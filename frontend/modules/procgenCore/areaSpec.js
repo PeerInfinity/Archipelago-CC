@@ -92,6 +92,32 @@ export const AREA_PARAM_SCHEMA = Object.freeze([
             + 'the default (slice 1 §8.2). 0 turns the extra edges off; 1 takes every legal '
             + 'one.',
     }),
+    /**
+     * ⛓⛓⛓ **THE ITEM-LOCKED CYCLE EDGE** — PROCGEN ELEMENTS arc 5, slice 5
+     * (D3; design §4.7 / ⚖ ruling 11). ⛔ It is a REALISATION knob and
+     * `goalShortcut` below is a GRAPH knob, which is why they are two
+     * parameters and not one: `goalShortcut` decides whether `graphify` may
+     * LINK into the goal's area at all (MetaZelda's own `allowGoalShortcut`,
+     * a bound handed to `buildAreaGraph`), and this one decides whether the
+     * binding puts a DOOR on one of the recorded edges. A graph can offer a
+     * cycle nobody realises, and did — for four arcs.
+     *
+     * ⛓ 0 IS THE DEFAULT AND SPENDS NO DRAW, which is what keeps every
+     * committed `--areas=` payload and every per-kind CLI md5 byte-identical:
+     * the whole realisation is behind one `if`.
+     */
+    Object.freeze({
+        key: 'shortcut',
+        domain: Object.freeze([0, 1]),
+        default: 0,
+        why: 'realise ONE recorded `graphify` edge as an ITEM-LOCKED SHORTCUT: a `door_SC` '
+            + 'on a cell that is NOT a cut (the goal stays reachable the long way) and is '
+            + 'STRICTLY SHORTER with it open, plus a `key_SC` placed where the player can '
+            + 'reach it without using it. ⛓ It is what makes the requirements '
+            + 'differential\'s fifth grade — SHORTENS, ⚖ design §4.5 — reachable on a '
+            + 'generated level: the BFS solves BOTH arms and the plan is shorter with the '
+            + 'key. Spelled 0/1 for the same reason `goalShortcut` is.',
+    }),
     Object.freeze({
         key: 'goalShortcut',
         domain: Object.freeze([0, 1]),

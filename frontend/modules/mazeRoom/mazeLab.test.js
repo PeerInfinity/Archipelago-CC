@@ -22,6 +22,7 @@ import {
 import { deserializeMazeLevel } from './procgenMaze.js';
 import { TILE_FLOOR, TILE_WALL, getTile } from './mazeRoomEngine.js';
 import { UrlParamsError } from '../procgenCore/urlParams.js';
+import { describeKeptKind } from '../procgenCore/labView.js';
 
 const ROOM = { width: 5, height: 5 };
 const step0 = (seed = 1, over = {}) => generateStep({ seed, step: 0, ...ROOM, ...over });
@@ -323,26 +324,49 @@ describe('mazeLab — GENERATE', () => {
         expect(st.roster).toEqual(roster);
     });
 
-    it('⛓⛓ a directive on a VERBLESS palette is NO_VERB, never solved-only', () => {
-        /**
-         * ⛓ THE DEFECT THIS ROW LOCKS DOWN (found by `check-maze-lab.mjs`):
-         * `mazeLab.applyDirective` first passed `discharges: () => false`, which
-         * claims every maze family HAS a verb no solve used. `levelGenerator`
-         * reads `null` as "no verb" and `false` as "has one, not discharged",
-         * and the difference is not cosmetic: under `false`,
-         * `take = solved && kind !== SOLVED_ONLY` REVERTS the first solving
-         * anchor and keeps searching for a discharge that cannot happen.
-         */
+    /**
+     * ⛓⛓⛓ **RE-PINNED BY THE RETIREMENT — arc 5, slice 5 (⚖ arc-5 ruling 4).**
+     * This row read *"a directive on a VERBLESS palette is NO_VERB, never
+     * solved-only"* and pinned `keptKind === 'solved-no-verb'`. It is REWRITTEN
+     * rather than deleted, because the DEFECT it locks down is still real and
+     * the reason it can no longer happen is the point:
+     *
+     * ⛓ THE DEFECT (found by `check-maze-lab.mjs`): `applyDirective` first
+     * passed `discharges: () => false`, which claims every maze family HAS a
+     * verb no solve used. `levelGenerator` reads `null` as "no verb" and
+     * `false` as "has one, not discharged", and the difference is not cosmetic:
+     * under `false`, `take = solved && kind !== SOLVED_ONLY` REVERTS the first
+     * solving anchor and keeps searching for a discharge that cannot happen.
+     *
+     * ⇒ the predicate is GONE with the policy, `keptKind` is `null`, and the
+     * COST the old row measured — one anchor walked, not twelve — is what this
+     * one still asserts, because that is the observable the defect moved.
+     */
+    it('⛓⛓ a maze directive runs under FIRST_SOLVED — `keptKind` is null, the walk is ONE',
+        () => {
+            const st = generateStep({ seed: 5, step: 2, width: 11, height: 11 });
+            const out = applyDirective(st, {
+                template: 'door-key', params: { dir: 'S', dist: 1 }, anchor: null, bound: 12,
+            }, 0);
+            const d = out.directives[0];
+            expect(d.outcome).toBe('KEPT');
+            expect(d.keepPolicy).toBe('first-solved');
+            expect(d.keptKind).toBeNull();
+            expect(d.anchorsWalked).toBe(1);
+            expect(describeKeptKind(d)).toMatch(/the keep policy was first-SOLVED/);
+            expect(describeKeptKind(d)).not.toMatch(/solved-only/);
+        });
+
+    /**
+     * ⛔ AND AN OLD SPEC CARRYING THE RETIRED POLICY REFUSES BY NAME rather
+     * than being answered under the surviving one — 4c's rule on the Seedling
+     * side, one substrate over: the two were different questions.
+     */
+    it('⛔ a directive asking for `prefer-discharge` REFUSES by name', () => {
         const st = generateStep({ seed: 5, step: 2, width: 11, height: 11 });
-        const out = applyDirective(st, {
-            template: 'door-key', params: { dir: 'S', dist: 1 }, anchor: null, bound: 12,
-        }, 0);
-        const d = out.directives[0];
-        expect(d.outcome).toBe('KEPT');
-        expect(d.keptKind).toBe('solved-no-verb');
-        // ⛔ AND THE COST: a NO_VERB template is taken at the FIRST solving
-        // anchor, so the walk is one anchor long.
-        expect(d.anchorsWalked).toBe(1);
+        expect(() => applyDirective(st, {
+            template: 'door-key', params: { dir: 'S', dist: 1 }, keepPolicy: 'prefer-discharge',
+        }, 0)).toThrow(/0 of 1944 directed attempts/);
     });
 
     it('generateWithDirectives is the ONE replay path — batch == one at a time', () => {

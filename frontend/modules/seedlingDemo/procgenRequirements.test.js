@@ -12,6 +12,7 @@
 
 import { describe, expect, it } from 'vitest';
 
+import { GRADE_WORDS } from '../procgenCore/differentialGrade.js';
 import {
     REQUIRING_GRADES, gradeOf, requirementsFor,
 } from './procgenRequirements.js';
@@ -200,16 +201,83 @@ describe('gradeOf reads FIELDS, and agrees with the prose it does not read', () 
         expect(REQUIRING_GRADES).not.toContain('WEAK');
     });
 
-    it('⛔ SHORTENS is NOT a grade this module can answer (trap 355 — arc 5\'s)', () => {
+    /**
+     * ⛓⛓⛓ **ARC 5, SLICE 5 — THE ROW THAT SAID `SHORTENS` WAS UNREACHABLE NOW
+     * SAYS IT IS REACHED, AND IT IS THE SAME ROW.** Arc-3 slice 4d wrote this
+     * as *"SHORTENS is NOT a grade this module can answer (trap 355 — arc 5's)"*
+     * and asserted `all.has('SHORTENS') === false`. ⛔ It is REWRITTEN rather
+     * than deleted, so the six words are still enumerated in one place and the
+     * discharge is visible in the diff.
+     */
+    it('⛓ the SIX words are exactly what `gradeOf` can answer — SHORTENS included', () => {
+        const both = (withTicks, withoutTicks) => ({
+            verdict: 'rule not established', withVerdict: 'SOLVED', withoutVerdict: 'SOLVED',
+            withTicks, withoutTicks,
+        });
         const all = new Set([
             gradeOf({ verdict: 'REQUIRED', withoutVerdict: 'REFUSED' }),
             gradeOf({ verdict: 'REQUIRED', withoutVerdict: 'BUDGET_EXHAUSTED' }),
             gradeOf({ verdict: 'REQUIRED', withoutVerdict: 'THREW:X' }),
-            gradeOf({ verdict: 'rule not established', inert: true }),
-            gradeOf({ verdict: 'rule not established', inert: false }),
+            gradeOf(both(200, 200)),
+            gradeOf(both(120, 300)),
+            gradeOf(both(300, 120)),
         ]);
-        expect([...all].sort()).toEqual(
-            ['BOUND-DEPENDENT', 'INERT', 'NOT-ESTABLISHED', 'STRONG', 'WEAK']);
-        expect(all.has('SHORTENS')).toBe(false);
+        expect([...all].sort()).toEqual(GRADE_WORDS);
+        expect(all.has('SHORTENS')).toBe(true);
+    });
+
+    /**
+     * ⛓⛓⛓ **THE DIRECTION, DRIVEN FROM BOTH SIDES.** A sign error in the ONE
+     * comparison would grade every shortcut level and every non-shortcut level
+     * with the same confidence, so the two directions are asserted separately
+     * and by name.
+     */
+    it('⛓⛓ SHORTENS is FEWER ticks WITH the item — the other direction is NOT-ESTABLISHED',
+        () => {
+            const both = (withTicks, withoutTicks) => ({
+                verdict: 'rule not established', withVerdict: 'SOLVED',
+                withoutVerdict: 'SOLVED', withTicks, withoutTicks,
+            });
+            expect(gradeOf(both(120, 300))).toBe('SHORTENS');
+            expect(gradeOf(both(299, 300))).toBe('SHORTENS');
+            expect(gradeOf(both(300, 300))).toBe('INERT');
+            expect(gradeOf(both(301, 300))).toBe('NOT-ESTABLISHED');
+            expect(REQUIRING_GRADES).not.toContain('SHORTENS');
+        });
+
+    /**
+     * ⛔⛔ **THE GUARD THAT MATTERS MOST: A WITHOUT-ARM THAT DID NOT SOLVE HAS
+     * NO COST, AND IT STILL CARRIES A TICK COUNT.** `requirementsFor` writes
+     * `withoutTicks` from `without.ok ? without.value.ticks : null`, so a
+     * BUDGET_EXHAUSTED arm carries the ticks it spent FAILING. Handing that to
+     * the comparison would grade a REQUIRED row SHORTENS.
+     */
+    it('⛔ a REQUIRED row is never SHORTENS, however the tick counts fall', () => {
+        for (const withoutVerdict of ['REFUSED', 'BUDGET_EXHAUSTED', 'THREW:PhysicsV2Error']) {
+            expect(gradeOf({ verdict: 'REQUIRED', withVerdict: 'SOLVED', withoutVerdict,
+                withTicks: 50, withoutTicks: 400 })).not.toBe('SHORTENS');
+        }
+        // and a row whose WITH arm did not solve is not a shortcut either
+        expect(gradeOf({ verdict: 'rule not established', withVerdict: 'REFUSED',
+            withoutVerdict: 'REFUSED', withTicks: 50, withoutTicks: 400 }))
+            .toBe('NOT-ESTABLISHED');
+    });
+
+    /**
+     * ⛓ **`row.inert` AND THE GRADE AGREE ON EVERY ROW WHERE BOTH ARMS SOLVED**,
+     * and the row that could separate them is named rather than hidden: arc 3's
+     * `inert` field is `without.ok && ticks equal`, and `without.ok` is TRUE for
+     * a REFUSED without-arm too — so on a row whose WITH arm did not solve the
+     * field can say `inert` about two failures at the same tick count. The
+     * GRADE does not, because it reads the verdict PAIR.
+     */
+    it('⛓ the grade and the row\'s own `inert` field agree when both arms SOLVED', () => {
+        const both = (withTicks, withoutTicks) => ({
+            verdict: 'rule not established', withVerdict: 'SOLVED', withoutVerdict: 'SOLVED',
+            withTicks, withoutTicks, inert: withTicks === withoutTicks,
+        });
+        for (const row of [both(200, 200), both(120, 300), both(300, 120)]) {
+            expect(gradeOf(row) === 'INERT').toBe(row.inert);
+        }
     });
 });

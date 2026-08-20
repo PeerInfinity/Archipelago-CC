@@ -649,6 +649,21 @@ export const REFUSALS = frz({
             "where": "procgenMaze.js (the whole module)"
         },
         {
+            "alsoFiresIn": [],
+            "channel": "`summary.areas.refused` / `summary.elementInfo.refused` on `lab.html`",
+            "constant": "MAZE_REFUSALS",
+            "file": "frontend/modules/mazeRoom/procgenMaze.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": "… recorded `graphify` edge(s) offered … corridor cell(s) and the room offered … other free floor cell(s); … failed the SHORTCUT LAW (it is a cut, or walling it costs the walk nothing) and … would have taken some OTHER cell off the level-n flood. ⛓ A room with no cycle has nothing to shorten, and a room whose cycle is free to walk round has nothing to sell — neither is a defect. ⛔ A MAZE IS A TREE unless its kind says otherwise, so this is the ordinary answer on the tree kinds and the refusal to expect there.",
+            "name": "no-cell-can-carry-a-shortcut",
+            "named": true,
+            "scanFound": true,
+            "source": "maze-area-binding",
+            "sourceTitle": "The MAZE area + element binding",
+            "where": "procgenMaze.js (the whole module)"
+        },
+        {
             "alsoFiresIn": [
                 "block-pocket"
             ],
@@ -762,7 +777,23 @@ export const REFUSALS = frz({
             "where": "procgenMaze.js (the whole module)"
         },
         {
+            "alsoFiresIn": [],
+            "channel": "`summary.areas.refused` / `summary.elementInfo.refused` on `lab.html`",
+            "constant": "MAZE_REFUSALS",
+            "file": "frontend/modules/mazeRoom/procgenMaze.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": "the shortcut door went to (…,…) and no cell of any area at key level 0 is free to hold `key_SC` — every one is a boundary cell (where the tree's own doors go), an endpoint, or already carries something. ⛔ A key the player cannot reach without the door it opens is not a shortcut key, so the run refuses rather than placing it anywhere.",
+            "name": "no-level-0-area-cell-can-hold-the-shortcut-key",
+            "named": true,
+            "scanFound": true,
+            "source": "maze-area-binding",
+            "sourceTitle": "The MAZE area + element binding",
+            "where": "procgenMaze.js (the whole module)"
+        },
+        {
             "alsoFiresIn": [
+                "room-door",
                 "block-pocket"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
@@ -773,14 +804,31 @@ export const REFUSALS = frz({
             "meaning": null,
             "name": "no-pocket",
             "named": true,
-            "scanFound": true,
+            "scanFound": false,
             "source": "kill-gate",
             "sourceTitle": "The KILL GATE element",
             "where": "frontend/modules/procgenCore/elements/killGate.js — `KILL_GATE_REFUSALS`"
         },
         {
             "alsoFiresIn": [
-                "kill-gate"
+                "block-pocket"
+            ],
+            "channel": "returned to the ELEMENT that asked, which files it under its own census key",
+            "constant": "ROOM_DOOR_REFUSALS",
+            "file": "frontend/modules/procgenCore/elements/roomDoor.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": null,
+            "name": "no-pocket",
+            "named": true,
+            "scanFound": true,
+            "source": "room-door",
+            "sourceTitle": "The shared room-door geometry (`pocketFor`)",
+            "where": "frontend/modules/procgenCore/elements/roomDoor.js — `ROOM_DOOR_REFUSALS`"
+        },
+        {
+            "alsoFiresIn": [
+                "room-door"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
             "constant": "BLOCK_POCKET_REFUSALS",
@@ -924,6 +972,7 @@ export const REFUSALS = frz({
         },
         {
             "alsoFiresIn": [
+                "room-door",
                 "block-pocket"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
@@ -934,14 +983,31 @@ export const REFUSALS = frz({
             "meaning": null,
             "name": "pocket-not-legal",
             "named": true,
-            "scanFound": true,
+            "scanFound": false,
             "source": "kill-gate",
             "sourceTitle": "The KILL GATE element",
             "where": "frontend/modules/procgenCore/elements/killGate.js — `KILL_GATE_REFUSALS`"
         },
         {
             "alsoFiresIn": [
-                "kill-gate"
+                "block-pocket"
+            ],
+            "channel": "returned to the ELEMENT that asked, which files it under its own census key",
+            "constant": "ROOM_DOOR_REFUSALS",
+            "file": "frontend/modules/procgenCore/elements/roomDoor.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": null,
+            "name": "pocket-not-legal",
+            "named": true,
+            "scanFound": true,
+            "source": "room-door",
+            "sourceTitle": "The shared room-door geometry (`pocketFor`)",
+            "where": "frontend/modules/procgenCore/elements/roomDoor.js — `ROOM_DOOR_REFUSALS`"
+        },
+        {
+            "alsoFiresIn": [
+                "room-door"
             ],
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
             "constant": "BLOCK_POCKET_REFUSALS",
@@ -1371,6 +1437,36 @@ export const REFUSALS = frz({
             "file": "frontend/modules/seedlingDemo/procgenSeedlingElements.js",
             "inTheConstant": true,
             "kind": "constant",
+            "meaning": "",
+            "name": "the-elements-shortcut-is-not-a-shortcut",
+            "named": true,
+            "scanFound": true,
+            "source": "seedling-element-binding",
+            "sourceTitle": "The SEEDLING element binding",
+            "where": "frontend/modules/seedlingDemo/procgenSeedlingElements.js — `SEEDLING_ELEMENT_REFUSALS`"
+        },
+        {
+            "alsoFiresIn": [],
+            "channel": "`summary.elementInfo.refused` on `watch.html`; `generate-seedling-level.mjs --json` `elementInfo.refused`",
+            "constant": "SEEDLING_ELEMENT_REFUSALS",
+            "file": "frontend/modules/seedlingDemo/procgenSeedlingElements.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": "the element declares `law: \"shortcut\"` and the binding offered no `shortcutLaw`. ⛔ Falling back to the door law would adjudicate the placement by the rule it was built to fail, so the run refuses BY NAME instead — a binding that cannot ask the inverse cannot host a shortcut, and that is a fact about the binding.",
+            "name": "the-elements-shortcut-law-is-not-offered",
+            "named": true,
+            "scanFound": true,
+            "source": "seedling-element-binding",
+            "sourceTitle": "The SEEDLING element binding",
+            "where": "frontend/modules/seedlingDemo/procgenSeedlingElements.js — `SEEDLING_ELEMENT_REFUSALS`"
+        },
+        {
+            "alsoFiresIn": [],
+            "channel": "`summary.elementInfo.refused` on `watch.html`; `generate-seedling-level.mjs --json` `elementInfo.refused`",
+            "constant": "SEEDLING_ELEMENT_REFUSALS",
+            "file": "frontend/modules/seedlingDemo/procgenSeedlingElements.js",
+            "inTheConstant": true,
+            "kind": "constant",
             "meaning": "the element writes (…,…), which is the … cell. Neither endpoint's terrain is an element's to re-decide — `freeRefusal` says the same thing to a template, and a room whose start is wall is a room whose refusal is about geometry rather than about the element.",
             "name": "the-elements-write-lands-on-the-start-or-the-goal",
             "named": true,
@@ -1719,6 +1815,36 @@ export const REFUSALS = frz({
             "where": "frontend/modules/procgenCore/elements/blockPocket.js — `BLOCK_POCKET_REFUSALS`"
         },
         {
+            "alsoFiresIn": [],
+            "channel": "`summary.areas.refused` / `summary.elementInfo.refused` on `lab.html`",
+            "constant": "MAZE_REFUSALS",
+            "file": "frontend/modules/mazeRoom/procgenMaze.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": "… recorded `graphify` edge(s) offered … corridor cell(s) and the room offered … other free floor cell(s); … failed the SHORTCUT LAW (it is a cut, or walling it costs the walk nothing) and … would have taken some OTHER cell off the level-n flood. ⛓ A room with no cycle has nothing to shorten, and a room whose cycle is free to walk round has nothing to sell — neither is a defect. ⛔ A MAZE IS A TREE unless its kind says otherwise, so this is the ordinary answer on the tree kinds and the refusal to expect there.",
+            "name": "the-shortcut-changes-which-cells-are-reachable",
+            "named": true,
+            "scanFound": true,
+            "source": "maze-area-binding",
+            "sourceTitle": "The MAZE area + element binding",
+            "where": "procgenMaze.js (the whole module)"
+        },
+        {
+            "alsoFiresIn": [],
+            "channel": "`summary.areas.refused` / `summary.elementInfo.refused` on `lab.html`",
+            "constant": "MAZE_REFUSALS",
+            "file": "frontend/modules/mazeRoom/procgenMaze.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": "the shortcut at (…,…) saves … step(s) (… open, … walled), and the cheapest level-0 cell that can hold `key_SC` puts the route through it at … step(s) — not shorter than the …-step LONG WAY. ⛔ A key that costs more to fetch than its door saves is a lock the solver walks past: the differential would grade the level INERT, which is the mechanism reporting that nothing reached it. Measured on `rooms` seed 5 at 11x11 before this clause existed: geometry 17/19, BFS plan 21 BOTH WAYS.",
+            "name": "the-shortcut-key-costs-more-than-the-shortcut-saves",
+            "named": true,
+            "scanFound": true,
+            "source": "maze-area-binding",
+            "sourceTitle": "The MAZE area + element binding",
+            "where": "procgenMaze.js (the whole module)"
+        },
+        {
             "alsoFiresIn": [
                 "seedling-area-binding"
             ],
@@ -1901,22 +2027,22 @@ export const REFUSALS = frz({
             "patterns": [
                 "/(?:seen\\.add|refused:\\s*|reason:\\s*|refuse\\(|refuseArea\\(|\\?\\?\\s*|\\?\\s*|\\s:\\s*)\\(?'([a-z][a-zA-Z0-9]*(?:-[a-zA-Z0-9]+)+)'/g"
             ],
-            "scannedCount": 5,
-            "spansModules": false,
+            "scannedCount": 3,
+            "spansModules": true,
             "title": "The KILL GATE element",
             "where": "frontend/modules/procgenCore/elements/killGate.js — `KILL_GATE_REFUSALS`"
         },
         {
             "channel": "`summary.areas.refused` / `summary.elementInfo.refused` on `lab.html`",
             "constant": "MAZE_REFUSALS",
-            "declaredCount": 14,
+            "declaredCount": 18,
             "file": "frontend/modules/mazeRoom/procgenMaze.js",
             "id": "maze-area-binding",
             "kind": "constant",
             "patterns": [
                 "/(?:seen\\.add|refused:\\s*|reason:\\s*|refuse\\(|refuseArea\\(|\\?\\?\\s*|\\?\\s*|\\s:\\s*)\\(?'([a-z][a-zA-Z0-9]*(?:-[a-zA-Z0-9]+)+)'/g"
             ],
-            "scannedCount": 14,
+            "scannedCount": 18,
             "spansModules": false,
             "title": "The MAZE area + element binding",
             "where": "procgenMaze.js (the whole module)"
@@ -1983,6 +2109,21 @@ export const REFUSALS = frz({
             "where": "elementSpec.resolveRequireDirective"
         },
         {
+            "channel": "returned to the ELEMENT that asked, which files it under its own census key",
+            "constant": "ROOM_DOOR_REFUSALS",
+            "declaredCount": 2,
+            "file": "frontend/modules/procgenCore/elements/roomDoor.js",
+            "id": "room-door",
+            "kind": "constant",
+            "patterns": [
+                "/(?:seen\\.add|refused:\\s*|reason:\\s*|refuse\\(|refuseArea\\(|\\?\\?\\s*|\\?\\s*|\\s:\\s*)\\(?'([a-z][a-zA-Z0-9]*(?:-[a-zA-Z0-9]+)+)'/g"
+            ],
+            "scannedCount": 2,
+            "spansModules": false,
+            "title": "The shared room-door geometry (`pocketFor`)",
+            "where": "frontend/modules/procgenCore/elements/roomDoor.js — `ROOM_DOOR_REFUSALS`"
+        },
+        {
             "channel": "`summary.areas.refused` / `summary.elementInfo.refused` on `watch.html`",
             "constant": "SEEDLING_AREA_REFUSALS",
             "declaredCount": 19,
@@ -2000,14 +2141,14 @@ export const REFUSALS = frz({
         {
             "channel": "`summary.elementInfo.refused` on `watch.html`; `generate-seedling-level.mjs --json` `elementInfo.refused`",
             "constant": "SEEDLING_ELEMENT_REFUSALS",
-            "declaredCount": 15,
+            "declaredCount": 17,
             "file": "frontend/modules/seedlingDemo/procgenSeedlingElements.js",
             "id": "seedling-element-binding",
             "kind": "constant",
             "patterns": [
                 "/(?:seen\\.add|refused:\\s*|reason:\\s*|refuse\\(|refuseArea\\(|\\?\\?\\s*|\\?\\s*|\\s:\\s*)\\(?'([a-z][a-zA-Z0-9]*(?:-[a-zA-Z0-9]+)+)'/g"
             ],
-            "scannedCount": 12,
+            "scannedCount": 14,
             "spansModules": true,
             "title": "The SEEDLING element binding",
             "where": "frontend/modules/seedlingDemo/procgenSeedlingElements.js — `SEEDLING_ELEMENT_REFUSALS`"
@@ -2030,6 +2171,15 @@ export const REFUSALS = frz({
     ],
     "spans": [
         {
+            "constant": "KILL_GATE_REFUSALS",
+            "firesIn": [
+                "room-door",
+                "block-pocket"
+            ],
+            "name": "no-pocket",
+            "source": "kill-gate"
+        },
+        {
             "constant": "SEEDLING_ELEMENT_REFUSALS",
             "firesIn": [
                 "seedling-area-binding",
@@ -2037,6 +2187,15 @@ export const REFUSALS = frz({
             ],
             "name": "no-site-fits-this-room",
             "source": "seedling-element-binding"
+        },
+        {
+            "constant": "KILL_GATE_REFUSALS",
+            "firesIn": [
+                "room-door",
+                "block-pocket"
+            ],
+            "name": "pocket-not-legal",
+            "source": "kill-gate"
         },
         {
             "constant": "SEEDLING_ELEMENT_REFUSALS",

@@ -34,15 +34,24 @@
  * throw, which is not a claim about the level at all) — and a row where both
  * arms solve at the SAME tick count says INERT.
  *
- * ⛔⛔ **`SHORTENS` IS ARC 5'S FIFTH GRADE AND IS DELIBERATELY NOT COMPUTED
- * HERE** (design §4.5): *both arms solve, fewer ticks WITH the item* — what an
- * ITEM-GATED SHORTCUT (design §4.7: water/swim, a waterfall on a `graphify`
- * edge) looks like to this differential. ⛓ Nothing in the pipeline can produce
- * one today: no element grants a shortcut, so every both-arms-solve row this
- * corpus can reach is INERT or a tick difference no mechanism explains. Trap
- * 355 — *a bound nothing can reach is not a bound; say so* — so it is NAMED as
- * arc 5's and left uncomputed rather than shipped as a grade that would never
- * fire and could never be gated.
+ * ⛓⛓⛓ **`SHORTENS` IS COMPUTED AT LAST — arc 5, slice 5.** *Both arms solve,
+ * fewer ticks WITH the item* (design §4.5) — what an ITEM-GATED SHORTCUT
+ * (design §4.7) looks like to this differential. Arc 3 left it NAMED and
+ * uncomputed on trap 355's rule (*a grade nothing can reach is not a grade*)
+ * because no element granted a shortcut; slice 5's `shortcut` element grants
+ * one, so the word is now reachable and is computed by
+ * `procgenCore/differentialGrade.gradeDifferential` — ⛔ the ONE spelling, which
+ * the MAZE's `mazeCostRecords` asks in BFS plan lengths on the same day.
+ *
+ * ⛔⛔ **AND IT MOVED NO COMMITTED ROW.** Before the arm was wired in, the
+ * committed corpus was counted for the flips it could cause — rows where the
+ * without-arm SOLVED with strictly MORE ticks than the with-arm. The acceptance
+ * batch (stdout md5 `ab540ac4…`, which is the corpus by definition) has FIVE
+ * pre-sword levels whose candidate set is empty and FIVE post-sword levels
+ * whose arms solve at IDENTICAL tick counts (128/128, 190/190, 213/213,
+ * 166/166, 217/217) — every one INERT, none of them a flip. The count was
+ * ZERO and it was taken FIRST, because a grade that re-words a committed row is
+ * a re-record and this slice owns none.
  *
  * ── ⚠⚠ THE WITHOUT-ARM'S FAILURE IS BUDGET-SHAPED, AND THAT IS EXPECTED ─
  *
@@ -53,7 +62,13 @@
  * DIFFERENTIAL'S VERDICT is what speaks, never the refusal text.**
  */
 
+import { REQUIRING_GRADES, gradeDifferential } from '../procgenCore/differentialGrade.js';
 import { DEFAULT_BUDGET, bootStaging, solve } from './procgenOracle.js';
+
+/** ⛓ RE-EXPORTED, not re-declared — arc 5 slice 5 moved the list into
+ *  `procgenCore/differentialGrade` so the maze reads the same one. Every
+ *  importer of this module is unchanged. */
+export { REQUIRING_GRADES };
 
 /**
  * The AP item name behind each boot flag — the vocabulary the REPORT speaks,
@@ -223,21 +238,55 @@ export function requirementsFor(state, withOut, { budget = DEFAULT_BUDGET } = {}
  *                    where it must not, which is not a claim about the level
  *   INERT            both arms solved at the SAME tick count — the item did not
  *                    merely fail to be necessary, it changed nothing
- *   NOT-ESTABLISHED  both arms solved, and the tick counts differ
+ *   SHORTENS         ⛓ ARC 5, SLICE 5 — both arms solved and the WITH arm spent
+ *                    STRICTLY FEWER ticks: the item bought a shorter way
+ *   NOT-ESTABLISHED  both arms solved, the tick counts differ, and no mechanism
+ *                    here claims the difference (⛔ including the OTHER
+ *                    direction — cheaper WITHOUT the item is not a shortcut)
  *
- * ⛔ `SHORTENS` IS NOT HERE. See the file docblock: nothing in the pipeline can
- * produce one today, and a grade nothing can reach is not a grade (trap 355).
- * When arc 5 ships an item-gated shortcut, it is `NOT-ESTABLISHED` with fewer
- * ticks WITH the item, and THAT is the row this word will be carved out of.
+ * ⛓⛓⛓ **THE ARITHMETIC IS `procgenCore/differentialGrade.gradeDifferential`'s
+ * AND NOT THIS FILE'S** (arc 5, slice 5). SHORTENS arrived on Seedling and on
+ * the MAZE in the same slice, and two spellings of *which arm is cheaper* is
+ * exactly the failure mode this repo keeps recording. ⛔ This function's job is
+ * now what it always was — to say which of THIS binding's fields answer the
+ * shared question — and the unit it hands over is TICKS.
+ *
+ * ⚠ **AND IT STOPPED READING `row.inert`, WHICH IS A NARROWING RATHER THAN A
+ * CHANGE.** Arc 3 answered INERT off that field; the field is
+ * `without.ok && ticks equal`, and `without.ok` is TRUE for a REFUSED
+ * without-arm too — so on a row whose WITH arm did not solve it can say
+ * "inert" about two FAILURES that happened to cost the same. The grade now
+ * reads the VERDICT PAIR, which is the same fact on every row the corpus
+ * actually produces and a stricter one on the rows it does not.
+ * ⛓ `procgenRequirements.test.js` drives the agreement where both arms solved
+ * AND names the case that separates them, rather than asserting an equivalence
+ * that is not one. ⛔ The FIELD is untouched — it rides every committed payload
+ * and moving it would be a re-record.
  */
 export function gradeOf(row) {
-    if (row.verdict !== 'REQUIRED') return row.inert ? 'INERT' : 'NOT-ESTABLISHED';
-    if (row.withoutVerdict === 'REFUSED') return 'STRONG';
-    if (row.withoutVerdict === 'BUDGET_EXHAUSTED') return 'BOUND-DEPENDENT';
-    return 'WEAK';
+    const required = row.verdict === 'REQUIRED';
+    /**
+     * ⛔⛔ **"BOTH ARMS SOLVED" IS A VERDICT PAIR, NOT A TICK PAIR — AND
+     * `withoutTicks` IS PRESENT ON A REFUSAL TOO.** Arc 3 wrote it as
+     * `without.ok ? without.value.ticks : null`, so a without-arm that ran out
+     * of budget carries the tick count it spent FAILING. Handing that number to
+     * a `<` comparison would grade *"the with-arm solved in 50, the without-arm
+     * gave up at 400"* as SHORTENS — a shortcut claimed on a level whose
+     * without-arm never reached the goal. ⇒ the costs are offered ONLY when
+     * both verdicts are `SOLVED`.
+     *
+     * ⛓ AND THE PAIR IS EXACTLY `required`'s OWN CONDITION READ THE OTHER WAY.
+     * `required` is *the with-arm solved and the without-arm did not (or did
+     * not certify)*, so a row that is NOT required and whose `withoutVerdict`
+     * is `SOLVED` is one where the without-arm solved AND certified — the same
+     * fact, off the same fields, with no second reading of the run.
+     */
+    const bothSolved = !required && row.withVerdict === 'SOLVED'
+        && row.withoutVerdict === 'SOLVED';
+    return gradeDifferential({
+        required,
+        withoutVerdict: row.withoutVerdict,
+        withCost: bothSolved ? (row.withTicks ?? null) : null,
+        withoutCost: bothSolved ? (row.withoutTicks ?? null) : null,
+    });
 }
-
-/** ⛓ The grades a `require:[X]` directive accepts as MET — ⚖ D1: STRONG or
- *  BOUND-DEPENDENT. A WEAK row's evidence is an ENGINE throw and is not a
- *  statement about the level at all, so it does not meet a directive. */
-export const REQUIRING_GRADES = Object.freeze(['STRONG', 'BOUND-DEPENDENT']);

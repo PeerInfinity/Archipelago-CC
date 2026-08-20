@@ -56,7 +56,9 @@ import {
     PLACEMENT_GROUP, PLACEMENT_TAG, PRE_SWORD_PALETTE, instantiateKept,
 } from './procgenPalette.js';
 import { TAGS_PER_LEVEL } from './breakableRocks.js';
-import { connected, reachableFrom, shortestPath } from '../procgenCore/gridFlood.js';
+import {
+    connected, reachableFrom, shortcutLawRefusal, shortestPath,
+} from '../procgenCore/gridFlood.js';
 import { generateLevel } from '../procgenCore/levelGenerator.js';
 /**
  * ⛓⛓⛓ PROCGEN ELEMENTS arc 3, slice 4b — **THE ONE PARTITION AND THE ONE
@@ -403,6 +405,23 @@ export const GOAL_AREA_ID = 'GOAL';
  *     walkable, it is reachable.
  *  2. **START-SIDE** — with the door cells walled, every clearer cell is
  *     reachable from the START.
+ *
+ * ── ⛓⛓⛓ **ITS INVERSE LIVES BESIDE IT, NOT INSTEAD OF IT** (arc 5, slice 5)
+ *
+ * ⛔ **THIS LAW IS UNCHANGED AND STILL BINDS EVERY DOOR.** Arc 5 slice 5 added
+ * `gridFlood.shortcutLawRefusal`, which is clause 1 with the quantifier
+ * FLIPPED: with the cell(s) walled the goal REMAINS reachable, and the shortest
+ * way is STRICTLY LONGER. A SHORTCUT is the other thing a lockable cell can be,
+ * and this law refuses one by name (*"it is NOT A CUT … the wall is
+ * DECORATION"*) — which is the right answer about a door and the wrong one
+ * about a shortcut. ⛓ The two laws take the SAME argument shape
+ * (`walkableFor(walledKeys)`, `doorKeys`, `clearerKeys`) so a caller cannot
+ * hand one of them a picture of the room the other never saw, and clause 2 —
+ * START-SIDE — is carried over verbatim, because *the opener must be
+ * reachable* is true of both. ⇒ two rules, one vocabulary, and the element
+ * says which one it is asking. `shortcutLawRefusal`'s own docblock carries the
+ * price (it needs `shortestPath` twice where this needs one early-exit
+ * `connected`).
  *
  * ── ⛓⛓⛓ **TWO CALLERS, ONE LAW** (arc 3, slice 4a) ────────────────────
  *
@@ -1486,6 +1505,31 @@ export function seedlingModel({
             /** ⛓ SLICE 2's CLAUSE 1 AS A FUNCTION — the one-cell special case of
              *  the flood above, spelled once. */
             isCut: (cell) => !connectedWith({ walled: [cell] }),
+            /**
+             * ⛓⛓⛓ **THE DOOR LAW'S INVERSE, HANDED IN THE SAME WAY** (arc 5,
+             * slice 5, D1). ⛔ An element does not re-derive a law — it ASKS
+             * one — and a SHORTCUT asks a different question of the same room:
+             * with these cell(s) walled the goal must still be REACHABLE and
+             * STRICTLY FURTHER. Same `walkableWith` predicate, same start and
+             * goal, same `askOpenHalf` reasoning (an element has no
+             * `sealRefusal` ahead of it, so the law asks the open half itself
+             * — `shortcutLawRefusal` asks it unconditionally because a
+             * shortcut is never offered as a pass-2 anchor).
+             */
+            shortcutLaw: ({ paint = [], doorCells = [], clearer = [], lengths = null } = {}) => {
+                const painted = paintMap(paint);
+                return shortcutLawRefusal({
+                    width: d.width,
+                    height: d.height,
+                    walkableFor: (walled) => walkableWith(skeletonBase, painted, walled),
+                    start: { x: d.start.tx, y: d.start.ty },
+                    goal: { x: goalCell.tx, y: goalCell.ty },
+                    doorKeys: new Set(doorCells.map((c) => `${c.x},${c.y}`)),
+                    clearerKeys: clearer.map((c) => `${c.x},${c.y}`),
+                    name: 'the element\'s shortcut',
+                    lengths,
+                });
+            },
             doorLaw: ({ paint = [], doorCells = [], clearer = [] } = {}) => {
                 const painted = paintMap(paint);
                 return doorLawRefusal({
@@ -1932,6 +1976,21 @@ export function seedlingModel({
             placement: onConnectorPlan.placement,
             start: d.start,
             goal: goalCell,
+            /** ⛓⛓⛓ WHICH LAW ADJUDICATES — the ELEMENT's own declaration (arc
+             *  5, slice 5). ⛔ Read off the concrete element rather than off its
+             *  name, so the table of which elements are shortcuts lives in ONE
+             *  file (`elements.ELEMENT_LAWS`). */
+            law: onConnectorPlan.concrete.law,
+            shortcutLaw: ({ paintedFor, doorKeys, clearerKeys }) => shortcutLawRefusal({
+                width: d.width,
+                height: d.height,
+                walkableFor: paintedFor,
+                start: { x: d.start.tx, y: d.start.ty },
+                goal: { x: goalCell.tx, y: goalCell.ty },
+                doorKeys,
+                clearerKeys,
+                name: `the element "${onConnectorPlan.concrete.instance}"`,
+            }),
             doorLaw: ({ paintedFor, doorKeys, clearerKeys }) => doorLawRefusal({
                 width: d.width,
                 height: d.height,

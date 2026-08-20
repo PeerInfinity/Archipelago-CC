@@ -390,11 +390,23 @@ describe('refusals names every constant, and its scan is the non-vacuity witness
          *  that quietly became "fires nowhere" would otherwise be invisible,
          *  which is the hole `spansModules` could have opened. */
         expect(REFUSALS.spans.map((s) => `${s.name} → ${s.firesIn.join(',')}`)).toEqual([
+            /**
+             * ⛓⛓ ARC 5, SLICE 5 ADDED THE FIRST TWO, and they are a DIFFERENT
+             * constant's — `KILL_GATE_REFUSALS`. `pocketFor` (*where the opener
+             * stands*) moved into `roomDoor.js` when the SHORTCUT element
+             * needed the same search, so the kill gate declares two names it no
+             * longer raises in its own file. ⛔ The flag is licensed by that
+             * constant's own docblock, and `room-door` has a census key of its
+             * own, which is what keeps this a SPAN rather than a finding.
+             */
+            'no-pocket → room-door,block-pocket',
             'no-site-fits-this-room → seedling-area-binding,maze-area-binding',
+            'pocket-not-legal → room-door,block-pocket',
             'the-chain-is-arc-4 → seedling-area-binding',
             'the-skeleton-does-not-solve-with-the-element → seedling-area-binding',
         ]);
-        for (const s of REFUSALS.spans) expect(s.constant).toBe('SEEDLING_ELEMENT_REFUSALS');
+        expect([...new Set(REFUSALS.spans.map((s) => s.constant))].sort())
+            .toEqual(['KILL_GATE_REFUSALS', 'SEEDLING_ELEMENT_REFUSALS']);
     });
 
     /**

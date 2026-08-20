@@ -57,6 +57,7 @@
  */
 
 import { buildAreaGraph } from '../procgenCore/areaGraph.js';
+import { gradeDifferential } from '../procgenCore/differentialGrade.js';
 /**
  * ⛓ PROCGEN ELEMENTS arc 3, slice 4b — THE ONE PARTITION AND THE ONE
  * LEVEL-n FLOOD, lifted out of this file into `procgenCore/` so the Seedling
@@ -74,7 +75,9 @@ import {
     DEFAULT_ELEMENTS, ELEMENT_TABLE, NONE as ELEMENTS_NONE, formatElementSpec, namedParams,
     normalizeElementSpec, parseElementSpec, resolveElementSpec,
 } from '../procgenCore/elementSpec.js';
-import { connected, reachableFrom } from '../procgenCore/gridFlood.js';
+import {
+    connected, distancesFrom, reachableFrom, shortcutLawRefusal,
+} from '../procgenCore/gridFlood.js';
 import { generateLevel, VERDICT } from '../procgenCore/levelGenerator.js';
 import {
     DEFAULT_SKELETON, DEFAULT_SKELETON_KIND, assertKind, carveSkeleton, kindsOffered,
@@ -153,6 +156,18 @@ export const MAZE_REFUSALS = Object.freeze([
     'the-key-area-has-no-cell-that-can-hold-it',
     'the-level-flood-disagrees-with-the-partition',
     'the-reserved-rectangle-seals-the-room',
+    /**
+     * ⛓⛓ arc 5, slice 5 — the ITEM-LOCKED CYCLE EDGE's own three
+     * (`areas=<n>;shortcut=1`). ⛔ Named apart from the K-door refusals above
+     * on the same rule that split `no-cut-for-the-kill-lock` off
+     * `no-cut-for-the-flag-lock` on the Seedling side: a census that filed a
+     * shortcut's refusal under a K-door's name would say the wrong thing about
+     * a lock whose whole job is NOT being a cut.
+     */
+    'no-cell-can-carry-a-shortcut',
+    'the-shortcut-changes-which-cells-are-reachable',
+    'no-level-0-area-cell-can-hold-the-shortcut-key',
+    'the-shortcut-key-costs-more-than-the-shortcut-saves',
 ]);
 
 /**
@@ -461,6 +476,30 @@ export function partitionMazeAreas(world, { entrance, goal, declared = [] } = {}
 /** `door_K0` ← 'K0'. The per-instance ids ⚖ §3.5 calls "the symbols". */
 export const doorIdFor = (symbol) => `door_${symbol}`;
 export const keyIdFor = (symbol) => `key_${symbol}`;
+
+/**
+ * ⛓⛓⛓ **THE SHORTCUT'S OWN SYMBOL, AND IT HAS TO BE ITS OWN** — arc 5, slice
+ * 5 (D3).
+ *
+ * ⛔⛔ **A SHORTCUT LOCKED BY AN EXISTING `K{n}` IS UNGRADEABLE, AND THAT IS A
+ * RESULT RATHER THAN A CONVENIENCE.** ⚖ Design ruling 16 spells the post-solve
+ * shortcut as *"an edge between the entrance's area and the GOAL's area locked
+ * by K_goal"*. On this substrate `door_K{n-1}` ALSO sits on every boundary cell
+ * of every area at level `n` (`realiseAreaGraph`'s own rule), and
+ * `checkAcceptable` puts the goal at the highest level — so removing `key_K{n}`
+ * seals the goal and the differential grades the symbol **STRONG**, not
+ * SHORTENS. The same argument kills every symbol ON THE SOLUTION PATH, which is
+ * all of them. ⇒ the only symbol whose differential can see a shortcut is one
+ * whose ONLY doors are the shortcut's, and `SC` is that symbol. Ruling 16's
+ * LOOP is still built — `graphify` records the edge and `goalShortcut` decides
+ * whether it may reach the goal — what changes is which lock the binding hangs
+ * on it.
+ *
+ * ⚠ It is deliberately NOT `K`-shaped: `doorLevelOf` parses `door_K(\d+)` and
+ * returning a level for this door would put it in the key-level flood's
+ * arithmetic, where it does not belong (see `realiseAreaShortcut`).
+ */
+export const SHORTCUT_SYMBOL = 'SC';
 /**
  * ⛓⛓ arc 2 ⚖ rulings 21-22 — a symbol realised as a STEP-ON FLAG rather than as
  * a carried key. In the engine the two are the same thing (`kind: 'flag'` is
@@ -719,6 +758,296 @@ function realiseAreaGraph(world, {
         keys.push(Object.freeze({ symbol, area: areaId, x: at.x, y: at.y }));
     }
     return { doors, keys, refused: null };
+}
+
+/**
+ * ⛓⛓⛓ **THE ITEM-LOCKED CYCLE EDGE — the maze's realisation of the fifth
+ * grade** (PROCGEN ELEMENTS arc 5, slice 5, D3; design §4.7 / ⚖ ruling 11).
+ *
+ * A `door_SC` on ONE cell of a corridor the `graphify` phase already recorded
+ * as an extra edge, and a `key_SC` where the player can reach it WITHOUT using
+ * it. ⛔ **THE GOAL STAYS REACHABLE THE LONG WAY** — that is the whole
+ * difference between this and every other door the maze places, and it is what
+ * makes the BFS differential grade it SHORTENS (solves both arms, shorter with
+ * the key) rather than STRONG (the without-arm cannot solve at all).
+ *
+ * ── ⛓⛓ WHY A `graphify` EDGE, WHEN THE GRID'S CORRIDORS ARE ALREADY THERE
+ *
+ * `realiseAreaGraph`'s own docblock says a `graphify` edge is RECORDED rather
+ * than CONSTRUCTED: *"the corridor it names already exists"*. That has been
+ * true and unused since arc 1 — the graph declares a cycle and the grid needs
+ * no work to have one. This is the first thing that reads those edges back.
+ * ⛔ The candidate cells are therefore the CORRIDOR COMPONENTS that touch BOTH
+ * of an edge's areas, which is `partitionAreas`' own definition of what an
+ * adjacency IS (`{kind: 'corridor', component: i}`) — never a fresh geometry.
+ *
+ * ── ⛔⛔ THE THREE CLAUSES, AND THE THIRD IS THE MAZE'S OWN ────────────
+ *
+ *  1-2. **THE SHORTCUT LAW** (`gridFlood.shortcutLawRefusal`, the ONE spelling,
+ *       shared with Seedling): with the cell walled the goal is STILL reachable
+ *       and the shortest way is STRICTLY LONGER.
+ *  3. **IT CHANGES WHICH CELLS ARE REACHABLE BY EXACTLY ONE — ITSELF.** ⛓ This
+ *     clause is not in the shared law because it is not about shortcuts; it is
+ *     about `verifyAreaLevels`, which demands EXACT agreement between the
+ *     partition's claim and the level-n flood in BOTH directions (missing AND
+ *     extra). A door cell that took some third area off the flood would make
+ *     the level-n check refuse a room whose K-doors are all correct, and the
+ *     reader would meet *"the level flood disagrees with the partition"* about
+ *     a shortcut. ⇒ asked here, refused by its own name, and it is what makes
+ *     the next paragraph true.
+ *
+ * ── ⛔⛔ AND THE LEVEL-n FLOOD IS TOLD THE DOOR IS LEVEL **0** ─────────
+ *
+ * ⛓ Not a fudge — a statement about what that flood is FOR. `verifyAreaLevels`
+ * checks that *the partition told the truth about where the ways into an AREA
+ * are*; its vocabulary is key levels and `door_K{n}`. A shortcut is a lock on a
+ * cell that is **not a cut of anything** (clause 3, measured, not assumed), so
+ * it changes no area's reachability at any level, and handing it a level would
+ * make the flood answer a question about the shortcut with the machinery for a
+ * question about the tree. ⇒ `doorLevels` carries `door_SC -> 0` — *"this door
+ * is not what gates an area"* — and the claim that it gates nothing is clause
+ * 3, which runs first.
+ *
+ * ⛓ ONE DRAW FOR THE CELL AND ONE FOR THE KEY, both `rng.pick` over candidates
+ * that have ALREADY passed every rule — the arc's own discipline: nothing after
+ * the pick is a choice, and a pick that could land on a candidate the law would
+ * refuse would be a draw spent to fail.
+ *
+ * @returns {{door, key, edge, lengths}|{refused:{reason, detail}}}
+ */
+export function realiseAreaShortcut(world, { partition, graph, rng, entrance, goal }) {
+    const byId = new Map(partition.areas.map((a) => [a.id, a]));
+    const floorAt = (x, y) => getTile(world, x, y) === TILE_FLOOR;
+    const isEnd = (c) => (c.x === entrance.x && c.y === entrance.y)
+        || (c.x === goal.x && c.y === goal.y);
+    const openReach = reachableFrom(world.width, world.height, floorAt, entrance);
+
+    /**
+     * ⛓⛓⛓ **THE CANDIDATE CELLS, IN TWO ARMS, AND THE SECOND ONE IS A FINDING
+     * RATHER THAN A CONVENIENCE.**
+     *
+     *  1. **THE `graphify` ARM** — cells of a CORRIDOR COMPONENT that touches
+     *     BOTH areas of a recorded `graphify` edge, which is `partitionAreas`'
+     *     own definition of what an adjacency IS
+     *     (`{kind: 'corridor', component: i}`). This is D3's letter and ⚖ design
+     *     §4.7's *"a `graphify` edge locked by a symbol"*.
+     *  2. **ANY FREE FLOOR CELL** — the fallback, and it exists because arm 1
+     *     came back EMPTY on every kind and size measured: over `rooms` at
+     *     11/15/20 and seeds 1..8 at `graphify=1`, the recorded edges offered
+     *     14, 8 and 27 corridor cells and **every single one failed the
+     *     shortcut law**. ⛓ The reason is geometric and worth writing down: a
+     *     CORRIDOR CELL IS ONE-WIDE BY THE PARTITION'S OWN DEFINITION (a floor
+     *     cell that belongs to no all-floor 2x2), so walling one cuts its
+     *     corridor; a `graphify` edge says two AREAS are adjacent in the LOCK
+     *     graph, and says nothing about the GRID having a second way round.
+     *
+     * ⛔⛔ **AND THE FALLBACK CANNOT TRIVIALISE ANYTHING, WHICH IS WHY IT IS
+     * ALLOWED.** The one-symbol law exists so an extra EDGE does not hand the
+     * player a region early. This is not an extra edge — it is an extra
+     * OBSTACLE on a cell that already exists, and clause 3 below proves it takes
+     * NO cell off the flood. An added lock can only make a level harder, and a
+     * lock that changes no reachability changes no key level. ⇒ the fallback is
+     * strictly safer than the rule it steps around, and `via` records which arm
+     * placed so the split is a measurement.
+     */
+    const seen = new Set();
+    const offered = [];
+    const offer = (x, y, edge, via) => {
+        const k = `${x},${y}`;
+        if (seen.has(k)) return;
+        seen.add(k);
+        if (!floorAt(x, y)) return;
+        if (isEnd({ x, y })) return;
+        if (getObstacle(world, x, y) !== undefined) return;
+        if (getItem(world, x, y) !== undefined) return;
+        offered.push({ x, y, edge, via });
+    };
+    for (const e of graph.edges) {
+        if (e.kind !== 'graphify') continue;
+        if (!byId.has(e.a) || !byId.has(e.b)) continue;
+        for (const comp of partition.corridorComponents) {
+            if (!comp.touches.includes(e.a) || !comp.touches.includes(e.b)) continue;
+            for (const k of comp.cells) {
+                const [x, y] = k.split(',').map(Number);
+                offer(x, y, Object.freeze({ a: e.a, b: e.b, lock: e.lock }), 'graphify-edge');
+            }
+        }
+    }
+    const fromGraphify = offered.length;
+    for (let y = 0; y < world.height; y += 1) {
+        for (let x = 0; x < world.width; x += 1) offer(x, y, null, 'any-cycle-cell');
+    }
+
+    const tried = { law: 0, reach: 0 };
+    const ok = [];
+    for (const cand of offered) {
+        const walled = new Set([`${cand.x},${cand.y}`]);
+        const lengths = {};
+        const why = shortcutLawRefusal({
+            width: world.width,
+            height: world.height,
+            walkableFor: (keys) => (x, y) => !(keys?.has(`${x},${y}`) === true) && floorAt(x, y),
+            start: entrance,
+            goal,
+            doorKeys: walled,
+            clearerKeys: [],
+            name: `the shortcut at (${cand.x},${cand.y})`,
+            lengths,
+        });
+        if (why) { tried.law += 1; continue; }
+        /** ⛓ CLAUSE 3 — see the docblock. The door cell is the ONE cell that
+         *  may leave the flood, because the door itself stands in it. */
+        const shut = reachableFrom(world.width, world.height,
+            (x, y) => !walled.has(`${x},${y}`) && floorAt(x, y), entrance);
+        if (shut.size + 1 !== openReach.size
+            || [...openReach].some((k) => k !== `${cand.x},${cand.y}` && !shut.has(k))) {
+            tried.reach += 1;
+            continue;
+        }
+        ok.push(Object.freeze({ ...cand, lengths: Object.freeze({ ...lengths }) }));
+    }
+    if (ok.length === 0) {
+        return { refused: { reason: tried.reach > 0
+            ? 'the-shortcut-changes-which-cells-are-reachable'
+            : 'no-cell-can-carry-a-shortcut',
+        detail: `${graph.edges.filter((e) => e.kind === 'graphify').length} recorded `
+            + `\`graphify\` edge(s) offered ${fromGraphify} corridor cell(s) and the room `
+            + `offered ${offered.length - fromGraphify} other free floor cell(s); `
+            + `${tried.law} failed the SHORTCUT LAW (it is a cut, or walling it costs the `
+            + `walk nothing) and ${tried.reach} would have taken some OTHER cell off the `
+            + 'level-n flood. ⛓ A room with no cycle has nothing to shorten, and a room '
+            + 'whose cycle is free to walk round has nothing to sell — neither is a defect. '
+            + '⛔ A MAZE IS A TREE unless its kind says otherwise, so this is the ordinary '
+            + 'answer on the tree kinds and the refusal to expect there.' } };
+    }
+    /**
+     * ⛓ THE `graphify` ARM WINS WHERE BOTH PASS — arm 1's cells come FIRST in
+     * `offered` and the draw is taken over the whole list, so a preference has
+     * to be spelled rather than hoped for.
+     */
+    const preferred = ok.filter((c) => c.via === 'graphify-edge');
+    /**
+     * ⛔⛔ **AND THERE IS NO "PREFER THE BIGGEST SAVING" RULE, BECAUSE IT WAS
+     * BUILT AND IT MOVED NOTHING.** The obvious lever for the INERT rows below
+     * is to take the candidate with the largest `walled - open`; it was written,
+     * run over `rooms` x {11x11, 15x15, 20x20} x seeds 1..10, and **not one of
+     * the 30 cells changed** — table for table, grade for grade. ⛓ The reason
+     * is geometric: in a 4-connected grid a single walled cell whose bypass runs
+     * alongside it costs the walk EXACTLY TWO STEPS, so nearly every candidate
+     * ties at 2 and there is nothing to prefer. (The one exception measured —
+     * `rooms` seed 9 at 11x11, geometry 4/26 — was already the draw's answer.)
+     * ⇒ the preference is NOT SHIPPED, per this arc's own rule that a knob
+     * nobody's measurement moves is a knob nobody adjudicated (trap 449). The
+     * finding is the deliverable, and it says where a bigger saving would have
+     * to come from: a MULTI-CELL door, not a better choice of one cell.
+     */
+    const pick = rng.pick(preferred.length > 0 ? preferred : ok);
+
+    /**
+     * ⛓⛓ THE KEY GOES IN AN AREA AT KEY LEVEL **0** — ⚖ design ruling 16's
+     * *"the entrance's area (precond ∅)"* read as the partition spells it. ⛔ It
+     * is the honest reading of *"its item placed reachable WITHOUT it"*: a level-0
+     * area is reachable with no key at all, so the without-arm's route to the key
+     * cannot depend on the shortcut or on any other lock.
+     */
+    const boundary = new Set();
+    for (const area of partition.areas) {
+        for (const c of area.boundary) boundary.add(`${c.x},${c.y}`);
+    }
+    const free = [];
+    for (const area of partition.areas) {
+        if ((graph.areas[area.id]?.keyLevel ?? 0) !== 0) continue;
+        for (const c of area.cells) {
+            const k = `${c.x},${c.y}`;
+            if (boundary.has(k) || isEnd(c)) continue;
+            if (k === `${pick.x},${pick.y}`) continue;
+            if (getObstacle(world, c.x, c.y) !== undefined) continue;
+            if (getItem(world, c.x, c.y) !== undefined) continue;
+            free.push({ x: c.x, y: c.y });
+        }
+    }
+    if (free.length === 0) {
+        return { refused: { reason: 'no-level-0-area-cell-can-hold-the-shortcut-key',
+            detail: `the shortcut door went to (${pick.x},${pick.y}) and no cell of any area `
+                + 'at key level 0 is free to hold `key_SC` — every one is a boundary cell '
+                + '(where the tree\'s own doors go), an endpoint, or already carries '
+                + 'something. ⛔ A key the player cannot reach without the door it opens is '
+                + 'not a shortcut key, so the run refuses rather than placing it anywhere.' } };
+    }
+
+    /**
+     * ⛓⛓⛓ **AND THE KEY HAS TO PAY FOR ITSELF — the clause the FIRST BUILD DID
+     * NOT HAVE, found on the first level it placed.** `rooms` seed 5 at 11x11
+     * shipped a shortcut whose GEOMETRY saves two steps (17 open, 19 walled)
+     * and whose BFS plan was **21 either way**: the walk to the key cost more
+     * than the door saved, so the optimal plan ignored the key entirely and the
+     * differential graded the level **INERT**. ⛔ That is a lock the solver
+     * walks past — decoration with a key in front of it — and shipping it under
+     * the name "shortcut" would make the fifth grade unreachable on the one
+     * substrate that can produce it.
+     *
+     * ⇒ the key cell is chosen to MINIMISE THE ROUTE THROUGH IT, exactly:
+     * `d(entrance → key) + d(key → goal)` over the OPEN grid (the door is a
+     * cell the player may walk once they hold the key). Two distance floods
+     * answer it for every candidate at once — ⛓ `gridFlood.distancesFrom`,
+     * which exists for this. And if even the best cell does not beat the LONG
+     * way, the run REFUSES BY NAME rather than placing a lock nobody will use.
+     *
+     * ⚠ **IT IS A GRID BOUND AND NOT THE SOLVER'S ANSWER.** The BFS the
+     * differential runs is over `(player, blocks, inventory)` and can differ;
+     * this is the cheap necessary condition that stops the obviously-INERT
+     * levels, and `mazeCostRecords` is still what grades the level that ships.
+     */
+    const fromEntrance = distancesFrom(world.width, world.height, floorAt, entrance);
+    const fromGoal = distancesFrom(world.width, world.height, floorAt, goal);
+    const through = (c) => {
+        const a = fromEntrance.get(`${c.x},${c.y}`);
+        const b = fromGoal.get(`${c.x},${c.y}`);
+        return (a === undefined || b === undefined) ? Infinity : a + b;
+    };
+    let best = Infinity;
+    for (const c of free) best = Math.min(best, through(c));
+    if (!(best < pick.lengths.walled)) {
+        return { refused: { reason: 'the-shortcut-key-costs-more-than-the-shortcut-saves',
+            detail: `the shortcut at (${pick.x},${pick.y}) saves `
+                + `${pick.lengths.walled - pick.lengths.open} step(s) `
+                + `(${pick.lengths.open} open, ${pick.lengths.walled} walled), and the `
+                + `cheapest level-0 cell that can hold \`key_SC\` puts the route through it `
+                + `at ${Number.isFinite(best) ? best : 'no'} step(s) — not shorter than the `
+                + `${pick.lengths.walled}-step LONG WAY. ⛔ A key that costs more to fetch `
+                + 'than its door saves is a lock the solver walks past: the differential '
+                + 'would grade the level INERT, which is the mechanism reporting that '
+                + 'nothing reached it. Measured on `rooms` seed 5 at 11x11 before this '
+                + 'clause existed: geometry 17/19, BFS plan 21 BOTH WAYS.' } };
+    }
+    /** ⛓ THE DRAW IS AMONG EQUALS — every cell tying at the minimum route, in
+     *  the partition's own cell order. Nothing after the pick is a choice. */
+    const cheapest = free.filter((c) => through(c) === best);
+    /**
+     * ⛔⛔ **BOTH WRITES HAPPEN HERE, AFTER BOTH REFUSALS.** The first cut put
+     * the door down before the key search and a key refusal then left the world
+     * holding a `door_SC` nothing could open — an unsolvable room shipped by
+     * the very function whose job is to keep it solvable. ⇒ every refusal above
+     * returns before anything is written, which is `realiseAreaGraph`'s own
+     * clone-and-commit discipline read one function over.
+     */
+    const at = rng.pick(cheapest);
+    setObstacle(world, pick.x, pick.y, doorIdFor(SHORTCUT_SYMBOL));
+    setItem(world, at.x, at.y, keyIdFor(SHORTCUT_SYMBOL));
+    return {
+        door: Object.freeze({ symbol: SHORTCUT_SYMBOL, x: pick.x, y: pick.y }),
+        key: Object.freeze({ symbol: SHORTCUT_SYMBOL, x: at.x, y: at.y }),
+        edge: pick.edge,
+        /** ⛓ WHICH ARM PLACED — `graphify-edge` or `any-cycle-cell`. See the
+         *  docblock: arm 1 is D3's letter and arm 2 is what the rooms offer. */
+        via: pick.via,
+        /** ⛓ THE LAW'S OWN TWO NUMBERS — the GEOMETRIC saving in steps, carried
+         *  out of its `lengths` sink rather than re-walked. The BFS differential
+         *  is the SOLVER's account of the same fact, and a level where the two
+         *  disagree in SIGN is a finding. */
+        lengths: pick.lengths,
+        refused: null,
+    };
 }
 
 /* ══════════════════════════════════════════════════════════════════════
@@ -1510,10 +1839,51 @@ export function mazeModel({
                     partition, graph, rng: roomRng, entrance: entrancePos, goal: goalPos,
                     flagSymbols, forcedCells,
                 });
-                const libs = areaLibraries(graph.symbols, { flagSymbols,
-                    obstacleBase: candidate.obstacleLib, itemBase: candidate.itemLib });
+                /**
+                 * ⛓⛓⛓ **THE ITEM-LOCKED CYCLE EDGE — arc 5, slice 5 (D3).**
+                 * ⛔ BEHIND ONE `if`, and `shortcut=0` is the default: at the
+                 * default this whole block does not execute, spends no draw and
+                 * adds no library entry, which is what keeps every committed
+                 * `--areas=` payload and all nine per-kind CLI md5s
+                 * byte-identical. ⚖ The `chambers=0` law, two knobs on.
+                 *
+                 * ⛓ IT RUNS AFTER THE TREE'S OWN REALISATION and before the
+                 * library is built, for two reasons that are both about order:
+                 * the candidate cells must exclude the K-doors the tree just
+                 * placed (`getObstacle` is what says so), and `SC` must be in
+                 * the library or `isObstacleCleared` would answer TRUE for an
+                 * id it does not hold and the shortcut would open for everybody.
+                 */
+                const wantShortcut = areaValues.shortcut === 1 && !realised.refused;
+                const shortcut = wantShortcut
+                    ? realiseAreaShortcut(candidate, {
+                        partition, graph, rng: roomRng, entrance: entrancePos, goal: goalPos,
+                    })
+                    : null;
+                if (shortcut && !shortcut.refused) {
+                    /** ⛔ LEVEL 0 — *"this door is not what gates an area"*. See
+                     *  `realiseAreaShortcut`'s docblock for why that is a
+                     *  statement about the flood rather than about the lock. */
+                    doorLevels.set(doorIdFor(SHORTCUT_SYMBOL), 0);
+                }
+                const libs = areaLibraries(
+                    shortcut && !shortcut.refused
+                        ? [...graph.symbols, SHORTCUT_SYMBOL] : graph.symbols,
+                    { flagSymbols,
+                        obstacleBase: candidate.obstacleLib, itemBase: candidate.itemLib },
+                );
                 candidate.obstacleLib = libs.obstacleLib;
                 candidate.itemLib = libs.itemLib;
+                /**
+                 * ⛓⛓ **A SHORTCUT REFUSAL DOES NOT THROW THE LEVEL AWAY**, and
+                 * that is a decision rather than a leniency: the shortcut is an
+                 * ADDITION to a tree that is already correct, so a room with no
+                 * cycle to sell is a room that ships without one. ⛔ It is
+                 * RECORDED on its own field, never folded into `refused` — a
+                 * caller reading `areas.refused` must not learn "the area graph
+                 * failed" about a run whose graph is fine.
+                 */
+                const shortcutRefused = shortcut?.refused ?? null;
                 const mismatch = realised.refused
                     ? null : verifyAreaLevels(candidate, { partition, graph, doorLevels });
                 if (!realised.refused && mismatch === null) template = candidate;
@@ -1526,6 +1896,18 @@ export function mazeModel({
                     graph,
                     doors: Object.freeze(realised.doors),
                     keys: Object.freeze(realised.keys),
+                    /** ⛓ OMITTED at `shortcut=0` — the field does not exist on
+                     *  a run that did not ask for one, so no payload moves. */
+                    ...(shortcut && !shortcut.refused ? { shortcut: Object.freeze({
+                        symbol: SHORTCUT_SYMBOL,
+                        door: shortcut.door,
+                        key: shortcut.key,
+                        edge: shortcut.edge,
+                        via: shortcut.via,
+                        lengths: shortcut.lengths,
+                    }) } : {}),
+                    ...(shortcutRefused ? { shortcutRefused: Object.freeze(shortcutRefused) }
+                        : {}),
                     addedObstacles: Object.freeze(Object.keys(libs.addedObstacles)),
                     addedItems: Object.freeze(Object.keys(libs.addedItems)),
                     refused: realised.refused
@@ -2217,6 +2599,17 @@ export function areaSummaryOf(model) {
         refused: info.refused,
         doors: info.doors,
         keys: info.keys,
+        /**
+         * ⛓ arc 5, slice 5 — the ITEM-LOCKED CYCLE EDGE, and BOTH fields are
+         * spread CONDITIONALLY so a run that did not ask for one carries
+         * neither and no committed `--areas=` payload moves (trap 375: two
+         * `null`s are a byte change like any other).
+         * ⛔ `shortcutRefused` is apart from `refused` on purpose: the shortcut
+         * is an ADDITION to a tree that is already correct, and a reader must
+         * not learn "the area graph failed" about a run whose graph is fine.
+         */
+        ...(info.shortcut ? { shortcut: info.shortcut } : {}),
+        ...(info.shortcutRefused ? { shortcutRefused: info.shortcutRefused } : {}),
         graph: info.graph && Object.freeze({
             areas: info.graph.areas,
             edges: info.graph.edges,
@@ -2442,6 +2835,61 @@ export function mazeCostRecords({ model, budget = DEFAULT_MAZE_BUDGET, record, k
         }));
     }
 
+    /**
+     * ⛓⛓⛓ **THE SHORTCUT'S DIFFERENTIAL — THE FIFTH GRADE, ON THE MAZE**
+     * (arc 5, slice 5, D3). ⛔ `null` unless `areas=<n>;shortcut=1` placed one,
+     * so a run that did not ask for a shortcut carries no field and its bytes
+     * do not move.
+     *
+     * ⛓ IT IS THE **SAME TWO ARMS** the symbol rows above run — the finished
+     * level, and the finished level with the KEY removed and the DOOR kept —
+     * and the unit is the BFS **PLAN LENGTH**, this substrate's tick analogue.
+     * What differs is the expected ANSWER: a `K` symbol is a cut, so its
+     * without-arm is `null` and the grade is STRONG; a shortcut is not, so its
+     * without-arm SOLVES and the grade is what
+     * `procgenCore/differentialGrade.gradeDifferential` says about the two plan
+     * lengths — SHORTENS when the key buys a shorter walk.
+     *
+     * ⛔⛔ **THE ARITHMETIC IS THE SHARED ONE AND NOT A SECOND SPELLING.**
+     * Seedling's `procgenRequirements.gradeOf` hands the same function TICKS on
+     * the same day. Two implementations of *which arm is cheaper* is the exact
+     * failure mode this repo keeps recording, and SHORTENS arriving on both
+     * venues at once is when it would have got in.
+     */
+    let shortcut = null;
+    const sc = info?.ran ? info.shortcut ?? null : null;
+    if (sc) {
+        const after = solveTo(record, atGoal);
+        const withoutKey = cloneWorld(record);
+        clearItem(withoutKey, sc.key.x, sc.key.y);
+        const before = solveTo(withoutKey, atGoal);
+        shortcut = Object.freeze({
+            symbol: sc.symbol,
+            door: sc.door,
+            key: sc.key,
+            edge: sc.edge,
+            via: sc.via,
+            planWith: after.plan,
+            expandedWith: after.expanded,
+            /** ⛔ THE WITHOUT-ARM KEEPS THE DOOR AND LOSES THE KEY — the same
+             *  ablation `isCut` uses, and the reason it is that one is arc-1's:
+             *  removing a DOOR can only make a level easier, so that arm solves
+             *  at every seed and is a claim nothing can falsify. */
+            planWithoutKey: before.plan,
+            expandedWithoutKey: before.expanded,
+            /** ⛓ THE GEOMETRIC saving, in steps, from the shortcut law's own
+             *  sink — the number the plan lengths are the SOLVER's account of. */
+            stepsOpen: sc.lengths?.open ?? null,
+            stepsWalled: sc.lengths?.walled ?? null,
+            grade: gradeDifferential({
+                required: after.plan !== null && before.plan === null,
+                withoutVerdict: before.plan === null ? 'REFUSED' : 'SOLVED',
+                withCost: after.plan,
+                withoutCost: before.plan,
+            }),
+        });
+    }
+
     const byName = new Map(MAZE_TEMPLATES.map((t) => [t.name, t]));
     let world = model.skeleton();
     let prev = solveTo(world, atGoal);
@@ -2466,7 +2914,7 @@ export function mazeCostRecords({ model, budget = DEFAULT_MAZE_BUDGET, record, k
         }));
         prev = next;
     }
-    return { elements: Object.freeze(elements), kept: Object.freeze(keptCost) };
+    return { elements: Object.freeze(elements), kept: Object.freeze(keptCost), shortcut };
 }
 
 /**
@@ -2636,6 +3084,10 @@ export function generateMazeLevel({
         summary: Object.freeze({
             ...out.summary,
             ...(cost ? { kept: cost.kept, elements: cost.elements } : {}),
+            /** ⛓ arc 5, slice 5 — OMITTED unless `areas=<n>;shortcut=1` placed
+             *  one, so no run that did not ask for a shortcut carries a field
+             *  for it and the per-kind CLI md5s do not move. */
+            ...(cost?.shortcut ? { shortcut: cost.shortcut } : {}),
             /**
              * ⛓ THE AREA BLOCK, beside `skeleton`'s — the spec that ran, what
              * the partition found, the graph's own bounds and draws, and the

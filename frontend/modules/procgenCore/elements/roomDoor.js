@@ -26,6 +26,19 @@ export const NB4 = Object.freeze([[0, -1], [0, 1], [-1, 0], [1, 0]]);
 export const cellKey = (x, y) => `${x},${y}`;
 
 /**
+ * ⛓⛓⛓ **THE TWO REFUSALS THIS FILE RAISES** — PROCGEN ELEMENTS arc 5, slice 5.
+ *
+ * `pocketFor` is the only thing here that refuses, and it does so by NAME, so
+ * the names get a census key where they are raised. ⛔ **AND THE ELEMENTS STILL
+ * DECLARE THEM TOO**, which is not a duplicate: `KILL_GATE_REFUSALS`'
+ * `SHORTCUT_REFUSALS`' and `BLOCK_POCKET_REFUSALS`' axis is the ELEMENT — what
+ * a caller who asked for that head can meet — and this one's axis is the FILE.
+ * Both are true, neither is a copy, and it is the same arrangement
+ * `SEEDLING_ELEMENT_REFUSALS` and `MAZE_REFUSALS` have had since P5.
+ */
+export const ROOM_DOOR_REFUSALS = Object.freeze(['no-pocket', 'pocket-not-legal']);
+
+/**
  * ⛓⛓⛓ **THE MINIMUM DISTANCE FROM THE GOAL — trap 348, paid at the SITE
  * PICKER rather than at the solver** (⚖ the orchestrating session's line,
  * arc-3 §11.13).
@@ -269,4 +282,63 @@ export function bodyRegion(room, from, { writes = new Map(), walled = [] } = {})
         }
     }
     return { region, boundary };
+}
+
+/**
+ * ⛓⛓ **WHERE THE OPENER STANDS — the pocket for ONE candidate**: `{cell,
+ * carved}` or `{refused}`.
+ *
+ * ⛔ THE CANDIDATES ARE THE 4-NEIGHBOURS OF `before`, THE START-SIDE PATH CELL,
+ * and that is what makes the pocket start-side BY CONSTRUCTION rather than by
+ * luck — `before` is on the start's side of the door by definition of a path.
+ * Clause 2 of the door law asserts it anyway, because "by construction" is a
+ * claim and the flood is a measurement.
+ *
+ * ⛓⛓⛓ **IT MOVED HERE FROM `killGate.js` IN ARC 5, SLICE 5, AND THE MOVE IS
+ * VERBATIM.** The SHORTCUT element stands in the same place as the kill gate
+ * and puts its body in the same kind of pocket; the only thing that differs
+ * between them is WHICH LAW adjudicates the door. A second copy of this search
+ * would be a second answer to *"where does the opener go"*, and the day they
+ * disagreed one element would place where the other refused — which is the
+ * exact argument that put `growWall` and `doorCandidates` in this file in the
+ * first place. ⛔ The kill gate's three committed levels are byte-identical
+ * across the move (`d48f424f…`/`4f736b5e…`/`3dd61600…`), which is what says it
+ * was a move.
+ */
+export function pocketFor(room, cand, wall, { preferOpen }) {
+    const onWall = new Set(wall.map((c) => cellKey(c.x, c.y)));
+    const onPath = new Set(room.mainPath.map((c) => cellKey(c.x, c.y)));
+    const open = [];
+    const carvable = [];
+    let sawCandidate = false;
+    for (const [dx, dy] of NB4) {
+        const x = cand.before.x + dx;
+        const y = cand.before.y + dy;
+        const k = cellKey(x, y);
+        if (!inInterior(room, x, y)) continue;
+        if (onWall.has(k) || onPath.has(k)) continue;
+        if ((x === room.start.x && y === room.start.y)
+            || (x === room.goal.x && y === room.goal.y)) continue;
+        sawCandidate = true;
+        if (room.floorAt(x, y)) {
+            open.push({ cell: { x, y }, carved: false,
+                neighbours: floorNeighboursAfter(room, writesOf(tilesFor(wall)), x, y) });
+            continue;
+        }
+        /**
+         * ⛔ A CARVE IS A DEAD END, and the element pre-checks the clause it can
+         * see: after this element's writes the cell must have EXACTLY ONE floor
+         * neighbour. The binding runs slice 2's carve rule in full (one blob,
+         * one mouth, no shortcut) on the way in — this is the proposal, that is
+         * the legality.
+         */
+        const writes = writesOf(tilesFor(wall, [{ x, y }]));
+        if (floorNeighboursAfter(room, writes, x, y) === 1) {
+            carvable.push({ cell: { x, y }, carved: true, neighbours: 1 });
+        }
+    }
+    if (preferOpen) open.sort((a, b) => b.neighbours - a.neighbours);
+    const chosen = open[0] ?? carvable[0] ?? null;
+    if (chosen) return chosen;
+    return { refused: sawCandidate ? 'pocket-not-legal' : 'no-pocket' };
 }

@@ -1984,18 +1984,60 @@ export const TERMS = Object.freeze([
     t({
         id: 'grade',
         term: 'a grade',
-        aliases: ['STRONG', 'WEAK', 'BOUND-DEPENDENT', 'INERT', 'NOT-ESTABLISHED'],
+        aliases: ['STRONG', 'WEAK', 'BOUND-DEPENDENT', 'INERT', 'SHORTENS', 'NOT-ESTABLISHED'],
         area: 'level-gen',
         plain: 'How strongly the level actually depends on the item that was asked for — from '
-            + '"cannot be finished without it" down to "makes no difference".',
-        detail: 'Five, from `procgenRequirements.js`: **STRONG** / **BOUND-DEPENDENT** / '
-            + '**WEAK** / **INERT** / **NOT-ESTABLISHED**, with seven named refusals and exit '
-            + '6 when the directive cannot be met. ⛓ Seed 30 is the seed the '
-            + '[demand](#demand) rescued: before it, the kill lock was cleared by pass-2 '
+            + '"cannot be finished without it" down to "makes no difference", plus one word '
+            + 'for "you can finish without it, but it is a shorter walk with it".',
+        detail: '**SIX**, and the arithmetic lives in ONE place for both substrates '
+            + '(`procgenCore/differentialGrade.js`): **STRONG** / **BOUND-DEPENDENT** / '
+            + '**WEAK** / **INERT** / **SHORTENS** / **NOT-ESTABLISHED**, with seven named '
+            + 'refusals and exit 6 when the directive cannot be met. ⛓ Seed 30 is the seed '
+            + 'the [demand](#demand) rescued: before it, the kill lock was cleared by pass-2 '
             + '*water* and the directive graded WEAK; the gate now declares a demand on its '
             + 'body\'s region and the same seed grades STRONG.',
         where: [{ label: 'architecture.md § Pass 1', doc: PASS1 }],
-        seeAlso: ['require-directive', 'requirements-differential', 'demand', 'graded-refusal'],
+        seeAlso: ['require-directive', 'requirements-differential', 'demand', 'graded-refusal',
+            'shortens', 'shortcut-law'],
+    }),
+    t({
+        id: 'shortens',
+        term: 'SHORTENS',
+        aliases: ['the fifth grade', 'an item-gated shortcut'],
+        area: 'level-gen',
+        plain: 'The level can be finished WITHOUT the item — the long way round — and the '
+            + 'item buys a shorter walk.',
+        detail: 'The differential\'s fifth grade (⚖ design §4.5): **both arms solve, and the '
+            + 'WITH arm is STRICTLY cheaper**. It was NAMED in arc 3 and left uncomputed on '
+            + 'trap 355\'s rule — *a grade nothing can reach is not a grade* — because no '
+            + 'element granted a shortcut; arc 5 slice 5 computed it and reached it. ⛓ The '
+            + 'unit is the CALLER\'s: Seedling hands TICKS, the maze hands BFS PLAN LENGTH. '
+            + '⛔ It does NOT meet a `require:` directive — a shortcut is the case where the '
+            + 'level solves WITHOUT the item, and "requires X" is the case where it does '
+            + 'not. ⚠ Its FIRST witness is the maze (`--areas=\'1;shortcut=1\'`); the '
+            + 'Seedling venue is blocked by three measured walls in the SOLVER and the '
+            + 'ENGINE, named in `procgenCore/elements/shortcut.js`.',
+        where: [{ label: 'architecture.md § Pass 1', doc: PASS1 }],
+        seeAlso: ['grade', 'requirements-differential', 'shortcut-law', 'cut'],
+    }),
+    t({
+        id: 'shortcut-law',
+        term: 'the shortcut law',
+        aliases: ['a shortcut', 'the cycle edge'],
+        area: 'level-gen',
+        plain: 'The rule that says a lock is a SAVING rather than a REQUIREMENT: wall it and '
+            + 'the goal is still reachable, just further away.',
+        detail: 'The [door law](#door-law)\'s clause 1 with the quantifier FLIPPED, spelled '
+            + 'ONCE for both substrates in `procgenCore/gridFlood.shortcutLawRefusal` and '
+            + 'BESIDE the door law rather than instead of it. Four clauses: the open half '
+            + '(its terrain does not seal the room), **still connected** (walled, the goal '
+            + 'REMAINS reachable — else it is a door), **strictly shorter** (else the lock is '
+            + 'decoration with a key in front of it), and start-side (the opener is not '
+            + 'behind its own shortcut). ⛔ It reads the TERRAIN flood, so entities are '
+            + 'invisible to it: a cell it calls a cycle edge can still be a cut of the '
+            + 'OBSTACLE graph, and the [grade](#grade) is what catches that.',
+        where: [{ label: 'architecture.md § Pass 1', doc: PASS1 }],
+        seeAlso: ['door-law', 'cut', 'shortens', 'area-graph'],
     }),
     t({
         id: 'biome',

@@ -44,7 +44,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 9,
+            "count": 10,
             "id": "census"
         },
         {
@@ -164,13 +164,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 208,
+        "blockStyle": 209,
         "browser": 72,
-        "cited": 60,
-        "files": 227,
+        "cited": 61,
+        "files": 228,
         "lineStyle": 19,
-        "withDocblock": 227,
-        "withFlags": 136
+        "withDocblock": 228,
+        "withFlags": 137
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -412,6 +412,53 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "build-dj-loader-swf.mjs — produce the loader-injected wide Doodle Jump SWF as a FILE, for consumers that need a URL instead of in-memory bytes: the real-DJ renderer's native-Flash tier (NPAPI plugins stream the movie by URL) and the SWFRecomp recompile input (flasharchive/Doodle_Jump_loader/test.swf).",
             "path": "scripts/procgen/build-dj-loader-swf.mjs"
+        },
+        {
+            "argvHelpers": [
+                "SEEDS",
+                "arg"
+            ],
+            "browser": false,
+            "category": "census",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "json",
+                "kinds",
+                "seeds",
+                "steps"
+            ],
+            "file": "census-maze-keeps.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "kinds"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "seeds"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "steps"
+                }
+            ],
+            "oneLiner": "census-maze-keeps — **THE MAZE'S `solved-only` KEEP CLASS, COUNTED** — PROCGEN ELEMENTS arc 5, slice 5 (D5; ⚖ arc-5 ruling 4).",
+            "path": "scripts/procgen/census-maze-keeps.mjs"
         },
         {
             "argvHelpers": [
@@ -2000,7 +2047,8 @@ export const INSTRUMENTS = frz({
             "category": "generate",
             "citedBy": [
                 "docs/json/developer/procgen/architecture.md",
-                "docs/json/developer/procgen/maze.md"
+                "docs/json/developer/procgen/maze.md",
+                "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [

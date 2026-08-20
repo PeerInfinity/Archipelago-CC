@@ -96,8 +96,13 @@
  */
 
 import { TILE_FLOOR } from '../shared/procgen/mazeAlgorithms/gridTiles.js';
-import { DIR_DELTA, chooseEntryPort, guardIdsFor } from '../procgenCore/elements.js';
+import {
+    DIR_DELTA, LAW_CUT, LAW_SHORTCUT, chooseEntryPort, guardIdsFor,
+} from '../procgenCore/elements.js';
 import { KILL_BODY_ID, KILL_DOOR_ID } from '../procgenCore/elements/killGate.js';
+import {
+    SHORTCUT_BODY_ID, SHORTCUT_DOOR_ID,
+} from '../procgenCore/elements/shortcut.js';
 import { connected, reachableFrom, shortestPath } from '../procgenCore/gridFlood.js';
 import { ELEMENT_TABLE, NONE as ELEMENTS_NONE } from '../procgenCore/elementSpec.js';
 
@@ -165,6 +170,16 @@ export const SEEDLING_ELEMENT_REFUSALS = Object.freeze([
     'the-elements-carve-is-not-legal',
     'the-elements-door-is-not-a-cut',
     'the-elements-write-lands-on-the-start-or-the-goal',
+    /**
+     * ⛓⛓ arc 5, slice 5 — the SHORTCUT's own two, named APART from
+     * `the-elements-door-is-not-a-cut` on the same rule that split
+     * `no-cut-for-the-kill-lock` off `no-cut-for-the-flag-lock` one slice
+     * earlier: a census that filed a shortcut's refusal under "the door was not
+     * a cut" would say the opposite of what happened, about a thing whose whole
+     * job is not being a cut.
+     */
+    'the-elements-shortcut-is-not-a-shortcut',
+    'the-elements-shortcut-law-is-not-offered',
     /** ⛓⛓ P5 — THE NAME THE LIST WAS MISSING, and unlike the three above it
      *  this one FIRES ON REAL DATA: slice 2's carve rule's NO-SHORTCUT clause,
      *  re-asked of the whole composite, refused 4 of the census's cells. It is
@@ -757,6 +772,7 @@ export function compositeSeedlingElement({
  */
 export function compositeSeedlingOnConnector({
     width, height, groundAt, skeletonWallAt, placement, start, goal, doorLaw, carveLaw,
+    law = LAW_CUT, shortcutLaw = null,
 }) {
     const painted = new Map();
     for (const t of placement.tiles) {
@@ -821,17 +837,52 @@ export function compositeSeedlingOnConnector({
         }
     }
 
-    // ── (iii) THE DOOR LAW — both clauses, plus the open half ───────────
-    const doorWhy = doorLaw({
-        paintedFor: (walled) => (x, y) => {
-            if (walled && walled.has(`${x},${y}`)) return false;
-            return at(x, y);
-        },
-        doorKeys: new Set(placement.doorCells.map((c) => `${c.x},${c.y}`)),
-        clearerKeys: placement.clearer.map((c) => `${c.x},${c.y}`),
-    });
-    if (doorWhy) {
-        return { refused: { reason: 'the-elements-door-is-not-a-cut', detail: doorWhy } };
+    /**
+     * ── (iii) THE DOOR LAW — both clauses, plus the open half ───────────
+     *
+     * ⛓⛓⛓ **OR ITS INVERSE, AND THE ELEMENT IS WHAT SAYS WHICH** (arc 5, slice
+     * 5, D1). An `on-connector` element declares `law` — `'cut'` for every one
+     * written before arc 5, `'shortcut'` for the SWORD-GATED SHORTCUT — and the
+     * commit asks THAT law, on the placement that is about to ship.
+     *
+     * ⛔ **IT IS NOT A BRANCH THIS FILE INVENTED.** The element's `construct`
+     * filtered its candidates with one of the two laws; a commit that asked the
+     * other would refuse every placement the element accepted (a shortcut is
+     * never a cut — that is its definition), and a binding that guessed from the
+     * element's NAME would be a second table of which elements are shortcuts
+     * kept in a different file from the first. ⇒ the declaration travels with
+     * the element, exactly as `phase` does.
+     *
+     * ⛓ AND THE REFUSAL NAME IS THE LAW'S. `the-elements-door-is-not-a-cut` is
+     * a sentence about a DOOR; a census that filed a shortcut's refusal under it
+     * would say "the door was not a cut" about a thing whose whole job is not
+     * being one.
+     */
+    const paintedFor = (walled) => (x, y) => {
+        if (walled && walled.has(`${x},${y}`)) return false;
+        return at(x, y);
+    };
+    const doorKeys = new Set(placement.doorCells.map((c) => `${c.x},${c.y}`));
+    const clearerKeys = placement.clearer.map((c) => `${c.x},${c.y}`);
+    if (law === LAW_SHORTCUT) {
+        if (typeof shortcutLaw !== 'function') {
+            return { refused: { reason: 'the-elements-shortcut-law-is-not-offered',
+                detail: 'the element declares `law: "shortcut"` and the binding offered no '
+                    + '`shortcutLaw`. ⛔ Falling back to the door law would adjudicate the '
+                    + 'placement by the rule it was built to fail, so the run refuses BY NAME '
+                    + 'instead — a binding that cannot ask the inverse cannot host a '
+                    + 'shortcut, and that is a fact about the binding.' } };
+        }
+        const why = shortcutLaw({ paintedFor, doorKeys, clearerKeys });
+        if (why) {
+            return { refused: { reason: 'the-elements-shortcut-is-not-a-shortcut',
+                detail: why } };
+        }
+    } else {
+        const doorWhy = doorLaw({ paintedFor, doorKeys, clearerKeys });
+        if (doorWhy) {
+            return { refused: { reason: 'the-elements-door-is-not-a-cut', detail: doorWhy } };
+        }
     }
 
     return { placed: Object.freeze({
@@ -884,6 +935,9 @@ export function compositeSeedlingOnConnector({
  *                           `refineStrategy` takes to `kill`
  *   `killgate_body`      -> `spinner {tag:'-1'}`            the body whose death
  *                           opens it; `tag:'-1'` is the palette row's own
+ *   `shortcut_door`      -> `lock {tset:'-1', tag:<own>}`   arc 5 slice 5 — the
+ *                           SAME lock, chosen by the INVERSE law
+ *   `shortcut_body`      -> `spinner {tag:'-1'}`            the same body
  *   the block            -> `pushableblock`                 `PushableBlock.as:27`
  *                           is `type = "Solid"`, which is why a block in a
  *                           corridor is a door at all
@@ -910,6 +964,26 @@ export function seedlingOnConnectorEntities({ placed, tagFor }) {
             continue;
         }
         if (e.id === KILL_BODY_ID) {
+            entities.push({ type: 'spinner', tx: e.x, ty: e.y, attrs: { tag: '-1' } });
+            continue;
+        }
+        /**
+         * ⛓⛓⛓ **THE SHORTCUT'S TWO ARE THE KILL GATE'S TWO** (arc 5, slice 5).
+         * ⛔ The REALISATION is identical on purpose — a `tset:-1` lock and the
+         * spinner whose death clears it — because the mechanism IS the kill
+         * gate's; what differs is the LAW that chose the cell, and a law is not
+         * something an entity carries. ⚠ Two ids rather than a re-used pair, so
+         * a payload, a census and a lifted claim can each say WHICH element put
+         * the lock there without inferring it from the room.
+         */
+        if (e.id === SHORTCUT_DOOR_ID) {
+            const tag = tagFor();
+            tags.lock = tag;
+            entities.push({ type: 'lock', tx: e.x, ty: e.y,
+                attrs: { tset: '-1', tag: String(tag) } });
+            continue;
+        }
+        if (e.id === SHORTCUT_BODY_ID) {
             entities.push({ type: 'spinner', tx: e.x, ty: e.y, attrs: { tag: '-1' } });
             continue;
         }

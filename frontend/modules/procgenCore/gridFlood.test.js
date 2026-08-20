@@ -8,7 +8,10 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { GridFloodError, connected, reachableFrom, shortestPath } from './gridFlood.js';
+import {
+    GridFloodError, SHORTCUT_LAW_CLAUSES, connected, reachableFrom, shortcutLawRefusal,
+    shortestPath,
+} from './gridFlood.js';
 
 /**
  * `#` is wall, anything else is walkable. Rows are given top-to-bottom, so the
@@ -310,5 +313,180 @@ describe('shortestPath — ONE path, not just its existence (arc 3 slice 1)', ()
         };
         shortestPath(5, 3, counted, { x: 0, y: 0 }, { x: 4, y: 2 });
         for (const [k, n] of calls) expect(n, k).toBe(1);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ THE SHORTCUT LAW — arc 5, slice 5 (D1)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * The law's own argument shape, built from an ASCII room. ⛔ `walkableFor` is
+ * the caller's predicate WITH a key set forced solid — the SAME shape
+ * `doorLawRefusal` takes, which is what lets an element ask either law without
+ * building the room twice.
+ */
+const lawOn = (rows, { door, clearer = [], start, goal }) => {
+    const g = grid(rows);
+    const keys = new Set(door.map((c) => `${c.x},${c.y}`));
+    const lengths = {};
+    const why = shortcutLawRefusal({
+        width: g.width,
+        height: g.height,
+        walkableFor: (walled) => (x, y) => {
+            if (walled && walled.has(`${x},${y}`)) return false;
+            return g.isWalkable(x, y);
+        },
+        start,
+        goal,
+        doorKeys: keys,
+        clearerKeys: clearer.map((c) => `${c.x},${c.y}`),
+        name: 'the test\'s shortcut',
+        lengths,
+    });
+    return { why, lengths };
+};
+
+/**
+ * ⛓ THE CANONICAL SHORTCUT ROOM. A 7x5 loop: the top row is the SHORT arc, the
+ * bottom three rows are the LONG one. `S` is (0,0), `G` is (6,0), and the
+ * shortcut cell is (3,0) — walling it forces the walk down and around.
+ *
+ *      S..*..G      row 0 — the short arc, `*` = the shortcut cell
+ *      #.###.#      row 1
+ *      #.....#      row 2 — the long arc
+ *      #######      row 3
+ */
+const LOOP = [
+    '.......',
+    '#.###.#',
+    '#.....#',
+    '#######',
+];
+const S = { x: 0, y: 0 };
+const G = { x: 6, y: 0 };
+
+describe('shortcutLawRefusal — the door law\'s clause 1, INVERTED', () => {
+    it('⛓⛓⛓ ACCEPTS a real shortcut, and reports what it saves', () => {
+        const { why, lengths } = lawOn(LOOP, { door: [{ x: 3, y: 0 }], start: S, goal: G });
+        expect(why).toBeNull();
+        // 6 steps along the top; the detour is down, across and back up.
+        expect(lengths.open).toBe(6);
+        expect(lengths.walled).toBe(10);
+        expect(lengths.walled).toBeGreaterThan(lengths.open);
+    });
+
+    /**
+     * ⛔⛔ **THE MUTANT (a) ROW.** Drop the "still connected" clause and a
+     * shortcut that IS a cut ships. This is the room where that happens: a
+     * plain corridor, whose one cell walled leaves the goal unreachable. The
+     * law must refuse it BY NAME and hand the caller to the DOOR law.
+     */
+    it('⛔ a CUT is refused by name — `the-shortcut-is-a-cut`', () => {
+        const { why } = lawOn(['.....'], { door: [{ x: 2, y: 0 }], start: { x: 0, y: 0 },
+            goal: { x: 4, y: 0 } });
+        expect(why).toMatch(/IS A CUT/);
+        expect(why).toMatch(/doorLawRefusal/);
+        expect(why).toMatch(/grades STRONG, never SHORTENS/);
+    });
+
+    /**
+     * ⛓⛓ A cell OFF every shortest route: the room stays connected AND the walk
+     * does not get longer, so the lock would be decoration with a key in front
+     * of it and the differential would grade the item INERT.
+     */
+    it('⛔ a cell that changes no route is refused — `the-shortcut-does-not-shorten`', () => {
+        const { why } = lawOn([
+            '.....',
+            '.....',
+        ], { door: [{ x: 2, y: 1 }], start: { x: 0, y: 0 }, goal: { x: 4, y: 0 } });
+        expect(why).toMatch(/DOES NOT SHORTEN/);
+        expect(why).toMatch(/4 step\(s\) with those cell\(s\) open and 4 with them walled/);
+    });
+
+    /**
+     * ⛓ AND THE BOUNDARY IS **STRICT**. A cell whose walling leaves the walk
+     * exactly as long is NOT a shortcut, and the law says so at the boundary
+     * rather than one step away from it.
+     */
+    it('⛔ EQUAL lengths are not a shortening — the comparison is strict', () => {
+        /**
+         * ⛓ THE CELL IS ON *A* SHORTEST PATH AND THE ROOM HOLDS ANOTHER OF THE
+         * SAME LENGTH — the case a non-strict comparison would let through, and
+         * the one a room with an obviously-longer detour cannot produce.
+         *
+         *      S.*        (1,0) is on a 3-step route to (2,1)…
+         *      ..G        …and going down first is also 3.
+         */
+        const { why } = lawOn([
+            '...',
+            '...',
+        ], { door: [{ x: 1, y: 0 }], start: { x: 0, y: 0 }, goal: { x: 2, y: 1 } });
+        expect(why).toMatch(/DOES NOT SHORTEN/);
+        expect(why).toMatch(/3 step\(s\) with those cell\(s\) open and 3 with them walled/);
+    });
+
+    it('⛔ terrain that seals the room is refused — the door law\'s own open half', () => {
+        const { why } = lawOn([
+            '..#..',
+        ], { door: [{ x: 1, y: 0 }], start: { x: 0, y: 0 }, goal: { x: 4, y: 0 } });
+        expect(why).toMatch(/TERRAIN SEALS the room/);
+    });
+
+    /**
+     * ⛓⛓⛓ **THE START-SIDE CLAUSE IS NOT FREE HERE**, and this room is why: the
+     * loop keeps the goal reachable with the shortcut walled (clause 1 passes)
+     * and the OPENER sits in a nub whose only mouth is the shortcut cell
+     * itself. The player would have to take the short way to earn the right to
+     * take the short way.
+     *
+     *      ###o###   `o` (3,0) — a dead-end nub off the SHORT arc
+     *      S..*..G   `*` (3,1) — the shortcut cell
+     *      #.###.#
+     *      #.....#   the LONG arc, which does not reach `o` at all
+     *      #######
+     */
+    it('⛔ an opener BEHIND its own shortcut is refused by name', () => {
+        const rows = [
+            '###o###',
+            '...*...',
+            '#.###.#',
+            '#.....#',
+            '#######',
+        ].map((r) => r.replace(/[o*]/g, '.'));
+        const { why } = lawOn(rows, {
+            door: [{ x: 3, y: 1 }],
+            clearer: [{ x: 3, y: 0 }],
+            start: { x: 0, y: 1 },
+            goal: { x: 6, y: 1 },
+        });
+        expect(why).toMatch(/OPENER cell \(3,0\)/);
+        expect(why).toMatch(/BEHIND the shortcut/);
+    });
+
+    it('⛓ the opener ON the start side passes the clause', () => {
+        const { why } = lawOn(LOOP, {
+            door: [{ x: 3, y: 0 }], clearer: [{ x: 1, y: 2 }], start: S, goal: G,
+        });
+        expect(why).toBeNull();
+    });
+
+    it('⛓ the `lengths` sink is filled ONLY on acceptance', () => {
+        const refused = lawOn(['.....'], { door: [{ x: 2, y: 0 }], start: { x: 0, y: 0 },
+            goal: { x: 4, y: 0 } });
+        expect(refused.lengths.open).toBeUndefined();
+        expect(refused.lengths.walled).toBeUndefined();
+    });
+
+    /**
+     * ⛔ THE CLAUSE LIST IS NOT A CENSUS KEY (see its docblock) — the law
+     * returns TEXT and each CALLER files the answer under its own refusal
+     * name. This row pins the vocabulary and its ORDER, which is the order the
+     * clauses are asked in and therefore which one a room meets first.
+     */
+    it('⛓ the four CLAUSES are declared in the order the law asks them', () => {
+        expect(SHORTCUT_LAW_CLAUSES).toEqual([
+            'seals-the-room', 'is-a-cut', 'does-not-shorten', 'opener-behind-the-door',
+        ]);
     });
 });

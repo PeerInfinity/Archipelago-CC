@@ -627,10 +627,37 @@ try {
     check(dText.includes(d.outcome) && dText.includes(d.instance),
         'and the directives pane PRINTS it (instance + outcome), on the page', dText.trim());
     if (d.outcome === 'KEPT') {
-        check(/NO verb to discharge|first-SOLVED/.test(dText),
-            '⛔ a KEPT row says WHICH KIND OF KEEP it was — the v1 maze palette declares no '
-            + 'verbs, so the honest sentence is "this family has NO verb to discharge"',
+        /**
+         * ⛓⛓⛓ **THE RETIREMENT'S PAGE GATE — PROCGEN ELEMENTS arc 5, slice 5.**
+         * ⚖ Ruling 4 retired `KEEP_POLICY.PREFER_DISCHARGE` on the maze at a
+         * MEASURED zero (`census-maze-keeps.mjs`: 0 `solved-only` of 1944
+         * directed attempts), so this row's sentence CHANGED — from *"this
+         * family has NO verb to discharge"* to *"the keep policy was
+         * first-SOLVED, so nothing asked"*. Those are different claims about
+         * different questions, and the old regex admitted BOTH, so it would
+         * have passed the retirement in silence.
+         *
+         * ⛔ IT NOW ASSERTS THE SURVIVING ONE AND REFUSES THE RETIRED ONES BY
+         * NAME. `solved-only` on this page would mean a shortfall nobody looked
+         * for; `NO verb to discharge` would mean the preference RAN and found
+         * nothing to prefer. Neither is true any more, and a row that tolerated
+         * either would be the gate that cannot see its own mover (trap 376).
+         *
+         * ⚠ AND THE md5 IDENTITIES CANNOT SEE THIS AT ALL: no committed maze
+         * identity runs a directive, which slice 5's mutant (d) measured
+         * directly (324 of 324 solved-only, every md5 byte-identical). This row
+         * is one of the three things that DO gate the retirement.
+         */
+        check(/the keep policy was first-SOLVED/.test(dText)
+            && !/solved-only/.test(dText) && !/NO verb to discharge/.test(dText),
+            '⛔⛔ a KEPT row says the policy was FIRST-SOLVED and nothing asked about a verb '
+            + '— ⚖ arc-5 ruling 4 retired `PREFER_DISCHARGE` on the maze, so `solved-only` '
+            + 'and "NO verb to discharge" are both sentences about a question nobody puts',
             dText.trim());
+        check(d.keptKind === null,
+            '⛓ …and the RECORD agrees with the page — `keptKind` is null under FIRST_SOLVED, '
+            + 'which is a VALUE beside the sentence rather than an echo of it',
+            JSON.stringify({ keepPolicy: d.keepPolicy, keptKind: d.keptKind }));
     }
     check(directed.identity.includes('1 directed attempt(s)'),
         'and the identity line counts the directed attempt', directed.identity);

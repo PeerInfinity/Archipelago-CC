@@ -302,3 +302,214 @@ export function shortestPath(width, height, isWalkable, from, to) {
     }
     return out.reverse();
 }
+
+/**
+ * ⛓⛓⛓ **HOW FAR EVERY REACHABLE CELL IS** — the same 4-neighbour walk
+ * `reachableFrom` makes, keeping the DISTANCE it already computed.
+ *
+ * PROCGEN ELEMENTS arc 5, slice 5. ⛔ A FOURTH member of this family and not a
+ * fourth FLOOD: `reachableFrom`'s answer is exactly this Map's key set, and
+ * `shortestPath`'s answer is one walk back along it. It exists because arc 5's
+ * shortcut binding has to ask *"which free cell makes the shortest route
+ * THROUGH it"* of every candidate cell at once, and asking `shortestPath` once
+ * per cell is |cells| walks where one answers.
+ *
+ * ⚠ IT IS KEPT SEPARATE FROM `reachableFrom` RATHER THAN REPLACING ITS BODY.
+ * That function's contract includes *"calls the predicate at most ONCE per
+ * cell"*, which its own row drives; re-expressing it over this Map would make
+ * every caller allocate a distance nobody asked for, on the hot path both
+ * bindings' legality rules run.
+ *
+ * @returns {Map<string, number>} `"x,y" -> steps from `from``, including `from`
+ *   itself at 0. A cell absent from the Map is unreachable.
+ */
+export function distancesFrom(width, height, isWalkable, from) {
+    for (const [n, v] of [['width', width], ['height', height]]) {
+        if (!Number.isInteger(v) || v <= 0) {
+            fail(`gridFlood: ${n} must be a positive integer, got ${JSON.stringify(v)}.`);
+        }
+    }
+    if (typeof isWalkable !== 'function') {
+        fail('gridFlood: `isWalkable(x, y)` must be a function — the PREDICATE is the '
+            + 'caller\'s and the flood is shared.');
+    }
+    assertCell(from, '`from`', width, height);
+    const out = new Map();
+    if (!isWalkable(from.x, from.y)) return out;
+    const seen = new Uint8Array(width * height);
+    const start = from.x + from.y * width;
+    seen[start] = 1;
+    out.set(`${from.x},${from.y}`, 0);
+    let frontier = [start];
+    let steps = 0;
+    while (frontier.length > 0) {
+        steps += 1;
+        const next = [];
+        for (const i of frontier) {
+            const x = i % width;
+            const y = (i - x) / width;
+            for (const [dx, dy] of [[0, -1], [0, 1], [-1, 0], [1, 0]]) {
+                const nx = x + dx;
+                const ny = y + dy;
+                if (nx < 0 || ny < 0 || nx >= width || ny >= height) continue;
+                const ni = nx + ny * width;
+                if (seen[ni]) continue;
+                seen[ni] = 1;
+                if (!isWalkable(nx, ny)) continue;
+                out.set(`${nx},${ny}`, steps);
+                next.push(ni);
+            }
+        }
+        frontier = next;
+    }
+    return out;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ THE SHORTCUT LAW — PROCGEN ELEMENTS arc 5, slice 5 (D1)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓ THE FOUR CLAUSES `shortcutLawRefusal` can refuse on, in the order it asks
+ * them.
+ *
+ * ⛔⛔ **THIS IS NOT A REFUSAL-CENSUS KEY, AND THE DIFFERENCE MATTERS.** The law
+ * returns TEXT and never a `reason:` name — it is a rule, not a binding — so
+ * each CALLER files the answer under its own census name: the Seedling element
+ * says `the-shortcut-is-a-cut` / `the-shortcut-does-not-shorten`
+ * (`SHORTCUT_REFUSALS`), the Seedling composite says
+ * `the-elements-shortcut-is-not-a-shortcut`, and the maze says
+ * `no-cell-can-carry-a-shortcut`. Declaring these four as a census key would
+ * put four names in the reference's refusal table that no source raises, which
+ * is the failure `refusalCensus.test.js` exists to catch in the other
+ * direction. ⇒ they are the CLAUSE vocabulary, exported so a caller's mapping
+ * can be read against them.
+ */
+export const SHORTCUT_LAW_CLAUSES = Object.freeze([
+    'seals-the-room', 'is-a-cut', 'does-not-shorten', 'opener-behind-the-door',
+]);
+
+/**
+ * ⛓⛓⛓ **THE SHORTCUT LAW — THE DOOR LAW'S CLAUSE 1, INVERTED, AND IT IS
+ * SPELLED BESIDE THE DOOR LAW RATHER THAN INSTEAD OF IT.**
+ *
+ * PROCGEN ELEMENTS arc 5, slice 5 (D1). Arc-3 §9's DOOR LAW says a door is a
+ * CUT: *with the door cell(s) walled the GOAL is UNREACHABLE from the START.*
+ * ⛔ **THAT LAW IS UNCHANGED AND STILL BINDS EVERY DOOR.** A SHORTCUT is the
+ * other thing a lockable cell can be, and it needs its own rule because the
+ * door law would refuse it by name (`… is NOT A CUT … the wall is DECORATION`)
+ * — which is the RIGHT answer about a door and the WRONG one about a shortcut.
+ *
+ * Four clauses, and the middle two are the law:
+ *
+ *  0. **OPEN HALF** — with the shortcut's cell(s) WALKABLE the goal is
+ *     reachable from the start. The door law's `askOpenHalf`, carried over
+ *     verbatim: a shortcut whose own terrain seals the room is not a shortcut.
+ *  1. **STILL CONNECTED** — with them WALLED the goal REMAINS reachable. This
+ *     is the door law's clause 1 with the quantifier flipped, and it is what
+ *     makes the level solvable WITHOUT the opener: *the long arc the level
+ *     already provides.*
+ *  2. **STRICTLY SHORTER** — the shortest start→goal path with the cell(s) open
+ *     is STRICTLY SHORTER than with them walled. ⛔ Without this clause a
+ *     "shortcut" that changes no route at all would pass, and the differential
+ *     would grade the item INERT on a level that shipped a lock for it — the
+ *     mechanism would exist and the grade would say nothing reached it.
+ *  3. **START-SIDE** — with them walled, every opener cell is reachable from
+ *     the start. ⛓ Carried over from the door law UNCHANGED, and it is not
+ *     free here even though clause 1 keeps the room connected: the opener could
+ *     sit inside a pocket whose ONLY mouth is the shortcut cell itself, and
+ *     then the thing that opens the shortcut is behind the shortcut.
+ *
+ * ⛔⛔ **CLAUSE 2 IS WHY THIS TAKES `shortestPath` AND THE DOOR LAW DOES NOT.**
+ * A cut law only ever needs *is there a way*; a shortcut law needs *how long is
+ * the way*, twice. That is two full BFS walks per candidate against the door
+ * law's one early-exit `connected`, and it is the price the fifth grade costs.
+ * Named rather than hidden: an element that asks this of every main-path cell
+ * pays 2·|path| walks, which is why `buildShortcut` asks the CHEAP clauses (1
+ * before 2) first and lets most candidates die on connectivity.
+ *
+ * ⛓ **AND THE COMPARISON IS ON STEPS, NOT ON CELLS.** `shortestPath` returns
+ * the path inclusive of both endpoints, so `path.length - 1` is the step count
+ * — the same reading slice 2's NO-SHORTCUT carve clause makes, which is the
+ * rule this one is the deliberate inverse of. ⛔ Two rules that compare path
+ * lengths in different units would disagree the day a one-cell room appeared.
+ *
+ * ⚠ **WHAT THIS IS BLIND TO, AND IT IS `gridFlood`'s STANDING BLINDNESS**: it
+ * is a TILE flood over the caller's `isWalkable`, so entities are not terrain
+ * (the file docblock). The claim it makes is about the ROOM's geometry — *with
+ * this cell solid the walk is longer* — and never about what a solver does with
+ * the lock standing in it. The DIFFERENTIAL is what says that, and the two are
+ * different measurements on purpose.
+ *
+ * @param {object} o
+ * @param {number} o.width
+ * @param {number} o.height
+ * @param {(walledKeys: Set<string>|null) => ((x:number, y:number) => boolean)}
+ *   o.walkableFor the caller's own painted-terrain predicate with a key set
+ *   forced solid — ⛔ the SAME argument shape `doorLawRefusal` takes, so the
+ *   two laws are asked in one vocabulary and a caller cannot hand one of them a
+ *   picture of the room the other never saw.
+ * @param {{x:number, y:number}} o.start
+ * @param {{x:number, y:number}} o.goal
+ * @param {Set<string>} o.doorKeys the shortcut's own cell(s), as `"x,y"`.
+ * @param {string[]} o.clearerKeys the opener's cell(s), as `"x,y"`.
+ * @param {string} o.name what the refusal calls the caller.
+ * @param {object|null} [o.lengths] ⛓ an OPTIONAL out-parameter, filled with
+ *   `{open, walled}` step counts when the law ACCEPTS — the two numbers it
+ *   already computed, so a caller that wants to record what the shortcut saves
+ *   does not walk the grid a third time. ⛔ A sink, never a second return
+ *   value: every caller reads the TEXT and must keep reading exactly that.
+ * @returns {string|null} the refusal TEXT, or `null` when the law accepts.
+ */
+export function shortcutLawRefusal({
+    width, height, walkableFor, start, goal, doorKeys, clearerKeys = [], name,
+    lengths = null,
+}) {
+    const doorList = [...doorKeys].map((k) => `(${k})`).join(' ');
+    const open = shortestPath(width, height, walkableFor(null), start, goal);
+    if (open === null) {
+        return `${name} declares a shortcut at ${doorList}, and its own TERRAIN SEALS the `
+            + `room: with the shortcut cell(s) WALKABLE the GOAL (${goal.x},${goal.y}) is `
+            + `already unreachable from the START (${start.x},${start.y}). ⛔ A shortcut `
+            + 'whose open state is a sealed room is not a shortcut — this is the door law\'s '
+            + 'own open half, and a shortcut pays for it exactly as an element door does.';
+    }
+    const walled = walkableFor(doorKeys);
+    const round = shortestPath(width, height, walled, start, goal);
+    if (round === null) {
+        return `${name} declares a shortcut at ${doorList}, and it IS A CUT: with those `
+            + `cell(s) walled the GOAL (${goal.x},${goal.y}) is UNREACHABLE from the START `
+            + `(${start.x},${start.y}), so the level has no long arc and the lock standing `
+            + 'there is a REQUIREMENT rather than a saving. ⛔ That is a DOOR, and the door '
+            + 'law (`doorLawRefusal`) is the rule that adjudicates one — a shortcut whose '
+            + 'without-arm cannot solve grades STRONG, never SHORTENS, and a level that '
+            + 'shipped it under this name would be mis-described by its own payload.';
+    }
+    if (round.length - 1 <= open.length - 1) {
+        return `${name} declares a shortcut at ${doorList}, and it DOES NOT SHORTEN: the `
+            + `shortest way from the START (${start.x},${start.y}) to the GOAL `
+            + `(${goal.x},${goal.y}) is ${open.length - 1} step(s) with those cell(s) open `
+            + `and ${round.length - 1} with them walled. ⛔ A lock that changes no route is `
+            + 'DECORATION with a key in front of it: the differential would grade the item '
+            + 'INERT, and INERT on a level built to carry a shortcut is the mechanism '
+            + 'reporting that nothing reached it. ⚖ The fifth grade is *fewer ticks WITH the '
+            + 'item*, so the geometry has to be strictly shorter before the solver is asked.';
+    }
+    const reach = reachableFrom(width, height, walled, start);
+    for (const key of clearerKeys) {
+        if (!reach.has(key)) {
+            return `${name} declares a shortcut at ${doorList}, and its OPENER cell (${key}) `
+                + `is unreachable from the START (${start.x},${start.y}) once those cell(s) `
+                + 'are walled — the thing that OPENS the shortcut is BEHIND the shortcut. ⛓ '
+                + 'The room stays connected (clause 1 passed), so this is not the door law\'s '
+                + 'sealed-pocket case: it is an opener in a pocket whose only mouth is the '
+                + 'shortcut itself, and the player would have to take the short way to earn '
+                + 'the right to take the short way.';
+        }
+    }
+    if (lengths) {
+        lengths.open = open.length - 1;
+        lengths.walled = round.length - 1;
+    }
+    return null;
+}

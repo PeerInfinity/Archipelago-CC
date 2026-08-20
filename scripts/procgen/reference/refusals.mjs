@@ -61,8 +61,37 @@ const REFUSAL_SOURCES = [
         constant: 'KILL_GATE_REFUSALS',
         names: M.killGate.KILL_GATE_REFUSALS,
         file: SOURCES.killGate,
+        /**
+         * ⛓⛓ **IT SPANS MODULES SINCE ARC 5 SLICE 5**, and the constant's own
+         * docblock says so: `pocketFor` — *where the opener stands* — moved into
+         * `roomDoor.js`, the file whose whole job is the geometry the room-aware
+         * door elements SHARE, so `no-pocket` and `pocket-not-legal` are
+         * declared here and raised there. ⛔ The flag is not a licence to
+         * declare anything: a declared name firing NOWHERE is still a finding
+         * under it, which is why `roomDoor` is a scanned source below.
+         */
+        spansModules: true,
         channel: 'the element\'s `{refused:{reason, detail}}` → `summary.elementInfo.refused` '
             + 'on both pages, and the ELEMENTS CENSUS counts them',
+    },
+    {
+        /**
+         * ⛓ THE GEOMETRY THE ROOM-AWARE DOOR ELEMENTS SHARE — arc 5, slice 5.
+         * `pocketFor` moved here when the SHORTCUT element needed the same
+         * search, so `no-pocket` / `pocket-not-legal` are RAISED here and
+         * DECLARED by every element that asks. ⛔ It gets its own constant
+         * rather than being a literal scan: the names have a home, and the
+         * elements' own lists become SPANS (declared there, raised here) rather
+         * than findings — which is the same arrangement
+         * `SEEDLING_ELEMENT_REFUSALS` has had since P5.
+         */
+        id: 'room-door',
+        title: 'The shared room-door geometry (`pocketFor`)',
+        kind: 'constant',
+        constant: 'ROOM_DOOR_REFUSALS',
+        names: M.roomDoor.ROOM_DOOR_REFUSALS,
+        file: SOURCES.roomDoor,
+        channel: 'returned to the ELEMENT that asked, which files it under its own census key',
     },
     {
         id: 'block-pocket',

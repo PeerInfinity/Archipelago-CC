@@ -57,11 +57,12 @@
  */
 
 import {
-    DEFAULT_BOUNDS, KEEP_POLICY, STOP, directedAttempt,
+    DEFAULT_BOUNDS, STOP, directedAttempt,
 } from '../procgenCore/levelGenerator.js';
 import { catalogueRows, normalizeRoster, restrictPalette } from '../procgenCore/paletteRoster.js';
 import {
-    ANCHOR_SALT, PARAM_SALT, directiveSeed, dropDirectedParam, intParam, readAreas, readBounds,
+    ANCHOR_SALT, DIRECTIVE_KEEP_POLICY, PARAM_SALT, directiveSeed, dropDirectedParam,
+    intParam, readAreas, readBounds,
     readElements, readRequire, readRosterSpec, readSkeleton, refuseDirectedParam, writeAreasParam,
     refuseDuplicateParams,
     writeBounds, writeElementsParam, writeInt, writeRequireParam, writeRosterParam, writeRunFlag,
@@ -552,7 +553,52 @@ export function applyDirective(state, spec, index) {
             + `palette "${palette.name}" does not hold — it offers `
             + `[${palette.templates.map((t) => t.name).join(', ')}].`);
     }
-    const keepPolicy = spec.keepPolicy ?? KEEP_POLICY.PREFER_DISCHARGE;
+    /**
+     * ⛓⛓⛓ **`PREFER_DISCHARGE` LEFT THE MAZE IN ARC 5, SLICE 5** (⚖ arc-5
+     * ruling 4, the user's own words: *"we can get rid of it or leave it — as
+     * far as I'm aware it was never needed"*), and it left MEASURED FIRST.
+     *
+     * `census-maze-keeps.mjs` swept the policy's own subjects — every directed
+     * attempt the page can make: 9 skeleton kinds x seeds 1..6 x steps {0, 2} x
+     * all 18 ENUMERATED instantiations of both v1 templates, at this file's own
+     * `DIRECTED_ANCHOR_TRIES` bound — and counted the `solved-only` class:
+     * **0 of 1944**. ⛓ Zero STRUCTURALLY rather than by the luck of the seeds:
+     * this call site handed `discharges: () => null` because the v1 palette
+     * declares NO VERB on either template, and `walkAnchors` reads a `null`
+     * discharge as `KEPT_KIND.NO_VERB` — never as `solved-only`. The preference
+     * had nothing to prefer between on any room the maze can build.
+     *
+     * ⇒ every directive runs under `DIRECTIVE_KEEP_POLICY`, the CONSTANT
+     * Seedling has run under since arc-3 slice 4c, and a spec that asks for
+     * anything else REFUSES BY NAME rather than being answered under a policy
+     * it did not ask for. ⛔ `discharges` goes with it: under `FIRST_SOLVED`
+     * `walkAnchors` never calls the predicate, and passing one would be a
+     * declaration about a question nothing puts.
+     *
+     * ⛓ **THE TRACE FIELD'S DISPOSITION, SAID EXPLICITLY** (the ruling asks
+     * for it): `keptKind` STAYS on the directive record and is now `null` on
+     * every maze directive — which is what `FIRST_SOLVED` has always meant and
+     * what `labView.describeKeptKind`'s default arm already says in words (*"the
+     * keep policy was first-SOLVED, so nothing asked"*). ⛔ The FIELD is not
+     * dropped: a payload is a REPORT and must still say what was run, and
+     * removing it would move every recorded directive's bytes for a `null`.
+     * ⚠ `KEEP_POLICY`/`KEPT_KIND` themselves stay in `procgenCore/
+     * levelGenerator.js`. Both substrates now run one policy, so the enum's
+     * other member is unreachable from either — that removal is a LOOP-CORE
+     * change nobody has ruled, and it is named for the arc close rather than
+     * taken here.
+     */
+    if (spec.keepPolicy !== undefined && spec.keepPolicy !== DIRECTIVE_KEEP_POLICY) {
+        fail(`mazeLab: a directive asked for keepPolicy ${JSON.stringify(spec.keepPolicy)}. `
+            + `Every maze directive runs under ${JSON.stringify(DIRECTIVE_KEEP_POLICY)} since `
+            + 'PROCGEN ELEMENTS arc 5 slice 5 (⚖ ruling 4): the `solved-only` class was '
+            + 'measured at 0 of 1944 directed attempts and is STRUCTURALLY unreachable — the '
+            + 'v1 palette declares no verb on either template. ⛔ An old spec carrying the '
+            + 'other policy REFUSES rather than being answered under this one: the two were '
+            + 'different questions and silently answering the surviving one is the '
+            + 'reinterpretation a versioned grammar exists to prevent.');
+    }
+    const keepPolicy = DIRECTIVE_KEEP_POLICY;
     const bound = spec.bound ?? DIRECTED_ANCHOR_TRIES;
     /**
      * ⛓ TWO SALTED STREAMS — `urlParams.directiveSeed`, shared with Seedling.
@@ -575,8 +621,14 @@ export function applyDirective(state, spec, index) {
         bound,
         keepPolicy,
         /**
+         * ⛔⛔ **`discharges` IS GONE — arc 5, slice 5.** Under `FIRST_SOLVED`
+         * `walkAnchors` never asks, so a predicate here would be an answer to a
+         * question nothing puts. What follows is kept as the RECORD of why it
+         * was `() => null` and never `() => false`, because the distinction is
+         * the reason the class it fed was empty:
+         *
          * ⛓⛓⛓ THE DISCHARGE TEST, AND **`null` IS NOT `false`** — a distinction
-         * this slice's own browser row caught me getting wrong.
+         * the constructive arc's own browser row caught me getting wrong.
          *
          * `levelGenerator.walkAnchors` reads the three kinds off this ONE
          * return value: `null`/`undefined` means *"this family has NO VERB to
@@ -595,11 +647,11 @@ export function applyDirective(state, spec, index) {
          * reddened with `kept:solved-only — no anchor within the bound made the
          * walk USE this template's verb`, about a template with no verb.
          *
-         * ⚠ It is passed rather than omitted because `PREFER_DISCHARGE` REFUSES
-         * a missing predicate by name — and the day the maze grows a push move
-         * or a combat verb, this is the one place it is spelled.
+         * ⚠ It WAS passed rather than omitted because `PREFER_DISCHARGE` refused
+         * a missing predicate by name. The day the maze grows a push move or a
+         * combat verb, this docblock is where the argument for bringing the
+         * preference back starts — with a census, not with a memory.
          */
-        discharges: () => null,
         rowBase: { directive: index + 1, step: state.step, try: null },
     });
     const recorded = Object.freeze({

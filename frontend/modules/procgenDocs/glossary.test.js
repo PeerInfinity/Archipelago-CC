@@ -124,6 +124,16 @@ describe('the glossary as data', () => {
      * for three parameters: `room-size` covers both axes, because a room is one
      * setting.
      *
+     * ⛓⛓ **156 — arc 5, slice 5 SPENDS TWO**: `shortens` and `shortcut-law`.
+     * ⛔ `shortens` is a SIXTH value of an existing term (`grade`) and gets its
+     * own entry anyway, because it is the word this slice made REACHABLE and a
+     * reader who meets it in a payload needs the whole argument — both arms
+     * solve, the WITH arm is cheaper, the unit is the caller's — rather than an
+     * alias buried in a five-word list. `shortcut-law` is the RULE, and it is a
+     * second entry beside `door-law` for the same reason the code spells it
+     * beside rather than instead of: they are inverses, and a reader who
+     * conflated them would read a refusal as its own opposite.
+     *
      * ⛓⛓ **154 — arc 5, slice 4 SPENDS TWO**: `arena-element` and `bodies`, on
      * the P5 rule that every PARAMETER names at least one term. ⛔ `bodies` gets
      * its own entry rather than a clause inside `arena-element` because it is
@@ -140,11 +150,11 @@ describe('the glossary as data', () => {
      * generator for. Folding them would make "a chamber" ambiguous in exactly
      * the table this glossary exists to disambiguate.
      */
-    it('holds 154 entries — 149 + arc-5 slice 1\'s two + slice 3\'s one + slice 4\'s two, '
+    it('holds 156 entries — 149 + arc-5 slices 1/3/4/5\'s two + one + two + two, '
         + 'and every one is filed', () => {
-        expect(TERMS).toHaveLength(154);
+        expect(TERMS).toHaveLength(156);
         expect(TERMS.length).toBeGreaterThanOrEqual(80);
-        expect(TERMS.length).toBeLessThanOrEqual(154);
+        expect(TERMS.length).toBeLessThanOrEqual(156);
         expect(TERMS.filter((e) => !AREA_IDS.includes(e.area))).toHaveLength(0);
     });
 

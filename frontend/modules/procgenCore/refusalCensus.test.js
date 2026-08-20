@@ -49,6 +49,8 @@ import { KILL_GATE_REFUSALS } from './elements/killGate.js';
 import { BLOCK_POCKET_REFUSALS } from './elements/blockPocket.js';
 import { OPEN_CHAMBER_REFUSALS } from './elements/openChamber.js';
 import { ARENA_REFUSALS } from './elements/arena.js';
+import { SHORTCUT_REFUSALS } from './elements/shortcut.js';
+import { ROOM_DOOR_REFUSALS } from './elements/roomDoor.js';
 import { SEEDLING_ELEMENT_REFUSALS } from '../seedlingDemo/procgenSeedlingElements.js';
 import { SEEDLING_AREA_REFUSALS } from '../seedlingDemo/procgenSeedling.js';
 import { MAZE_REFUSALS, MAZE_REQUIRE_REFUSALS } from '../mazeRoom/procgenMaze.js';
@@ -92,6 +94,8 @@ const SOURCES = {
     blockPocket: 'frontend/modules/procgenCore/elements/blockPocket.js',
     openChamber: 'frontend/modules/procgenCore/elements/openChamber.js',
     arena: 'frontend/modules/procgenCore/elements/arena.js',
+    shortcut: 'frontend/modules/procgenCore/elements/shortcut.js',
+    roomDoor: 'frontend/modules/procgenCore/elements/roomDoor.js',
     seedlingElements: 'frontend/modules/seedlingDemo/procgenSeedlingElements.js',
     seedling: 'frontend/modules/seedlingDemo/procgenSeedling.js',
     maze: 'frontend/modules/mazeRoom/procgenMaze.js',
@@ -124,6 +128,19 @@ const KEYS = [
         constant: 'ARENA_REFUSALS',
         declared: ARENA_REFUSALS,
         text: () => read(SOURCES.arena),
+    },
+    {
+        constant: 'SHORTCUT_REFUSALS',
+        declared: SHORTCUT_REFUSALS,
+        text: () => read(SOURCES.shortcut),
+    },
+    {
+        /** ⛓ arc 5, slice 5 — the shared `pocketFor`'s own two, where they are
+         *  RAISED. The elements that ask it declare them too; both lists are
+         *  true and neither is a copy (see `ROOM_DOOR_REFUSALS`' docblock). */
+        constant: 'ROOM_DOOR_REFUSALS',
+        declared: ROOM_DOOR_REFUSALS,
+        text: () => read(SOURCES.roomDoor),
     },
     {
         constant: 'SEEDLING_ELEMENT_REFUSALS',

@@ -56,8 +56,7 @@
 
 import { defineElement } from '../elements.js';
 import {
-    DOOR_GOAL_MIN, NB4, bodyRegion, cellKey, doorCandidates, floorNeighboursAfter, growWall,
-    inInterior, tilesFor, writesOf,
+    DOOR_GOAL_MIN, bodyRegion, cellKey, doorCandidates, growWall, pocketFor, tilesFor, writesOf,
 } from './roomDoor.js';
 
 /** The two ids the BINDING looks up — the door, and the body that opens it. */
@@ -71,57 +70,20 @@ export const KILL_BODY_ID = 'killgate_body';
  */
 export const POCKET_PREFERS_OPEN = true;
 
-/** Every refusal this element can produce, BY NAME — what the census counts. */
+/**
+ * Every refusal this element can produce, BY NAME — what the census counts.
+ *
+ * ⛓⛓ **ITS AXIS IS THE ELEMENT, NOT THIS FILE** (arc 5, slice 5). `no-pocket`
+ * and `pocket-not-legal` are raised by `roomDoor.pocketFor`, which moved there
+ * when the SHORTCUT element needed the same search: two copies of *where does
+ * the opener go* would be two answers, and the day they disagreed one element
+ * would place where the other refused. ⇒ the reference's refusal table declares
+ * this source `spansModules`, and `roomDoor.js` is scanned so the names are
+ * found FIRING rather than reported as dead.
+ */
 export const KILL_GATE_REFUSALS = Object.freeze([
     'no-cut-cell', 'goal-too-close', 'wall-does-not-seal', 'no-pocket', 'pocket-not-legal',
 ]);
-
-/**
- * The pocket for ONE candidate: `{cell, carved}` or `{refused}`.
- *
- * ⛔ THE CANDIDATES ARE THE 4-NEIGHBOURS OF `before`, THE START-SIDE PATH CELL,
- * and that is what makes the pocket start-side BY CONSTRUCTION rather than by
- * luck — `before` is on the start's side of the door by definition of a path.
- * Clause 2 of the door law asserts it anyway, because "by construction" is a
- * claim and the flood is a measurement.
- */
-function pocketFor(room, cand, wall, { preferOpen }) {
-    const onWall = new Set(wall.map((c) => cellKey(c.x, c.y)));
-    const onPath = new Set(room.mainPath.map((c) => cellKey(c.x, c.y)));
-    const open = [];
-    const carvable = [];
-    let sawCandidate = false;
-    for (const [dx, dy] of NB4) {
-        const x = cand.before.x + dx;
-        const y = cand.before.y + dy;
-        const k = cellKey(x, y);
-        if (!inInterior(room, x, y)) continue;
-        if (onWall.has(k) || onPath.has(k)) continue;
-        if ((x === room.start.x && y === room.start.y)
-            || (x === room.goal.x && y === room.goal.y)) continue;
-        sawCandidate = true;
-        if (room.floorAt(x, y)) {
-            open.push({ cell: { x, y }, carved: false,
-                neighbours: floorNeighboursAfter(room, writesOf(tilesFor(wall)), x, y) });
-            continue;
-        }
-        /**
-         * ⛔ A CARVE IS A DEAD END, and the element pre-checks the clause it can
-         * see: after this element's writes the cell must have EXACTLY ONE floor
-         * neighbour. The binding runs slice 2's carve rule in full (one blob,
-         * one mouth, no shortcut) on the way in — this is the proposal, that is
-         * the legality.
-         */
-        const writes = writesOf(tilesFor(wall, [{ x, y }]));
-        if (floorNeighboursAfter(room, writes, x, y) === 1) {
-            carvable.push({ cell: { x, y }, carved: true, neighbours: 1 });
-        }
-    }
-    if (preferOpen) open.sort((a, b) => b.neighbours - a.neighbours);
-    const chosen = open[0] ?? carvable[0] ?? null;
-    if (chosen) return chosen;
-    return { refused: sawCandidate ? 'pocket-not-legal' : 'no-pocket' };
-}
 
 /**
  * ⛓ The refusal a run of candidates deserves: the DEEPEST stage any reached.

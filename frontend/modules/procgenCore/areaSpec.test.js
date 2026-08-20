@@ -24,19 +24,28 @@ describe('procgenCore/areaSpec — the defaults', () => {
     });
 
     it('resolve fills every declared value; normalize STRIPS the ones at default', () => {
-        expect(resolveAreaSpec({ keys: 1 }))
-            .toEqual({ keys: 1, partition: 'chambers', graphify: 0.2, goalShortcut: 1 });
+        expect(resolveAreaSpec({ keys: 1 })).toEqual({
+            keys: 1, partition: 'chambers', graphify: 0.2, shortcut: 0, goalShortcut: 1,
+        });
         expect(normalizeAreaSpec({ keys: 1 })).toEqual({ keys: 1 });
         expect(normalizeAreaSpec({ keys: 1, params: { graphify: 0.2 } })).toEqual({ keys: 1 });
     });
 
-    it('the schema declares exactly the three knobs, and the domains are the swept ones', () => {
+    /**
+     * ⛓ RE-PINNED BY ARC 5, SLICE 5: `shortcut` is the FOURTH knob — the
+     * ITEM-LOCKED CYCLE EDGE (D3), default 0, which is what keeps every
+     * committed `--areas=` payload and all nine per-kind maze CLI md5s
+     * byte-identical.
+     */
+    it('the schema declares exactly the four knobs, and the domains are the swept ones', () => {
         expect(AREA_PARAM_SCHEMA.map((p) => p.key))
-            .toEqual(['partition', 'graphify', 'goalShortcut']);
+            .toEqual(['partition', 'graphify', 'shortcut', 'goalShortcut']);
         expect(AREA_PARAM_SCHEMA.find((p) => p.key === 'partition').domain).toEqual(['chambers']);
+        expect(AREA_PARAM_SCHEMA.find((p) => p.key === 'shortcut').domain).toEqual([0, 1]);
+        expect(AREA_PARAM_SCHEMA.find((p) => p.key === 'shortcut').default).toBe(0);
         expect(KEYS_DOMAIN).toEqual([0, 1, 2, 3]);
         // ⚖ ruling 4: a domain nobody can enumerate is a domain nobody swept.
-        expect(enumerateAreaValues().length).toBe(1 * 4 * 2);
+        expect(enumerateAreaValues().length).toBe(1 * 4 * 2 * 2);
     });
 });
 
@@ -110,7 +119,7 @@ describe('procgenCore/areaSpec — SIX distinguished refusals, each actionable',
     it('a DUPLICATED key', () => refuses('1;graphify=1;graphify=0', /names "graphify" TWICE/));
     it('a key the spec does not declare', () => {
         refuses('1;chambers=2', /has no parameter "chambers"/);
-        refuses('1;chambers=2', /\[partition, graphify, goalShortcut\]/);
+        refuses('1;chambers=2', /\[partition, graphify, shortcut, goalShortcut\]/);
     });
     it('a value outside a declared domain', () => {
         refuses('1;graphify=0.7', /not in its declared domain \[0, 0.2, 0.5, 1\]/);

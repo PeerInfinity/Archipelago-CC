@@ -236,6 +236,24 @@ export const PHASE_PRE_CARVE = 'pre-carve';
 export const PHASE_ON_CONNECTOR = 'on-connector';
 
 /**
+ * ⛓⛓⛓ **WHICH LAW ADJUDICATES AN `on-connector` ELEMENT'S DOOR CELL(S)** —
+ * PROCGEN ELEMENTS arc 5, slice 5 (D1). ⛔ It is a DECLARED PROPERTY OF THE
+ * ELEMENT and not a branch in the binding, for the reason `phase` is: the
+ * binding asks the law ONCE, on the placement it is about to commit, and it
+ * must ask the same one the element's `construct` filtered its candidates with.
+ * A binding that guessed from the element's NAME would be a second table of
+ * which elements are shortcuts, kept in a different file from the first.
+ *
+ *   `cut`       with the door cell(s) walled the GOAL is UNREACHABLE — arc-3
+ *               §9's door law, and every element written before arc 5.
+ *   `shortcut`  with them walled the goal is STILL reachable and the walk is
+ *               STRICTLY LONGER — `gridFlood.shortcutLawRefusal`, the inverse.
+ */
+export const ELEMENT_LAWS = Object.freeze(['cut', 'shortcut']);
+export const LAW_CUT = 'cut';
+export const LAW_SHORTCUT = 'shortcut';
+
+/**
  * ⛓⛓ **THE ROOM PROBE — WHAT AN `on-connector` ELEMENT IS ALLOWED TO KNOW**,
  * and the list is closed on purpose.
  *
@@ -263,6 +281,17 @@ export const PHASE_ON_CONNECTOR = 'on-connector';
  *                     adjudicate it. ⛔ This is what "ONE door law, both callers"
  *                     means at the element end: the element does not re-derive
  *                     the law, it ASKS it.
+ *
+ * ⛓⛓⛓ **AND AN EIGHTH MEMBER ARRIVED WITH THE FIFTH GRADE — `shortcutLaw`**
+ * (arc 5, slice 5, D1): the door law's clause 1 INVERTED, asked in the same
+ * argument shape plus a `lengths` sink. ⛔ **IT IS OPTIONAL AND DELIBERATELY
+ * NOT IN `needFns`.** A binding that offers `doorLaw` and not `shortcutLaw` can
+ * host a kill gate and cannot host a shortcut, which is a true and useful
+ * state — the maze's element binding is exactly that today — and making the
+ * member mandatory would turn every such binding into a THROW where a graded
+ * refusal is owed. The SHORTCUT element checks for it and refuses BY NAME,
+ * which is the rule this file already applies to every other capability
+ * question.
  */
 export function assertRoomProbe(room, owner) {
     const needFns = ['floorAt', 'isCut', 'connectedWith', 'doorLaw'];
@@ -751,7 +780,7 @@ function assertConstructOutput(out, ctx) {
  *   written before arc-3 slice 4a and is unchanged byte for byte.
  */
 export function defineElement({ name, family, params = [], why, construct,
-    assertPlacement = null, footprint = null, phase = PHASE_PRE_CARVE }) {
+    assertPlacement = null, footprint = null, phase = PHASE_PRE_CARVE, law = LAW_CUT }) {
     if (typeof name !== 'string' || !name) {
         fail('elements: an element needs a name — it is the catalogue key, the cost record\'s '
             + '`element` field and what a spec string asks for.');
@@ -770,6 +799,18 @@ export function defineElement({ name, family, params = [], why, construct,
             + 'len-2 one), so a fixed list would be a claim about one instantiation '
             + 'printed over all of them.');
     }
+    if (!ELEMENT_LAWS.includes(law)) {
+        fail(`elements: element "${name}" declared law ${JSON.stringify(law)}; the laws are `
+            + `[${ELEMENT_LAWS.join(', ')}]. "${LAW_CUT}" is the default and is arc-3 §9's `
+            + `door law; "${LAW_SHORTCUT}" is its INVERSE (still reachable, strictly `
+            + 'longer) and is what a gated SHORTCUT is adjudicated by.');
+    }
+    if (law === LAW_SHORTCUT && phase !== PHASE_ON_CONNECTOR) {
+        fail(`elements: element "${name}" declares law "${LAW_SHORTCUT}" at phase `
+            + `"${phase}". The shortcut law is asked of DOOR CELLS in a finished room, and a `
+            + '`pre-carve` element is constructed before the room exists — so the two '
+            + 'together are a claim nothing could adjudicate.');
+    }
     if (!ELEMENT_PHASES.includes(phase)) {
         fail(`elements: element "${name}" declared phase ${JSON.stringify(phase)}; the phases `
             + `are [${ELEMENT_PHASES.join(', ')}]. "${PHASE_PRE_CARVE}" is the default and is `
@@ -787,6 +828,9 @@ export function defineElement({ name, family, params = [], why, construct,
         name,
         family,
         phase,
+        /** ⛓ arc 5, slice 5 — see `ELEMENT_LAWS`. `'cut'` for every element
+         *  written before it, so no binding branch changes for them. */
+        law,
         params: base.params,
         why,
         /** ⛓ `null` when the element declares none — the binding then sizes the
@@ -804,6 +848,7 @@ export function defineElement({ name, family, params = [], why, construct,
                 name: row.name,
                 family: row.family,
                 phase,
+                law,
                 params: row.params,
                 instance: row.instance,
                 why: row.why,
