@@ -23,6 +23,13 @@ import {
 } from './procgenPalette.js';
 import { generateSeedlingLevel, seedlingSeam } from './procgenSeedling.js';
 import { parseElementSpec } from '../procgenCore/elementSpec.js';
+import { DEFAULT_BUDGET } from './procgenOracle.js';
+import { TILE_SIZE } from './levelWorld.js';
+import { newSpinner, stepSpinner } from './spinner.js';
+import { buildKillGate } from '../procgenCore/elements/killGate.js';
+import {
+    TILE_FLOOR, cellKey, inInterior, writesOf,
+} from '../procgenCore/elements/roomDoor.js';
 
 const instance = (name, overrides) => POST_SWORD_PALETTE.templates
     .find((t) => t.name === name).instantiate(null, overrides);
@@ -217,5 +224,102 @@ describe('`summary.require` — omitted when untyped, and NAMED on every refusal
             .not.toBe(null);
         expect(hit.r.refused.reason).toMatch(/^the-required-element-did-not-certify: /);
         expect(hit.r.grade).toBe(null);
+    });
+});
+
+
+/**
+ * ⛓⛓⛓ **THE STEPPED SET IS A FUNCTION OF A TICK BOUND** — PROCGEN ELEMENTS
+ * arc 5, slice 2, and this row is what keeps §18.2 C4's refutation a CHECKED
+ * claim rather than a paragraph.
+ *
+ * ⛔ THE CLAIM: the "exact" demand C4 asked for — the body's own stepped path
+ * instead of `bodyRegion`'s flood — is exact only relative to how long the
+ * body is stepped, and the 400 the measurement used is
+ * `DEFAULT_BUDGET.maxTicksPerTarget`, which is the SOLVER's per-target budget
+ * and says nothing about the spinner. Step it longer and the set GROWS INTO
+ * THE FLOOD. ⇒ a demand built on the short walk forbids fewer cells than the
+ * body really visits, which is unsound, and one built on a long walk is the
+ * flood already, which buys nothing.
+ *
+ * ⛔ It steps the SAME function the game does (`spinner.stepSpinner`) over the
+ * SAME construct-time room the element demanded on (`buildKillGate`'s own
+ * candidate, its writes applied and the door shut) — not a re-spelling of
+ * either (trap 417).
+ */
+describe('⛓⛓ the STEPPED demand C4 asked for is a function of the TICK BOUND', () => {
+    const steppedCells = (solid, from, ticks) => {
+        const collides = (r) => {
+            for (let ty = Math.floor(r.y / TILE_SIZE);
+                ty <= Math.floor((r.bottom - 1) / TILE_SIZE); ty += 1) {
+                for (let tx = Math.floor(r.x / TILE_SIZE);
+                    tx <= Math.floor((r.right - 1) / TILE_SIZE); tx += 1) {
+                    if (solid(tx, ty)) return { tx, ty };
+                }
+            }
+            return null;
+        };
+        let sp = newSpinner({ id: 'row', x: from.x * TILE_SIZE, y: from.y * TILE_SIZE });
+        const seen = new Set();
+        for (let t = 0; t < ticks; t += 1) {
+            seen.add(cellKey(Math.floor(sp.x / TILE_SIZE), Math.floor(sp.y / TILE_SIZE)));
+            sp = stepSpinner(sp, { collides: (rect) => collides(rect), noTerrain: true });
+        }
+        return seen;
+    };
+
+    it('⛔ 400 is the SOLVER\'s per-target budget, not a property of the body', () => {
+        expect(DEFAULT_BUDGET.maxTicksPerTarget).toBe(400);
+    });
+
+    it('⛓⛓⛓ the stepped set GROWS with the bound and reaches the flood exactly — '
+        + 'so the flood is its LIMIT, not an over-approximation', () => {
+        const { model } = SEAM;
+        const placed = model.elements.placed[0];
+        const probe = model.roomProbe();
+        const built = buildKillGate(probe);
+        const door = placed.doorCell;
+        const pocket = placed.clearer[0];
+        const pick = (built.candidates ?? []).find((c) => c.cand.cell.x === door.x
+            && c.cand.cell.y === door.y && c.pocket.cell.x === pocket.x
+            && c.pocket.cell.y === pocket.y);
+        expect(pick, 'the census matches the SHIPPED candidate or every number '
+            + 'below is about a different placement').toBeTruthy();
+
+        const writes = writesOf(pick.tiles);
+        const solid = (x, y) => {
+            if (!inInterior(probe, x, y)) return true;
+            if (x === door.x && y === door.y) return true;
+            const w = writes.get(cellKey(x, y));
+            return w === undefined ? !probe.floorAt(x, y) : w !== TILE_FLOOR;
+        };
+        const region = pick.body.region;
+        /**
+         * ⛔⛔ **THE BOUNDS ARE 100/200/400 AND NOT 400/800/1600, BECAUSE ON
+         * THIS SUBJECT 400 IS ALREADY ENOUGH** — its stepped set reaches the
+         * flood's 16 cells exactly there. A row written at 400/800/1600 would
+         * read `[16, 16, 16]`, assert monotonicity over a constant and END at
+         * the flood by doing nothing: green, and blind to the mutation it
+         * exists to catch (trap 296). The bounds below are the ones this gate
+         * can DISCRIMINATE, and the first assertion is the non-vacuity.
+         *
+         * ⚠ THAT THE SHIPPED 400 IS ITSELF SHORT ON SOME GATES is a corpus
+         * MEASUREMENT, not this row: `empty` post-sword seed 29 under the
+         * biome default list is 25 of 40 at 400 and all 40 from 1600
+         * (`census-seedling-killgate-clears.mjs`; arc 5 slice 2's as-built).
+         * A unit row cannot hold a level that costs a certification solve.
+         */
+        const bounds = [100, 200, DEFAULT_BUDGET.maxTicksPerTarget];
+        const sizes = bounds.map((t) => steppedCells(solid, pocket, t).size);
+        expect(sizes[0], 'the shortest bound must be SHORT of the flood or this '
+            + 'row asserts growth over a constant').toBeLessThan(region.size);
+        // ⛔ MONOTONE, and it ENDS at the flood — the two claims that together
+        // say the flood is where the body goes given time.
+        for (let i = 1; i < sizes.length; i += 1) expect(sizes[i]).toBeGreaterThan(sizes[i - 1]);
+        expect(sizes[sizes.length - 1]).toBe(region.size);
+        // and no step ever leaves the flood, at any bound
+        for (const t of [100, 3200]) {
+            for (const k of steppedCells(solid, pocket, t)) expect(region.has(k)).toBe(true);
+        }
     });
 });

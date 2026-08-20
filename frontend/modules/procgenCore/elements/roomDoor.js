@@ -178,9 +178,16 @@ export { TILE_FLOOR, TILE_WALL };
  * until the first non-ground cell in each direction"*, and the body is not
  * axis-aligned: `spinner.SPINNER.heading` is `-PI/4`, so the ctor velocity is
  * `(0.7071, -0.7071)` and every tick moves BOTH axes, reflecting per axis on a
- * solid. A lane would have named 2–4 cells; the body's own stepper covers
- * **7–13 cells on a carved kind and 12–26 on the open 10x10 room** (measured,
- * `scripts/procgen/census-seedling-killgate-clears.mjs`, 224 cells).
+ * solid. A lane would have named 2–4 cells; this flood names **median 13 cells
+ * on a carved kind and median 32 on the open 10x10 room** (arc 5, slice 0's
+ * W2 roll-up over 224 cells and 17 placed-and-certified gates: region min 7
+ * max 24 median 13 carved, min 16 max 40 median 32 `empty`).
+ *
+ * ⛔ **THE NUMBERS ABOVE ARE THE REGION'S OWN.** They were once a DIFFERENT
+ * function's: the census used to flood the skeleton grid without the element's
+ * grown wall, and this docblock quoted that copy's cells as if they were
+ * `bodyRegion`'s. The copy is deleted and these are read off
+ * `buildKillGate`'s candidate — the very object the element demanded.
  *
  * ── ⛓ WHY THE FLOOD CONTAINS THE BODY, AS AN ARGUMENT ─────────────────
  *
@@ -189,8 +196,9 @@ export { TILE_FLOOR, TILE_WALL };
  * and to move between two cells the box straddles their shared EDGE, which a
  * diagonal-only contact does not offer. ⇒ the centre's cell path is 4-connected
  * through non-solid cells, and this flood contains it. **MEASURED, not left as
- * an argument: the flood is a superset of the stepped set on 10 of 10 certified
- * gates, and EQUAL to it on all six carved ones.**
+ * an argument: over 17 placed-and-certified gates (7 `empty`, 10 carved) the
+ * body's own stepper put ZERO cells outside this flood, and 6 of the 10 carved
+ * sets were EQUAL to it.**
  *
  * ── ⛓ AND THE BOUNDARY IS PART OF THE ANSWER ──────────────────────────
  *
@@ -201,8 +209,34 @@ export { TILE_FLOOR, TILE_WALL };
  *
  * ⛔ NO DRAW, NO SIMULATION — a walk on the SKELETON, a pure function of the
  * room. ⚠ It is deliberately NOT the body's own stepper: this file is
- * substrate-agnostic and does not know its body is a `Spinner`. The price of
- * that is measured and published (the flood over-forbids on 1 of the 10).
+ * substrate-agnostic and does not know its body is a `Spinner`.
+ *
+ * ── ⛓⛓⛓ AND ARC 5 SLICE 2 PRICED THE ALTERNATIVE AND REFUSED IT ───────
+ *
+ * §18.2 C4 asked for the body's own STEPPED set instead — *"exact"*, against
+ * this flood's *"one false positive in ten"*. Three measurements closed it:
+ *
+ *  1. **THE STEPPED SET IS A FUNCTION OF A TICK BOUND, AND THE BOUND IS THE
+ *     SOLVER'S.** The 400 the census used is `DEFAULT_BUDGET.maxTicksPerTarget`
+ *     — how long the SOLVER may spend reaching one target — and nothing about
+ *     the body. On the corpus's 7 placed gates the stepped set grows with the
+ *     bound and **reaches this flood exactly**: `empty` seed 29 is 25 cells at
+ *     400, 37 at 800, and all 40 from 1600 on; the carved `winding` seed 9 is
+ *     12 / 13 / 13 / 18 at 400 / 800 / 1600 / 3200. ⇒ the flood is not an
+ *     over-approximation of where the body goes; it is the LIMIT of it.
+ *  2. **SO THE PUBLISHED "24% OVER-FORBIDDING" IS A BOUND ARTEFACT** — those
+ *     are cells the body reaches later than 400 ticks, not cells it never
+ *     reaches.
+ *  3. **AND RELAXING TO THE 400-TICK SET COSTS LEVELS.** A build that switched
+ *     turned 3 rows of the 410-row committed corpus from levels into
+ *     `GenerationAborted`: pass 2 painted a `water-pool` in a cell only the
+ *     flood forbade and the player DROWNED walking the kill (`empty`
+ *     post-sword seed 29 at (4,4), seed 38 at (1,3)). The SAME build with the
+ *     bound at 4000 reproduces every committed row byte for byte — which is
+ *     what says the bound, and not the switch, is the mover.
+ *
+ * ⇒ **C4 IS MEASURED AND REFUTED, NOT DEFERRED.** An exact demand would have
+ * to be exact at every bound, and at every bound where it is, it is this.
  *
  * @returns {{region: Set<string>, boundary: Set<string>}} both as `cellKey`s
  */

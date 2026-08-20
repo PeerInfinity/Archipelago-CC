@@ -241,11 +241,21 @@ function placementOf(pick, count) {
          * ⛓ THE PREDICTOR IS EXACT ON THE MEASURED CORPUS: over the ten
          * certified gates, *lethal terrain inside the BODY'S OWN STEPPED PATH*
          * ⟺ `cause:'water'`, 2 for 2 both ways. The REGION is a superset of
-         * that path (10 of 10, and EQUAL on all six carved kinds), so it is
-         * sound; on the open 10x10 room it is wider (32 cells against the
-         * stepped 24, median) and the price of the difference is measured: it
-         * would forbid a placement on ONE gate whose lock a sword really did
-         * open. ⛔ Published rather than tuned.
+         * that path — over 17 placed gates the stepper put ZERO cells outside
+         * it, and 6 of the 10 carved sets were EQUAL — so it is sound. Its
+         * size, measured (arc 5, slice 0's W2): **region median 32 `empty` /
+         * 13 carved against the 400-tick stepped set's 21 / 13**.
+         *
+         * ⛔⛔ **AND THE GAP IS A TICK BOUND, NOT AN ERROR** (arc 5, slice 2).
+         * 400 is `DEFAULT_BUDGET.maxTicksPerTarget`, the SOLVER's per-target
+         * budget; raise it and the stepped set grows into the region and
+         * reaches it exactly (seed 29: 25 → 37 → 40 of 40 at 400 → 800 →
+         * 1600). A build that demanded only the 400-tick set turned three
+         * committed corpus rows into `GenerationAborted` — pass 2 painted
+         * water where the body goes after tick 400 and the player drowned
+         * walking the kill — while the same build at 4000 ticks reproduced
+         * every committed row byte for byte. ⇒ §18.2 C4 is MEASURED AND
+         * REFUTED; `bodyRegion`'s docblock carries the table.
          *
          * ⚠ `must:'floor'` FORBIDS A WALL TOO, which is stricter than the drown
          * mechanism needs — a `wall-segment` in the region changes the bounce
