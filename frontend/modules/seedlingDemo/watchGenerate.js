@@ -108,7 +108,7 @@ import { ELEMENTS_NONE, elementSummaryOf } from './procgenSeedlingElements.js';
 import { DEFAULT_AREAS, normalizeAreaSpec, parseAreaSpec } from '../procgenCore/areaSpec.js';
 import { densityLine } from '../procgenCore/densityBlock.js';
 import {
-    formatElementSpec, isElementList, parseItemRequireList,
+    formatElementSpec, isElementList, normalizeElementSpec, parseItemRequireList,
 } from '../procgenCore/elementSpec.js';
 import { SEED_MAX, rngFor } from './procgenRng.js';
 /**
@@ -578,6 +578,85 @@ export function writeGenerateParams(search, {
     writeRequireParam(q, require, { grammar: parseItemRequireList });
     writeRunFlag(q, step);
     return q.toString();
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ SEEDLING BOT R9, SLICE 0 — **THE `?elements=` CONTROL'S THREE STATES**
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * The page's element control is a `<select>` and the parameter it edits has a
+ * state a `<select>` cannot hold: `undefined`, *nobody said*, which is what
+ * `seedlingSeam` reads as *apply the BIOME DEFAULT* (`defaultElementsFor`).
+ * Two more are ordinary: `none` is a CHOICE the seam honours, and a head name
+ * is an override carrying its own params sub-form.
+ *
+ * ⛔ **THE MAPPING LIVES HERE, NOT IN THE VIEW**, for the reason the reader and
+ * the writer live here: it is the third face of the same two-streams law
+ * (arc-3 §13.3), the view has no test harness, and a mapping inside a closure
+ * would be asserted only through a browser. These two functions are inverses
+ * over the control's whole vocabulary and `watchGenerate.test.js` drives them
+ * as a pair.
+ *
+ * ⚠ A `+` LIST HAS NO `<select>` SPELLING and is not given one: a list is a
+ * DISTRIBUTION over two or more heads and an option per subset is not a
+ * vocabulary a reader can act on. The control shows the URL's list read-only
+ * under `ELEMENTS_CONTROL_LIST`, and `elementsFromControl` hands that sentinel
+ * back the very spec it was shown — so a press that left it alone KEEPS it,
+ * and the option can never mean a list the page is no longer holding.
+ */
+/** The control value that means `undefined` — *nobody said*, the biome default. */
+export const ELEMENTS_CONTROL_DEFAULT = '';
+/** The control value that means *the `+` list this page was loaded with*. */
+export const ELEMENTS_CONTROL_LIST = '\u0000list';
+
+/**
+ * ⛓ A spec (or `undefined`) → the control value that SHOWS it.
+ *
+ * @param {object|undefined} spec what the caller asked for — `undefined` is
+ *   *nobody said*, `{name:'none'}` is the CHOICE, anything else a head or list
+ * @returns {string} one of `ELEMENTS_CONTROL_DEFAULT`, `ELEMENTS_CONTROL_LIST`
+ *   or a head name from `ELEMENT_NAMES`
+ */
+export function elementsControlValue(spec) {
+    if (spec === undefined) return ELEMENTS_CONTROL_DEFAULT;
+    if (isElementList(spec)) return ELEMENTS_CONTROL_LIST;
+    return normalizeElementSpec(spec).name;
+}
+
+/**
+ * ⛓ The control value (plus the params the sub-form named) → the spec the ONE
+ * writer is handed. The inverse of `elementsControlValue` over every state the
+ * control can hold.
+ *
+ * ⛔ `params` IS THE **NAMED** SET AND NOTHING ELSE. A sub-form select left at
+ * `any (draw it)` contributes no key, because a named parameter spends NO draw
+ * and an omitted one is DRAWN — the two build different levels even when the
+ * value comes out the same (`elementSpec.namedParams`).
+ *
+ * @param {string} value the control's value
+ * @param {object} [o]
+ * @param {object} [o.params] the sub-form's named parameters
+ * @param {object} [o.list] the `+` list the page was loaded with, for the
+ *   read-only sentinel; `undefined` when there is none
+ * @returns {object|undefined} the spec, or `undefined` for the biome default
+ */
+export function elementsFromControl(value, { params = {}, list } = {}) {
+    if (value === ELEMENTS_CONTROL_DEFAULT) return undefined;
+    if (value === ELEMENTS_CONTROL_LIST) return list;
+    return normalizeElementSpec(
+        Object.keys(params).length === 0 ? { name: value } : { name: value, params },
+    );
+}
+
+/**
+ * ⛓ How the RESET comparison spells an element ask. ⛔ `undefined` needs a
+ * spelling of its own: `formatElementSpec` cannot produce one (there is no
+ * string for *nobody said*), and a comparison that mapped it to `''` would read
+ * a switch from the biome default to a drawn `none` as no change at all.
+ */
+export function elementsAskSpelling(spec) {
+    return spec === undefined ? '(biome default)'
+        : formatElementSpec(normalizeElementSpec(spec));
 }
 
 /**

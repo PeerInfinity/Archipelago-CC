@@ -607,6 +607,57 @@
            raising it multiplies the ceiling `#genNote` prints. -->
       <label>anchor tries <input id="genAnchorTries" type="number" min="1" step="1" style="width:4em"></label>
     </div>
+    <!-- ⛓⛓⛓ SEEDLING BOT R9, SLICE 0 — **THE SIX URL-ONLY PARAMETERS GET
+         CONTROLS** (⚖ the user's standing form-controls item, arc-3 §16.9(9) /
+         arc-5 D5). Until this slice `?elements=` `?areas=` `?require=`
+         `?width=` `?height=` `?fill=` were reachable only by typing the
+         address bar; the reader and the ONE writer already owned all six, so
+         this adds controls and NOT a parameter — the writer does not change.
+
+         ⛔ EVERY OPTION HERE COMES FROM THE CODEC'S OWN DOMAIN
+         (`FILL_MODES`, `KEYS_DOMAIN`, `AREA_PARAM_SCHEMA`, `ELEMENT_NAMES`,
+         `paramSchemaFor`, `assertRoomSize`'s 3..60). A hand-typed list here
+         would be a second vocabulary and the reader would meet whichever one
+         drifted — the maze lab's law, one substrate over.
+
+         ⛔ READ AT THE **PRESS** by `readForm()`, never cached, and a changed
+         one RESETS the ladder to step 0 with the reason said in the status
+         line: every one of the six is run-defining (the room, the graph, the
+         directive and the element are all built BEFORE pass 2 runs), so step 3
+         under one spelling followed by step 4 under another is a display no
+         single run ever produced. -->
+    <div class="line">
+      <label>w <input id="genWidth" type="number" min="3" max="60" step="1" style="width:4em"></label>
+      <label>h <input id="genHeight" type="number" min="3" max="60" step="1" style="width:4em"></label>
+      <label for="genFill">fill</label>
+      <select id="genFill"></select>
+      <label for="genAreas">areas (keys)</label>
+      <select id="genAreas"></select>
+      <span id="genAreaParams"></span>
+      <label>requires <input id="genRequire" type="text" placeholder="hasSword"
+        style="width:8em" spellcheck="false"></label>
+    </div>
+    <!-- ⛓⛓⛓ THE ELEMENT, AND IT IS THE ONE CONTROL WITH **THREE** KINDS OF
+         STATE rather than two (the maze's has two, because the maze's default
+         IS `none`):
+
+           `(biome default)`  ≡ `undefined` — *nobody said*, so `seedlingSeam`
+                              applies `defaultElementsFor(items)`. ⛔ A control
+                              that spelled this `none` would silently turn the
+                              biome default off on EVERY load, and the two
+                              default-stream identities would move.
+           `none`             a CHOICE the seam honours — no element at all.
+           a head + params    an override; a parameter left at `any (draw it)`
+                              is DRAWN and a named one spends NO draw.
+
+         ⚠ A `+` LIST IS NOT SPELLED BY A `<select>` (the maze has the same
+         limit): when the URL carries one the control shows it READ-ONLY and a
+         press that leaves it alone KEEPS it. -->
+    <div class="line">
+      <label for="genElements">element</label>
+      <select id="genElements"></select>
+      <span id="genElementParams"></span>
+    </div>
     <div class="line">
       <button id="genStep">STEP — one template</button>
       <button id="genRunAll">RUN-ALL</button>

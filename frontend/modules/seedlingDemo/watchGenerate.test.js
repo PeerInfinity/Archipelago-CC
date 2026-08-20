@@ -28,9 +28,11 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-    BIOME_NAMES, DEFAULT_SKELETON, DIRECTED_ANCHOR_TRIES, GENERATE_BIOMES, agreementWithPayload,
+    BIOME_NAMES, DEFAULT_SKELETON, DIRECTED_ANCHOR_TRIES, ELEMENTS_CONTROL_DEFAULT,
+    ELEMENTS_CONTROL_LIST, GENERATE_BIOMES, agreementWithPayload,
     agreementWithTrace, applyDirective, describeKeptKind, describeState, directedCost,
-    displaySolve, displayStaging, formatDirectives, generateStep, generateWithDirectives,
+    displaySolve, displayStaging, elementsAskSpelling, elementsControlValue, elementsFromControl,
+    formatDirectives, generateStep, generateWithDirectives,
     generationRows, keptTemplatesOf, ladderCost, paletteFor, parseDirective, parseDirectives,
     readGenerateParams, skeletonCatalogue, stepFromParams, tileAtPoint, writeGenerateParams,
 } from './watchGenerate.js';
@@ -2547,5 +2549,114 @@ describe('?width= / ?height= / ?fill= — the page\'s half of the room contract'
         const bigger = { ...bare, level: { ...st.record, width: 20, height: 12 } };
         expect(agreementWithPayload(bigger, st).differences).toContain('size');
         expect(agreementWithPayload({ ...bare, fill: 'shell' }, st).differences).toContain('fill');
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ SEEDLING BOT R9, SLICE 0 — **THE FORM CONTROLS' MAPPING**
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * The page's six new controls edit parameters the reader and the ONE writer
+ * already owned; what is NEW is the mapping between a control's value and the
+ * ask, and it is here rather than in the view's closure so it can be driven
+ * without a browser. ⛔ Every literal below is stated by THIS file — the two
+ * round-trip rows come last (trap 250: a fixed point tests self-consistency
+ * and never correctness).
+ */
+describe('watchGenerate — the form controls (R9 slice 0)', () => {
+    const bounds = { obstacleTarget: 6, triesPerStep: 8, saturationK: 3, anchorTriesPerCandidate: 1 };
+    const list = { any: [{ name: 'guard' }, { name: 'chamber', params: { w: 2, h: 3 } }] };
+
+    /**
+     * ⛓⛓⛓ **THE THREE STATES, AND THE FIRST ONE IS THE WHOLE FEATURE.**
+     * `undefined` is *nobody said* — the seam applies `defaultElementsFor` —
+     * and `{name:'none'}` is a CHOICE. A control with only the second could
+     * never ask for the default at all.
+     */
+    it('⛓ the element control maps `(biome default)` to `undefined`, NOT to `none`', () => {
+        expect(elementsControlValue(undefined)).toBe(ELEMENTS_CONTROL_DEFAULT);
+        expect(elementsFromControl(ELEMENTS_CONTROL_DEFAULT)).toBeUndefined();
+        // ⛔ and `none` is its own value, reachable and distinct
+        expect(elementsControlValue({ name: 'none' })).toBe('none');
+        expect(elementsFromControl('none')).toEqual({ name: 'none' });
+        expect(ELEMENTS_CONTROL_DEFAULT).not.toBe('none');
+    });
+
+    it('⛓ a head with its sub-form, and an UNSET parameter contributes nothing', () => {
+        expect(elementsControlValue({ name: 'guard', params: { len: 4 } })).toBe('guard');
+        expect(elementsFromControl('guard', { params: { len: 4 } }))
+            .toEqual({ name: 'guard', params: { len: 4 } });
+        /** ⛔ `any (draw it)` is the ABSENCE of a key, because a named parameter
+         *  spends NO draw and an omitted one is DRAWN. */
+        expect(elementsFromControl('guard', { params: {} })).toEqual({ name: 'guard' });
+    });
+
+    it('⛓ a `+` list is READ-ONLY: the sentinel hands back the very spec it shows', () => {
+        expect(elementsControlValue(list)).toBe(ELEMENTS_CONTROL_LIST);
+        expect(elementsFromControl(ELEMENTS_CONTROL_LIST, { list })).toBe(list);
+        /** ⚠ and with no list loaded the sentinel is `undefined`, never a
+         *  half-built spec — a state the control never offers. */
+        expect(elementsFromControl(ELEMENTS_CONTROL_LIST)).toBeUndefined();
+    });
+
+    /** ⛓ THE PAIR IS AN INVERSE over the control's whole vocabulary. */
+    it('⛓ control value ↔ ask is a round trip for every state', () => {
+        for (const spec of [undefined, { name: 'none' }, { name: 'guard' },
+            { name: 'chamber', params: { w: 2, h: 3 } }, list]) {
+            const v = elementsControlValue(spec);
+            const back = elementsFromControl(v, { params: spec?.params ?? {}, list });
+            expect(elementsAskSpelling(back)).toBe(elementsAskSpelling(spec));
+        }
+    });
+
+    /**
+     * ⛓ THE RESET COMPARISON NEEDS A SPELLING FOR *NOBODY SAID*, and
+     * `formatElementSpec` has none. ⛔ A comparison that mapped `undefined` to
+     * `''` would read a switch from the biome default to a drawn `none` — two
+     * different runs — as no change at all, and the ladder would carry on.
+     */
+    it('⛔ the ask SPELLING distinguishes the biome default from every head', () => {
+        expect(elementsAskSpelling(undefined)).toBe('(biome default)');
+        expect(elementsAskSpelling({ name: 'none' })).toBe('none');
+        expect(elementsAskSpelling(undefined)).not.toBe(elementsAskSpelling({ name: 'none' }));
+        expect(elementsAskSpelling({ name: 'guard' }))
+            .not.toBe(elementsAskSpelling({ name: 'guard', params: { len: 3 } }));
+        expect(elementsAskSpelling(list)).toBe('guard+chamber;w=2;h=3');
+    });
+
+    /**
+     * ⛓⛓⛓ **THE SIZE CONTROLS' ABSENT-VS-NAMED MAPPING** — the half a control
+     * makes newly reachable by hand. ⛔ The writer deletes IN PLACE at the
+     * pinned default, so a form sitting at 10x10 writes NOTHING: this is what
+     * keeps every catalogue URL and every copied link byte-identical, and it is
+     * the row the width mutant has to get past.
+     */
+    it('⛔ the size controls at the DEFAULT write no ?width=/?height=/?fill=', () => {
+        const at = writeGenerateParams('?source=generate', {
+            seed: 1, biome: 'pre-sword', bounds, step: 0,
+            size: { width: 10, height: 10 }, fill: 'dense',
+        });
+        expect(at).not.toMatch(/width=/);
+        expect(at).not.toMatch(/height=/);
+        expect(at).not.toMatch(/fill=/);
+    });
+
+    /**
+     * ⛓⛓ AND **ONE AXIS AT A TIME** — `demos.js`'s own room-contract URL names
+     * `width=12` and NO `height=`, which is only possible because the writer
+     * decides per axis. A control that wrote both together would rewrite that
+     * published link on the very first load.
+     */
+    it('⛓ a NAMED width beside an OMITTED height is what the catalogue link is', () => {
+        const one = writeGenerateParams('?source=generate', {
+            seed: 28, biome: 'pre-sword', bounds, step: 0,
+            size: { width: 12, height: 10 }, fill: 'shell',
+        });
+        expect(one).toMatch(/width=12/);
+        expect(one).not.toMatch(/height=/);
+        expect(one).toMatch(/fill=shell/);
+        /** ⛔ and it READS BACK as the 12x10 room the link names. */
+        const p = readGenerateParams(`?${one}`);
+        expect(p.size).toEqual({ width: 12, height: 10 });
     });
 });
