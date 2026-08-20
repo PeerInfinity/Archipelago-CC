@@ -106,6 +106,31 @@ describe('openChamber — the geometry', () => {
     });
 
     /**
+     * ⛓⛓⛓ **THE BLOB IS THE RECTANGLE ITS PARAMETERS NAME** — and this row
+     * exists because MUTANT (c) showed that no other one could see it.
+     *
+     * ⛔ THE SITE IS BUILT FROM `values` HERE, NEVER FROM `footprint()`. Every
+     * other row in this file sizes its site with `siteFor`, which asks the
+     * element what rectangle it wants — so a `footprint()` that LIES by one
+     * cell is invisible to them: the binding sizes the site from the lie, the
+     * element fills the site, and the two agree by construction (trap 250, a
+     * fixed point at the SITE instead of at the value). What discriminates is
+     * asking for the rectangle the PARAMETERS name and checking the element
+     * accepts it and fills it.
+     */
+    it('accepts the rectangle its PARAMETERS name, and fills exactly that', () => {
+        for (const values of VALUES) {
+            const site = { x: 4, y: 5, w: values.w, h: values.h };
+            const out = buildOpenChamber(values, site, rngFor(9));
+            expect(out.refused, `${JSON.stringify(values)} `
+                + `${out.refused?.reason} ${out.refused?.detail}`).toBeUndefined();
+            expect(out.placement.area.cells).toHaveLength(values.w * values.h);
+            expect(out.placement.cost.w).toBe(values.w);
+            expect(out.placement.cost.h).toBe(values.h);
+        }
+    });
+
+    /**
      * ⛓⛓⛓ **THE BLOB IS A CHAMBER BY `wideBlobs`' OWN RULE** — asserted, not
      * assumed (the element's docblock claims it and this is the measurement).
      * The primitive is the one `sites.js`' `chamber` class and the partition

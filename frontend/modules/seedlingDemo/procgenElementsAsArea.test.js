@@ -82,6 +82,25 @@ describe('the chamber\'s blob is an area BOTH vocabularies agree about', () => {
         expect(checked).toBeGreaterThan(100);
     });
 
+    /**
+     * ⛓⛓ **THE SITE THE BINDING GAVE IT IS THE RECTANGLE ITS PARAMETERS NAME**
+     * — the binding-side half of the element test's own parameters row, and it
+     * is here because the two could disagree without either module noticing:
+     * the binding sizes the site from `footprint()` and the element fills the
+     * site, so a footprint that lies about the parameters is a room with a
+     * chamber of the wrong size in it and nothing that reads only the SITE can
+     * tell (MUTANT (c)).
+     */
+    it('the site the binding picked is the element\'s own w x h, either way round', () => {
+        for (const { kind, seed } of PLACED) {
+            const p = modelFor(kind, seed).elements.placed[0];
+            const { w, h } = p.params;
+            expect([`${w}x${h}`, `${h}x${w}`], `${kind}/${seed}`)
+                .toContain(`${p.site.w}x${p.site.h}`);
+            expect(p.areaCells).toHaveLength(w * h);
+        }
+    });
+
     /** ⛓ AND THE PARTITION CARRIES IT AS `E0`, kind `element` — the guard's
      *  own id and kind, from the same `declaredAreas` line. */
     it('the partition carries it as a DECLARED area of kind `element`', () => {
