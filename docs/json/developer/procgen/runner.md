@@ -96,7 +96,11 @@ The registry entry exposes the requirement-targeted hooks to the generic engine:
 - `scripts/procgen/verify-runner-bot.mjs` — Playwright: bot `walkTo` through the playback controller surface.
 - `scripts/procgen/verify-runner-embed.mjs` — Playwright round-trip of a sphere-grown runner world, first check to Victory, bot-driven.
 
-Substrate tests run in the **test-substrates** config (the regression config lacks substrate runtimes). Slow suites (`*.slow.test.js`) run via `vitest.slow.config.js`.
+Substrate tests run in the **test-substrates** config (the regression config lacks substrate runtimes).
+
+⛔ **THE RUNNER'S SLOW TIER IS DISABLED** (⚖ user, 2026-08-20), ahead of a major redesign of this substrate that will make the current generate-and-verify batteries irrelevant. `vitest.slow.config.js` now excludes `runnerDemo/**/*.slow.test.js` and `procgenPipeline/runnerSphereGrowth.slow.test.js` — eight files, **2380 s of the suite's 2569 s (92.6%)**, one of them already red on a 300 s test timeout. Measured after: 12 files / 217 tests / **178 s**, all green. The files are DISABLED, not deleted: they stay on disk as the record of what the current generator, solver and oracle were held to, and the redesign's own suite replaces them. Reverting is deleting the two patterns from that config's `exclude`.
+
+⛓ Still running, and untouched by that change: the runner's DEFAULT-tier `*.test.js` under `npm run test:unit` (apRules, botDriver, canRun, deriveRules, gameCore, generator, level, parity, physics, runnerDemoLibrary, zoneRules); `runnerDemo/generator.calib.test.js` in the manual calibration tier (`npm run test:unit:calib`); the in-app runner substrate tests; and the `verify-runner-*.mjs` Playwright instruments above.
 
 ## Related documentation
 

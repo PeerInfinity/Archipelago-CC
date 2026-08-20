@@ -6,7 +6,7 @@ Developer documentation for the procedural-generation ("procgen") system: the pi
 
 <!-- GENERATED:procgen-docs-index BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**17 documents · 4 pages · 165,210 words.**
+**17 documents · 4 pages · 165,358 words.**
 
 Order: `README_ORDER` in `scripts/procgen/reference/docsIndex.mjs` — today's reading order, declared. A file in the directory that is not in that list is a HARD ERROR, so a new document cannot arrive unindexed.
 
@@ -19,7 +19,7 @@ Descriptions: the document's OWN first paragraph, collapsed onto one line; past 
 | [Procgen demonstrations — a catalogue](./demos.md) | Every demonstrable feature of the two procgen lab pages, one entry each, with the link that shows it, the CLI command that reproduces it in node, which control to press, and what you are looking at. | 859 |
 | [Procgen Gotchas and Disambiguations](./gotchas.md) | Short entries for the things most likely to mislead someone orienting in the procgen code. Each is a present-state fact with file pointers, not a bug report. | 3975 |
 | [Bounce Substrate](./bounce.md) | Bounce ("Bounce Demo", substrate id `bounce`) is a Doodle-Jump-style vertical platformer substrate in `frontend/modules/bounceDemo/`. | 2365 |
-| [Runner Substrate](./runner.md) | Runner ("Runner Demo", substrate id `runner`) is an auto-runner platformer substrate in `frontend/modules/runnerDemo/`. | 4154 |
+| [Runner Substrate](./runner.md) | Runner ("Runner Demo", substrate id `runner`) is an auto-runner platformer substrate in `frontend/modules/runnerDemo/`. | 4302 |
 | [Playback and Debugging Tools](./playback-and-debugging.md) | The procgen stack ships a family of tools for *watching a world play itself*: a playback bot that walks recorded playthroughs, a substrate-neutral controller contract with iframe proxies, shared timing/UI primitives, a forward simulator that generates sphere logs, and per-substrate visualizers. | 937 |
 | [Loop Recording and Block Modes](./loop-recording.md) | How loop mode captures what a player does in a region and plays it back: the per-block **mode system** (Manual / Record / Playback / Bot), the per-block **Instant** toggle, the **saved-recording store**, the **capture contract** that decides whether the loops module or the substrate owns recording, the **queue annotations** describing what a recorded visit cost, and the **loop-mode interaction … | 7866 |
 | [Maze Substrate](./maze.md) | The maze substrate (`frontend/modules/mazeRoom/`, substrate id `maze`) renders regions as grid-of-tiles maze rooms: the player walks tile by tile, picks up items by stepping onto location tiles, and leaves through exit tiles on the perimeter. | 8654 |

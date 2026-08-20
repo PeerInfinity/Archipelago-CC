@@ -33,9 +33,22 @@ plan moves to `CC/docs/plans/` when its implementation starts.
 
 ## 1. Runner substrate — OR-lanes are the only remaining work
 
-Status: coverage RESTORED. The test-strategy rebalance SHIPPED+PUSHED
-2026-07-12, CI green (JavaScript Unit Tests 11m36s, whole slow battery under
-the ~15–18 min target). runnerDemo suites are back in both vitest configs.
+Status: coverage RESTORED 2026-07-12 — ⛔ **and the SLOW TIER IS OFF AGAIN
+SINCE 2026-08-20** (⚖ user): a major REDESIGN of this substrate is planned and
+will make the current generate-and-verify batteries irrelevant, so
+`vitest.slow.config.js` excludes `runnerDemo/**/*.slow.test.js` and
+`procgenPipeline/runnerSphereGrowth.slow.test.js`. Eight files, **2380 s of the
+slow suite's 2569 s (92.6%)**, one already red on a 300 s test timeout
+(`generator.slow.test.js`, `[blue+doubleJump+glide+spring] × seeds 1,2`). The
+files are DISABLED, not deleted; the redesign's own suite replaces them, and
+reverting is deleting the two patterns. ⛓ Untouched and still running: the
+runner's DEFAULT-tier `*.test.js`, the manual calib tier, the in-app substrate
+tests and the `verify-runner-*.mjs` instruments. Rationale and the per-file
+table are in `vitest.slow.config.js` itself and in
+`docs/json/developer/procgen/runner.md`.
+
+⚠ **The OR-lanes item below (O1–O5) predates the redesign decision** and is not
+re-scoped here; whoever opens the redesign should say whether it survives.
 
 1. **~~Implement the test-strategy rebalance~~ — DONE 2026-07-12** (Opus; 5
    commits on `main`, pushed, CI green). Default suite is generation-free;

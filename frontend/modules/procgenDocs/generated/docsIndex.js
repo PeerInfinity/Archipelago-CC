@@ -23,9 +23,9 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 17,
-        "lines": 13902,
+        "lines": 13906,
         "pages": 4,
-        "words": 165210
+        "words": 165358
     },
     "descriptionRule": "the document's OWN first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence. ⛔ Never a hand-written summary — if an entry reads thin, the fix is a better opening paragraph in the document.",
     "dir": "docs/json/developer/procgen",
@@ -102,7 +102,7 @@ export const DOCS_INDEX = frz({
             "description": "Runner (\"Runner Demo\", substrate id `runner`) is an auto-runner platformer substrate in `frontend/modules/runnerDemo/`.",
             "file": "runner.md",
             "h1": "Runner Substrate",
-            "lines": 108,
+            "lines": 112,
             "links": [
                 "architecture.md",
                 "bounce.md",
@@ -113,7 +113,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/runner.md",
-            "words": 4154
+            "words": 4302
         },
         {
             "description": "The procgen stack ships a family of tools for *watching a world play itself*: a playback bot that walks recorded playthroughs, a substrate-neutral controller contract with iframe proxies, shared timing/UI primitives, a forward simulator that generates sphere logs, and per-substrate visualizers.",
