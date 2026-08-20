@@ -6,7 +6,7 @@ Developer documentation for the procedural-generation ("procgen") system: the pi
 
 <!-- GENERATED:procgen-docs-index BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**17 documents · 4 pages · 160,090 words.**
+**17 documents · 4 pages · 161,006 words.**
 
 Order: `README_ORDER` in `scripts/procgen/reference/docsIndex.mjs` — today's reading order, declared. A file in the directory that is not in that list is a HARD ERROR, so a new document cannot arrive unindexed.
 
@@ -27,7 +27,7 @@ Descriptions: the document's OWN first paragraph, collapsed onto one line; past 
 | [Paths and Obstacles](./paths-and-obstacles.md) | Paths-and-obstacles is the intermediate representation procgen uses for access rules. | 914 |
 | [The Stepped Pipeline](./stepped-pipeline.md) | Sphere growth, top-down, and shuffled-spiral can run as monolithic calls or as a sequence of discrete, inspectable, editable steps. | 1523 |
 | [Text Adventure Substrate](./text-adventure.md) | The text-adventure substrate (id `text_adventure`) renders a procgen region as prose: a textual description with compass-labelled clickable exits and clickable locations. Under the hood it is a *tile-grid world wearing a text skin* — its build-time hooks reuse the shared tile-grid adapter primitives verbatim, so its sidecar shape is identical to the maze's; only the panel differs. | 687 |
-| [The Seedling Real-Game Bot, and the tracked record of the procgen arcs on `watch.html`](./seedling-bot.md) | How we drive the **real recompiled Seedling** with a scripted input tape and check a JavaScript model of its physics against what the game actually did — movement, collision, room transitions and A\* pathing. This file is also the tracked record of the procgen arcs built on `watch.html`, § *The procgen ELEMENTS design* being the current one. | 105980 |
+| [The Seedling Real-Game Bot, and the tracked record of the procgen arcs on `watch.html`](./seedling-bot.md) | How we drive the **real recompiled Seedling** with a scripted input tape and check a JavaScript model of its physics against what the game actually did — movement, collision, room transitions and A\* pathing. This file is also the tracked record of the procgen arcs built on `watch.html`, § *The procgen ELEMENTS design* being the current one. | 106896 |
 | [Flash Substrate](./flash.md) | The flash substrate (`frontend/modules/flashSubstrate/`, id `flash`) hosts recompiled Flash games — SWF → C → WASM via SWFRecomp-CC — in a same-origin iframe as procgen regions. The module ships a placeholder game page, so it is testable independently of any real recompiled game; its real significance is as the **shared iframe-substrate machinery** other substrates build on. | 981 |
 | [JtA Substrate](./jta.md) | The JtA substrate (`frontend/modules/jtaSubstrateWrapper/`, id `jta`) hosts the Journey to Ascension fork — an incremental/idle game in the `frontend/modules/journey-to-ascension/` submodule — in a same-origin iframe as a loop-mode substrate. It is the **reference zone-based substrate** (one AP region = one JtA zone, instantiated by ordinal), with host-side shared-mana brokering. | 4814 |
 | [Omsi Substrate (Idle Loops)](./omsi.md) | The omsi substrate (`frontend/modules/omsiSubstrateWrapper/`, id `omsi`) hosts the **`PeerInfinity/omsi-loops` fork of dmchurch's Idle Loops** — included as the `frontend/modules/omsi-loops/` git submodule, pinned at `2bda39b` — in a same-origin iframe as a loop-mode substrate. | 7217 |

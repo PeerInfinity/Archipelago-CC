@@ -10577,6 +10577,90 @@ timed out or was harness-failed in either arm.
 ⛔ **`chamber` IS OPT-IN ONLY** — it joins no biome default this arc, and every
 committed identity is byte-identical.
 
+### Arc 5, slice 4 — ARENAS: `bodies = n` priced before it was offered, and the four-mouth contract (2026-08-20)
+
+**The chamber weaponised.** `procgenCore/elements/arena.js` is the open
+chamber's own blob — the same footprint rule, the same declared
+`area`, the same four mouths, built by the same two IMPORTED functions — with
+`bodies` spinners standing in it and a KILL LOCK the BINDING puts on a cut of
+the room's main path, opened by the game's own `totalEnemies() == 0`. The
+import list is the proof it is not a fork, and a unit row asserts the two
+elements' tiles, area and eight ports are equal object-for-object at the same
+seed.
+
+⛔ **THE LOCK IS NOT ON THE BLOB'S MOUTH**, which is where the brief put it: the
+binding walls the site's ring and opens exactly ONE mouth, so a lock standing in
+it seals the bodies away from the player, `totalEnemies() == 0` never becomes
+true, and the gate never opens. It goes where the guard's own `Lock`(B) goes, by
+the same function — the main-path cut nearest the goal that leaves the element's
+entry mouth on the START's side. One function, two callers, each naming its own
+lock (`no-cut-for-the-kill-lock` beside `no-cut-for-the-flag-lock`).
+
+**`bodies = n` — COST FIRST (⚖ ruling 9), and the domain is what the cost said.**
+In the arena's own hand-drawn room (a corridor with a `tset:-1` lock in a cut
+and a 5×5 blob hanging off the mouth), holding everything but the count fixed:
+
+| bodies | outcome | ticks | ms |
+|---|---|---|---|
+| 0 (control) | SOLVED | 129 | 34 |
+| **1** | SOLVED | 462 | 600 |
+| **2** | SOLVED | 602 | 1060 |
+| **3** | ⛔ REFUSED | — | 2188 |
+
+⇒ the domain ships as **{1, 2}**. At production scale (64 yield-table cells per
+arm) two bodies cost LESS wall clock than one (363 s vs 508 s) with fewer aborts
+— a refusal is cheaper than a solve. ⛓ And the certification column across those
+two arms is NOT attributable to the count: a `pre-carve` element is constructed
+BEFORE the carve, so one extra `pick` per body re-rolls every draw the carve
+makes (measured: same goal on 32 of 32, same site on 32 of 32, **different carve
+on 8 of 32**). *A parameter that changes an element's draw count re-rolls
+everything drawn after it, so a two-arm sweep over it is not a paired
+comparison.*
+
+**A10 reproduced, and the body class is the census's choice rather than the
+design's.** The same fixture with the lock REMOVED, per class, 23 classes read
+from the engine's own table: `spinner` **THROWS** *"level 900 holds live spinners
+AND a DIALOGUED ceremony (torch) is running"*, and 20 of the other 22 SOLVE at
+the empty room's own 129 ticks — a body in a side room nobody must enter is not
+an obstacle at all. WITH the lock, `spinner` is the ONLY class that solves:
+a `tset:-1` lock needs a body the solver can kill, and `KILL_ARM_POLICY` calls
+exactly one class `modelled`. ⇒ no class is an OBSTACLE without a lock — the 20
+lock-less solves are the empty room's own solve, tick for tick — so the
+plain-chaser arm is named for R9 with its refusal text rather than forced.
+
+**The four-mouth contract** (slice 3's named carry). A blob element declares ONE
+MOUTH PER SIDE — the drawn one first, the other three derived from it — and the
+BINDING takes the first whose cell is not the room's border ring. Still two
+draws; still *refuse rather than redraw*. `the-entry-mouth-is-the-rooms-border-ring`
+goes **28 → 0** at 10×10 and 7 → 0 at 15×15, `the-entry-port-cannot-be-joined` is
+UNMOVED at 35 and 28, and a chamber PLACES on 37 of 84 cells at 10×10 where it
+placed on 14. ⛓ It is a STRICT EXTENSION, measured: over 252 (kind, size, seed)
+cells, 35 rows change and **every one of them was a refusal before** — all 107
+previously-placed levels are byte-identical.
+
+**The arena's own ceiling, published rather than tuned.** 49–70% of its refusals
+are `no-cut-for-the-kill-lock` — the room's main path offers no single-cell cut
+that is not the goal's doorstep — because unlike the KILL GATE its lock does not
+GROW a wall to make one. Of the placements that survive, 2 of 20 certify, and 11
+of 13 certification failures are the solver's press arm (*"the kill work order
+has no weapon"*) failing to find a strike opportunity inside a small blob. Both
+are named for a later slice; nothing here tunes a solver.
+
+⛓⛓⛓ **AND ONE SHIPPED TO THE REAL GAME AND AGREED PER TICK** (⚖ ruling 5's
+per-family row, HEADLESS, via slice 3's `--elements=`-parameterised arm):
+`branchy` seed 11 at 15×15 — the shortest of the three certified candidates over
+6 kinds × 16 seeds × {12×12, 15×15} — **`agrees per tick (516 observations)`** in
+1698 s, with the sentence's own count checked against two independent accounts of
+the same run and the 900→0 remap witnessed at every observation. The room that
+went to the game had `heldAtDoor: true`: one of that arena's own bodies cleared
+its kill lock before the crossing.
+
+⛔ **`arena` IS OPT-IN ONLY** — it joins no biome default, and every committed
+identity is byte-identical. ⚠ One behaviour DID change: it carries
+`needs: ['hasSword']`, so `--require=hasSword` now forces the `+` list
+`killgate+arena` instead of a bare `killgate`, and a list spends one `pick` where
+a bare head spends none.
+
 ## ▶ LOAD IN WASM — what this page holds, run in the REAL recompiled game (TOOLING; ⚖ user, 2026-08-19)
 
 `watch.html` has always been able to run a **committed tape** in the real
