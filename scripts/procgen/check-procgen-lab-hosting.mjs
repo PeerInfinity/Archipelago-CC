@@ -66,6 +66,7 @@ import { execFileSync } from 'node:child_process';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { PRE_SWORD_PALETTE } from '../../frontend/modules/seedlingDemo/procgenPalette.js';
 import { closeServer, serveRepoRoot } from './serveRepoRoot.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -136,10 +137,52 @@ const seedlingPayload = cli('generate-seedling-level.mjs', SEEDLING_ARGS);
  * is the other runtime's bytes, exactly as every other payload claim here is.
  * ⚠ TWO directives, because one would not distinguish "the list was replayed"
  * from "the first entry was".
+ *
+ * ── ⛔⛔⛔ AND THE SPEC IS **SPELLED BY THE PALETTE**, NOT TYPED ────────
+ *
+ * ⛓ PROCGEN ELEMENTS arc 5, slice 6b. Until this slice the spec was the literal
+ * `'wall-gap-block(ori=v,gap=1)@12d;wall-segment(ori=h,len=2)@12d'`, and it had
+ * been **BROKEN TWICE OVER SINCE ARC 3 SLICE 4c**: `wall-gap-block` is one of
+ * the three door TEMPLATES 4c retired, and the `d` suffix is the KEEP-POLICY
+ * letter that left the grammar in the same slice. The row did not go quietly
+ * red — it CRASHED, by name, before its first check
+ * (`the-bound-ends-with-the-keep-policy-letter`) — and nothing noticed for two
+ * arcs, because no per-slice gate list names this row.
+ *
+ * ⇒ ⛔ **THE SAME SELECTION RULE THE ELEMENT SUBJECT ABOVE ALREADY USES**: the
+ * row does not type a subject the roster can retire underneath it, it asks the
+ * roster. The rule, stated so a reader can re-run it:
+ *
+ *   the FIRST TWO templates the palette offers, each with every declared
+ *   parameter at the FIRST value of its own declared domain, at the
+ *   ladder's own anchor bound.
+ *
+ * ⛔ Every one of those is a value the PALETTE declares, so a retired template
+ * or a retired parameter value cannot appear here again; and if the palette ever
+ * offers fewer than two templates the row THROWS rather than quietly claiming
+ * about a one-directive replay, which is the exact claim it exists to refuse.
+ * ⛓ The bound carries NO letter: `first-solved` is the only policy Seedling has
+ * run since 4c, and `parseDirective` refuses a spec that names one.
  */
-const DIRECTED_SPEC = 'wall-gap-block(ori=v,gap=1)@12d;wall-segment(ori=h,len=2)@12d';
+const DIRECTED_BOUND = 12;
+const DIRECTED_SPEC = (() => {
+    const offered = PRE_SWORD_PALETTE.templates ?? [];
+    if (offered.length < 2) {
+        throw new Error('check-procgen-lab-hosting: palette '
+            + `"${PRE_SWORD_PALETTE.name}" offers ${offered.length} template(s) — this row's `
+            + 'DIRECTED claim needs TWO, because one directive cannot distinguish "the list '
+            + 'was replayed" from "the first entry was".');
+    }
+    return offered.slice(0, 2).map((t) => {
+        const params = (t.params ?? []).map((q) => `${q.key}=${q.domain[0]}`).join(',');
+        return `${t.name}${params ? `(${params})` : ''}@${DIRECTED_BOUND}`;
+    }).join(';');
+})();
 const directedSeedlingPayload = cli('generate-seedling-level.mjs',
     [...SEEDLING_ARGS, `--directed=${DIRECTED_SPEC}`]);
+// eslint-disable-next-line no-console
+console.log(`node: the DIRECTED spec is SPELLED BY THE PALETTE "${PRE_SWORD_PALETTE.name}": `
+    + `${DIRECTED_SPEC}`);
 // eslint-disable-next-line no-console
 console.log(`node: the DIRECTED Seedling payload carries `
     + `${directedSeedlingPayload.directives.length} directive(s): `
