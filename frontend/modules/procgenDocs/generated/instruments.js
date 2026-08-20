@@ -653,7 +653,8 @@ export const INSTRUMENTS = frz({
         {
             "argvHelpers": [
                 "arg",
-                "say"
+                "say",
+                "span"
             ],
             "browser": false,
             "category": "census",
@@ -661,6 +662,7 @@ export const INSTRUMENTS = frz({
             "docblockStyle": "block",
             "documentedFlags": [
                 "json",
+                "kinds",
                 "seeds"
             ],
             "file": "census-seedling-killgate-clears.mjs",
