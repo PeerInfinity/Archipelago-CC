@@ -57,6 +57,9 @@ describe('⛓⛓ the anchors — two readers, 607 headings, one answer', () => {
             expect(idsOf(RENDERS.get(f).html), f).toEqual(want);
             total += want.length;
         }
+        // ⚠ 609 → 610 with arc-5 slice 3: `seedling-bot.md` § *Arc 5, slice 3
+        //   — ELEMENTS-AS-AREA*, the § a generation-OUTPUT change owes the
+        //   tracked record. Before it:
         // ⚠ 608 → 609 with arc-5 slice 2: `seedling-bot.md` § *Arc 5, slice 2*
         //   (the oriented site pick + C4's refutation). Before it, 607 → 608 was
         //   arc-5 slice 1: `seedling-bot.md` § *Arc 5, slice 1
@@ -66,7 +69,7 @@ describe('⛓⛓ the anchors — two readers, 607 headings, one answer', () => {
         // WASM gained *The PER-TICK verdict — and the two limits it names*.
         // ⛔ RE-PINNED, never widened — a pin that moves because somebody wrote
         // into what it measures is the pin WORKING (trap 410).
-        expect(total).toBe(609);
+        expect(total).toBe(610);
     });
 
     it('⛔ uses OUR rule, not marked\'s slugger — they differ, and here is where', () => {
@@ -214,13 +217,14 @@ describe('⛓ the constructs the corpus is actually made of', () => {
 });
 
 describe('⛓ the biggest document — the one the budget is about', () => {
-    it('seedling-bot.md renders 396 headings and its slugs are unique', () => {
-        // ⚠ 395 → 396: arc-5 slice 2's § (the oriented site pick). 394 → 395 was
+    it('seedling-bot.md renders 397 headings and its slugs are unique', () => {
+        // ⚠ 396 → 397: arc-5 slice 3's § (elements-as-area, the chamber
+        // element). 395 → 396 was arc-5 slice 2's § (the oriented site pick). 394 → 395 was
         //   slice 1's (the room contract).
         // ⚠ 393 → 394: the per-tick slice's § in ▶ LOAD IN WASM. Same re-pin.
         const ids = idsOf(RENDERS.get('seedling-bot.md').html);
-        expect(ids).toHaveLength(396);
-        expect(new Set(ids).size).toBe(396);
+        expect(ids).toHaveLength(397);
+        expect(new Set(ids).size).toBe(397);
         expect(ids.filter((i) => i !== ghSlug(i))).toEqual([]);
     });
 
