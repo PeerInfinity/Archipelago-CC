@@ -77,9 +77,12 @@ describe('⛓⛓ the anchors — two readers, 607 headings, one answer', () => {
         // tracked record. Same re-pin as the line below.
         // ⚠ 606 → 607 with the per-tick slice: `seedling-bot.md` § ▶ LOAD IN
         // WASM gained *The PER-TICK verdict — and the two limits it names*.
+        // ⚠ 615 → 618 with SEEDLING BOT R9 slice 1: `seedling-bot.md` § *R9 —
+        //   the solver rung, opened from the generator's side* and its two
+        //   slice sub-headings — the § the tracked record owes a re-record.
         // ⛔ RE-PINNED, never widened — a pin that moves because somebody wrote
         // into what it measures is the pin WORKING (trap 410).
-        expect(total).toBe(615);
+        expect(total).toBe(618);
     });
 
     it('⛔ uses OUR rule, not marked\'s slugger — they differ, and here is where', () => {
@@ -227,7 +230,9 @@ describe('⛓ the constructs the corpus is actually made of', () => {
 });
 
 describe('⛓ the biggest document — the one the budget is about', () => {
-    it('seedling-bot.md renders 402 headings and its slugs are unique', () => {
+    it('seedling-bot.md renders 405 headings and its slugs are unique', () => {
+        // ⚠ 402 → 405: SEEDLING BOT R9 slice 1's § *R9 — the solver rung, opened
+        // from the generator's side* plus its two slice sub-headings.
         // ⚠ 400 → 402: arc-5 slice 6b's TWO §§ (the density block, and the arc's
         // own CLOSED summary).
         // ⚠ 399 → 400: arc-5 slice 6a's § (the biome default's new shape).
@@ -237,8 +242,8 @@ describe('⛓ the biggest document — the one the budget is about', () => {
         //   slice 1's (the room contract).
         // ⚠ 393 → 394: the per-tick slice's § in ▶ LOAD IN WASM. Same re-pin.
         const ids = idsOf(RENDERS.get('seedling-bot.md').html);
-        expect(ids).toHaveLength(402);
-        expect(new Set(ids).size).toBe(402);
+        expect(ids).toHaveLength(405);
+        expect(new Set(ids).size).toBe(405);
         expect(ids.filter((i) => i !== ghSlug(i))).toEqual([]);
     });
 
