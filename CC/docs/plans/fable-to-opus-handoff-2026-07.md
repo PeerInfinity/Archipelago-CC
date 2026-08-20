@@ -3398,6 +3398,19 @@ grows in `docs/json/developer/procgen/seedling-bot.md` from the splice on).
 solver cannot certify, so the solver is the bottleneck — §5g's leverage map
 above is the order *inside* R9's solver half rather than an arc of its own.
 **Slice 0 (the form controls) SHIPPED 2026-08-20**, byte-inert, `55ee1e857..b89448ad8`.
+**Slice 1 (the quick fixes) SHIPPED 2026-08-20**, `d7b0f5ec1..9bbc847fb`: the
+per-spec parameter DOMAIN `key=v1|v2|v3` (byte-inert, whole identity block
+unmoved) and the rung's ONE ruled generator re-record adopting it in the biome
+default — **the guard reaches a room 10 → 24 pre-sword and 10 → 15 post-sword**,
+its graded-drop share 95.6 % → 89.3 % / 93.9 % → 90.9 %, mover set predicted
+first and diffed row by row; A3's misreported WHY; the E bucket, where the demo
+catalogue's `cli:` line is now EXECUTED (162 → 181 claims, and the first run
+found a `; echo $?` that made a documented exit-6 command exit 0); a press-time
+refusal on the editor-generate gate fails BY NAME instead of after 300 seconds.
+⛔ Carried off: **a solver change that moves only a refusal STRING moves no tape
+and still moves every payload that RECORDS a refusal** — A3 moved four identity
+artifacts by one `reasonText` line each, ⚖ ruled to stand as a second, different
+class of mover.
 
 ## 6. Everything else (unchanged queues)
 

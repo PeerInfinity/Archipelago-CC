@@ -166,7 +166,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 210,
         "browser": 72,
-        "cited": 62,
+        "cited": 63,
         "files": 229,
         "lineStyle": 19,
         "withDocblock": 229,
@@ -1180,7 +1180,9 @@ export const INSTRUMENTS = frz({
             ],
             "browser": true,
             "category": "check",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [
                 "host"

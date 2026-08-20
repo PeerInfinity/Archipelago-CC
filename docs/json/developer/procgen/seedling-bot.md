@@ -11210,3 +11210,95 @@ not a reason to widen this.
 ⚠ The split is not tidiness. WSL's own chromium is SwiftShader at ~0.5 ticks/s,
 so a 255-tick solve is eight minutes of software rasterising and any deadline
 over it is a race against machine load rather than a fact.
+
+## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
+
+⚖ The user's order: **form controls first**, then **the quick fixes**, then a
+**SEQUENCE of playback tapes on the watch page** as a *continuation of the game
+state*, `KEEP_POLICY` removal when convenient, then oracle and solver features
+**as the vanilla playthrough needs them**. The splice stays R9's first solver
+act (R8's close, option A).
+
+### Slice 0 — FORM CONTROLS (`b89448ad8`)
+
+Six URL-only parameters gained controls on the Seedling generate page, the
+element control gained a THIRD state (`(biome default)` ≡ `undefined`, which
+`seedlingSeam` reads as *apply `defaultElementsFor`*), and the mapping lives in
+`watchGenerate.js` as a pair of inverses rather than inside the view.
+`check-seedling-editor-generate.mjs` 208 → **222**.
+
+### Slice 1 — the quick fixes (`0d09e2ad3` … `9bbc847fb`)
+
+**⛓⛓⛓ THE PER-SPEC PARAMETER DOMAIN.** A parameter had two spellings and the
+difference between them was a DRAW. There is now a third:
+
+```
+guard              OMITTED — ONE rng.pick over the whole declared domain
+guard;len=2|3|4    SUBSET  — ONE rng.pick over those members, AS WRITTEN
+guard;len=4        PIN     — the value, and NO draw at all
+```
+
+The SHAPE is `templateContract`'s (`{pick:[…]}`, where the draw is spent) and the
+SPELLING is `elementSpec`'s. Order is kept as written (the draw is a `pick` over
+that array); a ONE-member subset **is** the pin; the whole domain spelled as a
+subset is a NAMED spelling and not the bare parameter (`namedParams` reports them
+differently, and that difference is what a reader is reading); a member outside
+the domain, a repeat, and a subset on the binding knob `binds` each refuse BY
+NAME. `|` and not `,`, because `,` is taken twice outside this codec.
+
+**THE BIOME DEFAULT ADOPTED IT** (⚖ ruling 9 — the rung's ONE generator
+re-record): `guard;len=2|3|4+blockpocket+chamber;w=2;h=3` pre-sword,
+`+killgate` post-sword. Arc 5 measured the guard reaching a room **10 times in
+600** default draws with `len` 5 and 6 placing NOTHING at 10×10. Measured after,
+over 15 kinds × 40 seeds × both biomes at `keys: 1`:
+
+| | guard drew | PLACED | graded-drop share |
+|---|---|---|---|
+| pre-sword | 225 | 10 → **24** | 95.6 % → **89.3 %** |
+| post-sword | 165 | 10 → **15** | 93.9 % → **90.9 %** |
+
+⛓ And the placed-`len` histogram says why: BEFORE `{2: 10}` on both biomes —
+3, 4, 5, 6 placed nothing anywhere in 1200 cells. AFTER `{2:10, 3:4, 4:10}` pre
+and `{2:10, 3:4, 4:1}` post. The `len=2` count is unchanged; the whole gain is
+draws that used to land on 5 and 6 landing on 3 and 4.
+
+⛔ `nextIndex(n)` spends ONE `next()` whatever `n` is, so no draw COUNT moved
+anywhere — only the value the guard's `len` lands on, and only where the list
+drew `guard`. In the three pairs dumps **every differing row is guard-headed and
+no non-guard row moved** (46 of 46). The re-pin tail is ONE unit row; the browser
+tail is **ZERO over 746 claims**, which is the same finding arc-5 6a's mutant (b)
+made: a change in the default's DISTRIBUTION is invisible to every behavioural
+gate in the tree, and that is why the literal default pin exists.
+
+**A3 — a kill refusal names the arm it actually tried.** `derivePressKill`
+accumulated its own refusal sentences and discarded them at every `return null`,
+so a room that refused in the PRESS arm reported *"level N has NO arrow trap"* —
+true, alone, and about the arm nobody asked for. It returns `{first, plans,
+rejected}` on every arm now and both fallthroughs report both arms, the press
+arm's first. ⚠ `solverBot.js:5830` is NOT the same defect: that is the walker's
+rung 4, which never calls `derivePressKill`, so its `weapon.why` is the only arm
+it tried.
+
+⛔⛔ **AND A REFUSAL STRING IS RECORDED IN PAYLOADS.** A3 moved no tape — the
+battery `--check` is byte-identical at `1fedb0ab…` and `r8-solve-18`'s trace is
+byte-identical by its own producer — and still moved FOUR identity artifacts, one
+`reasonText` line each: the acceptance batch (1 of 106 rows), `killgate` levels
+seeds 2 and 9 (1 row each; **seed 5 is the control and did not move**, because its
+refusal is not a kill refusal) and the post-sword default level. The rooms are
+byte-identical. ⇒ *"no tape moved"* answers only half the question; the other half
+is **"who RECORDS this string?"**
+
+**THE E BUCKET.** The demo catalogue's `cli:` line is `{command, exit[, skip]}`
+and `check-procgen-demos.mjs` RUNS it — 162 → **181 claims**. The first run found
+what an unrun field hides: `refused-directive`'s command ended `; echo $?`, so the
+shell exited 0 while the entry's own prose said 6. `publishShip` projects `note`,
+so the ship row reads the remap structurally instead of regexing the painted
+verdict. The shortest certification tape over certified DEFAULT levels is **73
+ticks** (`empty`, seeds 26/28; `winding` 88, `branchy` 123, `rooms` 125), so
+nothing ≤ ~60 exists and the headless REPLAY arm keeps `friction-stop.json`.
+
+**A PRESS-TIME REFUSAL FAILS BY NAME.** `check-seedling-editor-generate.mjs` used
+to die of an uncaught `TimeoutError` after its whole 300-second budget when the
+page refused a form at a press; `waitOrRefusal` now reports it as a named failure
+quoting `#status`. Measured by mutant: **14 named FAILs** where slice 0's mutant
+(c) got one timeout and 17 silent passes.
