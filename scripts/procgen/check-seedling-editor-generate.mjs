@@ -86,6 +86,7 @@
  */
 
 import { chromium } from '@playwright/test';
+import { execFileSync } from 'node:child_process';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -2963,6 +2964,116 @@ if (!host) {
     check(chambersControl === '1',
         '⛔ the CHAMBERS control shows the value the room was CARVED at, not the codec\'s '
         + 'default', json(chambersControl));
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ CLAIM 11 — **THE DENSITY IDENTITY BLOCK, PAGE AGAINST NODE**
+ * (PROCGEN ELEMENTS arc 5, slice 6b — §3.6)
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⛔ **A VALUE CLAIM, AND THE NODE SIDE IS A CHILD PROCESS** — not this
+ * script's own `generateStep` import. The block's whole promise is that ONE
+ * function (`procgenCore/densityBlock.js`) spells it for four readouts; the
+ * cheapest way to break that promise is for one CALL SITE to read a different
+ * field, and two call sites inside one node process would not be able to say
+ * so. ⇒ the page's `__editorGenerate.identity` against
+ * `generate-seedling-level.mjs --density`'s own line, on the same six settings.
+ *
+ * ⛓ THE SUBJECT IS A ROOM WHERE ALL SIX FIELDS SAY SOMETHING: a CARVED
+ * `winding;chambers=2`, a NON-SQUARE MULTI-SCREEN 20x12 room, `fill=shell`
+ * (92 of 240 cells written — the strip really strips), the biome default's
+ * four-member `+` list RESOLVED to one head, and a target that is not the
+ * default 6. A block asserted on the pinned 10x10 dense open room would be
+ * five defaults and a claim that could not tell them apart.
+ *
+ * ⛔ THE URL IS THE PAGE WRITER'S OWN SPELLING (`writeGenerateParams`), so the
+ * two sides are the same run rather than two runs that happen to agree.
+ */
+{
+    const DENSITY_Q = 'source=generate&seed=7&biome=pre-sword'
+        + '&skeleton=winding%3Bchambers%3D2&width=20&height=12&fill=shell'
+        + '&count=1&tries=8&k=3&anchortries=1&run=1';
+    const web = await load(DENSITY_Q, { step: 1, seed: 7 });
+    const lineOf = (text) => (String(text ?? '').split(/\s{2,}|\n/)
+        .find((b) => b.trim().startsWith('density: ')) ?? '').trim();
+    const pageBlock = lineOf(web.gen.identity);
+    const nodeReport = execFileSync(process.execPath, [
+        join(HERE, 'generate-seedling-level.mjs'),
+        '--seed=7', '--biome=pre-sword', '--skeleton=winding;chambers=2',
+        '--width=20', '--height=12', '--fill=shell', '--count=1', '--density',
+    ], { encoding: 'utf8', maxBuffer: 128 * 1024 * 1024, stdio: ['ignore', 'pipe', 'ignore'] });
+    const nodeBlock = (nodeReport.split('\n').find((l) => l.startsWith('density: ')) ?? '').trim();
+    check(pageBlock !== '' && nodeBlock !== '',
+        '⛓⛓ CLAIM 11 — BOTH readouts PRINT a density block (the page on its identity line, '
+        + 'the CLI under `--density`)', `page ${json(pageBlock)} · node ${json(nodeBlock)}`);
+    check(pageBlock === nodeBlock,
+        '⛓⛓⛓ …and they are the SAME SIX VALUES, character for character — ONE function, '
+        + 'two runtimes', `page ${json(pageBlock)} vs node ${json(nodeBlock)}`);
+    /**
+     * ⛔ AND THE VALUES ARE THE RUN'S, not a default echoed back. Each field is
+     * checked against the thing that produced it: the record the page built,
+     * the fill it was asked for, the head the stream RESOLVED out of the `+`
+     * list, and the bound it ran under.
+     */
+    check(pageBlock.includes(`size=${web.level.width}x${web.level.height}`),
+        '⛓ …`size=` is the RECORD\'s own room, not the asked size',
+        `${pageBlock} vs ${web.level.width}x${web.level.height}`);
+    check(pageBlock.includes('fill=shell')
+        && web.level.layers.find((l) => l.name === 'tiles').tiles.length
+            < web.level.width * web.level.height,
+    '⛓⛓ …`fill=` is the DECLARED word AND the strip really stripped — the one room where a '
+        + 'recomputation from the written-cell count could not be told apart is the OPEN one',
+    `${web.level.layers.find((l) => l.name === 'tiles').tiles.length} of `
+        + `${web.level.width * web.level.height} cells written`);
+    check(pageBlock.includes('chambers=2') && pageBlock.includes('kind=winding'),
+        '⛓ …`kind=`/`chambers=` are the skeleton the room was CARVED at', pageBlock);
+    check(pageBlock.includes(`element=${web.gen.identity.includes('-> drew `')
+        ? web.gen.identity.split('-> drew `')[1].split('`')[0] : '(no draw)'}`),
+    '⛓⛓⛓ …and `element=` is the head the `+` list RESOLVED to, not the four-member list '
+        + 'that was ASKED — the identity line\'s own `-> drew` value',
+    `${pageBlock} · identity says ${json(web.gen.identity.split('element: ')[1] ?? null)}`);
+    check(pageBlock.includes('target=1'),
+        '⛓ …and `target=` is the bound this run actually ran under, not the biome default 6',
+        pageBlock);
+    /**
+     * ⛓⛓⛓ **AND A SECOND SUBJECT, BECAUSE THE FIRST CANNOT DISTINGUISH ONE OF
+     * THE TWO BUILDS** (`feedback_fixture_must_discriminate_two_builds` — the
+     * mutant is what forced this row to exist).
+     *
+     * The subject above is `fill=shell` on a room where the strip DROPS 148 of
+     * 240 cells, so a block that spelled `fill` by RECOMPUTING it from the
+     * written-cell count (`tiles.length === width*height ? 'dense' : 'shell'`)
+     * would still print `shell` there and the claim would pass. ⛔ The room that
+     * separates the two answers is the OPEN one with NO element: arc 5 slice 1
+     * measured the shell strip at **0%** there, and it reproduces —
+     * `--elements=none --fill=shell` writes **100 of 100** cells, i.e. a record
+     * that is byte-for-byte the DENSE room and was nevertheless generated
+     * `shell`. On that room a recomputation says `dense` and the declaration
+     * says `shell`.
+     *
+     * ⚠ AND IT IS ONLY THAT ROOM AT `--elements=none` SINCE SLICE 6a: the biome
+     * default now draws a `guard`/`blockpocket`/`chamber`, whose GROWN wall the
+     * strip can drop, so the same open room at the default writes 88 of 100.
+     */
+    const OPEN_SHELL_Q = 'source=generate&seed=7&biome=pre-sword&fill=shell'
+        + '&count=6&tries=8&k=3&anchortries=1&elements=none&run=1';
+    const openWeb = await load(OPEN_SHELL_Q, { step: 6, seed: 7 });
+    const openPage = lineOf(openWeb.gen.identity);
+    const openNode = (execFileSync(process.execPath, [
+        join(HERE, 'generate-seedling-level.mjs'),
+        '--seed=7', '--biome=pre-sword', '--fill=shell', '--count=6',
+        '--elements=none', '--density',
+    ], { encoding: 'utf8', maxBuffer: 128 * 1024 * 1024, stdio: ['ignore', 'pipe', 'ignore'] })
+        .split('\n').find((l) => l.startsWith('density: ')) ?? '').trim();
+    const openTiles = openWeb.level.layers.find((l) => l.name === 'tiles').tiles.length;
+    check(openTiles === openWeb.level.width * openWeb.level.height,
+        '⛓⛓⛓ …and the DISCRIMINATING subject is a `fill=shell` room whose strip dropped '
+        + 'NOTHING — the record is the DENSE room, byte for byte',
+        `${openTiles} of ${openWeb.level.width * openWeb.level.height} cells written`);
+    check(openPage === openNode && openPage.includes('fill=shell'),
+        '⛓⛓⛓ …and BOTH readouts still say `fill=shell` on it — the word is the DECLARATION, '
+        + 'and a block that recomputed it from the written-cell count would say `dense` here',
+        `page ${json(openPage)} vs node ${json(openNode)}`);
 }
 
 console.log(failed ? `\n${failed} FAILURE(S)` : '\nALL CHECKS PASSED');

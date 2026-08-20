@@ -71,6 +71,7 @@ import {
 import {
     DEFAULT_AREAS, formatAreaSpec, formatRequireList, normalizeAreaSpec,
 } from '../procgenCore/areaSpec.js';
+import { densityLine } from '../procgenCore/densityBlock.js';
 /**
  * ⛓⛓ PROCGEN ELEMENTS arc 2, slice 4 — the ONE element codec. ⛔ The page does
  * not parse `?elements=` itself and does not restate a domain: `urlParams`
@@ -1347,6 +1348,25 @@ export function describeState(state, solved = null) {
             + (requireText === '' ? '' : ` · requires: ${requireText}`)
             + (directives ? `, then ${directives} directed attempt(s)` : '')
             + (edits ? `, then ${edits} manual edit(s)` : ''),
+        /**
+         * ⛓⛓⛓ ARC 5, SLICE 6b — **THE DENSITY IDENTITY BLOCK** (§3.6), the same
+         * six levers the Seedling page prints and through the SAME function
+         * (`procgenCore/densityBlock.js`). ⛔ `fill` is `dense` here and it is a
+         * statement rather than a placeholder: the maze writes its grid whole
+         * and has no fill knob, so `dense` is what this substrate IS.
+         *
+         * ⛔ IT READS: the room is the RECORD's own `width`/`height`, the
+         * element is the spec the model RESOLVED. Nothing is recomputed from
+         * the finished level.
+         */
+        densityLine({
+            skeleton: state.skeleton ?? DEFAULT_SKELETON,
+            width: state.record?.width ?? state.width,
+            height: state.record?.height ?? state.height,
+            fill: 'dense',
+            element: state.model?.elements?.spec ?? state.elements ?? DEFAULT_ELEMENTS,
+            obstacleTarget: state.bounds.obstacleTarget,
+        }),
         `palette: ${state.palette?.name ?? '(none)'}`
             + (state.roster ? '' : ' (the WHOLE roster — no restriction)'),
         s ? `kept ${s.keptCount}/${state.bounds.obstacleTarget} over ${s.attempts} attempt(s)`

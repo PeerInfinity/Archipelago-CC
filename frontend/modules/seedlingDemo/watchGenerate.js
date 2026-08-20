@@ -106,6 +106,7 @@ import {
 } from './procgenSeedling.js';
 import { ELEMENTS_NONE, elementSummaryOf } from './procgenSeedlingElements.js';
 import { DEFAULT_AREAS, normalizeAreaSpec, parseAreaSpec } from '../procgenCore/areaSpec.js';
+import { densityLine } from '../procgenCore/densityBlock.js';
 import {
     formatElementSpec, isElementList, parseItemRequireList,
 } from '../procgenCore/elementSpec.js';
@@ -1414,6 +1415,31 @@ export function describeState(state, solved = null) {
              */
             + ((state.edits ?? []).length
                 ? `, then ${state.edits.length} manual edit(s)` : ''),
+        /**
+         * ⛓⛓⛓ ARC 5, SLICE 6b — **THE DENSITY IDENTITY BLOCK** (§3.6): the six
+         * levers that decide how much room there is and how much is in it, in
+         * ONE line, spelled by `procgenCore/densityBlock.js` — the same function
+         * the maze page and both CLIs call, so the four readouts cannot drift.
+         *
+         * ⛔ IT READS; IT DOES NOT COMPUTE. The room is the RECORD's own
+         * `width`/`height` (never the asked size — a refused size never becomes
+         * a room), the fill is the DECLARED word (never a guess from the written
+         * cell count: `fill=shell` on an open room strips 0%), and the element is
+         * the head the stream RESOLVED, not the `+` list that was asked for.
+         *
+         * ⛔ ALL SIX PRINT ON EVERY LEVEL — the one deliberate exception to this
+         * line's own "name it only when it is not the default" rule, and the
+         * module's docblock carries the reason: a DIAL is read by seeing every
+         * position at once.
+         */
+        densityLine({
+            skeleton: state.skeleton ?? DEFAULT_SKELETON,
+            width: state.record?.width ?? state.size?.width ?? SEEDLING_DEFAULTS.width,
+            height: state.record?.height ?? state.size?.height ?? SEEDLING_DEFAULTS.height,
+            fill: state.fill ?? FILL_DENSE,
+            element: state.model?.elementHead ?? state.elements?.spec ?? null,
+            obstacleTarget: state.bounds.obstacleTarget,
+        }),
         /**
          * ⛓ SLICE 4: THE ROSTER THE RUN DREW FROM, by the palette's own name —
          * `pre-sword` unrestricted, `pre-sword[families:pit,water]` under verb

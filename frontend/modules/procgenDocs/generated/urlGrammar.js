@@ -953,7 +953,7 @@ export const URL_GRAMMAR = frz({
                 {
                     "file": "frontend/modules/seedlingDemo/watchGenerate.js",
                     "fn": "readGenerateParams",
-                    "line": 226,
+                    "line": 227,
                     "role": "read"
                 },
                 {
@@ -980,7 +980,7 @@ export const URL_GRAMMAR = frz({
                 {
                     "file": "frontend/modules/seedlingDemo/watchGenerate.js",
                     "fn": "writeGenerateParams",
-                    "line": 461,
+                    "line": 462,
                     "role": "write"
                 }
             ],
@@ -1564,7 +1564,7 @@ export const URL_GRAMMAR = frz({
                 {
                     "file": "frontend/modules/mazeRoom/mazeLab.js",
                     "fn": "readLabParams",
-                    "line": 211,
+                    "line": 212,
                     "role": "read"
                 }
             ],
@@ -1573,7 +1573,7 @@ export const URL_GRAMMAR = frz({
                 {
                     "file": "frontend/modules/mazeRoom/mazeLab.js",
                     "fn": "writeLabParams",
-                    "line": 287,
+                    "line": 288,
                     "role": "write"
                 }
             ],

@@ -62,6 +62,7 @@ const MAZE = (p) => import(join(HERE, '..', '..', 'frontend/modules/mazeRoom', p
 
 const { ATTEMPT, STOP, costModel } = await CORE('levelGenerator.js');
 const { formatSkeleton, parseSkeleton } = await CORE('skeletonKinds.js');
+const { densityLine } = await CORE('densityBlock.js');
 const { formatAreaSpec, formatRequireList, parseAreaSpec, parseRequireList } =
     await CORE('areaSpec.js');
 const { NONE: ELEMENTS_NONE, formatElementSpec, parseElementSpec } =
@@ -268,6 +269,27 @@ if (has('json')) {
     say('');
     say(`room:   ${s.width}x${s.height} tiles, skeleton ${formatSkeleton(SKELETON)}`
         + `${SKELETON.kind === 'empty' ? ' (all floor before the loop, no wall ring)' : ' (CARVED)'}`);
+    /**
+     * ⛓⛓⛓ ARC 5, SLICE 6b — **THE DENSITY IDENTITY BLOCK** (§3.6), the same
+     * six levers and the same function (`procgenCore/densityBlock.js`) the
+     * Seedling CLI and both lab pages print. ⛔ `fill=dense` is a statement
+     * about this substrate rather than a placeholder: the maze writes its grid
+     * whole and has no fill knob.
+     *
+     * ⛔⛔ OPT-IN, for the reason the Seedling CLI's own block states: this
+     * report's md5 is TWELVE of the arc's byte-inertia rows and the arc's ONE
+     * re-record is spent.
+     */
+    if (has('density')) {
+        say(densityLine({
+            skeleton: SKELETON,
+            width: out.record.width,
+            height: out.record.height,
+            fill: 'dense',
+            element: out.model.elements?.spec ?? ELEMENTS,
+            obstacleTarget: bounds.obstacleTarget,
+        }));
+    }
     if (AREAS.keys > 0) {
         const a = out.model.areas;
         say(`areas:  ${formatAreaSpec(AREAS)} — ${a.partitionSummary?.areaCount ?? 0} area(s) `

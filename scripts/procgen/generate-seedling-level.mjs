@@ -70,6 +70,7 @@ const CORE = (p) => import(join(HERE, '..', '..', 'frontend/modules/procgenCore'
 
 const { ATTEMPT, STOP, costModel } = await CORE('levelGenerator.js');
 const { formatSkeleton, parseSkeleton } = await CORE('skeletonKinds.js');
+const { densityLine } = await CORE('densityBlock.js');
 const { formatAreaSpec, parseAreaSpec } = await CORE('areaSpec.js');
 const { DEFAULT_BUDGET } = await M('procgenOracle.js');
 const { generateSeedlingLevel, seedlingSkeletonSpec } = await M('procgenSeedling.js');
@@ -543,6 +544,34 @@ if (has('json')) {
          */
         + `, fill ${FILL} (${tileCount} of ${out.record.width * out.record.height} cells `
         + 'written)');
+    /**
+     * ⛓⛓⛓ ARC 5, SLICE 6b — **THE DENSITY IDENTITY BLOCK** (§3.6), on the same
+     * function both lab pages print (`procgenCore/densityBlock.js`), so the four
+     * readouts of one run cannot drift.
+     *
+     * ⛔⛔ **OPT-IN, AND THAT IS A DECISION WITH A NUMBER BEHIND IT.** ⚖ The
+     * arc's ONE re-record was spent by slice 6a; this report's md5 is a
+     * published identity (`generate-seedling-level.mjs … | md5sum` is three of
+     * the arc's byte-inertia rows, and `generate-maze-level.mjs`'s is twelve
+     * more), so a line printed unconditionally would re-record FIFTEEN
+     * identities for a projection of five fields already on the page above it.
+     * ⇒ the flag is the channel, an omitted flag is byte-identical, and the
+     * BROWSER rows are where the block is asserted on every run.
+     *
+     * ⛓ The element is the head AS RESOLVED (`out.model.elementHead`), which is
+     * the one the `+` list's `pick` landed on — the same value the line below
+     * prints after `-> drew`.
+     */
+    if (has('density')) {
+        say(densityLine({
+            skeleton: SKELETON,
+            width: out.record.width,
+            height: out.record.height,
+            fill: FILL,
+            element: out.model.elementHead ?? null,
+            obstacleTarget: bounds.obstacleTarget,
+        }));
+    }
     /**
      * ⛓⛓ THE ELEMENT LINE — and it prints the CERTIFICATION VERDICT, not a
      * placement, because the two differ today and hiding the difference is the

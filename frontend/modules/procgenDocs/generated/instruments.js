@@ -44,7 +44,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 10,
+            "count": 11,
             "id": "census"
         },
         {
@@ -164,13 +164,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 209,
+        "blockStyle": 210,
         "browser": 72,
-        "cited": 61,
-        "files": 228,
+        "cited": 62,
+        "files": 229,
         "lineStyle": 19,
-        "withDocblock": 228,
-        "withFlags": 137
+        "withDocblock": 229,
+        "withFlags": 138
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -544,6 +544,102 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "census-seedling-committed-rooms — WHAT IS STANDING IN EVERY COMMITTED ROOM.",
             "path": "scripts/procgen/census-seedling-committed-rooms.mjs"
+        },
+        {
+            "argvHelpers": [
+                "M",
+                "SEEDS",
+                "arg",
+                "has",
+                "mean",
+                "note",
+                "one",
+                "pct",
+                "say"
+            ],
+            "browser": false,
+            "category": "census",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "estimate-only",
+                "json",
+                "kinds",
+                "seeds"
+            ],
+            "file": "census-seedling-density.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "biome"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "cell"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "cellbudget"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "count"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "elements"
+                },
+                {
+                    "how": [
+                        "has"
+                    ],
+                    "name": "estimate-only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "fills"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "kinds"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "seeds"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "sizes"
+                }
+            ],
+            "oneLiner": "census-seedling-density — **WHAT EACH POSITION OF THE DENSITY DIAL BUYS.**",
+            "path": "scripts/procgen/census-seedling-density.mjs"
         },
         {
             "argvHelpers": [
@@ -2088,6 +2184,12 @@ export const INSTRUMENTS = frz({
                 },
                 {
                     "how": [
+                        "has"
+                    ],
+                    "name": "density"
+                },
+                {
+                    "how": [
                         "arg"
                     ],
                     "name": "elements"
@@ -2262,6 +2364,12 @@ export const INSTRUMENTS = frz({
                         "num"
                     ],
                     "name": "count"
+                },
+                {
+                    "how": [
+                        "has"
+                    ],
+                    "name": "density"
                 },
                 {
                     "how": [
