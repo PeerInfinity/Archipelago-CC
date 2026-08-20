@@ -124,6 +124,13 @@ const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
  * one the page prints.
  */
 const CLI_TIMEOUT_MS = 300000;
+/**
+ * ⛔ **AND THE CLI ROWS DO NOT RUN UNDER `--pages=`**, which is why that arm
+ * reports **162** where a local run reports **181**. The command in a `cli`
+ * field runs the LOCAL tree; asserting its exit while checking a DEPLOYED root
+ * would be a claim about a different tree wearing the deployed run's name. The
+ * asymmetry is stated here so nobody reads 162 as a regression from 181.
+ */
 
 let failed = 0;
 const check = (ok, what, detail) => {
