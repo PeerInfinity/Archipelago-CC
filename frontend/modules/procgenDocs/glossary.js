@@ -1287,6 +1287,49 @@ export const TERMS = Object.freeze([
         seeAlso: ['pre-carve-element', 'chamber', 'area', 'area-partition', 'element-head'],
     }),
     t({
+        id: 'arena-element',
+        term: 'the arena element',
+        aliases: ['`arena`', 'the chamber weaponised'],
+        area: 'level-gen',
+        plain: 'A room built into the level with enemies in it, and a lock further on that '
+            + 'only opens once they are dead.',
+        detail: 'The [chamber](#chamber-element)\'s own blob — same shape, same declared '
+            + '[area](#area), same four [mouths](#mouth), built by the same two functions — '
+            + 'plus [`bodies`](#bodies) spinners standing in it and a KILL LOCK the BINDING '
+            + 'puts on a [cut](#cut) of the room\'s main path, opened by the game\'s own '
+            + '`totalEnemies() == 0`. ⛔ The lock is NOT on the blob\'s mouth: the ring is '
+            + 'walled and one mouth is opened, so a lock standing in it seals the bodies away '
+            + 'from the player and the count can never reach zero. It goes exactly where the '
+            + '[guard](#guard)\'s flag lock goes — the main-path cut that leaves the mouth on '
+            + 'the START\'s side. ⛓ THE LOCK IS LOAD-BEARING: with it, one spinner in the '
+            + 'blob SOLVES in 462 ticks; without it the same room THROWS *"level 900 holds '
+            + 'live spinners AND a DIALOGUED ceremony (torch) is running"*, and 20 of 23 '
+            + 'other enemy classes solve it at the empty room\'s OWN tick count — a body in '
+            + 'a side room nobody has to enter is not an obstacle at all. ⛔ Spinner is the '
+            + 'only body class: it is the only one the solver has a modelled kill arm for, '
+            + 'and every other class REFUSES the same room. It is in NO biome default.',
+        where: [{ label: 'architecture.md § Pass 1', doc: PASS1 }],
+        seeAlso: ['bodies', 'chamber-element', 'kill-gate', 'pre-carve-element', 'cut'],
+    }),
+    t({
+        id: 'bodies',
+        term: '`bodies = n`',
+        aliases: ['the body count', 'more than one enemy per kill lock'],
+        area: 'level-gen',
+        plain: 'How many enemies an arena puts in its room, with one lock however many '
+            + 'of them there are.',
+        detail: 'The [arena](#arena-element)\'s count knob, drawn without replacement over '
+            + 'the blob\'s cells — two enemies in one tile is a placement that lies about '
+            + 'being two. ⛔ **THE DOMAIN IS A MEASUREMENT, TAKEN BEFORE THE KNOB WAS '
+            + 'OFFERED**: in the arena\'s own hand-drawn room, `n = 1` SOLVES in 462 ticks, '
+            + '`n = 2` in 602 (+30% ticks, +77% wall clock) and **`n = 3` REFUSES**. So the '
+            + 'domain is `{1, 2}` and 3 is not in it — a value nobody swept is one nobody '
+            + 'adjudicated. ⛓ It costs ONE [tag](#tag) at either value: the count buys '
+            + 'enemies, never persistence.',
+        where: [{ label: 'architecture.md § Pass 1', doc: PASS1 }],
+        seeAlso: ['arena-element', 'kill-gate', 'element-head'],
+    }),
+    t({
         id: 'demand',
         term: 'a demand',
         aliases: ['the element\'s DEMAND region'],
@@ -1426,7 +1469,12 @@ export const TERMS = Object.freeze([
             + 'TUNNEL — a change to the room\'s connectivity rather than a place to stand. The '
             + '[guard](#guard)\'s gadget has an entry mouth joined by the shortest tunnel and '
             + 'its **exit mouth SEALED**: with both open the door is not a cut on ~30% of '
-            + 'runs.',
+            + 'runs. ⛓ A BLOB element ([chamber](#chamber-element), [arena](#arena-element)) '
+            + 'declares ONE MOUTH PER SIDE, in the order its draws prefer them, and the '
+            + 'BINDING takes the first whose cell is not the room\'s border ring — the '
+            + 'element still decides, and the room answers the one question only it can. '
+            + 'Before that, a mouth against the interior\'s edge was simply refused: **28 of '
+            + '70 refusals at 10×10**, and 0 at 20×20.',
         where: [
             { label: 'architecture.md § Pass 2', doc: PASS2 },
             { label: 'architecture.md § Pass 1', doc: PASS1 },

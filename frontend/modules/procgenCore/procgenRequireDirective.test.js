@@ -36,8 +36,16 @@ describe('the item vocabulary, read from the table', () => {
                 Object.values(ELEMENT_TABLE).flatMap((e) => e.needs ?? []))].sort());
         });
 
-    it('headsNeeding answers the SHIPPED table with exactly `killgate`', () => {
-        expect(headsNeeding('hasSword')).toEqual(['killgate']);
+    /**
+     * ⛓⛓⛓ **ARC 5, SLICE 4 — THE SHIPPED TABLE HAS TWO SWORD-GATED HEADS NOW**,
+     * and this row is asserted LITERALLY on purpose so a third cannot slide in.
+     * `arena`'s payload is a spinner, and `weaponForPress` returns null with no
+     * sword slot, so it carries the same `needs` the kill gate does. ⛔ THE
+     * CONSEQUENCE IS THE ROW BELOW IT: `--require=hasSword` stopped being a
+     * FORCED BARE head and became a two-member `+` LIST.
+     */
+    it('headsNeeding answers the SHIPPED table with exactly `killgate` and `arena`', () => {
+        expect(headsNeeding('hasSword')).toEqual(['killgate', 'arena']);
         expect(headsNeeding('hasShield')).toEqual([]);
     });
 
@@ -65,11 +73,22 @@ describe('the grammar', () => {
 });
 
 describe('the directive resolves against `needs`, the biome and the caller\'s spec', () => {
-    it('MET with the head FORCED when nobody said `elements` — and it spends no draw', () => {
+    /**
+     * ⛓⛓⛓ **AND THIS IS WHERE A SECOND SWORD-GATED HEAD IS PAID FOR** (arc 5,
+     * slice 4). Until `arena` shipped, exactly one head needed the sword and the
+     * directive FORCED it BARE — which spends no draw (arc-2's law). With two,
+     * the same code path produces the `+` LIST it was written to produce, and a
+     * list spends ONE `pick` before `instantiate`. ⛔ So `--require=hasSword`
+     * now draws between the two rather than naming one, and every draw after the
+     * head moves by one. That is trap 321's shape arriving on schedule: the
+     * mechanism did not change, the TABLE did, and the row that used to read
+     * "forced" reads "a distribution over exactly the heads that need it".
+     */
+    it('MET when nobody said `elements` — a `+` LIST over BOTH sword-gated heads', () => {
         const d = resolveRequireDirective({ require: ['hasSword'], items: SWORD });
         expect(d.refused).toBe(null);
         expect(d.forced).toBe(true);
-        expect(d.elements).toEqual({ name: 'killgate' });
+        expect(d.elements).toEqual({ any: [{ name: 'killgate' }, { name: 'arena' }] });
     });
 
     it('⛓⛓ TWO NEEDING HEADS become a `+` LIST of exactly those two-and-a-half', () => {

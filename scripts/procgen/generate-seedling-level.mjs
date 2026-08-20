@@ -247,6 +247,7 @@ const LIFTED_CLAIM_TEXT = Object.freeze({
     'reverse-pull-block': 'A BLOCK WAS ON THE BUTTON WHEN THE DOOR WAS FIRST CROSSED',
     'kill-gate': 'THIS GATE\'S OWN BODY CLEARED THIS GATE\'S OWN LOCK, BEFORE THE CROSSING',
     'block-pocket': 'THIS BLOCK WAS SHOVED AS FAR AS THE ELEMENT GUARANTEED',
+    arena: 'ONE OF THIS ARENA\'S OWN BODIES CLEARED ITS KILL LOCK, BEFORE THE CROSSING',
 });
 /**
  * ⛓⛓ VERB 1 — **RESTRICT** (GENERATE-mode UI slice 4). `--families=a,b` or
@@ -631,9 +632,23 @@ if (has('json')) {
          * composite and the entity mapping read, so a reader never meets
          * `(null,null)` printed as a coordinate.
          */
+        /**
+         * ⛓⛓ **AND A FOURTH SENTENCE FOR THE ARENA** (arc 5, slice 4). It is
+         * the SAME blob and the same mouth — so this is the space sentence with
+         * the payload appended rather than a fifth printer — and what it adds
+         * is the two things an arena has that a chamber does not: the BODIES,
+         * and the KILL LOCK the binding put on the main-path cut. ⛔ Decided by
+         * `p.bodies`, the same field the entity mapping reads.
+         */
+        const payload = () => (((p.bodies?.length ?? 0) === 0)
+            ? 'put NO entity in the room'
+            : `put ${p.bodies.length} spinner(s) in it `
+                + `(${p.bodies.map((b) => `(${b.x},${b.y})`).join(' ')}), whose death opens the `
+                + `KILL LOCK on the main-path cut (${p.killLockCell.x},${p.killLockCell.y}) `
+                + `[tag ${p.tags.lock}]`);
         const spaceShape = () => `${p.instance} at site (${p.site.x},${p.site.y}) `
             + `${p.site.w}x${p.site.h}; it DECLARED its ${p.cost.cells} floor cell(s) an `
-            + `AREA (\`E0\`) and put NO entity in the room; the entry mouth is `
+            + `AREA (\`E0\`) and ${payload()}; the entry mouth is `
             + `(${p.entryMouth.x},${p.entryMouth.y}); tunnel ${p.tunnel} cell(s); the carve `
             + `had written ${p.carveOverwrote} of its cells differently`;
         const shape = () => (p.phase === 'on-connector'

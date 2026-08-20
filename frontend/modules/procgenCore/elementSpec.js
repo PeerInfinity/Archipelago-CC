@@ -40,6 +40,7 @@
  * ⛔ NO DOM AND NO NODE IMPORTS: the lab page loads this in a browser.
  */
 
+import { ARENA } from './elements/arena.js';
 import { BLOCK_POCKET } from './elements/blockPocket.js';
 import { KILL_GATE } from './elements/killGate.js';
 import { OPEN_CHAMBER } from './elements/openChamber.js';
@@ -185,6 +186,36 @@ export const ELEMENT_TABLE = Object.freeze({
             + '0 of 264 cells at every size, because a bigger tree room grows CORRIDOR and '
             + 'not areas.',
         extra: Object.freeze([]),
+    }),
+    /**
+     * ⛓⛓⛓ **THE CHAMBER WEAPONISED** (arc 5, slice 4; §3.4). Same blob, same
+     * declared area, same four mouths — plus BODIES and a kill lock. ⛔ The two
+     * heads are DELIBERATELY NOT ONE with a `bodies=0` setting (⚖ the user's
+     * standing ruling for this arc: *chamber = free supply, arena = the gate*):
+     * a chamber costs a room nothing and an arena costs it a fight, and a
+     * caller choosing between them is choosing between those, not between two
+     * values of a number.
+     *
+     * ⛓ `needs: ['hasSword']` for the SAME reason `killgate` carries it, and
+     * it is a BINDING fact rather than a parameter of the geometry: the
+     * payload is a spinner, `weaponForPress` returns null with no sword slot,
+     * so a pre-sword boot can never make `totalEnemies() == 0` true. The seam
+     * refuses BY NAME and for free rather than spending a solver budget to
+     * learn what the boot flags already say.
+     *
+     * ⛔ AND IT IS IN NO BIOME DEFAULT. ⚖ Ruling 8 put `chamber` in the close
+     * slice's bundled re-record and explicitly did NOT rule on `arena`; this
+     * arc ships it OPT-IN, with the numbers a default decision would need.
+     */
+    arena: Object.freeze({
+        element: ARENA,
+        why: 'The ARENA (arc-5 §3.4; design catalogue #4/#6): the chamber\'s own blob with '
+            + '`bodies` enemies in it and a KILL LOCK on the room\'s main path, opened by the '
+            + 'game\'s own `totalEnemies() == 0`. ⛓ Arc-3 §15.9 is why it is a chamber and '
+            + 'not a nub: 20 of 23 enemy classes solve a 6x6 chamber and 20 of 23 refuse a '
+            + '1-wide corridor.',
+        extra: Object.freeze([]),
+        needs: Object.freeze(['hasSword']),
     }),
 });
 

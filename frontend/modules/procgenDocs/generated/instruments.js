@@ -663,6 +663,12 @@ export const INSTRUMENTS = frz({
                     "how": [
                         "arg"
                     ],
+                    "name": "arena"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
                     "name": "json"
                 }
             ],

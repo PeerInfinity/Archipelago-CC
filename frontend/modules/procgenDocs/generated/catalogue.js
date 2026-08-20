@@ -1267,7 +1267,8 @@ export const CATALOGUE = frz({
         "guard",
         "killgate",
         "blockpocket",
-        "chamber"
+        "chamber",
+        "arena"
     ],
     "elements": [
         {
@@ -1357,6 +1358,49 @@ export const CATALOGUE = frz({
                 }
             ],
             "why": "The OPEN CHAMBER (arc-5 §3.3): an open floor blob DECLARED as an area, so a room whose skeleton offers no chamber at all has somewhere a key can live. Slice 1 measured the hole it fills — a BARE TREE KIND accepts `--areas=2` on 0 of 264 cells at every size, because a bigger tree room grows CORRIDOR and not areas."
+        },
+        {
+            "head": "arena",
+            "module": "arena",
+            "needs": [
+                "hasSword"
+            ],
+            "params": [
+                {
+                    "default": 4,
+                    "domain": [
+                        2,
+                        3,
+                        4,
+                        5,
+                        6
+                    ],
+                    "key": "w",
+                    "why": "the blob's width — `openChamber`'s own domain and for its own two reasons (2 is the smallest rectangle the 2x2 rule calls a chamber; 6 is where the reserved rectangle stops fitting the DEFAULT 10x10 room's interior)."
+                },
+                {
+                    "default": 4,
+                    "domain": [
+                        2,
+                        3,
+                        4,
+                        5,
+                        6
+                    ],
+                    "key": "h",
+                    "why": "the blob's height, on the same domain. ⛓ Separate from `w` because a non-square blob has two orientations and the site pick offers both."
+                },
+                {
+                    "default": 1,
+                    "domain": [
+                        1,
+                        2
+                    ],
+                    "key": "bodies",
+                    "why": "⚖ design §7c, the user's named item: how many enemies stand in the blob, ONE lock, opened by the game's own `totalEnemies() == 0`. ⛔ COST-FIRST (⚖ arc-5 ruling 9): the domain is what the D0 pricing arm measured as sane — see `BODIES_DOMAIN` and the as-built §12."
+                }
+            ],
+            "why": "The ARENA (arc-5 §3.4; design catalogue #4/#6): the chamber's own blob with `bodies` enemies in it and a KILL LOCK on the room's main path, opened by the game's own `totalEnemies() == 0`. ⛓ Arc-3 §15.9 is why it is a chamber and not a nub: 20 of 23 enemy classes solve a 6x6 chamber and 20 of 23 refuse a 1-wide corridor."
         }
     ],
     "itemsElementsNeed": [

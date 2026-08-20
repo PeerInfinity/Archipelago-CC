@@ -124,6 +124,13 @@ describe('the glossary as data', () => {
      * for three parameters: `room-size` covers both axes, because a room is one
      * setting.
      *
+     * ⛓⛓ **154 — arc 5, slice 4 SPENDS TWO**: `arena-element` and `bodies`, on
+     * the P5 rule that every PARAMETER names at least one term. ⛔ `bodies` gets
+     * its own entry rather than a clause inside `arena-element` because it is
+     * the thing a caller TYPES and the thing ⚖ design §7c named, and because
+     * its whole content is a measurement (`{1, 2}`, priced before the knob was
+     * offered) that a reader should be able to land on directly.
+     *
      * ⛓⛓ **152 — arc 5, slice 3 SPENDS ONE**, and says whose licence: ⚖ design
      * ruling 24 (*area is pass 1's job*), realised as the `chamber` ELEMENT
      * HEAD. ⛔ It is a SECOND entry beside `chamber`, not a rewrite of it,
@@ -133,11 +140,11 @@ describe('the glossary as data', () => {
      * generator for. Folding them would make "a chamber" ambiguous in exactly
      * the table this glossary exists to disambiguate.
      */
-    it('holds 152 entries — 149 + arc-5 slice 1\'s two + slice 3\'s one, and every '
-        + 'one is filed', () => {
-        expect(TERMS).toHaveLength(152);
+    it('holds 154 entries — 149 + arc-5 slice 1\'s two + slice 3\'s one + slice 4\'s two, '
+        + 'and every one is filed', () => {
+        expect(TERMS).toHaveLength(154);
         expect(TERMS.length).toBeGreaterThanOrEqual(80);
-        expect(TERMS.length).toBeLessThanOrEqual(152);
+        expect(TERMS.length).toBeLessThanOrEqual(154);
         expect(TERMS.filter((e) => !AREA_IDS.includes(e.area))).toHaveLength(0);
     });
 

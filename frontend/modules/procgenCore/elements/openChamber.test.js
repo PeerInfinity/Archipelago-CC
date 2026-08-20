@@ -17,7 +17,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { ProcgenRng } from '../procgenRng.js';
-import { DIR_DELTA, assertFootprints } from '../elements.js';
+import { DIR_DELTA, OPPOSITE_DIR as OPPOSITE, assertFootprints } from '../elements.js';
 import { wideBlobs } from '../areaPartition.js';
 import {
     MIN_CHAMBER, OPEN_CHAMBER, OPEN_CHAMBER_REFUSALS, buildOpenChamber, openChamberFootprint,
@@ -159,26 +159,69 @@ describe('openChamber — the geometry', () => {
         }
     });
 
-    it('declares one entry port and one exit port, mirrored across the site', () => {
+    /**
+     * ⛓⛓ ARC 5, SLICE 4 — **ONE MOUTH PER SIDE**, each with its mirrored exit.
+     * The row asserts every entry, not merely the first: the whole point of the
+     * change is that the binding may take any of them.
+     */
+    it('declares one entry port PER SIDE, each with its mirrored exit', () => {
         for (const values of VALUES) {
             for (const seed of SEEDS) {
                 const site = siteFor(values);
                 const { placement } = buildOpenChamber(values, site, rngFor(seed));
-                const entry = placement.ports.find((p) => p.role === 'entry');
-                const exit = placement.ports.find((p) => p.role === 'exit');
-                expect(placement.ports).toHaveLength(2);
-                const d = DIR_DELTA[entry.dir];
-                /** the port is ON the edge its dir points off, and the dir is OUTWARD */
-                expect(entry.x + d.dx < site.x || entry.x + d.dx >= site.x + site.w
-                    || entry.y + d.dy < site.y || entry.y + d.dy >= site.y + site.h).toBe(true);
-                /** the exit is the SAME offset on the opposite edge — a derivation */
-                if (d.dx === 0) {
-                    expect(exit.x).toBe(entry.x);
-                    expect(exit.y).toBe(entry.y === site.y ? site.y + site.h - 1 : site.y);
-                } else {
-                    expect(exit.y).toBe(entry.y);
-                    expect(exit.x).toBe(entry.x === site.x ? site.x + site.w - 1 : site.x);
+                const entries = placement.ports.filter((p) => p.role === 'entry');
+                const exits = placement.ports.filter((p) => p.role === 'exit');
+                expect(placement.ports).toHaveLength(8);
+                expect(entries.map((p) => p.dir).sort()).toEqual(['E', 'N', 'S', 'W']);
+                expect(exits.map((p) => p.dir).sort()).toEqual(['E', 'N', 'S', 'W']);
+                for (const entry of entries) {
+                    const exit = exits.find((p) => p.dir === OPPOSITE[entry.dir]);
+                    const d = DIR_DELTA[entry.dir];
+                    /** the port is ON the edge its dir points off, and the dir is OUTWARD */
+                    expect(entry.x + d.dx < site.x || entry.x + d.dx >= site.x + site.w
+                        || entry.y + d.dy < site.y || entry.y + d.dy >= site.y + site.h)
+                        .toBe(true);
+                    /** the exit is the SAME offset on the opposite edge — a derivation */
+                    if (d.dx === 0) {
+                        expect(exit.x).toBe(entry.x);
+                        expect(exit.y).toBe(entry.y === site.y ? site.y + site.h - 1 : site.y);
+                    } else {
+                        expect(exit.y).toBe(entry.y);
+                        expect(exit.x).toBe(entry.x === site.x ? site.x + site.w - 1 : site.x);
+                    }
                 }
+            }
+        }
+    });
+
+    /**
+     * ⛓⛓⛓ **THE FIRST ENTRY IS THE DRAWN ONE, AND THAT IS WHY THE FOUR-MOUTH
+     * CHANGE IS A STRICT EXTENSION** (arc 5, slice 4). A binding that takes the
+     * first acceptable candidate gives a room that could use the drawn mouth
+     * exactly the level slice 3 shipped; only a room that REFUSED before can
+     * see any difference. ⛔ The witness is the STREAM, not a re-reading of the
+     * ports: the same two draws taken by hand off an identical rng must name
+     * the first entry.
+     */
+    it('offers the DRAWN mouth first — the other three are fallbacks', () => {
+        for (const values of VALUES) {
+            for (const seed of SEEDS) {
+                const site = siteFor(values);
+                const spy = rngFor(seed);
+                const dir = spy.pick(['N', 'S', 'E', 'W']);
+                const edge = [];
+                if (dir === 'N' || dir === 'S') {
+                    const y = dir === 'N' ? site.y : site.y + site.h - 1;
+                    for (let x = site.x; x < site.x + site.w; x += 1) edge.push({ x, y });
+                } else {
+                    const x = dir === 'W' ? site.x : site.x + site.w - 1;
+                    for (let y = site.y; y < site.y + site.h; y += 1) edge.push({ x, y });
+                }
+                const cell = spy.pick(edge);
+                const { placement } = buildOpenChamber(values, site, rngFor(seed));
+                const first = placement.ports.find((p) => p.role === 'entry');
+                expect({ dir: first.dir, x: first.x, y: first.y })
+                    .toEqual({ dir, x: cell.x, y: cell.y });
             }
         }
     });

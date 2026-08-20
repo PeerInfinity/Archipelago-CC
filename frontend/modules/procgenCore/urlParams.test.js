@@ -873,7 +873,7 @@ describe('urlParams — ?elements=', () => {
 
     it('REFUSES BY NAME, with the parameter in front and the codec\'s sentence behind', () => {
         expect(() => readElements(q('elements=hammer')))
-            .toThrow(/\?elements="hammer".*head of an element spec is the ELEMENT.*\[none, guard, killgate, blockpocket, chamber\]/s);
+            .toThrow(/\?elements="hammer".*head of an element spec is the ELEMENT.*\[none, guard, killgate, blockpocket, chamber, arena\]/s);
         expect(() => readElements(q('elements=none%3Blen%3D3')))
             .toThrow(/There is no element to give them to/);
         expect(() => readElements(q('elements=guard%3Blen%3D9')))
@@ -886,7 +886,7 @@ describe('urlParams — ?elements=', () => {
 
     it('REFUSES on the way OUT what it would refuse on the way in', () => {
         expect(() => writeElementsParam(q(''), { name: 'hammer' }))
-            .toThrow(/declared elements are \[none, guard, killgate, blockpocket, chamber\]/);
+            .toThrow(/declared elements are \[none, guard, killgate, blockpocket, chamber, arena\]/);
         expect(() => writeElementsParam(q(''), { name: 'guard', params: { len: 9 } }))
             .toThrow(/not in its declared domain/);
         expect(() => writeElementsParam(q(''), { name: 'none', params: { len: 2 } }))

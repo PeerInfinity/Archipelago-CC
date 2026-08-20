@@ -167,14 +167,33 @@ describe('`summary.require` — omitted when untyped, and NAMED on every refusal
      * budget, so there is no cheaper bound to pick. The file's other nine rows
      * are inside the suite's own 60 s.
      */
+    /**
+     * ⛓⛓⛓ **RE-PICKED IN ARC 5 SLICE 4, BY ITS OWN SCAN, AND THE CAUSE IS A
+     * SECOND SWORD-GATED HEAD.** `arena` carries `needs: ['hasSword']` for the
+     * same reason `killgate` does, so `--require=hasSword` no longer FORCES one
+     * bare head — it forces the `+` LIST `killgate+arena` and the stream draws
+     * between them. On `KILL_GATE_SEED` the draw now lands on `arena`, whose
+     * entry mouth cannot be joined in that room, and the directive is REFUSED:
+     * a subject, not a defect. ⛔ RE-SCANNED rather than weakened (trap 285):
+     * seeds 1..40, the first whose draw lands on `killgate` AND whose element
+     * places AND whose certification passes — 14, 17, 25, 29, 33, 38 qualify and
+     * this row takes the first.
+     */
+    const DIRECTIVE_SEED = 14;
+
     it('MET, with the grade and both arms, when the room can carry it', () => {
-        const out = gen({ require: ['hasSword'] });
+        const out = generateSeedlingLevel({
+            seed: DIRECTIVE_SEED, palette: POST_SWORD_PALETTE, bounds: BOUNDS,
+            require: ['hasSword'],
+        });
         const r = out.summary.require;
         expect(r.met).toBe(true);
         expect(r.asked).toEqual(['hasSword']);
-        expect(r.element).toBe('killgate');
+        /** ⛓ `element` is what the directive FORCED — now the two heads that
+         *  need the item, not the one that used to be alone in needing it. */
+        expect(r.element).toEqual(['killgate', 'arena']);
         expect(r.forced).toBe(true);
-        expect(r.spec).toBe('killgate');
+        expect(r.spec).toBe('killgate+arena');
         expect(r.grade).toBe('STRONG');
         expect(r.with.verdict).toBe('SOLVED');
         expect(r.without.verdict).toBe('REFUSED');

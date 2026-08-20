@@ -81,7 +81,10 @@
  *                 obstacles:[{x,y,id}], items:[{x,y,id}] }
  *     ports:    [{x, y, dir, role}] role 'entry'|'exit'; the port is a CELL OF
  *                                   THE ELEMENT ON ITS SITE'S EDGE and `dir` is
- *                                   OUTWARD — a connector attaches at port+dir
+ *                                   OUTWARD — a connector attaches at port+dir.
+ *                                   ⛓ MORE THAN ONE `entry` IS LEGAL and the
+ *                                   ORDER IS A PREFERENCE — see below
+ *
  *     demand:   [{x, y, must}]      cells the element does NOT write but needs
  *                                   kept ('floor'|'wall') — a hammer's ring, a
  *                                   gadget's outer wall
@@ -92,6 +95,42 @@
  *     symbols:  { holds:[id…], grants:[id…] }
  *     cost:     { …element-declared numbers }
  *   }
+ *
+ * ── ⛓⛓⛓ THE ENTRY PORTS ARE A **CANDIDATE LIST IN PREFERENCE ORDER** ──
+ *
+ * PROCGEN ELEMENTS arc 5, slice 4, and it exists because of a COUNTED refusal
+ * rather than a preference for generality. `openChamber` used to declare ONE
+ * entry, drawn: a side and a cell along it. Seedling's binding then walls the
+ * site's ring and opens exactly that mouth — and where the site sits against
+ * the interior's edge the mouth IS the room's border ring, which opens the
+ * room and is refused BY NAME. Slice 3 measured the price:
+ * `the-entry-mouth-is-the-rooms-border-ring` was **28 of 70 refusals at 10x10**
+ * and 0 at 20x20 (arc-5 §11.4). The standing law (arc 2) is *refuse rather
+ * than redraw*, so the honest fix is not a second draw: **the element declares
+ * every mouth it would accept, in the order it prefers them, and the BINDING —
+ * which is the thing that knows what a border ring is — takes the first one
+ * its room can use.**
+ *
+ * ⛔ **THE PREFERENCE IS WHERE THE DRAW STAYS.** The first `entry` is the one
+ * the element's own draws chose; the rest are DERIVATIONS from it and spend
+ * nothing. So the draw count is unchanged, a record is still `{params, site}`
+ * plus the seed, and a room that could use the drawn mouth uses the drawn
+ * mouth — the change is a STRICT EXTENSION, visible only on the cells that
+ * refused before.
+ *
+ * ⛔ **AN `exit` IS MATCHED TO ITS ENTRY BY INDEX** — the i-th `exit` belongs to
+ * the i-th `entry` — and that rule is DELIBERATELY not "the opposite side".
+ * ⛓ THE FIRST CUT SAID `OPPOSITE_DIR` AND THE GUARD REFUTED IT ON ITS SECOND
+ * SEED: `reverse-pull-block`'s two ports are the ends of its PULL LANE, whose
+ * exit run turns, so its exit is frequently perpendicular to its entry and the
+ * lookup returned `undefined` — a `TypeError` in the composite, not a graded
+ * refusal. A pairing rule only one element satisfies is a rule about that
+ * element. Whether the pair is a MIRROR is the blob's own invariant and is
+ * asserted where the blob is built.
+ *
+ * `chooseEntryPort` below is the ONE reading of both rules; a binding whose
+ * elements declare a single entry (the maze's) gets the same answer it always
+ * did, because the first acceptable entry of a one-entry list is that entry.
  *
  * ⚠ `symbols.holds` / `symbols.grants` are **IDS THE ELEMENT NAMES, NOT LIBRARY
  * ENTRIES IT INVENTS.** `holds: ['sw_A']` says "this element derives the token
@@ -145,6 +184,48 @@ export const DIR_DELTA = Object.freeze({
 });
 
 export const PORT_ROLES = Object.freeze(['entry', 'exit']);
+
+/** ⛓ THE MIRROR OF A DIRECTION — one table, so `openChamber`'s exit derivation
+ *  and `chooseEntryPort`'s pairing cannot disagree about what "opposite" means. */
+export const OPPOSITE_DIR = Object.freeze({ N: 'S', S: 'N', E: 'W', W: 'E' });
+
+/**
+ * ⛓⛓⛓ **THE BINDING'S PICK AMONG THE ELEMENT'S DECLARED MOUTHS** (arc 5,
+ * slice 4) — see the file docblock's *entry ports are a candidate list*.
+ *
+ * `accept(entry, exit)` is the BINDING's own question about ITS room (Seedling
+ * asks *is the mouth cell the room's border ring?*); `null` for the predicate
+ * means *the first one*, which is what a binding whose elements declare a
+ * single mouth wants and is the behaviour every caller had before this existed.
+ *
+ * ⛔ IT SPENDS NO DRAW AND MAKES NO GEOMETRY. The candidates and their order
+ * are the ELEMENT's; the only thing the binding contributes is a verdict on
+ * each, which is a read of tiles it already owns.
+ *
+ * @returns {{entry, exit}|{refusedAll: Array<{entry, exit}>}} — every candidate
+ *   is returned on a total refusal so the binding can name the one it would
+ *   have taken (the element's own first preference) in its refusal text.
+ */
+export function chooseEntryPort(placement, accept = null) {
+    const entries = (placement.ports ?? []).filter((p) => p.role === 'entry');
+    const exits = (placement.ports ?? []).filter((p) => p.role === 'exit');
+    /** ⛔ BY INDEX, and the guard is why — see the file docblock. An element
+     *  that declares fewer exits than entries has ONE exit for all of them,
+     *  which is what a single-mouth element with a lane already means. */
+    const pairs = entries.map((entry, i) => ({
+        entry,
+        exit: exits[i] ?? exits[0] ?? null,
+    }));
+    if (pairs.length === 0) {
+        fail('elements: `chooseEntryPort` was asked of a placement with no `entry` port. '
+            + 'The shape assertion refuses that placement, so reaching here means the '
+            + 'binding asked about something `assertPlacementShape` never saw.');
+    }
+    for (const pair of pairs) {
+        if (accept === null || accept(pair.entry, pair.exit)) return pair;
+    }
+    return { refusedAll: pairs };
+}
 
 /**
  * ⛓⛓⛓ **THE TWO PHASES** — see the file docblock. `pre-carve` is the default

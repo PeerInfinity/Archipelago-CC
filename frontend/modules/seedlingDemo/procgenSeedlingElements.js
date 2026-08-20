@@ -96,7 +96,7 @@
  */
 
 import { TILE_FLOOR } from '../shared/procgen/mazeAlgorithms/gridTiles.js';
-import { DIR_DELTA, guardIdsFor } from '../procgenCore/elements.js';
+import { DIR_DELTA, chooseEntryPort, guardIdsFor } from '../procgenCore/elements.js';
 import { KILL_BODY_ID, KILL_DOOR_ID } from '../procgenCore/elements/killGate.js';
 import { connected, reachableFrom, shortestPath } from '../procgenCore/gridFlood.js';
 import { ELEMENT_TABLE, NONE as ELEMENTS_NONE } from '../procgenCore/elementSpec.js';
@@ -154,6 +154,9 @@ export const SEEDLING_ELEMENT_REFUSALS = Object.freeze([
     'the-cell-beyond-the-guard-door-is-not-floor',
     'the-guard-is-not-a-cut-of-the-level',
     'no-cut-for-the-flag-lock',
+    /** ⛓ arc 5, slice 4 — the SAME cut rule for an element that declares BODIES;
+     *  named apart so a census never says "the flag" about a room with none. */
+    'no-cut-for-the-kill-lock',
     'the-skeleton-does-not-solve-with-the-element',
     /** ⛓ arc 3 slice 4a — the `on-connector` composite's own three. Each is
      *  TRUE BY CONSTRUCTION for the two elements shipped here (they filter with
@@ -264,7 +267,12 @@ export function seedlingElementSiteCandidates({ width, height, start, goal, foot
  *
  * @returns {{cell}|{refused:{reason, detail}}}
  */
-export function flagLockCellFor({ width, height, walkable, start, goal, reserved, entryMouth }) {
+export function flagLockCellFor({ width, height, walkable, start, goal, reserved, entryMouth,
+    /** ⛓ THE DEFAULT IS THE GUARD'S, and both PRODUCTION callers pass their own
+     *  anyway (arc 5, slice 4) — the literal at the CALL SITE is what the
+     *  refusal census scans for, and the default is what keeps a direct caller
+     *  (a unit row handing this function a room) from getting `undefined`. */
+    reason = 'no-cut-for-the-flag-lock' }) {
     const path = shortestPath(width, height, walkable, start, goal);
     if (!path) {
         return { refused: { reason: 'the-reserved-rectangle-seals-the-room',
@@ -292,9 +300,10 @@ export function flagLockCellFor({ width, height, walkable, start, goal, reserved
         }
         return { cell: Object.freeze({ x: c.x, y: c.y }) };
     }
-    return { refused: { reason: 'no-cut-for-the-flag-lock',
+    return { refused: { reason,
         detail: `no cell of the ${path.length}-cell main path can carry `
-            + 'the flag\'s lock: ' + (tried.length ? tried.join('; ') : '(the path is two cells)')
+            + `the ${reason === 'no-cut-for-the-kill-lock' ? 'arena\'s kill' : 'flag\'s'} lock: `
+            + (tried.length ? tried.join('; ') : '(the path is two cells)')
             + '. ⛔ The element is REFUSED rather than placed as DECORATION: a `buttonroom` '
             + 'whose `lock`(B) is not a cut opens a door the walk never needed, which is '
             + '⚖ ruling 17\'s own definition of decoration. ⛓ On the OPEN room this is the '
@@ -383,11 +392,65 @@ export function compositeSeedlingElement({
     const at = (x, y) => x >= 0 && y >= 0 && x < width && y < height && mask[x + y * width] === 1;
     const set = (x, y, v) => { mask[x + y * width] = v ? 1 : 0; };
     const reserved = reservedRect(site);
-    const port = (role) => placement.ports.find((p) => p.role === role);
-    const entryPort = port('entry');
-    const exitPort = port('exit');
-    const din = DIR_DELTA[entryPort.dir];
-    const entryMouth = Object.freeze({ x: entryPort.x + din.dx, y: entryPort.y + din.dy });
+    /**
+     * ⛓⛓⛓ **THE MOUTH IS PICKED HERE, OUT OF EVERY ONE THE ELEMENT DECLARED**
+     * — PROCGEN ELEMENTS arc 5, slice 4, and it is slice 3's named carry
+     * (§11.11 residue 2) rather than a generalisation for its own sake.
+     *
+     * A mouth is the cell one step OUTWARD from an entry port, and Seedling's
+     * border ring is what makes the room a room — so a mouth that lands on it
+     * cannot be opened and the placement is refused BY NAME. Slice 3 counted
+     * the price of the element choosing alone: **28 of 70 refusals at 10x10**
+     * carried that name, and 0 at 20x20, because a small room is where a snug
+     * site sits against the interior's edge.
+     *
+     * ⛔ THE ELEMENT STILL DECIDES, AND THE BINDING STILL DOES NOT REDRAW. The
+     * candidates and their ORDER are the element's own (its first is the one
+     * its draws chose); this asks each one the single question only the room
+     * can answer. A one-entry element — the guard — gets its own port back,
+     * which is why this is a strict extension and not a re-record.
+     */
+    const onBorderRing = (x, y) => x <= 0 || y <= 0 || x >= width - 1 || y >= height - 1;
+    const mouthOf = (p) => Object.freeze({
+        x: p.x + DIR_DELTA[p.dir].dx, y: p.y + DIR_DELTA[p.dir].dy,
+    });
+    const chosen = chooseEntryPort(placement,
+        (entry) => !onBorderRing(mouthOf(entry).x, mouthOf(entry).y));
+    if (chosen.refusedAll) {
+        const [first] = chosen.refusedAll;
+        const firstMouth = mouthOf(first.entry);
+        /**
+         * ⛓⛓⛓ **A REFUSAL DETAIL RIDES THE PAYLOAD, SO RE-WORDING ONE SPENDS A
+         * RE-RECORD** (arc 5, slice 4; trap 446's sibling one field over). The
+         * four-mouth sentence below is NEW INFORMATION only when there is more
+         * than one mouth to report — and a ONE-MOUTH element (the guard) is
+         * every committed artifact this refusal appears in. Measured: with the
+         * new sentence printed unconditionally, the acceptance batch moved on
+         * exactly two rows (`ab540ac4…` → `9b4c42ae…`), and a field-by-field
+         * diff of both payloads found ONE changed string and not one moved cell.
+         * ⇒ the single-mouth branch is the sentence that was here before, byte
+         * for byte, and the plural one is the only thing this slice adds.
+         */
+        return { refused: { reason: 'the-entry-mouth-is-the-rooms-border-ring',
+            detail: chosen.refusedAll.length === 1
+                ? `the gadget's entry port (${first.entry.x},${first.entry.y}) faces `
+                    + `${first.entry.dir}, so its mouth is (${firstMouth.x},${firstMouth.y}) `
+                    + '— a cell of the room\'s BORDER RING. Opening it would open the room. '
+                    + '⛓ The site is drawn before the element picks its port directions, so '
+                    + 'this is decided after the fact and REFUSED rather than redrawn.'
+                : `EVERY one of the ${chosen.refusedAll.length} mouth(s) the gadget declared `
+                    + 'has its mouth cell on the room\'s BORDER RING — '
+                    + `${chosen.refusedAll.map(({ entry }) => `${entry.dir}:(${mouthOf(entry).x},`
+                        + `${mouthOf(entry).y})`).join(', ')}. Opening one would open the room. `
+                    + `⛓ The element PREFERRED ${first.entry.dir} (its own draw) and the binding `
+                    + 'takes the first the room can use (arc 5, slice 4); when the site is '
+                    + 'against the interior\'s edge on every side there is none, and the site '
+                    + 'is drawn before the element picks its ports, so this is decided after '
+                    + 'the fact and REFUSED rather than redrawn.' } };
+    }
+    const entryPort = chosen.entry;
+    const exitPort = chosen.exit;
+    const entryMouth = mouthOf(entryPort);
 
     /** ⛓ THE NON-VACUITY WITNESS: how many cells the carve had made different
      *  from what the element wants. `0` means the reservation decided nothing on
@@ -416,28 +479,6 @@ export function compositeSeedlingElement({
             paint(x, y, x === entryMouth.x && y === entryMouth.y);
         }
     }
-    /**
-     * ⛔⛔ AND THE MOUTH MAY NOT BE THE ROOM'S OWN BORDER RING — a refusal the
-     * maze does not need and Seedling does. A maze room has NO wall ring (its
-     * entrance is the corner tile (0,0)), so a ring cell there is an ordinary
-     * cell; Seedling's border is what makes the room a room (`loadlevel` drops
-     * out-of-rectangle tiles and nothing stops a player walking off a floor
-     * that ends), so opening it is refused rather than painted over. ⛓ The maze
-     * folds this case into `the-entry-port-cannot-be-joined`, whose own docblock
-     * names it as that refusal's common cause; here it is a DISTINCT fact — the
-     * mouth is UNOPENABLE, not merely unreached — and the census counts them
-     * apart.
-     */
-    if (entryMouth.x <= 0 || entryMouth.y <= 0
-        || entryMouth.x >= width - 1 || entryMouth.y >= height - 1) {
-        return { refused: { reason: 'the-entry-mouth-is-the-rooms-border-ring',
-            detail: `the gadget's entry port (${entryPort.x},${entryPort.y}) faces `
-                + `${entryPort.dir}, so its mouth is (${entryMouth.x},${entryMouth.y}) — a cell `
-                + 'of the room\'s BORDER RING. Opening it would open the room. ⛓ The site is '
-                + 'drawn before the element picks its port directions, so this is decided '
-                + 'after the fact and REFUSED rather than redrawn.' } };
-    }
-
     /**
      * ⛓⛓ THE CONNECTOR JOINS THE ENTRY MOUTH — the SHORTEST tunnel to floor the
      * START already reaches, breadth-first in the one neighbour order, NEVER
@@ -548,7 +589,20 @@ export function compositeSeedlingElement({
      * omitting them, so a reader of `elements.placed[0]` never has to ask
      * whether an absent `door` means "no door" or "not recorded".
      */
-    const doorCell = placement.entities.obstacles[0] ?? null;
+    /**
+     * ⛓⛓⛓ **WHICH OBSTACLE IS A DOOR — ASKED OF `symbols`, NOT OF THE ARRAY**
+     * (arc 5, slice 4, and it is slice 3's rule read one turn further).
+     *
+     * Slice 3 learned to skip (iii)-(v) when an element declares NO obstacle. An
+     * ARENA declares obstacles and none of them is a door: they are BODIES, and
+     * the thing that opens its lock is the game's `totalEnemies() == 0` rather
+     * than a symbol. ⛔ So the test is `symbols.holds` — *this element derives a
+     * token while it is satisfied*, which is precisely what makes an obstacle a
+     * door the area graph can bind a FLAG behind (⚖ rulings 21-22). An element
+     * that holds nothing has no door, whatever it put in the room.
+     */
+    const doorCell = placement.symbols.holds.length > 0
+        ? (placement.entities.obstacles[0] ?? null) : null;
     let flagCell = null;
     let flagLockCell = null;
     if (doorCell !== null) {
@@ -576,11 +630,45 @@ export function compositeSeedlingElement({
         }
 
         // ── (v) THE FLAG'S LOCK, on a main-path cut ─────────────────────────
+        /** ⛓ THE NAME IS PASSED, NOT DEFAULTED (arc 5, slice 4): each caller
+         *  names its own lock, and the LITERAL at the call site is what the
+         *  refusal census scans for. A default would make one of the two names
+         *  invisible to `generate-procgen-reference --check`. */
         const lock = flagLockCellFor({ width, height, walkable: at,
             start: { x: start.tx, y: start.ty }, goal: { x: goal.tx, y: goal.ty },
-            reserved, entryMouth });
+            reserved, entryMouth, reason: 'no-cut-for-the-flag-lock' });
         if (lock.refused) return lock;
         flagLockCell = lock.cell;
+    }
+
+    /**
+     * ⛓⛓⛓ **(v′) THE KILL LOCK — THE SAME CUT RULE, FOR AN ELEMENT THAT
+     * DECLARES BODIES** (arc 5, slice 4; §3.4).
+     *
+     * An arena's obstacles are enemies and the thing that opens its lock is
+     * the game's own `totalEnemies() == 0`. ⛔ **THE LOCK IS NOT ON THE BLOB'S
+     * MOUTH**, which is where the brief put it: the ring is walled and exactly
+     * one mouth is opened, so a lock standing in it is the only way to the
+     * bodies — the player cannot reach them, the count never falls to zero and
+     * the gate never opens. It goes exactly where the guard's `Lock`(B) goes,
+     * and by the SAME function: the main-path cut nearest the goal that leaves
+     * the element's ENTRY MOUTH on the START's side (`flagLockCellFor` clause
+     * (e)). ⇒ the player detours into the arena, clears it, and walks on.
+     *
+     * ⛔ ONE FUNCTION, TWO CALLERS, AND EACH NAMES ITS OWN LOCK — the refusal
+     * is `no-cut-for-the-kill-lock` here and `no-cut-for-the-flag-lock` there,
+     * because a census that counted them together would say "the flag" about a
+     * room that has no flag.
+     */
+    const bodies = placement.symbols.holds.length === 0
+        ? placement.entities.obstacles : [];
+    let killLockCell = null;
+    if (bodies.length > 0) {
+        const lock = flagLockCellFor({ width, height, walkable: at,
+            start: { x: start.tx, y: start.ty }, goal: { x: goal.tx, y: goal.ty },
+            reserved, entryMouth, reason: 'no-cut-for-the-kill-lock' });
+        if (lock.refused) return lock;
+        killLockCell = lock.cell;
     }
 
     // ── (vi) NO SHORTCUT — slice 2's carve clause (b), asked of the whole composite ──
@@ -606,6 +694,31 @@ export function compositeSeedlingElement({
         door: doorCell === null ? null : Object.freeze({ x: doorCell.x, y: doorCell.y }),
         flagCell,
         flagLockCell,
+        /**
+         * ⛓⛓⛓ **ARC 5, SLICE 4 — PRESENT ONLY WHERE THERE ARE ANY, AND THE
+         * PAYLOAD HAS TWO DOORS INTO IT.**
+         *
+         * Slice 3's five guard fields are `null` on a chamber rather than
+         * omitted, so a reader never has to ask whether an absent `door` means
+         * "no door" or "not recorded" — and that cost nothing, because a guard
+         * placement already carried those keys. A NEW key is different: this
+         * record IS `certification.geometry`, verbatim, and that object rides
+         * into every payload that holds an element. ⛔ MEASURED: with `bodies:
+         * []` and `killLockCell: null` written unconditionally, the acceptance
+         * batch moved on a row whose element is a GUARD — two added keys, not
+         * one moved cell. `elementSummaryOf`'s conditional spread is NOT enough
+         * on its own, because it is only ONE of the two doors.
+         *
+         * ⇒ a placement that declares no body carries neither key, and the
+         * question *"no bodies or not recorded?"* is answered by the element's
+         * own name — an `arena` always has at least one.
+         */
+        ...(bodies.length > 0 ? {
+            bodies: Object.freeze(bodies.map((b) => Object.freeze({
+                x: b.x, y: b.y, id: b.id,
+            }))),
+            killLockCell,
+        } : {}),
         areaCells: placement.area.cells,
         tunnel: Object.freeze(tunnel),
         carveOverwrote,
@@ -867,6 +980,46 @@ export function seedlingElementEntities({ placed, groupIdFor, tagFor, ids }) {
      * one layer out (`compositeSeedlingElement`'s (iii)-(v) gate).
      */
     if (placed.door === null) {
+        /**
+         * ⛓⛓⛓ **THE ARENA'S REALISATION — SPINNERS AND ONE LOCK** (arc 5,
+         * slice 4). The mapping stays a TABLE from what the element DECLARED to
+         * what Seedling puts in the room:
+         *
+         *   each declared BODY -> `spinner {tag:'-1'}`  the kill gate's own
+         *                        spelling, one per body, in the element's own
+         *                        order. ⛓ The `arena_body_<i>` IDS are the
+         *                        record's names for the parts (the guard's
+         *                        `button_A0` is the same idea) and the element's
+         *                        own `assertPlacement` is what pins them; this
+         *                        mapping reads the LIST, so a body cannot be
+         *                        silently dropped by a rename.
+         *   the KILL LOCK     -> `lock {tset:'-1', tag:<own>}`  the binding's,
+         *                        on the main-path cut (`killLockCell`);
+         *                        `tset == -1` is L5/L18's own spelling and is
+         *                        what `refineStrategy` takes to `kill`
+         *
+         * ⛔ **ONE TAG, WHATEVER `bodies` IS.** The lock is the only thing here
+         * with durable state; a spinner carries `tag:'-1'`, which is the
+         * palette row's own literal and not an allocation. So an arena costs
+         * ONE of `TAGS_PER_LEVEL`'s 30 at `bodies=1` and ONE at `bodies=n` —
+         * the count buys enemies, never persistence.
+         */
+        if ((placed.bodies?.length ?? 0) > 0) {
+            const tag = tagFor();
+            return {
+                groups: Object.freeze({}),
+                tags: Object.freeze({ lock: tag }),
+                ids,
+                entities: Object.freeze([
+                    ...placed.bodies.map((b) => Object.freeze({
+                        type: 'spinner', tx: b.x, ty: b.y, attrs: Object.freeze({ tag: '-1' }),
+                    })),
+                    Object.freeze({ type: 'lock', tx: placed.killLockCell.x,
+                        ty: placed.killLockCell.y,
+                        attrs: Object.freeze({ tset: '-1', tag: String(tag) }) }),
+                ]),
+            };
+        }
         return {
             groups: Object.freeze({}),
             tags: Object.freeze({}),
@@ -1212,12 +1365,45 @@ function blockPocketClaim({ records = [] }, placed) {
     return travelled >= (placed.cost?.push ?? 1);
 }
 
+/**
+ * ⛓⛓⛓ **THE ARENA'S CLAIM — THE KILL GATE'S, OVER A LIST** (arc 5, slice 4).
+ *
+ * The gate's reader asks whether the clear that opened the lock was credited to
+ * THIS gate's own body; an arena has `bodies` of them, so the same question is
+ * membership in a SET. ⛔ That is the whole difference, and it is why this is
+ * not a copy with a different constant: `execKillByPress` already carries
+ * `resolved.bodies` as a LIST (design §7c's own note), so the solver's side of
+ * `bodies = n` needed nothing.
+ *
+ * ⛔ AND THE `cause` IS CARRIED RATHER THAN ASSERTED. A lock cleared because
+ * pass-2 furniture DROWNED a body opens for a reason the level did not pose —
+ * arc 3 measured it at 2 of 10 certified kill gates — and the gate answers it
+ * with a `demand` over the body's region. An arena cannot compute that region
+ * (it is `pre-carve`; the room does not exist yet), so the exposure is measured
+ * instead: this reader returns `false` when the clear was not this arena's, and
+ * the as-built publishes the `cause` distribution over the corpus.
+ */
+function arenaClaim({ records = [], trace = null, scratchClears = [] }, placed) {
+    if (!placed.killLockCell || (placed.bodies?.length ?? 0) === 0) return null;
+    const lockId = seedlingId('lock', placed.killLockCell);
+    const mine = new Set(placed.bodies.map((b) => seedlingId('spinner', b)));
+    if (!records.some((r) => r.strategy === 'kill')) return null;
+    const clear = (scratchClears ?? []).find((c) => c.lock === lockId);
+    if (!clear) return null;
+    if (!mine.has(clear.by)) return false;
+    const cross = (trace?.rows ?? []).find((row) => rowCrosses(row, placed.killLockCell));
+    if (!cross) return null;
+    const opened = clear.at ?? clear.declaredAt ?? null;
+    return opened === null ? null : opened <= cross.tick;
+}
+
 /** ⛔ ONE TABLE, and an element with no reader answers `null` rather than a
  *  green `true` nobody measured. */
 const LIFTED_CLAIMS = Object.freeze({
     'reverse-pull-block': (cert, placed) => liftedClaimFrom(cert, placed),
     'kill-gate': killGateClaim,
     'block-pocket': blockPocketClaim,
+    arena: arenaClaim,
 });
 
 export function liftedClaimFor(elementName) {
@@ -1270,6 +1456,17 @@ export function elementSummaryOf(model, { certification = null } = {}) {
         door: p.door,
         flagCell: p.flagCell,
         flagLockCell: p.flagLockCell,
+        /**
+         * ⛓⛓ **CARRIED ONLY WHERE THERE ARE ANY** (arc 5, slice 4) — and the
+         * conditional is measured rather than stylistic. This object rides
+         * `summary.elements.placed[]` AND `certification.geometry[]` into every
+         * payload that holds a guard, so two keys added unconditionally would
+         * move every committed md5 for a pair of `null`s (trap 375, and slice
+         * 2's `orient` is the same finding). A payload carries what the
+         * placement HAS.
+         */
+        ...((p.bodies?.length ?? 0) > 0
+            ? { bodies: p.bodies, killLockCell: p.killLockCell } : {}),
         groups: p.groups,
         tags: p.tags,
         ids: p.ids,

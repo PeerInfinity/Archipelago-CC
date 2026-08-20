@@ -195,14 +195,14 @@ const ATTRS = Object.freeze({
     arrowtrap: { shoot: '1', tset: '0' },
 });
 
-function attempt(record, name) {
+function attempt(record, name, goalAt = null) {
     const staging = bootStaging({
         boot: bootAtTile(record, START.tx, START.ty),
         items: POST_SWORD_ITEMS,
         pins: ['dead_frames'],
         time: GENERATED_BOOT_TIME,
     });
-    const goalCell = name === 'spinner@nub' ? { tx: 8, ty: 3 } : GOAL;
+    const goalCell = goalAt ?? (name === 'spinner@nub' ? { tx: 8, ty: 3 } : GOAL);
     try {
         const out = solve(record, staging, [collectGoal(goalCell.tx * 16, goalCell.ty * 16)],
             DEFAULT_BUDGET, { name: `enemy-census-${name}`, scratchPersistence: true });
@@ -281,6 +281,121 @@ say('');
 say('⛔ Nothing here promotes a class. Design §5 marks several of these `?` or `R9+`; a row '
     + 'that SOLVED is reported as having solved THIS room at THIS budget, which is not the '
     + 'same claim as "the generator may place it".');
+
+/**
+ * ⛓⛓⛓ **THE ARENA ARM — AN AXIS, PRINTED ONLY WHEN ASKED** (PROCGEN ELEMENTS
+ * arc 5, slice 4: D0's cost probe and D2's plain-enemy measurement).
+ *
+ * ⛔ OMIT `--arena=` AND THIS FILE'S OUTPUT IS BYTE-IDENTICAL. A census that
+ * grew a block nobody requested would make every previously published number's
+ * command produce a different table (slice 3's rule, one instrument over).
+ *
+ * ── THE ROOM ──────────────────────────────────────────────────────────
+ *
+ * The ARENA's own shape, hand-drawn so the two variables are the only things
+ * that move: a corridor from the start to the goal with a `tset:-1` LOCK in a
+ * cut cell, and a 5x5 open blob hanging off it through ONE mouth, with `n`
+ * bodies standing in the blob. That is what `procgenCore/elements/arena.js`
+ * plus the binding's kill lock build, with the room's own noise removed.
+ *
+ *      0123456789
+ *    0 ##########
+ *    1 #S..L...G#     S start (1,1) · L the kill lock (4,1) · G goal (8,1)
+ *    2 #.########     the mouth is (1,2); the blob is x1..5 y3..7
+ *    3 #......###
+ *    4 #......###     ⛓ the bodies stand in the blob, spread from its far
+ *    5 #......###       corner inwards, which is where the element's own
+ *    6 #......###       draw puts them on average
+ *    7 #......###
+ *    8 ##########
+ *    9 ##########
+ *
+ * ── ⚖ RULING 9: COST BEFORE THE DOMAIN ───────────────────────────────
+ *
+ * `--arena=1,2,3` runs the same room at each body count and prints TICKS and
+ * WALL CLOCK beside the outcome, because §7c's warning is a cost one: one
+ * corridor spinner is 84 ms/tick in `deriveStrike` (probe 2b) and the worst
+ * 10x10 kill-gate certification is already 126 s.
+ *
+ * ── ⛓ AND THE `nolock` ARM IS D2's MEASUREMENT AND MUTANT (a)'s CONTROL ──
+ *
+ * The same room with the LOCK REMOVED, per class. Arc-3 §18.2 A10 says what
+ * to expect — *a live spinner refuses the collect ceremony outright* — and a
+ * class that certifies WITHOUT a lock would be the finding.
+ */
+const ARENA = arg('arena', '');
+if (ARENA) {
+    const counts = ARENA.split(',').map(Number);
+    const blob = [];
+    for (let y = 3; y <= 7; y += 1) for (let x = 1; x <= 5; x += 1) blob.push({ tx: x, ty: y });
+    const arenaRoom = (n, cls, { lock = true } = {}) => {
+        let rec = emptyLevel({ level: LEVEL });
+        const floor = new Set(['1,2', ...blob.map((c) => `${c.tx},${c.ty}`)]);
+        for (let x = 1; x <= 8; x += 1) floor.add(`${x},1`);
+        const wall = [];
+        for (let ty = 1; ty <= 8; ty += 1) {
+            for (let tx = 1; tx <= 8; tx += 1) {
+                if (!floor.has(`${tx},${ty}`)) wall.push({ tx, ty, terrain: 'wall' });
+            }
+        }
+        rec = withTerrain(rec, wall);
+        const ents = [{ type: SEEDLING_DEFAULTS.goalClass, ...oelAtTile(8, 1),
+            attrs: { tag: SEEDLING_DEFAULTS.goalTag } }];
+        if (lock) ents.push({ type: 'lock', ...oelAtTile(4, 1), attrs: { tset: '-1', tag: '1' } });
+        /** ⛓ FROM THE FAR CORNER INWARDS — a fixed order, so `n` is the only
+         *  thing that differs between two rows of this table. */
+        for (let i = 0; i < n; i += 1) {
+            const c = blob[blob.length - 1 - i];
+            ents.push({ type: cls, ...oelAtTile(c.tx, c.ty),
+                ...(ATTRS[cls] ? { attrs: ATTRS[cls] } : {}) });
+        }
+        return withEntities(rec, ents);
+    };
+    /** ⛓ THE GOAL IS THIS ROOM'S OWN (8,1), NOT the chamber arm's (8,8) — a
+     *  fixture solved against somebody else's goal cell refuses for a reason
+     *  that has nothing to do with the body. */
+    const timed = (record, name) => {
+        const t0 = Date.now();
+        const out = attempt(record, name, { tx: 8, ty: 1 });
+        return { ...out, ms: Date.now() - t0 };
+    };
+    say('');
+    say('## ⛓⛓⛓ THE ARENA ARM — ⚖ arc-5 ruling 9, cost BEFORE the domain');
+    say('');
+    say('room: a corridor start (1,1) -> goal (8,1) with a `tset:-1` LOCK at (4,1), and a 5x5 '
+        + 'blob (1,3)..(5,7) hanging off the mouth (1,2). The bodies stand in the blob, from '
+        + 'its far corner inwards. Boot post-sword. ⛔ The GOAL row is the control: the same '
+        + 'room with no lock and no body.');
+    say('');
+    say('| arm | bodies | outcome | ticks | ms | strategies | the solve\'s own words |');
+    say('|---|---|---|---|---|---|---|');
+    const control = timed(arenaRoom(0, 'spinner', { lock: false }), 'arena-control');
+    say(`| control (no lock, no body) | 0 | **${control.outcome}** | ${control.ticks ?? '-'} `
+        + `| ${control.ms} | ${control.strategies.join(', ') || '-'} `
+        + `| ${(control.reason ?? '-').replace(/\|/g, '/')} |`);
+    for (const n of counts) {
+        const r = timed(arenaRoom(n, 'spinner'), `arena-spinner-${n}`);
+        say(`| \`arena\` + kill lock | ${n} | **${r.outcome}** | ${r.ticks ?? '-'} | ${r.ms} `
+            + `| ${r.strategies.join(', ') || '-'} | ${(r.reason ?? '-').replace(/\|/g, '/')} |`);
+    }
+    say('');
+    say('### ⛓ THE `nolock` ARM — D2, the PLAIN enemy obstacle, per class');
+    say('');
+    say('the same blob, ONE body, and **no lock at all**. ⛓ Arc-3 §18.2 A10 predicts the '
+        + 'ceremony refusal; a class that certifies here is one the arena could host without '
+        + 'a kill lock, and the table is what says which.');
+    say('');
+    say('| class | with the LOCK | ticks | NO lock | ticks | the no-lock solve\'s own words |');
+    say('|---|---|---|---|---|---|');
+    for (const cls of CLASSES) {
+        const withLock = timed(arenaRoom(1, cls), `arena-${cls}`);
+        const noLock = timed(arenaRoom(1, cls, { lock: false }), `arena-nolock-${cls}`);
+        say(`| \`${cls}\` | **${withLock.outcome}** | ${withLock.ticks ?? '-'} `
+            + `| **${noLock.outcome}** | ${noLock.ticks ?? '-'} `
+            + `| ${(noLock.reason ?? '-').replace(/\|/g, '/')} |`);
+    }
+    say('');
+}
 
 const OUT = arg('json', '');
 if (OUT) {

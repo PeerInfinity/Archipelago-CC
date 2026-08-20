@@ -1827,7 +1827,11 @@ export function seedlingModel({
                         ? `the FLAG sits at (${cp.flagCell.x},${cp.flagCell.y}) and its LOCK on `
                             + `the main-path cut (${cp.flagLockCell.x},${cp.flagLockCell.y}). `
                         : `and it declared its ${cp.areaCells.length} floor cell(s) an AREA — `
-                            + 'no door, no flag and no lock: it is SPACE. ')
+                            + ((cp.bodies?.length ?? 0) === 0
+                                ? 'no door, no flag and no lock: it is SPACE. '
+                                : `${cp.bodies.length} body/bodies stand in it and their `
+                                    + 'death opens the KILL LOCK on the main-path cut '
+                                    + `(${cp.killLockCell.x},${cp.killLockCell.y}). `))
                     + `The carve `
                     + `had written ${cp.carveOverwrote} of these cells differently. ⛔ NO draw.`
                 : `the COMPOSITE REFUSED: ${elementInfo.refused?.reason} — `
@@ -1866,6 +1870,16 @@ export function seedlingModel({
                 /** ⛓ arc 5, slice 3 — what a DOORLESS element leaves: the blob
                  *  it DECLARED as an area, which is the whole of its geometry
                  *  and the thing the partition consumes. */
+                /** ⛓ arc 5, slice 4 — the ARENA's payload: where the bodies
+                 *  stand and which cut their death opens. ⛔ Absent for a
+                 *  chamber, whose `bodies` is empty. */
+                (cp.bodies?.length ?? 0) > 0 && paintable({ id: 'arena-bodies',
+                    label: `the ${cp.bodies.length} BODY/BODIES and the KILL LOCK their death `
+                        + `opens — the lock is on a main-path CUT, with the arena's mouth on `
+                        + 'the START\'s side of it',
+                    kind: 'outline',
+                    cells: [...cp.bodies.map((b) => ({ x: b.x, y: b.y })), cp.killLockCell],
+                    pick: cp.killLockCell }),
                 !cp.flagCell && paintable({ id: 'element-area',
                     label: `the ${cp.areaCells.length} floor cell(s) the element DECLARED as `
                         + 'an AREA — excluded from the blob rule and carried into the '

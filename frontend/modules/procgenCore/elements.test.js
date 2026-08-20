@@ -20,7 +20,7 @@ import { describe, expect, it } from 'vitest';
 import { ProcgenRng } from './procgenRng.js';
 import {
     DIR_DELTA, ElementContractError, PORT_DIRS, assertElement, assertFootprints,
-    defineElement, enumerateElementInstantiations,
+    chooseEntryPort, defineElement, enumerateElementInstantiations,
 } from './elements.js';
 import { REVERSE_PULL_BLOCK } from './elements/reversePullBlock.js';
 import { TILE_FLOOR, TILE_WALL } from '../shared/procgen/mazeAlgorithms/gridTiles.js';
@@ -544,5 +544,62 @@ describe('⛓⛓ the SNUG FOOTPRINT, per orientation', () => {
         expect(() => defineElement({ name: 'x', family: 'toy', why: 'w',
             construct: () => ({}), footprint: [{ w: 4, h: 4, orient: 'square' }] }))
             .toThrow(/must be a function of its VALUES/);
+    });
+});
+
+/**
+ * ⛓⛓⛓ **THE BINDING'S PICK AMONG THE DECLARED MOUTHS** (arc 5, slice 4) — the
+ * contract half of the four-mouth change. The census half (`the-entry-mouth-is-
+ * the-rooms-border-ring` **28 -> 0** at 10x10) is in the as-built; what is
+ * asked here is the rule itself, including the one a real element refuted.
+ */
+describe('chooseEntryPort — the entry ports are a candidate list', () => {
+    const port = (x, y, dir, role) => ({ x, y, dir, role });
+
+    it('takes the FIRST entry when the binding asks nothing', () => {
+        const placement = { ports: [
+            port(1, 1, 'N', 'entry'), port(2, 2, 'S', 'entry'),
+            port(1, 3, 'S', 'exit'), port(2, 0, 'N', 'exit'),
+        ] };
+        expect(chooseEntryPort(placement).entry.dir).toBe('N');
+        expect(chooseEntryPort(placement, null).entry.dir).toBe('N');
+    });
+
+    it('takes the first the binding ACCEPTS, and returns every candidate when none passes',
+        () => {
+            const placement = { ports: [
+                port(1, 1, 'N', 'entry'), port(2, 2, 'S', 'entry'), port(3, 3, 'E', 'entry'),
+                port(1, 9, 'S', 'exit'), port(2, 9, 'N', 'exit'), port(3, 9, 'W', 'exit'),
+            ] };
+            expect(chooseEntryPort(placement, (e) => e.dir !== 'N').entry.dir).toBe('S');
+            expect(chooseEntryPort(placement, (e) => e.dir === 'E').entry.dir).toBe('E');
+            const none = chooseEntryPort(placement, () => false);
+            expect(none.entry).toBeUndefined();
+            expect(none.refusedAll.map((p) => p.entry.dir)).toEqual(['N', 'S', 'E']);
+        });
+
+    /**
+     * ⛓⛓⛓ **THE PAIRING IS BY INDEX, AND THE GUARD IS WHY.** The first cut of
+     * this function looked the exit up by `OPPOSITE_DIR[entry.dir]`, which is
+     * true of a BLOB and false of `reverse-pull-block`: its two ports are the
+     * ends of a pull lane whose exit run TURNS, so a perpendicular pair is
+     * ordinary and the lookup returned `undefined` — a `TypeError` in the
+     * Seedling composite rather than a graded refusal, on the second seed
+     * anybody tried. ⛔ A pairing rule only one element satisfies is a rule
+     * about that element.
+     */
+    it('pairs by INDEX — an exit that is not the entry\'s opposite still pairs', () => {
+        const placement = { ports: [
+            port(1, 1, 'N', 'entry'),
+            port(4, 4, 'E', 'exit'),
+        ] };
+        const { entry, exit } = chooseEntryPort(placement);
+        expect(entry.dir).toBe('N');
+        expect(exit).toEqual(port(4, 4, 'E', 'exit'));
+    });
+
+    it('⛔ refuses a placement with no entry port at all', () => {
+        expect(() => chooseEntryPort({ ports: [port(1, 1, 'N', 'exit')] }))
+            .toThrow(/no `entry` port/);
     });
 });

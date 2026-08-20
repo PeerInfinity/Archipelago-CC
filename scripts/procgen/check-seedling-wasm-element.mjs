@@ -164,10 +164,33 @@ check(gen.elements?.ran === true,
     gen.elements?.ran ? `${gen.elements.placed?.[0]?.instance} at `
         + `(${gen.elements.placed?.[0]?.site?.x},${gen.elements.placed?.[0]?.site?.y})`
         : `REFUSED: ${gen.elements?.refused?.reason}`);
-check((gen.areas?.locks?.length ?? 0) > 0,
-    '⛓⛓ …and a lock-and-key GRAPH was adjudicated over the room the element made',
-    `${gen.areas?.locks?.length ?? 0} lock(s), ${gen.areas?.flags?.length ?? 0} flag(s), `
-    + `refused ${gen.areas?.refused?.reason ?? 'no'}`);
+/**
+ * ⛓⛓⛓ **THE SECOND PRECONDITION IS WHAT THE ELEMENT DECLARED** (arc 5, slice 4)
+ * — the arc's own rule, applied to this gate rather than to the binding.
+ *
+ * Slice 3's family was the CHAMBER, whose whole point is to give a room an
+ * AREA, so *"a lock-and-key graph was adjudicated over it"* is exactly the
+ * fact that makes its ship non-vacuous. Slice 4's family is the ARENA, whose
+ * point is a FIGHT: its own payload is `bodies` spinners and a `tset:-1` kill
+ * lock on a main-path cut, and a graph over it is optional decoration. ⛔ A row
+ * that demanded the graph of an arena would fail for a reason that has nothing
+ * to do with the family it is gating; one that demanded nothing would ship an
+ * ordinary room and read `agrees per tick` off it.
+ */
+const placed = gen.elements?.placed?.[0] ?? null;
+if ((placed?.bodies?.length ?? 0) > 0) {
+    check(Boolean(placed.killLockCell),
+        '⛓⛓ …and the room really carries THIS element\'s payload — its bodies and the '
+        + 'KILL LOCK their death opens',
+        `${placed.bodies.length} body/bodies at `
+        + `${placed.bodies.map((b) => `(${b.x},${b.y})`).join(' ')}, kill lock at `
+        + `(${placed.killLockCell?.x},${placed.killLockCell?.y})`);
+} else {
+    check((gen.areas?.locks?.length ?? 0) > 0,
+        '⛓⛓ …and a lock-and-key GRAPH was adjudicated over the room the element made',
+        `${gen.areas?.locks?.length ?? 0} lock(s), ${gen.areas?.flags?.length ?? 0} flag(s), `
+        + `refused ${gen.areas?.refused?.reason ?? 'no'}`);
+}
 
 await page.click('#loadWasm');
 if (!await until("window.__watch?.wasm?.reached?.includes('runtime')", 600,

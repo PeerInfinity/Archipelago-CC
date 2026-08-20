@@ -2283,13 +2283,20 @@ describe('watchGenerate — the three parameters (arc 3, slice 5a)', () => {
         expect(bare.elements.spec).not.toEqual({ name: 'killgate' });
     });
 
-    it('⛓ `?require=hasSword` reaches the seam — it FORCES the head, by name', () => {
+    /**
+     * ⛓⛓ ARC 5, SLICE 4 — the FORCED spec is a `+` LIST now, because `arena`
+     * needs the sword for the same reason `killgate` does and the directive
+     * forces EVERY head that needs the item. The claim this row makes is
+     * unchanged (the parameter reaches the seam and decides the spec); what it
+     * pins is the roster, literally, so a third sword-gated head cannot slide in.
+     */
+    it('⛓ `?require=hasSword` reaches the seam — it FORCES the heads, by name', () => {
         const st = generateStep({
             seed: 1, biome: 'post-sword', step: 0, require: read('require=hasSword').require,
         });
         expect(st.require.asked).toEqual(['hasSword']);
         expect(st.require.forced).toBe(true);
-        expect(st.elements.spec).toEqual({ name: 'killgate' });
+        expect(st.elements.spec).toEqual({ any: [{ name: 'killgate' }, { name: 'arena' }] });
         /** ⛔ AND A BIOME THAT CANNOT GRANT IT REFUSES **BY NAME**, with the
          *  level still built (arc-1's law, and the CLI's exit 6). */
         const pre = generateStep({ seed: 1, biome: 'pre-sword', step: 0, require: ['hasSword'] });
