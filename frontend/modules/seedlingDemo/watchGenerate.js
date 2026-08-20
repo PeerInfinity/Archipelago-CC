@@ -1388,6 +1388,20 @@ export function describeState(state, solved = null) {
             + (state.skeleton && spellSkeleton(state.skeleton) !== DEFAULT_SKELETON_KIND
                 ? ` · skeleton: ${spellSkeleton(state.skeleton)} (CARVED, not the open room)`
                 : '')
+            /**
+             * ⛓⛓ ARC 5, SLICE 1 — **THE ROOM, NAMED ONLY WHEN IT IS NOT THE
+             * PINNED ONE** (⚖ rulings 1 and 2), which is `empty`'s own rule one
+             * clause over: a line that said `· 10x10 dense` on every level would
+             * train a reader to stop reading it, and the one time it matters is
+             * the one time it is there. ⛔ It is on the identity line because a
+             * level built in a 20x10 SHELL room and one built in the pinned
+             * 10x10 dense room are different levels, and until this clause
+             * existed the two printed the same sentence.
+             */
+            + ((state.size && (state.size.width !== SEEDLING_DEFAULTS.width
+                || state.size.height !== SEEDLING_DEFAULTS.height))
+                ? ` · room: ${state.size.width}x${state.size.height}` : '')
+            + (state.fill && state.fill !== FILL_DENSE ? ` · fill: ${state.fill}` : '')
             + ((state.directives ?? []).length
                 ? `, then ${state.directives.length} directed attempt(s)` : '')
             /**

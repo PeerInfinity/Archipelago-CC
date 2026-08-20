@@ -404,6 +404,24 @@ describe('⛔⛔ THE CLOSURE LAW — no floor cell 4-adjacent to an ABSENT cell'
         expect(() => assertClosed(holed)).toThrow(/An absent cell is NOT a wall/);
     });
 
+    /**
+     * ⛓⛓⛓ THE ROW MUTANT (a) EXISTS FOR. `shellOf` cannot produce a hole FROM A
+     * DENSE INPUT — the law holds by construction there — so the row that gates
+     * the call inside it has to hand it an input that is already sparse. ⛔
+     * Without this row, deleting `assertClosed(out)` from `shellOf` reddens
+     * NOTHING, because the law's own row calls the law directly.
+     */
+    it('⛔ `shellOf` REFUSES to return a holed room when the input already had the hole', () => {
+        const holed = fromPicture([
+            '#####',
+            '#...#',
+            '#... ',
+            '#...#',
+            '#####',
+        ]);
+        expect(() => shellOf(holed)).toThrow(/THE CLOSURE LAW/);
+    });
+
     it('⛓ a hole on the DIAGONAL is not a way out, and is not refused', () => {
         const cornerless = fromPicture([
             ' ### ',

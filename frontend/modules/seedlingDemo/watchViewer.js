@@ -212,7 +212,7 @@ import { catalogueRows, restrictPalette } from './procgenPalette.js';
  * pure writers, never by a second construction.
  */
 import {
-    atlasOf, emptyLevel, TERRAIN_NAMES, withEntities, withTerrain,
+    atlasOf, emptyLevel, SINGLE_SCREEN_TILES, TERRAIN_NAMES, withEntities, withTerrain,
 } from './procgenLevel.js';
 /**
  * ⛓⛓⛓ SLICE 11 (constructive-mode arc) — FREE TILE / OBJECT EDITING. ⚖ Ruling
@@ -5636,6 +5636,25 @@ async function runGenerate(params, lifetime) {
              */
             skeleton: state.skeleton ?? null,
             skeletons: skeletonCatalogue({ simulator: false }),
+            /**
+             * ⛓⛓⛓ ARC 5, SLICE 1 — **THE ROOM, AS A CHANNEL A ROW CAN READ**
+             * (⚖ rulings 1 and 2). ⛔ It exists because the claim a browser row
+             * makes about a MULTI-SCREEN or SHELL room has to be read off the
+             * channel it is about (trap 430's family, and slice 0 paid a
+             * Windows run to learn it): `width`/`height` say whether the camera
+             * can scroll at all, and `tiles` against `cells` is the strip,
+             * measured rather than asserted from the flag.
+             */
+            room: {
+                width: state.record?.width ?? null,
+                height: state.record?.height ?? null,
+                cells: (state.record?.width ?? 0) * (state.record?.height ?? 0),
+                tiles: (state.record?.layers ?? []).find((l) => l.name === 'tiles')
+                    ?.tiles.length ?? null,
+                fill: state.fill ?? null,
+                multiScreen: (state.record?.width ?? 0) > SINGLE_SCREEN_TILES.width
+                    || (state.record?.height ?? 0) > SINGLE_SCREEN_TILES.height,
+            },
             /**
              * ⛓⛓⛓ SLICE 5a (D1) — **THE THREE BLOCKS, READ OFF THE STATE**, in
              * the CLI's own shapes (`elementSummaryOf`, `areaSummaryOf`,

@@ -5,10 +5,11 @@
  * `watch.html`'s ▶ load-in-wasm button ships what the page holds into the real
  * recompiled Seedling and prints TWO verdicts beside the JS run's own answer:
  * the END STATE (did the real game finish where the model finished) and, since
- * the per-tick slice, the whole run TICK BY TICK. This row drives TWO ships all
- * the way to `finished`, past the `drain`, and reads both verdicts off the page.
+ * the per-tick slice, the whole run TICK BY TICK. This row drives THREE ships
+ * all the way to `finished`, past the `drain`, and reads both verdicts off the
+ * page.
  *
- * ── ⛓⛓⛓ TWO PLANS, AND THE SECOND ONE IS THE POINT ───────────────
+ * ── ⛓⛓⛓ THREE PLANS, AND EACH ONE ANSWERS WHAT THE LAST COULD NOT ──
  *
  *   SOLVE     a committed staging, solved IN the page, its tape shipped. The
  *             tape's rooms are the atlas's own, so nothing is remapped.
@@ -23,6 +24,13 @@
  *             SEEN"*). ⛔ It is a ROW gap, not a mechanism gap: the mechanism
  *             shipped with the per-tick slice and is unit-tested; what was
  *             missing was an arm that could run it against the real game.
+ *   ROOM      ⛓⛓⛓ arc 5, slice 1 — a **MULTI-SCREEN, SHELL-FORMAT** generated
+ *             room: 12x10, so the camera CLAMP stops pinning at 0 and the two
+ *             runtimes each scroll with code they do not share; and 40 of its
+ *             120 cells written, so most of its walls are cells that hold NO
+ *             TILE AT ALL. Every level shipped before it was one screen and
+ *             densely written, so neither claim had ever been put to the real
+ *             game. See its own docblock for how the subject was measured.
  *
  * ⚠ IT IS NO LONGER THE ONLY ARM THAT CAN SEE `agrees per tick`.
  * `check-seedling-wasm-pages.mjs` now drives a 30-tick COMMITTED tape through
@@ -220,6 +228,85 @@ const GENERATE_STEPS = [
     },
     {
         what: '⛓ the ship reached `finished` — the real game ran the certification tape out',
+        wait: "window.__watch?.wasm?.verdict && window.__watch.wasm.verdict.kind !== 'not-finished'",
+        sec: 900,
+    },
+    { read: 'window.__watch.wasm', as: 'wasm' },
+    { read: "document.getElementById('wasmVerdict').textContent", as: 'verdictText' },
+];
+
+/**
+ * ── ⛓⛓⛓ THE ROOM-CONTRACT PLAN — A **MULTI-SCREEN, SHELL-FORMAT** ROOM ──
+ *
+ * PROCGEN ELEMENTS arc 5, slice 1 (⚖ rulings 1 and 2). The third plan, and the
+ * first level this repo has ever shipped to the real game that is NOT one
+ * screen and NOT densely written.
+ *
+ * ⛔ **WHAT MAKES IT A WITNESS RATHER THAN A THIRD SHIP.** Two claims neither
+ * of the other plans can make:
+ *
+ *  1. **THE CAMERA BAND IS IN PLAY.** A 12-wide room is 192 px against a 160 px
+ *     screen, so `cameraFor`'s clamp stops pinning the camera at 0 and the two
+ *     runtimes each scroll with their own code — the JS model's `stepCamera`
+ *     and the recompiled game's `Game.view()` share NOTHING. Every level
+ *     shipped before this one was 10x10, where the clamp holds the camera at 0
+ *     for the whole run and the disagreement could not arise.
+ *  2. **NULL IS NOT WALL, IN THE REAL GAME.** The room is written in the
+ *     `shell` fill: 40 tiles of a 120-cell rectangle, the other 80 ABSENT. The
+ *     JS side proves the strip changes no tick (`procgenRoomContract.test.js`
+ *     solves the same room dense and stripped and compares the whole verdict
+ *     object); this is the arm that asks the RECOMPILED GAME the same question,
+ *     and its answer is per-tick.
+ *
+ * ⛓ **THE SUBJECT WAS MEASURED, NOT CHOSEN.** Over `empty`/`winding` x seeds
+ * 1..40 x {12x10, 14x10, 15x10, 20x10}, filtered to the rooms whose model
+ * camera actually MOVES and whose display solve is under 200 ticks, seed 28 is
+ * the shortest carved one: **154 ticks**, camera x 0 -> 32 (the whole range a
+ * 12-wide room has), and **40 of 120 cells written**. ⛔ The tape being short is
+ * what puts this claim inside a HEADLESS row's reach — slice 0's residue 4,
+ * discharged: 154 ticks is under half of seed 38's 360, which headless ran in
+ * ~20 minutes.
+ */
+const ROOM_SEED = 28;
+const ROOM_BIOME = 'pre-sword';
+const ROOM_COUNT = 1;
+const ROOM_W = 12;
+const ROOM_H = 10;
+const ROOM_PAGE = `${HOST}/frontend/modules/seedlingDemo/watch.html`
+    + `?source=generate&seed=${ROOM_SEED}&biome=${ROOM_BIOME}&skeleton=winding`
+    + `&width=${ROOM_W}&height=${ROOM_H}&fill=shell&count=${ROOM_COUNT}&run=1`;
+
+const ROOM_STEPS = [
+    {
+        what: '⛔ the generator ran its WHOLE ladder — not merely its first `ok`',
+        wait: "window.__editorGenerate?.status === 'ok'"
+            + ` && window.__editorGenerate?.step === ${ROOM_COUNT}`
+            + " && !document.getElementById('genRunAll').disabled"
+            + " && !document.getElementById('loadWasm').disabled",
+        sec: 300,
+    },
+    { read: 'window.__editorGenerate.step', as: 'genStep' },
+    { read: 'window.__editorGenerate.ticks', as: 'genTicks' },
+    { read: 'window.__editorGenerate.certified', as: 'genCertified' },
+    /** ⛓ THE CHANNEL THE ROOM CLAIMS ARE ABOUT — published by the page for
+     *  exactly this row (trap 430: read the channel the claim names). */
+    { read: 'window.__editorGenerate.room', as: 'room' },
+    { read: 'window.__editorGenerate.identity', as: 'identity' },
+    { read: "document.getElementById('loadWasm').title", as: 'buttonTitle' },
+    { click: '#loadWasm', what: 'press ▶ load in wasm' },
+    {
+        what: 'the ship reached `runtime` and is waiting for a REAL ▶ Start',
+        wait: "window.__watch?.wasm?.reached?.includes('runtime')",
+        sec: 300,
+    },
+    { frame_click: '#btn-start', frame: '/game.html', what: 'press ▶ Start INSIDE the frame' },
+    {
+        what: '⛓ the ONE-ROOM level set MOUNTED and was read back out of the artifact',
+        wait: "window.__watch?.wasm?.reached?.includes('levels') || window.__watch?.wasm?.refusal",
+        sec: 300,
+    },
+    {
+        what: '⛓ the ship reached `finished` — the real game ran the tape out',
         wait: "window.__watch?.wasm?.verdict && window.__watch.wasm.verdict.kind !== 'not-finished'",
         sec: 900,
     },
@@ -522,6 +609,79 @@ function perTickClaims(wasm, arm) {
             `game ${wasm.status?.tick} vs certification ${res.reads?.genTicks}`);
     }
     pageHygiene(res, 'GENERATE');
+}
+
+// ── ARM 3: THE ROOM CONTRACT — a MULTI-SCREEN, SHELL-FORMAT generated room ──
+{
+    const res = drive('▶ load in wasm, a MULTI-SCREEN SHELL room, driven to `finished`',
+        ROOM_PAGE, ROOM_STEPS, 'watch-ship-room');
+    check(res !== null && res.crashed !== true, 'ROOM: the driver completed every step',
+        res === null ? 'no results file — the driver died before writing one'
+            : (res.error ?? `${res.steps.length} step(s)`));
+    if (res === null) { console.log(`\n${failed} FAILURE(S)`); process.exit(1); }
+
+    const wasm = res.reads?.wasm ?? null;
+    const room = res.reads?.room ?? null;
+    check(res.reads?.genStep === ROOM_COUNT,
+        'ROOM: ⛔ the room that shipped is the LADDER\'S LAST step, not its first',
+        `step ${res.reads?.genStep} of ${ROOM_COUNT}`);
+    /**
+     * ⛔⛔ THE TWO PRECONDITIONS ARE CLAIMS, NOT ASSUMPTIONS. A row that shipped
+     * a 10x10 dense room and read `agrees per tick` off it would pass while
+     * witnessing NOTHING this slice is about — the vacuity shape, at the
+     * subject instead of at the assertion. Both are read off the page's own
+     * `room` block, which is the channel the claim is about.
+     */
+    check(room?.width === ROOM_W && room?.height === ROOM_H && room?.multiScreen === true,
+        'ROOM: ⛓⛓⛓ the shipped room is MULTI-SCREEN — bigger than the 10x10 pin every '
+        + 'level shipped before it, so the CAMERA BAND is in play',
+        `${room?.width}x${room?.height}, multiScreen ${room?.multiScreen}`);
+    check(room?.fill === 'shell' && room?.tiles > 0 && room?.tiles < room?.cells,
+        'ROOM: ⛓⛓⛓ …and it is written in the SHELL fill — the strip really ran, measured '
+        + 'rather than taken off the flag',
+        `${room?.tiles} of ${room?.cells} cell(s) written, fill ${room?.fill}`);
+    /** ⛓ AND THE PAGE SAYS SO IN WORDS — the identity line names the room the
+     *  level was built in, which until this slice it could not. */
+    check(typeof res.reads?.identity === 'string'
+        && new RegExp(`room: ${ROOM_W}x${ROOM_H}`).test(res.reads.identity)
+        && /fill: shell/.test(res.reads.identity),
+        'ROOM: ⛓ the page\'s IDENTITY LINE names the room and the fill',
+        lineWith(res.reads?.identity ?? '', /room:/));
+    check(typeof res.reads?.buttonTitle === 'string'
+        && /ship this room as a ONE-ROOM level set/i.test(res.reads.buttonTitle),
+        'ROOM: …and the button title NAMES what pressing it will send',
+        res.reads?.buttonTitle ?? '(no title)');
+
+    check(wasm !== null, 'ROOM: the page published `__watch.wasm`', wasm ? wasm.stage : 'null');
+    if (wasm) {
+        wasm.__verdictText = res.reads?.verdictText ?? '';
+        const want = ['probe', 'runtime', 'start', 'levels', 'tape', 'running', 'finished',
+            'drain', 'verdict'];
+        check(JSON.stringify(wasm.reached) === JSON.stringify(want),
+            'ROOM: ⛓ every stage was reached, in order, `levels` included',
+            `${JSON.stringify(wasm.reached)}`);
+        check(wasm.refusal === null, 'ROOM: no stage refused', JSON.stringify(wasm.refusal));
+        check(wasm.set?.rooms === 1 && typeof wasm.set?.set_id === 'string'
+            && wasm.set.set_id.startsWith('watch-oneroom-'),
+            'ROOM: ⛓⛓ exactly ONE room mounted, under the set_id the exporter stamped',
+            JSON.stringify(wasm.set ?? null));
+        check(wasm.status?.finished === true, 'ROOM: the game reports the run FINISHED',
+            `tick ${wasm.status?.tick}, level ${wasm.status?.level}, `
+            + `(${wasm.status?.x}, ${wasm.status?.y})`);
+        check(wasm.verdict?.agrees === true,
+            'ROOM: ⛓⛓⛓ end-state verdict: AGREES — in a room the camera SCROLLED and whose '
+            + 'walls are mostly not written at all',
+            `${wasm.verdict?.text} · Δx ${wasm.verdict?.deltas?.dx} Δy ${wasm.verdict?.deltas?.dy}`);
+        perTickClaims(wasm, 'ROOM');
+        check(wasm.status?.level === 0,
+            'ROOM: ⛔ …and the GAME was in room 0 the whole time — the 900→0 remap again, '
+            + 'now over a room that is not one screen',
+            `game level ${wasm.status?.level}, model record level 900`);
+        check(wasm.status?.tick === res.reads?.genTicks,
+            'ROOM: the game ran the SAME number of ticks the certification produced',
+            `game ${wasm.status?.tick} vs certification ${res.reads?.genTicks}`);
+    }
+    pageHygiene(res, 'ROOM');
 }
 
 console.log(failed === 0 ? '\nALL PASS' : `\n${failed} FAILURE(S)`);
