@@ -45,7 +45,10 @@ export default defineConfig({
     //
     // ⇒ MEASURED AFTER, same machine, same command: 12 files / 217 tests /
     // **178 s**, ALL GREEN — a 93.1% cut, and the CI slow job stops carrying a
-    // red it cannot act on.
+    // red it cannot act on. ⛓ AND ON CI, WHICH IS THE NUMBER THAT MATTERS:
+    // the `JavaScript Unit Tests` workflow (it runs `test:unit` then
+    // `test:unit:slow`) went **15m52s → 3m20s** across this one commit
+    // (`f82bc84b9` → `991db346c`).
     //
     // ⚠ THE PATTERNS ARE DELIBERATELY BROAD. A NEW `runnerDemo/*.slow.test.js`
     // written before the redesign lands would also be excluded — which is the

@@ -25,7 +25,7 @@ export const DOCS_INDEX = frz({
         "docs": 17,
         "lines": 13906,
         "pages": 4,
-        "words": 165358
+        "words": 165374
     },
     "descriptionRule": "the document's OWN first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence. ⛔ Never a hand-written summary — if an entry reads thin, the fix is a better opening paragraph in the document.",
     "dir": "docs/json/developer/procgen",
@@ -113,7 +113,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/runner.md",
-            "words": 4302
+            "words": 4318
         },
         {
             "description": "The procgen stack ships a family of tools for *watching a world play itself*: a playback bot that walks recorded playthroughs, a substrate-neutral controller contract with iframe proxies, shared timing/UI primitives, a forward simulator that generates sphere logs, and per-substrate visualizers.",
