@@ -2854,8 +2854,31 @@ if (!host) {
         && json(reqWeb.gen.require?.grade) === json(nodeReq.require.grade),
     '⛓⛓ …and the GRADE the browser measured IS node\'s',
     `${reqWeb.gen.require?.met} / ${json(reqWeb.gen.require?.grade)}`);
-    check(json(reqWeb.gen.elements?.spec) === json({ name: 'killgate' }),
-        '⛔ …and the directive FORCED the head — a `+` list would have spent a pick',
+    /**
+     * ⛓⛓⛓ **THE FORCED SPEC IS A `+` LIST SINCE ARC 5 SLICE 4, AND THIS ROW WAS
+     * TWO SLICES BEHIND IT.** ⛔ It asserted the BARE head `{name:'killgate'}`,
+     * which was right while `killgate` was the only element declaring
+     * `needs: ['hasSword']`. Slice 4's `arena` declares it too, so
+     * `resolveRequireDirective` has forced `killgate+arena` ever since — trap
+     * 457, recorded in slice 4's own as-built and never carried into this
+     * browser row, which nobody re-ran until arc 5 slice 6a's re-pin tail.
+     *
+     * ⛔ **CORRECTED, NOT RELAXED** (trap 62). The claim the row exists to make
+     * is *"the directive DECIDED the head rather than leaving it to a draw"*,
+     * and that claim is now about a list whose members are EXACTLY the elements
+     * the asked-for item unlocks. So it is asserted as a literal — both members,
+     * in order — and a third `needs: ['hasSword']` element arriving without a
+     * decision reds this row rather than sliding in.
+     *
+     * ⚠ It is NOT a `+` list the caller wrote: `require` NARROWED the roster to
+     * the two heads that can meet it, and a pick over two certifiable heads is
+     * a different thing from a pick over four (`drawElementHead` still spends
+     * exactly one).
+     */
+    check(json(reqWeb.gen.elements?.spec)
+        === json({ any: [{ name: 'killgate' }, { name: 'arena' }] }),
+        '⛔ …and the directive NARROWED the roster to exactly the heads `hasSword` '
+        + 'unlocks — `killgate+arena`, in order, and nothing else',
         json(reqWeb.gen.elements?.spec));
     check(json(reqWeb.level) === json(nodeReq.record),
         '⛓⛓ …and the level IS node\'s directed level, byte for byte');
