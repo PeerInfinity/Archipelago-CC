@@ -861,11 +861,48 @@ await page.route(
  * about to be rewritten. The buttons are disabled for exactly the span of the
  * run (`busy()`), which is the honest "it finished" marker.
  */
-const settled = (step, seed = null) => page.waitForFunction(
-    ([s, sd]) => window.__editorGenerate?.step === s
-        && (sd === null || window.__editorGenerate.seed === sd)
-        && !document.getElementById('genRunAll').disabled,
-    [step, seed], { timeout: 300000 });
+/**
+ * ⛓⛓⛓ **AND A PRESS-TIME REFUSAL FAILS BY NAME, NOT BY TIMEOUT** — SEEDLING
+ * BOT R9 slice 1, from slice 0's §8.6(3) (trap 480). Slice 0's mutant (c) did
+ * not redden a claim here: it died at claim 2's first ladder press after the
+ * WHOLE 300-second budget, with 17 claims passed and the readout stuck at step
+ * 0. The page had behaved exactly as designed — the refusal was spoken,
+ * `#status` went `class="bad"`, zero page errors, no run nobody asked for —
+ * and this gate had no way to notice a status line.
+ *
+ * ⛔ THE SETTLE CONDITION IS ASKED FIRST, and the refusal branch requires the
+ * ladder to be IDLE (`genRunAll` not disabled) as well as `bad`. So a `bad`
+ * status that is part of a claim's own subject — a refused `?require=`, a
+ * refused parameter — cannot turn a green row red: those pages still reach
+ * their step, and the settle wins. What is caught is the one state this row
+ * could not distinguish from a hang: idle, refused, and never having moved.
+ */
+const waitOrRefusal = async (readyExpr, what) => {
+    const outcome = await page.waitForFunction(`(() => {
+        const busy = document.getElementById('genRunAll') ? document.getElementById('genRunAll').disabled === true : false;
+        if (${readyExpr}) return { settled: true };
+        const st = document.getElementById('status');
+        if (!busy && st && st.className === 'bad') {
+            return { refused: (st.textContent || '').trim().slice(0, 300),
+                at: window.__editorGenerate ? window.__editorGenerate.step : null };
+        }
+        return false;
+    })()`, null, { timeout: 300000 }).then((h) => h.jsonValue());
+    if (outcome.refused) {
+        check(false,
+            `⛔ the page REFUSED AT A PRESS instead of ${what} — a named failure where this `
+            + 'row used to spend its whole 300 s budget and die by timeout',
+            `#status is \`bad\` and the ladder is idle at step ${outcome.at}: `
+            + `"${outcome.refused}"`);
+    }
+    return outcome;
+};
+
+const settled = (step, seed = null) => waitOrRefusal(
+    `window.__editorGenerate && window.__editorGenerate.step === ${step}`
+    + `${seed === null ? '' : ` && window.__editorGenerate.seed === ${seed}`} && !busy`,
+    `settling at step ${step}${seed === null ? '' : ` on seed ${seed}`}`,
+);
 
 /**
  * Load a GENERATE view and wait for the arm's own readout.
@@ -1019,8 +1056,10 @@ const catalogueOf = () => page.evaluate(() => ({
 
     // ── CLAIM 1: ONE PRESS OF STEP ───────────────────────────────────
     await page.click('#genStep');
-    await page.waitForFunction(() => window.__editorGenerate?.step === 1,
-        null, { timeout: 300000 });
+    // ⛓ R9 slice 1 — through the refusal-aware waiter: this is the FIRST press
+    //   of the whole gate, and slice 0's mutant (c) died here by timeout.
+    await waitOrRefusal('window.__editorGenerate && window.__editorGenerate.step === 1',
+        'stepping to 1');
     const stepped = await page.evaluate(() => ({
         gen: window.__editorGenerate,
         level: window.__editorGenerated.level,
@@ -1175,8 +1214,9 @@ const catalogueOf = () => page.evaluate(() => ({
     await load(q, { step: PRE.count, seed: PRE.seed });
     await page.fill('#genSeed', String(PRE.seed + 1));
     await page.click('#genStep');
-    await page.waitForFunction((s) => window.__editorGenerate?.seed === s,
-        PRE.seed + 1, { timeout: 300000 });
+    await waitOrRefusal(
+        `window.__editorGenerate && window.__editorGenerate.seed === ${PRE.seed + 1}`,
+        `the press to pick up seed ${PRE.seed + 1}`);
     const after = await page.evaluate(() => ({
         gen: window.__editorGenerate, level: window.__editorGenerated.level,
     }));
@@ -1305,8 +1345,10 @@ const catalogueOf = () => page.evaluate(() => ({
 
     // ── 5c: RESET is the SKELETON, and the link says so by ABSENCE ───
     await page.click('#genReset');
-    await page.waitForFunction(() => window.__editorGenerate?.step === 0
-        && !document.getElementById('genReset').disabled, null, { timeout: 300000 });
+    await waitOrRefusal(
+        'window.__editorGenerate && window.__editorGenerate.step === 0'
+        + " && document.getElementById('genReset').disabled === false",
+        'resetting to the skeleton');
     const reset = await panelOf();
     const ru = new URLSearchParams(reset.url);
     check(!ru.has('run') && ru.get('count') === String(ROUND.count),
@@ -1704,10 +1746,10 @@ const catalogueOf = () => page.evaluate(() => ({
      * onward, so waiting for it to EXIST would read the page before the
      * directive ran.
      */
-    await page.waitForFunction(
-        () => window.__editorGenerate?.directives?.length === 1
-            && !document.getElementById('genRunAll').disabled,
-        null, { timeout: 300000 },
+    await waitOrRefusal(
+        'window.__editorGenerate && window.__editorGenerate.directives'
+        + ' && window.__editorGenerate.directives.length === 1 && !busy',
+        'running the directed attempt',
     );
     const after = await page.evaluate(() => ({
         gen: window.__editorGenerate,
@@ -1801,10 +1843,9 @@ const catalogueOf = () => page.evaluate(() => ({
             '⛓ the payload the page would DOWNLOAD carries the directive',
             json(servedPayload.directives?.[0]?.instance));
         await load(`gen=${PAYLOAD_ROUTE}`);
-        await page.waitForFunction(
-            () => window.__editorGenerate?.payloadCheck
-                && !document.getElementById('genRunAll').disabled,
-            null, { timeout: 300000 },
+        await waitOrRefusal(
+            'window.__editorGenerate && window.__editorGenerate.payloadCheck && !busy',
+            'answering the payload comparison',
         );
         const back = await page.evaluate(() => ({
             gen: window.__editorGenerate,
@@ -1885,10 +1926,10 @@ const catalogueOf = () => page.evaluate(() => ({
             }
             row.querySelector(`button[data-attempt="${template}"]`).click();
         }, subject);
-        await page.waitForFunction(
-            () => window.__editorGenerate?.directives?.length === 1
-                && !document.getElementById('genRunAll').disabled,
-            null, { timeout: 300000 },
+        await waitOrRefusal(
+            'window.__editorGenerate && window.__editorGenerate.directives'
+            + ' && window.__editorGenerate.directives.length === 1 && !busy',
+            'running the directed attempt',
         );
         const got = await page.evaluate(() => ({
             d: window.__editorGenerate.directives[0],
@@ -1949,10 +1990,10 @@ const catalogueOf = () => page.evaluate(() => ({
             }
             row.querySelector(`button[data-attempt="${template}"]`).click();
         }, { template: DIRECT.template, params: DIRECT.params });
-        await page.waitForFunction(
-            () => window.__editorGenerate?.directives?.length === 1
-                && !document.getElementById('genRunAll').disabled,
-            null, { timeout: 300000 },
+        await waitOrRefusal(
+            'window.__editorGenerate && window.__editorGenerate.directives'
+            + ' && window.__editorGenerate.directives.length === 1 && !busy',
+            'running the directed attempt',
         );
         const warned = await page.evaluate(
             () => document.getElementById('genDirectivesNote').textContent);
@@ -2001,16 +2042,16 @@ const catalogueOf = () => page.evaluate(() => ({
             }
             row.querySelector(`button[data-attempt="${template}"]`).click();
         }, { template: DIRECT.template, params: DIRECT.params });
-        await page.waitForFunction(
-            () => window.__editorGenerate?.directives?.length === 1
-                && !document.getElementById('genRunAll').disabled,
-            null, { timeout: 300000 },
+        await waitOrRefusal(
+            'window.__editorGenerate && window.__editorGenerate.directives'
+            + ' && window.__editorGenerate.directives.length === 1 && !busy',
+            'running the directed attempt',
         );
         await page.click('#genDirectivesClear');
-        await page.waitForFunction(
-            () => (window.__editorGenerate?.directives ?? []).length === 0
-                && !document.getElementById('genRunAll').disabled,
-            null, { timeout: 300000 },
+        await waitOrRefusal(
+            'window.__editorGenerate && (window.__editorGenerate.directives || []).length === 0'
+            + ' && !busy',
+            'clearing the directives',
         );
         const cleared = await page.evaluate(() => ({
             gen: window.__editorGenerate,
@@ -2161,10 +2202,10 @@ const catalogueOf = () => page.evaluate(() => ({
         + `⇒ ${json(target.expect)}`);
     const beforeClick = await page.evaluate(() => window.__editorGenerated.level);
     await page.mouse.click(target.x, target.y);
-    await page.waitForFunction(
-        () => window.__editorGenerate?.directives?.length === 1
-            && !document.getElementById('genRunAll').disabled,
-        null, { timeout: 300000 },
+    await waitOrRefusal(
+        'window.__editorGenerate && window.__editorGenerate.directives'
+        + ' && window.__editorGenerate.directives.length === 1 && !busy',
+        'running the directed attempt',
     );
     const clicked = await page.evaluate(() => ({
         gen: window.__editorGenerate,
@@ -2238,10 +2279,9 @@ const catalogueOf = () => page.evaluate(() => ({
     {
         servedPayload = await page.evaluate(() => window.__editorGenerated);
         await load(`gen=${PAYLOAD_ROUTE}`);
-        await page.waitForFunction(
-            () => window.__editorGenerate?.payloadCheck
-                && !document.getElementById('genRunAll').disabled,
-            null, { timeout: 300000 },
+        await waitOrRefusal(
+            'window.__editorGenerate && window.__editorGenerate.payloadCheck && !busy',
+            'answering the payload comparison',
         );
         const back = await page.evaluate(() => ({
             gen: window.__editorGenerate,
@@ -2290,10 +2330,10 @@ const catalogueOf = () => page.evaluate(() => ({
         await page.evaluate(() => document.getElementById('canvas')
             .scrollIntoView({ block: 'center' }));
         await page.mouse.click(bad.x, bad.y);
-        await page.waitForFunction(
-            () => window.__editorGenerate?.directives?.length === 1
-                && !document.getElementById('genRunAll').disabled,
-            null, { timeout: 300000 },
+        await waitOrRefusal(
+            'window.__editorGenerate && window.__editorGenerate.directives'
+            + ' && window.__editorGenerate.directives.length === 1 && !busy',
+            'running the directed attempt',
         );
         const refused = await page.evaluate(() => ({
             gen: window.__editorGenerate,
@@ -2355,10 +2395,9 @@ if (!host) {
      * and one that only fires when the box is slow enough to schedule the poll
      * between the skeleton and the run.
      */
-    const reproduced = () => page.waitForFunction(
-        () => window.__editorGenerate?.payloadCheck
-            && !document.getElementById('genRunAll').disabled,
-        null, { timeout: 300000 });
+    const reproduced = () => waitOrRefusal(
+        'window.__editorGenerate && window.__editorGenerate.payloadCheck && !busy',
+        'answering the payload comparison');
     await load(`gen=${GEN_ROUTE}`);
     await reproduced();
     const web = await page.evaluate(() => ({
@@ -2740,10 +2779,10 @@ if (!host) {
             { step: 0, seed: CARVED.seed });
             await armTemplate('wall-segment', { ori: SEALER.ori, len: SEALER.len });
             await clickTile(SEALER.tx, SEALER.ty);
-            await page.waitForFunction(
-                () => window.__editorGenerate?.directives?.length === 1
-                    && !document.getElementById('genRunAll').disabled,
-                null, { timeout: 300000 },
+            await waitOrRefusal(
+                'window.__editorGenerate && window.__editorGenerate.directives'
+                + ' && window.__editorGenerate.directives.length === 1 && !busy',
+                'running the directed attempt',
             );
             const sealedPane = await page.evaluate(() => ({
                 directives: window.__editorGenerate?.directives ?? [],
@@ -2883,10 +2922,10 @@ if (!host) {
             + `&count=${OPEN.step}&run=1`, { step: OPEN.step, seed: OPEN.seed });
         await armTemplate('wall-segment', { ori: OPEN.ori, len: OPEN.len });
         await clickTile(OPEN.tx, OPEN.ty);
-        await page.waitForFunction(
-            () => window.__editorGenerate?.directives?.length === 1
-                && !document.getElementById('genRunAll').disabled,
-            null, { timeout: 300000 },
+        await waitOrRefusal(
+            'window.__editorGenerate && window.__editorGenerate.directives'
+            + ' && window.__editorGenerate.directives.length === 1 && !busy',
+            'running the directed attempt',
         );
         const pane = await page.evaluate(() => ({
             directives: window.__editorGenerate?.directives ?? [],
