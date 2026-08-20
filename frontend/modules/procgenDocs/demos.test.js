@@ -66,9 +66,10 @@ describe('every non-prose entry is loadable by the row', () => {
      *  per-slice demo debt every slice from 1 on left behind (the room contract,
      *  the oriented site pick, `chamber`, `arena`, the maze SHORTENS witness and
      *  the density block beside the default's new shape). ⛓ 19 → **20** at
-     *  SEEDLING BOT R9 slice 0: the FORM CONTROLS, whose claim is the one a
-     *  control could most easily break (`elementsAsked == null` on a URL that
-     *  names no element). */
+     *  SEEDLING BOT R9 slice 0: the FORM CONTROLS, claiming `elementsAsked ==
+     *  null` on a URL that names no element — the LOAD half of the element
+     *  control's third state. ⚠ Its reach is measured and bounded: the row
+     *  never presses a ladder button, so the PRESS half is CLAIM 5R's. */
     it('has 20 of them, and exactly one PROSE entry', () => {
         expect(real).toHaveLength(20);
         expect(DEMOS.filter((e) => e.prose)).toHaveLength(1);
