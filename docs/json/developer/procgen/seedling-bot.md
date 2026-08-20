@@ -9922,7 +9922,9 @@ every table is arc-3 kickoff §12.
   2 runs on a separate one. That is the OPPOSITE of the pre-carve rule (*a
   refused element spends its draws and moves the room*), and both are true of
   their own phase.
-- **THE `+` LIST** (`guard;len=2+killgate+blockpocket`) is a CHOICE, not a
+- **THE `+` LIST** (`guard;len=2|3|4+killgate+blockpocket+chamber;w=2;h=3` — as of
+  R9 slice 1; it read `guard;len=2+killgate+blockpocket` when this § was written)
+  is a CHOICE, not a
   conjunction — ONE BLOCK PER LEVEL forbids the other reading — and one
   `rng.pick` over its members is the only draw it spends. `none` is a legal
   member.
@@ -9972,9 +9974,11 @@ as-built with every table is arc-3 kickoff **§13**.
   element does — one mechanism — rather than re-growing a second array.
 - ⛓ **AND THE DEFAULT GENERATOR HAS DOORS AGAIN, WHICH IS WHAT MADE THE
   RETIREMENT SAFE.** `procgenSeedling.defaultElementsFor(items)` — ONE place, the
-  SEAM, because the model has no items: `guard;len=2+blockpocket` pre-sword,
-  `guard;len=2+killgate+blockpocket` post-sword, a `+` list meaning ONE of these
-  drawn. The CLI, the sweep and the page follow by passing `undefined`;
+  SEAM, because the model has no items — as of R9 slice 1
+  `guard;len=2|3|4+blockpocket+chamber;w=2;h=3` pre-sword and
+  `guard;len=2|3|4+killgate+blockpocket+chamber;w=2;h=3` post-sword (it read
+  `guard;len=2+blockpocket` / `+killgate` when this § was written), a `+` list
+  meaning ONE of these drawn. The CLI, the sweep and the page follow by passing `undefined`;
   `--elements=none` stays selectable and stays inert relative to ITSELF (not to
   the pre-4c default — the goal draw moved in the same commit).
 - **`PREFER_DISCHARGE` RETIRED ON SEEDLING.** The `<d|s>` policy letter left the
@@ -10357,8 +10361,8 @@ gitignored; this § is the tracked record.
 
 **What the Seedling generator IS now**, in one paragraph. Pass 1 draws the GOAL
 at Manhattan ≥ 3 from the start, then an ELEMENT head from the biome default
-spec (`guard;len=2+blockpocket`, `+killgate` post-sword — a `+` list is a
-CHOICE), builds any `pre-carve` element, runs THE CARVE (the five carved tree
+spec (`guard;len=2|3|4+blockpocket+chamber;w=2;h=3`, `+killgate` post-sword — a
+`+` list is a CHOICE, and `len=2|3|4` is a SUBSET the guard draws ONE value from), builds any `pre-carve` element, runs THE CARVE (the five carved tree
 kinds defaulting to `chambers = 1`), builds any `on-connector` element against a
 read-only room probe, optionally partitions the room into AREAS and realises an
 area GRAPH (locks on every boundary cell, the goal in a radius-2 vestibule),

@@ -79,9 +79,9 @@ describe('⛓ THE CODEC — two new heads, and the `+` list', () => {
     it('⛔ the BIOME DEFAULT spec, both biomes, pinned LITERALLY — spelling, '
         + 'order, and which parameters are NAMED', () => {
         expect(formatElementSpec(defaultElementsFor(PRE_SWORD_ITEMS)))
-            .toBe('guard+blockpocket+chamber;w=2;h=3');
+            .toBe('guard;len=2|3|4+blockpocket+chamber;w=2;h=3');
         expect(formatElementSpec(defaultElementsFor(POST_SWORD_ITEMS)))
-            .toBe('guard+killgate+blockpocket+chamber;w=2;h=3');
+            .toBe('guard;len=2|3|4+killgate+blockpocket+chamber;w=2;h=3');
         /** ⛓ the two biomes differ by EXACTLY the sword-gated head. */
         const pre = defaultElementsFor(PRE_SWORD_ITEMS).any.map((m) => m.name);
         const post = defaultElementsFor(POST_SWORD_ITEMS).any.map((m) => m.name);
@@ -89,15 +89,24 @@ describe('⛓ THE CODEC — two new heads, and the `+` list', () => {
         expect(post).toEqual(['guard', 'killgate', 'blockpocket', 'chamber']);
         expect(post.filter((n) => !pre.includes(n))).toEqual(['killgate']);
         /**
-         * ⛔ THE TWO-STREAMS HALF, READ OFF THE NORMALIZED SPEC: the guard
-         * member carries NO `params` key at all (⇒ `len` and `turns` are both
-         * drawn), and the chamber member carries BOTH of its own (⇒ it spends
-         * no draw on either). `normalizeElementSpec` omits `params` entirely
-         * when the caller named nothing, which is exactly the distinction.
+         * ⛔ THE TWO-STREAMS HALF, READ OFF THE NORMALIZED SPEC — and since
+         * SEEDLING BOT R9 slice 1 (D1) the guard's `len` is the THIRD kind:
+         * a SUBSET, which spends the same ONE draw an omitted parameter spends
+         * but names WHICH values it may land on. `turns` is still absent (⇒
+         * drawn over its whole domain), the chamber carries BOTH of its own (⇒
+         * no draw on either), and `killgate` declares none at all. ⛔ The three
+         * states are pinned on one line each, because a subset silently turned
+         * into a pin would spend one draw fewer and move every draw after it.
          */
         const memberOf = (spec, name) => spec.any.find((m) => m.name === name);
         expect(memberOf(defaultElementsFor(POST_SWORD_ITEMS), 'guard').params)
+            .toEqual({ len: { pick: [2, 3, 4] } });
+        expect(memberOf(defaultElementsFor(PRE_SWORD_ITEMS), 'guard').params.turns)
             .toBeUndefined();
+        /** ⛓ …and the values are the DOMAIN's own typed members, in the order
+         *  written — the draw is a `pick` over that array. */
+        expect(memberOf(defaultElementsFor(PRE_SWORD_ITEMS), 'guard').params.len.pick)
+            .toEqual([2, 3, 4]);
         expect(memberOf(defaultElementsFor(POST_SWORD_ITEMS), 'chamber').params)
             .toEqual({ w: 2, h: 3 });
         expect(memberOf(defaultElementsFor(POST_SWORD_ITEMS), 'killgate').params)

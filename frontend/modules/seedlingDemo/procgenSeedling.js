@@ -97,7 +97,7 @@ import { makeLedger, paintable, phaseRow } from './procgenLedger.js';
 import {
     DEFAULT_ELEMENTS, ELEMENT_TABLE, NONE as ELEMENTS_NONE, drawElementHead, formatElementSpec,
     formatParamValue, isElementList, isParamSubset, namedParams, normalizeElementSpec,
-    resolveElementSpec, resolveRequireDirective,
+    paramSubset, resolveElementSpec, resolveRequireDirective,
 } from '../procgenCore/elementSpec.js';
 /**
  * ⛓ THE REQUIREMENTS DIFFERENTIAL — arc 3, slice 4d. ⛔ ONE implementation,
@@ -3879,7 +3879,23 @@ function certificationGap(cert) {
  * @param {object|null} items the biome's boot flags (`palette.items`)
  */
 export function defaultElementsFor(items) {
-    const heads = [{ name: 'guard' }];
+    /**
+     * ⛓⛓⛓ **THE GUARD DRAWS ITS `len` FROM A SUBSET** (SEEDLING BOT R9, slice
+     * 1, D1; ⚖ ruling 9 — the rung's ONE generator re-record). Slice 6a made
+     * `len` DRAWN and published what that cost: over 15 kinds x 40 seeds at
+     * `keys: 1` the guard REACHED A ROOM 10 times of 600 while `blockpocket`
+     * reached 121 and `chamber` 126, and **every one of those ten was `len=2`**
+     * — 3, 4, 5 and 6 place NOTHING at the default 10x10, so four fifths of the
+     * guard's draws were a graded drop. ⛔ The answer is NOT a wider bound or a
+     * retry: it is to draw from the values the measurement says can land.
+     * `2|3|4` keeps the distribution the element was built to have (3 and 4 DO
+     * place in a bigger room — 30 and 22 of 120 at the pinned room, §10.10(2))
+     * and stops spending draws on 5 and 6, which place nowhere this generator
+     * builds. ⚠ It is a SUBSET, not a pin: one `rng.pick` either way, in the
+     * same place in the stream, so the room moves only where the list drew
+     * `guard` at all.
+     */
+    const heads = [{ name: 'guard', params: { len: paramSubset([2, 3, 4]) } }];
     if (items?.hasSword === true) heads.push({ name: 'killgate' });
     heads.push({ name: 'blockpocket' });
     heads.push({ name: 'chamber', params: { w: 2, h: 3 } });

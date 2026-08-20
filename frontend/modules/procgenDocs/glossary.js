@@ -1170,15 +1170,44 @@ export const TERMS = Object.freeze([
         plain: 'Which contraption this level gets — picked from what the player is already '
             + 'carrying when the level begins.',
         detail: 'With nothing asked, `defaultElementsFor(items)` supplies the **biome default '
-            + 'spec**: `guard+blockpocket+chamber;w=2;h=3` pre-sword, '
-            + '`guard+killgate+blockpocket+chamber;w=2;h=3` post-sword (arc 5 slice 6a — the '
-            + 'guard DRAWS its `len`, the chamber NAMES its blob). '
+            + 'spec**: `guard;len=2|3|4+blockpocket+chamber;w=2;h=3` pre-sword, '
+            + '`guard;len=2|3|4+killgate+blockpocket+chamber;w=2;h=3` post-sword (arc 5 slice '
+            + '6a — the guard DRAWS its `len`, the chamber NAMES its blob; R9 slice 1 — the '
+            + 'guard draws it from a [SUBSET](#element-subset), because 5 and 6 place nothing '
+            + 'in a 10x10 room). '
             + '⛓ **A `+` list is a CHOICE** — one `rng.pick`, because one block '
             + 'per level forbids a conjunction. `ELEMENT_TABLE.<head>.needs` gates a head '
             + 'against the biome\'s [boot items](#boot-items) for free: a pre-sword '
             + '`killgate` refuses without spending a solve.',
         where: [{ label: 'architecture.md § Pass 1', doc: PASS1 }],
-        seeAlso: ['element', 'biome', 'boot-items', 'require-directive'],
+        seeAlso: ['element', 'biome', 'boot-items', 'require-directive', 'element-subset'],
+    }),
+    t({
+        id: 'element-subset',
+        term: 'a parameter SUBSET',
+        aliases: ['`len=2|3|4`', 'the per-spec parameter domain'],
+        area: 'level-gen',
+        plain: 'Draw this knob, but only from these values.',
+        detail: 'The THIRD thing an [element spec](#element) can say about a parameter, and '
+            + 'the three differ by the DRAW they spend: `guard` OMITS `len` and spends one '
+            + '`rng.pick` over the whole declared domain; `guard;len=2|3|4` names a SUBSET '
+            + 'and spends that SAME one draw over those members, in the same place in the '
+            + 'stream; `guard;len=4` PINS it and spends none. ⛓ Order is kept as written '
+            + '(the draw is a `pick` over that array), a ONE-member subset IS the pin, and a '
+            + 'subset naming the whole domain is still a NAMED spelling rather than the bare '
+            + 'parameter — because `namedParams` reports the two differently and that '
+            + 'difference is what a reader is reading. ⛔ It NARROWS a domain and can never '
+            + 'widen one: a member outside the declared domain refuses BY NAME, as does a '
+            + 'repeated member (weighting is not on offer) and a subset on a BINDING knob '
+            + 'like `binds`, which is resolved rather than drawn. ⚠ Why it exists: arc 5 '
+            + 'measured the guard reaching a room 10 times in 600 default draws, with `len` '
+            + '5 and 6 placing NOTHING at 10x10 — so the biome default now draws '
+            + '`guard;len=2|3|4` (R9 slice 1, D1).',
+        where: [
+            { label: 'the REFERENCE page § Elements — every head and its parameter domains', code: REFERENCE },
+            { label: 'architecture.md § Pass 1', doc: PASS1 },
+        ],
+        seeAlso: ['element', 'element-head', 'guard'],
     }),
     t({
         id: 'pre-carve-element',
