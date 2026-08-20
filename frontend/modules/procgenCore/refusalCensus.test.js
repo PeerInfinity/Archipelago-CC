@@ -47,6 +47,7 @@ import { REQUIRE_DIRECTIVE_REFUSALS } from './elementSpec.js';
 import { URL_PARAM_REFUSALS } from './urlParams.js';
 import { KILL_GATE_REFUSALS } from './elements/killGate.js';
 import { BLOCK_POCKET_REFUSALS } from './elements/blockPocket.js';
+import { OPEN_CHAMBER_REFUSALS } from './elements/openChamber.js';
 import { SEEDLING_ELEMENT_REFUSALS } from '../seedlingDemo/procgenSeedlingElements.js';
 import { SEEDLING_AREA_REFUSALS } from '../seedlingDemo/procgenSeedling.js';
 import { MAZE_REFUSALS, MAZE_REQUIRE_REFUSALS } from '../mazeRoom/procgenMaze.js';
@@ -88,6 +89,7 @@ function regionFrom(text, startRe) {
 const SOURCES = {
     killGate: 'frontend/modules/procgenCore/elements/killGate.js',
     blockPocket: 'frontend/modules/procgenCore/elements/blockPocket.js',
+    openChamber: 'frontend/modules/procgenCore/elements/openChamber.js',
     seedlingElements: 'frontend/modules/seedlingDemo/procgenSeedlingElements.js',
     seedling: 'frontend/modules/seedlingDemo/procgenSeedling.js',
     maze: 'frontend/modules/mazeRoom/procgenMaze.js',
@@ -110,6 +112,11 @@ const KEYS = [
         constant: 'BLOCK_POCKET_REFUSALS',
         declared: BLOCK_POCKET_REFUSALS,
         text: () => read(SOURCES.blockPocket),
+    },
+    {
+        constant: 'OPEN_CHAMBER_REFUSALS',
+        declared: OPEN_CHAMBER_REFUSALS,
+        text: () => read(SOURCES.openChamber),
     },
     {
         constant: 'SEEDLING_ELEMENT_REFUSALS',

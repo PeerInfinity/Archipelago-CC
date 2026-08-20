@@ -33,7 +33,10 @@ const kindOf = (k) => parseSkeleton(k, { simulator: false, substrate: 'the door 
 
 describe('⛓ THE CODEC — two new heads, and the `+` list', () => {
     it('parses `killgate` and `blockpocket`, and NEITHER takes a parameter', () => {
-        expect(ELEMENT_NAMES).toEqual(['none', 'guard', 'killgate', 'blockpocket']);
+        /** ⛓ arc 5 slice 3 added the `chamber` head — the roster is asserted
+         *  LITERALLY (never `toContain`) so a head arriving without a decision
+         *  reds a row rather than sliding in. */
+        expect(ELEMENT_NAMES).toEqual(['none', 'guard', 'killgate', 'blockpocket', 'chamber']);
         expect(parseElementSpec('killgate')).toEqual({ name: 'killgate' });
         expect(parseElementSpec('blockpocket')).toEqual({ name: 'blockpocket' });
         expect(() => parseElementSpec('killgate;span=8'))

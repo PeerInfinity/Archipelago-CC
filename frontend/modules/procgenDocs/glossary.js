@@ -1188,9 +1188,12 @@ export const TERMS = Object.freeze([
         detail: 'Constructed in absolute coordinates inside a snug rectangle the '
             + '[binding](#binding) offers, writing its whole site — floor AND wall. The '
             + '[carve](#the-carve) then runs over the whole grid and its answer inside that '
-            + 'rectangle is discarded. The one shipped is the reverse-pull block gadget '
-            + '([the guard](#guard)) at `turns = 0`; `turns > 0` refuses '
-            + '`the-chain-is-arc-4` by name and spends no draw. ⚠ Its rectangle is the '
+            + 'rectangle is discarded. TWO are shipped: the reverse-pull block gadget '
+            + '([the guard](#guard)) at `turns = 0` — `turns > 0` refuses '
+            + '`the-chain-is-arc-4` by name and spends no draw — and '
+            + '[the chamber](#chamber-element), which is floor and nothing else. ⛓ A DOORLESS '
+            + 'one takes no flag, no lock and no tag, and the binding asks what it DECLARED '
+            + 'rather than which element it is. ⚠ Its rectangle is the '
             + 'ELEMENT\'s own declared SNUG FOOTPRINT, offered in every orientation: a '
             + 'straight lane is `len+2` along the pull axis by 4 across, so a len-4 gadget '
             + 'is offered 6x4 AND 4x6 rather than the 6x6 square the binding used to size. '
@@ -1262,6 +1265,26 @@ export const TERMS = Object.freeze([
             + 'placement is painted; two mouths would be a TUNNEL. Certifies **36 of 36**.',
         where: [{ label: 'architecture.md § Pass 1', doc: PASS1 }],
         seeAlso: ['clearer', 'mouth', 'on-connector-element', 'certification'],
+    }),
+    t({
+        id: 'chamber-element',
+        term: 'the chamber element',
+        aliases: ['`chamber`', 'open-chamber', 'the element that is SPACE'],
+        area: 'level-gen',
+        plain: 'An open room built into the level on purpose, so a key has somewhere to live.',
+        detail: 'A [pre-carve](#pre-carve-element) element that is nothing but floor: an open '
+            + '`w × h` blob DECLARED as an [area](#area), a mouth for the '
+            + '[connector](#connector), and no block, no button, no door, no '
+            + '[symbol](#symbol) and no [tag](#tag). ⛓ It exists because of a measurement '
+            + 'rather than an argument: a bare tree [skeleton kind](#skeleton-kind) accepts '
+            + '`--areas=2` on **0 of 264** cells at every size from 10×10 to 30×30, because a '
+            + 'bigger tree room grows [corridor](#corridor) and not [chambers](#chamber) — '
+            + 'what it lacks is a PLACE, and no amount of room gives it one. ⚠ Its blob is a '
+            + 'chamber by the 2×2 rule on its own merits and is declared anyway, so the '
+            + '[partition](#area-partition) never has to find it. ⛔ It is NOT in any biome '
+            + 'default: `--elements=chamber;w=2;h=3` is how a room asks for one.',
+        where: [{ label: 'architecture.md § Pass 1', doc: PASS1 }],
+        seeAlso: ['pre-carve-element', 'chamber', 'area', 'area-partition', 'element-head'],
     }),
     t({
         id: 'demand',
@@ -1364,7 +1387,7 @@ export const TERMS = Object.freeze([
             { label: 'maze.md § The area graph', doc: MAZE_AREAS },
             { label: 'architecture.md § Pass 2', doc: PASS2 },
         ],
-        seeAlso: ['site', 'area', 'chambers', 'wide-cell', 'corridor'],
+        seeAlso: ['site', 'area', 'chambers', 'wide-cell', 'corridor', 'chamber-element'],
     }),
     t({
         id: 'corridor',

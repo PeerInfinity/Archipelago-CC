@@ -822,7 +822,7 @@ export const REFUSALS = frz({
             "file": "frontend/modules/seedlingDemo/procgenSeedling.js",
             "inTheConstant": true,
             "kind": "constant",
-            "meaning": "a len=… straight gadget needs a … site with a one-cell ring around it, and no such rectangle fits inside the …x… room's interior while leaving the START (…,…) and the GOAL (…,…) outside the ring. ⛔ ⚖ Arc-3 ruling 7: the room does NOT grow — the honest answer is a shorter gadget or a different goal, and D1(b)'s census publishes how often each `len` fits. ⛓ The extents are the ELEMENT's own declaration (arc 5, slice 2): a straight lane is `len+2` along the pull axis and `EXIT_RUN+1 = 4` across, offered BOTH ways round.",
+            "meaning": "`…` needs a … site with a one-cell ring around it, and no such rectangle fits inside the …x… room's interior while leaving the START (…,…) and the GOAL (…,…) outside the ring. ⛔ ⚖ Arc-3 ruling 7: the room does NOT grow — the honest answer is a smaller element or a different goal, and D1(b)'s census publishes how often each `len` fits. ⛓ The extents are the ELEMENT's own declaration (arc 5, slice 2): a straight lane is `len+2` along the pull axis and `EXIT_RUN+1 = 4` across, and a chamber is its own `w x h` — each offered BOTH ways round.",
             "name": "no-site-fits-this-room",
             "named": true,
             "scanFound": true,
@@ -970,6 +970,21 @@ export const REFUSALS = frz({
             "source": "url-params",
             "sourceTitle": "The URL grammar itself",
             "where": "urlParams.readSize"
+        },
+        {
+            "alsoFiresIn": [],
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "OPEN_CHAMBER_REFUSALS",
+            "file": "frontend/modules/procgenCore/elements/openChamber.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": "the binding offered …x… and a w=… h=… chamber declares [………]. ⛔ A chamber's snug footprint IS its size, so a rectangle that is not one of them is a different chamber — this element fills what it declared and does not silently grow into, or rattle around inside, somebody else's guess.",
+            "name": "site-is-not-a-declared-footprint",
+            "named": true,
+            "scanFound": true,
+            "source": "open-chamber",
+            "sourceTitle": "The OPEN CHAMBER element",
+            "where": "frontend/modules/procgenCore/elements/openChamber.js — `OPEN_CHAMBER_REFUSALS`"
         },
         {
             "alsoFiresIn": [],
@@ -1905,6 +1920,21 @@ export const REFUSALS = frz({
             "spansModules": false,
             "title": "The `?require=` directive (the AREA-GRAPH SYMBOL vocabulary)",
             "where": "procgenMaze.requireOutcome"
+        },
+        {
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "OPEN_CHAMBER_REFUSALS",
+            "declaredCount": 1,
+            "file": "frontend/modules/procgenCore/elements/openChamber.js",
+            "id": "open-chamber",
+            "kind": "constant",
+            "patterns": [
+                "/(?:seen\\.add|refused:\\s*|reason:\\s*|refuse\\(|refuseArea\\(|\\?\\?\\s*|\\?\\s*|\\s:\\s*)\\(?'([a-z][a-zA-Z0-9]*(?:-[a-zA-Z0-9]+)+)'/g"
+            ],
+            "scannedCount": 1,
+            "spansModules": false,
+            "title": "The OPEN CHAMBER element",
+            "where": "frontend/modules/procgenCore/elements/openChamber.js — `OPEN_CHAMBER_REFUSALS`"
         },
         {
             "channel": "`trace[].budgetKind`, and it is part of the determinism payload's sha",

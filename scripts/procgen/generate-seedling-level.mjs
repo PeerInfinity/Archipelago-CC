@@ -623,6 +623,19 @@ if (has('json')) {
          * printer that said `site: undefined` for a door would be the summary's
          * own flattening defect wearing a readout.
          */
+        /**
+         * ⛓⛓⛓ **AND A THIRD: A PRE-CARVE ELEMENT THAT IS SPACE** (arc 5,
+         * slice 3). The `pre-carve` sentence below names a block, a button, a
+         * door, a flag and the flag's lock — five things an `openChamber` does
+         * not have. ⛔ It is `p.door === null` that decides, the same fact the
+         * composite and the entity mapping read, so a reader never meets
+         * `(null,null)` printed as a coordinate.
+         */
+        const spaceShape = () => `${p.instance} at site (${p.site.x},${p.site.y}) `
+            + `${p.site.w}x${p.site.h}; it DECLARED its ${p.cost.cells} floor cell(s) an `
+            + `AREA (\`E0\`) and put NO entity in the room; the entry mouth is `
+            + `(${p.entryMouth.x},${p.entryMouth.y}); tunnel ${p.tunnel} cell(s); the carve `
+            + `had written ${p.carveOverwrote} of its cells differently`;
         const shape = () => (p.phase === 'on-connector'
             ? `${p.instance} door (${p.doorCell.x},${p.doorCell.y})`
                 + `${p.tags?.lock !== undefined ? ` [tag ${p.tags.lock}]` : ''}; `
@@ -640,7 +653,7 @@ if (has('json')) {
                 + 'cells differently');
         say(`element: ${head} — `
             + (p
-                ? shape()
+                ? (p.door === null ? spaceShape() : shape())
                 : `⛔ REFUSED: ${out.model.elements.refused?.reason} — `
                     + `${out.model.elements.refused?.detail}`));
         if (p) {
@@ -648,8 +661,18 @@ if (has('json')) {
             say(`         ⛔⛔ CERTIFIED: ${e.certified} — ${c.verdict}`
                 + `${c.gap ? ` (${c.gap})` : ''}`);
             if (c.reasonText) say(`         the solve's own words: ${c.reasonText}`);
-            say(`         ⛓ ${LIFTED_CLAIM_TEXT[p.element] ?? 'THE LIFTED CLAIM'}: `
-                + `${c.heldAtDoor === null ? 'the route never crossed it' : c.heldAtDoor}`);
+            /** ⛓ A LIFTED CLAIM IS A CLAIM ABOUT A DOOR THE PLAN CROSSED, and
+             *  an element with no door has none to lift. ⛔ Printing `null`
+             *  under the words "the route never crossed it" would say something
+             *  false about a room with nothing to cross. */
+            if (LIFTED_CLAIM_TEXT[p.element]) {
+                say(`         ⛓ ${LIFTED_CLAIM_TEXT[p.element]}: `
+                    + `${c.heldAtDoor === null ? 'the route never crossed it' : c.heldAtDoor}`);
+            } else {
+                say('         ⛓ NO LIFTED CLAIM — this element declares no door, so there is '
+                    + 'no crossing to make a claim about. What it certifies is that the room '
+                    + 'still SOLVES with its blob and its tunnel in it.');
+            }
             if (!e.certified) {
                 say('         ⇒ the level below was generated WITHOUT the gadget (the draws '
                     + 'were spent either way). ⛔ Nothing solved around it.');

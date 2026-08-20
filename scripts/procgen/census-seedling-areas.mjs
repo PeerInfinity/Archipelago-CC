@@ -44,7 +44,7 @@ const { defaultElementsFor, seedlingModel, seedlingSkeletonSpec } =
 const { PRE_SWORD_PALETTE, POST_SWORD_PALETTE } = await M('seedlingDemo/procgenPalette.js');
 const { parseSkeleton } = await M('procgenCore/skeletonKinds.js');
 const { TAGS_PER_LEVEL } = await M('seedlingDemo/breakableRocks.js');
-const { formatElementSpec } = await M('procgenCore/elementSpec.js');
+const { formatElementSpec, parseElementSpec } = await M('procgenCore/elementSpec.js');
 
 const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
     ?? `--${name}=${fallback}`).slice(`--${name}=`.length);
@@ -101,6 +101,34 @@ const SIZES = arg('sizes', '10x10').split(',').filter(Boolean).map((spec) => {
     }
     return { width: Number(m[1]), height: Number(m[2]), label: `${m[1]}x${m[2]}` };
 });
+/**
+ * ⛓⛓⛓ **THE ELEMENT ARM** (PROCGEN ELEMENTS arc 5, slice 3; §3.3's D3). The
+ * census has always run each biome's OWN DEFAULT element spec, because the
+ * guard's declared area is one of the areas the graph sees and a run without it
+ * would measure a room the generator does not generate. Slice 3 adds an element
+ * that is SPACE, and the question it exists to answer is a COMPARISON:
+ *
+ *   *does a bare tree kind's `--areas=1` acceptance rise above 0 when a
+ *   `chamber` is in the spec?*
+ *
+ * ⛔ SO THE SPEC BECOMES AN AXIS, not a replacement: `--elements=chamber;w=2;h=3`
+ * runs that arm BESIDE nothing, `--elements=default,chamber;w=2;h=3` runs the
+ * biome default and the chamber in one table, and OMITTING it is the biome
+ * default alone — which is the census as it was, printing the same columns in
+ * the same order. ⛓ `default` is the WORD for "each biome's own", because a
+ * literal spec cannot say "whatever this palette asks for".
+ *
+ * ⚠ AND THE ARM IS A COLUMN ONLY WHEN IT WAS ASKED FOR. A census that grew a
+ * column nobody requested would make every previously-published number's
+ * command produce a different table.
+ */
+const DEFAULT_ARM = 'default';
+const ELEMENT_ARMS = arg('elements', '').split(',').map((x) => x.trim()).filter(Boolean);
+const ARMS = ELEMENT_ARMS.length ? ELEMENT_ARMS : [DEFAULT_ARM];
+const ARM_COLUMN = ELEMENT_ARMS.length > 0;
+const specFor = (armSpec, palette) => (armSpec === DEFAULT_ARM
+    ? defaultElementsFor(palette.items) : parseElementSpec(armSpec));
+
 const BIOMES = [['pre', PRE_SWORD_PALETTE], ['post', POST_SWORD_PALETTE]];
 
 const say = (line = '') => process.stdout.write(`${line}\n`);
@@ -118,6 +146,10 @@ say('biomes: pre-sword and post-sword, each at its OWN default element spec '
     + '— ⛓ slice 4c §13.3');
 say(`sizes:  ${SIZES.map((z) => z.label).join(', ')} — ⛓ an AXIS since arc-5 slice 1 `
     + '(⚖ ruling 1 supersedes arc-3 ruling 7; the default 10x10 is one screen)');
+if (ARM_COLUMN) {
+    say(`elements: ${ARMS.join('  ·  ')} — ⛓ an AXIS since arc-5 slice 3 (§3.3); `
+        + '`default` is each biome\'s own spec and is what an omitted `--elements=` runs');
+}
 say('cost:   one carve + one element construction + the partition per cell; '
     + 'NO area graph, NO template, NO solve.');
 say('');
@@ -125,6 +157,7 @@ const rows = [];
 for (const kindSpec of KINDS) {
   for (const size of SIZES) {
     for (const [biome, palette] of BIOMES) {
+      for (const armSpec of ARMS) {
         for (const seed of SEEDS) {
             const skeleton = seedlingSkeletonSpec(kindSpec);
             let model = null;
@@ -132,12 +165,12 @@ for (const kindSpec of KINDS) {
             try {
                 model = seedlingModel({ seed, skeleton,
                     defaults: { width: size.width, height: size.height },
-                    elements: defaultElementsFor(palette.items) });
+                    elements: specFor(armSpec, palette) });
             } catch (e) {
                 error = `${e.name}: ${e.message.slice(0, 70)}`;
             }
             if (error) {
-                rows.push({ kind: kindSpec, size: size.label, biome, seed, error });
+                rows.push({ kind: kindSpec, size: size.label, biome, arm: armSpec, seed, error });
                 continue;
             }
             const p = model.areaPartition();
@@ -156,8 +189,12 @@ for (const kindSpec of KINDS) {
                      * "which area may hold a symbol" and the other two heads
                      * declare no area at all.
                      */
-                    const spec = defaultElementsFor(palette.items);
-                    const withBinds = binds === 'item' ? spec
+                    const spec = specFor(armSpec, palette);
+                    /** ⛓ `binds` rides on a GUARD member and only a `+` LIST has
+                     *  members; a bare head (every `--elements=` arm this slice
+                     *  measures) takes the spec unchanged, which is what the
+                     *  `any` arm means for an element that declares no symbol. */
+                    const withBinds = (binds === 'item' || !Array.isArray(spec.any)) ? spec
                         : { any: spec.any.map((mm) => (mm.name === 'guard'
                             ? { ...mm, params: { ...(mm.params ?? {}), binds } } : mm)) };
                     let a = null;
@@ -206,6 +243,10 @@ for (const kindSpec of KINDS) {
                  *  acceptance rate at 20x20. */
                 size: size.label,
                 biome,
+                /** ⛓ arc 5, slice 3 — the ELEMENT SPEC is a column for the same
+                 *  reason: an acceptance rate measured with a chamber in the
+                 *  room is not an acceptance rate without one. */
+                arm: armSpec,
                 seed,
                 areas: p.areas.length,
                 real: real.length,
@@ -257,32 +298,39 @@ for (const kindSpec of KINDS) {
                 graphArms,
             });
         }
+      }
     }
   }
 }
 
 const ok = rows.filter((r) => !r.error);
+/** ⛓ THE ARM IS PART OF EVERY ROLL-UP KEY AND IS PRINTED ONLY WHEN IT WAS
+ *  ASKED FOR — with one arm the grouping is the one this census always had. */
+const armCell = (arm) => (ARM_COLUMN ? `\`${arm}\` | ` : '');
+const armHead = ARM_COLUMN ? 'elements | ' : '';
+const armDashes = ARM_COLUMN ? '---|' : '';
 say('## Per kind x biome — the roll-up over the seeds (mean, then the range)');
 say('');
-say('| kind | biome | areas | REAL | elem | synth | dead floor | adj | largest boundary | '
-    + 'goal synthetic | ent==goal | holders (ex goal) | elem placed |');
-say('|---|---|---|---|---|---|---|---|---|---|---|---|---|');
+say(`| kind | biome | ${armHead}areas | REAL | elem | synth | dead floor | adj | `
+    + 'largest boundary | goal synthetic | ent==goal | holders (ex goal) | elem placed |');
+say(`|---|---|${armDashes}---|---|---|---|---|---|---|---|---|---|---|`);
 const byCell = new Map();
 for (const r of rows) {
     /** ⛓ arc 5, slice 1 — kind x SIZE x biome; averaging two sizes into one row
      *  would be a number about neither. */
-    const k = `${r.kind}|${r.size}|${r.biome}`;
+    const k = `${r.kind}|${r.size}|${r.biome}|${r.arm}`;
     if (!byCell.has(k)) byCell.set(k, []);
     byCell.get(k).push(r);
 }
 for (const [k, rs] of byCell) {
-    const [kind, size, biome] = k.split('|');
+    const [kind, size, biome, arm] = k.split('|');
     const good = rs.filter((r) => !r.error);
     if (good.length === 0) {
-        say(`| ${kind} @ ${size} | ${biome} | ALL ${rs.length} THREW |`); continue;
+        say(`| ${kind} @ ${size} | ${biome} | ${armCell(arm)}ALL ${rs.length} THREW |`);
+        continue;
     }
-    say(`| \`${kind}\` @ ${size} | ${biome} `
-        + `| ${fmt(mean(good.map((r) => r.areas)))} (${range(good.map((r) => r.areas))}) `
+    say(`| \`${kind}\` @ ${size} | ${biome} | ${armCell(arm)}`.replace(/\| $/, '| ')
+        + `${fmt(mean(good.map((r) => r.areas)))} (${range(good.map((r) => r.areas))}) `
         + `| **${fmt(mean(good.map((r) => r.real)))}** (${range(good.map((r) => r.real))}) `
         + `| ${good.filter((r) => r.element > 0).length}/${good.length} `
         + `| ${fmt(mean(good.map((r) => r.synthetic)))} `
@@ -298,16 +346,16 @@ for (const [k, rs] of byCell) {
 say('');
 say(`## THE TAG WORST CASE — against \`TAGS_PER_LEVEL\` = ${TAGS_PER_LEVEL}`);
 say('');
-say('| kind | size | biome | element tags | boundary cells (max) | ONE TAG PER CELL (max) | '
-    + 'ONE TAG PER GROUP, 1 key | 2 keys |');
-say('|---|---|---|---|---|---|---|---|');
+say(`| kind | size | biome | ${armHead}element tags | boundary cells (max) | `
+    + 'ONE TAG PER CELL (max) | ONE TAG PER GROUP, 1 key | 2 keys |');
+say(`|---|---|---|${armDashes}---|---|---|---|---|`);
 for (const [k, rs] of byCell) {
-    const [kind, size, biome] = k.split('|');
+    const [kind, size, biome, arm] = k.split('|');
     const good = rs.filter((r) => !r.error);
     if (good.length === 0) continue;
     const worstCell = Math.max(...good.map((r) => r.tagsPerCell));
-    say(`| \`${kind}\` | ${size} | ${biome} `
-        + `| ${range(good.map((r) => r.elementTags))} `
+    say(`| \`${kind}\` | ${size} | ${biome} | ${armCell(arm)}`
+        + `${range(good.map((r) => r.elementTags))} `
         + `| ${Math.max(...good.map((r) => r.boundaryCells))} `
         + `| ${worstCell}${worstCell > TAGS_PER_LEVEL ? ' ⛔ OVER' : ''} `
         + `| ${Math.max(...good.map((r) => r.tagsPerGroup1))} `
@@ -316,12 +364,16 @@ for (const [k, rs] of byCell) {
 say('');
 say('## Per cell — kind x size x biome x seed');
 say('');
-say('| kind | biome | seed | areas | REAL | elem | synth | goal area | ent==goal | '
+say(`| kind | biome | ${armHead}seed | areas | REAL | elem | synth | goal area | ent==goal | `
     + 'largest boundary | holders | dead | element |');
-say('|---|---|---|---|---|---|---|---|---|---|---|---|---|');
+say(`|---|---|${armDashes}---|---|---|---|---|---|---|---|---|---|---|`);
 for (const r of rows) {
-    if (r.error) { say(`| \`${r.kind}\` | ${r.biome} | ${r.seed} | ⛔ ${r.error} |`); continue; }
-    say(`| \`${r.kind}\` | ${r.biome} | ${r.seed} | ${r.areas} | ${r.real} | ${r.element} `
+    if (r.error) {
+        say(`| \`${r.kind}\` | ${r.biome} | ${armCell(r.arm)}${r.seed} | ⛔ ${r.error} |`);
+        continue;
+    }
+    say(`| \`${r.kind}\` | ${r.biome} | ${armCell(r.arm)}${r.seed} | ${r.areas} `
+        + `| ${r.real} | ${r.element} `
         + `| ${r.synthetic} | ${r.goalArea ?? '-'}${r.vestibule ? ' (VESTIBULE)' : ''}`
         + ` size ${r.goalSize} | ${r.share ? '**YES**' : 'no'} | ${r.largestBoundary} `
         + `| ${r.holders} | ${r.deadFloor} | ${r.elem ?? '—'} |`);
@@ -336,17 +388,18 @@ const predict = (r, keys) => {
     if (r.holders < keys) return 'no-area-can-hold-its-key';
     return 'ADMITS';
 };
-say('| kind | size | biome | admits 1 key | admits 2 keys | the refusals it meets at 1 key |');
-say('|---|---|---|---|---|---|');
+say(`| kind | size | biome | ${armHead}admits 1 key | admits 2 keys | `
+    + 'the refusals it meets at 1 key |');
+say(`|---|---|---|${armDashes}---|---|---|`);
 for (const [k, rs] of byCell) {
-    const [kind, size, biome] = k.split('|');
+    const [kind, size, biome, arm] = k.split('|');
     const why = {};
     for (const r of rs) {
         const p1 = predict(r, 1);
         if (p1 !== 'ADMITS') why[p1] = (why[p1] ?? 0) + 1;
     }
-    say(`| \`${kind}\` | ${size} | ${biome} `
-        + `| **${rs.filter((r) => predict(r, 1) === 'ADMITS').length}/${rs.length}** `
+    say(`| \`${kind}\` | ${size} | ${biome} | ${armCell(arm)}`
+        + `**${rs.filter((r) => predict(r, 1) === 'ADMITS').length}/${rs.length}** `
         + `| ${rs.filter((r) => predict(r, 2) === 'ADMITS').length}/${rs.length} `
         + `| ${Object.entries(why).map(([n, c]) => `${n} ${c}`).join(' · ') || '—'} |`);
 }
@@ -356,13 +409,13 @@ if (KEYS.length) {
     say(`## THE GRAPH ARM — \`--areas=${KEYS.join(',')}\` x \`binds=${BINDS.join(',')}\`, `
         + 'MEASURED (no solve)');
     say('');
-    say('| kind | size | biome | arm | RAN | locks (max) | flags GUARDED | superseded '
-        + '| tags (max) | the refusals it met |');
-    say('|---|---|---|---|---|---|---|---|---|---|');
+    say(`| kind | size | biome | ${armHead}arm | RAN | locks (max) | flags GUARDED `
+        + '| superseded | tags (max) | the refusals it met |');
+    say(`|---|---|---|${armDashes}---|---|---|---|---|---|---|`);
     for (const [k, rs] of byCell) {
         /** ⛓ arc 5, slice 1 — kind x SIZE x biome, and the SIZE is its own
          *  column: an acceptance rate is a number about a room. */
-        const [kind, size, biome] = k.split('|');
+        const [kind, size, biome, elemArm] = k.split('|');
         const good = rs.filter((r) => !r.error);
         if (!good.length) continue;
         for (const keys of KEYS) {
@@ -372,7 +425,8 @@ if (KEYS.length) {
                 const why = {};
                 for (const a of arm) if (a.refused) why[a.refused] = (why[a.refused] ?? 0) + 1;
                 const ran = arm.filter((a) => a.ran);
-                say(`| \`${kind}\` | ${size} | ${biome} | keys=${keys} binds=${binds} `
+                say(`| \`${kind}\` | ${size} | ${biome} | ${armCell(elemArm)}`
+                    + `keys=${keys} binds=${binds} `
                     + `| **${ran.length}/${arm.length}** `
                     + `| ${Math.max(0, ...arm.map((a) => a.locks))} `
                     + `| ${ran.reduce((n, a) => n + a.guarded, 0)}/`

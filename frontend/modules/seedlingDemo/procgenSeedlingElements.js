@@ -524,35 +524,64 @@ export function compositeSeedlingElement({
                 + 'alternative to.' } };
     }
 
-    // ── (iii) the FLAG's cell — one step past the door on the exit lane ──
-    const doorCell = placement.entities.obstacles[0];
-    const dex = DIR_DELTA[exitPort.dir];
-    const flagCell = Object.freeze({ x: doorCell.x + dex.dx, y: doorCell.y + dex.dy });
-    if (!at(flagCell.x, flagCell.y)) {
-        return { refused: { reason: 'the-cell-beyond-the-guard-door-is-not-floor',
-            detail: `(${flagCell.x},${flagCell.y}) is one step beyond the guard door along `
-                + 'the exit lane and is not ground. The element carves that lane, so this is '
-                + 'a defect in the placement rather than a fact about the room.' } };
-    }
+    /**
+     * ⛓⛓⛓ **(iii)-(v) ARE THE GUARD'S HALF, AND AN ELEMENT THAT IS SPACE HAS
+     * NONE** — PROCGEN ELEMENTS arc 5, slice 3 (§3.3).
+     *
+     * The three checks below are all about ONE DOOR: the FLAG sits one step
+     * past it, that door has to be a CUT of the level, and the flag's own LOCK
+     * goes on a main-path cut. They exist because the guard element declares an
+     * `obstacle` — a door — and the binding realises the symbol it holds as a
+     * `buttonroom` beyond it (⚖ rulings 21-22).
+     *
+     * ⛔ **THE TEST IS WHAT THE ELEMENT DECLARED, NOT WHICH ELEMENT IT IS.** An
+     * `openChamber` declares no obstacle, no block, no button and no symbol —
+     * so there is no door to be a cut of anything, no cell beyond it, and no
+     * flag to lock. Skipping the three is not a relaxation: each would be asked
+     * of `undefined` and would answer a question nobody posed. ⛓ EVERY CHECK
+     * THAT IS ABOUT THE ROOM STILL RUNS FOR IT — the mouth's ring cell (above),
+     * the element's `demand`, start->goal connectivity through the re-walled
+     * ring, and clause (vi)'s NO-SHORTCUT — because those are the BINDING's
+     * claims about the room and not the guard's about its door.
+     *
+     * ⚠ The record then carries `null` in the five guard fields rather than
+     * omitting them, so a reader of `elements.placed[0]` never has to ask
+     * whether an absent `door` means "no door" or "not recorded".
+     */
+    const doorCell = placement.entities.obstacles[0] ?? null;
+    let flagCell = null;
+    let flagLockCell = null;
+    if (doorCell !== null) {
+        // ── (iii) the FLAG's cell — one step past the door on the exit lane ──
+        const dex = DIR_DELTA[exitPort.dir];
+        flagCell = Object.freeze({ x: doorCell.x + dex.dx, y: doorCell.y + dex.dy });
+        if (!at(flagCell.x, flagCell.y)) {
+            return { refused: { reason: 'the-cell-beyond-the-guard-door-is-not-floor',
+                detail: `(${flagCell.x},${flagCell.y}) is one step beyond the guard door along `
+                    + 'the exit lane and is not ground. The element carves that lane, so this is '
+                    + 'a defect in the placement rather than a fact about the room.' } };
+        }
 
-    // ── (iv) THE GUARD IS A CUT: the flag is unreachable with the door walled ──
-    const doorless = (x, y) => at(x, y) && !(x === doorCell.x && y === doorCell.y);
-    if (connected(width, height, doorless, { x: start.tx, y: start.ty }, flagCell)) {
-        return { refused: { reason: 'the-guard-is-not-a-cut-of-the-level',
-            detail: `with the guard door at (${doorCell.x},${doorCell.y}) treated as WALL the `
-                + `START still reaches the flag at (${flagCell.x},${flagCell.y}). ⛓ THE DOOR `
-                + 'IS THE POINT (⚖ design ruling 17): a guard the player can walk around is '
-                + 'a decoration and the block would never have to be pushed. ⚠ The exit mouth '
-                + 'is SEALED, so on a generated room this is TRUE BY CONSTRUCTION and the '
-                + 'refusal is unfalsifiable on real data (trap 296) — its gate is the unit '
-                + 'row that hands this function a room with a second way in.' } };
-    }
+        // ── (iv) THE GUARD IS A CUT: the flag is unreachable with the door walled ──
+        const doorless = (x, y) => at(x, y) && !(x === doorCell.x && y === doorCell.y);
+        if (connected(width, height, doorless, { x: start.tx, y: start.ty }, flagCell)) {
+            return { refused: { reason: 'the-guard-is-not-a-cut-of-the-level',
+                detail: `with the guard door at (${doorCell.x},${doorCell.y}) treated as WALL the `
+                    + `START still reaches the flag at (${flagCell.x},${flagCell.y}). ⛓ THE DOOR `
+                    + 'IS THE POINT (⚖ design ruling 17): a guard the player can walk around is '
+                    + 'a decoration and the block would never have to be pushed. ⚠ The exit mouth '
+                    + 'is SEALED, so on a generated room this is TRUE BY CONSTRUCTION and the '
+                    + 'refusal is unfalsifiable on real data (trap 296) — its gate is the unit '
+                    + 'row that hands this function a room with a second way in.' } };
+        }
 
-    // ── (v) THE FLAG'S LOCK, on a main-path cut ─────────────────────────
-    const lock = flagLockCellFor({ width, height, walkable: at,
-        start: { x: start.tx, y: start.ty }, goal: { x: goal.tx, y: goal.ty },
-        reserved, entryMouth });
-    if (lock.refused) return lock;
+        // ── (v) THE FLAG'S LOCK, on a main-path cut ─────────────────────────
+        const lock = flagLockCellFor({ width, height, walkable: at,
+            start: { x: start.tx, y: start.ty }, goal: { x: goal.tx, y: goal.ty },
+            reserved, entryMouth });
+        if (lock.refused) return lock;
+        flagLockCell = lock.cell;
+    }
 
     // ── (vi) NO SHORTCUT — slice 2's carve clause (b), asked of the whole composite ──
     const afterPath = shortestPath(width, height, at,
@@ -570,11 +599,13 @@ export function compositeSeedlingElement({
         site: Object.freeze({ ...site }),
         ports: Object.freeze(placement.ports.map((p) => Object.freeze({ ...p }))),
         entryMouth,
-        block: Object.freeze({ ...placement.entities.blocks[0] }),
-        button: Object.freeze({ ...placement.entities.buttons[0] }),
-        door: Object.freeze({ x: doorCell.x, y: doorCell.y }),
+        block: placement.entities.blocks[0]
+            ? Object.freeze({ ...placement.entities.blocks[0] }) : null,
+        button: placement.entities.buttons[0]
+            ? Object.freeze({ ...placement.entities.buttons[0] }) : null,
+        door: doorCell === null ? null : Object.freeze({ x: doorCell.x, y: doorCell.y }),
         flagCell,
-        flagLockCell: lock.cell,
+        flagLockCell,
         areaCells: placement.area.cells,
         tunnel: Object.freeze(tunnel),
         carveOverwrote,
@@ -816,6 +847,33 @@ export function seedlingOnConnectorEntities({ placed, tagFor }) {
  * as it stands, so the goal's own tag is taken before any of them can ask.
  */
 export function seedlingElementEntities({ placed, groupIdFor, tagFor, ids }) {
+    /**
+     * ⛓⛓⛓ **AN ELEMENT THAT IS SPACE REALISES NO ENTITY, AND SPENDS NO TAG**
+     * — PROCGEN ELEMENTS arc 5, slice 3.
+     *
+     * The mapping above is a TABLE from what an element DECLARED to what
+     * Seedling puts in the room, and an `openChamber` declares nothing but
+     * floor: no block to push, no button to press, no door to hold and no
+     * symbol for the area graph to bind. ⛔ So the honest realisation is the
+     * EMPTY one — and the important half of that sentence is `tags`: the
+     * guard's three (`lock`(A), the `buttonroom`, `lock`(B)) come out of a
+     * budget of THIRTY per level (`TAGS_PER_LEVEL`, one flat array with no
+     * bounds check), and a chamber asks for NONE of them. A branch that
+     * allocated three tags for a room with nothing in it would spend a
+     * third of a level's persistence on space.
+     *
+     * ⚠ It is `placed.door === null` that decides, not the element's NAME: the
+     * composite already answered that question and this is the same fact read
+     * one layer out (`compositeSeedlingElement`'s (iii)-(v) gate).
+     */
+    if (placed.door === null) {
+        return {
+            groups: Object.freeze({}),
+            tags: Object.freeze({}),
+            ids,
+            entities: Object.freeze([]),
+        };
+    }
     const groupA = groupIdFor({ tx: placed.button.x, ty: placed.button.y });
     const groupB = groupIdFor({ tx: placed.flagCell.x, ty: placed.flagCell.y });
     if (groupA === groupB) {

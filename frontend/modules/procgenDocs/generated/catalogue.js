@@ -1266,7 +1266,8 @@ export const CATALOGUE = frz({
         "none",
         "guard",
         "killgate",
-        "blockpocket"
+        "blockpocket",
+        "chamber"
     ],
     "elements": [
         {
@@ -1324,6 +1325,38 @@ export const CATALOGUE = frz({
             "needs": [],
             "params": [],
             "why": "The room-aware BLOCK POCKET (design catalogue #2): a `pushableblock` on a main-path cut with a REST POCKET carved beyond it in the push direction, so the shove that clears the corridor has somewhere to put the block. Certified by the existing `shove`."
+        },
+        {
+            "head": "chamber",
+            "module": "open-chamber",
+            "needs": [],
+            "params": [
+                {
+                    "default": 4,
+                    "domain": [
+                        2,
+                        3,
+                        4,
+                        5,
+                        6
+                    ],
+                    "key": "w",
+                    "why": "the blob's width. 2 is the smallest rectangle `wideBlobs`' 2x2 rule calls a chamber at all; 6 is where the reserved rectangle (the blob plus a one-cell ring) stops fitting the 8x8 interior of the DEFAULT 10x10 room with the start and the goal left outside it."
+                },
+                {
+                    "default": 4,
+                    "domain": [
+                        2,
+                        3,
+                        4,
+                        5,
+                        6
+                    ],
+                    "key": "h",
+                    "why": "the blob's height, on the same domain and for the same two reasons. ⛓ It is a SEPARATE knob because a non-square chamber has two orientations and the site pick offers both (arc 5, slice 2) — which is the difference between 9 candidate positions and 15-and-15 on a small room."
+                }
+            ],
+            "why": "The OPEN CHAMBER (arc-5 §3.3): an open floor blob DECLARED as an area, so a room whose skeleton offers no chamber at all has somewhere a key can live. Slice 1 measured the hole it fills — a BARE TREE KIND accepts `--areas=2` on 0 of 264 cells at every size, because a bigger tree room grows CORRIDOR and not areas."
         }
     ],
     "itemsElementsNeed": [

@@ -123,11 +123,21 @@ describe('the glossary as data', () => {
      * which is the very finding that moved this ceiling to 149. ⛔ Two entries
      * for three parameters: `room-size` covers both axes, because a room is one
      * setting.
+     *
+     * ⛓⛓ **152 — arc 5, slice 3 SPENDS ONE**, and says whose licence: ⚖ design
+     * ruling 24 (*area is pass 1's job*), realised as the `chamber` ELEMENT
+     * HEAD. ⛔ It is a SECOND entry beside `chamber`, not a rewrite of it,
+     * because the two are different things a reader meets in different
+     * sentences: `chamber` is the 2x2 rule's unit — what the partition and the
+     * site vocabulary MEAN — and `chamber-element` is a thing you can ask a
+     * generator for. Folding them would make "a chamber" ambiguous in exactly
+     * the table this glossary exists to disambiguate.
      */
-    it('holds 151 entries — 149 + arc-5 slice 1\'s two, and every one is filed', () => {
-        expect(TERMS).toHaveLength(151);
+    it('holds 152 entries — 149 + arc-5 slice 1\'s two + slice 3\'s one, and every '
+        + 'one is filed', () => {
+        expect(TERMS).toHaveLength(152);
         expect(TERMS.length).toBeGreaterThanOrEqual(80);
-        expect(TERMS.length).toBeLessThanOrEqual(151);
+        expect(TERMS.length).toBeLessThanOrEqual(152);
         expect(TERMS.filter((e) => !AREA_IDS.includes(e.area))).toHaveLength(0);
     });
 

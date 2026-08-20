@@ -42,6 +42,7 @@
 
 import { BLOCK_POCKET } from './elements/blockPocket.js';
 import { KILL_GATE } from './elements/killGate.js';
+import { OPEN_CHAMBER } from './elements/openChamber.js';
 import { REVERSE_PULL_BLOCK } from './elements/reversePullBlock.js';
 import { parseRequireList } from './areaSpec.js';
 import { assertParamSchema, enumerateValues } from './templateContract.js';
@@ -156,6 +157,33 @@ export const ELEMENT_TABLE = Object.freeze({
             + 'main-path cut with a REST POCKET carved beyond it in the push direction, so '
             + 'the shove that clears the corridor has somewhere to put the block. Certified '
             + 'by the existing `shove`.',
+        extra: Object.freeze([]),
+    }),
+    /**
+     * ⛓⛓⛓ **THE ELEMENT THAT IS SPACE** (PROCGEN ELEMENTS arc 5, slice 3;
+     * ⚖ design ruling 24, §3.3). ⛔ NO `binds` AND NO `needs`, and both
+     * absences are claims rather than omissions:
+     *
+     *  · `binds` asks WHICH AREA MAY HOLD A KEY SYMBOL, and it is a knob on
+     *    the GUARD because the guard's whole point is that the key lives
+     *    behind its door (⚖ ruling 1). A chamber holds no door. Its area
+     *    competes for a symbol exactly like a carved chamber's does, which is
+     *    the `any` arm by construction — and saying so with a parameter fixed
+     *    at one value would be a knob with one setting.
+     *  · `needs` names an ITEM the biome must grant. A chamber is floor: a
+     *    pre-sword boot walks into it exactly as a post-sword one does.
+     *
+     * ⛔ AND IT IS NOT IN ANY BIOME DEFAULT this arc (§6 Q2) — a default
+     * change re-records every committed artifact, and that re-record is the
+     * orchestrator's to spend at the arc's close, with the measured case.
+     */
+    chamber: Object.freeze({
+        element: OPEN_CHAMBER,
+        why: 'The OPEN CHAMBER (arc-5 §3.3): an open floor blob DECLARED as an area, so a '
+            + 'room whose skeleton offers no chamber at all has somewhere a key can live. '
+            + 'Slice 1 measured the hole it fills — a BARE TREE KIND accepts `--areas=2` on '
+            + '0 of 264 cells at every size, because a bigger tree room grows CORRIDOR and '
+            + 'not areas.',
         extra: Object.freeze([]),
     }),
 });

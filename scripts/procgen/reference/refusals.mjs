@@ -75,6 +75,16 @@ const REFUSAL_SOURCES = [
             + 'on both pages, and the ELEMENTS CENSUS counts them',
     },
     {
+        id: 'open-chamber',
+        title: 'The OPEN CHAMBER element',
+        kind: 'constant',
+        constant: 'OPEN_CHAMBER_REFUSALS',
+        names: M.openChamber.OPEN_CHAMBER_REFUSALS,
+        file: SOURCES.openChamber,
+        channel: 'the element\'s `{refused:{reason, detail}}` → `summary.elementInfo.refused` '
+            + 'on both pages, and the ELEMENTS CENSUS counts them',
+    },
+    {
         id: 'seedling-element-binding',
         title: 'The SEEDLING element binding',
         kind: 'constant',

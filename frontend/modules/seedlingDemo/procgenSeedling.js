@@ -1223,8 +1223,22 @@ export function seedlingModel({
         } else {
             const entry = ELEMENT_TABLE[elementValues.name];
             const drawsBefore = roomRng.draws;
-            const concrete = entry.element.instantiate(roomRng, { ...named, turns: 0 });
-            const size = concrete.params.len + SITE_MARGIN_STRAIGHT;
+            /**
+             * ⛓⛓ **`turns: 0` IS AN OVERRIDE OF THE GUARD'S OWN PARAMETER, SO
+             * IT IS ONLY SPELLED FOR AN ELEMENT THAT HAS ONE** (arc 5, slice
+             * 3). ⚖ Arc-3 ruling 1 gives Seedling the STRAIGHT LANE — that is a
+             * claim about a WALK, and an element with no walk has no `turns` to
+             * straighten. `templateContract` refuses an override of a parameter
+             * the schema does not declare BY NAME ("a silently ignored override
+             * is a control that writes state nobody reads"), which is how this
+             * was found rather than reasoned: the chamber head threw on its
+             * first run. ⛔ The guard's arm is the same object it always was —
+             * `params` is the element's own frozen schema, asked, not a second
+             * list of which elements bend.
+             */
+            const overrides = entry.element.params.some((pp) => pp.key === 'turns')
+                ? { ...named, turns: 0 } : named;
+            const concrete = entry.element.instantiate(roomRng, overrides);
             /**
              * ⛓⛓⛓ **THE SNUG FOOTPRINT, ASKED OF THE ELEMENT** (arc 5, slice
              * 2, §3.2). The element states its true extents per orientation;
@@ -1232,15 +1246,29 @@ export function seedlingModel({
              * as the gadget does at `turns > 0` — is offered the SQUARE this
              * binding has always sized, so the fallback is not a new shape but
              * the old one, named.
+             *
+             * ⛓⛓ **AND THE FALLBACK IS THE GUARD'S OWN ARITHMETIC** (`len +
+             * SITE_MARGIN_STRAIGHT`), which is why arc 5 slice 3 stopped
+             * computing it unconditionally: a `chamber` has no `len` at all, so
+             * on that head the old line produced `NaN x NaN` and named it in a
+             * refusal. It is computed only where it is USED — for an element
+             * that declared nothing — and the row carries `null` otherwise,
+             * which is the honest reading of *the binding did not have to
+             * guess*.
              */
             const declared = concrete.footprint?.() ?? null;
+            const size = declared === null
+                ? concrete.params.len + SITE_MARGIN_STRAIGHT : null;
             const footprints = declared
                 ?? [{ w: size, h: size, orient: 'square' }];
             const sites = seedlingElementSiteCandidates({
                 width: d.width, height: d.height, start: d.start, goal: goalCell, footprints,
             });
             preCarveRow = {
-                len: concrete.params.len,
+                /** ⛓ `len` is the GUARD's parameter and stays the row's column;
+                 *  an element without one records `null` rather than borrowing
+                 *  a word for a number it does not have. */
+                len: concrete.params.len ?? null,
                 size,
                 footprints,
                 shape: footprints.map((f) => `${f.w}x${f.h}`).join(' or '),
@@ -1250,17 +1278,18 @@ export function seedlingModel({
             };
             if (sites.length === 0) {
                 elementRefusal = { reason: 'no-site-fits-this-room',
-                    detail: `a len=${concrete.params.len} straight gadget needs a `
+                    detail: `\`${concrete.instance}\` needs a `
                         + `${preCarveRow.shape} `
                         + 'site with a one-cell ring around it, and no such rectangle fits '
                         + `inside the ${d.width}x${d.height} room's interior while leaving the `
                         + `START (${d.start.tx},${d.start.ty}) and the GOAL (${goalCell.tx},`
                         + `${goalCell.ty}) outside the ring. ⛔ ⚖ Arc-3 ruling 7: the room does `
-                        + 'NOT grow — the honest answer is a shorter gadget or a different '
+                        + 'NOT grow — the honest answer is a smaller element or a different '
                         + 'goal, and D1(b)\'s census publishes how often each `len` fits. '
                         + '⛓ The extents are the ELEMENT\'s own declaration (arc 5, slice 2): '
                         + 'a straight lane is `len+2` along the pull axis and `EXIT_RUN+1 = 4` '
-                        + 'across, offered BOTH ways round.' };
+                        + 'across, and a chamber is its own `w x h` — each offered BOTH ways '
+                        + 'round.' };
             } else {
                 const picked = roomRng.pick(sites);
                 preCarveRow.site = picked;
@@ -1310,7 +1339,14 @@ export function seedlingModel({
                          *  readers (the census's orientation column) get the
                          *  word and `elementSummaryOf` does not carry it. */
                         siteOrient: picked.orient ?? null,
-                        params: concrete.params, ids: guardIdsFor(0) };
+                        params: concrete.params,
+                        /** ⛓⛓ THE THREE IDS ARE THE GUARD'S — `button_A0`,
+                         *  `door_A0`, `sw_A0`, the names its symbol is realised
+                         *  under. An element that declares NO symbol (arc 5
+                         *  slice 3's chamber) is handed `null`: ids for parts
+                         *  it does not have would be three names nothing in the
+                         *  room answers to. */
+                        ids: placement.symbols.holds.length > 0 ? guardIdsFor(0) : null };
                 }
             }
         }
@@ -1324,7 +1360,7 @@ export function seedlingModel({
             sentence: elementRefusal
                 ? `the PRE-CARVE element REFUSED: ${elementRefusal.reason} — `
                     + `${elementRefusal.detail}`
-                : `\`${elementPlan.concrete.instance}\` drew len=${preCarveRow.len}, picked a `
+                : `\`${elementPlan.concrete.instance}\` picked a `
                     + `${preCarveRow.site.w}x${preCarveRow.site.h} \`${preCarveRow.site.orient}\` `
                     + `SITE at (${preCarveRow.site.x},${preCarveRow.site.y}) out of `
                     + `${preCarveRow.candidates} snug candidate(s) over the footprint(s) `
@@ -1765,7 +1801,7 @@ export function seedlingModel({
          * they spend no draw. The alternative (no picture for the guard's own
          * cut, which is what the whole element exists to make) is worse.
          */
-        const flagLockSets = (recordLedger && cp) ? (() => {
+        const flagLockSets = (recordLedger && cp && cp.flagLockCell) ? (() => {
             const walkable = (x, y) => terrainAt(base, x, y) === 'ground'
                 && !(x === cp.flagLockCell.x && y === cp.flagLockCell.y);
             return {
@@ -1776,12 +1812,23 @@ export function seedlingModel({
             };
         })() : null;
         ledger.phase('composite', {
+            /**
+             * ⛓ THE SENTENCE'S SECOND HALF IS THE GUARD'S (arc 5, slice 3): a
+             * DOORLESS pre-carve element has no flag and no flag lock, and a
+             * row that printed `(null,null)` for them would be reporting the
+             * absence as a coordinate. What it says instead is what the element
+             * actually left behind — the AREA it declared.
+             */
             sentence: cp
                 ? `the COMPOSITE committed \`${cp.instance}\`: the reserved rectangle was `
                     + `re-walled, a ${cp.tunnel.length}-cell TUNNEL joined the entry mouth at `
-                    + `(${cp.entryMouth.x},${cp.entryMouth.y}), the exit mouth was SEALED, the `
-                    + `FLAG sits at (${cp.flagCell.x},${cp.flagCell.y}) and its LOCK on the `
-                    + `main-path cut (${cp.flagLockCell.x},${cp.flagLockCell.y}). The carve `
+                    + `(${cp.entryMouth.x},${cp.entryMouth.y}), the exit mouth was SEALED, `
+                    + (cp.flagCell
+                        ? `the FLAG sits at (${cp.flagCell.x},${cp.flagCell.y}) and its LOCK on `
+                            + `the main-path cut (${cp.flagLockCell.x},${cp.flagLockCell.y}). `
+                        : `and it declared its ${cp.areaCells.length} floor cell(s) an AREA — `
+                            + 'no door, no flag and no lock: it is SPACE. ')
+                    + `The carve `
                     + `had written ${cp.carveOverwrote} of these cells differently. ⛔ NO draw.`
                 : `the COMPOSITE REFUSED: ${elementInfo.refused?.reason} — `
                     + `${elementInfo.refused?.detail}`,
@@ -1811,11 +1858,20 @@ export function seedlingModel({
                         }
                         return out;
                     })() }),
-                paintable({ id: 'flag-and-lock',
+                cp.flagCell && paintable({ id: 'flag-and-lock',
                     label: 'the FLAG (buttonroom) and its LOCK on the main-path cut',
                     kind: 'outline',
                     cells: [cp.flagCell, cp.flagLockCell],
                     pick: cp.flagCell }),
+                /** ⛓ arc 5, slice 3 — what a DOORLESS element leaves: the blob
+                 *  it DECLARED as an area, which is the whole of its geometry
+                 *  and the thing the partition consumes. */
+                !cp.flagCell && paintable({ id: 'element-area',
+                    label: `the ${cp.areaCells.length} floor cell(s) the element DECLARED as `
+                        + 'an AREA — excluded from the blob rule and carried into the '
+                        + 'partition as `E0`',
+                    kind: 'cells',
+                    cells: cp.areaCells }),
                 flagLockSets?.startSide?.length && paintable({
                     id: 'flag-lock-flood-start',
                     label: `the START side of the flag LOCK's cut — `
@@ -2331,7 +2387,27 @@ export function seedlingModel({
                  * unconditionally, so an untagged lock clears `(level-1, 29)` —
                  * an out-of-band write into the PREVIOUS level's last slot.)
                  */
+                /**
+                 * ⛓⛓⛓ **THE ADOPTION TEST — AND IT ASKS TWO THINGS, NOT ONE**
+                 * (arc 5, slice 3). The graph may put a symbol in the element's
+                 * DECLARED area, and where the element already carries a
+                 * `buttonroom` (the guard's flag, one step beyond its door) the
+                 * binding ADOPTS it: same group, same tag, no second flag and no
+                 * second tag pair.
+                 *
+                 * ⛔ **AN ELEMENT THAT IS SPACE HAS NOTHING TO ADOPT.** A
+                 * chamber declares an area and no flag at all, so the symbol
+                 * bound to it is placed the ORDINARY way — one `pick` over the
+                 * area's free cells, a fresh group, a fresh flag tag and a fresh
+                 * lock tag — which is exactly what happens for a carved chamber
+                 * and is why this is not a special case for the chamber but the
+                 * ABSENCE of one. ⚠ Without the second clause the binding read
+                 * `p.flagCell.x` off `null` and THREW where a graded refusal was
+                 * owed; `wanted` also has to see the honest 2 tags, and it does,
+                 * because it asks this same function.
+                 */
                 const guardBound = (sym) => (elementInfo.ran && declaredAreas.length > 0
+                    && elementInfo.placed[0].flagCell !== null
                     && graph.areas[declaredAreas[0].id]?.item === sym);
                 const wanted = graph.symbols.reduce((n, sym) => n + (guardBound(sym) ? 0 : 2), 0);
                 const usedNow = new Set(taken);
