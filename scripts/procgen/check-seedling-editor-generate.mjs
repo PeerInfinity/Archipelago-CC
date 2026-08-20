@@ -224,8 +224,36 @@ const CARRIER = { seed: 29, biome: 'post-sword', count: 1 };
  * (`PRE.seed + 1`), 7 is claim 5d's (`PRE.seed + 3`) and 41 is the carrier's.
  * (Was seed 5, back when `PRE` was seed 1.)
  */
+/**
+ * ⛓⛓⛓ SEEDLING BOT R9, SLICE 0 ADDS **THE SIX FORM CONTROLS** TO THE SET THAT
+ * HAS TO TRAVEL — twelve now, and every one of them is set AWAY from what the
+ * page would fall back to (10x10 · `dense` · `keys=0` · the biome default), so
+ * a writeback that dropped one lands on a DIFFERENT value rather than
+ * coinciding with the right one (trap 235, the same argument `tries`/`k` are
+ * not their defaults for).
+ *
+ * ⚠ `require` IS THE ONE THAT STAYS EMPTY, and deliberately: a directive is
+ * adjudicated against the BIOME and the HEAD (`resolveRequireDirective`), so
+ * every value that would travel here also changes what the run IS. Its own
+ * claim (5e) drives the empty-box-is-ABSENT rule instead — which is the half
+ * a control makes newly reachable.
+ *
+ * ⛓ MEASURED at these settings before they were wired: seed 6 pre-sword at
+ * 12x11 `shell`, `areas=1`, `elements=guard;len=3` still KEEPS 2 of 2 and
+ * stops at TARGET_REACHED, so the step the URL names is still the target the
+ * form asked for. (The element and the graph both report a GRADED REFUSAL at
+ * this room, which is an honest state the readout carries and not a failure.)
+ */
 const ROUND = {
     seed: 6, biome: 'pre-sword', count: 2, tries: 3, k: 2, anchortries: 2, tickbudget: 600,
+    width: 12, height: 11, fill: 'shell', areas: '1', elements: 'guard', len: '3', require: '',
+};
+const ROUND_ROOM = { size: { width: ROUND.width, height: ROUND.height }, fill: ROUND.fill };
+/** ⛓ R9 slice 0 — `none` as the codec spells it; the CHOICE, not the absence. */
+const ELEMENTS_NONE_SPEC = { name: 'none' };
+const ROUND_SPECS = {
+    areas: { keys: Number(ROUND.areas) },
+    elements: { name: ROUND.elements, params: { len: Number(ROUND.len) } },
 };
 const ROUND_BOUNDS = {
     obstacleTarget: ROUND.count,
@@ -570,9 +598,19 @@ const nodeFull = generateStep({ ...PRE, step: PRE.count });
 const nodeCarrier = generateStep({ ...CARRIER, step: CARRIER.count });
 const nodeRound = generateStep({
     seed: ROUND.seed, biome: ROUND.biome, step: ROUND.count,
-    bounds: ROUND_BOUNDS, budget: ROUND_BUDGET,
+    bounds: ROUND_BOUNDS, budget: ROUND_BUDGET, ...ROUND_ROOM, ...ROUND_SPECS,
 });
-const nodeRoundSkeleton = generateStep({ seed: ROUND.seed, biome: ROUND.biome, step: 0 });
+/**
+ * ⛓ R9 SLICE 0 — **AND THE SKELETON ANCHOR CARRIES THE ROOM TOO.** ⛔ A RESET
+ * keeps the FORM's values (it re-runs `generateStep` at step 0 under exactly
+ * what `readForm` last read), so a node anchor still built at the pinned 10x10
+ * with the biome default would be a different room from the one claim 5c's
+ * link opens on. ⛓ Measured: it reddened the moment the fixture grew, which is
+ * the anchor doing its job.
+ */
+const nodeRoundSkeleton = generateStep({
+    seed: ROUND.seed, biome: ROUND.biome, step: 0, ...ROUND_ROOM, ...ROUND_SPECS,
+});
 
 const payload = {
     generator: 'scripts/procgen/check-seedling-editor-generate.mjs',
@@ -907,7 +945,7 @@ const clickTile = async (tx, ty) => {
     );
 };
 
-/** The five generate controls and the address bar, as the browser holds them. */
+/** The TWELVE generate controls and the address bar, as the browser holds them. */
 const panelOf = () => page.evaluate(() => ({
     url: window.location.search,
     seed: document.getElementById('genSeed').value,
@@ -916,6 +954,20 @@ const panelOf = () => page.evaluate(() => ({
     tries: document.getElementById('genTries').value,
     k: document.getElementById('genK').value,
     anchortries: document.getElementById('genAnchorTries').value,
+    /**
+     * ⛓⛓⛓ R9 SLICE 0 — THE SIX THAT WERE URL-ONLY. ⛔ Read as the BROWSER
+     * holds them (the control's own value), never off the readout: the claim
+     * is that a copied link brings the FORM back, and a readout echo could not
+     * tell a restored control from a restored state.
+     */
+    width: document.getElementById('genWidth').value,
+    height: document.getElementById('genHeight').value,
+    fill: document.getElementById('genFill').value,
+    areas: document.getElementById('genAreas').value,
+    require: document.getElementById('genRequire').value,
+    elements: document.getElementById('genElements').value,
+    elementParams: [...document.querySelectorAll('#genElementParams select')]
+        .map((sel) => `${sel.dataset.elemParam}=${sel.value}`).join(','),
     // ⛓ SLICE 4: the catalogue's ticks are a CONTROL like the six above, so
     // they travel with them through the round trip.
     checked: [...document.querySelectorAll('#genRoster input[data-template]')]
@@ -1153,6 +1205,19 @@ const catalogueOf = () => page.evaluate(() => ({
     await page.fill('#genTries', String(ROUND.tries));
     await page.fill('#genK', String(ROUND.k));
     await page.fill('#genAnchorTries', String(ROUND.anchortries));
+    /**
+     * ⛓⛓⛓ R9 SLICE 0 — AND THE SIX NEW CONTROLS WITH THEM. ⛔ The element head
+     * is selected FIRST so its sub-form is re-mounted before `len` is set: the
+     * params box is rebuilt at defaults on every head change (a `len` select
+     * left standing from another head would be handed to one that does not
+     * declare it, and the press would refuse).
+     */
+    await page.fill('#genWidth', String(ROUND.width));
+    await page.fill('#genHeight', String(ROUND.height));
+    await page.selectOption('#genFill', ROUND.fill);
+    await page.selectOption('#genAreas', ROUND.areas);
+    await page.selectOption('#genElements', ROUND.elements);
+    await page.selectOption('#genElementParams select[data-elem-param="len"]', ROUND.len);
     await page.click('#genRunAll');
     await settled(ROUND.count);
     const pressed = await panelOf();
@@ -1175,6 +1240,23 @@ const catalogueOf = () => page.evaluate(() => ({
         && u.get('anchortries') === String(ROUND.anchortries) && u.get('run') === '1',
         '⛓ EVERY generate control is written back — the address bar NAMES the run '
         + '(the defect: it named the level BEFORE the edits)', pressed.url);
+    /**
+     * ⛓⛓⛓ R9 SLICE 0 — THE SIX, WRITTEN BACK THROUGH THE **UNCHANGED** WRITER.
+     * ⛔ `?require=` is asserted ABSENT rather than empty: an emptied directive
+     * REFUSES on the way in, so `''` is not a value this bar may ever carry.
+     */
+    check(u.get('width') === String(ROUND.width) && u.get('height') === String(ROUND.height)
+        && u.get('fill') === ROUND.fill && u.get('areas') === ROUND.areas
+        && u.get('elements') === `${ROUND.elements};len=${ROUND.len}` && !u.has('require'),
+        '⛓⛓ …and so are the SIX that were URL-only until R9 slice 0 — the room, the fill, '
+        + 'the graph and the element spec the sub-form named (and NO ?require=, because the '
+        + 'box is empty and an empty directive is ABSENT)', pressed.url);
+    check(json(web.gen.elementsAsked) === json(ROUND_SPECS.elements)
+        && web.gen.room.width === ROUND.width && web.gen.room.height === ROUND.height
+        && web.gen.room.fill === ROUND.fill && web.gen.requireAsked === null,
+        '…and those are the values the RUN really used, read off the readout\'s own room '
+        + 'and ASKED blocks rather than off the bar (value ≠ echo)',
+        `${json(web.gen.elementsAsked)} in ${json(web.gen.room)}`);
     check(web.gen.bounds.anchorTriesPerCandidate === ROUND.anchortries,
         '…and the anchor bound the URL names is the one the RUN used, not just a string',
         json(web.gen.bounds));
@@ -1202,8 +1284,13 @@ const catalogueOf = () => page.evaluate(() => ({
     }));
     check(reloaded.seed === pressed.seed && reloaded.biome === pressed.biome
         && reloaded.count === pressed.count && reloaded.tries === pressed.tries
-        && reloaded.k === pressed.k && reloaded.anchortries === pressed.anchortries,
-        '⛓⛓ the copied URL brings the PANEL back identical — all SIX controls',
+        && reloaded.k === pressed.k && reloaded.anchortries === pressed.anchortries
+        && reloaded.width === pressed.width && reloaded.height === pressed.height
+        && reloaded.fill === pressed.fill && reloaded.areas === pressed.areas
+        && reloaded.require === pressed.require && reloaded.elements === pressed.elements
+        && reloaded.elementParams === pressed.elementParams,
+        '⛓⛓ the copied URL brings the PANEL back identical — all TWELVE controls, the '
+        + 'element\'s params sub-form included',
         `${json(pressed)} → ${json(reloaded)}`);
     check(json(back.level) === json(web.level) && json(back.trace) === json(web.trace),
         '⛓⛓ …and the LEVEL back byte-identical, trace included — the link reproduces '
@@ -1230,6 +1317,123 @@ const catalogueOf = () => page.evaluate(() => ({
         'and that link opens on the SKELETON — node\'s own step 0 for this seed, byte for byte',
         `step ${afterReset.gen.step}`);
     check(errors.length === 0, 'no page errors anywhere in the round trip',
+        errors.join(' | ') || 'none');
+}
+
+// ── CLAIM 5R: ⛓⛓⛓ THE ELEMENT CONTROL'S **THREE** STATES (R9 slice 0) ──
+{
+    /**
+     * ⛓ CLAIM 5's fixed point says the encoding agrees with ITSELF; it cannot
+     * say the page asked for the right thing (trap 250). THIS claim is the
+     * correctness half, and it is about the state a `<select>` cannot hold:
+     * `(biome default)` ≡ `undefined` ≡ *nobody said*, which `seedlingSeam`
+     * resolves through `defaultElementsFor(items)`.
+     *
+     * ⛔ THE SUBJECT IS **POST-SWORD**, because post-sword is where the biome
+     * default is a FOUR-head list (`killgate` joins it) — and it is seed 3
+     * because seed 3 is one where the default's room and `none`'s room really
+     * DIFFER, so the third check below can fail.
+     */
+    const S = { seed: 3, biome: 'post-sword', count: 1 };
+    const base = `source=generate&seed=${S.seed}&biome=${S.biome}&count=${S.count}`
+        + '&tries=8&k=3&anchortries=1';
+    const nodeDefault = generateStep({ seed: S.seed, biome: S.biome, step: S.count });
+    const nodeNone = generateStep({
+        seed: S.seed, biome: S.biome, step: S.count, elements: ELEMENTS_NONE_SPEC,
+    });
+
+    // ── 5R-a: a bare load SHOWS the biome-default state ──────────────
+    await load(`${base}&run=1`, { step: S.count });
+    const bare = await panelOf();
+    const bareGen = await page.evaluate(() => ({
+        gen: window.__editorGenerate, level: window.__editorGenerated.level,
+    }));
+    check(bare.elements === '' && bare.elementParams === '',
+        '⛓⛓⛓ a load with NO ?elements= shows the control at `(biome default)` with an EMPTY '
+        + 'params sub-form — the third state exists and is what an untouched page holds',
+        `control ${json(bare.elements)}, params ${json(bare.elementParams)}`);
+    check(bareGen.gen.elementsAsked === null
+        && json(bareGen.gen.elements.spec) === json(nodeDefault.elements.spec),
+        '…and the readout says NOBODY ASKED while the RUN resolved the biome\'s own spec — '
+        + 'the two are different fields because they are different facts (value ≠ echo)',
+        `asked ${json(bareGen.gen.elementsAsked)}, ran ${json(bareGen.gen.elements.spec)}`);
+
+    // ── 5R-b: pressing at that state writes NOTHING, and builds the SAME room
+    await page.click('#genRunAll');
+    await settled(S.count);
+    const pressedDefault = await panelOf();
+    const afterDefault = await page.evaluate(() => ({
+        gen: window.__editorGenerate, level: window.__editorGenerated.level,
+    }));
+    check(!new URLSearchParams(pressedDefault.url).has('elements'),
+        '⛓⛓⛓ …and PRESSING at that state writes NO ?elements= AT ALL — the control cannot '
+        + 'spell the default into the bar, which is the whole reason it has a third state '
+        + '(a control that wrote `none` here would turn the biome default off on every '
+        + 'later load)', pressedDefault.url);
+    check(json(afterDefault.level) === json(nodeDefault.record),
+        '⛓⛓⛓ …and the record it built is node\'s own BARE-LOAD level, byte for byte — the '
+        + 'correctness half a fixed point can never see (trap 250)',
+        `page ${json(afterDefault.level).length} chars vs node `
+        + `${json(nodeDefault.record).length}`);
+    check(afterDefault.gen.elementsAsked === null && afterDefault.gen.lastResetReason === null,
+        '…and NOTHING reset: an untouched control is not a changed one, so the ladder the '
+        + 'press continued is the ladder the link named',
+        `asked ${json(afterDefault.gen.elementsAsked)}, reset `
+        + `${json(afterDefault.gen.lastResetReason)}`);
+
+    // ── 5R-c: `none` is a CHOICE, and it is a DIFFERENT run ──────────
+    await page.selectOption('#genElements', 'none');
+    await page.click('#genRunAll');
+    await settled(S.count);
+    const pressedNone = await panelOf();
+    const afterNone = await page.evaluate(() => ({
+        gen: window.__editorGenerate, level: window.__editorGenerated.level,
+    }));
+    check(new URLSearchParams(pressedNone.url).get('elements') === 'none'
+        && json(afterNone.gen.elementsAsked) === json(ELEMENTS_NONE_SPEC),
+        '⛓⛓ `none` is a CHOICE and it IS written — Seedling spells no value by absence, '
+        + 'because absence means the BIOME DEFAULT here', pressedNone.url);
+    check(json(afterNone.level) === json(nodeNone.record)
+        && json(afterNone.level) !== json(afterDefault.level),
+        '⛓⛓⛓ …and it builds a DIFFERENT room from the biome default\'s — the two states the '
+        + 'old URL-only page could not tell apart are two different runs',
+        `none ${json(afterNone.level).length} chars vs default `
+        + `${json(afterDefault.level).length}`);
+    check(String(afterNone.gen.lastResetReason ?? '').includes('elements'),
+        '⛓⛓ …and the ladder RESET, saying WHICH control did it — the page\'s own '
+        + 'read-at-the-press rule, extended to the six (⚖ §6 Q3\'s default)',
+        json(afterNone.gen.lastResetReason));
+
+    // ── 5R-d: a `+` LIST is READ-ONLY, and a press KEEPS it ──────────
+    const LIST = 'guard+chamber;w=2;h=3';
+    await load(`${base}&elements=${encodeURIComponent(LIST)}&run=1`, { step: S.count });
+    const listPanel = await page.evaluate(() => ({
+        value: document.getElementById('genElements').value,
+        label: document.getElementById('genElements').selectedOptions[0].textContent,
+        params: document.getElementById('genElementParams').textContent,
+        asked: window.__editorGenerate.elementsAsked,
+    }));
+    check(listPanel.label.includes(LIST) && listPanel.params === '',
+        '⛓⛓ a `+` LIST in the URL shows READ-ONLY, named verbatim — a `<select>` cannot '
+        + 'BUILD a distribution over two heads, so the control shows the one it was handed '
+        + 'instead of pretending the parameter is absent', json(listPanel.label));
+    await page.click('#genRunAll');
+    await settled(S.count);
+    const afterList = await panelOf();
+    const askedList = await page.evaluate(() => window.__editorGenerate.elementsAsked);
+    check(new URLSearchParams(afterList.url).get('elements') === LIST
+        && json(askedList) === json(listPanel.asked),
+        '⛓⛓⛓ …and a press that LEFT IT ALONE keeps it — the sentinel hands back the very '
+        + 'spec it displays, so the control can never quietly narrow a list to one head',
+        afterList.url);
+
+    // ── 5R-e: the EMPTY directive box is ABSENT, never `''` ──────────
+    check(afterList.require === '' && !new URLSearchParams(afterList.url).has('require')
+        && askedList !== null,
+        '⛓⛓ an EMPTY #genRequire is ABSENT and never `\'\'` — `parseItemRequireList(\'\')` '
+        + 'REFUSES by name (a directive somebody emptied is not the same as no directive), '
+        + 'so the box\'s empty string must never reach the parser', afterList.url);
+    check(errors.length === 0, 'no page errors anywhere in the three-state drive',
         errors.join(' | ') || 'none');
 }
 
