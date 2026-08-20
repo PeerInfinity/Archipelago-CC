@@ -65,9 +65,12 @@ describe('every non-prose entry is loadable by the row', () => {
     /** ⛓ 13 → **19** at PROCGEN ELEMENTS arc 5 slice 6b: the arc's close pays the
      *  per-slice demo debt every slice from 1 on left behind (the room contract,
      *  the oriented site pick, `chamber`, `arena`, the maze SHORTENS witness and
-     *  the density block beside the default's new shape). */
-    it('has 19 of them, and exactly one PROSE entry', () => {
-        expect(real).toHaveLength(19);
+     *  the density block beside the default's new shape). ⛓ 19 → **20** at
+     *  SEEDLING BOT R9 slice 0: the FORM CONTROLS, whose claim is the one a
+     *  control could most easily break (`elementsAsked == null` on a URL that
+     *  names no element). */
+    it('has 20 of them, and exactly one PROSE entry', () => {
+        expect(real).toHaveLength(20);
         expect(DEMOS.filter((e) => e.prose)).toHaveLength(1);
     });
 
