@@ -370,7 +370,15 @@ describe('refusals names every constant, and its scan is the non-vacuity witness
          *  addressable by a slug a census can count. ⛔ This is the row that
          *  would red if `urlParams`' names were ever taken away again. */
         expect(REFUSALS.rows.filter((r) => !r.named)).toEqual([]);
-        expect(URL_PARAM_REFUSALS.length).toBe(28);
+        /**
+         * ⛓ **32 — arc 5, slice 1 adds FOUR**: the room contract's reader and
+         * writer each refuse a size and a fill by name (`room-size-refused`,
+         * `cannot-write-a-room-size`, `fill-mode-refused`,
+         * `cannot-write-a-fill-mode`). ⛔ The number is PINNED rather than
+         * bounded for the reason P5 pinned it: a slice that adds a refusal
+         * should have to come here and say so.
+         */
+        expect(URL_PARAM_REFUSALS.length).toBe(32);
         for (const r of REFUSALS.rows.filter((x) => x.source === 'url-params')) {
             expect(URL_PARAM_REFUSALS, r.name).toContain(r.name);
             expect(r.where, r.name).toMatch(/^urlParams\./);

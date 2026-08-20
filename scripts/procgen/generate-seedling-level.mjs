@@ -74,6 +74,9 @@ const { formatAreaSpec, parseAreaSpec } = await CORE('areaSpec.js');
 const { DEFAULT_BUDGET } = await M('procgenOracle.js');
 const { generateSeedlingLevel, seedlingSkeletonSpec } = await M('procgenSeedling.js');
 const {
+    FILL_DENSE, ROOM_TILES_MAX, ROOM_TILES_MIN, SINGLE_SCREEN_TILES, assertRoomSize, fillByName,
+} = await M('procgenLevel.js');
+const {
     DEFAULT_SKELETON, GENERATE_BIOMES, describeKeptKind, directedCost, generateWithDirectives,
     paletteFor, parseDirectives,
 } = await M('watchGenerate.js');
@@ -120,6 +123,45 @@ const ANCHOR_TRIES = num('anchor-tries', 1);
  * typed `chambers=0` is indistinguishable from an omitted one.
  */
 const SKELETON = seedlingSkeletonSpec(arg('skeleton', 'empty'));
+/**
+ * ⛓⛓⛓ PROCGEN ELEMENTS arc 5, slice 1 — **THE ROOM CONTRACT** (⚖ rulings 1
+ * and 2): `--width=`/`--height=` in tiles, and `--fill=dense|shell`.
+ *
+ * ⛔ ABSENT IS THE ONE-SCREEN 10x10 ROOM this CLI has always generated, and the
+ * knob is BYTE-INERT when it is not typed: size is a CONSTANT INPUT and not a
+ * draw, so `--width=10 --height=10` prints the identical payload to a run with
+ * neither flag (this slice proves it with the PAIR, `--json | cmp`, rather than
+ * asserting it about one arm).
+ *
+ * ⛔ A SIZE OUTSIDE [3..60] REFUSES BY NAME AND EXITS 6 — the maze CLI's
+ * "refused run" code, which is what a directive or a graph refusal already
+ * uses here. 60 is the VANILLA MAXIMUM measured over the shipped atlas, and the
+ * refusal says so; it is never clamped, because a clamp would certify a room
+ * nobody asked for.
+ */
+const SIZE = (() => {
+    const size = {
+        width: num('width', SINGLE_SCREEN_TILES.width),
+        height: num('height', SINGLE_SCREEN_TILES.height),
+    };
+    try {
+        return assertRoomSize(size, 'generate-seedling-level');
+    } catch (e) {
+        process.stderr.write(`${e.message}\n`);
+        process.exit(6);
+        return null;
+    }
+})();
+const SIZE_TYPED = process.argv.some((a) => a.startsWith('--width=') || a.startsWith('--height='));
+const FILL = (() => {
+    try {
+        return fillByName(arg('fill', FILL_DENSE), 'generate-seedling-level');
+    } catch (e) {
+        process.stderr.write(`${e.message}\n`);
+        process.exit(6);
+        return null;
+    }
+})();
 /**
  * ⛓⛓⛓ PROCGEN ELEMENTS arc 3, slice 3 — **THE ELEMENT**, through the ONE codec
  * (`procgenCore/elementSpec.js`), the same string the maze CLI takes and the
@@ -365,6 +407,24 @@ if (DIRECTED && ELEMENTS !== undefined
     process.exit(2);
 }
 
+/**
+ * ⛔ `--directed=` DOES NOT COMPOSE WITH THE ROOM CONTRACT THIS SLICE, and it
+ * refuses BY NAME rather than silently building a default room. The directed
+ * path is `watchGenerate.generateWithDirectives` (the PAGE's), which DOES take
+ * the size — but a directive's own anchor domain is the room's, and no directed
+ * subject in this repo was ever recorded at another size. ⚠ Named rather than
+ * threaded: a flag accepted and ignored would print a payload whose level is
+ * not the room the caller asked for, and threading it would ship a domain
+ * nothing measured.
+ */
+if (DIRECTED && (SIZE_TYPED || FILL !== FILL_DENSE)) {
+    process.stderr.write('generate-seedling-level: --directed= does not compose with '
+        + '--width=/--height=/--fill= yet. A directive\'s anchors are the ROOM\'s, and no '
+        + 'directed subject has been measured at another size or in the shell format. Say one '
+        + 'or the other.\n');
+    process.exit(2);
+}
+
 const t0 = Date.now();
 let out;
 try {
@@ -381,6 +441,10 @@ try {
             areas: AREAS,
             elements: ELEMENTS,
             require: REQUIRE,
+            /** ⛓ ARC 5, SLICE 1 — the room contract, through the seam's own
+             *  `defaults` argument; the shell strip runs at the end of pass 2. */
+            defaults: { width: SIZE.width, height: SIZE.height },
+            fill: FILL,
         });
 } catch (e) {
     /**
@@ -439,6 +503,13 @@ const payload = {
      */
     skeleton: out.skeleton ?? SKELETON,
     /**
+     * ⛓ ARC 5, SLICE 1 — **OMITTED ENTIRELY AT `dense`**, which is what keeps
+     * every payload written before this slice byte-identical. The SIZE needs no
+     * field of its own: `payload.level` IS the room and has always carried
+     * `width`/`height`, which is what `agreementWithPayload` compares.
+     */
+    ...(FILL === FILL_DENSE ? {} : { fill: FILL }),
+    /**
      * ⚠ THE BUDGET COMES FROM WHICHEVER OBJECT RAN. A `--count=0 --directed=…`
      * construction has NO ladder summary — nothing was drawn — but the
      * directives still ran under a budget, and that budget is on the state.
@@ -457,9 +528,19 @@ if (has('json')) {
     const s = out.summary;
     say(`# generated Seedling level — seed ${SEED}, biome ${BIOME}`);
     say('');
+    const tileCount = out.record.layers.find((l) => l.name === 'tiles').tiles.length;
     say(`room:   ${out.record.width}x${out.record.height} tiles, level ${out.record.level}`
         + `, skeleton ${formatSkeleton(SKELETON)}`
-        + (SKELETON.kind === 'empty' ? ' (the bordered open room)' : ' (CARVED)'));
+        + (SKELETON.kind === 'empty' ? ' (the bordered open room)' : ' (CARVED)')
+        /**
+         * ⛓ ARC 5, SLICE 1 — the FILL, and it prints the CELL COUNT beside it
+         * rather than the word alone: `shell` on an open room drops nothing at
+         * all (every wall of the ring touches the floor), and a readout that
+         * said `shell` without the number would let a reader believe a strip
+         * had happened where none did.
+         */
+        + `, fill ${FILL} (${tileCount} of ${out.record.width * out.record.height} cells `
+        + 'written)');
     /**
      * ⛓⛓ THE ELEMENT LINE — and it prints the CERTIFICATION VERDICT, not a
      * placement, because the two differ today and hiding the difference is the

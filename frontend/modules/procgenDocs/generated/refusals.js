@@ -272,6 +272,21 @@ export const REFUSALS = frz({
             "file": "frontend/modules/procgenCore/urlParams.js",
             "inTheConstant": true,
             "kind": "constant",
+            "meaning": "urlParams: cannot write ?fill= — …",
+            "name": "cannot-write-a-fill-mode",
+            "named": true,
+            "scanFound": true,
+            "source": "url-params",
+            "sourceTitle": "The URL grammar itself",
+            "where": "urlParams.writeFillParam"
+        },
+        {
+            "alsoFiresIn": [],
+            "channel": "a `UrlParamsError` thrown at READ time — the page's fatal line, and the CLI's stderr. `error.code` IS the name in this column.",
+            "constant": "URL_PARAM_REFUSALS",
+            "file": "frontend/modules/procgenCore/urlParams.js",
+            "inTheConstant": true,
+            "kind": "constant",
             "meaning": "urlParams: cannot write ?…=… — it is not an integer, and the reader would refuse to read it back. A URL this page cannot reload is not a link to the run it is showing.",
             "name": "cannot-write-a-non-integer",
             "named": true,
@@ -294,6 +309,36 @@ export const REFUSALS = frz({
             "source": "url-params",
             "sourceTitle": "The URL grammar itself",
             "where": "urlParams.formatDirectives"
+        },
+        {
+            "alsoFiresIn": [],
+            "channel": "a `UrlParamsError` thrown at READ time — the page's fatal line, and the CLI's stderr. `error.code` IS the name in this column.",
+            "constant": "URL_PARAM_REFUSALS",
+            "file": "frontend/modules/procgenCore/urlParams.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": "urlParams: cannot write ?…=… — a room side is a whole number of tiles, and the reader would refuse to read it back.",
+            "name": "cannot-write-a-room-size",
+            "named": true,
+            "scanFound": true,
+            "source": "url-params",
+            "sourceTitle": "The URL grammar itself",
+            "where": "urlParams.writeSizeParams"
+        },
+        {
+            "alsoFiresIn": [],
+            "channel": "a `UrlParamsError` thrown at READ time — the page's fatal line, and the CLI's stderr. `error.code` IS the name in this column.",
+            "constant": "URL_PARAM_REFUSALS",
+            "file": "frontend/modules/procgenCore/urlParams.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": "urlParams: cannot write ?width=…&height=… — …",
+            "name": "cannot-write-a-room-size",
+            "named": true,
+            "scanFound": true,
+            "source": "url-params",
+            "sourceTitle": "The URL grammar itself",
+            "where": "urlParams.writeSizeParams"
         },
         {
             "alsoFiresIn": [],
@@ -429,6 +474,21 @@ export const REFUSALS = frz({
             "source": "url-params",
             "sourceTitle": "The URL grammar itself",
             "where": "urlParams.readElementsTyped"
+        },
+        {
+            "alsoFiresIn": [],
+            "channel": "a `UrlParamsError` thrown at READ time — the page's fatal line, and the CLI's stderr. `error.code` IS the name in this column.",
+            "constant": "URL_PARAM_REFUSALS",
+            "file": "frontend/modules/procgenCore/urlParams.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": "urlParams: ?fill= on … — …",
+            "name": "fill-mode-refused",
+            "named": true,
+            "scanFound": true,
+            "source": "url-params",
+            "sourceTitle": "The URL grammar itself",
+            "where": "urlParams.readFill"
         },
         {
             "alsoFiresIn": [],
@@ -895,6 +955,21 @@ export const REFUSALS = frz({
             "source": "url-params",
             "sourceTitle": "The URL grammar itself",
             "where": "urlParams.readRequire"
+        },
+        {
+            "alsoFiresIn": [],
+            "channel": "a `UrlParamsError` thrown at READ time — the page's fatal line, and the CLI's stderr. `error.code` IS the name in this column.",
+            "constant": "URL_PARAM_REFUSALS",
+            "file": "frontend/modules/procgenCore/urlParams.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": "urlParams: ?width=…&height=… on … — …",
+            "name": "room-size-refused",
+            "named": true,
+            "scanFound": true,
+            "source": "url-params",
+            "sourceTitle": "The URL grammar itself",
+            "where": "urlParams.readSize"
         },
         {
             "alsoFiresIn": [],
@@ -1895,14 +1970,14 @@ export const REFUSALS = frz({
         {
             "channel": "a `UrlParamsError` thrown at READ time; `error.code` is the name",
             "constant": "URL_PARAM_REFUSALS",
-            "declaredCount": 28,
+            "declaredCount": 32,
             "file": "frontend/modules/procgenCore/urlParams.js",
             "id": "url-params",
             "kind": "constant",
             "patterns": [
                 "/\\bfail\\('([a-z][a-z0-9-]+)',/g + the string run after it"
             ],
-            "scannedCount": 28,
+            "scannedCount": 33,
             "spansModules": false,
             "title": "The URL grammar itself",
             "where": "every `export function` in urlParams.js"

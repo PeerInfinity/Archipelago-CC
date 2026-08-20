@@ -46,8 +46,8 @@
 
 import { TILE_SIZE, tagOf } from './levelWorld.js';
 import {
-    ProcgenLevelError, SINGLE_SCREEN_TILES, bootAtTile, emptyLevel, oelAtTile,
-    terrainAt, withEntities, withTerrain,
+    FILL_DENSE, FILL_SHELL, ProcgenLevelError, SINGLE_SCREEN_TILES, assertRoomSize, bootAtTile,
+    emptyLevel, fillByName, hasTile, oelAtTile, shellOf, terrainAt, withEntities, withTerrain,
 } from './procgenLevel.js';
 import {
     DEFAULT_BUDGET, VERDICT, assertBudget, bootStaging, collectGoal, solve,
@@ -807,6 +807,19 @@ export function seedlingModel({
     dropElement = false, ledger: recordLedger = true,
 } = {}) {
     const d = { ...SEEDLING_DEFAULTS, ...defaults };
+    /**
+     * ⛓⛓⛓ **THE ROOM CONTRACT'S SIZE, ADJUDICATED ONCE** (arc 5, slice 1;
+     * ⚖ ruling 1). ⛔ Size is a CONSTANT INPUT and not a draw — it is read here,
+     * before `roomRng` is touched, and it moves no stream. That is what makes
+     * an omitted `width`/`height` byte-identical to a NAMED 10x10: the two
+     * spell different URLs and build the same room, cell for cell.
+     *
+     * ⚠ `emptyLevel` refuses `< 3` on its own and still does; this adds the
+     * VANILLA MAXIMUM (60, measured over the shipped atlas) and puts the whole
+     * refusal in the model's own sentence, so a caller that reached the size
+     * through the seam gets the same words as one that typed a flag.
+     */
+    assertRoomSize({ width: d.width, height: d.height }, 'procgenSeedling');
     /**
      * ⛓⛓⛓ **THE LEDGER** (slice 5a, D3) — one row per PHASE, appended BY the
      * phase as it runs. ⛔ Never assembled afterwards from a list of names
@@ -2721,6 +2734,23 @@ export function seedlingModel({
                 + 'here would build a room whose refusal is about GEOMETRY rather than about '
                 + 'the template.';
         }
+        /**
+         * ⛓⛓⛓ **ABSENT IS NOT GROUND, AND IT IS NOT WALL EITHER** (arc 5,
+         * slice 1; ⚖ ruling 2). In a `shell` room the cells beyond the wall
+         * that touches the floor hold NO TILE AT ALL, and `terrainAt` answers
+         * `null` for them — the same `null` it answers for a column this
+         * palette does not name. ⛔ Refused by NAME rather than by falling into
+         * the sentence below: *"already holds null"* reads as *an earlier
+         * template painted it*, and nothing painted it. Pass 2 DECORATES the
+         * play area; it does not extend it.
+         */
+        if (!hasTile(record, tx, ty)) {
+            return `(${tx},${ty}) holds NO TILE — it is beyond this room's wall shell `
+                + '(⚖ arc-5 ruling 2: a `shell` room is floor, the wall that touches it, and '
+                + 'nothing else). ⛔ An absent cell is not a wall and not ground: it has no '
+                + 'collision in either runtime, so pass 2 may not stand on it, paint it or '
+                + 'carve it. Pass 2 decorates the PLAY AREA — it does not extend it.';
+        }
         const terrain = terrainAt(record, tx, ty);
         if (terrain !== 'ground') {
             return `(${tx},${ty}) already holds ${JSON.stringify(terrain)} and not untouched `
@@ -2976,6 +3006,34 @@ export function seedlingModel({
             return `(${tx},${ty}) is the ${which} cell, whose terrain is not a template's to `
                 + 're-decide — a carve there would build a room whose refusal is about '
                 + 'GEOMETRY rather than about the template.';
+        }
+        /**
+         * ⛓⛓⛓ **A CARVE IS THE ONE PASS-2 WRITE THAT CAN BREAK THE CLOSURE
+         * LAW** (arc 5, slice 1), so the law is asked here PROSPECTIVELY rather
+         * than re-asserted over the finished record.
+         *
+         * ⛔ The reasoning, once, because it is what makes ONE refusal enough:
+         * a `wall` write lands on ground and leaves every neighbour present; a
+         * `water`/`pit` write lands on ground, whose four neighbours a CLOSED
+         * shell already guarantees are present; only a CARVE turns a WALL into
+         * floor, and a kept wall is one that touches floor — its OTHER
+         * neighbours may be absent. ⇒ carving it would leave floor 4-adjacent
+         * to nothing, which is a room that does not confine what walks in it.
+         */
+        if (!hasTile(record, tx, ty)) {
+            return `(${tx},${ty}) holds NO TILE — it is beyond this room's wall shell, and a `
+                + 'CARVE cannot create room where the record has none (⚖ arc-5 ruling 2). '
+                + '⛔ An absent cell has no collision in either runtime; carving it would '
+                + 'not open a wall, it would claim a cell the room does not have.';
+        }
+        const openTo = [[0, -1], [-1, 0], [1, 0], [0, 1]]
+            .map(([dx, dy]) => [tx + dx, ty + dy])
+            .find(([nx, ny]) => !hasTile(record, nx, ny));
+        if (openTo) {
+            return `(${tx},${ty}) is a SHELL wall whose neighbour (${openTo[0]},${openTo[1]}) `
+                + 'is ABSENT. ⛔ THE CLOSURE LAW (⚖ arc-5 ruling 2): no floor cell may be '
+                + '4-adjacent to a cell that holds no tile, because an absent cell is not a '
+                + 'wall in either runtime — carving here would open the room onto nothing.';
         }
         const here = terrainAt(record, tx, ty);
         const skel = terrainAt(base, tx, ty);
@@ -4037,9 +4095,47 @@ export function requireVerdict({ dir, model, certification, out, palette, seed, 
  * level's identity is one number and neither stream can shift the other by
  * spending a draw.
  */
+/**
+ * ── ⛓⛓⛓ **THE SHELL STRIP — ONE PURE FUNCTION, AT THE END OF A PASS** ──
+ *
+ * PROCGEN ELEMENTS arc 5, slice 1 (⚖ ruling 2). The room is GENERATED DENSE and
+ * STRIPPED at the end; ⛔ never mid-pipeline, so every law in this file — carve
+ * legality's frozen `base`, the seal flood, the demand, the site derivation,
+ * the certification solve — keeps reading the dense room it was written for and
+ * moves not one byte.
+ *
+ * ⛔⛔ **AND THE ELEMENT'S `wall` DEMAND IS ASSERTED, NOT REASONED.** A kill
+ * gate's demand names the cells that keep its BODY in the region the gate was
+ * certified on; those walls touch the region's floor, so the strip keeps them
+ * by construction — which is exactly the kind of sentence that is true until
+ * somebody changes the adjacency rule. The assertion costs one pass over a map
+ * this function already built and turns the sentence into a gate.
+ *
+ * @param {object} record the FINISHED record of a pass
+ * @param {object} model  the model whose `elementDemand()` names the rim walls
+ * @param {string} fill   `dense` (returns the record UNTOUCHED, by identity) or
+ *                        `shell`
+ * @param {number} [adjacency] 8 (shipped) or 4 (the mutant)
+ */
+export function shellLevel(record, model, fill = FILL_DENSE, { adjacency = 8 } = {}) {
+    if (fillByName(fill, 'procgenSeedling') === FILL_DENSE) return record;
+    const out = shellOf(record, { adjacency });
+    for (const cell of model.elementDemand()) {
+        if (cell.must !== 'wall') continue;
+        if (hasTile(out, cell.x, cell.y)) continue;
+        fail(`procgenSeedling: the \`shell\` strip DROPPED (${cell.x},${cell.y}), which the `
+            + 'ELEMENT DEMANDS be `wall` — one of the cells that keeps its body inside the '
+            + 'region the gate was certified on. ⛔ An absent cell has no collision in either '
+            + 'runtime, so the body would walk out of the set its demand was computed over '
+            + 'and the lock would be a claim about a room nobody built.');
+    }
+    return out;
+}
+
 export function generateSeedlingLevel({
     seed, palette = PRE_SWORD_PALETTE, bounds, budget = DEFAULT_BUDGET, defaults,
     skeleton = DEFAULT_SKELETON, elements, areas = DEFAULT_AREAS, require,
+    fill = FILL_DENSE,
 } = {}) {
     const { model, oracle, certification, areaCertification, require: dir,
         ledger: seamLedger } = seedlingSeam({
@@ -4061,6 +4157,13 @@ export function generateSeedlingLevel({
         ? null : requireVerdict({ dir, model, certification, out, palette, seed, budget });
     return {
         ...out,
+        /**
+         * ⛓⛓⛓ **THE END OF PASS 2 — AND THE ONLY PLACE THE FINAL RECORD IS
+         * REWRITTEN** (arc 5, slice 1). At `fill: 'dense'` this is the SAME
+         * OBJECT `generateLevel` returned, by identity, which is what makes the
+         * knob byte-inert when nobody asks for it.
+         */
+        record: shellLevel(out.record, model, fill),
         model,
         certification,
         areaCertification,

@@ -125,6 +125,11 @@ export const URL_PARAM_REFUSALS = Object.freeze([
     'cannot-write-a-non-integer',
     'bounds-key-unknown',
     'cannot-write-a-run-flag-for-that-step',
+    /* ── the ROOM CONTRACT — its size and its fill (arc 5, slice 1) ── */
+    'room-size-refused',
+    'cannot-write-a-room-size',
+    'fill-mode-refused',
+    'cannot-write-a-fill-mode',
     /* ── a sub-grammar this file DELEGATES to, refusing under its own name ── */
     'skeleton-spec-refused',
     'area-spec-refused',
@@ -262,6 +267,144 @@ export function writeBounds(q, bounds) {
     writeInt(q, 'tries', bounds.triesPerStep);
     writeInt(q, 'k', bounds.saturationK);
     writeInt(q, 'anchortries', bounds.anchorTriesPerCandidate);
+    return q;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ THE ROOM CONTRACT — `?width=`, `?height=`, `?fill=`
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * PROCGEN ELEMENTS arc 5, slice 1 (⚖ rulings 1 and 2). The maze lab has read
+ * `?width=`/`?height=` since it existed; the Seedling page's room was PINNED at
+ * one screen and had no size channel at all. This is that channel, and it is
+ * ONE reader and ONE writer per §8.6's standing law.
+ *
+ * ── ⛔ THE RANGE IS THE CALLER'S, NOT THIS FILE'S ─────────────────────
+ *
+ * `readRequire`'s rule, one parameter over: the VOCABULARY is an argument. The
+ * maximum is 60 because that is the largest side any of the 116 VANILLA
+ * Seedling levels carries — a fact about a substrate, measured in
+ * `seedlingDemo/procgenLevel.js` beside the atlas it was measured from — and a
+ * grammar file that hard-coded it would own a number it cannot check. So the
+ * caller passes `grammar`, this file runs it, and the refusal it raises is
+ * re-raised HERE under the name of the CHANNEL, exactly as `?areas=` does.
+ *
+ * ── ⛔ ABSENT IS THE DEFAULT AND THE DEFAULT IS NOT WRITTEN ───────────
+ *
+ * `?skeleton=`'s rule. ⚠ AND A NAMED DEFAULT IS A DIFFERENT URL FOR THE SAME
+ * ROOM, which is exactly what a size may be and an element parameter may not:
+ * an element parameter that is NAMED spends no draw while an omitted one is
+ * DRAWN (arc-2 §11.5), so the two build different levels. Size is a CONSTANT
+ * INPUT — it moves no stream — so `?width=10` and no parameter at all build the
+ * same room cell for cell, and this slice proves that with the pair rather than
+ * asserting it about one arm.
+ */
+
+/**
+ * ⛓ `?width=`/`?height=` → `{width, height}`, each falling back to the
+ * caller's own default. ⛔ Both axes are read by ONE function because a room is
+ * one setting: a page that read them apart would have two places to teach the
+ * next bound.
+ *
+ * @param {object} o
+ * @param {object} o.defaults  `{width, height}` — what ABSENT means here
+ * @param {function} [o.grammar]  `({width, height}) => …`, run for its refusal
+ * @param {string} [o.substrate]  what the refusal calls this page
+ */
+export function readSize(q, { defaults, grammar = null, substrate = 'this page' } = {}) {
+    const size = {
+        width: intParam(q, 'width', defaults.width),
+        height: intParam(q, 'height', defaults.height),
+    };
+    if (!grammar) return size;
+    /** ⛔ ONE ADJUDICATION, NAMED FOR ITS CHANNEL — `readAreas`' rule. */
+    try {
+        grammar(size);
+    } catch (e) {
+        fail('room-size-refused',
+            `urlParams: ?width=${size.width}&height=${size.height} on ${substrate} — `
+            + `${e.message}`);
+    }
+    return size;
+}
+
+/**
+ * ⛔ THE WRITER REFUSES WHAT THE READER WOULD REFUSE (§8.6's standing law) and
+ * DELETES each axis at its default, IN PLACE — never delete-then-set, which
+ * would move the key to the end of the bar and break the fixed point on the
+ * second load (GENERATE-UI slice 4 measured that on `?families=`).
+ *
+ * ⚠ THE ROUND TRIP CANNOT SEE A WRITER THAT KEPT THE PARAMETER AT ITS DEFAULT
+ * (trap 250: a fixed point tests SELF-CONSISTENCY): `?width=10` reads back as
+ * 10 and re-writes as `?width=10` forever. The row that gates this compares the
+ * written STRING against the expected one.
+ */
+export function writeSizeParams(q, size, { defaults, grammar = null } = {}) {
+    const pairs = [['width', size?.width ?? defaults.width], ['height', size?.height ?? defaults.height]];
+    for (const [name, value] of pairs) {
+        if (!Number.isInteger(value)) {
+            fail('cannot-write-a-room-size',
+                `urlParams: cannot write ?${name}=${JSON.stringify(value)} — a room side is a `
+                + 'whole number of tiles, and the reader would refuse to read it back.');
+        }
+    }
+    if (grammar) {
+        try {
+            grammar({ width: pairs[0][1], height: pairs[1][1] });
+        } catch (e) {
+            fail('cannot-write-a-room-size',
+                `urlParams: cannot write ?width=${pairs[0][1]}&height=${pairs[1][1]} — `
+                + `${e.message}`);
+        }
+    }
+    for (const [name, value] of pairs) {
+        if (value === defaults[name]) q.delete(name);
+        else q.set(name, String(value));
+    }
+    return q;
+}
+
+/**
+ * ⛓ `?fill=` → the record's FILL MODE, a bare enum with its own parameter.
+ *
+ * ── ⚖ §6 Q1: ITS OWN PARAMETER, AND THE GRAMMAR'S PRECEDENTS DECIDED IT ──
+ *
+ * The alternative was a clause on the skeleton spec — `?skeleton=empty;fill=
+ * shell` — and the spec grammar is `procgenCore/skeletonKinds.js`, which BOTH
+ * substrates parse. ⛔ Three of this file's own precedents point the other way:
+ * a skeleton parameter is a parameter of the CARVE (`minRoom`, `chambers`) and
+ * is validated against the KIND's declared domain, while the fill is a property
+ * of the RECORD and is true of `empty` and of every carved kind alike; the maze
+ * has no record format to strip, so the clause would be a Seedling-only key in
+ * a shared codec (the `?biome=` collision this file already refuses over); and
+ * the size knobs it belongs beside are their own parameters on both pages. ⇒
+ * its own key, DELETED at the default `dense` — the same rule `?skeleton=` and
+ * `?areas=` follow.
+ */
+export function readFill(q, { fallback, grammar = null, substrate = 'this page' } = {}) {
+    const raw = q.get('fill');
+    if (raw === null || raw === '') return fallback;
+    if (!grammar) return raw;
+    try {
+        return grammar(raw);
+    } catch (e) {
+        fail('fill-mode-refused', `urlParams: ?fill= on ${substrate} — ${e.message}`);
+        return null;
+    }
+}
+
+/** ⛔ DELETED at the default; refuses on the way out what the reader refuses. */
+export function writeFillParam(q, fill, { fallback, grammar = null } = {}) {
+    const value = fill ?? fallback;
+    if (grammar) {
+        try {
+            grammar(value);
+        } catch (e) {
+            fail('cannot-write-a-fill-mode', `urlParams: cannot write ?fill= — ${e.message}`);
+        }
+    }
+    if (value === fallback) q.delete('fill');
+    else q.set('fill', String(value));
     return q;
 }
 

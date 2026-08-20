@@ -85,11 +85,11 @@ import {
  */
 import {
     ANCHOR_SALT, DIRECTIVE_KEEP_POLICY, PARAM_SALT, directiveSeed, dropDirectedParam, intParam,
-    readAreas, readBounds, readElementsTyped, readRequire, readRosterSpec, readSkeleton,
-    readSkeletonTyped, refuseDirectedParam, refuseDuplicateParams, writeAreasParam,
-    writeBounds, writeElementsParam,
+    readAreas, readBounds, readElementsTyped, readFill, readRequire, readRosterSpec, readSize,
+    readSkeleton, readSkeletonTyped, refuseDirectedParam, refuseDuplicateParams, writeAreasParam,
+    writeBounds, writeElementsParam, writeFillParam,
     writeInt, writeRequireParam,
-    writeRosterParam, writeRunFlag, writeSkeletonParam,
+    writeRosterParam, writeRunFlag, writeSizeParams, writeSkeletonParam,
 } from '../procgenCore/urlParams.js';
 import {
     POST_SWORD_PALETTE, PRE_SWORD_PALETTE, instantiateKept, normalizeRoster, restrictPalette,
@@ -98,9 +98,11 @@ import {
     DEFAULT_SKELETON, DEFAULT_SKELETON_KIND, assertKind, formatSkeleton, normalizeSkeleton,
     skeletonCatalogue,
 } from '../procgenCore/skeletonKinds.js';
+import { FILL_DENSE, assertRoomSize, fillByName } from './procgenLevel.js';
 import {
-    SEEDLING_SKELETON_KINDS, areaSummaryOf, generateSeedlingLevel,
+    SEEDLING_DEFAULTS, SEEDLING_SKELETON_KINDS, areaSummaryOf, generateSeedlingLevel,
     seedlingExplicitSkeletonParams, seedlingOracle, seedlingSeam, seedlingSkeletonSpec,
+    shellLevel,
 } from './procgenSeedling.js';
 import { ELEMENTS_NONE, elementSummaryOf } from './procgenSeedlingElements.js';
 import { DEFAULT_AREAS, normalizeAreaSpec, parseAreaSpec } from '../procgenCore/areaSpec.js';
@@ -331,6 +333,35 @@ export function readGenerateParams(search) {
          * and refuses BY NAME with the vocabulary in the sentence.
          */
         require: readRequire(q, { grammar: parseItemRequireList }),
+        /**
+         * ── ⛓⛓⛓ ARC 5, SLICE 1 — **THE ROOM CONTRACT ON THE ADDRESS BAR** ──
+         *
+         * ⚖ Ruling 1: width and height are separate knobs, the DEFAULT stays
+         * 10x10 and a default is a PIN. ⛔ ABSENT is `SEEDLING_DEFAULTS`' own
+         * pair, so a link written before this parameter existed reads back the
+         * room it always named — and `?width=10` is a DIFFERENT URL for the
+         * SAME room, which is true of a size and false of an element parameter
+         * (a named element parameter spends no draw; a size spends none either
+         * way, because it is a constant input rather than a draw).
+         *
+         * ⛔ The RANGE is `procgenLevel.assertRoomSize`'s — the module that
+         * measured 60 off the shipped atlas — handed in as the grammar, so the
+         * URL, the CLI and the model all refuse with one sentence.
+         */
+        size: readSize(q, {
+            defaults: SEEDLING_DEFAULTS,
+            grammar: assertRoomSize,
+            substrate: 'the Seedling page',
+        }),
+        /**
+         * ⛓⛓ ⚖ RULING 2 — **THE FILL**, its own parameter beside the size
+         * knobs (§6 Q1's default, decided against this grammar's own
+         * precedents — `urlParams.readFill`'s docblock carries the three).
+         * ABSENT is `dense`, the rectangle this generator has always written.
+         */
+        fill: readFill(q, {
+            fallback: FILL_DENSE, grammar: fillByName, substrate: 'the Seedling page',
+        }),
         /** ⛓ The four the loop runs under — `urlParams.readBounds`, shared. */
         bounds: readBounds(q),
         /**
@@ -430,6 +461,7 @@ export function readGenerateParams(search) {
 export function writeGenerateParams(search, {
     seed, biome, bounds, step, roster = null, payloadOwned = false,
     skeleton = DEFAULT_SKELETON, elements, areas = DEFAULT_AREAS, require = null,
+    size = SEEDLING_DEFAULTS, fill = FILL_DENSE,
 } = {}) {
     const q = new URLSearchParams(search);
     if (payloadOwned) return q.toString();
@@ -455,6 +487,15 @@ export function writeGenerateParams(search, {
         substrate: 'the Seedling page',
         explicit: seedlingExplicitSkeletonParams(skeleton?.kind),
     });
+    /**
+     * ⛓⛓ ARC 5, SLICE 1 — the ROOM CONTRACT, written in place and DELETED at
+     * its default (⚖ rulings 1 and 2). ⛔ The delete-at-default is what keeps a
+     * default room's bar byte-identical to every link ever copied off this
+     * page, and the row that gates it compares the STRING: a round trip cannot
+     * see a writer that kept `?width=10` (trap 250).
+     */
+    writeSizeParams(q, size, { defaults: SEEDLING_DEFAULTS, grammar: assertRoomSize });
+    writeFillParam(q, fill, { fallback: FILL_DENSE, grammar: fillByName });
     // ⛓ SLICE 3: the anchor-search bound is a BOUND like the other three, so it
     // rides with them in `urlParams.writeBounds` (§8.6's standing law: every new
     // control arrives WITH its parameter in the one writer). The integer refusal
@@ -588,7 +629,21 @@ const elementsBlockOf = (model, certification) => {
 export function generateStep({
     seed, biome, step, bounds, budget, roster = null, skeleton = DEFAULT_SKELETON,
     elements, areas = DEFAULT_AREAS, require = null,
+    /**
+     * ⛓⛓⛓ ARC 5, SLICE 1 — **THE ROOM CONTRACT REACHES THE SEAM AS
+     * `defaults`**, which is the argument `seedlingModel` has taken since the
+     * PoC (`SEEDLING_DEFAULTS` is `{level, width, height, goalClass, goalTag,
+     * start}`) — so the size channel adds no seam, only a caller. ⛔ At the
+     * default pair this passes `{width: 10, height: 10}`, which is what
+     * `SEEDLING_DEFAULTS` already says, so the model builds a byte-identical
+     * room whether the page names the size or not.
+     */
+    size = SEEDLING_DEFAULTS, fill = FILL_DENSE,
 } = {}) {
+    /** ⛔ REFUSED HERE TOO, BEFORE ANY SOLVE — a page that reached the model
+     *  with a bad size would pay a carve to find out. */
+    assertRoomSize(size, 'the Seedling page');
+    const defaults = { width: size.width, height: size.height };
     /**
      * ⛓ SLICE 5 OF THE CONSTRUCTIVE ARC — the room this ladder starts from,
      * validated ONCE here so step 0 and step k cannot disagree about it, and
@@ -655,7 +710,7 @@ export function generateStep({
          */
         const seam = seedlingSeam({
             seed, items: palette.items ?? null, budget: b, skeleton: skelEffective,
-            elements, areas, require,
+            elements, areas, require, defaults,
         });
         const { model } = seam;
         return Object.freeze({
@@ -667,7 +722,15 @@ export function generateStep({
             roster: palette.roster ?? null,
             step,
             model,
-            record: model.skeleton(),
+            /**
+             * ⛓⛓⛓ **THE END OF PASS 1** (arc 5, slice 1) — the one place the
+             * SKELETON record is rewritten, and at `fill: 'dense'` it is the
+             * same object by identity. ⛔ The strip never runs mid-pipeline:
+             * every law in `procgenSeedling` — the frozen carve `base`, the
+             * seal flood, the element's demand — read the DENSE room the model
+             * built, and what leaves is the shell.
+             */
+            record: shellLevel(model.skeleton(), model, fill),
             trace: [],
             summary: null,
             keptTemplates: [],
@@ -691,6 +754,10 @@ export function generateStep({
             /** ⚖ Ruling 9(b)'s block — the kind this room WAS built from.
              *  ⛓ SLICE 5a: the EFFECTIVE spelling — see above. */
             skeleton: skelEffective,
+            /** ⛓ ARC 5, SLICE 1 — what the URL writer spells, off the STATE
+             *  rather than off the reader's answer (one spelling per setting). */
+            size: Object.freeze({ width: size.width, height: size.height }),
+            fill,
             /** ⛓⛓ SLICE 5a (D1) — the three blocks, `null` when not asked. */
             elements: elementsBlockOf(model, seam.certification),
             areas: areas?.keys > 0
@@ -725,6 +792,10 @@ export function generateStep({
         palette,
         bounds: { ...DEFAULT_BOUNDS, ...(bounds ?? {}), obstacleTarget: step },
         budget: b,
+        /** ⛓ ARC 5, SLICE 1 — the room contract; the strip is applied at the
+         *  end of pass 2, inside `generateSeedlingLevel`. */
+        defaults,
+        fill,
         /** ⛓ SLICE 5a (D2) — the EFFECTIVE spec, so a typed `chambers=0` reaches
          *  the carve. `seedlingSkeletonSpec` is idempotent, so the model
          *  re-resolving it moves nothing. */
@@ -749,6 +820,9 @@ export function generateStep({
         /** ⛓⛓ SLICE 11 — see the step-0 branch for why it is a list and not absent. */
         edits: Object.freeze([]),
         skeleton: skelEffective,
+        /** ⛓ ARC 5, SLICE 1 — see the step-0 branch. */
+        size: Object.freeze({ width: size.width, height: size.height }),
+        fill,
         /**
          * ⛓⛓ SLICE 5a (D1) — READ OFF `out.summary`, which is where
          * `generateSeedlingLevel` already puts the CLI's own three blocks. ⛔ A
@@ -965,9 +1039,17 @@ export function applyDirective(state, spec, index) {
  */
 export function generateWithDirectives({
     seed, biome, step, bounds, budget, roster = null, directed = null,
-    skeleton = DEFAULT_SKELETON, edits = null,
+    skeleton = DEFAULT_SKELETON, edits = null, size = SEEDLING_DEFAULTS, fill = FILL_DENSE,
 } = {}) {
-    let state = generateStep({ seed, biome, step, bounds, budget, roster, skeleton });
+    /**
+     * ⛓⛓ ARC 5, SLICE 1 — the room contract rides the LADDER, and the
+     * directives then act on whatever record the ladder produced. ⛔ On a
+     * `shell` room that means a directive meets ABSENT cells, and both pass-2
+     * adjudicators refuse them BY NAME (`procgenSeedling`'s `freeRefusal` and
+     * `carveCellRefusal`) rather than misreading them as terrain an earlier
+     * template wrote.
+     */
+    let state = generateStep({ seed, biome, step, bounds, budget, roster, skeleton, size, fill });
     (directed ?? []).forEach((spec, i) => { state = applyDirective(state, spec, i); });
     /**
      * ⛓⛓⛓ SLICE 11 — THE THIRD LEG, AND ITS ORDER IS THE RULE (see
@@ -1119,6 +1201,33 @@ export function agreementWithPayload(payload, state) {
      * unrestricted run has, so an OLD payload does not diverge here.
      */
     cmp('roster', payload.roster ?? null, state.roster ?? null);
+    /**
+     * ⛓⛓ ARC 5, SLICE 1 — **THE ROOM CONTRACT IS AN IDENTITY FIELD**, for the
+     * roster's own reason: a payload built at 20x12 and reproduced at the
+     * default 10x10 would report a LEVEL divergence whose real cause is that a
+     * different ROOM was asked for. ⚠ `?? SEEDLING_DEFAULTS`' pair and `??
+     * dense` on both sides, so every payload written before this slice — all of
+     * them — reads as the default room and does not falsely diverge.
+     *
+     * ⛔ THE SIZE IS TAKEN OFF THE PAYLOAD'S OWN LEVEL RECORD when the payload
+     * carries no `size` block, because the record IS the room and a payload
+     * cannot disagree with the level inside it.
+     */
+    const payloadSize = payload.size
+        ?? (Number.isInteger(payload.level?.width) && Number.isInteger(payload.level?.height)
+            ? { width: payload.level.width, height: payload.level.height }
+            /**
+             * ⚠ A payload whose LEVEL carries no dimensions is a hand-built or
+             * truncated file, and `level` is already the difference it will
+             * report. Falling back to the default here keeps that ONE finding
+             * one finding — the shape `skeleton`'s own comparison names (*two
+             * findings for one cause*).
+             */
+            : { width: SEEDLING_DEFAULTS.width, height: SEEDLING_DEFAULTS.height });
+    cmp('size', payloadSize,
+        { width: state.size?.width ?? SEEDLING_DEFAULTS.width,
+            height: state.size?.height ?? SEEDLING_DEFAULTS.height });
+    cmp('fill', payload.fill ?? FILL_DENSE, state.fill ?? FILL_DENSE);
     /**
      * ⛓ SLICE 5: THE DIRECTIVES ARE AN IDENTITY FIELD LIKE THE ROSTER. ⚖ §3.5:
      * the level IS the ladder plus these, so a payload built with two directives

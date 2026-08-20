@@ -2399,3 +2399,122 @@ describe('watchGenerate — the three parameters (arc 3, slice 5a)', () => {
             .toMatch(/elements \(the payload predates the biome DEFAULT element spec/);
     });
 });
+
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ THE ROOM CONTRACT ON THIS PAGE — arc 5, slice 1 (⚖ rulings 1, 2)
+ * ══════════════════════════════════════════════════════════════════════ */
+describe('?width= / ?height= / ?fill= — the page\'s half of the room contract', () => {
+    const bounds = {
+        obstacleTarget: 3, triesPerStep: 5, saturationK: 2, anchorTriesPerCandidate: 4,
+    };
+
+    it('ABSENT is the pinned one-screen room and the DEFAULT fill', () => {
+        const p = readGenerateParams('?source=generate');
+        expect(p.size).toEqual({ width: 10, height: 10 });
+        expect(p.fill).toBe('dense');
+    });
+
+    it('reads both axes and the fill, independently', () => {
+        const p = readGenerateParams('?source=generate&width=20&height=12&fill=shell');
+        expect(p.size).toEqual({ width: 20, height: 12 });
+        expect(p.fill).toBe('shell');
+        expect(readGenerateParams('?source=generate&height=30').size)
+            .toEqual({ width: 10, height: 30 });
+    });
+
+    it('⛔ refuses a room bigger than VANILLA\'s, by name, before anything is built', () => {
+        expect(() => readGenerateParams('?source=generate&width=61'))
+            .toThrow(/width=61 is outside \[3\.\.60\]/);
+        expect(() => readGenerateParams('?source=generate&height=2'))
+            .toThrow(/height=2 is outside \[3\.\.60\]/);
+        expect(() => readGenerateParams('?source=generate&width=20.5'))
+            .toThrow(/\?width="20.5" is not an integer/);
+        expect(() => readGenerateParams('?source=generate&fill=sparse'))
+            .toThrow(/not one of \[dense, shell\]/);
+    });
+
+    /**
+     * ⛔⛔ **MUTANT (d)'s ROW** — the STRING, not the round trip. A writer that
+     * kept `?width=10` at the default round-trips for ever (trap 250) and the
+     * bar of every default run would grow two keys nobody typed.
+     */
+    it('⛓⛓ writes NOTHING at the default room, and the exact keys off it', () => {
+        expect(writeGenerateParams('?source=generate', {
+            seed: 1, biome: 'pre-sword', bounds, step: 0,
+        })).not.toMatch(/width|height|fill/);
+        expect(writeGenerateParams('?source=generate', {
+            seed: 1, biome: 'pre-sword', bounds, step: 0,
+            size: { width: 10, height: 10 }, fill: 'dense',
+        })).not.toMatch(/width|height|fill/);
+        const off = writeGenerateParams('?source=generate', {
+            seed: 1, biome: 'pre-sword', bounds, step: 0,
+            size: { width: 20, height: 12 }, fill: 'shell',
+        });
+        expect(off).toMatch(/width=20/);
+        expect(off).toMatch(/height=12/);
+        expect(off).toMatch(/fill=shell/);
+    });
+
+    it('⛓ the reader is the writer\'s inverse for the room contract too', () => {
+        const search = writeGenerateParams('?source=generate', {
+            seed: 4, biome: 'pre-sword', bounds, step: 2,
+            size: { width: 20, height: 12 }, fill: 'shell',
+        });
+        const p = readGenerateParams(`?${search}`);
+        expect(p.size).toEqual({ width: 20, height: 12 });
+        expect(p.fill).toBe('shell');
+        /** ⛓ and the SECOND write is byte-identical — the fixed point. */
+        expect(writeGenerateParams(`?${search}`, {
+            seed: p.seed, biome: p.biome, bounds: p.bounds, step: 2, size: p.size, fill: p.fill,
+        })).toBe(search);
+    });
+
+    /**
+     * ⛓⛓⛓ **THE TWO STREAMS** (⚖ ruling 1). A NAMED default is a DIFFERENT URL
+     * and the SAME ROOM — true of a size, false of an element parameter — and
+     * the claim is the PAIR: the two bars differ, the two records do not.
+     */
+    it('⛓ a NAMED 10x10 spells a different URL and builds the identical room', () => {
+        const named = readGenerateParams('?source=generate&seed=5&width=10&height=10');
+        const omitted = readGenerateParams('?source=generate&seed=5');
+        expect(named.size).toEqual(omitted.size);
+        const a = generateStep({ seed: 5, biome: 'pre-sword', step: 0, size: named.size });
+        const b = generateStep({ seed: 5, biome: 'pre-sword', step: 0 });
+        expect(JSON.stringify(a.record)).toBe(JSON.stringify(b.record));
+    });
+
+    it('the STATE carries the room it was built in, and the strip really ran', () => {
+        const st = generateStep({
+            seed: 3, biome: 'pre-sword', step: 0,
+            skeleton: { kind: 'winding' }, size: { width: 20, height: 20 }, fill: 'shell',
+        });
+        expect(st.size).toEqual({ width: 20, height: 20 });
+        expect(st.fill).toBe('shell');
+        expect([st.record.width, st.record.height]).toEqual([20, 20]);
+        const dense = generateStep({
+            seed: 3, biome: 'pre-sword', step: 0,
+            skeleton: { kind: 'winding' }, size: { width: 20, height: 20 },
+        });
+        expect(st.record.layers[0].tiles.length)
+            .toBeLessThan(dense.record.layers[0].tiles.length);
+    });
+
+    /**
+     * ⛓ THE ROOM IS AN IDENTITY FIELD LIKE THE ROSTER — a payload built at
+     * 20x12 and reproduced at the default reports the FIELD, not an
+     * unexplained level divergence. ⚠ And a payload written before this slice
+     * reads its size off its own LEVEL, so none of them falsely diverges.
+     */
+    it('⛓⛓ `size` and `fill` are identity fields, and an OLD payload still agrees', () => {
+        const st = generateStep({ seed: 1, biome: 'pre-sword', step: 1 });
+        const bare = {
+            seed: st.seed, biome: st.biome, roster: st.roster, directives: st.directives,
+            skeleton: st.skeleton, level: st.record, trace: st.trace,
+        };
+        expect(agreementWithPayload(bare, st).differences).toEqual([]);
+        const bigger = { ...bare, level: { ...st.record, width: 20, height: 12 } };
+        expect(agreementWithPayload(bigger, st).differences).toContain('size');
+        expect(agreementWithPayload({ ...bare, fill: 'shell' }, st).differences).toContain('fill');
+    });
+});

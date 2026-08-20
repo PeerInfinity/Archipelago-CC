@@ -70,6 +70,198 @@ export const SINGLE_SCREEN_TILES = Object.freeze({
 });
 
 /**
+ * ⛓⛓⛓ **THE ROOM'S MAXIMUM SIDE — 60 TILES, AND IT IS A MEASUREMENT OF THE
+ * SHIPPED GAME** (PROCGEN ELEMENTS arc 5, slice 1; ⚖ arc-5 ruling 1).
+ *
+ * ⛔ NOT A ROUND NUMBER AND NOT A BUDGET. `flashPanel/atlases/seedling-map.json`
+ * holds 116 vanilla levels; the widest is level 12 at **40x60** and the tallest
+ * is level 40 at **60x58**, so each axis's vanilla maximum is 60 and neither
+ * axis has ever carried more. A generated room above it would be a room the
+ * REAL GAME has never been asked to hold, and the refusal says so BY NAME
+ * rather than clamping — a clamp would hand back a level whose size is not the
+ * size the caller asked for and whose certification is about a different room.
+ *
+ * ⚠ THE MINIMUM IS `emptyLevel`'s OWN, 3, and it stays there: a room with a
+ * wall ring and no interior is not a room, and that refusal already exists.
+ */
+export const ROOM_TILES_MIN = 3;
+export const ROOM_TILES_MAX = 60;
+
+/**
+ * The size refusal, BY NAME, shared by every channel that carries one (the
+ * CLI's `--width=`/`--height=`, the URL's `?width=`/`?height=`, the sweep's
+ * `--sizes=`).
+ *
+ * ⛔ ONE ADJUDICATION. `emptyLevel` refuses `< 3` and a non-integer on its own
+ * and always will — it is the constructor and cannot trust a caller — but a
+ * CLI that only found out inside the model would print the model's sentence for
+ * a typo in a flag. This is the sentence a person who typed a number reads.
+ *
+ * @param {object} size `{width, height}`
+ * @param {string} [where] what the refusal calls the channel
+ * @returns {{width:number,height:number}} the same pair, frozen
+ */
+export function assertRoomSize({ width, height }, where = 'procgenLevel') {
+    for (const [axis, v] of [['width', width], ['height', height]]) {
+        if (!Number.isInteger(v)) {
+            fail(`${where}: ${axis}=${JSON.stringify(v)} is not an integer. A room is a whole `
+                + 'number of tiles on each side.');
+        }
+        if (v < ROOM_TILES_MIN || v > ROOM_TILES_MAX) {
+            fail(`${where}: ${axis}=${v} is outside [${ROOM_TILES_MIN}..${ROOM_TILES_MAX}]. `
+                + `⛔ ${ROOM_TILES_MAX} is the VANILLA MAXIMUM, measured over the 116 levels `
+                + 'of `flashPanel/atlases/seedling-map.json` (level 40 is 60x58, level 12 is '
+                + `40x60), and ${ROOM_TILES_MIN} is the smallest room that has a wall ring `
+                + 'AND an interior. Refused rather than clamped: a clamp would generate a '
+                + 'room of a size nobody asked for and certify it as if they had.');
+        }
+    }
+    return Object.freeze({ width, height });
+}
+
+/**
+ * ── ⛓⛓⛓ THE FILL MODES — `dense` (every cell written) and `shell` ─────
+ *
+ * ⚖ Arc-5 ruling 2. `dense` is the room this generator has always written and
+ * is the DEFAULT; `shell` is vanilla's own sparse form (27 of the 116 vanilla
+ * levels are sparse, down to 20% filled) — floor, plus the wall cells that
+ * touch it, plus NOTHING at all beyond.
+ */
+export const FILL_DENSE = 'dense';
+export const FILL_SHELL = 'shell';
+export const FILL_MODES = Object.freeze([FILL_DENSE, FILL_SHELL]);
+
+/** The fill mode a name selects, refusing an unknown one BY NAME. */
+export function fillByName(name, where = 'procgenLevel') {
+    if (!FILL_MODES.includes(name)) {
+        fail(`${where}: fill=${JSON.stringify(name)} is not one of `
+            + `[${FILL_MODES.join(', ')}]. \`${FILL_DENSE}\` writes every cell of the `
+            + `rectangle (the default, and every committed artifact is at it); \`${FILL_SHELL}\` `
+            + 'writes the floor, the wall cells that touch it, and nothing beyond.');
+    }
+    return name;
+}
+
+/**
+ * ── ⛓⛓⛓ **THE SHELL — floor + the wall that touches it + NULL BEYOND** ──
+ *
+ * ⚖ Arc-5 ruling 2, and the whole of it rests on one fact about both runtimes:
+ * **NULL IS NOT WALL.** `levelWorld` builds `solids`/`walkableTiles` ONLY from
+ * entries PRESENT in the tiles layer (`levelWorld.js:4041`), and the real
+ * recompiled game does the same, so an ABSENT cell has no collision anywhere. A
+ * strip that removed a wall the room was CONFINED by would not make a bigger
+ * room; it would make a room with a hole in it.
+ *
+ * ⛔ **SO THE STRIP IS DEFINED ON WHAT IT KEEPS, NEVER ON WHAT IT DROPS**: every
+ * non-wall cell survives, and every WALL cell that touches one. What is left
+ * over is wall nothing in the room can reach, see or collide with.
+ *
+ * ── ⛔ 8-ADJACENT, AND THE CHOICE IS THE ENGINE'S RATHER THAN TASTE ────
+ *
+ * The player and the spinner are AXIS-ALIGNED BOXES, so a box overlapping the
+ * DIAGONAL neighbour of a floor cell also overlaps both cells they share an
+ * edge with — and those two are 4-adjacent to that floor and therefore kept
+ * whichever rule is used. ⇒ a 4-adjacent strip cannot open a hole a box can
+ * pass through either. ⛓ What it CAN change is how many solids a single
+ * resolution step overlaps at once (the spinner reflects off the axis of what
+ * it hit), and that is a claim about `levelWorld`'s collision resolution rather
+ * than about this file — so the strip keeps the diagonal walls and is
+ * CONSERVATIVE, and the 4-adjacent build is a MUTANT this slice measured
+ * instead of a decision it argued.
+ *
+ * ── ⛔⛔ THE CLOSURE LAW, ASKED OF EVERY RECORD THIS RETURNS ───────────
+ *
+ * *No floor cell may be 4-adjacent to an absent cell.* It holds BY
+ * CONSTRUCTION for a dense input — every 4-neighbour of a kept floor cell is
+ * either floor (kept) or a wall touching floor (kept) — and it is ASSERTED
+ * anyway, because the input does not have to be dense: a hand-built record, an
+ * edited one, or a future strip that ran mid-pipeline would each arrive here
+ * with a hole, and a confinement claim about a room with a hole in it is the
+ * one failure this format can produce silently.
+ *
+ * ⚠ IT IS STRICTER THAN VANILLA, and that is deliberate and measured: vanilla
+ * level 110 has two floor cells at the bottom of the room with no wall around
+ * them at all. Vanilla can afford it because nothing walks there; a GENERATED
+ * room's confinement is a claim the certification solve rests on.
+ *
+ * @param {object} record   a level record, dense or already sparse
+ * @param {object} [o]
+ * @param {number} [o.adjacency] 8 (the shipped rule) or 4 (the mutant)
+ * @returns {object} a new frozen record; the input is untouched
+ */
+export function shellOf(record, { adjacency = 8 } = {}) {
+    if (adjacency !== 4 && adjacency !== 8) {
+        fail(`procgenLevel: shellOf adjacency must be 4 or 8, got ${JSON.stringify(adjacency)}.`);
+    }
+    const layer = tilesLayer(record);
+    const terrain = new Map();
+    for (const [tx, ty, txPixel] of layer.tiles) {
+        terrain.set(`${tx},${ty}`, columnTerrainName(Math.floor(txPixel / TILE_SIZE)));
+    }
+    const isFloor = (tx, ty) => {
+        const t = terrain.get(`${tx},${ty}`);
+        return t !== undefined && t !== 'wall';
+    };
+    const NEIGHBOURS_8 = [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]];
+    const NEIGHBOURS_4 = [[0, -1], [-1, 0], [1, 0], [0, 1]];
+    const around = adjacency === 8 ? NEIGHBOURS_8 : NEIGHBOURS_4;
+    const keep = (tx, ty) => {
+        if (isFloor(tx, ty)) return true;
+        return around.some(([dx, dy]) => isFloor(tx + dx, ty + dy));
+    };
+    const tiles = layer.tiles.filter(([tx, ty]) => keep(tx, ty));
+    const out = freezeRecord({
+        ...record,
+        layers: record.layers.map((l) => (l === layer ? { ...l, tiles } : { ...l })),
+        entities: [...record.entities],
+    });
+    assertClosed(out);
+    return out;
+}
+
+/**
+ * ⛔⛔ **THE CLOSURE LAW** — no floor cell 4-adjacent to an ABSENT cell. Asked
+ * of every record `shellOf` returns, and available to any caller that wants to
+ * ask it of a record somebody else built.
+ *
+ * ⚠ 4-ADJACENT IS THE RIGHT QUESTION HERE even though the STRIP keeps 8: a box
+ * leaves a cell through an EDGE, and a hole on a diagonal is not a way out. The
+ * two rules are asked of different things — what to keep, and what makes the
+ * room a room.
+ */
+export function assertClosed(record, where = 'procgenLevel') {
+    const layer = tilesLayer(record);
+    const terrain = new Map();
+    for (const [tx, ty, txPixel] of layer.tiles) {
+        terrain.set(`${tx},${ty}`, columnTerrainName(Math.floor(txPixel / TILE_SIZE)));
+    }
+    for (const [key, t] of terrain) {
+        if (t === 'wall') continue;
+        const [tx, ty] = key.split(',').map(Number);
+        for (const [dx, dy] of [[0, -1], [-1, 0], [1, 0], [0, 1]]) {
+            const nk = `${tx + dx},${ty + dy}`;
+            if (terrain.has(nk)) continue;
+            fail(`${where}: THE CLOSURE LAW — the floor cell (${tx},${ty}) is 4-adjacent to `
+                + `the ABSENT cell (${tx + dx},${ty + dy}). ⛔ An absent cell is NOT a wall: `
+                + '`levelWorld` builds its solids only from the entries a record HAS '
+                + '(levelWorld.js:4041) and the real game does the same, so this room does '
+                + 'not confine what walks in it — the border, a demand rim, a grown door '
+                + 'wall and the spinner\'s billiard box all need REAL wall tiles. A shell is '
+                + 'floor plus the wall that touches it, and nothing beyond.');
+        }
+    }
+    return true;
+}
+
+/** The terrain NAME a tileset column builds, or `null` for one this palette
+ *  does not name. ⛓ `terrainAt`'s own lookup, lifted so the two readers of a
+ *  record's terrain cannot disagree about what a column means. */
+function columnTerrainName(column) {
+    const found = Object.values(TERRAIN).find((t) => t.column === column);
+    return found ? found.name : null;
+}
+
+/**
  * THE PoC's TERRAIN VOCABULARY — four terrains, each a (column, type) pair.
  *
  * `type` is the CLAIM and `column` is the write; `assertTerrainColumns()`
@@ -368,9 +560,19 @@ function assertEntities(entities) {
 export function terrainAt(record, tx, ty) {
     const entry = tilesLayer(record).tiles.find(([x, y]) => x === tx && y === ty);
     if (!entry) return null;
-    const column = Math.floor(entry[2] / TILE_SIZE);
-    const found = Object.values(TERRAIN).find((t) => t.column === column);
-    return found ? found.name : null;
+    return columnTerrainName(Math.floor(entry[2] / TILE_SIZE));
+}
+
+/**
+ * ⛓ **DOES THIS RECORD HOLD A TILE AT ALL AT THAT CELL** — the three-valued
+ * read's third value (arc 5, slice 1). `terrainAt` answers `null` for BOTH an
+ * absent cell and a column this palette does not name, and those are different
+ * facts: one means *the room does not extend here*, the other means *the room
+ * holds terrain this vocabulary cannot describe*. A refusal that confused them
+ * would tell a caller the wrong thing about a `shell` room.
+ */
+export function hasTile(record, tx, ty) {
+    return tilesLayer(record).tiles.some(([x, y]) => x === tx && y === ty);
 }
 
 /**

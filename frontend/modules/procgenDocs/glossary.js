@@ -995,6 +995,60 @@ export const TERMS = Object.freeze([
         ],
         seeAlso: ['skeleton-kind', 'the-carve', 'control-arm', 'pass-1'],
     }),
+    /**
+     * ⛓⛓⛓ PROCGEN ELEMENTS arc 5, slice 1 — **THE ROOM CONTRACT'S TWO TERMS**,
+     * and the licence being spent is named (⚖ the count gate's own rule): the
+     * user's arc-5 rulings 1 and 2 create two settings a reader meets on the
+     * address bar (`?width=`/`?height=` and `?fill=`), and the URL-grammar
+     * table refuses a parameter with no glossary term — the P5 finding that put
+     * the ceiling at 149 in the first place.
+     */
+    t({
+        id: 'room-size',
+        term: 'the room size',
+        aliases: ['`?width=`', '`?height=`', '60x60'],
+        area: 'level-gen',
+        plain: 'How many tiles wide and tall the generated room is.',
+        detail: 'Two separate knobs, `?width=`/`?height=` and `--width=`/`--height=`, with the '
+            + 'DEFAULT pinned at **10x10** — one screen (`camera.SCREEN_W / TILE_SIZE`), and '
+            + 'the room every committed Seedling artifact was recorded in. ⛔ The maximum is '
+            + '**60** on each axis and it is a MEASUREMENT of the shipped game, not a budget: '
+            + 'the widest vanilla level is 40x60 and the tallest is 60x58, over the 116 in '
+            + '`flashPanel/atlases/seedling-map.json`. Outside `[3..60]` REFUSES BY NAME and '
+            + 'is never clamped. ⚠ A size is a CONSTANT INPUT and not a [draw](#draw), so a '
+            + 'NAMED `width=10` and an omitted one build the same room cell for cell — the '
+            + 'opposite of an [element](#element) parameter, where naming it spends no draw '
+            + 'and omitting it spends one.',
+        where: [
+            { label: 'architecture.md § Pass 1', doc: PASS1 },
+            { label: 'seedling-bot.md § The procgen ELEMENTS design', doc: SEEDLING },
+        ],
+        seeAlso: ['skeleton', 'skeleton-kind', 'room-fill', 'draw'],
+    }),
+    t({
+        id: 'room-fill',
+        term: 'the room fill',
+        aliases: ['`?fill=`', 'the shell format', 'the closure law'],
+        area: 'level-gen',
+        plain: 'Whether the room writes a tile for every cell, or only for the floor and the '
+            + 'wall that touches it.',
+        detail: '`dense` (the default) writes every cell of the rectangle. `shell` writes the '
+            + 'floor, the wall cells 8-adjacent to it, and NOTHING beyond — vanilla\'s own '
+            + 'sparse form (27 of the 116 vanilla levels are sparse, down to 20% filled). '
+            + '⛔ **NULL IS NOT WALL**: `levelWorld` builds solids only from the entries a '
+            + 'record HAS, and so does the real game, so an absent cell has no collision '
+            + 'anywhere. ⛔ Hence **THE CLOSURE LAW** — *no floor cell may be 4-adjacent to '
+            + 'an absent cell* — refused by name over every shell record, and a pass-2 CARVE '
+            + 'beside an absent cell refused for the same reason. ⛓ The room is generated '
+            + 'DENSE and STRIPPED at the end of a pass, so every legality rule keeps reading '
+            + 'the dense room; what the strip buys is measured, and it is **0%** on an open '
+            + 'room and **~50-82%** of the record\'s bytes on a carved one.',
+        where: [
+            { label: 'architecture.md § Pass 1', doc: PASS1 },
+            { label: 'seedling-bot.md § The procgen ELEMENTS design', doc: SEEDLING },
+        ],
+        seeAlso: ['room-size', 'level', 'skeleton', 'graded-refusal'],
+    }),
     t({
         id: 'skeleton-kind',
         term: 'a skeleton kind',

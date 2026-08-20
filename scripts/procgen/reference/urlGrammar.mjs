@@ -161,8 +161,14 @@ const PARAM_NOTES = {
     gen: { field: { watch: 'gen', lab: 'gen' }, codec: 'a path to a payload JSON', terms: ['payload'] },
     tickbudget: { field: { watch: 'budget.maxTicksPerTarget', lab: null }, codec: 'intParam', terms: ['tick-budget', 'solver'] },
     expansions: { field: { watch: null, lab: 'budget.maxExpansions' }, codec: 'intParam', terms: ['bfs-oracle', 'certification'] },
-    width: { field: { watch: null, lab: 'width' }, codec: 'intParam', terms: ['skeleton'] },
-    height: { field: { watch: null, lab: 'height' }, codec: 'intParam', terms: ['skeleton'] },
+    /**
+     * ⛓ ARC 5, SLICE 1 — the WATCH page reads these now too (⚖ ruling 1); the
+     * maze lab has since it existed. ⛔ ONE row per parameter across both pages,
+     * so the terms name what the parameter IS rather than which page asked.
+     */
+    width: { field: { watch: 'size.width', lab: 'width' }, codec: 'intParam', terms: ['room-size', 'skeleton'] },
+    height: { field: { watch: 'size.height', lab: 'height' }, codec: 'intParam', terms: ['room-size', 'skeleton'] },
+    fill: { field: { watch: 'fill', lab: null }, codec: 'fillByName', terms: ['room-fill', 'level'] },
     tape: { field: { watch: 'tape', lab: null }, codec: 'a path to a tape JSON', terms: ['tape'] },
     side: { field: { watch: 'side', lab: null }, codec: 'a lower-cased enum', terms: ['seedling-differential'] },
     speed: { field: { watch: 'speed', lab: null }, codec: 'Number()', terms: ['playback-speed', 'view-setting'] },

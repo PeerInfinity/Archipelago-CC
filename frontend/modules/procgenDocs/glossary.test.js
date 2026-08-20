@@ -114,11 +114,20 @@ describe('the glossary as data', () => {
      * if the ceiling ever lifted — `component` and `a wall backend`.
      * ⛔ The upper bound is now 149 and it is still a BOUND: the next slice that
      * wants an entry comes here and says whose licence it is spending.
+     *
+     * ⛓⛓⛓ **151 — PROCGEN ELEMENTS arc 5, slice 1 SPENDS TWO**, and says whose
+     * licence: ⚖ the user's arc-5 **ruling 1** (the room size is configurable,
+     * max 60x60) and **ruling 2** (the sparse SHELL format and its closure law).
+     * Each creates a URL parameter — `?width=`/`?height=` and `?fill=` — and the
+     * generated URL-grammar table REFUSES a parameter with no glossary term,
+     * which is the very finding that moved this ceiling to 149. ⛔ Two entries
+     * for three parameters: `room-size` covers both axes, because a room is one
+     * setting.
      */
-    it('holds 149 entries — 140 + P5\'s nine, and every one is filed', () => {
-        expect(TERMS).toHaveLength(149);
+    it('holds 151 entries — 149 + arc-5 slice 1\'s two, and every one is filed', () => {
+        expect(TERMS).toHaveLength(151);
         expect(TERMS.length).toBeGreaterThanOrEqual(80);
-        expect(TERMS.length).toBeLessThanOrEqual(149);
+        expect(TERMS.length).toBeLessThanOrEqual(151);
         expect(TERMS.filter((e) => !AREA_IDS.includes(e.area))).toHaveLength(0);
     });
 

@@ -21,11 +21,12 @@ import {
     ANCHOR_SALT, DIRECTIVE_KEEP_POLICY, PARAM_SALT, UrlParamsError, directiveSeed,
     refuseDuplicateParams,
     dropDirectedParam, formatDirectives,
-    intParam, parseDirective, parseDirectives, readAreas, readBounds, readElements, readRequire,
-    readRosterSpec, readSkeleton, readSkeletonTyped, refuseDirectedParam, stepFromParams,
+    intParam, parseDirective, parseDirectives, readAreas, readBounds, readElements, readFill,
+    readRequire, readRosterSpec, readSize, readSkeleton, readSkeletonTyped, refuseDirectedParam,
+    stepFromParams,
     writeAreasParam,
-    writeBounds, writeElementsParam, writeInt, writeRequireParam, writeRosterParam, writeRunFlag,
-    writeSkeletonParam,
+    writeBounds, writeElementsParam, writeFillParam, writeInt, writeRequireParam,
+    writeRosterParam, writeRunFlag, writeSizeParams, writeSkeletonParam,
 } from './urlParams.js';
 import {
     LabViewError, describeKeptKind, directedCost, generationRows, ladderCost, tileAtPoint,
@@ -911,5 +912,141 @@ describe('urlParams — ?elements=', () => {
         writeRunFlag(bar, 0);
         expect(bar.get('elements')).toBe('guard;len=2;turns=1');
         expect(bar.get('areas')).toBe('1');
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ THE ROOM CONTRACT — `?width=`, `?height=`, `?fill=` (arc 5, slice 1)
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⛔ SUBSTRATE-FREE, like the rest of this file: the RANGE and the MODE
+ * vocabulary are handed in as `grammar`, exactly as `?require=`'s is, so these
+ * rows drive the grammar rather than Seedling's numbers.
+ */
+
+/** A stand-in for `procgenLevel.assertRoomSize` — the caller's own range. */
+const SIZE_GRAMMAR = ({ width, height }) => {
+    for (const [axis, v] of [['width', width], ['height', height]]) {
+        if (!Number.isInteger(v)) throw new Error(`${axis}=${JSON.stringify(v)} is not an integer`);
+        if (v < 3 || v > 60) throw new Error(`${axis}=${v} is outside [3..60]`);
+    }
+    return { width, height };
+};
+const FILL_GRAMMAR = (name) => {
+    if (!['dense', 'shell'].includes(name)) throw new Error(`fill=${JSON.stringify(name)} is not one of [dense, shell]`);
+    return name;
+};
+const D = { width: 10, height: 10 };
+
+describe('urlParams — ?width= / ?height=', () => {
+    it('ABSENT is the caller\'s own default, on each axis independently', () => {
+        expect(readSize(q(''), { defaults: D })).toEqual({ width: 10, height: 10 });
+        expect(readSize(q('width=20'), { defaults: D })).toEqual({ width: 20, height: 10 });
+        expect(readSize(q('height=12'), { defaults: D })).toEqual({ width: 10, height: 12 });
+        expect(readSize(q('width=20&height=12'), { defaults: D })).toEqual({ width: 20, height: 12 });
+    });
+
+    it('⛔ a non-integer is the SHARED integer refusal, by its own name', () => {
+        try {
+            readSize(q('width=2.5'), { defaults: D });
+            throw new Error('did not refuse');
+        } catch (e) {
+            expect(e).toBeInstanceOf(UrlParamsError);
+            expect(e.code).toBe('not-an-integer');
+        }
+    });
+
+    it('⛔ a size the CALLER\'s grammar refuses is re-raised under the CHANNEL\'s name', () => {
+        try {
+            readSize(q('width=61'), { defaults: D, grammar: SIZE_GRAMMAR, substrate: 'the Seedling page' });
+            throw new Error('did not refuse');
+        } catch (e) {
+            expect(e.code).toBe('room-size-refused');
+            expect(e.message).toMatch(/\?width=61&height=10 on the Seedling page/);
+            expect(e.message).toMatch(/width=61 is outside \[3\.\.60\]/);
+        }
+    });
+
+    it('⛓ with NO grammar it reads the integers and adjudicates nothing', () => {
+        expect(readSize(q('width=999'), { defaults: D })).toEqual({ width: 999, height: 10 });
+    });
+
+    /**
+     * ⛔⛔ **THE ROW MUTANT (d) EXISTS FOR** — and it compares the STRING.
+     * A round trip cannot see a writer that KEPT `?width=10`: the reader reads
+     * 10 back and the writer writes it again, for ever (trap 250 — a fixed
+     * point tests SELF-CONSISTENCY, never correctness).
+     */
+    it('⛓⛓ DELETES each axis at its default and writes the exact string otherwise', () => {
+        expect(writeSizeParams(q('seed=3&run=1'), { width: 10, height: 10 }, { defaults: D })
+            .toString()).toBe('seed=3&run=1');
+        expect(writeSizeParams(q('seed=3&run=1'), { width: 20, height: 12 }, { defaults: D })
+            .toString()).toBe('seed=3&run=1&width=20&height=12');
+        expect(writeSizeParams(q('seed=3&width=20&run=1'), { width: 20, height: 10 },
+            { defaults: D }).toString()).toBe('seed=3&width=20&run=1');
+        /** ⛓ ONE axis off the default writes ONE key. */
+        expect(writeSizeParams(q(''), { width: 10, height: 12 }, { defaults: D }).toString())
+            .toBe('height=12');
+    });
+
+    /**
+     * ⛓ REWRITE IN PLACE, never delete-then-set: a `delete` then a `set` of the
+     * same key APPENDS it, which moved `?families=` to the end of the bar and
+     * broke the fixed point once already.
+     */
+    it('⛓ keeps an off-default axis WHERE IT WAS in the bar', () => {
+        expect(writeSizeParams(q('width=20&seed=3&run=1'), { width: 30, height: 10 },
+            { defaults: D }).toString()).toBe('width=30&seed=3&run=1');
+    });
+
+    it('⛔ the WRITER refuses what the READER would refuse', () => {
+        expect(() => writeSizeParams(q(''), { width: 61, height: 10 },
+            { defaults: D, grammar: SIZE_GRAMMAR })).toThrow(/cannot write \?width=61/);
+        try {
+            writeSizeParams(q(''), { width: 10.5, height: 10 }, { defaults: D });
+            throw new Error('did not refuse');
+        } catch (e) {
+            expect(e.code).toBe('cannot-write-a-room-size');
+        }
+    });
+
+    it('⛓ reader and writer are INVERSES on a size the grammar allows', () => {
+        for (const bar of ['', 'width=20', 'height=60', 'width=3&height=3', 'width=20&height=12']) {
+            const read = readSize(q(bar), { defaults: D, grammar: SIZE_GRAMMAR });
+            expect(writeSizeParams(q(bar), read, { defaults: D, grammar: SIZE_GRAMMAR }).toString())
+                .toBe(bar);
+        }
+    });
+});
+
+describe('urlParams — ?fill=', () => {
+    it('ABSENT and EMPTY are the fallback; a value goes through the CALLER\'s vocabulary', () => {
+        expect(readFill(q(''), { fallback: 'dense', grammar: FILL_GRAMMAR })).toBe('dense');
+        expect(readFill(q('fill='), { fallback: 'dense', grammar: FILL_GRAMMAR })).toBe('dense');
+        expect(readFill(q('fill=shell'), { fallback: 'dense', grammar: FILL_GRAMMAR })).toBe('shell');
+    });
+
+    it('⛔ an unknown mode refuses under the CHANNEL\'s name', () => {
+        try {
+            readFill(q('fill=sparse'), { fallback: 'dense', grammar: FILL_GRAMMAR, substrate: 'the Seedling page' });
+            throw new Error('did not refuse');
+        } catch (e) {
+            expect(e.code).toBe('fill-mode-refused');
+            expect(e.message).toMatch(/\?fill= on the Seedling page/);
+            expect(e.message).toMatch(/not one of \[dense, shell\]/);
+        }
+    });
+
+    it('⛓ DELETED at the default, SET otherwise, and the writer refuses what the reader would', () => {
+        expect(writeFillParam(q('fill=shell&run=1'), 'dense', { fallback: 'dense' }).toString())
+            .toBe('run=1');
+        expect(writeFillParam(q('seed=3'), 'shell', { fallback: 'dense' }).toString())
+            .toBe('seed=3&fill=shell');
+        try {
+            writeFillParam(q(''), 'sparse', { fallback: 'dense', grammar: FILL_GRAMMAR });
+            throw new Error('did not refuse');
+        } catch (e) {
+            expect(e.code).toBe('cannot-write-a-fill-mode');
+        }
     });
 });

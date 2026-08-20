@@ -35,6 +35,7 @@ const M = (p) => import(join(REPO, 'frontend/modules', p));
 
 const { seedlingModel, seedlingSkeletonSpec } = await M('seedlingDemo/procgenSeedling.js');
 const { parseSkeleton } = await M('procgenCore/skeletonKinds.js');
+const { assertRoomSize } = await M('seedlingDemo/procgenLevel.js');
 
 const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
     ?? `--${name}=${fallback}`).slice(`--${name}=`.length);
@@ -63,6 +64,31 @@ const SEEDS = (() => {
     }
     return spec.split(',').map(Number);
 })();
+/**
+ * ⛓⛓⛓ **THE SIZE AXIS** (PROCGEN ELEMENTS arc 5, slice 1; ⚖ ruling 1). Until
+ * this slice the room was PINNED at one screen and this header said so; the
+ * default is still `10x10`, which is the room every committed site number in
+ * this repo was measured in, and a number quoted at one size is not a number
+ * about another (trap 383).
+ *
+ * ⛔ VALIDATED BEFORE THE FIRST CELL through the BINDING's own refusal, so a
+ * typo does not surface as a carve that throws.
+ */
+const SIZES = arg('sizes', '10x10').split(',').filter(Boolean).map((spec) => {
+    const m = /^(\d+)x(\d+)$/.exec(spec.trim());
+    if (!m) {
+        process.stderr.write(`census-seedling-sites: --sizes= member "${spec}" is not WxH.\n`);
+        process.exit(2);
+    }
+    const size = { width: Number(m[1]), height: Number(m[2]) };
+    try {
+        assertRoomSize(size, 'census-seedling-sites');
+    } catch (e) {
+        process.stderr.write(`census-seedling-sites: ${e.message}\n`);
+        process.exit(2);
+    }
+    return { ...size, label: `${size.width}x${size.height}` };
+});
 const JSON_OUT = arg('json', '');
 
 const say = (line = '') => process.stdout.write(`${line}\n`);
@@ -75,37 +101,39 @@ say('# SEEDLING SITE CENSUS');
 say('');
 say(`kinds:  ${KINDS.join(', ')}`);
 say(`seeds:  ${SEEDS[0]}..${SEEDS[SEEDS.length - 1]} (${SEEDS.length})`);
-say('room:   10x10, one screen (`SINGLE_SCREEN_TILES`) — ⛔ not an axis, ⚖ arc-3 ruling 7');
+say(`sizes:  ${SIZES.map((z) => z.label).join(', ')} — ⛓ an AXIS since arc-5 slice 1 `
+    + '(⚖ ruling 1 supersedes arc-3 ruling 7; the default 10x10 is one screen, '
+    + '`SINGLE_SCREEN_TILES`)');
 say('cost:   one carve + the site derivation per cell; NO template, NO solve.');
 say('');
 
 const rows = [];
 for (const kindSpec of KINDS) {
-    for (const seed of SEEDS) {
-        const skeleton = seedlingSkeletonSpec(kindSpec);
-        let model = null;
-        let error = null;
-        try {
-            model = seedlingModel({ seed, skeleton });
-        } catch (e) {
-            error = `${e.name}: ${e.message.slice(0, 60)}`;
-        }
-        if (error) { rows.push({ kind: kindSpec, seed, error }); continue; }
-        const s = model.siteSummary;
-        const rec = model.skeleton();
-        let ground = 0;
-        for (let ty = 0; ty < rec.height; ty += 1) {
-            for (let tx = 0; tx < rec.width; tx += 1) {
-                if (rec.terrain?.[ty]?.[tx] === 'ground'
-                    || model.sites) ground += 0;
+    for (const size of SIZES) {
+        for (const seed of SEEDS) {
+            const skeleton = seedlingSkeletonSpec(kindSpec);
+            let model = null;
+            let error = null;
+            try {
+                model = seedlingModel({
+                    seed,
+                    skeleton,
+                    /** ⛓ arc 5, slice 1 — the size reaches the model through the
+                     *  `defaults` argument it has always taken. */
+                    defaults: { width: size.width, height: size.height },
+                });
+            } catch (e) {
+                error = `${e.name}: ${e.message.slice(0, 60)}`;
             }
+            if (error) { rows.push({ kind: kindSpec, size: size.label, seed, error }); continue; }
+            rows.push({
+                kind: kindSpec,
+                size: size.label,
+                seed,
+                ...model.siteSummary,
+                goal: `${model.goalCell.tx},${model.goalCell.ty}`,
+            });
         }
-        rows.push({
-            kind: kindSpec,
-            seed,
-            ...s,
-            goal: `${model.goalCell.tx},${model.goalCell.ty}`,
-        });
     }
 }
 
@@ -116,8 +144,12 @@ say('| kind | main | bends | branches | branch len | tips | chambers | chamber c
 say('|---|---|---|---|---|---|---|---|---|---|');
 const byKind = new Map();
 for (const r of rows) {
-    if (!byKind.has(r.kind)) byKind.set(r.kind, []);
-    byKind.get(r.kind).push(r);
+    /** ⛓ arc 5, slice 1 — KEYED BY kind x SIZE. ⛔ A roll-up that averaged two
+     *  sizes into one row would be the shape trap 383 names: a number measured
+     *  with one instrument quoted about another. */
+    const key = `${r.kind} @ ${r.size}`;
+    if (!byKind.has(key)) byKind.set(key, []);
+    byKind.get(key).push(r);
 }
 for (const [kind, rs] of byKind) {
     const ok = rs.filter((r) => !r.error);
@@ -136,19 +168,21 @@ for (const [kind, rs] of byKind) {
         + `| ${fmt(mean(ok.map((r) => r.corridor)))} (${range(ok.map((r) => r.corridor))}) |`);
 }
 say('');
-say('## Per cell — kind x seed');
+say('## Per cell — kind x size x seed');
 say('');
-say('| kind | seed | goal | main | bend | branch (lengths) | tip | chambers (sizes) | corridor |');
-say('|---|---|---|---|---|---|---|---|---|');
+say('| kind | size | seed | goal | main | bend | branch (lengths) | tip | chambers (sizes) '
+    + '| corridor |');
+say('|---|---|---|---|---|---|---|---|---|---|');
 for (const r of rows) {
-    if (r.error) { say(`| ${r.kind} | ${r.seed} | REFUSED — ${r.error} |`); continue; }
-    say(`| ${r.kind} | ${r.seed} | (${r.goal}) | ${r.main} | ${r.bend} `
+    if (r.error) { say(`| ${r.kind} | ${r.size} | ${r.seed} | REFUSED — ${r.error} |`); continue; }
+    say(`| ${r.kind} | ${r.size} | ${r.seed} | (${r.goal}) | ${r.main} | ${r.bend} `
         + `| ${r.branch} (${r.branchLengths.join(',') || '—'}) | ${r.tip} `
         + `| ${r.chambers} (${r.chamberSizes.join(',') || '—'}) | ${r.corridor} |`);
 }
 
 if (JSON_OUT) {
     mkdirSync(dirname(JSON_OUT), { recursive: true });
-    writeFileSync(JSON_OUT, `${JSON.stringify({ kinds: KINDS, seeds: SEEDS, rows }, null, 2)}\n`);
+    writeFileSync(JSON_OUT,
+        `${JSON.stringify({ kinds: KINDS, sizes: SIZES.map((z) => z.label), seeds: SEEDS, rows }, null, 2)}\n`);
     process.stderr.write(`wrote ${JSON_OUT}\n`);
 }

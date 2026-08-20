@@ -10406,6 +10406,54 @@ named items: the room-aware SITE PICK (which is what recovers the guard's
 the ceiling on everything the area graph can accept), the differential's
 SHORTENS grade, and an EXACT (stepped) demand for a moving body.
 
+### Arc 5, slice 1 — THE ROOM CONTRACT: a configurable size (≤ 60×60) and the sparse SHELL format (2026-08-19)
+
+⚖ The user's arc-5 rulings 1 and 2 changed what the Seedling generator may
+EMIT, so the tracked record says so here rather than waiting for the arc's
+close. ⛔ Both channels are OPT-IN and every default is byte-identical: the
+committed battery, the maze byte-identity dump, the acceptance batch, the
+`empty` and carved pair dumps and the generated set are unmoved, which is the
+claim, not a hope.
+
+**The size.** `?width=`/`?height=` on the watch page and `--width=`/`--height=`
+on `generate-seedling-level.mjs` reach `seedlingModel` through the `defaults`
+argument it has always taken. The DEFAULT stays **10×10** — one screen, and the
+room every committed artifact was recorded in — and each axis is refused BY NAME
+outside `[3..60]`, never clamped. **60 is a measurement of the shipped game**:
+over the 116 levels of `flashPanel/atlases/seedling-map.json` the widest is
+40×60 and the tallest 60×58. ⚠ A size is a CONSTANT INPUT and not a draw, so a
+NAMED `width=10` builds the identical room to an omitted one, cell for cell —
+the opposite of an element parameter, where NAMING it spends no draw and
+omitting it spends one. `--sizes=` is a Seedling axis on `sweep-yield-table.mjs`
+and `census-seedling-sites.mjs` now; a number measured at 10×10 is not a number
+about 20×20.
+
+**The fill.** `?fill=shell` / `--fill=shell` writes the floor, the wall cells
+8-adjacent to it, and **nothing beyond** — vanilla's own sparse form (27 of the
+116 vanilla levels are sparse, down to 20 % filled). ⛔ **NULL IS NOT WALL**:
+`levelWorld` builds its solids only from the entries a record HAS
+(`levelWorld.js:4041`) and the real recompiled game does the same, so an absent
+cell has no collision in either runtime. Hence **THE CLOSURE LAW** — *no floor
+cell may be 4-adjacent to an absent cell* — asked of every shell record and
+refused by name, and a pass-2 CARVE next to an absent cell refused for the same
+reason (a carve is the only pass-2 write that can open a room onto nothing).
+⛓ The room is generated **DENSE and STRIPPED at the end of a pass**, never
+mid-pipeline: the carve's frozen `base`, the seal flood, the element's demand
+and the certification solve all keep reading the dense room, and every
+`must:'wall'` cell of an element's demand is ASSERTED to survive the strip
+rather than argued to.
+
+**What the strip buys, measured.** It drops wall cells nothing in the room can
+reach, so the answer depends entirely on how much solid wall the carve left:
+**0 %** on an open bordered room (every ring cell touches the interior),
+~38–50 % of the record's bytes on a 10×10–20×20 `winding` room and **82 %** on a
+40×40 one, and ~0–4 % on `rooms`/`bushy`, whose interiors are mostly floor. The
+strip is 8-adjacent and therefore CONSERVATIVE: an axis-aligned box that
+overlaps a floor cell's diagonal neighbour also overlaps both cells they share
+an edge with, and those are kept under either rule — so the diagonal walls are
+kept because multi-solid collision resolution is `levelWorld`'s claim to make,
+not this format's.
+
 ## ▶ LOAD IN WASM — what this page holds, run in the REAL recompiled game (TOOLING; ⚖ user, 2026-08-19)
 
 `watch.html` has always been able to run a **committed tape** in the real

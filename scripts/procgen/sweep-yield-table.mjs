@@ -68,10 +68,11 @@
  *
  *   `--kinds=`  default: every kind the binding OFFERS (`MAZE_SKELETON_KINDS` /
  *               `SEEDLING_SKELETON_KINDS` — derived, never a second list).
- *   `--sizes=`  MAZE only: `11x11,7x7,5x5,4x4` by default (§9.6's ladder).
- *               ⛔ Seedling's room is FIXED at one screen (10x10,
- *               `SINGLE_SCREEN_TILES`), so its second axis is the kind's own
- *               FLOOR FRACTION, printed as a column rather than swept.
+ *   `--sizes=`  maze: `11x11,7x7,5x5,4x4` by default (§9.6's ladder).
+ *               ⛓ SEEDLING TOO SINCE PROCGEN ELEMENTS arc 5, slice 1 (⚖ ruling
+ *               1): default `10x10` — the room every committed Seedling number
+ *               was measured in — and any pair in [3..60], the VANILLA
+ *               maximum. The kind's FLOOR FRACTION stays a column beside it.
  *   `--seeds=`  default `1-8`.
  *
  * Run:
@@ -344,6 +345,8 @@ if (CELL !== '') {
     let floorPct;
     /** ⛓ arc 3 slice 1 — Seedling only; the maze binds sites in a later slice. */
     let siteCensus = null;
+    /** ⛓ arc 5 slice 1 — Seedling only; the maze's grid has no sparse form. */
+    let shellCensus = null;
     /** ⛓ arc 3 slice 3 — the element's certification, from the shared seam. */
     let seedlingCertification = null;
     let seedlingAreaCertification = null;
@@ -392,6 +395,14 @@ if (CELL !== '') {
          */
         const seam = seedlingSeam({
             seed,
+            /**
+             * ⛓⛓⛓ PROCGEN ELEMENTS arc 5, slice 1 — **THE SIZE IS AN AXIS
+             * NOW** (⚖ ruling 1), and it reaches the seam through the
+             * `defaults` argument `seedlingModel` has always taken. ⛔ At
+             * `10x10` this passes exactly what `SEEDLING_DEFAULTS` says, so
+             * every cell this sweep ever ran is unmoved.
+             */
+            defaults: { width: size.width, height: size.height },
             /** ⛓ arc 3 slice 4b — the SEEDLING resolver, so the five carved tree
              *  kinds get their `chambers` default and a typed 0 survives. */
             skeleton: seedlingSkeletonSpec(kind),
@@ -429,6 +440,27 @@ if (CELL !== '') {
          * are re-derivable from the level (`siteSummaryOf`'s own rule).
          */
         siteCensus = model.siteSummary;
+        /**
+         * ⛓⛓⛓ **THE SHELL'S CLAIMED WIN, MEASURED PER CELL** (arc 5, slice 1,
+         * ⚖ ruling 2 — the §6 Q1 evidence). ⛔ Measured on the SKELETON, which
+         * is the room the strip has anything to say about: pass 2 only ever
+         * paints INSIDE the play area, so the wall a strip drops is the CARVE's
+         * and not the ladder's. ⚠ `bytes` is `JSON.stringify` length — the
+         * record as it ships — and not a file on disk, so it is comparable
+         * across cells and is not a claim about any particular writer.
+         */
+        const { shellLevel } = await M('seedlingDemo/procgenSeedling.js');
+        const shelled = shellLevel(sk, model, 'shell');
+        shellCensus = {
+            cells: sk.width * sk.height,
+            denseTiles: sk.layers[0].tiles.length,
+            shellTiles: shelled.layers[0].tiles.length,
+            denseBytes: JSON.stringify(sk).length,
+            shellBytes: JSON.stringify(shelled).length,
+        };
+        shellCensus.savedPct = Math.round(
+            (100 * (shellCensus.denseBytes - shellCensus.shellBytes)) / shellCensus.denseBytes,
+        );
     }
 
     const t0 = process.hrtime.bigint();
@@ -701,6 +733,7 @@ if (CELL !== '') {
         seed,
         floorPct,
         siteCensus,
+        shellCensus,
         areaCensus,
         elements: elementRow,
         require: requireRow,
@@ -757,19 +790,34 @@ for (const k of KINDS) {
 }
 
 /**
- * ⛔ SEEDLING HAS ONE SIZE AND SAYS SO. `SINGLE_SCREEN_TILES` is 10x10 and the
- * binding has no width/height argument at all — offering a `--sizes=` that
- * silently did nothing would be a knob claiming an axis this sweep does not
- * have.
+ * ⛓⛓⛓ **`--sizes=` IS A SEEDLING AXIS NOW** (PROCGEN ELEMENTS arc 5, slice 1;
+ * ⚖ ruling 1 supersedes arc-3 ruling 7's *"stays 10x10"*).
+ *
+ * ⛔ THIS FILE USED TO REFUSE IT BY NAME, and the refusal was RIGHT at the
+ * time: *"the binding has no width/height argument at all — offering a
+ * `--sizes=` that silently did nothing would be a knob claiming an axis this
+ * sweep does not have."* The binding has one now, so the knob is real; the
+ * DEFAULT stays `10x10`, which is the room every committed number in this
+ * repo was measured in.
+ *
+ * ⛔ AND THE RANGE IS THE BINDING'S, checked here before the estimate prints,
+ * so a sweep does not discover a typo in cell 41 of 56. Seedling's maximum is
+ * the VANILLA maximum, 60 — a `--sizes=64x64` refuses with the atlas
+ * measurement in the sentence.
  */
 const SIZES = (SUBSTRATE === 'maze'
     ? arg('sizes', '11x11,7x7,5x5,4x4')
-    : '10x10').split(',').map(parseSize);
-if (SUBSTRATE === 'seedling' && arg('sizes', '') !== '') {
-    note('sweep-yield-table: --sizes= is a MAZE axis. Seedling\'s room is fixed at one '
-        + 'screen (SINGLE_SCREEN_TILES, 10x10) and its second axis is the kind\'s FLOOR '
-        + 'FRACTION, which this table prints as a column.');
-    process.exit(2);
+    : arg('sizes', '10x10')).split(',').map(parseSize);
+if (SUBSTRATE === 'seedling') {
+    const { assertRoomSize } = await M('seedlingDemo/procgenLevel.js');
+    for (const sz of SIZES) {
+        try {
+            assertRoomSize({ width: sz.width, height: sz.height }, 'sweep-yield-table');
+        } catch (e) {
+            note(`sweep-yield-table: --sizes= member "${sz.label}" — ${e.message}`);
+            process.exit(2);
+        }
+    }
 }
 
 const SEEDS = parseSeeds(arg('seeds', '1-8'));
@@ -801,8 +849,7 @@ const header = [
         ? ` biome \`${PALETTE_NAME}\`` : ''} (CONSTRUCTIVE-MODE arc, slice 6, §3.6 item 1)`,
     '',
     `command: \`node scripts/procgen/sweep-yield-table.mjs --substrate=${SUBSTRATE} `
-        + `--kinds=${KINDS.join(',')} ${SUBSTRATE === 'maze'
-            ? `--sizes=${SIZES.map((s) => s.label).join(',')} ` : ''}`
+        + `--kinds=${KINDS.join(',')} --sizes=${SIZES.map((s) => s.label).join(',')} `
         + `${AREAS.keys > 0 ? `--areas='${formatAreaSpec(AREAS)}' ` : ''}`
         + `${SUBSTRATE === 'seedling' ? `--palette=${PALETTE_NAME} ` : ''}`
         + `--seeds=${arg('seeds', '1-8')} --count=${BOUNDS.obstacleTarget} `
@@ -952,6 +999,36 @@ for (const [key, rows] of groups) {
         + `| ${Math.max(0, ...ok.map((r) => r.maxSolveMs))} |`);
 }
 say('');
+
+/**
+ * ⛓⛓⛓ **THE SHELL'S WIN, PER KIND x SIZE** (arc 5, slice 1; ⚖ ruling 2, and
+ * the §6 Q1 evidence the close will cite).
+ *
+ * ⛔ THE NUMBER IS A MEASUREMENT AND SOME OF IT IS ZERO, WHICH IS THE FINDING:
+ * the strip drops WALL CELLS NOTHING CAN TOUCH, so a room whose interior is
+ * mostly floor has none to drop and an OPEN bordered room has literally none
+ * (every ring cell is 8-adjacent to the interior). A table that only showed the
+ * carved kinds would sell the format on its best case.
+ */
+if (SUBSTRATE === 'seedling' && results.some((r) => r.shellCensus)) {
+    say('## THE SHELL — what `--fill=shell` drops, per kind x size (⛓ on the SKELETON)');
+    say('');
+    say('| kind | size | cells | dense tiles | shell tiles | dropped | dense bytes '
+        + '| shell bytes | saved |');
+    say('|---|---|---|---|---|---|---|---|---|');
+    for (const [key, rs] of groups) {
+        const [kind, size] = key.split('|');
+        const ok = rs.filter((r) => r.shellCensus);
+        if (ok.length === 0) continue;
+        const m = (pick) => mean(ok.map(pick));
+        say(`| ${kind} | ${size} | ${m((r) => r.shellCensus.cells)} `
+            + `| ${m((r) => r.shellCensus.denseTiles)} | ${m((r) => r.shellCensus.shellTiles)} `
+            + `| ${m((r) => r.shellCensus.denseTiles - r.shellCensus.shellTiles)} `
+            + `| ${m((r) => r.shellCensus.denseBytes)} | ${m((r) => r.shellCensus.shellBytes)} `
+            + `| **${m((r) => r.shellCensus.savedPct)}%** |`);
+    }
+    say('');
+}
 
 if (SUBSTRATE === 'maze') {
     say('## THE AREA CENSUS — per kind x size (⛓ measured on the SKELETON, before any lock)');

@@ -725,6 +725,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "seeds"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "sizes"
                 }
             ],
             "oneLiner": "census-seedling-sites — **THE SITE CENSUS**: how many of each SITE class a Seedling skeleton offers, per kind, per knob, per seed.",
@@ -2042,6 +2048,8 @@ export const INSTRUMENTS = frz({
         },
         {
             "argvHelpers": [
+                "FILL",
+                "SIZE",
                 "arg",
                 "has",
                 "list",
@@ -2120,6 +2128,19 @@ export const INSTRUMENTS = frz({
                 },
                 {
                     "how": [
+                        "arg"
+                    ],
+                    "name": "fill"
+                },
+                {
+                    "how": [
+                        "num",
+                        "startsWith"
+                    ],
+                    "name": "height"
+                },
+                {
+                    "how": [
                         "has"
                     ],
                     "name": "json"
@@ -2172,6 +2193,13 @@ export const INSTRUMENTS = frz({
                         "num"
                     ],
                     "name": "tries"
+                },
+                {
+                    "how": [
+                        "num",
+                        "startsWith"
+                    ],
+                    "name": "width"
                 }
             ],
             "oneLiner": "generate-seedling-level — THE PoC's CLI TWIN (kickoff §3.5, slice 2).",
@@ -5129,6 +5157,7 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [
                 "arg",
                 "has",
+                "m",
                 "mean",
                 "n",
                 "note",

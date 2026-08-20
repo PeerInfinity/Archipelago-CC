@@ -4620,6 +4620,15 @@ async function runGenerate(params, lifetime) {
     let elements = gp.elements;
     let areas = gp.areas;
     let require = gp.require;
+    /**
+     * ⛓⛓⛓ PROCGEN ELEMENTS arc 5, slice 1 — **THE ROOM CONTRACT**, ⚖ rulings 1
+     * and 2. URL-only this slice, like `?tickbudget=` and the three above: the
+     * reader resolves `?width=`/`?height=`/`?fill=`, the ONE writer spells them
+     * back off the STATE, and there is no form control (⚖ the user's standing
+     * form-controls item is a named parked line, not this slice's).
+     */
+    let size = gp.size;
+    let fill = gp.fill;
 
     /**
      * ⛓ `?gen=` — a payload emitted by `generate-seedling-level.mjs`, whose
@@ -4715,6 +4724,18 @@ async function runGenerate(params, lifetime) {
          * one beside it, which is two findings for one cause.
          */
         if (payload.skeleton) skeleton = seedlingSkeletonSpec(payload.skeleton);
+        /**
+         * ⛓⛓ ARC 5, SLICE 1 — **THE ROOM CONTRACT COMES OFF THE PAYLOAD TOO**,
+         * for the skeleton's own reason: a payload built at 20x12 and
+         * reproduced at the default 10x10 reports a LEVEL divergence whose real
+         * cause is a different ROOM. ⛔ The SIZE is read off `payload.level` —
+         * the record IS the room, and every payload has always carried it, so
+         * even a file written before this slice reproduces at its own size.
+         */
+        if (payload.level) {
+            size = { width: payload.level.width, height: payload.level.height };
+        }
+        if (payload.fill) fill = payload.fill;
         if (payload.summary?.elements) elements = payload.summary.elements.spec;
         if (payload.summary?.areas) areas = parseAreaSpec(payload.summary.areas.spec);
         if (payload.summary?.require) require = [...payload.summary.require.asked];
@@ -5770,6 +5791,11 @@ async function runGenerate(params, lifetime) {
             seed: state.seed,
             biome: state.biome,
             bounds: state.bounds,
+            /** ⛓ ARC 5, SLICE 1 — from the STATE, like the skeleton: the room
+             *  the record on screen was really built in. Deleted at 10x10 /
+             *  `dense` by the writer. */
+            size: state.size,
+            fill: state.fill,
             // ⛓ CONSTRUCTIVE SLICE 5: from the STATE — the kind the room on
             // screen was really CARVED from, so a link cannot name a skeleton
             // the page did not build. DELETED at the open room by the writer.
@@ -6140,7 +6166,7 @@ async function runGenerate(params, lifetime) {
                 // with the old text on it, which is a lie about what it does.
                 await new Promise((r) => requestAnimationFrame(r));
                 if (!lifetime.alive()) return;
-                state = generateStep({ seed, biome, step: k, bounds, budget, roster, skeleton, elements, areas, require });
+                state = generateStep({ seed, biome, step: k, bounds, budget, roster, skeleton, elements, areas, require, size, fill });
                 step = k;
                 const out = await show(why);
                 if (!out.drew) return;
@@ -6161,7 +6187,7 @@ async function runGenerate(params, lifetime) {
         // ⛓ A FRESH `generateStep` STATE CARRIES AN EMPTY DIRECTIVE LIST, so
         // the reset drops them BY CONSTRUCTION rather than by a second line
         // somebody could forget to write.
-        state = generateStep({ seed, biome, step: 0, bounds, budget, roster, skeleton, elements, areas, require });
+        state = generateStep({ seed, biome, step: 0, bounds, budget, roster, skeleton, elements, areas, require, size, fill });
         await show(why);
     };
     /**
@@ -6368,7 +6394,7 @@ async function runGenerate(params, lifetime) {
             if (step === 0) {
                 await resetToSkeleton(`${cleared} — back to the skeleton`);
             } else {
-                state = generateStep({ seed, biome, step, bounds, budget, roster, skeleton, elements, areas, require });
+                state = generateStep({ seed, biome, step, bounds, budget, roster, skeleton, elements, areas, require, size, fill });
                 await show(`${cleared} — back to seed ${seed}'s ladder at step ${step}`);
             }
         } finally {
@@ -6585,7 +6611,7 @@ async function runGenerate(params, lifetime) {
     };
 
     // ── the skeleton, before anything is drawn ───────────────────────────
-    state = generateStep({ seed, biome, step: 0, bounds, budget, roster, skeleton, elements, areas, require });
+    state = generateStep({ seed, biome, step: 0, bounds, budget, roster, skeleton, elements, areas, require, size, fill });
     await show('the SKELETON');
 
     if (gp.run || payload) {

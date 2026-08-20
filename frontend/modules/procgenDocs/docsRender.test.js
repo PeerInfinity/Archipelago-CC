@@ -57,11 +57,14 @@ describe('⛓⛓ the anchors — two readers, 607 headings, one answer', () => {
             expect(idsOf(RENDERS.get(f).html), f).toEqual(want);
             total += want.length;
         }
+        // ⚠ 607 → 608 with arc-5 slice 1: `seedling-bot.md` § *Arc 5, slice 1
+        // — THE ROOM CONTRACT*, the one § a generation-OUTPUT change owes the
+        // tracked record. Same re-pin as the line below.
         // ⚠ 606 → 607 with the per-tick slice: `seedling-bot.md` § ▶ LOAD IN
         // WASM gained *The PER-TICK verdict — and the two limits it names*.
         // ⛔ RE-PINNED, never widened — a pin that moves because somebody wrote
         // into what it measures is the pin WORKING (trap 410).
-        expect(total).toBe(607);
+        expect(total).toBe(608);
     });
 
     it('⛔ uses OUR rule, not marked\'s slugger — they differ, and here is where', () => {
@@ -209,11 +212,12 @@ describe('⛓ the constructs the corpus is actually made of', () => {
 });
 
 describe('⛓ the biggest document — the one the budget is about', () => {
-    it('seedling-bot.md renders 394 headings and its slugs are unique', () => {
+    it('seedling-bot.md renders 395 headings and its slugs are unique', () => {
+        // ⚠ 394 → 395: arc-5 slice 1's § (the room contract).
         // ⚠ 393 → 394: the per-tick slice's § in ▶ LOAD IN WASM. Same re-pin.
         const ids = idsOf(RENDERS.get('seedling-bot.md').html);
-        expect(ids).toHaveLength(394);
-        expect(new Set(ids).size).toBe(394);
+        expect(ids).toHaveLength(395);
+        expect(new Set(ids).size).toBe(395);
         expect(ids.filter((i) => i !== ghSlug(i))).toEqual([]);
     });
 
