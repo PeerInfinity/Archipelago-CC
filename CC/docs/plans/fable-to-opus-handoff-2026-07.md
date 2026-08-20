@@ -3367,6 +3367,25 @@ parameter domain (⚖ the user's).
 **NEXT**: arc 4 (the CHAIN) is ⛔ ask-first and unauthorised; everything else in
 §5g's ladder is closed.
 
+### ⛓⛓⛓ SEEDLING BOT **R9 — OPENED 2026-08-20**, and it is the successor entry §5g's close asked for
+
+⚖ The user opened R9 in the Fable planning session the moment arc 5 closed, and
+gave its ORDER themselves: **form controls first** (the six URL-only generate
+parameters get page controls) → **the quick fixes** (the per-spec parameter
+DOMAIN `key=v1|v2`, `derivePressKill`'s misreported WHY, the code-only E
+bucket) → **a SEQUENCE of playback tapes on the watch page** → `KEEP_POLICY`
+out of the loop core *when convenient* → **then the campaign**: oracle and
+solver features added AS THE VANILLA PLAYTHROUGH NEEDS THEM, in sphere order,
+with R9's ruled first solver act (the `r8-d2` three-segment splice + the
+`r8-solve-4` drift, ONE attributed licence) and the derived `break` verb where
+the route meets them. The kickoff is `NewDocs/plans/seedling-bot-r9-kickoff.md`
+(⚠ gitignored; its as-builts are the per-slice record, and the tracked summary
+grows in `docs/json/developer/procgen/seedling-bot.md` from the splice on).
+⛓ Why R9 over arc 4: arc 5 MEASURED that the generator now places what the
+solver cannot certify, so the solver is the bottleneck — §5g's leverage map
+above is the order *inside* R9's solver half rather than an arc of its own.
+**Slice 0 (the form controls) SHIPPED 2026-08-20**, byte-inert, `55ee1e857..b89448ad8`.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
