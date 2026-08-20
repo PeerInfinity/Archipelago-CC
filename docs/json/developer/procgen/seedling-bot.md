@@ -10516,6 +10516,67 @@ false positive in ten". Three measurements closed it the other way:
    every committed row byte for byte — which is what says the BOUND, not the
    switch, is the mover.
 
+### Arc 5, slice 3 — ELEMENTS-AS-AREA: the `chamber` element, and C11's law (2026-08-20)
+
+**The element that is SPACE.** Slice 1 measured the hole rather than argued it:
+a bare TREE kind accepts `--areas=2` on **0 of 264** cells at 10×10, 15×15,
+20×20 *and* 30×30 alike, refusing throughout with
+`no-area-at-that-key-level-can-hold-its-key`. A bigger tree room grows
+CORRIDOR, not areas — `winding`'s corridor sites go 10 → 51 from 10×10 to
+20×20 while its chamber count stays 1. What a tree kind lacks is a PLACE.
+`procgenCore/elements/openChamber.js` is one: a `pre-carve` element whose whole
+geometry is an open `w × h` floor blob DECLARED as an `area`, with a mouth a
+connector can attach to and **nothing else** — no block, no button, no door, no
+symbol, no tag, no `binds`, no `needs`. Two geometry draws, always (the mouth's
+side and its offset; the exit port is the mirror and spends none).
+
+⛔ **NO SECOND PARTITION MECHANISM.** The blob reaches
+`partitionAreas({declared})` through the very line the guard's area reaches it
+by; `areaPartition.js`, `areaGraph.js` and `sites.js` are untouched. What the
+BINDING learned is that an element may be space: `compositeSeedlingElement`'s
+flag/door/lock clauses are the GUARD's half and are skipped for a placement
+that declares no obstacle, the entity mapping returns the EMPTY realisation and
+spends none of the 30 persistence tags, and the "adopt the element's flag" test
+now asks whether the element HAS one. Every check about the ROOM still runs.
+
+**What it buys, per kind at named sizes** (12 seeds × 2 biomes = 24 per cell,
+`--areas=1`; the biome default is 0/24 on every bare tree kind at 10×10):
+
+| 10×10 | winding | branchy | bushy | loopy | open |
+|---|---|---|---|---|---|
+| biome default | 0 | 0 | 0 | 0 | 0 |
+| `chamber` (drawn) | 0 | 2 | 0 | 0 | 2 |
+| `chamber;w=2;h=3` | **4** | **8** | **2** | **4** | **4** |
+
+⇒ all five bare tree kinds rise above zero — **with a NAMED spec, and only 2 of
+5 with the drawn one**, because the `w`/`h` domain runs to 6 and a 6×6
+chamber's reserved rectangle is the whole interior of a 10×10 room. A pinned
+(or drawn-over-its-whole-domain) default hides a real improvement. `keys=2` is
+unmoved: one chamber is ONE area.
+
+**C11, ruled and shipped with its test.** *A dropped area-bearing element takes
+its declared area with it — the partition re-runs without it and the graph
+re-adjudicates; a refusal there is the level's honest grade, by name.* It holds
+by construction (`declaredAreas` derives from `elements.ran`, and the drop
+rebuilds the model), so what shipped is the ROWS: the dropped partition is
+compared against an INDEPENDENT flood of the dropped room's live floor, `E0`
+appears in no area, adjacency or lock, and the graph refuses by name. Not
+vacuous — over the five tree kinds × 12 seeds at 20×20, **44 of 44 runs that
+accept with the chamber refuse without it**, every one with
+`no-area-at-that-key-level-can-hold-its-key`. And a real generated level
+reaches it: `winding` seed 5 at 20×20 fails its certification
+(`the-goal-approach-is-blocked`), drops the chamber, and ships as the graded
+refusal.
+
+**Cost and certification, against the biome default** (yield table, 120 cells
+each): the chamber PLACES 70/120 and certifies 68 of those (the default:
+60/120, 53); `--areas=1` acceptance goes **4/120 → 45/120**, every accepted
+graph also certifies, and the sweep costs **+33% wall clock**. Nothing threw,
+timed out or was harness-failed in either arm.
+
+⛔ **`chamber` IS OPT-IN ONLY** — it joins no biome default this arc, and every
+committed identity is byte-identical.
+
 ## ▶ LOAD IN WASM — what this page holds, run in the REAL recompiled game (TOOLING; ⚖ user, 2026-08-19)
 
 `watch.html` has always been able to run a **committed tape** in the real
