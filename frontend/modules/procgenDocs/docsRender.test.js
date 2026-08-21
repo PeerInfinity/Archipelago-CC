@@ -85,7 +85,12 @@ describe('⛓⛓ the anchors — two readers, 607 headings, one answer', () => {
         // ⛔ RE-PINNED, never widened — a pin that moves because somebody wrote
         // into what it measures is the pin WORKING (trap 410).
         // ⛓ 620 → 621: R9 slice 3's § (the splice + the drift) in seedling-bot.md.
-        expect(total).toBe(621);
+        // ⛓ 621 → 622: R9 slice 4's § (the derived `break` verb). ⚠ AND IT WENT
+        //   RED IN CI RATHER THAN LOCALLY, because the slice's own AFTER
+        //   capture was taken BEFORE the commit that wrote the § — slice 1's
+        //   own lesson ("take the AFTER capture after the LAST commit that can
+        //   move it") paid a second time, one artifact over.
+        expect(total).toBe(622);
     });
 
     it('⛔ uses OUR rule, not marked\'s slugger — they differ, and here is where', () => {
@@ -247,9 +252,10 @@ describe('⛓ the biggest document — the one the budget is about', () => {
         //   slice 1's (the room contract).
         // ⚠ 393 → 394: the per-tick slice's § in ▶ LOAD IN WASM. Same re-pin.
         // ⚠ 407 → 408: R9 slice 3's § — the splice + the drift.
+        // ⚠ 408 → 409: R9 slice 4's § — the derived `break` verb.
         const ids = idsOf(RENDERS.get('seedling-bot.md').html);
-        expect(ids).toHaveLength(408);
-        expect(new Set(ids).size).toBe(408);
+        expect(ids).toHaveLength(409);
+        expect(new Set(ids).size).toBe(409);
         expect(ids.filter((i) => i !== ghSlug(i))).toEqual([]);
     });
 

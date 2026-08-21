@@ -11754,3 +11754,8 @@ horizontal one every committed kill uses — i.e. it MOVES TAPES.** ⇒ pinned a
 finding in `breakVerb.test.js` (rows that go RED the day it is fixed, and are
 rewritten as the repair's own rows then), worked around by a correctly-numbered
 local helper, carried as a ⚖ ask.
+
+⛓ The live Pages row after this slice's deploy: **20 / 0, ALL PASS**
+(`check-seedling-wasm-pages.mjs --root=https://peerinfinity.github.io/Archipelago-CC`)
+— unmoved at slice 3's number, and worth running even though no ship path moved,
+because the roster the site's picker enumerates GREW by one tape.
