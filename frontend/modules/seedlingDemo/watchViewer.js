@@ -141,6 +141,21 @@ import { buildStagedTape } from './botDriverV1.js';
 import { buildLevelSet } from './levelSetExporter.js';
 import { planLevelSetChunks, validateLevelSet } from './levelSetValidator.js';
 import { createRunForStaging, rolesForStaging, solveStaging } from './tapeRunner.js';
+/**
+ * ⛓⛓⛓ R9 SLICE 2 — THE DIRECTOR, **IMPORTED**, NEVER RE-SPELLED (⚖ ruling 10).
+ *
+ * R5 built one page / N windows / zero re-boots after the first, and drove it
+ * from a Windows Playwright script; `seedlingDemo/director.js` has been its
+ * model since, with no imports of its own so that a browser can load it —
+ * and until this slice NOTHING in `frontend/` imported it. The boundary rules
+ * the page applies are that module's, called; a page that re-spelled them
+ * would be two directors agreeing until one was edited.
+ */
+import {
+    boundaryFindings, continuationAdmission, expandSequence, formatTapesParam,
+    PAGE_CHAINS, parseTapesParam, refusalsOnly, sequenceAdmission,
+    streamBoundaryFindings,
+} from './director.js';
 import {
     censusGoalOptions, censusWorld, defaultGoalsFromCensus, formatGoalsParam,
     harvestPresets, itemFlagsOf, ITEM_FORM_FIELDS, parseGoalsParam, readSolveParams,
@@ -545,6 +560,16 @@ function readParams() {
     return {
         gen,
         tape: q.get('tape'),
+        /**
+         * ⛓⛓⛓ R9 SLICE 2 — THE SEQUENCE, beside the single tape and in the
+         * ONE reader (⚖ ruling 10, §6 Q6). `,` is the page's list separator,
+         * already spelled by `?layers=` and `?goals=`; the decision is
+         * `director.parseTapesParam`'s, which is pure, tested, and keeps
+         * ABSENT (`null`) distinguishable from EMPTY (`[]`) — a `?tapes=`
+         * with nothing in it is a URL a reader can produce, and it must not
+         * silently become the single-tape arm.
+         */
+        tapes: parseTapesParam(q.get('tapes')),
         side: (q.get('side') || 'js').toLowerCase(),
         speed: Number(q.get('speed') || 1),
         // ⚠ RAW. `parseLayersParam` is where it is decided, and it is pure so
@@ -624,6 +649,10 @@ function resetPageChrome() {
     delete window.__editorManual;
     delete window.__editorGenerate;
     delete window.__editorGenerated;
+    // ⛓ R9 slice 2: and the SEQUENCE's, for the same reason — a `window 2 of
+    // 2` left standing over the arm you switched to describes a walk that is
+    // no longer on screen.
+    delete window.__editorSequence;
     // ⛓ And "an arm has finished mounting" is a claim about the arm that just
     // left. Cleared here, it becomes the honest thing to wait on: it reappears
     // only when the ARRIVING arm is done (see `mountArm`).
@@ -1385,6 +1414,13 @@ function makeRenderer(canvas) {
 }
 
 async function runJs(params, lifetime) {
+    /**
+     * ⛓⛓⛓ R9 SLICE 2 — `?tapes=` SELECTS THE SEQUENCE ARM, and `?tape=` is
+     * untouched. ⛔ ABSENT is not EMPTY: `?tapes=` written with nothing in it
+     * lands here as `[]` and gets the sequence arm's own refusal, not a silent
+     * fall-through to the single-tape one (`director.parseTapesParam`).
+     */
+    if (params.tapes !== null) return runJsSequence(params, lifetime);
     // ⛓ A pasted or uploaded tape has no path to navigate to, so it replays
     // IN PLACE — through the same `replayLoadedTape` hook every arm sets, and
     // against this same level source (`armPrelude`).
@@ -1393,6 +1429,315 @@ async function runJs(params, lifetime) {
     if (!lifetime.alive()) return undefined;
     return replayTape(tape, params.tape, params, levelSource,
         await fetchTraceSidecar(params.tape));
+}
+
+
+/**
+ * ══ ⛓⛓⛓ R9 SLICE 2 — THE SEQUENCE ARM (⚖ ruling 10) ═════════════════════
+ *
+ * ⚖ The user's own sentence, 2026-08-20: *"I want the second tape to continue
+ * from the game state at the end of the first tape. I don't want it to reload
+ * a fresh page. And I want it to work like this for both JS playback and wasm
+ * playback."*
+ *
+ * ⛓ THE GAME ALREADY DOES THIS, and that is why it is a small function.
+ * `Bot.botStart` re-arms the SAME world when the next tape's boot names its
+ * construction args — `if (bootLevel != Main.level || !atBootPosition())
+ * FP.world = new Game(bootLevel, bootX, bootY)` (`Bot.as:1722-1725`) — and its
+ * own comment names it *"the CONTINUATION path (the director's window
+ * boundaries)"* (`:2759-2766`). R5's Windows driver has driven N windows on
+ * one page since (`seedling-bot-replay-win.py --tapes`). What was missing was
+ * the PAGE doing it, on both sides.
+ *
+ * ── THE SHAPE ─────────────────────────────────────────────────────────
+ *
+ * `?tapes=a,b,c` → expand any chain HEADLINE to its segments (`PAGE_CHAINS`,
+ * asserted in node against `PLAYTHROUGH_CHAINS`) → fetch → **TIER 1**
+ * admission (`director.sequenceAdmission`, decidable from the tapes alone) →
+ * then, window by window, **TIER 2** (`director.continuationAdmission`) against
+ * the LIVE run before window k+1's first tick, and `collectRun(tape, src,
+ * {run})` to step the given run with that tape's held sets.
+ *
+ * ⛔ A REFUSAL STOPS THE SEQUENCE AND IS NAMED. Never a silent rebuild: the
+ * game WOULD rebuild, and a rebuild is not a continuation (⚖ §6 Q7).
+ *
+ * ── ⛓ WHY THE FRAMES ARE RE-INDEXED, AND WHY THE BOUNDARY FRAME IS DROPPED
+ *
+ * `overlaysFor`'s `frameAt(t)` indexes the frames array BY TICK, and every
+ * ledger the run keeps (`transitions`, `earnedClears`, `playerHits`, …) is
+ * numbered by `ticksCompleted`, which CONTINUES across a resumed window. So
+ * the combined frames are re-stamped to sequence-absolute ticks and window
+ * k+1's frame 0 is dropped: it is the same observation as window k's last —
+ * measured, `r8-d2-19`'s tick 864 and `r8-d2-20`'s tick 0 are both
+ * `L20 (200,72)` — and that is exactly the arithmetic
+ * `playthroughAcceptance.chainFindings` does with its stream slices
+ * (`864 + 781 = 1645`).
+ */
+const jsBlocksWhy = Object.freeze({
+    rng: 'the JS model keeps no LFSR position — `rng` is threaded to `createLevelRun` '
+        + 'and read by the Owl fight, never reported back. The wasm side answers this '
+        + 'row from `botSeam()`.',
+    seam: 'the JS model builds no seam envelope; `botSeam()` is the game\'s, and '
+        + '`segmentBootFromLatch` is what turns one into tape blocks.',
+});
+
+/**
+ * The live world, in the vocabulary `continuationAdmission` reads — the JS
+ * side's half of this section's docblock in `director.js`.
+ *
+ * ⛔ THE CLEARED SET IS **window 1's DECLARED persistence ∪ every
+ * `run.earnedClears` since**, and that formula is stated once, over there.
+ * Measured: `r8-d2-19` declares `{5:0, 8:0, 8:1, 10:0}` and earns
+ * `{19:1, 19:0}`; `r8-d2-20` declares exactly those six.
+ *
+ * ⚠ `seal_parts` IS A NAMED BOUND. `saveState` reports how many slots the run
+ * FILLED, never which seals — the identity is a rejection-sampled draw at
+ * chest open (`Chest.as:84-89`) — so the `save` row is answered only while the
+ * run has opened no chest, and is UNASSERTED by name once it has.
+ */
+function jsLiveEnvelope(run, bootPersistence, bootPins) {
+    const cleared = [];
+    const seen = new Set();
+    for (const c of [...(bootPersistence ?? []), ...run.earnedClears]) {
+        const k = `${c.level}:${c.tag}`;
+        if (seen.has(k)) continue;
+        seen.add(k);
+        cleared.push({ level: c.level, tag: c.tag });
+    }
+    const save = run.saveState;
+    const idx = (bools) => bools.flatMap((v, i) => (v ? [i] : []));
+    const blocks = { pins: [...(bootPins ?? [])] };
+    const why = { ...jsBlocksWhy };
+    if (save.sealSlotsEarned === 0) {
+        blocks.save = {
+            totem_parts: idx(save.totem_parts),
+            keys: idx(save.keys),
+            seal_parts: [...save.bootSealParts],
+        };
+    } else {
+        why.save = `the run has opened ${save.sealSlotsEarned} chest(s) and the seal in `
+            + 'each slot is a rejection-sampled draw the model does not predict '
+            + '(`levelRun.saveState`\'s own bound) — only the COUNT is knowable';
+    }
+    return { level: run.level, ctor: run.worldCtor, cleared, blocks, blocksWhy: why };
+}
+
+/**
+ * A queued member → the repo path it is fetched from. A member with a `/` is
+ * already a path (what `?tape=` carries); a bare name is a fixture, which is
+ * what a chain expands to.
+ */
+function tapePathFor(member) {
+    const m = String(member).replace(/^\/+/, '');
+    if (m.includes('/')) return m;
+    return `${DEFAULT_TAPE_DIR}/${m.endsWith('.json') ? m : `${m}.json`}`;
+}
+
+/**
+ * The nearest chain the roster DOES have that starts with a given tape — so a
+ * refusal carries its own next work order (R8 lesson 2, the cheapest planning
+ * instrument there is).
+ */
+function nearestChainFor(name) {
+    const bare = String(name).replace(/^.*\//, '').replace(/\.json$/, '');
+    for (const [id, segs] of Object.entries(PAGE_CHAINS)) {
+        if (segs.includes(bare) && segs.length > 1) return `?tapes=${id} (${segs.join(',')})`;
+    }
+    return null;
+}
+
+async function runJsSequence(params, lifetime) {
+    const { levelSource } = await armPrelude(params, lifetime);
+    const { names, expansions } = expandSequence(params.tapes);
+    const seq = {
+        asked: [...params.tapes],
+        expansions,
+        windows: [],
+        admitted: false,
+        refusal: null,
+        boundaries: [],
+    };
+    const stop = (reason, detail) => {
+        seq.refusal = { reason, detail };
+        window.__editorSequence = seq;
+        fatal(`the sequence stopped: ${reason}`, detail);
+        return seq;
+    };
+    if (names.length === 0) {
+        return stop('the queue is empty',
+            '`?tapes=` was written and names nothing. A sequence of zero tapes plays '
+            + 'nothing; use ?tape= for one.');
+    }
+
+    // ── fetch, then TIER 1 — before anything plays ───────────────────
+    const tapes = [];
+    for (const n of names) {
+        try {
+            // eslint-disable-next-line no-await-in-loop
+            tapes.push(await fetchJson(repoUrl(tapePathFor(n)), `tape ${n}`));
+        } catch (e) {
+            return stop(`the roster has no "${n}"`, e.message);
+        }
+        if (!lifetime.alive()) return seq;
+    }
+    const parsedTapes = tapes.map((t) => parseTape(t));
+    const tier1 = sequenceAdmission(parsedTapes.map((t, i) => ({ ...t, name: names[i] })));
+    seq.tier1 = tier1;
+    const refused1 = refusalsOnly(tier1);
+    if (refused1.length > 0) {
+        return stop('a window was refused at queue time',
+            refused1.map((f) => `${f.where}: ${f.what} — ${f.detail}`).join('\n\n'));
+    }
+
+    /**
+     * ⚠ THE HUD's EFFECTIVE-TERRAIN ROW READS WINDOW 1's RELAXATIONS. `parsed`
+     * is per-tape and the viewer holds one; a sequence whose windows declare
+     * DIFFERENT `noHazards` would draw the later ones' terrain against the
+     * first one's list. Said out loud rather than policed: a shrinking
+     * relaxation list is what a subtractive ladder looks like
+     * (`director.crutchScheduleFindings`), so refusing it would be wrong.
+     */
+    const relaxations = parsedTapes.map((t) => (t.noHazards ?? []).join('+'));
+    seq.mixedRelaxations = new Set(relaxations).size > 1 ? relaxations : null;
+
+    // ── the window loop, on ONE run ──────────────────────────────────
+    const frames = [];
+    const samples = [];
+    let run = null;
+    let offset = 0;
+    let last = null;
+    for (let k = 0; k < tapes.length; k += 1) {
+        if (k > 0) {
+            const live = jsLiveEnvelope(run, parsedTapes[0].persistence, parsedTapes[0].pins);
+            const found = continuationAdmission(parsedTapes[k], live, {
+                index: k, label: names[k], nearest: nearestChainFor(names[0]),
+            });
+            seq.boundaries.push({
+                index: k,
+                label: names[k],
+                live: { level: live.level, ctor: live.ctor, cleared: live.cleared },
+                admission: found,
+            });
+            const refusals = refusalsOnly(found);
+            if (refusals.length > 0) {
+                seq.windows.push({ index: k, label: names[k], refused: true });
+                return stop(`window ${k} ("${names[k]}") cannot continue window ${k - 1}`,
+                    refusals.map((f) => `${f.what} — ${f.detail}`).join('\n\n'));
+            }
+        }
+        // eslint-disable-next-line no-await-in-loop
+        const collected = collectRun(tapes[k], levelSource, k === 0 ? {} : { run });
+        if (collected.error) {
+            return stop(`window ${k} ("${names[k]}") threw mid-walk`, collected.error.message);
+        }
+        run = collected.run;
+        const isLast = k === tapes.length - 1;
+        const keep = isLast ? collected.frames.length : collected.frames.length - 1;
+        for (let i = 0; i < keep; i += 1) {
+            const f = collected.frames[i];
+            frames.push({ ...f, observation: { ...f.observation, t: offset + f.observation.t } });
+            samples.push(collected.samples[i]);
+        }
+        seq.windows.push({
+            index: k,
+            label: names[k],
+            from: offset,
+            to: offset + collected.parsed.tick_count,
+            ticks: collected.parsed.tick_count,
+            observations: collected.finished.ticks.length,
+            finished: {
+                transitions: collected.finished.transitions.length,
+                transports: collected.finished.transports.length,
+                grants: collected.finished.grants.length,
+                collected: collected.finished.collected.length,
+            },
+            endLevel: run.level,
+            endCtor: run.worldCtor,
+        });
+        /**
+         * ⛓ THE DIRECTOR'S OWN BOUNDARY CHECKS, over the MODEL's per-tick
+         * samples — `boundaryFindings` wants a `botStatus`-shaped readout on
+         * each side, and the model's is its last observation plus its item
+         * mirror. ⛔ `streamBoundaryFindings` is the one that can be believed
+         * (its own docblock): both sides are the currency the differential
+         * compares.
+         */
+        if (k > 0 && last) {
+            const b = seq.boundaries[seq.boundaries.length - 1];
+            b.stream = streamBoundaryFindings(
+                { ticks: last.finished.ticks }, { ticks: collected.finished.ticks },
+                { index: k - 1, label: names[k] },
+            );
+            b.status = boundaryFindings(
+                modelStatusOf(last), modelStatusOf(collected, 0),
+                { ticks: last.finished.ticks }, { index: k - 1, label: names[k] },
+            );
+        }
+        offset += collected.parsed.tick_count;
+        last = collected;
+        if (!lifetime.alive()) return seq;
+    }
+
+    seq.admitted = true;
+    seq.ticks = offset;
+    seq.observations = frames.length;
+    /**
+     * ⛓⛓⛓ THE STREAM ITSELF, ON THE READOUT — and `watchWasm`'s opposite rule
+     * is not being broken, it is being distinguished.
+     *
+     * There the readout publishes the DIFF and not the stream, because the
+     * comparator has both sides in the page and a few thousand observations
+     * through `__watch` would make every ship publish a megabyte. Here the
+     * CLAIM IS AN EQUALITY WITH AN OUTSIDE ORACLE — the headline `r8-d2`
+     * replayed alone — and the oracle lives in node, in the row. A digest
+     * computed in the page and compared to a digest computed in the row would
+     * be an ECHO (trap 269): it would agree with itself for any stream both
+     * sides happened to spell the same way. So the row takes the OBSERVATIONS
+     * and diffs them against its own `runTapeToStream`. 1646 of
+     * `{t, level, x, y}` is ~60 KB.
+     */
+    seq.stream = frames.map((f) => f.observation);
+    const combinedParsed = { ...parsedTapes[0], tick_count: offset };
+    const combined = {
+        parsed: combinedParsed,
+        frames,
+        samples,
+        // ⛔ The RUN's own return, with the combined observation stream in
+        // place of the last window's — every other field on it (transitions,
+        // transports, grants, the ledgers) is already sequence-absolute
+        // because `ticksCompleted` continues across a resumed window.
+        finished: { ...last.finished, ticks: frames.map((f) => f.observation) },
+        run,
+        error: null,
+    };
+    const label = `${names.join(' → ')} — ${names.length} window(s), one game state`;
+    return replayTape(combinedParsed, label, params, levelSource, null, null,
+        { precollected: combined, sequence: seq });
+}
+
+/**
+ * A `botStatus`-shaped readout OUT OF THE MODEL, for the two director checks
+ * that were written against the game's.
+ *
+ * ⚠ It carries what the model HAS and omits what it does not: no
+ * `dead_frames` (that is `continuationFindings`' input and belongs to the wasm
+ * row), no `persistence_cleared` beyond the run's earned rows. The absent
+ * fields make their checks report rather than pass, which is the module's own
+ * rule about an unasserted check.
+ */
+function modelStatusOf(collected, at = -1) {
+    const o = at < 0 ? collected.finished.ticks.at(-1) : collected.finished.ticks[at];
+    const inv = collected.run.inventory;
+    return {
+        level: o.level,
+        x: o.x,
+        y: o.y,
+        items: inv,
+        grants: [],
+        persistence_cleared: collected.run.earnedClears.map((c) => ({
+            level: c.level, tag: c.tag,
+        })),
+    };
 }
 
 /**
@@ -1710,7 +2055,9 @@ function mountLayerControls(on, redraw) {
  * `renderer.draw`, including every scrub frame.
  */
 async function replayTape(tape, label, params, levelSource, traceSource = null,
-    dangerQueries = null, { scratchPersistence = false, afterDraw = null } = {}) {
+    dangerQueries = null, {
+        scratchPersistence = false, afterDraw = null, precollected = null, sequence = null,
+    } = {}) {
     replayGeneration += 1;
     const myGeneration = replayGeneration;
     const canvas = $('canvas');
@@ -1750,7 +2097,29 @@ async function replayTape(tape, label, params, levelSource, traceSource = null,
      * MANUAL, a paste, an upload) scrubs exactly as it always did and a
      * committed tape's undeclared clear is still the refusal it should be.
      */
-    const collected = collectRun(tape, levelSource, { scratchPersistence });
+    /**
+     * ⛓⛓⛓ R9 SLICE 2 — **`precollected`, AND IT IS THE ONLY SEAM THE SEQUENCE
+     * NEEDS.** (⚖ ruling 10.)
+     *
+     * The SEQUENCE arm walks its N windows on ONE live run before the viewer
+     * mounts — window k+1 resumes window k's run through `createTapeStepper`'s
+     * `run` option — and hands the combined walk in here. ⛔ Nothing else
+     * changes: the rAF loop is not forked, the scrub, the HUD, the overlays,
+     * the markers and the trace pane all read the same `{frames, samples,
+     * finished, run}` shape they always did, and the combined frames are
+     * indexed by SEQUENCE-ABSOLUTE tick so `overlaysFor`'s `frameAt(t)` places
+     * a run-absolute ledger row exactly as it does for one tape.
+     *
+     * ⚠ THE BRIEF ASKED FOR AN END-OF-TAPE HOOK ON THE rAF LOOP INSTEAD, and
+     * this is the same claim collected the way this function already collects.
+     * Its own docblock above is the reason: *"Collect eagerly: a tape is at
+     * most a few thousand ticks and the whole point of scrubbing is that going
+     * BACK costs nothing."* A hook that collected window k+1 when the CURSOR
+     * reached the end of window k would make the scrub span the sequence only
+     * after you had watched it, and would put a second collection path inside
+     * the one loop that must never be forked. Said out loud in the as-built.
+     */
+    const collected = precollected ?? collectRun(tape, levelSource, { scratchPersistence });
     const { frames, samples, finished, run } = collected;
     if (collected.error) {
         fatal('the run threw before finishing — the viewer shows what it got',
@@ -1963,8 +2332,21 @@ async function replayTape(tape, label, params, levelSource, traceSource = null,
             + (unknown.length
                 ? `  ⚠ ${unknown.length} volume(s) NOT DRAWN — no renderer arm for their `
                 + `shape: ${unknown.join(', ')}`
-                : '');
+                : '')
+            + (sequence ? `  ·  ${sequence.windows.length} window(s), one game state` : '');
     }
+    /**
+     * ⛓⛓⛓ R9 SLICE 2 — THE SEQUENCE'S OWN READOUT, and it is STRUCTURAL.
+     *
+     * `check-seedling-editor-sequence.mjs` reads this, exactly as the other
+     * rows read `__editorSolve`/`__editorGenerate`/`__editorWasm`. It carries
+     * `window k of N` per window with that window's own `finished` summary,
+     * the admission findings each boundary was admitted by, and the
+     * director's `boundaryFindings`/`streamBoundaryFindings` over the MODEL's
+     * own per-tick samples — the same two functions the Windows driver's
+     * trace is asserted with, called, not re-spelled.
+     */
+    if (sequence) window.__editorSequence = sequence;
 
     /**
      * ⚠ THE OVERLAYS' OWN ABSENCES, REPORTED. Three of them, and every one
@@ -7701,19 +8083,28 @@ async function populatePicker(params, index) {
     sel.title = note;
     if (src) src.textContent = `roster: ${index.source}`;
     /**
-     * Load on select. A full navigation rather than an in-place swap: the
-     * wasm side cannot rewind the GAME (`botReset` forgets the tape, not the
-     * world — every tape needs a fresh page, which is the same rule the
-     * recording harness follows).
+     * Load on select. A full navigation rather than an in-place swap.
      *
-     * ⚠ THE SECOND HALF OF THIS REASON IS SPENT, AND THE FIRST IS NOT. It
-     * used to add "and reloading keeps both sides on one code path instead of
+     * ⚠ BOTH HALVES OF THE ORIGINAL REASON ARE NOW SPENT, and R9 slice 2
+     * spends the second one.
+     *
+     * The first was "reloading keeps both sides on one code path instead of
      * giving the JS side a teardown nobody tests" — the switch arc built that
-     * teardown and a browser row tests it, so that argument is gone. What
-     * stands is the wasm one, and picking a tape stays a navigation for a
-     * second reason worth keeping: it is an explicit "load something else",
-     * and the reload is what lets it BEAT the block `stagingForMount` would
-     * otherwise keep.
+     * teardown and a browser row tests it.
+     *
+     * ⛓⛓⛓ The second was *"the wasm side cannot rewind the GAME (`botReset`
+     * forgets the tape, not the world — every tape needs a fresh page)"*.
+     * ⛔ TRUE, AND NOT A REASON, because a CONTINUATION never rewinds: the
+     * next tape does not go back to a boot, it re-arms the world already
+     * standing. `botStart` rebuilds only when the next boot names other
+     * construction args (`Bot.as:1722-1725`), and its own comment calls it
+     * *"the CONTINUATION path (the director's window boundaries)"* (`:2759`).
+     * That is what `?tapes=` and the queue control beside this picker do, on
+     * both sides.
+     *
+     * What stands is neither: picking a tape stays a navigation because it is
+     * an explicit "load something else", and the reload is what lets it BEAT
+     * the block `stagingForMount` would otherwise keep.
      */
     sel.onchange = () => {
         const q = new URLSearchParams(window.location.search);
@@ -7721,6 +8112,67 @@ async function populatePicker(params, index) {
         q.set('side', params.side);
         window.location.search = q.toString();
     };
+    mountQueueControl(params, sel);
+}
+
+/**
+ * ⛓⛓⛓ R9 SLICE 2 — THE ORDERED ADD-TO-QUEUE CONTROL (⚖ ruling 10).
+ *
+ * ⛔ BESIDE the single-tape picker, never instead of it. What the picker gives
+ * you is "load something else"; what this gives you is "and then this one, on
+ * the same game". The queue is `?tapes=`, so a sequence is a LINK like every
+ * other view on this page — and the WRITER is here, the one place the page
+ * writes a tape selection into the bar.
+ *
+ * ⛓ THE PICKER'S OWN NOTE IS CORRECTED IN THE SAME BREATH (see it above): its
+ * navigation was justified by the wasm REWIND — *"the wasm side cannot rewind
+ * the GAME (`botReset` forgets the tape, not the world — every tape needs a
+ * fresh page)"*. ⛔ THAT IS THE HALF THIS SLICE SPENDS: a CONTINUATION needs
+ * no rewind at all, because it does not go back — `botStart` re-arms the same
+ * world (`Bot.as:1722-1725`, and `:2759` calls it "the CONTINUATION path").
+ * The reason that survives is the other one: picking a tape is an explicit
+ * "load something else", and the reload is what lets it beat the block
+ * `stagingForMount` would otherwise keep.
+ */
+function mountQueueControl(params, sel) {
+    const queued = params.tapes ? [...params.tapes] : [];
+    const bare = (v) => String(v).replace(/^.*\//, '').replace(/\.json$/, '');
+    const render = () => {
+        const { names, expansions } = expandSequence(queued);
+        $('queueList').textContent = queued.length === 0
+            ? 'queue: empty — pick a tape and press + queue'
+            : `queue: ${queued.join(' → ')}`
+                + (expansions.length
+                    ? `  (${names.length} window(s): ${names.join(' → ')})` : '');
+        $('queueRun').disabled = queued.length === 0;
+        $('queueClear').disabled = queued.length === 0;
+    };
+    /**
+     * ⛔ `set` WHEN THERE IS SOMETHING TO WRITE, `delete` WHEN THERE IS NOT —
+     * and `formatTapesParam` is what decides which (trap 478: a delete-then-set
+     * MOVES an existing key to the end of the bar, which a fixed point cannot
+     * see and a round trip can).
+     */
+    const write = (go) => {
+        const q = new URLSearchParams(window.location.search);
+        const value = formatTapesParam(queued);
+        if (value === null) q.delete('tapes'); else q.set('tapes', value);
+        q.set('side', params.side);
+        if (go) window.location.search = q.toString();
+        else window.history.replaceState(null, '', `${window.location.pathname}?${q}`);
+    };
+    $('queueAdd').onclick = () => {
+        queued.push(bare(sel.value));
+        render();
+        write(false);
+    };
+    $('queueClear').onclick = () => {
+        queued.length = 0;
+        render();
+        write(false);
+    };
+    $('queueRun').onclick = () => write(true);
+    render();
 }
 
 /**
@@ -7888,7 +8340,11 @@ async function mountArmBody(params, lifetime) {
         return;
     }
 
-    $('title').textContent = params.tape || '(no tape)';
+    /**
+     * ⛓ R9 SLICE 2: a SEQUENCE names its own windows, so the title is theirs.
+     */
+    $('title').textContent = (params.tapes && params.tapes.length > 0)
+        ? params.tapes.join(' → ') : (params.tape || '(no tape)');
     // The picker is populated even with no tape, so the page is a launcher
     // rather than an error when you arrive without one.
     const dir = params.tape
@@ -7900,7 +8356,13 @@ async function mountArmBody(params, lifetime) {
     // can come from, and they are fetched exactly as before.
     const picking = loadTapeIndex(dir, { withTapes: false })
         .then((index) => populatePicker(params, index));
-    if (!params.tape) {
+    /**
+     * ⛓⛓ R9 SLICE 2: `?tapes=` IS A TAPE SELECTION TOO. Without this the
+     * sequence arm would never be reached — a bare `?tapes=` URL carries no
+     * `?tape=` and would land in the no-tape refusal below, which is the
+     * right message for the wrong page.
+     */
+    if (!params.tape && params.tapes === null) {
         await picking;
         lifetime.report('no ?tape= given', () => fatal(
             'no ?tape= given — pick one above, or switch source to SOLVE',

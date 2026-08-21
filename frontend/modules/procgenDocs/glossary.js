@@ -2271,6 +2271,26 @@ export const TERMS = Object.freeze([
         seeAlso: ['seedling', 'seedling-differential', 'arm', 'lab-page'],
     }),
     t({
+        id: 'window',
+        term: 'a window',
+        aliases: ['a tape window', 'a continuation window'],
+        area: 'seedling',
+        plain: 'One tape in a sequence of tapes that all play on the SAME game, without '
+            + 'reloading it.',
+        detail: 'A [segment](#tape) inherits the state before it through its own boot '
+            + 'DECLARATION; a window inherits it because the game never stopped — the live '
+            + 'state IS the inheritance, which is strictly stronger (a declaration is a '
+            + 'claim the tape makes; a survived boundary is a fact about the game). ⛓ The '
+            + 'game does the continuing itself: `botStart` rebuilds the world ONLY when the '
+            + 'next tape\'s boot names other construction args, so a matching boot re-arms '
+            + 'the world already standing. ⛔ A later window may not declare anything the '
+            + 'live world does not already hold — a persistence list that differs by one '
+            + 'flag either clears one the world never earned or takes back one it did, and '
+            + 'both are rebuilds in disguise. It is REFUSED BY NAME, never silently rebuilt.',
+        where: [{ label: 'seedling-bot.md § The tape', doc: `${SEEDLING}#the-tape` }],
+        seeAlso: ['tape', 'seedling', 'arm'],
+    }),
+    t({
         id: 'seedling-differential',
         term: 'the differential',
         aliases: [],

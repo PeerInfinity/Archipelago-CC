@@ -453,9 +453,41 @@ export function createTapeStepper(tape, opts = {}) {
     const t = parseTape(tape);
     const {
         terrainStateAt = groundTerrain, onTick, levelSource, scratchPersistence = false,
+        /**
+         * ⛓⛓⛓ R9 SLICE 2 — **THE RESUME FACE**, and it is ONE option.
+         *
+         * ⚖ Ruling 10 (user, 2026-08-20): the second tape continues from the
+         * game state the first one ended in, with no fresh page. The GAME
+         * already does this — `botStart` re-arms the SAME world when the next
+         * tape's boot names its construction args (`Bot.as:1722-1725`), and
+         * `botReset` (the only thing that forgets a world) is called by nothing
+         * in this repo. This is the model's half of the same sentence.
+         *
+         * ⛔ WHAT IT SKIPS IS **`createRunForStaging` AND NOTHING ELSE.** The
+         * loop below is untouched, `heldKeysAt` is untouched, and
+         * `createRunForStaging` itself is untouched — a resumed window steps
+         * the GIVEN run with the next tape's held sets, which is legal because
+         * `run.advance(held)` is tape-agnostic (`levelRun.js`'s docblock) and
+         * is exactly what the two shipped live-run producer loops already do
+         * (`solverBot.solveSegment({run,…})`, `watchManual.createManualSession`).
+         *
+         * ⛔ AND IT IS AN `opts` FIELD, NOT A TAPE FIELD — 4b/slice 5's
+         * no-data-path property, kept: `parseTape` cannot spell it and
+         * `stagingFromTape` does not copy it, so no tape, preset, paste or
+         * upload can resume anything. Every pre-existing call site passes none
+         * and therefore stages its own run, which is what makes this addition
+         * byte-inert for the battery, the differential and every acceptance row
+         * by construction rather than by convention.
+         *
+         * ⚠ THE WINDOW'S OWN STAGING IS NOT APPLIED, AND THAT IS THE POINT.
+         * Applying it is what a REBUILD is. The caller is responsible for
+         * having admitted the window first — `director.continuationAdmission`
+         * refuses by name when the declared block is not the live world's.
+         */
+        run: resumeRun = null,
     } = opts;
 
-    if (!t.noclip && !levelSource) {
+    if (!t.noclip && !levelSource && !resumeRun) {
         throw new Error(
             'runTape: the tape has noclip=false and no opts.levelSource was given, '
             + 'so there is no collision geometry to run it against. Collision is the '
@@ -469,8 +501,9 @@ export function createTapeStepper(tape, opts = {}) {
     // ⛓ THE construction — hoisted to `createRunForStaging` (editor arc
     // slice 1) so the solver's own callers reach the same one. A parsed tape
     // IS a staging block plus inputs, so it is passed straight through.
-    const run = levelSource ? createRunForStaging(t, levelSource, { scratchPersistence }) : null;
-    if (!levelSource && t.grants.length > 0) {
+    const run = resumeRun
+        ?? (levelSource ? createRunForStaging(t, levelSource, { scratchPersistence }) : null);
+    if (!levelSource && !resumeRun && t.grants.length > 0) {
         throw new Error(
             'runTape: the tape declares grants but no opts.levelSource was given. The v1 '
             + 'engine has no level tracking, so it could not tell when the run entered a '

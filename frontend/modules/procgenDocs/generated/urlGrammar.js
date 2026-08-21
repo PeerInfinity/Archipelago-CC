@@ -102,6 +102,7 @@ export const URL_GRAMMAR = frz({
                 "source": "replay",
                 "speed": 1,
                 "tape": null,
+                "tapes": null,
                 "tick": null,
                 "tickWhy": null
             },
@@ -829,6 +830,28 @@ export const URL_GRAMMAR = frz({
                 {
                     "absentMeans": null,
                     "atDefault": "not written by this page",
+                    "codec": "director.parseTapesParam (a comma list; absent is null, empty is [])",
+                    "defaultField": "tapes",
+                    "defaultIsUndefined": false,
+                    "defaultValue": null,
+                    "name": "tapes",
+                    "retired": false,
+                    "terms": [
+                        "tape",
+                        "window"
+                    ],
+                    "via": [
+                        {
+                            "file": "frontend/modules/seedlingDemo/watchViewer.js",
+                            "fn": "readParams",
+                            "how": "get",
+                            "role": "read"
+                        }
+                    ]
+                },
+                {
+                    "absentMeans": null,
+                    "atDefault": "not written by this page",
                     "codec": "a comma list, validated against the palette",
                     "defaultField": "roster",
                     "defaultIsUndefined": false,
@@ -959,7 +982,7 @@ export const URL_GRAMMAR = frz({
                 {
                     "file": "frontend/modules/seedlingDemo/watchViewer.js",
                     "fn": "readParams",
-                    "line": 535,
+                    "line": 550,
                     "role": "read"
                 },
                 {

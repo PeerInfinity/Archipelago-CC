@@ -659,3 +659,76 @@ describe('the incremental stepping face (watch page)', () => {
             .toThrow(/not a known key name/);
     });
 });
+
+/**
+ * ⛓⛓⛓ R9 SLICE 2 — THE RESUME FACE (⚖ ruling 10).
+ *
+ * ⛔ THE CLAIM IS AGAINST THE HEADLINE, not against itself. `r8-d2` is the two
+ * segments' inputs driven by ONE model run; until this slice no run had played
+ * both as windows. So window 1 is stepped, window 2 RESUMES its run, and the
+ * concatenation is diffed against the headline replayed alone — a fixed point
+ * over the resume face would have tested self-consistency and nothing else
+ * (trap 250).
+ */
+describe('createTapeStepper — the resume run', () => {
+    const levelSource = atlasLevelSource();
+    const stream = (t, opts) => {
+        const stepper = createTapeStepper(t, opts);
+        const ticks = [];
+        let done = null;
+        for (let r = stepper.next(); ; r = stepper.next()) {
+            if (r.done) { done = r.value; break; }
+            ticks.push(r.value.observation);
+        }
+        return { ticks, done };
+    };
+
+    it('⛓⛓⛓ [r8-d2-19, r8-d2-20] on ONE run IS the headline r8-d2, tick for tick', () => {
+        const headline = runTapeToStream(loadTape('r8-d2'), { levelSource });
+        // ⛓ The run comes out of the per-tick hook — the one seam a claim may
+        //   read live state through (`createTapeStepper`'s own docblock).
+        let live = null;
+        const w1 = stream(loadTape('r8-d2-19'),
+            { levelSource, onTick: (t, s, h, r) => { live = r; } });
+        const seen = w1.ticks;
+        const w2 = stream(loadTape('r8-d2-20'), { run: live });
+        const cat = [
+            ...seen.slice(0, 864),
+            ...w2.ticks.map((o) => ({ ...o, t: o.t + 864 })),
+        ];
+        expect(cat).toHaveLength(headline.ticks.length);
+        let firstDiff = -1;
+        for (let i = 0; i < cat.length; i += 1) {
+            if (JSON.stringify(cat[i]) !== JSON.stringify(headline.ticks[i])) {
+                firstDiff = i;
+                break;
+            }
+        }
+        expect(firstDiff, 'the first tick at which the two windows differ from the headline')
+            .toBe(-1);
+    });
+
+    it('⛓ the resumed window CONTINUES the run rather than staging its own', () => {
+        let live = null;
+        stream(loadTape('r8-d2-19'), { levelSource, onTick: (t, s, h, r) => { live = r; } });
+        // The world after window 1 was CONSTRUCTED at r8-d2-20's boot — the
+        // game's own continuation test (`Bot.as:1722-1725`, `:1817`).
+        expect(live.level).toBe(20);
+        expect(live.worldCtor).toEqual(loadTape('r8-d2-20').boot ? { x: 192, y: 64 } : null);
+        const before = live.ticksCompleted;
+        const w2 = stream(loadTape('r8-d2-20'), { run: live });
+        expect(w2.ticks[0]).toEqual({ t: 0, x: 200, y: 72, level: 20 });
+        // ⛔ ONE run: `ticksCompleted` continued rather than restarting at 0,
+        //    which is what makes every ledger row sequence-absolute.
+        expect(live.ticksCompleted).toBeGreaterThan(before);
+    });
+
+    it('a resumed window needs no levelSource — it stages nothing', () => {
+        let live = null;
+        stream(loadTape('r8-d2-19'), { levelSource, onTick: (t, s, h, r) => { live = r; } });
+        expect(() => createTapeStepper(loadTape('r8-d2-20'), { run: live })).not.toThrow();
+        // …and without one it is the pre-existing refusal, unchanged.
+        expect(() => createTapeStepper(loadTape('r8-d2-20'), {}))
+            .toThrow(/no opts.levelSource/);
+    });
+});

@@ -48,8 +48,8 @@ export const INSTRUMENTS = frz({
             "id": "census"
         },
         {
-            "browser": 19,
-            "count": 25,
+            "browser": 20,
+            "count": 26,
             "id": "check"
         },
         {
@@ -164,13 +164,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 210,
-        "browser": 72,
+        "blockStyle": 211,
+        "browser": 73,
         "cited": 63,
-        "files": 229,
+        "files": 230,
         "lineStyle": 19,
-        "withDocblock": 229,
-        "withFlags": 138
+        "withDocblock": 230,
+        "withFlags": 139
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -1343,6 +1343,32 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "check-seedling-editor-refusal — THE EDITOR ARC SLICE 10 ACCEPTANCE ROW.",
             "path": "scripts/procgen/check-seedling-editor-refusal.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "check",
+                "refusalsAt",
+                "report"
+            ],
+            "browser": true,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host"
+            ],
+            "file": "check-seedling-editor-sequence.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                }
+            ],
+            "oneLiner": "check-seedling-editor-sequence — A SEQUENCE OF TAPES, ON ONE GAME STATE.",
+            "path": "scripts/procgen/check-seedling-editor-sequence.mjs"
         },
         {
             "argvHelpers": [

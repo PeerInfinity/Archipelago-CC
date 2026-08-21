@@ -810,13 +810,24 @@ export function sampleMovers(run) {
  * page's GENERATE arm, scrubbing a tape its own scratch solve produced. The
  * signature stays positional-compatible, so every existing call gets `false`.
  */
-export function collectRun(tape, levelSource, { scratchPersistence = false } = {}) {
+export function collectRun(tape, levelSource, {
+    scratchPersistence = false, run: resumeRun = null,
+} = {}) {
     const parsed = parseTape(tape);
     const samples = [];
     let run = null;
     const stepper = createTapeStepper(tape, {
         levelSource,
         scratchPersistence,
+        /**
+         * ⛓⛓⛓ R9 SLICE 2 — forwarded, and nothing else. See
+         * `createTapeStepper`'s own docblock for what a resume run is and why
+         * it is an option rather than a tape field. The ONE caller that passes
+         * it is the page's SEQUENCE arm, continuing window k+1 on the world
+         * window k ended in; every existing call passes none and stages its
+         * own run exactly as it always did.
+         */
+        run: resumeRun,
         onTick: (tick, state, held, r) => {
             run = r;
             // A tape with no run (the v1 engine, no levelSource) has no

@@ -9352,6 +9352,27 @@ export function createLevelRun({
         get level() { return level; },
         get world() { return world; },
         get state() { return state; },
+        /**
+         * ⛓⛓⛓ R9 SLICE 2 — THE ARGS THIS WORLD WAS **CONSTRUCTED** WITH, and
+         * they are not `state`.
+         *
+         * The game's own continuation test is `bootLevel == Main.level &&
+         * atBootPosition()`, and `atBootPosition` compares
+         * `Main.playerPositionX/Y` — the SPAWN arguments the current `Game`
+         * was built from, never where the player is standing now
+         * (`Bot.as:1722-1725`, `:1817`). `worldCtor` is this run's copy of
+         * exactly those: written from `boot` at construction and rewritten by
+         * every world swap (`enterWorld`) and every ending re-boot, which is
+         * where the game writes its pair too.
+         *
+         * ⛔ EXPOSED FOR THE SEQUENCE'S ADMISSION CHECK and nothing else. A
+         * window that boots `(x,y)` continues the live world only if these are
+         * that pair; comparing `state` instead would ask "is the player
+         * standing on the boot", which is a different question with the same
+         * shape — the half-tile `SPAWN_OFFSET` alone separates (192,64) from
+         * the (200,72) `r8-d2-19` ends at.
+         */
+        get worldCtor() { return { ...worldCtor }; },
         get transitions() { return transitions; },
         /** The `transitions` entries a PIT FALL produced, not a teleporter. */
         get transports() { return transports.map((r) => ({ ...r })); },

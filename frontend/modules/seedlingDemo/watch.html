@@ -315,6 +315,10 @@
   label { color: #8a8a98; display: flex; gap: 4px; align-items: center; }
   #pick { display: flex; gap: 6px; align-items: center; margin: 4px 0; }
   #pick label { color: #8a8a98; }
+  #queueBox { margin-left: 10px; }
+  #queueBox button { background: #262630; color: #d8d8e0; border: 1px solid #34343e; padding: 2px 6px; }
+  #queueBox button:disabled { opacity: .45; }
+  #queueList { margin-left: 6px; }
   #tapes { background: #1e1e26; color: #d8d8e0; border: 1px solid #34343e; padding: 2px 6px; max-width: 60vw; }
   #sidenote { color: #8a8a98; font-size: 11px; }
   #progress { height: 4px; background: #1a1a20; margin-top: 6px; }
@@ -481,6 +485,20 @@
         <option value="wasm">wasm — the real recompiled game</option>
       </select>
       <span id="sidenote"></span>
+      <!-- ⛓⛓⛓ R9 SLICE 2 — THE QUEUE (⚖ ruling 10). An ORDERED add-to-queue
+           control beside the single-tape picker, not instead of it: picking a
+           tape stays a navigation (see `loadTapeIndex`'s note, whose FIRST
+           half — the JS side has no teardown — is spent and whose second, the
+           wasm REWIND, continuation does not need either; the reason that
+           stands is that it is an explicit "load something else"). ⛔ The
+           queue writes `?tapes=`, so a sequence is a LINK exactly as every
+           other view on this page is. -->
+      <span id="queueBox">
+        <button id="queueAdd">+ queue</button>
+        <button id="queueRun" disabled>&#9654; run sequence</button>
+        <button id="queueClear" disabled>clear</button>
+        <span id="queueList" class="note"></span>
+      </span>
     </span>
     <!-- ⛓⛓⛓ ▶ LOAD IN WASM (⚖ user, 2026-08-19) — a SEPARATE BUTTON, not a
          fifth SOURCE and not a sixth engine. SOLVE, MANUAL and GENERATE each

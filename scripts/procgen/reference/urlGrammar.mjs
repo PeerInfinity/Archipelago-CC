@@ -173,6 +173,17 @@ const PARAM_NOTES = {
     height: { field: { watch: 'size.height', lab: 'height' }, codec: 'intParam', terms: ['room-size', 'skeleton'] },
     fill: { field: { watch: 'fill', lab: null }, codec: 'fillByName', terms: ['room-fill', 'level'] },
     tape: { field: { watch: 'tape', lab: null }, codec: 'a path to a tape JSON', terms: ['tape'] },
+    /**
+     * ⛓⛓⛓ R9 SLICE 2 (⚖ ruling 10) — the SEQUENCE, beside the single tape. A
+     * comma list of tape paths, bare fixture names, or CHAIN IDS (a headline
+     * expands to its segments through `director.PAGE_CHAINS`); the windows
+     * play on ONE game state, no reload.
+     */
+    tapes: {
+        field: { watch: 'tapes', lab: null },
+        codec: 'director.parseTapesParam (a comma list; absent is null, empty is [])',
+        terms: ['tape', 'window'],
+    },
     side: { field: { watch: 'side', lab: null }, codec: 'a lower-cased enum', terms: ['seedling-differential'] },
     speed: { field: { watch: 'speed', lab: null }, codec: 'Number()', terms: ['playback-speed', 'view-setting'] },
     layers: { field: { watch: 'layers', lab: null }, codec: 'parseLayersParam (a comma list)', terms: ['overlay-layer'] },
@@ -211,6 +222,7 @@ const DEFAULTS_ON_EMPTY = {
         ...(await import('../../../frontend/modules/seedlingDemo/watchSolve.js')).readSolveParams(''),
         ...(await import('../../../frontend/modules/seedlingDemo/watchManual.js')).readViewParams(''),
         tape: null,
+        tapes: null,
         side: 'js',
         speed: 1,
         layers: null,
