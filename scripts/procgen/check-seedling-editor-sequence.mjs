@@ -235,12 +235,30 @@ check((granted.seq?.windows ?? []).length === 0,
 // ══ 7. THE CODEC ROUND-TRIPS THROUGH THE PAGE'S OWN WRITER ══════════════
 await page.goto(`${origin}${PAGE_PATH}?tape=frontend/modules/seedlingDemo/fixtures/tapes/`
     + 'r8-d2-19.json&side=js');
-await page.waitForFunction(() => !document.getElementById('queueAdd').disabled
-    && !document.getElementById('tapes').disabled, null, { timeout: 120000 });
-await page.selectOption('#tapes', 'frontend/modules/seedlingDemo/fixtures/tapes/r8-d2-19.json');
-await page.click('#queueAdd');
-await page.selectOption('#tapes', 'frontend/modules/seedlingDemo/fixtures/tapes/r8-d2-20.json');
-await page.click('#queueAdd');
+/**
+ * ⛔⛔ THE PICKER IS SET WITHOUT `selectOption`, AND THE FIRST CUT OF THIS ROW
+ * IS WHY. `#tapes`'s own `onchange` assigns `window.location.search`, which
+ * NAVIGATES — so a `selectOption` here tears the page down and the `#queueAdd`
+ * click lands on a document that is reloading. It passed against a warm server
+ * and failed against a cold one, which is the shape of every timing-luck green
+ * there is. The queue control reads `sel.value`, so setting the value is
+ * exactly what a reader picking a tape leaves behind, minus the navigation.
+ *
+ * ⚠ AND THE WAIT IS FOR THE QUEUE CONTROL TO HAVE MOUNTED, not for
+ * `#queueAdd` to be enabled: that button is never disabled, so waiting on it is
+ * a condition the PREVIOUS state already satisfies — not a wait at all.
+ */
+await page.waitForFunction(
+    () => !document.getElementById('tapes').disabled
+        && /^queue:/.test(document.getElementById('queueList').textContent),
+    null, { timeout: 120000 });
+const pick = async (name) => {
+    await page.evaluate((v) => { document.getElementById('tapes').value = v; },
+        `frontend/modules/seedlingDemo/fixtures/tapes/${name}.json`);
+    await page.click('#queueAdd');
+};
+await pick('r8-d2-19');
+await pick('r8-d2-20');
 const written = await page.evaluate(() => window.location.search);
 check(/[?&]tapes=r8-d2-19%2Cr8-d2-20|[?&]tapes=r8-d2-19,r8-d2-20/.test(written),
     '⛓ CLAIM 7 — the queue control WRITES `?tapes=` in order, and it is a LINK',

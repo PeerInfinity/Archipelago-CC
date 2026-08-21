@@ -3411,6 +3411,23 @@ refusal on the editor-generate gate fails BY NAME instead of after 300 seconds.
 and still moves every payload that RECORDS a refusal** — A3 moved four identity
 artifacts by one `reasonText` line each, ⚖ ruled to stand as a second, different
 class of mover.
+**Slice 2 (the tape SEQUENCE, ⚖ ruling 10) SHIPPED 2026-08-20**, `60fc17bf8..`:
+`?tapes=a,b,c` on `watch.html`, both engines, the windows stepping ONE live run
+with NO reload — `[r8-d2-19, r8-d2-20]` reproduces the headline `r8-d2` **tick
+for tick** (1646 observations, first differing tick −1) and ends equal, which no
+run had ever done: the chain had only ever been checked by arithmetic over a
+single model run. `director.js` is IMPORTED by the page for the first time since
+R5 built it. ⛔ Carried off, three: **the kickoff's admission rule refused the
+slice's own subject** — a staged segment's declared block is a LATCH, so the
+ruled rule became *admitted iff it MATCHES the live state, refused BY NAME
+otherwise* (trap 470 again); **an equality claim can be blind to the mutant it
+was written for** — a resume face that silently re-staged reproduced the
+headline byte for byte, because every chain in the roster is cut at a level
+ARRIVAL where a boot block reconstructs the world exactly, so ONE-RUN had to be
+asserted directly; and **a segment's `persistence` carries two different
+things** — a latch of its predecessor and a FORWARD DECLARATION of a clear its
+own walk will earn — which is why `act2-the-sword` is not continuable past
+window 4 as recorded, with the next work order named.
 
 ## 6. Everything else (unchanged queues)
 

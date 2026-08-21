@@ -2588,6 +2588,15 @@ with no grant and no clear list) rather than the stronger "zero re-boots"
 one. A window that really continues needs the SAME boot args as the world it
 is continuing in, and then `dead_frames` on it is 0.
 
+### ⛓ …and R9 slice 2 made the PAGE a director (the same lineage, one page on)
+
+R5's director drove N windows on ONE page from a Windows Playwright script, and
+`seedlingDemo/director.js` was its model — with no imports of its own so a
+browser could load it, and nothing in `frontend/` ever importing it. R9 slice 2
+is the page doing it: `?tapes=a,b,c` on `watch.html`, both engines, the windows
+stepping ONE live run with no reload. The rules are that module's, imported. See
+the R9 § below.
+
 ### ⚖ R5 slice 2 ruling: ZERO BUILDS IS OVER
 
 The user ruled §6.5 and §6.6 at slice 2's close (kickoff §13). **One AS3 batch
@@ -11302,3 +11311,87 @@ to die of an uncaught `TimeoutError` after its whole 300-second budget when the
 page refused a form at a press; `waitOrRefusal` now reports it as a named failure
 quoting `#status`. Measured by mutant: **14 named FAILs** where slice 0's mutant
 (c) got one timeout and 17 silent passes.
+
+### Slice 2 — A SEQUENCE OF TAPES, AS A CONTINUATION (`f5e030afc` … `3d6cfd7a6`)
+
+⚖ The user's own sentence: *"I want the second tape to continue from the game
+state at the end of the first tape. I don't want it to reload a fresh page. And
+I want it to work like this for both JS playback and wasm playback."*
+
+`?tapes=a,b,c` beside `?tape=`, an ordered add-to-queue control beside the
+picker, and a chain HEADLINE that expands to its segments through a browser-safe
+constant checked in node against `PLAYTHROUGH_CHAINS`. Both engines.
+
+**⛓⛓⛓ THE CLAIM.** `?tapes=r8-d2` → `[r8-d2-19, r8-d2-20]` on ONE live run
+produces the headline `r8-d2` replayed alone **tick for tick** — 1646
+observations, first differing tick −1 — and ends equal. `r8-d2` has always been
+the two segments' inputs driven by one MODEL run, checked since by arithmetic
+(`chainFindings`' sum and stream slices, 864 + 781 = 1645). No run had ever
+played both windows as one.
+
+**THE ADMISSION RULE, AND THE ONE IT REPLACES.** The brief said a later window
+declaring `persistence`/`grants` is refused by name — `windowsFrom`'s rule.
+Measured on the slice's own subject: `r8-d2-20` declares SIX clears, which are
+exactly `r8-d2-19`'s four DECLARED plus the two it EARNS. Its `rng`, `save` and
+`seam` are latches of the same world. Under that wording the subject is refused
+and the ruling is unreachable (trap 470 — two settled rulings may not compose).
+⚖ Ruled: **a later window's declared staging is admitted iff it MATCHES the live
+state; a mismatch is REFUSED BY NAME, never silently rebuilt.** `persistence`
+must equal the live cleared set exactly — a superset clears a flag the world
+never earned, a subset takes back one it did, and `botStart` resets every tag
+first, so both are rebuilds in disguise.
+
+Two tiers, because the live world does not exist until window k has played:
+**tier 1** at queue time (names resolve, no later-window grants, ends-at-rest
+REPORTED with the keys named) and **tier 2** before window k+1's first tick —
+the game's own test, `boot.level == the live level` and `boot.x/y` == the
+CONSTRUCTION args (`Bot.as:1722-1725`, `atBootPosition` `:1817`), then latch
+equality. The live state is `botSeam()` → `segmentBootFromLatch` on the wasm
+side and, on the JS side, `run.worldCtor` plus **window 1's declared persistence
+∪ every `run.earnedClears` since**. A row the JS side cannot answer for (`rng`,
+`seam`) is UNASSERTED **by name**, never passed.
+
+**⛔ ENDS-AT-REST IS REPORTED, NOT REFUSED**, and the subject measured that too:
+`r8-d2-19`'s last span is `{down 803..864}`, held through `tick_count`, and the
+walk is right — the headline holds `down` from 803 to 891 across the same
+instant. The rule is a WASM-side authoring rule (FlashPunk's `Input` is a static
+nothing clears); the JS model recomputes `heldKeysAt` every tick. So the row
+NAMES THE KEYS, which is the list the wasm boundary has to release.
+
+**⛔⛔ AND THE STREAM CLAIM CANNOT SEE A RE-STAGE.** A build whose resume face
+silently re-staged reproduced the headline **byte for byte** — first differing
+tick −1. `r8-d2`'s cut is a level ARRIVAL, so the world was freshly constructed
+on that tick and the player is on the spawn AT REST, which is exactly what
+`r8-d2-20`'s boot block reconstructs; and since R1 every chain in the roster has
+been cut at an arrival. ⇒ what gates it is that it is the SAME RUN: window 2's
+`finished` carries window 1's transition too, `earnedClears` is five rows, and
+`ticksCompleted` is 1645. Both a unit row and a browser claim ask that directly.
+
+**THE WASM SIDE.** `shipToWasm` takes `windows`; `freshFrame()` and the human
+▶ Start happen ONCE. Per window k+1 on the SAME frame: release the keys window k
+left held (the driver's own `keyup`s at the driver's own targets; `moved at
+boundary` measured either way), read the latch, ADMIT, `botLoadTape` →
+`botStart` → poll `finished` → a SECOND `botDrain` → the per-window verdict →
+`continuationFindings`. Each drain is its own buffer starting at tick 0, so the
+concatenation offsets by the running sum of `tick_count` and drops each window's
+duplicated first observation. `WASM_STAGES` gains `tape k/N`, `running k/N`,
+`finished k/N`, `drain k/N` and `boundary k/N`; one window is byte-identical to
+the old list. ⛔ The never-press-Start law is untouched — it is about the SWF's
+Start, once per page.
+
+**⛓ A FINDING ABOUT THE ROSTER, MEASURED BY A MUTANT.** `act2-the-sword`
+continues for FOUR boundaries and stops at `r7-act2-5`. With tier 2 disabled it
+steps and throws at tick 1067: *"the removal of bob@48,80 … OPENS 1 kill lock(s)
+in level 5 [{5,0}] … and the tape DECLARES no clear for them."* ⇒ `{5,0}` is a
+kill lock **that segment's own walk opens**, carried as a boot `persistence`
+entry because `levelRun` refuses to compute one itself. So a segment's declared
+persistence carries TWO different things — a LATCH of its predecessor's state,
+which must match, and a FORWARD DECLARATION of a clear its own walk will earn,
+which must not — and latch equality cannot tell them apart. The refusal is still
+correct (as a window it would enter L5 with the lock already open), so
+`act2-the-sword` is not continuable past window 4 AS RECORDED. Next work order:
+re-record without the forward declaration through the v9 timed `at` channel, or
+a tape field that marks one.
+
+`check-seedling-editor-sequence.mjs` — 20 claims. The Windows ship row gains a
+fourth arm. ZERO tapes, traces or expectations moved.
