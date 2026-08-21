@@ -80,6 +80,18 @@ import {
 import { SPINNER, hammerHitsPlayer } from './spinner.js';
 import { KILL_ARM_POLICY } from './enemyDamage.js';
 import { SLASH_HIT_TICKS, SLASH_REACH, distanceRectPoint, slashRect } from './presses.js';
+/**
+ * ⛓⛓⛓ R9 SLICE 4 — THE ROCK'S OWN TRANSCRIPTION, ASKED RATHER THAN COPIED.
+ * `rockBreaksUnder` is `hit(_t)`'s test (`rockType <= hasGhostSword ? 1 : 0`),
+ * `WAIT_AFTER_PRESS_TICKS` is the LEG's promise and `assertWaitCovers` is the
+ * check that a leg keeps it. ⛔ None of the three numbers is retyped here
+ * (trap 89): the module that transcribed `BreakableRock.as` owns them, and the
+ * one that owns `HIT_TO_GONE_TICKS`' ±1 is the one that must say how long a
+ * wait has to be.
+ */
+import {
+    WAIT_AFTER_PRESS_TICKS, assertWaitCovers, rockBreaksUnder,
+} from './breakableRocks.js';
 import {
     bodyKillRegions, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
 } from './dangerMap.js';
@@ -352,6 +364,36 @@ export const OBSTACLE_STRATEGIES = Object.freeze({
      * mechanism, one executor, one ledger entry.
      */
     'solid:chest': 'chest',
+    /**
+     * ⛓⛓⛓ ⚖ R9 SLICE 4 — **THE DERIVED `break` VERB**, and the ROW is the half
+     * of it the route was waiting for.
+     *
+     * The engine has modelled the swing since R5 slice 5 (`levelRun.js`'s
+     * `BreakableRock` arm: `rockBreaksUnder`, `hitRock`, the out-of-band
+     * persistence write) and `presses.PRESS_ARM_POLICY.BreakableRock` has said
+     * `modelled` ever since. What did not exist was a SOLVER row: a rock press
+     * was named by OEL COORDINATE in `botDriverV2`'s hand-written spear arm, so
+     * to the live solver a rock was stone — with the sword and without it.
+     *
+     * ⛔ MEASURED, TWICE, BEFORE THIS ROW EXISTED. Route-survey step 12 (L3 out
+     * of L11) is *"Obstacle: solid:breakablerock (breakablerock@96,112). No
+     * strategy row exists for this obstacle"* — and `breakablerock@96,112` CUTS
+     * L3, so the room has no way round it. And arc 5 slice 5's probe 1 put a
+     * rock on the short arc of a cycle and got 244 ticks in BOTH arms of the
+     * requirements differential: *"to this solver the rock is a WALL"*.
+     *
+     * ⛓ **TWO TAGS, ONE VERB** — `shieldlock`/`shieldlocknorm`'s own lesson
+     * (R8 slice 7) one family over. `Game.as:2158` builds the
+     * `breakablerockghost` family with `rockType = 1` and everything else with
+     * the default 0, so the two census tags are ONE AS3 class differing in the
+     * field that decides which weapon breaks it. A table that knew only the
+     * plain tag would answer *"No strategy row exists"* for a ghost rock —
+     * which is a sentence about the CATALOGUE when the fact is about the
+     * INVENTORY. With both rows the ghost rock refuses BY NAME instead, and
+     * names the ghost sword as its next work order.
+     */
+    'solid:breakablerock': 'break',
+    'solid:breakablerockghost': 'break',
     'solid:magicallock': 'kill',
     // A button guarding the frontier is L4's own shape: the room's answer
     // starts with HOLDING it (the hand-authored leg's `hold` mechanic).
@@ -451,6 +493,15 @@ export const STRATEGY_EXECUTORS = Object.freeze({
     fight: execFight,
     keylock: execKeylock,
     touch: execTouch,
+    /**
+     * ⛓⛓⛓ ⚖ R9 SLICE 4 — the first executor whose whole effect is a WALL GOING
+     * AWAY, and the first one that needs NO derivation of a moment: a rock is
+     * STATIC, so a strike stance is a reachable cell plus a facing and there is
+     * no forecast to consult and no `previewWalk` per opportunity to pay for.
+     * `kill`'s press arm derives WHEN; this derives only WHERE, and then waits
+     * out an animation whose length the transcription already owns.
+     */
+    break: execBreak,
 });
 
 /**
@@ -577,6 +628,7 @@ function resolveObstacleStrategy(run, strategy, obstacle, contacts, aim, allowTe
     if (strategy === 'fight') return resolveFightStrategy(run, obstacle, contacts, blocked);
     if (strategy === 'keylock') return resolveKeylockStrategy(run, obstacle, contacts, blocked);
     if (strategy === 'touch') return resolveTouchStrategy(run, obstacle, contacts, blocked);
+    if (strategy === 'break') return resolveBreakStrategy(run, obstacle, contacts, blocked);
     if (strategy === 'weigh') return resolveWeighStrategy(run, obstacle, contacts, blocked);
     if (strategy !== 'hold') return null;
     return resolveHoldStrategy(run, obstacle, contacts, blocked);
@@ -4869,6 +4921,365 @@ function execTouch(run, perTick, resolved, ctx) {
         + `of ${bound} ticks (\`opensOnTick\` ${resolved.window} + slack), and the snap `
         + `${snappedAt === null ? 'NEVER FIRED — the pinned box never reached the touch '
             + 'rect' : `fired at tick ${snappedAt}`}.`);
+}
+
+/**
+ * ⛔⛔⛔ **R9 SLICE 4 — THE SLASH FACING, IN THE GAME'S OWN NUMBERING, AND WHY
+ * THIS FUNCTION EXISTS BESIDE `facingToward` INSTEAD OF REPLACING IT.**
+ *
+ * `presses.js` transcribes `Player.direction` as **RIGHT 0 · UP 1 · LEFT 2 ·
+ * DOWN 3** (`playerPhysicsV2.nextDirection` is `sprites()`'s own chain and
+ * agrees). `solverBot.FACING_KEYS` is `{0:right, 1:down, 2:left, 3:up}` and
+ * `facingToward` returns `dy >= 0 ? 1 : 3` — **the vertical pair is SWAPPED**
+ * relative to the game.
+ *
+ * ⛓ THE PAIR IS SELF-CONSISTENT AS A *KEY* MAP and wrong as a *direction*:
+ * `FACING_KEYS[facingToward(...)]` really does hold the key that walks toward
+ * the target. What is wrong is the OTHER consumer — `slashRectToward` feeds the
+ * same integer to `presses.slashRect`, so for a target directly ABOVE or BELOW
+ * the rect is computed on the OPPOSITE side. Measured, at the origin:
+ *
+ *   target BELOW  facingToward -> 1, `slashRect(...,1)` is the UP rect   -> NO overlap
+ *   target ABOVE  facingToward -> 3, `slashRect(...,3)` is the DOWN rect -> NO overlap
+ *
+ * ⇒ `deriveStrike`'s candidate filter and `execKillByPress`'s live reach test
+ * can NEVER accept a vertical strike cell. That is a **conservative** defect —
+ * it refuses opportunities, it never presses the wrong way — which is why three
+ * rungs of committed tapes are green over it: every press they contain is
+ * horizontal, where the two conventions agree.
+ *
+ * ⛔ **AND THAT IS EXACTLY WHY IT IS NOT FIXED HERE.** Repairing `facingToward`
+ * would hand `deriveStrike` a whole class of strike cells it has never had, and
+ * a nearer vertical cell would be chosen ahead of the horizontal one every
+ * committed kill currently uses — i.e. it MOVES TAPES, which this slice has no
+ * licence for. It is written up as a work order with its measurement, and this
+ * verb uses a correctly-numbered helper of its own rather than quietly widening
+ * the shared one.
+ */
+const SLASH_DIRECTION_KEYS = Object.freeze({ 0: 'right', 1: 'up', 2: 'left', 3: 'down' });
+
+/** `facingToward`'s question, answered in `presses.js`'s numbering. */
+function slashFacingToward(from, target) {
+    const cx = (target.x + target.right) / 2;
+    const cy = (target.y + target.bottom) / 2;
+    const dx = cx - from.x;
+    const dy = cy - from.y;
+    if (Math.abs(dx) >= Math.abs(dy)) return dx >= 0 ? 0 : 2;
+    return dy >= 0 ? 3 : 1;
+}
+
+/** The slash rect a swing from `from` at `target` would really fire. */
+function slashRectAt(from, target) {
+    return slashRect(from.x, from.y, slashFacingToward(from, target));
+}
+
+/**
+ * ⛓⛓⛓ RESOLVE the `break` work order — ⚖ R9 SLICE 4, AND THE TWO GUARDS ARE
+ * THE VERB'S WHOLE ITEM STORY.
+ *
+ * ⛔ **THE FIRST GUARD EXISTS BECAUSE THE GAME IS SILENT.**
+ * `procgenRequirements.js:195-200` says it in the differential's own words:
+ * *"without the sword `weaponForPress` returns null and the press is a SILENT
+ * NO-OP"*. A verb that swung anyway would drive its whole bound pressing a key
+ * that does nothing and then report a rock that "did not break" — a true
+ * sentence about a room, when the fact is about the INVENTORY. So the weapon is
+ * asked BEFORE a stance is derived, and the refusal names the item.
+ *
+ * ⛔ **THE SECOND GUARD IS THE ROCK'S OWN TEST, ASKED OF THE TRANSCRIPTION.**
+ * `rockBreaksUnder(rockType, inventory)` is `hit(_t)`'s `rockType <= _t` with
+ * `_t = hasGhostSword ? 1 : 0` — so a `breakablerockghost` (rockType 1) under a
+ * plain sword is a swing that lands and does NOTHING, which `levelRun` records
+ * as `{broke: false, why: 'rockType 1 > 0 — this weapon cannot break it'}`.
+ * ⛓ That is a WORK ORDER and it is named as one: the ghost sword is an item the
+ * campaign does not hold yet, and a refusal that says so is the cheapest
+ * planning instrument this rung has (R8 lesson 2).
+ *
+ * ⚠ **A GHOSTSWORD IN THE PRIMARY SLOT IS REFUSED TOO, AND NOT AS AN
+ * OVERSIGHT**: `levelRun.applyThrust` THROWS on one — *"a ghostsword press
+ * routes the slash rect through `genericHit`'s Spear arm and doubles the rect's
+ * height from the sprite WIDTH. Neither is modelled (R5)"* — so a verb that
+ * selected it would turn an item the run really holds into an engine throw.
+ * Refused by name, with the model gap as the work order.
+ */
+function resolveBreakStrategy(run, obstacle, contacts, blocked = []) {
+    const rock = (run.world.solids ?? []).find((s) => s.rockId === obstacle.id);
+    /**
+     * ⛔ NOT A REFUSAL — the caller reports a `null` as "the census row the
+     * frontier named is not one this executor can bind", which is the honest
+     * answer for a solid that wears the tag and carries no `rockId` (the world
+     * was built without one). "This table names a verb for this kind" and "this
+     * particular body can be acted on" are different claims.
+     */
+    if (!rock) return null;
+    const weapon = run.primaryWeapon;
+    if (weapon !== 'sword') {
+        return {
+            strategy: 'break',
+            held: false,
+            rock: obstacle.id,
+            rejected: [{
+                option: `break ${obstacle.id}`,
+                why: weapon === null
+                    ? 'the run\'s `primary` slot holds NOTHING — `weaponForPress` returns '
+                        + 'null and `Player.useItem`\'s switch matches no arm, so the press '
+                        + 'would be a SILENT no-op. ⛔ The sword is a SUB-ORDER the macro '
+                        + 'layer owes (a `collect-placement` goal), not a parameter of this '
+                        + 'verb: swinging at the rock without it would spend the whole bound '
+                        + 'and report the ROOM for a fact about the INVENTORY.'
+                    : `the run's \`primary\` slot fires \`${weapon}\`, and only the plain `
+                        + 'SWORD breaks a rock in this model. `Player.as:1071-1074` routes '
+                        + `\`hit()\` from a slash, and a \`${weapon}\` press is a different `
+                        + `rect through a different \`genericHit\` arm — for \`ghostsword\` `
+                        + '`levelRun.applyThrust` THROWS by name (the Spear arm doubles the '
+                        + 'rect height from the sprite WIDTH, unmodelled since R5). ⇒ the '
+                        + 'work order is to EQUIP the sword, or to model the ghostsword '
+                        + 'slash rect.',
+            }],
+        };
+    }
+    if (!rockBreaksUnder(rock.rockType, run.inventory)) {
+        return {
+            strategy: 'break',
+            held: false,
+            rock: obstacle.id,
+            rejected: [{
+                option: `break ${obstacle.id}`,
+                why: `\`BreakableRock.hit(_t)\` is \`if (rockType <= _t)\` and \`Player.as:`
+                    + `1071-1074\` passes \`hasGhostSword ? 1 : 0\`; this rock is rockType `
+                    + `${rock.rockType ?? 0} and the run holds `
+                    + `${run.inventory?.hasGhostSword ? 'the ghost sword' : 'NO ghost sword'}`
+                    + '. ⛔ The swing would LAND and do nothing — `levelRun` records it as '
+                    + '`{broke: false}` rather than as a miss. ⇒ THE NEXT WORK ORDER IS THE '
+                    + 'GHOST SWORD: a `breakablerockghost` is one AS3 class away from the '
+                    + 'plain rock and exactly one item away from being breakable, and no '
+                    + 'stance, budget or re-aim can substitute for it.',
+            }],
+        };
+    }
+    const { stance, discharged } = deriveBreakStance(run, rock, contacts, blocked);
+    /**
+     * ⛔ THE WAIT IS THE LEG'S PROMISE, NOT THE ANIMATION. `HIT_TO_GONE_TICKS`
+     * is an UPPER BOUND BY ONE — `World.update` may run the rock's graphic
+     * before or after the player's `hit()` in the same pass — so
+     * `breakableRocks` publishes a separate, larger number for what a LEG must
+     * wait, and `assertWaitCovers` is the check that this verb keeps it. Asked
+     * here, at the resolution, so a bound that stopped covering the animation
+     * fails where the number is chosen rather than 20 ticks later in a walk.
+     */
+    assertWaitCovers(WAIT_AFTER_PRESS_TICKS, `solverBot break (${obstacle.id})`);
+    return {
+        strategy: 'break',
+        postCondition: 'gone',
+        target: { x: rock.rect.x, y: rock.rect.y, ...rock.rect },
+        rock: obstacle.id,
+        stance,
+        discharged,
+        wait: WAIT_AFTER_PRESS_TICKS,
+        rejected: [{
+            option: 'hold / shove / kill',
+            why: `${obstacle.id} answers to no group, no push and no death: `
+                + '`BreakableRock` is a `Solid` with no `tSet`, `Player.solids` does not '
+                + 'push it and it is no `Enemy`. The ONE thing that removes it is a sword '
+                + 'swing whose rect overlaps it, and `endAnim` — the Spritemap\'s own '
+                + 'completion callback — is what calls `FP.world.remove`.',
+        }, ...hypothesisRejection(discharged)],
+    };
+}
+
+/**
+ * The break stance: a REACHABLE cell from which the swing's own rect overlaps
+ * the rock.
+ *
+ * ⛔ **BOTH HALVES OF THE GAME'S OWN TEST, AND NEITHER IS A PROXY.**
+ * `auditPress` asks `slashRect(x, y, direction)` against the live solid, and
+ * `deriveStrike` asks `distanceRectPoint <= SLASH_REACH` first because the
+ * reach is the cheap half. A stance derived from adjacency alone would put the
+ * player diagonally off a corner, where the box is one tile away and the 16x32
+ * rect misses entirely.
+ *
+ * ⛔ **AND THE CANDIDATE IS TESTED AT THE CELL CENTRE, WHERE THE WALK STOPS.**
+ * A `keylock`'s stance is PINNED because its key line is one pixel inside a
+ * solid; a slash reaches 16 px, so the cell centre is inside the rect's own
+ * span and the executor re-asks the question at the LIVE position anyway
+ * (an early or late arrival that still finds the rock in reach should press).
+ *
+ * ⚠ **THE SWEEP IS BOUNDED AND SAYS SO** (the bounded-sweep law): ±2 lattice
+ * cells around the rock, which at `DEFAULT_LATTICE` covers every cell a 16 px
+ * reach can be satisfied from and is the same window `deriveTouchStance` and
+ * `deriveKeylockStance` walk.
+ */
+function deriveBreakStance(run, rock, contacts, blocked = []) {
+    /**
+     * ⛓⛓⛓ **THE CHEAPEST STANCE IS THE ONE THE WALK IS ALREADY STANDING IN,
+     * AND ROUTE STEP 12 IS WHY IT IS ASKED FIRST.**
+     *
+     * L3's `breakablerock@96,112` is the door out of the ARRIVAL POCKET: the
+     * boot cell (104,136) is a one-cell island — Stone on three sides, WATER on
+     * the fourth — and the rock is its only non-lethal neighbour. Every cell
+     * from which a lattice sweep can swing at that rock is on the FAR side of
+     * it, so a derivation that only searched the ring reported *"no REACHABLE
+     * stance"* for a room whose stance is the tile the player booted on.
+     *
+     * ⛔ AND IT RETURNS `stance: null` RATHER THAN THE LIVE POSITION, because
+     * the caller's contract is *"walk to the stance, then run the verb"* — a
+     * `walkTo` to where the walk already is is a corridor request for a
+     * zero-length corridor, and the frontier's own planner is entitled to
+     * refuse one. `null` is the one spelling that says "no approach is owed",
+     * and the executor re-asks the reach question at the LIVE position anyway.
+     *
+     * ⚠ THE BOOT CELL IS INSIDE A TELEPORTER VOLUME and that is not widened
+     * into a rule: the sweep below still refuses a teleporter cell it is not
+     * already standing in. Being carried to another level is not a stance, and
+     * the one case where it is safe is the case where the run is demonstrably
+     * already in it and has not transitioned.
+     */
+    if (distanceRectPoint(run.state.x, run.state.y, rock.rect) <= SLASH_REACH
+        && rectsOverlapLocal(slashRectAt(run.state, rock.rect), rock.rect)) {
+        return { stance: null, discharged: [] };
+    }
+    const pitch = DEFAULT_LATTICE;
+    const opts = solverPlanOpts(run, contacts, { nodeMargin: 0, triggerMargin: 0 });
+    const cell = nodeAt((rock.rect.x + rock.rect.right) / 2,
+        (rock.rect.y + rock.rect.bottom) / 2, pitch);
+    const candidates = [];
+    let outOfReach = 0;
+    let noRect = 0;
+    for (let dy = -2; dy <= 2; dy += 1) {
+        for (let dx = -2; dx <= 2; dx += 1) {
+            if (dx === 0 && dy === 0) continue;
+            const c = nodeCentre(cell.tx + dx, cell.ty + dy, pitch);
+            if (plannerObstacleAt(run.world, c.x, c.y, null, opts)) continue;
+            if (distanceRectPoint(c.x, c.y, rock.rect) > SLASH_REACH) { outOfReach += 1; continue; }
+            if (!rectsOverlapLocal(slashRectAt(c, rock.rect), rock.rect)) {
+                noRect += 1;
+                continue;
+            }
+            candidates.push({ d: Math.hypot(c.x - rock.rect.x, c.y - rock.rect.y), ...c });
+        }
+    }
+    candidates.sort((a, b) => a.d - b.d || a.y - b.y || a.x - b.x);
+    const hypothesis = stanceHypothesis(run, blocked, contacts);
+    for (const c of candidates) {
+        const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis);
+        if (reached) return { stance: { x: c.x, y: c.y }, discharged: reached.discharged };
+    }
+    throw new SolverRefusal(
+        `solverBot: no REACHABLE stance for a swing at ${rock.rockId} in level `
+        + `${run.level} — ${candidates.length} cell(s) put the slash rect on the rock and `
+        + `none plans a corridor from (${run.state.x},${run.state.y}); ${outOfReach} more `
+        + `were beyond SLASH_REACH (${SLASH_REACH} px) and ${noRect} were in reach with the `
+        + 'rect pointing elsewhere. ⇒ the rock is on the frontier and the room offers '
+        + 'nowhere to stand and swing: the next work order is a way to REACH one of those '
+        + 'cells, not a bigger budget.',
+        { obstacle: { kind: 'solid', id: rock.rockId } });
+}
+
+/**
+ * Executor: the `break` verb — AIM, PRESS, WAIT OUT THE ANIMATION.
+ *
+ * ⛔⛔ **THE PRESS CONSUMES THE PREVIOUS TICK'S FACING**, which is why this is
+ * an alternation and not a single tick. `levelRun`'s own comment: *"`sprites()`
+ * — the only writer of `direction` — runs at the END of the update, so a press
+ * consumes the facing this tick STARTED with"*. `execKillByPress` solved this
+ * for a moving body by aiming one tick and pressing the next; a rock does not
+ * move, so the same alternation costs one tick and needs no forecast.
+ *
+ * ⛔ **AND THE WAIT IS FOR THE WORLD, NOT FOR A COUNT.** `hit()` starts a
+ * 4-frame animation and removes nothing: the rock is SOLID for all of it, and
+ * `endAnim` is the Spritemap callback that calls `FP.world.remove`. So the
+ * condition is the run's OWN `brokenRocks` set — the same one
+ * `liveGeometryOpts` hands the planner — and the verb ALSO holds the leg's
+ * declared `WAIT_AFTER_PRESS_TICKS`, because `HIT_TO_GONE_TICKS` is an upper
+ * bound by one and a leg that walks on the exact tick is a leg that can
+ * disagree with the game for a reason no route cares about.
+ *
+ * ⛓ **NOTHING IS HELD FOR THE WAIT** — 20 ticks of a released key is ONE span
+ * (trap 16), and a held key would keep the walk pressing a wall.
+ */
+function execBreak(run, perTick, resolved, ctx) {
+    /**
+     * ⛔⛔ **A `SolverRefusal`, NOT A `SolverBotError`, AND THE DIFFERENCE IS A
+     * GRADE.** `execKeylock` and `execTouch` `fail()` on their own `held:false`
+     * arms, which raises a `SolverBotError` — and `procgenOracle.solve`
+     * RE-THROWS one rather than classifying it, so on a generated level an
+     * item-gated verb that failed that way would come back `THREW:*` and
+     * `differentialGrade` would call it **WEAK** ("the ENGINE spoke, which is
+     * not a claim about the level"). It is precisely a claim about the level:
+     * the without-arm cannot pass this rock BECAUSE it lacks the item, which is
+     * the definition of **STRONG**. ⇒ every refusal this verb raises is a
+     * refusal, and the two older executors' arms are named as residue rather
+     * than changed under this slice's licence.
+     */
+    const refuse = (why) => {
+        throw new SolverRefusal(why, { obstacle: { kind: 'solid', id: resolved.rock } });
+    };
+    if (resolved.held === false) {
+        return refuse(`${ctx.what}: ${resolved.rock} cannot be broken by this run — `
+            + `${resolved.rejected[0].why}`);
+    }
+    const NO_KEYS = new Set();
+    const PRESS = new Set(['primary']);
+    const from = perTick.length;
+    const gone = () => (run.brokenRocks ?? NO_KEYS).has(resolved.rock);
+    /**
+     * ⛔ THE BOUND IS THE MECHANISM'S OWN, PLUS THE ONE RE-AIM THIS VERB MAY
+     * SPEND: an aim tick, a press tick, the leg's wait, and one repeat in case
+     * the first swing was refused by the game's own `hitsTimer`-free arm (it is
+     * not, but a bound derived from ONE press would report "the rock survived"
+     * for an off-by-one instead of naming it).
+     */
+    const bound = 2 * (2 + resolved.wait) + HOLD_SLACK;
+    let pressedAt = null;
+    let aimed = false;
+    for (let spent = 0; spent <= bound; spent += 1) {
+        if (gone() && pressedAt !== null
+            && run.ticksCompleted >= pressedAt + resolved.wait) {
+            return { verb: 'break', target: resolved.rock, from,
+                ticks: perTick.length - from, pressedAt, stance: resolved.stance };
+        }
+        let held = NO_KEYS;
+        if (pressedAt === null) {
+            const want = slashFacingToward(run.state, resolved.target);
+            const inReach = distanceRectPoint(run.state.x, run.state.y, resolved.target)
+                <= SLASH_REACH
+                && rectsOverlapLocal(slashRect(run.state.x, run.state.y, want),
+                    resolved.target);
+            if (!inReach) {
+                refuse(`${ctx.what}: the walk arrived at (${run.state.x},${run.state.y}) and `
+                    + `${resolved.rock} is not in reach of a swing from there `
+                    + `(SLASH_REACH ${SLASH_REACH} px). The stance this verb derived was `
+                    + `${resolved.stance
+                        ? `(${resolved.stance.x},${resolved.stance.y})`
+                        : 'THE LIVE POSITION (no approach was owed — the walk was already '
+                            + 'in reach when the verb was resolved)'} — a walk that ends `
+                    + 'somewhere else is a corridor finding, not a rock one.');
+            }
+            if (aimed || run.direction === want) {
+                held = PRESS;
+                pressedAt = run.ticksCompleted;
+            } else {
+                // ⛓ ONE TICK OF THE FACING KEY. It leans the box a pixel INTO
+                // the rock, which is where a swing wants it anyway — the wall
+                // stops the step and `sprites()` writes the direction the press
+                // on the next tick will consume.
+                held = new Set([SLASH_DIRECTION_KEYS[want]]);
+                aimed = true;
+            }
+        }
+        perTick.push(held);
+        const { transition } = run.advance(held);
+        if (transition) {
+            refuse(`${ctx.what}: the run crossed to level ${transition.to_level} while `
+                + `breaking ${resolved.rock}. A break is PER VISIT — \`check()\` only `
+                + 'removes a rock with `tag >= 0`, so a `tag = -1` rock is rebuilt whole by '
+                + 'the next `new Game` and the swing would have to be paid for again.');
+        }
+    }
+    return refuse(`${ctx.what}: ${resolved.rock} was still in the world `
+        + `${bound} ticks after the stance was reached (pressed at `
+        + `${pressedAt === null ? 'NEVER — the aim never resolved' : pressedAt}). The `
+        + 'animation is four frames and `endAnim` removes the entity; a rock that outlives '
+        + 'that is a disagreement between this model and the game, not a budget.');
 }
 
 /**

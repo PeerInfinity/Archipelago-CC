@@ -92,6 +92,20 @@ export const KNOWN_STRATEGY_VERBS = Object.freeze([
     // driven for three rungs is neither. The reporting path keeps its own
     // test coverage against a synthetic unknown.
     'collect',
+    /**
+     * ⛓ R9 slice 4: the `break` verb — a sword swing that removes a
+     * `BreakableRock` from the world. Listed for `collect`'s own reason (it is
+     * DRIVEN, so it is neither a typo nor unknown), and listed in the slice
+     * that first drives it rather than left for the report to flag.
+     *
+     * ⚠ AND THE LIST IS STILL SHORT OF WHAT THE SOLVER REGISTERS: `weigh`,
+     * `fight`, `keylock` and `wand` are `STRATEGY_EXECUTORS` rows this array
+     * has never carried, so a trace that drives one REPORTS it as unknown. That
+     * is the report channel working as designed and it is not this slice's to
+     * change — moving them would re-pin every trace summary that has recorded
+     * the current answer.
+     */
+    'break',
 ]);
 
 const isPlainObject = (v) => !!v && typeof v === 'object' && !Array.isArray(v);
