@@ -1,15 +1,93 @@
 {
     "trace_version": 1,
     "tape": "r8-d2",
-    "tick_count": 1645,
+    "tick_count": 2218,
     "boot": {
-        "level": 19,
+        "level": 18,
         "x": 16,
-        "y": 144
+        "y": 32
     },
     "rows": [
         {
             "tick": 0,
+            "saw": {
+                "level": 18,
+                "x": 24,
+                "y": 40,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "reach-exit",
+                "aim": {
+                    "x": 184,
+                    "y": 120
+                }
+            },
+            "obstacle": {
+                "kind": "solid",
+                "id": "lock@144,112"
+            },
+            "strategy": {
+                "verb": "kill",
+                "postCondition": "kill-lock"
+            },
+            "rejected": [
+                {
+                    "option": "kill by the room's own ceiling",
+                    "why": "level 18 has 0 arrow trap(s), so there is no ceiling to arm — the weapon is the player's own press, which `KILL_ARM_POLICY` calls `modelled` for [Spinner, Spinner]"
+                },
+                {
+                    "option": "hold",
+                    "why": "lock@144,112 carries `tset == -1`, so NO button in the game answers it — `checkEnemies()` opens it when `Game.totalEnemies()` reaches zero (§12.8)."
+                }
+            ],
+            "keys": [
+                "down",
+                "right"
+            ]
+        },
+        {
+            "tick": 386,
+            "saw": {
+                "level": 18,
+                "x": 55.978201027358494,
+                "y": 39.61357546961173,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "reach-exit",
+                "aim": {
+                    "x": 184,
+                    "y": 120
+                }
+            },
+            "obstacle": {
+                "kind": "danger",
+                "id": "spinner@112,48"
+            },
+            "strategy": {
+                "verb": "walk",
+                "rung": "avoid",
+                "climb": 1,
+                "waypoints": 3
+            },
+            "rejected": [
+                {
+                    "option": "keep-plan",
+                    "why": "the previous corridor was refuted by the world (a blocked sweep or a stall); re-planned from the live position"
+                }
+            ],
+            "keys": [
+                "right"
+            ],
+            "note": "merged: walk decided on the same tick"
+        },
+        {
+            "tick": 573,
             "saw": {
                 "level": 19,
                 "x": 24,
@@ -48,7 +126,7 @@
             "note": "merged: walk decided on the same tick"
         },
         {
-            "tick": 507,
+            "tick": 1080,
             "saw": {
                 "level": 19,
                 "x": 104.0799164417699,
@@ -85,7 +163,7 @@
             ]
         },
         {
-            "tick": 568,
+            "tick": 1141,
             "saw": {
                 "level": 19,
                 "x": 105.41484929315735,
@@ -117,7 +195,7 @@
             ]
         },
         {
-            "tick": 607,
+            "tick": 1180,
             "saw": {
                 "level": 19,
                 "x": 105.41484929315735,
@@ -154,7 +232,7 @@
             "note": "merged: walk decided on the same tick"
         },
         {
-            "tick": 741,
+            "tick": 1314,
             "saw": {
                 "level": 19,
                 "x": 56.13183782085479,
@@ -199,7 +277,7 @@
             ]
         },
         {
-            "tick": 864,
+            "tick": 1437,
             "saw": {
                 "level": 20,
                 "x": 200,
@@ -247,7 +325,7 @@
             ]
         },
         {
-            "tick": 1041,
+            "tick": 1614,
             "saw": {
                 "level": 20,
                 "x": 120.90591659770337,
@@ -279,7 +357,7 @@
             ]
         },
         {
-            "tick": 1080,
+            "tick": 1653,
             "saw": {
                 "level": 20,
                 "x": 120.90591659770337,
@@ -324,7 +402,7 @@
             "note": "merged: hold decided on the same tick; merged: walk decided on the same tick"
         },
         {
-            "tick": 1248,
+            "tick": 1821,
             "saw": {
                 "level": 20,
                 "x": 173.91331281829937,
@@ -361,7 +439,7 @@
             ]
         },
         {
-            "tick": 1366,
+            "tick": 1939,
             "saw": {
                 "level": 20,
                 "x": 200.6633128182994,

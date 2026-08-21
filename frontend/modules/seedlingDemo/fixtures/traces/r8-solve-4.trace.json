@@ -1,7 +1,7 @@
 {
     "trace_version": 1,
     "tape": "r8-solve-4",
-    "tick_count": 253,
+    "tick_count": 255,
     "boot": {
         "level": 4,
         "x": 16,
@@ -35,7 +35,7 @@
             "rejected": [
                 {
                     "option": "route-around",
-                    "why": "button@16,64 is a proximity-hazard volume on the frontier of the reachable component, so there is no route around it — A* refuses to plan THROUGH an avoid volume, and a hold is what adds its presser to the exemptions (trap 147)"
+                    "why": "button@16,64 is on the frontier of the reachable component, so there is no route around it — A* refuses to plan THROUGH an avoid volume or a solid, and a hold is what adds its presser to the exemptions (trap 147)"
                 }
             ],
             "keys": [
@@ -44,7 +44,7 @@
             "note": "merged: walk decided on the same tick"
         },
         {
-            "tick": 149,
+            "tick": 151,
             "saw": {
                 "level": 4,
                 "x": 24,
@@ -103,7 +103,7 @@
             "note": "merged: walk decided on the same tick"
         },
         {
-            "tick": 220,
+            "tick": 222,
             "saw": {
                 "level": 4,
                 "x": 47.699999999999996,

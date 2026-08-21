@@ -34,6 +34,16 @@
             "note": ""
         },
         {
+            "level": 17,
+            "tag": 29,
+            "note": ""
+        },
+        {
+            "level": 18,
+            "tag": 0,
+            "note": ""
+        },
+        {
             "level": 19,
             "tag": 0,
             "note": ""
@@ -56,10 +66,10 @@
         "seal_parts": []
     },
     "rng": {
-        "seed": 1761417076,
+        "seed": 1823918582,
         "split": false,
         "cosmetic": 0,
-        "fp": 1414699912
+        "fp": 1752443622
     },
     "seam": {
         "items": {
@@ -82,7 +92,7 @@
         "hits_max": 3,
         "first_use": false,
         "extended": false,
-        "time": 9620,
+        "time": 10213,
         "primary": 0,
         "secondary": 0,
         "grass_cut": 0,

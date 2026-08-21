@@ -2,7 +2,7 @@
     "tape_version": 8,
     "game": "seedling",
     "name": "r8-d2-19",
-    "description": "⛓⛓⛓ R8 SLICE 7 — SEGMENT 1 of the staged chain `r8-d2`, and the ladder's FIRST BOSS FIGHT DRIVEN BY THE SOLVER. The live policy identifies `shieldboss@80,32` as the obstacle the placement is INSIDE (`bosskey@96,64` sits at tile (6,4), within his 48x48 body — the wall, the key and the exit are one object), and fights him on a PRESS SCHEDULE DERIVED from `shieldBossFight.shieldBossWindowFor`: `hitPlayer` counts 120 CONSECUTIVE band ticks and opens `movedShield`, the one animation `ShieldBoss.hit` forwards through, and the press tick is the EARLIEST T whose five dispatches (`SLASH_HIT_TICKS`, because `slashDelayMax` is ZERO) all land inside it. ⛔ Traps 85/93: one press is FIVE hit tests and the RECEIVER decides how many land — the first press of the room spends its first dispatch on the ARMING SWALLOW and lands on its second, and `hitsTimer = 30` then refuses the four behind it. ZERO hits over the whole fight, which is a claim about the STAB: every landing calls `sit()`, aborting the chain before frames 5..8. Then the key's ceremony, and `bosslock@48,32` opened by the `keylock` verb — ⚖ §15.7a ruling 1's `key -> keylock` opener, whose 80-tick window is `activators.opensOnKeyTick(60, 0.05)` and not a Lock's 101. ⛔ ONE SEGMENT: a fight does not survive the door (trap 150), so the fight and the crossing it opens cannot be cut apart. Boot: r7-act2-11's committed v8 block — the campaign's own post-sword latch — staged at L19's own arrival from L18; nothing about L18 is declared, because `R8_D2_COMPLETE.trackA` reports that room as a wall rather than recording it. Authored by scripts/procgen/solve-seedling-r8-d2-chain.mjs.",
+    "description": "⛓⛓⛓ R8 SLICE 7 — SEGMENT 1 of the staged chain `r8-d2`, and the ladder's FIRST BOSS FIGHT DRIVEN BY THE SOLVER. The live policy identifies `shieldboss@80,32` as the obstacle the placement is INSIDE (`bosskey@96,64` sits at tile (6,4), within his 48x48 body — the wall, the key and the exit are one object), and fights him on a PRESS SCHEDULE DERIVED from `shieldBossFight.shieldBossWindowFor`: `hitPlayer` counts 120 CONSECUTIVE band ticks and opens `movedShield`, the one animation `ShieldBoss.hit` forwards through, and the press tick is the EARLIEST T whose five dispatches (`SLASH_HIT_TICKS`, because `slashDelayMax` is ZERO) all land inside it. ⛔ Traps 85/93: one press is FIVE hit tests and the RECEIVER decides how many land — the first press of the room spends its first dispatch on the ARMING SWALLOW and lands on its second, and `hitsTimer = 30` then refuses the four behind it. ZERO hits over the whole fight, which is a claim about the STAB: every landing calls `sit()`, aborting the chain before frames 5..8. Then the key's ceremony, and `bosslock@48,32` opened by the `keylock` verb — ⚖ §15.7a ruling 1's `key -> keylock` opener, whose 80-tick window is `activators.opensOnKeyTick(60, 0.05)` and not a Lock's 101. ⛔ ONE SEGMENT: a fight does not survive the door (trap 150), so the fight and the crossing it opens cannot be cut apart. ⛓⛓⛓ R9 SLICE 3 CHANGED ITS BOOT AND NOTHING ELSE ABOUT IT: R8 staged this segment at L19's own arrival from L18 by DECLARATION, because `R8_D2_COMPLETE.trackA` reported L18 as a wall rather than recording it. R8 slice 8 then solved that room honestly, so every field of this boot is now `r8-solve-18`'s MEASURED LATCH — the save arrays, the persistence set carrying `{18,0}`, the three RNG streams, `save.time` — read out of the running game by `botSeam()` and turned into blocks by `segmentBootFromLatch`. Two of those rows are `modelled: false` by `SEAM_BOOT_SPEC` on purpose, which is exactly why a Windows-driver run and not a model line produces them. Authored by scripts/procgen/solve-seedling-r8-d2-chain.mjs.",
     "boot": {
         "level": 19,
         "x": 16,
@@ -32,6 +32,16 @@
             "level": 10,
             "tag": 0,
             "note": ""
+        },
+        {
+            "level": 17,
+            "tag": 29,
+            "note": ""
+        },
+        {
+            "level": 18,
+            "tag": 0,
+            "note": ""
         }
     ],
     "equips": [],
@@ -44,10 +54,10 @@
         "seal_parts": []
     },
     "rng": {
-        "seed": 418414780,
+        "seed": 58227647,
         "split": false,
         "cosmetic": 0,
-        "fp": 1763053598
+        "fp": 2069965047
     },
     "seam": {
         "items": {
@@ -70,7 +80,7 @@
         "hits_max": 3,
         "first_use": false,
         "extended": false,
-        "time": 8586,
+        "time": 9179,
         "primary": 0,
         "secondary": 0,
         "grass_cut": 0,
@@ -83,7 +93,7 @@
         "menu_state": 0,
         "music": {
             "set": "Room",
-            "index": 1
+            "index": 0
         }
     },
     "tick_count": 864,
