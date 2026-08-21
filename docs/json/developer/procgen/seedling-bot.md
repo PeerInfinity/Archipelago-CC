@@ -5755,6 +5755,16 @@ are scoped work rather than loose ends:
 
 ## R7: the honest playthrough, as built (CLOSED 2026-08-10)
 
+> ⛓ **RETIREMENT NOTE (R9 slice 7, 2026-08-21).** The chain this chapter is
+> about — `act2-the-sword` and its `r7-act2-*` tapes — **has been retired** under
+> ⚖ ruling 14: the true-start solver chain `r9-campaign` walks the same rooms and
+> `r8-solve-1..11` cover nine of the twelve tapes' claims. `r7-act2-5`,
+> `r7-act2-6` and `r7-act2-full` remain on the roster because they are the only
+> witnesses of families no solver tape carries (the v10 `despawn` channel; the
+> ETA transit probe's positive oracle). **Everything below is HISTORY and is left
+> exactly as it was measured** — it is the record of what R7 built, not a
+> description of the roster today. See the R9 slice 7 section for what moved.
+
 R7's brief and full as-built record are
 `NewDocs/plans/seedling-bot-r7-opus-kickoff.md` (§§8–20 the slices, §21 the
 close — NewDocs is gitignored, so the file exists only on the working
@@ -12064,3 +12074,106 @@ it. Ship gate **91 → 105 / 0**. Sequence gate **21 → 26 / 0**. Demos **21 �
 (the `?tapes=` row). vitest **6759 → 6800** over 182. Roster **154 → 159**.
 Battery `--check` `67bcde75…` → **`6d667b170723c2e0644eb8971a8c7dbe`**, exit 0
 both sides — the ownership handover, one producer per tape.
+
+### Slice 7 — ⛓⛓⛓ THE FIRST COVERAGE-DERIVED RETIREMENT: the hand chain retires, and NINE of its twelve tapes are covered
+
+⚖ **Ruling 14's first execution.** The hand chain `act2-the-sword` — eleven
+rooms walked by hand at R7, the rung's original custody chain — is **out of
+`PLAYTHROUGH_CHAINS`, out of `PAGE_CHAINS`, out of the page's picker and out of
+the sequence gate's pin**. `r9-campaign` is the custody chain now.
+
+#### Which tapes are covered, and which are not
+
+Ruling 14 retires a hand tape *the moment a solver tape covers its claim*, and
+its second clause says a tape whose family nothing else witnesses **stays,
+named**. Both halves fired.
+
+**NINE ARE COVERED** — `r7-act2-1, -2, -3, -4, -7, -8, -9, -10, -11`, each by
+its `r8-solve-N` twin walking the same room from the same boot. Rooms 1, 2, 3,
+7, 9 and 11 the solver walks in the SAME tick count (183 / 47 / 245 / 146 / 122
+/ 87); rooms 4, 8 and 10 it walks differently (347→255, 1090→827, 89→90).
+
+**THREE STAY, AND THIS IS THE RECORD OF WHY:**
+
+| tape | the family nothing else witnesses |
+|---|---|
+| `r7-act2-6` | the **v10 `despawn` declaration** — `bob@112,48` drowned at tick 120, witnessed by a truncated-arm probe |
+| `r7-act2-full` | the roster's **other** v10 despawn |
+| `r7-act2-5` | the ETA transit probe's POSITIVE oracle (*"the hand walk never enters an armed lane"*), the `tset -1` hold→kill refinement, and the `twoPassSolve` ETA bound |
+
+Measured over all 159 tapes: `tape_version {1:11, 2:12, 3:38, 4:22, 5:20, 6:6,
+7:10, 8:31, 9:7, 10:2}`, and the tapes declaring a despawn are **`r7-act2-6` and
+`r7-act2-full`, nobody else**. `r8-solve-6` is v8 and declares nothing. **A
+solver walk has no `phases` block and no witnessed removal by construction**, so
+no solver tape can ever take those claims over.
+
+#### The choreography record, which is now HISTORY rather than code
+
+`solve-seedling-r8-battery.mjs` used to DERIVE, from the hand chain's own
+`walk.units`, which of its rooms were hand-choreographed. That derivation
+retired with the route it read. The answer it gave, preserved here:
+
+| segment | verdict | why |
+|---|---|---|
+| 1, 2, 3, 7, 9, 10, 11 | BATTERY — legs only | (10 also `collect`, 11 also `chest`) |
+| 4 | EXCLUDED | mechanic `hold`, mechanic `shove` |
+| 5 | EXCLUDED | 1 `phases` block |
+| 6 | EXCLUDED | 1 `phases` block |
+| 8 | EXCLUDED | 2 `phases` blocks, mechanic `shove` |
+
+⇒ derived battery `[1, 2, 3, 7, 9, 10, 11]`, seven rooms. The split survives in
+the producer as a DECLARATION with this table as its provenance — keeping the
+old `check()` rows against it would have compared a constant to a transcription
+of itself.
+
+#### ⚖ Ruling 17 — minimize hardcoding — and the measurement that made it easy
+
+The user, mid-slice: *"I want to minimize hardcoding in general."* The first
+build had kept the hand route as a 300-line constant and baked four boot blocks.
+Both were refused, and the measurement is what settled it:
+
+> **The hand route's eleven goal lists and the atlas derivation the campaign
+> producer already used are IDENTICAL, coordinate for coordinate — 11 of 11.**
+
+So there is no route constant. `scripts/procgen/seedling-atlas-goals.mjs` holds
+the one derivation (a room's pickup by ENTITY TYPE, a crossing by the game's own
+`attrs.to`), and the battery, the tail and the campaign producer share it. **No
+boot block is baked either**: rows 1–4 and 11 read their own twins (byte-equal
+over all eleven boot-block fields, measured), the rest read the campaign's
+re-recorded latches. The only literals left are the HAND TICK COUNTS, because
+nothing on disk records how long the hand walk was and reading them off the twin
+would turn `solver vs hand` into `solver == hand` by construction.
+
+⛓ And reading the campaign's latches instead of R7's turned out to be
+**byte-inert**: rows 6/7/9/10 solve to identical tick counts either way. The
+difference is `seam` — the clock — and L0–L14 hold no spinners.
+
+#### The decayed bound, and the gate that outlives it
+
+`r8-battery-4` declared `endsAt: 253` over a 255-tick tape: slice 3 re-recorded
+that tape and moved the tape, not the constant, and nothing compared the two for
+four slices. Fixed — and gated. Measured across the roster before the gate was
+written, `endsAt === sum(segment tick counts)` held for **all fifteen chains**
+and failed for exactly this one, so it is an invariant rather than a rule fitted
+to a defect. It runs in the acceptance sweep AND in vitest, because the sweep's
+only roster-wide runner needs a GPU.
+
+#### The numbers
+
+Sequence gate **26 → 24 / 0** (the act2 pin retires; claim 9 is a paragraph
+saying so, not an absence). vitest **6802 → 6794** over 182 files — the −9 is
+exactly the nine `act2-the-sword` seams leaving the seam sweep (24 → 15), the
++1 is the new `endsAt` row. Survey **23/29, every tick unmoved** after being
+re-pointed at the solver chain. Instruments **234 → 235**. Roster **159**,
+unmoved — the deletion of the nine is slice 7b's, on a clean baseline. Battery
+`--check` `6d667b17…` → **`75adf82610fa7ea21f6822590a3b0330`**, exit 0, and the
+diff is exactly the three rows that would otherwise have become fixed points;
+tail `--check` → **`9a6a31925cb5204eee4cb0ad66febed6`**, two lines, the stripped
+clears are the solver's now. `solve-seedling-r8-d2-chain`, `-l18`,
+`solve-seedling-r9-l3` and `-r9-campaign` are byte-identical to baseline.
+
+⛓ **`scripts/procgen/identity-block.sh` is committed.** Ruling 8 published its
+byte-inertia set as VALUES and every slice rebuilt the commands in a scratchpad
+that was then discarded; three rows could no longer be reproduced at all. The
+commands live in the repo now, with the published values beside them and the
+three unreproducible rows marked.

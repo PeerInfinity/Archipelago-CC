@@ -171,7 +171,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 216,
         "browser": 73,
-        "cited": 67,
+        "cited": 68,
         "files": 235,
         "lineStyle": 19,
         "withDocblock": 235,
@@ -5097,7 +5097,9 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "seedling",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "seedling-atlas-goals.mjs",
