@@ -263,7 +263,17 @@ describe('the SOLVE itself', () => {
         expect(tape.save).toEqual(staging.save);
         expect(typeof ms).toBe('number');
 
-        expect(readTape('r8-solve-4').tick_count).toBe(253);   // trap 169, named
+        /**
+         * ⛓⛓⛓ R9 SLICE 3 — TRAP 169, **PAID**. This row used to read `253`
+         * against a page that derived 255: the differential replays the
+         * ARTIFACT, so it could not see that the artifact was no longer a walk
+         * its producer would author, and the drift sat here NAMED for three
+         * reports. ⚖ Ruling 5's licence re-recorded it. The row stays — as an
+         * EQUALITY now — because "the page and the tape agree" is the claim
+         * either way, and a deleted row would let the next drift arrive
+         * silently.
+         */
+        expect(readTape('r8-solve-4').tick_count).toBe(255);
     });
 
     it('the folded tape REPLAYS through the same stepper the viewer uses', () => {

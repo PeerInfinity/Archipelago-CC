@@ -42,6 +42,7 @@ import { atlasLevelSource } from './levelSource.js';
 import { MOVE_SPEEDS, spawnFromBoot } from './playerPhysicsV1.js';
 import { deriveTransitions, diffObservationStreams } from './tapeFormat.js';
 import { createTapeStepper, runTape, runTapeToStream } from './tapeRunner.js';
+import { PLAYTHROUGH_CHAINS, chainSpans } from './playthroughWalk.js';
 
 /** Entity spawn for the fixtures' shared boot block (Player.as:357: +8,+8). */
 const SPAWN = spawnFromBoot({ x: 80, y: 128 });
@@ -663,12 +664,19 @@ describe('the incremental stepping face (watch page)', () => {
 /**
  * ⛓⛓⛓ R9 SLICE 2 — THE RESUME FACE (⚖ ruling 10).
  *
- * ⛔ THE CLAIM IS AGAINST THE HEADLINE, not against itself. `r8-d2` is the two
- * segments' inputs driven by ONE model run; until this slice no run had played
- * both as windows. So window 1 is stepped, window 2 RESUMES its run, and the
- * concatenation is diffed against the headline replayed alone — a fixed point
- * over the resume face would have tested self-consistency and nothing else
- * (trap 250).
+ * ⛔ THE CLAIM IS AGAINST THE HEADLINE, not against itself. `r8-d2` is the
+ * segments' inputs driven by ONE model run; until slice 2 no run had played
+ * them as windows. So window 1 is stepped, each later window RESUMES its run,
+ * and the concatenation is diffed against the headline replayed alone — a
+ * fixed point over the resume face would have tested self-consistency and
+ * nothing else (trap 250).
+ *
+ * ⛓ R9 SLICE 3 — THE WINDOW LIST AND THE OFFSETS ARE **DERIVED FROM THE
+ * CHAIN**, not typed. The splice made `r8-d2` three segments and moved the cut
+ * from 864 to [573, 1437]; a hand-typed pair would have gone on comparing two
+ * windows against a three-segment headline and failed with a length, which is
+ * how this row actually reported the splice. Reading `chain.segments` and
+ * `chainSpans` means the next segment costs this file nothing.
  */
 describe('createTapeStepper — the resume run', () => {
     const levelSource = atlasLevelSource();
@@ -683,19 +691,28 @@ describe('createTapeStepper — the resume run', () => {
         return { ticks, done };
     };
 
-    it('⛓⛓⛓ [r8-d2-19, r8-d2-20] on ONE run IS the headline r8-d2, tick for tick', () => {
-        const headline = runTapeToStream(loadTape('r8-d2'), { levelSource });
+    const CHAIN = PLAYTHROUGH_CHAINS.find((c) => c.id === 'r8-d2');
+
+    it(`⛓⛓⛓ [${CHAIN.segments.join(', ')}] on ONE run IS the headline r8-d2, `
+        + 'tick for tick', () => {
+        const headline = runTapeToStream(loadTape(CHAIN.headline), { levelSource });
+        const spans = chainSpans(CHAIN);
         // ⛓ The run comes out of the per-tick hook — the one seam a claim may
         //   read live state through (`createTapeStepper`'s own docblock).
         let live = null;
-        const w1 = stream(loadTape('r8-d2-19'),
-            { levelSource, onTick: (t, s, h, r) => { live = r; } });
-        const seen = w1.ticks;
-        const w2 = stream(loadTape('r8-d2-20'), { run: live });
-        const cat = [
-            ...seen.slice(0, 864),
-            ...w2.ticks.map((o) => ({ ...o, t: o.t + 864 })),
-        ];
+        const cat = [];
+        CHAIN.segments.forEach((name, i) => {
+            const w = stream(loadTape(name), i === 0
+                ? { levelSource, onTick: (t, s, h, r) => { live = r; } }
+                : { run: live, onTick: (t, s, h, r) => { live = r; } });
+            // ⚠ A window yields `tick_count + 1` observations (RECORD-THEN-ACT),
+            //   and the boundary tick belongs to BOTH windows — so every window
+            //   but the last contributes its span's width and no more.
+            const width = spans[i].to - spans[i].from;
+            const take = i === CHAIN.segments.length - 1 ? w.ticks.length : width;
+            cat.push(...w.ticks.slice(0, take)
+                .map((o) => ({ ...o, t: o.t + spans[i].from })));
+        });
         expect(cat).toHaveLength(headline.ticks.length);
         let firstDiff = -1;
         for (let i = 0; i < cat.length; i += 1) {

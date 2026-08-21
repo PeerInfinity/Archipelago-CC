@@ -2165,6 +2165,19 @@ export const R8_D2_SHIELD = Object.freeze({
                     + '`lock@144,112` declared open — the first tape on the roster whose '
                     + 'press arm KILLS.',
             }),
+            Object.freeze({
+                name: 'r8-d2',
+                level: 18,
+                addedBy: 'R9 slice 3 (the splice)',
+                why: '⛓ THE SPLICE PUT L18 INSIDE THE HEADLINE. `r8-d2` was a two-segment '
+                    + 'chain starting at L19 and its press reached nothing; ⚖ ruling 5\'s '
+                    + 'licence re-derived it over THREE goal lists from L18\'s own boot, so '
+                    + 'its first 573 ticks ARE `r8-solve-18`\'s walk — the same two bodies, '
+                    + 'the same three landed presses each, the same kills. ⛔ IT WAS THIS '
+                    + 'ASSERTION THAT SAID SO: the exposure set is re-derived by DRIVING '
+                    + 'the roster (trap 89), so a tape that quietly grew a spinner press '
+                    + 'is named rather than absorbed — which is exactly what happened.',
+            }),
         ]),
     }),
 

@@ -5105,9 +5105,15 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "check"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "headline"
                 }
             ],
-            "oneLiner": "solve-seedling-r8-d2-chain — D2's LAST TWO ROOMS AS **ONE STAGED MULTI-SEGMENT CHAIN**, driven by the live solver.",
+            "oneLiner": "solve-seedling-r8-d2-chain — D2's LAST **THREE** ROOMS AS ONE STAGED MULTI-SEGMENT CHAIN, driven by the live solver.",
             "path": "scripts/procgen/solve-seedling-r8-d2-chain.mjs"
         },
         {

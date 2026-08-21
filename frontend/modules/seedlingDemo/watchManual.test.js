@@ -418,9 +418,13 @@ describe('⛓⛓⛓ THE ONE FOLD DERIVES ITS OWN VERSION (slice 5)', () => {
         const byAt = names.filter((n) =>
             (tape(n).persistence ?? []).some((c) => c.at !== undefined));
         const byDespawn = names.filter((n) => (tape(n).despawn ?? []).length > 0);
+        // ⛓ R9 slice 3: `r8-d2` joined the list. The splice put L18 inside the
+        // headline, and L18's `lock@144,112` is `tset -1` — so the re-derived
+        // headline declares the same timed `{18,0}` its own segment 0 does and
+        // is a v9 tape now. A hand-kept list is exactly what should red here.
         expect(byAt.sort()).toEqual([
             'r7-act2-5', 'r7-act2-8', 'r7-act2-full',
-            'r8-solve-18', 'r8-solve-5', 'r8-solve-8',
+            'r8-d2', 'r8-solve-18', 'r8-solve-5', 'r8-solve-8',
         ]);
         expect(byDespawn.sort()).toEqual(['r7-act2-6', 'r7-act2-full']);
         expect(names.length).toBeGreaterThan(140);   // and the sweep really swept
