@@ -708,6 +708,40 @@ describe('createTapeStepper — the resume run', () => {
             .toBe(-1);
     });
 
+    /**
+     * ⛔⛔ THE DISCRIMINATING ROW, AND THE MUTANT IS WHY IT EXISTS (R9 §10).
+     *
+     * The headline-equality row above is TRUE and does not gate this option. A
+     * build whose resume face silently re-staged was measured reproducing the
+     * headline BYTE FOR BYTE — first differing tick −1 — because `r8-d2`'s cut
+     * is a level ARRIVAL: the world was freshly constructed on that tick and
+     * the player is on the spawn AT REST, which is exactly what
+     * `r8-d2-20`'s boot block reconstructs. Since R1 every chain has been cut
+     * at an arrival, so no stream in the roster can tell the two apart.
+     *
+     * ⛓ WHAT TELLS THEM APART IS THAT IT IS THE SAME RUN. A resumed window
+     * carries the run's ledgers forward (`ticksCompleted`, `transitions`,
+     * `earnedClears`, the clock) and a re-staged one starts them at zero.
+     * ⚠ AND THE `levelSource` HAS TO BE PASSED, because that is what the page
+     * passes and what a re-staging mutant needs in order to re-stage.
+     */
+    it('⛓⛓⛓ the stepper\'s run IS the given run — even with a levelSource in hand', () => {
+        let live = null;
+        stream(loadTape('r8-d2-19'), { levelSource, onTick: (t, s, h, r) => { live = r; } });
+        let resumed = null;
+        const w2 = stream(loadTape('r8-d2-20'),
+            { levelSource, run: live, onTick: (t, s, h, r) => { resumed = r; } });
+        expect(resumed).toBe(live);
+        // …and the ledgers are the SEQUENCE's, not this window's own.
+        expect(w2.done.transitions).toEqual([
+            { t: 864, from_level: 19, to_level: 20 },
+            { t: 1645, from_level: 20, to_level: 13 },
+        ]);
+        expect(live.earnedClears.map((c) => `${c.level}:${c.tag}`).sort())
+            .toEqual(['19:0', '19:1', '20:0', '20:2', '20:4']);
+        expect(live.ticksCompleted).toBe(1645);
+    });
+
     it('⛓ the resumed window CONTINUES the run rather than staging its own', () => {
         let live = null;
         stream(loadTape('r8-d2-19'), { levelSource, onTick: (t, s, h, r) => { live = r; } });

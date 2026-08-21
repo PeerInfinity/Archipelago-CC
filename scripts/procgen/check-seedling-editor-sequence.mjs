@@ -181,6 +181,26 @@ b ? `live L${b.live.level} constructed at (${b.live.ctor.x},${b.live.ctor.y}); `
     + `${b.live.cleared.length} cleared flag(s) vs the ${tapeOf('r8-d2-20').persistence.length} `
     + 'the tape declares' : '');
 
+/**
+ * ⛔⛔ CLAIM 3b — THE DISCRIMINATING ONE, AND CLAIM 2 IS NOT IT.
+ *
+ * A build whose resume face silently RE-STAGED was measured reproducing the
+ * headline byte for byte (first differing tick −1). `r8-d2`'s cut is a level
+ * ARRIVAL, so the world is freshly constructed on that tick and the player is
+ * on the spawn at rest — exactly what `r8-d2-20`'s boot block rebuilds — and
+ * since R1 every chain in the roster has been cut at an arrival. ⇒ NO STREAM
+ * CLAIM HERE CAN TELL A RESUME FROM A RE-STAGE. What can is that it is the
+ * SAME RUN: window 2's `finished` carries window 1's transition too, because a
+ * re-staged run's ledgers start at zero.
+ */
+const w = got.seq.windows;
+check(w.length === 2 && w[0].finished.transitions === 1 && w[1].finished.transitions === 2
+    && w[1].from === 864 && w[1].to === 1645,
+'⛔⛔ CLAIM 3b — ONE RUN: window 2\'s LEDGERS ARE THE SEQUENCE\'S, not its own',
+`window 1 ${w[0]?.finished.transitions} transition(s) over [${w[0]?.from},${w[0]?.to}]; `
+    + `window 2 ${w[1]?.finished.transitions} over [${w[1]?.from},${w[1]?.to}] — a re-staged `
+    + 'window 2 would report 1');
+
 check(got.scrubMax === String(oracle.ticks.length - 1),
     '⛓ …and the SCRUB SPANS THE SEQUENCE, not one window',
     `scrub max ${got.scrubMax}`);
@@ -252,14 +272,27 @@ report('…and the window that stops it, BY NAME',
         ? `${refusedAt.label}: ${refusalsAt(refusedAt.admission).map((f) => f.what).join('; ')}`
         : 'none — the whole chain continues');
 /**
- * ⛔ PINNED, so a change in the ANSWER is a change somebody has to explain.
- * The finding itself is not this arm's to fix: `r7-act2-5` declares the clear
- * `{5,0}` and the live JS run does not hold it (window 1 declares none, and
- * `run.earnedClears` is empty through the cut — measured, plus 160 ticks of
- * coasting in L5 that write nothing). Either the GAME holds it at that latch
- * and the MODEL does not produce it, or the segment declares a flag its
- * predecessor never earned. ⛓ THE WASM ROW IS THE INSTRUMENT THAT SETTLES IT:
- * `botSeam()` reports the game's own `persistence_cleared` at that boundary.
+ * ⛔ PINNED, so a change in the ANSWER is a change somebody has to explain —
+ * AND THE MUTANT SETTLED WHAT THE ANSWER MEANS (R9 §10).
+ *
+ * With tier 2 refusing nothing, window 5 steps and THROWS at tick 1067: *"the
+ * removal of bob@48,80 at tick 1067 (an arrow kill) OPENS 1 kill lock(s) in
+ * level 5 [{5,0}] … and the tape DECLARES no clear for them."* ⇒ `{5,0}` is a
+ * KILL LOCK `r7-act2-5`'s OWN WALK opens, carried as a boot `persistence` entry
+ * because `levelRun` refuses to compute a kill-lock clear itself ("two writers
+ * of one persistence slot").
+ *
+ * ⛔ SO A SEGMENT'S DECLARED PERSISTENCE CARRIES TWO DIFFERENT THINGS: a LATCH
+ * of its predecessor's state, which must MATCH the live world, and a FORWARD
+ * DECLARATION of a clear its own walk will earn, which by construction must
+ * NOT. Latch equality cannot tell them apart, so it refuses `r7-act2-5` for
+ * declaring exactly what it has to declare — and the refusal is still CORRECT:
+ * as a continuation window it would enter L5 with the kill lock already open,
+ * which is not the world window 4 left. ⇒ `act2-the-sword` is not continuable
+ * past window 4 AS RECORDED. The next work order is a re-record without the
+ * forward declaration (the v9 timed `at` channel is its declared home) or a
+ * tape field that marks one, so admission can tell the two apart. ⛔ NOT THIS
+ * SLICE'S: it moves no tape.
  */
 check(act2.seq?.admitted === false && refusedAt?.label === 'r7-act2-5'
     && (act2.seq?.windows ?? []).length === 5,
