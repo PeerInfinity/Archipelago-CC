@@ -92,7 +92,11 @@ describe('⛓⛓ the anchors — two readers, 607 headings, one answer', () => {
         //   move it") paid a second time, one artifact over.
         // ⛓ 622 → 623: R9 slice 5's § (the continuation made honest — (d), the
         //   timed-row rule, and the true-start census).
-        expect(total).toBe(629);
+        // ⛓ 629 → 635: R9 slice 7's § (the first coverage-derived retirement) —
+        //   SIX headings, its own plus five sub-sections (which tapes are
+        //   covered, the choreography record, ⚖ ruling 17, the decayed bound,
+        //   the numbers). A re-pin, not a widening.
+        expect(total).toBe(635);
     });
 
     it('⛔ uses OUR rule, not marked\'s slugger — they differ, and here is where', () => {
@@ -260,9 +264,13 @@ describe('⛓ the biggest document — the one the budget is about', () => {
         //   headings, because the slice's account has five sub-sections
         //   (the clock, the chain, the page, the findings, the numbers) under
         //   its own — a re-pin, not a widening.
+        // ⛓ 416 → 422: R9 slice 7's § — the first coverage-derived retirement.
+        //   Six headings again, and one of them (`#### The numbers`) is the
+        //   SECOND heading of that text in this document, so it takes the -N
+        //   rule's ninth suffix — see `ghSlug.test.js`.
         const ids = idsOf(RENDERS.get('seedling-bot.md').html);
-        expect(ids).toHaveLength(416);
-        expect(new Set(ids).size).toBe(416);
+        expect(ids).toHaveLength(422);
+        expect(new Set(ids).size).toBe(422);
         expect(ids.filter((i) => i !== ghSlug(i))).toEqual([]);
     });
 
