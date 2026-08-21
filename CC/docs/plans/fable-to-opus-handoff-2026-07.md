@@ -3455,6 +3455,20 @@ envelope needed a third ledger). The census's fix list names five re-records wit
 PREDICTED `seam.time` (5609 · 6279 · 6847 · 7921 · 8587), four gaps and the L14 STOP. ⚖ Ruling
 13's rock-exposure report: **NO CHAIN ROOM MOVES** ⇒ the chain re-record goes AHEAD and
 shortening follows under its own licence. ⛔ Zero tapes moved.
+⛓⛓⛓ **AND THE WINDOWS SESSION REFUTED THE SLICE'S OWN HEADLINE PREDICTION, WHICH IS ITS BEST
+RESULT.** (d) MOVED the refusal, it did not remove it: on three independent chains the
+boundary AFTER the first refuses on **`seam` alone**, with **`time` the only differing row**
+and the gap exactly **21 = LOAD_FADE_FRAMES (20) + BOOT_PRESWAP_FRAMES (1)** — the boot cost a
+continuation never pays (`r8-d2-20` 10213/10192 · `r7-act2-3` 5069/5048 · `r8-solve-3`
+5069/5048). **`rng` is not among the findings in any of them**, which is exactly what (d) was
+for. ⇒ **⚖⚖ RULING 12's (a) IS REVIVED BY MEASUREMENT AND SPECIFIED TO THE FRAME**, with three
+costed options for the user — a second declared tape field · `botStart` spending the boot cost
+(AS3, not taken) · **the ADMISSION adding the constant back on a continuation, which needs no
+tape change and is newly arguable**. ⛔ Not built; blocks nothing in slice 6 (`seam` is
+unasserted by name on the JS tier). Gates: ship **83/0 → 91/0**, R8 tape gate **541/0/67** with
+porcelain empty, vitest 6731 → 6758. ⛔ Carried off, one more: **a queue the JS tier refuses
+never reaches the ship** — `watch.html` runs the JS walk first because it produces each
+window's model stream, so the wasm tier's subject is the JS-ADMITTED PREFIX (trap 486).
 **NEXT in R9: slice 6 — the chain RE-RECORD (the five successors + the four missing legs, each
 predicted first), and the route's own next refusal is still L14's CAMERA BAND.**
 **Slice 1 (the quick fixes) SHIPPED 2026-08-20**, `d7b0f5ec1..9bbc847fb`: the
