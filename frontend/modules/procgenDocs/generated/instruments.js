@@ -139,7 +139,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 6,
+            "count": 7,
             "id": "solve"
         },
         {
@@ -164,13 +164,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 214,
+        "blockStyle": 215,
         "browser": 73,
         "cited": 67,
-        "files": 233,
+        "files": 234,
         "lineStyle": 19,
-        "withDocblock": 233,
-        "withFlags": 141
+        "withDocblock": 234,
+        "withFlags": 142
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -5229,6 +5229,31 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "solve-seedling-r8-tail — THE BATTERY'S TAIL, through the TWO-PASS AUTHORING LOOP.",
             "path": "scripts/procgen/solve-seedling-r8-tail.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "solve",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "solve-seedling-r9-campaign.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "headline"
+                }
+            ],
+            "oneLiner": "solve-seedling-r9-campaign — **THE TRUE-START SOLVER CHAIN**: every room of Seedling's sphere order from `new Game(0,80,128)` to the L14 camera band, driven by the live solver, each segment booting its predecessor's MEASURED LATCH.",
+            "path": "scripts/procgen/solve-seedling-r9-campaign.mjs"
         },
         {
             "argvHelpers": [],
