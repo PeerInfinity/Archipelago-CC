@@ -3412,7 +3412,7 @@ refused to derive. ⛔ **THE STANDING IDENTITIES THAT MOVED ON PURPOSE**: batter
 window bought: the SEAM is the only instrument that can see a dishonest boot (every stream
 claim stays green); a LATCH is not a LIVE STATE from window 3 on (`SEAM_PREBUILD_FIELDS` — ⚖ an
 ASK, unfixable by re-record); and two ledgers that agreed until a room wrote out of band.
-⛓⛓⛓ **SLICE 4 — THE DERIVED `break` VERB, SHIPPED 2026-08-20**, `..<SLICE4HEAD>`. The engine
+⛓⛓⛓ **SLICE 4 — THE DERIVED `break` VERB, SHIPPED 2026-08-20**, `801fe0dfa..d49bdb1c2`. The engine
 has modelled a sword swing on a `BreakableRock` since R5; what did not exist was a SOLVER row.
 Two `OBSTACLE_STRATEGIES` rows (`breakablerock` AND `breakablerockghost` — one AS3 class, two
 census tags) and one executor whose two guards each name an ITEM rather than a budget.
