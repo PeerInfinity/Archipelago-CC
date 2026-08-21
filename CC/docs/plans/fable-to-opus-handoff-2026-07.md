@@ -3436,8 +3436,27 @@ land, and the REACHABLE head is named with its evidence: **ROW 14's ROCK LOCK** 
 ⚖ A SECOND ASK: `solverBot.facingToward` answers in a numbering the game does not use, so
 `slashRectToward` can never accept a VERTICAL strike cell — conservative, hence three rungs of
 green tapes over it, and repairing it moves tapes.
-**NEXT in R9: the campaign (⚖ ruling 11's true-start solver chain), and the route's own next
-refusal is L14's CAMERA BAND.**
+⛓⛓⛓ **SLICE 5 — THE CAMPAIGN OPENED: (d), THE TIMED-ROW RULE, AND THE TRUE-START CENSUS,
+2026-08-21.** ⚖ Ruling 12's option (d): the page ASSERTS a continuation window's declared `rng`
+pre-vs-pre and then STRIPS it from the copy `botLoadTape` gets (`split` KEPT — `Rng.split` is
+assigned unconditionally, and TWO roster tapes really declare it true, so the tier-1 refusal has
+a live witness rather than only a mutant). ⚖ Ruling 14's TIMED-ROW RULE: a v9 `at` row is the
+walk's OWN clear, excluded from latch equality, withheld from the GAME and handed to the MODEL
+rebased — and **`act2-the-sword` steps ALL ELEVEN WINDOWS with TEN boundaries admitted, with the
+tape byte-untouched**. ⛔ Carried off, three: **a refusal that names its own next work order can
+name the WRONG one** (slice 2 asked for a re-record; the cure it named — the v9 `at` channel —
+was already on the tapes it was refusing, and what was missing was an admission rule that could
+read it); **a lookup keyed on the BOOT answers a question about the boot, never about the GOAL**
+(the survey's `KNOWN_ANSWERS` map pointed step 11 at `r8-solve-11`, which solves a DIFFERENT
+goal at 87 t where the route's leg is 119 t — so the census's biggest row is a MISSING SEGMENT,
+not a re-record, and the gap count is FOUR); and **a true sentence about the wrong ledger, for
+the second slice running** (`earnedClears` does not carry an APPLIED TIMED row, so the live
+envelope needed a third ledger). The census's fix list names five re-records with their
+PREDICTED `seam.time` (5609 · 6279 · 6847 · 7921 · 8587), four gaps and the L14 STOP. ⚖ Ruling
+13's rock-exposure report: **NO CHAIN ROOM MOVES** ⇒ the chain re-record goes AHEAD and
+shortening follows under its own licence. ⛔ Zero tapes moved.
+**NEXT in R9: slice 6 — the chain RE-RECORD (the five successors + the four missing legs, each
+predicted first), and the route's own next refusal is still L14's CAMERA BAND.**
 **Slice 1 (the quick fixes) SHIPPED 2026-08-20**, `d7b0f5ec1..9bbc847fb`: the
 per-spec parameter DOMAIN `key=v1|v2|v3` (byte-inert, whole identity block
 unmoved) and the rung's ONE ruled generator re-record adopting it in the biome
