@@ -11905,9 +11905,47 @@ only in the rocks.
 **⛓ THE GATE MOVES.** `check-seedling-editor-sequence` 20 / 0 → **21 / 0**, and
 claim 9's pin moves from *"stopped at r7-act2-5 after 5 window(s)"* to *"11
 window(s) stepped; 10 boundary(ies) admitted"* — the old answer kept in the
-comment as the mutant's value. The ship gate's CHAIN arm is rewritten from
-*asserts the refusal* to six claims (both boundaries admitted · nothing refused
-· `rngStripped` per window · three per-tick agreements · the whole
-concatenation · every window's dead-frame share equal to the model's), every
-count DERIVED from the chain and the tapes rather than typed (trap 495).
+comment as the mutant's value. The ship gate goes **83 / 0 → 91 / 0** over its
+five arms, every count DERIVED from the chain and the tapes rather than typed
+(trap 495).
 ⛔ **This slice moves NO tape, trace, expectation or generator default.**
+
+**⛔⛔⛔ AND THE MEASUREMENT REFUTED THE PREDICTION — (d) MOVED THE REFUSAL, IT
+DID NOT REMOVE IT.** The seal said the three-window `?tapes=r8-d2` would admit
+at both boundaries. On the real GPU it admits at `boundary 1/3` and refuses at
+`boundary 2/3` — **but not on `rng`**. `rng` is not among the findings at all,
+which is exactly what (d) was built to achieve. The ONE remaining refusal is
+`seam`, and `time` is the only row of it that differs:
+
+```
+?tapes=r8-d2          r8-d2-20     declared 10213   live 10192   Δ 21
+?tapes=act2-the-sword r7-act2-3    declared  5069   live  5048   Δ 21
+?tapes=<solver 1..11> r8-solve-3   declared  5069   live  5048   Δ 21
+```
+
+⛓⛓⛓ **THREE INDEPENDENT CHAINS, ONE NUMBER: 21 = `LOAD_FADE_FRAMES` (20) +
+`BOOT_PRESWAP_FRAMES` (1)** — the room fade a fresh page pays on `botStart`
+plus the one frame a boot spends in the outgoing world. Every declared latch on
+the roster was measured after a FRESH-PAGE replay of its own segment; a
+continuation pays neither. In each case the boundary BEFORE it admits, because
+window 1 IS a fresh boot and pays exactly what the declaration was measured
+with; every boundary after the first is a continuation and is 21 behind.
+
+⇒ this is a fact about the **tape format**, not about the page: one declared
+reading cannot be both a fresh page's boot state and a continuation's arrival
+state. **⚖ Ruling 12's option (a) — a SECOND declared stream position, the
+POST-build reading beside the PRE-build one — is REVIVED BY MEASUREMENT** and
+is NOT built here (ruling 14: only a measured residual mismatch revives it).
+The CHAIN arm therefore keeps its refusal and asserts the measurement: `rng`
+ABSENT from the findings and `seam` PRESENT, both ways round; `time` the only
+differing seam row; and the residual DERIVED from the two constants. The
+boundary record now publishes `live.blocks` as DATA, because that number
+existed only inside a refusal SENTENCE and a gate asserting it would have had
+to regex prose for a value (trap 269).
+
+⚠ **AND THE WASM TIER'S SUBJECT IS THE JS-ADMITTED PREFIX.** `watch.html` runs
+the JS walk FIRST — it is what produces each window's model stream — so a queue
+the JS tier refuses never reaches the ship: `?tapes=<all twelve>` stops at
+*"window 11 (`r9-solve-3`) cannot continue window 10"* and `__watch.wasm` never
+reaches `runtime`. The census prints the prefix, with the reason (trap 486 — an
+instrument that cannot fire).

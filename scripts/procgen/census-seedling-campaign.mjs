@@ -505,14 +505,31 @@ say('⛔ NOT RUN HERE. `rng` and `seam` are the two rows this tier leaves '
     + 'unasserted, and only the real GPU can answer them (`botSeam()` → '
     + '`segmentBootFromLatch`). On the user\'s Windows Chrome, announced:');
 say('');
+/**
+ * ⛔⛔ THE SUBJECT IS THE JS-ADMITTED PREFIX, NOT THE WHOLE CHAIN — MEASURED,
+ * not reasoned. `watch.html` runs the JS walk FIRST, because that walk is what
+ * produces each window's model stream for the per-tick verdict. So a queue the
+ * JS tier REFUSES never reaches the ship at all: `?tapes=<the whole chain>`
+ * stops at *"window 11 (`r9-solve-3`) cannot continue window 10"* and
+ * `__watch.wasm` never reaches `runtime`. Naming the whole chain here would
+ * print a command that cannot answer the question it is printed for
+ * (trap 486 — an instrument that cannot FIRE).
+ */
+const firstRefusal = chainRows.findIndex((r) => r.verdict === 'REFUSED');
+const wasmPrefix = firstRefusal === -1 ? CHAIN : CHAIN.slice(0, firstRefusal + 1);
 say(`    http://localhost:8000/frontend/modules/seedlingDemo/watch.html`
-    + `?tapes=${CHAIN.join(',')}&side=wasm`);
+    + `?tapes=${wasmPrefix.join(',')}&side=wasm`);
 say(`    http://localhost:8000/frontend/modules/seedlingDemo/watch.html`
     + `?tapes=${TAIL.join(',')}&side=wasm`);
 say('');
-say('⛔ ITS BOUND IS NAMED IN ADVANCE: the page stops at the first boundary it '
-    + 'refuses, so a pair the JS tier already refuses is UNASSERTED on rng/seam '
-    + 'and stays on the fix list. The as-built records how far it reached.');
+say(`⛔ THE FIRST URL IS THE JS-ADMITTED PREFIX (${wasmPrefix.length} of `
+    + `${CHAIN.length} tapes), and that is not a convenience: the page runs the `
+    + 'JS walk FIRST — it is what produces each window\'s model stream — so a '
+    + 'queue the JS tier refuses never reaches the ship. Asking for the whole '
+    + 'chain prints a command that stops before the wasm arm begins.');
+say('⛔ AND ITS OWN BOUND: the ship stops at the first boundary IT refuses, so '
+    + 'every pair from there on is UNASSERTED on rng/seam and stays on the fix '
+    + 'list. The as-built records how far it reached.');
 
 // ── THE OUTPUT FILE ──────────────────────────────────────────────────
 if (WRITE) {
