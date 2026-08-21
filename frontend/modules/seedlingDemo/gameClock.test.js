@@ -141,14 +141,22 @@ describe('⛓⛓⛓ THE FREE ORACLE — the game latched every one of these', ()
         const withCeremony = seams.filter(({ from }) => runTape(loadTape(from), { levelSource })
             .deadFrameSpans.some((s) => s.kind === 'ceremony' || s.kind === 'help'));
         /**
-         * ⛓ R9 SLICE 6 — FOUR NOW, and every one is a room where the walk PICKS
+         * ⛓ R9 SLICE 6 — FOUR, and every one is a room where the walk PICKS
          * SOMETHING UP: the sword twice (`r7-act2-10` and its solver
          * counterpart `r8-solve-10`, on two different chains) and a boss key /
          * a chest. The list is DERIVED from `deadFrameSpans`, so a room added
          * tomorrow joins it; it is pinned here because the count is the claim.
+         *
+         * ⛓⛓⛓ R9 SLICE 7 — **THREE NOW, AND THE SWORD ONLY ONCE.** ⚖ Ruling 14
+         * retired `r7-act2-10` with the rest of the hand chain, so the sword's
+         * ceremony is witnessed by its solver counterpart `r8-solve-10` alone.
+         * The count moving is the retirement showing up in a DERIVED list —
+         * exactly what a pin over a derived list is for (trap 410: a pin that
+         * moves because somebody wrote into what it measures is the pin
+         * WORKING). Nothing about the ceremony itself changed.
          */
         expect(withCeremony.map((s) => s.from))
-            .toEqual(['r7-act2-10', 'r8-d2-19', 'r8-solve-10', 'r9-solve-11']);
+            .toEqual(['r8-d2-19', 'r8-solve-10', 'r9-solve-11']);
         for (const { from, to } of withCeremony) {
             const tape = loadTape(from);
             const run = runTape(tape, { levelSource });
@@ -164,7 +172,10 @@ describe('⛓⛓⛓ THE FREE ORACLE — the game latched every one of these', ()
     });
 
     it('⛓ and the SWORD is the one that also spends a Help frame', () => {
-        const sword = runTape(loadTape('r7-act2-10'), { levelSource });
+        // ⛓ R9 slice 7: was `r7-act2-10`, retired by ⚖ ruling 14. `r8-solve-10`
+        //   is the solver's walk of the same room taking the same sword, and it
+        //   is on the ceremony list above by MEASUREMENT, not by assumption.
+        const sword = runTape(loadTape('r8-solve-10'), { levelSource });
         const key = runTape(loadTape('r8-d2-19'), { levelSource });
         expect(sword.deadFrameSpans.filter((s) => s.kind === 'help')
             .reduce((n, s) => n + s.frames, 0)).toBe(1);
@@ -263,7 +274,9 @@ describe('⛓⛓⛓ THE RESUMED CLOCK — (d′) has no JS half, and this is the
             .toBeGreaterThanOrEqual(2);
         const custody = PLAYTHROUGH_CHAINS
             .filter((c) => (c.segments ?? []).length > 1 && !continuable.includes(c));
-        expect(custody.map((c) => c.id)).toContain('act2-the-sword');
+        // ⛓ R9 slice 7: was `act2-the-sword`; ⚖ ruling 14 retired it and
+//   `r9-campaign` is the custody chain that boots the true start now.
+        expect(custody.map((c) => c.id)).toContain('r9-campaign');
         for (const c of custody) {
             // ⛔ the reason, ASSERTED rather than asserted-about: segment 1
             //    declares no clock, so the run has none.
@@ -272,7 +285,10 @@ describe('⛓⛓⛓ THE RESUMED CLOCK — (d′) has no JS half, and this is the
     });
 
     it('⛔ a chain booting the TRUE START reads `null` at every boundary, by name', () => {
-        const chain = PLAYTHROUGH_CHAINS.find((c) => c.id === 'act2-the-sword');
+        // ⛓ R9 slice 7: `r9-campaign` replaces the retired `act2-the-sword`
+        //   as the chain that boots the TRUE START — fifteen segments, so
+        //   this now sweeps fourteen boundaries rather than ten.
+        const chain = PLAYTHROUGH_CHAINS.find((c) => c.id === 'r9-campaign');
         const rows = boundariesOf(chain);
         expect(rows.length).toBe(chain.segments.length - 1);
         expect(rows.map((r) => r.live)).toEqual(rows.map(() => null));

@@ -161,7 +161,7 @@ describe('the MODEL-sourced arm — L5, derived and then WALLED', () => {
 
 describe('the GAME-sourced arm — L8, and the refusal to substitute', () => {
     it('⛔ refuses to substitute the MODEL for a game-sourced tick, BY NAME', async () => {
-        const { t, base, makeRun } = harnessFor('r7-act2-8');
+        const { t, base, makeRun } = harnessFor('r8-solve-8');
         await expect(twoPassSolve({
             makeRun, goals: [{ kind: 'reach-exit', exit: { x: 96, y: 192 } }],
             name: 'probe-2pass-l8', boot: t.boot, persistence: base,
@@ -169,7 +169,7 @@ describe('the GAME-sourced arm — L8, and the refusal to substitute', () => {
     });
 
     it('⛓ with an oracle, L8 converges — and every pass is a MEASURE or a SOLVE', async () => {
-        const { t, base, makeRun } = harnessFor('r7-act2-8');
+        const { t, base, makeRun } = harnessFor('r8-solve-8');
         /**
          * ⚠ A SYNTHETIC ORACLE, AND IT IS NOT A MEASUREMENT. It answers with
          * a tick inside the prefix so the LOOP's shape can be driven offline;
@@ -202,7 +202,7 @@ describe('the GAME-sourced arm — L8, and the refusal to substitute', () => {
     });
 
     it('⛔ a declaration that unblocks NOTHING is named at the SECOND occurrence', async () => {
-        const { t, base, makeRun } = harnessFor('r7-act2-8');
+        const { t, base, makeRun } = harnessFor('r8-solve-8');
         // An oracle answering with the very END of the prefix: the clear
         // lands after the hold it was measured in, so the next pass raises
         // the same declaration again. The bound would eventually catch it;
@@ -215,7 +215,7 @@ describe('the GAME-sourced arm — L8, and the refusal to substitute', () => {
     });
 
     it('⛔ a tick measured PAST the end of the measuring walk is refused', async () => {
-        const { t, base, makeRun } = harnessFor('r7-act2-8');
+        const { t, base, makeRun } = harnessFor('r8-solve-8');
         const oracle = async ({ perTick }) => ({ at: perTick.length + 1, evidence: 'too far' });
         await expect(twoPassSolve({
             makeRun, goals: [{ kind: 'reach-exit', exit: { x: 96, y: 192 } }],
@@ -224,7 +224,7 @@ describe('the GAME-sourced arm — L8, and the refusal to substitute', () => {
     });
 
     it('⛔ an oracle that answers with a non-integer is refused', async () => {
-        const { t, base, makeRun } = harnessFor('r7-act2-8');
+        const { t, base, makeRun } = harnessFor('r8-solve-8');
         await expect(twoPassSolve({
             makeRun, goals: [{ kind: 'reach-exit', exit: { x: 96, y: 192 } }],
             name: 'probe-2pass-l8-junk', boot: t.boot, persistence: base,

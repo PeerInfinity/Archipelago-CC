@@ -694,7 +694,7 @@ describe('⛓ slice 6 — the attack rects are the ledger\'s own', () => {
 
 describe('⛓ slice 6 — the chaser BOX tracks the stepped position tick for tick', () => {
     it('r7-act2-4: the box is chaserBoxAt of run.chasers, at three sampled ticks', () => {
-        const c = collectRun(tape('r7-act2-4'), atlasLevelSource());
+        const c = collectRun(tape('r8-solve-4'), atlasLevelSource());
         // The tape walks a chaser room; `chaserWalks` is the engine's own
         // per-tick position ledger and is what the boxes are checked against.
         const walks = c.run.chaserWalks;
@@ -973,7 +973,7 @@ describe('slice 9 — the WORLD-STATE layer', () => {
      * that tracks from a layer that marks everything.
      */
     it('⛓⛓⛓ L11\'s chest is unmarked at tick 0 and GONE at tick 6 — and the engine agrees', () => {
-        const c = collectRun(tape('r7-act2-11'), levelSourceForTests);
+        const c = collectRun(tape('r8-solve-11'), levelSourceForTests);
         // the population, measured — one changeable object stands in this room
         expect(c.samples[0].changeCounts.placed).toBe(1);
         expect(c.samples[0].changeCounts.byFamily).toEqual({ openChests: 1 });
@@ -983,7 +983,7 @@ describe('slice 9 — the WORLD-STATE layer', () => {
         // ⛔ AND THE EMPTY SAYS WHICH EMPTY IT IS, with the count in it.
         expect(before.why).toMatch(/^1 changeable object\(s\) stand in this room and the run has changed NONE/);
 
-        const first = firstChange('r7-act2-11');
+        const first = firstChange('r8-solve-11');
         expect(first.tick).toBe(6);
         expect(first.got.why).toBe(null);
         expect(first.got.changes).toEqual([{
@@ -1236,7 +1236,7 @@ describe('slice 9 — the CRUSHERS, the R5 forward\'s first reader', () => {
 describe('⚖ slice 9 — the DANGER the SOLVER was told (item 9)', () => {
     const solveL4 = () => solveForPage({
         levelSource: levelSourceForTests,
-        staging: stagingFromTape(parseTape(tape('r7-act2-4'))),
+        staging: stagingFromTape(parseTape(tape('r8-solve-4'))),
         goals: [{ kind: 'reach-exit', exit: { x: 64, y: 16 } }],
         name: 'slice9-L4',
     });

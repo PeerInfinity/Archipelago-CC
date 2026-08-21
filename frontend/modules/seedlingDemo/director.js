@@ -725,10 +725,6 @@ export function traceTicks(windows) {
  */
 export const PAGE_CHAINS = Object.freeze({
     'toy-west-pair': Object.freeze(['r7-ends-meet-1', 'r7-ends-meet-2']),
-    'act2-the-sword': Object.freeze([
-        'r7-act2-1', 'r7-act2-2', 'r7-act2-3', 'r7-act2-4', 'r7-act2-5', 'r7-act2-6',
-        'r7-act2-7', 'r7-act2-8', 'r7-act2-9', 'r7-act2-10', 'r7-act2-11',
-    ]),
     'r8-battery-1': Object.freeze(['r8-solve-1']),
     'r8-battery-2': Object.freeze(['r8-solve-2']),
     'r8-battery-3': Object.freeze(['r8-solve-3']),

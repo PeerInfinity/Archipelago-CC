@@ -92,7 +92,7 @@ function runFromCommitted(name, over = {}) {
 
 describe('the full-bag path (⚖ §8.3.1 ruled resolution)', () => {
     it('run.liveGeometryOpts() is BRANDED and covers all fourteen families', () => {
-        const { run } = runFromCommitted('r7-act2-2');
+        const { run } = runFromCommitted('r8-solve-2');
         const bag = run.liveGeometryOpts();
         expect(isNormalizedLiveOpts(bag)).toBe(true);
         for (const k of LIVE_GEOMETRY_KEYS) expect(k in bag, `missing ${k}`).toBe(true);
@@ -145,7 +145,7 @@ describe('the full-bag path (⚖ §8.3.1 ruled resolution)', () => {
 
 describe('the battery rooms, in-model (the differential is the game-side gate)', () => {
     it('solves segment 2 (L2) and the transition is the tape\'s end', () => {
-        const { run, committed } = runFromCommitted('r7-act2-2');
+        const { run, committed } = runFromCommitted('r8-solve-2');
         const out = solveSegment({
             run, goals: [{ kind: 'reach-exit', exit: { x: 48, y: 96 } }],
             name: 'r8-solve-2', boot: committed.boot,
@@ -159,7 +159,7 @@ describe('the battery rooms, in-model (the differential is the game-side gate)',
     });
 
     it('solves segment 10 (L10, the SWORD collect) — strategy selection is real', () => {
-        const { run, committed } = runFromCommitted('r7-act2-10');
+        const { run, committed } = runFromCommitted('r8-solve-10');
         const out = solveSegment({
             run,
             goals: [
@@ -180,7 +180,7 @@ describe('the battery rooms, in-model (the differential is the game-side gate)',
     });
 
     it('solves segment 11 (L11, the chest) — the other selection arm', () => {
-        const { run, committed } = runFromCommitted('r7-act2-11');
+        const { run, committed } = runFromCommitted('r8-solve-11');
         const out = solveSegment({
             run,
             goals: [
@@ -204,7 +204,7 @@ describe('the battery rooms, in-model (the differential is the game-side gate)',
 
 describe('the trace producer — the first real producer of the slice-0 schema', () => {
     it('the produced trace validates, agrees with its own tape per row, and is sparse', () => {
-        const { run, committed } = runFromCommitted('r7-act2-10');
+        const { run, committed } = runFromCommitted('r8-solve-10');
         const out = solveSegment({
             run,
             goals: [
@@ -253,7 +253,7 @@ describe('the refusal shapes — never a silent stall', () => {
      * passing is not a stratum that stopped checking.
      */
     it('L4: `hold` then `shove` — the room SOLVES, and both decisions are traced', () => {
-        const { run, committed } = runFromCommitted('r7-act2-4');
+        const { run, committed } = runFromCommitted('r8-solve-4');
         const out = solveSegment({
             run, goals: [{ kind: 'reach-exit', exit: { x: 64, y: 16 } }],
             name: 'probe-l4', boot: committed.boot,
@@ -289,7 +289,7 @@ describe('the refusal shapes — never a silent stall', () => {
      * every rung of the ladder and what each said.
      */
     it('⛓ L8: both shoves DERIVED and the room CROSSES, once its clears are declared', () => {
-        const { run, committed } = runFromCommitted('r7-act2-8');
+        const { run, committed } = runFromCommitted('r8-solve-8');
         const out = solveSegment({
             run, goals: [{ kind: 'reach-exit', exit: { x: 96, y: 192 } }],
             name: 'probe-l8', boot: committed.boot,
@@ -340,7 +340,7 @@ describe('the refusal shapes — never a silent stall', () => {
      * nothing about a `SandTrap`'s death).
      */
     it('⛔ L8 with its clears UNDECLARED raises a GAME-sourced pending declaration', () => {
-        const { run, committed } = runFromCommitted('r7-act2-8', {
+        const { run, committed } = runFromCommitted('r8-solve-8', {
             persistence: [{ level: 5, tag: 0 }],
         });
         let refusal = null;
@@ -385,7 +385,7 @@ describe('the refusal shapes — never a silent stall', () => {
     });
 
     it('a collect-placement with nothing standing there refuses as a MACRO-layer error', () => {
-        const { run, committed } = runFromCommitted('r7-act2-2');
+        const { run, committed } = runFromCommitted('r8-solve-2');
         let refusal = null;
         try {
             solveSegment({
@@ -400,7 +400,7 @@ describe('the refusal shapes — never a silent stall', () => {
     });
 
     it('an unknown goal kind is refused at the door (the solver\'s vocabulary is closed)', () => {
-        const { run, committed } = runFromCommitted('r7-act2-2');
+        const { run, committed } = runFromCommitted('r8-solve-2');
         expect(() => solveSegment({
             run, goals: [{ kind: 'kill-everything' }],
             name: 'probe-goal', boot: committed.boot,
@@ -520,9 +520,9 @@ describe('the refusal shapes — never a silent stall', () => {
     it('⚠ BOUNDED VACUITY, MEASURED: no battery room exhausts the ladder any more', () => {
         const exhausted = [];
         for (const [tape, exit] of [
-            ['r7-act2-4', { x: 64, y: 16 }],
+            ['r8-solve-4', { x: 64, y: 16 }],
             ['r7-act2-6', { x: 224, y: 32 }],
-            ['r7-act2-8', { x: 96, y: 192 }],
+            ['r8-solve-8', { x: 96, y: 192 }],
         ]) {
             const { run, committed } = runFromCommitted(tape);
             try {
@@ -760,7 +760,7 @@ describe('R8 slice 3: `hold` registered — the derived-parameter executor', () 
      * changed nothing would leave the same obstacle in the message.
      */
     it('⛔ the frontier ADVANCED from the button to the block, and the block MOVED', () => {
-        const { run, committed } = runFromCommitted('r7-act2-4');
+        const { run, committed } = runFromCommitted('r8-solve-4');
         const out = solveSegment({
             run, goals: [{ kind: 'reach-exit', exit: { x: 64, y: 16 } }],
             name: 'r8-solve-4', boot: committed.boot,
@@ -798,7 +798,7 @@ describe('R8 slice 3: `hold` registered — the derived-parameter executor', () 
      * arithmetic: the kill, then the "die" animation, then the fade.
      */
     it('⛓⛓ the hold stops on its OBSERVED condition — the body being gone', () => {
-        const { run, committed } = runFromCommitted('r7-act2-4');
+        const { run, committed } = runFromCommitted('r8-solve-4');
         const out = solveSegment({
             run, goals: [{ kind: 'reach-exit', exit: { x: 64, y: 16 } }],
             name: 'r8-solve-4', boot: committed.boot,
@@ -848,7 +848,7 @@ describe('R8 slice 3: `hold` registered — the derived-parameter executor', () 
  */
 describe('the shove scan\'s off-the-map bound — units, measured', () => {
     it('⛔ `world.width/height` are TILES and `world.world.*` are PIXELS', () => {
-        const { run } = runFromCommitted('r7-act2-8');
+        const { run } = runFromCommitted('r8-solve-8');
         expect(run.world.width).toBe(12);
         expect(run.world.height).toBe(13);
         expect(run.world.world.width).toBe(12 * 16);
@@ -860,7 +860,7 @@ describe('the shove scan\'s off-the-map bound — units, measured', () => {
     });
 
     it('⛓ the derived second shove SINKS the block — the last resort, reached by exhaustion', () => {
-        const { run, committed } = runFromCommitted('r7-act2-8', {
+        const { run, committed } = runFromCommitted('r8-solve-8', {
             persistence: [{ level: 5, tag: 0 }],
         });
         let refusal = null;
@@ -919,7 +919,7 @@ describe('⚖ slice 10: `solid:chest` — the corridor-blocking chest is COLLECT
     });
 
     it('⛔ the frontier names the chest as a SOLID and the trace says which verb', () => {
-        const { run, committed } = runFromCommitted('r7-act2-11');
+        const { run, committed } = runFromCommitted('r8-solve-11');
         const out = solveSegment({
             run, goals: [{ kind: 'reach-exit', exit: { ...L11_EXIT } }],
             name: 'slice10-l11-obstacle', boot: committed.boot,
@@ -933,12 +933,12 @@ describe('⚖ slice 10: `solid:chest` — the corridor-blocking chest is COLLECT
     });
 
     it('⛓⛓⛓ …and the walk it earns is the GOAL-DIRECTED collect\'s, key for key', () => {
-        const a = runFromCommitted('r7-act2-11');
+        const a = runFromCommitted('r8-solve-11');
         const obstacleSide = solveSegment({
             run: a.run, goals: [{ kind: 'reach-exit', exit: { ...L11_EXIT } }],
             name: 'slice10-l11-obstacle', boot: a.committed.boot,
         });
-        const b = runFromCommitted('r7-act2-11');
+        const b = runFromCommitted('r8-solve-11');
         const goalSide = solveSegment({
             run: b.run,
             goals: [
@@ -971,12 +971,12 @@ describe('⚖ slice 10: `solid:chest` — the corridor-blocking chest is COLLECT
     });
 
     it('⚠ …and the two differ in exactly ONE thing — the decision they record', () => {
-        const a = runFromCommitted('r7-act2-11');
+        const a = runFromCommitted('r8-solve-11');
         const obstacleSide = solveSegment({
             run: a.run, goals: [{ kind: 'reach-exit', exit: { ...L11_EXIT } }],
             name: 'slice10-l11-obstacle', boot: a.committed.boot,
         });
-        const b = runFromCommitted('r7-act2-11');
+        const b = runFromCommitted('r8-solve-11');
         const goalSide = solveSegment({
             run: b.run,
             goals: [
@@ -1047,7 +1047,7 @@ describe('⚖ slice 10: `SolverRefusal` carries the danger record', () => {
      */
     const L16_BOOT = { level: 16, x: 32, y: 64 };
     const refuseInL16 = () => {
-        const { run } = runFromCommitted('r7-act2-11', { boot: { ...L16_BOOT } });
+        const { run } = runFromCommitted('r8-solve-11', { boot: { ...L16_BOOT } });
         try {
             solveSegment({
                 run, goals: [{ kind: 'reach-exit', exit: { x: 352, y: 80 } }],

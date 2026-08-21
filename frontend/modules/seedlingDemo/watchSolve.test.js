@@ -62,7 +62,7 @@ describe('the ?goals= vocabulary', () => {
 
 describe('the census the goal picker offers', () => {
     it('speaks the runner\'s own OEL coordinates for L4\'s two exits', () => {
-        const world = censusWorld(levelSource, stagingOf('r7-act2-4'));
+        const world = censusWorld(levelSource, stagingOf('r8-solve-4'));
         const specs = censusGoalOptions(world).map((o) => o.spec);
         // (64,16) is the exit `solve-seedling-r8-battery`'s `goalsFor(4)`
         // derives from the chain's own units — the picker and the battery
@@ -90,7 +90,7 @@ describe('the census the goal picker offers', () => {
 
 describe('the ?solve=1 default', () => {
     it('REFUSES L4 — two live exits is not one default', () => {
-        const world = censusWorld(levelSource, stagingOf('r7-act2-4'));
+        const world = censusWorld(levelSource, stagingOf('r8-solve-4'));
         const { goals, refusal } = defaultGoalsFromCensus(world);
         expect(goals).toBeNull();
         expect(refusal).toMatch(/2 live exit\(s\)/);
@@ -120,7 +120,7 @@ describe('the ?solve=1 default', () => {
 
 describe('the staging block, from whatever JSON the caller has', () => {
     it('extracts a committed TAPE\'s block and drops its inputs', () => {
-        const staging = stagingFromJson(readTape('r7-act2-4'));
+        const staging = stagingFromJson(readTape('r8-solve-4'));
         expect(staging.boot).toEqual({ level: 4, x: 16, y: 16 });
         expect(staging.rng.seed).toBe(2057886025);
         expect(staging).not.toHaveProperty('inputs');
@@ -128,12 +128,12 @@ describe('the staging block, from whatever JSON the caller has', () => {
     });
 
     it('round-trips a BARE block — what the textarea holds', () => {
-        const bare = stagingOf('r7-act2-4');          // no inputs, no tick_count
+        const bare = stagingOf('r8-solve-4');          // no inputs, no tick_count
         expect(stagingFromJson(bare)).toEqual(bare);
     });
 
     it('gives a malformed block the TAPE PARSER\'s own message, not a second one', () => {
-        const bad = { ...stagingOf('r7-act2-4'), boot: { level: 'four', x: 16, y: 16 } };
+        const bad = { ...stagingOf('r8-solve-4'), boot: { level: 'four', x: 16, y: 16 } };
         expect(() => stagingFromJson(bad)).toThrow(/boot/i);
     });
 
@@ -169,7 +169,7 @@ describe('the staging block, from whatever JSON the caller has', () => {
      */
     it('⛓⛓⛓ EVERY COMMITTED BOOT ROUND-TRIPS THROUGH THE TEXTAREA', () => {
         const cases = [
-            ['r7-act2-4', 8], ['r8-solve-18', 9], ['r7-act2-6', 10], ['r7-act2-full', 10],
+            ['r8-solve-4', 8], ['r8-solve-18', 9], ['r7-act2-6', 10], ['r7-act2-full', 10],
         ];
         for (const [name, version] of cases) {
             const staging = stagingFromJson(readTape(name));
@@ -192,8 +192,8 @@ describe('the staging block, from whatever JSON the caller has', () => {
 
 describe('the PRESETS harvest', () => {
     it('is the committed tape\'s OWN staging block, field for field', () => {
-        const tape = readTape('r7-act2-4');
-        const { presets, refused } = harvestPresets([{ name: 'r7-act2-4', tape }]);
+        const tape = readTape('r8-solve-4');
+        const { presets, refused } = harvestPresets([{ name: 'r8-solve-4', tape }]);
         expect(refused).toEqual([]);
         expect(presets[0].staging).toEqual(stagingFromTape(parseTape(tape)));
         // The fields that make the seam a MEASURED equality rather than a
@@ -205,7 +205,7 @@ describe('the PRESETS harvest', () => {
 
     it('REPORTS a tape it cannot parse instead of shrinking the list', () => {
         const { presets, refused } = harvestPresets([
-            { name: 'good', tape: readTape('r7-act2-4') },
+            { name: 'good', tape: readTape('r8-solve-4') },
             { name: 'bad', tape: { game: 'seedling', tape_version: 8 } },
         ]);
         expect(presets.map((p) => p.name)).toEqual(['good']);
@@ -247,7 +247,7 @@ describe('the SOLVE itself', () => {
      * Closing the gap is a re-record, and no licence exists this arc.
      */
     it('the page\'s own path derives r8-solve-4 exactly as the runner does', () => {
-        const staging = stagingOf('r7-act2-4');
+        const staging = stagingOf('r8-solve-4');
         const goals = parseGoalsParam('exit:64,16');   // = `goalsFor(4)`
         const { out, tape, ms } = solveForPage({
             levelSource, staging, goals, name: 'r8-solve-4',
@@ -277,7 +277,7 @@ describe('the SOLVE itself', () => {
     });
 
     it('the folded tape REPLAYS through the same stepper the viewer uses', () => {
-        const staging = stagingOf('r7-act2-4');
+        const staging = stagingOf('r8-solve-4');
         const { tape, out } = solveForPage({
             levelSource, staging, goals: parseGoalsParam('exit:64,16'), name: 'editor-L4',
         });
@@ -292,7 +292,7 @@ describe('the SOLVE itself', () => {
     });
 
     it('carries the solver\'s own refusals through verbatim', () => {
-        const staging = stagingOf('r7-act2-4');
+        const staging = stagingOf('r8-solve-4');
         expect(() => solveForPage({ levelSource, staging, goals: [], name: 'x' }))
             .toThrow(/goals must be a non-empty ordered list/);
     });
@@ -309,7 +309,7 @@ describe('the SOLVE itself', () => {
      * actually bound the walk.
      */
     it('maxTicksPerTarget ABSENT still reaches the solver\'s own default', () => {
-        const staging = stagingOf('r7-act2-4');
+        const staging = stagingOf('r8-solve-4');
         const goals = parseGoalsParam('exit:64,16');
         const absent = solveForPage({ levelSource, staging, goals, name: 'r8-solve-4' });
         const explicit = solveForPage({
@@ -323,7 +323,7 @@ describe('the SOLVE itself', () => {
     });
 
     it('maxTicksPerTarget PRESENT bounds the walk, and the refusal names it', () => {
-        const staging = stagingOf('r7-act2-4');
+        const staging = stagingOf('r8-solve-4');
         const goals = parseGoalsParam('exit:64,16');
         expect(() => solveForPage({
             levelSource, staging, goals, name: 'r8-solve-4', maxTicksPerTarget: 10,
@@ -403,7 +403,7 @@ describe('⛓⛓⛓ THE BOOT FORM v1 — sword and shield (slice 5)', () => {
     it('⚠ reads THREE states — declared true, declared false, and undeclared', () => {
         // `r7-act2-11` declares the sword true and the shield false; the
         // page's own default declares no seam at all.
-        expect(itemFlagsOf(stagingOf('r7-act2-11'))).toEqual({ sword: true, shield: false });
+        expect(itemFlagsOf(stagingOf('r8-solve-11'))).toEqual({ sword: true, shield: false });
         expect(stagingOf(TRUE_START_SEGMENT).seam).toBeNull();
         expect(itemFlagsOf(stagingOf(TRUE_START_SEGMENT)))
             .toEqual({ sword: null, shield: null });
@@ -434,7 +434,7 @@ describe('⛓⛓⛓ THE BOOT FORM v1 — sword and shield (slice 5)', () => {
     });
 
     it('⛓ and it edits a DECLARED block in place, leaving the other twelve alone', () => {
-        const before = stagingOf('r7-act2-11');
+        const before = stagingOf('r8-solve-11');
         const after = withItemFlag(before, 'shield', true);
         expect(after.seam.items.hasShield).toBe(true);
         expect(after.seam.items.hasSword).toBe(before.seam.items.hasSword);

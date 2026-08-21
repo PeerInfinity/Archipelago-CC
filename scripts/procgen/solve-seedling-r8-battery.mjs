@@ -92,8 +92,7 @@ const CHECK = process.argv.includes('--check');
 
 const { parseTape, requiredTapeVersion } =
     await import(join(REPO, 'frontend/modules/seedlingDemo/tapeFormat.js'));
-const { PLAYTHROUGH_CHAINS } =
-    await import(join(REPO, 'frontend/modules/seedlingDemo/playthroughWalk.js'));
+const { collectGoal, reachGoal } = await import(join(REPO, 'scripts/procgen/seedling-atlas-goals.mjs'));
 const { atlasLevelSource } =
     await import(join(REPO, 'frontend/modules/seedlingDemo/levelSource.js'));
 const { solveSegment } =
@@ -109,65 +108,121 @@ const check = (name, ok, detail) => {
     console.log(`${ok ? 'PASS' : 'FAIL'}: ${name}${detail ? ` — ${detail}` : ''}`);
 };
 
-const chain = PLAYTHROUGH_CHAINS.find((c) => c.id === 'act2-the-sword');
 const levelSource = atlasLevelSource();
 
-// ── 1. derive the battery from the chain's own units ──────────────────
-const MECHANIC_KEYS = ['hold', 'bait', 'wait', 'touch', 'equip', 'spear', 'shove',
-    'kill', 'fire', 'keylock', 'collect', 'chest'];
-const BATTERY_VERBS = new Set(['collect', 'chest']);
-
-const perSegment = chain.segments.map(() => ({ units: [], phases: 0, mechanics: new Set() }));
-{
-    let seg = 0;
-    for (const unit of chain.walk.units) {
-        const s = perSegment[Math.min(seg, perSegment.length - 1)];
-        s.units.push(unit);
-        if (unit.phases) s.phases += 1;
-        for (const target of unit.leg?.targets ?? []) {
-            for (const k of MECHANIC_KEYS) if (target[k] !== undefined) s.mechanics.add(k);
-        }
-        if (unit.leg?.exit) seg += 1;
-    }
-}
-const battery = [];
-perSegment.forEach((s, i) => {
-    const segNo = i + 1;
-    const blockers = [
-        ...(s.phases ? [`${s.phases} phases block(s)`] : []),
-        ...[...s.mechanics].filter((m) => !BATTERY_VERBS.has(m)).map((m) => `mechanic '${m}'`),
-    ];
-    if (blockers.length) {
-        console.log(`  segment ${segNo}: EXCLUDED — ${blockers.join(', ')} `
-            + '(hand choreography / slice-3 mechanics)');
-        return;
-    }
-    battery.push(segNo);
-    console.log(`  segment ${segNo}: BATTERY — legs only`
-        + `${s.mechanics.size ? ` + [${[...s.mechanics].join(', ')}]` : ''}`);
+/**
+ * ⛓⛓⛓ R9 SLICE 7 — THE ROOMS, AND WHERE EACH NUMBER COMES FROM.
+ *
+ * This producer used to read `PLAYTHROUGH_CHAINS.act2-the-sword` and derive
+ * both its goals and its row set from that chain's hand-authored `walk.units`.
+ * ⚖ Ruling 14 retired the chain and its twelve `r7-act2-*` tapes;
+ * ⚖ ruling 17 (the user: *"I want to minimize hardcoding in general"*) decides
+ * what replaces it: the SAME derivation `solve-seedling-r9-campaign.mjs`
+ * already used for these rooms, shared out into
+ * `seedling-atlas-goals.mjs`.
+ *
+ * ⛓ THE SWAP IS BYTE-INERT, AND IT WAS MEASURED BEFORE IT WAS MADE: the hand
+ * route's eleven goal lists and the atlas's eleven were compared coordinate for
+ * coordinate and came out **IDENTICAL, 11 of 11** (§15). Nothing about what the
+ * solver is asked to do has changed; the goals are now read out of the atlas
+ * instead of out of a retired chain's units.
+ *
+ * ⛔ **THE ROOM ORDER IS A DECLARATION, NOT A DERIVATION**, and it always was —
+ * `solve-seedling-r9-campaign.mjs` says the same of its own segment list. Which
+ * rooms this battery covers, and which way each one is crossed, is a statement
+ * about R8's playthrough. What is DERIVED is every coordinate under it.
+ *
+ * ⚠ SEGMENT 11 CROSSES BACK TO L10 and the campaign's `r9-solve-11` leaves by
+ * `teleporter@32,0` to L3 instead. One room, two errands: this is the BATTERY's
+ * room and that is the ROUTE's step 11 (§14.5).
+ */
+const BATTERY_ROOMS = Object.freeze({
+    1: Object.freeze({ level: 0, to: 2 }),
+    2: Object.freeze({ level: 2, to: 3 }),
+    3: Object.freeze({ level: 3, to: 4 }),
+    4: Object.freeze({ level: 4, to: 5 }),
+    5: Object.freeze({ level: 5, to: 6 }),
+    6: Object.freeze({ level: 6, to: 7 }),
+    7: Object.freeze({ level: 7, to: 8 }),
+    8: Object.freeze({ level: 8, to: 9 }),
+    9: Object.freeze({ level: 9, to: 10 }),
+    10: Object.freeze({ level: 10, to: 11, pickup: 'sword' }),
+    11: Object.freeze({ level: 11, to: 10, pickup: 'chest' }),
 });
+
+/**
+ * ⛓⛓⛓ R9 SLICE 7 — **THE CLASSIFIER RETIRED WITH THE ROUTE IT READ, AND ITS
+ * ANSWER IS NOW HISTORY RATHER THAN CODE.**
+ *
+ * Until this slice, the split below was DERIVED: the script read
+ * `act2-the-sword`'s units and excluded any segment carrying a `phases` block
+ * or a mechanic outside {collect, chest}, printing `segment 4: EXCLUDED —
+ * mechanic 'hold', 'shove'`, `segments 5, 6, 8: EXCLUDED — N phases block(s)`
+ * and `derived battery [1, 2, 3, 7, 9, 10, 11]`. That derivation asked *"does
+ * this segment's HAND walk contain choreography"* — a question about a walk
+ * that no longer exists on disk, and one **no solver tape can answer**, because
+ * a solver walk has no `phases` block by construction.
+ *
+ * ⇒ ⚖ ruling 17: the record goes to the tracked `seedling-bot.md` R9 § as a
+ * table with the numbers, and the split survives here as the DECLARATION it has
+ * become. It is not a derivation pretending to be one — keeping the old
+ * `check()` rows against a baked table would have been a fixed point over typed
+ * data asserting itself (trap 250), which is worse than an honest constant.
+ *
+ * Provenance: R7's hand route, read at `855a6d200` immediately before the
+ * twelve tapes were deleted — segment 4 `hold` + `shove`, segments 5 and 6 one
+ * `phases` block each, segment 8 two `phases` blocks + `shove`.
+ */
+const LEG_ONLY_ROOMS = Object.freeze([1, 2, 3, 7, 9, 10, 11]);
+const CHOREOGRAPHED_ROOMS = Object.freeze({
+    4: "mechanic 'hold', mechanic 'shove'",
+    5: '1 phases block(s)',
+    6: '1 phases block(s)',
+    8: '2 phases block(s), mechanic \'shove\'',
+});
+
+for (const segNo of Object.keys(BATTERY_ROOMS).map(Number)) {
+    const why = CHOREOGRAPHED_ROOMS[segNo];
+    console.log(why
+        ? `  segment ${segNo}: EXCLUDED — ${why} (hand choreography / slice-3 mechanics)`
+        : `  segment ${segNo}: BATTERY — legs only`
+            + `${BATTERY_ROOMS[segNo].pickup ? ` + [${BATTERY_ROOMS[segNo].pickup === 'sword'
+                ? 'collect' : 'chest'}]` : ''}`);
+}
+const battery = [...LEG_ONLY_ROOMS];
 console.log(`## derived battery: segments [${battery.join(', ')}] `
     + `(${battery.length} rooms)`);
-check('the derived battery is the seven leg-only rooms',
-    battery.join(',') === '1,2,3,7,9,10,11',
-    `[${battery.join(', ')}] — a change here is a chain edit or a classifier edit, `
-    + 'and either moves the §10 statement');
+/**
+ * ⛔⛔ R9 SLICE 7 — **THE OLD ROW HERE WOULD NOW ASSERT A CONSTANT AGAINST
+ * ITSELF, SO IT IS REPLACED RATHER THAN KEPT.**
+ *
+ * It read `battery.join(',') === '1,2,3,7,9,10,11'`. While `battery` was
+ * DERIVED from the hand route's units that compared two things — a derivation
+ * and a prediction — and a chain edit moved it. Now that the split is a
+ * declaration (above), the same row would compare `LEG_ONLY_ROOMS` to a
+ * transcription of `LEG_ONLY_ROOMS` and pass for as long as somebody edited
+ * both, which is a fixed point over typed data (trap 250) wearing the old
+ * row's words.
+ *
+ * ⇒ what IS still checkable is that the two declarations PARTITION the rooms:
+ * every room this producer covers is classified exactly once, none forgotten
+ * and none in both lists. That is a real consistency claim about data a future
+ * edit can break, and it is the honest remainder of the classifier.
+ */
+const classified = [...LEG_ONLY_ROOMS, ...Object.keys(CHOREOGRAPHED_ROOMS).map(Number)]
+    .sort((a, b) => a - b);
+const allRooms = Object.keys(BATTERY_ROOMS).map(Number).sort((a, b) => a - b);
+check('every battery room is classified EXACTLY once — leg-only or choreographed',
+    classified.join(',') === allRooms.join(','),
+    `classified [${classified.join(', ')}] vs rooms [${allRooms.join(', ')}] — a room in `
+    + 'both lists or in neither is a split that stopped covering its own subject');
 
-// ── 2. goals, derived from each segment's own units ───────────────────
+// ── 2. goals, derived from the ATLAS (⚖ ruling 17) ────────────────────
 function goalsFor(segNo) {
+    const room = BATTERY_ROOMS[segNo];
     const goals = [];
-    for (const unit of perSegment[segNo - 1].units) {
-        if (!unit.leg) continue;
-        for (const target of unit.leg.targets ?? []) {
-            if (target.collect) {
-                goals.push({ kind: 'collect-placement', placement: { ...target.collect.pickup } });
-            }
-            if (target.chest) {
-                goals.push({ kind: 'collect-placement', placement: { ...target.chest.chest } });
-            }
-        }
-        if (unit.leg.exit) goals.push({ kind: 'reach-exit', exit: { ...unit.leg.exit } });
-    }
+    if (room.pickup) goals.push(collectGoal(levelSource, room.level, room.pickup));
+    goals.push(reachGoal(levelSource, room.level, room.to));
     return goals;
 }
 
@@ -275,9 +330,15 @@ function emit(path, json, what) {
 }
 
 for (const row of SLICE_3B_ROWS) {
-    check(`segment ${row.segNo} is STILL excluded by the classifier (the hand walk's `
+    // ⛓ R9 slice 7: `!battery.includes(...)` is still a real cross-check — it
+    //   reads the OTHER declaration, so a room moved into `LEG_ONLY_ROOMS`
+    //   without being taken out of `SLICE_3B_ROWS` reds here rather than
+    //   silently authoring a row twice. What it no longer claims is that a
+    //   classifier DERIVED the exclusion; the hand route that could answer that
+    //   retired with ⚖ ruling 14, and the record moved to `seedling-bot.md`.
+    check(`segment ${row.segNo} is declared choreographed, not leg-only (the hand walk's `
         + 'choreography is a fact about the hand walk, not a label)',
-    !battery.includes(row.segNo),
+    !battery.includes(row.segNo) && CHOREOGRAPHED_ROOMS[row.segNo] !== undefined,
     `the solver replaces the CHOREOGRAPHY, and this row is what makes that a claim `
     + 'rather than a relabelling');
 }
@@ -331,12 +392,58 @@ rows.filter((r) => r.handedOver).length === Object.keys(HANDED_TO_CAMPAIGN).leng
 `[${rows.filter((r) => r.handedOver).map((r) => r.name).join(', ')}] — `
 + 'one producer per tape (trap 169)');
 
+/**
+ * ⛓⛓⛓ R9 SLICE 7 — THE STAGED BOOT IS READ FROM THE COVERING SOLVER TAPE.
+ *
+ * ⚖ Ruling 14's first execution deleted `r7-act2-1..11`; ⚖ ruling 17 (the
+ * user, 2026-08-21: *"I want to minimize hardcoding in general"*) decides HOW
+ * this script replaces the read: by DERIVATION from a surviving artifact, never
+ * by a constant. Each row's staged boot now comes from its own `r8-solve-N`
+ * tape on disk.
+ *
+ * ⛓ FOR ROWS 1, 2, 3, 4 AND 11 THE SWAP IS BYTE-INERT, AND THAT IS MEASURED,
+ * not hoped. At slice 7's baseline the hand tape and its twin were compared
+ * over all eleven boot-block fields — `boot`, `noclip`, `noDamage`,
+ * `noHazards`, `grants`, `persistence`, `equips`, `pins`, `save`, `rng`,
+ * `seam` — and came out BYTE-EQUAL for every one of those five. It is also
+ * SELF-CHECKING: these are the rows this script still EMITS, so a wrong boot
+ * would break the existing `is byte-identical to what this solver derives`
+ * claim.
+ *
+ * ⛔ FOR ROWS 6, 7, 9 AND 10 THE SWAP MOVES WHAT THIS SCRIPT PRINTS, AND THE
+ * MOVE IS THE POINT. Those four are HANDED OVER (⚖ ruling 11) — solved and
+ * reported here, EMITTED by `solve-seedling-r9-campaign.mjs` — and slice 6
+ * re-recorded their tapes from the true-start chain's MEASURED LATCHES, so
+ * their boots differ from R7's hand latches in `seam`. Reading the real
+ * artifact means this script now measures the walk from the boot the chain
+ * actually reaches, rather than from a hand latch no file holds any more. No
+ * tape moves (these rows emit nothing); the solver-vs-hand table's tick counts
+ * for them do. R9 slice 7 §15 publishes the row-level diff.
+ */
+const committedFor = (segNo) => parseTape(JSON.parse(
+    readFileSync(join(TAPES, `r8-solve-${segNo}.json`), 'utf8')));
+
+/**
+ * ⛓ THE HAND ANSWER — each retired tape's own `tick_count`, and the ONE value
+ * here that is a literal, because ⚖ ruling 17 allows a constant exactly where
+ * no surviving artifact carries it: **nothing on disk records how long the HAND
+ * walk was.** The solver tape records the SOLVER's walk, which is a different
+ * number and in five rooms a much smaller one — `r7-act2-4` was 347 ticks and
+ * `r8-solve-4` is 255. Reading the count off the twin would silently rewrite
+ * this script's oldest INFORMATION row into an identity (`solver == hand`,
+ * always), which is the failure ruling 17 exists to prevent, not an instance of
+ * it. Provenance: the `tick_count` field of `r7-act2-N.json` at `855a6d200`,
+ * read immediately before the files were deleted.
+ */
+const HAND_TICKS = Object.freeze({
+    1: 183, 2: 47, 3: 245, 4: 347, 6: 355, 7: 146, 9: 122, 10: 89, 11: 87,
+});
+
 mkdirSync(TRACES, { recursive: true });
 const summary = [];
 for (const row of rows) {
     const committedName = `r7-act2-${row.segNo}`;
-    const committed = parseTape(JSON.parse(
-        readFileSync(join(TAPES, `${committedName}.json`), 'utf8')));
+    const committed = committedFor(row.segNo);
     const staging = stagingOf(committed);
     const run = createRunForStaging(staging, levelSource);
     const out = solveSegment({
@@ -360,7 +467,7 @@ for (const row of rows) {
             .join(' then ')} — the hand-authored stances/waypoints were NOT handed over. `
         + `Solver: ${out.perTick.length} ticks, ${out.trace.rows.length} decision(s), `
         + `${out.replans} re-plan(s); hand answer ${committedName}: `
-        + `${committed.tick_count} ticks. The diff is INFORMATION, not a gate — the `
+        + `${HAND_TICKS[row.segNo]} ticks. The diff is INFORMATION, not a gate — the `
         + 'differential is the gate. '
         + `${row.slice3b ? `⛓ ${row.slice3b}. ` : ''}`
         + `${row.provenance ?? ''}`
@@ -375,7 +482,7 @@ for (const row of rows) {
             `${JSON.stringify(out.trace, null, 4)}\n`, `${row.name} trace`);
     }
     summary.push({
-        name: row.name, solver: out.perTick.length, hand: committed.tick_count,
+        name: row.name, solver: out.perTick.length, hand: HAND_TICKS[row.segNo],
         rows: out.trace.rows.length, replans: out.replans,
         probe: Boolean(row.provenance),
     });

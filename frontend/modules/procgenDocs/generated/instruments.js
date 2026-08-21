@@ -135,6 +135,11 @@ export const INSTRUMENTS = frz({
         {
             "browser": 0,
             "count": 1,
+            "id": "seedling"
+        },
+        {
+            "browser": 0,
+            "count": 1,
             "id": "show"
         },
         {
@@ -164,12 +169,12 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 215,
+        "blockStyle": 216,
         "browser": 73,
         "cited": 67,
-        "files": 234,
+        "files": 235,
         "lineStyle": 19,
-        "withDocblock": 234,
+        "withDocblock": 235,
         "withFlags": 142
     },
     "dir": "scripts/procgen",
@@ -5087,6 +5092,18 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "run-seedling-director — drive N window tapes on ONE page, and assert the boundaries from the game's own drained reports.",
             "path": "scripts/procgen/run-seedling-director.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "seedling",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "seedling-atlas-goals.mjs",
+            "flags": [],
+            "oneLiner": "seedling-atlas-goals — THE ONE PLACE A SEEDLING GOAL COORDINATE COMES FROM.",
+            "path": "scripts/procgen/seedling-atlas-goals.mjs"
         },
         {
             "argvHelpers": [],

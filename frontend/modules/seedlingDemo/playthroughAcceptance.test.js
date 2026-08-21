@@ -279,13 +279,28 @@ describe('playthroughWalk — a walk is a sequence of UNITS', () => {
     it('counts the two kinds, and the real chain carries both', () => {
         expect(assertWalkUnits(withUnits([LEG, phasesBlock(), LEG])))
             .toEqual({ units: 3, legs: 2, phases: 1 });
-        // ⛔ AGAINST THE COMMITTED CHAIN, not a synthetic one: the whole point
-        // of slice 6d is that a REAL chain is heterogeneous, and a test that
-        // only ever saw synthetic units would stay green through a chain that
-        // quietly went back to being all legs.
-        const mixed = PLAYTHROUGH_CHAINS.filter((c) => c.walk?.units)
-            .map((c) => assertWalkUnits(c));
-        expect(mixed.some((r) => r.legs > 0 && r.phases > 0)).toBe(true);
+// ⛔⛔ R9 SLICE 7 — **THIS HALF RETIRED, AND IT IS A WEAKENING, NAMED.**
+        //
+        // It swept `PLAYTHROUGH_CHAINS.filter(c => c.walk?.units)` and asserted
+        // that at least one REAL walk is heterogeneous — legs AND phases —
+        // because a test that only ever saw synthetic units would stay green
+        // through a chain that quietly went back to being all legs. The only
+        // heterogeneous walk on the roster was `act2-the-sword`'s, and ⚖ ruling
+        // 14 retired it with the hand chain; ⚖ ruling 17 then declined to keep
+        // its units as a constant, because every goal they carried is derivable
+        // from the atlas (measured: 11 of 11 identical) and a constant kept only
+        // to feed a test is the hardcoding that ruling exists to prevent.
+        //
+        // ⇒ NO COMMITTED WALK CARRIES A `phases` BLOCK TODAY. Re-pointing this
+        // at anything would be asserting against a subject that does not exist,
+        // and leaving the old sweep in place would make it pass vacuously the
+        // day the last mixed walk left (trap 486). So it is REMOVED rather than
+        // weakened in silence, and what it protected is written down here: if a
+        // future chain declares a `phases` unit, this claim should come back.
+        // `assertWalkUnits` itself is still gated — by the synthetic rows above
+        // and the mutation rows below, which is where the unit-shape law lives.
+        const withUnits_ = PLAYTHROUGH_CHAINS.filter((c) => c.walk?.units);
+        expect(withUnits_.every((c) => assertWalkUnits(c).phases === 0)).toBe(true);
     });
 
     it('⛔ MUTATION: a unit that is both kinds, or neither, THROWS', () => {
@@ -813,8 +828,37 @@ describe('chainGoalFindings — EARNED is measured, and the set is two-sided', (
         expect(row.detail).toMatch(/R7_GOAL_LEDGER has no row/);
     });
 
+    /**
+     * ⛓⛓⛓ R9 SLICE 7 — THE DECLARED BOUND, GATED WHERE CI CAN SEE IT.
+     *
+     * `chainFindings` gained the same row, but its only roster-wide runner is
+     * `verify-seedling-bot-differential.mjs` — a gate that needs the user's
+     * Chrome. A bound that decayed silently for four slices should not depend
+     * on a GPU row to notice the next one, so the claim is ALSO made here,
+     * over the real `PLAYTHROUGH_CHAINS`, where `npm test` and CI run it.
+     *
+     * ⛔ MEASURED BEFORE IT WAS WRITTEN: this held for all fifteen chains and
+     * failed for exactly `r8-battery-4` (`endsAt` 253 over a 255-tick tape,
+     * R9 slice 3 moved the tape and not the constant). It is an invariant, not
+     * a rule fitted to one defect.
+     */
+    it('⛓⛓ every chain\'s declared endsAt IS the sum of its tapes\' tick counts', () => {
+        const bad = PLAYTHROUGH_CHAINS
+            .filter((c) => c.endsAt !== undefined)
+            .map((c) => ({
+                id: c.id,
+                endsAt: c.endsAt,
+                sum: c.segments.reduce((n, s) => n + loadTape(s).tick_count, 0),
+            }))
+            .filter((r) => r.endsAt !== r.sum);
+        expect(bad).toEqual([]);
+    });
+
     it('⛓ THE REAL CHAIN declares exactly the rows R7 ends on', () => {
-        const chain = PLAYTHROUGH_CHAINS.find((c) => c.id === 'act2-the-sword');
+        // ⛓ R9 slice 7: was `act2-the-sword`. ⚖ Ruling 14 retired it and
+        //   `r9-campaign` inherited the claim WITHOUT changing it — the same
+        //   two ledger rows, now credited from solver tapes (§14.5).
+        const chain = PLAYTHROUGH_CHAINS.find((c) => c.id === 'r9-campaign');
         expect(chain.earns).toEqual(['sword@L10', 'chest@L11']);
     });
 });
@@ -843,7 +887,15 @@ describe('the chain kind — custody vs staged (R8 slice 0 track D)', () => {
         // gain a character), and slice 2's battery chains DO declare
         // `staged` — which is the kind existing at all. The two claims are
         // separated rather than the old one weakened.
-        for (const id of ['toy-west-pair', 'act2-the-sword']) {
+        // ⛔⛔ R9 SLICE 7 — THIS BOUND NARROWED, AND THE NARROWING IS NAMED
+        //    RATHER THAN SILENT. The claim is about the chains that PREDATE
+        //    the `kind` field. There were two; ⚖ ruling 14 retired
+        //    `act2-the-sword`, so there is ONE. `r9-campaign` also declares no
+        //    `kind`, but it POSTDATES the field and is not what this asserts —
+        //    adding it would change the claim from "the old entries did not
+        //    gain a character" into "some chains have no kind", which is a
+        //    weaker thing that happens to pass.
+        for (const id of ['toy-west-pair']) {
             const c = PLAYTHROUGH_CHAINS.find((x) => x.id === id);
             expect(Object.prototype.hasOwnProperty.call(c, 'kind'), c.id).toBe(false);
             expect(chainKind(c)).toBe('custody');
@@ -1140,7 +1192,11 @@ describe('⚖ condition 1 — the staged arm does not touch custody chains', () 
             && (c.clears ?? []).length === 0);
         // ⛔ THE POSITIVE COUNT FIRST: if no custody chain existed, every
         // assertion below would pass against nothing.
-        expect(custody.map((c) => c.id)).toEqual(['toy-west-pair', 'act2-the-sword']);
+        // ⛓ R9 slice 7: was ['toy-west-pair', 'act2-the-sword']. ⚖ Ruling 14
+        //   retired the second. `r9-campaign` is custody too but declares SIX
+        //   `clears` provenance rows, so it is filtered out above by the same
+        //   predicate that always filtered — the list is derived, not trimmed.
+        expect(custody.map((c) => c.id)).toEqual(['toy-west-pair']);
         for (const c of custody) {
             const rows = witnessedClearFindings(c, tapes);
             expect(rows.length, c.id).toBeGreaterThan(0);

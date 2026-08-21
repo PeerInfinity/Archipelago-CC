@@ -1416,7 +1416,7 @@ describe('⛓⛓⛓ R8 slice 3: an arrow kills a chaser, and the staging is thre
     };
 
     it('⛓ the L4 bob takes THREE arrows and dies to the third', () => {
-        const run = driveTape('r7-act2-4');
+        const run = driveTape('r8-solve-4');
         const landed = run.arrowBodyHits
             .filter((h) => h.body === L4_BOB && h.damaged);
         expect(landed.map((h) => h.hitsAfter)).toEqual([1, 2, 3]);
@@ -1429,7 +1429,7 @@ describe('⛓⛓⛓ R8 slice 3: an arrow kills a chaser, and the staging is thre
     });
 
     it('⛓ the i-frames really gate it — every arrow between the three is REFUSED by name', () => {
-        const run = driveTape('r7-act2-4');
+        const run = driveTape('r8-solve-4');
         const at = run.arrowBodyHits.filter((h) => h.body === L4_BOB);
         const refused = at.filter((h) => !h.damaged);
         // The trap fires three arrows every eleven ticks and the body has 30
@@ -1445,7 +1445,7 @@ describe('⛓⛓⛓ R8 slice 3: an arrow kills a chaser, and the staging is thre
      * three landings need two full i-frame windows between them.
      */
     it('⛓ the first and third landings are at least 60 ticks apart', () => {
-        const run = driveTape('r7-act2-4');
+        const run = driveTape('r8-solve-4');
         const landed = run.arrowBodyHits.filter((h) => h.body === L4_BOB && h.damaged);
         expect(landed[2].t - landed[0].t).toBeGreaterThanOrEqual(60);
     });
@@ -1459,7 +1459,7 @@ describe('⛓⛓⛓ R8 slice 3: an arrow kills a chaser, and the staging is thre
      * would slide every corpse up to fifty pixels the game leaves standing.
      */
     it('⛔ the KILLING hit does not knock back — the corpse keeps the velocity it had', () => {
-        const run = driveTape('r7-act2-4');
+        const run = driveTape('r8-solve-4');
         const kill = run.chaserKills[0];
         const walks = run.chaserWalks.filter((w) => w.id === L4_BOB);
         const justBefore = walks.filter((w) => w.t < kill.t).pop();
@@ -1479,10 +1479,10 @@ describe('⛓⛓⛓ R8 slice 3: an arrow kills a chaser, and the staging is thre
      * posts instead of two).
      */
     it('⛓⛓ dying, then destroy, then removed — three ticks, not one', () => {
-        const run = driveTape('r7-act2-4');
+        const run = driveTape('r8-solve-4');
         const kill = run.chaserKills[0];
         // Replay to the kill tick and step forward reading the getter.
-        const t = loadTape('r7-act2-4');
+        const t = loadTape('r8-solve-4');
         const r2 = createLevelRun({
             levelSource: atlasLevelSource(),
             boot: t.boot,
@@ -1523,7 +1523,7 @@ describe('⛓⛓⛓ R8 slice 3: an arrow kills a chaser, and the staging is thre
      * ⛔⛔⛔ THE ROOM VERDICT, WIDENED — and what is left of it is NARROWER.
      */
     it('⛓ a trap room with only chasers is STEPPED; one with an unstaged static body is not', () => {
-        const l4 = driveTape('r7-act2-4');
+        const l4 = driveTape('r8-solve-4');
         // L4 holds two arrow traps and one bob: stepped, and the ledger says so.
         expect(l4.chaserWalks.filter((w) => w.level === 4).length).toBeGreaterThan(0);
         // L8 holds a trap and two sandtraps whose arrow-death this rung does

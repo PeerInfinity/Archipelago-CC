@@ -157,7 +157,7 @@ function drive(session, script) {
 describe('a manual session', () => {
     it('⚠ RECORD-THEN-ACT: N ticks driven is N+1 observations', () => {
         const s = createManualSession({
-            levelSource, staging: stagingOf('r7-act2-4'), name: 'm',
+            levelSource, staging: stagingOf('r8-solve-4'), name: 'm',
         });
         // Observation 0 exists BEFORE anything is driven — it is the boot
         // position under no input, exactly like `createTapeStepper`'s.
@@ -174,7 +174,7 @@ describe('a manual session', () => {
 
     it('⛔ the held set is COPIED, not referenced — a live keyboard keeps moving', () => {
         const s = createManualSession({
-            levelSource, staging: stagingOf('r7-act2-4'), name: 'm',
+            levelSource, staging: stagingOf('r8-solve-4'), name: 'm',
         });
         const live = new Set(['right']);
         s.step(live);
@@ -183,7 +183,7 @@ describe('a manual session', () => {
     });
 
     it('the session boots WHERE THE STAGING SAYS, through the one construction', () => {
-        const staging = stagingOf('r7-act2-4');
+        const staging = stagingOf('r8-solve-4');
         const s = createManualSession({ levelSource, staging, name: 'm' });
         expect(s.observations[0].level).toBe(staging.boot.level);
         // `solveStaging` is what makes the block honest — the same pair
@@ -196,7 +196,7 @@ describe('a manual session', () => {
 
     it('live overlays come from the SAME extractor the replay uses', () => {
         const s = drive(
-            createManualSession({ levelSource, staging: stagingOf('r7-act2-4'), name: 'm' }),
+            createManualSession({ levelSource, staging: stagingOf('r8-solve-4'), name: 'm' }),
             [[['ArrowRight'], 10], [['ArrowRight', 'KeyX'], 4], [[], 6]],
         );
         const { markers } = liveOverlaysFor(s);
@@ -233,7 +233,7 @@ describe('⛓⛓⛓ ACCEPTANCE 1 — a hand-driven session REPLAYS frame-for-fra
 
     it('every observation and every held set survives the fold', () => {
         const s = drive(
-            createManualSession({ levelSource, staging: stagingOf('r7-act2-4'), name: 'manual-row' }),
+            createManualSession({ levelSource, staging: stagingOf('r8-solve-4'), name: 'manual-row' }),
             script,
         );
         expect(s.tick).toBe(115);
@@ -251,7 +251,7 @@ describe('⛓⛓⛓ ACCEPTANCE 1 — a hand-driven session REPLAYS frame-for-fra
         // per tick the round trip would pass trivially and prove nothing
         // about `buildTape`.
         const s = drive(
-            createManualSession({ levelSource, staging: stagingOf('r7-act2-4'), name: 'manual-row' }),
+            createManualSession({ levelSource, staging: stagingOf('r8-solve-4'), name: 'manual-row' }),
             script,
         );
         const t = s.fold();
@@ -280,7 +280,7 @@ describe('⛓⛓⛓ ACCEPTANCE 1 — a hand-driven session REPLAYS frame-for-fra
          * shape of a verdict answering the wrong question.
          */
         const s = createManualSession({
-            levelSource, staging: stagingOf('r7-act2-4'), name: 'refused',
+            levelSource, staging: stagingOf('r8-solve-4'), name: 'refused',
         });
         expect(() => drive(s, [
             [['ArrowRight'], 84], [[], 29], [['ArrowDown'], 72],
@@ -304,7 +304,7 @@ describe('⛓⛓⛓ ACCEPTANCE 1 — a hand-driven session REPLAYS frame-for-fra
         // The degenerate case a span fold is most likely to get wrong, and
         // the one a hand driver produces by pressing START and waiting.
         const s = drive(
-            createManualSession({ levelSource, staging: stagingOf('r7-act2-4'), name: 'idle' }),
+            createManualSession({ levelSource, staging: stagingOf('r8-solve-4'), name: 'idle' }),
             [[[], 40]],
         );
         const trip = foldRoundTrip(s, levelSource);
@@ -330,7 +330,7 @@ describe('⛓⛓⛓ THE ONE FOLD DERIVES ITS OWN VERSION (slice 5)', () => {
      * distinction. What replaces it as a refusal is the BOUND (an `at` past
      * the run's own last tick), which is a different and still-live failure.
      */
-    const v8 = () => stagingOf('r7-act2-4');
+    const v8 = () => stagingOf('r8-solve-4');
 
     it('a v8 staging block folds to v8 STILL — the floor does not move', () => {
         const t = buildStagedTape({ staging: v8(), perTick: [new Set(['right'])], name: 'ok' });
@@ -531,8 +531,8 @@ describe('⛓⛓⛓ THE DESPAWN DROP, NOW A DROP **AND A CHECK** (slice 5)', () 
     });
 
     it('a block with NO despawn checks nothing and says so with an empty list', () => {
-        const run = driveTape('r7-act2-4');
-        expect(checkSolveDespawns(declaredOf('r7-act2-4'), run)).toEqual([]);
+        const run = driveTape('r8-solve-4');
+        expect(checkSolveDespawns(declaredOf('r8-solve-4'), run)).toEqual([]);
     });
 
     it('⛓ and a MANUAL session exposes the same check on its own drive', () => {

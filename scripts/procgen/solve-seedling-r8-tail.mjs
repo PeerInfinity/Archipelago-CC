@@ -60,10 +60,10 @@ const ONLY = (process.argv.find((a) => a.startsWith('--only=')) ?? '--only=5,8')
 
 const { parseTape, requiredTapeVersion, gameVisibleTape, TAPE_VERSION } =
     await import(join(REPO, 'frontend/modules/seedlingDemo/tapeFormat.js'));
-const { PLAYTHROUGH_CHAINS } =
-    await import(join(REPO, 'frontend/modules/seedlingDemo/playthroughWalk.js'));
 const { createLevelRun } =
     await import(join(REPO, 'frontend/modules/seedlingDemo/levelRun.js'));
+const { reachGoal } =
+    await import(join(REPO, 'scripts/procgen/seedling-atlas-goals.mjs'));
 const { atlasLevelSource } =
     await import(join(REPO, 'frontend/modules/seedlingDemo/levelSource.js'));
 const { twoPassSolve } =
@@ -235,32 +235,26 @@ function makeGameOracle(tapeTemplate) {
     };
 }
 
-// ── the goals, derived from the chain's own units (the battery's rule) ─
-const chain = PLAYTHROUGH_CHAINS.find((c) => c.id === 'act2-the-sword');
-const perSegment = chain.segments.map(() => ({ units: [] }));
-{
-    let seg = 0;
-    for (const unit of chain.walk.units) {
-        perSegment[Math.min(seg, perSegment.length - 1)].units.push(unit);
-        if (unit.leg?.exit) seg += 1;
-    }
-}
-function goalsFor(segNo) {
-    const goals = [];
-    for (const unit of perSegment[segNo - 1].units) {
-        if (!unit.leg) continue;
-        for (const target of unit.leg.targets ?? []) {
-            if (target.collect) {
-                goals.push({ kind: 'collect-placement', placement: { ...target.collect.pickup } });
-            }
-            if (target.chest) {
-                goals.push({ kind: 'collect-placement', placement: { ...target.chest.chest } });
-            }
-        }
-        if (unit.leg.exit) goals.push({ kind: 'reach-exit', exit: { ...unit.leg.exit } });
-    }
-    return goals;
-}
+// ── the goals, derived from the ATLAS (⚖ ruling 17) ───────────────────
+/**
+ * ⛓ R9 SLICE 7 — was `PLAYTHROUGH_CHAINS.act2-the-sword`'s `walk.units`.
+ * ⚖ Ruling 14 retired that chain and its tapes; ⚖ ruling 17 (the user: *"I want
+ * to minimize hardcoding in general"*) replaces the read with the SAME atlas
+ * derivation `solve-seedling-r9-campaign.mjs` uses, shared out into
+ * `seedling-atlas-goals.mjs`. The two derivations were compared coordinate
+ * for coordinate before the swap: **all eleven goal lists IDENTICAL** (R9 slice
+ * 7 §15), rows 5 and 8 among them.
+ *
+ * ⛔ THE ROOM ORDER IS A DECLARATION, as it is in both sibling producers: this
+ * loop owns L5 -> L6 and L8 -> L9, the two rooms whose clears the two-pass
+ * authoring loop derives.
+ */
+const TAIL_ROOMS = Object.freeze({
+    5: Object.freeze({ level: 5, to: 6 }),
+    8: Object.freeze({ level: 8, to: 9 }),
+});
+const goalsFor = (segNo) => [reachGoal(levelSource, TAIL_ROOMS[segNo].level,
+    TAIL_ROOMS[segNo].to)];
 
 const levelSource = atlasLevelSource();
 
@@ -319,14 +313,46 @@ const ROWS = Object.freeze([
     }),
 ]);
 
+/**
+ * ⛓⛓⛓ R9 SLICE 7 — THE STAGED BOOT IS READ FROM THE COVERING SOLVER TAPE.
+ *
+ * ⚖ Ruling 14 deleted `r7-act2-5` and `r7-act2-8`, which this loop read for
+ * rows 5 and 8's staged boot; ⚖ ruling 17 (the user: *"I want to minimize
+ * hardcoding in general"*) decides that the replacement is a DERIVATION from a
+ * surviving artifact rather than a baked constant.
+ *
+ * ⛔ AND HERE THE SWAP IS NOT BYTE-INERT — measured, published, not hidden.
+ * At slice 7's baseline `r7-act2-5` vs `r8-solve-5` and `r7-act2-8` vs
+ * `r8-solve-8` DIFFER in [`persistence`, `seam`]: R9 slice 6 re-recorded both
+ * tapes from the true-start chain's MEASURED LATCHES (⚖ ruling 11), so their
+ * boots are the chain's rather than R7's. Reading the real artifact means this
+ * loop derives each room's timed clears from the boot the chain actually
+ * reaches. ⛓ NO TAPE MOVES: both rows are HANDED OVER to
+ * `solve-seedling-r9-campaign.mjs` and this script emits nothing for them, so
+ * the consequence is confined to what it PRINTS. R9 slice 7 §15 carries the
+ * row-level diff.
+ */
+const committedFor = (segNo) => parseTape(JSON.parse(
+    readFileSync(join(TAPES, `r8-solve-${segNo}.json`), 'utf8')));
+
+/**
+ * ⛓ The hand answer — the one literal here, allowed by ⚖ ruling 17 because no
+ * surviving artifact carries it: nothing on disk records how long the HAND walk
+ * was. `r8-solve-5` is 558 ticks against the hand's 812 and `r8-solve-8` is 827
+ * against 1090, so reading the count off the twin would turn this script's
+ * solver-vs-hand row into `solver == hand` by construction. Provenance: the
+ * `tick_count` field of `r7-act2-5.json` / `r7-act2-8.json` at `855a6d200`,
+ * read immediately before the files were deleted.
+ */
+const HAND_TICKS = Object.freeze({ 5: 812, 8: 1090 });
+
 mkdirSync(TRACES, { recursive: true });
 const summary = [];
 for (const row of ROWS) {
     if (!ONLY.includes(row.segNo)) continue;
     const name = `r8-solve-${row.segNo}`;
     const committedName = `r7-act2-${row.segNo}`;
-    const committed = parseTape(JSON.parse(
-        readFileSync(join(TAPES, `${committedName}.json`), 'utf8')));
+    const committed = committedFor(row.segNo);
     /**
      * ⛔ THE ROOM'S OWN TIMED CLEARS ARE STRIPPED, and the boot-time ones are
      * not. A timed `at` row in THIS room is exactly the thing the loop is
@@ -410,7 +436,7 @@ for (const row of ROWS) {
         + `tape's own timed clear(s) STRIPPED. GOALS derived from the chain's own units; `
         + 'the hand-authored stances, waypoints and hold ticks were NOT handed over. '
         + `Solver: ${r.out.perTick.length} ticks, ${r.out.trace.rows.length} decision(s); `
-        + `hand answer ${committedName}: ${committed.tick_count} ticks. ⛔ `
+        + `hand answer ${committedName}: ${HAND_TICKS[row.segNo]} ticks. ⛔ `
         + `${committedName}'s own \`at\` is NOT touched — §11.5 showed it is the end of a `
         + 'phases block and therefore an UPPER BOUND, and no re-record licence exists this '
         + 'rung. Authored by scripts/procgen/solve-seedling-r8-tail.mjs; trace sidecar in '
@@ -432,7 +458,7 @@ for (const row of ROWS) {
         + 'r9-campaign owns it now (⚖ ruling 11); this script remains the GAME-TICK '
         + 'ORACLE for §11.4 rooms (`--game`)');
     summary.push({
-        name, solver: r.out.perTick.length, hand: committed.tick_count,
+        name, solver: r.out.perTick.length, hand: HAND_TICKS[row.segNo],
         passes: r.passes.length, declarations: r.declarations,
     });
 }

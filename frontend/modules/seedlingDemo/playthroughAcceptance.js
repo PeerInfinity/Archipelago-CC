@@ -660,6 +660,29 @@ export function chainFindings(chain, tapes, replayed) {
         `${chain.segments.map((n) => tape(n).tick_count).join(' + ')} = ${sum}; `
         + `${chain.headline} is ${tape(chain.headline).tick_count}`);
 
+    /**
+     * ⛓⛓⛓ R9 SLICE 7 — **THE DECLARED BOUND, AGAINST THE TAPES IT BOUNDS.**
+     *
+     * `endsAt` is what `chainSpans` slices a chain's windows with, and until
+     * this row NOTHING compared it to anything. It decayed exactly the way an
+     * ungated typed count does: R9 slice 3 re-recorded `r8-solve-4` from 253
+     * ticks to 255 and moved the tape without the constant, so
+     * `r8-battery-4` sliced `[0, 253)` over a 255-tick tape — a weaker claim,
+     * silently, for four slices. Found by slice 6 (§14.11), fixed here.
+     *
+     * ⛔ THE ROW IS THE FIX, not the one-character edit. Measured across the
+     * whole roster before it was written: `endsAt === sum(segment tick
+     * counts)` held for all fifteen chains and failed for exactly
+     * `r8-battery-4`, so this is a real invariant and not a rule fitted to one
+     * defect. Trap 495's family — a typed count decays unless something
+     * derives it.
+     */
+    add(`chain ${chain.id}: the declared endsAt IS the tapes' own length`,
+        chain.endsAt === sum,
+        `endsAt ${chain.endsAt} vs the segments' ${sum} — a bound that outlives a `
+        + 're-record slices the wrong window and every claim inside it gets weaker '
+        + 'without saying so');
+
     // ── 2/3. PER SEGMENT: the stream slice, the calm arrival, the seam ─
     let offset = 0;
     chain.segments.forEach((name, i) => {

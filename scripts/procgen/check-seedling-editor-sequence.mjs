@@ -319,68 +319,27 @@ check(solo.cls === 'ok' && /865 observations/.test(solo.status) && solo.seq === 
     '⛓ CLAIM 8 — `?tape=` IS UNMOVED: one tape, one staged run, no sequence readout',
     solo.status);
 
-// ══ 9. THE act2 REPORT ══════════════════════════════════════════════════
-const act2 = await land('tapes=act2-the-sword&side=js');
-const admitted = (act2.seq?.boundaries ?? []).filter((x) => refusalsAt(x.admission).length === 0);
-const refusedAt = (act2.seq?.boundaries ?? []).find((x) => refusalsAt(x.admission).length > 0);
-report('⛓ CLAIM 9 — the TRUE-START chain, as a sequence: which windows continue',
-    `${act2.seq?.windows?.length ?? 0} of ${PAGE_CHAINS['act2-the-sword'].length} window(s) `
-    + `stepped; ${admitted.length} boundary(ies) admitted`);
-report('…and the window that stops it, BY NAME',
-    refusedAt
-        ? `${refusedAt.label}: ${refusalsAt(refusedAt.admission).map((f) => f.what).join('; ')}`
-        : 'none — the whole chain continues');
+// ══ 9. RETIRED — THE act2 REPORT ═══════════════════════════════════════
 /**
- * ⛔⛔⛔ PINNED, AND R9 SLICE 5 MOVED THE PIN — from *"stopped at `r7-act2-5`
- * after 5 windows"* to **the whole eleven-window chain**.
+ * ⛓⛓⛓ R9 SLICE 7 — **CLAIM 9 RETIRED WITH ITS SUBJECT (⚖ ruling 14).**
  *
- * ⛓ WHAT THE OLD ANSWER MEANT, kept because it is now a MUTANT's value: with
- * latch equality applied to every declared row, `r7-act2-5` was refused for
- * declaring `{5,0}` — a KILL LOCK ITS OWN WALK OPENS, carried on the tape
- * because `levelRun` refuses to compute a kill-lock clear itself ("two writers
- * of one persistence slot"). Remove the timed-row rule and this row returns to
- * *"stopped at r7-act2-5 after 5 window(s)"*, with 3 boundaries admitted.
- * Remove the JS APPENDER instead and window 5 steps and THROWS: *"the removal
- * of bob@48,80 at tick 1067 (an arrow kill) OPENS 1 kill lock(s) in level 5
- * [{5,0}] … and the tape DECLARES no clear for them."*
+ * This was the HAND chain's report: `?tapes=act2-the-sword&side=js`, eleven
+ * windows, ten boundaries, pinned at *"nothing refused"* after ⚖ ruling 14's
+ * timed-row admission rule, plus the free oracle that its rebased forward rows
+ * `{5,0}@1559`, `{8,0}@2515`, `{8,1}@3067` are exactly what `r7-act2-full`
+ * declares. All of it is in the R9 § of `seedling-bot.md` as history.
  *
- * ⇒ ⚖ ruling 14 (user, 2026-08-21): a segment's declared persistence carries
- * TWO different things and the roster ALREADY MARKS which is which — a FORWARD
- * declaration is a v9 TIMED row (`at`), a LATCH row is untimed. The forward
- * rows are excluded from latch equality, refused by name if the live world
- * already holds them, withheld from the GAME on a continuation (it earns them)
- * and handed to the MODEL rebased (it cannot compute them).
+ * The chain retired from `PLAYTHROUGH_CHAINS` and `PAGE_CHAINS` this slice, so
+ * the rows could not be re-pointed — there is nothing to point them at. What
+ * they claimed is claimed by CLAIMS 9b–9e below, one chain over and on a
+ * stronger footing: `r9-campaign` is fifteen windows on ONE game state where
+ * every boot after the first is a MEASURED LATCH rather than a hand
+ * declaration, and 9e makes the same free-oracle claim about ITS forward rows.
  *
- * ⛓ AND THE REBASING HAS A FREE ORACLE NOBODY WROTE FOR IT: the rebased ticks
- * this chain produces — `{5,0}@1559`, `{8,0}@2515`, `{8,1}@3067` — are
- * EXACTLY what the headline `r7-act2-full` declares, a tape recorded long
- * before any of this existed.
- *
- * ⛔ STILL NOT A RE-RECORD: `act2-the-sword` is byte-untouched. The work order
- * slice 2 named ("a re-record without the forward declaration") was the wrong
- * one; the fix was an ADMISSION RULE.
+ * ⛔ NOT DELETED SILENTLY. A gate that loses a claim without saying so reads
+ * exactly like a gate that still makes it (trap 119), which is the whole
+ * reason this block is a paragraph and not an absence.
  */
-const act2Windows = (act2.seq?.windows ?? []).length;
-const act2Boundaries = admitted.length;
-check(act2.seq?.admitted === true && refusedAt === undefined
-    && act2Windows === PAGE_CHAINS['act2-the-sword'].length
-    && act2Boundaries === PAGE_CHAINS['act2-the-sword'].length - 1,
-'⛓⛓⛓ …and that answer is PINNED — a change here is a finding somebody must explain',
-`${act2Windows} window(s) stepped; ${act2Boundaries} boundary(ies) admitted; `
-+ `${refusedAt ? `stopped at ${refusedAt.label}` : 'nothing refused'}`);
-
-/**
- * ⛓⛓ AND THE FORWARD ROWS ARE ON THE RECORD, PER WINDOW, REBASED — so a
- * reader can see WHICH rows the admission set aside rather than inferring it
- * from the fact that nothing refused (trap 269: a rule whose only evidence is
- * the absence of a refusal is indistinguishable from a rule nobody ran).
- */
-const forwardRows = (act2.seq?.boundaries ?? [])
-    .flatMap((b) => b.forwardRows ?? []);
-check(JSON.stringify(forwardRows) === JSON.stringify(['5:0@1559', '8:0@2515', '8:1@3067']),
-'⛓⛓ …and the FORWARD declarations are named per boundary, REBASED into the '
-+ "sequence's own tick numbering — the three `r7-act2-full` itself declares",
-JSON.stringify(forwardRows));
 
 // ══ 9b. THE TRUE-START SOLVER CHAIN, AS ONE SEQUENCE ════════════════════
 /**

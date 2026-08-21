@@ -97,8 +97,19 @@ const NAME = 'r8-solve-18';
  * this walk earns is authored by the two-pass loop from the run's own ledger,
  * not typed here.
  */
+/**
+ * ⛓ R9 SLICE 7 — RE-POINTED AT THE TWIN. This was `r7-act2-11.json`, the last
+ * committed segment of the hand chain `act2-the-sword`, which ⚖ ruling 14
+ * retired. `r8-solve-11` is the SOLVER tape for the same room from the same
+ * boot, and the swap is a MEASUREMENT, not a hope: at slice 7's baseline the
+ * two files' boot blocks were compared field by field and came out BYTE-EQUAL
+ * over all eleven — `boot`, `noclip`, `noDamage`, `noHazards`, `grants`,
+ * `persistence`, `equips`, `pins`, `save`, `rng`, `seam`. Only the fields in
+ * that list are read below. The hand chain's post-sword latch and the solver
+ * chain's are the same numbers; what changed is which file holds them.
+ */
 const LATCH = parseTape(JSON.parse(
-    readFileSync(join(TAPES, 'r7-act2-11.json'), 'utf8')));
+    readFileSync(join(TAPES, 'r8-solve-11.json'), 'utf8')));
 
 /**
  * L18's own arrival from L16 — ⚖ §16.3 ruling 1's route. `assertD2RouteGraph`

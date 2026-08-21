@@ -100,9 +100,17 @@ export function parseGoalsParam(raw) {
  * `PLAYTHROUGH_CHAINS.find(c => c.id === 'act2-the-sword').segments[0]`.
  * That is `SEAM_SIGNATURE`'s own shape: a value checked across the boundary
  * it cannot be imported across, never a second list nobody compares.
+ *
+ * ⛓⛓⛓ R9 SLICE 7 — RE-POINTED AT THE SOLVER CHAIN. This was
+ * `act2-the-sword` / `r7-act2-1` until ⚖ ruling 14 retired the hand chain.
+ * `r9-campaign` IS the true-start chain now (⚖ ruling 11) and its first
+ * segment is `r8-solve-1`. The default staging does not move a byte: at slice
+ * 7's baseline `r7-act2-1` and `r8-solve-1` were compared field by field and
+ * came out BYTE-EQUAL over all eleven boot-block fields, so the page fetches
+ * the same numbers out of a different file.
  */
-export const TRUE_START_CHAIN = 'act2-the-sword';
-export const TRUE_START_SEGMENT = 'r7-act2-1';
+export const TRUE_START_CHAIN = 'r9-campaign';
+export const TRUE_START_SEGMENT = 'r8-solve-1';
 
 /**
  * A staging block from whatever JSON the caller has: a whole committed
