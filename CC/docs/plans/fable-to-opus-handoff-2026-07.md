@@ -3398,6 +3398,21 @@ grows in `docs/json/developer/procgen/seedling-bot.md` from the splice on).
 solver cannot certify, so the solver is the bottleneck — §5g's leverage map
 above is the order *inside* R9's solver half rather than an arc of its own.
 **Slice 0 (the form controls) SHIPPED 2026-08-20**, byte-inert, `55ee1e857..b89448ad8`.
+⛓ Slice 1 (the quick fixes — the parameter SUBSET `guard;len=2|3|4` and the rung's ONE ruled
+generator re-record) `..9bbc847fb`; slice 2 (the tape sequence as a CONTINUATION, ⚖ ruling 10 —
+two windows on ONE game state reproduce the headline tick for tick) `..c26f9d85c`.
+⛓⛓⛓ **SLICE 3 SPENT THE RUNG'S ONE ATTRIBUTED SOLVER LICENCE, 2026-08-20, `..f74ef5b72`** —
+R8's two close-out debts are DISCHARGED. `r8-d2` is THREE segments (the honest L18 PROMOTED as
+`r8-solve-18`, not duplicated: zero bytes of it moved), headline 2,218 ticks and v9, cuts
+`[573, 1437]`; `r8-solve-4` re-derived 253 → 255. The prediction was SEALED at a pristine tree
+before any solve and 12 of its 15 numbers landed exactly — including the two it explicitly
+refused to derive. ⛔ **THE STANDING IDENTITIES THAT MOVED ON PURPOSE**: battery `--check`
+`1fedb0ab…` exit 1 → **`67bcde75489419e5331187b8ebf140a7` exit 0**, and the R8 tape gate
+**534 / 0 / 67 → 541 / 0 / 67** (derived row by row before the run). Three findings the third
+window bought: the SEAM is the only instrument that can see a dishonest boot (every stream
+claim stays green); a LATCH is not a LIVE STATE from window 3 on (`SEAM_PREBUILD_FIELDS` — ⚖ an
+ASK, unfixable by re-record); and two ledgers that agreed until a room wrote out of band.
+**NEXT in R9: slice 4, the derived `break` verb** (route-survey step 12 + the `shortcut` head).
 **Slice 1 (the quick fixes) SHIPPED 2026-08-20**, `d7b0f5ec1..9bbc847fb`: the
 per-spec parameter DOMAIN `key=v1|v2|v3` (byte-inert, whole identity block
 unmoved) and the rung's ONE ruled generator re-record adopting it in the biome
