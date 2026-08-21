@@ -833,4 +833,21 @@ describe('⛓⛓⛓ the continuation projection — the rng strip, AFTER the adm
         expect(continuationTape(tape({ persistence: [{ level: 8, tag: 1 }] })).forwardRows)
             .toEqual([]);
     });
+
+    /**
+     * ⛓⛓⛓ R9 SLICE 5 — **THE LATCHED BLOCKS ARE ON THE RECORD**, and the
+     * measurement that forced it is the CHAIN arm's own: under (d)
+     * `boundary 2/3` refuses on `seam` with ONE number differing
+     * (`time` 10213 declared vs 10192 live), and that number lived only inside
+     * the finding's DETAIL SENTENCE. A gate asserting the residual would have
+     * had to regex a sentence for a value — trap 269, exactly the shape this
+     * page keeps paying for. ⇒ published as DATA.
+     */
+    it('⛔⛔ the boundary record carries the LIVE BLOCKS the admission compared against',
+        () => {
+            const live = source('watchWasm.js')
+                .slice(source('watchWasm.js').indexOf('rec.live = {'));
+            expect(live.slice(0, 220)).toMatch(/blocks: live\.blocks/);
+            expect(live.slice(0, 220)).toMatch(/blocksWhy: live\.blocksWhy/);
+        });
 });

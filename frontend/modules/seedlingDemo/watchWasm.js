@@ -1153,8 +1153,23 @@ export async function shipToWasm(payload, host) {
             };
             const found = continuationAdmission(w.tape, live, { index: k, label: wLabel });
             rec.admission = found;
+            /**
+             * ⛓⛓⛓ R9 SLICE 5 — **THE LATCHED BLOCKS GO ON THE RECORD**, and
+             * the measurement that forced it is this slice's own.
+             *
+             * Under (d) `boundary 2/3` of `?tapes=r8-d2` still refuses — on
+             * `seam`, not `rng` — and the whole content of the refusal is ONE
+             * number: `seam.time` declared 10213 versus live 10192. That
+             * number existed only inside the finding's DETAIL SENTENCE, so a
+             * gate wanting to assert the residual had to regex a sentence for
+             * a value (trap 269, exactly). ⇒ the blocks the admission compared
+             * against are published as DATA, beside the declaration the reader
+             * already has from the tape.
+             */
             rec.live = { level: live.level, ctor: live.ctor,
-                cleared: (live.cleared ?? []).map((c) => `${c.level}:${c.tag}`) };
+                cleared: (live.cleared ?? []).map((c) => `${c.level}:${c.tag}`),
+                blocks: live.blocks ?? null,
+                blocksWhy: live.blocksWhy ?? null };
             const refusals = refusalsOnly(found);
             if (refusals.length > 0) {
                 return refuse(`boundary ${k}/${windows.length}`, 'window-cannot-continue',
