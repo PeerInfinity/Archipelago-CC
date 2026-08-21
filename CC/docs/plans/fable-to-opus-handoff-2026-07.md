@@ -3471,6 +3471,39 @@ never reaches the ship** — `watch.html` runs the JS walk first because it prod
 window's model stream, so the wasm tier's subject is the JS-ADMITTED PREFIX (trap 486).
 **NEXT in R9: slice 6 — the chain RE-RECORD (the five successors + the four missing legs, each
 predicted first), and the route's own next refusal is still L14's CAMERA BAND.**
+**⛓⛓⛓ SLICE 6 SHIPPED 2026-08-21** — **THE TRUE-START SOLVER CHAIN.** ⚖ Rulings 11 and 15.
+**(d′) first, measured**: `continuationTape` hands `botLoadTape` `seam.time + BOOT_COST_FRAMES`
+(derived, summed once) AFTER the plain-equality admission, and `?tapes=r8-d2` now admits at
+BOTH boundaries with a **ZERO residual**, every seam row equal, three per-tick agreements
+(574/865/782), the whole 2219, dead frames [41,170,170] and the end state L13 Δ0/Δ0 — the chain
+reached its end for the first time. ⛔⛔ **AND RULING 15's SECOND HALF WAS REFUTED BY
+MEASUREMENT**: the model's resumed clock is ALREADY `declared + 21` (9200 vs 9179, 10234 vs
+10213, measured at the pristine baseline before a line moved), because a sequence is ONE
+`levelRun` and `enterWorld` spends the fade at the crossing that ENDS the previous window — so
+(d′) has NO JS half and a derived pin says why. **THE CHAIN**: `r9-campaign`, custody, fifteen
+segments from `new Game(0,80,128)` to the L14 arrival, **3470 ticks**, ZERO hits; segments 1–4
+promoted, 5–10 and 12 re-booted from MEASURED latches, four new legs (119/47/237/74 — the
+survey's own numbers). **Every re-booted segment moved in its BOOT BLOCK ONLY** — `inputs`
+byte-identical, tick counts unmoved, expectations unmoved — predicted from an atlas census
+(zero spinners in all twelve rooms) and measured seven times. The free oracle asserted the whole
+clock column and **five of its numbers are ones the pairwise census could not see**, because a
+chain COMPOUNDS. **THE PAGE PLAYS IT**: `?tapes=r9-campaign` steps all fifteen windows on one
+game state, admits all fourteen boundaries, produces the headline's 3471 observations TICK FOR
+TICK, and the rebased forward rows equal the headline's own declared v9 rows — two derivations,
+one answer. **THE GOAL LEDGER CREDITS FROM SOLVER TAPES FOR THE FIRST TIME: 2/41**
+(`sword@L10`, `chest@L11`). ⛔ Three findings nothing before it could measure: `jsLiveEnvelope`
+was short the BANKED writes (a chest open; trap 493's third slice running) · the
+clear-evidence arm dispatched on the KIND and the kind was a proxy for the AUTHORING METHOD ·
+a third clear source `transported`, because the second cannot be faked. Gates: solver-roster
+**754/0/68** over 26 tapes (successor to 541/0/67 over 20), porcelain EMPTY after it; ship
+91 → **105/0**; sequence 21 → **26/0**; demos 21 → **22**; vitest 6759 → **6800**; roster 154 →
+**159**; battery `--check` `67bcde75…` → **`6d667b17…`** exit 0, the ownership handover.
+⚖ **§6 Q17 IS CLOSED**: (a)'s second declared field buys nothing (d′) does not, and is NOT
+built. ⛔ **NOTHING RETIRED** — the ledger does NOT refuse two custody claimants (measured), so
+`act2-the-sword` keeps its entry; slice 7's free list is named in kickoff §14.10.
+**NEXT in R9: slice 7 — the coverage-derived RETIREMENT (seven `r7-act2-*` files free today,
+four more once the battery and the survey are re-pointed), and then slice 8 = L14's CAMERA
+BAND, whose refusal the census now prints.**
 **Slice 1 (the quick fixes) SHIPPED 2026-08-20**, `d7b0f5ec1..9bbc847fb`: the
 per-spec parameter DOMAIN `key=v1|v2|v3` (byte-inert, whole identity block
 unmoved) and the rung's ONE ruled generator re-record adopting it in the biome
