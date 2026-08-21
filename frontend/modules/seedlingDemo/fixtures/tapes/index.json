@@ -1346,6 +1346,13 @@
       "noHazards": []
     },
     {
+      "file": "r9-solve-3.json",
+      "tickCount": 226,
+      "bootLevel": 3,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "shuffle-stop.json",
       "tickCount": 60,
       "bootLevel": 0,

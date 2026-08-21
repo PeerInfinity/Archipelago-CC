@@ -1,0 +1,172 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "name": "r9-solve-3",
+    "description": "⛓⛓⛓ R9 SLICE 4 — **THE ROOM THE `break` VERB OPENED.** Route-survey step 12 (L3 entered from L11, heading west to L2) was the survey's ONLY VERB-MISSING row: `breakablerock@96,112` is the door out of a one-cell arrival pocket — Stone on three sides, WATER on the fourth — and the planner's own sentence was \"the two are in different connected components\". The engine has modelled the swing since R5 slice 5 (`levelRun`'s `BreakableRock` arm, `rockBreaksUnder`, `hitRock`, the persistence write); what did not exist was a SOLVER row, so a rock press was named by OEL coordinate in a hand-written leg and to the live solver a rock was stone. This slice registered `OBSTACLE_STRATEGIES['solid:breakablerock'] = 'break'` and an executor that derives its own stance — and the stance here is the BOOT CELL itself, which is why the derivation asks the live position before it sweeps the ring. Boot: r7-act2-11's committed v8 block (the campaign's post-sword latch) re-pointed at L3's arrival from L11, read out of the atlas — R8 slice 8's own construction and the survey's `staged` policy, with the committed TIMED clears stripped. ⚠ A staged boot is a DECLARATION, not a measured latch: this tape says \"L3 is solvable from this declared state\", and ⚖ ruling 11's true-start chain is what will re-record it from a real one. Solver: 226 ticks, 2 decision(s), 0 re-plan(s), ZERO hits. Authored by scripts/procgen/solve-seedling-r9-l3.mjs; trace sidecar in fixtures/traces/.",
+    "boot": {
+        "level": 3,
+        "x": 96,
+        "y": 128
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 10,
+            "tag": 0,
+            "note": ""
+        }
+    ],
+    "equips": [],
+    "pins": [
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 418414780,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 1763053598
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": false,
+            "hasShield": false,
+            "hasFire": false,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": false
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 8586,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 1
+        }
+    },
+    "tick_count": 226,
+    "inputs": [
+        {
+            "key": "up",
+            "from": 0,
+            "to": 1
+        },
+        {
+            "key": "primary",
+            "from": 1,
+            "to": 2
+        },
+        {
+            "key": "up",
+            "from": 21,
+            "to": 45
+        },
+        {
+            "key": "down",
+            "from": 45,
+            "to": 46
+        },
+        {
+            "key": "up",
+            "from": 46,
+            "to": 47
+        },
+        {
+            "key": "down",
+            "from": 47,
+            "to": 48
+        },
+        {
+            "key": "up",
+            "from": 48,
+            "to": 49
+        },
+        {
+            "key": "left",
+            "from": 53,
+            "to": 106
+        },
+        {
+            "key": "right",
+            "from": 106,
+            "to": 107
+        },
+        {
+            "key": "left",
+            "from": 107,
+            "to": 108
+        },
+        {
+            "key": "up",
+            "from": 112,
+            "to": 165
+        },
+        {
+            "key": "down",
+            "from": 165,
+            "to": 166
+        },
+        {
+            "key": "up",
+            "from": 166,
+            "to": 167
+        },
+        {
+            "key": "right",
+            "from": 171,
+            "to": 198
+        },
+        {
+            "key": "left",
+            "from": 200,
+            "to": 202
+        },
+        {
+            "key": "up",
+            "from": 206,
+            "to": 226
+        }
+    ]
+}

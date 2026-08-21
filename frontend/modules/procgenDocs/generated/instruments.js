@@ -139,7 +139,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 5,
+            "count": 6,
             "id": "solve"
         },
         {
@@ -164,13 +164,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 211,
+        "blockStyle": 212,
         "browser": 73,
         "cited": 64,
-        "files": 230,
+        "files": 231,
         "lineStyle": 19,
-        "withDocblock": 230,
-        "withFlags": 139
+        "withDocblock": 231,
+        "withFlags": 140
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -5186,6 +5186,25 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "solve-seedling-r8-tail — THE BATTERY'S TAIL, through the TWO-PASS AUTHORING LOOP.",
             "path": "scripts/procgen/solve-seedling-r8-tail.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "solve",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "solve-seedling-r9-l3.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "oneLiner": "solve-seedling-r9-l3 — ⛓⛓⛓ **THE ROOM THE `break` VERB OPENED**, driven by the live solver.",
+            "path": "scripts/procgen/solve-seedling-r9-l3.mjs"
         },
         {
             "argvHelpers": [],
