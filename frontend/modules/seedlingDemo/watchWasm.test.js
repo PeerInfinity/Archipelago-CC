@@ -25,6 +25,7 @@ import {
     END_STATE_TOLERANCE, lastObservationOf, levelSetDisagreement, PER_TICK_SCOPE,
     perTickVerdictOf, remapStreamRooms, roomOfGeneratedLevel, stagesOf, VERDICT_SCOPE,
     verdictBlock, verdictLine, verdictOf, WASM_PAGE, WASM_STAGES, concatDrains,
+    continuationTape,
 } from './watchWasm.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -331,16 +332,35 @@ describe('E3 — `publishShip` projects the verdict NOTE, so a claim about the r
      * or 8, got 9`. ⇒ this row exists so the projection cannot be dropped again
      * by a refactor — the browser arm that would catch it costs a GPU and 15
      * minutes, and a claim nobody re-runs is a claim that decays (trap 474).
+     *
+     * ⛓⛓ R9 SLICE 5 RE-PINNED IT, AND IT WAS RIGHT TO RED (trap 495's shape —
+     * a gate that TYPED the old spelling). There are now TWO projections, one
+     * per window kind: `gameVisibleTape` for window 1 (a fresh boot applies
+     * everything) and `continuationTape` for k > 0 (which composes
+     * `gameVisibleTape` and then strips the three rng stream positions). So the
+     * claim is no longer "one spelling reaches the call" but "the value handed
+     * to `botLoadTape` came out of a PROJECTION, and both projections exist" —
+     * which is the claim that was meant all along.
      */
-    it('⛔⛔ `botLoadTape` is handed the GAME-VISIBLE projection, never the raw tape',
-        () => {
-            const body = source('watchWasm.js').split('\n')
-                .filter((l) => !/^\s*(\*|\/\/|\/\*)/.test(l))
-                // ⚠ the CALL, not the refusal message that names it
-                .filter((l) => /bot\('botLoadTape'/.test(l));
-            expect(body.length).toBeGreaterThan(0);
-            for (const line of body) expect(line).toMatch(/gameVisibleTape\(/);
-        });
+    it('⛔⛔ `botLoadTape` is handed a PROJECTION, never the raw tape', () => {
+        const live = source('watchWasm.js').split('\n')
+            .filter((l) => !/^\s*(\*|\/\/|\/\*)/.test(l));
+        const body = live
+            // ⚠ the CALL, not the refusal message that names it
+            .filter((l) => /bot\('botLoadTape'/.test(l));
+        expect(body.length).toBeGreaterThan(0);
+        // ⛔ the ARGUMENT is a projected object, never `w.tape`
+        for (const line of body) {
+            expect(line).toMatch(/projected\.tape|gameVisibleTape\(/);
+            expect(line).not.toMatch(/JSON\.stringify\(w\.tape\)/);
+        }
+        // ⛔ …and BOTH projections are on the path, by name — one per window kind
+        const chose = live.filter((l) => /continuationTape\(w\.tape\)/.test(l));
+        expect(chose.length).toBeGreaterThan(0);
+        expect(chose.join('\n')).toMatch(/k > 0/);
+        expect(live.filter((l) => /gameVisibleTape\(w\.tape\)/.test(l)).length)
+            .toBeGreaterThan(0);
+    });
 
     it('⛓ …and the projection is what makes a v9 tape loadable AT ALL — the AS3 '
         + 'loader gates on its VERSION LIST', () => {
@@ -719,5 +739,72 @@ describe('⛓⛓ the drains are concatenated the way the HEADLINE ARITHMETIC doe
     it('a window that drained NOTHING contributes nothing and does not shift wrongly', () => {
         const got = concatDrains([{ ticks: [] }, drainOf(0, 1, 'b')], [7, 1]);
         expect(got.ticks.map((o) => o.t)).toEqual([7, 8]);
+    });
+});
+
+
+/**
+ * ⛓⛓⛓ R9 SLICE 5 (⚖ ruling 12 (d), ruling 14) — **THE CONTINUATION
+ * PROJECTION**, which is what the page hands `botLoadTape` for k > 0 and ONLY
+ * after `continuationAdmission` has already asserted the declaration.
+ *
+ * ⛔ THE MUTANT THAT MAKES THIS A GATE: remove the strip (hand
+ * `gameVisibleTape(tape)` at every window) and `boundary 2/3` of `?tapes=r8-d2`
+ * refuses on `rng` exactly as slice 3 measured — `botStart` applies the
+ * declared seed on a continuation and rewinds the live stream by L19's build
+ * (§11.12(iii), trap 492). The rows below are the headless half of that; the
+ * GPU half is `check-seedling-wasm-ship.mjs`'s CHAIN arm.
+ */
+describe('⛓⛓⛓ the continuation projection — the rng strip, AFTER the admission', () => {
+    const rng = { seed: 1823918582, split: false, cosmetic: 4, fp: 1752443622 };
+    const tape = (over = {}) => ({
+        tape_version: 8, name: 'w', boot: { level: 20, x: 192, y: 64 },
+        tick_count: 3, inputs: [], persistence: [], grants: [], rng, ...over,
+    });
+
+    it('⛓ a continuation window is handed ZEROS for the three STREAM POSITIONS', () => {
+        const { tape: out } = continuationTape(tape());
+        expect(out.rng).toEqual({ seed: 0, split: false, cosmetic: 0, fp: 0 });
+    });
+
+    it('⛔ …and `split` is KEPT — `Rng.split` is assigned UNCONDITIONALLY (Bot.as:1771)', () => {
+        expect(continuationTape(tape({ rng: { ...rng, split: true } })).tape.rng.split)
+            .toBe(true);
+        // ⛔ the OTHER three are still zeroed beside it — the keep is one field,
+        //    not a bail-out.
+        expect(continuationTape(tape({ rng: { ...rng, split: true } })).tape.rng)
+            .toEqual({ seed: 0, split: true, cosmetic: 0, fp: 0 });
+    });
+
+    it('⛓ the page SAYS WHAT IT DID — `rngStripped` is the DECLARED triple, as a FIELD', () => {
+        // ⛔ a field, never a sentence to regex (trap 269 — echo is not value).
+        expect(continuationTape(tape()).rngStripped)
+            .toEqual({ seed: 1823918582, cosmetic: 4, fp: 1752443622 });
+    });
+
+    it('a tape that declares NO `rng` block is projected unchanged, and says so', () => {
+        // ⚠ 110 of the 154 tapes on the roster are pre-v7 and carry none.
+        const { tape: out, rngStripped } = continuationTape(tape({ rng: undefined }));
+        expect(rngStripped).toBe(null);
+        expect(out.rng).toBeUndefined();
+    });
+
+    it('⛔ WINDOW 1 IS UNTOUCHED — the projection is `gameVisibleTape`, unchanged', () => {
+        // The page calls `gameVisibleTape` directly for k === 0; this asserts the
+        // two projections really do differ, so "window 1 is untouched" is a
+        // measurable claim rather than a comment.
+        const t = tape();
+        expect(gameVisibleTape(t).rng).toEqual(rng);
+        expect(continuationTape(t).tape.rng).not.toEqual(rng);
+    });
+
+    it('⛓ everything `gameVisibleTape` drops is still dropped — the projection COMPOSES', () => {
+        const v9 = tape({
+            tape_version: 9,
+            persistence: [{ level: 5, tag: 0, at: 427 }, { level: 8, tag: 1 }],
+        });
+        const out = continuationTape(v9).tape;
+        expect(out.tape_version).toBe(8);
+        expect(out.persistence.every((c) => c.at === undefined)).toBe(true);
     });
 });

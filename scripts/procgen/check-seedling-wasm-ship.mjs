@@ -862,6 +862,31 @@ const SEQ_DEAD_FRAME_SHARES = (() => {
     return shares;
 })();
 
+/**
+ * ⛓⛓⛓ R9 SLICE 5 — THE SAME DERIVATION FOR THE **THREE-WINDOW CHAIN**, which
+ * (d) makes measurable for the first time. Derived, never typed: trap 495 is
+ * a gate that spelled a count and decayed when the count moved.
+ */
+const CHAIN_DEAD_FRAME_SHARES = (() => {
+    const levelSource = shipLevelSource();
+    const shares = [];
+    let live = null;
+    let owed = 0;
+    for (let i = 0; i < CHAIN_WINDOWS.length; i += 1) {
+        const st = createTapeStepper(loadTape(CHAIN_WINDOWS[i]), i === 0
+            ? { levelSource, onTick: (a, b, c, r) => { live = r; } }
+            : { run: live, onTick: (a, b, c, r) => { live = r; } });
+        for (let r = st.next(); !r.done; r = st.next()) { /* step to completion */ }
+        const now = live.deadFramesOwed;
+        shares.push(now - owed);
+        owed = now;
+    }
+    return shares;
+})();
+/** ⛓ The chain's own observation counts and end state — from the TAPES. */
+const CHAIN_TICKS = CHAIN_WINDOWS.map((n) => loadTape(n).tick_count);
+const CHAIN_WHOLE_OBS = CHAIN_TICKS.reduce((a, b) => a + b, 0) + 1;
+
 const SEQ_PAGE = `${HOST}/frontend/modules/seedlingDemo/watch.html`
     + `?tapes=${SEQ_WINDOWS.join(',')}&side=wasm`;
 const CHAIN_PAGE = `${HOST}/frontend/modules/seedlingDemo/watch.html?tapes=r8-d2&side=wasm`;
@@ -1022,24 +1047,35 @@ const SEQ_STEPS = [
 }
 
 /**
- * ⛔⛔⛔ R9 SLICE 3 — THE CHAIN ARM: `?tapes=r8-d2` IS THREE WINDOWS AND IT IS
- * REFUSED AT THE SECOND BOUNDARY, BY NAME. This arm asserts the refusal.
+ * ⛔⛔⛔ R9 SLICE 5 — THE CHAIN ARM: `?tapes=r8-d2` IS THREE WINDOWS AND UNDER
+ * (d) IT **ADMITS AT BOTH BOUNDARIES AND AGREES PER TICK ON ALL THREE**.
  *
- * See `SEQ_WINDOWS`' block for the mechanism. In one sentence: every latch on
- * the roster was measured after a FRESH-PAGE replay of its own segment, in
- * which `botStart` builds the boot level; a continuation does not build, so
- * from window 3 on the live stream is behind the declared PRE-BUILD rng by
- * exactly that build. The director sees it and stops before applying a state
- * that would move the world.
+ * ⛓ THIS ARM USED TO ASSERT THE REFUSAL, and that old result is now mutant
+ * (a)'s value rather than a claim about the shipped page (R9 §13). The
+ * mechanism it recorded is real and unchanged: every latch on the roster was
+ * measured after a FRESH-PAGE replay in which `botStart` BUILDS the boot
+ * level, and `botStart` also APPLIES a declared stream position whenever it is
+ * non-zero (`Bot.as:1772`, `:1782`) WITHOUT rebuilding (`:1722-1725`). On
+ * window 2 that write rewound the live stream by exactly L19's build, and
+ * `boundary 2/3` refused on `rng`.
  *
- * ⛓ WHY THIS ROW EXISTS RATHER THAN A DELETED CLAIM: a refusal that only
- * happens is indistinguishable from a refusal nobody checks (trap 119). And it
- * runs to `boundary 2/3`, so it also proves the first boundary of a
- * THREE-window sequence IS crossed on one game — which nothing else asserts.
+ * ⇒ ⚖ ruling 12's option (d), ruled by the user 2026-08-20 and shaped by
+ * ruling 14: ADMIT AGAINST THE DECLARATION FIRST — the pre-vs-pre `rng`
+ * assertion stays ON — and only then hand `botLoadTape` a copy with the three
+ * stream positions zeroed (`split` KEPT). The declaration is still asserted at
+ * every boundary; it is simply no longer APPLIED to a game that is already
+ * running.
+ *
+ * ⛔ WHAT MAKES THIS ARM A GATE RATHER THAN A REPORT: it asserts the two
+ * boundaries ADMIT, the three per-window verdicts AGREE PER TICK, the whole
+ * concatenation agrees, each window's DEAD-FRAME SHARE equals the model's
+ * (the one claim a door-crossing window can make — see the CLAIM 2 note), and
+ * the end state matches. Every count is DERIVED from `CHAIN_WINDOWS` and the
+ * tapes; a literal here would decay the first time the chain moved (trap 495).
  */
 {
-    const at = `boundary ${CHAIN_WINDOWS.length - 1}/${CHAIN_WINDOWS.length}`;
-    const res = drive(`▶ THE CHAIN — [${CHAIN_WINDOWS.join(', ')}] and its REFUSAL`,
+    const N = CHAIN_WINDOWS.length;
+    const res = drive(`▶ THE CHAIN — [${CHAIN_WINDOWS.join(', ')}] as ONE CONTINUATION`,
         CHAIN_PAGE, [
             {
                 what: 'the JS walk ADMITTED every window and the ship reached `runtime`',
@@ -1050,11 +1086,19 @@ const SEQ_STEPS = [
             { frame_click: '#btn-start', frame: '/game.html',
                 what: 'press ▶ Start INSIDE the frame' },
             {
-                what: `the ship reached ${at} and REFUSED there`,
-                wait: 'window.__watch?.wasm?.refusal'
-                    + ` && window.__watch.wasm.refusal.stage === '${at}'`,
+                what: `⛓⛓ the LAST boundary (${N - 1}/${N}) was crossed — the one slice 3 `
+                    + 'measured a REFUSAL at',
+                wait: `window.__watch?.wasm?.reached?.includes('boundary ${N - 1}/${N}')`,
                 sec: 900,
             },
+            {
+                what: '⛓⛓⛓ every window finished and the SEQUENCE has a verdict',
+                wait: "window.__watch?.wasm?.verdict"
+                    + " && window.__watch.wasm.verdict.kind !== 'not-finished'"
+                    + " && window.__watch.wasm.reached?.includes('verdict')",
+                sec: 1200,
+            },
+            { read: 'window.__watch.wasm', as: 'wasm' },
             { read: 'window.__watch.wasm.reached', as: 'reached' },
             { read: 'window.__watch.wasm.refusal', as: 'refusal' },
             { read: 'window.__editorSequence.windows.map((w) => w.label)', as: 'seqLabels' },
@@ -1062,23 +1106,104 @@ const SEQ_STEPS = [
     check(res !== null && res.crashed !== true, 'CHAIN: the driver completed every step',
         res === null ? 'no results file' : (res.error ?? `${res.steps.length} step(s)`));
     if (res !== null) {
+        const wasm = res.reads?.wasm ?? null;
+        const wins = wasm?.windows ?? [];
         check(JSON.stringify(res.reads?.seqLabels) === JSON.stringify([...CHAIN_WINDOWS]),
-            `CHAIN: ⛓ the headline expanded to its ${CHAIN_WINDOWS.length} segments`,
+            `CHAIN: ⛓ the headline expanded to its ${N} segments`,
             JSON.stringify(res.reads?.seqLabels));
+        check(res.reads?.refusal == null,
+            'CHAIN: ⛔⛔ …and NOTHING was refused — the whole chain is one continuation',
+            JSON.stringify(res.reads?.refusal ?? null));
+
+        /**
+         * ⛔⛔ CLAIM A — BOTH BOUNDARIES ADMITTED, and the `rng` row is one of
+         * the rows that PASSED rather than one that was skipped. An UNASSERTED
+         * row is never a pass (this arm's own law), so the count of
+         * informational rows is published beside the refusal count.
+         */
         const reached = res.reads?.reached ?? [];
-        check(reached.includes(`boundary 1/${CHAIN_WINDOWS.length}`)
-            && reached.includes(`running 2/${CHAIN_WINDOWS.length}`)
-            && reached.includes(`drain 2/${CHAIN_WINDOWS.length}`),
-        'CHAIN: ⛓⛓ THE FIRST BOUNDARY OF A THREE-WINDOW SEQUENCE IS CROSSED ON ONE GAME '
-            + '— L18 then L19, no rebuild between them',
-        JSON.stringify(reached));
-        const r = res.reads?.refusal ?? null;
-        check(r?.stage === at && r?.reason === 'window-cannot-continue'
-            && /the declared `rng` is not the live world's/.test(r?.detail ?? ''),
-        'CHAIN: ⛔⛔ …and the SECOND boundary is REFUSED BY NAME on `rng` — a latch '
-            + 'measured after a FRESH-PAGE replay carries its boot level\'s BUILD draws, '
-            + 'and a continuation never spends them (SEAM_PREBUILD_FIELDS)',
-        `${r?.stage} · ${r?.reason} · ${(r?.detail ?? '').slice(0, 260)}`);
+        const crossed = Array.from({ length: N - 1 }, (_, i) => `boundary ${i + 1}/${N}`);
+        check(crossed.every((st) => reached.includes(st)),
+            `CHAIN: ⛔⛔ CLAIM A — ALL ${N - 1} BOUNDARIES OF A ${N}-WINDOW SEQUENCE ARE `
+                + 'CROSSED ON ONE GAME — the answer slice 3 could not get',
+            JSON.stringify(reached.filter((x) => x.startsWith('boundary'))));
+        check(wins.length === N,
+            `CHAIN: ⛓ the readout carries one record per window (${N})`,
+            `${wins.length} record(s): ${wins.map((w) => w.label).join(', ')}`);
+
+        /**
+         * ⛔⛔ CLAIM B — THE STRIP IS ON THE RECORD. `rngStripped` carries what
+         * was DECLARED, ASSERTED and NOT APPLIED, per window; window 1's is
+         * null because a fresh boot applies everything. A page that stopped
+         * stripping would still admit and still agree — until window 3 — so
+         * this FIELD is what makes the mechanism visible rather than inferred
+         * (trap 269: echo is not value, so it is read as data).
+         */
+        const stripped = wins.map((w) => w.rngStripped ?? null);
+        const declared = CHAIN_WINDOWS.map((n) => loadTape(n).rng ?? null);
+        const wantStripped = declared.map((r, i) => (i === 0 || !r ? null
+            : { seed: r.seed ?? 0, cosmetic: r.cosmetic ?? 0, fp: r.fp ?? 0 }));
+        check(JSON.stringify(stripped) === JSON.stringify(wantStripped),
+            'CHAIN: ⛔⛔ CLAIM B — every CONTINUATION window reports the rng it DECLARED, '
+                + 'ASSERTED and did NOT APPLY; window 1 reports none',
+            JSON.stringify(stripped));
+
+        /**
+         * ⛔⛔ CLAIM C — THREE PER-TICK AGREEMENTS, one per window, each against
+         * the MODEL of that window out of the SAME walk the JS side scrubbed.
+         */
+        const perTick = wins.map((w) => w.perTick ?? null);
+        check(perTick.length === N && perTick.every((t) => /agrees/.test(t ?? '')),
+            `CHAIN: ⛔⛔⛔ CLAIM C — ALL ${N} WINDOWS AGREE WITH THE MODEL PER TICK`,
+            perTick.join('  ·  '));
+        const wantObs = CHAIN_TICKS.map((n) => n + 1);
+        const gotObs = wins.map((w, i) => wasm?.windows?.[i]?.drain?.observations ?? null);
+        check(JSON.stringify(gotObs) === JSON.stringify(wantObs),
+            `CHAIN: ⛓ …over the observation counts the TAPES imply — ${wantObs.join(' / ')}`,
+            JSON.stringify(gotObs));
+
+        /**
+         * ⛔⛔ CLAIM D — AND ONCE OVER THE WHOLE CONCATENATION, which is the
+         * claim a per-window pair cannot make: two windows can each agree with
+         * their own stream while the boundary between them lost a tick.
+         */
+        check(wasm?.verdict?.perTick?.observations === CHAIN_WHOLE_OBS
+            && wasm?.drain?.observations === CHAIN_WHOLE_OBS,
+        'CHAIN: ⛔⛔ CLAIM D — THE WHOLE CONCATENATION IS THE LENGTH THE TAPES IMPLY — '
+            + `${CHAIN_TICKS.join(' + ')} + 1 = ${CHAIN_WHOLE_OBS}`,
+        `per-tick ${wasm?.verdict?.perTick?.observations} · drain `
+            + `${wasm?.drain?.observations}`);
+        check(/agrees/.test(wasm?.verdict?.perTick?.text ?? ''),
+            'CHAIN: ⛔⛔ …and the WHOLE sequence agrees with the whole model, per tick',
+            wasm?.verdict?.perTick?.text ?? '');
+
+        /**
+         * ⛔⛔ CLAIM E — THE DEAD-FRAME SHARES, which is the ONLY continuation
+         * claim a door-crossing window can make (trap 488). A re-boot pays
+         * `blackCover`'s room fade ON TOP of the window's own, so an EXACT
+         * match against the model is the continuation, frame for frame — and
+         * `continuationFindings` correctly refuses to answer here because every
+         * one of these windows crosses a door.
+         *
+         * ⚠ THE MODEL'S SHARES ARE COMPUTED ON ONE CONTINUED RUN
+         * (`CHAIN_DEAD_FRAME_SHARES`), which is the same thing the page does —
+         * a STAGED walk of each tape would add the boot fade the continuation
+         * never pays and the two would disagree by exactly `LOAD_FADE_FRAMES`.
+         */
+        const gotDead = wins.map((w, i) => wasm?.windows?.[i]?.deadFrames ?? null);
+        check(JSON.stringify(gotDead) === JSON.stringify(CHAIN_DEAD_FRAME_SHARES),
+            'CHAIN: ⛔⛔⛔ CLAIM E — EVERY WINDOW\'S DEAD-FRAME SHARE IS THE MODEL\'S, '
+                + `EXACTLY — ${CHAIN_DEAD_FRAME_SHARES.join(' / ')}`,
+            `game ${JSON.stringify(gotDead)} vs model `
+                + `${JSON.stringify(CHAIN_DEAD_FRAME_SHARES)}`);
+
+        /** ⛓ CLAIM F — and the run ended where the model says it ended. */
+        check(wasm?.verdict?.agrees === true,
+            'CHAIN: ⛓ CLAIM F — the END STATE agrees, on the DRAINED frame',
+            wasm?.verdict?.text ?? '');
+        check((wins.slice(1)).every((w) => w.movedAtBoundary === false),
+            'CHAIN: ⛓ …and the player MOVED AT NO BOUNDARY — the key releases landed',
+            JSON.stringify(wins.map((w) => w.movedAtBoundary)));
     }
     pageHygiene(res, 'CHAIN');
 }

@@ -190,6 +190,55 @@ export function stagesOf({ levelSet = null, windows = 1 } = {}) {
 }
 
 /**
+ * ⛓⛓⛓ R9 SLICE 5 (⚖ ruling 12, option (d); ruling 14's first bullet) — **WHAT A
+ * CONTINUATION WINDOW HANDS THE GAME**, and it happens AFTER the admission.
+ *
+ * ⛔ THE ORDER IS THE WHOLE RULE. `continuationAdmission` compares the
+ * DECLARED `rng` against the live world's PRE-BUILD reading (`botSeam()` →
+ * `segmentBootFromLatch`, the `beginEntry` block) and refuses by name when
+ * they differ. That assertion stays ON. Only once it has passed is the
+ * declaration REMOVED from the copy `botLoadTape` receives — because
+ * `Bot.botStart` applies a stream position whenever it is non-zero
+ * (`Bot.as:1772` `Rng.setState` if `rngSeed != 0`, `:1782` `FP.randomSeed` if
+ * `rngFpSeed != 0`) and it does so WITHOUT REBUILDING (`:1722-1725`). On a
+ * continuation that write REWINDS the live stream by exactly the boot level's
+ * build — which is what refused `boundary 2/3` of `?tapes=r8-d2` at slice 3
+ * (§11.12(iii), trap 492).
+ *
+ * ⛔ `split` IS KEPT, and that is not symmetry. `Rng.split` is a STATIC
+ * assigned UNCONDITIONALLY on every `botStart` (`Bot.as:1771`), so zeroing it
+ * would not be a no-op the way the three seeds are: it re-routes which stream
+ * the cosmetic draws come from — a real change to the game. A later window
+ * that declares a DIFFERENT `split` from window 1's is therefore refused at
+ * TIER 1 (`director.sequenceAdmission`), in the picker, before a frame exists.
+ *
+ * ⛓ AND THE PAGE SAYS WHAT IT DID: `rngStripped` carries the three values that
+ * were DECLARED, ASSERTED and NOT APPLIED. A strip nobody can see is
+ * indistinguishable from a tape that declared nothing (trap 269 — echo is not
+ * value, so this is a FIELD).
+ *
+ * ⚠ WINDOW 1 IS UNTOUCHED. A fresh boot applies everything, and must: it is
+ * the only window whose declared stream position IS the state the page is in.
+ *
+ * @param {object} tape a PARSED tape (window k > 0)
+ * @returns {object} `{tape, rngStripped}` — `rngStripped` is `null` for a tape
+ *   that declares no `rng` block at all (110 of the 154 on the roster)
+ */
+export function continuationTape(tape) {
+    const visible = gameVisibleTape(tape);
+    const declared = tape.rng ?? null;
+    if (!declared) return { tape: visible, rngStripped: null };
+    return {
+        tape: { ...visible, rng: { ...declared, seed: 0, cosmetic: 0, fp: 0 } },
+        rngStripped: {
+            seed: declared.seed ?? 0,
+            cosmetic: declared.cosmetic ?? 0,
+            fp: declared.fp ?? 0,
+        },
+    };
+}
+
+/**
  * ⛓⛓⛓ THE WINDOW BOUNDARY, IN ONE PLACE — the streams concatenated the way the
  * HEADLINE ARITHMETIC does it.
  *
@@ -1006,7 +1055,7 @@ export async function shipToWasm(payload, host) {
         const at = many ? ` ${k + 1}/${windows.length}` : '';
         const wLabel = w.label || `window ${k + 1}`;
         const rec = { index: k, label: wLabel, admission: null, verdict: null,
-            continuation: null, movedAtBoundary: null };
+            continuation: null, movedAtBoundary: null, rngStripped: null };
         state.windows.push(rec);
 
         if (k > 0) {
@@ -1132,7 +1181,15 @@ export async function shipToWasm(payload, host) {
          * `r8-d2-19`: identical, no key dropped), so the three single-tape
          * arms are unaffected by construction rather than by re-measurement.
          */
-        const loaded = bot('botLoadTape', JSON.stringify(gameVisibleTape(w.tape)));
+        /**
+         * ⛓⛓⛓ R9 SLICE 5 — AND FOR k > 0 THE PROJECTION IS THE CONTINUATION
+         * ONE. See `continuationTape` for why the strip happens HERE, after
+         * the admission above has already asserted the declaration.
+         */
+        const projected = k > 0 ? continuationTape(w.tape) : { tape: gameVisibleTape(w.tape),
+            rngStripped: null };
+        rec.rngStripped = projected.rngStripped;
+        const loaded = bot('botLoadTape', JSON.stringify(projected.tape));
         if (loaded !== 'ok') return refuse(`tape${at}`, `botLoadTape: ${loaded}`, '');
         enter(`tape${at}`, 'the game accepted the tape');
 
@@ -1287,6 +1344,8 @@ export async function shipToWasm(payload, host) {
             endState: r.verdict?.text ?? null,
             continuation: r.continuation,
             movedAtBoundary: r.movedAtBoundary,
+            /** ⛓ R9 slice 5: what was DECLARED, ASSERTED and NOT APPLIED. */
+            rngStripped: r.rngStripped ?? null,
         })),
     };
     state.verdict = v;

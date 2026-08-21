@@ -807,6 +807,9 @@ export function expandSequence(members, { chains = PAGE_CHAINS } = {}) {
  * @param {object[]} tapes parsed tapes, in window order
  * @returns {object[]} findings; `refusalsOnly` of them empty means the queue may start
  */
+/** ⛓ R9 slice 5: absent `rng` and `split: false` are the SAME instruction. */
+const splitOf = (tape) => Boolean(tape?.rng?.split);
+
 export function sequenceAdmission(tapes, { coast = 8 } = {}) {
     const findings = [];
     const add = (where, what, detail) => findings.push({ where, what, detail });
@@ -820,6 +823,37 @@ export function sequenceAdmission(tapes, { coast = 8 } = {}) {
             add(`window ${i}`, 'the tape has no boot block',
                 'a window is a tape; a member the roster could not answer for is not one');
             return;
+        }
+        /**
+         * ⛓⛓⛓ R9 SLICE 5 (⚖ ruling 14) — **`split` IS THE ONE rng FIELD A
+         * CONTINUATION CANNOT DROP**, so a window that changes it is refused
+         * here, in the picker.
+         *
+         * `Bot.botStart` assigns `Rng.split = rngSplit` UNCONDITIONALLY
+         * (`Bot.as:1771`) — unlike `Rng.setState` and `FP.randomSeed`, which
+         * it applies only when the declared value is non-zero. So the page's
+         * continuation projection (`watchWasm.continuationTape`) can zero the
+         * three seeds and have the game ignore the write, and CANNOT do the
+         * same to `split`: a flip re-routes the cosmetic draws, which is a
+         * real change to the game rather than a no-op.
+         *
+         * ⚠ ABSENT IS `false`. 110 of the 154 tapes on the roster carry no
+         * `rng` block at all (they are pre-v7), and `botLoadTape` defaults the
+         * field — so "declares nothing" and "declares false" are the same
+         * instruction to the game and must not refuse each other.
+         *
+         * ⛓ AND THE RULE HAS A LIVE WITNESS RATHER THAN A MUTANT (trap 475):
+         * `r6-owl-control` and `r6-owl-kill` really do declare `split: true`,
+         * so a queue that mixes either with any other window reaches this row.
+         */
+        if (i > 0 && splitOf(tape) !== splitOf(tapes[0])) {
+            add(`window ${i} ("${label}")`, 'a later window declares a different `rng.split`',
+                `window 0 ("${tapes[0]?.name ?? 'window 0'}") declares `
+                + `split=${splitOf(tapes[0])} and this one declares ${splitOf(tape)}. `
+                + '`Rng.split` is a STATIC that `botStart` assigns on EVERY load '
+                + '(`Bot.as:1771`), so unlike the three stream positions it cannot be '
+                + 'stripped on a continuation — applying it would re-route the cosmetic '
+                + 'draws of a game that is already running.');
         }
         if (i > 0 && (tape.grants ?? []).length > 0) {
             add(`window ${i} ("${label}")`, 'a later window declares grants',

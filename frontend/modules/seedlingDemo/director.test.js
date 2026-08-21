@@ -607,6 +607,49 @@ describe('TIER 1 — admission at queue time', () => {
         expect(fs).toEqual([]);
     });
 
+    /**
+     * ⛓⛓⛓ R9 SLICE 5 — **`split` IS THE ONE rng FIELD THE PAGE CANNOT STRIP**,
+     * so a window that changes it is refused here rather than handed to a game
+     * that would apply it. `Bot.botStart` assigns `Rng.split` UNCONDITIONALLY
+     * (`Bot.as:1771`); the three stream positions are applied only when
+     * non-zero, which is what makes `watchWasm.continuationTape`'s zeroing a
+     * no-op on the game and this one not.
+     *
+     * ⛓ THE RULE HAS A LIVE WITNESS, NOT ONLY A MUTANT (trap 475):
+     * `r6-owl-control` and `r6-owl-kill` are the two tapes on the 154-tape
+     * roster that really declare `split: true`.
+     */
+    it('⛓⛓ a later window declaring a DIFFERENT `rng.split` is refused by name', () => {
+        const fs = sequenceAdmission([
+            tape({ rng: { seed: 1, split: false } }),
+            tape({ rng: { seed: 2, split: true } }),
+        ]);
+        expect(fs.map((f) => f.what))
+            .toContain('a later window declares a different `rng.split`');
+        expect(fs[0].detail).toMatch(/Bot\.as:1771/);
+    });
+
+    it('⛓ …and an ABSENT `rng` block is `split: false` — not a third state', () => {
+        // ⚠ 110 of the 154 roster tapes are pre-v7 and carry no `rng` at all;
+        //   `botLoadTape` defaults the field, so "declares nothing" and
+        //   "declares false" are the SAME instruction to the game.
+        expect(sequenceAdmission([tape({ rng: { seed: 1, split: false } }), tape()]))
+            .toEqual([]);
+        expect(sequenceAdmission([tape(), tape({ rng: { seed: 1, split: false } })]))
+            .toEqual([]);
+        // ⛔ and a true one still refuses against an absent one
+        expect(sequenceAdmission([tape(), tape({ rng: { seed: 1, split: true } })])
+            .map((f) => f.what))
+            .toContain('a later window declares a different `rng.split`');
+    });
+
+    it('⛓ window 0 may declare `split: true` — every window then agrees with it', () => {
+        expect(sequenceAdmission([
+            tape({ rng: { seed: 1, split: true } }),
+            tape({ rng: { seed: 2, split: true } }),
+        ])).toEqual([]);
+    });
+
     it('⛓ a window that does not end at rest REPORTS, and NAMES the keys', () => {
         const held = tape({ inputs: [{ key: 'down', from: 0, to: 100 }] });
         const fs = sequenceAdmission([held, tape()]);
