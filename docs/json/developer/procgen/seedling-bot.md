@@ -11600,3 +11600,8 @@ for a flag the game really did write. A true sentence about the wrong ledger.
 The differential cannot see this: it compares positions, and the seam compares
 the game's latch against a boot the game itself produced. `?tapes=r8-d2` is
 **20 / 0** on three windows once the reported out-of-band writes are folded in.
+
+⛓ The live Pages row after the deploy: **20 / 0, ALL PASS**
+(`check-seedling-wasm-pages.mjs --root=https://peerinfinity.github.io/Archipelago-CC`)
+— the ship path's projection is live, and the row that would have caught its
+absence is the one that had never been handed a v9 tape.
