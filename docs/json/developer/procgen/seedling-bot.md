@@ -11531,3 +11531,72 @@ that file nothing.
 promised: acceptance batch `8ad7bda2ae4b470122334f71b4e92651` at the pristine
 worktree and again on the finished tree (a same-tree control), and zero
 generator paths in the slice's whole diff.
+
+**⛓⛓⛓ AND THE ANNOUNCED WINDOWS SESSION FOUND TWO MORE THINGS, BOTH BY PUTTING
+A THIRD WINDOW IN FRONT OF `r8-d2`.** Ship gate 77 / 0 → **83 / 0, ALL PASS**,
+five arms.
+
+**1. THE SHIP PATH NEVER PROJECTED.** `gameVisibleTape` is the one
+classification of what a game-facing channel may hand to `botLoadTape`
+(`GAME_VISIBLE_DROPS`: the v9 `at`, v10's `despawn` — statements about what the
+GAME does on its own, never instructions to it). The differential has projected
+since R7 slice 6d; `watchWasm.shipToWasm` did not, and it was invisible because
+every tape it had ever shipped was v8 or below. The splice put a v9 tape into a
+sequence and the real GPU said, at `tape 1/3`:
+
+```
+botLoadTape: error:tape_version must be 1, 2, 3, 4, 5, 6, 7 or 8, got 9
+```
+
+Fixed at the call and BYTE-INERT for everything that shipped before it — a v8
+tape projects to itself, measured — with a unit row that mutant-reds when the
+projection is removed, because the arm that would otherwise catch it costs a
+GPU and fifteen minutes.
+
+**2. ⛔⛔⛔ A LATCH IS NOT A LIVE STATE FROM WINDOW 3 ON**, and the mechanism is
+`SEAM_PREBUILD_FIELDS` doing exactly its job. `rng.gameplay` and `fp.seed` are
+PRE-BUILD rows: a segment declares the stream position `botStart` will apply
+ABOVE its own build (R7 slice 2b — the fix that deleted the seam-build-cost
+bridge). On a FRESH PAGE that is exact, because `botStart` writes the value and
+then BUILDS the boot level, spending its draws. A continuation deliberately
+does NOT rebuild (`Bot.as:1722-1725` — that is what makes it a continuation),
+so those draws are never spent:
+
+```
+r8-d2-20 declares rng  {seed 1823918582, fp 1752443622}
+the live game after [r8-solve-18, r8-d2-19] holds
+                       {seed  954659063, fp 2069965047}
+                                         ^ = r8-d2-19's OWN boot fp — L19 was
+                                           never rebuilt, so nothing spent it
+```
+
+⇒ **every latch on the roster was measured after a fresh-page replay of its own
+segment**, so from window 3 on a continuation runs behind it by exactly that
+window's boot-level build. Slice 2 could not see it: N was 2 and window 1 is
+always a fresh boot, so window 2's declared latch was the only one asked.
+
+⛔ The refusal is CORRECT and is not papered over (⚖ slice 2's ruling: a
+mismatch is refused BY NAME, never silently rebuilt) — applying 1823918582
+would MOVE the world. And it cannot be fixed by re-recording: **a boot that
+matched a continuation would stop reproducing the differential's fresh-page
+replay**, which is the gate the whole roster rests on. The two are different
+measurements of "the state at the cut" and a tape can carry one. ⇒ a ⚖ ask.
+
+So the ship gate keeps the full-strength claim on the pair that IS continuable
+(`?tapes=r8-d2-19,r8-d2-20` — per-window `agrees per tick` 865 / 782, the whole
+concatenation 1646, window 2's dead frames 170 to the frame, end state L13
+Δ0/Δ0) and ADDS an arm that ASSERTS the refusal — which also proves the FIRST
+boundary of a three-window sequence IS crossed on one game, L18 then L19 with
+no rebuild between them.
+
+**⛔ ONE MORE, AND ONLY THE ADMISSION COULD ASK IT: TWO LEDGERS, TWO MEANINGS.**
+L18's Spinners carry `tag = "-1"`, so crossing it writes `{17,29}` out of band.
+`levelRun` REPORTS that write and deliberately keeps it out of `earnedClears`,
+which is *what the next BUILD may be handed* and which refuses a clear no
+entity reads. But a tape's `persistence` is read out of the GAME's array, which
+does carry it — so the watch page's live set, built from `earnedClears` alone,
+was short exactly that row and the admission refused the next window BY NAME
+for a flag the game really did write. A true sentence about the wrong ledger.
+The differential cannot see this: it compares positions, and the seam compares
+the game's latch against a boot the game itself produced. `?tapes=r8-d2` is
+**20 / 0** on three windows once the reported out-of-band writes are folded in.
