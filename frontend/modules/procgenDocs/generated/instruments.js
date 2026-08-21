@@ -166,7 +166,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 213,
         "browser": 73,
-        "cited": 64,
+        "cited": 66,
         "files": 232,
         "lineStyle": 19,
         "withDocblock": 232,
@@ -4368,7 +4368,9 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "probe",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "probe-seedling-shortcut-grade.mjs",
@@ -5203,7 +5205,9 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "solve",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "solve-seedling-r9-l3.mjs",

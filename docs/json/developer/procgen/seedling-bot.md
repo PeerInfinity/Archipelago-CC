@@ -10757,6 +10757,23 @@ derived break verb, a ladder that will pay a cheap kill, or a non-dialogued goal
 class. ⛓ Because it is unregistered, `--require=hasSword` is **UNMOVED** at
 `killgate+arena` and no directive subject was re-scanned.
 
+> ⛔⛔⛔ **R9 SLICE 4 LANDED THE DERIVED BREAK VERB, AND THE GRADE DID NOT
+> MOVE — there is a FOURTH wall, and it is structural.** Re-measured with
+> `break` registered and driving route step 12:
+> `probe-seedling-shortcut-grade.mjs` returns **244 / 244** on the two shortcut
+> arms and **129** on the control, to the tick. **A verb is selected only from a
+> `planError`** — the frontier walk that names an obstacle runs inside
+> `solveSegment`'s plan-failure handler — and a shortcut is BY DEFINITION a cell
+> whose walling leaves the goal reachable, so the planner never refuses and no
+> verb is ever selected. ⇒ on Seedling an item-gated obstacle grades **STRONG
+> when it CUTS** (the same probe's fourth arm: 157t with the sword, REFUSED
+> without) and **INERT when it does not**, with nothing in between. SHORTENS
+> needs a solver ROUTE PREFERENCE that spends a verb to shorten a walk it could
+> already make — which MOVES TAPES, so it is a ⚖ ask. The head therefore
+> STAYS OUT (trap 462, sharper), and the REACHABLE Seedling head is a **ROCK
+> LOCK** — a `breakablerock` on a main-path CUT, `needs:['hasSword']`, no live
+> body and therefore no A10. See the R9 § below.
+
 **`PREFER_DISCHARGE` RETIRED ON THE MAZE, AT A MEASURED ZERO** (⚖ arc-5 ruling 4).
 `census-maze-keeps.mjs` swept the policy's OWN subjects — the maze's directed
 attempts, 9 kinds × seeds 1..6 × steps {0, 2} × all 18 enumerated instantiations
@@ -11605,3 +11622,135 @@ the game's latch against a boot the game itself produced. `?tapes=r8-d2` is
 (`check-seedling-wasm-pages.mjs --root=https://peerinfinity.github.io/Archipelago-CC`)
 — the ship path's projection is live, and the row that would have caught its
 absence is the one that had never been handed a v9 tape.
+
+### Slice 4 — THE DERIVED `break` VERB, and the FOURTH WALL it uncovered
+
+**⛓⛓⛓ THE VERB.** `OBSTACLE_STRATEGIES` gained two rows and
+`STRATEGY_EXECUTORS` gained one executor:
+
+```
+'solid:breakablerock':      'break'
+'solid:breakablerockghost': 'break'      break: execBreak
+```
+
+⛔ TWO TAGS, ONE VERB — `shieldlock`/`shieldlocknorm`'s lesson (R8 slice 7) one
+family over. `Game.as:2158` builds the ghost family with `rockType = 1` and
+everything else with the default 0, so the two census tags are ONE AS3 class
+differing in the field that decides which weapon breaks it. A table that knew
+only the plain tag would answer *"No strategy row exists"* for a room whose fact
+is an INVENTORY.
+
+The engine has modelled the swing since R5 slice 5 (`levelRun`'s `BreakableRock`
+arm — `rockBreaksUnder`, `hitRock`, the persistence write; `presses
+.PRESS_ARM_POLICY.BreakableRock` is `modelled`). What did not exist was a SOLVER
+row: a rock press was named by OEL COORDINATE in `botDriverV2`'s hand-written
+spear arm, so to the live solver a rock was stone. The executor derives its own
+stance instead — a rock is STATIC, so a strike stance is a reachable cell plus a
+facing, with no forecast to consult and no `previewWalk` per opportunity.
+
+**⛔ TWO GUARDS, BOTH NAMING AN ITEM RATHER THAN A BUDGET.** `weaponForPress`
+null ⇒ the press is a SILENT no-op (`procgenRequirements`' own sentence), so the
+verb refuses BY NAME instead of swinging at nothing; `rockBreaksUnder(rockType,
+inventory)` false ⇒ the swing LANDS and does nothing, and the refusal names the
+GHOST SWORD as the next work order. Both raise a `SolverRefusal` and not a
+`SolverBotError`, because `procgenOracle.solve` re-throws the latter and an
+item-gated verb that THREW would grade **WEAK** where the honest grade is
+**STRONG**. (⚠ `execKeylock` and `execTouch` still `fail()` on their own
+`held:false` arms — named as residue, not changed under this slice's licence.)
+
+**⛓ AND THE STANCE IS THE BOOT CELL.** Route step 12's L3 rock is the door out
+of a one-cell arrival island — Stone on three sides, WATER on the fourth — so
+every cell a lattice ring sweep can swing from is on the FAR side of it. The
+derivation therefore asks the LIVE position first and returns `stance: null`
+when it already reaches: a `walkTo` to where the walk already is is a corridor
+request for a zero-length corridor, and the frontier's planner is entitled to
+refuse one.
+
+**⛓⛓⛓ THE ROUTE SURVEY: 22 → 23 of 29, and EXACTLY ONE ROW MOVED.** Step 12
+(L3 out of L11) REFUSED → **SOLVED, 226 ticks, 2 decisions**. Against a baseline
+captured at a pristine `801fe0dfa` worktree the other 28 rows are identical in
+verdict *and in tick count*, row for row. The six that remain are the six that
+remained before: L8 ORACLE · L14 CAMERA BAND · L15 `shove` VERB-APPLY · L16 Bob
+BRIDGE+KILL_ARM · A14 L6 TIMEOUT · A16 L4 `shove` VERB-APPLY. ⇒ **THE NEXT WORK
+ORDER ON THE ROUTE IS L14's CAMERA BAND** (R8 lesson 2), whose refusal names its
+own cure: *"move the stance away from the screen edge, or wait the shake out."*
+
+**THE TAPE — `r9-solve-3`, 226 ticks**, authored by
+`scripts/procgen/solve-seedling-r9-l3.mjs` and recorded ONCE with `--only=` on
+the announced real-GPU Windows session: **227 observations, and the model
+reproduces the recording it just made**; `save.time` 8853 game == model; ONE
+`primary` edge, i.e. one swing; zero hits, zero deaths. Its boot is the survey's
+own `staged` policy — `r7-act2-11`'s committed v8 block re-pointed at L3's
+arrival from L11, read out of the ATLAS, with the committed TIMED clears
+stripped — so its claim is *"L3 is solvable from this declared state"*, not
+*"the campaign reaches it"*. ⚖ Ruling 11's true-start chain is what will
+re-record it from a measured latch.
+
+**⛔⛔⛔ THE GENERATOR HALF IS A REFUTATION, AND IT IS THE SLICE'S REAL FINDING.**
+Arc 5 §13.6 left `shortcut` out of `elementSpec.ELEMENT_TABLE` behind three
+walls and predicted the head was *"ONE LINE on the day any ONE of them moves: a
+derived break verb, a combat ladder that prefers a cheap kill to a long detour,
+or a non-dialogued goal class."* Wall 1 has moved. The grade did not.
+`scripts/procgen/probe-seedling-shortcut-grade.mjs` — arc 5's scratch probe
+rebuilt as a committed instrument — with the verb registered:
+
+| room | verdict | ticks | verbs the trace drove |
+|---|---|---|---|
+| SHORTCUT rock, WITH sword | SOLVED | 244 | walk, collect |
+| SHORTCUT rock, WITHOUT sword | SOLVED | 244 | walk, collect |
+| control — short arc OPEN | SOLVED | 129 | walk, collect |
+| CUT rock, WITH sword | SOLVED | 157 | **break**, walk, collect |
+| CUT rock, WITHOUT sword | REFUSED | — | (none) |
+
+⇒ the SHORTCUT room grades **INERT** and the CUT room grades **STRONG**, both
+read off `differentialGrade` itself.
+
+> **THE FOURTH WALL. A verb is selected ONLY from a `planError` — the frontier
+> walk that names an obstacle runs inside `solveSegment`'s plan-failure handler.
+> A shortcut is BY DEFINITION a cell whose walling leaves the goal reachable, so
+> the planner never refuses, no obstacle is ever raised, and no verb is ever
+> selected. On Seedling an item-gated obstacle grades STRONG when it CUTS and
+> INERT when it does not, and NOTHING IN BETWEEN.**
+
+SHORTENS therefore needs a solver ROUTE PREFERENCE that spends a registered verb
+to shorten a walk it could already make — a change that re-plans every committed
+room holding a clearable obstacle beside an open way round, i.e. one that MOVES
+TAPES. ⚖ An ask, not a slice's to take. ⚠ The MAZE reaches the grade in the same
+machinery because its solver is a BFS over an edge graph where an item-locked
+edge is simply *passable when the item is held* — there is no refusal to hang a
+verb off, and none is needed. The fifth grade is not unreachable in general; it
+is unreachable through a REFUSAL-DRIVEN frontier.
+
+⇒ **`shortcut` STAYS OUT of `ELEMENT_TABLE`** (trap 462, now for a sharper
+reason), the four re-pins trap 457 predicted do NOT land, and `--require=hasSword`
+is UNMOVED at `killgate+arena`. **The reachable head is row 14's ROCK LOCK** —
+the CUT arm above is its evidence: a `breakablerock` on a main-path cut,
+`needs:['hasSword']`, no live body and therefore no A10, and a without-arm that
+refuses BY NAME on the item rather than on a budget. It is named here for the
+generator slice that builds it.
+
+**⛔⛔ AND A DEFECT IN A SHARED HELPER, MEASURED AND DELIBERATELY NOT FIXED.**
+`presses.js` and `playerPhysicsV2.js` both transcribe `Player.direction` as
+**RIGHT 0 · UP 1 · LEFT 2 · DOWN 3**. `solverBot.FACING_KEYS` is
+`{0:right, 1:down, 2:left, 3:up}` and `facingToward` returns `dy >= 0 ? 1 : 3` —
+the vertical pair is SWAPPED. The pair is self-consistent as a *key* map
+(`FACING_KEYS[facingToward(...)]` really does walk toward the target) and wrong
+as a *direction*: `slashRectToward` feeds the same integer to `slashRect`, so
+for a target directly above or below the rect is computed on the opposite side.
+Measured at the origin:
+
+```
+target BELOW  facingToward -> 1   slashRect(...,1) is the UP rect    NO overlap
+target ABOVE  facingToward -> 3   slashRect(...,3) is the DOWN rect  NO overlap
+```
+
+⇒ `deriveStrike`'s candidate filter and `execKillByPress`'s live reach test can
+NEVER accept a vertical strike cell. It is a CONSERVATIVE defect — it refuses
+opportunities, it never presses the wrong way — which is why three rungs of
+committed tapes are green over it: every press they contain is horizontal, where
+the two conventions agree. **Repairing it would hand the kill arm a class of
+cells it has never had, and a nearer vertical cell would be chosen ahead of the
+horizontal one every committed kill uses — i.e. it MOVES TAPES.** ⇒ pinned as a
+finding in `breakVerb.test.js` (rows that go RED the day it is fixed, and are
+rewritten as the repair's own rows then), worked around by a correctly-numbered
+local helper, carried as a ⚖ ask.

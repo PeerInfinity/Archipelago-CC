@@ -811,6 +811,25 @@ const FAMILY_RULES = [
         + 'own cure — "move the stance away from the screen edge, or wait the shake out"'],
     [/Strategy '([a-z]+)' failed to apply/,
         (m) => `VERB-APPLY — the '${m[1]}' strategy IS registered and did not apply here`],
+    /**
+     * ⛓ R9 SLICE 4 — R8 LESSON 2's OWN SHAPE HAD NO RULE, and a mutant is what
+     * found it. `solverBot` deliberately distinguishes *"no strategy row
+     * exists"* from *"a strategy is SELECTED and not registered"* — the second
+     * is the COMPUTED work order the whole seam exists to produce — and this
+     * classifier had a rule for the first and not the second, so the sentence
+     * that names the next slice's job landed as `unclassified`.
+     *
+     * ⚠ AND IT REACHES NOTHING ON TODAY'S ROUTE (trap 475: a declared axis that
+     * reaches nothing prints a complete-looking table). Its witness is slice
+     * 4's mutant (b) — the `break` row registered with `STRATEGY_EXECUTORS
+     * .break` removed — which produced exactly this text on step 12 and landed
+     * as `unclassified`. It is added with that witness named, not on the
+     * strength of a shape nobody has seen.
+     */
+    [/Strategy '([a-z]+)' is SELECTED but not registered/,
+        (m) => `VERB-SELECTED-NOT-REGISTERED — the table names '${m[1]}' for this obstacle `
+            + 'and no executor is registered for it. R8 lesson 2: this is a COMPUTED work '
+            + 'order, not a missing mechanism — the room says which verb it wants'],
     [/No strategy row exists for this obstacle/,
         'VERB-MISSING — the selected obstacle has NO strategy row at all'],
     [/needs a GAME-sourced tick/,
