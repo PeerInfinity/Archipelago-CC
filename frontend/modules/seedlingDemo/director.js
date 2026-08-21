@@ -636,3 +636,354 @@ export function traceTicks(windows) {
         (n, w) => n + Math.max((w.stream?.ticks?.length ?? 0) - 1, 0), 0,
     );
 }
+
+/**
+ * ══ ⛓⛓⛓ R9 SLICE 2 — THE SEQUENCE, AS THE **PAGE** ASKS FOR IT ══════════
+ *
+ * ⚖ Ruling 10 (user, 2026-08-20): *"I want the second tape to continue from
+ * the game state at the end of the first tape. I don't want it to reload a
+ * fresh page. And I want it to work like this for both JS playback and wasm
+ * playback."* Everything above this line is the R5 DIRECTOR — the same claim,
+ * driven from a Windows Playwright script over the recompiled game. What
+ * follows is the half `watch.html` needs to make it itself, and it lives HERE
+ * rather than in the page for the reason the whole module exists: a second
+ * spelling of a boundary rule is two rules that agree until one is edited.
+ *
+ * ── ⛔ THE ADMISSION RULE, AND THE SENTENCE IT REPLACES ────────────────
+ *
+ * Kickoff §3.3's first wording said a later window declaring `persistence` or
+ * `grants` is REFUSED BY NAME — `windowsFrom`'s own rule, one paragraph up.
+ * ⛓⛓ **MEASURED WRONG for the slice's own subject** (R9 §10, trap 470 — two
+ * settled rulings may not compose): `r8-d2-20` declares SIX clears, and they
+ * are exactly `r8-d2-19`'s four DECLARED plus the two that segment EARNS
+ * (`{19,0}` the boss and `{19,1}`, from `run.earnedClears`). The block is a
+ * LATCH of the live world, not an instruction to rebuild it — and §3.3 says
+ * so itself one bullet later, about the sibling fields: *"a staged tape's own
+ * latch is LEGAL when it equals what the live world already is — that is
+ * exactly `r8-d2-20` after `r8-d2-19`."* Under the first wording the slice's
+ * headline subject is refused and ruling 10 is unreachable.
+ *
+ * ⚖ THE RULED SENTENCE (orchestrator, 2026-08-20), and it is ONE rule for
+ * every declared field:
+ *
+ *   **a later window's declared staging is admitted iff it MATCHES the live
+ *   state; a mismatch is REFUSED BY NAME, never silently rebuilt.**
+ *
+ * `persistence` must equal the live cleared set EXACTLY — a superset re-clears
+ * a flag the world did not, a subset re-sets one it did, and `botStart`'s
+ * clear path (`Bot.as:1604`) sets every tag in every level back to true before
+ * applying the list, so both are rebuilds in disguise. `grants` must be empty
+ * (the live state IS the inheritance). `boot` must name the world's own
+ * CONSTRUCTION args, which is the GAME's own test: `botStart` skips
+ * `FP.world = new Game(bootLevel, bootX, bootY)` only when
+ * `bootLevel == Main.level && atBootPosition()`, and `atBootPosition` compares
+ * `Main.playerPositionX/Y` — the SPAWN args, not where the player is standing
+ * (`Bot.as:1722-1725`, `:1817`). `rng`/`seam`/`save`/`pins` must be absent or
+ * EQUAL.
+ *
+ * ── ⛓ WHERE THE "LIVE STATE" COMES FROM, ON EACH SIDE ────────────────
+ *
+ * **wasm**: `botSeam()` after window k finishes — the same envelope
+ * `r7Acceptance.segmentBootFromLatch` consumes — put back through that
+ * function, so the comparison is ENVELOPE-vs-DECLARED in the tape's own
+ * vocabulary and no third spelling of a boot block exists. The readout says
+ * so by name.
+ *
+ * **JS**: the live run. `boot.level` is `run.level`; `boot.x/y` is the run's
+ * CONSTRUCTION args (`levelRun`'s `worldCtor`, rewritten at every world swap
+ * and at every ending re-boot, which is precisely `Main.playerPositionX/Y`);
+ * and the cleared set is
+ *
+ *     window 1's DECLARED persistence  ∪  every `run.earnedClears` since
+ *
+ * ⛔ THE FORMULA IS STATED ONCE, HERE. Measured at `60fc17bf8`: `r8-d2-19`
+ * declares `{5:0, 8:0, 8:1, 10:0}` and earns `{19:1, 19:0}`; `r8-d2-20`
+ * declares those six and no others.
+ *
+ * ⚠ AND THE JS RUN CANNOT ANSWER FOR `rng`/`seam`/`save`/`pins`. It models no
+ * LFSR position and no seam envelope, so those rows come back **UNASSERTED
+ * BY NAME** with the caller's own reason beside them — never silently passed.
+ * An unasserted check and a passing one must not print the same thing, which
+ * is `continuationFindings`' rule for crossing a door, one seam out.
+ */
+
+/**
+ * ⛓ THE CHAINS THE PAGE MAY NAME — a browser-safe constant, CHECKED across
+ * the boundary it cannot be imported across.
+ *
+ * `playthroughWalk.js` imports `fixtures/index.js` and therefore `node:fs`, so
+ * `watch.html` cannot read `PLAYTHROUGH_CHAINS` at all — one such import made
+ * the whole page unloadable for two rungs. `director.test.js` runs in node,
+ * where it can, and asserts this table IS `PLAYTHROUGH_CHAINS`' own ids and
+ * segment lists. That is `TRUE_START_CHAIN`/`watchSolve.test.js:338`'s shape
+ * (and `SEAM_SIGNATURE`'s before it): a value checked across a boundary,
+ * never a second list nobody compares.
+ *
+ * ⛔ KEYED BY CHAIN **id**, one spelling. `toy-west-pair`'s headline TAPE is
+ * `r7-ends-meet-full` and its id is not — accepting both would make
+ * `?tapes=r8-d2` (where the two coincide) ambiguous about which it meant.
+ */
+export const PAGE_CHAINS = Object.freeze({
+    'toy-west-pair': Object.freeze(['r7-ends-meet-1', 'r7-ends-meet-2']),
+    'act2-the-sword': Object.freeze([
+        'r7-act2-1', 'r7-act2-2', 'r7-act2-3', 'r7-act2-4', 'r7-act2-5', 'r7-act2-6',
+        'r7-act2-7', 'r7-act2-8', 'r7-act2-9', 'r7-act2-10', 'r7-act2-11',
+    ]),
+    'r8-battery-1': Object.freeze(['r8-solve-1']),
+    'r8-battery-2': Object.freeze(['r8-solve-2']),
+    'r8-battery-3': Object.freeze(['r8-solve-3']),
+    'r8-battery-4': Object.freeze(['r8-solve-4']),
+    'r8-battery-5': Object.freeze(['r8-solve-5']),
+    'r8-battery-6': Object.freeze(['r8-solve-6']),
+    'r8-battery-8': Object.freeze(['r8-solve-8']),
+    'r8-battery-7': Object.freeze(['r8-solve-7']),
+    'r8-battery-9': Object.freeze(['r8-solve-9']),
+    'r8-battery-10': Object.freeze(['r8-solve-10']),
+    'r8-battery-11': Object.freeze(['r8-solve-11']),
+    'r8-d2-shield': Object.freeze(['r8-solve-20']),
+    'r8-d2': Object.freeze(['r8-d2-19', 'r8-d2-20']),
+});
+
+/**
+ * `?tapes=a,b,c` → `['a','b','c']`. The page's list separator is `,` and it is
+ * the same one `?layers=` uses, so the vocabulary does not grow a second one.
+ *
+ * ⚠ ABSENT IS NOT EMPTY. `null` means the parameter was not written; `[]`
+ * means it was written and says nothing, which is a URL a reader can produce
+ * and the page must not treat as "run the single-tape arm". Both come back
+ * distinguishable, and `formatTapesParam` is the inverse: `null` for a list
+ * with nothing in it, so the writer DELETES the key rather than leaving
+ * `?tapes=` behind.
+ */
+export function parseTapesParam(raw) {
+    if (raw === null || raw === undefined) return null;
+    return String(raw).split(',').map((s) => s.trim()).filter((s) => s.length > 0);
+}
+
+/** The inverse. `null` when there is nothing to write — the key is DELETED. */
+export function formatTapesParam(names) {
+    const list = (names ?? []).map((s) => String(s).trim()).filter((s) => s.length > 0);
+    return list.length === 0 ? null : list.join(',');
+}
+
+/**
+ * A queued member is either a TAPE the roster carries or a CHAIN id, and a
+ * chain expands to its segments IN ORDER.
+ *
+ * ⛔ EXPANSION IS REPORTED, NOT SILENT. `?tapes=r8-d2` is two windows and the
+ * readout says which two: a sequence whose length disagrees with what the
+ * reader typed is exactly the thing a director must never do quietly.
+ *
+ * @returns {{names: string[], expansions: object[]}}
+ */
+export function expandSequence(members, { chains = PAGE_CHAINS } = {}) {
+    const names = [];
+    const expansions = [];
+    for (const m of members ?? []) {
+        const segs = Object.prototype.hasOwnProperty.call(chains, m) ? chains[m] : null;
+        if (segs) {
+            expansions.push({ from: m, to: [...segs] });
+            names.push(...segs);
+        } else {
+            names.push(m);
+        }
+    }
+    return { names, expansions };
+}
+
+/**
+ * ⛓ TIER 1 — ADMISSION AT QUEUE TIME, before anything plays.
+ *
+ * Everything decidable from the TAPES ALONE. ⚠ It is deliberately not the
+ * whole rule: `boot.level == the live level` and the latch-equality rows name
+ * a world that does not exist until window k has run, so those are tier 2
+ * (`continuationAdmission`, asked at each boundary before window k+1's first
+ * tick). Splitting them is what lets a bad queue be refused in the picker
+ * instead of two minutes into a walk.
+ *
+ * @param {object[]} tapes parsed tapes, in window order
+ * @returns {object[]} findings; `refusalsOnly` of them empty means the queue may start
+ */
+export function sequenceAdmission(tapes, { coast = 8 } = {}) {
+    const findings = [];
+    const add = (where, what, detail) => findings.push({ where, what, detail });
+    if (!Array.isArray(tapes) || tapes.length === 0) {
+        add('queue', 'the queue is empty', 'a sequence of zero tapes plays nothing');
+        return findings;
+    }
+    tapes.forEach((tape, i) => {
+        const label = tape?.name ?? `window ${i}`;
+        if (!tape || !tape.boot) {
+            add(`window ${i}`, 'the tape has no boot block',
+                'a window is a tape; a member the roster could not answer for is not one');
+            return;
+        }
+        if (i > 0 && (tape.grants ?? []).length > 0) {
+            add(`window ${i} ("${label}")`, 'a later window declares grants',
+                `${tape.grants.length} grant(s). The live game state IS the inheritance — `
+                + 'a grant here would re-assert from the TAPE the thing the sequence '
+                + 'exists to prove from the GAME.');
+        }
+        /**
+         * ⛓⛓⛓ ENDS-AT-REST IS **REPORTED, NOT REFUSED**, AND THE SUBJECT IS
+         * WHAT MEASURED IT (R9 slice 2, trap 470 for the second time).
+         *
+         * ⛔ The first cut refused it, and `r8-d2-19` — the slice's OWN
+         * headline subject — is refused by it: its last span is
+         * `{down 803..864}`, held right through `tick_count`. And the walk is
+         * CORRECT: the headline `r8-d2` holds `down` from 803 to 891 across
+         * the very same instant, and the two-window JS run reproduces the
+         * headline tick for tick with the key held.
+         *
+         * The rule is a WASM-SIDE authoring rule and its own docblock says so:
+         * FlashPunk's `Input` is a STATIC that nothing clears, so a key held
+         * when a tape ends keeps walking the player while the boundary round
+         * trip happens. ⛔ THE JS MODEL HAS NO SUCH STATIC — `heldKeysAt` is
+         * recomputed from the tape on every tick and a window's last held set
+         * is never even dispatched — so on this side a held key at a boundary
+         * costs nothing at all.
+         *
+         * So it is an INFORMATIONAL row that NAMES THE KEYS, which is exactly
+         * the list the wasm side has to release at the boundary (the Windows
+         * driver already dispatches those `keyup`s, `seedling-bot-replay-win.py`
+         * :197-225, and reports `moved_at_boundary` when it cannot). A refusal
+         * that names its next work order is the cheapest planning instrument
+         * there is; this is the same thing one notch down.
+         *
+         * ⚠ THE LAST WINDOW IS EXEMPT — nothing follows it, so its tail is the
+         * walk's own ending.
+         */
+        if (i < tapes.length - 1) {
+            const why = assertWindowEndsAtRest(tape, { coast });
+            if (why.length > 0) {
+                findings.push({
+                    where: `window ${i} ("${label}")`,
+                    what: 'the window does not end at rest — the boundary must RELEASE '
+                        + 'these keys on a side that has an input static',
+                    detail: why.join('  ·  '),
+                    keys: [...new Set((tape.inputs ?? [])
+                        .filter((sp) => sp.to >= tape.tick_count).map((sp) => sp.key))],
+                    informational: true,
+                });
+            }
+        }
+    });
+    return findings;
+}
+
+const flagKey = (r) => `${r.level}:${r.tag}`;
+const flagSet = (rows) => new Set((rows ?? []).map(flagKey));
+const sortedKeys = (s) => [...s].sort();
+
+/**
+ * ⛓⛓⛓ TIER 2 — THE BOUNDARY, ASKED BEFORE WINDOW k+1's FIRST TICK.
+ *
+ * The ruled sentence, applied field by field. See this section's docblock for
+ * where `live` comes from on each side and why the JS side leaves four rows
+ * UNASSERTED rather than passing them.
+ *
+ * @param {object} tape  window k+1's PARSED tape
+ * @param {object} live  `{level, ctor:{x,y}, cleared:[{level,tag}], blocks, blocksWhy}`
+ *   — `blocks` carries whichever of `rng`/`seam`/`save`/`pins` the caller can
+ *   answer for (wasm: all four, from `segmentBootFromLatch`; JS: `save` and
+ *   `pins`), and `blocksWhy` is `{<field>|all|cleared: why}` for the rest
+ * @param {object=} opts `{index, label, nearest}` — `nearest` names the chain
+ *   the roster DOES have, so a refusal carries its own next work order
+ * @returns {object[]} findings; `informational: true` marks an UNASSERTED row
+ */
+export function continuationAdmission(tape, live, { index = 1, label = '', nearest = null } = {}) {
+    const where = `admission ${index}${label ? ` ("${label}")` : ''}`;
+    const findings = [];
+    const add = (what, detail, informational = false) =>
+        findings.push({ where, what, detail, ...(informational ? { informational } : {}) });
+    if (!tape || !tape.boot) {
+        add('the window has no boot block', 'a window is a tape and a tape declares a boot');
+        return findings;
+    }
+    if (!live) {
+        add('there is no live world to continue',
+            'the boundary check needs the state window ' + (index - 1) + ' ended in');
+        return findings;
+    }
+    const say = nearest ? ` The nearest continuation the roster has is ${nearest}.` : '';
+
+    // 1. THE GAME'S OWN TEST, IN THE GAME'S OWN WORDS (`Bot.as:1722`, `:1817`).
+    if (tape.boot.level !== live.level) {
+        add('the boot names a level the live world is not in',
+            `tape boots at L${tape.boot.level}; the world after window ${index - 1} is `
+            + `L${live.level}. \`botStart\` would run \`FP.world = new Game(...)\` — a `
+            + `REBUILD, which is not a continuation.${say}`);
+    }
+    if (live.ctor && (tape.boot.x !== live.ctor.x || tape.boot.y !== live.ctor.y)) {
+        add('the boot names construction args the live world was not built with',
+            `tape boots at (${tape.boot.x},${tape.boot.y}); the live world was CONSTRUCTED `
+            + `at (${live.ctor.x},${live.ctor.y}). \`atBootPosition\` compares `
+            + '`Main.playerPositionX/Y` — the spawn args, not where the player is '
+            + `standing — so this is a rebuild.${say}`);
+    }
+
+    // 2. GRANTS. Empty, always — the live state is the inheritance.
+    if ((tape.grants ?? []).length > 0) {
+        add('a later window declares grants',
+            `${tape.grants.length} grant(s): ${JSON.stringify(tape.grants)}`);
+    }
+
+    // 3. PERSISTENCE — EQUAL, both ways, and the difference is named.
+    if (live.cleared === null || live.cleared === undefined) {
+        add('unasserted — the caller reports no live cleared set',
+            live.blocksWhy?.cleared || live.blocksWhy?.all || 'no reason given', true);
+    } else {
+        const declared = flagSet(tape.persistence);
+        const held = flagSet(live.cleared);
+        const extra = sortedKeys(new Set([...declared].filter((k) => !held.has(k))));
+        const missing = sortedKeys(new Set([...held].filter((k) => !declared.has(k))));
+        if (extra.length > 0) {
+            add('the window declares a clear the live world does not hold',
+                `${extra.join(' ')} — \`botStart\` sets every tag in every level back to `
+                + 'true and then applies this list, so declaring a flag the world has not '
+                + `earned CLEARS it. That is a rebuild of the ledger.${say}`);
+        }
+        if (missing.length > 0) {
+            add('the window does not declare a clear the live world holds',
+                `${missing.join(' ')} — \`botStart\` resets every tag first, so a flag `
+                + 'left off this list comes BACK. The earlier windows earned it and this '
+                + `window would take it away.${say}`);
+        }
+    }
+
+    // 4. THE LATCHED BLOCKS — absent or EQUAL, and UNASSERTED is said out loud.
+    //
+    // ⛔ PER FIELD, NOT PER SIDE. The wasm side can answer for all four
+    // (`botSeam()` → `segmentBootFromLatch`); the JS side can answer for
+    // `save` and `pins` and models no LFSR position and no seam envelope. A
+    // field the caller's `blocks` does not CARRY is unasserted BY NAME with
+    // that caller's own reason — never quietly compared against `undefined`,
+    // which would pass for a tape that declared nothing and fail for one that
+    // did, and would call both "checked".
+    for (const field of ['rng', 'seam', 'save', 'pins']) {
+        const declaredHas = tape[field] !== null && tape[field] !== undefined
+            && !(Array.isArray(tape[field]) && tape[field].length === 0);
+        if (!declaredHas) continue;
+        const carried = live.blocks
+            && Object.prototype.hasOwnProperty.call(live.blocks, field)
+            && live.blocks[field] !== undefined;
+        if (!carried) {
+            add(`unasserted — \`${field}\` is declared and the live side cannot answer for it`,
+                (live.blocksWhy && live.blocksWhy[field])
+                    || live.blocksWhy?.all
+                    || 'the caller produced no latched block for it', true);
+            continue;
+        }
+        const a = JSON.stringify(tape[field]);
+        const b = JSON.stringify(live.blocks[field]);
+        if (a !== b) {
+            add(`the declared \`${field}\` is not the live world's`,
+                `tape ${a} vs live ${b}. A staged segment's own latch is legal when it `
+                + `MATCHES; this one does not, so applying it would move the world.${say}`);
+        }
+    }
+    return findings;
+}
+
+/** The refusals only — an UNASSERTED row is a report, never a refusal. */
+export const refusalsOnly = (findings) => (findings ?? []).filter((f) => !f.informational);

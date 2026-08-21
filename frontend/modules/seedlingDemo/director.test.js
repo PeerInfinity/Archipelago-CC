@@ -4,6 +4,8 @@ import {
     assertWindowEndsAtRest, continuationFindings, DirectorError,
     boundaryFlagClearanceFindings, LOCK_FLAG_WRITE_TICKS,
     crutchScheduleFindings, CRUTCH_JUSTIFICATION,
+    PAGE_CHAINS, parseTapesParam, formatTapesParam, expandSequence, sequenceAdmission,
+    continuationAdmission, refusalsOnly,
 } from './director.js';
 
 /**
@@ -509,5 +511,193 @@ describe('⛓ the CRUTCH SCHEDULE — a coercion may not outlive its justificati
 
     it('a single window has no boundary, so it makes no claim', () => {
         expect(crutchScheduleFindings([win('only', ['water'], NOTHING)])).toEqual([]);
+    });
+});
+
+/**
+ * ══ ⛓⛓⛓ R9 SLICE 2 — THE SEQUENCE THE PAGE ASKS FOR ═════════════════════
+ *
+ * ⚖ Ruling 10's admission rule, one row per refusal. The chain table is
+ * asserted ACROSS the boundary it cannot be imported across — `director.js`
+ * has no imports at all so that `watch.html` can load it, and this file runs
+ * in node where `PLAYTHROUGH_CHAINS` is reachable.
+ */
+describe('⛓⛓⛓ the page-side chain table is CHECKED against PLAYTHROUGH_CHAINS', () => {
+    it('has exactly the chains the roster has, with their own segment lists', async () => {
+        const { PLAYTHROUGH_CHAINS } = await import('./playthroughWalk.js');
+        const fromRoster = Object.fromEntries(
+            PLAYTHROUGH_CHAINS.map((c) => [c.id, [...c.segments]]),
+        );
+        const fromPage = Object.fromEntries(
+            Object.entries(PAGE_CHAINS).map(([k, v]) => [k, [...v]]),
+        );
+        expect(fromPage).toEqual(fromRoster);
+    });
+
+    it('⛓ and the headline subject is the two segments the slice claims', () => {
+        expect(PAGE_CHAINS['r8-d2']).toEqual(['r8-d2-19', 'r8-d2-20']);
+    });
+});
+
+describe('the ?tapes= codec', () => {
+    it('absent is NOT empty — the two are distinguishable', () => {
+        expect(parseTapesParam(null)).toBeNull();
+        expect(parseTapesParam(undefined)).toBeNull();
+        expect(parseTapesParam('')).toEqual([]);
+    });
+
+    it('splits on the page\'s own separator and trims', () => {
+        expect(parseTapesParam('a,b,c')).toEqual(['a', 'b', 'c']);
+        expect(parseTapesParam(' a , b ')).toEqual(['a', 'b']);
+        expect(parseTapesParam('a,,b,')).toEqual(['a', 'b']);
+    });
+
+    it('⛓ round-trips as a FIXED POINT over every spelling', () => {
+        for (const raw of ['a', 'a,b', 'a,b,c', 'x/y/z.json,q.json']) {
+            expect(formatTapesParam(parseTapesParam(raw))).toBe(raw);
+        }
+    });
+
+    it('⛔ writes NOTHING for an empty list, so the writer DELETES the key', () => {
+        expect(formatTapesParam([])).toBeNull();
+        expect(formatTapesParam(null)).toBeNull();
+        expect(formatTapesParam(['', '  '])).toBeNull();
+    });
+});
+
+describe('a chain HEADLINE is a legal member and expands', () => {
+    it('expands a chain id to its segments, in order, and REPORTS that it did', () => {
+        const got = expandSequence(['r8-d2']);
+        expect(got.names).toEqual(['r8-d2-19', 'r8-d2-20']);
+        expect(got.expansions).toEqual([{ from: 'r8-d2', to: ['r8-d2-19', 'r8-d2-20'] }]);
+    });
+
+    it('leaves a plain tape name alone, and mixes the two', () => {
+        const got = expandSequence(['some/tape.json', 'r8-d2']);
+        expect(got.names).toEqual(['some/tape.json', 'r8-d2-19', 'r8-d2-20']);
+        expect(got.expansions).toHaveLength(1);
+    });
+});
+
+describe('TIER 1 — admission at queue time', () => {
+    const tape = (over = {}) => ({
+        name: 'w', boot: { level: 20, x: 192, y: 64 }, tick_count: 100,
+        inputs: [], persistence: [], grants: [], ...over,
+    });
+
+    it('an empty queue is refused by name', () => {
+        expect(sequenceAdmission([])[0].what).toBe('the queue is empty');
+    });
+
+    it('a later window declaring GRANTS is refused by name', () => {
+        const fs = sequenceAdmission([tape(), tape({ grants: [{ level: 20, items: ['x'] }] })]);
+        expect(fs.map((f) => f.what)).toContain('a later window declares grants');
+    });
+
+    it('window 0 may declare grants — it boots', () => {
+        const fs = sequenceAdmission([tape({ grants: [{ level: 19, items: ['x'] }] }), tape()]);
+        expect(fs).toEqual([]);
+    });
+
+    it('⛓ a window that does not end at rest REPORTS, and NAMES the keys', () => {
+        const held = tape({ inputs: [{ key: 'down', from: 0, to: 100 }] });
+        const fs = sequenceAdmission([held, tape()]);
+        expect(fs).toHaveLength(1);
+        // ⛔ NOT a refusal: the JS model has no input static, and `r8-d2-19` —
+        //    the slice's own subject — ends with `down` HELD at tick_count.
+        expect(refusalsOnly(fs)).toEqual([]);
+        expect(fs[0].informational).toBe(true);
+        expect(fs[0].keys).toEqual(['down']);
+        expect(fs[0].what).toMatch(/must RELEASE/);
+        // ⚠ nothing follows the last window, so its tail is the walk's own ending.
+        expect(sequenceAdmission([tape(), held])).toEqual([]);
+    });
+});
+
+describe('⛓⛓⛓ TIER 2 — the boundary, and the ruled sentence field by field', () => {
+    const LIVE = {
+        level: 20,
+        ctor: { x: 192, y: 64 },
+        cleared: [{ level: 5, tag: 0 }, { level: 19, tag: 0 }],
+        blocks: { rng: { seed: 7 }, seam: { time: 5 }, save: null, pins: ['dead_frames'] },
+        blocksWhy: null,
+    };
+    const tape = (over = {}) => ({
+        name: 'w2', boot: { level: 20, x: 192, y: 64 },
+        persistence: [{ level: 5, tag: 0 }, { level: 19, tag: 0 }],
+        grants: [], ...over,
+    });
+    const whats = (fs) => fs.map((f) => f.what);
+
+    it('⛓ THE SUBJECT: a LATCH that matches is ADMITTED — no findings at all', () => {
+        expect(continuationAdmission(tape(), LIVE)).toEqual([]);
+    });
+
+    it('a boot naming another LEVEL is refused, and the refusal names the rebuild', () => {
+        const fs = continuationAdmission(tape({ boot: { level: 4, x: 192, y: 64 } }), LIVE);
+        expect(whats(fs)).toContain('the boot names a level the live world is not in');
+        expect(fs[0].detail).toMatch(/REBUILD/);
+    });
+
+    it('a boot naming other CONSTRUCTION ARGS is refused — the game\'s own test', () => {
+        const fs = continuationAdmission(tape({ boot: { level: 20, x: 200, y: 72 } }), LIVE);
+        expect(whats(fs))
+            .toContain('the boot names construction args the live world was not built with');
+        // ⛔ (200,72) is where the player STANDS after the half-tile spawn offset;
+        //    `atBootPosition` compares the ARGS, which are (192,64).
+        expect(fs[0].detail).toMatch(/Main\.playerPositionX\/Y/);
+    });
+
+    it('the refusal carries its own NEXT WORK ORDER when the caller has one', () => {
+        const fs = continuationAdmission(tape({ boot: { level: 4, x: 1, y: 2 } }), LIVE,
+            { nearest: 'r8-d2' });
+        expect(fs[0].detail).toMatch(/nearest continuation the roster has is r8-d2/);
+    });
+
+    it('a SUPERSET of the live cleared set is refused — it would clear an unearned flag', () => {
+        const fs = continuationAdmission(
+            tape({ persistence: [...tape().persistence, { level: 99, tag: 1 }] }), LIVE);
+        expect(whats(fs))
+            .toContain('the window declares a clear the live world does not hold');
+        expect(fs[0].detail).toMatch(/99:1/);
+    });
+
+    it('a SUBSET is refused too — the reset path would bring the flag BACK', () => {
+        const fs = continuationAdmission(tape({ persistence: [{ level: 5, tag: 0 }] }), LIVE);
+        expect(whats(fs))
+            .toContain('the window does not declare a clear the live world holds');
+        expect(fs[0].detail).toMatch(/19:0/);
+    });
+
+    it('grants are refused here too — tier 2 does not trust tier 1 to have run', () => {
+        const fs = continuationAdmission(tape({ grants: [{ level: 20, items: ['x'] }] }), LIVE);
+        expect(whats(fs)).toContain('a later window declares grants');
+    });
+
+    it('a declared `rng` that DISAGREES with the live world is refused', () => {
+        const fs = continuationAdmission(tape({ rng: { seed: 8 } }), LIVE);
+        expect(whats(fs)).toContain('the declared `rng` is not the live world\'s');
+    });
+
+    it('…and one that AGREES is legal — that is what a staged latch IS', () => {
+        expect(continuationAdmission(tape({ rng: { seed: 7 } }), LIVE)).toEqual([]);
+    });
+
+    it('⛔ a row the live side cannot answer for is UNASSERTED BY NAME, never passed', () => {
+        const js = { ...LIVE, blocks: { save: null, pins: [] },
+            blocksWhy: { rng: 'the JS run models no LFSR position' } };
+        const fs = continuationAdmission(tape({ rng: { seed: 7 } }), js);
+        expect(fs).toHaveLength(1);
+        expect(fs[0].informational).toBe(true);
+        expect(fs[0].what).toMatch(/^unasserted/);
+        expect(fs[0].detail).toMatch(/models no LFSR position/);
+        // …and an unasserted row is not a refusal.
+        expect(refusalsOnly(fs)).toEqual([]);
+    });
+
+    it('a tape with no boot block, and a boundary with no live world, both refuse', () => {
+        expect(continuationAdmission({}, LIVE)[0].what).toBe('the window has no boot block');
+        expect(continuationAdmission(tape(), null)[0].what)
+            .toBe('there is no live world to continue');
     });
 });
