@@ -44,7 +44,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 11,
+            "count": 12,
             "id": "census"
         },
         {
@@ -164,13 +164,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 213,
+        "blockStyle": 214,
         "browser": 73,
         "cited": 66,
-        "files": 232,
+        "files": 233,
         "lineStyle": 19,
-        "withDocblock": 232,
-        "withFlags": 140
+        "withDocblock": 233,
+        "withFlags": 141
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -521,6 +521,33 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "census-seedling-areas — **THE AREA CENSUS**: how many AREAS a Seedling skeleton offers, per kind, per knob, per seed, per biome — and what a lock on every boundary cell would cost out of the 30 persistence tags.",
             "path": "scripts/procgen/census-seedling-areas.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "census",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "json"
+            ],
+            "file": "census-seedling-campaign.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "no-write"
+                }
+            ],
+            "oneLiner": "══ THE CAMPAIGN CENSUS — does the TRUE-START SOLVER CHAIN continue, pair by pair, and what does each break cost? ══════════════════════════════════",
+            "path": "scripts/procgen/census-seedling-campaign.mjs"
         },
         {
             "argvHelpers": [
