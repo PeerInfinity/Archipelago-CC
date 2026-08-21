@@ -84,7 +84,8 @@ describe('⛓⛓ the anchors — two readers, 607 headings, one answer', () => {
         //   director's §, which is where the sequence's LINEAGE belongs.
         // ⛔ RE-PINNED, never widened — a pin that moves because somebody wrote
         // into what it measures is the pin WORKING (trap 410).
-        expect(total).toBe(620);
+        // ⛓ 620 → 621: R9 slice 3's § (the splice + the drift) in seedling-bot.md.
+        expect(total).toBe(621);
     });
 
     it('⛔ uses OUR rule, not marked\'s slugger — they differ, and here is where', () => {
@@ -245,9 +246,10 @@ describe('⛓ the biggest document — the one the budget is about', () => {
         // element). 395 → 396 was arc-5 slice 2's § (the oriented site pick). 394 → 395 was
         //   slice 1's (the room contract).
         // ⚠ 393 → 394: the per-tick slice's § in ▶ LOAD IN WASM. Same re-pin.
+        // ⚠ 407 → 408: R9 slice 3's § — the splice + the drift.
         const ids = idsOf(RENDERS.get('seedling-bot.md').html);
-        expect(ids).toHaveLength(407);
-        expect(new Set(ids).size).toBe(407);
+        expect(ids).toHaveLength(408);
+        expect(new Set(ids).size).toBe(408);
         expect(ids.filter((i) => i !== ghSlug(i))).toEqual([]);
     });
 

@@ -7107,8 +7107,8 @@ omission — re-derived at close from the committed expectations' own
 | **nothing prices an arrow in flight against the player** (R7 debt 5) | **PAID** at slice 5 — the model bills the player for an arrow through `applyPlayerHit`; every zero-hit claim in a room with a ceiling is now a real claim on that channel | **DISCHARGED (R8)** |
 | **`KILL_ARM_POLICY.Spinner`** | `refused` → `modelled`, paired, with the hammer as a CONTACT that bills | **DISCHARGED (R8)** |
 | **`KILL_ARM_POLICY.Bob`** | still `refused` — arrows and water were the mechanisms every room needed; nothing drove a PRESS against a chaser | **R9+** |
-| **the three-segment `r8-d2`** | L18 solves and its latch is segment 2's boot; prepending it re-records three committed artifacts. ⚖ **RULED (user, 2026-08-11): R9's FIRST ACT**, with the campaign's own licence | **R9, first** |
-| **`r8-solve-4`'s drift** (255 derived vs 253 committed) | REPORTED twice, never re-derived; the tape replays byte-exact and the producer's `--check` is the instrument that sees it | **R9**, with the same licence |
+| **the three-segment `r8-d2`** | L18 solves and its latch is segment 2's boot; prepending it re-records three committed artifacts. ⚖ **RULED (user, 2026-08-11): R9's FIRST ACT**, with the campaign's own licence. ⛓⛓⛓ **DONE at R9 slice 3**: `r8-solve-18` PROMOTED (not duplicated) as segment 0, both latches MEASURED, `cuts [573, 1437]` / `endsAt 2218`, both internal seams green over all 46 rows, the R8 gate 534 → **541 / 0 / 67** | **DISCHARGED (R9 slice 3)** |
+| **`r8-solve-4`'s drift** (255 derived vs 253 committed) | REPORTED twice, never re-derived; the tape replays byte-exact and the producer's `--check` is the instrument that sees it. ⛓⛓⛓ **PAID at R9 slice 3** under the same licence: 253 → **255**, and the battery `--check` goes `1fedb0ab…` exit 1 → **`67bcde75489419e5331187b8ebf140a7` exit 0**. The root cause is fixed too — no `--record --only=r8-solve-4` recipe existed anywhere in the repo, which is why the one instrument that could pay it never ran | **DISCHARGED (R9 slice 3)** |
 | **the goal ledger's other 39 rows** | UNCHANGED at 2/41 — everything R8 earned is on staged chains, which report and never credit | **R9's campaign** |
 | **ASSEMBLY** — solver segments re-run along genuine latches into the honest chain | untouched by design (the pivot's own sequencing); the machinery is complete and the multi-segment staged chain proves the seam works on solver output | **R9+**, on coverage |
 | **the wasm differential's sunset** | still the per-segment oracle, as ruled — and it EARNED that four times this rung (the blind L6 solve, L5's refuted walk, the hammer arm's first version, L18's dash). What R8 exercised through it: 20 new tapes; the chaser bridge; Arrow × Enemy; the arrow-vs-player bill; the spawn-tick deferral and the two-frame arming lag; the spinner press arm and the hammer contact; `Game.time`. What it has NOT exercised: any room in D3–D8, the ending, L14–L17, the trap bosses, any press against a chaser | **R9+**, and the graduation claim stays BOUNDED |
@@ -11395,3 +11395,139 @@ a tape field that marks one.
 
 `check-seedling-editor-sequence.mjs` — 20 claims. The Windows ship row gains a
 fourth arm. ZERO tapes, traces or expectations moved.
+
+### Slice 3 — ⛓⛓⛓ THE SPLICE + THE DRIFT: the rung's ONE attributed solver licence, spent once (`604c354c0` … )
+
+⚖ R8's close ruled option A (user, 2026-08-11): `r8-d2` stays two segments and
+the three-segment splice is **R9's first solver act**, together with
+`r8-solve-4`'s drift, under **ONE licence**, *"the prediction committed BEFORE
+the licence is used."* Both close-out debts are DISCHARGED here.
+
+**THE PREDICTION CAME FIRST, AND IT WAS A COMMITMENT, NOT A SUMMARY.** Before
+any solve and before any recording, at a pristine worktree at the slice's base
+commit: the files that would move, the tick counts, `cuts`/`endsAt`, the battery
+md5 change and the R8 gate's new count were written down. Twelve of the fifteen
+numbers landed exactly, including the two the prediction explicitly refused to
+derive; the three misses are all about **what an instrument can see**, and they
+are the interesting part.
+
+**`r8-solve-18` IS PROMOTED, NOT DUPLICATED.** The honest L18 already existed as
+a recorded, byte-exact artifact (R8 slice 8). An `r8-d2-18` would have been a
+second tape with the same boot, the same goal list and the same walk; editing
+its `description` so it *said* "segment 0" would have spent a re-record licence
+on a word. What changed is its RELATION, and a relation lives in
+`PLAYTHROUGH_CHAINS`. ⇒ the licence covered **four** names, not five, and the
+L18 producer's `--check` staying green on the finished tree is the proof that
+nothing of it moved.
+
+```
+r8-d2         2,218 ticks   the headline — all THREE rooms in ONE run (v8 -> v9)
+r8-solve-18     573 ticks   the honest L18, PROMOTED     cuts [573, 1437]
+r8-d2-19        864 ticks   the Shieldspire              endsAt 2218
+r8-d2-20        781 ticks   the shield, and the way OUT westward to L13
+```
+
+**⛓⛓⛓ THE FREE ORACLE PREDICTED THE GAME, AND THE GAME AGREED.**
+`gameClock.test.js` derives its seam sweep **from `PLAYTHROUGH_CHAINS`**, so
+adding a segment created a row that computed an answer one commit before a
+browser ran:
+
+```
+r8-solve-18 -> r8-d2-19: 8586 + 573 ticks + 40 dead  ⇒ MODEL SAYS 9179
+                         the committed successor declares 8586   (−593)
+r8-d2-19    -> r8-d2-20: 8586 + 864 ticks + 190 dead ⇒ 9620 == 9620   ← the control
+```
+
+The −593 **is** the dishonesty the splice removes. R8 declared `r8-d2-19`'s boot
+at the same `save.time` as L18's own boot, because both were staged from
+`r7-act2-11`'s latch — read as a claim, that says L18 took no time at all. The
+Windows latch run returned **9179**. ⇒ *derive the roster of a claim from the
+structure it is a claim about*: a hand-listed sweep would have been silently
+short by one row, and the number would have arrived with the recording instead
+of ahead of it.
+
+**THE BOOTS THAT MOVED**, measured by `botSeam()` → `segmentBootFromLatch`:
+
+| | `rng.seed` | `save.time` | `persistence` |
+|---|---|---|---|
+| `r8-d2-19` | 418414780 → 58227647 | 8586 → **9179** | + `{17,29}` + `{18,0}` |
+| `r8-d2-20` | 1761417076 → 1823918582 | 9620 → **10213** | + `{17,29}` + `{18,0}` |
+
+⛓ `{17,29}` is the **out-of-band write** §13.10's refutation transcribed two
+rungs ago: L18's spinners carry `tag = -1`, and `setPersistence(tag, o, _l)`
+sends a negative tag to `Main.level` — so crossing L18 honestly writes a flag in
+L17. The chain's own R8 docblock said the honest route *"arrives here having
+written both"*; it is measured now rather than asserted.
+
+**⛔⛔ FOUR PREDICTED MOVERS DID NOT MOVE.** `r8-d2-19` and `r8-d2-20` changed
+in their **boot block only** — `inputs` byte-identical, `tick_count` unchanged
+at 864 and 781 — so their traces (a record of DECISIONS) and their expectations
+(a record of the PLAYER's positions, deterministic from the same inputs) came
+out byte-identical. Twelve files were predicted; eight moved. The strong half of
+that is the SOLVER's: it planned L19 and L20 against a genuinely different boot
+state — different gameplay stream, different `fp` stream, a clock 593 ticks on,
+two extra persistence rows — and chose the same two walks.
+
+**THE DRIFT, PAID.** `r8-solve-4` re-derived from the 255-tick walk (`solver
+255 | hand 347 | −92`) and recorded in the same session. The producer writes all
+nine of its rows on every run and **eight came out byte-inert**, proved by
+`git status --porcelain` after the write.
+
+```
+solve-seedling-r8-battery.mjs --check 2>/dev/null | md5sum
+  1fedb0ab35b7cd74accecf0345bdc893  exit 1   (the two ⛔ DRIFT rows)
+  67bcde75489419e5331187b8ebf140a7  exit 0   ← the new standing value
+```
+
+⛓ R8 lesson 3 — *the producer's own `--check` runs at every close* — now has a
+green to hold. And the reason the drift survived three reports is fixed at the
+source: **no `--record --only=r8-solve-4` command existed anywhere in the
+repo**, so the one instrument that could pay it had no recipe. Both slice-3b
+rows have one now, in the producer's docblock.
+
+**THE R8 TAPE GATE: 534 / 0 / 67 → `541 / 0 / 67`**, and the 541 was derived row
+by row before the run — +4 per-segment rows for the new segment (stream slice,
+calm arrival, seam, boundary tick) and +3 `stagedClearFindings` rows for the
+`{18,0}@385` provenance the chain now carries. ZERO unlicensed moves, proved by
+`git status --porcelain` after a non-recording gate. Both internal seams are
+GREEN over the whole 46-row signature, all three stream slices are tick-for-tick,
+and the ending state is equal.
+
+**⛔⛔ AND THE MUTANTS SAID SOMETHING WORTH KEEPING: THE SEAM IS NOT A REDUNDANT
+CHECK ON THE STREAM — IT IS THE ONLY INSTRUMENT THAT CAN SEE A DISHONEST BOOT.**
+Mutant (b) put R8's declared state back into `r8-d2-19` and ran it through the
+real game: **114 PASS / 2 FAIL**, and both FAILs are seam rows (7 of 92 signature
+rows). Every stream and arithmetic claim stayed green — the three slices tick
+for tick, both boundary ticks, all three calm arrivals, the ends-meet sum, and
+the ending-state equality over all 46 rows. The mechanism: **a tape's `inputs`
+decide the walk and the boot decides only the state around it**, so a segment
+booted 593 ticks and one RNG stream away from where it claims to be walks the
+identical path. (Bounded honestly: the mutant reverted only segment 1, so both
+ENDS of the chain stayed on the new clock. What it establishes is that *one
+dishonest boot in the middle of a chain is invisible to every stream claim*.)
+
+⛓ Mutant (a) — the headline assembled by CONCATENATING the three segment files
+instead of ONE model run — is **INERT, and provably**: the concatenation and the
+one-run walk press the same keys on all 2,218 ticks, and each span of the
+headline's `inputs` is byte-identical to its segment's. Named as a REACH finding
+rather than answered by widening a claim: the chain claims cannot distinguish
+*one run, cut* from *three runs, glued* — and they do not need to, because the
+thing that would make gluing wrong is exactly what the seam refuses. The
+inertness is DOWNSTREAM of the seam being green.
+
+⛓ One red was a NEW CLAIM rather than a stale pin: `R8_D2_SHIELD.pressExposure`
+re-derives its set by DRIVING the roster (trap 89), and it refused by name —
+*"Undeclared and reaching: r8-d2"*. True: the splice put L18 inside the
+headline, so the headline's press arm now reaches and kills two spinners.
+Declared in `reachingAdded`, the one-row-per-slice list that exists so a
+prediction is never edited after its measurement.
+
+⛓ Slice 2's continuation claim grew with the chain and is derived from it:
+`[r8-solve-18, r8-d2-19, r8-d2-20]` on ONE run IS the headline `r8-d2`, tick for
+tick — window list and offsets read from `chainSpans`, so the next segment costs
+that file nothing.
+
+⛓ The generator identity is UNMOVED and was proved cheaply, as the prediction
+promised: acceptance batch `8ad7bda2ae4b470122334f71b4e92651` at the pristine
+worktree and again on the finished tree (a same-tree control), and zero
+generator paths in the slice's whole diff.
