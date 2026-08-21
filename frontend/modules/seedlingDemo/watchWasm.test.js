@@ -19,6 +19,8 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { gameVisibleTape } from './tapeFormat.js';
+import { loadTape } from './fixtures/index.js';
 import {
     END_STATE_TOLERANCE, lastObservationOf, levelSetDisagreement, PER_TICK_SCOPE,
     perTickVerdictOf, remapStreamRooms, roomOfGeneratedLevel, stagesOf, VERDICT_SCOPE,
@@ -312,6 +314,47 @@ describe('E3 — `publishShip` projects the verdict NOTE, so a claim about the r
 
     it('⛓⛓ carries `note` — the field the ship row reads STRUCTURALLY', () => {
         expect(projectionKeys()).toContain('note');
+    });
+
+    /**
+     * ⛔⛔⛔ R9 SLICE 3 — **THE GAME-VISIBLE PROJECTION, ON THE SHIP PATH.**
+     *
+     * `gameVisibleTape` is the ONE classification of what a game-facing channel
+     * may hand to `botLoadTape` (`GAME_VISIBLE_DROPS` — the v9 `at` on a
+     * persistence clear and v10's `despawn`, both statements about what the GAME
+     * DOES ON ITS OWN rather than instructions to it). The differential has
+     * projected since R7 slice 6d; this path did not, and it was INVISIBLE
+     * because every tape it had ever shipped was v8 or below.
+     *
+     * The splice put a v9 tape into a sequence and the real GPU said, at
+     * `tape 1/3`: `botLoadTape: error:tape_version must be 1, 2, 3, 4, 5, 6, 7
+     * or 8, got 9`. ⇒ this row exists so the projection cannot be dropped again
+     * by a refactor — the browser arm that would catch it costs a GPU and 15
+     * minutes, and a claim nobody re-runs is a claim that decays (trap 474).
+     */
+    it('⛔⛔ `botLoadTape` is handed the GAME-VISIBLE projection, never the raw tape',
+        () => {
+            const body = source('watchWasm.js').split('\n')
+                .filter((l) => !/^\s*(\*|\/\/|\/\*)/.test(l))
+                // ⚠ the CALL, not the refusal message that names it
+                .filter((l) => /bot\('botLoadTape'/.test(l));
+            expect(body.length).toBeGreaterThan(0);
+            for (const line of body) expect(line).toMatch(/gameVisibleTape\(/);
+        });
+
+    it('⛓ …and the projection is what makes a v9 tape loadable AT ALL — the AS3 '
+        + 'loader gates on its VERSION LIST', () => {
+        const v9 = loadTape('r8-solve-18');
+        expect(v9.tape_version).toBe(9);
+        expect(v9.persistence.some((c) => c.at !== undefined)).toBe(true);
+        const projected = gameVisibleTape(v9);
+        expect(projected.tape_version).toBe(8);
+        expect(projected.persistence.some((c) => c.at !== undefined)).toBe(false);
+        // ⚠ and BYTE-INERT for everything that shipped before it: a v8 tape
+        //   projects to itself, so the single-tape arms are unaffected by
+        //   construction rather than by re-measurement.
+        const v8 = loadTape('r8-d2-19');
+        expect(JSON.stringify(gameVisibleTape(v8))).toBe(JSON.stringify(v8));
     });
 
     /**

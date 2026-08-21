@@ -74,7 +74,9 @@
  * that assembled either with a lookalike would be measuring a different
  * subject and reporting it under the same word (trap 383).
  */
-import { diffObservationStreams, gameStreamFromDrain, KEY_CODES } from './tapeFormat.js';
+import {
+    diffObservationStreams, gameStreamFromDrain, gameVisibleTape, KEY_CODES,
+} from './tapeFormat.js';
 /**
  * ⛓⛓⛓ R9 SLICE 2 (⚖ ruling 10) — THE DIRECTOR'S BOUNDARY RULES, IMPORTED, and
  * the LATCH→TAPE-BLOCKS inverse the recording harness already runs on.
@@ -1108,7 +1110,29 @@ export async function shipToWasm(payload, host) {
         }
 
         // ── tape ─────────────────────────────────────────────────────
-        const loaded = bot('botLoadTape', JSON.stringify(w.tape));
+        /**
+         * ⛔⛔⛔ R9 SLICE 3 — **THE PROJECTION, WHICH THIS PATH NEVER MADE.**
+         *
+         * `gameVisibleTape` is the ONE classification of what a game-facing
+         * channel may hand to `botLoadTape` (`GAME_VISIBLE_DROPS`: the v9 `at`
+         * on a persistence clear, and v10's `despawn` — both statements about
+         * what the GAME DOES ON ITS OWN, never instructions to it). The
+         * differential has projected since R7 slice 6d
+         * (`verify-seedling-bot-differential.mjs:1709`), the Windows driver's
+         * callers project, and this path did not.
+         *
+         * ⛓ IT WAS INVISIBLE UNTIL A v9 TAPE ENTERED A SEQUENCE, and R9 slice
+         * 3's splice is what put one there. Measured on the real GPU:
+         * `botLoadTape: error:tape_version must be 1, 2, 3, 4, 5, 6, 7 or 8,
+         * got 9` — the AS3 loader gating on its VERSION LIST, refusing by name
+         * exactly as designed, at `tape 1/3`.
+         *
+         * ⚠ AND IT IS BYTE-INERT FOR EVERY TAPE THAT SHIPPED BEFORE:
+         * `gameVisibleTape` on a v8 tape returns it unchanged (measured on
+         * `r8-d2-19`: identical, no key dropped), so the three single-tape
+         * arms are unaffected by construction rather than by re-measurement.
+         */
+        const loaded = bot('botLoadTape', JSON.stringify(gameVisibleTape(w.tape)));
         if (loaded !== 'ok') return refuse(`tape${at}`, `botLoadTape: ${loaded}`, '');
         enter(`tape${at}`, 'the game accepted the tape');
 

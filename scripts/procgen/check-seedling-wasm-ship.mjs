@@ -779,8 +779,92 @@ function perTickClaims(wasm, arm) {
  */
 const { VERDICT_SCOPE: VERDICT_SCOPE_TEXT } = await import(
     join(REPO, 'frontend/modules/seedlingDemo/watchWasm.js'));
+/**
+ * ⛓⛓ R9 SLICE 3 — THE WINDOW LIST AND EVERY NUMBER DERIVED FROM IT.
+ *
+ * The splice made `?tapes=r8-d2` THREE windows. This arm typed `2` in six
+ * places — the labels, the stage list, `running 1/2`, `boundary 1/2`, and a
+ * literal `W2_MODEL_DEAD_FRAMES = 170` — so a segment added to the chain
+ * silently decayed the gate (trap 474) rather than reporting. Everything is
+ * read from `PAGE_CHAINS` and from the model now.
+ */
+const { PAGE_CHAINS } = await import(
+    join(REPO, 'frontend/modules/seedlingDemo/director.js'));
+const { stagesOf } = await import(
+    join(REPO, 'frontend/modules/seedlingDemo/watchWasm.js'));
+const { loadTape } = await import(
+    join(REPO, 'frontend/modules/seedlingDemo/fixtures/index.js'));
+const { createTapeStepper } = await import(
+    join(REPO, 'frontend/modules/seedlingDemo/tapeRunner.js'));
+const { atlasLevelSource: shipLevelSource } = await import(
+    join(REPO, 'frontend/modules/seedlingDemo/levelSource.js'));
 
-const SEQ_PAGE = `${HOST}/frontend/modules/seedlingDemo/watch.html?tapes=r8-d2&side=wasm`;
+/**
+ * ⛔⛔⛔ R9 SLICE 3 — **THE SUBJECT IS THE PAIR, AND THE THREE-WINDOW CHAIN IS
+ * A SECOND ARM THAT ASSERTS ITS REFUSAL.** Measured on the real GPU, and the
+ * mechanism is `SEAM_PREBUILD_FIELDS`, working exactly as designed.
+ *
+ * `rng.gameplay` and `fp.seed` are PRE-BUILD signature rows: a segment
+ * declares the stream position `botStart` will apply ABOVE its own build
+ * (R7 slice 2b — the fix that deleted the seam-build-cost bridge). On a FRESH
+ * PAGE that is exact: `botStart` writes the declared value and then BUILDS the
+ * boot level, spending its draws. In a CONTINUATION `botStart` deliberately
+ * does NOT rebuild (`Bot.as:1722-1725` — that is what makes it a
+ * continuation), so those build draws are never spent.
+ *
+ * ⇒ **from window 3 on, a continuation's live stream is behind the committed
+ * latch by exactly the window's boot-level build**, because every latch on the
+ * roster was measured after a fresh-page replay of its own segment. Slice 2
+ * could not see this: N was 2 and window 1 is always a fresh boot, so window
+ * 2's declared latch was the only one asked. Measured here at `boundary 2/3`:
+ *
+ *   r8-d2-20 declares rng {seed 1823918582, fp 1752443622}
+ *   the live game after [r8-solve-18, r8-d2-19] holds
+ *                       {seed  954659063, fp 2069965047}   ← fp UNMOVED,
+ *                                        = r8-d2-19's own boot fp, because
+ *                                          L19 was never rebuilt
+ *
+ * ⛔ THE REFUSAL IS CORRECT AND IS NOT PAPERED OVER. ⚖ Slice 2's ruling: a
+ * later window's declared staging is admitted iff it MATCHES the live state; a
+ * mismatch is REFUSED BY NAME, never silently rebuilt. Applying 1823918582
+ * would MOVE the world. And it cannot be fixed by re-recording: a boot that
+ * matched a continuation would stop reproducing the DIFFERENTIAL's fresh-page
+ * replay, which is the gate the whole roster rests on. ⇒ a ⚖ ask, recorded,
+ * not a retry — and this file asserts the refusal so the fact has a gate.
+ */
+const SEQ_WINDOWS = ['r8-d2-19', 'r8-d2-20'];
+const CHAIN_WINDOWS = PAGE_CHAINS['r8-d2'];
+/**
+ * ⛓⛓⛓ EACH WINDOW'S OWN DEAD-FRAME SHARE, from the MODEL, over ONE run.
+ *
+ * `botStart` zeroes `dead_frames` at every arm, so window k's count is ITS
+ * OWN — and the model knows the same number for the same window
+ * (`levelRun.deadFramesOwed` read at each cut, differenced). A re-boot would
+ * pay `blackCover`'s room fade ON TOP of it (~19 frames, exactly 20 under the
+ * R5 dead-frame pin), so an EXACT match is the continuation, frame for frame.
+ * See the CLAIM 2 note below for why this — and not
+ * `continuationFindings` — is the makeable claim on a door-crossing subject.
+ */
+const SEQ_DEAD_FRAME_SHARES = (() => {
+    const levelSource = shipLevelSource();
+    const shares = [];
+    let live = null;
+    let owed = 0;
+    for (let i = 0; i < SEQ_WINDOWS.length; i += 1) {
+        const st = createTapeStepper(loadTape(SEQ_WINDOWS[i]), i === 0
+            ? { levelSource, onTick: (a, b, c, r) => { live = r; } }
+            : { run: live, onTick: (a, b, c, r) => { live = r; } });
+        for (let r = st.next(); !r.done; r = st.next()) { /* step to completion */ }
+        const now = live.deadFramesOwed;
+        shares.push(now - owed);
+        owed = now;
+    }
+    return shares;
+})();
+
+const SEQ_PAGE = `${HOST}/frontend/modules/seedlingDemo/watch.html`
+    + `?tapes=${SEQ_WINDOWS.join(',')}&side=wasm`;
+const CHAIN_PAGE = `${HOST}/frontend/modules/seedlingDemo/watch.html?tapes=r8-d2&side=wasm`;
 const SEQ_STEPS = [
     {
         what: 'the JS walk ADMITTED both windows and the ship reached `runtime`',
@@ -794,16 +878,19 @@ const SEQ_STEPS = [
     { frame_click: '#btn-start', frame: '/game.html', what: 'press ▶ Start INSIDE the frame' },
     {
         what: 'window 1 is running in the real game',
-        wait: "window.__watch?.wasm?.reached?.includes('running 1/2')",
+        wait: 'window.__watch?.wasm?.reached?.includes('
+            + `'running 1/${SEQ_WINDOWS.length}')`,
         sec: 300,
     },
     {
-        what: '⛓ the boundary was crossed — window 2 continues the SAME game',
-        wait: "window.__watch?.wasm?.reached?.includes('boundary 1/2')",
-        sec: 600,
+        what: '⛓ the LAST boundary was crossed — every later window continues the '
+            + 'SAME game',
+        wait: 'window.__watch?.wasm?.reached?.includes('
+            + `'boundary ${SEQ_WINDOWS.length - 1}/${SEQ_WINDOWS.length}')`,
+        sec: 900,
     },
     {
-        what: '⛓⛓⛓ both windows finished and the SEQUENCE has a verdict',
+        what: '⛓⛓⛓ every window finished and the SEQUENCE has a verdict',
         wait: "window.__watch?.wasm?.verdict"
             + " && window.__watch.wasm.verdict.kind !== 'not-finished'"
             + " && window.__watch.wasm.reached?.includes('verdict')",
@@ -814,7 +901,8 @@ const SEQ_STEPS = [
 ];
 
 {
-    const res = drive('▶ TWO WINDOWS on ONE game state — [r8-d2-19, r8-d2-20]',
+    const res = drive(`▶ ${SEQ_WINDOWS.length} WINDOWS on ONE game state — `
+        + `[${SEQ_WINDOWS.join(', ')}]`,
         SEQ_PAGE, SEQ_STEPS, 'watch-ship-sequence');
     check(res !== null && res.crashed !== true, 'SEQUENCE: the driver completed every step',
         res === null ? 'no results file — the driver died before writing one'
@@ -822,63 +910,68 @@ const SEQ_STEPS = [
     if (res === null) { console.log(`\n${failed} FAILURE(S)`); process.exit(1); }
 
     const wasm = res.reads?.wasm ?? null;
-    check(JSON.stringify(res.reads?.seqLabels) === JSON.stringify(['r8-d2-19', 'r8-d2-20']),
-        'SEQUENCE: ⛓ the chain HEADLINE expanded to its two segments',
+    check(JSON.stringify(res.reads?.seqLabels) === JSON.stringify([...SEQ_WINDOWS]),
+        `SEQUENCE: ⛓ the chain HEADLINE expanded to its ${SEQ_WINDOWS.length} segments`,
         JSON.stringify(res.reads?.seqLabels));
     check(wasm !== null, 'SEQUENCE: the page published `__watch.wasm`',
         wasm ? wasm.stage : 'null');
     if (wasm) {
         wasm.__verdictText = res.reads?.verdictText ?? '';
-        const want = ['probe', 'runtime', 'start',
-            'tape 1/2', 'running 1/2', 'finished 1/2', 'drain 1/2',
-            'boundary 1/2',
-            'tape 2/2', 'running 2/2', 'finished 2/2', 'drain 2/2',
-            'verdict'];
+        // ⛔ THE LIST IS THE PAGE'S OWN GENERATOR (trap 383: a second copy here
+        //    would agree until one was edited).
+        const want = stagesOf({ windows: SEQ_WINDOWS.length });
         check(JSON.stringify(wasm.reached) === JSON.stringify(want),
-            'SEQUENCE: ⛓ CLAIM 1 — every stage reached IN ORDER, and ONE `start` for TWO '
-            + 'windows: `freshFrame()` and the human press happen once',
+            `SEQUENCE: ⛓ CLAIM 1 — every stage reached IN ORDER, and ONE \`start\` for `
+            + `${SEQ_WINDOWS.length} windows: \`freshFrame()\` and the human press happen `
+            + 'once',
             JSON.stringify(wasm.reached));
         check(wasm.refusal === null, 'SEQUENCE: no stage refused',
             JSON.stringify(wasm.refusal));
 
-        const w2 = (wasm.windows ?? [])[1] ?? null;
         /**
          * ⛔⛔ CLAIM 2 IS NOT THE ONE THE BRIEF ASKED FOR, AND THE FIRST RUN IS
          * WHY. The brief asked for `continuationFindings` EMPTY —
-         * `dead_frames == 0` on a continuation window. ⛓ MEASURED: window 2
-         * crosses L20 → L13, and `continuationFindings` REFUSES to answer for a
-         * window that crosses a door, because a door's fade is not attributable
-         * from there ("an unasserted check and a passing one must not print the
-         * same thing" — its own rule). Both windows of `r8-d2` cross, so the
-         * claim as briefed is UNMAKEABLE on this subject, and a row that read
-         * `length === 0` off it would have been asserting a green nobody could
-         * earn.
+         * `dead_frames == 0` on a continuation window. ⛓ MEASURED: every
+         * window of `r8-d2` CROSSES A DOOR, and `continuationFindings` REFUSES
+         * to answer for one that does, because a door's fade is not
+         * attributable from there ("an unasserted check and a passing one must
+         * not print the same thing" — its own rule). So the claim as briefed is
+         * UNMAKEABLE on this subject, and a row reading `length === 0` off it
+         * would have been asserting a green nobody could earn.
          *
          * ⛓⛓⛓ THE CLAIM THAT IS MAKEABLE, AND IT IS SHARPER: `botStart` zeroes
-         * `dead_frames` at every arm, so window 2's is ITS OWN — and the MODEL
-         * knows the same number for the same window. Measured through
-         * `levelRun.deadFramesOwed` on the two-window walk: 190 after window 1,
-         * 360 after window 2 ⇒ **window 2's own share is 170**. A re-boot would
-         * pay `blackCover`'s room fade ON TOP of that — ~19 frames, exactly 20
+         * `dead_frames` at every arm, so window k's is ITS OWN — and the MODEL
+         * knows the same number for the same window (`SEQ_DEAD_FRAME_SHARES`,
+         * differenced out of ONE stepped run). A re-boot would pay
+         * `blackCover`'s room fade ON TOP of that — ~19 frames, exactly 20
          * under the R5 dead-frame pin. So an EXACT match is the continuation,
-         * frame for frame, on a window `continuationFindings` cannot speak for.
+         * frame for frame, on windows `continuationFindings` cannot speak for.
+         *
+         * ⛓ R9 slice 3: asked of EVERY continuation window, not just the
+         * second. With three windows there are two boundaries, and a gate that
+         * checked one of them would report a green for the other by silence.
          */
-        const W2_MODEL_DEAD_FRAMES = 170;
-        check(w2 !== null && w2.deadFrames === W2_MODEL_DEAD_FRAMES,
-            'SEQUENCE: ⛓⛓⛓ CLAIM 2 — WINDOW 2 IS A CONTINUATION: its dead frames are the '
-            + 'MODEL\'S OWN SHARE for that window, to the frame — a re-boot would have paid '
-            + 'blackCover\'s fade (20 under the R5 pin) on top',
-            `game ${w2?.deadFrames} vs the model's ${W2_MODEL_DEAD_FRAMES} `
-            + '(levelRun.deadFramesOwed 190 → 360 across the boundary)');
-        check(Array.isArray(w2?.continuation)
-            && w2.continuation.every((f) => f.informational === true),
-        'SEQUENCE: ⛓ …and `continuationFindings` raises NO refusal — it reports UNASSERTED '
-        + 'by name, because this window crosses a door',
-        w2 ? (w2.continuation ?? []).map((f) => f.what).join(' | ') : 'no window 2 record');
-        check(w2 !== null && w2.movedAtBoundary === false,
-            'SEQUENCE: ⚠ …and the player did NOT drift across the boundary — the `keyup`s '
-            + 'the page dispatched released `r8-d2-19`\'s held `down`',
-            w2 ? `movedAtBoundary ${w2.movedAtBoundary}` : '');
+        for (let k = 1; k < SEQ_WINDOWS.length; k += 1) {
+            const wk = (wasm.windows ?? [])[k] ?? null;
+            check(wk !== null && wk.deadFrames === SEQ_DEAD_FRAME_SHARES[k],
+                `SEQUENCE: ⛓⛓⛓ CLAIM 2 — WINDOW ${k + 1} ("${SEQ_WINDOWS[k]}") IS A `
+                + 'CONTINUATION: its dead frames are the MODEL\'S OWN SHARE for that '
+                + 'window, to the frame — a re-boot would have paid blackCover\'s fade '
+                + '(20 under the R5 pin) on top',
+                `game ${wk?.deadFrames} vs the model's ${SEQ_DEAD_FRAME_SHARES[k]} `
+                + `(per-window shares [${SEQ_DEAD_FRAME_SHARES.join(', ')}])`);
+            check(Array.isArray(wk?.continuation)
+                && wk.continuation.every((f) => f.informational === true),
+            `SEQUENCE: ⛓ …and \`continuationFindings\` raises NO refusal for window `
+                + `${k + 1} — it reports UNASSERTED by name, because this window crosses `
+                + 'a door',
+            wk ? (wk.continuation ?? []).map((f) => f.what).join(' | ')
+                : `no window ${k + 1} record`);
+            check(wk !== null && wk.movedAtBoundary === false,
+                `SEQUENCE: ⚠ …and the player did NOT drift into window ${k + 1} — the `
+                + `\`keyup\`s the page dispatched released ${SEQ_WINDOWS[k - 1]}'s held keys`,
+                wk ? `movedAtBoundary ${wk.movedAtBoundary}` : '');
+        }
 
         for (const w of wasm.windows ?? []) {
             check(/agrees per tick/.test(w.verdict?.perTick?.text ?? ''),
@@ -891,7 +984,7 @@ const SEQ_STEPS = [
             + 'still lose the tick between them',
             `${wasm.verdict?.perTick?.text} (${wasm.verdict?.perTick?.observations} observation(s))`);
         check(wasm.verdict?.agrees === true,
-            'SEQUENCE: ⛓⛓⛓ CLAIM 4 — the END STATE is the headline\'s — L13 (104, 56)',
+            'SEQUENCE: ⛓⛓⛓ CLAIM 4 — the END STATE is where the chain ENDS — L13 (104, 56)',
             `${wasm.verdict?.text} · Δx ${wasm.verdict?.deltas?.dx} Δy ${wasm.verdict?.deltas?.dy} `
             + `· level ${wasm.verdict?.deltas?.level} vs ${wasm.verdict?.deltas?.expectedLevel}`);
         /**
@@ -904,10 +997,15 @@ const SEQ_STEPS = [
          * facts are asserted STRUCTURALLY off `__watch.wasm` instead of off a
          * readout this arm was designed not to write.
          */
-        check(wasm.verdict?.perTick?.observations === 1646
-            && wasm.drain?.observations === 1646,
+        // ⛓ R9 slice 3: DERIVED. `sum(tick_count) + 1` — RECORD-THEN-ACT gives
+        //   a window `tick_count + 1` observations and the boundary tick is
+        //   shared, so the concatenation is one more than the sum. The literal
+        //   1646 was the two-segment headline's, which the splice moved.
+        const wantObs = SEQ_WINDOWS.reduce((n, x) => n + loadTape(x).tick_count, 0) + 1;
+        check(wasm.verdict?.perTick?.observations === wantObs
+            && wasm.drain?.observations === wantObs,
         'SEQUENCE: ⛔ …and THREE INDEPENDENT ACCOUNTS OF HOW LONG THE RUN WAS AGREE — the '
-        + 'per-tick verdict\'s own count, the CONCATENATED drain, and the headline\'s 1646',
+        + `per-tick verdict's own count, the CONCATENATED drain, and the tapes' ${wantObs}`,
         `per-tick ${wasm.verdict?.perTick?.observations} · drain `
         + `${wasm.drain?.observations} · windows `
         + `${(wasm.windows ?? []).map((w) => w.drain?.observations).join(' + ')}`);
@@ -921,6 +1019,68 @@ const SEQ_STEPS = [
         wasm.verdict?.perTick?.text ?? '');
     }
     pageHygiene(res, 'SEQUENCE');
+}
+
+/**
+ * ⛔⛔⛔ R9 SLICE 3 — THE CHAIN ARM: `?tapes=r8-d2` IS THREE WINDOWS AND IT IS
+ * REFUSED AT THE SECOND BOUNDARY, BY NAME. This arm asserts the refusal.
+ *
+ * See `SEQ_WINDOWS`' block for the mechanism. In one sentence: every latch on
+ * the roster was measured after a FRESH-PAGE replay of its own segment, in
+ * which `botStart` builds the boot level; a continuation does not build, so
+ * from window 3 on the live stream is behind the declared PRE-BUILD rng by
+ * exactly that build. The director sees it and stops before applying a state
+ * that would move the world.
+ *
+ * ⛓ WHY THIS ROW EXISTS RATHER THAN A DELETED CLAIM: a refusal that only
+ * happens is indistinguishable from a refusal nobody checks (trap 119). And it
+ * runs to `boundary 2/3`, so it also proves the first boundary of a
+ * THREE-window sequence IS crossed on one game — which nothing else asserts.
+ */
+{
+    const at = `boundary ${CHAIN_WINDOWS.length - 1}/${CHAIN_WINDOWS.length}`;
+    const res = drive(`▶ THE CHAIN — [${CHAIN_WINDOWS.join(', ')}] and its REFUSAL`,
+        CHAIN_PAGE, [
+            {
+                what: 'the JS walk ADMITTED every window and the ship reached `runtime`',
+                wait: "window.__editorSequence?.admitted === true"
+                    + " && window.__watch?.wasm?.reached?.includes('runtime')",
+                sec: 300,
+            },
+            { frame_click: '#btn-start', frame: '/game.html',
+                what: 'press ▶ Start INSIDE the frame' },
+            {
+                what: `the ship reached ${at} and REFUSED there`,
+                wait: 'window.__watch?.wasm?.refusal'
+                    + ` && window.__watch.wasm.refusal.stage === '${at}'`,
+                sec: 900,
+            },
+            { read: 'window.__watch.wasm.reached', as: 'reached' },
+            { read: 'window.__watch.wasm.refusal', as: 'refusal' },
+            { read: 'window.__editorSequence.windows.map((w) => w.label)', as: 'seqLabels' },
+        ], 'watch-ship-chain');
+    check(res !== null && res.crashed !== true, 'CHAIN: the driver completed every step',
+        res === null ? 'no results file' : (res.error ?? `${res.steps.length} step(s)`));
+    if (res !== null) {
+        check(JSON.stringify(res.reads?.seqLabels) === JSON.stringify([...CHAIN_WINDOWS]),
+            `CHAIN: ⛓ the headline expanded to its ${CHAIN_WINDOWS.length} segments`,
+            JSON.stringify(res.reads?.seqLabels));
+        const reached = res.reads?.reached ?? [];
+        check(reached.includes(`boundary 1/${CHAIN_WINDOWS.length}`)
+            && reached.includes(`running 2/${CHAIN_WINDOWS.length}`)
+            && reached.includes(`drain 2/${CHAIN_WINDOWS.length}`),
+        'CHAIN: ⛓⛓ THE FIRST BOUNDARY OF A THREE-WINDOW SEQUENCE IS CROSSED ON ONE GAME '
+            + '— L18 then L19, no rebuild between them',
+        JSON.stringify(reached));
+        const r = res.reads?.refusal ?? null;
+        check(r?.stage === at && r?.reason === 'window-cannot-continue'
+            && /the declared `rng` is not the live world's/.test(r?.detail ?? ''),
+        'CHAIN: ⛔⛔ …and the SECOND boundary is REFUSED BY NAME on `rng` — a latch '
+            + 'measured after a FRESH-PAGE replay carries its boot level\'s BUILD draws, '
+            + 'and a continuation never spends them (SEAM_PREBUILD_FIELDS)',
+        `${r?.stage} · ${r?.reason} · ${(r?.detail ?? '').slice(0, 260)}`);
+    }
+    pageHygiene(res, 'CHAIN');
 }
 
 console.log(failed === 0 ? '\nALL PASS' : `\n${failed} FAILURE(S)`);
