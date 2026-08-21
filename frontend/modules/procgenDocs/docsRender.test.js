@@ -92,7 +92,7 @@ describe('⛓⛓ the anchors — two readers, 607 headings, one answer', () => {
         //   move it") paid a second time, one artifact over.
         // ⛓ 622 → 623: R9 slice 5's § (the continuation made honest — (d), the
         //   timed-row rule, and the true-start census).
-        expect(total).toBe(623);
+        expect(total).toBe(629);
     });
 
     it('⛔ uses OUR rule, not marked\'s slugger — they differ, and here is where', () => {
@@ -256,9 +256,13 @@ describe('⛓ the biggest document — the one the budget is about', () => {
         // ⚠ 407 → 408: R9 slice 3's § — the splice + the drift.
         // ⚠ 408 → 409: R9 slice 4's § — the derived `break` verb.
         // ⛓ 409 → 410: R9 slice 5's § — the continuation made honest.
+        // ⛓ 410 → 416: R9 slice 6's § — the true-start solver chain. SIX
+        //   headings, because the slice's account has five sub-sections
+        //   (the clock, the chain, the page, the findings, the numbers) under
+        //   its own — a re-pin, not a widening.
         const ids = idsOf(RENDERS.get('seedling-bot.md').html);
-        expect(ids).toHaveLength(410);
-        expect(new Set(ids).size).toBe(410);
+        expect(ids).toHaveLength(416);
+        expect(new Set(ids).size).toBe(416);
         expect(ids.filter((i) => i !== ghSlug(i))).toEqual([]);
     });
 

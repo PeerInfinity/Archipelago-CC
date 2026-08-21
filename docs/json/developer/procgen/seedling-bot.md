@@ -11949,3 +11949,118 @@ the JS tier refuses never reaches the ship: `?tapes=<all twelve>` stops at
 *"window 11 (`r9-solve-3`) cannot continue window 10"* and `__watch.wasm` never
 reaches `runtime`. The census prints the prefix, with the reason (trap 486 — an
 instrument that cannot fire).
+
+### Slice 6 — ⛓⛓⛓ THE TRUE-START SOLVER CHAIN: fifteen rooms, every boot a MEASURED latch, and the clock on a continuation
+
+⚖ **Ruling 11 (user, 2026-08-20)**: *"As we work our way through Seedling, I'll
+want to construct a sequence of tapes to play back our solutions from the
+beginning of the game … And I'll want the tapes to be recorded from the solver,
+not constructed manually."* ⚖ **Ruling 15 (user, 2026-08-21)**: the clock rides
+the continuation treatment in the other direction.
+
+#### (d′) — the one field a continuation is handed MORE of
+
+Slice 5 measured what (d) left behind: at every boundary after the first,
+`declared − live = 21` on three independent chains, with every other seam row
+EQUAL. The mechanism is `Bot.as:1703` — `if (seamTime != 0) Main.time =
+seamTime` runs on a continuation too, and `botStart` then does NOT rebuild, so
+the walk begins without the fade its recording was made behind.
+
+⇒ `watchWasm.continuationTape` hands `botLoadTape` a copy declaring
+**`seam.time + BOOT_COST_FRAMES`** — after the plain-equality admission, never
+before — and publishes `clockBumped: {declared, applied, bootCost}` as a FIELD.
+`BOOT_COST_FRAMES` is `LOAD_FADE_FRAMES` + `BOOT_PRESWAP_FRAMES`, imported and
+summed once. A zero or absent `seam.time` stays zero.
+
+**MEASURED on the real GPU**: `?tapes=r8-d2` now admits at BOTH boundaries with
+a **ZERO residual** and every seam row equal, all three windows agree per tick
+(574 / 865 / 782), the whole concatenation is 2219, the dead-frame shares are
+[41, 170, 170] — window 1 reading one MORE than the model because a fresh boot
+spends its pre-swap frame in the outgoing world — and the end state is L13,
+Δ0/Δ0. The chain reached its end for the first time.
+
+⛔⛔ **AND THE RULING'S SECOND HALF WAS REFUTED BY MEASUREMENT.** It asks for the
+same bump on the JS side. Taken at the pristine baseline before a line moved:
+the model's resumed clock is ALREADY `declared + 21` at every boundary (9200 vs
+9179; 10234 vs 10213), because a sequence is ONE `levelRun` and `enterWorld`
+spends the fade at the door crossing that ENDS the previous window. A second
+bump would put the model 21 AHEAD of the game (d′) had just corrected. What was
+built instead is the PIN, in `gameClock.test.js`, deriving its roster from
+`PLAYTHROUGH_CHAINS` — and it NAMES what it cannot measure: a CUSTODY chain's
+segment 1 is the true initial boot, which declares no `seam`, so its clock is
+`null` at every boundary.
+
+#### The chain
+
+`r9-campaign` — **fifteen segments**, custody, from `new Game(0,80,128)` with an
+empty save to the L14 arrival, **3470 ticks**:
+
+```
+ 1 r8-solve-1   L0  → L2   183     9 r8-solve-9   L9  → L10  122
+ 2 r8-solve-2   L2  → L3    47    10 r8-solve-10  L10 → L11   90   (the SWORD)
+ 3 r8-solve-3   L3  → L4   245    11 r9-solve-11  L11 → L3   119   (the CHEST)
+ 4 r8-solve-4   L4  → L5   255    12 r9-solve-3   L3  → L2   226   (the `break` room)
+ 5 r8-solve-5   L5  → L6   558    13 r9-solve-2   L2  → L0    47
+ 6 r8-solve-6   L6  → L7   294    14 r9-solve-0   L0  → L13  237
+ 7 r8-solve-7   L7  → L8   146    15 r9-solve-13  L13 → L14   74
+ 8 r8-solve-8   L8  → L9   827         STOP: route step 16 — L14's camera band
+```
+
+Segments 1–4 are PROMOTED (their boots already ARE their predecessors' latches);
+5–10 and 12 are re-booted from measured latches; 11, 13, 14, 15 are new. The
+segment list is the only declaration in the producer — every coordinate under it
+is read out of the atlas, and no stance, waypoint or hold tick is handed to the
+solver.
+
+**⛓⛓⛓ EVERY RE-BOOTED SEGMENT MOVED IN ITS BOOT BLOCK ONLY** — `inputs`
+byte-identical, `tick_count` unmoved, expectations unmoved — and for six of the
+seven the only seam row that moved is `time`, with `rng.seed` UNCHANGED. The
+reason was predictable and was predicted: the only model-visible field that
+moves is the clock, and `clock.now()` reaches only the spinner hammer, of which
+these twelve rooms have NONE.
+
+**⛓ THE FREE ORACLE ASSERTED THE WHOLE CLOCK COLUMN** and the chain COMPOUNDS,
+which a pairwise census cannot see: 5609 · **6187** · **6501** · **6667** ·
+**7514** · **7656** · 7917 · 8387 · 8633 · 8700 · 8957. Five of those differ
+from the census's pairwise numbers because once segment 5 moves, everything
+downstream of it moves too.
+
+#### What the page does with it
+
+`?tapes=r9-campaign` steps all fifteen windows on ONE game state, admits all
+fourteen boundaries, and produces the headline's **3471 observations tick for
+tick** — with the rebased forward rows `5:0@1157 · 8:0@1974 · 8:1@2373` equal to
+the headline's own declared v9 rows. Two derivations, one answer.
+
+**THE GOAL LEDGER CREDITS FROM SOLVER TAPES FOR THE FIRST TIME**: `sword@L10`
+and `chest@L11`, measured as NOT-HELD → HELD between each segment's own boot and
+its own latch. The ledger line reads **2/41**.
+
+#### Three findings the chain measured and nothing before it could
+
+1. **`jsLiveEnvelope` was short the BANKED writes.** A chest open runs
+   `Game.setPersistence(tag, false)` and this model banks the consequence for
+   the next build; the GAME's flag array holds it at once, and that array is
+   what a successor's `persistence` was read out of. Boundary 11 refused
+   `r9-solve-3` for declaring `{11,0}`. ⇒ `levelRun.bankedClears`, the fifth
+   ledger — trap 493 for the third slice running. No chain before this one had
+   a window AFTER a chest open.
+2. **The clear-evidence arm dispatched on the KIND, and the kind was a proxy for
+   the AUTHORING METHOD.** `custody` meant hand-planned with `phases`; `staged`
+   meant solver-authored with `clears`. A custody chain that is solver-authored
+   breaks the coincidence, so the dispatch is on the CARRIER the chain declares.
+   And segment uniqueness is now PER KIND, which is what its own message always
+   said.
+3. **A third clear source, `transported`**, because the second cannot be faked: a
+   headline declares the same clear at a different tick from the segment that
+   owns it, and no 1974-tick truncation was ever driven. The row names the tape,
+   the measured tick and the offset, and must add up.
+
+#### The numbers
+
+Solver-roster gate **754 PASS / 0 FAIL / 68 SKIP** over 26 tapes (successor to
+the R8 tape gate's 541/0/67 over 20), porcelain under `fixtures/` EMPTY after
+it. Ship gate **91 → 105 / 0**. Sequence gate **21 → 26 / 0**. Demos **21 → 22**
+(the `?tapes=` row). vitest **6759 → 6800** over 182. Roster **154 → 159**.
+Battery `--check` `67bcde75…` → **`6d667b170723c2e0644eb8971a8c7dbe`**, exit 0
+both sides — the ownership handover, one producer per tape.
