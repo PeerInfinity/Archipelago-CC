@@ -3412,7 +3412,32 @@ refused to derive. ⛔ **THE STANDING IDENTITIES THAT MOVED ON PURPOSE**: batter
 window bought: the SEAM is the only instrument that can see a dishonest boot (every stream
 claim stays green); a LATCH is not a LIVE STATE from window 3 on (`SEAM_PREBUILD_FIELDS` — ⚖ an
 ASK, unfixable by re-record); and two ledgers that agreed until a room wrote out of band.
-**NEXT in R9: slice 4, the derived `break` verb** (route-survey step 12 + the `shortcut` head).
+⛓⛓⛓ **SLICE 4 — THE DERIVED `break` VERB, SHIPPED 2026-08-20**, `..<SLICE4HEAD>`. The engine
+has modelled a sword swing on a `BreakableRock` since R5; what did not exist was a SOLVER row.
+Two `OBSTACLE_STRATEGIES` rows (`breakablerock` AND `breakablerockghost` — one AS3 class, two
+census tags) and one executor whose two guards each name an ITEM rather than a budget.
+**Route-survey 22 → 23 of 29 with EXACTLY ONE ROW MOVED** (verdict *and* tick count diffed row
+by row against a pristine baseline); step 12's L3 SOLVES in 226 ticks and its stance is the
+BOOT CELL — the rock is the only non-lethal neighbour of a one-cell arrival island. New tape
+`r9-solve-3`, recorded once on the announced Windows session: 227 observations, `save.time`
+8853 game == model, one `primary` edge. **The owed R8 tape gate reproduced at 541 / 0 / 67,
+ZERO moves.**
+⛔⛔⛔ **AND THE GENERATOR HALF IS A REFUTATION.** Arc 5 left `shortcut` out of the catalogue
+behind three walls and said the head was "ONE LINE on the day a derived break verb lands". It
+landed; the grade did not. `probe-seedling-shortcut-grade.mjs` (arc 5's scratch probe, now a
+committed instrument) returns 244 / 244 / 129 to the tick with the verb driving step 12.
+**THE FOURTH WALL: a verb is selected only from a `planError`, and a shortcut is by definition
+a cell whose walling leaves the goal reachable — so the planner never refuses and no verb is
+ever selected.** On Seedling an item-gated obstacle grades STRONG when it CUTS and INERT when
+it does not, with nothing in between; SHORTENS needs a solver ROUTE PREFERENCE that MOVES
+TAPES ⇒ ⚖ an ask. The head stays out (trap 462, sharper), the four predicted re-pins do NOT
+land, and the REACHABLE head is named with its evidence: **ROW 14's ROCK LOCK** — a
+`breakablerock` on a main-path CUT, `needs:['hasSword']`, no live body and therefore no A10.
+⚖ A SECOND ASK: `solverBot.facingToward` answers in a numbering the game does not use, so
+`slashRectToward` can never accept a VERTICAL strike cell — conservative, hence three rungs of
+green tapes over it, and repairing it moves tapes.
+**NEXT in R9: the campaign (⚖ ruling 11's true-start solver chain), and the route's own next
+refusal is L14's CAMERA BAND.**
 **Slice 1 (the quick fixes) SHIPPED 2026-08-20**, `d7b0f5ec1..9bbc847fb`: the
 per-spec parameter DOMAIN `key=v1|v2|v3` (byte-inert, whole identity block
 unmoved) and the rung's ONE ruled generator re-record adopting it in the biome
