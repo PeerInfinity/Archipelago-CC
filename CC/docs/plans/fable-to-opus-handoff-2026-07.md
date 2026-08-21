@@ -3501,9 +3501,32 @@ a third clear source `transported`, because the second cannot be faked. Gates: s
 ⚖ **§6 Q17 IS CLOSED**: (a)'s second declared field buys nothing (d′) does not, and is NOT
 built. ⛔ **NOTHING RETIRED** — the ledger does NOT refuse two custody claimants (measured), so
 `act2-the-sword` keeps its entry; slice 7's free list is named in kickoff §14.10.
-**NEXT in R9: slice 7 — the coverage-derived RETIREMENT (seven `r7-act2-*` files free today,
-four more once the battery and the survey are re-pointed), and then slice 8 = L14's CAMERA
-BAND, whose refusal the census now prints.**
+**Slice 7 (THE FIRST COVERAGE-DERIVED RETIREMENT) SHIPPED 2026-08-21**,
+`855a6d200..<head>`: `act2-the-sword` is OUT of `PLAYTHROUGH_CHAINS`, `PAGE_CHAINS`, the
+picker and the sequence gate's pin — but **⚖ ruling 14's SECOND CLAUSE FIRED and the
+retirement is PARTIAL: NINE of twelve tapes are covered, THREE STAY, named.** `r7-act2-6`
+and `r7-act2-full` are the roster's ONLY v10 `despawn` witnesses (census over all 159
+tapes: two despawn declarations, both theirs) and `r7-act2-5` carries the ETA transit
+probe's positive oracle, the `tset -1` hold→kill refinement and the `twoPassSolve` bound;
+a solver walk has no `phases` block by construction. ⚖ **RULING 17 (user, mid-slice: *"I
+want to minimize hardcoding in general"*)** reshaped the build: measured first that the
+hand route's eleven goal lists and the campaign producer's atlas derivation are
+**IDENTICAL 11 of 11**, so no route constant was committed and no boot block was baked —
+`scripts/procgen/seedling-atlas-goals.mjs` is the shared derivation and every producer
+reads its staged boots off the covering solver tape. ⛔ mutant (a) found §14.10's consumer
+set wrong: **FIVE of six producers** red on the deletion, not one, and the two that build
+the name by template are invisible to grep. Sequence 26 → **24/0**; vitest 6802 → **6794**
+(−9 = exactly the nine act2 seams, +1 the new `endsAt` gate); survey **23/29 unmoved**
+after re-pointing; instruments 234 → **235**; roster **159, unmoved**. Battery `--check`
+→ **`75adf826…`**, tail → **`9a6a3192…`**, both exit 0, both diffs published row by row;
+four producers byte-identical. `r8-battery-4.endsAt` **253 → 255** plus the invariant that
+gates it (`endsAt === sum(segment ticks)`, true of all fifteen chains).
+`scripts/procgen/identity-block.sh` COMMITTED (ruling 17 (c)).
+**NEXT in R9: slice 7b — DELETE the nine (+ expectations, traces, index rows; roster
+159 → 150), re-point the two Windows gates' boot to `r8-solve-4`, the local browser gates,
+and the whole-chain wasm row `?tapes=r9-campaign&side=wasm`; work list = kickoff §15.11.
+Then slice 8 = L14's CAMERA BAND. ⚖ OPEN: the v10 despawn channel has two witnesses and
+both are hand tapes — record a solver despawn, keep them, or retire the channel.**
 **Slice 1 (the quick fixes) SHIPPED 2026-08-20**, `d7b0f5ec1..9bbc847fb`: the
 per-spec parameter DOMAIN `key=v1|v2|v3` (byte-inert, whole identity block
 unmoved) and the rung's ONE ruled generator re-record adopting it in the biome
