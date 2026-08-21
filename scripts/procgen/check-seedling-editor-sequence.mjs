@@ -43,6 +43,13 @@
  *  7. **`?tapes=` ROUND-TRIPS** through the queue control's own writer, and
  *     an empty queue DELETES the key rather than leaving `?tapes=` behind.
  *  8. **THE SINGLE-TAPE ARM IS UNMOVED** — `?tape=` still replays one tape.
+ * 10. **THE WASM ARM TAKES THE SAME TWO WINDOWS** — the JS walk admits them,
+ *     the stage list carries `window k/N`, and the ship STOPS at ▶ Start
+ *     because the page may never press it. The per-tick verdicts and
+ *     `continuationFindings` belong to the announced Windows row.
+ * 11. **A NON-CONTINUABLE PAIR IS REFUSED BEFORE THE FRAME IS TOUCHED** — no
+ *     `__editorWasm` at all: a real GPU run is not spent to learn what the
+ *     model already knew by name.
  *  9. **⛓ THE act2 REPORT** — which of the true-start chain's windows admit,
  *     and the NAME of the refusal that stops the rest. A refusal there is a
  *     finding about the roster (or about the model), not a defect in this
@@ -298,6 +305,55 @@ check(act2.seq?.admitted === false && refusedAt?.label === 'r7-act2-5'
     && (act2.seq?.windows ?? []).length === 5,
 '⛓ …and that answer is PINNED — a change here is a finding somebody must explain',
 `stopped at ${refusedAt?.label} after ${(act2.seq?.windows ?? []).length} window(s)`);
+
+// ══ 10–11. THE WASM ARM, AS FAR AS A HEADLESS BROWSER CAN GO ═══════════
+/**
+ * ⛔ HEADLESS STOPS AT ▶ Start, AND THAT IS THE LAW WORKING. The frame's own
+ * start path must run inside a real user gesture (WebGPU init + AudioContext
+ * consume the activation), and this page may never press it. So what a
+ * headless row can assert is: the JS walk ADMITTED the windows, the ship
+ * reached `runtime`, it is WAITING, and the stage list it will walk carries the
+ * WINDOW VOCABULARY. The per-tick verdicts and `continuationFindings` are the
+ * announced Windows row's (`check-seedling-wasm-ship.mjs`'s two-window plan).
+ */
+const { stagesOf } = await import(join(MODULE, 'watchWasm.js'));
+await page.goto(`${origin}${PAGE_PATH}?tapes=r8-d2&side=wasm`);
+await page.waitForFunction(
+    () => (window.__editorWasm && window.__editorWasm.reached?.includes('runtime'))
+        || document.getElementById('status').className === 'bad',
+    null, { timeout: 180000 });
+const ship = await page.evaluate(() => ({
+    stages: window.__editorWasm?.stages ?? null,
+    reached: window.__editorWasm?.reached ?? null,
+    refusal: window.__editorWasm?.refusal ?? null,
+    windows: window.__editorWasm?.windows ?? null,
+    admitted: window.__editorSequence?.admitted ?? null,
+    labels: (window.__editorSequence?.windows ?? []).map((x) => x.label),
+}));
+check(ship.admitted === true && JSON.stringify(ship.stages) === JSON.stringify(stagesOf({ windows: 2 })),
+'⛓⛓ CLAIM 10 — THE WASM ARM TAKES THE SAME TWO WINDOWS, and its stages say so',
+`admitted ${ship.admitted}, windows ${JSON.stringify(ship.labels)}, stages `
+    + `${JSON.stringify(ship.stages)}`);
+check(JSON.stringify(ship.reached) === JSON.stringify(['probe', 'runtime'])
+    && ship.refusal === null,
+'⛔ …and it STOPS at ▶ Start — the page never presses it, once per page, by law',
+`reached ${JSON.stringify(ship.reached)}`);
+
+const badWasm = await page.goto(`${origin}${PAGE_PATH}?tapes=r8-d2-19,r8-solve-4&side=wasm`)
+    .then(() => page.waitForFunction(
+        () => window.__editorSequence?.refusal
+            || (window.__editorWasm && window.__editorWasm.reached?.includes('runtime')),
+        null, { timeout: 180000 }))
+    .then(() => page.evaluate(() => ({
+        refusal: window.__editorSequence?.refusal ?? null,
+        ship: window.__editorWasm ?? null,
+        detail: document.getElementById('detail').textContent,
+    })));
+check(!!badWasm.refusal && /cannot continue/.test(badWasm.refusal.reason)
+    && badWasm.ship === null,
+'⛓⛓ CLAIM 11 — a NON-CONTINUABLE PAIR IS REFUSED BEFORE THE FRAME IS TOUCHED',
+`${badWasm.refusal?.reason ?? 'not refused'} — __editorWasm is `
+    + `${badWasm.ship === null ? 'ABSENT (no ship began)' : 'PRESENT (a ship began!)'}`);
 
 check(errors.length === 0, 'ZERO console errors and pageerrors across every landing',
     errors.slice(0, 3).join(' | '));

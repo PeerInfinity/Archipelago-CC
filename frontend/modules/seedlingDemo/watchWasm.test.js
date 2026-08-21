@@ -22,7 +22,7 @@ import { fileURLToPath } from 'node:url';
 import {
     END_STATE_TOLERANCE, lastObservationOf, levelSetDisagreement, PER_TICK_SCOPE,
     perTickVerdictOf, remapStreamRooms, roomOfGeneratedLevel, stagesOf, VERDICT_SCOPE,
-    verdictBlock, verdictLine, verdictOf, WASM_PAGE, WASM_STAGES,
+    verdictBlock, verdictLine, verdictOf, WASM_PAGE, WASM_STAGES, concatDrains,
 } from './watchWasm.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -324,7 +324,12 @@ describe('E3 — `publishShip` projects the verdict NOTE, so a claim about the r
         expect(projectionKeys().sort()).toEqual([
             'drain', 'label', 'note', 'reached', 'refusal', 'scope', 'set', 'stage',
             'stages', 'status', 'verdict',
-        ]);
+            // ⛓ R9 slice 2: the SEQUENCE's per-window rows — admission, the
+            // per-window verdict, `continuationFindings`, the keys the boundary
+            // released and whether the player MOVED across it. Empty for a
+            // single-tape ship, which is every pre-existing caller.
+            'windows',
+        ].sort());
     });
 
     /** ⚠ AND THE SCAN IS NOT VACUOUS — it sees a key that is not there. */
@@ -610,5 +615,66 @@ describe('what the page prints beside the JS certification', () => {
         expect(PER_TICK_SCOPE).toMatch(/share/);
         expect(PER_TICK_SCOPE).toMatch(/invisible/);
         expect(VERDICT_SCOPE).toMatch(/end state only/);
+    });
+});
+
+
+/**
+ * ══ ⛓⛓⛓ R9 SLICE 2 — THE SEQUENCE, ON THIS SIDE (⚖ ruling 10) ═══════════
+ */
+describe('the window vocabulary', () => {
+    it('⛔ ONE window is the OLD list, exactly — every row asserts on these names', () => {
+        expect(stagesOf({ windows: 1 })).toEqual(stagesOf({}));
+        expect(stagesOf({ windows: 1 })).toEqual(
+            WASM_STAGES.filter((x) => x !== 'levels'));
+        expect(stagesOf({ windows: 1, levelSet: { set_id: 'x', rooms: [{}] } }))
+            .toEqual([...WASM_STAGES]);
+    });
+
+    it('⛓ N windows number the per-window stages and put a BOUNDARY between them', () => {
+        expect(stagesOf({ windows: 2 })).toEqual([
+            'probe', 'runtime', 'start',
+            'tape 1/2', 'running 1/2', 'finished 1/2', 'drain 1/2',
+            'boundary 1/2',
+            'tape 2/2', 'running 2/2', 'finished 2/2', 'drain 2/2',
+            'verdict',
+        ]);
+        // ⛔ ONE `start`: `freshFrame()` and the human ▶ Start happen once.
+        expect(stagesOf({ windows: 3 }).filter((x) => x === 'start')).toHaveLength(1);
+        expect(stagesOf({ windows: 3 }).filter((x) => x.startsWith('drain'))).toHaveLength(3);
+        expect(stagesOf({ windows: 3 })
+            .filter((x) => x.startsWith('boundary'))).toHaveLength(2);
+    });
+});
+
+describe('⛓⛓ the drains are concatenated the way the HEADLINE ARITHMETIC does it', () => {
+    /**
+     * ⛔ EACH WINDOW'S DRAIN IS ITS OWN BUFFER (trap 436 — a live read versus a
+     * buffered stream). Its ticks restart at 0, so the offset is not cosmetic:
+     * without it the whole-sequence verdict would compare window 2's tick 5
+     * against the model's tick 5, which is in window 1.
+     */
+    const drainOf = (from, n, tag) => ({
+        ticks: Array.from({ length: n + 1 }, (_, i) => ({ t: i, x: from + i, tag })),
+    });
+
+    it('drops each window\'s duplicated FIRST observation and shifts by tick_count', () => {
+        const got = concatDrains([drainOf(0, 3, 'a'), drainOf(3, 2, 'b')], [3, 2]);
+        expect(got.ticks.map((o) => o.t)).toEqual([0, 1, 2, 3, 4, 5]);
+        // 4 observations from window 1 (0..3, minus its last) + 3 from window 2
+        expect(got.ticks).toHaveLength(6);
+        expect(got.ticks[3].tag).toBe('b');
+        // ⛓ the SUM identity `chainFindings` asserts: 3 + 2 ticks = 6 observations
+        expect(got.ticks).toHaveLength(3 + 2 + 1);
+    });
+
+    it('a single window is passed through unshifted', () => {
+        const one = drainOf(0, 4, 'a');
+        expect(concatDrains([one], [4]).ticks).toEqual(one.ticks);
+    });
+
+    it('a window that drained NOTHING contributes nothing and does not shift wrongly', () => {
+        const got = concatDrains([{ ticks: [] }, drainOf(0, 1, 'b')], [7, 1]);
+        expect(got.ticks.map((o) => o.t)).toEqual([7, 8]);
     });
 });

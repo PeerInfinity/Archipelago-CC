@@ -734,5 +734,134 @@ function perTickClaims(wasm, arm) {
     pageHygiene(res, 'ROOM');
 }
 
+/**
+ * ══ ⛓⛓⛓ ARM 4: THE SEQUENCE — TWO WINDOWS, ONE GAME STATE ══════════════
+ *
+ * ⚖ Ruling 10 (user, 2026-08-20): *"I want the second tape to continue from the
+ * game state at the end of the first tape. I don't want it to reload a fresh
+ * page. And I want it to work like this for both JS playback and wasm
+ * playback."* This is the wasm half, and it is the ONLY place it can be
+ * measured: everything below `runtime` needs a real ▶ Start inside the frame.
+ *
+ * ⛔ THE SUBJECT IS THE ONE THE JS HALF ALREADY SETTLED. `?tapes=r8-d2` expands
+ * to `[r8-d2-19, r8-d2-20]`, and the JS run of those two windows on ONE live
+ * run reproduces the headline `r8-d2` tick for tick (1646 observations, first
+ * differing tick −1) and ends equal. So a disagreement here is a fact about the
+ * GAME, not about the plan.
+ *
+ * THE FOUR CLAIMS, in the order they can fail:
+ *  1. **THE STAGES CARRY THE WINDOW VOCABULARY** and were reached IN ORDER —
+ *     one `start`, two `drain`s, one `boundary` between them.
+ *  2. **⛔ WINDOW 2 PAID NO DEAD FRAMES** (`director.continuationFindings`).
+ *     This is the discriminating claim and nothing else can make it: a re-boot
+ *     ERASES the drift that caused it — the next window's first observation
+ *     lands exactly on its declared boot position, so the streams come back
+ *     clean and the trace reports a continuation it did not make. What a
+ *     re-boot cannot hide is `blackCover`'s room fade, ~19 frames and exactly
+ *     20 under the R5 dead-frame pin. `dead_frames != 0` in a window that never
+ *     left its room means `botStart` REBUILT the world.
+ *  3. **EVERY WINDOW AGREES PER TICK** with its own model stream, AND the whole
+ *     CONCATENATION agrees with the sequence's. Two windows can each agree with
+ *     their own stream while the boundary between them lost a tick, so both are
+ *     asked.
+ *  4. **THE END STATE IS THE HEADLINE'S** — `r8-d2` alone ends at L13
+ *     (104, 56), measured through the JS model.
+ *
+ * ⚠ AND THE BOUNDARY'S KEY RELEASES ARE REPORTED EITHER WAY (⚖ §6 Q8).
+ * `r8-d2-19`'s last span is `{down 803..864}`, held through `tick_count`;
+ * FlashPunk's `Input` is a static nothing clears, so the page dispatches the
+ * same `keyup`s the Windows driver does. If the frame will not take them the
+ * player DRIFTS, and `movedAtBoundary` is the number that says so.
+ */
+const SEQ_PAGE = `${HOST}/frontend/modules/seedlingDemo/watch.html?tapes=r8-d2&side=wasm`;
+const SEQ_STEPS = [
+    {
+        what: 'the JS walk ADMITTED both windows and the ship reached `runtime`',
+        wait: "window.__editorSequence?.admitted === true"
+            + " && window.__watch?.wasm?.reached?.includes('runtime')",
+        sec: 300,
+    },
+    { read: 'window.__editorSequence.windows.map((w) => w.label)', as: 'seqLabels' },
+    { read: 'window.__watch.wasm.stages', as: 'stages' },
+    // ⛔ THE ONE CLICK THE PAGE MAY NEVER MAKE.
+    { frame_click: '#btn-start', frame: '/game.html', what: 'press ▶ Start INSIDE the frame' },
+    {
+        what: 'window 1 is running in the real game',
+        wait: "window.__watch?.wasm?.reached?.includes('running 1/2')",
+        sec: 300,
+    },
+    {
+        what: '⛓ the boundary was crossed — window 2 continues the SAME game',
+        wait: "window.__watch?.wasm?.reached?.includes('boundary 1/2')",
+        sec: 600,
+    },
+    {
+        what: '⛓⛓⛓ both windows finished and the SEQUENCE has a verdict',
+        wait: "window.__watch?.wasm?.verdict"
+            + " && window.__watch.wasm.verdict.kind !== 'not-finished'"
+            + " && window.__watch.wasm.reached?.includes('verdict')",
+        sec: 900,
+    },
+    { read: 'window.__watch.wasm', as: 'wasm' },
+    { read: "document.getElementById('wasmVerdict').textContent", as: 'verdictText' },
+];
+
+{
+    const res = drive('▶ TWO WINDOWS on ONE game state — [r8-d2-19, r8-d2-20]',
+        SEQ_PAGE, SEQ_STEPS, 'watch-ship-sequence');
+    check(res !== null && res.crashed !== true, 'SEQUENCE: the driver completed every step',
+        res === null ? 'no results file — the driver died before writing one'
+            : (res.error ?? `${res.steps.length} step(s)`));
+    if (res === null) { console.log(`\n${failed} FAILURE(S)`); process.exit(1); }
+
+    const wasm = res.reads?.wasm ?? null;
+    check(JSON.stringify(res.reads?.seqLabels) === JSON.stringify(['r8-d2-19', 'r8-d2-20']),
+        'SEQUENCE: ⛓ the chain HEADLINE expanded to its two segments',
+        JSON.stringify(res.reads?.seqLabels));
+    check(wasm !== null, 'SEQUENCE: the page published `__watch.wasm`',
+        wasm ? wasm.stage : 'null');
+    if (wasm) {
+        wasm.__verdictText = res.reads?.verdictText ?? '';
+        const want = ['probe', 'runtime', 'start',
+            'tape 1/2', 'running 1/2', 'finished 1/2', 'drain 1/2',
+            'boundary 1/2',
+            'tape 2/2', 'running 2/2', 'finished 2/2', 'drain 2/2',
+            'verdict'];
+        check(JSON.stringify(wasm.reached) === JSON.stringify(want),
+            'SEQUENCE: ⛓ CLAIM 1 — every stage reached IN ORDER, and ONE `start` for TWO '
+            + 'windows: `freshFrame()` and the human press happen once',
+            JSON.stringify(wasm.reached));
+        check(wasm.refusal === null, 'SEQUENCE: no stage refused',
+            JSON.stringify(wasm.refusal));
+
+        const w2 = (wasm.windows ?? [])[1] ?? null;
+        check(w2 !== null && Array.isArray(w2.continuation) && w2.continuation.length === 0,
+            'SEQUENCE: ⛓⛓⛓ CLAIM 2 — WINDOW 2 IS A CONTINUATION: `continuationFindings` is '
+            + 'EMPTY, so it paid NO dead frames and `botStart` did NOT rebuild the world',
+            w2 ? JSON.stringify(w2.continuation) : 'no window 2 record');
+        check(w2 !== null && w2.movedAtBoundary === false,
+            'SEQUENCE: ⚠ …and the player did NOT drift across the boundary — the `keyup`s '
+            + 'the page dispatched released `r8-d2-19`\'s held `down`',
+            w2 ? `movedAtBoundary ${w2.movedAtBoundary}` : '');
+
+        for (const w of wasm.windows ?? []) {
+            check(/agrees per tick/.test(w.perTick ?? ''),
+                `SEQUENCE: ⛓⛓ CLAIM 3 — window "${w.label}" AGREES PER TICK with its own `
+                + 'model stream', w.perTick ?? '(no per-tick verdict)');
+        }
+        check(wasm.verdict?.perTick?.agrees === true,
+            'SEQUENCE: ⛓⛓⛓ CLAIM 3 — …AND THE WHOLE CONCATENATION AGREES PER TICK with the '
+            + 'sequence\'s own model stream — two windows can each agree with their own and '
+            + 'still lose the tick between them',
+            `${wasm.verdict?.perTick?.text} (${wasm.verdict?.perTick?.observations} observation(s))`);
+        check(wasm.verdict?.agrees === true,
+            'SEQUENCE: ⛓⛓⛓ CLAIM 4 — the END STATE is the headline\'s — L13 (104, 56)',
+            `${wasm.verdict?.text} · Δx ${wasm.verdict?.deltas?.dx} Δy ${wasm.verdict?.deltas?.dy} `
+            + `· level ${wasm.verdict?.deltas?.level} vs ${wasm.verdict?.deltas?.expectedLevel}`);
+        perTickClaims(wasm, 'SEQUENCE');
+    }
+    pageHygiene(res, 'SEQUENCE');
+}
+
 console.log(failed === 0 ? '\nALL PASS' : `\n${failed} FAILURE(S)`);
 process.exit(failed === 0 ? 0 : 1);

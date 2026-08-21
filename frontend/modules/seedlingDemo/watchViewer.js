@@ -1546,8 +1546,17 @@ function nearestChainFor(name) {
     return null;
 }
 
-async function runJsSequence(params, lifetime) {
-    const { levelSource } = await armPrelude(params, lifetime);
+/**
+ * ⛓⛓⛓ THE SEQUENCE'S ONE WALK — resolve, admit, and step N windows on ONE live
+ * run. **BOTH ARMS CALL THIS.** The JS arm scrubs what it collected; the wasm
+ * arm ships the same windows to the real game and compares against the same
+ * per-window model streams. ⛔ A second copy of the window loop would be two
+ * opinions about where a boundary is.
+ *
+ * @returns {object} `{seq, stop, frames, samples, run, parsedTapes, tapes, names}`
+ *   — `seq.refusal` non-null means it stopped and `stop` has already painted it
+ */
+async function walkSequence(params, lifetime, levelSource) {
     const { names, expansions } = expandSequence(params.tapes);
     const seq = {
         asked: [...params.tapes],
@@ -1557,11 +1566,16 @@ async function runJsSequence(params, lifetime) {
         refusal: null,
         boundaries: [],
     };
+    /**
+     * ⛔ A REFUSAL IS PAINTED AND RETURNED, never thrown: the readout is what
+     * the browser row asserts on, and a stop that only threw would leave the
+     * page describing nothing.
+     */
     const stop = (reason, detail) => {
         seq.refusal = { reason, detail };
         window.__editorSequence = seq;
         fatal(`the sequence stopped: ${reason}`, detail);
-        return seq;
+        return { seq, stopped: true };
     };
     if (names.length === 0) {
         return stop('the queue is empty',
@@ -1603,6 +1617,13 @@ async function runJsSequence(params, lifetime) {
     // ── the window loop, on ONE run ──────────────────────────────────
     const frames = [];
     const samples = [];
+    /**
+     * ⛓ ONE ENTRY PER WINDOW, for the WASM arm: the model's own stream for that
+     * window and the end state it predicts. ⛔ Out of THIS walk — never a second
+     * one — so the per-window verdict compares the game against the very run
+     * the JS side scrubbed.
+     */
+    const perWindow = [];
     let run = null;
     let offset = 0;
     let last = null;
@@ -1638,6 +1659,15 @@ async function runJsSequence(params, lifetime) {
             frames.push({ ...f, observation: { ...f.observation, t: offset + f.observation.t } });
             samples.push(collected.samples[i]);
         }
+        perWindow.push({
+            tape: tapes[k],
+            label: names[k],
+            modelStream: modelStreamOf(collected),
+            modelStreamWhy: collected.finished ? null
+                : 'the JS model did not finish this window',
+            expect: expectFromFrames(collected.frames),
+            expectWhy: collected.frames.length ? null : 'the model collected no frames',
+        });
         seq.windows.push({
             index: k,
             label: names[k],
@@ -1710,9 +1740,70 @@ async function runJsSequence(params, lifetime) {
         run,
         error: null,
     };
-    const label = `${names.join(' → ')} — ${names.length} window(s), one game state`;
-    return replayTape(combinedParsed, label, params, levelSource, null, null,
-        { precollected: combined, sequence: seq });
+    return {
+        seq, stop, names, tapes, parsedTapes, run, frames, samples,
+        combined, combinedParsed,
+        label: `${names.join(' → ')} — ${names.length} window(s), one game state`,
+        perWindow,
+    };
+}
+
+/**
+ * ⛓ THE JS ARM — scrub the walk. `?tapes=` with `side=js`.
+ */
+async function runJsSequence(params, lifetime) {
+    const { levelSource } = await armPrelude(params, lifetime);
+    const walked = await walkSequence(params, lifetime, levelSource);
+    if (!walked || walked.stopped || !walked.seq.admitted) return walked?.seq ?? null;
+    return replayTape(walked.combinedParsed, walked.label, params, levelSource, null, null,
+        { precollected: walked.combined, sequence: walked.seq });
+}
+
+/**
+ * ⛓⛓⛓ THE WASM ARM — the SAME windows, shipped to the real game (⚖ ruling 10's
+ * second half). `?tapes=` with `side=wasm`.
+ *
+ * ⛔ THE MODEL WALK COMES FIRST AND IS THE SAME ONE. `walkSequence` steps the N
+ * windows on one JS run, which does three jobs at once: it ADMITS every
+ * boundary before a single tape reaches the game (so a non-continuable queue is
+ * refused without touching the frame at all), it produces the per-window model
+ * streams the per-window verdict compares against, and it produces the WHOLE
+ * sequence's stream, which is what the concatenation verdict is about.
+ *
+ * ⚠ A JS-side refusal STOPS THE SHIP. The alternative — ship anyway and let the
+ * game's own boundary report it — would be interesting exactly once and would
+ * spend a real GPU run to learn what the model already knew by name.
+ */
+async function runWasmSequence(params, lifetime) {
+    const { levelSource } = await armPrelude(params, lifetime);
+    const walked = await walkSequence(params, lifetime, levelSource);
+    if (!walked || walked.stopped || !walked.seq.admitted) return walked?.seq ?? null;
+    if (!lifetime.alive()) return walked.seq;
+    window.__editorSequence = walked.seq;
+    return shipToWasm(
+        {
+            windows: walked.perWindow,
+            label: walked.label,
+            /**
+             * ⛓ THE WHOLE SEQUENCE'S expectation and stream — for one window
+             * these are the same objects the single-tape ship has always
+             * passed; for N they are the SEQUENCE's, which is the subject the
+             * concatenation verdict is about.
+             */
+            expect: walked.perWindow[walked.perWindow.length - 1].expect,
+            expectWhy: null,
+            modelStream: modelStreamOf(walked.combined),
+            modelStreamWhy: null,
+            note: `${walked.perWindow.length} window(s) on ONE game state — `
+                + `${walked.names.join(' → ')}`,
+        },
+        {
+            frame: $('frame'),
+            lifetime,
+            readout: replayWasmReadout(lifetime, params.source),
+            tolerance: END_STATE_TOLERANCE,
+        },
+    );
 }
 
 /**
@@ -7629,6 +7720,17 @@ function publishShip(state, source, lifetime) {
         set: state.set ?? null,
         status: state.status ?? null,
         scope: VERDICT_SCOPE,
+        /**
+         * ⛓⛓⛓ R9 SLICE 2 — THE SEQUENCE'S OWN ROWS (⚖ ruling 10). One entry per
+         * window: its admission findings, its per-window verdict, its
+         * `continuationFindings` (`dead_frames` MUST be 0 on a continuation
+         * window — a window that never left one room and paid a fade was
+         * REBUILT), the keys the boundary released and whether the player MOVED
+         * across it. ⛔ Carried, never recomposed: trap 440 is `publishShip`
+         * dropping a field the caller owned, and this is the same field one
+         * shape up.
+         */
+        windows: state.windows ?? [],
     };
     if (lifetime.alive()) publishWatch(source);
 }
@@ -7754,6 +7856,8 @@ function wireShipButton(params, lifetime) {
  * readout writes there.
  */
 async function runWasm(params, lifetime) {
+    // ⛓ R9 slice 2: `?tapes=` selects the SEQUENCE, on this side too.
+    if (params.tapes !== null) return runWasmSequence(params, lifetime);
     const tape = await fetchJson(repoUrl(params.tape), 'tape');
     const frame = $('frame');
     /**

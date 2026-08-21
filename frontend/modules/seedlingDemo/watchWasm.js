@@ -74,7 +74,19 @@
  * that assembled either with a lookalike would be measuring a different
  * subject and reporting it under the same word (trap 383).
  */
-import { diffObservationStreams, gameStreamFromDrain } from './tapeFormat.js';
+import { diffObservationStreams, gameStreamFromDrain, KEY_CODES } from './tapeFormat.js';
+/**
+ * ⛓⛓⛓ R9 SLICE 2 (⚖ ruling 10) — THE DIRECTOR'S BOUNDARY RULES, IMPORTED, and
+ * the LATCH→TAPE-BLOCKS inverse the recording harness already runs on.
+ *
+ * ⛔ `segmentBootFromLatch` is what turns a `botSeam()` envelope into the boot
+ * blocks a segment would declare — `plan-seedling-r7-act2.mjs` and
+ * `solve-seedling-r8-d2-chain.mjs` author every committed segment through it.
+ * So the wasm boundary check is ENVELOPE-vs-DECLARED in the tape's own
+ * vocabulary, and no third spelling of a boot block exists.
+ */
+import { continuationAdmission, continuationFindings, refusalsOnly } from './director.js';
+import { segmentBootFromLatch } from './r7Acceptance.js';
 
 /**
  * The build `watch.html` ships to.
@@ -157,8 +169,51 @@ export const END_STATE_TOLERANCE = 0;
  * (trap 262's shape), and a reader who could not see the stage at all could not
  * tell a MANUAL ship from one whose verdict was never computed.
  */
-export function stagesOf({ levelSet = null } = {}) {
-    return WASM_STAGES.filter((s) => s !== 'levels' || Boolean(levelSet));
+export function stagesOf({ levelSet = null, windows = 1 } = {}) {
+    /**
+     * ⛔ ONE WINDOW IS THE OLD LIST, EXACTLY. Every browser row and every unit
+     * row asserts on these names, and a ship of one tape must reach the same
+     * nine (or eight) stages it always did — the sequence vocabulary is
+     * ADDITIVE and appears only when there is more than one window.
+     */
+    if (windows <= 1) return WASM_STAGES.filter((s) => s !== 'levels' || Boolean(levelSet));
+    const head = ['probe', 'runtime', 'start', ...(levelSet ? ['levels'] : [])];
+    const body = [];
+    for (let k = 1; k <= windows; k += 1) {
+        if (k > 1) body.push(`boundary ${k - 1}/${windows}`);
+        body.push(`tape ${k}/${windows}`, `running ${k}/${windows}`,
+            `finished ${k}/${windows}`, `drain ${k}/${windows}`);
+    }
+    return [...head, ...body, 'verdict'];
+}
+
+/**
+ * ⛓⛓⛓ THE WINDOW BOUNDARY, IN ONE PLACE — the streams concatenated the way the
+ * HEADLINE ARITHMETIC does it.
+ *
+ * `playthroughAcceptance.chainFindings` slices a headline at its cut and
+ * compares each slice to its segment's own recording: `864 + 781 = 1645`, one
+ * short of the 1646 observations, because window k+1's tick 0 IS window k's
+ * last observation (measured on both sides: `L20 (200,72)`). So the
+ * concatenation drops it and shifts the rest by the running sum of
+ * `tick_count`.
+ *
+ * ⛔ A DRAIN IS A BUFFER, NOT A LIVE READ (trap 436). Each window's drain is a
+ * SECOND buffer whose ticks start at 0 again, so the offset is not cosmetic —
+ * without it the whole-sequence verdict would compare window 2's tick 5 with
+ * the model's tick 5, which is in window 1.
+ */
+export function concatDrains(drains, tickCounts) {
+    const ticks = [];
+    let offset = 0;
+    drains.forEach((d, k) => {
+        const rows = (d && Array.isArray(d.ticks)) ? d.ticks : [];
+        const last = k === drains.length - 1;
+        const keep = last ? rows.length : Math.max(rows.length - 1, 0);
+        for (let i = 0; i < keep; i += 1) ticks.push({ ...rows[i], t: rows[i].t + offset });
+        offset += tickCounts[k];
+    });
+    return { ticks, transitions: [] };
 }
 
 /**
@@ -711,11 +766,34 @@ export async function shipToWasm(payload, host) {
     const {
         levelSet = null, chunks = null, tape, expect = null, expectWhy = null, label = '',
         note = null, modelStream = null, modelStreamWhy = null,
+        /**
+         * ⛓⛓⛓ R9 SLICE 2 — **THE SEQUENCE** (⚖ ruling 10). An ordered list of
+         * `{tape, expect, expectWhy, modelStream, modelStreamWhy, label}`, all
+         * played on ONE game: `freshFrame()` and the human ▶ Start happen ONCE,
+         * for window 1, and every window after it is `botLoadTape` →
+         * `botStart` on the SAME frame — which is the game's own continuation
+         * path (`Bot.as:1722-1725`, named at `:2759`).
+         *
+         * ⛔ SPELLED `windows` AND NOT `tapes`, because a window carries more
+         * than a tape (its own expectation and its own model stream) and
+         * `director.js` has called it a window since R5. A single-tape ship
+         * passes none of this and becomes a ONE-WINDOW list below, so every
+         * existing caller is unchanged in behaviour.
+         *
+         * ⚠ `modelStream`/`expect` AT THE TOP LEVEL STAY THE **WHOLE**
+         * SEQUENCE'S — for one window that is the same object it always was.
+         */
+        windows: windowsIn = null,
     } = payload;
+    const windows = windowsIn ?? [{
+        tape, expect, expectWhy, modelStream, modelStreamWhy, label,
+    }];
     const { frame, lifetime, readout, tolerance = END_STATE_TOLERANCE } = host;
     const state = {
         stage: null,
-        stages: stagesOf({ levelSet }),
+        stages: stagesOf({ levelSet, windows: windows.length }),
+        /** ⛓ One record per window: its stages, its own verdict, its boundary. */
+        windows: [],
         reached: [],
         refusal: null,
         label,
@@ -902,95 +980,295 @@ export async function shipToWasm(payload, host) {
         enter('levels', `${levelSet.rooms.length} room(s) mounted — ${levelSet.set_id}`);
     }
 
-    // ── tape ─────────────────────────────────────────────────────────
-    const loaded = bot('botLoadTape', JSON.stringify(tape));
-    if (loaded !== 'ok') return refuse('tape', `botLoadTape: ${loaded}`, '');
-    enter('tape', 'the game accepted the tape');
+    /**
+     * ══ ⛓⛓⛓ THE WINDOW LOOP (⚖ ruling 10) ══════════════════════════════
+     *
+     * ⛔ ONE FRAME, ONE ▶ Start, N WINDOWS. `freshFrame()` ran once, above; the
+     * human pressed Start once; and every window after the first is
+     * `botLoadTape` → `botStart` on the SAME game. That is the game's own
+     * continuation path — `botStart` rebuilds only when the next tape's boot
+     * names other construction args (`Bot.as:1722-1725`), and a finished tape
+     * leaves `armed=false, finished=true` so a second load re-arms it (`:2644`,
+     * `:1560`). ⛔ `botReset` is NOT called: it forgets the tape, never the
+     * world, and nothing in this repo but one probe calls it.
+     *
+     * ⛔ AND THE NEVER-PRESS-START LAW IS UNTOUCHED. That law is about the
+     * SWF's `__swfBridgeStart`, pressed once per PAGE by a human; `botStart` is
+     * this module's own call and always has been (see the `start` stage above).
+     */
+    const tickCounts = windows.map((w) => w.tape.tick_count);
+    const drains = [];
+    for (let k = 0; k < windows.length; k += 1) {
+        const w = windows[k];
+        const many = windows.length > 1;
+        const at = many ? ` ${k + 1}/${windows.length}` : '';
+        const wLabel = w.label || `window ${k + 1}`;
+        const rec = { index: k, label: wLabel, admission: null, verdict: null,
+            continuation: null, movedAtBoundary: null };
+        state.windows.push(rec);
 
-    // ── running ──────────────────────────────────────────────────────
-    const started = bot('botStart');
-    if (started !== 'ok') return refuse('running', `botStart: ${started}`, '');
-    enter('running', `${label} — running in the real game`);
+        if (k > 0) {
+            /**
+             * ── ⛓⛓ THE BOUNDARY ───────────────────────────────────────────
+             *
+             * 1. RELEASE THE KEYS. FlashPunk's `Input` is a STATIC that nothing
+             *    clears, so a span running to `tick_count` leaves its key HELD
+             *    and the player walks off the boundary while the round trip
+             *    happens. A fresh page released them implicitly; a window does
+             *    not. ⛓ The Windows driver dispatches exactly these `keyup`s
+             *    (`seedling-bot-replay-win.py:197-225`) and this is the same
+             *    events at the same targets — `Input.enable()` registers on
+             *    `FP.stage` and the runtime's delivery ends at
+             *    `avm2_dispatch_event`, the hardware path.
+             * 2. READ THE LATCH and ADMIT. `botSeam()` is the envelope
+             *    `segmentBootFromLatch` consumes, so the check is
+             *    ENVELOPE-vs-DECLARED and the readout says so.
+             * 3. REFUSE BY NAME if the window cannot continue — never a silent
+             *    rebuild (⚖ §6 Q7). The game WOULD rebuild, and that is not a
+             *    continuation.
+             */
+            const held = [...new Set((windows[k - 1].tape.inputs ?? [])
+                .filter((sp) => sp.to >= windows[k - 1].tape.tick_count)
+                .map((sp) => sp.key))];
+            const codes = held.map((key) => KEY_CODES[key]).filter((c) => Number.isFinite(c));
+            const before = botJson('botStatus');
+            let released = null;
+            try {
+                released = releaseKeysInFrame(win(), codes);
+            } catch (e) {
+                released = `could not dispatch: ${e.message}`;
+            }
+            rec.releasedKeys = { keys: held, codes, how: released };
+            // Let the release land and the player coast to a stop. Friction is
+            // subtractive and the whole coast from walk speed is under 2 px —
+            // the driver waits 400 ms here for the same reason.
+            if (codes.length > 0) {
+                // eslint-disable-next-line no-await-in-loop
+                await new Promise((r) => { setTimeout(r, 400); });
+            }
+            const atRest = botJson('botStatus');
+            /**
+             * ⚠ MEASURED THE WAY THE DRIVER MEASURES IT (⚖ §6 Q8). If the frame
+             * will not take synthetic key events the player DRIFTS across the
+             * boundary, and this is the number that says so — reported, never
+             * silently absorbed.
+             */
+            rec.movedAtBoundary = (before && atRest)
+                ? (before.x !== atRest.x || before.y !== atRest.y) : null;
+
+            let blocks = null;
+            let blocksWhy = null;
+            const env = botJson('botSeam');
+            try {
+                blocks = segmentBootFromLatch(env);
+            } catch (e) {
+                blocksWhy = { all: 'the live world\'s latch could not be turned into tape '
+                    + `blocks — ${e.message}` };
+            }
+            const live = {
+                level: blocks ? blocks.boot.level : atRest?.level,
+                ctor: blocks ? { x: blocks.boot.x, y: blocks.boot.y } : null,
+                cleared: blocks ? blocks.persistence : (atRest?.persistence_cleared ?? null),
+                blocks: blocks
+                    ? { rng: blocks.rng, seam: blocks.seam, save: blocks.save, pins: blocks.pins }
+                    : null,
+                blocksWhy,
+            };
+            const found = continuationAdmission(w.tape, live, { index: k, label: wLabel });
+            rec.admission = found;
+            rec.live = { level: live.level, ctor: live.ctor,
+                cleared: (live.cleared ?? []).map((c) => `${c.level}:${c.tag}`) };
+            const refusals = refusalsOnly(found);
+            if (refusals.length > 0) {
+                return refuse(`boundary ${k}/${windows.length}`, 'window-cannot-continue',
+                    `${wLabel}: ${refusals.map((f) => `${f.what} — ${f.detail}`).join('  ·  ')}`);
+            }
+            /**
+             * ⛔⛔ THERE IS NO `windowsFrom` FIXED POINT HERE, AND THE REASON IS
+             * MEASURED (R9 §10). The brief asked for one — "window 2 ships WITH
+             * a `persistence` block → `windowsFrom` refuses by name BEFORE the
+             * ship". Neither spelling of that call is a gate:
+             *
+             *   · on the STRIPPED list it can never fire, because stripping is
+             *     what makes it pass — a declared axis that reaches nothing,
+             *     printing a complete-looking row (trap 475);
+             *   · on the SHIPPED list it refuses `r8-d2-20`, which declares six
+             *     clears that ARE the live world's — the very contradiction
+             *     ruling 10's admission rule was ruled to resolve.
+             *
+             * The instrument that actually gates it is `continuationAdmission`
+             * above, which refuses a NON-MATCHING declaration by name and does
+             * so on the JS walk, before a single tape reaches the frame. The
+             * second, independent one is `continuationFindings` below, which
+             * catches a rebuild the game performed anyway.
+             */
+            enter(`boundary ${k}/${windows.length}`,
+                `${wLabel} continues L${live.level} at (${live.ctor?.x},${live.ctor?.y})`
+                + `${rec.movedAtBoundary ? ' — ⚠ THE PLAYER MOVED at the boundary' : ''}`);
+        }
+
+        // ── tape ─────────────────────────────────────────────────────
+        const loaded = bot('botLoadTape', JSON.stringify(w.tape));
+        if (loaded !== 'ok') return refuse(`tape${at}`, `botLoadTape: ${loaded}`, '');
+        enter(`tape${at}`, 'the game accepted the tape');
+
+        // ── running ──────────────────────────────────────────────────
+        const started = bot('botStart');
+        if (started !== 'ok') return refuse(`running${at}`, `botStart: ${started}`, '');
+        enter(`running${at}`, `${wLabel} — running in the real game`);
+
+        /**
+         * ⚠ THE POLL IS THE SAME 250 ms POLL IT ALWAYS WAS, wrapped in a
+         * promise so the loop can await it. ⛔ NOT given a timeout: the
+         * pre-existing poll had none, and adding one here would introduce a
+         * new failure mode into the single-window path this refactor must
+         * leave unchanged.
+         */
+        // eslint-disable-next-line no-await-in-loop
+        const st = await new Promise((resolve) => {
+            const pollTick = lifetime.guard('wasm-poll', () => poll());
+            function poll() {
+                const now = botJson('botStatus');
+                if (now) {
+                    state.status = now;
+                    readout.onTick(now, w.tape, state);
+                    if (now.finished) return resolve(now);
+                }
+                return setTimeout(pollTick, 250);
+            }
+            pollTick();
+        });
+        state.stage = `finished${at}`;
+        state.reached.push(`finished${at}`);
+
+        /**
+         * ── ⛓⛓⛓ drain — ONCE PER WINDOW, AND ONLY ONCE ─────────────────
+         *
+         * `botDrain` is a BUFFERED stream the game has been filling since
+         * `botStart`, not a sample: reading it after `finished` yields every
+         * observation of THIS window. ⛔ That is why the per-tick verdict reads
+         * it and not the 250 ms `botStatus` poll above — at ~18.6 ticks/s that
+         * poll sees roughly one tick in four, so a "per-tick" record built from
+         * it would be a subsample reported as a stream. Reading it TWICE is not
+         * an option either: the verb DRAINS.
+         *
+         * ⛓⛓ AND EACH WINDOW'S DRAIN IS ITS OWN BUFFER, STARTING AT TICK 0
+         * AGAIN (trap 436 — a live read versus a buffered stream). The
+         * concatenation offsets them by the running sum of `tick_count` and
+         * drops each window's duplicated first observation, which is exactly
+         * the arithmetic `chainFindings` does over a headline's stream slices.
+         *
+         * ⛓⛓ ARC 5 SLICE 0 MOVED THIS **ABOVE** THE END-STATE CHECK: `botStatus`
+         * keeps moving after `finished` and the drained stream does not, so the
+         * END STATE has to be asked about the drained frame or the two
+         * instruments describe two moments.
+         */
+        const drained = botJson('botDrain');
+        drains.push(drained);
+        const drainCounts = drained && Array.isArray(drained.ticks)
+            ? {
+                observations: drained.ticks.length,
+                reportedTransitions: (drained.transitions ?? []).length,
+            }
+            : null;
+        state.drain = drainCounts;
+        rec.drain = drainCounts;
+        enter(`drain${at}`, drainCounts
+            ? `${drainCounts.observations} observation(s) drained from the game`
+            : 'this build answered no botDrain — the verdict falls back to '
+                + 'END STATE, labelled');
+
+        /**
+         * ⛓ THE PER-WINDOW VERDICT — each window's own model stream against its
+         * own drained one. ⛔ The END-STATE check runs FIRST and always (⚖ D2).
+         */
+        const wEnd = verdictOf(w.expect, st, tolerance,
+            { noExpectWhy: w.expectWhy, finalFrame: lastObservationOf(drained) });
+        rec.verdict = {
+            ...wEnd,
+            perTick: perTickVerdictOf({
+                modelStream: w.modelStream, modelStreamWhy: w.modelStreamWhy,
+                drained, endState: wEnd,
+            }),
+            drain: drainCounts,
+        };
+        /**
+         * ⛓⛓⛓ AND THE CLAIM ONLY A CONTINUATION WINDOW CAN MAKE.
+         * `continuationFindings`: a window that never left one room and paid
+         * DEAD FRAMES was re-booted — `botStart` rebuilt the world — whatever
+         * its positions say, because a re-boot ERASES the drift that caused it
+         * and every downstream position check then reports a continuation that
+         * did not happen. Window 0 is exempt: its fade is the boot's own.
+         */
+        if (k > 0) {
+            rec.continuation = continuationFindings(
+                { label: wLabel, stream: drained, status: st }, { index: k });
+        }
+        state.verdict = rec.verdict;
+        readout.onVerdict(rec.verdict, state);
+    }
 
     /**
-     * ⚠ THE WRAPPER CALLS `poll` THROUGH AN ARROW rather than wrapping it
-     * directly: `poll` is hoisted and readable here, but only from inside a
-     * body that runs later.
+     * ⛓⛓⛓ …AND ONCE OVER THE WHOLE CONCATENATION. The per-window verdicts say
+     * each window agreed with its own model; this says the SEQUENCE agreed with
+     * the sequence's model — which is the claim ruling 10 is actually about,
+     * and the one a per-window pair cannot make (two windows can each agree
+     * with their own stream while the boundary between them lost a tick).
      */
-    const pollTick = lifetime.guard('wasm-poll', () => poll());
-    // A function DECLARATION, not a const arrow: `poll()` is called above this
-    // line and a `const` would be in its temporal dead zone. Caught by the
-    // real-GPU Windows run, which is the only place the wasm path gets far
-    // enough to execute it.
-    function poll() {
-        const st = botJson('botStatus');
-        if (st) {
-            state.status = st;
-            readout.onTick(st, tape, state);
-            if (st.finished) {
-                state.stage = 'finished';
-                state.reached.push('finished');
-                /**
-                 * ── ⛓⛓⛓ drain — ONCE, AND ONLY ONCE ────────────────────
-                 *
-                 * `botDrain` is a BUFFERED stream the game has been filling
-                 * since `botStart`, not a sample: reading it after `finished`
-                 * yields every observation of the run. ⛔ THAT IS WHY THE
-                 * PER-TICK VERDICT READS IT AND NOT THE 250 ms `botStatus`
-                 * POLL ABOVE — at ~18.6 ticks/s on a real GPU that poll sees
-                 * roughly one tick in four, so a "per-tick" record built from
-                 * it would be a subsample reported as a stream (§18.15.10
-                 * residue 3). Reading it TWICE is not an option either: the
-                 * verb drains, so a second call answers about nothing.
-                 *
-                 * ⛓⛓ ARC 5 SLICE 0 MOVED THIS **ABOVE** THE END-STATE CHECK,
-                 * and the reason is measured in `verdictOf`'s own docblock:
-                 * `botStatus` keeps moving after `finished` and the drained
-                 * stream does not, so the END STATE has to be asked about the
-                 * drained frame or the two instruments describe two moments.
-                 * ⛔ The STAGE ORDER is unchanged — `finished`, `drain`,
-                 * `verdict`, exactly what the browser rows assert — and the
-                 * end-state check still runs FIRST of the two verdicts and
-                 * still runs UNCONDITIONALLY (⚖ D2); it is the READ that moved,
-                 * not the comparison's place in the answer.
-                 */
-                const drained = botJson('botDrain');
-                state.drain = drained && Array.isArray(drained.ticks)
-                    ? {
-                        observations: drained.ticks.length,
-                        reportedTransitions: (drained.transitions ?? []).length,
-                    }
-                    : null;
-                enter('drain', state.drain
-                    ? `${state.drain.observations} observation(s) drained from the game`
-                    : 'this build answered no botDrain — the verdict falls back to '
-                        + 'END STATE, labelled');
-                /**
-                 * ⛔⛔ THE END-STATE CHECK RUNS FIRST, AND IT ALWAYS RUNS (⚖ D2).
-                 * It is the check the per-tick one may not silently contradict,
-                 * and a `verdict-internally-inconsistent` is inconsistent WITH
-                 * this — so it cannot be computed after, or conditionally.
-                 */
-                const endState = verdictOf(expect, st, tolerance,
-                    { noExpectWhy: expectWhy, finalFrame: lastObservationOf(drained) });
-                const v = {
-                    ...endState,
-                    perTick: perTickVerdictOf({
-                        modelStream, modelStreamWhy, drained, endState,
-                    }),
-                    drain: state.drain,
-                };
-                state.verdict = v;
-                state.stage = 'verdict';
-                state.reached.push('verdict');
-                readout.onVerdict(v, state);
-                return;
-            }
-        }
-        setTimeout(pollTick, 250);
-    }
-    pollTick();
+    const whole = windows.length > 1
+        ? concatDrains(drains, tickCounts)
+        : drains[0];
+    const endState = verdictOf(expect ?? windows[windows.length - 1].expect,
+        state.status, tolerance,
+        { noExpectWhy: expectWhy, finalFrame: lastObservationOf(whole) });
+    const v = {
+        ...endState,
+        perTick: perTickVerdictOf({
+            modelStream, modelStreamWhy, drained: whole, endState,
+        }),
+        drain: state.drain,
+        /** ⛓ The sequence's own rows, so a reader never has to infer them. */
+        windows: state.windows.map((r) => ({
+            label: r.label,
+            perTick: r.verdict?.perTick?.text ?? null,
+            endState: r.verdict?.text ?? null,
+            continuation: r.continuation,
+            movedAtBoundary: r.movedAtBoundary,
+        })),
+    };
+    state.verdict = v;
+    state.stage = 'verdict';
+    state.reached.push('verdict');
+    readout.onVerdict(v, state);
     return state;
+}
+
+/**
+ * ⛓ THE BETWEEN-WINDOW KEY RELEASES, dispatched INTO the frame.
+ *
+ * ⛔ THE SAME EVENTS AT THE SAME TARGETS AS THE WINDOWS DRIVER
+ * (`seedling-bot-replay-win.py:197-225`): the runtime's key delivery ends at
+ * `avm2_dispatch_event`, the same place a real keyboard's does, so a DOM
+ * `keyup` IS the hardware path. Fired at every plausible target because which
+ * one the emscripten build registers on is a build detail, and an extra event
+ * on a target nobody listens to is inert.
+ *
+ * ⚠ IT REPORTS WHAT IT DID. If the frame will not take synthetic key events the
+ * caller measures `moved_at_boundary` exactly as the driver does rather than
+ * assuming the release landed (⚖ §6 Q8).
+ */
+function releaseKeysInFrame(w, codes) {
+    if (!w || !w.document) return 'no frame document — nothing dispatched';
+    if (!codes || codes.length === 0) return 'no keys were held at the boundary';
+    const targets = [w.document, w, w.document.querySelector('canvas')].filter(Boolean);
+    for (const c of codes) {
+        for (const t of targets) {
+            t.dispatchEvent(new w.KeyboardEvent('keyup', {
+                keyCode: c, which: c, bubbles: true, cancelable: true,
+            }));
+        }
+    }
+    return `${codes.length} keyup(s) x ${targets.length} target(s)`;
 }
 
 /**
