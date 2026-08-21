@@ -1498,7 +1498,37 @@ const jsBlocksWhy = Object.freeze({
 function jsLiveEnvelope(run, bootPersistence, bootPins) {
     const cleared = [];
     const seen = new Set();
-    for (const c of [...(bootPersistence ?? []), ...run.earnedClears]) {
+    /**
+     * ⛔⛔⛔ R9 SLICE 3 — AND THE OUT-OF-BAND WRITES BELONG HERE, WHICH THE
+     * SPLICE IS WHAT MADE REACHABLE.
+     *
+     * `earnedClears` and `save.levelPersistence` are TWO LEDGERS WITH TWO
+     * MEANINGS, and they agreed until a room wrote out of band.
+     * `earnedClears` is *what the next BUILD of a level may be handed*, and
+     * `levelRun` deliberately keeps an out-of-band write OUT of it: landing
+     * on a slot nobody owns is the whole meaning of a −1 tag, and
+     * `buildLevelWorld` refuses "a clear which no entity in this level reads"
+     * (`r5-feather` measured that throw). It REPORTS the write instead.
+     *
+     * But this envelope answers a different question — *what does the GAME's
+     * persistence ARRAY hold* — because that is what the successor tape's
+     * `persistence` block was read out of. L18's two Spinners carry
+     * `tag = "-1"`, so crossing that room honestly writes `{17,29}`
+     * (`level * 30 - 1`, `outOfBandLedger`), the measured latch carries it,
+     * and a live set built from `earnedClears` alone is short exactly that
+     * row. The admission then refuses the next window BY NAME for a flag the
+     * game really did write — a true sentence about the wrong ledger.
+     *
+     * ⚠ BOUNDED, AND THE BOUND IS NAMED: `spinnerWrites` is the only report
+     * channel that carries an `outOfBand` marker today. `RopeStart` and
+     * `BurnableTree` have the same branch and no committed map reaches their
+     * −1 case (`levelRun.js`, the same comment), so there is nothing to fold
+     * for them and inventing a fold would be a claim nothing drives.
+     */
+    const outOfBand = (run.spinnerWrites ?? [])
+        .filter((w) => w.outOfBand)
+        .map((w) => ({ level: w.flag.level, tag: w.flag.tag }));
+    for (const c of [...(bootPersistence ?? []), ...run.earnedClears, ...outOfBand]) {
         const k = `${c.level}:${c.tag}`;
         if (seen.has(k)) continue;
         seen.add(k);

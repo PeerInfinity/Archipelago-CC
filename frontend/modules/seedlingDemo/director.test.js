@@ -7,6 +7,9 @@ import {
     PAGE_CHAINS, parseTapesParam, formatTapesParam, expandSequence, sequenceAdmission,
     continuationAdmission, refusalsOnly,
 } from './director.js';
+import { loadTape } from './fixtures/index.js';
+import { runTape } from './tapeRunner.js';
+import { atlasLevelSource } from './levelSource.js';
 
 /**
  * The director's own stratum: pure functions over the GAME's reports, with
@@ -672,6 +675,65 @@ describe('⛓⛓⛓ TIER 2 — the boundary, and the ruled sentence field by fie
         expect(whats(fs))
             .toContain('the window does not declare a clear the live world holds');
         expect(fs[0].detail).toMatch(/19:0/);
+    });
+
+    /**
+     * ⛓⛓⛓ R9 SLICE 3 — THE OUT-OF-BAND ROW, AND IT IS WHY THE PAGE'S LIVE
+     * SET IS NOT `earnedClears`.
+     *
+     * The splice put L18 in front of `r8-d2`, and L18's two Spinners carry
+     * `tag = "-1"`. `Main.levelPersistenceSet` indexes `level * 30 + tag` with
+     * NO bounds check, so each kill writes the PREVIOUS level's LAST slot —
+     * `{17,29}` — and the measured latch carries it, which is why every
+     * segment after L18 declares it.
+     *
+     * ⛔ THE MODEL IS RIGHT NOT TO PUT IT IN `earnedClears`: that ledger is
+     * *what the next BUILD of a level may be handed*, and `buildLevelWorld`
+     * refuses "a clear which no entity in this level reads", which an
+     * out-of-band slot is by construction (`r5-feather` measured that throw).
+     * It REPORTS the write on `spinnerWrites` instead.
+     *
+     * ⇒ TWO LEDGERS, TWO MEANINGS, and they agreed until a room wrote out of
+     * band. A live set built from `earnedClears` alone is short exactly the
+     * out-of-band rows, and the admission then refuses the next window BY NAME
+     * for a flag the game really did write — a true sentence about the wrong
+     * ledger. `watchViewer.jsLiveEnvelope` folds the reported writes in; this
+     * row is what says the fold is load-bearing rather than decorative.
+     */
+    it('⛓⛓ an OUT-OF-BAND write belongs in the live set, and leaving it out '
+        + 'refuses the next window by name', () => {
+        const run = runTape(loadTape('r8-solve-18'), { levelSource: atlasLevelSource() });
+        const outOfBand = run.spinnerWrites.filter((w) => w.outOfBand);
+        // the ledger fact, first: REPORTED and not APPLIED
+        expect(outOfBand.map((w) => `${w.flag.level}:${w.flag.tag}`)).toEqual(['17:29', '17:29']);
+        expect(run.earnedClears).toEqual([]);
+
+        const declared = loadTape('r8-d2-19').persistence.map((c) => ({
+            level: c.level, tag: c.tag,
+        }));
+        const next = { name: 'r8-d2-19', boot: loadTape('r8-d2-19').boot,
+            persistence: declared, grants: [] };
+        const base = { level: 19, ctor: { x: 16, y: 144 },
+            blocks: { save: null, pins: [] }, blocksWhy: null };
+        // ⛔ WITHOUT the fold — `earnedClears` only, plus segment 0's own boot
+        const without = continuationAdmission(next, {
+            ...base,
+            cleared: [...loadTape('r8-solve-18').persistence.map((c) => ({
+                level: c.level, tag: c.tag,
+            })), ...run.earnedClears],
+        });
+        expect(whats(without))
+            .toContain('the window declares a clear the live world does not hold');
+        expect(without[0].detail).toMatch(/17:29/);
+        // ⛓ WITH it — admitted, and nothing else changes
+        const with_ = continuationAdmission(next, {
+            ...base,
+            cleared: [...loadTape('r8-solve-18').persistence.map((c) => ({
+                level: c.level, tag: c.tag,
+            })), ...run.earnedClears,
+            ...outOfBand.map((w) => ({ level: w.flag.level, tag: w.flag.tag }))],
+        });
+        expect(with_).toEqual([]);
     });
 
     it('grants are refused here too — tier 2 does not trust tier 1 to have run', () => {

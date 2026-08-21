@@ -15,7 +15,7 @@
  * `playthroughAcceptance.chainFindings` slices the headline's stream at the
  * cut and compares each slice to its segment's own recording. ⛔ NO GAME AND
  * NO RUN HAD EVER PLAYED BOTH WINDOWS AS ONE. That is this row's subject: the
- * page queues `?tapes=r8-d2`, the two windows step ONE live run, and the
+ * page queues `?tapes=r8-d2`, its windows step ONE live run, and the
  * stream that comes out must be the headline's TICK FOR TICK.
  *
  * ⛔ THE ORACLE IS RE-DERIVED HERE, in node, with `runTapeToStream` — the same
@@ -26,7 +26,7 @@
  *
  * ── THE CLAIMS ────────────────────────────────────────────────────────
  *
- *  1. **THE HEADLINE EXPANDS** — `?tapes=r8-d2` is ONE member and TWO windows,
+ *  1. **THE HEADLINE EXPANDS** — `?tapes=r8-d2` is ONE member and N windows,
  *     and the page says which two.
  *  2. **⛓⛓⛓ THE STREAM IS THE HEADLINE'S** — 1646 observations, first
  *     differing tick −1, from ONE run.
@@ -43,7 +43,7 @@
  *  7. **`?tapes=` ROUND-TRIPS** through the queue control's own writer, and
  *     an empty queue DELETES the key rather than leaving `?tapes=` behind.
  *  8. **THE SINGLE-TAPE ARM IS UNMOVED** — `?tape=` still replays one tape.
- * 10. **THE WASM ARM TAKES THE SAME TWO WINDOWS** — the JS walk admits them,
+ * 10. **THE WASM ARM TAKES THE SAME WINDOWS** — the JS walk admits them,
  *     the stage list carries `window k/N`, and the ship STOPS at ▶ Start
  *     because the page may never press it. The per-tick verdicts and
  *     `continuationFindings` belong to the announced Windows row.
@@ -159,8 +159,8 @@ for (let i = 0; i < Math.max(mine.length, oracle.ticks.length); i += 1) {
     if (JSON.stringify(mine[i]) !== JSON.stringify(oracle.ticks[i])) { firstDiff = i; break; }
 }
 check(mine.length === oracle.ticks.length && firstDiff === -1,
-    '⛓⛓⛓ CLAIM 2 — TWO WINDOWS ON ONE GAME STATE PRODUCE THE HEADLINE STREAM, '
-    + 'TICK FOR TICK',
+    `⛓⛓⛓ CLAIM 2 — ALL ${PAGE_CHAINS['r8-d2'].length} WINDOWS ON ONE GAME STATE `
+    + 'PRODUCE THE HEADLINE STREAM, TICK FOR TICK',
     `page ${mine.length} observation(s) vs the headline's ${oracle.ticks.length}; `
     + `first differing tick ${firstDiff}`
     + (firstDiff >= 0 ? ` — page ${JSON.stringify(mine[firstDiff])} vs headline `
@@ -172,21 +172,42 @@ check(JSON.stringify(endMine) === JSON.stringify(endOracle),
     '⛓ CLAIM 3 — …AND IT ENDS EQUAL',
     `${JSON.stringify(endMine)} vs ${JSON.stringify(endOracle)}`);
 
-const b = (got.seq.boundaries ?? [])[0];
+/**
+ * ⛓ R9 SLICE 3 — EVERY BOUNDARY, NOT "the first one". The splice made `r8-d2`
+ * three segments, so there are TWO boundaries; a row that read `boundaries[0]`
+ * and compared it against a hardcoded `r8-d2-20` was checking the wrong pair
+ * against the wrong tape the moment a segment was added. The list and the
+ * expected latch both come from `PAGE_CHAINS` now.
+ */
+const boundaries = got.seq.boundaries ?? [];
 const refusalsAt = (f) => (f ?? []).filter((x) => !x.informational);
-check(!!b && refusalsAt(b.admission).length === 0
-    && (b.stream ?? []).length === 0 && (b.status ?? []).length === 0,
-'⛓ CLAIM 4 — THE BOUNDARY HELD, on the director\'s own two checks',
-b ? `admission refusals ${refusalsAt(b.admission).length} `
-    + `(${b.admission.length} row(s), ${b.admission.filter((x) => x.informational).length} `
-    + `UNASSERTED by name), streamBoundaryFindings ${(b.stream ?? []).length}, `
-    + `boundaryFindings ${(b.status ?? []).length}` : 'no boundary was recorded');
-check(!!b && b.live.level === 20 && b.live.ctor.x === 192 && b.live.ctor.y === 64
-    && b.live.cleared.length === tapeOf('r8-d2-20').persistence.length,
-'⛓⛓ …and window 2\'s declared LATCH was admitted because it MATCHES the live world',
-b ? `live L${b.live.level} constructed at (${b.live.ctor.x},${b.live.ctor.y}); `
-    + `${b.live.cleared.length} cleared flag(s) vs the ${tapeOf('r8-d2-20').persistence.length} `
-    + 'the tape declares' : '');
+const SEGS = PAGE_CHAINS['r8-d2'];
+check(boundaries.length === SEGS.length - 1
+    && boundaries.every((x) => refusalsAt(x.admission).length === 0
+        && (x.stream ?? []).length === 0 && (x.status ?? []).length === 0),
+'⛓ CLAIM 4 — EVERY BOUNDARY HELD, on the director\'s own two checks',
+boundaries.length
+    ? boundaries.map((x) => `[${x.label}] admission refusals `
+        + `${refusalsAt(x.admission).length} (${x.admission.length} row(s), `
+        + `${x.admission.filter((y) => y.informational).length} UNASSERTED by name), `
+        + `streamBoundaryFindings ${(x.stream ?? []).length}, `
+        + `boundaryFindings ${(x.status ?? []).length}`).join('; ')
+    : 'no boundary was recorded');
+check(boundaries.length === SEGS.length - 1 && boundaries.every((x, i) => {
+    const t = tapeOf(SEGS[i + 1]);
+    return x.live.level === t.boot.level && x.live.ctor.x === t.boot.x
+        && x.live.ctor.y === t.boot.y
+        && x.live.cleared.length === t.persistence.length;
+}),
+'⛓⛓ …and every later window\'s declared LATCH was admitted because it MATCHES '
+    + 'the live world',
+boundaries.map((x, i) => {
+    const t = tapeOf(SEGS[i + 1]);
+    return `[${SEGS[i + 1]}] live L${x.live.level} constructed at `
+        + `(${x.live.ctor.x},${x.live.ctor.y}) vs boot L${t.boot.level} (${t.boot.x},`
+        + `${t.boot.y}); ${x.live.cleared.length} cleared flag(s) vs the `
+        + `${t.persistence.length} the tape declares`;
+}).join('; '));
 
 /**
  * ⛔⛔ CLAIM 3b — THE DISCRIMINATING ONE, AND CLAIM 2 IS NOT IT.
@@ -201,12 +222,25 @@ b ? `live L${b.live.level} constructed at (${b.live.ctor.x},${b.live.ctor.y}); `
  * re-staged run's ledgers start at zero.
  */
 const w = got.seq.windows;
-check(w.length === 2 && w[0].finished.transitions === 1 && w[1].finished.transitions === 2
-    && w[1].from === 864 && w[1].to === 1645,
-'⛔⛔ CLAIM 3b — ONE RUN: window 2\'s LEDGERS ARE THE SEQUENCE\'S, not its own',
-`window 1 ${w[0]?.finished.transitions} transition(s) over [${w[0]?.from},${w[0]?.to}]; `
-    + `window 2 ${w[1]?.finished.transitions} over [${w[1]?.from},${w[1]?.to}] — a re-staged `
-    + 'window 2 would report 1');
+/**
+ * ⛓ R9 slice 3: the ledger claim is over EVERY window and its numbers are
+ * DERIVED — window k's `transitions` is k (each segment ends at exactly one
+ * level arrival, which is what a cut IS on this roster), and its span is the
+ * running sum of the tapes' own `tick_count`s. The old row typed 864 and 1645.
+ */
+let runningFrom = 0;
+const spans = SEGS.map((n) => {
+    const from = runningFrom;
+    runningFrom += tapeOf(n).tick_count;
+    return { from, to: runningFrom };
+});
+check(w.length === SEGS.length
+    && w.every((x, i) => x.finished.transitions === i + 1
+        && x.from === spans[i].from && x.to === spans[i].to),
+'⛔⛔ CLAIM 3b — ONE RUN: every later window\'s LEDGERS ARE THE SEQUENCE\'S, not its own',
+w.map((x, i) => `window ${i + 1} ${x.finished?.transitions} transition(s) over `
+    + `[${x.from},${x.to}] (want ${i + 1} over [${spans[i].from},${spans[i].to}])`).join('; ')
+    + ' — a re-staged window k would report 1');
 
 check(got.scrubMax === String(oracle.ticks.length - 1),
     '⛓ …and the SCRUB SPANS THE SEQUENCE, not one window',
@@ -348,8 +382,12 @@ const ship = await page.evaluate(() => ({
     admitted: window.__editorSequence?.admitted ?? null,
     labels: (window.__editorSequence?.windows ?? []).map((x) => x.label),
 }));
-check(ship.admitted === true && JSON.stringify(ship.stages) === JSON.stringify(stagesOf({ windows: 2 })),
-'⛓⛓ CLAIM 10 — THE WASM ARM TAKES THE SAME TWO WINDOWS, and its stages say so',
+// ⛓ R9 slice 3: `windows: SEGS.length`, not a literal 2 — the stage list is a
+// function of how many windows the chain has, and typing the count here would
+// re-red this row on every future segment for no reason of its own.
+check(ship.admitted === true
+    && JSON.stringify(ship.stages) === JSON.stringify(stagesOf({ windows: SEGS.length })),
+`⛓⛓ CLAIM 10 — THE WASM ARM TAKES THE SAME ${SEGS.length} WINDOWS, and its stages say so`,
 `admitted ${ship.admitted}, windows ${JSON.stringify(ship.labels)}, stages `
     + `${JSON.stringify(ship.stages)}`);
 check(JSON.stringify(ship.reached) === JSON.stringify(['probe', 'runtime'])
