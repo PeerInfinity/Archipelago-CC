@@ -67,7 +67,7 @@
  *                coordinates from the atlas. ⛓ `r8-solve-18`'s boot is
  *                exactly this, and the script ASSERTS the equality, so
  *                the policy is R8's rather than this script's.
- *   `true-start` `r7-act2-1`'s boot: `new Game(0, 80, 128)`, empty save.
+ *   `true-start` `r8-solve-1`'s boot: `new Game(0, 80, 128)`, empty save.
  *
  * ⚠ **THE BOUND A STAGED BOOT NAMES.** A staged boot is a DECLARATION,
  * not a measured latch — `save.time` and the three RNG streams are
@@ -444,9 +444,27 @@ const committedTape = (name) => JSON.parse(readFileSync(join(TAPES, `${name}.jso
  * six steps in the middle. The position is the only key that is a fact about
  * the game.
  */
+/**
+ * ⛓⛓⛓ R9 SLICE 7 — RE-POINTED AT THE SOLVER CHAIN (⚖ ruling 14).
+ *
+ * This was `r7-act2-1..11` — the hand chain `act2-the-sword`, which retired
+ * this slice. `r8-solve-1..11` are the solver tapes for the same eleven rooms
+ * from the same boots, and the swap is inert where it matters HERE: the lookup
+ * is keyed on the ARRIVAL POSITION, which lives in `boot`, and `boot` is
+ * identical between every hand tape and its twin (rooms 1-4 and 11 are
+ * byte-equal over all eleven boot-block fields; rooms 5-10 differ only in
+ * `seam`, and rooms 5 and 8 in `persistence`). So every key is unchanged and
+ * the collision guard below still has nothing to choose between.
+ *
+ * ⚠ WHAT DOES CHANGE is which block rooms 5-10 are STAGED from: R9 slice 6
+ * re-recorded those tapes from the true-start chain's MEASURED LATCHES, so the
+ * survey now stages from the clock the chain really reaches rather than from
+ * R7's hand latch. Any tick count that moves because of it is a finding, not a
+ * regression — the run is published in the slice's as-built either way.
+ */
 const CAMPAIGN_TAPES = [
-    'r7-act2-1', 'r7-act2-2', 'r7-act2-3', 'r7-act2-4', 'r7-act2-5', 'r7-act2-6',
-    'r7-act2-7', 'r7-act2-8', 'r7-act2-9', 'r7-act2-10', 'r7-act2-11',
+    'r8-solve-1', 'r8-solve-2', 'r8-solve-3', 'r8-solve-4', 'r8-solve-5', 'r8-solve-6',
+    'r8-solve-7', 'r8-solve-8', 'r8-solve-9', 'r8-solve-10', 'r8-solve-11',
     'r8-d2-19', 'r8-d2-20',
 ];
 const bootKey = (level, x, y) => `L${level}@${x},${y}`;
@@ -462,8 +480,17 @@ for (const name of CAMPAIGN_TAPES) {
     COMMITTED_BY_ARRIVAL.set(key, name);
 }
 
-/** The staged construction: `r7-act2-11`'s block, re-pointed. R8 slice 8's own. */
-const STAGED_BASE = 'r7-act2-11';
+/**
+ * The staged construction: the campaign's post-sword latch. R8 slice 8's own.
+ *
+ * ⛓ R9 SLICE 7 — was `r7-act2-11`, retired by ⚖ ruling 14. `r8-solve-11` is the
+ * SAME LATCH: measured at slice 7's baseline, the two tapes' boot blocks are
+ * BYTE-EQUAL over all eleven fields (`boot`, `noclip`, `noDamage`, `noHazards`,
+ * `grants`, `persistence`, `equips`, `pins`, `save`, `rng`, `seam`). ⇒ every
+ * staged row below is constructed from the same numbers as before, out of a
+ * different file, and this re-point is PREDICTED to move nothing.
+ */
+const STAGED_BASE = 'r8-solve-11';
 
 /**
  * A staged row that ALREADY has a committed tape — the one place the staged
@@ -476,6 +503,19 @@ const STAGED_CROSSCHECK = new Map([[bootKey(18, 16, 32), 'r8-solve-18']]);
  * The KNOWN-ANSWER tape a row's tick count can be compared against — a
  * SOLVER tape for the same room from the same boot. Re-solving these is
  * agreement information, which is why they are in the survey at all.
+ */
+/**
+ * ⛓ R9 SLICE 7 — **THE KEY IS THE BOOT, NOT THE GOAL** (trap 503, paid here).
+ *
+ * Every entry is keyed on `bootKey(level, x, y)` — the position the route
+ * ARRIVES at — and NOT on the room or the errand. Two visits to one level are
+ * two different rows with two different boots and two different goals (L3 is
+ * visited twice on this route, L2 twice, L0 twice), so a lookup keyed on the
+ * LEVEL would hand a return leg the outbound room's answer and report the
+ * agreement as real. A lookup keyed on the STEP INDEX would mis-assign every
+ * row the moment an alternative leg added steps in the middle. The arrival
+ * position is the only key that is a fact about the game rather than about
+ * this table's ordering.
  */
 const KNOWN_ANSWERS = new Map([
     [bootKey(0, 80, 128), 'r8-solve-1'], [bootKey(2, 48, 32), 'r8-solve-2'],
@@ -493,7 +533,11 @@ function bootFor(step) {
     const tape = COMMITTED_BY_ARRIVAL.get(key);
     if (tape) {
         return {
-            kind: tape === 'r7-act2-1' ? 'true-start' : 'committed',
+            // ⛓ R9 slice 7: was `r7-act2-1`, retired by ⚖ ruling 14.
+            //   `r8-solve-1` is the same boot — `new Game(0, 80, 128)`,
+            //   empty save — measured BYTE-EQUAL over all eleven
+            //   boot-block fields against the tape it replaces.
+            kind: tape === 'r8-solve-1' ? 'true-start' : 'committed',
             source: tape,
             note: tape === 'r7-act2-1'
                 ? 'the TRUE GAME START — new Game(0, 80, 128), empty save'
