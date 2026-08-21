@@ -535,7 +535,8 @@ describe('⛓⛓⛓ the page-side chain table is CHECKED against PLAYTHROUGH_CHA
     });
 
     it('⛓ and the headline subject is the two segments the slice claims', () => {
-        expect(PAGE_CHAINS['r8-d2']).toEqual(['r8-d2-19', 'r8-d2-20']);
+        // ⛓ R9 slice 3: THREE segments — `r8-solve-18` promoted in front.
+        expect(PAGE_CHAINS['r8-d2']).toEqual(['r8-solve-18', 'r8-d2-19', 'r8-d2-20']);
     });
 });
 
@@ -568,13 +569,17 @@ describe('the ?tapes= codec', () => {
 describe('a chain HEADLINE is a legal member and expands', () => {
     it('expands a chain id to its segments, in order, and REPORTS that it did', () => {
         const got = expandSequence(['r8-d2']);
-        expect(got.names).toEqual(['r8-d2-19', 'r8-d2-20']);
-        expect(got.expansions).toEqual([{ from: 'r8-d2', to: ['r8-d2-19', 'r8-d2-20'] }]);
+        expect(got.names).toEqual(['r8-solve-18', 'r8-d2-19', 'r8-d2-20']);
+        expect(got.expansions).toEqual([{
+            from: 'r8-d2', to: ['r8-solve-18', 'r8-d2-19', 'r8-d2-20'],
+        }]);
     });
 
     it('leaves a plain tape name alone, and mixes the two', () => {
         const got = expandSequence(['some/tape.json', 'r8-d2']);
-        expect(got.names).toEqual(['some/tape.json', 'r8-d2-19', 'r8-d2-20']);
+        expect(got.names).toEqual([
+            'some/tape.json', 'r8-solve-18', 'r8-d2-19', 'r8-d2-20',
+        ]);
         expect(got.expansions).toHaveLength(1);
     });
 });

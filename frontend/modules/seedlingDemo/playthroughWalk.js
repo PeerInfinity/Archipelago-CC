@@ -1450,15 +1450,17 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
     }),
 
     /**
-     * ⛓⛓⛓ R8 SLICE 7 — **THE MACHINERY'S FIRST MULTI-SEGMENT STAGED CHAIN**.
+     * ⛓⛓⛓ R8 SLICE 7 — **THE MACHINERY'S FIRST MULTI-SEGMENT STAGED CHAIN**,
+     * and ⛓⛓⛓ R9 SLICE 3 — **THE SPLICE**: the honest L18 PREPENDED, so it is
+     * THREE segments and the chain no longer DECLARES its own front door.
      *
      * Every staged chain before this one is a single segment whose headline IS
      * its segment — an honest definition there, because "the same walk driven
-     * in one run" and the segment are the same tape. This one has TWO, so it
+     * in one run" and the segment are the same tape. This one has THREE, so it
      * exercises everything a one-segment chain never can: a HEADLINE that is a
-     * different recording, a CUT, the ENDS-MEET arithmetic (`864 + 781 =
-     * 1645`), a stream slice, and an INTERNAL SEAM that is a measured equality
-     * over all 46 signature rows.
+     * different recording, TWO CUTS, the ENDS-MEET arithmetic (`573 + 864 +
+     * 781 = 2218`), three stream slices, and TWO INTERNAL SEAMS that are
+     * measured equalities over all 46 signature rows.
      *
      * ⛔ THE CUT IS DECIDED BY PERSISTENCE, NOT GEOGRAPHY (trap 150). L19's
      * fight and the crossing it opens are ONE segment because a fight does not
@@ -1466,48 +1468,73 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
      * per-visit, so a cut between the kill and the stairs would boot a room
      * that has to be fought again.
      *
-     * ⛔ AND THE SUCCESSOR'S BOOT IS THE **GAME'S** LATCH. Two of the seam's
+     * ⛔ AND EVERY SUCCESSOR'S BOOT IS THE **GAME'S** LATCH. Two of the seam's
      * rows are `modelled: false` — `save.time` advances per `Game.update()`
      * including dead frames, and the RNG streams advance on draws no model
-     * line makes — so `solve-seedling-r8-d2-chain.mjs` drives segment 1
-     * through the WINDOWS channel and hands its `botSeam()` to
+     * line makes — so `solve-seedling-r8-d2-chain.mjs` drives segments 0 and 1
+     * through the WINDOWS channel and hands each `botSeam()` to
      * `segmentBootFromLatch`. A boot the model invented for those two would be
      * a number nobody measured.
      *
-     * ⚠ L18 IS NOT IN THIS CHAIN, and the reason is a measurement:
-     * `R8_D2_COMPLETE.trackA` records the strike schedule built, driven, and
-     * stopped by the room's south-west corner — and then the user's own
-     * correction, which the re-census confirms, says the wall was the
-     * CONSERVATIVE HAMMER DISC rather than the room. A room that refuses is
-     * REPORTED, never recorded (§11.10.1), so the chain begins at L19's own
-     * arrival from L18 and claims nothing about the room before it.
+     * ⛓⛓⛓ SEGMENT 0 IS `r8-solve-18`, **PROMOTED AND NOT RE-AUTHORED** (⚖ R8
+     * close option A, user 2026-08-11; R9 slice 3). R8's version of this
+     * comment said *"L18 IS NOT IN THIS CHAIN … a room that refuses is
+     * REPORTED, never recorded"*, and it was true when written: slice 7 built
+     * L18's strike schedule, drove it, and reported the room. Slice 8 then
+     * found the wall was its OWN INGREDIENT — the conservative hammer disc
+     * (trap 171), the 40-candidate scan bound it was hiding, and a kill lock
+     * with no writer — and the room solved. So the artifact existed, already
+     * recorded and byte-exact, before this chain wanted it. Duplicating it as
+     * an `r8-d2-18` would author a second tape with the same boot, the same
+     * goal list and the same walk; editing its `description` to SAY "segment
+     * 0" would spend a re-record licence on a word. ⇒ what changed is its
+     * RELATION, and a relation lives HERE.
      *
-     * ⚠ NO `clears` PROVENANCE ROWS, and the absence is a decision (§14.6a's
-     * two-sided equality is what would red if it were wrong): neither segment
-     * declares a timed v9 `at` clear. Every flag these walks write — `{19,0}`
-     * the boss, `{20,2}` the shield, `{20,0}` the shieldlock, `{20,4}` the
-     * buttonroom — is EARNED during the run, which is a different channel from
-     * a declared clear and needs no provenance because the run computes it end
-     * to end. `{20,1}`, the lock's own, is BANKED for the next build of L20
-     * rather than earned — `Lock.turnOff()`'s write is a permission about the
-     * run (§15.3.2) — and the walk leaves the room before there is one.
+     * ⛓⛓ ONE `clears` PROVENANCE ROW, and it arrived WITH the splice.
+     * `r8-solve-18` declares a timed v9 `{18,0}` at tick 385 — L18's
+     * `lock@144,112` is `tset -1`, so nothing but `Game.totalEnemies()`
+     * reaching zero opens it, and `createLevelRun` takes `persistence` AT
+     * CONSTRUCTION — and the re-derived headline, authored by the same
+     * `twoPassSolve` loop over all three goal lists, computes the SAME tick.
+     * `stagedClearFindings` demands provenance for both, two-sidedly.
+     *
+     * ⚠ EVERY OTHER FLAG THESE WALKS WRITE IS **EARNED**, not declared, and
+     * needs no provenance because the run computes it end to end: `{19,0}` the
+     * boss, `{20,2}` the shield, `{20,0}` the shieldlock, `{20,4}` the
+     * buttonroom. `{20,1}`, the lock's own, is BANKED for the next build of
+     * L20 rather than earned — `Lock.turnOff()`'s write is a permission about
+     * the run (§15.3.2) — and the walk leaves the room before there is one.
      */
     Object.freeze({
         id: 'r8-d2',
         kind: 'staged',
-        why: 'R8 slice 7: D2\'s last two rooms, driven by the live solver from the '
-            + 'campaign\'s own post-sword latch staged at L19\'s arrival from L18. '
-            + 'Segment 1 fights the ShieldBoss on a schedule DERIVED from '
+        why: 'R8 slice 7 + R9 slice 3: D2\'s last THREE rooms, driven by the live '
+            + 'solver from the campaign\'s own post-sword latch staged at L18\'s '
+            + 'arrival from L16. Segment 0 is the honest L18 (`r8-solve-18`, PROMOTED '
+            + 'not re-authored) — the kill-lock room crossed with `noDamage` retired, '
+            + 'zero hits and zero spinner contacts. Segment 1 fights the ShieldBoss on '
+            + 'a schedule DERIVED from '
             + '`shieldBossWindowFor`, takes the boss key and opens `bosslock@48,32` with '
             + 'the `keylock` verb; segment 2 takes the shield and crosses WESTWARD '
             + 'through `shieldlocknorm` (the `touch` verb, registered at last) -> '
             + '`buttonroom` -> `lock@32,80` -> the alcove -> L13.',
         headline: 'r8-d2',
-        segments: Object.freeze(['r8-d2-19', 'r8-d2-20']),
+        segments: Object.freeze(['r8-solve-18', 'r8-d2-19', 'r8-d2-20']),
         earns: Object.freeze([]),
-        clears: Object.freeze([]),
-        cuts: Object.freeze([864]),
-        endsAt: 1645,
+        clears: Object.freeze([Object.freeze({
+            level: 18, tag: 0, at: 385, source: 'model',
+            evidence: Object.freeze({
+                removedAt: 284,
+                fade: 101,
+                why: '`spinnerKillLockOpens`\'s removal (the second Spinner body leaves '
+                    + 'and `Game.totalEnemies()` reaches zero) plus '
+                    + '`activators.opensOnTick(0.01)`, the `Lock`\'s own fade — the same '
+                    + 'number `solve-seedling-r8-l18.mjs` computed for the standalone '
+                    + 'tape and the re-derived headline computes again',
+            }),
+        })]),
+        cuts: Object.freeze([573, 1437]),
+        endsAt: 2218,
     }),
 ]);
 

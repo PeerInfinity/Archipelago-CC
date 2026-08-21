@@ -55,9 +55,26 @@
  *   node scripts/procgen/solve-seedling-r8-battery.mjs            # write
  *   node scripts/procgen/solve-seedling-r8-battery.mjs --check    # verify byte-identical
  *
- * Then record the fixtures (the game is the only oracle):
+ * Then record the fixtures (the game is the only oracle) — ⛔ ALWAYS `--only=`.
+ * THE SEVEN LEG-ONLY ROOMS (R8 slice 2):
  *   node scripts/procgen/verify-seedling-bot-differential.mjs --win --record \
  *       --only=r8-solve-1,r8-solve-2,r8-solve-3,r8-solve-7,r8-solve-9,r8-solve-10,r8-solve-11
+ *
+ * ⛓ THE TWO SLICE-3b ROOMS (L4 and L6) HAVE THEIR OWN LINE, and until R9 slice
+ * 3 the repo carried NONE — which is how `r8-solve-4`'s drift survived three
+ * reports. This script WRITES all nine rows on every non-`--check` run, so a
+ * re-record that names only the drifted one is the only honest way to spend a
+ * licence on it:
+ *   node scripts/procgen/verify-seedling-bot-differential.mjs --win --record \
+ *       --only=r8-solve-4
+ *   node scripts/procgen/verify-seedling-bot-differential.mjs --win --record \
+ *       --only=r8-solve-6
+ *
+ * ⛔ AND `--check` RUNS AT EVERY CLOSE (R8 §18.9 lesson 3 / trap 169). The
+ * differential replays the ARTIFACT, so it cannot see that the artifact is no
+ * longer a walk its producer would author. Two claims, two instruments, both
+ * on the checklist. The published value is over **stdout only**:
+ *   node scripts/procgen/solve-seedling-r8-battery.mjs --check 2>/dev/null | md5sum
  */
 
 import { dirname, join } from 'node:path';

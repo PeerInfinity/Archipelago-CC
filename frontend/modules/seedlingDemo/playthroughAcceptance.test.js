@@ -1163,7 +1163,16 @@ describe('⚖ condition 1 — the staged arm does not touch custody chains', () 
         }
         // ⛔ AND SOME OF THEM REALLY DECLARE CLEARS — otherwise every row
         // above is the empty case (the silent-watcher law).
-        expect(withClears).toBe(2);
+        //
+        // ⛓ R9 slice 3: TWO -> THREE. `r8-d2` gained one when the splice put
+        // `r8-solve-18` in front of it — L18's kill lock is `tset -1`, so the
+        // clear its own walk earns has to be DECLARED at a computed tick and
+        // the chain has to carry the provenance for it. The pin is exact on
+        // purpose: a chain that gains or loses a timed clear should red here
+        // and be looked at, which is what happened.
+        expect(withClears).toBe(3);
+        expect(staged.filter((c) => (c.clears ?? []).length > 0).map((c) => c.id).sort())
+            .toEqual(['r8-battery-5', 'r8-battery-8', 'r8-d2']);
     });
 });
 

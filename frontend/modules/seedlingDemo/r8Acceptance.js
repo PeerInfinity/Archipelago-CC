@@ -2979,6 +2979,14 @@ export const R8_D2_COMPLETE = Object.freeze({
          * begins at L19's own arrival from L18. The boot is the same staged
          * post-sword latch either way; what changes is that the chain no
          * longer claims a room nobody solved.
+         *
+         * ⛓⛓⛓ SUPERSEDED AT R9 SLICE 3, AND THE RECORD IS KEPT RATHER THAN
+         * REWRITTEN. R8 slice 8 solved L18 honestly (the wall was the
+         * CONSERVATIVE HAMMER DISC, trap 171, not the room), and ⚖ the R8
+         * close ruled the splice R9's first act. `PLAYTHROUGH_CHAINS.r8-d2`
+         * now carries THREE segments — `r8-solve-18` promoted in front — with
+         * `cuts [573, 1437]` and `endsAt 2218`. This block stays as the
+         * statement R8 made ahead of its own work, which is what it is for.
          */
         segments: Object.freeze(['r8-d2-19', 'r8-d2-20']),
         boot: 'r7-act2-11\'s committed v8 block — the campaign\'s own post-sword latch — '

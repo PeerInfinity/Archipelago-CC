@@ -741,7 +741,10 @@ export const PAGE_CHAINS = Object.freeze({
     'r8-battery-10': Object.freeze(['r8-solve-10']),
     'r8-battery-11': Object.freeze(['r8-solve-11']),
     'r8-d2-shield': Object.freeze(['r8-solve-20']),
-    'r8-d2': Object.freeze(['r8-d2-19', 'r8-d2-20']),
+    // ⛓ R9 slice 3: the SPLICE. `r8-solve-18` is segment 0 — promoted, not
+    // re-authored (⚖ R8 close option A). `director.test.js` derives this whole
+    // table from `PLAYTHROUGH_CHAINS` and reds when the two disagree.
+    'r8-d2': Object.freeze(['r8-solve-18', 'r8-d2-19', 'r8-d2-20']),
 });
 
 /**
