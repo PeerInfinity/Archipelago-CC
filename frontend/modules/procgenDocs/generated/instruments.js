@@ -1348,6 +1348,7 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [
                 "arg",
                 "check",
+                "pick",
                 "refusalsAt",
                 "report"
             ],
@@ -1367,6 +1368,18 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "host"
+                },
+                {
+                    "how": [
+                        "pick"
+                    ],
+                    "name": "r8-d2-19"
+                },
+                {
+                    "how": [
+                        "pick"
+                    ],
+                    "name": "r8-d2-20"
                 }
             ],
             "oneLiner": "check-seedling-editor-sequence — A SEQUENCE OF TAPES, ON ONE GAME STATE.",
