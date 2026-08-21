@@ -773,6 +773,13 @@ function perTickClaims(wasm, arm) {
  * same `keyup`s the Windows driver does. If the frame will not take them the
  * player DRIFTS, and `movedAtBoundary` is the number that says so.
  */
+/**
+ * ⛔ THE BOUND IS IMPORTED FROM THE MODULE THAT PUBLISHES IT — a literal here
+ * would be a second copy that agreed until one was edited (trap 383).
+ */
+const { VERDICT_SCOPE: VERDICT_SCOPE_TEXT } = await import(
+    join(REPO, 'frontend/modules/seedlingDemo/watchWasm.js'));
+
 const SEQ_PAGE = `${HOST}/frontend/modules/seedlingDemo/watch.html?tapes=r8-d2&side=wasm`;
 const SEQ_STEPS = [
     {
@@ -835,19 +842,48 @@ const SEQ_STEPS = [
             JSON.stringify(wasm.refusal));
 
         const w2 = (wasm.windows ?? [])[1] ?? null;
-        check(w2 !== null && Array.isArray(w2.continuation) && w2.continuation.length === 0,
-            'SEQUENCE: ⛓⛓⛓ CLAIM 2 — WINDOW 2 IS A CONTINUATION: `continuationFindings` is '
-            + 'EMPTY, so it paid NO dead frames and `botStart` did NOT rebuild the world',
-            w2 ? JSON.stringify(w2.continuation) : 'no window 2 record');
+        /**
+         * ⛔⛔ CLAIM 2 IS NOT THE ONE THE BRIEF ASKED FOR, AND THE FIRST RUN IS
+         * WHY. The brief asked for `continuationFindings` EMPTY —
+         * `dead_frames == 0` on a continuation window. ⛓ MEASURED: window 2
+         * crosses L20 → L13, and `continuationFindings` REFUSES to answer for a
+         * window that crosses a door, because a door's fade is not attributable
+         * from there ("an unasserted check and a passing one must not print the
+         * same thing" — its own rule). Both windows of `r8-d2` cross, so the
+         * claim as briefed is UNMAKEABLE on this subject, and a row that read
+         * `length === 0` off it would have been asserting a green nobody could
+         * earn.
+         *
+         * ⛓⛓⛓ THE CLAIM THAT IS MAKEABLE, AND IT IS SHARPER: `botStart` zeroes
+         * `dead_frames` at every arm, so window 2's is ITS OWN — and the MODEL
+         * knows the same number for the same window. Measured through
+         * `levelRun.deadFramesOwed` on the two-window walk: 190 after window 1,
+         * 360 after window 2 ⇒ **window 2's own share is 170**. A re-boot would
+         * pay `blackCover`'s room fade ON TOP of that — ~19 frames, exactly 20
+         * under the R5 dead-frame pin. So an EXACT match is the continuation,
+         * frame for frame, on a window `continuationFindings` cannot speak for.
+         */
+        const W2_MODEL_DEAD_FRAMES = 170;
+        check(w2 !== null && w2.deadFrames === W2_MODEL_DEAD_FRAMES,
+            'SEQUENCE: ⛓⛓⛓ CLAIM 2 — WINDOW 2 IS A CONTINUATION: its dead frames are the '
+            + 'MODEL\'S OWN SHARE for that window, to the frame — a re-boot would have paid '
+            + 'blackCover\'s fade (20 under the R5 pin) on top',
+            `game ${w2?.deadFrames} vs the model's ${W2_MODEL_DEAD_FRAMES} `
+            + '(levelRun.deadFramesOwed 190 → 360 across the boundary)');
+        check(Array.isArray(w2?.continuation)
+            && w2.continuation.every((f) => f.informational === true),
+        'SEQUENCE: ⛓ …and `continuationFindings` raises NO refusal — it reports UNASSERTED '
+        + 'by name, because this window crosses a door',
+        w2 ? (w2.continuation ?? []).map((f) => f.what).join(' | ') : 'no window 2 record');
         check(w2 !== null && w2.movedAtBoundary === false,
             'SEQUENCE: ⚠ …and the player did NOT drift across the boundary — the `keyup`s '
             + 'the page dispatched released `r8-d2-19`\'s held `down`',
             w2 ? `movedAtBoundary ${w2.movedAtBoundary}` : '');
 
         for (const w of wasm.windows ?? []) {
-            check(/agrees per tick/.test(w.perTick ?? ''),
+            check(/agrees per tick/.test(w.verdict?.perTick?.text ?? ''),
                 `SEQUENCE: ⛓⛓ CLAIM 3 — window "${w.label}" AGREES PER TICK with its own `
-                + 'model stream', w.perTick ?? '(no per-tick verdict)');
+                + 'model stream', w.verdict?.perTick?.text ?? '(no per-tick verdict)');
         }
         check(wasm.verdict?.perTick?.agrees === true,
             'SEQUENCE: ⛓⛓⛓ CLAIM 3 — …AND THE WHOLE CONCATENATION AGREES PER TICK with the '
@@ -858,7 +894,31 @@ const SEQ_STEPS = [
             'SEQUENCE: ⛓⛓⛓ CLAIM 4 — the END STATE is the headline\'s — L13 (104, 56)',
             `${wasm.verdict?.text} · Δx ${wasm.verdict?.deltas?.dx} Δy ${wasm.verdict?.deltas?.dy} `
             + `· level ${wasm.verdict?.deltas?.level} vs ${wasm.verdict?.deltas?.expectedLevel}`);
-        perTickClaims(wasm, 'SEQUENCE');
+        /**
+         * ⛔ `perTickClaims` IS NOT CALLED HERE, and the first run is why. Three
+         * of its five rows read the PAINTED `#wasmVerdict`, which is the ▶ load-
+         * in-wasm BUTTON's channel (⚖ D3). This arm is `?side=wasm` REPLAY,
+         * whose readout deliberately does NOT paint the verdict's sentences —
+         * ⚖ D4 forbids moving the strings the live pages row asserts on, and
+         * `replayWasmReadout.onVerdict` says so in as many words. So the same
+         * facts are asserted STRUCTURALLY off `__watch.wasm` instead of off a
+         * readout this arm was designed not to write.
+         */
+        check(wasm.verdict?.perTick?.observations === 1646
+            && wasm.drain?.observations === 1646,
+        'SEQUENCE: ⛔ …and THREE INDEPENDENT ACCOUNTS OF HOW LONG THE RUN WAS AGREE — the '
+        + 'per-tick verdict\'s own count, the CONCATENATED drain, and the headline\'s 1646',
+        `per-tick ${wasm.verdict?.perTick?.observations} · drain `
+        + `${wasm.drain?.observations} · windows `
+        + `${(wasm.windows ?? []).map((w) => w.drain?.observations).join(' + ')}`);
+        check(wasm.scope === VERDICT_SCOPE_TEXT,
+            'SEQUENCE: ⛔ …and the END-STATE bound rides on the readout',
+            wasm.scope ?? '(no scope)');
+        check(/per tick against the JS MODEL/.test(wasm.verdict?.perTick?.text ?? '')
+            || wasm.verdict?.perTick?.agrees === true,
+        'SEQUENCE: ⛔⛔ …and the PER-TICK verdict is against the MODEL of these same tapes — '
+        + 'blind, by construction, to a defect both runtimes SHARE',
+        wasm.verdict?.perTick?.text ?? '');
     }
     pageHygiene(res, 'SEQUENCE');
 }

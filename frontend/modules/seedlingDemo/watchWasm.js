@@ -1140,6 +1140,20 @@ export async function shipToWasm(payload, host) {
         });
         state.stage = `finished${at}`;
         state.reached.push(`finished${at}`);
+        /**
+         * ⛓⛓⛓ THE WINDOW'S OWN DEAD FRAMES, AS A FIELD (R9 §10.12).
+         *
+         * `botStart` zeroes `dead_frames` at every arm, so this is THIS
+         * window's share — and it is the one number that can tell a
+         * continuation from a re-boot on a window that CROSSES A DOOR, where
+         * `continuationFindings` correctly refuses to answer (a door's fade is
+         * not attributable). The model knows the same number for the same
+         * window; a rebuild would add `blackCover`'s fade (20 under the R5
+         * dead-frame pin) on top of it. ⛔ A FIELD, not a sentence to regex
+         * (value ≠ echo, trap 269).
+         */
+        rec.deadFrames = st.dead_frames ?? null;
+        rec.ticks = st.tick ?? null;
 
         /**
          * ── ⛓⛓⛓ drain — ONCE PER WINDOW, AND ONLY ONCE ─────────────────
@@ -1218,6 +1232,21 @@ export async function shipToWasm(payload, host) {
     const whole = windows.length > 1
         ? concatDrains(drains, tickCounts)
         : drains[0];
+    /**
+     * ⛓ AND `state.drain` BECOMES THE WHOLE SEQUENCE'S, because the verdict
+     * beside it is. The ship row cross-checks the per-tick sentence's own count
+     * against this (three independent accounts of how long the run was), and a
+     * `drain` that described only the LAST window would make that check red on
+     * a run where nothing is wrong. Each window's own count stays on
+     * `windows[k].drain`.
+     */
+    if (windows.length > 1) {
+        state.drain = {
+            observations: whole.ticks.length,
+            reportedTransitions: drains.reduce(
+                (n, d) => n + ((d && d.transitions) ? d.transitions.length : 0), 0),
+        };
+    }
     const endState = verdictOf(expect ?? windows[windows.length - 1].expect,
         state.status, tolerance,
         { noExpectWhy: expectWhy, finalFrame: lastObservationOf(whole) });

@@ -1646,6 +1646,7 @@ async function walkSequence(params, lifetime, levelSource) {
                     refusals.map((f) => `${f.what} — ${f.detail}`).join('\n\n'));
             }
         }
+        const transitionsBefore = run ? run.transitions.length : 0;
         // eslint-disable-next-line no-await-in-loop
         const collected = collectRun(tapes[k], levelSource, k === 0 ? {} : { run });
         if (collected.error) {
@@ -1659,10 +1660,31 @@ async function walkSequence(params, lifetime, levelSource) {
             frames.push({ ...f, observation: { ...f.observation, t: offset + f.observation.t } });
             samples.push(collected.samples[i]);
         }
+        /**
+         * ⛔⛔ THE WINDOW'S OWN TRANSITIONS, SLICED AND REBASED — and the first
+         * Windows run of the ship row is what caught this (trap 436: a LIVE
+         * read versus a buffered stream, in its nastiest costume).
+         *
+         * `modelStreamOf` returns `finished.transitions`, which IS the run's
+         * OWN array — the same object, sequence-absolute and STILL GROWING. So
+         * window 1's "model stream" quietly acquired window 2's transition at
+         * t=1645 the moment window 2 crossed a door, and the per-window verdict
+         * refused by name: *"transitions[1].t (1645) is past the end of the
+         * stream (865 observations)"*. ⇒ each window takes the transitions its
+         * OWN span produced, by INDEX (so the boundary transition belongs to
+         * the window that made it and to no other), rebased to window-local
+         * ticks. The WHOLE sequence's stream keeps the absolute numbering,
+         * which is what its own verdict compares.
+         */
+        const mine = collected.finished
+            ? collected.finished.transitions.slice(transitionsBefore)
+                .map((t) => ({ ...t, t: t.t - offset }))
+            : [];
         perWindow.push({
             tape: tapes[k],
             label: names[k],
-            modelStream: modelStreamOf(collected),
+            modelStream: collected.finished
+                ? { ticks: [...collected.finished.ticks], transitions: mine } : null,
             modelStreamWhy: collected.finished ? null
                 : 'the JS model did not finish this window',
             expect: expectFromFrames(collected.frames),
