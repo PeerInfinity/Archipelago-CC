@@ -109,7 +109,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 21,
-            "count": 54,
+            "count": 55,
             "id": "probe"
         },
         {
@@ -164,12 +164,12 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 212,
+        "blockStyle": 213,
         "browser": 73,
         "cited": 64,
-        "files": 231,
+        "files": 232,
         "lineStyle": 19,
-        "withDocblock": 231,
+        "withDocblock": 232,
         "withFlags": 140
     },
     "dir": "scripts/procgen",
@@ -4363,6 +4363,18 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-seam-chain — ⚖ §6.2's MEASUREMENT.",
             "path": "scripts/procgen/probe-seedling-seam-chain.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-shortcut-grade.mjs",
+            "flags": [],
+            "oneLiner": "probe-seedling-shortcut-grade — ⛔⛔⛔ **WHY `SHORTENS` IS NOT REACHABLE ON SEEDLING, EVEN WITH THE `break` VERB REGISTERED.** R9 slice 4 (kickoff §3.5's generator half); the successor to arc 5 slice 5's `probe-rock.mjs`.",
+            "path": "scripts/procgen/probe-seedling-shortcut-grade.mjs"
         },
         {
             "argvHelpers": [

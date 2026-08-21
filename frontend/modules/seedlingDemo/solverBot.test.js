@@ -1000,9 +1000,21 @@ describe('⚖ slice 10: `solid:chest` — the corridor-blocking chest is COLLECT
      * in the game at all) — the claim "a kind/tag with no row is a refusal
      * that says so" must still have something that can make it false.
      */
+    /**
+     * ⛓ R9 SLICE 4 — `solid:breakablerock` LEFT THIS ROW, and the row is
+     * better for it. The rock was slice 10's second example of "a solid with no
+     * verb"; it has one now (`break`), so the claim keeps the example that is
+     * still true and that R8 slice 7 MEASURED: `sign@64,128` is a Solid at tile
+     * (4,8) in L19 with no verb in the game at all — the obstacle whose
+     * nearness to the aim once hid `bosslock@48,32`, which is why the frontier
+     * sorts actionable obstacles first.
+     */
     it('⛔ a solid with NO row still refuses by name — the claim is not widened', () => {
         expect(OBSTACLE_STRATEGIES['solid:sign']).toBeUndefined();
-        expect(OBSTACLE_STRATEGIES['solid:breakablerock']).toBeUndefined();
+        // ⛓ and the rock is the CONTROL for the same claim from the other
+        // side: a row that EXISTS resolves to a REGISTERED executor.
+        expect(OBSTACLE_STRATEGIES['solid:breakablerock']).toBe('break');
+        expect(STRATEGY_EXECUTORS.break).toBeTypeOf('function');
     });
 });
 

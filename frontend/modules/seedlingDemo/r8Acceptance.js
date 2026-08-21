@@ -1281,6 +1281,33 @@ export const R8_STRATEGY_EXECUTORS = Object.freeze({
             'the window: `activators.opensOnTick` over the row\'s own fade — 101 ticks '
                 + 'during which `receiveInput` is FALSE, so nothing is pressed and the '
                 + 'whole window is ONE span (trap 16)']),
+        /**
+         * ⛓⛓⛓ R9 SLICE 4 — the `break` verb, and it is the first executor
+         * whose whole effect is a WALL GOING AWAY. ⛔ It derives no MOMENT: a
+         * rock is STATIC, so unlike `kill`'s press arm there is no forecast to
+         * consult and no `previewWalk` per opportunity to pay for.
+         */
+        break: Object.freeze([
+            'the gate: `run.primaryWeapon` (`Player.useItem`\'s own switch) — a null '
+                + 'slot makes the press a SILENT no-op, so the verb refuses BY NAME '
+                + 'rather than swinging at nothing, and a non-sword weapon refuses '
+                + 'naming its own arm (a `ghostsword` press THROWS in `applyThrust`)',
+            'the second gate: `breakableRocks.rockBreaksUnder(rockType, inventory)` — '
+                + '`hit(_t)`\'s own `rockType <= (hasGhostSword ? 1 : 0)`, so a type-1 '
+                + 'rock under a plain sword refuses naming the GHOST SWORD as the next '
+                + 'work order',
+            'the stance: the LIVE POSITION when the swing already reaches from it '
+                + '(route step 12\'s L3 rock is the only non-lethal neighbour of a '
+                + 'one-cell arrival island), else a lattice ring cell within '
+                + '`presses.SLASH_REACH` whose `slashRect` overlaps the rock and whose '
+                + 'corridor PLANS',
+            'the facing: `slashFacingToward` — `presses.js`\'s numbering, NOT '
+                + '`FACING_KEYS`\' (see the helper\'s own docblock for the measured '
+                + 'mismatch and why it is not repaired here)',
+            'the wait: `breakableRocks.WAIT_AFTER_PRESS_TICKS`, the LEG\'s promise '
+                + 'rather than `HIT_TO_GONE_TICKS` — the animation\'s ±1 update-order '
+                + 'gap is exactly what the larger number covers, and '
+                + '`assertWaitCovers` is asked at the resolution']),
     }),
 
     /**
