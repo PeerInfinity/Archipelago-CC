@@ -17,8 +17,9 @@ import { LOAD_DEAD_FRAMES } from './swimSoundClock.js';
 import { BOOT_PRESWAP_FRAMES, SEAM_BOOT_SPEC } from './r7Acceptance.js';
 import { PLAYTHROUGH_CHAINS } from './playthroughWalk.js';
 import { loadTape } from './fixtures/index.js';
-import { runTape } from './tapeRunner.js';
+import { createTapeStepper, runTape } from './tapeRunner.js';
 import { atlasLevelSource } from './levelSource.js';
+import { BOOT_COST_FRAMES } from './watchWasm.js';
 
 const levelSource = atlasLevelSource();
 
@@ -164,6 +165,141 @@ describe('⛓⛓⛓ THE FREE ORACLE — the game latched every one of these', ()
         expect(sword.deadFrameSpans.find((s) => s.kind === 'ceremony').frames)
             .toBe(key.deadFrameSpans.find((s) => s.kind === 'ceremony').frames);
     });
+});
+
+/**
+ * ⛓⛓⛓ R9 SLICE 6 (⚖ ruling 15) — **THE MODEL'S RESUMED CLOCK IS ALREADY
+ * `declared + BOOT_COST_FRAMES`, AND THIS IS WHY (d′) HAS NO JS HALF.**
+ *
+ * Ruling 15 asks for one: *"the JS resume face applies the same `+bootCost` to
+ * the resumed run's `gameClock` at the boundary — or the model and the game
+ * disagree on the hammer phase in a spinner room."* Measured at the slice's
+ * pristine baseline, before a line was written: it is already there.
+ *
+ * The arithmetic, from this module's own two spenders. A staged run of tape k
+ * starts at `beginEntryTimeFromDeclared(D_k) = D_k + BOOT_PRESWAP_FRAMES` and
+ * then `levelRun.js:3109` spends `LOAD_FADE_FRAMES` before tick 0 ⇒ its first
+ * live tick reads `D_k + BOOT_COST_FRAMES`. A SEQUENCE is ONE `levelRun`, and
+ * the door crossing that ENDS window k − 1 goes through `enterWorld`, which
+ * spends `LOAD_FADE_FRAMES` for the new world (`levelRun.js:3400`) — so by
+ * `declaredSeamTimeAfter`'s own identity the resumed clock lands on exactly
+ * the same number.
+ *
+ * ⇒ the GAME is the side that is behind, because `Bot.as:1703` REWRITES
+ * `Main.time` to the declaration and then `botStart` does not rebuild, so it
+ * never pays the cost. `watchWasm.continuationTape` adds it there. A second
+ * bump here would put the model 21 AHEAD of the corrected game.
+ *
+ * ⛔ THE ROSTER IS DERIVED FROM `PLAYTHROUGH_CHAINS`, not listed (trap 495 and
+ * §11.9(3)): every multi-segment chain whose every segment declares a `seam`.
+ * A chain added tomorrow is measured tomorrow.
+ */
+describe('⛓⛓⛓ THE RESUMED CLOCK — (d′) has no JS half, and this is the measurement', () => {
+    const continuable = PLAYTHROUGH_CHAINS
+        .filter((c) => (c.segments ?? []).length > 1)
+        .filter((c) => c.segments.every((n) => loadTape(n).seam
+            && Number.isFinite(loadTape(n).seam.time)));
+
+    /** The director's own window loop, reduced to the one number it is about. */
+    const boundariesOf = (chain) => {
+        const out = [];
+        let run = null;
+        let offset = 0;
+        for (let k = 0; k < chain.segments.length; k += 1) {
+            const tape = loadTape(chain.segments[k]);
+            if (k > 0) {
+                out.push({
+                    chain: chain.id,
+                    boundary: `${chain.segments[k - 1]} -> ${chain.segments[k]}`,
+                    declared: tape.seam.time,
+                    live: run.gameTime,
+                });
+                // ⛔ THE SAME FOLD `watchViewer` DOES, and for the same reason:
+                //    a v9 timed row is the window's OWN clear, rebased into the
+                //    sequence's tick numbering (⚖ ruling 14's timed-row rule).
+                const forward = (tape.persistence ?? [])
+                    .filter((c) => c.at !== undefined)
+                    .map((c) => ({ ...c, at: c.at + offset }));
+                if (forward.length) run.addTimedClears(forward);
+            }
+            const stepper = createTapeStepper(tape, {
+                levelSource,
+                onTick: (t, state, held, r) => { run = r; },
+                ...(k > 0 ? { run } : {}),
+            });
+            let x = stepper.next();
+            while (!x.done) x = stepper.next();
+            offset += tape.tick_count;
+        }
+        return out;
+    };
+
+    /**
+     * ⛔⛔ AND THE BOUND IS THE INTERESTING HALF (a bounded sweep must NAME what
+     * it bounded). The multi-segment chains this sweep CANNOT measure are
+     * exactly the CUSTODY ones — `act2-the-sword`, and the campaign chain that
+     * joins it — because a custody chain's segment 1 is the TRUE INITIAL BOOT,
+     * which declares no `seam` at all: `new Game(0,80,128)` with an empty save.
+     * `createLevelRun` then refuses the clock BY NAME for the whole run
+     * (`clockRefusal` = "the boot block declares no `save.time`"), so every
+     * boundary on those chains reads `null` rather than a number.
+     *
+     * ⇒ the model cannot answer the clock for the true-start chain AT ALL, which
+     * is a fact about (d′)'s JS half twice over: there is nothing to bump, and
+     * nothing that reads it (`clock.now()` reaches only the spinner hammer, and
+     * the campaign's rooms have none).
+     */
+    it('the sweep names what it measures AND what it cannot', () => {
+        expect(continuable.map((c) => c.id)).toEqual(['r8-d2']);
+        expect(continuable.reduce((n, c) => n + c.segments.length - 1, 0))
+            .toBeGreaterThanOrEqual(2);
+        const custody = PLAYTHROUGH_CHAINS
+            .filter((c) => (c.segments ?? []).length > 1 && !continuable.includes(c));
+        expect(custody.map((c) => c.id)).toContain('act2-the-sword');
+        for (const c of custody) {
+            // ⛔ the reason, ASSERTED rather than asserted-about: segment 1
+            //    declares no clock, so the run has none.
+            expect(loadTape(c.segments[0]).seam?.time).toBeUndefined();
+        }
+    });
+
+    it('⛔ a chain booting the TRUE START reads `null` at every boundary, by name', () => {
+        const chain = PLAYTHROUGH_CHAINS.find((c) => c.id === 'act2-the-sword');
+        const rows = boundariesOf(chain);
+        expect(rows.length).toBe(chain.segments.length - 1);
+        expect(rows.map((r) => r.live)).toEqual(rows.map(() => null));
+    });
+
+    it.each(continuable.map((c) => ({ id: c.id, chain: c })))(
+        '$id: every boundary\'s resumed clock is `declared + BOOT_COST_FRAMES`',
+        ({ chain }) => {
+            const rows = boundariesOf(chain);
+            expect(rows.length).toBe(chain.segments.length - 1);
+            for (const r of rows) {
+                expect(`${r.boundary}: ${r.live}`)
+                    .toBe(`${r.boundary}: ${r.declared + BOOT_COST_FRAMES}`);
+            }
+        });
+
+    it('⛓ and the number is the ONE the game was measured to be short by — 21', () => {
+        // §13.6: three independent chains, `declared − live = 21` at every
+        // boundary after the first. Same constant, both sides, derived.
+        expect(BOOT_COST_FRAMES).toBe(LOAD_FADE_FRAMES + BOOT_PRESWAP_FRAMES);
+        expect(BOOT_COST_FRAMES).toBe(21);
+    });
+
+    it('⛔ MUTATION: a resumed clock that HAD been bumped would miss by exactly 21',
+        () => {
+            // The mutant ruling 15 asks for, priced without building it: adding
+            // `BOOT_COST_FRAMES` on the JS side puts every boundary 21 past the
+            // declaration the game (under (d′)) now lands on.
+            const chain = continuable.find((c) => c.id === 'r8-d2');
+            const rows = boundariesOf(chain);
+            for (const r of rows) {
+                expect(r.live + BOOT_COST_FRAMES).not.toBe(r.declared + BOOT_COST_FRAMES);
+                expect(r.live + BOOT_COST_FRAMES - r.declared).toBe(2 * BOOT_COST_FRAMES);
+            }
+        });
 });
 
 describe('the seam spec row the machinery earned', () => {

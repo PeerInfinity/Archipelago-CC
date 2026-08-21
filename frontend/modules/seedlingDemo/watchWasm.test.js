@@ -22,11 +22,14 @@ import { fileURLToPath } from 'node:url';
 import { gameVisibleTape } from './tapeFormat.js';
 import { loadTape } from './fixtures/index.js';
 import {
+    BOOT_COST_FRAMES,
     END_STATE_TOLERANCE, lastObservationOf, levelSetDisagreement, PER_TICK_SCOPE,
     perTickVerdictOf, remapStreamRooms, roomOfGeneratedLevel, stagesOf, VERDICT_SCOPE,
     verdictBlock, verdictLine, verdictOf, WASM_PAGE, WASM_STAGES, concatDrains,
     continuationTape,
 } from './watchWasm.js';
+import { LOAD_FADE_FRAMES } from './gameClock.js';
+import { BOOT_PRESWAP_FRAMES } from './r7Acceptance.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const source = (name) => readFileSync(join(HERE, name), 'utf8');
@@ -849,5 +852,104 @@ describe('⛓⛓⛓ the continuation projection — the rng strip, AFTER the adm
                 .slice(source('watchWasm.js').indexOf('rec.live = {'));
             expect(live.slice(0, 220)).toMatch(/blocks: live\.blocks/);
             expect(live.slice(0, 220)).toMatch(/blocksWhy: live\.blocksWhy/);
+        });
+});
+
+/**
+ * ⛓⛓⛓ R9 SLICE 6 (⚖ ruling 15, option (d′)) — **THE CLOCK, THE OTHER
+ * DIRECTION**: the one field a continuation window is handed MORE of.
+ *
+ * Slice 5's (d) moved the boundary refusal off `rng` and onto `seam.time` and
+ * measured what was left on three independent chains: declared − live = 21 at
+ * every boundary after the first, with every other seam row EQUAL (§13.6).
+ * `Bot.as:1703` writes `Main.time = seamTime` on a continuation too, and
+ * `botStart` then does NOT rebuild, so the walk starts without the fade its
+ * recording was made behind.
+ *
+ * ⛔ THE MUTANT THAT MAKES THIS A GATE: remove the bump and `boundary 2/3` of
+ * `?tapes=r8-d2` refuses on `seam.time` with declared 10213 against live
+ * 10192 — which is not a hypothetical, it is slice 5's own measurement, so no
+ * GPU is spent to see it again.
+ *
+ * ⛔ AND THERE IS NO JS COUNTERPART. `gameClock.test.js`'s resumed-clock sweep
+ * measures why: the model's clock is ALREADY `declared + BOOT_COST_FRAMES` at
+ * every boundary it can answer for.
+ */
+describe('⛓⛓⛓ (d′) — the continuation window is handed `seam.time + bootCost`', () => {
+    const seam = { time: 10213, day: 0, music: [1, 0] };
+    const tape = (over = {}) => ({
+        tape_version: 8, name: 'w', boot: { level: 20, x: 192, y: 64 },
+        tick_count: 3, inputs: [], persistence: [], grants: [], seam, ...over,
+    });
+
+    it('⛓ `BOOT_COST_FRAMES` is DERIVED from the two constants, never typed', () => {
+        expect(BOOT_COST_FRAMES).toBe(LOAD_FADE_FRAMES + BOOT_PRESWAP_FRAMES);
+        expect(BOOT_COST_FRAMES).toBe(21);
+        // ⛔ and the module does not spell the number anywhere: a literal 21
+        //    here would survive a physics edit that moved either constant.
+        const body = source('watchWasm.js');
+        expect(body.slice(body.indexOf('export function continuationTape')))
+            .not.toMatch(/\b21\b/);
+    });
+
+    it('⛔⛔ a continuation window\'s loaded tape declares `declared + bootCost`', () => {
+        const { tape: out, clockBumped } = continuationTape(tape());
+        expect(out.seam.time).toBe(10213 + BOOT_COST_FRAMES);
+        expect(clockBumped).toEqual({
+            declared: 10213, applied: 10234, bootCost: BOOT_COST_FRAMES,
+        });
+    });
+
+    it('⛓ …and NOTHING ELSE in the seam block moves — `time` is the only row', () => {
+        const { tape: out } = continuationTape(tape());
+        expect({ ...out.seam, time: undefined }).toEqual({ ...seam, time: undefined });
+    });
+
+    it('⛔ a ZERO `seam.time` STAYS ZERO — `Bot.as:1703` gates on `!= 0`', () => {
+        const { tape: out, clockBumped } = continuationTape(tape({
+            seam: { ...seam, time: 0 },
+        }));
+        expect(out.seam.time).toBe(0);
+        expect(clockBumped).toBe(null);
+    });
+
+    it('a tape that declares NO `seam` block is untouched, and says so', () => {
+        // ⚠ 110 of the 154 tapes on the roster are pre-v7; `r8-solve-1` — the
+        //   TRUE START, and window 1 of the campaign chain — declares none.
+        const { tape: out, clockBumped } = continuationTape(tape({ seam: undefined }));
+        expect(out.seam).toBeUndefined();
+        expect(clockBumped).toBe(null);
+    });
+
+    it('⛔ WINDOW 1 IS UNTOUCHED — `gameVisibleTape` keeps the declaration', () => {
+        expect(gameVisibleTape(tape()).seam.time).toBe(10213);
+    });
+
+    it('⛓ the bump COMPOSES with the rng strip and the timed-row withholding', () => {
+        const v9 = tape({
+            tape_version: 9,
+            rng: { seed: 5, split: false, cosmetic: 4, fp: 7 },
+            persistence: [{ level: 5, tag: 0, at: 427 }, { level: 8, tag: 1 }],
+        });
+        const { tape: out, rngStripped, forwardRows, clockBumped } = continuationTape(v9);
+        expect(out.seam.time).toBe(10213 + BOOT_COST_FRAMES);
+        expect(out.rng).toEqual({ seed: 0, split: false, cosmetic: 0, fp: 0 });
+        expect(out.persistence).toEqual([{ level: 8, tag: 1 }]);
+        expect(rngStripped).toEqual({ seed: 5, cosmetic: 4, fp: 7 });
+        expect(forwardRows).toEqual(['5:0@427']);
+        expect(clockBumped.applied).toBe(10234);
+    });
+
+    it('⛔ the bump happens AFTER the admission — the ORDER, in the page\'s own source',
+        () => {
+            const body = source('watchWasm.js');
+            const admit = body.indexOf('const found = continuationAdmission(w.tape, live');
+            const project = body.indexOf('k > 0 ? continuationTape(w.tape)');
+            expect(admit).toBeGreaterThan(0);
+            expect(project).toBeGreaterThan(admit);
+            // ⛔ and the admission is handed `w.tape` — the DECLARATION — not
+            //    the projected copy. Bumping first would admit a number nobody
+            //    declared.
+            expect(body.slice(admit, admit + 90)).toMatch(/continuationAdmission\(w\.tape/);
         });
 });

@@ -88,7 +88,26 @@ import {
  * vocabulary, and no third spelling of a boot block exists.
  */
 import { continuationAdmission, continuationFindings, refusalsOnly } from './director.js';
-import { segmentBootFromLatch } from './r7Acceptance.js';
+import { BOOT_PRESWAP_FRAMES, segmentBootFromLatch } from './r7Acceptance.js';
+import { LOAD_FADE_FRAMES } from './gameClock.js';
+
+/**
+ * ⛓⛓⛓ R9 SLICE 6 — **WHAT A FRESH BOOT SPENDS AND A CONTINUATION DOES NOT**
+ * (⚖ ruling 15, option (d′)). DERIVED, SUMMED ONCE, NEVER TYPED.
+ *
+ * `LOAD_FADE_FRAMES` (20) is the room fade `botStart` pays when it REBUILDS —
+ * twenty `Game.update()`s that skip `super.update()` while `blackCover` decays
+ * and still run `time += timeRate`. `BOOT_PRESWAP_FRAMES` (1) is the frame a
+ * boot spends in the OUTGOING world before the swap. Slice 5 measured their
+ * sum on three independent chains and got the same number every time: the
+ * continuation's clock was **21** behind its declaration at every boundary
+ * after the first (§13.6).
+ *
+ * ⛔ The two constants are IMPORTED and added here rather than written as
+ * `21`, so a physics edit that moves either one moves this with it — the
+ * ship gate's own CHAIN arm imports this export for the same reason.
+ */
+export const BOOT_COST_FRAMES = LOAD_FADE_FRAMES + BOOT_PRESWAP_FRAMES;
 
 /**
  * The build `watch.html` ships to.
@@ -238,10 +257,62 @@ export function stagesOf({ levelSet = null, windows = 1 } = {}) {
  * admission above has just asserted that those EQUAL the live set, so
  * `botStart`'s reset-then-apply is a no-op on the ledger.
  *
+ * ⛓⛓⛓ R9 SLICE 6, THE THIRD HALF (⚖ ruling 15, option (d′)) — **AND THE
+ * CLOCK GOES THE OTHER WAY: IT IS THE ONE FIELD A CONTINUATION IS HANDED MORE
+ * OF, NOT LESS.**
+ *
+ * Slice 5's (d) moved the boundary refusal off `rng` and onto `seam.time`, and
+ * measured the whole of what was left: declared − live = **21**, on three
+ * independent chains, with every other seam row EQUAL (§13.6). The mechanism
+ * is `Bot.as:1703` — `if (seamTime != 0) Main.time = seamTime` runs on a
+ * continuation too, and then `botStart` DOES NOT REBUILD (`:1722-1725`), so
+ * the walk begins without the `BOOT_COST_FRAMES` a fresh page pays before its
+ * tick 0. The recording the tape IS was made behind that fade.
+ *
+ * ⇒ the copy `botLoadTape` receives declares `seam.time + BOOT_COST_FRAMES`,
+ * so the write lands the walk on the phase its recording started from. By
+ * induction the segment's own latch then equals the SUCCESSOR's declaration
+ * and the next boundary admits under the same plain-equality rule.
+ *
+ * ⛔ AFTER THE ADMISSION, NEVER BEFORE — the same order (d) established one
+ * paragraph up. `continuationAdmission` compares the DECLARED value against
+ * the live world's and refuses by name; the bump is applied to the copy the
+ * GAME gets, and the assertion is untouched. Bumping first would be admitting
+ * a number nobody declared.
+ *
+ * ⛔ A ZERO OR ABSENT `seam.time` STAYS ZERO. `Bot.as:1703` gates on
+ * `seamTime != 0`, so 0 means "do not write the clock at all"; adding 21 to it
+ * would turn a tape that says nothing about the clock into one that sets it to
+ * 21. 110 of the 154 tapes on the roster are pre-v7 and declare no `seam` at
+ * all, and `r8-solve-1` — the TRUE START, and window 1 of the campaign chain —
+ * declares none either.
+ *
+ * ⛓ AND THE PAGE SAYS WHAT IT DID, as a FIELD: `clockBumped` carries
+ * `{declared, applied, bootCost}` beside `rngStripped`, for the same trap-269
+ * reason. A gate wanting the residual had to regex a finding's detail sentence
+ * for it until slice 5 published `live.blocks`; this is the other side of that
+ * pair.
+ *
+ * ⛔⛔ THERE IS NO JS-SIDE COUNTERPART, AND THAT IS A MEASUREMENT (§14.1).
+ * Ruling 15 asks for one — *"the JS resume face applies the same `+bootCost`
+ * to the resumed run's `gameClock` at the boundary"*. Measured at the pristine
+ * baseline, BEFORE this line was written: the model's resumed clock is ALREADY
+ * `declared + BOOT_COST_FRAMES` at every boundary (`r8-solve-18 → r8-d2-19`
+ * 9200 vs 9179, `r8-d2-19 → r8-d2-20` 10234 vs 10213), because a sequence is
+ * ONE `levelRun` and `enterWorld` spends `LOAD_FADE_FRAMES` at the door
+ * crossing that ENDS window k − 1 (`levelRun.js:3400`) while
+ * `beginEntryTimeFromDeclared` spent the pre-swap frame at the boot. The model
+ * never stopped paying the boot cost; the GAME did. A second bump on the JS
+ * side would put the model 21 AHEAD of the game this line has just corrected.
+ * `watchWasm.test.js` pins the equality so the next reader is answered by a
+ * test.
+ *
  * @param {object} tape a PARSED tape (window k > 0)
- * @returns {object} `{tape, rngStripped, forwardRows}` — `rngStripped` is
- *   `null` for a tape that declares no `rng` block at all (110 of the 154 on
- *   the roster); `forwardRows` is the timed rows that were NOT handed over
+ * @returns {object} `{tape, rngStripped, forwardRows, clockBumped}` —
+ *   `rngStripped` is `null` for a tape that declares no `rng` block at all
+ *   (110 of the 154 on the roster); `forwardRows` is the timed rows that were
+ *   NOT handed over; `clockBumped` is `null` for a tape whose `seam.time` is
+ *   absent or zero
  */
 export function continuationTape(tape) {
     const rows = tape.persistence ?? [];
@@ -252,15 +323,28 @@ export function continuationTape(tape) {
     const visible = gameVisibleTape(latchOnly);
     const declared = tape.rng ?? null;
     const forwardRows = forward.map((c) => `${c.level}:${c.tag}@${c.at}`);
-    if (!declared) return { tape: visible, rngStripped: null, forwardRows };
+    const declaredTime = visible.seam?.time;
+    const bumped = Number.isFinite(declaredTime) && declaredTime !== 0;
+    const clockBumped = bumped
+        ? {
+            declared: declaredTime,
+            applied: declaredTime + BOOT_COST_FRAMES,
+            bootCost: BOOT_COST_FRAMES,
+        }
+        : null;
+    const timed = bumped
+        ? { ...visible, seam: { ...visible.seam, time: clockBumped.applied } }
+        : visible;
+    if (!declared) return { tape: timed, rngStripped: null, forwardRows, clockBumped };
     return {
-        tape: { ...visible, rng: { ...declared, seed: 0, cosmetic: 0, fp: 0 } },
+        tape: { ...timed, rng: { ...declared, seed: 0, cosmetic: 0, fp: 0 } },
         rngStripped: {
             seed: declared.seed ?? 0,
             cosmetic: declared.cosmetic ?? 0,
             fp: declared.fp ?? 0,
         },
         forwardRows,
+        clockBumped,
     };
 }
 
@@ -1081,7 +1165,8 @@ export async function shipToWasm(payload, host) {
         const at = many ? ` ${k + 1}/${windows.length}` : '';
         const wLabel = w.label || `window ${k + 1}`;
         const rec = { index: k, label: wLabel, admission: null, verdict: null,
-            continuation: null, movedAtBoundary: null, rngStripped: null, forwardRows: [] };
+            continuation: null, movedAtBoundary: null, rngStripped: null, forwardRows: [],
+            clockBumped: null };
         state.windows.push(rec);
 
         if (k > 0) {
@@ -1228,9 +1313,15 @@ export async function shipToWasm(payload, host) {
          * the admission above has already asserted the declaration.
          */
         const projected = k > 0 ? continuationTape(w.tape) : { tape: gameVisibleTape(w.tape),
-            rngStripped: null, forwardRows: [] };
+            rngStripped: null, forwardRows: [], clockBumped: null };
         rec.rngStripped = projected.rngStripped;
         rec.forwardRows = projected.forwardRows;
+        /**
+         * ⛓⛓⛓ R9 SLICE 6 (⚖ ruling 15, (d′)) — `{declared, applied, bootCost}`
+         * for the window whose clock was moved, `null` for window 1 and for
+         * any window whose `seam.time` is absent or zero.
+         */
+        rec.clockBumped = projected.clockBumped;
         const loaded = bot('botLoadTape', JSON.stringify(projected.tape));
         if (loaded !== 'ok') return refuse(`tape${at}`, `botLoadTape: ${loaded}`, '');
         enter(`tape${at}`, 'the game accepted the tape');
@@ -1390,6 +1481,8 @@ export async function shipToWasm(payload, host) {
             rngStripped: r.rngStripped ?? null,
             /** ⛓ R9 slice 5: the walk's OWN clears, which the game must EARN. */
             forwardRows: r.forwardRows ?? [],
+            /** ⛓ R9 slice 6 (d′): the boot cost this continuation was handed. */
+            clockBumped: r.clockBumped ?? null,
         })),
     };
     state.verdict = v;

@@ -108,14 +108,28 @@ def main():
     # (`Bot.as:706-708`), so a window boundary at a level ARRIVAL costs no
     # frames at all.
     #
-    # ⚠⚠ AND A WINDOW AFTER THE FIRST MUST DECLARE NO `persistence` CLEARS.
+    # ⚠⚠ AND A WINDOW AFTER THE FIRST MAY DECLARE `persistence` CLEARS ONLY IF
+    # THEY ARE EXACTLY THE ONES THE LIVE WORLD ALREADY HOLDS.
     # `botStart`'s clear path is not additive: when `persistLevel.length > 0`
     # it first sets EVERY tag in EVERY level back to `true` and only then
-    # applies the declared list (`Bot.as:690-705`). A second window carrying
-    # even one clear would therefore WIPE every flag the player earned in the
-    # windows before it — every pickup's own `removed()` write, every
-    # kill-lock open. The empty list is load-bearing, not tidiness, and the
-    # boundary assert on `persistence_cleared` is what catches a breach.
+    # applies the declared list (`Bot.as:690-705`). A second window carrying a
+    # clear the live world does NOT hold would therefore WIPE flags the player
+    # earned in the windows before it — every pickup's own `removed()` write,
+    # every kill-lock open. A list that EQUALS the live set makes the whole
+    # reset-then-apply a no-op on the ledger, which is why a chain of solver
+    # segments — each of which declares the latch it inherits — is legal here.
+    #
+    # ⛓⛓⛓ R9 SLICE 6 — SO THE GUARD MOVED FROM PRE-FLIGHT TO THE BOUNDARY, and
+    # it got STRICTER rather than looser. The old rule ("declare nothing")
+    # refused the true-start campaign chain, whose every window after the first
+    # declares the set it inherits; it also could not catch a window declaring
+    # the WRONG non-empty set, because it never compared anything. The new rule
+    # reads `persistence_cleared` off the live game immediately before
+    # `botLoadTape` and refuses BY NAME on any difference — the same equality
+    # `director.continuationAdmission` asserts on the page, one process over.
+    # ⛔ v9 TIMED rows are excluded from the comparison and refused if the live
+    # world already holds one: a timed row is the walk's OWN clear (⚖ ruling
+    # 14's timed-row rule) and callers project them out before they get here.
     if bool(args.tape) == bool(args.tapes):
         raise SystemExit("pass exactly one of --tape or --tapes")
     release_codes = []
@@ -134,12 +148,6 @@ def main():
         release_codes = payload.get("releaseKeyCodes", []) if isinstance(payload, dict) else []
         if not isinstance(tapes, list) or not tapes:
             raise SystemExit("--tapes must be a non-empty JSON array (or {tapes: [...]})")
-        for i, t in enumerate(tapes[1:], start=1):
-            if t.get("persistence"):
-                raise SystemExit(
-                    f"window {i} ({t.get('name')}) declares persistence clears; "
-                    "botStart would reset EVERY flag in EVERY level first and "
-                    "erase what the earlier windows earned")
     else:
         with open(args.tape, "r", encoding="utf-8") as fh:
             tapes = [json.load(fh)]
@@ -224,6 +232,31 @@ def main():
                     # whole coast from walk speed is under 2 px.
                     page.wait_for_timeout(400)
                 before = bot_json(page, "botStatus") if wi > 0 else None
+                if wi > 0:
+                    # ⛔ THE BOUNDARY GUARD (see the --tapes note above). ASCII
+                    # only in anything printed or raised here: the Windows
+                    # console is cp1252.
+                    rows = tape.get("persistence") or []
+                    latch = {f"{r['level']}:{r['tag']}"
+                             for r in rows if r.get("at") is None}
+                    timed = {f"{r['level']}:{r['tag']}"
+                             for r in rows if r.get("at") is not None}
+                    held = {f"{r['level']}:{r['tag']}"
+                            for r in (before.get("persistence_cleared") or [])}
+                    if latch != held:
+                        raise RuntimeError(
+                            f"window {wi} ({label}) declares a persistence set that is "
+                            f"NOT the live world's: declared [{','.join(sorted(latch))}] "
+                            f"vs live [{','.join(sorted(held))}]. botStart resets EVERY "
+                            "flag in EVERY level before applying the declared list, so "
+                            "handing this over would erase what the earlier windows "
+                            "earned.")
+                    if timed & held:
+                        raise RuntimeError(
+                            f"window {wi} ({label}) declares a TIMED clear the live world "
+                            f"ALREADY holds: [{','.join(sorted(timed & held))}]. A timed "
+                            "row is the walk's own clear; handing it over would open the "
+                            "lock before the walk that opens it.")
                 loaded = evaluate_bot(page, "botLoadTape", json.dumps(tape))
                 if loaded != "ok":
                     raise RuntimeError(f"{label}: botLoadTape: {loaded}")
