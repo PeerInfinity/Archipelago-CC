@@ -275,10 +275,27 @@ function emit(path, json, what) {
 const budget = assertTapeWithinRuntimeBudget(tape, NAME);
 console.log(`## budget: ${budget.spans} span(s), ${Math.round(budget.bytes / 1024)} KB`);
 
+/**
+ * ⛓⛓⛓ R9 SLICE 6 — **HANDED OVER** (⚖ ruling 11; trap 169). This script's own
+ * description said what would happen to it: *"a staged boot is a DECLARATION,
+ * not a measured latch: this tape says 'L3 is solvable from this declared
+ * state', and ⚖ ruling 11's true-start chain is what will re-record it from a
+ * real one."* It did. `solve-seedling-r9-campaign.mjs` boots segment 12 from
+ * `r9-solve-11`'s MEASURED latch — a different derivation of the same file, and
+ * two producers writing one tape is trap 169's birthplace.
+ *
+ * ⛔ THE SCRIPT STAYS, and its claims stay green: it is the `break` verb's own
+ * witness (the rock is GONE from the run's live geometry, ONE `break` decision
+ * row, the persistence write attributed to the rock by name), and those are
+ * measurements about the VERB rather than about the artifact. What it no longer
+ * does is WRITE.
+ */
 mkdirSync(TRACES, { recursive: true });
-emit(join(TAPES, `${NAME}.json`), tapeJson(tape), NAME);
-emit(join(TRACES, `${NAME}.trace.json`),
-    `${JSON.stringify(out.trace, null, 4)}\n`, `${NAME} trace`);
+console.log(`\n## ${NAME}: SOLVED (${out.perTick.length} ticks) and NOT EMITTED — `
+    + 'r9-campaign segment 12 owns it now, booted from r9-solve-11\'s MEASURED latch '
+    + '(⚖ ruling 11). This script remains the `break` verb\'s witness.');
+void tapeJson;
+void emit;
 
 console.log(`\n## ${NAME}: ${out.perTick.length} ticks, ${hits} hit(s), ${deaths} death(s); `
     + `rock broken: ${broken.join(', ') || 'NONE'}`);

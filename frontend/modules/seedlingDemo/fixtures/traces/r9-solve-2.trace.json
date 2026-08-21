@@ -1,0 +1,44 @@
+{
+    "trace_version": 1,
+    "tape": "r9-solve-2",
+    "tick_count": 47,
+    "boot": {
+        "level": 2,
+        "x": 48,
+        "y": 80
+    },
+    "rows": [
+        {
+            "tick": 0,
+            "saw": {
+                "level": 2,
+                "x": 56,
+                "y": 88,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "reach-exit",
+                "aim": {
+                    "x": 56,
+                    "y": 24
+                }
+            },
+            "strategy": {
+                "verb": "walk",
+                "waypoints": 1
+            },
+            "path": [
+                {
+                    "x": 56,
+                    "y": 24
+                }
+            ],
+            "rejected": [],
+            "keys": [
+                "up"
+            ]
+        }
+    ]
+}

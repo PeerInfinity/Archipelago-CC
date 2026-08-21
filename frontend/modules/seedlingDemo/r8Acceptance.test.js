@@ -269,12 +269,17 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             // the hammer hit it takes knocks the same 80 ticks short of the
             // door — the pair's difference, visible in this ledger.
             'r8-hammer-arm',
+            // ⛓⛓ R9 slice 6's true-start chain: the HEADLINE enters every
+            // bridged room its segments do, and the LAST LEG is exposed at its
+            // L14 ARRIVAL — the tick the chain stops on, because route step 16
+            // refuses that room's camera band.
+            'r9-campaign', 'r9-solve-13',
         ]);
-        expect(out.exposed).toBe(11);
+        expect(out.exposed).toBe(13);
         expect(out.tapes).toEqual([
             'r7-act2-3', 'r7-act2-4', 'r7-act2-5', 'r7-act2-6', 'r7-act2-full',
             'r8-hammer-arm', 'r8-l6-bob-contact', 'r8-solve-3', 'r8-solve-4',
-            'r8-solve-5', 'r8-solve-6',
+            'r8-solve-5', 'r8-solve-6', 'r9-campaign', 'r9-solve-13',
         ]);
     });
 
@@ -323,6 +328,11 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'r8-solve-6': { tape: {}, levels: [6] },
             // ⛓ R8 slice 8's pair ARM, at its declared room.
             'r8-hammer-arm': { tape: {}, levels: [16] },
+            // ⛓ R9 slice 6's true-start chain and its last leg, at their
+            // declared rooms — L14 joins the synthetic bridged set below for
+            // the same reason L16 did.
+            'r9-campaign': { tape: {}, levels: [4, 5, 6, 14] },
+            'r9-solve-13': { tape: {}, levels: [14] },
         });
         expect(() => assertBridgeExposureIsMeasured(io)).toThrow(/right name with wrong rooms/);
     });
@@ -495,7 +505,9 @@ function syntheticExposureIo(rows) {
         // driven pair's ARM is declared exposed THERE — a mutation fixture
         // that could not represent a declared row would test a different
         // ledger from the one the real check reads.
-        bridgedLevels: () => new Set([4, 5, 6, 16]),
+        // ⛓ R9 slice 6: L14 joins for the same reason L16 did — the chain's
+        //   last leg is declared exposed THERE, at its ARRIVAL.
+        bridgedLevels: () => new Set([4, 5, 6, 14, 16]),
     };
 }
 

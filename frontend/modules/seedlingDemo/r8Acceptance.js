@@ -569,6 +569,34 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + 'the tape has left. ⚠ The LEVELS are the rooms with a BRIDGED body, '
                 + 'not the rooms the walk visits: L18 has spinners and no chaser.',
         }),
+        /**
+         * ⛓⛓⛓ R9 SLICE 6 — AND THE ASSERTION FOUND BOTH THE FIRST TIME THE
+         * SUITE RAN AFTER THE TRUE-START CHAIN LANDED, by name — the SIXTH slice
+         * this guard has caught in the act.
+         * ⛔ Neither is folded into `exposedTapes`: a prediction edited after
+         * its measurement is not a prediction.
+         */
+        Object.freeze({
+            name: 'r9-campaign', levels: Object.freeze([4, 5, 6, 14]), bobs: 6, ticks: 3470,
+            addedBy: 'R9 slice 6 (the true-start solver chain)',
+            why: 'the chain HEADLINE walks all fifteen rooms in one run, so it enters '
+                + 'every bridged room the segments do — L4\'s `bob@64,64`, L5\'s three '
+                + 'and L6\'s two — and drives each through the whole lifetime its '
+                + 'segment does. The same exposure as `r7-act2-full`, whose route it '
+                + 're-derives from the solver. ⚠ AND L14 IS THE FOURTH ROOM, which the '
+                + 'assertion named the first time it ran: the headline\'s last tick is '
+                + 'the L14 ARRIVAL, and L14 holds a bridged body the chain never walks '
+                + 'past — the same parked-arrival shape `r9-solve-13` has.',
+        }),
+        Object.freeze({
+            name: 'r9-solve-13', levels: Object.freeze([14]), bobs: 0, ticks: 74,
+            addedBy: 'R9 slice 6 (the true-start solver chain)',
+            why: '⛔ THE EXPOSURE IS THE ARRIVAL, NOT THE WALK. This leg is L13 → L14, '
+                + 'and L13 holds nothing bridged; it is the L14 ARRIVAL — the last '
+                + 'tick — that enters a bridged room. The chain STOPS there because '
+                + 'route step 16 refuses L14\'s camera band, so the room is entered and '
+                + 'never walked, which is the parked-mover shape `r8-solve-3` has.',
+        })
     ]),
 
     /**

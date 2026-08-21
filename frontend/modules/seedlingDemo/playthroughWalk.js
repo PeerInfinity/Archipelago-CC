@@ -1536,6 +1536,132 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
         cuts: Object.freeze([573, 1437]),
         endsAt: 2218,
     }),
+    /**
+     * ⛓⛓⛓ R9 SLICE 6 — **THE TRUE-START SOLVER CHAIN**, ⚖ ruling 11 (user,
+     * 2026-08-20): *"a sequence of tapes to play back our solutions from the
+     * beginning of the game … recorded from the solver, not constructed
+     * manually."*
+     *
+     * FIFTEEN SEGMENTS in sphere order, from `new Game(0,80,128)` with an empty
+     * save to the L14 arrival, and it is the roster's SECOND CUSTODY CHAIN and
+     * the FIRST one whose every segment is solver-authored. Every boot after
+     * the first is its predecessor's MEASURED LATCH — `botSeam()` at a
+     * `Game.begin()` entry, turned into blocks by `segmentBootFromLatch` — so
+     * `boot(k+1) == latch(k)` is an equality the GAME produced over all 46
+     * signature rows rather than a declaration anybody wrote.
+     *
+     * ⛔ WHAT IT REPLACED, AND WHY. `act2-the-sword` walks the same eleven
+     * rooms by HAND, and the census (R9 §13.3) measured that its solver
+     * counterparts stopped continuing at `r8-solve-5`: every successor from
+     * there declared a latch measured after a walk of a different length. The
+     * fix is a re-record from the measured latch, room by room — and the
+     * numbers COMPOUND, which is why `r8-solve-6`'s clock moved 346 rather than
+     * the census's pairwise 254.
+     *
+     * ⛔ IT STOPS AT L14 ON PURPOSE. Route-survey step 16 refuses L14's camera
+     * band, and a chain that walked past a refusal would be claiming a room
+     * nobody solved. The refusal IS the next work order.
+     *
+     * ⛓ `r9-solve-11` IS NOT `r8-solve-11`. Both take `chest@L11`; the battery's
+     * returns to L10 (its goals come from `act2-the-sword`'s own units) and this
+     * one leaves by `teleporter@32,0` to L3, which is the ROUTE's step 11.
+     */
+    Object.freeze({
+        id: 'r9-campaign',
+        why: '⛓⛓⛓ R9 slice 6 — the TRUE-START SOLVER CHAIN: every room of Seedling\'s '
+            + 'sphere order from the game\'s own boot to the L14 arrival, each segment '
+            + 'booting its predecessor\'s MEASURED latch, each walk derived by the live '
+            + 'solver from goals read out of the atlas. ⚖ Ruling 11. It is the first '
+            + 'chain to CREDIT the goal ledger from solver tapes.',
+        headline: 'r9-campaign',
+        segments: Object.freeze([
+            'r8-solve-1', 'r8-solve-2', 'r8-solve-3', 'r8-solve-4', 'r8-solve-5',
+            'r8-solve-6', 'r8-solve-7', 'r8-solve-8', 'r8-solve-9', 'r8-solve-10',
+            'r9-solve-11', 'r9-solve-3', 'r9-solve-2', 'r9-solve-0', 'r9-solve-13',
+        ]),
+        /**
+         * ⛓⛓⛓ THE FIRST GOAL-LEDGER ROWS A SOLVER CHAIN CREDITS. `R7_GOAL_LEDGER`
+         * has 41 rows and exactly two of them live in this chain's twelve rooms
+         * {0,2,3,4,5,6,7,8,9,10,11,13}; `chainGoalFindings` MEASURES both by
+         * asking whether the flag went NOT-HELD to HELD between a segment's own
+         * boot and its own latch, which a declaration cannot fake.
+         */
+        earns: Object.freeze(['sword@L10', 'chest@L11']),
+        /**
+         * ⛓⛓ THE TIMED CLEARS, WITH THE INSTRUMENT THAT MEASURED EACH — SIX
+         * ROWS FOR THREE CLEARS, because `stagedClearFindings` keys provenance
+         * on `{level,tag}@at` and a headline that walks every room in ONE run
+         * declares the same clear at a different tick from the segment that
+         * owns it. The segment rows carry the ORIGINAL measurement; the
+         * headline rows carry it REBASED, under the third source.
+         */
+        clears: Object.freeze([
+            Object.freeze({
+                level: 5, tag: 0, at: 427, source: 'model',
+                evidence: Object.freeze({
+                    removedAt: 326,
+                    fade: 101,
+                    why: '`chaserKillLockOpens`\'s removal (the third bob dies to the '
+                        + 'ceiling and `Game.totalEnemies()` reaches zero) plus '
+                        + '`activators.opensOnTick(RESPONDERS.lock.fade)`',
+                }),
+            }),
+            Object.freeze({
+                level: 5, tag: 0, at: 1157, source: 'model',
+                evidence: Object.freeze({
+                    removedAt: 1056,
+                    fade: 101,
+                    why: 'the HEADLINE\'s own run of the same room, 730 ticks into the '
+                        + 'chain — the same removal and the same fade, computed end to '
+                        + 'end by the model rather than rebased',
+                }),
+            }),
+            Object.freeze({
+                level: 8, tag: 0, at: 246, source: 'game',
+                evidence: Object.freeze({
+                    carriesAt: 246,
+                    absentAt: 245,
+                    why: 'the GAME\'s own `persistence_cleared`, by truncation — §11.4 '
+                        + 'REFUSES to compute a static `"Enemy"` body\'s arrow death, so '
+                        + 'the model may not substitute here',
+                }),
+            }),
+            Object.freeze({
+                level: 8, tag: 1, at: 645, source: 'game',
+                evidence: Object.freeze({
+                    carriesAt: 645,
+                    absentAt: 644,
+                    why: 'the second `SandTrap`, the same instrument — a boundary '
+                        + 'measured on both sides rather than a poll',
+                }),
+            }),
+            Object.freeze({
+                level: 8, tag: 0, at: 1974, source: 'transported',
+                evidence: Object.freeze({
+                    from: 'r8-solve-8', measuredAt: 246, offset: 1728,
+                    why: 'the headline walks L8 identically to `r8-solve-8` — asserted '
+                        + 'held set for held set for 247 ticks by the producer\'s own '
+                        + 'oracle guard — so this is that measurement, rebased',
+                }),
+            }),
+            Object.freeze({
+                level: 8, tag: 1, at: 2373, source: 'transported',
+                evidence: Object.freeze({
+                    from: 'r8-solve-8', measuredAt: 645, offset: 1728,
+                    why: 'the second `SandTrap`, the same transport — identical for 646 '
+                        + 'ticks',
+                }),
+            }),
+        ]),
+        /**
+         * ⛔ THE CUTS ARE THE HEADLINE'S OWN ARRIVALS, printed by
+         * `solve-seedling-r9-campaign.mjs` rather than typed here — the
+         * ends-meet arithmetic is what makes a CUT a measurement.
+         */
+        cuts: Object.freeze([183, 230, 475, 730, 1288, 1582, 1728, 2555, 2677, 2767,
+            2886, 3112, 3159, 3396]),
+        endsAt: 3470,
+    }),
 ]);
 
 /**
@@ -1631,7 +1757,8 @@ export function isPlaythroughSegment(name) {
  * what is on disk, derived, never a stored count.
  */
 export function assertChainsWellFormed(roster = fixtureNames()) {
-    const seen = new Set();
+    /** kind -> the segment names that kind has already claimed. */
+    const seen = new Map();
     const kinds = {};
     for (const chain of PLAYTHROUGH_CHAINS) {
         // ⛓ R8 slice 0: the kind is resolved FIRST, because two of the
@@ -1666,14 +1793,40 @@ export function assertChainsWellFormed(roster = fixtureNames()) {
                     + 'reports the same green as one that does.');
             }
         }
+        /**
+         * ⛓⛓⛓ R9 SLICE 6 — **UNIQUENESS IS PER KIND, WHICH IS WHAT THIS RULE'S
+         * OWN SENTENCE ALWAYS SAID.**
+         *
+         * The message reads *"a segment belongs to exactly one CUSTODY chain"*
+         * and the code compared across ALL of them. Nothing exercised the gap
+         * until now, because the one custody chain on the roster
+         * (`act2-the-sword`) walks `r7-act2-*` and the staged ones walk
+         * `r8-solve-*`. The true-start solver chain walks `r8-solve-1..10`,
+         * which the `r8-battery-N` chains ALSO name — and that is not
+         * ambiguity, it is two different claims about one artifact:
+         *
+         *   `r8-battery-6`  STAGED   — "this tape replays from the boot it
+         *                              DECLARES"; reports the ledger, credits
+         *                              nothing (`CHAIN_KINDS.staged`).
+         *   `r9-campaign`   CUSTODY  — "this tape's boot is its predecessor's
+         *                              MEASURED LATCH"; credits the ledger.
+         *
+         * ⛔ WHAT WOULD BE AMBIGUOUS IS TWO CUSTODY CLAIMANTS, because custody
+         * is what CREDITS `R7_GOAL_LEDGER` and two crediting chains would count
+         * one earning twice. That is still refused, by kind. A second STAGED
+         * claimant is refused too, for the symmetric reason: two per-segment
+         * verifications of one tape are the same claim spelled twice.
+         */
+        const seenOfKind = seen.get(kind) ?? new Set();
         for (const name of chain.segments) {
-            if (seen.has(name)) {
+            if (seenOfKind.has(name)) {
                 throw new PlaythroughError(
-                    `"${name}" appears in more than one chain; a segment belongs to `
-                    + 'exactly one custody chain or the chain claim is ambiguous');
+                    `"${name}" appears in more than one ${kind} chain; a segment belongs `
+                    + `to exactly one ${kind} chain or the chain claim is ambiguous`);
             }
-            seen.add(name);
+            seenOfKind.add(name);
         }
+        seen.set(kind, seenOfKind);
         // ⛔ The unit shapes are asserted HERE rather than at the planner,
         // because the planner runs on a developer's machine with a wasm
         // artifact staged and this runs on every CI sweep. A malformed

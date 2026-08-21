@@ -39,8 +39,8 @@
                     "why": "lock@48,112 carries `tset == -1` (`combat.KILL_LOCK_TSET`), so NO button in the game answers it — `checkEnemies()` opens it when `Game.totalEnemies()` reaches zero. A policy that went looking for a presser for THIS lock would find none and report the obstacle unresolvable (§12.8)."
                 },
                 {
-                    "option": "a PRESS arm against the bodies",
-                    "why": "the room's own ceiling is the weapon this rung uses; a press arm is a `KILL_ARM_POLICY` question and a refusal retired without a driven witness is trap 101."
+                    "option": "press a body",
+                    "why": "level 5 tracks NO live spinner bodies in this run, so there is no position to schedule a strike against — the press arm needs the body's position at the press, not its census cell (trap 157)."
                 }
             ],
             "keys": [

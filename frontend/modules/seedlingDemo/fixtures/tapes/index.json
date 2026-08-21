@@ -1346,6 +1346,41 @@
       "noHazards": []
     },
     {
+      "file": "r9-campaign.json",
+      "tickCount": 3470,
+      "bootLevel": 0,
+      "tapeVersion": 9,
+      "noHazards": []
+    },
+    {
+      "file": "r9-solve-0.json",
+      "tickCount": 237,
+      "bootLevel": 0,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "r9-solve-11.json",
+      "tickCount": 119,
+      "bootLevel": 11,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "r9-solve-13.json",
+      "tickCount": 74,
+      "bootLevel": 13,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "r9-solve-2.json",
+      "tickCount": 47,
+      "bootLevel": 2,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "r9-solve-3.json",
       "tickCount": 226,
       "bootLevel": 3,

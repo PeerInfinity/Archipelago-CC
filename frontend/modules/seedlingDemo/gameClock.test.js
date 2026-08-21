@@ -140,7 +140,15 @@ describe('⛓⛓⛓ THE FREE ORACLE — the game latched every one of these', ()
         // is what makes this row rather than the sweep the real gate.
         const withCeremony = seams.filter(({ from }) => runTape(loadTape(from), { levelSource })
             .deadFrameSpans.some((s) => s.kind === 'ceremony' || s.kind === 'help'));
-        expect(withCeremony.map((s) => s.from)).toEqual(['r7-act2-10', 'r8-d2-19']);
+        /**
+         * ⛓ R9 SLICE 6 — FOUR NOW, and every one is a room where the walk PICKS
+         * SOMETHING UP: the sword twice (`r7-act2-10` and its solver
+         * counterpart `r8-solve-10`, on two different chains) and a boss key /
+         * a chest. The list is DERIVED from `deadFrameSpans`, so a room added
+         * tomorrow joins it; it is pinned here because the count is the claim.
+         */
+        expect(withCeremony.map((s) => s.from))
+            .toEqual(['r7-act2-10', 'r8-d2-19', 'r8-solve-10', 'r9-solve-11']);
         for (const { from, to } of withCeremony) {
             const tape = loadTape(from);
             const run = runTape(tape, { levelSource });

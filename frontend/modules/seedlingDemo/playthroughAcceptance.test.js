@@ -1129,10 +1129,18 @@ describe('⚖ condition 1 — the staged arm does not touch custody chains', () 
     it('⛓ both committed CUSTODY chains produce exactly the phases-block findings', () => {
         const tapes = new Map();
         for (const name of fixtureNames()) tapes.set(name, loadTape(name));
-        const custody = PLAYTHROUGH_CHAINS.filter((c) => chainKind(c) === 'custody');
+        /**
+         * ⛓⛓⛓ R9 SLICE 6 — **THE SUBJECT IS THE CUSTODY CHAINS THAT CARRY A
+         * PHASES BLOCK**, which is what this arm is about, and it is derived
+         * rather than counted. `r9-campaign` is a CUSTODY chain with no walk at
+         * all — solver-authored end to end — so it is asked the PROVENANCE
+         * question instead, in the staged arm's own test below.
+         */
+        const custody = PLAYTHROUGH_CHAINS.filter((c) => chainKind(c) === 'custody'
+            && (c.clears ?? []).length === 0);
         // ⛔ THE POSITIVE COUNT FIRST: if no custody chain existed, every
         // assertion below would pass against nothing.
-        expect(custody.length).toBe(2);
+        expect(custody.map((c) => c.id)).toEqual(['toy-west-pair', 'act2-the-sword']);
         for (const c of custody) {
             const rows = witnessedClearFindings(c, tapes);
             expect(rows.length, c.id).toBeGreaterThan(0);

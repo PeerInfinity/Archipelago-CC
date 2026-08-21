@@ -382,6 +382,92 @@ check(JSON.stringify(forwardRows) === JSON.stringify(['5:0@1559', '8:0@2515', '8
 + "sequence's own tick numbering — the three `r7-act2-full` itself declares",
 JSON.stringify(forwardRows));
 
+// ══ 9b. THE TRUE-START SOLVER CHAIN, AS ONE SEQUENCE ════════════════════
+/**
+ * ⛓⛓⛓ R9 SLICE 6 (⚖ ruling 11) — **THE CHAIN THE CENSUS ASKED FOR, PLAYED.**
+ *
+ * Claim 9 above is the HAND chain's report; this is the SOLVER chain's claim,
+ * and the difference is what ruling 11 is about: every boot after the first is
+ * its predecessor's MEASURED LATCH, so the fifteen windows are one game the
+ * page steps from `new Game(0,80,128)` to the L14 arrival.
+ *
+ * ⛔ THE ORACLE IS THE HEADLINE PLAYED ALONE, exactly as claim 2's is — one
+ * tape, one staged run, no windows at all. A page that agreed with itself
+ * would be an echo (trap 269); this compares two different runs of the same
+ * walk, one of them stitched out of fifteen.
+ */
+const camp = await land('tapes=r9-campaign&side=js');
+const CAMP = PAGE_CHAINS['r9-campaign'];
+if (!camp.seq) {
+    check(false, 'CLAIM 9b — the true-start chain answered at all',
+        `${camp.status} — ${camp.detail}`);
+} else {
+    const campBoundaries = camp.seq.boundaries ?? [];
+    const campRefused = campBoundaries.find((x) => refusalsAt(x.admission).length > 0);
+    check(camp.seq.admitted === true && campRefused === undefined
+        && (camp.seq.windows ?? []).length === CAMP.length
+        && campBoundaries.length === CAMP.length - 1,
+    `⛓⛓⛓ CLAIM 9b — ALL ${CAMP.length} WINDOWS OF THE TRUE-START CHAIN STEP ON ONE `
+        + `GAME STATE, and all ${CAMP.length - 1} boundaries ADMIT`,
+    `${(camp.seq.windows ?? []).length} window(s), ${camp.seq.ticks} tick(s); `
+        + `${campBoundaries.length} boundary(ies); `
+        + `${campRefused ? `stopped at ${campRefused.label}` : 'nothing refused'}`);
+
+    const campOracle = runTapeToStream(tapeOf('r9-campaign'),
+        { levelSource: atlasLevelSource() });
+    const campMine = camp.seq.stream ?? [];
+    let campDiff = -1;
+    for (let i = 0; i < Math.max(campMine.length, campOracle.ticks.length); i += 1) {
+        if (JSON.stringify(campMine[i]) !== JSON.stringify(campOracle.ticks[i])) {
+            campDiff = i;
+            break;
+        }
+    }
+    check(campMine.length === campOracle.ticks.length && campDiff === -1,
+        '⛓⛓⛓ CLAIM 9c — …AND THE FIFTEEN WINDOWS PRODUCE THE HEADLINE STREAM, TICK '
+        + 'FOR TICK',
+        `page ${campMine.length} observation(s) vs the headline's `
+        + `${campOracle.ticks.length}; first differing tick ${campDiff}`
+        + (campDiff >= 0 ? ` — page ${JSON.stringify(campMine[campDiff])} vs headline `
+            + `${JSON.stringify(campOracle.ticks[campDiff])}` : ''));
+    check(JSON.stringify(campMine.at(-1)) === JSON.stringify(campOracle.ticks.at(-1)),
+        '⛓ CLAIM 9d — …AND IT ENDS EQUAL, at the L14 arrival',
+        `${JSON.stringify(campMine.at(-1))} vs ${JSON.stringify(campOracle.ticks.at(-1))}`);
+
+    /**
+     * ⛓⛓ THE FORWARD ROWS, REBASED — the three timed clears the chain's own
+     * segments declare, lifted into the sequence's numbering. ⛔ DERIVED from
+     * the tapes rather than typed: the expected list is each segment's own
+     * `at` plus the running sum of the tick counts before it, which is the
+     * same arithmetic `watchViewer` does and a different spelling of it.
+     */
+    const want = [];
+    let running = 0;
+    for (const name of CAMP) {
+        const t = tapeOf(name);
+        for (const c of (t.persistence ?? []).filter((x) => x.at !== undefined)) {
+            want.push(`${c.level}:${c.tag}@${c.at + running}`);
+        }
+        running += t.tick_count;
+    }
+    const campForward = campBoundaries.flatMap((b) => b.forwardRows ?? []);
+    check(JSON.stringify(campForward) === JSON.stringify(want),
+        '⛓⛓ CLAIM 9e — …and the FORWARD declarations are named per boundary, REBASED '
+        + 'into the sequence\'s own numbering — the three the HEADLINE itself declares',
+        `${JSON.stringify(campForward)} against ${JSON.stringify(want)}`);
+    /**
+     * ⛓⛓⛓ AND THE FREE ORACLE NOBODY WROTE FOR IT, the same one claim 9 has:
+     * those rebased ticks are EXACTLY what `r9-campaign` declares as its own
+     * v9 rows — a tape the producer emitted from a different derivation.
+     */
+    const headRows = (tapeOf('r9-campaign').persistence ?? [])
+        .filter((c) => c.at !== undefined).map((c) => `${c.level}:${c.tag}@${c.at}`);
+    check(JSON.stringify(campForward) === JSON.stringify(headRows),
+        '⛓⛓⛓ …and they are the HEADLINE\'s OWN declared rows, tick for tick — two '
+        + 'derivations, one answer',
+        `${JSON.stringify(campForward)} vs ${JSON.stringify(headRows)}`);
+}
+
 // ══ 10–11. THE WASM ARM, AS FAR AS A HEADLESS BROWSER CAN GO ═══════════
 /**
  * ⛔ HEADLESS STOPS AT ▶ Start, AND THAT IS THE LAW WORKING. The frame's own

@@ -282,6 +282,34 @@ for (const row of SLICE_3B_ROWS) {
     + 'rather than a relabelling');
 }
 
+/**
+ * ⛓⛓⛓ R9 SLICE 6 — **THE ROWS THIS SCRIPT NO LONGER AUTHORS, NAMED** (⚖ ruling
+ * 11; trap 169).
+ *
+ * `solve-seedling-r9-campaign.mjs` re-boots these rooms from their
+ * PREDECESSOR'S MEASURED LATCH — the state the running game reaches on the
+ * true-start chain — while every row below is authored from `r7-act2-N`'s
+ * COMMITTED STAGED BLOCK, which is a hand-chain declaration read off disk.
+ * Those are two different derivations of one file, and two producers writing
+ * one tape is trap 169's birthplace. ⇒ ownership MOVES; it is not shared.
+ *
+ * ⛔ THE DERIVATION ABOVE IS UNTOUCHED, and that is deliberate. `battery` still
+ * answers "which of `act2-the-sword`'s segments are leg-only", which is a claim
+ * about the HAND CHAIN and stays true; what changed is who writes the artifact.
+ * Filtering the derivation instead would erase the record of what was derived.
+ *
+ * ⚠ A ROW HERE IS STILL SOLVED AND STILL REPORTED — the solver-vs-hand table at
+ * the bottom keeps its line — it is simply not EMITTED. A handover that also
+ * stopped measuring would make "the campaign owns it" and "nobody checks it"
+ * print the same thing.
+ */
+const HANDED_TO_CAMPAIGN = Object.freeze({
+    6: 'r9-campaign segment 6 — booted from r8-solve-5\'s measured latch',
+    7: 'r9-campaign segment 7 — booted from r8-solve-6\'s measured latch',
+    9: 'r9-campaign segment 9 — booted from r8-solve-8\'s measured latch',
+    10: 'r9-campaign segment 10 — booted from r8-solve-9\'s measured latch',
+});
+
 const rows = [
     ...battery.map((segNo) => ({
         segNo, name: `r8-solve-${segNo}`, goals: goalsFor(segNo), provenance: null,
@@ -291,7 +319,17 @@ const rows = [
         provenance: null, slice3b: r.why,
     })),
     ...PROBE_ROWS,
-];
+].map((r) => ({ ...r, handedOver: HANDED_TO_CAMPAIGN[r.segNo] ?? null }));
+
+for (const [segNo, why] of Object.entries(HANDED_TO_CAMPAIGN)) {
+    console.log(`  segment ${segNo}: HANDED OVER to `
+        + `scripts/procgen/solve-seedling-r9-campaign.mjs — ${why}`);
+}
+check(`the handover names ${Object.keys(HANDED_TO_CAMPAIGN).length} row(s) this script `
+    + 'still SOLVES and no longer EMITS',
+rows.filter((r) => r.handedOver).length === Object.keys(HANDED_TO_CAMPAIGN).length,
+`[${rows.filter((r) => r.handedOver).map((r) => r.name).join(', ')}] — `
++ 'one producer per tape (trap 169)');
 
 mkdirSync(TRACES, { recursive: true });
 const summary = [];
@@ -328,9 +366,14 @@ for (const row of rows) {
         + `${row.provenance ?? ''}`
         + 'Authored by scripts/procgen/solve-seedling-r8-battery.mjs; trace sidecar in '
         + 'fixtures/traces/.';
-    emit(join(TAPES, `${row.name}.json`), tapeJson(tape, description), row.name);
-    emit(join(TRACES, `${row.name}.trace.json`),
-        `${JSON.stringify(out.trace, null, 4)}\n`, `${row.name} trace`);
+    if (row.handedOver) {
+        console.log(`   ⛓ ${row.name}: SOLVED (${out.perTick.length} ticks) and NOT `
+            + `EMITTED — ${row.handedOver}`);
+    } else {
+        emit(join(TAPES, `${row.name}.json`), tapeJson(tape, description), row.name);
+        emit(join(TRACES, `${row.name}.trace.json`),
+            `${JSON.stringify(out.trace, null, 4)}\n`, `${row.name} trace`);
+    }
     summary.push({
         name: row.name, solver: out.perTick.length, hand: committed.tick_count,
         rows: out.trace.rows.length, replans: out.replans,

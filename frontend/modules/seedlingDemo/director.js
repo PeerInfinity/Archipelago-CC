@@ -745,6 +745,14 @@ export const PAGE_CHAINS = Object.freeze({
     // re-authored (⚖ R8 close option A). `director.test.js` derives this whole
     // table from `PLAYTHROUGH_CHAINS` and reds when the two disagree.
     'r8-d2': Object.freeze(['r8-solve-18', 'r8-d2-19', 'r8-d2-20']),
+    // ⛓⛓⛓ R9 slice 6: the TRUE-START SOLVER CHAIN (⚖ ruling 11), fifteen rooms
+    // from `new Game(0,80,128)` to the L14 arrival. `director.test.js` derives
+    // this whole table from `PLAYTHROUGH_CHAINS` and reds when the two disagree.
+    'r9-campaign': Object.freeze([
+        'r8-solve-1', 'r8-solve-2', 'r8-solve-3', 'r8-solve-4', 'r8-solve-5',
+        'r8-solve-6', 'r8-solve-7', 'r8-solve-8', 'r8-solve-9', 'r8-solve-10',
+        'r9-solve-11', 'r9-solve-3', 'r9-solve-2', 'r9-solve-0', 'r9-solve-13',
+    ]),
 });
 
 /**
@@ -1164,8 +1172,25 @@ export function jsLiveEnvelope(run, bootPersistence, bootPins) {
      * filtered out of the boot fold below rather than trusted.
      */
     const applied = run.appliedTimedClears ?? [];
+    /**
+     * ⛓⛓⛓ R9 SLICE 6 — **AND THE BANKED WRITES BELONG HERE TOO**, which is the
+     * same sentence one class further along and the third time this family has
+     * been paid (trap 493).
+     *
+     * `levelRun.bankedClears` is `pendingEarnedClears`: the flags a
+     * `Lock.turnOff()` or a `Chest.open()` wrote, whose CONSEQUENCE this model
+     * defers to the next build of that level because a clear is a permission
+     * about a build. The GAME's flag array does not defer — `persistence_
+     * cleared` holds the write at once, and that array is what a successor
+     * tape's `persistence` block was read out of.
+     *
+     * ⚠ MEASURED: the true-start chain's boundary 11 refused `r9-solve-3` for
+     * declaring `{11,0}` — the chest `r9-solve-11` opens at tick 6. No chain
+     * before it had a window AFTER a chest open.
+     */
+    const banked = run.bankedClears ?? [];
     const bootLatch = (bootPersistence ?? []).filter((c) => c.at === undefined);
-    for (const c of [...bootLatch, ...run.earnedClears, ...outOfBand, ...applied]) {
+    for (const c of [...bootLatch, ...run.earnedClears, ...outOfBand, ...applied, ...banked]) {
         const k = `${c.level}:${c.tag}`;
         if (seen.has(k)) continue;
         seen.add(k);

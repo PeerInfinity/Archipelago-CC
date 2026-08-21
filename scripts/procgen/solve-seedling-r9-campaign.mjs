@@ -87,6 +87,7 @@
  */
 
 import { dirname, join } from 'node:path';
+import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -137,8 +138,23 @@ const check = (name, ok, detail) => {
  * for them would be a number nobody measured. ONE fresh-page run per segment,
  * on the artifact that will be committed.
  */
+/**
+ * ⛓ THE LATCH IS A PURE FUNCTION OF THE TAPE, so a re-run of this producer over
+ * an UNCHANGED segment must not spend the GPU again. The cache key is the md5
+ * of the exact bytes handed to the driver; a byte that moves invalidates it,
+ * which is the only property that makes reuse honest. ⛔ Cleared by deleting
+ * `/mnt/c/playwright/latch-*.json`.
+ */
 function latchOf(label, tapeObj) {
     mkdirSync(WIN_SCRATCH_WSL, { recursive: true });
+    const payload = JSON.stringify(gameVisibleTape(parseTape(tapeObj)));
+    const key = createHash('md5').update(payload).digest('hex').slice(0, 12);
+    const cached = join(WIN_SCRATCH_WSL, `latch-${label}-${key}.json`);
+    if (existsSync(cached)) {
+        console.log(`    ${label}: latch REUSED from ${key} (the tape's bytes are `
+            + 'unchanged, and a latch is a pure function of them)');
+        return JSON.parse(readFileSync(cached, 'utf8'));
+    }
     writeFileSync(join(WIN_SCRATCH_WSL, 'seedling-bot-replay-win.py'),
         readFileSync(WIN_DRIVER));
     const outWsl = join(WIN_SCRATCH_WSL, `stream-${label}.json`);
@@ -167,6 +183,7 @@ function latchOf(label, tapeObj) {
     console.log(`    drove ${label}: ${got.stream.ticks.length} observations, `
         + `${got.status.dead_frames} dead, ${((Date.now() - t0) / 1000).toFixed(0)}s`);
     if (!got.seam) throw new Error(`${label}: the driver returned no seam block`);
+    writeFileSync(cached, JSON.stringify(got.seam));
     return got.seam;
 }
 
@@ -442,7 +459,18 @@ for (let i = 0; !HEADLINE_ONLY && i < SEGMENTS.length; i += 1) {
         const t = parseTape(raw);
         results.push({ seg, run: null, out: { perTick: { length: t.tick_count } },
             boot: t.boot, state: stateOf(t), promotedRaw: raw, to: seg.to });
-        if (!CHECK && !last) carried = segmentBootFrom(seg.name, latchOf(seg.name, raw));
+        /**
+         * ⛔ AND A LATCH IS ONLY DRIVEN WHEN SOMETHING NEEDS IT. A PROMOTED
+         * successor reads its boot off its own committed tape, so measuring
+         * the predecessor's latch here would spend a browser run to learn a
+         * number nobody consumes. That the three promoted seams really do
+         * hold is MEASURED, not assumed — the census admits all three pairs on
+         * the JS tier and R9 §14.2's wasm prefix run admits `boundary 1/11`,
+         * `2/11` and `3/11` on the real game, `seam` and `rng` both.
+         */
+        if (!CHECK && !last && !SEGMENTS[i + 1].promoted) {
+            carried = segmentBootFrom(seg.name, latchOf(seg.name, raw));
+        }
         continue;
     }
     /**
@@ -458,17 +486,18 @@ for (let i = 0; !HEADLINE_ONLY && i < SEGMENTS.length; i += 1) {
         carried = { boot: committed.boot, state: stateOf(committed) };
     }
     const { boot, state } = carried;
-    const run = runFrom(boot, state);
-    const before = { hasSword: run.inventory.hasSword, seals: run.sealSlotsEarned ?? 0 };
+    let run = runFrom(boot, state);
+    const before = { hasSword: run.inventory.hasSword, seals: run.chestOpens.length };
     /**
      * ⛔ A ROOM WHOSE CLEAR THE MODEL MAY NOT COMPUTE GOES THROUGH THE TWO-PASS
      * LOOP, not `solveSegment` — L5's `{5,0}` is model-sourced and L8's
      * `{8,0}`/`{8,1}` are GAME-sourced (§11.4). Every other room has no timed
      * row at all and `solveSegment` is the whole answer.
      */
-    const needsTwoPass = (parseTape(JSON.parse(readFileSync(
-        join(TAPES, `${seg.name}.json`), 'utf8'))).persistence ?? [])
-        .some((c) => c.at !== undefined);
+    const committedPath = join(TAPES, `${seg.name}.json`);
+    const needsTwoPass = existsSync(committedPath)
+        && (parseTape(JSON.parse(readFileSync(committedPath, 'utf8'))).persistence ?? [])
+            .some((c) => c.at !== undefined);
     let out;
     let solvedPersistence = state.persistence;
     if (needsTwoPass) {
@@ -484,6 +513,14 @@ for (let i = 0; !HEADLINE_ONLY && i < SEGMENTS.length; i += 1) {
         });
         out = r.out;
         solvedPersistence = r.persistence;
+        /**
+         * ⛔ THE REPLAY RUN IS BUILT FROM THE **SOLVED** PERSISTENCE, not from
+         * the boot's. `createLevelRun` takes timed clears AT CONSTRUCTION, so a
+         * run staged before the loop derived `{5,0}@…` is a run that refuses
+         * the very kill lock the loop just declared — `undeclaredKillLock`,
+         * measured on the first launch of this path.
+         */
+        run = runFrom(boot, { ...state, persistence: solvedPersistence });
         for (const held of out.perTick) run.advance(held);
     } else {
         out = solveSegment({ run, goals: seg.goals, name: seg.name, boot });
@@ -500,7 +537,10 @@ for (let i = 0; !HEADLINE_ONLY && i < SEGMENTS.length; i += 1) {
             tick_count: out.perTick.length,
             inputs: buildTape(out.perTick, boot, seg.name,
                 { noclip: false, noDamage: false, noHazards: [], grants: [] }).inputs,
-            tape_version: 8,
+            // ⛓ DERIVED, never typed: a segment that carries a timed `at` row
+            //   is a v9 tape and `parseTape` refuses it under a v8 header —
+            //   which is how this line was found, on the first launch.
+            tape_version: solvedPersistence.some((c) => c.at !== undefined) ? 9 : 8,
         };
         carried = segmentBootFrom(seg.name, latchOf(seg.name, provisional));
     }
@@ -642,9 +682,15 @@ const goalLedgerRows = ['sword@L10', 'chest@L11'];
     check('⛓ segment 10 flips `hasSword` NOT-HELD -> HELD (the ledger\'s `sword@L10`)',
         sword?.before?.hasSword === false && sword?.run?.inventory.hasSword === true,
         `${sword?.before?.hasSword} -> ${sword?.run?.inventory.hasSword}`);
-    check('⛓ segment 11 gains a SEAL SLOT (the ledger\'s `chest@L11`)',
-        (chest?.run?.sealSlotsEarned ?? 0) > (chest?.before?.seals ?? 0),
-        `${chest?.before?.seals} -> ${chest?.run?.sealSlotsEarned}`);
+    // ⛔ `chestOpens` is the run's OWN ledger of chests it OPENED — one row per
+    //    open, which is what `goalEarnedWitness` reads as a seal slot gained.
+    //    `saveState.sealSlotsEarned` is a VIEW over the same array; the ledger
+    //    is the array, so the claim reads the array.
+    const opened = chest?.run?.chestOpens ?? [];
+    check('⛓ segment 11 OPENS the chest (the ledger\'s `chest@L11`)',
+        opened.length > (chest?.before?.seals ?? 0)
+            && opened.every((c) => c.level === 11),
+        `${chest?.before?.seals} -> ${opened.length}: ${JSON.stringify(opened)}`);
 }
 
 // ── emit ──────────────────────────────────────────────────────────────

@@ -1,0 +1,142 @@
+{
+    "trace_version": 1,
+    "tape": "r9-solve-11",
+    "tick_count": 119,
+    "boot": {
+        "level": 11,
+        "x": 32,
+        "y": 64
+    },
+    "rows": [
+        {
+            "tick": 0,
+            "saw": {
+                "level": 11,
+                "x": 40,
+                "y": 72,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "collect-placement",
+                "aim": {
+                    "x": 40,
+                    "y": 66
+                }
+            },
+            "strategy": {
+                "verb": "walk",
+                "waypoints": 1
+            },
+            "path": [
+                {
+                    "x": 40,
+                    "y": 66
+                }
+            ],
+            "rejected": [],
+            "keys": [
+                "up"
+            ]
+        },
+        {
+            "tick": 4,
+            "saw": {
+                "level": 11,
+                "x": 40,
+                "y": 67.90000000000002,
+                "vx": 0,
+                "vy": -0.8500000000000001,
+                "danger": []
+            },
+            "goal": {
+                "kind": "collect-placement",
+                "aim": {
+                    "x": 40,
+                    "y": 66
+                }
+            },
+            "strategy": {
+                "verb": "walk",
+                "waypoints": 1
+            },
+            "path": [
+                {
+                    "x": 40,
+                    "y": 66
+                }
+            ],
+            "rejected": [
+                {
+                    "option": "keep-plan",
+                    "why": "the previous corridor was refuted by the world (a blocked sweep or a stall); re-planned from the live position"
+                }
+            ],
+            "keys": [
+                "up"
+            ]
+        },
+        {
+            "tick": 13,
+            "saw": {
+                "level": 11,
+                "x": 40,
+                "y": 66.3,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "collect-placement",
+                "placement": {
+                    "x": 32,
+                    "y": 48
+                }
+            },
+            "strategy": {
+                "verb": "chest"
+            },
+            "obstacle": null,
+            "rejected": [
+                {
+                    "option": "collect",
+                    "why": "placement (32,48) resolves to chest@32,48 in `world.chests` — a chest is a Solid with a probe line, not a pickup volume, and `Chest.open()` is what spawns the thing to collect"
+                }
+            ],
+            "keys": []
+        },
+        {
+            "tick": 76,
+            "saw": {
+                "level": 11,
+                "x": 40,
+                "y": 66.3,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "reach-exit",
+                "aim": {
+                    "x": 40,
+                    "y": 8
+                }
+            },
+            "strategy": {
+                "verb": "walk",
+                "waypoints": 1
+            },
+            "path": [
+                {
+                    "x": 40,
+                    "y": 8
+                }
+            ],
+            "rejected": [],
+            "keys": [
+                "up"
+            ]
+        }
+    ]
+}

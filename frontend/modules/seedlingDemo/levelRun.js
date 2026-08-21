@@ -10686,6 +10686,43 @@ export function createLevelRun({
         get openChests() { return noclip ? null : (openChestIdsNow() ?? new Set()); },
         /** One record per chest OPENED, with the flag `open()` cleared. */
         get chestOpens() { return chestOpens.map((c) => ({ ...c })); },
+
+        /**
+         * ⛓⛓⛓ R9 SLICE 6 — **THE BANKED WRITES, AS A LEDGER** (trap 493, third
+         * slice running, and the third ledger this family has needed).
+         *
+         * `pendingEarnedClears` is what the NEXT BUILD of a level is handed:
+         * `Lock.turnOff()` and `Chest.open()` both run
+         * `Game.setPersistence(tag, false)`, and this model banks the
+         * CONSEQUENCE for the next visit because a clear is a PERMISSION about
+         * a build rather than a change to the room the player is standing in
+         * (§15.3.2's law).
+         *
+         * ⛔ BUT THE GAME'S FLAG ARRAY DOES NOT WAIT. `botStatus
+         * .persistence_cleared` holds the write the instant it is made, and
+         * that array is what a successor tape's `persistence` block was read
+         * out of. ⇒ a live cleared set built from `earnedClears` and
+         * `appliedTimedClears` alone is short exactly these rows, and the
+         * admission then refuses the next window BY NAME for a flag the game
+         * really did write — a true sentence about the wrong ledger, which is
+         * §13.2's finding one class over.
+         *
+         * ⚠ MEASURED, not anticipated: `r9-solve-11` opens `chest@32,48` at
+         * tick 6 and the true-start chain's boundary 11 refused `r9-solve-3`
+         * for declaring `{11,0}`. No chain before it had a window AFTER a
+         * chest open, which is why nothing saw this until fifteen segments
+         * existed.
+         *
+         * ⛔ A VIEW, NOT THE MAP. Handing the caller the live `Map` would let a
+         * reader empty the bank that `applyEarnedClears` consumes.
+         */
+        get bankedClears() {
+            const out = [];
+            for (const [lvl, tags] of pendingEarnedClears) {
+                for (const tag of tags) out.push({ level: lvl, tag });
+            }
+            return out;
+        },
         /**
          * One per completed seal ceremony. ⚠ `deadFrames` is the claim and
          * `t` is not: the ceremony costs the TAPE nothing, so the tick is

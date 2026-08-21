@@ -415,9 +415,22 @@ for (const row of ROWS) {
         + 'phases block and therefore an UPPER BOUND, and no re-record licence exists this '
         + 'rung. Authored by scripts/procgen/solve-seedling-r8-tail.mjs; trace sidecar in '
         + 'fixtures/traces/.';
-    emit(join(TAPES, `${name}.json`), tapeJson(tape, description), name);
-    emit(join(TRACES, `${name}.trace.json`),
-        `${JSON.stringify(r.out.trace, null, 4)}\n`, `${name} trace`);
+    /**
+     * ⛓⛓⛓ R9 SLICE 6 — **HANDED OVER, AND STILL MEASURED** (⚖ ruling 11; trap
+     * 169). `solve-seedling-r9-campaign.mjs` re-boots both of these rooms from
+     * their PREDECESSOR'S MEASURED LATCH on the true-start chain; this script
+     * authors them from `r7-act2-N`'s committed STAGED block. Two derivations
+     * of one file is two writers, so ownership MOVED.
+     *
+     * ⛔ WHAT DID NOT MOVE IS THE ORACLE, AND IT CANNOT: `makeGameOracle`'s
+     * binary search over truncated probe tapes is the ONLY thing in the repo
+     * that can ASK the game when a §11.4 death lands, and the campaign producer
+     * TRANSPORTS the answer it once produced rather than re-measuring it. ⇒ this
+     * script stays, `--game` stays, and `--write` is what it no longer does.
+     */
+    console.log(`   ⛓ ${name}: SOLVED (${r.out.perTick.length} ticks) and NOT EMITTED — `
+        + 'r9-campaign owns it now (⚖ ruling 11); this script remains the GAME-TICK '
+        + 'ORACLE for §11.4 rooms (`--game`)');
     summary.push({
         name, solver: r.out.perTick.length, hand: committed.tick_count,
         passes: r.passes.length, declarations: r.declarations,

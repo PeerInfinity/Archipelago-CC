@@ -178,11 +178,28 @@ export function witnessedClearFindings(chain, tapes) {
      * halves are DERIVED by mapping, so a row added tomorrow cannot go
      * unreported.
      *
-     * ⚠ SCOPED BY KIND. A custody chain never reaches this arm; its findings
-     * are byte-identical across this change and the tests assert that rather
-     * than assume it.
+     * ⛔⛔⛔ R9 SLICE 6 — **THE DISPATCH WAS KEYED ON THE KIND, AND THE KIND WAS
+     * A PROXY FOR THE AUTHORING METHOD.**
+     *
+     * R8 slice 5 wrote *"a custody chain never reaches this arm"* and it was
+     * true of the roster: `custody` meant `act2-the-sword`, hand-planned, with
+     * `phases` blocks; `staged` meant a solver tape with a `clears` row. ⚖
+     * Ruling 11 breaks the coincidence — `r9-campaign` is a CUSTODY chain
+     * (every boot is its predecessor's MEASURED latch, so it CREDITS the goal
+     * ledger) that is entirely SOLVER-AUTHORED and therefore has no walk and no
+     * phases block at all. Keyed on the kind, its three timed clears would be
+     * held to a witness that cannot exist, and the arm would demand a hand
+     * choreography from a chain whose whole claim is that there is none.
+     *
+     * ⇒ THE DISPATCH IS ON THE CARRIER THE CHAIN ACTUALLY DECLARES, which is
+     * what it always meant: a chain that carries `clears` is asked the
+     * PROVENANCE question (authored, checkable, two-sided), and a chain that
+     * carries `phases` blocks is asked the WITNESSED-OUTCOME question. The
+     * obligation is unchanged in both directions; only the question that fits
+     * the artifact is asked. ⛔ Neither is a licence: a chain that declares a
+     * timed clear and carries NEITHER carrier still reds, by name, below.
      */
-    if (chainKind(chain) === 'staged') {
+    if ((chain.clears ?? []).length > 0 || chainKind(chain) === 'staged') {
         return stagedClearFindings(chain, tapes);
     }
     // Each segment's start, in the WALK's own ticks — derived from the tape
@@ -304,6 +321,38 @@ export function stagedClearFindings(chain, tapes) {
                     + 'measured on both sides'
                 : `a game-sourced tick needs BOTH sides: carriesAt must be ${p.at} and `
                     + `absentAt ${p.at - 1}; got ${e.carriesAt} and ${e.absentAt}`;
+        } else if (p.source === 'transported') {
+            /**
+             * ⛓⛓⛓ R9 SLICE 6 — **A THIRD SOURCE, AND IT EXISTS BECAUSE THE
+             * SECOND ONE CANNOT BE FAKED.**
+             *
+             * A chain HEADLINE runs every room in ONE walk, so the clear a
+             * SEGMENT declares at its own tick 246 is the same clear the
+             * headline declares at 1974. The segment's row is `game`-sourced
+             * and has both sides of a real truncation behind it. The
+             * headline's does not: no 1974-tick truncation was ever driven,
+             * and writing `carriesAt: 1974, absentAt: 1973` would be declaring
+             * a measurement nobody took — the authoring law ("a latch the game
+             * will not give is never invented") one artifact over.
+             *
+             * ⇒ the honest row says what it IS: the SAME game measurement,
+             * REBASED by the segment's offset, and the arithmetic has to add
+             * up. What makes the rebase legal is asserted where it is made —
+             * `solve-seedling-r9-campaign.mjs`'s oracle refuses to transport a
+             * number unless the walk it is transporting into is byte-identical,
+             * held set for held set, to the walk it was measured on.
+             */
+            ok = Number.isFinite(e.measuredAt) && Number.isFinite(e.offset)
+                && typeof e.from === 'string' && e.from.length > 0
+                && e.measuredAt + e.offset === p.at;
+            detail = ok
+                ? `the SAME game measurement as ${e.from}'s own tick ${e.measuredAt}, `
+                    + `REBASED by this segment's offset ${e.offset} — and the walk it was `
+                    + 'transported into is byte-identical to the one it was measured on '
+                    + '(asserted by the producer, held set for held set)'
+                : 'a transported tick names the tape it was measured on, the tick it was '
+                    + `measured at and the offset, and must ADD UP: got from=${e.from}, `
+                    + `measuredAt=${e.measuredAt}, offset=${e.offset} against ${p.at}`;
         } else if (p.source === 'model') {
             ok = Number.isFinite(e.removedAt) && Number.isFinite(e.fade)
                 && e.removedAt + e.fade === p.at;
@@ -313,10 +362,11 @@ export function stagedClearFindings(chain, tapes) {
                 : `a model-sourced tick is removal + fade and must ADD UP: `
                     + `${e.removedAt} + ${e.fade} != ${p.at}`;
         } else {
-            detail = `"${p.source}" is not a tick source. The two are \`model\` (the run `
-                + 'computes the consequence end to end) and `game` (§11.4 refuses it, so '
-                + 'the GAME is asked) — and which one is allowed is a property of the '
-                + 'MECHANISM, not a choice.';
+            detail = `"${p.source}" is not a tick source. The three are \`model\` (the run `
+                + 'computes the consequence end to end), `game` (§11.4 refuses it, so the '
+                + 'GAME is asked by truncation) and `transported` (the SAME game '
+                + 'measurement, rebased into a headline that walks the identical room) — '
+                + 'and which one is allowed is a property of the MECHANISM, not a choice.';
         }
         rows.push({
             name: `chain ${chain.id}: ⛓ {${p.level},${p.tag}}@${p.at}'s evidence is `

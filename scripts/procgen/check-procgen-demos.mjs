@@ -249,7 +249,25 @@ try {
             `…and names a page this row knows how to READ`,
             READOUTS.has(entry.page) ? `${entry.page} → window.${READOUTS.get(entry.page)}`
                 : `${entry.page}; known: [${[...READOUTS.keys()].join(', ')}]`);
-        const readout = READOUTS.get(entry.page);
+        /**
+         * ⛓⛓⛓ R9 SLICE 6 — **THE CATALOGUE HOLDS PAGES OF MORE THAN ONE KIND
+         * NOW**, and the wait had one shape.
+         *
+         * Every row before the sequence one is a GENERATE page: it publishes a
+         * ladder readout and the pre-condition is "the ladder reached the step
+         * the URL names". `?tapes=` is the same page in a different arm — the
+         * DIRECTOR — and it publishes `__editorSequence` when the walk is done
+         * and a red `#status` when it stops. Waiting for a ladder step on it
+         * would time out at 300 s for a reason that is about the harness.
+         *
+         * ⇒ an entry may name its OWN readout and its own terminal condition
+         * (`readout` / `settled`). ⛔ The rule the ladder wait embodies is
+         * unchanged and is the reason this is an OPTION rather than a
+         * loosening: wait on the CLAIM'S OWN PRE-CONDITION, never on existence
+         * (trap 246), and make the condition terminal in BOTH directions so a
+         * refusal ends the wait instead of running out the clock.
+         */
+        const readout = entry.readout ?? READOUTS.get(entry.page);
         if (!readout || !entry.claim) continue;
         const q = new URLSearchParams(entry.url);
         const step = q.get('run') === '1' ? Number(q.get('count') ?? 0) : 0;
@@ -268,7 +286,14 @@ try {
         let waitError = null;
         try {
             // eslint-disable-next-line no-await-in-loop
-            await page.waitForFunction(([r, s]) => {
+            await page.waitForFunction(([r, s, own]) => {
+                if (own) {
+                    // ⛔ TERMINAL IN BOTH DIRECTIONS: the readout, or the page's
+                    //    own red status. A wait that only ever ended on success
+                    //    would report a refusal as a timeout.
+                    return window[r] !== undefined
+                        || document.getElementById('status')?.className === 'bad';
+                }
                 const o = window[r];
                 if (!o) return false;
                 if (o.fatal) return true;
@@ -276,12 +301,15 @@ try {
                 if (o.step !== s) return false;
                 const run = document.getElementById('genRunAll');
                 return !run || !run.disabled;
-            }, [readout, step], { timeout: 300000 });
+            }, [readout, step, Boolean(entry.readout)], { timeout: 300000 });
         } catch (e) { waitError = e.message; }
         // eslint-disable-next-line no-await-in-loop
         const state = await page.evaluate((r) => window[r] ?? null, readout);
         check(waitError === null,
-            `⛓ "${name}" — the page REACHED the state its URL names (step ${step})`,
+            entry.readout
+                ? `⛓ "${name}" — the page REACHED its own terminal readout `
+                    + `(window.${readout})`
+                : `⛓ "${name}" — the page REACHED the state its URL names (step ${step})`,
             waitError ?? '');
         check(errors.length === 0, '…with ZERO console errors and ZERO pageerrors',
             errors.join(' | '));
