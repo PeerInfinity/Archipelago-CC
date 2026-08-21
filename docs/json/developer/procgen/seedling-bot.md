@@ -11759,3 +11759,155 @@ local helper, carried as a ⚖ ask.
 (`check-seedling-wasm-pages.mjs --root=https://peerinfinity.github.io/Archipelago-CC`)
 — unmoved at slice 3's number, and worth running even though no ship path moved,
 because the roster the site's picker enumerates GREW by one tape.
+
+### Slice 5 — THE CONTINUATION MADE HONEST: (d), the TIMED-ROW rule, and the true-start census
+
+**⛓⛓⛓ (d) — THE rng STRIP HAPPENS AFTER THE ADMISSION.** ⚖ Ruling 12 (user,
+2026-08-20) and ruling 14 (2026-08-21). `watchWasm.continuationTape` composes
+`gameVisibleTape` and then zeroes `rng.seed` / `rng.cosmetic` / `rng.fp` on the
+copy `botLoadTape` receives, for **k > 0 only**. `continuationAdmission` is
+untouched — the declared stream position is still asserted, pre-vs-pre, against
+the live world's `beginEntry` reading at every boundary. It is simply no longer
+APPLIED to a game that is already running.
+
+The mechanism is slice 3's own finding (trap 492) read from the other end:
+`Bot.botStart` applies a stream position whenever it is non-zero
+(`Bot.as:1772`, `:1782`) and does so WITHOUT rebuilding (`:1722-1725`). On
+window 2 of `?tapes=r8-d2` that write rewound the live stream by exactly L19's
+build, and `boundary 2/3` refused. Nothing about the DECLARATION was wrong; the
+page was handing the game a fact about a fresh page.
+
+**⛔ `split` IS KEPT, AND IT IS NOT SYMMETRY.** `Rng.split` is a STATIC assigned
+UNCONDITIONALLY on every `botStart` (`Bot.as:1771`), so zeroing it would not be
+a no-op the way the three seeds are — it re-routes the cosmetic stream. A later
+window that declares a DIFFERENT `split` from window 1's is refused at TIER 1,
+in the picker, before a frame exists. ⛓ **The rule has a LIVE witness rather
+than only a mutant** (trap 475): of the 154 tapes on the roster, 110 carry no
+`rng` block at all and **two — `r6-owl-control`, `r6-owl-kill` — really declare
+`split: true`**. (The brief's "every tape declares `split: false`" was measured
+FALSE first; absent is read as false, because `botLoadTape` defaults the field.)
+
+The page says what it did: **`rngStripped`** per window carries the triple that
+was DECLARED, ASSERTED and NOT APPLIED, as a FIELD (trap 269) — `null` for
+window 1, because a fresh boot applies everything and must.
+
+**⛓⛓⛓ THE TIMED-ROW ADMISSION RULE.** ⚖ Ruling 14, refining slice 2's
+*"admitted iff it MATCHES"*: **a segment's declared persistence carries TWO
+different things, and the roster already marks which is which.**
+
+| kind | what it says | on a continuation |
+|---|---|---|
+| a LATCH row (untimed) | the world this window INHERITS | must MATCH, both ways |
+| a FORWARD declaration (a v9 TIMED row, `at`) | a clear this window's OWN WALK earns | must NOT be held yet |
+
+Latch equality cannot tell them apart, which is why slice 2 refused
+`r7-act2-5` for declaring `{5,0}` — exactly what it has to declare — and
+concluded the hand chain was *"not continuable past window 4 AS RECORDED"*.
+**No new tape field was needed.** Measured over all 154 tapes, seven carry
+timed rows and not one of them is a latch. ⇒ a timed row is excluded from latch
+equality, REFUSED BY NAME if the live world already holds it (*"the lock is
+open before the walk that opens it"*), REPORTED per boundary, and routed
+differently on the two sides:
+
+- **wasm** — `continuationTape` WITHHOLDS it. `gameVisibleTape` drops `at` and
+  KEEPS the row, which on a fresh page reproduces the recorded state and on a
+  continuation hands the clear AT BOOT — a ledger rebuild. The live game earns
+  it on its own tick.
+- **JS** — the model CANNOT compute it (`levelRun` refuses to compute a
+  kill-lock clear itself: *two writers of one persistence slot*), so the
+  resumed run RECEIVES it, REBASED by the window's offset, through one new
+  face: **`levelRun.addTimedClears`**. It refuses a row the world already holds
+  and a duplicate of one still pending. `createRunForStaging` is untouched and
+  there is no data path to the face — only a caller, in code, can pass rows.
+
+**⛔⛔ AND THE JS HALF NEEDED A THIRD LEDGER NOBODY HAD ASKED FOR.**
+`earnedClears` does not hold a row applied through `applyTimedClears` — that
+ledger answers *what the next BUILD of a level may be handed*, and the model
+computes no kill-lock clear at all. But the GAME's persistence ARRAY holds it
+the moment the tick numbered `at` begins, and that array is what the successor
+tape's `persistence` block was read out of. So the live envelope was short
+exactly those rows and boundary 5 would have refused on `{5,0}`: **a true
+sentence about the wrong ledger, for the second time in two slices** (the
+splice's out-of-band fold was the first). `levelRun` gains
+`appliedTimedClears`, the envelope folds it in, and window 1's own timed rows
+are excluded from the boot fold until their tick.
+
+**⛓⛓⛓ THE RESULT, HEADLESS:** `?tapes=act2-the-sword&side=js` steps **ALL
+ELEVEN WINDOWS with TEN BOUNDARIES ADMITTED**, and `act2-the-sword` is
+byte-untouched. Slice 2's named work order — *"a re-record without the forward
+declaration"* — was the wrong one; the fix was an ADMISSION RULE. ⛓ A free
+cross-check nobody wrote for it: the rebased ticks the chain produces —
+`{5,0}@1559`, `{8,0}@2515`, `{8,1}@3067` — are EXACTLY what the headline
+`r7-act2-full` declares, a tape recorded long before any of this existed.
+
+`jsLiveEnvelope` MOVED from `watchViewer.js` to `director.js` (the admission's
+home) and is re-exported: `watchViewer.js` touches `window` at module scope and
+cannot be imported in node, and the census has to ask the page's OWN question
+rather than a re-spelling of it (trap 383).
+
+**⛓⛓⛓ THE CAMPAIGN CENSUS — `census-seedling-campaign.mjs`.** ⚖ Rulings 11 and
+14. It walks the sphere-ordered solver roster, asks
+`director.continuationAdmission` PAIRWISE (window k from its OWN declaration,
+so a break at pair 4 does not blind the census to pairs 5..11), and publishes a
+FIX LIST with the number each re-record must produce.
+
+```
+ 1→2  2→3  3→4        CONTINUE            7→8, 9→10  CONTINUE pairwise
+ 4→5  NEEDS RE-RECORD  seam.time 5609 vs declared 5701  (Δ+92)
+ 5→6  NEEDS RE-RECORD  seam.time 6279 vs declared 6533  (Δ+254)
+ 6→7  NEEDS RE-RECORD  seam.time 6847 vs declared 6908  (Δ+61)
+ 8→9  NEEDS RE-RECORD  seam.time 7921 vs declared 8184  (Δ+263)
+10→11 NEEDS RE-RECORD  seam.time 8587 vs declared 8586  (Δ−1)
+11→r9-solve-3  ⛔ REFUSED on LEVEL and CTOR — ends L10 (48,32), boots L3 (96,128)
+ tail: r8-solve-18 → r8-d2-19 → r8-d2-20 CONTINUES throughout (2218 ticks, end L13)
+```
+
+**⛔⛔ AND THE BIGGEST ROW IS NOT A RE-RECORD AT ALL.** `r8-solve-11` is the
+BATTERY's segment 11: its goal is the CHEST at L11 and it exits BACK to L10, in
+87 ticks. The ROUTE's step 11 is `reach-exit(teleporter@32,0 → L3)`, which the
+survey already SOLVES at **119 ticks**. ⇒ the true-start chain is missing a
+segment nobody has recorded, the solver can produce it today, and **the gap
+count is FOUR, not three** (step 11's route leg · steps 13/14/15 at 47 / 237 /
+74 t). The chain's honest stop is unchanged: **L14's camera band**.
+
+⚠ The survey's `KNOWN_ANSWERS` map is what hid it — it points step 11 at
+`r8-solve-11` as *"the known-answer tape a row's tick count can be compared
+against"*, which is agreement information about a BOOT and never a claim that
+the committed tape satisfies the route's GOAL. Nothing said otherwise; nothing
+had asked.
+
+**⛔ EVERY COUNT NAMES ITS BOUND.** The JS tier leaves `rng` and `seam`
+UNASSERTED BY NAME at every boundary. And **no tape declares `save.time`** —
+the game clock is `seam.time` — so on this tier the drift is caught only by the
+free `gameClock` ORACLE and is an oracle row, never a refusal. The census says
+so per row. ⚠ The oracle is fed a **STAGED** walk's dead frames, never the
+continuation's: a staged walk pays the boot fade (`LOAD_FADE_FRAMES` = 20) and
+the declared latch it is compared against was measured after a fresh-page
+replay that paid the same fade, so an oracle fed the continuation's would
+report every boundary of `act2-the-sword` — measured exact in all ten — as
+short by exactly that fade.
+
+**⚖ RULING 13's ROCK-EXPOSURE REPORT, ANSWERED: NO CHAIN ROOM MOVES.**
+
+| walk | room | rocks | answer |
+|---|---|---|---|
+| `r8-solve-3` (step 3, L3 out) | L3 | 2 | PRE-SWORD — no claim is makeable |
+| `r9-solve-3` (step 12, L3 return) | L3 | 2 | **REQUIRED, NOT A SHORTCUT** — the rock CUTS the room, so the break is a cost the walk already spends (15 tiles vs a refusal) |
+| survey step 13 (L2) | L2 | **0** | THE AXIS REACHES NOTHING HERE (trap 475), named |
+| survey step 14 (L0) | L0 | 3 | **21 tiles either way** |
+
+⇒ the chain re-record goes AHEAD and shortening follows under its own licence.
+The probe is SCRATCH and reuses the planner's own per-visit `brokenRocks`
+family, so the shipped planner is byte-untouched; both arms treat every
+teleporter volume as already-contacted, identically, so the two lengths differ
+only in the rocks.
+
+**⛓ THE GATE MOVES.** `check-seedling-editor-sequence` 20 / 0 → **21 / 0**, and
+claim 9's pin moves from *"stopped at r7-act2-5 after 5 window(s)"* to *"11
+window(s) stepped; 10 boundary(ies) admitted"* — the old answer kept in the
+comment as the mutant's value. The ship gate's CHAIN arm is rewritten from
+*asserts the refusal* to six claims (both boundaries admitted · nothing refused
+· `rngStripped` per window · three per-tick agreements · the whole
+concatenation · every window's dead-frame share equal to the model's), every
+count DERIVED from the chain and the tapes rather than typed (trap 495).
+⛔ **This slice moves NO tape, trace, expectation or generator default.**

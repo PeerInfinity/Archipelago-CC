@@ -90,7 +90,9 @@ describe('⛓⛓ the anchors — two readers, 607 headings, one answer', () => {
         //   capture was taken BEFORE the commit that wrote the § — slice 1's
         //   own lesson ("take the AFTER capture after the LAST commit that can
         //   move it") paid a second time, one artifact over.
-        expect(total).toBe(622);
+        // ⛓ 622 → 623: R9 slice 5's § (the continuation made honest — (d), the
+        //   timed-row rule, and the true-start census).
+        expect(total).toBe(623);
     });
 
     it('⛔ uses OUR rule, not marked\'s slugger — they differ, and here is where', () => {
@@ -253,9 +255,10 @@ describe('⛓ the biggest document — the one the budget is about', () => {
         // ⚠ 393 → 394: the per-tick slice's § in ▶ LOAD IN WASM. Same re-pin.
         // ⚠ 407 → 408: R9 slice 3's § — the splice + the drift.
         // ⚠ 408 → 409: R9 slice 4's § — the derived `break` verb.
+        // ⛓ 409 → 410: R9 slice 5's § — the continuation made honest.
         const ids = idsOf(RENDERS.get('seedling-bot.md').html);
-        expect(ids).toHaveLength(409);
-        expect(new Set(ids).size).toBe(409);
+        expect(ids).toHaveLength(410);
+        expect(new Set(ids).size).toBe(410);
         expect(ids.filter((i) => i !== ghSlug(i))).toEqual([]);
     });
 

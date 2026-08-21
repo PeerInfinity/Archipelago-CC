@@ -86,7 +86,7 @@ Headless equivalents of everything the pages do live in `scripts/procgen/`. The 
 
 **233 instruments** live in `scripts/procgen/`, by prefix: `probe-` 55 (21 browser) · `verify-` 49 (30 browser) · `plan-` 33 (1 browser) · `check-` 26 (20 browser) · `census-` 12 · `dump-` 6 · `solve-` 6 · `sweep-` 6 · `make-` 5 · `recon-` 5 · `region-` 5 · `generate-` 4 · `extract-` 3 · `attribute-` 2 · `audit-` 2 · `export-` 2 (1 browser) · `batch-` 1 · `build-` 1 · `find-` 1 · `harvest-` 1 · `measure-` 1 · `mine-` 1 · no prefix 1 · `prove-` 1 · `run-` 1 · `show-` 1 · `stamp-` 1 · `survey-` 1.
 
-73 of them drive a real browser; 141 accept at least one `--flag`; 66 are cited by one of these documents; and 0 open with no comment at all.
+73 of them drive a real browser; 141 accept at least one `--flag`; 67 are cited by one of these documents; and 0 open with no comment at all.
 
 One row each — the one-liner from the file's own docblock, the flags it reads out of `argv`, whether it needs a browser, and which document cites it — is on the [reference page](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/reference.html#section-instruments), which can filter them.
 
