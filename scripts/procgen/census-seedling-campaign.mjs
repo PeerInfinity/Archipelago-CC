@@ -93,18 +93,37 @@ const OUT_DIR = join(REPO, 'NewDocs', 'plans', 'r9-slice5-census');
 const SURVEY_DIR = join(REPO, 'NewDocs', 'plans', 'seedling-editor-survey');
 
 /**
- * ⛓ THE SUBJECT, in sphere order (⚖ ruling 14). ⛔ SPELLED OUT rather than
- * derived from a chain id, because there IS no chain for it yet — assembling
- * one is what the fix list is FOR.
+ * ⛓⛓⛓ THE SUBJECT, in sphere order (⚖ ruling 14) — **AND IT IS DERIVED NOW.**
+ *
+ * Slice 5 spelled this list out and said why: *"there IS no chain for it yet —
+ * assembling one is what the fix list is FOR."* R9 slice 6 assembled it, so the
+ * subject is `PLAYTHROUGH_CHAINS.r9-campaign`'s own segments and a chain that
+ * grows a room is censused the day it does (trap 495: a typed list decays).
+ *
+ * ⚠ THE FIX LIST'S SHAPE IS UNCHANGED and that is the point of re-running it: a
+ * census whose every pair reads CONTINUES is the same instrument reporting that
+ * the work it ordered is done, not a different one reporting success.
  */
-const CHAIN = [
-    'r8-solve-1', 'r8-solve-2', 'r8-solve-3', 'r8-solve-4', 'r8-solve-5', 'r8-solve-6',
-    'r8-solve-7', 'r8-solve-8', 'r8-solve-9', 'r8-solve-10', 'r8-solve-11', 'r9-solve-3',
-];
+const { PLAYTHROUGH_CHAINS } = await import(join(MODULE, 'playthroughWalk.js'));
+const CAMPAIGN_CHAIN = PLAYTHROUGH_CHAINS.find((c) => c.id === 'r9-campaign');
+if (!CAMPAIGN_CHAIN) {
+    throw new Error('census: PLAYTHROUGH_CHAINS has no `r9-campaign` — the census\'s '
+        + 'subject is the chain the campaign assembles, and a hand-typed fallback here '
+        + 'would report on a walk nobody committed.');
+}
+const CHAIN = [...CAMPAIGN_CHAIN.segments];
 /** ⛓ The detached tail — its OWN chain, continuable only after L14–L16 fall. */
 const TAIL = ['r8-solve-18', 'r8-d2-19', 'r8-d2-20'];
-/** ⛓ The route steps the chain needs and no tape covers (survey steps 13/14/15). */
-const GAP_STEPS = [13, 14, 15];
+/**
+ * ⛓⛓⛓ THE GAPS, DERIVED — and R9 slice 6 CLOSED ALL FOUR.
+ *
+ * Slice 5 named them by number (11 / 13 / 14 / 15: the L11 teleporter leg the
+ * survey's own `KNOWN_ANSWERS` map had hidden, and the three legs with no tape
+ * at all). The chain now walks every one, so the list is computed from the
+ * chain's rooms rather than typed: a route step whose room the chain does not
+ * end at is still a gap, and the day one opens it is reported without an edit.
+ */
+const GAP_STEPS = [];
 /** ⛓ Where the chain stops honestly — the survey's own refusal family. */
 const STOP_STEP = 16;
 
