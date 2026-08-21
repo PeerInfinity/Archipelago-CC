@@ -807,4 +807,30 @@ describe('⛓⛓⛓ the continuation projection — the rng strip, AFTER the adm
         expect(out.tape_version).toBe(8);
         expect(out.persistence.every((c) => c.at === undefined)).toBe(true);
     });
+
+    /**
+     * ⛓⛓⛓ R9 SLICE 5's SECOND HALF — the FORWARD declarations do not reach the
+     * game. `gameVisibleTape` alone KEEPS the row and drops only `at`, which
+     * on a fresh page reproduces the recorded state and on a continuation
+     * opens the lock before the walk that opens it.
+     */
+    it('⛔⛔ a TIMED row is NOT handed to the game — it would arrive AT BOOT', () => {
+        const v9 = tape({
+            tape_version: 9,
+            persistence: [{ level: 5, tag: 0, at: 427 }, { level: 8, tag: 1 }],
+        });
+        const { tape: out, forwardRows } = continuationTape(v9);
+        // ⛔ the LATCH row survives (the admission just asserted it equals the
+        //    live set, so applying it is a no-op); the FORWARD row does not.
+        expect(out.persistence).toEqual([{ level: 8, tag: 1 }]);
+        expect(forwardRows).toEqual(['5:0@427']);
+        // ⛔ and `gameVisibleTape` on its own would have handed BOTH over —
+        //    which is the difference this projection exists to make.
+        expect(gameVisibleTape(v9).persistence).toHaveLength(2);
+    });
+
+    it('a window with no forward rows reports an EMPTY list, never a missing one', () => {
+        expect(continuationTape(tape({ persistence: [{ level: 8, tag: 1 }] })).forwardRows)
+            .toEqual([]);
+    });
 });

@@ -41,7 +41,9 @@ import { MODEL_EXEMPT_NAMES } from './r5Chain.js';
 import { atlasLevelSource } from './levelSource.js';
 import { MOVE_SPEEDS, spawnFromBoot } from './playerPhysicsV1.js';
 import { deriveTransitions, diffObservationStreams } from './tapeFormat.js';
-import { createTapeStepper, runTape, runTapeToStream } from './tapeRunner.js';
+import {
+    createTapeStepper, runTape, runTapeToStream, stagingFromTape,
+} from './tapeRunner.js';
 import { PLAYTHROUGH_CHAINS, chainSpans } from './playthroughWalk.js';
 
 /** Entity spawn for the fixtures' shared boot block (Player.as:357: +8,+8). */
@@ -781,5 +783,77 @@ describe('createTapeStepper — the resume run', () => {
         // …and without one it is the pre-existing refusal, unchanged.
         expect(() => createTapeStepper(loadTape('r8-d2-20'), {}))
             .toThrow(/no opts.levelSource/);
+    });
+
+    /**
+     * ⛓⛓⛓ R9 SLICE 5 (⚖ ruling 14's timed-row rule) — **THE APPENDER**, which
+     * is the resume face's ONE addition.
+     *
+     * A resumed window applies no staging, so the window's own v9 TIMED rows —
+     * clears its OWN walk earns — never reach the run at construction. The GAME
+     * earns them on its own tick; the MODEL cannot, because `levelRun` refuses
+     * to compute a kill-lock clear itself and an undeclared one THROWS.
+     *
+     * ⛔ THE SUBJECT IS `r8-solve-5` `{5,0}@427`, resumed after `r8-solve-4`.
+     */
+    describe('⛓⛓ addTimedClears — a later window\'s FORWARD declarations, rebased', () => {
+        const resumedAfter4 = () => {
+            let live = null;
+            stream(loadTape('r8-solve-4'),
+                { levelSource, onTick: (t, s, h, r) => { live = r; } });
+            return live;
+        };
+
+        it('⛓ the row lands at the REBASED tick, not the tape-local one', () => {
+            const live = resumedAfter4();
+            const offset = live.ticksCompleted;
+            live.addTimedClears([{ level: 5, tag: 0, at: 427 + offset }]);
+            // ⛔ not applied yet — the walk has not reached the tick.
+            expect(live.appliedTimedClears).toEqual([]);
+            stream(loadTape('r8-solve-5'), { run: live });
+            expect(live.appliedTimedClears).toEqual([{ level: 5, tag: 0, at: 427 + offset }]);
+        });
+
+        it('⛔⛔ WITHOUT it the resumed window THROWS — `undeclaredKillLock`', () => {
+            // ⛓ THE MUTANT, AS A ROW. This is the whole reason the appender
+            //   exists: the model can see the clear coming and refuses to
+            //   compute it, because the v9 `at` channel is its declared home.
+            const live = resumedAfter4();
+            let err = null;
+            try { stream(loadTape('r8-solve-5'), { run: live }); } catch (e) { err = e; }
+            expect(err).not.toBeNull();
+            expect(err.undeclaredKillLock).toBeDefined();
+            expect(err.undeclaredKillLock.level).toBe(5);
+            expect(err.undeclaredKillLock.flags).toEqual([0]);
+        });
+
+        it('⛔ a row the world ALREADY HOLDS is refused — two writers of one slot', () => {
+            const live = resumedAfter4();
+            live.addTimedClears([{ level: 5, tag: 0, at: live.ticksCompleted + 427 }]);
+            stream(loadTape('r8-solve-5'), { run: live });
+            expect(() => live.addTimedClears([{ level: 5, tag: 0, at: 99999 }]))
+                .toThrow(/ALREADY CLEAR/);
+        });
+
+        it('⛔ a DUPLICATE of a row still pending is refused, and names its tick', () => {
+            const live = resumedAfter4();
+            const at = live.ticksCompleted + 427;
+            live.addTimedClears([{ level: 5, tag: 0, at }]);
+            expect(() => live.addTimedClears([{ level: 5, tag: 0, at: at + 1 }]))
+                .toThrow(new RegExp(`already PENDING on this run at tick ${at}`));
+        });
+
+        it('a malformed row is refused by name rather than silently dropped', () => {
+            const live = resumedAfter4();
+            expect(() => live.addTimedClears([{ level: 5, tag: 0 }]))
+                .toThrow(/`at` REBASED/);
+        });
+
+        it('⛔ NO DATA PATH: `stagingFromTape` cannot spell it', () => {
+            // 4b/slice 5's no-data-path property, kept — only a CALLER, in
+            // code, can add a timed row to a running run.
+            expect(Object.keys(stagingFromTape(loadTape('r8-solve-5'))))
+                .not.toContain('addTimedClears');
+        });
     });
 });

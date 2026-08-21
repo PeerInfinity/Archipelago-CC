@@ -220,14 +220,39 @@ export function stagesOf({ levelSet = null, windows = 1 } = {}) {
  * ⚠ WINDOW 1 IS UNTOUCHED. A fresh boot applies everything, and must: it is
  * the only window whose declared stream position IS the state the page is in.
  *
+ * ⛓⛓⛓ R9 SLICE 5, THE SECOND HALF (⚖ ruling 14's timed-row rule) — **AND THE
+ * FORWARD DECLARATIONS DO NOT REACH THE GAME EITHER**, for a reason that has
+ * nothing to do with the rng and everything to do with what `gameVisibleTape`
+ * IS.
+ *
+ * A v9 timed `persistence` row is a clear the window's OWN WALK earns.
+ * `gameVisibleTape` projects a v9 tape to v8 by DROPPING `at` and KEEPING the
+ * row (`GAME_VISIBLE_DROPS`) — which is right for a FRESH page, where
+ * `botStart` applying the clear at boot reproduces the state the recording was
+ * made in. On a CONTINUATION it is exactly wrong: the live game has not earned
+ * the clear yet, and handing it the row would open the lock before the walk
+ * that opens it — a rebuild of the ledger, which is the one thing a
+ * continuation may not do. The live game earns it, on its own tick.
+ *
+ * ⇒ what `botLoadTape` receives for k > 0 is the LATCH ROWS ONLY — and the
+ * admission above has just asserted that those EQUAL the live set, so
+ * `botStart`'s reset-then-apply is a no-op on the ledger.
+ *
  * @param {object} tape a PARSED tape (window k > 0)
- * @returns {object} `{tape, rngStripped}` — `rngStripped` is `null` for a tape
- *   that declares no `rng` block at all (110 of the 154 on the roster)
+ * @returns {object} `{tape, rngStripped, forwardRows}` — `rngStripped` is
+ *   `null` for a tape that declares no `rng` block at all (110 of the 154 on
+ *   the roster); `forwardRows` is the timed rows that were NOT handed over
  */
 export function continuationTape(tape) {
-    const visible = gameVisibleTape(tape);
+    const rows = tape.persistence ?? [];
+    const forward = rows.filter((c) => c.at !== undefined);
+    const latchOnly = forward.length > 0
+        ? { ...tape, persistence: rows.filter((c) => c.at === undefined) }
+        : tape;
+    const visible = gameVisibleTape(latchOnly);
     const declared = tape.rng ?? null;
-    if (!declared) return { tape: visible, rngStripped: null };
+    const forwardRows = forward.map((c) => `${c.level}:${c.tag}@${c.at}`);
+    if (!declared) return { tape: visible, rngStripped: null, forwardRows };
     return {
         tape: { ...visible, rng: { ...declared, seed: 0, cosmetic: 0, fp: 0 } },
         rngStripped: {
@@ -235,6 +260,7 @@ export function continuationTape(tape) {
             cosmetic: declared.cosmetic ?? 0,
             fp: declared.fp ?? 0,
         },
+        forwardRows,
     };
 }
 
@@ -1055,7 +1081,7 @@ export async function shipToWasm(payload, host) {
         const at = many ? ` ${k + 1}/${windows.length}` : '';
         const wLabel = w.label || `window ${k + 1}`;
         const rec = { index: k, label: wLabel, admission: null, verdict: null,
-            continuation: null, movedAtBoundary: null, rngStripped: null };
+            continuation: null, movedAtBoundary: null, rngStripped: null, forwardRows: [] };
         state.windows.push(rec);
 
         if (k > 0) {
@@ -1187,8 +1213,9 @@ export async function shipToWasm(payload, host) {
          * the admission above has already asserted the declaration.
          */
         const projected = k > 0 ? continuationTape(w.tape) : { tape: gameVisibleTape(w.tape),
-            rngStripped: null };
+            rngStripped: null, forwardRows: [] };
         rec.rngStripped = projected.rngStripped;
+        rec.forwardRows = projected.forwardRows;
         const loaded = bot('botLoadTape', JSON.stringify(projected.tape));
         if (loaded !== 'ok') return refuse(`tape${at}`, `botLoadTape: ${loaded}`, '');
         enter(`tape${at}`, 'the game accepted the tape');
@@ -1346,6 +1373,8 @@ export async function shipToWasm(payload, host) {
             movedAtBoundary: r.movedAtBoundary,
             /** ⛓ R9 slice 5: what was DECLARED, ASSERTED and NOT APPLIED. */
             rngStripped: r.rngStripped ?? null,
+            /** ⛓ R9 slice 5: the walk's OWN clears, which the game must EARN. */
+            forwardRows: r.forwardRows ?? [],
         })),
     };
     state.verdict = v;

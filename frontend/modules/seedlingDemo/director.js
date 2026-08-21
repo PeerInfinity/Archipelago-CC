@@ -965,13 +965,61 @@ export function continuationAdmission(tape, live, { index = 1, label = '', neare
             `${tape.grants.length} grant(s): ${JSON.stringify(tape.grants)}`);
     }
 
-    // 3. PERSISTENCE — EQUAL, both ways, and the difference is named.
+    /**
+     * ── 3. PERSISTENCE ────────────────────────────────────────────────────
+     *
+     * ⛓⛓⛓ R9 SLICE 5 (⚖ ruling 14's second bullet) — **A SEGMENT'S DECLARED
+     * PERSISTENCE CARRIES TWO DIFFERENT THINGS, AND THE ROSTER ALREADY MARKS
+     * WHICH IS WHICH.**
+     *
+     * A LATCH row is a statement about the world the window INHERITS: it must
+     * MATCH, both ways, or `botStart`'s reset-then-apply moves the ledger. A
+     * FORWARD DECLARATION is a clear the window's OWN WALK will earn — carried
+     * on the tape because `levelRun` refuses to compute a kill-lock clear
+     * itself ("two writers of one persistence slot") — and by construction it
+     * must NOT be held yet.
+     *
+     * Latch equality alone cannot tell them apart, and slice 2 measured the
+     * consequence: `r7-act2-5` was refused for declaring `{5,0}`, which is
+     * exactly what it has to declare, and `act2-the-sword` was called "not
+     * continuable past window 4 AS RECORDED".
+     *
+     * ⛔ THE DISTINCTION NEEDED NO NEW TAPE FIELD. Every forward declaration on
+     * the roster is ALREADY MARKED — it is a v9 TIMED row (`at`), and every
+     * latch row is untimed. Measured over all 154 tapes: seven carry timed
+     * rows (`r7-act2-5` `{5,0}@737` · `r7-act2-8` `{8,0}@380` `{8,1}@932` ·
+     * `r7-act2-full` ×3 · `r8-solve-5` `{5,0}@427` · `r8-solve-8` ×2 ·
+     * `r8-solve-18` / `r8-d2` `{18,0}@385`), and not one of them is a latch.
+     *
+     * ⇒ a TIMED row is EXCLUDED from latch equality, REFUSED BY NAME if the
+     * live world already holds it (the lock would be open before the walk that
+     * opens it), and REPORTED so a reader can see which rows were set aside.
+     */
     if (live.cleared === null || live.cleared === undefined) {
         add('unasserted — the caller reports no live cleared set',
             live.blocksWhy?.cleared || live.blocksWhy?.all || 'no reason given', true);
     } else {
-        const declared = flagSet(tape.persistence);
+        const rows = tape.persistence ?? [];
+        const forward = rows.filter((c) => c.at !== undefined);
+        const latch = rows.filter((c) => c.at === undefined);
+        const declared = flagSet(latch);
         const held = flagSet(live.cleared);
+        const alreadyHeld = sortedKeys(new Set(forward.map(flagKey).filter((k) => held.has(k))));
+        if (alreadyHeld.length > 0) {
+            add('a forward declaration the live world ALREADY holds',
+                `${alreadyHeld.join(' ')} — declared as earned by this walk (a v9 timed `
+                + 'row), already held by the live world. The lock is open before the walk '
+                + `that opens it, so this window's own walk cannot be what earned it.${say}`);
+        }
+        if (forward.length > 0) {
+            add(`${forward.length} forward declaration(s) set aside — this walk's own`,
+                forward.map((c) => `${c.level}:${c.tag}@${c.at}`).join(' ')
+                + ' — a v9 TIMED row is a clear the window EARNS, not a latch it inherits, '
+                + 'so it is excluded from the equality below and is not handed to the game '
+                + 'on a continuation (`gameVisibleTape` strips `at`, which would apply the '
+                + 'clear AT BOOT — a ledger rebuild). The live game earns it; the JS model '
+                + 'is handed it rebased.', true);
+        }
         const extra = sortedKeys(new Set([...declared].filter((k) => !held.has(k))));
         const missing = sortedKeys(new Set([...held].filter((k) => !declared.has(k))));
         if (extra.length > 0) {
@@ -1024,3 +1072,119 @@ export function continuationAdmission(tape, live, { index = 1, label = '', neare
 
 /** The refusals only — an UNASSERTED row is a report, never a refusal. */
 export const refusalsOnly = (findings) => (findings ?? []).filter((f) => !f.informational);
+
+/**
+ * ══ ⛓⛓⛓ THE LIVE WORLD, JS SIDE ═════════════════════════════════════════
+ *
+ * ⛓ R9 SLICE 5 MOVED THIS HERE FROM `watchViewer.js`, unchanged but for the
+ * applied-timed fold below. The admission's home is this module, and the
+ * campaign census has to ask the SAME question the page asks — in node, with
+ * no DOM. A census that re-spelled the envelope would be measuring a
+ * lookalike and reporting it under the page's name (trap 383).
+ *
+ * ⛔ `watchViewer.js` RE-EXPORTS it rather than keeping a copy, and a unit row
+ * asserts the two names are the SAME FUNCTION REFERENCE.
+ */
+const jsBlocksWhy = Object.freeze({
+    rng: 'the JS model keeps no LFSR position — `rng` is threaded to `createLevelRun` '
+        + 'and read by the Owl fight, never reported back. The wasm side answers this '
+        + 'row from `botSeam()`.',
+    seam: 'the JS model builds no seam envelope; `botSeam()` is the game\'s, and '
+        + '`segmentBootFromLatch` is what turns one into tape blocks.',
+});
+
+/**
+ * The live world, in the vocabulary `continuationAdmission` reads — the JS
+ * side's half of this section's docblock in `director.js`.
+ *
+ * ⛔ THE CLEARED SET IS **window 1's DECLARED persistence ∪ every
+ * `run.earnedClears` since**, and that formula is stated once, over there.
+ * Measured: `r8-d2-19` declares `{5:0, 8:0, 8:1, 10:0}` and earns
+ * `{19:1, 19:0}`; `r8-d2-20` declares exactly those six.
+ *
+ * ⚠ `seal_parts` IS A NAMED BOUND. `saveState` reports how many slots the run
+ * FILLED, never which seals — the identity is a rejection-sampled draw at
+ * chest open (`Chest.as:84-89`) — so the `save` row is answered only while the
+ * run has opened no chest, and is UNASSERTED by name once it has.
+ */
+export function jsLiveEnvelope(run, bootPersistence, bootPins) {
+    const cleared = [];
+    const seen = new Set();
+    /**
+     * ⛔⛔⛔ R9 SLICE 3 — AND THE OUT-OF-BAND WRITES BELONG HERE, WHICH THE
+     * SPLICE IS WHAT MADE REACHABLE.
+     *
+     * `earnedClears` and `save.levelPersistence` are TWO LEDGERS WITH TWO
+     * MEANINGS, and they agreed until a room wrote out of band.
+     * `earnedClears` is *what the next BUILD of a level may be handed*, and
+     * `levelRun` deliberately keeps an out-of-band write OUT of it: landing
+     * on a slot nobody owns is the whole meaning of a −1 tag, and
+     * `buildLevelWorld` refuses "a clear which no entity in this level reads"
+     * (`r5-feather` measured that throw). It REPORTS the write instead.
+     *
+     * But this envelope answers a different question — *what does the GAME's
+     * persistence ARRAY hold* — because that is what the successor tape's
+     * `persistence` block was read out of. L18's two Spinners carry
+     * `tag = "-1"`, so crossing that room honestly writes `{17,29}`
+     * (`level * 30 - 1`, `outOfBandLedger`), the measured latch carries it,
+     * and a live set built from `earnedClears` alone is short exactly that
+     * row. The admission then refuses the next window BY NAME for a flag the
+     * game really did write — a true sentence about the wrong ledger.
+     *
+     * ⚠ BOUNDED, AND THE BOUND IS NAMED: `spinnerWrites` is the only report
+     * channel that carries an `outOfBand` marker today. `RopeStart` and
+     * `BurnableTree` have the same branch and no committed map reaches their
+     * −1 case (`levelRun.js`, the same comment), so there is nothing to fold
+     * for them and inventing a fold would be a claim nothing drives.
+     */
+    const outOfBand = (run.spinnerWrites ?? [])
+        .filter((w) => w.outOfBand)
+        .map((w) => ({ level: w.flag.level, tag: w.flag.tag }));
+    /**
+     * ⛓⛓⛓ R9 SLICE 5 — **AND THE APPLIED TIMED ROWS BELONG HERE TOO**, which
+     * the timed-row rule is what made reachable.
+     *
+     * `earnedClears` and `appliedTimedClears` are TWO LEDGERS WITH TWO
+     * MEANINGS, exactly as `earnedClears` and `spinnerWrites` are one row
+     * above: `earnedClears` holds what the MODEL computed, and `levelRun`
+     * deliberately refuses to compute a kill-lock clear at all — the v9 timed
+     * `at` channel is that clear's declared home, and a row applied through
+     * `applyTimedClears` therefore appears in NEITHER of the two ledgers above.
+     *
+     * But the GAME's persistence ARRAY holds it the moment the tick numbered
+     * `at` begins, and that array is what the successor tape's `persistence`
+     * block was read out of. MEASURED: `r7-act2-5` applies `{5,0}@737` and
+     * reports `earnedClears: []`, and `r7-act2-6` declares `{5,0}` — so a live
+     * set built without this fold refuses window 6 BY NAME for a flag the game
+     * really did write. A true sentence about the wrong ledger, for the second
+     * time in two slices (trap 493).
+     *
+     * ⚠ APPLIED, never DECLARED — a row whose tick the walk has not reached is
+     * not in the world yet — which is also why window 1's own timed rows are
+     * filtered out of the boot fold below rather than trusted.
+     */
+    const applied = run.appliedTimedClears ?? [];
+    const bootLatch = (bootPersistence ?? []).filter((c) => c.at === undefined);
+    for (const c of [...bootLatch, ...run.earnedClears, ...outOfBand, ...applied]) {
+        const k = `${c.level}:${c.tag}`;
+        if (seen.has(k)) continue;
+        seen.add(k);
+        cleared.push({ level: c.level, tag: c.tag });
+    }
+    const save = run.saveState;
+    const idx = (bools) => bools.flatMap((v, i) => (v ? [i] : []));
+    const blocks = { pins: [...(bootPins ?? [])] };
+    const why = { ...jsBlocksWhy };
+    if (save.sealSlotsEarned === 0) {
+        blocks.save = {
+            totem_parts: idx(save.totem_parts),
+            keys: idx(save.keys),
+            seal_parts: [...save.bootSealParts],
+        };
+    } else {
+        why.save = `the run has opened ${save.sealSlotsEarned} chest(s) and the seal in `
+            + 'each slot is a rejection-sampled draw the model does not predict '
+            + '(`levelRun.saveState`\'s own bound) — only the COUNT is knowable';
+    }
+    return { level: run.level, ctor: run.worldCtor, cleared, blocks, blocksWhy: why };
+}

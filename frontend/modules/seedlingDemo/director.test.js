@@ -5,11 +5,16 @@ import {
     boundaryFlagClearanceFindings, LOCK_FLAG_WRITE_TICKS,
     crutchScheduleFindings, CRUTCH_JUSTIFICATION,
     PAGE_CHAINS, parseTapesParam, formatTapesParam, expandSequence, sequenceAdmission,
-    continuationAdmission, refusalsOnly,
+    continuationAdmission, refusalsOnly, jsLiveEnvelope,
 } from './director.js';
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { loadTape } from './fixtures/index.js';
 import { runTape } from './tapeRunner.js';
 import { atlasLevelSource } from './levelSource.js';
+
+const HERE = dirname(fileURLToPath(import.meta.url));
 
 /**
  * The director's own stratum: pure functions over the GAME's reports, with
@@ -587,6 +592,82 @@ describe('a chain HEADLINE is a legal member and expands', () => {
     });
 });
 
+/**
+ * ⛓⛓⛓ R9 SLICE 5 — **`jsLiveEnvelope` LIVES HERE NOW, AND `watchViewer.js`
+ * RE-EXPORTS IT RATHER THAN KEEPING A COPY.**
+ *
+ * The campaign census (`census-seedling-campaign.mjs`) has to ask the SAME
+ * question the page asks, in node, with no DOM — and `watchViewer.js` cannot
+ * be imported outside a browser (it touches `window` at module scope). A
+ * census that re-spelled the envelope would be measuring a lookalike and
+ * reporting it under the page's name (trap 383).
+ *
+ * ⛔ SO THE CLAIM IS ASSERTED ON THE SOURCE, because the identity cannot be
+ * asserted by importing: `watchViewer.js` must carry `export { jsLiveEnvelope }`
+ * and must NOT define one.
+ */
+describe('⛓⛓ the live envelope is ONE function, and the page re-exports it', () => {
+    const viewer = readFileSync(join(HERE, 'watchViewer.js'), 'utf8');
+
+    it('⛔ `watchViewer.js` RE-EXPORTS `jsLiveEnvelope` — it does not define one', () => {
+        expect(viewer).toMatch(/export \{ jsLiveEnvelope \};/);
+        expect(viewer).not.toMatch(/function jsLiveEnvelope\s*\(/);
+    });
+
+    it('⛓ …and it imports the name from THIS module', () => {
+        const imports = viewer.slice(0, viewer.indexOf("} from './director.js';"));
+        expect(imports).toMatch(/jsLiveEnvelope/);
+    });
+
+    it('⛓ the envelope FOLDS the run\'s APPLIED timed clears — the third ledger', () => {
+        // ⛔ `earnedClears` holds what the MODEL computed and `levelRun` refuses
+        //    to compute a kill-lock clear at all, so a declared timed row is in
+        //    NEITHER it nor `spinnerWrites` — but the GAME's persistence array
+        //    holds it, and that array is what the successor's block was read
+        //    out of (trap 493, one room over from the splice's out-of-band fold).
+        const run = {
+            level: 5,
+            worldCtor: { x: 80, y: 32 },
+            earnedClears: [],
+            spinnerWrites: [],
+            appliedTimedClears: [{ level: 5, tag: 0, at: 427 }],
+            saveState: {
+                sealSlotsEarned: 0, totem_parts: [], keys: [], bootSealParts: [],
+            },
+        };
+        expect(jsLiveEnvelope(run, [], ['dead_frames']).cleared)
+            .toEqual([{ level: 5, tag: 0 }]);
+    });
+
+    it('⛔ …and window 1\'s OWN timed rows are NOT trusted before their tick', () => {
+        // A boot list may itself carry a v9 timed row (`r8-solve-5` does). It
+        // is not in the world until `at`, and `appliedTimedClears` is what says
+        // whether it is — so the boot fold takes the LATCH rows only.
+        const run = {
+            level: 5,
+            worldCtor: { x: 80, y: 32 },
+            earnedClears: [],
+            spinnerWrites: [],
+            appliedTimedClears: [],
+            saveState: {
+                sealSlotsEarned: 0, totem_parts: [], keys: [], bootSealParts: [],
+            },
+        };
+        const boot = [{ level: 8, tag: 1 }, { level: 5, tag: 0, at: 427 }];
+        expect(jsLiveEnvelope(run, boot, []).cleared).toEqual([{ level: 8, tag: 1 }]);
+    });
+
+    it('a run with no `appliedTimedClears` is handled — the fold is additive', () => {
+        const run = {
+            level: 1, worldCtor: { x: 0, y: 0 }, earnedClears: [], spinnerWrites: [],
+            saveState: {
+                sealSlotsEarned: 0, totem_parts: [], keys: [], bootSealParts: [],
+            },
+        };
+        expect(jsLiveEnvelope(run, [], []).cleared).toEqual([]);
+    });
+});
+
 describe('TIER 1 — admission at queue time', () => {
     const tape = (over = {}) => ({
         name: 'w', boot: { level: 20, x: 192, y: 64 }, tick_count: 100,
@@ -777,6 +858,60 @@ describe('⛓⛓⛓ TIER 2 — the boundary, and the ruled sentence field by fie
             ...outOfBand.map((w) => ({ level: w.flag.level, tag: w.flag.tag }))],
         });
         expect(with_).toEqual([]);
+    });
+
+    /**
+     * ⛓⛓⛓ R9 SLICE 5 (⚖ ruling 14) — **THE TIMED-ROW RULE**, which is what
+     * turned `act2-the-sword` from four windows into eleven without moving a
+     * byte of any tape.
+     */
+    it('⛓⛓⛓ a TIMED row is NOT compared — it is the walk\'s OWN clear, not a latch',
+        () => {
+            // ⛔ the live world holds neither `{7,3}` nor anything but the latch
+            //    pair, and the window is ADMITTED anyway.
+            const fs = continuationAdmission(
+                tape({ persistence: [...tape().persistence, { level: 7, tag: 3, at: 42 }] }),
+                LIVE);
+            expect(refusalsOnly(fs)).toEqual([]);
+        });
+
+    it('⛓ …and it is REPORTED, so the rule is visible rather than inferred', () => {
+        const fs = continuationAdmission(
+            tape({ persistence: [...tape().persistence, { level: 7, tag: 3, at: 42 }] }),
+            LIVE);
+        const row = fs.find((f) => /forward declaration\(s\) set aside/.test(f.what));
+        expect(row).toBeDefined();
+        expect(row.informational).toBe(true);
+        expect(row.detail).toMatch(/7:3@42/);
+    });
+
+    it('⛔⛔ a forward row the live world ALREADY HOLDS is refused BY NAME', () => {
+        // `{19,0}` IS in LIVE.cleared — so this walk cannot be what earns it.
+        const fs = continuationAdmission(
+            tape({ persistence: [{ level: 5, tag: 0 }, { level: 19, tag: 0, at: 9 }] }),
+            LIVE);
+        expect(fs.map((f) => f.what))
+            .toContain('a forward declaration the live world ALREADY holds');
+        expect(refusalsOnly(fs)[0].detail).toMatch(/19:0/);
+        expect(refusalsOnly(fs)[0].detail).toMatch(/before the walk\s+that opens it/);
+    });
+
+    it('⛔ an UNTIMED mismatch still refuses — the old rows are untouched', () => {
+        // ⛓ the same tape, the same missing flag, with `at` REMOVED: still a
+        //   refusal. This is the CONTROL for the row above (trap 297).
+        const fs = continuationAdmission(
+            tape({ persistence: [{ level: 5, tag: 0 }] }), LIVE);
+        expect(fs.map((f) => f.what))
+            .toContain('the window does not declare a clear the live world holds');
+    });
+
+    it('⛓ a timed row is excluded from BOTH directions of the equality', () => {
+        // ⛔ not merely from the "declares a clear the world lacks" half: a
+        //   latch set that is equal EXCEPT for a timed extra must be equal.
+        const fs = continuationAdmission(
+            tape({ persistence: [{ level: 5, tag: 0 }, { level: 19, tag: 0 },
+                { level: 99, tag: 9, at: 1 }] }), LIVE);
+        expect(refusalsOnly(fs)).toEqual([]);
     });
 
     it('grants are refused here too — tier 2 does not trust tier 1 to have run', () => {

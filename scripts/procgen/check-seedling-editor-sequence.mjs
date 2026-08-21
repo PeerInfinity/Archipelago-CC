@@ -331,32 +331,56 @@ report('…and the window that stops it, BY NAME',
         ? `${refusedAt.label}: ${refusalsAt(refusedAt.admission).map((f) => f.what).join('; ')}`
         : 'none — the whole chain continues');
 /**
- * ⛔ PINNED, so a change in the ANSWER is a change somebody has to explain —
- * AND THE MUTANT SETTLED WHAT THE ANSWER MEANS (R9 §10).
+ * ⛔⛔⛔ PINNED, AND R9 SLICE 5 MOVED THE PIN — from *"stopped at `r7-act2-5`
+ * after 5 windows"* to **the whole eleven-window chain**.
  *
- * With tier 2 refusing nothing, window 5 steps and THROWS at tick 1067: *"the
- * removal of bob@48,80 at tick 1067 (an arrow kill) OPENS 1 kill lock(s) in
- * level 5 [{5,0}] … and the tape DECLARES no clear for them."* ⇒ `{5,0}` is a
- * KILL LOCK `r7-act2-5`'s OWN WALK opens, carried as a boot `persistence` entry
+ * ⛓ WHAT THE OLD ANSWER MEANT, kept because it is now a MUTANT's value: with
+ * latch equality applied to every declared row, `r7-act2-5` was refused for
+ * declaring `{5,0}` — a KILL LOCK ITS OWN WALK OPENS, carried on the tape
  * because `levelRun` refuses to compute a kill-lock clear itself ("two writers
- * of one persistence slot").
+ * of one persistence slot"). Remove the timed-row rule and this row returns to
+ * *"stopped at r7-act2-5 after 5 window(s)"*, with 3 boundaries admitted.
+ * Remove the JS APPENDER instead and window 5 steps and THROWS: *"the removal
+ * of bob@48,80 at tick 1067 (an arrow kill) OPENS 1 kill lock(s) in level 5
+ * [{5,0}] … and the tape DECLARES no clear for them."*
  *
- * ⛔ SO A SEGMENT'S DECLARED PERSISTENCE CARRIES TWO DIFFERENT THINGS: a LATCH
- * of its predecessor's state, which must MATCH the live world, and a FORWARD
- * DECLARATION of a clear its own walk will earn, which by construction must
- * NOT. Latch equality cannot tell them apart, so it refuses `r7-act2-5` for
- * declaring exactly what it has to declare — and the refusal is still CORRECT:
- * as a continuation window it would enter L5 with the kill lock already open,
- * which is not the world window 4 left. ⇒ `act2-the-sword` is not continuable
- * past window 4 AS RECORDED. The next work order is a re-record without the
- * forward declaration (the v9 timed `at` channel is its declared home) or a
- * tape field that marks one, so admission can tell the two apart. ⛔ NOT THIS
- * SLICE'S: it moves no tape.
+ * ⇒ ⚖ ruling 14 (user, 2026-08-21): a segment's declared persistence carries
+ * TWO different things and the roster ALREADY MARKS which is which — a FORWARD
+ * declaration is a v9 TIMED row (`at`), a LATCH row is untimed. The forward
+ * rows are excluded from latch equality, refused by name if the live world
+ * already holds them, withheld from the GAME on a continuation (it earns them)
+ * and handed to the MODEL rebased (it cannot compute them).
+ *
+ * ⛓ AND THE REBASING HAS A FREE ORACLE NOBODY WROTE FOR IT: the rebased ticks
+ * this chain produces — `{5,0}@1559`, `{8,0}@2515`, `{8,1}@3067` — are
+ * EXACTLY what the headline `r7-act2-full` declares, a tape recorded long
+ * before any of this existed.
+ *
+ * ⛔ STILL NOT A RE-RECORD: `act2-the-sword` is byte-untouched. The work order
+ * slice 2 named ("a re-record without the forward declaration") was the wrong
+ * one; the fix was an ADMISSION RULE.
  */
-check(act2.seq?.admitted === false && refusedAt?.label === 'r7-act2-5'
-    && (act2.seq?.windows ?? []).length === 5,
-'⛓ …and that answer is PINNED — a change here is a finding somebody must explain',
-`stopped at ${refusedAt?.label} after ${(act2.seq?.windows ?? []).length} window(s)`);
+const act2Windows = (act2.seq?.windows ?? []).length;
+const act2Boundaries = admitted.length;
+check(act2.seq?.admitted === true && refusedAt === undefined
+    && act2Windows === PAGE_CHAINS['act2-the-sword'].length
+    && act2Boundaries === PAGE_CHAINS['act2-the-sword'].length - 1,
+'⛓⛓⛓ …and that answer is PINNED — a change here is a finding somebody must explain',
+`${act2Windows} window(s) stepped; ${act2Boundaries} boundary(ies) admitted; `
++ `${refusedAt ? `stopped at ${refusedAt.label}` : 'nothing refused'}`);
+
+/**
+ * ⛓⛓ AND THE FORWARD ROWS ARE ON THE RECORD, PER WINDOW, REBASED — so a
+ * reader can see WHICH rows the admission set aside rather than inferring it
+ * from the fact that nothing refused (trap 269: a rule whose only evidence is
+ * the absence of a refusal is indistinguishable from a rule nobody ran).
+ */
+const forwardRows = (act2.seq?.boundaries ?? [])
+    .flatMap((b) => b.forwardRows ?? []);
+check(JSON.stringify(forwardRows) === JSON.stringify(['5:0@1559', '8:0@2515', '8:1@3067']),
+'⛓⛓ …and the FORWARD declarations are named per boundary, REBASED into the '
++ "sequence's own tick numbering — the three `r7-act2-full` itself declares",
+JSON.stringify(forwardRows));
 
 // ══ 10–11. THE WASM ARM, AS FAR AS A HEADLESS BROWSER CAN GO ═══════════
 /**

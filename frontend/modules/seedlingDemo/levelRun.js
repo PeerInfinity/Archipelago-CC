@@ -533,6 +533,28 @@ export function createLevelRun({
     const timedClears = persistence.filter((c) => c.at !== undefined)
         .map((c) => ({ ...c })).sort((a, b) => a.at - b.at);
     /**
+     * ⛓⛓⛓ R9 SLICE 5 (⚖ ruling 14's timed-row rule) — **THE DECLARED LIST IS
+     * A `let`, BECAUSE A CONTINUATION GAINS ROWS AFTER CONSTRUCTION.**
+     *
+     * A sequence window k > 0 RESUMES this run (`createTapeStepper`'s `run`
+     * face) and applies NO staging — that is what a rebuild would be. But the
+     * window's own tape may carry v9 TIMED rows, which are that walk's OWN
+     * clears and which the model NEEDS: `levelRun` refuses to compute a
+     * kill-lock clear itself, so an undeclared one THROWS
+     * (`undeclaredKillLock`, twice below). The director hands them over
+     * through `addTimedClears`, rebased into this run's tick numbering, after
+     * the boundary is admitted and before the window's first tick.
+     *
+     * ⛔ TWO READERS, AND BOTH MOVE. `timedClears` is what `applyTimedClears`
+     * fires from; `declaredClears` is what the two kill-lock arms ask *"does
+     * the tape declare a clear for this flag"*. A row added to one and not the
+     * other would either never land or throw on the tick it landed.
+     *
+     * ⛔ AND `persistence` — the caller's own array — IS NEVER MUTATED. It is
+     * the parsed tape's list and three other readers hold it.
+     */
+    let declaredClears = persistence;
+    /**
      * ⛔⛔⛔ THE MID-VISIT CLEAR **WRITE** — one function, and slice 4b is why
      * it is a function at all.
      *
@@ -2187,7 +2209,7 @@ export function createLevelRun({
      * by. If it is ever false, the run says so instead of writing.
      */
     const assertScratchSlotIsFree = (p, flag) => {
-        const owner = persistence.find((c) => c.level === p.level && c.tag === flag);
+        const owner = declaredClears.find((c) => c.level === p.level && c.tag === flag);
         if (!owner) return;
         throw new Error(`levelRun: the scratch persistence layer was about to self-declare `
             + `the clear of {${p.level},${flag}} (opened by ${p.id}'s removal at tick `
@@ -7144,7 +7166,7 @@ export function createLevelRun({
             });
             return;
         }
-        const declared = persistence.filter((p) => p.level === level);
+        const declared = declaredClears.filter((p) => p.level === level);
         // ⛔ `flag`, NOT `tag` — `killLocksIn` fills `tag` with the ENTITY TYPE
         // ("lock"). The chaser arm paid for reading the wrong one.
         const undeclared = led.opens.filter((o) => !declared.some((p) => p.tag === o.flag));
@@ -7727,7 +7749,7 @@ export function createLevelRun({
             });
             return;
         }
-        const declared = persistence.filter((p) => p.level === level);
+        const declared = declaredClears.filter((p) => p.level === level);
         /**
          * ⛔ THE PERSISTENCE TAG IS `flag`, NOT `tag` — and the first cut of
          * this check read `tag`, which `killLocksIn` fills with the ENTITY
@@ -9910,6 +9932,85 @@ export function createLevelRun({
          * (`verify-seedling-bot-differential.mjs` takes `level`/`tag`/`id`
          * field by field). Nothing that makes a claim consumes `t`.
          */
+        /**
+         * ⛓⛓⛓ R9 SLICE 5 — **THE APPENDER, AND IT IS THE RESUME FACE'S ONE
+         * ADDITION** (⚖ ruling 14's timed-row rule).
+         *
+         * A sequence window k > 0 resumes this run and applies no staging.
+         * Its tape's v9 TIMED rows are that walk's OWN clears and the model
+         * needs them, because `levelRun` will not compute a kill-lock clear
+         * itself — an undeclared one throws `undeclaredKillLock`. The director
+         * calls this AFTER the boundary is admitted and BEFORE the window's
+         * first tick, with each row's `at` REBASED into this run's numbering
+         * (a tape's `at` is window-local; `ticksCompleted` is the sequence's).
+         *
+         * ⛔ IT REFUSES A ROW THE WORLD ALREADY HAS, and it refuses a duplicate
+         * of one already listed. Both would be a SECOND WRITER of one
+         * persistence slot — the exact thing the v9 channel exists to prevent —
+         * and a silently-deduplicated one would make "which walk earned this"
+         * unanswerable.
+         *
+         * ⛔ THERE IS NO DATA PATH TO IT. `parseTape` cannot spell it and
+         * `stagingFromTape` does not copy it; only a CALLER, in code, can pass
+         * rows. Every pre-existing caller passes none, which is what makes this
+         * byte-inert for the battery, the differential and every acceptance row
+         * by construction rather than by convention.
+         *
+         * @param {object[]} rows `{level, tag, at}`, `at` already rebased
+         */
+        addTimedClears(rows) {
+            for (const c of rows ?? []) {
+                if (c === null || typeof c !== 'object' || !Number.isFinite(c.at)) {
+                    throw new Error('levelRun.addTimedClears: a row is `{level, tag, at}` '
+                        + 'with `at` REBASED into this run\'s tick numbering, got '
+                        + `${JSON.stringify(c)}`);
+                }
+                if ((clearedByLevel.get(c.level) ?? []).includes(c.tag)) {
+                    throw new Error(`levelRun.addTimedClears: {${c.level},${c.tag}} is `
+                        + 'ALREADY CLEAR in this world. A timed row is the walk\'s OWN '
+                        + 'clear, so declaring one the world already holds would open the '
+                        + 'lock before the walk that opens it — and two writers of one '
+                        + 'persistence slot is the thing the v9 channel exists to prevent.');
+                }
+                const pending = timedClears.find(
+                    (o) => o.level === c.level && o.tag === c.tag && !o.applied);
+                if (pending) {
+                    throw new Error(`levelRun.addTimedClears: {${c.level},${c.tag}} is `
+                        + `already PENDING on this run at tick ${pending.at} — a second `
+                        + 'declaration of one persistence slot.');
+                }
+                const row = { level: c.level, tag: c.tag, at: c.at, note: c.note ?? '' };
+                timedClears.push(row);
+                declaredClears = [...declaredClears, row];
+            }
+            timedClears.sort((a, b) => a.at - b.at);
+        },
+
+        /**
+         * ⛓⛓⛓ R9 SLICE 5 — THE TIMED ROWS THIS RUN HAS ACTUALLY APPLIED.
+         *
+         * ⛔ A THIRD LEDGER, AND IT HAS TO BE (trap 493, one room over from the
+         * splice's out-of-band fold). `earnedClears` answers *what the next
+         * BUILD of a level may be handed* and deliberately holds only what the
+         * MODEL computed; a DECLARED timed row is applied through
+         * `applyClearNow` and appears in neither it nor `spinnerWrites`. But
+         * the GAME's `persistence_cleared` array holds it the moment the tick
+         * numbered `at` begins, and that array is what the next window's
+         * `persistence` block was read out of.
+         *
+         * ⇒ a live cleared set built from `earnedClears` alone is short exactly
+         * these rows, and the admission then refuses the next window BY NAME
+         * for a flag the game really did write — a true sentence about the
+         * wrong ledger. `director.jsLiveEnvelope` folds this in.
+         *
+         * ⚠ APPLIED, not declared: a row whose tick the walk never reached is
+         * NOT here, because the world does not hold it.
+         */
+        get appliedTimedClears() {
+            return timedClears.filter((c) => c.applied)
+                .map((c) => ({ level: c.level, tag: c.tag, at: c.at }));
+        },
+
         get earnedClears() {
             const out = [];
             for (const r of lockSnaps) {

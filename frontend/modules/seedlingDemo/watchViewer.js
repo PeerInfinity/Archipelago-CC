@@ -153,7 +153,7 @@ import { createRunForStaging, rolesForStaging, solveStaging } from './tapeRunner
  */
 import {
     boundaryFindings, continuationAdmission, expandSequence, formatTapesParam,
-    PAGE_CHAINS, parseTapesParam, refusalsOnly, sequenceAdmission,
+    jsLiveEnvelope, PAGE_CHAINS, parseTapesParam, refusalsOnly, sequenceAdmission,
     streamBoundaryFindings,
 } from './director.js';
 import {
@@ -1473,85 +1473,13 @@ async function runJs(params, lifetime) {
  * `playthroughAcceptance.chainFindings` does with its stream slices
  * (`864 + 781 = 1645`).
  */
-const jsBlocksWhy = Object.freeze({
-    rng: 'the JS model keeps no LFSR position — `rng` is threaded to `createLevelRun` '
-        + 'and read by the Owl fight, never reported back. The wasm side answers this '
-        + 'row from `botSeam()`.',
-    seam: 'the JS model builds no seam envelope; `botSeam()` is the game\'s, and '
-        + '`segmentBootFromLatch` is what turns one into tape blocks.',
-});
-
 /**
- * The live world, in the vocabulary `continuationAdmission` reads — the JS
- * side's half of this section's docblock in `director.js`.
- *
- * ⛔ THE CLEARED SET IS **window 1's DECLARED persistence ∪ every
- * `run.earnedClears` since**, and that formula is stated once, over there.
- * Measured: `r8-d2-19` declares `{5:0, 8:0, 8:1, 10:0}` and earns
- * `{19:1, 19:0}`; `r8-d2-20` declares exactly those six.
- *
- * ⚠ `seal_parts` IS A NAMED BOUND. `saveState` reports how many slots the run
- * FILLED, never which seals — the identity is a rejection-sampled draw at
- * chest open (`Chest.as:84-89`) — so the `save` row is answered only while the
- * run has opened no chest, and is UNASSERTED by name once it has.
+ * ⛓ R9 SLICE 5 — `jsLiveEnvelope` and its `blocksWhy` MOVED TO `director.js`,
+ * beside the admission that reads them, so the campaign census can import the
+ * SAME function in node instead of re-spelling it (trap 383). Re-exported
+ * here, not copied: `director.jsLiveEnvelope` IS this name.
  */
-function jsLiveEnvelope(run, bootPersistence, bootPins) {
-    const cleared = [];
-    const seen = new Set();
-    /**
-     * ⛔⛔⛔ R9 SLICE 3 — AND THE OUT-OF-BAND WRITES BELONG HERE, WHICH THE
-     * SPLICE IS WHAT MADE REACHABLE.
-     *
-     * `earnedClears` and `save.levelPersistence` are TWO LEDGERS WITH TWO
-     * MEANINGS, and they agreed until a room wrote out of band.
-     * `earnedClears` is *what the next BUILD of a level may be handed*, and
-     * `levelRun` deliberately keeps an out-of-band write OUT of it: landing
-     * on a slot nobody owns is the whole meaning of a −1 tag, and
-     * `buildLevelWorld` refuses "a clear which no entity in this level reads"
-     * (`r5-feather` measured that throw). It REPORTS the write instead.
-     *
-     * But this envelope answers a different question — *what does the GAME's
-     * persistence ARRAY hold* — because that is what the successor tape's
-     * `persistence` block was read out of. L18's two Spinners carry
-     * `tag = "-1"`, so crossing that room honestly writes `{17,29}`
-     * (`level * 30 - 1`, `outOfBandLedger`), the measured latch carries it,
-     * and a live set built from `earnedClears` alone is short exactly that
-     * row. The admission then refuses the next window BY NAME for a flag the
-     * game really did write — a true sentence about the wrong ledger.
-     *
-     * ⚠ BOUNDED, AND THE BOUND IS NAMED: `spinnerWrites` is the only report
-     * channel that carries an `outOfBand` marker today. `RopeStart` and
-     * `BurnableTree` have the same branch and no committed map reaches their
-     * −1 case (`levelRun.js`, the same comment), so there is nothing to fold
-     * for them and inventing a fold would be a claim nothing drives.
-     */
-    const outOfBand = (run.spinnerWrites ?? [])
-        .filter((w) => w.outOfBand)
-        .map((w) => ({ level: w.flag.level, tag: w.flag.tag }));
-    for (const c of [...(bootPersistence ?? []), ...run.earnedClears, ...outOfBand]) {
-        const k = `${c.level}:${c.tag}`;
-        if (seen.has(k)) continue;
-        seen.add(k);
-        cleared.push({ level: c.level, tag: c.tag });
-    }
-    const save = run.saveState;
-    const idx = (bools) => bools.flatMap((v, i) => (v ? [i] : []));
-    const blocks = { pins: [...(bootPins ?? [])] };
-    const why = { ...jsBlocksWhy };
-    if (save.sealSlotsEarned === 0) {
-        blocks.save = {
-            totem_parts: idx(save.totem_parts),
-            keys: idx(save.keys),
-            seal_parts: [...save.bootSealParts],
-        };
-    } else {
-        why.save = `the run has opened ${save.sealSlotsEarned} chest(s) and the seal in `
-            + 'each slot is a rejection-sampled draw the model does not predict '
-            + '(`levelRun.saveState`\'s own bound) — only the COUNT is knowable';
-    }
-    return { level: run.level, ctor: run.worldCtor, cleared, blocks, blocksWhy: why };
-}
-
+export { jsLiveEnvelope };
 /**
  * A queued member → the repo path it is fetched from. A member with a `/` is
  * already a path (what `?tape=` carries); a bare name is a fixture, which is
@@ -1675,6 +1603,42 @@ async function walkSequence(params, lifetime, levelSource) {
                 return stop(`window ${k} ("${names[k]}") cannot continue window ${k - 1}`,
                     refusals.map((f) => `${f.what} — ${f.detail}`).join('\n\n'));
             }
+        }
+        /**
+         * ⛓⛓⛓ R9 SLICE 5 (⚖ ruling 14's timed-row rule) — **THE WINDOW'S OWN
+         * FORWARD DECLARATIONS, HANDED TO THE RESUMED RUN AND REBASED.**
+         *
+         * ⛔ AFTER THE ADMISSION AND BEFORE THE FIRST TICK. The wasm side
+         * withholds these rows from the game (`watchWasm.continuationTape`)
+         * because the live game EARNS the clear on its own tick; the model
+         * cannot — `levelRun` refuses to compute a kill-lock clear itself, so
+         * an undeclared one THROWS. Slice 2 measured that throw at tick 1067 of
+         * `act2-the-sword`, and it was the SECOND thing standing between that
+         * chain and eleven windows.
+         *
+         * ⛔ REBASED BY THE WINDOW'S OFFSET, because a tape's `at` is
+         * WINDOW-LOCAL and the resumed run's `ticksCompleted` is the
+         * SEQUENCE's. An unrebased row would fire in whichever earlier window
+         * happened to span that tick, or never.
+         *
+         * ⛔ AND ONLY FOR k > 0. Window 0 STAGES its own run, where
+         * `createLevelRun` reads the tape's timed rows at construction exactly
+         * as it always has — untouched by this slice.
+         */
+        if (k > 0) {
+            const forward = (parsedTapes[k].persistence ?? [])
+                .filter((c) => c.at !== undefined)
+                .map((c) => ({ ...c, at: c.at + offset }));
+            if (forward.length > 0) {
+                try {
+                    run.addTimedClears(forward);
+                } catch (e) {
+                    return stop(`window ${k} ("${names[k]}") declares a forward clear this `
+                        + 'world cannot take', e.message);
+                }
+            }
+            seq.boundaries[seq.boundaries.length - 1].forwardRows = forward
+                .map((c) => `${c.level}:${c.tag}@${c.at}`);
         }
         const transitionsBefore = run ? run.transitions.length : 0;
         // eslint-disable-next-line no-await-in-loop
