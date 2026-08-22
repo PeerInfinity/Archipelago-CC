@@ -3701,7 +3701,15 @@ arithmetic closes exactly). ⛔ **TWO PRE-EXISTING REDS FOUND, BOTH BY B AND BOT
 `check-procgen-demos.mjs` is **194/2** (entries `dropped-element` seed 1 and `arena` seed 6 —
 exactly the certification flips slice 11's own §21.4 measured; confirmed by control), and
 `plan-seedling-r7-act2.mjs --check` has been broken since `706886397` (`no chain
-"act2-the-sword"`). Both left as RESIDUE. Kickoff **§21b** is the as-built. ⚠ Ruling 32 **F** = ⚖ **ruling 33**
+"act2-the-sword"`). Both left as RESIDUE. ⛔ **ONE CI RED WAS MINE** (`8a80cbd81`, fixed `da46b0e59`, JS-unit
+SUCCESS there): the reach test resolved its subject with a `git diff` over history in the
+DESCRIBE BODY, which on CI's SHALLOW checkout threw at COLLECTION and took all 16 of the
+file's rows with it while the local unfiltered run was green — trap 561. The seven paths are
+now pinned as DATA. ⚠ And a gap found on the way, NOT taken (a CI-config fix runs first in
+production): `unittests_frontend.yml`'s `paths:` filter lists only `frontend/**`, so a commit
+touching only `scripts/procgen/*.test.js` does not trigger the JS unit suite at all —
+`da46b0e59` had to be `workflow_dispatch`ed to be proved green. Kickoff **§21b** is the
+as-built. ⚠ Ruling 32 **F** = ⚖ **ruling 33**
 (targeted roster `--only=`) is NOT shipped, but its input now is: `--only-list` prints the
 selection as one line, and on slice 11's range it emits exactly the **22** names §16.11
 derived by hand. The CALLING CONVENTION is residue — no slice has run
