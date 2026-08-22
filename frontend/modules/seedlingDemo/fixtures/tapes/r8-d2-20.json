@@ -1,5 +1,5 @@
 {
-    "tape_version": 8,
+    "tape_version": 11,
     "game": "seedling",
     "name": "r8-d2-20",
     "description": "⛓⛓⛓ R8 SLICE 7 — SEGMENT 2 of the staged chain `r8-d2`, and `touch`'s room at last. EVERY FIELD OF ITS BOOT IS r8-d2-19's LATCH, read out of the run by `segmentBootFromLatch` — the save arrays with key 0 in them, the persistence set carrying `{19,0}`, the three RNG streams, the day/night phase and the music pair. That is what makes this the machinery's first MEASURED seam between two staged segments. The solver takes `shield@112,48` (no gate at all stands between the L19 arrival and it — §15.2's correction), then crosses WESTWARD through the three gates that are BEHIND it: `shieldlocknorm@176,16`, a latching TOUCH gated on `Player.hasShield` that refuses input for its whole 101-tick fade (`turnOff` restores it ONLY `if (p)`, so the verb releases the lean on the snap — a player carried out of the check rect never gets input back); then `buttonroom@192,16`, whose `room = -1` LOCAL PUBLISH latches tSet 0 open; then `lock@32,80`, which ⚖ §15.7a ruling 1 resolves through the MECHANISM GRAPH to that buttonroom rather than by its own id, with the buttonroom's stance a legal target under ⚖ ruling 2's hypothesis quantifier (it is reachable only once the shieldlock is discharged); then the four-cell alcove and `stairsup@16,48` to L13. Four clears EARNED during the run: {20,2} the shield, {20,0} the shieldlock, {20,4} the buttonroom and {20,1} the lock. ⚠ `save.rockSet` is NOT witnessed — `Shield.removed()` sets `Moonrock.beam` and the MOONROCK writes `rockSet` (trap 124), and the moonrock is in L0. Authored by scripts/procgen/solve-seedling-r8-d2-chain.mjs.",
@@ -54,6 +54,7 @@
             "note": ""
         }
     ],
+    "despawn": [],
     "equips": [],
     "pins": [
         "dead_frames"
@@ -106,6 +107,17 @@
         "music": {
             "set": "Room",
             "index": 1
+        }
+    },
+    "tick0": {
+        "rng": {
+            "seed": 1565614772,
+            "split": false,
+            "cosmetic": 0,
+            "fp": 581736349
+        },
+        "seam": {
+            "time": 10234
         }
     },
     "tick_count": 781,

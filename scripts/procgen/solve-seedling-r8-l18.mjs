@@ -62,6 +62,8 @@
 import { dirname, join } from 'node:path';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { committedTick0, tick0ParseFields, despawnField, tick0Field }
+    from './tick0Carry.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
@@ -287,7 +289,12 @@ const description = '⛓⛓⛓ R8 SLICE 8 — **THE HONEST L18**. The live solve
     + 'scripts/procgen/solve-seedling-r8-l18.mjs; trace sidecar in fixtures/traces/.';
 
 function tapeJson(obj) {
-    const parsed = parseTape(obj);
+    // ⛓ R9 slice 8: the tick-0 latch is CARRIED, never authored — read off
+    // the committed tape, which is the artifact (⚖ ruling 17). A producer
+    // that dropped it would report DRIFT on a tape nothing drifted in, and
+    // "fixing" that by re-running would DELETE the game's measurement.
+    const tick0 = committedTick0(TAPES, obj.name);
+    const parsed = parseTape({ ...obj, ...tick0ParseFields(tick0, obj) });
     return `${JSON.stringify({
         tape_version: requiredTapeVersion(parsed),
         game: 'seedling',
@@ -299,11 +306,13 @@ function tapeJson(obj) {
         noHazards: parsed.noHazards,
         grants: parsed.grants,
         persistence: parsed.persistence,
+        ...despawnField(tick0, parsed),
         equips: parsed.equips,
         pins: parsed.pins,
         save: parsed.save,
         rng: parsed.rng,
         seam: parsed.seam,
+        ...tick0Field(tick0, parsed),
         tick_count: parsed.tick_count,
         inputs: parsed.inputs,
     }, null, 4)}\n`;

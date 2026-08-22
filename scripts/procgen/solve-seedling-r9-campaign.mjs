@@ -91,6 +91,8 @@ import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { committedTick0, tick0ParseFields, despawnField, tick0Field }
+    from './tick0Carry.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
@@ -731,7 +733,15 @@ const HEADLINE_DESCRIPTION = '⛓⛓⛓ R9 SLICE 6 — THE HEADLINE of the custo
 
 function tapeJson(obj, description, label) {
     const declaredVersion = (obj.persistence ?? []).some((r) => r.at !== undefined) ? 9 : 8;
-    const parsed = parseTape({ ...obj, tape_version: declaredVersion });
+    // ⛓ R9 slice 8: the tick-0 latch is CARRIED, never authored — read off
+    // the committed tape, which is the artifact (⚖ ruling 17). Spread AFTER
+    // `declaredVersion`, which the field invalidates: a tick-0 block below
+    // v11 is refused BY DEFINITION, so a producer that carried the block and
+    // not the version would refuse its own committed tape.
+    const tick0 = committedTick0(TAPES, label);
+    const parsed = parseTape({
+        ...obj, tape_version: declaredVersion, ...tick0ParseFields(tick0, obj),
+    });
     const budget = assertTapeWithinRuntimeBudget({ ...obj, tape_version: declaredVersion },
         label);
     console.log(`## ${label} budget: ${budget.spans} span(s), `
@@ -747,11 +757,13 @@ function tapeJson(obj, description, label) {
         noHazards: parsed.noHazards,
         grants: parsed.grants,
         persistence: parsed.persistence,
+        ...despawnField(tick0, parsed),
         equips: parsed.equips,
         pins: parsed.pins,
         save: parsed.save,
         rng: parsed.rng,
         seam: parsed.seam,
+        ...tick0Field(tick0, parsed),
         tick_count: parsed.tick_count,
         inputs: parsed.inputs,
     }, null, 4)}\n`;

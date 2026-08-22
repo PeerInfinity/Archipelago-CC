@@ -1125,14 +1125,14 @@
       "file": "r7-ends-meet-1.json",
       "tickCount": 61,
       "bootLevel": 0,
-      "tapeVersion": 8,
+      "tapeVersion": 11,
       "noHazards": []
     },
     {
       "file": "r7-ends-meet-2.json",
       "tickCount": 48,
       "bootLevel": 94,
-      "tapeVersion": 8,
+      "tapeVersion": 11,
       "noHazards": []
     },
     {
@@ -1146,14 +1146,14 @@
       "file": "r8-d2-19.json",
       "tickCount": 864,
       "bootLevel": 19,
-      "tapeVersion": 8,
+      "tapeVersion": 11,
       "noHazards": []
     },
     {
       "file": "r8-d2-20.json",
       "tickCount": 781,
       "bootLevel": 20,
-      "tapeVersion": 8,
+      "tapeVersion": 11,
       "noHazards": []
     },
     {
@@ -1195,14 +1195,14 @@
       "file": "r8-solve-1.json",
       "tickCount": 183,
       "bootLevel": 0,
-      "tapeVersion": 8,
+      "tapeVersion": 11,
       "noHazards": []
     },
     {
       "file": "r8-solve-10.json",
       "tickCount": 90,
       "bootLevel": 10,
-      "tapeVersion": 8,
+      "tapeVersion": 11,
       "noHazards": []
     },
     {
@@ -1216,14 +1216,14 @@
       "file": "r8-solve-18.json",
       "tickCount": 573,
       "bootLevel": 18,
-      "tapeVersion": 9,
+      "tapeVersion": 11,
       "noHazards": []
     },
     {
       "file": "r8-solve-2.json",
       "tickCount": 47,
       "bootLevel": 2,
-      "tapeVersion": 8,
+      "tapeVersion": 11,
       "noHazards": []
     },
     {
@@ -1237,49 +1237,49 @@
       "file": "r8-solve-3.json",
       "tickCount": 245,
       "bootLevel": 3,
-      "tapeVersion": 8,
+      "tapeVersion": 11,
       "noHazards": []
     },
     {
       "file": "r8-solve-4.json",
       "tickCount": 255,
       "bootLevel": 4,
-      "tapeVersion": 8,
+      "tapeVersion": 11,
       "noHazards": []
     },
     {
       "file": "r8-solve-5.json",
       "tickCount": 558,
       "bootLevel": 5,
-      "tapeVersion": 9,
+      "tapeVersion": 11,
       "noHazards": []
     },
     {
       "file": "r8-solve-6.json",
       "tickCount": 294,
       "bootLevel": 6,
-      "tapeVersion": 8,
+      "tapeVersion": 11,
       "noHazards": []
     },
     {
       "file": "r8-solve-7.json",
       "tickCount": 146,
       "bootLevel": 7,
-      "tapeVersion": 8,
+      "tapeVersion": 11,
       "noHazards": []
     },
     {
       "file": "r8-solve-8.json",
       "tickCount": 827,
       "bootLevel": 8,
-      "tapeVersion": 9,
+      "tapeVersion": 11,
       "noHazards": []
     },
     {
       "file": "r8-solve-9.json",
       "tickCount": 122,
       "bootLevel": 9,
-      "tapeVersion": 8,
+      "tapeVersion": 11,
       "noHazards": []
     },
     {
@@ -1293,35 +1293,35 @@
       "file": "r9-solve-0.json",
       "tickCount": 237,
       "bootLevel": 0,
-      "tapeVersion": 8,
+      "tapeVersion": 11,
       "noHazards": []
     },
     {
       "file": "r9-solve-11.json",
       "tickCount": 119,
       "bootLevel": 11,
-      "tapeVersion": 8,
+      "tapeVersion": 11,
       "noHazards": []
     },
     {
       "file": "r9-solve-13.json",
       "tickCount": 74,
       "bootLevel": 13,
-      "tapeVersion": 8,
+      "tapeVersion": 11,
       "noHazards": []
     },
     {
       "file": "r9-solve-2.json",
       "tickCount": 47,
       "bootLevel": 2,
-      "tapeVersion": 8,
+      "tapeVersion": 11,
       "noHazards": []
     },
     {
       "file": "r9-solve-3.json",
       "tickCount": 226,
       "bootLevel": 3,
-      "tapeVersion": 8,
+      "tapeVersion": 11,
       "noHazards": []
     },
     {

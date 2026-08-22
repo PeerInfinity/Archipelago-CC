@@ -1,5 +1,5 @@
 {
-    "tape_version": 8,
+    "tape_version": 11,
     "game": "seedling",
     "name": "r7-ends-meet-1",
     "description": "⛓ SEGMENT 1 of chain \"toy-west-pair\" — the CUSTODY BASE CASE. Boots the game's own initial state (`Main.as:50-51`: `new Game(0, 80, 128)`, empty save) and inherits NOTHING: no grants, no persistence clears, no save presentation, no seam block. Ends at t=61, which is the L94 ARRIVAL — the constructor half-tile (288+8, 160+8) with a fresh Player at zero velocity, the only tick in this walk a `boot: {level, x, y}` can reproduce. Its latch is what authors segment 2.",
@@ -13,6 +13,7 @@
     "noHazards": [],
     "grants": [],
     "persistence": [],
+    "despawn": [],
     "equips": [],
     "pins": [
         "dead_frames"
@@ -29,6 +30,17 @@
         "fp": 987286273
     },
     "seam": null,
+    "tick0": {
+        "rng": {
+            "seed": 2258182,
+            "split": false,
+            "cosmetic": 0,
+            "fp": 987286273
+        },
+        "seam": {
+            "time": 4820
+        }
+    },
     "tick_count": 61,
     "inputs": [
         {

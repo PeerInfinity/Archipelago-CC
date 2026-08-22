@@ -1,5 +1,5 @@
 {
-    "tape_version": 8,
+    "tape_version": 11,
     "game": "seedling",
     "name": "r8-solve-3",
     "description": "⛓ R8 SLICE 2 — THE LIVE SOLVER's own solution to battery segment 3, from r7-act2-3's committed v8 boot block (staged per kickoff §3.5). GOALS derived from the chain's own units: reach-exit(128,48) — the hand-authored stances/waypoints were NOT handed over. Solver: 245 ticks, 1 decision(s), 0 re-plan(s); hand answer r7-act2-3: 245 ticks. The diff is INFORMATION, not a gate — the differential is the gate. Authored by scripts/procgen/solve-seedling-r8-battery.mjs; trace sidecar in fixtures/traces/.",
@@ -13,6 +13,7 @@
     "noHazards": [],
     "grants": [],
     "persistence": [],
+    "despawn": [],
     "equips": [],
     "pins": [
         "dead_frames"
@@ -63,6 +64,17 @@
         "music": {
             "set": "Room",
             "index": 0
+        }
+    },
+    "tick0": {
+        "rng": {
+            "seed": 2057886025,
+            "split": false,
+            "cosmetic": 0,
+            "fp": 1955308098
+        },
+        "seam": {
+            "time": 5090
         }
     },
     "tick_count": 245,

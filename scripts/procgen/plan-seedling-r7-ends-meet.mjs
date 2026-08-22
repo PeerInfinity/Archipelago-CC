@@ -44,6 +44,8 @@ import { chromium } from 'playwright';
 import { dirname, join } from 'node:path';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { committedTick0, tick0ParseFields, despawnField, tick0Field }
+    from './tick0Carry.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
@@ -59,7 +61,7 @@ if (!existsSync(join(ARTIFACT, 'game.html'))) {
     process.exit(0);
 }
 
-const { gameVisibleTape, parseTape, TAPE_VERSION } =
+const { gameVisibleTape, parseTape, requiredTapeVersion, TAPE_VERSION } =
     await import(join(REPO, 'frontend/modules/seedlingDemo/tapeFormat.js'));
 const { segmentBootFromLatch, seamLatchFindings } =
     await import(join(REPO, 'frontend/modules/seedlingDemo/r7Acceptance.js'));
@@ -80,9 +82,31 @@ const check = (name, ok, detail) => {
  * would produce a file that differs from what every consumer sees.
  */
 function tapeJson(obj, description) {
-    const parsed = parseTape(obj);
+    // ⛓ R9 slice 8: the tick-0 latch is CARRIED, never authored — read off the
+    // committed tape, which is the artifact (⚖ ruling 17).
+    const tick0 = committedTick0(TAPES, obj.name);
+    const parsed = parseTape({ ...obj, ...tick0ParseFields(tick0, obj) });
     return `${JSON.stringify({
-        tape_version: TAPE_VERSION,
+        /**
+         * ⛔⛔ WAS `TAPE_VERSION`, AND THAT WAS THIS PRODUCER'S PRE-EXISTING
+         * DRIFT — measured at a PRISTINE worktree at `899ef7a61`, where
+         * `--check` was ALREADY RED on all three of its tapes, before this
+         * slice touched anything.
+         *
+         * `TAPE_VERSION`'s own docblock says it: *"NOTHING THAT EMITS A TAPE
+         * READS THIS — the emitted version is decided by WHICH FIELDS THE
+         * CALLER DECLARES, so bumping this constant cannot silently
+         * re-version the committed fixtures."* This was the one emitter that
+         * read it, so every bump since v8 — v9, v10, and this slice's v11 —
+         * re-versioned its output and drifted it from the v8 files on disk.
+         * Nothing noticed because this producer is on NO checklist: ⚖ ruling
+         * 8's identity block runs SIX producers' `--check` and this is a
+         * SEVENTH (§14.11 named the gap for two others; this is the third).
+         *
+         * `requiredTapeVersion` is what every other producer uses and is the
+         * rule the constant documents.
+         */
+        tape_version: requiredTapeVersion(parsed),
         game: 'seedling',
         name: obj.name,
         description,
@@ -92,11 +116,13 @@ function tapeJson(obj, description) {
         noHazards: parsed.noHazards,
         grants: parsed.grants,
         persistence: parsed.persistence,
+        ...despawnField(tick0, parsed),
         equips: parsed.equips,
         pins: parsed.pins,
         save: parsed.save,
         rng: parsed.rng,
         seam: parsed.seam,
+        ...tick0Field(tick0, parsed),
         tick_count: parsed.tick_count,
         inputs: parsed.inputs,
     }, null, 4)}\n`;
@@ -173,6 +199,27 @@ async function latchOf(label, tapeObj) {
 
 try {
     for (const chain of PLAYTHROUGH_CHAINS) {
+        /**
+         * ⛔ THIS PLANNER OWNS THE `walk`-BEARING CHAINS AND ONLY THOSE, and
+         * saying so out loud is a SECOND pre-existing defect this slice
+         * measured at a pristine `899ef7a61`: the loop walked EVERY chain in
+         * `PLAYTHROUGH_CHAINS` and died with `Cannot read properties of
+         * undefined (reading 'pins')` on the first staged one (`r8-battery-1`,
+         * which declares no `walk` because a solver produced it). So the
+         * instrument crashed after its last real row, on every run, and could
+         * never reach a clean exit — its own `--check` verdict was
+         * unreachable, which is why the drift below it went unseen for three
+         * version bumps.
+         *
+         * A chain without a `walk` is not this planner's to author: it is
+         * SKIPPED by name rather than crashed on, so the exit code means what
+         * it says.
+         */
+        if (!chain.walk) {
+            console.log(`\n## chain ${chain.id} — SKIPPED: no \`walk\` block, so it is `
+                + 'not a hand-planned chain (a solver authored its segments)');
+            continue;
+        }
         console.log(`\n## chain ${chain.id}\n`);
         const spans = chainSpans(chain);
         const base = {

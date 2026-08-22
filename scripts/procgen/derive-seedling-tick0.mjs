@@ -95,6 +95,15 @@ const CHECK = process.argv.includes('--check');
 const LIST_ONLY = process.argv.includes('--list');
 const ONLY = (process.argv.find((a) => a.startsWith('--only=')) || '')
     .slice('--only='.length).split(',').filter(Boolean);
+/**
+ * ⛓ `--no-cache` — THE REPRODUCIBILITY CONTROL. The cache exists so a re-run
+ * costs nothing; this flag exists so "the same tape measured twice gives the
+ * same answer" can be ASKED. A tick-0 reading that moves between two runs is
+ * not a state to commit, and the only way to find out is to drive it twice.
+ */
+const NO_CACHE = process.argv.includes('--no-cache');
+/** `--dry-run` measures and reports, and writes NOTHING. */
+const DRY_RUN = process.argv.includes('--dry-run');
 
 const { parseTape, serializeTape, gameVisibleTape, requiredTapeVersion } =
     await import(join(MODULE, 'tapeFormat.js'));
@@ -220,7 +229,7 @@ function driveZeroTick(label, zeroTape) {
     const key = cacheKey(shipped);
     mkdirSync(CACHE, { recursive: true });
     const cached = join(CACHE, `${label}-${key}.json`);
-    if (existsSync(cached)) {
+    if (existsSync(cached) && !NO_CACHE) {
         console.log(`    ${label}: CACHED (${key})`);
         return JSON.parse(readFileSync(cached, 'utf8'));
     }
@@ -284,6 +293,78 @@ function tick0BlockFromEnvelope(envelope) {
         // frame. Uncorrected this is one frame short at every boundary.
         seam: { time: projected.seam.time + BOOT_PRESWAP_FRAMES },
     };
+}
+
+/**
+ * ⛔⛔⛔ THE WRITE IS SURGICAL, AND `serializeTape` IS **NOT** THE AUTHOR.
+ *
+ * Measured, on the first attempt at this: re-emitting a committed segment
+ * through `serializeTape` rewrote all twenty tapes wholesale. Two reasons,
+ * both invisible until the diff was read:
+ *
+ *   1. `serializeTape` indents with TWO spaces; every committed tape is
+ *      FOUR (the producers' own `JSON.stringify(..., null, 4)`), so every
+ *      line reflowed;
+ *   2. it writes `note` only when truthy, and the committed persistence rows
+ *      carry `"note": ""` — so each row silently lost a key.
+ *
+ * The result parsed, replayed and would have passed a naive "does it still
+ * load" check while breaking ⚖ ruling 20's own law that everything but the
+ * new field is BYTE-IDENTICAL. So this instrument does not re-author: it
+ * reads the committed TEXT, changes exactly two things — `tape_version` and
+ * the new `tick0` block — and re-emits with the formatting the file already
+ * had. `JSON.parse` preserves key order, and the identity
+ * `JSON.stringify(JSON.parse(text), null, 4) + "\n" === text` is MEASURED
+ * over all twenty pristine tapes rather than assumed (it holds, 20/20).
+ *
+ * ⚠ The block is inserted AFTER `seam` and BEFORE `tick_count`, which is
+ * where `serializeTape` puts it too — the two emitters disagree about
+ * whitespace, not about order.
+ *
+ * ⛔⛔ AND THE BUMP ADDS A **SECOND** KEY, WHICH THE BRIEF DID NOT PREDICT:
+ * `despawn` is MANDATORY from v10 up (`parseDespawns`: "[] when nothing is
+ * removed"), and all twenty segments are v8 or v9, so none carries it. A v11
+ * tape therefore has to declare `despawn: []`. That is the tape format's own
+ * rule rather than a choice made here — every version's fields have been
+ * mandatory from that version on since v2 — and `[]` is exactly what these
+ * tapes have always MEANT. It is reported as a delta rather than dodged by
+ * relaxing v10's guard, which is not this slice's to relax. `inputs`,
+ * expectations and the trace sidecars are untouched, which is the law's
+ * actual subject.
+ */
+function withTick0(text, block, label) {
+    const obj = JSON.parse(text);
+    if (JSON.stringify(JSON.parse(text), null, 4) + '\n' !== text) {
+        throw new Error(`${label}: the committed tape does not round-trip through `
+            + 'a 4-space re-emit, so a surgical write would reformat it. Refusing '
+            + 'rather than rewriting a file this instrument does not own the shape of.');
+    }
+    const out = {};
+    for (const [k, v] of Object.entries(obj)) {
+        if (k === 'tape_version') { out[k] = 11; continue; }
+        if (k === 'tick0') continue;          // replaced below, never duplicated
+        // `despawn` rides where `serializeTape` puts it — after `persistence`,
+        // before `equips` — so a v11 tape and a re-serialized one agree.
+        if (k === 'equips' && obj.despawn === undefined) out.despawn = [];
+        if (k === 'tick_count') out.tick0 = block;
+        out[k] = v;
+    }
+    if (out.despawn === undefined) out.despawn = [];
+    if (out.tick0 === undefined) out.tick0 = block;   // a tape with no tick_count key
+    // ⛔ AND THE RESULT MUST PARSE AS THE v11 TAPE IT CLAIMS TO BE. A
+    // surgical write that produced an unparseable tape would be caught by
+    // the next reader instead of by its author.
+    const reparsed = parseTape(JSON.parse(JSON.stringify(out)));
+    if (reparsed.tape_version !== 11 || reparsed.tick0 === null) {
+        throw new Error(`${label}: the surgical write did not produce a v11 tape `
+            + `carrying a tick-0 latch (got v${reparsed.tape_version}, `
+            + `tick0 ${reparsed.tick0 === null ? 'null' : 'present'})`);
+    }
+    if (requiredTapeVersion(reparsed) !== 11) {
+        throw new Error(`${label}: requiredTapeVersion says `
+            + `${requiredTapeVersion(reparsed)}, not 11`);
+    }
+    return `${JSON.stringify(out, null, 4)}\n`;
 }
 
 // ── THE RUN ───────────────────────────────────────────────────────────
@@ -397,14 +478,12 @@ for (const row of selected) {
         + `fp ${block.rng.fp}} vs declared {seed ${tape.rng.seed}, `
         + `cosmetic ${tape.rng.cosmetic}, fp ${tape.rng.fp}}`);
 
-    const next = parseTape({
-        ...JSON.parse(serializeTape(tape)),
-        tape_version: 11,
-        tick0: block,
-    });
-    const json = serializeTape(next);
     const have = readFileSync(tapePath(row.name), 'utf8');
-    if (have === json) {
+    const json = withTick0(have, block, row.name);
+    if (DRY_RUN) {
+        console.log(`  DRY RUN — would ${have === json ? 'leave unchanged' : 'write'} `
+            + `${tapePath(row.name)}`);
+    } else if (have === json) {
         console.log(`  unchanged (${json.length} bytes)`);
     } else {
         writeFileSync(tapePath(row.name), json);

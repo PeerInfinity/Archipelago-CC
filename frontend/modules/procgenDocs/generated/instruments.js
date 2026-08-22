@@ -1796,7 +1796,19 @@ export const INSTRUMENTS = frz({
                     "how": [
                         "includes"
                     ],
+                    "name": "dry-run"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
                     "name": "list"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "no-cache"
                 },
                 {
                     "how": [

@@ -1,5 +1,5 @@
 {
-    "tape_version": 8,
+    "tape_version": 11,
     "game": "seedling",
     "name": "r9-solve-11",
     "description": "⛓⛓⛓ R9 SLICE 6 — SEGMENT 11 of `r9-campaign`, THE TRUE-START SOLVER CHAIN (⚖ ruling 11, user 2026-08-20: \"a sequence of tapes to play back our solutions from the beginning of the game … recorded from the solver, not constructed manually\"). L11 — THE CHEST (`chest@L11`) and out by the TELEPORTER to L3. ⛔ NOT `r8-solve-11`, which takes the same chest and returns to L10: that is the BATTERY's room (its goals come from `act2-the-sword`'s units) and this is the ROUTE's step 11, which the survey solves at 119 t for the exit alone. One room, two goals, in the sphere order's sense. Solver: 119 ticks, 4 decision(s), 1 re-plan(s), ZERO hits. ⛔ ITS BOOT IS r8-solve-10's MEASURED LATCH — every field read out of the running game by `botSeam()` and turned into blocks by `segmentBootFromLatch`, not a staged declaration: the save arrays, the persistence set, the three RNG streams and `seam.time`. Two of those rows are `modelled: false` by `SEAM_BOOT_SPEC` on purpose, which is exactly why a Windows-driver run and not a model line produces them. GOALS come from the atlas (`placement` / `exitTo`); no stance, waypoint or hold tick was handed to the solver. Authored by scripts/procgen/solve-seedling-r9-campaign.mjs; trace sidecar in fixtures/traces/.",
@@ -34,6 +34,7 @@
             "note": ""
         }
     ],
+    "despawn": [],
     "equips": [],
     "pins": [
         "dead_frames"
@@ -84,6 +85,17 @@
         "music": {
             "set": "Room",
             "index": 1
+        }
+    },
+    "tick0": {
+        "rng": {
+            "seed": 785445641,
+            "split": false,
+            "cosmetic": 0,
+            "fp": 662460280
+        },
+        "seam": {
+            "time": 7938
         }
     },
     "tick_count": 119,
