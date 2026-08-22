@@ -3568,7 +3568,28 @@ a module error. Gates: identity identical, six producers green (four md5s moved 
 two unmoved as the control), survey 23/29, sequence 24/0, browser 262/0/0, vitest **6777**,
 ship **142/0**, pages **20/0** local+live, solver-roster **768/0/67 unmoved to the row** —
 the measurement that the field is invisible to the game.
-**NEXT in R9: slice 9 = the CAMPAIGN RE-RECORD PIPELINE (ruling 21) · slice 10 = the
+⛓⛓⛓ **R9 SLICE 9 SHIPPED 2026-08-22** (`d98c7aa98..ce18caa0e`, six commits) — ⚖ rulings
+21 + 23. **THE TRUE-START CAMPAIGN CHAIN PLAYS END TO END ON THE REAL GPU FOR THE FIRST
+TIME**: ship gate **245 / 0, ALL PASS**, the CAMPAIGN arm flipped from `REFUSES_AT 5` to
+ASSERTING — 14 boundaries admitted, all 15 windows agreeing per tick over the whole 3471
+observations, every tick-0 clock `declared + 21`, end state L14 (168, 72) Δ0/Δ0. ⛔ AND THE
+BRIEF'S DEFECT DID NOT EXIST: `r8-solve-6`'s rng was never stale (eleven cached latches all
+== their successors' declarations; the game reproduces 1726967612 and 514746467 today). The
+real cause was `gameVisibleTape` handing the GAME a v9 TIMED persistence row as a BOOT
+clear against `Bot.as:1587`'s clears-before-the-build rule — measured 514746467 with the
+row vs **1196897329** without, everything else identical, with two controls narrowing it to
+NECESSARY-NOT-SUFFICIENT. ⚖ Ruling 23 withholds a timed row on every path; the new
+`rerecord-seedling-campaign.mjs` (S0..S5, resumable, cached on COMPLETE bytes) then
+re-derived TWELVE boots in chain order — `rng.seed` the only field to move at seventeen
+boundaries, plus the game-sourced `save.seal_parts` `[7]`→`[4]` below the L11 chest — with
+**ZERO `RECORDED:` lines**, every input/expectation/trace byte-identical. Gates: identity
+identical, seven producers green (three md5s moved, four unmoved as the control), survey
+23/29, sequence green, census CONTINUES, solver-roster exit 0 (no solver tape moved),
+reference MATCH 237, vitest **334 files / 10254**. ⚠ Two findings for slice 9b:
+`plan-seedling-r7-ends-meet --check`'s md5 moves with MACHINE LOAD (it prints a wall clock)
+and the fork's persistence reset is guarded (ruling 25).
+**NEXT in R9: slice 9b = rulings 25 + 26 (the unconditional persistence reset behind a
+CONTROL BUILD; the v1/v2 retirement) + the `--check` timestamp fix · slice 10 = the
 campaign player (ruling 19) · slice 11 = L14's CAMERA BAND. ⚖ ALSO OPEN: the v10 despawn
 channel has two witnesses and both are hand tapes — record a solver despawn, keep them, or
 retire the channel.**
