@@ -12504,3 +12504,113 @@ instruments; survey 23/29; sequence gate 24/0; the eight local browser gates
 150, and the solver-roster differential **768 / 0 / 67** — unmoved to the row
 across twenty-six fresh-page replays, which is the measurement that the field is
 invisible to the game.
+
+### R9 slice 9: the campaign RE-RECORD PIPELINE — and the defect it was built around did not exist
+
+Slice 8 left the true-start campaign chain refusing at `boundary 5/15` on the
+real GPU, and read that refusal as proof that `r8-solve-6`'s declared stream
+position had never been re-recorded. Slice 9 was sent to find the authoring bug
+that had left it stale, and found that there was none.
+
+**The latch had landed.** All eleven latch files slice 6 left on disk carry a
+`beginEntry.rng.gameplay` that is exactly their successor's committed
+`rng.seed`; the artifact slice 6 DROVE is game-identical to the one it
+COMMITTED; and the game reproduces both today, fresh page, cache bypassed —
+`r8-solve-4` → 1726967612, `r8-solve-5` → 514746467. A pipeline that re-derived
+every boot would have written zero bytes.
+
+#### What the refusal actually was
+
+`Bot.as:1587` applies a tape's declared persistence clears **before the world is
+built**, and says why in its own comment: *"applying a clear after the world
+exists would leave the blocker standing for this visit."* And `gameVisibleTape`
+handed the game a v9 TIMED row with only its `at` removed. So one tape meant two
+different worlds — on a fresh page the gated body never spawned; on a
+continuation, whose room the game had already built at the previous boundary,
+the body stood and drew from the gameplay stream.
+
+Measured, with the prediction sealed to disk first: `r8-solve-5` walks its 558
+inputs to `rng.gameplay` **514746467** with the row handed over and
+**1196897329** without it — the second being exactly the live value the wasm
+CAMPAIGN arm had been refusing since slice 7b. 559 observations, the same end
+position, zero hits, the same clock and FP seed: only the stream moved.
+
+The control matters as much as the measurement. `r8-solve-6`, whose `{5,0}`
+names a room it never enters, is invariant either way; and `r8-solve-8`'s two
+own-room timed rows are invariant too. So the rule is **necessary, not
+sufficient**: the gated body must also draw from the gameplay stream. L5's does,
+L8's two do not, and boundary 5 was the only divergent boundary on the roster.
+
+⚖ Ruling 23 (user): *"a level run separately must play identically to the same
+level reached from the start."* The projection now withholds a timed row
+entirely, on every path. The game earns the clear by play; the model keeps the
+row, because `createLevelRun` takes timed clears at construction.
+
+#### How to re-record the campaign
+
+One command, six stages, each resumable and each flushing its state to a run
+directory:
+
+```
+node scripts/procgen/rerecord-seedling-campaign.mjs --dry-run    # S0 only
+node scripts/procgen/rerecord-seedling-campaign.mjs              # S0..S5
+node scripts/procgen/rerecord-seedling-campaign.mjs --from=S2 --run-dir=<dir>
+```
+
+| stage | what it does |
+|---|---|
+| **S0 PREDICT** | offline. Derives the subject from `PLAYTHROUGH_CHAINS` (every multi-segment chain), then the SEALED TABLE: per segment `none` / `boot-only` / `walk-moves`, the licensed set, the tick-0 re-derivations. `--dry-run` stops here. |
+| **S1 MEASURE** | the game, IN CHAIN ORDER. Segment k is driven as the artifact segment k−1 just made it, never as a provisional nobody commits. Every boot field comes from the envelope; a per-field diff against the committed block is printed, moved or not. |
+| **S2 WRITE** | surgical text edits of exactly what the table permits, then `derive-seedling-tick0.mjs` over its whole derived set. |
+| **S3 RECORD** | one `verify-seedling-bot-differential.mjs --win --record --only=<set>`. |
+| **S4 PROVE** | the JS sequence gate · the census · the wasm ship gate · the solver-roster differential. |
+| **S5 REPORT** | the sealed table with its measured column. |
+
+The laws it enforces, each unit-rowed in `rerecordCampaign.test.js`:
+
+- **every boot field comes from the measurement.** A field the envelope cannot
+  produce is a refusal BY NAME — never a carry-over from the committed block,
+  which is how a stale field survives a re-record. The committed block is read
+  only to diff against.
+- **the sealed table is a PERMISSION, not a forecast.** A segment whose bytes
+  would move and is not on it is a refusal naming the block. A `walk-moves`
+  verdict is a STOP — that licence is the user's.
+- **the latch cache is keyed on the COMPLETE bytes**, not the game-visible
+  projection: `tick0` is dropped by the projection, so two different complete
+  boots would share one latch file. A cache hit prints its key and its file.
+- **a persistence row has a measured half and a model half.** The latch owns
+  the `{level, tag}` set; `note` and ⚖ ruling 14's `at` are the model's, and
+  writing the measured set verbatim would delete both.
+- **surgical writes only**: the 4-space round-trip is measured per file before
+  anything is written.
+
+**Its definition of done is the chain PLAYING**, not the tape moving: the wasm
+CAMPAIGN arm green end to end on the real GPU. Idempotence is not the
+correctness claim — S0's verdict is a function of the tapes and reads the same
+before and after a run, so the fixed point is S1 re-measuring zero movers, which
+costs a browser.
+
+#### The first run
+
+Twelve boots re-derived, in chain order. `rng.seed` was the only field that moved
+at any of seventeen boundaries — except `save.seal_parts`, which moved `[7]` →
+`[4]` on the four segments below the L11 chest, because the seal slot is drawn
+and a re-derived stream awards a different one. Twelve tick-0 blocks moved, not
+the fourteen predicted: `derive-seedling-tick0`'s zero-tick variant had been
+filtering forward timed rows since the day it was written. The record wrote
+**zero `RECORDED:` lines** — every expectation already matched, so
+"inputs, expectations and traces byte-identical" is a measurement rather than an
+argument.
+
+**The ship gate is 245 / 0, ALL PASS, with the CAMPAIGN arm asserting**: 14
+boundaries admitted, all fifteen windows agreeing per tick over the whole
+3471-observation concatenation, every window paying its model dead-frame share
+exactly, every tick-0 clock at `declared + 21`, and the end state at L14
+(168, 72) — reached for the first time.
+
+One gate row fired for this chain for the first time and was wrong: an inverted
+arm returns before CLAIM 6 exists, so the only window 1 that row had ever
+asserted was `r8-d2`'s, which boots by DECLARATION and pays the model's share
+plus the pre-swap frame. A TRUE START swaps out of no outgoing world and pays
+one fewer. The row now derives its correction from the tape, the two arms assert
+in opposite directions in the same run, and the mutant was run both ways.
