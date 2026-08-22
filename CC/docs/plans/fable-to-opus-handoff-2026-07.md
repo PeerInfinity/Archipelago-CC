@@ -3612,7 +3612,11 @@ is four keys, v2→v3 two). ⚠ L49, the conch room, LEFT THE ROSTER. §18.11 pa
 `plan-seedling-r7-ends-meet --check`'s wall clock is gone and its md5
 **`75cf816affb3cfb903ae22b4120395ec`** is FIRST-ESTABLISHED (reproduced twice under
 different loads). Final gates: ship **245/0**, pages **20/0**, vitest **332 / 10178**,
-identity block **`65dd5849…` unmoved**, reference MATCH 238, survey 23/29, pins ALL PASS.
+identity block **`65dd5849…` unmoved**, reference MATCH 238, survey 23/29, pins ALL PASS,
+**six CI greens on `ee6e5daae`** and the LIVE Pages row **20/0 ALL PASS** (its first run read
+15/5 and the gate named the cause itself — "if the site is behind, this is the deploy, not the
+page"; the CDN had not propagated 48 s after the deploy, and the identical command re-run read
+20/0). ⚠ The live site runs the OLD binaries until the gitlink bump lands.
 ⛔ **THREE ASKS OPEN, ALL THE USER'S**: push `~/CC/seedling` (`bot`, `c2119e6`), push the
 `seedling-wasm` submodule (`1bc0003`), then bump the outer gitlink — until the last one
 lands, CI and Pages still run the pre-ruling-25 binaries.
