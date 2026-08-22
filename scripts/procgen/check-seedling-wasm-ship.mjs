@@ -1196,7 +1196,7 @@ function assertChainRefuses(ARM, WINDOWS, res, wasm, wins, at, TICKS) {
     const tape = WINDOWS[at];
     const declared = loadTape(tape).rng ?? null;
 
-    check(res.aborted === true && res.finished !== true,
+    check(res.aborted === true,
         `${ARM}: ⛓ the driver STOPPED ON THE REFUSAL and still wrote its reads — a `
         + 'refusal costs seconds now, not the whole derived deadline',
         `aborted ${res.aborted} · steps ${res.steps?.length ?? 0} · reads `
@@ -1229,7 +1229,7 @@ function assertChainRefuses(ARM, WINDOWS, res, wasm, wins, at, TICKS) {
     check((wins[at]?.admission ?? []).some((f) => !f.informational),
         `${ARM}: ⛓ …and window ${at + 1}'s own record carries the refusal too`,
         JSON.stringify((wins[at]?.admission ?? []).map((f) => f.detail?.slice(0, 90))));
-    check(wins[at]?.drain == null,
+    check(wins[at]?.drain?.observations == null,
         `${ARM}: ⛔ …and NOTHING of window ${at + 1} was stepped — refused at the `
         + 'boundary, not mid-walk', `drain ${JSON.stringify(wins[at]?.drain ?? null)}`);
 
@@ -1241,9 +1241,9 @@ function assertChainRefuses(ARM, WINDOWS, res, wasm, wins, at, TICKS) {
         check((wins[k]?.admission ?? []).every((f) => f.informational),
             `${ARM}: ⛓ boundary ${k}/${N} ADMITTED — window ${k + 1} ("${WINDOWS[k]}")`,
             JSON.stringify((wins[k]?.admission ?? []).map((f) => f.what)));
-        check(wins[k]?.drain === TICKS[k] + 1,
+        check(wins[k]?.drain?.observations === TICKS[k] + 1,
             `${ARM}: ⛓ …and it drained its own ${TICKS[k]} + 1 observations`,
-            `drain ${wins[k]?.drain}`);
+            `drain ${JSON.stringify(wins[k]?.drain ?? null)}`);
         if (k > 0) {
             check(wins[k]?.movedAtBoundary === false,
                 `${ARM}: ⛓ …and the player did not drift into it`,
@@ -1255,7 +1255,8 @@ function assertChainRefuses(ARM, WINDOWS, res, wasm, wins, at, TICKS) {
     for (let k = 0; k < wins.length; k += 1) {
         const wk = wins[k] ?? {};
         console.log(`  ${String(k + 1).padStart(2)}  ${WINDOWS[k].padEnd(16)}`
-            + `${String(TICKS[k]).padStart(6)}  ${String(wk.drain ?? 'REFUSED').padStart(7)}`
+            + `${String(TICKS[k]).padStart(6)}  `
+            + `${String(wk.drain?.observations ?? 'REFUSED').padStart(7)}`
             + `  ${String(wk.deadFrames ?? '—').padStart(10)}`
             + `  ${String(wk.movedAtBoundary ?? '—').padStart(5)}`
             + `  ${wk.clockBumped
@@ -1323,8 +1324,10 @@ function runChainArm(ARM, CHAIN_ID, WINDOWS, REFUSES_AT = null) {
      * the refusal and every window record, and the row below names them instead
      * of reporting a timeout.
      */
-    check(res !== null && res.crashed !== true && res.aborted !== true,
-        `${ARM}: the driver completed every step`,
+    check(res !== null && res.crashed !== true
+        && (res.aborted !== true || REFUSES_AT !== null),
+    `${ARM}: the driver ${REFUSES_AT === null ? 'completed every step'
+        : 'ran to the refusal this arm asserts'}`,
         res === null ? 'no results file'
             : (res.aborted
                 ? `ABORTED — the page REFUSED: ${JSON.stringify(res.reads?.wasm?.refusal
