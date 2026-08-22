@@ -112,7 +112,10 @@ describe('⛓⛓ the anchors — two readers, 655 headings, one answer', () => {
         //   them repeat earlier heading TEXT, so the -N rule reaches an
         //   ELEVENTH and TWELFTH suffix — see `ghSlug.test.js`. A re-pin, not a
         //   widening.
-        expect(total).toBe(655);
+        // ⛓ 655 → 656: R9 slice 9b's § (the fork's unconditional boot reset
+        //   and the v1/v2 retirement) — ONE heading, no sub-sections. A
+        //   re-pin, not a widening.
+        expect(total).toBe(656);
     });
 
     it('⛔ uses OUR rule, not marked\'s slugger — they differ, and here is where', () => {
@@ -293,9 +296,10 @@ describe('⛓ the biggest document — the one the budget is about', () => {
         //   which `#### Gates` is the FOURTH of that text here and
         //   `#### What the page does now` the SECOND, taking the -N rule's
         //   eleventh and twelfth suffixes.
+        // ⛓ 442 → 443: R9 slice 9b's § — one heading.
         const ids = idsOf(RENDERS.get('seedling-bot.md').html);
-        expect(ids).toHaveLength(442);
-        expect(new Set(ids).size).toBe(442);
+        expect(ids).toHaveLength(443);
+        expect(new Set(ids).size).toBe(443);
         expect(ids.filter((i) => i !== ghSlug(i))).toEqual([]);
     });
 

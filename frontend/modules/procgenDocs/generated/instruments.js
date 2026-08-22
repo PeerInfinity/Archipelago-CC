@@ -181,7 +181,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 219,
         "browser": 74,
-        "cited": 71,
+        "cited": 72,
         "files": 238,
         "lineStyle": 19,
         "withDocblock": 238,
@@ -3607,7 +3607,9 @@ export const INSTRUMENTS = frz({
             ],
             "browser": true,
             "category": "probe",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "probe-seedling-boot-reset.mjs",

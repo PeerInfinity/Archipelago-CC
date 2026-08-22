@@ -12614,3 +12614,80 @@ asserted was `r8-d2`'s, which boots by DECLARATION and pays the model's share
 plus the pre-swap frame. A TRUE START swaps out of no outgoing world and pays
 one fewer. The row now derives its correction from the tape, the two arms assert
 in opposite directions in the same run, and the mutant was run both ways.
+
+### R9 slice 9b: the fork's boot reset becomes unconditional, and the roster's last v1/v2 tape leaves
+
+Two `botStart` guards decided, for the whole arc, whether a tape got a fresh
+start: the level-persistence sweep was gated on `persistLevel.length > 0` and
+the totem/key/seal reset on `saveTotemParts.length > 0 || saveKeys.length > 0 ||
+saveSealParts.length > 0`. **A tape that declared nothing therefore took no
+reset at all and inherited whatever the page held** — so on one page, a second
+window's boot state was the first window's end state. The guards existed to keep
+a v1/v2 tape byte-identical, which is the order dependence the persistence
+comment's own next sentence had warned about. Both are deleted; the bodies
+already wrote the fresh values the game itself defines
+(`Main.buildLevelPersistence`'s all-true table, `Main.startSave`'s
+`false`/`false`/`-1`), so a tape that declares something still gets exactly what
+it declared, applied on top.
+
+**The rebuild was a three-build sequence, and the first build is the reason the
+second one can be attributed.** SWFRecomp had moved eleven commits since the
+pinned build — `avm2_ops.c`, `avm2_display.c`, `render_webgpu.c`, `libswf/tag.c`
+— so a CONTROL BUILD was made first at the *unchanged* AS3 with the *current*
+toolchain, `FRESH=1` and no `.o` cache. Its binaries are not byte-identical (they
+cannot be; mxmlc is not reproducible either) and **every behavioural gate read
+identically anyway**: ship 245/0 with the CAMPAIGN arm asserting, the 26-tape
+solver-roster differential 768/0 with zero tape bytes moved, pages 20/0, and the
+campaign pipeline's S1 fixed point 37/0 with zero movers at all seventeen
+boundaries. The toolchain is innocent by measurement, not by assumption.
+
+The edit itself then moved **nothing** on those same gates — the identity block
+is byte-identical to its own BEFORE — and the emscripten JS glue is byte-identical
+between the two builds, so only the `.wasm` carries the change, which is where an
+ABC change belongs.
+
+**The one thing that moved needed an instrument that did not exist.**
+`seedling-bot-replay-win.py --tapes` cannot express the measurement: its boundary
+guard refuses a window whose declared untimed persistence set differs from the
+live world's, which is exactly the mutant's shape. That guard is right for a
+solver chain, so the defect is measured *around* it —
+`scripts/procgen/probe-seedling-boot-reset.mjs` runs two windows on one page and
+reads the game's own `persistence_cleared` and `save.totem_parts`. The pinned
+build and the control build both read INHERITS on both arms; the edit reads
+FRESH on both; and a third build with only the persistence guard removed reads
+FRESH / INHERITS, which attributes the two guards separately. In every row
+window 1 still receives exactly what it declares.
+
+**Ruling 26 then emptied the bottom of the roster.** The reader census was
+measured rather than grepped — `loadTape` was instrumented for a whole vitest run
+so constructed names could not hide — and it split the 23 remaining v1/v2 tapes
+cleanly. The seven `r1-walk-*` tapes RETIRE: they are read, but a later-version
+tape witnesses the family, and `fixtures/tiers.js` had already measured exactly
+that when it demoted them in 2026-08-07 ("R2 re-walks the same game with solids
+restored, R3 removes the grants, R4 restores hazards"). The other sixteen — the
+physics and transport oracles, two of which are the pages gate's own hard-coded
+constants — UPGRADE to v3. **The roster goes 150 → 143 and nothing below version
+3 remains.**
+
+⛔ "A simple upgrade is one field" is false, and the format says so:
+`parseRelaxations` makes `noDamage`, `noHazards` and `grants` REQUIRED at v2 and
+`parsePersistence` requires `persistence` at v3, so a v1 → v3 re-stamp is four
+keys and a v2 → v3 one is two — always the version plus exactly the fields
+`parseTape` already normalises onto that tape. The upgrade is inert three ways:
+vitest green, the sixteen replayed against the real game at 327/0/37, and ⚖
+ruling 25 is what makes it safe at all, because the special semantics v1 and v2
+had were precisely the reset those versions did not get.
+
+Two things are worth carrying forward. A fixed point caught the re-stamp and was
+right to: `botDriverV2.test.js` asserts that the committed fixtures are what the
+driver emits today, and three of the sixteen are driver output — their diff was
+`tape_version` and nothing else. It was fixed at the producer (`synthesizeLegs`
+now declares a v3 floor, so the driver can no longer emit a retired version), not
+at the assertion. And a dangling `await import(join(REPO, …))` in
+`verify-seedling-bot-differential.mjs` survived both `node --check` and a fully
+green vitest, because vitest never loads that script; only running the gate found
+it. A path-existence sweep over every such import now reports zero.
+
+⚠ The price of the retirement is named: **L49**, the 5×9 conch room, was
+reachable only through the seven retired tapes and has left the roster, not just
+the default gate.
