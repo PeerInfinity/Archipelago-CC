@@ -706,58 +706,30 @@ export const RENDER_SIDE_DRAW_SITES = Object.freeze([
  * rejection-sampled and gameplay-inert beyond the readout — the ending gate
  * only checks "last slot filled" — so it is a POLLUTER, not a consumer.
  */
-export const GAMEPLAY_DRAW_CONSUMERS = Object.freeze({
-    finalboss: 'FinalBoss.as:142-144,158 — the rockfall spawn decision (1 draw/tick), '
-        + 'its aim (2 draws/spawn) and the grenade decision (1 draw/tick while walking)',
-    tentaclebeast: 'TentacleBeast.as:138-168 — spawn placement, up to 202 draws/frame '
-        + 'in the whirlpool loop (DEFERRED by name this rung)',
-    lightboss: 'LightBoss.as:67 — `if (!Math.floor(Math.random() * 90))` (DEFERRED)',
-});
-
 /**
- * A level's RNG posture: is a window in this room exactly reproducible?
+ * ⛓⛓⛓ R9 SLICE 8 — `GAMEPLAY_DRAW_CONSUMERS` AND `rngPostureOf` MOVED TO
+ * `seamPosture.js`, AND RE-EXPORTED HERE SO EVERY EXISTING IMPORTER IS
+ * UNCHANGED.
  *
- * ⚠ THIS IS A CLAIM ABOUT THE ROOM, NOT ABOUT THE RUN. It says whether the
- * stream can be perturbed in a way anything reads; it does NOT say the
- * update stream is byte-exact, which is what a recorded window shows.
+ * ⛔ THE REASON IS AN ARCHITECTURE BOUNDARY THIS FILE SITS ON THE WRONG SIDE
+ * OF, and `fixtures/index.js` states it in its own docblock: *"This file uses
+ * `fs` and is node-only ... the core modules are deliberately
+ * dependency-free so they stay usable in a browser"*. `r6Acceptance` imports
+ * `fixtures/index.js` for `r6ExitCriteria`'s roster, so ANYTHING that imports
+ * `r6Acceptance` pulls `node:fs` in with it.
  *
- * ⚠ And it carries one standing precondition it cannot check from a level
- * record: `Game.shake` is a `public static` that survives world swaps and
- * decays inside `view()`, which runs BELOW the `blackCover` gate — so a
- * window that begins with `shake > 0` drains it across a fade whose length
- * varies run to run. Every tape gets a fresh page, so `shake` starts at its
- * static initialiser 0; with `noDamage` on and no shake writer in the room
- * it stays there. Three facts, each assertable, none of them checked here.
+ * `rngPostureOf` is pure — a level record and a tile-type list in, a verdict
+ * out — and slice 8's posture gate needs it ON THE PAGE, where the admission
+ * runs. Importing it from here broke `watch.html` at load, and the way it
+ * broke is worth recording: the page simply never became ready, so the
+ * sequence gate reported a 180-second `TimeoutError` and NOT a module error.
+ * A page that fails to load reads exactly like a slow one.
  *
- * @param {object} levelRecord the atlas record
- * @param {number[]} tileTypes every tile type present in the level
+ * ⇒ the pure half lives in a browser-safe module and this one re-exports it.
+ * No call site moved, and the boundary is now enforced by where the code IS
+ * rather than by remembering.
  */
-export function rngPostureOf(levelRecord, tileTypes) {
-    const types = new Set((levelRecord?.entities ?? []).map((e) => e.type));
-    const renderCoupled = [];
-    if (types.has('bosstotem')) renderCoupled.push('BossTotem.render draws 2 per render');
-    if (types.has('lavaboss')) renderCoupled.push('LavaBoss.render draws 1 per render');
-    if ((tileTypes ?? []).includes(25)) {
-        renderCoupled.push('Tile.render\'s waterfall spray draws 2 per render (t=25)');
-    }
-    const consumers = Object.keys(GAMEPLAY_DRAW_CONSUMERS).filter((k) => types.has(k));
-    return {
-        renderCoupled,
-        consumers,
-        // ⛓ EXACT unless BOTH halves are present. L43 has a polluter and no
-        // consumer; L112 has a consumer and no polluter; L115 has a polluter
-        // (four waterfall tiles) and no consumer. None of the three is at
-        // risk, and the reasons are different in each case.
-        exact: !(renderCoupled.length > 0 && consumers.length > 0),
-        why: renderCoupled.length && consumers.length
-            ? `AT RISK: ${renderCoupled.join('; ')} against consumer(s) ${consumers.join(', ')}`
-            : renderCoupled.length
-                ? `polluter only, nothing reads it: ${renderCoupled.join('; ')}`
-                : consumers.length
-                    ? `consumer only, position is update-determined: ${consumers.join(', ')}`
-                    : 'no draw site of either kind',
-    };
-}
+export { GAMEPLAY_DRAW_CONSUMERS, rngPostureOf } from './seamPosture.js';
 
 // ── THE EXIT CRITERIA, derived ────────────────────────────────────────
 

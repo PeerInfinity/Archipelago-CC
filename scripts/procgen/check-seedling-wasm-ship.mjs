@@ -1251,7 +1251,7 @@ function assertChainRefuses(ARM, WINDOWS, res, wasm, wins, at, TICKS) {
         }
     }
     console.log(`\n  ${ARM} — the chain reached ${at} of ${N - 1} boundaries:`);
-    console.log('  #   window            ticks  drain  deadFrames  moved  clockBumped');
+    console.log('  #   window            ticks  drain  deadFrames  moved  tick0 time');
     for (let k = 0; k < wins.length; k += 1) {
         const wk = wins[k] ?? {};
         console.log(`  ${String(k + 1).padStart(2)}  ${WINDOWS[k].padEnd(16)}`
@@ -1259,8 +1259,9 @@ function assertChainRefuses(ARM, WINDOWS, res, wasm, wins, at, TICKS) {
             + `${String(wk.drain?.observations ?? 'REFUSED').padStart(7)}`
             + `  ${String(wk.deadFrames ?? '—').padStart(10)}`
             + `  ${String(wk.movedAtBoundary ?? '—').padStart(5)}`
-            + `  ${wk.clockBumped
-                ? `${wk.clockBumped.declared} + ${wk.clockBumped.bootCost}` : '— (fresh)'}`);
+            + `  ${wk.tick0Applied
+                ? `${wk.tick0Applied.declared.time} -> ${wk.tick0Applied.time}`
+                : '— (fresh)'}`);
     }
 }
 
@@ -1382,34 +1383,64 @@ function runChainArm(ARM, CHAIN_ID, WINDOWS, REFUSES_AT = null) {
                 : 'no blocks on the record');
 
             /**
-             * ⛔⛔ CLAIM 4 — (d′) HAPPENED, AND THE PAGE SAYS SO AS DATA. The
-             * bump is DERIVED here the same way the page derives it, so a
-             * physics edit that moves either constant moves both sides.
+             * ⛔⛔ CLAIM 4 — ⚖ RULING 20: THE TICK-0 STATE WAS **WRITTEN**, AND
+             * THE PAGE SAYS SO AS DATA.
+             *
+             * ⛔ THE EXPECTATION IS READ OFF THE TAPE, never typed and never
+             * copied from the readout it is checking. `tick0Applied` must equal
+             * the committed `tick0` block field for field — a check that
+             * compared the page's report against the page's report would be a
+             * fixed point (trap 519).
              */
-            const want = loadTape(WINDOWS[k]).seam?.time;
-            check(wk?.clockBumped?.declared === want
-                && wk?.clockBumped?.applied === want + BOOT_COST_FRAMES
-                && wk?.clockBumped?.bootCost === BOOT_COST_FRAMES,
-            `${ARM}: ⛔⛔ CLAIM 4 — window ${k + 1} was HANDED \`seam.time + bootCost\` `
-                + `(${want} + ${BOOT_COST_FRAMES} = ${want + BOOT_COST_FRAMES})`,
-            JSON.stringify(wk?.clockBumped ?? null));
+            const committed = loadTape(WINDOWS[k]);
+            const t0 = committed.tick0 ?? null;
+            const applied = wk?.tick0Applied ?? null;
+            check(t0 !== null && applied !== null
+                && applied.seed === t0.rng.seed
+                && applied.cosmetic === t0.rng.cosmetic
+                && applied.fp === t0.rng.fp
+                && applied.time === t0.seam.time,
+            `${ARM}: ⛔⛔ CLAIM 4 — window ${k + 1} was WRITTEN its DECLARED tick-0 state `
+                + `(rng.seed ${t0?.rng?.seed}, seam.time ${t0?.seam?.time})`,
+            JSON.stringify(applied));
 
-            /** ⛓ (d)'s own row, kept: the rng was declared, asserted, NOT applied. */
-            const decl = loadTape(WINDOWS[k]).rng ?? null;
-            check(JSON.stringify(wk?.rngStripped ?? null) === JSON.stringify(decl
+            /**
+             * ⛓ …and the (d′) identity survives as a CHECK, derived here the
+             * same way the page derives it, so a physics edit that moves either
+             * constant moves both sides.
+             */
+            const want = committed.seam?.time;
+            check(applied?.declared?.time === want
+                && applied?.bootCost === BOOT_COST_FRAMES
+                && applied?.obeysBootCost === true
+                && t0?.seam?.time === want + BOOT_COST_FRAMES,
+            `${ARM}: ⛓ …and window ${k + 1}'s tick-0 clock obeys \`declared + bootCost\` `
+                + `(${want} + ${BOOT_COST_FRAMES} = ${want + BOOT_COST_FRAMES})`,
+            `declared ${applied?.declared?.time} · bootCost ${applied?.bootCost} `
+                + `· obeys ${applied?.obeysBootCost} · tick0 ${t0?.seam?.time}`);
+
+            /**
+             * ⛓ …and what the tape DECLARES pre-build is on the record beside
+             * it, so a reader can see the gap the field closes without opening
+             * the tape.
+             */
+            const decl = committed.rng ?? null;
+            check(JSON.stringify({
+                seed: applied?.declared?.seed, cosmetic: applied?.declared?.cosmetic,
+                fp: applied?.declared?.fp,
+            }) === JSON.stringify(decl
                 ? { seed: decl.seed ?? 0, cosmetic: decl.cosmetic ?? 0, fp: decl.fp ?? 0 }
-                : null),
-            `${ARM}: ⛓ …and window ${k + 1} reports the rng it DECLARED, ASSERTED and did `
-                + 'NOT APPLY', JSON.stringify(wk?.rngStripped ?? null));
+                : { seed: 0, cosmetic: 0, fp: 0 }),
+            `${ARM}: ⛓ …and window ${k + 1} reports the PRE-BUILD rng it declares, `
+                + 'beside the tick-0 state it applied',
+            JSON.stringify(applied?.declared ?? null));
             check(wk?.movedAtBoundary === false,
                 `${ARM}: ⛓ …and the player did NOT drift into window ${k + 1}`,
                 `movedAtBoundary ${wk?.movedAtBoundary}`);
         }
-        check((wins[0] ?? {}).rngStripped === null
-            && (wins[0] ?? {}).clockBumped === null,
+        check((wins[0] ?? {}).tick0Applied === null,
         `${ARM}: ⛔ WINDOW 1 IS UNTOUCHED — a fresh boot applies everything it declares`,
-        `rngStripped ${JSON.stringify(wins[0]?.rngStripped)} · clockBumped `
-            + `${JSON.stringify(wins[0]?.clockBumped)}`);
+        `tick0Applied ${JSON.stringify(wins[0]?.tick0Applied)}`);
 
         /**
          * ⛔⛔ CLAIM 5 — ALL THREE WINDOWS AGREE WITH THEIR OWN MODEL PER TICK,
@@ -1471,15 +1502,16 @@ function runChainArm(ARM, CHAIN_ID, WINDOWS, REFUSES_AT = null) {
          * have to reconstruct it out of forty PASS lines.
          */
         console.log(`\n  ${ARM} — per window (${N}):`);
-        console.log('  #   window            ticks  deadFrames  model  moved  clockBumped');
+        console.log('  #   window            ticks  deadFrames  model  moved  tick0 time');
         for (let k = 0; k < N; k += 1) {
             const wk = wins[k] ?? {};
             const want = k === 0 ? SHARES[0] + BOOT_PRESWAP_FRAMES : SHARES[k];
             console.log(`  ${String(k + 1).padStart(2)}  ${WINDOWS[k].padEnd(16)}`
                 + `${String(TICKS[k]).padStart(6)}  ${String(wk.deadFrames ?? '—').padStart(10)}`
                 + `  ${String(want).padStart(5)}  ${String(wk.movedAtBoundary ?? '—').padStart(5)}`
-                + `  ${wk.clockBumped
-                    ? `${wk.clockBumped.declared} + ${wk.clockBumped.bootCost}` : '— (fresh)'}`);
+                + `  ${wk.tick0Applied
+                    ? `${wk.tick0Applied.declared.time} -> ${wk.tick0Applied.time}`
+                    : '— (fresh)'}`);
         }
     }
     pageHygiene(res, ARM);
@@ -1507,8 +1539,32 @@ runChainArm('CHAIN', 'r8-d2', CHAIN_WINDOWS);
  *
  * ⚖ A REFUSAL HERE IS A FINDING ABOUT THE CHAIN ON THE GAME, published by
  * name — never a tape fix. No `--record` is licensed in this slice.
+ *
+ * ⛓⛓⛓ R9 SLICE 8 (⚖ ruling 20) — **THE ARM IS FLIPPED BACK: IT ASSERTS THE
+ * CHAIN RUNNING END TO END.**
+ *
+ * Slice 7b ran this arm for the first time and it REFUSED at `boundary 5/15`
+ * on `rng` — `r8-solve-6`'s declared stream position against a live world that
+ * had gone somewhere else. The attribution (§16.8, plus §14.4's authoring
+ * record) is that the declaration is the FRESH-PAGE exit of `r8-solve-5`,
+ * measured by `latchOf`, while the live world had walked window 5 as a
+ * CONTINUATION — from the state (d)'s zeroing left it in, which is not where
+ * the fresh-page recording started. The two parted company inside L5, the
+ * arrow bait, where kills draw.
+ *
+ * ⇒ writing the measured TICK-0 state at every boundary removes exactly that
+ * difference: window k now begins where its own fresh-page replay began, so it
+ * walks the fresh-page walk, so its exit equals the latch its successor was
+ * authored FROM. Base case: window 1 is a fresh boot. ⛔ THIS IS A PREDICTION
+ * AND THE ARM IS HOW IT IS JUDGED — if the chain still refuses, the arm reds
+ * by name and that is a FINDING to report, not a tape to re-record.
+ *
+ * ⛔ `assertChainRefuses` IS NOT DELETED. It is this file's own convention,
+ * stated one docblock up: *"the arm that asserted the residual is not deleted —
+ * it is INVERTED"*. Passing no `REFUSES_AT` selects the asserting path; the
+ * refusing path stays, ready for the next chain that stops honestly.
  */
-runChainArm('CAMPAIGN', 'r9-campaign', PAGE_CHAINS['r9-campaign'], 5);
+runChainArm('CAMPAIGN', 'r9-campaign', PAGE_CHAINS['r9-campaign']);
 
 console.log(failed === 0 ? '\nALL PASS' : `\n${failed} FAILURE(S)`);
 process.exit(failed === 0 ? 0 : 1);
