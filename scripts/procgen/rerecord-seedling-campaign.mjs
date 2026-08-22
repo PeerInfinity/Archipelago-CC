@@ -46,11 +46,14 @@
  *    read only to DIFF against, and every compared field is printed — moved
  *    or not, because a diff that printed only movers cannot tell "unchanged"
  *    from "not compared".
- *  · THE SEALED TABLE IS THE LICENCE. S0 predicts, offline, per segment:
- *    `none` / `boot-only` / `walk-moves`. S2 writes EXACTLY the segments the
- *    table names; a segment whose bytes would move and is not on it is a
- *    refusal naming the field. A `walk-moves` prediction is a STOP — that
- *    licence is the user's.
+ *  · THE SEALED TABLE IS THE LICENCE — a PERMISSION, not a forecast. S0 says,
+ *    offline and per segment, `none` / `boot-only` / `walk-moves`: what that
+ *    segment MAY move. S2 writes only what the table permits; a segment whose
+ *    bytes would move and is not on it is a refusal naming the block. A
+ *    `walk-moves` verdict is a STOP — that licence is the user's. ⛔ Because
+ *    the verdict is a function of the TAPES it reads the same before and after
+ *    a run, so it is NOT the idempotence claim: that one is S1 measuring zero
+ *    movers, which costs a browser.
  *  · THE CACHE IS KEYED ON THE COMPLETE BYTES, not on the game-visible
  *    projection: two different complete boots project to the same bytes
  *    (`tick0` is dropped), so a projection-keyed cache can hand the second
@@ -601,9 +604,13 @@ function report(s0, s1, s2) {
     }
     console.log(`\n## written: ${(s2?.wrote ?? []).map((w) => w.label).join(', ') || '(none)'}`);
     console.log(`## run directory: ${RUN_DIR}`);
-    console.log('## ⛓ IDEMPOTENCE IS NOT THE CORRECTNESS CLAIM. A second --dry-run '
-        + 'predicting `none` everywhere is a FIXED POINT; what closes this pipeline is '
-        + 'S4 — the chain playing end to end on the real game (trap 250).');
+    console.log('## ⛓ IDEMPOTENCE IS NOT THE CORRECTNESS CLAIM, and it is not S0\'s to '
+        + 'make. S0\'s verdict is a PERMISSION — which segments MAY move — and it is a '
+        + 'function of the TAPES, so it says the same thing before and after a run. The '
+        + 'fixed point is S1 MEASURING ZERO MOVERS at every boundary against the final '
+        + 'committed artifacts, which is a browser row and not a re-print. And even that '
+        + 'is only a fixed point: what CLOSES this pipeline is S4 — the chain playing end '
+        + 'to end on the real game (trap 250).');
 }
 
 // ── the run ───────────────────────────────────────────────────────────
