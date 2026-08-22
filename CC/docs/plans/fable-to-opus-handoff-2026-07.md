@@ -3522,11 +3522,30 @@ after re-pointing; instruments 234 → **235**; roster **159, unmoved**. Battery
 four producers byte-identical. `r8-battery-4.endsAt` **253 → 255** plus the invariant that
 gates it (`endsAt === sum(segment ticks)`, true of all fifteen chains).
 `scripts/procgen/identity-block.sh` COMMITTED (ruling 17 (c)).
-**NEXT in R9: slice 7b — DELETE the nine (+ expectations, traces, index rows; roster
-159 → 150), re-point the two Windows gates' boot to `r8-solve-4`, the local browser gates,
-and the whole-chain wasm row `?tapes=r9-campaign&side=wasm`; work list = kickoff §15.11.
-Then slice 8 = L14's CAMERA BAND. ⚖ OPEN: the v10 despawn channel has two witnesses and
-both are hand tapes — record a solver despawn, keep them, or retire the channel.**
+**Slice 7b SHIPPED 2026-08-21**, `fcab60f94..addf7875f` — the deletion EXECUTED and the
+whole-chain wasm row RUN. Roster **159 → 150** (18 files: the nine tapes + nine
+expectations — there were **no `traces/` rows**, the brief's third set is empty — plus the
+regenerated index); `r7-act2-5/-6/-full` untouched. All six producers **byte-identical**
+(`75adf826…` / `9a6a3192…`), identity block identical row for row, survey **23/29 with
+every row unchanged**, sequence 24/0, vitest 6794 → **6767** (−27 accounted: −9
+`tapeIndexManifest`, −18 `tapeRunner`, two rows per tape not one). ⛔⛔ THE MUTANT FOUND
+**FOUR ACCEPTANCE GATES THAT WOULD HAVE GONE SILENT-GREEN** — a liveness probe fetching a
+hand tape reads its absence as "no dev server", prints SKIP and exits **0** (trap 486
+through a probe); all nine probes now read the generated index. Plus **two readers §15.11
+does not name** (trap 516's second firing) and **two gates red for slices** because nothing
+runs them. Survey: a dead boot source now refuses by name, exit 2, in EVERY mode. Windows:
+ship **131/0** (arms 1–5 = 105/0, + the new CAMPAIGN arm's 26), pages **20/0** with the
+picker reporting `150 option(s)`, solver-roster **768/0/67** (+14 = slice 7's own `endsAt`
+invariant × 14 chains; −1 skip = the retired chain — derived before the run).
+⛓⛓⛓ **THE CAMPAIGN CHAIN PLAYED ON THE REAL GPU AND STOPS AT BOUNDARY 5/15**: five windows
+clean, then `r8-solve-6`'s declared `rng` is not the live world's — and all ten
+`r8-solve-1..10` carry the retired hand chain's stream position byte-for-byte while their
+`seam.time` was re-recorded. No JS row can see it (the model compares declaration against
+declaration). ⚖ **OPEN: the cure is a re-record of `r8-solve-6..10`'s `rng` from the
+campaign's own latch — a TAPE MOVE, so an ask; boundaries 6/15..9/15 are unmeasured.**
+**NEXT in R9: slice 8 = L14's CAMERA BAND. ⚖ ALSO OPEN: the v10 despawn channel has two
+witnesses and both are hand tapes — record a solver despawn, keep them, or retire the
+channel.**
 **Slice 1 (the quick fixes) SHIPPED 2026-08-20**, `d7b0f5ec1..9bbc847fb`: the
 per-spec parameter DOMAIN `key=v1|v2|v3` (byte-inert, whole identity block
 unmoved) and the rung's ONE ruled generator re-record adopting it in the biome
