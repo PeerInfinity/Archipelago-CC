@@ -3588,11 +3588,39 @@ identical, seven producers green (three md5s moved, four unmoved as the control)
 reference MATCH 237, vitest **334 files / 10254**. ⚠ Two findings for slice 9b:
 `plan-seedling-r7-ends-meet --check`'s md5 moves with MACHINE LOAD (it prints a wall clock)
 and the fork's persistence reset is guarded (ruling 25).
-**NEXT in R9: slice 9b = rulings 25 + 26 (the unconditional persistence reset behind a
-CONTROL BUILD; the v1/v2 retirement) + the `--check` timestamp fix · slice 10 = the
-campaign player (ruling 19) · slice 11 = L14's CAMERA BAND. ⚖ ALSO OPEN: the v10 despawn
-channel has two witnesses and both are hand tapes — record a solver despawn, keep them, or
-retire the channel.**
+⛓⛓⛓ **R9 SLICE 9b SHIPPED 2026-08-22** (`357444ed9..c8c465621`, three outer commits + one
+in the fork and one in the wasm submodule, both AWAITING THE USER'S PUSHES) — ⚖ rulings
+25 + 26 + §18.11. **THE FORK'S BOOT RESET IS UNCONDITIONAL AND IT MOVED NOTHING.** Both
+`botStart` guards deleted (persistence sweep, save arrays), so a tape that declares nothing
+now boots from the game's own fresh-start values instead of inheriting the page. THREE local
+wasm builds: a CONTROL BUILD first at the *unchanged* AS3 (SWFRecomp had moved eleven
+commits — `avm2_ops`, `avm2_display`, `render_webgpu`, `tag.c`), which read **245/0 ship,
+768/0 solver-roster, 20/0 pages, 37/0 pipeline-S1 zero movers** on binaries that are NOT
+byte-identical ⇒ the toolchain is innocent BY MEASUREMENT and W2's attribution is clean;
+the edit then moved **nothing** on those same nine gates (identity block **byte-identical**
+to its own BEFORE, six of seven producer md5s unmoved) — and the emscripten JS glue is
+byte-identical between the two builds, so only the `.wasm` carries the change. ⛔ The one
+thing that moved needed a NEW instrument: `seedling-bot-replay-win.py --tapes` cannot express
+the mutant (its boundary guard refuses exactly that shape), so `probe-seedling-boot-reset.mjs`
+runs two windows on ONE page — **INHERITS → FRESH on both arms**, with a third build
+(persistence guard only) reading FRESH/INHERITS to attribute the two guards separately.
+⚖ Ruling 26: reader census MEASURED by instrumenting `loadTape` for a whole vitest run —
+**7 RETIRED** (the `r1-walk-*` family; `tiers.js` had already measured the family clause in
+2026-08-07) and **16 UPGRADED to v3**, roster **150 → 143, nothing below v3 left**, inert on
+the real game at **327/0/37**. ⛔ "an upgrade is ONE field" is REFUTED by the format (v1→v3
+is four keys, v2→v3 two). ⚠ L49, the conch room, LEFT THE ROSTER. §18.11 paid:
+`plan-seedling-r7-ends-meet --check`'s wall clock is gone and its md5
+**`75cf816affb3cfb903ae22b4120395ec`** is FIRST-ESTABLISHED (reproduced twice under
+different loads). Final gates: ship **245/0**, pages **20/0**, vitest **332 / 10178**,
+identity block **`65dd5849…` unmoved**, reference MATCH 238, survey 23/29, pins ALL PASS.
+⛔ **THREE ASKS OPEN, ALL THE USER'S**: push `~/CC/seedling` (`bot`, `c2119e6`), push the
+`seedling-wasm` submodule (`1bc0003`), then bump the outer gitlink — until the last one
+lands, CI and Pages still run the pre-ruling-25 binaries.
+**NEXT in R9: slice 10 = the campaign player (ruling 19) · slice 11 = L14's CAMERA BAND.
+⚖ ALSO OPEN: the v10 despawn channel has two witnesses and both are hand tapes — record a
+solver despawn, keep them, or retire the channel; and `botStart`'s OTHER two "declares
+something" gates (the seam block, the three rng writes) are an ASK — neither has a
+fresh-start value to reset TO (kickoff §19.2).**
 **Slice 1 (the quick fixes) SHIPPED 2026-08-20**, `d7b0f5ec1..9bbc847fb`: the
 per-spec parameter DOMAIN `key=v1|v2|v3` (byte-inert, whole identity block
 unmoved) and the rung's ONE ruled generator re-record adopting it in the biome
