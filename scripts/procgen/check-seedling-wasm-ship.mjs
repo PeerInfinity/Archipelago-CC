@@ -877,19 +877,58 @@ const CHAIN_WINDOWS = PAGE_CHAINS['r8-d2'];
  * See the CLAIM 2 note below for why this — and not
  * `continuationFindings` — is the makeable claim on a door-crossing subject.
  */
+/**
+ * ⛔⛔ R9 SLICE 7b — **THE FORWARD TIMED ROWS ARE APPENDED, REBASED**, and the
+ * CAMPAIGN arm is what found that they were not.
+ *
+ * A resumed window does NOT apply its own staging — that is `createTapeStepper`'s
+ * whole point, and applying it is what a REBUILD is. But `levelRun` reads a
+ * tape's TIMED persistence rows AT CONSTRUCTION (`timedClears`, :533) and
+ * refuses to compute a kill-lock clear itself, so a later window's `{level,tag}@at`
+ * has to be handed over explicitly. Both shipped chain-steppers already do it —
+ * `watchViewer.js` for the page and `census-seedling-campaign.mjs` for the
+ * census — and this derivation was a THIRD copy that did not.
+ *
+ * It agreed with them for two slices because no chain it stepped had a forward
+ * timed row in reach: `r8-d2`'s later windows declare none, and `r8-solve-18`'s
+ * `{18,0}@385` is window 0's own, applied at construction. `r9-campaign` is the
+ * first chain where it matters, and the model threw before the browser started:
+ *
+ *   levelRun: the removal of bob@48,80 at tick 1056 (an arrow kill) OPENS
+ *   1 kill lock(s) in level 5 [{5,0}] — and the tape DECLARES no clear for them
+ *
+ * — chain tick 1056 is tick 326 of window 5 (`r8-solve-5`), whose own
+ * `{5,0}@427` was never handed to the resumed run. Exactly the throw
+ * `watchViewer.js`'s own docblock records slice 2 measuring at tick 1067 of
+ * `act2-the-sword`, one chain over. ⇒ trap 383's shape, from the inside: a
+ * second copy of a derivation agrees with the first until a subject arrives
+ * that can tell them apart.
+ *
+ * ⛔ REBASED BY THE WINDOW'S OFFSET, because a tape's `at` is WINDOW-LOCAL and
+ * the resumed run's `ticksCompleted` is the SEQUENCE's — an unrebased row fires
+ * in whichever earlier window happens to span that tick, or never.
+ */
 const deadFrameSharesOf = (windows) => {
     const levelSource = shipLevelSource();
     const shares = [];
     let live = null;
     let owed = 0;
+    let offset = 0;
     for (let i = 0; i < windows.length; i += 1) {
-        const st = createTapeStepper(loadTape(windows[i]), i === 0
+        const tape = loadTape(windows[i]);
+        if (i > 0) {
+            const forward = (tape.persistence ?? []).filter((c) => c.at !== undefined)
+                .map((c) => ({ ...c, at: c.at + offset }));
+            if (forward.length > 0) live.addTimedClears(forward);
+        }
+        const st = createTapeStepper(tape, i === 0
             ? { levelSource, onTick: (a, b, c, r) => { live = r; } }
             : { run: live, onTick: (a, b, c, r) => { live = r; } });
         for (let r = st.next(); !r.done; r = st.next()) { /* step to completion */ }
         const now = live.deadFramesOwed;
         shares.push(now - owed);
         owed = now;
+        offset += tape.tick_count;
     }
     return shares;
 };
