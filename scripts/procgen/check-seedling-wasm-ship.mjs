@@ -854,6 +854,19 @@ const { BOOT_PRESWAP_FRAMES } = await import(
 const SEQ_WINDOWS = ['r8-d2-19', 'r8-d2-20'];
 const CHAIN_WINDOWS = PAGE_CHAINS['r8-d2'];
 /**
+ * ⛓⛓⛓ R9 SLICE 7b — THE CHAIN ARM BECOMES A FUNCTION OF A CHAIN ID, because a
+ * SECOND chain now has to play: `r9-campaign`, 15 windows and 3470 ticks, the
+ * whole true-start solver chain on the real GPU (§14.11/§15.11 named it twice
+ * and never ran it).
+ *
+ * ⛔ IT IS A PARAMETERISATION, NOT A COPY. This file already says why
+ * (trap 383, at the stage-list row): a second copy of a derivation agrees with
+ * the first until somebody edits one. So `r8-d2`'s arm and `r9-campaign`'s are
+ * the SAME code with the same claims, and a row that would be true of one and
+ * not the other is a row about the CHAIN and not about the harness.
+ */
+
+/**
  * ⛓⛓⛓ EACH WINDOW'S OWN DEAD-FRAME SHARE, from the MODEL, over ONE run.
  *
  * `botStart` zeroes `dead_frames` at every arm, so window k's count is ITS
@@ -864,13 +877,13 @@ const CHAIN_WINDOWS = PAGE_CHAINS['r8-d2'];
  * See the CLAIM 2 note below for why this — and not
  * `continuationFindings` — is the makeable claim on a door-crossing subject.
  */
-const SEQ_DEAD_FRAME_SHARES = (() => {
+const deadFrameSharesOf = (windows) => {
     const levelSource = shipLevelSource();
     const shares = [];
     let live = null;
     let owed = 0;
-    for (let i = 0; i < SEQ_WINDOWS.length; i += 1) {
-        const st = createTapeStepper(loadTape(SEQ_WINDOWS[i]), i === 0
+    for (let i = 0; i < windows.length; i += 1) {
+        const st = createTapeStepper(loadTape(windows[i]), i === 0
             ? { levelSource, onTick: (a, b, c, r) => { live = r; } }
             : { run: live, onTick: (a, b, c, r) => { live = r; } });
         for (let r = st.next(); !r.done; r = st.next()) { /* step to completion */ }
@@ -879,36 +892,56 @@ const SEQ_DEAD_FRAME_SHARES = (() => {
         owed = now;
     }
     return shares;
-})();
+};
+const SEQ_DEAD_FRAME_SHARES = deadFrameSharesOf(SEQ_WINDOWS);
 
 /**
  * ⛓⛓⛓ R9 SLICE 5 — THE SAME DERIVATION FOR THE **THREE-WINDOW CHAIN**, which
  * (d) makes measurable for the first time. Derived, never typed: trap 495 is
  * a gate that spelled a count and decayed when the count moved.
  */
-const CHAIN_DEAD_FRAME_SHARES = (() => {
-    const levelSource = shipLevelSource();
-    const shares = [];
-    let live = null;
-    let owed = 0;
-    for (let i = 0; i < CHAIN_WINDOWS.length; i += 1) {
-        const st = createTapeStepper(loadTape(CHAIN_WINDOWS[i]), i === 0
-            ? { levelSource, onTick: (a, b, c, r) => { live = r; } }
-            : { run: live, onTick: (a, b, c, r) => { live = r; } });
-        for (let r = st.next(); !r.done; r = st.next()) { /* step to completion */ }
-        const now = live.deadFramesOwed;
-        shares.push(now - owed);
-        owed = now;
-    }
-    return shares;
-})();
-/** ⛓ The chain's own observation counts and end state — from the TAPES. */
+/** ⛓ `r8-d2`'s own tick counts — the per-tick allowance every arm's deadline is
+ *  derived from. `runChainArm` derives everything else per chain. */
 const CHAIN_TICKS = CHAIN_WINDOWS.map((n) => loadTape(n).tick_count);
-const CHAIN_WHOLE_OBS = CHAIN_TICKS.reduce((a, b) => a + b, 0) + 1;
+
+/**
+ * ⛔⛔ THE DEADLINE IS DERIVED FROM THE CHAIN'S OWN TICK TOTAL (trap 495).
+ *
+ * `r8-d2` waits 1200 s for 2218 ticks of real GPU. That 1200 is the ONE
+ * literal here and it keeps its provenance: it is the deadline this arm has
+ * run green under since R9 slice 6, and nothing on disk records how long a
+ * tick takes on the user's machine — a per-tick rate is a property of the
+ * hardware, not of the repo, so nothing derives it. ⚖ ruling 17 allows a
+ * literal exactly there, with the sentence saying why.
+ *
+ * Everything else comes off it. `r9-campaign` is 3470 ticks — 56% more — so a
+ * typed 1200 would have killed the run about two thirds of the way through and
+ * reported a TIMEOUT that was about the clock and not about the game. The
+ * allowance is MEASURED off `r8-d2`'s throughput and multiplied by the other
+ * chain's own tick total, so a re-record that lengthens either chain moves its
+ * own deadline with it.
+ */
+const CHAIN_WAIT_SEC = 1200;
+const CHAIN_TICK_TOTAL = CHAIN_TICKS.reduce((a, b) => a + b, 0);
+const waitSecFor = (ticks) => Math.ceil((CHAIN_WAIT_SEC / CHAIN_TICK_TOTAL) * ticks);
+
+/**
+ * ⛓ THE END STATE IS READ OFF THE LAST WINDOW'S COMMITTED EXPECTATION — the
+ * room and the pixel, not a level number typed into a claim string. `r8-d2`
+ * ends L13 (104, 56); `r9-campaign` ends at L14's arrival (168, 72), which is
+ * where route step 16's camera-band refusal stops the chain honestly.
+ */
+const endStateOf = (windows) => {
+    const last = windows[windows.length - 1];
+    const exp = JSON.parse(readFileSync(
+        join(REPO, 'frontend/modules/seedlingDemo/fixtures/expectations', `${last}.json`),
+        'utf8'));
+    const t = exp.ticks[exp.ticks.length - 1];
+    return `L${t.level} (${t.x}, ${t.y})`;
+};
 
 const SEQ_PAGE = `${HOST}/frontend/modules/seedlingDemo/watch.html`
     + `?tapes=${SEQ_WINDOWS.join(',')}&side=wasm`;
-const CHAIN_PAGE = `${HOST}/frontend/modules/seedlingDemo/watch.html?tapes=r8-d2&side=wasm`;
 const SEQ_STEPS = [
     {
         what: 'the JS walk ADMITTED both windows and the ship reached `runtime`',
@@ -1094,10 +1127,21 @@ const SEQ_STEPS = [
  * sentence (trap 269), and the boot cost is still IMPORTED and summed rather
  * than typed.
  */
-{
-    const N = CHAIN_WINDOWS.length;
-    const res = drive(`▶ THE CHAIN — [${CHAIN_WINDOWS.join(', ')}] as ONE CONTINUATION`,
-        CHAIN_PAGE, [
+function runChainArm(ARM, CHAIN_ID, WINDOWS) {
+    const N = WINDOWS.length;
+    const SHARES = deadFrameSharesOf(WINDOWS);
+    const TICKS = WINDOWS.map((n) => loadTape(n).tick_count);
+    const TICK_TOTAL = TICKS.reduce((a, b) => a + b, 0);
+    const WHOLE_OBS = TICK_TOTAL + 1;
+    const SEC = waitSecFor(TICK_TOTAL);
+    const END = endStateOf(WINDOWS);
+    const PAGE_URL = `${HOST}/frontend/modules/seedlingDemo/watch.html`
+        + `?tapes=${CHAIN_ID}&side=wasm`;
+    console.log(`\n# ${ARM}: ${N} window(s), ${TICK_TOTAL} tick(s), `
+        + `deadline ${SEC}s (derived: ${CHAIN_WAIT_SEC}s / `
+        + `${CHAIN_TICK_TOTAL}t x ${TICK_TOTAL}t), ends ${END}`);
+    const res = drive(`▶ ${ARM} — ${N} window(s) as ONE CONTINUATION — [${WINDOWS.join(', ')}]`,
+        PAGE_URL, [
             {
                 what: 'the JS walk ADMITTED every window and the ship reached `runtime`',
                 wait: "window.__editorSequence?.admitted === true"
@@ -1111,33 +1155,33 @@ const SEQ_STEPS = [
                     + 'window continues the SAME game',
                 wait: 'window.__watch?.wasm?.reached?.includes('
                     + `'boundary ${N - 1}/${N}')`,
-                sec: 1200,
+                sec: SEC,
             },
             {
                 what: '⛓⛓⛓ every window finished and the CHAIN has a verdict',
                 wait: "window.__watch?.wasm?.verdict"
                     + " && window.__watch.wasm.verdict.kind !== 'not-finished'"
                     + " && window.__watch.wasm.reached?.includes('verdict')",
-                sec: 1200,
+                sec: SEC,
             },
             { read: 'window.__watch.wasm', as: 'wasm' },
             { read: 'window.__editorSequence.windows.map((w) => w.label)', as: 'seqLabels' },
-        ], 'watch-ship-chain');
-    check(res !== null && res.crashed !== true, 'CHAIN: the driver completed every step',
+        ], `watch-ship-${CHAIN_ID}`);
+    check(res !== null && res.crashed !== true, `${ARM}: the driver completed every step`,
         res === null ? 'no results file' : (res.error ?? `${res.steps.length} step(s)`));
     if (res !== null) {
         const wasm = res.reads?.wasm ?? null;
         const wins = wasm?.windows ?? [];
         const reached = wasm?.reached ?? [];
-        check(JSON.stringify(res.reads?.seqLabels) === JSON.stringify([...CHAIN_WINDOWS]),
-            `CHAIN: ⛓ the headline expanded to its ${N} segments`,
+        check(JSON.stringify(res.reads?.seqLabels) === JSON.stringify([...WINDOWS]),
+            `${ARM}: ⛓ the headline expanded to its ${N} segments`,
             JSON.stringify(res.reads?.seqLabels));
         // ⛔ THE LIST IS THE PAGE'S OWN GENERATOR (trap 383).
         check(JSON.stringify(reached) === JSON.stringify(stagesOf({ windows: N })),
-            `CHAIN: ⛓⛓ CLAIM 1 — every stage reached IN ORDER, and ONE ▶ Start for ${N} `
+            `${ARM}: ⛓⛓ CLAIM 1 — every stage reached IN ORDER, and ONE ▶ Start for ${N} `
                 + 'windows', JSON.stringify(reached));
         check(wasm?.refusal === null || wasm?.refusal === undefined,
-            'CHAIN: ⛔⛔⛔ CLAIM 2 — NO STAGE REFUSED. Slice 5 measured a refusal at '
+            `${ARM}: ⛔⛔⛔ CLAIM 2 — NO STAGE REFUSED. Slice 5 measured a refusal at `
                 + `boundary ${N - 1}/${N} on \`seam.time\`; (d′) is what closes it`,
             JSON.stringify(wasm?.refusal ?? null));
 
@@ -1152,20 +1196,20 @@ const SEQ_STEPS = [
             const wk = wins[k] ?? null;
             const refusedRows = (wk?.admission ?? []).filter((f) => !f.informational);
             check(refusedRows.length === 0,
-                `CHAIN: ⛔⛔⛔ CLAIM 3 — boundary ${k}/${N} ADMITS — zero refusals`,
+                `${ARM}: ⛔⛔⛔ CLAIM 3 — boundary ${k}/${N} ADMITS — zero refusals`,
                 JSON.stringify(refusedRows.map((f) => `${f.what}: ${f.detail}`)));
             const liveSeam = wk?.live?.blocks?.seam ?? null;
-            const declaredSeam = loadTape(CHAIN_WINDOWS[k]).seam ?? null;
+            const declaredSeam = loadTape(WINDOWS[k]).seam ?? null;
             check(liveSeam !== null && declaredSeam !== null
                 && liveSeam.time === declaredSeam.time,
-            `CHAIN: ⛔⛔⛔ …and the RESIDUAL AT BOUNDARY ${k}/${N} IS ZERO — slice 5 `
+            `${ARM}: ⛔⛔⛔ …and the RESIDUAL AT BOUNDARY ${k}/${N} IS ZERO — slice 5 `
                 + `measured ${LOAD_FADE_FRAMES} + ${BOOT_PRESWAP_FRAMES} = `
                 + `${LOAD_FADE_FRAMES + BOOT_PRESWAP_FRAMES} here`,
             `declared ${declaredSeam?.time} vs live ${liveSeam?.time} `
                 + `(Δ ${liveSeam && declaredSeam ? declaredSeam.time - liveSeam.time : '—'})`);
             check(liveSeam !== null && declaredSeam !== null
                 && JSON.stringify(liveSeam) === JSON.stringify(declaredSeam),
-            `CHAIN: ⛓ …and EVERY seam row at boundary ${k}/${N} is equal, `
+            `${ARM}: ⛓ …and EVERY seam row at boundary ${k}/${N} is equal, `
                 + '`time` included', liveSeam && declaredSeam
                 ? (Object.keys(declaredSeam).filter(
                     (x) => JSON.stringify(declaredSeam[x]) !== JSON.stringify(liveSeam[x]))
@@ -1177,28 +1221,28 @@ const SEQ_STEPS = [
              * bump is DERIVED here the same way the page derives it, so a
              * physics edit that moves either constant moves both sides.
              */
-            const want = loadTape(CHAIN_WINDOWS[k]).seam?.time;
+            const want = loadTape(WINDOWS[k]).seam?.time;
             check(wk?.clockBumped?.declared === want
                 && wk?.clockBumped?.applied === want + BOOT_COST_FRAMES
                 && wk?.clockBumped?.bootCost === BOOT_COST_FRAMES,
-            `CHAIN: ⛔⛔ CLAIM 4 — window ${k + 1} was HANDED \`seam.time + bootCost\` `
+            `${ARM}: ⛔⛔ CLAIM 4 — window ${k + 1} was HANDED \`seam.time + bootCost\` `
                 + `(${want} + ${BOOT_COST_FRAMES} = ${want + BOOT_COST_FRAMES})`,
             JSON.stringify(wk?.clockBumped ?? null));
 
             /** ⛓ (d)'s own row, kept: the rng was declared, asserted, NOT applied. */
-            const decl = loadTape(CHAIN_WINDOWS[k]).rng ?? null;
+            const decl = loadTape(WINDOWS[k]).rng ?? null;
             check(JSON.stringify(wk?.rngStripped ?? null) === JSON.stringify(decl
                 ? { seed: decl.seed ?? 0, cosmetic: decl.cosmetic ?? 0, fp: decl.fp ?? 0 }
                 : null),
-            `CHAIN: ⛓ …and window ${k + 1} reports the rng it DECLARED, ASSERTED and did `
+            `${ARM}: ⛓ …and window ${k + 1} reports the rng it DECLARED, ASSERTED and did `
                 + 'NOT APPLY', JSON.stringify(wk?.rngStripped ?? null));
             check(wk?.movedAtBoundary === false,
-                `CHAIN: ⛓ …and the player did NOT drift into window ${k + 1}`,
+                `${ARM}: ⛓ …and the player did NOT drift into window ${k + 1}`,
                 `movedAtBoundary ${wk?.movedAtBoundary}`);
         }
         check((wins[0] ?? {}).rngStripped === null
             && (wins[0] ?? {}).clockBumped === null,
-        'CHAIN: ⛔ WINDOW 1 IS UNTOUCHED — a fresh boot applies everything it declares',
+        `${ARM}: ⛔ WINDOW 1 IS UNTOUCHED — a fresh boot applies everything it declares`,
         `rngStripped ${JSON.stringify(wins[0]?.rngStripped)} · clockBumped `
             + `${JSON.stringify(wins[0]?.clockBumped)}`);
 
@@ -1209,17 +1253,17 @@ const SEQ_STEPS = [
          */
         for (const w of wins) {
             check(/agrees per tick/.test(w.verdict?.perTick?.text ?? ''),
-                `CHAIN: ⛔⛔ CLAIM 5 — window "${w.label}" AGREES PER TICK with its own `
+                `${ARM}: ⛔⛔ CLAIM 5 — window "${w.label}" AGREES PER TICK with its own `
                     + 'model stream', w.verdict?.perTick?.text ?? '(no per-tick verdict)');
         }
         check(wasm?.verdict?.perTick?.agrees === true
-            && wasm?.verdict?.perTick?.observations === CHAIN_WHOLE_OBS,
-        'CHAIN: ⛔⛔⛔ CLAIM 5 — …AND THE WHOLE CONCATENATION AGREES PER TICK, over the '
-            + `${CHAIN_WHOLE_OBS} observations the TAPES imply`,
+            && wasm?.verdict?.perTick?.observations === WHOLE_OBS,
+        `${ARM}: ⛔⛔⛔ CLAIM 5 — …AND THE WHOLE CONCATENATION AGREES PER TICK, over the `
+            + `${WHOLE_OBS} observations the TAPES imply`,
         `${wasm?.verdict?.perTick?.text} (${wasm?.verdict?.perTick?.observations})`);
-        check(wasm?.drain?.observations === CHAIN_WHOLE_OBS,
-            'CHAIN: ⛓ …and the CONCATENATED DRAIN is the same number — '
-                + `${CHAIN_TICKS.join(' + ')} + 1`,
+        check(wasm?.drain?.observations === WHOLE_OBS,
+            `${ARM}: ⛓ …and the CONCATENATED DRAIN is the same number — `
+                + `${TICKS.join(' + ')} + 1`,
             `drain ${wasm?.drain?.observations} · windows `
                 + `${wins.map((w) => w.drain?.observations).join(' + ')}`);
 
@@ -1234,29 +1278,72 @@ const SEQ_STEPS = [
          * after it. Pre-existing, never asserted before this line, and DERIVED
          * from the same constant the bump is.
          */
-        check(wins[0]?.deadFrames === CHAIN_DEAD_FRAME_SHARES[0] + BOOT_PRESWAP_FRAMES,
-            'CHAIN: ⛔⛔ CLAIM 6 — window 1 is a FRESH BOOT and pays the model\'s share '
-                + `PLUS the pre-swap frame — ${CHAIN_DEAD_FRAME_SHARES[0]} + `
+        check(wins[0]?.deadFrames === SHARES[0] + BOOT_PRESWAP_FRAMES,
+            `${ARM}: ⛔⛔ CLAIM 6 — window 1 is a FRESH BOOT and pays the model's share `
+                + `PLUS the pre-swap frame — ${SHARES[0]} + `
                 + `${BOOT_PRESWAP_FRAMES}`,
-            `game ${wins[0]?.deadFrames} vs model ${CHAIN_DEAD_FRAME_SHARES[0]}`);
+            `game ${wins[0]?.deadFrames} vs model ${SHARES[0]}`);
         for (let k = 1; k < N; k += 1) {
-            check(wins[k]?.deadFrames === CHAIN_DEAD_FRAME_SHARES[k],
-                `CHAIN: ⛔⛔ …and window ${k + 1} pays the MODEL'S SHARE EXACTLY — a `
+            check(wins[k]?.deadFrames === SHARES[k],
+                `${ARM}: ⛔⛔ …and window ${k + 1} pays the MODEL'S SHARE EXACTLY — a `
                     + `re-boot would have added blackCover's fade (${LOAD_FADE_FRAMES}) `
-                    + `on top — ${CHAIN_DEAD_FRAME_SHARES[k]}`,
-                `game ${wins[k]?.deadFrames} vs model ${CHAIN_DEAD_FRAME_SHARES[k]} `
-                    + `(shares ${JSON.stringify(CHAIN_DEAD_FRAME_SHARES)})`);
+                    + `on top — ${SHARES[k]}`,
+                `game ${wins[k]?.deadFrames} vs model ${SHARES[k]} `
+                    + `(shares ${JSON.stringify(SHARES)})`);
         }
 
         check(wasm?.verdict?.agrees === true,
-            'CHAIN: ⛔⛔⛔ CLAIM 7 — the END STATE is where the chain ENDS — L13, and the '
-                + 'chain reached it for the first time',
+            `${ARM}: ⛔⛔⛔ CLAIM 7 — the END STATE is where the chain ENDS, and the `
+                + `chain reached it for the first time — ${END}`,
             `${wasm?.verdict?.text} · Δx ${wasm?.verdict?.deltas?.dx} Δy `
                 + `${wasm?.verdict?.deltas?.dy} · level ${wasm?.verdict?.deltas?.level} `
                 + `vs ${wasm?.verdict?.deltas?.expectedLevel}`);
+
+        /**
+         * ⛓ THE PER-WINDOW TABLE, PRINTED — the row this arm exists to publish.
+         * Not a check: every column above is already asserted. It is here so a
+         * fifteen-window run can be READ, and so a slice quoting it does not
+         * have to reconstruct it out of forty PASS lines.
+         */
+        console.log(`\n  ${ARM} — per window (${N}):`);
+        console.log('  #   window            ticks  deadFrames  model  moved  clockBumped');
+        for (let k = 0; k < N; k += 1) {
+            const wk = wins[k] ?? {};
+            const want = k === 0 ? SHARES[0] + BOOT_PRESWAP_FRAMES : SHARES[k];
+            console.log(`  ${String(k + 1).padStart(2)}  ${WINDOWS[k].padEnd(16)}`
+                + `${String(TICKS[k]).padStart(6)}  ${String(wk.deadFrames ?? '—').padStart(10)}`
+                + `  ${String(want).padStart(5)}  ${String(wk.movedAtBoundary ?? '—').padStart(5)}`
+                + `  ${wk.clockBumped
+                    ? `${wk.clockBumped.declared} + ${wk.clockBumped.bootCost}` : '— (fresh)'}`);
+        }
     }
-    pageHygiene(res, 'CHAIN');
+    pageHygiene(res, ARM);
 }
+
+runChainArm('CHAIN', 'r8-d2', CHAIN_WINDOWS);
+
+/**
+ * ⛓⛓⛓ R9 SLICE 7b — **THE CAMPAIGN ARM: THE WHOLE TRUE-START CHAIN ON THE
+ * REAL GPU.** `?tapes=r9-campaign&side=wasm` — 15 windows, 14 boundaries,
+ * 3470 ticks, from L0's true game start to L14's arrival.
+ *
+ * ⛔ WHY IT WAS OWED. §14.11 named this row and did not run it ("a 15-window,
+ * 3470-tick real-GPU pass and this session had already spent four"); §15.11
+ * item 6 named it again. The JS tier plays all fifteen windows (§14.5) and the
+ * page's own sequence gate plays them in chromium (CLAIM 9b/9c/9d, 3471
+ * observations, ends {"t":3470,"x":168,"y":72,"level":14}). Until this arm
+ * runs, the GAME has never played the chain it is the custody record for.
+ *
+ * ⛔ EVERY NUMBER IS DERIVED — the window list off `PAGE_CHAINS`, the tick
+ * totals and observation count off the TAPES, the dead-frame shares off ONE
+ * stepped model run, the deadline off `r8-d2`'s measured throughput, the end
+ * state off the last window's committed expectation. Nothing about this arm is
+ * typed, which is what `windows` typed as 14 (mutant (e)) is there to prove.
+ *
+ * ⚖ A REFUSAL HERE IS A FINDING ABOUT THE CHAIN ON THE GAME, published by
+ * name — never a tape fix. No `--record` is licensed in this slice.
+ */
+runChainArm('CAMPAIGN', 'r9-campaign', PAGE_CHAINS['r9-campaign']);
 
 console.log(failed === 0 ? '\nALL PASS' : `\n${failed} FAILURE(S)`);
 process.exit(failed === 0 ? 0 : 1);
