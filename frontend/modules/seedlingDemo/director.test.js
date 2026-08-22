@@ -6,8 +6,9 @@ import {
     crutchScheduleFindings, CRUTCH_JUSTIFICATION,
     PAGE_CHAINS, parseTapesParam, formatTapesParam, expandSequence, sequenceAdmission,
     continuationAdmission, refusalsOnly, jsLiveEnvelope,
+    PAGE_CHAIN_META, CAMPAIGN_REQUIREMENTS, campaignChoice,
 } from './director.js';
-import { readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadTape } from './fixtures/index.js';
@@ -545,6 +546,176 @@ describe('⛓⛓⛓ the page-side chain table is CHECKED against PLAYTHROUGH_CHA
     it('⛓ and the headline subject is the two segments the slice claims', () => {
         // ⛓ R9 slice 3: THREE segments — `r8-solve-18` promoted in front.
         expect(PAGE_CHAINS['r8-d2']).toEqual(['r8-solve-18', 'r8-d2-19', 'r8-d2-20']);
+    });
+});
+
+/**
+ * ══ ⛓⛓⛓ R9 SLICE 10 — THE METADATA TABLE IS DERIVED FROM DISK ═══════════
+ *
+ * ⚖ Ruling 19 asks the ▶ campaign control for a chain nobody typed, so this is
+ * where "which chain" is actually computed. Every field of `PAGE_CHAIN_META` is
+ * recomputed here from three sources the browser cannot reach —
+ * `PLAYTHROUGH_CHAINS` (via `chainKind`), the committed tapes, and the
+ * decision-trace sidecars — and compared WHOLE. ⛔ Not field by field with a
+ * loop that could skip: `toEqual` over the whole object, so a chain present in
+ * one table and absent from the other is a failure rather than a silence.
+ */
+const TRACE_OF = (name) => join(HERE, 'fixtures', 'traces', `${name}.trace.json`);
+const TAPE_OF = (name) => JSON.parse(
+    readFileSync(join(HERE, 'fixtures', 'tapes', `${name}.json`), 'utf8'));
+
+/**
+ * ⛓ WHAT "A FRESH GAME START" IS, AS THE GAME DEFINES IT SINCE ⚖ RULING 25.
+ *
+ * R9 slice 9b made the fork's boot reset UNCONDITIONAL: a tape that declares
+ * nothing boots FRESH instead of inheriting whatever the page was holding. So
+ * "declares nothing carried" IS "starts where a new game does", and this
+ * predicate says that rather than naming a coordinate — `{0, 80, 128}` is
+ * where L0 happens to put the player and would be a claim about one room.
+ */
+const declaresNothingCarried = (tape) => !tape.seam
+    && (tape.persistence ?? []).length === 0
+    && (tape.grants ?? []).length === 0
+    && (tape.despawn ?? []).length === 0;
+
+describe('⛓⛓⛓ the page-side chain METADATA is CHECKED against disk (slice 10)', () => {
+    it('kind, trueStart and solverRecorded are all recomputed, whole', async () => {
+        const { PLAYTHROUGH_CHAINS, chainKind } = await import('./playthroughWalk.js');
+        const fromDisk = Object.fromEntries(PLAYTHROUGH_CHAINS.map((c) => [c.id, {
+            kind: chainKind(c),
+            trueStart: declaresNothingCarried(TAPE_OF(c.segments[0])),
+            solverRecorded: c.segments.every((n) => existsSync(TRACE_OF(n))),
+        }]));
+        expect(Object.fromEntries(
+            Object.entries(PAGE_CHAIN_META).map(([k, v]) => [k, { ...v }]),
+        )).toEqual(fromDisk);
+    });
+
+    /**
+     * ⛔⛔ THE PARTITION THE CONTROL RESTS ON, MEASURED OVER THE DOMAIN IT IS
+     * APPLIED TO — and it is clean there.
+     *
+     * ⚠ IT IS NOT CLEAN ROSTER-WIDE, and slice 10 measured the exception rather
+     * than assuming it away: `diagonal-run` is a HAND physics micro-fixture
+     * ("Hold RIGHT+UP for 30 ticks") that carries a `.trace.json` because it is
+     * `decisionTrace.test.js`'s own FORMAT fixture — no producer under
+     * `scripts/procgen/` writes it. So "has a sidecar" admits exactly one tape
+     * the solver did not record, and that tape is in no chain. ⇒ the predicate
+     * is asserted over the domain the control applies it to (chain segments),
+     * in BOTH directions, and the out-of-domain exception is named.
+     */
+    it('⛔ over CHAIN SEGMENTS the sidecar partitions solver tapes exactly', async () => {
+        const { PLAYTHROUGH_CHAINS } = await import('./playthroughWalk.js');
+        const solverNamed = (n) => /^r[89]-(solve|d2)/.test(n);
+        const rows = PLAYTHROUGH_CHAINS.flatMap((c) => c.segments.map((n) => ({
+            n, traced: existsSync(TRACE_OF(n)), solver: solverNamed(n),
+        })));
+        // ⛔ Both directions: a solver segment with no trace and a hand segment
+        // with one are DIFFERENT defects, and neither may pass as the other.
+        expect(rows.filter((r) => r.solver && !r.traced).map((r) => r.n)).toEqual([]);
+        expect(rows.filter((r) => !r.solver && r.traced).map((r) => r.n)).toEqual([]);
+        // …and BOTH sides of the partition are non-empty, which is what makes
+        // the two rows above claims rather than vacuities (trap 475).
+        expect(rows.some((r) => r.traced)).toBe(true);
+        expect(rows.some((r) => !r.traced)).toBe(true);
+    });
+
+    it('⚠ the ONE roster-wide exception is `diagonal-run`, and it is in no chain', async () => {
+        const { PLAYTHROUGH_CHAINS } = await import('./playthroughWalk.js');
+        // ⛔ SEGMENTS **AND HEADLINES**. `r8-d2` is a chain's headline tape —
+        // the same walk driven in ONE run — and the solver records it exactly
+        // as it records a segment, so a set built from segments alone would
+        // report it as an exception it is not.
+        const inAChain = new Set(PLAYTHROUGH_CHAINS
+            .flatMap((c) => [...c.segments, c.headline]));
+        const traced = readdirSync(join(HERE, 'fixtures', 'traces'))
+            .filter((f) => f.endsWith('.trace.json'))
+            .map((f) => f.replace(/\.trace\.json$/, ''));
+        // ⛔ A PIN, not a filter: the day a SECOND untraceable-by-a-producer
+        // sidecar appears this row reds and somebody reads why, instead of the
+        // control quietly widening.
+        expect(traced.filter((n) => !inAChain.has(n))).toEqual(['diagonal-run']);
+    });
+});
+
+describe('⛓⛓⛓ campaignChoice — the ▶ campaign control picks by RULE (slice 10)', () => {
+    it('picks the one chain that satisfies all three requirements', () => {
+        const c = campaignChoice();
+        expect(c.refusal).toBeNull();
+        expect(c.segments).toEqual([...PAGE_CHAINS[c.id]]);
+        // ⛔ THE NAME APPEARS HERE AND NOWHERE IN THE CONTROL. A roster that
+        // grows a different campaign fails in this row, where a human reads the
+        // reason, rather than in a page that silently plays something else.
+        expect(c.id).toBe('r9-campaign');
+        expect(c.why).toMatch(/custody \+ true-start \+ solver-recorded/);
+    });
+
+    /**
+     * ⛓⛓⛓ THE MEASUREMENT THAT MAKES ⚖ RULING 19's SECOND HALF LOAD-BEARING.
+     *
+     * `toy-west-pair` is ALSO a custody chain and its first segment ALSO
+     * declares nothing — `r7-ends-meet-1` and `r8-solve-1` have byte-identical
+     * boot blocks. So the true-start axis separates nothing among custody
+     * chains today, and "only tapes generated by the solver" is what leaves one
+     * answer standing. Without it the control would face a REAL tie, not a
+     * hypothetical one — and it refuses rather than picking the first.
+     */
+    it('⛔ the solver rule breaks a REAL tie — both custody chains are true starts', () => {
+        expect(PAGE_CHAIN_META['toy-west-pair'])
+            .toEqual({ kind: 'custody', trueStart: true, solverRecorded: false });
+        expect(TAPE_OF('r7-ends-meet-1').boot).toEqual(TAPE_OF('r8-solve-1').boot);
+        const both = {
+            ...PAGE_CHAIN_META,
+            'toy-west-pair': { kind: 'custody', trueStart: true, solverRecorded: true },
+        };
+        const tie = campaignChoice({ meta: both });
+        expect(tie.id).toBeNull();
+        expect(tie.refusal.reason).toMatch(/more than one campaign/);
+        expect(tie.refusal.detail).toMatch(/toy-west-pair/);
+        expect(tie.refusal.detail).toMatch(/r9-campaign/);
+    });
+
+    it('⛔ a STAGED chain is not picked, however solver-recorded it is', () => {
+        const staged = Object.fromEntries(Object.entries(PAGE_CHAIN_META)
+            .map(([k, v]) => [k, k === 'r9-campaign' ? { ...v, kind: 'staged' } : v]));
+        const c = campaignChoice({ meta: staged });
+        expect(c.id).toBeNull();
+        expect(c.refusal.reason).toMatch(/no chain plays from a fresh game start/);
+        expect(c.rejected.find((r) => r.id === 'r9-campaign').failed).toBe('custody');
+    });
+
+    it('⛔ a chain with ONE hand tape in it is refused BY NAME, not silently dropped', () => {
+        const handed = Object.fromEntries(Object.entries(PAGE_CHAIN_META)
+            .map(([k, v]) => [k, k === 'r9-campaign' ? { ...v, solverRecorded: false } : v]));
+        const c = campaignChoice({ meta: handed });
+        expect(c.id).toBeNull();
+        const row = c.rejected.find((r) => r.id === 'r9-campaign');
+        expect(row.failed).toBe('solver-recorded');
+        expect(row.why).toMatch(/not recorded by the solver/);
+        expect(c.refusal.detail).toMatch(/r9-campaign: .*not recorded by the solver/);
+    });
+
+    it('⛔ a chain whose first segment carries a state is not a fresh start', () => {
+        const mid = Object.fromEntries(Object.entries(PAGE_CHAIN_META)
+            .map(([k, v]) => [k, k === 'r9-campaign' ? { ...v, trueStart: false } : v]));
+        const c = campaignChoice({ meta: mid });
+        expect(c.id).toBeNull();
+        expect(c.rejected.find((r) => r.id === 'r9-campaign').failed).toBe('true-start');
+    });
+
+    it('a chain in the table with no metadata row is NAMED, not skipped', () => {
+        const { 'r9-campaign': _drop, ...missing } = PAGE_CHAIN_META;
+        const c = campaignChoice({ meta: missing });
+        expect(c.id).toBeNull();
+        expect(c.rejected.find((r) => r.id === 'r9-campaign').failed).toBe('meta');
+    });
+
+    it('every requirement carries its own WHY and its own refusal sentence', () => {
+        for (const r of CAMPAIGN_REQUIREMENTS) {
+            expect(r.why.length).toBeGreaterThan(20);
+            expect(typeof r.failed({ kind: 'staged', trueStart: false, solverRecorded: false }))
+                .toBe('string');
+        }
     });
 });
 

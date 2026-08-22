@@ -497,6 +497,15 @@
         <button id="queueAdd">+ queue</button>
         <button id="queueRun" disabled>&#9654; run sequence</button>
         <button id="queueClear" disabled>clear</button>
+        <!-- ⛓⛓⛓ R9 SLICE 10 — ▶ campaign (⚖ ruling 19, the user's): *"a way for
+             the watch page to play the full sequence of campaign tapes that we
+             have solved so far"*. ONE CLICK, and it holds NO chain id: it asks
+             `director.campaignChoice` for the custody chain that boots a true
+             start and whose every segment the solver recorded, then writes that
+             id through the QUEUE'S OWN WRITER — so the campaign is the same
+             `?tapes=` LINK every other sequence is and the existing arm plays
+             it. ⛔ No second player. -->
+        <button id="campaignRun">&#9654; campaign</button>
         <span id="queueList" class="note"></span>
       </span>
     </span>
@@ -886,6 +895,14 @@
   <div id="sourceStamp" class="note"></div>
   <div id="status">loading…</div>
   <div id="detail"></div>
+  <!-- ⛓⛓⛓ R9 SLICE 10 — THE CAMPAIGN READOUT (⚖ ruling 19). Where the
+       playthrough STANDS: rooms crossed, which goal-ledger rows the run
+       CREDITED, where it stopped and — from the census's committed frontier
+       artifact — the refusal that is the next work order. ⛔ Every number in it
+       is derived from the run and from committed artifacts; the gate re-derives
+       each one rather than echoing this element (trap 269). Hidden until a
+       sequence has something to say. -->
+  <div id="campaignReadout" hidden></div>
   <div id="progress"><div id="bar"></div></div>
 </header>
 <main>

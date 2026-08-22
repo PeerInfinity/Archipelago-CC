@@ -152,10 +152,19 @@ import { createRunForStaging, rolesForStaging, solveStaging } from './tapeRunner
  * would be two directors agreeing until one was edited.
  */
 import {
-    boundaryFindings, continuationAdmission, expandSequence, formatTapesParam,
-    jsLiveEnvelope, PAGE_CHAINS, parseTapesParam, refusalsOnly, sequenceAdmission,
-    streamBoundaryFindings,
+    boundaryFindings, campaignChoice, continuationAdmission, expandSequence,
+    formatTapesParam, jsLiveEnvelope, PAGE_CHAINS, parseTapesParam, refusalsOnly,
+    sequenceAdmission, streamBoundaryFindings,
 } from './director.js';
+/**
+ * ⛓ R9 SLICE 10 — the ledger and the seam-field reader, IMPORTED rather than
+ * re-spelled. `chainGoalFindings` credits a chain in node with exactly these
+ * two functions; the campaign readout credits the RUN with the same two, so
+ * the page and the acceptance cannot drift into two opinions about what
+ * "earned" means. `r7Acceptance.js` imports only `tapeFormat`/`rng` and is
+ * already loaded in the browser by `watchWasm.js`.
+ */
+import { goalEarnedWitness, R7_GOAL_LEDGER, seamBootFields } from './r7Acceptance.js';
 import {
     censusGoalOptions, censusWorld, defaultGoalsFromCensus, formatGoalsParam,
     harvestPresets, itemFlagsOf, ITEM_FORM_FIELDS, parseGoalsParam, readSolveParams,
@@ -1505,6 +1514,252 @@ function nearestChainFor(name) {
 }
 
 /**
+ * ══ ⛓⛓⛓ R9 SLICE 10 — THE CAMPAIGN READOUT (⚖ ruling 19) ══════════════════
+ *
+ * *"a way for the watch page to play the full sequence of campaign tapes that
+ * we have solved so far"* — and, having played it, to SAY WHERE THE PLAYTHROUGH
+ * STANDS: how many rooms it crossed, which goal-ledger rows it credited, where
+ * it stopped and what the next work order is.
+ *
+ * ⛔ EVERY NUMBER IS DERIVED, AND THE GATE RE-DERIVES EVERY ONE (trap 269 — an
+ * echo is not a value). Nothing here is typed: the chain comes from
+ * `campaignChoice`, the rooms from the walk's own windows, the credit from the
+ * committed tapes through `r7Acceptance`'s own two functions, and the frontier
+ * from an artifact the census writes and `--check`s.
+ *
+ * ⛔⛔ SCOPE, AS RULED. Only the fresh-start solver chain is ever named here.
+ * The detached `r8-d2` tail is real, playable on its own and NOT part of this:
+ * ⚖ ruling 19 scopes the player to *"the tapes that can be played continuously
+ * from a fresh game start"*, so the readout may say the rooms past the stop are
+ * unsolved and may not offer them.
+ */
+const FRONTIER_PATH = 'frontend/modules/seedlingDemo/fixtures/campaign-frontier.json';
+let frontierMemo = null;
+
+/**
+ * The census's committed projection of the route survey. ⚠ The survey JSON
+ * itself is gitignored (`NewDocs/*`), so this artifact is the only thing a
+ * BROWSER can read — and `census-seedling-campaign.mjs --check-frontier` is
+ * what keeps it honest against the survey on a machine that has one.
+ *
+ * ⛔ A MISSING OR MALFORMED ARTIFACT IS A NAMED ABSENCE, never a silent one:
+ * the readout prints the reason where the work order would have gone.
+ */
+async function campaignFrontier() {
+    if (frontierMemo) return frontierMemo;
+    try {
+        const j = await fetchJson(repoUrl(FRONTIER_PATH), 'the campaign frontier');
+        frontierMemo = { artifact: j, why: null };
+    } catch (e) {
+        frontierMemo = { artifact: null, why: `${FRONTIER_PATH} — ${e.message}` };
+    }
+    return frontierMemo;
+}
+
+/**
+ * ⛓⛓⛓ WHICH GOAL-LEDGER ROWS THIS RUN CREDITED, and the derivation is
+ * `chainGoalFindings`' own — `goalEarnedWitness` over a segment's BOOT and its
+ * LATCH, asking whether the collectible went NOT-HELD to HELD inside one driven
+ * window, which a declaration cannot fake.
+ *
+ * ⛔ THE LATCH IS THE SUCCESSOR'S BOOT BLOCK, AND THAT IS THE CUSTODY CHAIN'S
+ * WHOLE CLAIM, NOT A SHORTCUT. `boot(k+1) == latch(k)` is an equality the GAME
+ * produced over all 46 signature rows (R9 slice 6) and `seamLatchFindings`
+ * gates it in node. So the fields compared here came out of the running game,
+ * not out of the model's item mirror — which `levelRun.initialInventory`'s own
+ * docblock warns against reading as an oracle ("a test that asserted an item
+ * from here would be asserting that this file agrees with itself", trap 250).
+ *
+ * ⛔ AND THE RUN IS WHAT GATES IT. Only windows this walk actually STEPPED are
+ * offered a witness, so a run that stops at window 5 credits nothing from
+ * window 10 — the readout reports the playthrough, not the roster.
+ *
+ * ⚠ THE LAST STEPPED WINDOW IS UNASSERTED BY NAME. It has no successor boot, so
+ * whether it earned anything is a question this page cannot answer; saying
+ * nothing would make "earned nothing" and "could not look" print the same
+ * thing (trap 119).
+ */
+function campaignLedger(parsedTapes, names, stepped) {
+    const rows = [];
+    const credited = [];
+    const boots = parsedTapes.map((t) => seamBootFields(t));
+    const usable = Math.min(stepped, parsedTapes.length) - 1;
+    for (let k = 0; k < usable; k += 1) {
+        for (const row of R7_GOAL_LEDGER) {
+            if (credited.some((c) => c.id === row.id)) continue;
+            const witness = goalEarnedWitness(row, boots[k], boots[k + 1]);
+            if (witness) credited.push({ id: row.id, segment: names[k], witness });
+        }
+    }
+    const unasserted = usable >= 0 && usable < parsedTapes.length
+        ? [{
+            window: usable + 1,
+            label: names[usable] ?? null,
+            why: 'the last window this run stepped has no successor boot block, so its '
+                + 'own latch is not on the page — any row it earned is UNASSERTED here, '
+                + 'not absent',
+        }]
+        : [];
+    return { total: R7_GOAL_LEDGER.length, credited, creditedCount: credited.length,
+        unasserted, rows };
+}
+
+/**
+ * The structural object the gate reads and the block the reader sees, built
+ * from one source. ⛔ The DOM is rendered FROM `__campaign`, never beside it: a
+ * readout and an object that are two renderings of two computations is the
+ * shape trap 269 is about.
+ */
+function publishCampaign(seq, parsedTapes, names, run) {
+    const choice = campaignChoice();
+    const stepped = seq.windows.filter((w) => !w.refused).length;
+    /**
+     * ⛔ THE ARTIFACT IS PREFETCHED (`campaignFrontier()` is awaited at the top
+     * of `walkSequence`) SO THIS FUNCTION IS SYNCHRONOUS — and it has to be:
+     * `stop()` publishes `__editorSequence` synchronously and the gates wait on
+     * that, so a campaign object that arrived one microtask later would be a
+     * readout the gate could legally read as absent. `frontierMemo` is already
+     * filled by the time any caller gets here; the `?? {}` is the shape for a
+     * caller that has not, and it degrades to a NAMED absence rather than a
+     * throw.
+     */
+    const { artifact = null, why = 'the frontier artifact was not fetched before the '
+        + 'walk began' } = frontierMemo ?? {};
+    const isCampaign = choice.id !== null && seq.asked.length === 1
+        && seq.asked[0] === choice.id;
+    const ledger = parsedTapes
+        ? campaignLedger(parsedTapes, names, stepped)
+        : { total: R7_GOAL_LEDGER.length, credited: [], creditedCount: 0,
+            unasserted: [{ window: 0, label: null,
+                why: 'the walk stopped before any tape was parsed' }], rows: [] };
+    const camp = {
+        /** ⛓ The chain the ▶ campaign control WOULD play, derived, always. */
+        campaign: choice.id,
+        campaignWhy: choice.why,
+        campaignRefusal: choice.refusal,
+        /** ⚠ …and whether THIS sequence is that chain. `?tapes=r8-d2` is a
+         *  legal sequence and is not the campaign; the readout says which. */
+        isCampaign,
+        asked: [...seq.asked],
+        chainSegments: choice.segments.length,
+        rooms: {
+            crossed: stepped,
+            of: seq.windows.length,
+            rows: seq.windows.map((w) => ({
+                index: w.index,
+                segment: w.label,
+                level: w.endLevel ?? null,
+                ticks: w.ticks ?? null,
+                admitted: w.refused ? false : w.index === 0
+                    || Boolean(seq.boundaries.find((b) => b.index === w.index)),
+            })),
+        },
+        ledger,
+        end: run && stepped > 0 ? {
+            level: run.level,
+            /**
+             * ⛔ THE PLAYER'S OWN LAST OBSERVATION, NOT `worldCtor`. The two are
+             * different quantities that both read as "an (x,y) at the end":
+             * `worldCtor` is the ARGUMENTS the last level was constructed with
+             * (what `continuationAdmission` compares across a boundary), and the
+             * player is where the walk actually stands. Slice 10 measured them
+             * disagreeing on this very chain — ctor (160,64) against the player
+             * — so both are published, each under its own name.
+             */
+            x: seq.stream?.at(-1)?.x ?? null,
+            y: seq.stream?.at(-1)?.y ?? null,
+            ctor: run.worldCtor ? { x: run.worldCtor.x, y: run.worldCtor.y } : null,
+            ticks: seq.ticks ?? null,
+            /**
+             * ⛔ UNASSERTED BY NAME on this side. `seam.time` is a thing the
+             * GAME counts (`Game.as:832`'s `time += timeRate`, per RENDER); the
+             * JS model builds no seam envelope at all, so a number here would
+             * be this page inventing the one field it cannot see.
+             */
+            seamTime: null,
+            seamTimeWhy: 'the JS model builds no seam envelope and keeps no render '
+                + 'count, so `seam.time` is UNASSERTED on this side — the wasm arm '
+                + 'answers it from `botSeam()`',
+        } : null,
+        stoppedAt: seq.refusal
+            ? {
+                window: seq.windows.findIndex((w) => w.refused),
+                label: seq.windows.find((w) => w.refused)?.label ?? null,
+                reason: seq.refusal.reason,
+                detail: seq.refusal.detail,
+            }
+            : null,
+        /**
+         * ⛓ THE NEXT WORK ORDER, VERBATIM from the committed artifact. ⛔ The
+         * page does not summarise the refusal: the census derived it from the
+         * survey's own sentence and the reader is owed that sentence.
+         */
+        frontier: artifact
+            ? {
+                chain: artifact.chain,
+                lastArrival: artifact.lastArrival,
+                nextStep: artifact.nextStep,
+                refusal: artifact.refusal,
+                why: artifact.why,
+                source: FRONTIER_PATH,
+            }
+            : { chain: null, lastArrival: null, nextStep: null, refusal: null,
+                why, source: FRONTIER_PATH },
+    };
+    window.__campaign = camp;
+    renderCampaign(camp);
+    return camp;
+}
+
+/** ⛓ The reader's view of the SAME object — rendered from it, not beside it. */
+function renderCampaign(c) {
+    const el = $('campaignReadout');
+    if (!el) return;
+    const esc = (t) => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+    const parts = [];
+    parts.push(`<b>THE PLAYTHROUGH</b> — ${c.isCampaign
+        ? `the campaign chain <code>${esc(c.campaign)}</code>`
+        : `a sequence of ${c.asked.length} member(s), NOT the campaign `
+            + `(that is <code>${esc(c.campaign ?? 'refused')}</code>)`}`);
+    parts.push(`rooms crossed: <b>${c.rooms.crossed}</b> of ${c.rooms.of}`);
+    parts.push(c.rooms.rows.map((r) => `  ${r.index + 1}. ${esc(r.segment)} — `
+        + `${r.level === null ? 'not stepped' : `ends L${r.level}`}`
+        + `${r.ticks === null ? '' : `, ${r.ticks} ticks`}`
+        + `${r.admitted ? '' : ' — REFUSED'}`).join('<br>'));
+    parts.push(`goal ledger: <b>${c.ledger.creditedCount} / ${c.ledger.total}</b> credited`
+        + (c.ledger.credited.length
+            ? ` — ${c.ledger.credited.map((r) => `${esc(r.id)} (${esc(r.segment)})`)
+                .join(', ')}` : ''));
+    for (const u of c.ledger.unasserted) {
+        parts.push(`⚠ UNASSERTED: window ${u.window}${u.label ? ` (${esc(u.label)})` : ''}`
+            + ` — ${esc(u.why)}`);
+    }
+    if (c.end) {
+        parts.push(`ends: the player at L${c.end.level} (${c.end.x},${c.end.y})`
+            + `${c.end.ctor ? `, world built at (${c.end.ctor.x},${c.end.ctor.y})` : ''}`
+            + `, ${c.end.ticks} ticks`
+            + `  ·  ⚠ seam.time UNASSERTED — ${esc(c.end.seamTimeWhy)}`);
+    }
+    if (c.stoppedAt) {
+        parts.push(`⛔ STOPPED at window ${c.stoppedAt.window} `
+            + `(${esc(c.stoppedAt.label)}): ${esc(c.stoppedAt.reason)}`);
+    }
+    if (c.frontier.nextStep) {
+        parts.push(`<b>NEXT WORK ORDER</b> — route step ${c.frontier.nextStep.step}, `
+            + `L${c.frontier.nextStep.level} → L${c.frontier.nextStep.crossesTo}: `
+            + `${esc(c.frontier.refusal.family)}`);
+        parts.push(`<i>${esc(c.frontier.refusal.text)}</i>`);
+        parts.push('⚠ the rooms beyond that arrival are UNSOLVED — this player shows '
+            + 'only what plays continuously from a fresh game start.');
+    } else {
+        parts.push(`⚠ no work order — ${esc(c.frontier.why ?? 'the frontier artifact '
+            + 'names no refused step')}`);
+    }
+    el.innerHTML = parts.join('<br>');
+    el.hidden = false;
+}
+
+/**
  * ⛓⛓⛓ THE SEQUENCE'S ONE WALK — resolve, admit, and step N windows on ONE live
  * run. **BOTH ARMS CALL THIS.** The JS arm scrubs what it collected; the wasm
  * arm ships the same windows to the real game and compares against the same
@@ -1525,16 +1780,28 @@ async function walkSequence(params, lifetime, levelSource) {
         boundaries: [],
     };
     /**
+     * ⛓ R9 SLICE 10 — what the campaign readout needs, kept as the walk fills
+     * it in, so a STOP can report the playthrough it got as far as instead of
+     * reporting nothing. ⛔ A refused run is the case the readout exists FOR.
+     */
+    const sofar = { parsedTapes: null, names: null, run: null };
+    /**
      * ⛔ A REFUSAL IS PAINTED AND RETURNED, never thrown: the readout is what
      * the browser row asserts on, and a stop that only threw would leave the
      * page describing nothing.
      */
     const stop = (reason, detail) => {
         seq.refusal = { reason, detail };
+        publishCampaign(seq, sofar.parsedTapes, sofar.names, sofar.run);
         window.__editorSequence = seq;
         fatal(`the sequence stopped: ${reason}`, detail);
         return { seq, stopped: true };
     };
+    /**
+     * ⛓ R9 SLICE 10 — the campaign frontier, fetched ONCE and before anything
+     * plays, so `publishCampaign` can run synchronously beside `stop()`.
+     */
+    await campaignFrontier();
     if (names.length === 0) {
         return stop('the queue is empty',
             '`?tapes=` was written and names nothing. A sequence of zero tapes plays '
@@ -1553,6 +1820,8 @@ async function walkSequence(params, lifetime, levelSource) {
         if (!lifetime.alive()) return seq;
     }
     const parsedTapes = tapes.map((t) => parseTape(t));
+    sofar.parsedTapes = parsedTapes;
+    sofar.names = names;
     const tier1 = sequenceAdmission(parsedTapes.map((t, i) => ({ ...t, name: names[i] })));
     seq.tier1 = tier1;
     const refused1 = refusalsOnly(tier1);
@@ -1672,6 +1941,7 @@ async function walkSequence(params, lifetime, levelSource) {
             return stop(`window ${k} ("${names[k]}") threw mid-walk`, collected.error.message);
         }
         run = collected.run;
+        sofar.run = run;
         const isLast = k === tapes.length - 1;
         const keep = isLast ? collected.frames.length : collected.frames.length - 1;
         for (let i = 0; i < keep; i += 1) {
@@ -1781,6 +2051,13 @@ async function walkSequence(params, lifetime, levelSource) {
         run,
         error: null,
     };
+    /**
+     * ⛓ R9 SLICE 10 — the campaign readout for the walk that FINISHED, published
+     * here rather than in each arm so the JS arm and the wasm arm cannot end up
+     * with two answers about the same walk (the wasm arm ships AFTER this and
+     * changes none of it: the windows are the ones this walk admitted).
+     */
+    publishCampaign(seq, parsedTapes, names, run);
     return {
         seq, stop, names, tapes, parsedTapes, run, frames, samples,
         combined, combinedParsed,
@@ -8306,10 +8583,19 @@ function mountQueueControl(params, sel) {
      * MOVES an existing key to the end of the bar, which a fixed point cannot
      * see and a round trip can).
      */
-    const write = (go) => {
+    const write = (go, { dropSingle = false } = {}) => {
         const q = new URLSearchParams(window.location.search);
         const value = formatTapesParam(queued);
         if (value === null) q.delete('tapes'); else q.set('tapes', value);
+        /**
+         * ⛓ R9 SLICE 10 — ▶ campaign DROPS `?tape=`, and the ordinary queue does
+         * not. The queue is built up beside a tape you are looking at and
+         * keeping that selection in the bar is right; a campaign REPLACES the
+         * queue outright and its whole point is a link somebody else can open,
+         * so a leftover `?tape=` naming whichever tape happened to be picked
+         * would be a stray in a URL meant to be shared.
+         */
+        if (dropSingle) q.delete('tape');
         q.set('side', params.side);
         if (go) window.location.search = q.toString();
         else window.history.replaceState(null, '', `${window.location.pathname}?${q}`);
@@ -8325,6 +8611,73 @@ function mountQueueControl(params, sel) {
         write(false);
     };
     $('queueRun').onclick = () => write(true);
+    /**
+     * ⛓⛓⛓ R9 SLICE 10 — ▶ campaign (⚖ ruling 19, the user's): *"a way for the
+     * watch page to play the full sequence of campaign tapes that we have
+     * solved so far"*.
+     *
+     * ⛔ IT HOLDS NO CHAIN ID AND NO SEGMENT LIST. `campaignChoice` picks the
+     * one custody chain that boots a true start and whose every segment the
+     * solver recorded, and the day the roster gains a room the button plays one
+     * more window with no edit here (trap 495: a typed list decays).
+     *
+     * ⛔ AND IT WRITES THROUGH THE QUEUE'S OWN WRITER. The campaign is not a
+     * second player: it REPLACES the queue with the chain id and presses run, so
+     * what happens next is `?tapes=<chain>` — the same LINK, the same arm, the
+     * same admission — and the address bar afterwards is a campaign you can
+     * send to somebody. `?side=` rides along untouched, so `side=wasm` queues
+     * the same fifteen windows and waits for the one human ▶ Start the wasm
+     * side may never press for itself.
+     *
+     * ⛔⛔ A REFUSAL IS SPOKEN **AND** STRUCTURAL (trap 480). A control that only
+     * greys out is a control whose reason a gate has to guess at, and a gate
+     * that has to guess spends its timeout instead of failing by name — so the
+     * button carries the sentence in its `title`, and `window.__campaign`
+     * carries `campaignRefusal` whether or not a sequence ever runs.
+     */
+    const choice = campaignChoice();
+    const btn = $('campaignRun');
+    if (choice.refusal) {
+        btn.disabled = true;
+        btn.title = `${choice.refusal.reason} — ${choice.refusal.detail}`;
+    } else {
+        btn.title = `plays ${choice.why}`;
+        btn.onclick = () => {
+            queued.length = 0;
+            queued.push(choice.id);
+            render();
+            write(true, { dropSingle: true });
+        };
+    }
+    /**
+     * ⛓⛓ THE CONTROL'S OWN READOUT, **UNDER ITS OWN NAME** — so that "which
+     * chain would ▶ campaign play, and why not" is answerable on a page that has
+     * played nothing.
+     *
+     * ⛔⛔ AND IT IS **NOT** `__campaign`, WHICH THE DEMO ROW IS WHAT CAUGHT.
+     * The first spelling published both states under one name, and a reader
+     * waiting for "the campaign readout exists" was then satisfied INSTANTLY by
+     * the control's pre-walk object — on the page it had just navigated away
+     * from — and asserted a claim about a walk that had not started. Two states
+     * under one name is a readout whose terminal condition cannot be written
+     * (trap 246's shape). ⇒ `__campaignControl` is what the control publishes
+     * and `__campaign` is what a WALK publishes, so the presence of the second
+     * IS the terminal condition.
+     */
+    window.__campaignControl = {
+        campaign: choice.id,
+        campaignWhy: choice.why,
+        campaignRefusal: choice.refusal,
+        isCampaign: false,
+        asked: [...queued],
+        chainSegments: choice.segments.length,
+        rooms: null,
+        ledger: null,
+        end: null,
+        stoppedAt: null,
+        frontier: null,
+        beforeAnyWalk: true,
+    };
     render();
 }
 
