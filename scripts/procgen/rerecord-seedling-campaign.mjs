@@ -70,6 +70,13 @@
  *   S4 PROVE    the JS sequence gate · the wasm chain arms · the census.
  *   S5 REPORT   the sealed table with its measured column.
  *
+ * ⛔⛔ **S4 IS THE GATE RUN; DO NOT RUN SHIP/ROSTER STANDALONE AFTER A RECORD.**
+ * ⚖ Ruling 32 E. R9 slice 11 re-ran by hand the gates S4 had just run and paid
+ * ~30 minutes for a second opinion nobody had asked for — and one of those
+ * duplicate runs produced the unexplained red that cost another 40 (§21.9).
+ * After this pipeline completes, S4's verdicts ARE the slice's gate row; the
+ * only reason to drive ship or the roster again is a change made AFTER it.
+ *
  * Run:
  *   node scripts/procgen/rerecord-seedling-campaign.mjs --dry-run
  *   node scripts/procgen/rerecord-seedling-campaign.mjs            # S0..S5

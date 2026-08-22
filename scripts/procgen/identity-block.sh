@@ -17,6 +17,16 @@
 # tree for the AFTER, and `diff` the two — that comparison is the point, and it
 # is valid even for a row whose published value predates this script.
 #
+# ⛓⛓ BASELINE BY QUOTATION (⚖ ruling 32 A). When your head EQUALS the commit
+# named beside a value below, that value IS your BEFORE — quote it and do not
+# spend a worktree re-measuring what a clean tree cannot have changed. Then
+# re-measure only what your change REACHES:
+#     node scripts/procgen/reach-seedling-change.mjs --range=<base>..HEAD
+# which prints the rows of this block a change can move (⚠ an UPPER BOUND: what
+# CAN move, not what will). R9 slice 11 spent ~55 minutes on a pristine baseline
+# whose every row it could have quoted, and still missed four rows because it
+# sealed by grep instead.
+#
 # ── THE PUBLISHED VALUES AT `855a6d200` (R9 slice 7's baseline) ────────
 #   maze byte-identity            677b7d9cae51023e82fa2e365a8095dc   ✔ ruling 8
 #   acceptance batch              8ad7bda2ae4b470122334f71b4e92651   ✔ ruling 8
