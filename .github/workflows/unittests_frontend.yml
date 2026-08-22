@@ -5,6 +5,19 @@ on:
     paths:
       - 'frontend/**/*.js'
       - 'frontend/**/*.test.js'
+      # ⛓ ⚖ RULING 34 (user, 2026-08-22) — `vitest.config.js` collects
+      # `scripts/procgen/*.test.js` too, so a `scripts/**`-only commit owes this
+      # suite a run. R9 slice 11b's red survived a push because it did not get
+      # one: the trigger watched `frontend/**` and the change was under
+      # `scripts/**`. A path list that is narrower than what the config COLLECTS
+      # is a gate that reports green on tests it never ran.
+      - 'scripts/**/*.js'
+      - 'scripts/**/*.mjs'
+      - 'scripts/**/*.test.js'
+      # ⚠ THE SAME HOLE, ONE DIRECTORY OVER — named by the same criterion
+      # rather than left for the next slice to rediscover: `include` also
+      # collects `test_json/unit/**/*.test.js`.
+      - 'test_json/unit/**/*.test.js'
       - 'vitest.config.js'
       - 'vitest.slow.config.js'
       - 'package.json'
@@ -14,6 +27,19 @@ on:
     paths:
       - 'frontend/**/*.js'
       - 'frontend/**/*.test.js'
+      # ⛓ ⚖ RULING 34 (user, 2026-08-22) — `vitest.config.js` collects
+      # `scripts/procgen/*.test.js` too, so a `scripts/**`-only commit owes this
+      # suite a run. R9 slice 11b's red survived a push because it did not get
+      # one: the trigger watched `frontend/**` and the change was under
+      # `scripts/**`. A path list that is narrower than what the config COLLECTS
+      # is a gate that reports green on tests it never ran.
+      - 'scripts/**/*.js'
+      - 'scripts/**/*.mjs'
+      - 'scripts/**/*.test.js'
+      # ⚠ THE SAME HOLE, ONE DIRECTORY OVER — named by the same criterion
+      # rather than left for the next slice to rediscover: `include` also
+      # collects `test_json/unit/**/*.test.js`.
+      - 'test_json/unit/**/*.test.js'
       - 'vitest.config.js'
       - 'vitest.slow.config.js'
       - 'package.json'
