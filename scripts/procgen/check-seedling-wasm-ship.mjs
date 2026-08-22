@@ -1248,8 +1248,35 @@ function assertChainRefuses(ARM, WINDOWS, res, wasm, wins, at, TICKS) {
             check(wins[k]?.movedAtBoundary === false,
                 `${ARM}: ⛓ …and the player did not drift into it`,
                 `movedAtBoundary ${wins[k]?.movedAtBoundary}`);
+            /**
+             * ⛓⛓⛓ R9 SLICE 8 — THE WRITE IS GATED ON THE WINDOWS THAT DID RUN.
+             *
+             * ⛔ WITHOUT THIS THE ARM WOULD BE READING ONLY THE REFUSAL, and a
+             * tick-0 write that silently stopped happening would look exactly
+             * like today — same refusal, same seeds, same boundary. The
+             * refusing arm has to assert the mechanism that got the chain as
+             * far as it got, or it stops being able to tell "still broken
+             * there" from "newly broken everywhere".
+             *
+             * ⛔ Expected values READ OFF THE TAPE, never from the readout.
+             */
+            const t0 = loadTape(WINDOWS[k]).tick0 ?? null;
+            const applied = wins[k]?.tick0Applied ?? null;
+            check(t0 !== null && applied !== null
+                && applied.seed === t0.rng.seed && applied.cosmetic === t0.rng.cosmetic
+                && applied.fp === t0.rng.fp && applied.time === t0.seam.time,
+            `${ARM}: ⛓⛓ …and window ${k + 1} was WRITTEN its declared tick-0 state `
+                + `(rng.seed ${t0?.rng?.seed}, seam.time ${t0?.seam?.time})`,
+            JSON.stringify(applied));
+            check(applied?.obeysBootCost === true
+                && applied?.bootCost === BOOT_COST_FRAMES,
+            `${ARM}: ⛓ …and its tick-0 clock obeys \`declared + bootCost\``,
+            `bootCost ${applied?.bootCost} · obeys ${applied?.obeysBootCost}`);
         }
     }
+    check((wins[0] ?? {}).tick0Applied === null,
+    `${ARM}: ⛔ WINDOW 1 IS UNTOUCHED — a fresh boot applies everything it declares`,
+    `tick0Applied ${JSON.stringify(wins[0]?.tick0Applied)}`);
     console.log(`\n  ${ARM} — the chain reached ${at} of ${N - 1} boundaries:`);
     console.log('  #   window            ticks  drain  deadFrames  moved  tick0 time');
     for (let k = 0; k < wins.length; k += 1) {
@@ -1540,8 +1567,8 @@ runChainArm('CHAIN', 'r8-d2', CHAIN_WINDOWS);
  * ⚖ A REFUSAL HERE IS A FINDING ABOUT THE CHAIN ON THE GAME, published by
  * name — never a tape fix. No `--record` is licensed in this slice.
  *
- * ⛓⛓⛓ R9 SLICE 8 (⚖ ruling 20) — **THE ARM IS FLIPPED BACK: IT ASSERTS THE
- * CHAIN RUNNING END TO END.**
+ * ⛓⛓⛓ R9 SLICE 8 (⚖ ruling 20) — **THE ARM STAYS INVERTED, AND THE SLICE
+ * TURNED 7b's INFERENCE INTO A PROOF.**
  *
  * Slice 7b ran this arm for the first time and it REFUSED at `boundary 5/15`
  * on `rng` — `r8-solve-6`'s declared stream position against a live world that
@@ -1552,19 +1579,42 @@ runChainArm('CHAIN', 'r8-d2', CHAIN_WINDOWS);
  * the fresh-page recording started. The two parted company inside L5, the
  * arrow bait, where kills draw.
  *
- * ⇒ writing the measured TICK-0 state at every boundary removes exactly that
- * difference: window k now begins where its own fresh-page replay began, so it
- * walks the fresh-page walk, so its exit equals the latch its successor was
- * authored FROM. Base case: window 1 is a fresh boot. ⛔ THIS IS A PREDICTION
- * AND THE ARM IS HOW IT IS JUDGED — if the chain still refuses, the arm reds
- * by name and that is a FINDING to report, not a tape to re-record.
+ * The slice PREDICTED that writing the measured tick-0 state would remove that
+ * difference by induction, flipped this arm to asserting, and RAN IT. ⛔ THE
+ * PREDICTION MISSED, and the miss is the slice's sharpest result:
  *
- * ⛔ `assertChainRefuses` IS NOT DELETED. It is this file's own convention,
- * stated one docblock up: *"the arm that asserted the residual is not deleted —
- * it is INVERTED"*. Passing no `REFUSES_AT` selects the asserting path; the
- * refusing path stays, ready for the next chain that stops honestly.
+ *   · the write WORKS — windows 2..5 were each written their committed tick-0
+ *     block field for field, every clock obeying `declared + 21`, boundaries
+ *     1..4 admitted, and all five windows AGREE PER TICK with their own model;
+ *   · and the chain still refuses at `boundary 5/15`, on the SAME two seeds
+ *     7b measured: live 1196897329 against a declared 514746467.
+ *
+ * ⛓⛓⛓ WHICH IS THE PROOF. Because window 5 provably BEGAN at its own
+ * fresh-page tick-0 state and walked its own inputs to a per-tick agreement,
+ * the live world's position at boundary 5 **IS** `r8-solve-5`'s fresh-page
+ * exit, by construction rather than by argument. So the declaration is simply
+ * not that number — and `r8-solve-6`'s `rng` is BYTE-IDENTICAL to
+ * `r7-act2-6`'s, the retired HAND tape it was staged from (re-verified on disk
+ * this slice). 7b could infer that the rng was never re-recorded; slice 8 can
+ * PROVE it, because the tick-0 write is what makes the live walk the
+ * fresh-page walk.
+ *
+ * ⚖ THE CURE IS A TAPE MOVE AND THEREFORE STILL AN ASK (§16.15, unchanged and
+ * now better supported): re-record `r8-solve-6..10`'s `rng`. ⛓ What this slice
+ * adds is that the correct value no longer needs a walk re-solve — it is the
+ * live `beginEntry` this arm already measures and prints.
+ *
+ * ⛓ AND A DERIVED FORWARD PREDICTION, off the committed blocks: at boundaries
+ * 6, 7 and 9 the successor's declared seed EQUALS the predecessor's tick-0
+ * seed (1892719590 · 768692529 · 1820969995), so those admit if their walks
+ * spend no gameplay draws; at boundary 8 they DIFFER (L8 is an 827-tick
+ * drawing room), so 8 is the next one that can fail. Boundaries 6..9 remain
+ * UNMEASURED behind the first refusal.
+ *
+ * ⛔ `REFUSES_AT` STAYS 5 UNTIL THAT ASK IS ANSWERED. The arm asserts what is
+ * true of the chain on the game, and inverts the day the chain continues.
  */
-runChainArm('CAMPAIGN', 'r9-campaign', PAGE_CHAINS['r9-campaign']);
+runChainArm('CAMPAIGN', 'r9-campaign', PAGE_CHAINS['r9-campaign'], 5);
 
 console.log(failed === 0 ? '\nALL PASS' : `\n${failed} FAILURE(S)`);
 process.exit(failed === 0 ? 0 : 1);
