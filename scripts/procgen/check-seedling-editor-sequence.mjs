@@ -544,17 +544,50 @@ if (control.disabled) {
     `title "${control.title}" · __campaign.campaign ${control.camp?.campaign}`);
 
     await page.click('#campaignRun');
-    await page.waitForFunction(
-        () => window.__editorSequence !== undefined
-            || document.getElementById('status').className === 'bad',
-        null, { timeout: 300000 });
-    const camp = await page.evaluate(() => ({
+    /**
+     * ⛔⛔ TRAP 480, THE OTHER HALF — AND A MUTANT IS WHAT FOUND IT HERE.
+     *
+     * The DISABLED control is handled above: its reason is read and the row
+     * fails naming it. The control that EXISTS, is ENABLED, and does NOTHING is
+     * the harder case, and the first spelling of this row let the wait THROW —
+     * an uncaught `TimeoutError` with a stack trace, 300 seconds after a press
+     * that never did anything, and no named row at all. A gate that dies of a
+     * timeout has not said what is wrong; it has only said that it waited.
+     *
+     * ⇒ the wait is CAUGHT and turned into a row that names the button, the
+     * press, and the readout that never arrived. Measured: a build with
+     * `btn.onclick = () => {}` produced exactly the throw described above.
+     */
+    let pressWait = null;
+    try {
+        await page.waitForFunction(
+            () => window.__editorSequence !== undefined
+                || document.getElementById('status').className === 'bad',
+            null, { timeout: 300000 });
+    } catch (e) { pressWait = e.message; }
+    check(pressWait === null,
+        '⛔ …and THE PRESS ACTUALLY STARTED A WALK — `#campaignRun` is wired to '
+        + 'something',
+        pressWait === null ? 'the sequence arm answered'
+            : `${pressWait}\n          The button EXISTS and is ENABLED, and clicking it `
+              + 'produced no `__editorSequence` and no red status. A control wired to '
+              + 'nothing looks exactly like a control that works, from every angle '
+              + 'except this one.');
+    const camp = pressWait !== null ? null : await page.evaluate(() => ({
         search: window.location.search,
         camp: JSON.parse(JSON.stringify(window.__campaign)),
         windows: (window.__editorSequence?.windows ?? []).map((w) => w.label),
         readout: document.getElementById('campaignReadout').textContent,
         readoutHidden: document.getElementById('campaignReadout').hidden,
     }));
+    if (camp === null) {
+        // ⛔ NAMED, NOT SILENT. The rows below all read `camp`; skipping them
+        // without saying so would make a dead button and a clean run print the
+        // same nine absences (trap 119).
+        check(false, '⛔ CLAIMS 12–13 CANNOT RUN — the press produced no readout',
+            'every row below reads `window.__campaign`, which the click never '
+            + 'created. A check that cannot run is not a check that passed.');
+    } else {
     const q = new URLSearchParams(camp.search);
     check(q.get('tapes') === CHOICE.id && q.get('tape') === null,
         '⛓⛓⛓ CLAIM 12 — ONE CLICK writes `?tapes=<the derived chain>`, as a LINK',
@@ -652,6 +685,7 @@ if (control.disabled) {
     check(/unsolved/i.test(camp.readout),
         '⛓ …but the readout SAYS the rooms beyond the arrival are unsolved',
         camp.readout.slice(-160));
+    }
 }
 
 check(errors.length === 0, 'ZERO console errors and pageerrors across every landing',
