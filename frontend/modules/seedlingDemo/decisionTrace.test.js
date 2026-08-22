@@ -186,9 +186,24 @@ describe('the sidecar law, and the producer seam', () => {
     it('asserts the tape format never grew a trace field', () => {
         const tape = loadTape('diagonal-run');
         expect(assertTraceIsSidecarOnly(tape).sidecar).toBe(true);
-        // ⛓ And GAME_VISIBLE_DROPS stays what it was: a classification list
-        // for TAPE fields. A trace has no side of that line to be on.
-        expect(GAME_VISIBLE_DROPS).toEqual(['persistence[].at', 'despawn']);
+        /**
+         * ⛓ And GAME_VISIBLE_DROPS is a classification list for TAPE fields.
+         * A trace has no side of that line to be on, so the claim is that
+         * nothing trace-shaped is ON the list — asserted by NAME rather than
+         * by pinning the list's contents.
+         *
+         * ⛔ IT USED TO PIN THE CONTENTS, and that made this row a decayed
+         * literal in waiting: it went red at v10's `despawn` and again at R9
+         * slice 8's `tick0`, both times for a field that has nothing to do
+         * with decision traces. A row that reds whenever an UNRELATED field is
+         * classified is reporting the calendar, not the law (trap 495).
+         */
+        for (const key of GAME_VISIBLE_DROPS) {
+            expect(key, `${key} is trace-shaped and must not be a TAPE field`)
+                .not.toMatch(/trace|decision/i);
+        }
+        // …and the list is non-empty, so the loop above is not vacuous.
+        expect(GAME_VISIBLE_DROPS.length).toBeGreaterThan(0);
     });
 
     it('refuses a tape that carries a trace field', () => {

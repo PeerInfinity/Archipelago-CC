@@ -78,6 +78,7 @@ const MODULE = join(REPO, 'frontend', 'modules', 'seedlingDemo');
 
 const { collectRun } = await import(join(MODULE, 'watchOverlays.js'));
 const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
+const { rngPostureForBootLevel } = await import(join(MODULE, 'seamPosture.js'));
 const { loadTape } = await import(join(MODULE, 'fixtures', 'index.js'));
 const { parseTape } = await import(join(MODULE, 'tapeFormat.js'));
 const {
@@ -175,7 +176,16 @@ function censusPair(a, b, index) {
     if (wa.error) {
         return { pair: `${a} → ${b}`, verdict: 'WALK FAILED', why: wa.error, rows: [] };
     }
-    const found = continuationAdmission(wb.parsed, wa.envelope, { index, label: b });
+    /**
+     * ⛓ R9 SLICE 8 (⚖ ruling 20) — the posture gate, on the GAME tier. This
+     * pair's live side is a real `botSeam()` envelope, so its `rng` row is
+     * ASSERTED — and `rng.gameplay` is comparable only in a render-CLEAN boot
+     * room. The census asks the same question the page asks, with the same
+     * function, off the same atlas.
+     */
+    const rngPosture = rngPostureForBootLevel(wb.parsed.boot.level, source);
+    const found = continuationAdmission(wb.parsed, wa.envelope,
+        { index, label: b, rngPosture });
     const refusals = refusalsOnly(found);
     const unasserted = found.filter((f) => f.informational);
     /**
@@ -263,6 +273,12 @@ function wholeChain(names) {
     for (let k = 0; k < names.length; k += 1) {
         if (k > 0) {
             const live = jsLiveEnvelope(run, parsed[0].persistence, parsed[0].pins);
+            /**
+             * ⚠ NO POSTURE HERE, AND THAT IS NOT AN OVERSIGHT. This tier's
+             * live side is `jsLiveEnvelope` — the MODEL, which keeps no LFSR
+             * position at all, so `rng` is already UNASSERTED by name and
+             * there is nothing for a posture to excuse.
+             */
             const found = continuationAdmission(parsed[k], live, { index: k, label: names[k] });
             const refusals = refusalsOnly(found);
             if (refusals.length > 0) {

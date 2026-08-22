@@ -365,18 +365,36 @@ describe('E3 — `publishShip` projects the verdict NOTE, so a claim about the r
             .toBeGreaterThan(0);
     });
 
-    it('⛓ …and the projection is what makes a v9 tape loadable AT ALL — the AS3 '
+    it('⛓ …and the projection is what makes a v9+ tape loadable AT ALL — the AS3 '
         + 'loader gates on its VERSION LIST', () => {
-        const v9 = loadTape('r8-solve-18');
-        expect(v9.tape_version).toBe(9);
-        expect(v9.persistence.some((c) => c.at !== undefined)).toBe(true);
-        const projected = gameVisibleTape(v9);
+        /**
+         * ⛓ R9 SLICE 8: `r8-solve-18` is a v11 tape now — it is a segment of
+         * the `r8-d2` chain, so the derivation wrote it a tick-0 latch. The
+         * claim is UNCHANGED and is the stronger for it: whatever the newest
+         * version adds, the projection hands the fork a real v8 tape, and the
+         * timed row still goes.
+         */
+        const newest = loadTape('r8-solve-18');
+        expect(newest.tape_version).toBe(11);
+        expect(newest.persistence.some((c) => c.at !== undefined)).toBe(true);
+        expect(newest.tick0).not.toBeNull();
+        const projected = gameVisibleTape(newest);
         expect(projected.tape_version).toBe(8);
         expect(projected.persistence.some((c) => c.at !== undefined)).toBe(false);
-        // ⚠ and BYTE-INERT for everything that shipped before it: a v8 tape
-        //   projects to itself, so the single-tape arms are unaffected by
-        //   construction rather than by re-measurement.
-        const v8 = loadTape('r8-d2-19');
+        expect(projected).not.toHaveProperty('tick0');
+        /**
+         * ⚠ and BYTE-INERT for everything that shipped before it: a v8 tape
+         * projects to ITSELF, so the single-tape arms are unaffected by
+         * construction rather than by re-measurement.
+         *
+         * ⛔ THE SUBJECT MOVED AND THE CLAIM DID NOT. This used to read
+         * `r8-d2-19`, which is a chain segment and is therefore v11 now. The
+         * control has to be a tape the derived set does NOT contain, or it
+         * would stop being a control the moment its chain gained a field —
+         * `r8-solve-11` is the battery's room and is in no chain.
+         */
+        const v8 = loadTape('r8-solve-11');
+        expect(v8.tape_version).toBe(8);
         expect(JSON.stringify(gameVisibleTape(v8))).toBe(JSON.stringify(v8));
     });
 
@@ -747,209 +765,132 @@ describe('⛓⛓ the drains are concatenated the way the HEADLINE ARITHMETIC doe
 
 
 /**
- * ⛓⛓⛓ R9 SLICE 5 (⚖ ruling 12 (d), ruling 14) — **THE CONTINUATION
- * PROJECTION**, which is what the page hands `botLoadTape` for k > 0 and ONLY
- * after `continuationAdmission` has already asserted the declaration.
+ * ⛓⛓⛓ R9 SLICE 8 (⚖ ruling 20) — **THE CONTINUATION PROJECTION**, which is
+ * what the page hands `botLoadTape` for k > 0 and ONLY after
+ * `continuationAdmission` has already asserted the declaration.
  *
- * ⛔ THE MUTANT THAT MAKES THIS A GATE: remove the strip (hand
- * `gameVisibleTape(tape)` at every window) and `boundary 2/3` of `?tapes=r8-d2`
- * refuses on `rng` exactly as slice 3 measured — `botStart` applies the
- * declared seed on a continuation and rewinds the live stream by L19's build
- * (§11.12(iii), trap 492). The rows below are the headless half of that; the
- * GPU half is `check-seedling-wasm-ship.mjs`'s CHAIN arm.
+ * ⛔⛔ THIS BLOCK HAS BEEN REWRITTEN TWICE AND THE HISTORY IS THE ARGUMENT.
+ * Slice 5 STRIPPED the declaration (zeroed the three stream positions) and
+ * slice 6 BUMPED the clock by a derived constant. Both were corrections
+ * standing in for a state nobody had measured: where a FRESH page actually
+ * stood when the recording's walk began, one build and one fade after the
+ * declaration. Slice 8 measures it (`derive-seedling-tick0.mjs`, one zero-tick
+ * run per segment), the tape carries it as v11 `tick0`, and the page WRITES
+ * it. There is no strip and no bump left to test.
+ *
+ * ⛔ THE MUTANT THAT MAKES THIS A GATE, and its value is already measured:
+ * remove the write and the campaign chain refuses at `boundary 5/15` on `rng`
+ * again — slice 7b drove exactly that on the real GPU (§16.8), so the mutant's
+ * expected result is a recorded number rather than a guess. The rows below are
+ * the headless half; the GPU half is `check-seedling-wasm-ship.mjs`'s CAMPAIGN
+ * arm.
  */
-describe('⛓⛓⛓ the continuation projection — the rng strip, AFTER the admission', () => {
+describe('⛓⛓⛓ the continuation projection — the TICK-0 WRITE, AFTER the admission', () => {
     const rng = { seed: 1823918582, split: false, cosmetic: 4, fp: 1752443622 };
-    const tape = (over = {}) => ({
-        tape_version: 8, name: 'w', boot: { level: 20, x: 192, y: 64 },
-        tick_count: 3, inputs: [], persistence: [], grants: [], rng, ...over,
-    });
-
-    it('⛓ a continuation window is handed ZEROS for the three STREAM POSITIONS', () => {
-        const { tape: out } = continuationTape(tape());
-        expect(out.rng).toEqual({ seed: 0, split: false, cosmetic: 0, fp: 0 });
-    });
-
-    it('⛔ …and `split` is KEPT — `Rng.split` is assigned UNCONDITIONALLY (Bot.as:1771)', () => {
-        expect(continuationTape(tape({ rng: { ...rng, split: true } })).tape.rng.split)
-            .toBe(true);
-        // ⛔ the OTHER three are still zeroed beside it — the keep is one field,
-        //    not a bail-out.
-        expect(continuationTape(tape({ rng: { ...rng, split: true } })).tape.rng)
-            .toEqual({ seed: 0, split: true, cosmetic: 0, fp: 0 });
-    });
-
-    it('⛓ the page SAYS WHAT IT DID — `rngStripped` is the DECLARED triple, as a FIELD', () => {
-        // ⛔ a field, never a sentence to regex (trap 269 — echo is not value).
-        expect(continuationTape(tape()).rngStripped)
-            .toEqual({ seed: 1823918582, cosmetic: 4, fp: 1752443622 });
-    });
-
-    it('a tape that declares NO `rng` block is projected unchanged, and says so', () => {
-        // ⚠ 110 of the 154 tapes on the roster are pre-v7 and carry none.
-        const { tape: out, rngStripped } = continuationTape(tape({ rng: undefined }));
-        expect(rngStripped).toBe(null);
-        expect(out.rng).toBeUndefined();
-    });
-
-    it('⛔ WINDOW 1 IS UNTOUCHED — the projection is `gameVisibleTape`, unchanged', () => {
-        // The page calls `gameVisibleTape` directly for k === 0; this asserts the
-        // two projections really do differ, so "window 1 is untouched" is a
-        // measurable claim rather than a comment.
-        const t = tape();
-        expect(gameVisibleTape(t).rng).toEqual(rng);
-        expect(continuationTape(t).tape.rng).not.toEqual(rng);
-    });
-
-    it('⛓ everything `gameVisibleTape` drops is still dropped — the projection COMPOSES', () => {
-        const v9 = tape({
-            tape_version: 9,
-            persistence: [{ level: 5, tag: 0, at: 427 }, { level: 8, tag: 1 }],
-        });
-        const out = continuationTape(v9).tape;
-        expect(out.tape_version).toBe(8);
-        expect(out.persistence.every((c) => c.at === undefined)).toBe(true);
-    });
-
-    /**
-     * ⛓⛓⛓ R9 SLICE 5's SECOND HALF — the FORWARD declarations do not reach the
-     * game. `gameVisibleTape` alone KEEPS the row and drops only `at`, which
-     * on a fresh page reproduces the recorded state and on a continuation
-     * opens the lock before the walk that opens it.
-     */
-    it('⛔⛔ a TIMED row is NOT handed to the game — it would arrive AT BOOT', () => {
-        const v9 = tape({
-            tape_version: 9,
-            persistence: [{ level: 5, tag: 0, at: 427 }, { level: 8, tag: 1 }],
-        });
-        const { tape: out, forwardRows } = continuationTape(v9);
-        // ⛔ the LATCH row survives (the admission just asserted it equals the
-        //    live set, so applying it is a no-op); the FORWARD row does not.
-        expect(out.persistence).toEqual([{ level: 8, tag: 1 }]);
-        expect(forwardRows).toEqual(['5:0@427']);
-        // ⛔ and `gameVisibleTape` on its own would have handed BOTH over —
-        //    which is the difference this projection exists to make.
-        expect(gameVisibleTape(v9).persistence).toHaveLength(2);
-    });
-
-    it('a window with no forward rows reports an EMPTY list, never a missing one', () => {
-        expect(continuationTape(tape({ persistence: [{ level: 8, tag: 1 }] })).forwardRows)
-            .toEqual([]);
-    });
-
-    /**
-     * ⛓⛓⛓ R9 SLICE 5 — **THE LATCHED BLOCKS ARE ON THE RECORD**, and the
-     * measurement that forced it is the CHAIN arm's own: under (d)
-     * `boundary 2/3` refuses on `seam` with ONE number differing
-     * (`time` 10213 declared vs 10192 live), and that number lived only inside
-     * the finding's DETAIL SENTENCE. A gate asserting the residual would have
-     * had to regex a sentence for a value — trap 269, exactly the shape this
-     * page keeps paying for. ⇒ published as DATA.
-     */
-    it('⛔⛔ the boundary record carries the LIVE BLOCKS the admission compared against',
-        () => {
-            const live = source('watchWasm.js')
-                .slice(source('watchWasm.js').indexOf('rec.live = {'));
-            expect(live.slice(0, 220)).toMatch(/blocks: live\.blocks/);
-            expect(live.slice(0, 220)).toMatch(/blocksWhy: live\.blocksWhy/);
-        });
-});
-
-/**
- * ⛓⛓⛓ R9 SLICE 6 (⚖ ruling 15, option (d′)) — **THE CLOCK, THE OTHER
- * DIRECTION**: the one field a continuation window is handed MORE of.
- *
- * Slice 5's (d) moved the boundary refusal off `rng` and onto `seam.time` and
- * measured what was left on three independent chains: declared − live = 21 at
- * every boundary after the first, with every other seam row EQUAL (§13.6).
- * `Bot.as:1703` writes `Main.time = seamTime` on a continuation too, and
- * `botStart` then does NOT rebuild, so the walk starts without the fade its
- * recording was made behind.
- *
- * ⛔ THE MUTANT THAT MAKES THIS A GATE: remove the bump and `boundary 2/3` of
- * `?tapes=r8-d2` refuses on `seam.time` with declared 10213 against live
- * 10192 — which is not a hypothetical, it is slice 5's own measurement, so no
- * GPU is spent to see it again.
- *
- * ⛔ AND THERE IS NO JS COUNTERPART. `gameClock.test.js`'s resumed-clock sweep
- * measures why: the model's clock is ALREADY `declared + BOOT_COST_FRAMES` at
- * every boundary it can answer for.
- */
-describe('⛓⛓⛓ (d′) — the continuation window is handed `seam.time + bootCost`', () => {
     const seam = { time: 10213, day: 0, music: [1, 0] };
+    const tick0 = {
+        rng: { seed: 1565614772, split: false, cosmetic: 9, fp: 1044262091 },
+        seam: { time: 10234 },
+    };
     const tape = (over = {}) => ({
-        tape_version: 8, name: 'w', boot: { level: 20, x: 192, y: 64 },
-        tick_count: 3, inputs: [], persistence: [], grants: [], seam, ...over,
+        tape_version: 11, name: 'w', boot: { level: 20, x: 192, y: 64 },
+        tick_count: 3, inputs: [], persistence: [], grants: [], rng, seam, tick0, ...over,
     });
 
-    it('⛓ `BOOT_COST_FRAMES` is DERIVED from the two constants, never typed', () => {
+    it('⛓⛓⛓ a continuation window is handed the MEASURED TICK-0 STREAM', () => {
+        const { tape: out } = continuationTape(tape());
+        expect(out.rng.seed).toBe(1565614772);
+        expect(out.rng.cosmetic).toBe(9);
+        expect(out.rng.fp).toBe(1044262091);
+        // ⛔ and NOT the declaration, which is a whole build earlier.
+        expect(out.rng.seed).not.toBe(rng.seed);
+    });
+
+    it('⛓⛓⛓ …and the MEASURED TICK-0 CLOCK', () => {
+        expect(continuationTape(tape()).tape.seam.time).toBe(10234);
+    });
+
+    it('⛔ `split` is KEPT FROM THE DECLARATION — it is not a boundary property', () => {
+        // `Rng.split` is assigned UNCONDITIONALLY (`Bot.as:1771`) and re-routes
+        // which stream the cosmetic draws come from, so it is a property of the
+        // WHOLE sequence. A window declaring a different one is refused at
+        // tier 1, not silently overwritten from a tick-0 reading.
+        const out = continuationTape(tape({
+            rng: { ...rng, split: true },
+            tick0: { ...tick0, rng: { ...tick0.rng, split: false } },
+        })).tape;
+        expect(out.rng.split).toBe(true);
+        // …and the other three still come from `tick0` beside it.
+        expect(out.rng.seed).toBe(1565614772);
+    });
+
+    it('⛓ the page SAYS WHAT IT DID — `tick0Applied` is a FIELD, with the declaration', () => {
+        // ⛔ a field, never a sentence to regex (trap 269 — echo is not value).
+        const { tick0Applied } = continuationTape(tape());
+        expect(tick0Applied.seed).toBe(1565614772);
+        expect(tick0Applied.cosmetic).toBe(9);
+        expect(tick0Applied.fp).toBe(1044262091);
+        expect(tick0Applied.time).toBe(10234);
+        // …and BOTH readings are on the record, so a reader can see the gap
+        // the field exists to close.
+        expect(tick0Applied.declared)
+            .toEqual({ seed: 1823918582, cosmetic: 4, fp: 1752443622, time: 10213 });
+    });
+
+    it('⛓ `bootCost` SURVIVES AS A CHECK — derived, and the page reports obedience', () => {
+        const { tick0Applied } = continuationTape(tape());
+        expect(tick0Applied.bootCost).toBe(BOOT_COST_FRAMES);
         expect(BOOT_COST_FRAMES).toBe(LOAD_FADE_FRAMES + BOOT_PRESWAP_FRAMES);
         expect(BOOT_COST_FRAMES).toBe(21);
-        // ⛔ and the module does not spell the number anywhere: a literal 21
-        //    here would survive a physics edit that moved either constant.
+        // ⛓ slice 6 ADDED this number; slice 8 measured that all eighteen
+        //   segments declaring a clock read `declared + 21` at tick 0, so it is
+        //   now something the GAME is asked to obey.
+        expect(tick0Applied.obeysBootCost).toBe(true);
+        // …and a tick-0 clock that does NOT obey is reported, not rounded.
+        const odd = continuationTape(tape({ tick0: { ...tick0, seam: { time: 10999 } } }));
+        expect(odd.tick0Applied.obeysBootCost).toBe(false);
+        expect(odd.tape.seam.time).toBe(10999);   // still WRITTEN — it is the measurement
+    });
+
+    it('⛔ the module does not SPELL the boot cost below `continuationTape`', () => {
+        // a literal 21 would survive a physics edit that moved either constant.
         const body = source('watchWasm.js');
         expect(body.slice(body.indexOf('export function continuationTape')))
             .not.toMatch(/\b21\b/);
     });
 
-    it('⛔⛔ a continuation window\'s loaded tape declares `declared + bootCost`', () => {
-        const { tape: out, clockBumped } = continuationTape(tape());
-        expect(out.seam.time).toBe(10213 + BOOT_COST_FRAMES);
-        expect(clockBumped).toEqual({
-            declared: 10213, applied: 10234, bootCost: BOOT_COST_FRAMES,
-        });
+    it('⛔⛔ a window with NO tick-0 latch is REPORTED MISSING, never served', () => {
+        // The tier-2 backstop for tier 1's refusal. Falling back to slice 5's
+        // zeroing here would be the silent-wrong-answer shape.
+        const got = continuationTape(tape({ tick0: undefined }));
+        expect(got.tick0Missing).toBe(true);
+        expect(got.tick0Applied).toBeNull();
+        // …and the tape it returns is the plain projection — nothing invented.
+        expect(got.tape.rng).toEqual(rng);
     });
 
-    it('⛓ …and NOTHING ELSE in the seam block moves — `time` is the only row', () => {
-        const { tape: out } = continuationTape(tape());
-        expect({ ...out.seam, time: undefined }).toEqual({ ...seam, time: undefined });
+    it('⛔ WINDOW 1 IS UNTOUCHED — the page never calls this for k === 0', () => {
+        // Asserted at the call site rather than here: `shipToWasm` uses
+        // `gameVisibleTape` for window 1 and `continuationTape` only for k > 0.
+        const body = source('watchWasm.js');
+        expect(body).toMatch(/k > 0 \? continuationTape\(w\.tape\)/);
     });
 
-    it('⛔ a ZERO `seam.time` STAYS ZERO — `Bot.as:1703` gates on `!= 0`', () => {
-        const { tape: out, clockBumped } = continuationTape(tape({
-            seam: { ...seam, time: 0 },
+    it('⛓ the write COMPOSES with the timed-row withholding', () => {
+        const out = continuationTape(tape({
+            tape_version: 11,
+            persistence: [{ level: 5, tag: 0 }, { level: 5, tag: 1, at: 427 }],
         }));
-        expect(out.seam.time).toBe(0);
-        expect(clockBumped).toBe(null);
+        // the forward row is NOT handed over…
+        expect(out.tape.persistence).toEqual([{ level: 5, tag: 0 }]);
+        expect(out.forwardRows).toEqual(['5:1@427']);
+        // …and the tick-0 state is still written beside it.
+        expect(out.tape.rng.seed).toBe(1565614772);
+        expect(out.tape.seam.time).toBe(10234);
     });
 
-    it('a tape that declares NO `seam` block is untouched, and says so', () => {
-        // ⚠ 110 of the 154 tapes on the roster are pre-v7; `r8-solve-1` — the
-        //   TRUE START, and window 1 of the campaign chain — declares none.
-        const { tape: out, clockBumped } = continuationTape(tape({ seam: undefined }));
-        expect(out.seam).toBeUndefined();
-        expect(clockBumped).toBe(null);
+    it('⛔ the GAME never sees the field itself', () => {
+        expect(continuationTape(tape()).tape).not.toHaveProperty('tick0');
+        expect(continuationTape(tape()).tape.tape_version).toBe(8);
     });
-
-    it('⛔ WINDOW 1 IS UNTOUCHED — `gameVisibleTape` keeps the declaration', () => {
-        expect(gameVisibleTape(tape()).seam.time).toBe(10213);
-    });
-
-    it('⛓ the bump COMPOSES with the rng strip and the timed-row withholding', () => {
-        const v9 = tape({
-            tape_version: 9,
-            rng: { seed: 5, split: false, cosmetic: 4, fp: 7 },
-            persistence: [{ level: 5, tag: 0, at: 427 }, { level: 8, tag: 1 }],
-        });
-        const { tape: out, rngStripped, forwardRows, clockBumped } = continuationTape(v9);
-        expect(out.seam.time).toBe(10213 + BOOT_COST_FRAMES);
-        expect(out.rng).toEqual({ seed: 0, split: false, cosmetic: 0, fp: 0 });
-        expect(out.persistence).toEqual([{ level: 8, tag: 1 }]);
-        expect(rngStripped).toEqual({ seed: 5, cosmetic: 4, fp: 7 });
-        expect(forwardRows).toEqual(['5:0@427']);
-        expect(clockBumped.applied).toBe(10234);
-    });
-
-    it('⛔ the bump happens AFTER the admission — the ORDER, in the page\'s own source',
-        () => {
-            const body = source('watchWasm.js');
-            const admit = body.indexOf('const found = continuationAdmission(w.tape, live');
-            const project = body.indexOf('k > 0 ? continuationTape(w.tape)');
-            expect(admit).toBeGreaterThan(0);
-            expect(project).toBeGreaterThan(admit);
-            // ⛔ and the admission is handed `w.tape` — the DECLARATION — not
-            //    the projected copy. Bumping first would admit a number nobody
-            //    declared.
-            expect(body.slice(admit, admit + 90)).toMatch(/continuationAdmission\(w\.tape/);
-        });
 });

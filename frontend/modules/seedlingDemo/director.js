@@ -859,6 +859,36 @@ export function sequenceAdmission(tapes, { coast = 8 } = {}) {
                 + 'stripped on a continuation — applying it would re-route the cosmetic '
                 + 'draws of a game that is already running.');
         }
+        /**
+         * ⛓⛓⛓ R9 SLICE 8 (⚖ ruling 20) — **A CONTINUATION WINDOW MUST CARRY
+         * ITS TICK-0 LATCH**, refused HERE, in the picker, before a frame
+         * exists.
+         *
+         * The page WRITES the measured tick-0 state at every boundary
+         * (`watchWasm.continuationTape`). A window without one has no state
+         * to write, and the only alternative — serving it under slice 5's old
+         * zeroing — is the silent-wrong-answer shape: it would play, disagree
+         * with its own fresh-page recording from its very first tick, and
+         * surface as somebody else's `rng` refusal three boundaries later.
+         * That is exactly what slice 7b measured at `boundary 5/15` (§16.8).
+         *
+         * ⛔ THE REFUSAL CARRIES ITS OWN CURE, because a refusal whose reader
+         * has to go and find the instrument is a refusal that gets worked
+         * around.
+         *
+         * ⚠ WINDOW 0 IS EXEMPT and that is not a carve-out in the field's
+         * derivation — every segment of every multi-segment chain carries the
+         * block, index 0 included. It is a statement about what a FRESH BOOT
+         * needs: window 0 applies its own declaration and never has a tick-0
+         * state written, so a missing field there cannot mislead anything.
+         */
+        if (i > 0 && !tape.tick0) {
+            add(`window ${i} ("${label}")`, 'a later window declares no tick-0 latch',
+                'a continuation is WRITTEN the state a fresh page reaches at tick 0 — '
+                + 'one build and one fade after the declaration — and this tape carries '
+                + 'none, so there is nothing to write. Derive it: `node '
+                + `scripts/procgen/derive-seedling-tick0.mjs --only=${tape.name ?? label}\`.`);
+        }
         if (i > 0 && (tape.grants ?? []).length > 0) {
             add(`window ${i} ("${label}")`, 'a later window declares grants',
                 `${tape.grants.length} grant(s). The live game state IS the inheritance — `
@@ -932,7 +962,8 @@ const sortedKeys = (s) => [...s].sort();
  *   the roster DOES have, so a refusal carries its own next work order
  * @returns {object[]} findings; `informational: true` marks an UNASSERTED row
  */
-export function continuationAdmission(tape, live, { index = 1, label = '', nearest = null } = {}) {
+export function continuationAdmission(tape, live,
+    { index = 1, label = '', nearest = null, rngPosture = null } = {}) {
     const where = `admission ${index}${label ? ` ("${label}")` : ''}`;
     const findings = [];
     const add = (what, detail, informational = false) =>
@@ -1066,6 +1097,37 @@ export function continuationAdmission(tape, live, { index = 1, label = '', neare
         const a = JSON.stringify(tape[field]);
         const b = JSON.stringify(live.blocks[field]);
         if (a !== b) {
+            /**
+             * ⛓⛓⛓ R9 SLICE 8 (⚖ ruling 20) — THE `rng` ROW IS POSTURE-GATED.
+             *
+             * `rng.gameplay` is a `level-qualified-equality` row
+             * (`r7Acceptance.SEAM_SIGNATURE`): the stream position is an
+             * equality field only in a RENDER-CLEAN room. Where the boot room
+             * has a render-side draw site — `BossTotem`, `LavaBoss`, or the
+             * waterfall spray on tile t=25 — the two sides are a RENDER COUNT
+             * apart, and a render count is the ±2-banded quantity
+             * (`seamRngPosture`). Asserting equality there would red for a
+             * frame budget rather than for a defect.
+             *
+             * ⛔ FAIL-CLOSED. A caller that passes no posture gets the
+             * assertion, unchanged. Being told nothing about the room is not
+             * a reason to stop checking it — the excuse has to be MEASURED
+             * and NAMED, never defaulted into.
+             *
+             * ⛔ AND THE ROW IS STILL REPORTED. An excused mismatch is an
+             * `informational` finding carrying the render sites, not a
+             * silence: a boundary nobody can assert is a fact about the
+             * chain, and one that vanished from the readout would read
+             * exactly like one that passed (trap 119).
+             */
+            if (field === 'rng' && rngPosture && rngPosture.comparable === false) {
+                add(`unasserted — \`rng\` is NOT COMPARABLE at this boundary`,
+                    `tape ${a} vs live ${b}. ${rngPosture.renderSites.join('; ')} — the `
+                    + 'stream position is a render count away from its neighbour and a '
+                    + 'render count is ±2-banded, so equality is not a claim this room '
+                    + `can support.${say}`, true);
+                continue;
+            }
             add(`the declared \`${field}\` is not the live world's`,
                 `tape ${a} vs live ${b}. A staged segment's own latch is legal when it `
                 + `MATCHES; this one does not, so applying it would move the world.${say}`);

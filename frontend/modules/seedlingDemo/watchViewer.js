@@ -1588,6 +1588,31 @@ async function walkSequence(params, lifetime, levelSource) {
     for (let k = 0; k < tapes.length; k += 1) {
         if (k > 0) {
             const live = jsLiveEnvelope(run, parsedTapes[0].persistence, parsedTapes[0].pins);
+            /**
+             * ⛔⛔ R9 SLICE 8 (⚖ ruling 20) — **THE JS STEPPER APPLIES NOTHING
+             * FROM `tick0`, AND THAT IS THE MEASUREMENT, NOT AN OMISSION.**
+             *
+             * The v11 tick-0 latch answers a question only the GAME has: where
+             * a FRESH PAGE stood one build and one fade after it applied the
+             * declaration. The model has neither half of that gap —
+             *   · it keeps NO LFSR position (`SEAM_BOOT_SPEC` marks the rng
+             *     rows `modelled: false`; the admission's `rng` row is
+             *     UNASSERTED by name on this tier), and
+             *   · it ALREADY pays the boot cost, because a sequence is ONE
+             *     `levelRun` and `enterWorld` spends `LOAD_FADE_FRAMES` at the
+             *     crossing that ends window k − 1 (§14.1, measured: 9200 vs a
+             *     declared 9179).
+             * ⇒ applying the block here would move the model AWAY from the
+             * game this slice just corrected — the same defect slice 6
+             * measured and declined to build.
+             *
+             * ⚠ NO POSTURE IS PASSED for the same reason: there is no asserted
+             * `rng` row on this tier for a posture to excuse.
+             *
+             * The field is kept out of the model structurally as well as
+             * behaviourally: `stagingFromTape` does not forward it, and a unit
+             * row reds if it ever does.
+             */
             const found = continuationAdmission(parsedTapes[k], live, {
                 index: k, label: names[k], nearest: nearestChainFor(names[0]),
             });
@@ -1800,6 +1825,14 @@ async function runWasmSequence(params, lifetime) {
         {
             windows: walked.perWindow,
             label: walked.label,
+            /**
+             * ⛓ R9 SLICE 8 — the atlas the POSTURE GATE reads. Passing the
+             * source the page is ALREADY rendering from, rather than letting
+             * `watchWasm` reach for its own, is the point: a posture computed
+             * against a different atlas than the one on screen would be a true
+             * sentence about the wrong room.
+             */
+            levelSource,
             /**
              * ⛓ THE WHOLE SEQUENCE'S expectation and stream — for one window
              * these are the same objects the single-tape ship has always

@@ -669,9 +669,45 @@ describe('⛓⛓ the live envelope is ONE function, and the page re-exports it',
 });
 
 describe('TIER 1 — admission at queue time', () => {
+    /**
+     * ⛓ R9 SLICE 8: every fixture here carries a `tick0` block, because from
+     * ruling 20 on a CONTINUATION window that lacks one is refused at this
+     * tier by name. A fixture without it would red every row below for the
+     * new rule rather than for the rule each row is about — so the block is
+     * part of what "a well-formed continuation window" MEANS now, and the
+     * refusal gets its own test.
+     */
+    const TICK0 = {
+        rng: { seed: 1196897329, split: false, cosmetic: 0, fp: 341033166 },
+        seam: { time: 6208 },
+    };
     const tape = (over = {}) => ({
         name: 'w', boot: { level: 20, x: 192, y: 64 }, tick_count: 100,
-        inputs: [], persistence: [], grants: [], ...over,
+        inputs: [], persistence: [], grants: [], tick0: TICK0, ...over,
+    });
+
+    /**
+     * ⛔⛔ R9 SLICE 8 (⚖ ruling 20) — A CONTINUATION WINDOW WITHOUT A TICK-0
+     * LATCH IS REFUSED IN THE PICKER, BY NAME, WITH ITS OWN CURE.
+     *
+     * This is mutant (b) of the slice, as a permanent row: strip the field
+     * from one window and the queue refuses before a frame exists, naming the
+     * window and printing the derivation command. The alternative the page
+     * used to have — serving it under slice 5's zeroing — is the
+     * silent-wrong-answer shape: it plays, disagrees with its own fresh-page
+     * recording from tick 0, and surfaces as somebody else's `rng` refusal
+     * several boundaries later (§16.8's `boundary 5/15`).
+     */
+    it('⛔ a later window with NO tick-0 latch is refused, with the command', () => {
+        const fs = sequenceAdmission([tape(), tape({ name: 'r8-solve-6', tick0: undefined })]);
+        const row = fs.find((f) => f.what === 'a later window declares no tick-0 latch');
+        expect(row, JSON.stringify(fs)).toBeTruthy();
+        expect(row.where).toContain('r8-solve-6');
+        expect(row.detail).toMatch(/derive-seedling-tick0\.mjs --only=r8-solve-6/);
+    });
+
+    it('⚠ WINDOW 0 needs none — a fresh boot applies its own declaration', () => {
+        expect(sequenceAdmission([tape({ tick0: undefined }), tape()])).toEqual([]);
     });
 
     it('an empty queue is refused by name', () => {
@@ -938,6 +974,56 @@ describe('⛓⛓⛓ TIER 2 — the boundary, and the ruled sentence field by fie
         expect(fs[0].detail).toMatch(/models no LFSR position/);
         // …and an unasserted row is not a refusal.
         expect(refusalsOnly(fs)).toEqual([]);
+    });
+
+    /**
+     * ⛓⛓⛓ R9 SLICE 8 (⚖ ruling 20) — THE POSTURE GATE ON THE `rng` ROW.
+     *
+     * `rng.gameplay` is a `level-qualified-equality` row: the stream position
+     * is an equality field only where the boot room's RENDER path takes no
+     * draws. In a render-coupled room the two sides are a render COUNT apart
+     * and a render count is ±2-banded, so asserting equality would red for a
+     * frame budget rather than for a defect.
+     *
+     * ⛔ AND THE EXCUSED ROW IS STILL REPORTED, carrying its render sites. A
+     * boundary nobody can assert is a fact about the chain; one that vanished
+     * from the readout would read exactly like one that passed (trap 119).
+     */
+    const COUPLED = { comparable: false, renderSites: ["Tile.render's waterfall spray "
+        + 'draws 2 per render (t=25)'], consumers: [], verdict: 'NOT COMPARABLE' };
+    const CLEAN = { comparable: true, renderSites: [], consumers: [], verdict: 'RENDER-CLEAN' };
+
+    it('⛓ a mismatch in a RENDER-COUPLED room is UNASSERTED, with its sites', () => {
+        const fs = continuationAdmission(tape({ rng: { seed: 8 } }), LIVE,
+            { rngPosture: COUPLED });
+        expect(refusalsOnly(fs)).toEqual([]);
+        const row = fs.find((f) => f.what.includes('NOT COMPARABLE'));
+        expect(row.informational).toBe(true);
+        expect(row.detail).toMatch(/waterfall spray/);
+        // …and the two values are still printed, so the delta is readable.
+        expect(row.detail).toMatch(/tape .*seed.*8.*vs live/);
+    });
+
+    it('⛔ MUTANT (c): the SAME mismatch in a render-CLEAN room still REFUSES', () => {
+        // The discriminating half. Without it the row above would pass for a
+        // gate that had simply stopped checking `rng` at all.
+        const fs = continuationAdmission(tape({ rng: { seed: 8 } }), LIVE,
+            { rngPosture: CLEAN });
+        expect(whats(refusalsOnly(fs))).toContain('the declared `rng` is not the live world\'s');
+    });
+
+    it('⛔ FAIL-CLOSED: no posture at all means ASSERT, exactly as before', () => {
+        const fs = continuationAdmission(tape({ rng: { seed: 8 } }), LIVE, {});
+        expect(whats(refusalsOnly(fs))).toContain('the declared `rng` is not the live world\'s');
+    });
+
+    it('⛓ the gate is the `rng` row ONLY — a coupled room does not excuse `seam`', () => {
+        // A posture is a statement about DRAWS. The clock, the save block and
+        // the pins are not render-coupled in any room, so a render-coupled
+        // boot room must not launder a `seam` mismatch through this gate.
+        const fs = continuationAdmission(tape({ seam: { time: 999 } }), LIVE,
+            { rngPosture: COUPLED });
+        expect(whats(refusalsOnly(fs))).toContain('the declared `seam` is not the live world\'s');
     });
 
     it('a tape with no boot block, and a boundary with no live world, both refuse', () => {

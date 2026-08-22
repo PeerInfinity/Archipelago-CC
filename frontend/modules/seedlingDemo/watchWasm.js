@@ -89,6 +89,7 @@ import {
  */
 import { continuationAdmission, continuationFindings, refusalsOnly } from './director.js';
 import { BOOT_PRESWAP_FRAMES, segmentBootFromLatch } from './r7Acceptance.js';
+import { rngPostureForBootLevel } from './seamPosture.js';
 import { LOAD_FADE_FRAMES } from './gameClock.js';
 
 /**
@@ -209,110 +210,94 @@ export function stagesOf({ levelSet = null, windows = 1 } = {}) {
 }
 
 /**
- * ⛓⛓⛓ R9 SLICE 5 (⚖ ruling 12, option (d); ruling 14's first bullet) — **WHAT A
- * CONTINUATION WINDOW HANDS THE GAME**, and it happens AFTER the admission.
+ * ⛓⛓⛓ R9 SLICE 8 (⚖ ruling 20) — **WHAT A CONTINUATION WINDOW HANDS THE
+ * GAME**, and it happens AFTER the admission.
  *
- * ⛔ THE ORDER IS THE WHOLE RULE. `continuationAdmission` compares the
- * DECLARED `rng` against the live world's PRE-BUILD reading (`botSeam()` →
- * `segmentBootFromLatch`, the `beginEntry` block) and refuses by name when
- * they differ. That assertion stays ON. Only once it has passed is the
- * declaration REMOVED from the copy `botLoadTape` receives — because
- * `Bot.botStart` applies a stream position whenever it is non-zero
- * (`Bot.as:1772` `Rng.setState` if `rngSeed != 0`, `:1782` `FP.randomSeed` if
- * `rngFpSeed != 0`) and it does so WITHOUT REBUILDING (`:1722-1725`). On a
- * continuation that write REWINDS the live stream by exactly the boot level's
- * build — which is what refused `boundary 2/3` of `?tapes=r8-d2` at slice 3
- * (§11.12(iii), trap 492).
+ * ⛔⛔ THIS FUNCTION HAS HAD THREE ANSWERS AND THE FIRST TWO WERE CORRECTIONS
+ * FOR A NUMBER NOBODY HAD MEASURED. Keeping the history because it is the
+ * argument for the third:
  *
- * ⛔ `split` IS KEPT, and that is not symmetry. `Rng.split` is a STATIC
- * assigned UNCONDITIONALLY on every `botStart` (`Bot.as:1771`), so zeroing it
- * would not be a no-op the way the three seeds are: it re-routes which stream
- * the cosmetic draws come from — a real change to the game. A later window
- * that declares a DIFFERENT `split` from window 1's is therefore refused at
- * TIER 1 (`director.sequenceAdmission`), in the picker, before a frame exists.
+ *   SLICE 5, (d) — ZERO the declaration. A segment declares its stream
+ *     PRE-BUILD, and `botStart` applies it whenever non-zero (`Bot.as:1772`,
+ *     `:1782`) WITHOUT REBUILDING (`:1722-1725`), so on a continuation the
+ *     write REWOUND the live stream by exactly the boot level's build — which
+ *     refused `boundary 2/3` of `?tapes=r8-d2` at slice 3 (§11.12(iii), trap
+ *     492). Zeroing made the write a no-op and the live state was kept.
+ *   SLICE 6, (d′) — BUMP the clock by `+BOOT_COST_FRAMES`. (d) moved the
+ *     refusal off `rng` and onto `seam.time`: declared − live = 21 on three
+ *     independent chains (§13.6), because `Bot.as:1703` rewrites `Main.time`
+ *     to the declaration and then pays no fade.
+ *   SLICE 8, ruling 20 — **WRITE THE MEASURED TICK-0 STATE.** Both earlier
+ *     answers were standing in for the same missing fact: where a FRESH page
+ *     actually stood when the recording's walk began, one build and one fade
+ *     after the declaration. `derive-seedling-tick0.mjs` measures it with a
+ *     zero-tick run and the tape carries it as v11 `tick0`. Keeping the live
+ *     state (d) was right only because nothing better existed; the live state
+ *     is NOT where the recording started, and slice 7b measured the price —
+ *     the campaign chain refused at `boundary 5/15` on `rng` (§16.8).
  *
- * ⛓ AND THE PAGE SAYS WHAT IT DID: `rngStripped` carries the three values that
- * were DECLARED, ASSERTED and NOT APPLIED. A strip nobody can see is
- * indistinguishable from a tape that declared nothing (trap 269 — echo is not
- * value, so this is a FIELD).
+ * ⇒ the copy `botLoadTape` receives declares the TICK-0 `rng` and the TICK-0
+ * `seam.time`, and `botStart`'s existing writes apply them. Nothing in the
+ * fork changed; the field itself never reaches the game (`gameVisibleTape`
+ * drops it). Fresh == continued at every window's tick 0, exactly.
+ *
+ * ⛔ AFTER THE ADMISSION, NEVER BEFORE — the order slice 5 established and
+ * the reason ruling 20 restates: **the admission never trusts what this
+ * function writes.** `continuationAdmission` compares the live world against
+ * the tape's DECLARED PRE-BUILD values (posture-gated on the rng row) and
+ * refuses by name; the write lands on the copy the GAME gets. Writing first
+ * would be admitting a state the page had just installed — a fixed point,
+ * not a check (trap 519).
+ *
+ * ⛔ `split` IS KEPT AND IS NOT TAKEN FROM `tick0`. `Rng.split` is a STATIC
+ * assigned UNCONDITIONALLY on every `botStart` (`Bot.as:1771`), so it re-routes
+ * which stream the cosmetic draws come from — a property of the WHOLE
+ * sequence, not of a boundary. A later window declaring a DIFFERENT `split`
+ * from window 1's is refused at TIER 1 (`director.sequenceAdmission`), in the
+ * picker, before a frame exists.
+ *
+ * ⛔ A CONTINUATION WINDOW WHOSE TAPE LACKS THE FIELD IS REFUSED BY NAME,
+ * with the derivation command in the text — never silently served under (d)'s
+ * old zeroing, which would play and disagree with its own recording from its
+ * first tick.
+ *
+ * ⛓ AND THE PAGE SAYS WHAT IT DID, as a FIELD (trap 269 — echo is not value):
+ * `tick0Applied` carries what was written, what the tape DECLARES, the derived
+ * `bootCost` and whether the measured clock obeys it. It REPLACES
+ * `rngStripped` and `clockBumped`; a readout still carrying either name would
+ * be describing a mechanism that no longer runs.
+ *
+ * ⛓ `bootCost` STAYS DERIVED AND BECOMES A CHECK (⚖ ruling 20). Slice 6 ADDED
+ * it; slice 8 measured that every one of the eighteen segments declaring a
+ * clock reads `declared + 21` at tick 0, so the constant is now something the
+ * game is asked to obey rather than something the page imposes.
  *
  * ⚠ WINDOW 1 IS UNTOUCHED. A fresh boot applies everything, and must: it is
  * the only window whose declared stream position IS the state the page is in.
  *
- * ⛓⛓⛓ R9 SLICE 5, THE SECOND HALF (⚖ ruling 14's timed-row rule) — **AND THE
- * FORWARD DECLARATIONS DO NOT REACH THE GAME EITHER**, for a reason that has
- * nothing to do with the rng and everything to do with what `gameVisibleTape`
- * IS.
+ * ⛓⛓⛓ THE FORWARD DECLARATIONS STILL DO NOT REACH THE GAME (⚖ ruling 14's
+ * timed-row rule, slice 5), for a reason that has nothing to do with the rng.
+ * A v9 timed `persistence` row is a clear the window's OWN WALK earns;
+ * `gameVisibleTape` drops `at` and KEEPS the row, which is right for a FRESH
+ * page and exactly wrong on a continuation — handing the live game the row
+ * would open the lock before the walk that opens it, a ledger rebuild. What
+ * `botLoadTape` receives for k > 0 is the LATCH ROWS ONLY, and the admission
+ * has just asserted those equal the live set.
  *
- * A v9 timed `persistence` row is a clear the window's OWN WALK earns.
- * `gameVisibleTape` projects a v9 tape to v8 by DROPPING `at` and KEEPING the
- * row (`GAME_VISIBLE_DROPS`) — which is right for a FRESH page, where
- * `botStart` applying the clear at boot reproduces the state the recording was
- * made in. On a CONTINUATION it is exactly wrong: the live game has not earned
- * the clear yet, and handing it the row would open the lock before the walk
- * that opens it — a rebuild of the ledger, which is the one thing a
- * continuation may not do. The live game earns it, on its own tick.
- *
- * ⇒ what `botLoadTape` receives for k > 0 is the LATCH ROWS ONLY — and the
- * admission above has just asserted that those EQUAL the live set, so
- * `botStart`'s reset-then-apply is a no-op on the ledger.
- *
- * ⛓⛓⛓ R9 SLICE 6, THE THIRD HALF (⚖ ruling 15, option (d′)) — **AND THE
- * CLOCK GOES THE OTHER WAY: IT IS THE ONE FIELD A CONTINUATION IS HANDED MORE
- * OF, NOT LESS.**
- *
- * Slice 5's (d) moved the boundary refusal off `rng` and onto `seam.time`, and
- * measured the whole of what was left: declared − live = **21**, on three
- * independent chains, with every other seam row EQUAL (§13.6). The mechanism
- * is `Bot.as:1703` — `if (seamTime != 0) Main.time = seamTime` runs on a
- * continuation too, and then `botStart` DOES NOT REBUILD (`:1722-1725`), so
- * the walk begins without the `BOOT_COST_FRAMES` a fresh page pays before its
- * tick 0. The recording the tape IS was made behind that fade.
- *
- * ⇒ the copy `botLoadTape` receives declares `seam.time + BOOT_COST_FRAMES`,
- * so the write lands the walk on the phase its recording started from. By
- * induction the segment's own latch then equals the SUCCESSOR's declaration
- * and the next boundary admits under the same plain-equality rule.
- *
- * ⛔ AFTER THE ADMISSION, NEVER BEFORE — the same order (d) established one
- * paragraph up. `continuationAdmission` compares the DECLARED value against
- * the live world's and refuses by name; the bump is applied to the copy the
- * GAME gets, and the assertion is untouched. Bumping first would be admitting
- * a number nobody declared.
- *
- * ⛔ A ZERO OR ABSENT `seam.time` STAYS ZERO. `Bot.as:1703` gates on
- * `seamTime != 0`, so 0 means "do not write the clock at all"; adding 21 to it
- * would turn a tape that says nothing about the clock into one that sets it to
- * 21. 110 of the 154 tapes on the roster are pre-v7 and declare no `seam` at
- * all, and `r8-solve-1` — the TRUE START, and window 1 of the campaign chain —
- * declares none either.
- *
- * ⛓ AND THE PAGE SAYS WHAT IT DID, as a FIELD: `clockBumped` carries
- * `{declared, applied, bootCost}` beside `rngStripped`, for the same trap-269
- * reason. A gate wanting the residual had to regex a finding's detail sentence
- * for it until slice 5 published `live.blocks`; this is the other side of that
- * pair.
- *
- * ⛔⛔ THERE IS NO JS-SIDE COUNTERPART, AND THAT IS A MEASUREMENT (§14.1).
- * Ruling 15 asks for one — *"the JS resume face applies the same `+bootCost`
- * to the resumed run's `gameClock` at the boundary"*. Measured at the pristine
- * baseline, BEFORE this line was written: the model's resumed clock is ALREADY
- * `declared + BOOT_COST_FRAMES` at every boundary (`r8-solve-18 → r8-d2-19`
- * 9200 vs 9179, `r8-d2-19 → r8-d2-20` 10234 vs 10213), because a sequence is
- * ONE `levelRun` and `enterWorld` spends `LOAD_FADE_FRAMES` at the door
- * crossing that ENDS window k − 1 (`levelRun.js:3400`) while
- * `beginEntryTimeFromDeclared` spent the pre-swap frame at the boot. The model
- * never stopped paying the boot cost; the GAME did. A second bump on the JS
- * side would put the model 21 AHEAD of the game this line has just corrected.
- * `watchWasm.test.js` pins the equality so the next reader is answered by a
- * test.
+ * ⛔⛔ THERE IS NO JS-SIDE COUNTERPART, AND THAT IS A MEASUREMENT (§14.1),
+ * UNCHANGED BY THIS SLICE. The model's resumed clock is ALREADY
+ * `declared + BOOT_COST_FRAMES` at every boundary (9200 vs 9179, 10234 vs
+ * 10213), because a sequence is ONE `levelRun` and `enterWorld` spends
+ * `LOAD_FADE_FRAMES` at the crossing that ENDS window k − 1
+ * (`levelRun.js:3400`). The model never stopped paying the boot cost; the GAME
+ * did. And the model keeps no LFSR position at all, so there is nothing on the
+ * JS side for the rng half either — `stagingFromTape` deliberately does not
+ * forward `tick0`, and a unit row reds if it ever does.
  *
  * @param {object} tape a PARSED tape (window k > 0)
- * @returns {object} `{tape, rngStripped, forwardRows, clockBumped}` —
- *   `rngStripped` is `null` for a tape that declares no `rng` block at all
- *   (110 of the 154 on the roster); `forwardRows` is the timed rows that were
- *   NOT handed over; `clockBumped` is `null` for a tape whose `seam.time` is
- *   absent or zero
+ * @returns {object} `{tape, tick0Applied, tick0Missing, forwardRows}` —
+ *   `tick0Applied` is `null` exactly when `tick0Missing` is true;
+ *   `forwardRows` is the timed rows that were NOT handed over
  */
 export function continuationTape(tape) {
     const rows = tape.persistence ?? [];
@@ -321,30 +306,83 @@ export function continuationTape(tape) {
         ? { ...tape, persistence: rows.filter((c) => c.at === undefined) }
         : tape;
     const visible = gameVisibleTape(latchOnly);
-    const declared = tape.rng ?? null;
     const forwardRows = forward.map((c) => `${c.level}:${c.tag}@${c.at}`);
-    const declaredTime = visible.seam?.time;
-    const bumped = Number.isFinite(declaredTime) && declaredTime !== 0;
-    const clockBumped = bumped
-        ? {
-            declared: declaredTime,
-            applied: declaredTime + BOOT_COST_FRAMES,
-            bootCost: BOOT_COST_FRAMES,
-        }
-        : null;
-    const timed = bumped
-        ? { ...visible, seam: { ...visible.seam, time: clockBumped.applied } }
-        : visible;
-    if (!declared) return { tape: timed, rngStripped: null, forwardRows, clockBumped };
+    const tick0 = tape.tick0 ?? null;
+    const declared = tape.rng ?? null;
+    const declaredTime = visible.seam?.time ?? 0;
+
+    /**
+     * ⛔ A CONTINUATION WINDOW WITHOUT THE FIELD IS NOT SILENTLY SERVED. It is
+     * reported here and REFUSED BY NAME at tier 1 (`sequenceAdmission`),
+     * before a frame exists. Falling back to (d)'s zeroing would be the
+     * silent-wrong-answer shape: the window would play, disagree with its own
+     * recording from its first tick, and the disagreement would surface three
+     * boundaries later as somebody else's `rng` refusal.
+     */
+    if (!tick0) {
+        return {
+            tape: visible,
+            tick0Applied: null,
+            tick0Missing: true,
+            forwardRows,
+        };
+    }
+
+    /**
+     * ⛓⛓⛓ THE WRITE. `botStart` applies `rng.seed`/`cosmetic`/`fp` whenever
+     * they are non-zero and writes `Main.time = seamTime` whenever it is
+     * (`Bot.as:1771-1782`, `:1703`) — on a continuation too, because none of
+     * those writes is gated on the rebuild. So the tick-0 state reaches the
+     * game through the writes that were ALREADY there; nothing in the fork
+     * changed and nothing new is shipped (the field itself is dropped by
+     * `gameVisibleTape`).
+     *
+     * ⛔ `split` IS STILL KEPT AND STILL NOT WRITTEN FROM `tick0`. `Rng.split`
+     * is assigned UNCONDITIONALLY (`:1771`) and re-routes which stream the
+     * cosmetic draws come from, so it is a property of the WHOLE sequence
+     * rather than of a boundary. A later window declaring a different `split`
+     * from window 1's is refused at tier 1, as it has been since slice 5.
+     */
+    const applied = {
+        seed: tick0.rng.seed,
+        cosmetic: tick0.rng.cosmetic,
+        fp: tick0.rng.fp,
+        time: tick0.seam.time,
+    };
     return {
-        tape: { ...timed, rng: { ...declared, seed: 0, cosmetic: 0, fp: 0 } },
-        rngStripped: {
-            seed: declared.seed ?? 0,
-            cosmetic: declared.cosmetic ?? 0,
-            fp: declared.fp ?? 0,
+        tape: {
+            ...visible,
+            ...(declared ? { rng: { ...declared, ...tick0.rng, split: declared.split } }
+                : { rng: { ...tick0.rng } }),
+            ...(visible.seam ? { seam: { ...visible.seam, time: tick0.seam.time } } : {}),
         },
+        /**
+         * ⛓ AND THE PAGE SAYS WHAT IT DID, as a FIELD (trap 269 — echo is not
+         * value). This REPLACES slice 5's `rngStripped` and slice 6's
+         * `clockBumped`: there is no strip and no bump any more, so a readout
+         * still carrying either name would be describing a mechanism that no
+         * longer runs.
+         */
+        tick0Applied: {
+            ...applied,
+            declared: {
+                seed: declared?.seed ?? 0,
+                cosmetic: declared?.cosmetic ?? 0,
+                fp: declared?.fp ?? 0,
+                time: declaredTime,
+            },
+            /**
+             * ⛓ `bootCost` SURVIVES AS A CHECK, not as a value anyone adds
+             * (⚖ ruling 20). It is still derived from the two modules that own
+             * the halves, and the page now reports whether the MEASURED tick-0
+             * clock obeys the identity slice 6 used to impose.
+             */
+            bootCost: BOOT_COST_FRAMES,
+            obeysBootCost: declaredTime !== 0
+                && tick0.seam.time - declaredTime === BOOT_COST_FRAMES,
+        },
+        tick0Missing: false,
         forwardRows,
-        clockBumped,
     };
 }
 
@@ -945,6 +983,14 @@ export async function shipToWasm(payload, host) {
          * SEQUENCE'S — for one window that is the same object it always was.
          */
         windows: windowsIn = null,
+        /**
+         * ⛓ R9 SLICE 8 (⚖ ruling 20) — the atlas source the POSTURE GATE
+         * needs. Optional, and its absence is FAIL-CLOSED: without it the
+         * admission asserts the `rng` row at every boundary, exactly as it
+         * did before this slice. Being told nothing about a room is not a
+         * reason to stop checking it.
+         */
+        levelSource = null,
     } = payload;
     const windows = windowsIn ?? [{
         tape, expect, expectWhy, modelStream, modelStreamWhy, label,
@@ -1165,8 +1211,8 @@ export async function shipToWasm(payload, host) {
         const at = many ? ` ${k + 1}/${windows.length}` : '';
         const wLabel = w.label || `window ${k + 1}`;
         const rec = { index: k, label: wLabel, admission: null, verdict: null,
-            continuation: null, movedAtBoundary: null, rngStripped: null, forwardRows: [],
-            clockBumped: null };
+            continuation: null, movedAtBoundary: null, tick0Applied: null,
+            forwardRows: [] };
         state.windows.push(rec);
 
         if (k > 0) {
@@ -1236,7 +1282,26 @@ export async function shipToWasm(payload, host) {
                     : null,
                 blocksWhy,
             };
-            const found = continuationAdmission(w.tape, live, { index: k, label: wLabel });
+            /**
+             * ⛓⛓⛓ R9 SLICE 8 — THE POSTURE, DERIVED FROM THE BOOT ROOM the
+             * window is continuing INTO. `rng.gameplay` is comparable only in
+             * a render-CLEAN room; where it is not, the admission reports the
+             * mismatch with its render sites instead of refusing on a ±2
+             * render band. ⛔ Computed here and never cached on the tape: it
+             * is a property of the ATLAS, and a tape carrying it would be a
+             * second copy that could drift from the room it describes.
+             */
+            let rngPosture = null;
+            if (levelSource && Number.isFinite(w.tape?.boot?.level)) {
+                try {
+                    rngPosture = rngPostureForBootLevel(w.tape.boot.level, levelSource);
+                } catch {
+                    rngPosture = null;   // fail-closed: no posture means assert
+                }
+            }
+            const found = continuationAdmission(w.tape, live,
+                { index: k, label: wLabel, rngPosture });
+            rec.rngPosture = rngPosture;
             rec.admission = found;
             /**
              * ⛓⛓⛓ R9 SLICE 5 — **THE LATCHED BLOCKS GO ON THE RECORD**, and
@@ -1308,20 +1373,38 @@ export async function shipToWasm(payload, host) {
          * arms are unaffected by construction rather than by re-measurement.
          */
         /**
-         * ⛓⛓⛓ R9 SLICE 5 — AND FOR k > 0 THE PROJECTION IS THE CONTINUATION
-         * ONE. See `continuationTape` for why the strip happens HERE, after
-         * the admission above has already asserted the declaration.
+         * ⛓⛓⛓ R9 SLICE 8 (⚖ ruling 20) — FOR k > 0 THE PROJECTION IS THE
+         * CONTINUATION ONE, AND IT NOW **WRITES** RATHER THAN STRIPS. See
+         * `continuationTape`: the write happens HERE, after the admission
+         * above has already compared the DECLARED pre-build values against
+         * the live world's. The page never trusts what it is about to write.
+         *
+         * ⚠ WINDOW 1 IS UNTOUCHED, as it has been since slice 5 — a fresh
+         * boot applies its own declaration and is the only window whose
+         * declared position IS the state the page is in.
          */
         const projected = k > 0 ? continuationTape(w.tape) : { tape: gameVisibleTape(w.tape),
-            rngStripped: null, forwardRows: [], clockBumped: null };
-        rec.rngStripped = projected.rngStripped;
+            tick0Applied: null, tick0Missing: false, forwardRows: [] };
         rec.forwardRows = projected.forwardRows;
         /**
-         * ⛓⛓⛓ R9 SLICE 6 (⚖ ruling 15, (d′)) — `{declared, applied, bootCost}`
-         * for the window whose clock was moved, `null` for window 1 and for
-         * any window whose `seam.time` is absent or zero.
+         * ⛓ `{seed, cosmetic, fp, time, declared, bootCost, obeysBootCost}`
+         * for a continuation window, `null` for window 1.
          */
-        rec.clockBumped = projected.clockBumped;
+        rec.tick0Applied = projected.tick0Applied;
+        /**
+         * ⛔ AND A CONTINUATION WINDOW WITHOUT THE FIELD REFUSES HERE TOO, BY
+         * NAME AND WITH ITS OWN CURE. Tier 1 (`sequenceAdmission`) catches
+         * this in the picker before a frame exists; this is the tier-2 backstop
+         * for a queue that reached the game anyway — an instrument that can
+         * only be caught in one place is one deploy away from not being caught
+         * at all.
+         */
+        if (projected.tick0Missing) {
+            return refuse(`tape${at}`, `${wLabel} ("${w.label || w.tape.name}") declares no `
+                + 'tick-0 latch, so a continuation has no measured state to apply. '
+                + 'Derive it: node scripts/procgen/derive-seedling-tick0.mjs '
+                + `--only=${w.tape.name ?? w.label}`, '');
+        }
         const loaded = bot('botLoadTape', JSON.stringify(projected.tape));
         if (loaded !== 'ok') return refuse(`tape${at}`, `botLoadTape: ${loaded}`, '');
         enter(`tape${at}`, 'the game accepted the tape');
@@ -1477,12 +1560,16 @@ export async function shipToWasm(payload, host) {
             endState: r.verdict?.text ?? null,
             continuation: r.continuation,
             movedAtBoundary: r.movedAtBoundary,
-            /** ⛓ R9 slice 5: what was DECLARED, ASSERTED and NOT APPLIED. */
-            rngStripped: r.rngStripped ?? null,
+            /**
+             * ⛓⛓⛓ R9 slice 8 (⚖ ruling 20): the measured tick-0 state this
+             * continuation was WRITTEN, beside the pre-build values it
+             * declares. Replaces slice 5's `rngStripped` (nothing is stripped
+             * any more) and slice 6's `clockBumped` (nothing is bumped —
+             * `bootCost` rides along as a CHECK, `obeysBootCost`).
+             */
+            tick0Applied: r.tick0Applied ?? null,
             /** ⛓ R9 slice 5: the walk's OWN clears, which the game must EARN. */
             forwardRows: r.forwardRows ?? [],
-            /** ⛓ R9 slice 6 (d′): the boot cost this continuation was handed. */
-            clockBumped: r.clockBumped ?? null,
         })),
     };
     state.verdict = v;
