@@ -3678,6 +3678,33 @@ the commit on every value (trap 549's cure). Traps 554–557. Kickoff **§21** i
 (§16.11's "+2" looks double-counted; not re-run at the baseline), and one ship-gate red
 (230/15) that did NOT reproduce.
 
+⛓⛓⛓ **R9 SLICE 11b SHIPPED 2026-08-22** (`2880f7a5d`..`2f8836718`, five commits) —
+⚖ ruling 32's protocol fixes, taken BEFORE slice 12 edits anything, on the orchestrator's
+post-mortem of slice 11 (four avoidable retests). **B** `scripts/procgen/
+reach-seedling-change.mjs` answers "what can this change move?" with a transitive REVERSE
+import closure — producers/gates/pages/tests, the TAPES whose producer is reached, their
+chains, and the identity-block rows — resolving the three edge kinds no grep can see: the
+dynamic `join()` form (trap 543), the loader HELPER whose literal is at the CALL SITE (the
+one that hid slice 11's four rows), and a gate that DRIVES a page over HTTP (21 of them).
+Bases derived per file, 83 unresolvable edges REPORTED not dropped, and every report prints
+*"a reach is an UPPER BOUND — it says what CAN move, not what WILL."* **C** a tape's bytes
+reached the page down FIVE `fetch(` calls and now go through ONE `fetchArtifact` with
+`cache: 'no-store'` — and WHERE it bites is measured: `python -m http.server` sends no
+`Cache-Control` (Chrome revalidates), **GitHub Pages sends `max-age=600`** and serves the
+OLD bytes with no request on the wire. **D** `cuts`/`endsAt`/`at`/`offset` are DERIVED from
+the segment tapes; the derived numbers are **byte-identical to the typed ones on all fifteen
+chains**, and the two rows the derivation makes vacuous are NAMED rather than left looking
+like checks. **E** two docblock sentences. All five mutants fired. Gates: sequence 36/0,
+ship **245/0 first run**, `r7-ends-meet --check` reproduces `75cf816a…` byte for byte,
+reference ALL MATCH at 239 instruments, unfiltered vitest **333 / 10215** (+1 file / +21,
+arithmetic closes exactly). ⛔ **TWO PRE-EXISTING REDS FOUND, BOTH BY B AND BOTH SLICE 11's**:
+`check-procgen-demos.mjs` is **194/2** (entries `dropped-element` seed 1 and `arena` seed 6 —
+exactly the certification flips slice 11's own §21.4 measured; confirmed by control), and
+`plan-seedling-r7-act2.mjs --check` has been broken since `706886397` (`no chain
+"act2-the-sword"`). Both left as RESIDUE. Kickoff **§21b** is the as-built. ⚠ Ruling 32 **F**
+(targeted roster `--only=`) is still the user's and NOT shipped — B derives exactly that
+list, so it is one flag away.
+
 **NEXT in R9: slice 12 = L14** (⚖ ruling 29 — PARRY-WALK primary, HUNT fallback,
 `KILL_ARM_POLICY.Bob` → `modelled`; the `facingToward` blocker is now GONE), then
 slice 13 = the watch-page five.
