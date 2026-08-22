@@ -124,6 +124,11 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
+            "count": 1,
+            "id": "reach"
+        },
+        {
+            "browser": 0,
             "count": 5,
             "id": "recon"
         },
@@ -179,13 +184,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 219,
+        "blockStyle": 220,
         "browser": 74,
         "cited": 72,
-        "files": 238,
+        "files": 239,
         "lineStyle": 19,
-        "withDocblock": 238,
-        "withFlags": 145
+        "withDocblock": 239,
+        "withFlags": 146
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -4707,6 +4712,58 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "prove-seedling-procgen-seam — SLICE 1's PROOF, and it is CLI-first on purpose.",
             "path": "scripts/procgen/prove-seedling-procgen-seam.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "flag"
+            ],
+            "browser": false,
+            "category": "reach",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "reach-seedling-change.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "files"
+                },
+                {
+                    "how": [
+                        "flag"
+                    ],
+                    "name": "help"
+                },
+                {
+                    "how": [
+                        "flag"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "range"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "symbol"
+                }
+            ],
+            "oneLiner": "reach-seedling-change — **WHAT CAN THIS CHANGE MOVE?** The transitive import closure from a set of changed files to the producers, gates, tests, pages, TAPES, chains and identity-block rows that reach them.",
+            "path": "scripts/procgen/reach-seedling-change.mjs"
         },
         {
             "argvHelpers": [
