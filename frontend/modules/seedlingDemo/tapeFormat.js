@@ -128,10 +128,11 @@ import { TAGS_PER_LEVEL } from './breakableRocks.js';
  * bumping this constant cannot silently re-version the committed fixtures.
  * It is documentation plus one test's anchor.
  */
-export const TAPE_VERSION = 10;
+export const TAPE_VERSION = 11;
 
 /** Every version this parser accepts. v1 tapes are frozen, not deprecated. */
-export const SUPPORTED_TAPE_VERSIONS = Object.freeze([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+export const SUPPORTED_TAPE_VERSIONS = Object.freeze(
+    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
 
 /**
  * ── Version 7: the RNG STATE ──────────────────────────────────────────
@@ -1084,6 +1085,105 @@ function parseRng(raw) {
 }
 
 /**
+ * ── Version 11: the TICK-0 LATCH (⚖ ruling 20) ────────────────────────
+ *
+ * ⛔⛔⛔ A SEGMENT DECLARES TWO STATES, AND THEY ARE ONE BUILD APART.
+ *
+ * `boot`/`rng`/`seam` are the PRE-BUILD declaration — what `botStart` applies
+ * ABOVE the deferred build (`Bot.as:1689`), which a FRESH page then spends by
+ * building the boot level and paying the load fade. `tick0` is the same run
+ * measured one build later: the state at TICK 0 of that fresh boot, after the
+ * fade, at the instant the walk actually begins.
+ *
+ * A CONTINUATION never pays either cost — `botStart` does not rebuild
+ * (`Bot.as:1722-1725`) — so before this field the live world at a boundary was
+ * a whole build and a whole fade away from where the recording's walk started,
+ * and the page could only ZERO the declaration (R9 slice 5's (d)) or BUMP the
+ * clock by a derived constant (slice 6's (d′)). Both were corrections for a
+ * number nobody had measured. This field IS that number, measured once per
+ * segment by a ZERO-TICK fresh-page run, and the continuation page WRITES it.
+ *
+ * ⛔ THE FIELD IS GAME-INVISIBLE. `GAME_VISIBLE_DROPS` carries it and
+ * `gameVisibleTape` projects it away, so the fork never sees it and a v11 tape
+ * reaches `botLoadTape` as the v8 tape it has always been. It is also
+ * JS-STAGING-INVISIBLE (`stagingFromTape`): a field that reached
+ * `createRunForStaging` would be a REBUILD knob, which is the one thing a
+ * tick-0 reading must never become.
+ *
+ * ⛔ THE SCHEMA IS NOT A PARALLEL LIST. `r7Acceptance.SEAM_PREBUILD_FIELDS` is
+ * the set of signature rows read at `Game.begin()` ENTRY rather than at the
+ * terminal disarm — measured to be exactly
+ * `["save.time", "rng.gameplay", "rng.cosmetic", "fp.seed"]` — and those four
+ * are precisely the rows that can differ between the declaration and tick 0.
+ * They land in two channels (`SEAM_CHANNELS`): three in `rng` and one in
+ * `seam`, which is why this block is shaped `{ rng, seam }` and carries
+ * nothing else.
+ *
+ * ⚠ AND THE DERIVATION RUNS THE OTHER WAY ROUND, BECAUSE THE IMPORT DOES.
+ * `r7Acceptance` imports THIS module, so this module cannot import
+ * `SEAM_PREBUILD_FIELDS` without a cycle. The halves are therefore validated
+ * by REUSE — `parseRng` for the rng half, `SEAM_BOOT_SPEC`'s own `time` row
+ * for the clock half, neither re-spelled — and the correspondence with
+ * `SEAM_PREBUILD_FIELDS` is PINNED by a unit row in `r7Acceptance.test.js`,
+ * which can see both. A fifth prebuild row marked tomorrow reds that row by
+ * name instead of being silently dropped.
+ */
+function parseTick0(raw) {
+    const t0 = raw.tick0;
+    if (t0 === null || typeof t0 !== 'object' || Array.isArray(t0)) {
+        fail('tick0 must be an object { rng, seam } on a tape_version 11 tape, '
+            + `got ${JSON.stringify(t0)}`);
+    }
+    for (const k of Object.keys(t0)) {
+        if (k !== 'rng' && k !== 'seam') {
+            fail(`tick0.${k} is not a tick-0 field; the block carries exactly the `
+                + 'channels the PRE-BUILD signature rows map to — `rng` and `seam`');
+        }
+    }
+    // ⛔ REUSED, NOT RE-SPELLED. Every bound, every orbit argument and every
+    // refusal message `parseRng` carries applies unchanged to a tick-0
+    // reading: it is the same three generators at a later instant.
+    let rng;
+    try {
+        rng = parseRng({ rng: t0.rng });
+    } catch (e) {
+        fail(`tick0.${String(e.message).replace(/^rng/, 'rng')}`);
+    }
+    if (rng.seed === 0) {
+        fail('tick0.rng.seed is 0, which the format reserves for "inherit the page\'s '
+            + 'stream". A tick-0 reading is a state the LFSR really occupies — a 0 '
+            + 'means the derivation never measured it, and writing it on a '
+            + 'continuation would be a no-op that reads as an applied latch.');
+    }
+    const seam = t0.seam;
+    if (seam === null || typeof seam !== 'object' || Array.isArray(seam)) {
+        fail(`tick0.seam must be an object { time }, got ${JSON.stringify(seam)}`);
+    }
+    for (const k of Object.keys(seam)) {
+        if (k !== 'time') {
+            fail(`tick0.seam.${k} is not a tick-0 seam field; \`save.time\` is the only `
+                + 'PRE-BUILD signature row in the `seam` channel');
+        }
+    }
+    // ⛔ THE BOUNDS ARE `SEAM_BOOT_SPEC`'s OWN `time` ROW, looked up rather
+    // than retyped, so a bound moved there moves here with no edit.
+    const spec = SEAM_BOOT_SPEC.find((r) => r.key === 'time');
+    if (!spec) {
+        fail('SEAM_BOOT_SPEC carries no `time` row, so tick0.seam.time has no schema '
+            + 'to validate against — the seam signature moved and this block did not');
+    }
+    const time = seam.time;
+    requireFiniteNumber(time, 'tick0.seam.time');
+    if (time <= spec.min || time > spec.max) {
+        fail(`tick0.seam.time is ${time}, outside (${spec.min}, ${spec.max}] — the `
+            + 'bounds are `SEAM_BOOT_SPEC`\'s own `time` row, not a second copy. A '
+            + 'tick-0 clock is always > 0: a fresh boot pays the fade before tick 0, '
+            + 'so even a true start reads LOAD_FADE_FRAMES + BOOT_PRESWAP_FRAMES.');
+    }
+    return { rng, seam: { time } };
+}
+
+/**
  * ── The version-8 `seam` block ────────────────────────────────────────
  *
  * ⛔ THE SCHEMA IS `SEAM_BOOT_SPEC`, WALKED — not retyped here. The v8
@@ -1627,6 +1727,18 @@ export function parseTape(input) {
     }
     const seam = version >= 8 && seamBlockDeclaresAnything(raw.seam)
         ? parseSeam(raw) : emptySeamBlock();
+    // ⚠ Same rule as every field above: a version that predates the field
+    // means the field is ABSENT by definition, and declaring it anyway is a
+    // tape whose game and whose model would disagree about what was applied.
+    if (version < 11 && raw.tick0 !== undefined && raw.tick0 !== null) {
+        fail(`tape_version ${version} declares tick0: ${JSON.stringify(raw.tick0)}, `
+            + 'but versions below 11 have no tick-0 latch BY DEFINITION — the page '
+            + 'would strip or bump the declaration (R9 slices 5 and 6) while a reader '
+            + 'believed the measured state was applied. Bump tape_version to 11 to '
+            + 'declare one.');
+    }
+    const tick0 = version >= 11 && raw.tick0 !== undefined && raw.tick0 !== null
+        ? parseTick0(raw) : null;
 
     const boot = raw.boot;
     if (boot === null || typeof boot !== 'object' || Array.isArray(boot)) {
@@ -1749,6 +1861,13 @@ export function parseTape(input) {
         // ⚠ `null`, not `{}` — see `seamBlockDeclaresAnything`. Frozen when
         // present; `parseSeam` freezes the array values inside it.
         seam,
+        // ⚠ `null` when undeclared, on `seam`'s precedent: a tape either
+        // carries a MEASURED tick-0 state or it does not, and an empty object
+        // would read as "measured, and everything was zero".
+        tick0: tick0 && Object.freeze({
+            rng: Object.freeze({ ...tick0.rng }),
+            seam: Object.freeze({ ...tick0.seam }),
+        }),
         tick_count: tickCount,
         inputs: Object.freeze(inputs.map((s) => Object.freeze(s))),
         ...(raw.name ? { name: String(raw.name) } : {}),
@@ -1837,7 +1956,7 @@ export function keyEdgesAt(tape, t) {
  * a game that consumed it would be told to remove something instead of being
  * asked whether it had.
  */
-export const GAME_VISIBLE_DROPS = Object.freeze(['persistence[].at', 'despawn']);
+export const GAME_VISIBLE_DROPS = Object.freeze(['persistence[].at', 'despawn', 'tick0']);
 
 export function gameVisibleTape(tape) {
     const t = tape.tape_version === undefined ? parseTape(tape) : tape;
@@ -1846,12 +1965,18 @@ export function gameVisibleTape(tape) {
     // no mid-run clear is refused for a number rather than for a feature —
     // and it is, in content, exactly a v8 tape.
     if (t.tape_version < 9) return t;
-    const { despawn, ...rest } = t;
+    // ⛓ R9 SLICE 8: `tick0` leaves here too, and its absence downstream is the
+    // whole claim. The fork has no tick-0 concept — the page APPLIES the block
+    // through `botStart`'s existing `rng`/`seam.time` writes and the game only
+    // ever sees the ordinary declaration it has always seen.
+    const { despawn, tick0, ...rest } = t;
     return {
         ...rest,
-        // ⚠ 8, and still not `tape_version - 1`: everything versions 9 and
-        // 10 added is dropped here, so what is left is precisely a version 8
-        // tape. A decrement would be arithmetic pretending to be a claim.
+        // ⚠ 8, and still not `tape_version - 1`: everything versions 9, 10
+        // and 11 added is dropped here, so what is left is precisely a version
+        // 8 tape. A decrement would be arithmetic pretending to be a claim —
+        // and with v11 on the roster it would be a WRONG one, since a v11 tape
+        // minus its tick-0 block is a v8 tape and never a v10.
         tape_version: 8,
         persistence: (t.persistence ?? []).map(({ at, ...c }) => c),
     };
@@ -1873,6 +1998,10 @@ export function requiredTapeVersion(tape, floor = 8) {
     // an earlier arm. Each version's test is its own FEATURE and never the
     // declared number, which is what lets a v10 author leave 121 fixtures at
     // the versions they were written at.
+    // ⛔ HIGHEST FIRST, and the tick-0 latch is the highest: a segment that
+    // carries a measured tick-0 state AND a despawn is a v11 tape, not a v10
+    // one that quietly drops the field the continuation page reads.
+    if (tape.tick0 !== null && tape.tick0 !== undefined) return 11;
     if ((tape.despawn ?? []).length > 0) return 10;
     const usesAt = (tape.persistence ?? []).some((c) => c.at !== undefined);
     return usesAt ? 9 : floor;
@@ -1945,6 +2074,21 @@ export function serializeTape(tape) {
                 cosmetic: t.rng.cosmetic, fp: t.rng.fp,
             },
             ...(t.seam ? { seam: seamToBlock(t.seam) } : {}),
+        } : {}),
+        // Same round-trip rule, one version on: written ONLY for a v11 tape,
+        // so every committed v1..v10 fixture round-trips byte-identically past
+        // this bump. ⛔ The block rides BESIDE `rng`/`seam` rather than inside
+        // them, because it is the SAME channels at a DIFFERENT INSTANT and
+        // nesting it would make one of the two readings look like a default
+        // for the other.
+        ...(t.tape_version >= 11 && t.tick0 ? {
+            tick0: {
+                rng: {
+                    seed: t.tick0.rng.seed, split: t.tick0.rng.split,
+                    cosmetic: t.tick0.rng.cosmetic, fp: t.tick0.rng.fp,
+                },
+                seam: { time: t.tick0.seam.time },
+            },
         } : {}),
         tick_count: t.tick_count,
         inputs: t.inputs.map((s) => ({ key: s.key, from: s.from, to: s.to })),

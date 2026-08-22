@@ -44,6 +44,7 @@ import {
     RNG_SEED_MAX,
     requiredTapeVersion,
 } from './tapeFormat.js';
+import { stagingFromTape } from './tapeRunner.js';
 import { TILE_TYPE_NAMES } from '../flashPanel/seedlingSemantics.js';
 
 const base = {
@@ -287,7 +288,7 @@ describe('serialization', () => {
         // fixture file changes for no change in meaning.
         expect(JSON.parse(serializeTape(base)).tape_version).toBe(1);
         expect(JSON.parse(serializeTape(v2Base)).tape_version).toBe(2);
-        expect(TAPE_VERSION).toBe(10);
+        expect(TAPE_VERSION).toBe(11);
     });
 
     it('writes NO persistence field into a v1 or v2 tape either', () => {
@@ -709,7 +710,7 @@ describe('the game\'s stream, out of botDrain', () => {
 describe('version 2: what a v1 tape may and may not say', () => {
     it('still parses every v1 tape', () => {
         expect(parseTape(base).tape_version).toBe(1);
-        expect(SUPPORTED_TAPE_VERSIONS).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+        expect(SUPPORTED_TAPE_VERSIONS).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
     });
 
     it('normalises v1 to version 1 SEMANTICS so no engine branches on version', () => {
@@ -1245,8 +1246,8 @@ describe('version 7: the RNG state', () => {
     });
 
     it('TAPE_VERSION and SUPPORTED_TAPE_VERSIONS carry the bump', () => {
-        expect(TAPE_VERSION).toBe(10);
-        expect(SUPPORTED_TAPE_VERSIONS).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+        expect(TAPE_VERSION).toBe(11);
+        expect(SUPPORTED_TAPE_VERSIONS).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
     });
 });
 
@@ -1323,7 +1324,12 @@ describe('version 9: the witnessed mid-run clear', () => {
         // v9 tape too — EMPTY OR NOT. A projection whose SHAPE depended on
         // whether a model-only field had entries would hand the game a key
         // it does not know on exactly the tapes nobody tested.
-        expect(differing.sort()).toEqual(['despawn', 'persistence', 'tape_version']);
+        // ⛓ R9 slice 8: `tick0` joins the classified list. It differs even on
+        // a tape that declares none — `parseTape` normalises the field to
+        // `null` and the projection DELETES the key — which is the same
+        // shape-not-content rule `despawn` follows two lines up.
+        expect(differing.sort()).toEqual(
+            ['despawn', 'persistence', 'tape_version', 'tick0']);
         // …and the projection is a real v8 tape, which is the whole claim:
         // "declaring it v8 is a true statement about its contents".
         expect(() => parseTape(g)).not.toThrow();
@@ -1345,7 +1351,7 @@ describe('version 9: the witnessed mid-run clear', () => {
         expect(gameVisibleTape(v9NoAt).tape_version).toBe(8);
         const v8 = parseTape(v9({ persistence: [], tape_version: 8 }));
         expect(gameVisibleTape(v8)).toBe(v8);
-        expect(GAME_VISIBLE_DROPS).toEqual(['persistence[].at', 'despawn']);
+        expect(GAME_VISIBLE_DROPS).toEqual(['persistence[].at', 'despawn', 'tick0']);
     });
 });
 
@@ -1451,7 +1457,12 @@ describe('version 10: the witnessed mid-run enemy removal', () => {
         expect(g.persistence[0]).toEqual({ level: 6, tag: 0, note: '' });
         const differing = Object.keys(t).filter(
             (k) => JSON.stringify(t[k]) !== JSON.stringify(g[k]));
-        expect(differing.sort()).toEqual(['despawn', 'persistence', 'tape_version']);
+        // ⛓ R9 slice 8: `tick0` joins the classified list. It differs even on
+        // a tape that declares none — `parseTape` normalises the field to
+        // `null` and the projection DELETES the key — which is the same
+        // shape-not-content rule `despawn` follows two lines up.
+        expect(differing.sort()).toEqual(
+            ['despawn', 'persistence', 'tape_version', 'tick0']);
         expect(() => parseTape(g)).not.toThrow();
     });
 
@@ -1461,5 +1472,144 @@ describe('version 10: the witnessed mid-run enemy removal', () => {
         const v9NoDespawn = parseTape(v10({ tape_version: 9, despawn: [] }));
         expect(v9NoDespawn.despawn).toEqual([]);
         expect(JSON.parse(serializeTape(v9NoDespawn))).not.toHaveProperty('despawn');
+    });
+});
+
+/**
+ * ── ⛓⛓⛓ VERSION 11: THE TICK-0 LATCH (⚖ ruling 20) ───────────────────
+ *
+ * The field a CONTINUATION applies. `boot`/`rng`/`seam` say where a FRESH
+ * page starts BEFORE it builds the boot level and pays the load fade;
+ * `tick0` says where that same fresh run stood at TICK 0, one build and one
+ * fade later. A continuation pays neither cost, so before v11 the page could
+ * only zero the declaration (slice 5) or bump the clock by a derived constant
+ * (slice 6). This block is the measured state both of those were standing in
+ * for.
+ *
+ * ⛔ THE THREE CLAIMS THESE ROWS EXIST TO MAKE, and each has a mutant:
+ *   1. the field is GAME-INVISIBLE (`gameVisibleTape` drops it, the
+ *      projection is a real v8 tape);
+ *   2. the field is JS-STAGING-INVISIBLE (`stagingFromTape` never forwards
+ *      it — a field that reached `createRunForStaging` is a rebuild knob);
+ *   3. a tape carrying it below v11 is REFUSED, and a tape carrying it is
+ *      stamped 11 and round-trips byte-identically.
+ */
+describe('version 11 — the tick-0 latch', () => {
+    const TICK0 = {
+        rng: { seed: 1196897329, split: false, cosmetic: 0, fp: 341033166 },
+        seam: { time: 6208 },
+    };
+    const v11 = (over = {}) => ({
+        tape_version: 11,
+        game: 'seedling',
+        boot: { level: 6, x: 32, y: 16 },
+        noclip: false,
+        noDamage: false,
+        noHazards: [],
+        grants: [],
+        persistence: [],
+        equips: [],
+        pins: [],
+        save: { totem_parts: [], keys: [], seal_parts: [] },
+        rng: { seed: 514746467, split: false, cosmetic: 0, fp: 341033166 },
+        seam: { time: 6187 },
+        despawn: [],
+        tick0: TICK0,
+        tick_count: 294,
+        inputs: [],
+        ...over,
+    });
+
+    it('parses the block and keeps both readings, one build apart', () => {
+        const t = parseTape(v11());
+        expect(t.rng.seed).toBe(514746467);
+        expect(t.tick0.rng.seed).toBe(1196897329);
+        expect(t.seam.time).toBe(6187);
+        expect(t.tick0.seam.time).toBe(6208);
+        // ⛓ The (d′) identity, now a CHECK rather than a constant the page
+        // adds: 21 = LOAD_FADE_FRAMES (20) + BOOT_PRESWAP_FRAMES (1).
+        expect(t.tick0.seam.time - t.seam.time).toBe(21);
+    });
+
+    it('a tape that declares NO tick0 normalises to null, at any version', () => {
+        expect(parseTape(v11({ tick0: undefined })).tick0).toBeNull();
+        expect(parseTape(v11({ tape_version: 10, tick0: undefined })).tick0).toBeNull();
+        expect(parseTape(v11({ tape_version: 8, despawn: [], tick0: undefined })).tick0)
+            .toBeNull();
+    });
+
+    it('⛔ MUTATION: the block below v11 is REFUSED by name', () => {
+        for (const version of [8, 9, 10]) {
+            expect(() => parseTape(v11({ tape_version: version })))
+                .toThrow(/versions below 11 have no tick-0 latch/);
+        }
+    });
+
+    it('⛔ MUTATION: a stray channel is refused — the block is rng + seam', () => {
+        expect(() => parseTape(v11({ tick0: { ...TICK0, save: {} } })))
+            .toThrow(/not a tick-0 field/);
+        expect(() => parseTape(v11({ tick0: { ...TICK0, seam: { time: 6208, music: 1 } } })))
+            .toThrow(/not a tick-0 seam field/);
+    });
+
+    it('⛔ MUTATION: a zero seed is refused — 0 means "never measured"', () => {
+        expect(() => parseTape(v11({
+            tick0: { ...TICK0, rng: { ...TICK0.rng, seed: 0 } },
+        }))).toThrow(/never measured it/);
+    });
+
+    it('⛔ MUTATION: a zero or negative tick-0 clock is refused', () => {
+        // A fresh boot pays the fade BEFORE tick 0, so even a true start
+        // reads 21 — a 0 here is a reading nobody took.
+        for (const time of [0, -1]) {
+            expect(() => parseTape(v11({ tick0: { ...TICK0, seam: { time } } })))
+                .toThrow(/tick0\.seam\.time/);
+        }
+    });
+
+    it('stamps 11 only for a tape that USES it, and 11 beats 10 and 9', () => {
+        expect(requiredTapeVersion(parseTape(v11()))).toBe(11);
+        expect(requiredTapeVersion(parseTape(v11({ tick0: undefined })))).toBe(8);
+        // ⛔ Highest-first. A segment carrying a tick-0 latch AND a forward
+        // timed row AND a despawn is a v11 tape; an arm order that tested
+        // `despawn` first would stamp it 10 and the next parse would REFUSE
+        // the field the continuation page reads.
+        expect(requiredTapeVersion(parseTape(v11({
+            persistence: [{ level: 6, tag: 0, at: 40 }],
+            despawn: [{ level: 6, id: 'bob@112,48', at: 120 }],
+        })))).toBe(11);
+    });
+
+    it('round-trips byte-identically, and writes NO tick0 below v11', () => {
+        const t = parseTape(v11());
+        expect(parseTape(JSON.parse(serializeTape(t))).tick0).toEqual(t.tick0);
+        expect(serializeTape(parseTape(JSON.parse(serializeTape(t))))).toBe(serializeTape(t));
+        const v10NoTick0 = parseTape(v11({ tape_version: 10, tick0: undefined }));
+        expect(JSON.parse(serializeTape(v10NoTick0))).not.toHaveProperty('tick0');
+    });
+
+    it('⛓ CLAIM 1 — the GAME never sees it: the projection is a real v8 tape', () => {
+        const t = parseTape(v11());
+        const g = gameVisibleTape(t);
+        expect(g).not.toHaveProperty('tick0');
+        expect(g.tape_version).toBe(8);
+        // ⛔ AND THE DECLARATION IT DOES SEE IS THE PRE-BUILD ONE, UNMOVED.
+        // The whole design rests on the fork loading exactly the tape it
+        // always loaded; the tick-0 state reaches the game through
+        // `botStart`'s own writes, never through the loader.
+        expect(g.rng).toEqual(t.rng);
+        expect(g.seam.time).toBe(6187);
+        expect(() => parseTape(g)).not.toThrow();
+    });
+
+    it('⛓⛓ CLAIM 2 — the JS STAGING never sees it either (a rebuild knob)', () => {
+        const t = parseTape(v11());
+        const staging = stagingFromTape(t);
+        expect(staging).not.toHaveProperty('tick0');
+        // The model's own boot state is the PRE-build declaration, exactly as
+        // before the field existed — this is the row that reds if anyone adds
+        // `tick0` to `stagingFromTape`'s allowlist.
+        expect(staging.rng).toEqual(t.rng);
+        expect(staging.seam).toEqual(t.seam);
     });
 });

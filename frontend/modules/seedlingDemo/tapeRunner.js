@@ -122,6 +122,16 @@ export function runTape(tape, opts = {}) {
  * world too (they decide the census — see `createRunForStaging`). A caller
  * that wants an HONEST run from a relaxed tape's staging overrides them
  * explicitly, and says so.
+ *
+ * ⛔⛔ AND `tick0` IS DELIBERATELY ABSENT FROM THIS ALLOWLIST (R9 slice 8).
+ * The v11 tick-0 latch is the state a FRESH PAGE reaches one build and one
+ * fade after it applies `rng`/`seam` — a GAME measurement, for the GAME's
+ * continuation write. The model keeps no LFSR position and pays its own fade
+ * through `enterWorld` (§14.1), so forwarding it here would hand
+ * `createRunForStaging` a second, later boot state for the same run: a REBUILD
+ * KNOB wearing a latch's name. The list is an allowlist precisely so a new
+ * field has to be argued for rather than inherited; a unit row reds if this
+ * one ever appears.
  */
 export function stagingFromTape(t) {
     return {

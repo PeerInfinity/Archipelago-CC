@@ -750,14 +750,19 @@ describe('R7 slice 1 — tape v8, both-sided', () => {
         inputs: [], tick_count: 0,
     };
 
-    it('TAPE_VERSION is 9 and v8 parses', () => {
+    it('TAPE_VERSION follows the bumps and v8 still parses', () => {
         // ⚠ The seam block arrived at v8 and did not move at the v9 bump —
         // v9's only new feature is `persistence[].at`. The pin follows the
         // constant so the bump is a NAMED edit rather than a silent one.
         // ⛓ R7 slice 6e: v10 added `despawn` and the seam block did not move
         // for that either — both new fields are MODEL-ONLY and neither is a
         // seam channel. The pin still follows the constant.
-        expect(TAPE_VERSION).toBe(10);
+        // ⛓⛓ R9 slice 8: v11 added `tick0` and the seam block did not move for
+        // that one either, which is the subtlest of the three — `tick0` carries
+        // `seam.time`, so it LOOKS like a seam channel. It is not: it is a
+        // SECOND READING of channels that already exist, taken one build and
+        // one fade later. A new instant, not a new field.
+        expect(TAPE_VERSION).toBe(11);
         expect(parseTape({ ...base, seam: { hits_max: 4 } }).seam.hits_max).toBe(4);
     });
 
@@ -944,6 +949,67 @@ describe('seamExitFields — which instant each row is read at (R7 slice 2b)', (
         for (const f of SEAM_PREBUILD_FIELDS) {
             expect(SEAM_SIGNATURE.find((r) => r.field === f).prebuild).toBe(true);
         }
+    });
+
+    /**
+     * ⛔⛔⛔ R9 SLICE 8 — THE CORRESPONDENCE THE v11 TICK-0 BLOCK RESTS ON,
+     * PINNED HERE BECAUSE ONLY THIS FILE CAN SEE BOTH SIDES.
+     *
+     * `tapeFormat.js` cannot import `SEAM_PREBUILD_FIELDS` — `r7Acceptance`
+     * imports `tapeFormat`, so the dependency runs the other way and the
+     * import would be a cycle. The v11 block is therefore validated over
+     * there by REUSE (`parseRng` for the rng half, `SEAM_BOOT_SPEC`'s own
+     * `time` row for the clock half) and its SHAPE is pinned here.
+     *
+     * The claim: the tick-0 block carries EXACTLY the channels the PRE-BUILD
+     * signature rows map to, and nothing else can differ between a segment's
+     * declaration and its tick-0 reading. A fifth row marked `prebuild`
+     * tomorrow lands in a channel this row does not expect and REDS BY NAME,
+     * rather than being silently dropped from every tape the derivation
+     * writes — which is the failure that has no symptom (trap 486's family:
+     * the field would still be there, still parse, and be short a row).
+     */
+    it('⛓⛓⛓ the v11 tick-0 block\'s channels ARE the prebuild rows\' channels', () => {
+        const channels = [...new Set(
+            SEAM_PREBUILD_FIELDS.map((f) => SEAM_CHANNELS[f]))].sort();
+        expect(channels).toEqual(['rng', 'seam']);
+        // …and the split between them is 3 / 1, which is why the block is
+        // `{ rng: {seed, split, cosmetic, fp}, seam: {time} }` and not a flat
+        // bag of four keys.
+        const byChannel = (c) => SEAM_PREBUILD_FIELDS
+            .filter((f) => SEAM_CHANNELS[f] === c).sort();
+        expect(byChannel('rng')).toEqual(['fp.seed', 'rng.cosmetic', 'rng.gameplay']);
+        expect(byChannel('seam')).toEqual(['save.time']);
+        // ⛔ AND THE TAPE FORMAT REALLY DOES CARRY BOTH HALVES — read off a
+        // parsed v11 tape rather than asserted about the source, so a field
+        // renamed on one side and not the other reds here.
+        const t = parseTape({
+            tape_version: 11,
+            game: 'seedling',
+            boot: { level: 6, x: 32, y: 16 },
+            noclip: false,
+            noDamage: false,
+            noHazards: [],
+            grants: [],
+            persistence: [],
+            despawn: [],
+            equips: [],
+            pins: [],
+            save: { totem_parts: [], keys: [], seal_parts: [] },
+            rng: { seed: 514746467, split: false, cosmetic: 0, fp: 341033166 },
+            seam: { time: 6187 },
+            tick0: {
+                rng: { seed: 1196897329, split: false, cosmetic: 0, fp: 341033166 },
+                seam: { time: 6208 },
+            },
+            tick_count: 0,
+            inputs: [],
+        });
+        expect(Object.keys(t.tick0).sort()).toEqual(channels);
+        expect(t.tick0.rng).toHaveProperty('seed');
+        expect(t.tick0.rng).toHaveProperty('cosmetic');
+        expect(t.tick0.rng).toHaveProperty('fp');
+        expect(t.tick0.seam).toEqual({ time: 6208 });
     });
 
     it('⛓ takes the four prebuild rows from `beginEntry` and everything else from '
