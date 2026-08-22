@@ -1003,6 +1003,7 @@ const SEQ_STEPS = [
             + 'SAME game',
         wait: 'window.__watch?.wasm?.reached?.includes('
             + `'boundary ${SEQ_WINDOWS.length - 1}/${SEQ_WINDOWS.length}')`,
+        abort: 'window.__watch?.wasm?.refusal != null',
         sec: 900,
     },
     {
@@ -1010,6 +1011,7 @@ const SEQ_STEPS = [
         wait: "window.__watch?.wasm?.verdict"
             + " && window.__watch.wasm.verdict.kind !== 'not-finished'"
             + " && window.__watch.wasm.reached?.includes('verdict')",
+        abort: 'window.__watch?.wasm?.refusal != null',
         sec: 900,
     },
     { read: 'window.__watch.wasm', as: 'wasm' },
@@ -1166,7 +1168,102 @@ const SEQ_STEPS = [
  * sentence (trap 269), and the boot cost is still IMPORTED and summed rather
  * than typed.
  */
-function runChainArm(ARM, CHAIN_ID, WINDOWS) {
+/**
+ * ⛔⛔⛔ R9 SLICE 7b — **THE INVERTED ARM: A CHAIN THAT REFUSES ASSERTS ITS
+ * REFUSAL, BY NAME, WITH THE NUMBERS.**
+ *
+ * This is the shape slice 3 gave the CHAIN arm and slice 6 inverted when (d′)
+ * closed it — *"the arm that asserted the residual is not deleted, it is
+ * INVERTED"*. `r9-campaign` goes the other way: the whole true-start chain plays
+ * on the real GPU for the first time and STOPS at boundary 5/15, so the arm
+ * asserts exactly where and why, and inverts the day the chain continues.
+ *
+ * ⚖ A REFUSAL IN THIS ARM IS A FINDING ABOUT THE CHAIN ON THE GAME, published
+ * by name — NEVER a tape fix. Nothing here re-records anything.
+ *
+ * ⛔ `REFUSES_AT` IS THE ONE MEASURED LITERAL, and it is a fact about the GAME
+ * rather than about the repo: nothing on disk records which boundary the live
+ * rng stream first parts company with the declaration, because the JS model
+ * does not simulate the game's stream at all (which is why the page's own
+ * sequence gate admits all fourteen boundaries in chromium and this arm does
+ * not — the exact thing the CAMPAIGN row was owed for). Everything the arm
+ * COMPARES it against is derived: the refusing tape is `WINDOWS[REFUSES_AT]`,
+ * the declared seed is read off that tape, and the windows that DID run are
+ * checked against their own tick counts.
+ */
+function assertChainRefuses(ARM, WINDOWS, res, wasm, wins, at, TICKS) {
+    const N = WINDOWS.length;
+    const tape = WINDOWS[at];
+    const declared = loadTape(tape).rng ?? null;
+
+    check(res.aborted === true && res.finished !== true,
+        `${ARM}: ⛓ the driver STOPPED ON THE REFUSAL and still wrote its reads — a `
+        + 'refusal costs seconds now, not the whole derived deadline',
+        `aborted ${res.aborted} · steps ${res.steps?.length ?? 0} · reads `
+        + `${Object.keys(res.reads ?? {}).length}`);
+    check(wasm?.refusal != null,
+        `${ARM}: ⛔⛔⛔ THE CHAIN REFUSES — and the refusal is DATA, not a timeout`,
+        JSON.stringify(wasm?.refusal ?? null));
+    check(wasm?.refusal?.stage === `boundary ${at}/${N}`,
+        `${ARM}: ⛔⛔⛔ …AT BOUNDARY ${at}/${N} — window ${at + 1} ("${tape}") cannot `
+        + `continue window ${at} ("${WINDOWS[at - 1]}")`,
+        `stage ${wasm?.refusal?.stage}`);
+    check(wasm?.refusal?.reason === 'window-cannot-continue',
+        `${ARM}: ⛓ …and the reason is the ADMISSION's, refused BEFORE anything played`,
+        `reason ${wasm?.refusal?.reason}`);
+    check(typeof wasm?.refusal?.detail === 'string'
+        && wasm.refusal.detail.includes(tape)
+        && /declared `rng` is not the live world's/.test(wasm.refusal.detail),
+    `${ARM}: ⛔⛔ …and it is the DECLARED \`rng\`, naming the tape`,
+    (wasm?.refusal?.detail ?? '').slice(0, 200));
+    /**
+     * ⛓⛓⛓ THE SHARPEST ROW: the seed the refusal quotes as DECLARED is the one
+     * this tape carries on disk. That is what makes the refusal a fact about
+     * `${tape}`'s own declaration rather than about anything the page invented.
+     */
+    check(declared !== null
+        && (wasm?.refusal?.detail ?? '').includes(String(declared.seed)),
+    `${ARM}: ⛓⛓⛓ …and the DECLARED seed the refusal quotes is the one \`${tape}\` `
+        + `carries on disk — ${declared?.seed}`,
+    (wasm?.refusal?.detail ?? '').slice(0, 260));
+    check((wins[at]?.admission ?? []).some((f) => !f.informational),
+        `${ARM}: ⛓ …and window ${at + 1}'s own record carries the refusal too`,
+        JSON.stringify((wins[at]?.admission ?? []).map((f) => f.detail?.slice(0, 90))));
+    check(wins[at]?.drain == null,
+        `${ARM}: ⛔ …and NOTHING of window ${at + 1} was stepped — refused at the `
+        + 'boundary, not mid-walk', `drain ${JSON.stringify(wins[at]?.drain ?? null)}`);
+
+    /** ⛓ AND THE WINDOWS THAT DID RUN ARE ASSERTED, not waved past. */
+    check(wins.length === at + 1,
+        `${ARM}: ⛓ the game reached window ${at + 1} of ${N} and no further`,
+        `${wins.length} window record(s)`);
+    for (let k = 0; k < at; k += 1) {
+        check((wins[k]?.admission ?? []).every((f) => f.informational),
+            `${ARM}: ⛓ boundary ${k}/${N} ADMITTED — window ${k + 1} ("${WINDOWS[k]}")`,
+            JSON.stringify((wins[k]?.admission ?? []).map((f) => f.what)));
+        check(wins[k]?.drain === TICKS[k] + 1,
+            `${ARM}: ⛓ …and it drained its own ${TICKS[k]} + 1 observations`,
+            `drain ${wins[k]?.drain}`);
+        if (k > 0) {
+            check(wins[k]?.movedAtBoundary === false,
+                `${ARM}: ⛓ …and the player did not drift into it`,
+                `movedAtBoundary ${wins[k]?.movedAtBoundary}`);
+        }
+    }
+    console.log(`\n  ${ARM} — the chain reached ${at} of ${N - 1} boundaries:`);
+    console.log('  #   window            ticks  drain  deadFrames  moved  clockBumped');
+    for (let k = 0; k < wins.length; k += 1) {
+        const wk = wins[k] ?? {};
+        console.log(`  ${String(k + 1).padStart(2)}  ${WINDOWS[k].padEnd(16)}`
+            + `${String(TICKS[k]).padStart(6)}  ${String(wk.drain ?? 'REFUSED').padStart(7)}`
+            + `  ${String(wk.deadFrames ?? '—').padStart(10)}`
+            + `  ${String(wk.movedAtBoundary ?? '—').padStart(5)}`
+            + `  ${wk.clockBumped
+                ? `${wk.clockBumped.declared} + ${wk.clockBumped.bootCost}` : '— (fresh)'}`);
+    }
+}
+
+function runChainArm(ARM, CHAIN_ID, WINDOWS, REFUSES_AT = null) {
     const N = WINDOWS.length;
     const SHARES = deadFrameSharesOf(WINDOWS);
     const TICKS = WINDOWS.map((n) => loadTape(n).tick_count);
@@ -1194,6 +1291,18 @@ function runChainArm(ARM, CHAIN_ID, WINDOWS) {
                     + 'window continues the SAME game',
                 wait: 'window.__watch?.wasm?.reached?.includes('
                     + `'boundary ${N - 1}/${N}')`,
+                /**
+                 * ⛔⛔ R9 SLICE 7b — A REFUSAL ENDS THE WAIT, IN SECONDS.
+                 *
+                 * Neither of this arm's conditions can EVER become true once the
+                 * page refuses a boundary, so a refusal used to cost the whole
+                 * derived deadline and then arrive as `TimeoutError` — a sentence
+                 * about the clock, with the page's own refusal (sitting in
+                 * `__watch.wasm.refusal` within seconds) nowhere in it. Measured
+                 * on the CAMPAIGN arm's first firing: the refusal was up almost
+                 * immediately and the run sat on a dead page.
+                 */
+                abort: 'window.__watch?.wasm?.refusal != null',
                 sec: SEC,
             },
             {
@@ -1201,17 +1310,31 @@ function runChainArm(ARM, CHAIN_ID, WINDOWS) {
                 wait: "window.__watch?.wasm?.verdict"
                     + " && window.__watch.wasm.verdict.kind !== 'not-finished'"
                     + " && window.__watch.wasm.reached?.includes('verdict')",
+                abort: 'window.__watch?.wasm?.refusal != null',
                 sec: SEC,
             },
             { read: 'window.__watch.wasm', as: 'wasm' },
             { read: 'window.__editorSequence.windows.map((w) => w.label)', as: 'seqLabels' },
         ], `watch-ship-${CHAIN_ID}`);
-    check(res !== null && res.crashed !== true, `${ARM}: the driver completed every step`,
-        res === null ? 'no results file' : (res.error ?? `${res.steps.length} step(s)`));
+    /**
+     * ⛓ R9 slice 7b: `aborted` is a THIRD outcome beside completed and crashed.
+     * The driver stopped waiting because the page raised a refusal, ran the
+     * plan's `read` steps anyway and flushed — so the arm has the stage list,
+     * the refusal and every window record, and the row below names them instead
+     * of reporting a timeout.
+     */
+    check(res !== null && res.crashed !== true && res.aborted !== true,
+        `${ARM}: the driver completed every step`,
+        res === null ? 'no results file'
+            : (res.aborted
+                ? `ABORTED — the page REFUSED: ${JSON.stringify(res.reads?.wasm?.refusal
+                    ?? res.reads?.refusal ?? null)}`
+                : (res.error ?? `${res.steps.length} step(s)`)));
     if (res !== null) {
         const wasm = res.reads?.wasm ?? null;
         const wins = wasm?.windows ?? [];
         const reached = wasm?.reached ?? [];
+        if (REFUSES_AT !== null) { assertChainRefuses(ARM, WINDOWS, res, wasm, wins, REFUSES_AT, TICKS); pageHygiene(res, ARM); return; }
         check(JSON.stringify(res.reads?.seqLabels) === JSON.stringify([...WINDOWS]),
             `${ARM}: ⛓ the headline expanded to its ${N} segments`,
             JSON.stringify(res.reads?.seqLabels));
@@ -1382,7 +1505,7 @@ runChainArm('CHAIN', 'r8-d2', CHAIN_WINDOWS);
  * ⚖ A REFUSAL HERE IS A FINDING ABOUT THE CHAIN ON THE GAME, published by
  * name — never a tape fix. No `--record` is licensed in this slice.
  */
-runChainArm('CAMPAIGN', 'r9-campaign', PAGE_CHAINS['r9-campaign']);
+runChainArm('CAMPAIGN', 'r9-campaign', PAGE_CHAINS['r9-campaign'], 5);
 
 console.log(failed === 0 ? '\nALL PASS' : `\n${failed} FAILURE(S)`);
 process.exit(failed === 0 ? 0 : 1);

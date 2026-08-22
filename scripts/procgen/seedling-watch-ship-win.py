@@ -64,13 +64,29 @@ def _utf8_stdout():
             pass
 
 
-def wait_for(page, what, expression, deadline_sec, poll_sec=0.5):
-    """Poll a JS expression until it is truthy. Returns how long it took."""
+def wait_for(page, what, expression, deadline_sec, poll_sec=0.5, abort=None):
+    """Poll a JS expression until it is truthy. Returns (seconds, aborted).
+
+    ⛔⛔ R9 SLICE 7b — `abort` EXISTS BECAUSE A REFUSAL USED TO COST THE WHOLE
+    DEADLINE. The CAMPAIGN arm waits on `reached.includes('boundary 14/15')`
+    and then on a verdict. When the page REFUSES a boundary neither condition
+    can ever become true, so the run sat on a dead page for its full 1878
+    seconds and then reported `TimeoutError` — a sentence about the clock, with
+    the page's own refusal (which was sitting in `__watch.wasm.refusal` within
+    seconds) nowhere in it.
+
+    ⇒ a step may name an `abort` expression. When it goes truthy the wait STOPS
+    and says so, the caller records it, and every LATER wait is skipped so the
+    plan's `read` steps still run against the stopped page. The refusal reaches
+    the gate in seconds, by name, instead of a timeout half an hour later.
+    """
     start = time.time()
     while True:
         try:
             if page.evaluate(f"() => ({expression})"):
-                return round(time.time() - start, 1)
+                return round(time.time() - start, 1), False
+            if abort and page.evaluate(f"() => ({abort})"):
+                return round(time.time() - start, 1), True
         except Exception as exc:  # noqa: BLE001 — a page mid-navigation throws
             last = f"{type(exc).__name__}: {exc}"
             del last
@@ -91,7 +107,27 @@ def main():
         plan = json.load(fh)
 
     record = {"steps": [], "console": [], "crashed": False, "reads": {},
-              "bad_responses": []}
+              "bad_responses": [], "aborted": False, "finished": False}
+
+    def flush():
+        """⛔⛔ THE RECORD IS ON DISK AFTER EVERY STEP (R9 slice 7b).
+
+        It used to be written ONCE, in the last three lines of `main`. So a run
+        that was killed — or that a human stopped after watching it stall — left
+        NOTHING, even when every `read` in the plan had already executed and was
+        sitting in `record["reads"]`. The diagnostic run that measured the
+        CAMPAIGN refusal did exactly that: it had the stage list, the refusal and
+        all fifteen window records in memory at step 9 of 13, and the file did
+        not exist.
+
+        ⇒ every step flushes. A `kill` at any point leaves everything gathered so
+        far, `finished` says whether the plan ran out, and the caller can tell a
+        partial record from a complete one instead of guessing.
+        """
+        with open(args.out, "w", encoding="utf-8") as fh:
+            json.dump(record, fh)
+
+    flush()
     with sync_playwright() as p:
         # Headed on the real Windows desktop: a real GPU adapter, not
         # SwiftShader. This is the whole reason this file exists.
@@ -133,9 +169,24 @@ def main():
                 label = step.get("what") or json.dumps(step)[:80]
                 print(f"STEP {i + 1}/{len(plan['steps'])}: {label}", flush=True)
                 if "wait" in step:
-                    took = wait_for(page, label, step["wait"],
-                                    step.get("sec", args.deadline_sec))
-                    record["steps"].append({"step": i, "waited_sec": took, "what": label})
+                    # ⛓ Once a wait has ABORTED, every later wait is skipped —
+                    # the page is not going to progress — but the plan's `read`
+                    # steps still run, which is where the refusal is read from.
+                    if record["aborted"]:
+                        record["steps"].append({"step": i, "skipped": "after an abort",
+                                                "what": label})
+                        print(f"  SKIPPED (an earlier wait aborted)", flush=True)
+                        flush()
+                        continue
+                    took, aborted = wait_for(page, label, step["wait"],
+                                             step.get("sec", args.deadline_sec),
+                                             abort=step.get("abort"))
+                    record["steps"].append({"step": i, "waited_sec": took, "what": label,
+                                            "aborted": aborted})
+                    if aborted:
+                        record["aborted"] = True
+                        print(f"  ABORTED after {took}s — the page raised its abort "
+                              f"condition: {step.get('abort')}", flush=True)
                 elif "click" in step:
                     page.click(step["click"], timeout=step.get("sec", 60) * 1000)
                     record["steps"].append({"step": i, "clicked": step["click"]})
@@ -163,9 +214,12 @@ def main():
                     record["steps"].append({"step": i, "sleep_ms": step["sleep_ms"]})
                 else:
                     raise RuntimeError(f"step {i} names no action: {step!r}")
+                flush()
+            record["finished"] = True
         except Exception as exc:  # noqa: BLE001 — a dead arm is a RESULT here
             record["crashed"] = True
             record["error"] = f"{type(exc).__name__}: {exc}"
+            flush()
             print(f"SHIP_FAIL {record['error']}", flush=True)
             print("PAGE LOGS (last 25):", flush=True)
             for line in record["console"][-25:]:
@@ -177,8 +231,7 @@ def main():
                 pass
             browser.close()
 
-    with open(args.out, "w", encoding="utf-8") as fh:
-        json.dump(record, fh)
+    flush()
     print(f"WROTE {args.out}", flush=True)
 
 
