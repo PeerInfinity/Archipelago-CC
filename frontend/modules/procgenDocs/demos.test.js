@@ -70,11 +70,16 @@ describe('every non-prose entry is loadable by the row', () => {
      *  null` on a URL that names no element — the LOAD half of the element
      *  control's third state. ⚠ Its reach is measured and bounded: the row
      *  never presses a ladder button, so the PRESS half is CLAIM 5R's. */
-    it('has 21 of them, and exactly one PROSE entry', () => {
+    it('has 22 of them, and exactly one PROSE entry', () => {
         // ⛓ R9 slice 6: the `?tapes=` SEQUENCE row — the catalogue's first
         //   entry whose page is not a generation ladder, which is why it names
         //   its own `readout` and the row waits on that instead of a step.
-        expect(real).toHaveLength(21);
+        // ⛓ 21 → 22: R9 slice 10's ▶ campaign row — the catalogue's first entry
+        //   whose URL is the STARTING page rather than the destination, because
+        //   its subject is what a PRESS produces. It is also the first to use
+        //   `press`, which the check row CLICKS (a row that loaded the
+        //   destination would pass with the button wired to nothing, trap 479).
+        expect(real).toHaveLength(22);
         expect(DEMOS.filter((e) => e.prose)).toHaveLength(1);
     });
 
