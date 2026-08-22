@@ -86,19 +86,8 @@ dist/
 downloads/
 eggs/
 .eggs/
-# ⚖ ANCHORED (user, 2026-08-21). These two came from the Python packaging
-# template and mean the ROOT build dirs `./lib` and `./lib64`. Unanchored,
-# `lib/` matched a directory named `lib` at ANY depth — it silently swallowed
-# R9 slice 7's `frontend/modules/seedlingDemo/lib/` module, and the three
-# negations at the bottom of this file (`!scripts/lib/`, `!scripts/test/lib/`,
-# `!frontend/modules/spoilerTest/lib/`) are earlier rescues of the same
-# accident, now dead letters. Measured at the anchor: `git status --short`
-# gained ZERO untracked paths, `./lib` (super_junkoid_randomizer) stays
-# ignored by `/lib/`, and every other `lib` on disk is already covered by a
-# rule of its own (`.venv*`, `iframe_games/omsi-loops/`, the two `CC/scripts`
-# .gitignores) or lives inside a submodule.
-/lib/
-/lib64/
+lib/
+lib64/
 parts/
 sdist/
 var/
