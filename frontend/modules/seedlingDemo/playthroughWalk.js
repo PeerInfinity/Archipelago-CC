@@ -1046,9 +1046,23 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
      * its segment — an honest definition there, because "the same walk driven
      * in one run" and the segment are the same tape. This one has THREE, so it
      * exercises everything a one-segment chain never can: a HEADLINE that is a
-     * different recording, TWO CUTS, the ENDS-MEET arithmetic (`573 + 864 +
-     * 781 = 2218`), three stream slices, and TWO INTERNAL SEAMS that are
+     * different recording, TWO CUTS, the ENDS-MEET arithmetic (`541 + 864 +
+     * 781 = 2186`), three stream slices, and TWO INTERNAL SEAMS that are
      * measured equalities over all 46 signature rows.
+     *
+     * ⛓ **R9 SLICE 11 RE-DERIVED EVERY NUMBER IN THIS ROW.** Repairing
+     * `solverBot.facingToward` (trap 498) gave the kill arm a strike cell ABOVE
+     * the body, so L18's walk is 32 ticks shorter and the whole chain moves with
+     * it: `573 + 864 + 781 = 2218` became **`541 + 864 + 781 = 2186`**, the cuts
+     * became `[541, 1405]`, and the clear moved `385 -> 393` off a removal that
+     * moved `284 -> 292`. ⚠ THE REMOVAL IS LATER WHILE THE WALK IS SHORTER —
+     * the repair does not accelerate uniformly, it changes WHICH cell is struck,
+     * and the route out of the room is what shortened. The `Lock`'s own fade is
+     * UNMOVED at 101, which is the arithmetic saying the mechanism did not change.
+     * ⛔ These four numbers are a DECLARATION and the tapes are the fact: the
+     * solver-roster gate failed FOUR rows against the re-record until they were
+     * re-derived here — *"a bound that outlives a re-record slices the wrong
+     * window"* — so they are computed from the segments, never retyped.
      *
      * ⛔ THE CUT IS DECIDED BY PERSISTENCE, NOT GEOGRAPHY (trap 150). L19's
      * fight and the crossing it opens are ONE segment because a fight does not
@@ -1079,7 +1093,7 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
      * RELATION, and a relation lives HERE.
      *
      * ⛓⛓ ONE `clears` PROVENANCE ROW, and it arrived WITH the splice.
-     * `r8-solve-18` declares a timed v9 `{18,0}` at tick 385 — L18's
+     * `r8-solve-18` declares a timed v9 `{18,0}` at tick 393 — L18's
      * `lock@144,112` is `tset -1`, so nothing but `Game.totalEnemies()`
      * reaching zero opens it, and `createLevelRun` takes `persistence` AT
      * CONSTRUCTION — and the re-derived headline, authored by the same
@@ -1110,9 +1124,9 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
         segments: Object.freeze(['r8-solve-18', 'r8-d2-19', 'r8-d2-20']),
         earns: Object.freeze([]),
         clears: Object.freeze([Object.freeze({
-            level: 18, tag: 0, at: 385, source: 'model',
+            level: 18, tag: 0, at: 393, source: 'model',
             evidence: Object.freeze({
-                removedAt: 284,
+                removedAt: 292,
                 fade: 101,
                 why: '`spinnerKillLockOpens`\'s removal (the second Spinner body leaves '
                     + 'and `Game.totalEnemies()` reaches zero) plus '
@@ -1121,8 +1135,8 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
                     + 'tape and the re-derived headline computes again',
             }),
         })]),
-        cuts: Object.freeze([573, 1437]),
-        endsAt: 2218,
+        cuts: Object.freeze([541, 1405]),
+        endsAt: 2186,
     }),
     /**
      * ⛓⛓⛓ R9 SLICE 6 — **THE TRUE-START SOLVER CHAIN**, ⚖ ruling 11 (user,
