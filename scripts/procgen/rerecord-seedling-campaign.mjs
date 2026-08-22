@@ -77,14 +77,14 @@
  */
 
 import {
-    existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync,
+    existsSync, mkdirSync, readdirSync, readFileSync, unlinkSync, writeFileSync,
 } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
-    bootFromEnvelopeOnly, chainSubjects, latchCacheKey, timedClearHazard,
+    bootFromEnvelopeOnly, chainSubjects, latchCacheKey, mergePersistence, timedClearHazard,
 } from './rerecordCampaign.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -313,10 +313,19 @@ function driveLatch(label, completeTape) {
 
 // ── S1 · MEASURE ──────────────────────────────────────────────────────
 /**
- * ⛔ The blocks a boot declaration is made of. Named here ONCE so the write
- * and the diff cannot disagree about what a boot IS.
+ * ⛔⛔ THE BLOCKS A LATCH AUTHORS — and this list is `segmentBootFromLatch`'s
+ * OWN key set, ASSERTED against it at run time rather than retyped, so a
+ * signature row added tomorrow is either carried or named.
+ *
+ * ⛔ `equips` IS DELIBERATELY NOT HERE, and the omission is the law working
+ * rather than an exception to it. The latch has no opinion about it: it is not
+ * a `SEAM_BOOT_SPEC` row and `segmentBootFromLatch` does not return it, so a
+ * pipeline that "re-derived" it would be inventing a value, which is the same
+ * defect as carrying a stale one. Every chain segment on the roster declares
+ * `equips: []` (measured), and the pipeline leaves the field ALONE and says so
+ * rather than writing an empty array it did not measure.
  */
-const BOOT_BLOCKS = ['boot', 'save', 'persistence', 'pins', 'equips', 'rng', 'seam'];
+const BOOT_BLOCKS = ['boot', 'save', 'persistence', 'pins', 'rng', 'seam'];
 const committedBlocks = (tape) => {
     const out = {};
     for (const b of BOOT_BLOCKS) if (tape[b] !== undefined) out[b] = tape[b];
@@ -325,6 +334,7 @@ const committedBlocks = (tape) => {
 
 function measure(s0) {
     console.log('\n# S1 · MEASURE — the GAME, in chain order\n');
+    let blockSetChecked = false;
     const chains = subjects();
     const measured = {};
     const boundaries = [];
@@ -356,9 +366,38 @@ function measure(s0) {
                 throw new Error(`⛔ STOP at ${chain.id} boundary ${k + 1}: a latch that is `
                     + 'not a calm arrival cannot author a boot.');
             }
+            /**
+             * ⛔ THE BLOCK LIST IS THE PROJECTION'S OWN, CHECKED ON THE FIRST
+             * REAL ENVELOPE. If `segmentBootFromLatch` ever returns a block
+             * this pipeline does not write, every write would be silently
+             * partial — so the two key sets are compared once, against a latch
+             * the game produced rather than a synthetic one.
+             */
+            if (!blockSetChecked) {
+                blockSetChecked = true;
+                const got = Object.keys(segmentBootFromLatch(env)).sort();
+                check('⛓ BOOT_BLOCKS is `segmentBootFromLatch`\'s own key set',
+                    JSON.stringify(got) === JSON.stringify([...BOOT_BLOCKS].sort()),
+                    `${got.join(',')} against ${[...BOOT_BLOCKS].sort().join(',')}`);
+                if (failures) {
+                    throw new Error('⛔ STOP: the projection authors a block this pipeline '
+                        + 'does not write, so every write would be silently partial.');
+                }
+            }
             const succRaw = pending[successor] ?? rawOf(successor);
-            const { blocks, rows } = bootFromEnvelopeOnly(
-                env, committedBlocks(parseTape(succRaw)), segmentBootFromLatch);
+            const succCommitted = committedBlocks(parseTape(succRaw));
+            /**
+             * ⛓ `note` and `at` are re-attached BEFORE the diff, not after —
+             * see `mergePersistence`. A diff run against the raw measured set
+             * would report every segment's provenance prose as a mover and
+             * would then WRITE the rows without it.
+             */
+            const project = (e) => {
+                const b = segmentBootFromLatch(e);
+                return { ...b,
+                    persistence: mergePersistence(b.persistence, succCommitted.persistence) };
+            };
+            const { blocks, rows } = bootFromEnvelopeOnly(env, succCommitted, project);
             const movers = rows.filter((r) => r.moved);
             console.log(`    -> ${successor}: ${rows.length} field(s) compared, `
                 + `${movers.length} moved`);
@@ -370,8 +409,11 @@ function measure(s0) {
             check(`${successor}: its move is on the SEALED TABLE`,
                 movers.length === 0 || licensed,
                 movers.length === 0 ? 'nothing moved'
-                    : `⛔ ${movers.map((m) => m.field).join(', ')} moved and ${successor} `
-                        + 'is predicted `none` — the sealed table is the licence');
+                    : licensed
+                        ? `${movers.map((m) => m.field).join(', ')} moved, and the table `
+                            + 'predicted boot-only here'
+                        : `⛔ ${movers.map((m) => m.field).join(', ')} moved and ${successor} `
+                            + 'is predicted `none` — the sealed table is the licence');
             boundaries.push({
                 chain: chain.id, k: k + 1, from: name, to: successor,
                 moved: movers.map((m) => m.field), rows, licensed,
@@ -435,7 +477,17 @@ function write(s0, s1) {
         console.log(`  wrote ${label}: ${moved.join(', ')}`);
     }
     check('⛓ every write is on the sealed table', failures === 0);
-    flush('S2', { wrote });
+    /**
+     * ⛓⛓ THE TICK-0 HALF IS THE OTHER INSTRUMENT'S JOB (trap 169 — one
+     * producer per artifact). `derive-seedling-tick0.mjs` owns the v11 block:
+     * it drives the ZERO-TICK variant of each segment's NEW boot and writes
+     * the result surgically. It is run over its WHOLE derived set rather than
+     * `--only=` the predicted movers, so the segments the table says should
+     * NOT move are re-measured too and stand as the control.
+     */
+    const t0 = shell('the tick-0 blocks are re-derived from the NEW boots', 'node',
+        ['scripts/procgen/derive-seedling-tick0.mjs']);
+    flush('S2', { wrote, tick0: t0.ok });
     return { wrote };
 }
 
@@ -451,19 +503,35 @@ function writeBootDry(label, blocks) {
 }
 
 // ── S3/S4 · RECORD and PROVE ──────────────────────────────────────────
-function shell(what, cmd, args) {
+/**
+ * ⛔ THE WHOLE OUTPUT GOES TO THE RUN DIRECTORY, and only its tail to the
+ * console. A gate that prints thousands of rows and is summarised by its last
+ * forty is a gate whose COUNTS cannot be quoted afterwards — and a count is
+ * how a truncated sweep is told from a complete one (trap: a bounded sweep
+ * must name what it bounded). The tally line is derived from the whole text.
+ */
+function shell(what, cmd, args, logName) {
     console.log(`\n$ ${cmd} ${args.join(' ')}`);
+    const finish = (ok, out, status) => {
+        const file = join(RUN_DIR, `${logName ?? what.replace(/\W+/g, '-')}.log`);
+        writeFileSync(file, `$ ${cmd} ${args.join(' ')}\n${out}`);
+        const tally = { PASS: 0, FAIL: 0, SKIP: 0 };
+        for (const line of out.split('\n')) {
+            const m = /^(PASS|FAIL|SKIP)\b/.exec(line);
+            if (m) tally[m[1]] += 1;
+        }
+        console.log(out.split('\n').slice(ok ? -40 : -60).join('\n'));
+        console.log(`## ${tally.PASS} / ${tally.FAIL} / ${tally.SKIP} `
+            + `(PASS/FAIL/SKIP) over ${out.split('\n').length} line(s) -> ${file}`);
+        check(what, ok, `exit ${status} — ${tally.PASS}/${tally.FAIL}/${tally.SKIP}`);
+        return { ok, out, tally };
+    };
     try {
         const out = execFileSync(cmd, args, { cwd: ROOT, encoding: 'utf8',
-            stdio: ['ignore', 'pipe', 'pipe'], maxBuffer: 64 * 1024 * 1024 });
-        console.log(out.split('\n').slice(-40).join('\n'));
-        check(what, true, 'exit 0');
-        return { ok: true, out };
+            stdio: ['ignore', 'pipe', 'pipe'], maxBuffer: 256 * 1024 * 1024 });
+        return finish(true, out, 0);
     } catch (e) {
-        console.log([e.stdout, e.stderr].filter(Boolean).join('\n').split('\n')
-            .slice(-60).join('\n'));
-        check(what, false, `exit ${e.status}`);
-        return { ok: false, out: [e.stdout, e.stderr].filter(Boolean).join('\n') };
+        return finish(false, [e.stdout, e.stderr].filter(Boolean).join('\n'), e.status);
     }
 }
 
@@ -481,6 +549,20 @@ function record(s2) {
     flush('S3', { set });
 }
 
+/**
+ * ⛓ DERIVED, NEVER TYPED: every tape whose own `description` says a solver
+ * authored it, plus the four hand witnesses the gate carries as controls.
+ */
+function solverRoster() {
+    const names = readdirSync(TAPES)
+        .filter((f) => f.endsWith('.json') && f !== 'index.json')
+        .map((f) => f.slice(0, -5)).sort();
+    const solver = names.filter((n) => /Authored by scripts\/procgen\/solve-seedling|LIVE SOLVER/i
+        .test(rawOf(n).description || ''));
+    return [...solver, 'r8-hammer-arm', 'r8-hammer-control',
+        'r8-l18-spinner-press', 'r8-l6-bob-contact'];
+}
+
 function prove() {
     console.log('\n# S4 · PROVE — the chains play\n');
     const rows = [];
@@ -490,6 +572,17 @@ function prove() {
         ['scripts/procgen/census-seedling-campaign.mjs']).ok]);
     rows.push(['the wasm ship gate (CAMPAIGN arm)', shell('the wasm ship gate', 'node',
         ['scripts/procgen/check-seedling-wasm-ship.mjs']).ok]);
+    /**
+     * ⛓⛓⛓ THE SOLVER-ROSTER GATE IS THE GAME-INVISIBILITY CLAIM, and the
+     * roster is DERIVED from the tapes' own provenance (a solver-authored
+     * description) rather than named — ⚖ ruling 17, and the four hand
+     * witnesses the gate has always carried alongside it.
+     */
+    const solver = solverRoster();
+    console.log(`## the solver roster: ${solver.length} tape(s), derived`);
+    rows.push(['the solver-roster differential', shell('the solver-roster differential',
+        'node', ['scripts/procgen/verify-seedling-bot-differential.mjs', '--win',
+            `--only=${solver.join(',')}`]).ok]);
     flush('S4', { rows });
     return rows;
 }

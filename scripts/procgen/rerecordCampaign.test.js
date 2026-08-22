@@ -14,6 +14,7 @@ import {
     chainSubjects,
     isTrueStart,
     latchCacheKey,
+    mergePersistence,
     timedClearHazard,
 } from './rerecordCampaign.js';
 
@@ -161,5 +162,48 @@ describe('the fresh-vs-continuation hazard is DERIVED, and it is not sufficient'
     it('⛓ an UNTIMED clear is a boot state, not a mid-run one', () => {
         expect(timedClearHazard({ boot: { level: 5 }, persistence: [{ level: 5, tag: 0 }] }, 4)
             .atRisk).toBe(false);
+    });
+});
+
+describe('a persistence row has a MEASURED half and a MODEL half', () => {
+    /**
+     * ⛔⛔ THE MUTANT THIS ROW PRICES: writing the latch's `{level, tag}` set
+     * verbatim. It DELETES every `at` — the timed clears ⚖ ruling 14 gave the
+     * walk — and every `note`, which on `r8-solve-8` is the record of a real
+     * GPU binary search. Both would vanish into a tape that still parses.
+     */
+    it('⛓ a TIMED row survives a re-derivation the latch cannot see', () => {
+        const committed = [
+            { level: 5, tag: 0, note: 'earned upstream' },
+            { level: 8, tag: 0, note: 'game-sourced', at: 246 },
+            { level: 8, tag: 1, note: 'game-sourced', at: 645 },
+        ];
+        // the latch, taken BEFORE this walk, sees only what is in force
+        expect(mergePersistence([{ level: 5, tag: 0 }], committed)).toEqual(committed);
+    });
+
+    it('⛓ `note` rides with its row, and a NEW row gets an empty one', () => {
+        const committed = [{ level: 5, tag: 0, note: 'why' }];
+        expect(mergePersistence([{ level: 5, tag: 0 }, { level: 9, tag: 2 }], committed))
+            .toEqual([
+                { level: 5, tag: 0, note: 'why' },
+                { level: 9, tag: 2, note: '' },
+            ]);
+    });
+
+    it('⛓ a committed UNTIMED row the measurement drops IS a real move', () => {
+        expect(mergePersistence([], [{ level: 5, tag: 0, note: '' }])).toEqual([]);
+    });
+
+    it('⛔ a clear cannot be both INHERITED and EARNED', () => {
+        expect(() => mergePersistence([{ level: 5, tag: 0 }],
+            [{ level: 5, tag: 0, note: '', at: 427 }]))
+            .toThrow(/both inherited and earned/);
+    });
+
+    it('⛓ the result is sorted the way `parsePersistence` sorts', () => {
+        const out = mergePersistence(
+            [{ level: 9, tag: 1 }, { level: 5, tag: 2 }, { level: 5, tag: 0 }], []);
+        expect(out.map((c) => `${c.level}:${c.tag}`)).toEqual(['5:0', '5:2', '9:1']);
     });
 });

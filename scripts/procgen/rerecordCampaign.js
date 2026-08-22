@@ -182,3 +182,57 @@ export function timedClearHazard(tape, index) {
                     + 'stream (measured: L5 does, L8 does not)',
     };
 }
+
+/**
+ * ⛔⛔⛔ A PERSISTENCE ROW HAS A MEASURED HALF AND A MODEL HALF, AND ONLY ONE
+ * OF THEM IS THE LATCH'S TO AUTHOR.
+ *
+ * `segmentBootFromLatch` reads `save.levelPersistence` and returns
+ * `{level, tag}` — the SET of clears in force when the successor begins. That
+ * is the measured half, and it is the whole boot state.
+ *
+ * The committed row can carry two more keys, and NEITHER is derivable from a
+ * latch:
+ *  · `note` — provenance prose a solver wrote (`r8-solve-8`'s two rows carry
+ *    the binary search that measured them on the real GPU);
+ *  · `at` — ⚖ ruling 14's TIMED clear, which is a statement about the
+ *    successor's OWN walk. It is `GAME_VISIBLE_DROPS`'s first entry precisely
+ *    because it is model-only, and a latch taken BEFORE that walk cannot see
+ *    it: the flag is not set yet, so the measured set correctly omits it.
+ *
+ * ⇒ writing the measured set verbatim would DELETE both, silently — the
+ * timed rows a walk depends on and the provenance of the numbers in them. This
+ * merges: the measured set decides which untimed rows exist, the committed row
+ * supplies `note`, and every committed TIMED row is re-appended because it was
+ * never the latch's to drop.
+ *
+ * ⛔ AND IT REFUSES THE CONTRADICTION: a committed row carrying `at` that the
+ * measurement says is ALREADY IN FORCE at boot is a tape claiming a clear is
+ * both inherited and earned. Sorted the way `parsePersistence` sorts, so a
+ * re-derivation that changed only ORDER is not a diff.
+ *
+ * @param {Array} measured `[{level, tag}]` from the latch
+ * @param {Array} committed the successor's committed `persistence` block
+ */
+export function mergePersistence(measured, committed) {
+    const key = (c) => `${c.level}:${c.tag}`;
+    const was = new Map((committed ?? []).map((c) => [key(c), c]));
+    const inForce = new Set((measured ?? []).map(key));
+    const timed = (committed ?? []).filter((c) => c.at !== undefined);
+    const clash = timed.filter((c) => inForce.has(key(c)));
+    if (clash.length) {
+        throw new Error('⛔ '
+            + clash.map(key).join(', ')
+            + ' is declared as a TIMED clear the walk earns AND is already in force in the '
+            + 'measured boot state. A clear cannot be both inherited and earned; the tape\'s '
+            + '`at` row or the predecessor\'s walk is wrong.');
+    }
+    const rows = (measured ?? []).map((c) => ({
+        level: c.level,
+        tag: c.tag,
+        note: was.get(key(c))?.note ?? '',
+    }));
+    for (const c of timed) rows.push({ ...c });
+    rows.sort((a, b) => a.level - b.level || a.tag - b.tag);
+    return rows;
+}

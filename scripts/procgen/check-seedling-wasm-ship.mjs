@@ -1501,9 +1501,46 @@ function runChainArm(ARM, CHAIN_ID, WINDOWS, REFUSES_AT = null) {
          * after it. Pre-existing, never asserted before this line, and DERIVED
          * from the same constant the bump is.
          */
-        check(wins[0]?.deadFrames === SHARES[0] + BOOT_PRESWAP_FRAMES,
+        /**
+         * ⛔⛔⛔ R9 SLICE 9 — **AND A TRUE START GOES THE OTHER WAY, WHICH THIS
+         * ROW LEARNED THE FIRST TIME IT EVER FIRED ON THIS CHAIN.**
+         *
+         * The `+ BOOT_PRESWAP_FRAMES` above is a DECLARED boot's correction:
+         * `botStart` spends that frame in the OUTGOING world before swapping
+         * to the one the declaration names. A TRUE START names no stream and
+         * no clock — it is the page's own `new Game(0, 80, 128)` — so there is
+         * no outgoing world to spend it in, and the game reads one FEWER dead
+         * frame than the model rather than one more.
+         *
+         * ⛔ THE NUMBER IS A MEASURED LITERAL, and it is this arc's second
+         * (`REFUSES_AT` was the first). It is NOT a fit to a single
+         * observation: on standalone fresh-page runs the two TRUE STARTS on
+         * the roster read **38** dead frames (`r8-solve-1`, `r7-ends-meet-1`)
+         * and every DECLARED boot reads **41** (`r8-solve-18`, `r8-solve-2`,
+         * `r8-solve-4`), which is the same one-frame-each-way split measured
+         * outside any sequence.
+         *   node scripts/procgen/rerecord-seedling-campaign.mjs --to=S1
+         *   # the run directory's latch records carry `deadFrames` per segment
+         *
+         * ⛔⛔ AND IT COULD NOT HAVE BEEN SEEN BEFORE. Until this slice the
+         * CAMPAIGN arm was INVERTED, and an inverted arm returns from
+         * `assertChainRefuses` before CLAIM 6 exists — so the only chain whose
+         * window 1 this row had ever asserted was `r8-d2`'s, which boots by
+         * DECLARATION. The `r8-d2` arm still reads 41 against a model 40 in
+         * the same run, which is what keeps this from being a gate loosened to
+         * fit: the two arms disagree in OPPOSITE directions and both are
+         * asserted exactly.
+         */
+        const firstIsTrueStart = (() => {
+            const t = loadTape(WINDOWS[0]);
+            return (t.rng?.seed ?? 0) === 0 && (t.seam === null || t.seam === undefined);
+        })();
+        const bootCorrection = firstIsTrueStart ? -BOOT_PRESWAP_FRAMES : BOOT_PRESWAP_FRAMES;
+        check(wins[0]?.deadFrames === SHARES[0] + bootCorrection,
             `${ARM}: ⛔⛔ CLAIM 6 — window 1 is a FRESH BOOT and pays the model's share `
-                + `PLUS the pre-swap frame — ${SHARES[0]} + `
+                + `${firstIsTrueStart ? 'MINUS the pre-swap frame it never spends (a TRUE '
+                    + 'START swaps out of no outgoing world)' : 'PLUS the pre-swap frame'}`
+                + ` — ${SHARES[0]} ${bootCorrection < 0 ? '−' : '+'} `
                 + `${BOOT_PRESWAP_FRAMES}`,
             `game ${wins[0]?.deadFrames} vs model ${SHARES[0]}`);
         for (let k = 1; k < N; k += 1) {
@@ -1567,54 +1604,42 @@ runChainArm('CHAIN', 'r8-d2', CHAIN_WINDOWS);
  * ⚖ A REFUSAL HERE IS A FINDING ABOUT THE CHAIN ON THE GAME, published by
  * name — never a tape fix. No `--record` is licensed in this slice.
  *
- * ⛓⛓⛓ R9 SLICE 8 (⚖ ruling 20) — **THE ARM STAYS INVERTED, AND THE SLICE
- * TURNED 7b's INFERENCE INTO A PROOF.**
+ * ⛓⛓⛓ R9 SLICE 8 (⚖ ruling 20) — the arm was flipped to asserting, RAN, and
+ * still refused at `boundary 5/15` on the same two seeds: live 1196897329
+ * against a declared 514746467. Slice 8 read that as a proof that
+ * `r8-solve-6`'s `rng` had never been re-recorded, and left the arm INVERTED.
  *
- * Slice 7b ran this arm for the first time and it REFUSED at `boundary 5/15`
- * on `rng` — `r8-solve-6`'s declared stream position against a live world that
- * had gone somewhere else. The attribution (§16.8, plus §14.4's authoring
- * record) is that the declaration is the FRESH-PAGE exit of `r8-solve-5`,
- * measured by `latchOf`, while the live world had walked window 5 as a
- * CONTINUATION — from the state (d)'s zeroing left it in, which is not where
- * the fresh-page recording started. The two parted company inside L5, the
- * arrow bait, where kills draw.
+ * ⛔⛔⛔ R9 SLICE 9 — **THAT READING WAS WRONG, AND THE ARM IS NOW ASSERTING
+ * BECAUSE THE CAUSE WAS FIXED RATHER THAN BECAUSE A FIELD WAS EDITED.**
  *
- * The slice PREDICTED that writing the measured tick-0 state would remove that
- * difference by induction, flipped this arm to asserting, and RAN IT. ⛔ THE
- * PREDICTION MISSED, and the miss is the slice's sharpest result:
+ * The declaration was never stale. Driving the COMMITTED `r8-solve-5` on a
+ * fresh page today, cache bypassed, gives exactly 514746467 — slice 6's latch,
+ * reproduced. What slice 8's per-tick agreement could not see is that the
+ * driver's per-tick observation is `{t, x, y, level}` AND NOTHING ELSE, so two
+ * runs can agree on every tick of the PLAYER and still have walked past a
+ * different world.
  *
- *   · the write WORKS — windows 2..5 were each written their committed tick-0
- *     block field for field, every clock obeying `declared + 21`, boundaries
- *     1..4 admitted, and all five windows AGREE PER TICK with their own model;
- *   · and the chain still refuses at `boundary 5/15`, on the SAME two seeds
- *     7b measured: live 1196897329 against a declared 514746467.
+ * They had. `Bot.as:1587` applies a tape's declared persistence clears BEFORE
+ * the world is built — "applying a clear after the world exists would leave
+ * the blocker standing for this visit", in the fork's own words — and
+ * `gameVisibleTape` used to hand the game a TIMED row with only its `at`
+ * removed. So `r8-solve-5`'s `{5,0}@427` meant "that body never existed" on a
+ * fresh page and "that body is standing" on a continuation. MEASURED: the same
+ * tape, the same 558 inputs, `persistence: []` instead of the row — and the
+ * fresh page walks to **1196897329**, the live value this arm had been
+ * refusing since 7b, with 559 observations, the same end position, 0 hits, the
+ * same `save.time` and `fp.seed`.
  *
- * ⛓⛓⛓ WHICH IS THE PROOF. Because window 5 provably BEGAN at its own
- * fresh-page tick-0 state and walked its own inputs to a per-tick agreement,
- * the live world's position at boundary 5 **IS** `r8-solve-5`'s fresh-page
- * exit, by construction rather than by argument. So the declaration is simply
- * not that number — and `r8-solve-6`'s `rng` is BYTE-IDENTICAL to
- * `r7-act2-6`'s, the retired HAND tape it was staged from (re-verified on disk
- * this slice). 7b could infer that the rng was never re-recorded; slice 8 can
- * PROVE it, because the tick-0 write is what makes the live walk the
- * fresh-page walk.
+ * ⚖ RULING 23 (user, 2026-08-21: *"a level run separately must play
+ * identically to the same level reached from the start"*) withholds a timed
+ * row on every path, and `rerecord-seedling-campaign.mjs`'s first run
+ * re-derived every boot downstream of one — TWELVE of them, `rng.seed` and
+ * (below the L11 chest) the game-sourced `save.seal_parts`, with every
+ * `inputs`, expectation and trace sidecar byte-identical.
  *
- * ⚖ THE CURE IS A TAPE MOVE AND THEREFORE STILL AN ASK (§16.15, unchanged and
- * now better supported): re-record `r8-solve-6..10`'s `rng`. ⛓ What this slice
- * adds is that the correct value no longer needs a walk re-solve — it is the
- * live `beginEntry` this arm already measures and prints.
- *
- * ⛓ AND A DERIVED FORWARD PREDICTION, off the committed blocks: at boundaries
- * 6, 7 and 9 the successor's declared seed EQUALS the predecessor's tick-0
- * seed (1892719590 · 768692529 · 1820969995), so those admit if their walks
- * spend no gameplay draws; at boundary 8 they DIFFER (L8 is an 827-tick
- * drawing room), so 8 is the next one that can fail. Boundaries 6..9 remain
- * UNMEASURED behind the first refusal.
- *
- * ⛔ `REFUSES_AT` STAYS 5 UNTIL THAT ASK IS ANSWERED. The arm asserts what is
- * true of the chain on the game, and inverts the day the chain continues.
+ * ⇒ the arm ASSERTS. A refusal here is a finding about the chain again.
  */
-runChainArm('CAMPAIGN', 'r9-campaign', PAGE_CHAINS['r9-campaign'], 5);
+runChainArm('CAMPAIGN', 'r9-campaign', PAGE_CHAINS['r9-campaign']);
 
 console.log(failed === 0 ? '\nALL PASS' : `\n${failed} FAILURE(S)`);
 process.exit(failed === 0 ? 0 : 1);
