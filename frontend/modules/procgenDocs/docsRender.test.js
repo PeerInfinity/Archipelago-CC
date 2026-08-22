@@ -49,7 +49,7 @@ describe('every tracked document renders', () => {
     });
 });
 
-describe('⛓⛓ the anchors — two readers, 607 headings, one answer', () => {
+describe('⛓⛓ the anchors — two readers, 651 headings, one answer', () => {
     it('the page\'s heading ids ARE ghSlug\'s, document by document', () => {
         let total = 0;
         for (const f of DOC_FILES) {
@@ -102,7 +102,14 @@ describe('⛓⛓ the anchors — two readers, 607 headings, one answer', () => {
         //   deadline, the gates). Its `#### Gates` is the THIRD heading of that
         //   text in this document, so the -N rule reaches a TENTH suffix — see
         //   `ghSlug.test.js`. A re-pin, not a widening.
-        expect(total).toBe(642);
+        // ⛓ 642 → 651: R9 slice 8's § (the tick-0 latch) — NINE headings, its
+        //   own plus eight sub-sections (the zero-tick tape, what the field is,
+        //   which tapes carry it, the clock result, what the page does now, the
+        //   prediction that missed, the two older defects, the gates). Two of
+        //   them repeat earlier heading TEXT, so the -N rule reaches an
+        //   ELEVENTH and TWELFTH suffix — see `ghSlug.test.js`. A re-pin, not a
+        //   widening.
+        expect(total).toBe(651);
     });
 
     it('⛔ uses OUR rule, not marked\'s slugger — they differ, and here is where', () => {
@@ -250,7 +257,7 @@ describe('⛓ the constructs the corpus is actually made of', () => {
 });
 
 describe('⛓ the biggest document — the one the budget is about', () => {
-    it('seedling-bot.md renders 407 headings and its slugs are unique', () => {
+    it('seedling-bot.md renders 438 headings and its slugs are unique', () => {
         // ⚠ 405 → 407: R9 slice 2's own § plus the ⛓ line under the R5
         // director's §, which is where the sequence's LINEAGE belongs.
         // ⚠ 402 → 405: SEEDLING BOT R9 slice 1's § *R9 — the solver rung, opened
@@ -277,9 +284,13 @@ describe('⛓ the biggest document — the one the budget is about', () => {
         // ⛓ 422 → 429: R9 slice 7b's § — the deletion executed. Seven headings,
         //   and its `#### Gates` is the THIRD of that text here, so it takes the
         //   -N rule's TENTH suffix.
+        // ⛓ 429 → 438: R9 slice 8's § — the tick-0 latch, nine headings, of
+        //   which `#### Gates` is the FOURTH of that text here and
+        //   `#### What the page does now` the SECOND, taking the -N rule's
+        //   eleventh and twelfth suffixes.
         const ids = idsOf(RENDERS.get('seedling-bot.md').html);
-        expect(ids).toHaveLength(429);
-        expect(new Set(ids).size).toBe(429);
+        expect(ids).toHaveLength(438);
+        expect(new Set(ids).size).toBe(438);
         expect(ids.filter((i) => i !== ghSlug(i))).toEqual([]);
     });
 

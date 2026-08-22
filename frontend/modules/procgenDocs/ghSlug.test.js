@@ -91,7 +91,7 @@ describe('the corpus — what this repo can and cannot check', () => {
      * failing and the suffix rule gains its first real pin. That is the
      * intended outcome, not a regression.
      */
-    it('⚖ reaches the -N rule (9 suffixed slugs, all in seedling-bot.md) but nothing LINKS to one', () => {
+    it('⚖ reaches the -N rule (12 suffixed slugs, all in seedling-bot.md) but nothing LINKS to one', () => {
         /** ⛔ A SUFFIXED SLUG IS FOUND STRUCTURALLY, NOT BY `/-\d+$/`. This
          *  corpus is full of headings that END in a date — `…-2026-08-16`
          *  slugs to something ending `-16` — and a regex says eighty of them
@@ -128,6 +128,16 @@ describe('the corpus — what this repo can and cannot check', () => {
             //   the second. The suffix rule reaches a TENTH slug and STILL
             //   nothing links to one.
             'gates-2',
+            /**
+             * ⛓ R9 slice 8 (the tick-0 latch) adds TWO: its `#### Gates` is the
+             * FOURTH heading of that text in this document, and
+             * `#### What the page does now` is the SECOND. Twelve suffixed
+             * slugs now, and STILL nothing links to one — which is the claim
+             * this row actually makes. The -N rule keeps being REACHED by
+             * ordinary prose rather than by a contrived heading.
+             */
+            'what-the-page-does-now-1',
+            'gates-3',
         ]);
 
         /** ⛓ Every fragment any tracked doc links to, same-doc or cross-doc. */
