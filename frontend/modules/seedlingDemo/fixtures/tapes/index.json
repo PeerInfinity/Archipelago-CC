@@ -1101,48 +1101,6 @@
       "noHazards": []
     },
     {
-      "file": "r7-act2-1.json",
-      "tickCount": 183,
-      "bootLevel": 0,
-      "tapeVersion": 8,
-      "noHazards": []
-    },
-    {
-      "file": "r7-act2-10.json",
-      "tickCount": 89,
-      "bootLevel": 10,
-      "tapeVersion": 8,
-      "noHazards": []
-    },
-    {
-      "file": "r7-act2-11.json",
-      "tickCount": 87,
-      "bootLevel": 11,
-      "tapeVersion": 8,
-      "noHazards": []
-    },
-    {
-      "file": "r7-act2-2.json",
-      "tickCount": 47,
-      "bootLevel": 2,
-      "tapeVersion": 8,
-      "noHazards": []
-    },
-    {
-      "file": "r7-act2-3.json",
-      "tickCount": 245,
-      "bootLevel": 3,
-      "tapeVersion": 8,
-      "noHazards": []
-    },
-    {
-      "file": "r7-act2-4.json",
-      "tickCount": 347,
-      "bootLevel": 4,
-      "tapeVersion": 8,
-      "noHazards": []
-    },
-    {
       "file": "r7-act2-5.json",
       "tickCount": 812,
       "bootLevel": 5,
@@ -1154,27 +1112,6 @@
       "tickCount": 355,
       "bootLevel": 6,
       "tapeVersion": 10,
-      "noHazards": []
-    },
-    {
-      "file": "r7-act2-7.json",
-      "tickCount": 146,
-      "bootLevel": 7,
-      "tapeVersion": 8,
-      "noHazards": []
-    },
-    {
-      "file": "r7-act2-8.json",
-      "tickCount": 1090,
-      "bootLevel": 8,
-      "tapeVersion": 9,
-      "noHazards": []
-    },
-    {
-      "file": "r7-act2-9.json",
-      "tickCount": 122,
-      "bootLevel": 9,
-      "tapeVersion": 8,
       "noHazards": []
     },
     {

@@ -257,6 +257,14 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         expect(R8_ENEMY_BRIDGE.exposedTapes.map((t) => t.name)).toEqual([
             'r7-act2-3', 'r7-act2-4', 'r7-act2-5', 'r7-act2-6', 'r7-act2-full',
         ]);
+        // ⛓⛓ R9 slice 7b: TWO of the prediction's five are RETIRED — the files
+        // left the roster with the hand chain (⚖ ruling 14). The prediction is
+        // NOT edited; `retiredTapes` subtracts, and the assertion guards the
+        // subtraction against the directory in both directions.
+        expect(R8_ENEMY_BRIDGE.retiredTapes.map((t) => t.name))
+            .toEqual(['r7-act2-3', 'r7-act2-4']);
+        expect(R8_ENEMY_BRIDGE.retiredTapes.map((t) => t.coveredBy))
+            .toEqual(['r8-solve-3', 'r8-solve-4']);
         // ⛓ EACH SLICE ADDS ITS OWN THE SAME WAY, and the assertion finds
         // them by name the first time the full config runs after they land —
         // three slices running now. `r8-solve-3` ends at the L4 arrival;
@@ -275,9 +283,12 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             // refuses that room's camera band.
             'r9-campaign', 'r9-solve-13',
         ]);
-        expect(out.exposed).toBe(13);
+        // ⛓ 13 -> 11: `r7-act2-3` and `r7-act2-4` are off the roster, so the
+        // measurement cannot find them. The three that STAY (⚖ ruling 18) are
+        // still here, still exposed, still declared.
+        expect(out.exposed).toBe(11);
         expect(out.tapes).toEqual([
-            'r7-act2-3', 'r7-act2-4', 'r7-act2-5', 'r7-act2-6', 'r7-act2-full',
+            'r7-act2-5', 'r7-act2-6', 'r7-act2-full',
             'r8-hammer-arm', 'r8-l6-bob-contact', 'r8-solve-3', 'r8-solve-4',
             'r8-solve-5', 'r8-solve-6', 'r9-campaign', 'r9-solve-13',
         ]);
@@ -291,7 +302,11 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
      */
     it('reds when a tape enters a bridged room and nobody declared it', () => {
         const io = syntheticExposureIo({
-            'r7-act2-3': { tape: {}, levels: [4] },
+            // ⛓ R9 slice 7b: was `r7-act2-3`, retired. Its solver twin makes the
+            // same declared claim about the same room, and a RETIRED name on a
+            // synthetic roster would now red on the retirement guard instead —
+            // a different mutation from the one this row is about.
+            'r8-solve-3': { tape: {}, levels: [4] },
             'a-new-tape': { tape: {}, levels: [0, 4] },
         });
         // ⚠ Several declared tapes are absent from this synthetic roster too,
@@ -301,7 +316,7 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
     });
 
     it('reds when a declared tape stops entering a bridged room', () => {
-        const io = syntheticExposureIo({ 'r7-act2-3': { tape: {}, levels: [0] } });
+        const io = syntheticExposureIo({ 'r8-solve-3': { tape: {}, levels: [0] } });
         expect(() => assertBridgeExposureIsMeasured(io)).toThrow(/no longer exposed/);
     });
 
@@ -310,13 +325,14 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             // ⚠ Only ONE row moves — every other declared tape is present with
             // its declared rooms, so the name set matches and the ROOMS are
             // the only thing left for the assertion to catch.
-            'r7-act2-3': { tape: {}, levels: [4, 6] },
-            'r7-act2-4': { tape: {}, levels: [4, 5] },
+            // ⛓ R9 slice 7b: the moved row is `r8-solve-3`'s now — declared [4],
+            // presented as [4, 6]. `r7-act2-3`/`-4` are retired and may not
+            // appear on a synthetic roster at all.
+            'r8-solve-3': { tape: {}, levels: [4, 6] },
             'r7-act2-5': { tape: {}, levels: [5, 6] },
             'r7-act2-6': { tape: {}, levels: [6] },
             'r7-act2-full': { tape: {}, levels: [4, 5, 6] },
             'r8-l6-bob-contact': { tape: {}, levels: [6] },
-            'r8-solve-3': { tape: {}, levels: [4] },
             // ⛓ R8 slice 5's L5 tape, at its DECLARED rooms — it crosses into
             // L6 at the end, and the ledger says so.
             'r8-solve-5': { tape: {}, levels: [5, 6] },

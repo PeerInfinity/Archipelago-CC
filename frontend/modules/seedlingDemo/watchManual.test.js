@@ -338,7 +338,7 @@ describe('⛓⛓⛓ THE ONE FOLD DERIVES ITS OWN VERSION (slice 5)', () => {
         expect(() => parseTape(t)).not.toThrow();
     });
 
-    it('⛓⛓⛓ THE SIX BOOTS THAT REFUSED NOW FOLD — v9, and every one REPLAYS', () => {
+    it('⛓⛓ THE FIVE BOOTS THAT REFUSED NOW FOLD — v9, and every one REPLAYS', () => {
         /**
          * ⛔ THE ROUND TRIP IS THE ROW, not the version number. A tape stamped
          * 9 that `parseTape` still refused would be the same defect wearing a
@@ -346,9 +346,17 @@ describe('⛓⛓⛓ THE ONE FOLD DERIVES ITS OWN VERSION (slice 5)', () => {
          * boot is folded WITH ITS OWN TAPE'S INPUTS (the walk whose length the
          * declared `at` fits) and then parsed back.
          */
-        const six = ['r7-act2-5', 'r7-act2-8', 'r7-act2-full',
+        /**
+         * ⛓ R9 SLICE 7b — WAS SIX. `r7-act2-8` retired with the hand chain
+         * (⚖ ruling 14) and NOTHING is lost by it: its solver twin
+         * `r8-solve-8` is already in this list and declares the SAME v9 timed
+         * family, two rows in L8 — `{8,0}` and `{8,1}` — at 246 and 645 where
+         * the hand walk had 380 and 932. The tick values are the WALK; the
+         * claim is the FAMILY, and the family still has a witness here.
+         */
+        const five = ['r7-act2-5', 'r7-act2-full',
             'r8-solve-5', 'r8-solve-8', 'r8-solve-18'];
-        for (const n of six) {
+        for (const n of five) {
             const committed = tape(n);
             // ⚠ `solveStaging`, because that is what the callers hand over —
             // and `r7-act2-full` is BOTH a v9 `at` boot and the v10 despawn
@@ -427,8 +435,12 @@ describe('⛓⛓⛓ THE ONE FOLD DERIVES ITS OWN VERSION (slice 5)', () => {
         //   room in ONE run declares every timed clear its segments do, so the
         //   true-start chain's headline carries L5's `{5,0}` and L8's two,
         //   sequence-absolute. A hand-kept list is exactly what should red here.
+        // ⛓ R9 slice 7b: `r7-act2-8` left the roster with the eight other
+        //   covered hand tapes. The sweep READS THE DIRECTORY, so this list
+        //   reds the moment the two disagree — which is exactly what it did
+        //   when the deletion landed, by name, before the list was moved.
         expect(byAt.sort()).toEqual([
-            'r7-act2-5', 'r7-act2-8', 'r7-act2-full',
+            'r7-act2-5', 'r7-act2-full',
             'r8-d2', 'r8-solve-18', 'r8-solve-5', 'r8-solve-8', 'r9-campaign',
         ]);
         expect(byDespawn.sort()).toEqual(['r7-act2-6', 'r7-act2-full']);

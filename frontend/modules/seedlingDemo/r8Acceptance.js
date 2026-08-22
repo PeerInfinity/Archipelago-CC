@@ -475,6 +475,45 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
     ]),
 
     /**
+     * ⛓⛓⛓ RETIRED — R9 slice 7b, ⚖ ruling 14's coverage-derived retirement.
+     *
+     * ⛔ WHY THIS IS A SECOND LIST AND NOT AN EDIT. `exposedTapes` is R8's
+     * PREDICTION, committed before the bridge moved; deleting a row from it
+     * would rewrite what was predicted. So a retired tape is SUBTRACTED here
+     * instead, and the two halves still say which is which — the same shape
+     * `exposedAdded` uses for the other direction.
+     *
+     * ⚖ RULING 17: this is a guarded constant, not a typed roster. Every
+     * claim below is checked against the DIRECTORY by
+     * `assertBridgeExposureIsMeasured`:
+     *   · a retired name that comes BACK onto the roster reds BY NAME;
+     *   · a retired name that was never declared exposed reds BY NAME;
+     *   · a name on NEITHER list that is exposed on disk reds BY NAME
+     *     (the `missing` arm, unchanged since trap 89).
+     * ⇒ the list cannot drift away from the directory in either direction.
+     *
+     * Only the two act2 tapes that were DECLARED EXPOSED appear here; the
+     * other seven of the nine never entered a bridged room. `r7-act2-5`,
+     * `r7-act2-6` and `r7-act2-full` STAY on the roster (⚖ ruling 18) and are
+     * still in `exposedTapes` above, where they belong.
+     */
+    retiredTapes: Object.freeze([
+        Object.freeze({
+            name: 'r7-act2-3', coveredBy: 'r8-solve-3', retiredBy: 'R9 slice 7b',
+            why: 'the solver twin walks the same L3 segment to the same L4 arrival in the '
+                + 'same 245 ticks, and `r8-solve-3` is already declared exposed in '
+                + '`exposedAdded` for exactly this room — the exposure claim did not move, '
+                + 'only the file that carries it',
+        }),
+        Object.freeze({
+            name: 'r7-act2-4', coveredBy: 'r8-solve-4', retiredBy: 'R9 slice 7b',
+            why: 'the twin boots from a BYTE-EQUAL block over all eleven boot fields and '
+                + 'crosses the same L4/L5 rooms; the walks differ (347 hand ticks vs 255) '
+                + 'and that difference is the differential\'s subject, not this claim\'s',
+        }),
+    ]),
+
+    /**
      * ⛓ EXPOSED, AND AUTHORED BY THIS SLICE — kept in its OWN list so the
      * PREDICTION above stays exactly the claim that was committed before the
      * bridge moved.
@@ -723,7 +762,34 @@ export function assertBridgeExposureIsMeasured(io) {
         if (levels.length) found.push({ name, levels });
     }
     const all = [...R8_ENEMY_BRIDGE.exposedTapes, ...R8_ENEMY_BRIDGE.exposedAdded];
-    const declared = all.map((t) => t.name).sort();
+    /**
+     * ⛓⛓ THE RETIREMENT IS GUARDED AGAINST THE DIRECTORY, BOTH WAYS (R9 7b).
+     *
+     * A retirement list that only ever SUBTRACTED would be a licence to
+     * silence any row that started failing. So before it subtracts anything:
+     * a retired name still on disk reds (the deletion was undone, or never
+     * happened), and a retired name that was never declared exposed reds (a
+     * row retiring something this claim never made). Both read the roster
+     * `io.tapeNames()` hands over — the same seam the exposure itself uses.
+     */
+    const onDisk = new Set(io.tapeNames());
+    const retired = R8_ENEMY_BRIDGE.retiredTapes.map((t) => t.name);
+    const back = retired.filter((n) => onDisk.has(n));
+    if (back.length) {
+        throw new Error(`R8_ENEMY_BRIDGE: ${back.join(', ')} is declared RETIRED and is `
+            + 'still on the roster. A retired tape that comes back is not covered by its '
+            + 'solver twin any more — either delete the file or delete the retirement row '
+            + '(⚖ ruling 14: retirement is coverage-derived, and the file going is the '
+            + 'half that makes it true).');
+    }
+    const unclaimed = retired.filter((n) => !all.some((t) => t.name === n));
+    if (unclaimed.length) {
+        throw new Error(`R8_ENEMY_BRIDGE: ${unclaimed.join(', ')} is declared RETIRED and `
+            + 'was never declared EXPOSED. A retirement row subtracts from a prediction; '
+            + 'one with no matching prediction row subtracts nothing and hides that it '
+            + 'does.');
+    }
+    const declared = all.map((t) => t.name).filter((n) => !retired.includes(n)).sort();
     const measured = found.map((f) => f.name).sort();
     const missing = measured.filter((n) => !declared.includes(n));
     const stale = declared.filter((n) => !measured.includes(n));
