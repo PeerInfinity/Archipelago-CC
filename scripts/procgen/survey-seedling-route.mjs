@@ -95,7 +95,7 @@
 
 import { dirname, join } from 'node:path';
 import { execFile } from 'node:child_process';
-import { mkdirSync, readFileSync, writeFileSync, readdirSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -881,6 +881,22 @@ const FAMILY_RULES = [
         + 'channel can answer it, which is a RECORDING channel (R9\'s)'],
     [/combat ladder is EXHAUSTED/,
         'LADDER — every rung of ⚖ §11.8a\'s order refused; see the per-rung reasons'],
+    /**
+     * ⛔ R9 slice 7b — A MISSING FIXTURE IS A CAUSE, NOT AN "unclassified".
+     *
+     * Slice 7's mutant (e) left a retired name in the staged boot and the full
+     * run came back 13/29 with TEN steps reading `CRASHED — unclassified — see
+     * the refusal text`. The children were all dying on the SAME `ENOENT`, and
+     * the table said nothing about it: ten rows of regression with no cause
+     * named. `assertBootSourcesOnDisk` now refuses before any child starts, so
+     * this rule is the SECOND line of defence — it catches an `ENOENT` on a
+     * file the boot-source sweep does not reach (an expectation, a trace, an
+     * atlas) and NAMES THE PATH instead of shrugging.
+     */
+    [/ENOENT: no such file or directory, open '([^']+)'/,
+        (m) => `MISSING-FIXTURE — the child died opening \`${m[1].split('/').pop()}\`, which `
+            + `is not on disk (${m[1]}). This is not a solver refusal: nothing was solved, `
+            + 'so the row is a BROKEN INPUT and its verdict says nothing about the room'],
 ];
 
 /** The obstacle a solver refusal names, verbatim — the family's actual subject. */
@@ -907,6 +923,65 @@ const route = deriveRoute();
 const alternative = deriveAlternative(route);
 /** Every step this survey can run — the chosen route, then the alternative leg. */
 const allSteps = [...route.steps, ...(alternative?.steps ?? [])];
+
+/**
+ * ⛔⛔ EVERY BOOT SOURCE IS PROVED TO EXIST BEFORE ANY MODE RUNS — ⚖ R9 slice 7b,
+ * §15.8 findings 1 and 2, both of them measured by slice 7's mutant (e).
+ *
+ * ── WHAT THIS FIXES, EXACTLY ──────────────────────────────────────────
+ *
+ * `bootFor` returns a NAME. Nothing downstream of it opened the file until a
+ * child process did, and the two modes then failed in two different useless
+ * ways:
+ *
+ *   `--table`  printed `boot=staged:r7-act2-11` for eight rows, wrote
+ *              `route.json` and `survey.md`, and EXITED 0. The table view
+ *              reports provenance BY NAME and never reads the tape, so a
+ *              retired fixture produced a complete-looking deliverable naming
+ *              a file that is not on disk (trap 520: a provenance view prints
+ *              a dead reference and exits 0).
+ *   the run    reddened 23/29 -> 13/29 with TEN steps `CRASHED — unclassified
+ *              — see the refusal text`. Each child died on an `ENOENT` the
+ *              parent could not classify, so a ten-step regression arrived
+ *              with NO cause named anywhere in the table.
+ *
+ * ⇒ the check runs ONCE, at load, in EVERY mode (`--table`, `--views`,
+ * `--derive-only`, the full run and each `--step=` child), and refuses BY NAME
+ * with a non-zero exit. A dead fixture can no longer be echoed as provenance
+ * and can no longer arrive as ten unattributed crashes.
+ *
+ * ⚖ RULING 17: the list is DERIVED, never typed. It is exactly the set of
+ * names this survey can hand to `committedTape` — every step's own
+ * `bootFor(...).source` over `allSteps` (which is where `STAGED_BASE` enters,
+ * for every staged row), plus the two cross-check tables. A row added to the
+ * route or a boot re-pointed tomorrow is covered without touching this
+ * function; a name typed here would be the thing that decays.
+ */
+function assertBootSourcesOnDisk() {
+    const wanted = new Map();
+    const want = (name, why) => {
+        if (!wanted.has(name)) wanted.set(name, []);
+        wanted.get(name).push(why);
+    };
+    for (const step of allSteps) {
+        const b = bootFor(step);
+        want(b.source, `step ${step.step} (L${step.level} visit ${step.visit}) boot=${b.kind}`);
+    }
+    for (const [key, name] of STAGED_CROSSCHECK) want(name, `the staged cross-check at ${key}`);
+    for (const [key, name] of KNOWN_ANSWERS) want(name, `the known answer at ${key}`);
+    const missing = [...wanted].filter(([name]) => !existsSync(join(TAPES, `${name}.json`)));
+    if (!missing.length) return;
+    console.error('\n⛔ THE SURVEY REFUSES: a boot source it names is NOT ON DISK.\n');
+    for (const [name, whys] of missing) {
+        console.error(`  ${name}.json — ${join(TAPES, `${name}.json`).slice(REPO.length + 1)}`);
+        for (const why of whys) console.error(`      wanted by: ${why}`);
+    }
+    console.error('\nA tape that has been RETIRED must be re-pointed at the solver tape that '
+        + 'covers\nits claim before this survey can run (⚖ ruling 14). Nothing was written; '
+        + 'no mode\nof this script prints provenance for a file it cannot open.\n');
+    process.exit(2);
+}
+assertBootSourcesOnDisk();
 
 if (STEP !== null) {
     const step = allSteps.find((s) => String(s.step) === String(STEP));
