@@ -1317,7 +1317,14 @@ describe('version 9: the witnessed mid-run clear', () => {
         const t = parseTape(v9());
         const g = gameVisibleTape(t);
         expect(g.tape_version).toBe(8);
-        expect(g.persistence[0]).toEqual({ level: 5, tag: 0, note: '' });
+        // ⛔⛔ ⚖ RULING 23 (user, 2026-08-21): the TIMED ROW LEAVES ENTIRELY.
+        // This used to assert the row survived with its `at` stripped, which
+        // handed the game a boot clear for something the walk had not done —
+        // and `Bot.as:1587` applies clears BEFORE the world is built, so the
+        // gated body never spawned on a fresh page and stood on a continuation.
+        // MEASURED on `r8-solve-5`: 514746467 with the row, 1196897329
+        // without, everything else identical.
+        expect(g.persistence).toEqual([]);
         const differing = Object.keys(t).filter(
             (k) => JSON.stringify(t[k]) !== JSON.stringify(g[k]));
         // ⛓ R7 slice 6e: `despawn` joins the list, and it is dropped from a
@@ -1355,7 +1362,8 @@ describe('version 9: the witnessed mid-run clear', () => {
         // at, so the 121 committed fixtures are not re-versioned by being
         // handed to the game.
         expect(gameVisibleTape(v8).tape_version).toBe(8);
-        expect(GAME_VISIBLE_DROPS).toEqual(['persistence[].at', 'despawn', 'tick0']);
+        expect(GAME_VISIBLE_DROPS).toEqual(
+            ['persistence[] with at', 'despawn', 'tick0']);
     });
 
     /**
@@ -1397,6 +1405,38 @@ describe('version 9: the witnessed mid-run clear', () => {
             (k) => JSON.stringify(v8[k]) !== JSON.stringify(g[k]));
         expect(differing.sort()).toEqual(['despawn', 'tick0']);
         expect(() => parseTape(g)).not.toThrow();
+    });
+
+    /**
+     * ⛔⛔⛔ ⚖ RULING 23 (user, 2026-08-21): *"a level run separately must play
+     * identically to the same level reached from the start"*.
+     *
+     * The row this replaces asserted the OPPOSITE — that a timed clear reached
+     * the game with only its tick removed. That is the shape R9 slice 9
+     * measured as the cause of the campaign chain's `boundary 5/15` refusal:
+     * `Bot.as:1587` applies a tape's clears BEFORE the world is built, so the
+     * SAME row means "this body never existed" on a fresh page and "this body
+     * is standing and the flag is already set" on a continuation.
+     *
+     * ⛓ The model keeps the row — `createLevelRun` takes timed clears at
+     * construction and the walk depends on them. Only the GAME's copy loses it.
+     */
+    it('⛔ a TIMED clear never reaches the game, and an UNTIMED one always does', () => {
+        const timedOnly = parseTape(v9({ persistence: [{ level: 5, tag: 0, at: 3 }] }));
+        expect(timedOnly.persistence).toHaveLength(1);
+        expect(gameVisibleTape(timedOnly).persistence).toEqual([]);
+
+        const both = parseTape(v9({
+            persistence: [{ level: 5, tag: 0 }, { level: 8, tag: 1, at: 3 }],
+        }));
+        expect(gameVisibleTape(both).persistence)
+            .toEqual([{ level: 5, tag: 0, note: '' }]);
+
+        // …and a tape with no timed row is untouched in this respect, which is
+        // what keeps the change scoped to the seven tapes that carry one.
+        const untimed = parseTape(v9({ persistence: [{ level: 5, tag: 0 }] }));
+        expect(gameVisibleTape(untimed).persistence)
+            .toEqual([{ level: 5, tag: 0, note: '' }]);
     });
 });
 
@@ -1499,7 +1539,9 @@ describe('version 10: the witnessed mid-run enemy removal', () => {
         const g = gameVisibleTape(t);
         expect(g.tape_version).toBe(8);
         expect(g).not.toHaveProperty('despawn');
-        expect(g.persistence[0]).toEqual({ level: 6, tag: 0, note: '' });
+        // ⛔ ⚖ ruling 23: the TIMED row leaves entirely, so this tape's only
+        // clear is gone rather than stripped of its tick.
+        expect(g.persistence).toEqual([]);
         const differing = Object.keys(t).filter(
             (k) => JSON.stringify(t[k]) !== JSON.stringify(g[k]));
         // ⛓ R9 slice 8: `tick0` joins the classified list. It differs even on

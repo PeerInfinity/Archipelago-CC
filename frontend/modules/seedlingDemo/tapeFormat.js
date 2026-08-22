@@ -593,6 +593,20 @@ function requireFiniteNumber(value, what) {
  * the room respawns every enemy in it while the clear stays durable, so the
  * fight does not survive the door.
  *
+ * ⛔⛔⛔ ⚖ RULING 23 (user, 2026-08-21) — **AND THE ROW NEVER REACHES THE
+ * GAME AT ALL.** `gameVisibleTape` used to drop `at` and KEEP the row, which
+ * made the tape's own claim false on both paths in opposite directions:
+ * `Bot.as:1587` applies clears BEFORE the world is built, so a FRESH page
+ * never spawned the gated body, while a CONTINUATION (whose room the game
+ * built at the previous boundary) got the clear too late and left the body
+ * standing. R9 slice 9 measured the gap on `r8-solve-5`: 514746467 with the
+ * row, 1196897329 without — the second being the live value the wasm CAMPAIGN
+ * arm had refused at `boundary 5/15` since slice 7b, everything else identical.
+ * The row is now a MODEL-ONLY field (`GAME_VISIBLE_DROPS`), the game earns the
+ * clear by play on every path, and the user's requirement — *"a level run
+ * separately must play identically to the same level reached from the start"* —
+ * is a property of the projection rather than a hope about it.
+ *
  * ⛔⛔ WHY THIS IS NOT A STAGED GRANT, in three parts:
  *  1. **The boot stays honest.** `at` says the run's own play cleared the
  *     flag at tick T; the boot block still declares the state the segment
@@ -1956,7 +1970,8 @@ export function keyEdgesAt(tape, t) {
  * a game that consumed it would be told to remove something instead of being
  * asked whether it had.
  */
-export const GAME_VISIBLE_DROPS = Object.freeze(['persistence[].at', 'despawn', 'tick0']);
+export const GAME_VISIBLE_DROPS = Object.freeze(
+    ['persistence[] with at', 'despawn', 'tick0']);
 
 export function gameVisibleTape(tape) {
     const t = tape.tape_version === undefined ? parseTape(tape) : tape;
@@ -1998,7 +2013,33 @@ export function gameVisibleTape(tape) {
         // would be this function claiming something about them it did not
         // measure.
         tape_version: Math.min(t.tape_version, 8),
-        persistence: (t.persistence ?? []).map(({ at, ...c }) => c),
+        /**
+         * ⛔⛔⛔ ⚖ RULING 23 (user, 2026-08-21): *"a level run separately must
+         * play identically to the same level reached from the start"* — so a
+         * TIMED row leaves ENTIRELY, and not just its `at`.
+         *
+         * This used to `map(({at, ...c}) => c)`: strip the tick, KEEP the row.
+         * That handed the GAME a boot clear for something the walk had not
+         * done yet — and `Bot.as:1587` applies clears BEFORE the world is
+         * built, so on a FRESH page the gated body never spawned at all. On a
+         * CONTINUATION the room was built by the game at the previous
+         * boundary, so the same row landed after the world existed and (the
+         * fork's own comment) "would leave the blocker standing for this
+         * visit". Two different worlds from one tape.
+         *
+         * ⛓ MEASURED, R9 slice 9, on the real GPU: `r8-solve-5` walks its 558
+         * inputs to `rng.gameplay` 514746467 with the row handed over and
+         * 1196897329 without it — the second being exactly the live value the
+         * wasm CAMPAIGN arm had been refusing at `boundary 5/15` since slice
+         * 7b. Everything else was identical: 559 observations, the same end
+         * position, 0 hits, the same `save.time` and `fp.seed`.
+         *
+         * ⛓ THE MODEL KEEPS THE ROW — it needs the tick, and `createLevelRun`
+         * takes timed clears at construction. Only the GAME's copy loses it,
+         * and the GAME then EARNS the clear by play, which is what `at`'s own
+         * honesty analysis said all along.
+         */
+        persistence: (t.persistence ?? []).filter((c) => c.at === undefined),
     };
 }
 

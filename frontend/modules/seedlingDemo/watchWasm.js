@@ -302,10 +302,10 @@ export function stagesOf({ levelSet = null, windows = 1 } = {}) {
 export function continuationTape(tape) {
     const rows = tape.persistence ?? [];
     const forward = rows.filter((c) => c.at !== undefined);
-    const latchOnly = forward.length > 0
-        ? { ...tape, persistence: rows.filter((c) => c.at === undefined) }
-        : tape;
-    const visible = gameVisibleTape(latchOnly);
+    // ⛓ ⚖ ruling 23: the projection withholds these itself now, on every path.
+    // This no longer pre-strips — two copies of one rule is how they drift —
+    // but it still REPORTS what was withheld.
+    const visible = gameVisibleTape(tape);
     const forwardRows = forward.map((c) => `${c.level}:${c.tag}@${c.at}`);
     const tick0 = tape.tick0 ?? null;
     const declared = tape.rng ?? null;
