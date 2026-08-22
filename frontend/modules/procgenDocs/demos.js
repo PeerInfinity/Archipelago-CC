@@ -64,6 +64,15 @@
  *                   is not PRESSED by the row: `#loadWasm` starts a wasm
  *                   boot, which is `check-seedling-wasm-pages.mjs`'s job
  *                   and needs a real ▶ Start the catalogue row cannot give.
+ *   press           optional: a control the row CLICKS before reading the
+ *                   claim, as a CSS selector — for an entry whose whole
+ *                   subject is WHAT THE PRESS PRODUCES (R9 slice 10's
+ *                   ▶ campaign). ⛔ The difference from `control` is the
+ *                   difference between "this selector is not dead" and "this
+ *                   button does what the entry says": a row that LOADED the
+ *                   destination URL instead would pass with the button
+ *                   broken, because the arm it delegates to works either way
+ *                   (trap 479).
  *   claim           `<path> <op> <value>`, asserted off the page's readout
  *   demonstrates    prose — what the entry shows
  *   howToRun        prose — which controls to press
@@ -885,6 +894,55 @@ export const DEMOS = Object.freeze([
             '⛓ Every boot after the first is its predecessor\'s MEASURED LATCH, read\nout of the running game by `botSeam()` — so the chain is a CUSTODY chain and it\nCREDITS the goal ledger (`sword@L10`, `chest@L11`).',
             '⚠ `?tape=` (singular) is UNMOVED: one tape, one staged run, no sequence\nreadout. The two spellings are different questions and the page keeps both.',
             '⛔ A pair that cannot continue is refused BEFORE the frame is touched —\ntry `?tapes=r8-d2-19,r8-solve-4` and the page names the level the boot asks for\nand the level the live world is in.',
+        ]),
+        terms: Object.freeze([
+            'url-parameter',
+            'readout',
+            'tape',
+            'tape-name',
+            'window',
+            'solver',
+            'goal',
+            'seedling-differential',
+        ]),
+        prose: false,
+    }),
+    Object.freeze({
+        id: 'campaign-player',
+        n: 23,
+        title: '▶ CAMPAIGN — one click plays everything solved so far, and the page says where the playthrough stands',
+        page: '/frontend/modules/seedlingDemo/watch.html',
+        /**
+         * ⛓ THE URL IS THE **STARTING** PAGE, NOT THE DESTINATION — which is
+         * what makes this a press row. It lands on an ordinary single-tape
+         * REPLAY view with no sequence in the bar at all; the ▶ campaign button
+         * is what produces `?tapes=r9-campaign`, and `press` below is what makes
+         * the claim a claim about the BUTTON (trap 479).
+         */
+        url: 'tape=frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-1.json&side=js',
+        also: null,
+        press: '#campaignRun',
+        cli: { command: 'node scripts/procgen/check-seedling-editor-sequence.mjs', exit: 0 },
+        phase: null,
+        facts: Object.freeze([]),
+        layer: null,
+        readout: '__campaign',
+        /**
+         * ⛓ THE CLAIM IS READ STRUCTURALLY OFF THE READOUT THE PRESS CAUSED —
+         * `isCampaign` is false on every page that did not play the campaign
+         * chain (it is `false` in the object the control publishes before any
+         * walk), so this one value cannot go true without the click having
+         * queued the derived chain AND the arm having played it.
+         */
+        claim: 'isCampaign == true',
+        demonstrates: '⚖ Ruling 19 (the user, 2026-08-21): *"a way for the watch\npage to play the full sequence of campaign tapes that we have solved so far."*\nONE CLICK, from any REPLAY view, plays Seedling from `new Game(0,80,128)` with\nan empty save to the L14 arrival — and then SAYS WHERE THE PLAYTHROUGH STANDS:\nrooms crossed, which goal-ledger rows the run credited, and the refusal that is\nthe next work order.',
+        howToRun: 'Open the URL — an ordinary one-tape replay — and press\n**▶ campaign** beside the queue. The address bar becomes `?tapes=r9-campaign`,\nso the campaign is a LINK you can send to somebody. The block under the status\nline is the readout. Add `&side=wasm` to the URL the button wrote and press\n▶ Start inside the frame to watch the real recompiled game play the same\nfifteen windows on one page load.',
+        whatIsHappening: '⛔ **THE BUTTON HOLDS NO CHAIN NAME AND NO SEGMENT\nLIST.** It asks `director.campaignChoice`, which picks the one chain that is a\nCUSTODY chain (every boot after the first is its predecessor\'s measured latch),\nwhose first segment declares nothing carried (a fresh game start), and whose\nevery segment carries the solver\'s own decision-trace sidecar. The day the\nroster gains a room the button plays one more window with no edit.\n\n⛓ **AND IT IS NOT A SECOND PLAYER.** It writes the chain id through the queue\ncontrol\'s own writer, so what runs is `?tapes=` — the same arm, the same\nboundary admission, the same link.',
+        notes: Object.freeze([
+            '⛓ The ledger line is MEASURED, not declared: a row counts as credited\nonly where the collectible went NOT-HELD to HELD between a segment\'s own boot\nand its own latch, which a boot block cannot fake. Two of the 41 rows live in\nthese fifteen rooms — `sword@L10` and `chest@L11`.',
+            '⚠ The LAST window is UNASSERTED BY NAME: it has no successor boot\nblock, so whether it earned anything is a question the page cannot answer — and\n"earned nothing" and "could not look" must not print the same thing.',
+            '⛔ ⚖ Ruling 19 SCOPES this control: it shows only the tapes that play\ncontinuously from a fresh game start, and only tapes the solver recorded. The\ndetached `r8-d2` tail is a real chain and is deliberately NOT offered here —\nthe readout says the rooms beyond the arrival are unsolved and names the\nrefusal instead.',
+            '⛓ The refusal it prints is VERBATIM from\n`frontend/modules/seedlingDemo/fixtures/campaign-frontier.json`, which\n`census-seedling-campaign.mjs --write-frontier` derives from the route survey\nand `--check-frontier` reds on when it goes stale.',
         ]),
         terms: Object.freeze([
             'url-parameter',

@@ -50,6 +50,15 @@
  * 11. **A NON-CONTINUABLE PAIR IS REFUSED BEFORE THE FRAME IS TOUCHED** — no
  *     `__editorWasm` at all: a real GPU run is not spent to learn what the
  *     model already knew by name.
+ * 12. **⛓⛓⛓ ONE CLICK PLAYS THE CAMPAIGN** (R9 slice 10, ⚖ ruling 19) — the
+ *     ▶ campaign button is PRESSED, and what it writes is `?tapes=<the chain
+ *     this row derives for itself>` with the single-tape selection dropped.
+ *     ⛔ A PRESS, not an existence check: a control nobody presses is a control
+ *     nobody has gated (trap 479).
+ * 13. **⛓⛓⛓ EVERY READOUT FIELD IS RE-DERIVED** — rooms crossed, the ledger
+ *     rows credited and their segments, the end level, and the frontier —
+ *     computed HERE from the chain table, the committed tapes and the committed
+ *     frontier artifact, and compared to `window.__campaign`. ⛔ Never echoed.
  *  9. **⛓ THE act2 REPORT** — which of the true-start chain's windows admit,
  *     and the NAME of the refusal that stops the rest. A refusal there is a
  *     finding about the roster (or about the model), not a defect in this
@@ -74,7 +83,17 @@ const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name
 
 const { runTapeToStream } = await import(join(MODULE, 'tapeRunner.js'));
 const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
-const { PAGE_CHAINS } = await import(join(MODULE, 'director.js'));
+const { PAGE_CHAINS, campaignChoice } = await import(join(MODULE, 'director.js'));
+/**
+ * ⛓ R9 SLICE 10 — the gate RE-DERIVES the readout's ledger with the same two
+ * functions the page uses, from the committed tapes, in node. ⛔ That is not an
+ * echo (trap 269): the page and this row compute the same thing from the same
+ * artifacts by two separate call paths, and a page that stopped computing it
+ * would still have to produce the right answer to pass.
+ */
+const { goalEarnedWitness, R7_GOAL_LEDGER, seamBootFields } = await import(
+    join(MODULE, 'r7Acceptance.js'));
+const { parseTape } = await import(join(MODULE, 'tapeFormat.js'));
 
 const PAGE_PATH = '/frontend/modules/seedlingDemo/watch.html';
 const tapeOf = (n) => JSON.parse(readFileSync(join(MODULE, 'fixtures', 'tapes', `${n}.json`), 'utf8'));
@@ -479,6 +498,161 @@ check(!!badWasm.refusal && /cannot continue/.test(badWasm.refusal.reason)
 '⛓⛓ CLAIM 11 — a NON-CONTINUABLE PAIR IS REFUSED BEFORE THE FRAME IS TOUCHED',
 `${badWasm.refusal?.reason ?? 'not refused'} — __editorWasm is `
     + `${badWasm.ship === null ? 'ABSENT (no ship began)' : 'PRESENT (a ship began!)'}`);
+
+// ══ 12–13. ⛓⛓⛓ R9 SLICE 10 — THE CAMPAIGN PLAYER (⚖ ruling 19) ══════════
+/**
+ * ⛔⛔ THIS IS A PRESS PATH, AND THAT IS THE WHOLE POINT (trap 479). A row that
+ * LANDED on `?tapes=<chain>` and read the readout would pass with the ▶ campaign
+ * button broken, missing or wired to nothing — it would be checking the arm the
+ * button delegates to, not the button. So the row starts on a page with NO
+ * `?tapes=` at all, clicks, and asserts what the click produced.
+ *
+ * ⛔ AND THE EXPECTED CHAIN IS DERIVED HERE, not typed and not read off the
+ * page: `campaignChoice()` in node, over the same two tables the browser has.
+ */
+const CHOICE = campaignChoice();
+await page.goto(`${origin}${PAGE_PATH}?tape=frontend/modules/seedlingDemo/fixtures/tapes/`
+    + 'r8-solve-1.json&side=js');
+await page.waitForFunction(
+    () => !document.getElementById('tapes').disabled
+        && /^queue:/.test(document.getElementById('queueList').textContent),
+    null, { timeout: 120000 });
+const control = await page.evaluate(() => ({
+    disabled: document.getElementById('campaignRun').disabled,
+    title: document.getElementById('campaignRun').title,
+    camp: window.__campaignControl
+        ? JSON.parse(JSON.stringify(window.__campaignControl)) : null,
+}));
+/**
+ * ⛔⛔ TRAP 480 — A SPOKEN REFUSAL MUST ALSO FAIL BY NAME. If the control is
+ * disabled, clicking it would produce nothing and every row below would wait out
+ * its timeout to learn what the page already knew. So the refusal is READ, and
+ * the row fails NAMING it — and a control that greyed out without publishing a
+ * structural reason fails for THAT, which is the shape the trap is about.
+ */
+if (control.disabled) {
+    check(false, '⛔ CLAIM 12 — ▶ campaign is DISABLED, so no click can be gated',
+        control.camp?.campaignRefusal
+            ? `${control.camp.campaignRefusal.reason} — ${control.camp.campaignRefusal.detail}`
+            : '…and `__campaign.campaignRefusal` is ABSENT: the control greyed out with '
+              + 'its reason nowhere a gate can read it, which is exactly trap 480');
+} else {
+    check(CHOICE.refusal === null && control.camp?.campaign === CHOICE.id
+        && control.camp?.campaignRefusal === null
+        && control.title.includes(CHOICE.id),
+    '⛓ …and BEFORE any walk it already names the chain it would play, and why',
+    `title "${control.title}" · __campaign.campaign ${control.camp?.campaign}`);
+
+    await page.click('#campaignRun');
+    await page.waitForFunction(
+        () => window.__editorSequence !== undefined
+            || document.getElementById('status').className === 'bad',
+        null, { timeout: 300000 });
+    const camp = await page.evaluate(() => ({
+        search: window.location.search,
+        camp: JSON.parse(JSON.stringify(window.__campaign)),
+        windows: (window.__editorSequence?.windows ?? []).map((w) => w.label),
+        readout: document.getElementById('campaignReadout').textContent,
+        readoutHidden: document.getElementById('campaignReadout').hidden,
+    }));
+    const q = new URLSearchParams(camp.search);
+    check(q.get('tapes') === CHOICE.id && q.get('tape') === null,
+        '⛓⛓⛓ CLAIM 12 — ONE CLICK writes `?tapes=<the derived chain>`, as a LINK',
+        `?tapes=${q.get('tapes')} · ?tape=${q.get('tape')}`);
+    check(JSON.stringify(camp.windows) === JSON.stringify(CHOICE.segments),
+        `⛓ …and the arm played the chain's own ${CHOICE.segments.length} segments, in order`,
+        JSON.stringify(camp.windows));
+
+    // ── CLAIM 13 — every readout field, RE-DERIVED here ──────────────
+    /**
+     * ⛓ THE LEDGER, COMPUTED IN NODE FROM THE COMMITTED TAPES. Segment k's boot
+     * against segment k+1's — which for a custody chain IS segment k's measured
+     * latch — through `goalEarnedWitness`, the same function `chainGoalFindings`
+     * uses. The LAST window has no successor and is unasserted on both sides.
+     */
+    const boots = CHOICE.segments.map(
+        (n) => seamBootFields(parseTape(tapeOf(n))));
+    const mine = [];
+    for (let k = 0; k < boots.length - 1; k += 1) {
+        for (const row of R7_GOAL_LEDGER) {
+            if (mine.some((c) => c.id === row.id)) continue;
+            if (goalEarnedWitness(row, boots[k], boots[k + 1])) {
+                mine.push({ id: row.id, segment: CHOICE.segments[k] });
+            }
+        }
+    }
+    const theirs = camp.camp.ledger.credited.map((c) => ({ id: c.id, segment: c.segment }));
+    check(JSON.stringify(theirs) === JSON.stringify(mine)
+        && camp.camp.ledger.creditedCount === mine.length
+        && camp.camp.ledger.total === R7_GOAL_LEDGER.length,
+    `⛓⛓⛓ CLAIM 13 — THE LEDGER LINE IS RE-DERIVED: ${mine.length} / `
+        + `${R7_GOAL_LEDGER.length} credited, and the ROWS agree`,
+    `page ${JSON.stringify(theirs)} · this row ${JSON.stringify(mine)}`);
+    check(camp.camp.ledger.unasserted.length === 1
+        && camp.camp.ledger.unasserted[0].label === CHOICE.segments.at(-1),
+    '⛔ …and the LAST window is UNASSERTED BY NAME, never silently credited',
+    JSON.stringify(camp.camp.ledger.unasserted));
+
+    /**
+     * ⛓ ROOMS AND END STATE, against this row's OWN model walk of the headline
+     * — `runTapeToStream` on the chain's own headline tape, the same oracle
+     * claim 2 uses. ⛔ Not against the page's numbers restated.
+     */
+    const campOracle = runTapeToStream(tapeOf(CHOICE.id),
+        { levelSource: atlasLevelSource() });
+    const endOracle = campOracle.ticks.at(-1);
+    check(camp.camp.rooms.crossed === CHOICE.segments.length
+        && camp.camp.rooms.of === CHOICE.segments.length
+        && camp.camp.rooms.rows.length === CHOICE.segments.length
+        && camp.camp.rooms.rows.every((r, i) => r.segment === CHOICE.segments[i]),
+    `⛓ …and ROOMS CROSSED is ${CHOICE.segments.length}, one row per segment, in order`,
+    `${camp.camp.rooms.crossed} of ${camp.camp.rooms.of}`);
+    check(camp.camp.end.level === endOracle.level && camp.camp.end.x === endOracle.x
+        && camp.camp.end.y === endOracle.y
+        && camp.camp.end.ticks === campOracle.ticks.length - 1
+        && camp.camp.end.seamTime === null && Boolean(camp.camp.end.seamTimeWhy),
+    '⛓⛓ …and the END STATE is the HEADLINE played alone — with `seam.time` '
+        + 'UNASSERTED BY NAME on this side',
+    `page L${camp.camp.end.level} (${camp.camp.end.x},${camp.camp.end.y}) `
+        + `${camp.camp.end.ticks}t · oracle L${endOracle.level} `
+        + `(${endOracle.x},${endOracle.y}) ${campOracle.ticks.length - 1}t`);
+
+    /**
+     * ⛓ THE WORK ORDER, against the COMMITTED ARTIFACT this row reads itself.
+     * ⛔ The artifact is the census's checked projection of the route survey
+     * (`--check-frontier`); this row asserts the page prints it VERBATIM rather
+     * than paraphrasing a refusal the reader is owed in full.
+     */
+    const frontier = JSON.parse(readFileSync(
+        join(MODULE, 'fixtures', 'campaign-frontier.json'), 'utf8'));
+    check(JSON.stringify(camp.camp.frontier.nextStep) === JSON.stringify(frontier.nextStep)
+        && JSON.stringify(camp.camp.frontier.refusal) === JSON.stringify(frontier.refusal)
+        && camp.camp.frontier.chain === CHOICE.id,
+    `⛓⛓ …and the NEXT WORK ORDER is the artifact's, verbatim — route step `
+        + `${frontier.nextStep?.step} (L${frontier.nextStep?.level})`,
+    `${camp.camp.frontier.refusal?.family?.slice(0, 70)}…`);
+    check(camp.readoutHidden === false
+        && camp.readout.includes(`${mine.length} / ${R7_GOAL_LEDGER.length}`)
+        && camp.readout.includes(frontier.refusal.text),
+    '⛔ …and the READER SEES IT: `#campaignReadout` is visible and carries the '
+        + 'same ledger line and the same refusal sentence',
+    `hidden=${camp.readoutHidden}, ${camp.readout.length} chars`);
+
+    /**
+     * ⛔⛔ THE SCOPE RULING, ASSERTED AS AN ABSENCE (⚖ ruling 19). The detached
+     * `r8-d2` tail is a real, playable chain and is NOT part of the campaign —
+     * "not offered" is the claim, so the row looks for it and requires it not to
+     * be there. An absence nobody checks is a scope rule nobody has.
+     */
+    check(!camp.readout.includes('r8-d2') && !camp.readout.includes('r8-solve-18')
+        && !JSON.stringify(camp.camp).includes('r8-d2'),
+    '⛔ …and the DETACHED TAIL is NOT offered — ⚖ ruling 19 scopes the player to '
+        + 'what plays continuously from a fresh game start',
+    'no `r8-d2` / `r8-solve-18` anywhere in the readout or in `__campaign`');
+    check(/unsolved/i.test(camp.readout),
+        '⛓ …but the readout SAYS the rooms beyond the arrival are unsolved',
+        camp.readout.slice(-160));
+}
 
 check(errors.length === 0, 'ZERO console errors and pageerrors across every landing',
     errors.slice(0, 3).join(' | '));

@@ -31,6 +31,8 @@
  *   layer    optional: the overlay select
  *   control  optional: a CSS selector the entry tells the reader to press —
  *            asserted to EXIST on the page (never pressed; see below)
+ *   press    optional: a CSS selector this row CLICKS before reading the claim
+ *            — for an entry whose subject IS what the press produces (slice 10)
  *   claim    `<path> <op> <value>`, asserted off the page's readout
  *   prose    an entry that names no url of its own (it points at a doc)
  *
@@ -285,6 +287,28 @@ try {
         let got;
         let waitError = null;
         try {
+            /**
+             * ⛓⛓⛓ R9 SLICE 10 — **A `press` ENTRY WAITS ON THE PRESS'S OWN
+             * PRE-CONDITION**, not on the readout the press is going to create.
+             *
+             * ⛔ THIS IS THE SAME RULE THE LADDER WAIT ALREADY EMBODIES (trap
+             * 246), applied one step earlier. An entry whose subject is what a
+             * button PRODUCES names a readout that does not exist until the
+             * button is pressed — so waiting for it before pressing waits
+             * forever, and waiting for a readout that DOES already exist would
+             * be waiting for the wrong page. What must be true before a press is
+             * that the control is there and takeable, which `entry.press`
+             * already says: no second field, and nothing for a catalogue author
+             * to keep in sync.
+             */
+            if (entry.press) {
+                // eslint-disable-next-line no-await-in-loop
+                await page.waitForFunction((sel) => {
+                    if (document.getElementById('status')?.className === 'bad') return true;
+                    const el = document.querySelector(sel);
+                    return Boolean(el) && !el.disabled;
+                }, entry.press, { timeout: 300000 });
+            } else
             // eslint-disable-next-line no-await-in-loop
             await page.waitForFunction(([r, s, own]) => {
                 if (own) {
@@ -369,7 +393,53 @@ try {
                 `⛓ …and the CONTROL it tells you to press EXISTS (\`${entry.control}\`)`,
                 present ? 'on the page' : 'no element matches — the catalogue names a dead control');
         }
-        if (entry.phase || entry.facts.length || entry.layer) {
+        /**
+         * ⛓⛓⛓ R9 SLICE 10 — **`press` IS CLICKED**, and `control` still is not.
+         *
+         * The two fields are two different claims and the difference is the
+         * point. `control` names a button whose EFFECT this row has no way to
+         * verify (it opens a real GPU frame, it navigates away) so it asserts
+         * only that the catalogue is not pointing at a dead selector.
+         * `press` names a control whose whole entry IS what the press produces:
+         * the claim below is read AFTER the click, off the readout the click
+         * caused. ⛔ Trap 479 — a row that LOADED the destination URL instead
+         * would pass with the button broken, missing, or wired to nothing,
+         * because the arm it delegates to works either way. This file's own
+         * docblock has said it since the glossary filter: a control nobody
+         * presses is a control nobody has gated.
+         */
+        if (entry.press) {
+            // eslint-disable-next-line no-await-in-loop
+            const pressed = await page.evaluate((sel) => {
+                const el = document.querySelector(sel);
+                if (!el) return 'no element matches';
+                if (el.disabled) return `disabled: ${el.title || '(no reason given)'}`;
+                el.click();
+                return null;
+            }, entry.press);
+            check(pressed === null,
+                `⛓⛓⛓ …and the CONTROL IT NAMES WAS PRESSED (\`${entry.press}\`)`,
+                pressed ?? 'clicked');
+            if (pressed === null) {
+                /**
+                 * ⛔ A PRESS MAY NAVIGATE, and this row must not read the page it
+                 * pressed on. `?tapes=` is written by assignment to
+                 * `location.search`, so ▶ campaign leaves the document; the load
+                 * state is awaited first (a no-op when the press stayed put) and
+                 * only then the readout's own terminal condition — which is why
+                 * an entry's `readout` must name an object only the FINISHED
+                 * state publishes.
+                 */
+                // eslint-disable-next-line no-await-in-loop
+                await page.waitForLoadState('domcontentloaded').catch(() => {});
+                // eslint-disable-next-line no-await-in-loop
+                await page.waitForFunction(
+                    (r) => window[r] !== undefined
+                        || document.getElementById('status')?.className === 'bad',
+                    readout, { timeout: 300000 }).catch(() => {});
+            }
+        }
+        if (entry.phase || entry.facts.length || entry.layer || entry.press) {
             // eslint-disable-next-line no-await-in-loop
             driven = await page.evaluate((r) => window[r] ?? null, readout);
         }

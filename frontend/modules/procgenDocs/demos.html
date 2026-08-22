@@ -216,6 +216,9 @@ function driveLine(entry) {
     // the page really carries, so the words on this page and the id in the DOM
     // are one string — `check-procgen-demos.mjs` asserts it resolves.
     if (entry.control) bits.push(`press <b>${esc(entry.control)}</b>`);
+    // ⛓ R9 slice 10 — a control the CHECK ROW presses, not only the reader.
+    // Shown the same way: what the reader is told to do is the same act.
+    if (entry.press) bits.push(`press <b>${esc(entry.press)}</b>`);
     return bits.length ? `${label('HOW TO DRIVE IT')}<div class="drive">${bits.join(' · ')}</div>` : '';
 }
 
