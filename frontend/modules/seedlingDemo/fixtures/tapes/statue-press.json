@@ -1,5 +1,5 @@
 {
-  "tape_version": 1,
+  "tape_version": 3,
   "game": "seedling",
   "name": "statue-press",
   "description": "THE STATUE PIN. A driver-planned approach with a HAND-AUTHORED tail: botDriverV2 walks to (168,184) — tile (10,11), the cell directly west of the statue at oel (184,160) — and then RIGHT is held for 40 ticks straight into its left edge. The driver cannot produce the press itself: its whole job is to never touch a wall, and tile (11,11) is not even a legal goal because the player box does not fit at its centre. This exists because the statue was the one entity in the class table carrying TWO constructor offsets — Statue's (+16,-8) on top of NPC's (+8,+8) — and slice 1 applied only the first, putting the collider 8 px up and left. Nothing caught it until a pathing fixture walked past. With the route now planned AROUND the statue, this is the fixture that puts the corrected rect back under the oracle: the pinned x is a direct measurement of the collider's left edge, and the 8 px error moves it.",
@@ -9,6 +9,10 @@
     "y": 128
   },
   "noclip": false,
+  "noDamage": false,
+  "noHazards": [],
+  "grants": [],
+  "persistence": [],
   "tick_count": 150,
   "inputs": [
     {

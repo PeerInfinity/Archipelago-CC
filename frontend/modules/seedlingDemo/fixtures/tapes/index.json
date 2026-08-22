@@ -6,37 +6,42 @@
       "file": "collide-up-rock.json",
       "tickCount": 45,
       "bootLevel": 0,
-      "tapeVersion": 1
+      "tapeVersion": 3,
+      "noHazards": []
     },
     {
       "file": "cross-level-leg.json",
       "tickCount": 257,
       "bootLevel": 0,
-      "tapeVersion": 1
+      "tapeVersion": 3,
+      "noHazards": []
     },
     {
       "file": "diagonal-run.json",
       "tickCount": 40,
       "bootLevel": 0,
-      "tapeVersion": 1
+      "tapeVersion": 3,
+      "noHazards": []
     },
     {
       "file": "direction-flip.json",
       "tickCount": 45,
       "bootLevel": 0,
-      "tapeVersion": 1
+      "tapeVersion": 3,
+      "noHazards": []
     },
     {
       "file": "friction-stop.json",
       "tickCount": 30,
       "bootLevel": 0,
-      "tapeVersion": 1
+      "tapeVersion": 3,
+      "noHazards": []
     },
     {
       "file": "grant-sword-room.json",
       "tickCount": 376,
       "bootLevel": 0,
-      "tapeVersion": 2,
+      "tapeVersion": 3,
       "noHazards": [
         "water",
         "pit",
@@ -49,7 +54,7 @@
       "file": "hazard-boot-pit.json",
       "tickCount": 30,
       "bootLevel": 83,
-      "tapeVersion": 2,
+      "tapeVersion": 3,
       "noHazards": [
         "water",
         "pit",
@@ -62,7 +67,7 @@
       "file": "hazard-walk-water.json",
       "tickCount": 60,
       "bootLevel": 0,
-      "tapeVersion": 2,
+      "tapeVersion": 3,
       "noHazards": [
         "water",
         "pit",
@@ -147,7 +152,7 @@
       "file": "pit-fall-83.json",
       "tickCount": 80,
       "bootLevel": 83,
-      "tapeVersion": 2,
+      "tapeVersion": 3,
       "noHazards": [
         "water",
         "lava",
@@ -159,91 +164,7 @@
       "file": "pit-fall-chain-85.json",
       "tickCount": 220,
       "bootLevel": 83,
-      "tapeVersion": 2,
-      "noHazards": [
-        "water",
-        "lava",
-        "ice",
-        "waterfall"
-      ]
-    },
-    {
-      "file": "r1-walk-1-sword-shield.json",
-      "tickCount": 910,
-      "bootLevel": 0,
-      "tapeVersion": 2,
-      "noHazards": [
-        "water",
-        "lava",
-        "ice",
-        "waterfall"
-      ]
-    },
-    {
-      "file": "r1-walk-2-feather-conch.json",
-      "tickCount": 3548,
-      "bootLevel": 0,
-      "tapeVersion": 2,
-      "noHazards": [
-        "water",
-        "lava",
-        "ice",
-        "waterfall"
-      ]
-    },
-    {
-      "file": "r1-walk-3-wand-darksword.json",
-      "tickCount": 2844,
-      "bootLevel": 44,
-      "tapeVersion": 2,
-      "noHazards": [
-        "water",
-        "lava",
-        "ice",
-        "waterfall"
-      ]
-    },
-    {
-      "file": "r1-walk-4-torch.json",
-      "tickCount": 1145,
-      "bootLevel": 12,
-      "tapeVersion": 2,
-      "noHazards": [
-        "water",
-        "lava",
-        "ice",
-        "waterfall"
-      ]
-    },
-    {
-      "file": "r1-walk-5-spear-health.json",
-      "tickCount": 4361,
-      "bootLevel": 12,
-      "tapeVersion": 2,
-      "noHazards": [
-        "water",
-        "lava",
-        "ice",
-        "waterfall"
-      ]
-    },
-    {
-      "file": "r1-walk-6-cluster.json",
-      "tickCount": 2155,
-      "bootLevel": 12,
-      "tapeVersion": 2,
-      "noHazards": [
-        "water",
-        "lava",
-        "ice",
-        "waterfall"
-      ]
-    },
-    {
-      "file": "r1-walk-full.json",
-      "tickCount": 14963,
-      "bootLevel": 0,
-      "tapeVersion": 2,
+      "tapeVersion": 3,
       "noHazards": [
         "water",
         "lava",
@@ -1328,37 +1249,43 @@
       "file": "shuffle-stop.json",
       "tickCount": 60,
       "bootLevel": 0,
-      "tapeVersion": 1
+      "tapeVersion": 3,
+      "noHazards": []
     },
     {
       "file": "statue-press.json",
       "tickCount": 150,
       "bootLevel": 0,
-      "tapeVersion": 1
+      "tapeVersion": 3,
+      "noHazards": []
     },
     {
       "file": "straight-run.json",
       "tickCount": 40,
       "bootLevel": 0,
-      "tapeVersion": 1
+      "tapeVersion": 3,
+      "noHazards": []
     },
     {
       "file": "thread-the-gap.json",
       "tickCount": 197,
       "bootLevel": 0,
-      "tapeVersion": 1
+      "tapeVersion": 3,
+      "noHazards": []
     },
     {
       "file": "transition-west-return.json",
       "tickCount": 150,
       "bootLevel": 0,
-      "tapeVersion": 1
+      "tapeVersion": 3,
+      "noHazards": []
     },
     {
       "file": "wall-slide.json",
       "tickCount": 70,
       "bootLevel": 0,
-      "tapeVersion": 1
+      "tapeVersion": 3,
+      "noHazards": []
     }
   ]
 }

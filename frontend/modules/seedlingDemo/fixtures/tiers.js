@@ -82,15 +82,14 @@
  * demand. The cut is reversible by construction because it is a list.
  */
 export const LEGACY_TAPES = Object.freeze([
-    // The noclip era. `noclip: true`, granted, relaxed; never a sole
-    // detector in 20 sweeps. ⚠ L49 (the conch room) leaves with them.
-    'r1-walk-1-sword-shield',
-    'r1-walk-2-feather-conch',
-    'r1-walk-3-wand-darksword',
-    'r1-walk-4-torch',
-    'r1-walk-5-spear-health',
-    'r1-walk-6-cluster',
-    'r1-walk-full',
+    // ⛓⛓ THE SEVEN `r1-walk-*` TAPES ARE GONE FROM THE REPOSITORY, not just
+    // from this list — ⚖ ruling 26 (user, 2026-08-22) retired them in R9
+    // slice 9b, and the ARGUMENT IS THE ONE THIS FILE ALREADY MADE: R2
+    // re-walks the same game with solids restored, R3 removes the grants,
+    // R4 restores the hazards, so a later-version tape witnesses the family
+    // and none of the seven had ever been a sole detector. ⚠ L49 left with
+    // them, as the note below still says — and it is now gone from the
+    // ROSTER, not merely from the default gate.
     // Strictly dominated: byte-identical `inputs` to the r4 twin, with
     // `noHazards` ["water","lava","ice","waterfall"] against the twin's
     // ["water","waterfall"]. The same walk, more crutches.
@@ -102,8 +101,16 @@ export const LEGACY_TAPES = Object.freeze([
     'r3-walk-3-torch',
 ]);
 
-/** Level coverage that leaves the default gate with `LEGACY_TAPES`. */
-export const LEGACY_ONLY_LEVELS = Object.freeze([49]);
+/**
+ * Level coverage that leaves the default gate with `LEGACY_TAPES`.
+ *
+ * ⛓ EMPTY SINCE ⚖ RULING 26, and that is a REAL LOSS rather than a
+ * bookkeeping one: L49 (the 5x9 conch room) was reachable only through the
+ * `r1-walk-*` tapes, which are now retired, so it has left the ROSTER
+ * entirely. Nothing else demoted here takes unique level coverage with it —
+ * `r3-walk-{1,2,3}` are byte-identical in `inputs` to their r4 twins.
+ */
+export const LEGACY_ONLY_LEVELS = Object.freeze([]);
 
 /** The tiers a sweep can ask for, and what each means. */
 export const TIERS = Object.freeze({

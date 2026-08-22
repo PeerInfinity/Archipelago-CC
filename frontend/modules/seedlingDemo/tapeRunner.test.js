@@ -171,13 +171,27 @@ describe('fixture differential', () => {
         expect(names).toContain('pit-fall-chain-85');
         expect(names).toContain('collide-up-rock');
         expect(names).toContain('transition-west-return');
-        // The v1 five are all still on disk, and are still the tapes the v1
+        // The five are all still on disk, and are still the tapes the v1
         // ENGINE can run: single-level, and predating every relaxation.
+        //
+        // ⛓⛓ ⚖ RULING 26 (user, 2026-08-22) RE-STAMPED THEM v1 -> v3, AND
+        // THIS PIN GOT STRONGER RATHER THAN WEAKER. It used to read
+        // `tape_version === 1`, which is a PROXY for the property the v1
+        // engine actually needs — that the tape asks for no relaxation of
+        // any kind — and a proxy that a re-stamp invalidates without
+        // touching the property. The properties are now asserted directly:
+        // noclip, no damage relaxation, no hazard relaxation, no grant, no
+        // persistence clear. A v1 tape satisfies all five BY DEFINITION
+        // (`parseTape` normalises exactly these values onto one), so this is
+        // the same claim spelled out, and it survives the next bump.
         for (const n of V1_FIVE) {
             expect(names, `${n} is missing`).toContain(n);
             const t = loadTape(n);
-            expect(t.tape_version, `${n} is no longer a v1 tape`).toBe(1);
-            expect(t.noclip).toBe(true);
+            expect(t.noclip, `${n} is no longer noclip`).toBe(true);
+            expect(t.noDamage, `${n} relaxes damage`).toBe(false);
+            expect(t.noHazards, `${n} relaxes a hazard`).toEqual([]);
+            expect(t.grants, `${n} grants an item`).toEqual([]);
+            expect(t.persistence, `${n} clears a flag`).toEqual([]);
         }
     });
 

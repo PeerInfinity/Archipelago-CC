@@ -1,5 +1,5 @@
 {
-  "tape_version": 2,
+  "tape_version": 3,
   "game": "seedling",
   "name": "pit-fall-83",
   "description": "HAND-AUTHORED, and the CONTRAST PARTNER of hazard-boot-pit: same room, same pit tile, one name removed from noHazards. With `pit` coerced the walk onto tile (2,1) is a level change that does not happen; with `pit` LIVE it is the whole R1 mechanic. The stream records, in order: the edge tick (fired from getState BEFORE the movement, so this tick still runs input() normally), twenty fall-out ticks in which the residual velocity decays under friction while the lerp pulls x/y one tenth of the way to the pit tile's centre each tick and alpha counts 1 down by 0.05, the deferred end-of-tick swap to the control block's fallthrough target (level 84, ctor args floor(max(fallInPitPos - offset, 0)/16)*16 = (32,32)), and the fall-from-ceiling arrival: Player.check() puts the player at camera.y - 3 on the new world's first frame, which is always exactly 83 px above yStart, and v.y += 0.1 brings them back down in exactly 41 ticks. Level 84's arrival tile (2,2) is itself a PIT, so getStatePos returns 6 and the descent lands DEAD instead of bouncing - which is what chains the next fall and is why the underworld is reachable at all. The tape stops during that second fall-out on purpose; pit-fall-chain-85 carries it through. \u26a0 THE APPROACH IS FROM THE WEST, AND THAT IS NOT COSMETIC. Walking UP from the boot tile's centre - the obvious authoring, and what the first recording of this fixture did - puts the probe point on y = 32.0 EXACTLY at tick 8, equidistant from the centres of tiles (2,1) and (2,2), and nearestToPoint then resolves the tie by FlashPunk's entity-list order (which prepends, so it is the reverse of the extract's). The game fell; a model reading the extract's order would not have. Approaching from tile (1,1) with RIGHT held crosses the same boundary between samples (x = 31.55 then 33.00) and never lands on it.",
@@ -9,6 +9,7 @@
     "y": 16
   },
   "noclip": true,
+  "persistence": [],
   "noDamage": true,
   "noHazards": [
     "water",

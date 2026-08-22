@@ -1,10 +1,14 @@
 {
-  "tape_version": 1,
+  "tape_version": 3,
   "game": "seedling",
   "name": "shuffle-stop",
   "description": "Right 12, coast to a stop, left 12, coast again — a there-and-back that stays well inside level 0. Replaces the original clamp-left fixture, which walked far enough LEFT that the real game loaded an adjacent level (the recorded oracle showed level=94 at tick 61): the world clamp at x=2 is not reachable in level 0 because a room transition fires first, so no valid v1 tape can exercise it. The clamp is still transcribed and still covered, by the hand-derived unit case in playerPhysicsV1.test.js. This tape instead pins two full accelerate/decelerate cycles and a signed velocity reversal through zero.",
   "boot": { "level": 0, "x": 80, "y": 128 },
   "noclip": true,
+  "noDamage": false,
+  "noHazards": [],
+  "grants": [],
+  "persistence": [],
   "tick_count": 60,
   "inputs": [
     { "key": "right", "from": 0, "to": 12 },

@@ -1,5 +1,5 @@
 {
-  "tape_version": 1,
+  "tape_version": 3,
   "game": "seedling",
   "name": "wall-slide",
   "description": "Hold DOWN+LEFT from the spawn for the whole tape and slide along the cliff wall that bounds tiles (0..3, 10..12). Pins the per-axis sweep: X is blocked for 31 consecutive ticks (the stream shows x = 66.2288148957249 unchanged from t20 to t50) while Y keeps descending every single tick — one axis resolved, the other not, from the same diagonal velocity. Then at t51 the descent clears the corner and X starts moving again. That corner is the point: X is swept FULLY before Y and Y is swept at the new x (Mobile.as:38-39), so a Y-before-X engine reaches t50 with x = 65.2908729652601 instead — a divergence the fixture sees. 70 ticks is the budget: at ~90 the route reaches the Water tiles in rows 14-15 and the terrain seam fires.",
@@ -9,6 +9,10 @@
     "y": 128
   },
   "noclip": false,
+  "noDamage": false,
+  "noHazards": [],
+  "grants": [],
+  "persistence": [],
   "tick_count": 70,
   "inputs": [
     {

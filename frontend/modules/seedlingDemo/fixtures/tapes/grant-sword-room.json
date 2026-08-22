@@ -1,5 +1,5 @@
 {
-  "tape_version": 2,
+  "tape_version": 3,
   "game": "seedling",
   "name": "grant-sword-room",
   "description": "THE R0 WITNESS, synthesized by the relaxed botDriverV2 across five legs: boot in level 0 out through the stairs at oel (256,272), then 2 -> 3 -> 11 -> 10, the sword's room. It is the first tape to exercise every R0 relaxation at once. noclip and noHazards are both load-bearing rather than decorative: levels 3 and 11 are substantially WATER (32 and 10 cells), which the v2 rung refuses to stand on at all, and levels 2 and 3 hold entities (dungeonspire, moonrockpile, breakablerockghost) that no collider classification exists for — so this route is only plannable at all because buildLevelWorld relaxes by ROLE. The two avoid volumes are real and on the path: level 11's chest at oel (32,48), whose OPEN LINE runs one pixel beneath it directly between the arrival and the exit, and level 10's sword at oel (48,48), whose 8x8 rect the route has to clear while standing in the same 7x7 room. Walking over either freezes the game behind a dialogue the tape can never dismiss, so a route that clipped one would HANG rather than diverge. The grant fires on the arrival tick in level 10 and is asserted from the GAME's own botStatus.items, never from the JS mirror.",
@@ -9,6 +9,7 @@
     "y": 128
   },
   "noclip": true,
+  "persistence": [],
   "noDamage": true,
   "noHazards": [
     "water",

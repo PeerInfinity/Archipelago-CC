@@ -5815,12 +5815,35 @@ export function synthesizeLegs(legs, opts = {}) {
             + 'vanilla-reachable execution BOTH the run and the emitted tape get, and a '
             + 'plan that pins one and a tape that pins the other is two experiments.');
     }
-    const tape = buildTape(perTick, boot, name, relax
-        ? {
-            ...relax,
-            ...(relax.equips === undefined ? {} : { equips: run.equipsFired }),
-        }
-        : { noclip: false });
+    /**
+     * ⛓⛓ ⚖ RULING 26 (user, 2026-08-22): THE DRIVER NO LONGER EMITS A TAPE
+     * BELOW VERSION 3.
+     *
+     * `buildTape` picks the version BY WHICH FIELDS THE CALLER DECLARES, and
+     * that rule is deliberate (its docblock: reading `TAPE_VERSION` would
+     * have re-versioned every emitted tape at every bump). It is untouched.
+     * What changes is what THIS caller declares: a `relax` that omits the
+     * relaxations and the clear list used to yield a v1 or v2 tape, and the
+     * user has retired both versions. So the v3 floor is declared here, with
+     * exactly the values `parseTape` NORMALISES onto a v1/v2 tape anyway —
+     * `noDamage: false`, `noHazards: []`, `grants: []`, `persistence: []` —
+     * which makes the floor a re-spelling rather than a new experiment. A
+     * `relax` that declares any of them still wins.
+     *
+     * ⛓ MEASURED: the three committed fixtures this driver emits and the
+     * fixed-point test compares (`thread-the-gap`, `cross-level-leg`,
+     * `grant-sword-room`) differ from the driver's output in `tape_version`
+     * AND NOTHING ELSE once they are re-stamped — which is the inertness
+     * claim, made by the gate rather than argued.
+     */
+    const V3_FLOOR = { noDamage: false, noHazards: [], grants: [], persistence: [] };
+    const tape = buildTape(perTick, boot, name, {
+        noclip: false,
+        ...V3_FLOOR,
+        ...(relax || {}),
+        ...(relax && relax.persistence === undefined ? { persistence: [] } : {}),
+        ...(relax && relax.equips !== undefined ? { equips: run.equipsFired } : {}),
+    });
     if (relax && (relax.pins ?? []).join(' ') !== (tape.pins ?? []).join(' ')) {
         fail(`synthesizeLegs: the plan declares pins [${(relax.pins ?? []).join(' ')}] and `
             + `the emitted tape carries [${(tape.pins ?? []).join(' ')}]. A pin selects an `

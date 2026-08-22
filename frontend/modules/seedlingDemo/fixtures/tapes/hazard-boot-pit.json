@@ -1,5 +1,5 @@
 {
-  "tape_version": 2,
+  "tape_version": 3,
   "game": "seedling",
   "name": "hazard-boot-pit",
   "description": "HAND-AUTHORED, and the only fixture that exercises the parameterised boot. It boots straight into level 83 (OverWorld_fallhole) — a 5x5 room the v2 rung could reach by NEITHER door: the boot was baked into Main.as:51, and buildLevelWorld threw on its control and lightalpha tags. R0 lifts both, so this tape starts there and walks UP onto the PIT at tile (2,1). Without the pit in the hazard set the JS engine throws and the real game sets receiveInput = false and TRANSPORTS the player to level 84 (the control block's fallthrough) — so the claim is not merely a speed but a level change that does not happen, which the observation stream carries directly. It also pins that the sticky state STORES the raw 6: the coerce is on what the physics consumes, not on what the resolver resolved.",
@@ -9,6 +9,7 @@
     "y": 32
   },
   "noclip": true,
+  "persistence": [],
   "noDamage": true,
   "noHazards": [
     "water",

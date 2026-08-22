@@ -789,20 +789,37 @@ describe('the relaxed driver', () => {
         }
     });
 
-    it('emits a version 2 tape carrying exactly the relaxations it planned with', () => {
+    it('emits a tape carrying exactly the relaxations it planned with', () => {
+        // ⛓ WAS "a version 2 tape". ⚖ Ruling 26 retired every v1 and v2 tape,
+        // and `synthesizeLegs` now declares the v3 floor, so the version this
+        // asserts is 3. THE RELAXATIONS ARE THE CLAIM and they are unchanged:
+        // the floor declares the values `parseTape` normalises onto a v1/v2
+        // tape anyway, and a `relax` that names one still wins — which is what
+        // the three assertions below are about.
         const { tape } = synthesizeLegs([{ level: 0, targets: [{ x: 96, y: 136 }] }],
             { levelSource, relax: RELAX });
         const parsed = parseTape(tape);
-        expect(parsed.tape_version).toBe(2);
+        expect(parsed.tape_version).toBe(3);
         expect(parsed.noclip).toBe(true);
         expect(parsed.noDamage).toBe(true);
         expect(parsed.noHazards).toEqual(['water', 'pit', 'lava', 'ice', 'waterfall']);
     });
 
-    it('still emits a version 1 tape without `relax` — the v2 path is untouched', () => {
+    it('emits the v3 FLOOR without `relax`, and still relaxes nothing', () => {
+        // ⛓ WAS "still emits a version 1 tape without `relax`". ⚖ Ruling 26
+        // (user, 2026-08-22) retired v1 and v2, so the floor is 3 — but the
+        // claim the old name was making is the one that matters and it is
+        // asserted directly here: a caller that declares no `relax` gets a
+        // tape that RELAXES NOTHING. A version number was only ever a proxy
+        // for that, and it is the proxy the re-stamp invalidated.
         const { tape } = synthesizeWalk([{ x: 104, y: 136 }], { levelSource });
-        expect(parseTape(tape).tape_version).toBe(1);
-        expect(parseTape(tape).noclip).toBe(false);
+        const parsed = parseTape(tape);
+        expect(parsed.tape_version).toBe(3);
+        expect(parsed.noclip).toBe(false);
+        expect(parsed.noDamage).toBe(false);
+        expect(parsed.noHazards).toEqual([]);
+        expect(parsed.grants).toEqual([]);
+        expect(parsed.persistence).toEqual([]);
     });
 
     it('walks THROUGH level 0 water a relaxed tape has disabled', () => {
@@ -1062,7 +1079,7 @@ describe('R2: a relaxed walk with collision ON', () => {
         // TAPE agrees with the plan.
         const { tape } = synthesizeWalk([{ x: 264, y: 216 }], { levelSource, relax: R2 });
         const parsed = parseTape(tape);
-        expect(parsed.tape_version).toBe(2);
+        expect(parsed.tape_version).toBe(3);   // ⛓ the v3 floor, ⚖ ruling 26
         expect(parsed.noclip).toBe(false);
         expect(parsed.noDamage).toBe(true);
         // ...and the tape the runner reads walks the walk the driver drove.
@@ -1120,15 +1137,24 @@ describe('R2: a relaxed walk with collision ON', () => {
         // removes it on a cleared flag. One clear, one blocker, one level.
         const CLEAR = Object.freeze([{ level: 3, tag: 0, note: 'breakablerock@96,112' }]);
 
-        it('makes a version 3 tape by PRESENCE, not by value', () => {
+        it('PRESENCE still selects the version — above the v3 floor', () => {
+            // ⛓ THE PRESENCE RULE IS UNCHANGED; only the FLOOR moved. ⚖ Ruling
+            // 26 retired v1 and v2, so an omitted `persistence` no longer
+            // drops to v2 — it takes the floor's own `persistence: []`. The
+            // rule the old test was defending (presence, never value) is
+            // therefore asserted one version UP, where it still discriminates:
+            // `equips` is a v4 field, and declaring it EMPTY still lifts the
+            // tape to 4 while omitting it leaves it at 3.
             const empty = synthesizeWalk([{ x: 264, y: 216 }],
                 { levelSource, relax: { ...R2, persistence: [] } });
             expect(parseTape(empty.tape).tape_version).toBe(3);
             expect(parseTape(empty.tape).persistence).toEqual([]);
-            // ...and omitting it is still the version 2 tape R1 emits, which
-            // is what keeps the twenty-three frozen fixtures byte-identical.
             const absent = synthesizeWalk([{ x: 264, y: 216 }], { levelSource, relax: R2 });
-            expect(parseTape(absent.tape).tape_version).toBe(2);
+            expect(parseTape(absent.tape).tape_version).toBe(3);
+            expect(parseTape(absent.tape).persistence).toEqual([]);
+            const withEquips = synthesizeWalk([{ x: 264, y: 216 }],
+                { levelSource, relax: { ...R2, equips: [] } });
+            expect(parseTape(withEquips.tape).tape_version).toBe(4);
         });
 
         it('carries the clears into the tape it emits', () => {

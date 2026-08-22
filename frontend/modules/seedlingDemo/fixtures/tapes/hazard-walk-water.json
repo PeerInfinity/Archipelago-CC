@@ -1,5 +1,5 @@
 {
-  "tape_version": 2,
+  "tape_version": 3,
   "game": "seedling",
   "name": "hazard-walk-water",
   "description": "HAND-AUTHORED, and the oracle backing for the noHazards coerce. Level 0 row 8 going right leaves the spawn on Brick, crosses Ground and ends standing on WATER at column 9 (the v2 slice-0 fixture-authoring note). At the v2 rung this route is unrunnable twice over — assertModelledTerrain throws on the water tile, and in the game the player would DROWN, since canSwim is false and checkDrowning runs off the terrain state. With the hazard set declared it walks at the plain 0.8 ground speed and survives, which is exactly the pair of claims the coerce makes. Hand-authored rather than driver-planned on purpose: a synthesized tape would only prove the planner and the engine agree, while a held RIGHT proves the GAME agrees. Without it the noHazards mirror would be verified only against unit cases that share its assumptions.",
@@ -9,6 +9,7 @@
     "y": 128
   },
   "noclip": true,
+  "persistence": [],
   "noDamage": true,
   "noHazards": [
     "water",

@@ -193,16 +193,6 @@ export const R1_PERSISTENCE_EFFECTS = Object.freeze([
  */
 export const R1_MAX_TICKS_PER_WAYPOINT = 1500;
 
-/** Segment tape names, and the headline. `--only=` takes these. */
-export const R1_SEGMENT_NAMES = Object.freeze([
-    'r1-walk-1-sword-shield',
-    'r1-walk-2-feather-conch',
-    'r1-walk-3-wand-darksword',
-    'r1-walk-4-torch',
-    'r1-walk-5-spear-health',
-    'r1-walk-6-cluster',
-]);
-export const R1_FULL_WALK_NAME = 'r1-walk-full';
 
 /** Every item the walk ends holding, in collection order. */
 export function r1AllItems() {
@@ -275,87 +265,6 @@ export function assertRouteWellFormed(route) {
     return route;
 }
 
-/**
- * The tape specs the driver synthesizes from: six segments and the
- * headline, each `{name, boot, legs, relax, firstLeg, lastLeg, inherited}`.
- *
- * `relax` is the ONE object `synthesizeLegs` uses for the plan, the run and
- * the emitted tape — so a spec cannot give the planner and the tape
- * different ideas of which experiment this is.
- */
-export function r1TapeSpecs(route) {
-    assertRouteWellFormed(route);
-    // ⚠ THE BOUNDARY LEG IS SHARED. Segment N's LAST leg and segment N+1's
-    // FIRST leg are the same leg of the route: the boundary is the ARRIVAL
-    // in that level, so one segment ends by arriving there (its exit
-    // stripped — it stops rather than leaving) and the next boots there and
-    // takes that leg's exit for real. An off-by-one the other way would
-    // leave the walk standing in a level nobody exits.
-    const bounds = [0, ...route.segment_boundaries, route.legs.length - 1];
-    const specs = [];
-
-    for (let s = 0; s < R1_SEGMENT_NAMES.length; s++) {
-        const firstLeg = bounds[s];
-        const lastLeg = bounds[s + 1];
-        const legs = route.legs.slice(firstLeg, lastLeg + 1)
-            .map((l, i) => (i === lastLeg - firstLeg ? { level: l.level, targets: [] } : { ...l }));
-        const boot = route.leg_boots[firstLeg];
-        const firstEntry = (g) => routeFirstEntry(route, g.level);
-        // Everything collected up to and including the boundary the segment
-        // boots at — the previous segment ended by arriving there, so its
-        // grant has already fired. One entry at the boot level, which is
-        // observed at tick 0.
-        const inherited = s === 0 ? []
-            : route.grants.filter((g) => firstEntry(g) <= firstLeg).flatMap((g) => [...g.items]);
-        const own = route.grants
-            .filter((g) => firstEntry(g) <= lastLeg
-                && (s === 0 ? firstEntry(g) >= firstLeg : firstEntry(g) > firstLeg))
-            .map((g) => ({ level: g.level, items: [...g.items] }));
-        const grants = inherited.length > 0
-            ? [{ level: boot.level, items: inherited }, ...own]
-            : own;
-        specs.push({
-            name: R1_SEGMENT_NAMES[s],
-            segment: s + 1,
-            boot: { ...boot },
-            legs,
-            firstLeg,
-            lastLeg,
-            inherited,
-            // Re-based on the segment's own leg indices. An effect caused
-            // before this segment starts is already in force (leg 0); one
-            // caused after it ends never fires here, and the filter drops it.
-            extraVolumes: route.persistence_effects
-                .filter((e) => e.fromLeg <= lastLeg)
-                .map((e) => driverVolume(e, Math.max(0, e.fromLeg - firstLeg))),
-            maxTicksPerTarget: R1_MAX_TICKS_PER_WAYPOINT,
-            relax: { noclip: true, noDamage: true, noHazards: [...R1_NO_HAZARDS], grants },
-        });
-    }
-
-    specs.push({
-        name: R1_FULL_WALK_NAME,
-        segment: null,
-        boot: { ...route.boot },
-        legs: route.legs.map((l) => ({ ...l })),
-        firstLeg: 0,
-        lastLeg: route.legs.length - 1,
-        inherited: [],
-        extraVolumes: route.persistence_effects.map((e) => driverVolume(e, e.fromLeg)),
-        maxTicksPerTarget: R1_MAX_TICKS_PER_WAYPOINT,
-        relax: {
-            // ⚠ R1 IS THE NOCLIP RUNG, and it says so now rather than
-            // inheriting it. R2's walk keeps every other relaxation and puts
-            // the solids back, so `noclip` stopped being derivable from "is
-            // this a relaxed walk" — see `synthesizeLegs`.
-            noclip: true,
-            noDamage: true,
-            noHazards: [...R1_NO_HAZARDS],
-            grants: route.grants.map((g) => ({ level: g.level, items: [...g.items] })),
-        },
-    });
-    return specs;
-}
 
 /**
  * One persistence effect as the DRIVER wants it, with the rect rebuilt.

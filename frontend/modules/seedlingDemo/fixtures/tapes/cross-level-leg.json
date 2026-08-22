@@ -1,5 +1,5 @@
 {
-  "tape_version": 1,
+  "tape_version": 3,
   "game": "seedling",
   "description": "THE CROSS-LEVEL WITNESS, synthesized by botDriverV2 from three legs: level 0 (walk to (88,168), then exit through the teleporter at oel (0,128)), level 94 (walk to (216,200), then exit through (304,160)), level 0 (arrival, no targets). The CALLER names each teleporter; the driver never searches the graph. Unlike transition-west-return, whose crossings come from a hand-authored hold, every tick here is planned around real geometry in BOTH levels — level 94 is walled by a TreeLarge pixelmask and nine cliffsides, so the return route has to be planned, not guessed. It also pins the seam the physics refuses: the aim point for an exit is the trigger's centre, which for level 0's west pair at (0,128)/(0,144) means y=136 and not the ambiguous band y in (141,146) where both volumes overlap with different arrivals. Two transitions, at the ticks the transitions records name.",
   "boot": {
@@ -8,6 +8,10 @@
     "y": 128
   },
   "noclip": false,
+  "noDamage": false,
+  "noHazards": [],
+  "grants": [],
+  "persistence": [],
   "tick_count": 257,
   "inputs": [
     {

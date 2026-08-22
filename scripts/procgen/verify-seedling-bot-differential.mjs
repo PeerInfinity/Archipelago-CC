@@ -187,9 +187,6 @@ const {
 const {
     runTape, runTapeToStream,
 } = await import(join(REPO, 'frontend/modules/seedlingDemo/tapeRunner.js'));
-const {
-    r1AcceptanceFindings,
-} = await import(join(REPO, 'frontend/modules/seedlingDemo/r1Acceptance.js'));
 const { r2AcceptanceFindings } =
     await import(join(REPO, 'frontend/modules/seedlingDemo/r2Acceptance.js'));
 const { r2TapeSpecs } = await import(join(REPO, 'frontend/modules/seedlingDemo/r2Walk.js'));
@@ -237,11 +234,6 @@ const { ITEM_PROPERTIES, inventorySlotsFor } =
 const { r4TapeSpecs } = await import(join(REPO, 'frontend/modules/seedlingDemo/r4Walk.js'));
 const R4_ROUTE = JSON.parse(readFileSync(
     join(REPO, 'frontend/modules/seedlingDemo/fixtures/r4-route.json'), 'utf8'));
-const {
-    r1TapeSpecs,
-} = await import(join(REPO, 'frontend/modules/seedlingDemo/r1Walk.js'));
-const R1_ROUTE = JSON.parse(readFileSync(
-    join(REPO, 'frontend/modules/seedlingDemo/fixtures/r1-route.json'), 'utf8'));
 
 const RECORD = process.argv.includes('--record');
 /** `--only=name[,name...]` — restrict the sweep. Empty means "everything". */
@@ -394,7 +386,7 @@ function recordCheckpoint(entry) {
  * ⛓⛓ AND THE REPLAY PAYLOAD IS CACHED TOO, which is what keeps a resumed
  * run a real gate rather than a partial one.
  *
- * The cross-tape findings (`r1AcceptanceFindings` and its five siblings)
+ * The cross-tape findings (`r2AcceptanceFindings` and its four siblings)
  * take the `replayed` map and REFUSE to assert when an arm is missing —
  * "a pair asserted from one arm is not a pair". So a resume that skipped
  * tapes but kept only PASS/FAIL would turn every one of those claims into
@@ -1661,10 +1653,10 @@ function checkReadout(name, tape, status, stream) {
 }
 
 /**
- * R1's and R2's terminal assertions and segment chains, from the GAME's own
- * reports.
+ * R2's terminal assertions and segment chains, from the GAME's own reports.
+ * (R1's went with its tapes — ⚖ ruling 26.)
  *
- * The logic itself is `frontend/modules/seedlingDemo/r1Acceptance.js`,
+ * The logic itself lives in `frontend/modules/seedlingDemo/r<N>Acceptance.js`,
  * deliberately: a claim that only ever runs against a passing eleven-minute
  * replay is a claim nobody has ever seen FAIL, and a check that has never
  * failed is indistinguishable from one that cannot. As a pure function over
@@ -1674,7 +1666,11 @@ function checkReadout(name, tape, status, stream) {
 function checkAcceptance(replayed) {
     if (replayed.size === 0) return;
     const findings = [
-        ...r1AcceptanceFindings(R1_ROUTE, r1TapeSpecs(R1_ROUTE), replayed),
+        // ⛓ R1's arm is GONE — ⚖ ruling 26 (user, 2026-08-22) retired the
+        // seven `r1-walk-*` tapes, and `r1Acceptance.js` / `r1Walk.js`'s
+        // tape-spec half went with them. R2 re-walks the same route with
+        // solids restored, R3 without the grants, R4 with the hazards back,
+        // so the family below still witnesses everything R1's arm asserted.
         ...r2AcceptanceFindings(R2_ROUTE, r2TapeSpecs(R2_ROUTE), replayed),
         ...r3AcceptanceFindings(R3_ROUTE, r3TapeSpecs(R3_ROUTE), replayed),
         ...r4AcceptanceFindings(R4_ROUTE, r4TapeSpecs(R4_ROUTE), replayed),

@@ -387,7 +387,11 @@ console.log('\n## the three layers as LAYERS — legend, ?layers=, and OFF reall
 // ── 6. THE NAMED ABSENCE — a spinner room with no clock ─────────────────
 console.log('\n## ⚠ the hammer\'s named absence — 125 of 153 committed tapes have no clock');
 {
-    const n = await drawnAt('r1-walk-full', 300);
+    // ⛓ WAS `r1-walk-full`, RETIRED by ⚖ ruling 26 (R9 slice 9b). Re-pointed
+    // to its own successor: `r2-walk-full` is the SAME ROUTE re-walked with
+    // solids restored, and the claim here is about a tape whose boot declares
+    // no `save.time` — which is true of both, and of 125 of the roster.
+    const n = await drawnAt('r2-walk-full', 300);
     const why = n.drawn.hammer.why;
     check(n.drawn.hammer.lines.length === 0,
         'a tape whose boot declares no `save.time` draws no hammer line',
