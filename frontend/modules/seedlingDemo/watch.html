@@ -31,7 +31,7 @@
   page and the result is scrubbed by the SAME machinery REPLAY uses
   (solve-then-scrub).
 
-      watch.html?boot=frontend/modules/seedlingDemo/fixtures/tapes/r7-act2-4.json
+      watch.html?boot=frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-4.json
           &level=4&goals=exit:64,16&solve=1
 
   ?level=N     the level to solve in (overrides the staging block's own)
@@ -69,7 +69,7 @@
   frame-for-frame through the page's own REPLAY arm, and shows the tape in
   the save box.
 
-      watch.html?source=manual&boot=…/tapes/r7-act2-4.json&level=4
+      watch.html?source=manual&boot=…/tapes/r8-solve-4.json&level=4
 
   ⚠ MANUAL is never inferred — `?level=`/`?boot=` are shared with SOLVE, so
   it must be asked for by name.
@@ -258,7 +258,7 @@
       node scripts/procgen/export-seedling-view.mjs --out=view.png \
           --tape=…/tapes/r8-solve-4.json --tick=171 --layers=player,arrows
       node scripts/procgen/export-seedling-view.mjs --out=solve.png --trace \
-          --boot=…/tapes/r7-act2-4.json --level=4 --goals=exit:64,16 --solve=1
+          --boot=…/tapes/r8-solve-4.json --level=4 --goals=exit:64,16 --solve=1
 
   It starts its own static server on a free port, forwards the parameters
   above verbatim, adds ?shot=1, and screenshots this page. ⛔ It draws

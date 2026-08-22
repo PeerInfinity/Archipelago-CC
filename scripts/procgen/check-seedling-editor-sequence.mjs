@@ -257,7 +257,7 @@ check(/nearest continuation the roster has/.test(bad.detail),
     (bad.detail.match(/nearest continuation the roster has is [^.]*/) ?? [''])[0].slice(0, 140));
 
 // ══ 6. GRANTS, AT QUEUE TIME ════════════════════════════════════════════
-const granted = await land('tapes=r7-act2-1,r4-walk-2-feather&side=js');
+const granted = await land('tapes=r8-solve-1,r4-walk-2-feather&side=js');
 check(granted.cls === 'bad' && /refused at queue time/.test(granted.status)
     && /a later window declares grants/.test(granted.detail),
 '⛓ CLAIM 6 — A LATER WINDOW\'S GRANTS ARE REFUSED **BEFORE ANYTHING PLAYS**',

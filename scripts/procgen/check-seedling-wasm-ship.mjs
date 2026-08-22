@@ -98,7 +98,15 @@ const DRIVER = join(HERE, 'seedling-watch-ship-win.py');
  * Reusing it rather than inventing a segment means a red here is about the SHIP
  * and not about a solve nobody else runs.
  */
-const BOOT = 'frontend/modules/seedlingDemo/fixtures/tapes/r7-act2-4.json';
+/**
+ * ⛓ R9 slice 7b: the boot moved `r7-act2-4` -> `r8-solve-4` with the hand
+ * chain's retirement (⚖ ruling 14). The two blocks were compared field by
+ * field before the swap and are BYTE-EQUAL over all eleven boot fields
+ * (`boot` `seam` `grants` `persistence` `equips` `pins` `save` `rng`
+ * `noclip` `noHazards` `noDamage`), so this row boots the SAME L4 world it
+ * always did — only the file that carries the block changed.
+ */
+const BOOT = 'frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-4.json';
 const GOALS = 'exit:64,16';
 const NAME = 'r8-solve-4';
 const PAGE = `${HOST}/frontend/modules/seedlingDemo/watch.html`

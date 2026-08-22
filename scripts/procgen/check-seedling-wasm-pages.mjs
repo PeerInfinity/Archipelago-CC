@@ -117,7 +117,15 @@ const TAPE = 'frontend/modules/seedlingDemo/fixtures/tapes/pit-fall-chain-85.jso
  * PER-TICK verdict reachable on a machine with no GPU at all.
  */
 const REPLAY_TAPE = 'frontend/modules/seedlingDemo/fixtures/tapes/friction-stop.json';
-const SHIP_BOOT = 'frontend/modules/seedlingDemo/fixtures/tapes/r7-act2-4.json';
+/**
+ * ⛓ R9 slice 7b: the boot moved `r7-act2-4` -> `r8-solve-4` with the hand
+ * chain's retirement (⚖ ruling 14). The two blocks were compared field by
+ * field before the swap and are BYTE-EQUAL over all eleven boot fields
+ * (`boot` `seam` `grants` `persistence` `equips` `pins` `save` `rng`
+ * `noclip` `noHazards` `noDamage`), so this row boots the SAME L4 world it
+ * always did — only the file that carries the block changed.
+ */
+const SHIP_BOOT = 'frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-4.json';
 const SHIP_GOALS = 'exit:64,16';
 const SHIP_NAME = 'r8-solve-4';
 const WATCH = `${ROOT}/modules/seedlingDemo/watch.html?tape=${encodeURIComponent(TAPE)}&side=wasm`;

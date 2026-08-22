@@ -69,7 +69,7 @@ const check = (ok, what, detail) => {
 const unexpectedErrors = (errors) =>
     errors.filter((e) => !/fixtures\/traces\/[^\s\]]+\.trace\.json/.test(e));
 
-const alive = await fetch(`${HOST}/${TAPES}/r8-solve-8.json`)
+const alive = await fetch(`${HOST}/${TAPES}/index.json`)
     .then((r) => r.ok).catch(() => false);
 if (!alive) {
     console.log(`SKIP: no dev server serving ${HOST}/${TAPES}/ — start one at the REPO `
@@ -143,7 +143,7 @@ console.log('## r8-solve-8 (L8) @ tick 0 — a room that draws nothing, and says
 
 console.log('\n## …and r7-act2-4 (L4), the control that makes that row mean something');
 {
-    const b = await at('r7-act2-4', 0);
+    const b = await at('r8-solve-4', 0);
     check(b.drawn.hitboxes.boxes.length === 1 && b.census.enemies === 1,
         '⛓ ONE census body, and the page DREW it — 1 of 1',
         `${b.drawn.hitboxes.boxes.length} drawn / ${b.census.enemies} census`);

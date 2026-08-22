@@ -79,7 +79,7 @@ const check = (ok, what, detail) => {
 const unexpectedErrors = (errors) =>
     errors.filter((e) => !/fixtures\/traces\/[^\s\]]+\.trace\.json/.test(e));
 
-const alive = await fetch(`${HOST}/${TAPES}/r7-act2-11.json`)
+const alive = await fetch(`${HOST}/${TAPES}/index.json`)
     .then((r) => r.ok).catch(() => false);
 if (!alive) {
     console.log(`SKIP: no dev server serving ${HOST}/${TAPES}/ — start one at the REPO `
@@ -132,7 +132,7 @@ async function at(name, tick, extra = '') {
 // ── 1. THE WORLD-STATE LAYER — THE PAIR, AND THE TICK IS MEASURED ───────
 console.log('## r7-act2-11 (L11) — one chest, drawn shut at tick 0 and MARKED at the tick it opens');
 {
-    const { page, errors } = await open('r7-act2-11', 0);
+    const { page, errors } = await open('r8-solve-11', 0);
     const before = await readout(page);
     check(before.drawn.worldstate.changes.length === 0,
         'at tick 0 the layer marks NOTHING',
@@ -181,7 +181,7 @@ console.log('## r7-act2-11 (L11) — one chest, drawn shut at tick 0 and MARKED 
     '⛔⛔ …drawn ON the build-time box, which is still there to be marked',
     mark ? JSON.stringify(mark.base) : 'none');
     if (SHOT && found) {
-        await page.locator('#canvas').screenshot({ path: `${SHOT}/r7-act2-11-chest-gone.png` });
+        await page.locator('#canvas').screenshot({ path: `${SHOT}/r8-solve-11-chest-gone.png` });
     }
     check(unexpectedErrors(errors).length === 0, 'no page errors',
         unexpectedErrors(errors).join(' | ') || 'clean');
@@ -380,7 +380,7 @@ console.log('\n## ⚖ item 9 — the danger the SOLVER was told, and the absence
 {
     // (a) DEFAULT OFF, and "off" means the arm never ran — not merely that a
     //     checkbox is unticked. The pair is what makes the row non-vacuous.
-    const def = await at('r7-act2-11', 0);
+    const def = await at('r8-solve-11', 0);
     const danger = def.toggles.find(([id]) => id === 'danger');
     check(Boolean(danger) && danger[1] === false,
         '⚖ `danger` has a toggle and defaults OFF — the ruling\'s own condition',
@@ -391,7 +391,7 @@ console.log('\n## ⚖ item 9 — the danger the SOLVER was told, and the absence
 
     // (b) SWITCHED ON over a REPLAY: the absence is reported BY NAME and the
     //     page does not recompute a single thing.
-    const on = await at('r7-act2-11', 0, '&layers=player,danger');
+    const on = await at('r8-solve-11', 0, '&layers=player,danger');
     check(/^no solver ran — no danger data/.test(on.drawn.danger.why ?? ''),
         '⚖⚖ switched ON over a REPLAY, the layer says "no solver ran — no danger data"',
         (on.drawn.danger.why ?? '(none)').slice(0, 90));
@@ -407,7 +407,7 @@ console.log('\n## ⚖ item 9 — the danger the SOLVER was told, and the absence
 
 console.log('\n## …and the SOLVE that gives it something to draw (L4, in page)');
 {
-    const BOOT = `${TAPES}/r7-act2-4.json`;
+    const BOOT = `${TAPES}/r8-solve-4.json`;
     const { page, errors } = await openUrl(
         `${HOST}/frontend/modules/seedlingDemo/watch.html`
         + `?level=4&boot=${BOOT}&goals=${encodeURIComponent('exit:64,16')}&solve=1`

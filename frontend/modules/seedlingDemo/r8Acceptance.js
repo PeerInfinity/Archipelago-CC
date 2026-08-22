@@ -2395,7 +2395,7 @@ export const R8_D2_SHIELD = Object.freeze({
      * campaign reached the shield" is the whole of what staging costs.
      */
     stagedBoot: Object.freeze({
-        derivedFrom: 'r7-act2-11 (the last committed segment of `act2-the-sword`)',
+        derivedFrom: 'r8-solve-11 — byte-equal over all eleven boot fields to `r7-act2-11`, the last committed segment of the retired hand chain `act2-the-sword` (⚖ ruling 14; the hand file left the roster at R9 slice 7b)',
         items: 'hasSword true, everything else false — the campaign\'s own latch',
         persistence: '{5,0} {8,0} {8,1} {10,0} — the act2 chain\'s banked clears',
         whatIsNotDeclared: 'nothing about D2 itself: no spinner clear, no {19,0}, no '

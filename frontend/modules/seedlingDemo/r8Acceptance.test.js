@@ -1025,9 +1025,18 @@ describe('R8_D2_SHIELD — slice 6\'s prediction, stated before the press arm mo
      * tape rather than typed — a staged boot invented beside the campaign is
      * a claim about a different game.
      */
-    it('⛓ the staged boot matches `r7-act2-11`\'s committed v8 block', () => {
+    it('⛓ the staged boot matches `r8-solve-11`\'s committed v8 block', () => {
+        /**
+         * ⛓ R9 slice 7b: the tape this row reads moved `r7-act2-11` ->
+         * `r8-solve-11` with the hand chain's retirement. The two blocks were
+         * compared field by field before the swap and are BYTE-EQUAL over all
+         * eleven boot fields, so the CLAIM is unchanged — `derivedFrom` still
+         * names the hand tape as the block's origin, because that is history
+         * and history does not move when a file does.
+         */
         const t = JSON.parse(readFileSync(
-            join(HERE, 'fixtures', 'tapes', 'r7-act2-11.json'), 'utf8'));
+            join(HERE, 'fixtures', 'tapes', 'r8-solve-11.json'), 'utf8'));
+        expect(R8_D2_SHIELD.stagedBoot.derivedFrom).toMatch(/r8-solve-11/);
         expect(R8_D2_SHIELD.stagedBoot.derivedFrom).toMatch(/r7-act2-11/);
         expect(t.seam.items.hasSword).toBe(true);
         expect(t.seam.items.hasShield).toBe(false);

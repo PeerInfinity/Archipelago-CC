@@ -47,7 +47,7 @@ const check = (ok, what, detail) => {
     if (!ok) failed++;
 };
 
-const alive = await fetch(`${HOST}/${TAPES}/r7-act2-1.json`).then((r) => r.ok).catch(() => false);
+const alive = await fetch(`${HOST}/${TAPES}/index.json`).then((r) => r.ok).catch(() => false);
 if (!alive) {
     console.log(`SKIP: no dev server serving ${HOST}/${TAPES}/ — start one at the REPO `
         + 'ROOT with `python3 -m http.server 8000` (or pass --host=)');
@@ -102,7 +102,7 @@ console.log('\n## the default boot — no ?boot=, nothing typed');
         'an HONEST start: collision on, damage on, nothing cleared');
 
     const title = await page.textContent('#title');
-    check(/TRUE GAME START/.test(title) && /r7-act2-1/.test(title),
+    check(/TRUE GAME START/.test(title) && /r8-solve-1/.test(title),
         '⛓ …and it SAYS where the block came from — a derived default names its source',
         title);
     check(errors.length === 0, 'no page errors — clean', errors.slice(0, 2).join(' | '));
@@ -169,12 +169,12 @@ console.log('\n## ⛔ the SOLVE button solves what is IN THE BOX (the slice\'s o
      * written from the solve's own output — so a page that kept its closure
      * copy would report the tape's flag whatever the box said.
      */
-    const boot = `${TAPES}/r7-act2-11.json`;
+    const boot = `${TAPES}/r8-solve-11.json`;
     const { page, errors } = await open(`${PAGE}?source=solve&boot=${boot}`);
     await page.waitForFunction(() => document.querySelector('#bootBox')?.value?.length > 0);
 
     check(await page.$eval('#bootForm-sword', (el) => el.checked),
-        'the form reads r7-act2-11\'s DECLARED sword as ticked');
+        'the form reads r8-solve-11\'s DECLARED sword as ticked');
     await page.uncheck('#bootForm-sword');
     const block = await bootBlock(page);
     check(block.seam.items.hasSword === false,
@@ -273,7 +273,7 @@ console.log('\n## ⛓⛓⛓ the despawn check — r7-act2-6\'s declared bob, on 
  * ladder's head is checkable against a known answer.
  */
 {
-    const { page, errors } = await open(`${PAGE}?source=solve&boot=${TAPES}/r7-act2-1.json`);
+    const { page, errors } = await open(`${PAGE}?source=solve&boot=${TAPES}/r8-solve-1.json`);
     console.log('\n## WHERE THE PLAYER STARTS — entrances, the picker, and typed coordinates');
     await page.waitForSelector('#bootStart', { timeout: 60000 });
     // Step to L10 through the page's own control, not by URL: the write path

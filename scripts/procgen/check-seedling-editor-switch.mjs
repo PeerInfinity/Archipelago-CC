@@ -67,13 +67,13 @@ const { ITEM_FORM_FIELDS } = await M('watchSolve.js');
 
 const PAGE_PATH = '/frontend/modules/seedlingDemo/watch.html';
 /** A committed segment tape, so SOLVE and MANUAL both boot into a real room. */
-const BOOT = 'frontend/modules/seedlingDemo/fixtures/tapes/r7-act2-1.json';
+const BOOT = 'frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-1.json';
 /**
  * ⛓ AND THE ONE THE SHIP CLAIMS USE — `check-seedling-editor-solve.mjs`'s own
  * accepted segment, so a red in those claims is about the BUTTON and not about
  * a solve nobody else runs.
  */
-const SHIP_BOOT = 'frontend/modules/seedlingDemo/fixtures/tapes/r7-act2-4.json';
+const SHIP_BOOT = 'frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-4.json';
 const SHIP_GOALS = 'exit:64,16';
 const SHIP_NAME = 'r8-solve-4';
 
@@ -478,7 +478,7 @@ try {
         // combination, because this row is testing SCROLLING and has no
         // business discovering a solve that refuses.
         const solveUrl = `${origin}${PAGE_PATH}?source=solve`
-            + '&boot=frontend/modules/seedlingDemo/fixtures/tapes/r7-act2-4.json'
+            + '&boot=frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-4.json'
             + '&level=4&goals=exit%3A64%2C16&solve=1';
         console.log(`\npage: ${solveUrl}`);
         await page.setViewportSize({ width: 900, height: 500 });

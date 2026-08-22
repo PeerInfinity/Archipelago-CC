@@ -29,14 +29,22 @@
  * short of a second solver. The independent anchor is the PINNED NUMBER
  * below, which came from outside both paths.
  *
- * ── ⚠ 255, AND THE COMMITTED ARTIFACT SAYS 253 (trap 169) ─────────────
+ * ── ⛓ 255, AND THE GAP TRAP 169 NAMED IS CLOSED (R9 slice 3) ──────────
  *
- * `r8-solve-4.json` was recorded at 253 ticks and today's solver derives
- * 255 from the same staging block and the same goals. THE DRIFT PREDATES
- * THIS ARC and it is NOT a tolerance here: the page must match TODAY's
- * derivation EXACTLY. A page that matched the committed 253 would have
- * built a world neither the runner nor the game has. Closing the gap is a
- * re-record, and no re-record licence exists this arc — R9's does.
+ * This row used to carry a SECOND pinned number, `COMMITTED_TICKS = 253`,
+ * and assert that the committed artifact DISAGREED with today's derivation
+ * by two ticks. R9 slice 3 spent its re-record licence and moved
+ * `r8-solve-4.json` to 255; the literal did not move with it, so from that
+ * slice onward the row asserted a gap that no longer existed and went RED
+ * on a repair. A typed count that outlives its subject is trap 495's family
+ * and this is its third instance in the arc (§15.6's `r8-battery-4.endsAt`
+ * 253 -> 255 is the same two ticks, one constant over).
+ *
+ * ⇒ ⚖ ruling 17: the committed count is READ OFF THE ARTIFACT and asserted
+ * EQUAL to today's derivation. The row keeps its teeth — a future
+ * re-record that moves the tape away from the derivation reds here, by
+ * name, with both numbers — and it can no longer decay, because there is
+ * only one number left and the tape supplies it.
  *
  * Prereqs: a dev server at the REPO ROOT. SKIPs (exit 0) without one, like
  * every other seedling probe.
@@ -71,12 +79,15 @@ const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name
 
 const HOST = arg('host', 'http://localhost:8000');
 /** The acceptance row's segment: `r8-solve-4`, boot block and goals. */
-const BOOT = 'frontend/modules/seedlingDemo/fixtures/tapes/r7-act2-4.json';
+const TAPES = 'frontend/modules/seedlingDemo/fixtures/tapes';
+const BOOT = `${TAPES}/r8-solve-4.json`;
 const GOALS = 'exit:64,16';          // = the battery's `goalsFor(4)`
 const NAME = 'r8-solve-4';
-/** The tick count today's derivation lands on. See the trap-169 note above. */
+/**
+ * ⛓ THE ONE PINNED NUMBER — today's derivation, from outside both paths.
+ * The COMMITTED count is not typed beside it; it is read off the tape below.
+ */
 const EXPECTED_TICKS = 255;
-const COMMITTED_TICKS = 253;
 
 const PAGE = `${HOST}/frontend/modules/seedlingDemo/watch.html`
     + `?level=4&boot=${BOOT}&goals=${encodeURIComponent(GOALS)}&solve=1&name=${NAME}`;
@@ -87,9 +98,9 @@ const check = (ok, what, detail) => {
     if (!ok) failed++;
 };
 
-const alive = await fetch(`${HOST}/${BOOT}`).then((r) => r.ok).catch(() => false);
+const alive = await fetch(`${HOST}/${TAPES}/index.json`).then((r) => r.ok).catch(() => false);
 if (!alive) {
-    console.log(`SKIP: no dev server serving ${HOST}/${BOOT} — start one at the REPO `
+    console.log(`SKIP: no dev server serving ${HOST}/${TAPES}/ — start one at the REPO `
         + 'ROOT with `python3 -m http.server 8000` (or pass --host=)');
     process.exit(0);
 }
@@ -117,11 +128,11 @@ check(node.out.perTick.length === EXPECTED_TICKS,
     + 'both paths)', `got ${node.out.perTick.length}`);
 const committed = JSON.parse(readFileSync(
     join(REPO, `frontend/modules/seedlingDemo/fixtures/tapes/${NAME}.json`), 'utf8'));
-check(committed.tick_count === COMMITTED_TICKS,
-    `⚠ trap 169 NAMED, not tolerated: the committed ${NAME} is ${COMMITTED_TICKS} ticks `
-    + `and today's derivation is ${EXPECTED_TICKS}`,
-    `committed ${committed.tick_count}; the gap is a re-record R9 owns, and this row `
-    + 'compares the page against TODAY, never against the artifact');
+check(committed.tick_count === EXPECTED_TICKS,
+    `⛓ trap 169's gap is CLOSED: the committed ${NAME} and today's derivation are the `
+    + `SAME ${EXPECTED_TICKS} ticks — read off the tape, never typed beside it`,
+    `committed ${committed.tick_count} vs derived ${EXPECTED_TICKS}; a re-record that `
+    + 'moves one and not the other reds HERE, which is what the old literal could not do');
 
 // ── the page's derivation, in chromium ────────────────────────────────
 const browser = await chromium.launch();

@@ -52,7 +52,7 @@ const check = (ok, what, detail) => {
     if (!ok) failed++;
 };
 
-const alive = await fetch(`${HOST}/${TAPES}/r8-solve-18.json`).then((r) => r.ok).catch(() => false);
+const alive = await fetch(`${HOST}/${TAPES}/index.json`).then((r) => r.ok).catch(() => false);
 if (!alive) {
     console.log(`SKIP: no dev server serving ${HOST}/${TAPES}/ — start one at the REPO `
         + 'ROOT with `python3 -m http.server 8000` (or pass --host=)');
@@ -246,7 +246,7 @@ async function load(name, extra = '', shotAt = null) {
     });
     page.on('pageerror', (e) => errors.push(`pageerror: ${e.message}`));
     const url = `${HOST}/frontend/modules/seedlingDemo/watch.html`
-        + `?level=4&boot=${TAPES}/r7-act2-4.json&goals=exit%3A64%2C16&solve=1&name=r8-solve-4`;
+        + `?level=4&boot=${TAPES}/r8-solve-4.json&goals=exit%3A64%2C16&solve=1&name=r8-solve-4`;
     console.log(`\n## SOURCE=SOLVE — the pane from the solve's own trace\n   ${url}`);
     await page.goto(url, { waitUntil: 'domcontentloaded' });
     /**

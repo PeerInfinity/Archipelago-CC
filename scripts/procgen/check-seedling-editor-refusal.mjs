@@ -61,7 +61,7 @@ const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name
 const HOST = arg('host', 'http://localhost:8000');
 const SHOT = arg('shot', '');
 const TAPES = 'frontend/modules/seedlingDemo/fixtures/tapes';
-const BOOT = `${TAPES}/r7-act2-11.json`;
+const BOOT = `${TAPES}/r8-solve-11.json`;
 
 let failed = 0;
 const check = (ok, what, detail) => {
@@ -73,7 +73,7 @@ const check = (ok, what, detail) => {
 const unexpectedErrors = (errors) =>
     errors.filter((e) => !/fixtures\/traces\/[^\s\]]+\.trace\.json/.test(e));
 
-const alive = await fetch(`${HOST}/${BOOT}`).then((r) => r.ok).catch(() => false);
+const alive = await fetch(`${HOST}/${TAPES}/index.json`).then((r) => r.ok).catch(() => false);
 if (!alive) {
     console.log(`SKIP: no dev server serving ${HOST}/${TAPES}/ — start one at the REPO `
         + 'ROOT with `python3 -m http.server 8000` (or pass --host=)');

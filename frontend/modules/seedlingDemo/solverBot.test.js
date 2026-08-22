@@ -599,8 +599,11 @@ describe('the refusal shapes — never a silent stall', () => {
         // no combat census. The first battery was solved against exactly
         // this — identical in every room without enemies, blind in the one
         // with them.
+        // ⛓ R9 slice 7b: `r8-solve-2` — the solver twin of the retired
+        // `r7-act2-2`, byte-equal over all eleven boot fields and the same 47
+        // ticks. This row needs only a real L2 boot to build a world from.
         const t = parseTape(JSON.parse(
-            readFileSync(join(TAPES, 'r7-act2-2.json'), 'utf8')));
+            readFileSync(join(TAPES, 'r8-solve-2.json'), 'utf8')));
         const run = createLevelRun({
             levelSource, boot: t.boot, noclip: false, noHazards: t.noHazards,
             noDamage: false, grants: t.grants, persistence: t.persistence, despawn: [],

@@ -64,7 +64,7 @@ const check = (ok, what, detail) => {
 const unexpectedErrors = (errors) =>
     errors.filter((e) => !/fixtures\/traces\/[^\s\]]+\.trace\.json/.test(e));
 
-const alive = await fetch(`${HOST}/${TAPES}/r8-hammer-control.json`)
+const alive = await fetch(`${HOST}/${TAPES}/index.json`)
     .then((r) => r.ok).catch(() => false);
 if (!alive) {
     console.log(`SKIP: no dev server serving ${HOST}/${TAPES}/ — start one at the REPO `
@@ -312,7 +312,7 @@ console.log('\n## r7-act2-4 — the chaser BOX tracks the stepped position');
     });
     page.on('pageerror', (e) => errors.push(`pageerror: ${e.message}`));
     await page.goto(`${HOST}/frontend/modules/seedlingDemo/watch.html`
-        + `?tape=${TAPES}/r7-act2-4.json&side=js&tick=0`, { waitUntil: 'domcontentloaded' });
+        + `?tape=${TAPES}/r8-solve-4.json&side=js&tick=0`, { waitUntil: 'domcontentloaded' });
     await page.waitForFunction(() => window.__editorOverlays, null, { timeout: 180000 });
 
     // The walk ledger lives on the run, which the page does not publish — so
@@ -346,7 +346,7 @@ console.log('\n## r7-act2-4 — the chaser BOX tracks the stepped position');
         (b) => b.rect.right - b.rect.x === 8 && b.rect.bottom - b.rect.y === 8));
     check(sized, '⛓ …at the census hitbox 8x8 — `chaserBoxAt`, not a page-side literal',
         withBoxes[0]?.boxes.map((b) => `${b.tag} ${b.rect.right - b.rect.x}x${b.rect.bottom - b.rect.y}`).join(', '));
-    if (SHOT) await page.locator('#canvas').screenshot({ path: `${SHOT}/r7-act2-4-chaser-box.png` });
+    if (SHOT) await page.locator('#canvas').screenshot({ path: `${SHOT}/r8-solve-4-chaser-box.png` });
     check(unexpectedErrors(errors).length === 0,
         'no page errors beyond the expected missing-sidecar 404',
         unexpectedErrors(errors).join(' | ') || `clean (${errors.length} expected)`);
