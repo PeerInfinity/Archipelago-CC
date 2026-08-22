@@ -176,7 +176,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 217,
         "browser": 73,
-        "cited": 68,
+        "cited": 70,
         "files": 236,
         "lineStyle": 19,
         "withDocblock": 236,
@@ -1781,7 +1781,9 @@ export const INSTRUMENTS = frz({
             ],
             "browser": false,
             "category": "derive",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "derive-seedling-tick0.mjs",
@@ -3527,7 +3529,9 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": true,
             "category": "plan",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "plan-seedling-r7-ends-meet.mjs",
