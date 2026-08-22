@@ -10,6 +10,8 @@
  * state — and asserts the corresponding row goes red.
  */
 
+import { readFileSync } from 'node:fs';
+
 import { describe, it, expect } from 'vitest';
 import {
     CHAIN_KINDS, L5_ARROW_BAIT, L6_BOB_DROWN, PLAYTHROUGH_CHAINS, PlaythroughError,
@@ -852,6 +854,53 @@ describe('chainGoalFindings — EARNED is measured, and the set is two-sided', (
             }))
             .filter((r) => r.endsAt !== r.sum);
         expect(bad).toEqual([]);
+    });
+
+    /**
+     * ⛓⛓⛓ R9 SLICE 11b — **THE ROW THE DERIVATION CANNOT MAKE VACUOUS**
+     * (⚖ ruling 32 D). The one above is now true by construction: `endsAt` IS
+     * the sum. This one is not, because the HEADLINE is a different recording
+     * — one run of the whole walk — and nothing here computes it. It is
+     * ENDS-MEET's own claim, gated where CI can see it rather than only on the
+     * user's GPU, and it is what reds when a segment is re-recorded and its
+     * headline is not.
+     */
+    it('⛓⛓⛓ and the SUM is the HEADLINE\'s own length — two recordings agreeing', () => {
+        const bad = PLAYTHROUGH_CHAINS
+            .map((c) => ({
+                id: c.id,
+                headline: c.headline,
+                headlineTicks: loadTape(c.headline).tick_count,
+                sum: c.segments.reduce((n, s) => n + loadTape(s).tick_count, 0),
+            }))
+            .filter((r) => r.headlineTicks !== r.sum);
+        expect(bad).toEqual([]);
+    });
+
+    /**
+     * ⛔⛔ AND NO CHAIN MAY TYPE ONE BACK IN. `cuts`, `endsAt` and a clear's
+     * `at`/`offset` are arithmetic over the tapes; a declaration that spells
+     * one out is a constant that outlives its measurement (trap 556, and
+     * §14.11/§21.6 are the two times it did). The row reads the SOURCE,
+     * because that is where the mistake would be made — a derived value that
+     * happens to agree today would pass any value-level check.
+     */
+    it('⛔⛔ the DECLARATIONS type no tick constant — cuts/endsAt/at/offset are derived', () => {
+        const src = readFileSync(
+            new URL('./playthroughWalk.js', import.meta.url), 'utf8');
+        const declarations = src.slice(
+            src.indexOf('const CHAIN_DECLARATIONS'),
+            src.indexOf('const TICK_COUNTS'),
+        );
+        expect(declarations.length).toBeGreaterThan(1000);
+        const typed = [...declarations.matchAll(
+            /^\s*(cuts|endsAt|at|offset)\s*:\s*(?:Object\.freeze\(\[)?\s*\d/gm,
+        )].map((m) => m[1]);
+        expect(typed).toEqual([]);
+        // non-vacuity: the same scan DOES find the fields it is looking for
+        // in the region that legitimately carries measurements
+        expect(declarations).toMatch(/removedAt: \d+/);
+        expect(declarations).toMatch(/measuredAt: \d+/);
     });
 
     it('⛓ THE REAL CHAIN declares exactly the rows R7 ends on', () => {

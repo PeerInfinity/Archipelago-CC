@@ -44,7 +44,7 @@
  * if its position happens to be an integer.
  */
 
-import { fixtureNames } from './fixtures/index.js';
+import { fixtureNames, loadTape } from './fixtures/index.js';
 
 export class PlaythroughError extends Error {
     constructor(message) {
@@ -775,7 +775,7 @@ export function chainPolicy(chain) {
  * If they DISAGREE that is a finding about the pin, reported by name — not
  * a failure of the chain.
  */
-export const PLAYTHROUGH_CHAINS = Object.freeze([
+const CHAIN_DECLARATIONS = Object.freeze([
     Object.freeze({
         id: 'toy-west-pair',
         why: '⛓ SLICE 2\'s PROOF OF THE MACHINERY, not of the game. Two adjacent '
@@ -795,8 +795,6 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
          * position no boot reproduces and a state `requireCalm` would have
          * to be switched off to accept.
          */
-        cuts: Object.freeze([61]),
-        endsAt: 109,
         /*
          * ⛓ NO `seamBuildCost`, AND ITS ABSENCE IS THE RESULT. Slice 2 had to
          * declare one — a segment boundary duplicated one L94 build (1562
@@ -918,16 +916,15 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
      * probe, and the game accepted it at zero hits.
      */
     ...[
-        Object.freeze({ seg: 1, ends: 183, earns: [] }),
-        Object.freeze({ seg: 2, ends: 47, earns: [] }),
-        Object.freeze({ seg: 3, ends: 245, earns: [] }),
-        Object.freeze({ seg: 4, ends: 255, earns: [] }),
+        Object.freeze({ seg: 1, earns: [] }),
+        Object.freeze({ seg: 2, earns: [] }),
+        Object.freeze({ seg: 3, earns: [] }),
+        Object.freeze({ seg: 4, earns: [] }),
         Object.freeze({
             seg: 5,
-            ends: 558,
             earns: [],
             clears: Object.freeze([Object.freeze({
-                level: 5, tag: 0, at: 427, source: 'model',
+                level: 5, tag: 0, source: 'model',
                 evidence: Object.freeze({
                     removedAt: 326,
                     fade: 101,
@@ -937,14 +934,13 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
                 }),
             })]),
         }),
-        Object.freeze({ seg: 6, ends: 294, earns: [] }),
+        Object.freeze({ seg: 6, earns: [] }),
         Object.freeze({
             seg: 8,
-            ends: 827,
             earns: [],
             clears: Object.freeze([
                 Object.freeze({
-                    level: 8, tag: 0, at: 246, source: 'game',
+                    level: 8, tag: 0, source: 'game',
                     evidence: Object.freeze({
                         carriesAt: 246,
                         absentAt: 245,
@@ -954,7 +950,7 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
                     }),
                 }),
                 Object.freeze({
-                    level: 8, tag: 1, at: 645, source: 'game',
+                    level: 8, tag: 1, source: 'game',
                     evidence: Object.freeze({
                         carriesAt: 645,
                         absentAt: 644,
@@ -964,11 +960,11 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
                 }),
             ]),
         }),
-        Object.freeze({ seg: 7, ends: 146, earns: [] }),
-        Object.freeze({ seg: 9, ends: 122, earns: [] }),
-        Object.freeze({ seg: 10, ends: 90, earns: ['sword@L10'] }),
-        Object.freeze({ seg: 11, ends: 87, earns: ['chest@L11'] }),
-    ].map(({ seg, ends, earns, clears = [] }) => Object.freeze({
+        Object.freeze({ seg: 7, earns: [] }),
+        Object.freeze({ seg: 9, earns: [] }),
+        Object.freeze({ seg: 10, earns: ['sword@L10'] }),
+        Object.freeze({ seg: 11, earns: ['chest@L11'] }),
+    ].map(({ seg, earns, clears = [] }) => Object.freeze({
         id: `r8-battery-${seg}`,
         kind: 'staged',
         why: `R8 slice ${[5, 8].includes(seg) ? '5' : ([4, 6].includes(seg) ? '3b' : '2')}: `
@@ -989,8 +985,6 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
          * clears nothing.
          */
         clears: Object.freeze(clears),
-        cuts: Object.freeze([]),
-        endsAt: ends,
     })),
     /**
      * ⛓⛓⛓ R8 SLICE 6 — THE FIRST STAGED CHAIN THAT IS **NOT** AN act2
@@ -1033,8 +1027,6 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
         segments: Object.freeze(['r8-solve-20']),
         earns: Object.freeze([]),
         clears: Object.freeze([]),
-        cuts: Object.freeze([]),
-        endsAt: 365,
     }),
 
     /**
@@ -1124,7 +1116,7 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
         segments: Object.freeze(['r8-solve-18', 'r8-d2-19', 'r8-d2-20']),
         earns: Object.freeze([]),
         clears: Object.freeze([Object.freeze({
-            level: 18, tag: 0, at: 393, source: 'model',
+            level: 18, tag: 0, source: 'model',
             evidence: Object.freeze({
                 removedAt: 292,
                 fade: 101,
@@ -1135,8 +1127,6 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
                     + 'tape and the re-derived headline computes again',
             }),
         })]),
-        cuts: Object.freeze([541, 1405]),
-        endsAt: 2186,
     }),
     /**
      * ⛓⛓⛓ R9 SLICE 6 — **THE TRUE-START SOLVER CHAIN**, ⚖ ruling 11 (user,
@@ -1199,7 +1189,7 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
          */
         clears: Object.freeze([
             Object.freeze({
-                level: 5, tag: 0, at: 427, source: 'model',
+                level: 5, tag: 0, source: 'model',
                 evidence: Object.freeze({
                     removedAt: 326,
                     fade: 101,
@@ -1209,7 +1199,7 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
                 }),
             }),
             Object.freeze({
-                level: 5, tag: 0, at: 1157, source: 'model',
+                level: 5, tag: 0, source: 'model',
                 evidence: Object.freeze({
                     removedAt: 1056,
                     fade: 101,
@@ -1219,7 +1209,7 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
                 }),
             }),
             Object.freeze({
-                level: 8, tag: 0, at: 246, source: 'game',
+                level: 8, tag: 0, source: 'game',
                 evidence: Object.freeze({
                     carriesAt: 246,
                     absentAt: 245,
@@ -1229,7 +1219,7 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
                 }),
             }),
             Object.freeze({
-                level: 8, tag: 1, at: 645, source: 'game',
+                level: 8, tag: 1, source: 'game',
                 evidence: Object.freeze({
                     carriesAt: 645,
                     absentAt: 644,
@@ -1238,18 +1228,18 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
                 }),
             }),
             Object.freeze({
-                level: 8, tag: 0, at: 1974, source: 'transported',
+                level: 8, tag: 0, source: 'transported',
                 evidence: Object.freeze({
-                    from: 'r8-solve-8', measuredAt: 246, offset: 1728,
+                    from: 'r8-solve-8', measuredAt: 246,
                     why: 'the headline walks L8 identically to `r8-solve-8` — asserted '
                         + 'held set for held set for 247 ticks by the producer\'s own '
                         + 'oracle guard — so this is that measurement, rebased',
                 }),
             }),
             Object.freeze({
-                level: 8, tag: 1, at: 2373, source: 'transported',
+                level: 8, tag: 1, source: 'transported',
                 evidence: Object.freeze({
-                    from: 'r8-solve-8', measuredAt: 645, offset: 1728,
+                    from: 'r8-solve-8', measuredAt: 645,
                     why: 'the second `SandTrap`, the same transport — identical for 646 '
                         + 'ticks',
                 }),
@@ -1260,11 +1250,114 @@ export const PLAYTHROUGH_CHAINS = Object.freeze([
          * `solve-seedling-r9-campaign.mjs` rather than typed here — the
          * ends-meet arithmetic is what makes a CUT a measurement.
          */
-        cuts: Object.freeze([183, 230, 475, 730, 1288, 1582, 1728, 2555, 2677, 2767,
-            2886, 3112, 3159, 3396]),
-        endsAt: 3470,
     }),
 ]);
+
+/**
+ * ⛓⛓⛓ R9 SLICE 11b — **THE CHAIN'S TICKS ARE READ OFF ITS TAPES, NEVER
+ * TYPED.** ⚖ Ruling 32 D, ⚖ ruling 17.
+ *
+ * ── ⛔⛔ WHAT WENT WRONG WHEN THEY WERE TYPED — trap 556 ───────────────
+ *
+ * `cuts`, `endsAt` and a clear's `at` are ARITHMETIC over the segment tapes,
+ * and until this slice all three were hand-written here. R9 slice 3 moved
+ * `r8-solve-4` from 253 ticks to 255 and left `r8-battery-4`'s `endsAt` at
+ * 253, so `chainSpans` sliced the wrong window for four slices — silently
+ * (§14.11). R9 slice 11 re-recorded `r8-solve-18` and four roster rows went
+ * red on constants describing the OLD walk, three of them complaining from
+ * both sides at once (§21.6). Neither was a bug in the arithmetic; both were
+ * a constant outliving the measurement it summarised.
+ *
+ * ⇒ the declaration keeps what a human DECIDES — `segments`, `headline`,
+ * `kind`, `earns`, `why`, the `walk`, and each clear's `source` and
+ * `evidence` (the MEASUREMENTS: `removedAt`, `fade`, `carriesAt`,
+ * `absentAt`, `measuredAt`) — and everything that is a SUM is computed here,
+ * at load, from the tapes on disk:
+ *
+ *   `cuts`     the running total of the segments' own `tick_count`s
+ *   `endsAt`   that total, all segments in
+ *   `at`       `removedAt + fade` (model) · `carriesAt` (game) ·
+ *              `measuredAt + offset` (transported)
+ *   `offset`   the transported row's own rebase — the span start of the
+ *              segment its `evidence.from` names, which IS a cut. Leaving it
+ *              typed would have kept exactly one constant that a re-record
+ *              decays, in the row whose whole purpose is to travel.
+ *
+ * ⛓ WHAT THIS TURNS THE ENDS-MEET ROWS INTO, said plainly. `endsAt === sum`
+ * is now true by construction inside one process; the claim that still has
+ * content is `sum === headline.tick_count` — the SEGMENTS agree with the
+ * HEADLINE, which is a statement about two different recordings and is what
+ * ENDS-MEET always meant. `chainFindings`' arithmetic row asserts exactly
+ * that, and `playthroughAcceptance.test.js` asserts it roster-wide where CI
+ * can see it. Likewise `stagedClearFindings`' half-3 arithmetic no longer
+ * discriminates the TICK (it defines it) and still discriminates the
+ * evidence's COMPLETENESS — `absentAt === at - 1`, a finite `measuredAt`, a
+ * named `from`; the tick's own check is halves 1 and 2, which match the
+ * derived `at` against what a TAPE declares. That is a stronger check than
+ * the one it replaces, because a tape cannot be edited from here.
+ *
+ * ⚠ COST: 25 tapes, measured at 40 ms once per process. `loadTape` is the
+ * same reader every consumer uses, so there is no second parse of the truth.
+ */
+const TICK_COUNTS = new Map();
+
+/** One segment's own length, from the committed tape. */
+function segmentTicks(name) {
+    if (!TICK_COUNTS.has(name)) TICK_COUNTS.set(name, loadTape(name).tick_count);
+    return TICK_COUNTS.get(name);
+}
+
+/**
+ * A clear's tick, from the parts its `evidence` already carries.
+ *
+ * An unknown `source` returns `undefined` rather than a guess —
+ * `stagedClearFindings` names it as "not a tick source" and lists the three
+ * that are, which is a better answer than a number nobody can defend.
+ */
+function derivedClear(clear, startOf) {
+    const e = clear.evidence ?? {};
+    const row = (at, evidence) => Object.freeze({
+        level: clear.level, tag: clear.tag, at, source: clear.source, evidence,
+    });
+    if (clear.source === 'model') return row(e.removedAt + e.fade, e);
+    if (clear.source === 'game') return row(e.carriesAt, e);
+    if (clear.source === 'transported') {
+        const offset = startOf(e.from);
+        return row(offset === undefined ? undefined : e.measuredAt + offset,
+            Object.freeze({
+                from: e.from, measuredAt: e.measuredAt, offset, why: e.why,
+            }));
+    }
+    return row(undefined, e);
+}
+
+/** One declaration plus the numbers its own tapes imply. */
+function withDerivedTicks(entry) {
+    const counts = entry.segments.map(segmentTicks);
+    const cuts = [];
+    let run = 0;
+    for (let i = 0; i < counts.length - 1; i += 1) {
+        run += counts[i];
+        cuts.push(run);
+    }
+    const endsAt = counts.reduce((n, c) => n + c, 0);
+    const startOf = (name) => {
+        const i = entry.segments.indexOf(name);
+        return i < 0 ? undefined : counts.slice(0, i).reduce((n, c) => n + c, 0);
+    };
+    return Object.freeze({
+        ...entry,
+        clears: Object.freeze((entry.clears ?? []).map((c) => derivedClear(c, startOf))),
+        cuts: Object.freeze(cuts),
+        endsAt,
+    });
+}
+
+/**
+ * ⛔ THE CHAINS AS CONSUMERS SEE THEM — every declaration above, with its
+ * ticks derived. Nothing else reads `CHAIN_DECLARATIONS`.
+ */
+export const PLAYTHROUGH_CHAINS = Object.freeze(CHAIN_DECLARATIONS.map(withDerivedTicks));
 
 /**
  * A chain's segment boundaries as `[from, to)` spans. `[0, cut0)`,

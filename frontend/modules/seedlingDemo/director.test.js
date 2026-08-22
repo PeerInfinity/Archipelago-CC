@@ -547,6 +547,43 @@ describe('⛓⛓⛓ the page-side chain table is CHECKED against PLAYTHROUGH_CHA
         // ⛓ R9 slice 3: THREE segments — `r8-solve-18` promoted in front.
         expect(PAGE_CHAINS['r8-d2']).toEqual(['r8-solve-18', 'r8-d2-19', 'r8-d2-20']);
     });
+
+    /**
+     * ⛓⛓⛓ R9 SLICE 11b — **AND THE PAGE COPY CARRIES NO TICK AT ALL**
+     * (⚖ ruling 32 D). `cuts`, `endsAt` and a clear's `at` are now derived from
+     * the tapes on the node side; the browser cannot read tapes, so the
+     * temptation is to mirror the NUMBERS here — and a mirrored number is the
+     * exact constant trap 556 is about, one boundary further from the thing
+     * that would move it. The page table holds NAMES only, and this row is what
+     * says so. What the page needs about ticks it asks the tape it is playing.
+     */
+    it('⛔⛔ holds NAMES only — no cut, endsAt or clear tick is mirrored here', async () => {
+        const src = readFileSync(new URL('./director.js', import.meta.url), 'utf8');
+        const tables = src.slice(
+            src.indexOf('export const PAGE_CHAINS'),
+            src.indexOf('export const CAMPAIGN_REQUIREMENTS'),
+        );
+        expect(tables.length).toBeGreaterThan(1000);
+        expect(tables).not.toMatch(/\b(cuts|endsAt|removedAt|measuredAt|carriesAt)\b/);
+        // non-vacuity: the same slice DOES contain the names it is meant to
+        expect(tables).toMatch(/'r8-solve-18'/);
+    });
+
+    it('⛓ every page-side chain id has DERIVED ticks on the node side', async () => {
+        const { PLAYTHROUGH_CHAINS } = await import('./playthroughWalk.js');
+        const byId = new Map(PLAYTHROUGH_CHAINS.map((c) => [c.id, c]));
+        for (const id of Object.keys(PAGE_CHAINS)) {
+            const c = byId.get(id);
+            expect(Number.isFinite(c.endsAt)).toBe(true);
+            expect(c.cuts.length).toBe(c.segments.length - 1);
+            // the spans a page-side sequence would be sliced by are contiguous
+            // and end exactly where the chain does
+            const bounds = [0, ...c.cuts, c.endsAt];
+            for (let i = 1; i < bounds.length; i += 1) {
+                expect(bounds[i]).toBeGreaterThan(bounds[i - 1]);
+            }
+        }
+    });
 });
 
 /**

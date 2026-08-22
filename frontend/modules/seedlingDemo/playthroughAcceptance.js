@@ -302,7 +302,19 @@ export function stagedClearFindings(chain, tapes) {
                     + 'no caller reads like a ledger that is empty)',
         });
     }
-    // ── half 3: the EVIDENCE is checkable, per source ─────────────────
+    /**
+     * ── half 3: the EVIDENCE is checkable, per source ─────────────────
+     *
+     * ⛓ R9 SLICE 11b, said plainly (⚖ ruling 32 D): `at` is now DERIVED from
+     * these very parts, so the arithmetic conjunct below is true by
+     * construction and no longer discriminates the TICK. What each row still
+     * discriminates is the evidence's COMPLETENESS — `absentAt === at - 1`
+     * for a game row, a finite `measuredAt` and a named `from` for a
+     * transported one, finite parts for a model one — and the tick itself is
+     * checked by halves 1 and 2 against what a TAPE declares, which is a
+     * source this file cannot edit. The arithmetic is kept in the row's TEXT
+     * because a reader of the gate output needs to see the parts.
+     */
     for (const p of provenance) {
         const e = p.evidence ?? {};
         let ok = false;
@@ -676,12 +688,24 @@ export function chainFindings(chain, tapes, replayed) {
      * `r8-battery-4`, so this is a real invariant and not a rule fitted to one
      * defect. Trap 495's family — a typed count decays unless something
      * derives it.
+     *
+     * ⛓⛓ R9 SLICE 11b — **AND SOMETHING NOW DERIVES IT** (⚖ ruling 32 D):
+     * `playthroughWalk` computes `endsAt` from the tapes at load, so this row
+     * no longer discriminates a TYPED bound — there is none left to decay.
+     * What it still discriminates is named in its own detail: the tapes the
+     * SWEEP loaded against the tapes the chain derived from, two readers of
+     * the same directory. ⛔ IT STAYS BECAUSE A DERIVATION CAN BE VACUOUS TOO
+     * — if `withDerivedTicks` ever stopped summing the segments this row is
+     * what says so. The claim with real content moved one line up: `sum ===
+     * headline.tick_count`, two different recordings agreeing, which is what
+     * ENDS-MEET always meant.
      */
     add(`chain ${chain.id}: the declared endsAt IS the tapes' own length`,
         chain.endsAt === sum,
-        `endsAt ${chain.endsAt} vs the segments' ${sum} — a bound that outlives a `
-        + 're-record slices the wrong window and every claim inside it gets weaker '
-        + 'without saying so');
+        `endsAt ${chain.endsAt} vs the segments' ${sum} — DERIVED from the tapes since `
+        + 'R9 slice 11b, so this compares the sweep\'s own tape map against the chain\'s '
+        + 'and reds if the derivation ever stops being the sum; the claim about two '
+        + 'RECORDINGS is the arithmetic row above');
 
     // ── 2/3. PER SEGMENT: the stream slice, the calm arrival, the seam ─
     let offset = 0;
