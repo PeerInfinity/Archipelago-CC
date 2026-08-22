@@ -135,6 +135,11 @@ export const INSTRUMENTS = frz({
         {
             "browser": 0,
             "count": 1,
+            "id": "rerecord"
+        },
+        {
+            "browser": 0,
+            "count": 1,
             "id": "run"
         },
         {
@@ -174,13 +179,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 217,
+        "blockStyle": 218,
         "browser": 73,
         "cited": 70,
-        "files": 236,
+        "files": 237,
         "lineStyle": 19,
-        "withDocblock": 236,
-        "withFlags": 143
+        "withDocblock": 237,
+        "withFlags": 144
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -5103,6 +5108,55 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Region-library validate/restamp CLI — the hand-authoring helper (region-library-plan.md ruling 2, F1).",
             "path": "scripts/procgen/region-library-validate.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "rerecord",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "dry-run",
+                "from",
+                "to"
+            ],
+            "file": "rerecord-seedling-campaign.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "dry-run"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "from"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "no-cache"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "run-dir"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "to"
+                }
+            ],
+            "oneLiner": "rerecord-seedling-campaign — **ONE COMMAND THAT RE-DERIVES EVERY BOOT OF EVERY MULTI-SEGMENT CHAIN FROM THE GAME, IN CHAIN ORDER, WRITES EXACTLY THE PREDICTED SET, RECORDS ONCE, AND PROVES THE CHAINS PLAY.** ⚖ Ruling 21 (user, 2026-08-21: *\"a way to streamline the process of re-recording the whole campaign chain fro…",
+            "path": "scripts/procgen/rerecord-seedling-campaign.mjs"
         },
         {
             "argvHelpers": [],
