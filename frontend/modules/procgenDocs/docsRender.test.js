@@ -96,7 +96,13 @@ describe('⛓⛓ the anchors — two readers, 607 headings, one answer', () => {
         //   SIX headings, its own plus five sub-sections (which tapes are
         //   covered, the choreography record, ⚖ ruling 17, the decayed bound,
         //   the numbers). A re-pin, not a widening.
-        expect(total).toBe(635);
+        // ⛓ 635 → 642: R9 slice 7b's § (the deletion executed) — SEVEN headings,
+        //   its own plus six sub-sections (the nine are gone, the four
+        //   silent-green gates, the survey, the campaign chain's refusal, the
+        //   deadline, the gates). Its `#### Gates` is the THIRD heading of that
+        //   text in this document, so the -N rule reaches a TENTH suffix — see
+        //   `ghSlug.test.js`. A re-pin, not a widening.
+        expect(total).toBe(642);
     });
 
     it('⛔ uses OUR rule, not marked\'s slugger — they differ, and here is where', () => {
@@ -268,9 +274,12 @@ describe('⛓ the biggest document — the one the budget is about', () => {
         //   Six headings again, and one of them (`#### The numbers`) is the
         //   SECOND heading of that text in this document, so it takes the -N
         //   rule's ninth suffix — see `ghSlug.test.js`.
+        // ⛓ 422 → 429: R9 slice 7b's § — the deletion executed. Seven headings,
+        //   and its `#### Gates` is the THIRD of that text here, so it takes the
+        //   -N rule's TENTH suffix.
         const ids = idsOf(RENDERS.get('seedling-bot.md').html);
-        expect(ids).toHaveLength(422);
-        expect(new Set(ids).size).toBe(422);
+        expect(ids).toHaveLength(429);
+        expect(new Set(ids).size).toBe(429);
         expect(ids.filter((i) => i !== ghSlug(i))).toEqual([]);
     });
 

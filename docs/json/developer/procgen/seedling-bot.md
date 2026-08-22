@@ -12177,3 +12177,156 @@ byte-inertia set as VALUES and every slice rebuilt the commands in a scratchpad
 that was then discarded; three rows could no longer be reproduced at all. The
 commands live in the repo now, with the published values beside them and the
 three unreproducible rows marked.
+
+### R9 slice 7b: the deletion, four gates that would have gone silent-green, and the campaign chain's first real-GPU refusal
+
+Slice 7 measured the retirement and stopped. Slice 7b executes it, on a clean
+baseline, and the irreversible half turned out to be the least interesting thing
+in the slice.
+
+#### The nine are gone; the three stay
+
+**Roster 159 → 150.** Eighteen files left in one commit — `r7-act2-1, -2, -3,
+-4, -7, -8, -9, -10, -11`, each tape and each expectation — plus the regenerated
+`fixtures/tapes/index.json`. There were **no `fixtures/traces/` rows** for any of
+them: every trace sidecar on the roster is the solver's, so the deletion is 18
+files and not the 27 the work list implied. `r7-act2-5`, `r7-act2-6` and
+`r7-act2-full` were not touched; their bytes are recorded before and after.
+
+The retirement is a **guarded constant, not a typed list**.
+`R8_ENEMY_BRIDGE.retiredTapes` sits beside `exposedTapes` — which is not edited,
+because it is R8's PREDICTION and deleting a row from it would rewrite what was
+predicted — and the assertion checks the subtraction against the DIRECTORY three
+ways. A retired name that comes back reds by name; a retirement row with no
+prediction behind it reds by name; a name on neither list that is exposed on disk
+reds by name. All three measured by mutant.
+
+⛓ **The producers did not move, and that is the headline.** All six
+`--check` outputs are byte-identical to slice 7's close (battery
+`75adf82610fa7ea21f6822590a3b0330`, tail `9a6a31925cb5204eee4cb0ad66febed6`),
+and the whole identity block reproduces row for row. Slice 7 re-pointed every
+staged boot off the hand tapes onto their solver twins; this deletion proves it
+by removal.
+
+#### Four acceptance gates would have gone silent-green
+
+The deletion mutant — the nine removed with no reader paid — is the enumeration,
+and it found something a grep could not. Four of the eight local browser gates
+open with
+
+```js
+const alive = await fetch(`${HOST}/${TAPES}/<a hand tape>.json`).then((r) => r.ok);
+if (!alive) { console.log('SKIP: no dev server …'); process.exit(0); }
+```
+
+so a tape that is **gone** is indistinguishable from a server nobody started.
+`check-seedling-editor-boot`, `-refusal`, `-solve` and `-world` each printed SKIP
+and **exited 0**. Four acceptance rows would have become permanently passing
+no-ops the moment their subject retired, and nothing on any checklist tells SKIP
+from PASS.
+
+Every probe now fetches `fixtures/tapes/index.json` — the generated manifest,
+whose absence really does mean "no server". Measured on the mutant: a missing
+boot now exits 1 naming the path.
+
+The same mutant found **two readers no work list named** — a staged-boot
+comparison in `r8Acceptance.test.js` and a combat-census refusal in
+`solverBot.test.js`, each reading a hand tape straight off disk — and **two gates
+that had been red for slices** because nothing runs them: `-boot` asserted a page
+title that moved when the true-start default did, and `-solve` pinned
+`COMMITTED_TICKS = 253` against a tape R9 slice 3 had re-recorded to 255, so it
+asserted a gap that no longer existed and went red *on a repair*. Both paid; the
+second by reading the count off the tape instead of typing it beside the
+derivation.
+
+#### The survey stops printing a file it never opened
+
+`survey-seedling-route.mjs --table` reported provenance by NAME without reading
+the tape, so a retired fixture produced a complete-looking deliverable naming a
+file that was not on disk — and exited 0. The full run, meanwhile, reddened ten
+steps to `CRASHED — unclassified`, every child dying on the same `ENOENT`, with
+the cause named nowhere.
+
+One guard fixes both. Every boot source is proved to exist at load, in every
+mode, and a dead one refuses with exit 2 naming the file and every step that
+wanted it. The list is derived from the route rather than typed. The classifier
+gains a `MISSING-FIXTURE` family as a second line of defence. On a healthy tree
+the survey is byte-inert: 29 rows, verdict, tick count, boot source and family
+all identical, headline 23/29.
+
+#### The campaign chain plays on the real GPU, and stops at boundary 5/15
+
+The whole true-start chain had never been played by the GAME. `?tapes=r9-campaign
+&side=wasm` — 15 windows, 3470 ticks — was named as the obvious next Windows row
+twice and never run. It ran.
+
+**Five windows played and every one is clean.** Boundaries 0–4 admitted, the
+player did not drift at any of them, each continuation was handed
+`seam.time + 21`, and the drains are each tape's own `tick_count + 1`:
+184 · 48 · 246 · 256 · 559. Window 5 set aside its own forward declaration
+`5:0@427` by name.
+
+**Window 6 was refused at the boundary, before anything played:**
+
+> `r8-solve-6`: the declared `rng` is not the live world's — tape
+> `{seed: 514746467, split: false, cosmetic: 0, fp: 341033166}` vs live
+> `{seed: 1196897329, split: false, cosmetic: 0, fp: 341033166}`.
+
+`r8-solve-6` declares **byte-identically the same `rng` as `r7-act2-6`**, the
+retired hand tape it was staged from. Swept over all ten pairs: every
+`r8-solve-1..10` still carries the hand chain's stream position, while their
+`seam.time` values *were* re-recorded (5609 vs 5701, 6187 vs 6533, 6501 vs 6908,
+6667 vs 7074, 7514 vs 8184, 7656 vs 8326). The boot blocks moved and the `rng`
+did not.
+
+That is also why it refuses at five and not at one. The solver's walks are
+tick-identical to the hand's through L3, so the live stream is still where the
+hand chain left it at every boundary up to 4. L4 is 255 ticks against 347 and L5
+is 558 against 812 — L5 is the arrow bait, where kills draw — so the live stream
+parts from the declaration inside window 5, and the first boundary that can see
+it is 5/15. The `fp` is equal on both sides; only the seed differs. Two worlds at
+the same position in different streams.
+
+⛔ **No JS row could have found this.** The page's own sequence gate plays all
+fifteen windows in chromium and reports *"14 boundaries; nothing refused"*,
+because the model does not simulate the game's rng stream at all — it compares
+declaration against declaration. Only the game holds a live seed that can
+contradict one.
+
+The arm asserts the refusal rather than a green it cannot earn — the shape slice
+3 gave the chain arm and slice 6 inverted when `(d′)` closed it, run the other
+way. It will invert again when the chain continues. The cure is a re-record of
+five tapes' `rng` from the campaign's own live latch, which moves tapes and is
+therefore an ask, not a slice's to take. How many boundaries lie behind the first
+refusal is unmeasured.
+
+#### A refusal used to cost the whole deadline
+
+The first campaign run sat on a dead page for its full derived deadline and would
+have reported a `TimeoutError` — a sentence about the clock, with the page's own
+refusal, up within seconds, nowhere in it. A human watching the screen knew what
+had happened twenty-five minutes before the harness would have.
+
+Two changes, both general. The Windows driver now **flushes its record after
+every step** rather than once at the end, so a killed run leaves everything it
+gathered — the diagnostic that finally caught this refusal had the stage list,
+the refusal and all fifteen window records in memory and no file on disk. And a
+step may name an **abort expression**: both chain arms and the sequence arm stop
+waiting when `__watch.wasm.refusal` goes non-null, skip the later waits, still
+run their reads, and report `aborted` as a third outcome beside completed and
+crashed. The same refusal now arrives in seconds, as data, naming the tape and
+both seeds.
+
+#### Gates
+
+Identity block identical row for row. Six producers byte-identical. Reference
+MATCH, 235 instruments. Survey 23/29 with every row unchanged. Sequence 24/0.
+Demos all passed. vitest 182 files / 6767 — the −27 from 6794 is
+`tapeIndexManifest` (one row per tape, −9) and `tapeRunner` (two rows per tape,
+−18), no file gained or lost. The eight local browser gates **262 / 0 / 0 SKIP**,
+up from 260/2. On Windows Chrome: the ship gate **131 / 0** including the new
+campaign arm's 26 rows; the pages gate **20 / 0**, its picker reporting
+`150 option(s), roster: manifest`; and the solver-roster differential
+**768 / 0 / 67** — `+14` on slice 7's own `endsAt` invariant, one row per chain
+over the fourteen chains that remain, and `−1` skip because the chain slice 7
+retired is no longer there to skip. Zero failures: no solver tape moved.

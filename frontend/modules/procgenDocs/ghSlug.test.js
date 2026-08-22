@@ -123,6 +123,11 @@ describe('the corpus — what this repo can and cannot check', () => {
             //   that text in this document — slice 6's § has the first. The
             //   suffix rule reaches a NINTH slug and still nothing links to one.
             'the-numbers-1',
+            // ⛓ R9 slice 7b: its `#### Gates` is the THIRD heading of that text
+            //   in this document — the R8 close has the first, R9 slice 6's §
+            //   the second. The suffix rule reaches a TENTH slug and STILL
+            //   nothing links to one.
+            'gates-2',
         ]);
 
         /** ⛓ Every fragment any tracked doc links to, same-doc or cross-doc. */
