@@ -3657,7 +3657,30 @@ in `3b09020f9`, CI green there. ⚖ **RULING 28 (user, mid-slice): the `.gitigno
 REVERSED** — upstream ignore rules are not edited; use negation exceptions. Traps 549–553.
 Kickoff **§20** is the as-built.
 
-**NEXT in R9: slice 11 = L14's CAMERA BAND (the refusal `campaign-frontier.json` names).
+⛓⛓⛓ **R9 SLICE 11 SHIPPED 2026-08-22** (`5d8ded3b3` · `143846faf` · `4ebacf533`, three
+commits) — ⚖ ruling 29's high-priority fix, taken BEFORE L14 on the user's own sequencing.
+**Trap 498 PAID**: `solverBot.facingToward` now answers in `presses.js`'s numbering (the
+constants IMPORTED — no literal 1/3 left), `FACING_KEYS` re-keyed to match, and slice 4's
+correctly-numbered TWIN deleted so the `break` verb and the kill arm read ONE integer out of
+ONE map. The pair is EXPORTED for the agreement claim — no public consumer exposes the
+integer, so only an exported pair can assert it against BOTH vocabularies, which is the hole
+the defect lived in. **`r8-solve-18` 573 → 541 ticks**, re-recorded on the real GPU with
+`save.time` game 9168 = model 9168; `r8-d2` 2218 → 2186; `r8-d2-19`/`-20` walks HELD (only
+`seed` + `time`, −32 each). Movers SEALED at a pristine tree → MEASURED → RE-RECORDED, and
+**nothing outside the seal moved**. ⛓ The sharpest number is the press count: SIX presses
+became FIVE, and since two Spinners at `hitsMax` 3 need six landed hits while one swing
+cannot land twice on one body, **one swing landed on BOTH bodies** — the opportunity a
+vertical slash rect makes reachable and the old numbering could never accept. Gates:
+roster `--win` 768/0 (26 names DERIVED), ship 245/0, sequence 36/0, unfiltered vitest
+332 files / 10194, pipeline S1..S5 wrote NOTHING. `identity-block.sh`'s header RE-SEALED with
+the commit on every value (trap 549's cure). Traps 554–557. Kickoff **§21** is the as-built.
+⚠ Two numbers NOT proven and said so in §21.9: the roster SKIP reads 65 not the quoted 67
+(§16.11's "+2" looks double-counted; not re-run at the baseline), and one ship-gate red
+(230/15) that did NOT reproduce.
+
+**NEXT in R9: slice 12 = L14** (⚖ ruling 29 — PARRY-WALK primary, HUNT fallback,
+`KILL_ARM_POLICY.Bob` → `modelled`; the `facingToward` blocker is now GONE), then
+slice 13 = the watch-page five.
 ⚖ ALSO OPEN: the v10 despawn channel has two witnesses and both are hand tapes — record a
 solver despawn, keep them, or retire the channel; and `botStart`'s OTHER two "declares
 something" gates (the seam block, the three rng writes) are an ASK — neither has a
