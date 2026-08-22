@@ -3696,14 +3696,16 @@ the segment tapes; the derived numbers are **byte-identical to the typed ones on
 chains**, and the two rows the derivation makes vacuous are NAMED rather than left looking
 like checks. **E** two docblock sentences. All five mutants fired. Gates: sequence 36/0,
 ship **245/0 first run**, `r7-ends-meet --check` reproduces `75cf816a…` byte for byte,
-reference ALL MATCH at 239 instruments, unfiltered vitest **333 / 10215** (+1 file / +21,
+reference ALL MATCH at 239 instruments, unfiltered vitest **333 / 10216** (+1 file / +22,
 arithmetic closes exactly). ⛔ **TWO PRE-EXISTING REDS FOUND, BOTH BY B AND BOTH SLICE 11's**:
 `check-procgen-demos.mjs` is **194/2** (entries `dropped-element` seed 1 and `arena` seed 6 —
 exactly the certification flips slice 11's own §21.4 measured; confirmed by control), and
 `plan-seedling-r7-act2.mjs --check` has been broken since `706886397` (`no chain
-"act2-the-sword"`). Both left as RESIDUE. Kickoff **§21b** is the as-built. ⚠ Ruling 32 **F**
-(targeted roster `--only=`) is still the user's and NOT shipped — B derives exactly that
-list, so it is one flag away.
+"act2-the-sword"`). Both left as RESIDUE. Kickoff **§21b** is the as-built. ⚠ Ruling 32 **F** = ⚖ **ruling 33**
+(targeted roster `--only=`) is NOT shipped, but its input now is: `--only-list` prints the
+selection as one line, and on slice 11's range it emits exactly the **22** names §16.11
+derived by hand. The CALLING CONVENTION is residue — no slice has run
+`--only=$(… --only-list)` yet.
 
 **NEXT in R9: slice 12 = L14** (⚖ ruling 29 — PARRY-WALK primary, HUNT fallback,
 `KILL_ARM_POLICY.Bob` → `modelled`; the `facingToward` blocker is now GONE), then
