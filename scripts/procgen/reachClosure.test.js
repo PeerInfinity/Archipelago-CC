@@ -138,6 +138,31 @@ describe('⛔⛔ THE SLICE-11 REPRODUCTION — the four rows a depth-1 grep miss
         expect(report.chains).toContain('r8-d2');
     });
 
+    /**
+     * ⚖ RULING 33 — the roster gate's per-slice `--only=` comes from HERE. §16.11
+     * derived slice 7's selection by hand as *"every tape whose own description
+     * names a solve-seedling-* producer (22), plus the four non-solve witnesses
+     * §14.0.13 keeps by name"*. The reach reproduces that 22 out of the graph.
+     */
+    it('⛓ the reached tapes, widened to whole chains, ARE §16.11\'s derived 22', async () => {
+        const report = await reachReport(changed, { repo: REPO });
+        const { PLAYTHROUGH_CHAINS } = await import(
+            '../../frontend/modules/seedlingDemo/playthroughWalk.js');
+        const names = new Set(report.tapes.map((t) => t.tape));
+        for (const c of PLAYTHROUGH_CHAINS) {
+            if (!report.chains.includes(c.id)) continue;
+            for (const n of c.segments) names.add(n);
+            names.add(c.headline);
+        }
+        expect(names.size).toBe(22);
+        for (const n of ['r8-solve-18', 'r8-d2', 'r8-d2-19', 'r8-d2-20']) {
+            expect([...names]).toContain(n);
+        }
+        // ⛔ a chain's siblings ride in even where the change did not reach their
+        // own producer: a moved segment moves the headline it sums into.
+        expect([...names]).toContain('r9-campaign');
+    });
+
     it('⚠ and it is an UPPER BOUND: it also names rows slice 11 measured as HELD', async () => {
         const report = await reachReport(changed, { repo: REPO });
         const labels = report.identity.map((r) => r.label);

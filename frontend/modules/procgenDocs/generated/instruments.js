@@ -4753,6 +4753,12 @@ export const INSTRUMENTS = frz({
                 },
                 {
                     "how": [
+                        "flag"
+                    ],
+                    "name": "only-list"
+                },
+                {
+                    "how": [
                         "arg"
                     ],
                     "name": "range"

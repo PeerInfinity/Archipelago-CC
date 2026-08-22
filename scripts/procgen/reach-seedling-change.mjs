@@ -33,6 +33,15 @@
  *   node scripts/procgen/reach-seedling-change.mjs --symbol=<file>#<export>
  *   node scripts/procgen/reach-seedling-change.mjs --range=A..B --check=seal.txt
  *   …--json                                        machine-readable, same data
+ *   …--only-list                                   the `--only=` argument itself
+ *
+ * ⛓ `--only-list` prints ONE line — the roster gate's selection for this change,
+ * ⚖ ruling 33: every tape whose producer the change reaches, PLUS every tape of
+ * every chain those tapes belong to (a moved segment moves its chain's headline
+ * and its siblings' seams). Feed it straight in:
+ *
+ *   node scripts/procgen/verify-seedling-bot-differential.mjs --win \
+ *     --only=$(node scripts/procgen/reach-seedling-change.mjs --range=A..B --only-list)
  *
  * `--check=<file>` reads a seal — one predicted mover per line, `#` comments
  * and blanks ignored — and FAILS (exit 1) when the closure reaches something
@@ -64,6 +73,7 @@ const FILES = arg('files');
 const SYMBOL = arg('symbol');
 const CHECK = arg('check');
 const JSON_OUT = flag('json');
+const ONLY_LIST = flag('only-list');
 const positional = argv.filter((a) => !a.startsWith('--'));
 
 if (flag('help') || (!RANGE && !FILES && !SYMBOL && positional.length === 0)) {
@@ -110,7 +120,29 @@ if (SYMBOL) {
 
 const report = await reachReport(seedFiles, { repo: REPO, roots: DEFAULT_ROOTS, graph });
 
-if (JSON_OUT) {
+/**
+ * ⚖ RULING 33's SELECTION: the reached tapes, widened to their WHOLE chains.
+ * A segment that moves moves the headline it sums into and the seams its
+ * siblings are checked against, so a selection that named only the reached
+ * tape would gate a chain by one third of itself.
+ */
+async function onlyList(rep) {
+    const names = new Set(rep.tapes.map((t) => t.tape));
+    if (rep.chains.length > 0) {
+        const { PLAYTHROUGH_CHAINS } = await import(
+            new URL('../../frontend/modules/seedlingDemo/playthroughWalk.js', import.meta.url).href);
+        for (const c of PLAYTHROUGH_CHAINS) {
+            if (!rep.chains.includes(c.id)) continue;
+            for (const n of c.segments) names.add(n);
+            if (c.headline) names.add(c.headline);
+        }
+    }
+    return [...names].sort();
+}
+
+if (ONLY_LIST) {
+    console.log((await onlyList(report)).join(','));
+} else if (JSON_OUT) {
     console.log(JSON.stringify({
         seeds: report.seeds,
         offGraph: report.offGraph,
@@ -166,7 +198,7 @@ if (JSON_OUT) {
     }
 }
 
-if (CHECK) {
+if (CHECK && !ONLY_LIST) {
     const path = join(REPO, CHECK);
     const sealPath = existsSync(path) ? path : CHECK;
     if (!existsSync(sealPath)) {
