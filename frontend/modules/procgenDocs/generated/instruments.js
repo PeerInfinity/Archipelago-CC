@@ -113,8 +113,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 21,
-            "count": 55,
+            "browser": 22,
+            "count": 56,
             "id": "probe"
         },
         {
@@ -179,13 +179,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 218,
-        "browser": 73,
+        "blockStyle": 219,
+        "browser": 74,
         "cited": 71,
-        "files": 237,
+        "files": 238,
         "lineStyle": 19,
-        "withDocblock": 237,
-        "withFlags": 144
+        "withDocblock": 238,
+        "withFlags": 145
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -3600,6 +3600,39 @@ export const INSTRUMENTS = frz({
             "flags": [],
             "oneLiner": "probe-seedling-boot-clock — does a BOOT reach `Game.begin()` at the clock it declared, or one frame past it?",
             "path": "scripts/procgen/probe-seedling-boot-clock.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-boot-reset.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "expect"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "page"
+                }
+            ],
+            "oneLiner": "probe-seedling-boot-reset — **TWO WINDOWS ON ONE PAGE, AND WHAT THE SECOND ONE INHERITS.**",
+            "path": "scripts/procgen/probe-seedling-boot-reset.mjs"
         },
         {
             "argvHelpers": [],

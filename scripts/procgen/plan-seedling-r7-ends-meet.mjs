@@ -189,8 +189,15 @@ async function latchOf(label, tapeObj) {
         });
         const drained = JSON.parse(await call(page, 'botDrain'));
         const seam = JSON.parse(await call(page, 'botSeam'));
+        // ⛔ THE DURATION IS A WALL CLOCK, SO IT IS NOT PRINTED UNDER
+        // `--check`. This producer is the one that DRIVES A BROWSER INSIDE
+        // ITS OWN `--check`, so this line was the only differing byte between
+        // two `--check` runs of an unchanged tree — 227s vs 292s vs 223s —
+        // and ⚖ ruling 8's block was quoting an md5 that moved with machine
+        // load (R9 slice 9 §18.11, fixed here in slice 9b). The line still
+        // prints on the RECORD path, where it is progress rather than a claim.
         console.log(`    drove ${label}: ${drained.ticks.length} observations, `
-            + `${status.dead_frames} dead, ${((Date.now() - t0) / 1000).toFixed(0)}s`);
+            + `${status.dead_frames} dead${CHECK ? '' : `, ${((Date.now() - t0) / 1000).toFixed(0)}s`}`);
         return { seam, ticks: drained.ticks, status };
     } finally {
         await page.close();

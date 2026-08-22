@@ -155,8 +155,15 @@ function latchOf(label, tapeObj) {
         .forEach((l) => console.log(`    ${l}`));
     if (!existsSync(outWsl)) throw new Error(`windows driver wrote no stream for ${label}`);
     const got = JSON.parse(readFileSync(outWsl, 'utf8'));
+    // ⛔ THE DURATION IS A WALL CLOCK, SO IT IS NOT PRINTED UNDER `--check`.
+    // ⚖ Ruling 8 publishes a producer's `--check` stdout md5 as a byte-inertia
+    // fingerprint, and R9 slice 9 caught this line moving one of them with
+    // MACHINE LOAD alone (`plan-seedling-r7-ends-meet`, 227s vs 292s vs 223s,
+    // the only differing byte in the whole output). A fingerprint that moves
+    // with the machine is not a fingerprint. The line still prints on the
+    // RECORD path, where it is progress rather than a claim.
     console.log(`    drove ${label}: ${got.stream.ticks.length} observations, `
-        + `${got.status.dead_frames} dead, ${((Date.now() - t0) / 1000).toFixed(0)}s`);
+        + `${got.status.dead_frames} dead${CHECK ? '' : `, ${((Date.now() - t0) / 1000).toFixed(0)}s`}`);
     if (!got.seam) throw new Error(`${label}: the driver returned no seam block`);
     return got.seam;
 }
