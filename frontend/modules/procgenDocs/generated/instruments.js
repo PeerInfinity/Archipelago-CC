@@ -54,6 +54,11 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
+            "count": 1,
+            "id": "derive"
+        },
+        {
+            "browser": 0,
             "count": 6,
             "id": "dump"
         },
@@ -169,13 +174,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 216,
+        "blockStyle": 217,
         "browser": 73,
         "cited": 68,
-        "files": 235,
+        "files": 236,
         "lineStyle": 19,
-        "withDocblock": 235,
-        "withFlags": 142
+        "withDocblock": 236,
+        "withFlags": 143
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -1769,6 +1774,39 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "check-seedling-wasm-ship — **THE ONLY ARM THAT CAN SEE A REAL SOLVE'S VERDICT.**",
             "path": "scripts/procgen/check-seedling-wasm-ship.mjs"
+        },
+        {
+            "argvHelpers": [
+                "ONLY"
+            ],
+            "browser": false,
+            "category": "derive",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "derive-seedling-tick0.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "list"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "only"
+                }
+            ],
+            "oneLiner": "derive-seedling-tick0 — THE v11 TICK-0 LATCH, MEASURED ONCE PER CHAIN SEGMENT BY A ZERO-TICK FRESH-PAGE RUN.",
+            "path": "scripts/procgen/derive-seedling-tick0.mjs"
         },
         {
             "argvHelpers": [
