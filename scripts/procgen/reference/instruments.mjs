@@ -146,8 +146,20 @@ const allOf2 = (text, re) => {
     return out;
 };
 
-/** ⛓ What the file's own `Run:` / `Usage:` block SHOWS a reader typing. */
-const DOCUMENTED_FLAG_RE = /--([a-zA-Z][a-zA-Z0-9-]*)[=\s]/g;
+/**
+ * ⛓ What the file's own `Run:` / `Usage:` block SHOWS a reader typing.
+ *
+ * ⛔⛔ THE TRAILING DELIMITER IS A LOOKAHEAD, AND IT HAS TO BE (R9 slice 10).
+ * It used to be a consuming `[=\s]`, which requires a character AFTER the flag
+ * name — and the LAST flag in a usage block has none: the captured text ends
+ * where the docblock does. ⇒ every instrument whose usage block's final line
+ * ended in a bare flag reported that flag as UNDOCUMENTED, silently, in the
+ * generated index. Measured by swapping two usage lines in
+ * `census-seedling-campaign.mjs` and watching which of the two disappeared: the
+ * one that moved to the end, both times. `(?=[=\s]|$)` consumes nothing and
+ * accepts end-of-text, so a flag is documented wherever it is written.
+ */
+const DOCUMENTED_FLAG_RE = /--([a-zA-Z][a-zA-Z0-9-]*)(?=[=\s]|$)/g;
 
 const allOf = (text, re) => {
     const out = [];

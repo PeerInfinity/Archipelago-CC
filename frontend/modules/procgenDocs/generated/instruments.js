@@ -201,7 +201,7 @@ export const INSTRUMENTS = frz({
     ],
     "patterns": {
         "cite": "/(?<![\\w/*.-])(?:scripts\\/procgen\\/)?([a-z][a-zA-Z0-9-]*\\.mjs)\\b/g",
-        "documented": "/--([a-zA-Z][a-zA-Z0-9-]*)[=\\s]/g",
+        "documented": "/--([a-zA-Z][a-zA-Z0-9-]*)(?=[=\\s]|$)/g",
         "flags": [
             "includes: /\\bincludes\\(\\s*'--([a-zA-Z][a-zA-Z0-9-]*)'/g",
             "startsWith: /startsWith\\(\\s*[`']--([a-zA-Z][a-zA-Z0-9-]*)=/g"
@@ -359,6 +359,7 @@ export const INSTRUMENTS = frz({
             ],
             "docblockStyle": "block",
             "documentedFlags": [
+                "json",
                 "out-dir"
             ],
             "file": "batch-seedling-acceptance.mjs",
@@ -546,10 +547,19 @@ export const INSTRUMENTS = frz({
             ],
             "docblockStyle": "block",
             "documentedFlags": [
-                "json"
+                "check-frontier",
+                "json",
+                "no-write",
+                "write-frontier"
             ],
             "file": "census-seedling-campaign.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check-frontier"
+                },
                 {
                     "how": [
                         "includes"
@@ -561,6 +571,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "no-write"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "write-frontier"
                 }
             ],
             "oneLiner": "══ THE CAMPAIGN CENSUS — does the TRUE-START SOLVER CHAIN continue, pair by pair, and what does each break cost? ══════════════════════════════════",
@@ -2066,6 +2082,7 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "line",
             "documentedFlags": [
+                "check",
                 "source"
             ],
             "file": "extract-seedling-damage-sites.mjs",
@@ -2138,6 +2155,7 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "line",
             "documentedFlags": [
+                "check",
                 "source"
             ],
             "file": "extract-seedling-masks.mjs",
@@ -3115,7 +3133,9 @@ export const INSTRUMENTS = frz({
             "category": "plan",
             "citedBy": [],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "write"
+            ],
             "file": "plan-seedling-r5-l40-join.mjs",
             "flags": [
                 {
@@ -3292,7 +3312,9 @@ export const INSTRUMENTS = frz({
             "category": "plan",
             "citedBy": [],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "write"
+            ],
             "file": "plan-seedling-r5-shaft.mjs",
             "flags": [
                 {
@@ -3332,7 +3354,9 @@ export const INSTRUMENTS = frz({
             "category": "plan",
             "citedBy": [],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "write"
+            ],
             "file": "plan-seedling-r5-totem-entrance.mjs",
             "flags": [
                 {
@@ -3517,7 +3541,9 @@ export const INSTRUMENTS = frz({
             "category": "plan",
             "citedBy": [],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-r7-attribution.mjs",
             "flags": [
                 {
@@ -3557,7 +3583,9 @@ export const INSTRUMENTS = frz({
             "category": "plan",
             "citedBy": [],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-r8-hammer-pair.mjs",
             "flags": [
                 {
@@ -3576,7 +3604,9 @@ export const INSTRUMENTS = frz({
             "category": "plan",
             "citedBy": [],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-r8-l18-spinner.mjs",
             "flags": [
                 {
@@ -3730,6 +3760,7 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "bank",
                 "payloads"
             ],
             "file": "probe-seedling-deadframe-band.mjs",
@@ -3939,7 +3970,9 @@ export const INSTRUMENTS = frz({
             "category": "probe",
             "citedBy": [],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "maps"
+            ],
             "file": "probe-seedling-r5-feather.mjs",
             "flags": [
                 {
@@ -4196,7 +4229,9 @@ export const INSTRUMENTS = frz({
             "category": "probe",
             "citedBy": [],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "write"
+            ],
             "file": "probe-seedling-r5-press-axes.mjs",
             "flags": [
                 {
@@ -4221,7 +4256,9 @@ export const INSTRUMENTS = frz({
             "category": "probe",
             "citedBy": [],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "plan-only"
+            ],
             "file": "probe-seedling-r5-shaft-solver.mjs",
             "flags": [
                 {
@@ -4515,7 +4552,8 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
-                "max"
+                "max",
+                "reuse"
             ],
             "file": "probe-seedling-span-ceiling.mjs",
             "flags": [
@@ -4606,6 +4644,7 @@ export const INSTRUMENTS = frz({
             ],
             "docblockStyle": "block",
             "documentedFlags": [
+                "strict",
                 "tape"
             ],
             "file": "probe-seedling-watch-page.mjs",
@@ -4642,6 +4681,7 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "json",
                 "seed"
             ],
             "file": "prove-seedling-procgen-seam.mjs",
@@ -4749,7 +4789,8 @@ export const INSTRUMENTS = frz({
             "docblockStyle": "block",
             "documentedFlags": [
                 "clears",
-                "control"
+                "control",
+                "necessity"
             ],
             "file": "recon-seedling-r3.mjs",
             "flags": [
@@ -4798,6 +4839,7 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "floor-policy",
                 "hazard-tiles",
                 "raw-states",
                 "tapes"
@@ -4857,6 +4899,7 @@ export const INSTRUMENTS = frz({
             "docblockStyle": "block",
             "documentedFlags": [
                 "census",
+                "contact-audit",
                 "flood",
                 "hazards",
                 "kill-locks",
@@ -4944,7 +4987,8 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
-                "trap-boss-flood"
+                "trap-boss-flood",
+                "volumes"
             ],
             "file": "recon-seedling-r7.mjs",
             "flags": [
@@ -5157,6 +5201,7 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [
                 "dry-run",
                 "from",
+                "no-cache",
                 "to"
             ],
             "file": "rerecord-seedling-campaign.mjs",
@@ -5742,6 +5787,7 @@ export const INSTRUMENTS = frz({
             "docblockStyle": "block",
             "documentedFlags": [
                 "cellbudget",
+                "estimate-only",
                 "json",
                 "seeds",
                 "substrate"

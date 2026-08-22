@@ -1,0 +1,64 @@
+{
+  "artifact_version": 1,
+  "generatedBy": "node scripts/procgen/census-seedling-campaign.mjs --write-frontier",
+  "chain": "r9-campaign",
+  "segments": [
+    "r8-solve-1",
+    "r8-solve-2",
+    "r8-solve-3",
+    "r8-solve-4",
+    "r8-solve-5",
+    "r8-solve-6",
+    "r8-solve-7",
+    "r8-solve-8",
+    "r8-solve-9",
+    "r8-solve-10",
+    "r9-solve-11",
+    "r9-solve-3",
+    "r9-solve-2",
+    "r9-solve-0",
+    "r9-solve-13"
+  ],
+  "arrivals": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    3,
+    2,
+    0,
+    13,
+    14
+  ],
+  "sources": {
+    "frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json": "d2857cdd0f849efbe74514d848ae87eb",
+    "frontend/modules/flashPanel/atlases/seedling-map.json": "647bd46a7ff6f1eacb0d956b81344a44",
+    "frontend/modules/flashPanel/atlases/seedling-sphere-order.json": "03f215201a5a64c472fa5cc51c51ee98"
+  },
+  "covered": 15,
+  "lastArrival": {
+    "step": 15,
+    "level": 14,
+    "segment": "r9-solve-13"
+  },
+  "nextStep": {
+    "step": 16,
+    "level": 14,
+    "visit": 1,
+    "crossesTo": 15,
+    "goals": [
+      "stairsdown@32,64 → L15"
+    ]
+  },
+  "refusal": {
+    "family": "CAMERA BAND — `levelRun` REFUSES an on-screen verdict for a body at the screen edge inside `Game.shake`'s jiggle (camera.js, \"THE SHAKE, AND WHY IT IS A BAND\"). Not a missing mechanism: a missing STANCE RULE. The refusal names its own cure — \"move the stance away from the screen edge, or wait the shake out\"",
+    "text": "levelRun: whether bob bob@32,32 is on screen at tick 44 depends on where inside `Game.shake`'s jiggle the camera landed, and the two draws that decide it are not indexable (camera.js, \"THE SHAKE, AND WHY IT IS A BAND\"). `Enemy.update` early-returns at ZERO margin, so this is the difference between a body that damages and one that does not. Move the stance away from the screen edge, or wait the shake out."
+  },
+  "why": null
+}

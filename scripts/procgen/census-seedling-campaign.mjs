@@ -66,8 +66,11 @@
  *   node scripts/procgen/census-seedling-campaign.mjs
  *   node scripts/procgen/census-seedling-campaign.mjs --json
  *   node scripts/procgen/census-seedling-campaign.mjs --no-write
+ *   node scripts/procgen/census-seedling-campaign.mjs --write-frontier
+ *   node scripts/procgen/census-seedling-campaign.mjs --check-frontier
  */
 
+import { createHash } from 'node:crypto';
 import { mkdirSync, writeFileSync, readFileSync, existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -90,6 +93,9 @@ const { planTilePath, contactKey } = await import(join(MODULE, 'botDriverV2.js')
 
 const AS_JSON = process.argv.includes('--json');
 const WRITE = !process.argv.includes('--no-write');
+/** ⛓ R9 slice 10 — the two frontier modes (see `FRONTIER` below). */
+const WRITE_FRONTIER = process.argv.includes('--write-frontier');
+const CHECK_FRONTIER = process.argv.includes('--check-frontier');
 const OUT_DIR = join(REPO, 'NewDocs', 'plans', 'r9-slice5-census');
 const SURVEY_DIR = join(REPO, 'NewDocs', 'plans', 'seedling-editor-survey');
 
@@ -98,21 +104,32 @@ const SURVEY_DIR = join(REPO, 'NewDocs', 'plans', 'seedling-editor-survey');
  *
  * Slice 5 spelled this list out and said why: *"there IS no chain for it yet —
  * assembling one is what the fix list is FOR."* R9 slice 6 assembled it, so the
- * subject is `PLAYTHROUGH_CHAINS.r9-campaign`'s own segments and a chain that
- * grows a room is censused the day it does (trap 495: a typed list decays).
+ * subject is the campaign chain's own segments and a chain that grows a room is
+ * censused the day it does (trap 495: a typed list decays). ⛓ Slice 10 goes one
+ * step further: WHICH chain that is is `director.campaignChoice`'s answer now.
  *
  * ⚠ THE FIX LIST'S SHAPE IS UNCHANGED and that is the point of re-running it: a
  * census whose every pair reads CONTINUES is the same instrument reporting that
  * the work it ordered is done, not a different one reporting success.
  */
-const { PLAYTHROUGH_CHAINS } = await import(join(MODULE, 'playthroughWalk.js'));
-const CAMPAIGN_CHAIN = PLAYTHROUGH_CHAINS.find((c) => c.id === 'r9-campaign');
-if (!CAMPAIGN_CHAIN) {
-    throw new Error('census: PLAYTHROUGH_CHAINS has no `r9-campaign` — the census\'s '
-        + 'subject is the chain the campaign assembles, and a hand-typed fallback here '
-        + 'would report on a walk nobody committed.');
+/**
+ * ⛓⛓⛓ R9 SLICE 10 — **THE SUBJECT IS NOW THE PAGE'S OWN ANSWER**, not a name
+ * typed here. `director.campaignChoice` is what the ▶ campaign control asks,
+ * and it picks by rule: the custody chain that boots a true start and whose
+ * every segment the solver recorded (⚖ ruling 19). ⛔ ONE ANSWER, TWO READERS —
+ * the instrument that reports on the campaign and the control that plays it can
+ * no longer disagree about which chain that is, which is exactly the drift a
+ * second `find(c => c.id === '…')` here would have been free to acquire.
+ */
+const { campaignChoice } = await import(join(MODULE, 'director.js'));
+const CHOICE = campaignChoice();
+if (CHOICE.refusal) {
+    throw new Error(`census: ${CHOICE.refusal.reason} — ${CHOICE.refusal.detail}\n\n`
+        + 'The census\'s subject is the chain the ▶ campaign control plays, and a '
+        + 'hand-typed fallback here would report on a walk nobody committed.');
 }
-const CHAIN = [...CAMPAIGN_CHAIN.segments];
+const CHAIN_ID = CHOICE.id;
+const CHAIN = [...CHOICE.segments];
 /** ⛓ The detached tail — its OWN chain, continuable only after L14–L16 fall. */
 const TAIL = ['r8-solve-18', 'r8-d2-19', 'r8-d2-20'];
 /**
@@ -125,8 +142,6 @@ const TAIL = ['r8-solve-18', 'r8-d2-19', 'r8-d2-20'];
  * end at is still a gap, and the day one opens it is reported without an edit.
  */
 const GAP_STEPS = [];
-/** ⛓ Where the chain stops honestly — the survey's own refusal family. */
-const STOP_STEP = 16;
 
 const source = atlasLevelSource();
 const lines = [];
@@ -394,6 +409,187 @@ function surveyRows() {
     };
 }
 
+// ─────────────────────────────────────────────────────────────────────
+// 5b. ⛓⛓⛓ R9 SLICE 10 — THE FRONTIER, DERIVED, AND COMMITTED AS AN ARTIFACT
+// ─────────────────────────────────────────────────────────────────────
+
+/**
+ * ⛓⛓⛓ WHERE THE CHAIN STOPS AND WHY — **COMPUTED, NOT TYPED.**
+ *
+ * ⛔ THIS REPLACED A LITERAL. Until R9 slice 10 this file held
+ * `const STOP_STEP = 16;` with a one-line comment, and a literal cannot see the
+ * stop MOVE: the day a slice solves L14 the survey's step 16 starts reporting
+ * SOLVED and the census would go on printing "the STOP at step 16" as if
+ * nothing had happened — which is trap 495 (a typed count decays) wearing a
+ * route step's clothes. ⚖ Ruling 17: derive it.
+ *
+ * ── THE DERIVATION, IN THREE MOVES ────────────────────────────────────
+ *
+ * 1. **THE CHAIN'S ARRIVALS ARE MEASURED, NOT DECLARED.** Each segment is
+ *    walked (`walkOf`) and its `endLevel` is the room it arrives in. That is a
+ *    sequence the MODEL produced.
+ * 2. **THE ROUTE IS ALIGNED TO IT.** `route.steps[].crossesTo` is the same kind
+ *    of sequence from the other side — the survey's own plan — so the chain
+ *    covers the longest PREFIX of route steps whose `crossesTo` sequence equals
+ *    the measured arrivals. ⛔ An alignment rather than a count: a chain that
+ *    grows a room extends the prefix by itself, and a chain that takes a
+ *    DIFFERENT route stops matching and says so instead of quietly claiming the
+ *    steps it did not walk.
+ * 3. **THE STOP IS THE FIRST STEP AFTER THAT PREFIX THE SURVEY REFUSES.** Not
+ *    "the next step" — a step the survey SOLVES is a gap with a tape waiting to
+ *    be recorded, not a frontier — and not a step number anybody chose.
+ *
+ * ⚠ AND IF THE ALIGNMENT BREAKS, THE ROW IS UNASSERTED BY NAME. A chain whose
+ * arrivals do not prefix the route is a finding about one of the two, and
+ * inventing a stop for it would be this script answering a question it was
+ * handed the wrong inputs for.
+ *
+ * ⛔ THE SURVEY JSON IS GITIGNORED (`NewDocs/*`), WHICH IS WHY THE ARTIFACT
+ * EXISTS. `campaign-frontier.json` is the COMMITTED PROJECTION of it: the page
+ * reads the artifact — it has no other way to know what the next work order is
+ * — and `--check-frontier` is what keeps the projection honest against the
+ * survey on a machine that has one.
+ */
+const SOURCE_FILES = Object.freeze([
+    'frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json',
+    'frontend/modules/flashPanel/atlases/seedling-map.json',
+    'frontend/modules/flashPanel/atlases/seedling-sphere-order.json',
+]);
+const FRONTIER_PATH = join(MODULE, 'fixtures', 'campaign-frontier.json');
+const md5 = (b) => createHash('md5').update(b).digest('hex');
+
+/**
+ * ⛓ THE PROVENANCE THAT SURVIVES A MACHINE. ⛔ NOT a digest of `survey.json`:
+ * that file carries per-row `ms` timings, so hashing it would give a
+ * fingerprint that moves with the machine and reds for a reason that is not a
+ * change (trap 548). These three are the survey's own declared `sources`, all
+ * committed, and if any of them moves the route the survey planned may have
+ * moved with it.
+ */
+function sourceDigests() {
+    const out = {};
+    for (const rel of SOURCE_FILES) {
+        const abs = join(REPO, rel);
+        out[rel] = existsSync(abs) ? md5(readFileSync(abs)) : null;
+    }
+    return out;
+}
+
+function deriveFrontier(surveyRes) {
+    const arrivals = CHAIN.map((n) => walkOf(n)).map((w) => (w.error ? null : w.endLevel));
+    const base = {
+        artifact_version: 1,
+        generatedBy: 'node scripts/procgen/census-seedling-campaign.mjs --write-frontier',
+        chain: CHAIN_ID,
+        segments: [...CHAIN],
+        arrivals,
+        sources: sourceDigests(),
+    };
+    if (arrivals.some((a) => a === null)) {
+        return { ...base, lastArrival: null, nextStep: null, refusal: null, covered: null,
+            why: 'a chain segment did not walk, so the chain has no measured arrival '
+                + 'sequence to align the route against' };
+    }
+    if (!surveyRes.available) {
+        return { ...base, lastArrival: null, nextStep: null, refusal: null, covered: null,
+            why: surveyRes.why };
+    }
+    const steps = surveyRes.steps;
+    let covered = 0;
+    while (covered < arrivals.length && covered < steps.length
+        && steps[covered].crossesTo === arrivals[covered]) covered += 1;
+    if (covered !== arrivals.length) {
+        return { ...base, lastArrival: null, nextStep: null, refusal: null, covered,
+            why: `the chain's measured arrivals stop prefixing the route at segment `
+                + `${covered + 1} (${CHAIN[covered]} arrives in L${arrivals[covered]}; `
+                + `route step ${steps[covered]?.step} crosses to `
+                + `L${steps[covered]?.crossesTo}). A chain that walks a different route `
+                + 'has no stop this alignment can name.' };
+    }
+    const last = steps[covered - 1];
+    const refused = steps.slice(covered).find((x) => x.solved && x.solved.refusal);
+    if (!refused) {
+        return { ...base,
+            lastArrival: { step: last.step, level: last.crossesTo, segment: CHAIN.at(-1) },
+            nextStep: null, refusal: null, covered,
+            why: 'no route step after the chain is refused by the survey — every '
+                + 'remaining step SOLVES today, so the frontier is a GAP LIST rather '
+                + 'than a refusal and this is a finding, not a stop' };
+    }
+    return {
+        ...base,
+        covered,
+        lastArrival: { step: last.step, level: last.crossesTo, segment: CHAIN.at(-1) },
+        nextStep: {
+            step: refused.step,
+            level: refused.level,
+            visit: refused.visit,
+            crossesTo: refused.crossesTo,
+            goals: refused.goals.map((g) => g.why),
+        },
+        refusal: { family: refused.solved.family, text: refused.solved.refusal },
+        why: null,
+    };
+}
+
+const survey = surveyRows();
+const FRONTIER = deriveFrontier(survey);
+
+/**
+ * ⛔ THE CHECK IS FIELD BY FIELD, AND IT SAYS WHICH FIELDS IT COULD NOT RUN.
+ * The four structural fields (`chain`, `segments`, `arrivals`, `sources`) need
+ * no survey and therefore run in CI; `lastArrival`, `nextStep` and `refusal`
+ * are the survey's answer and are SKIPPED BY NAME where it is absent. A check
+ * that cannot run is not a check that passed.
+ */
+function checkFrontier() {
+    if (!existsSync(FRONTIER_PATH)) {
+        console.log(`FAIL  ${FRONTIER_PATH} is not on disk — run --write-frontier`);
+        return 1;
+    }
+    const on = JSON.parse(readFileSync(FRONTIER_PATH, 'utf8'));
+    const rows = [];
+    const cmp = (name, mine, theirs) => rows.push({
+        name, ok: JSON.stringify(mine) === JSON.stringify(theirs), mine, theirs,
+    });
+    cmp('chain', FRONTIER.chain, on.chain);
+    cmp('segments', FRONTIER.segments, on.segments);
+    cmp('arrivals', FRONTIER.arrivals, on.arrivals);
+    cmp('sources', FRONTIER.sources, on.sources);
+    if (survey.available && FRONTIER.nextStep) {
+        cmp('lastArrival', FRONTIER.lastArrival, on.lastArrival);
+        cmp('nextStep', FRONTIER.nextStep, on.nextStep);
+        cmp('refusal', FRONTIER.refusal, on.refusal);
+    } else {
+        console.log('SKIP  lastArrival / nextStep / refusal — '
+            + `${FRONTIER.why ?? survey.why}\n      A check that cannot run is not a `
+            + 'check that passed; the four structural rows below still do.');
+    }
+    let bad = 0;
+    for (const r of rows) {
+        if (!r.ok) bad += 1;
+        console.log(`${r.ok ? 'PASS' : 'FAIL'}  campaign-frontier.json: ${r.name}`);
+        if (!r.ok) {
+            console.log(`      on disk : ${JSON.stringify(r.theirs)}`);
+            console.log(`      derived : ${JSON.stringify(r.mine)}`);
+        }
+    }
+    console.log(`\n  ${rows.length - bad} pass, ${bad} fail`);
+    if (bad) {
+        console.log('\n⛔ THE ARTIFACT IS STALE. It is a PROJECTION of the route survey '
+            + 'and of this chain, and one of them has moved. Re-derive it with\n  node '
+            + 'scripts/procgen/census-seedling-campaign.mjs --write-frontier');
+    }
+    return bad ? 1 : 0;
+}
+
+if (CHECK_FRONTIER) process.exit(checkFrontier());
+if (WRITE_FRONTIER) {
+    writeFileSync(FRONTIER_PATH, `${JSON.stringify(FRONTIER, null, 2)}\n`);
+    console.log(`wrote ${FRONTIER_PATH}`);
+    process.exit(0);
+}
+
 // ═════════════════════════════════════════════════════════════════════
 // THE REPORT
 // ═════════════════════════════════════════════════════════════════════
@@ -406,7 +602,10 @@ say('⛔ Moves nothing: it reads tapes, walks the model, and asks '
 say('');
 say(`SUBJECT (⚖ ruling 14): ${CHAIN.length} solver tapes in sphere order — `
     + `${CHAIN.join(' → ')}`);
-say(`THEN: ${GAP_STEPS.length} route steps with NO tape, then the STOP at step ${STOP_STEP}.`);
+say(`THEN: ${GAP_STEPS.length} route steps with NO tape, then the STOP at `
+    + (FRONTIER.nextStep ? `step ${FRONTIER.nextStep.step} (L${FRONTIER.nextStep.level}) — `
+        + `${FRONTIER.refusal.family.split(' —')[0]}.`
+        : `an UNASSERTED step — ${FRONTIER.why}`));
 say(`DETACHED TAIL (its own block, its own bound): ${TAIL.join(' → ')}`);
 say('');
 say('BOUNDS, NAMED: the JS tier leaves `rng` and `seam` UNASSERTED at every '
@@ -431,7 +630,6 @@ for (const [what, w, names] of [['chain', chainWhole, CHAIN], ['tail', tailWhole
 }
 
 // ── THE FIX LIST ─────────────────────────────────────────────────────
-const survey = surveyRows();
 const fix = [];
 for (const row of chainRows) {
     if (row.verdict === 'CONTINUES') {
@@ -465,14 +663,17 @@ if (survey.available) {
             solvesToday: s.solved?.verdict === 'SOLVED',
         });
     }
-    const stop = survey.steps.find((x) => x.step === STOP_STEP);
-    fix.push({
-        segment: `route step ${STOP_STEP} (L${stop.level})`,
-        kind: 'STOPS',
-        reason: stop.solved?.verdict === 'SOLVED'
-            ? 'the survey SOLVES it — the stop has moved and this row is a finding'
-            : (stop.solved?.why ?? 'the survey refuses it'),
-    });
+    if (FRONTIER.nextStep) {
+        fix.push({
+            segment: `route step ${FRONTIER.nextStep.step} (L${FRONTIER.nextStep.level})`,
+            kind: 'STOPS',
+            reason: FRONTIER.refusal.family,
+        });
+    } else {
+        // ⛓ THE STOP MOVED, OR THE ALIGNMENT BROKE — either is a FINDING, and
+        // the derivation says which rather than printing a step nobody derived.
+        fix.push({ segment: 'route steps', kind: 'FINDING', reason: FRONTIER.why });
+    }
 } else {
     fix.push({ segment: 'route steps', kind: 'UNASSERTED', reason: survey.why });
 }
@@ -575,7 +776,7 @@ if (WRITE) {
 if (AS_JSON) {
     console.log(JSON.stringify({
         generator: 'census-seedling-campaign.mjs',
-        chain: CHAIN, tail: TAIL, gapSteps: GAP_STEPS, stopStep: STOP_STEP,
+        chain: CHAIN, tail: TAIL, gapSteps: GAP_STEPS, frontier: FRONTIER,
         chainRows, tailRows, chainWhole, tailWhole, fix, exposures,
         surveyAvailable: survey.available,
     }, null, 2));
