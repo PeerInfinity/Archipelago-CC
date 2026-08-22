@@ -173,7 +173,20 @@ manifest entry, once nothing tracked here names it. Either way
 
 Builds come from SWFRecomp-CC (`docs2/examples/avm2/<name>/`); the regeneration
 steps (inject → build → deploy) live in the SWFRecomp avm2 suite's
-`CURRENT_STATUS.md`.
+`CURRENT_STATUS.md`, and the concrete one-shot recipe for the bot build is in
+`NewDocs/plans/seedling-bot-r9-kickoff.md` §19.11.
+
+⛔ **A REBUILD ON A CHANGED TOOLCHAIN NEEDS A CONTROL BUILD FIRST** (R9 slice 9b,
+2026-08-22). `build_wasm_avm2.sh`'s `.o` cache keys on MTIME, mxmlc is not
+reproducible, and SWFModernRuntime moves independently — so a rebuilt artifact
+differs from its predecessor for reasons that have nothing to do with the AS3
+change you are making, and a behavioural move has nowhere to be attributed.
+Rebuild at the **unchanged** AS3 with `FRESH=1` first, install it, and run the
+whole measurement on it: any move there is a TOOLCHAIN finding and a stop. Only
+then edit and rebuild. Measured cost: 17 min for the control, 22 for the edit —
+against not knowing which of the two caused a move. (Memory
+`feedback_stale_object_cache_poisons_the_build` is the older, sharper half: a
+stale cache links fine and kills the renderer on boot.)
 
 Headless note: the wasm page needs WebGPU, which comes up headless on
 `--enable-unsafe-webgpu --ignore-gpu-blocklist --enable-unsafe-swiftshader
