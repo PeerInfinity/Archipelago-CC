@@ -399,7 +399,10 @@ describe('⛔⛔ THE RE-PROBE — every excluded family, driven in the door geom
             goal: { tx: 7, ty: 8 },
             entities: [
                 { type: 'lock', tx: 4, ty: 5, attrs: { tset: '-1', tag: '1' } },
-                { type: 'spinner', tx: 6, ty: 2, attrs: { tag: '-1' } },
+                // ⛓ R9 SLICE 11 RE-POINTED THE SPINNER (6,2) -> (4,2). See the
+                //   CONTROL below: the repair of `facingToward` made (6,2)
+                //   solvable in BOTH arms, which cost the pair its argument.
+                { type: 'spinner', tx: 4, ty: 2, attrs: { tag: '-1' } },
             ],
         });
         expect(out.threw).toBeUndefined();
@@ -416,15 +419,31 @@ describe('⛔⛔ THE RE-PROBE — every excluded family, driven in the door geom
     /**
      * ⛔ THE CONTROL FOR THE ROW ABOVE, and it is what makes the promotion a
      * measurement rather than a story: with the boot declaring NO `save.time`
-     * — the state every generated solve was in until this slice — the same room
+     * — the state every generated solve was in until slice 4e — the same room
      * still THROWS the hammer-transit refusal past the oracle.
+     *
+     * ⛔⛔ **R9 SLICE 11 — THE PAIR LOST ITS ARGUMENT AT (6,2) AND IS RE-POINTED
+     * TO (4,2), MEASURED RATHER THAN MOVED UNTIL IT PASSED.** Repairing
+     * `solverBot.facingToward` (trap 498) let the kill arm accept a strike cell
+     * ABOVE or BELOW a body for the first time, and at (6,2) that is enough to
+     * solve the room **even under the all-phases disc** — so BOTH arms read
+     * SOLVED and the control stopped controlling. ⚠ The honest repair is a
+     * vehicle that still separates the two arms, not a weakened assertion:
+     * every one of the 32 spinner cells in this geometry was swept under both
+     * arms, and **13 of them still SOLVE with the clock and REFUSE without it**
+     * — (2,1) (1,2) (3,2) **(4,2)** (8,2) (2,3) (3,3) (4,3) (7,3) (8,3) (3,4)
+     * (5,4) (7,4) (8,4). (4,2) is the one directly above the door gap, i.e. the
+     * closest geometric relative of the retired (6,2). ⇒ the claim was never
+     * about that cell; it is about the two readings of `clearOfHammersAt`, and
+     * it is as true after the repair as before — on a smaller set of rooms,
+     * which is exactly what a widened search is supposed to do.
      */
     it('…and with the clock UNDECLARED the same room throws, as it always did', () => {
         const out = attempt('spinner-killlock-no-clock', {
             goal: { tx: 7, ty: 8 },
             entities: [
                 { type: 'lock', tx: 4, ty: 5, attrs: { tset: '-1', tag: '1' } },
-                { type: 'spinner', tx: 6, ty: 2, attrs: { tag: '-1' } },
+                { type: 'spinner', tx: 4, ty: 2, attrs: { tag: '-1' } },
             ],
             time: null,
         });

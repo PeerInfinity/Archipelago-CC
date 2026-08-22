@@ -308,21 +308,28 @@ describe('the layer — the model self-declares the clear its own refusal named'
     /**
      * THE CONTROL, and it is the parent's behaviour verbatim.
      *
-     * ⛓⛓⛓ **EVERY TICK IN THIS DESCRIBE BLOCK MOVED AT SLICE 4e, AND THE MOVE
-     * IS THE OTHER SLICE'S HEADLINE.** The numbers were 517 (removal) and 618
-     * (the clear), measured when a generated boot declared no `save.time` and
-     * `dangerMap.spinnerDanger` therefore priced the spinner as a 13 px union
-     * over all 45 hammer phases. 4e declares the clock, the map prices the
-     * exact `collideLine`, and the walk reaches the body **359 ticks sooner**:
+     * ⛓⛓⛓ **EVERY TICK IN THIS DESCRIBE BLOCK HAS MOVED TWICE NOW, AND BOTH
+     * MOVES BELONG TO ANOTHER SLICE'S HEADLINE.** The numbers were 517
+     * (removal) and 618 (the clear), measured when a generated boot declared no
+     * `save.time` and `dangerMap.spinnerDanger` therefore priced the spinner as
+     * a 13 px union over all 45 hammer phases. 4e declares the clock, the map
+     * prices the exact `collideLine`, and the walk reached the body **359 ticks
+     * sooner**. ⛓ **R9 SLICE 11** repaired `solverBot.facingToward` (trap 498):
+     * the kill arm can accept a strike cell ABOVE or BELOW a body for the first
+     * time, `deriveStrike` takes the first viable candidate in `walkableCells`
+     * ROW-MAJOR order, and a vertical cell is therefore reached before the
+     * horizontal one this room used to walk to — **17 ticks sooner again**:
      *
-     *   removal   517 -> 158        the durable clear   618 -> 259
+     *   removal   517 -> 158 -> 141      the durable clear   618 -> 259 -> 242
      *
-     * ⛔ THE ARITHMETIC IS UNCHANGED and that is worth seeing rather than
-     * asserting: the clear is still removal + the `Lock`'s own 101-step fade
-     * (158 + 101 = 259, as 517 + 101 = 618 was). What moved is WHEN THE WALK
-     * ARRIVES, which is a fact about the danger map and not about this layer.
-     * These cases are re-pinned, not weakened — the relation between the two
-     * numbers is asserted below as well as the numbers themselves.
+     * ⛔ THE ARITHMETIC IS UNCHANGED ACROSS BOTH MOVES and that is worth seeing
+     * rather than asserting: the clear is still removal + the `Lock`'s own
+     * 101-step fade (141 + 101 = 242, as 158 + 101 = 259 and 517 + 101 = 618
+     * were). What moved is WHEN THE WALK ARRIVES — a fact about the danger map
+     * in 4e's case and about the strike-cell candidate set in slice 11's, and
+     * about this layer in neither. These cases are re-pinned, not weakened: the
+     * relation between the two numbers is asserted below as well as the numbers
+     * themselves, which is exactly why a re-pin is all that is owed.
      */
     it('WITHOUT the flag the run still refuses, and names the tick the clear lands on', () => {
         const record = killLockRoom();
@@ -332,8 +339,8 @@ describe('the layer — the model self-declares the clear its own refusal named'
         expect(thrown.undeclaredKillLock.level).toBe(LEVEL);
         expect(thrown.undeclaredKillLock.flags).toEqual([1]);
         expect(thrown.message).toMatch(/two writers of one persistence slot/);
-        expect(thrown.message).toMatch(/removal at tick 158/);
-        expect(thrown.message).toMatch(/lands the durable clear at tick 259/);
+        expect(thrown.message).toMatch(/removal at tick 141/);
+        expect(thrown.message).toMatch(/lands the durable clear at tick 242/);
     });
 
     /**
@@ -352,9 +359,9 @@ describe('the layer — the model self-declares the clear its own refusal named'
         expect(run.scratchClears).toEqual([{
             level: LEVEL,
             tag: 1,
-            at: 259,
-            declaredAt: 258,
-            removedAt: 158,
+            at: 242,
+            declaredAt: 241,
+            removedAt: 141,
             by: 'spinner@48,16',
             lock: 'lock@80,80',
             cause: 'sword',
@@ -376,9 +383,9 @@ describe('the layer — the model self-declares the clear its own refusal named'
         // ⛓ 4e: the declared tick must not be in the walk's FUTURE, or the
         // solver raises `PendingDeclaration` before the arm is reached and the
         // case stops being about the layer at all. It was 300 against a walk
-        // that killed at 517; the walk now kills at 158, so 300 was ahead of
-        // it. Re-pinned to the tick the model itself derives (158 + 101).
-        const staging = stagingFor(record, { persistence: [{ level: LEVEL, tag: 1, at: 259 }] });
+        // that killed at 517; the walk now kills at 141, so 300 was ahead of
+        // it. Re-pinned to the tick the model itself derives (141 + 101).
+        const staging = stagingFor(record, { persistence: [{ level: LEVEL, tag: 1, at: 242 }] });
         const { run, thrown } = driveSolve(record, staging, { scratchPersistence: true });
         expect(thrown).toBeNull();
         expect(run.scratchClears).toEqual([]);
@@ -478,10 +485,12 @@ describe('the narrowed dialogue guard — LIVE bodies only', () => {
      * previous case shows the guard did not lose its teeth. RED at the parent,
      * where this room threw.
      *
-     * ⚠ 4e RE-PINNED THE TICK (517 -> 158) for the block's own reason, and the
-     * claim is asserted as the ORDER rather than only as a literal — "the
-     * removal precedes the ceremony" is what this case is about, and a bare
-     * number cannot say it.
+     * ⚠ THE TICK HAS BEEN RE-PINNED TWICE (517 -> 158 at 4e, 158 -> 141 at R9
+     * slice 11) for reasons belonging to those slices, and the claim is
+     * asserted as the ORDER rather than only as a literal — "the removal
+     * precedes the ceremony" is what this case is about, a bare number cannot
+     * say it, and two re-pins in two slices are the demonstration that the
+     * order assertion is the load-bearing one.
      */
     it('a room whose spinner is already REMOVED is no longer asked', () => {
         const record = killLockRoom();
@@ -489,7 +498,7 @@ describe('the narrowed dialogue guard — LIVE bodies only', () => {
             oracleOpts('removed-spinner'));
         expect(out.verdict).toBe('SOLVED');
         // The removal really did precede the ceremony — the ledger's own row.
-        expect(out.scratchClears[0].removedAt).toBe(158);
+        expect(out.scratchClears[0].removedAt).toBe(141);
         expect(out.scratchClears[0].at).toBeGreaterThan(out.scratchClears[0].removedAt);
         expect(out.ticks).toBeGreaterThan(out.scratchClears[0].at);
     });

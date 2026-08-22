@@ -276,14 +276,27 @@ describe('procgen — the hammer-safety refusal is classifiable (slice 4e)', () 
     );
 
     /**
-     * ⛔ THE SUBJECT: cell (2,1), one of the seven the clock did NOT rescue.
-     * A REFUSAL rather than a throw is the whole change — the candidate reverts
-     * and the run lives.
+     * ⛔ THE SUBJECT: a cell where the spinner is UNBEATABLE. A REFUSAL rather
+     * than a throw is the whole change — the candidate reverts and the run lives.
+     *
+     * ⛔⛔ **R9 SLICE 11 RE-POINTED THIS VEHICLE (2,1) -> (4,1), AND SWEPT FOR
+     * THE SUCCESSOR RATHER THAN GUESSING IT.** Repairing `solverBot.facingToward`
+     * (trap 498) gave the kill arm strike cells ABOVE and BELOW a body for the
+     * first time, and (2,1) — "one of the seven the clock did not rescue" —
+     * became SOLVABLE. A vehicle that no longer produces the refusal cannot
+     * assert anything about how the refusal is CLASSIFIED, which is this row's
+     * only subject. All 31 spinner cells in this geometry were re-swept: the
+     * class is not empty, **SEVEN cells still refuse with `HAMMER SAFETY`** —
+     * **(4,1)** (5,2) (1,3) (5,3) (6,3) (1,4) (2,4) — and (4,1) is the nearest
+     * relative of the retired (2,1), same row, same wall. ⚠ Two of the swept
+     * cells refuse as a plain `SolverRefusal` instead ((2,2), (5,4)); those are
+     * NOT this row's subject and picking one would have made the row green
+     * while testing a different class.
      */
     it('a hammer-safety `SolverBotError` becomes REFUSED, text carried VERBATIM', () => {
         const out = solveRoom(room([
             { type: 'lock', ...oelAtTile(5, 5), attrs: { tset: '-1', tag: '1' } },
-            { type: 'spinner', ...oelAtTile(2, 1), attrs: { tag: '-1' } },
+            { type: 'spinner', ...oelAtTile(4, 1), attrs: { tag: '-1' } },
         ]));
         expect(out.verdict).toBe(VERDICT.REFUSED);
         expect(out.errorName).toBe('SolverBotError');

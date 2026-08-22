@@ -1395,9 +1395,10 @@ export const R8_STRATEGY_EXECUTORS = Object.freeze({
                 + 'one-cell arrival island), else a lattice ring cell within '
                 + '`presses.SLASH_REACH` whose `slashRect` overlaps the rock and whose '
                 + 'corridor PLANS',
-            'the facing: `slashFacingToward` — `presses.js`\'s numbering, NOT '
-                + '`FACING_KEYS`\' (see the helper\'s own docblock for the measured '
-                + 'mismatch and why it is not repaired here)',
+            'the facing: `solverBot.facingToward` — the SHARED helper, in '
+                + '`presses.js`\'s own numbering. ⛓ R9 slice 11 repaired it (trap 498) '
+                + 'and DELETED the correctly-numbered twin this verb used to carry, so '
+                + 'the verb and the kill arm now read one integer out of one map',
             'the wait: `breakableRocks.WAIT_AFTER_PRESS_TICKS`, the LEG\'s promise '
                 + 'rather than `HIT_TO_GONE_TICKS` — the animation\'s ±1 update-order '
                 + 'gap is exactly what the larger number covers, and '

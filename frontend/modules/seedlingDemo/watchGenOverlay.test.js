@@ -177,9 +177,22 @@ describe('watchGenOverlay — the layers', () => {
      * page holds one beside the model (`state.elements.certification`), so the
      * fixture now hands the data function exactly that shape (trap: a fixture
      * only gates a change it can DISTINGUISH).
+     *
+     * ⛔⛔ **R9 SLICE 11 RE-POINTED THE SEED (1 -> 3), AND THE REASON IS A
+     * MEASUREMENT WORTH KEEPING.** This row needs a DROPPED element that
+     * nonetheless carries a certification geometry to be ignored. Repairing
+     * `solverBot.facingToward` (trap 498) gave the kill arm vertical strike
+     * cells, and seed 1's `killgate` — previously dropped because its
+     * certification solve REFUSED — now CERTIFIES, so `elements.ran` is `true`
+     * and there is no dropped element left to assert about. Swept over seeds
+     * 1..20 against a pristine worktree: `ran === true` goes **2 -> 4**, and the
+     * two that flipped are **seed 1 and seed 9**. Seed 3 is the lowest seed that
+     * still drops (as do 4..8 and 10..19), so the subject is re-pointed, not
+     * weakened — and the flip is the same one that moves `level post-sword s1`
+     * in ruling 8's identity block.
      */
     it('⛔⛔ …even when the certification\'s GEOMETRY is attached to the model', () => {
-        const seam = seedlingSeam({ seed: 1, items: { hasSword: true },
+        const seam = seedlingSeam({ seed: 3, items: { hasSword: true },
             elements: { name: 'killgate' } });
         expect(seam.model.elements.ran).toBe(false);
         expect(seam.certification.geometry.length).toBeGreaterThan(0);

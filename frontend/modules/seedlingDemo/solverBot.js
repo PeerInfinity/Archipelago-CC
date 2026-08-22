@@ -79,7 +79,9 @@ import {
 } from './shieldBossFight.js';
 import { SPINNER, hammerHitsPlayer } from './spinner.js';
 import { KILL_ARM_POLICY } from './enemyDamage.js';
-import { SLASH_HIT_TICKS, SLASH_REACH, distanceRectPoint, slashRect } from './presses.js';
+import {
+    DOWN, LEFT, RIGHT, SLASH_HIT_TICKS, SLASH_REACH, UP, distanceRectPoint, slashRect,
+} from './presses.js';
 /**
  * ⛓⛓⛓ R9 SLICE 4 — THE ROCK'S OWN TRANSCRIPTION, ASKED RATHER THAN COPIED.
  * `rockBreaksUnder` is `hit(_t)`'s test (`rockType <= hasGhostSword ? 1 : 0`),
@@ -3530,17 +3532,67 @@ function safeStep(run, held, alternatives, what, bodyId) {
         + 'There is no step out.', { code: HAMMER_SAFETY });
 }
 
-/** The four facings, at `presses.slashRect`'s own indices. */
-const FACING_KEYS = Object.freeze({ 0: 'right', 1: 'down', 2: 'left', 3: 'up' });
+/**
+ * ⛓⛓⛓ **R9 SLICE 11 — ONE NUMBERING, BOTH CONSUMERS** (⚖ ruling 29,
+ * trap 498, the user's *"fixing `facingToward` is a high priority"*).
+ *
+ * ⛔ **THE DEFECT THIS PAIR CARRIED FOR THREE RUNGS, AND WHY IT STAYED GREEN.**
+ * `FACING_KEYS` was `{0:right, 1:down, 2:left, 3:up}` and `facingToward` returned
+ * `dy >= 0 ? 1 : 3` — the vertical pair SWAPPED against the game, which numbers
+ * `Player.direction` **RIGHT 0 · UP 1 · LEFT 2 · DOWN 3** (`presses.js`, and
+ * `playerPhysicsV2.nextDirection` is `sprites()`'s own chain and agrees). The pair
+ * was **self-consistent as a KEY map** — `FACING_KEYS[facingToward(...)]` really did
+ * hold the key that walks toward the target — and **wrong as a DIRECTION**:
+ * `slashRectToward` and `execKillByPress`'s live reach test feed the SAME integer to
+ * `presses.slashRect`, so for a target directly above or below the rect was computed
+ * on the OPPOSITE side and no vertical strike cell could ever be accepted.
+ *
+ * ⛓ **ONE INTEGER, TWO VOCABULARIES** — that is the whole shape of it, and it is
+ * why nothing was red: the defect only ever REFUSED opportunities, never pressed the
+ * wrong way. ⇒ the numbering is `presses.js`'s, DERIVED rather than retyped (the
+ * constants are imported, and there is no literal `1`/`3` below), and
+ * `breakVerb.test.js` asserts the one integer against BOTH vocabularies at once —
+ * the rect it produces AND the key it produces — which is the row that would have
+ * caught this on day one.
+ *
+ * ⛔ **AND THERE IS ONLY ONE SPELLING OF IT NOW.** Slice 4 had no licence to move
+ * tapes, so it built a correctly-numbered TWIN beside this pair
+ * (`SLASH_DIRECTION_KEYS` / `slashFacingToward` / `slashRectAt`) and pointed the
+ * `break` verb at it. Two spellings of one numbering is exactly the shape trap 357
+ * names, and it is the thing this slice exists to end: the twin is DELETED and the
+ * verb uses this pair.
+ *
+ * ⚠ **`Object.values(FACING_KEYS)` IS AN OPTION LIST, NOT ONLY A LOOKUP.**
+ * `stepToward` and `safeStep` enumerate it and take the FIRST option on a tie, and
+ * integer-like keys enumerate in ascending numeric order — so re-keying this map
+ * re-ordered those two tie-breaks (`right,down,left,up` → `right,up,left,down`).
+ * That is a real behavioural consequence of the repair, measured rather than
+ * discovered later, and it is confined to rooms with live spinner bodies because
+ * both functions return early without them.
+ */
+export const FACING_KEYS = Object.freeze({
+    [RIGHT]: 'right', [UP]: 'up', [LEFT]: 'left', [DOWN]: 'down',
+});
 
-/** Which of the four `Player.direction` values points from `cell` at `target`. */
-function facingToward(cell, target) {
+/**
+ * Which of the four `Player.direction` values points from `cell` at `target`.
+ *
+ * ⛓ **EXPORTED, WITH `FACING_KEYS`, FOR ONE REASON**: the claim that repairs
+ * trap 498 is *"the SAME integer is right in BOTH vocabularies"*, and no public
+ * consumer exposes the integer — `slashRectToward` returns only the rect and the
+ * kill arm returns only the key. A row driven through the consumers could assert
+ * one vocabulary or the other and never that they agree, which is precisely the
+ * hole the defect lived in. ⚠ `breakVerb.test.js` used to RESTATE this
+ * arithmetic locally because it was module-private; a copy of the thing under
+ * test is not a test of it.
+ */
+export function facingToward(cell, target) {
     const cx = (target.x + target.right) / 2;
     const cy = (target.y + target.bottom) / 2;
     const dx = cx - cell.x;
     const dy = cy - cell.y;
-    if (Math.abs(dx) >= Math.abs(dy)) return dx >= 0 ? 0 : 2;
-    return dy >= 0 ? 1 : 3;
+    if (Math.abs(dx) >= Math.abs(dy)) return dx >= 0 ? RIGHT : LEFT;
+    return dy >= 0 ? DOWN : UP;
 }
 
 /** `presses.slashRect` at the facing that points from `cell` at `target`. */
@@ -4924,56 +4976,6 @@ function execTouch(run, perTick, resolved, ctx) {
 }
 
 /**
- * ⛔⛔⛔ **R9 SLICE 4 — THE SLASH FACING, IN THE GAME'S OWN NUMBERING, AND WHY
- * THIS FUNCTION EXISTS BESIDE `facingToward` INSTEAD OF REPLACING IT.**
- *
- * `presses.js` transcribes `Player.direction` as **RIGHT 0 · UP 1 · LEFT 2 ·
- * DOWN 3** (`playerPhysicsV2.nextDirection` is `sprites()`'s own chain and
- * agrees). `solverBot.FACING_KEYS` is `{0:right, 1:down, 2:left, 3:up}` and
- * `facingToward` returns `dy >= 0 ? 1 : 3` — **the vertical pair is SWAPPED**
- * relative to the game.
- *
- * ⛓ THE PAIR IS SELF-CONSISTENT AS A *KEY* MAP and wrong as a *direction*:
- * `FACING_KEYS[facingToward(...)]` really does hold the key that walks toward
- * the target. What is wrong is the OTHER consumer — `slashRectToward` feeds the
- * same integer to `presses.slashRect`, so for a target directly ABOVE or BELOW
- * the rect is computed on the OPPOSITE side. Measured, at the origin:
- *
- *   target BELOW  facingToward -> 1, `slashRect(...,1)` is the UP rect   -> NO overlap
- *   target ABOVE  facingToward -> 3, `slashRect(...,3)` is the DOWN rect -> NO overlap
- *
- * ⇒ `deriveStrike`'s candidate filter and `execKillByPress`'s live reach test
- * can NEVER accept a vertical strike cell. That is a **conservative** defect —
- * it refuses opportunities, it never presses the wrong way — which is why three
- * rungs of committed tapes are green over it: every press they contain is
- * horizontal, where the two conventions agree.
- *
- * ⛔ **AND THAT IS EXACTLY WHY IT IS NOT FIXED HERE.** Repairing `facingToward`
- * would hand `deriveStrike` a whole class of strike cells it has never had, and
- * a nearer vertical cell would be chosen ahead of the horizontal one every
- * committed kill currently uses — i.e. it MOVES TAPES, which this slice has no
- * licence for. It is written up as a work order with its measurement, and this
- * verb uses a correctly-numbered helper of its own rather than quietly widening
- * the shared one.
- */
-const SLASH_DIRECTION_KEYS = Object.freeze({ 0: 'right', 1: 'up', 2: 'left', 3: 'down' });
-
-/** `facingToward`'s question, answered in `presses.js`'s numbering. */
-function slashFacingToward(from, target) {
-    const cx = (target.x + target.right) / 2;
-    const cy = (target.y + target.bottom) / 2;
-    const dx = cx - from.x;
-    const dy = cy - from.y;
-    if (Math.abs(dx) >= Math.abs(dy)) return dx >= 0 ? 0 : 2;
-    return dy >= 0 ? 3 : 1;
-}
-
-/** The slash rect a swing from `from` at `target` would really fire. */
-function slashRectAt(from, target) {
-    return slashRect(from.x, from.y, slashFacingToward(from, target));
-}
-
-/**
  * ⛓⛓⛓ RESOLVE the `break` work order — ⚖ R9 SLICE 4, AND THE TWO GUARDS ARE
  * THE VERB'S WHOLE ITEM STORY.
  *
@@ -5134,7 +5136,7 @@ function deriveBreakStance(run, rock, contacts, blocked = []) {
      * already in it and has not transitioned.
      */
     if (distanceRectPoint(run.state.x, run.state.y, rock.rect) <= SLASH_REACH
-        && rectsOverlapLocal(slashRectAt(run.state, rock.rect), rock.rect)) {
+        && rectsOverlapLocal(slashRectToward(run.state, rock.rect), rock.rect)) {
         return { stance: null, discharged: [] };
     }
     const pitch = DEFAULT_LATTICE;
@@ -5150,7 +5152,7 @@ function deriveBreakStance(run, rock, contacts, blocked = []) {
             const c = nodeCentre(cell.tx + dx, cell.ty + dy, pitch);
             if (plannerObstacleAt(run.world, c.x, c.y, null, opts)) continue;
             if (distanceRectPoint(c.x, c.y, rock.rect) > SLASH_REACH) { outOfReach += 1; continue; }
-            if (!rectsOverlapLocal(slashRectAt(c, rock.rect), rock.rect)) {
+            if (!rectsOverlapLocal(slashRectToward(c, rock.rect), rock.rect)) {
                 noRect += 1;
                 continue;
             }
@@ -5239,7 +5241,7 @@ function execBreak(run, perTick, resolved, ctx) {
         }
         let held = NO_KEYS;
         if (pressedAt === null) {
-            const want = slashFacingToward(run.state, resolved.target);
+            const want = facingToward(run.state, resolved.target);
             const inReach = distanceRectPoint(run.state.x, run.state.y, resolved.target)
                 <= SLASH_REACH
                 && rectsOverlapLocal(slashRect(run.state.x, run.state.y, want),
@@ -5262,7 +5264,7 @@ function execBreak(run, perTick, resolved, ctx) {
                 // the rock, which is where a swing wants it anyway — the wall
                 // stops the step and `sprites()` writes the direction the press
                 // on the next tick will consume.
-                held = new Set([SLASH_DIRECTION_KEYS[want]]);
+                held = new Set([FACING_KEYS[want]]);
                 aimed = true;
             }
         }

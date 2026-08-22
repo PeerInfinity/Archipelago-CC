@@ -30,8 +30,14 @@ import {
 } from './procgenOracle.js';
 import { POST_SWORD_ITEMS, PRE_SWORD_ITEMS } from './procgenPalette.js';
 import { SEEDLING_DEFAULTS } from './procgenSeedling.js';
-import { OBSTACLE_STRATEGIES, STRATEGY_EXECUTORS } from './solverBot.js';
-import { DOWN, RIGHT, SLASH_REACH, UP, distanceRectPoint, slashRect } from './presses.js';
+import { readFileSync } from 'node:fs';
+
+import {
+    FACING_KEYS, OBSTACLE_STRATEGIES, STRATEGY_EXECUTORS, facingToward,
+} from './solverBot.js';
+import {
+    DOWN, LEFT, RIGHT, SLASH_REACH, UP, distanceRectPoint, slashRect,
+} from './presses.js';
 import { DIRECTION_DOWN, DIRECTION_UP } from './playerPhysicsV2.js';
 import { plannerObstacleAt } from './botDriverV2.js';
 import { HIT_TO_GONE_TICKS, WAIT_AFTER_PRESS_TICKS, rockBreaksUnder } from './breakableRocks.js';
@@ -171,18 +177,18 @@ describe('the decision trace carries the verb', () => {
 
 
 /**
- * ⛔⛔⛔ **THE FINDING THIS SLICE TRIPPED OVER, PINNED AS A FINDING AND NOT AS A
- * FIX** — `solverBot.facingToward` answers in a numbering the GAME does not
- * use, and `slashRectToward` feeds that answer straight to `presses.slashRect`.
+ * ⛓⛓⛓ **THE REPAIR'S OWN ROWS — R9 SLICE 11, ⚖ RULING 29.** These replace the
+ * rows that PINNED the defect (trap 498). They said they would go red the day
+ * `facingToward` was repaired; it is repaired, they did, and this is what they
+ * became.
  *
- * These rows assert the DEFECT, deliberately: they are the measurement a ⚖ ask
- * needs, and the day `facingToward` is repaired they go RED and are rewritten
- * as the repair's own rows. Fixing it here would hand `deriveStrike` a whole
- * class of vertical strike cells it has never had — a nearer vertical cell
- * would be chosen ahead of the horizontal one every committed kill uses — and
- * that MOVES TAPES, which this slice has no licence for.
+ * ⛔ THE ROW THAT WOULD HAVE CAUGHT IT ON DAY ONE asks ONE integer against
+ * **BOTH** vocabularies at once — the RECT it produces through
+ * `presses.slashRect`, and the KEY it produces through `solverBot.FACING_KEYS`.
+ * The old pair was self-consistent in the key vocabulary and wrong in the rect
+ * one, so a row that asked only one of them passed for three rungs.
  */
-describe('⛔ the slash-direction convention, measured', () => {
+describe('⛓ the slash facing — ONE numbering, asserted against BOTH vocabularies', () => {
     /** The game's own numbering, from the two modules that transcribe it. */
     it('`presses` and `playerPhysicsV2` agree: UP is 1 and DOWN is 3', () => {
         expect(UP).toBe(1);
@@ -192,30 +198,61 @@ describe('⛔ the slash-direction convention, measured', () => {
     });
 
     /**
-     * ⛔ AND THE CONSEQUENCE, AT THE ORIGIN: a body directly below is in
-     * REACH, and the rect `slashRectToward`'s integer produces is the one
-     * ABOVE the player. The filter can therefore never accept it.
+     * ⛓ ALL FOUR CARDINALS, AT THE ORIGIN, IN ONE LOOP — a row that spelled
+     * out only the two that were broken would go green again the day somebody
+     * swapped the HORIZONTAL pair instead.
+     *
+     * ⚠ THE TARGETS ARE DERIVED FROM `SLASH_REACH`, not typed: each is a 16x16
+     * box whose near edge sits `SLASH_REACH / 2` from the origin, so every one
+     * of them is inside the reach the filter asks about first.
      */
-    it('⛔ a target directly BELOW is in reach and its `facingToward` rect MISSES', () => {
-        const below = { x: -8, y: 12, w: 16, h: 16, right: 8, bottom: 28 };
-        // `facingToward`'s arithmetic, restated (it is module-private).
-        const facingToward = (from, t) => {
-            const dx = (t.x + t.right) / 2 - from.x;
-            const dy = (t.y + t.bottom) / 2 - from.y;
-            if (Math.abs(dx) >= Math.abs(dy)) return dx >= 0 ? 0 : 2;
-            return dy >= 0 ? 1 : 3;
-        };
-        const ov = (a, b) => a.x < b.right && b.x < a.right && a.y < b.bottom && b.y < a.bottom;
-        expect(distanceRectPoint(0, 0, below)).toBeLessThanOrEqual(SLASH_REACH);
-        expect(facingToward({ x: 0, y: 0 }, below)).toBe(1);            // "down", in FACING_KEYS
-        expect(ov(slashRect(0, 0, facingToward({ x: 0, y: 0 }, below)), below)).toBe(false);
-        // ⛓ …and the GAME's own number for "below" hits it.
-        expect(ov(slashRect(0, 0, DOWN), below)).toBe(true);
-        // ⛓ The horizontal pair is where the two conventions agree, which is
-        // why three rungs of committed presses are green over this.
-        const east = { x: 8, y: -8, w: 16, h: 16, right: 24, bottom: 8 };
-        expect(facingToward({ x: 0, y: 0 }, east)).toBe(RIGHT);
-        expect(ov(slashRect(0, 0, RIGHT), east)).toBe(true);
+    /** `solverBot.rectsOverlapLocal`'s test, which is `FP.collideRect`'s. */
+    const overlaps = (a, b) => a.x < b.right && b.x < a.right
+        && a.y < b.bottom && b.y < a.bottom;
+    const OFFSET = SLASH_REACH / 2;
+    const boxAt = (cx, cy) => ({
+        x: cx - 8, y: cy - 8, w: 16, h: 16, right: cx + 8, bottom: cy + 8,
+    });
+    const CARDINALS = [
+        { name: 'EAST', dir: RIGHT, key: 'right', target: boxAt(OFFSET + 8, 0) },
+        { name: 'NORTH', dir: UP, key: 'up', target: boxAt(0, -(OFFSET + 8)) },
+        { name: 'WEST', dir: LEFT, key: 'left', target: boxAt(-(OFFSET + 8), 0) },
+        { name: 'SOUTH', dir: DOWN, key: 'down', target: boxAt(0, OFFSET + 8) },
+    ];
+
+    it.each(CARDINALS)('⛓ $name — one integer: the RECT overlaps AND the KEY walks toward it',
+        ({ dir, key, target }) => {
+            const here = { x: 0, y: 0 };
+            const facing = facingToward(here, target);
+            // ⛓ VOCABULARY 1 — it IS the game's own `Player.direction` value.
+            expect(facing).toBe(dir);
+            // ⛓ VOCABULARY 2 — and the SAME integer keys the walk-toward key.
+            expect(FACING_KEYS[facing]).toBe(key);
+            // ⛓ THE CONSEQUENCE THE DEFECT DENIED: in reach, and the rect that
+            //   integer produces really covers the target.
+            expect(distanceRectPoint(here.x, here.y, target))
+                .toBeLessThanOrEqual(SLASH_REACH);
+            expect(overlaps(slashRect(here.x, here.y, facing), target)).toBe(true);
+        });
+
+    /**
+     * ⛔ **ONE SPELLING, AND THIS ROW IS A TEXT GATE — SAID OUT LOUD.**
+     * Slice 4 could not repair the shared helper, so it built a correctly
+     * numbered TWIN beside it (`SLASH_DIRECTION_KEYS` / `slashFacingToward` /
+     * `slashRectAt`) and the `break` verb used the twin. Two spellings of one
+     * numbering is what this slice exists to end (trap 357's family), so the
+     * twin is DELETED and the verb uses the shared pair.
+     *
+     * ⚠ WHAT THIS ROW CANNOT SEE (trap 516): a map built from a COMPUTED key
+     * would not match the pattern. The behavioural half of the claim is the
+     * four-cardinal row above — this one only forbids a second LITERAL
+     * direction->key table from being written beside the first.
+     */
+    it('⛓ solverBot holds exactly ONE direction->key table', () => {
+        const src = readFileSync(new URL('./solverBot.js', import.meta.url), 'utf8');
+        const tables = src.match(/(?:\d+|\[[A-Z_]+\])\s*:\s*'right'/g) ?? [];
+        expect(tables, `direction->key tables found: ${tables.join(' · ')}`)
+            .toHaveLength(1);
     });
 });
 
