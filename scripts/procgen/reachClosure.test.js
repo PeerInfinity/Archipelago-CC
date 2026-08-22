@@ -103,10 +103,55 @@ describe('⛓ a synthetic three-file graph whose middle edge is DYNAMIC', () => 
 
 describe('⛔⛔ THE SLICE-11 REPRODUCTION — the four rows a depth-1 grep missed', () => {
     const RANGE = '70f14a502..5d8ded3b3';
-    const changed = execFileSync('git', ['diff', '--name-only', RANGE],
-        { cwd: REPO, encoding: 'utf8' }).split('\n').filter(Boolean);
 
-    it('the range still resolves and still names solverBot.js', () => {
+    /**
+     * ⛔⛔ THE SUBJECT IS A PINNED FILE LIST, NOT A `git diff`, AND THAT IS THE
+     * FIX FOR A RED CI FOUND FIRST.
+     *
+     * The first cut ran `git diff --name-only 70f14a502..5d8ded3b3` in the
+     * describe body. Locally that is a fact about history and cannot change;
+     * on CI, whose checkout is SHALLOW, it is
+     * `fatal: ambiguous argument … unknown revision`, thrown at collection time
+     * — so the whole FILE errored and 16 rows vanished while the local run was
+     * green. ⇒ the seven paths are pinned here as DATA (they are history; they
+     * cannot drift), the reproduction runs everywhere, and the git call becomes
+     * one row about the PIN's PROVENANCE which skips, by name, where there is
+     * no history to ask.
+     */
+    const changed = Object.freeze([
+        'frontend/modules/seedlingDemo/breakVerb.test.js',
+        'frontend/modules/seedlingDemo/procgenCountableClock.test.js',
+        'frontend/modules/seedlingDemo/procgenPostSword.test.js',
+        'frontend/modules/seedlingDemo/procgenScratchPersistence.test.js',
+        'frontend/modules/seedlingDemo/r8Acceptance.js',
+        'frontend/modules/seedlingDemo/solverBot.js',
+        'frontend/modules/seedlingDemo/watchGenOverlay.test.js',
+    ]);
+
+    /** The range's own file list, or null where the history is not present. */
+    function rangeFiles() {
+        try {
+            return execFileSync('git', ['diff', '--name-only', RANGE],
+                { cwd: REPO, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] })
+                .split('\n').filter(Boolean);
+        } catch {
+            return null;
+        }
+    }
+
+    it('the pinned list is the RANGE\'s own — or says why it could not ask', () => {
+        const fromGit = rangeFiles();
+        if (fromGit === null) {
+            // ⚠ NOT a silent skip: the reason is asserted, so a broken `git`
+            // cannot masquerade as a shallow clone.
+            expect(() => execFileSync('git', ['rev-parse', '70f14a502^{commit}'],
+                { cwd: REPO, stdio: 'ignore' })).toThrow();
+            return;
+        }
+        expect([...fromGit].sort()).toEqual([...changed].sort());
+    });
+
+    it('the pinned subject names solverBot.js', () => {
         expect(changed).toContain('frontend/modules/seedlingDemo/solverBot.js');
     });
 
