@@ -1345,13 +1345,58 @@ describe('version 9: the witnessed mid-run clear', () => {
      * copied every tape would make the 121 committed fixtures allocate for
      * nothing and would hide a copy that diverged.
      */
-    it('projects EVERY v9 tape, and returns anything older untouched', () => {
+    it('projects EVERY v9 tape, and a lower version KEEPS ITS NUMBER', () => {
         const v9NoAt = parseTape(v9({ persistence: [], tape_version: 9 }));
         expect(v9NoAt.tape_version).toBe(9);
         expect(gameVisibleTape(v9NoAt).tape_version).toBe(8);
         const v8 = parseTape(v9({ persistence: [], tape_version: 8 }));
-        expect(gameVisibleTape(v8)).toBe(v8);
+        // ⛔ A PROJECTION NEVER RAISES A VERSION. v9+ is, in content, a v8
+        // tape; v1..v8 already are one and keep the number they were written
+        // at, so the 121 committed fixtures are not re-versioned by being
+        // handed to the game.
+        expect(gameVisibleTape(v8).tape_version).toBe(8);
         expect(GAME_VISIBLE_DROPS).toEqual(['persistence[].at', 'despawn', 'tick0']);
+    });
+
+    /**
+     * ⛔⛔⛔ R9 SLICE 9 — **THE PROJECTION LEAKED ON EVERY TAPE BELOW v9, AND
+     * THE PIN ABOVE COULD NOT SEE IT** because it only ever projected a v9
+     * tape.
+     *
+     * `gameVisibleTape` returned a sub-v9 tape BY IDENTITY (`return t`) as a
+     * deliberate no-copy optimisation — correct when it was written, because
+     * a v8 tape had no classified field to lose. It stopped being correct the
+     * moment `parseTape` began NORMALISING the newer fields onto every tape it
+     * parses: a parsed v8 tape carries `despawn: []` and `tick0: null`, and
+     * the identity return handed both to the game.
+     *
+     * ⛓ WHAT IT COST, MEASURED (R9 slice 9 W0): the latch cache in
+     * `solve-seedling-r9-campaign.mjs` keys on the md5 of exactly these bytes,
+     * so every sub-v9 tape's key MOVED at the v9, v10 and v11 bumps even
+     * though nothing game-visible changed — reproduced on the slice-6 cache,
+     * where the two v9 segments' filenames still reproduce byte for byte
+     * (`r8-solve-5` bc706c7ba3e3, `r8-solve-8` e66574ebe41d) and every v8 one
+     * no longer does. A silent extra GPU run per bump, never a wrong answer.
+     *
+     * ⛔ AND THE REAL RISK IS THE NEXT FIELD, NOT THESE TWO. `despawn: []` and
+     * `tick0: null` are inert to the fork (measured: a v8 payload drives
+     * byte-identically with and without them). A v12 field whose normalised
+     * value is NOT inert would have reached the game on every tape below v9,
+     * on exactly the path no test covered.
+     */
+    it('⛔ the projection drops the classified fields on a tape BELOW v9 too', () => {
+        const v8 = parseTape(v9({ persistence: [], tape_version: 8 }));
+        expect(v8).toHaveProperty('despawn');
+        expect(v8).toHaveProperty('tick0');
+        const g = gameVisibleTape(v8);
+        expect(g).not.toHaveProperty('despawn');
+        expect(g).not.toHaveProperty('tick0');
+        // the SAME set of differing keys as the v9 pin, minus the version —
+        // which a sub-v9 projection does not move.
+        const differing = Object.keys(v8).filter(
+            (k) => JSON.stringify(v8[k]) !== JSON.stringify(g[k]));
+        expect(differing.sort()).toEqual(['despawn', 'tick0']);
+        expect(() => parseTape(g)).not.toThrow();
     });
 });
 

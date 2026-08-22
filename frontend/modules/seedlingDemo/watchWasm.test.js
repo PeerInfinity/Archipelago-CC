@@ -383,19 +383,33 @@ describe('E3 — `publishShip` projects the verdict NOTE, so a claim about the r
         expect(projected.persistence.some((c) => c.at !== undefined)).toBe(false);
         expect(projected).not.toHaveProperty('tick0');
         /**
-         * ⚠ and BYTE-INERT for everything that shipped before it: a v8 tape
-         * projects to ITSELF, so the single-tape arms are unaffected by
-         * construction rather than by re-measurement.
+         * ⚠ and a tape below v9 KEEPS ITS VERSION — the single-tape arms are
+         * unaffected in the only way that matters to the game's loader, which
+         * gates on the version LIST.
          *
          * ⛔ THE SUBJECT MOVED AND THE CLAIM DID NOT. This used to read
          * `r8-d2-19`, which is a chain segment and is therefore v11 now. The
          * control has to be a tape the derived set does NOT contain, or it
          * would stop being a control the moment its chain gained a field —
          * `r8-solve-11` is the battery's room and is in no chain.
+         *
+         * ⛔⛔ AND THE CLAIM USED TO BE `JSON.stringify(projection) ===
+         * JSON.stringify(tape)` — "byte-inert, no key dropped". R9 slice 9
+         * measured that as FALSE and fixed it: `parseTape` NORMALISES `despawn`
+         * and `tick0` onto every tape it parses, so a parsed v8 tape carries
+         * both, and the old identity return handed them to the game. The
+         * projection now drops them at every version. What survives of the
+         * original claim — and it is the half the arms rest on — is that
+         * nothing GAME-VISIBLE moves and the version does not.
          */
         const v8 = loadTape('r8-solve-11');
         expect(v8.tape_version).toBe(8);
-        expect(JSON.stringify(gameVisibleTape(v8))).toBe(JSON.stringify(v8));
+        const g8 = gameVisibleTape(v8);
+        expect(g8.tape_version).toBe(8);
+        expect(g8).not.toHaveProperty('despawn');
+        expect(g8).not.toHaveProperty('tick0');
+        const { despawn, tick0, ...rest } = v8;
+        expect(JSON.stringify(g8)).toBe(JSON.stringify(rest));
     });
 
     /**

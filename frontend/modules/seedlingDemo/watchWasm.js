@@ -1367,10 +1367,15 @@ export async function shipToWasm(payload, host) {
          * got 9` — the AS3 loader gating on its VERSION LIST, refusing by name
          * exactly as designed, at `tape 1/3`.
          *
-         * ⚠ AND IT IS BYTE-INERT FOR EVERY TAPE THAT SHIPPED BEFORE:
-         * `gameVisibleTape` on a v8 tape returns it unchanged (measured on
-         * `r8-d2-19`: identical, no key dropped), so the three single-tape
-         * arms are unaffected by construction rather than by re-measurement.
+         * ⚠ AND IT MOVES NOTHING GAME-VISIBLE FOR A TAPE THAT SHIPPED BEFORE:
+         * `gameVisibleTape` leaves a sub-v9 tape's VERSION alone, so the three
+         * single-tape arms are unaffected in the one way the AS3 loader cares
+         * about. ⛔ It is not literally identity any more, and R9 slice 9 is
+         * why: `parseTape` normalises `despawn` and `tick0` onto every tape it
+         * parses, so the old `return t` shortcut handed both to the game on
+         * every tape below v9 — measured, and measured inert on the GPU
+         * (`r8-solve-6`'s v8 payload drives to a byte-identical stream with and
+         * without them), but inert only for THESE two values.
          */
         /**
          * ⛓⛓⛓ R9 SLICE 8 (⚖ ruling 20) — FOR k > 0 THE PROJECTION IS THE

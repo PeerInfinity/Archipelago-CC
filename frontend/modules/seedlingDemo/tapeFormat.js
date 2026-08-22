@@ -1960,11 +1960,25 @@ export const GAME_VISIBLE_DROPS = Object.freeze(['persistence[].at', 'despawn', 
 
 export function gameVisibleTape(tape) {
     const t = tape.tape_version === undefined ? parseTape(tape) : tape;
-    // ⚠ EVERY v9+ tape projects, not only the ones carrying a model-only
-    // field. The GAME's loader gates on the VERSION LIST, so a v9 tape with
-    // no mid-run clear is refused for a number rather than for a feature —
-    // and it is, in content, exactly a v8 tape.
-    if (t.tape_version < 9) return t;
+    /**
+     * ⛔⛔⛔ R9 SLICE 9 — **EVERY TAPE PROJECTS, INCLUDING ONE BELOW v9.**
+     *
+     * This used to `return t` untouched for `tape_version < 9`, as a
+     * deliberate no-copy shortcut: a v8 tape had no classified field to lose,
+     * so identity was equality. That stopped being true the moment `parseTape`
+     * began NORMALISING the newer fields onto everything it parses — a parsed
+     * v8 tape carries `despawn: []` and `tick0: null`, and the shortcut handed
+     * both to the game.
+     *
+     * ⛓ MEASURED (slice 9 W0): the two inert values cost nothing on the game
+     * (a v8 payload drives byte-identically with and without them), but the
+     * latch cache in `solve-seedling-r9-campaign.mjs` keys on the md5 of
+     * exactly these bytes, so every sub-v9 tape's key moved at the v9, v10 and
+     * v11 bumps for no game-visible change — a silent extra GPU run per bump.
+     * ⛔ The risk that mattered was the NEXT field: a v12 normalisation that
+     * was not inert would have crossed to the game on the one path no test
+     * covered.
+     */
     // ⛓ R9 SLICE 8: `tick0` leaves here too, and its absence downstream is the
     // whole claim. The fork has no tick-0 concept — the page APPLIES the block
     // through `botStart`'s existing `rng`/`seam.time` writes and the game only
@@ -1972,12 +1986,18 @@ export function gameVisibleTape(tape) {
     const { despawn, tick0, ...rest } = t;
     return {
         ...rest,
-        // ⚠ 8, and still not `tape_version - 1`: everything versions 9, 10
-        // and 11 added is dropped here, so what is left is precisely a version
-        // 8 tape. A decrement would be arithmetic pretending to be a claim —
-        // and with v11 on the roster it would be a WRONG one, since a v11 tape
-        // minus its tick-0 block is a v8 tape and never a v10.
-        tape_version: 8,
+        // ⚠ 8 for everything at or above 9, and still not `tape_version - 1`:
+        // everything versions 9, 10 and 11 added is dropped here, so what is
+        // left is precisely a version 8 tape. A decrement would be arithmetic
+        // pretending to be a claim — and with v11 on the roster it would be a
+        // WRONG one, since a v11 tape minus its tick-0 block is a v8 tape and
+        // never a v10.
+        // ⛔ AND A PROJECTION NEVER RAISES A VERSION. A tape written at v3 is
+        // still a v3 tape after losing two keys it never declared, so `min`
+        // rather than a constant: re-stamping the 121 committed fixtures at 8
+        // would be this function claiming something about them it did not
+        // measure.
+        tape_version: Math.min(t.tape_version, 8),
         persistence: (t.persistence ?? []).map(({ at, ...c }) => c),
     };
 }
