@@ -3543,9 +3543,35 @@ clean, then `r8-solve-6`'s declared `rng` is not the live world's — and all te
 `seam.time` was re-recorded. No JS row can see it (the model compares declaration against
 declaration). ⚖ **OPEN: the cure is a re-record of `r8-solve-6..10`'s `rng` from the
 campaign's own latch — a TAPE MOVE, so an ask; boundaries 6/15..9/15 are unmeasured.**
-**NEXT in R9: slice 8 = L14's CAMERA BAND. ⚖ ALSO OPEN: the v10 despawn channel has two
-witnesses and both are hand tapes — record a solver despawn, keep them, or retire the
-channel.**
+⛓⛓⛓ **R9 SLICE 8 SHIPPED 2026-08-21** (`a0991e536..c4f7b21e4`, seven commits) — ⚖ ruling
+20, THE TICK-0 LATCH. A segment declares its boot state PRE-BUILD, and a fresh page then
+spends it on the boot level's build and the load fade before tick 0; a continuation pays
+neither. Slices 5 and 6 had been correcting for a state nobody measured. Now a v11 `tick0
+{rng, seam}` block carries the fresh-page TICK-0 reading, derived by ONE ZERO-TICK Windows
+run per segment — a tape with `inputs: []` whose terminal latch IS tick 0, verified from
+`Bot.as`'s own control flow before any GPU was spent and measured at `latch.tick` 0 on all
+twenty. **The derived set is TWENTY, not the ruling's 18** (`toy-west-pair` is a third
+multi-segment chain). The field is game-INVISIBLE and JS-staging-INVISIBLE; the page WRITES
+it on a continuation; `bootCost` survives as a CHECK the game passes **18 of 18** (every
+declared segment reads `declared + 21`, render-coupled rooms included — coupling moves the
+STREAM, never the CLOCK). ⛔⛔ **THE PREDICTION MISSED AND THE MISS IS THE PROOF**: the chain
+still refuses at `boundary 5/15` — but windows 2..5 were each written their committed
+tick-0 block, boundaries 1..4 admitted and all five windows agree per tick, so the live
+position at boundary 5 **IS** `r8-solve-5`'s fresh-page exit BY CONSTRUCTION, and the
+declaration (byte-identical to retired `r7-act2-6`'s) is demonstrably not it. 7b could
+infer the rng was never re-recorded; slice 8 PROVES it. ⇒ ⚖ **ruling 21: slice 9 is the
+CAMPAIGN RE-RECORD PIPELINE, whose first run is the licence.** Also paid: a SEVENTH
+producer on no checklist that had been re-versioning its own output since v9 (it read
+`TAPE_VERSION`, which its own docblock forbids) and crashed before its verdict; and a
+node-only import that broke `watch.html` and surfaced as a 180-second TIMEOUT rather than
+a module error. Gates: identity identical, six producers green (four md5s moved on purpose,
+two unmoved as the control), survey 23/29, sequence 24/0, browser 262/0/0, vitest **6777**,
+ship **142/0**, pages **20/0** local+live, solver-roster **768/0/67 unmoved to the row** —
+the measurement that the field is invisible to the game.
+**NEXT in R9: slice 9 = the CAMPAIGN RE-RECORD PIPELINE (ruling 21) · slice 10 = the
+campaign player (ruling 19) · slice 11 = L14's CAMERA BAND. ⚖ ALSO OPEN: the v10 despawn
+channel has two witnesses and both are hand tapes — record a solver despawn, keep them, or
+retire the channel.**
 **Slice 1 (the quick fixes) SHIPPED 2026-08-20**, `d7b0f5ec1..9bbc847fb`: the
 per-spec parameter DOMAIN `key=v1|v2|v3` (byte-inert, whole identity block
 unmoved) and the rung's ONE ruled generator re-record adopting it in the biome
