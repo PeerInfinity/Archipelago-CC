@@ -17,7 +17,7 @@
  */
 
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -153,6 +153,36 @@ describe('⛔⛔ THE SLICE-11 REPRODUCTION — the four rows a depth-1 grep miss
     it('and the maze byte-identity row, which does NOT reach the solver, is absent', async () => {
         const report = await reachReport(changed, { repo: REPO });
         expect(report.identity.map((r) => r.label)).not.toContain('maze byte-identity');
+    });
+});
+
+describe('⛔⛔ the edge that is NOT an import — a gate DRIVES a page', () => {
+    /**
+     * `check-seedling-editor-sequence.mjs` never imports `watch.html`; it
+     * points a browser at it. Without this edge the closure answers "a change
+     * to `watchViewer.js` reaches NO gate", which is a claim of INERTIA and is
+     * false — and a short upper bound is worse than none.
+     */
+    it('a change to the page reaches the browser gates that drive it', async () => {
+        const report = await reachReport(
+            ['frontend/modules/seedlingDemo/watchViewer.js'], { repo: REPO },
+        );
+        expect(report.gates).toContain('scripts/procgen/check-seedling-editor-sequence.mjs');
+        expect(report.gates).toContain('scripts/procgen/check-seedling-wasm-ship.mjs');
+        expect(report.pages).toContain('frontend/modules/seedlingDemo/watch.html');
+    });
+
+    it('and the edge is DERIVED from the naming — no name, no edge', () => {
+        const graph = buildGraph({ repo: REPO });
+        const scripts = [...graph.nodes].filter((n) => n.startsWith('scripts/procgen/'));
+        const silent = scripts.filter(
+            (n) => !/[A-Za-z0-9_.-]+\.html\b/.test(readFileSync(join(REPO, n), 'utf8')));
+        // non-vacuity: there really are scripts of both kinds
+        expect(silent.length).toBeGreaterThan(10);
+        expect(scripts.length - silent.length).toBeGreaterThan(10);
+        for (const n of silent) {
+            expect([...graph.forward.get(n)].filter((f) => f.endsWith('.html'))).toEqual([]);
+        }
     });
 });
 

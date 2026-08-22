@@ -233,6 +233,60 @@ describe('the holder', () => {
 
 // ── the structural row ───────────────────────────────────────────────────
 
+/**
+ * ⛔⛔⛓ R9 SLICE 11b — **ONE LOADER FOR A TAPE'S BYTES, AND IT IS
+ * UNCACHEABLE** (⚖ ruling 32 C, trap 557).
+ *
+ * R9 slice 11 read one ship-gate red whose every delta was exactly the
+ * re-record's own 32 ticks, on an unchanged tree, and two re-runs came back
+ * green (§21.9). Cause unproven; a stale response for a just-rewritten tape is
+ * the mechanism it looked most like, and this row is what keeps that mechanism
+ * OUT rather than arguing about it.
+ *
+ * ⚠ ASSERTED OVER THE SOURCE, for the same reason the listener rule above is:
+ * there is no runtime moment at which a second, un-busted `fetch` shows itself
+ * — it just serves an old file, quietly and correctly.
+ */
+describe('⛔⛔ a committed artifact reaches this page through ONE busted fetch', () => {
+    const source = (name) => readFileSync(join(HERE, name), 'utf8');
+    const PAGE_JS = () => readdirSync(HERE)
+        .filter((f) => f.endsWith('.js') && !f.endsWith('.test.js'))
+        .sort();
+
+    it('every raw `fetch(` in the page is the ONE helper, or a deliberate cache PROBE', () => {
+        const files = PAGE_JS();
+        const offenders = files.flatMap((f) => source(f)
+            .split('\n')
+            .map((line, i) => ({ line: line.trim(), n: i + 1 }))
+            // ⚠ COMMENT LINES ARE NOT CALL SITES. `levelSource.js:16` shows a
+            // bare `fetch` in a usage EXAMPLE; reporting it would be a finding
+            // about prose. The filter is `*` / `//`-led lines only, so a real
+            // call can never hide behind it.
+            .filter((r) => !/^(\*|\/\/|\/\*)/.test(r.line))
+            .filter((r) => /(?:await |= |return )fetch\s*\(/.test(r.line))
+            .filter((r) => !/cache:\s*'(no-store|only-if-cached)'/.test(r.line))
+            // ⚠ NAMED EXCEPTION: `watchWasm.js`'s HEAD probe asks whether the
+            // wasm PAGE exists. It reads no artifact bytes, and busting it
+            // would say this rule is about `fetch` rather than about tapes.
+            .filter((r) => !/WASM_PAGE/.test(r.line))
+            .map((r) => `${f}:${r.n}  ${r.line}`));
+        expect(offenders).toEqual([]);
+        // ⛔ NON-VACUITY, twice over: the scan must have read the file that
+        // owns the loader, and the loader must really be there.
+        expect(files).toContain('watchViewer.js');
+        expect(source('watchViewer.js')).toMatch(/function fetchArtifact\(url, init = \{\}\)/);
+        expect(source('watchViewer.js')).toMatch(/\.\.\.init, cache: 'no-store'/);
+    });
+
+    it('and the five sites that used to fetch tape bytes now call it', () => {
+        const src = source('watchViewer.js');
+        // the `?tape=` load path (through fetchJson), the trace sidecar, the
+        // roster manifest, the directory listing, the per-tape roster read
+        expect((src.match(/fetchArtifact\(/g) ?? []).length).toBeGreaterThanOrEqual(5);
+        expect(src).toMatch(/const res = await fetchArtifact\(url\);/);
+    });
+});
+
 describe('⛔ every listener in the page goes through a lifetime', () => {
     /**
      * The mechanism can only witness what it registered. A bare

@@ -607,8 +607,46 @@ function fatal(message, detail = '') {
     $('detail').textContent = detail;
 }
 
+/**
+ * ⛔⛔⛓ R9 SLICE 11b — **ONE FETCH FOR EVERY COMMITTED ARTIFACT THIS PAGE
+ * READS, AND IT IS UNCACHEABLE.** ⚖ Ruling 32 C, trap 557.
+ *
+ * ── THE FAILURE THIS EXISTS TO MAKE IMPOSSIBLE ────────────────────────
+ *
+ * R9 slice 11 re-recorded four tapes and then read ONE ship-gate red at
+ * `boundary 2/3` with every delta exactly 32 — the re-record's own number,
+ * arriving as if it were a boot regression. The tree had not changed, the
+ * pipeline had written nothing, and two re-runs came back 245/0. Cause
+ * UNPROVEN (§21.9), most likely a stale response for a tape whose bytes had
+ * just been rewritten. ⛔ It cost ~40 minutes and it was diagnosed as a
+ * regression before the re-run refuted it.
+ *
+ * ⇒ a tape's bytes are read through HERE and nowhere else, with
+ * `cache: 'no-store'`, so "the page is holding the previous recording" stops
+ * being one of the things a red can mean. **The unification is half the fix**:
+ * before this the bytes arrived down FIVE separate `fetch(` calls (the
+ * `?tape=` load, the trace sidecar, the roster manifest, the directory
+ * listing, the per-tape roster read), and busting four of five is a bug that
+ * looks exactly like a fix.
+ *
+ * ⚠ WHERE THIS ACTUALLY BITES, measured: `python -m http.server` sends no
+ * `Cache-Control` at all, and Chrome's heuristic freshness is 10% of the
+ * document's age — a tape written seconds ago is revalidated, so the LOCAL
+ * dev server is not the dangerous host. **GitHub Pages sends
+ * `Cache-Control: max-age=600`**, and against that shape a second read of a
+ * rewritten file returns the OLD bytes with no request on the wire at all.
+ * The measurement is in the slice's as-built with the command that took it.
+ *
+ * ⛔ `cache` is set LAST so a caller cannot override it. The two
+ * `only-if-cached` probes further down are NOT artifact reads — they measure
+ * the cache rather than trusting it, and they stay as they are.
+ */
+function fetchArtifact(url, init = {}) {
+    return fetch(url, { ...init, cache: 'no-store' });
+}
+
 async function fetchJson(url, what) {
-    const res = await fetch(url);
+    const res = await fetchArtifact(url);
     if (!res.ok) throw new Error(`${what}: ${url} — HTTP ${res.status}`);
     return res.json();
 }
@@ -2175,7 +2213,7 @@ async function fetchTraceSidecar(tapePath) {
     const { path, why } = traceSidecarPath(tapePath);
     if (!path) return { trace: null, why };
     try {
-        const res = await fetch(repoUrl(path));
+        const res = await fetchArtifact(repoUrl(path));
         if (!res.ok) {
             return { trace: null, why: `${path} — HTTP ${res.status} (only the solver's `
                 + 'tapes carry a trace sidecar)' };
@@ -8409,7 +8447,7 @@ async function loadTapeIndex(dir, { withTapes = true } = {}) {
     let source = null;
     let summaries = null;
     try {
-        const res = await fetch(repoUrl(`${dir}/${TAPE_INDEX_FILE}`));
+        const res = await fetchArtifact(repoUrl(`${dir}/${TAPE_INDEX_FILE}`));
         if (res.ok) {
             const m = await res.json();
             if (Array.isArray(m?.tapes)) {
@@ -8421,7 +8459,7 @@ async function loadTapeIndex(dir, { withTapes = true } = {}) {
     } catch { /* no manifest here; the listing below is the other way in */ }
     if (!source) {
         try {
-            const res = await fetch(`${repoUrl(dir)}/`);
+            const res = await fetchArtifact(`${repoUrl(dir)}/`);
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
             const html = await res.text();
             names = [...html.matchAll(/href="([^"?/]+\.json)"/g)]
@@ -8443,7 +8481,7 @@ async function loadTapeIndex(dir, { withTapes = true } = {}) {
         const base = { name, file: n, path: `${dir}/${n}`, summary: summaries?.get(n) ?? null };
         if (!withTapes && base.summary) return { ...base, tape: null };
         try {
-            return { ...base, tape: await (await fetch(repoUrl(`${dir}/${n}`))).json() };
+            return { ...base, tape: await (await fetchArtifact(repoUrl(`${dir}/${n}`))).json() };
         } catch (e) {
             // Kept in the list WITHOUT a tape: the file exists, and a
             // roster that hid the one it could not read would be lying

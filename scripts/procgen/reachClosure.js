@@ -374,7 +374,41 @@ export function buildGraph({ repo = REPO, roots = DEFAULT_ROOTS, files } = {}) {
             reverse.get(target).add(rel);
         }
     }
+    addPageDriveEdges({ repo, nodes, forward, reverse });
     return { nodes, forward, reverse, unresolved };
+}
+
+/**
+ * ⛔⛔ THE EDGE THAT IS NOT AN IMPORT — **a gate DRIVES a page over HTTP.**
+ *
+ * `check-seedling-editor-sequence.mjs` never imports `watch.html`; it points a
+ * browser at it. So the import closure alone answers "a change to
+ * `watchViewer.js` reaches NO gate", which is a claim of inertia and is FALSE
+ * — that gate reads the page's every readout. An upper bound that under-reports
+ * is worse than none, which is this file's own rule applied to itself.
+ *
+ * ⇒ every `scripts/procgen/*` that NAMES a page file gets an edge to it. The
+ * page set is the graph's own `.html` nodes, so nothing is listed; a docblock
+ * mention counts, deliberately — a bound is allowed to be generous and is not
+ * allowed to be short.
+ */
+function addPageDriveEdges({ repo, nodes, forward, reverse }) {
+    const pages = new Map();
+    for (const rel of nodes) {
+        if (rel.endsWith('.html')) pages.set(rel.split('/').pop(), rel);
+    }
+    if (pages.size === 0) return;
+    for (const rel of nodes) {
+        if (!rel.startsWith('scripts/procgen/')) continue;
+        let source;
+        try { source = readFileSync(join(repo, rel), 'utf8'); } catch { continue; }
+        for (const m of source.matchAll(/([A-Za-z0-9_.-]+\.html)\b/g)) {
+            const page = pages.get(m[1]);
+            if (!page || page === rel) continue;
+            forward.get(rel).add(page);
+            reverse.get(page).add(rel);
+        }
+    }
 }
 
 /** Everything that transitively IMPORTS any of `seeds` (seeds included). */
