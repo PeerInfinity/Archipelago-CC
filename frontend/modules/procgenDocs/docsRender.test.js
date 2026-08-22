@@ -119,7 +119,10 @@ describe('⛓⛓ the anchors — two readers, 655 headings, one answer', () => {
         //   its own plus four `####` sub-sections (the readout, the frontier
         //   artifact, the gates, the extractor defect). A re-pin, not a
         //   widening.
-        expect(total).toBe(661);
+        // ⛓ 661 → 665: R9 slice 11's § (the `facingToward` repair) — FOUR
+        //   headings, its own plus three `####` (the defect, what moved, the
+        //   three lessons). A re-pin, not a widening.
+        expect(total).toBe(665);
     });
 
     it('⛔ uses OUR rule, not marked\'s slugger — they differ, and here is where', () => {
@@ -304,9 +307,11 @@ describe('⛓ the biggest document — the one the budget is about', () => {
         // ⛓ 443 → 448: R9 slice 10's § — five headings (the campaign player,
         //   plus THE CAMPAIGN READOUT, THE FRONTIER ARTIFACT, THE GATES and the
         //   instruments-extractor defect).
+        // ⛓ 448 → 452: R9 slice 11's § — four headings (the `facingToward`
+        //   repair, plus the defect, what moved, and the three lessons).
         const ids = idsOf(RENDERS.get('seedling-bot.md').html);
-        expect(ids).toHaveLength(448);
-        expect(new Set(ids).size).toBe(448);
+        expect(ids).toHaveLength(452);
+        expect(new Set(ids).size).toBe(452);
         expect(ids.filter((i) => i !== ghSlug(i))).toEqual([]);
     });
 

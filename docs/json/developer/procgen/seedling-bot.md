@@ -11765,6 +11765,12 @@ finding in `breakVerb.test.js` (rows that go RED the day it is fixed, and are
 rewritten as the repair's own rows then), worked around by a correctly-numbered
 local helper, carried as a ⚖ ask.
 
+⛓ **REPAIRED AT R9 SLICE 11** — see that slice's § below. The prediction in this
+paragraph was right about the mechanism and the tape move, and the pin's promise
+to go RED turned out to be unkeepable: it had RESTATED `facingToward`'s arithmetic
+locally rather than importing it, so it asserted a copy of the defect and could
+never invert.
+
 ⛓ The live Pages row after this slice's deploy: **20 / 0, ALL PASS**
 (`check-seedling-wasm-pages.mjs --root=https://peerinfinity.github.io/Archipelago-CC`)
 — unmoved at slice 3's number, and worth running even though no ship path moved,
@@ -12819,3 +12825,83 @@ character after the flag name — and the last flag of a usage block has none. S
 every instrument whose usage block's final line ended in a bare flag reported it
 as undocumented, silently. Fixed with a lookahead. **23 instruments gained a
 correctly-documented flag; 0 lost one.**
+
+### R9 slice 11: ONE numbering, both consumers — `facingToward` repaired, and the 32 ticks the kill arm had been refusing
+
+⚖ Ruling 29, the user's *"fixing `facingToward` is a high priority. We should do
+that before starting the level 14 solve"*. Trap 498, paid.
+
+#### The defect, and why three rungs of tapes were green over it
+
+`presses.js` and `playerPhysicsV2.js` number `Player.direction` **RIGHT 0 · UP 1 ·
+LEFT 2 · DOWN 3**. `solverBot.FACING_KEYS` was `{0:right, 1:down, 2:left, 3:up}`
+and `facingToward` returned `dy >= 0 ? 1 : 3` — **the vertical pair swapped**. The
+pair was self-consistent as a KEY map and wrong as a DIRECTION: `slashRectToward`
+and the live reach test feed the SAME integer to `presses.slashRect`, so a target
+directly above or below got its rect on the OPPOSITE side and **no vertical strike
+cell could ever be accepted**. ONE INTEGER, TWO VOCABULARIES — and because the
+defect only ever REFUSED opportunities, never pressed the wrong way, nothing was
+red.
+
+The fix is one numbering DERIVED from `presses.js`'s exported constants (no literal
+`1`/`3` left in `solverBot`), `FACING_KEYS` re-keyed by those same constants so the
+aim key still walks toward the body, and the slice-4 TWIN
+(`SLASH_DIRECTION_KEYS`/`slashFacingToward`/`slashRectAt`) **deleted**, with the
+`break` verb moved onto the shared pair. `facingToward` and `FACING_KEYS` are
+exported **for the agreement claim, not for a new consumer**: no public consumer
+exposes the integer, so a row driven through them could assert one vocabulary or
+the other and never that they AGREE — which is the hole the defect lived in.
+
+#### What moved — one mover, attributed before anything was re-recorded
+
+**`r8-solve-18`: 573 → 541 ticks.** `deriveStrike` takes the FIRST viable
+opportunity and `walkableCells` is ROW-MAJOR, so the newly-admissible cell ABOVE a
+body is enumerated before the ones on its own row.
+
+⛔ Re-keying `FACING_KEYS` also re-orders `Object.values(FACING_KEYS)`, which is the
+OPTION LIST of `stepToward`/`safeStep` — both take the FIRST option on a tie. A
+mutant that froze the OLD option order while keeping the fixed numbering **also
+gives 541**, so the mover is the new strike-cell class ALONE and the tie-break
+re-order is measured inert on this tape.
+
+| artifact | moved |
+|---|---|
+| `r8-solve-18` | tape · trace · expectation |
+| `r8-d2` (headline) | tape · trace · expectation — `541 + 864 + 781 = 2186` |
+| `r8-d2-19`, `r8-d2-20` | tape ONLY, and only `seed` + `time`; `time` −32 in both |
+| survey | 23/29 unchanged; **one** row moved — step 19 (L18) 573 → 541 |
+| six generator identity rows | pairs c3/c6, carved c4, ENEMY census, killgate s2/s9 |
+
+The generator rows are the fix reaching the certification solve **transitively**
+(`procgenSeedling.js` imports `procgenOracle`, so generating a level runs the
+certify). Every moved row is post-sword; **not one pre-sword row moved**, which is
+the mechanism confirming itself — `wall-gap-spinner-killlock` is post-sword only.
+Line-level causes: `killgate s9` flipped `DROPPED → cert true · SOLVED · cause
+sword`; `killgate s2` moved only in unrendered fields (`ticks` 416→360, `at`
+292→259) with its printed table identical; `ENEMY census` moved one row
+(`spinner@nub` 384→365); the pairs dumps moved 5/5/2 rows, some walk-only and some
+where the LEVEL ITSELF changed because certification now succeeds where it refused.
+
+#### The three lessons this slice paid for
+
+**A pin that RESTATES its subject cannot invert when the subject is repaired.**
+`breakVerb.test.js` promised *"the day `facingToward` is repaired they go RED"*.
+Measured on the fixed tree: **10 passed, 0 failed**. The rows had declared
+`const facingToward = …` locally — "it is module-private" — which SHADOWS the
+thing under test. The cure is the one taken here: export the subject and assert
+the real thing; a pin that promises to go red owes a demonstration that it can.
+
+**A vehicle can lose its subject.** Three tests chose their fixture BECAUSE a room
+refused, and the widened search made those exact rooms solvable, so each would
+have asserted nothing. Each was re-pointed by SWEEP, not weakened: **7 of 31**
+spinner cells still refuse with `HAMMER SAFETY`; **13 of 32** still solve-with-clock
+and refuse-without; killgate certification over seeds 1..20 goes **2 → 4**.
+
+**A bound that outlives a re-record slices the wrong window.**
+`playthroughWalk.js` hard-declares the `r8-d2` chain's clears/cuts/endsAt and no
+producer regenerates them, so the re-record left four roster rows failing. Re-derived
+from the segments: `at` 385→393, `removedAt` 284→292, `cuts` [573,1437]→[541,1405],
+`endsAt` 2218→2186. **The fade is unmoved at 101** — the clear moved because the
+REMOVAL moved, not because the `Lock` did. And the removal is 8 ticks LATER while
+the walk is 32 ticks SHORTER: the repair changes WHICH cell is struck, it does not
+accelerate uniformly.

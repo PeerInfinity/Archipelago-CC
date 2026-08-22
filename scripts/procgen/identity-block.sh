@@ -20,16 +20,63 @@
 # ── THE PUBLISHED VALUES AT `855a6d200` (R9 slice 7's baseline) ────────
 #   maze byte-identity            677b7d9cae51023e82fa2e365a8095dc   ✔ ruling 8
 #   acceptance batch              8ad7bda2ae4b470122334f71b4e92651   ✔ ruling 8
-#   empty pairs c3                4643933e38c96d1f076ffb4fbe65e682   ✔ ruling 8
-#   empty pairs c6                f54d7e75815385c67b009e46d6015dd2   ✔ ruling 8
-#   carved pairs c4               b078e54dd3081cbf88ce4a1d20e9ebab   ✔ ruling 8
-#   ENEMY census default          fcc77cfd7072e3bf04f89dcb24e73de3   ✔ ruling 8
+#   empty pairs c3                4643933e38c96d1f076ffb4fbe65e682   ⛓ SUPERSEDED
+#   empty pairs c6                f54d7e75815385c67b009e46d6015dd2   ⛓ SUPERSEDED
+#   carved pairs c4               b078e54dd3081cbf88ce4a1d20e9ebab   ⛓ SUPERSEDED
+#   ENEMY census default          fcc77cfd7072e3bf04f89dcb24e73de3   ⛓ SUPERSEDED
+#   ⛔ THE FOUR ROWS MARKED SUPERSEDED MOVED AT R9 SLICE 11 — successors below.
 #   guard census (elements)       a6d18d49ae256c321d175f45ec76dccc   ✔ ruling 8
 #   generated set                 OK                                 ✔ ruling 8
 #   reference --check             ALL 6 MODULES + 3 REGIONS MATCH    ✔ ruling 8
-#   battery --check               75adf82610fa7ea21f6822590a3b0330  [R9 s7]
-#   tail --check                  9a6a31925cb5204eee4cb0ad66febed6  [R9 s7]
-#   d2-chain / l18 / l3 / campaign --check      exit 0, unmoved since slice 6
+#
+# ── ⛓ THE STANDING VALUES, RE-SEALED AT R9 SLICE 11 (`143846faf`) ──────
+# ⛔ TRAP 549: a published digest DECAYS unless the slice that moves the producer
+#   re-seals it, and a value without its commit cannot be reproduced. Slice 7's
+#   `75adf826…` sat in this header through three briefs and reproduced at NEITHER
+#   end (§20.1 measured it). Every value below names the commit it was taken at.
+#   ⚠ TWO OF THEM MOVED AT SLICE 11 and the reason is the `facingToward` repair
+#   (trap 498): the kill arm gained vertical strike cells, so L18 solves 32 ticks
+#   sooner and every artifact that reads it followed.
+#
+#   battery --check      18682c65be4d41066fd99b6ac87248c9   @143846faf  (unmoved)
+#   tail --check         9a6a31925cb5204eee4cb0ad66febed6   @143846faf  (unmoved)
+#   r9-l3 --check        8ac17aca76f18b3370b091219f876b19   @143846faf  (unmoved)
+#   campaign --check     0f3119fbdd3a742c8a96137bbe82b56f   @143846faf  (unmoved)
+#   l18 --check          c0ecf701e3a39c18ad5c6d8bdf26187e   @143846faf  ⛓ MOVED
+#                        (was 691dc7f3…) — r8-solve-18 573 -> 541 ticks
+#   d2-chain --check     4e21c680e586917d1e02f3e5ed7e8377   @143846faf  ⛓ MOVED
+#                        (was e46183d6…) — through segment 1 only; r8-d2-19 and
+#                        r8-d2-20 stayed byte-identical in their WALKS
+#   ⛓ Both re-read exit 0 once the re-record landed: mid-slice they read exit 1
+#     ("⛔ DRIFT — the committed artifact is not what the solver produces today"),
+#     which is what a licensed mover looks like BEFORE its record.
+#   r7-ends-meet --check 75cf816affb3cfb903ae22b4120395ec   @70f14a502  CHECK CLEAN
+#                        ⚠ the SEVENTH producer (ruling 22) and NOT run by this
+#                        script — it drives a browser inside its own `--check`.
+#                        §18.11 warned its md5 is not a fingerprint; at
+#                        `70f14a502` it reproduced BYTE-IDENTICALLY over two
+#                        consecutive runs (empty `diff`), so it is quotable there.
+#
+#   ⛓ SIX MEASUREMENT ROWS MOVED AT SLICE 11, because `procgenSeedling` imports
+#   `procgenOracle` — GENERATING A LEVEL RUNS THE CERTIFY SOLVE, so the repaired
+#   kill arm reaches them transitively. ⚠ Every mover is POST-SWORD and not one
+#   pre-sword row moved, which is the mechanism confirming itself:
+#   `wall-gap-spinner-killlock` is a post-sword template.
+#
+#   empty pairs c3       9a7cffe618a796a5bd2f7bf228a2dcb1   @143846faf
+#   empty pairs c6       5824d3276e88af7dbb893128bd0aefb1   @143846faf
+#   carved pairs c4      e2cf97a1a2287f3939245f0e9ceb3e81   @143846faf
+#   ENEMY census         bc64aaf88920338cc52cef9d100daecd   @143846faf
+#                        (one row: `spinner@nub` SOLVED 384 -> 365)
+#   killgate s2     [*]  51da6d6acf45b92ccdaa58ac82767319   @143846faf
+#                        ⚠ its PRINTED TABLE is identical; only unrendered fields
+#                        moved (`ticks` 416->360, `at` 292->259). A row that
+#                        cannot SEE a change is not a row that saw none.
+#   killgate s9     [*]  d0687559341d1414839f27dba13a669b   @143846faf
+#                        (DROPPED -> placed/certified/SOLVED, cause `sword`)
+#   ⛓ UNMOVED and worth saying: maze, acceptance batch (it holds NO spinner
+#   traffic at all), guard census, AREA census, killgate s5 (its gate is
+#   DROPPED), level pre-sword s1 AND level post-sword s1.
 #
 # ⚠ THREE ROWS BELOW CARRY A COMMAND THIS SCRIPT CHOSE, NOT THE ONE THAT MADE
 #   RULING 8's PUBLISHED VALUE — the AREA census, the three `killgate` levels

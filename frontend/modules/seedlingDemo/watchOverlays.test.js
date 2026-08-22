@@ -484,7 +484,18 @@ describe('⛔ kickoff §4 slice 2 acceptance — the overlays on committed tapes
         // frames), which is why the comparison names `t`.
         const action = markers.filter((m) => m.layer === 'action');
         const pressTicks = [...new Set(collected.run.presses.map((p) => p.t))].sort((a, b) => a - b);
-        expect(pressTicks).toEqual([33, 66, 104, 179, 212, 270]);
+        // ⛓⛓ R9 SLICE 11 — SIX PRESSES BECAME FIVE, and the arithmetic says why.
+        //   Repairing `solverBot.facingToward` (trap 498) gave the kill arm
+        //   strike cells ABOVE and BELOW a body for the first time, and the
+        //   walk is 32 ticks shorter (573 -> 541). ⛔ The press COUNT dropping
+        //   is the sharper fact: two Spinners at `hitsMax` 3 need SIX landed
+        //   hits, the producer measures `6 landed of 19 test(s)`, and ONE PRESS
+        //   CANNOT LAND TWICE ON ONE BODY (`hitSpinner` sets `hitsTimer = 30`,
+        //   so tests 2..5 of the same swing are refused on i-frames — traps
+        //   85/93). Six landed hits from five presses therefore means ONE SWING
+        //   LANDED ON BOTH BODIES — which is exactly the opportunity a vertical
+        //   slash rect makes reachable and the old numbering could never accept.
+        expect(pressTicks).toEqual([44, 112, 145, 245, 278]);
         expect(action.map((m) => m.tick)).toEqual(pressTicks);
         expect(new Set(collected.run.presses.map((p) => p.fired - p.t))).toEqual(new Set([1, 2, 3, 4, 5]));
 
@@ -493,9 +504,11 @@ describe('⛔ kickoff §4 slice 2 acceptance — the overlays on committed tapes
         expect(collected.run.playerHits).toEqual([]);
         expect(collected.run.spinnerContacts).toEqual([]);
 
-        // …and the one event this walk does have.
+        // …and the one event this walk does have. ⛓ R9 slice 11: 573 -> 541,
+        //   the same 32 ticks as the press ledger above — the transition is the
+        //   walk's LAST tick, so it moves with the walk and not on its own.
         expect(markers.filter((m) => m.layer === 'events')
-            .map((m) => `${m.source}@${m.tick}`)).toEqual(['transition@573']);
+            .map((m) => `${m.source}@${m.tick}`)).toEqual(['transition@541']);
         // ⚠ NOT A SILENCE: nothing in this walk is unplaceable.
         expect(unplaced).toEqual([]);
     }, 60000);
