@@ -12330,3 +12330,177 @@ campaign arm's 26 rows; the pages gate **20 / 0**, its picker reporting
 **768 / 0 / 67** — `+14` on slice 7's own `endsAt` invariant, one row per chain
 over the fourteen chains that remain, and `−1` skip because the chain slice 7
 retired is no longer there to skip. Zero failures: no solver tape moved.
+
+### R9 slice 8: the TICK-0 LATCH — a second declared state, one build and one fade after the first
+
+A segment tape has always declared its boot state **PRE-BUILD**: `botStart`
+applies `rng` and `seam.time` *above* the deferred build (`Bot.as:1689`). A
+FRESH page then spends that declaration — it builds the boot level, which takes
+draws, and pays the load fade, which takes frames — and only then does the
+walk's first tick happen. A CONTINUATION pays neither cost, because `botStart`
+does not rebuild (`Bot.as:1722-1725`).
+
+So for three slices the page had been correcting for a state nobody had
+measured. R9 slice 5 ZEROED the declaration so the write became a no-op; slice 6
+BUMPED the clock by a derived constant. Slice 8 measures the thing both were
+standing in for: **where a fresh page actually stood at tick 0**.
+
+#### The zero-tick tape, and why it is exactly the tick-0 reading
+
+The measurement needs no new game code. A tape with `inputs: []` and
+`tick_count: 0` is driven through the ordinary Windows replay driver, and the
+fork's own control flow makes its terminal latch the tick-0 state:
+
+1. the armed update gate returns early while `blackCover > 0 ||
+   Game.freezeObjects`, counting dead frames and **not** advancing `tick` — so
+   the whole boot fade is spent *before* tick 0;
+2. on the first LIVE frame the tick-0 observation is recorded;
+3. `tick >= tickCount` is true immediately at `tick_count: 0`, firing
+   `latchSeam` — which runs "AFTER the final observation … and BEFORE this
+   frame's `super.update()`".
+
+The driver reads `botSeam` only once the run reports finished, which is that
+same disarm. Measured over all twenty segments: every latch is at `latch.tick`
+**0**.
+
+#### What the field is, and what it is not
+
+`tick0: { rng: {seed, split, cosmetic, fp}, seam: {time} }`, tape version
+**11**, stamped only on tapes that carry it — every v1..v10 fixture round-trips
+byte-identically past the bump.
+
+The schema is not a parallel list. `SEAM_PREBUILD_FIELDS` is exactly
+`["save.time", "rng.gameplay", "rng.cosmetic", "fp.seed"]` — the signature rows
+read at `Game.begin()` ENTRY rather than at the terminal disarm, which is
+precisely the set that *can* differ between the declaration and tick 0. Those
+four land in two channels, three in `rng` and one in `seam`, and that is the
+block's shape. Because `r7Acceptance` imports `tapeFormat` and not the other
+way round, the format validates the halves by REUSE (`parseRng`;
+`SEAM_BOOT_SPEC`'s own `time` row) and the correspondence is pinned by a unit
+row in `r7Acceptance.test.js`, which can see both sides.
+
+The field is **game-invisible**: `gameVisibleTape` drops it and still stamps 8,
+so the fork sees the tape it always saw. It is **JS-staging-invisible** too:
+`stagingFromTape`'s allowlist deliberately excludes it, because a field reaching
+`createRunForStaging` would be a rebuild knob wearing a latch's name.
+
+#### Which tapes carry it — twenty, derived
+
+Every segment of every multi-segment chain in `PLAYTHROUGH_CHAINS`, read out
+rather than typed: `toy-west-pair` (2), `r8-d2` (3), `r9-campaign` (15). Index 0
+is included even though a first window is never a continuation, so the
+missing-field refusal needs no special case. `derive-seedling-tick0.mjs` writes
+only that set and refuses any name outside it.
+
+The write is surgical. An earlier attempt re-emitted the tapes through
+`serializeTape` and reformatted all twenty — it indents with two spaces where
+the committed tapes use four, and it drops `"note": ""` — which parsed, replayed,
+and would have passed a "does it still load" check while rewriting files it was
+supposed to leave alone. The instrument now edits the committed text, and the
+identity `JSON.stringify(JSON.parse(t), null, 4) + "\n" === t` is *measured*
+over all twenty pristine tapes before anything is written. Across all twenty
+diffs the only changed lines are `tape_version`, `despawn: []` (mandatory from
+v10 up, and `[]` is what these tapes always meant) and the `tick0` block.
+
+#### The clock result
+
+Every one of the eighteen segments that declares a `seam.time` reads its tick-0
+clock at exactly `declared + 21` — `LOAD_FADE_FRAMES` (20) plus
+`BOOT_PRESWAP_FRAMES` (1). Render-coupled rooms included, so **render coupling
+moves the stream and never the clock**. Slice 6's constant is now a CHECK the
+game passes rather than a number the page adds.
+
+The two true starts read **4820** with no declared term, because `botStart`
+writes `Main.time` only when the declaration is non-zero — a true start inherits
+the page's own boot clock.
+
+The readings are reproducible: three tapes driven twice with `--no-cache` — a
+true start, a render-clean room and a render-coupled one — came back
+byte-identical in every field.
+
+#### What the page does now
+
+On a continuation the page WRITES the measured tick-0 `rng` and `seam.time`,
+through `botStart`'s existing writes. `split` is still taken from the
+declaration, because `Rng.split` is assigned unconditionally and is a property
+of the whole sequence rather than of a boundary. The readout field
+`tick0Applied` replaces `rngStripped` and `clockBumped` and carries both
+readings plus `obeysBootCost`.
+
+A continuation window whose tape lacks the field is refused **by name, with the
+derivation command**, in the picker and again at the boundary. Serving it under
+the old zeroing is the silent-wrong-answer shape: it plays, disagrees with its
+own recording from its first tick, and surfaces as somebody else's `rng`
+refusal several boundaries later.
+
+The admission's `rng` row is **posture-gated**. `rng.gameplay` is a
+`level-qualified-equality` row: comparable only where the boot room's render
+path takes no draws. Where it does, the two sides are a render count apart and a
+render count is ±2-banded, so the row is reported NOT COMPARABLE with its sites
+instead of refusing on a frame budget. The gate is fail-closed — no posture
+means assert — and the excused row is still reported, because a boundary nobody
+can assert is a fact about the chain.
+
+Of the seventeen boundaries in the three chains, fifteen are render-clean; the
+two that are not are `r7-ends-meet-2` (L94) and `r9-solve-0` (L0), both the
+waterfall spray.
+
+#### The prediction missed, and the miss is the proof
+
+The campaign arm was flipped from asserting a refusal to asserting the chain
+running end to end, and run. **It still refuses at `boundary 5/15`**, on the
+same two seeds as before: live `1196897329` against a declared `514746467`.
+
+And the write demonstrably works — windows 2..5 were each written their
+committed tick-0 block field for field, every clock obeying `declared + 21`,
+boundaries 1..4 admitted, and all five windows agree per tick with their own
+model.
+
+That is what makes it a proof rather than a repeat. Because window 5 provably
+*began* at its own fresh-page tick-0 state and walked its own inputs to a
+per-tick agreement, the live world's position at boundary 5 **is**
+`r8-solve-5`'s fresh-page exit — by construction, not by argument. So the
+declaration simply is not that number, and `r8-solve-6`'s `rng` is
+byte-identical to `r7-act2-6`'s, the retired hand tape it was staged from. The
+earlier slice could infer that the stream position was never re-recorded; this
+one can prove it, precisely because the tick-0 write is what makes the live walk
+the fresh-page walk.
+
+The posture census cleared the obvious suspect before any browser started: L6 is
+render-clean, so there are no fade draws to carry and the row is correctly
+asserted.
+
+Off the committed blocks, at boundaries 6, 7 and 9 the successor's declared seed
+equals the predecessor's tick-0 seed, so those admit if their walks spend no
+gameplay draws; at boundary 8 they differ, so 8 is the next boundary that can
+fail. Boundaries 6..9 remain unmeasured behind the first refusal.
+
+#### Two defects found on the way, both older than this slice
+
+`plan-seedling-r7-ends-meet.mjs --check` was already red on all three of its
+tapes and then crashed, measured at a pristine baseline before anything was
+touched. It stamped `tape_version: TAPE_VERSION` — the one emitter that read the
+constant whose own docblock says nothing that emits a tape may read it, so every
+version bump since v8 re-versioned its output — and its loop walked every chain
+and died on the first one a solver authored. Both paid; it runs clean now. It is
+on no checklist, which is why nobody noticed.
+
+And a node-only import broke the watch page. The posture helper reached
+`rngPostureOf` through `r6Acceptance`, which imports the node-only fixtures
+module, so `node:fs` landed in the browser bundle. The way it failed is the
+lesson: the sequence gate reported a 180-second timeout, not a module error — a
+page that fails to *load* reads exactly like a slow one, and the modules import
+fine under node. The pure posture code moved to a browser-safe module with a
+re-export, and a module-graph sweep now proves no node-only module is reachable
+from `watchWasm.js`.
+
+#### Gates
+
+Identity block identical row for row; the six producers green with four md5s
+moved on purpose and two unmoved as the control; reference MATCH at 236
+instruments; survey 23/29; sequence gate 24/0; the eight local browser gates
+262/0/0; vitest 182 files / 6777. On Windows Chrome: ship gate **142 / 0**
+(up from 131, the new tick-0 rows), pages gate **20 / 0** with the picker at
+150, and the solver-roster differential **768 / 0 / 67** — unmoved to the row
+across twenty-six fresh-page replays, which is the measurement that the field is
+invisible to the game.
