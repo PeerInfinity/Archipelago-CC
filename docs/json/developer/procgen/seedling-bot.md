@@ -12905,3 +12905,99 @@ from the segments: `at` 385→393, `removedAt` 284→292, `cuts` [573,1437]→[5
 REMOVAL moved, not because the `Lock` did. And the removal is 8 ticks LATER while
 the walk is 32 ticks SHORTER: the repair changes WHICH cell is struck, it does not
 accelerate uniformly.
+
+### R9 slice 11b: the protocol fixes — a REACH instrument, one uncacheable tape loader, and chain ticks read off the tapes
+
+⚖ Ruling 32, opened on the orchestrator's post-mortem of slice 11: 3 h 40 m for a
+small fix, of which **four retests were avoidable**. Three tooling changes, no
+tape, trace, expectation, default or solver behaviour moved.
+
+#### B — the reach instrument: `scripts/procgen/reach-seedling-change.mjs`
+
+Slice 11 sealed *"`dump-seedling-kind-pairs` does not import the oracle at all"*
+from a grep of the ENTRY SCRIPT, and four identity rows moved anyway — the entry
+loads `procgenSeedling.js`, which imports `procgenOracle` at `:54`. **A depth-1
+import grep is not a reachability answer.**
+
+The instrument walks the **reverse** import graph — from the changed files to
+everything that imports them, however far — over `frontend/modules/**` and
+`scripts/procgen/**`, and partitions the answer into producers (`solve-`/`plan-`/
+`rerecord-` *with* a `--check`), gates, pages, tests, the **tapes whose producer
+is reached** (derived from each tape's own `description`), the chains those tapes
+belong to, and the identity-block rows (read out of `identity-block.sh` itself).
+`--range=A..B`, `--files=`, `--symbol=<file>#<export>`, and `--check=<seal>` which
+reds when the closure reaches a mover the seal does not name.
+
+Three edge kinds no `from '…'` grep can see, all three load-bearing here:
+
+| form | where | why a grep misses it |
+|---|---|---|
+| `await import(join(REPO, '…'))` | ~400 edges, three bases | no `from` on the line (trap 543) |
+| `const M = (p) => import(join(REPO, '…', p))`, then `M('procgenSeedling.js')` | the pairs dumps, the ENEMY census | the literal is at the **call site** |
+| a gate DRIVES a page over HTTP | 21 browser gates → `watch.html` | there is no import at all |
+
+The bases are derived per file, never listed (⚖ ruling 17): each file's own
+top-level `const X = …` is evaluated symbolically over `join`/`resolve`/`dirname`/
+`fileURLToPath`/`pathToFileURL`/`new URL`, so a file that invents `const ROOT = …`
+resolves for the same reason `REPO` does. 83 edges with a runtime segment are
+**reported, never dropped** — a silently pruned edge makes an upper bound untrue.
+
+⚠⚠ **A reach is an UPPER BOUND — it says what CAN move, not what WILL**, and every
+report prints that sentence. On slice 11's own range it names the ELEMENTS census
+(reached, measured HELD) beside the ENEMY census (reached, moved), and omits
+`maze byte-identity` (not reached, held).
+
+⛓ It earned itself immediately: run on slice 11's range it names
+`check-procgen-demos.mjs`, which **is red on `main` at 194/2** — two catalogue
+claims about seed 1 `killgate` and seed 6 `arena` that slice 11's own §21.4
+measured as flipped and nobody re-ran. Confirmed by control (this slice's three
+source files restored to `64875843c`: the same two rows fail).
+
+#### C — one loader for a tape's bytes, and it is uncacheable
+
+Slice 11 read ONE ship-gate red at `boundary 2/3` with every delta exactly 32 —
+the re-record's own number — on an unchanged tree; two re-runs came back 245/0 and
+the cause was left UNPROVEN. A tape's bytes reached the page down **five separate
+`fetch(` calls**; they now go through one `fetchArtifact(url, init)` that sets
+`cache: 'no-store'` last, so a caller cannot override it. **The unification is half
+the fix** — busting four of five looks exactly like a fix.
+
+⚠ Measured rather than asserted: `python -m http.server` sends no `Cache-Control`
+and Chrome's heuristic freshness is 10% of the document's age, so a just-written
+tape is revalidated — **the local dev server is not the dangerous host**.
+**GitHub Pages sends `cache-control: max-age=600`**, and against that header a
+re-read of a rewritten file returns the OLD bytes with no request on the wire.
+Both Windows drivers use `p.chromium.launch(...)`, not `launch_persistent_context`,
+so there is no cross-run profile cache to clear — what existed is the **in-session**
+cache, which the ship driver spans across every window of one run.
+
+#### D — the chain's ticks are read off its tapes
+
+`cuts`, `endsAt` and a clear's `at`/`offset` are arithmetic over the segment tapes
+and were hand-typed. That cost two slices: slice 3 moved `r8-solve-4` 253→255 and
+left `r8-battery-4`'s `endsAt` at 253 (four slices of a silently wrong window);
+slice 11 re-recorded `r8-solve-18` and four roster rows went red on constants
+describing the old walk. The declaration now keeps what a human DECIDES —
+`segments`, `headline`, `kind`, `earns`, `why`, the `walk`, and each clear's
+`source` plus its evidence MEASUREMENTS — and everything that is a SUM is computed
+at load. `offset` is derived too: it IS a cut, and left typed it would have been
+the one constant a re-record still decays, in the row whose whole purpose is to
+travel.
+
+⛓ **The values are the test**: every chain's cuts, endsAt, spans, clears and earns
+dumped before and after — `diff` empty over all fifteen chains. Two rows the
+derivation makes vacuous are **named** rather than left looking like checks
+(`endsAt === sum`, and `stagedClearFindings`' half-3 arithmetic); the claim with
+content is `sum === headline.tick_count`, two recordings agreeing, now gated in
+vitest where CI can see it as well as on the GPU.
+
+#### The two laws this slice writes down
+
+**BASELINE BY QUOTATION.** When your head equals the commit a standing value names,
+that value IS your BEFORE. Re-measure only what the reach names. Slice 11 spent
+~55 minutes rebuilding a baseline it could have quoted, and still missed four rows.
+
+**S4 IS THE GATE RUN.** After `rerecord-seedling-campaign.mjs` completes, its S4
+verdicts are the slice's gate row; a standalone ship/roster re-run afterwards is a
+second opinion nobody asked for — and one of slice 11's duplicates produced the
+40-minute red above.

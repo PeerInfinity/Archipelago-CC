@@ -122,7 +122,11 @@ describe('⛓⛓ the anchors — two readers, 655 headings, one answer', () => {
         // ⛓ 661 → 665: R9 slice 11's § (the `facingToward` repair) — FOUR
         //   headings, its own plus three `####` (the defect, what moved, the
         //   three lessons). A re-pin, not a widening.
-        expect(total).toBe(665);
+        // ⛓ 665 → 670: R9 slice 11b's § (the protocol fixes) — FIVE headings,
+        //   its own plus four `####` (B the reach instrument, C the one
+        //   uncacheable loader, D the derived chain ticks, the two laws).
+        //   A re-pin, not a widening.
+        expect(total).toBe(670);
     });
 
     it('⛔ uses OUR rule, not marked\'s slugger — they differ, and here is where', () => {
@@ -309,9 +313,12 @@ describe('⛓ the biggest document — the one the budget is about', () => {
         //   instruments-extractor defect).
         // ⛓ 448 → 452: R9 slice 11's § — four headings (the `facingToward`
         //   repair, plus the defect, what moved, and the three lessons).
+        // ⛓ 452 → 457: R9 slice 11b's § — five headings (the protocol fixes,
+        //   plus B the reach instrument, C the one uncacheable loader, D the
+        //   derived chain ticks, and the two laws).
         const ids = idsOf(RENDERS.get('seedling-bot.md').html);
-        expect(ids).toHaveLength(452);
-        expect(new Set(ids).size).toBe(452);
+        expect(ids).toHaveLength(457);
+        expect(new Set(ids).size).toBe(457);
         expect(ids.filter((i) => i !== ghSlug(i))).toEqual([]);
     });
 

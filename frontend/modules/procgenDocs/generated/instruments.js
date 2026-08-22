@@ -186,7 +186,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 220,
         "browser": 74,
-        "cited": 72,
+        "cited": 73,
         "files": 239,
         "lineStyle": 19,
         "withDocblock": 239,
@@ -4720,7 +4720,9 @@ export const INSTRUMENTS = frz({
             ],
             "browser": false,
             "category": "reach",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "reach-seedling-change.mjs",
