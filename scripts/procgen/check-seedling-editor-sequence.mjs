@@ -351,7 +351,7 @@ check(solo.cls === 'ok' && /865 observations/.test(solo.status) && solo.seq === 
  * The chain retired from `PLAYTHROUGH_CHAINS` and `PAGE_CHAINS` this slice, so
  * the rows could not be re-pointed — there is nothing to point them at. What
  * they claimed is claimed by CLAIMS 9b–9e below, one chain over and on a
- * stronger footing: `r9-campaign` is fifteen windows on ONE game state where
+ * stronger footing: `r9-campaign` is SIXTEEN windows on ONE game state where
  * every boot after the first is a MEASURED LATCH rather than a hand
  * declaration, and 9e makes the same free-oracle claim about ITS forward rows.
  *
@@ -366,8 +366,15 @@ check(solo.cls === 'ok' && /865 observations/.test(solo.status) && solo.seq === 
  *
  * Claim 9 above is the HAND chain's report; this is the SOLVER chain's claim,
  * and the difference is what ruling 11 is about: every boot after the first is
- * its predecessor's MEASURED LATCH, so the fifteen windows are one game the
- * page steps from `new Game(0,80,128)` to the L14 arrival.
+ * its predecessor's MEASURED LATCH, so the sixteen windows are one game the
+ * page steps from `new Game(0,80,128)` to the L15 arrival.
+ *
+ * ⚠ R9 slice 12b″ — THE COUNT AND THE ARRIVAL ARE READ, NOT TYPED. Both were
+ * spelled out in the claim labels below ("THE FIFTEEN WINDOWS", "at the L14
+ * arrival") and both went stale the moment the chain grew a room: the gate
+ * kept passing while printing a sentence about a chain it was no longer
+ * checking (trap 566 — a true sentence about the wrong subject). They now come
+ * from `PAGE_CHAINS` and from the oracle's own last observation.
  *
  * ⛔ THE ORACLE IS THE HEADLINE PLAYED ALONE, exactly as claim 2's is — one
  * tape, one staged run, no windows at all. A page that agreed with itself
@@ -402,14 +409,15 @@ if (!camp.seq) {
         }
     }
     check(campMine.length === campOracle.ticks.length && campDiff === -1,
-        '⛓⛓⛓ CLAIM 9c — …AND THE FIFTEEN WINDOWS PRODUCE THE HEADLINE STREAM, TICK '
-        + 'FOR TICK',
+        `⛓⛓⛓ CLAIM 9c — …AND THE ${CAMP.length} WINDOWS PRODUCE THE HEADLINE `
+        + 'STREAM, TICK FOR TICK',
         `page ${campMine.length} observation(s) vs the headline's `
         + `${campOracle.ticks.length}; first differing tick ${campDiff}`
         + (campDiff >= 0 ? ` — page ${JSON.stringify(campMine[campDiff])} vs headline `
             + `${JSON.stringify(campOracle.ticks[campDiff])}` : ''));
     check(JSON.stringify(campMine.at(-1)) === JSON.stringify(campOracle.ticks.at(-1)),
-        '⛓ CLAIM 9d — …AND IT ENDS EQUAL, at the L14 arrival',
+        `⛓ CLAIM 9d — …AND IT ENDS EQUAL, at the L${
+            campOracle.ticks.at(-1)?.level} arrival`,
         `${JSON.stringify(campMine.at(-1))} vs ${JSON.stringify(campOracle.ticks.at(-1))}`);
 
     /**

@@ -17,7 +17,7 @@
  */
 
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -186,10 +186,28 @@ describe('⛔⛔ THE SLICE-11 REPRODUCTION — the four rows a depth-1 grep miss
     /**
      * ⚖ RULING 33 — the roster gate's per-slice `--only=` comes from HERE. §16.11
      * derived slice 7's selection by hand as *"every tape whose own description
-     * names a solve-seedling-* producer (22), plus the four non-solve witnesses
-     * §14.0.13 keeps by name"*. The reach reproduces that 22 out of the graph.
+     * names a solve-seedling-* producer, plus the four non-solve witnesses
+     * §14.0.13 keeps by name"*. The reach reproduces that SET out of the graph.
+     *
+     * ⛔⛔ R9 SLICE 12b″ — **THIS ROW USED TO PIN A CARDINALITY, AND A CARDINALITY
+     * IS THE ONE THING ABOUT THIS SET THAT IS NOT STABLE.** It read
+     * `expect(names.size).toBe(22)`. The RANGE is historical and cannot move,
+     * but the tape corpus it reaches is not: `solve-seedling-r9-campaign.mjs` is
+     * inside the closure, so **every tape that producer ever emits joins this
+     * set**. §16.11's hand count was 22; adding `r9-solve-14` made it 23 and
+     * reddened a row that had found nothing. A pin that must be bumped by every
+     * slice that adds a room is a maintenance tax, not a check — and worse, a
+     * count cannot tell two disappearances apart (trap 565): swap one member for
+     * another and 22 still passes.
+     *
+     * ⇒ THE CLAIM IS NOW THE RULE, ASSERTED AS A SET, and the second derivation
+     * is INDEPENDENT of the graph: read every tape's own `description` off disk
+     * and keep the ones that name a `solve-seedling-*.mjs` producer. Two
+     * derivations, one answer — the graph walk and the corpus scan agree
+     * MEMBER FOR MEMBER, in both directions. Measured at the time of writing:
+     * 23 each way, 0 in either difference.
      */
-    it('⛓ the reached tapes, widened to whole chains, ARE §16.11\'s derived 22', async () => {
+    it('⛓ the reached tapes, widened to whole chains, ARE §16.11\'s rule — as a SET', async () => {
         const report = await reachReport(changed, { repo: REPO });
         const { PLAYTHROUGH_CHAINS } = await import(
             '../../frontend/modules/seedlingDemo/playthroughWalk.js');
@@ -199,7 +217,27 @@ describe('⛔⛔ THE SLICE-11 REPRODUCTION — the four rows a depth-1 grep miss
             for (const n of c.segments) names.add(n);
             names.add(c.headline);
         }
-        expect(names.size).toBe(22);
+
+        // ⛓ THE SECOND DERIVATION — the corpus, not the graph. A tape's
+        //   `description` names the producer that emitted it, which is the
+        //   sentence §16.11 counted by hand.
+        const TAPES = join(REPO, 'frontend/modules/seedlingDemo/fixtures/tapes');
+        const byDescription = new Set();
+        for (const f of readdirSync(TAPES)) {
+            if (!f.endsWith('.json')) continue;
+            let tape;
+            try {
+                tape = JSON.parse(readFileSync(join(TAPES, f), 'utf8'));
+            } catch { continue; }
+            if (/solve-seedling-[a-z0-9-]*\.mjs/.test(tape.description ?? '')) {
+                byDescription.add(f.slice(0, -'.json'.length));
+            }
+        }
+
+        // ⛔ NON-VACUITY FIRST — an empty scan would make the equality trivial.
+        expect(byDescription.size).toBeGreaterThan(20);
+        expect([...names].sort()).toEqual([...byDescription].sort());
+
         for (const n of ['r8-solve-18', 'r8-d2', 'r8-d2-19', 'r8-d2-20']) {
             expect([...names]).toContain(n);
         }

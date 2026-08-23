@@ -140,7 +140,15 @@ describe('⛓⛓ the anchors — two readers, 655 headings, one answer', () => {
         //   FOUR headings, its own plus three `####` (the three defects, the
         //   stance derived, and what the enforcement bought).
         //   A re-pin, not a widening.
-        expect(total).toBe(686);
+        // ⛓ 686 → 694: R9 slice 12b″'s § (THE RECORD — sixteen rooms play) —
+        //   EIGHT headings, its own plus seven `####` (the tape and the
+        //   prediction that named its own only failure mode, the pipeline
+        //   S0→S5, the tape that moved that nobody would predict from its
+        //   walk, the exposure guard finding it by name, the classifier
+        //   reading the RUN before the TEXT, the producer and the chain
+        //   having to agree, and the two gate labels that were a true
+        //   sentence about the wrong subject). A re-pin, not a widening.
+        expect(total).toBe(694);
     });
 
     it('⛔ uses OUR rule, not marked\'s slugger — they differ, and here is where', () => {
@@ -341,9 +349,16 @@ describe('⛓ the biggest document — the one the budget is about', () => {
         // ⛓ 469 → 473: R9 slice 12b′'s § — four headings (L14 crossed by the
         //   parry-walk, plus the three defects, the stance derived, and what
         //   the enforcement bought and the fallback's only witness).
+        // ⛓ 473 → 481: R9 slice 12b″'s § — eight headings (THE RECORD, plus
+        //   the tape and the prediction that named its own only failure mode,
+        //   the pipeline S0→S5, a tape moving that nobody would predict from
+        //   its walk, the exposure guard finding the new tape by name, the
+        //   classifier reading the RUN before the TEXT, the producer and the
+        //   chain having to agree, and the two gate labels that were a true
+        //   sentence about the wrong subject).
         const ids = idsOf(RENDERS.get('seedling-bot.md').html);
-        expect(ids).toHaveLength(473);
-        expect(new Set(ids).size).toBe(473);
+        expect(ids).toHaveLength(481);
+        expect(new Set(ids).size).toBe(481);
         expect(ids.filter((i) => i !== ghSlug(i))).toEqual([]);
     });
 

@@ -186,7 +186,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 223,
         "browser": 74,
-        "cited": 73,
+        "cited": 74,
         "files": 242,
         "lineStyle": 19,
         "withDocblock": 242,
@@ -5562,7 +5562,9 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "solve",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "solve-seedling-r9-campaign.mjs",

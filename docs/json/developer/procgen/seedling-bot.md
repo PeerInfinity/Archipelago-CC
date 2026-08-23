@@ -12064,8 +12064,13 @@ segment 1 is the true initial boot, which declares no `seam`, so its clock is
 
 #### The chain
 
-`r9-campaign` — **fifteen segments**, custody, from `new Game(0,80,128)` with an
-empty save to the L14 arrival, **3470 ticks**:
+⚠ **THE TABLE BELOW IS KEPT CURRENT, NOT FROZEN AT SLICE 6** — it is the one
+place the whole chain is written out, so every slice that grows the chain grows
+it here. As of R9 slice 12b″ it is SIXTEEN segments; slice 6 shipped fifteen of
+them, and the rooms added since are named in their own sections below.
+
+`r9-campaign` — **sixteen segments**, custody, from `new Game(0,80,128)` with an
+empty save to the L15 arrival, **3615 ticks**:
 
 ```
  1 r8-solve-1   L0  → L2   183     9 r8-solve-9   L9  → L10  122
@@ -12075,11 +12080,12 @@ empty save to the L14 arrival, **3470 ticks**:
  5 r8-solve-5   L5  → L6   558    13 r9-solve-2   L2  → L0    47
  6 r8-solve-6   L6  → L7   294    14 r9-solve-0   L0  → L13  237
  7 r8-solve-7   L7  → L8   146    15 r9-solve-13  L13 → L14   74
- 8 r8-solve-8   L8  → L9   827         STOP: route step 16 — L14's camera band
+ 8 r8-solve-8   L8  → L9   827    16 r9-solve-14  L14 → L15  145   (the PARRY-WALK)
+                                        STOP: route step 17 — L15's `shove`
 ```
 
 Segments 1–4 are PROMOTED (their boots already ARE their predecessors' latches);
-5–10 and 12 are re-booted from measured latches; 11, 13, 14, 15 are new. The
+5–10 and 12 are re-booted from measured latches; 11, 13, 14, 15, 16 are new. The
 segment list is the only declaration in the producer — every coordinate under it
 is read out of the atlas, and no stance, waypoint or hold tick is handed to the
 solver.
@@ -13454,3 +13460,145 @@ there either — 12b's measured vacuity, one mechanism further in.
 ⚠ **The stance scan costs 1.9–5.3 s per call** — the heaviest single call the
 solver makes, bounded by the same eight-cell reach `deriveBaitStance` uses and
 by the leash filter.
+
+### R9 slice 12b″: THE RECORD — sixteen rooms play, and the frontier moves to L15
+
+**`r9-solve-14` is on disk and the chain plays it.** Slice 12b′ solved L14
+offline; this slice put it through the campaign pipeline and onto the real GPU.
+The custody chain now runs **sixteen** segments from `new Game(0,80,128)` with
+an empty save to the **L15 arrival** — 3615 ticks — and the next work order is
+route step 17.
+
+| | before | after |
+|---|---|---|
+| chain segments | 15 | **16** |
+| headline `r9-campaign` | 3470 t | **3615 t** |
+| ship gate | 245 / 0 | **254 / 0**, ALL PASS |
+| CLAIM 7's end state | L14 (168, 72) | **L15 (56, 72)**, Δx 0 Δy 0 |
+| tape roster | 145 | **146** |
+| frontier | step 16, L14, CAMERA BAND | **step 17, L15, VERB-APPLY** |
+| route survey | 24 / 29 | 24 / 29 — a record moves no survey row |
+
+#### The tape, and the prediction that named its own only failure mode
+
+**145 ticks exactly**, and the seal said "145, or a few more; never fewer".
+The reasoning is what makes that a claim rather than a guess:
+`segmentBootFromLatch` authors a boot from `beginEntry.playerPositionX/Y` — the
+L14 world's CONSTRUCTION entry, published by the sequence gate as ctor
+(160,64) — and the route survey's step-16 staged boot is the same cell. Nothing
+else the latch carries is read by this walk: L14 has no lock, no timed clear and
+no chest, and the only inventory term is `hasSword`, held on both sides. The one
+way it could have missed was `beginEntry` reading the POST-crossing player
+position (168,72), which starts the walk 8 px further from the west exit and
+costs ticks rather than saving them. The measured boot is `L14@160,64`.
+
+**On the game: 146 observations, `primary ×6` — six presses — the game's own
+`hits` 0 against a model 0, one transition, into L15.** ⚖ Ruling 29(a)'s
+parry-walk, recorded.
+
+#### The pipeline, S0 → S5
+
+- **S0's table equalled the seal row for row.** One new row — `r9-campaign 16
+  r9-solve-14 L14 boot-only tick0:RE-DERIVE` — the licensed set 12 → 13 and the
+  tick-0 re-derivations 14 → 15. The verdict is a PERMISSION, not a forecast.
+- **S1 measured all seventeen boundaries: 38 fields compared, ZERO moved** —
+  `r9-solve-14` included, so its committed boot IS the latch the game produced.
+  That is what makes this a record from the measured latch rather than from the
+  offline one.
+- **S2 wrote no boot** and re-derived the tick-0 blocks: 61/0/0, one zero-tick
+  drive for the new tape (`declared 9051 + 21 = 9072`, measured 9072), and no
+  other block moved — fourteen controls held.
+- **S3 recorded two tapes**, and the second one is arithmetic rather than a
+  second licence: the headline IS the segments' concatenation, so
+  `sum(segment ticks) === headline.tick_count` and `endsAt === sum` make a chain
+  that grows a room and a headline that does not impossible. 3616 observations,
+  16 transitions, 0 hits, and the model reproduces the recording it just made.
+- **S4 is the gate run** (⚖ ruling 32 E): the JS sequence gate 36/0 with its
+  counts moved (16 segments, 16 of 16 rooms crossed, end state L15 (56,72)
+  3615 t on the page and on the oracle), the census with no findings, the wasm
+  ship gate 254/0, and the derived solver-roster differential.
+- **S5** reprinted the sealed table with its measured column.
+
+#### A tape moved that nobody would have predicted from its walk
+
+`r9-solve-13`'s `why` said *"the chain STOPS at L14"*, which stopped being true
+the moment 12b′ solved that room. Rewriting it moves the tape's `description` —
+and `gameVisibleTape` KEEPS `description`, dropping only the timed persistence
+rows, `despawn` and `tick0`. So its bytes moved, its latch-cache key moved and
+it re-drove on the game, while its EXPECTATION did not move at all, because the
+field is inert to the fork. One changed line, predicted and measured.
+
+#### The exposure guard found the new tape by name — the sixth slice running
+
+`assertBridgeExposureIsMeasured` re-derives the exposed set from the roster on
+every run, and `r9-solve-14` boots L14 — six bobs, `noDamage: false` — so it is
+exposed and undeclared until somebody declares it (trap 89). **The row's
+`levels: [14]` was sealed before the tape existed and derived rather than
+guessed**: the atlas gives L14 six `bob` entities and L15 none, so the walk's
+two rooms intersect the bridged set in exactly one of them. For the same reason
+`r9-campaign`'s declared levels did NOT move; only its tick count did.
+
+⛔ **Three enumerations had to grow with it, and each is its own claim** — the
+`exposedAdded` list, the exposed COUNT (12 → 13), and the SYNTHETIC mutation
+roster. That last one matters: without the row the "declared and no longer
+exposed" arm fires FIRST and the ROOMS mutation passes for the wrong reason.
+Measured — it did exactly that before the fixture was updated.
+
+`r9-solve-14` is the first tape on the roster whose exposure is neither a parked
+arrival nor a kill: six bridged bodies, all live for the whole walk, five struck
+once and knocked back, none killed, and the player untouched throughout.
+
+#### The classifier reads the RUN before the TEXT
+
+`survey-seedling-route.mjs`'s `familyOf` was text-only: it classified a refusal
+by the sentence the planner threw and said nothing about what the room had
+already done to the player on the way to it. R9 slice 12's own L14 row is the
+witness — a hit at tick 44, then a camera-band throw, filed as `CAMERA BAND`. A
+true sentence about the wrong subject. A run whose `playerHits` is non-empty is
+now the HIT family by name, with its count and the tick of the first hit.
+
+⛔ **The order is the claim**, and the test builds the mutant inline rather than
+trusting the source: every refusal this survey has produced matches one of
+`FAMILY_RULES`, so a text loop asked first returns before the hits are looked at
+and the arm is dead code that reads as covered.
+
+⛔⛔ **And it reaches nothing on today's route**, said in the module, in the test
+and here. The survey builds its `replay` block only for a step that SOLVED, and
+a SOLVED step has no refusal to classify, so at the one call site the run is
+null wherever a family is computed. Measured: re-classifying all 29 committed
+survey rows through the new function reproduces 29 of 29 families identically,
+0 moved, and zero rows carry a non-empty `playerHits`. What would give it reach
+is capturing the run the REFUSING solve built — named as residue, because it
+would move committed family texts and this slice is a record.
+
+`familyOf` and `FAMILY_RULES` moved to `scripts/procgen/surveyFamily.js` so they
+can be unit-rowed at all: the survey derives the route, checks every boot source
+on disk and solves twenty-nine rooms at module scope, so importing it to test
+one pure function would run the survey. A helper `.js` and its `.test.js` beside
+a `.mjs` are not instruments, so the index stays at 242.
+
+#### The producer and the chain now have to agree
+
+Nothing had ever asserted that `solve-seedling-r9-campaign.mjs`'s `SEGMENTS` and
+`PLAYTHROUGH_CHAINS.r9-campaign`'s `segments` name the same rooms, and it fails
+silently in both directions: a producer room the chain never walks emits a tape
+the sequence never plays, and a chain room the producer never solves ENOENTs at
+load. Two rows now read the producer's source — it cannot be imported, because
+it solves the whole campaign at module scope and drives Chrome for the latches —
+and assert the lists are equal, with a non-vacuity assertion first.
+
+#### Two gate labels that were a true sentence about the wrong subject
+
+`check-seedling-editor-sequence.mjs` derived CLAIM 9b's window count from
+`PAGE_CHAINS` and then TYPED the same number into 9c ("THE FIFTEEN WINDOWS")
+and typed the arrival into 9d ("at the L14 arrival"). Both went false the
+moment the chain grew a room, and neither could fail: the assertions compare
+streams, so the gate keeps passing while printing a claim about a chain it is
+no longer checking — trap 566's shape, one file over. 9c now reads
+`${CAMP.length}` and 9d reads the level off the oracle's own last observation,
+so the label and the subject move together. The docblock that spelled them out
+in prose says what it says and why, rather than being quietly corrected.
+
+⚠ The chain table under **Slice 6** above is the one place the whole chain is
+written out, and it has been kept current rather than frozen since — it is now
+sixteen rows, and it carries a line saying that is what it is.
