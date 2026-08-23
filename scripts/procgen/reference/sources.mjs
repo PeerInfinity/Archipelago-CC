@@ -26,6 +26,9 @@ export const M = {
     mazeLab: await import('../../../frontend/modules/mazeRoom/mazeLab.js'),
     maze: await import('../../../frontend/modules/mazeRoom/procgenMaze.js'),
     glossary: await import('../../../frontend/modules/procgenDocs/glossary.js'),
+    /** ⛓ The docs page's OWN heading reader — so the docs index counts headings
+     *  with the same rule the page slugs them with, not a second regex. */
+    ghSlug: await import('../../../frontend/modules/procgenDocs/ghSlug.js'),
 };
 
 export const SOURCES = {

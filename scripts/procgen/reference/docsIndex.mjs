@@ -147,8 +147,8 @@ export function buildDocsIndex() {
          * after every regeneration and go green on the second. A word count
          * that moves because a generator ran is not a fact about the document.
          */
-        const text = src(`${DOC_DIR}/${file}`)
-            .replace(/<!-- GENERATED:[\s\S]*?END -->/g, '');
+        const raw = src(`${DOC_DIR}/${file}`);
+        const text = raw.replace(/<!-- GENERATED:[\s\S]*?END -->/g, '');
         const h1 = (/^#\s+(.+)$/m.exec(text) ?? [])[1] ?? null;
         return {
             file,
@@ -157,6 +157,23 @@ export function buildDocsIndex() {
             description: descriptionOf(text),
             words: words(text),
             lines: text.split('\n').length,
+            /**
+             * ⛓⛓⛓ HOW MANY HEADINGS THE DOCS PAGE WILL RENDER OUT OF THIS FILE
+             * — counted with `headingsOf`, which is the page's OWN reader
+             * (`procgenDocs/ghSlug.js`), not a second regex written here.
+             *
+             * ⛔⛔ **ON `raw`, NOT ON `text`.** Every other measurement on this
+             * row deliberately drops the GENERATED regions, for the reason
+             * above. The PAGE does not: `docs.html` renders the file as it is
+             * on disk, generated regions included. A heading count taken from
+             * the stripped text would therefore be a true number about a
+             * document nobody reads, and the row that consumes it
+             * (`docsRender.test.js`) would be wrong by construction the first
+             * time a generated region grew a heading. Today no region in this
+             * corpus contains one and the two agree — which is exactly why the
+             * choice has to be written down instead of relied on.
+             */
+            headings: M.ghSlug.headingsOf(raw).length,
             /** ⛓ Which other procgen docs it links to — the shape of the
              *  section, measured rather than asserted. */
             links: [...new Set([...text.matchAll(/\]\(\.\/([a-z-]+\.md)/g)].map((m) => m[1]))]
@@ -179,6 +196,34 @@ export function buildDocsIndex() {
             pages: pages.length,
             words: docs.reduce((a, d) => a + d.words, 0),
             lines: docs.reduce((a, d) => a + d.lines, 0),
+            /**
+             * ⛓⛓ THE INDEX FILE'S OWN HEADINGS — README is not a ROW of this
+             * table (it is the file the table goes IN), but it IS one of the
+             * documents the page renders, so a corpus total that left it out
+             * would be a total of seventeen eighteenths of the corpus.
+             */
+            indexHeadings: M.ghSlug.headingsOf(src(INDEX_DOC)).length,
+            /**
+             * ⛓⛓⛓ EVERY HEADING THE DOCS PAGE RENDERS, ACROSS ALL EIGHTEEN
+             * FILES — the seventeen rows PLUS the index.
+             *
+             * ⚠ THE DENOMINATORS IN THIS OBJECT ARE NOT THE SAME. `docs` is 17
+             * and `headings` spans 18, because they answer different
+             * questions: how many documents this table has a row for, and how
+             * many headings `docs.html` will show. `docLinks.js` builds
+             * `DOC_FILES` as `[INDEX_FILE, ...docs]` for the same reason.
+             *
+             * ⛔ THIS FIELD EXISTS TO BE A PIN'S SOURCE (R9 slice 12e).
+             * `docsRender.test.js` pinned this number as a LITERAL for eleven
+             * slices, and every doc-editing slice re-typed it by hand on its
+             * first unfiltered run. ⚖ Ruling 22 already requires the reference
+             * regenerated in the SAME commit as the doc, so the claim that pin
+             * actually wants is *"the rendered corpus agrees with the
+             * generated reference"* — a STALENESS claim, which this field
+             * makes checkable and which no hand ever has to re-type.
+             */
+            headings: docs.reduce((a, d) => a + d.headings, 0)
+                + M.ghSlug.headingsOf(src(INDEX_DOC)).length,
         },
         orderRule: '`README_ORDER` in `scripts/procgen/reference/docsIndex.mjs` — today\'s '
             + 'reading order, declared. A file in the directory that is not in that list is a '

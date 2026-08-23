@@ -24,6 +24,7 @@ import { describe, expect, it } from 'vitest';
 
 import { REPO_URL } from './demos.js';
 import { DOC_DIR, DOC_FILES, linksIn, resolveDocLink } from './docLinks.js';
+import { DOCS_INDEX } from './generated/docsIndex.js';
 import { ghSlug, headingsOf } from './ghSlug.js';
 import { renderDoc } from './docsRender.js';
 
@@ -153,7 +154,24 @@ describe('⛓⛓ the anchors — two readers, one answer (the count is in the pi
         //   § is written as one continuous argument per item rather than as
         //   sub-sections, so there is nothing to subdivide.
         //   A re-pin, not a widening.
-        expect(total).toBe(695);
+        // ⛓⛓⛓ **NO FURTHER RE-PINS: THE VALUE IS READ FROM THE REFERENCE**
+        //   (R9 slice 12e). The ledger above stays as HISTORY — it is the
+        //   record of eleven slices' worth of headings and it says which § put
+        //   each one there. What it stops being is a maintenance cost: ⚖ ruling
+        //   22 already requires `generated/docsIndex.js` regenerated in the
+        //   SAME commit as any doc edit, so the number below is a fact the
+        //   reference already holds, and the claim this row makes is the one it
+        //   always meant — **the rendered corpus agrees with the generated
+        //   reference**, i.e. nobody edited a document without regenerating.
+        // ⛔ IT IS NOT A FIXED POINT (trap 250). The two sides are computed at
+        //   different TIMES by different PROCESSES: `total` here, now, from the
+        //   files on disk; `counts.headings` when the generator last ran. Edit a
+        //   heading and skip the regeneration and this row goes RED by name —
+        //   which is the staleness a literal could only catch by accident.
+        // ⚠ 695 spans EIGHTEEN files (`DOC_FILES` — README included, because
+        //   the page renders it), while `counts.docs` is 17. The reference
+        //   carries both and says why.
+        expect(total).toBe(DOCS_INDEX.counts.headings);
     });
 
     it('⛔ uses OUR rule, not marked\'s slugger — they differ, and here is where', () => {
@@ -372,9 +390,13 @@ describe('⛓ the biggest document — the one the budget is about', () => {
         // ⛓ 481 → 482: R9 slice 13's § — ONE heading (the watch-page five), with
         //   no `####` under it: five USER ITEMS written as one continuous
         //   argument each, so there is nothing to subdivide.
+        // ⛓⛓⛓ **NO FURTHER RE-PINS: THE VALUE IS READ FROM THE REFERENCE**
+        //   (R9 slice 12e) — the same staleness claim as the corpus total, one
+        //   document narrower. The ledger above stays as history.
+        const want = DOCS_INDEX.docs.find((d) => d.file === 'seedling-bot.md').headings;
         const ids = idsOf(RENDERS.get('seedling-bot.md').html);
-        expect(ids).toHaveLength(482);
-        expect(new Set(ids).size).toBe(482);
+        expect(ids).toHaveLength(want);
+        expect(new Set(ids).size).toBe(want);
         expect(ids.filter((i) => i !== ghSlug(i))).toEqual([]);
     });
 

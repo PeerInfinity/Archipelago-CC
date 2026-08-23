@@ -830,4 +830,30 @@ describe('the docs index is one row per .md in the procgen docs directory', () =
         expect(DOCS_INDEX.counts.docs).toBe(DOCS_INDEX.docs.length);
         expect(DOCS_INDEX.counts.pages).toBe(DOCS_INDEX.pages.length);
     });
+
+    /**
+     * ⛓⛓ THE HEADING COUNTS — the field `docsRender.test.js`'s two pins now
+     * READ (R9 slice 12e, ⚖ ruling 38 item (4a)).
+     *
+     * ⛔ This row does NOT check the numbers against the documents — that is
+     * exactly what `docsRender.test.js` does, with the page's own renderer, and
+     * duplicating it here would be the second reader that makes neither
+     * trustworthy. What is checked here is the SHAPE the pins depend on: every
+     * row has one, they are positive, and the corpus total is the rows PLUS the
+     * index file — because `counts.docs` (17) and `counts.headings` (18 files)
+     * do not share a denominator, and a reader who assumed they did would build
+     * a pin that is quietly short by README's headings.
+     */
+    it('⛓ every row carries a heading count, and the corpus total is the rows '
+        + 'PLUS the index file — two different denominators, said out loud', () => {
+        for (const d of DOCS_INDEX.docs) {
+            expect(d.headings, `${d.file} has no heading count`).toBeGreaterThan(0);
+            expect(Number.isInteger(d.headings), `${d.file}'s count is not an integer`).toBe(true);
+        }
+        const rows = DOCS_INDEX.docs.reduce((a, d) => a + d.headings, 0);
+        expect(DOCS_INDEX.counts.indexHeadings).toBeGreaterThan(0);
+        expect(DOCS_INDEX.counts.headings).toBe(rows + DOCS_INDEX.counts.indexHeadings);
+        /* ⛓ …and the index file really is the one document with no row. */
+        expect(DOCS_INDEX.docs.map((d) => d.file)).not.toContain('README.md');
+    });
 });
