@@ -104,7 +104,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 1,
+            "count": 2,
             "id": "no prefix"
         },
         {
@@ -184,13 +184,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 222,
+        "blockStyle": 223,
         "browser": 74,
         "cited": 74,
-        "files": 241,
+        "files": 242,
         "lineStyle": 19,
-        "withDocblock": 241,
-        "withFlags": 147
+        "withDocblock": 242,
+        "withFlags": 148
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -2278,6 +2278,58 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "find-seedling-seeds — **THE SEED SEARCH BY NAMED PROPERTY** (PROCGEN ELEMENTS arc 3, slice 4d, D4).",
             "path": "scripts/procgen/find-seedling-seeds.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "flag"
+            ],
+            "browser": false,
+            "category": "no prefix",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "gates.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "flag"
+                    ],
+                    "name": "help"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "flag"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "flag"
+                    ],
+                    "name": "list"
+                },
+                {
+                    "how": [
+                        "flag"
+                    ],
+                    "name": "no-windows"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "pages"
+                }
+            ],
+            "oneLiner": "gates — **RUN THE GATES, IN ONE LINE, KEYED ON EXIT CODES** (R9 slice 12e, ⚖ ruling 38 item (6)).",
+            "path": "scripts/procgen/gates.mjs"
         },
         {
             "argvHelpers": [
