@@ -3809,6 +3809,78 @@ cadence retired, the KILL chaser arm, L14 SOLVED, `r9-solve-14` through the pipe
 **slice 13** ready (`seedling-bot-r9-slice13-prompt.md`, the watch-page five); **12c** (the
 planner-level dash primitive) is the first discussion item.
 
+⛓⛓⛓ **R9 SLICE 12b SHIPPED 2026-08-23** (`12e80cb73` · `213d3078e` · `0055442f4` ·
+`3dc6d632f` · `a736eac1e` · `2d6d33949` · `3b171ec1e`) — **THE SWORD DASH, BUILT AND
+WITNESSED; THE CADENCE FLOOR RETIRED; THE STRIKE ON EVERY WALK.** As-built kickoff **§23**.
+
+**The dash is a first-class move.** `set slashing` (`Player.as:779-804`) is transcribed
+whole — four outcomes where the model had one (dash · swing · SWALLOWED · release), the
+window `gap <= 19` because `slash()` decrements above the press, `knockback`'s guards
+ASYMMETRIC (`>=` on x, `>` on y — rowed on `(1, √3)`, where `hypot` is exactly 2), and
+exactly inert at zero velocity because the runtime's `point_normalize` skips at zero
+length. ⛔ `useItem` is `input()`'s LAST act and `mobileUpdate` is
+`friction(); input(); moveX; moveY` ⇒ the impulse is spent on THIS tick's sweep, so the
+slash transition moved ABOVE `levelRun`'s step.
+
+⛓⛓⛓ **THE GAME AGREES DIGIT FOR DIGIT.** New fixture `r9-l0-sword-dash` (roster 144 →
+145, room DERIVED as the longest hit-free straight run over eleven chaser-free rooms),
+`--win --record` on intel/gen-9: 38 obs, 0 transitions, all green. Three dashes, each a
+step of **+1.750** (the 2.00 impulse minus the 0.25 of friction that runs BEFORE input),
+decaying at exactly 0.25/tick — `r5Totem.controlRefutation`'s shape from the other end.
+Four claims adjudicated: the impulse · `slashEnd`'s tick · **the non-refresh of
+`slashTimer`** (this fixture is the only thing anywhere that can say so) · the
+anim-complete re-arm.
+
+⛔⛔ **AND §22.9's "8-TAPE FREE ORACLE" DOES NOT EXIST.** Its 41 candidates reproduce
+EXACTLY and every one is inert: 640 `primary` entries → 374 survive `acting` → 149 hold a
+sword → **149 ordinary swings, ZERO dashes**. `r5-bobboss-arm` (called "the sharpest
+instrument, 72 presses") holds no sword and says so in its own committed description; the
+watcher tapes lose all 79 presses to a dialogue lock. ⇒ the roster is a REGRESSION
+witness, the driven witness became REQUIRED, and two planned mutants were VACUOUS rather
+than passing. **Trap 568: carry a roster-exposure scan through the RUN before calling a
+tape an oracle.**
+
+**⚖ RULING 36 (max swing rate) DERIVED, code + docs:** an ordinary swing once per **20**
+(the ±1 falls LOW — k=19 dashes; the old 21 was head-room) · **THREE dashes per window at
+k = 2/8/14**, not four at 1/7/13/19 — `Input.pressed` is a RISING EDGE, so a press costs
+two key ticks and `DASH_CHAIN` derives the schedule by RUNNING the transcription ·
+damage one per 30 **per BODY**. `slashEnd` is the Spritemap COMPLETE callback;
+`SLASH_ANIM_TICKS` derived (both plain-sword anims wrap on the 5th — a coincidence; the
+ghost sword's wrap at 7). **⚖ ruling 31(b): the cadence FLOOR is retired at all three
+sites**; only `execKillByPress.lastPressAt` changed behaviour (`>= 31` →
+`> SLASH_HIT_TICKS`), which its own docblock had asked for years earlier.
+
+**⚖ RULING 30 (b)(c)(d) SHIPPED:** `strikePolicy.js`, ONE object consulted by
+`previewWalk` AND `drive`, NEAREST by `distanceRectPoint` with a total tie-break, four
+candidacy gates with trace reasons, never refuses a walk; the forecast gained `hit()` so a
+certified corridor carries its strikes' knockbacks and deaths. **The preview/drive
+held-set EQUALITY is asserted between the two real functions** — 42 ticks key-for-key.
+HUNT = KILL: the kill rung gained a CHASER arm, no fifth rung.
+
+⚠ **L14 DOES NOT SOLVE** — it refuses BY NAME with five arms speaking, and the fifth names
+its own cure: `bob@32,32` is 127.1 px away against an 80 px leash, so a stand-and-strike
+waits for a body that never comes. ⛓ The mechanism is sound where it applies, measured on
+L14: standing at the boot, 8 strikes, `bob@128,64` killed at t=170, **ZERO player hits**
+with four bobs chasing — one stance clears ONE body. **12b′ = the STANCE DERIVATION →
+L14 → survey 23→24 → the pipeline record**, brief in §23.10.
+
+⚠ **The sealed mover prediction MISSED and the miss is the measurement:** all nine
+producers' `--check` byte-identical, so on every committed corridor the policy returned
+the walk's own keys on every tick — AVOID already routes those walks outside
+`SLASH_REACH`. **⚖ ruling 30(a)'s licence went UNSPENT; no tape moved.**
+
+**⚖ RULING 34 PROVEN and CLOSED** — the scripts-only commit `12e80cb73` triggered
+`JavaScript Unit Tests` run 32620698137, SUCCESS. **⚖ RULING 33's second use took the FULL
+arm** (`tapeRunner.js` edited + a tape added, both triggers it names): `--win --tier=full`
+= **145 tapes, 3399 PASS / 0 FAIL / 43 SKIP** at `2d6d33949`, which supersedes 768/0/65 as
+the standing full-roster value. Unfiltered vitest **333 / 10270**; instruments 242.
+Traps **566–568**. ⛓ 12c's numbers are in §23.11 (a dash-chained traverse is 2.15× the
+distance per tick — 53.4% fewer ticks).
+
+**NEXT in R9: slice 12b′** (the stance derivation → L14 solves → the 16-window pipeline
+record + the classifier + frontier → step 17), then **13** (the watch-page five), then
+**12c** (the planner-level dash primitive).
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:

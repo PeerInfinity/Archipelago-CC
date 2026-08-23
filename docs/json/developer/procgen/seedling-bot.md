@@ -13169,3 +13169,149 @@ forecast moves. No licence was spent and nothing needed re-recording.
 forecast, the press arm and the driven witness ship, and the room refuses BY NAME
 at plan time instead of walking into a hit. The opportunistic strike, the KILL
 rung's chaser arm and the recorded segment are the next slice's.
+
+### R9 slice 12b: THE SWORD DASH, built and witnessed — the cadence floor retired, the strike on every walk, and an oracle that never existed
+
+**The dash is a first-class move now.** `set slashing` (`Player.as:779-804`) is
+transcribed whole as `combatVerbs.slashSet`, wired into `levelRun`, and
+adjudicated by the real game. It has FOUR outcomes and this model had one:
+
+- the **dash** branch has no `!slashing` term, so a press inside an open swing
+  dashes and `play(…, true)` restarts the animation's clock;
+- it does **not refresh `slashTimer`** — only the ordinary arm writes 20;
+- **`slashDashed` clears on RELEASE**, and the release is `slashEnd`, the
+  Spritemap COMPLETE callback (`Player.as:41`) — not a key release and not a
+  timer;
+- a press can be **SWALLOWED ENTIRELY** (`slashDashed` up with the swing still
+  open refuses both arms, and there is no else);
+- the outer gate guards the **release** too.
+
+⛓ The window is `gap <= 19`, not `< 20`: `slash()` decrements at the top of
+`Player.update`, ABOVE the press that reads it.
+
+⚠⚠ **`knockback`'s guards are asymmetric** — `>=` on x, `>` on y — and they
+differ on exactly one input, a normalised component of exactly 0.5. `(1, √3)`
+reaches it exactly in IEEE doubles, so there is a unit row that admits the x
+impulse and refuses the mirrored y one. Without it, making the two agree passes
+every other row.
+
+⛓⛓ **At zero velocity the dash is EXACTLY inert**, and that is a runtime fact:
+`SWFModernRuntime/src/avm2/avm2_globals.c:1075` `point_normalize` skips at zero
+length, leaving (0,0) rather than NaN or a unit vector.
+
+#### ⛔ `useItem` is `input()`'s LAST act, and it is spent before the sweep
+
+`Mobile.mobileUpdate` is `friction(); input(); moveX(v.x); moveY(v.y);`
+(`Mobile.as:31-45`), and `useItem(Main.primary)` sits at the bottom of `input()`
+(`Player.as:1561-1563`). So the dash's `knockback` reaches **this tick's** sweep.
+`levelRun` had always recorded presses BELOW its step, under a comment saying
+*"nothing this schedules is read again before the next tick"* — true of a rect,
+true of the fire and wand windows, FALSE of the dash. The slash transition is
+taken ABOVE the step now and the press block consumes it; the impulse reaches
+`playerPhysicsV1` through a seam placed exactly where `useItem` is (inside
+`!inputBlocked`, below the waterfall push, and NOT behind `steerBlocked` — a
+damaged player cannot steer and can still dash).
+
+#### ⛓⛓⛓ The game agrees, digit for digit
+
+`r9-l0-sword-dash` (roster 144 → 145) holds `right` down a DERIVED corridor —
+the longest hit-free straight run over eleven chaser-free rooms — so every press
+lands on a moving player. `--win --record` on intel/gen-9: 38 observations, 0
+transitions, all checks passed. Each of the three dashes is a step of **+1.750**
+where the previous step was 1.400 / 1.900 / 2.400: **the 2.00 impulse minus the
+0.25 of friction that ran before it**. The game then decays each by exactly
+0.25/tick — `r5Totem.controlRefutation`'s measured shape (−0.25/tick from 2.20 =
+0.20 coasting + 2.00 knockback) reached from the other end.
+
+Four claims, all the game's: the impulse; `slashEnd`'s tick; **the non-refresh**
+(at k = 20 the decay runs on unbroken, where a refreshed-timer model would dash
+and add 1.750 the game does not); and the anim-complete re-arm (the press at
+k = 4, inside a dash's own animation, moves nothing).
+
+⛓ The player-side expectation is the RIGHT oracle here, which is the inverse of
+slice 12's lesson: that slice learned a green `--win --record` says almost
+nothing about an ENEMY because the expectation carries the PLAYER's positions.
+This claim IS the player's displacement.
+
+#### ⛔⛔ The roster could never have judged any of it
+
+Slice 12 left an "8-tape free oracle" — 41 tapes hold a `primary` press pair
+inside `SLASH_TIMER_MAX`. **That scan reproduces exactly and every one of its
+candidates is inert**, because three filters sit between a tape entry and
+`set slashing`:
+
+```
+    640 primary entries
+    -> 374 survive `acting`  (lockSnap | frozenTimer | cutsceneWalk)
+    -> 149 have a sword in the primary slot (`weaponForPress()`)
+    -> 149 ORDINARY SWINGS.   dash 0 · swallowed 0 · gated 0.
+```
+
+Twenty-one tapes reach the setter at all; none reaches the dash branch.
+`r5-bobboss-arm`, named there as "the sharpest instrument (72 such presses)",
+holds no sword — its own committed description says *"no tap can be a swing"*.
+The two watcher tapes lose all 79 presses to a dialogue lock before the setter
+can block them.
+
+⇒ the roster is a **regression** witness, not an oracle: it proves the wiring
+did not disturb the 149 ordinary swings it shares a code path with, and nothing
+else. A driven witness was therefore REQUIRED rather than a confirmation. ⇒
+**carry a roster-exposure scan through the RUN before calling a tape an oracle.**
+
+#### The opportunistic strike — one policy, two consumers
+
+`strikePolicy.js` is consulted by `solverBot.previewWalk` and by
+`botDriverV2.drive`, constructed at one site so the two cannot drift. NEAREST by
+`distanceRectPoint` (`Player.slash`'s own second filter) with a total tie-break;
+four candidacy gates each carrying its rejection reason; and it never refuses a
+walk. The chaser forecast gained `hit(id, playerPos)`, so a certified corridor
+carries the knockbacks, i-frames and deaths its own strikes cause.
+
+**The claim that makes it safe is a held-set EQUALITY between those two
+functions** — 42 ticks, key for key, and not vacuously.
+
+⛔ Two things a first cut gets wrong, both caught by measurement:
+
+1. **The arm is keyed on the CLASS, not on the `genericHit` ARM.** `as3` is
+   `"Enemy"` for every chaser and `KILL_ARM_POLICY.Enemy` is `refused` on
+   purpose — the family's row, whose reason a lift answers one class at a time.
+   Keyed on `as3`, the policy sits 5.9 px from a live bob and refuses it with a
+   TRUE sentence about the wrong subject.
+2. **The policy must see the PREVIOUS tick's bodies, on both sides.**
+   `stepChasersNow` runs above `stepV2`, so the game's `useItem` reads bodies
+   that HAVE moved this tick — more accurate, and unavailable to any driver,
+   because keys for tick k are committed before tick k runs. A probe better
+   informed than the walk certifies corridors the walk cannot keep.
+
+The per-target rule is TWO conditions: `hitsTimer === 0` AND no press of mine
+within `SLASH_HIT_TICKS` against that body. The second is what a timer-only rule
+gets wrong — hit tests run `T+1 … T+5`, so the tick after a press the timer has
+not moved yet.
+
+⚠ Scope: "every walk" is every CORRIDOR walk. The shield-lock and pickup
+approach loops are out for v1 — short terminal contact errands whose claim is
+which tick the contact lands on. Danger pricing there is unchanged.
+
+#### HUNT = KILL, and what L14 still needs
+
+The kill rung gained a CHASER arm for rooms where the ceiling has nothing to arm
+— L14 has 0 pressers and 0 traps. A chaser comes to the player, so the stance is
+the wait and the presses are the one policy. ⛔ **But the body must be able to
+come**: on L14 the ladder hands the arm `bob@32,32`, 127.1 px away against an
+80 px leash (`ENEMY_CLASSES.bob.aggro.range`). It never arrives, and a first cut
+that stood waiting for it was hit at tick 106 by one of the four bobs that DO
+chase. The arm refuses by name instead.
+
+⛓ The mechanism is sound where it applies, measured on L14 itself: standing at
+the room's own boot, the policy struck `bob@128,64` eight times, killed it at
+tick 170, and the player took **zero hits** with four bobs chasing. A single
+stance clears one body and then the next wave arrives — so the stance must be
+DERIVED (blocking body inside its leash, every other outside its reach for the
+kill window, a walkable corridor onward) and applied iteratively. That is the
+next slice's, and the refusal names it.
+
+⚠ **All nine producers' `--check` stayed byte-identical**, before and after the
+policy. That is a measured vacuity rather than a hold: the AVOID rung already
+routes every committed walk outside `SLASH_REACH` of any body, so the strike
+never had an opportunity to be opportunistic. No licence was spent and nothing
+needed re-recording.

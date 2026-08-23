@@ -131,7 +131,12 @@ describe('⛓⛓ the anchors — two readers, 655 headings, one answer', () => {
         //   sentence, the law it overturned, the responder built not joined,
         //   the game's enemy readout, and what did not move).
         //   A re-pin, not a widening.
-        expect(total).toBe(676);
+        // ⛓ 676 → 682: R9 slice 12b's § (the sword dash built and witnessed) —
+        //   SIX headings, its own plus five `####` (`useItem` is `input()`'s
+        //   last act, the game agreeing digit for digit, the roster that could
+        //   never have judged it, the one-policy strike, and HUNT = KILL).
+        //   A re-pin, not a widening.
+        expect(total).toBe(682);
     });
 
     it('⛔ uses OUR rule, not marked\'s slugger — they differ, and here is where', () => {
@@ -325,9 +330,13 @@ describe('⛓ the biggest document — the one the budget is about', () => {
         //   the press arm, plus the arrows' sentence, the law overturned, the
         //   responder built not joined, the game's own enemy readout, and what
         //   did NOT move).
+        // ⛓ 463 → 469: R9 slice 12b's § — six headings (the sword dash built
+        //   and witnessed, plus `useItem` as `input()`'s last act, the game
+        //   agreeing digit for digit, the roster that could never have judged
+        //   it, the one-policy strike, and HUNT = KILL).
         const ids = idsOf(RENDERS.get('seedling-bot.md').html);
-        expect(ids).toHaveLength(463);
-        expect(new Set(ids).size).toBe(463);
+        expect(ids).toHaveLength(469);
+        expect(new Set(ids).size).toBe(469);
         expect(ids.filter((i) => i !== ghSlug(i))).toEqual([]);
     });
 
