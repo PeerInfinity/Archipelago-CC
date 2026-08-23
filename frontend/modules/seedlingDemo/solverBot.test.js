@@ -53,11 +53,16 @@ import { assertEscalationIsOrdered } from './r8Acceptance.js';
 import {
     ESCALATION_LADDER,
     OBSTACLE_STRATEGIES, STRATEGY_EXECUTORS, STRATEGY_REFINEMENTS, SolverRefusal,
+    FACING_KEYS, facingToward,
     previewWalk, resolveKillStrategy, solveSegment, strikePolicyFor,
 } from './solverBot.js';
 // ⛓ R9 slice 12b — ⚖ ruling 30(c)'s equality is between these two exact
 // functions, so the row calls both rather than a stand-in for either.
 import { drive, runDwell } from './botDriverV2.js';
+// ⛓ R9 slice 12b′: the dash-refusal row builds BOTH arms of the policy, so it
+// needs the constructor and the swing period the refusal is measured in.
+import { createStrikePolicy } from './strikePolicy.js';
+import { ORDINARY_SWING_PERIOD } from './combatVerbs.js';
 import { DEFAULT_TOLERANCE } from './botDriverV1.js';
 import { SLASH_HIT_TICKS } from './presses.js';
 // ⛓ R9 slice 1 (A3) — the kill lock's own tset, read from the module that owns it.
@@ -1309,6 +1314,70 @@ describe('R9 slice 12b: the OPPORTUNISTIC STRIKE — one policy, two consumers',
             expect(b.as3).toBe('Enemy');
             expect(b.enemyClass).toBe('Bob');
         }
+    });
+
+    /**
+     * ⛓⛓⛓ R9 SLICE 12b′ — **`allowDash` IS ENFORCED**, and L14 is where the
+     * two arms disagree.
+     *
+     * ⛔ 12b CARRIED the flag and never read it, so the policy had no model of
+     * `slashTimer` and could not tell a swing from a dash. Its own per-target
+     * `owed` rule does not bound the PLAYER: two bodies are two targets, so
+     * two presses two ticks apart are legal by that rule and the second one
+     * DASHES (`set slashing`'s dash branch has no `!slashing` term).
+     *
+     * ⛓ NON-VACUOUS, AND IT IS L14 THAT MAKES IT SO — every committed
+     * corridor emits zero presses (§23.8), so no roster tape can distinguish
+     * these two arms. Standing at L14's own boot for 260 ticks: permitted, the
+     * policy presses at gaps 19/2/2/2 and the run is HIT once; refused, it
+     * presses at gaps 20/20/39, records four `dashRefused` rows, and is not
+     * hit at all.
+     */
+    it('⛔ `allowDash: false` REFUSES the press that would dash — and the arms differ', () => {
+        const l14 = () => createLevelRun({
+            levelSource, boot: { level: 14, x: 160, y: 64 }, noclip: false, noHazards: [],
+            noDamage: false, grants: [], persistence: [], despawn: [], equips: [],
+            pins: ['dead_frames'], save: { totem_parts: [], keys: [], seal_parts: [] },
+            rng: null, seam: { items: { hasSword: true } }, roles: ROLES,
+        });
+        const standStill = (allowDash) => {
+            const run = l14();
+            const policy = createStrikePolicy({
+                facingToward, facingKeys: FACING_KEYS, hasSword: true, allowDash,
+            });
+            const at = [];
+            for (let t = 0; t < 260; t += 1) {
+                const d = policy.decide(run.state, run.strikeBodies, run.ticksCompleted,
+                    new Set());
+                if (d.decision === 'press') at.push(run.ticksCompleted);
+                run.advance(d.held);
+            }
+            return { run, policy, at, gaps: at.slice(1).map((v, i) => v - at[i]) };
+        };
+
+        const permitted = standStill(true);
+        expect(permitted.gaps).toEqual([57, 34, 26, 19, 2, 31, 2, 31, 2]);
+        // ⛓ The refusal is the thing being tested, so the PERMITTED arm must
+        // reach the branch it is being spared: presses inside the window.
+        expect(permitted.gaps.filter((g) => g < ORDINARY_SWING_PERIOD).length).toBe(4);
+        expect(permitted.policy.trace.filter((r) => r.dashRefused)).toHaveLength(0);
+        expect(permitted.run.playerHits).toHaveLength(1);
+
+        const refused = standStill(false);
+        expect(refused.gaps).toEqual([57, 34, 26, 20, 20, 39]);
+        expect(Math.min(...refused.gaps)).toBeGreaterThanOrEqual(ORDINARY_SWING_PERIOD);
+        const rows = refused.policy.trace.filter((r) => r.dashRefused);
+        expect(rows).toHaveLength(4);
+        // The row says WHICH press it is measured against and what was in reach,
+        // because "no strike this tick" with no reason is the shape a reader
+        // cannot audit.
+        for (const r of rows) {
+            expect(r.dashRefused.wouldPressAt - r.dashRefused.lastPressAt)
+                .toBeLessThan(ORDINARY_SWING_PERIOD);
+            expect(r.dashRefused.inReach.length).toBeGreaterThan(0);
+            expect(r.dashRefused.why).toMatch(/would DASH/);
+        }
+        expect(refused.run.playerHits).toHaveLength(0);
     });
 
     /**

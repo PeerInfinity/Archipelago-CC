@@ -60,6 +60,39 @@
  * be struck on the very next tick — see `combatVerbs.ORDINARY_SWING_PERIOD`
  * and `DASH_CHAIN` for what actually bounds the player.
  *
+ * ── `allowDash` IS ENFORCED, AND IT IS THE POLICY THAT ENFORCES IT ────
+ *
+ * ⛔⛔ R9 SLICE 12b′. The flag arrived in 12b CARRIED and never read, which
+ * made its own docblock false: *"a corridor certified without the
+ * displacement is not the corridor the drive walks"* is a reason to REFUSE
+ * the press, and nothing refused it. The policy had no model of `slashTimer`
+ * at all, so it could not tell a swing from a dash — and `Player.as:779`'s
+ * dash branch has NO `!slashing` term, so a second press inside 20 ticks
+ * dashes whether or not anybody meant it.
+ *
+ * ⛓ VACUOUS ON EVERY COMMITTED CORRIDOR AND LIVE THE MOMENT L14 IS WALKED.
+ * §23.8 measured zero presses anywhere on the roster; L14's own stance dwell
+ * emits presses two ticks apart against different bodies (its `owed` rule is
+ * per TARGET, and two bodies are two targets).
+ *
+ * ⇒ with `allowDash` false a press is refused when it would land inside
+ * `ORDINARY_SWING_PERIOD` of my previous one — ⚖ ruling 36's own constant,
+ * `SLASH_TIMER_MAX` under the name that says what it bounds. THE REFUSAL IS
+ * TAKEN AT THE AIM, not at the press: an aim spends a direction key, and a
+ * tick spent aiming at a press that will be refused is a tick of drift for
+ * nothing.
+ *
+ * ⚠ IT COSTS NO DAMAGE. One body's damage is bounded by its own 30-tick
+ * i-frame (`ENEMY_IFRAMES`), which is above 20 — so the floor this puts under
+ * the swing rate is below the floor the receiver already imposes. What it
+ * costs is INTERLEAVING: two bodies can no longer be struck two ticks apart.
+ *
+ * ⛓ AND IT CLOSES §23.15's `slashRepeats` DOUBLE-COUNT FROM THIS SIDE. That
+ * defect needs two presses inside `SLASH_HIT_TICKS` (5); a rule that refuses
+ * two inside 20 refuses those a fortiori. The MODEL's own repair — a dash
+ * press RESTARTS the animation, so the pending repeats are REPLACED rather
+ * than appended — is named and is not this slice's.
+ *
  * ── PRIORITISATION ────────────────────────────────────────────────────
  *
  * NEAREST, by `distanceRectPoint` from the player's centre point to the
@@ -70,6 +103,7 @@
  * an unordered list is the shape kickoff §22.9 warned about in `deriveStrike`.
  */
 
+import { ORDINARY_SWING_PERIOD } from './combatVerbs.js';
 import { KILL_ARM_POLICY, MODELLED_KILL_ARMS } from './enemyDamage.js';
 import { SLASH_HIT_TICKS, SLASH_REACH, distanceRectPoint, slashRect } from './presses.js';
 import { rectsOverlap } from './levelWorld.js';
@@ -207,6 +241,14 @@ export function createStrikePolicy({
     if (!facingKeys) fail('createStrikePolicy: facingKeys is required');
     /** body id -> the tick I last pressed at it. */
     const owed = new Map();
+    /**
+     * ⛓ MY LAST PRESS AT ANY BODY — the swing-window question, which is about
+     * the PLAYER and therefore is not per target the way `owed` is.
+     * `slashTimer` is written by the ordinary arm alone and a dash does not
+     * refresh it (§23.2 point 2), so the tick of the last press is the whole
+     * state this needs.
+     */
+    let lastPressAt = null;
     /** The aim taken last tick, awaiting its press. */
     let aimed = null;
     const trace = [];
@@ -233,12 +275,53 @@ export function createStrikePolicy({
                 const target = aimed.id;
                 aimed = null;
                 owed.set(target, tick);
+                lastPressAt = tick;
                 const row = { tick, decision: STRIKE_PRESS, target, held: 'primary' };
                 trace.push(row);
                 return { held: new Set(['primary']), decision: STRIKE_PRESS, target };
             }
             const { chosen, rejected } = strikeCandidates(state, bodies,
                 { facingToward, owed, tick });
+            /**
+             * ⛔⛔ THE DASH REFUSAL, AND IT IS ASKED AFTER THE SCAN ON PURPOSE.
+             *
+             * The press this tick's aim earns lands on `tick + 1`; a press
+             * lands inside the open swing window — and therefore DASHES —
+             * when it is fewer than `ORDINARY_SWING_PERIOD` ticks after my
+             * last one. It is taken at the AIM rather than at the press
+             * because an aim spends a direction key, and a tick spent aiming
+             * at a press that will not be taken is a tick of drift for
+             * nothing.
+             *
+             * ⚠ BELOW THE SCAN BECAUSE THE SCAN IS WHAT WRITES THE TRACE. The
+             * dash window (20) strictly contains the own-press-owed window
+             * (`SLASH_HIT_TICKS`, 5), so asking this first would swallow the
+             * per-target rejections and leave the trace unable to say WHY a
+             * body was passed over — the two rules answer different questions
+             * and a reader needs both.
+             */
+            if (!allowDash && chosen.length > 0 && lastPressAt !== null
+                && (tick + 1) - lastPressAt < ORDINARY_SWING_PERIOD) {
+                trace.push({
+                    tick,
+                    decision: STRIKE_NONE,
+                    saw: bodies.length,
+                    rejected,
+                    dashRefused: {
+                        lastPressAt,
+                        wouldPressAt: tick + 1,
+                        inReach: chosen.map((c) => c.id),
+                        why: `a press at tick ${tick + 1} is ${(tick + 1) - lastPressAt} `
+                            + `tick(s) after mine at ${lastPressAt} and \`slashTimer\` runs `
+                            + `for ${ORDINARY_SWING_PERIOD} — \`set slashing\`'s dash branch `
+                            + 'has no `!slashing` term, so it would DASH: a +2 impulse '
+                            + 'along travel that the preview stepper does not carry. '
+                            + '`allowDash` is false, so the press is refused rather than '
+                            + 'certified against a displacement the probe cannot see.',
+                    },
+                });
+                return { held: walkHeld, decision: STRIKE_NONE };
+            }
             if (chosen.length === 0) {
                 if (rejected.length > 0) {
                     trace.push({ tick, decision: STRIKE_NONE, saw: bodies.length, rejected });
@@ -267,11 +350,14 @@ export function createStrikePolicy({
         },
 
         /**
-         * ⛔ `allowDash` is carried rather than acted on in v1, and saying so is
-         * the point: a press that lands inside `slashTimer` dashes, and a
-         * corridor certified without that displacement is not the corridor the
-         * drive walks. The planner-level dash primitive is slice 12c's.
+         * ⛓ R9 slice 12b′: CARRIED **AND ENFORCED** — see the header. False
+         * means a press that would land inside `slashTimer` is refused by
+         * name; true means the caller has taken responsibility for a corridor
+         * certified WITH the +2 displacement, which nothing does yet (the
+         * planner-level dash primitive is slice 12c's).
          */
         get allowDash() { return allowDash; },
+        /** ⛓ Read-only, for the rows that assert the refusal is not vacuous. */
+        get lastPressAt() { return lastPressAt; },
     };
 }
