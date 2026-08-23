@@ -3877,9 +3877,46 @@ the standing full-roster value. Unfiltered vitest **333 / 10270**; instruments 2
 Traps **566–568**. ⛓ 12c's numbers are in §23.11 (a dash-chained traverse is 2.15× the
 distance per tick — 53.4% fewer ticks).
 
-**NEXT in R9: slice 12b′** (the stance derivation → L14 solves → the 16-window pipeline
-record + the classifier + frontier → step 17), then **13** (the watch-page five), then
-**12c** (the planner-level dash primitive).
+### ⛓⛓⛓ SLICE 12b′ SHIPPED 2026-08-23 — **L14 CROSSED BY THE PARRY-WALK** (`7baf79492` … `ce0c68a81`)
+
+**L14 solves: 145 ticks, six presses, five bobs KNOCKED BACK, none killed, ZERO HITS** —
+rung 1 AVOID with the opportunistic strikes on it, which is ⚖ ruling 29(a)'s parry-walk
+word for word (*"start moving towards the exit, using the sword to knock back any bobs
+that get too close"*). Route survey **23 → 24/29**, exactly one row. ⚠ **No tape
+recorded** — `r9-solve-14` is slice 12b″'s, and kickoff **§23b.8** carries its whole brief
+(producer entry, chain entry, S0 prediction, ship CLAIM 7's sixteen windows, frontier
+step 17 = L15 `shove` VERB-APPLY, the readout, the classifier's still-owed `playerHits`
+arm, and the targeted roster).
+
+THREE DEFECTS, ALL IN SLICE 12b's OWN WORK: **(1)** `runDwell` destructured three of a
+four-key object and DROPPED the strike policy, so the chaser arm stood its whole bound
+unarmed and reported the untouched policy's own zero; **(2)** `allowDash` was CARRIED and
+never read, making its own docblock false — it is now enforced at the AIM, below the
+candidate scan, refusing a press inside `ORDINARY_SWING_PERIOD` (⚖ ruling 36's constant),
+which also closes §23.15's `slashRepeats` double-count from the policy's side; **(3)** the
+dwell bound had no term for how long the body takes to WALK to the stance (108 for every
+bob in every room → derived 102 / 106 / 116 / 148).
+
+THE STANCE IS DERIVED — four forecast-answered conditions, `previewWalk` gained a STANDING
+TAIL so approach and wait share one forecast, SCORED rather than first-viable, refusing BY
+NAME with three counts, and unpriceable candidates REJECTED rather than raised. ONE
+chooser with TWO named orders (`interceptOrder`, exported so the row calls the rule).
+
+⛓ **The sharpest row is a mutant that did not go red.** Reverting the enforcement does not
+refuse L14 — it moves the room from ⚖ 29(b)'s FALLBACK (247 t, two stances, one dwell
+clearing THREE bodies) to 29(a)'s PRIMARY (145 t, AVOID alone). ⚖ 29(a) over 29(b),
+MEASURED, and ⚖ 35's speed by way of the safety rule. ⚠ That mutant is also the fallback's
+ONLY in-anger witness — **L16** is the first room that will need it. ⚠ "dashes are safer"
+is NOT uniform between stances ⇒ **12c's first work item is the ORACLE (the preview must
+step with the drive's stepper), not the primitive.**
+
+GATES: unfiltered vitest ALONE **333 / 10277**; `solverBot.test.js` 44 → **50**; ten
+producers' `--check` GREEN with **ZERO MOVERS**; roster **145 unchanged**; instruments 242;
+reach `--only-list` over the slice's range = **25** tapes. Traps **569–571**.
+
+**NEXT in R9: slice 12b″** (the record — `r9-solve-14` through the pipeline, brief §23b.8),
+then **13** (the watch-page five), then **12c** (the complete dash model in the oracle,
+then the planner-level primitive).
 
 ## 6. Everything else (unchanged queues)
 
