@@ -70,6 +70,7 @@ import {
 import {
     DARK_SWORD_DAMAGE, FIRE_ARM_POLICY, LIGHTPOLE_HITS_TIMER_MAX, PRESS_ARM_POLICY,
     SLASH_HIT_TICKS, SLASH_REACH, SPEAR_DAMAGE, SWORD_DAMAGE, auditFire, auditPress,
+    slashReachFor,
     distanceRectPoint, slashRect, spearRect,
 } from './presses.js';
 import { FIRE_PRESS_CADENCE, FIRE_WINDOW, fireRect } from './fireVerb.js';
@@ -172,7 +173,10 @@ import {
 // ⚠ `SWORD_FORCE` ONLY. `combatVerbs` owns the swing GEOMETRY, which this
 // file does not use — the press rect comes from `presses.slashRect` — but
 // `Player.as:116`'s `swordForce` has one home and this is it.
-import { SWORD_FORCE } from './combatVerbs.js';
+import {
+    INITIAL_SLASH_STATE, SLASH_SCALE_NORMAL, SWORD_FORCE, slashScaleFor, slashSet,
+    slashTimerTick,
+} from './combatVerbs.js';
 import { ledgerKey, outOfBandFlagForWriter } from './outOfBandLedger.js';
 import { createChestState, stepChests } from './chest.js';
 import {
@@ -3463,6 +3467,10 @@ export function createLevelRun({
         // destination's.
         pendingThrust = null;
         slashRepeats = [];
+        // ⛓ R9 slice 12b: and neither can a swing, a dash-arm or a timer.
+        // `slashTimer`/`slashDashed`/`_slashing` are Player fields.
+        slashState = { ...INITIAL_SLASH_STATE };
+        slashEndsAt = null;
         // ⛓⛓ R6 SLICE 6d: …and a RUNTIME pickup cannot outlive its level
         // either, for a stronger reason than the thrust's. A placed pickup is
         // rebuilt by the destination's `loadlevel`; a `Seed` the Watcher added
@@ -3725,6 +3733,34 @@ export function createLevelRun({
      * field and the Player is reconstructed.
      */
     let slashRepeats = [];
+    /**
+     * ⛓⛓⛓ R9 SLICE 12b — `Player`'s FOUR SLASH FIELDS, which this run did not
+     * have and which are the whole of the SWORD DASH.
+     *
+     * `combatVerbs.slashSet` is `set slashing` transcribed; this holds the
+     * state it threads. ⚠ Cleared on a world swap with `pendingThrust` and
+     * `slashRepeats`: they are Player fields and the Player is reconstructed,
+     * so a dash cannot be armed across a door.
+     */
+    let slashState = { ...INITIAL_SLASH_STATE };
+    /**
+     * The tick `slashEnd()` is due on — `sprites()`' own callback, which fires
+     * after the swing's six graphic advances and calls `slashing = false`.
+     * ⚠ RE-ARMED by a dash press: `play(anim, true)` restarts the animation,
+     * so the callback's clock restarts with it.
+     */
+    let slashEndsAt = null;
+    /**
+     * ⛓⛓⛓ R9 SLICE 12b — ONE RECORD PER PRESS THAT REACHED `set slashing`,
+     * carrying which of its four arms took it.
+     *
+     * ⛔ IT IS A LEDGER BECAUSE THE TICK STREAM CANNOT SEE ANY OF THIS. A
+     * `swallowed` press and a `gated` one are both "the player pressed X and
+     * nothing happened"; a dash AT REST is exactly (0,0) of movement. None of
+     * the three is distinguishable from an ordinary swing by position alone,
+     * and two of them differ from it in what the NEXT press will do.
+     */
+    const slashPresses = [];
     /**
      * ⛓ R5 slice 7: the FIRE windows still open — `{pressTick, hitTicks}`.
      *
@@ -4438,9 +4474,25 @@ export function createLevelRun({
     };
 
     const applyThrust = (thrust) => {
-        const { weapon, direction, pressTick } = thrust;
+        const { weapon, direction, pressTick, scale = SLASH_SCALE_NORMAL } = thrust;
+        /**
+         * ⛓⛓ R9 SLICE 12b — THE SWING'S SCALE IS PART OF THE THRUST, and
+         * `slashRect`'s two filters BOTH read it.
+         *
+         * A dash press plays "slashnarrow", which `Player.render` squashes to
+         * 1.5 x 0.65 — a 24 x 20.8 rect (wider along the swing, SHORTER
+         * across it: neither rect contains the other) and a 24 px
+         * `distanceRectPoint` gate, because that gate is
+         * `slashingSprite.width * scaleX` rather than a constant.
+         *
+         * ⚠ It rides on the THRUST, not on the run's current state, because
+         * the four repeat ticks are the SAME swing re-aimed — a press landing
+         * inside another press's window must not retroactively re-scale the
+         * earlier one's remaining tests.
+         */
+        const reachLimit = weapon === 'spear' ? SLASH_REACH : slashReachFor(scale);
         const rect = weapon === 'sword'
-            ? slashRect(state.x, state.y, direction)
+            ? slashRect(state.x, state.y, direction, scale)
             : spearRect(state.x, state.y, direction);
         // A ghostsword routes a SLASH through the Spear branch of
         // `genericHit` — R5, and refused rather than approximated.
@@ -4800,10 +4852,10 @@ export function createLevelRun({
                 }
                 const body = shieldBossBodyRect(b);
                 const reach = distanceRectPoint(state.x, state.y, body);
-                if (reach > SLASH_REACH) {
+                if (reach > reachLimit) {
                     hits.push({
                         as3: 'ShieldBoss', id: b.id, landed: false, killed: false,
-                        why: `distanceRectPoint ${reach.toFixed(3)} > ${SLASH_REACH} — `
+                        why: `distanceRectPoint ${reach.toFixed(3)} > ${reachLimit} — `
                             + 'the rect reached him and `slash()`\'s own gate did not',
                     });
                 } else {
@@ -4930,11 +4982,11 @@ export function createLevelRun({
                 }
                 const body = spinnerRect(sp);
                 const reach = distanceRectPoint(state.x, state.y, body);
-                if (reach > SLASH_REACH) {
+                if (reach > reachLimit) {
                     spinnerPressHits.push({
                         t: ticksCompleted, level, id: sp.id, weapon, landed: false,
                         killed: false, reach, hits: sp.hits, hitsTimer: sp.hitsTimer,
-                        why: `distanceRectPoint ${reach.toFixed(3)} > ${SLASH_REACH} — `
+                        why: `distanceRectPoint ${reach.toFixed(3)} > ${reachLimit} — `
                             + 'the rect reached it and `slash()`\'s own gate did not',
                     });
                     hits.push({ as3: 'Spinner', id: sp.id, landed: false, killed: false });
@@ -5028,11 +5080,11 @@ export function createLevelRun({
                 }
                 const body = finalBossBox(b.x, b.y);
                 const reach = distanceRectPoint(state.x, state.y, body);
-                if (reach > SLASH_REACH) {
+                if (reach > reachLimit) {
                     finalBossShoves.push({
                         t: ticksCompleted, level, id: b.id, landed: false,
                         reach, force: 0, vx: b.vx, vy: b.vy, x: b.x, y: b.y,
-                        why: `distanceRectPoint ${reach.toFixed(3)} > ${SLASH_REACH} — `
+                        why: `distanceRectPoint ${reach.toFixed(3)} > ${reachLimit} — `
                             + 'the shove has carried him out of his own hit rect',
                     });
                     hits.push({ as3: 'FinalBoss', id: b.id, landed: false, killed: false });
@@ -5118,11 +5170,11 @@ export function createLevelRun({
                     bottom: w.ey - WATCHER.box.originY + WATCHER.box.h,
                 };
                 const reach = distanceRectPoint(state.x, state.y, body);
-                if (reach > SLASH_REACH) {
+                if (reach > reachLimit) {
                     watcherHits.push({
                         t: ticksCompleted, level, id: w.id, landed: false,
                         hits: w.hits, hitsTimer: w.hitsTimer,
-                        why: `distanceRectPoint ${reach.toFixed(3)} > ${SLASH_REACH} — `
+                        why: `distanceRectPoint ${reach.toFixed(3)} > ${reachLimit} — `
                             + 'the rect reached him and `slash()`\'s own gate did not',
                     });
                     hits.push({ as3: 'Watcher', id: w.id, landed: false });
@@ -5199,12 +5251,12 @@ export function createLevelRun({
                  * receiver culls its own hit tests) arriving at a new class.
                  */
                 const reach = distanceRectPoint(state.x, state.y, body);
-                if (reach > SLASH_REACH) {
+                if (reach > reachLimit) {
                     chaserPressHits.push({
                         t: ticksCompleted, level, id: c.id, tag: c.tag, weapon,
                         landed: false, killed: false, reach,
                         hits: c.hits, hitsTimer: c.hitsTimer,
-                        why: `distanceRectPoint ${reach.toFixed(3)} > ${SLASH_REACH} — `
+                        why: `distanceRectPoint ${reach.toFixed(3)} > ${reachLimit} — `
                             + 'the rect reached it and `slash()`\'s own gate did not',
                     });
                     hits.push({ as3: 'Enemy', id: c.id, landed: false, killed: false });
@@ -5458,7 +5510,9 @@ export function createLevelRun({
      * first live tick, `openActivators` is this tick's set, and the two input
      * gates are read off the freeze timer and the damage state.
      */
-    function stepOptsFor({ beforeTypeFlip, openActivators, inputBlocked, steerBlocked }) {
+    function stepOptsFor({
+        beforeTypeFlip, openActivators, inputBlocked, steerBlocked, dashImpulse = null,
+    }) {
         return {
             level: world,
             noclip,
@@ -5504,10 +5558,16 @@ export function createLevelRun({
             pins,
             // ⛓⛓⛓ R5 SLICE 22. `acting` above already drops the
             // direction keys; this drops the WATERFALL PUSH too, which
-            // is the last statement of `input()` and below the same
-            // return. Both, because the two halves of one `if` are not
-            // a place to be economical.
+            // is below the same return. Both, because the two halves of
+            // one `if` are not a place to be economical.
+            // ⚠ R9 SLICE 12b: the waterfall is NOT `input()`'s last
+            // statement — `useItem` is, four lines below it. See
+            // `dashImpulse`.
             inputBlocked,
+            // ⛓⛓⛓ R9 SLICE 12b: the SWORD DASH's `knockback(2, …)`, which
+            // `useItem` reaches from inside `input()` — so it is spent
+            // ABOVE this tick's sweeps. Null on every tick but a dash.
+            dashImpulse,
             // ⛓⛓⛓ R6 SLICE 3: `Player.input()`'s OTHER gate, and it is
             // NARROWER — `if (hitsTimer <= 0)` wraps the four arrow
             // branches and closes ABOVE the waterfall push and both
@@ -11367,6 +11427,23 @@ export function createLevelRun({
          */
         get presses() { return presses.map((p) => ({ ...p, hits: p.hits.map((h) => ({ ...h })) })); },
         /**
+         * ⛓ R9 SLICE 12b — one record per SWORD DASH: `{t, level, direction,
+         * v, impulse}`.
+         *
+         * ⛔ IT IS THE ONLY WITNESS A DASH LEAVES. At rest the impulse is
+         * exactly (0,0) — `point_normalize` no-ops at zero length — so four of
+         * the eight roster tapes that reach the branch move the player by
+         * NOTHING, and the observation stream cannot tell those ticks from an
+         * ordinary swing. A ledger, because a position diff cannot see this.
+         */
+        get slashPresses() {
+            return slashPresses.map((d) => ({
+                ...d, v: { ...d.v }, impulse: d.impulse ? { ...d.impulse } : null,
+            }));
+        },
+        /** The DASH subset — derived, so the two can never disagree. */
+        get dashes() { return this.slashPresses.filter((d) => d.outcome === 'dash'); },
+        /**
          * ⛓ R6 slice 2: one record per shot the run has FIRED —
          * `{t, level, id, direction, x, y, pressTick}`. `t` is the fire tick
          * and `pressTick` is the press; they differ by seven BY DERIVATION
@@ -12836,6 +12913,11 @@ export function createLevelRun({
             // `v.length > 0`, and `v` is what its own `input()` just set)
             // and before the player moves (`spear()` runs at the top of
             // `Player.update`, above `super.update()`).
+            // ⛓⛓ R9 SLICE 12b — `slash()`'s FIRST TWO LINES, and their place is
+            // the whole reason the dash window is `gap <= 19`. `if (slashTimer
+            // > 0) slashTimer--` runs at the top of `Player.update`, ABOVE
+            // `super.update()` and therefore above the press that reads it.
+            slashState = slashTimerTick(slashState);
             if (pendingThrust) {
                 applyThrust(pendingThrust);
                 /**
@@ -12921,11 +13003,68 @@ export function createLevelRun({
                     + `${ICE_TURRET_BLAST.freezeTicks - 1} ticks starting with the `
                     + 'contact tick; schedule the press outside that span.');
             }
+            /**
+             * ⛓⛓⛓ R9 SLICE 12b — `useItem`'s SWORD ARM, RESOLVED ABOVE THE
+             * STEP, because the DASH is the one thing a press schedules that
+             * this tick's sweep reads.
+             *
+             * ⛔ `Mobile.mobileUpdate` is `friction(); input(); moveX(v.x);
+             * moveY(v.y);` and `useItem(Main.primary)` is `input()`'s last
+             * act — so `set slashing`'s `knockback(2, …)` lands BEFORE the
+             * sweep. Every other consequence of a press (the rect, the fire
+             * and wand windows) is read a tick later, which is why the press
+             * block below sits under the step; this half cannot.
+             *
+             * ⛓ THE TRANSITION IS TAKEN ONCE, HERE, and the block below
+             * CONSUMES it rather than re-running the setter — two calls would
+             * be two `slashTimer` writes for one press.
+             *
+             * ⚠ `acting`, not `held`: a frozen or touch-locked tick drops the
+             * keys before `input()` ever reads them, and the loud refusal for
+             * that case is the throw above.
+             */
+            let slashPress = null;
+            if (acting.has(TALK_KEY) && !wasHeld.has(TALK_KEY) && !noclip
+                && (weaponForPress() === 'sword' || weaponForPress() === 'ghostsword')) {
+                slashPress = slashSet(slashState, {
+                    pressed: true,
+                    hasSword: inventory?.hasSword ?? false,
+                    hasGhostSword: inventory?.hasGhostSword ?? false,
+                    // ⛔ The other four gate terms are the verbs whose windows
+                    // this run already owns. `deathRaying` has no modelled
+                    // writer, so it is FALSE by construction rather than by
+                    // assumption — a rung that models the death ray owes this
+                    // line the flag.
+                    wanding: wandWindows.some((w) => ticksCompleted <= w.endTick),
+                    firing: fireWindows.some((w) => ticksCompleted <= w.endTick),
+                    deathRaying: false,
+                    spearing: pendingThrust !== null && pendingThrust.weapon === 'spear',
+                    direction: pressFacing,
+                    vx: state.vx,
+                    vy: state.vy,
+                });
+                slashState = slashPress.state;
+                slashPresses.push({
+                    t: ticksCompleted,
+                    level,
+                    outcome: slashPress.outcome,
+                    direction: slashPress.slashDirection,
+                    v: { x: state.vx, y: state.vy },
+                    impulse: slashPress.impulse ? { ...slashPress.impulse } : null,
+                });
+                if (slashPress.outcome === 'slash' || slashPress.outcome === 'dash') {
+                    // `play(anim, true)` RESTARTS the animation, so `slashEnd`'s
+                    // clock restarts with it — for a dash landing inside an open
+                    // swing as much as for a fresh one.
+                    slashEndsAt = ticksCompleted + SLASH_HIT_TICKS;
+                }
+            }
             const stepOpts = stepOptsFor({
                 beforeTypeFlip: firstTickInWorld,
                 openActivators: noclip ? null : openActivatorIds(activators),
                 inputBlocked: frozenTimer > 0,
                 steerBlocked: !canSteer(damage),
+                dashImpulse: slashPress?.outcome === 'dash' ? slashPress.impulse : null,
             });
             // ── ⛓⛓⛓ R5 SLICE 23: THE FREEZE-CLEARING FRAME'S OWN STEP ──
             //
@@ -13064,9 +13203,63 @@ export function createLevelRun({
                         fireTick: ticksCompleted + WAND_WINDOW.fireTick,
                         endTick: ticksCompleted + WAND_WINDOW.endTick,
                     });
+                } else if (weapon === 'sword' || weapon === 'ghostsword') {
+                    /**
+                     * ⛓⛓⛓ R9 SLICE 12b — THE SWORD ARM CONSUMES THE
+                     * TRANSITION `set slashing` ALREADY TOOK, above the step.
+                     *
+                     * ⛔ A press is no longer unconditionally a thrust. Two of
+                     * `slashSet`'s four outcomes open no window at all: a
+                     * `gated` press (wanding/firing/spearing, or no sword) and
+                     * a `swallowed` one (`slashDashed` up with the swing still
+                     * open — both arms refused and there is no else). The
+                     * model used to schedule a rect for every one of them.
+                     *
+                     * ⛓ AND THE SCALE RIDES ALONG. A dash plays "slashnarrow",
+                     * which `Player.render` squashes to 1.5 x 0.65 — so the
+                     * whole window this press opens swings a 24 x 20.8 rect
+                     * with a 24 px reach, not 16 x 32 at 16.
+                     */
+                    if (slashPress
+                        && (slashPress.outcome === 'slash' || slashPress.outcome === 'dash')) {
+                        pendingThrust = {
+                            weapon,
+                            direction: slashPress.slashDirection,
+                            pressTick: ticksCompleted,
+                            anim: slashState.anim,
+                            scale: slashScaleFor(slashState.anim),
+                        };
+                    }
                 } else if (weapon) {
                     pendingThrust = { weapon, direction: pressFacing, pressTick: ticksCompleted };
                 }
+            }
+            /**
+             * ⛓⛓⛓ R9 SLICE 12b — `slashEnd()`, AND IT IS BELOW THE PRESS FOR
+             * `wandEnd`'s REASON.
+             *
+             * `sprSlash`'s complete-callback IS `slashEnd`, and `sprites()` is
+             * the line below `super.update()` in `Player.update` — so a swing
+             * that ends on the same tick as a press ends AFTER it, which is
+             * why a press landing on its own window's last tick still dashes.
+             *
+             * ⛔⛔ THE RELEASE IS WHAT RE-ARMS THE DASH. `slashing = false`
+             * takes `set slashing`'s third arm and clears `slashDashed`, so a
+             * SECOND dash out of one 20-tick `slashTimer` window is legal.
+             * A model that cleared the flag on a timer instead would refuse
+             * it, and refuse it silently.
+             */
+            if (slashEndsAt !== null && ticksCompleted >= slashEndsAt) {
+                slashEndsAt = null;
+                slashState = slashSet(slashState, {
+                    pressed: false,
+                    hasSword: inventory?.hasSword ?? false,
+                    hasGhostSword: inventory?.hasGhostSword ?? false,
+                    wanding: wandWindows.some((w) => ticksCompleted <= w.endTick),
+                    firing: fireWindows.some((w) => ticksCompleted <= w.endTick),
+                    deathRaying: false,
+                    spearing: pendingThrust !== null && pendingThrust.weapon === 'spear',
+                }).state;
             }
             // ── ⛓⛓⛓ R6 SLICE 2: `wandEnd()`, AND IT IS BELOW THE PRESS ──
             //

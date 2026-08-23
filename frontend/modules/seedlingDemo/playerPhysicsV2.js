@@ -1038,6 +1038,8 @@ export function step(state, held, opts = {}) {
          * this is not `frozen`.
          */
         inputBlocked = false,
+        /** ⛓ R9 slice 12b — `{dvx, dvy}` from a SWORD DASH press, or null. */
+        dashImpulse = null,
         /**
          * ⛓⛓⛓ R6 SLICE 3: `Player.input()`'s i-frame gate, threaded the
          * same way and for the same reason — the run owns `hitsTimer`
@@ -1410,13 +1412,20 @@ export function step(state, held, opts = {}) {
         steerBlocked,
         friction,
         moveSpeed,
-        // `Player.input()`'s last act. The feather exempts UPWARD motion
-        // only — `!hasFeather || v.y >= 0` — so a feather-holding player
-        // still gets pushed while falling or standing.
+        // The WATERFALL push (`Player.as:1556-1560`). The feather exempts
+        // UPWARD motion only — `!hasFeather || v.y >= 0` — so a
+        // feather-holding player still gets pushed while falling or standing.
+        // ⚠ NOT `input()`'s last act: `useItem` is, four lines below it —
+        // see `useItemImpulse`.
         postInput: flags.onWaterfall
             ? (v) => ((!heldItems.hasFeather || v.y >= 0)
                 ? { x: v.x, y: v.y + WATERFALL_ACCELERATION } : v)
             : null,
+        // ⛓ R9 slice 12b: the SWORD DASH's `knockback(2, …)`, which
+        // `useItem` reaches from inside `input()` and therefore ABOVE this
+        // tick's sweeps. The run decides whether a press dashes (it owns
+        // `slashTimer`/`slashDashed`); the physics only spends the delta.
+        useItemImpulse: dashImpulse,
         world: level.world,
         collides: noclip ? null : (x, y) => level.collidesSolid(playerBoxAt(x, y), liveOpts),
         // `checkFallingInPit()` sits between moveY and the world clamp.

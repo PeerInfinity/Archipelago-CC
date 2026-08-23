@@ -368,6 +368,32 @@ export function step(state, held, opts = {}) {
         // frozen tick, when `mobileUpdate` runs no input at all.
         postInput = null,
         /**
+         * ⛓⛓⛓ R9 SLICE 12b — `useItem(Main.primary)`, WHICH IS `input()`'s
+         * REAL LAST ACT, and it can write `v`.
+         *
+         * `postInput` above is the WATERFALL push (`Player.as:1556-1560`).
+         * Below it, still inside `input()`, sit `if (Input.pressed(keys[4]))
+         * useItem(Main.primary)` and its secondary twin (`:1561-1567`) — and
+         * the SWORD DASH reaches `knockback(2, …)` from there.
+         *
+         * ⛔⛔ AND `Mobile.mobileUpdate` IS `friction(); input(); moveX(v.x);
+         * moveY(v.y);` (`Mobile.as:31-45`) — so a `v` written by `useItem` is
+         * consumed by THIS TICK'S SWEEP, not the next one. Every other thing
+         * a press schedules (a rect, a window) is read a tick later, which is
+         * why `levelRun` records presses BELOW its step; the dash is the first
+         * one that is not, and a model that applied it after the sweep would
+         * be one tick late on every dash in the game.
+         *
+         * ⚠ NOT behind `steerBlocked`. That seam is the i-frame window around
+         * the four direction arms (`if (hitsTimer <= 0)`), which closes ABOVE
+         * the waterfall and above this — a damaged player cannot steer and CAN
+         * still dash.
+         *
+         * `{dvx, dvy}` — a DELTA, because `knockback` adds to `v` rather than
+         * setting it.
+         */
+        useItemImpulse = null,
+        /**
          * ⛓⛓⛓ R5 SLICE 22: `Player.input()`'s OWN FIRST LINE, as a seam.
          *
          * ```
@@ -450,6 +476,10 @@ export function step(state, held, opts = {}) {
             // `if` in the source and runs either way.
             if (!steerBlocked) v = applyInput(v, held, moveSpeed);
             if (postInput) v = postInput(v);
+            // `useItem(Main.primary)` — below the waterfall, above the sweeps.
+            if (useItemImpulse) {
+                v = { x: v.x + useItemImpulse.dvx, y: v.y + useItemImpulse.dvy };
+            }
         }
         // X is FULLY resolved before Y, and Y's probe sees the NEW x —
         // `moveX(v.x); moveY(v.y);` (`Mobile.as:38-39`), where moveY reads

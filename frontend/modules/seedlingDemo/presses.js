@@ -38,6 +38,13 @@
 
 import { PRESS_ARMS, rectsOverlap } from './levelWorld.js';
 import { fireHits } from './fireVerb.js';
+/**
+ * ⛓ R9 SLICE 12b — THE TWO SLASH SCALES HAVE ONE HOME, AND IT IS
+ * `combatVerbs`. `Player.render`'s 1.5/0.65 is a single fact; a second copy
+ * here would agree with that one until somebody edited either, and the copy
+ * nobody tests is the one that drifts (⚖ ruling 17).
+ */
+import { SLASH_SCALE_DASH, SLASH_SCALE_NORMAL } from './combatVerbs.js';
 
 export class PressError extends Error {
     constructor(message) {
@@ -67,6 +74,16 @@ export const DARK_SWORD_DAMAGE = 2;
 export const SPEAR_DAMAGE = 2;
 /** `slashingSprite.width * scaleX` — the slash's post-rect distance gate. */
 export const SLASH_REACH = 16;
+/**
+ * ⛓ R9 SLICE 12b — AND IT SCALES WITH THE SWING. The gate is
+ * `slashingSprite.width * scaleX`, so a DASH press reaches 24 px, not 16.
+ * `SLASH_REACH` stays the plain-swing constant every PLANNER reads (a
+ * planner that assumed 24 would schedule presses the ordinary swing cannot
+ * make); the RUN asks this, because the run knows which animation is up.
+ */
+export const slashReachFor = (scale = SLASH_SCALE_NORMAL) => SLASH_REACH * scale.x;
+/** `slashReachFor(SLASH_SCALE_DASH)` — 24 px, named for the doc rows. */
+export const SLASH_REACH_DASH = SLASH_REACH * SLASH_SCALE_DASH.x;
 /** `Player.as:947-948` — `const length:int = 32; const thick:int = 5;` */
 export const SPEAR_LENGTH = 32;
 export const SPEAR_THICK = 5;
@@ -188,9 +205,16 @@ export function spearRect(x, y, direction) {
  * out rather than guessed, because `hasGhostSword` also re-routes the whole
  * press through the Spear branch of `genericHit`.
  */
-export function slashRect(x, y, direction) {
-    const w = 16;
-    const h = 32;
+export function slashRect(x, y, direction, scale = SLASH_SCALE_NORMAL) {
+    // ⛓⛓ R9 SLICE 12b — THE SCALE, WHICH IS THE DASH'S WHOLE RECT.
+    // `Player.render` writes `slashingSprite.scaleX/scaleY` = 1.5/0.65 while
+    // the animation is "slashnarrow" (`Player.as:1258-1266`), and
+    // `getSlashRect` reads `slashingSprite.width * scaleX` — so a dash press
+    // swings a 24 x 20.8 rect where an ordinary one swings 16 x 32. WIDER
+    // ALONG THE SWING AND SHORTER ACROSS IT: neither rect contains the other,
+    // so a model that used one for both is wrong in both directions.
+    const w = 16 * scale.x;
+    const h = 32 * scale.y;
     switch (direction) {
         case RIGHT: return rect(x, y - h / 2, w, h);
         case UP: return rect(x - h / 2, y - w, h, w);

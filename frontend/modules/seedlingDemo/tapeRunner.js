@@ -617,6 +617,20 @@ export function createTapeStepper(tape, opts = {}) {
             // two-sidedly, and a ShieldLock is the second thing on the ladder
             // that refuses input by design.
             lockSnaps: run ? run.lockSnaps : [],
+            /**
+             * ⛓ R9 slice 12b: one record per SWORD DASH. Model-side
+             * bookkeeping like `transports`, and for a sharper version of the
+             * same reason: at rest a dash's impulse is EXACTLY (0,0), so the
+             * tick stream cannot tell a dashing press from an ordinary one.
+             * This ledger is the only witness those tapes leave.
+             */
+            dashes: run ? run.dashes : [],
+            /**
+             * ⛓ Every press that reached `set slashing`, with the arm that
+             * took it — `slash` · `dash` · `swallowed` · `gated`. The
+             * superset `dashes` is derived from.
+             */
+            slashPresses: run ? run.slashPresses : [],
             // R3: one record per COMPLETED pickup ceremony. The other half
             // of the crutch ledger — `grants` is what was HANDED over and
             // this is what was WALKED ONTO, so "collected for real, not
