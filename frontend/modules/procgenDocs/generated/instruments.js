@@ -134,6 +134,11 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
+            "count": 1,
+            "id": "record"
+        },
+        {
+            "browser": 0,
             "count": 5,
             "id": "region"
         },
@@ -170,6 +175,11 @@ export const INSTRUMENTS = frz({
         {
             "browser": 0,
             "count": 1,
+            "id": "standing"
+        },
+        {
+            "browser": 0,
+            "count": 1,
             "id": "survey"
         },
         {
@@ -184,13 +194,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 223,
+        "blockStyle": 225,
         "browser": 74,
         "cited": 74,
-        "files": 242,
+        "files": 244,
         "lineStyle": 19,
-        "withDocblock": 242,
-        "withFlags": 148
+        "withDocblock": 244,
+        "withFlags": 150
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -5165,6 +5175,58 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/recon-seedling-r7.mjs"
         },
         {
+            "argvHelpers": [
+                "arg",
+                "guessKind"
+            ],
+            "browser": false,
+            "category": "record",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "record-standing-value.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "from"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "key"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "kind"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "measured-at"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "quote"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "why"
+                }
+            ],
+            "oneLiner": "record-standing-value — **ONE STANDING VALUE, RECORDED BY THE COMMAND THAT MEASURES IT** (R9 slice 12e, ⚖ ruling 38 item (5)).",
+            "path": "scripts/procgen/record-standing-value.mjs"
+        },
+        {
             "argvHelpers": [],
             "browser": false,
             "category": "region",
@@ -5636,6 +5698,58 @@ export const INSTRUMENTS = frz({
             "flags": [],
             "oneLiner": "Stamp the extracted vanilla fixture with its content-hash identity.",
             "path": "scripts/procgen/stamp-seedling-vanilla-set.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "flag"
+            ],
+            "browser": false,
+            "category": "standing",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "standing-values.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "flag"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "flag"
+                    ],
+                    "name": "list"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "flag"
+                    ],
+                    "name": "quote"
+                },
+                {
+                    "how": [
+                        "flag"
+                    ],
+                    "name": "write"
+                }
+            ],
+            "oneLiner": "standing-values — **THE COMMITTED ARTIFACT THAT REPLACES TWENTY NUMBERS IN EVERY HANDSHAKE** (R9 slice 12e, ⚖ ruling 38 item (5)).",
+            "path": "scripts/procgen/standing-values.mjs"
         },
         {
             "argvHelpers": [

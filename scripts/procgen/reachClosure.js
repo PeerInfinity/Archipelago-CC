@@ -600,33 +600,113 @@ export function identityRows({ repo = REPO } = {}) {
         }
         return out;
     };
-    const rRe = /^\s*r\s+"([^"]+)"\s+"\$\(node\s+(?:"?)(scripts\/procgen\/[A-Za-z0-9._-]+)/gm;
+    /**
+     * ⛓⛓⛓ THE COMMAND, NOT ONLY THE SCRIPT (R9 slice 12e).
+     *
+     * ⛔ `script` alone cannot REPRODUCE a row: three of these rows run the
+     * SAME script with different flags (`empty pairs c3` / `c6` / `carved
+     * pairs c4` are all `dump-seedling-kind-pairs.mjs`) and would be
+     * indistinguishable. `standing-values.mjs` re-runs these rows, so it needs
+     * the whole `$( … )` body — pipes, redirections and all, because the
+     * BATTERY's digest is the PIPE form and `$(…)` would give a different one
+     * (identity-block.sh's own closing note).
+     *
+     * ⛓ And that body is not runnable on its own: it calls `m`, a function the
+     * shell defines at the top. The helper definitions are returned by
+     * `identityShellHelpers()` below and are meant to be PREPENDED — derived
+     * from the same file rather than re-typed in JS, which is the whole reason
+     * this parser exists instead of a second list.
+     */
+    const rRe = /^\s*r\s+"([^"]+)"\s+"\$\((.+)\)"\s*$/gm;
     let m = rRe.exec(src);
     while (m !== null) {
         const raw = m[1].replace(/\s*\[\*\]\s*$/, '').trim();
-        for (const label of expand(raw)) {
-            const key = `${label}::${m[2]}`;
-            if (!seen.has(key)) { seen.add(key); rows.push({ label, script: m[2] }); }
+        const script = (/scripts\/procgen\/[A-Za-z0-9._-]+/.exec(m[2]) ?? [])[0] ?? null;
+        if (script) {
+            const bodies = expand(m[2]);
+            expand(raw).forEach((label, i) => {
+                const command = bodies[i] ?? bodies[0];
+                const key = `${label}::${script}`;
+                if (!seen.has(key)) {
+                    seen.add(key);
+                    rows.push({
+                        label,
+                        script: (/scripts\/procgen\/[A-Za-z0-9._-]+/.exec(command) ?? [])[0]
+                            ?? script,
+                        command,
+                    });
+                }
+            });
         }
         m = rRe.exec(src);
     }
-    // the `for p in <producers>` loop, whose command is `scripts/procgen/$p.mjs`
+    /**
+     * ⛓ the `for p in <producers>` loop. Its command is the `d=$( … )` line in
+     * the loop BODY — read out of the shell and expanded over `$p`, so a
+     * producer added to that list arrives here with the right pipe rather than
+     * with one this file guessed.
+     */
     if (loopVars.has('p')) {
+        const body = (/^\s*[A-Za-z_]\w*=\$\((.+)\)\s*$/m.exec(src) ?? [])[1] ?? null;
         for (const name of loopVars.get('p')) {
             const script = `scripts/procgen/${name}.mjs`;
             const key = `${name} --check::${script}`;
-            if (!seen.has(key)) { seen.add(key); rows.push({ label: `${name} --check`, script }); }
+            if (!seen.has(key)) {
+                seen.add(key);
+                rows.push({
+                    label: `${name} --check`,
+                    script,
+                    command: body ? body.split('$p').join(name).replace(/"/g, '') : null,
+                });
+            }
         }
     }
     // the standalone lines this script runs without the `r` helper
-    const bare = /^\s*node\s+(scripts\/procgen\/[A-Za-z0-9._-]+)/gm;
+    const bare = /^\s*node\s+(scripts\/procgen\/[A-Za-z0-9._-]+)[^\n]*/gm;
     let b = bare.exec(src);
     while (b !== null) {
         const key = `${b[1]}::${b[1]}`;
-        if (!seen.has(key)) { seen.add(key); rows.push({ label: b[1].split('/').pop(), script: b[1] }); }
+        if (!seen.has(key)) {
+            seen.add(key);
+            rows.push({ label: b[1].split('/').pop(), script: b[1], command: b[0].trim() });
+        }
         b = bare.exec(src);
     }
     return rows;
+}
+
+/**
+ * The command TEMPLATE `identity-block.sh` runs for each producer — the
+ * `d=$( … )` line inside its `for p in …` loop, with `$p` still in it.
+ *
+ * ⛓ Six producers are in that loop; the tree has THIRTEEN with a `--check`.
+ * `standing-values.mjs` records all thirteen, and this is how it records the
+ * other seven with the SAME command the block uses rather than one it made up
+ * — the pipe form matters (ruling 8's note: `$(…)` strips the trailing newline
+ * and gives a different digest for identical bytes).
+ */
+export function identityProducerTemplate({ repo = REPO } = {}) {
+    const path = join(repo, 'scripts/procgen/identity-block.sh');
+    if (!existsSync(path)) return null;
+    const src = readFileSync(path, 'utf8');
+    const body = (/^\s*[A-Za-z_]\w*=\$\((.+)\)\s*$/m.exec(src) ?? [])[1] ?? null;
+    return body ? body.replace(/"/g, '') : null;
+}
+
+/**
+ * The shell FUNCTIONS `identity-block.sh` defines for its own rows — `r` and
+ * `m` today — as text, ready to be prepended to a row's `command`.
+ *
+ * ⛔ DERIVED, not re-typed (⚖ ruling 17). `m () { md5sum | cut -d' ' -f1; }` is
+ * the definition of what every identity value MEANS; a copy of it in JS is a
+ * second spelling that goes wrong the day somebody changes the digest.
+ */
+export function identityShellHelpers({ repo = REPO } = {}) {
+    const path = join(repo, 'scripts/procgen/identity-block.sh');
+    if (!existsSync(path)) return '';
+    return [...readFileSync(path, 'utf8')
+        .matchAll(/^\s*([A-Za-z_]\w*)\s*\(\)\s*\{[^\n}]*\}\s*$/gm)]
+        .map((h) => h[0].trim()).join('\n');
 }
 
 /**
