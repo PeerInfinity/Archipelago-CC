@@ -98,16 +98,12 @@ import { execFile } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, writeFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
+import { familyOf } from './surveyFamily.js';
+
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
 const MODULE = join(REPO, 'frontend', 'modules', 'seedlingDemo');
 
-/**
- * ⛓ The press-arm policy, READ rather than quoted — see `FAMILY_RULES`' first
- * row. A top-level `await import` because `MODULE` is derived above it, and
- * because the family table is built at module load.
- */
-const { KILL_ARM_POLICY } = await import(join(MODULE, 'enemyDamage.js'));
 const TAPES = join(MODULE, 'fixtures', 'tapes');
 const OUT_DIR = join(REPO, 'NewDocs', 'plans', 'seedling-editor-survey');
 
@@ -834,100 +830,9 @@ async function solveOneStep(step) {
 // 5. THE MECHANISM FAMILY — a refusal mapped to R8's conversion queue
 // ─────────────────────────────────────────────────────────────────────
 
-/**
- * ⚠⚠ **EVERY ROW OF THIS TABLE WAS WRITTEN AFTER READING THE REFUSAL IT
- * CLASSIFIES**, and the first draft — written before the survey ran, from
- * the vocabulary the R8 doc uses — got THREE of the five wrong. It filed
- * L15's `shove` under a generic "PLAN" because the message contains "no
- * corridor", and L16's chaser-roster refusal under "CENSUS" because it
- * contains the word "census". A classifier keyed on words that appear in
- * every refusal classifies nothing.
- *
- * ⛔ So the rules key on the SENTENCE THAT DECIDES, most specific first,
- * and each names its row in R8's own handoff table. A refusal matching
- * nothing lands as `unclassified` WITH ITS FULL TEXT — a survey whose
- * classifier silently swallows the unknown reports a smaller problem than
- * it found (⚖ the bounded-sweep law: name what you bounded).
- */
-const FAMILY_RULES = [
-    /**
-     * ⛔⛔ R9 SLICE 12b — THIS ROW USED TO PUBLISH A CLAIM THE CODE HAD
-     * ALREADY FALSIFIED, and the survey printed it on every run for a whole
-     * slice without anybody reading it.
-     *
-     * It ended with a hardcoded *"R8 handoff: `KILL_ARM_POLICY.Bob` still
-     * `refused` — 'nothing drove a PRESS against a chaser'"*. R9 slice 12
-     * lifted `KILL_ARM_POLICY.Bob` to `modelled` and drove the press against
-     * a real bob on the real game (kickoff §22.4/§22.5) — so from that commit
-     * on, the survey's own step-18 row asserted the opposite of the module it
-     * was reporting about.
-     *
-     * ⇒ THE VERDICT IS READ FROM `enemyDamage.KILL_ARM_POLICY`, NOT TYPED
-     * (⚖ ruling 17). A classifier that quotes a policy has to quote the
-     * policy, or it is a second copy of it that only agrees until one of them
-     * is edited — and the one nobody tests is the one that drifts. The
-     * SENTENCE the row makes is still the survey's own (the roster is refused,
-     * so the body has no live position); only the policy digit comes from the
-     * source of truth.
-     */
-    [/chaser roster is REFUSED|no live position for it|priced "stepped"/,
-        () => 'BRIDGE+KILL_ARM — the room\'s CHASER ROSTER is refused, so the body has no '
-        + 'live position: `bait` has no line to move it along and `kill` has no removal to '
-        + `watch. \`KILL_ARM_POLICY.Bob\` is \`${KILL_ARM_POLICY.Bob.policy}\`${
-            KILL_ARM_POLICY.Bob.policy === 'modelled'
-                ? ' (R9 slice 12), so the press arm is NOT what is missing here — the '
-                + 'ROSTER refusal is'
-                : ' — "nothing drove a PRESS against a chaser"'}`],
-    [/`Game\.shake`|is on screen at tick/,
-        'CAMERA BAND — `levelRun` REFUSES an on-screen verdict for a body at the screen '
-        + 'edge inside `Game.shake`\'s jiggle (camera.js, "THE SHAKE, AND WHY IT IS A '
-        + 'BAND"). Not a missing mechanism: a missing STANCE RULE. The refusal names its '
-        + 'own cure — "move the stance away from the screen edge, or wait the shake out"'],
-    [/Strategy '([a-z]+)' failed to apply/,
-        (m) => `VERB-APPLY — the '${m[1]}' strategy IS registered and did not apply here`],
-    /**
-     * ⛓ R9 SLICE 4 — R8 LESSON 2's OWN SHAPE HAD NO RULE, and a mutant is what
-     * found it. `solverBot` deliberately distinguishes *"no strategy row
-     * exists"* from *"a strategy is SELECTED and not registered"* — the second
-     * is the COMPUTED work order the whole seam exists to produce — and this
-     * classifier had a rule for the first and not the second, so the sentence
-     * that names the next slice's job landed as `unclassified`.
-     *
-     * ⚠ AND IT REACHES NOTHING ON TODAY'S ROUTE (trap 475: a declared axis that
-     * reaches nothing prints a complete-looking table). Its witness is slice
-     * 4's mutant (b) — the `break` row registered with `STRATEGY_EXECUTORS
-     * .break` removed — which produced exactly this text on step 12 and landed
-     * as `unclassified`. It is added with that witness named, not on the
-     * strength of a shape nobody has seen.
-     */
-    [/Strategy '([a-z]+)' is SELECTED but not registered/,
-        (m) => `VERB-SELECTED-NOT-REGISTERED — the table names '${m[1]}' for this obstacle `
-            + 'and no executor is registered for it. R8 lesson 2: this is a COMPUTED work '
-            + 'order, not a missing mechanism — the room says which verb it wants'],
-    [/No strategy row exists for this obstacle/,
-        'VERB-MISSING — the selected obstacle has NO strategy row at all'],
-    [/needs a GAME-sourced tick/,
-        'ORACLE — a declaration the model refuses to compute; only the `--win` game '
-        + 'channel can answer it, which is a RECORDING channel (R9\'s)'],
-    [/combat ladder is EXHAUSTED/,
-        'LADDER — every rung of ⚖ §11.8a\'s order refused; see the per-rung reasons'],
-    /**
-     * ⛔ R9 slice 7b — A MISSING FIXTURE IS A CAUSE, NOT AN "unclassified".
-     *
-     * Slice 7's mutant (e) left a retired name in the staged boot and the full
-     * run came back 13/29 with TEN steps reading `CRASHED — unclassified — see
-     * the refusal text`. The children were all dying on the SAME `ENOENT`, and
-     * the table said nothing about it: ten rows of regression with no cause
-     * named. `assertBootSourcesOnDisk` now refuses before any child starts, so
-     * this rule is the SECOND line of defence — it catches an `ENOENT` on a
-     * file the boot-source sweep does not reach (an expectation, a trace, an
-     * atlas) and NAMES THE PATH instead of shrugging.
-     */
-    [/ENOENT: no such file or directory, open '([^']+)'/,
-        (m) => `MISSING-FIXTURE — the child died opening \`${m[1].split('/').pop()}\`, which `
-            + `is not on disk (${m[1]}). This is not a solver refusal: nothing was solved, `
-            + 'so the row is a BROKEN INPUT and its verdict says nothing about the room'],
-];
+// ⛓ R9 slice 12b″: the table and its classifier live in `surveyFamily.js` so
+//   they can be unit-rowed — this file solves the whole route at module scope,
+//   so importing it to test one pure function would RUN the survey.
 
 /** The obstacle a solver refusal names, verbatim — the family's actual subject. */
 function obstacleOf(refusal) {
@@ -936,14 +841,6 @@ function obstacleOf(refusal) {
     return m ? (m[2] ? `${m[1]} ${m[2]}` : m[1]) : null;
 }
 
-function familyOf(refusal) {
-    if (!refusal) return null;
-    for (const [re, family] of FAMILY_RULES) {
-        const m = re.exec(refusal);
-        if (m) return typeof family === 'function' ? family(m) : family;
-    }
-    return 'unclassified — see the refusal text';
-}
 
 // ─────────────────────────────────────────────────────────────────────
 // 6. MAIN
@@ -1271,7 +1168,13 @@ for (const step of [...route.steps, ...addendum]) {
     res.goals = res.goals ?? step.goals;
     res.visit = res.visit ?? step.visit;
     res.clock = res.clock ?? { gameTime: null, refusal: 'not measured — the child was killed' };
-    res.family = familyOf(res.refusal);
+    /**
+     * ⛓ R9 slice 12b″: the RUN is offered as well as the text. `replay` is
+     * built only for a step that SOLVED, so on today's route this is always
+     * null where a refusal exists — the arm's reach is named in
+     * `surveyFamily.js` rather than assumed.
+     */
+    res.family = familyOf(res.refusal, res.replay);
     rows.push(res);
     console.log(res.verdict === 'SOLVED'
         ? `SOLVED ${res.ticks} ticks, ${res.traceRows} decision(s), ${res.replans} re-plan(s), `
