@@ -66,6 +66,7 @@ import {
     INITIAL_DIRECTION,
     directionAfterFall,
     nextDirection,
+    knockbackImpulse,
 } from './playerPhysicsV2.js';
 
 const held = (...keys) => new Set(keys);
@@ -1213,5 +1214,76 @@ describe('⛔⛔ step(): the per-visit sets the sweep MUST be told about', () =>
         const stopped = walkEast({ burnedTrees: new Set([TREE]), fallenRocks: rock });
         expect(free.x).toBeGreaterThan(180);
         expect(stopped.x).toBeLessThan(176);
+    });
+});
+
+describe('R9 slice 12b: `Player.knockback`\'s velocity half (Player.as:1493-1510)', () => {
+    // `Player.swordForce`-sized, and the dash's own force, so the rows read
+    // as the two calls that actually happen rather than as abstract inputs.
+    const DASH_F = 2;
+
+    it('shoves along an axis-aligned centre by the whole force', () => {
+        expect(knockbackImpulse(1, 0, DASH_F)).toEqual({ dvx: 2, dvy: 0 });
+        expect(knockbackImpulse(-1, 0, DASH_F)).toEqual({ dvx: -2, dvy: 0 });
+        expect(knockbackImpulse(0, 1, DASH_F)).toEqual({ dvx: 0, dvy: 2 });
+        expect(knockbackImpulse(0, -1, DASH_F)).toEqual({ dvx: 0, dvy: -2 });
+    });
+
+    it('splits a 45° centre across both axes — both guards pass at 0.7071', () => {
+        const r = knockbackImpulse(1, 1, DASH_F);
+        expect(r.dvx).toBeCloseTo(DASH_F * Math.SQRT1_2, 12);
+        expect(r.dvy).toBeCloseTo(DASH_F * Math.SQRT1_2, 12);
+    });
+
+    /**
+     * ⛓⛓⛓ THE ASYMMETRY, ON THE ONE INPUT THAT CAN SEE IT.
+     *
+     * `if (Math.abs(center.x) >= 0.5)` against `if (Math.abs(center.y) > 0.5)`.
+     * The two comparisons differ on exactly one value, and `(1, √3)` reaches it
+     * EXACTLY in IEEE doubles: `hypot(1, √3) === 2`, so the normalised x is
+     * exactly 0.5. Mirroring the pair puts that same 0.5 on y, where `>` rejects
+     * it.
+     *
+     * ⚠ This row is the whole reason the transcription may not regularise the
+     * two guards. Without it, `>`/`>` and `>=`/`>=` both pass every other row
+     * in this block.
+     */
+    it('takes the x impulse at |n| === 0.5 exactly and refuses the y one', () => {
+        const SQRT3 = Math.sqrt(3);
+        expect(Math.hypot(1, SQRT3)).toBe(2);          // the premise, pinned
+        expect(1 / Math.hypot(1, SQRT3)).toBe(0.5);
+
+        const onX = knockbackImpulse(1, SQRT3, DASH_F);
+        expect(onX.dvx).toBe(DASH_F * 0.5);            // `>=` ADMITS it
+        expect(onX.dvy).toBeCloseTo(DASH_F * (SQRT3 / 2), 12);
+
+        const onY = knockbackImpulse(SQRT3, 1, DASH_F);
+        expect(onY.dvx).toBeCloseTo(DASH_F * (SQRT3 / 2), 12);
+        expect(onY.dvy).toBe(0);                       // `>` REFUSES it
+    });
+
+    /**
+     * ⛓⛓ THE ZERO-LENGTH ARM, AND IT IS A RUNTIME FACT.
+     * `SWFModernRuntime/src/avm2/avm2_globals.c:1075` `point_normalize` skips
+     * at zero length, so the point stays (0,0) — not NaN, not a unit vector —
+     * and both guards reject it. A dash pressed at rest moves nothing.
+     */
+    it('is EXACTLY inert at zero length — not NaN', () => {
+        const r = knockbackImpulse(0, 0, DASH_F);
+        expect(r).toEqual({ dvx: 0, dvy: 0 });
+        expect(Number.isNaN(r.dvx)).toBe(false);
+        expect(Number.isNaN(r.dvy)).toBe(false);
+    });
+
+    it('refuses both axes for a centre whose components are both under the band', () => {
+        // A 30°-ish centre has |n| = (0.4472, 0.8944): x is under 0.5, y is over.
+        const r = knockbackImpulse(1, 2, DASH_F);
+        expect(r.dvx).toBe(0);
+        expect(r.dvy).toBeCloseTo(DASH_F * (2 / Math.hypot(1, 2)), 12);
+    });
+
+    it('scales with the force it is handed — the sword\'s 5 and the dash\'s 2', () => {
+        expect(knockbackImpulse(1, 0, 5)).toEqual({ dvx: 5, dvy: 0 });
+        expect(knockbackImpulse(1, 0, 2)).toEqual({ dvx: 2, dvy: 0 });
     });
 });

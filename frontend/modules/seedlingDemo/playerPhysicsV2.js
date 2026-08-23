@@ -365,9 +365,71 @@ export function nextDirection(direction, vx, vy, directionFace = -1) {
  * to: **a fall arrival faces DOWN.** That is a bounded vacuity with a
  * witness rather than an omission, and the witness is R5, whose first
  * unguarded contact re-opens the `knockback` arm.
+ *
+ * ⚠ R9 SLICE 12b — **AND THE SWORD DASH IS A FOURTH CALLER OF `knockback`
+ * THAT NO CONTACT GATES.** `set slashing`'s dash branch calls `knockback(2,
+ * …)` from `input()`, so the `directionFace` write above is now reachable
+ * without anything hitting the player. It is still gated on `hitsTimer > 0`
+ * — which still needs a `Player.hit()` — so the `noDamage` collapse holds
+ * word for word; what changed is that a DAMAGED player who dashes writes a
+ * facing, and the closed writer set above is a set of THREE SITES and four
+ * callers, not three of each.
  */
 export function directionAfterFall() {
     return DIRECTION_DOWN;
+}
+
+/**
+ * ⛓⛓⛓ R9 SLICE 12b — `Player.knockback(f, p)`'s VELOCITY HALF
+ * (`Player.as:1493-1510`), transcribed with its two asymmetries intact.
+ *
+ * ```as3
+ *   public function knockback(f:Number = 0, p:Point = null):void {
+ *       if (p) {
+ *           if (hitsTimer > 0) { directionFace = direction; }
+ *           var center:Point = new Point(x - p.x, y - p.y);
+ *           center.normalize(1);
+ *           if (Math.abs(center.x) >= 0.5) { v.x += f * center.x; }
+ *           if (Math.abs(center.y) >  0.5) { v.y += f * center.y; }
+ *       }
+ *   }
+ * ```
+ *
+ * The caller computes `center` — `(x - p.x, y - p.y)` — and passes it,
+ * exactly as the AS3 builds it, because the four callers build `p`
+ * differently and a signature that took `p` would have to know which. The
+ * SWORD DASH's is `p = (x - v.x, y - v.y)`, so its centre is exactly the
+ * velocity; a contact's is the other body's position.
+ *
+ * ⚠⚠ **THE TWO GUARDS ARE NOT THE SAME COMPARISON.** `>=` on x and `>` on
+ * y. They differ on exactly one input — a centre whose normalised component
+ * is exactly 0.5, i.e. a velocity at 30° or 60° to an axis — where the x
+ * axis takes the impulse and the y axis does not. Transcribed rather than
+ * regularised: a model that made them agree would be right on every
+ * axis-aligned and every 45° case and wrong on the one the source
+ * distinguishes.
+ *
+ * ⛓⛓ **AT ZERO LENGTH THE WHOLE CALL IS EXACTLY INERT, AND THAT IS A
+ * RUNTIME FACT RATHER THAN AN INFERENCE.** `Point.normalize` in the runtime
+ * the game actually runs — `SWFModernRuntime/src/avm2/avm2_globals.c:1075`
+ * `point_normalize` — skips when the length is 0 (`if (length != 0.0 &&
+ * !isnan(length) …)`), leaving the point at (0,0) rather than producing NaN
+ * or a unit vector. Both guards then reject it. So a dash pressed at rest
+ * moves the player by nothing at all — which is why four of the eight tapes
+ * that exercise the dash are blind to this function entirely.
+ *
+ * @returns {{dvx: number, dvy: number}} the velocity DELTA, per axis.
+ */
+export function knockbackImpulse(cx, cy, f) {
+    const length = Math.hypot(cx, cy);
+    // `center.normalize(1)` — a no-op at zero length, so the components stay
+    // (0,0) and both guards below reject them.
+    const nx = length === 0 ? 0 : cx / length;
+    const ny = length === 0 ? 0 : cy / length;
+    return {
+        dvx: Math.abs(nx) >= 0.5 ? f * nx : 0,
+        dvy: Math.abs(ny) > 0.5 ? f * ny : 0,
+    };
 }
 
 /** `Player.as:65-80` and `Mobile.as:14-15`. */

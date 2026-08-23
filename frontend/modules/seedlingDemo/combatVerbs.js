@@ -57,6 +57,7 @@
 
 import { assertRect, rect, rectsOverlap } from './levelWorld.js';
 import { ENEMY_CLASSES, ENEMY_IFRAMES, KILL_CADENCE_FLOOR } from './combat.js';
+import { knockbackImpulse } from './playerPhysicsV2.js';
 import { CHASERS, killWindowTicks } from './chasers.js';
 
 export class CombatVerbError extends Error {
@@ -105,6 +106,189 @@ export const SWORD_FORCE = 5;
  * count is a floor).
  */
 export const KILL_PRESS_CADENCE = Math.max(KILL_CADENCE_FLOOR, ENEMY_IFRAMES + 1);
+
+// ─────────────────────────────────────────────────────────────────────
+// ⛓⛓⛓ R9 SLICE 12b — `set slashing`, THE WHOLE SETTER
+// ─────────────────────────────────────────────────────────────────────
+
+/**
+ * `Player.slashTimerMax`'s companion force — `set slashing`'s dash branch
+ * calls `knockback(2, …)` (`Player.as:788`).
+ */
+export const SLASH_DASH_FORCE = 2;
+
+/** The two animations `set slashing` can play (`Player.as:786`, `:794`). */
+export const SLASH_ANIM_NORMAL = 'slash';
+export const SLASH_ANIM_DASH = 'slashnarrow';
+
+/**
+ * `Player`'s four slash fields at construction (`Player.as:119-121`, and
+ * `_slashing` false).
+ */
+export const INITIAL_SLASH_STATE = Object.freeze({
+    slashing: false,
+    slashTimer: 0,
+    slashDashed: false,
+    anim: null,
+});
+
+/**
+ * ⛓⛓⛓ **`set slashing(_s)` — `Player.as:779-804`, TRANSCRIBED WHOLE**, and
+ * the reason it is one function rather than a branch bolted onto the press
+ * is that the setter has FOUR outcomes and the ladder had modelled one.
+ *
+ * ```as3
+ *   public function set slashing(_s:Boolean):void {
+ *       if ((hasSword || hasGhostSword) && !wanding && !firing
+ *            && !deathRaying && !spearing) {
+ *           if (slashTimer > 0 && _s && !slashDashed) {          // (1) DASH
+ *               slashDashed = true;
+ *               slashingSprite.play("slashnarrow", true);
+ *               knockback(2, new Point(x - v.x, y - v.y));
+ *               slashDirection = direction;
+ *               Music.playSound("Sword");
+ *           } else if (!slashing && _s) {                        // (2) SLASH
+ *               slashingSprite.play("slash", true);
+ *               slashDirection = direction;
+ *               slashTimer = slashTimerMax;
+ *               Music.playSound("Sword");
+ *           }
+ *           if (!_s) { slashDashed = false; }                    // (3) RELEASE
+ *           _slashing = _s;
+ *       }
+ *   }                                                            // (4) GATED
+ * ```
+ *
+ * ── THE FIVE THINGS A PARAPHRASE GETS WRONG ──────────────────────────
+ *
+ * 1. **THE DASH BRANCH DOES NOT ASK WHETHER YOU ARE ALREADY SLASHING.**
+ *    Its condition is `slashTimer > 0 && _s && !slashDashed` — no
+ *    `!slashing` term, unlike the branch below it. So a press landing INSIDE
+ *    an open swing dashes, and it re-plays the animation from frame 0 with
+ *    `play(…, true)`, which restarts `slashEnd`'s clock.
+ *
+ * 2. **THE DASH DOES NOT REFRESH `slashTimer`.** Only the `else if` writes
+ *    `slashTimerMax`. So the 20-tick window is measured from the FIRST press
+ *    of a chain and never extended, and a chain of presses inside one window
+ *    can dash more than once but cannot buy itself more time.
+ *
+ * 3. **`slashDashed` IS CLEARED ON RELEASE, NOT ON A TIMER.** `slashEnd()`
+ *    — the animation's own callback — calls `slashing = false`, which takes
+ *    arm (3). So after a swing ends, the next press inside the SAME
+ *    `slashTimer` window dashes AGAIN. Two dashes from one 20-tick window is
+ *    a legal sequence, not a modelling slip.
+ *
+ * 4. **A PRESS CAN BE SWALLOWED ENTIRELY.** With `slashDashed` up and
+ *    `_slashing` still up, arm (1) is refused by `!slashDashed` and arm (2)
+ *    by `!slashing` — and there is no else. The press plays no sound, moves
+ *    nothing, opens no window and does not touch the timer. It is the only
+ *    press in this model that costs a tick of input and buys nothing, and
+ *    `r5-bobboss-arm`'s 71 sub-window pairs are where it lives.
+ *
+ * 5. **THE OUTER GATE ALSO GUARDS THE RELEASE.** `if (!_s) slashDashed =
+ *    false` and `_slashing = _s` are INSIDE it. So a `slashEnd()` that
+ *    arrives while the player is (say) spearing leaves `_slashing` up and
+ *    `slashDashed` set. Reading the gate as "you cannot START a swing while
+ *    spearing" loses that, and loses it in the direction that silently
+ *    permits a later dash.
+ *
+ * @param {object} st  the four fields — see `INITIAL_SLASH_STATE`.
+ * @param {object} opts
+ *   `pressed`     `_s`; false is `slashEnd()`'s release.
+ *   `hasSword` / `hasGhostSword` / `wanding` / `firing` / `deathRaying` /
+ *   `spearing`    the outer gate's six terms, each named.
+ *   `direction`   `Player.direction` — what `slashDirection` latches.
+ *   `vx` / `vy`   the player's velocity, for the dash's `knockback` centre.
+ * @returns {{state: object, outcome: string, slashDirection: ?number,
+ *   impulse: ?{dvx: number, dvy: number}, why: string}}
+ *   `outcome` is one of `dash` · `slash` · `swallowed` · `release` · `gated`.
+ */
+export function slashSet(st, {
+    pressed,
+    hasSword = false, hasGhostSword = false,
+    wanding = false, firing = false, deathRaying = false, spearing = false,
+    direction = null, vx = 0, vy = 0,
+} = {}) {
+    const gateOpen = (hasSword || hasGhostSword)
+        && !wanding && !firing && !deathRaying && !spearing;
+    if (!gateOpen) {
+        return {
+            state: st,
+            outcome: 'gated',
+            slashDirection: null,
+            impulse: null,
+            why: '`set slashing`\'s outer gate is closed — (hasSword || hasGhostSword) '
+                + `is ${hasSword || hasGhostSword}, wanding ${wanding}, firing ${firing}, `
+                + `deathRaying ${deathRaying}, spearing ${spearing}. The setter's whole `
+                + 'body, INCLUDING the release and `_slashing = _s`, is inside it.',
+        };
+    }
+    let { slashing, slashTimer, slashDashed, anim } = st;
+    let outcome = null;
+    let slashDirection = null;
+    let impulse = null;
+    let why = '';
+    if (slashTimer > 0 && pressed && !slashDashed) {
+        // (1) THE DASH. ⚠ No `!slashing` term — see note 1.
+        slashDashed = true;
+        anim = SLASH_ANIM_DASH;
+        impulse = knockbackImpulse(vx, vy, SLASH_DASH_FORCE);
+        slashDirection = direction;
+        outcome = 'dash';
+        why = `a second press with slashTimer ${slashTimer} still up and slashDashed `
+            + 'false: `play("slashnarrow", true)` restarts the swing with the DASH rect '
+            + `and \`knockback(${SLASH_DASH_FORCE}, Point(x - v.x, y - v.y))\` shoves the `
+            + 'player along their own velocity. `slashTimer` is NOT refreshed.';
+    } else if (!slashing && pressed) {
+        // (2) THE ORDINARY SWING.
+        anim = SLASH_ANIM_NORMAL;
+        slashDirection = direction;
+        slashTimer = SLASH_TIMER_MAX;
+        outcome = 'slash';
+        why = 'a press with no swing open: `play("slash", true)`, `slashDirection` '
+            + `latched at ${direction}, and \`slashTimer\` set to ${SLASH_TIMER_MAX}.`;
+    } else if (pressed) {
+        // (4) SWALLOWED — both arms refused and there is no else. See note 4.
+        outcome = 'swallowed';
+        why = `a press with slashDashed ${slashDashed} and slashing ${slashing}: the dash `
+            + 'arm is refused by `!slashDashed` and the swing arm by `!slashing`, and '
+            + '`set slashing` has no else. Nothing is played, nothing is knocked back '
+            + 'and `slashTimer` is untouched.';
+    }
+    if (!pressed) {
+        // (3) THE RELEASE — `slashEnd()`. Inside the outer gate; see note 5.
+        slashDashed = false;
+        anim = null;
+        outcome = 'release';
+        why = '`slashEnd()` — the animation\'s own callback — sets `slashing = false`, '
+            + 'which clears `slashDashed` and re-arms the dash for the next press inside '
+            + 'the SAME `slashTimer` window.';
+    }
+    slashing = pressed;
+    return {
+        state: { slashing, slashTimer, slashDashed, anim },
+        outcome,
+        slashDirection,
+        impulse,
+        why,
+    };
+}
+
+/**
+ * `Player.slash()`'s FIRST TWO LINES — `if (slashTimer > 0) slashTimer--`
+ * (`Player.as:892-897`), which run at the TOP of `Player.update`, above
+ * `super.update()` and therefore above the press.
+ *
+ * ⛓ THE ORDER IS WHY THE WINDOW IS `gap <= 19` AND NOT `gap < 20`. A press
+ * at tick T writes 20 at the END of T (inside `input()`); tick T+k has
+ * already decremented k times when its own press is read, so the second
+ * press sees `20 - k` and needs it `> 0`. A model that decremented after the
+ * press would admit a dash at gap 20 that the game refuses.
+ */
+export function slashTimerTick(st) {
+    if (st.slashTimer <= 0) return st;
+    return { ...st, slashTimer: st.slashTimer - 1 };
+}
 
 /**
  * `Player.getSlashRect()` (`Player.as:929-950`), transcribed exactly.

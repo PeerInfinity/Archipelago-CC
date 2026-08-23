@@ -20,6 +20,13 @@ import {
     KILL_PRESS_CADENCE,
     slashRect,
     slashScaleFor,
+    slashSet,
+    slashTimerTick,
+    INITIAL_SLASH_STATE,
+    SLASH_DASH_FORCE,
+    SLASH_ANIM_DASH,
+    SLASH_ANIM_NORMAL,
+    SLASH_TIMER_MAX,
     SLASH_SCALE_DASH,
     SLASH_SCALE_NORMAL,
     SLASH_SPRITES,
@@ -309,5 +316,148 @@ describe('the kill schedule', () => {
             .toThrow(/ENCOUNTER SCRIPT/);
         expect(() => killSchedule({ tag: 'nosuchtag', cx: 0, cy: 0 }, 0))
             .toThrow(/no combat row/);
+    });
+});
+
+describe('R9 slice 12b: `set slashing` (Player.as:779-804), the whole setter', () => {
+    /** A press with the sword in hand, facing right, at the given velocity. */
+    const press = (st, opts = {}) => slashSet(st, {
+        pressed: true, hasSword: true, direction: 0, vx: 0, vy: 0, ...opts,
+    });
+    /** `slashEnd()` — the animation's own callback. */
+    const release = (st, opts = {}) => slashSet(st, {
+        pressed: false, hasSword: true, direction: 0, ...opts,
+    });
+    /** Advance `n` ticks of `slash()`'s decrement, which runs ABOVE the press. */
+    const ticks = (st, n) => {
+        let s = st;
+        for (let i = 0; i < n; i += 1) s = slashTimerTick(s);
+        return s;
+    };
+
+    it('starts with all four fields at their construction values', () => {
+        expect(INITIAL_SLASH_STATE).toEqual({
+            slashing: false, slashTimer: 0, slashDashed: false, anim: null,
+        });
+    });
+
+    it('a first press plays "slash", latches the direction and arms the 20-tick timer', () => {
+        const r = press(INITIAL_SLASH_STATE, { direction: 2 });
+        expect(r.outcome).toBe('slash');
+        expect(r.slashDirection).toBe(2);
+        expect(r.impulse).toBeNull();
+        expect(r.state).toEqual({
+            slashing: true, slashTimer: SLASH_TIMER_MAX, slashDashed: false,
+            anim: SLASH_ANIM_NORMAL,
+        });
+    });
+
+    /**
+     * ⛓⛓ THE WINDOW IS `gap <= 19`, AND THE DECREMENT'S PLACE IS WHY.
+     * `slash()` runs at the top of `Player.update`, above `super.update()` and
+     * therefore above the press, so a press `k` ticks later reads `20 - k`.
+     */
+    it('dashes at gap 19 and takes an ordinary swing at gap 20', () => {
+        const first = press(INITIAL_SLASH_STATE).state;
+        // The swing has long since ended by then, so `slashing` is down for both.
+        const ended = release(first).state;
+
+        const at19 = press(ticks(ended, 19));
+        expect(at19.state.slashTimer).toBe(1);          // still up when read
+        expect(at19.outcome).toBe('dash');
+
+        const at20 = press(ticks(ended, 20));
+        expect(at20.outcome).toBe('slash');             // the timer ran out
+        expect(at20.state.slashTimer).toBe(SLASH_TIMER_MAX);
+    });
+
+    it('the dash does NOT refresh `slashTimer` — note 2', () => {
+        const first = press(INITIAL_SLASH_STATE).state;
+        const later = ticks(first, 5);
+        const dash = press(later);
+        expect(dash.outcome).toBe('dash');
+        expect(dash.state.slashTimer).toBe(SLASH_TIMER_MAX - 5);
+        expect(dash.state.anim).toBe(SLASH_ANIM_DASH);
+    });
+
+    it('the dash branch does not ask whether a swing is open — note 1', () => {
+        // Pressed one tick into an OPEN swing: `slashing` is still true.
+        const open = ticks(press(INITIAL_SLASH_STATE).state, 1);
+        expect(open.slashing).toBe(true);
+        expect(press(open).outcome).toBe('dash');
+    });
+
+    it('shoves along the player\'s own velocity, and is inert at rest', () => {
+        const open = ticks(press(INITIAL_SLASH_STATE).state, 1);
+        expect(press(open, { vx: 2, vy: 0 }).impulse)
+            .toEqual({ dvx: SLASH_DASH_FORCE, dvy: 0 });
+        // ⛓ Four of the eight roster tapes that reach the dash press at rest,
+        // and this is why they are blind to the knockback half.
+        expect(press(open, { vx: 0, vy: 0 }).impulse).toEqual({ dvx: 0, dvy: 0 });
+    });
+
+    it('SWALLOWS a third press whole — note 4', () => {
+        const open = ticks(press(INITIAL_SLASH_STATE).state, 1);
+        const dashed = press(open).state;
+        const third = press(ticks(dashed, 1));
+        expect(third.outcome).toBe('swallowed');
+        expect(third.impulse).toBeNull();
+        // Nothing moved: the timer kept counting down and the anim stayed put.
+        expect(third.state).toEqual({
+            slashing: true, slashTimer: SLASH_TIMER_MAX - 2, slashDashed: true,
+            anim: SLASH_ANIM_DASH,
+        });
+    });
+
+    it('the RELEASE re-arms the dash inside the same timer window — note 3', () => {
+        const open = ticks(press(INITIAL_SLASH_STATE).state, 1);
+        const dashed = press(open).state;
+        expect(dashed.slashDashed).toBe(true);
+        const ended = release(ticks(dashed, 4));
+        expect(ended.outcome).toBe('release');
+        expect(ended.state.slashDashed).toBe(false);
+        expect(ended.state.slashing).toBe(false);
+        // Still inside the ORIGINAL 20 — so the next press dashes AGAIN.
+        expect(ended.state.slashTimer).toBeGreaterThan(0);
+        expect(press(ended.state).outcome).toBe('dash');
+    });
+
+    it('the outer gate guards the RELEASE too — note 5', () => {
+        const open = ticks(press(INITIAL_SLASH_STATE).state, 1);
+        const dashed = press(open).state;
+        const blocked = release(dashed, { spearing: true });
+        expect(blocked.outcome).toBe('gated');
+        // `_slashing` stays UP and `slashDashed` stays SET — the whole body,
+        // release included, is inside the `if`.
+        expect(blocked.state).toBe(dashed);
+        expect(blocked.state.slashDashed).toBe(true);
+    });
+
+    it('each of the outer gate\'s six terms closes it, and the ghost sword opens it', () => {
+        for (const flag of ['wanding', 'firing', 'deathRaying', 'spearing']) {
+            expect(press(INITIAL_SLASH_STATE, { [flag]: true }).outcome).toBe('gated');
+        }
+        expect(press(INITIAL_SLASH_STATE, { hasSword: false }).outcome).toBe('gated');
+        expect(press(INITIAL_SLASH_STATE, { hasSword: false, hasGhostSword: true }).outcome)
+            .toBe('slash');
+    });
+
+    it('`slashTimerTick` floors at zero and never goes negative', () => {
+        expect(slashTimerTick({ ...INITIAL_SLASH_STATE, slashTimer: 1 }).slashTimer).toBe(0);
+        expect(slashTimerTick({ ...INITIAL_SLASH_STATE, slashTimer: 0 }).slashTimer).toBe(0);
+        expect(slashTimerTick(INITIAL_SLASH_STATE)).toBe(INITIAL_SLASH_STATE);
+    });
+
+    /**
+     * ⛓ THE DASH'S RECT IS THE ONE `slashScaleFor` HAS ALWAYS RETURNED AND
+     * NOTHING EVER ASKED FOR. Before this slice `SLASH_SCALE_DASH` had no
+     * production caller at all — every reference outside `combatVerbs.js` was
+     * in this file. `slashSet`'s `anim` is what finally selects it.
+     */
+    it('the dash\'s anim is what selects the 1.5x0.65 rect', () => {
+        const open = ticks(press(INITIAL_SLASH_STATE).state, 1);
+        expect(slashScaleFor(press(open).state.anim)).toEqual(SLASH_SCALE_DASH);
+        expect(slashScaleFor(press(INITIAL_SLASH_STATE).state.anim))
+            .toEqual(SLASH_SCALE_NORMAL);
     });
 });
