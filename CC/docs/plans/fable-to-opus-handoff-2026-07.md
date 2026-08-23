@@ -3795,6 +3795,20 @@ things** — a latch of its predecessor and a FORWARD DECLARATION of a clear its
 own walk will earn — which is why `act2-the-sword` is not continuable past
 window 4 as recorded, with the next work order named.
 
+**⇒ CAMPAIGN ORCHESTRATION, session 2 → 3 (Fable, 2026-08-23).** Session 2 ran the opening
+discussion (⚖ rulings 29–34: L14's strategy — opportunistic strikes on every walk, HUNT = KILL,
+the sword dash modelled now; `facingToward` first; the watch-page five; the protocol fixes; the
+targeted roster gate; the CI paths filter) and orchestrated slices **11** (`facingToward`, one
+numbering — `r8-solve-18` 573→541, the swing that landed on both spinners), **11b** (the reach
+instrument, one uncacheable tape loader, chain ticks read off the tapes) and **12** (the bob
+forecast + the press arm vs Bob with the game's own enemy readout; L14 now refuses BY NAME at
+plan time), all verified against disk, CI green at `f9eaf4c0c`. Handed off to session 3
+(`NewDocs/plans/seedling-bot-r9-campaign3-planning-prompt.md`) with **slice 12b** ready to
+launch (`seedling-bot-r9-slice12b-prompt.md` — the strike on every walk, the dash BUILT, the
+cadence retired, the KILL chaser arm, L14 SOLVED, `r9-solve-14` through the pipeline) and
+**slice 13** ready (`seedling-bot-r9-slice13-prompt.md`, the watch-page five); **12c** (the
+planner-level dash primitive) is the first discussion item.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
