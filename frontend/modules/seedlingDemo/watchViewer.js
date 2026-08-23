@@ -8784,6 +8784,44 @@ function wireSourceSelector(params, onSwitch) {
     sideSel.onchange = () => onSwitch('replay', sideSel.value);
 }
 
+/**
+ * ── ⛓⛓⛓ ⚖ WATCH-PAGE ITEM (i) — COLLAPSE ALL / EXPAND ALL ─────────────
+ *
+ * ⛔ **THE SET IS DERIVED, NEVER TYPED** (⚖ ruling 17). `querySelectorAll
+ * ('details')` is the page's OWN answer to *"what is collapsible here"*, and it
+ * is the only answer that cannot go stale. A typed id list was the obvious
+ * alternative and is wrong for a measured reason: the page holds THIRTEEN
+ * `<details>` across four panels, and TWO of them (the boot block and
+ * `#tapeIO`) carry no `.genSection` class — so even the class, which looks like
+ * a derivation, is a filter that silently drops two sections. The gate row over
+ * the un-listed section is built for exactly that mutant.
+ *
+ * ⛔ **PAGE-WIDE, AND WIRED ONCE AT THE DOCUMENT'S BOOT** — beside the SOURCE
+ * selector and for its reason. The arms mount and unmount beneath these
+ * sections; a control wired inside an arm's lifetime would stop working on the
+ * first SOURCE switch, and it would be reported by nothing, because a button
+ * that does nothing looks exactly like a button whose sections were already
+ * closed (trap 552: a control wired to nothing spends a gate's timeout).
+ *
+ * ⛔ **A VIEW SETTING. NOT IN THE URL, AND NOT PERSISTED.** The sections
+ * themselves have been a view setting since 2026-08-18 and this is the same
+ * setting operated in bulk; writing it to the bar would put a display
+ * preference into every link copied off this page. A reload restores the
+ * page's own defaults — TEN open, THREE closed — and that default is asserted
+ * as its own row so this control cannot silently move it.
+ *
+ * ⚠ IT DOES NOT FIGHT THE TWO GATES THAT FORCE A SECTION OPEN after load
+ * (`check-seedling-editor-boot.mjs`, `-edit.mjs`). Those run at mount; a press
+ * is the reader's word and is simply the later one.
+ */
+function wireSectionChrome(root = document) {
+    const setAll = (open) => {
+        for (const d of root.querySelectorAll('details')) d.open = open;
+    };
+    root.getElementById('collapseAll').onclick = () => setAll(false);
+    root.getElementById('expandAll').onclick = () => setAll(true);
+}
+
 /** `replay-js` and `replay-wasm` are two machines with two teardowns. */
 const armNameFor = (params) =>
     (params.source === 'replay' ? `replay-${params.side}` : params.source);
@@ -9213,6 +9251,10 @@ export async function main() {
     attackHold = holdParam.hold;
     if (holdParam.why) $('detail').textContent = `⚠ ${holdParam.why}`;
     wireSourceSelector(params, switchArm);
+    // ⛓ ITEM (i): page-wide chrome, wired beside the SOURCE selector and for
+    // its reason — it must outlive every arm mount. BEFORE the first mount, so
+    // a reader who lands on a slow-generating URL can already fold the page.
+    wireSectionChrome();
     await mountArm(params, armLifetimes.start(armNameFor(params), 'the page loaded'));
     // ⚠ AFTER the first mount, so the `procgenLab:ready` the bridge publishes
     // carries a page that has already drawn (⚖ §3.5: *"after connect + first

@@ -597,6 +597,79 @@ const atPhase = async (index) => {
     }
 }
 
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ ⚖ WATCH-PAGE ITEM (ii) — THE THREE PHASE BUTTONS DO NOT DRIFT
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⚖ The user, 2026-08-22: *"the three phase buttons move to the LEFT so a
+ * changing text width changes only the slider's width"*. `#genPhaseLabel`
+ * swings from `no generation yet` to ~60 characters as the ladder is walked,
+ * and in the old order (prev · SLIDER · next · END · label) that swing pushed
+ * `PHASE ▶` and `the FINISHED level` sideways on every press.
+ *
+ * ⛔ MEASURED, NOT EYEBALLED — `getBoundingClientRect().x`, over a FULL ladder
+ * walk driven by the button the reader actually presses.
+ *
+ * ⛔ AND THE TWO HALVES ARE TWO ROWS, because they fail independently. The
+ * ORDER alone already holds the buttons' x — nothing that changes width is
+ * left of them — so a row asserting only x-constancy passes on a build whose
+ * slider is still the rigid `width:14em` and whose label therefore wraps
+ * instead of the slider shrinking. The row that gates the FLEX is the one
+ * below it: the slider's OWN width must CHANGE across the walk, because
+ * absorbing the label's swing is the whole of what the flex does.
+ */
+{
+    await load('source=generate&seed=2&biome=post-sword&count=0&elements=killgate');
+    /** The geometry of the row, as the browser lays it out right now. */
+    const metrics = () => page.evaluate(() => {
+        const x = (id) => document.getElementById(id).getBoundingClientRect().x;
+        return {
+            prev: x('genPhasePrev'),
+            next: x('genPhaseNext'),
+            end: x('genPhaseEnd'),
+            slider: document.getElementById('genPhase').getBoundingClientRect().width,
+            label: document.getElementById('genPhaseLabel').textContent,
+        };
+    });
+    const rows = nodeSubject.ledger.length;
+    /**
+     * ⛔ THE WALK IS THE READER'S OWN: `PHASE ▶`, pressed from the FINISHED
+     * level through every pass-1 row. Setting the slider's value directly
+     * would skip the state the label is longest in and would not be the
+     * gesture the user complained about.
+     */
+    const seen = [await metrics()];
+    for (let k = 0; k < rows; k += 1) {
+        // eslint-disable-next-line no-await-in-loop
+        await page.click('#genPhaseNext');
+        // eslint-disable-next-line no-await-in-loop
+        await atPhase(k);
+        // eslint-disable-next-line no-await-in-loop
+        seen.push(await metrics());
+    }
+    const constant = (key) => seen.every((m) => m[key] === seen[0][key]);
+    check(constant('prev') && constant('next') && constant('end'),
+        `⛓⛓⛓ ⚖ ITEM (ii): across a FULL ladder walk (${rows} press(es) of \`PHASE ▶\`) the `
+        + 'three buttons\' x is CONSTANT — the label\'s width no longer moves them',
+        `prev ${json([...new Set(seen.map((m) => m.prev))])} · `
+        + `next ${json([...new Set(seen.map((m) => m.next))])} · `
+        + `END ${json([...new Set(seen.map((m) => m.end))])}`);
+    /**
+     * ⛔ AND THE LABEL REALLY DID SWING. A walk whose label never changed width
+     * would make the row above vacuously true — trap 566's shape — so the
+     * subject is asserted before the property.
+     */
+    check(new Set(seen.map((m) => m.label)).size > 1,
+        '…on a walk whose LABEL really did change — the row is not vacuous',
+        `${new Set(seen.map((m) => m.label)).size} distinct label(s), `
+        + `widths ${Math.min(...seen.map((m) => m.label.length))}..`
+        + `${Math.max(...seen.map((m) => m.label.length))} chars`);
+    check(new Set(seen.map((m) => m.slider)).size > 1,
+        '⛓⛓ …and it is the SLIDER that absorbed the swing — its own width CHANGES across '
+        + 'the walk (this is the row that gates the flex, not the reorder)',
+        json([...new Set(seen.map((m) => Math.round(m.slider)))]));
+}
+
 check(errors.length === 0, 'no page errors across the whole row', errors.slice(0, 3).join(' | '));
 
 console.log(failed ? `\n${failed} FAILURE(S)` : '\nALL CHECKS PASSED');

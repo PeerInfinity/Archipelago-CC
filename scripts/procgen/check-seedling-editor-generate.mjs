@@ -3319,5 +3319,93 @@ if (!host) {
         `page ${json(openPage)} vs node ${json(openNode)}`);
 }
 
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ ⚖ WATCH-PAGE ITEM (i) — COLLAPSE ALL / EXPAND ALL
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⚖ The user, 2026-08-22: *"a Collapse All / Expand All button"*.
+ *
+ * ⛔ THE ROW IS OVER `document.querySelectorAll('details')`, WHICH IS THE
+ * CONTROL'S OWN SOURCE — the page's answer to *"what is collapsible here"*.
+ * ⚠ AND THAT IS THE POINT OF THE ROW, not an incidental spelling: a control
+ * built from a typed id list, or from the `.genSection` class, passes a row
+ * that checks only the sections it happens to name. The page holds THIRTEEN
+ * `<details>` and only ELEVEN carry the class — the boot block's and
+ * `#tapeIO`'s do not — so `.genSection` looks like a derivation and is a
+ * filter that drops two sections. This row counts what the DOM has.
+ *
+ * ⛔ THE DEFAULT IS ITS OWN ROW (trap 478's family: a delete-at-default needs
+ * an ABSENCE row). A collapse-all that quietly left every section open on a
+ * fresh load would pass both press rows and still have broken the page.
+ */
+{
+    await load('source=generate&seed=1&biome=pre-sword&count=0');
+    const sections = () => page.evaluate(() => {
+        const all = [...document.querySelectorAll('details')];
+        return {
+            total: all.length,
+            open: all.filter((d) => d.open).length,
+            // ⛔ IDENTIFIED, NOT COUNTED — a count cannot tell a swap from a
+            // match (trap 565), and the whole risk here is that the control
+            // closes the three it knows and leaves two it does not. Every
+            // `<summary>` carries a `data-term` for the glossary, so the page
+            // already has a stable name for each section.
+            closed: all.filter((d) => !d.open)
+                .map((d) => d.querySelector('summary')?.dataset.term ?? d.id ?? '(unnamed)')
+                .sort(),
+            genSection: all.filter((d) => d.classList.contains('genSection')).length,
+        };
+    });
+    /**
+     * ⛔ THE FRESH-LOAD DEFAULT, MEASURED AND NAMED. TEN open, THREE closed —
+     * the boot block, the CATALOGUE and `#tapeIO`. The page's CSS comment used
+     * to say "open by default except the CATALOGUE", which is true of
+     * `.genSection` and false of the page; R9 slice 13 corrected it and this is
+     * the row that keeps it corrected.
+     */
+    const fresh = await sections();
+    const DEFAULT_CLOSED = ['boot-items', 'roster', 'tape'];
+    check(fresh.total === 13 && fresh.open === 10
+        && json(fresh.closed) === json(DEFAULT_CLOSED),
+    '⛓⛓⛓ ⚖ ITEM (i): the FRESH-LOAD default is unchanged — 13 `<details>`, 10 open, and the '
+        + 'three closed ones are the boot block, the CATALOGUE and the tape I/O, BY NAME',
+    `${fresh.total} total, ${fresh.open} open, closed ${json(fresh.closed)}`);
+    /**
+     * ⛔ AND THE CLASS IS NOT THE SET. Stated as a row of its own so the
+     * mutant over a `.genSection`-derived control has something to red on: if
+     * these two numbers were equal, the row above could not tell the two
+     * derivations apart.
+     */
+    check(fresh.genSection < fresh.total,
+        '…and `.genSection` is NOT the set — a control derived from the class would miss '
+        + 'the sections that carry none',
+        `${fresh.genSection} of ${fresh.total} carry the class`);
+    await page.click('#collapseAll');
+    const collapsed = await sections();
+    check(collapsed.open === 0 && collapsed.total === fresh.total,
+        '⛓⛓⛓ …COLLAPSE ALL closes EVERY `<details>` on the page, in every panel — '
+        + 'including the ones that carry no `.genSection`',
+        `${collapsed.open} of ${collapsed.total} still open`);
+    await page.click('#expandAll');
+    const expanded = await sections();
+    check(expanded.open === expanded.total && expanded.total === fresh.total,
+        '⛓⛓⛓ …and EXPAND ALL opens every one of them',
+        `${expanded.open} of ${expanded.total} open`);
+    /**
+     * ⛔ A RELOAD RESTORES THE PAGE'S OWN DEFAULT. This is the ABSENCE half:
+     * the control is a VIEW setting, so it must leave NOTHING behind — not in
+     * the URL, not in storage. A control that persisted would pass every row
+     * above and would have changed what a copied link opens.
+     */
+    const again = await load('source=generate&seed=1&biome=pre-sword&count=0');
+    void again;
+    const reloaded = await sections();
+    check(reloaded.open === fresh.open && reloaded.closed.length === fresh.closed.length,
+        '⛔ …and a RELOAD is back at the page\'s own default — the control persists NOTHING, '
+        + 'in the URL or anywhere else',
+        `${reloaded.open} open vs ${fresh.open} on the first load; url ${json(
+            await page.evaluate(() => window.location.search))}`);
+}
+
 console.log(failed ? `\n${failed} FAILURE(S)` : '\nALL CHECKS PASSED');
 await finish(failed ? 1 : 0);

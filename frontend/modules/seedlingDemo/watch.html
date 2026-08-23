@@ -343,7 +343,23 @@
      section is a <details class="genSection">, open by default except the
      CATALOGUE. A closed section keeps its DOM (the browser rows drive the
      catalogue's rows by DOM click, never by visibility), it is a VIEW setting,
-     and it is not in the URL. */
+     and it is not in the URL.
+
+     ⛔⛔ AND THAT SENTENCE IS TRUE OF `.genSection` AND FALSE OF THE PAGE — R9
+     slice 13 measured it while building item (i)'s collapse-all. The page holds
+     THIRTEEN `<details>`, not eleven: the boot block's and `#tapeIO`'s carry no
+     class, and BOTH are closed by default. So the page's real default is TEN
+     open and THREE closed (the boot block, the CATALOGUE, `#tapeIO`) — and a
+     collapse-all derived from `.genSection` would have left two sections open
+     while reporting that it had closed everything. Trap 566's shape, sitting in
+     a comment: a true sentence about the wrong subject. The control reads
+     `querySelectorAll('details')` and the gate asserts the 10/3 partition as
+     its own row. */
+  /* ⛓ ITEM (ii)'s flex, beside the markup that explains it: the slider is the
+     ONE item that may grow or shrink on this line, so every width change the
+     label makes is spent on the slider and the three buttons never move. */
+  #genPhaseLine #genPhase { flex: 1 1 6em; min-width: 6em; }
+  #genPhaseLine #genPhaseLabel { flex: 0 1 auto; }
   details.genSection { margin: 0.4em 0; border-left: 2px solid #2a2a36; padding-left: 0.5em; }
   details.genSection > summary { font-weight: bold; color: #c8c8d4; }
   details.genSection > summary .note { font-weight: normal; }
@@ -457,6 +473,35 @@
     <a href="../procgenDocs/reference.html">reference</a>
     <span class="note">— every term on this page is defined there, and every URL
       parameter, template and refusal name is in the reference</span>
+  </div>
+  <!-- ⛓⛓⛓ ⚖ THE USER'S WATCH-PAGE ITEM (i), 2026-08-22: *"a Collapse All /
+       Expand All button"*.
+
+       ⛔ IT IS PAGE-WIDE CHROME, NOT AN ARM'S CONTROL. The collapsible
+       sections are spread across FOUR panels (`#bootPanel`, `#generatePanel`,
+       `#stage`, `#panel`) and the arms mount and unmount underneath them, so a
+       control living in any one panel would collapse a quarter of the page and
+       vanish on the next SOURCE switch. It sits here, above every panel, and
+       is wired once at the document's boot beside the SOURCE selector.
+
+       ⛔ AND IT OPERATES ON `document.querySelectorAll('details')`, NEVER ON A
+       TYPED ID LIST (⚖ ruling 17). There are THIRTEEN of them today — eleven
+       `.genSection` plus the boot block and `#tapeIO`, which carry no class —
+       and a typed list is a list that goes stale the day somebody adds the
+       fourteenth. That is the mutant this control's gate row is built for.
+
+       ⛔ IT IS A VIEW SETTING AND IS NOT IN THE URL, exactly like the sections
+       themselves (see `details.genSection`'s own rule below). It also does not
+       fight the two gates that force a section OPEN after load
+       (`check-seedling-editor-boot.mjs`, `-edit.mjs`): those run before any
+       user press, and a press after them is the reader's word, which is the
+       later one. -->
+  <div id="viewChrome" class="note">
+    <button id="collapseAll">collapse all</button>
+    <button id="expandAll">expand all</button>
+    <span class="note">— every collapsible section on this page, in every
+      panel. A VIEW setting: it is not written to the URL and a reload restores
+      the page's own defaults.</span>
   </div>
   <div id="pick">
     <label for="source">source</label>
@@ -710,11 +755,26 @@
     -->
     <details class="genSection" open>
     <summary data-term="ledger">generation phases <span class="note">— the ledger's step-through; tick a fact line to draw it</span></summary>
-    <div class="line">
+    <!-- ⛓⛓ ⚖ THE USER'S WATCH-PAGE ITEM (ii), 2026-08-22: *"the three phase
+         buttons move to the LEFT so a changing text width changes only the
+         slider's width"*. The label swings from `no generation yet` to ~60
+         characters as the ladder is walked, and in the old order (prev ·
+         SLIDER · next · END · label) that swing pushed `PHASE ▶` and `the
+         FINISHED level` sideways on every press — the reader's pointer had to
+         chase the button it had just pressed.
+
+         ⛔ THE ORDER IS THE FIX AND THE FLEX IS THE OTHER HALF. The three
+         buttons come FIRST, so nothing that changes width is ever to their
+         left; the slider is the ONE flexible item and ABSORBS the label's
+         swing (`flex: 1 1 6em`, replacing the rigid inline `width:14em`);
+         the label is rigid at its natural width. A reorder alone would already
+         hold the buttons' x — the row that gates the FLEX is the one asserting
+         the SLIDER's own width changes. Both are measured, not eyeballed. -->
+    <div class="line" id="genPhaseLine">
       <button id="genPhasePrev">◀ PHASE</button>
-      <input id="genPhase" type="range" min="0" max="0" step="1" style="width:14em">
       <button id="genPhaseNext">PHASE ▶</button>
       <button id="genPhaseEnd">the FINISHED level</button>
+      <input id="genPhase" type="range" min="0" max="0" step="1">
       <span id="genPhaseLabel" class="note"></span>
     </div>
     <!-- ⛓⛓ THE ROW'S OWN SENTENCE, its counts and its refusal BY NAME, plus one
