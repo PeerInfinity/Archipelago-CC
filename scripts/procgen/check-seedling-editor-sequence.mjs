@@ -672,12 +672,19 @@ if (control.disabled) {
     JSON.stringify(camp.camp.ledger.unasserted));
 
     /**
-     * ⛓ ROOMS AND END STATE, against this row's OWN model walk of the headline
-     * — `runTapeToStream` on the chain's own headline tape, the same oracle
-     * claim 2 uses. ⛔ Not against the page's numbers restated.
+     * ⛓ ROOMS AND END STATE, against this row's OWN model walk of the chain.
+     * ⛔ Not against the page's numbers restated.
+     *
+     * ⛔⛔ THIS READ WAS `tapeOf(CHOICE.id)` UNTIL R9 SLICE 12d, AND IT ONLY
+     * EVER WORKED BY COINCIDENCE: `CHOICE.id` is a CHAIN ID, and it resolved
+     * to a TAPE because the concatenated headline happened to share the
+     * campaign's name. `PAGE_CHAINS`' own docblock warns about exactly that
+     * ambiguity one file over — *"`toy-west-pair`'s headline TAPE is
+     * `r7-ends-meet-full` and its id is not"* — and this line was the place it
+     * bit. ⚖ Ruling 37 deleted the tape, so the id is only an id now and the
+     * oracle is the chain's segments played alone.
      */
-    const campOracle = runTapeToStream(tapeOf(CHOICE.id),
-        { levelSource: atlasLevelSource() });
+    const campOracle = { ticks: segmentsPlayedAlone(CHOICE.segments) };
     const endOracle = campOracle.ticks.at(-1);
     check(camp.camp.rooms.crossed === CHOICE.segments.length
         && camp.camp.rooms.of === CHOICE.segments.length
@@ -689,8 +696,8 @@ if (control.disabled) {
         && camp.camp.end.y === endOracle.y
         && camp.camp.end.ticks === campOracle.ticks.length - 1
         && camp.camp.end.seamTime === null && Boolean(camp.camp.end.seamTimeWhy),
-    '⛓⛓ …and the END STATE is the HEADLINE played alone — with `seam.time` '
-        + 'UNASSERTED BY NAME on this side',
+    '⛓⛓ …and the END STATE is where the SEGMENTS played alone end — with '
+        + '`seam.time` UNASSERTED BY NAME on this side',
     `page L${camp.camp.end.level} (${camp.camp.end.x},${camp.camp.end.y}) `
         + `${camp.camp.end.ticks}t · oracle L${endOracle.level} `
         + `(${endOracle.x},${endOracle.y}) ${campOracle.ticks.length - 1}t`);
