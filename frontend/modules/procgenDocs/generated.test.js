@@ -735,28 +735,43 @@ describe('the instruments index is one row per file in scripts/procgen', () => {
     });
 
     /**
-     * ⛓⛓⛓ THE `(never written)` MARKER IS NOT A SILENCER. A marker that could
-     * drop a citation without saying so would let the next author retire a real
-     * dead citation by typing three words, so the marked set is PUBLISHED and
-     * pinned here — and the row it names is asked of the DOC, not of the table.
+     * ⛓⛓⛓ THE MARKER IS NOT A SILENCER. A marker that could drop a citation
+     * without saying so would let the next author retire a real dead citation by
+     * typing three words, so the marked set is PUBLISHED and pinned here — and
+     * the row it names is asked of the DOC, not of the table.
+     *
+     * ⛓ R9 SLICE 13 widened it from `(never written)` to that OR `(retired)`,
+     * and renamed the field from `neverWritten` to `unresolvedByDesign` — a
+     * field of the old name holding a file that WAS written would be the
+     * true-sentence-about-the-wrong-subject failure (traps 566, 573). The two
+     * members are the two tenses: a plan superseded before anybody wrote it,
+     * and an instrument written, used and then deleted.
      */
-    it('⛓⛓ a citation MARKED `(never written)` is dropped, and the marked set '
-        + 'is published', () => {
-        expect(INSTRUMENTS.neverWritten.map((n) => n.name)).toEqual([
+    it('⛓⛓ a citation MARKED `(never written)` or `(retired)` is dropped, and the '
+        + 'marked set is published', () => {
+        expect(INSTRUMENTS.unresolvedByDesign.map((n) => n.name)).toEqual([
+            'plan-seedling-r7-act2.mjs',
             'plan-seedling-segment.mjs',
         ]);
-        expect(INSTRUMENTS.neverWritten[0].citedBy)
-            .toEqual(['docs/json/developer/procgen/seedling-bot.md']);
-        /* ⛓ asked of the DOCUMENT: the row really does carry both the name and
-         * the marker, on one line, within the declared window. */
+        for (const row of INSTRUMENTS.unresolvedByDesign) {
+            expect(row.citedBy).toEqual(['docs/json/developer/procgen/seedling-bot.md']);
+        }
+        /* ⛓ asked of the DOCUMENT: each row really does carry both the name and
+         * a marker, on one line, within the declared window. */
         const doc = readFileSync(join(ROOT, DOC_DIR, 'seedling-bot.md'), 'utf8');
-        const line = doc.split('\n').find((l) => l.includes('plan-seedling-segment.mjs'));
-        expect(line).toBeTruthy();
-        expect(line).toContain('(never written)');
-        /* ⛓ …and NO OTHER doc line in the directory carries the marker, so the
+        for (const [name, marker] of [
+            ['plan-seedling-segment.mjs', '(never written)'],
+            ['plan-seedling-r7-act2.mjs', '(retired)'],
+        ]) {
+            const row = doc.split('\n').find((l) => l.includes(name));
+            expect(row).toBeTruthy();
+            expect(row).toContain(marker);
+        }
+        /* ⛓ …and NO OTHER doc in the directory carries EITHER marker, so the
          * published set is the whole of it. */
         const marked = readdirSync(join(ROOT, DOC_DIR)).filter((f) => f.endsWith('.md'))
-            .filter((f) => /\(never written\)/.test(readFileSync(join(ROOT, DOC_DIR, f), 'utf8')));
+            .filter((f) => /\((?:never written|retired)\)/
+                .test(readFileSync(join(ROOT, DOC_DIR, f), 'utf8')));
         expect(marked).toEqual(['seedling-bot.md']);
     });
 });

@@ -250,7 +250,26 @@ const CITE_RE = /(?<![\w/*.-])(?:scripts\/procgen\/)?([a-z][a-zA-Z0-9-]*\.mjs)\b
  * ⚠ WITHIN 120 CHARACTERS AND ON THE SAME LINE. A marker further away than
  * that would be a sentence about something else.
  */
-const NEVER_WRITTEN_RE = /\(never written\)/;
+/**
+ * ⛓⛓⛓ R9 SLICE 13 — **AND `(retired)` JOINS `(never written)`, FOR THE SAME
+ * ARGUMENT ONE TENSE OVER.**
+ *
+ * The paragraph above says the marker exists because deleting a `.mjs` from a
+ * doc row "to satisfy a tool" was the worse edit. A RETIREMENT is that argument
+ * in the past tense: `plan-seedling-r7-act2.mjs` was deleted in this slice
+ * (dead `--check` since `706886397`, reach = 0 gates / 0 tests / 0 modules), and
+ * the doc that RECORDS the retirement has to be able to name the file it
+ * retired. Without this the tree would be choosing between an accurate history
+ * and a clean scan.
+ *
+ * ⛔ AND THE FIELD IS NO LONGER CALLED `neverWritten`, because a field of that
+ * name holding a file that WAS written would be exactly the true-sentence-about-
+ * the-wrong-subject failure this repo keeps recording (traps 566, 573). It is
+ * `unresolvedByDesign`: a citation the tree deliberately does not resolve,
+ * whichever tense it is in. It is still PUBLISHED and still pinned, so a marker
+ * cannot quietly retire a real dead citation.
+ */
+const NEVER_WRITTEN_RE = /\((?:never written|retired)\)/;
 const NEVER_WRITTEN_WINDOW = 120;
 
 /** ⛓ Every path in the repo with this basename — `node_modules`, `.git` and
@@ -414,9 +433,9 @@ export function buildInstruments() {
         rows,
         categories,
         findings,
-        /** ⛓ Every citation a document MARKED `(never written)` — published so
-         *  the marker cannot quietly retire a real dead citation. */
-        neverWritten: [...markedNeverWritten].sort()
+        /** ⛓ Every citation a document MARKED `(never written)` or `(retired)` —
+         *  published so the marker cannot quietly retire a real dead citation. */
+        unresolvedByDesign: [...markedNeverWritten].sort()
             .map(([name, where]) => ({ name, citedBy: where.sort() })),
         counts: {
             files: rows.length,
@@ -434,9 +453,10 @@ export function buildInstruments() {
                 + '`--${…}` template',
             documented: String(DOCUMENTED_FLAG_RE),
             cite: String(CITE_RE),
-            neverWritten: `${String(NEVER_WRITTEN_RE)} within ${NEVER_WRITTEN_WINDOW} `
+            unresolvedByDesign: `${String(NEVER_WRITTEN_RE)} within ${NEVER_WRITTEN_WINDOW} `
                 + 'characters after a citation, on the same line — the citation is then of a '
-                + 'PLAN and is dropped from both directions of the table',
+                + 'PLAN or of a RETIRED instrument, and is dropped from both directions of '
+                + 'the table',
         },
         docblockRule: 'the file\'s HEADER is everything before its first executable line '
             + '(blank lines, `#!`, comments and `import`/`export` lines are header), and the '

@@ -3970,6 +3970,40 @@ instruments 242; procgenDocs corpus 686 → **694**; `check-seedling-wasm-pages`
 **NEXT in R9: slice 13** (the watch-page five), then **12c** (the ORACLE first — the preview
 must step with the drive's stepper — then the planner primitive).
 
+### ⛓⛓⛓ SLICE 13 SHIPPED 2026-08-23 — **THE WATCH-PAGE FIVE: the ladder becomes a link, sand traps become visible** (`a535bdb13` … `fa547ddaf`, PUSHED)
+
+⚖ Ruling 29's five watch-page items, all in, tape-inert: **collapse/expand all** over
+`querySelectorAll('details')` (⛔ NOT `.genSection` — the page has 13 `<details>` and only 11
+carry the class, so the class is a filter wearing a query's clothes; the CSS comment saying
+otherwise is corrected and the 10-open/3-closed default is asserted BY NAME); the **three
+phase buttons stop drifting** (reorder + one flexible slider — and the mutant proves the
+reorder alone passes the x row, so the SLIDER-WIDTH row is the one that gates the flex);
+**`?phase=<name>`** as a generate-mode deep link through the page's ONE writer, refused by
+name, deleted at the default, with 8 demo entries (derived from the catalogue's own `phase:`
+fields) carrying it; **sand traps DRAWN** as a new `staticenemies` layer over
+`staticEnemyDanger`'s own partition; **enemies on the FIRST paint in solve mode** from the
+run the still frame was already holding. L6 first paint: 2 bobs + 4 sandtraps, disjoint.
+
+⛔⛔ **THREE GATES WERE ALREADY RED AT THE HEAD AND ONE WAS CRASHING** —
+`check-seedling-editor-phases` died on a `TypeError` after 30 rows because its `DROPPED`
+subject was a live search result frozen as a literal that slice 11's `64875843c` revoked. It
+now SEARCHES (CRASH → **82/0**). `-export` (2 FAIL) and `-overlays` (1 FAIL) are the same
+shape against `r8-solve-18`'s re-record and are **slice 12e's**, unchanged. ⛓ **A gate that
+throws prints no total: a gate runner must key on EXIT CODE.** And **seven typed cardinalities
+across five gates** pinned the layer roster's size — four reddening at once on the sixteenth
+layer, one of them a LABEL that went false on a passing row (trap 573, live). All derive now.
+`plan-seedling-r7-act2.mjs` retired (instruments 242 → **241**).
+
+GATES: unfiltered vitest ALONE **334 / 10293** UNMOVED; identity block **identical row for
+row** vs a pristine `5c916efc0` worktree; thirteen producers' `--check` **byte-identical**;
+`reach-seedling-change` PRODUCERS 0 · TAPES 0 · CHAINS 0 ⇒ **roster gate not owed**; phases
+CRASH → **94/0**; generate 216 → **224/0**; demos 196 → **204/0**; solve 6 → **11/0**;
+sequence **36/0**; reference **21/0**; ship **254/0**; pages **20/0** local. Traps **574–576**.
+As-built = kickoff **§24**.
+
+**NEXT in R9: slice 12c** (the ORACLE first — the preview must step with the drive's stepper
+— then the planner primitive), and **12e** owns the two red gates above.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:

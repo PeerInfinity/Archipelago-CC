@@ -196,14 +196,6 @@ export const INSTRUMENTS = frz({
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
     "findings": [],
     "flagRule": "a flag is counted where the script READS ARGV for it. A `--x=` literal alone is not enough: `--enable-features=` and `--use-angle=` are the two commonest in this directory and both are Chrome launch arguments. What the file's own `Run:` block shows is published separately as `documentedFlags`.",
-    "neverWritten": [
-        {
-            "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
-            ],
-            "name": "plan-seedling-segment.mjs"
-        }
-    ],
     "patterns": {
         "cite": "/(?<![\\w/*.-])(?:scripts\\/procgen\\/)?([a-z][a-zA-Z0-9-]*\\.mjs)\\b/g",
         "documented": "/--([a-zA-Z][a-zA-Z0-9-]*)(?=[=\\s]|$)/g",
@@ -212,7 +204,7 @@ export const INSTRUMENTS = frz({
             "startsWith: /startsWith\\(\\s*[`']--([a-zA-Z][a-zA-Z0-9-]*)=/g"
         ],
         "helperDecl": "/^\\s*(?:export )?const ([a-zA-Z][a-zA-Z0-9]*) = (?:async\\s+)?(?:function\\b|\\([^)]*\\)\\s*=>|[a-zA-Z_$][\\w$]*\\s*=>)/gm — then `<helper>('x')`, within 400 characters of a mention of both `argv` and a `--${…}` template",
-        "neverWritten": "/\\(never written\\)/ within 120 characters after a citation, on the same line — the citation is then of a PLAN and is dropped from both directions of the table"
+        "unresolvedByDesign": "/\\((?:never written|retired)\\)/ within 120 characters after a citation, on the same line — the citation is then of a PLAN or of a RETIRED instrument, and is dropped from both directions of the table"
     },
     "rows": [
         {
@@ -6655,6 +6647,20 @@ export const INSTRUMENTS = frz({
         "determinism",
         "sweep",
         "yield-table"
+    ],
+    "unresolvedByDesign": [
+        {
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "name": "plan-seedling-r7-act2.mjs"
+        },
+        {
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "name": "plan-seedling-segment.mjs"
+        }
     ]
 });
 

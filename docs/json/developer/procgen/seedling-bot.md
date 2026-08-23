@@ -13602,3 +13602,95 @@ in prose says what it says and why, rather than being quietly corrected.
 ⚠ The chain table under **Slice 6** above is the one place the whole chain is
 written out, and it has been kept current rather than frozen since — it is now
 sixteen rows, and it carries a line saying that is what it is.
+
+### R9 slice 13: THE WATCH-PAGE FIVE — the ladder becomes a link, sand traps become visible, and seven typed numbers stop lying
+
+⚖ Ruling 29's watch-page items, all five, tape-inert. `a535bdb13` … `fa547ddaf`.
+
+**(i) COLLAPSE ALL / EXPAND ALL** — page-wide chrome above every panel, wired
+once at the document's boot beside the SOURCE selector (the arms mount and
+unmount beneath these sections). It operates on `document.querySelectorAll
+('details')`. ⛔ Not on `.genSection`, and that is measured rather than
+stylistic: the page holds **thirteen** `<details>` and only **eleven** carry the
+class — the boot block's and `#tapeIO`'s do not. The CSS comment saying *"open by
+default except the CATALOGUE"* was a true sentence about `.genSection` and a
+false one about the page, whose real default is **10 open, 3 closed**; corrected,
+and the gate now asserts that partition BY NAME (each `<summary>`'s `data-term`),
+because a count cannot tell a swap from a match.
+
+**(ii) THE PHASE BUTTONS** — reordered to prev · next · END · slider · label,
+with the slider the one flexible item so it ABSORBS the label's swing. Measured
+over a six-press ladder walk: the buttons' x CONSTANT at 20.5 · 113.39 · 206.28,
+the label taking 7 distinct values 19..63 chars, the slider's width doing the
+moving. ⛓ The two halves are two rows because they fail independently — a mutant
+with the buttons reordered and the slider left rigid passes the x row with the
+SAME three numbers, so the row that gates the flex is the one asserting the
+slider's own width changes.
+
+**(iii) `?phase=<name>`** — a generate-mode deep link, naming the ROW (stable
+across seeds; an index renumbers when a pass-1 row is inserted). Read raw and
+resolved against the ladder AFTER the model has run, because whether `carve` is a
+phase of THIS run is a property of a ledger that does not exist at read time.
+FINISHED is spelled by ABSENCE. A name this ladder does not have is REFUSED BY
+NAME — status line and `__editorGenerate.phase.why`, listing the run's real
+phases — never clamped, and never written back to the bar. ⛔ ONE writer and ONE
+`replaceState`: the bar-writing block moved out of `show()` into `rewriteUrl`,
+which `goToPhase` now also calls, with the phase as an ARGUMENT rather than a
+read of `phaseIndex` (which `goToPhase` assigns before it awaits). The two
+comments that had said *"it is not written to the URL"* are rewritten as the new
+law; the OVERLAY stepper keeps the old one. Eight demo entries — derived from the
+catalogue's own `phase:` fields — carry the key and lost their "press `PHASE ▶`
+until…" prose; their multi-phase TOURS are kept, reworded to start from the
+landing phase.
+
+**(iv) SAND TRAPS ARE DRAWN** — a `sandtrap` was invisible in EVERY layer, not
+merely missing from one: `notSolid(…, 'Enemy')` is not an object solid, not a
+pixelmask, not a bridged chaser, and the run never steps it so no per-tick
+channel holds it. New `staticenemies` layer (its own, not `hitboxes` — that
+label says *"this tick"* and these bodies have none), ON by default because OFF
+is the bug. `watchOverlays.staticEnemyBodies` LIFTS `dangerMap.staticEnemyDanger`'s
+partition — `chaserRoomVerdict`, `isBridgedChaser`, the live spinner roster,
+`contactPricing`'s boss split — rather than re-deriving it. ⛔ And the LEVEL is a
+parameter, because a scrubber shows whichever room the cursor is in while the
+run's own `level` is wherever the walk ended; a caller drawing a different room
+hands its own live ids or is told nothing can be claimed.
+
+**(v) ENEMIES ON THE FIRST PAINT** — `previewLevel` handed `samples: []` under
+the words *"the still frame has no history and no run behind it"*. No HISTORY,
+but there IS a run, built four lines above. One sample at cursor 0 from
+`sampleMovers`. The still frame now publishes `window.__editorStill` with the
+renderer's own `drawn` manifest.
+
+Measured on L6 in solve mode, first paint, no press: two `bob`s from the sample
+and four `sandtrap`s from the census, at their `contactRect`s, asserted DISJOINT
+and named rather than counted.
+
+⛔⛔ **THREE GATES WERE ALREADY RED AT THE HEAD, AND ONE WAS CRASHING.**
+`check-seedling-editor-phases` died on a `TypeError` after 30 rows: its `DROPPED`
+subject was a live search result frozen as a literal, and slice 11's
+`facingToward` repair (`64875843c`) had flipped that level from REFUSED to
+CERTIFIED. It now SEARCHES by the rule the file already stated — the smaller
+seed — and refuses BY NAME when the grid holds none: **CRASH → 82/0**.
+`check-seedling-editor-export` (2 FAIL) and `-overlays` (1 FAIL) are the same
+shape against `r8-solve-18`'s re-record and are NOT this slice's. ⛓ A gate that
+throws prints no total, which is how this survived: **a gate runner must key on
+EXIT CODE, never on a printed total.**
+
+⛔⛔ **AND SEVEN TYPED CARDINALITIES ACROSS FIVE GATES PINNED THE LAYER ROSTER'S
+SIZE**, four of them reddening at once on the sixteenth layer for the one reason
+they were never meant to catch — with `-overlays`' comment claiming, directly
+above `=== 15`, that the number came from the roster rather than a literal. All
+seven now derive from `OVERLAY_LAYERS`. ⛓ The seventh was found by sweeping for
+the literal after fixing the other six: a LABEL in `-manual` reading *"the FIFTEEN
+layer toggles"* on a row that had just gone GREEN — a number that had gone false
+on a passing line, which is the one part of a gate that can do that silently.
+
+Also: `plan-seedling-r7-act2.mjs` (retired) — its `--check` dead since `706886397`;
+reach = 0 gates, 0 tests, 0 modules), instruments 242 → 241. The three tapes
+naming it as their author are ⚖ ruling 18's hand witnesses and were NOT edited —
+the provenance now names a retired file, deliberately.
+
+Inertia: identity block **identical row for row** against a pristine
+`5c916efc0` worktree · thirteen producers' `--check` byte-identical · unfiltered
+vitest **334 / 10293** unmoved · **zero tape moves** (`reach-seedling-change`:
+PRODUCERS 0 · TAPES 0 · CHAINS 0, so the roster gate was not owed).

@@ -49,7 +49,7 @@ describe('every tracked document renders', () => {
     });
 });
 
-describe('⛓⛓ the anchors — two readers, 655 headings, one answer', () => {
+describe('⛓⛓ the anchors — two readers, one answer (the count is in the pin, not here)', () => {
     it('the page\'s heading ids ARE ghSlug\'s, document by document', () => {
         let total = 0;
         for (const f of DOC_FILES) {
@@ -148,7 +148,12 @@ describe('⛓⛓ the anchors — two readers, 655 headings, one answer', () => {
         //   reading the RUN before the TEXT, the producer and the chain
         //   having to agree, and the two gate labels that were a true
         //   sentence about the wrong subject). A re-pin, not a widening.
-        expect(total).toBe(694);
+        // ⛓ 694 → 695: R9 slice 13's § (the watch-page five) — ONE heading, its
+        //   own, with no `####` under it: the slice is five USER ITEMS and the
+        //   § is written as one continuous argument per item rather than as
+        //   sub-sections, so there is nothing to subdivide.
+        //   A re-pin, not a widening.
+        expect(total).toBe(695);
     });
 
     it('⛔ uses OUR rule, not marked\'s slugger — they differ, and here is where', () => {
@@ -296,7 +301,15 @@ describe('⛓ the constructs the corpus is actually made of', () => {
 });
 
 describe('⛓ the biggest document — the one the budget is about', () => {
-    it('seedling-bot.md renders 442 headings and its slugs are unique', () => {
+    /**
+     * ⛔ THE NAME NO LONGER CARRIES A COUNT (R9 slice 13). It read *"renders 442
+     * headings"* while the pin three screens down said 481 — a number typed into
+     * a label, maintained by hand, and false for many slices on a row that kept
+     * passing. Trap 573: a label is the only part of a check that can go false
+     * silently, and a test NAME is a label. The counts live in the `expect`s,
+     * which are the only place that can red.
+     */
+    it('seedling-bot.md renders its headings and its slugs are unique', () => {
         // ⚠ 405 → 407: R9 slice 2's own § plus the ⛓ line under the R5
         // director's §, which is where the sequence's LINEAGE belongs.
         // ⚠ 402 → 405: SEEDLING BOT R9 slice 1's § *R9 — the solver rung, opened
@@ -356,9 +369,12 @@ describe('⛓ the biggest document — the one the budget is about', () => {
         //   classifier reading the RUN before the TEXT, the producer and the
         //   chain having to agree, and the two gate labels that were a true
         //   sentence about the wrong subject).
+        // ⛓ 481 → 482: R9 slice 13's § — ONE heading (the watch-page five), with
+        //   no `####` under it: five USER ITEMS written as one continuous
+        //   argument each, so there is nothing to subdivide.
         const ids = idsOf(RENDERS.get('seedling-bot.md').html);
-        expect(ids).toHaveLength(481);
-        expect(new Set(ids).size).toBe(481);
+        expect(ids).toHaveLength(482);
+        expect(new Set(ids).size).toBe(482);
         expect(ids.filter((i) => i !== ghSlug(i))).toEqual([]);
     });
 
