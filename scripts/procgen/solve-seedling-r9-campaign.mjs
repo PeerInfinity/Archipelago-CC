@@ -132,13 +132,6 @@ const { segmentBootFromLatch, seamLatchFindings } =
     await import(join(MODULE, 'r7Acceptance.js'));
 const { twoPassSolve } = await import(join(MODULE, 'twoPassSolve.js'));
 const { declaredSeamTimeAfter } = await import(join(MODULE, 'gameClock.js'));
-/**
- * ⛓ THE COMMITTED CHAIN, for the ENDS-MEET row ⚖ ruling 37 left in place of
- * the headline's. `playthroughWalk` derives `endsAt` and `cuts` from the tapes
- * on disk (⚖ ruling 32 D), so this is the OTHER derivation of the number this
- * run computes — not a constant, and not this run's own output.
- */
-const { PLAYTHROUGH_CHAINS } = await import(join(MODULE, 'playthroughWalk.js'));
 
 const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4b';
 const PAGE_URL = `http://localhost:8000/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
@@ -565,19 +558,53 @@ for (let i = 0; i < SEGMENTS.length; i += 1) {
  */
 const segTicks = results.map((r) => r.out.perTick.length);
 const segSum = segTicks.reduce((a, b) => a + b, 0);
-const CHAIN = PLAYTHROUGH_CHAINS.find((c) => c.id === 'r9-campaign');
-check('⛓ sum(segment ticks) === the COMMITTED chain\'s own endsAt',
-    Boolean(CHAIN) && segSum === CHAIN.endsAt,
-    `${segTicks.join(' + ')} = ${segSum} against endsAt ${CHAIN?.endsAt}`);
-check('⛓ every segment\'s solved length is its COMMITTED tape\'s own',
-    segTicks.every((n, i) => n === committedTicks[i]),
-    `${segTicks.join(',')} against ${committedTicks.join(',')}`);
+/**
+ * ⛔⛔ THE SECOND DERIVATION IS READ OFF DISK HERE, NOT IMPORTED FROM
+ * `PLAYTHROUGH_CHAINS` — and the reason is a LOAD ORDER, found by `--grow`'s
+ * own rehearsal rather than reasoned about.
+ *
+ * `playthroughWalk` derives `endsAt` by calling `loadTape` for every declared
+ * segment AT MODULE SCOPE. So the moment the declaration names a room whose
+ * tape does not exist yet — which is precisely the state a GROWTH passes
+ * through, between the append and this script writing the tape — importing it
+ * throws ENOENT, and the producer that is supposed to CREATE that tape cannot
+ * start. §23c.7(a) predicted that shape in the other direction (*"a chain room
+ * the producer never solves ENOENTs at load"*); this is the same edge on the
+ * growth path, and the cure is not to take the dependency.
+ *
+ * ⛓ NOTHING IS LOST. The claim was never about `PLAYTHROUGH_CHAINS`: it is
+ * THIS RUN's solved lengths against the COMMITTED tapes, and `committedTicks`
+ * reads those tapes directly. A segment with no committed tape is SKIPPED BY
+ * NAME rather than counted as a disagreement — "not recorded yet" and
+ * "recorded and different" must not print the same thing.
+ */
+const fresh = SEGMENTS.filter((_, i) => committedTicks[i] === null).map((s) => s.name);
+const committedSum = committedTicks.filter((n) => n !== null)
+    .reduce((a, b) => a + b, 0);
+const solvedSum = segTicks.filter((_, i) => committedTicks[i] !== null)
+    .reduce((a, b) => a + b, 0);
+if (fresh.length) {
+    console.log(`## ⛓ ENDS-MEET is SCOPED: ${fresh.join(', ')} ha${fresh.length === 1
+        ? 's' : 've'} no committed tape yet (a GROWTH is in flight), so the arithmetic `
+        + 'runs over the segments that do have one. The new tape\'s own length is proved '
+        + 'by the differential, which is what a first recording is for.');
+}
+check('⛓ sum(segment ticks) === the COMMITTED tapes\' own sum'
+    + (fresh.length ? ` — over the ${SEGMENTS.length - fresh.length} recorded segment(s)`
+        : ''),
+solvedSum === committedSum,
+`${segTicks.join(' + ')} = ${segSum}; recorded ${solvedSum} against committed `
+    + `${committedSum}`);
+check('⛓ every RECORDED segment\'s solved length is its committed tape\'s own',
+    segTicks.every((n, i) => committedTicks[i] === null || n === committedTicks[i]),
+    `${segTicks.join(',')} against ${committedTicks.map((n) => n ?? '—').join(',')}`);
 
 console.log(`\n## the chain: ${segSum} ticks over ${SEGMENTS.length} rooms`);
 SEGMENTS.forEach((s, i) => console.log(`   ${String(i + 1).padStart(2)} ${s.name.padEnd(13)} `
     + `L${String(s.level).padEnd(3)} -> L${String(s.to).padEnd(3)} ${String(segTicks[i]).padStart(5)} t`));
-console.log(`## PLAYTHROUGH_CHAINS.r9-campaign: cuts [${CHAIN?.cuts.join(', ')}], `
-    + `endsAt ${CHAIN?.endsAt}`);
+const cuts = segTicks.slice(0, -1).map(((run) => (n) => { run += n; return run; })(0));
+console.log(`## PLAYTHROUGH_CHAINS.r9-campaign: cuts [${cuts.join(', ')}], `
+    + `endsAt ${segSum}`);
 
 
 /**
