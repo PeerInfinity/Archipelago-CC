@@ -1205,7 +1205,7 @@
     },
     {
       "file": "r9-campaign.json",
-      "tickCount": 3470,
+      "tickCount": 3615,
       "bootLevel": 0,
       "tapeVersion": 9,
       "noHazards": []
@@ -1242,6 +1242,13 @@
       "file": "r9-solve-13.json",
       "tickCount": 74,
       "bootLevel": 13,
+      "tapeVersion": 11,
+      "noHazards": []
+    },
+    {
+      "file": "r9-solve-14.json",
+      "tickCount": 145,
+      "bootLevel": 14,
       "tapeVersion": 11,
       "noHazards": []
     },

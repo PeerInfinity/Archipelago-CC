@@ -635,26 +635,37 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
          * its measurement is not a prediction.
          */
         Object.freeze({
-            name: 'r9-campaign', levels: Object.freeze([4, 5, 6, 14]), bobs: 6, ticks: 3470,
+            name: 'r9-campaign', levels: Object.freeze([4, 5, 6, 14]), bobs: 6, ticks: 3615,
             addedBy: 'R9 slice 6 (the true-start solver chain)',
-            why: 'the chain HEADLINE walks all fifteen rooms in one run, so it enters '
+            why: 'the chain HEADLINE walks all sixteen rooms in one run, so it enters '
                 + 'every bridged room the segments do — L4\'s `bob@64,64`, L5\'s three '
                 + 'and L6\'s two — and drives each through the whole lifetime its '
                 + 'segment does. The same exposure as `r7-act2-full`, whose route it '
-                + 're-derives from the solver. ⚠ AND L14 IS THE FOURTH ROOM, which the '
-                + 'assertion named the first time it ran: the headline\'s last tick is '
-                + 'the L14 ARRIVAL, and L14 holds a bridged body the chain never walks '
-                + 'past — the same parked-arrival shape `r9-solve-13` has.',
+                + 're-derives from the solver. ⚠ AND L14 IS THE FOURTH ROOM. ⛓ R9 '
+                + 'slice 12b″ changed WHY it is: the headline used to end at the L14 '
+                + 'ARRIVAL, and L14 was a room it entered and never walked — the '
+                + 'parked-arrival shape `r9-solve-13` has. The sixteenth segment CROSSES '
+                + 'it, so the headline drives all six of L14\'s bobs for 145 ticks and '
+                + 'ends one room further on, at the L15 arrival. ⛔ THE LEVELS DID NOT '
+                + 'MOVE: L15 holds no `bob` at all (a pushable block, two breakable '
+                + 'rocks, a button, a lock, a chest, two stairs, three torches), so the '
+                + 'room the chain gained is not a bridged one and the claim is the same '
+                + 'four rooms.',
         }),
         Object.freeze({
             name: 'r9-solve-13', levels: Object.freeze([14]), bobs: 0, ticks: 74,
             addedBy: 'R9 slice 6 (the true-start solver chain)',
             why: '⛔ THE EXPOSURE IS THE ARRIVAL, NOT THE WALK. This leg is L13 → L14, '
                 + 'and L13 holds nothing bridged; it is the L14 ARRIVAL — the last '
-                + 'tick — that enters a bridged room. The chain STOPS there because '
-                + 'route step 16 refuses L14\'s camera band, so the room is entered and '
-                + 'never walked, which is the parked-mover shape `r8-solve-3` has.',
+                + 'tick — that enters a bridged room. The room is entered and never '
+                + 'walked, which is the parked-mover shape `r8-solve-3` has. ⛓ R9 '
+                + 'slice 12b″: this used to say "the chain STOPS there because route '
+                + 'step 16 refuses L14\'s camera band". It does not stop there any more '
+                + '— `r9-solve-14` is the crossing — but THIS tape\'s exposure is '
+                + 'unchanged, because it is still an ARRIVAL and still 74 ticks. The '
+                + 'claim did not move; only the sentence explaining it went false.',
         }),
+
         /**
          * ⛓⛓⛓ R9 SLICE 12 — AND THE GUARD FOUND IT AGAIN, BY NAME, the first
          * time the suite ran after the witness landed. That is the FIFTH slice
@@ -677,6 +688,30 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + 'carries the body\'s `hits` 1 -> 2 -> 3, the 30-tick i-frame caught '
                 + 'mid-drain on each, the "die" animation at `hits === hits_max`, the fade '
                 + 'and the removal; the player takes ZERO hits throughout.',
+        }),
+        /**
+         * ⛓⛓⛓ R9 SLICE 12b″ — AND THE GUARD FOUND IT AGAIN, BY NAME, the
+         * first time the suite ran after the tape landed — the SIXTH slice running
+         * (trap 89). ⛔ Not folded into `exposedTapes` for the standing reason: a
+         * prediction edited after its measurement is not a prediction.
+         *
+         * ⛔⛔ THE PREDICTION WAS SEALED BEFORE THE TAPE EXISTED — `levels: [14]`,
+         * `bobs: 6`, `ticks: 145` — and it was DERIVED rather than guessed: the atlas
+         * gives L14 six `bob` entities and L15 none, so the walk's two rooms intersect
+         * the bridged set in exactly one of them. The game then measured 145 ticks,
+         * six presses and ZERO hits.
+         */
+        Object.freeze({
+            name: 'r9-solve-14', levels: Object.freeze([14]), bobs: 6, ticks: 145,
+            addedBy: 'R9 slice 12b″ (the record of the L14 crossing)',
+            why: 'the SIX-BOB room, crossed by the PARRY-WALK (⚖ ruling 29(a)): the '
+                + 'most bridged bodies any tape on the roster drives at once, all six '
+                + 'live for the whole walk, five of them struck once and knocked back '
+                + 'and none killed. ⛔ It is the first tape whose exposure is neither a '
+                + 'parked arrival nor a kill: the bodies are stepped through their whole '
+                + 'lifetimes and the player walks past every one of them UNTOUCHED. '
+                + '⚠ The LEVELS are [14] and not [14, 15]: the leg ends at the L15 '
+                + 'arrival and L15 holds no `bob`, so the second room is not bridged.',
         })
     ]),
 

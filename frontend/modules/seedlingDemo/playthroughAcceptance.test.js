@@ -930,7 +930,7 @@ describe('chainGoalFindings — EARNED is measured, and the set is two-sided', (
      */
     it('⛓⛓ every campaign segment ARRIVES where its successor BOOTS, and the tail reaches L15', () => {
         const chain = PLAYTHROUGH_CHAINS.find((c) => c.id === 'r9-campaign');
-        const arrivalOf = (n) => loadExpectation(n).ticks.at(-1).level;
+        const arrivalOf = (n) => loadExpectation(n).stream.ticks.at(-1).level;
         const seams = chain.segments.slice(0, -1).map((n, i) => ({
             from: n, to: chain.segments[i + 1],
             arrives: arrivalOf(n), successorBoots: loadTape(chain.segments[i + 1]).boot.level,

@@ -278,26 +278,38 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             // door — the pair's difference, visible in this ledger.
             'r8-hammer-arm',
             // ⛓⛓ R9 slice 6's true-start chain: the HEADLINE enters every
-            // bridged room its segments do, and the LAST LEG is exposed at its
-            // L14 ARRIVAL — the tick the chain stops on, because route step 16
-            // refuses that room's camera band.
+            // bridged room its segments do, and `r9-solve-13` is exposed at its
+            // L14 ARRIVAL — a room it enters on its last tick and never walks.
+            // ⛓ R9 slice 12″: the chain no longer STOPS there. `r9-solve-14`
+            //   crosses L14, so the headline drives all six of its bobs; the
+            //   two rooms declared for `r9-solve-13` and `r9-campaign` are
+            //   unchanged, because L15 holds no bridged body.
             'r9-campaign', 'r9-solve-13',
             // ⛓⛓⛓ R9 slice 12: the press arm's driven witness — the FIRST tape
             // on the roster in which the PLAYER kills a bridged chaser, and the
             // fifth slice running that this guard has named its own addition
             // before a line of the stratum around it was written (trap 89).
             'r9-l6-bob-press',
+            // ⛓⛓⛓ R9 slice 12b″: the L14 crossing — SIX bridged bodies, the
+            // most any tape on the roster drives at once, none of them killed
+            // and the player untouched. The SIXTH slice running that this
+            // guard has named the slice's own addition by name (trap 89): the
+            // row was added to `exposedAdded` only after the check had refused
+            // the tape as "undeclared and exposed", which is the order that
+            // keeps `levels: [14]` a prediction rather than a transcription.
+            'r9-solve-14',
         ]);
-        // ⛓ 13 -> 11 -> 12: `r7-act2-3` and `r7-act2-4` are off the roster, so
-        // the measurement cannot find them; slice 12's witness is the twelfth.
-        // The three that STAY (⚖ ruling 18) are still here, still exposed,
-        // still declared.
-        expect(out.exposed).toBe(12);
+        // ⛓ 13 -> 11 -> 12 -> 13: `r7-act2-3` and `r7-act2-4` are off the
+        // roster, so the measurement cannot find them; slice 12's witness is
+        // the twelfth and slice 12b″'s L14 crossing the thirteenth. The three
+        // that STAY (⚖ ruling 18) are still here, still exposed, still
+        // declared.
+        expect(out.exposed).toBe(13);
         expect(out.tapes).toEqual([
             'r7-act2-5', 'r7-act2-6', 'r7-act2-full',
             'r8-hammer-arm', 'r8-l6-bob-contact', 'r8-solve-3', 'r8-solve-4',
             'r8-solve-5', 'r8-solve-6', 'r9-campaign', 'r9-l6-bob-press',
-            'r9-solve-13',
+            'r9-solve-13', 'r9-solve-14',
         ]);
     });
 
@@ -361,6 +373,11 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             // declaration's MIRROR, and a ledger row missing from it turns this
             // mutation back into a test about names.
             'r9-l6-bob-press': { tape: {}, levels: [6] },
+            // ⛓⛓ R9 slice 12b″'s L14 crossing, at its declared room — the same
+            // mirror rule: without it this mutation stops being about ROOMS,
+            // because the "declared and no longer exposed" arm fires first and
+            // the assertion passes for the wrong reason. Measured: it did.
+            'r9-solve-14': { tape: {}, levels: [14] },
         });
         expect(() => assertBridgeExposureIsMeasured(io)).toThrow(/right name with wrong rooms/);
     });

@@ -17,7 +17,8 @@
     "r9-solve-3",
     "r9-solve-2",
     "r9-solve-0",
-    "r9-solve-13"
+    "r9-solve-13",
+    "r9-solve-14"
   ],
   "arrivals": [
     2,
@@ -34,31 +35,32 @@
     2,
     0,
     13,
-    14
+    14,
+    15
   ],
   "sources": {
     "frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json": "d2857cdd0f849efbe74514d848ae87eb",
     "frontend/modules/flashPanel/atlases/seedling-map.json": "647bd46a7ff6f1eacb0d956b81344a44",
     "frontend/modules/flashPanel/atlases/seedling-sphere-order.json": "03f215201a5a64c472fa5cc51c51ee98"
   },
-  "covered": 15,
+  "covered": 16,
   "lastArrival": {
-    "step": 15,
-    "level": 14,
-    "segment": "r9-solve-13"
+    "step": 16,
+    "level": 15,
+    "segment": "r9-solve-14"
   },
   "nextStep": {
-    "step": 16,
-    "level": 14,
+    "step": 17,
+    "level": 15,
     "visit": 1,
-    "crossesTo": 15,
+    "crossesTo": 16,
     "goals": [
-      "stairsdown@32,64 → L15"
+      "stairsdown@144,16 → L16"
     ]
   },
   "refusal": {
-    "family": "CAMERA BAND — `levelRun` REFUSES an on-screen verdict for a body at the screen edge inside `Game.shake`'s jiggle (camera.js, \"THE SHAKE, AND WHY IT IS A BAND\"). Not a missing mechanism: a missing STANCE RULE. The refusal names its own cure — \"move the stance away from the screen edge, or wait the shake out\"",
-    "text": "levelRun: whether bob bob@32,32 is on screen at tick 44 depends on where inside `Game.shake`'s jiggle the camera landed, and the two draws that decide it are not indexable (camera.js, \"THE SHAKE, AND WHY IT IS A BAND\"). `Enemy.update` early-returns at ZERO margin, so this is the difference between a body that damages and one that does not. Move the stance away from the screen edge, or wait the shake out."
+    "family": "VERB-APPLY — the 'shove' strategy IS registered and did not apply here",
+    "text": "solverBot(survey-step-17): no corridor for goal reach-exit toward (152,24) in level 15. Obstacle: solid:pushableblock (pushableblock@64,64). Strategy 'shove' failed to apply. Planner said: no walkable tile path in level 15 from tile (3,4) to (9,1). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game."
   },
   "why": null
 }

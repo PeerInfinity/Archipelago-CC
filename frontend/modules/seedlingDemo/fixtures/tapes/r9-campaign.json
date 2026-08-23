@@ -2,7 +2,7 @@
     "tape_version": 9,
     "game": "seedling",
     "name": "r9-campaign",
-    "description": "⛓⛓⛓ R9 SLICE 6 — THE HEADLINE of the custody chain `r9-campaign`: every room of Seedling's sphere order from the TRUE INITIAL BOOT (`new Game(0,80,128)`, empty save) to the L14 arrival, driven by the live solver in ONE RUN, so the fifteen segments have something to be tick-for-tick IDENTICAL to. ⚖ Ruling 11 (user, 2026-08-20). Its cuts are the run's OWN ARRIVALS (R1's rule) and its two internal kill-lock rooms make it a v9 tape: L5's `{5,0}` and L8's `{8,0}`/`{8,1}` are `tset -1` clears `createLevelRun` takes AT CONSTRUCTION and the model does not WRITE, so the walk needs ticks only a solve can produce — the same `twoPassSolve` loop `r8-solve-18` was authored by — and carries every timed row SEQUENCE-ABSOLUTE. It CREDITS the goal ledger for the first time from solver tapes: `sword@L10` and `chest@L11`. ⛔ The chain STOPS at L14, whose camera band the route survey refuses; the refusal is the next work order. Authored by scripts/procgen/solve-seedling-r9-campaign.mjs.",
+    "description": "⛓⛓⛓ R9 SLICE 6 — THE HEADLINE of the custody chain `r9-campaign`: every room of Seedling's sphere order from the TRUE INITIAL BOOT (`new Game(0,80,128)`, empty save) to the L15 arrival, driven by the live solver in ONE RUN, so the sixteen segments have something to be tick-for-tick IDENTICAL to. ⚖ Ruling 11 (user, 2026-08-20). Its cuts are the run's OWN ARRIVALS (R1's rule) and its two internal kill-lock rooms make it a v9 tape: L5's `{5,0}` and L8's `{8,0}`/`{8,1}` are `tset -1` clears `createLevelRun` takes AT CONSTRUCTION and the model does not WRITE, so the walk needs ticks only a solve can produce — the same `twoPassSolve` loop `r8-solve-18` was authored by — and carries every timed row SEQUENCE-ABSOLUTE. It CREDITS the goal ledger for the first time from solver tapes: `sword@L10` and `chest@L11`. ⛓ R9 slice 12b″ added the SIXTEENTH room: L14, the six-bob room, crossed by the PARRY-WALK. The chain now STOPS at L15, whose 'shove' strategy the route survey refuses (route step 17); the refusal is the next work order. Authored by scripts/procgen/solve-seedling-r9-campaign.mjs.",
     "boot": {
         "level": 0,
         "x": 80,
@@ -48,7 +48,7 @@
         "fp": 987286273
     },
     "seam": null,
-    "tick_count": 3470,
+    "tick_count": 3615,
     "inputs": [
         {
             "key": "right",
@@ -1243,7 +1243,7 @@
         {
             "key": "up",
             "from": 3396,
-            "to": 3470
+            "to": 3481
         },
         {
             "key": "right",
@@ -1269,6 +1269,231 @@
             "key": "right",
             "from": 3427,
             "to": 3428
+        },
+        {
+            "key": "left",
+            "from": 3470,
+            "to": 3482
+        },
+        {
+            "key": "primary",
+            "from": 3482,
+            "to": 3483
+        },
+        {
+            "key": "left",
+            "from": 3483,
+            "to": 3503
+        },
+        {
+            "key": "down",
+            "from": 3486,
+            "to": 3487
+        },
+        {
+            "key": "primary",
+            "from": 3503,
+            "to": 3504
+        },
+        {
+            "key": "left",
+            "from": 3504,
+            "to": 3508
+        },
+        {
+            "key": "right",
+            "from": 3508,
+            "to": 3509
+        },
+        {
+            "key": "left",
+            "from": 3509,
+            "to": 3511
+        },
+        {
+            "key": "right",
+            "from": 3512,
+            "to": 3514
+        },
+        {
+            "key": "down",
+            "from": 3518,
+            "to": 3522
+        },
+        {
+            "key": "left",
+            "from": 3518,
+            "to": 3522
+        },
+        {
+            "key": "right",
+            "from": 3522,
+            "to": 3523
+        },
+        {
+            "key": "primary",
+            "from": 3523,
+            "to": 3524
+        },
+        {
+            "key": "down",
+            "from": 3524,
+            "to": 3530
+        },
+        {
+            "key": "left",
+            "from": 3524,
+            "to": 3543
+        },
+        {
+            "key": "up",
+            "from": 3530,
+            "to": 3531
+        },
+        {
+            "key": "down",
+            "from": 3531,
+            "to": 3532
+        },
+        {
+            "key": "up",
+            "from": 3532,
+            "to": 3533
+        },
+        {
+            "key": "down",
+            "from": 3533,
+            "to": 3534
+        },
+        {
+            "key": "up",
+            "from": 3534,
+            "to": 3535
+        },
+        {
+            "key": "down",
+            "from": 3535,
+            "to": 3536
+        },
+        {
+            "key": "up",
+            "from": 3541,
+            "to": 3542
+        },
+        {
+            "key": "primary",
+            "from": 3543,
+            "to": 3544
+        },
+        {
+            "key": "left",
+            "from": 3544,
+            "to": 3545
+        },
+        {
+            "key": "right",
+            "from": 3545,
+            "to": 3546
+        },
+        {
+            "key": "left",
+            "from": 3546,
+            "to": 3548
+        },
+        {
+            "key": "right",
+            "from": 3550,
+            "to": 3553
+        },
+        {
+            "key": "left",
+            "from": 3554,
+            "to": 3556
+        },
+        {
+            "key": "left",
+            "from": 3560,
+            "to": 3562
+        },
+        {
+            "key": "up",
+            "from": 3560,
+            "to": 3562
+        },
+        {
+            "key": "right",
+            "from": 3562,
+            "to": 3563
+        },
+        {
+            "key": "primary",
+            "from": 3563,
+            "to": 3564
+        },
+        {
+            "key": "up",
+            "from": 3564,
+            "to": 3570
+        },
+        {
+            "key": "left",
+            "from": 3564,
+            "to": 3583
+        },
+        {
+            "key": "down",
+            "from": 3570,
+            "to": 3571
+        },
+        {
+            "key": "up",
+            "from": 3571,
+            "to": 3572
+        },
+        {
+            "key": "down",
+            "from": 3572,
+            "to": 3573
+        },
+        {
+            "key": "up",
+            "from": 3573,
+            "to": 3574
+        },
+        {
+            "key": "down",
+            "from": 3576,
+            "to": 3577
+        },
+        {
+            "key": "primary",
+            "from": 3583,
+            "to": 3584
+        },
+        {
+            "key": "left",
+            "from": 3584,
+            "to": 3598
+        },
+        {
+            "key": "right",
+            "from": 3598,
+            "to": 3599
+        },
+        {
+            "key": "left",
+            "from": 3599,
+            "to": 3602
+        },
+        {
+            "key": "right",
+            "from": 3603,
+            "to": 3605
+        },
+        {
+            "key": "down",
+            "from": 3609,
+            "to": 3615
         }
     ]
 }
