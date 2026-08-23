@@ -741,13 +741,15 @@ export const PAGE_CHAINS = Object.freeze({
     // re-authored (⚖ R8 close option A). `director.test.js` derives this whole
     // table from `PLAYTHROUGH_CHAINS` and reds when the two disagree.
     'r8-d2': Object.freeze(['r8-solve-18', 'r8-d2-19', 'r8-d2-20']),
-    // ⛓⛓⛓ R9 slice 6: the TRUE-START SOLVER CHAIN (⚖ ruling 11), fifteen rooms
-    // from `new Game(0,80,128)` to the L14 arrival. `director.test.js` derives
+    // ⛓⛓⛓ R9 slice 6: the TRUE-START SOLVER CHAIN (⚖ ruling 11), sixteen rooms
+    // from `new Game(0,80,128)` to the L15 arrival. `director.test.js` derives
     // this whole table from `PLAYTHROUGH_CHAINS` and reds when the two disagree.
+    // ⛓ R9 slice 12b″ added the sixteenth: `r9-solve-14`, L14 → L15.
     'r9-campaign': Object.freeze([
         'r8-solve-1', 'r8-solve-2', 'r8-solve-3', 'r8-solve-4', 'r8-solve-5',
         'r8-solve-6', 'r8-solve-7', 'r8-solve-8', 'r8-solve-9', 'r8-solve-10',
         'r9-solve-11', 'r9-solve-3', 'r9-solve-2', 'r9-solve-0', 'r9-solve-13',
+        'r9-solve-14',
     ]),
 });
 

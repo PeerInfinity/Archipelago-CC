@@ -8,7 +8,10 @@
  * did not name.
  */
 
+import { readFileSync } from 'node:fs';
+
 import { describe, expect, it } from 'vitest';
+import { PLAYTHROUGH_CHAINS } from '../../frontend/modules/seedlingDemo/playthroughWalk.js';
 import {
     bootFromEnvelopeOnly,
     chainSubjects,
@@ -205,5 +208,51 @@ describe('a persistence row has a MEASURED half and a MODEL half', () => {
         const out = mergePersistence(
             [{ level: 9, tag: 1 }, { level: 5, tag: 2 }, { level: 5, tag: 0 }], []);
         expect(out.map((c) => `${c.level}:${c.tag}`)).toEqual(['5:0', '5:2', '9:1']);
+    });
+});
+
+/**
+ * ⛓⛓⛓ R9 SLICE 12b″ — **THE PRODUCER AND THE CHAIN NAME THE SAME SEGMENTS.**
+ *
+ * `solve-seedling-r9-campaign.mjs` declares `SEGMENTS` and
+ * `PLAYTHROUGH_CHAINS.r9-campaign` declares `segments`; the pipeline reads the
+ * SECOND and the tapes come from the FIRST. Nothing had ever asserted they
+ * agree, and the failure mode is silent in both directions: a producer that
+ * grew a room the chain does not play emits a tape the sequence never walks,
+ * and a chain that grew one the producer does not solve refuses at load with
+ * an ENOENT nobody predicted.
+ *
+ * ⛔ THE SOURCE IS READ, because that is where the mistake is made. The
+ * producer cannot be imported — it solves the whole campaign at module scope
+ * and drives Windows Chrome for the latches — so the declaration is scanned
+ * out of its text, and the scan asserts its own non-vacuity first.
+ */
+describe('the campaign producer and the campaign chain (R9 slice 12b\u2033)', () => {
+    it('\u26d3 name the same segments, in the same order', () => {
+        const src = readFileSync(
+            new URL('./solve-seedling-r9-campaign.mjs', import.meta.url), 'utf8');
+        const block = src.slice(src.indexOf('const SEGMENTS = ['),
+            src.indexOf('/** \u26d3 The head of the chain'));
+        // non-vacuity: the slice really is the declaration and nothing else
+        expect(block).toMatch(/^const SEGMENTS = \[/);
+        expect(block).toMatch(/\];\s*$/);
+        const names = [...block.matchAll(/\{ name: '([^']+)'/g)].map((m) => m[1]);
+        const chain = PLAYTHROUGH_CHAINS.find((c) => c.id === 'r9-campaign');
+        expect(names).toEqual([...chain.segments]);
+    });
+
+    it('\u26d3 …and the producer\u2019s LAST segment is the room the chain ends on \u2014 L14 \u2192 L15', () => {
+        const src = readFileSync(
+            new URL('./solve-seedling-r9-campaign.mjs', import.meta.url), 'utf8');
+        const block = src.slice(src.indexOf('const SEGMENTS = ['),
+            src.indexOf('/** \u26d3 The head of the chain'));
+        const rows = [...block.matchAll(
+            /\{ name: '([^']+)', level: (\d+), to: (\d+)/g)]
+            .map((m) => ({ name: m[1], level: Number(m[2]), to: Number(m[3]) }));
+        expect(rows.length).toBeGreaterThan(1);
+        expect(rows.at(-1)).toEqual({ name: 'r9-solve-14', level: 14, to: 15 });
+        // ⛓ and every row's `to` is its successor's `level` — the sphere
+        //   order's own chaining, derived rather than restated
+        expect(rows.slice(0, -1).filter((r, i) => r.to !== rows[i + 1].level)).toEqual([]);
     });
 });

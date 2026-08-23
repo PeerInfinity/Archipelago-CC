@@ -23,10 +23,11 @@ import {
     witnessedDespawnFindings, stagedClearFindings,
 } from './playthroughAcceptance.js';
 import {
-    SEAM_SIGNATURE, SEAM_PREBUILD_FIELDS, seamExitFields, segmentBootFromLatch,
+    R7_GOAL_LEDGER, SEAM_SIGNATURE, SEAM_PREBUILD_FIELDS, seamExitFields,
+    segmentBootFromLatch,
 } from './r7Acceptance.js';
 import { parseTape, TAPE_VERSION } from './tapeFormat.js';
-import { fixtureNames, loadTape } from './fixtures/index.js';
+import { fixtureNames, loadExpectation, loadTape } from './fixtures/index.js';
 
 /**
  * A synthetic two-segment chain, built the way the real one is: segment 2
@@ -908,6 +909,55 @@ describe('chainGoalFindings — EARNED is measured, and the set is two-sided', (
         //   `r9-campaign` inherited the claim WITHOUT changing it — the same
         //   two ledger rows, now credited from solver tapes (§14.5).
         const chain = PLAYTHROUGH_CHAINS.find((c) => c.id === 'r9-campaign');
+        expect(chain.earns).toEqual(['sword@L10', 'chest@L11']);
+    });
+
+    /**
+     * ⛓⛓⛓ R9 SLICE 12b″ — **THE CHAIN'S ARRIVAL SEQUENCE IS THE TAPES' OWN,
+     * AND ITS TAIL IS L14 → L15.**
+     *
+     * ⛔ NOT A TYPED SEQUENCE (⚖ ruling 17). A successor's BOOT LEVEL is its
+     * predecessor's arrival — the latch authored it — and a segment's own
+     * arrival is the last observation of its RECORDED stream, which is the
+     * game's. So the two sides of every seam come from two different
+     * artifacts and the row is an agreement rather than a restatement.
+     *
+     * ⛔ AND IT IS WHAT REDS IF A ROOM IS ADDED TO THE CHAIN AND NOT WALKED.
+     * For four slices L14 was where this chain STOPPED — `r9-solve-13` parked
+     * at the arrival and nothing crossed the room. The sixteenth segment is
+     * the crossing, so exactly one segment BOOTS L14 now and the tail's own
+     * stream ends one room further on.
+     */
+    it('⛓⛓ every campaign segment ARRIVES where its successor BOOTS, and the tail reaches L15', () => {
+        const chain = PLAYTHROUGH_CHAINS.find((c) => c.id === 'r9-campaign');
+        const arrivalOf = (n) => loadExpectation(n).ticks.at(-1).level;
+        const seams = chain.segments.slice(0, -1).map((n, i) => ({
+            from: n, to: chain.segments[i + 1],
+            arrives: arrivalOf(n), successorBoots: loadTape(chain.segments[i + 1]).boot.level,
+        }));
+        // the positive count first: a chain of one would satisfy every row below
+        expect(seams.length).toBe(chain.segments.length - 1);
+        expect(seams.filter((r) => r.arrives !== r.successorBoots)).toEqual([]);
+        // ⛓ THE TAIL — the sixteenth room is L14 and the walk CROSSES it
+        expect(chain.segments.filter((n) => loadTape(n).boot.level === 14))
+            .toEqual(['r9-solve-14']);
+        expect(arrivalOf(chain.segments.at(-1))).toBe(15);
+    });
+
+    /**
+     * ⛓⛓ …AND THE SIXTEENTH ROOM CREDITS NOTHING, WHICH IS WHY `earns` DID
+     * NOT MOVE. The claim is worth a row because the arrival room HAS a
+     * ledger entry: `chest@L15` is on `R7_GOAL_LEDGER`, and the walk enters
+     * L15 at its last tick without opening it. An `earns` derived from the
+     * chain's ROOMS would have grown here; `chainGoalFindings` MEASURES the
+     * flag going NOT-HELD → HELD between a segment's boot and its latch, so
+     * it did not.
+     */
+    it('⛓ the sixteenth room credits NOTHING — `earns` is MEASURED, not room-derived', () => {
+        const chain = PLAYTHROUGH_CHAINS.find((c) => c.id === 'r9-campaign');
+        expect(R7_GOAL_LEDGER.filter((r) => r.level === 15).map((r) => r.id))
+            .toContain('chest@L15');
+        expect(chain.earns).not.toContain('chest@L15');
         expect(chain.earns).toEqual(['sword@L10', 'chest@L11']);
     });
 });

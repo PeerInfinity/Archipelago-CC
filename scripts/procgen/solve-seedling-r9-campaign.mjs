@@ -18,7 +18,7 @@
  * as far as `r8-solve-4`, and from there every successor's declared latch was
  * measured after a walk of a different length. This script is the fix.
  *
- * FIFTEEN SEGMENTS, one headline:
+ * SIXTEEN SEGMENTS, one headline:
  *
  *   1  `r8-solve-1`   L0  → L2   PROMOTED — the TRUE INITIAL BOOT
  *   2  `r8-solve-2`   L2  → L3   PROMOTED
@@ -37,8 +37,9 @@
  *  12  `r9-solve-3`   L3  → L2   RE-BOOTED — the `break` verb's room
  *  13  `r9-solve-2`   L2  → L0   NEW
  *  14  `r9-solve-0`   L0  → L13  NEW
- *  15  `r9-solve-13`  L13 → L14  NEW — and the chain STOPS at the L14 camera
- *                                band, which the route survey refuses (slice 8)
+ *  15  `r9-solve-13`  L13 → L14  NEW
+ *  16  `r9-solve-14`  L14 → L15  NEW — the SIX-BOB room, crossed by the
+ *                                PARRY-WALK (⚖ ruling 29(a), R9 slice 12b′)
  *
  * ── ⛔⛔ WHY THE LATCHES ARE MEASURED PER SEGMENT AND NOT IN ONE CONTINUATION
  *
@@ -83,7 +84,8 @@
  * `r8-solve-1..4`, which this chain promoted and did not re-author:
  *   node scripts/procgen/verify-seedling-bot-differential.mjs --win --record \
  *       --only=r8-solve-5,r8-solve-6,r8-solve-7,r8-solve-8,r8-solve-9,\
- * r8-solve-10,r9-solve-11,r9-solve-3,r9-solve-2,r9-solve-0,r9-solve-13,r9-campaign
+ * r8-solve-10,r9-solve-11,r9-solve-3,r9-solve-2,r9-solve-0,r9-solve-13,\
+ * r9-solve-14,r9-campaign
  */
 
 import { dirname, join } from 'node:path';
@@ -294,8 +296,15 @@ const SEGMENTS = [
     { name: 'r9-solve-0', level: 0, to: 13, goals: [reach(0, 13)],
         why: 'L0 — the overworld crossed a second time, south to L13' },
     { name: 'r9-solve-13', level: 13, to: 14, goals: [reach(13, 14)],
-        why: 'L13 — and the chain STOPS at L14, whose CAMERA BAND the route survey '
-            + 'refuses (route step 16). The refusal is the next work order, not a gap' },
+        why: 'L13 — a corridor and a door, into the six-bob room the next segment '
+            + 'crosses. ⛓ R9 slice 12b″: route step 16 was this chain\'s STOP for four '
+            + 'slices (the survey refused L14\'s camera band); slice 12b\' solved it and '
+            + '`r9-solve-14` records it, so L14 is a room the chain walks THROUGH now '
+            + 'rather than the arrival it parked at' },
+    { name: 'r9-solve-14', level: 14, to: 15, goals: [reach(14, 15)],
+        why: 'L14 — the SIX-BOB room, crossed by the PARRY-WALK (⚖ ruling 29(a)): '
+            + 'six presses, five bobs knocked back, none killed, no hit taken. The '
+            + 'chaser arm exists and this room does not need it' },
 ];
 
 /** ⛓ The head of the chain: the committed true start, read off disk. */
@@ -304,7 +313,7 @@ const HEAD_RAW = JSON.parse(readFileSync(join(TAPES, `${HEAD_NAME}.json`), 'utf8
 const HEAD = parseTape(HEAD_RAW);
 
 /**
- * ⛓⛓⛓ THE HEADLINE — ALL FIFTEEN ROOMS IN **ONE RUN**, so the segments have
+ * ⛓⛓⛓ THE HEADLINE — ALL SIXTEEN ROOMS IN **ONE RUN**, so the segments have
  * something to be tick-for-tick identical to. The ENDS-MEET arithmetic
  * (`sum(tick_count) === headline.tick_count`) and the stream-slice check are
  * exactly the rows that make a CUT a measurement rather than a declaration.
@@ -319,7 +328,7 @@ const HEADLINE = Object.freeze({
     name: 'r9-campaign',
     boot: HEAD.boot,
     goals: SEGMENTS.flatMap((s) => s.goals),
-    why: 'ALL FIFTEEN ROOMS IN ONE RUN — what the segments are sliced from',
+    why: 'ALL SIXTEEN ROOMS IN ONE RUN — what the segments are sliced from',
 });
 
 const stateOf = (t) => ({
@@ -555,7 +564,7 @@ for (let i = 0; !HEADLINE_ONLY && i < SEGMENTS.length; i += 1) {
     }
 }
 
-// ── the headline: ONE run over all fifteen goal lists ─────────────────
+// ── the headline: ONE run over all sixteen goal lists ─────────────────
 /**
  * ⛓ THE OFFSETS THE HEADLINE'S GAME-SOURCED CLEARS ARE REBASED BY — the solved
  * segments' own tick counts, or (under `--headline`, where nothing has been
@@ -726,16 +735,18 @@ function descriptionFor(r, i) {
 
 const HEADLINE_DESCRIPTION = '⛓⛓⛓ R9 SLICE 6 — THE HEADLINE of the custody chain '
     + '`r9-campaign`: every room of Seedling\'s sphere order from the TRUE INITIAL BOOT '
-    + `(\`new Game(0,80,128)\`, empty save) to the L14 arrival, driven by the live solver `
-    + 'in ONE RUN, so the fifteen segments have something to be tick-for-tick IDENTICAL '
+    + `(\`new Game(0,80,128)\`, empty save) to the L15 arrival, driven by the live solver `
+    + 'in ONE RUN, so the sixteen segments have something to be tick-for-tick IDENTICAL '
     + 'to. ⚖ Ruling 11 (user, 2026-08-20). Its cuts are the run\'s OWN ARRIVALS (R1\'s '
     + 'rule) and its two internal kill-lock rooms make it a v9 tape: L5\'s `{5,0}` and '
     + 'L8\'s `{8,0}`/`{8,1}` are `tset -1` clears `createLevelRun` takes AT CONSTRUCTION '
     + 'and the model does not WRITE, so the walk needs ticks only a solve can produce — '
     + 'the same `twoPassSolve` loop `r8-solve-18` was authored by — and carries every '
     + 'timed row SEQUENCE-ABSOLUTE. It CREDITS the goal ledger for the first time from '
-    + 'solver tapes: `sword@L10` and `chest@L11`. ⛔ The chain STOPS at L14, whose camera '
-    + 'band the route survey refuses; the refusal is the next work order. Authored by '
+    + 'solver tapes: `sword@L10` and `chest@L11`. ⛓ R9 slice 12b″ added the SIXTEENTH '
+    + 'room: L14, the six-bob room, crossed by the PARRY-WALK. The chain now STOPS at '
+    + 'L15, whose \'shove\' strategy the route survey refuses (route step 17); the '
+    + 'refusal is the next work order. Authored by '
     + 'scripts/procgen/solve-seedling-r9-campaign.mjs.';
 
 function tapeJson(obj, description, label) {

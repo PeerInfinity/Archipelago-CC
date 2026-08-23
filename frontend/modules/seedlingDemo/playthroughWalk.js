@@ -1134,8 +1134,8 @@ const CHAIN_DECLARATIONS = Object.freeze([
      * beginning of the game … recorded from the solver, not constructed
      * manually."*
      *
-     * FIFTEEN SEGMENTS in sphere order, from `new Game(0,80,128)` with an empty
-     * save to the L14 arrival, and it is the roster's SECOND CUSTODY CHAIN and
+     * SIXTEEN SEGMENTS in sphere order, from `new Game(0,80,128)` with an empty
+     * save to the L15 arrival, and it is the roster's SECOND CUSTODY CHAIN and
      * the FIRST one whose every segment is solver-authored. Every boot after
      * the first is its predecessor's MEASURED LATCH — `botSeam()` at a
      * `Game.begin()` entry, turned into blocks by `segmentBootFromLatch` — so
@@ -1150,9 +1150,13 @@ const CHAIN_DECLARATIONS = Object.freeze([
      * numbers COMPOUND, which is why `r8-solve-6`'s clock moved 346 rather than
      * the census's pairwise 254.
      *
-     * ⛔ IT STOPS AT L14 ON PURPOSE. Route-survey step 16 refuses L14's camera
-     * band, and a chain that walked past a refusal would be claiming a room
-     * nobody solved. The refusal IS the next work order.
+     * ⛔ IT STOPS AT L15 ON PURPOSE. A chain that walked past a refusal would be
+     * claiming a room nobody solved, so its tail is always the last route step
+     * the survey SOLVES — and the first one it refuses IS the next work order.
+     * ⛓ R9 slice 12b″ moved that stop by one room: step 16 (L14's camera band)
+     * was the frontier for four slices, slice 12b′ solved it at 145 ticks and
+     * `r9-solve-14` records it, so the refusal in front of the chain is now
+     * step 17 — L15's `'shove'` strategy, registered and not applying.
      *
      * ⛓ `r9-solve-11` IS NOT `r8-solve-11`. Both take `chest@L11`; the battery's
      * returns to L10 (its goals come from `act2-the-sword`'s own units) and this
@@ -1161,7 +1165,7 @@ const CHAIN_DECLARATIONS = Object.freeze([
     Object.freeze({
         id: 'r9-campaign',
         why: '⛓⛓⛓ R9 slice 6 — the TRUE-START SOLVER CHAIN: every room of Seedling\'s '
-            + 'sphere order from the game\'s own boot to the L14 arrival, each segment '
+            + 'sphere order from the game\'s own boot to the L15 arrival, each segment '
             + 'booting its predecessor\'s MEASURED latch, each walk derived by the live '
             + 'solver from goals read out of the atlas. ⚖ Ruling 11. It is the first '
             + 'chain to CREDIT the goal ledger from solver tapes.',
@@ -1170,6 +1174,7 @@ const CHAIN_DECLARATIONS = Object.freeze([
             'r8-solve-1', 'r8-solve-2', 'r8-solve-3', 'r8-solve-4', 'r8-solve-5',
             'r8-solve-6', 'r8-solve-7', 'r8-solve-8', 'r8-solve-9', 'r8-solve-10',
             'r9-solve-11', 'r9-solve-3', 'r9-solve-2', 'r9-solve-0', 'r9-solve-13',
+            'r9-solve-14',
         ]),
         /**
          * ⛓⛓⛓ THE FIRST GOAL-LEDGER ROWS A SOLVER CHAIN CREDITS. `R7_GOAL_LEDGER`
