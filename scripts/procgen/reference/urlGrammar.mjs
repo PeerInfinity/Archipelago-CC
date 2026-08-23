@@ -194,6 +194,29 @@ const PARAM_NOTES = {
     name: { field: { watch: 'name', lab: null }, codec: 'a string', terms: ['tape-name', 'tape'] },
     solve: { field: { watch: 'solve', lab: null }, codec: 'the literal `1`', terms: ['solver'] },
     tick: { field: { watch: 'tick', lab: null }, codec: 'readViewParams (a whole tick index)', terms: ['tick', 'view-setting'] },
+    /**
+     * ⛓⛓⛓ ⚖ R9 SLICE 13 — the user's watch-page item (iii), 2026-08-22:
+     * *"a URL parameter for the PHASE so demo links deep-link to a phase"*. The
+     * ladder was explicitly NOT in the URL until this slice; that rule was
+     * reversed for the PHASE and kept for the overlay stepper.
+     */
+    phase: {
+        field: { watch: 'phase', lab: null },
+        codec: 'the ledger ROW\'s own name, raw — resolved against the ladder AFTER the '
+            + 'model has run, never at read time',
+        terms: ['phase-ladder', 'ledger', 'view-setting'],
+        absentMeans: {
+            watch: 'ABSENT IS THE **FINISHED LEVEL**, which is where the page has always '
+                + 'opened — so the default leaves the bar byte-identical to every link ever '
+                + 'copied off this page, and the writer DELETES the key rather than spelling '
+                + 'it. ⛔ It names the ROW, not its index: a name is stable across seeds and '
+                + 'is what the label prints, while an index renumbers the day a pass-1 row is '
+                + 'inserted. A name this ladder does not have is REFUSED BY NAME in the '
+                + 'status line and on `__editorGenerate.phase.why`, never clamped to the '
+                + 'nearest row.',
+            lab: null,
+        },
+    },
     shot: { field: { watch: 'shot', lab: null }, codec: 'the literal `1`', terms: ['screenshot-flag', 'browser-row'] },
     directed: { field: { watch: null, lab: null }, codec: 'RETIRED — refuses by name', terms: ['directive', 'directed-attempt'] },
     budgetms: { field: { watch: null, lab: null }, codec: 'RETIRED — warns and is ignored', terms: ['wall-clock-budget', 'tick-budget', 'determinism'] },

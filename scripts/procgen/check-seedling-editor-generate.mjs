@@ -3320,6 +3320,69 @@ if (!host) {
 }
 
 /* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ ⚖ ITEM (iii) — `?phase=` GOES THROUGH THE **ONE** WRITER
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⛔ THE PROPERTY IS NOT "the phase reaches the bar" — `check-seedling-editor-
+ * phases` asserts that. It is that the phase reaches the bar THROUGH
+ * `writeGenerateParams`, the page's single writer, and not through a second
+ * `replaceState` of its own.
+ *
+ * ⛔ AND THE ONLY WAY TO TELL THOSE APART IS TO PRESS SOMETHING ELSE
+ * AFTERWARDS. A second writer produces a correct bar on the phase press and
+ * then loses to whichever call ran last: press a form control after moving the
+ * ladder and either the phase is dropped (the ordinary writer overwrote a bar
+ * it does not know about that key) or a stale one is carried. This row is that
+ * sequence, and it is what mutant (c) was built to red.
+ */
+{
+    const PHASE_BASE = 'source=generate&seed=2&biome=post-sword&count=0&elements=killgate';
+    await load(PHASE_BASE);
+    const names = await page.evaluate(() => window.__editorGenerate.phase.phases);
+    const NAME = names[2];
+    await page.click('#genPhaseNext');
+    await page.waitForFunction(() => window.__editorGenerate?.phase?.index === 0,
+        null, { timeout: 60000 });
+    // walk to row 2 the way a reader does
+    await page.click('#genPhaseNext');
+    await page.click('#genPhaseNext');
+    await page.waitForFunction(() => window.__editorGenerate?.phase?.index === 2,
+        null, { timeout: 60000 });
+    const afterPhase = await page.evaluate(() => window.location.search);
+    check(afterPhase.includes(`phase=${NAME}`),
+        `⛓⛓ pressing the ladder to \`${NAME}\` writes it to the bar`, afterPhase);
+    /**
+     * ⛔ NOW A CONTROL THAT KNOWS NOTHING ABOUT PHASES. `#genSeed` runs the
+     * ordinary writer over the whole bar; with ONE writer the phase survives
+     * because the writer owns that key too, and with two it does not.
+     */
+    const beforeCount = names.length;
+    await page.selectOption('#genLayer', 'off').catch(() => {});
+    await page.waitForFunction(() => window.__editorGenerate?.layer === 'off',
+        null, { timeout: 60000 });
+    const afterOther = await page.evaluate(() => window.location.search);
+    check(afterOther === afterPhase,
+        '⛔⛔ …and pressing a control that knows NOTHING about phases leaves the bar '
+        + 'byte-identical — one writer owns every key, so nothing overwrites the phase and '
+        + 'nothing carries a stale one',
+        `${afterPhase}
+        → ${afterOther}`);
+    /**
+     * ⛔ AND THE LINK STILL RELOADS TO ITSELF after that sequence — the fixed
+     * point taken at the END of a mixed press order, which is where a
+     * two-writer page drifts.
+     */
+    await load(afterOther.replace(/^\?/, ''));
+    const reloadedBar = await page.evaluate(() => window.location.search);
+    check(reloadedBar === afterOther,
+        '⛓⛓⛓ …and THAT bar is still a fixed point — reloading after a mixed press order '
+        + 'rewrites it to itself',
+        `${afterOther}
+        → ${reloadedBar}`);
+    void beforeCount;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
  * ⛓⛓⛓ ⚖ WATCH-PAGE ITEM (i) — COLLAPSE ALL / EXPAND ALL
  * ══════════════════════════════════════════════════════════════════════
  *

@@ -340,6 +340,25 @@ try {
         /* ── the three controls the entry names, PRESSED ────────────── */
         let driven = state;
         if (entry.phase) {
+            /**
+             * ⛓⛓⛓ ⚖ R9 SLICE 13 — **THE URL LANDS THERE BEFORE ANYTHING IS
+             * PRESSED**, and this row is what stops the arm below from being
+             * decoration.
+             *
+             * ⛔ Every entry that names a phase now carries `&phase=<name>` in
+             * its link (⚖ the user's watch-page item (iii)), and its prose no
+             * longer tells a reader to press `PHASE ▶` until a label matches.
+             * ⚠ THE ARM BELOW CAN NO LONGER TELL THE TWO BUILDS APART: it sets
+             * the slider to the index the readout already holds, so it passes
+             * whether the deep link worked or not. This row is asserted FIRST,
+             * on the state as LOADED, and it is the only row that gates the
+             * link. What the arm still gates is stated at its own foot.
+             */
+            check((state?.phase?.phases ?? [])[state?.phase?.index] === entry.phase,
+                `⛓⛓⛓ …and the URL LANDED on \`${entry.phase}\` with NO press — the entry's `
+                + 'link carries `&phase=`',
+                `index ${JSON.stringify(state?.phase?.index)} of `
+                + `${JSON.stringify(state?.phase?.phases ?? null)}`);
             // eslint-disable-next-line no-await-in-loop
             const at = await page.evaluate(([r, n]) => {
                 const i = (window[r]?.phase?.phases ?? []).lastIndexOf(n);
@@ -356,6 +375,23 @@ try {
                 await page.waitForFunction(([r, i]) => window[r]?.phase?.index === i,
                     [readout, at], { timeout: 60000 });
             }
+            /**
+             * ⛓ WHAT THIS ARM STILL GATES, NOW THAT THE URL DOES THE LANDING
+             * (R9 slice 13, and said out loud because a row whose subject has
+             * moved and whose label has not is trap 566's shape):
+             *
+             *   1. that the ledger really HAS the phase the entry names —
+             *      `lastIndexOf` over the READOUT's own list, which is still
+             *      the only thing that reds when a generator change renames or
+             *      drops a row (the `check` above);
+             *   2. that `#genPhase` is still WIRED — the slider is set and
+             *      dispatched and the readout has to follow, which is a claim
+             *      about the control and not about the URL.
+             *
+             * ⛔ It NO LONGER gates "a reader can reach this phase", because
+             * the reader arrives already there. That is why the landing row
+             * above exists and why it is asserted before this arm runs.
+             */
         }
         for (const id of entry.facts) {
             // eslint-disable-next-line no-await-in-loop

@@ -85,6 +85,7 @@ export const URL_GRAMMAR = frz({
                 "layers": null,
                 "level": null,
                 "name": null,
+                "phase": null,
                 "require": null,
                 "roster": null,
                 "run": false,
@@ -573,6 +574,35 @@ export const URL_GRAMMAR = frz({
                     ]
                 },
                 {
+                    "absentMeans": "ABSENT IS THE **FINISHED LEVEL**, which is where the page has always opened — so the default leaves the bar byte-identical to every link ever copied off this page, and the writer DELETES the key rather than spelling it. ⛔ It names the ROW, not its index: a name is stable across seeds and is what the label prints, while an index renumbers the day a pass-1 row is inserted. A name this ladder does not have is REFUSED BY NAME in the status line and on `__editorGenerate.phase.why`, never clamped to the nearest row.",
+                    "atDefault": "DELETED at the default",
+                    "codec": "the ledger ROW's own name, raw — resolved against the ladder AFTER the model has run, never at read time",
+                    "defaultField": "phase",
+                    "defaultIsUndefined": false,
+                    "defaultValue": null,
+                    "name": "phase",
+                    "retired": false,
+                    "terms": [
+                        "ledger",
+                        "phase-ladder",
+                        "view-setting"
+                    ],
+                    "via": [
+                        {
+                            "file": "frontend/modules/seedlingDemo/watchGenerate.js",
+                            "fn": "readGenerateParams",
+                            "how": "get",
+                            "role": "read"
+                        },
+                        {
+                            "file": "frontend/modules/seedlingDemo/watchGenerate.js",
+                            "fn": "writeGenerateParams",
+                            "how": "delete+set",
+                            "role": "write"
+                        }
+                    ]
+                },
+                {
                     "absentMeans": null,
                     "atDefault": "DELETED at the default",
                     "codec": "parseRequireList / parseItemRequireList",
@@ -1003,7 +1033,7 @@ export const URL_GRAMMAR = frz({
                 {
                     "file": "frontend/modules/seedlingDemo/watchGenerate.js",
                     "fn": "writeGenerateParams",
-                    "line": 462,
+                    "line": 479,
                     "role": "write"
                 }
             ],

@@ -598,6 +598,108 @@ const atPhase = async (index) => {
 }
 
 /* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ ⚖ WATCH-PAGE ITEM (iii) — `?phase=` IS A DEEP LINK
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⚖ The user, 2026-08-22: *"a URL parameter for the PHASE so demo links
+ * deep-link to a phase"*. CLAIM 1 already asserts the page OPENS on the
+ * FINISHED level and that row is UNCHANGED — absence still means FINISHED, and
+ * this parameter did not move the default. These rows are what it added.
+ *
+ * ⛔ FOUR PROPERTIES, AND THEY FAIL INDEPENDENTLY: it LANDS, the readout AGREES
+ * with the canvas about which row that is, the link is a FIXED POINT with the
+ * new key in it, and a name this ladder does not have is REFUSED BY NAME
+ * instead of clamped.
+ */
+{
+    const NAME = nodeSubject.ledger[2].phase;
+    const BASE = `source=generate&seed=${SUBJECT.seed}&biome=${SUBJECT.biome}`
+        + `&count=0&elements=${SUBJECT.elements}`;
+    const bar = () => page.evaluate(() => window.location.search);
+    /**
+     * ⛔ THE DEEP LINK LANDS — and the row asserts the NAME, not only the
+     * index. An index claim would pass on a page that had landed on the right
+     * NUMBER of a different ladder, which is exactly the confusion the
+     * name-not-index decision was taken to avoid.
+     */
+    const deep = await load(`${BASE}&phase=${NAME}`);
+    check(deep.phase.index !== null && deep.phase.phases[deep.phase.index] === NAME,
+        `⛓⛓⛓ ⚖ ITEM (iii): \`?phase=${NAME}\` OPENS ON THAT ROW — from the URL alone, `
+        + 'with no press',
+        `index ${deep.phase.index} of ${deep.phase.count} = `
+        + `${json(deep.phase.phases[deep.phase.index])}`);
+    /**
+     * ⛔ AND THE PAGE AGREES WITH ITSELF. The readout says one thing; the LABEL
+     * is what the reader sees. A deep link that moved the readout and left the
+     * label on `the FINISHED level` would pass the row above.
+     */
+    const shownLabel = await page.evaluate(
+        () => document.getElementById('genPhaseLabel').textContent);
+    check(shownLabel.includes(NAME) && !shownLabel.includes('FINISHED'),
+        '…and the LABEL on the page says so too — the readout and the picture agree',
+        json(shownLabel));
+    /**
+     * ⛔ THE FIXED POINT, WITH THE NEW KEY IN IT. `?phase=` is DELETED by the
+     * first `show()` and re-SET by `goToPhase`, and a `delete` followed by a
+     * `set` APPENDS — so the key lands at the END of the bar, and a reload has
+     * to produce the SAME string rather than shuffling it again. That is the
+     * exact drift `writeRosterParam`'s docblock records having broken once.
+     */
+    const first = await bar();
+    check(first.includes(`phase=${NAME}`),
+        '⛓⛓ …and the bar CARRIES the phase — a link copied from here names it', first);
+    await load(first.replace(/^\?/, ''));
+    const second = await bar();
+    check(second === first,
+        '⛓⛓⛓ …and RELOADING that link rewrites it to ITSELF — a fixed point WITH the new '
+        + 'key, not a parameter that migrates down the bar on every copy',
+        `${first}\n        → ${second}`);
+    /**
+     * ⛔ THE ABSENCE ROW (trap 478's family). Pressing `the FINISHED level`
+     * must take the key OUT, not set it to some spelling of "none": the
+     * default has to leave the bar byte-identical to every link ever copied
+     * off this page, and a round trip cannot see a writer that kept it.
+     */
+    await page.click('#genPhaseEnd');
+    await page.waitForFunction(() => window.__editorGenerate?.phase?.index === null,
+        null, { timeout: 60000 });
+    const ended = await bar();
+    check(!ended.includes('phase='),
+        '⛔ …and pressing `the FINISHED level` DELETES the key — the default leaves the bar '
+        + 'clean, it is not spelled',
+        ended);
+    /**
+     * ⛔⛔ A NAME THIS LADDER DOES NOT HAVE IS REFUSED **BY NAME** — spoken in
+     * the status line AND on the readout, and NOT clamped. A clamp would make
+     * a link naming a phase that does not exist look exactly like one naming a
+     * phase that does, and the reader would study the wrong picture.
+     */
+    const BAD = 'nosuchphase';
+    const refused = await load(`${BASE}&phase=${BAD}`);
+    const status = await page.evaluate(
+        () => document.getElementById('status').textContent);
+    check(refused.phase.index === null,
+        `⛔⛔ …and \`?phase=${BAD}\` is NOT CLAMPED — the page stays on the FINISHED level`,
+        `index ${json(refused.phase.index)}`);
+    check(typeof refused.phase.why === 'string' && refused.phase.why.includes(BAD)
+        && nodeSubject.ledger.every((r) => refused.phase.why.includes(r.phase)),
+    '⛔⛔ …it is REFUSED BY NAME on the readout, and the refusal LISTS the phases this run '
+        + 'really recorded',
+    json(refused.phase.why));
+    check(status.includes(BAD),
+        '…and the reader is told where they are looking — the status line carries it',
+        json(status.slice(0, 120)));
+    /**
+     * ⛔ AND A REFUSED PHASE LEAVES NO LIE IN THE BAR. The page did not go
+     * there, so the link must not claim it did.
+     */
+    check(!(await bar()).includes('phase='),
+        '…and the REFUSED name is not written back to the bar — the link cannot claim a '
+        + 'phase the page is not showing',
+        await bar());
+}
+
+/* ══════════════════════════════════════════════════════════════════════
  * ⛓⛓⛓ ⚖ WATCH-PAGE ITEM (ii) — THE THREE PHASE BUTTONS DO NOT DRIFT
  * ══════════════════════════════════════════════════════════════════════
  *

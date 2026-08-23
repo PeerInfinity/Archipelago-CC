@@ -381,6 +381,23 @@ export function readGenerateParams(search) {
         budget: {
             maxTicksPerTarget: int('tickbudget', DEFAULT_BUDGET.maxTicksPerTarget),
         },
+        /**
+         * ⛓⛓⛓ ⚖ ITEM (iii) — `?phase=`, RAW, AND THAT IS THE HONEST SHAPE.
+         *
+         * ⛔ EVERY OTHER PARAMETER HERE IS DECIDED AT READ TIME; this one
+         * CANNOT BE. Whether `carve` is a phase of THIS run is a property of a
+         * ledger that does not exist until the model has run, so a reader that
+         * "validated" it would either be validating nothing or would have to
+         * run the generator to answer a question about a string. It rides
+         * through raw, exactly as `?layers=` and `?attackhold=` do, and the
+         * decision is made where the ladder is — reported BY NAME rather than
+         * clamped, which is `?tick=`'s precedent one file over
+         * (`readViewParams`' `tickWhy`).
+         *
+         * ⚠ ABSENT IS `null` AND MEANS THE FINISHED LEVEL — the page's default
+         * since the ladder was built, unchanged by this parameter's existence.
+         */
+        phase: q.get('phase'),
         /** A payload to REPRODUCE and check against — see `agreementWithPayload`. */
         gen,
         /** RUN-ALL on load. `?run=1` is the CLI's own path to a finished level. */
@@ -462,7 +479,7 @@ export function readGenerateParams(search) {
 export function writeGenerateParams(search, {
     seed, biome, bounds, step, roster = null, payloadOwned = false,
     skeleton = DEFAULT_SKELETON, elements, areas = DEFAULT_AREAS, require = null,
-    size = SEEDLING_DEFAULTS, fill = FILL_DENSE,
+    size = SEEDLING_DEFAULTS, fill = FILL_DENSE, phase = null,
 } = {}) {
     const q = new URLSearchParams(search);
     if (payloadOwned) return q.toString();
@@ -577,6 +594,39 @@ export function writeGenerateParams(search, {
     writeAreasParam(q, areas);
     writeRequireParam(q, require, { grammar: parseItemRequireList });
     writeRunFlag(q, step);
+    /**
+     * ── ⛓⛓⛓ ⚖ WATCH-PAGE ITEM (iii), R9 SLICE 13 — `?phase=` ──────────
+     *
+     * ⚖ The user, 2026-08-22: *"a URL parameter for the PHASE so demo links
+     * deep-link to a phase"*. The ladder was explicitly NOT in the URL until
+     * this slice (arc-1's law for the maze's layer stepper, quoted at
+     * `goToPhase` and in `watch.html`); the user reversed it for generate-mode
+     * deep links, and both of those comments were rewritten to say so.
+     *
+     * ⛔ **DELETED AT THE DEFAULT**, like `?skeleton=` and the room contract
+     * and for the identical reason: FINISHED is where the page opens and where
+     * it has always opened, so a link to it must be byte-identical to every
+     * link ever copied off this page. `null` is FINISHED. The ABSENCE row is
+     * what gates this (trap 478's family) — a round trip cannot see a writer
+     * that kept `?phase=certification` on the finished level.
+     *
+     * ⛔ **REWRITTEN IN PLACE, NEVER DELETE-THEN-SET.** A `delete` followed by
+     * a `set` of the same key APPENDS it, which moved `?families=` past
+     * `?run=1` on the second load and broke the fixed point once already (see
+     * `writeRosterParam`'s docblock). `set` alone preserves an existing key's
+     * position.
+     *
+     * ⚠ NO VALIDATION HERE, deliberately — and this is the one place this
+     * writer breaks its own §8.6 law that *"the writer refuses what the reader
+     * would refuse"*. The reader CANNOT refuse a phase name: whether a name is
+     * on the ladder is a property of a LEDGER that does not exist until the
+     * model has run, so the refusal lives where the ladder does (`goToPhase`'s
+     * caller, by name, in the status line and on the readout). What this
+     * writer is handed is a name the page just navigated to, so there is
+     * nothing here for a check to disagree with.
+     */
+    if (phase === null || phase === undefined) q.delete('phase');
+    else q.set('phase', String(phase));
     return q.toString();
 }
 

@@ -5972,6 +5972,17 @@ async function runGenerate(params, lifetime) {
      * throw in the temporal dead zone.
      */
     let phaseIndex = null;
+    /**
+     * ⛓ ⚖ ITEM (iii) — WHY A `?phase=` WAS NOT HONOURED, if it was not.
+     *
+     * ⛔ A REFUSAL IS SPOKEN AND IS ON THE READOUT, never clamped. Silently
+     * landing on the nearest row would make a demo link that named a phase this
+     * ladder does not have look exactly like one that named a phase it does —
+     * and the reader would be studying the wrong picture with no way to tell.
+     * `null` is *no `?phase=` was refused*, which is also the state after a
+     * later press moves the page somewhere legal.
+     */
+    let phaseWhy = null;
     let genLayer = 'off';
     let selectedFacts = new Set();
     /**
@@ -6444,6 +6455,8 @@ async function runGenerate(params, lifetime) {
                 index: phaseIndex,
                 count: rows.length,
                 phases: rows.map((r) => r.phase),
+                /** ⛓ ⚖ ITEM (iii): the `?phase=` refusal, BY NAME. `null` = none. */
+                why: phaseWhy,
                 row: phaseIndex === null ? null : rows[phaseIndex],
                 selected: selectedPaintables(),
                 level: record,
@@ -6452,6 +6465,106 @@ async function runGenerate(params, lifetime) {
             overlays: overlayData(),
             legend: overlayData().legend,
         };
+    }
+
+    /**
+     * ── ⛓⛓⛓ THE ARM'S ADDRESS BAR — ONE WRITER, ONE `replaceState` ─────
+     *
+     * Everything that was inline in `show()` until R9 slice 13, moved out
+     * VERBATIM so that `goToPhase` can reach it too. Every value it names is
+     * `runGenerate`'s own closure state, so nothing is threaded through a
+     * parameter list; the one argument is the PHASE, because that is the only
+     * thing the two callers disagree about.
+     *
+     * ⛔ THE PHASE IS AN ARGUMENT AND NOT A READ OF `phaseIndex`, and the
+     * difference is real: `goToPhase` assigns `phaseIndex` before it awaits a
+     * re-draw, and `show()` may run inside that await. A writer that read the
+     * live variable would be writing whichever value won the race. The caller
+     * that KNOWS which phase it just moved to passes it.
+     *
+     * @param {number|null} at the phase index to name in the bar; `null` is
+     *   the FINISHED level, which is spelled by ABSENCE.
+     */
+    function rewriteUrl(at = phaseIndex) {
+        const q = new URLSearchParams(window.location.search);
+        q.set('goals', formatGoalsParam(state.model.goals));
+        q.delete('boot');
+        q.delete('level');
+        /**
+         * ── ⛓⛓⛓ AND THE FORM'S OWN VALUES WITH THEM (slice 1) ─────────
+         *
+         * ⛔ THE PANEL USED TO EDIT LOCAL VARIABLES AND NOTHING ELSE. Seed
+         * 3 → 9, press RUN-ALL, and the address bar still said `?seed=3`:
+         * the link named a level the page was not showing, on a page whose
+         * ONLY persistence is the URL. `writeGenerateParams` is the single
+         * writer and `readGenerateParams` the single reader — see that
+         * docblock for why `count` is `state.bounds.obstacleTarget`, why
+         * `run` is deleted rather than zeroed, and what `?gen=` does here.
+         *
+         * ⚠ WRITTEN FROM `state`, NOT FROM THE FORM. `show()` runs after the
+         * generation, so the state holds the arguments the record on screen
+         * was ACTUALLY made with — the form is where they came from, but it
+         * is the run that the link has to name.
+         */
+        const search = writeGenerateParams(q.toString(), {
+            seed: state.seed,
+            biome: state.biome,
+            bounds: state.bounds,
+            /** ⛓ ARC 5, SLICE 1 — from the STATE, like the skeleton: the room
+             *  the record on screen was really built in. Deleted at 10x10 /
+             *  `dense` by the writer. */
+            size: state.size,
+            fill: state.fill,
+            // ⛓ CONSTRUCTIVE SLICE 5: from the STATE — the kind the room on
+            // screen was really CARVED from, so a link cannot name a skeleton
+            // the page did not build. DELETED at the open room by the writer.
+            skeleton: state.skeleton,
+            /**
+             * ⛓⛓ SLICE 5a (D1) — THE THREE, from the RUN's own arguments.
+             *
+             * ⛔ `elements` COMES FROM THE LOCAL, NOT FROM `state.elements`, and
+             * the difference is the whole of *nobody said*: the state carries
+             * the REPORT of whatever the seam resolved (which under 4c's biome
+             * default is a `+` list on every level), while what the link has to
+             * name is what the CALLER asked for. Writing the resolved default
+             * back would freeze the biome's spec into the URL and a post-sword
+             * link would then reproduce a pre-sword element list.
+             * ⛓ `areas`/`require` are the caller's too, for the same reason,
+             * and both are also byte-identical to their reports' `spec`.
+             */
+            elements,
+            areas,
+            require,
+            // ⛓ SLICE 4: from the STATE, like every other parameter here — the
+            // palette the record on screen was really drawn from carries it,
+            // so the link cannot name a roster the run did not have.
+            roster: state.roster,
+            // ⛔ SLICE 12: NO `directives` ARGUMENT — ⚖ §3.9 took the list off
+            // the bar, so the writer has no such parameter and a link names the
+            // LADDER alone. `describeState` says so as soon as there is one.
+            step,
+            /**
+             * ── ⛓⛓⛓ ⚖ WATCH-PAGE ITEM (iii) — THE PHASE, ON THE ADDRESS BAR
+             *
+             * ⚖ The user, 2026-08-22: *"a URL parameter for the PHASE so demo
+             * links deep-link to a phase"*. This REVERSES the ladder's founding
+             * rule — see `goToPhase`'s docblock and `watch.html`'s, both
+             * rewritten in the same slice.
+             *
+             * ⛔ IT IS THE ROW'S **NAME**, NOT ITS INDEX. The name is what the
+             * label prints, what the demo prose says and what a reader types;
+             * it is also stable across seeds, while an index renumbers the day
+             * a pass-1 row is inserted — and the whole point of the parameter
+             * is that a demo link written today still lands on `carve`
+             * tomorrow.
+             *
+             * ⛔ AND FINISHED IS SPELLED BY ABSENCE, so the default leaves the
+             * bar exactly as clean as it has always been. `null` DELETES.
+             */
+            phase: at === null ? null : (ledgerOf()[at]?.phase ?? null),
+            payloadOwned: Boolean(payload),
+        });
+        window.history.replaceState(null, '', `${window.location.pathname}?${search}`);
     }
 
     async function show(why, { certifying = false } = {}) {
@@ -6861,66 +6974,17 @@ async function runGenerate(params, lifetime) {
          * one, silently. `?boot=`/`?level=` go, so a stale committed tape
          * cannot be re-read over the handed level.
          */
-        const q = new URLSearchParams(window.location.search);
-        q.set('goals', formatGoalsParam(state.model.goals));
-        q.delete('boot');
-        q.delete('level');
         /**
-         * ── ⛓⛓⛓ AND THE FORM'S OWN VALUES WITH THEM (slice 1) ─────────
+         * ── ⛓⛓⛓ THE ADDRESS BAR, THROUGH THE PAGE'S ONE WRITER ────────
          *
-         * ⛔ THE PANEL USED TO EDIT LOCAL VARIABLES AND NOTHING ELSE. Seed
-         * 3 → 9, press RUN-ALL, and the address bar still said `?seed=3`:
-         * the link named a level the page was not showing, on a page whose
-         * ONLY persistence is the URL. `writeGenerateParams` is the single
-         * writer and `readGenerateParams` the single reader — see that
-         * docblock for why `count` is `state.bounds.obstacleTarget`, why
-         * `run` is deleted rather than zeroed, and what `?gen=` does here.
-         *
-         * ⚠ WRITTEN FROM `state`, NOT FROM THE FORM. `show()` runs after the
-         * generation, so the state holds the arguments the record on screen
-         * was ACTUALLY made with — the form is where they came from, but it
-         * is the run that the link has to name.
+         * ⛓ R9 SLICE 13 MOVED THIS BLOCK OUT UNCHANGED, into `rewriteUrl`.
+         * `?phase=` is written by `goToPhase`, which re-draws through
+         * `showPhase()` and never calls `show()` — so the block had to become
+         * reachable from both, and the page's law is ONE writer and ONE
+         * `replaceState`. Adding a second `replaceState` in the ladder would
+         * have been the drift the fixed-point rows exist to catch.
          */
-        const search = writeGenerateParams(q.toString(), {
-            seed: state.seed,
-            biome: state.biome,
-            bounds: state.bounds,
-            /** ⛓ ARC 5, SLICE 1 — from the STATE, like the skeleton: the room
-             *  the record on screen was really built in. Deleted at 10x10 /
-             *  `dense` by the writer. */
-            size: state.size,
-            fill: state.fill,
-            // ⛓ CONSTRUCTIVE SLICE 5: from the STATE — the kind the room on
-            // screen was really CARVED from, so a link cannot name a skeleton
-            // the page did not build. DELETED at the open room by the writer.
-            skeleton: state.skeleton,
-            /**
-             * ⛓⛓ SLICE 5a (D1) — THE THREE, from the RUN's own arguments.
-             *
-             * ⛔ `elements` COMES FROM THE LOCAL, NOT FROM `state.elements`, and
-             * the difference is the whole of *nobody said*: the state carries
-             * the REPORT of whatever the seam resolved (which under 4c's biome
-             * default is a `+` list on every level), while what the link has to
-             * name is what the CALLER asked for. Writing the resolved default
-             * back would freeze the biome's spec into the URL and a post-sword
-             * link would then reproduce a pre-sword element list.
-             * ⛓ `areas`/`require` are the caller's too, for the same reason,
-             * and both are also byte-identical to their reports' `spec`.
-             */
-            elements,
-            areas,
-            require,
-            // ⛓ SLICE 4: from the STATE, like every other parameter here — the
-            // palette the record on screen was really drawn from carries it,
-            // so the link cannot name a roster the run did not have.
-            roster: state.roster,
-            // ⛔ SLICE 12: NO `directives` ARGUMENT — ⚖ §3.9 took the list off
-            // the bar, so the writer has no such parameter and a link names the
-            // LADDER alone. `describeState` says so as soon as there is one.
-            step,
-            payloadOwned: Boolean(payload),
-        });
-        window.history.replaceState(null, '', `${window.location.pathname}?${search}`);
+        rewriteUrl();
 
         $('genToSolve').disabled = false;
         $('genToManual').disabled = false;
@@ -7656,10 +7720,26 @@ async function runGenerate(params, lifetime) {
     /* ── ⛓⛓⛓ SLICE 5a — THE PHASE LADDER AND THE OVERLAY STEPPER ───────
      *
      * ⛔ EVERY ONE OF THESE IS A **VIEW** CONTROL: it re-DRAWS, it never
-     * regenerates, it does not touch the ladder and it is not written to the
-     * URL (arc-1's law for the maze's layer stepper, one substrate over). ⛓ And
-     * they hand over: at the LAST pass-1 row the label says *"pass 2 — use
-     * STEP"*, and today's STEP (obstacleTarget = k, re-run) is unchanged.
+     * regenerates and it does not touch the ladder. ⛓ And they hand over: at
+     * the LAST pass-1 row the label says *"pass 2 — use STEP"*, and today's
+     * STEP (obstacleTarget = k, re-run) is unchanged.
+     *
+     * ⛓⛓⛓ **AND THE PHASE **IS** IN THE URL NOW — ⚖ THE USER, 2026-08-22.**
+     * This comment used to end *"and it is not written to the URL (arc-1's law
+     * for the maze's layer stepper, one substrate over)"*, and R9 slice 13
+     * REVERSED that on the user's own item (iii): *"a URL parameter for the
+     * PHASE so demo links deep-link to a phase"*. Eight entries in the demo
+     * catalogue used to instruct a reader to press `PHASE ▶` until a label
+     * matched; they now name the phase in the link.
+     *
+     * ⚠ THE OVERLAY STEPPER IS **NOT** COVERED BY THE REVERSAL and keeps
+     * arc-1's law. The ruling was about the phase, and a display layer is not a
+     * step of the construction — the thing a deep link has to be able to name.
+     *
+     * ⛔ ONE WRITER STILL, AND ONE `replaceState`: `goToPhase` calls
+     * `rewriteUrl`, the same function `show()` calls. FINISHED is spelled by
+     * ABSENCE, so a link to the default is byte-identical to every link ever
+     * copied off this page.
      */
     const goToPhase = async (next) => {
         const rows = ledgerOf();
@@ -7677,7 +7757,56 @@ async function runGenerate(params, lifetime) {
             await show('back to the FINISHED level');
         } else {
             await showPhase();
+            /**
+             * ⛓⛓⛓ ⚖ ITEM (iii) — AND THE BAR FOLLOWS, THROUGH THE ONE WRITER.
+             *
+             * ⛔ `showPhase()` does NOT go through `show()`, which is where the
+             * arm's only `replaceState` lives — so without this line the ladder
+             * would move the page and leave the link naming the finished level.
+             * It calls `rewriteUrl`, the same function `show()` calls; a second
+             * `replaceState` here would be the drift the fixed-point rows exist
+             * to catch, and is the mutant this line is measured against.
+             *
+             * ⚠ `at` IS PASSED, not read: `phaseIndex` is assigned above and
+             * `showPhase` awaits, so the live variable is not reliably this
+             * call's answer. The caller that knows passes it.
+             */
+            rewriteUrl(at);
         }
+        // ⛓ A press that LANDS somewhere clears a standing `?phase=` refusal:
+        // the readout's `why` describes the page now, not a URL it once had.
+        phaseWhy = null;
+    };
+    /**
+     * ⛓⛓⛓ ⚖ ITEM (iii) — `?phase=<name>` RESOLVED AGAINST **THIS** LADDER.
+     *
+     * ⛔ A NAME THAT IS NOT ON THIS LADDER IS REFUSED BY NAME AND THE PAGE
+     * STAYS ON THE FINISHED LEVEL. It is not clamped to the nearest row, not
+     * rounded to the first, not silently ignored: the refusal names the phase
+     * that was asked for AND lists the phases this run actually recorded, in
+     * the status line where the reader is looking and on the readout where a
+     * row can assert it. ⚠ A clamp is the failure this repo keeps recording —
+     * a URL that names something the page cannot show, showing something else
+     * that looks right.
+     *
+     * ⚠ THE MATCH IS ON THE ROW'S OWN `.phase`, the same string the label
+     * prints and the writer writes. Nothing here normalises case or trims: a
+     * ladder row name is an identifier, and a reader who typed a near-miss is
+     * better served by being told than by being guessed at.
+     */
+    const applyPhaseParam = async (asked) => {
+        if (asked === null || asked === undefined || !lifetime.alive()) return;
+        const rows = ledgerOf();
+        const at = rows.findIndex((r) => r.phase === asked);
+        if (at >= 0) { await goToPhase(at); return; }
+        phaseWhy = `?phase=${asked} — this run's ladder has no such phase. It recorded `
+            + `[${rows.map((r) => r.phase).join(', ')}]`;
+        $('status').className = 'bad';
+        $('status').textContent = `⛔ ${phaseWhy}`;
+        // ⛔ REPUBLISHED so the readout carries the refusal too: a row that can
+        // only read the status TEXT is asserting on a sentence, not on state.
+        publishPhase();
+        renderPhaseNote();
     };
     lifetime.on($('genPhase'), 'input', () => goToPhase(Number($('genPhase').value)));
     lifetime.on($('genPhasePrev'), 'click',
@@ -7895,6 +8024,21 @@ async function runGenerate(params, lifetime) {
                 : `⛔ ?gen= DIFFERS in [${payload.__check.differences.join(', ')}]`);
         }
     }
+    /**
+     * ── ⛓⛓⛓ ⚖ ITEM (iii) — THE DEEP LINK, APPLIED **LAST** ────────────
+     *
+     * ⛔ AFTER EVERYTHING, BECAUSE THE LADDER MUST EXIST. `?phase=` names a row
+     * of a ledger the model records while it runs; applied before RUN-ALL, the
+     * directives or the payload's edits, it would be resolved against a ladder
+     * that is one, three or ten rows shorter than the one the reader is about
+     * to be handed — and would land on a different picture on a link that named
+     * a real phase. The generation has to finish first.
+     *
+     * ⛔ AND IT GOES THROUGH `goToPhase`, THE SAME FUNCTION THE BUTTONS CALL.
+     * A deep link is a press the URL made; a second path to the phase would be
+     * a second chance to disagree with the one the reader can produce by hand.
+     */
+    await applyPhaseParam(gp.phase);
 }
 
 /**
