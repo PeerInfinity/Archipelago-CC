@@ -167,14 +167,17 @@ describe('the policy — an ENUMERATION, checked against `combat.js`', () => {
     });
 
     it('⛔ a state for a refused class THROWS at birth, not at the press', () => {
-        expect(() => createEnemyDamage('Bob')).toThrow(/refused/);
-        // ⛓ R8 SLICE 6: `Spinner` WAS the second exemplar here and is now
-        // `modelled` — a debt's record is an assertion that must flip. The
-        // control is REPLACED rather than deleted (trap 62): `Jellyfish` is
-        // transcribed to the same depth in the same module as `Bob` and is
-        // deliberately unconverted, so it is the class where "transcribed"
-        // and "modelled" still visibly differ.
+        // ⛓ R8 SLICE 6: `Spinner` WAS an exemplar here and is now `modelled`.
+        // ⛓⛓ R9 SLICE 12: so is `Bob` — a debt's record is an assertion that
+        // must flip, and this is the second time this row has been asked to.
+        // The control is REPLACED rather than deleted (trap 62): `Jellyfish`
+        // is transcribed to the same depth in the same module as `Bob`, is a
+        // CHASER exactly as `Bob` is, and is deliberately unconverted — so it
+        // is still the class where "transcribed" and "modelled" visibly
+        // differ, and the row keeps a live negative rather than becoming an
+        // enumeration of successes.
         expect(() => createEnemyDamage('Jellyfish')).toThrow(/refused/);
+        expect(createEnemyDamage('Bob').as3).toBe('Bob');
         expect(createEnemyDamage('Spinner').as3).toBe('Spinner');
         expect(() => createEnemyDamage('Nonesuch')).toThrow(/no KILL_ARM_POLICY row/);
     });

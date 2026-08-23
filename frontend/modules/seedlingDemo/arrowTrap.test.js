@@ -226,11 +226,30 @@ describe('⛔ the damage, and it is ONE (trap 143)', () => {
      * is for. A `modelled` row here would have made `levelRun` predict a
      * fight it cannot see.
      */
-    it('⛔⛔⛔ `Bob` stays `refused` — an arrow does not lift the position problem', () => {
-        expect(KILL_ARM_POLICY.Bob.policy).toBe('refused');
-        expect(() => createEnemyDamage('Bob')).toThrow(/is `refused`/);
-        // ...and the refusal's reason is the reason: POSITION, not damage.
-        expect(KILL_ARM_POLICY.Bob.why).toMatch(/POSITION/);
+    /**
+     * ⛓⛓⛓ R9 SLICE 12 — THIS ROW WAS `Bob` STAYS `refused`, AND IT HAS FLIPPED.
+     *
+     * The claim it made was narrow and it was RIGHT: an arrow does not lift the
+     * position problem, so this slice's arm could not lift the policy. What
+     * lifted it was the PRESS arm — a responder synthesized from the run's live
+     * chaser bodies, `enemyHit`'s five gates driven against one, and the
+     * `classCount` ledger computed per kill. The reason the old row asserted
+     * (POSITION) is exactly what got paid.
+     *
+     * ⛔ SO THE ROW IS REPOINTED, NOT DELETED (trap 62). What this module still
+     * owns is that an ARROW does not do it: the damage arithmetic below is the
+     * arrow's, and `Jellyfish` — a chaser transcribed to the same depth and
+     * deliberately unconverted — keeps the live negative that stops this file
+     * becoming an enumeration of successes.
+     */
+    it('⛓ `Bob` is `modelled` now, and the arrow arm is NOT what lifted it', () => {
+        expect(KILL_ARM_POLICY.Bob.policy).toBe('modelled');
+        // The lift's own reason names the PRESS, not the arrow.
+        expect(KILL_ARM_POLICY.Bob.why).toMatch(/enemyHit/);
+        // ⛔ and the control that keeps this row honest: a chaser of the same
+        // depth that nothing has driven a press against.
+        expect(KILL_ARM_POLICY.Jellyfish.policy).toBe('refused');
+        expect(() => createEnemyDamage('Jellyfish')).toThrow(/is `refused`/);
     });
 
     it('⛓⛓ THREE arrows kill a default `Enemy`, and the i-frames floor it at 60 ticks', () => {

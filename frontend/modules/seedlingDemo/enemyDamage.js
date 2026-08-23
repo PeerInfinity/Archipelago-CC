@@ -260,19 +260,57 @@ export const KILL_ARM_POLICY = Object.freeze({
      * ⇒ a refusal retired without a driven witness is trap 101's shape, and
      * this slice's driven arm prices a CONTACT, not a press. It stays refused.
      */
+    /**
+     * ⛓⛓⛓ R9 SLICE 12 — THE FIFTH `modelled` ROW, AND THE FIRST CHASER.
+     *
+     * ⛔ THE REFUSAL'S OWN TERMS ARE WHAT RETIRED IT, and they were an itemised
+     * bill rather than a mood. It read: *"what a PRESS arm needs is the
+     * damage/death staging: `Enemy.hit`'s five gates against a chaser, the
+     * 25-tick die ANIMATION during which `totalEnemies()` still counts the
+     * body, and the `classCount` move in a room that has a kill lock"*. Each
+     * line is now paid by a driven mechanism rather than by an argument:
+     *
+     *   · THE FIVE GATES — `enemyHit` has always been class-agnostic; nothing
+     *     had ever handed it a bob. `levelRun`'s `Enemy` press branch does,
+     *     with the sword's own `{d: swordDamage, f: swordForce 5, t: "Sword"}`,
+     *     and every refusal it reports carries the gate that made it.
+     *   · THE ANIMATION — `createDieAnim` + `endAnim` -> `destroy` ->
+     *     `MOBILE_DEATH_FADE` -> removal is `stepChasersNow`'s existing
+     *     staging, driven by the ARROW path since R8 slice 3 and confirmed
+     *     against the game. A press kill JOINS it rather than opening a second
+     *     one, so `totalEnemies()` counts the corpse through all 25 ticks for
+     *     free.
+     *   · THE `classCount` MOVE — computed per kill by `killLockLedger` with
+     *     the corpse taken OUT of `bodiesAfter` (unlike `IceTurret`, whose
+     *     `death()` intercepts the removal so the count never moves). A room
+     *     with a kill lock and no `combat` roster REFUSES by name rather than
+     *     reporting a nil from a fiction.
+     *
+     * ⛔ AND THE POSITION HALF, which R8 slice 1 paid, is what makes the press
+     * aimable at all: a chaser has no census rect by construction, so
+     * `presses.pressRespondersIn` SYNTHESIZES its responder from the run's live
+     * bodies. A press audited against the `.oel` cell would aim at a spawn
+     * point the body left on its first chasing tick (trap 157's shape).
+     *
+     * ⚠ `PRESS_ARM_POLICY.Enemy` IS UNCHANGED AND STILL `refused`. That row is
+     * about the FAMILY arm and its reason is still true of it; this row is the
+     * per-class answer, and the per-class row is what decides — the same shape
+     * the `IceTurret` lift used, one class at a time.
+     */
     Bob: Object.freeze({
-        policy: 'refused',
-        why: 'a Bob death REMOVES the body (`endAnim` sets `destroy` after 25 ticks, then '
-            + 'eleven of `Mobile.death`), so `classCount(Bob)` drops and every '
-            + '`tset == -1` lock in the room can open. ⛓ R8 slice 1 paid the POSITION '
-            + 'half — `levelRun.stepChasersNow` drives `chasers.chaserStep` and the game '
-            + 'confirmed it byte-exact — and the row still refuses, because what a PRESS '
-            + 'arm needs is the damage/death staging: `Enemy.hit`\'s five gates against a '
-            + 'chaser, the 25-tick die ANIMATION during which `totalEnemies()` still '
-            + 'counts the body, and the `classCount` move in a room that has a kill lock '
-            + '(L5 — the one room the bridge cannot step). The L60 pair still shows the '
-            + 'honest alternative: drive the kill in the game and read the lock off the '
-            + 'stream.',
+        policy: 'modelled',
+        why: '⛓ THE PARRY-WALK\'s FOUNDATION. A Bob death REMOVES the body (`endAnim` '
+            + 'sets `destroy` after 25 ticks, then eleven of `Mobile.death`), so '
+            + '`classCount(Bob)` drops and every `tset == -1` lock in the room can open '
+            + '— which is why the ledger is COMPUTED at every press kill rather than '
+            + 'assumed nil, and why a kill-lock room without a `combat` roster refuses '
+            + 'by name. The damage half is `enemyHit` with the sword\'s own `{d, f, t}` '
+            + 'against the LIVE chaser state (R8 slice 1\'s position half is what makes '
+            + 'that state exist); the death half is `stepChasersNow`\'s existing '
+            + 'animation staging, which the ARROW path has driven against the game since '
+            + 'R8 slice 3. ⛔ The killing hit takes NO knockback and a non-killing one '
+            + 'is shoved by `swordForce` 5 from the PLAYER\'s entity point, which is '
+            + '`Enemy.as`\'s own ordering.',
     }),
     BobSoldier: Object.freeze({ policy: 'refused', why: 'the Bob cost plus a shield state nobody has transcribed' }),
     BobBoss: Object.freeze({ policy: 'refused', why: 'boss damage — the encounter SCRIPT owns it (`bobBoss.js`), not a press arm' }),

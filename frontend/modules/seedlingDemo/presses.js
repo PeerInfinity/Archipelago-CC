@@ -235,7 +235,7 @@ export function distanceRectPoint(px, py, r) {
  */
 export function pressRespondersIn(world, rect, {
     pushables: live = null, turrets = null, shieldBosses = null, finalBosses = null,
-    spinners = null,
+    spinners = null, chasers = null,
 } = {}) {
     if (!world.roles?.includes('blocking')) {
         throw new PressError(`pressRespondersIn: level ${world.level} was built without `
@@ -375,6 +375,65 @@ export function pressRespondersIn(world, rect, {
         }
         if (rectsOverlap(rect, r.rect)) hits.push(r);
     }
+    /**
+     * ⛓⛓⛓ R9 SLICE 12 — THE SIXTH NON-CONSTANT RECT, AND THE FIRST WITH NO
+     * CENSUS ROW TO OVERRIDE.
+     *
+     * ⛔⛔ THE FIVE ARMS ABOVE ARE JOINS; THIS ONE IS A SYNTHESIS, and the
+     * difference is a fact about the census rather than a style choice.
+     * `levelWorld.js`'s builder sends every `cls.type === 'Enemy'` to
+     * `pressEnemies` **with no rect at all**, and says why in as many words:
+     * *"a static rect for a chaser would be a fact about where it spawned, not
+     * about where the press lands"*. So there is nothing here to swap a rect
+     * ON — the responder has to be built from the run's live bodies or it does
+     * not exist.
+     *
+     * ⛔ WHICH MAKES THE ABSENT-STATE DEFAULT THE OPPOSITE OF THE OTHER FIVE.
+     * They read "absent run state is ALIVE and where the level built it",
+     * because their bodies really are where the level built them until
+     * something moves them. A chaser is never where the level built it — it
+     * leaves on its first chasing tick — so absent state here means **NO
+     * RESPONDER**, not a body at the `.oel` cell. A press in a room the run
+     * has no chaser state for reaches nothing, which is the honest answer and
+     * the conservative one.
+     *
+     * ⛓ `as3` IS THE ARM, `enemyClass` IS THE CLASS, and both are needed
+     * because `genericHit` dispatches on the arm while the damage decision is
+     * per class. `PRESS_ARMS`/`PRESS_ARM_POLICY` are keyed by ARM and have no
+     * `Bob` row by construction; `enemyDamage.KILL_ARM_POLICY` is keyed by
+     * CLASS and is where a bob's row lives. ⇒ `PRESS_ARM_POLICY.Enemy` stays
+     * the table that governs the family and the per-class row decides — which
+     * is exactly the shape the `IceTurret` lift used one subclass at a time.
+     *
+     * ⚠ AND A `removed` BODY DROPS OUT, the ShieldBoss's treatment rather than
+     * the turret's: `Player.slash` collects with `collideRectInto`, which walks
+     * the world's type lists, so a body `FP.world.remove` has drained is not a
+     * candidate at all.
+     */
+    if (chasers) {
+        for (const [id, c] of chasers) {
+            if (c.removed) continue;
+            if (!rectsOverlap(rect, c.rect)) continue;
+            hits.push({
+                tag: c.tag,
+                as3: 'Enemy',
+                enemyClass: c.as3,
+                chaserId: id,
+                // ⛔ THE PLACEMENT, not the live position: `x`/`y` are the
+                // census identity every id and every ledger row is keyed on
+                // (`tag@x,y`), and a caller that rebuilt the key from the live
+                // rect would miss on every tick after the first. The LIVE half
+                // is `rect`, which is the half a press is aimed with.
+                x: c.x,
+                y: c.y,
+                rect: c.rect,
+                live: true,
+                arm: PRESS_ARMS.Enemy.arm,
+                cost: PRESS_ARMS.Enemy.cost,
+                src: PRESS_ARMS.Enemy.src,
+            });
+        }
+    }
     // A bridge is a press responder and it is TERRAIN — the one arm of
     // `genericHit` that dispatches on `Tile`. Merged here so a caller
     // asking "what does this thrust touch" gets one answer rather than two
@@ -421,10 +480,10 @@ export function pressRespondersIn(world, rect, {
  */
 export function auditPress(world, rect, {
     weapon, intended = [], pushables = null, turrets = null, shieldBosses = null,
-    finalBosses = null, spinners = null,
+    finalBosses = null, spinners = null, chasers = null,
 } = {}) {
     const responders = pressRespondersIn(world, rect, {
-        pushables, turrets, shieldBosses, finalBosses, spinners,
+        pushables, turrets, shieldBosses, finalBosses, spinners, chasers,
     });
     const spearOnly = new Set(['LightPole', 'Tile']);
     const live = responders.filter(

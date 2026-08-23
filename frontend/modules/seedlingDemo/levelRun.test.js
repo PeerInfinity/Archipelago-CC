@@ -34,10 +34,11 @@ import { fileURLToPath } from 'node:url';
 // ⛓ R8 slice 3: the two staging counts are IMPORTED, never typed — the
 // animation's length is `chasers`' own derivation from `Bob.as:36`'s
 // `add("die", [3,4,5,6], 5)` and the fade's is `enemyDamage`'s loop.
-import { deathTicks } from './chasers.js';
-import { MOBILE_DEATH_FADE, PIT_FADE } from './enemyDamage.js';
+import { chaserBoxAt, deathTicks } from './chasers.js';
+import { MOBILE_DEATH_FADE, PIT_FADE, removalTicksAfterHit } from './enemyDamage.js';
 import { DEFAULT_TOLERANCE, chooseHeld, hasArrived } from './botDriverV1.js';
 import { distanceRectPoint, SLASH_REACH } from './presses.js';
+import { SWORD_FORCE } from './combatVerbs.js';
 
 const DEATH_ANIM_TICKS = deathTicks('bob');
 import { runTapeToStream } from './tapeRunner.js';
@@ -2243,5 +2244,194 @@ describe('⛓⛓⛓ arc 3 slice 2d: the memoised spinner forecast', () => {
         expect(run.spinnerForecast(4).length).toBe(4);
         expect(run.spinnerForecast(2.5).length).toBe(3);
         expect(run.spinnerForecast(7).length).toBe(7);
+    });
+});
+
+/**
+ * ⛓⛓⛓ R9 SLICE 12 — **THE PRESS ARM vs A CHASER**, driven end to end in L6.
+ *
+ * ⛔⛔ THE REFUSAL THIS RETIRES WAS AN ITEMISED BILL, and it is quoted here
+ * because the rows below are its line items. `KILL_ARM_POLICY.Bob` read: *"what
+ * a PRESS arm needs is the damage/death staging: `Enemy.hit`'s five gates
+ * against a chaser, the 25-tick die ANIMATION during which `totalEnemies()`
+ * still counts the body, and the `classCount` move in a room that has a kill
+ * lock"*. Each line is DRIVEN here, against the run, and none of it is
+ * asserted from a table.
+ *
+ * ⚠ `noDamage` IS FALSE, WHICH IS NOT THE SPINNER ARM'S CONFIGURATION AND
+ * CANNOT BE. Under that flag the run steps no chaser at all, so it has no live
+ * position to offer and `chaserPressBodiesNow` returns `null` by design — the
+ * press would reach nothing. A chaser press test therefore runs with damage
+ * live, and the player really can be hurt while it stands there.
+ */
+describe('R9 slice 12: the press arm vs a chaser', () => {
+    const src = atlasLevelSource();
+    const ID = 'bob@112,48';
+    const l6 = () => createLevelRun({
+        levelSource: src, boot: { level: 6, x: 80, y: 48 }, noclip: false, noHazards: [],
+        noDamage: false, grants: [], persistence: [], despawn: [], equips: [], pins: [],
+        save: null, rng: null, seam: { items: { hasSword: true } }, roles: ROLES,
+    });
+    const bodyOf = (run) => {
+        const c = run.chasers.find((x) => x.id === ID);
+        return c ? chaserBoxAt(c.tag, c.x, c.y) : null;
+    };
+    /**
+     * Walk east until the bob is in reach, press, then STAND STILL and let it
+     * come back — a knocked bob recoils 5 px and chases in again, which is what
+     * makes a three-hit kill reachable without walking into it.
+     */
+    const landedRows = (run) => run.chaserPressHits.filter((h) => h.landed);
+    const pressUntil = (run, wanted, cap = 600) => {
+        let presses = 0;
+        let last = -99;
+        for (let i = 0; i < cap; i += 1) {
+            // ⛔ THE LOOP IS DRIVEN BY THE LEDGER, NOT BY THE PRESS COUNT, and
+            // the difference is `SLASH_HIT_TICKS`: a press is issued on one
+            // tick and its five hit tests run on T+1..T+5, so a loop that
+            // stopped when the last press was ISSUED would read the ledger
+            // before the swing had touched anything. It stops when the swing
+            // has LANDED, which is also what makes the corpse timing below
+            // measurable from the kill's own tick.
+            if (landedRows(run).length >= wanted) break;
+            const b = bodyOf(run);
+            const reach = b ? distanceRectPoint(run.state.x, run.state.y, b) : Infinity;
+            if (reach <= SLASH_REACH && i - last >= 31 && presses < wanted) {
+                run.advance(new Set(['primary']));
+                presses += 1;
+                last = i;
+            } else {
+                run.advance(presses === 0 ? new Set(['right']) : new Set());
+            }
+            if (run.playerDeaths.length) break;
+        }
+        return landedRows(run).length;
+    };
+
+    it('⛓⛓⛓ a sword press LANDS on a live bob — the gate that had never been driven', () => {
+        const run = l6();
+        expect(pressUntil(run, 1)).toBe(1);
+        const landed = landedRows(run);
+        expect(landed).toHaveLength(1);
+        // `hits += d` with the sword's own damage 1, against `hitsMax` 3.
+        expect(landed[0].hits).toBe(1);
+        // `hitsTimer = hitsTimerMax` — the i-frame that refuses tests 2..5.
+        expect(landed[0].hitsTimer).toBe(30);
+        expect(landed[0].killed).toBe(false);
+        // `slash()`'s own gate is measured, not assumed: the rect collected it
+        // and `distanceRectPoint` is what let it land.
+        expect(landed[0].reach).toBeLessThanOrEqual(SLASH_REACH);
+        expect(landed[0].why).toBeNull();
+    });
+
+    /**
+     * ⛔ `Enemy.knockback(f, p)` — `a = atan2(y - p.y, x - p.x)` from the
+     * PLAYER's own entity point, which is what `genericHit` passes. The bob is
+     * EAST of the player when the swing lands, so the shove is +x and its
+     * magnitude is `swordForce` exactly.
+     */
+    it('…and the body is shoved by swordForce 5, AWAY from the player', () => {
+        const run = l6();
+        pressUntil(run, 1);
+        const [hit] = landedRows(run);
+        const k = hit.knockback;
+        expect(k).not.toBeNull();
+        expect(Math.hypot(k.dx, k.dy)).toBeCloseTo(SWORD_FORCE, 3);
+        expect(k.dx).toBeGreaterThan(0);
+    });
+
+    it('⛓⛓⛓ THREE hits kill, and the KILLING hit takes no knockback', () => {
+        const run = l6();
+        pressUntil(run, 3);
+        const landed = landedRows(run);
+        expect(landed.map((h) => h.hits)).toEqual([1, 2, 3]);
+        expect(landed.map((h) => h.killed)).toEqual([false, false, true]);
+        // ⛔ `Enemy.as`'s own ordering: `enemyHit` reports `knockedBack: false`
+        // on the kill, so the third row carries no vector at all.
+        expect(landed[2].knockback).toBeNull();
+        expect(landed[0].knockback).not.toBeNull();
+        const kills = run.chaserKills;
+        expect(kills).toHaveLength(1);
+        expect(kills[0]).toMatchObject({ id: ID, by: 'press', weapon: 'sword', hits: 3 });
+        // The hit test's own one-tick lag off the press — the arrow path's
+        // fencepost, shared rather than re-derived.
+        expect(kills[0].t).toBe(landed[2].t + 1);
+    });
+
+    /**
+     * ⛔⛔ THE LEDGER CONSEQUENCE IS COMPUTED, AND THE NIL IS A MEASUREMENT.
+     * "There were no kill locks" and "nobody looked" print the same thing, so
+     * the row carries the SCAN's own words.
+     */
+    it('⛔ the kill-lock ledger is SCANNED, not assumed — and L6\'s answer is nil', () => {
+        const run = l6();
+        pressUntil(run, 3);
+        const led = run.chaserPressKillLocks;
+        expect(led).toHaveLength(1);
+        expect(led[0].nil).toBe(true);
+        expect(led[0].opens).toEqual([]);
+        expect(led[0].why).toMatch(/scanned, not assumed/);
+    });
+
+    /**
+     * ⛔⛔⛔ THE DEATH IS AN ANIMATION, AND THE BODY IS COUNTED THROUGHOUT IT.
+     * `Bob.startDeath` plays "die" and does NOT set `destroy`; `endAnim` does,
+     * `MOBILE_DEATH_FADE` ticks later the fade ends, and only then is the body
+     * removed. Three fenceposts, and the model predicts the total — so the
+     * measurement is that the corpse leaves on exactly the predicted tick and
+     * not before.
+     */
+    it('⛓⛓ the corpse is still in the roster for the whole death animation', () => {
+        const run = l6();
+        pressUntil(run, 3);
+        const owed = removalTicksAfterHit('Bob', deathTicks('bob'));
+        // 25 ticks of "die" plus `MOBILE_DEATH_FADE` — DERIVED, then pinned so
+        // a change in either fencepost is visible here.
+        expect(owed).toBe(36);
+        // ⛓ MEASURED FROM THE KILL'S OWN TICK, which the ledger carries — not
+        // from wherever the press loop happened to stop.
+        const target = run.chaserKills[0].t + owed;
+        const seen = [];
+        while (run.ticksCompleted < target) {
+            run.advance(new Set());
+            seen.push({ t: run.ticksCompleted, in: run.chasers.some((c) => c.id === ID) });
+        }
+        // Present for every tick before the removal — the positive count the
+        // zero rests on, so a body that vanished on the killing blow reds here.
+        expect(seen.slice(0, -1).every((r) => r.in)).toBe(true);
+        expect(seen[seen.length - 1].in).toBe(false);
+        expect(seen[seen.length - 1].t).toBe(target);
+    });
+
+    /**
+     * ⛔ AND THE PLAYER IS NOT HURT BY ITS OWN KILL — the claim the parry-walk
+     * rests on, asserted on the driven walk rather than hoped for.
+     */
+    it('⛓ the whole three-press kill takes ZERO player hits', () => {
+        const run = l6();
+        pressUntil(run, 3);
+        expect(run.playerHits).toEqual([]);
+        expect(run.playerDeaths).toEqual([]);
+    });
+
+    /**
+     * ⛔⛔ THE RESPONDER IS SYNTHESIZED FROM LIVE STATE, AND ABSENT STATE MEANS
+     * NO RESPONDER — the opposite of the other five live-rect arms, whose
+     * bodies really are where the level built them until something moves them.
+     * This is the row mutant (c) reds: without the synthesis a press reaches
+     * nothing at all, and without this gate it reaches a body the run is not
+     * stepping.
+     */
+    it('⛔ under `noDamage` the run steps no chaser, so a press reaches none', () => {
+        const run = createLevelRun({
+            levelSource: src, boot: { level: 6, x: 80, y: 48 }, noclip: false,
+            noHazards: [], noDamage: true, grants: [], persistence: [], despawn: [],
+            equips: [], pins: [], save: null, rng: null,
+            seam: { items: { hasSword: true } }, roles: ROLES,
+        });
+        for (let i = 0; i < 40; i += 1) run.advance(new Set(['right']));
+        for (let i = 0; i < 12; i += 1) run.advance(new Set(['primary']));
+        expect(run.chaserPressHits).toEqual([]);
+        expect(run.chaserKills).toEqual([]);
     });
 });

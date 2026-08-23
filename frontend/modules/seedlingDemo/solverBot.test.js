@@ -667,11 +667,17 @@ describe('A3 — a kill refusal names the PRESS arm, on a room with no arrow tra
 
     /** ⛓ …and the OTHER press-arm refusal reaches the reader too: a body whose
      *  `KILL_ARM_POLICY` row is not `modelled` says SO, rather than being
-     *  reported as a room with no ceiling. */
+     *  reported as a room with no ceiling.
+     *
+     *  ⛓⛓ R9 SLICE 12: the exemplar WAS `bob`, whose row is `modelled` now —
+     *  the press arm paid its refusal. Repointed rather than deleted (trap 62)
+     *  to `jellyfish`, a chaser transcribed to the same depth in the same
+     *  module and deliberately unconverted, so the claim keeps a live subject
+     *  instead of quietly becoming vacuous. */
     it('⛓ an un-modelled body\'s own sentence survives the fallthrough', () => {
         const run = roomWithNoTrap();
-        run.world.combat.enemies = [{ tag: 'bob', x: 5, y: 5, counted: true }];
-        run.spinnerBodies = [{ id: 'bob@5,5', x: 5, y: 5 }];
+        run.world.combat.enemies = [{ tag: 'jellyfish', x: 5, y: 5, counted: true }];
+        run.spinnerBodies = [{ id: 'jellyfish@5,5', x: 5, y: 5 }];
         const { rejected } = resolveKillStrategy(run, { id: 'lock@3,4' }, []);
         expect(rejected[0].option).toMatch(/^press /);
         expect(rejected[0].why).toMatch(/KILL_ARM_POLICY/);

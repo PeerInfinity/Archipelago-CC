@@ -166,8 +166,8 @@ import { LEGACY_FADE_PER_LOAD } from './deadFrameBand.js';
 // tSet == -1 locks" — from a blanket policy into an arithmetic the run
 // computes at every kill.
 import {
-    ENEMY_DAMAGE_DEFAULTS, MOBILE_DEATH_FADE, PIT_FADE, enemyHit, killLockLedger,
-    removalTicksAfterHit,
+    ENEMY_DAMAGE_DEFAULTS, MOBILE_DEATH_FADE, MODELLED_KILL_ARMS, PIT_FADE, enemyHit,
+    killLockLedger, removalTicksAfterHit,
 } from './enemyDamage.js';
 // ⚠ `SWORD_FORCE` ONLY. `combatVerbs` owns the swing GEOMETRY, which this
 // file does not use — the press rect comes from `presses.slashRect` — but
@@ -1754,6 +1754,16 @@ export function createLevelRun({
      */
     const chaserKills = [];
     /**
+     * ⛓ R9 SLICE 12 — every PRESS that reached a chaser, landed or refused,
+     * with the reason a refusal carries. The spinner arm's `spinnerPressHits`
+     * shape: a press whose five tests are all refused on i-frames is a fact
+     * the executor needs, and a ledger that only recorded landings would print
+     * the same thing as a press that never reached.
+     */
+    const chaserPressHits = [];
+    /** ⛓ R9 SLICE 12 — what each press KILL opened, computed per kill. */
+    const chaserPressKillLocks = [];
+    /**
      * ⛓ The kill-lock consequence of every chaser removal, COMPUTED — `{t,
      * level, id, cause, opens, nil, why, declaredAt?}`. A nil row is the
      * measurement that the scan RAN; an `opens` row carries the tags and the
@@ -2893,6 +2903,49 @@ export function createLevelRun({
      * absent means REMOVED. So the map carries the removal explicitly and
      * `pressRespondersIn` skips it by name.
      */
+    /**
+     * ⛓⛓⛓ R9 SLICE 12 — the chaser half of `spinnerPressBodiesNow`, and the
+     * PLACEMENT is derived from the census rather than parsed back out of the
+     * id. The run's chaser record holds the CONSTRUCTED position (`e.cx`/`cy`,
+     * the ctor's half-tile offset) because that is what the physics needs; the
+     * id and every ledger row are keyed on the `.oel` PLACEMENT. Both are read
+     * from the one place that has them.
+     */
+    const chaserPressBodiesNow = () => {
+        /**
+         * ⛔⛔ THE SAME GATE `stepChasersNow` OPENS WITH, AND IT IS LOAD-BEARING
+         * RATHER THAN SYMMETRIC — the R8_D2_SHIELD roster caught its absence
+         * the first time this arm ran.
+         *
+         * Under `noclip`/`noDamage` the run does not step a chaser at all, so
+         * it has NO live position to offer and a press must not invent one.
+         * Worse, `chaserStateFor` is where `assertChaserSolidsBound` lives: a
+         * room holding both a bridged chaser and a type-rewriting enemy (L40)
+         * REFUSES BY NAME, and building the press census unconditionally made
+         * that refusal fire on a `noDamage` tape that presses in L40 and never
+         * goes near a bob. Asking the question is not free; the flags decide
+         * whether it may be asked at all.
+         */
+        if (noclip || noDamage) return null;
+        const st = chaserStateFor(level);
+        if (st.size === 0) return null;
+        const out = new Map();
+        for (const e of (world.combat?.enemies ?? [])) {
+            if (!isBridgedChaser(e.tag)) continue;
+            const id = `${e.tag}@${e.x},${e.y}`;
+            const c = st.get(id);
+            if (!c) continue;
+            out.set(id, {
+                tag: c.tag,
+                as3: c.as3,
+                x: e.x,
+                y: e.y,
+                rect: chaserBoxAt(c.tag, c.x, c.y),
+                removed: c.removed === true,
+            });
+        }
+        return out.size === 0 ? null : out;
+    };
     const spinnerPressBodiesNow = () => {
         const st = spinnerStateFor(level);
         if (st.byId.size === 0) return null;
@@ -4427,9 +4480,31 @@ export function createLevelRun({
             // i.e. the census box; there is no room where that is wrong,
             // because a room with no spinner has no spinner responder either.
             spinners: spinnerPressBodiesNow(),
+            // ⛓⛓⛓ R9 SLICE 12: and the chasers' — SYNTHESIZED rather than
+            // joined, because the census carries no rect for an `Enemy` at all
+            // (see `pressRespondersIn`). `null` in a room the run steps no
+            // bridged chaser in, which that function reads as "no responder"
+            // — the opposite of the other five arms' default, and right for a
+            // body that is never where the level built it.
+            chasers: chaserPressBodiesNow(),
         });
+        /**
+         * ⛓⛓⛓ R9 SLICE 12 — THE FAMILY ARM IS STILL THE TABLE THAT GOVERNS,
+         * AND THE PER-CLASS ROW IS WHAT DECIDES.
+         *
+         * `PRESS_ARM_POLICY.Enemy` is `refused` and STAYS refused: its reason
+         * ("a death moves totalEnemies(), which opens tSet == -1 locks") is
+         * true of the family and is exactly what a lift has to answer for, one
+         * class at a time — the shape the `IceTurret` lift used. So an
+         * `Enemy`-arm responder is not admitted by the family table; it is
+         * admitted when `enemyDamage.KILL_ARM_POLICY` says its CLASS is
+         * modelled, and refused with that row's own reason when it does not.
+         */
+        const enemyClassModelled = (r) => r.as3 === 'Enemy'
+            && MODELLED_KILL_ARMS.includes(r.enemyClass);
         const refused = audit.live.filter(
-            (r) => !MODELLED_PRESS_ARMS.has(r.as3) && !INERT_PRESS_ARMS.has(r.as3),
+            (r) => !MODELLED_PRESS_ARMS.has(r.as3) && !INERT_PRESS_ARMS.has(r.as3)
+                && !enemyClassModelled(r),
         );
         if (refused.length > 0) {
             throw new Error(`levelRun: the ${weapon} press at tick ${pressTick} in level `
@@ -5071,6 +5146,187 @@ export function createLevelRun({
                     hits.push({
                         as3: 'Watcher', id: w.id, landed: verdict.landed,
                         hits: w.hits, why: verdict.why,
+                    });
+                }
+            } else if (r.as3 === 'Enemy') {
+                /**
+                 * ── ⛓⛓⛓ R9 SLICE 12: THE SWING AT A CHASER ──────────────
+                 *
+                 * `Player.genericHit`'s `e is Enemy` arm — the family arm, the
+                 * one every enemy the chain does not name first falls to — so
+                 * the call is `Enemy.hit(swordForce 5, new Point(x, y),
+                 * swordDamage, "Sword")` and `enemyDamage.enemyHit` is the
+                 * transcription that receives it. It has always been the right
+                 * function; nothing had ever handed it a bob.
+                 *
+                 * ⛔⛔ THE FIVE GATES ARE DRIVEN, NOT ARGUED. R8's
+                 * `KILL_ARM_POLICY.Bob` refusal listed exactly what a slice
+                 * lifting it owed — `Enemy.hit`'s five gates against a chaser,
+                 * the death as an ANIMATION that `totalEnemies()` counts
+                 * through, and the `classCount` consequence in a room with a
+                 * kill lock. All three run here: the gates are `enemyHit`'s
+                 * own, the animation is `createDieAnim` staged by
+                 * `stepChasersNow` exactly as the ARROW path already stages it,
+                 * and the ledger below is COMPUTED rather than skipped.
+                 *
+                 * ⛓ AND THIS IS THE PLAYER HALF OF A CALL THE ARROW HALF HAS
+                 * BEEN DRIVING SINCE R8 SLICE 3. The staging is deliberately
+                 * `applyArrowHit`'s, line for line, with two differences that
+                 * are both facts about the source: the knockback angle is
+                 * measured from the PLAYER's entity point rather than the
+                 * arrow's (`genericHit` passes `new Point(x, y)` — the
+                 * player's), and the killing hit takes NO knockback at all
+                 * (`enemyHit` reports `knockedBack: false` on the kill, which
+                 * is `Enemy.as`'s own ordering).
+                 */
+                const st = chaserStateFor(level);
+                const c = st.get(r.chaserId);
+                if (!c) {
+                    throw new Error(`levelRun: the ${weapon} press at tick ${pressTick} `
+                        + `reaches ${r.chaserId} in level ${level}, which is not in the `
+                        + "run's chaser state. The press census and the run disagree "
+                        + 'about which bodies exist, which is the two-consumers failure '
+                        + 'this state family exists to prevent.');
+                }
+                const body = chaserBoxAt(c.tag, c.x, c.y);
+                /**
+                 * ⛔ `slash()`'s OWN GATE, WHICH IS NOT THE RECT'S. The rect
+                 * collected the body; `FP.distanceRectPoint` is measured again
+                 * per test and is what decides whether the hit lands. A chaser
+                 * moves ~0.22 px/tick under its own steam and up to 5 px on a
+                 * knockback, so across the five tests of one press the answer
+                 * can change — which is the Owl's lesson (trap: a knocked
+                 * receiver culls its own hit tests) arriving at a new class.
+                 */
+                const reach = distanceRectPoint(state.x, state.y, body);
+                if (reach > SLASH_REACH) {
+                    chaserPressHits.push({
+                        t: ticksCompleted, level, id: c.id, tag: c.tag, weapon,
+                        landed: false, killed: false, reach,
+                        hits: c.hits, hitsTimer: c.hitsTimer,
+                        why: `distanceRectPoint ${reach.toFixed(3)} > ${SLASH_REACH} — `
+                            + 'the rect reached it and `slash()`\'s own gate did not',
+                    });
+                    hits.push({ as3: 'Enemy', id: c.id, landed: false, killed: false });
+                } else {
+                    const before = {
+                        hits: c.hits, hitsTimer: c.hitsTimer, dying: c.dying === true,
+                        vx: c.v.x, vy: c.v.y,
+                    };
+                    const verdict = enemyHit(c, {
+                        d: weapon === 'spear' ? SPEAR_DAMAGE
+                            : (inventory?.hasDarkSword ? DARK_SWORD_DAMAGE : SWORD_DAMAGE),
+                        // `Player.as:116` — `swordForce = 5`.
+                        f: SWORD_FORCE,
+                        t: weapon === 'spear' ? 'Spear' : 'Sword',
+                        // ⛔ `Enemy.hit` carries `!Game.freezeObjects` INSIDE
+                        // its own gate, so a press during a ceremony damages
+                        // nothing while the i-frame it is waiting on keeps
+                        // running down. The two halves of "frozen" go opposite
+                        // ways (`enemyHitUpdate`'s asymmetry note).
+                        frozen: ceremony !== null,
+                    });
+                    if (verdict.knockedBack) {
+                        /**
+                         * `Enemy.knockback(f, p)` — `a = atan2(y - p.y,
+                         * x - p.x)` from the PLAYER's own entity point, which
+                         * is what `genericHit` passes. Its three gates (`p`,
+                         * `!destroy`, `currentAnim != "die"`) all hold on a
+                         * landed non-killing hit by construction: `enemyHit`
+                         * only reports `knockedBack` from arms that reached
+                         * `knockback` in the source.
+                         */
+                        const a = Math.atan2(c.y - state.y, c.x - state.x);
+                        c.v.x += verdict.force * Math.cos(a);
+                        c.v.y += verdict.force * Math.sin(a);
+                    }
+                    chaserPressHits.push({
+                        t: ticksCompleted, level, id: c.id, tag: c.tag, weapon,
+                        landed: verdict.landed, killed: verdict.killed, reach,
+                        hits: c.hits, hitsTimer: c.hitsTimer,
+                        knockback: verdict.knockedBack
+                            ? { dx: c.v.x - before.vx, dy: c.v.y - before.vy }
+                            : null,
+                        why: verdict.landed ? null : verdict.refusedAt,
+                    });
+                    if (verdict.killed) {
+                        /**
+                         * ⛔ `Bob.startDeath` is `play("die")` and does NOT set
+                         * `destroy` — `endAnim` does, `MOBILE_DEATH_FADE` ticks
+                         * after that, and `FP.world.remove` after that. Three
+                         * fenceposts, not one, and `stepChasersNow` already
+                         * walks them for the arrow path; a press kill joins the
+                         * same staging rather than opening a second one.
+                         */
+                        c.anim = createDieAnim(c.tag);
+                        chaserKills.push({
+                            t: ticksCompleted + 1,
+                            level,
+                            id: c.id,
+                            by: 'press',
+                            weapon,
+                            hits: c.hits,
+                        });
+                        assertChaserRemovalIsDeclared(c, 'a press kill');
+                        /**
+                         * ⛔⛔⛔ THE LEDGER CONSEQUENCE, COMPUTED — AND FOR THIS
+                         * CLASS IT IS NOT NIL BY CONSTRUCTION.
+                         *
+                         * The R4/R8 refusal this lifts was a claim about what a
+                         * death COSTS: `classCount(Bob)` drops and every
+                         * `tset == -1` lock in the room can open. Unlike the
+                         * `IceTurret` lift — where `death()` intercepts the
+                         * removal so the count never moves — a Bob really does
+                         * leave the roster, so the ledger is asked with the
+                         * corpse REMOVED from `bodiesAfter`. Where the answer
+                         * is nil (L14 holds no kill lock) that nil is a
+                         * MEASUREMENT, because "there were no kill locks" and
+                         * "nobody looked" print the same thing.
+                         */
+                        const census = world.combat?.enemies ?? null;
+                        const rosterBefore = (census ?? [])
+                            .filter((e) => !e.removed)
+                            .map((e) => ({ as3: e.as3 }));
+                        const led = killLockLedger(levelSource(level), {
+                            bodiesBefore: rosterBefore,
+                            // ⛓ THE CORPSE IS GONE FROM THE COUNT — the whole
+                            // difference from the turret arm. `totalEnemies()`
+                            // keeps counting it for the 25 ticks of the "die"
+                            // animation, which is what `removalTicksAfterHit`
+                            // carries; the LEDGER is the question of what the
+                            // count becomes once it is over.
+                            bodiesAfter: (() => {
+                                const i = rosterBefore.findIndex((b) => b.as3 === c.as3);
+                                return i < 0 ? rosterBefore
+                                    : [...rosterBefore.slice(0, i), ...rosterBefore.slice(i + 1)];
+                            })(),
+                        });
+                        /**
+                         * ⛔⛔ AN ABSENT CENSUS IS A REFUSAL, NOT A PASS, and
+                         * it is scoped to the case where the count is
+                         * load-bearing — the turret arm's lesson, honoured
+                         * rather than repeated. With no `combat` role the
+                         * roster is EMPTY, so the ledger would report "this
+                         * death opened nothing" from a fiction.
+                         */
+                        if (led.locks.length > 0 && census === null) {
+                            throw new Error(`levelRun: a press killed ${c.id} in level `
+                                + `${level}, which HAS ${led.locks.length} kill lock(s), `
+                                + 'and this run was built without the `combat` role — so '
+                                + 'the roster is empty and the `totalEnemies()` count the '
+                                + 'lock turns on is a fiction. Build the run with '
+                                + '`combat` to press here.');
+                        }
+                        chaserPressKillLocks.push({
+                            t: ticksCompleted, level, id: c.id,
+                            opens: led.opens.map((o) => ({ flag: o.flag, at: `${o.tag}@${o.x},${o.y}` })),
+                            nil: led.opens.length === 0,
+                            why: led.why,
+                        });
+                    }
+                    hits.push({
+                        as3: 'Enemy', id: c.id, landed: verdict.landed,
+                        killed: verdict.killed, hits: c.hits,
                     });
                 }
             }
@@ -10653,6 +10909,9 @@ export function createLevelRun({
         get arrowBodyHits() { return arrowBodyHits.map((h) => ({ ...h })); },
         /** One per chaser an ARROW killed — `{t, level, id, by, arrow, hits}`. */
         get chaserKills() { return chaserKills.map((k) => ({ ...k })); },
+        /** ⛓ R9 SLICE 12 — the press arm's own ledgers. */
+        get chaserPressHits() { return chaserPressHits.map((h) => ({ ...h })); },
+        get chaserPressKillLocks() { return chaserPressKillLocks.map((k) => ({ ...k })); },
         /**
          * The kill-lock consequence of every chaser removal, computed. A `nil`
          * row is the measurement that the scan RAN (the IceTurret arm's law:
