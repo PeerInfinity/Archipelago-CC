@@ -654,6 +654,29 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + 'tick — that enters a bridged room. The chain STOPS there because '
                 + 'route step 16 refuses L14\'s camera band, so the room is entered and '
                 + 'never walked, which is the parked-mover shape `r8-solve-3` has.',
+        }),
+        /**
+         * ⛓⛓⛓ R9 SLICE 12 — AND THE GUARD FOUND IT AGAIN, BY NAME, the first
+         * time the suite ran after the witness landed. That is the FIFTH slice
+         * running (trap 89), and the row is added here rather than folded into
+         * `exposedTapes` for the standing reason: a prediction edited after its
+         * measurement is not a prediction.
+         *
+         * ⛔ THIS ONE IS EXPOSED ON PURPOSE AND MORE DEEPLY THAN ANY BEFORE IT.
+         * `r8-l6-bob-contact` drove a CONTACT; this drives a PRESS, and it is
+         * the witness `KILL_ARM_POLICY.Bob`'s lift rests on. `noDamage` is FALSE
+         * — it has to be, because under that flag the run steps no chaser at
+         * all — so the player stands inside a live bob's leash for 180 ticks and
+         * the bridge prices every one of them.
+         */
+        Object.freeze({
+            name: 'r9-l6-bob-press', levels: Object.freeze([6]), bobs: 2, ticks: 192,
+            addedBy: 'R9 slice 12 (the press arm vs a chaser)',
+            why: 'the press arm\'s driven witness — the first tape on the roster in which '
+                + 'the PLAYER kills a bridged chaser. The game\'s own `--mobiles` readout '
+                + 'carries the body\'s `hits` 1 -> 2 -> 3, the 30-tick i-frame caught '
+                + 'mid-drain on each, the "die" animation at `hits === hits_max`, the fade '
+                + 'and the removal; the player takes ZERO hits throughout.',
         })
     ]),
 

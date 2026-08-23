@@ -109,12 +109,12 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 33,
+            "count": 34,
             "id": "plan"
         },
         {
             "browser": 22,
-            "count": 56,
+            "count": 57,
             "id": "probe"
         },
         {
@@ -184,13 +184,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 220,
+        "blockStyle": 222,
         "browser": 74,
         "cited": 73,
-        "files": 239,
+        "files": 241,
         "lineStyle": 19,
-        "withDocblock": 239,
-        "withFlags": 146
+        "withDocblock": 241,
+        "withFlags": 147
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -3626,6 +3626,27 @@ export const INSTRUMENTS = frz({
         },
         {
             "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-r9-l6-bob-press.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "oneLiner": "⛓⛓⛓ R9 SLICE 12 — **THE PRESS ARM'S DRIVEN WITNESS AGAINST A CHASER.**",
+            "path": "scripts/procgen/plan-seedling-r9-l6-bob-press.mjs"
+        },
+        {
+            "argvHelpers": [],
             "browser": true,
             "category": "probe",
             "citedBy": [],
@@ -4479,6 +4500,18 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "THE FRONTIER REPORT — why rules v1 cannot reach something, reduced to the few doors that actually cause it (R7 slice 4).",
             "path": "scripts/procgen/probe-seedling-r7-rules-frontier.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-r9-bob-press-mobiles.mjs",
+            "flags": [],
+            "oneLiner": "⛓⛓⛓ R9 SLICE 12 — **THE ENEMY-SIDE WITNESS**, because the differential cannot be one.",
+            "path": "scripts/procgen/probe-seedling-r9-bob-press-mobiles.mjs"
         },
         {
             "argvHelpers": [],

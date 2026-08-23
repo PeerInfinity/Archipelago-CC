@@ -282,15 +282,22 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             // L14 ARRIVAL — the tick the chain stops on, because route step 16
             // refuses that room's camera band.
             'r9-campaign', 'r9-solve-13',
+            // ⛓⛓⛓ R9 slice 12: the press arm's driven witness — the FIRST tape
+            // on the roster in which the PLAYER kills a bridged chaser, and the
+            // fifth slice running that this guard has named its own addition
+            // before a line of the stratum around it was written (trap 89).
+            'r9-l6-bob-press',
         ]);
-        // ⛓ 13 -> 11: `r7-act2-3` and `r7-act2-4` are off the roster, so the
-        // measurement cannot find them. The three that STAY (⚖ ruling 18) are
-        // still here, still exposed, still declared.
-        expect(out.exposed).toBe(11);
+        // ⛓ 13 -> 11 -> 12: `r7-act2-3` and `r7-act2-4` are off the roster, so
+        // the measurement cannot find them; slice 12's witness is the twelfth.
+        // The three that STAY (⚖ ruling 18) are still here, still exposed,
+        // still declared.
+        expect(out.exposed).toBe(12);
         expect(out.tapes).toEqual([
             'r7-act2-5', 'r7-act2-6', 'r7-act2-full',
             'r8-hammer-arm', 'r8-l6-bob-contact', 'r8-solve-3', 'r8-solve-4',
-            'r8-solve-5', 'r8-solve-6', 'r9-campaign', 'r9-solve-13',
+            'r8-solve-5', 'r8-solve-6', 'r9-campaign', 'r9-l6-bob-press',
+            'r9-solve-13',
         ]);
     });
 
@@ -349,6 +356,11 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             // the same reason L16 did.
             'r9-campaign': { tape: {}, levels: [4, 5, 6, 14] },
             'r9-solve-13': { tape: {}, levels: [14] },
+            // ⛓⛓ R9 slice 12's press witness, at its declared room — added
+            // here for the reason the comment above gives: the fixture is the
+            // declaration's MIRROR, and a ledger row missing from it turns this
+            // mutation back into a test about names.
+            'r9-l6-bob-press': { tape: {}, levels: [6] },
         });
         expect(() => assertBridgeExposureIsMeasured(io)).toThrow(/right name with wrong rooms/);
     });

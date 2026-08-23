@@ -1,0 +1,62 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 6,
+        "x": 80,
+        "y": 48
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": {
+        "items": {
+            "hasSword": true
+        }
+    },
+    "tick0": null,
+    "tick_count": 192,
+    "inputs": [
+        {
+            "key": "right",
+            "from": 0,
+            "to": 10
+        },
+        {
+            "key": "primary",
+            "from": 10,
+            "to": 11
+        },
+        {
+            "key": "primary",
+            "from": 73,
+            "to": 74
+        },
+        {
+            "key": "primary",
+            "from": 146,
+            "to": 147
+        }
+    ],
+    "name": "r9-l6-bob-press",
+    "description": "⛓⛓⛓ R9 SLICE 12 — THE PRESS ARM'S DRIVEN WITNESS AGAINST A CHASER. `KILL_ARM_POLICY.Bob` flipped `refused` -> `modelled` this slice and a refusal retired without a driven witness is trap 101; this is the witness. The player presses L6's `bob@112,48` to death and the GAME adjudicates every consequence the R8 refusal itemised: 3 LANDED hits out of 7 recorded hit TEST(s) (⛔ one press is FIVE tests and the RECEIVER decides — `enemyHit` sets `hitsTimer` 30, so tests 2..5 are refused on i-frames), a `swordForce` 5 knockback from the PLAYER's entity point on each NON-killing hit and NONE on the killing one, the death as an ANIMATION during which `totalEnemies()` still counts the body (36 ticks from the blow to the removal), and the `classCount` consequence COMPUTED — L6 holds no `tset -1` lock and that nil is scanned rather than assumed. ⚠ `noDamage` is **FALSE** and it has to be, which is the opposite of `r8-l18-spinner-press`: under that flag the run steps no chaser, so the press would reach nothing and the tape would witness an empty room. The player therefore stands in a live bob's leash unprotected for the whole exchange, and that it takes ZERO hits is one of the claims. The stance is CHOSEN, not derived — a witness is not a solve. Authored by scripts/procgen/plan-seedling-r9-l6-bob-press.mjs.",
+    "note": ""
+}

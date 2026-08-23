@@ -1211,6 +1211,13 @@
       "noHazards": []
     },
     {
+      "file": "r9-l6-bob-press.json",
+      "tickCount": 192,
+      "bootLevel": 6,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "r9-solve-0.json",
       "tickCount": 237,
       "bootLevel": 0,
