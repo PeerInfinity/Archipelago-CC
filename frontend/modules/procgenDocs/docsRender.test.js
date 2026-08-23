@@ -136,7 +136,11 @@ describe('⛓⛓ the anchors — two readers, 655 headings, one answer', () => {
         //   last act, the game agreeing digit for digit, the roster that could
         //   never have judged it, the one-policy strike, and HUNT = KILL).
         //   A re-pin, not a widening.
-        expect(total).toBe(682);
+        // ⛓ 682 → 686: R9 slice 12b′'s § (L14 crossed by the parry-walk) —
+        //   FOUR headings, its own plus three `####` (the three defects, the
+        //   stance derived, and what the enforcement bought).
+        //   A re-pin, not a widening.
+        expect(total).toBe(686);
     });
 
     it('⛔ uses OUR rule, not marked\'s slugger — they differ, and here is where', () => {
@@ -334,9 +338,12 @@ describe('⛓ the biggest document — the one the budget is about', () => {
         //   and witnessed, plus `useItem` as `input()`'s last act, the game
         //   agreeing digit for digit, the roster that could never have judged
         //   it, the one-policy strike, and HUNT = KILL).
+        // ⛓ 469 → 473: R9 slice 12b′'s § — four headings (L14 crossed by the
+        //   parry-walk, plus the three defects, the stance derived, and what
+        //   the enforcement bought and the fallback's only witness).
         const ids = idsOf(RENDERS.get('seedling-bot.md').html);
-        expect(ids).toHaveLength(469);
-        expect(new Set(ids).size).toBe(469);
+        expect(ids).toHaveLength(473);
+        expect(new Set(ids).size).toBe(473);
         expect(ids.filter((i) => i !== ghSlug(i))).toEqual([]);
     });
 

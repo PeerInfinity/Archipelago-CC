@@ -13315,3 +13315,142 @@ policy. That is a measured vacuity rather than a hold: the AVOID rung already
 routes every committed walk outside `SLASH_REACH` of any body, so the strike
 never had an opportunity to be opportunistic. No licence was spent and nothing
 needed re-recording.
+
+### R9 slice 12b′: L14 CROSSED BY THE PARRY-WALK — a derived stance, a flag that meant nothing, and a dwell that was never armed
+
+**L14 solves: 145 ticks, six presses, five bobs knocked back, none killed, ZERO
+hits.** That is ⚖ ruling 29(a)'s parry-walk word for word — *"start moving
+towards the exit, using the sword to knock back any bobs that get too close"* —
+and it is rung 1, AVOID, with the opportunistic strikes on it. The route survey
+goes **23/29 → 24/29**, exactly one row moved.
+
+#### The three defects, all in slice 12b's own work
+
+**1. `runDwell` never armed the policy.** The kill rung had handed it
+`{ticks, strike, why, until}` since 12b; the verb destructured three of those
+four keys and drove `NO_HELD` every tick. So the chaser arm — whose whole
+mechanism is that the body walks into sword reach and is struck — stood still
+for its entire bound holding nothing, and reported the untouched policy's own
+`strikes` (zero). An options key nobody destructures is a SILENCE, not an error.
+The row is the pair on L6's `bob@112,48`: armed, the bob dies at tick 215 and
+the player is untouched; unarmed, the same wait is HIT at tick 119.
+
+⚠ The verb's **"NO KEYS" invariant becomes "no WALK keys"** — an aim tick holds
+a direction key, so an armed dwell drifts off its stance by one tick of
+acceleration and its friction decay. That drift is priced where the stance is
+derived, which is the only place it can be priced without giving the probe
+information the walk cannot have.
+
+**2. `allowDash` was carried and never read**, which made its own docblock
+false: *"a corridor certified without the displacement is not the corridor the
+drive walks"* is a reason to REFUSE a press, and nothing refused one. The policy
+had no model of `slashTimer` at all, and its per-target `owed` rule does not
+bound the PLAYER — two bodies are two targets, so two presses two ticks apart
+are legal by that rule and the second one dashes. Standing at L14's boot for 260
+ticks, permitted: press gaps 57/34/26/**19/2**/31/**2**/31/**2**, and the run is
+hit once. Refused: 57/34/26/**20/20**/39, four `dashRefused` rows, no hit.
+
+⇒ a press is refused when it would land inside `ORDINARY_SWING_PERIOD` — the
+constant ⚖ ruling 36 derived, no new literal. Taken at the AIM (an aim spends a
+direction key, and a tick spent aiming at a press that will not be taken is a
+tick of drift for nothing) and asked BELOW the candidate scan (the dash window
+of 20 strictly contains the own-press-owed window of 5, so asking it first would
+swallow the per-target rejections the trace exists to carry).
+
+⛓ It closes the `slashRepeats` double-count **from the policy's side**: that
+defect needs two presses inside `SLASH_HIT_TICKS`, and a rule refusing two
+inside 20 refuses those a fortiori. ⚠ The model's own repair stays named and
+unfixed — `pendingThrust` is set for outcome `'slash'` **or `'dash'`** and the
+repeats push is gated only on the weapon, so a dash press APPENDS four more
+repeats while the first press's still fire. In the game `play("slashnarrow",
+true)` restarts the animation, so the pending hit ticks are REPLACED.
+
+**3. The dwell bound had no term for the thing that dominates it.** The arm
+passed `killWindowTicks(tag) * 3 + HOLD_SLACK` — 108 for every bob in every room
+— which is three landed hits through the receiver's i-frames plus slack, and
+says nothing about how long the body takes to WALK to the stance. The scan's
+ceiling is now the body's own travel time at its `moveSpeed` (the term
+`deriveBaitStance` already derives) plus those three windows plus the slack; the
+dwell's bound is the tick the preview says the body DIES, plus the slack. L14's
+four derive **102, 106, 116 and 148** — two above the old constant and two
+below, so the gap is not a margin anybody could have added.
+
+#### The stance, derived
+
+Four conditions, and not one of them is a disc:
+
+1. the **target inside its own leash** from the stance, centre to centre —
+   `Bob.update`'s own `FP.distance` and `chaserDanger`'s;
+2. **every other body outside reach for the DURATION**, asked by stepping them
+   against the previewed player over the whole wait. `dangerDuringTransit` with
+   each sample's own forecast bodies is the corridor probe's instrument re-used,
+   not a second danger model;
+3. **a safe corridor TO the stance** — the approach is part of the stance, so
+   `previewWalk` gained a **standing tail** and the wait is previewed as the
+   walk's own tail on one forecast, one policy and one clock. The wait therefore
+   begins with the bodies the walk left, not the ones the room booted;
+4. **a corridor onward.** ⚠ Asked only where it can discriminate: an aim may be
+   a goal ENTITY — L14's exit is a teleporter tile the planner refuses by name —
+   and a scan that asked an unanswerable question would refuse every cell in the
+   room and read as "no stance exists". That is what the first cut did.
+
+⛔ **A candidate that cannot be priced is rejected, not raised.** The corridor
+probe previews the one corridor the planner chose; this scan previews up to 289,
+so it reaches cells the planner never would. On L6 a candidate corridor enters
+Water on a tape without the `"sound"` pin and the physics throws by name. Only
+that refusal and the planner's own are caught; anything else is re-raised.
+
+The stance is **scored, not first-viable** (soonest kill, then shortest
+approach, then most bodies cleared, then y and x), the runners-up ride in the
+trace, and a body with no qualifying cell is **refused by name with three
+counts** — cells in leash, of those reachable, of those refused by the forecast,
+with the reasons. On L14: `bob@32,32` — the body the arm refused at 12b's head,
+127.1 px away against an 80 px leash — gets a stance **one lattice cell from
+it**, walked to in 158 ticks, with the kill at 234 and no contact anywhere.
+
+⚠ **"One stance clears one body" was a duration artefact** of 12b's 170-tick
+window, not a property of a stance. At 400 ticks L14's own boot clears four, and
+one derived dwell clears three in 73 ticks.
+
+**The chooser stays one chooser.** `chooseBodyToRemove` now returns its ordered
+set; BAIT and the ceiling arm take `[0]`, which is the body the single-return
+version handed them, so they do not move. The chaser arm re-reads it in
+INTERCEPT order, and the order is the corridor probe's own first-danger answer
+rather than a second forecast. On L14 the two differ by the whole room: by
+aim-distance the head is `bob@32,32` at the exit; by intercept it is
+`bob@128,64`, the body the corridor met.
+
+#### What the enforcement actually bought, and the fallback's only witness
+
+Reverting the dash enforcement does not stop L14 solving. It changes the RUNG:
+
+| | rung | ticks | decisions | hits |
+|---|---|---|---|---|
+| enforced (`allowDash: false`) | AVOID alone | **145** | 1 | 0 |
+| permitted (`allowDash: true`) | KILL / chaser, **twice** | **247** | 3 | 0 |
+
+The permitted trace is `kill(bob@128,64)` at stance (120,56), then
+`kill(bob@64,64)` at stance (104,72) — a dwell whose bound is 150, met at 73,
+clearing three bodies — and then AVOID certifies and the room crosses. ⇒ **the
+enforcement moved L14 from the fallback to the primary and cut the crossing from
+247 ticks to 145.**
+
+⚠ **That mutant is the fallback's only in-anger witness.** The committed room
+does not reach the chaser arm, so the arm's rows are one layer in, calling the
+derivation directly on L14's real boot. The first room that will need it in
+anger is route step 18, **L16**, and a chaser-roster refusal stands in front of
+it there.
+
+⚠ **The direction of "dashes are safer" is not uniform.** At one forecast stance
+the dashing policy takes no hits over 400 ticks where the enforced one is hit at
+tick 169; at L14's boot the sign is the other way. So it is a claim about a
+stance, not about the game — and ⚖ ruling 35's *complete model of how the dash
+works* is what settles it.
+
+⚠ **Ten producers' `--check` stayed byte-identical**, zero movers. The strike
+policy still never fires on a committed corridor, so the enforcement cannot bite
+there either — 12b's measured vacuity, one mechanism further in.
+
+⚠ **The stance scan costs 1.9–5.3 s per call** — the heaviest single call the
+solver makes, bounded by the same eight-cell reach `deriveBaitStance` uses and
+by the leash filter.
