@@ -148,6 +148,22 @@ for (const key of derived) {
 for (const key of known) {
     if (derived.has(key)) continue;
     if (ONLY && !key.includes(ONLY)) continue;
+    /**
+     * ⛔⛔ A QUOTED ROW IS *SUPPOSED* TO BE OUTSIDE THE DERIVATION, and the two
+     * halves of this file did not COMPOSE until this line existed. The row-list
+     * check reads "a row the derivation no longer produces ⇒ an instrument was
+     * retired"; `record-standing-value.mjs --quote` exists precisely to record
+     * a value the derivation CANNOT produce (a Windows/GPU run a headless
+     * session cannot make). Without this clause the first quoted row makes
+     * `--check` permanently red, which makes the quoting path unusable and
+     * would have sent the next slice back to transcribing by hand.
+     */
+    if (existing.rows[key]?.quoted) {
+        const q = existing.rows[key];
+        console.log(`QUOTED: ${key.padEnd(46)} ${q.value}   @${q.measuredAt}`
+            + `${q.why ? `\n        ⛓ ${q.why}` : ''}`);
+        continue;
+    }
     say(false, `the file carries a row the derivation no longer produces: ${key}`,
         'an instrument was retired — run --write');
 }
