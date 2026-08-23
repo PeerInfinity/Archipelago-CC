@@ -91,7 +91,7 @@ import {
 // `CHASERS` x `MODELLED_ENEMY_CLASSES`, never typed here.
 import {
     ENEMY_PIT_TILE, ENEMY_TERRAIN_DESTROYS, chaserBoxAt, chaserSolids, chaserStep,
-    createDieAnim, isBridgedChaser, stepSpriteAnim,
+    createDieAnim, deathTicks, isBridgedChaser, stepSpriteAnim,
 } from './chasers.js';
 import { CRUSHER, alwaysArmed, crusherRect, scanCrusher, stepCrusher } from './crusher.js';
 import {
@@ -159,7 +159,7 @@ import {
     DEATH_REBOOT, PLAYER_DAMAGE, canSteer, createPlayerDamage, playerHit, stepPlayerDamage,
 } from './playerDamage.js';
 import {
-    TYPE_REWRITING_ENEMIES, contactPricing, contactRect, enemyHitPlayerFires,
+    ENEMY_CLASSES, TYPE_REWRITING_ENEMIES, contactPricing, contactRect, enemyHitPlayerFires,
 } from './combat.js';
 import { LEGACY_FADE_PER_LOAD } from './deadFrameBand.js';
 // ⛓⛓⛓ R5 SLICE 21: the kill's LEDGER half. `killLockLedger` is what turns
@@ -5848,6 +5848,8 @@ export function createLevelRun({
         let fcam = cam ? { ...cam } : null;
         let fband = camBand ? { x: { ...camBand.x }, y: { ...camBand.y } } : null;
         let fshake = shake;
+        /** ⛓ R9 slice 12b: the forecast's OWN clock, for the death staging. */
+        let tickOffset = 0;
         const worldRec = world.world;
         const target = bossCameraTarget;
         let first = true;
@@ -5946,6 +5948,18 @@ export function createLevelRun({
                     c.y = r.y;
                     c.v = r.v;
                 }
+                // ⛓⛓ R9 SLICE 12b — THE I-FRAME RUNS DOWN IN THE FORECAST TOO.
+                // `enemyHitUpdate` decrements once per enemy update, and a
+                // preview that carried a press's knockback but not its i-frame
+                // would let the strike policy press again next tick into a body
+                // the game is still refusing.
+                for (const c of bodies.values()) {
+                    if (c.hitsTimer > 0) c.hitsTimer -= 1;
+                    if (c.dyingAt !== undefined && tickOffset - c.dyingAt >= c.removalTicks) {
+                        c.removed = true;
+                    }
+                }
+                tickOffset += 1;
                 return ids
                     .map((id) => bodies.get(id))
                     .filter((c) => c && !c.removed && !c.destroy)
@@ -5955,7 +5969,55 @@ export function createLevelRun({
                         x: c.x,
                         y: c.y,
                         rect: chaserBoxAt(c.tag, c.x, c.y),
+                        // ⛓ R9 slice 12b: what the STRIKE POLICY needs to
+                        // decide whether a press would do anything — the same
+                        // two fields `run.chasers` carries live, so the two
+                        // sides of the preview/drive equality ask the same
+                        // question of the same shape.
+                        as3: 'Enemy',
+                        enemyClass: ENEMY_CLASSES[c.tag]?.as3 ?? null,
+                        hits: c.hits,
+                        hitsTimer: c.hitsTimer,
                     }));
+            },
+            /**
+             * ⛓⛓⛓ R9 SLICE 12b — **A PRESS, APPLIED TO THE FORECAST'S OWN
+             * BODY**, so that a corridor certified WITH strikes is certified
+             * against the bodies those strikes actually leave behind.
+             *
+             * ⛔ WITHOUT THIS THE PROBE AND THE WALK ARE ABOUT DIFFERENT
+             * ROOMS. A non-killing sword hit throws the body back by
+             * `SWORD_FORCE` from the PLAYER's entity point and arms a 30-tick
+             * i-frame; the third kills it and it leaves the danger set after
+             * its death staging. A forecast that stepped the bodies but never
+             * struck them would price every ETA against a body the drive is
+             * about to move — the same class of error the whole chaser
+             * forecast was built to end, one mechanism further in.
+             *
+             * The staging is `applyThrust`'s, line for line: `enemyHit` with
+             * the sword's own `{d, f, t}`, the knockback angle measured from
+             * the PLAYER, and NO knockback on the killing hit.
+             */
+            hit(id, playerPos) {
+                const c = bodies.get(id);
+                if (!c || c.removed || c.destroy) return null;
+                const verdict = enemyHit(c, {
+                    d: inventory?.hasDarkSword ? DARK_SWORD_DAMAGE : SWORD_DAMAGE,
+                    f: SWORD_FORCE,
+                    t: 'Sword',
+                    // A preview never starts a ceremony, so nothing freezes.
+                    frozen: false,
+                });
+                if (verdict.knockedBack) {
+                    const a = Math.atan2(c.y - playerPos.y, c.x - playerPos.x);
+                    c.v.x += verdict.force * Math.cos(a);
+                    c.v.y += verdict.force * Math.sin(a);
+                }
+                if (verdict.killed) {
+                    c.dyingAt = tickOffset;
+                    c.removalTicks = removalTicksAfterHit('Bob', deathTicks(c.tag));
+                }
+                return verdict;
             },
         };
     }
@@ -10938,6 +11000,44 @@ export function createLevelRun({
          * stepper does not run, so there are no live positions to report and
          * this must not invent any.
          */
+        /**
+         * ⛓⛓⛓ R9 SLICE 12b — **THE BODIES THE STRIKE POLICY ASKS ABOUT,
+         * LIVE**, in exactly the shape `chaserForecast().step()` returns.
+         *
+         * ⛔ IT EXISTS SO THE TWO SIDES CANNOT DRIFT. The policy is consulted
+         * by the PREVIEW (against forecast bodies) and by the DRIVE (against
+         * these), and its whole value is that the corridor it certifies is the
+         * corridor that gets walked. Two hand-built body shapes would agree
+         * until one of them was edited; one getter and one forecast projection,
+         * written to the same four fields, cannot.
+         *
+         * ⚠ `as3` is 'Enemy' — the CLASS the press census dispatches on. The
+         * per-CLASS policy row (`KILL_ARM_POLICY[tag]`) is what decides whether
+         * a press is modelled, and the policy asks that separately; this field
+         * is the family, and naming it here keeps the two questions apart.
+         */
+        get strikeBodies() {
+            if (noclip || noDamage) return [];
+            const out = [];
+            for (const c of chaserStateFor(level).values()) {
+                if (c.removed || c.destroy) continue;
+                out.push({
+                    id: c.id,
+                    tag: c.tag,
+                    as3: 'Enemy',
+                    // ⛔ THE CLASS, WHICH IS WHAT THE POLICY ROW IS KEYED ON.
+                    // `as3` is the `genericHit` ARM and is `"Enemy"` for every
+                    // chaser; `KILL_ARM_POLICY.Enemy` is refused for the whole
+                    // family on purpose. `enemyClass` is `combat.js`'s own
+                    // per-tag name — the field `enemyClassModelled` reads.
+                    enemyClass: ENEMY_CLASSES[c.tag]?.as3 ?? null,
+                    rect: chaserBoxAt(c.tag, c.x, c.y),
+                    hits: c.hits,
+                    hitsTimer: c.hitsTimer,
+                });
+            }
+            return out;
+        },
         get chasers() {
             if (noclip || noDamage) return [];
             const out = [];

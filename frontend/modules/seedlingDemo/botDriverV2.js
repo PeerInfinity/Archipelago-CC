@@ -4729,9 +4729,17 @@ function runCollect(run, perTick, collect, maxTicks, what) {
  * an exit is reached by TOUCHING it, not by parking on it, and the trigger
  * fires from the position the previous tick left).
  */
+/**
+ * ⛓ R9 SLICE 12b — THIS FUNCTION IS ONE HALF OF ⚖ RULING 30(c)'s CLAIM: what
+ * `solverBot.previewWalk` CERTIFIES is what this DOES. It was already exported
+ * (the leg runners' own list below); the equality row in `solverBot.test.js`
+ * drives both from one starting state and compares the held-set sequences,
+ * because an equality asserted against a re-implementation of either side is
+ * an assertion about the re-implementation.
+ */
 function drive(run, target, perTick, {
     until, tolerance, maxTicks, what, avoidVolumes, contacts = EMPTY_CONTACTS,
-    extraVolumes = EMPTY_VOLUMES, crossTo = null, grazes = null,
+    extraVolumes = EMPTY_VOLUMES, crossTo = null, grazes = null, strike = null,
 }) {
     let ticks = 0;
     const touched = [];
@@ -4757,7 +4765,29 @@ function drive(run, target, perTick, {
         // ignore every one. A span one consumer honours and the other drops
         // is the asymmetry this format exists to prevent, so the driver
         // emits the same nothing the game acts on.
-        const held = run.state.fall ? NO_HELD : chooseHeld(run.state, target, tolerance);
+        let held = run.state.fall ? NO_HELD : chooseHeld(run.state, target, tolerance);
+        /**
+         * ⛓⛓⛓ R9 SLICE 12b — **THE OPPORTUNISTIC STRIKE, ON THE WALK SIDE OF
+         * THE ONE POLICY** (⚖ ruling 30(b), the user's own ask: *"add
+         * opportunistic sword attacks to all of the paths, AVOID, TIME, and
+         * BAIT, not just KILL"*).
+         *
+         * ⛓ THIS IS THE WHOLE CROSS-CUT. `drive` is the single `chooseHeld`
+         * walk loop the ladder has — every rung's approach, every re-plan,
+         * every `walkTo` — so one line here is "on every walk" rather than a
+         * change repeated five times and forgotten in a sixth.
+         *
+         * ⛔ IT NEVER REFUSES. `decide` hands back the walk's own keys when
+         * nothing is in reach, so a room with no bodies, no sword or no
+         * modelled arm walks exactly as it did before this slice — which is
+         * what makes the roster's silence on it meaningful rather than lucky.
+         *
+         * ⚠ THE AIM AND THE PRESS COST THE WALK TWO TICKS, and the preview
+         * spends the same two, which is why the ETAs still hold.
+         */
+        if (strike && !run.state.fall) {
+            held = strike.decide(run.state, run.strikeBodies, run.ticksCompleted, held).held;
+        }
         perTick.push(held);
         // Where the player was when the edge could have fired. A pit's
         // identity is the tile UNDER them, and after `advance` they are in

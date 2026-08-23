@@ -53,8 +53,13 @@ import { assertEscalationIsOrdered } from './r8Acceptance.js';
 import {
     ESCALATION_LADDER,
     OBSTACLE_STRATEGIES, STRATEGY_EXECUTORS, STRATEGY_REFINEMENTS, SolverRefusal,
-    resolveKillStrategy, solveSegment,
+    previewWalk, resolveKillStrategy, solveSegment, strikePolicyFor,
 } from './solverBot.js';
+// ⛓ R9 slice 12b — ⚖ ruling 30(c)'s equality is between these two exact
+// functions, so the row calls both rather than a stand-in for either.
+import { drive } from './botDriverV2.js';
+import { DEFAULT_TOLERANCE } from './botDriverV1.js';
+import { SLASH_HIT_TICKS } from './presses.js';
 // ⛓ R9 slice 1 (A3) — the kill lock's own tset, read from the module that owns it.
 import { KILL_LOCK_TSET } from './combat.js';
 import {
@@ -1162,5 +1167,147 @@ describe('⚖ slice 10: `SolverRefusal` carries the danger record', () => {
         expect(outside.dangerQueries).toEqual([]);
         expect(outside.rows).toEqual([]);
         expect(outside.perTick).toEqual([]);
+    });
+});
+
+describe('R9 slice 12b: the OPPORTUNISTIC STRIKE — one policy, two consumers', () => {
+    /**
+     * L6's two bobs, the room `r9-l6-bob-press` drives. A sword in the seam
+     * and `noDamage` FALSE, because a policy that only ever runs behind a
+     * shield is a policy nobody has tested.
+     */
+    const l6 = () => createLevelRun({
+        levelSource, boot: { level: 6, x: 80, y: 48 }, noclip: false, noHazards: [],
+        noDamage: false, grants: [], persistence: [], despawn: [], equips: [],
+        pins: ['dead_frames'], save: { totem_parts: [], keys: [], seal_parts: [] },
+        rng: null, seam: { items: { hasSword: true } }, roles: ROLES,
+    });
+    /** A corridor east, past `bob@112,48`. */
+    const WPS = [{ x: 128, y: 56 }];
+    const key = (h) => [...h].sort().join('+') || '-';
+
+    /**
+     * ⛓⛓⛓ **THE CLAIM THAT MAKES THE WHOLE POLICY SAFE** (⚖ ruling 30(c)):
+     * what the PROBE certifies is what the WALK does. Asserted as a held-set
+     * equality between `previewWalk` and `drive` themselves — not against a
+     * re-implementation of either, which would be an assertion about the
+     * re-implementation.
+     *
+     * ⛔ MUTANT (a): put the policy in one and not the other and this reds
+     * immediately, because the corridor the danger map priced is no longer
+     * the corridor the tape walks.
+     */
+    it('the PREVIEW and the DRIVE spend the same keys, tick for tick', () => {
+        const a = l6();
+        const pv = previewWalk(a, WPS, DEFAULT_TOLERANCE, { strike: strikePolicyFor(a) });
+        const previewHeld = pv.samples.map((x) => key(x.held ?? new Set()));
+
+        const b = l6();
+        const perTick = [];
+        const strike = strikePolicyFor(b);
+        drive(b, WPS[0], perTick, {
+            until: 'arrival', tolerance: DEFAULT_TOLERANCE, maxTicks: 200,
+            what: 'the equality row', avoidVolumes: false, strike,
+        });
+        const driveHeld = perTick.map(key);
+
+        expect(driveHeld).toEqual(previewHeld);
+        // ⚠ AND NOT VACUOUSLY: a corridor where the policy never fires would
+        // pass this row with both sides holding `right` throughout.
+        expect(strike.strikes).toBeGreaterThan(0);
+        expect(previewHeld.filter((h) => h.includes('primary')).length)
+            .toBe(strike.strikes);
+    });
+
+    it('…and the walk that strikes takes NO hits where the same walk without one does', () => {
+        const withStrike = l6();
+        const perTick = [];
+        drive(withStrike, WPS[0], perTick, {
+            until: 'arrival', tolerance: DEFAULT_TOLERANCE, maxTicks: 200,
+            what: 'armed', avoidVolumes: false, strike: strikePolicyFor(withStrike),
+        });
+        expect(withStrike.playerHits).toHaveLength(0);
+        // ⛓ AND THE PRESS LANDED — a walk that took no hits because it never
+        // met anything would prove nothing about the policy.
+        const landed = withStrike.chaserPressHits.filter((h) => h.landed);
+        expect(landed.length).toBeGreaterThan(0);
+        expect(landed[0].hits).toBe(1);
+    });
+
+    it('AIMS one tick and PRESSES the next — `slashDirection` is latched, not read', () => {
+        const run = l6();
+        const strike = strikePolicyFor(run);
+        const decisions = [];
+        for (let t = 0; t < 20; t += 1) {
+            const d = strike.decide(run.state, run.strikeBodies, run.ticksCompleted,
+                new Set(['right']));
+            decisions.push(d.decision);
+            run.advance(d.held);
+        }
+        const aimAt = decisions.indexOf('aim');
+        expect(aimAt).toBeGreaterThanOrEqual(0);
+        expect(decisions[aimAt + 1]).toBe('press');
+    });
+
+    /**
+     * ⛔⛔ MUTANT (b)'s ROW. `hitsTimer === 0` alone is the right question one
+     * tick too early: a press's tests run `T+1 … T+SLASH_HIT_TICKS`, so on the
+     * tick after a press the target's timer has not moved and a timer-only
+     * rule presses again into a hit that is already on its way.
+     */
+    it('refuses a second press while MY OWN last press still has hit tests to run', () => {
+        const run = l6();
+        const strike = strikePolicyFor(run);
+        let pressedAt = null;
+        for (let t = 0; t < 30; t += 1) {
+            const d = strike.decide(run.state, run.strikeBodies, run.ticksCompleted,
+                new Set(['right']));
+            if (d.decision === 'press') { pressedAt = run.ticksCompleted; }
+            run.advance(d.held);
+        }
+        expect(pressedAt).not.toBeNull();
+        const owedRows = strike.trace.filter((r) => (r.rejected ?? []).some(
+            (x) => /still has hit tests to run/.test(x.why)));
+        expect(owedRows.length).toBeGreaterThan(0);
+        // The window is the swing's own length, not a cadence.
+        const ticks = owedRows.map((r) => r.tick - pressedAt);
+        expect(Math.max(...ticks)).toBeLessThanOrEqual(SLASH_HIT_TICKS);
+    });
+
+    it('is INERT where it cannot help — no sword, and no bodies', () => {
+        const noSword = createLevelRun({
+            levelSource, boot: { level: 6, x: 80, y: 48 }, noclip: false, noHazards: [],
+            noDamage: false, grants: [], persistence: [], despawn: [], equips: [],
+            pins: ['dead_frames'], save: { totem_parts: [], keys: [], seal_parts: [] },
+            rng: null, seam: {}, roles: ROLES,
+        });
+        expect(strikePolicyFor(noSword)).toBeNull();
+        // ⛓ And `noDamage` empties `strikeBodies` by construction — the gate
+        // `stepChasersNow` opens with (trap 563), re-asked here because this
+        // is a new consumer of live chaser state.
+        const shielded = createLevelRun({
+            levelSource, boot: { level: 6, x: 80, y: 48 }, noclip: false, noHazards: [],
+            noDamage: true, grants: [], persistence: [], despawn: [], equips: [],
+            pins: ['dead_frames'], save: { totem_parts: [], keys: [], seal_parts: [] },
+            rng: null, seam: { items: { hasSword: true } }, roles: ROLES,
+        });
+        expect(shielded.strikeBodies).toEqual([]);
+        expect(strikePolicyFor(shielded)).toBeNull();
+    });
+
+    /**
+     * ⛔ THE ARM IS KEYED ON THE **CLASS**, NOT ON THE `genericHit` ARM — and
+     * this row exists because the first cut got it wrong. `as3` is `"Enemy"`
+     * for every chaser and `KILL_ARM_POLICY.Enemy` is `refused` on purpose
+     * (the family's row, whose reason a lift must answer one class at a time).
+     * The policy sat 5.9 px from a live bob and refused it with a TRUE
+     * sentence about the wrong subject.
+     */
+    it('reads the per-CLASS policy row, not the family arm', () => {
+        const run = l6();
+        for (const b of run.strikeBodies) {
+            expect(b.as3).toBe('Enemy');
+            expect(b.enemyClass).toBe('Bob');
+        }
     });
 });

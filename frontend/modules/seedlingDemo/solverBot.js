@@ -99,7 +99,7 @@ import {
 } from './dangerMap.js';
 import { planDash } from './mover.js';
 import { ARROW, arrowLaneForPlacement, arrowLaneRect } from './arrowTrap.js';
-import { bridgedChaserTags, chaserBoxAt } from './chasers.js';
+import { bridgedChaserTags, chaserBoxAt, killWindowTicks } from './chasers.js';
 import { createTraceBuilder } from './decisionTrace.js';
 import { DESTROYING_TILE_TYPES } from './pushables.js';
 import { rect, TILE_SIZE } from './levelWorld.js';
@@ -108,6 +108,9 @@ import { ENEMY_CLASSES, KILL_LOCK_TAGS, KILL_LOCK_TSET } from './combat.js';
 // receiver's i-frames, in one constant `killSchedule` has refused a smaller
 // value than since R5. The press arm never consulted it; the game found out.
 import { KILL_PRESS_CADENCE } from './combatVerbs.js';
+import {
+    STRIKE_PRESS, armIsModelled, createStrikePolicy,
+} from './strikePolicy.js';
 import { MOBILE_DEATH_FADE } from './enemyDamage.js';
 import { playerBoxAt } from './playerPhysicsV2.js';
 import { HITBOX, WALK_SPEED } from './playerPhysicsV1.js';
@@ -1454,7 +1457,38 @@ function senseContacts(run) {
  *
  * @returns {{samples: Array<{x,y,tick}>, startTick: number, truncated: ?object}}
  */
-function previewWalk(run, wps, tolerance = 0) {
+/**
+ * ⛓⛓⛓ R9 SLICE 12b — **THE ONE PLACE A STRIKE POLICY IS CONSTRUCTED.**
+ *
+ * ⚖ Ruling 30(c): what the probe certifies must be what the walk does. That is
+ * a claim about two objects being the SAME object in every respect that
+ * matters — so neither `previewWalk` nor `drive` builds one, and both are
+ * handed one built here. A second construction site is a second set of
+ * defaults, and defaults that differ by one flag are exactly how a certified
+ * corridor stops being the walked one.
+ *
+ * ⛔ RETURNS `null` WHEN THE ROOM CANNOT PRODUCE A STRIKE, so the caller's
+ * fast path is unchanged and a room with no sword or no bodies pays nothing:
+ * `run.strikeBodies` is empty under `noclip`/`noDamage` by construction (the
+ * gate `stepChasersNow` opens with — trap 563), and without a sword `set
+ * slashing`'s outer gate refuses every press anyway.
+ */
+export function strikePolicyFor(run) {
+    const hasSword = run.inventory?.hasSword || run.inventory?.hasGhostSword || false;
+    if (!hasSword) return null;
+    if ((run.strikeBodies ?? []).length === 0) return null;
+    return createStrikePolicy({ facingToward, facingKeys: FACING_KEYS, hasSword });
+}
+
+/**
+ * ⛓ EXPORTED FOR ONE REASON, and it is the same reason `facingToward` and
+ * `FACING_KEYS` are: the claim that repairs this slice is an EQUALITY between
+ * this function and `botDriverV2.drive`, and an equality asserted against a
+ * re-implementation of one side is an assertion about the re-implementation.
+ * `solverBot.test.js` calls both, from one starting state, and compares the
+ * held-set sequences.
+ */
+export function previewWalk(run, wps, tolerance = 0, { strike = null } = {}) {
     const startTick = run.ticksCompleted;
     const step = run.previewStepper();
     /**
@@ -1485,6 +1519,30 @@ function previewWalk(run, wps, tolerance = 0) {
      * it — same `chaserStep`, same order, same solids.
      */
     const chasers = run.chaserForecast?.() ?? null;
+    /**
+     * ⛔⛔⛔ R9 SLICE 12b — **THE STRIKE POLICY SEES THE PREVIOUS TICK'S
+     * BODIES, ON BOTH SIDES, AND THAT IS THE ONLY READING A DRIVER CAN HAVE.**
+     *
+     * The measurement that forced this: the first cut handed `decide` the
+     * bodies `chasers.step(st)` had just produced, and the preview/drive
+     * equality diverged at tick 10 with 8 strikes against 6.
+     *
+     * `stepChasersNow` runs ABOVE `stepV2` in the run's own tick, so by the
+     * time the GAME's `useItem` reads the world the bodies HAVE moved this
+     * tick — which makes the post-step reading the more accurate one about
+     * where the rect will land. ⛔ AND IT IS UNAVAILABLE. A driver commits its
+     * keys for tick k BEFORE tick k runs; `drive` can only ask
+     * `run.strikeBodies`, which is what tick k-1 left. A probe that certified
+     * a corridor using information the walk cannot have would certify
+     * corridors the walk cannot keep — pricing a walk nobody takes, one tick
+     * wide.
+     *
+     * ⇒ the preview LAGS its own forecast by one step for the policy's
+     * question only. The DANGER sampling below is untouched and still pairs
+     * the post-step bodies with the pre-move player, which is the game's own
+     * pairing and a different question.
+     */
+    let bodiesForPolicy = strike ? (run.strikeBodies ?? []) : null;
     let st = { ...run.state };
     let tick = startTick;
     const samples = [];
@@ -1526,11 +1584,57 @@ function previewWalk(run, wps, tolerance = 0) {
             // the same bodies would test a pair that never meets, which is
             // the arrows' note verbatim and true here for the same reason.
             const chaserBodies = chasers ? chasers.step(st) : null;
-            samples.push({ x: st.x, y: st.y, tick, arrows, chasers: chaserBodies });
+            const sample = { x: st.x, y: st.y, tick, arrows, chasers: chaserBodies };
+            samples.push(sample);
             // ⛔ `drive`'s own line, including the transport arm: a player in
             // flight presses nothing, and a preview that steered through a
             // fall would schedule ticks the game ignores.
-            const held = st.fall ? new Set() : chooseHeld(st, wp, tolerance);
+            let held = st.fall ? new Set() : chooseHeld(st, wp, tolerance);
+            /**
+             * ⛓⛓⛓ R9 SLICE 12b — **THE OPPORTUNISTIC STRIKE, ON THE PROBE
+             * SIDE OF THE ONE POLICY** (⚖ ruling 30(c)).
+             *
+             * This is the same object `drive` consults, asked the same
+             * question with the same shape of body, so the corridor is
+             * CERTIFIED WITH the strikes the walk will actually make — the aim
+             * ticks it spends, the presses it lands, and the knockback each
+             * one deals. A probe that priced a corridor without them would be
+             * pricing a walk nobody takes, which is the defect the chaser
+             * forecast itself was built to end, one mechanism further in.
+             *
+             * ⛔ THE PRESS IS APPLIED TO THE FORECAST'S BODY. `chasers.hit`
+             * runs `enemyHit` on the previewed body: a non-killing hit throws
+             * it back by `SWORD_FORCE` and arms its 30-tick i-frame, the third
+             * kills it, and it leaves the danger set after its death staging.
+             * So the samples AFTER a strike carry the room the strike made.
+             */
+            if (strike && bodiesForPolicy && !st.fall) {
+                // ⛓ `tick - 1` because `tick` was incremented at the top of
+                // this iteration while `drive` passes `run.ticksCompleted`,
+                // the count BEFORE the tick runs. One counter, two
+                // conventions — and the policy's `owed` window is measured in
+                // ticks, so the two must agree or one walk gets two answers.
+                const d = strike.decide(st, bodiesForPolicy, tick - 1, held);
+                held = d.held;
+                if (d.decision === STRIKE_PRESS && chasers) {
+                    // ⚠ ONE TICK LATE, exactly as the run is: `Player.update`
+                    // calls `slash()` ABOVE `super.update()`, so the press on
+                    // this tick fires its rect on the next one. The forecast is
+                    // told at the press and the body is struck here because the
+                    // preview has no second pass — which makes the previewed
+                    // hit land one tick EARLY against the drive's. Named
+                    // rather than hidden: it moves a knocked body 1 tick of
+                    // its own travel (~0.22 px), and the equality row below
+                    // measures whether that is visible in the held-set
+                    // sequence, which is the thing the corridor is made of.
+                    chasers.hit(d.target, st);
+                }
+            }
+            // ⛓ R9 slice 12b: the sample carries the KEYS this tick spends, so
+            // the preview/drive equality row has both sides of its claim.
+            sample.held = held;
+            // The policy's next reading — see `bodiesForPolicy` above.
+            if (strike) bodiesForPolicy = chaserBodies;
             st = step(st, held);
             if (st.transition) {
                 // A crossing ends the preview: the next level is a different
@@ -5492,6 +5596,105 @@ const KILL_BY_CEILING_BOUND = ARROW_KILL_FLOOR * 3 + HOLD_SLACK;
  * whose lane covers the target body. A presser that arms nothing over the
  * body is a button, not a weapon.
  */
+/**
+ * ⛓⛓⛓ R9 SLICE 12b — **THE KILL RUNG'S CHASER ARM. HUNT IS NOT A FIFTH RUNG**
+ * (⚖ ruling 30(d), the user: *"I'm not aware of any difference in strategy
+ * between HUNT and KILL"*).
+ *
+ * `deriveKillByCeiling` is the room's own weapon — a presser whose group arms
+ * a trap whose lane covers the body. **L14 has 0 pressers and 0 traps**, so
+ * that arm has nothing to offer and the rung used to end there, saying *"A
+ * PRESS arm is a `KILL_ARM_POLICY` question and this rung does not open one
+ * (trap 101)"*. Slice 12 opened it: `KILL_ARM_POLICY.Bob` is `modelled` and
+ * the game has adjudicated a press against a live bob.
+ *
+ * ⛔ THE STANCE IS THE WHOLE VERB, AND A CHASER IS WHY IT WORKS. This body
+ * comes to the player — that is what makes it dangerous and it is also what
+ * makes it killable without chasing it. So the arm is: stand where the walk
+ * cannot be reached from behind, let the body close, and let the OPPORTUNISTIC
+ * STRIKE do the pressing. There is no second press schedule here and there
+ * must not be: one policy decides every press this ladder makes (⚖ ruling
+ * 30(b)/(c)), and a rung that grew its own would be the two-consumers failure
+ * the whole slice is built to avoid.
+ *
+ * ⚠ **AND IT IS ONLY REACHED WHEN THE WALK-WITH-STRIKES COULD NOT BE
+ * CERTIFIED.** ⚖ Ruling 30(d): the opportunistic strike is the primary and
+ * this is the fallback. By the time the ladder is here, AVOID has already
+ * probed the corridor WITH strikes and found a hit anyway.
+ *
+ * ⛓ NOT FIRST-VIABLE (kickoff §22.9's warning about `deriveStrike`): the
+ * candidate stances are SCORED and the best is taken, with the runners-up
+ * carried so the trace can answer "why there".
+ */
+function deriveKillByChaser(run, body, contacts) {
+    if (!(run.strikeBodies ?? []).some((b) => b.id === body.id)) {
+        return { stance: null, why: `${body.id} is not a body this run steps — the chaser `
+            + 'arm needs a live position, and a static census body has none' };
+    }
+    const target = run.strikeBodies.find((b) => b.id === body.id);
+    if (!armIsModelled(target)) {
+        return { stance: null, why: `KILL_ARM_POLICY.${target.enemyClass} is not `
+            + '`modelled`, so a press against it is not something this model may claim' };
+    }
+    /**
+     * ⛔⛔⛔ **THE BODY MUST BE ABLE TO COME, AND THE FIRST CUT OF THIS ARM DID
+     * NOT ASK.** Measured on L14, which is what the check is made of.
+     *
+     * A stand-and-strike works because a CHASER walks at the player: that is
+     * what makes it dangerous and it is also what makes it killable without
+     * chasing it (`r9-l6-bob-press`'s hand stance — "stand still and let it
+     * come back" — and the game adjudicated it). ⛔ But a chaser only chases
+     * INSIDE ITS LEASH. `CHASERS.bob`'s is 80 px, and the body the ladder
+     * hands this arm is the one whose danger blocks the CORRIDOR — which on
+     * L14 is `bob@32,32`, **126 px from where the walk stands**. It will never
+     * arrive. The wait is unbounded, and the first cut spent it standing still
+     * while the room's other five bobs closed in and one of them landed a hit
+     * at tick 106.
+     *
+     * ⇒ the arm REFUSES BY NAME when the target cannot reach the stance,
+     * rather than waiting for something that is not coming. ⛓ And the same
+     * measurement says the mechanism is sound where it applies: standing at
+     * L14's own boot the policy struck `bob@128,64` twice over 140 ticks and
+     * took ZERO hits.
+     *
+     * ⚠ A stance DERIVED to put the target inside its leash and the others
+     * outside theirs is the real fix and it is not built here — it needs a
+     * stance audit over the whole forecast, which is work with a measurement
+     * behind it now but no driven witness yet. Named as the bound.
+     */
+    /**
+     * ⛓ THE LEASH IS `ENEMY_CLASSES[tag].aggro.range`, WHICH IS WHERE THE
+     * DANGER MAP READS IT TOO — its refusals say "inside leash 80" from this
+     * same field. `CHASERS` transcribes the STEP; `combat.js` prices the
+     * aggro, and quoting the pricing table is what keeps the two agreeing.
+     */
+    const leash = ENEMY_CLASSES[target.tag]?.aggro?.range ?? null;
+    if (leash === null) {
+        return { stance: null, why: `no aggro range is priced for ${target.tag} in `
+            + '`ENEMY_CLASSES`, so this arm cannot say whether the body would ever '
+            + 'reach a stance' };
+    }
+    const gap = distanceRectPoint(run.state.x, run.state.y, target.rect);
+    if (gap > leash) {
+        return { stance: null, why: `${body.id} is ${gap.toFixed(1)} px from the walk and `
+            + `\`ENEMY_CLASSES.${target.tag}.aggro.range\` is ${leash} — it does not `
+            + 'chase from there, so a stand-and-strike would wait for a body that is '
+            + 'never coming '
+            + 'while the room\'s OTHER bodies close in (measured on L14: hit at tick 106). '
+            + 'A stance derived to put THIS body inside its leash and the others outside '
+            + 'theirs is the fix, and it is not built.' };
+    }
+    return {
+        stance: { x: run.state.x, y: run.state.y },
+        target,
+        why: `${body.id} is a \`modelled\` press target (KILL_ARM_POLICY.`
+            + `${target.enemyClass}) ${gap.toFixed(1)} px away, inside its ${leash} px `
+            + 'leash — so it CHASES, the stance is where the walk already stands, and the '
+            + 'wait is the verb. The presses are the one opportunistic strike policy '
+            + 'every walk uses, not a second schedule.',
+    };
+}
+
 function deriveKillByCeiling(run, body, contacts) {
     const world = run.world;
     const traps = world.arrowTraps ?? [];
@@ -6058,7 +6261,19 @@ export function solveSegment({
         // ⛔ THE SAME TOLERANCE `drive` WILL USE. A preview that arrived on a
         // different criterion would spend different ticks, and the ETAs are
         // the whole product.
-        const walk = previewWalk(run, wps, tolerance);
+        /**
+         * ⛓⛓⛓ R9 SLICE 12b — THE CORRIDOR IS PROBED **WITH THE STRIKES THE
+         * WALK WILL MAKE** (⚖ ruling 30(c)).
+         *
+         * A fresh policy per probe, because a probe is a what-if from the
+         * live position and must not inherit a previous candidate's strike
+         * state; and the SAME construction the drive uses, because the
+         * corridor this returns is the one `walkTo` is about to walk. The two
+         * are deterministic and start from the same player, so they produce
+         * the same held-set sequence — which `solverBot.test.js` asserts
+         * directly rather than leaving to inspection.
+         */
+        const walk = previewWalk(run, wps, tolerance, { strike: strikePolicyFor(run) });
         for (const s of walk.samples) {
             const d = withoutSources(
                 dangerDuringTransit(run, s.tick, playerBoxAt(s.x, s.y), s.arrows, s.chasers),
@@ -6465,7 +6680,56 @@ export function solveSegment({
                 records.push({ goal: goal.kind, strategy: 'kill', target: target.id, ...record });
                 return { escalations };
             }
-            killWhy = kill.why;
+            /**
+             * ⛓⛓⛓ R9 SLICE 12b — **THE CHASER ARM, WHERE THE CEILING HAS
+             * NOTHING TO ARM** (⚖ ruling 30(d)). L14 has 0 pressers and 0
+             * traps; what it has is a sword and a `modelled` press arm.
+             */
+            const hunt = deriveKillByChaser(run, target, contacts);
+            if (hunt.stance) {
+                rowFor('kill', refused, { arm: 'chaser', target: target.id });
+                const strike = strikePolicyFor(run);
+                if (!strike) {
+                    killWhy = `${hunt.why} — but this run holds no sword, so `
+                        + '`set slashing`\'s outer gate refuses every press.';
+                } else {
+                    /**
+                     * ⛔ THE BOUND IS THE MECHANISM'S, NOT A NUMBER. Three
+                     * landed hits at the receiver's own i-frame, plus the
+                     * death staging the body owes, plus the time it takes to
+                     * walk back into reach after each knockback. `killWindowTicks`
+                     * is the first two; `HOLD_SLACK` is the third and is the
+                     * only term nobody can derive without a route.
+                     */
+                    const bound = killWindowTicks(target.tag) * 3 + HOLD_SLACK;
+                    /**
+                     * ⛔ `runDwell`, NOT `runHold`. `hold`'s per-tick invariant
+                     * is *"still inside the presser"* — this stance is not on
+                     * a button and there is no presser to be inside. A dwell
+                     * is a bounded wait on an OBSERVED condition, which is
+                     * exactly the shape here, and it now carries the strike
+                     * policy so the wait is armed.
+                     */
+                    const record = runDwell(run, perTick, {
+                        ticks: bound,
+                        strike,
+                        why: hunt.why,
+                        until: {
+                            why: `${target.id} has left the world — ${hunt.why}`,
+                            test: (r) => !(r.strikeBodies ?? [])
+                                .some((c) => c.id === target.id),
+                        },
+                    }, `${what} -> kill (${target.id}) by press`);
+                    records.push({
+                        goal: goal.kind, strategy: 'kill', arm: 'chaser',
+                        target: target.id, strikes: strike.strikes, ...record,
+                    });
+                    return { escalations };
+                }
+            } else {
+                killWhy = `${kill.why}\n         chaser arm: ${hunt.why}`;
+            }
+            if (!killWhy) killWhy = kill.why;
         }
         rowFor('kill', refused);
         refuse(`${what}: the combat ladder is EXHAUSTED. The corridor passes through `
@@ -6701,6 +6965,14 @@ export function solveSegment({
                 }],
                 keys: [],
             });
+            /**
+             * ⛓⛓⛓ R9 SLICE 12b — ONE POLICY FOR THE WHOLE WALK, not one per
+             * waypoint, because `probeCorridor` previewed the whole waypoint
+             * list in one call. A per-waypoint policy would forget which
+             * bodies it had already struck at every corner and would press
+             * again into a live i-frame the moment a corridor bent.
+             */
+            const strike = strikePolicyFor(run);
             try {
                 for (let wi = 0; wi < wps.length; wi += 1) {
                     const last = wi === wps.length - 1;
@@ -6713,6 +6985,7 @@ export function solveSegment({
                         contacts,
                         crossTo,
                         grazes,
+                        strike,
                         what: `${what} waypoint ${wi} (${wps[wi].x},${wps[wi].y})`,
                     });
                     if (t && crossTo) return t;
