@@ -4001,8 +4001,41 @@ CRASH → **94/0**; generate 216 → **224/0**; demos 196 → **204/0**; solve 6
 sequence **36/0**; reference **21/0**; ship **254/0**; pages **20/0** local. Traps **574–576**.
 As-built = kickoff **§24**.
 
-**NEXT in R9: slice 12c** (the ORACLE first — the preview must step with the drive's stepper
-— then the planner primitive), and **12e** owns the two red gates above.
+### ⛓⛓⛓ SLICE 12e SHIPPED 2026-08-23 — **THE PROTOCOL FIXES II: four instruments, two laws retired** (`a77b135cc` … , PUSHED)
+
+⚖ Ruling 38 items **(4)(5)(6)**, tape-inert. **(4a)** the procgenDocs heading pins READ
+`DOCS_INDEX.counts.headings` / the row's `headings` — a STALENESS claim, not a literal; ⚖
+ruling 22's hand re-pin clause is RETIRED, and this slice's own doc commit is the proof (695
+→ 696, 482 → 483, `docsRender.test.js` untouched, the first doc-editing commit since 11b to
+pay nothing). **(4b)** `lint-gate-labels.mjs` + `lintGateLabels.test.js` — a gate LABEL or a
+test NAME carrying a count the check computes; calibrated `5c916efc0` **13** vs head **10**,
+the delta exactly slice 13's five; 98-entry allowlist keyed by file::rule::label, ten gate
+findings named. **(4c)** the two red gates cured by DERIVATION — and there were **THREE**
+frozen rows, not two (`-export:114`'s `tick 171 of 254` is the same `64875843c` re-record as
+`573`): **export 27/2 → 29/0, overlays 23/1 → 24/0**. **(5)** `scripts/procgen/
+standing-values.json` — 55 derived rows written by `standing-values.mjs --write`, ⚖ ruling
+32 A now a `git diff` instead of a transcription; ⛔ `identity-block.sh` is BYTE-IDENTICAL,
+because the proposed `r()` refactor would have broken `reachClosure.identityRows()`'s regex
+and SILENTLY emptied every future reach report's identity section. **(6)**
+`scripts/procgen/gates.sh local|live|reach` — 26 gates / 21 browser / 4 windows, local 26,
+live 4, roster and flags derived from the gates' own argv; **verdict keyed on EXIT CODE, and
+a zero exit with NO TOTAL LINE is a fail by name** (slice 13's crashing gate).
+
+⛔⛔ **THREE OF THE SLICE'S OWN DERIVATIONS WERE THE FAMILY IT WAS SENT TO FIX** — a verdict
+vocabulary GUESSED instead of read (the gates print five forms, not four; a green gate read
+as "NO TOTAL LINE"), a `windows` detector that keyed on a docblock SENTENCE rather than code
+(trap 566, inside the slice carrying the lint for it), and a template-literal test that
+looked like precision and HID three of the five calibration sites. Each was caught by a
+measurement, not by reading.
+
+GATES: `gates.sh local` **26/26** with the Windows rows run (⚖ ruling 16) — demos 204/0 ·
+generate 224/0 · phases 94/0 · sequence 36/0 · ship 254/0 · pages 20/0 · export 29/0 ·
+overlays 24/0. Instruments 241 → **245**. Zero tape / trace / expectation / default /
+identity-block moves; roster gate not owed. As-built = kickoff **§25**.
+
+**NEXT in R9: slice 12d** (the chain's ONE declaration + `--grow` + the headline retirement —
+ruling 38 (1)(2)(3)), then **12c** (the ORACLE first — the preview must step with the drive's
+stepper — then the planner primitive).
 
 ## 6. Everything else (unchanged queues)
 
