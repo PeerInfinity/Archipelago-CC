@@ -3918,6 +3918,58 @@ reach `--only-list` over the slice's range = **25** tapes. Traps **569–571**.
 then **13** (the watch-page five), then **12c** (the complete dash model in the oracle,
 then the planner-level primitive).
 
+### ⛓⛓⛓ SLICE 12b″ SHIPPED 2026-08-23 — **THE RECORD: SIXTEEN ROOMS PLAY, FRONTIER MOVES TO L15** (`5abb4b067` … `a58d20b3a`, PUSHED)
+
+**`r9-solve-14` is on disk and the chain plays it.** The custody chain is now **SIXTEEN**
+segments — `new Game(0,80,128)` with an empty save to the **L15 arrival**, **3615 ticks**,
+fifteen boundaries all admitted. The game agreed with 12b′'s offline solve TO THE TICK:
+**146 observations, `primary ×6`, the game's own `hits` 0 against a model 0** — ⚖ ruling
+29(a)'s parry-walk, recorded. The 145 was a one-sided prediction with a mechanism behind it
+(`segmentBootFromLatch` authors from `beginEntry` = ctor (160,64), the same cell the route
+survey stages) and its only miss-direction was named in advance. Pipeline S0 → S5: the
+sealed table licensed 13 boot writes and 15 tick-0 re-derivations, and S1 measured
+**`none` on every one of 20 boundaries** — 38 fields compared each. Ship gate CLAIM 7 moved
+as predicted: *"the chain reached it for the first time — L15 (56, 72)"*, Δx 0 Δy 0.
+Frontier artifact **step 16 (L14, CAMERA BAND) → step 17 (L15, VERB-APPLY — `shove` IS
+registered and did not apply here)**, which is the next work order in the artifact's own words.
+
+⛔ **THREE INSTRUMENTS HAD DRIFTED OFF THEIR SUBJECT, ALL THE SAME SHAPE** — a value derived
+once, written down, then read by nobody who could tell it had gone stale. **(1)**
+`r9-solve-13`'s `why` still said the chain STOPS at L14; that reaches the tape's
+`description`, so the producer's `--check` reds by name (the brief predicted this mutant
+gate-INVISIBLE — a miss called before the work). **(2)** `check-seedling-editor-sequence.mjs`
+DERIVED CLAIM 9b's window count and then TYPED it into 9c (*"THE FIFTEEN WINDOWS"*) and
+typed the arrival into 9d (*"at the L14 arrival"*) — and **neither could fail**, because the
+assertions compare streams; the gate passed while its label described another chain. Both
+now read `${CAMP.length}` and the oracle's own last observation. **(3)**
+`reachClosure.test.js` pinned a CARDINALITY (`toBe(22)`) over a set that grows by design —
+`solve-seedling-r9-campaign.mjs` is inside the historical closure, so every tape it emits
+joins the set. It is now the RULE asserted as a SET against an independent corpus scan
+(every tape whose `description` names a `solve-seedling-*.mjs` producer): **23 each way,
+0 in either difference**. Mutant: swap one member — count unchanged at 23, row RED, which
+`toBe(22)` could never do (trap 565).
+
+⛓ Mutant (f) PAID: `familyOf` extracted to `scripts/procgen/surveyFamily.js` and it asks
+`run.playerHits` BEFORE the text loop — with the ORDER built as an inline mutant, because
+every refusal the survey has ever produced matches a text rule, so asking second makes the
+arm dead code that reads as covered. ⚠ Its reach today is ZERO and the source says so:
+the survey builds `replay` only for a step that SOLVED, and a SOLVED step has no refusal.
+Two agreements nobody had ever asserted also landed — producer `SEGMENTS` ≡ chain
+`segments` (read off the producer's SOURCE; it cannot be imported), and every segment
+ARRIVES where its successor BOOTS.
+
+GATES: unfiltered vitest ALONE **334 / 10293**, 0 failed (was 333 / 10277); FULL roster
+`--win --tier=full` **146 tapes, 3425 / 0 / 43** ALL CHECKS PASSED (SKIP unchanged at 43,
+as sealed); wasm ship gate **254 / 0 / 0** ALL PASS; sequence **36 / 0**; demos **196 / 0**
+with the moved claim `windows.length == 16` holding; `check-seedling-wasm-pages` **20 / 0**;
+solver roster (S4) **794 / 0 / 65**; thirteen producers' `--check` GREEN, **zero movers**;
+instruments 242; procgenDocs corpus 686 → **694**; `check-seedling-wasm-pages`
+**20 / 0 LIVE** against the deployed Pages root after the push; **CI 6/6 green** at
+`a58d20b3a`. Traps **572–573**. As-built = kickoff **§23c**.
+
+**NEXT in R9: slice 13** (the watch-page five), then **12c** (the ORACLE first — the preview
+must step with the drive's stepper — then the planner primitive).
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
