@@ -61,6 +61,27 @@
 /** ⚠ `@playwright/test`, not `playwright` — slice 1's note. */
 import { chromium } from '@playwright/test';
 import { mkdirSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+/**
+ * ⛓⛓⛓ R9 SLICE 13 — **THE ROSTER'S SIZE IS THE ROSTER'S, NOT A LITERAL.**
+ *
+ * This row used to read `all.toggles.length === 15` with the word FIFTEEN in
+ * its own label, and the label was maintained by hand: slice 6 wrote ELEVEN,
+ * slice 8 TWELVE, slice 9 FIFTEEN. The user's watch-page item (iv) added a
+ * sixteenth layer and reddened FOUR gates at once, none of which was about the
+ * layer count — the pin caught the one thing it was never meant to catch.
+ *
+ * ⇒ trap 572's cure and trap 573's together: the CLAIM is that the page mounts
+ * one toggle per roster entry, the SOURCE is `OVERLAY_LAYERS` itself, and the
+ * number in the label comes from the same expression the assertion uses so it
+ * can never go false silently.
+ */
+const { LAYER_IDS } = await import(join(
+    dirname(fileURLToPath(import.meta.url)), '..', '..',
+    'frontend/modules/seedlingDemo/watchOverlays.js',
+));
 
 const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
     ?? `--${name}=${fallback}`).slice(`--${name}=`.length);
@@ -486,8 +507,9 @@ console.log('\n## the three as LAYERS — legend, defaults, and the driven-syste
     const all = await at('r5-l40-part0', 0);
     const ids = all.toggles.map(([id]) => id);
     check(ids.includes('worldstate') && ids.includes('crushers') && ids.includes('danger')
-        && all.toggles.length === 15,
-    '⛓ all three have a toggle, generated from the roster — FIFTEEN now',
+        && all.toggles.length === LAYER_IDS.length,
+    `⛓ all three have a toggle, generated from the roster — ${LAYER_IDS.length} of them, `
+        + 'and the number is the ROSTER\'s',
     `${all.toggles.length}: ${ids.join(', ')}`);
     const byId = (id) => all.toggles.find(([i]) => i === id)?.[1];
     check(byId('worldstate') === true && byId('crushers') === true && byId('danger') === false,

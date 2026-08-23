@@ -166,7 +166,15 @@ async function holdFor(page, codes, ms) {
     }));
     check(/DRIVING/.test(driving.status) && /tick\(s\) recorded/.test(driving.status),
         'the page reports a LIVE drive with its tick count', driving.status);
-    check(driving.toggles === 15 && driving.toggles === LAYER_IDS.length,
+    /**
+     * ⛔ THE LITERAL IS GONE (R9 slice 13). This line read `driving.toggles ===
+     * 15 && driving.toggles === LAYER_IDS.length` — a typed cardinality
+     * standing beside the derivation that already answered it, so adding a
+     * layer reddened the row for the one reason it was never meant to catch.
+     * Trap 572's cure applied where it was found: the DERIVATION is the claim,
+     * and what it asserts is that the page mounts one toggle per roster entry.
+     */
+    check(driving.toggles === LAYER_IDS.length,
         'the FIFTEEN layer toggles are mounted over the LIVE drive too, and they ARE the roster',
         `${driving.toggles} toggle(s), roster ${LAYER_IDS.length}`);
     if (SHOT) await page.screenshot({ path: `${SHOT}/manual-driving.png` });

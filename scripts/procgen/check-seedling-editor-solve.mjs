@@ -231,6 +231,10 @@ if (web.status !== 'ok') {
         hitboxes: window.__editorStill.drawn.hitboxes.boxes
             .map((b) => `${b.tag ?? b.kind}@${b.rect.x},${b.rect.y}`).sort(),
         hitboxWhy: window.__editorStill.drawn.hitboxes.why,
+        statics: window.__editorStill.drawn.staticEnemies.boxes
+            .map((b) => `${b.tag}@${b.rect.x},${b.rect.y}`).sort(),
+        staticWhy: window.__editorStill.drawn.staticEnemies.why,
+        staticReading: window.__editorStill.drawn.staticEnemies.reading,
     } : null));
     check(still !== null && still.level === 6,
         '⛓ the still frame is L6 and it published what it drew',
@@ -245,6 +249,38 @@ if (web.status !== 'ok') {
     '⛓⛓⛓ ⚖ ITEM (v): the FIRST PAINT in solve mode carries L6\'s TWO live `bob` bodies — '
         + 'before any press, from the run the still frame already held',
     JSON.stringify(still?.hitboxes));
+    /**
+     * ⛔ AND THE FOUR SANDTRAPS, FROM THE OTHER SOURCE. Named, not counted, and
+     * for a sharper reason than usual: the two families are drawn from
+     * DIFFERENT channels, so a build that mixed them up — a bob priced as a
+     * placement, or a sandtrap sampled as live — would satisfy "six boxes" and
+     * fail this.
+     */
+    check(still?.statics.length === 4
+        && still.statics.every((b) => b.startsWith('sandtrap@')),
+    '⛓⛓⛓ ⚖ ITEM (iv): …and L6\'s FOUR `sandtrap`s, at their census `contactRect`s — bodies '
+        + 'that were in NO layer this page had: not a tile, not an object solid, not a '
+        + 'pixelmask, not a bridged chaser',
+    JSON.stringify(still?.statics));
+    /**
+     * ⛔ THE TWO SETS ARE DISJOINT, which is the row that says the partition
+     * really partitions. A body drawn in BOTH channels would be painted twice
+     * and would be told two different stories about where it is.
+     */
+    check(still !== null
+        && still.statics.every((b) => !still.hitboxes.includes(b)),
+    '⛓⛓ …and the two sets are DISJOINT — the run\'s own verdict partitions them, so nothing '
+        + 'is drawn as a live body AND as a placement',
+    `live ${JSON.stringify(still?.hitboxes)} vs static ${JSON.stringify(still?.statics)}`);
+    /**
+     * ⛔ AND THE READING IS NAMED. A placement is not a position; the layer has
+     * to say which it is showing, or the reader takes a spawn cell for a body's
+     * current whereabouts.
+     */
+    check(typeof still?.staticReading === 'string' && still.staticReading.length > 0,
+        '…and the layer NAMES its reading — a PLACEMENT is not a position, and the readout '
+        + 'says which this is',
+        JSON.stringify(still?.staticReading));
 }
 
 check(errors.length === 0, 'no page errors', errors.join(' | ') || 'clean');

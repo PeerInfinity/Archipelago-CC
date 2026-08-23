@@ -179,6 +179,8 @@ import {
     // ⛓ ⚖ ITEM (v): the still frame samples the run it already holds — the
     // SAME seam the replay and the manual drive read, never a fifth sampler.
     sampleMovers,
+    // ⛓ ⚖ ITEM (iv): the static/live partition, answered where the run is.
+    staticEnemyBodies,
     SWING_WINDOW_NOTE, traceRowFields,
     traceSidecarPath, worldChangesAt, dialogueAt,
 } from './watchOverlays.js';
@@ -436,6 +438,16 @@ const PATH_COLOURS = Object.freeze({
  */
 const SHAPE_COLOURS = Object.freeze({
     hitbox: '#ffd0a0',
+    /**
+     * ⛓⛓⛓ ⚖ ITEM (iv) — A PLACEMENT IS NOT A POSITION, AND THE INK SAYS SO.
+     * The live hitbox is `#ffd0a0`, warm; this is the same family COOLED
+     * (`#a08a6a`), for `attackHeld`'s reason one channel over: it must read as
+     * *the same kind of thing, not live*. A distinct hue would say "a different
+     * kind of body"; the SAME hue would make a census placement
+     * indistinguishable from a body the run is stepping, which is the whole
+     * distinction the layer exists to draw.
+     */
+    staticEnemy: '#a08a6a',
     hammer: '#ff8fd0',
     hammerTouch: '#ffffff',
     attack: '#ffd75f',
@@ -976,6 +988,15 @@ function makeRenderer(canvas) {
      */
     const drawn = {
         hitboxes: { boxes: [], why: null },
+        /**
+         * ⛓ ⚖ ITEM (iv) — the `{…, why}` PAIR SHAPE from the outset, and a
+         * `reading` beside it: this layer can legitimately draw nothing for
+         * THREE different reasons (the room has none, the census was not
+         * consulted, this draw was handed no run) and a picture that showed the
+         * same empty canvas for all three would be the hole the layer exists
+         * to fill.
+         */
+        staticEnemies: { boxes: [], why: null, reading: null },
         hammer: { lines: [], why: null },
         attacks: [],
         /**
@@ -1179,6 +1200,8 @@ function makeRenderer(canvas) {
              * all — see `watchOverlays`' one-spelling import block.
              */
             drawn.hitboxes = { boxes: [], why: null };
+            // ⛓ ⚖ ITEM (iv): reset with its siblings — LAST DRAW, not cumulative.
+            drawn.staticEnemies = { boxes: [], why: null, reading: null };
             drawn.hammer = { lines: [], why: null };
             drawn.attacks = [];
             drawn.attacksHeld = [];
@@ -1310,6 +1333,34 @@ function makeRenderer(canvas) {
                     });
                 }
             }
+            if (opts.on.has('staticenemies')) {
+                /**
+                 * ⛓⛓⛓ ⚖ ITEM (iv) — THE BODIES NO OTHER LAYER COULD SHOW.
+                 *
+                 * ⛔ THE CHANNEL IS HANDED IN, ALREADY PARTITIONED. The
+                 * renderer cannot compute this: the partition is the RUN's own
+                 * verdict (`chaserRoomVerdict`, `isBridgedChaser`, the live
+                 * spinner roster) and `draw` is given a WORLD, not a run — a
+                 * world this renderer deliberately never advances. So
+                 * `watchOverlays.staticEnemyBodies` answers it at the call
+                 * sites that hold a run, exactly as `sampleMovers` does, and
+                 * this arm paints what it was given.
+                 *
+                 * ⚠ `null` IS AN HONEST ABSENCE — a caller with no run at all
+                 * (the phase ladder's folds) says so, rather than reporting an
+                 * empty room. The `why` carries which it was.
+                 */
+                const st = opts.staticEnemies
+                    ?? { bodies: [], why: 'this draw was handed no run, so nothing is known '
+                        + 'about static bodies here' };
+                drawn.staticEnemies = { boxes: [], why: st.why, reading: st.reading ?? null };
+                for (const body of st.bodies) {
+                    outline(body.rect, SHAPE_COLOURS.staticEnemy);
+                    drawn.staticEnemies.boxes.push({
+                        id: body.id, tag: body.tag, rect: body.rect,
+                    });
+                }
+            }
             if (opts.on.has('lanes')) {
                 /**
                  * ⛓ THE ARMED TRAPS' COLUMNS — the trap's GEOMETRY, not the
@@ -1428,6 +1479,13 @@ function makeRenderer(canvas) {
                 hitboxes: {
                     boxes: drawn.hitboxes.boxes.map((b) => ({ ...b })),
                     why: drawn.hitboxes.why,
+                },
+                // ⛓ ⚖ ITEM (iv), in the pair shape, because this accessor is
+                // DOM-side and no module test reaches it (§16.5's lesson).
+                staticEnemies: {
+                    boxes: drawn.staticEnemies.boxes.map((b) => ({ ...b })),
+                    why: drawn.staticEnemies.why,
+                    reading: drawn.staticEnemies.reading,
                 },
                 hammer: { lines: drawn.hammer.lines.map((l) => ({ ...l })), why: drawn.hammer.why },
                 attacks: drawn.attacks.map((a) => ({ ...a })),
@@ -2438,6 +2496,12 @@ function mountLayerControls(on, redraw) {
         // written out — and three new strokes with no legend rows would have
         // re-opened exactly that.
         swatch(SHAPE_COLOURS.hitbox, 'enemy hitbox (this tick)'),
+        // ⛓ ⚖ ITEM (iv): its own row, generated from the same table the
+        // renderer colours from — a hue nobody can name is the `unknownShapes`
+        // lesson applied to ink, and this one is a whole family of body.
+        swatch(SHAPE_COLOURS.staticEnemy, 'static "Enemy" PLACEMENT — a body this room does '
+            + 'not step (a sandtrap, a dead-lane turret, or any chaser in a room whose '
+            + 'roster is REFUSED). Where the LEVEL put it, not where a run has it'),
         swatch(SHAPE_COLOURS.hammer, 'hammer line'),
         swatch(SHAPE_COLOURS.hammerTouch, 'hammer REACHING the player'),
         swatch(SHAPE_COLOURS.attack, 'attack rect (fired) — a SWORD press fires '
@@ -2663,6 +2727,22 @@ async function replayTape(tape, label, params, levelSource, traceSource = null,
              * what makes this the FORWARD's reader and not a fifth sampler.
              */
             live: { crushers: f.crushers, crusherScans: f.crusherScans },
+            /**
+             * ⛓ ⚖ ITEM (iv): the STATIC bodies, from the replay's own run.
+             * ⚠ NOT per-tick and not on the frame — a census placement does not
+             * change with the cursor, which is exactly what distinguishes it
+             * from every other body channel here.
+             */
+            staticEnemies: staticEnemyBodies(collected.run, {
+                // ⛔ THE FRAME'S LEVEL, NOT THE RUN'S — the walk ended
+                // somewhere and the cursor is somewhere else.
+                level: f.observation.level,
+                // ⛔ AND THE LIVE ROSTER AT THIS CURSOR, from the samples the
+                // shape layers already read. `run.spinnerBodies` is the room
+                // the run ENDED in and would exclude the wrong bodies here.
+                liveIds: bodiesAt(samples, cursor, f.observation.level).bodies
+                    .filter((b) => b.kind === 'spinner').map((b) => b.id),
+            }),
             dangerQueries,
         });
         // ⛓ SLICE 5a — THE SIBLINGS, after every draw including every scrub
@@ -3561,6 +3641,13 @@ function previewLevel(levelSource, staging, layers, lifetime, afterDraw = null) 
             attackHold: attackHoldNow(),
             cursor: 0,
             live: { crushers: run.crushers, crusherScans: run.crusherScans },
+            /**
+             * ⛓⛓⛓ ⚖ ITEM (iv) BESIDE ITEM (v): the still frame's LIVE bodies
+             * come from the one sample above, and its STATIC ones from here.
+             * Two sources, because they are two kinds of body — and on L6 that
+             * is two bobs from the sample and four sandtraps from this.
+             */
+            staticEnemies: staticEnemyBodies(run),
             // ⚖ Nothing has solved this room yet, and `null` is how the layer
             // is told to SAY so rather than drawing a calm room.
             dangerQueries: null,
@@ -4857,6 +4944,9 @@ async function runManual(params, lifetime) {
              * the one room it exists for.
              */
             live: { crushers: session.run.crushers, crusherScans: session.run.crusherScans },
+            // ⛓ ⚖ ITEM (iv): the live run being driven right now is the one
+            // that knows which of its bodies it steps.
+            staticEnemies: staticEnemyBodies(session.run),
             // ⚖ A MANUAL DRIVE HAS NO SOLVER, and `null` is how the layer is
             // told to say so by name rather than drawing a calm room.
             dangerQueries: null,

@@ -69,7 +69,12 @@ import { formatTraceRow } from './decisionTrace.js';
  * converged all eleven spellings FIRST; the layer is what the hoist rode in
  * on, and it computes no lane geometry of its own.
  */
-import { chaserBoxAt } from './chasers.js';
+// ⛓ ⚖ ITEM (iv): `isBridgedChaser` is HALF the static/live partition, and it is
+// the run's own predicate — see `staticEnemyBodies`.
+import { chaserBoxAt, isBridgedChaser } from './chasers.js';
+// ⛓ ⚖ ITEM (iv): the census's own hitbox and the census's own boss split. ⛔ NOT
+// retyped here — a second hitbox table is what `sampleMovers` already refuses.
+import { contactPricing, contactRect } from './combat.js';
 import { hammerHitsPlayer, hammerLine } from './spinner.js';
 import { playerBoxAt } from './playerPhysicsV2.js';
 import { arrowLaneForPlacement, arrowLaneRect } from './arrowTrap.js';
@@ -173,6 +178,22 @@ export const OVERLAY_LAYERS = Object.freeze([
      * (⚖ §1.6 — one dot per arrow per tick, cumulative) does not reach them.
      */
     Object.freeze({ id: 'hitboxes', label: 'enemy body hitboxes (this tick)', kind: 'shape', on: true }),
+    /**
+     * ⛓⛓⛓ ⚖ WATCH-PAGE ITEM (iv), R9 SLICE 13 — AND IT IS ITS **OWN** LAYER.
+     *
+     * ⛔ IT DOES NOT RIDE `hitboxes`, whose label says *"this tick"*. These
+     * bodies have no tick: they are census PLACEMENTS the run never steps, and
+     * folding them into a layer named for a moment would put two states under
+     * one readout name — trap 550, in ink. A reader who could not tell a live
+     * body from a placement would have exactly the confusion the `why` on
+     * `staticEnemyBodies` exists to prevent.
+     *
+     * ⛔ ON BY DEFAULT, because OFF is the bug the user reported. A `sandtrap`
+     * kills, is in no other layer, and was invisible on every canvas this page
+     * has ever drawn; shipping it behind an unticked box would be fixing it
+     * only for people who already knew to look.
+     */
+    Object.freeze({ id: 'staticenemies', label: 'static "Enemy" PLACEMENTS (bodies this room does not step — sandtraps, turrets)', kind: 'shape', on: true }),
     Object.freeze({ id: 'hammer', label: 'spinner hammer line (this tick)', kind: 'shape', on: true }),
     /**
      * ⛓⛓⛓ GROUP B: the label says "tickS", plural, because a SWORD press is
@@ -430,6 +451,105 @@ export function keyEdges(heldPerTick, keys = ACTION_KEYS) {
  * are no live positions to report. Both come through as an empty layer, and
  * the page's own emptiness readout is what says which tapes those were.
  */
+/**
+ * ── ⛓⛓⛓ ⚖ WATCH-PAGE ITEM (iv) — THE BODIES THIS ROOM DOES **NOT** STEP ──
+ *
+ * ⚖ The user, 2026-08-22: *"the JS UI does not DRAW SAND TRAPS — fix"*.
+ *
+ * ⛔ AND A SANDTRAP WAS INVISIBLE IN EVERY LAYER, NOT MERELY MISSING FROM ONE.
+ * `sandtrap` is `notSolid(…, 'Enemy')` — it is not an object solid, not a
+ * pixelmask, not a bridged chaser (`CHASERS` is bob and jellyfish) — so the
+ * tiles missed it, the object-solid palette missed it, and `sampleMovers`
+ * missed it because the run never steps it and it is in no per-tick channel.
+ * L6 has four of them and the canvas showed none. The danger map already
+ * priced them (`dangerMap.staticEnemyDanger`, R8 slice 1's measured gap, with
+ * the free oracle's receipt: the GAME killing the player twice at
+ * `sandtrap@64,16` in a room every other ingredient called calm).
+ *
+ * ⛔⛔ **THE PARTITION IS THE RUN'S OWN VERDICT, NEVER A TAG LIST**, and it is
+ * `staticEnemyDanger`'s partition exactly — lifted, not re-derived, because
+ * two answers to *"does this room step that body"* is the disagreement the
+ * whole ingredient exists to avoid:
+ *
+ *   · a room the verdict STEPS draws its bridged chasers from the SAMPLE, at
+ *     their live positions, and this channel skips them — pricing a live one
+ *     here would paint the cell it left on its first chasing tick, and would
+ *     paint a DEAD one's spawn for ever (trap 157 wearing the viewer's
+ *     clothes);
+ *   · a room whose chaser roster is REFUSED has no live positions at all, so
+ *     its bobs ARE drawn here, at their PLACEMENTS — which is exactly what the
+ *     danger map prices there, and the `why` says so in words rather than
+ *     letting a reader take a placement for a position;
+ *   · spinners are excluded by the run's own live roster, same reason;
+ *   · a BOSS is an encounter script and not a body (`contactPricing`'s split),
+ *     so it is skipped here for the reason `stepBoundFor` refuses one.
+ *
+ * ⚠ `world.combat` is `null` when the caller did not consult the `combat`
+ * role, and that is REPORTED as a `why` rather than drawn as an empty room —
+ * "no static bodies here" and "nobody asked" are different answers and the
+ * layer that cannot tell them apart is the one this repo keeps re-finding.
+ *
+ * ⛔⛔ **THE LEVEL IS THE DRAW'S, NOT THE RUN'S.** A scrubber shows whichever
+ * room the CURSOR is in while the run's own `level` is wherever the walk ended,
+ * and `worldFor`/`chaserRoomVerdict` both take one — so reading `run.level`
+ * here would paint the last room's bodies over every earlier one. ⚠ The live
+ * SPINNER roster is the exception: `run.spinnerBodies` is the room the run is
+ * IN, so a caller drawing a different room must hand its own live ids (the
+ * cursor's sample has them) or be told that nothing can be claimed. A default
+ * that silently used the wrong room's roster would draw a live spinner as a
+ * placement, which is trap 157 wearing the viewer's clothes.
+ *
+ * @param {object} run the live run — its `worldFor`, `chaserRoomVerdict` and
+ *   `spinnerBodies` are the three things this reads
+ * @param {object} [o]
+ * @param {number} [o.level] the level being DRAWN; defaults to the run's own
+ * @param {string[]|null} [o.liveIds] the ids of bodies this room is stepping
+ *   RIGHT NOW; defaults to the run's spinner roster when the level matches, and
+ *   to `null` — *nothing can be claimed* — when it does not
+ * @returns {{bodies: Array, why: string|null, reading: string}} the boxes to
+ *   paint, or the reason there are none
+ */
+export function staticEnemyBodies(run, { level = run.level, liveIds } = {}) {
+    const ids = liveIds !== undefined ? liveIds
+        : (level === run.level ? (run.spinnerBodies ?? []).map((b) => b.id) : null);
+    if (ids === null) {
+        return { bodies: [], reading: null,
+            why: `the run is in level ${run.level} and this is a draw of level ${level}, so `
+                + 'no live body roster is available for it and nothing is claimed' };
+    }
+    const world = run.worldFor?.(level);
+    if (!world) return { bodies: [], reading: null, why: `this page has no world for level ${level}` };
+    if (!world.combat) {
+        return { bodies: [], reading: null,
+            why: `level ${level}'s COMBAT census was not consulted, so nothing is known `
+                + 'about its static bodies — this is not an empty room' };
+    }
+    const stepped = run.chaserRoomVerdict(level).stepped;
+    const live = new Set(ids);
+    const bodies = [];
+    for (const inst of (world.combat.enemies ?? [])) {
+        if (stepped && isBridgedChaser(inst.tag)) continue;
+        if (live.has(`${inst.tag}@${inst.x},${inst.y}`)) continue;
+        if (contactPricing(inst.tag).kind === 'boss') continue;
+        const rect = contactRect(inst);
+        if (!rect) continue;
+        bodies.push({ id: `${inst.tag}@${inst.x},${inst.y}`, tag: inst.tag, rect });
+    }
+    return {
+        bodies,
+        why: bodies.length > 0 ? null
+            : `level ${level} has no "Enemy" body this room does not step`,
+        /**
+         * ⚠ THE READING IS NAMED, because a PLACEMENT and a POSITION are not
+         * the same claim and the canvas cannot say which it is showing.
+         */
+        reading: stepped ? 'placement (this room is stepped, so these classes are unbridged '
+            + 'and do not move)'
+            : 'PLACEMENT — this room\'s chaser roster is REFUSED, so the model has no live '
+                + 'position for these bodies',
+    };
+}
+
 export function sampleMovers(run) {
     const enemies = [];
     /**

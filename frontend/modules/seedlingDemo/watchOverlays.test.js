@@ -66,9 +66,15 @@ describe('the layer roster', () => {
         // is *default OFF* and labelled as the bot's heuristic. So this row
         // pins WHICH layers are off and not merely how many — a later tidy-up
         // that flipped `danger` on would be reversing a ⚖ ruling.
+        // ⛓ ⚖ R9 SLICE 13 adds `staticenemies`, ON, on the user's item (iv):
+        // a `sandtrap` is in NO other layer and it kills, so shipping it behind
+        // an unticked box would fix the reported bug only for people who
+        // already knew to look. The OFF list is untouched, which is the half
+        // this row is really pinning.
         expect([...defaultLayerSet()].sort()).toEqual([
             'action', 'attacks', 'crushers', 'damage', 'enemies', 'events', 'hammer',
-            'hitboxes', 'lanes', 'player', 'pushables', 'volumes', 'worldstate',
+            'hitboxes', 'lanes', 'player', 'pushables', 'staticenemies', 'volumes',
+            'worldstate',
         ]);
         expect(OVERLAY_LAYERS.find((l) => l.id === 'arrows').on).toBe(false);
         expect(OVERLAY_LAYERS.filter((l) => !l.on).map((l) => l.id))
@@ -85,13 +91,26 @@ describe('the layer roster', () => {
     it('⛓ the shape layers are `shape` — this tick, not the walk', () => {
         const shapes = OVERLAY_LAYERS.filter((l) => l.kind === 'shape').map((l) => l.id);
         expect(shapes).toEqual([
-            'hitboxes', 'hammer', 'attacks', 'lanes', 'worldstate', 'crushers', 'danger',
+            'hitboxes', 'staticenemies', 'hammer', 'attacks', 'lanes', 'worldstate',
+            'crushers', 'danger',
         ]);
         // The distinction the renderer branches on, pinned: a `path` layer is
         // cumulative to the cursor and a `shape` layer is the cursor's tick.
         expect(OVERLAY_LAYERS.filter((l) => l.kind === 'path').map((l) => l.id))
             .toEqual(['player', 'enemies', 'pushables', 'arrows']);
-        expect(LAYER_IDS).toHaveLength(15);
+        /**
+         * ⛓⛓⛓ ⚖ R9 SLICE 13 — 15 → 16, AND THE ROW SAYS **WHICH** LAYER.
+         *
+         * ⛔ A LENGTH ALONE CANNOT TELL A SWAP FROM A MATCH (trap 565), and it
+         * cannot say what the number is FOR — the failure trap 573 records. The
+         * user's watch-page item (iv) added `staticenemies`, so the claim is
+         * that the layer EXISTS, is a `shape`, and is ON by default (OFF would
+         * be the reported bug shipped behind a checkbox), with the count as its
+         * corroboration rather than as the whole assertion.
+         */
+        expect(LAYER_IDS).toHaveLength(16);
+        expect(OVERLAY_LAYERS.find((l) => l.id === 'staticenemies'))
+            .toMatchObject({ kind: 'shape', on: true });
         const byId = (id) => OVERLAY_LAYERS.find((l) => l.id === id);
         expect({ kind: byId('lanes').kind, on: byId('lanes').on })
             .toEqual({ kind: 'shape', on: true });
