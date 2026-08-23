@@ -679,9 +679,19 @@ describe('`kill` — the first predictive Enemy arm, driven', () => {
     });
 
     describe('the refusals, each naming what it caught', () => {
-        it('⛔ a cadence under the i-frame floor', async () => {
+        /**
+         * ⛓⛓ R9 SLICE 12b — THE REFUSAL SURVIVES AND ITS REASON DOES NOT
+         * (⚖ ruling 31(b)). A cadence of 20 is still refused, because the
+         * second press would land inside THIS BODY's own 30-tick i-frame and
+         * would not damage. What it is no longer refused for is being a DASH:
+         * the dash is transcribed, driven against the game
+         * (`r9-l0-sword-dash`) and available on purpose.
+         */
+        it('⛔ a cadence inside the TARGET\'s i-frame, named as the receiver\'s rule', async () => {
             await expect(legs([SWORD, { ...KILL, kill: { ...KILL.kill, cadence: 20 } }]))
-                .rejects.toThrow(/under the 31-tick floor/);
+                .rejects.toThrow(/lands the next press inside the body's own 30-tick i-frame/);
+            await expect(legs([SWORD, { ...KILL, kill: { ...KILL.kill, cadence: 20 } }]))
+                .rejects.toThrow(/bounds DAMAGE TO ONE BODY, not the swing rate/);
         });
 
         it('⛔ a press count that cannot kill', async () => {

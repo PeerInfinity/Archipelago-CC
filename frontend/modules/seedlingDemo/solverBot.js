@@ -4202,12 +4202,41 @@ function execKillByPress(run, perTick, resolved, ctx) {
          * **DASH THAT MOVES THE PLAYER**. The recording caught it at tick 36,
          * 2 px apart in x, with every other one of the 477 observations exact.
          *
-         * ⇒ the schedule honours `combatVerbs.KILL_PRESS_CADENCE` — the floor
-         * `killSchedule` has refused a smaller cadence than since R5, and
-         * which this arm never consulted. ⚠ It is the PRESSER's constraint,
-         * not the receiver's: the receiver's 30-tick i-frame is already in the
-         * floor (`max(KILL_CADENCE_FLOOR, ENEMY_IFRAMES + 1)`), and reading
-         * only the receiver's is how the dash rule went unasked.
+         * ⇒ the schedule used to honour `combatVerbs.KILL_PRESS_CADENCE`,
+         * `killSchedule`'s floor since R5, which this arm had never consulted.
+         *
+         * ⚠⚠ R9 SLICE 12b — **AND THE SECOND HALF OF THAT PARAGRAPH IS NOW
+         * FALSE.** It read: *"It is the PRESSER's constraint, not the
+         * receiver's … reading only the receiver's is how the dash rule went
+         * unasked."* The dash rule is asked now — it is transcribed
+         * (`combatVerbs.slashSet`), driven against the game
+         * (`r9-l0-sword-dash`, three impulses digit for digit) and USED. What
+         * `r8-solve-18` recorded at tick 36 was not a defect to be forbidden;
+         * it was the game telling the truth about a mechanism the model did
+         * not have. The floor is retired (⚖ ruling 31(b)) and what is left is
+         * below.
+         */
+        /**
+         * ⛓⛓⛓ R9 SLICE 12b — THIS IS THE TARGET'S CLOCK NOW, NOT THE PLAYER'S
+         * (⚖ ruling 31(b)), and the docblock above is what made the change
+         * safe to describe.
+         *
+         * The floor `KILL_PRESS_CADENCE` used to carry was a `max()` over two
+         * rules: the RECEIVER's 30-tick i-frame plus one, and the PRESSER's
+         * 20-tick dash window. The presser's half is retired — the dash is
+         * transcribed and driven against the game — so what remains is the
+         * receiver's, and the receiver's is PER BODY.
+         *
+         * ⛔⛔ BUT THE GATE BELOW STILL NEEDS THIS COUNTER, AND THE DOCBLOCK
+         * ABOVE SAYS EXACTLY WHY: `body.hitsTimer === 0` is *"the right
+         * question one tick too early"*. A press's hit tests run over
+         * `T+1 … T+SLASH_HIT_TICKS`, so on the tick AFTER a press the target's
+         * timer is still 0 and a rule reading only the timer would aim again
+         * into a hit that has not landed yet. So the memory is what a press of
+         * MINE is still owed, and it is measured in `SLASH_HIT_TICKS` rather
+         * than in a cadence — leaving it at the old 31 would forbid a legal
+         * second press on a DIFFERENT body, which the retirement is supposed
+         * to allow.
          */
         let lastPressAt = -KILL_PRESS_CADENCE;
         for (; spent <= bound; spent += 1) {
@@ -4219,7 +4248,7 @@ function execKillByPress(run, perTick, resolved, ctx) {
                 lastPressAt = run.ticksCompleted;
                 aimed = false;
                 strike = null;
-            } else if (run.ticksCompleted - lastPressAt >= KILL_PRESS_CADENCE
+            } else if (run.ticksCompleted - lastPressAt > SLASH_HIT_TICKS
                 && body.hitsTimer === 0
                 && distanceRectPoint(run.state.x, run.state.y, body.rect) <= SLASH_REACH
                 && rectsOverlapLocal(slashRect(run.state.x, run.state.y,

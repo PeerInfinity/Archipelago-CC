@@ -656,15 +656,42 @@ export const PUZZLEMENT_HAZARDS = Object.freeze({
 export const ENEMY_IFRAMES = 30;
 
 /**
- * The floor on the gap between two attack presses.
+ * ⛓ `Player.slashTimerMax` (`Player.as:119`) — the window inside which a
+ * second press is a DASH rather than a swing.
  *
- * ⚠ Not an i-frame number. `Player.useItem` turns a SECOND press inside
- * `slashTimer` (20) into a DASH — `knockback(2, Point(x - v.x, y - v.y))`,
- * an impulse along the current velocity that MOVES the player. R3 spaced
- * its ceremony presses eight apart precisely because they must land inside
- * that window; a kill schedule needs the opposite, so 21 is the floor.
+ * ⛓⛓ IT LIVES HERE, ONE LEVEL BELOW `combatVerbs` AND `presses`, BECAUSE IT
+ * HAD TWO COPIES (⚖ ruling 17). Both of those modules wrote `20` out for
+ * themselves, and both re-export it now; this file is already the home of the
+ * other cross-cutting press constant (`ENEMY_IFRAMES`), so it is the one place
+ * the number can be edited once.
  */
-export const KILL_CADENCE_FLOOR = 21;
+export const SLASH_TIMER_MAX = 20;
+
+/**
+ * ⛔⛔ R9 SLICE 12b, ⚖ ruling 36 — **THIS IS NO LONGER A FLOOR, AND IT NEVER
+ * DESCRIBED THE GAME'S MAXIMUM SWING RATE.**
+ *
+ * It used to read: *"`Player.useItem` turns a SECOND press inside `slashTimer`
+ * (20) into a DASH … a kill schedule needs the opposite, so 21 is the floor."*
+ * Both halves are retired:
+ *
+ *  · **A DASH IS NO LONGER A REASON TO REFUSE A PRESS** (⚖ ruling 31(b)). The
+ *    dash is transcribed (`combatVerbs.slashSet`), driven against the game
+ *    (`r9-l0-sword-dash` — three +2 impulses, digit for digit) and USED. A
+ *    press is refused only by what it would DO, and what a sub-20 press does
+ *    is move the player 2 px along their own velocity, on purpose.
+ *  · **21 WAS NEVER THE SWING RATE.** The ordinary swing's period is
+ *    `SLASH_TIMER_MAX` — 20, not 21 — because the `else if (!slashing && _s)`
+ *    arm needs the timer at 0, and `slash()` decrements ABOVE the press. The
+ *    ±1 falls on the LOW side: at k = 19 the timer reads 1 and the press
+ *    DASHES. See `combatVerbs.ORDINARY_SWING_PERIOD` and `DASH_CHAIN`.
+ *
+ * ⇒ what SURVIVES is the number's other job: a conservative per-press PERIOD
+ * for `encounters`' kill-cost ESTIMATE, which is a budget and not a gate. It
+ * is the swing period plus one tick of head-room, derived rather than typed,
+ * and it refuses nothing.
+ */
+export const KILL_CADENCE_FLOOR = SLASH_TIMER_MAX + 1;
 
 /**
  * How many presses a kill costs at the run's current sword.

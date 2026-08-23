@@ -2448,8 +2448,10 @@ function faceTowards(run, perTick, facing, what) {
  * `hitsTimer <= 0`, a landed hit sets it to 30, and the body's `hitUpdate`
  * runs BEFORE the player each tick — so the gate reopens on the thirtieth
  * tick after and `KILL_PRESS_CADENCE` (31) clears it by ONE. Presses closer
- * than that are not a faster kill; they are presses the enemy refuses,
- * and the ones inside `SLASH_TIMER_MAX` are a DASH that moves the player.
+ * than that are not a faster kill; they are presses the enemy refuses.
+ * ⚠ R9 SLICE 12b: and the ones inside `SLASH_TIMER_MAX` are a DASH — which
+ * used to be part of the same refusal and is now a CHOICE (⚖ ruling 31(b)).
+ * The cadence here is the RECEIVER's i-frame and nothing else.
  *
  * ⛓ AND THE COUNT IS A FLOOR, THE ASSERTION IS THE EFFECT — `killSchedule`'s
  * doctrine, applied. The leg may send a slack press; gate 4 of `Enemy.hit`
@@ -2547,13 +2549,24 @@ function runKill(run, perTick, kill, what) {
             + 'comes from the last tick that had velocity, so a wall-pinned stance has a '
             + 'facing and no keys.');
     }
+    /**
+     * ⛓⛓ R9 SLICE 12b — THE RECEIVER'S RULE, AND ONLY THE RECEIVER'S
+     * (⚖ ruling 31(b)). The old refusal ended *"and anything under
+     * `SLASH_TIMER_MAX` turns the second press into a DASH, which MOVES the
+     * player and re-aims the rect"* — all three of those are true and none of
+     * them is a reason any more. The dash is transcribed, driven against the
+     * game (`r9-l0-sword-dash`) and available on purpose; what still cannot
+     * happen is a press landing inside THIS body's own i-frame.
+     */
     if (cadence < KILL_PRESS_CADENCE) {
-        fail(`${what}: a cadence of ${cadence} is under the ${KILL_PRESS_CADENCE}-tick `
-            + `floor. \`Enemy.hit\`'s i-frame is ${ICE_TURRET.hitsTimerMax} ticks and the `
-            + `body's \`hitUpdate\` runs BEFORE the player, so the gate reopens on the `
-            + `${ICE_TURRET.hitsTimerMax}th tick after a landed hit — the margin is ONE. `
-            + `And anything under \`SLASH_TIMER_MAX\` turns the second press into a DASH, `
-            + 'which MOVES the player and re-aims the rect.');
+        fail(`${what}: a cadence of ${cadence} lands the next press inside the body's `
+            + `own ${ICE_TURRET.hitsTimerMax}-tick i-frame, so it would NOT damage. `
+            + `\`Enemy.hit\`'s first gate is \`hitsTimer <= 0\`, a landed hit sets `
+            + `${ICE_TURRET.hitsTimerMax}, and the body's \`hitUpdate\` runs BEFORE the `
+            + `player — so the gate reopens on the ${ICE_TURRET.hitsTimerMax}th tick `
+            + `after and the margin is ONE. ⛓ This bounds DAMAGE TO ONE BODY, not the `
+            + 'swing rate: the player may press far faster, and a dash is a choice '
+            + 'rather than an error.');
     }
 
     // ── the target, and the two rosters that have to agree about it ───

@@ -1843,6 +1843,11 @@ Three facts only the game knew, from the first collection recording:
 after the ceremony reaches `useItem(Main.primary)`: one is a swing, two
 inside twenty ticks is a **DASH that moves the player**. Every fixture
 spaces them eight apart, and the executor asserts none lands after the end.
+⛓ **R9 slice 12b measured what those eight-apart presses actually do**: on the
+`r3-collect-*` family, four of the five never reach `useItem` at all —
+`acting` drops them inside the pickup ceremony — and of the seven tapes in
+that family only `r3-collect-sword` holds a sword when its one surviving
+press lands. The spacing was load-bearing for a reason that never fired.
 
 ### ⛔⛔ The Owl room's DRAW SCHEDULE, and three things the instrument taught (R6 slice 6e)
 
@@ -2688,12 +2693,47 @@ swim boost is not "six ticks per 47" for a stop-start swim.**
 5. **The LOS test has four exemptions**: `hasGhostSword`, `type == "Solid"`,
    `type == "Rope"`, `is Flyer`.
 
-**The kill cadence is 31, not 21.** 21 is the DASH floor (a second press
-inside `slashTimer` knocks the player along their own velocity); 31 is the
-enemy i-frame one (`hitsTimerMax` 30). Different facts; the larger wins.
-The ±1 (whether the enemy's `hitUpdate` runs before or after the player's
-`slash()` on the hit tick is FlashPunk update-list order) is taken on the
-conservative side.
+**⛓⛓⛓ THE MAXIMUM SWORD SWING RATE IS THREE NUMBERS, AND NONE OF THEM IS 21
+OR 31** (R9 slice 12b, ⚖ ruling 36). This paragraph used to read *"the kill
+cadence is 31, not 21"* and describe a `max()` over a DASH floor and an
+i-frame floor. Both halves were about different things and neither was the
+swing rate:
+
+1. **An ORDINARY SWING is one per 20 ticks.** `set slashing`'s
+   `else if (!slashing && _s)` arm needs `slashTimer` at 0 — a press with the
+   timer up takes the dash arm instead — and `slash()` decrements ABOVE the
+   press (`Player.as:892-897`, at the top of `Player.update`), so a press `k`
+   ticks later reads `20 - k`. ⚠ **The ±1 falls on the LOW side**: at k = 19
+   the timer reads 1 and the press DASHES; k = 20 is the first ordinary swing
+   again. `combatVerbs.ORDINARY_SWING_PERIOD`.
+2. **A DASH is one per ANIMATION, so THREE per window, at k = 2 / 8 / 14** —
+   each a +2 impulse along the player's own velocity. `slashDashed` is cleared
+   by `slashEnd`, which is `sprSlash`'s COMPLETE CALLBACK (`Player.as:41`) and
+   not a key release, so the re-arm runs on the animation's clock: 5 ticks,
+   plus one because `slashEnd` fires from `sprites()`, BELOW `input()`. And
+   `Input.pressed` is a RISING EDGE, so a press costs two ticks of the key and
+   k = 1 is not expressible by any controller. `combatVerbs.DASH_CHAIN`
+   derives all of it by RUNNING the transcription; a hand division gives
+   1/6/11/16 and a hand count that models only the first correction gives
+   1/7/13/19. Both are schedules no input stream can produce.
+   ⇒ **the sustained rate is 3 dashes + 1 ordinary swing per 20 ticks = +6 px
+   of impulse per 20 ticks**, which is what ⚖ ruling 35's "dashing towards the
+   exit" is worth.
+3. **DAMAGE TO ONE BODY is one per 30 ticks, and it is the RECEIVER's.**
+   `Enemy.hit` refuses while `hitsTimer > 0` and a landed hit sets 30. The
+   swing rate does not bound damage; the i-frame does, PER BODY — two bodies in
+   one rect take a hit each from the same press, and a second body coming into
+   reach may be struck the very next tick. `combatVerbs.KILL_PRESS_CADENCE` is
+   now `ENEMY_IFRAMES + 1` alone, and the ±1 (whether the enemy's `hitUpdate`
+   runs before or after the player's `slash()` on the hit tick — FlashPunk
+   update-list order) is still taken on the conservative side. `r9-l6-bob-press`
+   drove 31 against the real game; nothing has driven 30.
+
+⇒ **a press is refused only by what it would DO** (⚖ ruling 31(b)). All three
+enforcement sites — `killSchedule`, `botDriverV2`'s kill leg and
+`solverBot.execKillByPress` — now cite the RECEIVER. `combat.KILL_CADENCE_FLOOR`
+survives as `SLASH_TIMER_MAX + 1`, a conservative per-press period for
+`encounters`' cost ESTIMATE, and refuses nothing.
 
 **The ghost sword's rect is `width * 2` = 48 tall, from a 7-pixel-high
 sprite.** Reading `height` for both arms shrinks the one item whose reach is
@@ -5304,6 +5344,12 @@ experiment. Fixed with the configuration §14.9 already proved inert — a
 **31-tick** press cadence, which clears `slashTimer` so no press can dash in
 either arm. *Not* "press at rest": the knockback direction is
 `(x - v.x, y - v.y)`, degenerate at `v = 0`, with no driven witness.
+⛓ **R9 slice 12b: that last clause is now settled.** The degeneracy is a
+RUNTIME fact — `SWFModernRuntime/src/avm2/avm2_globals.c:1075`
+`point_normalize` skips at zero length, leaving (0,0) rather than NaN — and
+the dash HAS a driven witness, `r9-l0-sword-dash`. The 31 here remains the
+right choice for THIS pair (it keeps the two arms comparable), but it is a
+fixture's configuration now rather than a rule about what a press may be.
 
 ⛓ And the drive's own residue had supported a different, plausible story.
 **A single-arm diagnosis from a single-arm residue is a hypothesis.**
@@ -7061,8 +7107,18 @@ SKIP  chain r8-d2-shield: ⛓ the EARNED set is exactly what the chain declares
    Everything R8 earned — the shield, the boss key, three L20 flags, `{18,0}` —
    is on STAGED chains, and a staged boot can DECLARE a flag but cannot EARN
    one, because what it skips is the REACHING.
-8. **The dash is avoided, not modelled** — `KILL_PRESS_CADENCE` keeps every
-   press outside `slashTimer`, so no walk on the roster produces one.
+8. ~~**The dash is avoided, not modelled**~~ — **CLOSED at R9 slice 12b.**
+   `set slashing` is transcribed whole (`combatVerbs.slashSet`: dash, swing,
+   swallow, release), wired into `levelRun`, and driven against the real game
+   by `r9-l0-sword-dash` — three +2 impulses at k = 2/8/14, digit for digit,
+   with the game confirming that `slashTimer` is NOT refreshed by a dash and
+   that a press inside a dash's own animation is swallowed whole.
+   ⚠ **AND THE OLD SENTENCE'S SECOND HALF WAS TRUE FOR THE WRONG REASON.** No
+   walk on the roster produced a dash — but not because the cadence kept
+   presses outside `slashTimer`. Measured: of 640 `primary` tape entries, 374
+   survive `acting` and only 149 have a sword in the primary slot, and all 149
+   are ordinary swings. The roster could never have reached the branch, so it
+   could never have discriminated any dash model from any other.
 9. **Carried unchanged from R7**: `buildTape`'s v5 cap; the L3→L11 shortcut,
    named and not taken; the strict-vs-minimal order question; three
    unreconciled Seedling worlds; the model refusals (BobBoss, the spear's

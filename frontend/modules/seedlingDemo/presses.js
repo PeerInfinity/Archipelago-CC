@@ -44,7 +44,7 @@ import { fireHits } from './fireVerb.js';
  * here would agree with that one until somebody edited either, and the copy
  * nobody tests is the one that drifts (⚖ ruling 17).
  */
-import { SLASH_SCALE_DASH, SLASH_SCALE_NORMAL } from './combatVerbs.js';
+import { SLASH_SCALE_DASH, SLASH_SCALE_NORMAL, SLASH_TIMER_MAX } from './combatVerbs.js';
 
 export class PressError extends Error {
     constructor(message) {
@@ -91,8 +91,11 @@ export const SPEAR_THICK = 5;
 export const ENEMY_HITS_MAX = 3;
 /** `Enemy.as:24` — ticks before the same enemy can be hit again. */
 export const ENEMY_HITS_TIMER = 30;
-/** `Player.as:119` — the double-tap window that turns two presses into a DASH. */
-export const SLASH_TIMER_MAX = 20;
+/**
+ * `Player.as:119` — the double-tap window that turns two presses into a DASH.
+ * ⛓ RE-EXPORTED rather than re-typed: `combat.js` is its one home (⚖ ruling 17).
+ */
+export { SLASH_TIMER_MAX };
 
 /**
  * ⛔⛔⛔ R6 SLICE 5: **ONE PRESS IS FIVE HIT TESTS**, AND THE LADDER HAD

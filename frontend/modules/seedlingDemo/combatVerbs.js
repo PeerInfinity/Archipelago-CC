@@ -56,7 +56,7 @@
  */
 
 import { assertRect, rect, rectsOverlap } from './levelWorld.js';
-import { ENEMY_CLASSES, ENEMY_IFRAMES, KILL_CADENCE_FLOOR } from './combat.js';
+import { ENEMY_CLASSES, ENEMY_IFRAMES, KILL_CADENCE_FLOOR, SLASH_TIMER_MAX } from './combat.js';
 import { knockbackImpulse } from './playerPhysicsV2.js';
 import { CHASERS, killWindowTicks } from './chasers.js';
 
@@ -79,8 +79,12 @@ export const SLASH_SPRITES = Object.freeze({
 export const SLASH_SCALE_NORMAL = Object.freeze({ x: 1, y: 1 });
 export const SLASH_SCALE_DASH = Object.freeze({ x: 1.5, y: 0.65 });
 
-/** `Player.slashTimerMax` — the double-press window that becomes a DASH. */
-export const SLASH_TIMER_MAX = 20;
+/**
+ * `Player.slashTimerMax` — the double-press window that becomes a DASH.
+ * ⛓ RE-EXPORTED from `combat.js`, which is its one home (⚖ ruling 17): this
+ * module and `presses` both used to write the 20 out for themselves.
+ */
+export { SLASH_TIMER_MAX };
 
 /** `Player.swordDamage` / `darkSwordDamage` / `ghostSwordDamage`. */
 export const SWORD_DAMAGE = Object.freeze({ sword: 1, darksword: 2, ghostsword: 2 });
@@ -89,23 +93,32 @@ export const SWORD_DAMAGE = Object.freeze({ sword: 1, darksword: 2, ghostsword: 
 export const SWORD_FORCE = 5;
 
 /**
- * The gap between two presses that both LAND on one enemy.
+ * ⛓⛓⛓ R9 SLICE 12b, ⚖ ruling 31(b) — **THE GAP BETWEEN TWO PRESSES THAT BOTH
+ * LAND ON ONE BODY, AND IT IS NOW THE RECEIVER'S NUMBER ALONE.**
  *
- * ⚠ Strictly larger than `KILL_CADENCE_FLOOR`, and for an unrelated
- * reason. 21 is about the PLAYER: a second press inside `slashTimer` is a
- * dash, which knocks the player along their own velocity. 31 is about the
- * ENEMY: `Enemy.hit` refuses while `hitsTimer > 0`, and a landed hit sets
- * it to `hitsTimerMax` = 30, decremented once per enemy update.
+ * It used to be `max(KILL_CADENCE_FLOOR, ENEMY_IFRAMES + 1)` — 31 by way of a
+ * MAX over two unrelated rules, one about the PRESSER (21: a second press
+ * inside `slashTimer` is a dash that moves the player) and one about the
+ * RECEIVER (31: `Enemy.hit` refuses while `hitsTimer > 0`). The presser's half
+ * is RETIRED: a dash is transcribed, driven against the game and chosen on
+ * purpose, so it is no longer a reason to refuse anything. The value is
+ * unchanged and its DERIVATION is now one rule instead of two.
  *
- * ⚠ AND THE 31 CARRIES A ±1 THIS MODULE DOES NOT RESOLVE. Whether the
- * enemy's `hitUpdate` runs before or after the player's `slash()` on the
- * hit tick depends on FlashPunk's update-list order, which is insertion
- * order and not something a transcription should assume. 31 is the
- * conservative side of that ambiguity, and it costs one tick per press in a
- * schedule whose assertion is the EFFECT anyway (the R2 hold lesson: the
- * count is a floor).
+ * ⚠ AND THE ±1 IS STILL A ±1, SAID PLAINLY. Whether the enemy's `hitUpdate`
+ * runs before or after the player's `slash()` on the hit tick depends on
+ * FlashPunk's update-list order, which is insertion order and not something a
+ * transcription should assume. 31 is the conservative side. ⛓ `r9-l6-bob-press`
+ * drove 31 against the real game and the three hits landed; nothing has ever
+ * driven 30, so the head-room stays until something does.
+ *
+ * ⛔⛔ IT IS PER BODY, WHICH IS WHY IT IS NOT A SWING RATE. `hitsTimer` is a
+ * field on the ENEMY. Two bodies in one rect each take a hit from the same
+ * press, and a second body coming into reach may be struck the very next tick.
+ * A schedule that treated this as "how often the player may press" would
+ * refuse presses the game allows — see `ORDINARY_SWING_PERIOD` and
+ * `DASH_CHAIN` for what actually bounds the player.
  */
-export const KILL_PRESS_CADENCE = Math.max(KILL_CADENCE_FLOOR, ENEMY_IFRAMES + 1);
+export const KILL_PRESS_CADENCE = ENEMY_IFRAMES + 1;
 
 // ─────────────────────────────────────────────────────────────────────
 // ⛓⛓⛓ R9 SLICE 12b — `set slashing`, THE WHOLE SETTER
@@ -647,11 +660,30 @@ export function killSchedule(instance, startTick, {
         fail(`killSchedule: "${instance.tag}" has no hit count — a boss (or an unpriced `
             + 'class) is an ENCOUNTER SCRIPT, not a press schedule.');
     }
+    /**
+     * ⛓⛓ R9 SLICE 12b — REFUSED BY WHAT THE PRESS WOULD DO, NOT BY A FLOOR
+     * (⚖ ruling 31(b)).
+     *
+     * The old refusal quoted two reasons and only one of them survives. A
+     * cadence inside `SLASH_TIMER_MAX` is no longer an error: it is a DASH,
+     * transcribed and driven against the game, and a schedule may want one.
+     * What is still an error is a cadence that lands the second press inside
+     * THIS BODY's own i-frame, because that press does not damage — it is a
+     * schedule whose arithmetic says "N hits" and whose effect is fewer.
+     *
+     * ⚠ The refusal names the RECEIVER now, so a caller reading it is pointed
+     * at `hitsTimer` rather than at a constant with a `max()` in it.
+     */
     if (cadence < KILL_PRESS_CADENCE) {
-        fail(`killSchedule: cadence ${cadence} is under the ${KILL_PRESS_CADENCE}-tick `
-            + `floor (${KILL_CADENCE_FLOOR}-tick dash rule, ${ENEMY_IFRAMES}-tick enemy `
-            + 'i-frames). Presses closer than that are a dash that MOVES the player and '
-            + 'a hit the enemy refuses.');
+        fail(`killSchedule: a cadence of ${cadence} lands the next press inside `
+            + `"${instance.tag}"'s own ${ENEMY_IFRAMES}-tick i-frame, so it would NOT `
+            + `damage — \`Enemy.hit\` refuses while \`hitsTimer > 0\`, and a landed hit `
+            + `sets it to ${ENEMY_IFRAMES}. ${KILL_PRESS_CADENCE} is that plus the `
+            + 'update-order ±1 this transcription does not resolve. ⛓ This is the '
+            + 'RECEIVER\'s rule and it is per BODY: the player may press far faster '
+            + `(an ordinary swing every ${SLASH_TIMER_MAX} ticks, plus up to `
+            + `${DASH_CHAIN_MAX} dashes inside each of those windows), and a SECOND `
+            + 'body in reach may be struck on the very next tick.');
     }
     // ⚠ A THROW, NOT A `?? 0`. The window floor has to run past the death
     // ANIMATION — both chasers override `startDeath` to play it without

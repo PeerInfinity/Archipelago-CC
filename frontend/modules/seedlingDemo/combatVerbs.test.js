@@ -34,6 +34,7 @@ import {
     DASH_CHAIN,
     DASH_CHAIN_MAX,
     ORDINARY_SWING_PERIOD,
+    KILL_PRESS_CADENCE,
     SLASH_SCALE_DASH,
     SLASH_SCALE_NORMAL,
     SLASH_SPRITES,
@@ -277,9 +278,37 @@ describe('the kill schedule', () => {
         expect(KILL_PRESS_CADENCE).toBe(31);
     });
 
-    it('refuses a cadence under the floor, by name', () => {
+    /**
+     * ⛓⛓ R9 SLICE 12b — THE REFUSAL SURVIVES AND ITS REASON DOES NOT.
+     *
+     * `killSchedule` schedules presses at ONE body, so the RECEIVER's i-frame
+     * binds it whatever the presser can do — the behaviour is unchanged. What
+     * changed is that the throw no longer cites the dash: a press inside
+     * `SLASH_TIMER_MAX` is refused here because it would not DAMAGE, not
+     * because it would move the player (⚖ ruling 31(b)).
+     */
+    it('refuses a cadence that lands inside the TARGET\'s i-frame, and says whose rule it is', () => {
         expect(() => killSchedule(jelly, 0, { cadence: 30 }))
-            .toThrow(/is under the 31-tick floor/);
+            .toThrow(/lands the next press inside "jellyfish"'s own 30-tick i-frame/);
+        expect(() => killSchedule(jelly, 0, { cadence: 30 })).toThrow(/would NOT damage/);
+        // ⛔ and a sub-`SLASH_TIMER_MAX` cadence must not be refused for BEING
+        // a dash any more. It is still refused — one body, one i-frame — but
+        // the old reason ("a dash that MOVES the player", "under the N-tick
+        // floor") is gone, and the message now names the chain as something
+        // the PLAYER may do rather than as an error.
+        expect(() => killSchedule(jelly, 0, { cadence: 15 }))
+            .not.toThrow(/under the \d+-tick floor|a dash that MOVES the player/);
+        expect(() => killSchedule(jelly, 0, { cadence: 15 }))
+            .toThrow(/the player may press far faster/);
+    });
+
+    it('…and the cadence is derived from the RECEIVER alone now, not a max() over two rules', () => {
+        expect(KILL_PRESS_CADENCE).toBe(31);
+        expect(KILL_PRESS_CADENCE).toBe(ENEMY_IFRAMES + 1);
+        // The presser's old half is retired: the swing period is 20, and 21
+        // was one tick of head-room over it rather than a rule about damage.
+        expect(KILL_CADENCE_FLOOR).toBe(ORDINARY_SWING_PERIOD + 1);
+        expect(KILL_PRESS_CADENCE).not.toBe(KILL_CADENCE_FLOOR);
     });
 
     it('three plain-sword presses for a jellyfish, two with the darksword', () => {
