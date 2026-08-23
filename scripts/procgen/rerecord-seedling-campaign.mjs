@@ -91,7 +91,7 @@ import {
 } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import {
     bootFromEnvelopeOnly, chainSubjects, latchCacheKey, mergePersistence, timedClearHazard,
@@ -115,6 +115,8 @@ const arg = (name, dflt) => {
     return hit === undefined ? dflt : hit.slice(name.length + 3);
 };
 const DRY_RUN = process.argv.includes('--dry-run');
+/** ⚖ Ruling 38 (2), R9 slice 12d — the growth command. See `grow()` below. */
+const GROW = process.argv.includes('--grow');
 const NO_CACHE = process.argv.includes('--no-cache');
 const FROM = arg('from', 'S0');
 const TO = DRY_RUN ? 'S0' : arg('to', 'S5');
@@ -620,10 +622,394 @@ function report(s0, s1, s2) {
         + 'to end on the real game (trap 250).');
 }
 
+// ── ⛓⛓⛓ THE GROWTH COMMAND — ⚖ RULING 38 ITEM (2), R9 SLICE 12d ───────
+/**
+ * `--grow` records THE NEXT ROOM, end to end.
+ *
+ * ── ⛔ WHAT IT REPLACES ────────────────────────────────────────────────
+ *
+ * Slice 12b″ grew this chain by one room and it took a whole session:
+ * `SEGMENTS`, `PLAYTHROUGH_CHAINS`, `PAGE_CHAINS`, the demos catalogue's
+ * counts, `R8_ENEMY_BRIDGE`, `index.json`, the frontier, the doc's chain table
+ * and a `--record` follow-up the pipeline did not fold in — twelve edits, half
+ * of them the same fact. ⚖ Ruling 38 (1) made the membership ONE declaration;
+ * this is (2), the command that appends to it.
+ *
+ * ── THE SUBJECT IS DERIVED, AND SO IS THE ANSWER ──────────────────────
+ *
+ * The room to grow into is the chain's own tail `to` — nothing is passed on
+ * the command line, because a room named by a human is a room nobody checked
+ * against the route. Whether it SOLVES is the SURVEY's answer, read off the
+ * two artifacts the census reads (`route.json` + `survey.json`), and
+ * cross-checked against the committed frontier — two derivations, one answer.
+ *
+ * ⛔⛔ **A REFUSAL IS THE ANSWER, NOT AN ERROR.** If the survey refuses the
+ * next step, `--grow` prints the refusal VERBATIM — family and text — and
+ * writes NOTHING. That is the correct outcome for a chain standing in front of
+ * an unsolved room, and it is today's: route step 17, L15, `shove`. The exit
+ * code is 0, because the command did what it is for; a STALE or MISSING
+ * artifact exits 1, because then it could not ask.
+ *
+ * ── WHAT A GROWTH WRITES (seven artifacts, 12b″'s own list) ───────────
+ *   1  `campaignChain.js`            the appended segment
+ *   2  `fixtures/tapes/<new>.json`   the tape           ) the producer's,
+ *   3  `fixtures/traces/<new>.trace.json`  the sidecar  ) in one run
+ *   4  `fixtures/tapes/<pred>.json`  the predecessor's `why` → `description`
+ *   5  `fixtures/expectations/<new>.json`  the recording (S3)
+ *   6  `fixtures/tapes/index.json`   regenerated
+ *   7  `fixtures/campaign-frontier.json`   re-derived
+ * then S0..S5 over the whole chain, the reference regenerated, and the
+ * standing values re-measured. Everything else a growth touches DERIVES from
+ * artifact 1 since ⚖ ruling 38 (1).
+ *
+ * Run:
+ *   node scripts/procgen/rerecord-seedling-campaign.mjs --grow --dry-run
+ *   node scripts/procgen/rerecord-seedling-campaign.mjs --grow
+ */
+const SURVEY_DIR = join(ROOT, 'NewDocs/plans/seedling-editor-survey');
+const FRONTIER_PATH = join(MODULE, 'fixtures/campaign-frontier.json');
+const CHAIN_DECL = join(MODULE, 'campaignChain.js');
+
+/** A refusal that is the ANSWER: say it, write nothing, exit 0. */
+function growRefuses(what, detail) {
+    console.log(`\n## ⛔ --grow REFUSES: ${what}\n`);
+    console.log(detail);
+    console.log('\n## NOTHING WAS WRITTEN. `git status --porcelain` should be empty.');
+    process.exit(0);
+}
+/** A refusal that means it could not ASK: exit 1. */
+function growCannotAsk(what, cure) {
+    console.log(`\n## ⛔⛔ --grow CANNOT ASK: ${what}`);
+    console.log(`## THE CURE: ${cure}`);
+    console.log('## NOTHING WAS WRITTEN.');
+    process.exit(1);
+}
+
+async function grow() {
+    console.log('# --grow — the next room, end to end (⚖ ruling 38 (2), R9 slice 12d)\n');
+    const decl = await import(pathToFileURL(CHAIN_DECL).href);
+    const names = [...decl.CAMPAIGN_SEGMENT_NAMES];
+    const tail = decl.campaignTail();
+    const next = decl.campaignNextLevel();
+    console.log(`## the chain: ${names.length} segment(s), tail ${tail.name} `
+        + `(L${tail.level} → L${tail.to})`);
+    console.log(`## the room in front of it, DERIVED from the tail's own \`to\`: L${next}`);
+
+    // ── the frontier: the census's checked projection of the survey ────
+    if (!existsSync(FRONTIER_PATH)) {
+        growCannotAsk(`${FRONTIER_PATH} is not on disk`,
+            'node scripts/procgen/census-seedling-campaign.mjs --write-frontier');
+    }
+    const frontier = JSON.parse(readFileSync(FRONTIER_PATH, 'utf8'));
+    if (frontier.chain !== decl.CAMPAIGN_CHAIN_ID
+        || JSON.stringify(frontier.segments) !== JSON.stringify(names)) {
+        growCannotAsk('the committed frontier is STALE — it describes a different chain '
+            + `(${frontier.chain}: ${(frontier.segments ?? []).length} segment(s)) than `
+            + `the declaration does (${decl.CAMPAIGN_CHAIN_ID}: ${names.length}). Growing `
+            + 'from a stale frontier would ask the route about the wrong room',
+        'node scripts/procgen/census-seedling-campaign.mjs --write-frontier');
+    }
+    if (frontier.covered !== names.length) {
+        growCannotAsk(`the frontier says the chain covers ${frontier.covered} route `
+            + `step(s) and the declaration has ${names.length} segment(s)`,
+        'node scripts/procgen/census-seedling-campaign.mjs (it names the segment where '
+            + 'the chain stops prefixing the route)');
+    }
+
+    // ── the survey: the frontier's own source, read again ─────────────
+    const routeP = join(SURVEY_DIR, 'route.json');
+    const surveyP = join(SURVEY_DIR, 'survey.json');
+    if (!existsSync(routeP) || !existsSync(surveyP)) {
+        growCannotAsk(`${routeP} / survey.json are not on disk — the survey's answer is `
+            + 'what decides whether the next room solves, and this command will not '
+            + 'invent it',
+        'node scripts/procgen/survey-seedling-route.mjs');
+    }
+    const route = JSON.parse(readFileSync(routeP, 'utf8'));
+    const survey = JSON.parse(readFileSync(surveyP, 'utf8'));
+    const step = route.steps[frontier.covered] ?? null;
+    if (!step) {
+        growRefuses('THE ROUTE ENDS HERE',
+            `the chain covers all ${route.steps.length} route step(s); there is no next `
+            + 'room to grow into. A chain that has walked the whole route is finished, '
+            + 'not stuck.');
+    }
+    /**
+     * ⛔ TWO DERIVATIONS, ONE ANSWER. The declaration's tail says the next room
+     * is L`next`; the route says the next STEP is in L`step.level`. If those
+     * disagree the chain is not walking the route the survey surveyed, and
+     * growing would append a room nobody aligned.
+     */
+    if (step.level !== next) {
+        growCannotAsk(`the declaration's tail leaves into L${next} and route step `
+            + `${step.step} is in L${step.level} — the chain and the route disagree about `
+            + 'what comes next',
+        'node scripts/procgen/census-seedling-campaign.mjs (its alignment row names the '
+            + 'segment where the two part)');
+    }
+    const row = (survey.rows ?? []).find((r) => String(r.step) === String(step.step));
+    if (!row) {
+        growCannotAsk(`the survey has no row for route step ${step.step} (L${step.level})`,
+            'node scripts/procgen/survey-seedling-route.mjs');
+    }
+
+    // ── THE ANSWER ────────────────────────────────────────────────────
+    if (row.verdict !== 'SOLVED' || row.refusal) {
+        /**
+         * ⛓ AND THE FRONTIER'S COPY OF IT IS CHECKED, where it has one. The
+         * census projects the FIRST refused step; when that is this step the
+         * two texts must be the same sentence, or one of the artifacts is
+         * older than the other and the refusal being quoted is not today's.
+         */
+        if (frontier.nextStep && frontier.nextStep.step === step.step
+            && frontier.refusal && frontier.refusal.text !== row.refusal) {
+            growCannotAsk('the committed frontier and the survey give DIFFERENT refusals '
+                + `for route step ${step.step} — one of them is older than the other, and `
+                + 'a refusal quoted from a stale artifact is a sentence about a room '
+                + 'nobody asked today',
+            'node scripts/procgen/census-seedling-campaign.mjs --write-frontier');
+        }
+        growRefuses(`route step ${step.step}, L${step.level}, DOES NOT SOLVE`,
+            `   family: ${row.family ?? frontier.refusal?.family ?? '(unnamed)'}\n\n`
+            + `   ${row.refusal}\n\n`
+            + `   goals asked: ${step.goals.map((g) => g.why).join('; ')}\n`
+            + `   the boot the survey used: ${row.boot?.kind} `
+            + `${row.boot?.source ?? ''} at L${row.boot?.block?.level}@`
+            + `${row.boot?.block?.x},${row.boot?.block?.y}\n\n`
+            + '   ⛓ THIS IS THE WORK ORDER. The chain grows when the solver crosses this '
+            + 'room, not before — a segment appended over a refusal would be a tape of a '
+            + 'walk nobody found.');
+    }
+
+    // ── the segment this growth would append, DERIVED ─────────────────
+    const prefix = /^(r\d+)-/.exec(tail.name)?.[1];
+    if (!prefix) {
+        growCannotAsk(`the tail is named "${tail.name}" and no rung prefix (\`rN-\`) can `
+            + 'be read off it, so a name for the new segment cannot be derived',
+        'name the tail by the arc convention (`rN-solve-<level>`), or extend this '
+            + 'derivation deliberately');
+    }
+    const newName = `${prefix}-solve-${step.level}`;
+    if (names.includes(newName) || existsSync(join(TAPES, `${newName}.json`))) {
+        growCannotAsk(`the derived name "${newName}" is already taken — L${step.level} is `
+            + 'being visited a SECOND time, and which tape owns which visit is a decision '
+            + 'a human makes (⛔ trap 169: `r9-solve-11` vs `r8-solve-11` is exactly this)',
+        'append the segment by hand with a name that says which visit it is, then re-run '
+            + 'the pipeline with --from=S0');
+    }
+    /**
+     * ⛓ `collects` COMES FROM THE ATLAS, not from the goal's prose. A route
+     * goal of kind `collect-placement` carries the CELL; the entity standing in
+     * that cell names the type, which is the same lookup the producer's
+     * `placement(level, type)` does in reverse.
+     */
+    const src = atlasLevelSource();
+    const collects = [];
+    for (const g of step.goals) {
+        if (g.kind !== 'collect-placement') continue;
+        const ent = (src(step.level).entities ?? []).find(
+            (e) => e.x === g.placement.x && e.y === g.placement.y);
+        if (!ent) {
+            growCannotAsk(`route step ${step.step} collects at `
+                + `(${g.placement.x},${g.placement.y}) in L${step.level} and the atlas has `
+                + 'no entity there, so the goal cannot be re-derived by the producer',
+            'node scripts/procgen/survey-seedling-route.mjs --derive-only (the route and '
+                + 'the atlas have to agree before a tape can be authored from either)');
+        }
+        collects.push(ent.type);
+    }
+    /**
+     * ⛔ THE `why` IS DERIVED FROM THE SOLVE RECORD (⚖ ruling 17), never a hand
+     * sentence: the rung, the room, the goals the atlas gave, and what the
+     * solver actually spent. It is written into the tape's `description` by the
+     * producer, so a `why` that described a different walk reds `--check`.
+     */
+    const why = `L${step.level} — grown by \`rerecord-seedling-campaign.mjs --grow\` at `
+        + `route step ${step.step}: ${step.goals.map((g) => g.why).join('; ')}. The `
+        + `survey's own solve is ${row.ticks} tick(s), ${row.traceRows} decision(s), `
+        + `${row.replans} re-plan(s), passes [${(row.passes ?? [])
+            .map((p) => p.kind).join(', ')}]`;
+
+    const plan = { newName, level: step.level, to: step.crossesTo, collects, why,
+        predecessor: tail.name, step: step.step };
+    console.log('\n## ⛓ THE SURVEY SOLVES IT. The segment this growth appends:\n');
+    console.log(`   name       ${plan.newName}`);
+    console.log(`   rooms      L${plan.level} → L${plan.to}`);
+    console.log(`   collects   ${plan.collects.join(', ') || '(nothing)'}`);
+    console.log(`   why        ${plan.why}`);
+    console.log('\n## THE SEVEN ARTIFACTS THIS GROWTH WRITES:\n');
+    const artifacts = [
+        `frontend/modules/seedlingDemo/campaignChain.js (the appended segment)`,
+        `frontend/modules/seedlingDemo/fixtures/tapes/${plan.newName}.json`,
+        `frontend/modules/seedlingDemo/fixtures/traces/${plan.newName}.trace.json`,
+        `frontend/modules/seedlingDemo/fixtures/tapes/${plan.predecessor}.json `
+            + '(re-emitted; ⛔ see THE ONE THING THIS COMMAND CANNOT DERIVE, below)',
+        `frontend/modules/seedlingDemo/fixtures/expectations/${plan.newName}.json (S3)`,
+        'frontend/modules/seedlingDemo/fixtures/tapes/index.json',
+        'frontend/modules/seedlingDemo/fixtures/campaign-frontier.json',
+    ];
+    artifacts.forEach((a, i) => console.log(`   ${i + 1}. ${a}`));
+    console.log('\n## THEN: the producer, S0..S5 over the whole chain, the reference '
+        + 'regenerated, and `standing-values.mjs --write`.');
+
+    /**
+     * ⛔⛔⛔ THE ONE THING `--grow` CANNOT DERIVE, SAID OUT LOUD RATHER THAN
+     * DISCOVERED LATER.
+     *
+     * Slice 12b″ had to rewrite the PREDECESSOR's `why` when it grew this
+     * chain: `r9-solve-13`'s said *"the chain STOPS at L14, whose CAMERA BAND
+     * the route survey refuses"*, and that went false the moment L14 solved.
+     *
+     * ⛔ AND NO GATE WOULD HAVE CAUGHT IT. §23c.4 says the producer's `--check`
+     * reds on a stale `why` — true THEN, because the human had already changed
+     * the declaration and the tape had not been re-emitted. It is NOT true of a
+     * `why` that is stale in BOTH: the check compares the tape's `description`
+     * against the declaration, so a sentence that is false about the world but
+     * consistent between the two passes forever. A fixed point cannot see it
+     * (trap: a fixed point tests self-consistency, never correctness).
+     *
+     * ⇒ this is a REVIEW ITEM, printed verbatim, and it is the one place a
+     * growth still needs a human. Deriving it is residue and would need the
+     * `why` to be composed of parts a machine can check.
+     */
+    console.log('\n## ⛔⛔ THE ONE THING THIS COMMAND CANNOT DERIVE — REVIEW IT:\n');
+    console.log(`   ${plan.predecessor}'s \`why\` in campaignChain.js reads:\n`);
+    console.log(`     "${tail.why}"\n`);
+    console.log('   Does that sentence survive the chain growing past it? Slice 12b″\'s '
+        + 'predecessor said\n   "the chain STOPS at L14, whose CAMERA BAND the route '
+        + 'survey refuses" and it went\n   FALSE. ⛔ No gate can tell you: the producer\'s '
+        + '`--check` compares the tape\'s\n   `description` against this declaration, so a '
+        + 'sentence stale in BOTH is self-\n   consistent and passes. Edit '
+        + 'campaignChain.js before the growth if it has gone false.');
+
+    if (DRY_RUN) {
+        console.log('\n## --dry-run: PLANNED ONLY, nothing written.');
+        return { plan, planned: artifacts, dryRun: true };
+    }
+
+    // ── 1. the declaration ────────────────────────────────────────────
+    /**
+     * ⛔⛔ THE APPEND IS REVERSIBLE UNTIL THE PRODUCER AGREES, and it has to be.
+     * The survey's SOLVED verdict is a claim about a walk it found from a
+     * STAGED boot; the producer solves the same room from its predecessor's
+     * MEASURED LATCH, which is a different starting state. The survey saying
+     * yes is therefore evidence, not a guarantee — and a `--grow` that left a
+     * segment in the declaration after the producer refused it would leave a
+     * chain naming a tape that does not exist, which is the one state the LAWS
+     * say must never be pushed. So the pre-append text is kept, and a producer
+     * refusal restores it: the command writes NOTHING.
+     *
+     * ⛓ ONLY THE FIRST STEP GETS THE REVERT. Once the producer has written
+     * tapes, restoring the declaration would be a lie about what is on disk;
+     * from there the growth is RESUMABLE and says so.
+     */
+    const before = readFileSync(CHAIN_DECL, 'utf8');
+    appendSegment(plan);
+    console.log(`\n  wrote ${CHAIN_DECL} — ${names.length} → ${names.length + 1} segments`);
+
+    /**
+     * ⛔⛔ EVERYTHING AFTER THE APPEND RUNS IN CHILD PROCESSES, and that is a
+     * consequence rather than a style: this module imported `PLAYTHROUGH_CHAINS`
+     * at load, so the chain THIS process holds is the one from BEFORE the
+     * append. A pipeline run in-process would predict, measure and prove the
+     * old chain while the declaration on disk said something else — the exact
+     * shape of defect ⚖ ruling 38 (1) exists to remove. So the growth SHELLS
+     * each stage, every one of them reading the declaration fresh.
+     */
+    const steps = [
+        ['the producer authors the new segment and rewrites its predecessor\'s `why`',
+            ['scripts/procgen/solve-seedling-r9-campaign.mjs'], 'grow-producer'],
+        ['the pipeline S0..S5 over the grown chain',
+            ['scripts/procgen/rerecord-seedling-campaign.mjs', `--run-dir=${RUN_DIR}`],
+            'grow-pipeline'],
+        ['the tape index', ['scripts/procgen/generate-tape-index.mjs'], 'grow-index'],
+        ['the frontier, re-derived',
+            ['scripts/procgen/census-seedling-campaign.mjs', '--write-frontier'],
+            'grow-frontier'],
+        ['the generated reference (the doc\'s chain table)',
+            ['scripts/procgen/generate-procgen-reference.mjs'], 'grow-reference'],
+        ['the standing values, re-measured',
+            ['scripts/procgen/standing-values.mjs', '--write'], 'grow-standing'],
+    ];
+    const ran = [];
+    for (const [what, args, log] of steps) {
+        const r = shell(what, 'node', args, log);
+        ran.push({ what, ok: r.ok, tally: r.tally });
+        if (!r.ok && ran.length === 1) {
+            writeFileSync(CHAIN_DECL, before);
+            console.log(`\n## ⛔⛔ THE PRODUCER REFUSED ${plan.newName}, so the append is `
+                + 'REVERTED and NOTHING is written.');
+            console.log('## The survey solves this room from a STAGED boot; the producer '
+                + 'solves it from its predecessor\'s MEASURED LATCH, and those are '
+                + 'different starting states. The producer\'s refusal is the one that '
+                + 'counts, because its walk is the one that would be recorded.');
+            console.log(`## Read ${join(RUN_DIR, `${log}.log`)}.`);
+            break;
+        }
+        if (!r.ok) {
+            console.log(`\n## ⛔⛔ THE GROWTH STOPPED AT: ${what}`);
+            console.log('## The declaration is APPENDED and the tree is HALF-GROWN. '
+                + `Read ${join(RUN_DIR, `${log}.log`)}, fix, and re-enter with `
+                + `\`--run-dir=${RUN_DIR}\` — every stage is resumable and the append is `
+                + 'idempotent only in the sense that it has already happened: do not run '
+                + '`--grow` twice.');
+            break;
+        }
+    }
+    console.log('\n## WHAT MOVED — hand this table to the as-built:\n');
+    for (const r of ran) {
+        console.log(`   ${r.ok ? 'PASS' : 'FAIL'}  ${r.what} — `
+            + `${r.tally.PASS}/${r.tally.FAIL}/${r.tally.SKIP}`);
+    }
+    console.log('\n## and the seven artifacts above; `git status --porcelain` is the '
+        + 'other half of the answer.');
+    return { plan, planned: artifacts, dryRun: false, ran };
+}
+
+/**
+ * ⛔ A SURGICAL APPEND, and it refuses rather than guessing where the list
+ * ends: the declaration is source a human reads, so a growth edits it the way
+ * a human would and leaves everything above untouched.
+ */
+function appendSegment(plan) {
+    const text = readFileSync(CHAIN_DECL, 'utf8');
+    const marker = '\n]);\n';
+    const at = text.indexOf(marker, text.indexOf('export const CAMPAIGN_SEGMENTS'));
+    if (at < 0) {
+        throw new Error('⛔ campaignChain.js: the end of CAMPAIGN_SEGMENTS could not be '
+            + 'found. The append is a text edit on a shape this command expects; a '
+            + 'reformat of the declaration has to be matched here deliberately.');
+    }
+    const q = (s) => `'${s.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`;
+    const wrapped = [];
+    let line = '';
+    for (const word of plan.why.split(' ')) {
+        if (line && (line.length + word.length + 1) > 68) { wrapped.push(line); line = ''; }
+        line = line ? `${line} ${word}` : word;
+    }
+    if (line) wrapped.push(line);
+    const whySrc = wrapped.map((l, i) => (i === 0
+        ? `        why: ${q(`${l} `)}`
+        : `            + ${q(i === wrapped.length - 1 ? l : `${l} `)}`)).join('\n');
+    const rowSrc = `    Object.freeze({\n`
+        + `        name: '${plan.newName}', level: ${plan.level}, to: ${plan.to},`
+        + `${plan.collects.length
+            ? ` collects: Object.freeze([${plan.collects.map(q).join(', ')}]),` : ''}\n`
+        + `${whySrc},\n`
+        + `    }),`;
+    writeFileSync(CHAIN_DECL, `${text.slice(0, at)}\n${rowSrc}${text.slice(at)}`);
+}
+
 // ── the run ───────────────────────────────────────────────────────────
 console.log(`# rerecord-seedling-campaign — stages ${FROM}..${TO}`
     + `${DRY_RUN ? ' (--dry-run)' : ''}${NO_CACHE ? ' (--no-cache)' : ''}`);
 console.log(`# run directory: ${RUN_DIR}\n`);
+
+if (GROW) {
+    const g = await grow();
+    console.log(failures ? `\n${failures} FAILURE(S)` : '\nall checks green');
+    process.exit(failures || (g.ran ?? []).some((r) => !r.ok) ? 1 : 0);
+}
 
 const s0 = wants('S0') ? predict() : resume('S0');
 const s1 = wants('S1') ? measure(s0) : (wants('S2') || wants('S5') ? resume('S1') : null);
