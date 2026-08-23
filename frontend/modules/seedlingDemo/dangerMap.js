@@ -351,9 +351,29 @@ export function hazardDanger(run, box) {
  * flags the run does not step a chaser, so it has no live position to offer
  * and this must not invent one from the census.
  */
-export function chaserDanger(run, box, horizon) {
+export function chaserDanger(run, box, horizon, bodies = null) {
     const out = [];
-    for (const c of run.chasers ?? []) {
+    /**
+     * ⛓⛓⛓ R9 SLICE 12 — **THE BODIES MAY BE A FORECAST'S**, and when they are
+     * they are already AT the ETA.
+     *
+     * `run.chasers` is where the bodies are NOW. In TRANSIT that was the whole
+     * defect: `coupledHorizon` is 0, so `r` below is 0, so every cell along a
+     * corridor was priced against the ungrown box at the plan-time position —
+     * and a bob spends the walk closing on the player. `previewWalk` now steps
+     * them against the candidate path and hands each sample its own bodies, so
+     * the position IS the answer to "where will it be when I get there" rather
+     * than a growth radius standing in for one.
+     *
+     * ⚠ THE GROWTH TERM IS NOT REMOVED, because the two readings share this
+     * function: a caller that passes nothing still gets the live bodies and
+     * still needs `bound * horizon` (the WAIT question, `dangerAt`'s other
+     * mode, asks exactly that). With forecast bodies the horizon is 0 and the
+     * growth is correctly nil — the same constant, for the opposite reason.
+     * `threatPad` applies either way: a class whose THREAT exceeds its body is
+     * not measured by its body.
+     */
+    for (const c of bodies ?? run.chasers ?? []) {
         const row = ENEMY_CLASSES[c.tag];
         const bound = stepBoundFor(c.tag);
         if (bound === null) {
@@ -825,11 +845,30 @@ export const TRANSIT_INGREDIENTS = Object.freeze({
         atEta: true,
         why: '`stepArrow` reads only the arrow: velocity, the level bound, and cover',
     }),
+    /**
+     * ⛓⛓⛓ R9 SLICE 12 — THIS ROW USED TO BE FALSE, AND THE FALSE HALF WAS THE
+     * SENTENCE THAT SOUNDED LIKE A MECHANISM.
+     *
+     * It read *"Read LIVE; priced along the corridor by the per-tick next-cell
+     * check"*. There was no such check — not in `botDriverV2.drive`, not
+     * anywhere — so the corridor was priced against the plan-time box at every
+     * ETA and the claim covered for it. L14's survey walk is what collected:
+     * a hit at tick 44 from a body priced seventeen pixels from where it stood.
+     *
+     * ⇒ the coupling was read as a reason the arm COULD NOT be carried to the
+     * ETA. It is the opposite: the coupling is what makes a forecast over a
+     * CANDIDATE PATH the only honest answer, because the bodies' future is a
+     * function of the walk being considered. `previewWalk` steps them against
+     * that path and hands each sample its own bodies.
+     */
     chasers: Object.freeze({
         coupling: 'player-coupled',
-        atEta: false,
-        why: '`chaseImpulse` steers at the player, so a long forecast forecasts the '
-            + 'walk. Read LIVE; priced along the corridor by the per-tick next-cell check',
+        atEta: true,
+        why: '`chaseImpulse` steers at the player, so where a bob will BE is a function '
+            + 'of the walk being considered — which is why it is forecast against the '
+            + 'CANDIDATE PATH (`previewWalk` steps `chaserStep` per tick) and each '
+            + 'sample carries the bodies as of its own tick, rather than read LIVE and '
+            + 'grown by a horizon',
     }),
     armedLanes: Object.freeze({
         coupling: 'state',
@@ -896,7 +935,7 @@ export const TRANSIT_INGREDIENTS = Object.freeze({
  *   about the difference should get the one that forbids more.
  * @returns {{danger: boolean, horizon: number, mode: string, sources: object[]}}
  */
-export function dangerAt(run, tick, box, { mode = 'wait', arrows = null } = {}) {
+export function dangerAt(run, tick, box, { mode = 'wait', arrows = null, chasers = null } = {}) {
     if (!run || typeof run.level !== 'number') {
         fail('dangerAt: needs a live run — the whole point is that the positions are the '
             + 'ones the run has NOW, not the ones a level record was authored with.');
@@ -925,7 +964,7 @@ export function dangerAt(run, tick, box, { mode = 'wait', arrows = null } = {}) 
             ? arrowDangerDuringTransit(run, box, horizon, arrows)
             : arrowDanger(run, box, horizon)),
         ...hazardDanger(run, box),
-        ...chaserDanger(run, box, coupledHorizon),
+        ...chaserDanger(run, box, coupledHorizon, mode === 'transit' ? chasers : null),
         // ⛓ AUTONOMOUS (§14.2): a spinner cannot read the player, so it is
         // carried to the cell's own ETA in transit mode exactly as an arrow is.
         ...spinnerDanger(run, box, horizon),
@@ -945,8 +984,8 @@ export function dangerAt(run, tick, box, { mode = 'wait', arrows = null } = {}) 
  * produces a schedule the walk does not keep, and a probe checked against a
  * schedule nobody drives is a probe of nothing.
  */
-export function dangerDuringTransit(run, tick, box, arrows = null) {
-    return dangerAt(run, tick, box, { mode: 'transit', arrows });
+export function dangerDuringTransit(run, tick, box, arrows = null, chasers = null) {
+    return dangerAt(run, tick, box, { mode: 'transit', arrows, chasers });
 }
 
 /**

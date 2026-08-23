@@ -5448,6 +5448,203 @@ export function createLevelRun({
     }
 
     /**
+     * ⛓⛓⛓ R9 SLICE 12 — **THE BOB FORECAST**, and it is `arrowForecastNow`'s
+     * sentence one ingredient over.
+     *
+     * ⛔⛔ WHAT IT REPAIRS, NAMED AS A MEASUREMENT RATHER THAN AS AN INTENTION.
+     * `previewWalk` stepped the PLAYER and the ARROWS and nothing else, and
+     * `dangerMap`'s `coupledHorizon` is `0` in TRANSIT — so `chaserDanger`
+     * priced every bob as its ungrown 8x8 box WHERE IT STOOD AT PLAN TIME, at
+     * every ETA along the corridor. The route survey's L14 walk is the receipt:
+     * it took a hit at tick 44 from `bob@96,48`, a body the corridor probe had
+     * priced at (96,48) and which was at (113.7, 56.1) — seventeen pixels east
+     * — when it landed the blow. `TRANSIT_INGREDIENTS.chasers` claimed the
+     * corridor was "priced along the corridor by the per-tick next-cell check";
+     * no such check existed anywhere in `botDriverV2.drive`.
+     *
+     * ⛔ AND `coupledHorizon` 0 IS NOW HONEST INSTEAD OF A FICTION. The same
+     * constant, for the opposite reason: there is nothing left to GROW, because
+     * the body is already carried to the cell's own ETA. `threatPad` still
+     * applies — a class whose THREAT exceeds its body is not measured by its
+     * body (`chaseEnvelope`'s own note).
+     *
+     * ⛓ THE STEPPING IS `stepChasersNow`'s, NOT A SECOND COPY OF IT: the same
+     * pure `chasers.chaserStep`, the same `.oel`-reversed update order, the
+     * same once-per-tick `solidOpts` brand, the same static-`"Enemy"`-as-wall
+     * rule (a `SandTrap` is a WALL to a bob), and the same sibling sweep read
+     * LIVE so a body that updates later sees the earlier one where this tick
+     * left it.
+     *
+     * ⛔⛔ AND `onScreen` IS ANSWERED, NOT GUESSED — which is the whole reason
+     * this is a forecast and not an estimate. `Enemy.update` early-returns
+     * off screen at ZERO margin, skipping friction, the move AND `hitUpdate`,
+     * so a wrong answer here is the difference between a body that damages and
+     * one that does not. The forecast carries its OWN camera and steps it with
+     * `stepCameraNow`'s own branch — exact `cam` while `shake` is 0, the
+     * `stepCameraBand` interval while it is not, collapsing back to a point
+     * when the band closes — and asks `onScreenUnderShake`, which REFUSES an
+     * uncertain verdict by name exactly as `onScreenNow` does. It never
+     * guesses which draw the jiggle landed on.
+     *
+     * ⛓ THE FORECAST WRITES NO NEW SHAKE, and that is a property rather than
+     * an omission: `previewWalk`'s law is that a hit does not happen in a
+     * preview (the whole point is to find out whether one WOULD), and
+     * `Player.hit` is the only shake writer in a room with no rockfall and no
+     * totem. So a preview's shake can only DECAY, and a corridor the walk
+     * actually accepts is one whose camera stayed exact throughout.
+     *
+     * ⛔ WHAT IT DOES NOT SIMULATE, NAMED RATHER THAN LEFT TO BE DISCOVERED,
+     * in `previewWalk`'s own idiom: the terrain switch (a bob does not drown in
+     * a preview), the die animation and the removal fenceposts, and the CONTACT
+     * itself. Positions and liveness are what the danger map asks for; the
+     * damage staging belongs to the arm that presses.
+     */
+    function chaserForecastNow() {
+        // ⛔ THE SAME GATE `stepChasersNow` OPENS WITH, for its reason: under
+        // these flags the run does not step a chaser, so it has no live
+        // position to offer and this must not invent one from the census.
+        if (noclip || noDamage) return null;
+        const st = chaserStateFor(level);
+        if (st.size === 0) return null;
+        // ⚠ THE `.oel` ADD ORDER, REVERSED — `stepChasersNow`'s note: the LAST
+        // placement updates FIRST, and it is observable the moment two bodies
+        // can block each other, which is exactly L5's and L6's case (and L14's,
+        // with six).
+        const ids = [...st.keys()].reverse();
+        const bodies = new Map();
+        for (const [id, c] of st) bodies.set(id, { ...c, v: { ...c.v } });
+        // ⚠ ONCE, not per tick: the previewed world is FROZEN at this tick's
+        // geometry (`previewWalk`'s own law — blocks do not glide, locks do not
+        // open), so re-normalising per tick would be a cost with no reading
+        // behind it. The live driver pays it per tick because its geometry
+        // moves.
+        const solidOpts = normalizeLiveOpts(liveSolidOpts());
+        const staticEnemyBoxes = [];
+        for (const inst of (world.combat?.enemies ?? [])) {
+            if (isBridgedChaser(inst.tag)) continue;
+            if (inst.row.speed !== 0) continue;
+            const r = contactRect(inst);
+            if (r) staticEnemyBoxes.push({ id: `${inst.tag}@${inst.x},${inst.y}`, rect: r });
+        }
+        // The camera, seeded from the live one and stepped by this forecast
+        // alone. `cam`/`camBand` are exclusive in `stepCameraNow` and are
+        // mirrored here as such.
+        let fcam = cam ? { ...cam } : null;
+        let fband = camBand ? { x: { ...camBand.x }, y: { ...camBand.y } } : null;
+        let fshake = shake;
+        const worldRec = world.world;
+        const target = bossCameraTarget;
+        let first = true;
+        const advanceCamera = (player) => {
+            if (fband === null && fshake === 0) {
+                fcam = stepCamera(fcam, player, worldRec, { cameraTarget: target });
+                return;
+            }
+            if (fband === null) fband = cameraBand(fcam);
+            const r = stepCameraBand(fband, player, worldRec,
+                { shake: fshake, cameraTarget: target });
+            fband = r.band;
+            fshake = r.shake;
+            if (bandIsExact(fband)) {
+                fcam = { x: fband.x.lo, y: fband.y.lo };
+                fband = null;
+            } else {
+                fcam = null;
+            }
+        };
+        const onScreenAt = (rect, who) => {
+            if (fband === null) return camOnScreen(rect, fcam);
+            const verdict = onScreenUnderShake(rect, fband);
+            if (verdict === 'uncertain') {
+                throw new Error(`chaserForecast: whether ${who} is on screen depends on `
+                    + 'where inside `Game.shake`\'s jiggle the camera landed, and the two '
+                    + 'draws that decide it are not indexable (camera.js, "THE SHAKE, AND '
+                    + 'WHY IT IS A BAND"). `Enemy.update` early-returns at ZERO margin, so '
+                    + 'this is the difference between a body that damages and one that '
+                    + 'does not — and a FORECAST must not guess it any more than the live '
+                    + 'run may. Wait the shake out before previewing this corridor.');
+            }
+            return verdict === 'on';
+        };
+        return {
+            /**
+             * One forecast tick. `playerPos` is where the PREVIEWED player is
+             * at the START of this tick — the same reading `stepChasersNow`
+             * takes from `state` before `stepV2` runs.
+             *
+             * ⛓ THE CAMERA IS ADVANCED FIRST, AND NOT ON THE FIRST CALL. Live,
+             * `stepCameraNow(next)` runs at the END of a tick on the POST-move
+             * player, so the `cam` a body reads at tick N was written by tick
+             * N-1 — which is exactly the live `cam` this forecast was seeded
+             * with. From the second call on, the incoming `playerPos` IS the
+             * previous call's post-move player, so advancing here reproduces
+             * that write rather than approximating it.
+             */
+            step(playerPos) {
+                if (!first) advanceCamera(playerPos);
+                first = false;
+                for (const id of ids) {
+                    const c = bodies.get(id);
+                    if (!c || c.removed || c.destroy) continue;
+                    const box = chaserBoxAt(c.tag, c.x, c.y);
+                    const move = (mx, my, dx, dy) => {
+                        let x = mx;
+                        let y = my;
+                        const blocked = (px, py) => {
+                            const r = chaserBoxAt(c.tag, px, py);
+                            if (world.collidesSolid(r, solidOpts)) return true;
+                            for (const b of staticEnemyBoxes) {
+                                if (rectsOverlap(r, b.rect)) return true;
+                            }
+                            for (const o of bodies.values()) {
+                                if (o.id === c.id || o.removed) continue;
+                                if (rectsOverlap(r, chaserBoxAt(o.tag, o.x, o.y))) return true;
+                            }
+                            return false;
+                        };
+                        const sweep = (rel, axis) => {
+                            const n = Math.abs(rel);
+                            const sign = rel < 0 ? -1 : (rel > 0 ? 1 : 0);
+                            for (let i = 0; i < n; i += 1) {
+                                const stepPx = Math.min(1, n - i) * sign;
+                                const nx = axis === 'x' ? x + stepPx : x;
+                                const ny = axis === 'y' ? y + stepPx : y;
+                                if (blocked(nx, ny)) return;
+                                x = nx;
+                                y = ny;
+                            }
+                        };
+                        sweep(dx, 'x');
+                        sweep(dy, 'y');
+                        return { x, y };
+                    };
+                    const r = chaserStep(c.tag, c, playerPos, {
+                        onScreen: onScreenAt(box, `${c.tag} ${c.id}`),
+                        // ⚠ A ceremony freezes the world, and a preview never
+                        // starts one — `previewWalk` does not collect, does not
+                        // talk and does not die.
+                        frozen: false,
+                        move,
+                    });
+                    c.x = r.x;
+                    c.y = r.y;
+                    c.v = r.v;
+                }
+                return ids
+                    .map((id) => bodies.get(id))
+                    .filter((c) => c && !c.removed && !c.destroy)
+                    .map((c) => ({
+                        id: c.id,
+                        tag: c.tag,
+                        x: c.x,
+                        y: c.y,
+                        rect: chaserBoxAt(c.tag, c.x, c.y),
+                    }));
+            },
+        };
+    }
+
+    /**
      * ⛓⛓⛓ THE BODIES AN ARROW CAN MEET, IN `ARROW.hitables` ORDER.
      *
      * ⛔ THE `"Enemy"` HALF IS TWO ROSTERS AND THEY ARE NOT INTERCHANGEABLE.
@@ -10850,6 +11047,17 @@ export function createLevelRun({
          */
         arrowForecast() {
             return noclip ? null : arrowForecastNow();
+        },
+        /**
+         * ⛓ THE CHASER SUBSYSTEM, FORECAST — see `chaserForecastNow`. `null`
+         * when the room steps no bridged chaser, and `null` under
+         * `noclip`/`noDamage`, where nothing is stepped at all. The gate is
+         * inside `chaserForecastNow` rather than repeated here, because
+         * `noDamage` is a term `arrowForecast` does not have and a caller
+         * should not have to know which flags belong to which subsystem.
+         */
+        chaserForecast() {
+            return chaserForecastNow();
         },
         get arrowFlights() {
             return arrowsFor(level).map((a) => ({

@@ -1469,6 +1469,22 @@ function previewWalk(run, wps, tolerance = 0) {
      * a second copy of it.
      */
     const forecast = run.arrowForecast?.() ?? null;
+    /**
+     * ⛓⛓⛓ R9 SLICE 12 — **AND THE CHASERS ADVANCE ON THAT SAME CLOCK**, which
+     * is the arrows' own sentence one ingredient over and for the same reason.
+     *
+     * A forecast of the bodies where they STAND is not enough, and the route
+     * survey's L14 walk is the receipt: the corridor was probed against
+     * `bob@96,48` at (96,48) and the body was at (113.7, 56.1) — seventeen
+     * pixels east, having chased the player the whole way — when it landed the
+     * hit at tick 44. An arrow is autonomous and a chaser is PLAYER-COUPLED, so
+     * the coupling is exactly what a forecast over a CANDIDATE PATH can supply
+     * and a live reading cannot: the bodies are stepped against the previewed
+     * player, per tick, so each sample carries the bodies as of ITS OWN tick.
+     * `run.chaserForecast()` is the run's own subsystem, not a second copy of
+     * it — same `chaserStep`, same order, same solids.
+     */
+    const chasers = run.chaserForecast?.() ?? null;
     let st = { ...run.state };
     let tick = startTick;
     const samples = [];
@@ -1502,7 +1518,15 @@ function previewWalk(run, wps, tolerance = 0) {
              * is a WAIT question (trap 154) and `dangerNow`/the stance checks
              * own it; this is the TRANSIT half.
              */
-            samples.push({ x: st.x, y: st.y, tick, arrows });
+            // ⛔ THE BODIES ARE STEPPED BEFORE THE SAMPLE IS TAKEN, and the
+            // pairing is the game's: `stepChasersNow` runs ABOVE `stepV2`
+            // and reads `state` — the PRE-move player — so a body's contact
+            // this tick is tested at its POST-move position against the box
+            // the previous tick left. Sampling the post-move player against
+            // the same bodies would test a pair that never meets, which is
+            // the arrows' note verbatim and true here for the same reason.
+            const chaserBodies = chasers ? chasers.step(st) : null;
+            samples.push({ x: st.x, y: st.y, tick, arrows, chasers: chaserBodies });
             // ⛔ `drive`'s own line, including the transport arm: a player in
             // flight presses nothing, and a preview that steered through a
             // fall would schedule ticks the game ignores.
@@ -3355,7 +3379,8 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0) {
         }
         let unsafe = null;
         for (const sm of walk.samples) {
-            const d = dangerDuringTransit(run, sm.tick, playerBoxAt(sm.x, sm.y), sm.arrows);
+            const d = dangerDuringTransit(run, sm.tick, playerBoxAt(sm.x, sm.y),
+                sm.arrows, sm.chasers);
             if (d.danger) { unsafe = { sm, d }; break; }
         }
         if (unsafe) {
@@ -6007,7 +6032,8 @@ export function solveSegment({
         const walk = previewWalk(run, wps, tolerance);
         for (const s of walk.samples) {
             const d = withoutSources(
-                dangerDuringTransit(run, s.tick, playerBoxAt(s.x, s.y), s.arrows), except);
+                dangerDuringTransit(run, s.tick, playerBoxAt(s.x, s.y), s.arrows, s.chasers),
+                except);
             if (d.danger) return { x: s.x, y: s.y, tick: s.tick, eta: s.tick - walk.startTick, ...d };
         }
         /**

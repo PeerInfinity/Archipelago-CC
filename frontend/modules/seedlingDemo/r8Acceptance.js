@@ -160,6 +160,25 @@ export const R8_NORMALIZE_LIVE_BATCH = Object.freeze({
                 + 'walk that has not happened yet (the same call the live stepper makes '
                 + 'once per tick).',
         }),
+        /**
+         * ⛓ ADDED BY R9 SLICE 12, and by the same route as the three above:
+         * the bob forecast gave `chaserForecastNow` a solid bag, and this
+         * guard named it BY NAME the first time the suite ran — the FIFTH
+         * slice in a row this has happened to (trap 89). A re-derived tally
+         * keeps being worth more than a list somebody remembers to edit.
+         */
+        Object.freeze({
+            file: 'levelRun.js', builder: 'liveSolidOpts', at: 'chaserForecastNow',
+            addedBy: 'R9 slice 12', action: 'brand',
+            why: 'the chaser forecast\'s sweep bag — hoisted once per FORECAST rather '
+                + 'than per tick of it, for `arrowForecastNow`\'s reason exactly: the '
+                + 'previewed world is FROZEN at this tick\'s geometry (`previewWalk`\'s '
+                + 'own law — blocks do not glide, locks do not open), so a per-tick '
+                + 'rebuild would be a cost with no reading behind it. The LIVE '
+                + '`stepChasersNow` pays it per tick because its geometry moves; this '
+                + 'one\'s does not, and the divergence is the frozen world rather than '
+                + 'a different opinion about the bag.',
+        }),
         Object.freeze({
             file: 'levelRun.js', builder: 'liveSolidOpts', at: 'pushableCtx',
             action: 'already', why: 'R7 slice 4 — once per tick, `{...base, pushables}` '

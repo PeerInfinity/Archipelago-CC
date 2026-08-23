@@ -865,10 +865,38 @@ describe('⚖ §13.10a — the ETA-aware transit probe, against its two oracles'
          * the whole 13 px disc at every horizon. The BODY is autonomous; the
          * ANGLE is unknown; both facts are in the row's `why`.
          */
+        /**
+         * ⛓⛓⛓ R9 SLICE 12 BREAKS THE EQUALITY ABOVE, AND THAT IS THE DESIGN
+         * CHANGE THIS ROW ASKED TO BE TOLD ABOUT.
+         *
+         * `atEta === autonomous` held for two rungs and read as a law. It was
+         * really a CONFESSION: being player-coupled was treated as a reason an
+         * arm could not be carried to a cell's own ETA, so the chaser arm was
+         * priced at its plan-time box at every horizon — and L14's survey walk
+         * took a hit at tick 44 from a body seventeen pixels from where the
+         * corridor had priced it.
+         *
+         * ⇒ THE LAW IS NOT "AUTONOMOUS", IT IS "COMPUTABLE AT PLAN TIME", and
+         * there are two ways to be that. An arrow and a spinner cannot see the
+         * player, so one forecast serves every candidate path. A bob CAN see
+         * the player — which is precisely why its future is a function of the
+         * walk being considered, and why the honest forecast is one taken
+         * AGAINST THE CANDIDATE PATH rather than none at all. The coupling did
+         * not stop being true; it stopped being an excuse.
+         *
+         * ⚠ So the two sets are no longer asserted equal — they are asserted
+         * SEPARATELY, and the one row that is `atEta: true` while
+         * player-coupled is named, so a third one is still a design change and
+         * not a typo.
+         */
         const atEta = keys.filter((k) => TRANSIT_INGREDIENTS[k].atEta);
         const autonomous = keys.filter((k) => TRANSIT_INGREDIENTS[k].coupling === 'autonomous');
-        expect(atEta).toEqual(['arrows', 'spinners']);
-        expect(atEta).toEqual(autonomous);
+        expect(atEta).toEqual(['arrows', 'chasers', 'spinners']);
+        expect(autonomous).toEqual(['arrows', 'spinners']);
+        expect(atEta.filter((k) => !autonomous.includes(k))).toEqual(['chasers']);
+        // …and every autonomous arm is still carried to the ETA: the widening
+        // added a case, it did not drop one.
+        expect(autonomous.every((k) => TRANSIT_INGREDIENTS[k].atEta)).toBe(true);
         expect(TRANSIT_INGREDIENTS.spinners.why).toMatch(/runRange/);
         expect(TRANSIT_INGREDIENTS.spinners.why).toMatch(/Game\.time/);
         expect(TRANSIT_INGREDIENTS.arrows.coupling).toBe('autonomous');
@@ -968,5 +996,148 @@ describe('(f) live spinners — the exact hammer line, and the disc it replaced'
         expect(row.why).toContain('AND SO IS THE HAMMER');
         // The fallback is named in the row, not only in the code.
         expect(row.why).toContain('45 phases');
+    });
+});
+
+/**
+ * ⛓⛓⛓ R9 SLICE 12 — **THE BOB FORECAST**: the chaser arm carried to the ETA.
+ *
+ * ⛔⛔ THE DEFECT THIS STRATUM IS THE MEASUREMENT OF. `coupledHorizon` is 0 in
+ * TRANSIT, so `chaserDanger`'s growth term was 0, so every cell of a corridor
+ * was priced against the body's box AT PLAN TIME — for an ETA fifty ticks away.
+ * `TRANSIT_INGREDIENTS.chasers` covered for it with a sentence about a
+ * "per-tick next-cell check" that existed nowhere in the driver. The route
+ * survey's L14 walk is what collected: a hit at tick 44 from `bob@96,48`, a
+ * body priced at (96,48) that was at (113.7, 56.1) when it landed the blow.
+ *
+ * ⚠ AND THE ROWS BELOW ARE BUILT TO DISCRIMINATE, not to describe. The pair
+ * that matters reads the SAME cell twice — calm against the live bodies, named
+ * at the ETA against the forecast's — because a row that only asserted "the
+ * forecast names something" would pass against a function that named
+ * everything, and a row that only asserted the bodies moved would pass against
+ * a forecast that ignored the candidate path entirely (which is exactly the
+ * mutant this slice predicted first and measured second).
+ */
+describe('the BOB FORECAST — chasers stepped against the CANDIDATE PATH', () => {
+    // L6 is the room the bridge really steps: two bobs, no arrow trap, so
+    // `chaserRoomVerdict` says yes. 20 ticks east puts the player level with
+    // `bob@112,48` and well inside its 80 px leash.
+    const run = runIn(6, { level: 6, x: 80, y: 48 }, ['right'], 20);
+    const start = () => ({ x: run.state.x, y: run.state.y });
+    /** Step a fresh forecast along a candidate path, returning one body's track. */
+    const trackOf = (id, advance, ticks = 30) => {
+        const fc = run.chaserForecast();
+        let p = start();
+        const out = [];
+        for (let k = 0; k < ticks; k += 1) {
+            const bodies = fc.step(p);
+            p = advance(p, k);
+            out.push(bodies.find((b) => b.id === id));
+        }
+        return out;
+    };
+
+    it('the room really is forecast — the positive count every zero below rests on', () => {
+        const fc = run.chaserForecast();
+        expect(fc).not.toBeNull();
+        const bodies = fc.step(start());
+        expect(bodies.map((b) => b.id).sort()).toEqual(['bob@112,48', 'bob@96,16']);
+    });
+
+    it('⛔ and it is NULL where nothing is stepped — the `stepChasersNow` gate, not a new one', () => {
+        const relaxed = createLevelRun({
+            levelSource: source,
+            boot: { level: 6, x: 80, y: 48 },
+            noclip: false,
+            noDamage: true,
+            roles: ROLES,
+        });
+        expect(relaxed.chaserForecast()).toBeNull();
+    });
+
+    it('the bodies MOVE, and they move AT the previewed player', () => {
+        const live = run.chasers.find((c) => c.id === 'bob@112,48');
+        const track = trackOf('bob@112,48', (p) => p);
+        // It starts east of the player and closes westward, tick by tick.
+        expect(live.x).toBeGreaterThan(run.state.x);
+        expect(track[29].x).toBeLessThan(live.x);
+        expect(track[29].x).toBeGreaterThan(run.state.x);
+    });
+
+    /**
+     * ⛓⛓⛓ THE ROW THIS WHOLE SLICE EXISTS FOR — the same cell, two readings.
+     *
+     * The player's own box, priced against the LIVE bodies, is CALM: the bob is
+     * seven pixels away and the horizon term is 0, so nothing overlaps. Priced
+     * against the bodies the forecast puts there at the cell's own ETA, the
+     * same box names the bob — because by then it has walked into the player.
+     */
+    it('⛓⛓⛓ a bob that WILL intercept is priced AT THE ETA, and is invisible LIVE', () => {
+        const box = playerBoxAt(run.state.x, run.state.y);
+        // LIVE — at every horizon this mode can ask for, including the one the
+        // transit map actually uses.
+        expect(chaserDanger(run, box, 0).map((s) => s.id)).toEqual([]);
+        const fc = run.chaserForecast();
+        let named = null;
+        let at = null;
+        for (let k = 1; k <= 30 && named === null; k += 1) {
+            const bodies = fc.step(start());
+            const ids = chaserDanger(run, box, 0, bodies).map((s) => s.id);
+            if (ids.length) { named = ids; at = k; }
+        }
+        expect(named).toEqual(['bob@112,48']);
+        // It takes real ticks to arrive — a forecast that named it immediately
+        // would be pricing the plan-time box all over again.
+        expect(at).toBeGreaterThan(6);
+    });
+
+    it('…and a bob that will NOT reach the cell is never named — the other half', () => {
+        const box = playerBoxAt(run.state.x, run.state.y);
+        const fc = run.chaserForecast();
+        const seen = new Set();
+        for (let k = 1; k <= 30; k += 1) {
+            for (const s of chaserDanger(run, box, 0, fc.step(start()))) seen.add(s.id);
+        }
+        // `bob@96,16` is parked against L6's sandtrap (trap 152) and never
+        // crosses to the player's row, so no ETA prices it.
+        expect([...seen]).toEqual(['bob@112,48']);
+    });
+
+    /**
+     * ⛔⛔ THE COUPLING IS TO THE PATH, AND THIS IS THE ROW THAT SAYS SO.
+     *
+     * A forecast that stepped the bodies against the player's PLAN-TIME
+     * position would be a second way of spelling the defect. `chaseImpulse` is
+     * bang-bang AT the player, so two candidate paths that leave the direction
+     * unchanged produce the same track — which is why this row moves the player
+     * NORTH, across the bob's bearing, rather than along it.
+     */
+    it('⛔ two candidate paths give two tracks — the forecast follows the WALK', () => {
+        const frozen = trackOf('bob@112,48', (p) => p);
+        const northward = trackOf('bob@112,48', (p) => ({ x: p.x, y: p.y - 0.8 }));
+        expect(northward[29].y).toBeLessThan(frozen[29].y - 4);
+        expect(northward[29].x).not.toBe(frozen[29].x);
+    });
+
+    it('`dangerDuringTransit` carries the bodies through to the union', () => {
+        const box = playerBoxAt(run.state.x, run.state.y);
+        const fc = run.chaserForecast();
+        let bodies = null;
+        for (let k = 1; k <= 20; k += 1) bodies = fc.step(start());
+        const live = dangerDuringTransit(run, run.ticksCompleted + 20, box, null);
+        const fore = dangerDuringTransit(run, run.ticksCompleted + 20, box, null, bodies);
+        expect(live.sources.filter((s) => s.kind === 'chaser')).toEqual([]);
+        expect(fore.sources.filter((s) => s.kind === 'chaser').map((s) => s.id))
+            .toEqual(['bob@112,48']);
+    });
+
+    it('⛓ the TRANSIT_INGREDIENTS row is TRUE now, and the false sentence is gone', () => {
+        const row = TRANSIT_INGREDIENTS.chasers;
+        expect(row.coupling).toBe('player-coupled');
+        // It used to be `false` with a `why` that claimed a per-tick next-cell
+        // check nothing implemented.
+        expect(row.atEta).toBe(true);
+        expect(row.why).not.toContain('next-cell check');
+        expect(row.why).toContain('CANDIDATE PATH');
     });
 });
