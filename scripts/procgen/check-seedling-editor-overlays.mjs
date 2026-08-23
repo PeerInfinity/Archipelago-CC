@@ -37,7 +37,7 @@
  * is in `~/.cache/ms-playwright` after a plain `npm ci`. Slice 1's own note.
  */
 import { chromium } from '@playwright/test';
-import { mkdirSync } from 'node:fs';
+import { mkdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -66,6 +66,26 @@ const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name
 const HOST = arg('host', 'http://localhost:8000');
 const SHOT = arg('shot', '');
 const TAPES = 'frontend/modules/seedlingDemo/fixtures/tapes';
+
+/**
+ * ⛓⛓⛓ WHEN A TAPE PRESSES — READ FROM THE TAPE (R9 slice 12e).
+ *
+ * ⛔⛔ THE ROW BELOW FROZE `[33, 66, 104, 179, 212, 270]` and was RED from
+ * `64875843c` — R9 slice 11's `facingToward` repair re-recorded `r8-solve-18`
+ * (573 ticks → 541) and moved every press with it. Nobody saw it for two
+ * rungs: the reach instrument did not exist when the repair landed, and slice
+ * 13 found it by running the gate. ⇒ the press ticks are the TAPE's, and the
+ * claim this row makes is the one it always meant — *the page draws a marker
+ * where the tape says a press happened*.
+ *
+ * ⛓ A press is an `inputs` span whose key is `primary`, and the marker stands
+ * at the tick the span STARTS. The number is interpolated into the label too,
+ * so it cannot go false silently the next time the tape is re-recorded (trap
+ * 573).
+ */
+const pressTicksOf = (name) => Object.values(
+    JSON.parse(readFileSync(`${TAPES}/${name}.json`, 'utf8')).inputs ?? {},
+).filter((i) => i.key === 'primary').map((i) => i.from).sort((a, b) => a - b);
 
 let failed = 0;
 const check = (ok, what, detail) => {
@@ -150,8 +170,10 @@ async function load(name, extra = '', shotAt = null) {
 
     const action = overlays.markers.filter((m) => m.layer === 'action');
     const ticks = action.map((m) => m.tick);
-    check(JSON.stringify(ticks) === JSON.stringify([33, 66, 104, 179, 212, 270]),
-        'the press markers stand at the recorded press ticks',
+    const pressed = pressTicksOf('r8-solve-18');
+    check(JSON.stringify(ticks) === JSON.stringify(pressed),
+        `the press markers stand at the ${pressed.length} press ticks r8-solve-18 records `
+        + `— [${pressed.join(', ')}]`,
         `[${ticks.join(', ')}]`);
 
     const damage = overlays.markers.filter((m) => m.layer === 'damage');

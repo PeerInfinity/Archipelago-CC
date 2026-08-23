@@ -67,6 +67,25 @@ const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name
 const OUT = arg('keep', '') || mkdtempSync(join(tmpdir(), 'seedling-export-'));
 mkdirSync(OUT, { recursive: true });
 
+/**
+ * ⛓⛓⛓ HOW MANY FRAMES A TAPE IS — READ FROM THE TAPE (R9 slice 12e).
+ *
+ * ⛔⛔ TWO ROWS BELOW FROZE THIS NUMBER AS A LITERAL AND WERE RED FROM
+ * `64875843c` — R9 slice 11's `facingToward` repair, which re-recorded
+ * `r8-solve-18` from 573 ticks to 541 and moved `r8-solve-4` with it. Nobody
+ * saw it for two rungs: the reach instrument did not exist when the repair
+ * landed, and slice 13 found them by running the gate. A gate whose subject is
+ * a COMMITTED ARTIFACT must ask the artifact.
+ *
+ * ⛓ `frames = tick_count + 1` is the exporter's own arithmetic, not a
+ * coincidence: `export-seedling-view.mjs:295` resolves `--tick=last` to
+ * `(shot.frames ?? 1) - 1`, i.e. the run holds one frame per tick from 0 to
+ * `tick_count` inclusive. So the assertion says *the page drew what the tape
+ * says*, which is the claim both rows always meant.
+ */
+const tickCountOf = (file) => JSON.parse(readFileSync(file, 'utf8')).tick_count;
+const framesOf = (file) => tickCountOf(file) + 1;
+
 let failed = 0;
 const check = (ok, what, detail) => {
     console.log(`${ok ? 'PASS' : 'FAIL'}: ${what}${detail ? ` — ${detail}` : ''}`);
@@ -111,8 +130,11 @@ check(a.code === EXIT.ok, 'the export exits 0', `exit ${a.code}${a.stderr ? ` �
 check(aPng.isPng && aPng.width > 0 && aPng.height > 0,
     'and there is a real PNG at --out, sized like the canvas',
     `${aPng.width}x${aPng.height}, ${aPng.bytes?.length ?? 0} bytes`);
-check(/tick 171 of 254 frame\(s\)/.test(a.stdout),
-    'the tick the caller asked for is the tick that was drawn', a.stdout.trim().split('\n').pop());
+const SOLVE4_FRAMES = framesOf(SOLVE4);
+check(a.stdout.includes(`tick ${ARROW_TICK} of ${SOLVE4_FRAMES} frame(s)`),
+    `the tick the caller asked for is the tick that was drawn — ${ARROW_TICK} of `
+    + `${SOLVE4_FRAMES}, the frame count r8-solve-4 declares`,
+    a.stdout.trim().split('\n').pop());
 // ⛓ SLICE 6 widened the roster 8 → 11, slice 8 → 12 and slice 9 → 15. The
 // check is REPLACED, not relaxed: the default set is still asserted EXACTLY,
 // and the ⚖ halves — `arrows` OFF (§1.6) and `danger` OFF (item 9) — are
@@ -246,8 +268,9 @@ check(!existsSync(refusalOut),
  * ⛓⛓⛓ AND THE OTHER HALF — THE SAME BOOT, EXPORTED, BECAUSE IT NOW FOLDS.
  *
  * The refusal above and this export differ in ONE argument: the goal. With
- * L18's far exit the solve runs 573 ticks, past the declared clear at 385,
- * and the fold stamps VERSION 9 and carries the row. That pair is what
+ * L18's far exit the solve runs past the declared clear at 385 — how far is
+ * the TAPE's business and is read from it, not typed here — and the fold
+ * stamps VERSION 9 and carries the row. That pair is what
  * makes the replacement honest rather than a re-aimed regex — the boot that
  * refused for a whole arc is exported here, from the same CLI, in one run.
  */
@@ -264,9 +287,14 @@ check(png(v9Out).isPng && png(v9Out).width > 0,
  * is the frame count of the tape the page REPLAYED — i.e. the v9 tape
  * really parsed. A run whose fold had been refused could not have printed
  * one at all.
+ *
+ * ⛓ The number comes from `r8-solve-18.json` and is interpolated into the
+ * LABEL as well as the condition, so it cannot go false silently the next
+ * time somebody re-records the tape (trap 573).
  */
-check(/tick 573 of 574/.test(v9.stdout),
-    '⛓⛓ …and the page REPLAYED all 573 folded ticks — the v9 tape parsed',
+const L18_TICKS = tickCountOf(`${TAPES}/r8-solve-18.json`);
+check(v9.stdout.includes(`tick ${L18_TICKS} of ${L18_TICKS + 1}`),
+    `⛓⛓ …and the page REPLAYED all ${L18_TICKS} folded ticks — the v9 tape parsed`,
     /--tick=last[^\n]*/.exec(v9.stdout)?.[0]);
 
 // A second, different refusal — so the row is about the PATH, not one message.
