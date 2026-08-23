@@ -3715,9 +3715,51 @@ selection as one line, and on slice 11's range it emits exactly the **22** names
 derived by hand. The CALLING CONVENTION is residue — no slice has run
 `--only=$(… --only-list)` yet.
 
-**NEXT in R9: slice 12 = L14** (⚖ ruling 29 — PARRY-WALK primary, HUNT fallback,
-`KILL_ARM_POLICY.Bob` → `modelled`; the `facingToward` blocker is now GONE), then
-slice 13 = the watch-page five.
+⛓⛓⛓ **R9 SLICE 12 SHIPPED 2026-08-23** (`54cde9014` · `51fe4d852` · `5c42f9c51` ·
+`1e4c194bc`, four commits) — ⚖ rulings 29/30/31/33/34. **The MECHANISM half of L14; the
+room does not SOLVE yet and that is the agreed split** (12b = W3+W4, 12c = the planner
+dash primitive).
+**THE FAMILY WAS NOT THE CAMERA BAND.** The survey's L14 refusal named a body at the
+screen edge; a probe that KEPT the run read `playerHits = [{t:44, source:'chaser',
+id:'bob@96,48'}]`. `Player.hit` writes the shake on tick 44 and the band opens — the band
+is the MESSENGER and the family is **a hit from a chaser the walk did not see coming**.
+**THE BOB FORECAST.** `previewWalk` stepped the player and the arrows and nothing else,
+and `coupledHorizon` 0 in TRANSIT priced every bob's ungrown box AT PLAN TIME —
+while `TRANSIT_INGREDIENTS.chasers` claimed a "per-tick next-cell check" that **existed
+nowhere**. The bob that struck was priced at (96,48) and was at (113.7, 56.1). The forecast
+is the ARROWS' own sentence one ingredient over (a widening of a tested path, not a
+parallel one), with `onScreen` answered by a camera the forecast steps itself. **L14: 44
+ticks + 1 hit → 0 ticks, 0 hits**, refusing BY NAME with all four rungs speaking.
+⛔ It overturned a two-rung "law": `atEta === autonomous` was a CONFESSION, not a law —
+player-coupling is exactly WHY a candidate-path forecast is the honest answer.
+**THE PRESS ARM.** `KILL_ARM_POLICY.Bob` → `modelled`. ⛔ It could not be the planned
+`chasers:` JOIN: a chaser has NO census rect by design, so the responder is SYNTHESIZED
+from live bodies and absent state means NO RESPONDER (the inverse of the other five arms).
+**THE GAME AGREED, and the differential could not have told us**: an expectation carries
+the PLAYER's positions and this player stands still for 180 of 192 ticks, so a separate
+`--mobiles` probe read the ENEMY — `hits 1/3 → 2/3 → 3/3`, the 30-tick i-frame armed on
+each, `anim "die"` at `hits === hits_max`, a fade, a removal, player `hits: 0`.
+**ZERO TAPE MOVERS** — the licensed set was DERIVED (`CHASERS` = {bob, jellyfish} ×
+stepped × producer-derived = `r8-solve-4/-5/-6`) and all seven producers came back
+byte-identical; my seal predicted two would move and both were refuted.
+**GATES:** vitest **333/10235** · `check-procgen-demos` **194/2 → 196/0** (two
+pre-existing reds from slice 11, ATTRIBUTED before being re-authored: a mutant on the
+`--count=1` level was a mutant on a DIFFERENT ROOM) · seven producers unmoved · **⚖ RULING
+33's FIRST USE: `--win --only=$(reach --only-list)` = 29 tapes, 832 PASS / 0 FAIL / 65
+SKIP** · instruments 241 · roster 144. ⚠ 11b's published vitest 10216 was ONE LOW — it is
+**10217**, measured at `6925622bd`.
+⚖ **RULING 34 SHIPPED** — `scripts/**` + `test_json/unit/**` added to BOTH `paths:` lists;
+CI JS-unit green. ⚠ The `scripts/**` trigger is UNPROVEN until a scripts-ONLY commit.
+⛓ **THE DASH IS TRANSCRIBED AND UNBUILT** (12b/12c): the AS3 arithmetic, the asymmetric
+`>=`/`>` guards, and the measurement that **at v = (0,0) it is EXACTLY inert** (the
+recompiled runtime's `point_normalize` skips at zero length). Roster exposure derived: 41
+tapes hold a sub-20 press pair, **33 inert and every producer-derived tape among them**;
+the 8 that remain are a FREE ORACLE (fixed inputs, recorded expectations).
+Traps 562–565.
+
+**NEXT in R9: slice 12b** (W3 the opportunistic strike on EVERY walk + the KILL rung's
+chaser arm, W4 the 16-window pipeline record, L14 SOLVED), then 12c = the planner dash
+primitive, then slice 13 = the watch-page five.
 ⚖ ALSO OPEN: the v10 despawn channel has two witnesses and both are hand tapes — record a
 solver despawn, keep them, or retire the channel; and `botStart`'s OTHER two "declares
 something" gates (the seam block, the three rng writes) are an ASK — neither has a

@@ -13001,3 +13001,115 @@ that value IS your BEFORE. Re-measure only what the reach names. Slice 11 spent
 verdicts are the slice's gate row; a standalone ship/roster re-run afterwards is a
 second opinion nobody asked for — and one of slice 11's duplicates produced the
 40-minute red above.
+
+### R9 slice 12: THE BOB FORECAST and the PRESS ARM — a hit at tick 44, traced to three mechanisms and paid with the game's own enemy readout
+
+The route survey's L14 walk refused with a CAMERA BAND message. **The band was
+the messenger.** A scratch probe kept the run and read `playerHits`:
+`{t: 44, source: 'chaser', id: 'bob@96,48'}` — the walk took a HIT at tick 44,
+`Player.hit` wrote `shake += 5`, the band opened, and `bob@32,32` at the screen
+edge read `uncertain`. The family is **a hit from a chaser the walk did not see
+coming**, and the stance rule the refusal named is not needed in a room with
+zero hits.
+
+**Three mechanisms, each a file:line.** `previewWalk` steps the PLAYER and the
+ARROW forecast and nothing else. `dangerAt`'s `coupledHorizon` is `0` in TRANSIT,
+so `chaserDanger`'s growth term `bound × horizon` is exactly zero and every cell
+of a corridor is priced against the body's ungrown box AT PLAN TIME.
+`TRANSIT_INGREDIENTS.chasers` covered for both with a sentence claiming the
+corridor was *"priced along the corridor by the per-tick next-cell check"* — and
+**no such check existed anywhere in the driver.** The number that settles it:
+the probe priced `bob@96,48` at (96,48); it was at (113.7, 56.1), seventeen
+pixels east, when it landed the blow.
+
+#### The forecast is the arrows' own sentence, one ingredient over
+
+`previewWalk` already carried `run.arrowForecast()` and attached `arrows` to
+every sample; `dangerDuringTransit` already threaded it and both consumers
+already passed it. The chaser arm is that sentence with `chasers` in place of
+`arrows` — a widening of a tested path, not a parallel one. `chaserForecastNow`
+steps the room's bodies against the PREVIEWED player using `stepChasersNow`'s own
+stepping: the same pure `chaserStep`, the same `.oel`-REVERSED update order, the
+same once-per-tick solid bag, the same static-`"Enemy"`-as-wall rule, the same
+sibling sweep read live.
+
+`onScreen` is ANSWERED rather than guessed, because `Enemy.update` early-returns
+off screen at ZERO margin and a wrong answer there is the difference between a
+body that damages and one that does not: the forecast carries its own camera,
+steps it with `stepCameraNow`'s own branch, and asks `onScreenUnderShake`, which
+refuses an uncertain verdict by name exactly as the live reader does. A preview
+writes no new shake — `previewWalk`'s law is that a hit does not happen in one —
+so the band can only fire on a corridor about to be discarded.
+
+`coupledHorizon` 0 becomes honest instead of a fiction: the same constant for the
+opposite reason, because there is nothing left to GROW once the body is already
+at the ETA.
+
+**L14, before and after:** 44 ticks and one hit, then a camera-band throw →
+**0 ticks, 0 hits**, and a plan-time refusal naming every rung — AVOID
+(`chaser:bob@96,48` at (119.3, 56.2), within six pixels of where the hit really
+landed), TIME (128 px against `MOVER_RANGE`'s 48), BAIT (no region kills a body),
+KILL (*"a PRESS arm is a `KILL_ARM_POLICY` question and this rung does not open
+one"*).
+
+#### The law the slice overturned
+
+`atEta === autonomous` had held for two rungs and read as a law. It was a
+CONFESSION: player-coupling was treated as a reason an arm could not be carried
+to a cell's own ETA. It is the opposite — a bob CAN see the player, which is
+exactly why its future is a function of the walk being considered, and why a
+forecast against the CANDIDATE PATH is the only honest answer.
+
+#### The press arm: a responder that had to be built, not joined
+
+`KILL_ARM_POLICY.Bob` is `modelled`. The plan called for a `chasers:` live-rect
+override "joined like `spinners`" and **that is impossible**: `levelWorld`'s
+builder sends every `cls.type === 'Enemy'` to a separate `pressEnemies` list with
+no rect at all, on purpose — *"a static rect for a chaser would be a fact about
+where it spawned, not about where the press lands"*. The five existing live-rect
+arms SWAP a rect on a row the census built; this one SYNTHESIZES the responder
+from the run's live bodies. That inverts the absent-state default too: the other
+five read "absent state is ALIVE and where the level built it", and a chaser is
+never where the level built it, so absent state here means NO RESPONDER.
+
+`PRESS_ARM_POLICY.Enemy` is unchanged and still `refused` — it is the FAMILY's
+row and its reason is still true of the family; the per-class row decides, which
+is the shape the `IceTurret` lift used one class at a time.
+
+#### The game's own enemy readout — and the gate that could not have told us
+
+`verify-seedling-bot-differential --win --record` recorded the witness on a real
+GPU and the model reproduced all 193 observations. **That is not the claim.** An
+expectation carries the PLAYER's positions and the PLAYER's `hits`, and this
+player stands still for 180 of 192 ticks — its trajectory is very nearly the same
+whether the bob dies or not. A separate probe drives the same committed tape with
+`--mobiles`, which the differential does not pass, and reads the ENEMY:
+
+```
+  hits 1/3  hits_timer 26  anim "walk"
+  hits 2/3  hits_timer 25  anim "walk"
+  hits 3/3  hits_timer 26  anim "die"
+  hits 3/3  hits_timer  5  alpha 0.5      → gone
+```
+
+plus `hits_max` 3, `damage` 1, `can_hit` true, `only_hit_by` "", `just_knock`
+false, `max_force` −1 — `enemyHit`'s five gates' own inputs, confirmed by the
+thing being hit. The player's own counter reads `hits: 0` throughout.
+
+⚠ The samples are ~7 ticks apart, so the 5.000 px impulse stays the MODEL's
+number; what the game settles is that the body was thrown east on the tick the
+hit landed and that the damage staging is what the model says.
+
+#### What did NOT move
+
+`chasers.CHASERS` transcribes exactly two tags (`bob`, `jellyfish`), and only a
+producer-derived walk can move. Intersecting that with `chaserRoomVerdict`
+stepped gives `r8-solve-4/-5/-6` as the whole licensed mover set — and **all
+seven producers came back byte-identical**. The pricing changed in those rooms
+and the chosen corridor did not: their walks were never on the margin the
+forecast moves. No licence was spent and nothing needed re-recording.
+
+⚠ L14 does not SOLVE yet. That is the agreed shape of a mechanism-half slice: the
+forecast, the press arm and the driven witness ship, and the room refuses BY NAME
+at plan time instead of walking into a hit. The opportunistic strike, the KILL
+rung's chaser arm and the recorded segment are the next slice's.

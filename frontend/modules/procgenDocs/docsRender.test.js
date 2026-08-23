@@ -126,7 +126,12 @@ describe('⛓⛓ the anchors — two readers, 655 headings, one answer', () => {
         //   its own plus four `####` (B the reach instrument, C the one
         //   uncacheable loader, D the derived chain ticks, the two laws).
         //   A re-pin, not a widening.
-        expect(total).toBe(670);
+        // ⛓ 670 → 676: R9 slice 12's § (the bob forecast and the press arm) —
+        //   SIX headings, its own plus five `####` (the forecast as the arrows'
+        //   sentence, the law it overturned, the responder built not joined,
+        //   the game's enemy readout, and what did not move).
+        //   A re-pin, not a widening.
+        expect(total).toBe(676);
     });
 
     it('⛔ uses OUR rule, not marked\'s slugger — they differ, and here is where', () => {
@@ -316,9 +321,13 @@ describe('⛓ the biggest document — the one the budget is about', () => {
         // ⛓ 452 → 457: R9 slice 11b's § — five headings (the protocol fixes,
         //   plus B the reach instrument, C the one uncacheable loader, D the
         //   derived chain ticks, and the two laws).
+        // ⛓ 457 → 463: R9 slice 12's § — six headings (the bob forecast and
+        //   the press arm, plus the arrows' sentence, the law overturned, the
+        //   responder built not joined, the game's own enemy readout, and what
+        //   did NOT move).
         const ids = idsOf(RENDERS.get('seedling-bot.md').html);
-        expect(ids).toHaveLength(457);
-        expect(new Set(ids).size).toBe(457);
+        expect(ids).toHaveLength(463);
+        expect(new Set(ids).size).toBe(463);
         expect(ids.filter((i) => i !== ghSlug(i))).toEqual([]);
     });
 
