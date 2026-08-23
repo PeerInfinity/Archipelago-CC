@@ -95,21 +95,74 @@ const json = (v) => JSON.stringify(v);
  *
  * `DROPPED` is a level whose element the certification REFUSED, which is what
  * the *"a dropped element draws NOTHING"* claim needs a live subject for.
+ *
+ * ⛔⛔⛔ **AND `DROPPED` IS SEARCHED FOR, NOT TYPED — R9 SLICE 13.**
+ *
+ * It used to read `{ seed: 1, biome: 'post-sword', elements: 'killgate' }`, and
+ * at `5c916efc0` that level is no longer dropped: `generateStep` answers
+ * `ran true, certified true, refused null`. CLAIM 5's first row failed, its
+ * second failed because the element now legitimately draws its groups, and its
+ * third dereferenced `refused.reason` on `null` — so the gate **threw** and
+ * never reached CLAIM 6 or printed a total.
+ *
+ * ⛓ THE CAUSE IS ON THE RECORD: R9 slice 11's `facingToward` repair
+ * (`64875843c`) flipped `post-sword` seeds 1 and 9 from REFUSED to CERTIFIED
+ * (kickoff §21.4 / §22.2 — killgate certification over seeds 1..20 goes 2 → 4).
+ * Slice 12's W0b re-picked the DEMOS catalogue's `dropped-element` row from
+ * seed 1 to seed 3 for exactly this reason; nobody ran this gate.
+ *
+ * ⇒ **THE SUBJECT IS A LIVE SEARCH RESULT AND MUST NOT BE FROZEN AS A
+ * LITERAL.** This is trap 572's family one level up: there, a pinned
+ * CARDINALITY over a set that grows by design; here, a pinned SUBJECT over a
+ * property that a solver change can revoke. The same docblock above records
+ * `AREAS` being re-scanned BY HAND twice for the identical reason. A hand
+ * re-pick buys one slice; a search buys every slice.
+ *
+ * The rule is the one this file has always applied and states above — **the
+ * smaller seed** — over the range §21.4 published, and a grid with NO dropped
+ * cell REFUSES BY NAME rather than handing CLAIM 5 a subject it cannot use.
  */
 const SUBJECT = { seed: 2, biome: 'post-sword', elements: 'killgate' };
 const AREAS = { seed: 2, biome: 'pre-sword', skeleton: 'loopy', areas: 1 };
-const DROPPED = { seed: 1, biome: 'post-sword', elements: 'killgate' };
+
+/** The seed range §21.4 measured killgate certification over. */
+const DROPPED_SEEDS = 20;
+/** The grid `DROPPED` is taken from — the family SUBJECT is taken from too. */
+const DROPPED_GRID = { biome: 'post-sword', elements: 'killgate' };
+
+/**
+ * ⛓ THE FIRST DROPPED CELL, BY THE SMALLER-SEED RULE.
+ *
+ * ⛔ It returns the REPORT beside the subject, so the row that announces the
+ * search asserts on the very object CLAIM 5 goes on to read — a search whose
+ * answer were re-derived at the use site could disagree with its own
+ * announcement.
+ */
+function findDroppedSubject() {
+    for (let seed = 1; seed <= DROPPED_SEEDS; seed += 1) {
+        const step = generateStep({ seed, biome: DROPPED_GRID.biome, step: 0,
+            elements: { name: DROPPED_GRID.elements } });
+        const e = step.elements;
+        if (e?.ran === false && e?.certified === false && e?.refused) {
+            return { subject: { seed, ...DROPPED_GRID }, step };
+        }
+    }
+    return { subject: null, step: null };
+}
+const dropped = findDroppedSubject();
+const DROPPED = dropped.subject;
 
 const nodeSubject = generateStep({ seed: SUBJECT.seed, biome: SUBJECT.biome, step: 0,
     elements: { name: SUBJECT.elements } });
 const nodeAreas = generateStep({ seed: AREAS.seed, biome: AREAS.biome, step: 0,
     skeleton: seedlingSkeletonSpec(AREAS.skeleton), areas: { keys: AREAS.areas } });
-const nodeDropped = generateStep({ seed: DROPPED.seed, biome: DROPPED.biome, step: 0,
-    elements: { name: DROPPED.elements } });
+const nodeDropped = dropped.step;
 
 console.log(`node: subject ledger [${nodeSubject.ledger.map((r) => r.phase).join(', ')}]; `
     + `areas ran ${nodeAreas.areas.ran} with ${nodeAreas.areas.locks?.length ?? 0} lock(s); `
-    + `dropped element ran ${nodeDropped.elements.ran}`);
+    + `dropped element ${DROPPED
+        ? `= seed ${DROPPED.seed} (${nodeDropped.elements.refused.reason})`
+        : 'NOT FOUND'}`);
 
 // ── the browser ───────────────────────────────────────────────────────
 
@@ -334,26 +387,51 @@ const atPhase = async (index) => {
  * draw a gadget nobody can walk into, and this is the row that says it does not.
  */
 {
-    await load(`source=generate&seed=${DROPPED.seed}&biome=${DROPPED.biome}`
-        + `&count=0&elements=${DROPPED.elements}`);
-    await page.selectOption('#genLayer', 'all');
-    await page.waitForFunction(() => window.__editorGenerate?.layer === 'all',
-        null, { timeout: 60000 });
-    const shown = await page.evaluate(() => ({
-        gen: window.__editorGenerate,
-        legend: [...document.querySelectorAll('#genLegend .tr')].map((e) => e.textContent),
-    }));
-    check(nodeDropped.elements.ran === false && nodeDropped.elements.certified === false,
-        '⛓ the subject really is a DROPPED element (node says so)',
-        json(nodeDropped.elements.refused?.reason));
-    check(shown.gen.overlays.groups.filter((g) => g.id.startsWith('element:')).length === 0,
-        '⛔⛔ …and the overlay draws NO element group at all',
-        json(shown.gen.overlays.groups.map((g) => g.id)));
-    check(shown.gen.overlays.notes.join(' ').includes(nodeDropped.elements.refused.reason),
-        '⛓⛓ …and the REASON is a LEGEND row instead — by name',
-        shown.gen.overlays.notes.join(' ').slice(0, 100));
-    check(shown.legend.some((t) => t.includes(nodeDropped.elements.refused.reason)),
-        '…and it is on the page where a reader is looking');
+    /**
+     * ⛔ THE SEARCH IS A CLAIM, NOT A PRELUDE. A grid with no dropped cell is a
+     * real state of the generator, and it must be REFUSED BY NAME here rather
+     * than surfacing three lines down as a `null` dereference — which is
+     * exactly how this row failed at `5c916efc0`.
+     */
+    check(DROPPED !== null,
+        `⛓⛓⛓ a DROPPED element SUBJECT still exists to check — searched, not typed `
+        + `(${DROPPED_GRID.biome}/${DROPPED_GRID.elements}, seeds 1..${DROPPED_SEEDS}, `
+        + 'smaller seed wins)',
+        DROPPED ? `seed ${DROPPED.seed} — ${nodeDropped.elements.refused.reason}`
+            : `NO seed in 1..${DROPPED_SEEDS} drops its element; this claim has no subject`);
+    /**
+     * ⛓ AND THE SIBLING SUBJECT IS ASSERTED FOR THE PROPERTY IT WAS CHOSEN FOR.
+     * `SUBJECT` is frozen on purpose — re-picking it by the same ascending rule
+     * would now select seed 1, a DIFFERENT level, and churn every CLAIM-1 cell
+     * count for no gain — but a frozen subject that quietly lost its property
+     * would leave the ledger rows asserting about a room nobody chose. This is
+     * the row that says it did not.
+     */
+    check(nodeSubject.elements?.ran === true && nodeSubject.elements?.certified === true,
+        `⛓ …and \`SUBJECT\` (seed ${SUBJECT.seed}) is still a PLACED killgate — the property `
+        + 'it was chosen for',
+        `ran ${nodeSubject.elements?.ran}, certified ${nodeSubject.elements?.certified}`);
+    if (DROPPED) {
+        // eslint-disable-next-line no-await-in-loop
+        await load(`source=generate&seed=${DROPPED.seed}&biome=${DROPPED.biome}`
+            + `&count=0&elements=${DROPPED.elements}`);
+        await page.selectOption('#genLayer', 'all');
+        await page.waitForFunction(() => window.__editorGenerate?.layer === 'all',
+            null, { timeout: 60000 });
+        const shown = await page.evaluate(() => ({
+            gen: window.__editorGenerate,
+            legend: [...document.querySelectorAll('#genLegend .tr')].map((e) => e.textContent),
+        }));
+        const reason = nodeDropped.elements.refused.reason;
+        check(shown.gen.overlays.groups.filter((g) => g.id.startsWith('element:')).length === 0,
+            '⛔⛔ …and the overlay draws NO element group at all',
+            json(shown.gen.overlays.groups.map((g) => g.id)));
+        check(shown.gen.overlays.notes.join(' ').includes(reason),
+            '⛓⛓ …and the REASON is a LEGEND row instead — by name',
+            shown.gen.overlays.notes.join(' ').slice(0, 100));
+        check(shown.legend.some((t) => t.includes(reason)),
+            '…and it is on the page where a reader is looking');
+    }
 }
 
 /* ══════════════════════════════════════════════════════════════════════
