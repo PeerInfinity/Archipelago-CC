@@ -27,6 +27,13 @@ import {
     SLASH_ANIM_DASH,
     SLASH_ANIM_NORMAL,
     SLASH_TIMER_MAX,
+    animCompleteTicks,
+    SLASH_ANIM_TICKS,
+    SWORD_ANIM_RATE,
+    SWORD_ANIM_RATE_DASH,
+    DASH_CHAIN,
+    DASH_CHAIN_MAX,
+    ORDINARY_SWING_PERIOD,
     SLASH_SCALE_DASH,
     SLASH_SCALE_NORMAL,
     SLASH_SPRITES,
@@ -459,5 +466,84 @@ describe('R9 slice 12b: `set slashing` (Player.as:779-804), the whole setter', (
         expect(slashScaleFor(press(open).state.anim)).toEqual(SLASH_SCALE_DASH);
         expect(slashScaleFor(press(INITIAL_SLASH_STATE).state.anim))
             .toEqual(SLASH_SCALE_NORMAL);
+    });
+});
+
+describe('R9 slice 12b: the ANIMATION clock, and the maximum swing rate (⚖ ruling 36)', () => {
+    /**
+     * `slashEnd` is `sprSlash`'s COMPLETE CALLBACK (`Player.as:41`), not a key
+     * release — so the dash's re-arm runs on FlashPunk's frame accumulator.
+     */
+    it('wraps a looping animation when its accumulator has stepped every frame', () => {
+        // `slash` — [0,1,2,3,4] at swordSpeed 30, i.e. exactly one frame a tick.
+        expect(animCompleteTicks(5, SWORD_ANIM_RATE)).toBe(5);
+        // `slashnarrow` — [1,2,3] at swordSpeedDash 20, i.e. 0.667 a tick.
+        expect(animCompleteTicks(3, SWORD_ANIM_RATE_DASH)).toBe(5);
+    });
+
+    /**
+     * ⚠ THE EQUALITY ABOVE IS A COINCIDENCE OF THE ARITHMETIC, and this row is
+     * what stops it being written down as a shared constant: the GHOST sword's
+     * two lists (7 at 30, 4 at 20) also agree with each other and NOT with the
+     * plain sword's. Same shape, different number.
+     */
+    it('does NOT give the same answer for the ghost sword', () => {
+        expect(animCompleteTicks(7, SWORD_ANIM_RATE)).toBe(7);
+        expect(animCompleteTicks(4, SWORD_ANIM_RATE_DASH)).toBe(7);
+    });
+
+    it('refuses a rate that never wraps rather than looping forever', () => {
+        expect(() => animCompleteTicks(3, 0)).toThrow(/does not wrap/);
+    });
+
+    it('exposes the plain sword\'s two periods by name', () => {
+        expect(SLASH_ANIM_TICKS.slash).toBe(5);
+        expect(SLASH_ANIM_TICKS.slashnarrow).toBe(5);
+    });
+
+    /**
+     * ⛓⛓⛓ THE MAXIMUM SWING RATE, ⚖ ruling 36 — three numbers, none of them
+     * the 21 or the 31 the ladder called "the cadence".
+     */
+    it('ORDINARY swings are one per 20 ticks, and the ±1 falls on the LOW side', () => {
+        expect(ORDINARY_SWING_PERIOD).toBe(SLASH_TIMER_MAX);
+        expect(ORDINARY_SWING_PERIOD).toBe(20);
+        // At k = 19 the timer reads 1 and the press DASHES; at k = 20 it reads
+        // 0 and the press is a swing. So 20 is the period — 21 was head-room.
+        const press = (st) => slashSet(st, { pressed: true, hasSword: true, direction: 0 });
+        const ticks = (st, n) => {
+            let s = st;
+            for (let i = 0; i < n; i += 1) s = slashTimerTick(s);
+            return s;
+        };
+        const ended = slashSet(press(INITIAL_SLASH_STATE).state,
+            { pressed: false, hasSword: true }).state;
+        expect(press(ticks(ended, 19)).outcome).toBe('dash');
+        expect(press(ticks(ended, 20)).outcome).toBe('slash');
+    });
+
+    /**
+     * ⛔⛔ DASHES ARE ONE PER ANIMATION, NOT ONE PER WINDOW — and the offsets
+     * are what two wrong derivations disagreed about.
+     *
+     * Dividing 20 by the animation's 5 gives four dashes at k = 1/6/11/16.
+     * Modelling `slashEnd` firing BELOW the press (it is called from
+     * `sprites()`, under `super.update()`) moves them to 1/7/13/19 — still
+     * four. Modelling `Input.pressed` as the RISING EDGE it is — a press costs
+     * two ticks of the key, so k = 1 is not expressible by any controller —
+     * gives THREE, at 2/8/14. The last is the only one a tape can drive.
+     */
+    it('admits exactly three dashes per window, at k = 2 / 8 / 14', () => {
+        expect(DASH_CHAIN_MAX).toBe(3);
+        expect([...DASH_CHAIN.at]).toEqual([2, 8, 14]);
+        expect(DASH_CHAIN.max).toBe(DASH_CHAIN.at.length);
+    });
+
+    it('…and every press in between is SWALLOWED, which is what bounds the chain', () => {
+        expect([...DASH_CHAIN.swallowed]).toEqual([4, 6, 10, 12, 16, 18]);
+        // Every offset in the window is either a dash, a swallow, or a tick the
+        // key had to be up on — nothing is unaccounted for.
+        const used = new Set([...DASH_CHAIN.at, ...DASH_CHAIN.swallowed]);
+        for (const k of used) expect(k % 2).toBe(0);
     });
 });

@@ -109,7 +109,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 34,
+            "count": 35,
             "id": "plan"
         },
         {
@@ -184,13 +184,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 222,
+        "blockStyle": 223,
         "browser": 74,
         "cited": 73,
-        "files": 241,
+        "files": 242,
         "lineStyle": 19,
-        "withDocblock": 241,
-        "withFlags": 147
+        "withDocblock": 242,
+        "withFlags": 148
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -3623,6 +3623,27 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-r8-l18-spinner — THE PRESS ARM'S DRIVEN PAIR.",
             "path": "scripts/procgen/plan-seedling-r8-l18-spinner.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-r9-l0-sword-dash.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "oneLiner": "⛓⛓⛓ R9 SLICE 12b — **THE SWORD DASH'S DRIVEN WITNESS.**",
+            "path": "scripts/procgen/plan-seedling-r9-l0-sword-dash.mjs"
         },
         {
             "argvHelpers": [],

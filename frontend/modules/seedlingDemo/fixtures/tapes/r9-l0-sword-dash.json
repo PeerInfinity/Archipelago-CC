@@ -1,0 +1,77 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 0,
+        "x": 176,
+        "y": 208
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": {
+        "items": {
+            "hasSword": true
+        }
+    },
+    "tick0": null,
+    "tick_count": 37,
+    "inputs": [
+        {
+            "key": "right",
+            "from": 0,
+            "to": 37
+        },
+        {
+            "key": "primary",
+            "from": 3,
+            "to": 4
+        },
+        {
+            "key": "primary",
+            "from": 5,
+            "to": 6
+        },
+        {
+            "key": "primary",
+            "from": 7,
+            "to": 8
+        },
+        {
+            "key": "primary",
+            "from": 11,
+            "to": 12
+        },
+        {
+            "key": "primary",
+            "from": 17,
+            "to": 18
+        },
+        {
+            "key": "primary",
+            "from": 23,
+            "to": 24
+        }
+    ],
+    "name": "r9-l0-sword-dash",
+    "description": "⛓⛓⛓ R9 SLICE 12b — THE SWORD DASH'S DRIVEN WITNESS, and the dash has no other one: the committed roster CANNOT reach the branch. Kickoff §22.9 derived an \"8-tape free oracle\" from tape INPUTS (41 tapes hold a `primary` pair inside `SLASH_TIMER_MAX` — which reproduces); carried through the RUN all 41 die on one of three filters — 640 entries -> 374 survive `acting` -> 149 hold a sword -> 149 ORDINARY swings, zero dashes. So the game is the only oracle. The player holds `right` down a clear L0 corridor (DERIVED as the longest hit-free straight run over eleven chaser-free rooms) so every press lands on a MOVING player — at rest the impulse is exactly zero, `point_normalize` being a no-op at zero length. The schedule is `combatVerbs.DASH_CHAIN`'s own: an ordinary swing, then DASHES at k = 2/8/14 (k=2 and not k=1 because `Input.pressed` is a RISING EDGE and a press costs two ticks of the key), a press at k = 4 that must be SWALLOWED WHOLE (inside a dash's animation both arms of `set slashing` are refused and there is no else), and a press at k = 20 that must be an ORDINARY SWING — the discriminator, because the dash does NOT refresh `slashTimer` and a model that thought it did would dash here and move the player 2 px the game does not. Four claims: the impulse and its −0.25/tick decay, `slashEnd`'s tick, the non-refresh, and the anim-complete re-arm (`slashDashed` is cleared by the Spritemap callback, and the re-arm period is the animation PLUS ONE because `slashEnd` fires from `sprites()`, below `input()`). ⛓ The player-side expectation IS the right oracle here — trap 564 inverted: the claim is the PLAYER's own displacement. Prior game witness for the arithmetic: `r5Totem.controlRefutation`, −0.25/tick from 2.20 = 0.20 coasting + 2.00 knockback. Authored by scripts/procgen/plan-seedling-r9-l0-sword-dash.mjs.",
+    "note": ""
+}

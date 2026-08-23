@@ -174,8 +174,8 @@ import {
 // file does not use — the press rect comes from `presses.slashRect` — but
 // `Player.as:116`'s `swordForce` has one home and this is it.
 import {
-    INITIAL_SLASH_STATE, SLASH_SCALE_NORMAL, SWORD_FORCE, slashScaleFor, slashSet,
-    slashTimerTick,
+    INITIAL_SLASH_STATE, SLASH_ANIM_TICKS, SLASH_SCALE_NORMAL, SWORD_FORCE, slashScaleFor,
+    slashSet, slashTimerTick,
 } from './combatVerbs.js';
 import { ledgerKey, outOfBandFlagForWriter } from './outOfBandLedger.js';
 import { createChestState, stepChests } from './chest.js';
@@ -13053,10 +13053,20 @@ export function createLevelRun({
                     impulse: slashPress.impulse ? { ...slashPress.impulse } : null,
                 });
                 if (slashPress.outcome === 'slash' || slashPress.outcome === 'dash') {
-                    // `play(anim, true)` RESTARTS the animation, so `slashEnd`'s
-                    // clock restarts with it — for a dash landing inside an open
-                    // swing as much as for a fresh one.
-                    slashEndsAt = ticksCompleted + SLASH_HIT_TICKS;
+                    /**
+                     * ⛓⛓ `play(anim, true)` RESTARTS the animation, so
+                     * `slashEnd`'s clock restarts with it — for a dash landing
+                     * inside an open swing as much as for a fresh one.
+                     *
+                     * ⛔ THE CLOCK IS THE ANIMATION'S, PER ANIMATION. "slash"
+                     * is 5 frames at 30 and "slashnarrow" is 3 at 20, and both
+                     * wrap on the 5th tick — which is a COINCIDENCE of the
+                     * accumulator and not a shared constant, so it is looked
+                     * up rather than reused from `SLASH_HIT_TICKS`. (That the
+                     * two agree for the plain sword is exactly why R6 slice
+                     * 5's measured 5 is also the swing's length.)
+                     */
+                    slashEndsAt = ticksCompleted + SLASH_ANIM_TICKS[slashState.anim];
                 }
             }
             const stepOpts = stepOptsFor({

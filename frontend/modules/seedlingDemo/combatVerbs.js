@@ -122,6 +122,65 @@ export const SLASH_ANIM_NORMAL = 'slash';
 export const SLASH_ANIM_DASH = 'slashnarrow';
 
 /**
+ * ⛓⛓⛓ R9 SLICE 12b — **`slashEnd` IS AN ANIMATION CALLBACK, NOT A KEY
+ * RELEASE**, and the whole maximum-swing-rate question is downstream of that.
+ *
+ * `sprSlash = new Spritemap(imgSlash, 16, 32, slashEnd)` (`Player.as:41`) —
+ * the third argument is FlashPunk's `complete` callback, fired when a LOOPING
+ * animation wraps. `slashEnd()` (`:1046`) is `slashing = false`, which takes
+ * `set slashing`'s release arm and clears `slashDashed`. So the dash re-arms
+ * itself at the END OF ITS OWN ANIMATION, on a clock that has nothing to do
+ * with `slashTimer`.
+ *
+ * The two animations (`Player.as:392-393`):
+ *   `slash`        frames [0,1,2,3,4]  at `swordSpeed`     30
+ *   `slashnarrow`  frames [1,2,3]      at `swordSpeedDash` 20
+ *
+ * ⚠⚠ THE TWO RATES ARE DIFFERENT AND THE TWO PERIODS ARE THE SAME, WHICH IS
+ * A COINCIDENCE OF THE ARITHMETIC AND MUST NOT BE WRITTEN AS A CONSTANT.
+ * FlashPunk accumulates `frameRate / assignedFrameRate` per update and steps
+ * a frame each time the accumulator passes 1: five frames at 30/30 wrap on
+ * the 5th tick, and three frames at 20/30 ALSO wrap on the 5th — the 0.667
+ * accumulator lands its three steps on ticks 2, 4 and 5. Change either the
+ * frame list or the rate and they part company, so this is DERIVED.
+ *
+ * ⛓ AND THE GHOST SWORD IS NOT 5. Its lists are 7 frames at 30 and 4 at 20,
+ * both of which wrap on the 7th tick. `levelRun` REFUSES a ghostsword press
+ * for an unrelated reason (`genericHit`'s Spear arm), so nothing consumes
+ * that number yet — it is derived here rather than assumed to be the sword's.
+ */
+export function animCompleteTicks(frameCount, frameRate, assignedFrameRate = 30) {
+    let timer = 0;
+    let index = 0;
+    // The same bound `Spritemap.updateAnimation` has no need of, as a refusal
+    // rather than an infinite loop: a rate of 0 never completes.
+    for (let tick = 1; tick <= 1000; tick += 1) {
+        timer += frameRate / assignedFrameRate;
+        while (timer >= 1) {
+            timer -= 1;
+            index += 1;
+            if (index === frameCount) return tick;
+        }
+    }
+    return fail(`animCompleteTicks: ${frameCount} frame(s) at ${frameRate}/`
+        + `${assignedFrameRate} does not wrap inside 1000 ticks`);
+}
+
+/** `Player.as:131-132` — `swordSpeed` and `swordSpeedDash`. */
+export const SWORD_ANIM_RATE = 30;
+export const SWORD_ANIM_RATE_DASH = 20;
+
+/**
+ * How many ticks after `play(anim, true)` the `slashEnd` callback fires, per
+ * animation — DERIVED from `Player.as:392-393`'s own frame lists and rates.
+ */
+export const SLASH_ANIM_TICKS = Object.freeze({
+    [SLASH_ANIM_NORMAL]: animCompleteTicks(5, SWORD_ANIM_RATE),
+    [SLASH_ANIM_DASH]: animCompleteTicks(3, SWORD_ANIM_RATE_DASH),
+});
+
+
+/**
  * `Player`'s four slash fields at construction (`Player.as:119-121`, and
  * `_slashing` false).
  */
@@ -289,6 +348,91 @@ export function slashTimerTick(st) {
     if (st.slashTimer <= 0) return st;
     return { ...st, slashTimer: st.slashTimer - 1 };
 }
+
+/**
+ * ⛓⛓⛓ **THE GAME'S MAXIMUM SWORD SWING RATE** (⚖ ruling 36), which is THREE
+ * numbers and not one — and none of them is the 21 or the 31 the ladder has
+ * been calling "the cadence" since R5.
+ *
+ * 1. **ORDINARY SWINGS: one per 20 ticks.** The `else if (!slashing && _s)`
+ *    arm needs `slashTimer` at 0, because a press with the timer up takes the
+ *    dash arm instead (or is swallowed). `slashTimer` is set to 20 at the
+ *    swing and decremented once per `slash()`, which runs ABOVE the press —
+ *    so the press `k` ticks later reads `20 - k`, and the first press that is
+ *    an ordinary swing again is at **k = 20**, not 21. ⚠ THE ±1 FALLS ON THE
+ *    LOW SIDE: at k = 19 the timer reads 1 and the press DASHES. So 20 is the
+ *    period, and `KILL_CADENCE_FLOOR`'s 21 was one tick of head-room over it.
+ *
+ * 2. **DASHES: one per ANIMATION, not one per window.** `slashDashed` is
+ *    cleared by `slashEnd`, so a chain is press → dash → (5 ticks) → dash →
+ *    (5 ticks) → … for as long as `slashTimer` is still up. The first dash
+ *    can land at k = 1, and each subsequent one 5 ticks later, so the window
+ *    admits `DASH_CHAIN_MAX` of them — each a +2 impulse along travel. This
+ *    is the mechanism behind ⚖ ruling 35's "dashing towards the exit".
+ *
+ * 3. **DAMAGE TO ONE BODY: one per 30 ticks, and it is the RECEIVER's.**
+ *    `Enemy.hit` refuses while `hitsTimer > 0` and a landed hit sets 30. The
+ *    swing rate does not bound damage; the i-frame does, PER BODY — so two
+ *    bodies in one rect take a hit each from the same press, and one body
+ *    takes at most one hit per 30 ticks however fast the player swings.
+ *
+ * ⇒ A PRESS IS REFUSED BY WHAT IT WOULD DO, NOT BY A FLOOR (⚖ ruling 31(b)).
+ */
+export const DASH_CHAIN = (() => {
+    /**
+     * ⛔⛔ DERIVED BY RUNNING THE TRANSCRIPTION UNDER THE RULES A CONTROLLER
+     * ACTUALLY HAS, NOT BY DIVIDING. Two corrections, each worth one dash:
+     *
+     * 1. **`slashEnd` FIRES BELOW THE PRESS.** It is called from `sprites()`,
+     *    which is under `super.update()` in `Player.update` — so a press ON
+     *    the animation's last tick still sees `slashDashed` up and is
+     *    SWALLOWED. The re-arm period is the animation PLUS ONE.
+     * 2. **`Input.pressed` IS A RISING EDGE.** A press costs two ticks of the
+     *    key — one down, one up — so two presses cannot be on consecutive
+     *    ticks at all. The theoretical first dash at k = 1 is not expressible
+     *    by any controller; the earliest is k = 2.
+     *
+     * A first cut that modelled neither gave 4 dashes at k = 1/6/11/16, and a
+     * cut that modelled only the first gave 4 at 1/7/13/19. Both are ticks no
+     * input stream can produce.
+     *
+     * The loop is `levelRun`'s own tick order — decrement, press, release —
+     * pressing on every tick the key is FREE, which is the fastest a
+     * controller can ask.
+     */
+    let st = INITIAL_SLASH_STATE;
+    let endsAt = null;
+    let keyHeld = false;
+    const at = [];
+    const swallowed = [];
+    const opening = slashSet(st, { pressed: true, hasSword: true, direction: 0, vx: 1, vy: 0 });
+    st = opening.state;
+    endsAt = SLASH_ANIM_TICKS[opening.state.anim];
+    keyHeld = true;
+    for (let k = 1; k <= SLASH_TIMER_MAX; k += 1) {
+        st = slashTimerTick(st);
+        // The controller lets the key up for one tick, then presses again.
+        const press = !keyHeld;
+        keyHeld = press;
+        if (press) {
+            const r = slashSet(st, { pressed: true, hasSword: true, direction: 0, vx: 1, vy: 0 });
+            st = r.state;
+            if (r.outcome === 'dash') { at.push(k); endsAt = k + SLASH_ANIM_TICKS[st.anim]; }
+            if (r.outcome === 'swallowed') swallowed.push(k);
+        }
+        if (endsAt !== null && k >= endsAt) {
+            endsAt = null;
+            st = slashSet(st, { pressed: false, hasSword: true }).state;
+        }
+    }
+    return Object.freeze({ max: at.length, at: Object.freeze(at), swallowed: Object.freeze(swallowed) });
+})();
+
+/** The most dashes one `slashTimer` window admits — see `DASH_CHAIN`. */
+export const DASH_CHAIN_MAX = DASH_CHAIN.max;
+
+/** The ordinary swing's own period — see note 1. `KILL_CADENCE_FLOOR` was 21. */
+export const ORDINARY_SWING_PERIOD = SLASH_TIMER_MAX;
 
 /**
  * `Player.getSlashRect()` (`Player.as:929-950`), transcribed exactly.
