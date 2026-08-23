@@ -174,8 +174,16 @@ async function holdFor(page, codes, ms) {
      * Trap 572's cure applied where it was found: the DERIVATION is the claim,
      * and what it asserts is that the page mounts one toggle per roster entry.
      */
+    /**
+     * ⛔⛔ AND THE LABEL SAID **FIFTEEN** WHILE THE ROSTER WAS SIXTEEN — trap
+     * 573 caught live, by this slice's own sweep for the literal above. Once
+     * the assertion derived, the row went green with a label that had gone
+     * FALSE, which is the one part of a gate that can do that silently. The
+     * number now comes from the expression the assertion uses.
+     */
     check(driving.toggles === LAYER_IDS.length,
-        'the FIFTEEN layer toggles are mounted over the LIVE drive too, and they ARE the roster',
+        `the ${LAYER_IDS.length} layer toggles are mounted over the LIVE drive too, and they `
+        + 'ARE the roster',
         `${driving.toggles} toggle(s), roster ${LAYER_IDS.length}`);
     if (SHOT) await page.screenshot({ path: `${SHOT}/manual-driving.png` });
 
