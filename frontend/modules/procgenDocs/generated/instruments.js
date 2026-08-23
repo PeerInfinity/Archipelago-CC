@@ -109,7 +109,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 35,
+            "count": 34,
             "id": "plan"
         },
         {
@@ -184,13 +184,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 223,
+        "blockStyle": 222,
         "browser": 74,
         "cited": 74,
-        "files": 242,
+        "files": 241,
         "lineStyle": 19,
-        "withDocblock": 242,
-        "withFlags": 148
+        "withDocblock": 241,
+        "withFlags": 147
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -3514,31 +3514,6 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-r6-wtalk — ⛓⛓⛓ W-TALK: THE WATCHER'S DIALOGUE, AND THE FIRST LEDGER ROW A ROUTE CAN EARN BY WALKING AWAY.",
             "path": "scripts/procgen/plan-seedling-r6-wtalk.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": false,
-            "category": "plan",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "plan-seedling-r7-act2.mjs",
-            "flags": [
-                {
-                    "how": [
-                        "startsWith"
-                    ],
-                    "name": "chain"
-                },
-                {
-                    "how": [
-                        "includes"
-                    ],
-                    "name": "check"
-                }
-            ],
-            "oneLiner": "plan-seedling-r7-act2 — AUTHOR the first honest segments, from the UNITS and from the GAME's own latch.",
-            "path": "scripts/procgen/plan-seedling-r7-act2.mjs"
         },
         {
             "argvHelpers": [],
