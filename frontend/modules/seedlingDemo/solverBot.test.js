@@ -54,6 +54,7 @@ import {
     ESCALATION_LADDER,
     OBSTACLE_STRATEGIES, STRATEGY_EXECUTORS, STRATEGY_REFINEMENTS, SolverRefusal,
     FACING_KEYS, facingToward,
+    deriveKillByChaser, interceptOrder,
     previewWalk, resolveKillStrategy, solveSegment, strikePolicyFor,
 } from './solverBot.js';
 // ⛓ R9 slice 12b — ⚖ ruling 30(c)'s equality is between these two exact
@@ -63,6 +64,8 @@ import { drive, runDwell } from './botDriverV2.js';
 // needs the constructor and the swing period the refusal is measured in.
 import { createStrikePolicy } from './strikePolicy.js';
 import { ORDINARY_SWING_PERIOD } from './combatVerbs.js';
+import { killWindowTicks } from './chasers.js';
+import { ENEMY_CLASSES } from './combat.js';
 import { DEFAULT_TOLERANCE } from './botDriverV1.js';
 import { SLASH_HIT_TICKS } from './presses.js';
 // ⛓ R9 slice 1 (A3) — the kill lock's own tset, read from the module that owns it.
@@ -1424,5 +1427,158 @@ describe('R9 slice 12b: the OPPORTUNISTIC STRIKE — one policy, two consumers',
         const unarmed = l6();
         expect(() => runDwell(unarmed, [], dwellFor(unarmed, null), 'the unarmed dwell'))
             .toThrow(/the dwell was HIT at tick 119/);
+    });
+});
+
+/**
+ * ⛓⛓⛓ R9 SLICE 12b′ — **THE DERIVED STANCE**, the kill rung's chaser arm.
+ *
+ * ⚠ NO IN-ANGER WITNESS, AND THAT IS SAID RATHER THAN HIDDEN. Slice 12b′ also
+ * enforced `allowDash`, and with the dash refused L14's corridor certifies
+ * WITH its opportunistic strikes — so the room now solves at rung 1 (⚖ ruling
+ * 29(a)'s parry-walk, the user's PRIMARY) and never reaches this fallback. The
+ * arm is therefore tested one layer in, by calling it on L14's own boot: a
+ * real room, six real bobs, and every number below is what the forecast
+ * measured there.
+ */
+describe('R9 slice 12b′: the DERIVED STANCE — scored, iterative, refuses by name', () => {
+    const l14 = () => createLevelRun({
+        levelSource, boot: { level: 14, x: 160, y: 64 }, noclip: false, noHazards: [],
+        noDamage: false, grants: [], persistence: [], despawn: [], equips: [],
+        pins: ['dead_frames'], save: { totem_parts: [], keys: [], seal_parts: [] },
+        rng: null, seam: { items: { hasSword: true } }, roles: ROLES,
+    });
+    /** The ladder's own inputs, minus the aim — which on L14 is a teleporter
+     *  tile the planner refuses, and the scan's condition 4 skips it there. */
+    const derive = (id) => {
+        const run = l14();
+        const body = run.strikeBodies.find((b) => b.id === id);
+        return { run, ...deriveKillByChaser(run, { ...body }, new Set(),
+            { aim: null, allowTeleporter: null, tolerance: DEFAULT_TOLERANCE }) };
+    };
+    const dist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
+
+    /**
+     * ⛔ MUTANT (a)'s ROW — "wherever the walk stands" against a DERIVED
+     * stance, on the exact body that refused at slice 12b's head.
+     *
+     * `bob@32,32` is 127.1 px from L14's boot against an 80 px leash: it does
+     * not chase from there, so the first cut's `{stance: run.state}` waited
+     * for a body that was never coming. The derivation puts the player 16 px
+     * from it — one lattice cell — and the body comes.
+     */
+    it('⛔ derives a stance for the body that CANNOT reach where the walk stands', () => {
+        const { run, stance, why, ticks } = derive('bob@32,32');
+        expect(stance).toEqual({ x: 40, y: 24 });
+        expect(stance).not.toEqual({ x: run.state.x, y: run.state.y });
+
+        const body = run.strikeBodies.find((b) => b.id === 'bob@32,32');
+        const centre = {
+            x: (body.rect.x + body.rect.right) / 2,
+            y: (body.rect.y + body.rect.bottom) / 2,
+        };
+        const leash = ENEMY_CLASSES.bob.aggro.range;
+        // OUT of leash from the walk — which is the whole refusal — and IN it
+        // from the stance, which is the whole repair.
+        expect(dist(run.state, centre)).toBeGreaterThan(leash);
+        expect(dist(stance, centre)).toBeLessThanOrEqual(leash);
+        expect(ticks).toBe(106);
+        expect(why).toMatch(/dies at tick 234/);
+    });
+
+    /**
+     * ⛔ MUTANT (b)'s ROW — THE DURATION, not the instant. `deriveBaitStance`'s
+     * trap-154 lesson one rung up: a cell can be danger-free when the walk
+     * arrives and lethal forty ticks later, because a chaser spends those
+     * forty ticks walking. The refusal for `bob@64,64` carries both shapes of
+     * failure by name, and the WAIT one is the duration condition biting.
+     */
+    it('⛔ refuses BY NAME with its three counts — and names the WAIT that goes bad', () => {
+        const { stance, why } = derive('bob@64,64');
+        expect(stance).toBeNull();
+        expect(why).toMatch(/64 cell\(s\) inside its 80 px leash/);
+        expect(why).toMatch(/49 of those reachable/);
+        expect(why).toMatch(/49 of THOSE refused by the forecast/);
+        // Both refusal shapes, and the first is the one a static-leash disc
+        // could never produce.
+        expect(why).toMatch(/the WAIT is dangerous at tick \d+ — chaser:bob@128,64/);
+        expect(why).toMatch(/is still standing after the whole \d+-tick ceiling/);
+        expect(why).toMatch(/trap 154/);
+    });
+
+    /**
+     * ⛔ MUTANT (e)'s ROW — NOT FIRST-VIABLE. The scan's own order is
+     * nearest-approach-first, so a first-viable pick would take the closest
+     * qualifying cell. The score is soonest-kill-first, and on `bob@96,80`
+     * they disagree: the winner is 57.7 px away and a runner-up is 35.8, i.e.
+     * the nearer cell qualified and was passed over for a sooner kill.
+     */
+    it('⛓ takes the BEST stance, not the first viable one — and carries the runners-up', () => {
+        const { run, stance, runnersUp, clears } = derive('bob@96,80');
+        expect(stance).toEqual({ x: 120, y: 104 });
+        expect(runnersUp.length).toBeGreaterThan(0);
+        const nearer = runnersUp.filter((r) => dist(run.state, r) < dist(run.state, stance));
+        expect(nearer.length).toBeGreaterThan(0);
+        // …and every runner-up's kill is LATER, which is what the score says.
+        for (const r of runnersUp) expect(r.deathAt).toBeGreaterThan(120 - 30);
+        // ⛓ The record carries every body the wait removes, not only the one
+        // asked for — the reason the NEXT climb finds a different room.
+        expect(clears).toEqual(['bob@96,80', 'bob@128,64']);
+    });
+
+    /**
+     * ⛔ THE BOUND IS MEASURED, NOT COMPUTED FROM A FORMULA. §23.10 named
+     * `killWindowTicks(tag) * 3 + HOLD_SLACK`, which on a bob is 108 for every
+     * body in every room — it has no term for how long the body takes to WALK
+     * to the stance, and that term dominates. The four bounds this room
+     * derives are 106, 148, 102 and 116: two above the formula and two below,
+     * so the difference is not a margin anybody could have added.
+     */
+    it('⛔ the dwell bound is the forecast\'s own death tick, not a per-class constant', () => {
+        const formula = killWindowTicks('bob') * 3 + 30;
+        expect(formula).toBe(108);
+        const bounds = {
+            'bob@32,32': 106, 'bob@128,64': 148, 'bob@96,48': 102, 'bob@176,112': 116,
+        };
+        for (const [id, want] of Object.entries(bounds)) {
+            expect(derive(id).ticks).toBe(want);
+        }
+        expect(Object.values(bounds).some((b) => b > formula)).toBe(true);
+        expect(Object.values(bounds).some((b) => b < formula)).toBe(true);
+    });
+
+    /**
+     * ⛔ MUTANT (g)'s ROW — THE TWO ORDERS DIFFER, AND THE CHOOSER'S HEAD DOES
+     * NOT MOVE. `chooseBodyToRemove` orders by distance from the AIM and BAIT
+     * and the ceiling arm read `[0]` of exactly that list; the chaser arm
+     * re-reads it in INTERCEPT order. L14 is where the two disagree by the
+     * whole room, so the row is not vacuous: aim-first is `bob@32,32` at the
+     * exit, intercept-first is `bob@128,64`, the body the corridor probe met.
+     */
+    it('⛔ the chaser arm re-orders by INTERCEPT; the chooser\'s own head is untouched', () => {
+        const run = l14();
+        const aim = { x: 32, y: 64 };
+        // The chooser's order, by its own rule: distance from the AIM, ties by id.
+        const byAim = [...run.strikeBodies].map((b) => ({
+            ...b,
+            x: (b.rect.x + b.rect.right) / 2,
+            y: (b.rect.y + b.rect.bottom) / 2,
+        })).sort((a, b) => Math.hypot(a.x - aim.x, a.y - aim.y)
+            - Math.hypot(b.x - aim.x, b.y - aim.y) || (a.id < b.id ? -1 : 1));
+        expect(byAim[0].id).toBe('bob@32,32');
+
+        // The corridor probe's own first danger on this room, verbatim from
+        // the survey's committed refusal at slice 12b's head.
+        const hit = { sources: [{ kind: 'chaser', id: 'bob@128,64' }] };
+        const ordered = interceptOrder(byAim, hit);
+        expect(ordered[0].id).toBe('bob@128,64');
+        // ⛓ …and it is a RE-ORDER, not a filter: the same bodies, and the ones
+        // the probe never named keep the chooser's order behind the one it did.
+        expect(ordered.map((b) => b.id).sort()).toEqual(byAim.map((b) => b.id).sort());
+        expect(ordered.slice(1).map((b) => b.id))
+            .toEqual(byAim.filter((b) => b.id !== 'bob@128,64').map((b) => b.id));
+        // The chooser's own head — what BAIT and the ceiling arm take — is
+        // untouched by any of this.
+        expect(byAim[0].id).toBe('bob@32,32');
     });
 });

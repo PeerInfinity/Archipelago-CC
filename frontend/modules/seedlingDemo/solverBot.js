@@ -112,7 +112,7 @@ import {
     STRIKE_PRESS, armIsModelled, createStrikePolicy,
 } from './strikePolicy.js';
 import { MOBILE_DEATH_FADE } from './enemyDamage.js';
-import { playerBoxAt } from './playerPhysicsV2.js';
+import { PhysicsV2Error, playerBoxAt } from './playerPhysicsV2.js';
 import { HITBOX, WALK_SPEED } from './playerPhysicsV1.js';
 import { chestStanceBand } from './chest.js';
 
@@ -1488,7 +1488,7 @@ export function strikePolicyFor(run) {
  * `solverBot.test.js` calls both, from one starting state, and compares the
  * held-set sequences.
  */
-export function previewWalk(run, wps, tolerance = 0, { strike = null } = {}) {
+export function previewWalk(run, wps, tolerance = 0, { strike = null, standFor = 0 } = {}) {
     const startTick = run.ticksCompleted;
     const step = run.previewStepper();
     /**
@@ -1649,8 +1649,59 @@ export function previewWalk(run, wps, tolerance = 0, { strike = null } = {}) {
         }
         if (truncated) break;
     }
-    return { samples, startTick, truncated };
+    /**
+     * ⛓⛓⛓ R9 SLICE 12b′ — **THE STANDING TAIL, ON THE SAME FORECAST AND THE
+     * SAME POLICY.**
+     *
+     * The kill rung's chaser arm walks to a stance and then WAITS there while
+     * the body comes. Those are not two questions: the corridor TO the stance
+     * spends ticks the bodies also spend, so a stance evaluated from the
+     * room's tick-0 positions is a stance for a room nobody will be standing
+     * in. ⛔ So the dwell is previewed as the walk's own TAIL — one
+     * `chaserForecast`, one `arrowForecast`, one strike policy and one clock
+     * — rather than by a second preview seeded from the live state.
+     *
+     * ⛔ THE WALK'S OWN KEYS ARE EMPTY HERE, WHICH IS `runDwell`'s CONTRACT
+     * ("no WALK keys"), and the policy may still spend a direction key to
+     * aim. That drift is REAL and it is stepped, not assumed away: `step` is
+     * the run's own stepper, so the previewed stance wanders exactly as far
+     * as the driven one will.
+     *
+     * ⚠ A TRUNCATED WALK GETS NO TAIL. The player is not where the caller
+     * thinks, so standing "there" would be standing somewhere else.
+     */
+    if (!truncated && standFor > 0) {
+        for (let i = 0; i < standFor; i += 1) {
+            tick += 1;
+            const arrows = forecast ? forecast.step(st) : null;
+            const chaserBodies = chasers ? chasers.step(st) : null;
+            const sample = { x: st.x, y: st.y, tick, arrows, chasers: chaserBodies,
+                phase: 'dwell' };
+            samples.push(sample);
+            let held = st.fall ? new Set() : NO_HELD_PREVIEW;
+            if (strike && bodiesForPolicy && !st.fall) {
+                const d = strike.decide(st, bodiesForPolicy, tick - 1, held);
+                held = d.held;
+                if (d.decision === STRIKE_PRESS && chasers) chasers.hit(d.target, st);
+            }
+            sample.held = held;
+            if (strike) bodiesForPolicy = chaserBodies;
+            st = step(st, held);
+            if (st.transition) {
+                truncated = {
+                    at: { x: st.x, y: st.y },
+                    why: `the dwell crossed to level ${st.transition.to_level}; a dwell `
+                        + 'that leaves the room undoes itself (trap 150)',
+                };
+                break;
+            }
+        }
+    }
+    return { samples, startTick, truncated, stood: standFor };
 }
+
+/** The walk's own keys during a standing tail — empty, and named as such. */
+const NO_HELD_PREVIEW = new Set();
 
 /**
  * The danger probe at a DECISION point: the union map's reason list for a
@@ -5626,7 +5677,8 @@ const KILL_BY_CEILING_BOUND = ARROW_KILL_FLOOR * 3 + HOLD_SLACK;
  * candidate stances are SCORED and the best is taken, with the runners-up
  * carried so the trace can answer "why there".
  */
-function deriveKillByChaser(run, body, contacts) {
+export function deriveKillByChaser(run, body, contacts,
+    { aim = null, allowTeleporter = null, tolerance = 0 } = {}) {
     if (!(run.strikeBodies ?? []).some((b) => b.id === body.id)) {
         return { stance: null, why: `${body.id} is not a body this run steps — the chaser `
             + 'arm needs a live position, and a static census body has none' };
@@ -5674,25 +5726,294 @@ function deriveKillByChaser(run, body, contacts) {
             + '`ENEMY_CLASSES`, so this arm cannot say whether the body would ever '
             + 'reach a stance' };
     }
+    /**
+     * ⛓⛓⛓ **THE STANCE, DERIVED — SCORED, ITERATIVE, AND IT REFUSES BY NAME.**
+     *
+     * Slice 12b's first cut returned `{stance: run.state}` — "wherever the
+     * walk stands" — and L14 measured what that is worth: the ladder hands
+     * this arm the body whose danger blocks the corridor, which there is
+     * `bob@32,32` at 127.1 px against an 80 px leash. It never comes; the
+     * dwell stood waiting for it and was hit at tick 106 by one of the four
+     * bobs that do chase. The arm then REFUSED by name, which was honest and
+     * still solved nothing.
+     *
+     * ⛔ FOUR CONDITIONS, AND EVERY ONE OF THEM IS THE FORECAST'S ANSWER
+     * RATHER THAN A DISC:
+     *
+     *  1. **the TARGET inside its own leash from the stance**, so it comes at
+     *     all — measured centre to centre, which is `Bob.update`'s own
+     *     `FP.distance(x, y, player.x, player.y)` and `chaserDanger`'s.
+     *  2. **every OTHER body outside reach FOR THE DURATION** — and that is
+     *     asked by STEPPING them against the previewed player over the whole
+     *     wait, not by growing a box. `dangerDuringTransit` with the sample's
+     *     own forecast bodies is `probeCorridor`'s instrument, re-used rather
+     *     than re-implemented: one danger model, two questions.
+     *  3. **a corridor TO the stance that is itself safe** — the approach is
+     *     part of the stance. It is previewed as the walk's own head and the
+     *     dwell as its TAIL, on ONE forecast, so the bodies the wait begins
+     *     with are the bodies the walk left, not the ones the room booted.
+     *  4. **a corridor onward** from the stance to the aim, so a stance that
+     *     wins the fight and traps the walk is not offered.
+     *
+     * ⛓ THE BOUND IS DERIVED TWICE OVER (⚖ ruling 17). The SCAN's ceiling is
+     * the body's own travel time to the stance at its own `moveSpeed` — which
+     * is `deriveBaitStance`'s term, and it is exactly what `HOLD_SLACK` was
+     * standing in for — plus three landed hits through the receiver's i-frames
+     * (`killWindowTicks(tag) * 3`) plus that slack. The DWELL's bound is then
+     * the tick this preview says the body dies, plus the slack: a measured
+     * number, not a formula that has to be generous. ⚠ §23.10's
+     * `killWindowTicks*3 + HOLD_SLACK` alone is 108 ticks on a bob, and no
+     * stance on L14 kills its first body inside 108.
+     *
+     * ⛓ NOT FIRST-VIABLE (kickoff §22.9's warning about `deriveStrike`): every
+     * survivor is scored and the runners-up ride in the trace, so the answer
+     * to "why there" is in the record rather than in the iteration order.
+     */
     const gap = distanceRectPoint(run.state.x, run.state.y, target.rect);
-    if (gap > leash) {
-        return { stance: null, why: `${body.id} is ${gap.toFixed(1)} px from the walk and `
-            + `\`ENEMY_CLASSES.${target.tag}.aggro.range\` is ${leash} — it does not `
-            + 'chase from there, so a stand-and-strike would wait for a body that is '
-            + 'never coming '
-            + 'while the room\'s OTHER bodies close in (measured on L14: hit at tick 106). '
-            + 'A stance derived to put THIS body inside its leash and the others outside '
-            + 'theirs is the fix, and it is not built.' };
+    const row = ENEMY_CLASSES[target.tag];
+    const speed = row?.speed ?? 0;
+    if (!(speed > 0)) {
+        return { stance: null, why: `${body.id} has \`speed ${speed}\` — it does not `
+            + 'chase, so no stance can bring it to the player and a stand-and-strike '
+            + 'would wait for something that never moves' };
     }
-    return {
-        stance: { x: run.state.x, y: run.state.y },
-        target,
-        why: `${body.id} is a \`modelled\` press target (KILL_ARM_POLICY.`
-            + `${target.enemyClass}) ${gap.toFixed(1)} px away, inside its ${leash} px `
-            + 'leash — so it CHASES, the stance is where the walk already stands, and the '
-            + 'wait is the verb. The presses are the one opportunistic strike policy '
-            + 'every walk uses, not a second schedule.',
+    const targetCentre = {
+        x: (target.rect.x + target.rect.right) / 2,
+        y: (target.rect.y + target.rect.bottom) / 2,
     };
+    const pitch = DEFAULT_LATTICE;
+    const here = nodeAt(run.state.x, run.state.y, pitch);
+    const planOpts = solverPlanOpts(run, contacts);
+    const strikeFor = () => strikePolicyFor(run);
+
+    /**
+     * ⛔ CONDITION 4 IS ASKED ONLY WHERE IT CAN DISCRIMINATE. An `aim` may be
+     * a goal ENTITY rather than a walkable cell — `planWaypoints` refuses a
+     * teleporter tile by name, and `walkTo` answers that by RE-IDENTIFYING
+     * the goal rather than by routing to it. A scan that asked "is there a
+     * corridor onward to this aim" against such an aim would answer no for
+     * every cell in the room and refuse with a count of zero, which reads as
+     * "the room has no stance" and means "I asked an unanswerable question".
+     * So the aim is probed FROM THE CURRENT POSITION first: if the walk
+     * cannot plan to it from where it already stands, the test carries no
+     * information about a stance and is not run.
+     */
+    const aimIsPlannable = aim !== null
+        && corridorPlans(run.world, run.state, aim, allowTeleporter, planOpts);
+    // ── condition 1, and the cheap half of 3 and 4 ────────────────────
+    const inLeash = [];
+    const candidates = [];
+    for (let dy = -STANCE_SCAN_CELLS; dy <= STANCE_SCAN_CELLS; dy += 1) {
+        for (let dx = -STANCE_SCAN_CELLS; dx <= STANCE_SCAN_CELLS; dx += 1) {
+            const c = nodeCentre(here.tx + dx, here.ty + dy, pitch);
+            const d = Math.hypot(c.x - targetCentre.x, c.y - targetCentre.y);
+            if (d > leash) continue;
+            inLeash.push(c);
+            if (!corridorPlans(run.world, run.state, c, allowTeleporter, planOpts)) continue;
+            if (aimIsPlannable
+                && !corridorPlans(run.world, c, aim, allowTeleporter, planOpts)) continue;
+            candidates.push({ ...c, d,
+                approach: Math.hypot(c.x - run.state.x, c.y - run.state.y) });
+        }
+    }
+    // Nearest-first only as a SCAN order — the pick below is by score, and
+    // ties are broken by y then x so an emitted tape is not an artifact of
+    // iteration order.
+    candidates.sort((a, b) => a.approach - b.approach || a.y - b.y || a.x - b.x);
+
+    /**
+     * ⛓ THE CEILING — see the note above. The travel term uses the body's own
+     * `moveSpeed` over the straight line, which is a FLOOR on its arrival and
+     * therefore the right side to be wrong on for a ceiling that must not cut
+     * the fight short.
+     */
+    const ceilingFor = (c) => Math.ceil(Math.hypot(c.x - targetCentre.x, c.y - targetCentre.y)
+        / speed) + killWindowTicks(target.tag) * 3 + HOLD_SLACK;
+
+    const scored = [];
+    const rejected = [];
+    for (const c of candidates) {
+        const wps = (c.x === run.state.x && c.y === run.state.y)
+            ? [] : planWaypointsOrNull(run.world, run.state, c, allowTeleporter, planOpts);
+        if (wps === null) continue;
+        /**
+         * ⛔⛔ A CANDIDATE THAT CANNOT BE PRICED IS REJECTED, NOT RAISED — and
+         * the difference is a crash.
+         *
+         * `probeCorridor` previews ONE corridor, the one the planner chose;
+         * this scan previews up to `(2n+1)^2` of them, so it walks into cells
+         * the planner would never route through. L6 measured it: a candidate
+         * corridor enters Water on a tape without the `"sound"` pin and
+         * `playerPhysicsV2.step` throws BY NAME, which is right — the model
+         * cannot price that walk — and a scan that let it escape would fail
+         * the whole solve because one cell of the room is unpriceable.
+         *
+         * ⚠ ONLY THE TWO REFUSAL CLASSES ARE CAUGHT. A `PhysicsV2Error` and a
+         * `BotDriverV2Error` are this model saying "I will not answer for that
+         * corridor"; anything else is a defect and is re-raised, because a
+         * scan that swallowed every throw would offer a stance it never
+         * priced.
+         */
+        let walk;
+        try {
+            walk = previewWalk(run, wps, tolerance,
+                { strike: strikeFor(), standFor: ceilingFor(c) });
+        } catch (e) {
+            if (!(e instanceof PhysicsV2Error) && !(e instanceof BotDriverV2Error)) throw e;
+            rejected.push({ ...c, why: `the model REFUSES to price this candidate's own `
+                + `corridor — ${e.message.split('\n')[0].slice(0, 160)}` });
+            continue;
+        }
+        if (walk.truncated) {
+            rejected.push({ ...c, why: `the preview did not settle — ${walk.truncated.why}` });
+            continue;
+        }
+        let danger = null;
+        let deathTick = null;
+        for (const sm of walk.samples) {
+            if (deathTick === null && sm.chasers
+                && !sm.chasers.some((b) => b.id === target.id)) deathTick = sm.tick;
+            if (danger !== null) continue;
+            const dg = dangerDuringTransit(run, sm.tick, playerBoxAt(sm.x, sm.y),
+                sm.arrows, sm.chasers);
+            if (dg.danger) danger = { tick: sm.tick, phase: sm.phase ?? 'transit', ...dg };
+        }
+        if (danger) {
+            rejected.push({ ...c, why: `${danger.phase === 'dwell' ? 'the WAIT' : 'the APPROACH'} `
+                + `is dangerous at tick ${danger.tick - walk.startTick} — `
+                + `${danger.sources.map((x) => `${x.kind}:${x.id}`).join(', ')}` });
+            continue;
+        }
+        if (deathTick === null) {
+            rejected.push({ ...c, why: `${target.id} is still standing after the whole `
+                + `${ceilingFor(c)}-tick ceiling — it does not reach this stance inside its `
+                + 'own travel time plus three kill windows' });
+            continue;
+        }
+        const arrival = walk.startTick + walk.samples.filter((sm) => sm.phase !== 'dwell').length;
+        scored.push({
+            x: c.x, y: c.y,
+            approach: arrival - walk.startTick,
+            deathAt: deathTick - walk.startTick,
+            // Every body this wait removes, not only the one that was asked
+            // for — the record a reader needs to see why the NEXT climb finds
+            // a different room.
+            clears: clearsOf(walk, run),
+            ticks: (deathTick - arrival) + HOLD_SLACK,
+        });
+    }
+    if (scored.length === 0) {
+        return {
+            stance: null,
+            why: `no stance derives for ${body.id} on level ${run.level}: `
+                + `${inLeash.length} cell(s) inside its ${leash} px leash, `
+                + `${candidates.length} of those reachable`
+                + `${aimIsPlannable ? ' and with a corridor onward' : ''}, `
+                + `and ${rejected.length} of THOSE refused by the forecast `
+                + `[${rejected.slice(0, 3).map((r) => `(${r.x},${r.y}): ${r.why}`).join('; ')}`
+                + `${rejected.length > 3 ? '; …' : ''}]. ⛔ A stance safe to PASS is not safe `
+                + 'to WAIT in (trap 154), and this rung asks the waiting question over the '
+                + 'whole duration rather than at the instant.',
+        };
+    }
+    /**
+     * ⛓ THE SCORE, SAID: soonest kill first (the wait is the expensive part
+     * and a shorter one is a smaller claim), then the shortest approach, then
+     * the most bodies cleared, then y and x so the order is TOTAL.
+     */
+    scored.sort((a, b) => a.deathAt - b.deathAt || a.approach - b.approach
+        || b.clears.length - a.clears.length || a.y - b.y || a.x - b.x);
+    const best = scored[0];
+    return {
+        stance: { x: best.x, y: best.y },
+        target,
+        ticks: best.ticks,
+        clears: best.clears,
+        // ⛓ The runners-up, so the trace can answer "why THERE" and not only
+        // "where" — `deriveStrike`'s lesson, kickoff §22.9.
+        runnersUp: scored.slice(1, 4).map((r) => ({ x: r.x, y: r.y, deathAt: r.deathAt })),
+        why: `${body.id} is a \`modelled\` press target (KILL_ARM_POLICY.`
+            + `${target.enemyClass}) ${gap.toFixed(1)} px from the walk; the stance `
+            + `(${best.x},${best.y}) puts it ${Math.hypot(best.x - targetCentre.x,
+                best.y - targetCentre.y).toFixed(1)} px away, inside its ${leash} px leash, `
+            + `so it CHASES. The forecast walks there in ${best.approach} tick(s) and stands: `
+            + `${target.id} dies at tick ${best.deathAt}`
+            + `${best.clears.length > 1 ? ` (and ${best.clears.length - 1} other bod(y|ies) `
+                + `with it: ${best.clears.filter((id) => id !== target.id).join(', ')})` : ''}`
+            + `, and NO body reaches the player at any tick of either half — the union map's `
+            + `own answer at every sample, with the bodies stepped against this candidate. `
+            + `${scored.length} stance(s) qualified out of ${candidates.length} reachable of `
+            + `${inLeash.length} in leash; this one is the soonest kill. The presses are the `
+            + 'one opportunistic strike policy every walk uses, not a second schedule.',
+    };
+}
+
+/**
+ * ⛓⛓⛓ R9 SLICE 12b′ — **THE CHASER ARM'S OWN ORDER OVER THE CHOOSER'S SET.**
+ *
+ * `chooseBodyToRemove` orders by distance from the AIM. That is the right
+ * question for BAIT — lure the body that is IN the way — and the wrong one
+ * for an iterative stand-and-strike, because the body nearest the destination
+ * is the one furthest from the fight. On L14 the two orders differ by the
+ * whole room: by aim-distance the head is `bob@32,32` at the exit, 127 px
+ * away behind four bobs that are already chasing; by intercept it is
+ * `bob@128,64`, the body the corridor probe met first.
+ *
+ * ⛓ THE ORDER IS THE PROBE'S OWN ANSWER, NOT A SECOND FORECAST. `hit.sources`
+ * is the danger this climb exists about, in the order the corridor met it, so
+ * the arm reads those first and the chooser's own order behind them. Exported
+ * because the row that says the two orders differ must call the rule rather
+ * than re-spell it (trap 566).
+ *
+ * @param {object[]} removable `chooseBodyToRemove`'s ordered set
+ * @param {object} hit  the corridor probe's first danger, with its `sources`
+ */
+export function interceptOrder(removable, hit) {
+    const intercepts = (hit?.sources ?? []).map((sx) => sx.id);
+    const rank = (b) => {
+        const i = intercepts.indexOf(b.id);
+        return i < 0 ? intercepts.length : i;
+    };
+    // ⚠ A STABLE sort, so bodies the probe never named keep the chooser's own
+    // order behind the ones it did — the two rules compose rather than one
+    // replacing the other.
+    return [...removable].sort((a, b) => rank(a) - rank(b));
+}
+
+/**
+ * ⛓ How many cells out the stance scan looks — `deriveBaitStance`'s own 8,
+ * which at `DEFAULT_LATTICE` is 128 px and therefore covers a whole Seedling
+ * room from any cell in it. Named rather than repeated at two scan sites.
+ */
+const STANCE_SCAN_CELLS = 8;
+
+/** `planWaypoints`, returning `null` where `corridorPlans` returns false. */
+function planWaypointsOrNull(world, from, aim, allowTeleporter, opts) {
+    try {
+        return planWaypoints(world, from, aim, allowTeleporter, opts);
+    } catch (e) {
+        if (!(e instanceof BotDriverV2Error)) throw e;
+        return null;
+    }
+}
+
+/**
+ * The bodies a previewed walk-and-wait REMOVES, in the order they go.
+ *
+ * ⛓ Read off the forecast's own roster rather than counted: a body that
+ * leaves the sample's chaser list has finished its death staging, which is
+ * the same observable `runDwell`'s `until` tests on the live run.
+ */
+function clearsOf(walk, run) {
+    const gone = [];
+    let live = new Set((run.strikeBodies ?? []).map((b) => b.id));
+    for (const sm of walk.samples) {
+        if (!sm.chasers) continue;
+        const now = new Set(sm.chasers.map((b) => b.id));
+        for (const id of live) if (!now.has(id)) gone.push(id);
+        live = now;
+    }
+    return gone;
 }
 
 function deriveKillByCeiling(run, body, contacts) {
@@ -6332,17 +6653,32 @@ export function solveSegment({
         const all = [...live, ...statics];
         all.sort((a, b) => Math.hypot(a.x - aim.x, a.y - aim.y)
             - Math.hypot(b.x - aim.x, b.y - aim.y) || (a.id < b.id ? -1 : 1));
+        /**
+         * ⛓⛓⛓ R9 SLICE 12b′ — **THE WHOLE SET, ORDERED, AND STILL ONE
+         * CHOOSER.**
+         *
+         * ⛔ The hypothesis and the filter are one question and stay in one
+         * place; what differs between the rungs is the ORDER they read the
+         * answer in, and that is a rung's business rather than the chooser's.
+         * BAIT and the ceiling arm take `[0]` — this list's head is the same
+         * body the single-return version handed them, so they do not move.
+         * The CHASER arm re-orders by INTERCEPT (see its call site), because
+         * an ITERATIVE arm that starts with the body nearest the DESTINATION
+         * starts with the one furthest from the fight: on L14 that is
+         * `bob@32,32`, 127 px away behind four bobs that are already coming.
+         */
+        const admits = [];
         for (const c of all) {
             const without = dangerVolumes(run, 0).filter((v) => v.id !== c.id);
             try {
                 planWaypoints(run.world, run.state, aim, allowTeleporter,
                     solverPlanOpts(run, contacts, { extraVolumes: without }));
-                return c;
+                admits.push(c);
             } catch (e) {
                 if (!(e instanceof BotDriverV2Error)) throw e;
             }
         }
-        return null;
+        return admits;
     };
 
     const reasonsOf = (d) => d.sources
@@ -6504,7 +6840,10 @@ export function solveSegment({
          * actually has a strategy for (a LIVE stepped body; a static census
          * row is a wall for this quantifier).
          */
-        const body = chooseBodyToRemove(goal, aim, contacts, allowTeleporter);
+        const removable = chooseBodyToRemove(goal, aim, contacts, allowTeleporter);
+        // ⛓ BAIT and the ceiling arm read the head of the ordered set, which
+        // is the body the single-return chooser used to hand them.
+        const body = removable[0] ?? null;
         let baitWhy = null;
         if (body && body.stepped === false) {
             baitWhy = `${body.id} is a STATIC census body (\`speed 0\`, and this room's `
@@ -6685,29 +7024,70 @@ export function solveSegment({
              * NOTHING TO ARM** (⚖ ruling 30(d)). L14 has 0 pressers and 0
              * traps; what it has is a sword and a `modelled` press arm.
              */
-            const hunt = deriveKillByChaser(run, target, contacts);
+            /**
+             * ⛓⛓⛓ R9 SLICE 12b′ — **THE CHASER ARM READS THE SET IN INTERCEPT
+             * ORDER**, and the order is the corridor probe's own answer.
+             *
+             * `chooseBodyToRemove` orders by distance from the AIM, which is
+             * the right question for BAIT (lure the body that is IN the way)
+             * and the wrong one for an iterative stand-and-strike: the body
+             * nearest the destination is the one furthest from the fight. The
+             * probe already named which body reaches the walk first — it is
+             * `hit.sources`, the danger this climb is here about — so the arm
+             * reads those FIRST, in the order the corridor met them, and the
+             * chooser's own order behind them. Derived, not typed (⚖ ruling
+             * 17), and it needs no second forecast.
+             */
+            const hunted = interceptOrder(removable, hit)[0] ?? target;
+            const hunt = deriveKillByChaser(run, hunted, contacts,
+                { aim, allowTeleporter, tolerance });
             if (hunt.stance) {
-                rowFor('kill', refused, { arm: 'chaser', target: target.id });
+                rowFor('kill', refused, { arm: 'chaser', target: hunted.id,
+                    stance: hunt.stance, runnersUp: hunt.runnersUp });
                 const strike = strikePolicyFor(run);
                 if (!strike) {
                     killWhy = `${hunt.why} — but this run holds no sword, so `
                         + '`set slashing`\'s outer gate refuses every press.';
                 } else {
                     /**
-                     * ⛔ THE BOUND IS THE MECHANISM'S, NOT A NUMBER. Three
-                     * landed hits at the receiver's own i-frame, plus the
-                     * death staging the body owes, plus the time it takes to
-                     * walk back into reach after each knockback. `killWindowTicks`
-                     * is the first two; `HOLD_SLACK` is the third and is the
-                     * only term nobody can derive without a route.
+                     * ⛓⛓⛓ **THE STANCE IS WALKED TO, AND THE WALK IS THE
+                     * LADDER'S OWN.** `walkTo` re-enters this whole climb for
+                     * the corridor to the stance, so the approach the
+                     * derivation previewed is certified by the same
+                     * instruments that certify any other leg — and the strike
+                     * policy is on it, because `walkTo` is a walk.
+                     *
+                     * ⚠ Skipped when the stance IS where the walk stands: a
+                     * `walkTo` to the current cell arrives before its first
+                     * tick, which is the empty-preview case `probeCorridor`
+                     * names, and spending a re-plan on it would put an
+                     * ARRIVED row in the trace for a walk nobody took.
                      */
-                    const bound = killWindowTicks(target.tag) * 3 + HOLD_SLACK;
+                    if (hunt.stance.x !== run.state.x || hunt.stance.y !== run.state.y) {
+                        walkTo(goal, hunt.stance, {
+                            what: `${what} -> kill (${hunted.id}) stance`,
+                        });
+                    }
+                    /**
+                     * ⛔ THE BOUND IS THE FORECAST'S OWN MEASUREMENT, plus the
+                     * slack — and that is the repair. Slice 12b's
+                     * `killWindowTicks(tag) * 3 + HOLD_SLACK` is three landed
+                     * hits at the receiver's i-frame plus a slack term, and it
+                     * omits the one quantity that dominates a stand-and-strike:
+                     * how long the body takes to WALK to the stance. On a bob
+                     * that formula is 108 ticks and no stance on L14 kills its
+                     * first body inside 108. The derivation previewed this
+                     * exact wait and saw the death; `hunt.ticks` is that tick
+                     * plus `HOLD_SLACK`, so the bound is a claim this run can
+                     * refute rather than a number chosen to be safe.
+                     */
+                    const bound = hunt.ticks;
                     /**
                      * ⛔ `runDwell`, NOT `runHold`. `hold`'s per-tick invariant
                      * is *"still inside the presser"* — this stance is not on
                      * a button and there is no presser to be inside. A dwell
                      * is a bounded wait on an OBSERVED condition, which is
-                     * exactly the shape here, and it now carries the strike
+                     * exactly the shape here, and it carries the strike
                      * policy so the wait is armed.
                      */
                     const record = runDwell(run, perTick, {
@@ -6715,18 +7095,30 @@ export function solveSegment({
                         strike,
                         why: hunt.why,
                         until: {
-                            why: `${target.id} has left the world — ${hunt.why}`,
+                            why: `${hunted.id} has left the world — ${hunt.why}`,
                             test: (r) => !(r.strikeBodies ?? [])
-                                .some((c) => c.id === target.id),
+                                .some((c) => c.id === hunted.id),
                         },
-                    }, `${what} -> kill (${target.id}) by press`);
+                    }, `${what} -> kill (${hunted.id}) by press`);
                     // ⛓ `record.strikes` is the dwell's own — `runDwell` reads
                     // it off the policy it was armed with, so there is one
                     // owner of the number rather than two spellings of it.
                     records.push({
                         goal: goal.kind, strategy: 'kill', arm: 'chaser',
-                        target: target.id, ...record,
+                        target: hunted.id, stance: hunt.stance,
+                        clears: hunt.clears, ...record,
                     });
+                    /**
+                     * ⛓⛓ **THE ARM IS ITERATIVE AND THIS IS WHERE IT
+                     * ITERATES.** Returning `{escalations}` is the ladder's
+                     * "a rung CHANGED THE WORLD, re-plan" answer (§10.4 note
+                     * 6): the caller re-asks AVOID from the new position
+                     * against the room this kill left. If the corridor now
+                     * certifies WITH strikes, that is the normal exit; if it
+                     * does not, the next climb derives the next stance for the
+                     * next body. One stance per body, because the measurement
+                     * says a wait ends when its own body goes.
+                     */
                     return { escalations };
                 }
             } else {
