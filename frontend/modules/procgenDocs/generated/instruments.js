@@ -89,6 +89,11 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
+            "count": 1,
+            "id": "lint"
+        },
+        {
+            "browser": 0,
             "count": 5,
             "id": "make"
         },
@@ -194,13 +199,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 225,
+        "blockStyle": 226,
         "browser": 74,
         "cited": 74,
-        "files": 244,
+        "files": 245,
         "lineStyle": 19,
-        "withDocblock": 244,
-        "withFlags": 150
+        "withDocblock": 245,
+        "withFlags": 151
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -2731,6 +2736,40 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "harvest-procgen-terms — **THE CANDIDATE SET FOR THE PROCGEN GLOSSARY, MEASURED RATHER THAN REMEMBERED** (PROCGEN DOCS slice P2, D1).",
             "path": "scripts/procgen/harvest-procgen-terms.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "isGateFinding"
+            ],
+            "browser": false,
+            "category": "lint",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "lint-gate-labels.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "root"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "write-allow"
+                }
+            ],
+            "oneLiner": "lint-gate-labels — **A CHECK'S LABEL, OR A TEST'S NAME, THAT CARRIES A NUMBER THE SAME CHECK ALREADY COMPUTES** (R9 slice 12e, ⚖ ruling 38 item (4b); traps 572 and 573).",
+            "path": "scripts/procgen/lint-gate-labels.mjs"
         },
         {
             "argvHelpers": [],
