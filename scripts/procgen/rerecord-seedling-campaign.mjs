@@ -662,8 +662,30 @@ function report(s0, s1, s2) {
  * standing values re-measured. Everything else a growth touches DERIVES from
  * artifact 1 since ⚖ ruling 38 (1).
  *
+ * ── ⛔⛔ THE TWO LAWS ITS OWN PROOF ESTABLISHED ────────────────────────
+ *
+ * **A SCRATCH TREE CANNOT RUN THE BROWSER STAGES, AND THAT IS THE HARNESS
+ * RATHER THAN THE COMMAND.** The dev server serves ONE tree, so a browser
+ * stage entered from a second worktree drives the FIRST tree's pages and
+ * reports about the wrong subject — a green that means nothing. So a growth is
+ * REHEARSED offline (`--grow --to=S0`: append, author, predict) and RUN in the
+ * tree the server is serving.
+ *
+ * **THE FOUR SUMMARIES RUN ONLY AFTER A COMPLETE PIPELINE.** `index.json`, the
+ * frontier, the generated reference and `standing-values.json` all DESCRIBE a
+ * finished tree. `standing-values.json` in particular is what ⚖ ruling 32 A
+ * makes the NEXT slice's BEFORE, so a rehearsal that stamped it would hand the
+ * next slice a baseline measured on an unfinished chain.
+ *
+ * ⛓ AND ONE SENTENCE WORTH KEEPING, from the mutant that proved the revert:
+ * **the survey's YES is evidence, not a guarantee.** It solves from a STAGED
+ * boot; the producer solves from the predecessor's MEASURED LATCH. Those are
+ * different starting states, so the producer's refusal is the one that counts —
+ * its walk is the one that would be recorded.
+ *
  * Run:
  *   node scripts/procgen/rerecord-seedling-campaign.mjs --grow --dry-run
+ *   node scripts/procgen/rerecord-seedling-campaign.mjs --grow --to=S0  # rehearse
  *   node scripts/procgen/rerecord-seedling-campaign.mjs --grow
  */
 const SURVEY_DIR = join(ROOT, 'NewDocs/plans/seedling-editor-survey');
