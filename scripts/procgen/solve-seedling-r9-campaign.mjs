@@ -18,28 +18,13 @@
  * as far as `r8-solve-4`, and from there every successor's declared latch was
  * measured after a walk of a different length. This script is the fix.
  *
- * SIXTEEN SEGMENTS, one headline:
- *
- *   1  `r8-solve-1`   L0  → L2   PROMOTED — the TRUE INITIAL BOOT
- *   2  `r8-solve-2`   L2  → L3   PROMOTED
- *   3  `r8-solve-3`   L3  → L4   PROMOTED
- *   4  `r8-solve-4`   L4  → L5   PROMOTED
- *   5  `r8-solve-5`   L5  → L6   RE-BOOTED from segment 4's measured latch
- *   6  `r8-solve-6`   L6  → L7   RE-BOOTED
- *   7  `r8-solve-7`   L7  → L8   RE-BOOTED
- *   8  `r8-solve-8`   L8  → L9   RE-BOOTED
- *   9  `r8-solve-9`   L9  → L10  RE-BOOTED
- *  10  `r8-solve-10`  L10 → L11  RE-BOOTED — takes the SWORD
- *  11  `r9-solve-11`  L11 → L3   NEW — takes the CHEST and leaves by the
- *                                TELEPORTER (⛔ `r8-solve-11` takes the same
- *                                chest and returns to L10, which is the
- *                                BATTERY's room and not the ROUTE's step)
- *  12  `r9-solve-3`   L3  → L2   RE-BOOTED — the `break` verb's room
- *  13  `r9-solve-2`   L2  → L0   NEW
- *  14  `r9-solve-0`   L0  → L13  NEW
- *  15  `r9-solve-13`  L13 → L14  NEW
- *  16  `r9-solve-14`  L14 → L15  NEW — the SIX-BOB room, crossed by the
- *                                PARRY-WALK (⚖ ruling 29(a), R9 slice 12b′)
+ * ⛔ THE ROOM LIST IS NOT REPEATED HERE. It was, for six slices — sixteen
+ * lines of `name / level / to / note` that had to be grown by hand every time
+ * the chain grew, which is the seventh copy of the one fact ⚖ ruling 38 (1)
+ * removes. The list is `frontend/modules/seedlingDemo/campaignChain.js`, and
+ * the table with each room's measured tick count is GENERATED into
+ * `docs/json/developer/procgen/seedling-bot.md`'s `campaign-chain` region by
+ * `generate-procgen-reference.mjs`.
  *
  * ── ⛔⛔ WHY THE LATCHES ARE MEASURED PER SEGMENT AND NOT IN ONE CONTINUATION
  *
@@ -95,6 +80,14 @@ import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from '
 import { fileURLToPath } from 'node:url';
 import { committedTick0, tick0ParseFields, despawnField, tick0Field }
     from './tick0Carry.js';
+/**
+ * ⛔ THE ONE DECLARATION (⚖ ruling 38 (1), R9 slice 12d). A static import
+ * rather than the dynamic `await import(MODULE, …)` the runtime modules below
+ * use: this one is inert data with no imports of its own, so it needs no path
+ * computed at load and reads like what it is.
+ */
+import { CAMPAIGN_SEGMENTS } from
+    '../../frontend/modules/seedlingDemo/campaignChain.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
@@ -253,59 +246,31 @@ const collect = (level, type) => ({ kind: 'collect-placement', placement: placem
 const reach = (level, to) => ({ kind: 'reach-exit', exit: exitTo(level, to) });
 
 /**
- * ⛔ THE SEGMENT LIST IS THE SPHERE ORDER — a DECLARATION, and the only thing
- * here that is one. Every coordinate under it is read out of the atlas by
+ * ⛔⛔ THE SEGMENT LIST IS NOT DECLARED HERE ANY MORE — ⚖ ruling 38 item (1),
+ * R9 slice 12d. It lives in `frontend/modules/seedlingDemo/campaignChain.js`,
+ * the ONE declaration every consumer derives from, and this file's `SEGMENTS`
+ * is now a RECONSTRUCTION of it: each row's goals are `collects` turned into
+ * `collect-placement` on that room's own atlas entity, then `reach-exit`
+ * toward `to`. Every coordinate is still read out of the atlas by
  * `placement`/`exitTo`; not one stance, waypoint or hold tick is handed to the
  * solver, which is ruling 11's *"recorded from the solver, not constructed
- * manually"* in its operational form. `survey-seedling-route.mjs` derives the
- * same level sequence from the sphere order independently, and its rows are
- * compared against these below.
+ * manually"* in its operational form.
+ *
+ * ⛓ THE DEPENDENCY RUNS THIS WAY ONLY, and that is a fact about this file:
+ * it solves the whole campaign at module scope and drives Windows Chrome, so
+ * nothing can import IT. `campaignChain.js` has no imports at all and is
+ * browser-safe, so the browser consumers read the same list the tapes are
+ * authored from. `survey-seedling-route.mjs` derives the same level sequence
+ * from the sphere order independently, and its rows are compared against
+ * these below.
  */
-const SEGMENTS = [
-    { name: 'r8-solve-1', level: 0, to: 2, promoted: true, goals: [reach(0, 2)],
-        why: 'L0 — the TRUE INITIAL BOOT, `new Game(0,80,128)` with an empty save' },
-    { name: 'r8-solve-2', level: 2, to: 3, promoted: true, goals: [reach(2, 3)],
-        why: 'L2 — the first teleporter' },
-    { name: 'r8-solve-3', level: 3, to: 4, promoted: true, goals: [reach(3, 4)],
-        why: 'L3 — outbound, PRE-SWORD (the breakable rocks are not yet passable)' },
-    { name: 'r8-solve-4', level: 4, to: 5, promoted: true, goals: [reach(4, 5)],
-        why: 'L4 — the hold-then-shove room' },
-    { name: 'r8-solve-5', level: 5, to: 6, goals: [reach(5, 6)],
-        why: 'L5 — the arrow-bait kill lock; the walk earns `{5,0}` on its own tick' },
-    { name: 'r8-solve-6', level: 6, to: 7, goals: [reach(6, 7)],
-        why: 'L6 — the ladder\'s proving room, the AVOID → TIME → BAIT ladder' },
-    { name: 'r8-solve-7', level: 7, to: 8, goals: [reach(7, 8)],
-        why: 'L7 — a straight corridor, two spires, two stairs' },
-    { name: 'r8-solve-8', level: 8, to: 9, goals: [reach(8, 9)],
-        why: 'L8 — two kill locks, `{8,0}` and `{8,1}`, both the walk\'s own' },
-    { name: 'r8-solve-9', level: 9, to: 10, goals: [reach(9, 10)],
-        why: 'L9 — the teleporter pair' },
-    { name: 'r8-solve-10', level: 10, to: 11, goals: [collect(10, 'sword'), reach(10, 11)],
-        why: 'L10 — THE SWORD (`sword@L10`, the goal ledger\'s first credited row)' },
-    { name: 'r9-solve-11', level: 11, to: 3, goals: [collect(11, 'chest'), reach(11, 3)],
-        why: 'L11 — THE CHEST (`chest@L11`) and out by the TELEPORTER to L3. ⛔ NOT '
-            + '`r8-solve-11`, which takes the same chest and returns to L10: that is the '
-            + 'BATTERY\'s room (its goals come from `act2-the-sword`\'s units) and this '
-            + 'is the ROUTE\'s step 11, which the survey solves at 119 t for the exit '
-            + 'alone. One room, two goals, in the sphere order\'s sense' },
-    { name: 'r9-solve-3', level: 3, to: 2, goals: [reach(3, 2)],
-        why: 'L3 — the RETURN, and the `break` verb\'s room: `breakablerock@96,112` is '
-            + 'the door out of a one-cell arrival pocket (R9 slice 4)' },
-    { name: 'r9-solve-2', level: 2, to: 0, goals: [reach(2, 0)],
-        why: 'L2 — the return leg, up the stairs to L0' },
-    { name: 'r9-solve-0', level: 0, to: 13, goals: [reach(0, 13)],
-        why: 'L0 — the overworld crossed a second time, south to L13' },
-    { name: 'r9-solve-13', level: 13, to: 14, goals: [reach(13, 14)],
-        why: 'L13 — a corridor and a door, into the six-bob room the next segment '
-            + 'crosses. ⛓ R9 slice 12b″: route step 16 was this chain\'s STOP for four '
-            + 'slices (the survey refused L14\'s camera band); slice 12b\' solved it and '
-            + '`r9-solve-14` records it, so L14 is a room the chain walks THROUGH now '
-            + 'rather than the arrival it parked at' },
-    { name: 'r9-solve-14', level: 14, to: 15, goals: [reach(14, 15)],
-        why: 'L14 — the SIX-BOB room, crossed by the PARRY-WALK (⚖ ruling 29(a)): '
-            + 'six presses, five bobs knocked back, none killed, no hit taken. The '
-            + 'chaser arm exists and this room does not need it' },
-];
+const SEGMENTS = CAMPAIGN_SEGMENTS.map((s) => Object.freeze({
+    ...s,
+    goals: [
+        ...(s.collects ?? []).map((type) => collect(s.level, type)),
+        reach(s.level, s.to),
+    ],
+}));
 
 /** ⛓ The head of the chain: the committed true start, read off disk. */
 const HEAD_NAME = SEGMENTS[0].name;

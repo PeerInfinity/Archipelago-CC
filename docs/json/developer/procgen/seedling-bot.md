@@ -12064,29 +12064,41 @@ segment 1 is the true initial boot, which declares no `seam`, so its clock is
 
 #### The chain
 
-⚠ **THE TABLE BELOW IS KEPT CURRENT, NOT FROZEN AT SLICE 6** — it is the one
-place the whole chain is written out, so every slice that grows the chain grows
-it here. As of R9 slice 12b″ it is SIXTEEN segments; slice 6 shipped fifteen of
-them, and the rooms added since are named in their own sections below.
+⛓ **THE TABLE BELOW IS GENERATED** — R9 slice 12d, ⚖ ruling 38 (1). It used to
+be kept CURRENT BY HAND, with a note here saying so, and it was one of six
+copies of the chain's membership. It is now derived from the chain's one
+declaration (`frontend/modules/seedlingDemo/campaignChain.js`), the segment
+tapes' own `tick_count`s and the committed route frontier, by
+`generate-procgen-reference.mjs`; `--check` reds when it goes stale.
 
-`r9-campaign` — **sixteen segments**, custody, from `new Game(0,80,128)` with an
-empty save to the L15 arrival, **3615 ticks**:
+<!-- GENERATED:campaign-chain BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-```
- 1 r8-solve-1   L0  → L2   183     9 r8-solve-9   L9  → L10  122
- 2 r8-solve-2   L2  → L3    47    10 r8-solve-10  L10 → L11   90   (the SWORD)
- 3 r8-solve-3   L3  → L4   245    11 r9-solve-11  L11 → L3   119   (the CHEST)
- 4 r8-solve-4   L4  → L5   255    12 r9-solve-3   L3  → L2   226   (the `break` room)
- 5 r8-solve-5   L5  → L6   558    13 r9-solve-2   L2  → L0    47
- 6 r8-solve-6   L6  → L7   294    14 r9-solve-0   L0  → L13  237
- 7 r8-solve-7   L7  → L8   146    15 r9-solve-13  L13 → L14   74
- 8 r8-solve-8   L8  → L9   827    16 r9-solve-14  L14 → L15  145   (the PARRY-WALK)
-                                        STOP: route step 17 — L15's `shove`
-```
+`r9-campaign` — **16 segments**, custody, from `new Game(0,80,128)` with an empty save to the **L15** arrival, **3615 ticks**. Segments 1–4 are PROMOTED (their boots already ARE their predecessors' latches, so this chain gives them a RELATION rather than a rewrite); every later one boots its predecessor's MEASURED latch.
 
-Segments 1–4 are PROMOTED (their boots already ARE their predecessors' latches);
-5–10 and 12 are re-booted from measured latches; 11, 13, 14, 15, 16 are new. The
-segment list is the only declaration in the producer — every coordinate under it
+| # | tape | rooms | ticks | earns |
+|---|---|---|---|---|
+| 1 ⛓ | `r8-solve-1` | L0 → L2 | 183 | — |
+| 2 ⛓ | `r8-solve-2` | L2 → L3 | 47 | — |
+| 3 ⛓ | `r8-solve-3` | L3 → L4 | 245 | — |
+| 4 ⛓ | `r8-solve-4` | L4 → L5 | 255 | — |
+| 5 | `r8-solve-5` | L5 → L6 | 558 | — |
+| 6 | `r8-solve-6` | L6 → L7 | 294 | — |
+| 7 | `r8-solve-7` | L7 → L8 | 146 | — |
+| 8 | `r8-solve-8` | L8 → L9 | 827 | — |
+| 9 | `r8-solve-9` | L9 → L10 | 122 | — |
+| 10 | `r8-solve-10` | L10 → L11 | 90 | `sword@L10` |
+| 11 | `r9-solve-11` | L11 → L3 | 119 | `chest@L11` |
+| 12 | `r9-solve-3` | L3 → L2 | 226 | — |
+| 13 | `r9-solve-2` | L2 → L0 | 47 | — |
+| 14 | `r9-solve-0` | L0 → L13 | 237 | — |
+| 15 | `r9-solve-13` | L13 → L14 | 74 | — |
+| 16 | `r9-solve-14` | L14 → L15 | 145 | — |
+
+**STOP — route step 17, L15.** The chain ends at the last step the survey SOLVES; the first one it refuses is the next work order: *VERB-APPLY — the 'shove' strategy IS registered and did not apply here*.
+
+<!-- GENERATED:campaign-chain END -->
+
+The segment list is the only declaration behind it — every coordinate under it
 is read out of the atlas, and no stance, waypoint or hold tick is handed to the
 solver.
 

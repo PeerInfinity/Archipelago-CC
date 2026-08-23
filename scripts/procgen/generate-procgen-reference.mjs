@@ -76,10 +76,20 @@ import {
 } from './reference/instruments.mjs';
 
 import { INDEX_DOC, buildDocsIndex, docsIndexMarkdown } from './reference/docsIndex.mjs';
+/**
+ * ⛓ R9 slice 12d (⚖ ruling 38 (1)): the campaign chain's table. The one
+ * place the whole chain was written out for a human, kept current BY HAND
+ * since slice 6 — now derived from the chain's one declaration, the tapes'
+ * own tick counts and the committed route frontier.
+ */
+import {
+    CAMPAIGN_DOC, buildCampaignChain, campaignChainMarkdown,
+} from './reference/campaignChain.mjs';
 
 const REGISTRY = await buildRegistry();
 const INSTRUMENTS = buildInstruments();
 const DOCS_INDEX = buildDocsIndex();
+const CAMPAIGN_CHAIN = await buildCampaignChain();
 
 const OUT = resolve(arg('out', DEFAULT_OUT));
 const files = [
@@ -167,6 +177,11 @@ const regions = [
         file: INDEX_DOC,
         table: 'procgen-docs-index',
         body: docsIndexMarkdown(DOCS_INDEX),
+    },
+    {
+        file: CAMPAIGN_DOC,
+        table: 'campaign-chain',
+        body: campaignChainMarkdown(CAMPAIGN_CHAIN),
     },
 ].map((r) => ({ ...r, path: join(REPO, r.file) }));
 

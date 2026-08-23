@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 17,
         "headings": 696,
         "indexHeadings": 2,
-        "lines": 16492,
+        "lines": 16479,
         "pages": 4,
-        "words": 190964
+        "words": 190811
     },
     "descriptionRule": "the document's OWN first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence. ⛔ Never a hand-written summary — if an entry reads thin, the fix is a better opening paragraph in the document.",
     "dir": "docs/json/developer/procgen",
@@ -237,14 +237,14 @@ export const DOCS_INDEX = frz({
             "file": "seedling-bot.md",
             "h1": "The Seedling Real-Game Bot, and the tracked record of the procgen arcs on `watch.html`",
             "headings": 483,
-            "lines": 13795,
+            "lines": 13782,
             "links": [
                 "architecture.md",
                 "demos.md",
                 "maze.md"
             ],
             "path": "docs/json/developer/procgen/seedling-bot.md",
-            "words": 136456
+            "words": 136303
         },
         {
             "description": "The flash substrate (`frontend/modules/flashSubstrate/`, id `flash`) hosts recompiled Flash games — SWF → C → WASM via SWFRecomp-CC — in a same-origin iframe as procgen regions. The module ships a placeholder game page, so it is testable independently of any real recompiled game; its real significance is as the **shared iframe-substrate machinery** other substrates build on.",

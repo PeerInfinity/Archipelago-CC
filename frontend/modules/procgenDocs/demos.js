@@ -190,6 +190,28 @@ export const READOUTS = Object.freeze(new Map([
     ['/frontend/modules/mazeRoom/lab.html', '__mazeLab'],
 ]));
 
+/**
+ * ⛔ THE CAMPAIGN CHAIN'S ONE DECLARATION (⚖ ruling 38 (1), R9 slice 12d) —
+ * this catalogue's ONLY import, and it is deliberate. Two entries below made
+ * claims about the campaign's SIZE (`windows.length == 16`) and its arrival
+ * room, both TYPED; both went stale the moment slice 12b″ grew the chain, and
+ * a claim string one room out is a demo that fails for a reason that is not
+ * about the page. `campaignChain.js` is inert data with no imports of its own,
+ * so `demos.html` (a browser, locally and on Pages) pays one module fetch.
+ *
+ * ⚠ THE TICK TOTALS WERE DELETED RATHER THAN DERIVED. A reader of this
+ * catalogue is a BROWSER and cannot open a tape, so `3615` and `3616` could
+ * only ever have been retyped here. A number nobody can recompute in the place
+ * it is written is exactly the constant that decays (trap 574), so the prose
+ * now says WHAT the scrub bar spans instead of how far.
+ */
+import { CAMPAIGN_SEGMENT_NAMES, campaignTail } from
+    '../seedlingDemo/campaignChain.js';
+
+/** The campaign's size and arrival room, DERIVED — never typed twice. */
+const CAMPAIGN_WINDOWS = CAMPAIGN_SEGMENT_NAMES.length;
+const CAMPAIGN_ARRIVES_AT = campaignTail().to;
+
 export const DEMOS = Object.freeze([
     Object.freeze({
         id: 'sites',
@@ -877,7 +899,7 @@ export const DEMOS = Object.freeze([
     Object.freeze({
         id: 'tape-sequence',
         n: 22,
-        title: 'THE SEQUENCE — sixteen tapes, ONE game state, from the true start to L15',
+        title: `THE SEQUENCE — ${CAMPAIGN_WINDOWS} tapes, ONE game state, from the true start to L${CAMPAIGN_ARRIVES_AT}`,
         page: '/frontend/modules/seedlingDemo/watch.html',
         url: 'tapes=r9-campaign&side=js',
         also: null,
@@ -886,10 +908,10 @@ export const DEMOS = Object.freeze([
         facts: Object.freeze([]),
         layer: null,
         readout: '__editorSequence',
-        claim: 'windows.length == 16',
-        demonstrates: 'R9 slices 2, 5 and 6 (⚖ rulings 10 and 11): `?tapes=`\nplays a LIST of tapes as ONE CONTINUATION — tape B resumes the game state tape A\nended in, with no fresh page, on both the JS model and the wasm game. This URL\nnames a CHAIN, so the page expands it to its sixteen segments and walks Seedling\nfrom `new Game(0,80,128)` with an empty save to the L15 arrival: 3615 ticks, the\nsword, the chest, the six-bob room crossed without a hit, and a STOP at the\n`shove` the route survey refuses one room further on.',
-        howToRun: 'Open it and watch the scrub bar: it spans the WHOLE\nsequence (3615), not one window. The queue list beside the canvas names every\nwindow and marks which boundary each one crossed. Then open the same URL with\n`&side=wasm` and press ▶ Start inside the frame — the real recompiled game plays\nthe same sixteen windows on one page load.',
-        whatIsHappening: '⛔ **A BOUNDARY IS AN ADMISSION, NOT A RELOAD.** At each\none the page reads the live world\'s own latch and compares it to the next tape\'s\ndeclared boot, field by field; a window whose declaration is not the live world\'s\nis REFUSED BY NAME rather than silently rebuilt. What crosses is a projection:\nthe declared RNG stream positions are asserted and then withheld (the live stream\nIS the state), the walk\'s own timed clears are withheld from the game and handed\nto the model rebased, and `seam.time` is handed over PLUS the boot cost a fresh\npage pays and a continuation does not.\n\n⛓ **THE STREAM IS THE CLAIM.** The sixteen windows produce the same 3616\nobservations, tick for tick, that the headline tape produces played ALONE — two\ndifferent runs of one walk, one of them stitched out of sixteen.',
+        claim: `windows.length == ${CAMPAIGN_WINDOWS}`,
+        demonstrates: 'R9 slices 2, 5 and 6 (⚖ rulings 10 and 11): `?tapes=`\nplays a LIST of tapes as ONE CONTINUATION — tape B resumes the game state tape A\nended in, with no fresh page, on both the JS model and the wasm game. This URL\nnames a CHAIN, so the page expands it to its ' + CAMPAIGN_WINDOWS + ' segments and walks\nSeedling from `new Game(0,80,128)` with an empty save to the L' + CAMPAIGN_ARRIVES_AT + ' arrival: the\nsword, the chest, the six-bob room crossed without a hit, and a STOP at the\n`shove` the route survey refuses one room further on.',
+        howToRun: 'Open it and watch the scrub bar: it spans the WHOLE\nsequence, not one window. The queue list beside the canvas names every\nwindow and marks which boundary each one crossed. Then open the same URL with\n`&side=wasm` and press ▶ Start inside the frame — the real recompiled game plays\nthe same ' + CAMPAIGN_WINDOWS + ' windows on one page load.',
+        whatIsHappening: '⛔ **A BOUNDARY IS AN ADMISSION, NOT A RELOAD.** At each\none the page reads the live world\'s own latch and compares it to the next tape\'s\ndeclared boot, field by field; a window whose declaration is not the live world\'s\nis REFUSED BY NAME rather than silently rebuilt. What crosses is a projection:\nthe declared RNG stream positions are asserted and then withheld (the live stream\nIS the state), the walk\'s own timed clears are withheld from the game and handed\nto the model rebased, and `seam.time` is handed over PLUS the boot cost a fresh\npage pays and a continuation does not.\n\n⛓ **THE STREAM IS THE CLAIM.** The ' + CAMPAIGN_WINDOWS + ' windows produce the same\nobservations, tick for tick, that the headline tape produces played ALONE — two\ndifferent runs of one walk, one of them stitched out of ' + CAMPAIGN_WINDOWS + '.',
         notes: Object.freeze([
             '⛓ Every boot after the first is its predecessor\'s MEASURED LATCH, read\nout of the running game by `botSeam()` — so the chain is a CUSTODY chain and it\nCREDITS the goal ledger (`sword@L10`, `chest@L11`).',
             '⚠ `?tape=` (singular) is UNMOVED: one tape, one staged run, no sequence\nreadout. The two spellings are different questions and the page keeps both.',
@@ -935,11 +957,11 @@ export const DEMOS = Object.freeze([
          * queued the derived chain AND the arm having played it.
          */
         claim: 'isCampaign == true',
-        demonstrates: '⚖ Ruling 19 (the user, 2026-08-21): *"a way for the watch\npage to play the full sequence of campaign tapes that we have solved so far."*\nONE CLICK, from any REPLAY view, plays Seedling from `new Game(0,80,128)` with\nan empty save to the L15 arrival — and then SAYS WHERE THE PLAYTHROUGH STANDS:\nrooms crossed, which goal-ledger rows the run credited, and the refusal that is\nthe next work order.',
-        howToRun: 'Open the URL — an ordinary one-tape replay — and press\n**▶ campaign** beside the queue. The address bar becomes `?tapes=r9-campaign`,\nso the campaign is a LINK you can send to somebody. The block under the status\nline is the readout. Add `&side=wasm` to the URL the button wrote and press\n▶ Start inside the frame to watch the real recompiled game play the same\nsixteen windows on one page load.',
+        demonstrates: '⚖ Ruling 19 (the user, 2026-08-21): *"a way for the watch\npage to play the full sequence of campaign tapes that we have solved so far."*\nONE CLICK, from any REPLAY view, plays Seedling from `new Game(0,80,128)` with\nan empty save to the L' + CAMPAIGN_ARRIVES_AT + ' arrival — and then SAYS WHERE THE PLAYTHROUGH STANDS:\nrooms crossed, which goal-ledger rows the run credited, and the refusal that is\nthe next work order.',
+        howToRun: 'Open the URL — an ordinary one-tape replay — and press\n**▶ campaign** beside the queue. The address bar becomes `?tapes=r9-campaign`,\nso the campaign is a LINK you can send to somebody. The block under the status\nline is the readout. Add `&side=wasm` to the URL the button wrote and press\n▶ Start inside the frame to watch the real recompiled game play the same\n' + CAMPAIGN_WINDOWS + ' windows on one page load.',
         whatIsHappening: '⛔ **THE BUTTON HOLDS NO CHAIN NAME AND NO SEGMENT\nLIST.** It asks `director.campaignChoice`, which picks the one chain that is a\nCUSTODY chain (every boot after the first is its predecessor\'s measured latch),\nwhose first segment declares nothing carried (a fresh game start), and whose\nevery segment carries the solver\'s own decision-trace sidecar. The day the\nroster gains a room the button plays one more window with no edit.\n\n⛓ **AND IT IS NOT A SECOND PLAYER.** It writes the chain id through the queue\ncontrol\'s own writer, so what runs is `?tapes=` — the same arm, the same\nboundary admission, the same link.',
         notes: Object.freeze([
-            '⛓ The ledger line is MEASURED, not declared: a row counts as credited\nonly where the collectible went NOT-HELD to HELD between a segment\'s own boot\nand its own latch, which a boot block cannot fake. Two of the 41 rows live in\nthese sixteen rooms — `sword@L10` and `chest@L11`. ⛓ R9 slice 12b″ added the\nsixteenth, L14, and it credits NOTHING — which is why `earns` did not move.',
+            '⛓ The ledger line is MEASURED, not declared: a row counts as credited\nonly where the collectible went NOT-HELD to HELD between a segment\'s own boot\nand its own latch, which a boot block cannot fake. Two of the 41 rows live in\nthese ' + CAMPAIGN_WINDOWS + ' rooms — `sword@L10` and `chest@L11`. ⛓ R9 slice 12b″ added the\nsixteenth, L14, and it credits NOTHING — which is why `earns` did not move.',
             '⚠ The LAST window is UNASSERTED BY NAME: it has no successor boot\nblock, so whether it earned anything is a question the page cannot answer — and\n"earned nothing" and "could not look" must not print the same thing.',
             '⛔ ⚖ Ruling 19 SCOPES this control: it shows only the tapes that play\ncontinuously from a fresh game start, and only tapes the solver recorded. The\ndetached `r8-d2` tail is a real chain and is deliberately NOT offered here —\nthe readout says the rooms beyond the arrival are unsolved and names the\nrefusal instead.',
             '⛓ The refusal it prints is VERBATIM from\n`frontend/modules/seedlingDemo/fixtures/campaign-frontier.json`, which\n`census-seedling-campaign.mjs --write-frontier` derives from the route survey\nand `--check-frontier` reds on when it goes stale.',

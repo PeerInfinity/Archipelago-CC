@@ -60,6 +60,14 @@
  * argument).
  */
 
+/**
+ * ⛔ THE CAMPAIGN CHAIN'S ONE DECLARATION (⚖ ruling 38 (1), R9 slice 12d) —
+ * this module's first import, and it is data with no imports of its own, so
+ * the page pays nothing for it. `PAGE_CHAINS` below derives its campaign row
+ * from it rather than repeating sixteen names a growth would have to edit.
+ */
+import { CAMPAIGN_CHAIN_ID, CAMPAIGN_SEGMENT_NAMES } from './campaignChain.js';
+
 export class DirectorError extends Error {
     constructor(message) {
         super(message);
@@ -741,16 +749,18 @@ export const PAGE_CHAINS = Object.freeze({
     // re-authored (⚖ R8 close option A). `director.test.js` derives this whole
     // table from `PLAYTHROUGH_CHAINS` and reds when the two disagree.
     'r8-d2': Object.freeze(['r8-solve-18', 'r8-d2-19', 'r8-d2-20']),
-    // ⛓⛓⛓ R9 slice 6: the TRUE-START SOLVER CHAIN (⚖ ruling 11), sixteen rooms
-    // from `new Game(0,80,128)` to the L15 arrival. `director.test.js` derives
-    // this whole table from `PLAYTHROUGH_CHAINS` and reds when the two disagree.
-    // ⛓ R9 slice 12b″ added the sixteenth: `r9-solve-14`, L14 → L15.
-    'r9-campaign': Object.freeze([
-        'r8-solve-1', 'r8-solve-2', 'r8-solve-3', 'r8-solve-4', 'r8-solve-5',
-        'r8-solve-6', 'r8-solve-7', 'r8-solve-8', 'r8-solve-9', 'r8-solve-10',
-        'r9-solve-11', 'r9-solve-3', 'r9-solve-2', 'r9-solve-0', 'r9-solve-13',
-        'r9-solve-14',
-    ]),
+    /**
+     * ⛓⛓⛓ R9 slice 6: the TRUE-START SOLVER CHAIN (⚖ ruling 11), from
+     * `new Game(0,80,128)` to the L15 arrival.
+     *
+     * ⛔ DERIVED, NOT TYPED (⚖ ruling 38 (1), R9 slice 12d). `campaignChain.js`
+     * is the one declaration; `PLAYTHROUGH_CHAINS` reads the same module, and
+     * `director.test.js`'s roster-wide equality row still compares the two
+     * tables — it just cannot fail on THIS chain any more, which is the point.
+     * The count is not written down anywhere here: the day the declaration
+     * gains a room the page plays one more window with no edit.
+     */
+    [CAMPAIGN_CHAIN_ID]: CAMPAIGN_SEGMENT_NAMES,
 });
 
 /**

@@ -892,6 +892,65 @@ export function assertBridgeExposureIsMeasured(io) {
 }
 
 /**
+ * ⛓⛓⛓ R9 SLICE 12d — **THE CAMPAIGN'S PREDICTION ROWS ARE COMPLETE, DERIVED
+ * FROM THE CHAIN'S ONE DECLARATION.** ⚖ Ruling 38 (1), as amended.
+ *
+ * ── ⛔⛔ WHY THIS IS A SECOND ROW AND NOT A DERIVED `levels` FIELD ──────
+ *
+ * Ruling 38 (1) said the campaign's exposure row should DERIVE its `levels`.
+ * It must not, and the reason is what `exposedAdded` IS: every row here was
+ * written BEFORE the measurement that checks it, and the list's own law is
+ * *"a prediction edited after its measurement is not a prediction"* (trap 89,
+ * ⚖ ruling 18). A `levels` computed from the same atlas the measurement reads
+ * would agree with it by construction — a prediction that cannot be wrong,
+ * which is the exact opposite of what six slices of this guard have been for.
+ *
+ * ⇒ the predictions stay TYPED and this asks the OTHER question, the one a
+ * duplicate list could never answer: **does every campaign room that touches a
+ * bridged body have a prediction row at all?** The chain's membership is now
+ * one declaration, so a growth that walks into a bob room and forgets its row
+ * is a thing this can name BEFORE the roster runs — where the guard itself
+ * needs the recorded stream and therefore the tape.
+ *
+ * ⚠ A SEGMENT'S ROOMS ARE `{level, to}`, not the boot alone. `r8-solve-3` and
+ * `r9-solve-13` are both exposed at their ARRIVAL — a room they enter on the
+ * last tick and never walk — so a boot-only reading would miss two of the six
+ * rows that exist today and call the list complete.
+ *
+ * @param {object} io `{segments, bridgedLevels}` — injected, so the mutation
+ *   cases can hand it a declaration that grew a room.
+ * @returns {{touching: string[], declared: string[]}}
+ */
+export function campaignBridgeCoverageFindings(io) {
+    if (!io || !Array.isArray(io.segments) || typeof io.bridgedLevels !== 'function') {
+        throw new Error('campaignBridgeCoverageFindings: needs {segments, bridgedLevels} '
+            + '— a default that read the real declaration would make the mutation cases '
+            + 'untestable.');
+    }
+    const bridged = io.bridgedLevels();
+    const touching = io.segments
+        .filter((s) => bridged.has(s.level) || bridged.has(s.to))
+        .map((s) => s.name);
+    if (touching.length === 0) {
+        throw new Error('campaignBridgeCoverageFindings: NO campaign segment touches a '
+            + 'bridged room. The campaign crosses L4, L5, L6 and L14, all of which hold '
+            + 'bridged bodies, so an empty answer means the declaration or the census '
+            + 'was not read — a vacuous pass, not a clean one.');
+    }
+    const declared = [...R8_ENEMY_BRIDGE.exposedTapes, ...R8_ENEMY_BRIDGE.exposedAdded]
+        .map((t) => t.name);
+    const missing = touching.filter((n) => !declared.includes(n));
+    if (missing.length) {
+        throw new Error(`R8_ENEMY_BRIDGE: ${missing.join(', ')} is a campaign segment `
+            + 'whose own rooms hold a bridged body and it has NO prediction row. The '
+            + 'chain declaration grew a room the exposure ledger does not know about; '
+            + 'write the row BEFORE the roster measures it, or the row is a '
+            + 'transcription (trap 89).');
+    }
+    return { touching, declared };
+}
+
+/**
  * ⛔ THE TWO TABLES AGREE, AND THE AGREEMENT IS ASSERTED — never assumed.
  *
  * `R8_ENEMY_BRIDGE.bridgedClasses` is a DECLARATION (it is what the

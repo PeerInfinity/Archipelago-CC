@@ -45,6 +45,13 @@
  */
 
 import { fixtureNames, loadTape } from './fixtures/index.js';
+/**
+ * ⛔ THE CAMPAIGN CHAIN'S ONE DECLARATION (⚖ ruling 38 (1), R9 slice 12d).
+ * `r9-campaign`'s `segments` below is DERIVED from it, not typed here — the
+ * producer that authors the tapes reads the same list, so a room cannot be
+ * in one and not the other.
+ */
+import { CAMPAIGN_CHAIN_ID, CAMPAIGN_SEGMENT_NAMES } from './campaignChain.js';
 
 export class PlaythroughError extends Error {
     constructor(message) {
@@ -1163,19 +1170,20 @@ const CHAIN_DECLARATIONS = Object.freeze([
      * one leaves by `teleporter@32,0` to L3, which is the ROUTE's step 11.
      */
     Object.freeze({
-        id: 'r9-campaign',
+        id: CAMPAIGN_CHAIN_ID,
         why: '⛓⛓⛓ R9 slice 6 — the TRUE-START SOLVER CHAIN: every room of Seedling\'s '
             + 'sphere order from the game\'s own boot to the L15 arrival, each segment '
             + 'booting its predecessor\'s MEASURED latch, each walk derived by the live '
             + 'solver from goals read out of the atlas. ⚖ Ruling 11. It is the first '
             + 'chain to CREDIT the goal ledger from solver tapes.',
         headline: 'r9-campaign',
-        segments: Object.freeze([
-            'r8-solve-1', 'r8-solve-2', 'r8-solve-3', 'r8-solve-4', 'r8-solve-5',
-            'r8-solve-6', 'r8-solve-7', 'r8-solve-8', 'r8-solve-9', 'r8-solve-10',
-            'r9-solve-11', 'r9-solve-3', 'r9-solve-2', 'r9-solve-0', 'r9-solve-13',
-            'r9-solve-14',
-        ]),
+        /**
+         * ⛔ DERIVED FROM `campaignChain.js` (⚖ ruling 38 (1)). This used to be
+         * sixteen typed names, and 12b″ could only assert that it and the
+         * producer's copy AGREED (§23c.7a) — the row an unremovable duplicate
+         * earns. There is no duplicate now, so there is no row.
+         */
+        segments: CAMPAIGN_SEGMENT_NAMES,
         /**
          * ⛓⛓⛓ THE FIRST GOAL-LEDGER ROWS A SOLVER CHAIN CREDITS. `R7_GOAL_LEDGER`
          * has 41 rows and exactly two of them live in this chain's twelve rooms
