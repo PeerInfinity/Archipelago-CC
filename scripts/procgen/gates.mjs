@@ -147,11 +147,22 @@ const UNRUNNABLE = selection.filter((g) => argvFor(g, where, { host: HOST, pages
 /* ── the run ─────────────────────────────────────────────────────────── */
 
 /**
- * ⛓ A gate's own summary line, in this directory's vocabulary: `ALL CHECKS
- * PASSED`, `N CHECK(S) FAILED`, `N FAILURE(S)`, or `OK`. Absence is the
- * finding, not a blank.
+ * ⛓⛓ A gate's own summary line — the vocabulary READ OUT OF THE GATES, not
+ * guessed. `grep` over every `console.log` that prints a verdict in
+ * `scripts/procgen/check-*.mjs` gives exactly FIVE forms:
+ *
+ *     ALL CHECKS PASSED          `${failed} CHECK(S) FAILED`
+ *     ALL PASS — <a tail>        `${failed} FAILURE(S)`
+ *     OK
+ *
+ * ⛔ THE FIRST CUT HAD FOUR OF THEM and reported
+ * `check-seedling-wasm-pins.mjs` — which prints `ALL PASS — 1 pinned build,
+ * four views in agreement` and exits 0 — as *"NO TOTAL LINE"*. A verdict
+ * reader whose vocabulary is guessed rather than read turns a green gate into
+ * a red one, which is the same defect as the totals-grep it replaces, pointing
+ * the other way.
  */
-const TOTAL_RE = /^(?:ALL CHECKS PASSED|OK|\d+ (?:CHECK\(S\) FAILED|FAILURE\(S\)))$/;
+const TOTAL_RE = /^(?:ALL CHECKS PASSED|ALL PASS\b.*|OK|\d+ (?:CHECK\(S\) FAILED|FAILURE\(S\)))$/;
 const totalOf = (out) => out.split('\n').map((l) => l.trim()).reverse()
     .find((l) => TOTAL_RE.test(l)) ?? null;
 const tally = (out) => ({
@@ -196,9 +207,20 @@ for (const { gate, argv: gargv } of PLAN) {
      * a runner that reads totals sees neither.
      */
     const red = code !== 0 || total === null;
-    results.push({ file: gate.file, code, ms, total, ...counts, red });
+    /**
+     * ⛓ …and WHICH kind of nothing. A gate that printed `SKIP:` and no verdict
+     * politely declined (no dev server, no Windows session); a gate that
+     * printed neither THREW. Both are red — you asked for the gates and did
+     * not get them — but they are different facts and the line says which.
+     */
+    const skipped = total === null && counts.skip > 0 && counts.pass === 0;
+    results.push({ file: gate.file, code, ms, total, ...counts, skipped, red });
     const verdict = red ? 'FAIL' : 'PASS';
-    const why = code !== 0 ? `exit ${code}` : (total === null ? 'NO TOTAL LINE — it printed no verdict at all' : total);
+    const why = code !== 0
+        ? `exit ${code}`
+        : (skipped
+            ? 'SKIPPED — it declined and checked nothing, which is not a pass'
+            : (total === null ? 'NO TOTAL LINE — it printed no verdict at all' : total));
     console.log(`${verdict}  ${gate.file.padEnd(40)} ${String(counts.pass)}/${counts.fail}`
         + `${counts.skip ? `/${counts.skip} skipped` : ''}  ${(ms / 1000).toFixed(1)}s  — ${why}`);
     if (red) {
