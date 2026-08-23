@@ -215,7 +215,10 @@ describe('⛔⛔ THE SLICE-11 REPRODUCTION — the four rows a depth-1 grep miss
         for (const c of PLAYTHROUGH_CHAINS) {
             if (!report.chains.includes(c.id)) continue;
             for (const n of c.segments) names.add(n);
-            names.add(c.headline);
+            // ⛓ R9 slice 12d, ⚖ ruling 37: a chain's headline is OPTIONAL now.
+            //   `r9-campaign` has none, and adding `undefined` would put a
+            //   name in this set that the corpus scan can never produce.
+            if (c.headline) names.add(c.headline);
         }
 
         // ⛓ THE SECOND DERIVATION — the corpus, not the graph. A tape's
@@ -241,9 +244,14 @@ describe('⛔⛔ THE SLICE-11 REPRODUCTION — the four rows a depth-1 grep miss
         for (const n of ['r8-solve-18', 'r8-d2', 'r8-d2-19', 'r8-d2-20']) {
             expect([...names]).toContain(n);
         }
-        // ⛔ a chain's siblings ride in even where the change did not reach their
-        // own producer: a moved segment moves the headline it sums into.
-        expect([...names]).toContain('r9-campaign');
+        // ⛔ A CHAIN'S SIBLINGS RIDE IN even where the change did not reach
+        // their own producer — the reason the widening exists. ⛓ R9 slice 12d:
+        // this used to name `r9-campaign`, the campaign's HEADLINE tape, for
+        // exactly that reason. ⚖ Ruling 37 retired the tape, so the claim is
+        // made on a sibling that is still a sibling: `r9-solve-0` is in the
+        // campaign chain and NO producer in the slice-11 range emits it — it
+        // is here only because the widening put its chain in.
+        expect([...names]).toContain('r9-solve-0');
     });
 
     it('⚠ and it is an UPPER BOUND: it also names rows slice 11 measured as HELD', async () => {

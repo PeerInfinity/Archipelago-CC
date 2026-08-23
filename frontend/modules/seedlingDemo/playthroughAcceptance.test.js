@@ -865,9 +865,21 @@ describe('chainGoalFindings — EARNED is measured, and the set is two-sided', (
      * ENDS-MEET's own claim, gated where CI can see it rather than only on the
      * user's GPU, and it is what reds when a segment is re-recorded and its
      * headline is not.
+     *
+     * ⛓⛓ R9 SLICE 12d, ⚖ RULING 37 — **IT IS SCOPED TO THE CHAINS THAT HAVE
+     * ONE, AND THE SCOPE IS ASSERTED.** `r9-campaign` has no headline: it IS
+     * the sequence of its segment tapes. A row that silently skipped it would
+     * read exactly like a row that checked it (trap 119), so the chains
+     * WITHOUT a headline are listed here by name — a chain that quietly lost
+     * its headline joins that list and a human has to agree.
      */
     it('⛓⛓⛓ and the SUM is the HEADLINE\'s own length — two recordings agreeing', () => {
-        const bad = PLAYTHROUGH_CHAINS
+        const withHeadline = PLAYTHROUGH_CHAINS.filter((c) => c.headline);
+        const without = PLAYTHROUGH_CHAINS.filter((c) => !c.headline).map((c) => c.id);
+        // ⛔ the SCOPE, stated: exactly one chain is out, and it is the campaign
+        expect(without).toEqual(['r9-campaign']);
+        expect(withHeadline.length).toBeGreaterThan(0);          // non-vacuity
+        const bad = withHeadline
             .map((c) => ({
                 id: c.id,
                 headline: c.headline,
@@ -900,8 +912,14 @@ describe('chainGoalFindings — EARNED is measured, and the set is two-sided', (
         expect(typed).toEqual([]);
         // non-vacuity: the same scan DOES find the fields it is looking for
         // in the region that legitimately carries measurements
+        // ⛓ R9 slice 12d: `measuredAt` was the OTHER probe here, and the only
+        //   rows that carried it were the campaign's two `transported` clears —
+        //   the HEADLINE's own rebased declarations, retired with the tape
+        //   (⚖ ruling 37). `carriesAt`/`absentAt` are the surviving evidence
+        //   fields, and they are measurements in exactly the same sense.
         expect(declarations).toMatch(/removedAt: \d+/);
-        expect(declarations).toMatch(/measuredAt: \d+/);
+        expect(declarations).toMatch(/carriesAt: \d+/);
+        expect(declarations).toMatch(/absentAt: \d+/);
     });
 
     it('⛓ THE REAL CHAIN declares exactly the rows R7 ends on', () => {

@@ -12071,6 +12071,27 @@ declaration (`frontend/modules/seedlingDemo/campaignChain.js`), the segment
 tapes' own `tick_count`s and the committed route frontier, by
 `generate-procgen-reference.mjs`; `--check` reds when it goes stale.
 
+⛔⛔ **AND THERE IS NO CONCATENATED TAPE — ⚖ RULING 37 (user, 2026-08-23), R9
+slice 12d.** *"The plan was to use the tools to play the individual campaign
+tapes in sequence, not combine them into one tape."* Until 12d this chain also
+had a `headline`: a seventeenth artifact, `r9-campaign.json`, all sixteen rooms
+solved again in ONE run so the segments had something to be tick-for-tick
+identical to. It is deleted — the tape, its expectation, its index row, its
+exposure prediction and its three rebased `clears` rows. `r9-campaign` survives
+as the CHAIN's id: `?tapes=r9-campaign` still expands to the sixteen segments.
+
+⛓ **IT WAS MEASURED REDUNDANT BEFORE IT WAS DELETED.** The sixteen segments
+played ALONE by the model and concatenated (each successor contributing from its
+index 1, because the boundary tick is observed twice) are the headline's **3616
+observations with no differing index**. So the sequence gate's CLAIM 9c asserts
+exactly what it asserted before, from artifacts that still exist, and what
+ENDS-MEET always meant — two different runs of one walk agreeing — is now
+asserted where the second run actually happens: the live continuation on the JS
+page and on the real recompiled game. ⛓ The R7/R8 STAGED chains KEEP their
+headlines, because for them the one-run recording IS the subject (they exist to
+prove that a cut is a measurement) and `toy-west-pair`'s is additionally what
+its byte-frozen free oracle is compared against.
+
 <!-- GENERATED:campaign-chain BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
 `r9-campaign` — **16 segments**, custody, from `new Game(0,80,128)` with an empty save to the **L15** arrival, **3615 ticks**. Segments 1–4 are PROMOTED (their boots already ARE their predecessors' latches, so this chain gives them a RELATION rather than a rewrite); every later one boots its predecessor's MEASURED latch.

@@ -5700,15 +5700,9 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "check"
-                },
-                {
-                    "how": [
-                        "includes"
-                    ],
-                    "name": "headline"
                 }
             ],
-            "oneLiner": "solve-seedling-r9-campaign — **THE TRUE-START SOLVER CHAIN**: every room of Seedling's sphere order from `new Game(0,80,128)` to the L14 camera band, driven by the live solver, each segment booting its predecessor's MEASURED LATCH.",
+            "oneLiner": "solve-seedling-r9-campaign — **THE TRUE-START SOLVER CHAIN**: every room of Seedling's sphere order from `new Game(0,80,128)` to the arrival the chain currently ends at, driven by the live solver, each segment booting its predecessor's MEASURED LATCH.",
             "path": "scripts/procgen/solve-seedling-r9-campaign.mjs"
         },
         {

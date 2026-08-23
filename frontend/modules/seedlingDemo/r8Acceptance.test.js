@@ -277,14 +277,14 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             // the hammer hit it takes knocks the same 80 ticks short of the
             // door — the pair's difference, visible in this ledger.
             'r8-hammer-arm',
-            // ⛓⛓ R9 slice 6's true-start chain: the HEADLINE enters every
-            // bridged room its segments do, and `r9-solve-13` is exposed at its
+            // ⛓⛓ R9 slice 6's true-start chain: `r9-solve-13` is exposed at its
             // L14 ARRIVAL — a room it enters on its last tick and never walks.
-            // ⛓ R9 slice 12″: the chain no longer STOPS there. `r9-solve-14`
-            //   crosses L14, so the headline drives all six of its bobs; the
-            //   two rooms declared for `r9-solve-13` and `r9-campaign` are
-            //   unchanged, because L15 holds no bridged body.
-            'r9-campaign', 'r9-solve-13',
+            // ⛓⛓ R9 slice 12d, ⚖ ruling 37: the `r9-campaign` row that stood
+            //   here was the HEADLINE TAPE's, and the tape is retired. Its
+            //   exposure was its segments' exposure — it entered every bridged
+            //   room they do and no other — so nothing moved to a twin and
+            //   nothing is owed a `retiredTapes` row.
+            'r9-solve-13',
             // ⛓⛓⛓ R9 slice 12: the press arm's driven witness — the FIRST tape
             // on the roster in which the PLAYER kills a bridged chaser, and the
             // fifth slice running that this guard has named its own addition
@@ -299,16 +299,18 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             // keeps `levels: [14]` a prediction rather than a transcription.
             'r9-solve-14',
         ]);
-        // ⛓ 13 -> 11 -> 12 -> 13: `r7-act2-3` and `r7-act2-4` are off the
+        // ⛓ 13 -> 11 -> 12 -> 13 -> 12: `r7-act2-3` and `r7-act2-4` are off the
         // roster, so the measurement cannot find them; slice 12's witness is
-        // the twelfth and slice 12b″'s L14 crossing the thirteenth. The three
-        // that STAY (⚖ ruling 18) are still here, still exposed, still
+        // the twelfth and slice 12b″'s L14 crossing the thirteenth. ⛓ R9 slice
+        // 12d took one back off: the retired HEADLINE tape was an exposed tape
+        // in its own right, and deleting the file is what the count reads. The
+        // three that STAY (⚖ ruling 18) are still here, still exposed, still
         // declared.
-        expect(out.exposed).toBe(13);
+        expect(out.exposed).toBe(12);
         expect(out.tapes).toEqual([
             'r7-act2-5', 'r7-act2-6', 'r7-act2-full',
             'r8-hammer-arm', 'r8-l6-bob-contact', 'r8-solve-3', 'r8-solve-4',
-            'r8-solve-5', 'r8-solve-6', 'r9-campaign', 'r9-l6-bob-press',
+            'r8-solve-5', 'r8-solve-6', 'r9-l6-bob-press',
             'r9-solve-13', 'r9-solve-14',
         ]);
     });
@@ -363,10 +365,14 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'r8-solve-6': { tape: {}, levels: [6] },
             // ⛓ R8 slice 8's pair ARM, at its declared room.
             'r8-hammer-arm': { tape: {}, levels: [16] },
-            // ⛓ R9 slice 6's true-start chain and its last leg, at their
-            // declared rooms — L14 joins the synthetic bridged set below for
-            // the same reason L16 did.
-            'r9-campaign': { tape: {}, levels: [4, 5, 6, 14] },
+            // ⛓ R9 slice 6's true-start chain's last leg, at its declared
+            // room — L14 joins the synthetic bridged set below for the same
+            // reason L16 did. ⛓⛓ R9 slice 12d: the chain's HEADLINE tape used
+            // to have a row here too and it is retired with the tape
+            // (⚖ ruling 37). Leaving it would have broken the mirror the other
+            // way — a synthetic roster carrying a tape the ledger no longer
+            // declares fires "undeclared and exposed" FIRST and this mutation
+            // stops being about ROOMS. Measured: it did, on the first run.
             'r9-solve-13': { tape: {}, levels: [14] },
             // ⛓⛓ R9 slice 12's press witness, at its declared room — added
             // here for the reason the comment above gives: the fixture is the

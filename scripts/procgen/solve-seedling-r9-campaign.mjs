@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 /**
  * solve-seedling-r9-campaign — **THE TRUE-START SOLVER CHAIN**: every room of
- * Seedling's sphere order from `new Game(0,80,128)` to the L14 camera band,
- * driven by the live solver, each segment booting its predecessor's MEASURED
- * LATCH. ⚖ Ruling 11 (user, 2026-08-20), R9 slice 6.
+ * Seedling's sphere order from `new Game(0,80,128)` to the arrival the chain
+ * currently ends at, driven by the live solver, each segment booting its
+ * predecessor's MEASURED LATCH. ⚖ Ruling 11 (user, 2026-08-20), R9 slice 6.
  *
  * ── WHAT THIS IS ─────────────────────────────────────────────────────────
  *
@@ -60,17 +60,37 @@
  * segment 1's is the game's own boot, so the battery keeps them and this chain
  * gives them a RELATION rather than a rewrite.
  *
+ * ── ⛔⛔ THERE IS NO CONCATENATED TAPE — ⚖ RULING 37 (user, 2026-08-23) ──
+ *
+ * *"the plan was to use the tools to play the individual campaign tapes in
+ * sequence, not combine them into one tape."* This script used to emit a
+ * SEVENTEENTH artifact, `r9-campaign.json`: all sixteen rooms solved again in
+ * ONE run, so the segments had something to be tick-for-tick identical to. It
+ * is gone, and with it the `--headline` flag (the cheap model-only ask), the
+ * `sum(segment ticks) === headline.tick_count` row and the cut derivation off
+ * its arrivals.
+ *
+ * ⛓ WHAT REPLACED THE CLAIM, AND WHY IT IS NOT A LOSS. The one-run tape was a
+ * REDUNDANT witness and was measured to be one before it was deleted: the
+ * sixteen segments played alone by the model and concatenated are its 3616
+ * observations with no differing index. What ENDS-MEET meant — two different
+ * runs of one walk agreeing — is asserted where the second run actually
+ * happens: `?tapes=r9-campaign` on the JS page and on the real recompiled game,
+ * every boundary admitted against the LIVE world's own latch. The arithmetic
+ * kept here is `sum(segment ticks) === PLAYTHROUGH_CHAINS.r9-campaign.endsAt`,
+ * which compares THIS RUN's solves against the COMMITTED tapes and is a claim
+ * about two derivations rather than one.
+ *
  * Run (model-side; the latch runs need Windows Chrome and a dev server):
- *   node scripts/procgen/solve-seedling-r9-campaign.mjs --headline   # no browser
  *   node scripts/procgen/solve-seedling-r9-campaign.mjs
- *   node scripts/procgen/solve-seedling-r9-campaign.mjs --check
+ *   node scripts/procgen/solve-seedling-r9-campaign.mjs --check   # no browser
  *
  * Then record (the game is the only oracle) — ⛔ ALWAYS `--only=`, and ⛔ NOT
  * `r8-solve-1..4`, which this chain promoted and did not re-author:
  *   node scripts/procgen/verify-seedling-bot-differential.mjs --win --record \
  *       --only=r8-solve-5,r8-solve-6,r8-solve-7,r8-solve-8,r8-solve-9,\
  * r8-solve-10,r9-solve-11,r9-solve-3,r9-solve-2,r9-solve-0,r9-solve-13,\
- * r9-solve-14,r9-campaign
+ * r9-solve-14
  */
 
 import { dirname, join } from 'node:path';
@@ -96,8 +116,6 @@ const TAPES = join(MODULE, 'fixtures', 'tapes');
 const TRACES = join(MODULE, 'fixtures', 'traces');
 
 const CHECK = process.argv.includes('--check');
-/** ⛓ `--headline` — the cheap first ask: a pure MODEL run, no browser. */
-const HEADLINE_ONLY = process.argv.includes('--headline');
 
 const {
     parseTape, requiredTapeVersion, assertTapeWithinRuntimeBudget, gameVisibleTape,
@@ -114,6 +132,13 @@ const { segmentBootFromLatch, seamLatchFindings } =
     await import(join(MODULE, 'r7Acceptance.js'));
 const { twoPassSolve } = await import(join(MODULE, 'twoPassSolve.js'));
 const { declaredSeamTimeAfter } = await import(join(MODULE, 'gameClock.js'));
+/**
+ * ⛓ THE COMMITTED CHAIN, for the ENDS-MEET row ⚖ ruling 37 left in place of
+ * the headline's. `playthroughWalk` derives `endsAt` and `cuts` from the tapes
+ * on disk (⚖ ruling 32 D), so this is the OTHER derivation of the number this
+ * run computes — not a constant, and not this run's own output.
+ */
+const { PLAYTHROUGH_CHAINS } = await import(join(MODULE, 'playthroughWalk.js'));
 
 const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4b';
 const PAGE_URL = `http://localhost:8000/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
@@ -278,22 +303,16 @@ const HEAD_RAW = JSON.parse(readFileSync(join(TAPES, `${HEAD_NAME}.json`), 'utf8
 const HEAD = parseTape(HEAD_RAW);
 
 /**
- * ⛓⛓⛓ THE HEADLINE — ALL SIXTEEN ROOMS IN **ONE RUN**, so the segments have
- * something to be tick-for-tick identical to. The ENDS-MEET arithmetic
- * (`sum(tick_count) === headline.tick_count`) and the stream-slice check are
- * exactly the rows that make a CUT a measurement rather than a declaration.
- *
- * ⛔ A **TWO-PASS** solve: L5's and L8's kill locks are `tset -1` rooms whose
- * clears `createLevelRun` takes AT CONSTRUCTION and the model deliberately
- * does not WRITE (one writer per persistence slot), so the headline's own walk
- * needs, as an INPUT, ticks only a solve can produce. The headline is
- * therefore a v9 tape carrying every timed row SEQUENCE-ABSOLUTE.
+ * Each segment's COMMITTED length, read off disk — `null` for a segment this
+ * run is authoring for the first time, which is what `--grow` passes through.
+ * ⛔ A missing tape is reported as a mismatch by the row that reads this, not
+ * skipped: "the tape is not there yet" and "the tape disagrees" must not print
+ * the same thing.
  */
-const HEADLINE = Object.freeze({
-    name: 'r9-campaign',
-    boot: HEAD.boot,
-    goals: SEGMENTS.flatMap((s) => s.goals),
-    why: 'ALL SIXTEEN ROOMS IN ONE RUN — what the segments are sliced from',
+const committedTicks = SEGMENTS.map((s) => {
+    const path = join(TAPES, `${s.name}.json`);
+    return existsSync(path)
+        ? parseTape(JSON.parse(readFileSync(path, 'utf8'))).tick_count : null;
 });
 
 const stateOf = (t) => ({
@@ -425,7 +444,7 @@ let carried = null;
  * measured latches to solve them from, so the offsets come from the COMMITTED
  * tick counts instead, and the run says so.
  */
-for (let i = 0; !HEADLINE_ONLY && i < SEGMENTS.length; i += 1) {
+for (let i = 0; i < SEGMENTS.length; i += 1) {
     const seg = SEGMENTS[i];
     const last = i === SEGMENTS.length - 1;
     if (seg.promoted) {
@@ -529,91 +548,37 @@ for (let i = 0; !HEADLINE_ONLY && i < SEGMENTS.length; i += 1) {
     }
 }
 
-// ── the headline: ONE run over all sixteen goal lists ─────────────────
-/**
- * ⛓ THE OFFSETS THE HEADLINE'S GAME-SOURCED CLEARS ARE REBASED BY — the solved
- * segments' own tick counts, or (under `--headline`, where nothing has been
- * solved) the COMMITTED ones. Both are stated in the run's output.
- */
-const headOffsets = (() => {
-    // ⚠ A NEW LEG HAS NO COMMITTED TAPE, so under `--headline` the offsets STOP
-    //   at the first one rather than being invented — every later entry is
-    //   `null`, and `ownersFrom` cannot build an owner out of a missing file.
-    //   The only game-sourced clears on this chain are L8's, in segment 8,
-    //   which is upstream of every new leg; a chain that grew one earlier would
-    //   refuse by name here rather than rebase by a number nobody computed.
-    const out = [];
-    let n = 0;
-    for (let i = 0; i < SEGMENTS.length; i += 1) {
-        if (n === null) { out.push(null); continue; }
-        out.push(n);
-        const path = join(TAPES, `${SEGMENTS[i].name}.json`);
-        const len = results[i] ? results[i].out.perTick.length
-            : (existsSync(path)
-                ? parseTape(JSON.parse(readFileSync(path, 'utf8'))).tick_count : null);
-        n = len === null ? null : n + len;
-    }
-    return out;
-})();
-console.log(`## the headline's segment offsets ${HEADLINE_ONLY ? '(from the COMMITTED tick '
-    + 'counts — nothing has been solved under --headline)' : '(from this run\'s own solves)'}`
-    + `: [${headOffsets.join(', ')}]`);
-
-const headSolved = await twoPassSolve({
-    makeRun: (persistence) => runFrom(HEADLINE.boot, { ...stateOf(HEAD), persistence }),
-    goals: HEADLINE.goals,
-    name: HEADLINE.name,
-    boot: HEADLINE.boot,
-    persistence: HEAD.persistence,
-    gameTick: makeRebasedOracle(ownersFrom(headOffsets)),
-    log: (m) => console.log(m),
-});
-const headState = { ...stateOf(HEAD), persistence: headSolved.persistence };
-const headRun = runFrom(HEADLINE.boot, headState);
-for (const held of headSolved.out.perTick) headRun.advance(held);
-claimArrival(HEADLINE.name, headRun, SEGMENTS[SEGMENTS.length - 1].to);
-
-/**
- * ⛓⛓⛓ THE CUTS ARE THE HEADLINE'S OWN ARRIVALS, DERIVED — R1's rule. A
- * segment ends where the run enters the next segment's room, so the cut list
- * is the transition ticks and `endsAt` is the last one. ⛔ Not typed: a
- * constant that disagreed with the tapes is exactly the ends-meet failure the
- * arithmetic below exists to catch.
- */
-const arrivals = headRun.transitions.map((t) => ({ t: t.t, to: t.to_level }));
-check(`⛓ the headline crosses ${SEGMENTS.length} doors, in the sphere order's own sequence`,
-    arrivals.length === SEGMENTS.length
-        && arrivals.every((a, i) => a.to === SEGMENTS[i].to),
-    `${arrivals.map((a) => `t${a.t}:L${a.to}`).join(' ')} against `
-        + `${SEGMENTS.map((s) => `L${s.to}`).join(' ')}`);
-const cuts = arrivals.slice(0, -1).map((a) => a.t);
-const spans = arrivals.map((a, i) => a.t - (i === 0 ? 0 : arrivals[i - 1].t));
-
-console.log(`\n## the headline: ${headSolved.out.perTick.length} ticks over `
-    + `${SEGMENTS.length} rooms`);
-SEGMENTS.forEach((s, i) => console.log(`   ${String(i + 1).padStart(2)} ${s.name.padEnd(13)} `
-    + `L${String(s.level).padEnd(3)} -> L${String(s.to).padEnd(3)} ${String(spans[i]).padStart(5)} t`));
-console.log(`## PLAYTHROUGH_CHAINS.r9-campaign: cuts [${cuts.join(', ')}], `
-    + `endsAt ${headSolved.out.perTick.length}`);
-
-
-if (HEADLINE_ONLY) {
-    console.log(`\n## r9-campaign headline (MODEL ONLY): ${headSolved.out.perTick.length} `
-        + `ticks, ${headSolved.out.trace.rows.length} decision(s), ${headSolved.out.replans} `
-        + `re-plan(s), passes [${headSolved.passes.map((x) => x.kind).join(', ')}]`);
-    console.log('## nothing emitted; the segments need the game (`latchOf`).');
-    console.log(failures ? `\n${failures} FAILURE(S)` : '\nall model-side checks green');
-    process.exit(failures ? 1 : 0);
-}
 // ── the chain's own arithmetic ────────────────────────────────────────
+/**
+ * ⛓⛓⛓ **THE ENDS-MEET ROW, AFTER ⚖ RULING 37.** It used to be `sum(segment
+ * ticks) === headline.tick_count` — this run's solves against a SEVENTEENTH
+ * artifact this run also produced. The headline is retired, so the second
+ * derivation is the COMMITTED chain: `playthroughWalk` sums the tapes on disk
+ * into `endsAt`, and that number was written by earlier runs of this script.
+ *
+ * ⛔ IT IS NOT VACUOUS AND THE DIFFERENCE MATTERS. `endsAt === sum(committed
+ * tick_counts)` is true by construction inside one process (⚖ ruling 32 D);
+ * what this compares is THIS RUN's own solve lengths against the committed
+ * ones, which is exactly the claim that reds when a walk moves and its tape
+ * does not. Under `--check` that is the byte comparison's arithmetic twin;
+ * under a real run it is the reason a re-record is noticed.
+ */
 const segTicks = results.map((r) => r.out.perTick.length);
 const segSum = segTicks.reduce((a, b) => a + b, 0);
-check('⛓ sum(segment ticks) === the headline\'s own tick count',
-    segSum === headSolved.out.perTick.length,
-    `${segTicks.join(' + ')} = ${segSum} against ${headSolved.out.perTick.length}`);
-check('⛓ every segment\'s length is the headline\'s own span at that arrival',
-    segTicks.every((n, i) => n === spans[i]),
-    `${segTicks.join(',')} against ${spans.join(',')}`);
+const CHAIN = PLAYTHROUGH_CHAINS.find((c) => c.id === 'r9-campaign');
+check('⛓ sum(segment ticks) === the COMMITTED chain\'s own endsAt',
+    Boolean(CHAIN) && segSum === CHAIN.endsAt,
+    `${segTicks.join(' + ')} = ${segSum} against endsAt ${CHAIN?.endsAt}`);
+check('⛓ every segment\'s solved length is its COMMITTED tape\'s own',
+    segTicks.every((n, i) => n === committedTicks[i]),
+    `${segTicks.join(',')} against ${committedTicks.join(',')}`);
+
+console.log(`\n## the chain: ${segSum} ticks over ${SEGMENTS.length} rooms`);
+SEGMENTS.forEach((s, i) => console.log(`   ${String(i + 1).padStart(2)} ${s.name.padEnd(13)} `
+    + `L${String(s.level).padEnd(3)} -> L${String(s.to).padEnd(3)} ${String(segTicks[i]).padStart(5)} t`));
+console.log(`## PLAYTHROUGH_CHAINS.r9-campaign: cuts [${CHAIN?.cuts.join(', ')}], `
+    + `endsAt ${CHAIN?.endsAt}`);
+
 
 /**
  * ⛓⛓⛓ THE FREE ORACLE, ASSERTED SEGMENT BY SEGMENT — `gameClock.
@@ -698,22 +663,6 @@ function descriptionFor(r, i) {
         + DESCRIPTION_TAIL.replace('%PRED%', pred);
 }
 
-const HEADLINE_DESCRIPTION = '⛓⛓⛓ R9 SLICE 6 — THE HEADLINE of the custody chain '
-    + '`r9-campaign`: every room of Seedling\'s sphere order from the TRUE INITIAL BOOT '
-    + `(\`new Game(0,80,128)\`, empty save) to the L15 arrival, driven by the live solver `
-    + 'in ONE RUN, so the sixteen segments have something to be tick-for-tick IDENTICAL '
-    + 'to. ⚖ Ruling 11 (user, 2026-08-20). Its cuts are the run\'s OWN ARRIVALS (R1\'s '
-    + 'rule) and its two internal kill-lock rooms make it a v9 tape: L5\'s `{5,0}` and '
-    + 'L8\'s `{8,0}`/`{8,1}` are `tset -1` clears `createLevelRun` takes AT CONSTRUCTION '
-    + 'and the model does not WRITE, so the walk needs ticks only a solve can produce — '
-    + 'the same `twoPassSolve` loop `r8-solve-18` was authored by — and carries every '
-    + 'timed row SEQUENCE-ABSOLUTE. It CREDITS the goal ledger for the first time from '
-    + 'solver tapes: `sword@L10` and `chest@L11`. ⛓ R9 slice 12b″ added the SIXTEENTH '
-    + 'room: L14, the six-bob room, crossed by the PARRY-WALK. The chain now STOPS at '
-    + 'L15, whose \'shove\' strategy the route survey refuses (route step 17); the '
-    + 'refusal is the next work order. Authored by '
-    + 'scripts/procgen/solve-seedling-r9-campaign.mjs.';
-
 function tapeJson(obj, description, label) {
     const declaredVersion = (obj.persistence ?? []).some((r) => r.at !== undefined) ? 9 : 8;
     // ⛓ R9 slice 8: the tick-0 latch is CARRIED, never authored — read off
@@ -788,22 +737,7 @@ for (let i = 0; i < results.length; i += 1) {
     emit(join(TRACES, `${r.seg.name}.trace.json`),
         `${JSON.stringify(r.out.trace, null, 4)}\n`, `${r.seg.name} trace`);
 }
-{
-    const obj = {
-        game: 'seedling', name: HEADLINE.name, boot: HEADLINE.boot,
-        noclip: false, noDamage: false, noHazards: [], grants: [],
-        persistence: headSolved.persistence,
-        equips: HEAD.equips, pins: HEAD.pins, save: HEAD.save,
-        rng: HEAD.rng, seam: HEAD.seam,
-        tick_count: headSolved.out.perTick.length,
-        inputs: buildTape(headSolved.out.perTick, HEADLINE.boot, HEADLINE.name,
-            { noclip: false, noDamage: false, noHazards: [], grants: [] }).inputs,
-    };
-    emit(join(TAPES, `${HEADLINE.name}.json`),
-        tapeJson(obj, HEADLINE_DESCRIPTION, HEADLINE.name), HEADLINE.name);
-}
-
-console.log(`\n## r9-campaign: headline ${headSolved.out.perTick.length}t = `
+console.log(`\n## r9-campaign: ${segSum}t = `
     + `${SEGMENTS.map((s, i) => `${s.name} ${segTicks[i]}t`).join(' + ')}, `
     + `${SEGMENTS.length - 1} internal seam(s)`);
 console.log(`## goal ledger rows this chain CREDITS: ${goalLedgerRows.join(', ')}`);

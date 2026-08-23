@@ -52,7 +52,7 @@ import {
     seamBootFields, seamExitFields, seamFindings, seamLatchFindings,
 } from './r7Acceptance.js';
 import {
-    PLAYTHROUGH_CHAINS, TRUE_INITIAL_BOOT, chainKind, chainPolicy,
+    PLAYTHROUGH_CHAINS, TRUE_INITIAL_BOOT, chainKind, chainPolicy, chainTapeNames,
 } from './playthroughWalk.js';
 
 /**
@@ -210,8 +210,8 @@ export function witnessedClearFindings(chain, tapes) {
         startOf.set(name, running);
         running += tapes.get(name)?.tick_count ?? 0;
     }
-    startOf.set(chain.headline, 0);
-    for (const name of [...chain.segments, chain.headline]) {
+    if (chain.headline) startOf.set(chain.headline, 0);
+    for (const name of chainTapeNames(chain)) {
         const t = tapes.get(name);
         if (!t) continue;
         const base = startOf.get(name);
@@ -262,7 +262,7 @@ export function stagedClearFindings(chain, tapes) {
     const key = (c) => `${c.level},${c.tag}@${c.at}`;
     /** Every timed clear the chain's own tapes actually declare. */
     const declared = [];
-    for (const name of [...chain.segments, chain.headline]) {
+    for (const name of chainTapeNames(chain)) {
         const t = tapes.get(name);
         if (!t) continue;
         for (const c of t.persistence) {
@@ -428,8 +428,8 @@ export function witnessedDespawnFindings(chain, tapes) {
         startOf.set(name, running);
         running += tapes.get(name)?.tick_count ?? 0;
     }
-    startOf.set(chain.headline, 0);
-    for (const name of [...chain.segments, chain.headline]) {
+    if (chain.headline) startOf.set(chain.headline, 0);
+    for (const name of chainTapeNames(chain)) {
         const t = tapes.get(name);
         if (!t) continue;
         const base = startOf.get(name);
@@ -601,7 +601,7 @@ export function chainGoalFindings(chain, tapes, replayed) {
 export function chainFindings(chain, tapes, replayed) {
     const found = [];
     const add = (name, ok, detail) => found.push({ name, ok, detail });
-    const missing = [...chain.segments, chain.headline]
+    const missing = chainTapeNames(chain)
         .filter((n) => !replayed.has(n));
     if (missing.length) {
         add(`chain ${chain.id}: SKIPPED — this sweep did not replay `
@@ -614,7 +614,20 @@ export function chainFindings(chain, tapes, replayed) {
 
     const seg = (n) => replayed.get(n);
     const tape = (n) => tapes.get(n);
-    const headline = seg(chain.headline);
+    /**
+     * ⛔⛔ A CHAIN MAY HAVE NO HEADLINE — ⚖ RULING 37 (user, 2026-08-23), R9
+     * slice 12d: *"the plan was to use the tools to play the individual
+     * campaign tapes in sequence, not combine them into one tape."* The three
+     * claims below that COMPARE the segments against a single concatenated
+     * recording (ARITHMETIC, the per-segment STREAM SLICE, THE ENDING STATE)
+     * have no second recording to compare to, and each one is emitted as a
+     * SKIPPED row naming what carries its content instead — never silently
+     * absent, because a claim quietly gone reads exactly like a claim that
+     * passed (trap 119).
+     */
+    const headline = chain.headline ? seg(chain.headline) : null;
+    const noHeadline = 'this chain has NO headline tape (⚖ ruling 37): it IS the '
+        + 'sequence of its segment tapes, played in order';
 
     // ── THE WITNESSED-CLEAR LAW (slice 6d) ────────────────────────────
     found.push(...witnessedClearFindings(chain, tapes));
@@ -667,10 +680,23 @@ export function chainFindings(chain, tapes, replayed) {
 
     // ── 1. THE ARITHMETIC — R1's claim, kept ──────────────────────────
     const sum = chain.segments.reduce((n, name) => n + tape(name).tick_count, 0);
-    add(`chain ${chain.id}: the segment tick counts sum to the headline's`,
-        sum === tape(chain.headline).tick_count,
-        `${chain.segments.map((n) => tape(n).tick_count).join(' + ')} = ${sum}; `
-        + `${chain.headline} is ${tape(chain.headline).tick_count}`);
+    if (headline) {
+        add(`chain ${chain.id}: the segment tick counts sum to the headline's`,
+            sum === tape(chain.headline).tick_count,
+            `${chain.segments.map((n) => tape(n).tick_count).join(' + ')} = ${sum}; `
+            + `${chain.headline} is ${tape(chain.headline).tick_count}`);
+    } else {
+        add(`chain ${chain.id}: the ENDS-MEET ARITHMETIC is UNASKABLE — ${noHeadline}`,
+            true,
+            `the segments sum to ${sum} and there is no second recording to sum against. `
+            + 'What ENDS-MEET always meant — two different runs of one walk agreeing — is '
+            + 'made where it belongs: `?tapes=' + chain.id + '` on the JS page '
+            + '(`check-seedling-editor-sequence.mjs`) and on the real game '
+            + '(`check-seedling-wasm-ship.mjs`, whose per-tick verdict is taken over the '
+            + 'observation count the TAPES imply). The `endsAt` row below still compares '
+            + 'the sweep\'s tape map against the chain\'s derivation');
+        found[found.length - 1].skipped = true;
+    }
 
     /**
      * ⛓⛓⛓ R9 SLICE 7 — **THE DECLARED BOUND, AGAINST THE TAPES IT BOUNDS.**
@@ -714,24 +740,42 @@ export function chainFindings(chain, tapes, replayed) {
         const t = tape(name);
 
         // 2. the stream slice, tick for tick
-        const want = headline.stream.ticks.filter(
-            (o) => o.t >= offset && o.t <= offset + t.tick_count);
         const got = here.stream.ticks;
-        let firstDiff = -1;
-        for (let k = 0; k < Math.max(want.length, got.length); k += 1) {
-            const a = want[k];
-            const b = got[k];
-            if (!a || !b || a.t - offset !== b.t || a.x !== b.x || a.y !== b.y
-                || a.level !== b.level) { firstDiff = k; break; }
+        if (headline) {
+            const want = headline.stream.ticks.filter(
+                (o) => o.t >= offset && o.t <= offset + t.tick_count);
+            let firstDiff = -1;
+            for (let k = 0; k < Math.max(want.length, got.length); k += 1) {
+                const a = want[k];
+                const b = got[k];
+                if (!a || !b || a.t - offset !== b.t || a.x !== b.x || a.y !== b.y
+                    || a.level !== b.level) { firstDiff = k; break; }
+            }
+            add(`chain ${chain.id}: ${name} is the headline's ticks `
+                + `${offset}..${offset + t.tick_count}, tick for tick`,
+            firstDiff === -1 && want.length === got.length,
+            firstDiff === -1 && want.length === got.length
+                ? `${got.length} observations`
+                : `${want.length} expected vs ${got.length} observed; first difference at `
+                    + `index ${firstDiff}: headline ${JSON.stringify(want[firstDiff])} vs `
+                    + `segment ${JSON.stringify(got[firstDiff])}`);
+        } else if (i === 0) {
+            /**
+             * ⛔ ONE ROW FOR THE WHOLE CHAIN, not one per segment. Sixteen
+             * identical "unaskable" lines would drown the rows that still
+             * carry a claim; the point of the skip is that a reader sees the
+             * absence once and is told where the content went.
+             */
+            add(`chain ${chain.id}: the per-segment STREAM SLICE is UNASKABLE for all `
+                + `${chain.segments.length} segments — ${noHeadline}`, true,
+            'there is no concatenated recording to slice. The partition it asserted is '
+                + 'carried by the rows still here — every seam GREEN over the whole '
+                + 'signature, and the boundary tick OBSERVED TWICE and agreeing, which '
+                + 'is the same claim made pairwise — and by the live continuation the '
+                + 'sequence and ship gates drive, where each window is diffed against '
+                + 'its own segment played ALONE (⚖ ruling 23)');
+            found[found.length - 1].skipped = true;
         }
-        add(`chain ${chain.id}: ${name} is the headline's ticks `
-            + `${offset}..${offset + t.tick_count}, tick for tick`,
-        firstDiff === -1 && want.length === got.length,
-        firstDiff === -1 && want.length === got.length
-            ? `${got.length} observations`
-            : `${want.length} expected vs ${got.length} observed; first difference at `
-                + `index ${firstDiff}: headline ${JSON.stringify(want[firstDiff])} vs `
-                + `segment ${JSON.stringify(got[firstDiff])}`);
 
         // ⛔ 3a. THE CALM ARRIVAL, REQUIRED. This is what `requireCalm: true`
         // means and where it lives: the roster runs it FALSE because no
@@ -806,19 +850,33 @@ export function chainFindings(chain, tapes, replayed) {
     // place, which is exactly trap 119's shape — a number that is no longer
     // measuring anything, still passing.
     const lastSeg = seg(chain.segments[chain.segments.length - 1]);
-    const agree = latchAgreementFindings(
-        `chain ${chain.id} ending state`,
-        headline.seam?.seam, lastSeg.seam?.seam, ['headline', 'chain']);
-    const disagree = agree.filter((r) => !r.ok);
-    add(`chain ${chain.id}: ⛓ THE ENDING STATE — the chain ends where the headline ends, `
-        + 'field by field, with NO offset declared anywhere',
-    disagree.length === 0,
-    disagree.length === 0 ? `${agree.length} signature rows agree`
-        : `${disagree.length} row(s) DIFFER: `
-            + disagree.map((r) => `${r.name} [${r.detail}]`).join('; '));
+    if (headline) {
+        const agree = latchAgreementFindings(
+            `chain ${chain.id} ending state`,
+            headline.seam?.seam, lastSeg.seam?.seam, ['headline', 'chain']);
+        const disagree = agree.filter((r) => !r.ok);
+        add(`chain ${chain.id}: ⛓ THE ENDING STATE — the chain ends where the headline `
+            + 'ends, field by field, with NO offset declared anywhere',
+        disagree.length === 0,
+        disagree.length === 0 ? `${agree.length} signature rows agree`
+            : `${disagree.length} row(s) DIFFER: `
+                + disagree.map((r) => `${r.name} [${r.detail}]`).join('; '));
+    } else {
+        add(`chain ${chain.id}: ⛓ THE ENDING STATE is UNASKABLE — ${noHeadline}`, true,
+            `the chain ends at ${JSON.stringify(lastSeg.stream.ticks.at(-1))} and there `
+            + 'is no second run of the same walk to compare that state against. The claim '
+            + 'is made on the real game instead: `check-seedling-wasm-ship.mjs`\'s CLAIM 7 '
+            + 'asserts the END STATE the chain reaches against the one the segment TAPES '
+            + 'imply (`endStateOf(WINDOWS)`), which never read the headline');
+        found[found.length - 1].skipped = true;
+    }
 
     // ── 5. THE FREE ORACLE, when the sweep has it ─────────────────────
-    if (chain.freeOracle && replayed.has(chain.freeOracle)) {
+    // ⛓ A free oracle is a claim ABOUT the headline ("the headline reproduces
+    //   the FROZEN fixture"), so a chain without one cannot have it — and no
+    //   chain declares both states today. The guard says so rather than
+    //   throwing on a null.
+    if (headline && chain.freeOracle && replayed.has(chain.freeOracle)) {
         const oracle = seg(chain.freeOracle);
         const n = Math.min(headline.stream.ticks.length, oracle.stream.ticks.length);
         let diff = -1;
@@ -839,7 +897,7 @@ export function chainFindings(chain, tapes, replayed) {
                 + `${JSON.stringify(headline.stream.ticks[diff])} vs `
                 + `${JSON.stringify(oracle.stream.ticks[diff])} — a FINDING about the `
                 + 'pins, not a failure of the chain');
-    } else if (chain.freeOracle) {
+    } else if (headline && chain.freeOracle) {
         add(`chain ${chain.id}: the free oracle ${chain.freeOracle} was NOT replayed`,
             true, 'run --tier=full or add it to --only to get the comparison for free');
         found[found.length - 1].skipped = true;

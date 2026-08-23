@@ -376,11 +376,45 @@ check(solo.cls === 'ok' && /865 observations/.test(solo.status) && solo.seq === 
  * checking (trap 566 — a true sentence about the wrong subject). They now come
  * from `PAGE_CHAINS` and from the oracle's own last observation.
  *
- * ⛔ THE ORACLE IS THE HEADLINE PLAYED ALONE, exactly as claim 2's is — one
- * tape, one staged run, no windows at all. A page that agreed with itself
- * would be an echo (trap 269); this compares two different runs of the same
- * walk, one of them stitched out of fifteen.
+ * ⛔⛔ THE ORACLE IS THE SEGMENTS PLAYED ALONE — ⚖ RULING 37 + ⚖ RULING 23,
+ * R9 slice 12d. Until this slice it was the CONCATENATED HEADLINE TAPE played
+ * alone, exactly as claim 2's is. That tape is retired (*"the plan was to use
+ * the tools to play the individual campaign tapes in sequence, not combine
+ * them into one tape."*), so the oracle is now what the campaign's own law
+ * says it should be: each segment run ALONE by the model from its own declared
+ * boot, concatenated with the duplicated boundary tick dropped — *"a level
+ * played separately plays the same as reached from the start"*.
+ *
+ * ⛓ THE SWAP IS BIT-FOR-BIT, AND THAT WAS MEASURED BEFORE THE TAPE WAS
+ * DELETED: the concatenation is 3616 observations against the headline's 3616,
+ * first differing index −1. So this row asserts exactly what it asserted
+ * before, from an artifact that still exists.
+ *
+ * ⛔ It is still not an echo (trap 269): the page ran ONE continuation on one
+ * game state and this process ran sixteen independent staged runs. Two
+ * different ways of producing one walk, compared.
  */
+/**
+ * The campaign's model-side oracle: every window played alone, end to end.
+ *
+ * ⚠ THE BOUNDARY TICK IS OBSERVED TWICE and must be counted once. Segment k's
+ * last observation and segment k+1's tick 0 are the same instant of the same
+ * walk seen from two boots — which is why the tick counts SUM rather than
+ * overshooting by one per seam — so every segment after the first contributes
+ * from its index 1.
+ */
+function segmentsPlayedAlone(names) {
+    const ticks = [];
+    let offset = 0;
+    for (const name of names) {
+        const own = runTapeToStream(tapeOf(name), { levelSource: atlasLevelSource() });
+        for (let i = ticks.length === 0 ? 0 : 1; i < own.ticks.length; i += 1) {
+            ticks.push({ ...own.ticks[i], t: own.ticks[i].t + offset });
+        }
+        offset += tapeOf(name).tick_count;
+    }
+    return ticks;
+}
 const camp = await land('tapes=r9-campaign&side=js');
 const CAMP = PAGE_CHAINS['r9-campaign'];
 if (!camp.seq) {
@@ -398,27 +432,26 @@ if (!camp.seq) {
         + `${campBoundaries.length} boundary(ies); `
         + `${campRefused ? `stopped at ${campRefused.label}` : 'nothing refused'}`);
 
-    const campOracle = runTapeToStream(tapeOf('r9-campaign'),
-        { levelSource: atlasLevelSource() });
+    const campOracle = segmentsPlayedAlone(CAMP);
     const campMine = camp.seq.stream ?? [];
     let campDiff = -1;
-    for (let i = 0; i < Math.max(campMine.length, campOracle.ticks.length); i += 1) {
-        if (JSON.stringify(campMine[i]) !== JSON.stringify(campOracle.ticks[i])) {
+    for (let i = 0; i < Math.max(campMine.length, campOracle.length); i += 1) {
+        if (JSON.stringify(campMine[i]) !== JSON.stringify(campOracle[i])) {
             campDiff = i;
             break;
         }
     }
-    check(campMine.length === campOracle.ticks.length && campDiff === -1,
-        `⛓⛓⛓ CLAIM 9c — …AND THE ${CAMP.length} WINDOWS PRODUCE THE HEADLINE `
-        + 'STREAM, TICK FOR TICK',
-        `page ${campMine.length} observation(s) vs the headline's `
-        + `${campOracle.ticks.length}; first differing tick ${campDiff}`
-        + (campDiff >= 0 ? ` — page ${JSON.stringify(campMine[campDiff])} vs headline `
-            + `${JSON.stringify(campOracle.ticks[campDiff])}` : ''));
-    check(JSON.stringify(campMine.at(-1)) === JSON.stringify(campOracle.ticks.at(-1)),
+    check(campMine.length === campOracle.length && campDiff === -1,
+        `⛓⛓⛓ CLAIM 9c — …AND THE ${CAMP.length} WINDOWS PRODUCE THE SAME STREAM AS `
+        + `THE ${CAMP.length} SEGMENTS PLAYED ALONE, TICK FOR TICK`,
+        `page ${campMine.length} observation(s) vs the segments' `
+        + `${campOracle.length}; first differing tick ${campDiff}`
+        + (campDiff >= 0 ? ` — page ${JSON.stringify(campMine[campDiff])} vs segments `
+            + `${JSON.stringify(campOracle[campDiff])}` : ''));
+    check(JSON.stringify(campMine.at(-1)) === JSON.stringify(campOracle.at(-1)),
         `⛓ CLAIM 9d — …AND IT ENDS EQUAL, at the L${
-            campOracle.ticks.at(-1)?.level} arrival`,
-        `${JSON.stringify(campMine.at(-1))} vs ${JSON.stringify(campOracle.ticks.at(-1))}`);
+            campOracle.at(-1)?.level} arrival`,
+        `${JSON.stringify(campMine.at(-1))} vs ${JSON.stringify(campOracle.at(-1))}`);
 
     /**
      * ⛓⛓ THE FORWARD ROWS, REBASED — the three timed clears the chain's own
@@ -439,19 +472,23 @@ if (!camp.seq) {
     const campForward = campBoundaries.flatMap((b) => b.forwardRows ?? []);
     check(JSON.stringify(campForward) === JSON.stringify(want),
         '⛓⛓ CLAIM 9e — …and the FORWARD declarations are named per boundary, REBASED '
-        + 'into the sequence\'s own numbering — the three the HEADLINE itself declares',
+        + 'into the sequence\'s own numbering, against the segment tapes\' own `at` rows '
+        + 'plus the running tick sum',
         `${JSON.stringify(campForward)} against ${JSON.stringify(want)}`);
     /**
-     * ⛓⛓⛓ AND THE FREE ORACLE NOBODY WROTE FOR IT, the same one claim 9 has:
-     * those rebased ticks are EXACTLY what `r9-campaign` declares as its own
-     * v9 rows — a tape the producer emitted from a different derivation.
+     * ⛔⛔ ONE ROW IS GONE HERE, AND IT IS SAID RATHER THAN LEFT ABSENT (trap
+     * 119). Until R9 slice 12d there was a fourth check under 9e: the rebased
+     * forward rows were ALSO compared against `r9-campaign.json`'s own v9
+     * `persistence` — a THIRD derivation, emitted by the producer from a
+     * different run, which is what made it a free oracle nobody wrote.
+     *
+     * ⚖ Ruling 37 retired that tape, so the third derivation no longer exists
+     * and the claim cannot be re-pointed: 9e's two sides are the PAGE's own
+     * per-boundary rows and this process's arithmetic over the segment tapes,
+     * which is still two independent derivations and is the whole of what is
+     * asserted now. ⛓ The r8-d2 chain keeps its equivalent (claim 9's), because
+     * it keeps its headline.
      */
-    const headRows = (tapeOf('r9-campaign').persistence ?? [])
-        .filter((c) => c.at !== undefined).map((c) => `${c.level}:${c.tag}@${c.at}`);
-    check(JSON.stringify(campForward) === JSON.stringify(headRows),
-        '⛓⛓⛓ …and they are the HEADLINE\'s OWN declared rows, tick for tick — two '
-        + 'derivations, one answer',
-        `${JSON.stringify(campForward)} vs ${JSON.stringify(headRows)}`);
 }
 
 // ══ 10–11. THE WASM ARM, AS FAR AS A HEADLESS BROWSER CAN GO ═══════════

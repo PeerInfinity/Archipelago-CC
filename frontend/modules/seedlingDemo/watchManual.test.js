@@ -430,18 +430,19 @@ describe('⛓⛓⛓ THE ONE FOLD DERIVES ITS OWN VERSION (slice 5)', () => {
         // headline, and L18's `lock@144,112` is `tset -1` — so the re-derived
         // headline declares the same timed `{18,0}` its own segment 0 does and
         // is a v9 tape now. A hand-kept list is exactly what should red here.
-        // ⛓ R9 slice 6: `r9-campaign` joined the list, for the same reason
-        //   `r8-d2` did one slice-family over — a headline that walks every
-        //   room in ONE run declares every timed clear its segments do, so the
-        //   true-start chain's headline carries L5's `{5,0}` and L8's two,
-        //   sequence-absolute. A hand-kept list is exactly what should red here.
+        // ⛓ R9 slice 6: `r9-campaign` joined the list, because a headline that
+        //   walks every room in ONE run declares every timed clear its segments
+        //   do. ⛓⛓ R9 slice 12d, ⚖ ruling 37: it LEFT again — the concatenated
+        //   tape is retired and the three sequence-absolute rows went with it.
+        //   The sweep READS THE DIRECTORY, so this list reds the moment the two
+        //   disagree, which is exactly what it did when the deletion landed.
         // ⛓ R9 slice 7b: `r7-act2-8` left the roster with the eight other
         //   covered hand tapes. The sweep READS THE DIRECTORY, so this list
         //   reds the moment the two disagree — which is exactly what it did
         //   when the deletion landed, by name, before the list was moved.
         expect(byAt.sort()).toEqual([
             'r7-act2-5', 'r7-act2-full',
-            'r8-d2', 'r8-solve-18', 'r8-solve-5', 'r8-solve-8', 'r9-campaign',
+            'r8-d2', 'r8-solve-18', 'r8-solve-5', 'r8-solve-8',
         ]);
         expect(byDespawn.sort()).toEqual(['r7-act2-6', 'r7-act2-full']);
         expect(names.length).toBeGreaterThan(140);   // and the sweep really swept

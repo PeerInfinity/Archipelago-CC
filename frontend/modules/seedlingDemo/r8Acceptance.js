@@ -633,25 +633,18 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
          * this guard has caught in the act.
          * ⛔ Neither is folded into `exposedTapes`: a prediction edited after
          * its measurement is not a prediction.
+         *
+         * ⛔⛔ THE `r9-campaign` ROW IS GONE — ⚖ RULING 37, R9 slice 12d. It was
+         * the HEADLINE TAPE's row (`levels: [4, 5, 6, 14]`, `bobs: 6`, `ticks:
+         * 3615`), and the tape is retired: the campaign is the sequence of its
+         * segment tapes now. ⛓ THE ROW IS DELETED RATHER THAN RETIRED, and the
+         * difference is deliberate — `retiredTapes` subtracts a tape whose
+         * COVERAGE moved to a solver twin (⚖ ruling 14), and asserts the twin
+         * exists; nothing here was covered by that tape that its own segments
+         * do not cover, because its exposure WAS its segments' (it entered
+         * every bridged room they do, and no other). A retirement row would be
+         * claiming a transfer that never happened.
          */
-        Object.freeze({
-            name: 'r9-campaign', levels: Object.freeze([4, 5, 6, 14]), bobs: 6, ticks: 3615,
-            addedBy: 'R9 slice 6 (the true-start solver chain)',
-            why: 'the chain HEADLINE walks all sixteen rooms in one run, so it enters '
-                + 'every bridged room the segments do — L4\'s `bob@64,64`, L5\'s three '
-                + 'and L6\'s two — and drives each through the whole lifetime its '
-                + 'segment does. The same exposure as `r7-act2-full`, whose route it '
-                + 're-derives from the solver. ⚠ AND L14 IS THE FOURTH ROOM. ⛓ R9 '
-                + 'slice 12b″ changed WHY it is: the headline used to end at the L14 '
-                + 'ARRIVAL, and L14 was a room it entered and never walked — the '
-                + 'parked-arrival shape `r9-solve-13` has. The sixteenth segment CROSSES '
-                + 'it, so the headline drives all six of L14\'s bobs for 145 ticks and '
-                + 'ends one room further on, at the L15 arrival. ⛔ THE LEVELS DID NOT '
-                + 'MOVE: L15 holds no `bob` at all (a pushable block, two breakable '
-                + 'rocks, a button, a lock, a chest, two stairs, three torches), so the '
-                + 'room the chain gained is not a bridged one and the claim is the same '
-                + 'four rooms.',
-        }),
         Object.freeze({
             name: 'r9-solve-13', levels: Object.freeze([14]), bobs: 0, ticks: 74,
             addedBy: 'R9 slice 6 (the true-start solver chain)',

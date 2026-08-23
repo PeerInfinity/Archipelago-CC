@@ -767,12 +767,31 @@ export function chainPolicy(chain) {
 }
 
 /**
- * ⛔ THE CHAINS, ORDERED. One entry per chain; each names its headline and
- * its segments IN ORDER.
+ * ⛔ THE CHAINS, ORDERED. One entry per chain; each names its segments IN
+ * ORDER, and OPTIONALLY a headline.
  *
- * `headline` is the same walk driven in ONE run. It is not decoration: the
- * concatenation identity is asserted against it, so a chain without one can
- * prove its seams and cannot prove it is the same walk.
+ * `headline` is the same walk driven in ONE run, and where a chain has one the
+ * concatenation identity is asserted against it.
+ *
+ * ⛔⛔ THE CAMPAIGN CHAIN HAS NONE, AND THAT IS THE INSTRUCTION NOW — ⚖ ruling
+ * 37 (user, 2026-08-23): *"the plan was to use the tools to play the individual
+ * campaign tapes in sequence, not combine them into one tape."* `r9-campaign`
+ * IS the sequence of its sixteen segment tapes; the claim that they are one
+ * walk is made where it is actually driven — `?tapes=r9-campaign` on the JS
+ * page and on the real recompiled game, each window admitted at its boundary
+ * against the LIVE world's own latch and diffed per tick against its own
+ * segment played ALONE (⚖ ruling 23). The concatenated tape never carried that
+ * claim; it was R8's `PLAYTHROUGH_CHAINS` convention, inherited at slice 6.
+ *
+ * ⛓ THE R7/R8 STAGED CHAINS KEEP THEIRS, and the reason is what they are for.
+ * `toy-west-pair` and `r8-d2` exist to prove the MACHINERY — that a cut is a
+ * measurement — so for them the one-run recording IS the subject, and
+ * `toy-west-pair`'s headline is additionally the thing its FREE ORACLE (a
+ * byte-frozen R1 fixture) is compared against. A chain whose headline is its
+ * subject cannot retire it; the campaign's headline was a redundant witness,
+ * and it was MEASURED to be redundant before it was deleted: the sixteen
+ * segments played alone and concatenated are the headline's 3616 observations
+ * with no differing index.
  *
  * `freeOracle` names a COMMITTED, FROZEN fixture whose observation stream
  * the headline should reproduce. `transition-west-return` has been in the
@@ -1176,7 +1195,12 @@ const CHAIN_DECLARATIONS = Object.freeze([
             + 'booting its predecessor\'s MEASURED latch, each walk derived by the live '
             + 'solver from goals read out of the atlas. ⚖ Ruling 11. It is the first '
             + 'chain to CREDIT the goal ledger from solver tapes.',
-        headline: 'r9-campaign',
+        /**
+         * ⛔ NO `headline` — ⚖ ruling 37, R9 slice 12d. The chain's ID is still
+         * `r9-campaign` and `?tapes=r9-campaign` still expands to the segments;
+         * what is gone is the 3615-tick concatenated TAPE that used to share
+         * the name.
+         */
         /**
          * ⛔ DERIVED FROM `campaignChain.js` (⚖ ruling 38 (1)). This used to be
          * sixteen typed names, and 12b″ could only assert that it and the
@@ -1193,12 +1217,20 @@ const CHAIN_DECLARATIONS = Object.freeze([
          */
         earns: Object.freeze(['sword@L10', 'chest@L11']),
         /**
-         * ⛓⛓ THE TIMED CLEARS, WITH THE INSTRUMENT THAT MEASURED EACH — SIX
-         * ROWS FOR THREE CLEARS, because `stagedClearFindings` keys provenance
-         * on `{level,tag}@at` and a headline that walks every room in ONE run
-         * declares the same clear at a different tick from the segment that
-         * owns it. The segment rows carry the ORIGINAL measurement; the
-         * headline rows carry it REBASED, under the third source.
+         * ⛓⛓ THE TIMED CLEARS, WITH THE INSTRUMENT THAT MEASURED EACH — THREE
+         * ROWS FOR THREE CLEARS, one per `{level,tag}@at` a SEGMENT declares.
+         *
+         * ⛔⛔ IT WAS SIX UNTIL ⚖ RULING 37 (R9 slice 12d), AND THE THREE THAT
+         * WENT ARE EXACTLY THE THREE WHOSE ONLY WITNESS WAS THE HEADLINE:
+         * `stagedClearFindings` keys provenance on `{level,tag}@at`, and a tape
+         * that walked every room in ONE run declared the same clear at a
+         * different tick from the segment that owns it — so L5's `{5,0}` had a
+         * second `model` row at 1157 and L8's two had `transported` rows at
+         * 1974 and 2373. With that tape gone no tape declares those ticks, and
+         * half 2 of the law ("every provenance row has a tape clear") would red
+         * on them BY NAME. ⛓ Nothing was lost: every surviving row's own
+         * evidence — `removedAt`+`fade`, `carriesAt`/`absentAt` — is the
+         * ORIGINAL measurement, and the segment that owns it still declares it.
          */
         clears: Object.freeze([
             Object.freeze({
@@ -1209,16 +1241,6 @@ const CHAIN_DECLARATIONS = Object.freeze([
                     why: '`chaserKillLockOpens`\'s removal (the third bob dies to the '
                         + 'ceiling and `Game.totalEnemies()` reaches zero) plus '
                         + '`activators.opensOnTick(RESPONDERS.lock.fade)`',
-                }),
-            }),
-            Object.freeze({
-                level: 5, tag: 0, source: 'model',
-                evidence: Object.freeze({
-                    removedAt: 1056,
-                    fade: 101,
-                    why: 'the HEADLINE\'s own run of the same room, 730 ticks into the '
-                        + 'chain — the same removal and the same fade, computed end to '
-                        + 'end by the model rather than rebased',
                 }),
             }),
             Object.freeze({
@@ -1238,23 +1260,6 @@ const CHAIN_DECLARATIONS = Object.freeze([
                     absentAt: 644,
                     why: 'the second `SandTrap`, the same instrument — a boundary '
                         + 'measured on both sides rather than a poll',
-                }),
-            }),
-            Object.freeze({
-                level: 8, tag: 0, source: 'transported',
-                evidence: Object.freeze({
-                    from: 'r8-solve-8', measuredAt: 246,
-                    why: 'the headline walks L8 identically to `r8-solve-8` — asserted '
-                        + 'held set for held set for 247 ticks by the producer\'s own '
-                        + 'oracle guard — so this is that measurement, rebased',
-                }),
-            }),
-            Object.freeze({
-                level: 8, tag: 1, source: 'transported',
-                evidence: Object.freeze({
-                    from: 'r8-solve-8', measuredAt: 645,
-                    why: 'the second `SandTrap`, the same transport — identical for 646 '
-                        + 'ticks',
                 }),
             }),
         ]),
@@ -1428,9 +1433,23 @@ export function playthroughSegmentNames() {
     return PLAYTHROUGH_CHAINS.flatMap((c) => c.segments);
 }
 
-/** Every tape a chain owns — segments plus the headline. */
+/**
+ * ⛔ EVERY TAPE ONE CHAIN OWNS — its segments, plus its headline IF IT HAS ONE.
+ *
+ * ⛓⛓ R9 SLICE 12d, ⚖ RULING 37: `headline` is OPTIONAL now. The campaign chain
+ * has none — it IS the sequence of its segment tapes, played in order — and a
+ * `[...segments, chain.headline]` that appended `undefined` for it would send
+ * every consumer looking for a fixture named "undefined". One spelling, here,
+ * so the six call sites that walked a chain's tapes cannot each get it wrong
+ * their own way.
+ */
+export function chainTapeNames(chain) {
+    return chain.headline ? [...chain.segments, chain.headline] : [...chain.segments];
+}
+
+/** Every tape every chain owns — segments, and the headlines that still exist. */
 export function playthroughTapeNames() {
-    return PLAYTHROUGH_CHAINS.flatMap((c) => [...c.segments, c.headline]);
+    return PLAYTHROUGH_CHAINS.flatMap(chainTapeNames);
 }
 
 /**

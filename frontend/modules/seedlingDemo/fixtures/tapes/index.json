@@ -1204,13 +1204,6 @@
       "noHazards": []
     },
     {
-      "file": "r9-campaign.json",
-      "tickCount": 3615,
-      "bootLevel": 0,
-      "tapeVersion": 9,
-      "noHazards": []
-    },
-    {
       "file": "r9-l0-sword-dash.json",
       "tickCount": 37,
       "bootLevel": 0,
