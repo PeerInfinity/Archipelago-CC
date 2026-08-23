@@ -104,7 +104,7 @@ const NAME = 'r9-l0-sword-dash';
  * ⛓ THE ROOM IS DERIVED, NOT PICKED. A sweep of every 16 px cell of eleven
  * chaser-free rooms, in both horizontal directions, for the longest run that
  * takes no wall, no transition and no hit in 70 ticks: L0's southern corridor
- * tops it at 81.85 px, and this cell walks 98.70 px over the tape's own length
+ * tops it at 81.85 px, and this cell walks 81.50 px over the tape's own length
  * with clearance to spare. The dash needs open ground precisely because it
  * MOVES the player — a witness that ran into a wall would pin x and lose the
  * claim on the tick it mattered.
@@ -137,6 +137,8 @@ const run = createLevelRun({
 const EAST = new Set(['right']);
 const EAST_PRESS = new Set(['right', 'primary']);
 const perTick = [];
+/** The player's own centre at tick 0 — `BOOT` is the TILE, 8 px to its west. */
+const startX = run.state.x;
 
 /**
  * ⛓ THE WARM-UP IS DERIVED FROM THE WALK, NOT CHOSEN. `right` is held until
@@ -253,7 +255,10 @@ check(`⛓ …and the impulse itself is the jump PLUS the friction that preceded
         + `= ${SLASH_DASH_FORCE} - ${FRICTION}`).join('; '));
 check('⛔ the corridor stayed OPEN — no wall pinned the claim',
     trace.every((r) => r.x !== r.before.x || r.before.vx === 0),
-    `travelled ${(run.state.x - BOOT.x).toFixed(2)} px from x ${BOOT.x}`);
+    // ⚠ From the player's own STARTING CENTRE, not from `BOOT.x`: a boot is a
+    // tile coordinate and the constructor centres the player 8 px into it, so
+    // differencing against `BOOT.x` overstates the travel by exactly that.
+    `travelled ${(run.state.x - startX).toFixed(2)} px from x ${startX}`);
 check('⛔ the player took no hits and never left the room',
     run.playerHits.length === 0 && run.playerDeaths.length === 0
         && run.transitions.length === 0,
@@ -324,7 +329,7 @@ if (CHECK) {
 console.log(`\n## ${NAME}: ${perTick.length} ticks, opening press at ${opening}, `
     + `${dashRows.length} dash(es) at k = ${dashRows.map((p) => p.t - opening).join('/')}, `
     + `${rows.filter((p) => p.outcome === 'swallowed').length} swallowed, `
-    + `travel ${(run.state.x - BOOT.x).toFixed(2)} px`);
+    + `travel ${(run.state.x - startX).toFixed(2)} px`);
 console.log('\n## THE SEALED TRAJECTORY — the model\'s per-tick answer, before the game sees it');
 for (const r of trace) {
     const row = rows.find((p) => p.t === r.t);
