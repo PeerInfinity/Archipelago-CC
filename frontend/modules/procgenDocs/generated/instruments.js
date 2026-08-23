@@ -201,7 +201,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 226,
         "browser": 74,
-        "cited": 74,
+        "cited": 78,
         "files": 245,
         "lineStyle": 19,
         "withDocblock": 245,
@@ -1229,7 +1229,9 @@ export const INSTRUMENTS = frz({
             ],
             "browser": false,
             "category": "check",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [
                 "keep"
@@ -2301,7 +2303,9 @@ export const INSTRUMENTS = frz({
             ],
             "browser": false,
             "category": "no prefix",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "gates.mjs",
@@ -2744,7 +2748,9 @@ export const INSTRUMENTS = frz({
             ],
             "browser": false,
             "category": "lint",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "lint-gate-labels.mjs",
@@ -5745,7 +5751,9 @@ export const INSTRUMENTS = frz({
             ],
             "browser": false,
             "category": "standing",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "standing-values.mjs",

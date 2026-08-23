@@ -13694,3 +13694,101 @@ Inertia: identity block **identical row for row** against a pristine
 `5c916efc0` worktree · thirteen producers' `--check` byte-identical · unfiltered
 vitest **334 / 10293** unmoved · **zero tape moves** (`reach-seedling-change`:
 PRODUCERS 0 · TAPES 0 · CHAINS 0, so the roster gate was not owed).
+
+### R9 slice 12e: FOUR TOOLS AND THE TWO LAWS THEY RETIRE — the pins read the reference, the standing values become a file, the gates run in one line, and a label that carries a count is a lint finding
+
+⚖ Ruling 38 items (4)(5)(6). Four instruments, and each one exists because a
+protocol rule was being kept by hand and a hand had been getting it wrong.
+
+**The heading pins stop costing a hand edit.**
+`frontend/modules/procgenDocs/docsRender.test.js` pinned the corpus heading
+total and `seedling-bot.md`'s own id count as literals, and every doc-editing
+slice since 11b went RED on both on its first unfiltered run and re-pinned them
+by hand with the headings itemised. ⚖ Ruling 22 already requires
+`generated/docsIndex.js` regenerated in the SAME commit as the doc, so what
+those pins actually want is *"the rendered corpus agrees with the generated
+reference"* — a STALENESS claim. Each `docs[]` row now carries `headings` and
+`counts` carries `headings`/`indexHeadings`, counted with the page's own
+`headingsOf`. Two things had to be said out loud in the row rather than
+relied on: the count is taken on the **unstripped** text (every other
+measurement on that row drops the GENERATED regions deliberately; the page does
+not, so a stripped count would be a true number about a document nobody reads),
+and the corpus total spans **eighteen** files while `counts.docs` is
+seventeen, because README is not a row and IS rendered. It is not a fixed point
+(trap 250): the two sides are computed at different times by different
+processes, and the mutant pair proves it — a heading added WITHOUT regenerating
+reds by name; the same edit WITH regeneration goes green with no hand edit at
+all. **This § is that mutant's first real customer.**
+
+**The standing values become a committed artifact.**
+`scripts/procgen/standing-values.json`, written by `standing-values.mjs
+--write`, never by hand: 55 rows, every one derived — 21 from
+`identity-block.sh`, 13 producers with a `--check`, the 26 `check-*.mjs` gates,
+the unfiltered suite. ⚖ Ruling 32 A is now mechanical: a slice's BEFORE is that
+file at its head and its AFTER is a regeneration plus a `git diff`. ⛔ The means
+changed mid-slice and the reason is worth keeping: the brief proposed
+restructuring `identity-block.sh`'s `r()` to take its command as a string, and
+`reachClosure.js`'s `identityRows()` already parses that shell — the refactor
+would have broken its regex and **silently emptied the identity section of
+every future reach report**. So the shell is byte-identical and
+`identityRows()` grew a `command` field instead. `cheap` is MEASURED, not
+declared: `--write` times every row and `--check` re-runs exactly the ones under
+a minute, quoting the rest with their own `measuredAt`.
+
+**The gates run in one line, and the verdict is the exit code.**
+`scripts/procgen/gates.sh local|live|reach` (body in `gates.mjs`) derives the
+roster from the gates' own `--host`/`--root`/`--pages` parsing: 26 gates, 21
+browser, 4 Windows-driver, **local 26, live 4**. Two derivations had to be
+transitive rather than literal, and each was measured: `browser` follows a
+gate's SPAWNS (`check-seedling-editor-export.mjs` reads no flag and imports no
+browser — it spawns the exporter, which brings both — so a flag-keyed roster
+would have skipped the one gate this slice was sent to repair), and `windows`
+keys on the ASSIGNMENT of the driver path, because a bare search for it matched
+five gates and one of them only NAMES it in a docblock sentence about its
+sibling (trap 566). ⛔ **A gate that exits non-zero fails, and so does a gate
+that exits 0 without printing a verdict** — slice 13 measured `-phases`
+CRASHING mid-run, printing no total, which a runner grepping totals reads as
+*nothing* rather than as a failure. `gates.sh reach <base>..HEAD` runs every
+browser gate `reach-seedling-change.mjs` names for a change, which is ⚖ ruling
+32 A's "re-measure only what the reach names" made runnable.
+
+**Three gate rows that had frozen a re-recorded tape's numbers.**
+`-export` was 27/2 and `-overlays` 23/1 at slice 13's head, stable, and one
+commit explains all of it: slice 11's `facingToward` repair (`64875843c`)
+re-recorded `r8-solve-18` from 573 ticks to 541 and moved its presses.
+`-overlays` had frozen `[33, 66, 104, 179, 212, 270]`; `-export` had frozen
+`tick 573 of 574` **and** `tick 171 of 254 frame(s)` — a third row of the same
+family that nobody had named, because `254` reads like a different subject from
+`573` until you ask the tape. All three now derive from the tape on disk, and
+`frames = tick_count + 1` is the exporter's own arithmetic. **29/0 and 24/0.**
+`ARROW_TICK = 171` stays a literal: it is an INPUT the row chose, and that
+distinction is the next tool's whole calibration.
+
+**A label that carries a count the check computes is a lint finding.**
+`lint-gate-labels.mjs` reports; `lintGateLabels.test.js` gates. Calibrated
+against two heads in a detached worktree — 13 gate findings at `5c916efc0`
+against 10 at this head, the delta being exactly the five sites slice 13
+cleared. Precision is a measurement, not a claim: `.length === 0/1` is dropped
+(*empty* and *exactly one* are singleton claims, and keeping them meant 490
+findings), a digit counts only in a counting position (`quota jta=15` is a
+configured value), and the corpus is the gates plus helpers plus `*.test.js`
+(adding the `plan-`/`probe-` instruments meant 107, every extra one a one-shot
+row whose number IS its finding). One apparent precision was a defect:
+*"contains a backtick ⇒ template literal"* hid three of the five calibration
+sites, because half these labels quote an identifier. A file that IMPORTS the
+scan holds its TEST DATA and is not scanned, or the allowlist ends up carrying
+its own fixtures.
+
+**How to run the gates now.** `bash scripts/procgen/gates.sh local` — the dev
+server at the repo root, `--root=` derived as `<host>/frontend` because that is
+the Pages-SHAPED root; `bash scripts/procgen/gates.sh live` for the four gates a
+published origin can answer; `bash scripts/procgen/gates.sh reach <base>..HEAD`
+for a change's own list. `node scripts/procgen/standing-values.mjs --check`
+re-runs the cheap half of the standing values and diffs;
+`node scripts/procgen/lint-gate-labels.mjs` lists the typed counts.
+
+⚠ **Residue.** `identity-block.sh` is still invisible to the instruments index:
+that index enumerates `.mjs` and `CITE_RE` matches `.mjs`, which is why the
+wrapper's body is `gates.mjs` with a three-line `.sh` shim. Extending both to
+`.sh` is a separate subject — it would pull `identity-block.sh` in, need a
+`#`-comment docblock reader, and move the reference's counts.
