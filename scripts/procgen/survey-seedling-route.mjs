@@ -101,6 +101,13 @@ import { fileURLToPath } from 'node:url';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
 const MODULE = join(REPO, 'frontend', 'modules', 'seedlingDemo');
+
+/**
+ * ⛓ The press-arm policy, READ rather than quoted — see `FAMILY_RULES`' first
+ * row. A top-level `await import` because `MODULE` is derived above it, and
+ * because the family table is built at module load.
+ */
+const { KILL_ARM_POLICY } = await import(join(MODULE, 'enemyDamage.js'));
 const TAPES = join(MODULE, 'fixtures', 'tapes');
 const OUT_DIR = join(REPO, 'NewDocs', 'plans', 'seedling-editor-survey');
 
@@ -843,11 +850,34 @@ async function solveOneStep(step) {
  * it found (⚖ the bounded-sweep law: name what you bounded).
  */
 const FAMILY_RULES = [
+    /**
+     * ⛔⛔ R9 SLICE 12b — THIS ROW USED TO PUBLISH A CLAIM THE CODE HAD
+     * ALREADY FALSIFIED, and the survey printed it on every run for a whole
+     * slice without anybody reading it.
+     *
+     * It ended with a hardcoded *"R8 handoff: `KILL_ARM_POLICY.Bob` still
+     * `refused` — 'nothing drove a PRESS against a chaser'"*. R9 slice 12
+     * lifted `KILL_ARM_POLICY.Bob` to `modelled` and drove the press against
+     * a real bob on the real game (kickoff §22.4/§22.5) — so from that commit
+     * on, the survey's own step-18 row asserted the opposite of the module it
+     * was reporting about.
+     *
+     * ⇒ THE VERDICT IS READ FROM `enemyDamage.KILL_ARM_POLICY`, NOT TYPED
+     * (⚖ ruling 17). A classifier that quotes a policy has to quote the
+     * policy, or it is a second copy of it that only agrees until one of them
+     * is edited — and the one nobody tests is the one that drifts. The
+     * SENTENCE the row makes is still the survey's own (the roster is refused,
+     * so the body has no live position); only the policy digit comes from the
+     * source of truth.
+     */
     [/chaser roster is REFUSED|no live position for it|priced "stepped"/,
-        'BRIDGE+KILL_ARM — the room\'s CHASER ROSTER is refused, so the body has no live '
-        + 'position: `bait` has no line to move it along and `kill` has no removal to '
-        + 'watch. R8 handoff: `KILL_ARM_POLICY.Bob` still `refused` — "nothing drove a '
-        + 'PRESS against a chaser"'],
+        () => 'BRIDGE+KILL_ARM — the room\'s CHASER ROSTER is refused, so the body has no '
+        + 'live position: `bait` has no line to move it along and `kill` has no removal to '
+        + `watch. \`KILL_ARM_POLICY.Bob\` is \`${KILL_ARM_POLICY.Bob.policy}\`${
+            KILL_ARM_POLICY.Bob.policy === 'modelled'
+                ? ' (R9 slice 12), so the press arm is NOT what is missing here — the '
+                + 'ROSTER refusal is'
+                : ' — "nothing drove a PRESS against a chaser"'}`],
     [/`Game\.shake`|is on screen at tick/,
         'CAMERA BAND — `levelRun` REFUSES an on-screen verdict for a body at the screen '
         + 'edge inside `Game.shake`\'s jiggle (camera.js, "THE SHAKE, AND WHY IT IS A '
