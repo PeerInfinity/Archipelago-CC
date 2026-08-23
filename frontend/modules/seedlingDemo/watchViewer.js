@@ -175,7 +175,11 @@ import {
     bodiesAt, channelSummary, collectRun, crushersAt, dangerQueriesAt, defaultLayerSet,
     hammerLinesAt, LAYER_IDS, MARKER_GLYPHS, markersVisibleAt, modelStreamOf,
     OVERLAY_LAYERS, overlaysFor,
-    parseAttackHold, parseLayersParam, pathPointsUpTo, SWING_WINDOW_NOTE, traceRowFields,
+    parseAttackHold, parseLayersParam, pathPointsUpTo,
+    // ⛓ ⚖ ITEM (v): the still frame samples the run it already holds — the
+    // SAME seam the replay and the manual drive read, never a fifth sampler.
+    sampleMovers,
+    SWING_WINDOW_NOTE, traceRowFields,
     traceSidecarPath, worldChangesAt, dialogueAt,
 } from './watchOverlays.js';
 import {
@@ -3520,10 +3524,33 @@ function previewLevel(levelSource, staging, layers, lifetime, afterDraw = null) 
         renderer.fit(world);
         renderer.draw(world, run.state, {
             on: layers.on,
-            // The still frame has no history and no run behind it: every
-            // channel that would describe one is EMPTY rather than absent, so
-            // the layers draw nothing instead of drawing something stale.
-            samples: [],
+            /**
+             * ── ⛓⛓⛓ ⚖ WATCH-PAGE ITEM (v) — THE STILL FRAME HAS A RUN ─────
+             *
+             * ⚖ The user, 2026-08-22: *"the page does not draw the ENEMIES on
+             * the first draw when a level is selected in solve mode"*.
+             *
+             * ⛔ THE OLD COMMENT HERE WAS HALF TRUE AND THE FALSE HALF WAS THE
+             * DEFECT. It said *"the still frame has no history and no run
+             * behind it"* — and there is no HISTORY, but there IS a run: it is
+             * `createRunForStaging`'s, built four lines up, and its
+             * `run.chasers` and `run.spinnerBodies` hold live bodies at this
+             * very instant. Handing `[]` was not describing an absence, it was
+             * discarding something the function already had, and the visible
+             * consequence was a room whose two bobs appeared only after
+             * somebody pressed a key.
+             *
+             * ⛓ ONE SAMPLE, AT CURSOR 0, from `sampleMovers` — the SAME seam
+             * the replay and the manual drive read, so the still frame's bodies
+             * are the same derivation and not a fifth sampler. It is a WALK of
+             * length one, which is exactly what a still frame is.
+             *
+             * ⚠ `markers` and `presses` STAY EMPTY, and that is not an
+             * oversight: a marker is something that HAPPENED and a press is
+             * something somebody DID, and neither has yet. Only the bodies
+             * exist before the first tick.
+             */
+            samples: [sampleMovers(run)],
             markers: [],
             presses: [],
             // ⛓ GROUP B: passed even though `presses` is empty, so the still
@@ -3575,6 +3602,27 @@ function previewLevel(levelSource, staging, layers, lifetime, afterDraw = null) 
             inside: inside ? { tag: inside.tag ?? null, rect: inside.rect } : null,
             solids: blockers.length,
         };
+        /**
+         * ── ⛓⛓⛓ ⚖ ITEMS (iv) AND (v) — WHAT THE STILL FRAME REALLY DREW ───
+         *
+         * ⛔ ITS OWN READOUT, NOT A FIELD ON `__editorSpawn`. That readout
+         * answers *"where is the player and does it fit"*; this one answers
+         * *"which bodies are on the canvas before anything has been pressed"*.
+         * Two questions under one name is the failure trap 550 records, and the
+         * two rows that read these have nothing to do with each other.
+         *
+         * ⛔ READ OFF THE RENDERER, NEVER RECOMPUTED. `renderer.drawn` is what
+         * the last `draw` PUT ON THE CANVAS; a readout derived here would be a
+         * derivation nothing on screen used, and it would agree with a renderer
+         * that drew nothing at all.
+         */
+        window.__editorStill = {
+            level: run.level,
+            drawn: renderer.drawn,
+            // ⚠ The ONE sample the frame was handed, named so a row can tell
+            // "no bodies in this room" from "no sample was passed".
+            samples: 1,
+        };
         return { drew: true, level: run.level, why: null };
     } catch (e) {
         // ⚠ A REFUSED PREVIEW HAS NO SPAWN TO REPORT, and `null` says so
@@ -3582,6 +3630,10 @@ function previewLevel(levelSource, staging, layers, lifetime, afterDraw = null) 
         // `clear: true` under a room that would not build is the readout
         // lying about the room on screen.
         window.__editorSpawn = null;
+        // ⚠ AND THE DRAW MANIFEST WITH IT — a refused preview drew nothing, and
+        // leaving the LAST room's bodies standing would be the readout lying
+        // about the canvas, which is the same defect one field over.
+        window.__editorStill = null;
         lifetime.report(`the level preview refused: ${e.message}`, () => {
             $('detail').textContent = `⚠ this block will not build, so nothing is drawn yet — `
                 + `${e.message}`;

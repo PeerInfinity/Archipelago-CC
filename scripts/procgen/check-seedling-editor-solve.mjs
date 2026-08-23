@@ -197,6 +197,56 @@ if (web.status !== 'ok') {
         + `(${web.tickCount} ticks; node ${node.ms} ms on the same machine)`);
 }
 
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ ⚖ WATCH-PAGE ITEMS (v) AND (iv) — THE FIRST PAINT SHOWS THE BODIES
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⚖ The user, 2026-08-22: (v) *"the page does not draw the ENEMIES on the
+ * first draw when a level is selected in solve mode"* and (iv) *"the JS UI
+ * does not DRAW SAND TRAPS"*.
+ *
+ * ⛔ ONE ROOM ANSWERS BOTH, AND THAT IS WHY L6 IS THE SUBJECT. It holds TWO
+ * bridged `bob`s — live bodies the run steps, which item (v) is about — and
+ * FOUR `sandtrap`s — static `"Enemy"` census rows the run never steps, which
+ * item (iv) is about. The two halves come from different sources and fail
+ * independently, so they are two rows, and a build with item (v) and without
+ * item (iv) sees two bobs and ZERO sandtraps. That is the measurement that
+ * they are two changes.
+ *
+ * ⛔ READ OFF THE PUBLISHED DRAW MANIFEST, NOT OFF PIXELS. `__editorStill.
+ * drawn` is what the renderer's LAST `draw` actually put on the canvas — a
+ * check that recomputed the boxes would agree with a renderer that drew none.
+ *
+ * ⛔ AND BEFORE ANY PRESS. The whole defect was that the bodies appeared only
+ * once something drove the run; a row taken after a press could not see it.
+ */
+{
+    const L6 = `${HOST}/frontend/modules/seedlingDemo/watch.html?source=solve&level=6`;
+    await page.goto(L6, { waitUntil: 'domcontentloaded' });
+    await page.waitForFunction(() => window.__editorStill !== undefined,
+        null, { timeout: 180000 });
+    const still = await page.evaluate(() => (window.__editorStill ? {
+        level: window.__editorStill.level,
+        samples: window.__editorStill.samples,
+        hitboxes: window.__editorStill.drawn.hitboxes.boxes
+            .map((b) => `${b.tag ?? b.kind}@${b.rect.x},${b.rect.y}`).sort(),
+        hitboxWhy: window.__editorStill.drawn.hitboxes.why,
+    } : null));
+    check(still !== null && still.level === 6,
+        '⛓ the still frame is L6 and it published what it drew',
+        JSON.stringify(still && { level: still.level, samples: still.samples }));
+    /**
+     * ⛔ THE BODIES ARE NAMED, NOT COUNTED. A count cannot tell a swap from a
+     * match (trap 565) and here the risk is precisely a mix-up between the two
+     * families — two sandtraps drawn as bobs would satisfy any count.
+     */
+    check(still?.hitboxes.length === 2
+        && still.hitboxes.every((b) => b.startsWith('bob@')),
+    '⛓⛓⛓ ⚖ ITEM (v): the FIRST PAINT in solve mode carries L6\'s TWO live `bob` bodies — '
+        + 'before any press, from the run the still frame already held',
+    JSON.stringify(still?.hitboxes));
+}
+
 check(errors.length === 0, 'no page errors', errors.join(' | ') || 'clean');
 
 await browser.close();
