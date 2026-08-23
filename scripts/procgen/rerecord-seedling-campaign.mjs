@@ -916,21 +916,49 @@ async function grow() {
      * shape of defect ⚖ ruling 38 (1) exists to remove. So the growth SHELLS
      * each stage, every one of them reading the declaration fresh.
      */
+    /**
+     * ⛓ `--from=`/`--to=` PASS THROUGH to the pipeline, and that is what makes
+     * a growth REHEARSABLE. `--grow --to=S0` appends, authors the tapes and
+     * runs the pipeline's OFFLINE prediction — no browser, no GPU — which is
+     * the whole of what can honestly be checked in a scratch worktree: the dev
+     * server serves ONE tree, so a browser stage entered from a second one
+     * would drive the pages of the first and report about the wrong subject.
+     */
+    const passthrough = [`--run-dir=${RUN_DIR}`];
+    if (process.argv.some((a) => a.startsWith('--from='))) passthrough.push(`--from=${FROM}`);
+    if (process.argv.some((a) => a.startsWith('--to='))) passthrough.push(`--to=${TO}`);
     const steps = [
-        ['the producer authors the new segment and rewrites its predecessor\'s `why`',
+        ['the producer authors the new segment and re-emits its predecessor',
             ['scripts/procgen/solve-seedling-r9-campaign.mjs'], 'grow-producer'],
-        ['the pipeline S0..S5 over the grown chain',
-            ['scripts/procgen/rerecord-seedling-campaign.mjs', `--run-dir=${RUN_DIR}`],
+        [`the pipeline ${FROM}..${TO} over the grown chain`,
+            ['scripts/procgen/rerecord-seedling-campaign.mjs', ...passthrough],
             'grow-pipeline'],
-        ['the tape index', ['scripts/procgen/generate-tape-index.mjs'], 'grow-index'],
-        ['the frontier, re-derived',
-            ['scripts/procgen/census-seedling-campaign.mjs', '--write-frontier'],
-            'grow-frontier'],
-        ['the generated reference (the doc\'s chain table)',
-            ['scripts/procgen/generate-procgen-reference.mjs'], 'grow-reference'],
-        ['the standing values, re-measured',
-            ['scripts/procgen/standing-values.mjs', '--write'], 'grow-standing'],
     ];
+    /**
+     * ⛔⛔ THE FOUR SUMMARIES RUN ONLY AFTER A COMPLETE PIPELINE. `index.json`,
+     * the frontier, the generated reference and the standing values all
+     * DESCRIBE a finished tree. Writing them over a half-grown one would
+     * publish a set of numbers for a state nobody proved — and `standing-
+     * values.json` in particular is the artifact ⚖ ruling 32 A makes the next
+     * slice's BEFORE, so a rehearsal that stamped it would hand the next slice
+     * a baseline measured on an unfinished chain.
+     */
+    if (TO === 'S5') {
+        steps.push(
+            ['the tape index', ['scripts/procgen/generate-tape-index.mjs'], 'grow-index'],
+            ['the frontier, re-derived',
+                ['scripts/procgen/census-seedling-campaign.mjs', '--write-frontier'],
+                'grow-frontier'],
+            ['the generated reference (the doc\'s chain table)',
+                ['scripts/procgen/generate-procgen-reference.mjs'], 'grow-reference'],
+            ['the standing values, re-measured',
+                ['scripts/procgen/standing-values.mjs', '--write'], 'grow-standing'],
+        );
+    } else {
+        console.log(`\n## ⚠ REHEARSAL (--to=${TO}): the tape index, the frontier, the `
+            + 'reference and the standing values are NOT written — they describe a '
+            + 'FINISHED tree and this one is half-grown.');
+    }
     const ran = [];
     for (const [what, args, log] of steps) {
         const r = shell(what, 'node', args, log);

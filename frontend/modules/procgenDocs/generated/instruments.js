@@ -5459,7 +5459,8 @@ export const INSTRUMENTS = frz({
                 },
                 {
                     "how": [
-                        "arg"
+                        "arg",
+                        "startsWith"
                     ],
                     "name": "from"
                 },
@@ -5483,7 +5484,8 @@ export const INSTRUMENTS = frz({
                 },
                 {
                     "how": [
-                        "arg"
+                        "arg",
+                        "startsWith"
                     ],
                     "name": "to"
                 }
