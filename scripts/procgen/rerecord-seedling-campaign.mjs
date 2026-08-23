@@ -891,18 +891,28 @@ async function grow() {
      * (trap: a fixed point tests self-consistency, never correctness).
      *
      * ⇒ this is a REVIEW ITEM, printed verbatim, and it is the one place a
-     * growth still needs a human. Deriving it is residue and would need the
-     * `why` to be composed of parts a machine can check.
+     * growth still needs a human — but ⚖ RULING 39 (user, 2026-08-23: *"Yes, I
+     * approve of that change for the why"*) shrinks the class it can bite: a
+     * segment's `why` carries ONLY THE ROOM'S OWN STORY, and frontier-status
+     * sentences live in `campaign-frontier.json` and the readout. A room story
+     * does not decay when the chain grows past it. The print names the
+     * convention so the reviewer knows what they are checking against.
      */
     console.log('\n## ⛔⛔ THE ONE THING THIS COMMAND CANNOT DERIVE — REVIEW IT:\n');
     console.log(`   ${plan.predecessor}'s \`why\` in campaignChain.js reads:\n`);
     console.log(`     "${tail.why}"\n`);
-    console.log('   Does that sentence survive the chain growing past it? Slice 12b″\'s '
-        + 'predecessor said\n   "the chain STOPS at L14, whose CAMERA BAND the route '
-        + 'survey refuses" and it went\n   FALSE. ⛔ No gate can tell you: the producer\'s '
-        + '`--check` compares the tape\'s\n   `description` against this declaration, so a '
-        + 'sentence stale in BOTH is self-\n   consistent and passes. Edit '
-        + 'campaignChain.js before the growth if it has gone false.');
+    console.log('   ⚖ RULING 39 (user, 2026-08-23) IS THE CONVENTION TO CHECK IT '
+        + 'AGAINST: a segment\'s\n   `why` carries ONLY THE ROOM\'S OWN STORY. A '
+        + 'FRONTIER-STATUS sentence — "the chain\n   stops here", "the refusal is the '
+        + 'next work order" — belongs to `campaign-frontier\n   .json` and the readout, '
+        + 'never to a `why`. A room story does not decay when the\n   chain grows past '
+        + 'it; a status sentence does, which is the whole defect.\n');
+    console.log('   ⛔ NO GATE CAN ANSWER THIS FOR YOU. The producer\'s `--check` '
+        + 'compares the tape\'s\n   `description` against this declaration, so a sentence '
+        + 'stale in BOTH is self-\n   consistent and passes forever. Slice 12b″\'s '
+        + 'predecessor said "the chain STOPS\n   at L14, whose CAMERA BAND the route '
+        + 'survey refuses" and it went FALSE. Edit\n   campaignChain.js before the growth '
+        + 'if this one has.');
 
     if (DRY_RUN) {
         console.log('\n## --dry-run: PLANNED ONLY, nothing written.');
