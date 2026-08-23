@@ -6720,9 +6720,12 @@ export function solveSegment({
                                 .some((c) => c.id === target.id),
                         },
                     }, `${what} -> kill (${target.id}) by press`);
+                    // ⛓ `record.strikes` is the dwell's own — `runDwell` reads
+                    // it off the policy it was armed with, so there is one
+                    // owner of the number rather than two spellings of it.
                     records.push({
                         goal: goal.kind, strategy: 'kill', arm: 'chaser',
-                        target: target.id, strikes: strike.strikes, ...record,
+                        target: target.id, ...record,
                     });
                     return { escalations };
                 }

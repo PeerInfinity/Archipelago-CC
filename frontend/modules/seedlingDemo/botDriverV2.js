@@ -1563,7 +1563,7 @@ function runWait(run, perTick, wait, what) {
  *   no transition   a bait that leaves the room undoes itself — re-entry
  *                   respawns every enemy while a clear stays durable
  *                   (R7 slice 6d's measurement, trap 150).
- *   NO KEYS         the stance was derived; drifting off it changes the
+ *   NO WALK KEYS    the stance was derived; drifting off it changes the
  *                   straight line the whole bait is about.
  *   NO NEW HITS     ⛔ THE ONE THAT MAKES IT A CLAIM. `runBait`'s own lesson,
  *                   from the other side: a choreography that is run over
@@ -1576,9 +1576,32 @@ function runWait(run, perTick, wait, what) {
  * shut-before law, one verb over, and the reason it is checked here rather
  * than trusted to the caller is that the caller is a POLICY and a policy's
  * mistake looks exactly like a room that was already solved.
+ *
+ * ⛓⛓⛓ R9 SLICE 12b′ — **AND IT MAY BE ARMED.** The kill rung's CHASER arm
+ * (`solverBot.deriveKillByChaser`) is a dwell whose whole mechanism is that
+ * the body walks into sword reach and is struck; the strikes are the ONE
+ * opportunistic policy every walk uses (⚖ ruling 30(b)/(c)), never a second
+ * schedule. So `dwell.strike` is a policy object and this verb consults it
+ * per tick exactly as `drive` does.
+ *
+ * ⛔⛔ THE FIRST CUT PASSED THE POLICY AND THIS FUNCTION DROPPED IT. Slice
+ * 12b's ladder already handed `{ticks, strike, why, until}` here while the
+ * destructure below read three of the four keys, so the arm stood UNARMED
+ * and reported the policy's own `strikes` — zero — as its record. An options
+ * key nobody destructures is not an error, it is a SILENCE
+ * ([[feedback_dropped_option_key_is_a_silence]], trap 156's family), and the
+ * row below it in `botDriverV2.test.js` fails when the dwell is unarmed.
+ *
+ * ⚠ SO "NO KEYS" IS NOW "NO **WALK** KEYS", and the difference is real: an
+ * AIM tick holds a direction key, so an armed dwell DRIFTS off its stance by
+ * whatever one tick of acceleration and its friction decay come to. That
+ * drift is priced where the stance is derived (`solverBot.previewDwell`
+ * steps the player with the run's own stepper under this same policy's
+ * keys), which is the only place it can be priced without giving the probe
+ * information the walk cannot have (trap 567).
  */
 function runDwell(run, perTick, dwell, what) {
-    const { ticks, until, why } = dwell ?? {};
+    const { ticks, until, why, strike = null } = dwell ?? {};
     if (!Number.isInteger(ticks) || ticks <= 0) {
         fail(`${what}: dwell.ticks must be a positive integer BOUND, got `
             + `${JSON.stringify(ticks)}. The bound is a claim the run can refute; the `
@@ -1603,8 +1626,18 @@ function runDwell(run, perTick, dwell, what) {
     const at = { x: run.state.x, y: run.state.y };
     let metAt = null;
     for (let i = 1; i <= ticks; i += 1) {
-        perTick.push(NO_HELD);
-        const { transition } = run.advance(NO_HELD);
+        /**
+         * ⛓ THE WALK'S OWN KEYS ARE EMPTY AND THE POLICY DECIDES WHAT IS
+         * SPENT — the same call `drive` makes, against the same `strikeBodies`
+         * getter and the same tick counter, because a dwell that asked the
+         * question differently would be a second consumer of a one-consumer
+         * policy (⚖ ruling 30(c)).
+         */
+        const held = strike && !run.state.fall
+            ? strike.decide(run.state, run.strikeBodies, run.ticksCompleted, NO_HELD).held
+            : NO_HELD;
+        perTick.push(held);
+        const { transition } = run.advance(held);
         if (transition) {
             fail(`${what}: dwell tick ${i} of ${ticks} crossed from level `
                 + `${transition.from_level} to ${transition.to_level}. A bait stays in the `
@@ -1627,7 +1660,13 @@ function runDwell(run, perTick, dwell, what) {
             + 'whose straight line does not cross what the derivation thought it crossed, '
             + 'never a window to lengthen.');
     }
-    return { kind: 'dwell', at, ticks: metAt, bound: ticks, why, until: until.why };
+    return {
+        kind: 'dwell', at, ticks: metAt, bound: ticks, why, until: until.why,
+        // ⛓ What the policy actually spent, read from the policy rather than
+        // counted here — one owner of the number, and the caller's record row
+        // then carries the same one the equality rows assert on.
+        strikes: strike ? strike.strikes : 0,
+    };
 }
 
 function runHold(run, perTick, hold, what, before = null) {

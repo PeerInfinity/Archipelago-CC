@@ -163,7 +163,9 @@ describe('⛓ THE FLIP — slice 3 §10.3\'s corridor-lock exclusion, with a blo
     it('⛔ THE WHOLE POINT — the lock opens while the player is NOT on the button', () => {
         const out = solveRoom('C2-corridor-lock-weigh-dwell', CANONICAL);
         const rec = out.records.find((r) => r.strategy === 'weigh');
-        // `runDwell`'s invariants are "no transition, NO KEYS, no new hits", so
+        // `runDwell`'s invariants are "no transition, no WALK keys, no new
+        // hits" (R9 slice 12b′ armed it with the strike policy; this weigh
+        // passes none, so it spends none), so
         // a dwell that ended on the group's own observable is a lock that
         // opened with nobody standing on the presser. That sentence is the
         // slice: a `hold` cannot produce this record at all.

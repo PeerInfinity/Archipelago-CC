@@ -57,7 +57,7 @@ import {
 } from './solverBot.js';
 // ⛓ R9 slice 12b — ⚖ ruling 30(c)'s equality is between these two exact
 // functions, so the row calls both rather than a stand-in for either.
-import { drive } from './botDriverV2.js';
+import { drive, runDwell } from './botDriverV2.js';
 import { DEFAULT_TOLERANCE } from './botDriverV1.js';
 import { SLASH_HIT_TICKS } from './presses.js';
 // ⛓ R9 slice 1 (A3) — the kill lock's own tset, read from the module that owns it.
@@ -1309,5 +1309,51 @@ describe('R9 slice 12b: the OPPORTUNISTIC STRIKE — one policy, two consumers',
             expect(b.as3).toBe('Enemy');
             expect(b.enemyClass).toBe('Bob');
         }
+    });
+
+    /**
+     * ⛓⛓⛓ R9 SLICE 12b′ — **THE DWELL IS ARMED, AND THIS ROW FAILS WHEN IT
+     * IS NOT.**
+     *
+     * ⛔ SLICE 12b'S LADDER HANDED `runDwell` A POLICY AND `runDwell` DROPPED
+     * IT: its destructure read `{ticks, until, why}` of a four-key object, so
+     * the chaser arm stood still for its whole bound holding nothing and
+     * reported the policy's own untouched `strikes` — zero. An options key
+     * nobody destructures is a SILENCE, not an error
+     * ([[feedback_dropped_option_key_is_a_silence]]).
+     *
+     * ⛓ THE TWO ARMS ARE THE SAME STANCE, THE SAME BODY AND THE SAME BOUND,
+     * and they end differently: armed, the bob walks in, is struck three
+     * times through its own 30-tick i-frames and leaves the world at tick
+     * 215 with the player untouched; unarmed, the same wait is HIT at tick
+     * 119. So the row cannot pass with the policy dropped, which is the
+     * property the first cut lacked.
+     */
+    it('⛔ an ARMED dwell kills the body that walks in; the UNARMED one is hit', () => {
+        const armed = l6();
+        const strike = strikePolicyFor(armed);
+        const dwellFor = (run, policy) => ({
+            ticks: 400,
+            strike: policy,
+            why: 'the chaser arm\'s own shape — stand, let the body come, let the '
+                + 'one policy press',
+            until: {
+                why: 'bob@112,48 has left the world',
+                test: (r) => !(r.strikeBodies ?? []).some((c) => c.id === 'bob@112,48'),
+            },
+        });
+
+        const rec = runDwell(armed, [], dwellFor(armed, strike), 'the armed dwell');
+        expect(rec.ticks).toBe(215);
+        expect(rec.strikes).toBe(3);
+        expect(strike.strikes).toBe(3);
+        expect(armed.playerHits).toHaveLength(0);
+
+        // ⛔ THE CONTROL, AND IT IS THE WHOLE ROW. Same stance, same body,
+        // same bound, policy withheld — `runDwell`'s NO-NEW-HITS invariant
+        // fires, which is what a dropped `strike` key produced in anger.
+        const unarmed = l6();
+        expect(() => runDwell(unarmed, [], dwellFor(unarmed, null), 'the unarmed dwell'))
+            .toThrow(/the dwell was HIT at tick 119/);
     });
 });
