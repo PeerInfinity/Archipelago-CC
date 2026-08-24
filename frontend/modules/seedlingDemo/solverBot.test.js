@@ -2297,7 +2297,12 @@ describe('R9 slice 12b′: the DERIVED STANCE — scored, iterative, refuses by 
      */
     it('⛔ derives a stance for the body that CANNOT reach where the walk stands', () => {
         const { run, stance, why, ticks } = derive('bob@32,32');
-        expect(stance).toEqual({ x: 40, y: 24 });
+        // ⛓ R9 slice 12c″ — (40,24) at 12c′'s head. ⚖ Ruling 44's harmless
+        // window opened corridors this rung used to price as danger, so the
+        // SCORE picks a different cell; the claim below — out of leash from
+        // the walk, inside it from the stance — is what the row is about and
+        // is untouched.
+        expect(stance).toEqual({ x: 56, y: 40 });
         expect(stance).not.toEqual({ x: run.state.x, y: run.state.y });
 
         const body = run.strikeBodies.find((b) => b.id === 'bob@32,32');
@@ -2310,28 +2315,48 @@ describe('R9 slice 12b′: the DERIVED STANCE — scored, iterative, refuses by 
         // from the stance, which is the whole repair.
         expect(dist(run.state, centre)).toBeGreaterThan(leash);
         expect(dist(stance, centre)).toBeLessThanOrEqual(leash);
-        expect(ticks).toBe(106);
-        expect(why).toMatch(/dies at tick 234/);
+        expect(ticks).toBe(109);
+        expect(why).toMatch(/dies at tick 202/);
     });
 
     /**
      * ⛔ MUTANT (b)'s ROW — THE DURATION, not the instant. `deriveBaitStance`'s
      * trap-154 lesson one rung up: a cell can be danger-free when the walk
      * arrives and lethal forty ticks later, because a chaser spends those
-     * forty ticks walking. The refusal for `bob@64,64` carries both shapes of
-     * failure by name, and the WAIT one is the duration condition biting.
+     * forty ticks walking.
+     *
+     * ⛓⛓⛓ **R9 SLICE 12c″ — AND THIS REFUSAL IS RETIRED, WHICH IS THE
+     * MEASUREMENT AND NOT A REGRESSION.** At 12c′'s head `bob@64,64` refused
+     * by name: 64 cells inside its leash, 49 reachable, **49 of those 49
+     * refused by the forecast**, the WAIT going bad at a tick with
+     * `chaser:bob@128,64` on it. ⚖ Ruling 44 says the forecast was wrong about
+     * that: `Enemy.hitPlayer` gates the contact on the ENEMY's own
+     * `hitsTimer`, and the rung's own presses put those bodies inside their
+     * i-frames, so the map was pricing the safest window in the game as
+     * danger. With the harmless arm the derivation SUCCEEDS — and every one of
+     * L14's six bodies now derives a stance where five did before.
+     *
+     * ⚠ THE ROW KEEPS ITS TEETH by asserting the whole shape it used to
+     * refuse on: the stance, its leash arithmetic, the death it waits for, and
+     * that NO body reaches the player at any sample of either half — which is
+     * the same forecast that used to say the opposite.
      */
-    it('⛔ refuses BY NAME with its three counts — and names the WAIT that goes bad', () => {
-        const { stance, why } = derive('bob@64,64');
-        expect(stance).toBeNull();
-        expect(why).toMatch(/64 cell\(s\) inside its 80 px leash/);
-        expect(why).toMatch(/49 of those reachable/);
-        expect(why).toMatch(/49 of THOSE refused by the forecast/);
-        // Both refusal shapes, and the first is the one a static-leash disc
-        // could never produce.
-        expect(why).toMatch(/the WAIT is dangerous at tick \d+ — chaser:bob@128,64/);
-        expect(why).toMatch(/is still standing after the whole \d+-tick ceiling/);
-        expect(why).toMatch(/trap 154/);
+    it('⛓⛓ the WAIT refusal for `bob@64,64` is RETIRED by the harmless window — it derives '
+        + 'a stance now, and says why', () => {
+        const { run, stance, why, ticks } = derive('bob@64,64');
+        expect(stance).toEqual({ x: 56, y: 88 });
+        expect(ticks).toBe(115);
+        expect(why).toMatch(/22.6 px away, inside its 80 px leash, so it CHASES/);
+        expect(why).toMatch(/dies at tick 182/);
+        expect(why).toMatch(/NO body reaches the player at any tick of either half/);
+        // ⛓ AND IT IS THE SAME BODY THAT REFUSED: out of press reach from the
+        // walk, which is why a stance was needed at all.
+        const body = run.strikeBodies.find((b) => b.id === 'bob@64,64');
+        const centre = {
+            x: (body.rect.x + body.rect.right) / 2,
+            y: (body.rect.y + body.rect.bottom) / 2,
+        };
+        expect(dist(run.state, centre)).toBeGreaterThan(dist(stance, centre));
     });
 
     /**
@@ -2343,7 +2368,9 @@ describe('R9 slice 12b′: the DERIVED STANCE — scored, iterative, refuses by 
      */
     it('⛓ takes the BEST stance, not the first viable one — and carries the runners-up', () => {
         const { run, stance, runnersUp, clears } = derive('bob@96,80');
-        expect(stance).toEqual({ x: 120, y: 104 });
+        // ⛓ R9 slice 12c″ — (120,104) at 12c′'s head; the harmless window
+        // re-scored the scan. The CLAIM is the ordering, not the cell.
+        expect(stance).toEqual({ x: 88, y: 104 });
         expect(runnersUp.length).toBeGreaterThan(0);
         const nearer = runnersUp.filter((r) => dist(run.state, r) < dist(run.state, stance));
         expect(nearer.length).toBeGreaterThan(0);
@@ -2351,7 +2378,7 @@ describe('R9 slice 12b′: the DERIVED STANCE — scored, iterative, refuses by 
         for (const r of runnersUp) expect(r.deathAt).toBeGreaterThan(120 - 30);
         // ⛓ The record carries every body the wait removes, not only the one
         // asked for — the reason the NEXT climb finds a different room.
-        expect(clears).toEqual(['bob@96,80', 'bob@128,64']);
+        expect(clears).toEqual(['bob@96,80', 'bob@64,64']);
     });
 
     /**
@@ -2359,14 +2386,17 @@ describe('R9 slice 12b′: the DERIVED STANCE — scored, iterative, refuses by 
      * `killWindowTicks(tag) * 3 + HOLD_SLACK`, which on a bob is 108 for every
      * body in every room — it has no term for how long the body takes to WALK
      * to the stance, and that term dominates. The four bounds this room
-     * derives are 106, 148, 102 and 116: two above the formula and two below,
-     * so the difference is not a margin anybody could have added.
+     * derives are 109, 148, 102 and 116: two above the formula and two below,
+     * so the difference is not a margin anybody could have added. ⛓ R9 slice
+     * 12c″ moved exactly ONE of the four (106 → 109, `bob@32,32`, whose stance
+     * the harmless window re-scored); the other three are unmoved, which is
+     * what says the bound is the forecast's and not a constant.
      */
     it('⛔ the dwell bound is the forecast\'s own death tick, not a per-class constant', () => {
         const formula = killWindowTicks('bob') * 3 + 30;
         expect(formula).toBe(108);
         const bounds = {
-            'bob@32,32': 106, 'bob@128,64': 148, 'bob@96,48': 102, 'bob@176,112': 116,
+            'bob@32,32': 109, 'bob@128,64': 148, 'bob@96,48': 102, 'bob@176,112': 116,
         };
         for (const [id, want] of Object.entries(bounds)) {
             expect(derive(id).ticks).toBe(want);

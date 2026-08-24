@@ -103,6 +103,44 @@ describe('dangerAt — the four ingredients, each measured in a real room', () =
             expect(() => chaserDanger(boss, box(), 1)).toThrow(DangerMapError);
             expect(() => chaserDanger(boss, box(), 1)).toThrow(/ENCOUNTER SCRIPT/);
         });
+
+        /**
+         * ⛓⛓⛓ R9 SLICE 12c″, ⚖ RULING 44 — **THE HARMLESS WINDOW, AND THIS
+         * MAP CARRIED ZERO `hitsTimer` TERMS BEFORE IT.**
+         *
+         * `Enemy.hitPlayer` gates the player-damaging contact on the ENEMY's
+         * own timer, so a struck body cannot damage for its whole i-frame
+         * however close it steers. `levelRun`'s stepped-chaser arm has asked
+         * `enemyHitPlayerFires` since R6 slice 3; this map never asked, so the
+         * safest window in the game read as danger — which is the half of
+         * §28.6 that lived here rather than in `certifyDash`.
+         *
+         * ⛓ NON-VACUOUS IN BOTH DIRECTIONS: the SAME body at the SAME place,
+         * one tick of its own i-frame apart, is a source and then is not.
+         */
+        it('⛓⛓ a body inside its own i-frame is NOT a per-tick contact — and the same '
+            + 'body with the timer down IS', () => {
+            const onIt = playerBoxAt(run.chasers[0].x, run.chasers[0].y);
+            const live = [{ ...run.chasers[0], hitsTimer: 0 }];
+            const knocked = [{ ...run.chasers[0], hitsTimer: 1 }];
+            expect(chaserDanger(run, onIt, 0, live, { perTick: true })).toHaveLength(1);
+            expect(chaserDanger(run, onIt, 0, knocked, { perTick: true })).toEqual([]);
+        });
+
+        /**
+         * ⛔⛔ **AND THE WAIT ARM IS UNTOUCHED, WHICH IS A CLAIM AND NOT AN
+         * OVERSIGHT.** A dwell is priced through `bound * horizon` over a
+         * WINDOW, and a window has no single tick at which to ask
+         * `Enemy.hitPlayer` anything — an i-frame that expires inside it would
+         * make the answer a fact about the wrong moment. So the default is
+         * `perTick: false` and only `dangerAt`'s TRANSIT line turns it on.
+         */
+        it('⛔ the same i-framed body is STILL danger when the caller is pricing a window', () => {
+            const onIt = playerBoxAt(run.chasers[0].x, run.chasers[0].y);
+            const knocked = [{ ...run.chasers[0], hitsTimer: 29 }];
+            expect(chaserDanger(run, onIt, 0, knocked)).toHaveLength(1);
+            expect(dangerWhileWaiting(run, run.ticksCompleted + 30, onIt).danger).toBe(true);
+        });
     });
 
     /**

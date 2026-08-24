@@ -66,7 +66,9 @@
 import {
     arrowLaneForPlacement, arrowLaneRect, arrowRect, ARROW, stepArrow,
 } from './arrowTrap.js';
-import { contactPricing, contactRect, ENEMY_CLASSES, stepBoundFor } from './combat.js';
+import {
+    contactPricing, contactRect, ENEMY_CLASSES, plannerContactFree, stepBoundFor,
+} from './combat.js';
 import { chaserBoxAt, isBridgedChaser } from './chasers.js';
 import { hazardVolume, volumeHitsBox } from './hazards.js';
 import { rect, rectsOverlap } from './levelWorld.js';
@@ -351,7 +353,7 @@ export function hazardDanger(run, box) {
  * flags the run does not step a chaser, so it has no live position to offer
  * and this must not invent one from the census.
  */
-export function chaserDanger(run, box, horizon, bodies = null) {
+export function chaserDanger(run, box, horizon, bodies = null, { perTick = false } = {}) {
     const out = [];
     /**
      * ⛓⛓⛓ R9 SLICE 12 — **THE BODIES MAY BE A FORECAST'S**, and when they are
@@ -374,6 +376,35 @@ export function chaserDanger(run, box, horizon, bodies = null) {
      * not measured by its body.
      */
     for (const c of bodies ?? run.chasers ?? []) {
+        /**
+         * ⛓⛓⛓ R9 SLICE 12c″, ⚖ RULING 44 — **A BODY THE GAME'S OWN GATE SAYS
+         * CANNOT FIRE IS NOT A CONTACT.**
+         *
+         * `Enemy.hitPlayer` (`Enemies/Enemy.as:211`) gates the player-damaging
+         * contact on the ENEMY's `hitsTimer`, so a struck body is harmless for
+         * its whole 30-tick i-frame — it keeps steering (`Bob.update` has no
+         * such gate) and the player walks through it (`"Enemy"` is not in
+         * `Mobile.solids`). `levelRun`'s stepped-chaser arm has asked
+         * `enemyHitPlayerFires` since R6 slice 3 and files the refusal as a
+         * `contactsSuppressed` row; this map never asked at all, and carried
+         * ZERO `hitsTimer` terms. So the danger map priced the safest window
+         * in the game as danger. It is the same predicate, CALLED (⚖ ruling
+         * 17, trap 566), through the planner's wrapper — which prices an
+         * `uncertain` or off-screen verdict as DANGER rather than as safety.
+         *
+         * ⛔ **PER-TICK ONLY, AND THAT IS A CLAIM AND NOT AN OVERSIGHT.** In
+         * TRANSIT the sample carries the bodies as of ITS OWN tick and the
+         * horizon is 0, so "can this body damage me HERE" is exactly the
+         * question `Enemy.hitPlayer` answers at that tick. The WAIT arm prices
+         * a whole dwell window through `bound * horizon`; a window has no
+         * single tick to ask the predicate about, and an i-frame that expires
+         * inside it would be a claim about the wrong moment.
+         *
+         * ⛓ THE VERDICT IS `'on'`: this map holds no camera, and assuming the
+         * body IS drawn is the reading that lets its own state do all the
+         * refusing.
+         */
+        if (perTick && plannerContactFree(c, 'on').contactFree) continue;
         const row = ENEMY_CLASSES[c.tag];
         const bound = stepBoundFor(c.tag);
         if (bound === null) {
@@ -964,7 +995,8 @@ export function dangerAt(run, tick, box, { mode = 'wait', arrows = null, chasers
             ? arrowDangerDuringTransit(run, box, horizon, arrows)
             : arrowDanger(run, box, horizon)),
         ...hazardDanger(run, box),
-        ...chaserDanger(run, box, coupledHorizon, mode === 'transit' ? chasers : null),
+        ...chaserDanger(run, box, coupledHorizon, mode === 'transit' ? chasers : null,
+            { perTick: mode === 'transit' }),
         // ⛓ AUTONOMOUS (§14.2): a spinner cannot read the player, so it is
         // carried to the cell's own ETA in transit mode exactly as an arrow is.
         ...spinnerDanger(run, box, horizon),
