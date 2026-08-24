@@ -108,7 +108,8 @@ import { ENEMY_CLASSES, KILL_LOCK_TAGS, KILL_LOCK_TSET } from './combat.js';
 // receiver's i-frames, in one constant `killSchedule` has refused a smaller
 // value than since R5. The press arm never consulted it; the game found out.
 import {
-    KILL_PRESS_CADENCE, SLASH_ANIM_TICKS, slashSet, slashTimerTick,
+    DASH_CHAIN, DASH_DISPLACEMENT, KILL_PRESS_CADENCE, ORDINARY_SWING_PERIOD,
+    SLASH_ANIM_TICKS, slashSet, slashTimerTick,
 } from './combatVerbs.js';
 import {
     STRIKE_PRESS, armIsModelled, createStrikePolicy,
@@ -1460,6 +1461,25 @@ function senseContacts(run) {
  * @returns {{samples: Array<{x,y,tick}>, startTick: number, truncated: ?object}}
  */
 /**
+ * ⛓⛓⛓ R9 SLICE 12c′, ⚖ RULING 41 — **THE ROSTER-WIDE DASH PERMISSION, ONE
+ * FLAG STATE AND NO PER-ROOM LITERAL** (user, 2026-08-23: *"I want to make the
+ * change roster wide, not limited to level 14."*).
+ *
+ * ⛔ IT IS THE PERMISSION, NOT THE CHOICE. What it permits is a press
+ * `planSwordDash` SCHEDULED; the opportunistic dash is refused under either
+ * state (`strikePolicy`'s header says why, and §27.7 is the measurement:
+ * the flag alone took `r9-solve-14` from 145 t to 400 t). So flipping this
+ * changes what the LADDER MAY ASK FOR, and the planner still decides press by
+ * press.
+ *
+ * ⛓ A `dashPlan` handed to `strikePolicyFor` directly IS its own permission,
+ * which is what lets the offline proof run at a `false` head: the plan and the
+ * flag are the same grant said two ways, and `walkTo` only ever builds a plan
+ * when this is true — so at `false` no committed corridor can reach one.
+ */
+export const ALLOW_DASH_ROSTER_WIDE = false;
+
+/**
  * ⛓⛓⛓ R9 SLICE 12b — **THE ONE PLACE A STRIKE POLICY IS CONSTRUCTED.**
  *
  * ⚖ Ruling 30(c): what the probe certifies must be what the walk does. That is
@@ -1475,11 +1495,23 @@ function senseContacts(run) {
  * gate `stepChasersNow` opens with — trap 563), and without a sword `set
  * slashing`'s outer gate refuses every press anyway.
  */
-export function strikePolicyFor(run) {
+export function strikePolicyFor(run, { dashPlan = null } = {}) {
     const hasSword = run.inventory?.hasSword || run.inventory?.hasGhostSword || false;
     if (!hasSword) return null;
-    if ((run.strikeBodies ?? []).length === 0) return null;
-    return createStrikePolicy({ facingToward, facingKeys: FACING_KEYS, hasSword });
+    /**
+     * ⛔ A PLANNED DASH IS A MOVE, AND A MOVE DOES NOT NEED A BODY. The
+     * body-count fast path below is right for a STRIKE policy — with nothing
+     * in reach `decide` only ever hands back the walk's own keys — but a
+     * `dashPlan` presses for DISPLACEMENT, so a room with no bodies is exactly
+     * where its whole schedule would be spent. Returning `null` there would
+     * make `planSwordDash`'s plan silently unwalkable (⚖ ruling 30(c): the
+     * preview would carry it and the drive would not).
+     */
+    if (!dashPlan && (run.strikeBodies ?? []).length === 0) return null;
+    return createStrikePolicy({
+        facingToward, facingKeys: FACING_KEYS, hasSword, dashPlan,
+        allowDash: dashPlan ? true : ALLOW_DASH_ROSTER_WIDE,
+    });
 }
 
 /**
@@ -1601,8 +1633,24 @@ export function previewWalk(run, wps, tolerance = 0, { strike = null, standFor =
         // ⛔ THE POLICY IS ASKED WITH THE STATE THE PREVIOUS TICK LEFT, above
         // this tick's `slashTimerTick` — which is where `drive` asks it from,
         // and `slashPressForecast` does the ageing itself.
-        if (bodiesForPolicy && !state.fall) {
-            decision = strike.decide(state, bodiesForPolicy, at, walkHeld, {
+        /**
+         * ⛔⛔ R9 SLICE 12c′ — **THE POLICY IS ASKED ON EVERY TICK IT IS ARMED
+         * FOR, NOT ONLY ON THE TICKS THAT HAVE BODIES.**
+         *
+         * The first cut consulted it only while `bodiesForPolicy` was truthy,
+         * and `chasers.step` returns `null` in a room with no chaser forecast
+         * at all — so after the FIRST tick the policy was never asked again.
+         * Harmless while every press needed a body in reach; MEASURED as soon
+         * as one did not: a planned dash chain scheduled four presses in a
+         * body-free room and the walk took exactly ONE, the opening swing,
+         * with zero yields and zero refusals to explain it.
+         *
+         * ⛓ IT IS BYTE-INERT FOR THE STRIKE ARM: `decide` with an empty body
+         * list scans nothing, chooses nothing and hands back the walk's own
+         * keys, which is what the skipped call did.
+         */
+        if (strike && !state.fall) {
+            decision = strike.decide(state, bodiesForPolicy ?? [], at, walkHeld, {
                 slash: { state: slashState, endsAt: slashEndsAt, gate },
             });
             held = decision.held;
@@ -1633,7 +1681,16 @@ export function previewWalk(run, wps, tolerance = 0, { strike = null, standFor =
             // its own travel (~0.22 px), and the equality row below
             // measures whether that is visible in the held-set
             // sequence, which is the thing the corridor is made of.
-            if (chasers) chasers.hit(decision.target, state);
+            /**
+             * ⛓ R9 slice 12c′ — EVERY BODY THE RECT COVERS, not only the
+             * named one. A STRIKE press names its single aimed target (which
+             * is what every committed corridor was priced with, and §23.8 is
+             * why none can tell the two apart); a PLANNED press swings along
+             * the player's own travel and hands back the whole covered set.
+             */
+            for (const id of (decision.targets ?? [decision.target])) {
+                if (id !== null && id !== undefined && chasers) chasers.hit(id, state);
+            }
         }
         // A spear thrust live at the preview's start is consumed by the first
         // tick's `applyThrust`; nothing here creates another.
@@ -1652,11 +1709,14 @@ export function previewWalk(run, wps, tolerance = 0, { strike = null, standFor =
     let tick = startTick;
     const samples = [];
     let truncated = null;
+    let wpIndex = -1;
     for (const wp of wps) {
+        wpIndex += 1;
         let spent = 0;
         while (!hasArrived(st, wp, tolerance)) {
             if (spent >= DEFAULT_MAX_TICKS_PER_TARGET) {
                 truncated = {
+                    kind: 'stalled',
                     at: { x: wp.x, y: wp.y },
                     why: `the preview spent ${spent} tick(s) without arriving — the walk `
                         + 'is checked as far as it was previewed and no further',
@@ -1689,7 +1749,12 @@ export function previewWalk(run, wps, tolerance = 0, { strike = null, standFor =
             // the same bodies would test a pair that never meets, which is
             // the arrows' note verbatim and true here for the same reason.
             const chaserBodies = chasers ? chasers.step(st) : null;
-            const sample = { x: st.x, y: st.y, tick, arrows, chasers: chaserBodies };
+            // ⛓ R9 slice 12c′ — the sample carries WHICH LEG it belongs to, so a
+            // caller can measure a corridor's own length rather than the whole
+            // walk's. ⚖ Ruling 30(c) holds over a corridor's LENGTH (§27.8,
+            // trap 587), and a bound nobody can evaluate per leg is a bound
+            // nobody can respect.
+            const sample = { x: st.x, y: st.y, tick, arrows, chasers: chaserBodies, wp: wpIndex };
             samples.push(sample);
             // ⛔ `drive`'s own line, including the transport arm: a player in
             // flight presses nothing, and a preview that steered through a
@@ -1724,13 +1789,22 @@ export function previewWalk(run, wps, tolerance = 0, { strike = null, standFor =
             // the preview/drive equality row has both sides of its claim.
             sample.held = held;
             // The policy's next reading — see `bodiesForPolicy` above.
-            if (strike) bodiesForPolicy = chaserBodies;
+            if (strike) bodiesForPolicy = chaserBodies ?? [];
             st = step(st, held, { dashImpulse: combat.dashImpulse });
             combatAfter(tick - 1);
             if (st.transition) {
                 // A crossing ends the preview: the next level is a different
                 // world, and this map is scoped to `run.level`.
+                /**
+                  * ⛓ R9 slice 12c′ — `kind` NAMES WHICH TRUNCATION THIS IS.
+                  * A CROSSING is the walk arriving; a STALL is a wall. They
+                  * are the same field and opposite outcomes, and
+                  * `planSwordDash` has to compare two walks' lengths — which
+                  * it may do across crossings and must never do across a
+                  * stall.
+                  */
                 truncated = {
+                    kind: 'crossed',
                     at: { x: st.x, y: st.y },
                     why: `the preview crossed to level ${st.transition.to_level}; the `
                         + 'danger map is scoped to one room',
@@ -1767,17 +1841,18 @@ export function previewWalk(run, wps, tolerance = 0, { strike = null, standFor =
             const arrows = forecast ? forecast.step(st) : null;
             const chaserBodies = chasers ? chasers.step(st) : null;
             const sample = { x: st.x, y: st.y, tick, arrows, chasers: chaserBodies,
-                phase: 'dwell' };
+                phase: 'dwell', wp: wpIndex };
             samples.push(sample);
             let held = st.fall ? new Set() : NO_HELD_PREVIEW;
             const combat = combatBefore(st, tick - 1, held);
             held = combat.held;
             sample.held = held;
-            if (strike) bodiesForPolicy = chaserBodies;
+            if (strike) bodiesForPolicy = chaserBodies ?? [];
             st = step(st, held, { dashImpulse: combat.dashImpulse });
             combatAfter(tick - 1);
             if (st.transition) {
                 truncated = {
+                    kind: 'crossed',
                     at: { x: st.x, y: st.y },
                     why: `the dwell crossed to level ${st.transition.to_level}; a dwell `
                         + 'that leaves the room undoes itself (trap 150)',
@@ -1787,6 +1862,315 @@ export function previewWalk(run, wps, tolerance = 0, { strike = null, standFor =
         }
     }
     return { samples, startTick, truncated, stood: standFor };
+}
+
+/**
+ * ⛓⛓⛓ R9 SLICE 12c′ — **THE PREVIEW/DRIVE AGREEMENT BOUND** (§27.8, trap 587).
+ *
+ * ⚖ Ruling 30(c)'s equality — the preview and the drive spend the same keys —
+ * is TRUE and it is BOUNDED. `previewWalk` has no second pass, so `chasers.hit`
+ * runs at the press tick where the drive's `applyThrust` runs at press+1; 12b
+ * priced that skew at ~0.22 px of one body's travel and asserted the equality
+ * over a 42-tick corridor, where 0.22 px never reaches a held-set. On a LONG
+ * stand it does: on L14's own boot the sequences part at tick **207** with the
+ * roster default and at **144** with a dashing policy — a dash does not create
+ * the divergence, it brings it 63 ticks earlier, because a moved player is
+ * chased differently.
+ *
+ * ⛔ THE NUMBER IS 12c's MEASUREMENT AND IT IS NOT ALLOWED TO DECAY QUIETLY
+ * (trap 574): `solverBot.test.js`'s parting row asserts this constant IS the
+ * index that fixture measures, so a model change that moves the skew reds the
+ * row rather than silently loosening the bound this refuses against.
+ *
+ * ⇒ `planSwordDash` certifies CORRIDOR BY CORRIDOR and refuses to schedule a
+ * leg longer than this. A whole room previewed in one call would be certified
+ * against a preview the drive stops matching.
+ */
+export const PREVIEW_AGREEMENT_BOUND = 144;
+
+/**
+ * ⛓⛓⛓ R9 SLICE 12c′ — **THE PRESS SCHEDULE OF A SUSTAINED DASH CHAIN**,
+ * derived from the two constants that decide it rather than typed.
+ *
+ * `DASH_CHAIN` is `combatVerbs`' own derivation of what one `slashTimer`
+ * window admits, run under the rules a CONTROLLER actually has (a rising-edge
+ * key, `slashEnd` firing below the press): an opening ordinary swing, then
+ * dashes at its own offsets. The window is `ORDINARY_SWING_PERIOD` long and a
+ * dash does NOT refresh it, so the pattern repeats: swing, dashes, swing.
+ */
+export const DASH_CHAIN_PATTERN = Object.freeze([0, ...DASH_CHAIN.at]);
+
+/**
+ * ⛓⛓⛓ R9 SLICE 12c′, ⚖ RULING 35 — **`planSwordDash`: A PRESS TAKEN AS A
+ * MOVE.**
+ *
+ * *"Safety is a higher priority than speed, but I would still like the solver
+ * to dash to save time whenever there isn't a reason not to… I expect dashing
+ * towards the exit to work better for level 14 than walking and sword
+ * slashing."* (user, 2026-08-23).
+ *
+ * ── ⛔⛔ WHY THIS EXISTS AND THE FLAG DOES NOT DO IT ───────────────────
+ *
+ * §27.7 flipped `allowDash` alone and measured the result on the only campaign
+ * room that can reach the branch: `r9-solve-14` went **145 t → 400 t**. The
+ * dash model was right and the CHOOSER was wrong — a press taken because a body
+ * is in reach buys a displacement along whatever travel the walk happened to
+ * have, and the AVOID corridor must then be certified WITH it. Trap 589: an
+ * arithmetic that prices a MOVE prices it under a policy that CHOOSES it for
+ * that reason.
+ *
+ * ⇒ this chooses presses for the DISPLACEMENT they buy along the route. A
+ * planned press needs no body, spends no aim tick and no direction key —
+ * `set slashing`'s dash arm knocks the player back along their own VELOCITY,
+ * so the walk simply adds `primary` to the keys it was already holding.
+ *
+ * ── ⛔ WHY IT IS NOT `mover.planDash` AND NOT IN `mover.js` ────────────
+ *
+ * `mover.planDash` is §3.3's TICK-OPTIMAL TRAVERSAL over `KEY_SETS` on
+ * `stepV1`, and has nothing to do with the sword. A plan certified on `stepV1`
+ * cannot be walked by a `stepV2` drive that spends a `dashImpulse`: the impulse
+ * arrives as `useItemImpulse` ABOVE the tick's sweeps, so a V1 schedule and a
+ * V2 drive differ by the whole 9 px of every dash plus every collision the
+ * geometry decides — trap 118's exact shape, a schedule nobody drives. This is
+ * built on `levelRun.previewStepper()`, which carries the impulse as of 12c.
+ *
+ * ── WHAT IT CERTIFIES — THE CORRIDOR THE DASH CREATES ─────────────────
+ *
+ * NOT the marginal 9 px: that stays `certifyDash`'s claim and is asked per
+ * press, by the policy, on both sides. What THIS prices is the whole previewed
+ * corridor WITH the schedule in it — arrows and chasers stepped per tick,
+ * every strike's knockback applied — through the caller's OWN danger predicate
+ * (`certify`), which is `walkTo`'s `probeCorridor`. One predicate, not a
+ * second: a probe better informed than the walk certifies corridors the walk
+ * cannot keep (trap 567).
+ *
+ * ⛔ AND IT IS BOUNDED, PER LEG. ⚖ Ruling 30(c) holds over a corridor's LENGTH
+ * (§27.8, trap 587), so a candidate whose longest leg exceeds
+ * `PREVIEW_AGREEMENT_BOUND` is REFUSED BY NAME rather than certified against a
+ * preview the drive stops matching.
+ *
+ * ⛔ **AND A PLAN IS RETURNED ONLY IF IT IS FASTER.** ⚖ Ruling 35 puts safety
+ * over speed and speed only where certification is free; a schedule that
+ * certifies and does not shorten the walk is a refusal, not a plan.
+ *
+ * @param {object} run
+ * @param {object[]} wps  the corridor the ladder just certified
+ * @param {object} opts
+ * @param {number} opts.tolerance  the tolerance `drive` will use
+ * @param {?function} opts.certify `(samples) => hit|null` — the caller's own
+ *   danger predicate over a previewed walk. Omitted, only the walk's own
+ *   truncation and the leg bound are checked, which is what the offline proof
+ *   uses.
+ * @returns {{plan: ?object, ticks: ?number, saved: ?number, baseline: number,
+ *   legs: ?number[], candidates: object[], why: ?string}}
+ */
+export function planSwordDash(run, wps, { tolerance = 0, certify = null } = {}) {
+    const startTick = run.ticksCompleted;
+    const candidates = [];
+    const refuse = (why) => ({ plan: null, ticks: null, saved: null, baseline: null,
+        legs: null, windows: null, scanned: candidates.length, candidates, why });
+    /**
+     * ⛔ NO SWORD, NO DASH — REFUSED FIRST AND BY NAME. `set slashing`'s outer
+     * gate needs `hasSword || hasGhostSword`, so a press in a pre-sword room
+     * is `gated` and buys nothing. §27.7 measured that this is TWELVE of the
+     * campaign's twenty-three committed segments; asking each of them to
+     * preview a whole corridor per candidate tick would be a scan whose answer
+     * is known from one field.
+     */
+    if (!(run.inventory?.hasSword || run.inventory?.hasGhostSword)) {
+        return refuse('this room holds no sword, so `set slashing`\'s outer gate refuses '
+            + 'every press and no schedule can buy a single pixel');
+    }
+    const legsOf = (walk) => {
+        const legs = [];
+        for (const sample of walk.samples) legs[sample.wp] = (legs[sample.wp] ?? 0) + 1;
+        return [...legs].map((n) => n ?? 0);
+    };
+    const previewFor = (dashPlan) => {
+        const strike = strikePolicyFor(run, { dashPlan });
+        return { walk: previewWalk(run, wps, tolerance, { strike }), strike };
+    };
+    const scheduleFor = (starts) => {
+        const ticks = new Set();
+        for (const at of starts) for (const d of DASH_CHAIN_PATTERN) ticks.add(at + d);
+        return {
+            ticks,
+            starts: starts.slice(),
+            why: `⚖ ruling 35: ${starts.length} dash window(s) at `
+                + `${starts.map((t) => t - startTick).join(', ')} — each an ordinary swing `
+                + `to open the ${ORDINARY_SWING_PERIOD}-tick window, then `
+                + `${DASH_CHAIN.at.length} dash(es) at +${DASH_CHAIN.at.join('/+')}, each `
+                + `carrying the player ${DASH_DISPLACEMENT.total} px further along their own `
+                + 'travel',
+        };
+    };
+    /**
+     * ⛓ THE CONTROL IS THE SAME CALL. The baseline is the UNDASHED walk
+     * previewed by this very function, so "faster" compares two runs of one
+     * instrument rather than a number somebody carried in.
+     */
+    const base = previewFor(null).walk;
+    const baseline = base.samples.length;
+    /**
+     * ⛔⛔ A CROSSING IS NOT A TRUNCATION IN THE SENSE THAT MATTERS. Every
+     * `reach-exit` corridor ends by crossing and `previewWalk` stops there,
+     * so reading any `truncated` as "no length to compare" refuses the whole
+     * class this primitive exists for. MEASURED: the first cut did exactly
+     * that on L14 and reported a baseline of 145 with an EMPTY candidate list,
+     * which reads precisely like a planner that found nothing.
+     */
+    const crossed = base.truncated?.kind === 'crossed';
+    if (base.truncated && !crossed) {
+        return { ...refuse(`the UNDASHED corridor STALLS (${base.truncated.why}), so there `
+            + 'is no length for a schedule to beat'), baseline };
+    }
+    /**
+     * ⛓⛓⛓ **"DASH WHEREVER THERE IS NO REASON NOT TO", AS AN ALGORITHM**
+     * (⚖ ruling 35, the user's own words). One left-to-right pass: at each
+     * tick the walk is still running, ask whether opening a dash window HERE
+     * certifies and shortens the corridor. It does — take it, and skip past
+     * the window it opened, because two windows cannot overlap
+     * (`slashTimer` is not refreshed by a dash). It does not — say why, step
+     * one tick, ask again.
+     *
+     * ⛔ EARLIEST-FIRST RATHER THAN BEST-FIRST, and that is a choice with a
+     * reason: a dash taken EARLY shortens the horizon every later forecast
+     * has to price (⚖ ruling 35(b)), and each acceptance is re-measured
+     * against the walk the previous ones produced — so the schedule is
+     * greedy but never speculative.
+     *
+     * ⛔ THE SWEEP IS BOUNDED BY THE WALK'S OWN LENGTH and says so: `scanned`
+     * is how many ticks were asked about, and every rejected one carries its
+     * reason kind.
+     */
+    const windows = [];
+    let current = baseline;
+    let bestWalk = base;
+    let at = startTick;
+    while (at < startTick + current) {
+        const plan = scheduleFor([...windows, at]);
+        const { walk, strike } = previewFor(plan);
+        const row = { at: at - startTick, ticks: walk.samples.length, certified: false };
+        /**
+         * ⛔⛔ **A PRESS TAKEN TO MOVE MAY NOT ALSO BE A STRIKE**, and this is
+         * the rule the first driven run of this primitive bought.
+         *
+         * The greedy pass certified a schedule on L14 and the DRIVE then
+         * refused to step at tick 73 — *"whether `bob@176,112` is on screen
+         * depends on where inside `Game.shake`'s jiggle the camera landed"*.
+         * The preview could not have seen it: `previewWalk` walks a world
+         * frozen at the plan tick, so a shake the walk itself CAUSES is
+         * invisible to it. What causes one is a hit.
+         *
+         * ⇒ a scheduled press exists for the DISPLACEMENT it buys; a hit is a
+         * side effect that changes the room the corridor was certified for —
+         * knockback, an i-frame, a death, a camera shake — and ⚖ ruling 35 puts
+         * safety first. The STRIKE arm still strikes; the PLANNED arm must not.
+         * ⛓ It is asked of the previewed policy's own rows, so it is the same
+         * question on both sides of ⚖ ruling 30(c).
+         */
+        const struck = strike.plannedPresses.filter((r) => (r.targets ?? []).length > 0);
+        /**
+         * ⛓⛓ **WHAT THE SCHEDULE ACTUALLY BOUGHT**, carried on every candidate
+         * row so a refusal can be read as a MECHANISM rather than a verdict.
+         * A window that scheduled twenty presses and had nineteen YIELDED by
+         * `certifyDash` is not the same finding as one whose dashes all landed
+         * and still saved nothing — and "not faster" prints the same for both.
+         */
+        row.pressed = strike.plannedPresses.length;
+        row.dashed = strike.plannedPresses.filter((r) => r.dash).length;
+        row.yielded = strike.plannedSkipped.length;
+        row.yieldedFirst = strike.plannedSkipped[0]?.plannedSkipped?.why ?? null;
+        const legs = legsOf(walk);
+        const longest = Math.max(0, ...legs);
+        if (walk.truncated && walk.truncated.kind !== 'crossed') {
+            row.kind = 'stalled';
+            row.why = `the dashed corridor STALLS — ${walk.truncated.why}`;
+        } else if (Boolean(walk.truncated?.kind === 'crossed') !== crossed) {
+            row.kind = 'crossing';
+            row.why = crossed
+                ? 'the undashed corridor CROSSED and this one does not — the dash carries '
+                    + 'the player past the trigger, so its length is about a different journey'
+                : 'the dashed corridor crosses where the undashed one did not';
+        } else if (longest > PREVIEW_AGREEMENT_BOUND) {
+            row.kind = 'leg-bound';
+            row.why = `its longest leg is ${longest} tick(s), past the preview/drive `
+                + `agreement bound of ${PREVIEW_AGREEMENT_BOUND} (§27.8) — past that the `
+                + 'walk would be certified against a preview the drive stops matching';
+        } else if (struck.length) {
+            row.kind = 'would-hit';
+            row.why = `a scheduled press at tick ${struck[0].tick} would cover `
+                + `${struck[0].targets.join(', ')}. A press taken to MOVE may not also be a `
+                + 'strike: a hit changes the room the corridor was certified for — knockback, '
+                + 'an i-frame, a death, a camera shake the frozen preview cannot see — and '
+                + '⚖ ruling 35 puts safety over speed';
+        } else if (walk.samples.length >= current) {
+            row.kind = 'not-faster';
+            row.why = `${walk.samples.length} tick(s) against ${current} — a window that `
+                + 'does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed '
+                + `only where it costs no certification. It scheduled ${row.pressed} press(es), `
+                + `${row.dashed} of them dashes, and ${row.yielded} were YIELDED`
+                + `${row.yieldedFirst ? ` — first: ${row.yieldedFirst}` : ''}`;
+        } else {
+            const hit = certify ? certify(walk.samples) : null;
+            if (hit) {
+                row.kind = 'danger';
+                row.why = `the dashed corridor probes DANGEROUS at `
+                    + `(${hit.x.toFixed(1)},${hit.y.toFixed(1)}) at tick ${hit.tick}`;
+            } else {
+                row.certified = true;
+                row.legs = legs;
+            }
+        }
+        candidates.push(row);
+        if (row.certified) {
+            windows.push(at);
+            current = row.ticks;
+            bestWalk = walk;
+            at += ORDINARY_SWING_PERIOD;
+        } else {
+            at += 1;
+        }
+    }
+    if (!windows.length) {
+        return { ...refuse(`no dash window certified faster than the undashed ${baseline} `
+            + `tick(s) — ${candidates.length} start tick(s) scanned, each with its own `
+            + 'reason'), baseline };
+    }
+    const plan = scheduleFor(windows);
+    return {
+        plan,
+        ticks: current,
+        saved: baseline - current,
+        baseline,
+        legs: legsOf(bestWalk),
+        windows: windows.map((t) => t - startTick),
+        scanned: candidates.length,
+        candidates,
+        why: null,
+    };
+}
+
+/**
+ * ⛓ R9 slice 12c′ — one trace row per REASON KIND a dash window was rejected
+ * for, with its count and the first example. See the call site for why the
+ * whole scan is not transcribed.
+ */
+function dashRejectionSummary(dash) {
+    const byKind = new Map();
+    for (const c of dash.candidates ?? []) {
+        if (c.certified) continue;
+        if (!byKind.has(c.kind)) byKind.set(c.kind, { n: 0, first: c });
+        byKind.get(c.kind).n += 1;
+    }
+    const rows = [...byKind.entries()].sort((a, b) => b[1].n - a[1].n)
+        .map(([kind, v]) => ({
+            option: `sword-dash window: ${kind}`,
+            why: `${v.n} of ${dash.scanned} scanned start tick(s) — first at walk-offset `
+                + `${v.first.at}: ${v.first.why}`,
+        }));
+    if (dash.why) rows.push({ option: 'sword-dash', why: dash.why });
+    return rows;
 }
 
 /** The walk's own keys during a standing tail — empty, and named as such. */
@@ -6667,6 +7051,22 @@ export function solveSegment({
      * segment between them crossed two of them. Eight-pixel samples are finer
      * than any volume on the hazard roster (the smallest is a 16 px box).
      */
+    /**
+     * ⛓ R9 slice 12c′ — THE SAMPLE-CHECKING HALF, FACTORED OUT so
+     * `planSwordDash` can price a DASHED corridor through the SAME predicate
+     * this rung refuses on. A second danger reading would be a probe better
+     * informed (or worse) than the walk, which is trap 567 from either side.
+     */
+    const probeSamples = (samples, except = null) => {
+        for (const s of samples) {
+            const d = withoutSources(
+                dangerDuringTransit(run, s.tick, playerBoxAt(s.x, s.y), s.arrows, s.chasers),
+                except);
+            if (d.danger) return { x: s.x, y: s.y, tick: s.tick, ...d };
+        }
+        return null;
+    };
+
     const probeCorridor = (wps, except = null) => {
         // ⛔ THE SAME TOLERANCE `drive` WILL USE. A preview that arrived on a
         // different criterion would spend different ticks, and the ETAs are
@@ -6684,12 +7084,8 @@ export function solveSegment({
          * directly rather than leaving to inspection.
          */
         const walk = previewWalk(run, wps, tolerance, { strike: strikePolicyFor(run) });
-        for (const s of walk.samples) {
-            const d = withoutSources(
-                dangerDuringTransit(run, s.tick, playerBoxAt(s.x, s.y), s.arrows, s.chasers),
-                except);
-            if (d.danger) return { x: s.x, y: s.y, tick: s.tick, eta: s.tick - walk.startTick, ...d };
-        }
+        const hit = probeSamples(walk.samples, except);
+        if (hit) return { ...hit, eta: hit.tick - walk.startTick };
         /**
          * ⛔ THE NON-VACUITY CHECK RUNS ON THE CLEAN PATH, not only on the
          * refusal — a probe that found nothing because it sampled nothing
@@ -7436,17 +7832,59 @@ export function solveSegment({
                 });
                 if (climbed.wps) { wps = climbed.wps; } else { continue; }
             }
+            /**
+             * ⛓⛓⛓ R9 SLICE 12c′, ⚖ RULING 35 — **THE PLANNER IS ASKED ONCE
+             * PER CORRIDOR, ABOVE THE ONE POLICY THE WHOLE WALK SHARES.**
+             *
+             * ⛔ AT `ALLOW_DASH_ROSTER_WIDE === false` IT IS NOT ASKED AT ALL,
+             * so no committed corridor can reach a plan and the flip is one
+             * line. When it is asked, its candidates are certified through
+             * `probeSamples` — this rung's OWN danger predicate, not a second
+             * reading of it (trap 567) — and the plan is handed to
+             * `strikePolicyFor`, the single construction site, so the preview
+             * and the drive walk the same schedule (⚖ ruling 30(c)).
+             *
+             * ⛔⛔ AND IT IS REPORTED ON THE **WALK ROW**, not on a row of its
+             * own. `seeRow` merges rows that land on the same tick, and every
+             * rung of one climb is decided before a tick is spent — so a
+             * separate `sword-dash` row at `perTick.length` OVERWRITES the
+             * walk row's `verb` and `path`. Measured: the first cut did
+             * exactly that and every campaign trace lost its waypoint list.
+             */
+            const dash = ALLOW_DASH_ROSTER_WIDE
+                ? planSwordDash(run, wps, { tolerance,
+                    certify: (samples) => probeSamples(samples, except) })
+                : null;
             seeRow({
                 tick: perTick.length,
                 saw: saw(),
                 goal: { kind: goal.kind, aim: { x: aim.x, y: aim.y } },
-                strategy: { verb: 'walk', waypoints: wps.length },
+                strategy: {
+                    verb: 'walk',
+                    waypoints: wps.length,
+                    ...(dash ? { swordDash: { planned: Boolean(dash.plan),
+                        ticks: dash.ticks, baseline: dash.baseline, saved: dash.saved,
+                        windows: dash.windows ?? null, legs: dash.legs ?? null,
+                        scanned: dash.scanned, why: dash.why } } : {}),
+                },
                 path: wps.map((w) => ({ x: w.x, y: w.y })),
-                rejected: attempt === 0 ? [] : [{
-                    option: 'keep-plan',
-                    why: 'the previous corridor was refuted by the world '
-                        + '(a blocked sweep or a stall); re-planned from the live position',
-                }],
+                rejected: [
+                    ...(attempt === 0 ? [] : [{
+                        option: 'keep-plan',
+                        why: 'the previous corridor was refuted by the world '
+                            + '(a blocked sweep or a stall); re-planned from the live position',
+                    }]),
+                    /**
+                     * ⛓ THE SCAN IS SUMMARISED, NOT TRANSCRIBED. It asks about
+                     * every tick the walk is still running, so a trace that
+                     * carried one row per rejected start would put a hundred
+                     * rows in every tape's sidecar. One row per reason KIND,
+                     * with its count and the first example, is what a reader
+                     * needs — and `scanned` says how many were asked, so a
+                     * bounded sweep names what it bounded.
+                     */
+                    ...(dash ? dashRejectionSummary(dash) : []),
+                ],
                 keys: [],
             });
             /**
@@ -7456,7 +7894,12 @@ export function solveSegment({
              * bodies it had already struck at every corner and would press
              * again into a live i-frame the moment a corridor bent.
              */
-            const strike = strikePolicyFor(run);
+            /**
+             * ⛓ A REFUSED PLAN COSTS THE WALK NOTHING: the policy is built
+             * without one and the corridor is walked exactly as it was before
+             * this existed.
+             */
+            const strike = strikePolicyFor(run, { dashPlan: dash?.plan ?? null });
             try {
                 for (let wi = 0; wi < wps.length; wi += 1) {
                     const last = wi === wps.length - 1;

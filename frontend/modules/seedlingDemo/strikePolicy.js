@@ -89,9 +89,42 @@
  *
  * ⛓ AND IT CLOSES §23.15's `slashRepeats` DOUBLE-COUNT FROM THIS SIDE. That
  * defect needs two presses inside `SLASH_HIT_TICKS` (5); a rule that refuses
- * two inside 20 refuses those a fortiori. The MODEL's own repair — a dash
- * press RESTARTS the animation, so the pending repeats are REPLACED rather
- * than appended — is named and is not this slice's.
+ * two inside 20 refuses those a fortiori.
+ *
+ * ── ⛔⛔⛔ WHAT `allowDash: true` MEANS AS OF R9 SLICE 12c′ ────────────
+ *
+ * **IT PERMITS THE DASHES `planSwordDash` SCHEDULED, AND NOTHING ELSE.**
+ *
+ * 12c built the arm that TOOK a body-gated dash wherever `certifyDash`
+ * certified it, and §27.7 measured what that buys on the only room in the
+ * campaign that can reach the branch: `r9-solve-14` **145 t -> 400 t**, a
+ * valid, zero-hit, 2.76× WORSE walk. The dash model was right; the CHOOSER
+ * was wrong. A press taken because a body is in reach displaces the player
+ * 9 px along whatever travel they happened to have, the AVOID corridor must
+ * then be certified WITH that displacement, and the corridor that certifies
+ * is a longer one (trap 589).
+ *
+ * ⇒ **THE OPPORTUNISTIC DASH IS RETIRED.** A body-gated press that would dash
+ * is refused under `true` exactly as under `false`; only the REASON differs,
+ * and both are `dashRefused` rows so a reader auditing a walk never has to
+ * know which flag produced the silence. What `true` adds is the PLANNED press:
+ * scheduled by tick, needing no body, costing no aim tick and no direction
+ * key, and taken for the displacement it buys along the route.
+ *
+ * ⛓ ⚖ RULING 41 IS KEPT AS WRITTEN. There is ONE flag state, roster-wide, and
+ * no per-room literal. What varies per WALK is the PLAN — which is the thing
+ * that ruling leaves to the planner, and the thing the preview and the drive
+ * are handed the same copy of (⚖ ruling 30(c)).
+ *
+ * ⚠ **WHAT THIS DOES NOT DECIDE, NAMED RATHER THAN QUIETLY DROPPED.** §23b.3
+ * recorded a stance where the DASHING policy took 0 hits over 400 ticks where
+ * the enforced one was hit — i.e. a possible SAFETY benefit for a dash taken
+ * while STANDING, not travelling. §27.8b then failed to reproduce the hit at
+ * all, so that benefit is unfalsified in either direction. A stance-dwell dash
+ * would need its own chooser (a dwell has no route to dash along, so
+ * `planSwordDash`'s question does not even apply to it) and its own witness.
+ * NOT BUILT: named here so the next slice does not read the retirement above
+ * as an answer to it.
  *
  * ── PRIORITISATION ────────────────────────────────────────────────────
  *
@@ -177,9 +210,16 @@ function armRefusalWhy(body) {
  * @param {Map<string, number>} owed  body id -> the tick a press of mine was
  *   issued, for as long as its hit tests are still to run.
  * @param {number} tick
+ * @param {?number} direction  ⛓ R9 slice 12c′ — a FIXED swing direction, for
+ *   a press whose `slashDirection` is not a choice. A PLANNED dash press is
+ *   taken for the displacement it buys along the route, and `set slashing`
+ *   latches `slashDirection = direction` — the player's own travel — so the
+ *   rect it swings is not the one an aim would have chosen. `null` keeps the
+ *   aiming behaviour every committed corridor was scanned with: one direction
+ *   per body, from `facingToward`.
  */
 export function strikeCandidates(player, bodies, {
-    facingToward, owed, tick, scale = SLASH_SCALE_NORMAL,
+    facingToward, owed, tick, scale = SLASH_SCALE_NORMAL, direction = null,
 }) {
     /**
      * ⛓⛓⛓ R9 SLICE 12c — **THE SCAN ASKS WITH THE RECT THE PRESS WILL SWING.**
@@ -215,10 +255,10 @@ export function strikeCandidates(player, bodies, {
         // `collideRectInto` FIRST and applies the distance gate second, so a
         // body inside 16 px that the rect does not cover is not a candidate —
         // and at the corners the two disagree by up to the box's half-diagonal.
-        const direction = facingToward(player, b.rect);
-        if (!rectsOverlap(slashRect(player.x, player.y, direction, scale), b.rect)) {
+        const facing = direction ?? facingToward(player, b.rect);
+        if (!rectsOverlap(slashRect(player.x, player.y, facing, scale), b.rect)) {
             rejected.push({ id: b.id, why: `in reach (${reach.toFixed(3)}) but the `
-                + `slash rect facing ${direction} does not cover it` });
+                + `slash rect facing ${facing} does not cover it` });
             continue;
         }
         if (b.hitsTimer > 0) {
@@ -239,7 +279,8 @@ export function strikeCandidates(player, bodies, {
                 + 'landed yet, so `hitsTimer` reading 0 is not an invitation' });
             continue;
         }
-        chosen.push({ id: b.id, as3: b.as3, enemyClass: b.enemyClass, reach, direction, rect: b.rect });
+        chosen.push({ id: b.id, as3: b.as3, enemyClass: b.enemyClass, reach,
+            direction: facing, rect: b.rect });
     }
     // NEAREST first, ties broken by id so the order is total and reproducible
     // on both sides of the preview/drive equality.
@@ -358,16 +399,61 @@ export function certifyDash(state, bodies, impulse) {
  * @param {object} opts.facingToward  `solverBot.facingToward`, injected rather
  *   than imported to keep this module out of `solverBot`'s import cycle.
  * @param {object} opts.facingKeys    `solverBot.FACING_KEYS`.
- * @param {boolean} opts.allowDash    ⚖ ruling 31(c): v1 MAY permit a press
- *   that lands inside `slashTimer` and therefore dashes. Off by default: the
- *   dash is a displacement the corridor must be certified WITH, and the
- *   planner-level primitive is slice 12c's.
+ * @param {boolean} opts.allowDash    ⚖ ruling 31(c) created it; ⚖ ruling 41
+ *   made it roster-wide. See `dashPlan` for what it permits as of 12c′: DASHES
+ *   THE PLANNER SCHEDULED, and nothing else.
+ * @param {?object} opts.dashPlan  ⚖ ruling 35, R9 slice 12c′ — see below.
  */
 export function createStrikePolicy({
-    facingToward, facingKeys, allowDash = false, hasSword = true,
+    facingToward, facingKeys, allowDash = false, hasSword = true, dashPlan = null,
 } = {}) {
     if (typeof facingToward !== 'function') fail('createStrikePolicy: facingToward is required');
     if (!facingKeys) fail('createStrikePolicy: facingKeys is required');
+    /**
+     * ⛓⛓⛓ R9 SLICE 12c′ — **THE PLANNER'S SCHEDULE, AND IT IS WHAT
+     * `allowDash: true` NOW PERMITS.**
+     *
+     * ⛔⛔ **MEASURED: THE FLAG ALONE IS A 2.76× REGRESSION** (§27.7). With
+     * `allowDash: true` and nothing else, this policy dashes at whatever body
+     * happens to be in reach; the displacement is one the AVOID corridor must
+     * then be certified WITH, and the corridor that certifies is a LONGER one.
+     * `r9-solve-14` went 145 t → 400 t, valid and zero-hit and 255 ticks
+     * worse. Trap 589: an arithmetic that prices a MOVE prices it under a
+     * POLICY that chooses it for that reason, and enabling the move without
+     * the chooser is a different experiment.
+     *
+     * ⇒ **THE OPPORTUNISTIC DASH IS RETIRED.** A body-gated press that would
+     * dash is refused under `true` exactly as it is under `false`; what
+     * changes is only the REASON. What `true` permits is a press this plan
+     * SCHEDULED — chosen for the displacement it buys along the route, not
+     * for the body it happens to reach (⚖ ruling 35's *"dashing towards the
+     * exit"*).
+     *
+     * ⛓ **AND A PLANNED PRESS COSTS NO AIM TICK AND NO DIRECTION KEY.** `set
+     * slashing`'s dash arm knocks the player back along their own VELOCITY
+     * (`knockbackImpulse(vx, vy, SLASH_DASH_FORCE)`), not along
+     * `slashDirection` — so a press taken for displacement needs no facing,
+     * and the walk keeps holding its own keys with `primary` ADDED. That is
+     * the whole reason this is a movement primitive and not a strike.
+     *
+     * ⛔ ONE POLICY OBJECT STILL (⚖ ruling 30(c)): the plan is a constructor
+     * argument, so `previewWalk` and `drive` are handed the same schedule and
+     * the same refusals. ⚖ Ruling 41 is kept — there is ONE flag state,
+     * roster-wide, and no per-room switch; what varies per WALK is the plan,
+     * which is what the ruling explicitly leaves to the planner.
+     *
+     * `{ ticks: number[]|Set<number>, why: string }` — ABSOLUTE tick indices,
+     * in the same counter `decide` is called with.
+     */
+    const plannedTicks = dashPlan
+        ? new Set(dashPlan.ticks instanceof Set ? [...dashPlan.ticks] : (dashPlan.ticks ?? []))
+        : new Set();
+    if (dashPlan && !allowDash) {
+        fail('createStrikePolicy: a dashPlan was given with `allowDash: false`. The plan IS '
+            + 'the permission the flag grants (⚖ ruling 41), so a scheduled walk on a '
+            + 'refusing policy is a corridor certified for presses that will never be '
+            + 'taken — the exact preview/drive gap ⚖ ruling 30(c) exists to close.');
+    }
     /** body id -> the tick I last pressed at it. */
     const owed = new Map();
     /**
@@ -397,6 +483,15 @@ export function createStrikePolicy({
         },
         /** ⛓ R9 slice 12c — the rows where a dash was refused, either arm. */
         get dashRefusals() { return trace.filter((t) => t.dashRefused).map((t) => ({ ...t })); },
+        /** ⛓ R9 slice 12c′ — the presses `planSwordDash` SCHEDULED and this walk took. */
+        get plannedPresses() {
+            return trace.filter((t) => t.decision === STRIKE_PRESS && t.planned)
+                .map((t) => ({ ...t }));
+        },
+        /** ⛓ R9 slice 12c′ — the scheduled presses the policy YIELDED, with the reason. */
+        get plannedSkipped() {
+            return trace.filter((t) => t.plannedSkipped).map((t) => ({ ...t }));
+        },
         get aimed() { return aimed; },
 
         /**
@@ -417,9 +512,91 @@ export function createStrikePolicy({
                 aimed = null;
                 owed.set(target, tick);
                 lastPressAt = tick;
-                const row = { tick, decision: STRIKE_PRESS, target, held: 'primary', dash };
+                const row = { tick, decision: STRIKE_PRESS, target, held: 'primary', dash,
+                    targets: [target] };
                 trace.push(row);
-                return { held: new Set(['primary']), decision: STRIKE_PRESS, target, dash };
+                return { held: new Set(['primary']), decision: STRIKE_PRESS, target, dash,
+                    targets: [target] };
+            }
+            /**
+             * ⛓⛓⛓ R9 SLICE 12c′ — **THE PLANNED PRESS: A MOVE, NOT A STRIKE.**
+             *
+             * It lands on THIS tick (`ticksAhead: 0`), because the walk's keys
+             * for this tick are what `decide` is returning — where an aim/press
+             * pair looks one tick ahead. The forecast is asked with the run's
+             * own primitives, so what the press WILL do is known before a key
+             * is spent on it.
+             *
+             * ⛔ A PRESS THAT OPENS NO WINDOW IS SKIPPED, not taken: `gated`
+             * and `swallowed` do nothing at all, so pressing would spend the
+             * key and buy neither the swing nor the impulse. A `slash` IS
+             * taken — it opens the 20-tick window the chain's dashes need, and
+             * costs only the key.
+             *
+             * ⛔ AND A SCHEDULED DASH IS STILL CERTIFIED. ⚖ Ruling 35 puts
+             * safety over speed, and `certifyDash` prices the marginal ground
+             * the impulse adds against the bodies BOTH SIDES can see — so a
+             * refusal here is taken identically by the preview and the drive,
+             * and the corridor `planSwordDash` measured is the corridor the
+             * walk keeps.
+             */
+            if (allowDash && plannedTicks.has(tick) && slash && !state.fall) {
+                const now = slashPressForecast(slash, {
+                    tick, ticksAhead: 0, direction: state.direction ?? 0,
+                    vx: state.vx ?? 0, vy: state.vy ?? 0,
+                });
+                const opens = now.outcome === 'dash' || now.outcome === 'slash';
+                const verdict = now.outcome === 'dash'
+                    ? certifyDash(state, bodies, now.impulse)
+                    : { certified: true, why: null, worst: null };
+                if (opens && verdict.certified) {
+                    /**
+                     * ⛓ WHICH BODIES THE RECT COVERS — ALL OF THEM. `slashDirection`
+                     * is the player's own travel, so the scan is asked with that
+                     * FIXED direction rather than one facing per body, and every
+                     * body the rect covers takes the hit the game would give it.
+                     * ⚠ The STRIKE arm still names ONE target; §23.8's AVOID
+                     * routing is why no committed corridor can tell them apart,
+                     * and a row measures exactly that.
+                     */
+                    const { chosen } = strikeCandidates(state, bodies, {
+                        facingToward, owed, tick, scale: now.scale,
+                        direction: state.direction ?? 0,
+                    });
+                    const targets = chosen.map((c) => c.id);
+                    for (const id of targets) owed.set(id, tick);
+                    lastPressAt = tick;
+                    const held = new Set([...walkHeld, 'primary']);
+                    trace.push({
+                        tick,
+                        decision: STRIKE_PRESS,
+                        planned: true,
+                        dash: now.outcome === 'dash',
+                        outcome: now.outcome,
+                        direction: state.direction ?? 0,
+                        targets,
+                        held: [...held].sort().join('+'),
+                        why: dashPlan.why ?? null,
+                    });
+                    return { held, decision: STRIKE_PRESS, planned: true,
+                        dash: now.outcome === 'dash', targets, target: targets[0] ?? null };
+                }
+                trace.push({
+                    tick,
+                    decision: STRIKE_NONE,
+                    planned: true,
+                    plannedSkipped: {
+                        outcome: now.outcome,
+                        why: opens
+                            ? `the scheduled dash is NOT CERTIFIED: ${verdict.why}. ⚖ Ruling 35 `
+                                + 'puts safety over speed, so the plan yields the press rather '
+                                + 'than taking ground nothing has priced.'
+                            : `a press here would be \`${now.outcome}\` — ${now.why} No window `
+                                + 'opens and no impulse is spent, so the key buys nothing.',
+                        worst: verdict.worst ?? null,
+                    },
+                });
+                return { held: walkHeld, decision: STRIKE_NONE };
             }
             /**
              * ⛓⛓⛓ R9 SLICE 12c — **WHAT THIS AIM'S PRESS WILL ACTUALLY DO,
@@ -470,15 +647,22 @@ export function createStrikePolicy({
             const { chosen, rejected } = strikeCandidates(state, bodies,
                 { facingToward, owed, tick, scale: forecast?.scale ?? SLASH_SCALE_NORMAL });
             /**
-             * ⛔⛔ THE DASH REFUSAL, AND IT IS ASKED AFTER THE SCAN ON PURPOSE.
+             * ⛔⛔⛔ R9 SLICE 12c′ — **THE OPPORTUNISTIC DASH IS RETIRED, AND
+             * THE REFUSAL IS NOW THE SAME UNDER BOTH FLAG STATES.**
              *
-             * The press this tick's aim earns lands on `tick + 1`; a press
-             * lands inside the open swing window — and therefore DASHES —
-             * when it is fewer than `ORDINARY_SWING_PERIOD` ticks after my
-             * last one. It is taken at the AIM rather than at the press
-             * because an aim spends a direction key, and a tick spent aiming
-             * at a press that will not be taken is a tick of drift for
-             * nothing.
+             * 12c built the `allowDash: true` arm that TOOK a body-gated dash
+             * wherever `certifyDash` certified it, and §27.7 then measured what
+             * that buys: `r9-solve-14` 145 t → 400 t, valid, zero-hit, 2.76×
+             * worse. The dash was real; the CHOOSER was wrong. A press taken
+             * because a body is in reach displaces the player 9 px along
+             * whatever travel they happened to have, and the AVOID corridor
+             * must then be certified WITH that displacement — the corridor
+             * that certifies is longer (trap 589).
+             *
+             * ⇒ a body-gated press that would DASH is refused under `true`
+             * exactly as under `false`; only the REASON differs. What `true`
+             * permits is the PLANNED press above, scheduled for the
+             * displacement it buys along the route.
              *
              * ⚠ BELOW THE SCAN BECAUSE THE SCAN IS WHAT WRITES THE TRACE. The
              * dash window (20) strictly contains the own-press-owed window
@@ -486,9 +670,21 @@ export function createStrikePolicy({
              * per-target rejections and leave the trace unable to say WHY a
              * body was passed over — the two rules answer different questions
              * and a reader needs both.
+             *
+             * ⛓ IT IS TAKEN AT THE AIM, not at the press: an aim spends a
+             * direction key, and a tick spent aiming at a press that will not
+             * be taken is a tick of drift for nothing.
+             *
+             * ⚠ AND UNDER `true` THE SCAN ABOVE ASKED WITH THE DASH RECT,
+             * because `slashPressForecast` says this press would dash. The
+             * bodies it names are therefore *the ones a dash would have
+             * reached* — which is the right list for a refusal row to carry,
+             * and is never a list anything acts on.
              */
-            if (!allowDash && chosen.length > 0 && lastPressAt !== null
-                && (tick + 1) - lastPressAt < ORDINARY_SWING_PERIOD) {
+            const wouldDash = forecast
+                ? forecast.outcome === 'dash'
+                : (lastPressAt !== null && (tick + 1) - lastPressAt < ORDINARY_SWING_PERIOD);
+            if (chosen.length > 0 && wouldDash) {
                 trace.push({
                     tick,
                     decision: STRIKE_NONE,
@@ -496,60 +692,26 @@ export function createStrikePolicy({
                     rejected,
                     dashRefused: {
                         lastPressAt,
-                        wouldPressAt: tick + 1,
+                        wouldPressAt: forecast?.at ?? tick + 1,
                         inReach: chosen.map((c) => c.id),
-                        why: `a press at tick ${tick + 1} is ${(tick + 1) - lastPressAt} `
-                            + `tick(s) after mine at ${lastPressAt} and \`slashTimer\` runs `
-                            + `for ${ORDINARY_SWING_PERIOD} — \`set slashing\`'s dash branch `
-                            + 'has no `!slashing` term, so it would DASH: a +2 impulse '
-                            + 'along travel that the preview stepper does not carry. '
-                            + '`allowDash` is false, so the press is refused rather than '
-                            + 'certified against a displacement the probe cannot see.',
+                        opportunistic: true,
+                        why: forecast
+                            ? `a press at tick ${forecast.at} WOULD DASH (${forecast.why}) and `
+                                + 'it is an OPPORTUNISTIC one — chosen because a body is in '
+                                + 'reach, not for the displacement it buys along the route. '
+                                + '⚖ Ruling 35 asks for dashes TOWARD THE EXIT, and §27.7 '
+                                + 'measured what the other kind costs: `r9-solve-14` 145 t -> '
+                                + '400 t. Only a press `planSwordDash` SCHEDULED may dash; '
+                                + 'this one is refused and the walk keeps its keys.'
+                            : `a press at tick ${tick + 1} is ${(tick + 1) - lastPressAt} `
+                                + `tick(s) after mine at ${lastPressAt} and \`slashTimer\` runs `
+                                + `for ${ORDINARY_SWING_PERIOD} — \`set slashing\`'s dash branch `
+                                + 'has no `!slashing` term, so it would DASH: a +2 impulse '
+                                + 'along travel. `allowDash` is false, so no press may dash at '
+                                + 'all and this one is refused rather than certified.',
                     },
                 });
                 return { held: walkHeld, decision: STRIKE_NONE };
-            }
-            /**
-             * ⛔⛔⛔ R9 SLICE 12c — **THE `allowDash: true` ARM: A DASH IS
-             * TAKEN ONLY WHERE IT IS CERTIFIED, AND REFUSED BY NAME WHERE IT
-             * IS NOT** (⚖ ruling 35, the user's own: *"safety over speed, dash
-             * wherever there is no reason not to"*).
-             *
-             * ⛓ IT IS THE SAME REFUSAL SHAPE AS THE `false` ARM ABOVE — a
-             * `dashRefused` row with its `why` — because a reader auditing a
-             * walk should not have to know which flag produced the silence.
-             * What differs is the REASON: `false` refuses because the
-             * displacement is uncertified BY POLICY; `true` refuses this one
-             * because it was certified and FAILED, or could not be priced.
-             *
-             * ⛓ AND IT IS TAKEN AT THE AIM, for the same reason 12b′'s is: an
-             * aim spends a direction key, and a tick spent aiming at a press
-             * that will be refused is a tick of drift for nothing.
-             */
-            if (allowDash && forecast?.outcome === 'dash' && chosen.length > 0) {
-                const verdict = certifyDash(state, bodies, forecast.impulse);
-                if (!verdict.certified) {
-                    trace.push({
-                        tick,
-                        decision: STRIKE_NONE,
-                        saw: bodies.length,
-                        rejected,
-                        dashRefused: {
-                            lastPressAt,
-                            wouldPressAt: forecast.at,
-                            inReach: chosen.map((c) => c.id),
-                            uncertified: true,
-                            worst: verdict.worst,
-                            why: `a press at tick ${forecast.at} WOULD DASH (${forecast.why}) `
-                                + `and the dash is NOT CERTIFIED: ${verdict.why}. `
-                                + '`allowDash` is true, so the refusal is the '
-                                + 'CERTIFICATION\'s and not the flag\'s — ⚖ ruling 35 puts '
-                                + 'safety over speed, and a dash that cannot be priced is '
-                                + 'refused rather than taken.',
-                        },
-                    });
-                    return { held: walkHeld, decision: STRIKE_NONE };
-                }
             }
             if (chosen.length === 0) {
                 if (rejected.length > 0) {
