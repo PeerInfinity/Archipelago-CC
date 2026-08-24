@@ -5995,6 +5995,43 @@ export function createLevelRun({
                     }));
             },
             /**
+             * ⛓⛓⛓ R9 SLICE 12c‴ — **THE BODIES AS THEY STAND RIGHT NOW**,
+             * without advancing anything.
+             *
+             * ⛔⛔ IT EXISTS BECAUSE A SNAPSHOT TAKEN BEFORE THE SWING IS NOT
+             * WHAT THE TICK LEFT. `step()` returns its projection immediately
+             * after moving and ageing the bodies, and the caller then applies
+             * that tick's sword window — so the array `step` handed back is
+             * STALE by exactly the hits the window just landed. The policy's
+             * next reading is supposed to be "what tick k-1 left"
+             * (`CONTACT_READING_LAG`), which on the DRIVE side is
+             * `run.strikeBodies` read at the END of the tick and therefore
+             * INCLUDES them.
+             *
+             * ⛓ MEASURED: with the preview re-using `step`'s array, the two
+             * sides' `hitsTimer` for a struck body differed by exactly ONE for
+             * the whole i-frame (29 against 30) — the same one-tick skew ⚖
+             * ruling 44's threshold turned into a six-tick divergence in the
+             * decisions it produces. Same projection, same fields; the only
+             * difference is WHEN it is taken.
+             */
+            bodies() {
+                return ids
+                    .map((id) => bodies.get(id))
+                    .filter((c) => c && !c.removed && !c.destroy)
+                    .map((c) => ({
+                        id: c.id,
+                        tag: c.tag,
+                        x: c.x,
+                        y: c.y,
+                        rect: chaserBoxAt(c.tag, c.x, c.y),
+                        as3: 'Enemy',
+                        enemyClass: ENEMY_CLASSES[c.tag]?.as3 ?? null,
+                        hits: c.hits,
+                        hitsTimer: c.hitsTimer,
+                    }));
+            },
+            /**
              * ⛓⛓⛓ R9 SLICE 12b — **A PRESS, APPLIED TO THE FORECAST'S OWN
              * BODY**, so that a corridor certified WITH strikes is certified
              * against the bodies those strikes actually leave behind.

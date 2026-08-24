@@ -80,7 +80,9 @@ import {
 import { SPINNER, hammerHitsPlayer } from './spinner.js';
 import { KILL_ARM_POLICY } from './enemyDamage.js';
 import {
-    DOWN, LEFT, RIGHT, SLASH_HIT_TICKS, SLASH_REACH, UP, distanceRectPoint, slashRect,
+    DOWN, EMPTY_SWORD_WINDOW, LEFT, RIGHT, SLASH_HIT_TICKS, SLASH_REACH, UP,
+    distanceRectPoint, slashReachFor, slashRect,
+    swordWindowReplace, swordWindowSchedule, swordWindowStep,
 } from './presses.js';
 /**
  * ⛓⛓⛓ R9 SLICE 4 — THE ROCK'S OWN TRANSCRIPTION, ASKED RATHER THAN COPIED.
@@ -109,7 +111,7 @@ import { ENEMY_CLASSES, KILL_LOCK_TAGS, KILL_LOCK_TSET, contactPricing } from '.
 // value than since R5. The press arm never consulted it; the game found out.
 import {
     DASH_CHAIN, DASH_DISPLACEMENT, KILL_PRESS_CADENCE, ORDINARY_SWING_PERIOD,
-    SLASH_ANIM_TICKS, slashSet, slashTimerTick,
+    SLASH_ANIM_TICKS, slashScaleFor, slashSet, slashTimerTick,
 } from './combatVerbs.js';
 import {
     STRIKE_PRESS, armIsModelled, createStrikePolicy,
@@ -1611,6 +1613,20 @@ export function previewWalk(run, wps, tolerance = 0, { strike = null, standFor =
      */
     const slashLive = strike ? run.slashInfo : null;
     let slashState = slashLive ? slashLive.state : null;
+    /**
+     * ⛓⛓⛓ R9 SLICE 12c‴ — **THE PREVIEW'S OWN SWORD WINDOW**, threaded exactly
+     * as `slashState` is and stepped by the same `presses.swordWindowStep` the
+     * run steps its own with.
+     *
+     * ⛔ IT STARTS EMPTY, AND THAT IS A CLAIM RATHER THAN A DEFAULT. A preview
+     * begins where `drive` is about to commit its keys for the next tick, and a
+     * thrust live at that moment is one the RUN has already scheduled and will
+     * apply itself — `run.slashInfo` carries the gate and the timer, which is
+     * everything a press decision needs, and there is no reading of a pending
+     * thrust for the preview to inherit. ⚠ A rung that gives the preview a
+     * mid-window start owes this line the run's live window.
+     */
+    let swordWindow = EMPTY_SWORD_WINDOW;
     let slashEndsAt = slashLive ? slashLive.endsAt : null;
     let spearPending = slashLive ? slashLive.gate.spearing : false;
     const gateAt = (t) => ({
@@ -1631,7 +1647,7 @@ export function previewWalk(run, wps, tolerance = 0, { strike = null, standFor =
      * `at` is `ticksCompleted` — the count BEFORE the tick runs, which is the
      * convention `drive` passes and the policy's `owed` window is measured in.
      */
-    const combatBefore = (state, at, walkHeld) => {
+    const combatBefore = (state, at, walkHeld, bodiesNow) => {
         if (!strike) return { held: walkHeld, dashImpulse: null };
         const gate = gateAt(at);
         let held = walkHeld;
@@ -1663,6 +1679,66 @@ export function previewWalk(run, wps, tolerance = 0, { strike = null, standFor =
         }
         // ── the tick's own top: `Player.slash()`'s first two lines ───
         slashState = slashTimerTick(slashState);
+        /**
+         * ⛓⛓⛓⛓ R9 SLICE 12c‴ — **THE SWORD WINDOW, STEPPED HERE, BY THE SAME
+         * FUNCTION `levelRun.advance` STEPS IT WITH** (⚖ rulings 17 and 30(c)).
+         *
+         * ⛔⛔ WHAT THIS REPLACES AND WHY IT WAS WRONG. The preview used to
+         * model a press as ONE `chasers.hit` at the PRESS TICK. The run applies
+         * the pending thrust at the TOP OF THE FOLLOWING tick and then runs four
+         * more tests, each with the rect recomputed from the LIVE position.
+         * §29.5 measured what that cost once ⚖ ruling 44's harmless window
+         * turned a 30-tick-wide refusal into a THRESHOLD on `hitsTimer`: the two
+         * sides read that value one apart, so one press per i-frame is spent by
+         * one side and yielded by the other, and the equality parted at 79.
+         *
+         * ⛓⛓⛓ **AND THE GAME SETTLED WHICH SIDE IS WRONG** — not this model
+         * arguing with itself. `probe-seedling-r9-harmless-window-mobiles.mjs`
+         * inverts a struck body's own `hits_timer` out of the game's `botMobiles`
+         * readout: three independent samples all put the landed hit at PRESS + 1.
+         * The drive's convention is the game's.
+         *
+         * ⛔ THE CURE IS THE ORDER AND THE REPEATS, NOT A LAG. A scratch build
+         * that merely DEFERRED the single previewed hit by one tick measured
+         * WORSE (the parting fell 79 → 62): deferring one shot leaves the four
+         * re-aimed tests missing, so the previewed room becomes a third room
+         * that is neither side's.
+         *
+         * ⛔ THE ORDER IS `advance`'s, and the two things that make it that are
+         * both above: the BODIES have already stepped this tick (`chasers.step`
+         * runs at the top of the loop, as `stepChasersNow` runs above
+         * `slashTimerTick`), and the PLAYER has not (`stepV2` is below this
+         * call, as it is below the thrust in the run). So the rect is taken from
+         * the PRE-MOVE player against POST-STEP bodies — the game's own pairing.
+         */
+        const fired = swordWindowStep(swordWindow, at);
+        swordWindow = fired.window;
+        for (const thrust of fired.fires) {
+            if (thrust.weapon !== 'sword' || !chasers) continue;
+            /**
+             * ⛓ `slash()`'s TWO GATES, in the game's order: `collideRectInto`
+             * against `getSlashRect()` first, then `distanceRectPoint` against
+             * `slashingSprite.width * scaleX`. Both read the THRUST's scale, not
+             * the run's current state, because the four repeats are the SAME
+             * swing re-aimed — a press landing inside another press's window
+             * must not retroactively re-scale the earlier one's tests.
+             */
+            const rectNow = slashRect(state.x, state.y, thrust.direction, thrust.scale);
+            const reachLimit = slashReachFor(thrust.scale);
+            for (const b of bodiesNow ?? []) {
+                if (!rectsOverlapLocal(rectNow, b.rect)) continue;
+                if (distanceRectPoint(state.x, state.y, b.rect) > reachLimit) continue;
+                /**
+                 * ⛔ THE RECEIVER DECIDES. `chasers.hit` runs `enemyHit`, whose
+                 * own five gates refuse an i-framed body, a dying one and a
+                 * destroyed one — which is why tests 2..5 of a press are no-ops
+                 * against the body test 1 struck, and why a DIFFERENT body that
+                 * walks into the rect on tick 3 is hit for real.
+                 */
+                chasers.hit(b.id, state);
+                if (thrust.planned) plannedStruck.push({ tick: at, id: b.id });
+            }
+        }
         let dashImpulse = null;
         if (decision && decision.decision === STRIKE_PRESS) {
             const r = slashSet(slashState, {
@@ -1675,44 +1751,28 @@ export function previewWalk(run, wps, tolerance = 0, { strike = null, standFor =
             slashState = r.state;
             if (r.outcome === 'slash' || r.outcome === 'dash') {
                 slashEndsAt = at + SLASH_ANIM_TICKS[slashState.anim];
+                /**
+                 * ⛓⛓ THE REPLACEMENT AND THE SCHEDULE, in `advance`'s own two
+                 * places: `play(anim, true)` restarts the animation so the
+                 * earlier window's remaining tests are dropped, and the press's
+                 * own thrust is scheduled for the TOP OF THE NEXT TICK.
+                 *
+                 * ⚠ `planned` RIDES ON THE THRUST so `plannedStruck` above can
+                 * tell a MOVE's hit from a STRIKE's — and it rides through the
+                 * four repeats too, because `swordWindowStep` spreads the
+                 * pending thrust into them.
+                 */
+                swordWindow = swordWindowReplace(swordWindow);
+                swordWindow = swordWindowSchedule(swordWindow, {
+                    weapon: 'sword',
+                    direction: r.slashDirection,
+                    pressTick: at,
+                    anim: slashState.anim,
+                    scale: slashScaleFor(slashState.anim),
+                    planned: decision.planned === true,
+                });
             }
             if (r.outcome === 'dash') dashImpulse = r.impulse;
-            // ⚠ ONE TICK LATE, exactly as the run is: `Player.update`
-            // calls `slash()` ABOVE `super.update()`, so the press on
-            // this tick fires its rect on the next one. The forecast is
-            // told at the press and the body is struck here because the
-            // preview has no second pass — which makes the previewed
-            // hit land one tick EARLY against the drive's. Named
-            // rather than hidden: it moves a knocked body 1 tick of
-            // its own travel (~0.22 px), and the equality row below
-            // measures whether that is visible in the held-set
-            // sequence, which is the thing the corridor is made of.
-            /**
-             * ⛓ R9 slice 12c′ — EVERY BODY THE RECT COVERS, not only the
-             * named one. A STRIKE press names its single aimed target (which
-             * is what every committed corridor was priced with, and §23.8 is
-             * why none can tell the two apart); a PLANNED press swings along
-             * the player's own travel and hands back the whole covered set.
-             */
-            for (const id of (decision.targets ?? [decision.target])) {
-                if (id === null || id === undefined || !chasers) continue;
-                chasers.hit(id, state);
-                /**
-                 * ⛓⛓⛓ R9 SLICE 12c‴, ⚖ RULING 45(a) — **WHAT A PLANNED PRESS
-                 * ACTUALLY STRUCK, RECORDED**, so `planSwordDash` can price the
-                 * hit instead of refusing the candidate for having one.
-                 *
-                 * ⛔ IT IS THE APPLICATION SITE AND NOT THE POLICY'S TARGET
-                 * LIST, deliberately. The policy names who it AIMS at, at the
-                 * press tick; this names who the window HIT. Today those are
-                 * the same set because the preview still applies one hit at the
-                 * press tick; when the preview adopts the shared sword window
-                 * the second becomes the game's true five-tick coverage and
-                 * every consumer of this field sharpens with it, without a flag
-                 * and without a second question.
-                 */
-                if (decision.planned) plannedStruck.push({ tick: at, id });
-            }
         }
         // A spear thrust live at the preview's start is consumed by the first
         // tick's `applyThrust`; nothing here creates another.
@@ -1805,13 +1865,20 @@ export function previewWalk(run, wps, tolerance = 0, { strike = null, standFor =
             // the count BEFORE the tick runs. One counter, two
             // conventions — and the policy's `owed` window is measured in
             // ticks, so the two must agree or one walk gets two answers.
-            const combat = combatBefore(st, tick - 1, held);
+            const combat = combatBefore(st, tick - 1, held, chaserBodies);
             held = combat.held;
             // ⛓ R9 slice 12b: the sample carries the KEYS this tick spends, so
             // the preview/drive equality row has both sides of its claim.
             sample.held = held;
-            // The policy's next reading — see `bodiesForPolicy` above.
-            if (strike) bodiesForPolicy = chaserBodies ?? [];
+            /**
+             * The policy's next reading — see `bodiesForPolicy` above.
+             * ⛓⛓ R9 slice 12c‴: taken from the forecast AS IT STANDS NOW, not
+             * from the array `step` handed back before this tick's sword window
+             * fired. `run.strikeBodies` on the drive side is read at the END of
+             * the tick and includes the hits; a stale snapshot here left the two
+             * sides' `hitsTimer` exactly one apart for a whole i-frame.
+             */
+            if (strike) bodiesForPolicy = (chasers ? chasers.bodies() : null) ?? [];
             st = step(st, held, { dashImpulse: combat.dashImpulse });
             combatAfter(tick - 1);
             if (st.transition) {
@@ -1866,10 +1933,10 @@ export function previewWalk(run, wps, tolerance = 0, { strike = null, standFor =
                 phase: 'dwell', wp: wpIndex };
             samples.push(sample);
             let held = st.fall ? new Set() : NO_HELD_PREVIEW;
-            const combat = combatBefore(st, tick - 1, held);
+            const combat = combatBefore(st, tick - 1, held, chaserBodies);
             held = combat.held;
             sample.held = held;
-            if (strike) bodiesForPolicy = chaserBodies ?? [];
+            if (strike) bodiesForPolicy = (chasers ? chasers.bodies() : null) ?? [];
             st = step(st, held, { dashImpulse: combat.dashImpulse });
             combatAfter(tick - 1);
             if (st.transition) {
@@ -1890,53 +1957,57 @@ export function previewWalk(run, wps, tolerance = 0, { strike = null, standFor =
  * ⛓⛓⛓ R9 SLICE 12c′ — **THE PREVIEW/DRIVE AGREEMENT BOUND** (§27.8, trap 587).
  *
  * ⚖ Ruling 30(c)'s equality — the preview and the drive spend the same keys —
- * is TRUE and it is BOUNDED. `previewWalk` has no second pass, so `chasers.hit`
- * runs at the press tick where the drive's `applyThrust` runs at press+1; 12b
- * priced that skew at ~0.22 px of one body's travel and asserted the equality
- * over a 42-tick corridor, where 0.22 px never reaches a held-set. On a LONG
- * stand it does: on L14's own boot the sequences part at tick **207** with the
- * roster default and at **144** with a dashing policy — a dash does not create
- * the divergence, it brings it 63 ticks earlier, because a moved player is
- * chased differently.
+ * is TRUE and it is BOUNDED. The bound is a MEASUREMENT and it is not allowed
+ * to decay quietly (trap 574): `solverBot.test.js`'s parting row asserts this
+ * constant is at or below the index those fixtures actually measure, so a model
+ * change that moves the skew reds the row rather than silently loosening the
+ * filter it refuses against.
  *
- * ⛔ THE NUMBER IS A MEASUREMENT AND IT IS NOT ALLOWED TO DECAY QUIETLY
- * (trap 574): `solverBot.test.js`'s parting row asserts this constant is at or
- * below the index that fixture measures, so a model change that moves the skew
- * reds the row rather than silently loosening the bound this refuses against.
+ * ── THE HISTORY, BECAUSE EACH NUMBER NAMED A DIFFERENT MECHANISM ──────
  *
- * ⛓⛓⛓ **R9 SLICE 12c″ BROUGHT IT DOWN — 144 → 79 — AND THE ROW IS WHAT
- * CAUGHT IT.** The harmless-window arm (⚖ ruling 44) turned a 30-tick-wide
- * refusal into a THRESHOLD on `hitsTimer`, and the two sides read that value
- * ONE TICK APART (the preview applies `chasers.hit` at the press tick where
- * `drive` applies it at press+1 — 12b's named skew). A blanket "any
- * `hitsTimer > 0` refuses" gives the same answer for a reading of 18 or 19; a
- * threshold does not, so one press per i-frame lands on the boundary and the
- * two sides take different presses. The dashing arm's parting fell 179 → 79;
- * the REFUSED arm's is 207 in every build, unmoved, which is what says the
- * cause is the arm and not the fixture.
+ * **144** (12c′) — `previewWalk` had no second pass, so `chasers.hit` ran at
+ * the PRESS TICK where `applyThrust` runs at press+1. 12b priced that skew at
+ * ~0.22 px of one body's travel; on a long stand it reached a held-set.
+ * **79** (12c″) — ⚖ ruling 44's harmless window turned a 30-tick-wide refusal
+ * into a THRESHOLD on `hitsTimer`, and the two sides read that value one apart,
+ * so one press per i-frame was spent by one side and yielded by the other. A
+ * blanket refusal is skew-PROOF and a threshold is not (trap 595). The cost was
+ * measured on the population the bound REJECTS (trap 596): `r9-solve-0` offers
+ * candidate legs of 92 and 95 and lost 168 t back to its committed 237.
  *
- * ⛔⛔ **AND IT COSTS ONE MOVER — MEASURED AFTER I FIRST MEASURED THE WRONG
- * POPULATION.** The first cut of this note said "it costs nothing: the longest
- * leg anywhere is 70". That was the longest leg of the plans that were
- * ACCEPTED — the survivors of the very filter being priced. Measured on what
- * the bound actually filters, the CANDIDATES, `r9-solve-0` offers legs of 92
- * and 95 and is now refused `leg-bound` on all 237 of its start ticks: under
- * the flip it goes back from 168 t to its committed 237. A bound's cost is a
- * fact about the population it REJECTS, and reading it off the accepted set is
- * a survivorship argument wearing a measurement's clothes.
+ * ⛓⛓⛓⛓ **195 (12c‴) — AND THE MECHANISM THE OTHER TWO NAMED IS CURED.**
+ * `previewWalk` steps `presses.swordWindowStep`, the same function
+ * `levelRun.advance` steps, in the run's own intra-tick order; and its policy
+ * reading is taken from the forecast AS IT STANDS after that window rather than
+ * from the array `step` handed back before it. ⛔ THE GAME SETTLED WHICH SIDE
+ * WAS WRONG rather than this model arguing with itself:
+ * `probe-seedling-r9-harmless-window-mobiles.mjs` inverts a struck body's own
+ * `hits_timer` out of the game's `botMobiles` readout, three independent
+ * samples agreeing, and puts the landed hit at PRESS + 1.
  *
- * ⚠⚠ **AND IT IS BOUNDING THE WRONG QUANTITY, WHICH THIS SLICE MEASURED AND
- * DID NOT FIX.** It bounds the longest LEG; the divergence accumulates over
- * the WHOLE WALK. `r9-solve-14`'s planned corridor has legs [48,32,36,5] —
- * every one inside 79 — and the DRIVE is hit at tick 75 of it. So this
- * constant is a necessary bound and not a sufficient one, and the sufficient
- * one is the two sides agreeing about `hitsTimer` in the first place.
+ * ⛓ MEASURED, on §29.5's own fixtures: **the KEYS no longer part at all** —
+ * the REFUSED arm agrees over the whole 260-tick stand (was 207) and the
+ * planned-dashing arm over the whole 120-tick stand (was 79).
+ *
+ * ⛔⛔ SO WHY IS THERE STILL A CONSTANT? Because a SECOND stream still parts,
+ * by a DIFFERENT mechanism, and retiring the bound would be claiming a cure the
+ * measurement does not cover. The bodies the POLICY is handed first differ at
+ * index **195**, and the difference is a DEATH REMOVAL: `bob@128,64` is killed
+ * at tick 169 and leaves the drive's roster one tick before it leaves the
+ * preview's. It changes no key inside these fixtures — but a body list is what
+ * the next tick's scan reads, so on some other walk it could, and a bound
+ * pinned to the earliest measured divergence of ANY stream is the honest place
+ * to stand until the removal staging is measured too.
+ *
+ * ⚠⚠ AND IT IS STILL BOUNDING THE WRONG QUANTITY, unchanged from 12c″: it
+ * bounds the longest LEG where a divergence accumulates over the WHOLE WALK.
+ * It is necessary and not sufficient; what makes it nearly free now is that the
+ * cure moved it far above every candidate leg the roster offers.
  *
  * ⇒ `planSwordDash` certifies CORRIDOR BY CORRIDOR and refuses to schedule a
- * leg longer than this. A whole room previewed in one call would be certified
- * against a preview the drive stops matching.
+ * leg longer than this.
  */
-export const PREVIEW_AGREEMENT_BOUND = 79;
+export const PREVIEW_AGREEMENT_BOUND = 195;
 
 /**
  * ⛓⛓⛓ R9 SLICE 12c′ — **THE PRESS SCHEDULE OF A SUSTAINED DASH CHAIN**,

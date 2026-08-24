@@ -1589,31 +1589,35 @@ describe('R9 slice 12c: the DASH, MODELLED — the oracle steps it and the polic
      * there, and the two sides stop agreeing about which body is in reach.
      */
     it('⛓⛓⛓ the PREVIEW and the DRIVE spend the same keys over a stand that DASHES — '
-        + 'through tick 78, and ⛔ THEY PART AT 79', () => {
+        + 'over the WHOLE STAND — the parting is CURED', () => {
         const r = standBoth(l14, 110, true, dashChainPlan(160));
         /**
-         * ⛔⛔⛔ **R9 SLICE 12c″ — THIS ROW USED TO BE AN EQUALITY OVER THE
-         * WHOLE STAND AND IT IS NOW AN EQUALITY WITH AN INDEX ON IT.**
+         * ⛓⛓⛓⛓ **R9 SLICE 12c‴ — THIS ROW WAS AN EQUALITY WITH AN INDEX ON IT
+         * AND IT IS AN EQUALITY AGAIN.**
          *
-         * ⚖ Ruling 44's harmless window is a THRESHOLD on `hitsTimer`, and the
-         * two sides read that value ONE TICK APART: `previewWalk` applies
-         * `chasers.hit` at the press tick where `drive` applies it at press+1
-         * (12b's named skew, ~0.22 px of one body's travel, invisible to a
-         * held-set until something turns ON it). 12c's blanket refusal —
-         * *any* `hitsTimer > 0` — answered the same for a reading of 18 or 19
-         * and was therefore skew-PROOF; a threshold is not, so one press per
-         * i-frame lands on the boundary and the two sides spend different keys.
-         * Measured at this head, both sides' traces: at t=73 they hold
-         * IDENTICAL body positions and timers of 18 (preview) against 19
-         * (drive); the preview yields on `bob@128,64` at `hitsTimer 9` on
-         * t=82 and the drive yields on the same body at `hitsTimer 4` on t=88
-         * — one decision, six ticks apart.
+         * 12c″ left it parting at 79. ⚖ Ruling 44's harmless window is a
+         * THRESHOLD on `hitsTimer` and the two sides read that value ONE TICK
+         * APART, so one press per i-frame was spent by one side and yielded by
+         * the other — a blanket refusal is skew-PROOF and a threshold is not
+         * (trap 595). ⛔ THE GAME SETTLED WHICH SIDE WAS WRONG rather than the
+         * model arguing with itself: `probe-seedling-r9-harmless-window-mobiles`
+         * inverts a struck body's own `hits_timer` out of `botMobiles` and puts
+         * the landed hit at PRESS + 1, three independent samples agreeing.
          *
-         * ⛓ THE PARTING IS THE ARM'S, NOT THE FIXTURE'S: the REFUSED arm parts
-         * at 207 in every build measured (12c′'s head and this one alike).
+         * ⛔⛔ AND THE CURE HAS TWO COMPONENTS, WHICH IS WHY THE NAIVE ONE
+         * FAILED. (1) `previewWalk` steps `presses.swordWindowStep` — the same
+         * function `advance` steps — in the run's own intra-tick order, so a
+         * press fires at T+1..T+5 with the rect re-aimed each tick instead of
+         * once at T. (2) its policy reading is taken from the forecast AS IT
+         * STANDS after that window, not from the array `step` handed back
+         * BEFORE it. Without (2) the parting went to 62 — WORSE than the
+         * uncured 79, and exactly the number 12c″ measured for a one-tick
+         * deferral. The second component is invisible to a held-set until a
+         * threshold reads the value it moves.
          */
-        expect(firstDiff(r.preview, r.drive)).toBe(79);
-        expect(r.drive.slice(0, 79)).toEqual(r.preview.slice(0, 79));
+        expect(r.drive).toHaveLength(110);
+        expect(firstDiff(r.preview, r.drive)).toBe(110);
+        expect(r.preview.slice(0, 110)).toEqual(r.drive);
         // ⚠ AND NOT VACUOUSLY. A stand where nothing dashed would pass this
         // row with the `false` arm's own sequence.
         expect(r.pa.dashes).toBe(15);
@@ -1621,31 +1625,19 @@ describe('R9 slice 12c: the DASH, MODELLED — the oracle steps it and the polic
         expect(r.pa.strikes).toBe(21);
         expect(r.pb.strikes).toBe(21);
         /**
-         * ⛔⛔ **AND THE PREVIEWED PLAYER ENDS WHERE THE DRIVEN ONE ENDS**,
-         * which is the half of ⚖ ruling 30(c) a held-set sequence cannot see.
+         * ⛔⛔⛔ **AND THE PREVIEWED PLAYER ENDS ON THE DRIVEN ONE'S PIXEL** —
+         * the half of ⚖ ruling 30(c) a held-set sequence cannot see, and the
+         * sharpest statement of the cure there is. 12c″ measured 127.85 against
+         * 99.75 at tick 110, twenty-eight pixels apart and a corridor about a
+         * different journey. It is now the same number to the last digit.
          *
          * ⚠ MEASURED, NOT FORESEEN: mutant (a) — the preview stepper's
-         * `dashImpulse` dropped — leaves this fixture's KEY sequence
-         * completely intact. The dash moves the player 9 px and no decision
-         * inside 130 ticks turns on it, so the corridor the probe priced would
-         * have been the wrong corridor and every row here would still be
-         * green. The position is what makes the row bite (trap 570: a mutant
-         * that does not red the row you aimed at is telling you which row you
-         * needed).
+         * `dashImpulse` dropped — leaves this fixture's KEY sequence completely
+         * intact, so the position is what makes the row bite (trap 570).
          */
-        expect(r.at(78).x).toBeCloseTo(r.pb.trace.length ? r.at(78).x : 0, 9);
-        /**
-         * ⛔⛔ **AND THE POSITIONS PART WITH THE KEYS, WHICH IS THE HALF A
-         * HELD-SET SEQUENCE CANNOT SEE.** After the parting the previewed
-         * player is 28 px from the driven one — measured 127.85 against 99.75
-         * at tick 110 — so a corridor certified past the index is a corridor
-         * about a different journey. That is exactly what
-         * `PREVIEW_AGREEMENT_BOUND` refuses to schedule past, and why this
-         * slice brought it down to 79.
-         */
-        expect(Math.abs(r.at(110).x - r.run.state.x)).toBeGreaterThan(9);
-        expect(r.at(110).x).toBeCloseTo(127.85, 2);
-        expect(r.run.state.x).toBeCloseTo(99.75, 2);
+        expect(r.at(110).x).toBe(r.run.state.x);
+        expect(r.at(110).y).toBe(r.run.state.y);
+        expect(r.at(110).x).toBeCloseTo(99.75, 2);
         // ⛓ AND THE STAND MOVED — the dashes carry the player off the stance
         // they started on, which is what makes the position half of this claim
         // a claim about a corridor rather than about a point.
@@ -2172,41 +2164,81 @@ describe('R9 slice 12c: the DASH, MODELLED — the oracle steps it and the polic
      * the skew is named in `previewWalk` and this slice was told not to move
      * it. Recorded so the next slice cannot mistake it for its own.
      */
-    it('⚠⚠ the equality PARTS at 207 refused and 79 planned-dashing — and the BOUND is below both', () => {
-        const refused = firstDiff(standBoth(l14, 260, false).preview,
-            standBoth(l14, 260, false).drive);
-        const dashing = firstDiff(standBoth(l14, 120, true, dashChainPlan(170)).preview,
-            standBoth(l14, 120, true, dashChainPlan(170)).drive);
-        expect(refused).toBe(207);
+    it('⛓⛓⛓⛓ R9 slice 12c‴: the KEYS no longer part at all — 207 → the whole stand '
+        + 'refused, 79 → the whole stand dashing — and the BOUND is what the BODIES '
+        + 'still measure', () => {
+        const refusedPair = standBoth(l14, 260, false);
+        const refused = firstDiff(refusedPair.preview, refusedPair.drive);
+        const dashPair = standBoth(l14, 120, true, dashChainPlan(170));
+        const dashing = firstDiff(dashPair.preview, dashPair.drive);
         /**
-         * ⛔⛔⛔ **R9 SLICE 12c″ — 179 → 79, AND THIS ROW IS WHAT CAUGHT IT.**
-         * ⚖ Ruling 44's harmless window is a threshold on `hitsTimer` and the
-         * two sides read that value one tick apart, so a press landing on the
-         * boundary is spent by one side and yielded by the other. 12c's
-         * blanket refusal was thirty ticks wide and could not notice. ⛓ The
-         * REFUSED arm is 207 in both builds — unmoved — which is what says the
-         * cause is the arm rather than the fixture.
+         * ⛓⛓⛓ **THE CURE, MEASURED.** `previewWalk` steps
+         * `presses.swordWindowStep` — the same function `levelRun.advance` steps
+         * — in the run's own intra-tick order, and takes its policy reading from
+         * the forecast AS IT STANDS after that window. ⛔ THE GAME SETTLED WHICH
+         * SIDE WAS WRONG: `probe-seedling-r9-harmless-window-mobiles.mjs`
+         * inverts a struck body's `hits_timer` out of `botMobiles` and puts the
+         * landed hit at PRESS + 1, three samples agreeing.
+         *
+         * ⛔ THE CURE IS THE ORDER AND THE REPEATS, NOT A LAG. 12c″ measured a
+         * scratch build that merely DEFERRED the single previewed hit by one
+         * tick and it was WORSE — the parting fell 79 → 62. Mutant (e) is that
+         * shape from the other side: move the window BELOW the player's step and
+         * this row returns to a parting inside the fixture.
+         *
+         * ⚠ `-1` IS THE ANSWER, not a large number: `firstDiff` returns it when
+         * the two sequences agree for their whole common length. The preview is
+         * one sample longer by construction (`standFor: ticks + 1`), so the
+         * common length IS the drive's stand.
          */
-        expect(dashing).toBe(79);
+        expect(refusedPair.drive).toHaveLength(260);
+        expect(refused).toBe(260);
+        expect(dashPair.drive).toHaveLength(120);
+        expect(dashing).toBe(120);
+        /**
+         * ⛔⛔ **AND A SECOND STREAM STILL PARTS, BY A DIFFERENT MECHANISM** —
+         * which is why the constant is re-derived rather than retired. The
+         * bodies the POLICY is handed first differ at 195, and the difference is
+         * a DEATH REMOVAL (`bob@128,64`, killed at tick 169, leaves the drive's
+         * roster one tick before it leaves the preview's), not the hit skew. It
+         * changes no key here; a body list is what the next scan reads, so it
+         * could elsewhere.
+         */
+        const handed = { preview: [], drive: [] };
+        const recorded = (side) => {
+            const inner = policyFor(false);
+            return {
+                get trace() { return inner.trace; },
+                get strikes() { return inner.strikes; },
+                get dashes() { return inner.dashes; },
+                get dashRefusals() { return inner.dashRefusals; },
+                get plannedPresses() { return inner.plannedPresses; },
+                get plannedSkipped() { return inner.plannedSkipped; },
+                get allowDash() { return inner.allowDash; },
+                get lastPressAt() { return inner.lastPressAt; },
+                get aimed() { return inner.aimed; },
+                decide(state, bodies, tick, walkHeld, opts) {
+                    handed[side].push(bodies.map((b) => `${b.id}@${b.hitsTimer}`).sort().join(' '));
+                    return inner.decide(state, bodies, tick, walkHeld, opts);
+                },
+            };
+        };
+        const pa = recorded('preview');
+        previewWalk(l14(), [], 0, { strike: pa, standFor: 261 });
+        const pb = recorded('drive');
+        runDwell(l14(), [], {
+            ticks: 260, strike: pb, why: 'the bound\'s own fixture',
+            until: { why: 'the stand has run', test: (r) => r.ticksCompleted >= 260 },
+        }, 'the bound\'s own fixture');
+        const bodiesPart = firstDiff(handed.preview, handed.drive);
+        expect(bodiesPart).toBe(195);
         /**
          * ⛔⛔ **THE BOUND IS PINNED TO A MEASUREMENT, NOT TYPED BESIDE ONE**
-         * (trap 574: a gate's SUBJECT frozen as a literal decays invisibly).
-         * `planSwordDash` refuses to schedule a leg longer than
-         * `PREVIEW_AGREEMENT_BOUND`, and this asserts that constant is at or
-         * below where BOTH live arms actually stop agreeing. A model change
-         * that brings either parting down reds this row rather than quietly
-         * loosening a bound nobody re-measured.
-         *
-         * ⚠ 12c's own 144 was the OPPORTUNISTIC arm's parting and that arm is
-         * retired; 12c″ brought the constant to 79 because this row measured
-         * the dashing arm parting there. ⛔ IT IS NOT FREE: measured under the
-         * scratch flip, `r9-solve-14`'s planned legs are [48,32,41,7] and fit,
-         * but `r9-solve-0`'s CANDIDATES reach 92 and it is refused `leg-bound`
-         * on every start tick — 168 t back to its committed 237. The cost is
-         * read off the population the bound REJECTS, never off the plans that
-         * survived it.
+         * (trap 574). It is at or below the earliest divergence of ANY stream
+         * these fixtures measure, so a model change that brings one down reds
+         * this row rather than quietly loosening a filter nobody re-measured.
          */
-        expect(PREVIEW_AGREEMENT_BOUND).toBeLessThanOrEqual(Math.min(refused, dashing));
+        expect(PREVIEW_AGREEMENT_BOUND).toBe(bodiesPart);
     });
 
     /**
@@ -2304,12 +2336,13 @@ describe('R9 slice 12b′: the DERIVED STANCE — scored, iterative, refuses by 
      */
     it('⛔ derives a stance for the body that CANNOT reach where the walk stands', () => {
         const { run, stance, why, ticks } = derive('bob@32,32');
-        // ⛓ R9 slice 12c″ — (40,24) at 12c′'s head. ⚖ Ruling 44's harmless
-        // window opened corridors this rung used to price as danger, so the
+        // ⛓ R9 slice 12c‴ — (40,24) at 12c′'s head, (56,40) at 12c″'s.
+        // ⚖ Ruling 44's harmless window opened corridors this rung used to
+        // price as danger and 12c‴'s cured preview re-scored them again, so the
         // SCORE picks a different cell; the claim below — out of leash from
         // the walk, inside it from the stance — is what the row is about and
         // is untouched.
-        expect(stance).toEqual({ x: 56, y: 40 });
+        expect(stance).toEqual({ x: 40, y: 56 });
         expect(stance).not.toEqual({ x: run.state.x, y: run.state.y });
 
         const body = run.strikeBodies.find((b) => b.id === 'bob@32,32');
@@ -2322,8 +2355,10 @@ describe('R9 slice 12b′: the DERIVED STANCE — scored, iterative, refuses by 
         // from the stance, which is the whole repair.
         expect(dist(run.state, centre)).toBeGreaterThan(leash);
         expect(dist(stance, centre)).toBeLessThanOrEqual(leash);
-        expect(ticks).toBe(109);
-        expect(why).toMatch(/dies at tick 202/);
+        // ⛓ R9 slice 12c‴ — 109/202 at 12c″'s head; the cured preview re-scored
+        // the scan and the stance moved with it (see the note above).
+        expect(ticks).toBe(115);
+        expect(why).toMatch(/dies at tick 193/);
     });
 
     /**
@@ -2351,10 +2386,12 @@ describe('R9 slice 12b′: the DERIVED STANCE — scored, iterative, refuses by 
     it('⛓⛓ the WAIT refusal for `bob@64,64` is RETIRED by the harmless window — it derives '
         + 'a stance now, and says why', () => {
         const { run, stance, why, ticks } = derive('bob@64,64');
-        expect(stance).toEqual({ x: 56, y: 88 });
-        expect(ticks).toBe(115);
-        expect(why).toMatch(/22.6 px away, inside its 80 px leash, so it CHASES/);
-        expect(why).toMatch(/dies at tick 182/);
+        // ⛓ R9 slice 12c‴ — (56,88)/115/182 at 12c″'s head. The cured preview
+        // re-scored the scan; the CLAIM is the shape below, not the cell.
+        expect(stance).toEqual({ x: 72, y: 88 });
+        expect(ticks).toBe(109);
+        expect(why).toMatch(/16.0 px away, inside its 80 px leash, so it CHASES/);
+        expect(why).toMatch(/dies at tick 170/);
         expect(why).toMatch(/NO body reaches the player at any tick of either half/);
         // ⛓ AND IT IS THE SAME BODY THAT REFUSED: out of press reach from the
         // walk, which is why a stance was needed at all.
@@ -2369,23 +2406,35 @@ describe('R9 slice 12b′: the DERIVED STANCE — scored, iterative, refuses by 
     /**
      * ⛔ MUTANT (e)'s ROW — NOT FIRST-VIABLE. The scan's own order is
      * nearest-approach-first, so a first-viable pick would take the closest
-     * qualifying cell. The score is soonest-kill-first, and on `bob@96,80`
-     * they disagree: the winner is 57.7 px away and a runner-up is 35.8, i.e.
-     * the nearer cell qualified and was passed over for a sooner kill.
+     * qualifying cell. The score is soonest-kill-first, and where they disagree
+     * the winner is FARTHER than a cell that also qualified.
+     *
+     * ⛓⛓ **R9 SLICE 12c‴ MOVED THE SUBJECT, AND SAYING WHY IS THE POINT.**
+     * This row asked `bob@96,80` for four slices. With the preview cured the
+     * winner on THAT body is also the nearest of its candidates — zero nearer
+     * runners-up — so the row would have gone on passing while demonstrating
+     * NOTHING, which is the vacuity trap 570 is about from the other side. It is
+     * re-pointed at `bob@176,112`, where the disagreement is now sharpest and
+     * MEASURED: the winner is 48.0 px away and ALL THREE runners-up are nearer
+     * (32.0, 35.8, 45.3). The claim is unchanged; the witness moved because the
+     * measurement moved.
      */
     it('⛓ takes the BEST stance, not the first viable one — and carries the runners-up', () => {
-        const { run, stance, runnersUp, clears } = derive('bob@96,80');
-        // ⛓ R9 slice 12c″ — (120,104) at 12c′'s head; the harmless window
-        // re-scored the scan. The CLAIM is the ordering, not the cell.
-        expect(stance).toEqual({ x: 88, y: 104 });
+        const { run, stance, runnersUp, clears, ticks } = derive('bob@176,112');
+        expect(stance).toEqual({ x: 168, y: 120 });
         expect(runnersUp.length).toBeGreaterThan(0);
         const nearer = runnersUp.filter((r) => dist(run.state, r) < dist(run.state, stance));
-        expect(nearer.length).toBeGreaterThan(0);
-        // …and every runner-up's kill is LATER, which is what the score says.
-        for (const r of runnersUp) expect(r.deathAt).toBeGreaterThan(120 - 30);
+        // ⛔ EVERY runner-up is nearer, so a first-viable pick could not have
+        // produced this winner under any tie-break.
+        expect(nearer.length).toBe(runnersUp.length);
+        // …and every runner-up's kill is LATER than the winner's whole dwell,
+        // which is what the score says and what a distance order cannot.
+        for (const r of runnersUp) expect(r.deathAt).toBeGreaterThan(ticks);
         // ⛓ The record carries every body the wait removes, not only the one
-        // asked for — the reason the NEXT climb finds a different room.
-        expect(clears).toEqual(['bob@96,80', 'bob@64,64']);
+        // asked for — the reason the NEXT climb finds a different room. Here it
+        // is exactly the one, which is itself a measurement: this stance's wait
+        // clears nothing else.
+        expect(clears).toEqual(['bob@176,112']);
     });
 
     /**
@@ -2402,8 +2451,12 @@ describe('R9 slice 12b′: the DERIVED STANCE — scored, iterative, refuses by 
     it('⛔ the dwell bound is the forecast\'s own death tick, not a per-class constant', () => {
         const formula = killWindowTicks('bob') * 3 + 30;
         expect(formula).toBe(108);
+        // ⛓ R9 slice 12c‴ — 109/148/102/116 at 12c″'s head; the cured preview
+        // re-scored every one of them. THREE are above the formula and one is
+        // below, so the difference is still not a margin anybody could have
+        // added — which is the row's actual claim.
         const bounds = {
-            'bob@32,32': 109, 'bob@128,64': 148, 'bob@96,48': 102, 'bob@176,112': 116,
+            'bob@32,32': 115, 'bob@128,64': 126, 'bob@96,48': 105, 'bob@176,112': 120,
         };
         for (const [id, want] of Object.entries(bounds)) {
             expect(derive(id).ticks).toBe(want);
