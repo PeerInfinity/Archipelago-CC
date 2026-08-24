@@ -24,6 +24,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
     DOWN,
+    EMPTY_SWORD_WINDOW,
     ENEMY_HITS_MAX,
     ENEMY_HITS_TIMER,
     HITABLE_TYPES,
@@ -37,8 +38,12 @@ import {
     SPEAR_THICK,
     SWORD_DAMAGE,
     UP,
+    SLASH_HIT_TICKS,
     distanceRectPoint,
     pressDamage,
+    swordWindowReplace,
+    swordWindowSchedule,
+    swordWindowStep,
     pressWouldKill,
     auditPress,
     pressRespondersIn,
@@ -330,5 +335,104 @@ describe('the level query (R4: the census half of §3.2)', () => {
         expect(relaxed.pressResponders).toEqual([]);
         expect(() => pressRespondersIn(relaxed, spearRect(204, 132, LEFT)))
             .toThrow(PressError);
+    });
+});
+
+/**
+ * ⛓⛓⛓ R9 SLICE 12c‴ — **THE SWORD WINDOW, ASKED IN ISOLATION.**
+ *
+ * The window is what `levelRun.advance` used to keep in two locals and
+ * `solverBot.previewWalk` kept not at all — and ⚖ ruling 30(c) is an equality
+ * between two objects that must be the SAME object. Extracting it makes that
+ * literal; these rows are what say the extraction is a TRANSCRIPTION and not a
+ * paraphrase, because a pure function can be asked about ticks no fixture
+ * happens to contain.
+ */
+describe('the sword window — one stepper, both sides', () => {
+    const sword = (t) => ({ weapon: 'sword', direction: RIGHT, pressTick: t });
+    /** Drive N ticks from a press at `pressTick`, collecting what fires when. */
+    const drive = (pressTick, ticks, { secondPress = null } = {}) => {
+        let win = EMPTY_SWORD_WINDOW;
+        const fired = [];
+        for (let t = 0; t <= ticks; t += 1) {
+            const step = swordWindowStep(win, t);
+            win = step.window;
+            for (const f of step.fires) fired.push({ t, pressTick: f.pressTick, repeat: f.repeat ?? 0 });
+            if (t === secondPress) win = swordWindowReplace(win);
+            if (t === pressTick || t === secondPress) {
+                win = swordWindowSchedule(win, sword(t));
+            }
+        }
+        return fired;
+    };
+
+    it('⛓⛓⛓ a press at T fires on T+1 … T+SLASH_HIT_TICKS — five ticks, one rect each, '
+        + 'and NOT on T itself', () => {
+        const fired = drive(10, 20);
+        expect(fired.map((f) => f.t)).toEqual([11, 12, 13, 14, 15]);
+        expect(fired).toHaveLength(SLASH_HIT_TICKS);
+        // ⛔ THE FIRST FIRE IS THE PENDING THRUST, the other four are repeats —
+        // and the repeat index is what a caller uses to tell a re-aim from the
+        // opening swing.
+        expect(fired.map((f) => f.repeat)).toEqual([0, 1, 2, 3, 4]);
+        expect(fired.every((f) => f.pressTick === 10)).toBe(true);
+    });
+
+    it('⛔ NOTHING fires on the press tick — which is exactly what `previewWalk` '
+        + 'used to do and the game refutes', () => {
+        expect(drive(10, 20).some((f) => f.t === 10)).toBe(false);
+    });
+
+    it('⛓⛓ a SECOND press inside the window REPLACES the first one\'s remaining '
+        + 'tests, it does not interleave with them', () => {
+        // Press at 10 (fires 11..15) and again at 12. Under a REPLACEMENT the
+        // first window keeps only what has already fired (11, 12) and the
+        // second owns 13..17. Under an APPEND, ticks 13, 14 and 15 would each
+        // take TWO — which is `Player.slash()` running its test twice on a
+        // tick, and it never does.
+        const fired = drive(10, 20, { secondPress: 12 });
+        const perTick = new Map();
+        for (const f of fired) perTick.set(f.t, (perTick.get(f.t) ?? 0) + 1);
+        expect([...perTick.values()].every((n) => n === 1)).toBe(true);
+        expect(fired.map((f) => `${f.t}:${f.pressTick}`))
+            .toEqual(['11:10', '12:10', '13:12', '14:12', '15:12', '16:12', '17:12']);
+    });
+
+    it('⛓ the repeat filter keeps `at > tick`, so a repeat that has fired is dropped '
+        + 'and one whose tick has PASSED is dropped with it', () => {
+        let win = swordWindowSchedule(EMPTY_SWORD_WINDOW, sword(0));
+        win = swordWindowStep(win, 1).window;          // fires the pending, schedules 2..5
+        expect(win.repeats.map((r) => r.at)).toEqual([2, 3, 4, 5]);
+        // Step straight to 4: 2 and 3 are never asked for and must not survive.
+        const jumped = swordWindowStep(win, 4);
+        expect(jumped.fires.map((f) => f.repeat)).toEqual([3]);
+        expect(jumped.window.repeats.map((r) => r.at)).toEqual([5]);
+    });
+
+    it('⛔ ONLY A SWORD BUYS REPEATS — a spear press schedules ONE thrust and nothing '
+        + 'after it (`SPEAR_HIT_TICKS_UNMODELLED`)', () => {
+        let win = swordWindowSchedule(EMPTY_SWORD_WINDOW,
+            { weapon: 'spear', direction: RIGHT, pressTick: 0 });
+        const step = swordWindowStep(win, 1);
+        expect(step.fires).toHaveLength(1);
+        expect(step.window.repeats).toEqual([]);
+    });
+
+    it('⛔⛔ `swordWindowSchedule` does NOT clear a live window, and that is why it is '
+        + 'separate from `swordWindowReplace` — a spear press must not kill a swing', () => {
+        let win = swordWindowSchedule(EMPTY_SWORD_WINDOW, sword(0));
+        win = swordWindowStep(win, 1).window;
+        expect(win.repeats).toHaveLength(4);
+        const spear = swordWindowSchedule(win,
+            { weapon: 'spear', direction: RIGHT, pressTick: 1 });
+        expect(spear.repeats).toHaveLength(4);
+        expect(swordWindowReplace(win).repeats).toHaveLength(0);
+    });
+
+    it('⛓ the empty window is a fixed point — stepping it fires nothing and changes '
+        + 'nothing', () => {
+        const step = swordWindowStep(EMPTY_SWORD_WINDOW, 7);
+        expect(step.fires).toEqual([]);
+        expect(step.window).toEqual({ pending: null, repeats: [] });
     });
 });

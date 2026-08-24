@@ -2551,3 +2551,59 @@ describe('R9 slice 12c: the slashRepeats REPLACEMENT — one rect per tick, alwa
         expect(Math.max(...gaps)).toBeLessThanOrEqual(2);
     });
 });
+
+/**
+ * ⛓⛓⛓ R9 SLICE 12c‴ — **THE EXTRACTION'S NON-VACUITY, ON THE ROSTER.**
+ *
+ * `presses.swordWindowStep` is now the ONE implementation of the swing window,
+ * called by `levelRun.advance` and by `solverBot.previewWalk` (⚖ rulings 17 and
+ * 30(c)). A refactor's proof is that the behaviour did not move — the 14
+ * producer `--check` md5s say that — but a proof that the REPEATS are exercised
+ * at all is a different claim, and without it the extraction could be a tidy-up
+ * of dead code.
+ *
+ * ⛓ MEASURED OVER THE WHOLE ROSTER, offline: of 148 committed tapes, 24 land a
+ * press and **18 land a sword HIT on a REPEAT tick** (`fired − pressTick ≥ 2`) —
+ * `r5-feather` · `r5-l40-part0` · `r5-l40-part5` (+ its control) ·
+ * `r6-owl-{control,kill}` · `r6-shield-{control,kill}` ·
+ * `r6-watcher-blood` (+ its control) · `r8-d2` · `r8-d2-19` ·
+ * `r8-l18-spinner-press` · `r8-solve-18` · `r9-l6-bob-press` ·
+ * `r9-l6-sword-dash-hit` · `r9-solve-14` · `r9-solve-3`. The heaviest is
+ * `r8-d2` (40 sword presses, 25 repeat-hits); `r9-solve-14` lands 18.
+ *
+ * ⛔⛔ AND THE FIRST CUT OF THAT SCAN WAS WRONG IN A WAY WORTH RECORDING. It
+ * keyed on the OFFSET alone and reported 26 tapes with offsets up to **8** —
+ * impossible for a window whose own arithmetic caps them at 5. The extra rows
+ * were FIRE presses: `run.presses` carries both windows and
+ * `FIRE_WINDOW.hitTicks` is `[4,5,6,7,8]`. Keyed on `weapon === 'sword'` the
+ * count is 18 and every offset is in 2..5. ⇒ a scan over a shared ledger must
+ * filter by WHAT PRODUCED the row, never by a number that two producers can
+ * both write.
+ *
+ * This row drives the FIRST of the eighteen by name, so the claim cannot rot
+ * into prose.
+ */
+describe('R9 slice 12c‴: the shared sword window is exercised by the roster', () => {
+    it('⛓⛓ `r5-feather` lands hits on repeat ticks 2..5 — the four EXTRA tests one '
+        + 'press buys are not dead code', () => {
+        const tape = loadTape('r5-feather');
+        const run = createLevelRun({
+            levelSource, boot: { ...tape.boot }, noclip: tape.noclip,
+            noHazards: tape.noHazards, noDamage: tape.noDamage, grants: tape.grants,
+            persistence: tape.persistence, despawn: tape.despawn ?? [],
+            equips: tape.equips, pins: tape.pins, save: tape.save, rng: tape.rng,
+            seam: tape.seam, roles: ROLES,
+        });
+        for (let t = 0; t < tape.tick_count; t += 1) run.advance(heldKeysAt(tape, t));
+        const sword = run.presses.filter((p) => p.weapon === 'sword');
+        const repeatHits = sword.filter((p) => (p.fired - p.t) >= 2 && p.hits.length > 0);
+        expect(repeatHits.length).toBeGreaterThan(0);
+        // ⛔ EVERY offset is inside the window's own arithmetic: a press at T
+        // fires on T+1 … T+SLASH_HIT_TICKS and nowhere else.
+        const offsets = [...new Set(sword.map((p) => p.fired - p.t))].sort((a, b) => a - b);
+        expect(Math.min(...offsets)).toBeGreaterThanOrEqual(1);
+        expect(Math.max(...offsets)).toBeLessThanOrEqual(SLASH_HIT_TICKS);
+        expect([...new Set(repeatHits.map((p) => p.fired - p.t))].sort((a, b) => a - b))
+            .toEqual([2, 3, 4, 5]);
+    });
+});

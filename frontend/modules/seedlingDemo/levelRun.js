@@ -68,9 +68,10 @@ import {
     pushablesSettled, stepPushables,
 } from './pushables.js';
 import {
-    DARK_SWORD_DAMAGE, FIRE_ARM_POLICY, LIGHTPOLE_HITS_TIMER_MAX, PRESS_ARM_POLICY,
+    DARK_SWORD_DAMAGE, EMPTY_SWORD_WINDOW, FIRE_ARM_POLICY, LIGHTPOLE_HITS_TIMER_MAX,
+    PRESS_ARM_POLICY,
     SLASH_HIT_TICKS, SLASH_REACH, SPEAR_DAMAGE, SWORD_DAMAGE, auditFire, auditPress,
-    slashReachFor,
+    slashReachFor, swordWindowReplace, swordWindowSchedule, swordWindowStep,
     distanceRectPoint, slashRect, spearRect,
 } from './presses.js';
 import { FIRE_PRESS_CADENCE, FIRE_WINDOW, fireRect } from './fireVerb.js';
@@ -3465,8 +3466,7 @@ export function createLevelRun({
         // A thrust cannot outlive its level either: `spear()` collides the
         // rect against `FP.world`, and by the time it fires the world is the
         // destination's.
-        pendingThrust = null;
-        slashRepeats = [];
+        swordWindow = EMPTY_SWORD_WINDOW;
         // ⛓ R9 slice 12b: and neither can a swing, a dash-arm or a timer.
         // `slashTimer`/`slashDashed`/`_slashing` are Player fields.
         slashState = { ...INITIAL_SLASH_STATE };
@@ -3726,21 +3726,32 @@ export function createLevelRun({
      * press, one decrement (see `bridges.js`). A rung that lengthens the
      * animation re-opens this.
      */
-    let pendingThrust = null;
     /**
-     * ⛓ The four EXTRA hit ticks one sword press buys — `presses.SLASH_HIT_TICKS`.
-     * ⚠ Cleared on a world swap with everything else: `slashing` is a Player
-     * field and the Player is reconstructed.
+     * ⛓⛓⛓ R9 SLICE 12c‴ — **THE PENDING SWING, AS ONE VALUE, AND THE PREVIEW
+     * STEPS THE SAME ONE** (⚖ ruling 30(c), ⚖ ruling 17).
+     *
+     * This used to be two locals — `pendingThrust` (the thrust the last tick's
+     * press scheduled) and `slashRepeats` (the four EXTRA hit ticks one sword
+     * press buys, `presses.SLASH_HIT_TICKS`). They are `Player` fields and the
+     * machinery that advances them is `Player.update`'s, so it lives in
+     * `presses.js` now and BOTH `advance` and `solverBot.previewWalk` call it.
+     * The preview modelled a press as ONE hit at the PRESS TICK; the game lands
+     * it at press + 1 and runs four more re-aimed tests after it, which
+     * `probe-seedling-r9-harmless-window-mobiles.mjs` measured on the game
+     * itself.
+     *
+     * ⚠ Cleared on a world swap with everything else: a thrust cannot outlive
+     * its level and neither can a swing — the Player is reconstructed.
      */
-    let slashRepeats = [];
+    let swordWindow = EMPTY_SWORD_WINDOW;
     /**
      * ⛓⛓⛓ R9 SLICE 12b — `Player`'s FOUR SLASH FIELDS, which this run did not
      * have and which are the whole of the SWORD DASH.
      *
      * `combatVerbs.slashSet` is `set slashing` transcribed; this holds the
-     * state it threads. ⚠ Cleared on a world swap with `pendingThrust` and
-     * `slashRepeats`: they are Player fields and the Player is reconstructed,
-     * so a dash cannot be armed across a door.
+     * state it threads. ⚠ Cleared on a world swap with `swordWindow`: they are
+     * Player fields and the Player is reconstructed, so a dash cannot be armed
+     * across a door.
      */
     let slashState = { ...INITIAL_SLASH_STATE };
     /**
@@ -9524,9 +9535,9 @@ export function createLevelRun({
                 + 'immediately under `Game.freezeObjects`, so the window '
                 + 'BURNS — the press lands nothing. Press outside the freeze.');
         }
-        if (pendingThrust) {
-            throw new Error(`levelRun: a ${pendingThrust.weapon} press at tick `
-                + `${pendingThrust.pressTick} would fire its rect on a FROZEN `
+        if (swordWindow.pending) {
+            throw new Error(`levelRun: a ${swordWindow.pending.weapon} press at tick `
+                + `${swordWindow.pending.pressTick} would fire its rect on a FROZEN `
                 + `tick (${what}), and \`genericHit\` returns immediately under `
                 + '`Game.freezeObjects` — so the press would do nothing at '
                 + 'all. Press outside the freeze.');
@@ -11649,7 +11660,7 @@ export function createLevelRun({
                     wanding: ticksCompleted <= wandUntil,
                     firing: ticksCompleted <= fireUntil,
                     deathRaying: false,
-                    spearing: pendingThrust !== null && pendingThrust.weapon === 'spear',
+                    spearing: swordWindow.pending?.weapon === 'spear',
                 },
             };
         },
@@ -13128,57 +13139,51 @@ export function createLevelRun({
             // > 0) slashTimer--` runs at the top of `Player.update`, ABOVE
             // `super.update()` and therefore above the press that reads it.
             slashState = slashTimerTick(slashState);
-            if (pendingThrust) {
-                applyThrust(pendingThrust);
-                /**
-                 * ⛔⛔⛔ R6 SLICE 5: AND FOUR MORE, ON THE FOUR TICKS AFTER.
-                 *
-                 * `Player.slash`'s `slashDelayMax` is ZERO, so the hit test
-                 * runs on every tick `slashing` is up — `T+1 … T+5`, five in
-                 * all (`presses.SLASH_HIT_TICKS`). This model fired ONE for
-                 * five rungs and was right every time, because every arm it
-                 * had reached is idempotent inside five ticks. `ShieldBoss`
-                 * is not: hit 1 spends the swallowed dispatch and hit 2 of
-                 * the SAME press starts a retaliation stab. The game's
-                 * recording is what found it.
-                 *
-                 * ⚠ THE REPEATS ARE THE SAME THRUST, RE-AIMED. `slashDirection`
-                 * is LATCHED at the press (`set slashing`) so the direction
-                 * does not move, but the RECT is recomputed from the player's
-                 * live position on each tick — `getSlashRect()` reads `x`/`y`
-                 * every call — so a player being knocked back swings from
-                 * where they are, not from where they pressed.
-                 */
-                if (pendingThrust.weapon === 'sword') {
-                    for (let i = 1; i < SLASH_HIT_TICKS; i += 1) {
-                        slashRepeats.push({ ...pendingThrust, at: ticksCompleted + i, repeat: i });
-                    }
-                }
-                pendingThrust = null;
-            }
-            // The four repeats, each on its own tick and against this tick's
-            // position.
-            //
-            // ⛓⛓ R9 SLICE 12c — AND THERE IS ONLY EVER ONE WINDOW IN FLIGHT.
-            // This comment used to say a second press inside the window is
-            // legal "and the two windows must not interleave by index", which
-            // is a true sentence about the wrong mechanism: the second press
-            // does not open a second window, it RESTARTS the first one
-            // (`play(anim, true)`), so the earlier window's remaining tests are
-            // REPLACED. The press block below clears them; see its note. The
-            // filter stays a filter because a `due` tick still has to be
-            // separated from a future one.
-            //
-            // ⚠ THE REPEATS ARE THE SAME THRUST, RE-AIMED — the direction is
-            // latched at the press and the RECT is recomputed from the live
-            // position, so a player being knocked back swings from where they
-            // are.
-            if (slashRepeats.length > 0) {
-                const due = slashRepeats.filter((r) => r.at === ticksCompleted);
-                if (due.length > 0) {
-                    slashRepeats = slashRepeats.filter((r) => r.at > ticksCompleted);
-                    for (const r of due) applyThrust(r);
-                }
+            /**
+             * ⛓⛓⛓ R9 SLICE 12c‴ — **ONE SWORD-WINDOW STEPPER, AND THE PREVIEW
+             * CALLS THE SAME ONE** (⚖ ruling 30(c), ⚖ ruling 17, trap 566).
+             *
+             * What used to be two blocks here — apply the pending thrust and
+             * schedule its four repeats, then fire this tick's due repeats —
+             * is `presses.swordWindowStep`, because `solverBot.previewWalk`
+             * needs the identical machinery and had none of it: it modelled a
+             * press as ONE `chasers.hit` at the PRESS TICK. THE GAME SAYS
+             * OTHERWISE, measured rather than argued: inverting a struck body's
+             * own `hits_timer` out of `botMobiles` puts the landed hit at
+             * PRESS + 1, three independent samples agreeing
+             * (`probe-seedling-r9-harmless-window-mobiles.mjs`, R9 slice 12c‴).
+             *
+             * ⛔ THE ORDER IS THE CLAIM AND THE FUNCTION RETURNS IT: the
+             * PENDING thrust first, then this tick's DUE repeats. Firing the
+             * pending is also what SCHEDULES the four, at `T+1 … T+4` from
+             * here — which is why a press at T lands its five tests on T+1..T+5.
+             *
+             * ⛔⛔⛔ R6 SLICE 5's finding is unchanged and now lives in the
+             * function: `Player.slash`'s `slashDelayMax` is ZERO, so the hit
+             * test runs on every tick `slashing` is up. This model fired ONE
+             * for five rungs and was right every time, because every arm it had
+             * reached is idempotent inside five ticks. `ShieldBoss` is not: hit
+             * 1 spends the swallowed dispatch and hit 2 of the SAME press
+             * starts a retaliation stab. The game's recording is what found it.
+             *
+             * ⚠ THE REPEATS ARE THE SAME THRUST, RE-AIMED. `slashDirection` is
+             * LATCHED at the press (`set slashing`) so the direction does not
+             * move, but the RECT is recomputed from the player's live position
+             * on each tick — `getSlashRect()` reads `x`/`y` every call — so a
+             * player being knocked back swings from where they are, not from
+             * where they pressed. That is why the fires are applied HERE, one
+             * `applyThrust` each, rather than resolved inside the stepper.
+             *
+             * ⛓⛓ AND THERE IS ONLY EVER ONE WINDOW IN FLIGHT. A second press
+             * inside the window does not open a second one, it RESTARTS the
+             * first (`play(anim, true)`), so the earlier window's remaining
+             * tests are REPLACED — `swordWindowReplace`, taken by the press
+             * block below.
+             */
+            {
+                const fired = swordWindowStep(swordWindow, ticksCompleted);
+                swordWindow = fired.window;
+                for (const thrust of fired.fires) applyThrust(thrust);
             }
             // ── ⛓ THE FIRE WINDOW'S HIT TICKS ────────────────────────
             // `Player.update` calls `fire()` in the same place it calls
@@ -13260,7 +13265,7 @@ export function createLevelRun({
                     wanding: wandWindows.some((w) => ticksCompleted <= w.endTick),
                     firing: fireWindows.some((w) => ticksCompleted <= w.endTick),
                     deathRaying: false,
-                    spearing: pendingThrust !== null && pendingThrust.weapon === 'spear',
+                    spearing: swordWindow.pending?.weapon === 'spear',
                     direction: pressFacing,
                     vx: state.vx,
                     vy: state.vy,
@@ -13314,11 +13319,11 @@ export function createLevelRun({
                      *
                      * ⛓ NO GAP IS OPENED. This tick's own repeat has already
                      * fired above (the due filter runs at the TOP of the tick,
-                     * over `pendingThrust`); what is cleared is strictly the
+                     * over the window's own `pending`); what is cleared is strictly the
                      * FUTURE of a swing the game has just replaced, and this
                      * press's own thrust schedules T+1..T+4 from here.
                      */
-                    slashRepeats = [];
+                    swordWindow = swordWindowReplace(swordWindow);
                 }
             }
             const stepOpts = stepOptsFor({
@@ -13484,16 +13489,17 @@ export function createLevelRun({
                      */
                     if (slashPress
                         && (slashPress.outcome === 'slash' || slashPress.outcome === 'dash')) {
-                        pendingThrust = {
+                        swordWindow = swordWindowSchedule(swordWindow, {
                             weapon,
                             direction: slashPress.slashDirection,
                             pressTick: ticksCompleted,
                             anim: slashState.anim,
                             scale: slashScaleFor(slashState.anim),
-                        };
+                        });
                     }
                 } else if (weapon) {
-                    pendingThrust = { weapon, direction: pressFacing, pressTick: ticksCompleted };
+                    swordWindow = swordWindowSchedule(swordWindow,
+                        { weapon, direction: pressFacing, pressTick: ticksCompleted });
                 }
             }
             /**
@@ -13520,7 +13526,7 @@ export function createLevelRun({
                     wanding: wandWindows.some((w) => ticksCompleted <= w.endTick),
                     firing: fireWindows.some((w) => ticksCompleted <= w.endTick),
                     deathRaying: false,
-                    spearing: pendingThrust !== null && pendingThrust.weapon === 'spear',
+                    spearing: swordWindow.pending?.weapon === 'spear',
                 }).state;
             }
             // ── ⛓⛓⛓ R6 SLICE 2: `wandEnd()`, AND IT IS BELOW THE PRESS ──

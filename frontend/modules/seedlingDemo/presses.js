@@ -145,6 +145,124 @@ export const SPEAR_HIT_TICKS_UNMODELLED = Object.freeze({
         + 'six-advance animation. Not modelled — see `SLASH_HIT_TICKS`.',
 });
 /** `Scenery/LightPole.as:20` — ticks before the same pole can be toggled again. */
+// ── ⛓⛓⛓ R9 SLICE 12c‴: THE SWORD WINDOW, ONE IMPLEMENTATION FOR BOTH SIDES ──
+
+/**
+ * ⛓⛓⛓ **`Player`'s PENDING SWING, AS A VALUE** — the state `levelRun.advance`
+ * kept in two locals (`pendingThrust` and `slashRepeats`) and `previewWalk`
+ * did not keep at all.
+ *
+ * ⛔⛔ **WHY IT MOVED HERE, AND IT IS ⚖ RULING 30(c)'s EQUALITY, NOT TIDINESS.**
+ * A press does not land a hit. It schedules a WINDOW: `Player.slash()` runs its
+ * rect test on every tick `slashing` is up — `T+1 … T+SLASH_HIT_TICKS`, five in
+ * all — with the rect recomputed from the player's LIVE position each time. The
+ * RUN has modelled that since R6 slice 5. The PREVIEW modelled a press as ONE
+ * `chasers.hit` at the PRESS TICK, which is wrong twice over: one tick early,
+ * and four re-aimed tests short.
+ *
+ * ⛓ **AND THE GAME SETTLED WHICH SIDE IS WRONG** (R9 slice 12c‴,
+ * `probe-seedling-r9-harmless-window-mobiles.mjs`). Inverting the struck body's
+ * own `hits_timer` out of the game's `--mobiles` readout — three independent
+ * samples, all agreeing — puts the landed hit at **press + 1**, which is
+ * `pendingThrust` fired at the top of the following tick and is NOT the press
+ * tick. So the drive's convention is the game's and the preview's was not.
+ *
+ * ⛔ THE CURE IS THE ORDER AND THE REPEATS, NOT A LAG. A scratch build that
+ * merely DEFERRED the previewed hit by one tick measured WORSE than the
+ * uncured skew (kickoff §29.5, the equality's parting 79 → 62). Deferring the
+ * single shot leaves the four re-aimed tests missing, so the previewed room is
+ * a third room that is neither side's.
+ */
+export const EMPTY_SWORD_WINDOW = Object.freeze({
+    pending: null,
+    repeats: Object.freeze([]),
+});
+
+/**
+ * ⛓⛓⛓ ONE TICK OF THE WINDOW, at the place `Player.update` runs it: ABOVE
+ * `super.update()` (so above the player's own sweep) and BELOW the enemies'
+ * own update (so the bodies have already stepped this tick).
+ *
+ * ⛔ THE TWO HALVES FIRE IN THE GAME'S OWN ORDER and the caller must apply them
+ * in it: the PENDING thrust the last tick's press scheduled, and then this
+ * tick's DUE repeats. Firing the pending is also what SCHEDULES the four
+ * repeats, at `tick + 1 … tick + SLASH_HIT_TICKS - 1` — which is why a press at
+ * T lands its five tests on T+1..T+5 and not on T..T+4.
+ *
+ * ⚠ THE REPEATS ARE THE SAME THRUST, RE-AIMED. `slashDirection` is LATCHED at
+ * the press so the direction does not move, but `getSlashRect()` reads `x`/`y`
+ * on every call — so the caller must test each fired thrust from the player's
+ * position AT THAT TICK, never from the press's.
+ *
+ * ⚠ ONLY A SWORD BUYS REPEATS. A spear press schedules one thrust and nothing
+ * else (`SPEAR_HIT_TICKS_UNMODELLED`), so the branch is on the thrust's own
+ * `weapon` rather than on the caller knowing which it handed over.
+ *
+ * ⚠ `at > tick` AND NOT `>= tick`: a repeat that has fired is dropped, and one
+ * whose tick has passed unfired is dropped with it. Transcribed from the run's
+ * own filter rather than re-derived, because the two are the same statement.
+ *
+ * @param {{pending: ?object, repeats: object[]}} win
+ * @param {number} tick  `ticksCompleted` — the count BEFORE this tick runs.
+ * @returns {{window: object, fires: object[]}} `fires` in the game's order.
+ */
+export function swordWindowStep(win, tick) {
+    let { pending } = win;
+    let repeats = win.repeats;
+    const fires = [];
+    if (pending) {
+        fires.push(pending);
+        if (pending.weapon === 'sword') {
+            const grown = repeats.slice();
+            for (let i = 1; i < SLASH_HIT_TICKS; i += 1) {
+                grown.push({ ...pending, at: tick + i, repeat: i });
+            }
+            repeats = grown;
+        }
+        pending = null;
+    }
+    if (repeats.length > 0) {
+        const due = repeats.filter((r) => r.at === tick);
+        if (due.length > 0) {
+            repeats = repeats.filter((r) => r.at > tick);
+            for (const r of due) fires.push(r);
+        }
+    }
+    return { window: { pending, repeats }, fires };
+}
+
+/**
+ * ⛓⛓ **THE PENDING HIT TESTS ARE REPLACED, NOT APPENDED TO** — taken by a
+ * sword press that OPENS a window (`slashSet`'s `slash` or `dash`), ABOVE the
+ * player's step.
+ *
+ * `play(anim, true)` RESTARTS the animation, so `slashEnd`'s clock restarts and
+ * the hit tests that run off `if (slashing)` inside it restart with it. A model
+ * that reset one and appended to the other asserts that `Player.slash()` runs
+ * its test TWICE on a tick, which it never does.
+ *
+ * ⛓ NO GAP IS OPENED: this tick's own repeat has already fired above (the step
+ * runs at the TOP of the tick), so what is cleared is strictly the FUTURE of a
+ * swing the game has just replaced.
+ */
+export function swordWindowReplace(win) {
+    return { pending: win.pending, repeats: [] };
+}
+
+/**
+ * ⛓ THE PRESS'S OWN THRUST, scheduled for the TOP of the NEXT tick — taken
+ * BELOW the player's step, where `useItem` sits inside `input()`.
+ *
+ * ⛔ SEPARATE FROM `swordWindowReplace` BECAUSE THE GAME TAKES THEM AT
+ * DIFFERENT MOMENTS OF THE TICK, and because a NON-sword press schedules a
+ * thrust WITHOUT replacing anything: `useItem`'s spear arm never touches
+ * `slashing`. Folding the two into one call would clear a live sword window on
+ * a spear press.
+ */
+export function swordWindowSchedule(win, thrust) {
+    return { pending: thrust, repeats: win.repeats };
+}
+
 export const LIGHTPOLE_HITS_TIMER_MAX = 25;
 
 /** Facing directions, as `Player.direction` numbers them. */
