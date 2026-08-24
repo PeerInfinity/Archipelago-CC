@@ -146,10 +146,30 @@ export const EDIT_OPS = Object.freeze([
 
 export const TILE_NAMES = Object.freeze({ floor: TILE_FLOOR, wall: TILE_WALL });
 
-/** ⛓ `button_A3` → 3. Derived from the ONE allocator by search rather than by a
- *  regexp, so a change to the id shape cannot leave a second spelling behind. */
-function indexOfGuardId(buttonId) {
+/**
+ * ⛓ `button_A3` → 3. Derived from the ONE allocator by search rather than by a
+ * regexp, so a change to the id shape cannot leave a second spelling behind.
+ *
+ * ⛓ EXPORTED for EDITOR v3 slice A1: `mazeEditAdapter.readCell` has to answer
+ * *"which button is at this cell"* in the vocabulary `setButton` takes — the
+ * INDEX — and a second inversion over there would be exactly the drifting
+ * spelling this search exists to prevent.
+ */
+export function indexOfGuardId(buttonId) {
     for (let n = 0; n < 64; n += 1) if (guardIdsFor(n).button === buttonId) return n;
+    return null;
+}
+
+/**
+ * ⛓ `flag_K2` → 2 — the SAME search, over the flag allocator, and it is here
+ * beside `indexOfGuardId` for the same reason (EDITOR v3 slice A1). ⛔ Returns
+ * `null` for an item id that is not a flag, which is what tells a plain ITEM
+ * from a flag at the adapter's `readCell`: the two are the same cell to the
+ * engine (`_setFlag` places an item) and different ops to the editor, because
+ * only the flag carries the `itemLib` entry the renderer and layer 1 read.
+ */
+export function indexOfFlagId(itemId) {
+    for (let n = 0; n < 64; n += 1) if (flagIdFor(`K${n}`) === itemId) return n;
     return null;
 }
 

@@ -244,6 +244,29 @@ export function cloneWorld(world) {
 }
 
 /**
+ * ⛓⛓ **DID THE WORLD CHANGE?** — the ONE comparison, extracted here beside the
+ * serialiser it is built on (EDITOR v3 slice A1).
+ *
+ * ⛔ It was an inline expression in `mazeLab.applyEdit`, whose docblock argues
+ * the whole point at length: *the test is "did the WORLD change", not what the
+ * EDITOR called it* — `MazeRoomEditor._setTile` returns `ok: true, type:
+ * 'tile'` for a click on a cell that already holds that tile, so a guard on the
+ * descriptor counts a press that moved no bytes as an edit (trap 263). The edit
+ * CORE asks the same question through its adapter's `equal`, and two spellings
+ * of one comparison are how a page and a fold come to disagree about whether
+ * anything happened.
+ *
+ * ⚠ IT IS THE **SERIALISED** WORLD and not a deep compare: `serializeMazeLevel`
+ * is the level's determinism channel — fixed key order, sorted overlays, the
+ * per-instance library entries — so it is exactly the set of bytes an identity
+ * is about, and it ignores the caches (`_exitsByPos`) and the location-name map
+ * that a clone rebuilds.
+ */
+export function worldsEqual(a, b) {
+    return JSON.stringify(serializeMazeLevel(a)) === JSON.stringify(serializeMazeLevel(b));
+}
+
+/**
  * A maze world as plain JSON — what the CLI prints and what a later lab page
  * downloads.
  *

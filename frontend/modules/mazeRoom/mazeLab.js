@@ -92,7 +92,7 @@ import { createState, step } from './mazeRoomEngine.js';
 import {
     DEFAULT_MAZE_BUDGET, MAZE_DEFAULTS, MAZE_PALETTE, MAZE_SKELETON_KINDS, assertMazeBudget,
     cloneWorld, deserializeMazeLevel, generateMazeLevel, mazeCostRecords, mazeModel, mazeOracle,
-    requireOutcome, serializeMazeLevel,
+    requireOutcome, serializeMazeLevel, worldsEqual,
 } from './procgenMaze.js';
 import { SEED_MAX, rngFor } from './procgenRng.js';
 
@@ -771,9 +771,7 @@ export function applyEdit(state, editor, tx, ty) {
      * serialised worlds is the one question this page actually has (rooms are
      * tens of cells, so the comparison is free).
      */
-    const changed = result.ok
-        && JSON.stringify(serializeMazeLevel(next))
-            !== JSON.stringify(serializeMazeLevel(state.record));
+    const changed = result.ok && !worldsEqual(next, state.record);
     if (!changed) {
         return { state, result };
     }
