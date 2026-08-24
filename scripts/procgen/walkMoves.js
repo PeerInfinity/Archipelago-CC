@@ -66,6 +66,31 @@ export class WalkMovesError extends Error {
 const fail = (m) => { throw new WalkMovesError(m); };
 
 export const LICENSE_FLAG = '--license-walks';
+
+/**
+ * ⛔⛔ **THE PRODUCER'S OWN CHECK FLAG, AS A CONSTANT — AND THE REASON IS A
+ * DEFECT THIS SLICE SHIPPED AND THEN CAUGHT.**
+ *
+ * `standingValues.producerScripts` decides what is "a producer with a
+ * `--check`" by scanning every `solve-`/`plan-`/`rerecord-*.mjs` for the
+ * LITERAL `'--check'` **anywhere in its text**. S0's walk measurement SHELLS
+ * OUT to producers with that flag, so the moment the literal appeared inside
+ * `rerecord-seedling-campaign.mjs` the standing-values row list grew a
+ * `producer: rerecord-seedling-campaign --check` row — and that pipeline
+ * IGNORES unknown flags, so the "check" ran **the whole S0..S5 pipeline**,
+ * drove Windows Chrome, and would have baked a twenty-minute GPU row into the
+ * baseline every slice re-measures.
+ *
+ * ⇒ the flag is named HERE, in a `.js` the producer regex does not match, and
+ * the pipeline REFUSES `--check` by name (see its argv block) so the landmine
+ * is loud rather than silent if anything re-arms it.
+ *
+ * ⚠ The deeper fix belongs to the instrument: "contains the string" is not
+ * "reads it out of argv", and the instruments scan already answers the second
+ * question correctly. Not changed here — it would move the row LIST, which is
+ * the baseline ⚖ ruling 32 A makes the next slice's BEFORE.
+ */
+export const CHECK_FLAG = '--check';
 /** The one verdict a licence covers. */
 export const LICENSABLE = 'walk-moves';
 

@@ -114,8 +114,8 @@ import {
     bootFromEnvelopeOnly, chainSubjects, latchCacheKey, mergePersistence, timedClearHazard,
 } from './rerecordCampaign.js';
 import {
-    LICENSE_FLAG, applyLicence, cascadeFrom, licenceFrom, movedSegments, nominateOwners,
-    participationOf, reportRows,
+    CHECK_FLAG, LICENSE_FLAG, applyLicence, cascadeFrom, licenceFrom, movedSegments,
+    nominateOwners, participationOf, reportRows,
 } from './walkMoves.js';
 import { buildInstruments } from './reference/instruments.mjs';
 
@@ -153,6 +153,24 @@ try {
     LICENCE = licenceFrom(LICENSE_TOKEN === undefined ? [] : [LICENSE_TOKEN]);
 } catch (e) {
     console.log(`FAIL: ${e.message}`);
+    process.exit(1);
+}
+/**
+ * ⛔⛔ **THIS IS A PIPELINE, NOT A PRODUCER, AND `--check` MUST SAY SO OUT
+ * LOUD.** It ignores unknown flags, so a caller who hands it `--check`
+ * expecting a read-only verdict gets S0..S5: browser stages, GPU, and writes.
+ * That is not hypothetical — `standingValues.producerScripts` scans this
+ * directory for that flag's own LITERAL SPELLING and added a row for this file the
+ * moment S0's walk measurement started shelling out with it, which then RAN
+ * the whole pipeline inside a baseline measurement. The flag name lives in
+ * `walkMoves.js` (a `.js`, outside that scan) so this refusal cannot re-arm
+ * the row it exists to explain.
+ */
+if (process.argv.includes(CHECK_FLAG)) {
+    console.log(`FAIL: rerecord-seedling-campaign has no ${CHECK_FLAG}. It is the RE-RECORD `
+        + 'PIPELINE (S0..S5) — it MEASURES with a browser and WRITES tapes, and it ignores '
+        + 'unknown flags, so running it as if it were a producer would drive the GPU and '
+        + 'move artifacts. Use `--dry-run` for the offline S0 verdict, or `--to=S0`.');
     process.exit(1);
 }
 const FROM = arg('from', 'S0');
@@ -257,7 +275,7 @@ async function measureWalks(chains) {
         let status = 0;
         let log = '';
         try {
-            log = execFileSync('node', [`scripts/procgen/${p.file}`, '--check',
+            log = execFileSync('node', [`scripts/procgen/${p.file}`, CHECK_FLAG,
                 `--walk-report=${out}`],
             { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'],
                 maxBuffer: 256 * 1024 * 1024 });
@@ -267,7 +285,7 @@ async function measureWalks(chains) {
         }
         const ms = Date.now() - t0;
         const logFile = join(RUN_DIR, `walk-${p.file.replace(/\.mjs$/, '')}.log`);
-        writeFileSync(logFile, `$ node scripts/procgen/${p.file} --check `
+        writeFileSync(logFile, `$ node scripts/procgen/${p.file} ${CHECK_FLAG} `
             + `--walk-report=${out}\n${log}`);
         if (!existsSync(out)) {
             crashed.push(`${p.file} produced NO walk report (exit ${status}) — it did not `
