@@ -13825,3 +13825,64 @@ that index enumerates `.mjs` and `CITE_RE` matches `.mjs`, which is why the
 wrapper's body is `gates.mjs` with a three-line `.sh` shim. Extending both to
 `.sh` is a separate subject — it would pull `identity-block.sh` in, need a
 `#`-comment docblock reader, and move the reference's counts.
+
+### R9 slice 12d: ONE DECLARATION, THE CONCATENATED TAPE RETIRED, AND A COMMAND THAT GROWS THE CHAIN
+
+⚖ Rulings 37 and 38 (1)(2) — with ⚖ rulings 39 and 40 arriving while the slice
+ran. Six typed copies of the campaign's membership became **one**; the
+3615-tick concatenated tape is **gone**; `rerecord-seedling-campaign.mjs
+--grow` exists and has answered its first question.
+
+**THE ONE DECLARATION** is `frontend/modules/seedlingDemo/campaignChain.js` —
+inert data with no imports of its own, which is what makes it browser-safe. The
+producer IMPORTS it and rebuilds each segment's goals from `collects` + `to`
+against the atlas; `PLAYTHROUGH_CHAINS[].segments` and `PAGE_CHAINS
+['r9-campaign']` **are the same frozen array** (asserted by IDENTITY, which a
+hand-kept copy that happens to match today cannot satisfy); `demos.js`
+interpolates its length and arrival room; and the chain table above is a
+GENERATED markdown region. The dependency runs one way only because the
+producer solves the campaign at module scope and drives Windows Chrome — so
+nothing can import IT.
+
+⚠ **A SEVENTH COPY nobody had listed** went with them: the producer's own
+docblock carried a sixteen-line room table, grown by hand every slice.
+
+**THE RETIREMENT WAS MEASURED REDUNDANT BEFORE IT HAPPENED.** The sixteen
+segments played ALONE by the model and concatenated — each successor from its
+index 1, because the boundary tick is observed twice — are the headline's
+**3616 observations, first differing index −1**. The sequence gate's CLAIM 9c
+therefore asserts exactly what it asserted before, from artifacts that still
+exist, and ⚖ ruling 23's law carries it. Three claims that had no second
+recording left became **UNASKABLE-BY-NAME** rather than silently absent (the
+ENDS-MEET arithmetic, the per-segment stream slice, the ending state), each
+naming where its content went; three of the six `clears` provenance rows went
+with the tape, and they were exactly the three whose only witness it was.
+
+⛔ **A FOURTH READ OF THE RETIRED TAPE WAS INVISIBLE TO GREP.** The sequence
+gate did `runTapeToStream(tapeOf(CHOICE.id))` — `CHOICE.id` is a CHAIN ID, and
+it resolved to a TAPE only because the headline shared the campaign's name. It
+surfaced as a CRASH with 28 PASS lines and **no total**, which is why
+`gates.sh` keys on exit codes.
+
+**`--grow`** derives the next room from the chain's own tail `to`, asks the
+route survey the census reads, and cross-checks it against the committed
+frontier. A refusal is the ANSWER, not an error: today's tail is L14 → L15 and
+the survey refuses L15, so it printed route step 17's family and text verbatim
+and wrote nothing. The append is REVERSIBLE until the producer agrees — the
+survey solves from a STAGED boot and the producer from the predecessor's
+MEASURED LATCH, so the survey's yes is evidence, not a guarantee. And it names
+the one thing it cannot derive: whether the PREDECESSOR's `why` survived the
+chain growing past it. ⚖ Ruling 39 shrinks that class — a `why` carries only
+the room's own story, and frontier-status sentences live in the frontier
+artifact.
+
+⛔ **A SCRATCH TREE CANNOT RUN THE BROWSER STAGES**, and that is the harness
+rather than the command: the dev server serves ONE tree. So a growth is
+REHEARSED offline (`--grow --to=S0`) and RUN in the tree the server is serving,
+and the four summaries (`index.json`, the frontier, the reference,
+`standing-values.json`) run only after a COMPLETE pipeline.
+
+Gates: `gates.sh local` **26/26** · the FULL roster **145 tapes, 3378 / 0 / 46,
+ALL CHECKS PASSED** · the unfiltered vitest ALONE **336 files / 10310 rows, 0
+failed**, no hand re-pin · sequence 36/0 → **35/0** by named rows · ship
+**254/0** unchanged · the campaign producer's `--check` md5 the only mover.
