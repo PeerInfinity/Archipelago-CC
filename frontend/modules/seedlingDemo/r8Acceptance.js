@@ -705,7 +705,32 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + 'lifetimes and the player walks past every one of them UNTOUCHED. '
                 + '⚠ The LEVELS are [14] and not [14, 15]: the leg ends at the L15 '
                 + 'arrival and L15 holds no `bob`, so the second room is not bridged.',
-        })
+        }),
+        /**
+         * ⛓⛓⛓ R9 SLICE 12c — **THE SEVENTH SLICE RUNNING** (trap 89). The guard
+         * named it by name on the first unfiltered run after the tape landed, and
+         * it is the SECOND thing this slice learned from a check it did not write.
+         * ⛔ Not folded into `exposedTapes`, for the standing reason.
+         *
+         * ⛓ THE PREDICTION IS DERIVABLE AND WAS: the tape is L6's own boot and
+         * never leaves the room, so `levels: [6]`; the atlas gives L6 two `bob`
+         * entities, so `bobs: 2` — the same two `r9-l6-bob-press` drives; and the
+         * tape's own `tick_count` is 22.
+         */
+        Object.freeze({
+            name: 'r9-l6-sword-dash-hit', levels: Object.freeze([6]), bobs: 2, ticks: 22,
+            addedBy: 'R9 slice 12c (the dash RECT\'s driven witness)',
+            why: 'the DASH RECT, driven against a body — the half of the dash nothing had '
+                + 'ever asked the game about. An ordinary swing fires 16 x 32 twice and '
+                + 'collects NOTHING; the dash two ticks later fires 24 x 20.8 and lands on '
+                + '`bob@112,48` at `distanceRectPoint` 20.236, which is above `SLASH_REACH` '
+                + '(16) and below `SLASH_REACH_DASH` (24) — so the game answers ONE boolean '
+                + 'that a wrong rect gets wrong. ⛓ Its exposure is a SURVIVOR: one hit of '
+                + 'three, the 30-tick i-frame armed, the body thrown east by `swordForce` '
+                + 'and walking away alive, and the player untouched. The shortest exposed '
+                + 'tape on the roster, and the only one whose claim is a rect rather than a '
+                + 'kill, a walk-past or an arrival.',
+        }),
     ]),
 
     /**

@@ -298,20 +298,28 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             // the tape as "undeclared and exposed", which is the order that
             // keeps `levels: [14]` a prediction rather than a transcription.
             'r9-solve-14',
+            // ⛓⛓⛓ R9 slice 12c: the dash RECT's driven witness — the SEVENTH
+            // slice running that this guard has named the slice's own addition
+            // by name (trap 89), on the first unfiltered run after the tape
+            // landed. The shortest exposed tape on the roster (22 ticks) and
+            // the only one whose exposure is a SURVIVOR: one hit of three, the
+            // i-frame armed, the body thrown clear and walking away alive.
+            'r9-l6-sword-dash-hit',
         ]);
-        // ⛓ 13 -> 11 -> 12 -> 13 -> 12: `r7-act2-3` and `r7-act2-4` are off the
-        // roster, so the measurement cannot find them; slice 12's witness is
-        // the twelfth and slice 12b″'s L14 crossing the thirteenth. ⛓ R9 slice
-        // 12d took one back off: the retired HEADLINE tape was an exposed tape
-        // in its own right, and deleting the file is what the count reads. The
-        // three that STAY (⚖ ruling 18) are still here, still exposed, still
-        // declared.
-        expect(out.exposed).toBe(12);
+        // ⛓ 13 -> 11 -> 12 -> 13 -> 12 -> 13: `r7-act2-3` and `r7-act2-4` are
+        // off the roster, so the measurement cannot find them; slice 12's
+        // witness is the twelfth and slice 12b″'s L14 crossing the thirteenth.
+        // ⛓ R9 slice 12d took one back off: the retired HEADLINE tape was an
+        // exposed tape in its own right, and deleting the file is what the
+        // count reads. ⛓ R9 slice 12c puts it back with the dash-rect witness.
+        // The three that STAY (⚖ ruling 18) are still here, still exposed,
+        // still declared.
+        expect(out.exposed).toBe(13);
         expect(out.tapes).toEqual([
             'r7-act2-5', 'r7-act2-6', 'r7-act2-full',
             'r8-hammer-arm', 'r8-l6-bob-contact', 'r8-solve-3', 'r8-solve-4',
             'r8-solve-5', 'r8-solve-6', 'r9-l6-bob-press',
-            'r9-solve-13', 'r9-solve-14',
+            'r9-l6-sword-dash-hit', 'r9-solve-13', 'r9-solve-14',
         ]);
     });
 
@@ -384,6 +392,12 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             // because the "declared and no longer exposed" arm fires first and
             // the assertion passes for the wrong reason. Measured: it did.
             'r9-solve-14': { tape: {}, levels: [14] },
+            // ⛓⛓ R9 slice 12c's dash-rect witness, at its declared room — the
+            // same mirror rule, for the third time in three slices that added a
+            // ledger row. A row in the ledger and not in this fixture makes the
+            // "declared and no longer exposed" arm fire first and the assertion
+            // pass for the wrong reason.
+            'r9-l6-sword-dash-hit': { tape: {}, levels: [6] },
         });
         expect(() => assertBridgeExposureIsMeasured(io)).toThrow(/right name with wrong rooms/);
     });
