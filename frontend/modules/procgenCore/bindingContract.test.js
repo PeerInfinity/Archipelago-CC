@@ -32,7 +32,7 @@
  * contract would be a suite nobody runs.
  */
 
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -321,13 +321,26 @@ describe('the two bindings share the contract and nothing else', () => {
  */
 describe('⛔ procgenCore imports nothing substrate-side', () => {
     const here = dirname(fileURLToPath(import.meta.url));
-    const ELEMENTS = ['elements.js', 'elements/reversePullBlock.js'];
-    const SHIPPING = [
-        'levelGenerator.js', 'templateContract.js', 'procgenRng.js', 'areaGraph.js',
-        'areaSpec.js', 'gridFlood.js', 'skeletonKinds.js', 'urlParams.js', 'paletteRoster.js',
-        'pageLifetime.js', 'labProtocol.js', 'labBridge.js', 'labView.js',
-        ...ELEMENTS,
-    ];
+    /**
+     * ⛓⛓ **THE ROSTER IS READ OFF THE DIRECTORY, NOT TYPED.**
+     *
+     * EDITOR v3 slice A1. It WAS a literal list of thirteen names, and five
+     * shipping modules had already arrived beside it without joining
+     * (`areaPartition`, `densityBlock`, `differentialGrade`, `elementSpec`,
+     * `sites`) — the gate said nothing about them, and the sixth
+     * (`editCore.js`) would have been the sixth silence. ⚠ trap 574: a gate's
+     * SUBJECT frozen as a literal decays invisibly, and this one decayed while
+     * every row stayed green.
+     *
+     * ⛔ `*.test.js` is excluded because the rule is about SHIPPING modules —
+     * this very file imports both bindings and has to (see the docblock).
+     */
+    const shippingIn = (rel) => readdirSync(join(here, rel), { withFileTypes: true })
+        .filter((d) => d.isFile() && d.name.endsWith('.js') && !d.name.endsWith('.test.js'))
+        .map((d) => (rel === '.' ? d.name : `${rel}/${d.name}`))
+        .sort();
+    const ELEMENTS = ['elements.js', ...shippingIn('elements')];
+    const SHIPPING = [...shippingIn('.'), ...shippingIn('elements')];
     const BINDING = /(^|\/)(mazeRoom|seedlingDemo)\//;
     const SHARED = /(^|\/)shared\//;
     const GRID_TILES = 'shared/procgen/mazeAlgorithms/gridTiles.js';
@@ -362,6 +375,13 @@ describe('⛔ procgenCore imports nothing substrate-side', () => {
         expect(importsOf('elements.js')).toContain(`../${GRID_TILES}`);
         expect(importsOf('elements/reversePullBlock.js')).toContain(`../../${GRID_TILES}`);
         expect(importsOf('skeletonKinds.js').some((s) => SHARED.test(s))).toBe(true);
+        // ⛔ the DERIVED roster really did pick the directory up, and it holds
+        //   the modules the literal list had quietly stopped covering.
+        expect(SHIPPING).toContain('editCore.js');
+        expect(SHIPPING).toContain('sites.js');
+        expect(SHIPPING).toContain('elements/roomDoor.js');
+        expect(SHIPPING.some((r) => r.endsWith('.test.js'))).toBe(false);
+        expect(SHIPPING.length).toBeGreaterThan(20);
         expect(BINDING.test('../mazeRoom/mazeRoomEngine.js')).toBe(true);
         expect(BINDING.test('../seedlingDemo/procgenPalette.js')).toBe(true);
         expect(SHARED.test(`../${GRID_TILES}`)).toBe(true);
