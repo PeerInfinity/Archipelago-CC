@@ -242,16 +242,34 @@ describe('⛓ the brush', () => {
 
     /**
      * ⛓⛓ MUTANT: `swallowClick` is never set — the `click` the browser fires
-     * after the release paints the last cell a SECOND time and `ops()` is 2.
+     * after the release re-applies the brush at the last cell.
+     *
+     * ⛔⛔ **AND THE OP COUNT CANNOT SEE IT** — measured, and the first cut of
+     * this row was GREEN under that mutant. The trailing click lands on the
+     * cell the stroke just painted, so the second application is a NO-OP and
+     * ⚖ law (b) drops it: same record, same `ops()`, same everything the
+     * obvious assertion looks at. ⚠ §9.3's lesson exactly (and trap 586): a
+     * claim measured on a subject that cannot tell two builds apart is not a
+     * claim. The SUBJECT here is that the handler did not RUN — no sentence,
+     * no `onChange` — which is what the swallow actually promises.
      */
-    it('the click that follows a committed drag is swallowed', () => {
+    it('the click that follows a committed drag is swallowed — the handler does NOT run', () => {
         const t = harness();
         t.canvas.dispatch('mousedown', { tx: 0, ty: 0 });
         t.canvas.dispatch('mousemove', { tx: 1, ty: 0 });
         t.keyTarget.dispatch('mouseup', {});
+        const saidBefore = t.said.length;
+        const changedBefore = t.changes.length;
         t.canvas.dispatch('click', { tx: 1, ty: 0 });
+        expect(t.said).toHaveLength(saidBefore);
+        expect(t.changes).toHaveLength(changedBefore);
         expect(t.session.ops()).toHaveLength(1);
         expect(t.session.ops()[0].op).toBe('group');
+        // ⛓ …and the NEXT click is not swallowed — the flag is one-shot, not a
+        //   mode. Without this the mutant "swallowClick is never cleared" would
+        //   pass the row above and kill every press after a drag.
+        t.canvas.dispatch('click', { tx: 4, ty: 4 });
+        expect(t.session.ops()).toHaveLength(2);
     });
 
     /** ⛓ MUTANT: a one-cell drag commits a group of 1 — then the click that

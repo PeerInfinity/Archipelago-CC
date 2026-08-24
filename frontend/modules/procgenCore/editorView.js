@@ -346,6 +346,16 @@ export function mountEditorView({
 
     const floodAt = (c) => {
         const target = floodTarget(c.tx, c.ty);
+        /**
+         * ⛓ A PAGE THAT HAS NO TARGET HAS NOT ARMED A FLOOD. ⛔ Refused here
+         * rather than passed on: `writeOps(null, …)` emits nothing and the
+         * core's refusal would then be *"writeOps emitted nothing"*, which is a
+         * true sentence about the wrong subject (⚠ trap 598's family).
+         */
+        if (!target || typeof target !== 'object') {
+            say('FLOOD has no target — the page\'s palette selection does not name one', true);
+            return null;
+        }
         const built = tryCore('floodOps', () => floodOps(
             adapter, session.record(), c.tx, c.ty, target,
         ));
