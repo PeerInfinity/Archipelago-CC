@@ -25,10 +25,21 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-    EDIT_OPS, ENTITY_ROSTER, ENTITY_ROSTER_TYPES, WatchEditError, applyEdit, applyEdits,
-    describeEdit, editState, editStates, entityIndexAt, normalizeEdit, undoEdit,
+    CELL_OPS, EDIT_OPS, ENTITY_ROSTER, ENTITY_ROSTER_PROCGEN, ENTITY_ROSTER_TYPES, ROOM_OPS,
+    ROOM_GEOMETRY_BOSSES, WatchEditError, applyEdit, applyEdits, coerceAttrValue, describeEdit,
+    editState, editStates, entityDecl, entityIndexAt, entityRosterFrom, normalizeAttrsAgainst,
+    normalizeEdit, normalizeGroupOrEdit, resizeWarnings, undoEdit,
 } from './watchEdit.js';
-import { TERRAIN_NAMES, oelAtTile, terrainAt, tileAtOel } from './procgenLevel.js';
+import {
+    LAYER_COLUMNS, LAYER_TILESETS, TERRAIN_NAMES, TILE_LAYERS, assertColumnsModelled, emptyLevel,
+    hasTile, layerNamed, oelAtTile, resizeRoom, shellOf, terrainAt, tileAtOel, tileCellAt,
+    withTerrain,
+} from './procgenLevel.js';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { CLIFFSIDE_FRAME_MASKS, MODELLED_TILE_TYPES } from './levelWorld.js';
+import { TILE_COLUMN_TO_TYPE } from '../flashPanel/seedlingSemantics.js';
+import { loadAtlas } from './levelSource.js';
 import { ENTITY_CLASSES, buildLevelWorld, LevelWorldError } from './levelWorld.js';
 import { generateStep, generateWithDirectives } from './watchGenerate.js';
 import { atlasOf } from './procgenLevel.js';
@@ -40,14 +51,26 @@ const ladder = (step = 2) => generateStep({ ...SUBJECT, step });
 const j = (v) => JSON.stringify(v);
 
 describe('the op set — closed, and normalized before anything is applied', () => {
-    it('the four ops ARE the set every reader shares', () => {
-        expect(EDIT_OPS).toEqual(['paint', 'place', 'attrs', 'remove']);
+    it('the ops ARE the set every reader shares — slice 11\'s four, plus B\'s two', () => {
+        expect(EDIT_OPS).toEqual(['paint', 'place', 'attrs', 'remove', 'nodes', 'resize']);
         expect(Object.isFrozen(EDIT_OPS)).toBe(true);
     });
 
-    it('a fifth op refuses BY NAME and names the four', () => {
+    /**
+     * ⛓ CELL vs ROOM, DERIVED — trap 574's shape. `resize` is the one op that
+     * carries no `tx`/`ty`, and the split is declared once so `normalizeEdit`'s
+     * demand for a cell follows the declaration instead of a chain of
+     * `op.op !== …` that a seventh op joins by being forgotten.
+     */
+    it('⛓ every op is a CELL op or a ROOM op, and the two lists PARTITION the set', () => {
+        expect([...CELL_OPS, ...ROOM_OPS].sort()).toEqual([...EDIT_OPS].sort());
+        expect(CELL_OPS.filter((o) => ROOM_OPS.includes(o))).toEqual([]);
+        expect(ROOM_OPS).toEqual(['resize']);
+    });
+
+    it('an unknown op refuses BY NAME and names the whole set', () => {
         expect(() => normalizeEdit({ op: 'nudge', tx: 1, ty: 1 }))
-            .toThrow(/is not one of the four edit ops \[paint, place, attrs, remove\]/);
+            .toThrow(/is not one of the 6 edit ops \[paint, place, attrs, remove, nodes, resize\]/);
     });
 
     /**
@@ -457,9 +480,496 @@ describe('describeEdit — the pane\'s row, in the brief\'s own spelling', () =>
             place: { ...at, op: 'place', type: 'button' },
             attrs: { ...at, op: 'attrs' },
             remove: { ...at, op: 'remove' },
+            nodes: { ...at, op: 'nodes', nodes: [{ x: 16, y: 32 }] },
+            resize: { op: 'resize', width: 12, height: 12 },
         };
         for (const op of EDIT_OPS) {
             expect(describeEdit(normalizeEdit(samples[op])), op).toMatch(/^EDIT /);
         }
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ EDITOR v3 · SLICE B — THE WIDENED OPS AND THE `.oep` SCHEMA
+ * ══════════════════════════════════════════════════════════════════════ */
+
+const ATLAS = loadAtlas();
+
+const SCHEMA = JSON.parse(readFileSync(
+    fileURLToPath(new URL('./fixtures/seedling-ogmo-schema.json', import.meta.url)), 'utf8',
+));
+
+describe('the .oep schema fixture — what the editor OFFERS, derived', () => {
+    it('⛓ every declared value carries one of the FOUR Ogmo types, and the fixture '
+        + 'publishes the closed set rather than the three that happen to occur', () => {
+        expect(SCHEMA.value_types).toEqual(['integer', 'number', 'string', 'boolean']);
+        const used = new Set(Object.values(SCHEMA.entities)
+            .flatMap((e) => e.values.map((v) => v.type)));
+        for (const t of used) expect(SCHEMA.value_types).toContain(t);
+        // ⚠ MEASURED: Seedling's project uses three of the four. The consumer must
+        // not learn "there are three types" from data that merely omits the fourth.
+        expect([...used].sort()).toEqual(['integer', 'number', 'string']);
+    });
+
+    it('⛓⛓ EVERY entity type the 116 SHIPPED ROOMS hold is declared — the fixture is '
+        + 'checked against the DATA the game loads, not against a second reading of the AS3',
+    () => {
+        const types = new Set(ATLAS.levels.flatMap((l) => l.entities.map((e) => e.type)));
+        const undeclared = [...types].filter((t) => !SCHEMA.entities[t]);
+        expect(undeclared, `${types.size} types in the atlas`).toEqual([]);
+        expect(types.size).toBe(137);
+        expect(Object.keys(SCHEMA.entities).length).toBe(144);
+    });
+
+    it('⛓⛓⛓ THE HARDENING RULE ACCEPTS THE REAL DATA — every attribute value of every '
+        + 'entity in all 116 rooms satisfies its declared type and range', () => {
+        let checked = 0;
+        const refused = [];
+        for (const level of ATLAS.levels) {
+            for (const e of level.entities) {
+                const decl = SCHEMA.entities[e.type];
+                for (const [k, v] of Object.entries(e.attrs ?? {})) {
+                    const d = decl.values.find((x) => x.name === k);
+                    expect(d, `<${e.type}> carries an undeclared ${k}`).toBeTruthy();
+                    checked += 1;
+                    try { coerceAttrValue(d, v, 'row'); } catch (err) {
+                        refused.push(`${e.type}.${k}=${v}: ${err.message}`);
+                    }
+                }
+            }
+        }
+        // ⚠ TRAP "a hardening rule can REFUSE the real data": the corpus this rule is
+        // about is the fixture the rule must satisfy, and the count is what makes the
+        // row non-vacuous.
+        expect(refused).toEqual([]);
+        expect(checked).toBe(3574);
+    });
+
+    it('⚠ AND OGMO DOES **NOT** WRITE EVERY DECLARED VALUE — the brief said it does, '
+        + 'measured false: 183 of 2,461 instances lack one', () => {
+        let complete = 0;
+        let partial = 0;
+        const missing = new Map();
+        for (const level of ATLAS.levels) {
+            for (const e of level.entities) {
+                const want = SCHEMA.entities[e.type].values.map((v) => v.name);
+                const got = new Set(Object.keys(e.attrs ?? {}));
+                const absent = want.filter((n) => !got.has(n));
+                if (absent.length === 0) complete += 1; else partial += 1;
+                for (const n of absent) missing.set(`${e.type}.${n}`, (missing.get(`${e.type}.${n}`) ?? 0) + 1);
+            }
+        }
+        expect(complete).toBe(2278);
+        expect(partial).toBe(183);
+        expect([...missing.entries()].sort((a, b) => b[1] - a[1])[0]).toEqual(['teleporter.sign', 137]);
+        // ⛓ …AND EVERY ONE OF THE ABSENT VALUES HAS A DECLARED DEFAULT. That is what
+        // makes the finding "a value declared AFTER those rooms were last saved"
+        // rather than "the format is optional wherever it feels like it".
+        for (const key of missing.keys()) {
+            const [type, name] = key.split('.');
+            const d = SCHEMA.entities[type].values.find((v) => v.name === name);
+            expect(d.default, key).not.toBeNull();
+        }
+    });
+
+    it('⛓ `rope` is the ONE type declaring <nodes>, and the roster derives it', () => {
+        const withNodes = Object.entries(SCHEMA.entities)
+            .filter(([, e]) => e.nodes).map(([t]) => t);
+        expect(withNodes).toEqual(['rope']);
+        const roster = entityRosterFrom(SCHEMA);
+        expect(roster.length).toBe(144);
+        expect(roster.filter((r) => r.nodes).map((r) => r.type)).toEqual(['rope']);
+    });
+
+    it('⛓ the five ROOM-GEOMETRY bosses are all declared, in the `enemies` folder — a '
+        + 'literal WITH PROVENANCE, pinned against the schema so a rename reddens', () => {
+        for (const name of Object.keys(ROOM_GEOMETRY_BOSSES)) {
+            expect(SCHEMA.entities[name], name).toBeTruthy();
+            expect(SCHEMA.entities[name].folder, name).toBe('enemies');
+        }
+        expect(Object.keys(ROOM_GEOMETRY_BOSSES).length).toBe(5);
+    });
+
+    it('⛔ `ENTITY_ROSTER` DID NOT WIDEN — the page reads its [0] as the default place '
+        + 'type, and `ENTITY_ROSTER_PROCGEN` is the SAME frozen array', () => {
+        expect(ENTITY_ROSTER_PROCGEN).toBe(ENTITY_ROSTER);
+        expect(ENTITY_ROSTER_TYPES).toEqual(
+            ['pushableblock', 'button', 'lock', 'spinner', 'arrowtrap']);
+        // …and every one of the five IS in the wide vocabulary, so the narrow list is a
+        // SUBSET rather than a second roster.
+        for (const t of ENTITY_ROSTER_TYPES) expect(SCHEMA.entities[t], t).toBeTruthy();
+    });
+});
+
+describe('paint — all 45 columns, and the cliffsides layer', () => {
+    it('⛓⛓⛓ BYTE-INERT: a terrain-NAME paint normalizes to exactly slice 11\'s op', () => {
+        expect(j(normalizeEdit({ op: 'paint', tx: 3, ty: 4, terrain: 'wall' })))
+            .toBe('{"op":"paint","tx":3,"ty":4,"terrain":"wall"}');
+        // ⛔ `layer` is ABSENT when it is `tiles`: the op is compared BYTE for BYTE
+        // between a payload and a page, so writing the default into every op would
+        // make every level generated before this slice disagree with itself.
+        expect(j(normalizeEdit({ op: 'paint', tx: 3, ty: 4, terrain: 'wall', layer: 'tiles' })))
+            .toBe('{"op":"paint","tx":3,"ty":4,"terrain":"wall"}');
+    });
+
+    it('⛓ a COLUMN paint reaches all 45, and the record holds what was asked for', () => {
+        const r = emptyLevel({ level: 1 });
+        for (const column of [0, 21, 36, 44]) {
+            const out = applyEdit(r, { op: 'paint', tx: 4, ty: 4, column });
+            expect(tileCellAt(out, 4, 4).column, `column ${column}`).toBe(column);
+        }
+    });
+
+    it('⚠ THERE IS NO "Unused" COLUMN TO REFUSE — all 45 build a type the JS model '
+        + 'transcribes, so the only paint refusal is OUT OF RANGE', () => {
+        expect(assertColumnsModelled(MODELLED_TILE_TYPES)).toBe(true);
+        expect(() => normalizeEdit({ op: 'paint', tx: 1, ty: 1, column: 45 }))
+            .toThrow(/is not a column of the "tiles" layer — that layer has 45 \(0\.\.44\)/);
+        expect(() => normalizeEdit({ op: 'paint', tx: 1, ty: 1, column: -1 }))
+            .toThrow(/not a column of the "tiles" layer/);
+    });
+
+    it('a paint carrying BOTH a name and a column refuses — two spellings of one choice',
+        () => {
+            expect(() => normalizeEdit({ op: 'paint', tx: 1, ty: 1, terrain: 'wall', column: 3 }))
+                .toThrow(/carries a `terrain` NAME and a `column` at once/);
+        });
+
+    it('⛓⛓ the cliffsides layer: painted into a room that has NONE creates it, with the '
+        + 'tileset the 116 rooms use and AFTER the tiles layer', () => {
+        const r = emptyLevel({ level: 1 });
+        expect(layerNamed(r, 'cliffsides')).toBeNull();
+        const out = applyEdit(r, { op: 'paint', tx: 4, ty: 4, layer: 'cliffsides', column: 2 });
+        expect(out.layers.map((l) => l.name)).toEqual(['tiles', 'cliffsides']);
+        expect(layerNamed(out, 'cliffsides').set).toBe(LAYER_TILESETS.cliffsides);
+        expect(tileCellAt(out, 4, 4, 'cliffsides').column).toBe(2);
+        // …and the TILES layer is untouched by a cliffsides paint.
+        expect(tileCellAt(out, 4, 4).column).toBe(tileCellAt(r, 4, 4).column);
+    });
+
+    it('⛔ a terrain NAME on the cliffsides layer refuses BY NAME — `wall`\'s column is '
+        + '3, which would silently paint mask 3 (CliffSideMaskRU)', () => {
+        expect(() => normalizeEdit({
+            op: 'paint', tx: 1, ty: 1, layer: 'cliffsides', terrain: 'wall',
+        })).toThrow(/asked of the "cliffsides" layer/);
+    });
+
+    it('the cliffsides column bound is CLIFFSIDE_FRAME_MASKS.length, derived', () => {
+        expect(LAYER_COLUMNS.cliffsides).toBe(CLIFFSIDE_FRAME_MASKS.length);
+        expect(LAYER_COLUMNS.tiles).toBe(TILE_COLUMN_TO_TYPE.length);
+        expect(() => normalizeEdit({
+            op: 'paint', tx: 1, ty: 1, layer: 'cliffsides', column: 5,
+        })).toThrow(/that layer has 5 \(0\.\.4\)/);
+    });
+
+    it('a third layer name refuses — `loadlevel` builds exactly two', () => {
+        expect(() => normalizeEdit({ op: 'paint', tx: 1, ty: 1, layer: 'decor', column: 0 }))
+            .toThrow(/layer must be one of \[tiles, cliffsides\]/);
+    });
+
+    it('⛓ the EDITOR\'s writer ADDS a cell the layer lacks; the GENERATOR\'s replaces only',
+        () => {
+            // A 3x3 wall block: its centre is a wall with no floor in reach, so the
+            // strip drops it — a `shellOf(emptyLevel)` drops NOTHING (every ring wall
+            // touches the floor), and a row over that would distinguish nothing.
+            const block = [];
+            for (let ty = 4; ty <= 6; ty += 1) {
+                for (let tx = 4; tx <= 6; tx += 1) block.push({ tx, ty, terrain: 'wall' });
+            }
+            const dense = withTerrain(emptyLevel({ level: 1 }), block);
+            const sparse = shellOf(dense);
+            // (0,0) is a corner wall the shell strip keeps; pick a cell it dropped.
+            const gone = [];
+            for (let ty = 0; ty < dense.height; ty += 1) {
+                for (let tx = 0; tx < dense.width; tx += 1) {
+                    if (!hasTile(sparse, tx, ty)) gone.push([tx, ty]);
+                }
+            }
+            expect(gone.length, 'the shell must drop something for this row to mean anything')
+                .toBeGreaterThan(0);
+            const [tx, ty] = gone[0];
+            expect(withTerrain(sparse, [{ tx, ty, terrain: 'ground' }]).layers[0].tiles.length)
+                .toBe(sparse.layers[0].tiles.length);
+            expect(applyEdit(sparse, { op: 'paint', tx, ty, terrain: 'ground' })
+                .layers[0].tiles.length).toBe(sparse.layers[0].tiles.length + 1);
+        });
+});
+
+describe('place — the whole vocabulary, typed', () => {
+    it('⛓⛓⛓ BYTE-INERT with NO schema: slice 11\'s place op, unchanged', () => {
+        expect(j(normalizeEdit({ op: 'place', tx: 3, ty: 4, type: 'button', attrs: { tset: '0' } })))
+            .toBe('{"op":"place","tx":3,"ty":4,"type":"button","attrs":{"tset":"0"}}');
+        // …and every one of the five procgen types round-trips its OFFERED attrs
+        // through the schema-bearing path unchanged, which is what makes the
+        // typed path safe to hand the palette.
+        for (const e of ENTITY_ROSTER) {
+            expect(j(normalizeEdit({ op: 'place', tx: 1, ty: 1, type: e.type, attrs: e.attrs })),
+                e.type)
+                .toBe(j(normalizeEdit(
+                    { op: 'place', tx: 1, ty: 1, type: e.type, attrs: e.attrs }, { schema: SCHEMA },
+                )));
+        }
+    });
+
+    it('an UNDECLARED attribute refuses BY NAME, and names what the type declares', () => {
+        expect(() => normalizeEdit(
+            { op: 'place', tx: 1, ty: 1, type: 'button', attrs: { nope: '1' } },
+            { schema: SCHEMA },
+        )).toThrow(/<button> has no attribute "nope"\. `Shrum\.oep` declares \[tset\]/);
+    });
+
+    it('an UNDECLARED TYPE refuses on the schema path — and stays FREE TEXT without one',
+        () => {
+            expect(() => normalizeEdit(
+                { op: 'place', tx: 1, ty: 1, type: 'nope', attrs: {} }, { schema: SCHEMA },
+            )).toThrow(/is not one of the 144 entity types/);
+            // ⚠ law (b) is untouched: with no schema the world is still the adjudicator.
+            expect(normalizeEdit({ op: 'place', tx: 1, ty: 1, type: 'nope', attrs: {} }).type)
+                .toBe('nope');
+        });
+
+    it('min / max / maxChars are enforced from the declaration', () => {
+        const at = { op: 'place', tx: 1, ty: 1 };
+        expect(() => normalizeEdit({ ...at, type: 'button', attrs: { tset: '101' } },
+            { schema: SCHEMA })).toThrow(/above the declared maximum 100/);
+        expect(() => normalizeEdit({ ...at, type: 'button', attrs: { tset: '-1' } },
+            { schema: SCHEMA })).toThrow(/below the declared minimum 0/);
+        expect(() => normalizeEdit({ ...at, type: 'torch', attrs: { c: '0xFFCC0000' } },
+            { schema: SCHEMA })).toThrow(/maxChars=8/);
+        expect(() => normalizeEdit({ ...at, type: 'button', attrs: { tset: 'x' } },
+            { schema: SCHEMA })).toThrow(/declared `integer` and "x" is not a number/);
+        expect(() => normalizeEdit({ ...at, type: 'button', attrs: { tset: '1.5' } },
+            { schema: SCHEMA })).toThrow(/is not a whole number/);
+    });
+
+    it('⛓ a value is COERCED to the text an OEL would hold — {tset: 0} and {tset: "0"} '
+        + 'are one payload', () => {
+        const a = normalizeEdit({ op: 'place', tx: 1, ty: 1, type: 'button', attrs: { tset: 0 } },
+            { schema: SCHEMA });
+        const b = normalizeEdit({ op: 'place', tx: 1, ty: 1, type: 'button', attrs: { tset: '0' } },
+            { schema: SCHEMA });
+        expect(j(a)).toBe(j(b));
+        expect(a.attrs.tset).toBe('0');
+        // …and a `number` value keeps its fraction (pull.direction default 0.75).
+        expect(normalizeAttrsAgainst(SCHEMA, 'pull', { direction: 0.75 }).direction).toBe('0.75');
+    });
+
+    it('⛔ fillDefaults is OFF by default and the 183-instance measurement is why', () => {
+        const bare = normalizeEdit({ op: 'place', tx: 1, ty: 1, type: 'lock', attrs: {} },
+            { schema: SCHEMA });
+        expect(bare.attrs).toEqual({});
+        const filled = normalizeEdit({ op: 'place', tx: 1, ty: 1, type: 'lock', attrs: {} },
+            { schema: SCHEMA, fillDefaults: true });
+        expect(filled.attrs).toEqual({ tag: '0', tset: '-1' });
+        // ⚠ a value with NO declared default stays absent even when filling — three of
+        // the 166 have none and inventing a zero would write an author's silence as data.
+        const flip = normalizeEdit({ op: 'place', tx: 1, ty: 1, type: 'bonetorch', attrs: {} },
+            { schema: SCHEMA, fillDefaults: true });
+        expect(Object.keys(flip.attrs)).toEqual(['c']);
+        expect(entityDecl(SCHEMA, 'bonetorch').values.find((v) => v.name === 'flip').default)
+            .toBeNull();
+    });
+
+    it('an `attrs` op is checked against the RECORD\'s entity, not the op\'s', () => {
+        const r = applyEdit(emptyLevel({ level: 1 }),
+            { op: 'place', tx: 4, ty: 4, type: 'button', attrs: { tset: '0' } });
+        expect(() => applyEdit(r, { op: 'attrs', tx: 4, ty: 4, attrs: { tag: '1' } },
+            { schema: SCHEMA })).toThrow(/<button> has no attribute "tag"/);
+        expect(applyEdit(r, { op: 'attrs', tx: 4, ty: 4, attrs: { tset: 3 } },
+            { schema: SCHEMA }).entities[0].attrs).toEqual({ tset: '3' });
+    });
+});
+
+describe('nodes — the rope\'s node list, as an op', () => {
+    const roped = (record) => applyEdit(record,
+        { op: 'place', tx: 4, ty: 4, type: 'rope', attrs: {} });
+
+    it('⛓ REPLACES the cell\'s last entity\'s node list', () => {
+        const r = roped(emptyLevel({ level: 1 }));
+        const out = applyEdit(r, { op: 'nodes', tx: 4, ty: 4, nodes: [{ x: 96, y: 64 }] });
+        expect(out.entities[0].nodes).toEqual([{ x: 96, y: 64 }]);
+        expect(r.entities[0].nodes).toBeUndefined();
+    });
+
+    it('⚠ an EMPTY list REMOVES the field — `nodes: []` is a shape the round trip cannot '
+        + 'preserve (the writer emits a self-closing element)', () => {
+        const r = applyEdit(roped(emptyLevel({ level: 1 })),
+            { op: 'nodes', tx: 4, ty: 4, nodes: [{ x: 96, y: 64 }] });
+        const out = applyEdit(r, { op: 'nodes', tx: 4, ty: 4, nodes: [] });
+        expect('nodes' in out.entities[0]).toBe(false);
+    });
+
+    it('⛔ refused for a type the schema says has no <nodes>', () => {
+        const r = applyEdit(emptyLevel({ level: 1 }),
+            { op: 'place', tx: 4, ty: 4, type: 'button', attrs: { tset: '0' } });
+        expect(() => applyEdit(r, { op: 'nodes', tx: 4, ty: 4, nodes: [{ x: 1, y: 1 }] },
+            { schema: SCHEMA })).toThrow(/does not declare <nodes>/);
+        // …and a `place` carrying one is refused at normalisation, before any record.
+        expect(() => normalizeEdit({
+            op: 'place', tx: 1, ty: 1, type: 'button', attrs: {}, nodes: [{ x: 1, y: 1 }],
+        }, { schema: SCHEMA })).toThrow(/does not declare <nodes>/);
+    });
+
+    it('a node is {x, y} in OEL PIXELS, refusing anything else', () => {
+        expect(() => normalizeEdit({ op: 'nodes', tx: 1, ty: 1, nodes: [{ x: 1 }] }))
+            .toThrow(/a node is `\{x, y\}` in OEL PIXELS/);
+        expect(() => normalizeEdit({ op: 'nodes', tx: 1, ty: 1, nodes: 'x' }))
+            .toThrow(/needs an array of \{x, y\}/);
+    });
+
+    it('a nodes op on a cell with no entity refuses, like every other cell-subject op',
+        () => {
+            expect(() => applyEdit(emptyLevel({ level: 1 }),
+                { op: 'nodes', tx: 4, ty: 4, nodes: [] })).toThrow(/which holds no entity/);
+        });
+});
+
+describe('resize — ⚖ ruling 5', () => {
+    it('⛓ the ROOM op carries no cell, and its canonical form names the anchor', () => {
+        expect(j(normalizeEdit({ op: 'resize', width: 12, height: 14 })))
+            .toBe('{"op":"resize","width":12,"height":14,"anchor":"top-left"}');
+        expect(() => normalizeEdit({ op: 'resize', width: 12, height: 14, anchor: 'centre' }))
+            .toThrow(/anchor must be one of \[top-left\]/);
+    });
+
+    it('GROW adds cells with NO tile', () => {
+        const r = emptyLevel({ level: 1 });
+        const out = applyEdit(r, { op: 'resize', width: 14, height: 12 });
+        expect([out.width, out.height]).toEqual([14, 12]);
+        expect(out.layers[0].tiles.length).toBe(r.layers[0].tiles.length);
+        expect(hasTile(out, 12, 11)).toBe(false);
+    });
+
+    it('⛔ CROP REFUSES a dropped cell that holds a tile or an entity, BY NAME', () => {
+        const r = emptyLevel({ level: 1 });
+        expect(() => applyEdit(r, { op: 'resize', width: 5, height: 5 }))
+            .toThrow(/would drop \d+ tile\(s\) and 0 entity\(ies\)/);
+        // …and the identity resize is not a refusal.
+        expect(resizeRoom(r, { width: 10, height: 10 })).toBe(r);
+    });
+
+    it('⛔ crop names the ENTITY when only an entity is in the way', () => {
+        // A room whose tiles all fit, holding one body that does not.
+        const r = emptyLevel({ level: 1 });
+        const stripped = {
+            ...r,
+            layers: r.layers.map((l) => ({ ...l, tiles: l.tiles.filter(([tx, ty]) => tx < 5 && ty < 5) })),
+            entities: [{ type: 'button', ...oelAtTile(7, 7), attrs: { tset: '0' } }],
+        };
+        expect(() => resizeRoom(stripped, { width: 5, height: 5 }))
+            .toThrow(/0 tile\(s\) and 1 entity\(ies\).*button@112,112/s);
+    });
+
+    it('the ROOM SIZE bounds still hold', () => {
+        const r = emptyLevel({ level: 1 });
+        expect(() => applyEdit(r, { op: 'resize', width: 61, height: 10 }))
+            .toThrow(/outside \[3\.\.60\]/);
+        expect(() => applyEdit(r, { op: 'resize', width: 2, height: 10 }))
+            .toThrow(/outside \[3\.\.60\]/);
+    });
+
+    it('⚖ ruling 5 — the readout WARNS about the five compiled-in boss geometries, and '
+        + 'never refuses', () => {
+        const r = applyEdit(emptyLevel({ level: 1, width: 20, height: 20 }),
+            { op: 'place', tx: 4, ty: 4, type: 'bosstotem', attrs: { tag: '0' } });
+        const w = resizeWarnings(r, { op: 'resize', width: 24, height: 24 });
+        expect(w.join(' ')).toMatch(/<bosstotem>.*COMPILED IN/s);
+        expect(w.join(' ')).toMatch(/BossTotemShot\.roomBottom/);
+        expect(w.join(' ')).toMatch(/hold NO TILE/);
+        // ⛔ a warning, not a refusal: the op still applies.
+        expect(applyEdit(r, { op: 'resize', width: 24, height: 24 }).width).toBe(24);
+        // …and a room without one warns about neither boss nor growth on a shrink.
+        expect(resizeWarnings(emptyLevel({ level: 1 }), { op: 'resize', width: 10, height: 10 }))
+            .toEqual([]);
+    });
+
+    it('a resize to the SAME size is the identity — the fold\'s no-op rule reports it, '
+        + 'not a refusal here', () => {
+        const r = emptyLevel({ level: 1 });
+        expect(applyEdit(r, { op: 'resize', width: r.width, height: r.height })).toBe(r);
+        expect(editState({ record: r, edits: [] },
+            { op: 'resize', width: r.width, height: r.height }).edits).toEqual([]);
+    });
+});
+
+describe('group — the two folds agree on ONE payload', () => {
+    const STROKE = {
+        op: 'group',
+        label: 'stroke 3',
+        ops: [
+            { op: 'paint', tx: 2, ty: 2, terrain: 'wall' },
+            { op: 'paint', tx: 3, ty: 2, column: 9 },
+            { op: 'place', tx: 4, ty: 4, type: 'button', attrs: { tset: '0' } },
+        ],
+    };
+
+    it('⛓⛓ `applyEdits` folds a group, and the result is the members applied in order',
+        () => {
+            const r = emptyLevel({ level: 1 });
+            expect(j(applyEdits(r, [STROKE]))).toBe(j(applyEdits(r, STROKE.ops)));
+        });
+
+    it('⛔ a NESTED group refuses — `editCore` refuses the same shape, and one fold '
+        + 'accepting what the other refuses is the disagreement this arm prevents', () => {
+        expect(() => applyEdits(emptyLevel({ level: 1 }),
+            [{ op: 'group', label: 'outer', ops: [STROKE] }])).toThrow(/NESTED/);
+    });
+
+    it('⛔ ALL-OR-NOTHING: a refusing member leaves the record untouched', () => {
+        const r = emptyLevel({ level: 1 });
+        const bad = { op: 'group', label: 'x', ops: [STROKE.ops[0], { op: 'remove', tx: 9, ty: 9 }] };
+        expect(() => applyEdits(r, [bad])).toThrow(/holds no entity/);
+        expect(j(r)).toBe(j(emptyLevel({ level: 1 })));
+    });
+
+    it('an EMPTY group refuses, and `describeEdit` has a row for a group', () => {
+        expect(() => applyEdits(emptyLevel({ level: 1 }), [{ op: 'group', label: 'x', ops: [] }]))
+            .toThrow(/carries no ops/);
+        expect(describeEdit(normalizeGroupOrEdit(STROKE))).toBe('EDIT group "stroke 3" (3 op(s))');
+    });
+
+    it('⛓ a group\'s MEMBERS are canonicalised too — the byte comparison is over the '
+        + 'whole list', () => {
+        const messy = { op: 'group', label: 'x', ops: [{ ty: 2, tx: 2, op: 'paint', terrain: 'wall' }] };
+        expect(j(normalizeGroupOrEdit(messy)))
+            .toBe('{"op":"group","label":"x","ops":[{"op":"paint","tx":2,"ty":2,"terrain":"wall"}]}');
+    });
+
+    it('⛓ a group rides in a STATE\'s edit list as one entry, and UNDO pops the whole '
+        + 'stroke', () => {
+        const r = emptyLevel({ level: 1 });
+        const s = editState({ record: r, edits: [] }, STROKE);
+        expect(s.edits.length).toBe(1);
+        expect(j(undoEdit(s).record)).toBe(j(r));
+    });
+});
+
+describe('the tile-layer facts this slice DERIVES, pinned against the 116', () => {
+    it('⛓ every `tiles` layer carries set="tileset" and every `cliffsides` layer '
+        + 'set="cliffsidesset" — LAYER_TILESETS is a literal these rows own', () => {
+        const seen = {};
+        for (const level of ATLAS.levels) {
+            for (const layer of level.layers) {
+                (seen[layer.name] ??= new Set()).add(layer.set);
+            }
+        }
+        expect([...seen.tiles]).toEqual([LAYER_TILESETS.tiles]);
+        expect([...seen.cliffsides]).toEqual([LAYER_TILESETS.cliffsides]);
+        // …and both names are declared in the `.oep`'s <tilesets>.
+        const declared = SCHEMA.tilesets.map((t) => t.name);
+        expect(declared).toContain(LAYER_TILESETS.tiles);
+        expect(declared).toContain(LAYER_TILESETS.cliffsides);
+        expect(Object.keys(seen).sort()).toEqual(['cliffsides', 'tiles']);
+    });
+
+    it('⛓ `tiles` first, `cliffsides` second — the order every vanilla room writes', () => {
+        const orders = new Set(ATLAS.levels.map((l) => l.layers.map((x) => x.name).join('+')));
+        expect([...orders].sort()).toEqual(['tiles', 'tiles+cliffsides']);
+        expect(ATLAS.levels.filter((l) => l.layers.length === 2).length).toBe(16);
+    });
+
+    it('⛓ the schema\'s <layers> and the record\'s tile layers agree on the two names', () => {
+        expect(SCHEMA.layers.filter((l) => l.kind === 'tiles').map((l) => l.name))
+            .toEqual(TILE_LAYERS);
     });
 });

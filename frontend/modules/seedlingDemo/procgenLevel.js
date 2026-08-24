@@ -51,7 +51,7 @@
  */
 
 import { SCREEN_W, SCREEN_H } from './camera.js';
-import { TILE_SIZE } from './levelWorld.js';
+import { CLIFFSIDE_FRAME_MASKS, TILE_SIZE } from './levelWorld.js';
 import { TILE_COLUMN_TO_TYPE, TILE_TYPE_NAMES } from '../flashPanel/seedlingSemantics.js';
 
 export class ProcgenLevelError extends Error {
@@ -603,3 +603,310 @@ export const atlasOf = (record) => ({
     level_count: 1,
     levels: [record],
 });
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ THE WHOLE TILE VOCABULARY — EDITOR v3, SLICE B
+ *
+ * `TERRAIN` above is the GENERATOR's palette: four names, chosen because the
+ * PoC's placement rules reason about *walkable / solid / lethal / pit* and a
+ * generator that could paint any of 45 columns would be choosing scenery it
+ * has no rule for. The EDITOR has the opposite problem — a person editing a
+ * vanilla room is looking at Brick and Ice and Waterfall, and an editor whose
+ * brush held four names could not reproduce the room it opened.
+ *
+ * ⛔ SO THE TWO VOCABULARIES COEXIST AND NEITHER REPLACES THE OTHER: `TERRAIN`
+ * stays exactly the four-name convenience it is (every generator caller is
+ * unchanged), and the editor addresses a COLUMN, which is what the game reads.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓ THE TWO TILE LAYERS AND HOW MANY COLUMNS EACH HAS — both DERIVED, and
+ * from different tables because the two layers are read by different code.
+ *
+ *   `tiles`      → `TILE_COLUMN_TO_TYPE.length`. `Game.as`'s 45-case switch,
+ *                  as data (`seedlingSemantics`).
+ *   `cliffsides` → `CLIFFSIDE_FRAME_MASKS.length`. `CliffSide.as:19-32` is a
+ *                  `switch(frame)` over five 16x16 pixelmasks whose `default`
+ *                  arm (frame >= 4) takes the U mask — so five is the number of
+ *                  DISTINCT cliffsides there are, and a sixth column would be a
+ *                  fifth mask spelled differently.
+ *
+ * ⚠ THE ORDER IS THE RECORD'S ORDER, and it is measured: all 116 vanilla rooms
+ * write `tiles` first and the 16 that have cliffsides write them second. A
+ * writer that emitted them the other way round would produce a document the
+ * game loads identically and every byte comparison rejects.
+ */
+export const LAYER_COLUMNS = Object.freeze({
+    tiles: TILE_COLUMN_TO_TYPE.length,
+    cliffsides: CLIFFSIDE_FRAME_MASKS.length,
+});
+
+export const TILE_LAYERS = Object.freeze(Object.keys(LAYER_COLUMNS));
+
+/**
+ * ⛓ THE TILESET EACH LAYER NAMES — a LITERAL WITH PROVENANCE (plan §5 #1's
+ * allowance), because the `.oep` does not carry the mapping: Ogmo 1 declares
+ * the tilesets and the layers separately and a LEVEL picks a tileset per layer.
+ *
+ * ⛔ SO IT IS MEASURED OFF THE DATA AND PINNED THERE. `procgenLevel.test.js`
+ * asserts, over the committed 116-room atlas, that every `tiles` layer carries
+ * `set="tileset"` (116 of 116) and every `cliffsides` layer carries
+ * `set="cliffsidesset"` (16 of 16), and that both names are declared in the
+ * `.oep`'s `<tilesets>`. A room authored against a third tileset would redden
+ * that row rather than being silently written under the wrong one.
+ */
+export const LAYER_TILESETS = Object.freeze({
+    tiles: 'tileset',
+    cliffsides: 'cliffsidesset',
+});
+
+/**
+ * ⛓ **EVERY COLUMN OF THE `tiles` LAYER BUILDS A TILE TYPE THE JS MODEL
+ * TRANSCRIBES** — asserted, not assumed.
+ *
+ * ⚠ THE BRIEF ASKED FOR A REFUSAL OF "a column whose type is `Unused`" AND
+ * THERE IS NO SUCH COLUMN. Measured: `TILE_COLUMN_TO_TYPE` maps all 45 columns
+ * onto 38 types and `levelWorld.MODELLED_TILE_TYPES` holds every one of them,
+ * so the editor's paint has nothing to refuse inside the table. (The word
+ * `Unused` in `seedlingSemantics` is `TILE_TYPE_ENTITY_TYPES[29]`, the FlashPunk
+ * entity type of Bridge — which overwrites it every frame from its own opening
+ * timer, i.e. a gated crossing rather than a dead column.)
+ *
+ * ⇒ the only paint refusal on this layer is an OUT-OF-RANGE column, and this
+ * assertion is what will notice the day that stops being true.
+ */
+export function assertColumnsModelled(modelledTypes) {
+    const modelled = new Set(modelledTypes);
+    const orphans = TILE_COLUMN_TO_TYPE
+        .map((type, column) => ({ column, type }))
+        .filter(({ type }) => !modelled.has(type));
+    if (orphans.length > 0) {
+        fail('procgenLevel: tileset column(s) '
+            + orphans.map(({ column, type }) => `${column} (type ${type} `
+                + `${TILE_TYPE_NAMES[type] ?? '?'})`).join(', ')
+            + ' build a tile type the JS model does not transcribe. The editor paints '
+            + 'COLUMNS, so a column the model cannot build is one the editor must refuse '
+            + 'BY NAME rather than hand to `buildLevelWorld` for it to throw about.');
+    }
+    return true;
+}
+
+/**
+ * The column a paint SPEC selects, refusing BY NAME.
+ *
+ * A spec is either a `TERRAIN` name (the generator's four-name convenience,
+ * `tiles` layer only) or `{column: n}` (the editor's whole vocabulary).
+ *
+ * ⛔ A NAME IS REFUSED ON `cliffsides` rather than reinterpreted: the four
+ * terrain names are (column, TILE type) pairs checked against
+ * `TILE_COLUMN_TO_TYPE`, and that table has nothing to say about a cliffside
+ * mask. `{terrain: 'wall'}` on the cliffsides layer would silently paint mask
+ * 3 (`CliffSideMaskRU`) because wall's column happens to be 3.
+ */
+export function columnOfSpec(spec, layer = 'tiles', where = 'procgenLevel') {
+    const columns = LAYER_COLUMNS[layer];
+    if (columns === undefined) {
+        fail(`${where}: ${JSON.stringify(layer)} is not one of this game's tile layers `
+            + `[${TILE_LAYERS.join(', ')}]. \`loadlevel\` builds those two and throws on any `
+            + 'other name, so a third layer would be a room the game refuses to open.');
+    }
+    if (typeof spec === 'string') {
+        if (layer !== 'tiles') {
+            fail(`${where}: the terrain NAME ${JSON.stringify(spec)} was asked of the `
+                + `"${layer}" layer. The four names are (column, TILE type) pairs checked `
+                + 'against `TILE_COLUMN_TO_TYPE`, and that table describes the `tiles` layer '
+                + `only — a cliffside column picks one of ${LAYER_COLUMNS.cliffsides} `
+                + 'PIXELMASKS. Name a `{column: n}` instead.');
+        }
+        return terrainByName(spec).column;
+    }
+    const column = isPlainRecordObject(spec) ? spec.column : undefined;
+    if (!Number.isInteger(column) || column < 0 || column >= columns) {
+        fail(`${where}: ${JSON.stringify(spec)} is not a column of the "${layer}" layer — `
+            + `that layer has ${columns} (0..${columns - 1}). `
+            + (layer === 'tiles'
+                ? 'They are `TILE_COLUMN_TO_TYPE`, the game\'s own 45-case switch as data; '
+                    + 'a paint spec is either one of those columns or one of the four '
+                    + `terrain names [${TERRAIN_NAMES.join(', ')}].`
+                : `They are \`CLIFFSIDE_FRAME_MASKS\` — the ${LAYER_COLUMNS.cliffsides} `
+                    + 'pixelmasks `CliffSide.as:19-32` switches over.'));
+    }
+    return column;
+}
+
+const isPlainRecordObject = (v) => Boolean(v) && typeof v === 'object' && !Array.isArray(v);
+
+/** One layer by name, or `null` — the read half of `withLayerTiles`. */
+export function layerNamed(record, name) {
+    return (record.layers ?? []).find((l) => l.name === name) ?? null;
+}
+
+/**
+ * ⛓⛓⛓ **THE GENERAL TILE WRITER** — cells `[{tx, ty, column}]` on ONE named
+ * layer, PURE, a new frozen record out.
+ *
+ * ⛔⛔ IT **ADDS** A CELL THE LAYER DOES NOT HAVE, AND `withTerrain` DOES NOT.
+ * That difference is the whole reason this is a second function rather than a
+ * widened first one, and both behaviours are right for their caller:
+ *
+ *   ·  `withTerrain` is the GENERATOR's writer and maps over the entries that
+ *      exist. Every generated room is `dense` when a template paints it, so it
+ *      has never mattered — and on a `shell` room, painting a cell the strip
+ *      removed must NOT put terrain back where the strip decided there is none.
+ *   ·  `withLayerTiles` is the EDITOR's writer, and a paint that silently did
+ *      nothing is the exact defect `editState`'s record-equality rule exists to
+ *      report (trap 263): the op would be dropped from the identity and the
+ *      person would see an unchanged room and no reason. A grown room (`resize`)
+ *      is ALL absent cells, and a `cliffsides` layer usually does not exist at
+ *      all — neither is paintable by a writer that can only replace.
+ *
+ * ⚠ A LAYER THAT DOES NOT EXIST IS CREATED, with the tileset `LAYER_TILESETS`
+ * names, and appended AFTER the existing layers — which reproduces vanilla's
+ * own order (`tiles` then `cliffsides`, measured over all 116).
+ */
+export function withLayerTiles(record, layerName, cells, { addMissing = true } = {}) {
+    const columns = LAYER_COLUMNS[layerName];
+    if (columns === undefined) {
+        fail(`procgenLevel: ${JSON.stringify(layerName)} is not one of this game's tile `
+            + `layers [${TILE_LAYERS.join(', ')}].`);
+    }
+    const existing = layerNamed(record, layerName);
+    if (!existing && layerName === 'tiles') tilesLayer(record);   // the record's own refusal
+    const seen = new Set();
+    const replaced = new Map();
+    for (const cell of cells) {
+        const { tx, ty } = cell;
+        if (!inBounds(record, tx, ty)) {
+            fail(`procgenLevel: cell (${tx},${ty}) is outside level ${record.level}'s `
+                + `${record.width}x${record.height} rectangle. \`loadlevel\` drops `
+                + 'out-of-rectangle placements silently, so a write past the edge would '
+                + 'build a room it could not see.');
+        }
+        const key = `${tx},${ty}`;
+        if (seen.has(key)) {
+            fail(`procgenLevel: cell (${tx},${ty}) is named twice in one withLayerTiles `
+                + `call on "${layerName}". One cell holds one tile per layer; which write `
+                + 'you meant is not derivable here.');
+        }
+        seen.add(key);
+        replaced.set(key, columnOfSpec(
+            Number.isInteger(cell.column) ? { column: cell.column } : cell.terrain,
+            layerName,
+        ));
+    }
+    const old = existing ? existing.tiles : [];
+    const tiles = old.map(([tx, ty, txPixel, tyPixel]) => {
+        const column = replaced.get(`${tx},${ty}`);
+        if (column === undefined) return [tx, ty, txPixel, tyPixel];
+        replaced.delete(`${tx},${ty}`);
+        return tileEntry(tx, ty, column);
+    });
+    if (addMissing) {
+        for (const [key, column] of replaced) {
+            const [tx, ty] = key.split(',').map(Number);
+            tiles.push(tileEntry(tx, ty, column));
+        }
+    }
+    const layers = existing
+        ? record.layers.map((l) => (l === existing ? { ...l, tiles } : { ...l }))
+        : [...record.layers.map((l) => ({ ...l, tiles: [...l.tiles] })),
+            { name: layerName, set: LAYER_TILESETS[layerName], tiles }];
+    return freezeRecord({ ...record, layers, entities: [...record.entities] });
+}
+
+/**
+ * ⛓ **THE CELL'S TILE, IN BOTH VOCABULARIES** — `{column, type, typeName,
+ * terrain}` or `null`.
+ *
+ * ⛔ A SECOND READER BESIDE `terrainAt` RATHER THAN A WIDENED ONE. `terrainAt`
+ * returns a NAME and has eleven callers across the generator, the oracle and
+ * the ledger; changing its return type would be a rewrite of files this slice
+ * has no business in. ⚠ And the two answer DIFFERENT questions: `terrainAt`
+ * says *is this one of the four the generator reasons about* (`null` for the
+ * other 41 columns), this says *what is actually there*.
+ */
+export function tileCellAt(record, tx, ty, layerName = 'tiles') {
+    const layer = layerNamed(record, layerName);
+    const entry = layer?.tiles.find(([x, y]) => x === tx && y === ty);
+    if (!entry) return null;
+    const column = Math.floor(entry[2] / TILE_SIZE);
+    const type = layerName === 'tiles' ? (TILE_COLUMN_TO_TYPE[column] ?? null) : null;
+    return Object.freeze({
+        column,
+        type,
+        typeName: type === null ? null : (TILE_TYPE_NAMES[type] ?? null),
+        terrain: layerName === 'tiles' ? columnTerrainName(column) : null,
+    });
+}
+
+/**
+ * ⛓⛓⛓ **RESIZE** — ⚖ plan ruling 5 (phase 2, this slice).
+ *
+ * `anchor: 'top-left'` is the only anchor, and it is named rather than implied:
+ * a room's cells are addressed by absolute (tx, ty) and every OTHER anchor
+ * renumbers every cell, every entity's pixel position and every `<node>` — a
+ * translation, which is a different op with a different refusal set. Naming the
+ * one that exists is what makes a second one an addition rather than a
+ * surprise.
+ *
+ * ⛔ GROW ADDS NO TILES. The new cells are ABSENT, and an absent cell is not a
+ * wall (the CLOSURE LAW's whole point). Adding a floor would be inventing
+ * terrain; adding a wall would silently move the room's border, which is the
+ * one thing `emptyLevel`'s docblock forbids.
+ *
+ * ⚠ AND WHETHER THAT BREAKS CLOSURE DEPENDS ON THE OLD EDGE, measured rather
+ * than asserted: growing an `emptyLevel` leaves its wall RING standing one
+ * column in from the new edge, so `assertClosed` still passes and the room is
+ * simply smaller than its rectangle. Growing a room whose edge cells were
+ * FLOOR exposes that floor to the absent cells beyond and `assertClosed`
+ * refuses. ⇒ the readout says the new cells hold no tile; it does not claim a
+ * refusal it has not asked for.
+ *
+ * ⛔ CROP REFUSES A NON-EMPTY DROPPED CELL BY NAME rather than discarding it. A
+ * crop that quietly dropped a tile or a body would make the record's identity
+ * (`base` + ops) reconstruct a room whose contents depended on a rectangle
+ * nobody can see in the op.
+ */
+export const RESIZE_ANCHORS = Object.freeze(['top-left']);
+
+export function resizeRoom(record, { width, height, anchor = 'top-left' } = {}) {
+    if (!RESIZE_ANCHORS.includes(anchor)) {
+        fail(`procgenLevel: resize anchor ${JSON.stringify(anchor)} is not one of `
+            + `[${RESIZE_ANCHORS.join(', ')}]. Every other anchor renumbers every cell, `
+            + 'every entity pixel position and every <node> — that is a TRANSLATION, a '
+            + 'different op with a different refusal set.');
+    }
+    assertRoomSize({ width, height }, 'procgenLevel: resize');
+    if (width === record.width && height === record.height) {
+        return record;   // ⛓ the fold's no-op rule does the reporting, not a refusal here
+    }
+    const droppedTiles = [];
+    for (const layer of record.layers) {
+        for (const [tx, ty] of layer.tiles) {
+            if (tx >= width || ty >= height) droppedTiles.push(`${layer.name} (${tx},${ty})`);
+        }
+    }
+    const droppedEntities = record.entities
+        .filter((e) => {
+            const at = tileAtOel(e.x, e.y);
+            return at.tx >= width || at.ty >= height;
+        })
+        .map((e) => `${e.type}@${e.x},${e.y}`);
+    if (droppedTiles.length > 0 || droppedEntities.length > 0) {
+        fail(`procgenLevel: resize to ${width}x${height} would drop `
+            + `${droppedTiles.length} tile(s) and ${droppedEntities.length} entity(ies) that `
+            + `lie outside the new rectangle — ${[...droppedTiles.slice(0, 3),
+                ...droppedEntities.slice(0, 3)].join(', ')}`
+            + `${droppedTiles.length + droppedEntities.length > 6 ? ', …' : ''}. ⛔ REFUSED `
+            + 'rather than cropped: a crop that silently discarded them would make this '
+            + 'record\'s identity (base + ops) reconstruct a room whose contents depend on a '
+            + 'rectangle nobody can read out of the op. Clear the cells first.');
+    }
+    return freezeRecord({
+        ...record,
+        width,
+        height,
+        layers: record.layers.map((l) => ({ ...l, tiles: l.tiles.map((t) => [...t]) })),
+        entities: record.entities.map((e) => ({ ...e })),
+    });
+}
