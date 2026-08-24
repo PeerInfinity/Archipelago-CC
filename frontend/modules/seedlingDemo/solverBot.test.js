@@ -1479,7 +1479,10 @@ describe('R9 slice 12c: the DASH, MODELLED — the oracle steps it and the polic
     const standBoth = (mk, ticks, allowDash) => {
         const a = mk();
         const pa = policyFor(allowDash);
-        const pv = previewWalk(a, [], 0, { strike: pa, standFor: ticks });
+        // ⛓ ONE TICK MORE THAN THE DRIVE, so `samples[ticks]` is the PRE-MOVE
+        // box of tick `ticks + 1` — i.e. where the player stands after the
+        // drive's own last tick, which is what the position claim compares.
+        const pv = previewWalk(a, [], 0, { strike: pa, standFor: ticks + 1 });
         const b = mk();
         const perTick = [];
         const pb = policyFor(allowDash);
@@ -1496,6 +1499,12 @@ describe('R9 slice 12c: the DASH, MODELLED — the oracle steps it and the polic
         return {
             preview: pv.samples.map((x) => key(x.held ?? new Set())),
             drive: perTick.map(key),
+            // ⛓ R9 slice 12c — THE POSITIONS AS WELL AS THE KEYS. A sample is
+            // the PRE-MOVE box, so `samples[n]` is where the player stood
+            // after n driven ticks. Held-sets alone cannot see a 9 px
+            // displacement that changes no decision inside the bound —
+            // measured: mutant (a) left this row's key sequence intact.
+            at: (n) => pv.samples[n],
             pa,
             pb,
             run: b,
@@ -1519,13 +1528,28 @@ describe('R9 slice 12c: the DASH, MODELLED — the oracle steps it and the polic
      */
     it('⛓⛓⛓ the PREVIEW and the DRIVE spend the same keys over a stand that DASHES', () => {
         const r = standBoth(l14, 130, true);
-        expect(r.drive).toEqual(r.preview);
+        expect(r.drive).toEqual(r.preview.slice(0, r.drive.length));
         // ⚠ AND NOT VACUOUSLY. A stand where nothing dashed would pass this
         // row with the `false` arm's own sequence.
         expect(r.pa.dashes).toBe(1);
         expect(r.pb.dashes).toBe(1);
         expect(r.pa.strikes).toBe(3);
         expect(r.pb.strikes).toBe(3);
+        /**
+         * ⛔⛔ **AND THE PREVIEWED PLAYER ENDS WHERE THE DRIVEN ONE ENDS**,
+         * which is the half of ⚖ ruling 30(c) a held-set sequence cannot see.
+         *
+         * ⚠ MEASURED, NOT FORESEEN: mutant (a) — the preview stepper's
+         * `dashImpulse` dropped — leaves this fixture's KEY sequence
+         * completely intact. The dash moves the player 9 px and no decision
+         * inside 130 ticks turns on it, so the corridor the probe priced would
+         * have been the wrong corridor and every row here would still be
+         * green. The position is what makes the row bite (trap 570: a mutant
+         * that does not red the row you aimed at is telling you which row you
+         * needed).
+         */
+        expect(r.at(130).x).toBeCloseTo(r.run.state.x, 9);
+        expect(r.at(130).y).toBeCloseTo(r.run.state.y, 9);
     });
 
     /**
