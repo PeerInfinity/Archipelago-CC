@@ -202,11 +202,17 @@ describe('⛓⛓⛓ THE TWO FOLDS AGREE — a session apply ≡ a direct applyEd
             .toMatchObject({ ok: false, reason: 'ProcgenLevelError' });
         expect(adapter.apply(base, { op: 'paint', tx: 99, ty: 99, column: 0 }))
             .toMatchObject({ ok: false, reason: 'ProcgenLevelError' });
-        // ⚠ AND ANYTHING ELSE IS NOT CAUGHT — a defect must not read as a refusal.
-        // A `writeOps` that handed back a body with no `attrs` object is a defect in
-        // THIS file, and it must reach the caller as one.
-        const broken = { ...adapter, apply(record, op) { return adapter.apply(record, op.boom.x); } };
-        expect(() => broken.apply(base, { op: 'remove', tx: 3, ty: 3 })).toThrow(TypeError);
+        /**
+         * ⚠ AND ANYTHING ELSE IS **NOT** CAUGHT — a defect must not read as a
+         * refusal. ⛔ The first spelling of this row raised its error OUTSIDE
+         * the adapter's `try` (a wrapper whose own `apply` threw), so it passed
+         * against a `catch` that swallowed EVERYTHING — a mutant-invisible row.
+         * A record whose `entities` is not an array throws a `TypeError` from
+         * `withEntities`, INSIDE the try, which is where the discrimination is.
+         */
+        const malformed = { ...base, entities: 5 };
+        expect(() => adapter.apply(malformed, { op: 'place', tx: 1, ty: 1, type: 'button', attrs: {} }))
+            .toThrow(TypeError);
     });
 });
 
