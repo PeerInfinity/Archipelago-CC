@@ -500,8 +500,11 @@ const SCHEMA = JSON.parse(readFileSync(
 ));
 
 describe('the .oep schema fixture — what the editor OFFERS, derived', () => {
-    it('⛓ every declared value carries one of the FOUR Ogmo types, and the fixture '
-        + 'publishes the closed set rather than the three that happen to occur', () => {
+    // ⚠ INTERPOLATED for the same reason the paint describe is (A1 §9.6): the
+    // count is `value_types`', and the linter would otherwise tie it to whichever
+    // roster this file's body happens to derive a length from.
+    it(`⛓ every declared value carries one of the ${SCHEMA.value_types.length} Ogmo types, `
+        + 'and the fixture publishes the closed set rather than the three that occur', () => {
         expect(SCHEMA.value_types).toEqual(['integer', 'number', 'string', 'boolean']);
         const used = new Set(Object.values(SCHEMA.entities)
             .flatMap((e) => e.values.map((v) => v.type)));
@@ -601,7 +604,16 @@ describe('the .oep schema fixture — what the editor OFFERS, derived', () => {
     });
 });
 
-describe('paint — all 45 columns, and the cliffsides layer', () => {
+/**
+ * ⚠ THE NAME'S COUNT IS INTERPOLATED, and A1 §9.6 is why: `lintGateLabels`'
+ * `name-over-a-roster` rule ties a typed count in a name to a roster the BODY
+ * derives from, and it tied this "45" to `CLIFFSIDE_FRAME_MASKS` — a
+ * NEIGHBOURING roster. The 45 is `TILE_COLUMN_TO_TYPE`'s. Cured the way the
+ * linter's own message prescribes (interpolate from the roster it is actually
+ * about) rather than by `--write-allow`, which would put a real typed count in
+ * the allowlist.
+ */
+describe(`paint — all ${TILE_COLUMN_TO_TYPE.length} columns, and the cliffsides layer`, () => {
     it('⛓⛓⛓ BYTE-INERT: a terrain-NAME paint normalizes to exactly slice 11\'s op', () => {
         expect(j(normalizeEdit({ op: 'paint', tx: 3, ty: 4, terrain: 'wall' })))
             .toBe('{"op":"paint","tx":3,"ty":4,"terrain":"wall"}');
