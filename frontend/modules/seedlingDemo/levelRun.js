@@ -13157,10 +13157,22 @@ export function createLevelRun({
                 pendingThrust = null;
             }
             // The four repeats, each on its own tick and against this tick's
-            // position. ⚠ FILTERED IN PLACE rather than shifted, because a
-            // second press inside the window is legal (it re-plays the anim,
-            // which RESETS the clock) and the two windows must not interleave
-            // by index.
+            // position.
+            //
+            // ⛓⛓ R9 SLICE 12c — AND THERE IS ONLY EVER ONE WINDOW IN FLIGHT.
+            // This comment used to say a second press inside the window is
+            // legal "and the two windows must not interleave by index", which
+            // is a true sentence about the wrong mechanism: the second press
+            // does not open a second window, it RESTARTS the first one
+            // (`play(anim, true)`), so the earlier window's remaining tests are
+            // REPLACED. The press block below clears them; see its note. The
+            // filter stays a filter because a `due` tick still has to be
+            // separated from a future one.
+            //
+            // ⚠ THE REPEATS ARE THE SAME THRUST, RE-AIMED — the direction is
+            // latched at the press and the RECT is recomputed from the live
+            // position, so a player being knocked back swings from where they
+            // are.
             if (slashRepeats.length > 0) {
                 const due = slashRepeats.filter((r) => r.at === ticksCompleted);
                 if (due.length > 0) {
@@ -13277,6 +13289,36 @@ export function createLevelRun({
                      * 5's measured 5 is also the swing's length.)
                      */
                     slashEndsAt = ticksCompleted + SLASH_ANIM_TICKS[slashState.anim];
+                    /**
+                     * ⛓⛓⛓ R9 SLICE 12c — **AND THE PENDING HIT TICKS ARE
+                     * REPLACED, NOT APPENDED.** §23.15 named this and left it;
+                     * ⚖ ruling 35's complete dash model is where it is paid.
+                     *
+                     * ⛔ IT IS THE SAME SENTENCE AS THE LINE ABOVE. `play(anim,
+                     * true)` RESTARTS the animation, so `slashEnd`'s clock
+                     * restarts — that is `slashEndsAt`. The HIT TESTS run off
+                     * `if (slashing)` inside that same animation, one per tick,
+                     * so they restart with it too. A model that reset one and
+                     * appended to the other is asserting that `Player.slash()`
+                     * runs its test TWICE on a tick, which it never does.
+                     *
+                     * ⚠ THE DEFECT NEEDS TWO PRESSES INSIDE `SLASH_HIT_TICKS`,
+                     * and that is why it survived five rungs: press at T
+                     * schedules T+2..T+5; press at T+2 schedules T+4..T+7; and
+                     * ticks T+4 and T+5 then took TWO `applyThrust` calls
+                     * where the game runs one. `r5-bobboss-arm`'s 71
+                     * sub-window pairs hold no sword, and no reached pair of
+                     * sword presses anywhere on the roster is within five
+                     * ticks (§23.15) — so it is roster-inert and the reach
+                     * report is expected to name zero movers.
+                     *
+                     * ⛓ NO GAP IS OPENED. This tick's own repeat has already
+                     * fired above (the due filter runs at the TOP of the tick,
+                     * over `pendingThrust`); what is cleared is strictly the
+                     * FUTURE of a swing the game has just replaced, and this
+                     * press's own thrust schedules T+1..T+4 from here.
+                     */
+                    slashRepeats = [];
                 }
             }
             const stepOpts = stepOptsFor({

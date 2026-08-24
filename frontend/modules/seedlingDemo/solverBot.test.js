@@ -1705,6 +1705,57 @@ describe('R9 slice 12c: the DASH, MODELLED — the oracle steps it and the polic
     });
 
     /**
+     * ⛓⛓⛓ **THE ROW THAT TIES (ii) TO (iii).** The `slashRepeats` replacement
+     * is a claim about two presses inside `SLASH_HIT_TICKS`; whether the
+     * POLICY can ever produce such a pair is a different question, and it is
+     * answered here rather than assumed either way.
+     *
+     * ⛓ AT `false` IT CANNOT, and that is 12b′'s enforcement: every press is
+     * at least `ORDINARY_SWING_PERIOD` after the last, which refuses a pair
+     * inside 5 a fortiori.
+     *
+     * ⛓ AT `true` IT PRESSES INSIDE THE SWING WINDOW — that is the whole
+     * point of the dash — so the mechanism the replacement repairs is LIVE for
+     * the policy.
+     *
+     * ⚠ **AND ON THESE TWO FIXTURES IT STILL DOES NOT REACH THE DOUBLE-COUNT,
+     * MEASURED**: the tightest pair either produces is exactly
+     * `SLASH_HIT_TICKS` apart, which lands the tick AFTER the last repeat. The
+     * reason is the certification: my own press's hit arms a 30-tick i-frame
+     * on the body it landed on, and a body inside its i-frame makes the next
+     * dash unpriceable. A press that MISSES leaves the timer at 0, which is
+     * why 5 is reachable at all.
+     *
+     * ⇒ the replacement's own witness is a DRIVEN TAPE, not a policy walk —
+     * `levelRun.test.js`'s `DASH_CHAIN` fixture, whose first two presses are
+     * two ticks apart. Said here so a reader does not take these two fixtures
+     * as coverage of (iii).
+     */
+    it('⛓⛓ at `true` the policy presses INSIDE the swing window; at `false` it cannot', () => {
+        const gapsFor = (mk, ticks, allowDash) => {
+            const run = mk();
+            const policy = policyFor(allowDash);
+            const at = [];
+            for (let t = 0; t < ticks; t += 1) {
+                const d = policy.decide(run.state, run.strikeBodies, run.ticksCompleted,
+                    new Set(), { slash: run.slashInfo });
+                if (d.decision === 'press') at.push(run.ticksCompleted);
+                run.advance(d.held);
+            }
+            return at.slice(1).map((v, i) => v - at[i]);
+        };
+        const refused = gapsFor(l14, 260, false);
+        expect(Math.min(...refused)).toBeGreaterThanOrEqual(ORDINARY_SWING_PERIOD);
+
+        const dashing = gapsFor(l14, 260, true);
+        // ⛓ INSIDE the swing window — the branch (iii) repairs is reached.
+        expect(dashing.filter((g) => g < ORDINARY_SWING_PERIOD).length).toBeGreaterThan(0);
+        // ⚠ …but NOT inside the repeat window, on this fixture or the stance.
+        expect(Math.min(...dashing)).toBe(SLASH_HIT_TICKS);
+        expect(Math.min(...gapsFor(stance, 400, true))).toBe(SLASH_HIT_TICKS);
+    });
+
+    /**
      * ⛓⛓ **THE STEPPER, ASKED DIRECTLY.** (i)'s claim is that the preview's
      * options are still built in exactly one place and that the dash arm adds
      * exactly one key — so the no-dash arm must be the stepper it always was,

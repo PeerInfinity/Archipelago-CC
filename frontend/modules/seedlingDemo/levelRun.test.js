@@ -18,6 +18,11 @@
  */
 
 import { describe, expect, it } from 'vitest';
+// ⛓ R9 slice 12c — the chain's own offsets, so the fixture and
+// `combatVerbs.DASH_CHAIN` cannot disagree about what the chain IS.
+import { DASH_CHAIN } from './combatVerbs.js';
+import { SLASH_HIT_TICKS } from './presses.js';
+const DASH_CHAIN_OFFSETS = [0, ...DASH_CHAIN.at];
 
 import { loadTape } from './fixtures/index.js';
 import { createLevelRun } from './levelRun.js';
@@ -2433,5 +2438,116 @@ describe('R9 slice 12: the press arm vs a chaser', () => {
         for (let i = 0; i < 12; i += 1) run.advance(new Set(['primary']));
         expect(run.chaserPressHits).toEqual([]);
         expect(run.chaserKills).toEqual([]);
+    });
+});
+
+/**
+ * ⛓⛓⛓ R9 SLICE 12c — **A SECOND PRESS INSIDE AN OPEN SWING REPLACES ITS
+ * PENDING HIT TICKS; IT DOES NOT ADD TO THEM.**
+ *
+ * §23.15 named this defect and left it: `pendingThrust` is set for outcome
+ * `'slash'` OR `'dash'`, and the repeats push is gated only on
+ * `weapon === 'sword'`, so a dash press APPENDED four more repeats while the
+ * first press's were still firing. Press at T schedules T+2..T+5; press at
+ * T+2 schedules T+4..T+7; ticks T+4 and T+5 then take TWO `applyThrust` calls
+ * where `Player.slash()` runs its test ONCE per tick.
+ *
+ * In the game `play("slashnarrow", true)` RESTARTS the animation. The model
+ * already restarted `slashEnd`'s clock on that line and did not restart the
+ * hit tests, which are the SAME animation's — so the two halves of one
+ * sentence disagreed.
+ *
+ * ⛔ ROSTER-INERT, WHICH IS WHY IT SURVIVED FIVE RUNGS. No reached pair of
+ * sword presses anywhere on the committed roster is within `SLASH_HIT_TICKS`
+ * (§23.8, §23.15), so nothing could distinguish the two models — the game is
+ * the only oracle and this is the driven fixture that asks it.
+ */
+describe('R9 slice 12c: the slashRepeats REPLACEMENT — one rect per tick, always', () => {
+    /**
+     * `plan-seedling-r9-l0-sword-dash`'s own room and schedule: the derived
+     * body-free L0 corridor, `right` held so every press lands on a MOVING
+     * player, and presses at k = 0 / 2 / 8 / 14 — `DASH_CHAIN`'s chain, whose
+     * FIRST TWO are two ticks apart and therefore inside `SLASH_HIT_TICKS`.
+     */
+    const dashChainRun = () => {
+        const run = createLevelRun({
+            levelSource: atlasLevelSource(),
+            boot: { level: 0, x: 176, y: 208 },
+            noclip: false,
+            noHazards: [],
+            noDamage: false,
+            grants: [],
+            persistence: [],
+            despawn: [],
+            equips: [],
+            pins: ['dead_frames'],
+            save: { totem_parts: [], keys: [], seal_parts: [] },
+            rng: null,
+            seam: { items: { hasSword: true } },
+            roles: ROLES,
+        });
+        const EAST = new Set(['right']);
+        const EAST_PRESS = new Set(['right', 'primary']);
+        // ⛓ The warm-up is DERIVED from the walk: `right` until `vx` stops
+        // RISING, which is the top of `Player.input`'s ramp. The producer's
+        // own rule, so the fixture and the tape cannot disagree about when
+        // the chain starts.
+        let opening = 0;
+        for (let t = 0; t < 40; t += 1) {
+            const before = run.state.vx;
+            run.advance(EAST);
+            if (run.state.vx <= before) { opening = t + 1; break; }
+        }
+        const pressAt = new Set(DASH_CHAIN_OFFSETS.map((k) => opening + k));
+        for (let t = opening; t <= opening + 30; t += 1) {
+            run.advance(pressAt.has(t) ? EAST_PRESS : EAST);
+        }
+        return { run, opening };
+    };
+
+    /**
+     * ⛔⛔ **THE ROW, AND IT IS A COUNT PER TICK.** `run.presses` records one
+     * entry per press that FIRED its rect, stamped with the tick it fired on.
+     * `Player.slash()` runs `else if (slashing)` once per `update`, so two
+     * entries on one `fired` tick is the model claiming a hit test the game
+     * does not run.
+     *
+     * ⛔ MUTANT (b): revert the clear to an append and this reds at ticks
+     * `opening + 4` and `opening + 5` — the two the first swing and the dash
+     * both scheduled.
+     */
+    it('⛔⛔ two presses two ticks apart fire ONE rect per tick, not two', () => {
+        const { run } = dashChainRun();
+        const perTick = new Map();
+        for (const p of run.presses) perTick.set(p.fired, (perTick.get(p.fired) ?? 0) + 1);
+        expect(Math.max(...perTick.values())).toBe(1);
+        // ⛓ NON-VACUOUS: the chain really did dash, so the branch that used to
+        // double-count was reached.
+        expect(run.dashes).toHaveLength(3);
+        expect(run.slashPresses.map((p) => p.outcome))
+            .toEqual(['slash', 'dash', 'dash', 'dash']);
+        // ⛓ AND THE PRESSES ARE INSIDE THE WINDOW THE DEFECT NEEDS.
+        const pressTicks = run.slashPresses.map((p) => p.t);
+        expect(pressTicks[1] - pressTicks[0]).toBeLessThan(SLASH_HIT_TICKS);
+    });
+
+    /**
+     * ⛓ **AND NO TICK OF THE SWING GOES UNTESTED.** A replacement that cleared
+     * too much would be as wrong as an append, in the other direction — it
+     * would drop hit ticks the game runs. The span from the first fire to the
+     * last is CONTIGUOUS: `slashing` is up for the whole chain (each press
+     * restarts the animation before the previous one ends), so every tick in
+     * between runs exactly one test.
+     */
+    it('⛓ …and the replaced window leaves NO GAP — every tick of the chain fires once', () => {
+        const { run } = dashChainRun();
+        const fired = run.presses.map((p) => p.fired).sort((a, b) => a - b);
+        expect(new Set(fired).size).toBe(fired.length);
+        const gaps = fired.slice(1).map((v, i) => v - fired[i]);
+        // ⚠ A gap of 2 is legal and is the CHAIN's own shape: the swing at
+        // k = 2 ends five ticks later and the next press is at k = 8, so the
+        // one tick between two windows tests nothing. The claim is that no
+        // tick is tested TWICE and no window drops a tick of its own.
+        expect(Math.max(...gaps)).toBeLessThanOrEqual(2);
     });
 });
