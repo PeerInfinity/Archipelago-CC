@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 17,
-        "headings": 698,
+        "headings": 699,
         "indexHeadings": 2,
-        "lines": 16667,
+        "lines": 16785,
         "pages": 4,
-        "words": 192865
+        "words": 194135
     },
     "descriptionRule": "the document's OWN first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence. ⛔ Never a hand-written summary — if an entry reads thin, the fix is a better opening paragraph in the document.",
     "dir": "docs/json/developer/procgen",
@@ -236,15 +236,15 @@ export const DOCS_INDEX = frz({
             "description": "How we drive the **real recompiled Seedling** with a scripted input tape and check a JavaScript model of its physics against what the game actually did — movement, collision, room transitions and A\\* pathing. This file is also the tracked record of the procgen arcs built on `watch.html`, § *The procgen ELEMENTS design* being the current one.",
             "file": "seedling-bot.md",
             "h1": "The Seedling Real-Game Bot, and the tracked record of the procgen arcs on `watch.html`",
-            "headings": 485,
-            "lines": 13970,
+            "headings": 486,
+            "lines": 14088,
             "links": [
                 "architecture.md",
                 "demos.md",
                 "maze.md"
             ],
             "path": "docs/json/developer/procgen/seedling-bot.md",
-            "words": 138357
+            "words": 139627
         },
         {
             "description": "The flash substrate (`frontend/modules/flashSubstrate/`, id `flash`) hosts recompiled Flash games — SWF → C → WASM via SWFRecomp-CC — in a same-origin iframe as procgen regions. The module ships a placeholder game page, so it is testable independently of any real recompiled game; its real significance is as the **shared iframe-substrate machinery** other substrates build on.",

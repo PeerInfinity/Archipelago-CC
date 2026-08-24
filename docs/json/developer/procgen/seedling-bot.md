@@ -13992,3 +13992,121 @@ removes it. What the certification measurably buys is which dashes are taken
 116), and — sharpest — that on §23b.3's stance the walk stays inside the region
 the model can answer about at all: without it the RUN ITSELF refuses to step at
 tick 101, `bob@32,32`'s on-screen answer depending on `Game.shake`'s jiggle.
+
+### R9 slice 12c′: THE PLANNER DASHES — six rooms get faster, the opportunistic dash is retired, and L14 is the one room that cannot
+
+**⚖ Ruling 35 asks for dashes TOWARD THE EXIT, and 12c measured what the FLAG
+alone buys instead: `r9-solve-14` 145 t → 400 t.** The dash model was right and
+the CHOOSER was wrong (trap 589). This slice builds the chooser.
+
+**The mechanism: a planned press, not an opportunistic one.** A body-gated press
+that would DASH is now refused under BOTH flag states — only the reason differs,
+and both are `dashRefused` rows so a reader auditing a walk never has to know
+which flag produced the silence. What `allowDash: true` permits is a press
+`planSwordDash` SCHEDULED: it needs no body, costs **no aim tick and no
+direction key**, and adds `primary` to the keys the walk was already holding.
+That is possible because `set slashing`'s dash arm knocks the player back along
+their own **velocity** (`knockbackImpulse(vx, vy, SLASH_DASH_FORCE)`), not along
+`slashDirection` — which is what makes this a movement primitive rather than a
+strike. ⚖ Ruling 41 is kept as written: ONE flag state, roster-wide, no
+per-room literal; what varies per WALK is the PLAN, and the plan is a
+constructor argument to `strikePolicyFor` — the single construction site — so
+the preview and the drive walk the same schedule (⚖ ruling 30(c)).
+
+**`planSwordDash`**, in `solverBot` and built on `levelRun.previewStepper()`.
+⛔ NOT in `mover.js`, which is untouched: `mover.planDash` is a `stepV1` keyset
+traversal, and a plan certified on `stepV1` cannot be walked by a `stepV2` drive
+that spends a `dashImpulse` (trap 118). One left-to-right greedy pass — ⚖ ruling
+35's *"dash wherever there is no reason not to"*, literally: at each tick the
+walk is still running, does opening a dash window HERE certify and shorten the
+corridor? Take it and skip past the window it opened; or say why, step one tick,
+ask again. The sweep is bounded by the walk's own length and prints `scanned`,
+and every rejection carries one of six kinds — `stalled` · `crossing` ·
+`leg-bound` · `would-hit` · `not-faster` · `danger`. What it certifies is the
+CORRIDOR THE DASH CREATES, through `walkTo`'s own danger predicate handed in
+(`probeSamples`, factored out — a second reading would be trap 567 from either
+side); `certifyDash` stays the marginal-9 px claim, asked per press by the
+policy on both sides.
+
+**⛓⛓⛓ SIX ROOMS GET FASTER, AND L14 IS NOT ONE OF THEM.** Measured through
+`solve-seedling-r9-campaign --check --walk-report`, the producer's own solve
+path, with the flag scratch-flipped:
+
+| segment | committed | planned | Δ |
+|---|---|---|---|
+| `r8-solve-10` | 90 | **81** | −9 |
+| `r9-solve-11` | 119 | **97** | −22 |
+| `r9-solve-3` | 226 | **175** | −51 |
+| `r9-solve-2` | 47 | **23** | −24 (**2.04×**) |
+| `r9-solve-0` | 237 | **168** | −69 |
+| `r9-solve-13` | 74 | **35** | −39 (**2.11×**) |
+| **`r9-solve-14`** | **145** | **145** | **refused, by name** |
+
+Chain total **3615 → 3401 t**. The 2.11× on `r9-solve-13` is §23.11's measured
+2.15× distance-per-tick arriving where it was predicted to.
+
+**⛔⛔ And the answer to ⚖ ruling 35(c) is the opposite of the expectation, with
+a mechanism.** The user expected *"dashing towards the exit to work better for
+level 14 than walking and sword slashing."* Dashing toward the exit works — on
+six other rooms — and **L14 is the one room where it cannot, because L14 IS the
+walking-and-slashing room.** Its own strikes knock bobs into their 30-tick
+i-frames, and `certifyDash` cannot price a dash against a body in knockback
+(`priceCrossing`'s own refusal, unchanged from 12c). The scan is exhaustive:
+**145 start ticks, 116 not-faster · 16 would-hit · 13 danger**, and the
+not-faster rows carry the cause rather than a verdict — *"It scheduled 0
+press(es), 0 of them dashes, and 3 were YIELDED — first: `bob@128,64` is inside
+its own i-frame (hitsTimer 29)…"*. §27.5 named this shape in advance: *"the dash
+a policy most wants is the one two ticks after a press, and two ticks after a
+press the body it struck is in flight."* **The strike and the dash compete for
+the same room.**
+
+**⛔⛔⛔ Three findings the build bought, none of them predicted.**
+
+1. **A CROSSING IS NOT A TRUNCATION.** Every `reach-exit` corridor ends by
+   crossing and `previewWalk` stops there, because the danger map is scoped to
+   one room. The first cut read any `truncated` as "no length to compare" and
+   reported L14 with a baseline of 145 and an EMPTY candidate list — which reads
+   exactly like a planner that found nothing. `truncated.kind` (`crossed` /
+   `stalled`) is a field now, and a candidate that ends differently from the
+   baseline is refused: its shorter tick count would be about a different
+   journey.
+2. **THE POLICY WAS ONLY ASKED ON TICKS THAT HAD BODIES.** `previewWalk`
+   consulted the strike policy while its body list was truthy, and
+   `chasers.step` returns `null` in a room with no chaser forecast at all — so
+   after the FIRST tick the policy was never asked again. Invisible for as long
+   as every press needed a body in reach. Measured the moment one did not: a
+   four-press dash chain in a body-free room took exactly ONE press, with zero
+   yields and zero refusals to explain the other three. **The null this slice
+   nearly reported — "the planner finds nothing" — was an artefact of it.**
+   Byte-inert for the strike arm (an empty body list scans nothing, chooses
+   nothing and hands back the walk's own keys), and the four owning producers'
+   `--check` md5s are the proof.
+3. **A PRESS TAKEN TO MOVE MAY NOT ALSO BE A STRIKE.** The first greedy pass
+   certified a schedule on L14 and the DRIVE then refused to step at tick 73 —
+   *"whether `bob@176,112` is on screen depends on where inside `Game.shake`'s
+   jiggle the camera landed"*. The preview could not have seen it: it walks a
+   world frozen at the plan tick, so a shake the walk itself CAUSES is invisible
+   to it, and a hit is what causes one. The `would-hit` refusal is that rule.
+
+**The bound, re-pinned.** ⚖ Ruling 30(c) holds over a corridor's LENGTH, not a
+room's lifetime (§27.8, trap 587). With the opportunistic arm retired the two
+LIVE arms part at **207** (no dash) and **179** (planned-dashing) on L14's own
+boot stand; `PREVIEW_AGREEMENT_BOUND` is asserted at or below BOTH, so a model
+change that brings either parting down reds the row rather than quietly
+loosening a bound nobody re-measured (trap 574). 12c's 144 was the opportunistic
+arm's parting and that arm no longer exists.
+
+**⛔ The roster-wide default is STILL `false`** and `walkTo` does not even ASK
+the planner there, so no committed corridor can reach a plan and the campaign
+digest is unmoved. The flip moves SIX segments, which is more than the licence
+in front of this slice covered — it is the user's call, and the flip and the
+re-record must land in one series: with the flag flipped and nothing re-recorded
+the campaign `--check` is RED with 26 failures by name, the sum row reading
+*"…= 3401; recorded 3401 against committed 3615"*.
+
+⚠ **Mutant (d) went the other way from its prediction, like 12c's (c).**
+PREDICTED: drop `planSwordDash`'s certification and the planned L14 walk takes a
+hit. MEASURED: it takes none — it **LEAVES THE ROOM**, at dwell tick 110 of 130,
+and `runDwell` refuses by name (trap 150). The sharpest thing the certification
+buys is still not a hit avoided; it is that the walk stays inside the region the
+model can answer about at all.
