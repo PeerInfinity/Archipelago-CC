@@ -1604,10 +1604,24 @@ describe('R9 slice 12c: the DASH, MODELLED — the oracle steps it and the polic
      * ⛓ THE DIRECTION IS THE FINDING, AND §23b.3 GOT IT HALF RIGHT. 12b′
      * recorded "dashes are safer at the forecast stance, more dangerous at the
      * boot" and concluded the sign is not uniform. It is not — but the cure is
-     * not to pick a side: a CERTIFIED dash is safe at BOTH, and this row is
-     * the boot, where the uncertified arm is hit.
+     * not to pick a side: a MODELLED dash is safe at BOTH.
      *
-     * ⛔ MUTANT (c): remove the certification term and the t=252 hit returns.
+     * ⛔⛔ **AND MUTANT (c) SAYS WHICH HALF DID IT, WHICH IS NOT THE HALF I
+     * PREDICTED** (trap 570). I predicted that removing the certification term
+     * would bring the t=252 hit back. IT DOES NOT: with the certification gone
+     * but the FORECAST kept, this fixture takes 3 dashes and STILL ZERO HITS.
+     * The hit is removed by (ii) — the policy knowing which rect its press
+     * swings and declining to spend an aim tick on a `gated`/`swallowed` one —
+     * and NOT by the certification.
+     *
+     * ⇒ what the certification is measured to contribute here is WHICH dashes
+     * are taken (4 against 3), the swallowed census (20 against 16), and the
+     * tick the preview/drive equality parts (144 against 116). On §23b.3's
+     * stance its contribution is sharper still: without it that walk drifts
+     * into a state the RUN ITSELF refuses to step, `bob@32,32`'s on-screen
+     * answer at tick 101 depending on where inside `Game.shake`'s jiggle the
+     * camera landed. A dash the certification would have refused walks the
+     * player somewhere the model cannot answer about at all.
      */
     it('⛔⛔ `allowDash: true` WITH certification takes L14\'s boot to ZERO hits — and still dashes', () => {
         const run = l14();
