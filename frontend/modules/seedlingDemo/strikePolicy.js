@@ -103,9 +103,15 @@
  * an unordered list is the shape kickoff §22.9 warned about in `deriveStrike`.
  */
 
-import { ORDINARY_SWING_PERIOD } from './combatVerbs.js';
+import {
+    DASH_DISPLACEMENT, ORDINARY_SWING_PERIOD, SLASH_DASH_FORCE, SLASH_SCALE_NORMAL,
+    slashPressForecast,
+} from './combatVerbs.js';
+import { chaseEnvelope } from './encounters.js';
 import { KILL_ARM_POLICY, MODELLED_KILL_ARMS } from './enemyDamage.js';
-import { SLASH_HIT_TICKS, SLASH_REACH, distanceRectPoint, slashRect } from './presses.js';
+import {
+    SLASH_HIT_TICKS, SLASH_REACH, distanceRectPoint, slashReachFor, slashRect,
+} from './presses.js';
 import { rectsOverlap } from './levelWorld.js';
 
 export class StrikePolicyError extends Error {
@@ -172,7 +178,26 @@ function armRefusalWhy(body) {
  *   issued, for as long as its hit tests are still to run.
  * @param {number} tick
  */
-export function strikeCandidates(player, bodies, { facingToward, owed, tick }) {
+export function strikeCandidates(player, bodies, {
+    facingToward, owed, tick, scale = SLASH_SCALE_NORMAL,
+}) {
+    /**
+     * ⛓⛓⛓ R9 SLICE 12c — **THE SCAN ASKS WITH THE RECT THE PRESS WILL SWING.**
+     *
+     * `Player.slash` collects with `collideRectInto` against
+     * `getSlashRect()` and then filters on `slashingSprite.width * scaleX` —
+     * BOTH read the scale, and a dash's is 1.5 x 0.65. So a dash swings 24 x
+     * 20.8 at reach 24 where an ordinary swing swings 16 x 32 at 16: WIDER
+     * along the swing and SHORTER across it, and **neither rect contains the
+     * other**. A scan that used one shape for both is wrong in both
+     * directions — it misses bodies a dash would reach and offers bodies a
+     * dash would miss.
+     *
+     * ⛓ THE DEFAULT IS THE PLAIN SWING, so `allowDash: false` — the
+     * roster-wide default (⚖ ruling 42) — asks exactly the question it asked
+     * before this parameter existed.
+     */
+    const reachLimit = slashReachFor(scale);
     const chosen = [];
     const rejected = [];
     for (const b of bodies) {
@@ -181,9 +206,9 @@ export function strikeCandidates(player, bodies, { facingToward, owed, tick }) {
             continue;
         }
         const reach = distanceRectPoint(player.x, player.y, b.rect);
-        if (reach > SLASH_REACH) {
+        if (reach > reachLimit) {
             rejected.push({ id: b.id, why: `distanceRectPoint ${reach.toFixed(3)} > `
-                + `${SLASH_REACH}` });
+                + `${reachLimit}` });
             continue;
         }
         // ⛓ THE RECT AS WELL AS THE REACH. `Player.slash` collects with
@@ -191,7 +216,7 @@ export function strikeCandidates(player, bodies, { facingToward, owed, tick }) {
         // body inside 16 px that the rect does not cover is not a candidate —
         // and at the corners the two disagree by up to the box's half-diagonal.
         const direction = facingToward(player, b.rect);
-        if (!rectsOverlap(slashRect(player.x, player.y, direction), b.rect)) {
+        if (!rectsOverlap(slashRect(player.x, player.y, direction, scale), b.rect)) {
             rejected.push({ id: b.id, why: `in reach (${reach.toFixed(3)}) but the `
                 + `slash rect facing ${direction} does not cover it` });
             continue;
@@ -220,6 +245,110 @@ export function strikeCandidates(player, bodies, { facingToward, owed, tick }) {
     // on both sides of the preview/drive equality.
     chosen.sort((a, b) => (a.reach - b.reach) || (a.id < b.id ? -1 : 1));
     return { chosen, rejected };
+}
+
+/**
+ * ⛓⛓⛓ R9 SLICE 12c — **IS THIS DASH SAFE TO TAKE, ASKED WITH NOTHING BUT
+ * WHAT THE WALK ITSELF HAS?** (⚖ ruling 35 safety-first; trap 567.)
+ *
+ * ⛔⛔ **WHY IT LIVES IN THE POLICY AND NOT IN THE PREVIEW.** The obvious
+ * design hands the certification down from `previewWalk`, which owns a chaser
+ * FORECAST and could step the bodies over the dash. That is trap 567 exactly:
+ * a driver commits its keys for tick k before tick k runs, so `drive` has
+ * `run.strikeBodies` — what tick k-1 left — and NOTHING else. A probe better
+ * informed than the walk certifies corridors the walk cannot keep, and the
+ * preview/drive equality would diverge on the first dash. So the question is
+ * asked from `{state, bodies}`, which is what BOTH sides hold.
+ *
+ * ── WHAT IS PRICED, AND WHAT IS NOT ──────────────────────────────────
+ *
+ * ⛓ **THE MARGINAL 9 PX, NOT THE CORRIDOR.** The corridor is
+ * `probeCorridor`'s and is certified WITH the strikes and now WITH the dash,
+ * because the preview steps the impulse. What a dash ADDS is
+ * `DASH_DISPLACEMENT` — 8 ticks of surplus velocity carrying the player
+ * `DASH_DISPLACEMENT.total` px further along their own travel than the walk
+ * would have gone. That extra ground is what nothing has priced, and it is
+ * what this prices.
+ *
+ * ⛓ **THROUGH `encounters.chaseEnvelope`, WHICH IS NOT A SECOND DANGER
+ * MODEL.** It is the arc's own sound over-approximation: it grows the body's
+ * transcribed hitbox by its class step bound per tick plus its `threatPad`
+ * and reports the AABB clearance. Re-used rather than re-spelled, exactly as
+ * §23b.4's stance conditions re-used `dangerDuringTransit`.
+ *
+ * ⛔ **TWO WAYS TO BE UNPRICEABLE, AND BOTH REFUSE BY NAME** rather than
+ * assume:
+ *  1. **No step bound** — a boss or an unpriced tag. `chaseEnvelope` fails by
+ *     name here already ("0 would read as static and prove the arena safe");
+ *     this converts that into a `dashRefused` row instead of a throw, because
+ *     a policy may decline but may not abort a walk.
+ *  2. **A body inside its own i-frame** — i.e. one I have just knocked. This
+ *     is `priceCrossing`'s own refusal, verbatim in its reason: *"a knocked
+ *     enemy's chase takes the `pushed` branch, which does not re-normalize to
+ *     moveSpeed — so the step bound the envelope rests on no longer holds"*.
+ *     ⚠ IT IS THE COMMON CASE AND IT IS SUPPOSED TO BE: the dash a policy
+ *     most wants is the one two ticks after a press, and two ticks after a
+ *     press the body it struck is in flight at up to `SWORD_FORCE`. ⚖ Ruling
+ *     35 puts safety over speed, so an unpriceable dash is a refused dash.
+ *
+ * ⚠ **THE OFFSETS ARE THE IMPULSE'S OWN SHAPE.** `knockbackImpulse` is
+ * axis-quantised (a component under half the unit length is dropped), so the
+ * direction of travel is taken from the impulse vector itself and scaled by
+ * `DASH_DISPLACEMENT.perTick[k] / SLASH_DASH_FORCE`. For a cardinal dash —
+ * the only kind any committed corridor takes — that is exact against
+ * `DASH_DISPLACEMENT`.
+ *
+ * @returns {{certified: boolean, why: ?string, worst: ?object}}
+ */
+export function certifyDash(state, bodies, impulse) {
+    if (!impulse || (impulse.dvx === 0 && impulse.dvy === 0)) {
+        // ⛓ AT REST THE IMPULSE IS EXACTLY (0,0) — `point_normalize` no-ops at
+        // zero length — so the dash moves the player NOWHERE and adds no
+        // ground to price. Certified, and said rather than left to the
+        // arithmetic returning 0.
+        return { certified: true, why: 'the impulse is (0,0) — a dash at rest carries '
+            + 'the player nowhere, so it adds no ground to price', worst: null };
+    }
+    const path = DASH_DISPLACEMENT.perTick.map((carried, k) => ({
+        t: k,
+        x: state.x + (impulse.dvx / SLASH_DASH_FORCE) * carried,
+        y: state.y + (impulse.dvy / SLASH_DASH_FORCE) * carried,
+    }));
+    let worst = null;
+    for (const b of bodies) {
+        if (b.hitsTimer > 0) {
+            return { certified: false, worst: { id: b.id },
+                why: `${b.id} is inside its own i-frame (hitsTimer ${b.hitsTimer}), so it `
+                    + 'is in KNOCKBACK: `Enemy.hit` applies `swordForce` and a knocked '
+                    + 'chase takes the `pushed` branch, which does not re-normalize to '
+                    + '`moveSpeed` — the step bound `chaseEnvelope` rests on does not '
+                    + 'hold (`priceCrossing`\'s own refusal). The dash cannot be PRICED '
+                    + 'against it, so under ⚖ ruling 35 it is refused rather than taken' };
+        }
+        let env;
+        try {
+            env = chaseEnvelope({ tag: b.tag, cx: b.x, cy: b.y }, path);
+        } catch (e) {
+            return { certified: false, worst: { id: b.id },
+                why: `${b.id} cannot be priced by an envelope at all — ${e.message}` };
+        }
+        for (const row of env.rows) {
+            if (worst === null || row.clearance < worst.clearance) {
+                worst = { id: b.id, t: row.t, clearance: Number(row.clearance.toFixed(3)) };
+            }
+            if (row.clearance <= 0) {
+                return { certified: false,
+                    worst: { id: b.id, t: row.t,
+                        clearance: Number(row.clearance.toFixed(3)) },
+                    why: `${b.id}'s envelope MEETS the dashed path at offset tick `
+                        + `${row.t} (clearance ${row.clearance.toFixed(3)}). The dash `
+                        + `carries the player ${DASH_DISPLACEMENT.total} px further `
+                        + 'along their own travel than the walk the corridor was '
+                        + 'certified on, and that ground is not clear' };
+            }
+        }
+    }
+    return { certified: true, why: null, worst };
 }
 
 /**
@@ -257,6 +386,17 @@ export function createStrikePolicy({
         /** ⛓ Read-only, for the equality row and for the as-built's counts. */
         get trace() { return trace.map((t) => ({ ...t })); },
         get strikes() { return trace.filter((t) => t.decision === STRIKE_PRESS).length; },
+        /**
+         * ⛓ R9 slice 12c — the presses that DASHED, derived from the same
+         * rows `strikes` counts so the two cannot disagree. Zero on every
+         * committed corridor, because the roster-wide default is
+         * `allowDash: false` (⚖ ruling 42).
+         */
+        get dashes() {
+            return trace.filter((t) => t.decision === STRIKE_PRESS && t.dash).length;
+        },
+        /** ⛓ R9 slice 12c — the rows where a dash was refused, either arm. */
+        get dashRefusals() { return trace.filter((t) => t.dashRefused).map((t) => ({ ...t })); },
         get aimed() { return aimed; },
 
         /**
@@ -268,20 +408,67 @@ export function createStrikePolicy({
          *   THIS tick, from whichever side is asking.
          * @param {number} tick
          */
-        decide(state, bodies, tick, walkHeld) {
+        decide(state, bodies, tick, walkHeld, { slash = null } = {}) {
             if (!hasSword) return { held: walkHeld, decision: STRIKE_NONE };
             // ── the PRESS half of a two-tick strike ──────────────────
             if (aimed !== null) {
                 const target = aimed.id;
+                const dash = aimed.dash ?? false;
                 aimed = null;
                 owed.set(target, tick);
                 lastPressAt = tick;
-                const row = { tick, decision: STRIKE_PRESS, target, held: 'primary' };
+                const row = { tick, decision: STRIKE_PRESS, target, held: 'primary', dash };
                 trace.push(row);
-                return { held: new Set(['primary']), decision: STRIKE_PRESS, target };
+                return { held: new Set(['primary']), decision: STRIKE_PRESS, target, dash };
+            }
+            /**
+             * ⛓⛓⛓ R9 SLICE 12c — **WHAT THIS AIM'S PRESS WILL ACTUALLY DO,
+             * BEFORE A DIRECTION KEY IS SPENT ON IT** (⚖ ruling 35).
+             *
+             * The aim is this tick and the press it earns lands on `tick + 1`,
+             * so the forecast ages the run's slash state by exactly that —
+             * with the run's own primitives, in the run's own order (see
+             * `combatVerbs.slashPressForecast`). Its outcome decides the RECT
+             * the scan asks with, because a dash swings a different one.
+             *
+             * ⛔ `null` WHEN THE CALLER DID NOT SUPPLY IT, and then the scan
+             * asks with the plain swing's rect exactly as it did before this
+             * parameter existed. That is not a silent default: at
+             * `allowDash: false` — the roster-wide default (⚖ ruling 42) — the
+             * refusal below already forbids every press that could dash, so
+             * the plain rect is the only rect a press can swing and the two
+             * arms agree by construction. A row asserts it.
+             */
+            const forecast = (slash && allowDash)
+                ? slashPressForecast(slash, {
+                    tick, ticksAhead: 1, direction: state.direction ?? 0,
+                    vx: state.vx ?? 0, vy: state.vy ?? 0,
+                })
+                : null;
+            /**
+             * ⛔⛔ A PRESS THAT OPENS NO WINDOW CANNOT HIT ANYTHING, so it is
+             * not worth an aim tick. `set slashing` has FOUR arms and two of
+             * them do nothing at all: `gated` (wanding, firing, spearing, or
+             * no sword) and `swallowed` (`slashDashed` up with the swing still
+             * open — both arms refused and there is no else). 12b's model
+             * scheduled a rect for every one of them; this reads the OUTCOME
+             * rather than the flag, which is what makes it a model instead of
+             * a guess.
+             */
+            if (forecast && (forecast.outcome === 'gated' || forecast.outcome === 'swallowed')) {
+                trace.push({
+                    tick,
+                    decision: STRIKE_NONE,
+                    saw: bodies.length,
+                    pressWouldBe: forecast.outcome,
+                    why: `a press at tick ${forecast.at} would be \`${forecast.outcome}\` — `
+                        + `${forecast.why} No window opens, so no rect is swung and an aim `
+                        + 'tick spent on it would be a direction key of drift for nothing.',
+                });
+                return { held: walkHeld, decision: STRIKE_NONE };
             }
             const { chosen, rejected } = strikeCandidates(state, bodies,
-                { facingToward, owed, tick });
+                { facingToward, owed, tick, scale: forecast?.scale ?? SLASH_SCALE_NORMAL });
             /**
              * ⛔⛔ THE DASH REFUSAL, AND IT IS ASKED AFTER THE SCAN ON PURPOSE.
              *
@@ -322,6 +509,48 @@ export function createStrikePolicy({
                 });
                 return { held: walkHeld, decision: STRIKE_NONE };
             }
+            /**
+             * ⛔⛔⛔ R9 SLICE 12c — **THE `allowDash: true` ARM: A DASH IS
+             * TAKEN ONLY WHERE IT IS CERTIFIED, AND REFUSED BY NAME WHERE IT
+             * IS NOT** (⚖ ruling 35, the user's own: *"safety over speed, dash
+             * wherever there is no reason not to"*).
+             *
+             * ⛓ IT IS THE SAME REFUSAL SHAPE AS THE `false` ARM ABOVE — a
+             * `dashRefused` row with its `why` — because a reader auditing a
+             * walk should not have to know which flag produced the silence.
+             * What differs is the REASON: `false` refuses because the
+             * displacement is uncertified BY POLICY; `true` refuses this one
+             * because it was certified and FAILED, or could not be priced.
+             *
+             * ⛓ AND IT IS TAKEN AT THE AIM, for the same reason 12b′'s is: an
+             * aim spends a direction key, and a tick spent aiming at a press
+             * that will be refused is a tick of drift for nothing.
+             */
+            if (allowDash && forecast?.outcome === 'dash' && chosen.length > 0) {
+                const verdict = certifyDash(state, bodies, forecast.impulse);
+                if (!verdict.certified) {
+                    trace.push({
+                        tick,
+                        decision: STRIKE_NONE,
+                        saw: bodies.length,
+                        rejected,
+                        dashRefused: {
+                            lastPressAt,
+                            wouldPressAt: forecast.at,
+                            inReach: chosen.map((c) => c.id),
+                            uncertified: true,
+                            worst: verdict.worst,
+                            why: `a press at tick ${forecast.at} WOULD DASH (${forecast.why}) `
+                                + `and the dash is NOT CERTIFIED: ${verdict.why}. `
+                                + '`allowDash` is true, so the refusal is the '
+                                + 'CERTIFICATION\'s and not the flag\'s — ⚖ ruling 35 puts '
+                                + 'safety over speed, and a dash that cannot be priced is '
+                                + 'refused rather than taken.',
+                        },
+                    });
+                    return { held: walkHeld, decision: STRIKE_NONE };
+                }
+            }
             if (chosen.length === 0) {
                 if (rejected.length > 0) {
                     trace.push({ tick, decision: STRIKE_NONE, saw: bodies.length, rejected });
@@ -329,7 +558,10 @@ export function createStrikePolicy({
                 return { held: walkHeld, decision: STRIKE_NONE };
             }
             const pick = chosen[0];
-            aimed = { id: pick.id, direction: pick.direction, tick };
+            aimed = {
+                id: pick.id, direction: pick.direction, tick,
+                dash: forecast?.outcome === 'dash',
+            };
             trace.push({
                 tick,
                 decision: STRIKE_AIM,
@@ -337,6 +569,12 @@ export function createStrikePolicy({
                 reach: pick.reach,
                 direction: pick.direction,
                 saw: bodies.length,
+                // ⛓ R9 slice 12c — WHAT THE PRESS THIS AIM EARNS WILL BE, so
+                // a trace can answer "which rect did that scan ask with".
+                // `null` when the caller supplied no slash state (the
+                // `allowDash: false` arm, where the plain rect is the only one
+                // a press can swing).
+                pressWouldBe: forecast?.outcome ?? null,
                 // ⛓ The runners-up, so a trace can answer "why that one" and
                 // not only "which one".
                 alsoInReach: chosen.slice(1).map((c) => ({ id: c.id, reach: c.reach })),

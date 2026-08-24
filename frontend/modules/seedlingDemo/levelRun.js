@@ -11031,6 +11031,15 @@ export function createLevelRun({
                     // family on purpose. `enemyClass` is `combat.js`'s own
                     // per-tag name — the field `enemyClassModelled` reads.
                     enemyClass: ENEMY_CLASSES[c.tag]?.as3 ?? null,
+                    // ⛓ R9 SLICE 12c — THE CENTRE, WHICH THE FORECAST'S OWN
+                    // PROJECTION HAS CARRIED SINCE 12b (`:5964`) AND THIS
+                    // SHAPE DID NOT. The docblock above says the two are
+                    // "written to the same four fields, cannot drift" — and
+                    // they had already drifted by two. `chaseEnvelope` prices
+                    // a body from its CENTRE and its tag, so the dash
+                    // certification cannot be asked from a rect alone.
+                    x: c.x,
+                    y: c.y,
                     rect: chaserBoxAt(c.tag, c.x, c.y),
                     hits: c.hits,
                     hitsTimer: c.hitsTimer,
@@ -11457,7 +11466,38 @@ export function createLevelRun({
                 inputBlocked: frozenTimer > 0,
                 steerBlocked: !canSteer(damage),
             });
-            return (st, held) => stepV2(st, held, opts);
+            /**
+             * ⛓⛓⛓ R9 SLICE 12c — **AND IT SPENDS A DASH IMPULSE, BECAUSE THE
+             * DRIVE DOES** (⚖ ruling 35).
+             *
+             * `advance` builds its options with `dashImpulse: slashPress
+             * ?.outcome === 'dash' ? slashPress.impulse : null` (`:13177`) and
+             * `stepV2` spends it as `useItemImpulse` — `useItem` is reached
+             * from inside `input()`, so the +2 knockback lands ABOVE this
+             * tick's sweep. A preview whose stepper could not carry it would
+             * price a corridor the drive walks 9 px further along (§23.11),
+             * which is exactly why `allowDash` was enforced OFF in 12b′ rather
+             * than acted on.
+             *
+             * ⛔ `stepOptsFor` STAYS THE ONE BUILDER AND STAYS ONE CALL. The
+             * spread overrides the single key that builder already declares
+             * and already defaults to `null`, so `{...opts, dashImpulse}` is
+             * field for field what `stepOptsFor({…, dashImpulse})` returns —
+             * asserted as a row rather than claimed here. It is a spread and
+             * not a second call because `stepOptsFor` re-runs `liveSolidOpts`
+             * on every invocation and the stance scan previews up to 289
+             * corridors of hundreds of ticks each.
+             *
+             * ⛓ THE NON-DASH ARM PASSES THE SAME OBJECT IT ALWAYS DID. Every
+             * committed corridor emits no dash at all (the roster-wide default
+             * is `allowDash: false`, ⚖ ruling 42), so this costs the roster
+             * nothing and the reach report can predict zero movers.
+             */
+            return (st, held, { dashImpulse = null } = {}) => (
+                dashImpulse
+                    ? stepV2(st, held, { ...opts, dashImpulse })
+                    : stepV2(st, held, opts)
+            );
         },
         /**
          * ⛓ THE ARROW SUBSYSTEM, FORECAST — see `arrowForecastNow`. `null`
@@ -11543,6 +11583,76 @@ export function createLevelRun({
         },
         /** The DASH subset — derived, so the two can never disagree. */
         get dashes() { return this.slashPresses.filter((d) => d.outcome === 'dash'); },
+        /**
+         * ⛓⛓⛓ R9 SLICE 12c — **EVERYTHING A PRESS'S OUTCOME DEPENDS ON, IN
+         * ONE SHAPE, SO THE PROBE AND THE DRIVE CANNOT ASK DIFFERENT
+         * QUESTIONS** (⚖ ruling 30(c), ⚖ ruling 35).
+         *
+         * The strike policy has to know what its press WILL DO before it
+         * spends an aim tick on it, because a dash swings a different rect
+         * (24 x 20.8 at reach 24, against 16 x 32 at 16) and neither rect
+         * contains the other. `slashSet` is the function that knows; this is
+         * everything `slashSet` reads that lives on the run.
+         *
+         * ⛔ IT IS ONE GETTER RATHER THAN FIVE because a caller that assembled
+         * the gate from five reads would be a SECOND transcription of
+         * `advance`'s own press block (`:13129`), and the two would agree
+         * until one of them was edited. The six gate terms below are that
+         * block's own six, in its own order:
+         *   · `hasSword`/`hasGhostSword` — the run's inventory mirror;
+         *   · `wanding`/`firing`        — the windows the run owns, asked
+         *                                 with `ticksCompleted <= endTick`,
+         *                                 which is the press block's test;
+         *   · `deathRaying`             — FALSE BY CONSTRUCTION, not by
+         *                                 assumption: no writer is modelled,
+         *                                 and a rung that models the death ray
+         *                                 owes this line the flag;
+         *   · `spearing`                — a spear thrust still pending.
+         *
+         * ⚠ IT IS THE STATE THE **NEXT** TICK WILL AGE, not the state that
+         * tick's press reads. `slashTimerTick` runs at the TOP of `advance`
+         * (`:13020`), above the press — so a consumer that reads this before
+         * calling `advance` holds the value tick `ticksCompleted - 1` LEFT,
+         * and must age it itself. `combatVerbs.slashPressForecast` is that
+         * ageing, written once.
+         *
+         * ⛔ NOT GATED ON `noclip`/`noDamage`, and the reason is trap 563
+         * rather than an oversight: the two gates that matter to a CONSUMER
+         * of this are already upstream of it — under `noclip` no press is
+         * taken at all (`:13128`'s `&& !noclip`) and `previewStepper` refuses
+         * outright, and under either flag `strikeBodies` is empty so
+         * `strikePolicyFor` returns `null` and nothing ever asks. A third
+         * gate here would be a fourth spelling of the same refusal.
+         */
+        get slashInfo() {
+            /**
+             * ⛓ THE END TICKS RIDE ALONG WITH THE BOOLEANS, and that is what
+             * lets a PREVIEW use this shape at all. A preview steps ticks the
+             * run has not run, so it must AGE the two windows rather than
+             * freeze this tick's answer — and a preview that froze `firing`
+             * true would refuse to model a press for the rest of the corridor.
+             * ⛔ A preview cannot OPEN either window: both are opened by a
+             * `secondary` press, the walk holds no `secondary`, and the strike
+             * policy presses `primary` alone. Asserted as a row rather than
+             * claimed here (trap 566). `-1` is "no window", which no
+             * `ticksCompleted` can be inside.
+             */
+            const wandUntil = wandWindows.reduce((m, w) => Math.max(m, w.endTick), -1);
+            const fireUntil = fireWindows.reduce((m, w) => Math.max(m, w.endTick), -1);
+            return {
+                state: { ...slashState },
+                endsAt: slashEndsAt,
+                openUntil: { wanding: wandUntil, firing: fireUntil },
+                gate: {
+                    hasSword: inventory?.hasSword ?? false,
+                    hasGhostSword: inventory?.hasGhostSword ?? false,
+                    wanding: ticksCompleted <= wandUntil,
+                    firing: ticksCompleted <= fireUntil,
+                    deathRaying: false,
+                    spearing: pendingThrust !== null && pendingThrust.weapon === 'spear',
+                },
+            };
+        },
         /**
          * ⛓ R6 slice 2: one record per shot the run has FIRED —
          * `{t, level, id, direction, x, y, pressTick}`. `t` is the fire tick

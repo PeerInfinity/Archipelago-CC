@@ -63,7 +63,11 @@ import { drive, runDwell } from './botDriverV2.js';
 // ⛓ R9 slice 12b′: the dash-refusal row builds BOTH arms of the policy, so it
 // needs the constructor and the swing period the refusal is measured in.
 import { createStrikePolicy } from './strikePolicy.js';
-import { ORDINARY_SWING_PERIOD } from './combatVerbs.js';
+import {
+    DASH_DISPLACEMENT, ORDINARY_SWING_PERIOD, SLASH_DASH_FORCE, slashPressForecast,
+} from './combatVerbs.js';
+// ⛓ R9 slice 12c — the certification the `allowDash: true` arm is gated on.
+import { certifyDash } from './strikePolicy.js';
 import { killWindowTicks } from './chasers.js';
 import { ENEMY_CLASSES } from './combat.js';
 import { DEFAULT_TOLERANCE } from './botDriverV1.js';
@@ -1429,6 +1433,419 @@ describe('R9 slice 12b: the OPPORTUNISTIC STRIKE — one policy, two consumers',
             .toThrow(/the dwell was HIT at tick 119/);
     });
 });
+/**
+ * ⛓⛓⛓ R9 SLICE 12c — **THE COMPLETE DASH MODEL IN THE ORACLE.**
+ *
+ * ⚖ Ruling 35, the user's own: *"the oracle and the planner BOTH model the
+ * dash completely; safety over speed, dash wherever there is no reason not
+ * to"*. 12b′ measured the preview/drive gap to be exactly TWO things — the
+ * preview's stepper carried no `dashImpulse`, and `previewWalk` never called
+ * `slashSet` — and closed it by REFUSING every press that could dash. This
+ * closes it by MODELLING them.
+ *
+ * ⛔ THE ROSTER-WIDE DEFAULT IS STILL `false` (⚖ ruling 42). Every row here
+ * that exercises the `true` arm builds the policy itself; nothing committed
+ * takes a dash, and the campaign producer's digest is the proof.
+ */
+describe('R9 slice 12c: the DASH, MODELLED — the oracle steps it and the policy prices it', () => {
+    const l14 = () => createLevelRun({
+        levelSource, boot: { level: 14, x: 160, y: 64 }, noclip: false, noHazards: [],
+        noDamage: false, grants: [], persistence: [], despawn: [], equips: [],
+        pins: ['dead_frames'], save: { totem_parts: [], keys: [], seal_parts: [] },
+        rng: null, seam: { items: { hasSword: true } }, roles: ROLES,
+    });
+    /**
+     * ⛓ THE (88,72) STANCE OF §23b.3, WHICH IS A CENTRE AND NOT A BOOT. A boot
+     * is a TILE and the constructor centres the player 8 px into it, so the
+     * stance's own coordinates are reached from `boot: (80,64)`. Measured
+     * rather than assumed: booting at (88,72) lands the player ON `bob@96,80`.
+     */
+    const stance = () => createLevelRun({
+        levelSource, boot: { level: 14, x: 80, y: 64 }, noclip: false, noHazards: [],
+        noDamage: false, grants: [], persistence: [], despawn: [], equips: [],
+        pins: ['dead_frames'], save: { totem_parts: [], keys: [], seal_parts: [] },
+        rng: null, seam: { items: { hasSword: true } }, roles: ROLES,
+    });
+    const policyFor = (allowDash) => createStrikePolicy({
+        facingToward, facingKeys: FACING_KEYS, hasSword: true, allowDash,
+    });
+    const key = (h) => [...h].sort().join('+') || '-';
+    /**
+     * A STAND, driven by the arc's own two consumers. `wps: []` with a
+     * `standFor` tail is `previewWalk`'s whole dwell; `runDwell` is the
+     * driver's. Neither is a re-implementation of the other, which is the
+     * only reason an equality between them says anything (⚖ ruling 30(c)).
+     */
+    const standBoth = (mk, ticks, allowDash) => {
+        const a = mk();
+        const pa = policyFor(allowDash);
+        const pv = previewWalk(a, [], 0, { strike: pa, standFor: ticks });
+        const b = mk();
+        const perTick = [];
+        const pb = policyFor(allowDash);
+        runDwell(b, perTick, {
+            ticks,
+            strike: pb,
+            why: 'the dash model\'s equality fixture — a stand, so the corridor\'s own '
+                + 'waypoint arithmetic cannot be what the row is measuring',
+            until: {
+                why: `the stand has run its ${ticks} ticks`,
+                test: (r) => r.ticksCompleted >= ticks,
+            },
+        }, 'the dashing stand');
+        return {
+            preview: pv.samples.map((x) => key(x.held ?? new Set())),
+            drive: perTick.map(key),
+            pa,
+            pb,
+            run: b,
+        };
+    };
+    const firstDiff = (x, y) => {
+        for (let i = 0; i < Math.max(x.length, y.length); i += 1) {
+            if (x[i] !== y[i]) return i;
+        }
+        return -1;
+    };
+
+    /**
+     * ⛓⛓⛓ **THE ROW THAT MAKES THE DASH MODEL SAFE**, and it is 12b's own
+     * equality with a press stream that DASHES.
+     *
+     * ⛔ MUTANT (a): drop the preview stepper's `dashImpulse` and this reds —
+     * the previewed player stops 9 px short of the driven one on the dash's
+     * decay (`DASH_DISPLACEMENT.total`), the bodies chase a player who is not
+     * there, and the two sides stop agreeing about which body is in reach.
+     */
+    it('⛓⛓⛓ the PREVIEW and the DRIVE spend the same keys over a stand that DASHES', () => {
+        const r = standBoth(l14, 130, true);
+        expect(r.drive).toEqual(r.preview);
+        // ⚠ AND NOT VACUOUSLY. A stand where nothing dashed would pass this
+        // row with the `false` arm's own sequence.
+        expect(r.pa.dashes).toBe(1);
+        expect(r.pb.dashes).toBe(1);
+        expect(r.pa.strikes).toBe(3);
+        expect(r.pb.strikes).toBe(3);
+    });
+
+    /**
+     * ⛓⛓⛓ **THE POLICY'S FORECAST OF ITS OWN PRESS IS EXACT** — the claim
+     * that (ii) rests on, asserted against the RUN rather than against a
+     * second copy of the forecast.
+     *
+     * `slashPressForecast` ages the run's slash state by the run's own
+     * primitives in the run's own order and asks `slashSet` what the press on
+     * `tick + 1` will be. `run.dashes` is the run's independent ledger of what
+     * `advance` actually did. The two counts agreeing is what says the ageing
+     * is right; the ticks agreeing is what says it is right EVERY TIME.
+     */
+    it('⛓⛓⛓ every press the policy calls a DASH is a dash in the run — tick for tick', () => {
+        const r = standBoth(l14, 130, true);
+        const policyDashTicks = r.pb.trace
+            .filter((t) => t.decision === 'press' && t.dash).map((t) => t.tick);
+        const runDashTicks = r.run.dashes.map((d) => d.t);
+        expect(runDashTicks).toEqual(policyDashTicks);
+        expect(policyDashTicks).toHaveLength(1);
+    });
+
+    /**
+     * ⛔⛔ **12b's POLICY DASHED WITHOUT KNOWING IT**, and this is the row that
+     * says so. Withhold the slash state and the policy has no model at all: it
+     * cannot tell a swing from a dash, so it cannot choose the rect and it
+     * cannot certify — and the RUN dashes anyway, because `set slashing`'s
+     * dash branch has no `!slashing` term.
+     *
+     * ⛓ THREE DASHES THE MODEL NEVER SAW. That is the whole reason
+     * `allowDash` was enforced OFF in 12b′ rather than acted on.
+     */
+    it('⛔ without the slash state the policy dashes BLIND — the run dashes, the model does not', () => {
+        const run = l14();
+        const policy = policyFor(true);
+        for (let t = 0; t < 260; t += 1) {
+            // ⚠ NO `slash` KEY — 12b's own call, verbatim.
+            const d = policy.decide(run.state, run.strikeBodies, run.ticksCompleted, new Set());
+            run.advance(d.held);
+        }
+        expect(policy.dashes).toBe(0);
+        expect(run.dashes.length).toBe(3);
+        expect(run.playerHits).toHaveLength(1);
+        expect(run.playerHits[0].t ?? run.playerHits[0].tick).toBe(252);
+    });
+
+    /**
+     * ⛔⛔⛔ **THE SAFETY ROW** (⚖ ruling 35). Same stance, same bound, same
+     * `allowDash: true` — the only difference is that the policy can now see
+     * what its press will do and CERTIFY the ground the dash adds.
+     *
+     * ⛓ THE DIRECTION IS THE FINDING, AND §23b.3 GOT IT HALF RIGHT. 12b′
+     * recorded "dashes are safer at the forecast stance, more dangerous at the
+     * boot" and concluded the sign is not uniform. It is not — but the cure is
+     * not to pick a side: a CERTIFIED dash is safe at BOTH, and this row is
+     * the boot, where the uncertified arm is hit.
+     *
+     * ⛔ MUTANT (c): remove the certification term and the t=252 hit returns.
+     */
+    it('⛔⛔ `allowDash: true` WITH certification takes L14\'s boot to ZERO hits — and still dashes', () => {
+        const run = l14();
+        const policy = policyFor(true);
+        for (let t = 0; t < 260; t += 1) {
+            const d = policy.decide(run.state, run.strikeBodies, run.ticksCompleted,
+                new Set(), { slash: run.slashInfo });
+            run.advance(d.held);
+        }
+        expect(run.playerHits).toHaveLength(0);
+        // ⛓ NOT BY REFUSING EVERYTHING. A certification that never certified
+        // would also report zero hits, and would be a rename of `false`.
+        expect(policy.dashes).toBe(4);
+        expect(run.dashes.length).toBe(4);
+        // ⛓ AND IT REFUSED BY NAME, with the body and the reason on the row.
+        const refused = policy.dashRefusals;
+        expect(refused).toHaveLength(10);
+        expect(refused.every((r) => r.dashRefused.uncertified)).toBe(true);
+        for (const r of refused) {
+            expect(r.dashRefused.why).toMatch(/WOULD DASH/);
+            expect(r.dashRefused.why).toMatch(/NOT CERTIFIED/);
+        }
+    });
+
+    /**
+     * ⛓ **THE SECOND FIXTURE, AND IT IS THE NON-VACUITY ONE.** At §23b.3's
+     * forecast stance neither arm is hit, so a safety claim there proves
+     * nothing — what it can prove is that the certification is not a blanket
+     * refusal wearing a `why`.
+     *
+     * ⚠ §23b.3's OWN NUMBER DOES NOT REPRODUCE AT THIS HEAD, and it is
+     * recorded rather than quoted: it reports the ENFORCED arm being hit at
+     * t=169 here. Driven from this stance for 400 ticks, NEITHER arm is hit —
+     * measured three ways (this stand; the same stand booted at (88,72), which
+     * puts the player on top of `bob@96,80`; and a fixed-player forecast).
+     */
+    it('⛓ …and at §23b.3\'s stance the certification still TAKES dashes — it is not a blanket no', () => {
+        const run = stance();
+        expect({ x: run.state.x, y: run.state.y }).toEqual({ x: 88, y: 72 });
+        const policy = policyFor(true);
+        for (let t = 0; t < 400; t += 1) {
+            const d = policy.decide(run.state, run.strikeBodies, run.ticksCompleted,
+                new Set(), { slash: run.slashInfo });
+            run.advance(d.held);
+        }
+        expect(policy.dashes).toBe(5);
+        expect(run.dashes.length).toBe(5);
+        expect(policy.dashRefusals).toHaveLength(12);
+        expect(run.playerHits).toHaveLength(0);
+    });
+
+    /**
+     * ⛔⛔ **MUTANT (g)'s ROW: THE POLICY READS THE OUTCOME, NOT THE FLAG.**
+     *
+     * `set slashing` has four arms and two of them do NOTHING — `gated` and
+     * `swallowed`. A press inside a dash's own animation is swallowed whole:
+     * no sound, no window, no impulse, no timer write. A policy that spent an
+     * aim tick on one would spend a direction key of drift to buy a press that
+     * cannot hit anything, which is 12b's model scheduling a rect for every
+     * press regardless of what `set slashing` did with it.
+     */
+    it('⛔ a press the model says will be SWALLOWED costs no aim tick and no press', () => {
+        const run = l14();
+        const policy = policyFor(true);
+        for (let t = 0; t < 400; t += 1) {
+            const d = policy.decide(run.state, run.strikeBodies, run.ticksCompleted,
+                new Set(), { slash: run.slashInfo });
+            run.advance(d.held);
+        }
+        const swallowed = policy.trace.filter((r) => r.pressWouldBe === 'swallowed');
+        // ⛓ NON-VACUOUS: the branch is reached, and reached often.
+        expect(swallowed.length).toBe(20);
+        for (const r of swallowed) {
+            expect(r.decision).toBe('none');
+            expect(r.why).toMatch(/No window opens/);
+        }
+        // ⛔ AND NO AIM WAS TAKEN ON ANY OF THOSE TICKS.
+        const aimTicks = new Set(policy.trace.filter((r) => r.decision === 'aim')
+            .map((r) => r.tick));
+        expect(swallowed.some((r) => aimTicks.has(r.tick))).toBe(false);
+    });
+
+    /**
+     * ⛓⛓ **THE STEPPER, ASKED DIRECTLY.** (i)'s claim is that the preview's
+     * options are still built in exactly one place and that the dash arm adds
+     * exactly one key — so the no-dash arm must be the stepper it always was,
+     * and the dash arm must move the player by the impulse and nothing else.
+     */
+    it('⛓⛓ `previewStepper` spends a dash impulse — and without one it is unchanged', () => {
+        const run = l14();
+        const step = run.previewStepper();
+        const held = new Set(['left']);
+        const plain = step({ ...run.state }, held);
+        const explicitNull = step({ ...run.state }, held, { dashImpulse: null });
+        expect(explicitNull).toEqual(plain);
+        const dashed = step({ ...run.state }, held, {
+            dashImpulse: { dvx: -SLASH_DASH_FORCE, dvy: 0 },
+        });
+        // ⛓ `useItem` is reached from INSIDE `input()`, so the impulse lands
+        // above this tick's sweep and the tick it is spent on already moves
+        // further. The claim is the velocity, which is where it is applied.
+        expect(dashed.vx).toBeCloseTo(plain.vx - SLASH_DASH_FORCE, 9);
+        expect(dashed.vy).toBeCloseTo(plain.vy, 9);
+        expect(dashed.x).toBeLessThan(plain.x);
+    });
+
+    /**
+     * ⛓⛓⛓ **THE 9 PX, DERIVED — AND IT IS §23.11's MEASURED NUMBER.**
+     *
+     * `DASH_DISPLACEMENT` is built from `SLASH_DASH_FORCE` and
+     * `DEFAULT_FRICTION` alone. §23.11 measured "one dash adds 9 px" off
+     * `r9-l0-sword-dash`'s GAME-recorded stream. The two agreeing is what
+     * makes the certification's path the dash's real path (⚖ ruling 17: a
+     * literal only with provenance, and this one has none because it is not a
+     * literal).
+     */
+    it('⛓⛓⛓ the dash carries 9 px over 8 ticks, DERIVED from the two constants', () => {
+        expect(DASH_DISPLACEMENT.ticks).toBe(8);
+        expect(DASH_DISPLACEMENT.total).toBe(9);
+        expect(DASH_DISPLACEMENT.perTick).toEqual([2, 3.75, 5.25, 6.5, 7.5, 8.25, 8.75, 9]);
+    });
+
+    /**
+     * ⛔⛔ **A DASH AT REST IS CERTIFIED, AND SAYING SO IS THE POINT.**
+     * `knockbackImpulse` normalises the player's velocity and
+     * `point_normalize` no-ops at zero length, so a dash pressed standing
+     * still carries the player NOWHERE — there is no added ground to price.
+     * ⚠ Four of §22.9's eight roster candidates would have been blind to the
+     * dash for exactly this reason.
+     */
+    it('⛔ certification of a dash AT REST is trivially true — the impulse is (0,0)', () => {
+        const run = l14();
+        const v = certifyDash(run.state, run.strikeBodies, { dvx: 0, dvy: 0 });
+        expect(v.certified).toBe(true);
+        expect(v.why).toMatch(/carries the player nowhere/);
+    });
+
+    /**
+     * ⛔⛔ **A KNOCKED BODY MAKES A DASH UNPRICEABLE, AND THAT IS
+     * `priceCrossing`'s OWN REFUSAL** — `Enemy.hit` applies `swordForce` and a
+     * knocked chase takes the `pushed` branch, which does not re-normalize to
+     * `moveSpeed`, so the step bound `chaseEnvelope` rests on does not hold.
+     *
+     * ⚠ IT IS THE COMMON CASE AND IT IS SUPPOSED TO BE: the dash a policy most
+     * wants is the one two ticks after a press, and two ticks after a press
+     * the body it struck is in flight. ⚖ Ruling 35 puts safety over speed.
+     */
+    it('⛔ a body inside its own i-frame makes the dash UNPRICEABLE, refused by name', () => {
+        const run = l14();
+        const knocked = run.strikeBodies.map((b, i) => (i === 0 ? { ...b, hitsTimer: 12 } : b));
+        const v = certifyDash(run.state, knocked, { dvx: -SLASH_DASH_FORCE, dvy: 0 });
+        expect(v.certified).toBe(false);
+        expect(v.why).toMatch(/inside its own i-frame/);
+        expect(v.why).toMatch(/does not re-normalize to `moveSpeed`/);
+    });
+
+    /**
+     * ⛔⛔⛔ **THE PREVIEW CANNOT OPEN A WAND OR FIRE WINDOW**, asserted rather
+     * than asserted-in-prose (trap 566: a warning quoted in a header is not a
+     * check).
+     *
+     * The gate `slashSet` reads has six terms and two of them are windows the
+     * RUN owns. A preview steps ticks the run has not run, so it must AGE
+     * them — and ageing is only sound because nothing a preview does can OPEN
+     * one. Both are opened by a `secondary` press; the walk holds no
+     * `secondary` and the strike policy presses `primary` alone.
+     */
+    it('⛔⛔ no previewed tick spends `secondary`, so the two aged windows only ever CLOSE', () => {
+        const r = standBoth(l14, 130, true);
+        expect(r.preview.some((h) => h.includes('secondary'))).toBe(false);
+        expect(r.drive.some((h) => h.includes('secondary'))).toBe(false);
+        const info = r.run.slashInfo;
+        expect(info.openUntil).toEqual({ wanding: -1, firing: -1 });
+        expect(info.gate.wanding).toBe(false);
+        expect(info.gate.firing).toBe(false);
+    });
+
+    /**
+     * ⚠⚠⚠ **THE EQUALITY IS A BOUNDED CLAIM, AND IT ALREADY WAS AT HEAD.**
+     *
+     * `previewWalk`'s hit lands ONE TICK EARLY against the drive's — the
+     * preview has no second pass, so `chasers.hit` runs at the press tick
+     * where `applyThrust` runs at press+1. 12b named that skew and measured it
+     * at ~0.22 px of one body's travel; ⚖ ruling 30(c)'s equality row asserts
+     * the two agree on L6's 42-tick corridor, where 0.22 px never reaches a
+     * held-set.
+     *
+     * ⛔ IT REACHES ONE ON A LONG STAND. Measured at THIS head and at
+     * `f498381ca` alike, on L14's own boot: the sequences part at tick 207
+     * with the roster-wide `allowDash: false`, and at 144 with `true`. So the
+     * dash does NOT create the divergence — it brings it 63 ticks earlier,
+     * because a dash moves the player and a moved player is chased
+     * differently.
+     *
+     * ⇒ **12c′ inherits this**: ⚖ ruling 30(c) holds over a corridor's length,
+     * not over a room's lifetime, and a re-priced walk longer than ~144 ticks
+     * is certified against a preview the drive stops matching. NOT FIXED HERE:
+     * the skew is named in `previewWalk` and this slice was told not to move
+     * it. Recorded so the next slice cannot mistake it for its own.
+     */
+    it('⚠⚠ the preview/drive equality PARTS on a long stand — at 207 refused, 144 dashing', () => {
+        expect(firstDiff(standBoth(l14, 260, false).preview,
+            standBoth(l14, 260, false).drive)).toBe(207);
+        expect(firstDiff(standBoth(l14, 260, true).preview,
+            standBoth(l14, 260, true).drive)).toBe(144);
+    });
+
+    /**
+     * ⛓ **THE FORECAST, ASKED IN ISOLATION.** The two-tick ageing is what (ii)
+     * rests on and it is a pure function, so it gets a row that does not need
+     * a room: a fresh state presses an ORDINARY SWING; the same state one tick
+     * after a swing forecasts a DASH; and `SLASH_TIMER_MAX` ticks after it
+     * forecasts an ordinary swing again, because a dash does NOT refresh the
+     * timer (`plan-seedling-r9-l0-sword-dash`'s own discriminator).
+     */
+    it('⛓ `slashPressForecast` reproduces `r9-l0-sword-dash`\'s own schedule, from the state alone', () => {
+        const gate = {
+            hasSword: true, hasGhostSword: false, wanding: false, firing: false,
+            deathRaying: false, spearing: false,
+        };
+        const fresh = { slashing: false, slashTimer: 0, slashDashed: false, anim: null };
+        expect(slashPressForecast({ state: fresh, endsAt: null, gate },
+            { tick: 0, ticksAhead: 1 }).outcome).toBe('slash');
+        /**
+         * ⛓ THE STATE A PRESS AT TICK 0 LEAVES: the timer at
+         * `SLASH_TIMER_MAX`, the swing open, and `slashEnd` due on tick 5 —
+         * `SLASH_ANIM_TICKS.slash`, which is the run's own `slashEndsAt`.
+         */
+        const swung = {
+            slashing: true, slashTimer: ORDINARY_SWING_PERIOD, slashDashed: false,
+            anim: 'slash',
+        };
+        // k = 2, `DASH_CHAIN`'s first dash — and k = 2 rather than 1 because
+        // `Input.pressed` is a rising edge, which is the TAPE's constraint and
+        // not this function's.
+        const d = slashPressForecast({ state: swung, endsAt: 5, gate },
+            { tick: 1, ticksAhead: 1, vx: 1, vy: 0 });
+        expect(d.at).toBe(2);
+        expect(d.outcome).toBe('dash');
+        expect(d.impulse).toEqual({ dvx: SLASH_DASH_FORCE, dvy: 0 });
+        expect(d.scale).toEqual({ x: 1.5, y: 0.65 });
+        /**
+         * ⛔⛔ THE DISCRIMINATOR, and it is the one claim only this tape can
+         * make: a press a FULL WINDOW after the first is an ORDINARY SWING,
+         * because the dash does not refresh `slashTimer` — only the `else if`
+         * writes it. A model that thought otherwise would read a live window
+         * here and dash, moving the player 2 px the game does not.
+         *
+         * ⛓ AND IT GOES THROUGH THE RELEASE. Ageing 19 whole ticks crosses
+         * `endsAt`, so `slashEnd` fires inside the forecast and clears both
+         * `slashing` and `slashDashed` — which is what lets the ordinary arm
+         * be taken at all.
+         */
+        const late = slashPressForecast({ state: swung, endsAt: 5, gate },
+            { tick: 1, ticksAhead: ORDINARY_SWING_PERIOD - 1, vx: 1, vy: 0 });
+        expect(late.at).toBe(ORDINARY_SWING_PERIOD);
+        expect(late.outcome).toBe('slash');
+        expect(late.impulse).toBeNull();
+        expect(late.scale).toEqual({ x: 1, y: 1 });
+    });
+});
+
 
 /**
  * ⛓⛓⛓ R9 SLICE 12b′ — **THE DERIVED STANCE**, the kill rung's chaser arm.

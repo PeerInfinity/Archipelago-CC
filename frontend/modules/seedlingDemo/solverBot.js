@@ -107,7 +107,9 @@ import { ENEMY_CLASSES, KILL_LOCK_TAGS, KILL_LOCK_TSET } from './combat.js';
 // ⛓ R8 slice 8: the PRESSER's own cadence floor — the dash rule plus the
 // receiver's i-frames, in one constant `killSchedule` has refused a smaller
 // value than since R5. The press arm never consulted it; the game found out.
-import { KILL_PRESS_CADENCE } from './combatVerbs.js';
+import {
+    KILL_PRESS_CADENCE, SLASH_ANIM_TICKS, slashSet, slashTimerTick,
+} from './combatVerbs.js';
 import {
     STRIKE_PRESS, armIsModelled, createStrikePolicy,
 } from './strikePolicy.js';
@@ -1543,6 +1545,109 @@ export function previewWalk(run, wps, tolerance = 0, { strike = null, standFor =
      * pairing and a different question.
      */
     let bodiesForPolicy = strike ? (run.strikeBodies ?? []) : null;
+    /**
+     * ⛓⛓⛓ R9 SLICE 12c — **THE PREVIEW THREADS THE PLAYER'S OWN SLASH STATE**,
+     * which is the second of the two things 12b′ measured the preview/drive gap
+     * to be (finding 2: the preview never called `slashSet`).
+     *
+     * ⛔ WHY IT IS NOT OPTIONAL ANY MORE. `set slashing`'s dash branch adds a
+     * +2 impulse the DRIVE spends through `stepV2` and the preview did not
+     * carry — 9 px per dash (§23.11), on a corridor the danger map priced
+     * without them. 12b′'s answer was to REFUSE the press (`allowDash: false`);
+     * ⚖ ruling 35's answer, and this slice's, is to MODEL it, so that the
+     * corridor the probe certifies is the corridor the drive walks even when
+     * the walk dashes.
+     *
+     * ⛓ THE ORDER IS `advance`'s OWN, and it has to be: `slashTimerTick` at the
+     * TOP of the tick (`levelRun.js:13020`, `Player.slash()`'s first two lines,
+     * above `super.update()`), the press inside `input()` (`:13129`), the
+     * impulse spent by this tick's sweep (`:13177`), and `slashEnd()` BELOW it
+     * (`:13362`, from `sprites()`). Any other order re-arms the dash on the
+     * wrong tick.
+     *
+     * ⚠ THE GATE'S TWO WINDOWS ARE AGED, NOT FROZEN. `run.slashInfo` carries
+     * their end ticks for exactly this; nothing in a preview can open one
+     * (see its docblock). `spearing` is a first-tick fact only — a spear
+     * `pendingThrust` live at the preview's start is consumed by that tick's
+     * `applyThrust` and nothing here creates another.
+     */
+    const slashLive = strike ? run.slashInfo : null;
+    let slashState = slashLive ? slashLive.state : null;
+    let slashEndsAt = slashLive ? slashLive.endsAt : null;
+    let spearPending = slashLive ? slashLive.gate.spearing : false;
+    const gateAt = (t) => ({
+        hasSword: slashLive.gate.hasSword,
+        hasGhostSword: slashLive.gate.hasGhostSword,
+        wanding: t <= slashLive.openUntil.wanding,
+        firing: t <= slashLive.openUntil.firing,
+        deathRaying: false,
+        spearing: spearPending,
+    });
+    /**
+     * ⛓⛓ ONE TICK OF THE COMBAT STATE, WRITTEN ONCE. The TRANSIT loop and the
+     * standing TAIL both consult the policy, and 12b′ already paid for the two
+     * being separate code (`runDwell` dropped an options key its sibling
+     * carried). A dash model split across two copies is where the next one
+     * rots, so both call these.
+     *
+     * `at` is `ticksCompleted` — the count BEFORE the tick runs, which is the
+     * convention `drive` passes and the policy's `owed` window is measured in.
+     */
+    const combatBefore = (state, at, walkHeld) => {
+        if (!strike) return { held: walkHeld, dashImpulse: null };
+        const gate = gateAt(at);
+        let held = walkHeld;
+        let decision = null;
+        // ⛔ THE POLICY IS ASKED WITH THE STATE THE PREVIOUS TICK LEFT, above
+        // this tick's `slashTimerTick` — which is where `drive` asks it from,
+        // and `slashPressForecast` does the ageing itself.
+        if (bodiesForPolicy && !state.fall) {
+            decision = strike.decide(state, bodiesForPolicy, at, walkHeld, {
+                slash: { state: slashState, endsAt: slashEndsAt, gate },
+            });
+            held = decision.held;
+        }
+        // ── the tick's own top: `Player.slash()`'s first two lines ───
+        slashState = slashTimerTick(slashState);
+        let dashImpulse = null;
+        if (decision && decision.decision === STRIKE_PRESS) {
+            const r = slashSet(slashState, {
+                pressed: true,
+                ...gate,
+                direction: state.direction ?? 0,
+                vx: state.vx ?? 0,
+                vy: state.vy ?? 0,
+            });
+            slashState = r.state;
+            if (r.outcome === 'slash' || r.outcome === 'dash') {
+                slashEndsAt = at + SLASH_ANIM_TICKS[slashState.anim];
+            }
+            if (r.outcome === 'dash') dashImpulse = r.impulse;
+            // ⚠ ONE TICK LATE, exactly as the run is: `Player.update`
+            // calls `slash()` ABOVE `super.update()`, so the press on
+            // this tick fires its rect on the next one. The forecast is
+            // told at the press and the body is struck here because the
+            // preview has no second pass — which makes the previewed
+            // hit land one tick EARLY against the drive's. Named
+            // rather than hidden: it moves a knocked body 1 tick of
+            // its own travel (~0.22 px), and the equality row below
+            // measures whether that is visible in the held-set
+            // sequence, which is the thing the corridor is made of.
+            if (chasers) chasers.hit(decision.target, state);
+        }
+        // A spear thrust live at the preview's start is consumed by the first
+        // tick's `applyThrust`; nothing here creates another.
+        spearPending = false;
+        return { held, dashImpulse };
+    };
+    /** `slashEnd()`, and it is BELOW the step for `sprites()`' own reason. */
+    const combatAfter = (at) => {
+        if (!strike) return;
+        if (slashEndsAt !== null && at >= slashEndsAt) {
+            slashState = slashSet(slashState, { pressed: false, ...gateAt(at) }).state;
+            slashEndsAt = null;
+        }
+    };
     let st = { ...run.state };
     let tick = startTick;
     const samples = [];
@@ -1608,34 +1713,20 @@ export function previewWalk(run, wps, tolerance = 0, { strike = null, standFor =
              * kills it, and it leaves the danger set after its death staging.
              * So the samples AFTER a strike carry the room the strike made.
              */
-            if (strike && bodiesForPolicy && !st.fall) {
-                // ⛓ `tick - 1` because `tick` was incremented at the top of
-                // this iteration while `drive` passes `run.ticksCompleted`,
-                // the count BEFORE the tick runs. One counter, two
-                // conventions — and the policy's `owed` window is measured in
-                // ticks, so the two must agree or one walk gets two answers.
-                const d = strike.decide(st, bodiesForPolicy, tick - 1, held);
-                held = d.held;
-                if (d.decision === STRIKE_PRESS && chasers) {
-                    // ⚠ ONE TICK LATE, exactly as the run is: `Player.update`
-                    // calls `slash()` ABOVE `super.update()`, so the press on
-                    // this tick fires its rect on the next one. The forecast is
-                    // told at the press and the body is struck here because the
-                    // preview has no second pass — which makes the previewed
-                    // hit land one tick EARLY against the drive's. Named
-                    // rather than hidden: it moves a knocked body 1 tick of
-                    // its own travel (~0.22 px), and the equality row below
-                    // measures whether that is visible in the held-set
-                    // sequence, which is the thing the corridor is made of.
-                    chasers.hit(d.target, st);
-                }
-            }
+            // ⛓ `tick - 1` because `tick` was incremented at the top of
+            // this iteration while `drive` passes `run.ticksCompleted`,
+            // the count BEFORE the tick runs. One counter, two
+            // conventions — and the policy's `owed` window is measured in
+            // ticks, so the two must agree or one walk gets two answers.
+            const combat = combatBefore(st, tick - 1, held);
+            held = combat.held;
             // ⛓ R9 slice 12b: the sample carries the KEYS this tick spends, so
             // the preview/drive equality row has both sides of its claim.
             sample.held = held;
             // The policy's next reading — see `bodiesForPolicy` above.
             if (strike) bodiesForPolicy = chaserBodies;
-            st = step(st, held);
+            st = step(st, held, { dashImpulse: combat.dashImpulse });
+            combatAfter(tick - 1);
             if (st.transition) {
                 // A crossing ends the preview: the next level is a different
                 // world, and this map is scoped to `run.level`.
@@ -1679,14 +1770,12 @@ export function previewWalk(run, wps, tolerance = 0, { strike = null, standFor =
                 phase: 'dwell' };
             samples.push(sample);
             let held = st.fall ? new Set() : NO_HELD_PREVIEW;
-            if (strike && bodiesForPolicy && !st.fall) {
-                const d = strike.decide(st, bodiesForPolicy, tick - 1, held);
-                held = d.held;
-                if (d.decision === STRIKE_PRESS && chasers) chasers.hit(d.target, st);
-            }
+            const combat = combatBefore(st, tick - 1, held);
+            held = combat.held;
             sample.held = held;
             if (strike) bodiesForPolicy = chaserBodies;
-            st = step(st, held);
+            st = step(st, held, { dashImpulse: combat.dashImpulse });
+            combatAfter(tick - 1);
             if (st.transition) {
                 truncated = {
                     at: { x: st.x, y: st.y },

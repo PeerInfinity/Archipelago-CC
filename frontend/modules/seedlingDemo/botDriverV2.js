@@ -1634,7 +1634,13 @@ function runDwell(run, perTick, dwell, what) {
          * policy (⚖ ruling 30(c)).
          */
         const held = strike && !run.state.fall
-            ? strike.decide(run.state, run.strikeBodies, run.ticksCompleted, NO_HELD).held
+            ? strike.decide(run.state, run.strikeBodies, run.ticksCompleted, NO_HELD,
+                // ⛓ R9 SLICE 12c — and the run's own SLASH STATE, which is
+                // what tells the policy whether the press its aim earns will
+                // SWING or DASH. Read before `advance`, which is where the
+                // preview reads its own threaded copy from — `slashTimerTick`
+                // runs at the TOP of the tick, above the press.
+                { slash: run.slashInfo }).held
             : NO_HELD;
         perTick.push(held);
         const { transition } = run.advance(held);
@@ -4825,7 +4831,10 @@ function drive(run, target, perTick, {
          * spends the same two, which is why the ETAs still hold.
          */
         if (strike && !run.state.fall) {
-            held = strike.decide(run.state, run.strikeBodies, run.ticksCompleted, held).held;
+            held = strike.decide(run.state, run.strikeBodies, run.ticksCompleted, held,
+                // ⛓ R9 SLICE 12c — see `runDwell`'s own call: ONE policy, one
+                // question, and now one model of what the press will do.
+                { slash: run.slashInfo }).held;
         }
         perTick.push(held);
         // Where the player was when the edge could have fired. A pit's

@@ -57,6 +57,7 @@
 
 import { assertRect, rect, rectsOverlap } from './levelWorld.js';
 import { ENEMY_CLASSES, ENEMY_IFRAMES, KILL_CADENCE_FLOOR, SLASH_TIMER_MAX } from './combat.js';
+import { DEFAULT_FRICTION } from './playerPhysicsV1.js';
 import { knockbackImpulse } from './playerPhysicsV2.js';
 import { CHASERS, killWindowTicks } from './chasers.js';
 
@@ -361,6 +362,101 @@ export function slashTimerTick(st) {
     if (st.slashTimer <= 0) return st;
     return { ...st, slashTimer: st.slashTimer - 1 };
 }
+
+/**
+ * ⛓⛓⛓ R9 SLICE 12c — **WHAT A PRESS `ticksAhead` TICKS FROM NOW WILL DO,
+ * COMPUTED WITH THE RUN'S OWN PRIMITIVES RATHER THAN GUESSED FROM A GAP.**
+ *
+ * ⚖ Ruling 35 asks the oracle and the planner to model the dash COMPLETELY.
+ * The strike policy has to commit an AIM one tick before the press it earns,
+ * and the two presses swing DIFFERENT RECTS — 16 x 32 at reach 16 for an
+ * ordinary swing, 24 x 20.8 at reach 24 for a dash, and neither contains the
+ * other. So "would this press dash" cannot be a gap arithmetic: 12b′'s
+ * `(tick + 1) - lastPressAt < ORDINARY_SWING_PERIOD` is a SOUND REFUSAL and
+ * not an answer — it says "it might dash", which is all a refusal needs.
+ *
+ * ⛔⛔ THE AGEING IS THE RUN'S OWN ORDER, NOT A PARAPHRASE OF IT. Per tick
+ * `levelRun.advance` does `slashTimerTick` at the TOP (`:13020`, which is
+ * `Player.slash()`'s first two lines, above `super.update()`), then the press
+ * (`:13129`, inside `input()`), then `slashEnd()` (`:13362`, from `sprites()`,
+ * BELOW `super.update()`). A forecast that released before the press would
+ * re-arm the dash a tick early and a forecast that decremented after it would
+ * admit a dash at gap 20 the game refuses — the two errors this ordering has
+ * already cost the ladder once each.
+ *
+ * ⚠ THE INPUT IS THE STATE THE **PREVIOUS** TICK LEFT — `levelRun.slashInfo`
+ * read before `advance`, or a preview's own threaded copy. `ticksAhead` is how
+ * many WHOLE ticks run before the press's own: 0 = the press is on tick
+ * `tick`, 1 = on tick `tick + 1`, which is the aim/press shape.
+ *
+ * @param {object} slash `{state, endsAt, gate}` — `levelRun.slashInfo`'s shape.
+ * @param {object} opts `tick` (the tick `state` is entering), `ticksAhead`,
+ *   and the press's own `direction`/`vx`/`vy`, which decide `slashDirection`
+ *   and the impulse but never the OUTCOME.
+ * @returns {object} `slashSet`'s own return, plus `scale` (the rect that press
+ *   swings, via `slashScaleFor`) and `at` (the tick it lands on).
+ */
+export function slashPressForecast(slash, {
+    tick, ticksAhead = 1, direction = null, vx = 0, vy = 0,
+} = {}) {
+    if (!slash || !slash.state || !slash.gate) {
+        fail('slashPressForecast: needs `levelRun.slashInfo`\'s shape — {state, endsAt, '
+            + 'gate}. A forecast built from a gap alone cannot tell a dash from a swing, '
+            + 'and the two swing different rects.');
+    }
+    const { gate } = slash;
+    let st = slash.state;
+    let endsAt = slash.endsAt;
+    for (let k = 0; k < ticksAhead; k += 1) {
+        const t = tick + k;
+        st = slashTimerTick(st);
+        // ⛓ `slashEnd` fires BELOW the press, so on a tick with no press of
+        // ours it is the tick's last act — and it is what RE-ARMS the dash.
+        if (endsAt !== null && t >= endsAt) {
+            st = slashSet(st, { pressed: false, ...gate }).state;
+            endsAt = null;
+        }
+    }
+    const at = tick + ticksAhead;
+    st = slashTimerTick(st);
+    const r = slashSet(st, { pressed: true, ...gate, direction, vx, vy });
+    return { ...r, at, scale: slashScaleFor(r.state.anim) };
+}
+
+/**
+ * ⛓⛓⛓ R9 SLICE 12c — **HOW LONG A DASH IS LIVE, AND HOW FAR IT CARRIES**,
+ * derived from the two constants that decide it rather than quoted from the
+ * measurement that confirmed it.
+ *
+ * `set slashing`'s dash arm adds `SLASH_DASH_FORCE` along the player's own
+ * travel. The player is then ABOVE `moveSpeed`, so `Player.input`'s
+ * `if (v.x < moveSpeed)` adds nothing and `Mobile.friction` alone runs the
+ * surplus down by `DEFAULT_FRICTION` a tick until the floor catches it.
+ *
+ * ⇒ `ticks` = 2 / 0.25 = **8**, and the extra ground covered is the sum of
+ * what survives on each of them — 2 + 1.75 + … + 0.25 = **9 px**. §23.11
+ * measured exactly 9 on `r9-l0-sword-dash`'s GAME-recorded stream; this is
+ * that number arrived at from the constants, and `plan-seedling-r9-l0-sword-
+ * dash` already asserts the −0.25/tick decay it is made of.
+ *
+ * ⛔ `perTick` IS CUMULATIVE, not per-tick deltas: it is the OFFSET from where
+ * an undashed walk would be after k ticks, which is the question a dash
+ * certification asks.
+ */
+export const DASH_DISPLACEMENT = (() => {
+    const ticks = Math.round(SLASH_DASH_FORCE / DEFAULT_FRICTION);
+    const perTick = [];
+    let carried = 0;
+    for (let k = 1; k <= ticks; k += 1) {
+        carried += SLASH_DASH_FORCE - (k - 1) * DEFAULT_FRICTION;
+        perTick.push(Number(carried.toFixed(10)));
+    }
+    return Object.freeze({
+        ticks,
+        perTick: Object.freeze(perTick),
+        total: perTick[perTick.length - 1],
+    });
+})();
 
 /**
  * ⛓⛓⛓ **THE GAME'S MAXIMUM SWORD SWING RATE** (⚖ ruling 36), which is THREE
