@@ -3809,6 +3809,24 @@ cadence retired, the KILL chaser arm, L14 SOLVED, `r9-solve-14` through the pipe
 **slice 13** ready (`seedling-bot-r9-slice13-prompt.md`, the watch-page five); **12c** (the
 planner-level dash primitive) is the first discussion item.
 
+**⇒ CAMPAIGN ORCHESTRATION, session 3 → 4 (Fable, 2026-08-23).** Session 3 orchestrated and
+verified SIX slices at `2e5637250..97b6cf444`, CI green throughout: **12b** (the sword dash built
+and game-witnessed digit for digit; ⚖ ruling 36's swing-rate numbers; the cadence floor retired;
+the opportunistic strike policy — one object, preview == drive), **12b′** (`allowDash` enforced —
+L14 moved from the fallback to the PRIMARY: 145 t, AVOID alone, zero hits; the derived stance
+shipped as the fallback), **12b″** (THE RECORD — `r9-solve-14` 145 t exactly; the campaign is
+SIXTEEN rooms; frontier → step 17 = L15 `shove`), **13** (the watch-page five, tape-inert; the
+phases gate repaired by SEARCH; `plan-seedling-r7-act2.mjs` retired), **12e** (protocol fixes II:
+docs pins read the reference; the label/test-name lint; `standing-values.json`; `gates.sh`
+exit-keyed; three frozen gate rows cured) and **12d** (the chain's ONE declaration
+`campaignChain.js`; `--grow` with two witnesses; the concatenated headline tape RETIRED, roster
+145). Rulings **35–40** recorded (dash first-class · swing rate · headline retirement · the six
+streamlining items · the `why` convention · the full roster as a CHECKPOINT event). NOT a rung
+close (user). Handed off to session 4
+(`NewDocs/plans/seedling-bot-r9-campaign4-planning-prompt.md`): first act = the **12c** design
+discussion (the COMPLETE dash model in the ORACLE → a `--mobiles` dash-hit witness → the planner
+primitive; number to beat 145 t; ruling 39's `why` sweep rides its pipeline run).
+
 ⛓⛓⛓ **R9 SLICE 12b SHIPPED 2026-08-23** (`12e80cb73` · `213d3078e` · `0055442f4` ·
 `3dc6d632f` · `a736eac1e` · `2d6d33949` · `3b171ec1e`) — **THE SWORD DASH, BUILT AND
 WITNESSED; THE CADENCE FLOOR RETIRED; THE STRIKE ON EVERY WALK.** As-built kickoff **§23**.
