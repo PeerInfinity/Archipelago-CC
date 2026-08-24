@@ -190,6 +190,55 @@ An artifact hash that moves tells you *something* changed; it does not tell you 
 
 **How to handle one:** before believing an md5 move is a behaviour change, diff the ROWS against a `git worktree` at the base commit and read what actually differs. A false mover found this way is worth naming in the record — it is the difference between "the demand changed 5 levels" and "the demand changed 2 levels and added a field to 5 payloads".
 
+## A Seedling paste ACCUMULATES bodies; it does not replace them
+
+The maze's edit vocabulary has `clearEntity`, so a paste can make a cell look
+exactly like the descriptor it was handed. Seedling's has `remove`, which takes
+*the last entity in the cell* one at a time and refuses an empty cell — and
+`writeOps` is handed a DESCRIPTOR, not a record, so it cannot know how many to
+emit. A paste onto an empty cell therefore reproduces it exactly, and a paste
+onto an occupied cell leaves both sets of bodies. The read → write → read fixed
+point holds for the `tile` and `cliff` halves at every cell and for the whole
+descriptor only where the cell is empty; the tests assert the accumulation
+rather than avoiding the cells that show it.
+
+## Editing a vanilla Seedling room re-orders its attributes in the saved OEL
+
+A record parsed out of a shipped `.oel` carries the author's attribute order —
+`to playerx playery show tag invert sign` on a teleporter, straight out of the
+XML. Every op path canonicalises `attrs` to SORTED, and has since the free-edit
+slice, because the edit list is compared byte for byte between a payload and a
+page and two people who typed the same attributes in a different order must
+produce one payload. So a saved room is VALUE-identical and BYTE-different from
+the one it was opened from, in the attributes of any entity an op touched. Cell
+descriptors are therefore compared with `editCore.canonicalJson` (keys sorted at
+every depth) and never with a bare `JSON.stringify`.
+
+## `recordToOel` is not byte-identical to Ogmo's own output, in three known ways
+
+Measured over all 116 shipped rooms: 0 exact, 64 modulo a trailing newline. The
+three classes are the newline this writer ends its document with and Ogmo does
+not (all 116); the out-of-rectangle tile placements the extract discards and
+counts in `tiles_outside_level` (51 rooms — Ogmo lets an author paint past the
+level rectangle and the game's loader drops them); and one room, `treelarge.oel`,
+whose raw `>` inside an attribute value this writer escapes as `&gt;`. The round
+trip is asserted BY VALUE and the byte count is reported as a measurement — the
+newline is not fixed because the writer's output is `source.xml` in committed
+level-set artifacts.
+
+## The `.oep` says what the editor OFFERS; the AS3 says what the game READS
+
+`Shrum.oep` declares 144 entity types with typed values, defaults and ranges,
+and the schema fixture is a transcription of it and of nothing else. Their
+agreement is pinned against the DATA rather than against a second reading of
+`Game.loadLevelXML`: every entity type in the 116 shipped rooms is declared, and
+every attribute value those rooms carry satisfies its declared type and range
+(3,574 values, zero refusals). Two things that look like laws and are not —
+there is no tile column reserved as unused (all 45 build a type the JS model
+transcribes), and Ogmo does not reliably write every declared value (183 of
+2,461 instances lack one, each of them a value added to the project file after
+that room was last saved).
+
 ## Related documentation
 
 - [Architecture](./architecture.md)

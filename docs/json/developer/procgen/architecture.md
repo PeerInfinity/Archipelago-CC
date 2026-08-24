@@ -191,13 +191,18 @@ and imports none:
 | `bounds(record)` | `{w, h}`, the cell grid |
 | `readCell(record, x, y)` | a closed, comparable cell DESCRIPTOR |
 | `writeOps(descriptor, x, y)` | the atomic ops that make that cell look like the descriptor — the inverse of `readCell`, emitting ops only for the fields the descriptor PRESENTS |
+| `bases` (OPTIONAL) | `{kind: (tag) => record}` — how a payload's `base` tag becomes a record. Absent means the substrate's PAGE resolves it, which is the maze's case; a resolver whose body was "the record you already have" would be a tautology wearing a mechanism's name. |
+
+`assertAdapter` checks that shape. `assertAdapterBehaviour(adapter, {record, op, refused, cell, other})` checks the seven things every function here silently assumes — bounds are positive integers, `apply` answers the contract, `apply` does not mutate its input, `equal` is true of a record against itself and false after a real op, a refusal carries a sentence, `writeOps` returns an array, and `readCell` → `writeOps` → `readCell` reproduces the descriptor **at a different cell**. That last qualifier is the point: a fixed point on the cell the descriptor came from is passed by a `writeOps` that returns nothing. It ships from the core rather than living in a test file because the next adapter author has the same seven assumptions to satisfy.
+
+`resolveBase(adapter, tag)` is the one place a `{kind, …}` tag is interpreted, and the core still does not interpret it — it routes on `kind` and the adapter answers. A kind the adapter does not offer refuses by name, and so does a substrate with no `bases` at all, with two different sentences.
 
 **The six functions** over any adapter:
 
 - `foldEdits(adapter, base, ops)` — base → ops in order → `{record, applied, steps, dropped}`. The ONE reconstruction. `steps` carries the applied ops WITH the adapter's own sentence, so a page's readout needs no second walk over the same application path.
 - `createEditSession(adapter, baseRecord, {base, certified})` — `apply` / `undo` / `ops` / `record` / `certified` / `setCertified` / `payload`. `payload()` is `{base, edits, certified}`, where `base` is an opaque tagged value (`{kind, …}`) the core never interprets.
 - `group(label, ops)` — a stroke, a fill, a paste: applied ALL-OR-NOTHING, ONE entry in the op list, ONE undo. Nested groups are refused by name (a stroke is flat, or "one group is one undo" has no meaning).
-- `rectCopy` / `rectPasteOps` — a rectangle of descriptors, pasted back as a group and clipped to the destination's bounds. `tilesOnly` / `entitiesOnly` are a projection of the adapter's descriptor, and are refused by name on a substrate whose cells carry no such field rather than silently ignored.
+- `rectCopy` / `rectPasteOps` — a rectangle of descriptors, pasted back as a group and clipped to the destination's bounds. The filter is `only: '<descriptor field>'`, and `tilesOnly` / `entitiesOnly` are aliases into it — so a substrate whose cells carry three layers gets three filters the day its descriptor does, without the core holding an enum of layer names. A filter naming a field the descriptor lacks is refused by name rather than silently ignored. Seedling's cells are `{tile, cliff, entities}` and the maze's are `{tile, entity}`; both are answered by the same selector.
 - `floodOps` — the 4-connected component of cells whose whole descriptor matches the seed's, repainted as a group. The walk is `gridFlood.reachableFrom`, not a second flood.
 - `describeOps(ops)` — the readout line, e.g. `3 edit(s) (1 group of 12)`.
 
@@ -210,7 +215,7 @@ Nothing in the core adjudicates legality. Free means free; certification is the 
 
 **The toy-adapter rule.** `editCore.test.js` drives a toy substrate written in the test file and imports nothing from `mazeRoom/` or `seedlingDemo/` — asserted by reading its own source. A core proven only against one substrate is that substrate's editor with an extra indirection.
 
-**Adapters today.** The maze has one (`mazeRoom/mazeEditAdapter.js`, a wrapper over `mazeRoomEditor.applyEditOp`). Seedling's `seedlingDemo/watchEdit.js` is **not yet an adapter** — it has the same op/fold/undo shape and gave the core law 1, but wrapping it is a later slice.
+**Adapters today.** Two. The maze's is `mazeRoom/mazeEditAdapter.js`, a wrapper over `mazeRoomEditor.applyEditOp`. Seedling's is `seedlingDemo/seedlingEditAdapter.js`, a wrapper over `watchEdit` — see the Seedling editor section below for what it resolves and what it bounds.
 
 ## The editor view (`procgenCore/editorView.js`)
 
@@ -235,6 +240,31 @@ cannot be told from one nobody dragged.
 
 **Mounted today** on the maze lab page's EDIT arm, on that arm's own lifetime.
 Seedling's page is a later slice.
+
+## The Seedling editor's data model (`seedlingDemo/`)
+
+`watchEdit.js` is the op vocabulary and `seedlingEditAdapter.js` is the wrapper that makes it an `editCore` adapter. The ops address CELLS, never list indices, because the edit list is IDENTITY and travels in a payload a person reads.
+
+| op | what it takes |
+|---|---|
+| `paint` | `{tx, ty, layer?, terrain \| column}` — either of the game's two tile layers, and on `tiles` any of the 45 tileset columns rather than only the generator's four terrain names |
+| `place` | `{tx, ty, type, attrs, nodes?}` |
+| `attrs` | `{tx, ty, attrs}` — the last entity in the cell; REPLACED, never merged |
+| `remove` | `{tx, ty}` — the last entity in the cell |
+| `nodes` | `{tx, ty, nodes}` — replaces that entity's `<node>` children; an empty list removes the field |
+| `resize` | `{width, height, anchor}` — the one op about the ROOM rather than a cell |
+
+**The vocabulary is DERIVED, not typed.** `scripts/procgen/extract-seedling-ogmo-schema.py` reads `~/CC/seedling/Shrum.oep` — the Ogmo 1 project file the game's own 116 rooms were authored against — into `seedlingDemo/fixtures/seedling-ogmo-schema.json`: 144 entity declarations, 166 typed values with their defaults and ranges, the two tilesets and the three layers. Its `--check` is byte identity, because the producer's output is a fingerprint of its input, and `provenance.oep_sha256` is what tells "the source moved" apart from "the script moved". A hand-written attribute table would be a second declaration of the same facts, wrong silently.
+
+The schema is **injected**, never read by the modules that use it — one `node:fs` anywhere on the page's import graph makes the whole graph unloadable in a browser. So are the level source, the vanilla set's `set_id` and the OEL parser, each refused by name at the moment it is needed. The parser has a third reason: no module under `frontend/` imports anything under `scripts/`, and reversing that direction for one function would be the tree's first inversion.
+
+**Two things the `.oep` measurement overturned.** There is no tile column to refuse for being unused — all 45 build a type `levelWorld` transcribes, so the only paint refusal on that layer is out-of-range. And Ogmo does **not** reliably write every declared value: 183 of the 2,461 entity instances in the shipped rooms lack one, every absent value has a declared default, and every one of them was added to the project file after those rooms were last saved. Filling omitted attributes from their defaults is therefore an editor convenience asked for by name (`fillDefaults`), not a property of the format.
+
+**The `base` union** (`{kind, …}`, the payload's identity half). Seedling resolves `atlas` — refusing a `set_id` that is not the vanilla set's content hash, in the same shape the game's save stamp refuses a save written against different level bytes — and `oel`, a pasted document through the injected parser. `generate` and `set-room` are members that refuse by name, because "the GENERATE ladder owns that identity" is a more useful sentence than "no such kind".
+
+**The bounds it names.** A paste does not clear the destination's bodies: Seedling has no clear-cell op, `remove` takes one body at a time, and `writeOps` sees a descriptor rather than a record — so a paste onto an empty cell reproduces it exactly and onto an occupied cell it accumulates. And a vanilla record's attributes carry the author's key order while every op path canonicalises to sorted, so an editor that rewrites a vanilla cell re-orders that entity's attributes in the saved OEL: value-inert, byte-visible.
+
+**The round trip, over all 116 shipped rooms.** `record → recordToOel → parseOelLevel → record` is a value fixed point 116 of 116, and parsing the DISK OEL reproduces the committed atlas record 116 of 116 — that second arm is the one with an independent source in it, and it is what keeps the first from being two implementations agreeing about the same mistake. Byte identity against the disk file is a MEASUREMENT and not an assertion: 0 of 116 exact, 64 of 116 modulo a trailing newline, with exactly three difference classes — the newline this writer adds and Ogmo does not, the out-of-rectangle tiles the extract discards in 51 rooms, and one room whose raw `>` inside an attribute value this writer escapes.
 
 ## Determinism and verification
 
