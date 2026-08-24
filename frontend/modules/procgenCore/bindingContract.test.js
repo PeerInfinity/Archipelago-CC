@@ -274,7 +274,15 @@ describe.each(FIXTURES)('the loop\'s seam, over the $name bindings', (f) => {
  * turned out to be the same object would report a contract where it had a
  * tautology.
  */
-describe('the two bindings share the contract and nothing else', () => {
+/**
+ * ⛓ THE COUNT IS INTERPOLATED FROM `FIXTURES` rather than typed. It said "the
+ * two bindings", and `lint-gate-labels` began flagging that the day the import
+ * scan's roster below stopped being a literal — the heuristic ties a number in
+ * a name to any DERIVED roster in the file, and "two" is about `FIXTURES`, not
+ * about `SHIPPING`. ⛔ Interpolating is the linter's own prescribed cure and it
+ * is the better name anyway: a third binding would change the sentence.
+ */
+describe(`the ${FIXTURES.length} bindings share the contract and nothing else`, () => {
     it('different models, different oracles, different palettes, different rng sources', () => {
         const s = FIXTURES[0].build(1);
         const m = FIXTURES[1].build(1);

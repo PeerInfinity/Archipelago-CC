@@ -443,7 +443,7 @@ Its headless half is `mazeLab.js` (URL reader/writer, the three modes' logic,
 the payload); its DOM arm is `mazeLabView.js`; its unit tests are
 `mazeLab.test.js`.
 
-The room's edits are also available as an **`editCore` adapter** — `mazeRoom/mazeEditAdapter.js` says the maze in the six words [the edit core](architecture.md#the-edit-core-procgencoreeditcorejs) asks for, which is what gives the maze a base+ops identity, grouped strokes, rectangle copy/paste and flood fill. It is a wrapper: the ops are `EDIT_OPS`, the application path is `applyEditOp`, and `equal` is `procgenMaze.worldsEqual` (the comparison `applyEdit` already made, extracted rather than re-spelled).
+The room's edits are also available as an **`editCore` adapter** — `mazeRoom/mazeEditAdapter.js` says the maze in the six words the edit core asks for (`architecture.md` § "The edit core"), which is what gives the maze a base+ops identity, grouped strokes, rectangle copy/paste and flood fill. It is a wrapper: the ops are `EDIT_OPS`, the application path is `applyEditOp`, and `equal` is `procgenMaze.worldsEqual` (the comparison `applyEdit` already made, extracted rather than re-spelled).
 
 ⚠ Two bounds it ships with, both pinned by tests: a pasted `setButton` carries its RESOLVED index and the engine does not refuse a duplicate, so a copied gadget gives two cells the same door; and the entrance is a singleton, so a paste carrying it MOVES it.
 

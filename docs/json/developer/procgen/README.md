@@ -6,7 +6,7 @@ Developer documentation for the procedural-generation ("procgen") system: the pi
 
 <!-- GENERATED:procgen-docs-index BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**17 documents · 4 pages · 197,329 words.**
+**17 documents · 4 pages · 197,334 words.**
 
 Order: `README_ORDER` in `scripts/procgen/reference/docsIndex.mjs` — today's reading order, declared. A file in the directory that is not in that list is a HARD ERROR, so a new document cannot arrive unindexed.
 
@@ -22,7 +22,7 @@ Descriptions: the document's OWN first paragraph, collapsed onto one line; past 
 | [Runner Substrate](./runner.md) | Runner ("Runner Demo", substrate id `runner`) is an auto-runner platformer substrate in `frontend/modules/runnerDemo/`. | 4318 |
 | [Playback and Debugging Tools](./playback-and-debugging.md) | The procgen stack ships a family of tools for *watching a world play itself*: a playback bot that walks recorded playthroughs, a substrate-neutral controller contract with iframe proxies, shared timing/UI primitives, a forward simulator that generates sphere logs, and per-substrate visualizers. | 937 |
 | [Loop Recording and Block Modes](./loop-recording.md) | How loop mode captures what a player does in a region and plays it back: the per-block **mode system** (Manual / Record / Playback / Bot), the per-block **Instant** toggle, the **saved-recording store**, the **capture contract** that decides whether the loops module or the substrate owns recording, the **queue annotations** describing what a recorded visit cost, and the **loop-mode interaction … | 7866 |
-| [Maze Substrate](./maze.md) | The maze substrate (`frontend/modules/mazeRoom/`, substrate id `maze`) renders regions as grid-of-tiles maze rooms: the player walks tile by tile, picks up items by stepping onto location tiles, and leaves through exit tiles on the perimeter. | 8768 |
+| [Maze Substrate](./maze.md) | The maze substrate (`frontend/modules/mazeRoom/`, substrate id `maze`) renders regions as grid-of-tiles maze rooms: the player walks tile by tile, picks up items by stepping onto location tiles, and leaves through exit tiles on the perimeter. | 8773 |
 | [Sphere-Driven Growth](./sphere-growth.md) | Sphere growth is the primary procgen driver: instead of growing a world and then discovering its progression structure, it **plans the progression first** — which items belong to which sphere — and then grows a world guaranteed to realise that plan. The plan doubles as a verification oracle, so every generated world ships with a proof that its progression matches the intent. | 1456 |
 | [Paths and Obstacles](./paths-and-obstacles.md) | Paths-and-obstacles is the intermediate representation procgen uses for access rules. | 914 |
 | [The Stepped Pipeline](./stepped-pipeline.md) | Sphere growth, top-down, and shuffled-spiral can run as monolithic calls or as a sequence of discrete, inspectable, editable steps. | 1523 |
