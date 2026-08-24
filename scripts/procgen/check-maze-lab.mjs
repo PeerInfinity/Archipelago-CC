@@ -103,8 +103,8 @@ const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name
 
 const MAZE = (p) => import(join(REPO, 'frontend/modules/mazeRoom', p));
 const {
-    MazeRoomEditor, PALETTE_TYPES, applyEdit, generateStep, generateWithDirectives, labPayload,
-    serializeMazeLevel,
+    MazeRoomEditor, PALETTE_TYPES, applyEdit, applyEditOpToState, generateStep,
+    generateWithDirectives, labPayload, serializeMazeLevel,
 } = await MAZE('mazeLab.js');
 
 const json = (v) => JSON.stringify(v);
@@ -511,10 +511,43 @@ const EDITED_PAYLOAD = (() => {
 console.log(`node: the EDITED payload carries ${EDITED_PAYLOAD.edits.length} op(s): `
     + `${EDITED_PAYLOAD.edits.map((e) => `${e.op.op}${e.op.id ? `(${e.op.id})` : ''}`).join(', ')}`);
 
+/**
+ * ⛓⛓⛓ EDITOR v3 SLICE A2 — **A PAYLOAD WHOSE EDIT LIST CARRIES A `group`.**
+ *
+ * ⛔ The claim it exists for is the one A1's op shape could not yet make: a
+ * STROKE, a PASTE or a FLOOD is ONE entry in the list, carrying its members,
+ * and `?gen=` must reproduce it BYTE FOR BYTE. A build that flattened a group
+ * on the way into the payload would reproduce the same LEVEL and a DIFFERENT
+ * list, and `agreementWithPayload` compares the list.
+ */
+const GROUPED_ROUTE = '/__maze-grouped-payload.json';
+const GROUPED_PAYLOAD = (() => {
+    const base = generateStep({ seed: 3, step: 2 });
+    const free = base.model.allCells(base.record)
+        .filter((p) => base.model.isFree(base.record, p.tx, p.ty))
+        .slice(0, 3);
+    const stroke = {
+        op: 'group',
+        label: `stroke of ${free.length} cell(s)`,
+        ops: free.map((p) => ({ op: 'setTile', x: p.tx, y: p.ty, tile: 'wall' })),
+    };
+    const out = applyEditOpToState(base, stroke);
+    if (!out.result.ok) {
+        throw new Error(`check-maze-lab: the grouped payload's own stroke was REFUSED — `
+            + `${out.result.description}`);
+    }
+    return labPayload(out.state);
+})();
+// eslint-disable-next-line no-console
+console.log(`node: the GROUPED payload carries ${GROUPED_PAYLOAD.edits.length} entry(ies), `
+    + `the first a ${GROUPED_PAYLOAD.edits[0].op.op} of `
+    + `${GROUPED_PAYLOAD.edits[0].op.ops.length}`);
+
 const PAYLOAD_ROUTES = new Map([
     [SEAL_ROUTE, SEAL_PAYLOAD],
     [OPEN_SEAL_ROUTE, OPEN_SEAL_PAYLOAD],
     [EDITED_ROUTE, EDITED_PAYLOAD],
+    [GROUPED_ROUTE, GROUPED_PAYLOAD],
 ]);
 await page.route(
     (u) => PAYLOAD_ROUTES.has(u.pathname),
@@ -1464,6 +1497,281 @@ try {
         '⛓⛓ …carrying `key_blue`, which is NOT the editor\'s default id — the one value that '
         + 'separates "replayed the OP" from "replayed the palette selection"',
         json((genEdited.level.items ?? []).map((i) => i.id)));
+
+    /* ── CLAIM 14: THE TOOLS (EDITOR v3 SLICE A2) ───────────────────── */
+    /**
+     * ⛓⛓⛓ **THE CANVAS TOOL IS `procgenCore/editorView`'s NOW**, and this claim
+     * is what says the four gestures A1 proved as pure functions are reachable
+     * with a mouse. ⛔ Every cell is computed HERE from the canvas rectangle and
+     * the level's own tiles — the page's geometry is never asked (claim 5's
+     * law), and the subject cells are chosen because they are FREE, so a
+     * refusal cannot make a row pass for the wrong reason.
+     */
+    const TOOL_ROOM = { width: 9, height: 9 };
+    const toolsWeb = await load(`seed=7&width=${TOOL_ROOM.width}`
+        + `&height=${TOOL_ROOM.height}&count=0&source=edit`,
+    () => window.__mazeLab?.source === 'edit', 'the EDIT arm for the tool claims');
+    const TW = TOOL_ROOM.width;
+    const TH = TOOL_ROOM.height;
+    check(toolsWeb.editTool === 'brush' && toolsWeb.editClip === null,
+        '⛓ the EDIT arm opens with the BRUSH armed and an empty clipboard',
+        `${json(toolsWeb.editTool)} / ${json(toolsWeb.editClip)}`);
+    /**
+     * ⛓⛓ THE TOOL BUTTONS ARE A VIEW OF `editorView`'s COMMAND TABLE — the
+     * order and the ids are the table's, so a build that bound a key in a
+     * `switch` beside the table would show a button the keyboard cannot reach.
+     */
+    const toolIds = await page.$$eval('#labTools button', (bs) => bs.map((b) => b.dataset.tool));
+    check(json(toolIds) === json(['brush', 'rect', 'paste', 'flood', 'escape']),
+        '⛓ the TOOL box holds exactly the view\'s own command rows, in its order', json(toolIds));
+    /**
+     * ⛔⛔ **AND THEY ARE NOT IN THE PALETTE BOX.** The browser row above
+     * ENUMERATES `#labPalette` (one button per `PALETTE_ENTRIES` row), and the
+     * group-B lesson is that a knob dropped into an enumerated container counts
+     * as a member and reds three claims at once.
+     */
+    const paletteCount = await page.$$eval('#labPalette button', (bs) => bs.length);
+    check(paletteCount === 9,
+        '⛔ …and `#labPalette` still enumerates exactly the nine palette entries',
+        String(paletteCount));
+
+    /* ⛓ THE SUBJECT CELLS, computed from the level's own tiles. */
+    const tBusy = new Set([
+        `${toolsWeb.level.entrance.x},${toolsWeb.level.entrance.y}`,
+        ...toolsWeb.level.exits.map((e) => `${e.x},${e.y}`),
+        ...(toolsWeb.level.items ?? []).map((i) => `${i.x},${i.y}`),
+        ...(toolsWeb.level.obstacles ?? []).map((o) => `${o.x},${o.y}`),
+        ...(toolsWeb.level.blocks ?? []).map((b) => `${b.x},${b.y}`),
+        ...(toolsWeb.level.buttons ?? []).map((b) => `${b.x},${b.y}`),
+    ]);
+    const tFree = (tx, ty) => tx >= 0 && ty >= 0 && tx < TW && ty < TH
+        && toolsWeb.level.tiles[ty * TW + tx] === 0 && !tBusy.has(`${tx},${ty}`);
+    /** ⛓ A horizontal RUN of three free cells, and a free 2x2 plus its free
+     *  DIAGONAL neighbour — searched for rather than assumed, so the claim dies
+     *  with a sentence rather than with a wrong cell if the room changes. */
+    let RUN = null;
+    let SQ = null;
+    for (let ty = 0; ty < TH; ty += 1) {
+        for (let tx = 0; tx < TW; tx += 1) {
+            if (!RUN && [0, 1, 2].every((d) => tFree(tx + d, ty))) {
+                RUN = [0, 1, 2].map((d) => ({ tx: tx + d, ty }));
+            }
+            if (!SQ && ty > RUN?.[0]?.ty + 1
+                && [[0, 0], [1, 0], [0, 1], [1, 1], [2, 2]].every(([dx, dy]) => tFree(tx + dx, ty + dy))) {
+                SQ = { x: tx, y: ty };
+            }
+        }
+    }
+    if (!RUN || !SQ) {
+        throw new Error('check-maze-lab: the 9x9 skeleton has no run of three free cells, or no '
+            + 'free 2x2 with a free diagonal neighbour — the tool claims have no subject.');
+    }
+    const tRect = () => page.$eval('#canvas', (c) => {
+        const r = c.getBoundingClientRect();
+        return { x: r.x, y: r.y, w: r.width, h: r.height };
+    });
+    /** ⛓ THE RECTANGLE IS RE-READ BEFORE EVERY POINT (claim 5's measured
+     *  lesson: the identity line above the canvas GROWS as edits accumulate,
+     *  so a cached rectangle puts the next press a row too high). */
+    const tPoint = async (tx, ty) => {
+        await page.$eval('#canvas', (c) => c.scrollIntoView({ block: 'center' }));
+        const b = await tRect();
+        return {
+            x: b.x + Math.floor(((tx + 0.5) * b.w) / TW),
+            y: b.y + Math.floor(((ty + 0.5) * b.h) / TH),
+        };
+    };
+    const tClick = async (tx, ty) => {
+        const p = await tPoint(tx, ty);
+        await page.mouse.click(p.x, p.y);
+    };
+    const tileAt = (lvl, tx, ty) => lvl.tiles[ty * TW + tx];
+
+    /**
+     * ⛓⛓⛓ **A DRAG ACROSS THREE CELLS IS ONE EDIT.**
+     *
+     * ⛔ THE COUNT IS THE CLAIM, not the picture: a build that applied the
+     * stroke's cells one at a time paints exactly the same three walls, so the
+     * LEVEL cannot tell the two apart. `editOps` (the op list as the page holds
+     * it) and the ONE undo below are what can (⚠ trap 586).
+     */
+    await page.click('#labPalette button[data-type="wall"]');
+    const strokePts = [];
+    for (const c of RUN) strokePts.push(await tPoint(c.tx, c.ty));
+    await page.mouse.move(strokePts[0].x, strokePts[0].y);
+    await page.mouse.down();
+    for (const p of strokePts.slice(1)) await page.mouse.move(p.x, p.y);
+    await page.mouse.up();
+    /**
+     * ⛔⛔ **THE WAIT IS `>= 1`, AND THE COUNT IS ASSERTED BELOW.** Measured: a
+     * wait for `=== 1` DOES go red under the mutant (which reports 3), but it
+     * reports it as a 60 s STUCK — a timeout naming the wait rather than the
+     * claim. A wait a wrong build OVERSHOOTS turns a value finding into a
+     * scheduling-shaped one, and the harness's own vocabulary (STUCK vs
+     * CHECK-BOUND) exists to keep those apart. The wait now only says *an edit
+     * landed*; the count is a check.
+     */
+    await settled(() => window.__mazeLab?.edits >= 1, 'the stroke to land');
+    const stroked = await read();
+    check(RUN.every((c) => tileAt(stroked.level, c.tx, c.ty) === 1),
+        `⛓ a DRAG painted all three cells of the run at y=${RUN[0].ty}`,
+        RUN.map((c) => tileAt(stroked.level, c.tx, c.ty)).join(','));
+    check(stroked.edits === 1 && stroked.editOps[0].op === 'group'
+        && stroked.editOps[0].members === 3,
+    '⛓⛓⛓ **…as ONE edit — a `group` of 3** — a build that applied the cells one at a time '
+        + 'paints the same three walls and reports THREE edits here',
+    json(stroked.editOps));
+    check(stroked.editNote === '1 edit(s) (1 group of 3)',
+        '⛓ …and the note says so, through `editCore.describeOps` — the count is of UNDOS',
+        stroked.editNote);
+    check(stroked.identity.includes('1 manual edit(s) (1 group of 3)'),
+        '⛓ …and the identity line names the group\'s size in the same words',
+        stroked.identity.slice(0, 150));
+
+    /**
+     * ⛓⛓⛓ **Ctrl+Z UNDOES, AND ONE UNDO TAKES THE WHOLE STROKE BACK.** ⚖ Law
+     * (a): undo is the FOLD over a shorter list, so all three cells return
+     * together.
+     */
+    await page.keyboard.press('Control+z');
+    await settled(() => window.__mazeLab?.edits === 0, 'Ctrl+Z to undo the stroke');
+    const undone = await read();
+    check(RUN.every((c) => tileAt(undone.level, c.tx, c.ty) === 0),
+        '⛓⛓ **Ctrl+Z undid the WHOLE stroke** — one undo, three cells back to floor',
+        RUN.map((c) => tileAt(undone.level, c.tx, c.ty)).join(','));
+    check(undone.editNote === '0 edit(s)' && undone.certified === null,
+        '⛓ …and the note is empty again, the level still UNCERTIFIED',
+        `${undone.editNote} / ${json(undone.certified)}`);
+
+    /**
+     * ⛓⛓⛓ **RECT COPY → PASTE reproduces the cells.** The source 2x2 is
+     * painted first so it differs from the destination — a copy of untouched
+     * floor onto untouched floor is a NO-OP the fold drops, and the row would
+     * pass over a paste that did nothing (⚖ law (b)).
+     */
+    await tClick(SQ.x, SQ.y);
+    await settled(() => window.__mazeLab?.edits === 1, 'the first wall of the source square');
+    await tClick(SQ.x + 1, SQ.y);
+    await settled(() => window.__mazeLab?.edits === 2, 'the second wall of the source square');
+    await tClick(SQ.x + 1, SQ.y + 1);
+    await settled(() => window.__mazeLab?.edits === 3, 'the third wall of the source square');
+    /**
+     * ⛓ THE SQUARE IS DELIBERATELY **MIXED** — three walls and one floor. A
+     * uniform clip cannot tell "reproduced the clip" from "wrote the same tile
+     * everywhere", which is §9.3's lesson about a subject that distinguishes
+     * nothing, one layer up.
+     */
+    await page.click('#labTools button[data-tool="rect"]');
+    await tClick(SQ.x, SQ.y);
+    await tClick(SQ.x + 1, SQ.y + 1);
+    await settled(() => window.__mazeLab?.editClip?.w === 2, 'the 2x2 clip');
+    const copied = await read();
+    check(json(copied.editClip) === json({ w: 2, h: 2 }),
+        '⛓ RECT of two opposite corners makes a 2x2 clip', json(copied.editClip));
+    check(copied.edits === 3, '⛔ …and a COPY is not an edit — the op list did not grow',
+        String(copied.edits));
+    await page.click('#labTools button[data-tool="paste"]');
+    await tClick(RUN[0].tx, RUN[0].ty);
+    await settled(() => window.__mazeLab?.edits === 4, 'the paste to land as ONE edit');
+    const pasted = await read();
+    check(pasted.editOps[3].op === 'group',
+        '⛓⛓ a PASTE is ONE edit — a `group` carrying the cells it wrote',
+        json(pasted.editOps[3]));
+    /** ⛓⛓ THE VALUE CLAIM — the destination now HOLDS the source's pattern,
+     *  read off the serialized level cell by cell rather than off a count. */
+    const pattern = [[0, 0], [1, 0], [0, 1], [1, 1]].map(([dx, dy]) => [
+        tileAt(pasted.level, SQ.x + dx, SQ.y + dy),
+        tileAt(pasted.level, RUN[0].tx + dx, RUN[0].ty + dy),
+    ]);
+    check(pattern.every(([a, b]) => a === b)
+        && pattern.some(([a]) => a === 1) && pattern.some(([a]) => a === 0),
+    '⛓⛓⛓ **THE PASTE REPRODUCED THE CLIP, CELL FOR CELL** — and the clip is MIXED (three '
+        + 'walls and a floor), so a build that wrote one tile everywhere cannot pass it',
+    json(pattern));
+
+    /**
+     * ⛓⛓⛓ **FLOOD PAINTS EXACTLY ITS COMPONENT — the DIAGONAL neighbour is a
+     * DIFFERENT component.** ⚖ 4-connectivity, and `editCore.floodOps` walks
+     * `gridFlood.reachableFrom` rather than a private BFS.
+     */
+    /**
+     * ⛔⛔ **THE TOOL IS RE-ARMED, AND THAT IS A MEASUREMENT.** Picking a
+     * PALETTE entry does not change the armed TOOL — they are two questions —
+     * so the two presses below ran as PASTES the first time this row was
+     * written, dropping the clip twice more and growing the wall component from
+     * four cells to eight. The flood then reported 8 and the diagonal was
+     * swallowed. ⚠ The failure looked like a connectivity defect and was a
+     * page-driving one; the *label* on the group (`flood (0,2) — 8 cell(s)`)
+     * is what told them apart.
+     */
+    await page.click('#labTools button[data-tool="brush"]');
+    await page.click('#labPalette button[data-type="wall"]');
+    await tClick(SQ.x, SQ.y + 1);
+    await settled(() => window.__mazeLab?.edits === 5, 'the fourth wall, closing the square');
+    await tClick(SQ.x + 2, SQ.y + 2);
+    await settled(() => window.__mazeLab?.edits === 6, 'the lone DIAGONAL wall');
+    const preFlood = await read();
+    check(tileAt(preFlood.level, SQ.x + 2, SQ.y + 2) === 1
+        && [[0, 0], [1, 0], [0, 1], [1, 1]]
+            .every(([dx, dy]) => tileAt(preFlood.level, SQ.x + dx, SQ.y + dy) === 1),
+    `⛓ the subject is a 2x2 wall square at (${SQ.x},${SQ.y}) with a lone wall at its DIAGONAL `
+        + `corner (${SQ.x + 2},${SQ.y + 2})`,
+    json([[0, 0], [1, 0], [0, 1], [1, 1], [2, 2]]
+        .map(([dx, dy]) => tileAt(preFlood.level, SQ.x + dx, SQ.y + dy))));
+    await page.click('#labPalette button[data-type="floor"]');
+    await page.click('#labTools button[data-tool="flood"]');
+    await tClick(SQ.x, SQ.y);
+    await settled(() => window.__mazeLab?.edits === 7, 'the flood to land as ONE edit');
+    const flooded = await read();
+    check(flooded.editOps[6].op === 'group' && flooded.editOps[6].members === 4,
+        '⛓⛓ a FLOOD is ONE edit — a `group` of exactly the FOUR cells of the component',
+        json(flooded.editOps[6]));
+    check([[0, 0], [1, 0], [0, 1], [1, 1]]
+        .every(([dx, dy]) => tileAt(flooded.level, SQ.x + dx, SQ.y + dy) === 0),
+    '⛓ …the whole 2x2 component is floor again');
+    check(tileAt(flooded.level, SQ.x + 2, SQ.y + 2) === 1,
+        '⛔⛔ **…and the DIAGONAL neighbour is UNTOUCHED** — a diagonal-only neighbour is a '
+        + 'DIFFERENT component, because neither substrate lets a mover cross a corner',
+        String(tileAt(flooded.level, SQ.x + 2, SQ.y + 2)));
+
+    /**
+     * ⛓⛓⛓ **§9.4's BOUND IS PRINTED BEFORE THE PASTE LANDS.** A clip carrying
+     * the ENTRANCE is a clip whose paste MOVES the level's only one, and the
+     * page must SAY so — never silently.
+     */
+    await page.click('#labTools button[data-tool="rect"]');
+    await tClick(toolsWeb.level.entrance.x, toolsWeb.level.entrance.y);
+    await tClick(toolsWeb.level.entrance.x, toolsWeb.level.entrance.y);
+    await settled(() => window.__mazeLab?.editClip?.w === 1, 'the 1x1 entrance clip');
+    const clipText = await page.textContent('#clipNote');
+    check(/ENTRANCE/.test(clipText) && /SINGLETON/.test(clipText),
+        '⛓⛓⛓ **A CLIP CARRYING THE ENTRANCE NAMES THE BOUND** (§9.4 bound 2) — on the page, '
+        + 'before anything is pasted', clipText.trim());
+    const clipStatus = await page.textContent('#status');
+    check(/ENTRANCE/.test(clipStatus),
+        '⛔ …and in the status line too, which is where a reader is already looking',
+        clipStatus.trim());
+
+    /**
+     * ⛓⛓⛓ **CLAIM 7, EXTENDED: AN EDITED PAYLOAD WHOSE LIST CARRIES A `group`
+     * IS REPRODUCED BYTE FOR BYTE.** ⛔ A build that flattened the group on the
+     * way into the payload reproduces the same LEVEL and a different LIST, and
+     * `agreementWithPayload` compares the list — which is what this row reads.
+     */
+    const genGrouped = await load(`gen=${GROUPED_ROUTE}`,
+        () => window.__mazeLab?.payloadCheck, 'the GROUPED payload to be reproduced');
+    check(genGrouped.payloadCheck.checked === true && genGrouped.payloadCheck.agrees === true,
+        '⛓⛓⛓ **A PAYLOAD CARRYING A `group` IS REPRODUCED BYTE FOR BYTE** — level, trace AND '
+        + 'the edit list',
+        json(genGrouped.payloadCheck.differences ?? genGrouped.payloadCheck.why));
+    check(json(genGrouped.level) === json(GROUPED_PAYLOAD.level)
+        && genGrouped.edits === 1 && genGrouped.editOps[0].members === 3,
+    '⛓ …and it came back as ONE entry of three members, not as three edits',
+    `${genGrouped.edits} edit(s), ${json(genGrouped.editOps)}`);
+    check(json(genGrouped.payload.base) === json(GROUPED_PAYLOAD.base)
+        && genGrouped.payload.base.kind === 'maze-lab',
+    '⛓⛓ …and the payload carries the IDENTITY TAG the edits are edits OF (§3.2\'s `base`)',
+    json(genGrouped.payload.base));
 
     /* ── CLAIM 13: `?directed=` IS REFUSED BY NAME (SLICE 12) ────────── */
     /**
