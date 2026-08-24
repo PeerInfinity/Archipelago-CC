@@ -2202,7 +2202,7 @@ describe('R9 slice 12c′: the PLANNER dashes toward the exit', () => {
      * ⛔ NOTHING HERE IS HAND-PICKED: the boot is the committed tape's, the
      * corridor is `planWaypoints`' own, and the schedule is `DASH_CHAIN`'s.
      */
-    it('⛓⛓⛓ it PLANS — `r9-solve-2`\'s room, 47 ticks to 23, on one dash window', () => {
+    it('⛓⛓⛓ it PLANS — `r9-solve-2`\'s own room, on ONE dash window, and the walk gets shorter', () => {
         const run = runOf('r9-solve-2');
         expect(run.inventory.hasSword).toBe(true);
         const tele = (run.world.teleporters ?? []).find((t) => t.to === 0);
@@ -2296,9 +2296,13 @@ describe('R9 slice 12c′: the PLANNER dashes toward the exit', () => {
         const strike = strikePolicyFor(run, { dashPlan: { ticks, why: 'the row\'s own window' } });
         expect(strike).not.toBeNull();
         previewWalk(run, [{ x: run.state.x - 64, y: run.state.y }], 0, { strike });
-        expect(strike.plannedPresses).toHaveLength(DASH_CHAIN_PATTERN.length);
-        expect(strike.plannedPresses.filter((p) => p.dash)).toHaveLength(DASH_CHAIN.at.length);
-        expect(strike.plannedSkipped).toHaveLength(0);
+        // ⛓ THE WHOLE TICK LIST, not its size — a count would pass on the
+        // right NUMBER of the wrong presses.
+        expect(strike.plannedPresses.map((p) => p.tick))
+            .toEqual(DASH_CHAIN_PATTERN.map((d) => run.ticksCompleted + d));
+        expect(strike.plannedPresses.filter((p) => p.dash).map((p) => p.tick))
+            .toEqual(DASH_CHAIN.at.map((d) => run.ticksCompleted + d));
+        expect(strike.plannedSkipped).toEqual([]);
     });
 
     /**
