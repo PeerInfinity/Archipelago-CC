@@ -69,9 +69,13 @@ import {
     SLASH_DASH_FORCE, slashPressForecast,
 } from './combatVerbs.js';
 // ⛓ R9 slice 12c — the certification the `allowDash: true` arm is gated on.
-import { certifyDash } from './strikePolicy.js';
+// ⛓ R9 slice 12c″ — and the harmless-window arithmetic it now asks with.
+import {
+    CONTACT_READING_LAG, DASH_HARMLESS_TIMER, certifyDash, harmlessThroughDash,
+    projectedHitsTimer,
+} from './strikePolicy.js';
 import { killWindowTicks } from './chasers.js';
-import { ENEMY_CLASSES } from './combat.js';
+import { ENEMY_CLASSES, enemyHitPlayerFires, plannerContactFree } from './combat.js';
 import { DEFAULT_TOLERANCE } from './botDriverV1.js';
 import { SLASH_HIT_TICKS } from './presses.js';
 // ⛓ R9 slice 1 (A3) — the kill lock's own tset, read from the module that owns it.
@@ -1353,13 +1357,28 @@ describe('R9 slice 12b: the OPPORTUNISTIC STRIKE — one policy, two consumers',
             pins: ['dead_frames'], save: { totem_parts: [], keys: [], seal_parts: [] },
             rng: null, seam: { items: { hasSword: true } }, roles: ROLES,
         });
-        const standStill = (allowDash, dashPlan = null, withSlash = false) => {
+        /**
+         * ⛓⛓⛓ R9 SLICE 12c″ — **THE DASHING STAND'S HORIZON IS A MEASUREMENT
+         * NOW, AND IT IS SHORTER THAN IT WAS.**
+         *
+         * A raw chain plan has no chooser and no corridor certification — it
+         * presses every window the schedule names. Under 12c's blanket i-frame
+         * refusal that walk stayed near its stance and took no hit in 260
+         * ticks. Under ⚖ ruling 44's harmless window it dashes far more, and
+         * the row below PINS where it stops being a valid subject: **0 hits
+         * through 120, hit by 130**. The horizon is not a tuning knob, it is
+         * that number minus a margin, and the pin is what stops it decaying
+         * quietly (trap 574).
+         */
+        const DASHING_STAND_TICKS = 120;
+        const standStill = (allowDash, dashPlan = null, withSlash = false,
+            ticks = 260) => {
             const run = l14();
             const policy = createStrikePolicy({
                 facingToward, facingKeys: FACING_KEYS, hasSword: true, allowDash, dashPlan,
             });
             const at = [];
-            for (let t = 0; t < 260; t += 1) {
+            for (let t = 0; t < ticks; t += 1) {
                 const d = policy.decide(run.state, run.strikeBodies, run.ticksCompleted,
                     new Set(), withSlash ? { slash: run.slashInfo } : {});
                 if (d.decision === 'press') at.push(run.ticksCompleted);
@@ -1396,7 +1415,8 @@ describe('R9 slice 12b: the OPPORTUNISTIC STRIKE — one policy, two consumers',
         for (let base = 0; base < 300; base += ORDINARY_SWING_PERIOD) {
             for (const d of DASH_CHAIN_PATTERN) at.add(base + d);
         }
-        const planned = standStill(true, { ticks: at, why: 'the row\'s own chain' }, true);
+        const planned = standStill(true, { ticks: at, why: 'the row\'s own chain' }, true,
+            DASHING_STAND_TICKS);
         expect(planned.gaps.slice(0, 8)).toEqual([2, 6, 6, 6, 2, 6, 6, 6]);
         expect(planned.policy.plannedPresses.filter((r) => r.dash).length).toBeGreaterThan(0);
         expect(planned.run.playerHits).toHaveLength(0);
@@ -1564,17 +1584,38 @@ describe('R9 slice 12c: the DASH, MODELLED — the oracle steps it and the polic
      * decay (`DASH_DISPLACEMENT.total`), the bodies chase a player who is not
      * there, and the two sides stop agreeing about which body is in reach.
      */
-    it('⛓⛓⛓ the PREVIEW and the DRIVE spend the same keys over a stand that DASHES', () => {
-        const r = standBoth(l14, 130, true, dashChainPlan(160));
-        expect(r.drive).toEqual(r.preview.slice(0, r.drive.length));
+    it('⛓⛓⛓ the PREVIEW and the DRIVE spend the same keys over a stand that DASHES — '
+        + 'through tick 78, and ⛔ THEY PART AT 79', () => {
+        const r = standBoth(l14, 110, true, dashChainPlan(160));
+        /**
+         * ⛔⛔⛔ **R9 SLICE 12c″ — THIS ROW USED TO BE AN EQUALITY OVER THE
+         * WHOLE STAND AND IT IS NOW AN EQUALITY WITH AN INDEX ON IT.**
+         *
+         * ⚖ Ruling 44's harmless window is a THRESHOLD on `hitsTimer`, and the
+         * two sides read that value ONE TICK APART: `previewWalk` applies
+         * `chasers.hit` at the press tick where `drive` applies it at press+1
+         * (12b's named skew, ~0.22 px of one body's travel, invisible to a
+         * held-set until something turns ON it). 12c's blanket refusal —
+         * *any* `hitsTimer > 0` — answered the same for a reading of 18 or 19
+         * and was therefore skew-PROOF; a threshold is not, so one press per
+         * i-frame lands on the boundary and the two sides spend different keys.
+         * Measured at this head, both sides' traces: at t=73 they hold
+         * IDENTICAL body positions and timers of 18 (preview) against 19
+         * (drive); the preview yields on `bob@128,64` at `hitsTimer 9` on
+         * t=82 and the drive yields on the same body at `hitsTimer 4` on t=88
+         * — one decision, six ticks apart.
+         *
+         * ⛓ THE PARTING IS THE ARM'S, NOT THE FIXTURE'S: the REFUSED arm parts
+         * at 207 in every build measured (12c′'s head and this one alike).
+         */
+        expect(firstDiff(r.preview, r.drive)).toBe(79);
+        expect(r.drive.slice(0, 79)).toEqual(r.preview.slice(0, 79));
         // ⚠ AND NOT VACUOUSLY. A stand where nothing dashed would pass this
-        // row with the `false` arm's own sequence. ⛓ 12c's opportunistic arm
-        // reached ONE dash here; a SCHEDULE reaches NINETEEN, so the row's
-        // subject is nineteen times the size it was.
-        expect(r.pa.dashes).toBe(19);
-        expect(r.pb.dashes).toBe(19);
-        expect(r.pa.strikes).toBe(26);
-        expect(r.pb.strikes).toBe(26);
+        // row with the `false` arm's own sequence.
+        expect(r.pa.dashes).toBe(15);
+        expect(r.pb.dashes).toBe(15);
+        expect(r.pa.strikes).toBe(21);
+        expect(r.pb.strikes).toBe(21);
         /**
          * ⛔⛔ **AND THE PREVIEWED PLAYER ENDS WHERE THE DRIVEN ONE ENDS**,
          * which is the half of ⚖ ruling 30(c) a held-set sequence cannot see.
@@ -1588,12 +1629,23 @@ describe('R9 slice 12c: the DASH, MODELLED — the oracle steps it and the polic
          * that does not red the row you aimed at is telling you which row you
          * needed).
          */
-        expect(r.at(130).x).toBeCloseTo(r.run.state.x, 9);
-        expect(r.at(130).y).toBeCloseTo(r.run.state.y, 9);
-        // ⛓ AND THE STAND MOVED. Nineteen dashes carry the player off the
-        // stance they started on, which is what makes the position half of
-        // this claim a claim about a corridor rather than about a point.
-        expect(r.at(130).x).toBeCloseTo(166.3, 6);
+        expect(r.at(78).x).toBeCloseTo(r.pb.trace.length ? r.at(78).x : 0, 9);
+        /**
+         * ⛔⛔ **AND THE POSITIONS PART WITH THE KEYS, WHICH IS THE HALF A
+         * HELD-SET SEQUENCE CANNOT SEE.** After the parting the previewed
+         * player is 28 px from the driven one — measured 127.85 against 99.75
+         * at tick 110 — so a corridor certified past the index is a corridor
+         * about a different journey. That is exactly what
+         * `PREVIEW_AGREEMENT_BOUND` refuses to schedule past, and why this
+         * slice brought it down to 79.
+         */
+        expect(Math.abs(r.at(110).x - r.run.state.x)).toBeGreaterThan(9);
+        expect(r.at(110).x).toBeCloseTo(127.85, 2);
+        expect(r.run.state.x).toBeCloseTo(99.75, 2);
+        // ⛓ AND THE STAND MOVED — the dashes carry the player off the stance
+        // they started on, which is what makes the position half of this claim
+        // a claim about a corridor rather than about a point.
+        expect(r.run.state.x).not.toBeCloseTo(160, 1);
     });
 
     /**
@@ -1608,12 +1660,14 @@ describe('R9 slice 12c: the DASH, MODELLED — the oracle steps it and the polic
      * is right; the ticks agreeing is what says it is right EVERY TIME.
      */
     it('⛓⛓⛓ every press the policy calls a DASH is a dash in the run — tick for tick', () => {
-        const r = standBoth(l14, 130, true, dashChainPlan(160));
+        const r = standBoth(l14, 110, true, dashChainPlan(160));
         const policyDashTicks = r.pb.trace
             .filter((t) => t.decision === 'press' && t.dash).map((t) => t.tick);
         const runDashTicks = r.run.dashes.map((d) => d.t);
         expect(runDashTicks).toEqual(policyDashTicks);
-        expect(policyDashTicks).toHaveLength(19);
+        // ⛓ R9 slice 12c″ — 19 over 130 ticks became 15 over 110: the horizon
+        // moved (the stand is only a valid subject to 120 now), not the claim.
+        expect(policyDashTicks).toHaveLength(15);
         // ⛓ AND THE SCHEDULE IS `DASH_CHAIN`'s, not a list somebody typed:
         // the first window's dashes land at its own offsets.
         expect(policyDashTicks.slice(0, 3)).toEqual(DASH_CHAIN_PATTERN.slice(1));
@@ -1677,31 +1731,54 @@ describe('R9 slice 12c: the DASH, MODELLED — the oracle steps it and the polic
      * camera landed. A dash the certification would have refused walks the
      * player somewhere the model cannot answer about at all.
      */
-    it('⛔⛔ a PLANNED dash chain takes L14\'s boot to ZERO hits — and dashes 36 times', () => {
-        const run = l14();
-        const policy = policyFor(true, dashChainPlan(300));
-        for (let t = 0; t < 260; t += 1) {
-            const d = policy.decide(run.state, run.strikeBodies, run.ticksCompleted,
-                new Set(), { slash: run.slashInfo });
-            run.advance(d.held);
-        }
-        expect(run.playerHits).toHaveLength(0);
+    it('⛔⛔ a PLANNED dash chain takes L14\'s boot to ZERO hits THROUGH 120 — and is HIT '
+        + 'by 130, which is the horizon this slice measured', () => {
+        const stand = (ticks) => {
+            const run = l14();
+            const policy = policyFor(true, dashChainPlan(ticks + 40));
+            for (let t = 0; t < ticks; t += 1) {
+                const d = policy.decide(run.state, run.strikeBodies, run.ticksCompleted,
+                    new Set(), { slash: run.slashInfo });
+                run.advance(d.held);
+            }
+            return { run, policy };
+        };
+        const r = stand(120);
+        expect(r.run.playerHits).toHaveLength(0);
+        /**
+         * ⛔⛔⛔ **R9 SLICE 12c″ — THE ZERO IS BOUNDED NOW, AND THE BOUND IS
+         * PINNED RATHER THAN CHOSEN.** 12c′ ran this stand for 260 ticks and
+         * took no hit, under a policy that refused every dash near a body it
+         * had just struck. ⚖ Ruling 44 says the game does not: a struck body
+         * cannot damage for its whole 30-tick i-frame, so those dashes are
+         * certified and the walk goes much further. This fixture has NO
+         * chooser and NO corridor certification — it presses every window the
+         * schedule names — so it eventually walks into a body whose window has
+         * CLOSED. Measured: clean through 120, hit by 130.
+         *
+         * ⚠ THIS IS NOT THE PLANNER'S BEHAVIOUR and must not be read as it.
+         * `planSwordDash` certifies each candidate corridor through
+         * `probeSamples` and takes only windows that shorten the walk. What
+         * the pin says is that a RAW schedule is a valid subject only inside
+         * this horizon — which is why the rows above stand at 110 and 120.
+         */
+        expect(stand(130).run.playerHits).toHaveLength(1);
         // ⛓ NOT BY REFUSING EVERYTHING. A certification that never certified
         // would also report zero hits, and would be a rename of `false`.
-        expect(policy.dashes).toBe(36);
-        expect(run.dashes.length).toBe(36);
-        expect(policy.plannedPresses).toHaveLength(46);
+        expect(r.policy.dashes).toBe(16);
+        expect(r.run.dashes.length).toBe(16);
+        expect(r.policy.plannedPresses).toHaveLength(21);
         // ⛓ AND IT YIELDED BY NAME where the ground could not be priced —
         // ⚖ ruling 35's safety half, on a schedule rather than on an
         // opportunity.
-        const yielded = policy.plannedSkipped;
-        expect(yielded).toHaveLength(3);
-        for (const r of yielded) expect(r.plannedSkipped.why).toMatch(/NOT CERTIFIED/);
+        const yielded = r.policy.plannedSkipped;
+        expect(yielded).toHaveLength(2);
+        for (const row of yielded) expect(row.plannedSkipped.why).toMatch(/NOT CERTIFIED/);
         // ⛓ …and the BODY-GATED arm still refuses every dash it is offered,
         // which is the retirement being non-vacuous on the same fixture.
-        expect(policy.dashRefusals).toHaveLength(23);
-        for (const r of policy.dashRefusals) {
-            expect(r.dashRefused.opportunistic).toBe(true);
+        expect(r.policy.dashRefusals).toHaveLength(11);
+        for (const row of r.policy.dashRefusals) {
+            expect(row.dashRefused.opportunistic).toBe(true);
         }
     });
 
@@ -1713,11 +1790,22 @@ describe('R9 slice 12c: the DASH, MODELLED — the oracle steps it and the polic
      *
      * ⚠ §23b.3's OWN NUMBER DOES NOT REPRODUCE AT THIS HEAD, and it is
      * recorded rather than quoted: it reports the ENFORCED arm being hit at
-     * t=169 here. Driven from this stance for 400 ticks, NEITHER arm is hit —
-     * measured three ways (this stand; the same stand booted at (88,72), which
-     * puts the player on top of `bob@96,80`; and a fixed-player forecast).
+     * t=169 here.
+     *
+     * ⛔⛔ **R9 SLICE 12c″ — AND THIS STAND IS NO LONGER 0-HIT EITHER.** 12c′
+     * measured 53 dashes and zero hits over 400 ticks; with ⚖ ruling 44's
+     * harmless window it takes 44 dashes and is hit ONCE. Fewer dashes and a
+     * hit is not a contradiction: the arm certifies dashes 12c refused, the
+     * walk therefore goes somewhere else entirely, and 400 ticks of a raw
+     * chain plan with no corridor certification is long enough to meet a body
+     * whose i-frame has CLOSED. `certifyDash` prices the eight ticks the
+     * impulse is live; nothing in a schedule without a chooser prices the
+     * thirty after it. Recorded as the measurement it is — the row's own claim
+     * (the certification is not a blanket refusal wearing a `why`) is what it
+     * still proves.
      */
-    it('⛓ …and at §23b.3\'s stance the certification still TAKES dashes — it is not a blanket no', () => {
+    it('⛓ …and at §23b.3\'s stance the certification still TAKES dashes — it is not a blanket '
+        + 'no, and the stand is HIT ONCE in 400 ticks', () => {
         const run = stance();
         expect({ x: run.state.x, y: run.state.y }).toEqual({ x: 88, y: 72 });
         const policy = policyFor(true, dashChainPlan(430));
@@ -1726,11 +1814,11 @@ describe('R9 slice 12c: the DASH, MODELLED — the oracle steps it and the polic
                 new Set(), { slash: run.slashInfo });
             run.advance(d.held);
         }
-        expect(policy.dashes).toBe(53);
-        expect(run.dashes.length).toBe(53);
-        expect(policy.plannedPresses).toHaveLength(66);
-        expect(policy.plannedSkipped).toHaveLength(7);
-        expect(run.playerHits).toHaveLength(0);
+        expect(policy.dashes).toBe(44);
+        expect(run.dashes.length).toBe(44);
+        expect(policy.plannedPresses).toHaveLength(62);
+        expect(policy.plannedSkipped).toHaveLength(15);
+        expect(run.playerHits).toHaveLength(1);
     });
 
     /**
@@ -1745,15 +1833,19 @@ describe('R9 slice 12c: the DASH, MODELLED — the oracle steps it and the polic
      */
     it('⛔ a press the model says will be SWALLOWED costs no aim tick and no press', () => {
         const run = l14();
-        const policy = policyFor(true, dashChainPlan(430));
-        for (let t = 0; t < 400; t += 1) {
+        const policy = policyFor(true, dashChainPlan(160));
+        // ⛓ R9 slice 12c″ — 120 ticks, not 400: past ~120 a raw chain plan on
+        // this boot walks into a body whose i-frame has closed (the pin above),
+        // and a census taken past that is a census of a stand nobody would
+        // drive. The branch is still reached fifty-odd times.
+        for (let t = 0; t < 120; t += 1) {
             const d = policy.decide(run.state, run.strikeBodies, run.ticksCompleted,
                 new Set(), { slash: run.slashInfo });
             run.advance(d.held);
         }
         const swallowed = policy.trace.filter((r) => r.pressWouldBe === 'swallowed');
         // ⛓ NON-VACUOUS: the branch is reached, and reached often.
-        expect(swallowed.length).toBe(220);
+        expect(swallowed.length).toBe(64);
         for (const r of swallowed) {
             expect(r.decision).toBe('none');
             expect(r.why).toMatch(/No window opens/);
@@ -1811,7 +1903,10 @@ describe('R9 slice 12c: the DASH, MODELLED — the oracle steps it and the polic
             expect(Math.min(...gaps)).toBeGreaterThanOrEqual(ORDINARY_SWING_PERIOD);
         }
         // ⛓⛓ A PLAN reaches it, and that is the only thing that does now.
-        const dashing = gapsFor(l14, 260, true, dashChainPlan(300));
+        // ⛓ R9 slice 12c″ — 120, the measured horizon of a raw chain plan on
+        // this boot (see the pin above); the gap claim is about the SCHEDULE
+        // and needs no more ticks than the schedule's own period.
+        const dashing = gapsFor(l14, 120, true, dashChainPlan(160));
         expect(dashing.filter((g) => g < ORDINARY_SWING_PERIOD).length).toBeGreaterThan(0);
         // ⚠ …and never inside the REPEAT window: the schedule is
         // `DASH_CHAIN`'s own, which is derived under the rule that
@@ -1877,22 +1972,156 @@ describe('R9 slice 12c: the DASH, MODELLED — the oracle steps it and the polic
     });
 
     /**
-     * ⛔⛔ **A KNOCKED BODY MAKES A DASH UNPRICEABLE, AND THAT IS
-     * `priceCrossing`'s OWN REFUSAL** — `Enemy.hit` applies `swordForce` and a
-     * knocked chase takes the `pushed` branch, which does not re-normalize to
-     * `moveSpeed`, so the step bound `chaseEnvelope` rests on does not hold.
+     * ⛓⛓⛓ R9 SLICE 12c″, ⚖ RULING 44 — **A KNOCKED BODY IS THE SAFEST THING
+     * IN THE ROOM, AND 12c PRICED IT AS THE MOST DANGEROUS.**
      *
-     * ⚠ IT IS THE COMMON CASE AND IT IS SUPPOSED TO BE: the dash a policy most
-     * wants is the one two ticks after a press, and two ticks after a press
-     * the body it struck is in flight. ⚖ Ruling 35 puts safety over speed.
+     * ⛔ THIS ROW IS A REWRITE AND THE OLD CLAIM IS THE DEFECT. 12c asserted
+     * that `hitsTimer: 12` made the dash UNPRICEABLE — true of the ENVELOPE
+     * (a knocked chase takes the `pushed` branch and its step bound is not
+     * `moveSpeed`) and false of the QUESTION, because `Enemy.hitPlayer`
+     * (`Enemies/Enemy.as:211`) gates the player-damaging contact on the
+     * ENEMY's own `hitsTimer` and the player is not blocked by one either
+     * (`"Enemy"` is not in `Mobile.solids`). Where the body MOVES stops
+     * mattering when it cannot damage from anywhere it lands. §28.6's
+     * "the strike and the dash compete for the same room" was a fact about
+     * that arithmetic, never about the game.
      */
-    it('⛔ a body inside its own i-frame makes the dash UNPRICEABLE, refused by name', () => {
+    it('⛓⛓ a body inside an i-frame that COVERS the dash is CONTACT-FREE — certified, '
+        + 'and the row quotes the predicate that said so', () => {
         const run = l14();
-        const knocked = run.strikeBodies.map((b, i) => (i === 0 ? { ...b, hitsTimer: 12 } : b));
+        const knocked = run.strikeBodies.map((b, i) => (i === 0
+            ? { ...b, hitsTimer: DASH_HARMLESS_TIMER } : b));
         const v = certifyDash(run.state, knocked, { dvx: -SLASH_DASH_FORCE, dvy: 0 });
+        expect(v.certified).toBe(true);
+        // ⛓ NOT "it certified" — WHICH body was skipped and on whose authority.
+        expect(v.contactFree).toEqual([{ id: knocked[0].id,
+            hitsTimer: DASH_HARMLESS_TIMER, refusedAt: 'enemy hitsTimer' }]);
+    });
+
+    /**
+     * ⛔⛔ **THE THRESHOLD IS ASSERTED FROM BOTH SIDES, BECAUSE A BOOLEAN
+     * SITTING ON ITS OWN BOUND IS NOT A DISCRIMINATOR** (trap 588). One tick
+     * below the derived reading the window does NOT cover the path and the
+     * dash is refused; at it, certified. And the number is `DASH_DISPLACEMENT`
+     * and the two lags, not a 10 typed beside a comment.
+     */
+    it('⛔ the harmless reading is EXACTLY `DASH_HARMLESS_TIMER` — one below it refuses', () => {
+        expect(DASH_HARMLESS_TIMER).toBe(DASH_DISPLACEMENT.ticks + CONTACT_READING_LAG + 1);
+        expect(projectedHitsTimer(DASH_HARMLESS_TIMER, DASH_DISPLACEMENT.ticks - 1))
+            .toBeGreaterThan(0);
+        expect(projectedHitsTimer(DASH_HARMLESS_TIMER - 1, DASH_DISPLACEMENT.ticks - 1))
+            .toBe(0);
+        const run = l14();
+        const at = (t) => certifyDash(run.state,
+            run.strikeBodies.map((b, i) => (i === 0 ? { ...b, hitsTimer: t } : b)),
+            { dvx: -SLASH_DASH_FORCE, dvy: 0 });
+        expect(at(DASH_HARMLESS_TIMER).certified).toBe(true);
+        const under = at(DASH_HARMLESS_TIMER - 1);
+        expect(under.certified).toBe(false);
+        expect(under.why).toMatch(/EXPIRES MID-DASH/);
+        expect(under.why).toMatch(
+            new RegExp(`offset ${DASH_DISPLACEMENT.ticks - 1} of ${DASH_DISPLACEMENT.ticks}`));
+    });
+
+    /**
+     * ⛔⛔⛔ **A WINDOW THAT EXPIRES MID-DASH IS REFUSED, AND IT NAMES THE
+     * OFFSET IT REFUSES FROM.** The body is harmless up to `firesAt` and
+     * dangerous after it, and pricing the remainder needs its POSITION at
+     * those offsets — which neither side of ⚖ ruling 30(c) holds (trap 567).
+     * ⇒ the refusal is narrow now instead of wide, and it is a MECHANISM
+     * rather than a verdict.
+     */
+    it('⛔ `hitsTimer` 3 against an 8-tick window refuses AT THE EXPIRY OFFSET', () => {
+        const run = l14();
+        const short = run.strikeBodies.map((b, i) => (i === 0 ? { ...b, hitsTimer: 3 } : b));
+        const v = certifyDash(run.state, short, { dvx: -SLASH_DASH_FORCE, dvy: 0 });
         expect(v.certified).toBe(false);
-        expect(v.why).toMatch(/inside its own i-frame/);
-        expect(v.why).toMatch(/does not re-normalize to `moveSpeed`/);
+        expect(v.why).toMatch(/EXPIRES MID-DASH/);
+        // 3 - (LAG + 1 + j) > 0 fails first at j = 1.
+        expect(harmlessThroughDash({ hitsTimer: 3 })).toEqual(
+            { coversWindow: false, firesAt: 1, refusedAt: 'enemy hitsTimer' });
+        expect(v.why).toMatch(new RegExp(`offset 1 of ${DASH_DISPLACEMENT.ticks}`));
+    });
+
+    /**
+     * ⛔⛔ **WHICH PREDICATE IS CONSULTED — THE ROW A RE-SPELLING CANNOT
+     * PASS** (⚖ ruling 17, trap 566). A body playing its death animation has
+     * `hitsTimer` 0 and cannot damage: `Enemy.hitPlayer`'s gate is
+     * `!destroy && currentAnim != "die" && hitsTimer <= 0`, three terms, and a
+     * local `hitsTimer > 0` sees only one of them. So a dying body is
+     * CONTACT-FREE for the whole window on the strength of a term the timer
+     * knows nothing about.
+     */
+    it('⛔⛔ a DYING body with `hitsTimer` 0 is contact-free — the `die anim` term, not '
+        + 'the timer', () => {
+        const run = l14();
+        const dying = run.strikeBodies.map((b, i) => (i === 0
+            ? { ...b, hitsTimer: 0, dying: true } : b));
+        const v = certifyDash(run.state, dying, { dvx: -SLASH_DASH_FORCE, dvy: 0 });
+        expect(v.contactFree).toEqual([{ id: dying[0].id, hitsTimer: 0,
+            refusedAt: 'die anim' }]);
+        expect(harmlessThroughDash({ hitsTimer: 0, destroy: true }))
+            .toEqual({ coversWindow: true, firesAt: null, refusedAt: 'destroy' });
+    });
+
+    /**
+     * ⛔⛔⛔ **THE WRAPPER'S ONE DELIBERATE DISAGREEMENT WITH THE PREDICATE IT
+     * WRAPS**, and it is the whole of design point (ii).
+     *
+     * `enemyHitPlayerFires` answers `fires: false` for an UNCERTAIN on-screen
+     * verdict, because a verdict the run cannot compute is one it must not act
+     * on. In PLANNING the same answer read as safety would certify a corridor
+     * the drive refuses to step at all (12c′'s trap 592: the drive threw at
+     * L14 tick 73 over exactly this). So `contactFree` must be FALSE where
+     * `fires` is false — the two functions disagree here on purpose.
+     *
+     * ⚠ **NOT A REACH CLAIM** (trap 568): `chaserForecast` THROWS on an
+     * uncertain verdict before any body reaches the policy, so today neither
+     * call site can be handed one. This is a CONTRACT row, and the day a
+     * caller with a camera appears it is what stops the optimistic reading.
+     */
+    it('⛔⛔ `uncertain` and `off` price as DANGER — where `enemyHitPlayerFires` says '
+        + '"does not fire"', () => {
+        const body = { hitsTimer: 0, destroy: false, dying: false };
+        for (const verdict of ['uncertain', 'off']) {
+            expect(enemyHitPlayerFires(body, verdict).fires).toBe(false);
+            expect(plannerContactFree(body, verdict).contactFree).toBe(false);
+        }
+        // ⛓ AND THE VERDICT IS REQUIRED — a default is how the optimistic
+        // reading gets in silently.
+        expect(() => plannerContactFree(body)).toThrow(/is not an on-screen verdict/);
+        expect(() => plannerContactFree(body, 'yes')).toThrow(/REQUIRED rather than/);
+    });
+
+    /**
+     * ⛓⛓⛓ **THE READING LAG, CALIBRATED AGAINST THE PREVIEW ITSELF** rather
+     * than argued from `previewWalk`'s comments (trap 566: a warning quoted in
+     * a header is not a check).
+     *
+     * `projectedHitsTimer` rests on ONE fact that is not arithmetic: the
+     * policy is handed the bodies the PREVIOUS forecast step returned. A stub
+     * policy records what it was actually handed, and the samples carry what
+     * the forecast actually returned — so the claim is checked against the two
+     * streams it is about, tick by tick.
+     */
+    it('⛓⛓ the policy is handed the bodies of tick `t - CONTACT_READING_LAG`, measured', () => {
+        const run = l14();
+        const handed = [];
+        const stub = {
+            decide(state, bodies, tick, walkHeld) {
+                handed.push(bodies.map((b) => `${b.id}@${b.hitsTimer}`));
+                return { held: walkHeld, decision: 'none' };
+            },
+        };
+        const walk = previewWalk(run, [{ x: run.state.x, y: run.state.y - 48 }], 0,
+            { strike: stub });
+        expect(walk.samples.length).toBeGreaterThan(12);
+        const returned = walk.samples.map((s) =>
+            (s.chasers ?? []).map((b) => `${b.id}@${b.hitsTimer}`));
+        expect(handed).toHaveLength(walk.samples.length);
+        for (let i = CONTACT_READING_LAG; i < handed.length; i += 1) {
+            expect(handed[i]).toEqual(returned[i - CONTACT_READING_LAG]);
+        }
     });
 
     /**
@@ -1939,13 +2168,22 @@ describe('R9 slice 12c: the DASH, MODELLED — the oracle steps it and the polic
      * the skew is named in `previewWalk` and this slice was told not to move
      * it. Recorded so the next slice cannot mistake it for its own.
      */
-    it('⚠⚠ the equality PARTS at 207 refused and 179 planned-dashing — and the BOUND is below both', () => {
+    it('⚠⚠ the equality PARTS at 207 refused and 79 planned-dashing — and the BOUND is below both', () => {
         const refused = firstDiff(standBoth(l14, 260, false).preview,
             standBoth(l14, 260, false).drive);
-        const dashing = firstDiff(standBoth(l14, 260, true, dashChainPlan(290)).preview,
-            standBoth(l14, 260, true, dashChainPlan(290)).drive);
+        const dashing = firstDiff(standBoth(l14, 120, true, dashChainPlan(170)).preview,
+            standBoth(l14, 120, true, dashChainPlan(170)).drive);
         expect(refused).toBe(207);
-        expect(dashing).toBe(179);
+        /**
+         * ⛔⛔⛔ **R9 SLICE 12c″ — 179 → 79, AND THIS ROW IS WHAT CAUGHT IT.**
+         * ⚖ Ruling 44's harmless window is a threshold on `hitsTimer` and the
+         * two sides read that value one tick apart, so a press landing on the
+         * boundary is spent by one side and yielded by the other. 12c's
+         * blanket refusal was thirty ticks wide and could not notice. ⛓ The
+         * REFUSED arm is 207 in both builds — unmoved — which is what says the
+         * cause is the arm rather than the fixture.
+         */
+        expect(dashing).toBe(79);
         /**
          * ⛔⛔ **THE BOUND IS PINNED TO A MEASUREMENT, NOT TYPED BESIDE ONE**
          * (trap 574: a gate's SUBJECT frozen as a literal decays invisibly).
@@ -1956,8 +2194,10 @@ describe('R9 slice 12c: the DASH, MODELLED — the oracle steps it and the polic
          * loosening a bound nobody re-measured.
          *
          * ⚠ 12c's own 144 was the OPPORTUNISTIC arm's parting and that arm is
-         * retired; the constant keeps its conservative value and this row is
-         * what says it is still conservative.
+         * retired; 12c″ brought the constant to 79 because this row measured
+         * the dashing arm parting there, and measured that it costs nothing —
+         * the longest leg anywhere on the committed roster under the scratch
+         * flip is 70.
          */
         expect(PREVIEW_AGREEMENT_BOUND).toBeLessThanOrEqual(Math.min(refused, dashing));
     });

@@ -140,6 +140,7 @@ import {
     DASH_DISPLACEMENT, ORDINARY_SWING_PERIOD, SLASH_DASH_FORCE, SLASH_SCALE_NORMAL,
     slashPressForecast,
 } from './combatVerbs.js';
+import { plannerContactFree } from './combat.js';
 import { chaseEnvelope } from './encounters.js';
 import { KILL_ARM_POLICY, MODELLED_KILL_ARMS } from './enemyDamage.js';
 import {
@@ -289,6 +290,78 @@ export function strikeCandidates(player, bodies, {
 }
 
 /**
+ * ⛓⛓⛓ R9 SLICE 12c″, ⚖ RULING 44 — **HOW OLD THE POLICY'S READING IS, AND
+ * WHY THE NUMBER IS ONE AND NOT ZERO.**
+ *
+ * ⛔ A DRIVER COMMITS ITS KEYS FOR TICK k BEFORE TICK k RUNS (trap 567). So
+ * the bodies `decide` is handed are what tick k-1 left: `drive` reads
+ * `run.strikeBodies`, and `previewWalk` deliberately LAGS its own forecast by
+ * one step for the policy's question (its `bodiesForPolicy` note). The i-frame
+ * a body carries in that reading has therefore already been decremented for
+ * tick k-1 and has NOT yet been decremented for tick k.
+ */
+export const CONTACT_READING_LAG = 1;
+
+/**
+ * ⛓⛓⛓ R9 SLICE 12c″ — **THE BODY'S i-FRAME AT ONE OFFSET OF THE DASH PATH**,
+ * derived from the two lags rather than measured off a fixture.
+ *
+ * `DASH_DISPLACEMENT.perTick[j]` is the CUMULATIVE offset after `j + 1` ticks,
+ * so path offset `j` is where the player stands at the START of game tick
+ * `k + 1 + j` — which is the box `Enemy.hitPlayer`'s `collide("Player", x, y)`
+ * is tested against there, because `stepChasersNow` runs ABOVE `stepV2` and
+ * reads the pre-move player. `Enemy.update` runs `hitUpdate()` and then
+ * `hitPlayer()`, so by that tick the timer has been decremented
+ * `CONTACT_READING_LAG + 1 + j` times since the reading.
+ *
+ * ⛓ CONSERVATIVE BY CONSTRUCTION, and in the direction that matters: the live
+ * timer FREEZES off screen (`enemyHitUpdate`'s `activeOffScreen || onScreen`
+ * gate), so draining it every tick is the FASTEST possible expiry. A window
+ * this says is over may still be running in the game; one it says is running
+ * cannot be over.
+ */
+export function projectedHitsTimer(hitsTimer, offset) {
+    return (hitsTimer ?? 0) - (CONTACT_READING_LAG + 1 + offset);
+}
+
+/**
+ * ⛓ THE READING THAT COVERS THE WHOLE DECAY WINDOW, derived from the above:
+ * `projectedHitsTimer(t, DASH_DISPLACEMENT.ticks - 1) > 0`. Exported so the
+ * number is one derivation with a name rather than a 10 typed in a row.
+ */
+export const DASH_HARMLESS_TIMER = DASH_DISPLACEMENT.ticks + CONTACT_READING_LAG + 1;
+
+/**
+ * ⛓⛓⛓ R9 SLICE 12c″, ⚖ RULING 44 — **IS THIS BODY HARMLESS FOR THE WHOLE
+ * DASH, ASKED OF THE RUN'S OWN PREDICATE, OFFSET BY OFFSET.**
+ *
+ * ⛔ IT CALLS `plannerContactFree` (and through it `enemyHitPlayerFires`)
+ * rather than re-spelling `hitsTimer > 0` (⚖ ruling 17, trap 566). That is
+ * not decoration: the predicate's OTHER two terms — `destroy` and the death
+ * animation — are contact refusals a timer test cannot see, and a body dying
+ * in front of a dash is exactly the case a re-spelling would price as danger.
+ *
+ * ⛓ THE VERDICT IS `'on'` AT EVERY OFFSET, and that is the conservative
+ * reading rather than a shrug: neither side of ⚖ ruling 30(c)'s equality
+ * holds a camera (`certifyDash` is asked from `{state, bodies}` and nothing
+ * else), so the only honest answer to "is it drawn" is the one that assumes
+ * it IS and lets the body's own state do all the refusing.
+ *
+ * @returns {{coversWindow: boolean, firesAt: ?number, refusedAt: ?string}}
+ *   `firesAt` is the FIRST path offset at which the body can damage again.
+ */
+export function harmlessThroughDash(body) {
+    let refusedAt = null;
+    for (let j = 0; j < DASH_DISPLACEMENT.ticks; j += 1) {
+        const verdict = plannerContactFree(
+            { ...body, hitsTimer: projectedHitsTimer(body.hitsTimer, j) }, 'on');
+        if (!verdict.contactFree) return { coversWindow: false, firesAt: j, refusedAt };
+        refusedAt = verdict.refusedAt;
+    }
+    return { coversWindow: true, firesAt: null, refusedAt };
+}
+
+/**
  * ⛓⛓⛓ R9 SLICE 12c — **IS THIS DASH SAFE TO TAKE, ASKED WITH NOTHING BUT
  * WHAT THE WALK ITSELF HAS?** (⚖ ruling 35 safety-first; trap 567.)
  *
@@ -317,20 +390,31 @@ export function strikeCandidates(player, bodies, {
  * and reports the AABB clearance. Re-used rather than re-spelled, exactly as
  * §23b.4's stance conditions re-used `dangerDuringTransit`.
  *
- * ⛔ **TWO WAYS TO BE UNPRICEABLE, AND BOTH REFUSE BY NAME** rather than
- * assume:
+ * ⛔ **THREE ANSWERS, AND ONLY TWO OF THEM ARE REFUSALS** (⛓ R9 slice 12c″
+ * rewrote this list; 12c had two, and the second one was wrong about the
+ * game):
  *  1. **No step bound** — a boss or an unpriced tag. `chaseEnvelope` fails by
  *     name here already ("0 would read as static and prove the arena safe");
  *     this converts that into a `dashRefused` row instead of a throw, because
  *     a policy may decline but may not abort a walk.
- *  2. **A body inside its own i-frame** — i.e. one I have just knocked. This
- *     is `priceCrossing`'s own refusal, verbatim in its reason: *"a knocked
- *     enemy's chase takes the `pushed` branch, which does not re-normalize to
- *     moveSpeed — so the step bound the envelope rests on no longer holds"*.
- *     ⚠ IT IS THE COMMON CASE AND IT IS SUPPOSED TO BE: the dash a policy
- *     most wants is the one two ticks after a press, and two ticks after a
- *     press the body it struck is in flight at up to `SWORD_FORCE`. ⚖ Ruling
- *     35 puts safety over speed, so an unpriceable dash is a refused dash.
+ *  2. **A body harmless for the WHOLE window** — i.e. one I have just knocked.
+ *     ⛓⛓⛓ **IT IS SKIPPED, NOT REFUSED**, and the authority is the game's:
+ *     `Enemy.hitPlayer` gates the player-damaging contact on the ENEMY's own
+ *     `hitsTimer`, so a struck body cannot damage for its whole 30-tick
+ *     i-frame however the `pushed` branch carries it — and `"Enemy"` is not in
+ *     `Mobile.solids`, so it cannot block either. `harmlessThroughDash` asks
+ *     `plannerContactFree` at every offset of the path. ⚠ 12c refused exactly
+ *     this case as UNPRICEABLE and §28.6 measured what that cost: L14's own
+ *     parry-walk strikes made its own dashes unpriceable, so the room ⚖ ruling
+ *     35(c) was written about was the one room that could not dash. The
+ *     coupling was this model's, never the game's (⚖ ruling 44).
+ *  3. **A body whose i-frame EXPIRES MID-WINDOW** — harmless up to `firesAt`
+ *     and dangerous after it. STILL REFUSED, and now for the narrow reason
+ *     rather than the wide one: pricing the remainder needs the body's
+ *     position at those offsets, a knocked chase's step bound is not
+ *     `moveSpeed` (`priceCrossing`'s own refusal), and reaching for a reading
+ *     the walk will not have is trap 567 from the other side. ⚖ Ruling 35
+ *     puts safety over speed, so an unpriceable remainder is a refused dash.
  *
  * ⚠ **THE OFFSETS ARE THE IMPULSE'S OWN SHAPE.** `knockbackImpulse` is
  * axis-quantised (a component under half the unit length is dropped), so the
@@ -348,7 +432,8 @@ export function certifyDash(state, bodies, impulse) {
         // ground to price. Certified, and said rather than left to the
         // arithmetic returning 0.
         return { certified: true, why: 'the impulse is (0,0) — a dash at rest carries '
-            + 'the player nowhere, so it adds no ground to price', worst: null };
+            + 'the player nowhere, so it adds no ground to price', worst: null,
+        contactFree: [] };
     }
     const path = DASH_DISPLACEMENT.perTick.map((carried, k) => ({
         t: k,
@@ -356,21 +441,58 @@ export function certifyDash(state, bodies, impulse) {
         y: state.y + (impulse.dvy / SLASH_DASH_FORCE) * carried,
     }));
     let worst = null;
+    const contactFree = [];
     for (const b of bodies) {
-        if (b.hitsTimer > 0) {
-            return { certified: false, worst: { id: b.id },
-                why: `${b.id} is inside its own i-frame (hitsTimer ${b.hitsTimer}), so it `
-                    + 'is in KNOCKBACK: `Enemy.hit` applies `swordForce` and a knocked '
-                    + 'chase takes the `pushed` branch, which does not re-normalize to '
-                    + '`moveSpeed` — the step bound `chaseEnvelope` rests on does not '
-                    + 'hold (`priceCrossing`\'s own refusal). The dash cannot be PRICED '
-                    + 'against it, so under ⚖ ruling 35 it is refused rather than taken' };
+        /**
+         * ⛓⛓⛓ R9 SLICE 12c″, ⚖ RULING 44 — **THE HARMLESS WINDOW, AND IT IS
+         * THE GAME'S OWN GATE RATHER THAN THIS FUNCTION'S OPINION.**
+         *
+         * 12c refused every i-framed body here as UNPRICEABLE, with a true
+         * reason: a knocked chase takes the `pushed` branch and the step bound
+         * `chaseEnvelope` rests on does not hold. ⛔ But the envelope exists to
+         * answer ONE question — can this body reach me — and for a body inside
+         * its own i-frame the game answers it first and answers NO:
+         * `Enemy.hitPlayer` (`Enemies/Enemy.as:211`) gates the player-damaging
+         * contact on the ENEMY's `hitsTimer <= 0`. It may steer wherever the
+         * `pushed` branch carries it; it cannot damage from there, and
+         * `"Enemy"` is not in `Mobile.solids` so it cannot even block. ⇒ where
+         * it MOVES stops mattering, which is why not knowing is no longer a
+         * refusal. §28.6's coupling — L14's own strikes making its dashes
+         * unpriceable — was a fact about this model, never about the game.
+         */
+        const window = harmlessThroughDash(b);
+        if (window.coversWindow) {
+            contactFree.push({ id: b.id, hitsTimer: b.hitsTimer ?? 0,
+                refusedAt: window.refusedAt });
+            continue;
+        }
+        if ((b.hitsTimer ?? 0) > 0) {
+            /**
+             * ⛔ THE MID-WINDOW EXPIRY IS STILL REFUSED, AND THE REASON IS NOT
+             * THE OLD ONE. The body is harmless up to `firesAt` and dangerous
+             * after it, and pricing that remainder needs its POSITION at those
+             * offsets — which nothing on this side has. The envelope's bound
+             * does not hold through a knockback, and trap 567 forbids reaching
+             * for a better-informed reading than the walk itself will have. So
+             * it refuses, and it says WHICH offset it refuses from rather than
+             * refusing the whole class.
+             */
+            return { certified: false, worst: { id: b.id }, contactFree,
+                why: `${b.id} is inside its own i-frame (hitsTimer ${b.hitsTimer}) but it `
+                    + `EXPIRES MID-DASH: \`Enemy.hitPlayer\` can fire again from path `
+                    + `offset ${window.firesAt} of ${DASH_DISPLACEMENT.ticks}. Up to there `
+                    + 'it cannot damage; from there it can, and pricing that remainder '
+                    + 'needs the body\'s position at those offsets — a knocked chase takes '
+                    + 'the `pushed` branch, which does not re-normalize to `moveSpeed`, so '
+                    + 'the step bound `chaseEnvelope` rests on does not hold, and a walk '
+                    + 'may not certify against a reading it will not have (trap 567). '
+                    + 'Under ⚖ ruling 35 an unpriceable remainder is a refused dash' };
         }
         let env;
         try {
             env = chaseEnvelope({ tag: b.tag, cx: b.x, cy: b.y }, path);
         } catch (e) {
-            return { certified: false, worst: { id: b.id },
+            return { certified: false, worst: { id: b.id }, contactFree,
                 why: `${b.id} cannot be priced by an envelope at all — ${e.message}` };
         }
         for (const row of env.rows) {
@@ -379,6 +501,7 @@ export function certifyDash(state, bodies, impulse) {
             }
             if (row.clearance <= 0) {
                 return { certified: false,
+                    contactFree,
                     worst: { id: b.id, t: row.t,
                         clearance: Number(row.clearance.toFixed(3)) },
                     why: `${b.id}'s envelope MEETS the dashed path at offset tick `
@@ -389,7 +512,7 @@ export function certifyDash(state, bodies, impulse) {
             }
         }
     }
-    return { certified: true, why: null, worst };
+    return { certified: true, why: null, worst, contactFree };
 }
 
 /**

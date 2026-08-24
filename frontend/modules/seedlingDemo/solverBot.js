@@ -1877,16 +1877,38 @@ export function previewWalk(run, wps, tolerance = 0, { strike = null, standFor =
  * the divergence, it brings it 63 ticks earlier, because a moved player is
  * chased differently.
  *
- * ⛔ THE NUMBER IS 12c's MEASUREMENT AND IT IS NOT ALLOWED TO DECAY QUIETLY
- * (trap 574): `solverBot.test.js`'s parting row asserts this constant IS the
- * index that fixture measures, so a model change that moves the skew reds the
- * row rather than silently loosening the bound this refuses against.
+ * ⛔ THE NUMBER IS A MEASUREMENT AND IT IS NOT ALLOWED TO DECAY QUIETLY
+ * (trap 574): `solverBot.test.js`'s parting row asserts this constant is at or
+ * below the index that fixture measures, so a model change that moves the skew
+ * reds the row rather than silently loosening the bound this refuses against.
+ *
+ * ⛓⛓⛓ **R9 SLICE 12c″ BROUGHT IT DOWN — 144 → 79 — AND THE ROW IS WHAT
+ * CAUGHT IT.** The harmless-window arm (⚖ ruling 44) turned a 30-tick-wide
+ * refusal into a THRESHOLD on `hitsTimer`, and the two sides read that value
+ * ONE TICK APART (the preview applies `chasers.hit` at the press tick where
+ * `drive` applies it at press+1 — 12b's named skew). A blanket "any
+ * `hitsTimer > 0` refuses" gives the same answer for a reading of 18 or 19; a
+ * threshold does not, so one press per i-frame lands on the boundary and the
+ * two sides take different presses. The dashing arm's parting fell 179 → 79;
+ * the REFUSED arm's is 207 in every build, unmoved, which is what says the
+ * cause is the arm and not the fixture.
+ *
+ * ⛓ **AND IT COSTS NOTHING, MEASURED**: under the scratch flip the longest
+ * leg anywhere on the committed roster is 70 (`r9-solve-0`'s first), so 79
+ * refuses no corridor that 144 accepted.
+ *
+ * ⚠⚠ **AND IT IS BOUNDING THE WRONG QUANTITY, WHICH THIS SLICE MEASURED AND
+ * DID NOT FIX.** It bounds the longest LEG; the divergence accumulates over
+ * the WHOLE WALK. `r9-solve-14`'s planned corridor has legs [48,32,36,5] —
+ * every one inside 79 — and the DRIVE is hit at tick 75 of it. So this
+ * constant is a necessary bound and not a sufficient one, and the sufficient
+ * one is the two sides agreeing about `hitsTimer` in the first place.
  *
  * ⇒ `planSwordDash` certifies CORRIDOR BY CORRIDOR and refuses to schedule a
  * leg longer than this. A whole room previewed in one call would be certified
  * against a preview the drive stops matching.
  */
-export const PREVIEW_AGREEMENT_BOUND = 144;
+export const PREVIEW_AGREEMENT_BOUND = 79;
 
 /**
  * ⛓⛓⛓ R9 SLICE 12c′ — **THE PRESS SCHEDULE OF A SUSTAINED DASH CHAIN**,

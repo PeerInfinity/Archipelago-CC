@@ -1153,6 +1153,101 @@ export function enemyHitPlayerFires(enemy, onScreenVerdict) {
 }
 
 /**
+ * ⛓⛓⛓ R9 SLICE 12c″, ⚖ RULING 44 — **THE PLANNING SIDE OF
+ * `enemyHitPlayerFires`, AND THE ONE PLACE THE TWO ANSWERS MUST DIFFER.**
+ *
+ * The user, 2026-08-24: *"If dashing doesn't make L14 faster, then there is
+ * still something that we're failing to model properly. Let's look at the AS3
+ * code again."* The thing not modelled was above: `Enemy.hitPlayer` gates on
+ * the ENEMY's own `hitsTimer`, so **a struck body cannot deal contact damage
+ * for its whole 30-tick i-frame** — and `"Enemy"` is not in `Mobile.solids`
+ * (`Mobile.as:17`), so the player may walk straight through the harmless one.
+ * The RUN has modelled that since R6 slice 3, one function up. The PLANNING
+ * stack never has: `dangerMap` carried zero `hitsTimer` terms and 12c's
+ * `certifyDash` refused an i-framed body as UNPRICEABLE, so the planner
+ * priced the game's single safest window as undashable danger.
+ *
+ * ⇒ this is the arm the planner asks with, and it is a WRAPPER rather than a
+ * second spelling (⚖ ruling 17, trap 566): the terms that decide are
+ * `enemyHitPlayerFires`'s own, called, with its `refusedAt` handed back for
+ * the row that quotes it.
+ *
+ * ── ⛔⛔ WHY IT IS NOT SIMPLY `!fires` ─────────────────────────────────
+ *
+ * Because two of that predicate's four refusals are facts about the RUN'S OWN
+ * TICK and are not claims a PLAN may rest on:
+ *
+ *  · **`uncertain`** — `onScreenUnderShake` cannot say whether a body inside
+ *    `Game.shake`'s jiggle is drawn on screen, and the two draws that decide
+ *    are not indexable. The run answers "it does not fire" because a verdict
+ *    it cannot compute is one it must not act on, and the forecast THROWS
+ *    rather than guess (`levelRun.js`, `chaserForecast: whether … is on
+ *    screen depends on`). In planning the same word means the opposite: an
+ *    unknown prices as DANGER, never as safety (12c′'s trap 592, from the
+ *    other side).
+ *  · **`offScreen`** — true of this tick and this camera. The camera FOLLOWS
+ *    the player, so a body off screen at tick k can be on screen well inside
+ *    an 8-tick dash window; a plan that banked on it would be certifying
+ *    against a camera it is about to move.
+ *
+ * ⇒ **THE ONLY POSITIVE CLAIM THIS FUNCTION EVER MAKES COMES FROM THE BODY'S
+ * OWN STATE** — `destroy`, the death animation, and its i-frame timer — which
+ * is exactly what "the harmless window" is. Everything else refuses.
+ *
+ * ⚠ THE VERDICT IS REQUIRED, not defaulted. A default is how an optimistic
+ * reading gets in silently, and a caller with no camera should have to say
+ * `'on'` — the reading that assumes the body CAN fire — out loud.
+ *
+ * @param {object} body `{hitsTimer, destroy|removed, dying}` — a strike-policy
+ *   or chaser-forecast body, whose field names are mapped here rather than at
+ *   each call site (`levelRun`'s stepped-chaser arm maps the same three).
+ * @param {'on'|'off'|'uncertain'} onScreenVerdict
+ * @returns {{contactFree: boolean, refusedAt: ?string, why: string}}
+ */
+export function plannerContactFree(body, onScreenVerdict) {
+    if (!body) {
+        throw new Error('plannerContactFree: needs a body. The whole question is about the '
+            + "BODY'S own state — a missing one has no window to be inside.");
+    }
+    if (onScreenVerdict !== 'on' && onScreenVerdict !== 'off' && onScreenVerdict !== 'uncertain') {
+        throw new Error(`plannerContactFree: "${onScreenVerdict}" is not an on-screen `
+            + 'verdict. It is REQUIRED rather than defaulted: a default is how an '
+            + "optimistic reading gets in silently, and a caller with no camera says 'on' "
+            + '— the reading that assumes the body CAN fire — out loud.');
+    }
+    if (onScreenVerdict === 'uncertain') {
+        return { contactFree: false, refusedAt: null,
+            why: 'whether this body is on screen is UNCERTAIN, and `Enemy.update` early-'
+                + 'returns at zero margin. The run reads that as "does not fire"; a PLAN '
+                + 'must read it as danger, because an unknown is not a window' };
+    }
+    if (onScreenVerdict === 'off') {
+        return { contactFree: false, refusedAt: null,
+            why: 'the body is off screen at THIS tick, which is a fact about this camera '
+                + 'and not a property of the window: the camera follows the player, so a '
+                + 'body off screen now can be on screen inside the same plan' };
+    }
+    const verdict = enemyHitPlayerFires({
+        hitsTimer: body.hitsTimer ?? 0,
+        // ⛔ THE SAME THREE FIELDS `levelRun`'s stepped-chaser arm maps, mapped
+        // ONCE here: a forecast body says `removed`, a live `run.chasers` row
+        // says `destroy`, and both mean `Enemy.update`'s `!destroy`.
+        destroy: body.destroy ?? body.removed ?? false,
+        dieAnim: body.dieAnim ?? body.dying ?? false,
+    }, 'on');
+    if (verdict.fires) {
+        return { contactFree: false, refusedAt: null,
+            why: '`Enemy.hitPlayer` fires against this body — nothing in its own state '
+                + 'refuses the contact' };
+    }
+    return { contactFree: true, refusedAt: verdict.refusedAt,
+        why: `\`Enemy.hitPlayer\` cannot fire — ${verdict.refusedAt}. The gate is the `
+            + "ENEMY's own, so the body may keep steering (`Bob.update` has no such gate) "
+            + 'and the player may pass through it (`"Enemy"` is not in `Mobile.solids`) '
+            + 'without taking a contact' };
+}
+
+/**
  * Which census bodies this rung can price a CONTACT for, and which it
  * refuses by name.
  *
