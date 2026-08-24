@@ -110,7 +110,7 @@ import {
 import { chaseEnvelope } from './encounters.js';
 import { KILL_ARM_POLICY, MODELLED_KILL_ARMS } from './enemyDamage.js';
 import {
-    SLASH_HIT_TICKS, SLASH_REACH, distanceRectPoint, slashReachFor, slashRect,
+    SLASH_HIT_TICKS, distanceRectPoint, slashReachFor, slashRect,
 } from './presses.js';
 import { rectsOverlap } from './levelWorld.js';
 
