@@ -4108,6 +4108,60 @@ the LAST tape-move-triggered one.
 then the planner primitive; L14's re-record now runs through `--grow`, and ruling 39's `why`
 sweep rides it).
 
+⛓⛓⛓ **R9 SLICE 12c SHIPPED 2026-08-23** (`73d9c3d35` · `88c2d7fad` · `47948452a` ·
+`41f14a595` · `d3660b364` · `01b9f387f`), ⚖ rulings 41–43. **THE COMPLETE DASH MODEL IS IN THE
+ORACLE, AND THE ROSTER-WIDE DEFAULT IS STILL `false`** — `solve-seedling-r9-campaign --check`
+is unmoved at `8f8389ee…`, which is the proof.
+
+12b′ measured the preview/drive gap to be exactly two things and closed it by REFUSING every
+press that could dash. This closes it by MODELLING them. **(i)** `previewStepper()` takes a
+per-tick `dashImpulse` — `stepOptsFor` stays the ONE builder and ONE call, the spread overrides
+the single key it already declares, and the non-dash arm passes the object it always did, which
+is why every committed corridor is byte-unchanged. `previewWalk` threads the run's slash state
+in `advance`'s own order. **(ii)** `combatVerbs.slashPressForecast` is EXACT, not a gap
+arithmetic; its outcome picks the scan's rect (24 × 20.8 at reach 24 dashing against 16 × 32 at
+16 — neither contains the other), a press `set slashing` would swallow costs no aim tick, and
+under `true` `certifyDash` prices the MARGINAL 9 px (`DASH_DISPLACEMENT`, DERIVED, and equal to
+§23.11's game-measured 9) against PRE-STEP bodies through `chaseEnvelope` — trap 567, the probe
+gets the DRIVER's information. **(iii)** §23.15's `slashRepeats` double-count is paid: a second
+press REPLACES the pending hit ticks, which is the same sentence the line above it already said
+about `slashEnd`'s clock. **(iv)** `r9-l6-sword-dash-hit` (roster 145 → **146**): the landed
+reach **20.236** is above `SLASH_REACH` and below `SLASH_REACH_DASH`, so the game answers ONE
+boolean — and answered it, hits 1/3, i-frame armed, body thrown east, every digit agreeing.
+
+⛔⛔⛔ **AND THE MEASUREMENT THAT INVERTS 12c′'s PREMISE.** Of the 23 committed chain segments
+**12 hold no sword and 10 carry no bodies** — exactly ONE, `r9-solve-14`, can reach the dash
+branch at all. Re-solving the campaign offline with `allowDash: true` (a worktree, the
+producer's own solve path) moves that one and only that one: **145 t → 400 t, +255, 2.76×**,
+still zero hits and still a calm L15 arrival. §23.11's 2.15×-per-tick arithmetic is about
+dashing TOWARD THE EXIT; the flag alone buys an OPPORTUNISTIC dash whose displacement the AVOID
+corridor must be certified WITH, and the corridor that certifies is longer. ⇒ **12c′ must not
+flip the default on the flag alone — the planner primitive is what makes ⚖ ruling 35's speed
+claim true at all.** Proposed name `planSwordDash` in `solverBot` (`mover.planDash` is TAKEN and
+means something else); and a plan certified on `stepV1` CANNOT be walked by a `stepV2` drive
+that spends an impulse (trap 118's shape) — it must be built on `previewStepper()`, which as of
+this slice carries it.
+
+⚠ **⚖ RULING 30(c)'s PREVIEW/DRIVE EQUALITY IS A BOUNDED CLAIM, AND ALREADY WAS.** On L14's own
+boot stand the sequences part at tick **207** with the default and **144** dashing — measured
+identically at `f498381ca`. The named one-tick chaser-hit skew is the cause; the dash brings it
+63 ticks earlier, it does not create it. L14's committed solve is 145 t, one tick past.
+⚠ §23b.3's *"hit at tick 169 at the forecast stance"* does NOT reproduce, measured three ways.
+⚠ **MUTANTS (a) AND (c) BOTH WENT THE OTHER WAY FROM THEIR PREDICTIONS**, and both taught: (a)
+left the equality row green, so the row now asserts the previewed player's POSITION (the mutant
+is then off by 13.35 px); (c) does not bring L14's hit back — **(ii), the forecast, is what
+removes it** — but without it the stance walk drifts somewhere the RUN ITSELF refuses to step.
+
+⚠ **NOT BUILT: (v), the `--license-walks` pipeline mode — handed to 12c″** with its reasoning in
+kickoff §27.9. Its ANSWER was produced anyway (the worktree rehearsal above), and §27.7 shows
+12c′ must not take that re-record until the primitive exists.
+
+Instruments 245 → **247**; as-built = kickoff **§27**; traps **586–589**.
+
+**NEXT in R9: slice 12c′** (the PLANNER primitive — dashing TOWARD THE EXIT, not the flag
+alone — then the flip and the pipeline run; ruling 39's `why` sweep still rides it), and
+**12c″** for the `--license-walks` mode.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
