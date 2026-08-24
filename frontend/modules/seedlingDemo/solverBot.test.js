@@ -2195,9 +2195,12 @@ describe('R9 slice 12c: the DASH, MODELLED — the oracle steps it and the polic
          *
          * ⚠ 12c's own 144 was the OPPORTUNISTIC arm's parting and that arm is
          * retired; 12c″ brought the constant to 79 because this row measured
-         * the dashing arm parting there, and measured that it costs nothing —
-         * the longest leg anywhere on the committed roster under the scratch
-         * flip is 70.
+         * the dashing arm parting there. ⛔ IT IS NOT FREE: measured under the
+         * scratch flip, `r9-solve-14`'s planned legs are [48,32,41,7] and fit,
+         * but `r9-solve-0`'s CANDIDATES reach 92 and it is refused `leg-bound`
+         * on every start tick — 168 t back to its committed 237. The cost is
+         * read off the population the bound REJECTS, never off the plans that
+         * survived it.
          */
         expect(PREVIEW_AGREEMENT_BOUND).toBeLessThanOrEqual(Math.min(refused, dashing));
     });

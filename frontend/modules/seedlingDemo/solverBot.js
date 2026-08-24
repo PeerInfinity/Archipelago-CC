@@ -1893,9 +1893,15 @@ export function previewWalk(run, wps, tolerance = 0, { strike = null, standFor =
  * the REFUSED arm's is 207 in every build, unmoved, which is what says the
  * cause is the arm and not the fixture.
  *
- * ⛓ **AND IT COSTS NOTHING, MEASURED**: under the scratch flip the longest
- * leg anywhere on the committed roster is 70 (`r9-solve-0`'s first), so 79
- * refuses no corridor that 144 accepted.
+ * ⛔⛔ **AND IT COSTS ONE MOVER — MEASURED AFTER I FIRST MEASURED THE WRONG
+ * POPULATION.** The first cut of this note said "it costs nothing: the longest
+ * leg anywhere is 70". That was the longest leg of the plans that were
+ * ACCEPTED — the survivors of the very filter being priced. Measured on what
+ * the bound actually filters, the CANDIDATES, `r9-solve-0` offers legs of 92
+ * and 95 and is now refused `leg-bound` on all 237 of its start ticks: under
+ * the flip it goes back from 168 t to its committed 237. A bound's cost is a
+ * fact about the population it REJECTS, and reading it off the accepted set is
+ * a survivorship argument wearing a measurement's clothes.
  *
  * ⚠⚠ **AND IT IS BOUNDING THE WRONG QUANTITY, WHICH THIS SLICE MEASURED AND
  * DID NOT FIX.** It bounds the longest LEG; the divergence accumulates over

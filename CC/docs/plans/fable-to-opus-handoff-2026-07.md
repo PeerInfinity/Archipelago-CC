@@ -4197,10 +4197,31 @@ body-free room took ONE press of a four-press schedule with no refusal to explai
 rest — **the null this slice nearly reported was an artefact of it.** Traps **590–593**;
 as-built = kickoff **§28**; vitest 336/10329 → **338/10367**; instruments 247; roster 146.
 
-**NEXT in R9: slice 12c″** — the licensed SIX-mover re-record (the cascade fires for the
-first time on a real chain: `r8-solve-10` is #10 of 16, so 11–16 go `boot-only`) plus
-⚖ ruling 39's `why` sweep in the same pipeline run, **once the user rules on the licence**.
-Then the route: L15 `shove` VERB-APPLY → L16 BRIDGE → L8 ORACLE → A14 → A16.
+⛓⛓⛓ **R9 SLICE 12c″ SHIPPED 2026-08-24** (`aa9e30664` · `ec5a2d0dc` + records) — ⚖ **ruling
+44**: the re-record was SUPERSEDED until the dash model was complete, and the AS3 re-read
+found what was missing. `Enemy.hitPlayer` (`Enemies/Enemy.as:211`) gates the
+player-damaging contact on the **ENEMY's own `hitsTimer`**, so a struck body is harmless
+for its whole 30-tick i-frame, keeps steering, and is not solid to the player. The RUN has
+modelled that since R6 slice 3; the PLANNER never had. It does now, by CALLING
+`enemyHitPlayerFires` through a wrapper that prices `uncertain`/`off` as DANGER, at
+`certifyDash` and at `chaserDanger`'s per-tick arm.
+⛓ **⚖ Ruling 35(c) is ANSWERED: L14 plans 145 → 128 t** (121 with the first site alone),
+and §28.6's "the strike and the dash compete for the same room" is retired as a fact about
+the MODEL. ⛔⛔ **AND THE PLAN IS NOT DRIVABLE** — the driven walk is HIT at tick 75 and
+`levelRun` refuses to step at 77, on a corridor its own danger predicate certified. The
+blocker is now the **preview/drive `hitsTimer` disagreement**: 12c's blanket refusal was
+30 ticks wide and skew-PROOF, a THRESHOLD on the same value is not (parting 179 → 79; the
+REFUSED arm 207 in every build), and the naive cure measures WORSE (62). It is TAPE-MOVING,
+so it lands with the flip. Traps **595–596**; as-built = kickoff **§29**; TAPE-INERT (the
+four owning producers' md5s unmoved at both commits).
+
+**NEXT in R9: slice 12c‴** — ⚖ ruling 45's two planner changes (the over-broad `would-hit`
+refusal retired now that a strike is measured to write NO `Game.shake`; PARTIAL dash
+windows) **plus the preview/drive skew cure, designed and worktree-proven**, and the
+witness pair the user LICENSED in 12c″ and left unspent (run it EARLY — its driven per-tick
+`hitsTimer` stream is the ground the skew work needs). THEN the re-record session, on
+12c‴'s table rather than 12c′'s. Then the route: L15 `shove` VERB-APPLY → L16 BRIDGE →
+L8 ORACLE → A14 → A16.
 
 ## 6. Everything else (unchanged queues)
 

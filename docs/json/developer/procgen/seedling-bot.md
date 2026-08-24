@@ -14110,3 +14110,123 @@ hit. MEASURED: it takes none — it **LEAVES THE ROOM**, at dwell tick 110 of 13
 and `runDwell` refuses by name (trap 150). The sharpest thing the certification
 buys is still not a hit avoided; it is that the walk stays inside the region the
 model can answer about at all.
+
+### R9 slice 12c″: THE PLANNER LEARNS THE HARMLESS WINDOW — L14 plans under 145 at last, and the plan is not drivable
+
+⚖ **Ruling 44, the user, at 12c′'s STOP**: *"If dashing doesn't make L14
+faster, then there is still something that we're failing to model properly.
+Let's look at the AS3 code again. Does dashing make the player briefly
+invulnerable?"* It does not — and the missing mechanism was on the other side
+of the contact.
+
+**THE GAME, re-read line by line.** The dash arm of `set slashing`
+(`Player.as:783–791`) is anim + `knockback(2, new Point(x - v.x, y - v.y))` +
+`slashDirection` + sound; `Player.hit` (`:1373`) gates on `Bot.noDamage`, then
+`hitsTimer <= 0 && hits < hitsMax && !Game.freezeObjects`, and **nothing reads
+`slashing` or `slashDashed`** — so a dash grants the player nothing. What it
+grants is on the ENEMY: `Enemy.hitPlayer()` (`Enemies/Enemy.as:211`) runs only
+under `!destroy && currentAnim != "die" && hitsTimer <= 0`, i.e. **a struck body
+cannot deal contact damage for its whole 30-tick i-frame**. It keeps steering
+while harmless (`Enemies/Bob.as` contains no `hitsTimer` term at all), and
+`"Enemy"` is not among `Mobile.as:17`'s solids — so the player may walk straight
+through it.
+
+**THE RUN HAS MODELLED THAT SINCE R6 SLICE 3.** `combat.enemyHitPlayerFires`
+is the transcription, `refusedAt: 'enemy hitsTimer'` is its verdict, and both
+`levelRun` contact arms ask it. **THE PLANNING STACK NEVER DID**: `dangerMap.js`
+carried zero `hitsTimer` terms and 12c's `certifyDash` refused an i-framed body
+as UNPRICEABLE. So §28.6's *"the strike and the dash compete for the same room"*
+was a true statement about this model and a false one about the game.
+
+**THE ARM, CALLED RATHER THAN RE-SPELLED** (⚖ ruling 17, trap 566).
+`combat.plannerContactFree(body, onScreenVerdict)` wraps the predicate and
+disagrees with it in exactly one place, deliberately: **`uncertain` and `off`
+price as DANGER** where the run reads them as "does not fire". A verdict the run
+cannot compute is one a PLAN must not bank on, and an off-screen body can be on
+screen inside the same 8-tick window because the camera follows the player. The
+only positive claim the wrapper ever makes comes from the body's own state.
+
+Two call sites:
+
+- **`certifyDash`** now has three answers where 12c had two. A window that
+  COVERS the whole dash is SKIPPED with the predicate's `refusedAt` quoted in
+  the row; one that EXPIRES MID-WINDOW is refused BY OFFSET; everything else
+  takes the envelope unchanged. The projection —
+  `projectedHitsTimer(h, j) = h - (CONTACT_READING_LAG + 1 + j)`, so the whole
+  window needs `DASH_DISPLACEMENT.ticks + 2` = 10 — is derived from the two
+  constants and the two lags, and CALIBRATED against `previewWalk`'s own two
+  streams tick for tick rather than argued from a comment. It is conservative
+  in the right direction: the live timer FREEZES off screen, so draining it
+  every tick is the fastest possible expiry.
+- **`chaserDanger`** asks the same predicate PER TICK, and only in TRANSIT mode,
+  where the sample carries the bodies as of its own tick at horizon 0 — the
+  moment `Enemy.hitPlayer` answers about. The WAIT arm is untouched: a dwell
+  priced through `bound * horizon` has no single tick to ask about.
+
+**⛓⛓⛓ ⚖ RULING 35(c) IS ANSWERED — L14 PLANS 145 → 128 t.** Measured through
+`solve-seedling-r9-campaign --check`, the producer's own solve path, with the
+flag scratch-flipped in a worktree:
+
+| segment | committed | 12c′ planned | **12c″ planned** |
+|---|---|---|---|
+| `r8-solve-10` | 90 | 81 | **81** |
+| `r9-solve-11` | 119 | 97 | **97** |
+| `r9-solve-3` | 226 | 175 | **175** |
+| `r9-solve-2` | 47 | 23 | **23** |
+| `r9-solve-13` | 74 | 35 | **35** |
+| `r9-solve-0` | 237 | 168 | ⛔ **237 — refused `leg-bound`** |
+| **`r9-solve-14`** | **145** | refused | ⛔ **128 planned, NOT DRIVABLE** |
+
+L14's scan: **71 start ticks — would-hit 33 · not-faster 28 · danger 7 ·
+certified 3**, windows at [24,69,95], legs [48,32,41,7]. Against 12c′'s
+116/16/13 over 145.
+
+**⛔⛔⛔ AND THE PLAN IS NOT DRIVABLE, WHICH IS THIS SLICE'S REAL FINDING.** The
+campaign solve CRASHES on `r9-solve-14` after planning it: the driven walk is
+**HIT at tick 75** by `bob@64,64`, `Game.shake` goes to 5 and decays to 2, and
+at tick 77 `levelRun` cannot say whether `bob@176,112` is drawn, so it refuses
+to step. The corridor was certified through `probeSamples` — this rung's own
+danger predicate — and the DRIVE was hit on it. **The harmless window is not
+wrong; the preview and the drive are not walking the same walk.**
+
+**⛔⛔ WHY, AND IT IS A SHAPE WORTH CARRYING**: 12c's refusal — *any*
+`hitsTimer > 0` → refuse — was **thirty ticks wide and therefore skew-PROOF**.
+The two sides read that timer ONE TICK APART (`previewWalk` applies
+`chasers.hit` at the press tick, `drive` at press+1 — 12b's named skew, ~0.22 px
+of one body's travel), and a blanket refusal answers the same for 18 or 19. **A
+THRESHOLD does not.** One press per i-frame lands on the boundary, one side
+spends it and the other yields, and from there the two walk different rooms.
+Measured on 12c′'s own equality fixture: the dashing arm's parting falls
+**179 → 79**, while the REFUSED arm's is **207 in every build** — which is what
+says the cause is the arm and not the fixture. In the traces the same decision
+appears on both sides six ticks apart (preview yields on `bob@128,64` at
+`hitsTimer 9`, t=82; drive yields on it at `hitsTimer 4`, t=88).
+
+⛔ **The naive cure does not work, measured**: a scratch build applying the
+previewed hit at press+1 moves the parting to **62** — worse. Closing the skew
+is its own piece of work, and it is TAPE-MOVING (L14 is the only room that
+presses), so it belongs to the re-record series by the one-series law.
+
+**⚠ `PREVIEW_AGREEMENT_BOUND` 144 → 79, AND IT COSTS A MOVER.** The row that
+pins the constant to the measured parting is what caught it. The first reading
+of its cost was WRONG in an instructive way: *"the longest leg anywhere is 70"*
+was the longest leg of the plans that were ACCEPTED — the survivors of the very
+filter being priced. On the population the bound actually REJECTS, `r9-solve-0`
+offers candidate legs of 92 and 95 and is refused on all 237 of its start
+ticks. ⚠ And the bound is bounding the wrong quantity anyway: it bounds the
+longest LEG, while the divergence accumulates over the WALK — L14's legs are all
+≤48 and the drive is hit at tick 75 of a 128-tick plan.
+
+**⛓ THE GAME AGREEMENT IS UNWITNESSED, AND THE SCAN THAT SAYS SO IS
+CALIBRATED.** Every one of the 146 committed tapes replayed offline through
+`tapeRunner`: **ZERO** carry a `contactsSuppressed` row with
+`why === 'enemy hitsTimer'`. That string occurs in exactly one place in the
+module — its own definition. ⚠ The roster's other i-frame reason is spelled
+`hitsTimer` (7 rows) and is `playerHit`'s — the PLAYER's own invulnerability —
+so a scan keyed on the substring would have reported seven witnesses, every one
+about the wrong subject. The filter is calibrated on a known positive: a scratch
+tape from `r9-l6-bob-press`'s boot that strikes the bob at tick 10 and keeps
+walking takes **0 hits with 10 `enemy hitsTimer` suppressions at t=32…41**,
+while the same tape without the press takes **2 hits from that same bob**. One
+press turns ten ticks of body contact into ten ticks of nothing — ⚖ ruling
+44(b), reproduced in the run.
