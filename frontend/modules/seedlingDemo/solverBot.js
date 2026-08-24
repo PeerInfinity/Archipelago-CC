@@ -103,7 +103,7 @@ import { bridgedChaserTags, chaserBoxAt, killWindowTicks } from './chasers.js';
 import { createTraceBuilder } from './decisionTrace.js';
 import { DESTROYING_TILE_TYPES } from './pushables.js';
 import { rect, TILE_SIZE } from './levelWorld.js';
-import { ENEMY_CLASSES, KILL_LOCK_TAGS, KILL_LOCK_TSET } from './combat.js';
+import { ENEMY_CLASSES, KILL_LOCK_TAGS, KILL_LOCK_TSET, contactPricing } from './combat.js';
 // ⛓ R8 slice 8: the PRESSER's own cadence floor — the dash rule plus the
 // receiver's i-frames, in one constant `killSchedule` has refused a smaller
 // value than since R5. The press arm never consulted it; the game found out.
@@ -1578,6 +1578,12 @@ export function previewWalk(run, wps, tolerance = 0, { strike = null, standFor =
      */
     let bodiesForPolicy = strike ? (run.strikeBodies ?? []) : null;
     /**
+     * ⛓ R9 slice 12c‴ — every body a PLANNED press's window struck, in the
+     * order it struck them. See the push site for why it is the application and
+     * not the aim.
+     */
+    const plannedStruck = [];
+    /**
      * ⛓⛓⛓ R9 SLICE 12c — **THE PREVIEW THREADS THE PLAYER'S OWN SLASH STATE**,
      * which is the second of the two things 12b′ measured the preview/drive gap
      * to be (finding 2: the preview never called `slashSet`).
@@ -1689,7 +1695,23 @@ export function previewWalk(run, wps, tolerance = 0, { strike = null, standFor =
              * the player's own travel and hands back the whole covered set.
              */
             for (const id of (decision.targets ?? [decision.target])) {
-                if (id !== null && id !== undefined && chasers) chasers.hit(id, state);
+                if (id === null || id === undefined || !chasers) continue;
+                chasers.hit(id, state);
+                /**
+                 * ⛓⛓⛓ R9 SLICE 12c‴, ⚖ RULING 45(a) — **WHAT A PLANNED PRESS
+                 * ACTUALLY STRUCK, RECORDED**, so `planSwordDash` can price the
+                 * hit instead of refusing the candidate for having one.
+                 *
+                 * ⛔ IT IS THE APPLICATION SITE AND NOT THE POLICY'S TARGET
+                 * LIST, deliberately. The policy names who it AIMS at, at the
+                 * press tick; this names who the window HIT. Today those are
+                 * the same set because the preview still applies one hit at the
+                 * press tick; when the preview adopts the shared sword window
+                 * the second becomes the game's true five-tick coverage and
+                 * every consumer of this field sharpens with it, without a flag
+                 * and without a second question.
+                 */
+                if (decision.planned) plannedStruck.push({ tick: at, id });
             }
         }
         // A spear thrust live at the preview's start is consumed by the first
@@ -1861,7 +1883,7 @@ export function previewWalk(run, wps, tolerance = 0, { strike = null, standFor =
             }
         }
     }
-    return { samples, startTick, truncated, stood: standFor };
+    return { samples, startTick, truncated, stood: standFor, plannedStruck };
 }
 
 /**
@@ -1927,6 +1949,32 @@ export const PREVIEW_AGREEMENT_BOUND = 79;
  * dash does NOT refresh it, so the pattern repeats: swing, dashes, swing.
  */
 export const DASH_CHAIN_PATTERN = Object.freeze([0, ...DASH_CHAIN.at]);
+
+/**
+ * ⛓⛓⛓ R9 SLICE 12c‴, ⚖ RULING 45(b) — **THE PARTIAL WINDOWS** (user,
+ * 2026-08-24: *"I would like the planner to consider dashes that aren't full
+ * length, if possible."*).
+ *
+ * ⛔ A WINDOW IS NOT ALL-OR-NOTHING. `DASH_CHAIN_PATTERN` is the LONGEST
+ * schedule one `slashTimer` window admits; every PREFIX of it is a legal
+ * schedule too, and a shorter one buys less displacement for fewer presses —
+ * which is exactly what a corridor whose full chain overshoots, stalls, or
+ * strikes something needs.
+ *
+ * ⛓ DERIVED FROM THE PATTERN, so a chain that gains or loses a dash tomorrow
+ * gains or loses a prefix with it and nothing here is typed (⚖ ruling 17). The
+ * empty prefix is NOT one of them: pressing nothing is the undashed baseline,
+ * which the pass already measures as its control.
+ *
+ * ⚠ VARIABLE OFFSETS ARE THE NEXT STEP AND ARE NOT BUILT. A single dash is
+ * legal at any `+2 … +19` of the window, so the full candidate space is far
+ * larger than these four; the prefixes are what ⚖ ruling 45(b) asked for "at
+ * minimum", and the measurement of what they buy is what should decide whether
+ * the rest is worth its previews.
+ */
+export const DASH_CHAIN_PREFIXES = Object.freeze(
+    DASH_CHAIN_PATTERN.map((_, i) => Object.freeze(DASH_CHAIN_PATTERN.slice(0, i + 1))),
+);
 
 /**
  * ⛓⛓⛓ R9 SLICE 12c′, ⚖ RULING 35 — **`planSwordDash`: A PRESS TAKEN AS A
@@ -2009,6 +2057,19 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null } = {}) 
         return refuse('this room holds no sword, so `set slashing`\'s outer gate refuses '
             + 'every press and no schedule can buy a single pixel');
     }
+    /**
+     * ⛓⛓ R9 SLICE 12c‴, ⚖ RULING 45(a) — the two things a modelled hit is still
+     * refused for, both read ONCE per corridor because both are facts about the
+     * ROOM rather than about a candidate.
+     *
+     * ⛔ `shakeWritersHere` is `camera.SHAKE_WRITERS` MINUS `playerHit`, filtered
+     * to the writers this room actually holds a body for — the run's own
+     * derivation, never a level list here. `tagOfBody` is what turns a struck
+     * body's id into the class `contactPricing` is keyed on; `run.strikeBodies`
+     * is the one shape both sides of ⚖ ruling 30(c) already share.
+     */
+    const shakeWriters = run.shakeWritersHere ?? [];
+    const tagOfBody = new Map((run.strikeBodies ?? []).map((b) => [b.id, b.tag]));
     const legsOf = (walk) => {
         const legs = [];
         for (const sample of walk.samples) legs[sample.wp] = (legs[sample.wp] ?? 0) + 1;
@@ -2018,18 +2079,23 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null } = {}) 
         const strike = strikePolicyFor(run, { dashPlan });
         return { walk: previewWalk(run, wps, tolerance, { strike }), strike };
     };
-    const scheduleFor = (starts) => {
+    /**
+     * ⛓ R9 slice 12c‴ — a window is `{at, pattern}` now, not a bare tick: ⚖
+     * ruling 45(b)'s partial windows mean two windows at the same start tick can
+     * be different schedules, and the plan has to carry WHICH.
+     */
+    const scheduleFor = (wins) => {
         const ticks = new Set();
-        for (const at of starts) for (const d of DASH_CHAIN_PATTERN) ticks.add(at + d);
+        for (const w of wins) for (const d of w.pattern) ticks.add(w.at + d);
         return {
             ticks,
-            starts: starts.slice(),
-            why: `⚖ ruling 35: ${starts.length} dash window(s) at `
-                + `${starts.map((t) => t - startTick).join(', ')} — each an ordinary swing `
-                + `to open the ${ORDINARY_SWING_PERIOD}-tick window, then `
-                + `${DASH_CHAIN.at.length} dash(es) at +${DASH_CHAIN.at.join('/+')}, each `
-                + `carrying the player ${DASH_DISPLACEMENT.total} px further along their own `
-                + 'travel',
+            starts: wins.map((w) => w.at),
+            windows: wins.map((w) => ({ at: w.at, pattern: [...w.pattern] })),
+            why: `⚖ ruling 35: ${wins.length} dash window(s) at `
+                + `${wins.map((w) => `${w.at - startTick}[+${w.pattern.join('/+')}]`).join(', ')}`
+                + ` — each an ordinary swing to open the ${ORDINARY_SWING_PERIOD}-tick `
+                + `window, then its dash(es), each carrying the player `
+                + `${DASH_DISPLACEMENT.total} px further along their own travel`,
         };
     };
     /**
@@ -2075,36 +2141,78 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null } = {}) 
     let current = baseline;
     let bestWalk = base;
     let at = startTick;
-    while (at < startTick + current) {
-        const plan = scheduleFor([...windows, at]);
+    /**
+     * ⛓⛓⛓ R9 SLICE 12c‴, ⚖ RULING 45(b) — **ONE CANDIDATE PER PREFIX**, and
+     * the pass keeps the SHORTEST CERTIFIED WALK at each start tick, ties broken
+     * by FEWER PRESSES.
+     *
+     * ⛔ THE COST IS NAMED RATHER THAN ABSORBED: this is `DASH_CHAIN_PREFIXES.length`
+     * previews per start tick where 12c′ took one, and `scanned` counts every
+     * one of them — so a reader can tell a scan that asked four questions per
+     * tick from one that asked one. The candidate rows carry `prefix` and
+     * `presses` for the same reason.
+     *
+     * ⛓ THE TIE-BREAK IS NOT COSMETIC. A shorter prefix that walks the same
+     * number of ticks has spent fewer presses, and every press is a key the
+     * corridor's certification has to hold — ⚖ ruling 35's safety-first read of
+     * "dash whenever there is no reason not to".
+     */
+    const evaluateAt = (start, pattern) => {
+        const plan = scheduleFor([...windows, { at: start, pattern }]);
         const { walk, strike } = previewFor(plan);
-        const row = { at: at - startTick, ticks: walk.samples.length, certified: false };
+        const row = { at: start - startTick, prefix: [...pattern],
+            presses: pattern.length, ticks: walk.samples.length, certified: false };
         /**
-         * ⛔⛔ **A PRESS TAKEN TO MOVE MAY NOT ALSO BE A STRIKE**, and this is
-         * the rule the first driven run of this primitive bought.
+         * ⛓⛓⛓ R9 SLICE 12c‴, ⚖ RULING 45(a) — **A PLANNED PRESS MODELS THE HIT
+         * IT DEALS; IT IS NOT REFUSED FOR HAVING ONE.**
          *
-         * The greedy pass certified a schedule on L14 and the DRIVE then
-         * refused to step at tick 73 — *"whether `bob@176,112` is on screen
-         * depends on where inside `Game.shake`'s jiggle the camera landed"*.
-         * The preview could not have seen it: `previewWalk` walks a world
-         * frozen at the plan tick, so a shake the walk itself CAUSES is
-         * invisible to it. What causes one is a hit.
+         * ⛔⛔ WHAT THE OLD RULE SAID AND WHY IT WAS OVER-BROAD. 12c′'s greedy
+         * pass certified a schedule on L14 and the DRIVE then refused to step at
+         * tick 73 — *"whether `bob@176,112` is on screen depends on where inside
+         * `Game.shake`'s jiggle the camera landed"* — so the rule became "a
+         * scheduled press may not cover a body", with a camera shake among its
+         * four reasons. The user asked whether that was true (2026-08-24: *"Does
+         * striking an enemy really cause camera shake?"*) and the AS3 census
+         * says NO: `Player.hit` `+= 5` is the player TAKING a hit
+         * (`Player.as:1391`); `Enemy.hit`, `startDeath`, `dieEffects`,
+         * `SlashHit` and `genericHit` write none. 12c′'s tick-73 shake came from
+         * the player being hit on an UNCERTIFIED first-cut run, never from a
+         * dealt strike.
          *
-         * ⇒ a scheduled press exists for the DISPLACEMENT it buys; a hit is a
-         * side effect that changes the room the corridor was certified for —
-         * knockback, an i-frame, a death, a camera shake — and ⚖ ruling 35 puts
-         * safety first. The STRIKE arm still strikes; the PLANNED arm must not.
-         * ⛓ It is asked of the previewed policy's own rows, so it is the same
-         * question on both sides of ⚖ ruling 30(c).
+         * ⇒ the other three consequences — knockback, the i-frame, the death —
+         * are ALL MODELLED, and the preview already applies them (`chasers.hit`
+         * runs `enemyHit` on the forecast's own body). So the candidate carries
+         * the room its own press makes, and is priced on it.
+         *
+         * ⛔ WHAT SURVIVES, AND IT IS EXACTLY TWO THINGS:
+         *  1. **a room that can open the shake band WITHOUT the player** — the
+         *     `camera.SHAKE_WRITERS` table minus `playerHit`, asked of the RUN
+         *     (`run.shakeWritersHere`). There a shake really is invisible to a
+         *     frozen preview, and the old refusal is right.
+         *  2. **a covered body whose CLASS is not priceable** —
+         *     `combat.contactPricing` `unknown` (no combat row at all) or `boss`
+         *     (an encounter script rather than a body, which prices its own
+         *     `hitPlayer` override in its own step). Striking one models
+         *     something this stack does not have.
+         *
+         * ⛓ AND THE STRIKE-THEN-DASH SEAM IS THE SCAN'S OWN FIRST GATE:
+         * `strikeCandidates` rejects a target whose `hitsTimer > 0`, so a swing
+         * over a body the walk has just knocked is not a hit at all and never
+         * reaches either arm. A row asserts it.
+         *
+         * ⚠ THE COVERED SET IS THE PREVIEW'S OWN APPLICATION SITE
+         * (`walk.plannedStruck`), not the policy's aim list — see its push site.
+         * Today the two agree; when the preview adopts the shared sword window
+         * this becomes the game's true five-tick coverage and this refusal
+         * sharpens with it rather than needing a flag.
          */
-        const struck = strike.plannedPresses.filter((r) => (r.targets ?? []).length > 0);
-        /**
-         * ⛓⛓ **WHAT THE SCHEDULE ACTUALLY BOUGHT**, carried on every candidate
-         * row so a refusal can be read as a MECHANISM rather than a verdict.
-         * A window that scheduled twenty presses and had nineteen YIELDED by
-         * `certifyDash` is not the same finding as one whose dashes all landed
-         * and still saved nothing — and "not faster" prints the same for both.
-         */
+        const struck = walk.plannedStruck ?? [];
+        const struckIds = [...new Set(struck.map((h) => h.id))];
+        const unpriced = struckIds
+            .map((id) => ({ id, tag: tagOfBody.get(id) ?? null }))
+            .map((b) => ({ ...b,
+                kind: b.tag === null ? 'unknown' : contactPricing(b.tag).kind }))
+            .filter((b) => b.kind === 'unknown' || b.kind === 'boss');
         row.pressed = strike.plannedPresses.length;
         row.dashed = strike.plannedPresses.filter((r) => r.dash).length;
         row.yielded = strike.plannedSkipped.length;
@@ -2125,13 +2233,25 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null } = {}) 
             row.why = `its longest leg is ${longest} tick(s), past the preview/drive `
                 + `agreement bound of ${PREVIEW_AGREEMENT_BOUND} (§27.8) — past that the `
                 + 'walk would be certified against a preview the drive stops matching';
-        } else if (struck.length) {
-            row.kind = 'would-hit';
-            row.why = `a scheduled press at tick ${struck[0].tick} would cover `
-                + `${struck[0].targets.join(', ')}. A press taken to MOVE may not also be a `
-                + 'strike: a hit changes the room the corridor was certified for — knockback, '
-                + 'an i-frame, a death, a camera shake the frozen preview cannot see — and '
-                + '⚖ ruling 35 puts safety over speed';
+        } else if (struck.length && shakeWriters.length) {
+            row.kind = 'shake-room';
+            row.why = `a scheduled press at tick ${struck[0].tick} strikes ${struck[0].id}, `
+                + `and this room can write \`Game.shake\` without the player: `
+                + `${shakeWriters.join(', ')}. A strike itself writes NONE (⚖ ruling 45(a), `
+                + 'the AS3 census), but a preview frozen at the plan tick cannot see a band '
+                + 'this room opens on its own schedule, and an `onScreenUnderShake` verdict '
+                + 'of `uncertain` is a body that may or may not damage. ⚖ Ruling 35 puts safety '
+                + 'over speed';
+        } else if (unpriced.length) {
+            row.kind = 'unpriced-hit';
+            row.why = `a scheduled press strikes ${unpriced.map((b) => `${b.id} `
+                + `(${b.tag ?? 'no tag'}: ${b.kind})`).join(', ')}, whose class `
+                + '`combat.contactPricing` does not price as a plain body — an `unknown` has '
+                + 'no combat row at all and a `boss` is an encounter script that prices its '
+                + 'own `hitPlayer` override in its own step. The dealt-hit effects this '
+                + 'stack models (knockback, the i-frame, the death) are not that class\'s, '
+                + 'so the room the corridor was certified for is not the room the press '
+                + 'makes';
         } else if (walk.samples.length >= current) {
             row.kind = 'not-faster';
             row.why = `${walk.samples.length} tick(s) against ${current} — a window that `
@@ -2150,11 +2270,23 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null } = {}) 
                 row.legs = legs;
             }
         }
-        candidates.push(row);
-        if (row.certified) {
-            windows.push(at);
-            current = row.ticks;
-            bestWalk = walk;
+        return { row, walk };
+    };
+    while (at < startTick + current) {
+        let best = null;
+        for (const pattern of DASH_CHAIN_PREFIXES) {
+            const got = evaluateAt(at, pattern);
+            candidates.push(got.row);
+            if (!got.row.certified) continue;
+            const better = best === null
+                || got.row.ticks < best.row.ticks
+                || (got.row.ticks === best.row.ticks && got.row.presses < best.row.presses);
+            if (better) best = got;
+        }
+        if (best) {
+            windows.push({ at, pattern: best.row.prefix });
+            current = best.row.ticks;
+            bestWalk = best.walk;
             at += ORDINARY_SWING_PERIOD;
         } else {
             at += 1;
@@ -2172,7 +2304,10 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null } = {}) 
         saved: baseline - current,
         baseline,
         legs: legsOf(bestWalk),
-        windows: windows.map((t) => t - startTick),
+        // ⛓ R9 slice 12c‴: a window carries its PREFIX now — two schedules at the
+        // same start tick are different plans, and a report that printed only the
+        // tick could not tell them apart.
+        windows: windows.map((w) => ({ at: w.at - startTick, prefix: [...w.pattern] })),
         scanned: candidates.length,
         candidates,
         why: null,

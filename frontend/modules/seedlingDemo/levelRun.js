@@ -153,6 +153,9 @@ import {
     // ⛓ R6 SLICE 4: the writers table, DRIVEN — the totem writes two of the
     // roster's three shakes and both are `=`, not `+=`.
     applyShakeWriter,
+    // ⛓ R9 SLICE 12c‴, ⚖ ruling 45: the same table MINUS `playerHit` — the
+    // writers a room can open WITHOUT the player doing anything.
+    BOSS_CLASS_SHAKE_WRITERS,
 } from './camera.js';
 // ⛓⛓⛓ R6 SLICE 3: `Player.hit`/`knockback`/`hitUpdate`/`die`, and the
 // contact source that calls them. `noDamage` stops being a refusal here.
@@ -10856,6 +10859,37 @@ export function createLevelRun({
         get damage() { return { ...damage }; },
         /** `Game.shake` right now — a static, so it outlives every world. */
         get shake() { return shake; },
+        /**
+         * ⛓⛓⛓ R9 SLICE 12c‴, ⚖ RULING 45 — **WHICH `camera.SHAKE_WRITERS` THIS
+         * ROOM CAN REACH**, asked of the run's own state families rather than of
+         * a level list.
+         *
+         * ⛔ IT IS A QUESTION ABOUT THE ROOM, NOT ABOUT THE TICK. `planSwordDash`
+         * needs it once per corridor: a planned press MODELS a covered body's
+         * hit (the dealt-hit effects — knockback, i-frame, death — are all
+         * modelled and the preview already applies them), and ⚖ ruling 45(a)
+         * says a strike writes NO shake. What it cannot model is a shake the
+         * ROOM opens on its own schedule, because the frozen preview cannot see
+         * one; so the old blanket refusal survives exactly where such a writer
+         * exists.
+         *
+         * ⛓ THE ROSTER IS `camera.BOSS_CLASS_SHAKE_WRITERS`, which is the table
+         * minus `playerHit` — never a re-listing. What is per-room is which of
+         * them has a BODY here: `bossStateFor` is the `BossTotem`'s (the laser
+         * and the death), and the Owl's fight is what spawns `RockFall`s.
+         *
+         * ⚠ `playerHit` is deliberately ABSENT and that is the ruling: the
+         * player taking a hit is the one writer every room can reach, and a
+         * corridor is certified against it by the danger predicate rather than
+         * by refusing to press.
+         */
+        get shakeWritersHere() {
+            if (noclip) return [];
+            const out = [];
+            if (bossStateFor(level).size > 0) out.push('totemLaser', 'totemDeath');
+            if (owlStateFor(level).bosses.size > 0) out.push('rockFallLanding');
+            return out.filter((w) => BOSS_CLASS_SHAKE_WRITERS.includes(w));
+        },
         /**
          * The tape's hazard-name set, so a caller re-asking the geometry a
          * question mid-drive asks it under the SAME coercion the physics is

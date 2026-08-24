@@ -56,7 +56,8 @@ import {
     FACING_KEYS, facingToward,
     deriveKillByChaser, interceptOrder,
     previewWalk, resolveKillStrategy, solveSegment, strikePolicyFor,
-    ALLOW_DASH_ROSTER_WIDE, DASH_CHAIN_PATTERN, PREVIEW_AGREEMENT_BOUND, planSwordDash,
+    ALLOW_DASH_ROSTER_WIDE, DASH_CHAIN_PATTERN, DASH_CHAIN_PREFIXES,
+    PREVIEW_AGREEMENT_BOUND, planSwordDash,
 } from './solverBot.js';
 // ⛓ R9 slice 12b — ⚖ ruling 30(c)'s equality is between these two exact
 // functions, so the row calls both rather than a stand-in for either.
@@ -72,8 +73,11 @@ import {
 // ⛓ R9 slice 12c″ — and the harmless-window arithmetic it now asks with.
 import {
     CONTACT_READING_LAG, DASH_HARMLESS_TIMER, certifyDash, harmlessThroughDash,
-    projectedHitsTimer,
+    projectedHitsTimer, strikeCandidates,
 } from './strikePolicy.js';
+// ⛓ R9 slice 12c‴, ⚖ ruling 45(a) — the shake writers a room can reach without
+// the player, DERIVED from the table rather than listed beside it.
+import { BOSS_CLASS_SHAKE_WRITERS, SHAKE_WRITERS } from './camera.js';
 import { killWindowTicks } from './chasers.js';
 import { ENEMY_CLASSES, enemyHitPlayerFires, plannerContactFree } from './combat.js';
 import { DEFAULT_TOLERANCE } from './botDriverV1.js';
@@ -2487,7 +2491,11 @@ describe('R9 slice 12c′: the PLANNER dashes toward the exit', () => {
         expect(r.plan).not.toBeNull();
         expect(r.ticks).toBe(23);
         expect(r.saved).toBe(24);
-        expect(r.windows).toEqual([0]);
+        // ⛓⛓ R9 slice 12c‴, ⚖ ruling 45(b): a window carries its PREFIX now.
+        // The room still wants the WHOLE chain — which is the measurement, not
+        // the assumption: all four prefixes were previewed at this start tick
+        // and the full one walked shortest.
+        expect(r.windows).toEqual([{ at: 0, prefix: [...DASH_CHAIN_PATTERN] }]);
         // ⛓ the schedule is the window's own shape, not a typed list
         expect([...r.plan.ticks].sort((a, b) => a - b))
             .toEqual(DASH_CHAIN_PATTERN.map((d) => run.ticksCompleted + d));
@@ -2538,6 +2546,125 @@ describe('R9 slice 12c′: the PLANNER dashes toward the exit', () => {
             expect(Number.isInteger(c.dashed)).toBe(true);
             expect(Number.isInteger(c.yielded)).toBe(true);
         }
+    });
+
+    /**
+     * ⛓⛓⛓ R9 SLICE 12c‴, ⚖ RULING 45(b) — **EVERY PREFIX IS ENUMERATED AT
+     * EVERY START TICK**, and the cost is visible rather than absorbed.
+     *
+     * ⛔ MUTANT (d)'s ROW. Drop `[0,2]` from `DASH_CHAIN_PREFIXES` and this
+     * reds by counting: the scan asks `DASH_CHAIN_PREFIXES.length` questions per
+     * start tick, so `scanned` is a MULTIPLE of it and every prefix length
+     * appears the same number of times. A pass that quietly skipped one would
+     * still certify something and still look like a scan.
+     */
+    it('⛓⛓ ⚖ ruling 45(b): all four prefixes are previewed at every start tick, and '
+        + '`scanned` says so', () => {
+        const run = runOf('r9-solve-2');
+        const tele = (run.world.teleporters ?? []).find((t) => t.to === 0);
+        const wps = planWaypoints(run.world, run.state,
+            { x: tele.rect.x + 8, y: tele.rect.y + 8 },
+            (run.world.teleporters ?? []).indexOf(tele), {});
+        const r = planSwordDash(run, wps, { tolerance: 0 });
+        expect(DASH_CHAIN_PREFIXES.map((p) => [...p]))
+            .toEqual([[0], [0, 2], [0, 2, 8], [0, 2, 8, 14]]);
+        expect(r.scanned % DASH_CHAIN_PREFIXES.length).toBe(0);
+        const byLength = new Map();
+        for (const c of r.candidates) byLength.set(c.presses, (byLength.get(c.presses) ?? 0) + 1);
+        expect([...byLength.keys()].sort((a, b) => a - b))
+            .toEqual(DASH_CHAIN_PREFIXES.map((p) => p.length));
+        // …and every prefix was asked the SAME number of times, which is what
+        // makes the multiple above a partition rather than a coincidence.
+        expect(new Set(byLength.values()).size).toBe(1);
+        // ⛓ every row carries WHICH prefix it was, so a report can tell two
+        // schedules at one start tick apart.
+        for (const c of r.candidates) {
+            expect(Array.isArray(c.prefix)).toBe(true);
+            expect(c.prefix.length).toBe(c.presses);
+            expect(DASH_CHAIN_PREFIXES.some((pre) =>
+                pre.length === c.prefix.length && pre.every((d, i) => d === c.prefix[i])))
+                .toBe(true);
+        }
+    });
+
+    /**
+     * ⛓⛓⛓ R9 SLICE 12c‴, ⚖ RULING 45(a) — **THE `would-hit` REFUSAL IS GONE,
+     * AND WHAT REPLACED IT IS TWO NAMED CASES.**
+     *
+     * ⛔ MUTANT (c)'s ROW. `r9-solve-14` is the six-bob room and its planned
+     * presses DO cover bodies — 12c′ refused 16 of its 145 start ticks for
+     * exactly that. This asserts no candidate is refused for covering one any
+     * more, on a room that holds no boss-class shake writer: the dealt-hit
+     * effects are modelled and the preview applies them.
+     */
+    it('⛓⛓⛓ ⚖ ruling 45(a): a covered body is MODELLED, not refused — no `would-hit` '
+        + 'row survives in a room with no boss-class shake writer', () => {
+        const run = runOf('r9-solve-14');
+        expect(run.shakeWritersHere).toEqual([]);
+        const tele = (run.world.teleporters ?? []).find((t) => t.to === 15);
+        const wps = planWaypoints(run.world, run.state,
+            { x: tele.rect.x + 8, y: tele.rect.y + 8 },
+            (run.world.teleporters ?? []).indexOf(tele), {});
+        const r = planSwordDash(run, wps, { tolerance: 0 });
+        const kinds = new Set(r.candidates.filter((c) => !c.certified).map((c) => c.kind));
+        expect(kinds.has('would-hit')).toBe(false);
+        expect(kinds.has('shake-room')).toBe(false);
+        expect(kinds.has('unpriced-hit')).toBe(false);
+        expect(r.plan).not.toBeNull();
+    });
+
+    /**
+     * ⛓⛓ **THE ROOM PREDICATE IS NOT VACUOUS**, which is the half a refusal
+     * that never fires cannot show on its own. `camera.BOSS_CLASS_SHAKE_WRITERS`
+     * is the writers table MINUS `playerHit` — derived, never re-listed — and
+     * `run.shakeWritersHere` names which of them a room holds a body for.
+     */
+    it('⛓⛓ the boss-class shake roster is DERIVED from the table, and the room '
+        + 'predicate names writers where they exist and none where they do not', () => {
+        expect(BOSS_CLASS_SHAKE_WRITERS).toEqual(
+            Object.keys(SHAKE_WRITERS).filter((k) => k !== 'playerHit'));
+        expect(BOSS_CLASS_SHAKE_WRITERS).not.toContain('playerHit');
+        const at = (level) => createLevelRun({
+            levelSource, boot: { level, x: 80, y: 48 }, noclip: false, noHazards: [],
+            noDamage: false, grants: [], persistence: [], despawn: [], equips: [],
+            pins: ['dead_frames'], save: { totem_parts: [], keys: [], seal_parts: [] },
+            rng: null, seam: { items: { hasSword: true } }, roles: ROLES,
+        }).shakeWritersHere;
+        // ⛔ THE NEGATIVE AND THE POSITIVE, because either alone is a vacuity:
+        // L14 and L6 are the rooms the dash planner actually works in, and the
+        // totem's room and the Owl's are where the refusal must survive.
+        expect(at(14)).toEqual([]);
+        expect(at(6)).toEqual([]);
+        expect(at(43)).toEqual(['totemLaser', 'totemDeath']);
+        expect(at(112)).toEqual(['rockFallLanding']);
+    });
+
+    /**
+     * ⛓⛓⛓ **THE STRIKE-THEN-DASH SEAM, AND IT IS THE SCAN'S OWN FIRST GATE.**
+     *
+     * ⚖ Ruling 44 said strike-then-dash is the L14 combination the user
+     * expected, and ⚖ ruling 45(a) removes the refusal that forbade the second
+     * half. What makes the pair COMPOSE is that a swing over a body the walk has
+     * just knocked is not a hit at all: `strikeCandidates` rejects an i-framed
+     * TARGET before anything downstream sees it — `Enemy.hit`'s own first gate,
+     * transcribed. So the press that MOVES cannot re-strike the body the press
+     * that STRUCK left harmless, and the two rulings do not fight.
+     */
+    it('⛓⛓⛓ a swing over a body I have just knocked is NOT a hit — `strikeCandidates` '
+        + 'rejects an i-framed target by name', () => {
+        const player = { x: 100, y: 100 };
+        const body = (hitsTimer) => ({
+            id: 'bob@100,100', as3: 'Enemy', enemyClass: 'Bob', hitsTimer,
+            rect: { x: 96, y: 96, right: 112, bottom: 112 },
+        });
+        const opts = { facingToward, owed: new Map(), tick: 0 };
+        const fresh = strikeCandidates(player, [body(0)], opts);
+        expect(fresh.chosen.map((c) => c.id)).toEqual(['bob@100,100']);
+        const knocked = strikeCandidates(player, [body(30)], opts);
+        expect(knocked.chosen).toEqual([]);
+        expect(knocked.rejected[0].why).toMatch(/hitsTimer 30/);
+        // ⛓ …and it is the ENEMY's gate that is being quoted, not a local rule.
+        expect(knocked.rejected[0].why).toMatch(/`Enemy\.hit` refuses while it is up/);
     });
 
     it('⛔ no sword is refused FIRST and by name — twelve of the chain\'s segments are', () => {

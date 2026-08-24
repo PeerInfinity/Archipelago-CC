@@ -264,6 +264,28 @@ export const SHAKE_WRITERS = Object.freeze({
 });
 
 /**
+ * ⛓⛓⛓ R9 SLICE 12c‴, ⚖ RULING 45 — **THE WRITERS A PLANNED PRESS CANNOT
+ * CAUSE, DERIVED FROM THE TABLE RATHER THAN LISTED BESIDE IT.**
+ *
+ * The user, 2026-08-24: *"Does striking an enemy really cause camera shake?"*
+ * The census says no. `Player.hit` `+= 5` — the player TAKING a hit — is the
+ * only writer a plain room can reach; `Enemy.hit`, `startDeath`, `dieEffects`,
+ * `SlashHit` and `genericHit` write NONE. Every other row here is a BOSS or a
+ * SCENERY script (`BossTotem`'s laser and death, `RockFall`'s landing), and a
+ * room that holds one can open the shake band without the player doing
+ * anything.
+ *
+ * ⇒ this is the table MINUS `playerHit`, computed, so a writer added tomorrow
+ * joins it automatically and cannot be forgotten in a second list (⚖ ruling 17;
+ * the failure it prevents is trap 576's — a "derivation" that is a typed list).
+ * `planSwordDash` keeps its `would-hit` refusal exactly where a room can reach
+ * one of these, and drops it everywhere else.
+ */
+export const BOSS_CLASS_SHAKE_WRITERS = Object.freeze(
+    Object.keys(SHAKE_WRITERS).filter((k) => k !== 'playerHit'),
+);
+
+/**
  * ⛓⛓⛓ R6 SLICE 4: THE TABLE, DRIVEN. `Game.shake` gets its new value from
  * the writer's own `op`, so the two operators can never drift apart in a
  * caller's head — which is exactly what §34.3 did when it wrote all three as
