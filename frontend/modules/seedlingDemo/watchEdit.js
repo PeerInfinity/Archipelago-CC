@@ -766,7 +766,7 @@ export function editState(state, rawOp, options = {}) {
      * a flag: a caller that forgot to check gets the old state and cannot
      * accidentally announce an edit.
      */
-    if (JSON.stringify(record) === JSON.stringify(state.record)) return state;
+    if (recordsEqual(record, state.record)) return state;
     return Object.freeze({
         ...state,
         baseRecord: base,
@@ -774,6 +774,24 @@ export function editState(state, rawOp, options = {}) {
         edits: Object.freeze([...(state.edits ?? []), op]),
     });
 }
+
+/**
+ * ⛓⛓ **THE RECORD EQUALITY, EXTRACTED — ONE SPELLING.**
+ *
+ * `editState`'s "did the record change" test is the same question `editCore`'s
+ * fold asks through `adapter.equal`, and until slice B they were two
+ * expressions of it: an inline `JSON.stringify` here, and whatever the adapter
+ * chose. ⛔ Two spellings of an equality is the drift that makes a no-op an edit
+ * on one path and not on the other, and the identity line then depends on which
+ * path a click took.
+ *
+ * ⚠ `JSON.stringify` IS ENOUGH HERE and is not enough in general: a level record
+ * is plain JSON built by this directory's own frozen constructors, so its key
+ * ORDER is fixed by construction (`freezeRecord` spreads a literal, `tileEntry`
+ * builds an array). `editCore.canonicalJson` exists for the descriptors, which
+ * an ADAPTER assembles and whose order is therefore not fixed.
+ */
+export const recordsEqual = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
 /**
  * ⛓ UNDO — pop the list and RE-FOLD from `baseRecord`. ⛔ Not an inverse op

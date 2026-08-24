@@ -104,6 +104,26 @@ export const ADAPTER_MEMBERS = Object.freeze({
 });
 
 /**
+ * ⛓⛓⛓ **THE OPTIONAL MEMBERS** — present or absent, but never MIS-TYPED.
+ *
+ * `bases` is §3.2's tagged union, arriving in slice B. ⛔ IT IS OPTIONAL AND NOT
+ * REQUIRED, and that is a decision rather than a convenience: the maze's base is
+ * a TAG the page already has a record for (`{kind:'maze-lab', …}`), so a maze
+ * adapter forced to declare a resolver would declare one that answers *the
+ * record you already have* — a member whose whole body is a tautology, which is
+ * the shape a reader mistakes for a mechanism. A substrate declares `bases` when
+ * a tag can be turned into a record without the page's help, and `resolveBase`
+ * refuses BY NAME when it cannot.
+ *
+ * ⚠ AN OPTIONAL MEMBER THAT IS PRESENT IS CHECKED EXACTLY AS A REQUIRED ONE. A
+ * `bases: 'atlas'` (a string, say) would otherwise sail through `assertAdapter`
+ * and die inside `resolveBase` with a message about a kind rather than a type.
+ */
+export const ADAPTER_OPTIONAL_MEMBERS = Object.freeze({
+    bases: 'object',
+});
+
+/**
  * ⛓ REFUSE A MISSING OR MIS-TYPED ADAPTER MEMBER **BY NAME**, before anything
  * folds. ⛔ Not a nicety: every other refusal in this file quotes
  * `adapter.name`, so an adapter without one produces refusals that say
@@ -123,12 +143,137 @@ export function assertAdapter(adapter) {
                 + `{${Object.keys(ADAPTER_MEMBERS).join(', ')}}.`);
         }
     }
+    for (const [member, type] of Object.entries(ADAPTER_OPTIONAL_MEMBERS)) {
+        if (adapter[member] === undefined) continue;
+        // eslint-disable-next-line valid-typeof
+        if (typeof adapter[member] !== type || adapter[member] === null
+            || Array.isArray(adapter[member])) {
+            fail(`editCore: adapter member \`${member}\` is OPTIONAL, but when it is present `
+                + `it must be a plain ${type} — got ${JSON.stringify(adapter[member])}. `
+                + 'Absent means "this substrate has none"; mis-typed means a defect that '
+                + 'would otherwise surface as a message about a KIND rather than a type.');
+        }
+    }
     if (adapter.name === '') {
         fail('editCore: adapter member `name` must be a NON-EMPTY string — every refusal in '
             + 'this file quotes it, and an empty one makes them say nothing about which '
             + 'substrate refused.');
     }
     return adapter;
+}
+
+/**
+ * ⛓⛓⛓ **§3.2's `base` TAG → A RECORD**, through the adapter's own `bases`.
+ *
+ * A payload's `base` is `{kind, …}` and the core has carried it OPAQUELY since
+ * A1 — deliberately, because interpreting it is substrate knowledge (A1 §9.2
+ * departure 1). This is the one place that interpretation happens, and it is
+ * still the ADAPTER doing it: the core only routes on `kind` and refuses.
+ *
+ * ⛔ EVERY REFUSAL NAMES THE KIND **AND** WHAT IS ON OFFER. A tag whose kind the
+ * substrate does not resolve is the common case and not an error in the caller —
+ * Seedling's `generate` base is resolved by the GENERATE ladder and its
+ * `set-room` by a slice that has not landed — so the sentence has to say which
+ * of those it is, and the adapter's own resolver is what says it.
+ */
+export function resolveBase(adapter, tag) {
+    assertAdapter(adapter);
+    if (!tag || typeof tag !== 'object' || Array.isArray(tag) || typeof tag.kind !== 'string') {
+        fail(`editCore: a base tag is \`{kind, …}\`, got ${JSON.stringify(tag)}. It is the `
+            + 'payload\'s identity half (§3.2) and the `kind` is what selects a resolver.');
+    }
+    if (!adapter.bases) {
+        fail(`editCore: the ${adapter.name} adapter declares no \`bases\`, so it cannot turn `
+            + `the base tag ${JSON.stringify(tag.kind)} into a record. A substrate whose `
+            + 'bases are resolved by its PAGE (the maze\'s are) leaves this member absent, '
+            + 'and a session is opened on a record somebody else resolved.');
+    }
+    const resolve = adapter.bases[tag.kind];
+    if (typeof resolve !== 'function') {
+        fail(`editCore: ${JSON.stringify(tag.kind)} is not a base kind the ${adapter.name} `
+            + `adapter resolves — it offers [${Object.keys(adapter.bases).join(', ')}].`);
+    }
+    const record = resolve(tag);
+    if (record === null || typeof record !== 'object') {
+        fail(`editCore: the ${adapter.name} adapter's \`${tag.kind}\` resolver returned `
+            + `${JSON.stringify(record)} — a base resolver returns a RECORD, and refuses BY `
+            + 'NAME when it cannot (it is the only thing that knows why).');
+    }
+    return record;
+}
+
+/**
+ * ⛓⛓⛓ **THE ADAPTER'S BEHAVIOUR, ASKED OF IT** — A1 §9.8's residue, closed.
+ *
+ * `assertAdapter` checks SHAPE. This checks the five things every caller in this
+ * file silently assumes, against the adapter's own record and its own op, and
+ * refuses BY NAME with the law that failed. ⛔ It is a SHIPPING function rather
+ * than a test helper because an adapter author outside this repo has the same
+ * five assumptions to satisfy, and a law that only exists inside somebody's
+ * `.test.js` is a law the next adapter learns by breaking.
+ *
+ * @param {object} adapter
+ * @param {object} o
+ * @param {object} o.record   a record of this substrate
+ * @param {object} o.op       an atomic op that CHANGES that record
+ * @param {object} o.refused  an atomic op that substrate REFUSES
+ * @param {{x:number,y:number}} [o.cell]  a cell to read/write (default 0,0)
+ * @param {{x:number,y:number}} [o.other] a DIFFERENT cell (see law 5)
+ */
+export function assertAdapterBehaviour(adapter, { record, op, refused, cell, other } = {}) {
+    assertAdapter(adapter);
+    const law = (n, what) => fail(`editCore: the ${adapter.name} adapter fails contract law `
+        + `${n} — ${what}`);
+    const b = adapter.bounds(record);
+    if (!b || !Number.isInteger(b.w) || !Number.isInteger(b.h) || b.w <= 0 || b.h <= 0) {
+        law(1, `\`bounds\` returned ${JSON.stringify(b)}; it must be {w, h} of positive `
+            + 'integers, because every clip, paste and flood is expressed over them.');
+    }
+    const before = canonicalJson(record);
+    const res = adapter.apply(record, op);
+    if (!res || typeof res.ok !== 'boolean') {
+        law(2, `\`apply\` returned ${JSON.stringify(res)}; the contract is `
+            + '`{ok, op, description, record?}`.');
+    }
+    if (!res.ok) law(2, `the sample op was REFUSED (${res.description}); law 2 needs an op `
+        + 'that CHANGES the record, or it tests nothing.');
+    if (canonicalJson(record) !== before) {
+        law(3, '`apply` MUTATED the record it was handed. The fold walks its own chain and '
+            + 'the caller\'s record must survive a refusal untouched.');
+    }
+    if (!adapter.equal(record, record)) law(4, '`equal` says a record differs from ITSELF.');
+    if (adapter.equal(record, res.record)) {
+        law(4, '`equal` says the record is unchanged after an op that changed it — the '
+            + 'fold\'s "a no-op is not an edit" rule reads this, so an over-eager `equal` '
+            + 'silently drops real edits from the identity.');
+    }
+    const bad = adapter.apply(record, refused);
+    if (!bad || bad.ok !== false || typeof bad.description !== 'string' || bad.description === '') {
+        law(5, `a REFUSED op returned ${JSON.stringify(bad)}; a refusal is `
+            + '`{ok:false, description}` with a sentence a person reads — the fold quotes it.');
+    }
+    const at = cell ?? { x: 0, y: 0 };
+    const away = other ?? { x: b.w - 1, y: b.h - 1 };
+    const desc = adapter.readCell(record, at.x, at.y);
+    const ops = adapter.writeOps(desc, at.x, at.y);
+    if (!Array.isArray(ops)) law(6, '`writeOps` must return an ARRAY of atomic ops.');
+    /**
+     * ⛓ **LAW 7 — `readCell` → `writeOps` → `readCell` AT A DIFFERENT CELL.**
+     *
+     * ⚠ §9.3's lesson, and the reason the cell moves: a fixed point on the cell
+     * the descriptor came FROM distinguishes nothing — a `writeOps` that
+     * returned `[]` would pass it. Writing the descriptor somewhere else and
+     * reading it back is what asks whether the pair is actually an inverse.
+     */
+    const moved = foldEdits(adapter, record, [group('contract law 7',
+        adapter.writeOps(desc, away.x, away.y))]);
+    if (canonicalJson(adapter.readCell(moved.record, away.x, away.y)) !== canonicalJson(desc)) {
+        law(7, `\`writeOps\` of the descriptor at (${at.x},${at.y}) did not reproduce it at `
+            + `(${away.x},${away.y}) — read back `
+            + `${canonicalJson(adapter.readCell(moved.record, away.x, away.y))}, wanted `
+            + `${canonicalJson(desc)}. The pair is what every paste and flood is built on.`);
+    }
+    return true;
 }
 
 /* ══════════════════════════════════════════════════════════════════════
@@ -503,11 +648,50 @@ export function rectCopy(adapter, record, { x, y, w, h }) {
  * and call it a tiles-only paste (⚠ trap 594's family — a flag you do not
  * implement must be refused, not accepted and dropped).
  */
-const filterDescriptor = (adapter, desc, { tilesOnly, entitiesOnly }) => {
-    if (!tilesOnly && !entitiesOnly) return desc;
-    const field = tilesOnly ? 'tile' : 'entity';
+/**
+ * ⛓⛓ THE TWO BOOLEAN FILTERS, AS WHAT THEY ALWAYS WERE — a name for a
+ * descriptor FIELD. Slice B, additive: Seedling's cells carry two tile LAYERS
+ * plus entities, so its filter vocabulary is three-way and the maze's is
+ * two-way, and the difference is a fact about the DESCRIPTOR rather than
+ * something the core should hold an enum of.
+ *
+ * ⇒ `only: '<field>'` is the general form and the booleans are aliases into it.
+ * That is what this file's own docblock already promised — *"a substrate whose
+ * cells carry three layers gets three filters for free the day its descriptor
+ * does"* — and A2 §10.9 named making good on it as slice B's decision.
+ */
+export const FILTER_ALIASES = Object.freeze({
+    tilesOnly: 'tile',
+    entitiesOnly: 'entity',
+});
+
+/** The descriptor field a filter option names, or `null` for "no filter". */
+export function filterFieldOf({ tilesOnly = false, entitiesOnly = false, only = null } = {}) {
+    const asked = [
+        ...Object.entries(FILTER_ALIASES).filter(([k]) => ({ tilesOnly, entitiesOnly })[k]),
+        ...(only === null ? [] : [['only', only]]),
+    ];
+    if (asked.length > 1) {
+        fail(`editCore: a paste was asked for ${asked.length} filters at once `
+            + `(${asked.map(([k, v]) => `${k}=${JSON.stringify(v)}`).join(', ')}). A filter `
+            + 'keeps ONE descriptor field; two filters that cancel are not a filter, and a '
+            + 'caller that meant '
+            + '"everything" should ask for neither.');
+    }
+    if (asked.length === 0) return null;
+    const field = asked[0][1];
+    if (typeof field !== 'string' || field === '') {
+        fail(`editCore: \`only\` names the descriptor FIELD to keep, got `
+            + `${JSON.stringify(field)}.`);
+    }
+    return field;
+}
+
+const filterDescriptor = (adapter, desc, options) => {
+    const field = filterFieldOf(options);
+    if (field === null) return desc;
     if (!desc || typeof desc !== 'object' || !Object.prototype.hasOwnProperty.call(desc, field)) {
-        fail(`editCore: ${tilesOnly ? 'tilesOnly' : 'entitiesOnly'} was asked of a `
+        fail(`editCore: a filter keeping \`${field}\` was asked of a `
             + `${adapter.name} clip whose cell descriptor is ${JSON.stringify(desc)} — it has `
             + `no \`${field}\` field, so the split does not exist on this substrate. ⛔ `
             + 'Refused rather than ignored: a filter that was silently dropped would paste '
@@ -525,14 +709,10 @@ const filterDescriptor = (adapter, desc, { tilesOnly, entitiesOnly }) => {
  * them could only refuse an off-grid destination or write off the end.
  */
 export function rectPasteOps(adapter, record, clip, x, y, {
-    tilesOnly = false, entitiesOnly = false, label = null,
+    tilesOnly = false, entitiesOnly = false, only = null, label = null,
 } = {}) {
     assertAdapter(adapter);
-    if (tilesOnly && entitiesOnly) {
-        fail('editCore: rectPasteOps was asked for tilesOnly AND entitiesOnly — that is the '
-            + 'whole clip with two filters that cancel, and a caller that meant "everything" '
-            + 'should ask for neither.');
-    }
+    const field = filterFieldOf({ tilesOnly, entitiesOnly, only });
     if (!clip || !Number.isInteger(clip.w) || !Number.isInteger(clip.h)
         || !Array.isArray(clip.cells)) {
         fail(`editCore: rectPasteOps needs a clip from rectCopy (\`{w, h, cells}\`), got `
@@ -546,7 +726,8 @@ export function rectPasteOps(adapter, record, clip, x, y, {
             const tx = x + dx;
             const ty = y + dy;
             if (tx < 0 || ty < 0 || tx >= b.w || ty >= b.h) { clipped += 1; continue; }
-            const desc = filterDescriptor(adapter, clip.cells[dy][dx], { tilesOnly, entitiesOnly });
+            const desc = filterDescriptor(adapter, clip.cells[dy][dx],
+                { tilesOnly, entitiesOnly, only });
             const cellOps = adapter.writeOps(desc, tx, ty);
             if (!Array.isArray(cellOps)) {
                 fail(`editCore: ${adapter.name}.writeOps returned ${JSON.stringify(cellOps)} `
@@ -556,13 +737,31 @@ export function rectPasteOps(adapter, record, clip, x, y, {
         }
     }
     if (ops.length === 0) {
+        /**
+         * ⛔ **THE TWO REASONS AN EMPTY PASTE HAPPENS ARE DIFFERENT DEFECTS, AND
+         * THE FIRST SPELLING NAMED ONLY ONE OF THEM.** Slice B found it: a
+         * three-way `only` filter over a clip whose cells all lack that field
+         * produces zero ops with ZERO cells clipped, and the message said *every
+         * cell fell outside the grid* — a true sentence about the wrong subject.
+         * A person reading it would go looking at their coordinates.
+         */
+        const cells = clip.w * clip.h;
         fail(`editCore: rectPasteOps of a ${clip.w}x${clip.h} clip at (${x},${y}) produced NO `
-            + `ops — every cell fell outside the ${b.w}x${b.h} ${adapter.name} grid `
-            + `(${clipped} clipped). ⛔ An empty group is refused (see \`group\`), and a `
-            + 'paste that landed entirely off the level is a caller defect, not a stroke '
-            + 'whose members all did nothing.');
+            + 'ops. '
+            + (clipped === cells
+                ? `Every one of its ${cells} cells fell outside the ${b.w}x${b.h} `
+                    + `${adapter.name} grid — a paste that landed entirely off the level is a `
+                    + 'caller defect.'
+                : `${cells - clipped} of its ${cells} cells landed on the ${b.w}x${b.h} `
+                    + `${adapter.name} grid and NONE of them had anything to write`
+                    + `${field === null ? '' : ` under the \`${field}\` filter`} — the `
+                    + 'descriptors are empty of that field, so the filter has nothing to '
+                    + 'paste.')
+            + ' ⛔ An empty group is refused (see `group`).');
     }
-    const what = tilesOnly ? ' tiles' : (entitiesOnly ? ' entities' : '');
+    // ⛓ THE LABEL NAMES THE FIELD, not the option — so a three-way substrate's
+    // third filter reads as itself instead of as "paste" with nothing to say.
+    const what = field === null ? '' : ` ${field}`;
     return group(label ?? `paste${what} ${clip.w}x${clip.h} at (${x},${y})`, ops);
 }
 
