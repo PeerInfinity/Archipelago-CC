@@ -100,6 +100,7 @@ import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from '
 import { fileURLToPath } from 'node:url';
 import { committedTick0, tick0ParseFields, despawnField, tick0Field }
     from './tick0Carry.js';
+import { createWalkReport } from './walkReport.js';
 /**
  * ⛔ THE ONE DECLARATION (⚖ ruling 38 (1), R9 slice 12d). A static import
  * rather than the dynamic `await import(MODULE, …)` the runtime modules below
@@ -114,6 +115,30 @@ const REPO = join(HERE, '..', '..');
 const MODULE = join(REPO, 'frontend', 'modules', 'seedlingDemo');
 const TAPES = join(MODULE, 'fixtures', 'tapes');
 const TRACES = join(MODULE, 'fixtures', 'traces');
+
+/**
+ * ⛓ R9 slice 12c′, ⚖ ruling 43 — **THIS PRODUCER'S OWN WALK REPORT**, written
+ * only when `--walk-report=<path>` is passed and silent otherwise, so this
+ * script's `--check` stdout (and therefore its standing `--check` md5) is
+ * byte-identical with the flag absent. `rerecord-seedling-campaign.mjs` S0
+ * reads it to MEASURE which committed walks today's solver re-solves
+ * differently — never to predict one.
+ */
+const WALK_REPORT = createWalkReport({
+    producer: 'solve-seedling-r9-campaign.mjs',
+    tapesDir: TAPES,
+    /**
+     * ⛓ THE FLAG TOKEN IS FOUND **HERE**, not only inside the helper. The
+     * instruments index publishes "the flags it reads out of `argv`" by
+     * scanning each instrument's own text, and a flag parsed one module away
+     * is a flag its table would omit — about the very producers ⚖ ruling 43's
+     * mode depends on. `walkReport.js` still owns the PARSE (a bare
+     * `--walk-report` is refused by name there).
+     */
+    arg: process.argv.find((a) => a === '--walk-report'
+        || a.startsWith('--walk-report=')),
+});
+
 
 const CHECK = process.argv.includes('--check');
 
@@ -729,6 +754,9 @@ function tapeJson(obj, description, label) {
 }
 
 function emit(path, json, what) {
+    // ⛓ R9 slice 12c′ — the walk report is taken HERE, above the write, so the
+    // committed side is read BEFORE `--check`-less runs overwrite it.
+    WALK_REPORT.note(path, json);
     if (CHECK) {
         const have = existsSync(path) ? readFileSync(path, 'utf8') : null;
         check(`${what} is byte-identical to what this solver derives`, have === json,

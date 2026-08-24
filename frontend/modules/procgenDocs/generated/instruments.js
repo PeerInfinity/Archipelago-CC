@@ -5624,6 +5624,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "check"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "walk-report"
                 }
             ],
             "oneLiner": "solve-seedling-r8-battery — the LIVE SOLVER re-solves the leg-only act2 rooms from staged boots.",
@@ -5649,6 +5655,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "headline"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "walk-report"
                 }
             ],
             "oneLiner": "solve-seedling-r8-d2-chain — D2's LAST **THREE** ROOMS AS ONE STAGED MULTI-SEGMENT CHAIN, driven by the live solver.",
@@ -5687,6 +5699,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "check"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "walk-report"
                 }
             ],
             "oneLiner": "solve-seedling-r8-l18 — ⛓⛓⛓ **THE HONEST L18**, driven by the live solver with `noDamage` RETIRED.",
@@ -5741,6 +5759,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "check"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "walk-report"
                 }
             ],
             "oneLiner": "solve-seedling-r9-campaign — **THE TRUE-START SOLVER CHAIN**: every room of Seedling's sphere order from `new Game(0,80,128)` to the arrival the chain currently ends at, driven by the live solver, each segment booting its predecessor's MEASURED LATCH.",
