@@ -1,0 +1,57 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 6,
+        "x": 80,
+        "y": 48
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": {
+        "items": {
+            "hasSword": true
+        }
+    },
+    "tick0": null,
+    "tick_count": 22,
+    "inputs": [
+        {
+            "key": "right",
+            "from": 0,
+            "to": 2
+        },
+        {
+            "key": "primary",
+            "from": 2,
+            "to": 3
+        },
+        {
+            "key": "primary",
+            "from": 4,
+            "to": 5
+        }
+    ],
+    "name": "r9-l6-sword-dash-hit",
+    "description": "⛓⛓⛓ R9 SLICE 12c — THE SWORD DASH'S RECT, DRIVEN AGAINST A BODY, and it is the half of the dash nothing had ever asked the game about. ⚖ Ruling 31(a) put the MOVEMENT half under `r9-l0-sword-dash` (x and v digit for digit, on a body-free corridor); ⚖ ruling 35 asks for the COMPLETE model, and the rest of it is the RECT: a dash plays \"slashnarrow\", `Player.render` squashes it 1.5 x 0.65, and `getSlashRect()` returns 24 x 20.8 where an ordinary swing returns 16 x 32 — WIDER ALONG THE SWING AND SHORTER ACROSS IT, so neither rect contains the other and a model using one for both is wrong in both directions. `slash()`'s second filter is `slashingSprite.width * scaleX`, so the REACH goes 16 -> 24 with the rect. THE DISCRIMINATOR IS THE LANDED REACH: 19.34, ABOVE SLASH_REACH (16) and BELOW SLASH_REACH_DASH (24) — a model that swung the ORDINARY rect for a dash press lands NOTHING here, and the game reports which. The ordinary swing two ticks earlier fires its 16 x 32 rect twice and collects nothing: that is the control, and without it the tape would prove only that a press hit a bob. The room is `r9-l6-bob-press`'s own boot (also the `--mobiles` probe's), because L0's dash corridor is BODY-FREE on purpose and a witness does not place bodies. ⛓ IT ALSO WITNESSES §23.15's `slashRepeats` REPLACEMENT: its two presses are two ticks apart, which is exactly what the double-count needed, and `play(\"slashnarrow\", true)` RESTARTS the animation so the rects fire ONE PER TICK and contiguously where the pre-12c model fired two on each of two ticks. ⚠ The differential's expectation is the PLAYER's (trap 564): the BODY's own column — position, knockback by `swordForce`, and its 30-tick i-frame — is asked of the game through `--mobiles`. Authored by scripts/procgen/plan-seedling-r9-l6-sword-dash-hit.mjs.",
+    "note": ""
+}

@@ -114,12 +114,12 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 34,
+            "count": 35,
             "id": "plan"
         },
         {
             "browser": 22,
-            "count": 57,
+            "count": 58,
             "id": "probe"
         },
         {
@@ -199,13 +199,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 226,
+        "blockStyle": 228,
         "browser": 74,
         "cited": 78,
-        "files": 245,
+        "files": 247,
         "lineStyle": 19,
-        "withDocblock": 245,
-        "withFlags": 151
+        "withDocblock": 247,
+        "withFlags": 152
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -3742,6 +3742,27 @@ export const INSTRUMENTS = frz({
         },
         {
             "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-r9-l6-sword-dash-hit.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "oneLiner": "⛓⛓⛓ R9 SLICE 12c — **THE SWORD DASH'S RECT, DRIVEN AGAINST A BODY.**",
+            "path": "scripts/procgen/plan-seedling-r9-l6-sword-dash-hit.mjs"
+        },
+        {
+            "argvHelpers": [],
             "browser": true,
             "category": "probe",
             "citedBy": [],
@@ -4607,6 +4628,18 @@ export const INSTRUMENTS = frz({
             "flags": [],
             "oneLiner": "⛓⛓⛓ R9 SLICE 12 — **THE ENEMY-SIDE WITNESS**, because the differential cannot be one.",
             "path": "scripts/procgen/probe-seedling-r9-bob-press-mobiles.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-r9-dash-rect-mobiles.mjs",
+            "flags": [],
+            "oneLiner": "⛓⛓⛓ R9 SLICE 12c — **THE DASH RECT'S ENEMY-SIDE WITNESS**, because the differential cannot be one.",
+            "path": "scripts/procgen/probe-seedling-r9-dash-rect-mobiles.mjs"
         },
         {
             "argvHelpers": [],
