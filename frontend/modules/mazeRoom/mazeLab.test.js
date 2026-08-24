@@ -18,6 +18,7 @@ import {
     planFrames,
     readLabParams, SKELETON_KIND_NAMES, DEFAULT_SKELETON, serializeMazeLevel,
     skeletonCatalogue, solveState, stepFromParams, undoEdit, writeLabParams,
+    certifyInto, editBaseTag, openEditSession, projectSession,
 } from './mazeLab.js';
 import { deserializeMazeLevel } from './procgenMaze.js';
 import { TILE_FLOOR, TILE_WALL, getTile } from './mazeRoomEngine.js';
@@ -1421,5 +1422,145 @@ describe('mazeLab — planFrames, the SOLVE replay (⚖ design ruling 6 fn. 3)',
         const st = guarded();
         expect(planFrames(st, null)).toBe(null);
         expect(planFrames(st, { plan: [] })).toBe(null);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ EDITOR v3 SLICE A2 — THE SESSION, THE BASE TAG, AND WHAT `LOAD` IS
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('mazeLab — the edit SESSION (editor v3 slice A2)', () => {
+    const edited = () => {
+        const st = generateStep({ seed: 3, step: 2, ...ROOM });
+        const e = new MazeRoomEditor({ itemLib: {}, obstacleLib: {} });
+        e.selectType(PALETTE_TYPES.WALL);
+        const c = st.model.allCells(st.record).find((p) => st.model.isFree(st.record, p.tx, p.ty));
+        return applyEdit(st, e, c.tx, c.ty).state;
+    };
+
+    /**
+     * ⛓⛓⛓ **THE TRI-STATE HAS ONE HOME AND ONE `false` SITE.** ⛓ MUTANT: have
+     * `certifyInto` write `state.certified` instead of the session's — the
+     * projection then overwrites it with the session's stale `null` and this
+     * row goes RED on the `false`.
+     */
+    it('certifyInto writes the ORACLE\'s answer into the SESSION, and `false` lives there', () => {
+        // ⛓ SEAL the entrance so the oracle has something to REFUSE.
+        let st = step0(1);
+        const e = new MazeRoomEditor({ itemLib: {}, obstacleLib: {} });
+        e.selectType(PALETTE_TYPES.WALL);
+        for (const [x, y] of [[1, 0], [0, 1]]) st = applyEdit(st, e, x, y).state;
+        const session = openEditSession(st);
+        expect(session.certified).toBe(null);
+        const answered = certifyInto(st, session);
+        expect(session.certified).toBe(false);
+        expect(answered.certified).toBe(false);
+        expect(answered.lastSolve.verdict).toBe('REFUSED');
+        // …and a SOLVED answer puts `true` back, through the same one bridge.
+        const ok = generateStep({ seed: 3, step: 2, ...ROOM });
+        const okSession = openEditSession(ok);
+        expect(certifyInto(ok, okSession).certified).toBe(true);
+        expect(okSession.certified).toBe(true);
+    });
+
+    /** ⛓ MUTANT: have an applied op leave `certified` alone — an edited level
+     *  then still claims the oracle said yes about a level it never saw. */
+    it('an edit through the session puts the tri-state back to `null`', () => {
+        const st = generateStep({ seed: 3, step: 2, ...ROOM });
+        expect(st.certified).toBe(true);
+        const session = openEditSession(st);
+        expect(session.certified).toBe(true);
+        const c = st.model.allCells(st.record).find((p) => st.model.isFree(st.record, p.tx, p.ty));
+        expect(session.apply({ op: 'setTile', x: c.tx, y: c.ty, tile: 'wall' }))
+            .toMatchObject({ ok: true, applied: true });
+        expect(session.certified).toBe(null);
+        const out = projectSession(st, session);
+        expect(out.certified).toBe(null);
+        expect(out.certification).toBe(null);
+    });
+
+    /**
+     * ⛓⛓ **A GROUP IS ONE EDIT, ONE UNDO AND ONE LINE.** ⛓ MUTANT: have the
+     * page apply a stroke's members one at a time — `edits` reads 3, the
+     * identity line says `3 manual edit(s)` with no parenthesis, and ONE undo
+     * leaves two cells painted. ⛔ The row asserts all three, because the
+     * RECORD alone cannot tell the two builds apart (⚠ trap 586).
+     */
+    it('a `group` is ONE entry, ONE undo, and the identity line names its size', () => {
+        const st = generateStep({ seed: 3, step: 2, ...ROOM });
+        const free = st.model.allCells(st.record)
+            .filter((p) => st.model.isFree(st.record, p.tx, p.ty)).slice(0, 3);
+        const session = openEditSession(st);
+        const res = session.apply({
+            op: 'group',
+            label: 'stroke of 3 cell(s)',
+            ops: free.map((p) => ({ op: 'setTile', x: p.tx, y: p.ty, tile: 'wall' })),
+        });
+        expect(res).toMatchObject({ ok: true, applied: true });
+        const out = projectSession(st, session);
+        expect(out.edits).toHaveLength(1);
+        expect(out.edits[0].op.op).toBe('group');
+        expect(describeState(out)).toMatch(/1 manual edit\(s\) \(1 group of 3\)/);
+        for (const p of free) expect(getTile(out.record, p.tx, p.ty)).toBe(TILE_WALL);
+        const back = undoEdit(out);
+        expect(back.edits).toHaveLength(0);
+        for (const p of free) expect(getTile(back.record, p.tx, p.ty)).toBe(TILE_FLOOR);
+    });
+
+    /**
+     * ⛓⛓ **THE PAYLOAD CARRIES THE IDENTITY TAG.** ⛓ MUTANT: drop `base` from
+     * `labPayload` — an edited payload then says what was done but not what it
+     * was done TO, and a reader has to diff two levels to find out.
+     */
+    it('labPayload carries `base`, and it is NOT compared as a difference', () => {
+        const st = edited();
+        const pay = labPayload(st);
+        expect(pay.base).toMatchObject({
+            kind: 'maze-lab', seed: 3, step: 2, width: 5, height: 5,
+        });
+        expect(editBaseTag(st)).toEqual(pay.base);
+        // ⛔ a payload whose tag says something else still AGREES: every field
+        //   in the tag is compared ONE BY ONE elsewhere, and comparing the tag
+        //   too would report one divergence twice.
+        const relabelled = { ...pay, base: { ...pay.base, kind: 'something-else' } };
+        expect(agreementWithPayload(relabelled, st).differences).not.toContain('base');
+    });
+
+    /**
+     * ⛓⛓⛓ **A LOADED LEVEL HAS NO EDIT LIST, AND SAYS THE URL IS NOT A
+     * REPRODUCTION ANYWAY.**
+     *
+     * ⛓ MUTANT: have `loadPayload` keep `payload.edits` — its `baseRecord` is
+     * the payload's ALREADY-EDITED level, so the first UNDO folds the list onto
+     * a world that already has it and the wall appears twice over. The row
+     * asserts the LEVEL is unchanged by an undo, which is what sees it.
+     */
+    it('a LOADED level carries no edits, is its own base, and still warns about the URL', () => {
+        const st = edited();
+        const back = loadPayload(labPayload(st));
+        expect(back.edits).toEqual([]);
+        expect(back.baseRecord).toBe(back.record);
+        expect(back.loaded).toBe(true);
+        expect(serializeMazeLevel(back.record)).toEqual(serializeMazeLevel(st.record));
+        // ⛔ an UNDO on a loaded level changes NOTHING — there is nothing to
+        //   fold back to, and a build that folded the payload's list would
+        //   produce a different level here.
+        expect(undoEdit(back)).toBe(back);
+        expect(describeState(back)).toMatch(/LOADED from a payload/);
+        expect(describeState(back))
+            .toMatch(/the URL is NOT a reproduction of this construction/);
+    });
+
+    /** ⛓ MUTANT: have `openEditSession` open on `state.record` — a state that
+     *  already carries edits then folds them onto a world that has them. */
+    it('openEditSession replays a state\'s own edits and lands on its own world', () => {
+        const st = edited();
+        const session = openEditSession(st);
+        expect(session.ops()).toHaveLength(1);
+        expect(serializeMazeLevel(session.record()))
+            .toEqual(serializeMazeLevel(st.record));
+        expect(session.undo()).toBe(true);
+        expect(serializeMazeLevel(session.record()))
+            .toEqual(serializeMazeLevel(generateStep({ seed: 3, step: 2, ...ROOM }).record));
     });
 });

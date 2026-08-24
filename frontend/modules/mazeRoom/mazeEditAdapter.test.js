@@ -20,7 +20,8 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-    MazeRoomEditor, PALETTE_TYPES, applyEdit, applyEdits, certify, generateStep, undoEdit,
+    MazeRoomEditor, PALETTE_TYPES, applyEdit, certify, generateStep, labPayload, loadPayload,
+    openEditSession, projectSession, undoEdit,
 } from './mazeLab.js';
 import { EDIT_OPS, applyEditOp } from './mazeRoomEditor.js';
 import { cloneWorld, serializeMazeLevel, worldsEqual } from './procgenMaze.js';
@@ -349,10 +350,35 @@ describe('⛓ rect copy/paste of a button+block gadget', () => {
 });
 
 /* ══════════════════════════════════════════════════════════════════════
- * ⛓⛓⛓ THE TWO RECONSTRUCTIONS AGREE — the gate A2 replaces one behind
- * ══════════════════════════════════════════════════════════════════════ */
+ * ⛓⛓⛓ THE RECONSTRUCTIONS AGREE — **A1's TWO ROWS SPENT, A2's ONE ADDED**
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⛔⛔ **A1's TWO AGREEMENT ROWS ARE GONE, AND THAT IS THE SLICE LANDING.**
+ * They were the safety net under A2's replacement and they held:
+ *
+ *  · *"a recorded payload folds the same way through both"* pinned
+ *    `mazeLab.applyEdits` against `editCore.foldEdits`. `applyEdits` **IS**
+ *    `foldEdits` now — one call, on the same base, over the same ops — so the
+ *    row asserted a function against itself.
+ *  · *"a stack POP and a shorter FOLD land on the same world, at every depth"*
+ *    pinned `mazeLab.undoEdit` (a WORLD STACK pop) against the session's undo
+ *    (a shorter fold). ⛔ `undoStack` no longer exists; `undoEdit` is
+ *    `foldEdits(baseRecord, ops.slice(0, -1))`, which is what the session's
+ *    `undo` is. The row asserted a tautology too.
+ *
+ * ⚠ A row that has become a tautology is DELETED rather than left green: it
+ * would read as coverage of the mechanism it is no longer able to see (⚖ trap
+ * 570's neighbourhood — ask what a row can still distinguish).
+ *
+ * ⛓ WHAT REPLACES THEM is the agreement A2 actually created: the page has TWO
+ * spellings of the edit law now — the VALUE transitions (`applyEdit`, a
+ * payload replay, every test) and the SESSION (`openEditSession` +
+ * `session.apply`, which is what `procgenCore/editorView` drives on the page).
+ * ⛔ Both land in `foldEdits`, but they hold the op list in different places
+ * and only one of them is what a person's presses go through.
+ */
 
-describe('⛔ `mazeLab` and the edit core reconstruct the SAME world', () => {
+describe('⛔ the VALUE transitions and the SESSION agree', () => {
     /** A recorded edit list, made the way the PAGE makes one: a palette
      *  selection and a click, through `mazeLab.applyEdit`. */
     const recorded = () => {
@@ -373,60 +399,85 @@ describe('⛔ `mazeLab` and the edit core reconstruct the SAME world', () => {
     };
 
     /**
-     * ⛓⛓⛓ **THE AGREEMENT** — `mazeLab.applyEdits` (the page's replay) and
-     * `foldEdits` (the core's) produce the same world from the same list. This
-     * is what makes A2's swap a REPLACEMENT rather than a rewrite.
+     * ⛓⛓⛓ **A SESSION OPENED ON A STATE HOLDS THE SAME LEVEL, AND UNDOES TO
+     * THE SAME LEVELS AT EVERY DEPTH.**
      *
-     * ⛓ MUTANT: have `foldEdits` fold onto a shared record (no clone per step)
-     * or reverse the list — the `worldsEqual` row goes RED. MUTANT 2: drop the
-     * adapter's `cloneWorld` — `applyEditOp` then writes through `state.record`
-     * and the mazeLab side is corrupted before it is compared.
+     * ⛓ MUTANT: have `openEditSession` open on `state.record` instead of
+     * `state.baseRecord` — the world is identical at depth 5 and DIVERGES on
+     * the first undo, which is why the row walks every depth instead of
+     * comparing the top (⚠ §9.3's lesson: a claim measured on an UNCHANGED
+     * subject distinguishes nothing).
+     * ⛓ MUTANT 2: have `projectSession` read `session.record()` without
+     * re-folding — the same world, and `dropped`/`applied` stop agreeing.
      */
-    it('a recorded payload folds the same way through both', () => {
+    it('a session opened on a state undoes to the same world at every depth', () => {
         const st = recorded();
         expect(st.edits).toHaveLength(5);
-        const base = generateStep(ROOM).record;
+        const s = openEditSession(st);
+        expect(s.ops()).toHaveLength(5);
+        expect(worldsEqual(s.record(), st.record)).toBe(true);
 
-        const viaLab = applyEdits(generateStep(ROOM), st.edits);
-        const viaCore = foldEdits(mazeEditAdapter, base, st.edits.map((e) => e.op));
-
-        expect(worldsEqual(viaLab.record, viaCore.record)).toBe(true);
-        expect(worldsEqual(viaLab.record, st.record)).toBe(true);
-        expect(viaCore.applied).toHaveLength(5);
-        expect(viaCore.dropped).toHaveLength(0);
+        let value = st;
+        for (let n = 4; n >= 0; n -= 1) {
+            value = undoEdit(value);
+            expect(s.undo()).toBe(true);
+            expect(value.edits).toHaveLength(n);
+            expect(s.ops()).toHaveLength(n);
+            expect(worldsEqual(value.record, s.record()),
+                `after undoing to ${n} edit(s)`).toBe(true);
+            // ⛓ …and the PROJECTION is the same level as the session's own.
+            expect(worldsEqual(projectSession(value, s).record, s.record())).toBe(true);
+        }
+        expect(worldsEqual(s.record(), generateStep(ROOM).record)).toBe(true);
     });
 
     /**
-     * ⛓⛓⛓ **THE TWO UNDO LAWS AGREE** — a self-consistency the maze has never
-     * been asked for.
+     * ⛓⛓ **THE OP LIST SURVIVES A ROUND TRIP THROUGH THE STATE** — the page
+     * projects a session onto a state and re-opens a session from it every time
+     * the EDIT arm is entered.
      *
-     * `mazeLab.undoEdit` POPS a stack of worlds; the session RE-FOLDS a shorter
-     * list. They are different mechanisms and they must produce the same
-     * record, or A2's replacement would silently change what UNDO means.
-     *
-     * ⛓ MUTANT: make the session's `undo()` a stack pop of its own — this row
-     * stays GREEN (that is the point: the two agree today), but the CORE's own
-     * `undo = shorter fold` row is what makes the mechanism a fold. ⛓ MUTANT 2:
-     * have `mazeLab.undoEdit` forget to pop `edits` alongside `undoStack` — the
-     * op-count row goes RED.
+     * ⛓ MUTANT: have `projectSession` keep the state's old `edits` instead of
+     * the session's — the second session opens on a stale list and the world
+     * diverges.
      */
-    it('a stack POP and a shorter FOLD land on the same world, at every depth', () => {
+    it('project → re-open is a fixed point on the ops AND on the world', () => {
         const st = recorded();
-        const base = generateStep(ROOM).record;
-        const s = createEditSession(mazeEditAdapter, base);
-        for (const e of st.edits) expect(s.apply(e.op)).toMatchObject({ ok: true, applied: true });
-        expect(s.ops()).toHaveLength(5);
+        const projected = projectSession(st, openEditSession(st));
+        const again = openEditSession(projected);
+        expect(again.ops().map((o) => o.op)).toEqual(st.edits.map((e) => e.op.op));
+        expect(worldsEqual(again.record(), st.record)).toBe(true);
+        // ⛔ NON-VACUITY — the fixture really carries five DIFFERENT ops.
+        expect(new Set(st.edits.map((e) => e.op.op)).size).toBe(5);
+    });
 
-        let popped = st;
-        for (let n = 4; n >= 0; n -= 1) {
-            popped = undoEdit(popped);
-            expect(s.undo()).toBe(true);
-            expect(popped.edits).toHaveLength(n);
-            expect(s.ops()).toHaveLength(n);
-            expect(worldsEqual(popped.record, s.record()),
-                `after undoing to ${n} edit(s)`).toBe(true);
+    /**
+     * ⛓⛓⛓ **`undoStack` IS GONE FROM THE STATE**, asserted rather than
+     * described. ⛓ MUTANT: leave the field in one of the five producers — this
+     * row names which one.
+     */
+    it('no state this module produces carries an `undoStack`', () => {
+        const st = recorded();
+        /**
+         * ⛔⛔ **THE ROSTER IS EVERY PRODUCER, AND THE STEP-0 BRANCH IS ONE OF
+         * THEM.** Measured: the first cut listed `generateStep(ROOM)` only —
+         * `ROOM` is step 3, so the LADDER branch — and the mutant that left an
+         * `undoStack` in the SKELETON branch was GREEN. ⚠ Trap 574's shape: a
+         * gate whose subject is narrower than its name.
+         */
+        const rows = [
+            ['generateStep step 3', generateStep(ROOM)],
+            ['generateStep step 0', generateStep({ ...ROOM, step: 0 })],
+            ['applyEdit', st],
+            ['undoEdit', undoEdit(st)],
+            ['certify', certify(generateStep(ROOM))],
+            ['loadPayload', loadPayload(labPayload(st))],
+            ['projectSession', projectSession(st, openEditSession(st))],
+        ];
+        expect(rows).toHaveLength(7);
+        for (const [what, s] of rows) {
+            expect(Object.prototype.hasOwnProperty.call(s, 'undoStack'), what).toBe(false);
+            expect(s.baseRecord, `${what} carries a baseRecord`).toBeTruthy();
         }
-        expect(worldsEqual(s.record(), base)).toBe(true);
     });
 });
 

@@ -58,12 +58,23 @@ import { AREA_LAYERS, areaLegend, drawAreaOverlay } from './mazeAreaOverlay.js';
  */
 import { drawElementOverlay, elementLegend } from './mazeElementOverlay.js';
 import {
-    DEFAULT_MAZE_BIOME, DIRECTED_ANCHOR_TRIES, MAZE_BIOME_NAMES, MazeRoomEditor, PALETTE_ENTRIES,
-    SOURCES, agreementWithPayload, applyDirective, applyEdit, applyEdits, certify, describeState,
-    generateStep, generateWithDirectives, labCatalogue, labPayload, loadPayload, planCells,
-    planFrames, readLabParams, serializeMazeLevel, skeletonCatalogue, solveState,
-    stepFromParams, undoEdit, writeLabParams,
+    DEFAULT_MAZE_BIOME, DIRECTED_ANCHOR_TRIES, MAZE_BIOME_NAMES, MazeRoomEditor,
+    PALETTE_ENTRIES, PALETTE_TYPES,
+    SOURCES, agreementWithPayload, applyDirective, applyEdits, certifyInto, describeState,
+    generateStep, generateWithDirectives, labCatalogue, labPayload, loadPayload,
+    openEditSession, planCells, planFrames, projectSession, readLabParams, serializeMazeLevel,
+    skeletonCatalogue, stepFromParams, writeLabParams,
 } from './mazeLab.js';
+/**
+ * ⛓⛓⛓ EDITOR v3 SLICE A2 — **THE SHARED TOOL, MOUNTED.** ⛔ The canvas tool,
+ * the stroke-is-one-group law, the command table and the key map are
+ * `procgenCore/editorView`'s and are not re-spelled here; what stays this
+ * page's is the GEOMETRY (`cellAt`), the PALETTE (an op template), the
+ * substrate's own BOUNDS sentences, and the renderer.
+ */
+import { mountEditorView } from '../procgenCore/editorView.js';
+import { describeOps } from '../procgenCore/editCore.js';
+import { mazeEditAdapter } from './mazeEditAdapter.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 // ⛓ SLICE 7: the ONE normalizer for a skeleton spec — this form, the identity
 // line and the URL bar all spell a room the same way.
@@ -127,6 +138,22 @@ export function main() {
     let payloadCheck = null;
     let hover = null;
     let editor = null;
+    /**
+     * ⛓⛓⛓ EDITOR v3 SLICE A2 — **THE EDIT SESSION IS THE HOME FOR `record`,
+     * `edits` AND `certified`**, for the whole page life and not only in the
+     * EDIT arm. ⛔ `state`'s copies of those three are PROJECTIONS, written by
+     * `mazeLab.projectSession` and by nothing else; the page carried a WORLD
+     * STACK (`undoStack`) until this slice and now carries base + ops, which is
+     * ⚖ law (a) of `procgenCore/editCore`.
+     *
+     * ⛔ It is RE-OPENED, never edited, when the base record moves — a rung, a
+     * directive, a LOAD. Those are not edits: they replace the level the edits
+     * are edits OF, and a session that kept its op list across one would fold
+     * yesterday's presses onto today's room.
+     */
+    let session = null;
+    /** ⛓ `procgenCore/editorView`'s mount, alive only while the EDIT arm is. */
+    let tool = null;
     let message = '';
     let messageBad = false;
     /**
@@ -176,6 +203,121 @@ export function main() {
     let bridge = null;
 
     const say = (text, bad = false) => { message = text; messageBad = bad; };
+
+    /**
+     * ⛓⛓⛓ **THE ONE PLACE A NEW BASE RECORD ARRIVES.** Every `generateStep`,
+     * every directive, every LOAD lands here, so there is one answer to *what
+     * is this page editing* and one moment at which the op list is allowed to
+     * reset.
+     */
+    const adopt = (next) => {
+        state = next;
+        session = openEditSession(state);
+        state = projectSession(state, session);
+        return state;
+    };
+
+    /** ⛓ THE SESSION CHANGED — put its three answers back on the state. ⛔ The
+     *  ONE writer of `record`/`edits`/`certified` on this page. */
+    const sync = () => { state = projectSession(state, session); };
+
+    /**
+     * ⛓ THE PALETTE'S EDITOR — created lazily because it needs the level's own
+     * libraries, and re-created when a LOAD brings different ones.
+     */
+    const ensureEditor = () => {
+        if (!editor) {
+            editor = new MazeRoomEditor({
+                itemLib: state.record.itemLib ?? DEFAULT_ITEMS,
+                obstacleLib: state.record.obstacleLib ?? DEFAULT_OBSTACLES,
+            });
+        }
+        return editor;
+    };
+
+    /**
+     * ⛓⛓ **THE PALETTE, AS AN OP TEMPLATE** — `MazeRoomEditor.opFor` is the one
+     * place the editor's private selection (`selectedItemId`,
+     * `selectedObstacleId`) is spent, and it was already the ONE op builder a
+     * press used. ⛔ `editorView` never sees a palette; it asks for an op.
+     */
+    const brushOp = (tx, ty) => ensureEditor().opFor(tx, ty);
+
+    /**
+     * ⛓ **WHAT A FLOOD PAINTS** — the CURRENT palette tile, and only a tile.
+     * ⛔ A descriptor with no `entity` key emits `setTile` alone
+     * (`mazeWriteOps` emits ops only for the fields the descriptor presents),
+     * so a fill repaints the floor of a component without erasing what stands
+     * on it. `null` when the palette names something that is not a tile — the
+     * view refuses by name rather than flooding with a guess.
+     */
+    const floodTarget = () => {
+        const t = ensureEditor().selectedType;
+        if (t === PALETTE_TYPES.FLOOR) return { tile: 'floor' };
+        if (t === PALETTE_TYPES.WALL) return { tile: 'wall' };
+        return null;
+    };
+
+    /** ⛓ THE TWO PASTE FILTERS, read AT THE PRESS (the read-at-press law). */
+    const pasteOptions = () => ({
+        tilesOnly: $('labPasteTiles').checked,
+        entitiesOnly: $('labPasteEntities').checked,
+    });
+
+    /**
+     * ⛓⛓⛓ **§9.4's TWO BOUNDS, COUNTED OFF THE CLIP AND SAID BEFORE THE PASTE
+     * LANDS.** ⛔ They are the MAZE's and `editorView` cannot know either — it
+     * only guarantees that whatever this function names is printed first:
+     *
+     *  · **a pasted `setButton` DUPLICATES its resolved index** — the op shape
+     *    carries the index on purpose (a replay must not allocate a different
+     *    one), and `applyEditOp` does not refuse a duplicate, so two cells end
+     *    up pressing one door;
+     *  · **the ENTRANCE is a SINGLETON** — `setEntrance` MOVES the world's only
+     *    one, and the cell it came from silently stops being the entrance.
+     *
+     * ⚠ Measured, not assumed: both are pinned by `mazeEditAdapter.test.js`.
+     */
+    const clipWarnings = (clip) => {
+        const parts = (clip?.cells ?? []).flat().map((d) => d?.entity).filter(Boolean);
+        const buttons = parts.filter((e) => e.button !== undefined).length;
+        const entrances = parts.filter((e) => e.entrance).length;
+        const out = [];
+        if (buttons) {
+            out.push(`this clip carries ${buttons} BUTTON(s) — a paste places a SECOND cell `
+                + 'holding the same `button_A{n}`, so two cells will press one door');
+        }
+        if (entrances) {
+            out.push('this clip carries the ENTRANCE — it is a SINGLETON, so a paste MOVES it '
+                + 'and the cell it came from stops being the entrance');
+        }
+        return out;
+    };
+
+    /**
+     * ⛓⛓ **THE PAGE'S COMMAND ROWS** — `editorView` adds the four tools and
+     * `Escape`, and binds `Ctrl/Cmd+Z` to the row whose id is `undo`. ⛔ ONE
+     * table: the buttons below and the keys are both views of it.
+     */
+    const undoCommand = {
+        id: 'undo',
+        label: 'UNDO one edit',
+        key: 'u',
+        run: () => {
+            if (!session.undo()) {
+                say('nothing to undo — this level carries no manual edit');
+                render();
+                return;
+            }
+            sync();
+            lastSolve = null;
+            clearPlay();
+            say('undid one edit — UNDO is the FOLD over a shorter list, not a stack pop, so '
+                + 'the level is byte-identical to one that never had it. Still UNCERTIFIED '
+                + '(nothing has solved the world on screen)');
+            render();
+        },
+    };
 
     /**
      * ⛓⛓ THE REPLAY DIES WITH THE WORLD IT IS A REPLAY OF. ⛔ Called from every
@@ -407,10 +549,10 @@ export function main() {
                  */
                 const all = on.length === cat.groups.length;
                 try {
-                    state = Object.freeze({
+                    adopt(Object.freeze({
                         ...state,
                         roster: all ? null : { axis: 'families', names: on },
-                    });
+                    }));
                     say(all ? 'the WHOLE roster — no restriction'
                         : `restricted to families [${on.join(', ')}]`);
                 } catch (e) {
@@ -477,12 +619,12 @@ export function main() {
                 values[key] = domain.find((v) => String(v) === select.value);
             }
             try {
-                state = applyDirective(state, {
+                adopt(applyDirective(state, {
                     template: t.name,
                     params: values,
                     anchor: null,
                     bound: DIRECTED_ANCHOR_TRIES,
-                }, (state.directives ?? []).length);
+                }, (state.directives ?? []).length));
                 const d = state.directives[state.directives.length - 1];
                 say(`${d.instance}: ${d.outcome}`
                     + (d.at ? ` at (${d.at.tx},${d.at.ty})` : '')
@@ -538,10 +680,40 @@ export function main() {
             });
             box.appendChild(b);
         }
+        /**
+         * ⛓⛓ SLICE A2 — **THE TOOL BUTTONS ARE A VIEW OF `editorView`'s COMMAND
+         * TABLE**, in its own order, each carrying the key the table declares.
+         * ⛔ They live in `#labTools` and NOT in `#labPalette`: the browser row
+         * ENUMERATES the palette box (one button per `PALETTE_ENTRIES` row) and
+         * a knob dropped into an enumerated container counts as a member — the
+         * group-B lesson, and it reds three claims at once.
+         */
+        const tools = $('labTools');
+        tools.textContent = '';
+        for (const row of tool?.commands ?? []) {
+            if (row.id === undoCommand.id) continue;
+            const b = el('button', 'toolBtn', `${row.label}${row.key ? ` (${row.key})` : ''}`);
+            b.dataset.tool = row.id;
+            if (tool && row.id === tool.tool) b.classList.add('armed');
+            lifetimes.current().on(b, 'click', () => { row.run(); render(); });
+            tools.appendChild(b);
+        }
+        /**
+         * ⛓⛓ THE NOTE IS `editCore.describeOps` PLUS THE PER-OP SENTENCES. ⛔
+         * The head counts TOP-LEVEL ops, which is what UNDO is a count of: a
+         * pane that said "14 edits" for a list holding one 14-cell stroke would
+         * describe a history with fourteen presses in it and thirteen of them
+         * un-undoable. The group sizes ride in the parenthesis.
+         */
         $('editNote').textContent = (state.edits ?? []).length
-            ? `${state.edits.length} manual edit(s): `
+            ? `${describeOps(state.edits.map((e) => e.op))}: `
                 + state.edits.map((e) => `#${e.n} ${e.description}`).join(' · ')
             : 'no manual edits yet.';
+        $('clipNote').textContent = tool?.clip
+            ? `clip: ${tool.clip.w}x${tool.clip.h}`
+                + (clipWarnings(tool.clip).length
+                    ? ` ⚠ ${clipWarnings(tool.clip).join(' ⚠ ')}` : '')
+            : 'no clip — arm RECT and click two opposite corners';
     };
 
     const renderSolvePanel = () => {
@@ -898,7 +1070,7 @@ export function main() {
     const goTo = (step) => {
         const a = formArgs();
         try {
-            state = generateStep({ ...a, step });
+            adopt(generateStep({ ...a, step }));
             lastSolve = null;
             clearPlay();
             payloadCheck = null;
@@ -922,7 +1094,7 @@ export function main() {
         say(`RUN-ALL to ${target}: ≤ ${ladderCost(a.bounds, WORST_CASE_SOLVE_MS).solves} solves`);
         try {
             for (let k = 1; k <= target; k += 1) {
-                state = generateStep({ ...a, step: k });
+                adopt(generateStep({ ...a, step: k }));
                 if (state.saturated) {
                     say(`SATURATED at step ${k} — ${a.bounds.saturationK} consecutive steps `
                         + 'kept nothing', true);
@@ -962,7 +1134,7 @@ export function main() {
     const loadFromBox = () => {
         try {
             const payload = JSON.parse($('labText').value);
-            state = loadPayload(payload);
+            adopt(loadPayload(payload));
             editor = null;
             lastSolve = null;
             clearPlay();
@@ -1012,12 +1184,7 @@ export function main() {
                 + '(⚠ a CEILING — the loop keeps its first candidate most of the time).';
         }
         if (src === SOURCES.EDIT) {
-            if (!editor) {
-                editor = new MazeRoomEditor({
-                    itemLib: state.record.itemLib ?? DEFAULT_ITEMS,
-                    obstacleLib: state.record.obstacleLib ?? DEFAULT_OBSTACLES,
-                });
-            }
+            ensureEditor();
             renderEditPanel();
         }
         if (src === SOURCES.SOLVE) renderSolvePanel();
@@ -1071,6 +1238,21 @@ export function main() {
             certified: state.certified ?? null,
             edits: (state.edits ?? []).length,
             editLog: (state.edits ?? []).map((e) => e.description),
+            /**
+             * ⛓⛓⛓ SLICE A2 — **THE OP LIST AS THE PAGE HOLDS IT**, so a
+             * browser row can tell a 3-cell STROKE (one entry, one group of 3)
+             * from three presses (three entries). ⛔ A count alone cannot: both
+             * builds paint the same three cells, and `edits` would read 3 under
+             * the mutant that applies a drag's cells one at a time.
+             */
+            editOps: (state.edits ?? []).map((e) => (e.op?.op === 'group'
+                ? { op: 'group', label: e.op.label, members: e.op.ops.length }
+                : e.op)),
+            editNote: describeOps((state.edits ?? []).map((e) => e.op)),
+            /** ⛓ WHICH TOOL IS ARMED, and what the clipboard holds — `null`
+             *  outside the EDIT arm, where no tool is mounted. */
+            editTool: tool?.tool ?? null,
+            editClip: tool?.clip ? { w: tool.clip.w, h: tool.clip.h } : null,
             directives: (state.directives ?? []).map((d) => ({
                 instance: d.instance, outcome: d.outcome, keptKind: d.keptKind, at: d.at,
             })),
@@ -1332,21 +1514,28 @@ export function main() {
         lt.on($('labRunAll'), 'click', runAll);
         lt.on($('labReset'), 'click', () => goTo(0));
         lt.on($('labRosterAll'), 'click', () => {
-            state = Object.freeze({ ...state, roster: null });
+            adopt(Object.freeze({ ...state, roster: null }));
             say('the WHOLE roster — no restriction');
             writeUrl();
             render();
         });
         lt.on($('labDirectivesClear'), 'click', () => {
-            state = Object.freeze({ ...state, directives: Object.freeze([]) });
+            adopt(Object.freeze({ ...state, directives: Object.freeze([]) }));
             say('directives cleared — press STEP or RUN-ALL to rebuild the level without them');
             writeUrl();
             render();
         });
         lt.on($('labSolve'), 'click', () => {
             try {
-                lastSolve = solveState(state);
-                state = certify(state);
+                /**
+                 * ⛓⛓ SLICE A2 — **ONE SOLVE, AND THE VERDICT GOES INTO THE
+                 * SESSION.** It was two (`solveState` then `certify`, which
+                 * solves again); `certifyInto` asks the oracle once and writes
+                 * the tri-state through `session.setCertified` — ⛔ the ONE
+                 * place `false` is reachable on this page.
+                 */
+                state = certifyInto(state, session);
+                lastSolve = state.lastSolve;
                 /**
                  * ⛓⛓⛓ AND THE PLAN BECOMES FRAMES — ⚖ design ruling 6 fn. 3.
                  * ⛔ `planFrames` replays through the ENGINE's own `step`, so
@@ -1414,13 +1603,7 @@ export function main() {
             say('replaying the plan — the BLOCK moves with `state.blocks`');
             render();
         });
-        lt.on($('labUndo'), 'click', () => {
-            state = undoEdit(state);
-            lastSolve = null;
-            clearPlay();
-            say('undid one edit — still UNCERTIFIED (nothing has solved the world on screen)');
-            render();
-        });
+        lt.on($('labUndo'), 'click', undoCommand.run);
         lt.on($('labDownload'), 'click', download);
         lt.on($('labLoad'), 'click', loadFromBox);
         lt.on($('labUpload'), 'change', (e) => {
@@ -1455,22 +1638,54 @@ export function main() {
              */
             const clicked = cellAt(e);
             if (clicked) bridge?.selectTile(clicked.tx, clicked.ty);
-            if (source !== SOURCES.EDIT) return;
-            const c = clicked;
-            if (!c) {
-                say('that point is outside the room — the cell you name is the cell that gets '
-                    + 'edited, so a click past the edge REFUSES rather than clamping to the '
-                    + 'last one', true);
-                render();
-                return;
-            }
-            const out = applyEdit(state, editor, c.tx, c.ty);
-            state = out.state;
-            // ⛔ VERBATIM — the editor's own refusal sentence.
-            say(out.result.description, !out.result.ok);
-            if (out.result.ok && out.result.type !== 'noop') { lastSolve = null; clearPlay(); }
-            render();
+            /**
+             * ⛓⛓⛓ SLICE A2 — **THE EDIT BRANCH IS GONE FROM HERE.**
+             * `procgenCore/editorView` owns the tool: one `armed` value, the
+             * stroke-as-one-group, rect/paste/flood, Escape and the key map.
+             * ⛔ This listener survives because `selectTile` is NOT an edit —
+             * it fires in every arm and says *"the reader pointed at this
+             * cell"*, which is the only thing a host can act on (⚖ §3.5's
+             * third page→host event). Two listeners on one canvas, and they
+             * answer two different questions.
+             */
         });
+
+        /**
+         * ⛓⛓⛓ **THE TOOL IS MOUNTED ONLY IN THE EDIT ARM, ON THIS ARM'S OWN
+         * LIFETIME.** ⛔ Retire-then-create means leaving EDIT detaches every
+         * listener `editorView` registered — the overlay is taken down by
+         * `destroy` on the same retirement, because the element is this file's
+         * DOM and not the lifetime's.
+         */
+        tool = null;
+        if (source === SOURCES.EDIT) {
+            ensureEditor();
+            tool = mountEditorView({
+                canvas,
+                session,
+                adapter: mazeEditAdapter,
+                // ⛔ THE GEOMETRY STAYS THIS PAGE'S — `check-maze-lab` claim 5
+                //   computes the target cell independently and asserts the tile
+                //   it named is the tile that changed.
+                cellAt,
+                brushOp,
+                floodTarget,
+                pasteOptions,
+                clipWarnings,
+                commands: [undoCommand],
+                lifetime: lt,
+                say,
+                offRoom: () => 'that point is outside the room — the cell you name is the cell '
+                    + 'that gets edited, so a click past the edge REFUSES rather than clamping '
+                    + 'to the last one',
+                onChange: ({ result }) => {
+                    sync();
+                    if (result?.applied) { lastSolve = null; clearPlay(); }
+                    render();
+                },
+            });
+            lt.onRetire(() => { tool?.destroy(); tool = null; });
+        }
 
         render();
     };
@@ -1542,7 +1757,7 @@ export function main() {
             const res = await fetch(params.gen);
             if (!res.ok) throw new Error(`?gen=${params.gen} — HTTP ${res.status}`);
             const payload = await res.json();
-            state = generateWithDirectives({
+            adopt(generateWithDirectives({
                 seed: payload.seed,
                 biome: payload.biome ?? DEFAULT_MAZE_BIOME,
                 step: payload.bounds?.obstacleTarget ?? 0,
@@ -1583,7 +1798,7 @@ export function main() {
                  */
                 elements: elementSpecOf(payload.elements) ?? undefined,
                 require: payload.require ?? null,
-            });
+            }));
             /**
              * ⛓⛓⛓ ARC 2 SLICE 4 — **AND THEN THE EDITS**, in order, through the
              * SAME `applyEditOp` a press uses (constructive §18.2's residue,
@@ -1593,7 +1808,7 @@ export function main() {
              * from `applyEdits` and the boot's catch prints it — LOAD is the
              * way in for one, and the message says so.
              */
-            if ((payload.edits ?? []).length) state = applyEdits(state, payload.edits);
+            if ((payload.edits ?? []).length) adopt(applyEdits(state, payload.edits));
             payloadCheck = agreementWithPayload(payload, state);
             say(payloadCheck.agrees
                 ? 'the browser REPRODUCED the payload byte-identically — level AND trace'
@@ -1601,7 +1816,7 @@ export function main() {
             !payloadCheck.agrees);
             return;
         }
-        state = generateWithDirectives({
+        adopt(generateWithDirectives({
             seed: params.seed,
             biome: params.biome,
             step: stepFromParams(params),
@@ -1647,7 +1862,7 @@ export function main() {
              */
             elements: params.elements,
             require: params.require,
-        });
+        }));
         say(`seed ${params.seed} at step ${stepFromParams(params)}`
             + (params.skeleton?.kind && params.skeleton.kind !== 'empty'
                 ? `, skeleton ${params.skeleton.kind}` : ''));

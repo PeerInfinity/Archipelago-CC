@@ -168,7 +168,12 @@
   #status.bad { color: #ff8080; }
   #detail { font-size: 11px; color: #8a8a98; white-space: pre-wrap; margin-top: 2px; }
   main { display: flex; gap: 12px; padding: 12px; align-items: flex-start; }
-  #stage { flex: 1 1 auto; min-width: 0; }
+  /* ⛓ SLICE A2 — `procgenCore/editorView` inserts its selection overlay as a
+     SIBLING of the canvas, absolutely positioned; the stage is what it is
+     positioned against. ⛔ Without `relative` the overlay would be placed
+     against the viewport and the rectangle would be drawn somewhere else. */
+  #stage { flex: 1 1 auto; min-width: 0; position: relative; }
+  .editorViewOverlay { position: absolute; pointer-events: none; }
   #panel { flex: 0 0 340px; }
   canvas { display: block; image-rendering: pixelated; background: #101014; }
   canvas.editing { cursor: crosshair; outline: 2px dashed #ffd75f; outline-offset: -2px; }
@@ -378,10 +383,25 @@
          and drops the certification — §3.8: editing never bypasses the oracle. -->
     <div id="editPanel" class="armPanel" hidden>
       <div class="line">
-        <b>palette</b> <span class="note">— pick one, then click a tile</span>
+        <b>palette</b> <span class="note">— pick one, then click a tile (or DRAG: one stroke is ONE undo)</span>
         <button id="labUndo">UNDO one edit</button>
       </div>
       <div id="labPalette"></div>
+      <!-- ⛓⛓ EDITOR v3 SLICE A2 — the tools `procgenCore/editCore` proved in A1,
+           given a control. ⛔ THEY ARE NOT IN `#labPalette`: the browser row
+           ENUMERATES that box (one button per PALETTE_ENTRIES row) and a knob
+           dropped into an enumerated container counts as a member. The buttons
+           are rendered from `editorView`'s own COMMAND TABLE, so the label and
+           the key here cannot drift from the key that actually fires. -->
+      <div class="line">
+        <b>tool</b> <span class="note">— Escape clears it; Ctrl/Cmd+Z undoes</span>
+      </div>
+      <div id="labTools"></div>
+      <div class="line">
+        <label><input id="labPasteTiles" type="checkbox"> paste tiles only</label>
+        <label><input id="labPasteEntities" type="checkbox"> paste entities only</label>
+      </div>
+      <div id="clipNote" class="note"></div>
       <div id="editNote" class="note"></div>
     </div>
 

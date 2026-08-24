@@ -73,6 +73,16 @@ import {
 } from '../procgenCore/areaSpec.js';
 import { densityLine } from '../procgenCore/densityBlock.js';
 /**
+ * ⛓⛓⛓ EDITOR v3, SLICE A2 — **THE EDIT CORE IS THIS PAGE'S EDIT MODEL NOW.**
+ * ⛔ `foldEdits` is the ONE reconstruction (law (a)); the world STACK this page
+ * carried as `undoStack` is GONE, and UNDO is the same fold over a shorter
+ * list. `createEditSession` is what the DOM arm mounts `editorView` on, and
+ * `mazeEditAdapter` (slice A1) is the six words the core asks of a substrate.
+ */
+import {
+    applyOne, createEditSession, describeOps, foldEdits,
+} from '../procgenCore/editCore.js';
+/**
  * ⛓⛓ PROCGEN ELEMENTS arc 2, slice 4 — the ONE element codec. ⛔ The page does
  * not parse `?elements=` itself and does not restate a domain: `urlParams`
  * reads the parameter, `elementSpec` adjudicates the string, and the form's
@@ -86,14 +96,15 @@ import {
     normalizeSkeleton,
 } from '../procgenCore/skeletonKinds.js';
 import {
-    MazeRoomEditor, PALETTE_ENTRIES, PALETTE_TYPES, applyEditOp,
+    MazeRoomEditor, PALETTE_ENTRIES, PALETTE_TYPES,
 } from './mazeRoomEditor.js';
 import { createState, step } from './mazeRoomEngine.js';
 import {
     DEFAULT_MAZE_BUDGET, MAZE_DEFAULTS, MAZE_PALETTE, MAZE_SKELETON_KINDS, assertMazeBudget,
-    cloneWorld, deserializeMazeLevel, generateMazeLevel, mazeCostRecords, mazeModel, mazeOracle,
+    deserializeMazeLevel, generateMazeLevel, mazeCostRecords, mazeModel, mazeOracle,
     requireOutcome, serializeMazeLevel, worldsEqual,
 } from './procgenMaze.js';
+import { mazeEditAdapter } from './mazeEditAdapter.js';
 import { SEED_MAX, rngFor } from './procgenRng.js';
 
 export class MazeLabError extends Error {
@@ -419,6 +430,11 @@ export function generateStep({
             ...common,
             model,
             record: model.skeleton(),
+            /** ⛓ SLICE A2 — see `THE BASE RECORD` below: the record the fold
+             *  starts from, and the ONE thing UNDO needs now that the world
+             *  stack is gone. A freshly-generated level has no edits, so it IS
+             *  the record. */
+            baseRecord: model.skeleton(),
             trace: [],
             summary: null,
             /**
@@ -479,6 +495,8 @@ export function generateStep({
         ...common,
         model: out.model,
         record: out.record,
+        /** ⛓ SLICE A2 — the fold's base; see `THE BASE RECORD`. */
+        baseRecord: out.record,
         trace: out.trace,
         summary: out.summary,
         keptTemplates: keptTemplatesOf(out.summary, palette),
@@ -673,6 +691,9 @@ export function applyDirective(state, spec, index) {
     return Object.freeze({
         ...state,
         record: out.record,
+        /** ⛓ SLICE A2 — a DIRECTIVE is not an EDIT: it moves the base the edit
+         *  fold starts from, exactly as a ladder rung does. */
+        baseRecord: out.record,
         trace: Object.freeze([...(state.trace ?? []), ...out.rows]),
         keptTemplates: out.outcome === 'KEPT'
             ? Object.freeze([...state.keptTemplates, template])
@@ -718,32 +739,123 @@ export { skeletonCatalogue } from '../procgenCore/skeletonKinds.js';
  * EDIT (⚖ ruling 8 + §3.8)
  * ══════════════════════════════════════════════════════════════════════ */
 
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ EDITOR v3, SLICE A2 — **THE EDIT MODEL IS `procgenCore/editCore`**
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ── ⛓ THE BASE RECORD ────────────────────────────────────────────────
+ *
+ * ⛔ **`undoStack` IS GONE.** This page carried a list of WORLDS and popped it;
+ * ⚖ law (a) of the core says an edited level IS *the base, then the ops, in
+ * order*, and UNDO is that same fold over a SHORTER LIST. So the state carries
+ * ONE record instead of N: `baseRecord`, the world the ladder / a directive /
+ * a LOAD produced, before any manual edit. `record` is `foldEdits(baseRecord,
+ * edits)`.
+ *
+ * ⛔ Not a tidy-up: a stack is only equal to the fold if NOTHING but an edit
+ * ever wrote the record, and this page has three other writers (a rung, a
+ * directive, a load). A1 pinned the two equal on the maze
+ * (`mazeEditAdapter.test.js`) precisely so this replacement could be a swap
+ * with a gate behind it.
+ *
+ * ── ⛓ TWO SPELLINGS OF THE SAME LAW, AND WHY BOTH EXIST ──────────────
+ *
+ *  · **VALUE** — `applyEdit` / `applyEdits` / `undoEdit`, `(state) → state`.
+ *    A payload replay, `?gen=`, the CLI and every test drive these; they take
+ *    no session and hold no mutable state.
+ *  · **SESSION** — `openEditSession` / `projectSession`, what `mazeLabView`
+ *    mounts `procgenCore/editorView` on. A session is the ONE home for the
+ *    record, the op list and the certification tri-state while a person is
+ *    editing, and `projectSession` is the ONE WRITER that copies those three
+ *    back onto the page's state for the readouts to read.
+ *
+ * ⛔ They are not two application paths: both land in `editCore.foldEdits`,
+ * which is the one reconstruction. What differs is who holds the op list.
+ */
+
 /**
- * ⛓⛓⛓ ONE MANUAL EDIT — `mazeRoomEditor.applyAt` on a CLONE.
+ * ⛓⛓ **THE IDENTITY TAG A PAYLOAD CARRIES** — §3.2's `base`, in this page's
+ * own spelling and in the payload's own field names.
  *
- * ⛔ **IT CLONES FIRST, AND THAT IS NOT A CONVENIENCE.** `MazeRoomEditor`
- * MUTATES the world it is given (it is the panel's editor, and the panel owns
- * exactly one world). A lab page's state object is frozen and its `record` is
- * shared with the trace rows, the payload and — after a `?gen=` load — with the
- * thing it is being compared against. Editing in place would silently rewrite
- * the level the page says it generated. ⇒ every edit is applied to
- * `cloneWorld(record)` and the previous world is kept, which also gives UNDO
- * for free (the stack is a list of worlds, exactly as the Seedling arc's undo
- * is a list of records).
+ * ⛔ THE CORE NEVER INTERPRETS IT (`createEditSession`'s docblock): it is an
+ * opaque tagged value, carried verbatim, and resolving one back to a record is
+ * a substrate's business. It exists so a payload can say *what these edits are
+ * edits OF* without the reader having to diff two levels to find out.
+ */
+export function editBaseTag(state) {
+    return Object.freeze({
+        kind: 'maze-lab',
+        seed: state.seed,
+        biome: state.biome,
+        width: state.width,
+        height: state.height,
+        step: state.step,
+        skeleton: state.skeleton ?? DEFAULT_SKELETON,
+        areas: state.areas ?? DEFAULT_AREAS,
+        elements: state.elements ?? DEFAULT_ELEMENTS,
+        require: state.require ?? null,
+        directives: (state.directives ?? []).map((d) => d.instance),
+        loaded: Boolean(state.loaded),
+    });
+}
+
+/**
+ * ⛓ THE FOLD'S OWN STEPS → THE PAGE'S EDIT RECORDS. ⛔ `n` and `description`
+ * come from the SAME walk that produced the record (`foldEdits`' `steps`,
+ * added by this slice) — a second walk to collect the sentences would be two
+ * walkers over one application path, which is what the core exists to prevent.
+ */
+const editRecordsOf = (steps) => Object.freeze((steps ?? []).map((st, i) => Object.freeze({
+    n: i + 1, op: st.op, description: st.description,
+})));
+
+/**
+ * ⛓ THE THREE FIELDS THE OP LIST DECIDES, written in ONE place.
  *
- * ⛔ **AND IT UNCERTIFIES** (⚖ §3.8): `certification` goes to `null` on any
- * edit that CHANGED something. An edit the editor refused (`ok: false`) or one
- * that changed nothing (`Tile already floor.`) leaves the state exactly as it
- * was — a refusal is not a modification, and marking the level uncertified for
- * a click that did nothing would be a readout claiming a fact that did not
- * happen.
+ * ⛔ `certification` (the verdict OBJECT, which the pane prints) is cleared
+ * here rather than kept beside the tri-state: `certified === true` IS *the
+ * oracle was asked about the record now on screen and said yes*, so a
+ * certification surviving a `null` tri-state would be a display of an answer
+ * about a level that has moved. ⚖ §3.8, and the tri-state stays the one home.
+ */
+const withEdits = (state, { record, steps, certified, certification = null }) => Object.freeze({
+    ...state,
+    record,
+    edits: editRecordsOf(steps),
+    certification: certified === true ? certification : null,
+    certified,
+});
+
+/**
+ * ⛓⛓⛓ ONE MANUAL EDIT — the palette's op, through `editCore.applyOne`.
+ *
+ * ⛔ **THE OP IS BUILT BY `MazeRoomEditor.opFor` AND APPLIED BY THE CORE.** The
+ * editor's private selection (`selectedItemId`, `selectedObstacleId`) is spent
+ * exactly where it always was; what changed is that the APPLICATION goes
+ * through the same `applyOne` a group, a paste and a flood take, so a stroke
+ * and a click are one code path and not two.
+ *
+ * ⛔ **AND IT UNCERTIFIES** (⚖ §3.8): `certification` and the tri-state go to
+ * `null` on any edit that CHANGED something. An edit the editor refused
+ * (`ok: false`) or one that changed nothing (`Tile already floor.`) leaves the
+ * state exactly as it was — a refusal is not a modification, and marking the
+ * level uncertified for a click that did nothing would be a readout claiming a
+ * fact that did not happen.
+ *
+ * ⛔ **THE TEST IS "DID THE WORLD CHANGE", NOT WHAT THE EDITOR CALLED IT** —
+ * ⚖ law (b), and `mazeEditAdapter`'s `equal` is `procgenMaze.worldsEqual`,
+ * which is this function's own former test extracted rather than re-spelled.
+ * `MazeRoomEditor._setTile` returns `ok('tile', 'Tile (3,3) already floor.')`
+ * for a click that changed NOTHING, so a guard on `ok`/`type` counted it as a
+ * manual edit: the count bumped, the certification dropped and the identity
+ * line announced that the URL had stopped being a reproduction.
  *
  * @param {object} state  a `generateStep`/`applyDirective`/`loadPayload` state
  * @param {MazeRoomEditor} editor  the page's editor (its palette selection is
  *   UI state and lives with the UI)
- * @returns {{state: object, result: object}} the new state and the editor's own
- *   descriptor VERBATIM — the page prints `result.description` unchanged,
- *   because the editor's refusal is the evidence channel.
+ * @returns {{state: object, result: object}} the new state and the ADAPTER's
+ *   own descriptor VERBATIM — the page prints `result.description` unchanged,
+ *   because the refusal is the evidence channel.
  */
 export function applyEdit(state, editor, tx, ty) {
     if (!(editor instanceof MazeRoomEditor)) {
@@ -751,78 +863,40 @@ export function applyEdit(state, editor, tx, ty) {
             + 'page\'s, and a second editor would be a second answer to "what does a click '
             + 'do".');
     }
-    const next = cloneWorld(state.record);
-    const result = editor.applyAt(next, tx, ty);
-    /**
-     * ⛓⛓⛓ **THE TEST IS "DID THE WORLD CHANGE", NOT WHAT THE EDITOR CALLED IT**
-     * — and this row is here because the first cut asked the editor and got the
-     * wrong answer.
-     *
-     * `MazeRoomEditor._setTile` returns `ok('tile', 'Tile (3,3) already
-     * floor.')` for a click that changed NOTHING: `ok: true`, and `type` is
-     * `'tile'` rather than `'noop'` (`'noop'` is reserved for its REFUSALS). So
-     * a guard on `ok`/`type` counted "you clicked floor on a floor tile" as a
-     * manual edit — which bumps the edit count, drops the CERTIFICATION and
-     * makes the identity line say the URL stopped being a reproduction, all for
-     * a click that did nothing. ⚖ §3.8 is a law about CHANGES.
-     *
-     * ⛔ Asked of the WORLD rather than fixed in the editor: the editor is the
-     * panel's too and its descriptors are its own business, and comparing the
-     * serialised worlds is the one question this page actually has (rooms are
-     * tens of cells, so the comparison is free).
-     */
-    const changed = result.ok && !worldsEqual(next, state.record);
-    if (!changed) {
-        return { state, result };
+    const op = editor.opFor(tx, ty);
+    if (!op) {
+        return {
+            state,
+            result: { ok: false, description: `Unknown palette type ${editor.selectedType}.` },
+        };
     }
-    /**
-     * ⛓⛓⛓ **THE RECORD IS AN OP** — arc 2 slice 4, closing constructive
-     * §18.2's residue. It was `{n, type, at, palette, description}`: a
-     * DESCRIPTION of a press, which named the cell and the PALETTE but not the
-     * item id the editor had selected, so a fold placed a different body at the
-     * right cell and `agreementWithPayload` had to refuse an edited payload by
-     * name. `result.op` is CLOSED — every argument is in it, and the two
-     * allocating ops carry the index that was actually used, exactly as a
-     * recorded DIRECTIVE carries its resolved parameters.
-     *
-     * ⛔ `at` and `palette` are GONE rather than kept beside it: `op.x`/`op.y`
-     * IS the cell and `op.op` IS what was done, and two spellings of one fact
-     * are how a replay and a readout come to disagree.
-     */
-    const edit = Object.freeze({
-        n: (state.edits?.length ?? 0) + 1,
-        type: result.type,
-        op: result.op,
-        description: result.description,
-    });
-    return {
-        state: Object.freeze({
-            ...state,
-            record: next,
-            edits: Object.freeze([...(state.edits ?? []), edit]),
-            /** ⚖ §3.8: UNCERTIFIED until re-solved. `null`, never `false`. */
-            certification: null,
-            /** ⛓ SLICE 12 — and `null` on the tri-state too: an edit does not
-             *  make the oracle say no, it makes nobody have asked. */
-            certified: null,
-            /** ⛓ The world before this edit, so UNDO is a pop and not a replay. */
-            undoStack: Object.freeze([...(state.undoStack ?? []), state.record]),
-        }),
-        result,
-    };
+    return applyEditOpToState(state, op);
 }
 
 /**
- * ⛓⛓⛓ **REPLAY A PAYLOAD'S EDITS** — arc 2 slice 4, and the reason it can exist
- * at all is that an edit is now an OP (`mazeRoomEditor.applyEditOp`'s docblock).
+ * ⛓⛓ **ONE OP — ATOMIC OR A `group` — ON A STATE.** The palette press above and
+ * the DOM arm's stroke / paste / flood all land here, so the "did it change"
+ * question and the certification law are asked once.
+ */
+export function applyEditOpToState(state, op) {
+    const res = applyOne(mazeEditAdapter, state.record, op);
+    if (!res.ok || worldsEqual(state.record, res.record)) {
+        return { state, result: res };
+    }
+    const edits = [...(state.edits ?? []).map((e) => e.op), res.op ?? op];
+    const out = foldEdits(mazeEditAdapter, state.baseRecord ?? state.record, edits);
+    return { state: withEdits(state, { ...out, certified: null }), result: res };
+}
+
+/**
+ * ⛓⛓⛓ **REPLAY A PAYLOAD'S EDITS** — `editCore.foldEdits`, and nothing else.
  *
- * ⛔ THE FOLD USES THE SAME APPLICATION PATH A PRESS USES, in order, on a CLONE
- * per step — so `?gen=` of an EDITED payload reproduces it byte for byte and
- * the page's own `agreementWithPayload` can say so. That is the second half of
- * ⚖ ruling 9: the payload IS the identity of an edited level, and a channel
- * that could only carry it one way was half a promise.
+ * ⛔ THE FOLD IS THE CORE'S: `?gen=` of an EDITED payload reproduces it byte for
+ * byte and `agreementWithPayload` can say so. That is the second half of ⚖
+ * ruling 9 — the payload IS the identity of an edited level, and a channel that
+ * could only carry it one way was half a promise.
  *
- * ⚠ **AN EDIT RECORDED BEFORE THIS SHAPE EXISTED REFUSES BY NAME.** A payload
+ * ⚠ **AN EDIT RECORDED BEFORE THE OP SHAPE EXISTED REFUSES BY NAME.** A payload
  * from constructive slice 12 carries `{n, type, at, palette, description}` —
  * there is no op in it, and guessing one from `palette` is exactly the
  * different-body-at-the-right-cell defect the op shape exists to end. The
@@ -830,55 +904,125 @@ export function applyEdit(state, editor, tx, ty) {
  *
  * ⚠ AND A REFUSED OP IS A THROW, not a skip: a fold that silently dropped an
  * edit would report a level difference whose real cause is three lines further
- * up.
+ * up. ⛓ The core throws that refusal; this function re-states it in the page's
+ * own words so a reader of a `?gen=` failure is told which channel refused.
  */
 export function applyEdits(state, edits) {
-    let out = state;
     (edits ?? []).forEach((edit, i) => {
-        if (!edit?.op) {
+        if (!editOpOf(edit)) {
             fail(`mazeLab: edit #${i + 1} of this payload carries no \`op\` — it is a `
                 + 'DESCRIPTION recorded before maze edits had an op shape (constructive slice '
                 + '12), and a fold that guessed one from its `palette` would place a DIFFERENT '
                 + 'BODY at the right cell. Use LOAD, which takes the payload\'s `level` as it '
                 + 'stands.');
         }
-        const next = cloneWorld(out.record);
-        const result = applyEditOp(next, edit.op);
-        if (!result.ok) {
-            fail(`mazeLab: edit #${i + 1} (${edit.op.op} at (${edit.op.x},${edit.op.y})) was `
-                + `REFUSED on replay: ${result.description} ⛔ A fold that skipped it would `
-                + 'report a level difference whose cause is here.');
-        }
-        out = Object.freeze({
-            ...out,
-            record: next,
-            edits: Object.freeze([...(out.edits ?? []), Object.freeze({
-                n: (out.edits?.length ?? 0) + 1,
-                type: result.type,
-                op: result.op,
-                description: result.description,
-            })]),
-            certification: null,
-            certified: null,
-            undoStack: Object.freeze([...(out.undoStack ?? []), out.record]),
-        });
     });
-    return out;
+    const ops = [...(state.edits ?? []).map((e) => e.op), ...(edits ?? []).map(editOpOf)];
+    let out;
+    try {
+        out = foldEdits(mazeEditAdapter, state.baseRecord ?? state.record, ops);
+    } catch (e) {
+        fail(`mazeLab: a recorded edit was REFUSED on replay — ${e.message}`);
+    }
+    return withEdits(state, { ...out, certified: null });
 }
 
-/** ⛓ UNDO is a POP of the world stack. Uncertified stays uncertified — the
- *  oracle has still not been asked about the world now on screen. */
+/**
+ * ⛓ AN EDIT ENTRY'S OP, whichever of the two envelopes it arrived in.
+ *
+ * ⛔ A payload written by this build carries `{n, op, description}` and `op` is
+ * the closed op; a payload written by arc 2 slice 4 carries the same envelope
+ * with a `type`; a payload from constructive slice 12 carries a DESCRIPTION and
+ * has no op at all, which is the one case that must refuse. ⚠ `null` here is
+ * the REFUSAL's trigger and never a silent skip.
+ */
+const editOpOf = (edit) => (edit && typeof edit.op === 'object' && edit.op ? edit.op : null);
+
+/**
+ * ⛓⛓⛓ **UNDO IS THE FOLD OVER A SHORTER LIST** — ⚖ law (a). ⛔ Not a stack pop:
+ * the record after an undo is the record a page that never had that edit would
+ * hold, byte for byte, and a stack can only promise that if nothing but an edit
+ * ever wrote the record — which is false here (a rung, a directive and a LOAD
+ * all write it).
+ *
+ * ⚠ A GROUP IS ONE ENTRY, so undoing a stroke, a paste or a flood removes the
+ * whole thing. ⚠ At ZERO edits it returns the state unchanged, so a page can
+ * call it unconditionally and a readout cannot claim an undo that did not
+ * happen. Uncertified stays uncertified — the oracle has still not been asked
+ * about the world now on screen.
+ */
 export function undoEdit(state) {
-    const stack = state.undoStack ?? [];
-    if (stack.length === 0) return state;
-    return Object.freeze({
-        ...state,
-        record: stack[stack.length - 1],
-        undoStack: Object.freeze(stack.slice(0, -1)),
-        edits: Object.freeze((state.edits ?? []).slice(0, -1)),
-        certification: null,
-        certified: null,
+    const edits = state.edits ?? [];
+    if (edits.length === 0) return state;
+    const out = foldEdits(mazeEditAdapter, state.baseRecord ?? state.record,
+        edits.slice(0, -1).map((e) => e.op));
+    return withEdits(state, { ...out, certified: null });
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ THE SESSION — WHAT THE DOM ARM MOUNTS `editorView` ON
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓⛓ **OPEN A SESSION ON A STATE.** The session owns the op list and the
+ * tri-state for as long as a person is editing; `projectSession` is what puts
+ * its answers back on the state for the readouts.
+ *
+ * ⛔ IT IS OPENED ON `baseRecord`, NOT ON `record` — the fold has to start where
+ * the edits started, or the first undo would land on a level that already had
+ * them. ⚠ A state's existing edits are replayed in, so entering EDIT twice in
+ * one page life does not lose the first visit's work.
+ */
+export function openEditSession(state) {
+    const session = createEditSession(mazeEditAdapter, state.baseRecord ?? state.record, {
+        base: editBaseTag(state),
+        certified: state.certified ?? null,
     });
+    for (const edit of state.edits ?? []) {
+        const res = session.apply(edit.op);
+        if (!res.ok) {
+            fail(`mazeLab: this state's own edit #${edit.n} was REFUSED when the session `
+                + `re-folded it — ${res.description} ⛔ That is a base/ops disagreement, not `
+                + 'a user error: the state carries edits its own `baseRecord` cannot take.');
+        }
+    }
+    /** ⛓ The tri-state is re-stated AFTER the replay: every applied op puts it
+     *  back to `null` by law, and a state that arrived CERTIFIED (a generated
+     *  rung with no edits) must keep saying so. */
+    session.setCertified(state.certified ?? null);
+    return session;
+}
+
+/**
+ * ⛓⛓⛓ **THE ONE WRITER OF `record`, `edits` AND `certified` ON THE PAGE.**
+ *
+ * ⛔ While a session is open it is the HOME for those three; the state's copies
+ * are PROJECTIONS assembled here and written nowhere else. Two writers is
+ * exactly the failure this arc has been spending its budget avoiding — a page
+ * that edited `state.record` beside a session would show one level and fold
+ * another.
+ */
+export function projectSession(state, session) {
+    const ops = session.ops();
+    const out = foldEdits(mazeEditAdapter, state.baseRecord ?? state.record, ops);
+    return withEdits(state, {
+        ...out,
+        certified: session.certified,
+        certification: state.certification,
+    });
+}
+
+/**
+ * ⛓⛓ **THE ORACLE'S ANSWER, INTO THE SESSION** — ⚖ §3.8's law with ONE home.
+ * `certify` computes the verdict (it is a pure question about a record);
+ * `session.setCertified` is where the page's answer LIVES, and this is the only
+ * bridge between them, which is what keeps `false` reachable in exactly one
+ * place.
+ */
+export function certifyInto(state, session) {
+    const answered = certify(state);
+    session.setCertified(answered.certified);
+    return projectSession(answered, session);
 }
 
 /* ══════════════════════════════════════════════════════════════════════
@@ -1044,6 +1188,20 @@ export function labPayload(state) {
          */
         elements: state.elements ?? DEFAULT_ELEMENTS,
         require: state.require ?? null,
+        /**
+         * ⛓⛓ EDITOR v3 SLICE A2 — **THE IDENTITY TAG THE EDITS ARE EDITS OF**
+         * (§3.2's `base`, carried opaquely by `editCore`). ⛔ It is written
+         * UNCONDITIONALLY and is NOT compared by `agreementWithPayload`: it
+         * restates fields the payload already carries one by one, so a
+         * comparison of it would report one divergence twice.
+         */
+        base: editBaseTag(state),
+        /**
+         * ⛓ SLICE A2 — the edits are `{n, op, description}` and `op` is
+         * `editCore`'s: a STROKE, a PASTE or a FLOOD is ONE entry whose `op` is
+         * a `group` carrying its members. ⛔ That is what makes the count in the
+         * identity line a count of UNDOS.
+         */
         edits: state.edits ?? [],
         /**
          * ⛓ SLICE 12 — THE TRI-STATE TRAVELS, in Seedling's spelling. ⚠ It is
@@ -1135,7 +1293,7 @@ export function agreementWithPayload(payload, state) {
      * and `applyEdits` says so BY NAME rather than this function guessing. LOAD
      * remains the way in for one, and it always was.
      */
-    if ((payload.edits ?? []).some((e) => !e?.op)) {
+    if ((payload.edits ?? []).some((e) => !editOpOf(e))) {
         return {
             checked: false,
             agrees: false,
@@ -1253,11 +1411,26 @@ export function loadPayload(payload, { biome = DEFAULT_MAZE_BIOME } = {}) {
         height: world.height,
         model: bound,
         record: world,
+        /** ⛓ SLICE A2 — a LOADED level IS its own base; see the `edits` note. */
+        baseRecord: world,
         trace: payload?.trace ?? [],
         summary: payload?.summary ?? null,
         keptTemplates: [],
         directives: payload?.directives ?? [],
-        edits: payload?.edits ?? [],
+        /**
+         * ⛓⛓⛓ EDITOR v3 SLICE A2 — **A LOADED LEVEL HAS NO EDIT LIST, AND THAT
+         * IS THE HONEST STATE.** ⛔ It used to carry `payload.edits`, which was
+         * a REPORT of a construction this page did not perform: `record` is the
+         * payload's FINAL level, edits already baked in, so `baseRecord` is that
+         * same level and folding the list again would apply every edit TWICE.
+         * ⚖ Law (a) has no room for a third thing: either the ops fold from the
+         * base or they are not this state's ops.
+         *
+         * ⚠ Nothing is lost — the level IS the edited level, `describeState`
+         * says so through the `loaded` clause, and `?gen=` (which replays the
+         * ops from the LADDER) is the channel that reproduces one.
+         */
+        edits: [],
         skeleton: payload?.skeleton ?? DEFAULT_SKELETON,
         /**
          * ⛓ SLICE 3 — a LOADED level says which graph produced it, and ⛔
@@ -1312,6 +1485,16 @@ export function loadPayload(payload, { biome = DEFAULT_MAZE_BIOME } = {}) {
 export function describeState(state, solved = null) {
     const s = state.summary;
     const edits = (state.edits ?? []).length;
+    /**
+     * ⛓⛓ EDITOR v3 SLICE A2 — **THE COUNT IS OF UNDOS, AND THE GROUPS RIDE IN
+     * A PARENTHESIS.** `editCore.describeOps` is the one formatter for it, so
+     * this line and the EDIT pane's note cannot disagree about what "3 edits"
+     * means when one of them is a 12-cell stroke. ⛔ The head keeps the word
+     * "manual" this page has always used — it is what distinguishes an edit
+     * from a DIRECTED attempt in the same sentence.
+     */
+    const editText = describeOps((state.edits ?? []).map((e) => e.op))
+        .replace(' edit(s)', ' manual edit(s)');
     const directives = (state.directives ?? []).length;
     /**
      * ⛓ SLICE 5 — THE SKELETON KIND, NAMED ONLY WHEN IT IS NOT THE OPEN ROOM.
@@ -1345,7 +1528,8 @@ export function describeState(state, solved = null) {
             + (elementText === DEFAULT_ELEMENTS.name ? '' : ` · elements: ${elementText}`)
             + (requireText === '' ? '' : ` · requires: ${requireText}`)
             + (directives ? `, then ${directives} directed attempt(s)` : '')
-            + (edits ? `, then ${edits} manual edit(s)` : ''),
+            + (edits ? `, then ${editText}` : '')
+            + (state.loaded ? ' · LOADED from a payload' : ''),
         /**
          * ⛓⛓⛓ ARC 5, SLICE 6b — **THE DENSITY IDENTITY BLOCK** (§3.6), the same
          * six levers the Seedling page prints and through the SAME function
@@ -1426,7 +1610,15 @@ export function describeState(state, solved = null) {
      * `describeState` prints the same sentence, each page naming its own
      * download affordance in the parenthesis.
      */
-    if (directives || edits) {
+    /**
+     * ⛓⛓ SLICE 12 WIDENED THE CONDITION AND KEPT THE SENTENCE (⚖ §3.9); ⛓ SLICE
+     * A2 widens it once more, to a LOADED level. ⛔ It has to: `loadPayload`
+     * takes a level AS IT STANDS, so the address bar names a ladder that never
+     * produced what is on screen — which is exactly the fact this clause
+     * exists to state, and the one case where it used to be silent was the
+     * case where the level came from somebody else's file.
+     */
+    if (directives || edits || state.loaded) {
         bits.push('⚠ the URL is NOT a reproduction of this construction — it names the '
             + 'LADDER alone; the PAYLOAD is (download / the save box)');
     }

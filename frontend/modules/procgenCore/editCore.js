@@ -280,12 +280,22 @@ const opLabel = (op) => (isGroup(op)
  * wants — `agreementWithPayload` naming `edits` for it is the honest reading,
  * not a false alarm.
  *
- * @returns {{record, applied: object[], dropped: Array<{index, op, description}>}}
+ * ⛓ **AND EVERY APPLIED OP'S OWN SENTENCE RIDES IN `steps`** (slice A2). The
+ * adapter answers *what did this op do* once, on the fold, and a page that
+ * wanted the line for a readout otherwise had to walk `applyOne` a SECOND time
+ * over the same list — two walkers over one application path, which is the
+ * shape this file exists to prevent. `applied` is still the op list and
+ * nothing about it moved; `steps` is the same ops with `{index, op,
+ * description}`, `index` being the position in the list that was HANDED in.
+ *
+ * @returns {{record, applied: object[], steps: Array<{index, op, description}>,
+ *   dropped: Array<{index, op, description}>}}
  */
 export function foldEdits(adapter, base, ops) {
     assertAdapter(adapter);
     let record = base;
     const applied = [];
+    const steps = [];
     const dropped = [];
     (ops ?? []).forEach((op, i) => {
         const res = applyOne(adapter, record, op);
@@ -303,9 +313,15 @@ export function foldEdits(adapter, base, ops) {
         }
         record = res.record;
         applied.push(res.op ?? op);
+        steps.push(Object.freeze({
+            index: i, op: res.op ?? op, description: res.description,
+        }));
     });
     return Object.freeze({
-        record, applied: Object.freeze(applied), dropped: Object.freeze(dropped),
+        record,
+        applied: Object.freeze(applied),
+        steps: Object.freeze(steps),
+        dropped: Object.freeze(dropped),
     });
 }
 
