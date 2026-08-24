@@ -2611,7 +2611,7 @@ describe('R9 slice 12c′: the PLANNER dashes toward the exit', () => {
      * appears the same number of times. A pass that quietly skipped one would
      * still certify something and still look like a scan.
      */
-    it('⛓⛓ ⚖ ruling 45(b): all four prefixes are previewed at every start tick, and '
+    it('⛓⛓ ⚖ ruling 45(b): EVERY prefix is previewed at every start tick, and '
         + '`scanned` says so', () => {
         const run = runOf('r9-solve-2');
         const tele = (run.world.teleporters ?? []).find((t) => t.to === 0);

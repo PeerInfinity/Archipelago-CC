@@ -14230,3 +14230,119 @@ walking takes **0 hits with 10 `enemy hitsTimer` suppressions at t=32…41**,
 while the same tape without the press takes **2 hits from that same bob**. One
 press turns ten ticks of body contact into ten ticks of nothing — ⚖ ruling
 44(b), reproduced in the run.
+
+### R9 slice 12c‴: ONE SWORD WINDOW FOR BOTH SIDES — the game says press + 1, the parting is cured, and L14 is DRIVEN at 123 t
+
+⚖ **Ruling 45, the user, at 12c″'s STOP**: *"I don't think this rule makes
+sense … Does striking an enemy really cause camera shake? … Also, I would like
+the planner to consider dashes that aren't full length, if possible."* Both
+halves land here, and so does the blocker 12c″ left: the plan was certified and
+the drive was HIT.
+
+**THE WITNESS PAIR, AND THE GAME'S OWN i-FRAME CLOCK.** §29.7 measured that of
+146 committed tapes, **ZERO** had ever exercised ⚖ ruling 44(b) — the mechanism
+the whole dash model now rests on. The user's licensed pair pays that: two tapes
+from `r9-l6-bob-press`'s boot with identical held keys, differing by ONE
+`primary` at tick 10. The PRESS arm takes 0 player hits with ten ticks of contact
+suppressed by the enemy's own i-frame (t = 32…41, `bob@112,48`); the CONTROL
+takes 2 hits from that same bob. **The game agrees**: its `--mobiles` readout
+carries `hits 1/3` and a monotonically draining `hits_timer` on the struck body
+while the player walks through it, and NO damage on the control's.
+
+⛓⛓ **AND THE PAIR SETTLES THE SKEW, WHICH IS WHAT IT WAS RUN EARLY FOR.**
+`botMobiles` reports the game's own `tick` beside each body, and `Enemy.hit`
+writes `hitsTimer = 30` once, so one damaged sample INVERTS to the hit tick:
+`hitTick = tick − (30 − hits_timer)`. Three independent samples all answer **12**
+against a press at game tick 11. ⇒ **the game lands the hit at PRESS + 1** —
+`levelRun.advance`'s `pendingThrust`, not `previewWalk`'s press-tick
+`chasers.hit`. The model's whole i-frame column IS the game's: `hits_timer`
+22/13/5, `hits`, and the body's own x agreeing to 0.01 px at every sampled tick.
+
+⚠ **THE TAPE'S LENGTH IS A MEASUREMENT AND THE FIRST ONE WAS WRONG.** The
+obvious length — walk until the press arm's own first hit and stop one tick
+short — is 60, and the GAME refused both arms: press `hits` 1 against 0, control
+`hits` **0** against 2, with all 61 observations matching.
+`seedling-bot-replay-win.py` polls `botStatus` every 0.25 s at 30 fps, so the
+status the differential compares is read up to ~8 engine frames PAST the tape
+with its last keys still held. ⛔ And the control's failure is the instructive
+one: `verify-seedling-bot-differential` argued the `hits` EQUALITY was safe
+where `hits_timer` is only a bound — *"a further hit would fail the equality
+loudly"*. **A further hit that is the KILLING one moves it to ZERO**, through
+`Player.hit`'s `hits >= hitsMax` → `die()`. The sentence is corrected in place;
+the tape's length is now the SHORTEST walk that completes its sealed columns
+(42 ticks) with the post-tape margin MEASURED on both arms (18 / 19) and
+asserted at ≥ 2× the poller's window.
+
+**ONE SWORD WINDOW, EXTRACTED.** `presses.js` owns the machinery both sides
+need: `swordWindowStep(win, tick)` returns the PENDING thrust and then this
+tick's DUE repeats (firing the pending is what schedules its four, at
+`T+1 … T+SLASH_HIT_TICKS−1`), `swordWindowReplace` is the press's REPLACEMENT
+taken above the step, `swordWindowSchedule` is its thrust taken below. The RUN
+side is a transcription and moves nothing — 13 of 14 producer `--check` md5s
+byte-identical (the 14th, `plan-seedling-r7-attribution`, moved with the two new
+TAPES and was attributed by stashing). ⛓ **NOT DEAD CODE**: of 148 tapes, 24 land
+a press and **18 land a sword hit on a REPEAT tick**, `r8-d2` heaviest at 25.
+
+**⚖ RULING 45(a): THE PLANNED PRESS MODELS ITS HIT.** The AS3 census says a
+strike writes NO `Game.shake` — `Player.hit` `+= 5` is the player TAKING one;
+`Enemy.hit`/`startDeath`/`dieEffects`/`SlashHit`/`genericHit` write none. The
+other three consequences are all modelled and the preview applies them, so
+`would-hit` is retired. What survives is two named cases: a room that can open
+the band WITHOUT the player (`camera.BOSS_CLASS_SHAKE_WRITERS`, the table minus
+`playerHit`, COMPUTED from it; L14 [] · L6 [] · L43 [totemLaser, totemDeath] ·
+L112 [rockFallLanding]), and a covered body whose `contactPricing` is `unknown`
+or `boss`. ⛓ The seam that makes strike-then-dash compose is the scan's own
+first gate: `strikeCandidates` rejects an i-framed TARGET, so the press that
+MOVES cannot re-strike the body the press that STRUCK left harmless.
+
+**⚖ RULING 45(b): PARTIAL WINDOWS.** `DASH_CHAIN_PREFIXES` is every prefix of
+the pattern, derived from it — `[0]` · `[0,2]` · `[0,2,8]` · `[0,2,8,14]`. The
+greedy pass previews all four per start tick and keeps the shortest certified
+walk, ties broken by fewer presses; the 4× preview cost is counted in `scanned`
+and every row carries its `prefix`.
+
+**⛓⛓⛓ THE CURE, AND IT HAS TWO COMPONENTS.** `previewWalk` steps the shared
+window in the run's own intra-tick order — bodies already stepped, player not
+yet, so the rect is taken from the PRE-MOVE player against POST-STEP bodies —
+**and** takes its policy reading from the forecast AS IT STANDS after that
+window rather than from the array `step` handed back before it. ⛔ Without the
+second the parting goes to **62**, worse than the uncured 79 and exactly the
+number 12c″ measured for a naive one-tick deferral: deferring one shot leaves
+the four re-aimed tests missing AND leaves the reading stale. Measured on
+§29.5's own fixtures: the REFUSED arm's parting **207 → none**, the dashing
+arm's **79 → none**, and the previewed player ends on the driven one's PIXEL
+(99.74999999999977 both sides, against 12c″'s 127.85 vs 99.75).
+
+**`PREVIEW_AGREEMENT_BOUND` 79 → 195, re-derived and NOT retired.** On the keys
+the equality is about it now certifies nothing — but a second stream still
+parts: the bodies the POLICY is handed first differ at 195, and that is a DEATH
+REMOVAL (`bob@128,64`, killed at 169, leaves the drive's roster one tick before
+the preview's), not the hit skew. ⚠ It still bounds the wrong QUANTITY. ⛓ Its
+cost, measured on the population it REJECTS: **nothing** — `r9-solve-0` is
+accepted with its 92/95-tick candidate legs where at 79 it was `leg-bound` on
+every start tick.
+
+**THE MEASUREMENT, THREE COLUMNS, offline under the scratch flip** — every row
+DRIVEN, 0 hits, calm arrival:
+
+| segment | committed | 12c″ | +⚖ 45 | + the cure |
+|---|---|---|---|---|
+| `r8-solve-10` | 90 | 81 | 81 | 81 |
+| `r9-solve-11` | 119 | 97 | 97 | 97 |
+| `r9-solve-3` | 226 | 175 | **151** | 151 |
+| `r9-solve-2` | 47 | 23 | 23 | 23 |
+| `r9-solve-0` | 237 | 237 `leg-bound` | 237 `leg-bound` | **144** |
+| `r9-solve-13` | 74 | 35 | 35 | 35 |
+| **`r9-solve-14`** | 145 | **128 PLANNED, not drivable** | 108 | **123** |
+| chain | 3615 | — | 3409 | **3331** |
+
+⛔⛔ **AND THE SLOWER NUMBER IS THE TRUSTWORTHY ONE.** L14's 108 exists and is
+NOT CERTIFIED: it was priced by a preview that still parts from the drive, so
+its own probe cannot say the walk is safe — it drives clean, and nothing in that
+column establishes it. **123 is the certified number**, priced by a preview that
+matches the drive exactly and ends on its pixel. ⚖ Ruling 35 puts safety over
+speed, and the trade is 15 ticks on one room against 93 on another.
+
+⛓ The roster-wide flag is still `false` and every one of the four owning
+producers' `--check` md5s is byte-identical at each of this slice's four
+commits — the whole slice is TAPE-INERT apart from the two witness tapes it adds.

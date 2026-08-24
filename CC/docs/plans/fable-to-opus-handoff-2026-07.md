@@ -4215,13 +4215,52 @@ REFUSED arm 207 in every build), and the naive cure measures WORSE (62). It is T
 so it lands with the flip. Traps **595–596**; as-built = kickoff **§29**; TAPE-INERT (the
 four owning producers' md5s unmoved at both commits).
 
-**NEXT in R9: slice 12c‴** — ⚖ ruling 45's two planner changes (the over-broad `would-hit`
-refusal retired now that a strike is measured to write NO `Game.shake`; PARTIAL dash
-windows) **plus the preview/drive skew cure, designed and worktree-proven**, and the
-witness pair the user LICENSED in 12c″ and left unspent (run it EARLY — its driven per-tick
-`hitsTimer` stream is the ground the skew work needs). THEN the re-record session, on
-12c‴'s table rather than 12c′'s. Then the route: L15 `shove` VERB-APPLY → L16 BRIDGE →
-L8 ORACLE → A14 → A16.
+⛓⛓⛓ **R9 SLICE 12c‴ SHIPPED 2026-08-24** (`e28e8c48e` · `5026eb5b7` · `bad5e4109` ·
+`102196498` + records) — **the blocker is CLOSED and the seal is met.**
+⛓ **THE GAME SETTLED IT.** The user's licensed WITNESS PAIR was run FIRST: two tapes from
+`r9-l6-bob-press`'s boot, identical held keys, differing by ONE `primary` at tick 10. It
+reproduces ⚖ ruling 44(b) in the game (0 player hits with ten ticks of contact suppressed
+by the enemy's own i-frame, against 2 hits on the control) AND settles the skew — inverting
+a struck body's own `hits_timer` out of `botMobiles`, three independent samples agreeing,
+puts the landed hit at **PRESS + 1**: `levelRun.advance`'s convention, not `previewWalk`'s.
+⛓ **THE CURE IS ONE SWORD WINDOW FOR BOTH SIDES** (`presses.swordWindowStep` &c.) stepped
+in the run's own intra-tick order, **plus** the policy's body reading taken AFTER that
+window rather than before it. Without the second half the parting goes to **62** — 12c″'s
+own naive-deferral number. Measured: parting **207 → none** refused, **79 → none** dashing,
+and the previewed player ends on the driven one's PIXEL.
+⛓ ⚖ **Ruling 45 SHIPPED IN FULL**: `would-hit` retired to two named cases (a room that can
+write `Game.shake` without the player — the writers table MINUS `playerHit`, computed; and
+a body whose `contactPricing` is `unknown`/`boss`), and the candidate space gains the
+PREFIXES of the dash chain.
+⛓ **`PREVIEW_AGREEMENT_BOUND` 79 → 195**, re-derived (not retired) because a DEATH REMOVAL
+still parts the body lists there; its cost measured on what it REJECTS is **nothing**.
+⛔⛔ **THE RE-RECORD SESSION'S TABLE IS KICKOFF §30.6 COLUMN (C)**, every row DRIVEN with
+0 hits and a calm arrival: `r8-solve-10` 81 · `r9-solve-11` 97 · `r9-solve-3` **151** ·
+`r9-solve-2` 23 · `r9-solve-0` **144** (the mover 12c″ lost to the bound, back and better
+than 12c′'s 168) · `r9-solve-13` 35 · **`r9-solve-14` 123** — chain 3615 → **3331 t**.
+⛔⛔⛔ **123 IS THE CERTIFIED NUMBER AND 108 IS NOT.** A 108-tick L14 exists in the
+intermediate column, drives clean, and was priced by a preview that still parts from the
+drive — so nothing in that column certifies it. ⚖ Ruling 35 puts safety over speed: take
+123. Traps **600–603**; as-built = kickoff **§30**; TAPE-INERT (the four owning md5s
+byte-identical at all four commits; the roster grows only by the pair, 146 → 148, which is
+also what moved `plan-seedling-r7-attribution`'s standing md5).
+⚠ **THREE THINGS OWED, NONE THIS SLICE'S**: (0) `lint-gate-labels.mjs`'s `callsIn` does not
+skip COMMENTS, so one apostrophe in a `//` comment makes every later `describe(`/`it(`
+swallow the rest of the file — pre-existing, previously silent, and surfaced when this
+slice put the first ALL-CAPS `.length` into the dead zone. MEASURED: the fix moves the
+corpus 101 → 91 findings (12 gone, 2 new, ten files), so each needs deciding on its merits;
+the one false positive it produced here is allowlisted on the merits (a slice NUMBER read
+as a cardinality). (1) the removal-staging one-tick offset is
+UNFIXED and is what the 195 bound stands on — fixing it would let the constant retire;
+(2) `verify-seedling-bot-differential` reads the game's status up to ~8 engine frames PAST
+the tape (0.25 s poll at 30 fps), so a tape ending near an event reports one the tape never
+scheduled — the driver-side fix is GAME-FACING and therefore ⚖ ruling 40's full-roster
+checkpoint class. Until it lands, a tape's post-tape MARGIN is part of its design.
+
+**NEXT in R9: THE RE-RECORD SESSION**, on kickoff §30.6 column (C) — the flip plus the
+seven moved segments through `rerecord-seedling-campaign.mjs` under ⚖ ruling 43's
+`--license-walks`, with ⚖ ruling 39's `why` sweep riding the run. Then the route:
+L15 `shove` VERB-APPLY → L16 BRIDGE → L8 ORACLE → A14 → A16.
 
 ## 6. Everything else (unchanged queues)
 
