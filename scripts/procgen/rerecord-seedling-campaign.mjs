@@ -61,9 +61,25 @@
  *  · RESUMABLE. Each stage writes its state to the run directory with a
  *    `finished` flag, and `--from=`/`--to=` re-enter at a stage boundary.
  *
+ * ── ⚖ RULING 43 — CHANGES TO EXISTING TAPES, NOT ONLY GROWTH ──────────
+ *
+ * S0's sealed table used to permit `none` / `boot-only` only, and treated
+ * `walk-moves` as a STOP **against a verdict nothing measured** — it asserted
+ * no segment was PREDICTED to move its walk, which is true of a prediction
+ * nobody made. S0 now MEASURES it, out of the producers' own `--check`
+ * re-solves (`walkMoves.js`, `walkReport.js`), and `--license-walks=<ruling-id>`
+ * turns the measured STOP into a permission for EXACTLY the measured set:
+ * refused by name without an id, never widening (the set IS the measurement),
+ * with every successor of a moved walk cascaded to `boot-only` and the ruling
+ * printed by S5. The licence is SPENT at the top of S1, where the moved
+ * segments' own producers re-author them — a walk lives in `inputs`, which
+ * S2's surgical BOOT writes cannot touch.
+ *
  * ── STAGES ────────────────────────────────────────────────────────────
- *   S0 PREDICT  offline; the sealed table. `--dry-run` stops here.
- *   S1 MEASURE  chain order, fresh page per segment + a zero-tick run per
+ *   S0 PREDICT  offline; the sealed table + the MEASURED walk moves.
+ *               `--dry-run` stops here.
+ *   S1 MEASURE  the licence is spent (the producers re-author), then chain
+ *               order, fresh page per segment + a zero-tick run per
  *               segment; every boot field from the envelope.
  *   S2 WRITE    surgical text edits of exactly the predicted set.
  *   S3 RECORD   ONE `--win --record --only=<set>`; the producers' `--check`.
@@ -82,6 +98,7 @@
  *   node scripts/procgen/rerecord-seedling-campaign.mjs            # S0..S5
  *   node scripts/procgen/rerecord-seedling-campaign.mjs --from=S2
  *   node scripts/procgen/rerecord-seedling-campaign.mjs --to=S1 --no-cache
+ *   node scripts/procgen/rerecord-seedling-campaign.mjs --license-walks=<ruling-id>
  *
  * The browser stages need Windows Chrome and a dev server on :8000.
  */
@@ -96,6 +113,11 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import {
     bootFromEnvelopeOnly, chainSubjects, latchCacheKey, mergePersistence, timedClearHazard,
 } from './rerecordCampaign.js';
+import {
+    LICENSE_FLAG, applyLicence, cascadeFrom, licenceFrom, movedSegments, nominateOwners,
+    participationOf, reportRows,
+} from './walkMoves.js';
+import { buildInstruments } from './reference/instruments.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..', '..');
@@ -118,6 +140,21 @@ const DRY_RUN = process.argv.includes('--dry-run');
 /** ⚖ Ruling 38 (2), R9 slice 12d — the growth command. See `grow()` below. */
 const GROW = process.argv.includes('--grow');
 const NO_CACHE = process.argv.includes('--no-cache');
+/**
+ * ⚖ Ruling 43, R9 slice 12c′ — **THE WALK LICENCE.** Parsed BEFORE any stage
+ * runs, because a bare `--license-walks` must refuse with nothing written; see
+ * `walkMoves.licenceFrom`. `process.argv` is read here rather than only inside
+ * that module so the instruments index's argv scan can see the flag.
+ */
+const LICENSE_TOKEN = process.argv.find((a) => a === '--license-walks'
+    || a.startsWith('--license-walks='));
+let LICENCE = null;
+try {
+    LICENCE = licenceFrom(LICENSE_TOKEN === undefined ? [] : [LICENSE_TOKEN]);
+} catch (e) {
+    console.log(`FAIL: ${e.message}`);
+    process.exit(1);
+}
 const FROM = arg('from', 'S0');
 const TO = DRY_RUN ? 'S0' : arg('to', 'S5');
 const RUN_DIR = arg('run-dir', join(process.env.TMPDIR || '/tmp',
@@ -176,7 +213,93 @@ function subjects() {
         }));
 }
 
-function predict() {
+/**
+ * ⛓⛓⛓ R9 SLICE 12c′, ⚖ RULING 43 — **THE WALK MOVES, MEASURED OUT OF THE
+ * PRODUCERS.**
+ *
+ * Each participating producer is run ONCE with `--check --walk-report=<path>`;
+ * its report says, segment by segment, whether today's solve differs from the
+ * committed tape and IN WHICH FIELD. See `walkMoves.js` for the three filters
+ * and their calibration, and `walkReport.js` for why `inputs` — not bytes —
+ * is what decides.
+ *
+ * ⛔⛔ **A NON-ZERO EXIT IS THE EXPECTED CASE, NOT A FAILURE.** A producer
+ * whose walk moved FAILS its own byte check and exits 1 — that is the very
+ * event this is measuring. So the verdict is keyed on THE REPORT FILE
+ * EXISTING AND PARSING, not on the exit code, and a producer that produced no
+ * report is a STOP naming it and its log. "It disagreed" and "it crashed" must
+ * not print the same thing.
+ *
+ * ⛔ AND IT IS OFFLINE. Only producers the instruments scan says read
+ * `--walk-report` participate, and the one nominated producer that drives a
+ * browser is named `unmeasured` with that mechanism as its reason — S0's own
+ * contract is "offline, no browser", and §26.6's law is that a scratch tree
+ * cannot run a browser stage at all.
+ */
+async function measureWalks(chains) {
+    const nominated = nominateOwners(chains, { tapesDir: TAPES });
+    const instruments = await buildInstruments();
+    const participation = participationOf([...nominated.keys()],
+        { instrumentRows: instruments.rows });
+    console.log('\n## THE WALK MEASUREMENT — the producers, and what each may answer');
+    const reports = [];
+    const owners = [];
+    const crashed = [];
+    for (const p of participation) {
+        const nominatedBy = nominated.get(p.file) ?? [];
+        if (!p.participates) {
+            console.log(`   ${'—'.padEnd(6)} ${p.file.padEnd(32)} UNMEASURED — ${p.why}`);
+            continue;
+        }
+        const out = join(RUN_DIR, `walk-${p.file.replace(/\.mjs$/, '')}.json`);
+        if (existsSync(out)) unlinkSync(out);
+        const t0 = Date.now();
+        let status = 0;
+        let log = '';
+        try {
+            log = execFileSync('node', [`scripts/procgen/${p.file}`, '--check',
+                `--walk-report=${out}`],
+            { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'],
+                maxBuffer: 256 * 1024 * 1024 });
+        } catch (e) {
+            status = e.status ?? -1;
+            log = [e.stdout, e.stderr].filter(Boolean).join('\n');
+        }
+        const ms = Date.now() - t0;
+        const logFile = join(RUN_DIR, `walk-${p.file.replace(/\.mjs$/, '')}.log`);
+        writeFileSync(logFile, `$ node scripts/procgen/${p.file} --check `
+            + `--walk-report=${out}\n${log}`);
+        if (!existsSync(out)) {
+            crashed.push(`${p.file} produced NO walk report (exit ${status}) — it did not `
+                + `disagree, it did not run. Read ${logFile}`);
+            console.log(`   ${'FAIL'.padEnd(6)} ${p.file.padEnd(32)} no report, exit ${status}`);
+            continue;
+        }
+        const report = JSON.parse(readFileSync(out, 'utf8'));
+        reports.push(report);
+        /**
+         * ⛔ THE CALIBRATION IS BY NAME, NOT BY COUNT (trap 578, and the
+         * count-as-proxy trap beside it): a producer that reported the RIGHT
+         * NUMBER of the WRONG segments would satisfy an arithmetic and mean
+         * nothing. What is checked is that every segment which NOMINATED this
+         * producer is in the report it wrote.
+         */
+        const missing = nominatedBy.filter((s) => !report.segments.some((x) => x.segment === s));
+        owners.push({ file: p.file, ms, exit: status, nominated: nominatedBy.length,
+            reported: report.segments.length, missing });
+        console.log(`   ${'ok'.padEnd(6)} ${p.file.padEnd(32)} `
+            + `${String(report.segments.length).padStart(2)} segment(s) reported, `
+            + `${nominatedBy.length} nominated, ${(ms / 1000).toFixed(1)}s, exit ${status}`);
+    }
+    const { rows, unmeasured, stops } = reportRows(reports, chains,
+        participation.filter((p) => !p.participates));
+    const moved = movedSegments(rows);
+    const cascade = cascadeFrom(chains, moved);
+    return { rows, unmeasured, stops: [...stops, ...crashed], moved, cascade, owners,
+        participation };
+}
+
+async function predict() {
     console.log('# S0 · PREDICT — offline, no browser\n');
     const chains = subjects();
     check('⛓ the subject is DERIVED from PLAYTHROUGH_CHAINS',
@@ -240,24 +363,121 @@ function predict() {
         }
     }
 
+    /**
+     * ⛓⛓⛓ R9 SLICE 12c′, ⚖ RULING 43 — **THE WALK HALF OF THE TABLE, AND IT
+     * IS MEASURED.** Everything above this line is ⚖ ruling 23's BOOT
+     * prediction; a walk move is never predicted (§18.4), so it is measured
+     * here and merged in.
+     */
+    const walk = await measureWalks(chains);
+    const byId = new Map(table.map((r) => [r.segment, r]));
+    for (const r of walk.rows) {
+        const row = byId.get(r.segment);
+        if (!row) continue;
+        row.walk = { verdict: r.verdict, producer: r.producer, moved: r.moved,
+            solvedTicks: r.solvedTicks, committedTicks: r.committedTicks };
+        if (r.verdict === 'walk-moves') {
+            row.verdict = 'walk-moves';
+            row.tick0Rederived = true;
+            row.why = `its WALK re-solves differently today — ${r.committedTicks} t committed `
+                + `against ${r.solvedTicks} t, measured by ${r.producer}`;
+        }
+    }
+    for (const u of walk.unmeasured) {
+        const row = byId.get(u.segment);
+        if (row) row.walk = { verdict: 'unmeasured', why: u.why };
+    }
+    /**
+     * ⛓⛓ THE CASCADE. A moved walk ends somewhere new, so every SUCCESSOR
+     * boots from a latch that has changed — `boot-only`, automatically, and it
+     * is the FIRST move in a chain that decides (everything after it is
+     * downstream whether or not it moved too).
+     */
+    for (const [, c] of walk.cascade) {
+        for (const name of c.successors) {
+            const row = byId.get(name);
+            if (!row || row.verdict === 'walk-moves') continue;
+            row.verdict = 'boot-only';
+            row.tick0Rederived = true;
+            row.why = `downstream of ${c.firstMoveSegment}, whose WALK moved — its boot is `
+                + 'that segment\'s latch, and the latch has changed (⚖ ruling 43\'s cascade)';
+        }
+    }
+
     const licensed = table.filter((r) => r.verdict !== 'none').map((r) => r.segment);
     const tick0Set = table.filter((r) => r.tick0Rederived).map((r) => r.segment);
     console.log('\n## THE SEALED TABLE');
     for (const r of table) {
         console.log(`   ${r.chain.padEnd(14)} ${String(r.index + 1).padStart(2)} `
             + `${r.segment.padEnd(14)} L${String(r.bootLevel).padEnd(3)} `
-            + `${r.verdict.padEnd(10)} tick0:${r.tick0Rederived ? 'RE-DERIVE' : 'keep     '} `
+            + `${r.verdict.padEnd(11)} tick0:${r.tick0Rederived ? 'RE-DERIVE' : 'keep     '} `
+            + `walk:${(r.walk?.verdict ?? 'unmeasured').padEnd(11)} `
             + `${r.ownRoomTimedClears.length ? `own-timed[${r.ownRoomTimedClears}] ` : ''}`
             + `${r.posture.comparable ? '' : 'rng NOT COMPARABLE '}`);
     }
     console.log(`\n## THE LICENSED SET (boot writes): ${licensed.length} — `
         + `${licensed.join(', ') || '(empty)'}`);
     console.log(`## TICK-0 RE-DERIVATIONS: ${tick0Set.length} — ${tick0Set.join(', ')}`);
-    check('⛓ no segment is predicted to move its WALK',
-        table.every((r) => r.verdict !== 'walk-moves'),
-        'a walk move is the user\'s licence, never this pipeline\'s');
-    flush('S0', { licensed, tick0Set, table, rulingBase: 'ruling 23' });
-    return { licensed, tick0Set, table };
+
+    // ── the walk measurement's own accounting ─────────────────────────
+    check('⛓ every chain segment is ACCOUNTED FOR — reported by exactly ONE producer, '
+        + 'or NAMED unmeasured',
+    walk.stops.length === 0 && walk.rows.length + walk.unmeasured.length === table.length,
+    walk.stops.length ? walk.stops.join(' · ')
+        : `${walk.rows.length} measured + ${walk.unmeasured.length} unmeasured `
+            + `= ${table.length}`);
+    check('⛓ every participating producer reported the segments that NOMINATED it',
+        walk.owners.every((o) => o.missing.length === 0),
+        walk.owners.map((o) => `${o.file} ${o.reported}/${o.nominated}`
+            + `${o.missing.length ? ` ⛔ MISSING ${o.missing.join(',')}` : ''}`).join(' · '));
+    if (walk.unmeasured.length) {
+        console.log(`\n## ⚠ UNMEASURED — ${walk.unmeasured.length} segment(s), and a licence `
+            + 'can never cover them:');
+        for (const u of walk.unmeasured) console.log(`   ${u.segment.padEnd(16)} ${u.why}`);
+    }
+
+    // ── the walk moves, and the licence (⚖ ruling 43) ─────────────────
+    const licence = applyLicence(walk.moved, LICENCE);
+    if (walk.moved.length) {
+        console.log(`\n## ⛔ MEASURED WALK MOVES — ${walk.moved.length}:`);
+        for (const m of walk.moved) {
+            console.log(`   ${m.segment.padEnd(16)} ${m.before} t -> ${m.after} t   `
+                + `(${m.chain} #${m.index + 1}, measured by ${m.producer})`);
+        }
+        for (const [id, c] of walk.cascade) {
+            console.log(`   cascade in ${id}: the first move is ${c.firstMoveSegment}, so `
+                + `${c.successors.length} successor(s) become boot-only`
+                + `${c.successors.length ? ` — ${c.successors.join(', ')}` : ''}`);
+        }
+    } else {
+        console.log('\n## MEASURED WALK MOVES: none — every measured segment re-solves to '
+            + 'the walk its committed tape already holds.');
+    }
+    if (licence.sealed) {
+        console.log(`\n## ⚖ THE LICENCE: \`${LICENSE_FLAG}=${licence.sealed.ruling}\` — `
+            + `${licence.sealed.segments.length} segment(s) permitted`
+            + `${licence.sealed.note ? ` (${licence.sealed.note})` : ''}`);
+    }
+    check('⛓ every measured WALK MOVE is covered by a licence (⚖ ruling 43)',
+        licence.stops.length === 0,
+        licence.stops.length ? licence.stops.join(' · ')
+            : (LICENCE ? `under ${LICENCE.ruling}` : 'nothing moved, so nothing needed one'));
+
+    flush('S0', {
+        licensed,
+        tick0Set,
+        table,
+        rulingBase: 'ruling 23',
+        walk: {
+            rows: walk.rows,
+            unmeasured: walk.unmeasured,
+            owners: walk.owners,
+            moved: walk.moved,
+            cascade: [...walk.cascade.entries()].map(([id, c]) => ({ chain: id, ...c })),
+            licence: licence.sealed,
+        },
+    });
+    return { licensed, tick0Set, table, walk: { moved: walk.moved, licence: licence.sealed } };
 }
 
 // ── THE WINDOWS CHANNEL ───────────────────────────────────────────────
@@ -344,8 +564,44 @@ const committedBlocks = (tape) => {
     return out;
 };
 
+/**
+ * ⛓⛓⛓ R9 SLICE 12c′, ⚖ RULING 43 — **A LICENSED WALK MOVE IS RE-AUTHORED BY
+ * ITS OWN PRODUCER, AND IT HAPPENS BEFORE ANYTHING IS MEASURED FROM IT.**
+ *
+ * ⛔ S2's writes are SURGICAL BOOT writes; a walk lives in `inputs`, which
+ * only the producer can author. So the licence is spent HERE — at the top of
+ * S1, above the first latch drive — for the same reason `--grow` runs the
+ * producer before the pipeline (§26.6): every later stage reads the tapes off
+ * disk, and a stage that measured the OLD walk would hand its successor a
+ * boot for a walk nobody will commit.
+ *
+ * ⛔ IT SPENDS EXACTLY THE SEALED SET AND CANNOT WIDEN IT: the producers come
+ * from `s0.walk.licence.segments`, which is the MEASURED set S0 flushed. A
+ * producer re-authors every tape it owns — the ones that did not move come
+ * back byte-identical, which is the control.
+ */
+function spendWalkLicence(s0) {
+    const licence = s0.walk?.licence ?? null;
+    const permitted = licence?.segments ?? [];
+    if (!permitted.length) return { ran: [] };
+    const producers = [...new Set(permitted.map((p) => p.producer))].sort();
+    console.log(`## ⚖ THE WALK LICENCE, SPENT — \`${licence.ruling}\` permits `
+        + `${permitted.length} walk move(s): `
+        + `${permitted.map((p) => `${p.segment} ${p.before}t->${p.after}t`).join(', ')}`);
+    console.log(`## their producer(s) re-author every tape they own: ${producers.join(', ')}`);
+    const ran = [];
+    for (const file of producers) {
+        const r = shell(`${file} re-authors its walks under ⚖ ${licence.ruling}`,
+            'node', [`scripts/procgen/${file}`],
+            `s1-producer-${file.replace(/\.mjs$/, '')}`);
+        ran.push({ file, ok: r.ok });
+    }
+    return { ran };
+}
+
 function measure(s0) {
     console.log('\n# S1 · MEASURE — the GAME, in chain order\n');
+    const spent = spendWalkLicence(s0);
     let blockSetChecked = false;
     const chains = subjects();
     const measured = {};
@@ -439,7 +695,7 @@ function measure(s0) {
             measured[successor] = { complete: next };
         }
     }
-    flush('S1', { boundaries, pending: measured });
+    flush('S1', { boundaries, pending: measured, licenceSpent: spent.ran });
     return { boundaries, measured };
 }
 
@@ -610,6 +866,25 @@ function report(s0, s1, s2) {
         console.log(`   ${r.chain.padEnd(14)} ${r.segment.padEnd(14)} `
             + `predicted ${r.verdict.padEnd(10)} measured `
             + `${m === undefined ? '(not a successor)' : (m.length ? m.join(',') : 'none')}`);
+    }
+    /**
+     * ⛓ ⚖ RULING 43 — **THE LICENCE PRINTS HERE, WITH ITS RULING AND ITS
+     * BEFORE/AFTER TICKS.** A walk move is the user's permission, so the run's
+     * own report has to be able to say whose it was and what it bought; a
+     * table that only said "written" would leave the authority off the record.
+     */
+    const licence = s0.walk?.licence ?? null;
+    if (licence) {
+        console.log(`\n## ⚖ THE WALK LICENCE: \`${licence.ruling}\` — `
+            + `${licence.segments.length} segment(s)`);
+        for (const p of licence.segments) {
+            console.log(`   ${p.segment.padEnd(16)} ${p.before} t -> ${p.after} t   `
+                + `(${p.chain}, re-authored by ${p.producer})`);
+        }
+        if (!licence.segments.length) console.log(`   ${licence.note}`);
+    } else {
+        console.log('\n## ⚖ THE WALK LICENCE: none was given, and none was needed — S0 '
+            + 'measured no walk move.');
     }
     console.log(`\n## written: ${(s2?.wrote ?? []).map((w) => w.label).join(', ') || '(none)'}`);
     console.log(`## run directory: ${RUN_DIR}`);
@@ -1071,7 +1346,7 @@ if (GROW) {
     process.exit(failures || (g.ran ?? []).some((r) => !r.ok) ? 1 : 0);
 }
 
-const s0 = wants('S0') ? predict() : resume('S0');
+const s0 = wants('S0') ? await predict() : resume('S0');
 const s1 = wants('S1') ? measure(s0) : (wants('S2') || wants('S5') ? resume('S1') : null);
 const s2 = wants('S2') ? write(s0, s1) : (wants('S3') || wants('S5') ? resume('S2') : null);
 if (wants('S3')) record(s2);

@@ -5479,6 +5479,7 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [
                 "dry-run",
                 "from",
+                "license-walks",
                 "no-cache",
                 "to"
             ],
@@ -5502,6 +5503,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "grow"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "license-walks"
                 },
                 {
                     "how": [
