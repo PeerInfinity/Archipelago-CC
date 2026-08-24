@@ -13885,4 +13885,4 @@ and the four summaries (`index.json`, the frontier, the reference,
 Gates: `gates.sh local` **26/26** · the FULL roster **145 tapes, 3378 / 0 / 46,
 ALL CHECKS PASSED** · the unfiltered vitest ALONE **336 files / 10310 rows, 0
 failed**, no hand re-pin · sequence 36/0 → **35/0** by named rows · ship
-**254/0** unchanged · the campaign producer's `--check` md5 the only mover.
+**254/0** unchanged · **TWO producer `--check` md5s moved, not the one the seal predicted**: the campaign's (the headline is gone from its output) and `plan-seedling-r7-attribution`'s, which prints `roster N tapes; expectation files N` and therefore has a ROSTER-SHAPED fingerprint that any tape move moves — a producer's digest fingerprints whatever that producer chose to print.
