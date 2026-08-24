@@ -13484,7 +13484,11 @@ it there.
 the dashing policy takes no hits over 400 ticks where the enforced one is hit at
 tick 169; at L14's boot the sign is the other way. So it is a claim about a
 stance, not about the game — and ⚖ ruling 35's *complete model of how the dash
-works* is what settles it.
+works* is what settles it. ⚠⚠ **The `tick 169` half does NOT reproduce at slice
+12c's head** — measured three ways (the stance read as a boot, which puts the
+player on top of `bob@96,80`; the stance read as a CENTRE, which is what it is;
+and a fixed-player forecast), neither arm is hit there in 400 ticks. The
+"0 hits dashing" half does reproduce. See the 12c section.
 
 ⚠ **Ten producers' `--check` stayed byte-identical**, zero movers. The strike
 policy still never fires on a committed corridor, so the enforcement cannot bite
@@ -13886,3 +13890,105 @@ Gates: `gates.sh local` **26/26** · the FULL roster **145 tapes, 3378 / 0 / 46,
 ALL CHECKS PASSED** · the unfiltered vitest ALONE **336 files / 10310 rows, 0
 failed**, no hand re-pin · sequence 36/0 → **35/0** by named rows · ship
 **254/0** unchanged · **TWO producer `--check` md5s moved, not the one the seal predicted**: the campaign's (the headline is gone from its output) and `plan-seedling-r7-attribution`'s, which prints `roster N tapes; expectation files N` and therefore has a ROSTER-SHAPED fingerprint that any tape move moves — a producer's digest fingerprints whatever that producer chose to print.
+
+### R9 slice 12c: THE DASH, MODELLED — the oracle steps it, the policy prices it, and flipping the flag is a 2.76× regression
+
+**The preview/drive gap 12b′ measured is closed by MODELLING, not by refusing.**
+12b′ found it to be exactly two things: `levelRun.previewStepper()` built its
+`stepV2` options with no `dashImpulse`, and `previewWalk` never called
+`slashSet`. Both are gone.
+
+**(i) The oracle steps the dash.** `previewStepper()` takes a per-tick
+`dashImpulse`; `stepOptsFor` stays the one builder and the one call, and the
+spread overrides the single key it already declares and already defaults to
+`null` — so the non-dash arm passes the object it always did and every
+committed corridor is byte-unchanged. `previewWalk` threads the run's own slash
+state through `slashTimerTick` / `slashSet` / `slashEnd` in `advance`'s own
+order, and its transit loop and standing tail share ONE `combatBefore` /
+`combatAfter` pair. `levelRun.slashInfo` is the one shape both consumers read —
+state, `endsAt`, the six gate terms, and the two windows' END TICKS so a preview
+can AGE them rather than freeze this tick's answer.
+
+**(ii) The policy knows what its press will do.** `combatVerbs
+.slashPressForecast` ages that state by the run's own primitives and asks
+`slashSet` what the press on tick+1 will be — EXACT, not a gap arithmetic.
+12b′'s `(tick + 1) - lastPressAt < ORDINARY_SWING_PERIOD` is a sound REFUSAL,
+which is all a refusal needs, and not an answer. The outcome picks the rect the
+candidate scan asks with: **24 × 20.8 at reach 24 dashing, 16 × 32 at 16
+swinging, and neither contains the other**. A press `set slashing` would
+`gate` or `swallow` costs no aim tick — the policy reads the OUTCOME, not the
+flag.
+
+**Certified, and defined by what the WALK can have.** A driver commits its keys
+for tick k before tick k runs, so it has `run.strikeBodies` — the previous
+tick's bodies — and nothing else (trap 567). `certifyDash` therefore lives in
+the policy and prices the MARGINAL displacement: `DASH_DISPLACEMENT`, DERIVED
+from `SLASH_DASH_FORCE` and `DEFAULT_FRICTION` alone as 8 ticks carrying 9 px —
+which is §23.11's game-measured 9, reached from the constants. The 8 offsets
+are asked of every pre-step body through `encounters.chaseEnvelope`, the arc's
+own sound over-approximation. Two ways to be UNPRICEABLE, both refusing by
+name: a tag with no step bound, and a body inside its own i-frame — the second
+being `priceCrossing`'s own refusal, because a knocked chase takes the `pushed`
+branch and does not re-normalize to `moveSpeed`. It is the common case and it
+is meant to be: ⚖ ruling 35 puts safety over speed.
+
+| L14's boot, 260 ticks | presses | policy dashes | RUN dashes | hits |
+|---|---|---|---|---|
+| `allowDash: false` (the roster default) | 7 | 0 | 0 | **0** |
+| `true`, the model withheld — 12b's own call | 10 | 0 | **3** | **1 @ t=252** |
+| `true` + forecast + certification | 10 | **4** | 4 | **0** |
+
+**(iii) A second press REPLACES the pending hit ticks.** §23.15 named this and
+left it. `play(anim, true)` RESTARTS the animation, so `slashEnd`'s clock
+restarts — which the model already did — and the hit tests run off
+`if (slashing)` inside that same animation, so they restart with it. Resetting
+one and appending to the other was two halves of one sentence disagreeing. The
+comment that said "a second press inside the window is legal and the two
+windows must not interleave by index" was a TRUE sentence about the WRONG
+mechanism: there is only ever one window in flight.
+
+**The witness: `r9-l6-sword-dash-hit` (roster 145 → 146).** L6 at
+`r9-l6-bob-press`'s own boot, walk `right` 2 ticks, then `DASH_CHAIN`'s own
+first pair. The ordinary swing at k = 0 fires 16 × 32 twice and collects
+nothing — the control. The DASH at k = 2 fires **24 × 20.8** and lands on
+`bob@112,48` at `distanceRectPoint` **20.236**: above `SLASH_REACH` (16), below
+`SLASH_REACH_DASH` (24). A model swinging the ordinary rect for a dash press
+lands NOTHING, so the game answers one boolean. ⛔ The walk length is SCORED,
+not shortest: seven qualify and the shortest lands at 23.457, half a pixel
+inside the bound — a discriminator against its own edge cannot tell a wrong
+model from float noise, so the rule is the margin from the NEARER bound,
+maximised. The same tape witnesses (iii): its two presses are two ticks apart
+and the rects fire on 3,4,5,6,7,8,9 — seven ticks, one each, contiguous, where
+the pre-12c model fired two on each of two.
+
+**⛔⛔⛔ And the re-pricing table inverts 12c′'s premise.** Of the 23 committed
+chain segments, **12 hold no sword and 10 carry no bodies** — exactly ONE,
+`r9-solve-14`, can reach the dash branch at all. Re-solving the campaign
+offline with `allowDash: true` (a worktree, the producer's own solve path)
+moves that one and only that one: **145 t → 400 t**, +255, 2.76×, still zero
+hits and still a calm L15 arrival. §23.11's 2.15×-per-tick arithmetic is about
+dashing TOWARD THE EXIT; the flag alone buys an OPPORTUNISTIC dash, whose
+displacement the AVOID corridor must then be certified WITH, and the corridor
+that certifies is longer. **The planner primitive is not an optimisation on top
+of the flag — it is what makes ⚖ ruling 35's speed claim true at all.**
+
+⚠ **⚖ Ruling 30(c)'s preview/drive equality is a BOUNDED claim, and it already
+was.** The named one-tick chaser-hit skew reaches a held-set on a long stand:
+on L14's own boot the sequences part at **tick 207** with the default and
+**144** dashing — measured identically at this head and at `f498381ca`. The
+dash does not create the divergence, it brings it 63 ticks earlier. L14's
+committed solve is 145 t, right on that line.
+
+⚠ **§23b.3's "hit at tick 169" does not reproduce.** Measured three ways at
+this head — the stance read as a boot (which puts the player on top of
+`bob@96,80`), the stance read as a centre, and a fixed-player forecast —
+neither arm is hit at that stance in 400 ticks. The "0 hits dashing" half does
+reproduce.
+
+⚠ **Mutant (c) went the other way from its prediction.** Removing the
+certification does NOT bring L14's t=252 hit back — (ii), the forecast, is what
+removes it. What the certification measurably buys is which dashes are taken
+(4 vs 3), the swallowed census (20 vs 16), where the equality parts (144 vs
+116), and — sharpest — that on §23b.3's stance the walk stays inside the region
+the model can answer about at all: without it the RUN ITSELF refuses to step at
+tick 101, `bob@32,32`'s on-screen answer depending on `Game.shake`'s jiggle.
