@@ -1,0 +1,1960 @@
+{
+ "schema_version": 1,
+ "provenance": {
+  "generator": "scripts/procgen/extract-seedling-ogmo-schema.py",
+  "oep_path": "Shrum.oep",
+  "oep_sha256": "3cbe353fdf278dab807d64d8bbe36fbfe37080e8e404cff6ed99783b6d60ef88",
+  "git": {
+   "repo": "~/CC/seedling",
+   "commit": "826ba77d67a4e6cc826204faa8948ecfaa1c00fa",
+   "dirty": false
+  }
+ },
+ "value_types": [
+  "integer",
+  "number",
+  "string",
+  "boolean"
+ ],
+ "tilesets": [
+  {
+   "name": "tileset",
+   "image": "tileset.png",
+   "tile_width": 16,
+   "tile_height": 16
+  },
+  {
+   "name": "cliffsidesset",
+   "image": "cliffsidesset.png",
+   "tile_width": 16,
+   "tile_height": 16
+  }
+ ],
+ "layers": [
+  {
+   "name": "tiles",
+   "kind": "tiles",
+   "grid_size": 16
+  },
+  {
+   "name": "cliffsides",
+   "kind": "tiles",
+   "grid_size": 16
+  },
+  {
+   "name": "objects",
+   "kind": "objects",
+   "grid_size": 8
+  }
+ ],
+ "entities": {
+  "bob": {
+   "folder": "enemies",
+   "width": 16,
+   "height": 16,
+   "values": []
+  },
+  "bobsoldier": {
+   "folder": "enemies",
+   "width": 16,
+   "height": 16,
+   "values": []
+  },
+  "bobboss1": {
+   "folder": "enemies",
+   "width": 16,
+   "height": 16,
+   "values": []
+  },
+  "bobboss2": {
+   "folder": "enemies",
+   "width": 16,
+   "height": 16,
+   "values": []
+  },
+  "bobboss3": {
+   "folder": "enemies",
+   "width": 16,
+   "height": 16,
+   "values": []
+  },
+  "bosstotem": {
+   "folder": "enemies",
+   "width": 32,
+   "height": 48,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "tentaclebeast": {
+   "folder": "enemies",
+   "width": 48,
+   "height": 48,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "lavaboss": {
+   "folder": "enemies",
+   "width": 96,
+   "height": 80,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "finalboss": {
+   "folder": "enemies",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "lightbosscontroller": {
+   "folder": "enemies",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "fliernum",
+     "type": "integer",
+     "default": "0"
+    },
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "flyer": {
+   "folder": "enemies",
+   "width": 16,
+   "height": 16,
+   "values": []
+  },
+  "jellyfish": {
+   "folder": "enemies",
+   "width": 16,
+   "height": 16,
+   "values": []
+  },
+  "lavarunner": {
+   "folder": "enemies",
+   "width": 16,
+   "height": 16,
+   "values": []
+  },
+  "bulb": {
+   "folder": "enemies",
+   "width": 16,
+   "height": 16,
+   "values": []
+  },
+  "drill": {
+   "folder": "enemies",
+   "width": 16,
+   "height": 16,
+   "values": []
+  },
+  "wallflyer": {
+   "folder": "enemies",
+   "width": 16,
+   "height": 16,
+   "values": []
+  },
+  "bombpusher": {
+   "folder": "enemies",
+   "width": 48,
+   "height": 48,
+   "values": []
+  },
+  "crusher": {
+   "folder": "enemies",
+   "width": 32,
+   "height": 32,
+   "values": [
+    {
+     "name": "tset",
+     "type": "integer",
+     "default": "-1",
+     "min": -1,
+     "max": 100
+    }
+   ]
+  },
+  "puncher": {
+   "folder": "enemies",
+   "width": 16,
+   "height": 16,
+   "values": []
+  },
+  "spinner": {
+   "folder": "enemies",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "sandtrap": {
+   "folder": "enemies",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "icetrap": {
+   "folder": "enemies",
+   "width": 16,
+   "height": 16,
+   "values": []
+  },
+  "lavatrap": {
+   "folder": "enemies",
+   "width": 16,
+   "height": 16,
+   "values": []
+  },
+  "darktrap": {
+   "folder": "enemies",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "turret": {
+   "folder": "enemies",
+   "width": 16,
+   "height": 16,
+   "values": []
+  },
+  "iceturret": {
+   "folder": "enemies",
+   "width": 32,
+   "height": 32,
+   "values": []
+  },
+  "shieldboss": {
+   "folder": "enemies",
+   "width": 48,
+   "height": 64,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "grenade": {
+   "folder": "enemies",
+   "width": 16,
+   "height": 16,
+   "values": []
+  },
+  "treelarge": {
+   "folder": "trees",
+   "width": 160,
+   "height": 192,
+   "values": []
+  },
+  "tree": {
+   "folder": "trees",
+   "width": 32,
+   "height": 32,
+   "values": []
+  },
+  "treebare": {
+   "folder": "trees",
+   "width": 32,
+   "height": 32,
+   "values": []
+  },
+  "burnabletree": {
+   "folder": "trees",
+   "width": 32,
+   "height": 32,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "opentree": {
+   "folder": "trees",
+   "width": 32,
+   "height": 32,
+   "values": []
+  },
+  "snowhill": {
+   "folder": "buildings",
+   "width": 96,
+   "height": 64,
+   "values": []
+  },
+  "building": {
+   "folder": "buildings",
+   "width": 64,
+   "height": 48,
+   "values": []
+  },
+  "building1": {
+   "folder": "buildings",
+   "width": 48,
+   "height": 32,
+   "values": []
+  },
+  "building2": {
+   "folder": "buildings",
+   "width": 64,
+   "height": 48,
+   "values": []
+  },
+  "building3": {
+   "folder": "buildings",
+   "width": 48,
+   "height": 96,
+   "values": []
+  },
+  "building4": {
+   "folder": "buildings",
+   "width": 144,
+   "height": 128,
+   "values": []
+  },
+  "building5": {
+   "folder": "buildings",
+   "width": 64,
+   "height": 48,
+   "values": []
+  },
+  "building6": {
+   "folder": "buildings",
+   "width": 80,
+   "height": 120,
+   "values": []
+  },
+  "building7": {
+   "folder": "buildings",
+   "width": 80,
+   "height": 88,
+   "values": []
+  },
+  "building8": {
+   "folder": "buildings",
+   "width": 64,
+   "height": 64,
+   "values": []
+  },
+  "rock": {
+   "folder": "rocks",
+   "width": 16,
+   "height": 16,
+   "values": []
+  },
+  "rock2": {
+   "folder": "rocks",
+   "width": 16,
+   "height": 16,
+   "values": []
+  },
+  "rock3": {
+   "folder": "rocks",
+   "width": 16,
+   "height": 16,
+   "values": []
+  },
+  "rock4": {
+   "folder": "rocks",
+   "width": 16,
+   "height": 16,
+   "values": []
+  },
+  "fallrock": {
+   "folder": "rocks",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tset",
+     "type": "integer",
+     "default": "0",
+     "min": 0,
+     "max": 100
+    },
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "fallrocklarge": {
+   "folder": "rocks",
+   "width": 32,
+   "height": 32,
+   "values": [
+    {
+     "name": "tset",
+     "type": "integer",
+     "default": "0",
+     "min": 0,
+     "max": 100
+    },
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    },
+    {
+     "name": "bossrock",
+     "type": "integer",
+     "default": "0",
+     "min": 0,
+     "max": 1
+    },
+    {
+     "name": "thirdboss",
+     "type": "integer",
+     "default": "0",
+     "max": 1
+    }
+   ]
+  },
+  "moonrock": {
+   "folder": "rocks",
+   "width": 48,
+   "height": 48,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "pole": {
+   "folder": "scenery",
+   "width": 16,
+   "height": 16,
+   "values": []
+  },
+  "brickpole": {
+   "folder": "scenery",
+   "width": 16,
+   "height": 16,
+   "values": []
+  },
+  "brickwell": {
+   "folder": "scenery",
+   "width": 16,
+   "height": 16,
+   "values": []
+  },
+  "statue1": {
+   "folder": "scenery",
+   "width": 48,
+   "height": 32,
+   "values": [
+    {
+     "name": "text",
+     "type": "string",
+     "default": ""
+    },
+    {
+     "name": "frames",
+     "type": "integer",
+     "default": "3",
+     "min": 0
+    }
+   ]
+  },
+  "statue2": {
+   "folder": "scenery",
+   "width": 48,
+   "height": 32,
+   "values": [
+    {
+     "name": "text",
+     "type": "string",
+     "default": ""
+    },
+    {
+     "name": "frames",
+     "type": "integer",
+     "default": "3",
+     "min": 0
+    }
+   ]
+  },
+  "finaldoor": {
+   "folder": "scenery",
+   "width": 32,
+   "height": 32,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "pod": {
+   "folder": "scenery",
+   "width": 16,
+   "height": 16,
+   "values": []
+  },
+  "frozenboss": {
+   "folder": "scenery",
+   "width": 160,
+   "height": 160,
+   "values": []
+  },
+  "moonrockpile": {
+   "folder": "scenery",
+   "width": 32,
+   "height": 16,
+   "values": []
+  },
+  "bed": {
+   "folder": "scenery",
+   "width": 16,
+   "height": 32,
+   "values": []
+  },
+  "dresser": {
+   "folder": "scenery",
+   "width": 32,
+   "height": 16,
+   "values": []
+  },
+  "bar": {
+   "folder": "scenery",
+   "width": 64,
+   "height": 16,
+   "values": []
+  },
+  "barstool": {
+   "folder": "scenery",
+   "width": 16,
+   "height": 16,
+   "values": []
+  },
+  "torch": {
+   "folder": "scenery",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "c",
+     "type": "string",
+     "default": "0xFFCC00",
+     "maxChars": 8
+    }
+   ]
+  },
+  "bonetorch": {
+   "folder": "scenery",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "c",
+     "type": "string",
+     "default": "0xFFCC00",
+     "maxChars": 8
+    },
+    {
+     "name": "flip",
+     "type": "integer",
+     "default": null,
+     "min": 0,
+     "max": 1
+    }
+   ]
+  },
+  "bonetorch2": {
+   "folder": "scenery",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "c",
+     "type": "string",
+     "default": "0xFFCC00",
+     "maxChars": 8
+    },
+    {
+     "name": "flip",
+     "type": "integer",
+     "default": null,
+     "min": 0,
+     "max": 1
+    }
+   ]
+  },
+  "planttorch": {
+   "folder": "scenery",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "c",
+     "type": "string",
+     "default": "0xFFFF44",
+     "maxChars": 8
+    },
+    {
+     "name": "flip",
+     "type": "integer",
+     "default": null,
+     "min": 0,
+     "max": 1
+    },
+    {
+     "name": "distance",
+     "type": "integer",
+     "default": "100",
+     "min": 0
+    }
+   ]
+  },
+  "lightpole": {
+   "folder": "scenery",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "c",
+     "type": "string",
+     "default": "0xFFFF44",
+     "maxChars": 8
+    },
+    {
+     "name": "tset",
+     "type": "integer",
+     "default": "-1",
+     "min": -1,
+     "max": 100
+    },
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    },
+    {
+     "name": "invert",
+     "type": "integer",
+     "default": "0",
+     "min": 0,
+     "max": 1
+    }
+   ]
+  },
+  "orb": {
+   "folder": "scenery",
+   "width": 8,
+   "height": 8,
+   "values": [
+    {
+     "name": "c",
+     "type": "string",
+     "default": "0xFF00FF",
+     "maxChars": 8
+    }
+   ]
+  },
+  "wire": {
+   "folder": "scenery",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "img",
+     "type": "integer",
+     "default": "-1"
+    }
+   ]
+  },
+  "shieldstatue": {
+   "folder": "scenery",
+   "width": 48,
+   "height": 32,
+   "values": []
+  },
+  "oraclestatue": {
+   "folder": "scenery",
+   "width": 32,
+   "height": 32,
+   "values": []
+  },
+  "ruinedpillar": {
+   "folder": "scenery",
+   "width": 32,
+   "height": 32,
+   "values": []
+  },
+  "totem": {
+   "folder": "scenery",
+   "width": 32,
+   "height": 64,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    },
+    {
+     "name": "text",
+     "type": "string",
+     "default": ""
+    },
+    {
+     "name": "frames",
+     "type": "integer",
+     "default": "10",
+     "min": 0
+    }
+   ]
+  },
+  "dungeonspire": {
+   "folder": "scenery",
+   "width": 16,
+   "height": 16,
+   "values": []
+  },
+  "lightbosstotem": {
+   "folder": "scenery",
+   "width": 16,
+   "height": 16,
+   "values": []
+  },
+  "littlestones": {
+   "folder": "scenery",
+   "width": 16,
+   "height": 16,
+   "values": []
+  },
+  "sword": {
+   "folder": "pickups",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "ghostspear": {
+   "folder": "pickups",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "ghostsword": {
+   "folder": "pickups",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "darkshield": {
+   "folder": "pickups",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "darksuit": {
+   "folder": "pickups",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "conch": {
+   "folder": "pickups",
+   "width": 8,
+   "height": 8,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "fire": {
+   "folder": "pickups",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "wand": {
+   "folder": "pickups",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "firewand": {
+   "folder": "pickups",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "feather": {
+   "folder": "pickups",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "shield": {
+   "folder": "pickups",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "torchpickup": {
+   "folder": "pickups",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "chest": {
+   "folder": "pickups",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "bosskey": {
+   "folder": "pickups",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "keyType",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "totempart": {
+   "folder": "pickups",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "totempart",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "health": {
+   "folder": "pickups",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "seed": {
+   "folder": "pickups",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "text",
+     "type": "string",
+     "default": ""
+    }
+   ]
+  },
+  "player": {
+   "folder": "utility",
+   "width": 16,
+   "height": 16,
+   "values": []
+  },
+  "control": {
+   "folder": "utility",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "fallthrough",
+     "type": "integer",
+     "default": "-1",
+     "min": -1,
+     "max": 100
+    },
+    {
+     "name": "xOff",
+     "type": "integer",
+     "default": "0",
+     "min": -1600,
+     "max": 1600
+    },
+    {
+     "name": "yOff",
+     "type": "integer",
+     "default": "0",
+     "min": -1600,
+     "max": 1600
+    },
+    {
+     "name": "sign",
+     "type": "integer",
+     "default": "0",
+     "min": 0,
+     "max": 8
+    }
+   ]
+  },
+  "lightalpha": {
+   "folder": "utility",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "alpha",
+     "type": "number",
+     "default": "0",
+     "min": 0,
+     "max": 1
+    }
+   ]
+  },
+  "daynight": {
+   "folder": "utility",
+   "width": 16,
+   "height": 16,
+   "values": []
+  },
+  "blur": {
+   "folder": "utility",
+   "width": 16,
+   "height": 16,
+   "values": []
+  },
+  "blur2": {
+   "folder": "utility",
+   "width": 16,
+   "height": 16,
+   "values": []
+  },
+  "snow": {
+   "folder": "utility",
+   "width": 16,
+   "height": 16,
+   "values": []
+  },
+  "lightray": {
+   "folder": "utility",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "alpha",
+     "type": "number",
+     "default": "0",
+     "min": 0,
+     "max": 1
+    },
+    {
+     "name": "color",
+     "type": "string",
+     "default": "0xFFFFFF",
+     "maxChars": 8
+    },
+    {
+     "name": "width",
+     "type": "integer",
+     "default": "16",
+     "min": 0,
+     "max": 240
+    },
+    {
+     "name": "height",
+     "type": "integer",
+     "default": "16",
+     "min": 0,
+     "max": 240
+    }
+   ]
+  },
+  "droplet": {
+   "folder": "utility",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "heaviness",
+     "type": "integer",
+     "default": "100",
+     "min": 0,
+     "max": 100
+    },
+    {
+     "name": "startheight",
+     "type": "number",
+     "default": "48",
+     "min": 0
+    },
+    {
+     "name": "color",
+     "type": "string",
+     "default": "0xFFFFFF",
+     "maxChars": 8
+    },
+    {
+     "name": "width",
+     "type": "integer",
+     "default": "-1",
+     "min": -1
+    },
+    {
+     "name": "height",
+     "type": "integer",
+     "default": "-1",
+     "min": -1
+    }
+   ]
+  },
+  "shadow": {
+   "folder": "utility",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "alpha",
+     "type": "number",
+     "default": "0.25",
+     "min": 0,
+     "max": 1
+    },
+    {
+     "name": "color",
+     "type": "string",
+     "default": "0x000000",
+     "maxChars": 8
+    },
+    {
+     "name": "width",
+     "type": "integer",
+     "default": "16"
+    },
+    {
+     "name": "height",
+     "type": "integer",
+     "default": "16"
+    }
+   ]
+  },
+  "stairsup": {
+   "folder": "utility",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "flip",
+     "type": "integer",
+     "default": "0",
+     "min": 0,
+     "max": 1
+    },
+    {
+     "name": "to",
+     "type": "integer",
+     "default": "0",
+     "min": 0,
+     "max": 200
+    },
+    {
+     "name": "playerx",
+     "type": "integer",
+     "default": "0",
+     "min": 0,
+     "max": 1280
+    },
+    {
+     "name": "playery",
+     "type": "integer",
+     "default": "0",
+     "min": 0,
+     "max": 1280
+    },
+    {
+     "name": "sign",
+     "type": "integer",
+     "default": "0",
+     "min": 0,
+     "max": 8
+    }
+   ]
+  },
+  "stairsdown": {
+   "folder": "utility",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "flip",
+     "type": "integer",
+     "default": "0",
+     "min": 0,
+     "max": 1
+    },
+    {
+     "name": "to",
+     "type": "integer",
+     "default": "0",
+     "min": 0,
+     "max": 200
+    },
+    {
+     "name": "playerx",
+     "type": "integer",
+     "default": "0",
+     "min": 0,
+     "max": 1280
+    },
+    {
+     "name": "playery",
+     "type": "integer",
+     "default": "0",
+     "min": 0,
+     "max": 1280
+    },
+    {
+     "name": "sign",
+     "type": "integer",
+     "default": "0",
+     "min": 0,
+     "max": 8
+    }
+   ]
+  },
+  "teleporter": {
+   "folder": "utility",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "to",
+     "type": "integer",
+     "default": "0",
+     "min": 0,
+     "max": 200
+    },
+    {
+     "name": "playerx",
+     "type": "integer",
+     "default": "0",
+     "min": 0,
+     "max": 1280
+    },
+    {
+     "name": "playery",
+     "type": "integer",
+     "default": "0",
+     "min": 0,
+     "max": 1280
+    },
+    {
+     "name": "show",
+     "type": "integer",
+     "default": "0",
+     "min": 0,
+     "max": 1
+    },
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "-1"
+    },
+    {
+     "name": "invert",
+     "type": "integer",
+     "default": "0",
+     "min": 0,
+     "max": 1
+    },
+    {
+     "name": "sign",
+     "type": "integer",
+     "default": "0",
+     "min": 0,
+     "max": 8
+    }
+   ]
+  },
+  "whirlpool": {
+   "folder": "puzzlements",
+   "width": 32,
+   "height": 32,
+   "values": []
+  },
+  "breakablerock": {
+   "folder": "puzzlements",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "breakablerockghost": {
+   "folder": "puzzlements",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "pushableblock": {
+   "folder": "puzzlements",
+   "width": 16,
+   "height": 16,
+   "values": []
+  },
+  "pushableblockfire": {
+   "folder": "puzzlements",
+   "width": 16,
+   "height": 16,
+   "values": []
+  },
+  "pushableblockspear": {
+   "folder": "puzzlements",
+   "width": 16,
+   "height": 16,
+   "values": []
+  },
+  "button": {
+   "folder": "puzzlements",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tset",
+     "type": "integer",
+     "default": "0",
+     "min": 0,
+     "max": 100
+    }
+   ]
+  },
+  "buttonroom": {
+   "folder": "puzzlements",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tset",
+     "type": "integer",
+     "default": "0",
+     "min": 0,
+     "max": 100
+    },
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    },
+    {
+     "name": "flip",
+     "type": "integer",
+     "default": "0",
+     "min": 0,
+     "max": 1
+    },
+    {
+     "name": "room",
+     "type": "integer",
+     "default": "-1",
+     "min": -1
+    }
+   ]
+  },
+  "arrowtrap": {
+   "folder": "puzzlements",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tset",
+     "type": "integer",
+     "default": "0",
+     "min": 0,
+     "max": 100
+    },
+    {
+     "name": "shoot",
+     "type": "integer",
+     "default": "0",
+     "min": 0,
+     "max": 1
+    }
+   ]
+  },
+  "rocklock": {
+   "folder": "puzzlements",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tset",
+     "type": "integer",
+     "default": "-1",
+     "min": -1,
+     "max": 100
+    },
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "lock": {
+   "folder": "puzzlements",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tset",
+     "type": "integer",
+     "default": "-1",
+     "min": -1,
+     "max": 100
+    },
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "grasslock": {
+   "folder": "puzzlements",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tset",
+     "type": "integer",
+     "default": "-1",
+     "min": -1,
+     "max": 100
+    },
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "shieldlocknorm": {
+   "folder": "puzzlements",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "shieldlock": {
+   "folder": "puzzlements",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "wandlock": {
+   "folder": "puzzlements",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tset",
+     "type": "integer",
+     "default": "-1",
+     "min": -1,
+     "max": 100
+    },
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "bosslock": {
+   "folder": "puzzlements",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "keyType",
+     "type": "integer",
+     "default": "0"
+    },
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "magicallock": {
+   "folder": "puzzlements",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "magicallockfire": {
+   "folder": "puzzlements",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "cover": {
+   "folder": "puzzlements",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tset",
+     "type": "integer",
+     "default": "0",
+     "min": 0,
+     "max": 100
+    }
+   ]
+  },
+  "pull": {
+   "folder": "puzzlements",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "force",
+     "type": "integer",
+     "default": "1"
+    },
+    {
+     "name": "direction",
+     "type": "number",
+     "default": "0.75"
+    }
+   ]
+  },
+  "rope": {
+   "folder": "puzzlements",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tset",
+     "type": "integer",
+     "default": "-1",
+     "min": -1,
+     "max": 100
+    },
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    }
+   ],
+   "nodes": {
+    "draw_object": true,
+    "limit": 1,
+    "line_mode": 1
+   }
+  },
+  "pulser": {
+   "folder": "puzzlements",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tset",
+     "type": "integer",
+     "default": "0",
+     "min": 0,
+     "max": 100
+    }
+   ]
+  },
+  "spinningaxe": {
+   "folder": "puzzlements",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "rate",
+     "type": "integer",
+     "default": "5"
+    },
+    {
+     "name": "colortype",
+     "type": "integer",
+     "default": "0"
+    }
+   ]
+  },
+  "lavachain": {
+   "folder": "puzzlements",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "dir",
+     "type": "integer",
+     "default": "0",
+     "min": 0,
+     "max": 3
+    }
+   ]
+  },
+  "beamtower": {
+   "folder": "puzzlements",
+   "width": 16,
+   "height": 32,
+   "values": [
+    {
+     "name": "direction",
+     "type": "integer",
+     "default": "0"
+    },
+    {
+     "name": "rate",
+     "type": "number",
+     "default": "1"
+    },
+    {
+     "name": "speed",
+     "type": "number",
+     "default": "1"
+    }
+   ]
+  },
+  "introchar": {
+   "folder": "characters",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    },
+    {
+     "name": "text",
+     "type": "string",
+     "default": ""
+    },
+    {
+     "name": "frames",
+     "type": "integer",
+     "default": "10",
+     "min": 0
+    }
+   ]
+  },
+  "rekcahdam": {
+   "folder": "characters",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    },
+    {
+     "name": "text",
+     "type": "string",
+     "default": ""
+    },
+    {
+     "name": "frames",
+     "type": "integer",
+     "default": "10",
+     "min": 0
+    }
+   ]
+  },
+  "forestchar": {
+   "folder": "characters",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    },
+    {
+     "name": "text",
+     "type": "string",
+     "default": ""
+    },
+    {
+     "name": "frames",
+     "type": "integer",
+     "default": "10",
+     "min": 0
+    }
+   ]
+  },
+  "adnanchar": {
+   "folder": "characters",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    },
+    {
+     "name": "text",
+     "type": "string",
+     "default": ""
+    },
+    {
+     "name": "frames",
+     "type": "integer",
+     "default": "10",
+     "min": 0
+    }
+   ]
+  },
+  "watcher": {
+   "folder": "characters",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    },
+    {
+     "name": "text",
+     "type": "string",
+     "default": ""
+    },
+    {
+     "name": "text1",
+     "type": "string",
+     "default": ""
+    },
+    {
+     "name": "frames",
+     "type": "integer",
+     "default": "10",
+     "min": 0
+    }
+   ]
+  },
+  "karlore": {
+   "folder": "characters",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    },
+    {
+     "name": "text",
+     "type": "string",
+     "default": ""
+    },
+    {
+     "name": "frames",
+     "type": "integer",
+     "default": "10",
+     "min": 0
+    }
+   ]
+  },
+  "witch": {
+   "folder": "characters",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    },
+    {
+     "name": "text",
+     "type": "string",
+     "default": ""
+    },
+    {
+     "name": "frames",
+     "type": "integer",
+     "default": "10",
+     "min": 0
+    }
+   ]
+  },
+  "hermit": {
+   "folder": "characters",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    },
+    {
+     "name": "text",
+     "type": "string",
+     "default": ""
+    },
+    {
+     "name": "frames",
+     "type": "integer",
+     "default": "4",
+     "min": 0
+    }
+   ]
+  },
+  "oracle": {
+   "folder": "characters",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    },
+    {
+     "name": "text",
+     "type": "string",
+     "default": ""
+    },
+    {
+     "name": "text1",
+     "type": "string",
+     "default": ""
+    },
+    {
+     "name": "frames",
+     "type": "integer",
+     "default": "10",
+     "min": 0
+    }
+   ]
+  },
+  "yeti": {
+   "folder": "characters",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    },
+    {
+     "name": "text",
+     "type": "string",
+     "default": ""
+    },
+    {
+     "name": "frames",
+     "type": "integer",
+     "default": "10",
+     "min": 0
+    }
+   ]
+  },
+  "sensei": {
+   "folder": "characters",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    },
+    {
+     "name": "text",
+     "type": "string",
+     "default": ""
+    },
+    {
+     "name": "frames",
+     "type": "integer",
+     "default": "4",
+     "min": 0
+    }
+   ]
+  },
+  "sign": {
+   "folder": "characters",
+   "width": 16,
+   "height": 16,
+   "values": [
+    {
+     "name": "tag",
+     "type": "integer",
+     "default": "0"
+    },
+    {
+     "name": "text",
+     "type": "string",
+     "default": ""
+    },
+    {
+     "name": "frames",
+     "type": "integer",
+     "default": "10",
+     "min": 0
+    }
+   ]
+  }
+ }
+}
