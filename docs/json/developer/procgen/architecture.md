@@ -194,7 +194,7 @@ and imports none:
 
 **The six functions** over any adapter:
 
-- `foldEdits(adapter, base, ops)` — base → ops in order → `{record, applied, dropped}`. The ONE reconstruction.
+- `foldEdits(adapter, base, ops)` — base → ops in order → `{record, applied, steps, dropped}`. The ONE reconstruction. `steps` carries the applied ops WITH the adapter's own sentence, so a page's readout needs no second walk over the same application path.
 - `createEditSession(adapter, baseRecord, {base, certified})` — `apply` / `undo` / `ops` / `record` / `certified` / `setCertified` / `payload`. `payload()` is `{base, edits, certified}`, where `base` is an opaque tagged value (`{kind, …}`) the core never interprets.
 - `group(label, ops)` — a stroke, a fill, a paste: applied ALL-OR-NOTHING, ONE entry in the op list, ONE undo. Nested groups are refused by name (a stroke is flat, or "one group is one undo" has no meaning).
 - `rectCopy` / `rectPasteOps` — a rectangle of descriptors, pasted back as a group and clipped to the destination's bounds. `tilesOnly` / `entitiesOnly` are a projection of the adapter's descriptor, and are refused by name on a substrate whose cells carry no such field rather than silently ignored.
@@ -211,6 +211,30 @@ Nothing in the core adjudicates legality. Free means free; certification is the 
 **The toy-adapter rule.** `editCore.test.js` drives a toy substrate written in the test file and imports nothing from `mazeRoom/` or `seedlingDemo/` — asserted by reading its own source. A core proven only against one substrate is that substrate's editor with an extra indirection.
 
 **Adapters today.** The maze has one (`mazeRoom/mazeEditAdapter.js`, a wrapper over `mazeRoomEditor.applyEditOp`). Seedling's `seedlingDemo/watchEdit.js` is **not yet an adapter** — it has the same op/fold/undo shape and gave the core law 1, but wrapping it is a later slice.
+
+## The editor view (`procgenCore/editorView.js`)
+
+The DOM half of the same split, and the only thing on a page allowed to decide
+what a press on the canvas does. It imports `editCore.js` and nothing else.
+
+It owns four things:
+
+1. **The canvas tool — one `armed` value.** `brush`, `rect`, `paste`, `flood`, or nothing; `Escape` clears it. A page that kept a second "which tool" flag beside it would have two answers to what a click does.
+2. **The stroke is ONE group.** A drag paints every cell it visits, de-duplicated and in visit order, and records ONE `group` — so one undo takes the whole stroke back and `describeOps` reports a history a person can count. The click a browser fires after the release is swallowed, so a single press lands exactly once.
+3. **The command table is the one writer of the key map.** The page supplies `{id, label, key, run}` rows; the view adds the four tools and `Escape`; the keyboard is a VIEW of that list. Two rows claiming one key are refused by name rather than resolved by walk order, and `Ctrl/Cmd+Z` resolves to the page's own `undo` row — there is no private undo behind the page's back.
+4. **The selection overlay, and nothing else.** The substrate is drawn by the page (the one-renderer law); the view creates its own element and draws on it the rectangle a copy is being dragged out of and the paste anchor. Hover stays the page's, or two renderers would answer "which cell is under the pointer".
+
+Everything substrate-shaped is injected and refused by name if missing: `cellAt`
+(the geometry is the page's — the browser gate computes its target cell
+independently and asserts the cell it named is the cell that changed), `brushOp`
+(the palette, as a closed op template), `floodTarget`, `pasteOptions`,
+`clipWarnings` (a substrate's own bounds, which the view only guarantees are
+printed BEFORE a paste lands), and `say`. Having no `document` and no injected
+painter is a refusal, not a silent skip: a selection rectangle nobody can see
+cannot be told from one nobody dragged.
+
+**Mounted today** on the maze lab page's EDIT arm, on that arm's own lifetime.
+Seedling's page is a later slice.
 
 ## Determinism and verification
 

@@ -445,7 +445,28 @@ the payload); its DOM arm is `mazeLabView.js`; its unit tests are
 
 The room's edits are also available as an **`editCore` adapter** — `mazeRoom/mazeEditAdapter.js` says the maze in the six words the edit core asks for (`architecture.md` § "The edit core"), which is what gives the maze a base+ops identity, grouped strokes, rectangle copy/paste and flood fill. It is a wrapper: the ops are `EDIT_OPS`, the application path is `applyEditOp`, and `equal` is `procgenMaze.worldsEqual` (the comparison `applyEdit` already made, extracted rather than re-spelled).
 
-⚠ Two bounds it ships with, both pinned by tests: a pasted `setButton` carries its RESOLVED index and the engine does not refuse a duplicate, so a copied gadget gives two cells the same door; and the entrance is a singleton, so a paste carrying it MOVES it.
+⚠ Two bounds it ships with, both pinned by tests: a pasted `setButton` carries its RESOLVED index and the engine does not refuse a duplicate, so a copied gadget gives two cells the same door; and the entrance is a singleton, so a paste carrying it MOVES it. The page counts both off a clip and prints them BEFORE a paste lands — in the EDIT pane and in the status line — never silently.
+
+**The page runs on an edit SESSION.** `mazeLab.openEditSession` opens one on the
+state; `projectSession` is the ONE writer of `record`, `edits` and `certified`
+back onto the page's state; `certifyInto` is the one bridge from the oracle's
+verdict to the session's tri-state, which is why `false` is reachable in exactly
+one place. A state carries `baseRecord` — what the ladder, a directive or a LOAD
+produced — and `record` is the fold of the edits over it.
+
+⛔ **There is no world stack.** UNDO is the fold over a shorter list, so a level
+reached by undoing is byte-identical to one that never had the popped edit — a
+stack could only promise that if nothing but an edit ever wrote the record, and
+this page has three other writers. A drag, a paste and a flood are each ONE
+entry (a `group`) and therefore ONE undo; the identity line and the EDIT pane
+both print `editCore.describeOps`, so `1 manual edit(s) (1 group of 3)` is a
+count of undos rather than of cells.
+
+⛓ A LOADED payload's level is taken AS IT STANDS: the loaded state is its own
+base and carries no edit list, because `level` already has the edits baked in
+and folding them again would apply each one twice. `?gen=` — which replays the
+ops from the ladder — is the channel that reproduces an edited level, and the
+payload carries a `base` tag naming what its edits are edits of.
 
 ### The three modes
 
@@ -456,7 +477,7 @@ being left drops its listeners.
 | mode | what it does |
 |---|---|
 | `generate` (default) | the loop, in the page. STEP places one template and re-solves; RUN-ALL runs to the target or to SATURATION. The generation pane shows every attempt with its outcome word (`KEPT` / `REVERTED` / `NO_ANCHOR` / `ILLEGAL_PLACEMENT`) and the oracle's **verbatim** refusal. A catalogue lists what the palette can generate, by family; unticking a family RESTRICTS the roster the run may draw from, and ATTEMPT on a row runs one directed attempt for that template. |
-| `edit` | `mazeRoomEditor.js`'s palette — floor / wall / entrance / item / obstacle / **block / button / flag** / erase — applied to the clicked tile. Every edit lands on a **clone**, so UNDO is a pop of a world stack and the level the page says it generated is never rewritten underneath it. |
+| `edit` | `mazeRoomEditor.js`'s palette — floor / wall / entrance / item / obstacle / **block / button / flag** / erase — applied to the clicked tile, plus the four tools `procgenCore/editorView.js` brings (brush, RECT copy, PASTE, FLOOD). Every edit lands on a **clone**, and the level the page says it generated is never rewritten underneath it. |
 | `solve` | `mazeOracle` on the world now on screen, with the plan drawn over the room: SOLVED / REFUSED / BUDGET_EXHAUSTED, reason verbatim. |
 
 A step-*k* level **is** `generate-maze-level.mjs --seed=S --count=k`, byte for

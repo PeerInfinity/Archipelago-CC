@@ -1617,7 +1617,7 @@ export const URL_GRAMMAR = frz({
                 {
                     "file": "frontend/modules/mazeRoom/mazeLab.js",
                     "fn": "readLabParams",
-                    "line": 212,
+                    "line": 223,
                     "role": "read"
                 }
             ],
@@ -1626,7 +1626,7 @@ export const URL_GRAMMAR = frz({
                 {
                     "file": "frontend/modules/mazeRoom/mazeLab.js",
                     "fn": "writeLabParams",
-                    "line": 288,
+                    "line": 299,
                     "role": "write"
                 }
             ],
