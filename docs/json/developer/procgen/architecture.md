@@ -174,6 +174,44 @@ A procgen `rules.json` goes through the standard toolchain, with the extra keys 
 
 The result is a rules file with real multiworld item distribution that the frontend still recognizes and plays as a procgen world.
 
+## The edit core (`procgenCore/editCore.js`)
+
+Two substrates now have a level editor and a third is planned, so the editing
+machinery lives in `procgenCore/` — pure, no DOM, and (like every shipping
+module of that directory) with no substrate import at all.
+
+**An adapter** is a plain object the caller supplies; the core registers none
+and imports none:
+
+| member | contract |
+|---|---|
+| `name` | what a refusal calls the substrate |
+| `apply(record, op)` | ONE atomic op → `{ok, op, description, record?}`. The `op` returned is the RESOLVED one (every drawn parameter spent). `ok: false` is a refusal by name; the input record is never mutated. |
+| `equal(a, b)` | record equality — the "did anything change" test |
+| `bounds(record)` | `{w, h}`, the cell grid |
+| `readCell(record, x, y)` | a closed, comparable cell DESCRIPTOR |
+| `writeOps(descriptor, x, y)` | the atomic ops that make that cell look like the descriptor — the inverse of `readCell`, emitting ops only for the fields the descriptor PRESENTS |
+
+**The six functions** over any adapter:
+
+- `foldEdits(adapter, base, ops)` — base → ops in order → `{record, applied, dropped}`. The ONE reconstruction.
+- `createEditSession(adapter, baseRecord, {base, certified})` — `apply` / `undo` / `ops` / `record` / `certified` / `setCertified` / `payload`. `payload()` is `{base, edits, certified}`, where `base` is an opaque tagged value (`{kind, …}`) the core never interprets.
+- `group(label, ops)` — a stroke, a fill, a paste: applied ALL-OR-NOTHING, ONE entry in the op list, ONE undo. Nested groups are refused by name (a stroke is flat, or "one group is one undo" has no meaning).
+- `rectCopy` / `rectPasteOps` — a rectangle of descriptors, pasted back as a group and clipped to the destination's bounds. `tilesOnly` / `entitiesOnly` are a projection of the adapter's descriptor, and are refused by name on a substrate whose cells carry no such field rather than silently ignored.
+- `floodOps` — the 4-connected component of cells whose whole descriptor matches the seed's, repainted as a group. The walk is `gridFlood.reachableFrom`, not a second flood.
+- `describeOps(ops)` — the readout line, e.g. `3 edit(s) (1 group of 12)`.
+
+**The two laws.**
+
+1. **Identity is `base` + `ops`.** UNDO is the fold over a SHORTER list — never an inverse op and never a stack of records — so a level reached by undoing is byte-identical to one that never had the popped edit.
+2. **A no-op is not an edit.** The question is asked of the RECORD through the adapter's `equal`, never of the op or the editor's descriptor: `MazeRoomEditor._setTile` reports `ok: true` for a click on a cell that already holds that tile, and counting it would bump the edit count and drop the certification for a press that moved no bytes.
+
+Nothing in the core adjudicates legality. Free means free; certification is the guard, and every refusal here is about the SHAPE of an op or an adapter.
+
+**The toy-adapter rule.** `editCore.test.js` drives a toy substrate written in the test file and imports nothing from `mazeRoom/` or `seedlingDemo/` — asserted by reading its own source. A core proven only against one substrate is that substrate's editor with an extra indirection.
+
+**Adapters today.** The maze has one (`mazeRoom/mazeEditAdapter.js`, a wrapper over `mazeRoomEditor.applyEditOp`). Seedling's `seedlingDemo/watchEdit.js` is **not yet an adapter** — it has the same op/fold/undo shape and gave the core law 1, but wrapping it is a later slice.
+
 ## Determinism and verification
 
 - **Seeded rng everywhere.** All generation randomness flows from `createRng(seed)` (`frontend/modules/shared/rng.js`, mulberry32 with `getState`/`setState` for step-boundary snapshots).

@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 17,
-        "headings": 701,
+        "headings": 702,
         "indexHeadings": 2,
-        "lines": 17021,
+        "lines": 17063,
         "pages": 4,
-        "words": 196642
+        "words": 197329
     },
     "descriptionRule": "the document's OWN first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence. ⛔ Never a hand-written summary — if an entry reads thin, the fix is a better opening paragraph in the document.",
     "dir": "docs/json/developer/procgen",
@@ -36,8 +36,8 @@ export const DOCS_INDEX = frz({
             "description": "This is the orientation document for the procedural-generation (\"procgen\") system: the pipeline, the four layout drivers, **level generation's two passes** (elements and the certified area graph, then the site-typed keep-or-revert loop), the substrates, what a world compiles to, and how it is played back. Read this first; the rest of this section goes deeper on individual pieces.",
             "file": "architecture.md",
             "h1": "Procedural Generation Architecture",
-            "headings": 15,
-            "lines": 182,
+            "headings": 16,
+            "lines": 220,
             "links": [
                 "demos.md",
                 "maze.md",
@@ -45,7 +45,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/architecture.md",
-            "words": 3771
+            "words": 4344
         },
         {
             "description": "`frontend/modules/shared/procgen/substrateRegistry.js` is the dispatch hub between the pipeline, the runtime player and the substrates: each registers an **entry**, and consumers look entries up by `id` instead of importing substrate modules. This is the reference for that entry contract — field by field, a capability matrix GENERATED from the eight entries, and a checklist for adding one.",
@@ -162,7 +162,7 @@ export const DOCS_INDEX = frz({
             "file": "maze.md",
             "h1": "Maze Substrate",
             "headings": 30,
-            "lines": 770,
+            "lines": 774,
             "links": [
                 "architecture.md",
                 "loop-recording.md",
@@ -171,7 +171,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/maze.md",
-            "words": 8654
+            "words": 8768
         },
         {
             "description": "Sphere growth is the primary procgen driver: instead of growing a world and then discovering its progression structure, it **plans the progression first** — which items belong to which sphere — and then grows a world guaranteed to realise that plan. The plan doubles as a verification oracle, so every generated world ships with a proof that its progression matches the intent.",
