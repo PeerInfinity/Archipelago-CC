@@ -245,6 +245,61 @@ export function entityRosterFrom(schema) {
 }
 
 /**
+ * ⛓⛓⛓ **THE TWO-ORACLE BOUND, AS DATA** — ⚖ ruling 3 (*the wasm is the
+ * certifier; the bound is DISPLAYED, the edit is never refused*), plan §3.3's
+ * *"⚠ Two oracles, unequal reach"*, and §11.3's one row left `bounded, slice C`.
+ *
+ * `Shrum.oep` declares the vocabulary the GAME can load; `levelWorld`'s
+ * `ENTITY_CLASSES` is what the JS model TRANSCRIBES, and it is a SUBSET. A room
+ * holding a body outside it is a room the JS oracle cannot answer about — it
+ * throws `LevelWorldError` by name — while the recompiled game runs it fine.
+ *
+ * ⛔ **THE CLASS TABLE IS A PARAMETER, exactly as the schema is.** This file is
+ * on the page's graph and stays import-free of the model for the same reason it
+ * stays import-free of the fixture: the caller (node, the page, a gate) already
+ * holds the table, and a module that reached for one would be a second opinion
+ * about which model is in play.
+ *
+ * ⚠ **DISTINCT TYPES, IN FIRST-APPEARANCE ORDER, NOT INSTANCES.** The sentence
+ * this feeds says *"N type(s)"*; counting instances would report 6 for a room
+ * holding six of one untranscribed body and read as six separate problems.
+ */
+export function untranscribedTypes(record, entityClasses) {
+    if (!isPlainObject(entityClasses)) {
+        fail('watchEdit: `untranscribedTypes` takes the MODEL\'s own class table '
+            + '(`levelWorld.ENTITY_CLASSES`) as a parameter — a module that imported one '
+            + 'would be a second opinion about which model is being asked.');
+    }
+    const out = [];
+    for (const e of record?.entities ?? []) {
+        if (!entityClasses[e.type] && !out.includes(e.type)) out.push(e.type);
+    }
+    return Object.freeze(out);
+}
+
+/**
+ * ⛓ THE SENTENCE — ⚖ ruling 3's own words, with the types named.
+ *
+ * ⛔ **IT IS A BOUND AND NOT A REFUSAL, AND THE DIFFERENCE IS THE CONTROL IT
+ * LEAVES ALONE.** Ruling 3's sketch was *"SOLVE is offered only when every
+ * entity is transcribed"*; as shipped SOLVE STAYS OFFERED and this says what it
+ * will answer, because disabling it would take away the page's only way to see
+ * `buildLevelWorld`'s own construction site — which is the finding
+ * `check-seedling-editor-edit.mjs` claim 10 exists to keep visible. Saying what
+ * a press will do is this page's law everywhere else; removing the press is not.
+ *
+ * ⚠ `null` when there are none, so a caller cannot print an empty warning.
+ */
+export function transcribeBoundText(types) {
+    const list = [...(types ?? [])];
+    if (list.length === 0) return null;
+    return `⚠ the JS model does not transcribe ${list.length} type(s) — `
+        + `${list.join(', ')}. The room still EDITS and still SHIPS; what it cannot get `
+        + 'here is a JS certification (SOLVE will refuse from the engine, by name). '
+        + '⚖ Ruling 3: ▶ load in wasm is the certifier for these.';
+}
+
+/**
  * ⛓⛓ **ONE ATTRIBUTE, COERCED TO THE TEXT AN OEL WOULD HOLD, AND RANGE-CHECKED.**
  *
  * ⛔ THE OUTPUT IS ALWAYS A STRING, and that is canonicalisation rather than

@@ -65,6 +65,12 @@
  * 10. **AN ENGINE THROW IS DISPLAYED, NOT FATAL** — a hand-placed entity the
  *     class table has never heard of: the page shows `LevelWorldError` with the
  *     engine's own message, stays alive, and reports UNCERTIFIED.
+ * 11. **EDITOR v3 C1 — THE WIDE ROSTER AND ⚖ RULING 3's BOUND.** The datalist
+ *     is the whole `Shrum.oep` vocabulary, the page's default place type is
+ *     STILL `pushableblock` (a NAMED constant now, not `[0]` of the list), a
+ *     type only the wide roster offers places for real, and a DECLARED type the
+ *     JS model does not transcribe shows the bound instead of taking the arm
+ *     down.
  *
  * Run: node scripts/procgen/check-seedling-editor-edit.mjs
  *      node scripts/procgen/check-seedling-editor-edit.mjs --host=http://localhost:8000
@@ -84,7 +90,11 @@ const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name
 const M = (p) => import(join(REPO, 'frontend/modules/seedlingDemo', p));
 const { displaySolve, generateStep, generateWithDirectives } = await M('watchGenerate.js');
 const { terrainAt } = await M('procgenLevel.js');
-const { normalizeEdit } = await M('watchEdit.js');
+const { normalizeEdit, untranscribedTypes } = await M('watchEdit.js');
+const { DEFAULT_PLACE_TYPE } = await M('watchEditor.js');
+const { ENTITY_CLASSES } = await M('levelWorld.js');
+const OGMO_SCHEMA = JSON.parse(await (await import('node:fs/promises')).readFile(
+    join(REPO, 'frontend/modules/seedlingDemo/fixtures/seedling-ogmo-schema.json'), 'utf8'));
 
 const PAGE_PATH = '/frontend/modules/seedlingDemo/watch.html';
 const EDITED_ROUTE = '/__edited-payload.json';
@@ -164,6 +174,29 @@ const SEAL_OPS = SEAL.map((c) => op({ op: 'paint', ...c, terrain: 'wall' }));
 const PLACE_OP = op({ op: 'place', ...FREE, type: 'pushableblock', attrs: {} });
 const REMOVE_OP = op({ op: 'remove', ...FREE });
 const BAD_OP = op({ op: 'place', ...FREE, type: BAD_TYPE, attrs: {} });
+
+/**
+ * ⛓⛓⛓ **CLAIM 11's TWO SUBJECTS, AND BOTH ARE DERIVED — trap 574's shape.**
+ *
+ * ⛔⛔ **THE BRIEF SAID `bob` WOULD SHOW THE TRANSCRIBE BOUND AND IT DOES NOT.**
+ * *Not in `procgenPalette`'s five* and *not in `levelWorld.ENTITY_CLASSES`* are
+ * two different sets and only **7 of the 144** declared types are in the second
+ * (`bobboss1..3`, `building3`, `lightbosstotem`, `fire`, `player`). `bob` is in
+ * the first and not the second, so a row that placed it expecting the bound
+ * would have gone green on the wrong claim — it would have asserted the bound's
+ * ABSENCE while its name said presence.
+ *
+ * ⇒ TWO subjects, each derived off the data rather than typed:
+ *   `WIDE_ONLY`  a type the WIDE roster offers, the five do NOT, and the model
+ *                DOES transcribe — the place must simply WORK and say nothing.
+ *   `UNTRANSCRIBED` a type `Shrum.oep` DECLARES and the model does NOT
+ *                transcribe — ⚖ ruling 3's bound, DISPLAYED, edit not refused.
+ */
+const DECLARED = Object.keys(OGMO_SCHEMA.entities);
+const UNTRANSCRIBED_ALL = DECLARED.filter((t) => !ENTITY_CLASSES[t]);
+const NARROW = new Set((await M('watchEdit.js')).ENTITY_ROSTER_PROCGEN.map((e) => e.type));
+const WIDE_ONLY = DECLARED.find((t) => !NARROW.has(t) && ENTITY_CLASSES[t]);
+const UNTRANSCRIBED = UNTRANSCRIBED_ALL[0];
 
 const withEdits = (edits) => generateWithDirectives({
     seed: SUBJECT.seed, biome: SUBJECT.biome, step: SUBJECT.count, edits,
@@ -628,8 +661,100 @@ try {
     check(badSolved.gen.verdict === null,
         '⛔ …and there is no verdict, because the oracle never got to answer');
 
+    /* ══ CLAIM 11 — THE WIDE ROSTER, AND ⚖ RULING 3's BOUND ═════════ */
+
+    await load(`source=generate&seed=${SUBJECT.seed}&count=${SUBJECT.count}&run=1`);
+    const opened = await page.evaluate(() => ({
+        type: document.getElementById('genEditType').value,
+        attrs: document.getElementById('genEditAttrs').value,
+        options: [...document.querySelectorAll('#genEditTypes option')].map((o) => o.value),
+        folders: [...document.querySelectorAll('#genEditFolder option')].map((o) => o.value),
+        roster: document.getElementById('genEditRoster').textContent,
+        transcribeHidden: document.getElementById('genEditTranscribe').hidden,
+    }));
+    check(opened.type === DEFAULT_PLACE_TYPE && opened.type === PLACE_OP.type,
+        '⛔⛔ THE PAGE STILL OPENS ON `pushableblock` WITH THE DATALIST WIDENED — the default '
+        + 'is a NAMED constant now (`watchEditor.DEFAULT_PLACE_TYPE`) and not `[0]` of the '
+        + 'offered list, which is exactly the tie that would have moved claim 4\'s subject '
+        + 'when the list grew', `${opened.type} / ${PLACE_OP.type}`);
+    check(json(opened.options) === json(DECLARED),
+        `⛓ the datalist IS \`Shrum.oep\`'s whole declared vocabulary — ${DECLARED.length} `
+        + 'types, in the schema\'s own order, not a list this page keeps',
+        `${opened.options.length} offered`);
+    check(opened.folders.length === new Set(Object.values(OGMO_SCHEMA.entities)
+        .map((e) => e.folder)).size + 1,
+        '⛓ …and the FOLDER filter offers every folder the schema files them under, plus the '
+        + '"(all)" row — DERIVED, so a new folder in the `.oep` appears without a page edit',
+        json(opened.folders));
+    check(!opened.transcribeHidden === false,
+        '⛓ a freshly generated room says NOTHING about transcription — the bound is hidden '
+        + 'when there is nothing to say, so it cannot read as a standing warning');
+
+    /* (a) a type ONLY the wide roster offers — it just works, silently. */
+    await selectTool('place');
+    await page.fill('#genEditType', WIDE_ONLY);
+    await page.fill('#genEditAttrs', '{}');
+    await clickCell(FREE);
+    await settledEdits(1);
+    const wide = await read();
+    const wideBound = await page.evaluate(() => ({
+        hidden: document.getElementById('genEditTranscribe').hidden,
+        text: document.getElementById('genEditTranscribe').textContent,
+    }));
+    check(wide.gen.status === 'ok'
+        && json(wide.payload.edits) === json([op({ op: 'place', ...FREE, type: WIDE_ONLY, attrs: {} })]),
+        `⛓⛓ a type the FIVE never offered (\`${WIDE_ONLY}\`) places for real and the payload `
+        + 'carries it byte-identically to node\'s op — the widened offer reaches a real body',
+        json(wide.payload.edits));
+    check(wideBound.hidden === true && untranscribedTypes(wide.payload.level, ENTITY_CLASSES).length === 0,
+        `⛔⛔ …AND IT SHOWS NO BOUND, because \`${WIDE_ONLY}\` IS TRANSCRIBED. The brief `
+        + 'expected `bob` here to raise the transcribe bound; measured, only '
+        + `${UNTRANSCRIBED_ALL.length} of the ${DECLARED.length} declared types are outside `
+        + 'the model, and `bob` is not one of them — NOT-IN-THE-FIVE and NOT-TRANSCRIBED are '
+        + 'two different sets', wideBound.text.slice(0, 60));
+
+    /* (b) a DECLARED type the model does NOT transcribe — ⚖ ruling 3. */
+    await page.click('#genEditUndo');
+    await settledEdits(0);
+    await selectTool('place');
+    await page.fill('#genEditType', UNTRANSCRIBED);
+    await page.fill('#genEditAttrs', '{}');
+    await clickCell(FREE);
+    await settledEdits(1);
+    const untr = await read();
+    const bound = await page.evaluate(() => ({
+        hidden: document.getElementById('genEditTranscribe').hidden,
+        text: document.getElementById('genEditTranscribe').textContent,
+        solveDisabled: document.getElementById('genEditSolve').disabled,
+        undoDisabled: document.getElementById('genEditUndo').disabled,
+    }));
+    check(untr.gen.status === 'ok' && untr.gen.edits === 1,
+        `⛔ ⚖ RULING 3: THE EDIT IS NEVER REFUSED. \`${UNTRANSCRIBED}\` is a body the game `
+        + 'loads and the JS model does not, and the page takes it', json(untr.gen.edits));
+    check(bound.hidden === false
+        && bound.text.includes(`${UNTRANSCRIBED}`)
+        && /does not transcribe 1 type\(s\)/.test(bound.text)
+        && /load in wasm is the certifier/.test(bound.text),
+        '⛓⛓⛓ …and the BOUND IS DISPLAYED, naming the type and naming the certifier — a '
+        + 'sentence, not a throw and not a dead control', bound.text.slice(0, 110));
+    check(bound.solveDisabled === false && bound.undoDisabled === false,
+        '⛔ …and NEITHER control is disabled. Ruling 3\'s sketch was "SOLVE is offered only '
+        + 'when every entity is transcribed"; as shipped SOLVE stays offered and the bound '
+        + 'says what it will answer, because removing the press would remove the page\'s only '
+        + 'way to see `buildLevelWorld`\'s own construction site — which is claim 10',
+        `${bound.solveDisabled} / ${bound.undoDisabled}`);
+    check(json(untranscribedTypes(untr.payload.level, ENTITY_CLASSES)) === json([UNTRANSCRIBED]),
+        '⛓ …and NODE agrees about the record the page downloaded, off the same class table',
+        json(untranscribedTypes(untr.payload.level, ENTITY_CLASSES)));
+
     /* ══ the page survived all of it ════════════════════════════════ */
 
+    await load(`source=generate&seed=${SUBJECT.seed}&count=${SUBJECT.count}&run=1`);
+    await selectTool('place');
+    await page.fill('#genEditType', BAD_TYPE);
+    await page.fill('#genEditAttrs', '{}');
+    await clickCell(FREE);
+    await settledEdits(1);
     await page.click('#genEditUndo');
     await settledEdits(0);
     const alive = await read();

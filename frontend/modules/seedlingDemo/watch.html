@@ -927,18 +927,38 @@
       <!-- ⛔ A free INPUT with a datalist and NOT a select: the WORLD is the
            adjudicator (`buildLevelWorld` refuses an untranscribed tag by name
            with its construction site), so a type nobody offered must be
-           typeable. The list is what `procgenPalette` actually places. -->
+           typeable. ⛓ EDITOR v3 C1: the list is now the whole vocabulary
+           `Shrum.oep` declares (`entityRosterFrom(schema)`), and the FOLDER box
+           narrows the SUGGESTIONS only — never what can be typed. -->
+      <label for="genEditFolder">folder</label>
+      <select id="genEditFolder"></select>
       <label>type <input id="genEditType" list="genEditTypes" style="width:11em"></label>
       <datalist id="genEditTypes"></datalist>
       <label>attrs <input id="genEditAttrs" style="width:15em"></label>
       <button id="genEditUndo" disabled>UNDO the last edit</button>
       <button id="genEditSolve" disabled>SOLVE — certify what is on screen</button>
     </div>
+    <!-- ⛓ THE TYPED ATTRIBUTE FORM — one input per value the `.oep` declares
+         for the selected type, carrying that declaration's own min/max. It
+         WRITES the JSON box above and re-reads it; the box stays the ONE value
+         the op is built from, so a type the schema does not declare still has
+         somewhere to be spelled. ⛔ EMPTY MEANS OMITTED (`fillDefaults` is
+         OFF — plan §11.5 item 2). -->
+    <div class="line" id="genEditAttrForm"></div>
+    <div class="line">
+      <span id="genEditRoster" class="note"></span>
+    </div>
     <div class="line">
       <span id="genEditNote" class="note"></span>
     </div>
     <div class="line">
       <span id="genEditCert" class="note"></span>
+    </div>
+    <!-- ⚖ RULING 3's BOUND, DISPLAYED: the JS model transcribes a SUBSET of the
+         144 declared types. A room holding one of the others still edits and
+         still ships; what it cannot get here is a JS certification. -->
+    <div class="line">
+      <span id="genEditTranscribe" class="note" hidden></span>
     </div>
     <div id="genEdits"></div>
     </details>

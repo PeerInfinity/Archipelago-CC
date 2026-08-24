@@ -129,7 +129,7 @@
  * record that carries manual edits (see `show`'s `certifying` pass). Traps
  * 171/173: the ORACLE's catch is untouched.
  */
-import { buildLevelWorld, LevelWorldError, TILE_SIZE } from './levelWorld.js';
+import { buildLevelWorld, ENTITY_CLASSES, LevelWorldError, TILE_SIZE } from './levelWorld.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
 /**
  * ⛓ THE ▶ LOAD-IN-WASM PAYLOAD BUILDERS — the ONE fold (`buildStagedTape`) and
@@ -273,8 +273,19 @@ import {
  * and UNCERTIFIED-until-SOLVE).
  */
 import {
-    EDIT_OPS, ENTITY_ROSTER, describeEdit, editState, editStates, undoEdit,
+    EDIT_OPS, describeEdit, editState, editStates, undoEdit,
 } from './watchEdit.js';
+/**
+ * ⛓⛓⛓ EDITOR v3 SLICE C1 — the CONTROLS move out. `watchEditor.js` is this
+ * page's DOM glue for the editing form (the wide palette, the typed attribute
+ * rows, ⚖ ruling 3's bound); `watchEdit.js` stays the pure ops. ⛔ The default
+ * place type is now a NAMED constant with its provenance and not `[0]` of
+ * whatever list the datalist happens to hold — §11.5 item 4's ⛔, which is
+ * what made widening the roster a page change and not a data change.
+ */
+import {
+    DEFAULT_PLACE_TYPE, mountEntityPalette, renderTranscribeBound,
+} from './watchEditor.js';
 import { createLifetimeHolder } from './watchLifetime.js';
 // ⛓ SLICE 4 (constructive-mode arc): ONE summary of this page's state, in the
 // shape `procgenCore/labProtocol.js` asks for. ⛔ A PROJECTION of the readouts
@@ -5592,6 +5603,13 @@ function mountEdits(edits) {
  * and for the O(N²) price it costs, which is stated before it is spent.
  */
 async function runGenerate(params, lifetime) {
+    /**
+     * ⛓ KICKED HERE AND AWAITED AT THE PALETTE, ~2,400 lines down: the fetch
+     * overlaps the arm's own setup instead of standing in front of it. ⛔ Not
+     * awaited here — the schema is needed by ONE control and holding the whole
+     * mount for it would make a data file the arm's boot dependency.
+     */
+    loadOgmoSchema();
     const gp = params.gen;
     let seed = gp.seed;
     let biome = gp.biome;
@@ -6782,6 +6800,15 @@ async function runGenerate(params, lifetime) {
         const directiveReadout = mountDirectives(state.directives);
         const editReadout = mountEdits(state.edits);
         renderCertification();
+        /**
+         * ⛓⛓ ⚖ RULING 3's BOUND, BESIDE THE CERTIFICATION AND ON THE SAME
+         * TERMS: ONE writer, called from the one draw, so it cannot describe a
+         * room the page has stopped showing. ⛔ It is a BOUND and not a
+         * refusal — the room still edits, still downloads and still ships; what
+         * it cannot get here is a JS certification, and ▶ load in wasm is the
+         * certifier (§3.3's *"two oracles, unequal reach"*).
+         */
+        renderTranscribeBound($('genEditTranscribe'), state.record, ENTITY_CLASSES);
         lastPayload = {
             generator: 'frontend/modules/seedlingDemo/watchViewer.js (SOURCE = GENERATE)',
             seed,
@@ -7993,34 +8020,53 @@ async function runGenerate(params, lifetime) {
     /**
      * ⛔ MOUNTED FROM THE MODULES' OWN VOCABULARIES, so this file keeps no
      * second list of what a terrain or an entity is: `procgenLevel.TERRAIN_NAMES`
-     * is the four-terrain vocabulary and `watchEdit.ENTITY_ROSTER` is the
-     * offered types with their reasons in the tooltips. ⚠ The type field is a
-     * free `<input>` with the roster as a `<datalist>` and NOT a `<select>`,
-     * which is §3.8(b) as a control: the world is the adjudicator, so a type
-     * nobody offered must be typeable and must refuse from the ENGINE with its
-     * own construction site rather than from a dropdown that never let you ask.
+     * is the four-terrain vocabulary and the entity list is
+     * `watchEditor.mountEntityPalette`'s, which derives it from the `.oep`
+     * extract (144 types) or falls back BY NAME to the five `procgenPalette`
+     * places. ⚠ The type field is a free `<input>` with the roster as a
+     * `<datalist>` and NOT a `<select>`, which is §3.8(b) as a control: the
+     * world is the adjudicator, so a type nobody offered must be typeable and
+     * must refuse from the ENGINE with its own construction site rather than
+     * from a dropdown that never let you ask.
      */
     $('genEditTerrain').innerHTML = TERRAIN_NAMES
         .map((t) => `<option value="${t}">${t}</option>`).join('');
-    const typeList = $('genEditTypes');
-    typeList.innerHTML = '';
-    for (const e of ENTITY_ROSTER) {
-        const o = document.createElement('option');
-        o.value = e.type;
-        o.label = e.why;
-        typeList.appendChild(o);
-    }
-    $('genEditType').value = ENTITY_ROSTER[0].type;
-    $('genEditAttrs').value = JSON.stringify(ENTITY_ROSTER[0].attrs);
     /**
-     * ⚠ THE ATTRS BOX FOLLOWS THE TYPE ONLY WHEN THE TYPE IS ONE THE ROSTER
-     * KNOWS — a suggestion, not a rewrite: a free type leaves whatever you had
-     * typed standing, because the page has nothing to suggest for it.
+     * ⛓⛓⛓ **EDITOR v3 C1 — THE WIDE ROSTER, AND THE PAGE NAMES ITS DEFAULT.**
+     *
+     * ⛔ **THE DEFAULT IS `DEFAULT_PLACE_TYPE`, NOT `[0]`.** §11.5 item 4: this
+     * line used to read `ENTITY_ROSTER[0].type`, which tied *what the page
+     * opens on* to *the order of the offered list* — so pointing the datalist
+     * at `entityRosterFrom(schema)` (whose first key is `bob`) would silently
+     * have changed what `check-seedling-editor-edit.mjs`'s `place` gesture
+     * places, with nothing in either file naming the tie. Two facts, two
+     * spellings, and the constant carries its provenance and an assertion of it.
+     *
+     * ⛔ **THE SCHEMA IS A SUGGESTION SOURCE AND NOT A GATE.** The op builder
+     * below still calls `watchEdit` WITHOUT a schema, so a type `Shrum.oep`
+     * does not declare is still typeable and still refuses from
+     * `buildLevelWorld` with its own construction site — law (b), which is the
+     * reason this control is an `<input>` and not a `<select>` in the first
+     * place, and which claim 10 of the 59-check row asserts.
+     *
+     * ⚠ **AND A SCHEMA THAT DID NOT ARRIVE IS SAID, NOT SWALLOWED.** The
+     * palette falls back to the five types `procgenPalette` places and prints
+     * which list it is showing: *"the type I want is missing"* and *"the list
+     * is the small one"* are the same symptom with different cures.
      */
-    lifetime.on($('genEditType'), 'change', () => {
-        const row = ENTITY_ROSTER.find((e) => e.type === $('genEditType').value.trim());
-        if (row) $('genEditAttrs').value = JSON.stringify(row.attrs);
+    const ogmoSchema = await loadOgmoSchema();
+    if (!lifetime.alive()) return;
+    const palette = mountEntityPalette({
+        typeInput: $('genEditType'),
+        typeList: $('genEditTypes'),
+        folderSel: $('genEditFolder'),
+        attrsInput: $('genEditAttrs'),
+        attrsForm: $('genEditAttrForm'),
+        rosterNote: $('genEditRoster'),
+        schema: ogmoSchema,
+        lifetime,
     });
+    palette.setType(DEFAULT_PLACE_TYPE);
     // ⛔ THROUGH THE ONE WRITER. The select is a VIEW of `armed` (see
     // `renderArmed`), so this hands it the value and reads nothing back.
     lifetime.on($('genEditTool'), 'change', () => {
@@ -8672,8 +8718,55 @@ function replayWasmReadout(lifetime, source = 'replay') {
 
 // ── entry ────────────────────────────────────────────────────────────────
 
+/**
+ * ⛓ THIS MODULE'S COMMITTED-ARTIFACT DIRECTORY — one spelling, because the
+ * tapes and the Ogmo schema extract are siblings in it and two literals would
+ * be two facts about one path.
+ */
+const FIXTURES_DIR = 'frontend/modules/seedlingDemo/fixtures';
+
 /** Where to look for sibling tapes when no `?tape=` names a directory. */
-const DEFAULT_TAPE_DIR = 'frontend/modules/seedlingDemo/fixtures/tapes';
+const DEFAULT_TAPE_DIR = `${FIXTURES_DIR}/tapes`;
+
+/**
+ * ⛓⛓ **`Shrum.oep` AS DATA, FETCHED THROUGH THE ONE LOADER** (slice B's
+ * `scripts/procgen/extract-seedling-ogmo-schema.py` writes it). ⛔ Through
+ * `fetchJson` like every other committed artifact this page reads, so
+ * `no-store` covers it too — a schema served from cache after a re-extract is
+ * exactly the class of red trap 557 exists to remove.
+ */
+const OGMO_SCHEMA_PATH = `${FIXTURES_DIR}/seedling-ogmo-schema.json`;
+
+/**
+ * ⛓⛓ **LAZY AND MEMOISED, AND A FAILURE IS `null` RATHER THAN A THROW.**
+ *
+ * ⛔ LAZY because three of the five arms never open an editing form, and a
+ * page that fetched 60 KB of vocabulary to REPLAY a tape would be paying for a
+ * control it never shows. ⛔ MEMOISED because the GENERATE and EDIT arms can
+ * both mount within one document (the in-place SOURCE switch), and two arms
+ * fetching one artifact is the shape `fetchArtifact` exists to have exactly
+ * one of.
+ *
+ * ⚠ **`null` IS A REAL ANSWER AND IT IS SAID ON THE PAGE.** A missing schema
+ * must not take the editor down — slice 11's five-type roster is a working
+ * page — so the refusal is degraded to a NAMED fallback in
+ * `mountEntityPalette`'s roster note, and the reason is kept here for the
+ * console. A refusal that stopped the arm would make a data file a
+ * single point of failure for a control that predates it.
+ */
+let ogmoSchemaPromise = null;
+function loadOgmoSchema() {
+    if (!ogmoSchemaPromise) {
+        ogmoSchemaPromise = fetchJson(repoUrl(OGMO_SCHEMA_PATH), 'the Ogmo schema extract')
+            .catch((e) => {
+                console.warn(`the Ogmo schema extract would not load (${e.message}) — the `
+                    + 'editing form falls back to the five types `procgenPalette` places, '
+                    + 'and says so on the page.');
+                return null;
+            });
+    }
+    return ogmoSchemaPromise;
+}
 
 /**
  * The GENERATED roster file a static host can serve.
