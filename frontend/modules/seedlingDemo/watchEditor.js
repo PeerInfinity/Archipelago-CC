@@ -33,6 +33,9 @@
 import {
     ENTITY_ROSTER_PROCGEN, entityRosterFrom, transcribeBoundText, untranscribedTypes,
 } from './watchEdit.js';
+import { TERRAIN_NAMES, columnOfSpec } from './procgenLevel.js';
+import { TOOLS, UNDO_COMMAND_ID, mountEditorView } from '../procgenCore/editorView.js';
+import { describeOps } from '../procgenCore/editCore.js';
 
 export class WatchEditorError extends Error {
     constructor(message) {
@@ -367,4 +370,342 @@ export function renderTranscribeBound(box, record, entityClasses) {
     box.className = text ? 'note bad' : 'note';
     box.hidden = !text;
     return types;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ **THE MOUNT — ONE EDIT IMPLEMENTATION, TWO HOSTS** (plan §3.1)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓ **THE BRUSH MODES** — what a brush STROKE writes. ⛔ These are the page's
+ * five `<select>` options and they are NOT `editorView`'s tools: a TOOL is a
+ * GESTURE (brush · rect · paste · flood · the AT… template arm) and a MODE is
+ * what the brush gesture puts down. They were one control before this slice
+ * because there was only one gesture.
+ */
+export const BRUSH_MODES = Object.freeze(['off', 'paint', 'place', 'attrs', 'remove']);
+
+/**
+ * ⛓ The sentence the edit section shows — it says what a click will DO before
+ * it is clicked. ⛔ MOVED VERBATIM from `runGenerate`: the words are slice 11's
+ * and this slice is a relocation, so changing them here would have hidden a
+ * behaviour change inside a refactor's diff.
+ */
+export const brushNoteText = (mode) => ({
+    off: 'no edit tool — clicks on the level do nothing (AT… still arms a template).',
+    paint: '⛓ PAINT ARMED: the clicked tile becomes the selected terrain. ⛔ The border '
+        + 'ring is editable too, and NOTHING here checks legality — free means free, and '
+        + 'the ORACLE is the guard (press SOLVE). Escape cancels.',
+    place: '⛓ PLACE ARMED: the entity type below is placed at the clicked tile\'s OEL '
+        + 'corner with the attributes in the box, LITERALLY (no activator-group '
+        + 'derivation — a hand placement has no anchor to derive from). Escape cancels.',
+    attrs: '⛓ ATTRS ARMED: the clicked tile\'s LAST entity has its attributes REPLACED by '
+        + 'the box (not merged — clearing a field is spelled by leaving it out). '
+        + 'Escape cancels.',
+    remove: '⛓ REMOVE ARMED: the clicked tile\'s LAST entity is deleted. A tile holding '
+        + 'none refuses BY NAME rather than doing nothing. Escape cancels.',
+}[mode] ?? '');
+
+/**
+ * ⛓⛓ **§11.9 BOUND 1, SAID BEFORE A PASTE LANDS.** A Seedling paste does not
+ * CLEAR the destination's bodies — `writeOps` sees a DESCRIPTOR and cannot know
+ * how many `remove`s to emit — so a paste onto an occupied cell ACCUMULATES.
+ *
+ * ⛔ THE PAGE SUPPLIES THE SENTENCE AND `editorView` GUARANTEES IT IS PRINTED
+ * BEFORE rather than after (A2 §10.2 departure 2). A substrate-agnostic file
+ * cannot count bodies; this can, and it counts them in the CLIP, which is what
+ * the reader is about to put down.
+ */
+export function seedlingClipWarnings(clip, record, adapter) {
+    const out = [];
+    const bodies = (clip?.cells ?? [])
+        .flat().reduce((n, c) => n + (c?.entities?.length ?? 0), 0);
+    if (bodies > 0) {
+        out.push(`the clip carries ${bodies} body/bodies and a paste ADDS them — it does NOT `
+            + 'clear the destination, so a cell that already holds one will hold both '
+            + '(§11.9 bound 1)');
+    }
+    if (record && adapter) {
+        let occupied = 0;
+        const b = adapter.bounds(record);
+        for (let y = 0; y < b.h; y += 1) {
+            for (let x = 0; x < b.w; x += 1) {
+                if (adapter.readCell(record, x, y).entities.length > 0) occupied += 1;
+            }
+        }
+        if (occupied > 0 && bodies > 0) {
+            out.push(`${occupied} cell(s) of this room already hold a body`);
+        }
+    }
+    return out;
+}
+
+/**
+ * ⛓⛓⛓ **MOUNT THE EDITING SECTION OVER A HOST.**
+ *
+ * ⛔ **THE HOST IS THE SEAM, AND IT IS WHY THERE ARE TWO ARMS AND ONE
+ * IMPLEMENTATION.** `editorView` needs `{apply, ops, record}` — the shape
+ * `editCore.createEditSession` returns. The EDIT arm hands it exactly that. The
+ * GENERATE arm hands it a thin object over its own `generateStep` state, which
+ * folds through `watchEdit.editState` — so the GENERATE payload, the `?gen=`
+ * replay and every committed fixture stay byte-identical BY CONSTRUCTION rather
+ * than by a comparison somebody has to remember to make.
+ *
+ * @param {object} o
+ * @param {HTMLCanvasElement} o.canvas
+ * @param {object} o.host      `{apply, undo, ops, record, certified, setCertified}`
+ * @param {object} o.adapter   `createSeedlingEditAdapter(...)`
+ * @param {Function} o.cellAt  the page's pixel→tile map, as an event handler
+ * @param {object[]} o.commands the HOST's command rows (undo, solve, download…)
+ * @param {object[]} o.tools    the HOST's own gestures (GENERATE's AT… arm)
+ * @param {object} o.lifetime
+ */
+export function mountWatchEditor({
+    canvas, host, adapter, cellAt, lifetime, schema = null,
+    commands = [], tools = [], say = () => {}, onChange = null, onDisarm = null,
+    entityClasses = null, doc = globalThis.document,
+} = {}) {
+    const $ = (id) => doc.getElementById(id);
+    for (const [name, v] of [
+        ['canvas', canvas], ['host', host], ['adapter', adapter], ['cellAt', cellAt],
+        ['lifetime', lifetime],
+    ]) {
+        if (!v) fail(`watchEditor: \`${name}\` is required — refused by name.`);
+    }
+
+    /**
+     * ⛓ **THE TERRAIN PICKER, FROM `procgenLevel`'s OWN VOCABULARY** — moved
+     * here from `runGenerate` with the section it belongs to. ⛔ It has to be
+     * here and not in the GENERATE arm: the EDIT arm mounts the same DOM, and a
+     * picker filled by only one of the two hosts is an empty `<select>` on the
+     * other — measured, by the browser driver, which timed out on
+     * *"did not find some options"* rather than failing a claim.
+     *
+     * ⚠ THE FOUR NAMES, NOT THE 45 COLUMNS. `TERRAIN_NAMES` is what the
+     * GENERATOR reasons about and the `paint` op takes either; the full column
+     * picker is a control, not an op, and it is slice C2's (§11.3).
+     */
+    $('genEditTerrain').innerHTML = TERRAIN_NAMES
+        .map((t) => `<option value="${t}">${t}</option>`).join('');
+
+    const palette = mountEntityPalette({
+        typeInput: $('genEditType'),
+        typeList: $('genEditTypes'),
+        folderSel: $('genEditFolder'),
+        attrsInput: $('genEditAttrs'),
+        attrsForm: $('genEditAttrForm'),
+        rosterNote: $('genEditRoster'),
+        schema,
+        lifetime,
+        doc,
+    });
+
+    /* ── THE BRUSH MODE, READ AT THE PRESS ────────────────────────── */
+
+    const mode = () => $('genEditTool').value;
+
+    /**
+     * ⛔ **THE ATTRS BOX IS PARSED HERE AND ITS REFUSAL IS THE READER'S OWN
+     * TEXT**, because a page that silently treated unparseable attributes as
+     * `{}` would place an entity nobody asked for. ⛓ MOVED VERBATIM from
+     * `runGenerate.editOpFor`.
+     */
+    const ATTRS_REFUSAL = (e) => `the attributes box does not parse as JSON (${e.message}). `
+        + 'It is a literal OEL attribute set — e.g. {"tset":"0","tag":"-1"} — and nothing '
+        + 'here derives an activator group for you.';
+    const attrsFromBox = () => {
+        const raw = $('genEditAttrs').value.trim();
+        return raw === '' ? {} : JSON.parse(raw);
+    };
+
+    /**
+     * ⛓⛓⛓ **THE OP, BUILT AT THE PRESS AND NOT AT ARMING TIME** — A2 §10.2
+     * departure 1's law, which this page needs for the same reason the maze
+     * does: the palette moves without re-arming the brush, and a template
+     * captured at arming time would go stale the moment it did.
+     */
+    const brushOp = (tx, ty) => {
+        const m = mode();
+        if (!BRUSH_MODES.includes(m) || m === 'off') return null;
+        if (m === 'paint') return { op: 'paint', tx, ty, terrain: $('genEditTerrain').value };
+        if (m === 'remove') return { op: 'remove', tx, ty };
+        /**
+         * ⛔ `{refused}` AND NOT `null` — `editorView`'s third answer. An
+         * unparseable attributes box is not "no brush is armed", and reporting
+         * it as one would send the reader to the tool selector instead of to
+         * the box they just typed in.
+         */
+        let attrs;
+        try { attrs = attrsFromBox(); } catch (e) { return { refused: ATTRS_REFUSAL(e) }; }
+        if (m === 'attrs') return { op: 'attrs', tx, ty, attrs };
+        return { op: 'place', tx, ty, type: $('genEditType').value.trim(), attrs };
+    };
+
+    /**
+     * ⛓⛓ **THE FLOOD'S TARGET IS THE BRUSH MODE'S, PROJECTED ONTO A
+     * DESCRIPTOR.** ⛔ `writeOps` emits ops only for the fields a descriptor
+     * PRESENTS, so a PAINT flood carries `{tile}` alone and leaves the bodies
+     * and the cliffsides of every cell it fills untouched — which is what a
+     * reader means by "flood this terrain".
+     *
+     * ⚠ `attrs` AND `remove` HAVE NO FLOOD, and that is a refusal rather than a
+     * silence: neither is expressible as *"make this cell look like X"* (they
+     * are both *"do this to whatever is already here"*), and `editorView` says
+     * so by name when the target is `null`.
+     */
+    const floodTarget = () => {
+        const m = mode();
+        if (m === 'paint') {
+            return { tile: { column: columnOfSpec($('genEditTerrain').value, 'tiles',
+                'watchEditor: the FLOOD target') } };
+        }
+        if (m === 'place') {
+            try {
+                return {
+                    entities: [{ type: $('genEditType').value.trim(), attrs: attrsFromBox() }],
+                };
+            } catch { return null; }
+        }
+        return null;
+    };
+
+    const pasteOptions = () => {
+        const only = $('editPasteOnly')?.value ?? '';
+        return only === '' ? {} : { only };
+    };
+
+    const clipWarnings = (clip) => seedlingClipWarnings(clip, host.record(), adapter);
+
+    /* ── THE VIEW ─────────────────────────────────────────────────── */
+
+    /**
+     * ⛓⛓ **ONE HOOK, AND THIS FILE IS ITS FIRST READER.** Every gesture and
+     * every `setTool` lands here, so the section's own readouts (the armed
+     * buttons, the clipboard note, the transcribe bound) are redrawn from ONE
+     * place — and the HOST's `onChange` runs after, with the section already
+     * describing what it holds.
+     */
+    const afterChange = (c) => {
+        render();
+        if (onChange) onChange(c);
+    };
+
+    const view = mountEditorView({
+        canvas,
+        session: host,
+        adapter,
+        cellAt,
+        commands,
+        tools,
+        brushOp,
+        floodTarget,
+        pasteOptions,
+        clipWarnings,
+        say,
+        onChange: afterChange,
+        lifetime,
+        doc,
+        offRoom: (tool) => `the ${tool} click landed outside the level`,
+    });
+
+    /* ── THE CONTROLS, EACH A VIEW OF THE ONE TABLE ───────────────── */
+
+    /**
+     * ⛔ **THE GESTURE BUTTONS ARE BUILT FROM `view.commands`**, never typed.
+     * The command table is `editorView`'s one writer of the key map, and a
+     * hand-written row of buttons would be a second list that drifts from it —
+     * the very shape §11.7's linter fires on one level up.
+     */
+    const toolBox = $('editTools');
+    const buttons = new Map();
+    if (toolBox) {
+        toolBox.innerHTML = '';
+        for (const row of view.commands) {
+            if (!Object.values(TOOLS).includes(row.id)) continue;
+            const b = doc.createElement('button');
+            b.id = `editTool_${row.id}`;
+            b.textContent = row.key ? `${row.label} (${row.key})` : row.label;
+            b.title = `arms the ${row.id} gesture`;
+            lifetime.on(b, 'click', () => { view.run(row.id); });
+            toolBox.appendChild(b);
+            buttons.set(row.id, b);
+        }
+    }
+
+    /**
+     * ⛓⛓ **THE MODE SELECT IS A VIEW OF THE ARMED TOOL, AND ARMS IT.** Picking
+     * a mode arms the BRUSH; `off` disarms whatever is armed. ⛔ A2 §10.8's
+     * first defect, prevented rather than repeated: *a page's PALETTE and its
+     * armed TOOL are two questions*, and a control that changed one while
+     * assuming the other followed ran a different gesture and failed like a
+     * defect in the code under test (trap 598).
+     */
+    /**
+     * ⛓ THE TOOL AS IT WAS AT THE LAST DRAW — so a DISARM can be reported with
+     * the name of what was disarmed. ⛔ `editorView`'s Escape row clears the
+     * tool and says a generic sentence; the page's own vocabulary (*"the
+     * pit-patch arm was CANCELLED — no attempt was made, and no solve was
+     * spent"*) is a fact about what was ARMED, which is gone by the time the
+     * clear is visible. Kept here, one draw behind, which is the only place it
+     * still exists.
+     */
+    let lastTool = null;
+    const syncArmed = () => {
+        const armed = view.tool;
+        if (lastTool !== null && armed === null && onDisarm) onDisarm(lastTool);
+        lastTool = armed;
+        for (const [id, b] of buttons) b.className = armed === id ? 'armedTool' : '';
+        // ⛓ …and the MODE select follows the TOOL: leaving the brush for RECT
+        // must not leave a select claiming a brush is armed.
+        if (armed !== TOOLS.BRUSH && mode() !== 'off') $('genEditTool').value = 'off';
+        const note = $('genEditNote');
+        if (note) {
+            note.textContent = armed === TOOLS.BRUSH || armed === null
+                ? brushNoteText(armed === null ? 'off' : mode())
+                : `⛓ ${armed.toUpperCase()} ARMED — click the level. Escape cancels.`;
+        }
+    };
+
+    lifetime.on($('genEditTool'), 'change', () => {
+        view.setTool(mode() === 'off' ? null : TOOLS.BRUSH);
+        syncArmed();
+    });
+
+    const clipNote = $('editClipNote');
+    const renderClip = () => {
+        if (!clipNote) return;
+        clipNote.textContent = view.clip
+            ? `clipboard: ${view.clip.w}x${view.clip.h} — ${seedlingClipWarnings(view.clip,
+                host.record(), adapter).join(' ⚠ ') || 'nothing to warn about'}`
+            : 'clipboard: EMPTY — arm RECT and click two opposite corners.';
+    };
+
+    /** ⛓ THE ONE PLACE the section's readouts are redrawn. */
+    const render = () => {
+        syncArmed();
+        renderClip();
+        if (entityClasses) {
+            renderTranscribeBound($('genEditTranscribe'), host.record(), entityClasses);
+        }
+        const list = $('genEdits');
+        if (list) list.dataset.summary = describeOps(host.ops());
+    };
+
+    render();
+
+    return {
+        view,
+        palette,
+        render,
+        /** ⛓ The mode, for a host that has to write it (a reset, a replay). */
+        setMode(m) {
+            $('genEditTool').value = m;
+            view.setTool(m === 'off' ? null : TOOLS.BRUSH);
+            syncArmed();
+        },
+        mode,
+        brushOp,
+        undoCommandId: UNDO_COMMAND_ID,
+        destroy() { view.destroy(); },
+    };
 }

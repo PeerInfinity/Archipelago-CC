@@ -254,8 +254,9 @@ import {
 // palette operation (`restrictPalette`) — both live where palettes live, and
 // this file only renders and wires them.
 import { catalogueRows, restrictPalette } from './procgenPalette.js';
-// ⛓ SLICE 11 adds `TERRAIN_NAMES` — the edit tool's terrain picker is mounted
-// from the four-terrain vocabulary itself, so this file keeps no second list.
+// ⛓ EDITOR v3 C1: `TERRAIN_NAMES` LEFT with the picker it filled — the edit
+// section is shared with the EDIT arm now, and `watchEditor` mounts it, so
+// this file keeps no second list of what a terrain is.
 /**
  * ⛓ SLICE 5a adds `emptyLevel`/`withTerrain`/`withEntities` — the STEP-THROUGH
  * rebuilds phase k's room from the ledger's DELTAS through the record's own
@@ -263,7 +264,7 @@ import { catalogueRows, restrictPalette } from './procgenPalette.js';
  */
 import {
     assertRoomSize, atlasOf, emptyLevel, FILL_DENSE, FILL_MODES, fillByName,
-    ROOM_TILES_MAX, ROOM_TILES_MIN, SINGLE_SCREEN_TILES, TERRAIN_NAMES,
+    ROOM_TILES_MAX, ROOM_TILES_MIN, SINGLE_SCREEN_TILES,
     withEntities, withTerrain,
 } from './procgenLevel.js';
 /**
@@ -273,7 +274,7 @@ import {
  * and UNCERTIFIED-until-SOLVE).
  */
 import {
-    EDIT_OPS, describeEdit, editState, editStates, undoEdit,
+    describeEdit, editState, editStates, undoEdit, untranscribedTypes,
 } from './watchEdit.js';
 /**
  * ⛓⛓⛓ EDITOR v3 SLICE C1 — the CONTROLS move out. `watchEditor.js` is this
@@ -283,9 +284,26 @@ import {
  * whatever list the datalist happens to hold — §11.5 item 4's ⛔, which is
  * what made widening the roster a page change and not a data change.
  */
-import {
-    DEFAULT_PLACE_TYPE, mountEntityPalette, renderTranscribeBound,
-} from './watchEditor.js';
+import { DEFAULT_PLACE_TYPE, mountWatchEditor } from './watchEditor.js';
+import { createSeedlingEditAdapter } from './seedlingEditAdapter.js';
+import { TOOLS, UNDO_COMMAND_ID } from '../procgenCore/editorView.js';
+import { createEditSession, foldEdits, resolveBase } from '../procgenCore/editCore.js';
+/**
+ * ⛓ THE ONE OEL READER AND THE ONE WRITER, which now sit in one file — EDITOR
+ * v3 C1 moved `parseOelLevel` beside `recordToOel` so the EDIT arm's
+ * `base: {kind:'oel'}` has a parser IN THE BROWSER without inverting the
+ * scripts → frontend direction. See that file's own note.
+ */
+import { parseOelLevel, recordToOel } from './procgenLevelOel.js';
+
+/**
+ * ⛓⛓ **THE GENERATE ARM'S OWN GESTURE, AS A PAGE TOOL** — the click-to-anchor
+ * AT… arm, which predates `editorView` and is not an EDIT. ⛔ It is a tool
+ * rather than a second `armed` variable because a click means exactly one
+ * thing: with two states on one canvas the page's own comment (*"only one of
+ * the two can be armed at a time"*) would be a claim nothing kept.
+ */
+const TEMPLATE_TOOL = 'template';
 import { createLifetimeHolder } from './watchLifetime.js';
 // ⛓ SLICE 4 (constructive-mode arc): ONE summary of this page's state, in the
 // shape `procgenCore/labProtocol.js` asks for. ⛔ A PROJECTION of the readouts
@@ -338,6 +356,21 @@ function repoUrl(path) {
         : new URL(p, REPO_ROOT).href;
 }
 const ATLAS_URL = repoUrl('frontend/modules/flashPanel/atlases/seedling-map.json');
+
+/**
+ * ⛓ THIS MODULE'S COMMITTED-ARTIFACT DIRECTORY — one spelling, because the
+ * tapes, the Ogmo schema extract and the stamped vanilla set are all siblings
+ * in it and three literals would be three facts about one path.
+ *
+ * ⛔ **UP HERE WITH `ATLAS_URL`, NOT BESIDE ITS FIRST READER.** Measured: with
+ * it declared beside `DEFAULT_TAPE_DIR` (2,400 lines further down) the module
+ * threw `Cannot access 'FIXTURES_DIR' before initialization` at LOAD — the EDIT
+ * arm's `VANILLA_SET_PATH` is a module-level `const` that reads it, and a
+ * `const` initialiser above its dependency is a temporal dead zone, not a
+ * hoist. The page went blank with one console line. ⚠ Trap: a mount-time read
+ * can hit the TDZ of state declared below it, and `?.` does not help.
+ */
+const FIXTURES_DIR = 'frontend/modules/seedlingDemo/fixtures';
 
 const PIT = HAZARD_STATES.pit;
 
@@ -3776,6 +3809,31 @@ function loadAtlas() {
 let heldGeneratedLevel = null;
 
 /**
+ * ⛓⛓⛓ **"OPEN IN EDITOR" — THE ONE THING THE URL CANNOT CARRY** (plan §3.5).
+ *
+ * ⛔ **A RECORD, HANDED OVER IN MEMORY, ONE-SHOT.** ⚖ Ruling 9 is that a URL
+ * names LAUNCH PARAMETERS and nothing else, and a generated room is 10x10 of
+ * tiles plus its bodies — so the bar cannot carry it and must not learn to.
+ * `switchArm` is an in-place lifetime switch in ONE document, so a module slot
+ * is exactly as long-lived as the handover is.
+ *
+ * ⛔ **AND IT IS TAKEN, NOT READ.** A second switch back to EDIT must not
+ * silently reopen a room the reader left behind — that is the stale-state shape
+ * the SWITCH arc removed everywhere else. `takeEditHandover()` clears it.
+ *
+ * ⛓ THIS IS ALSO WHY `seedlingEditAdapter.bases.generate` REFUSES BY NAME
+ * rather than being absent: resolving a `generate` tag means RUNNING the
+ * ladder, and the arm that already ran it hands the answer over instead. The
+ * TAG still travels, so the identity line survives the crossing.
+ */
+let editHandover = null;
+const takeEditHandover = () => {
+    const h = editHandover;
+    editHandover = null;
+    return h;
+};
+
+/**
  * A source that answers for the held generated level and defers to the atlas
  * for everything else.
  *
@@ -6088,26 +6146,30 @@ async function runGenerate(params, lifetime) {
     let state = null;
     let lastPayload = null;
     /**
-     * ⛓⛓⛓ SLICE 6 — THE ARMED CLICK. ⛓⛓ SLICE 11 GAVE IT A SECOND KIND rather
-     * than a second variable:
+     * ⛓⛓⛓ SLICE 6 — THE ARMED CLICK. ⛓⛓ SLICE 11 GAVE IT A SECOND KIND, AND
+     * **EDITOR v3 C1 GAVE THE WHOLE THING TO `editorView`.**
      *
-     *   `null`                                nothing is pending
-     *   `{kind:'template', template, readParams}`  AT… on a catalogue row
-     *   `{kind:'edit', tool}`                 an edit tool is selected
+     * ⛔ **THE ARMED VALUE IS `editor.view.tool` NOW**, and it is still ONE
+     * value with ONE writer and ONE canvas listener — the difference is that
+     * the vocabulary grew from two kinds to six (`brush` · `rect` · `paste` ·
+     * `flood` · this page's `template` gesture · `null`) and the machinery is
+     * shared with the maze lab instead of living in this closure.
      *
-     * ⛔ **ONE VARIABLE, ONE WRITER (`setArmed`), ONE LISTENER.** The two are
-     * mutually exclusive by construction — a click means exactly one thing —
-     * and arming either DISARMS the other, including the tool `<select>`, which
-     * `renderArmed` drives back to `off`. A second `editTool` variable beside
-     * this one would let a page look unarmed for templates while a paint was
-     * still pending, which is the state the reader's next click gets wrong.
+     * ⛓ **`armedTemplate` IS THE `template` GESTURE'S PARAMETER, NOT A SECOND
+     * ARMED STATE** — exactly as the terrain `<select>` is the brush gesture's
+     * parameter and the type box is the place mode's. WHICH GESTURE is one
+     * question with one answer; WHAT IT WILL PUT DOWN is another, and this page
+     * has always had several of those.
      *
-     * ⛔ It is declared HERE with `state` for the same measured reason (trap
+     * ⛔ Both are declared HERE with `state` for the measured reason (trap
      * 252): `renderArmed` runs from `renderCatalogue`, which runs at MOUNT, and
      * a reference to a `let` declared below would throw in the temporal dead
-     * zone and take the whole arm down before it drew anything.
+     * zone and take the whole arm down before it drew anything. ⚠ `editor` is
+     * read through `?.` for the same reason — the catalogue is built before the
+     * mount that creates it.
      */
-    let armed = null;
+    let armedTemplate = null;
+    let editor = null;
     /**
      * ── ⛓⛓⛓ SLICE 5a (D4/D4'/D5) — **THE PHASE LADDER AND THE OVERLAYS, AS
      * ── VIEW STATE** ────────────────────────────────────────────────────
@@ -6203,9 +6265,9 @@ async function runGenerate(params, lifetime) {
      */
     function renderArmed() {
         const canvas = $('canvas');
-        const template = armed?.kind === 'template' ? armed : null;
-        const tool = armed?.kind === 'edit' ? armed.tool : 'off';
-        canvas.classList.toggle('armed', Boolean(armed));
+        const tool = editor?.view.tool ?? null;
+        const template = tool === TEMPLATE_TOOL ? armedTemplate : null;
+        canvas.classList.toggle('armed', tool !== null);
         for (const b of $('genRoster').querySelectorAll('button[data-arm]')) {
             const on = Boolean(template) && b.dataset.arm === template.template;
             b.classList.toggle('armed', on);
@@ -6218,48 +6280,41 @@ async function runGenerate(params, lifetime) {
                 + 'spending a solve. Press Escape, or AT… again, to cancel.'
             : 'click-to-anchor: press AT… on a catalogue row, then click a tile on the level '
                 + 'below. ⛔ The unit is the TEMPLATE — the EDIT tools below are what paint a '
-                + 'bare tile, and only one of the two can be armed at a time.';
+                + 'bare tile, and only one of the SIX gestures can be armed at a time.';
         /**
-         * ⛓⛓ THE TOOL SELECT IS A VIEW OF `armed`, NOT A SECOND STORE. Arming
-         * a template drives it back to `off` here, so the two controls cannot
-         * both look live — which is the whole reason there is one variable.
+         * ⛓⛓ THE READOUT CARRIES BOTH, so an acceptance row can assert the
+         * armed state without reading a string out of a note. ⛓ EDITOR v3 C1:
+         * `editTool` is still the BRUSH MODE — that is what it has always
+         * meant, and `check-seedling-editor-edit.mjs` asserts `'paint'` against
+         * it. The GESTURE is a new fact and gets a new name rather than a new
+         * meaning for an old one (trap 583's shape).
          */
-        $('genEditTool').value = tool;
-        $('genEditNote').textContent = editNoteText(tool);
-        // ⛓ The readout carries both, so an acceptance row can assert the
-        // armed state without reading a string out of a note.
         if (window.__editorGenerate) {
             window.__editorGenerate.armed = template?.template ?? null;
-            window.__editorGenerate.editTool = tool;
+            window.__editorGenerate.editTool = tool === TOOLS.BRUSH
+                ? (editor?.mode() ?? 'off') : 'off';
+            window.__editorGenerate.gesture = tool;
         }
     }
     /**
-     * ⛔ THE ONE WRITER OF `armed`. Every arm, disarm and re-arm on this panel
-     * goes through here — the AT… callback, the tool `<select>`, Escape, the
-     * catalogue rebuild and the click handler's own disarm — so there is one
-     * place that decides what the page LOOKS like when something is pending.
+     * ⛔ THE ONE WRITER OF THE TEMPLATE ARM. Arming a template arms the
+     * `template` GESTURE, which is what disarms a brush — one value, one
+     * listener, and the mutual exclusion is `editorView`'s rather than a rule
+     * this closure has to keep.
      */
-    const setArmed = (next) => { armed = next; renderArmed(); };
+    const armTemplate = (next) => {
+        armedTemplate = next;
+        editor?.view.setTool(next ? TEMPLATE_TOOL : null);
+        renderArmed();
+    };
     /**
-     * ⚠ THE SENTENCE THE EDIT SECTION SHOWS, and it says what a click will DO
-     * before it is clicked — the same law the ARMED note follows. ⛔ The
-     * certification half is deliberately NOT here: it is a statement about the
-     * level, so it lives in `#genEditCert`, which every draw rewrites.
+     * ⚠ THE SENTENCE THE EDIT SECTION SHOWS moved to `watchEditor.brushNoteText`
+     * WITH ITS WORDS UNCHANGED — the section is shared with the EDIT arm now,
+     * and a page that described the same brush two ways would be two answers to
+     * one question. ⛔ The certification half is still NOT there: it is a
+     * statement about the LEVEL, so it lives in `#genEditCert`, which every
+     * draw rewrites.
      */
-    const editNoteText = (tool) => ({
-        off: 'no edit tool — clicks on the level do nothing (AT… still arms a template).',
-        paint: '⛓ PAINT ARMED: the clicked tile becomes the selected terrain. ⛔ The border '
-            + 'ring is editable too, and NOTHING here checks legality — free means free, and '
-            + 'the ORACLE is the guard (press SOLVE). Escape cancels.',
-        place: '⛓ PLACE ARMED: the entity type below is placed at the clicked tile\'s OEL '
-            + 'corner with the attributes in the box, LITERALLY (no activator-group '
-            + 'derivation — a hand placement has no anchor to derive from). Escape cancels.',
-        attrs: '⛓ ATTRS ARMED: the clicked tile\'s LAST entity has its attributes REPLACED by '
-            + 'the box (not merged — clearing a field is spelled by leaving it out). '
-            + 'Escape cancels.',
-        remove: '⛓ REMOVE ARMED: the clicked tile\'s LAST entity is deleted. A tile holding '
-            + 'none refuses BY NAME rather than doing nothing. Escape cancels.',
-    }[tool] ?? '');
     const renderCatalogue = () => {
         const full = paletteFor(biomeSel.value);
         const selected = new Set(roster
@@ -6272,17 +6327,21 @@ async function runGenerate(params, lifetime) {
              * two rows armed at once would make the next click mean two things.
              */
             (template, readParams) => {
-                setArmed(armed?.kind === 'template' && armed.template === template
-                    ? null : { kind: 'template', template, readParams });
+                armTemplate(armedTemplate?.template === template
+                    && editor?.view.tool === TEMPLATE_TOOL
+                    ? null : { template, readParams });
             });
         for (const b of rosterBoxes()) b.onchange = () => updateRunButtons();
         // ⛔ The buttons were just rebuilt, so the armed VIEW has to be redrawn
-        // — and `armed` itself is dropped, because the row object it named is
+        // — and the arm itself is dropped, because the row object it named is
         // gone and its form is a new one. ⛓ SLICE 11: that drops a selected
         // EDIT TOOL too, which is right for the same reason — the catalogue is
         // rebuilt on a biome/roster change, and a brush left live across one
-        // would paint under a page the reader has just re-described.
-        setArmed(null);
+        // would paint under a page the reader has just re-described. ⛓ EDITOR
+        // v3 C1: `armTemplate(null)` clears the GESTURE, so it drops a RECT
+        // corner and a FLOOD arm with it, on exactly the same argument.
+        armTemplate(null);
+        editor?.setMode('off');
     };
     /**
      * ⛔ AN EMPTY RESTRICTION REFUSES **BEFORE** THE PRESS. `levelGenerator`
@@ -6801,14 +6860,19 @@ async function runGenerate(params, lifetime) {
         const editReadout = mountEdits(state.edits);
         renderCertification();
         /**
-         * ⛓⛓ ⚖ RULING 3's BOUND, BESIDE THE CERTIFICATION AND ON THE SAME
-         * TERMS: ONE writer, called from the one draw, so it cannot describe a
-         * room the page has stopped showing. ⛔ It is a BOUND and not a
-         * refusal — the room still edits, still downloads and still ships; what
-         * it cannot get here is a JS certification, and ▶ load in wasm is the
-         * certifier (§3.3's *"two oracles, unequal reach"*).
+         * ⛓⛓ THE EDITING SECTION'S OWN READOUTS — the armed gesture, the
+         * clipboard note, and ⚖ RULING 3's BOUND beside the certification and
+         * on the same terms: ONE writer, called from the one draw, so none of
+         * them can describe a room the page has stopped showing. ⛔ The bound is
+         * a BOUND and not a refusal — the room still edits, still downloads and
+         * still ships; what it cannot get here is a JS certification, and ▶
+         * load in wasm is the certifier (§3.3's *"two oracles, unequal reach"*).
+         *
+         * ⚠ `?.` because `show('the SKELETON')` runs BEFORE the mount that
+         * creates the editor — the first draw of the arm has no section yet,
+         * and it is the mount that draws it.
          */
-        renderTranscribeBound($('genEditTranscribe'), state.record, ENTITY_CLASSES);
+        editor?.render();
         lastPayload = {
             generator: 'frontend/modules/seedlingDemo/watchViewer.js (SOURCE = GENERATE)',
             seed,
@@ -7048,7 +7112,7 @@ async function runGenerate(params, lifetime) {
              * value on every redraw — so a readout can never claim an arm that
              * a re-render dropped.
              */
-            armed: armed?.kind === 'template' ? armed.template : null,
+            armed: editor?.view.tool === TEMPLATE_TOOL ? armedTemplate?.template ?? null : null,
             /**
              * ⛓⛓ SLICE 11: THE EDITS, AND THEY ARE THE READOUT'S OWN THREE
              * FIELDS rather than one. `edits` is the COUNT a host mirrors
@@ -7060,7 +7124,15 @@ async function runGenerate(params, lifetime) {
             edits: state.edits.length,
             editList: state.edits,
             editRows: editReadout?.rows ?? 0,
-            editTool: armed?.kind === 'edit' ? armed.tool : 'off',
+            editTool: editor?.view.tool === TOOLS.BRUSH ? editor.mode() : 'off',
+            /**
+             * ⛓ EDITOR v3 C1 — the GESTURE, beside the brush MODE. A NEW name
+             * for a NEW fact: `editTool` has meant *which brush mode* since
+             * slice 11 and a gate asserts `'paint'` against it, so widening its
+             * meaning to the six gestures would have moved a claim nobody
+             * edited (trap 583's shape).
+             */
+            gesture: editor?.view.tool ?? null,
             skeleton: state.skeleton,
             bounds: state.bounds,
             budget: state.budget,
@@ -7274,91 +7346,103 @@ async function runGenerate(params, lifetime) {
     }
 
     /**
-     * ⛓⛓⛓ ONE MANUAL EDIT — the op is built HERE from the tool and the form,
-     * and applied by `watchEdit.editState`, which is the ONE place an edit
-     * touches a record.
+     * ⛓⛓⛓ **THE HOST — THIS ARM'S SIDE OF THE ONE EDIT IMPLEMENTATION.**
      *
-     * ⛔ **AND IT CLEARS THE CERTIFICATION FIRST**, before the op is even
-     * applied. ⚖ §3.8(b): the moment the record moves, the last solve is about
-     * a room that is no longer on screen — so the clear cannot be conditional
-     * on the op succeeding, and it cannot come after a draw that would have
-     * printed the stale verdict for one frame.
+     * EDITOR v3 C1, plan §3.1. `runEdit` and `editOpFor` are GONE: the op is
+     * built by `watchEditor.brushOp` (the same builder the EDIT arm uses, the
+     * same words, read at the press) and the gesture machinery is
+     * `editorView`'s. What is left here is the half that is genuinely this
+     * arm's — how an op reaches THIS arm's store.
      *
-     * ⚠ A REFUSED OP LEAVES THE LEVEL ALONE and says why, with the ops
-     * module's own sentence. `editState` refuses an out-of-room cell
-     * (`withTerrain`'s message), a REMOVE on an empty cell and a malformed
-     * attrs object — none of them is a modification, so none of them counts as
-     * an edit. ⛓ Trap 263 the maze paid for: the count, the certification and
-     * the "this URL is no longer a reproduction" clause must move only for a
-     * click that CHANGED something.
+     * ⛔⛔ **AND IT IS `watchEdit.editState` OVER `state`, NOT AN `editCore`
+     * SESSION.** That is the whole reason the GENERATE payload, the `?gen=`
+     * replay and every committed fixture are byte-identical across this slice:
+     * they are not COMPARED to be so afterwards, the fold that produces them
+     * did not move. The EDIT arm hands `editorView` a real session; this arm
+     * hands it a session-SHAPED object over the ladder's state. One tool, two
+     * hosts (§3.1's own sentence).
+     *
+     * ⛔ **IT IS SYNCHRONOUS AND THE REDRAW IS NOT.** `editorView.applyOp` is
+     * sync — it has to be, a stroke is one group and one answer — so the fold
+     * happens here and the `await show(...)` happens in `onChange`, where the
+     * result is already known. ⚠ `busyNow` still gates it, so a click during
+     * the redraw cannot land a second op on a stale record.
+     *
+     * ⚠ THE THREE OUTCOMES ARE `editCore`'s three, and the middle one is trap
+     * 263's, which the maze paid for once: a click that CHANGED NOTHING is not
+     * an edit — `editState` returns the SAME state object, so this is an
+     * identity check and not a flag a caller could forget, and the count, the
+     * certification and the "this URL is no longer a reproduction" clause all
+     * stay put. ⛔ **AND THE CERTIFICATION IS CLEARED BEFORE THE DRAW**, never
+     * after: the moment the record moves the last solve is about a room that is
+     * no longer on screen (⚖ §3.8(b)).
      */
-    async function runEdit(tool, at) {
-        busy(true);
-        try {
-            if (!lifetime.alive() || !state?.record) return;
-            let op;
-            try {
-                op = editOpFor(tool, at);
-            } catch (e) {
-                $('status').className = 'bad';
-                $('status').textContent = `the ${tool} edit was REFUSED — ${e.message}`;
-                return;
+    const generateHost = {
+        record: () => state?.record ?? null,
+        ops: () => (state?.edits ?? []).map((e) => e.op),
+        get certified() { return certified; },
+        setCertified(v) { certified = v; return certified; },
+        apply(op) {
+            if (busyNow || !lifetime.alive() || !state?.record) {
+                return {
+                    ok: false,
+                    applied: false,
+                    description: 'a run holds the thread — the edit was not applied',
+                };
             }
             let next;
             try {
                 next = editState(state, op);
             } catch (e) {
-                $('status').className = 'bad';
-                $('status').textContent = `the ${tool} edit at (${at.tx},${at.ty}) was `
-                    + `REFUSED — ${e.message}`;
-                return;
+                return {
+                    ok: false,
+                    applied: false,
+                    description: `the edit was REFUSED — ${e.message}`,
+                };
             }
-            /**
-             * ⛓⛓⛓ TRAP 263, WHICH THE MAZE PAGE PAID FOR ONCE (§10.6 defect 2):
-             * a click that CHANGED NOTHING is not an edit. `editState` returns
-             * the SAME state object when the record did not move, so this is an
-             * identity check and not a flag a caller could forget — and the
-             * count, the certification and the "this URL is no longer a
-             * reproduction" clause all stay put. ⚠ SAID, not silently nothing.
-             */
             if (next === state) {
-                $('status').className = '';
-                $('status').textContent = `the ${tool} click at (${at.tx},${at.ty}) changed `
-                    + 'NOTHING, so it is not an edit — the count, the certification and the '
-                    + 'identity line are unmoved. ⚖ §3.8 is a law about CHANGES.';
-                return;
+                return {
+                    ok: true,
+                    applied: false,
+                    op,
+                    description: 'the click changed NOTHING, so it is not an edit — the '
+                        + 'count, the certification and the identity line are unmoved. '
+                        + '⚖ §3.8 is a law about CHANGES.',
+                };
             }
             state = next;
             certified = null;
-            await show(describeEdit(op));
+            return { ok: true, applied: true, op, description: describeEdit(op) };
+        },
+        /**
+         * ⛔ UNDO DOES **NOT** RESTORE A CERTIFICATION. The oracle has still not
+         * been asked about the record now on screen — it happens to be a record
+         * it once certified, but "once solved a record equal to this" and
+         * "solved this" are the same fact only if nothing else moved, and a
+         * page is not entitled to that inference.
+         */
+        undo() {
+            if ((state?.edits ?? []).length === 0) return false;
+            state = undoEdit(state);
+            certified = null;
+            return true;
+        },
+    };
+
+    /**
+     * ⛓ THE REDRAW AFTER A GESTURE — the async half `generateHost.apply` cannot
+     * do. ⛔ Fire-and-forget on purpose: `editorView`'s handlers are sync and a
+     * failure has to land somewhere visible, which `show`'s own paths do.
+     */
+    const afterEdit = async (description) => {
+        busy(true);
+        try {
+            await show(description);
         } finally {
             busy(false);
             updateEditButtons();
         }
-    }
-
-    /**
-     * The tool + the form → ONE op. ⛔ The JSON box is parsed HERE and its
-     * refusal is the reader's own text, because a page that silently treated
-     * unparseable attributes as `{}` would place an entity nobody asked for.
-     */
-    function editOpFor(tool, at) {
-        if (tool === 'paint') {
-            return { op: 'paint', tx: at.tx, ty: at.ty, terrain: $('genEditTerrain').value };
-        }
-        if (tool === 'remove') return { op: 'remove', tx: at.tx, ty: at.ty };
-        const raw = $('genEditAttrs').value.trim();
-        let attrs;
-        try {
-            attrs = raw === '' ? {} : JSON.parse(raw);
-        } catch (e) {
-            throw new Error(`the attributes box does not parse as JSON (${e.message}). `
-                + 'It is a literal OEL attribute set — e.g. {"tset":"0","tag":"-1"} — and '
-                + 'nothing here derives an activator group for you.');
-        }
-        if (tool === 'attrs') return { op: 'attrs', tx: at.tx, ty: at.ty, attrs };
-        return { op: 'place', tx: at.tx, ty: at.ty, type: $('genEditType').value.trim(), attrs };
-    }
+    };
 
     /**
      * ⛔ READ THE FORM, AND RESET THE LADDER IF ITS IDENTITY CHANGED.
@@ -7707,25 +7791,49 @@ async function runGenerate(params, lifetime) {
      * dimensions, so the answer is right at whatever integer scale the
      * renderer chose and whatever size CSS is presenting it at.
      */
-    lifetime.on(window, 'keydown', (ev) => {
-        if (ev.key !== 'Escape' || !armed) return;
-        // ⛓ SLICE 11: ONE key clears BOTH kinds, because there is one variable
-        // — a page with a second Escape for the brush would be a page where
-        // "cancel" meant different things depending on what was pending.
-        const what = armed.kind === 'template'
-            ? 'AT… cancelled — nothing was placed'
-            : `the ${armed.tool} tool was DISARMED — nothing was edited`;
-        setArmed(null);
+    /**
+     * ⛓⛓⛓ EDITOR v3 C1 — **ESCAPE IS `editorView`'s NOW, AND THIS IS THE
+     * SENTENCE IT LEAVES BEHIND.** The key binding, the clear and the mutual
+     * exclusion all live in the view's command table (one key map, one writer);
+     * what the view cannot know is this page's vocabulary for what was
+     * cancelled, because by the time the clear is visible the armed thing is
+     * gone. So `mountWatchEditor` reports the tool it had ONE DRAW AGO and this
+     * turns it into the page's own words.
+     *
+     * ⛔ A SECOND `keydown` LISTENER WOULD HAVE BEEN THE OTHER SPELLING and it
+     * is the wrong one: two handlers for one key is exactly the two-answers
+     * shape the single `armed` variable existed to prevent, and the ordering
+     * between them would decide whether the sentence named the tool or named
+     * `null`.
+     */
+    const sayDisarmed = (tool) => {
         $('status').className = '';
-        $('status').textContent = what;
-    });
-    $('canvas').onclick = async (ev) => {
-        if (!lifetime.alive() || !state?.record) return;
+        $('status').textContent = tool === TEMPLATE_TOOL
+            ? 'AT… cancelled — nothing was placed'
+            : `the ${tool} gesture was DISARMED — nothing was edited`;
+        if (tool === TEMPLATE_TOOL) armedTemplate = null;
+        renderArmed();
+    };
+    /**
+     * ── ⛓⛓⛓ THE PIXEL → TILE MAP, AND IT IS THE **ONLY** THING THIS ARM
+     * ── STILL OWNS ABOUT A CANVAS CLICK ───────────────────────────────
+     *
+     * ⛓ THE CONVERSION IS `watchGenerate.tileAtPoint` — the ONE pixel-to-tile
+     * mapping, given the ELEMENT's on-screen size and the ROOM's own
+     * dimensions, so the answer is right at whatever integer scale the renderer
+     * chose and whatever size CSS is presenting it at.
+     *
+     * ⛔ **`null` FOR A POINT OUTSIDE THE ROOM**, which is `editorView`'s
+     * contract for `cellAt` — the refusal sentence is `offRoom`'s and the
+     * conversion's own message is kept as the reason.
+     */
+    let lastCellRefusal = null;
+    const cellAt = (ev) => {
+        if (!state?.record) return null;
         const rect = $('canvas').getBoundingClientRect();
-        let at = null;
-        let refusal = null;
         try {
-            at = tileAtPoint({
+            lastCellRefusal = null;
+            return tileAtPoint({
                 x: ev.clientX - rect.left,
                 y: ev.clientY - rect.top,
                 width: rect.width,
@@ -7734,46 +7842,30 @@ async function runGenerate(params, lifetime) {
                 rows: state.record.height,
             });
         } catch (e) {
-            refusal = e.message;
+            lastCellRefusal = e.message;
+            return null;
         }
-        /**
-         * ⛓⛓ SLICE 4 — `procgenLab:selectTile`, AND IT DOES NOT NEED AN ARM.
-         * ⛔ The event says *"the reader pointed at this cell"*, which is the
-         * only thing a host can act on; firing it only while ARMED would make
-         * it mean "a directive was placed" under a name that says otherwise.
-         * ⚠ The page's own behaviour is unchanged — the armed guard below is
-         * exactly where it was, one statement further down.
-         */
+    };
+    /**
+     * ⛓⛓ SLICE 4 — `procgenLab:selectTile`, AND IT DOES NOT NEED AN ARM. ⛔ The
+     * event says *"the reader pointed at this cell"*, which is the only thing a
+     * host can act on; firing it only while ARMED would make it mean "a
+     * directive was placed" under a name that says otherwise.
+     *
+     * ⛔⛔ **THIS IS THE SECOND CANVAS LISTENER AND IT IS THE ONE A2 §10.6
+     * BOUND 3 ALREADY NAMED.** The tool's listener is `editorView`'s; this one
+     * is the page's and fires in EVERY arm, armed or not. They answer different
+     * questions and both are needed — what does NOT exist any more is a second
+     * ARMED STATE, which is what the bound was ever about.
+     *
+     * ⚠ `.onclick =` rather than `addEventListener`, so a later arm's own
+     * assignment REPLACES this one rather than stacking beside it — the
+     * convention every other control on this page follows.
+     */
+    $('canvas').onclick = (ev) => {
+        if (!lifetime.alive() || !state?.record) return;
+        const at = cellAt(ev);
         if (at) hostBridge?.selectTile(at.tx, at.ty);
-        if (!armed || busyNow) return;
-        if (refusal !== null) {
-            // ⚠ SAID, not swallowed — a click the page ignored silently is the
-            // one outcome the reader cannot act on.
-            $('status').className = '';
-            $('status').textContent = refusal;
-            return;
-        }
-        /**
-         * ── ⛓⛓⛓ SLICE 11 — THE SECOND KIND, AND THE ONE ASYMMETRY BETWEEN
-         * ── THEM: **AN EDIT TOOL STAYS ARMED, A TEMPLATE ARM DOES NOT** ─────
-         *
-         * ⛔ A template arm spends a SOLVE and is a one-shot: it disarms before
-         * the attempt so a second click cannot queue a second directive behind
-         * a running solve. An edit tool is a BRUSH — painting a corridor is
-         * five clicks and re-arming between each would be a control that
-         * fights its own purpose — so it survives the click and Escape (or the
-         * `off` option) is how it ends. ⚠ `busyNow` still gates it, so a click
-         * during the redraw cannot land a second op on a stale record.
-         */
-        if (armed.kind === 'edit') {
-            await runEdit(armed.tool, at);
-            return;
-        }
-        const { template, readParams } = armed;
-        // ⛔ DISARMED BEFORE THE ATTEMPT, so a second click while the solve is
-        // running cannot queue a second directive behind it.
-        setArmed(null);
-        await attempt(template, readParams(), at);
     };
     /**
      * ⚠ CLEARING IS A RESET TO THE LADDER, not an undo of one directive. There
@@ -8019,18 +8111,16 @@ async function runGenerate(params, lifetime) {
 
     /**
      * ⛔ MOUNTED FROM THE MODULES' OWN VOCABULARIES, so this file keeps no
-     * second list of what a terrain or an entity is: `procgenLevel.TERRAIN_NAMES`
-     * is the four-terrain vocabulary and the entity list is
-     * `watchEditor.mountEntityPalette`'s, which derives it from the `.oep`
-     * extract (144 types) or falls back BY NAME to the five `procgenPalette`
-     * places. ⚠ The type field is a free `<input>` with the roster as a
+     * second list of what a terrain or an entity is — and since EDITOR v3 C1
+     * this file keeps NEITHER: `watchEditor.mountWatchEditor` mounts both
+     * pickers, because the section they are in is shared with the EDIT arm and
+     * a control filled by only one of two hosts is an empty `<select>` on the
+     * other. ⚠ The type field is a free `<input>` with the roster as a
      * `<datalist>` and NOT a `<select>`, which is §3.8(b) as a control: the
      * world is the adjudicator, so a type nobody offered must be typeable and
      * must refuse from the ENGINE with its own construction site rather than
      * from a dropdown that never let you ask.
      */
-    $('genEditTerrain').innerHTML = TERRAIN_NAMES
-        .map((t) => `<option value="${t}">${t}</option>`).join('');
     /**
      * ⛓⛓⛓ **EDITOR v3 C1 — THE WIDE ROSTER, AND THE PAGE NAMES ITS DEFAULT.**
      *
@@ -8054,66 +8144,34 @@ async function runGenerate(params, lifetime) {
      * which list it is showing: *"the type I want is missing"* and *"the list
      * is the small one"* are the same symptom with different cures.
      */
-    const ogmoSchema = await loadOgmoSchema();
-    if (!lifetime.alive()) return;
-    const palette = mountEntityPalette({
-        typeInput: $('genEditType'),
-        typeList: $('genEditTypes'),
-        folderSel: $('genEditFolder'),
-        attrsInput: $('genEditAttrs'),
-        attrsForm: $('genEditAttrForm'),
-        rosterNote: $('genEditRoster'),
-        schema: ogmoSchema,
-        lifetime,
-    });
-    palette.setType(DEFAULT_PLACE_TYPE);
-    // ⛔ THROUGH THE ONE WRITER. The select is a VIEW of `armed` (see
-    // `renderArmed`), so this hands it the value and reads nothing back.
-    lifetime.on($('genEditTool'), 'change', () => {
-        const tool = $('genEditTool').value;
-        setArmed(EDIT_OPS.includes(tool) ? { kind: 'edit', tool } : null);
-    });
-    $('genEditUndo').onclick = async () => {
-        busy(true);
-        try {
-            const n = state.edits.length;
-            if (n === 0) return;
-            state = undoEdit(state);
-            /**
-             * ⛔ UNDO DOES **NOT** RESTORE A CERTIFICATION. The oracle has still
-             * not been asked about the record now on screen — it happens to be a
-             * record it once certified, but "once solved a record equal to this"
-             * and "solved this" are the same fact only if nothing else moved,
-             * and a page is not entitled to that inference. The maze page's own
-             * rule (`undoEdit`: *uncertified stays uncertified*).
-             */
-            certified = null;
-            await show(`UNDO — ${n - 1} manual edit(s) remain`);
-        } finally {
-            busy(false);
-        }
-    };
     /**
-     * ⛓⛓⛓ THE SOLVE PRESS — §3.8(b)'s other half, and the ONLY thing that can
-     * certify an edited level. ⛔ It runs `displaySolve`, which is
-     * `procgenSeedling.seedlingOracle` over the CURRENT record with the KEPT
-     * TEMPLATES' pin union — the same oracle the loop used, not a second one.
+     * ⛓⛓ **PLAN §3.5's ONE BUTTON.** The record and the `base` TAG cross
+     * together — no reload, the same in-place lifetime switch the SOURCE
+     * selector uses — so the edit arm's identity line reads *"generated seed 4
+     * · pre-sword · step 2, then N edit(s)"* rather than starting from nothing.
      *
-     * ⚠ THE PINS ARE THE KEPT TEMPLATES', AND THAT IS SAID OUT LOUD: a
-     * hand-placed entity has no template, so it contributes no pin. A water
-     * pool painted by hand does NOT oblige `'sound'` the way the water TEMPLATE
-     * does — the pin union is a fact about what the loop drew, and inventing a
-     * pin for a hand edit would certify the room under an inventory nobody
-     * asked for.
+     * ⛔ **THE EDITS CROSS AS THE RECORD, NOT AS OPS.** A2 §10.6 bound 2's
+     * lesson, in this direction: the ladder's `state.record` is ALREADY
+     * `base + directives + edits`, so handing both the folded record and the op
+     * list would apply the edits twice. The tag names how many there were,
+     * which is honest, and the new session's own list starts empty — the edit
+     * arm cannot vouch for a construction it did not perform.
      */
-    $('genEditSolve').onclick = async () => {
-        busy(true);
-        try {
-            if (!state?.record) return;
-            await show('SOLVE — certifying the record on screen', { certifying: true });
-        } finally {
-            busy(false);
-        }
+    $('genOpenEditor').onclick = () => {
+        if (!state?.record) return;
+        editHandover = {
+            record: state.record,
+            base: {
+                kind: 'generate',
+                seed,
+                biome,
+                step,
+                directives: (state.directives ?? []).map((d) => d.template ?? d),
+                edits: (state.edits ?? []).length,
+                skeleton,
+            },
+        };
+        void switchArm('edit');
     };
     $('genDownload').onclick = () => {
         if (!lastPayload) return;
@@ -8128,6 +8186,114 @@ async function runGenerate(params, lifetime) {
 
     // ── the skeleton, before anything is drawn ───────────────────────────
     state = generateStep({ seed, biome, step: 0, bounds, budget, roster, skeleton, elements, areas, require, size, fill });
+
+    const ogmoSchema = await loadOgmoSchema();
+    if (!lifetime.alive()) return;
+    /**
+     * ⛓⛓⛓ **THE MOUNT — GENERATE'S FREE-EDITING SECTION IS `watchEditor`'s
+     * NOW**, over `editorView`, over this arm's own host.
+     *
+     * ⛔⛔ **AFTER `state` HOLDS THE SKELETON AND BEFORE THE FIRST DRAW.**
+     * Measured: mounted with the rest of the controls (~250 lines up, where
+     * every other one is wired) the arm died at boot with `Cannot read
+     * properties of null (reading 'width')` — `editorView` REPAINTS its overlay
+     * at mount, and the repaint asks the adapter for the record's bounds. There
+     * is no record yet at that point. ⇒ the mount is a consumer of the state,
+     * not a sibling of the controls, and it goes where the state exists.
+     *
+     * ⛔ THE COMMANDS AND THE ONE PAGE TOOL ARE WHAT THIS ARM CONTRIBUTES.
+     * `undo` is the id `Ctrl/Cmd+Z` resolves to (`editorView.UNDO_COMMAND_ID`),
+     * so the keyboard undo and the button are one row rather than two; SOLVE is
+     * this arm's oracle press; `template` is the AT… gesture, which is a
+     * ONE-SHOT (it spends a solve) and disarms itself, which is the asymmetry
+     * slice 11 wrote down and which is now expressible instead of special-cased.
+     */
+    const editorAdapter = createSeedlingEditAdapter({
+        schema: null,
+        /**
+         * ⛔ **NO SCHEMA ON THE OP PATH IN THIS ARM.** Law (b) — the world is
+         * the adjudicator — and, concretely, `check-seedling-editor-edit.mjs`
+         * claim 10 places a type `Shrum.oep` does not declare and asserts that
+         * `buildLevelWorld` is what refuses it, with its own construction site.
+         * A schema here would refuse it earlier, from the VOCABULARY, which is
+         * a different and less useful sentence about a different subject.
+         */
+    });
+    editor = mountWatchEditor({
+        canvas: $('canvas'),
+        host: generateHost,
+        adapter: editorAdapter,
+        cellAt,
+        lifetime,
+        schema: ogmoSchema,
+        entityClasses: ENTITY_CLASSES,
+        say: (text, bad) => {
+            $('status').className = bad ? 'bad' : '';
+            $('status').textContent = text;
+        },
+        onDisarm: sayDisarmed,
+        onChange: ({ result }) => {
+            renderArmed();
+            if (result?.applied) void afterEdit(result.description);
+            else updateEditButtons();
+        },
+        commands: [
+            {
+                id: UNDO_COMMAND_ID,
+                label: 'UNDO the last edit',
+                run: () => {
+                    const n = (state?.edits ?? []).length;
+                    if (n === 0 || busyNow) return;
+                    generateHost.undo();
+                    void afterEdit(`UNDO — ${n - 1} manual edit(s) remain`);
+                },
+            },
+            {
+                id: 'solve',
+                label: 'SOLVE — certify what is on screen',
+                run: () => {
+                    if (!state?.record || busyNow) return;
+                    void (async () => {
+                        busy(true);
+                        try {
+                            await show('SOLVE — certifying the record on screen',
+                                { certifying: true });
+                        } finally {
+                            busy(false);
+                        }
+                    })();
+                },
+            },
+        ],
+        tools: [{
+            id: TEMPLATE_TOOL,
+            label: 'AT… (a catalogue template)',
+            /**
+             * ⛔ **A ONE-SHOT, AND IT SAYS SO IN ITS OWN BODY.** A template arm
+             * spends a SOLVE, so it disarms BEFORE the attempt and a second
+             * click cannot queue a second directive behind a running solve. An
+             * edit BRUSH is the opposite — painting a corridor is five clicks —
+             * and stays armed. ⛓ `editorView` does not decide which: *"a page
+             * tool that wants to be one-shot calls `setTool` from its own
+             * `at`"*, which is exactly this.
+             */
+            at: (at) => {
+                if (busyNow || !armedTemplate) return;
+                const { template, readParams } = armedTemplate;
+                armTemplate(null);
+                void attempt(template, readParams(), at);
+            },
+        }],
+    });
+    /**
+     * ⛓ THE PALETTE'S OPENING TYPE — a NAMED constant, not `[0]` of the offered
+     * list. §11.5 item 4's ⛔; see `watchEditor.DEFAULT_PLACE_TYPE`.
+     */
+    editor.palette.setType(DEFAULT_PLACE_TYPE);
+    editor.setMode('off');
+    lifetime.on($('genEditUndo'), 'click', () => editor.view.run(UNDO_COMMAND_ID));
+    lifetime.on($('genEditSolve'), 'click', () => editor.view.run('solve'));
+
     await show('the SKELETON');
 
     if (gp.run || payload) {
@@ -8229,6 +8395,538 @@ async function runGenerate(params, lifetime) {
     await applyPhaseParam(gp.phase);
 }
 
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ **THE FIFTH ARM — `?source=edit`** (plan §3.1, §3.2, §3.4)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓ THE VANILLA SET'S STAMPED `set_id` — ⚖ RULING 2's subject, READ rather
+ * than typed. It is the content hash of the 116 committed rooms, and a page
+ * that carried a literal copy of it would be a second reader of the identity
+ * `stampLevelSetIdentity` owns — stale the day the extract is re-stamped, and
+ * stale in the one direction that makes the hash CHECK pass when it should
+ * refuse.
+ */
+const VANILLA_SET_PATH = `${FIXTURES_DIR}/seedling-vanilla-set.json`;
+let vanillaSetIdPromise = null;
+const loadVanillaSetId = () => {
+    if (!vanillaSetIdPromise) {
+        vanillaSetIdPromise = fetchJson(repoUrl(VANILLA_SET_PATH), 'the vanilla level set')
+            .then((set) => set.set_id);
+    }
+    return vanillaSetIdPromise;
+};
+
+/**
+ * ⛓⛓ **WHAT THE LOAD BOX WAS HANDED** — sniffed BY SHAPE and refused BY NAME.
+ *
+ * ⛔ NOT BY FILE EXTENSION and not by a radio button the reader has to get
+ * right: a payload is JSON with a `base`, an OEL is XML with a `<level>` root,
+ * and both are unambiguous on their own bytes. ⚠ A third thing (a level-set
+ * JSON) is REFUSED with whose job it is, rather than being read as a payload
+ * that happens to be missing fields.
+ */
+export function sniffLoadBox(text) {
+    const t = String(text ?? '').trim();
+    if (t === '') return { kind: null, why: 'the box is empty' };
+    if (t.startsWith('<')) {
+        return /<level[\s>]/i.test(t)
+            ? { kind: 'oel', xml: t }
+            : { kind: null, why: 'this is XML but its root is not `<level>` — an OEL is one '
+                + 'room, and nothing here reads any other Ogmo document' };
+    }
+    let parsed;
+    try {
+        parsed = JSON.parse(t);
+    } catch (e) {
+        return { kind: null, why: `this is neither an OEL (it does not start with \`<\`) nor `
+            + `JSON (${e.message})` };
+    }
+    if (parsed && typeof parsed === 'object' && Array.isArray(parsed.rooms)) {
+        return { kind: null, why: 'this is a LEVEL SET (it has `rooms`), and loading a set is '
+            + 'the level-set arm\'s — plan phase 3. One room of one is not the same thing as '
+            + 'the set, and pretending otherwise would drop every exit it declares' };
+    }
+    if (!parsed || typeof parsed !== 'object' || !parsed.base) {
+        return { kind: null, why: 'this JSON carries no `base`, so it is not an editor '
+            + 'payload. A payload is `{base, edits, …}` — the identity is `base, then edits`, '
+            + 'and a level with neither is a picture rather than a construction' };
+    }
+    return { kind: 'payload', payload: parsed };
+}
+
+/**
+ * ⛓⛓⛓ **THE EDIT ARM.** A room, on its own, with no ladder behind it.
+ *
+ * ⛔ **THE IDENTITY IS `base, THEN EDITS`** (§3.2) and it is the payload's,
+ * never the URL's (⚖ ruling 9). `?source=edit&level=14` is a LAUNCH PARAMETER
+ * and nothing more: the bar names which room to open and carries not one edit,
+ * which is the same law the GENERATE arm keeps and the reason both download a
+ * payload rather than a link.
+ *
+ * ⛔ **AND THE ARM IS ASKED FOR BY NAME.** `?level=` is shared with SOLVE and
+ * MANUAL, so nothing infers this arm from it — a stale SOLVE link that landed
+ * in an editor would be a page that changed what a link meant.
+ */
+async function runEditor(params, lifetime) {
+    const { atlas } = await armPrelude(params, lifetime);
+    if (!lifetime.alive()) return;
+    const [ogmoSchema, vanillaSetId] = await Promise.all([
+        loadOgmoSchema(), loadVanillaSetId(),
+    ]);
+    if (!lifetime.alive()) return;
+
+    /**
+     * ⛔ **NO SCHEMA ON THE OP PATH HERE EITHER**, for the GENERATE arm's
+     * reason and one of its own: an ATLAS room is real shipped data, and §11.5
+     * item 2 measured 183 of its 2,461 entity instances legitimately carrying
+     * no value for an attribute that HAS a declared default. A vocabulary gate
+     * on the op path would be a hardening rule refusing the corpus it is about.
+     */
+    const adapter = createSeedlingEditAdapter({
+        schema: null,
+        levelSource: levelSourceFromAtlas(atlas),
+        vanillaSetId,
+        parseOel: parseOelLevel,
+    });
+
+    const atlasLevels = (atlas.levels ?? []).map((l) => l.level);
+    const wantLevel = Number.isInteger(params.level) ? params.level : atlasLevels[0];
+
+    let session = null;
+    let baseTag = null;
+    /**
+     * ⛓ THE BASE'S RECORD, KEPT BESIDE THE TAG. The session owns it internally
+     * and does not expose it, and the op READOUT needs it: `foldEdits(base,
+     * ops).steps` is where each op's sentence comes from, and folding from the
+     * CURRENT record would describe every op against a room that already has it.
+     */
+    let baseRecord = null;
+    let lastWhy = null;
+
+    /* ── THE DRAW ─────────────────────────────────────────────────── */
+
+    /**
+     * ⛓⛓ **ONE STILL FRAME, THROUGH `previewLevel`** — the SAME drawing every
+     * other arm's opening frame goes through, over a one-record atlas
+     * (`atlasOf`), exactly as GENERATE's phase view does. ⛔ No private tick
+     * loop and no second renderer: this arm draws a ROOM, and a room the page
+     * cannot BUILD says so with `buildLevelWorld`'s own sentence rather than
+     * going blank.
+     */
+    const boot = await trueStartStaging();
+    const drawRoom = () => {
+        const record = session.record();
+        const src = levelSourceFromAtlas(atlasOf(record));
+        const block = { ...boot, boot: { ...boot.boot, level: record.level } };
+        /**
+         * ⛔⛔ **⚖ RULING 3 IS WHAT THIS `catch` IS FOR, AND IT IS BOUNDED BY
+         * CLASS NAME.** A room holding a body the JS model does not transcribe
+         * cannot be BUILT here — `buildLevelWorld` refuses by name — and ruling
+         * 3 says the edit is never refused for it: the wasm is the certifier and
+         * the bound is DISPLAYED. So the throw becomes this arm's `why`, the
+         * room stays edited, the payload still downloads and ▶ load in wasm
+         * still ships it.
+         *
+         * ⛓ MEASURED: without it, a `place building3` APPLIED, said so in the
+         * status line, and then `chooseSpawn` threw OUT of the draw — past
+         * `previewLevel`'s own try, which only wraps the render — so the
+         * readout never updated and the browser driver saw `edits: 0` for an
+         * edit that had happened. A page that dies between the change and the
+         * readout reports the change as never made.
+         *
+         * ⛔ **BY NAME AND NOTHING ELSE** (traps 171/173, and the GENERATE arm's
+         * own rule one panel over): a `TypeError` from this file is a defect,
+         * and swallowing it here would make a crash look like a room the model
+         * declined to build.
+         */
+        try {
+            const spawn = chooseSpawn(src, block, record.level);
+            const staged = spawn
+                ? { ...block, boot: { ...block.boot, x: spawn.x, y: spawn.y } }
+                : block;
+            lastWhy = previewLevel(src, staged, layerSetFor(params), lifetime).why ?? null;
+        } catch (e) {
+            if (!(e instanceof LevelWorldError)) throw e;
+            lastWhy = `${e.name}: ${e.message}`;
+        }
+        return lastWhy;
+    };
+
+    /* ── THE READOUTS ─────────────────────────────────────────────── */
+
+    const describeBase = (tag) => {
+        if (!tag) return '(no base)';
+        if (tag.kind === 'atlas') return `the VANILLA atlas, level ${tag.level} — set_id ${tag.set_id}`;
+        if (tag.kind === 'oel') return `a PASTED OEL (${tag.xml.length} bytes)`;
+        if (tag.kind === 'generate') {
+            /**
+             * ⛓ THE LADDER'S OWN IDENTITY, CARRIED ACROSS THE HANDOVER — and
+             * `tag.edits` is how many edits were ALREADY FOLDED INTO the record
+             * that came with it, which is not the same number as this session's
+             * op list. Both are printed, because a reader who cannot tell them
+             * apart cannot tell what this payload reproduces.
+             */
+            return `generated seed ${tag.seed} · ${tag.biome} · step ${tag.step}`
+                + `${(tag.directives ?? []).length ? ` · ${tag.directives.length} directive(s)` : ''}`
+                + `${tag.edits ? ` · ${tag.edits} edit(s) ALREADY IN the handed-over record` : ''}`;
+        }
+        return `a \`${tag.kind}\` base`;
+    };
+
+    const payloadNow = () => {
+        const p = session.payload();
+        return {
+            generator: 'frontend/modules/seedlingDemo/watchViewer.js (SOURCE = EDIT)',
+            base: p.base,
+            edits: p.edits,
+            certified: p.certified,
+            level: session.record(),
+        };
+    };
+
+    let editorUi = null;
+    const render = () => {
+        const n = session.ops().length;
+        $('editBase').textContent = `${describeBase(baseTag)}${n ? `, then ${n} edit(s)` : ''}`
+            + ' — ⛔ the URL carries NO edits (⚖ ruling 9); the PAYLOAD is the reproduction.';
+        /**
+         * ⛔ THIS ARM'S OWN ANSWER ABOUT THE TWO BUTTONS, because the RULE is
+         * the arm's: UNDO needs an edit to undo (the same rule GENERATE's
+         * `updateEditButtons` keeps), and SOLVE is LIVE here and refuses with a
+         * REASON when pressed — this arm has no oracle, and a dead button would
+         * be silent about which of the two reasons it was.
+         */
+        $('genEditUndo').disabled = n === 0;
+        $('genEditSolve').disabled = false;
+        $('genEditCert').className = 'note bad';
+        $('genEditCert').textContent = session.certified === true
+            ? '✔ CERTIFIED'
+            : '⛔ UNCERTIFIED — nothing has solved the room now on screen. ⚠ This arm has no '
+                + 'ORACLE: a room with no ladder has no palette and no pin union to solve it '
+                + 'under (§3.5). ▶ load in wasm is the certifier here.';
+        if (session.certified === true) $('genEditCert').className = 'note';
+        editorUi?.render();
+        /**
+         * ⛓ THE OP LIST, THROUGH THE CORE'S OWN SENTENCES — `foldEdits().steps`
+         * is the applied ops WITH the adapter's description of each (A2 §10.3),
+         * so the readout is a `map` rather than a second walk over the same
+         * application path. ⛓ Folded from the BASE, which is the only record
+         * the descriptions are true of in order.
+         */
+        const steps = n === 0 ? [] : foldEdits(adapter, baseRecord, session.ops()).steps;
+        const box = $('genEdits');
+        box.innerHTML = '';
+        if (n === 0) {
+            const empty = document.createElement('div');
+            empty.className = 'note';
+            empty.textContent = 'no edits yet — the room IS its base, exactly';
+            box.appendChild(empty);
+        }
+        for (const [i, st] of steps.entries()) {
+            const el = document.createElement('div');
+            el.className = 'eRow';
+            const label = document.createElement('b');
+            label.textContent = `e${i + 1}`;
+            el.appendChild(label);
+            const text = document.createElement('span');
+            text.className = 'et';
+            // ⛔ `textContent`, never `innerHTML` — a description carries an
+            // adapter's own sentence about data a person pasted in.
+            text.textContent = ` ${st.description}`;
+            el.appendChild(text);
+            box.appendChild(el);
+        }
+        window.__editorEdit = {
+            status: lastWhy ? 'refused' : 'ok',
+            base: baseTag,
+            baseKind: baseTag?.kind ?? null,
+            edits: session.ops().length,
+            editList: session.ops(),
+            certified: session.certified,
+            level: session.record(),
+            why: lastWhy,
+            transcribe: untranscribedTypes(session.record(), ENTITY_CLASSES),
+        };
+    };
+
+    /**
+     * ⛓ ONE PLACE THE ROOM CHANGES — a new base, or an edit. ⛔ The draw comes
+     * FIRST and the readout SECOND, so a readout can never describe a room the
+     * canvas has not been asked to show.
+     */
+    const redraw = (what) => {
+        const why = drawRoom();
+        $('status').className = why ? 'bad' : '';
+        $('status').textContent = why
+            ? `${what} — but the room would not BUILD: ${why}`
+            : what;
+        render();
+        setShippable(shippableEdit());
+        /**
+         * ── ⛓⛓⛓ `?shot=1` — THE CLI'S CONTRACT, IN THIS ARM TOO ───────────
+         *
+         * ⛔ **WITHOUT IT `export-seedling-view.mjs --source=edit` CANNOT
+         * FINISH.** Its readiness wait is `body[data-shot-ready="1"]` racing
+         * `#status.bad`, and this arm sets neither on a healthy draw — so the
+         * CLI would sit until `--timeout` and report a timeout for a page that
+         * had drawn correctly seconds earlier. The brief's *"screenshots the
+         * new arm for free"* is free only once the arm answers the contract.
+         *
+         * ⛓ THE THREE PARTS HOLD HERE FOR FREE: nothing animates (a still
+         * frame is all this arm draws), the draw ran SYNCHRONOUSLY above, and
+         * the flag goes on the body while `__editorShot` carries the facts.
+         *
+         * ⚠ `tick: null` AND IT SAYS WHY. `--tick=N` is a scrub cursor into a
+         * RUN, and this arm has no run — reporting `0` would name a frame of a
+         * walk nobody took. The reader gets the reason instead of a number that
+         * looks answered.
+         */
+        window.__editorShot = {
+            ready: true,
+            requested: params.shot,
+            tick: null,
+            frames: 0,
+            label: describeBase(baseTag),
+            why: 'the EDIT arm draws a STILL FRAME and has no run, so `?tick=` names nothing '
+                + 'here — the room on screen is the only frame there is',
+        };
+        if (params.shot) document.body.dataset.shotReady = '1';
+    };
+
+    /* ── THE SHIP ─────────────────────────────────────────────────── */
+
+    /**
+     * ⛓⛓ ▶ LOAD IN WASM, over `buildOneRoomSet` — the SAME one-room path
+     * GENERATE ships through, with a **ZERO-INPUT TAPE** at the room's boot.
+     *
+     * ⛔ **AND NO EXPECTATION, SAID OUT LOUD.** Nothing has solved this room,
+     * so there is no walk to compare against — the keyboard is what drives it,
+     * exactly as MANUAL's arm already ships. An `expect` invented here would be
+     * a claim about a run nobody made.
+     */
+    const shippableEdit = () => ({
+        what: 'ship this room into the recompiled game (keyboard-driven; no expectation)',
+        build: () => {
+            const record = session.record();
+            const { set, chunks, mapped } = buildOneRoomSet({
+                record,
+                name: `edit_${baseTag?.kind ?? 'room'}_${record.level}`,
+                setId: `watch-edit-${baseTag?.kind ?? 'room'}-${record.level}`,
+                provenance: { base: baseTag, edits: session.ops().length },
+            });
+            return {
+                levelSet: set,
+                chunks,
+                tape: { boot: { ...boot.boot, level: mapped.room }, presses: [] },
+                expect: null,
+                expectWhy: 'nothing has solved this room — the EDIT arm has no oracle, so the '
+                    + 'ship carries a ZERO-INPUT tape and the keyboard drives (MANUAL\'s arm, '
+                    + 'already). An expectation here would be a claim about a run nobody made.',
+                modelStream: null,
+                modelStreamWhy: 'no per-tick comparison: there is no recorded walk of an '
+                    + 'edited room to compare the game against',
+                label: `${describeBase(baseTag)} + ${session.ops().length} edit(s) — a ONE-ROOM `
+                    + `set (${set.set_id})`,
+                note: mapped.why,
+            };
+        },
+    });
+
+    /* ── OPENING A BASE ───────────────────────────────────────────── */
+
+    /**
+     * ⛔ **ONE ENTRY, AND A REFUSAL LEAVES THE PREVIOUS ROOM STANDING.** A page
+     * that cleared the canvas on a bad `set_id` would answer a refusal with a
+     * blank screen — the reader would have lost the room they were editing to
+     * find out that a paste was wrong.
+     */
+    const openBase = (tag, edits = [], suppliedRecord = null) => {
+        let record;
+        try {
+            /**
+             * ⛔ **A SUPPLIED RECORD IS THE ONE WAY IN THAT SKIPS
+             * `resolveBase`, AND IT IS THE HANDOVER'S.** The adapter refuses a
+             * `generate` tag BY NAME because resolving one means RUNNING the
+             * ladder; "open in editor" is the arm that already ran it handing
+             * the answer across. ⚠ Every OTHER path resolves, so a pasted
+             * payload cannot get a room in through this door.
+             */
+            record = suppliedRecord ?? resolveBase(adapter, tag);
+        } catch (e) {
+            $('status').className = 'bad';
+            $('status').textContent = `the base was REFUSED — ${e.message}`;
+            $('editLoadNote').textContent = e.message;
+            return false;
+        }
+        const next = createEditSession(adapter, record, { base: tag });
+        for (const op of edits) {
+            const res = next.apply(op);
+            if (!res.ok) {
+                $('status').className = 'bad';
+                $('status').textContent = `the payload's edit list would not fold — `
+                    + `${res.description}`;
+                return false;
+            }
+        }
+        session = next;
+        baseTag = tag;
+        baseRecord = record;
+        editorUi?.destroy();
+        editorUi = mountEditor();
+        return true;
+    };
+
+    /* ── THE MOUNT ────────────────────────────────────────────────── */
+
+    let lastCellRefusal = null;
+    const cellAt = (ev) => {
+        const record = session?.record();
+        if (!record) return null;
+        const rect = $('canvas').getBoundingClientRect();
+        try {
+            lastCellRefusal = null;
+            return tileAtPoint({
+                x: ev.clientX - rect.left,
+                y: ev.clientY - rect.top,
+                width: rect.width,
+                height: rect.height,
+                cols: record.width,
+                rows: record.height,
+            });
+        } catch (e) {
+            lastCellRefusal = e.message;
+            return null;
+        }
+    };
+
+    function mountEditor() {
+        return mountWatchEditor({
+            canvas: $('canvas'),
+            host: session,
+            adapter,
+            cellAt,
+            lifetime,
+            schema: ogmoSchema,
+            entityClasses: ENTITY_CLASSES,
+            say: (text, bad) => {
+                $('status').className = bad ? 'bad' : '';
+                $('status').textContent = text;
+            },
+            onDisarm: (tool) => {
+                $('status').className = '';
+                $('status').textContent = `the ${tool} gesture was DISARMED — nothing was `
+                    + 'edited';
+            },
+            onChange: ({ result }) => {
+                if (result?.applied) redraw(result.description);
+                else render();
+            },
+            commands: [{
+                id: UNDO_COMMAND_ID,
+                label: 'UNDO the last edit',
+                run: () => {
+                    const n = session.ops().length;
+                    if (!session.undo()) return;
+                    redraw(`UNDO — ${n - 1} edit(s) remain`);
+                },
+            }],
+        });
+    }
+
+    /* ── LAUNCH ───────────────────────────────────────────────────── */
+
+    /**
+     * ⛓⛓ `?source=edit&level=N` → `base: {kind:'atlas', set_id, level}` — ⚖
+     * ruling 2's hash is READ off the committed set, so the check is a real
+     * comparison and not a tautology against a literal this file also owns.
+     */
+    const handed = takeEditHandover();
+    const opened = handed
+        ? openBase(handed.base, [], handed.record)
+        : openBase({ kind: 'atlas', set_id: vanillaSetId, level: wantLevel });
+    if (!opened) {
+        window.__editorEdit = { status: 'refused', base: null, edits: 0 };
+        return;
+    }
+    editorUi.palette.setType(DEFAULT_PLACE_TYPE);
+    editorUi.setMode('off');
+    redraw(`EDIT — ${describeBase(baseTag)}`);
+
+    lifetime.on($('genEditUndo'), 'click', () => editorUi.view.run(UNDO_COMMAND_ID));
+    /**
+     * ⛔ **SOLVE IS OFFERED AND SAYS WHY IT CANNOT ANSWER.** This arm has no
+     * palette and no pin union — a room with no ladder was solved under no
+     * inventory — so there is nothing here to certify WITH. ⚠ Disabled would
+     * have been silent about which of the two reasons it was; this names it.
+     */
+    $('genEditSolve').disabled = false;
+    lifetime.on($('genEditSolve'), 'click', () => {
+        $('status').className = 'bad';
+        $('status').textContent = 'this arm has NO ORACLE. A room with no ladder has no '
+            + 'palette and no pin union to solve it under, and inventing one would certify it '
+            + 'under an inventory nobody asked for (§3.5). ▶ load in wasm is the certifier '
+            + 'here; "open in editor" from GENERATE keeps the ladder\'s.';
+    });
+
+    lifetime.on($('editLoadGo'), 'click', () => {
+        const got = sniffLoadBox($('editLoad').value);
+        $('editLoadNote').textContent = '';
+        if (got.kind === null) {
+            $('editLoadNote').textContent = `⛔ REFUSED — ${got.why}`;
+            $('status').className = 'bad';
+            $('status').textContent = `the LOAD box was REFUSED — ${got.why}`;
+            return;
+        }
+        if (got.kind === 'oel') {
+            if (openBase({ kind: 'oel', xml: got.xml })) {
+                editorUi.palette.setType(DEFAULT_PLACE_TYPE);
+                redraw('LOADED a pasted OEL');
+            }
+            return;
+        }
+        const tag = got.payload.base;
+        /**
+         * ⛔ **A `generate` BASE IS REFUSED BY NAME IN THIS ARM** — §3.2's rule
+         * that the LADDER owns that identity. Reconstructing it means RUNNING
+         * the ladder, which is the GENERATE arm; "open in editor" is the door
+         * that carries the record across, and it goes the other way.
+         */
+        if (tag?.kind === 'generate') {
+            const why = 'this payload\'s base is a GENERATE ladder (seed, biome, directives), '
+                + 'and reproducing it means RUNNING that ladder. ⇒ open it from GENERATE — '
+                + `\`?source=generate&gen=…\` — and press "open in editor" there.`;
+            $('editLoadNote').textContent = `⛔ REFUSED — ${why}`;
+            $('status').className = 'bad';
+            $('status').textContent = `the LOAD box was REFUSED — ${why}`;
+            return;
+        }
+        if (openBase(tag, got.payload.edits ?? [])) {
+            editorUi.palette.setType(DEFAULT_PLACE_TYPE);
+            redraw(`LOADED a payload — ${describeBase(baseTag)}, then `
+                + `${session.ops().length} edit(s)`);
+        }
+    });
+
+    const download = (name, text, type) => {
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([text], { type }));
+        a.download = name;
+        a.click();
+        URL.revokeObjectURL(a.href);
+    };
+    /**
+     * ⛔ BROWSER DOWNLOADS ONLY — the page NEVER writes `fixtures/`. Committing
+     * a room stays a CLI act, which is the standing law this arc did not touch.
+     */
+    lifetime.on($('editDownload'), 'click', () => download(
+        `edit-${baseTag?.kind ?? 'room'}-${session.record().level}.json`,
+        `${JSON.stringify(payloadNow(), null, 2)}\n`, 'application/json'));
+    lifetime.on($('editDownloadOel'), 'click', () => download(
+        `edit-${baseTag?.kind ?? 'room'}-${session.record().level}.oel`,
+        recordToOel(session.record()), 'application/xml'));
+}
+
 /**
  * ⛓⛓⛓ THE GENERATE SHIP'S PAYLOAD — a ONE-ROOM set, its chunks, and the
  * certification tape rebooted into room 0.
@@ -8244,17 +8942,25 @@ async function runGenerate(params, lifetime) {
  * validate" and "the game rejected the tape" are different findings with
  * different names — which is the whole of the stage machine's promise.
  */
-function buildGenerateShip(state, solved) {
-    const entryName = `${state.biome}_seed${state.seed}_step${state.step}`;
+/**
+ * ⛓⛓⛓ **THE ONE-ROOM SET, AND IT IS ONE IMPLEMENTATION FOR TWO ARMS.**
+ *
+ * ⛔ EXTRACTED, NOT ADDED (EDITOR v3 C1). `buildGenerateShip` was the only
+ * caller and its body is unchanged; the second caller is the EDIT arm's ship,
+ * and an arm that re-built "wrap one record in a set, validate it, chunk it,
+ * map its level onto room 0" would be a second opinion about what a shippable
+ * room is — with its own idea of whether the validator was consulted.
+ *
+ * ⚠ WHAT IS **NOT** HERE is the tape and the expectation. Those are what the
+ * two arms genuinely differ about: GENERATE ships the certification tape and
+ * the model's stream beside it; the EDIT arm ships a ZERO-INPUT tape and NO
+ * expectation, because nobody has solved that room and the keyboard is what
+ * drives it (MANUAL's arm, already).
+ */
+function buildOneRoomSet({ record, summary = null, seed = 0, name, setId, provenance }) {
     const { set } = buildLevelSet(
-        [{ seed: state.seed, record: state.record, summary: state.summary, name: entryName }],
-        {
-            setId: `watch-oneroom-${state.biome}-${state.seed}-${state.step}`,
-            generator: 'watch.html ▶ load in wasm',
-            provenance: {
-                biome: state.biome, seed: state.seed, step: state.step, bounds: state.bounds,
-            },
-        },
+        [{ seed, record, summary, name }],
+        { setId, generator: 'watch.html ▶ load in wasm', provenance },
     );
     const v = validateLevelSet(set);
     if (!v.ok) {
@@ -8269,9 +8975,23 @@ function buildGenerateShip(state, solved) {
      * ⛓ THE SET'S ORDER IS ITS IDENTITY — position is the room id, which is
      * `buildLevelSet`'s own rule. One entry, so the order is one record.
      */
-    const mapped = roomOfGeneratedLevel(state.record.level, set.rooms.length,
-        [state.record.level]);
+    const mapped = roomOfGeneratedLevel(record.level, set.rooms.length, [record.level]);
     if (mapped.room === null) throw new Error(mapped.why);
+    return { set, chunks, mapped };
+}
+
+function buildGenerateShip(state, solved) {
+    const entryName = `${state.biome}_seed${state.seed}_step${state.step}`;
+    const { set, chunks, mapped } = buildOneRoomSet({
+        record: state.record,
+        summary: state.summary,
+        seed: state.seed,
+        name: entryName,
+        setId: `watch-oneroom-${state.biome}-${state.seed}-${state.step}`,
+        provenance: {
+            biome: state.biome, seed: state.seed, step: state.step, bounds: state.bounds,
+        },
+    });
     /**
      * ⛔ THE MODEL'S END STATE COMES FROM THE **UNREMAPPED** TAPE, walked in
      * the level source that HAS level 900 — the model has no room 0 to walk.
@@ -8342,6 +9062,7 @@ const NOTHING_TO_SHIP = Object.freeze({
     solve: 'no solve yet — press SOLVE, then this ships the tape it produced',
     manual: 'the boot panel has not mounted yet',
     generate: 'no generated level yet — STEP or RUN-ALL first',
+    edit: 'no room loaded yet',
 });
 
 function setShippable(next) {
@@ -8717,13 +9438,6 @@ function replayWasmReadout(lifetime, source = 'replay') {
 
 
 // ── entry ────────────────────────────────────────────────────────────────
-
-/**
- * ⛓ THIS MODULE'S COMMITTED-ARTIFACT DIRECTORY — one spelling, because the
- * tapes and the Ogmo schema extract are siblings in it and two literals would
- * be two facts about one path.
- */
-const FIXTURES_DIR = 'frontend/modules/seedlingDemo/fixtures';
 
 /** Where to look for sibling tapes when no `?tape=` names a directory. */
 const DEFAULT_TAPE_DIR = `${FIXTURES_DIR}/tapes`;
@@ -9114,6 +9828,21 @@ const PANELS = Object.freeze({
     manualActions: (s) => s === 'manual',
     generatePanel: (s) => s === 'generate',
     /**
+     * ⛓⛓⛓ **EDITOR v3 C1 — THE EDIT PANEL IS SHARED, AND THAT IS THE SPLIT.**
+     * Free editing was a `<details>` INSIDE `#generatePanel`, so it was a
+     * feature of the GENERATE arm and nothing else could reach it. It is its
+     * own panel now and it is up for BOTH arms — the same DOM, the same ids,
+     * the same handlers, mounted over a different HOST (§3.1's *"one edit
+     * implementation with two hosts"*, as a `PANELS` row).
+     *
+     * ⛓ `editOnly` is the half GENERATE has no use for — the `base` identity
+     * line, the LOAD box and the OEL download. The GENERATE arm's identity is
+     * its ladder and its payload, which the pane above already prints; a second
+     * `base` line there would be two answers to one question.
+     */
+    editPanel: (s) => s === 'generate' || s === 'edit',
+    editOnly: (s) => s === 'edit',
+    /**
      * ⛓ ▶ LOAD IN WASM is up for the three arms that HOLD something, and down
      * for REPLAY — where the ENGINE selector already ships the tape and a
      * second control for one act would be two answers to "how do I run this in
@@ -9223,6 +9952,14 @@ const ARMS = Object.freeze({
     solve: { run: runSolve, readout: '__editorSolve' },
     generate: { run: runGenerate, readout: '__editorGenerate' },
     manual: { run: runManual, readout: '__editorManual' },
+    /**
+     * ⛓⛓⛓ **THE FIFTH SOURCE** (plan §3.1). ⛔ `?source=edit` is asked for BY
+     * NAME and is never inferred — `?level=N` is shared with SOLVE and MANUAL,
+     * and a stale SOLVE link that landed in an editor would be a page that
+     * changed what a link meant. `readSolveParams` already takes `?source=`
+     * verbatim, so nothing in the readers moved for this.
+     */
+    edit: { run: runEditor, readout: '__editorEdit' },
 });
 
 /**

@@ -641,6 +641,113 @@ describe('⛔ the mount refuses rather than skips', () => {
     });
 });
 
+describe('⛓ a brush that REFUSES — the third answer', () => {
+    it('⛔ `{refused}` is SAID VERBATIM and is NOT reported as "no brush is armed" — the two '
+        + 'are different findings and collapsing them sends the reader to the wrong control', () => {
+        const t = harness({ brush: { refused: 'the attributes box does not parse as JSON' } });
+        t.click(1, 1);
+        expect(t.last().text).toBe('the attributes box does not parse as JSON');
+        expect(t.last().bad).toBe(true);
+        expect(t.session.ops()).toEqual([]);
+    });
+
+    it('⛓ …and NOTHING armed still says its own thing', () => {
+        const t = harness({ brush: null });
+        t.click(1, 1);
+        expect(t.last().text).toMatch(/no brush is armed/);
+    });
+
+    it('⛔ a refusal ANYWHERE in a stroke aborts the WHOLE stroke — the core\'s '
+        + 'all-or-nothing law, so a gesture the reader did not make cannot commit', () => {
+        const t = harness();
+        t.setBrush({ refused: 'nope' });
+        t.drag([{ tx: 0, ty: 0 }, { tx: 1, ty: 0 }, { tx: 2, ty: 0 }]);
+        expect(t.session.ops()).toEqual([]);
+        expect(t.last().text).toBe('nope');
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ EDITOR v3 C1 — **THE PAGE'S OWN TOOLS**, in the SAME `tool`
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('a PAGE TOOL joins the four — one armed value, one listener, one table', () => {
+    const pageTool = (log, extra = {}) => ({
+        id: 'template', label: 'AT… (template)', key: 't', at: (c) => log.push(c), ...extra,
+    });
+
+    it('⛓ it is armable by id, by its command row and by its key, and the CLICK reaches it', () => {
+        const log = [];
+        const t = harness({ tools: [pageTool(log)] });
+        t.view.setTool('template');
+        expect(t.view.tool).toBe('template');
+        t.click(2, 3);
+        expect(log).toEqual([{ tx: 2, ty: 3 }]);
+        t.view.setTool(TOOLS.BRUSH);
+        t.view.run('template');
+        expect(t.view.tool).toBe('template');
+        t.view.setTool(TOOLS.BRUSH);
+        t.keyTarget.dispatch('keydown', { key: 't' });
+        expect(t.view.tool).toBe('template');
+    });
+
+    it('⛔⛔ ARMING IT DISARMS THE BRUSH — which is the whole reason it is a tool and not a '
+        + 'second listener: two armed states on one canvas would make the page\'s own '
+        + '"only one of the two can be armed" comment a claim nothing keeps', () => {
+        const log = [];
+        const t = harness({ tools: [pageTool(log)] });
+        t.view.setTool('template');
+        t.click(1, 1);
+        expect(t.session.ops()).toEqual([]);
+        expect(log.length).toBe(1);
+        t.view.setTool(TOOLS.BRUSH);
+        t.click(1, 1);
+        expect(t.session.ops().length).toBe(1);
+        expect(log.length).toBe(1);
+    });
+
+    it('⛓ a ONE-SHOT page tool disarms itself from its own `at` — this file does not decide '
+        + 'which gestures spend themselves', () => {
+        const t = harness({
+            tools: [{ id: 'oneshot', label: 'one shot', at: () => t.view.setTool(null) }],
+        });
+        t.view.setTool('oneshot');
+        t.click(0, 0);
+        expect(t.view.tool).toBe(null);
+    });
+
+    it('⛔ a page tool that SHADOWS one of the four is refused BY NAME', () => {
+        expect(() => harness({ tools: [{ id: TOOLS.BRUSH, at: () => {} }] }))
+            .toThrow(/shadows one of this file's own four/);
+    });
+
+    it('⛔ a malformed page tool refuses at MOUNT, not at the first click on it', () => {
+        expect(() => harness({ tools: [{ id: 'x' }] })).toThrow(/\{id, label, key\?, at\(cell\)\}/);
+        expect(() => harness({ tools: [{ at: () => {} }] })).toThrow(/\{id, label, key\?, at\(cell\)\}/);
+    });
+
+    it('⛔ a page tool whose KEY is already claimed is refused — the key map is a VIEW of the '
+        + 'one table and a shadowed binding is a control the help text still advertises', () => {
+        expect(() => harness({ tools: [{ id: 'clash', key: 'b', at: () => {} }] }))
+            .toThrow(/claimed by both/);
+    });
+
+    it('⛓ the tool vocabulary REFUSES an unknown id and NAMES both halves of it', () => {
+        const t = harness({ tools: [pageTool([])] });
+        expect(() => t.view.setTool('nope'))
+            .toThrow(/\[brush, rect, paste, flood, template\]/);
+    });
+
+    it('⛓ with NO page tools nothing moved — the maze passes none and its vocabulary is the '
+        + 'four exactly', () => {
+        const t = harness();
+        expect(() => t.view.setTool('template')).toThrow(/\[brush, rect, paste, flood\]/);
+        expect(t.view.commands.map((r) => r.id)).toEqual(
+            [...Object.values(TOOLS), 'escape'],
+        );
+    });
+});
+
 /* ══════════════════════════════════════════════════════════════════════
  * ⛔⛔ THE SPLIT IS REAL — asserted on the SOURCE
  * ══════════════════════════════════════════════════════════════════════ */

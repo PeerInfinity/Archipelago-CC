@@ -124,6 +124,29 @@ export function mountEditorView({
     floodTarget,
     pasteOptions = () => ({}),
     clipWarnings = () => [],
+    /**
+     * ⛓⛓⛓ **THE PAGE'S OWN TOOLS** — EDITOR v3 C1. `[{id, label, key, at(cell)}]`,
+     * joining the four below in the SAME `tool` variable, the SAME command
+     * table and the SAME canvas listener.
+     *
+     * ⛔ **WHY THIS EXISTS AND WHY IT IS NOT A SECOND LISTENER.** Seedling's
+     * GENERATE arm has a click-to-anchor TEMPLATE arm (*press AT… on a
+     * catalogue row, then click a tile*) that predates this file, and it was
+     * one of two kinds inside a page-local `armed` variable with its own
+     * `canvas.onclick`. Delegating the editing half here while leaving the
+     * template half behind would have put TWO armed states and TWO listeners on
+     * one canvas — and the page's own comment (*"only one of the two can be
+     * armed at a time"*) would then be a claim nothing kept. A page tool is
+     * this file's answer: the four remain the vocabulary this file OWNS, and
+     * `TOOLS` is still the closed set of them, but `tool` may also name a
+     * gesture the page brought.
+     *
+     * ⚠ `at(cell)` IS CALLED WITH THE CELL AND MAY DO ANYTHING — including
+     * disarming itself, which is what a one-shot gesture (a template arm spends
+     * a solve) does and what a brush must not. This file does not decide which:
+     * a page tool that wants to be one-shot calls `setTool` from its own `at`.
+     */
+    tools = [],
     onChange = null,
     say = () => {},
     offRoom = () => 'that point is outside the level',
@@ -149,10 +172,30 @@ export function mountEditorView({
         }
     }
     if (!isFn(session.apply) || !isFn(session.ops) || !isFn(session.record)) {
-        fail('editorView: `session` must be an `editCore.createEditSession` result — it is the '
-            + 'ONE home for the record and the op list, and a page that handed a plain object '
-            + 'here would be editing a copy nobody folds.');
+        fail('editorView: `session` must answer `apply` / `ops` / `record` — the shape '
+            + '`editCore.createEditSession` returns. ⛔ It is the ONE home for the record and '
+            + 'the op list, and a page that handed a plain bag here would be editing a copy '
+            + 'nobody folds. ⚠ EDITOR v3 C1: a HOST may present that shape over its own '
+            + 'store (Seedling\'s GENERATE arm folds through `watchEdit.editState` so its '
+            + 'payload stays byte-identical), and that is the point — one tool, two hosts. '
+            + 'What is refused is an object that does not answer the three.');
     }
+    /**
+     * ⛓ THE PAGE'S TOOLS, VALIDATED HERE so a malformed one refuses at MOUNT
+     * rather than at the first click on it.
+     */
+    const pageTools = [...tools].map((t) => {
+        if (!t || typeof t.id !== 'string' || !t.id || !isFn(t.at)) {
+            fail(`editorView: a page tool must be {id, label, key?, at(cell)}, got `
+                + `${JSON.stringify(t)}.`);
+        }
+        if (Object.values(TOOLS).includes(t.id)) {
+            fail(`editorView: the page tool ${JSON.stringify(t.id)} shadows one of this `
+                + `file's own four [${Object.values(TOOLS).join(', ')}] — refused by name `
+                + 'rather than resolved by whichever list is walked last.');
+        }
+        return Object.freeze({ ...t });
+    });
     const keys$ = keyTarget ?? doc;
     if (!keys$ || !isFn(keys$.addEventListener)) {
         fail('editorView: no keyboard target — pass `keyTarget` (or a `doc` that is a real '
@@ -291,13 +334,38 @@ export function mountEditorView({
 
     /* ── THE TOOLS ────────────────────────────────────────────────── */
 
-    const brushAt = (c) => {
+    /**
+     * ⛓⛓ **`brushOp` HAS THREE ANSWERS, NOT TWO** (EDITOR v3 C1):
+     *
+     *   an op        — apply it;
+     *   `null`       — nothing is armed;
+     *   `{refused}`  — the palette CANNOT build an op and says why.
+     *
+     * ⛔ THE THIRD ONE EXISTS BECAUSE THE FIRST TWO COLLAPSED A REAL
+     * DISTINCTION. Seedling's PLACE brush parses a JSON attributes box, and an
+     * unparseable box is not "no brush is armed" — reporting it as one is a
+     * true sentence about the wrong subject (trap 598's family), and the reader
+     * would go looking at the tool selector instead of at the box they just
+     * typed in. ⚠ A THROW would have been the other spelling and is worse: a
+     * substrate-agnostic file cannot tell the page's own refusal class from a
+     * `TypeError`, so catching one means swallowing the other.
+     */
+    const opFromBrush = (c) => {
         const op = brushOp(c.tx, c.ty);
         if (!op) {
             say('no brush is armed — pick a palette entry first', true);
             return null;
         }
-        return applyOp(op);
+        if (typeof op.refused === 'string') {
+            say(op.refused, true);
+            return null;
+        }
+        return op;
+    };
+
+    const brushAt = (c) => {
+        const op = opFromBrush(c);
+        return op ? applyOp(op) : null;
     };
 
     const rectAt = (c) => {
@@ -368,14 +436,18 @@ export function mountEditorView({
         [TOOLS.RECT]: rectAt,
         [TOOLS.PASTE]: pasteAt,
         [TOOLS.FLOOD]: floodAt,
+        // ⛓ The page's, in the same table — so the canvas listener's dispatch
+        // has ONE shape and `setTool`'s vocabulary has ONE source.
+        ...Object.fromEntries(pageTools.map((t) => [t.id, (c) => t.at(c)])),
     });
 
     /* ── THE COMMAND TABLE, AND THE KEY MAP AS A VIEW OF IT ───────── */
 
+    const TOOL_IDS = Object.freeze([...Object.values(TOOLS), ...pageTools.map((t) => t.id)]);
     const setTool = (t) => {
-        if (t !== null && !Object.values(TOOLS).includes(t)) {
-            fail(`editorView: unknown tool ${JSON.stringify(t)} — the four are `
-                + `[${Object.values(TOOLS).join(', ')}].`);
+        if (t !== null && !TOOL_IDS.includes(t)) {
+            fail(`editorView: unknown tool ${JSON.stringify(t)} — the vocabulary is `
+                + `[${TOOL_IDS.join(', ')}] (this file's four, plus the page's).`);
         }
         tool = t;
         corner = null;
@@ -388,13 +460,29 @@ export function mountEditorView({
         ...TOOL_ROWS.map((r) => Object.freeze({
             id: r.id, label: r.label, key: r.key, run: () => { setTool(r.tool); },
         })),
+        // ⛓ A page tool gets a command row too, so the key map and every button
+        // stay a VIEW of ONE table — including the page's own gestures.
+        ...pageTools.map((t) => Object.freeze({
+            id: t.id, label: t.label ?? t.id, key: t.key, run: () => { setTool(t.id); },
+        })),
         Object.freeze({
             id: 'escape',
             label: 'CLEAR the armed tool',
             key: 'Escape',
+            /**
+             * ⛔ **THE SENTENCE FIRST, THEN THE CLEAR** — EDITOR v3 C1, and the
+             * order is the contract. `setTool` fires `onChange`, and a page that
+             * wants to name WHAT was disarmed (*"AT… cancelled — nothing was
+             * placed"*) can only do it from there, one draw behind. With the
+             * clear first this file's generic line landed AFTER the page's
+             * specific one and overwrote it — measured, as a browser gate
+             * failure reading *"nothing is armed — pick a tool"* where the row
+             * expected *"cancelled"*. ⚠ Saying it before it is true is this
+             * page family's own law anyway: a control says what a press will DO.
+             */
             run: () => {
-                setTool(null);
                 say('nothing is armed — pick a tool');
+                setTool(null);
             },
         }),
     ];
@@ -492,7 +580,13 @@ export function mountEditorView({
          * to keep. ⛔ Not `s.cells.map(apply)`: N ops would need N undos and
          * `describeOps` would report a history with N presses in it.
          */
-        const ops = s.cells.map((c) => brushOp(c.tx, c.ty)).filter(Boolean);
+        const built = s.cells.map((c) => brushOp(c.tx, c.ty));
+        // ⛓ A REFUSAL ANYWHERE ABORTS THE WHOLE STROKE and says why, on the
+        // core's own all-or-nothing law: a stroke that dropped its refused
+        // cells would commit a gesture the reader did not make.
+        const refusal = built.find((o) => o && typeof o.refused === 'string');
+        if (refusal) { say(refusal.refused, true); return; }
+        const ops = built.filter(Boolean);
         if (ops.length === 0) {
             say('no brush is armed — pick a palette entry first', true);
             return;

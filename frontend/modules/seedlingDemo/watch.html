@@ -510,6 +510,7 @@
       <option value="solve">SOLVE — the bot, in this page</option>
       <option value="manual">MANUAL — drive it yourself</option>
       <option value="generate">GENERATE — the Cloudberry loop, in this page</option>
+      <option value="edit">EDIT — a room, on its own (atlas · OEL · a payload)</option>
     </select>
     <span id="replayPick">
       <label for="tapes">tape</label>
@@ -735,6 +736,12 @@
       <button id="genRunAll">RUN-ALL</button>
       <button id="genReset">RESET to the skeleton</button>
       <button id="genDownload">Download level JSON + trace</button>
+      <!-- ⛓ EDITOR v3 C1 (plan §3.5): hands the CURRENT record to the EDIT arm
+           as `base: {kind:'generate', …}` so the identity line survives — no
+           reload, the in-place lifetime switch. ⛔ The ladder does NOT follow:
+           the edit arm never runs a directive, which is what keeps the ordering
+           law (edits after all directives) true on both sides. -->
+      <button id="genOpenEditor">open in editor →</button>
     </div>
     </details>
     <!--
@@ -891,6 +898,50 @@
     </div>
     <div id="genDirectives"></div>
     </details>
+    <div id="genNote" class="note"></div>
+  </div>
+  <!--
+    ⛓⛓⛓ **THE EDIT PANEL — ONE BLOCK, TWO HOSTS** (EDITOR v3 slice C1, plan
+    §3.1). It was a `<details>` nested INSIDE `#generatePanel`, so free editing
+    was a feature of the GENERATE arm and nothing else could reach it. It is its
+    own panel now and `PANELS` shows it for BOTH `generate` and `edit` — the
+    same DOM, the same ids, the same handlers, mounted over a different HOST.
+
+    ⛔ THE IDS ARE KEPT (`genEdit*`), and deliberately: `check-seedling-editor-
+    edit.mjs` drives eleven claims through these selectors, and renaming them to
+    match the new panel would have made a 71-check row's diff indistinguishable
+    from a behaviour change. The `gen` prefix is now a fact about their history,
+    which is what the comment is for.
+
+    ⛓ `#editOnly` below is the half the GENERATE arm has no use for — the base
+    identity line, the LOAD box and the OEL download — and `PANELS` hides it
+    there. Free editing itself is identical in both arms.
+  -->
+  <div id="editPanel" class="armPanel" hidden>
+    <!--
+      ⛓ EDIT-ARM ONLY: where this room CAME FROM (`base`), how to load another
+      one, and how to take it away. ⚖ Plan §3.2 — a level with no ladder still
+      has an identity, and it is `base, then edits`.
+    -->
+    <div id="editOnly" hidden>
+    <details class="genSection" open>
+    <summary data-term="payload">the room's IDENTITY — <span class="note">`base`, then the edits</span></summary>
+    <div class="line">
+      <span id="editBase" class="note"></span>
+    </div>
+    <div class="line">
+      <label for="editLoad">LOAD</label>
+      <textarea id="editLoad" rows="3" style="width:44em"
+        placeholder="paste a payload JSON (with its `base`) or a raw OEL &lt;level&gt;…&lt;/level&gt; — sniffed by SHAPE, refused BY NAME"></textarea>
+    </div>
+    <div class="line">
+      <button id="editLoadGo">LOAD what is in the box</button>
+      <button id="editDownload">Download the PAYLOAD (base + edits)</button>
+      <button id="editDownloadOel">Download the ROOM as OEL</button>
+      <span id="editLoadNote" class="note"></span>
+    </div>
+    </details>
+    </div>
     <!--
       ⛓⛓⛓ FREE TILE / OBJECT EDITING (constructive-mode slice 11, ⚖ ruling 8
       + §3.8). The other side of ruling 6's tile boundary: click-to-anchor
@@ -913,6 +964,29 @@
     -->
     <details class="genSection" open>
     <summary data-term="payload">free editing <span class="note">— paint a tile, place / edit / remove an entity; SOLVE re-certifies</span></summary>
+    <!--
+      ⛓⛓⛓ EDITOR v3 C1 — **THE GESTURE ROW.** `editorView` owns four gestures
+      (BRUSH · RECT copy · PASTE · FLOOD) plus the page's own AT… template arm,
+      and they are ONE armed value with ONE canvas listener. The `tool` select
+      below is the BRUSH's MODE — what a brush stroke writes — which is what it
+      has always been; these buttons are which GESTURE is armed.
+
+      ⛔ THE THREE-WAY PASTE FILTER is `editCore`'s `only: 'tile' | 'cliff' |
+      'entities'` (slice B generalised it from the maze's two checkboxes). A
+      Seedling cell has TWO tile layers plus bodies, so a boolean pair could not
+      spell it.
+    -->
+    <div class="line">
+      <span id="editTools"></span>
+      <label for="editPasteOnly">paste</label>
+      <select id="editPasteOnly">
+        <option value="">everything the clip holds</option>
+        <option value="tile">tiles only</option>
+        <option value="cliff">cliffsides only</option>
+        <option value="entities">entities only</option>
+      </select>
+      <span id="editClipNote" class="note"></span>
+    </div>
     <div class="line">
       <label for="genEditTool">tool</label>
       <select id="genEditTool">
@@ -962,7 +1036,7 @@
     </div>
     <div id="genEdits"></div>
     </details>
-    <div id="genNote" class="note"></div>
+    <div id="editNote" class="note"></div>
   </div>
   <!--
     ⛓⛓⛓ IS THIS PAGE RUNNING THE CODE THAT IS ON DISK?

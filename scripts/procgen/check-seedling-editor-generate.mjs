@@ -3420,18 +3420,34 @@ if (!host) {
         };
     });
     /**
-     * ⛔ THE FRESH-LOAD DEFAULT, MEASURED AND NAMED. TEN open, THREE closed —
-     * the boot block, the CATALOGUE and `#tapeIO`. The page's CSS comment used
-     * to say "open by default except the CATALOGUE", which is true of
-     * `.genSection` and false of the page; R9 slice 13 corrected it and this is
-     * the row that keeps it corrected.
+     * ⛔ THE FRESH-LOAD DEFAULT, MEASURED AND NAMED. THREE closed — the boot
+     * block, the CATALOGUE and `#tapeIO` — and everything else open. The page's
+     * CSS comment used to say "open by default except the CATALOGUE", which is
+     * true of `.genSection` and false of the page; R9 slice 13 corrected it and
+     * this is the row that keeps it corrected.
+     *
+     * ⛓⛓ **EDITOR v3 C1 MOVED THE COUNT FROM 13 TO 14, AND THE CLAIM IS NOW
+     * WRITTEN AS THE THING IT IS ABOUT.** The slice added `#editPanel`'s own
+     * identity section (`base`, the LOAD box, the downloads) — one more open
+     * `<details>`. ⛔ The two typed totals were the *derived-roster* shape trap
+     * 574 names: they are a fact about how many sections the page HAPPENS to
+     * have, and this row is about WHICH ONES ARE CLOSED. So the closed SET is
+     * still asserted by name (identified, never counted — trap 565) and the
+     * open count is now *"all of them but those three"*, which is the sentence
+     * the label makes and cannot go stale when a section is added.
+     *
+     * ⚠ THE TOTAL IS STILL ASSERTED, as a FLOOR rather than an equality: it is
+     * what keeps the row from passing on a page whose sections failed to render
+     * at all, which is the one thing the set alone could not see.
      */
     const fresh = await sections();
     const DEFAULT_CLOSED = ['boot-items', 'roster', 'tape'];
-    check(fresh.total === 13 && fresh.open === 10
+    check(fresh.total >= DEFAULT_CLOSED.length
+        && fresh.open === fresh.total - DEFAULT_CLOSED.length
         && json(fresh.closed) === json(DEFAULT_CLOSED),
-    '⛓⛓⛓ ⚖ ITEM (i): the FRESH-LOAD default is unchanged — 13 `<details>`, 10 open, and the '
-        + 'three closed ones are the boot block, the CATALOGUE and the tape I/O, BY NAME',
+    `⛓⛓⛓ ⚖ ITEM (i): the FRESH-LOAD default is unchanged — every \`<details>\` on the page `
+        + `is open except ${DEFAULT_CLOSED.length}, and those three are the boot block, the `
+        + 'CATALOGUE and the tape I/O, BY NAME',
     `${fresh.total} total, ${fresh.open} open, closed ${json(fresh.closed)}`);
     /**
      * ⛔ AND THE CLASS IS NOT THE SET. Stated as a row of its own so the
