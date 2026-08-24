@@ -4158,9 +4158,49 @@ kickoff §27.9. Its ANSWER was produced anyway (the worktree rehearsal above), a
 
 Instruments 245 → **247**; as-built = kickoff **§27**; traps **586–589**.
 
-**NEXT in R9: slice 12c′** (the PLANNER primitive — dashing TOWARD THE EXIT, not the flag
-alone — then the flip and the pipeline run; ruling 39's `why` sweep still rides it), and
-**12c″** for the `--license-walks` mode.
+⛓⛓⛓ **R9 SLICE 12c′ SHIPPED 2026-08-24** (`d7ffaed88` · `f9cbb5c85` · `a2b8666da` ·
+`3864ffcc3` · `ef7a844a2`, pushed) — **W1 + W2 only, TAPE-INERT; W3 is a STOP with the
+user.**
+
+⚖ **RULING 43's MODE IS BUILT** (`walkReport.js` + `walkMoves.js` + the pipeline): S0
+MEASURES walk moves out of the producers' own `--check` re-solves and **`inputs` is what
+decides** — a byte verdict would call ⚖ ruling 39's `why` sweep a walk move and send a
+prose edit to the user for a licence. Ownership is the producer's OWN CLAIM
+(`--walk-report`), not its tape's description; participation is its own argv, read out of
+the instruments scan (⚖ ruling 38 (6)); the one browser-driving producer is `unmeasured`
+BY NAME so S0 stays offline and worktree-rehearsable. `--license-walks=<ruling-id>` is
+refused without an id (exit 1, run dir not created), never widens, cascades successors,
+prints through S5, and is SPENT at the top of S1. Empty-set witness at head; the worktree
+rehearsal reproduces §27.7 EXACTLY.
+
+⛓⛓⛓ **`planSwordDash` DASHES TOWARD THE EXIT, AND SIX ROOMS GET FASTER** — chain
+**3615 → 3401 t**: `r9-solve-13` 74 → **35** (2.11×, which is §23.11's 2.15×/tick arriving
+where it was predicted), `r9-solve-2` 47 → **23** (2.04×), `r9-solve-0` 237 → 168,
+`r9-solve-3` 226 → 175, `r9-solve-11` 119 → 97, `r8-solve-10` 90 → 81. A planned press
+needs no body, no aim tick and no direction key (the dash impulse is along VELOCITY); the
+policy's OPPORTUNISTIC dash is RETIRED under both flag states, which is §27.7's 400 t
+removed at its source.
+
+⛔⛔ **AND ⚖ RULING 35(c) IS ANSWERED THE OTHER WAY, WITH A MECHANISM: `r9-solve-14` is
+REFUSED BY NAME** — 145 start ticks scanned, 116 not-faster · 16 would-hit · 13 danger —
+**because L14 IS the walking-and-slashing room.** Its parry-walk strikes knock bobs into
+their 30-tick i-frames and `certifyDash` cannot price a dash against a body in knockback.
+The strike and the dash compete for the same room.
+
+⛔ **THE FLIP WAS NOT TAKEN.** The licence covered `r9-solve-14` alone and only if faster;
+six movers where one was licensed is a STOP by the brief's own clause. `ALLOW_DASH_ROSTER
+_WIDE` is still `false`. ⛓ Measured that the flip and the re-record are ONE series: flipped
+with nothing re-recorded, the campaign `--check` is RED with **26 FAILURES** by name.
+
+⛔⛔⛔ The sharpest row: **the policy was only asked on ticks that HAD BODIES**, so a
+body-free room took ONE press of a four-press schedule with no refusal to explain the
+rest — **the null this slice nearly reported was an artefact of it.** Traps **590–593**;
+as-built = kickoff **§28**; vitest 336/10329 → **338/10367**; instruments 247; roster 146.
+
+**NEXT in R9: slice 12c″** — the licensed SIX-mover re-record (the cascade fires for the
+first time on a real chain: `r8-solve-10` is #10 of 16, so 11–16 go `boot-only`) plus
+⚖ ruling 39's `why` sweep in the same pipeline run, **once the user rules on the licence**.
+Then the route: L15 `shove` VERB-APPLY → L16 BRIDGE → L8 ORACLE → A14 → A16.
 
 ## 6. Everything else (unchanged queues)
 
