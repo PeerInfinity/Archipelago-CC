@@ -731,6 +731,45 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + 'tape on the roster, and the only one whose claim is a rect rather than a '
                 + 'kill, a walk-past or an arrival.',
         }),
+        /**
+         * ⛓⛓⛓ R9 SLICE 12c‴ — **THE WITNESS PAIR, DECLARED BEFORE THE GUARD
+         * COULD FIND IT.** Seven consecutive slices have been named by
+         * `assertBridgeExposureIsMeasured` on their first unfiltered run (trap 89);
+         * this one declares its rows in the SAME COMMIT that writes the tapes, which
+         * is the only way the row is a PREDICTION rather than a transcript.
+         *
+         * ⛓ BOTH PREDICTIONS ARE DERIVED, NOT GUESSED: each tape is L6's own boot
+         * and never leaves the room, so `levels: [6]`; the atlas gives L6 two `bob`
+         * entities, so `bobs: 2` — the same two `r9-l6-bob-press` drives; and `ticks`
+         * is each tape's own `tick_count`, which the producer SEARCHES (the walk ends
+         * one tick before the press arm's first player hit) rather than choosing.
+         *
+         * ⛔⛔ AND THE PAIR'S EXPOSURES ARE OPPOSITE, WHICH IS THE POINT. The two
+         * tapes differ by ONE `primary` at tick 10. The PRESS arm's exposure is a body
+         * it knocks harmless and then walks THROUGH untouched; the CONTROL's is the
+         * same body hitting the player TWICE. ⚖ Ruling 44(b) IS that difference, and
+         * until this pair the roster had ZERO tapes that exercised it (§29.7: not one
+         * `contactsSuppressed` row with `why === 'enemy hitsTimer'` in 146 tapes).
+         */
+        Object.freeze({
+            name: 'r9-l6-harmless-press', levels: Object.freeze([6]), bobs: 2, ticks: 42,
+            addedBy: 'R9 slice 12c‴ (the harmless-window witness pair)',
+            why: 'the TREATMENT arm: one `primary` at tick 10 lands a swing on '
+                + '`bob@112,48` at tick 11, arming the 30-tick i-frame `Enemy.hitPlayer` '
+                + 'gates on — and the player then walks straight THROUGH the body '
+                + '(`"Enemy"` is not in `Mobile.solids`) for ten ticks of contact that '
+                + 'damage nothing, taking ZERO hits. The first tape on the roster to '
+                + 'exercise ⚖ ruling 44(b) at all.',
+        }),
+        Object.freeze({
+            name: 'r9-l6-harmless-control', levels: Object.freeze([6]), bobs: 2, ticks: 42,
+            addedBy: 'R9 slice 12c‴ (the harmless-window witness pair)',
+            why: 'the CONTROL arm: the walk with that one press REMOVED and nothing else '
+                + 'changed. Nothing arms a timer, nothing is suppressed, and the same '
+                + '`bob@112,48` hits the player TWICE. ⚠ Its exposure is the SAME two '
+                + 'bobs in the SAME room — the pair is a pair precisely because the '
+                + 'exposure claim does not move and the OUTCOME does.',
+        }),
     ]),
 
     /**

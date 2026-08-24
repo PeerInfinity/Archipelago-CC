@@ -305,6 +305,17 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             // the only one whose exposure is a SURVIVOR: one hit of three, the
             // i-frame armed, the body thrown clear and walking away alive.
             'r9-l6-sword-dash-hit',
+            // ⛓⛓⛓ R9 slice 12c‴: the harmless-window WITNESS PAIR — and it is
+            // the first addition in eight slices that this guard did NOT have
+            // to name, because both rows were declared in the same commit that
+            // wrote the tapes. ⛔ THE PAIR IS TWO ROWS, NOT ONE: both arms walk
+            // the same L6 corridor past the same two bobs, so their exposure
+            // CLAIM is identical and only the outcome differs — the treatment
+            // knocks `bob@112,48` harmless and walks through it untouched, the
+            // control is hit twice by it. A ledger that carried only the
+            // treatment would be declaring the pair's difference rather than
+            // its exposure.
+            'r9-l6-harmless-press', 'r9-l6-harmless-control',
         ]);
         // ⛓ 13 -> 11 -> 12 -> 13 -> 12 -> 13: `r7-act2-3` and `r7-act2-4` are
         // off the roster, so the measurement cannot find them; slice 12's
@@ -314,11 +325,14 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         // count reads. ⛓ R9 slice 12c puts it back with the dash-rect witness.
         // The three that STAY (⚖ ruling 18) are still here, still exposed,
         // still declared.
-        expect(out.exposed).toBe(13);
+        // ⛓ R9 slice 12c‴ takes it to 15 — the witness pair is TWO tapes in
+        // one bridged room, declared up front rather than found by this check.
+        expect(out.exposed).toBe(15);
         expect(out.tapes).toEqual([
             'r7-act2-5', 'r7-act2-6', 'r7-act2-full',
             'r8-hammer-arm', 'r8-l6-bob-contact', 'r8-solve-3', 'r8-solve-4',
             'r8-solve-5', 'r8-solve-6', 'r9-l6-bob-press',
+            'r9-l6-harmless-control', 'r9-l6-harmless-press',
             'r9-l6-sword-dash-hit', 'r9-solve-13', 'r9-solve-14',
         ]);
     });
@@ -398,6 +412,13 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             // "declared and no longer exposed" arm fire first and the assertion
             // pass for the wrong reason.
             'r9-l6-sword-dash-hit': { tape: {}, levels: [6] },
+            // ⛓⛓ R9 slice 12c‴'s witness pair, at its declared room — the same
+            // mirror rule, for the fourth time in four slices that added ledger
+            // rows. BOTH arms belong here: a mirror missing one of them makes
+            // the "declared and no longer exposed" arm fire first and this
+            // mutation pass for the wrong reason.
+            'r9-l6-harmless-press': { tape: {}, levels: [6] },
+            'r9-l6-harmless-control': { tape: {}, levels: [6] },
         });
         expect(() => assertBridgeExposureIsMeasured(io)).toThrow(/right name with wrong rooms/);
     });

@@ -1231,9 +1231,41 @@ function checkReadout(name, tape, status, stream) {
         // the position stream — the steering gap between two hits is the
         // window, and it is compared tick for tick.
         //
-        // The `hits` equality above is safe by contrast: nothing moves it
-        // after the tape stops except a further hit, and that would fail the
-        // equality loudly rather than quietly.
+        // ⛔⛔⛔ AND THE `hits` EQUALITY ABOVE IS **NOT** SAFE BY CONTRAST —
+        // THIS SENTENCE USED TO SAY IT WAS, AND R9 SLICE 12c‴ MEASURED IT
+        // FALSE. What it said: "nothing moves it after the tape stops except a
+        // further hit, and that would fail the equality loudly rather than
+        // quietly." A further hit moves it UP — loud, true. ⛔ A further hit
+        // that is the KILLING one moves it to **ZERO**, because `Player.hit`'s
+        // `hits >= hitsMax` arm calls `die()`. So the same post-tape frames
+        // that only ever LOWER the countdown can RESET the counter, and the
+        // failure then reads as "the model over-counted" — which is what the
+        // message above offers as its first explanation, a true sentence about
+        // the wrong subject.
+        //
+        // MEASURED: a two-tape pair whose control held 2 of `hitsMax` 3 took
+        // its third hit in those frames; the game reported `hits` 0 against the
+        // model's 2 with all 61 observations byte-identical.
+        //
+        // ⇒ THE SOUND STATEMENT IS THE SAME SHAPE AS THE COUNTDOWN'S: this
+        // equality holds only while the tape's own POST-TAPE MARGIN exceeds the
+        // window in which the status is read. That window is
+        // `seedling-bot-replay-win.py`'s `poll_sec` (0.25) at
+        // `FP.assignedFrameRate` (30) — about EIGHT engine frames, with the
+        // tape's last keys STILL HELD because nothing dispatches a release; the
+        // drain gap measured on a real recording is 5. A tape whose margin is
+        // inside that window is a latent flake in either direction, and the
+        // producer is where the margin belongs: derive the length as the
+        // SHORTEST walk that completes the tape's claim, then MEASURE how many
+        // frames each arm can spend before its counters move and assert that
+        // margin against the poller's window
+        // (`plan-seedling-r9-l6-harmless-window.mjs` is the worked example).
+        //
+        // ⚠ THE REAL FIX IS NOT HERE. The driver should read the status AT the
+        // tape's last observation rather than up to a poll later; that is a
+        // Windows-driver change and therefore game-facing, so it carries ⚖
+        // ruling 40's full-roster checkpoint and is QUEUED rather than taken
+        // in passing.
         const timerOk = status.hits_timer <= expected.damage.hitsTimer
             && (expected.damage.hitsTimer !== 0 || status.hits_timer === 0);
         check(`${name}: the game's own \`hits_timer\` is inside the i-frame window`,

@@ -1218,6 +1218,20 @@
       "noHazards": []
     },
     {
+      "file": "r9-l6-harmless-control.json",
+      "tickCount": 42,
+      "bootLevel": 6,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "r9-l6-harmless-press.json",
+      "tickCount": 42,
+      "bootLevel": 6,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "r9-l6-sword-dash-hit.json",
       "tickCount": 22,
       "bootLevel": 6,

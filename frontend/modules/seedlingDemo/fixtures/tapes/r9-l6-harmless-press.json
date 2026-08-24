@@ -1,0 +1,52 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 6,
+        "x": 80,
+        "y": 48
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": {
+        "items": {
+            "hasSword": true
+        }
+    },
+    "tick0": null,
+    "tick_count": 42,
+    "inputs": [
+        {
+            "key": "right",
+            "from": 0,
+            "to": 42
+        },
+        {
+            "key": "primary",
+            "from": 10,
+            "to": 11
+        }
+    ],
+    "name": "r9-l6-harmless-press",
+    "description": "⛓⛓⛓ R9 SLICE 12c‴, ⚖ RULING 44(b) — ONE HALF OF THE HARMLESS-WINDOW WITNESS PAIR (user licence, 2026-08-24). Two tapes from L6's `r9-l6-bob-press` boot with IDENTICAL held keys, differing by exactly ONE `primary` at tick 10. `Enemy.hitPlayer` (`Enemies/Enemy.as:211`) gates the player-damaging contact on the ENEMY's own `hitsTimer`, so a struck body is harmless for its whole 30-tick i-frame while it keeps steering, and `\"Enemy\"` is not in `Mobile.solids` so the player walks straight through it. Slice 12c″ taught the PLANNER that window and §29.7 then measured that ZERO of the 146 committed tapes had ever exercised it — the model was agreeing with itself. This pair asks the GAME. ⛓ THE PRESS ARM: the swing lands on bob@112,48 at tick 11 (press + 1 — `pendingThrust` fires at the TOP of the following tick), arms the 30-tick timer, and the player then walks THROUGH the body taking ZERO hits, with 10 ticks of contact suppressed by that timer (t = 32..41). ⛓ The walk's length (42 ticks) is SEARCHED, not chosen: it stops one tick before this arm's first player hit, which is `sandtrap@160,48` at the corridor's end and has nothing to do with the bob. ⚠ The differential carries the PLAYER's column only (trap 564); the BODY's — position, `hits`, and the `hits_timer` that settles WHICH TICK the hit landed on — is asked of the game by scripts/procgen/probe-seedling-r9-harmless-window-mobiles.mjs. Authored by scripts/procgen/plan-seedling-r9-l6-harmless-window.mjs.",
+    "note": ""
+}
