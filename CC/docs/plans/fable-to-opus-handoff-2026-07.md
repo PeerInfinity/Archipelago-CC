@@ -4033,9 +4033,62 @@ generate 224/0 · phases 94/0 · sequence 36/0 · ship 254/0 · pages 20/0 · ex
 overlays 24/0. Instruments 241 → **245**. Zero tape / trace / expectation / default /
 identity-block moves; roster gate not owed. As-built = kickoff **§25**.
 
-**NEXT in R9: slice 12d** (the chain's ONE declaration + `--grow` + the headline retirement —
-ruling 38 (1)(2)(3)), then **12c** (the ORACLE first — the preview must step with the drive's
-stepper — then the planner primitive).
+### ⛓⛓⛓ SLICE 12d SHIPPED 2026-08-23 — **ONE DECLARATION, THE CONCATENATED TAPE RETIRED, AND A COMMAND THAT GROWS THE CHAIN** (`c2a1607f7` … , PUSHED)
+
+⚖ Rulings **37** and **38 (1)(2)(3)** — tape-MOVING (one deletion), and ⚖ rulings **39** and
+**40** arrived while it ran.
+
+**(1) THE ONE DECLARATION** is `frontend/modules/seedlingDemo/campaignChain.js`: inert data,
+no imports of its own (⇒ browser-safe), and the producer IMPORTS it because the producer
+cannot be imported — it solves at module scope and drives Chrome. **SEVEN typed copies became
+one**, not the six sealed: the producer's own docblock carried a 16-line room table nobody had
+listed. `PLAYTHROUGH_CHAINS[].segments` and `PAGE_CHAINS['r9-campaign']` **ARE the same frozen
+array**, asserted by IDENTITY — the one assertion a hand-kept copy that matches today cannot
+pass — and the tracked doc's chain table is the **4th GENERATED markdown region**. ⚠ **38
+(1)'s exposure clause is AMENDED**: `R8_ENEMY_BRIDGE`'s prediction rows stay TYPED, because a
+`levels` derived from the same atlas the measurement reads is a prediction that CANNOT BE
+WRONG (trap 89); what derives is a COVERAGE row — every campaign room holding a bridged body
+must HAVE a prediction row, asked AT THE DECLARATION, earlier than the guard itself can look.
+
+**(3) THE RETIREMENT WAS MEASURED REDUNDANT BEFORE IT HAPPENED**: the sixteen segments played
+ALONE by the model and concatenated are the headline's **3616 observations, first differing
+index −1**. Tapes 146 → **145**; exposed 13 → 12; **three of six `clears` rows** went, exactly
+the three whose only witness the headline was. Three claims are **UNASKABLE-BY-NAME** rather
+than silently absent, each naming where its content went; one claim is really gone (9e's third
+derivation), announced in a paragraph.
+
+**(2) `--grow`** derives the next room from the chain's own tail `to`, asks the route survey
+the census reads, cross-checks the committed frontier, and **a refusal is the ANSWER, not an
+error**. Its first witness is real: today's tail is L14 → L15, the survey refuses L15, and it
+printed route step 17's family and text VERBATIM and wrote nothing. Second witness: a scratch
+worktree with `r9-solve-14` un-recorded — `--dry-run` planned **exactly 12b″'s seven
+artifacts**, and the real run gave S0's **13 boot writes / 15 tick-0 re-derivations** and **16
+of 19 tape fields byte-identical** (the three left are S2's browser stage). ⛔ **A SCRATCH TREE
+CANNOT RUN THE BROWSER STAGES** — the dev server serves ONE tree — so `--from=`/`--to=`
+rehearse offline and **the four summaries run only after a COMPLETE pipeline**.
+
+⛔⛔ **THE TWO BEST FINDINGS ARE THE SLICE'S OWN TOOLS BITING.** W2's new ends-meet row made the
+producer import `PLAYTHROUGH_CHAINS`, which `loadTape`s every segment AT MODULE SCOPE — so the
+producer could not start in the one state a growth passes through (trap 584, found by RUNNING
+`--grow`, not by reasoning). And a FOURTH read of the retired tape was invisible to grep:
+`tapeOf(CHOICE.id)`, a CHAIN ID that resolved to a TAPE only because the two shared a word
+(trap 583) — it crashed with 28 PASS lines and NO TOTAL. Plus 12e's label lint named this
+slice's own new test row, and the docs pins needed no hand re-pin.
+
+GATES: `gates.sh local` **26/26** · FULL roster **145 tapes 3378 / 0 / 46 ALL CHECKS PASSED** ·
+unfiltered vitest ALONE **336 files / 10310 rows, 0 failed** · sequence 36/0 → **35/0** by
+named rows · ship **254/0** unchanged · campaign `--check` `b3b18f4e…` → `1c7f03e4…`, the only
+producer mover · instruments **245**. As-built = kickoff **§26**; traps **583–585**.
+
+⚖ **RULING 39**: a segment's `why` carries ONLY the room's own story; frontier-status sentences
+live in `campaign-frontier.json` and the readout. The sweep of the sixteen existing `why`s is
+**12c's**, riding its pipeline run. ⚖ **RULING 40**: ruling 33's *"any push that moves tapes ⇒
+full roster"* clause is **RETIRED** — the full roster is a CHECKPOINT event, and 12d's run is
+the LAST tape-move-triggered one.
+
+**NEXT in R9: slice 12c** (the ORACLE first — the preview must step with the drive's stepper —
+then the planner primitive; L14's re-record now runs through `--grow`, and ruling 39's `why`
+sweep rides it).
 
 ## 6. Everything else (unchanged queues)
 
