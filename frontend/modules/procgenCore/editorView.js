@@ -37,7 +37,11 @@
  * substrate is drawn by the page and only by the page. This file creates its
  * own overlay element and draws on it the two things the page has no notion of
  * — the rectangle a copy is being dragged out of, and the anchor a paste is
- * pending at. ⚠ HOVER STAYS THE PAGE'S: `mazeLabView.draw` already outlines the
+ * pending at — plus, since EDITOR v3 D2, whatever SHAPES the page contributes
+ * through the optional `shapes()`. ⛔ That last one does not loosen the law: the
+ * element, the clear and the repaint schedule are still this file's, and the
+ * page hands over WHAT to draw rather than a second surface to draw it on.
+ * ⚠ HOVER STAYS THE PAGE'S: `mazeLabView.draw` already outlines the
  * hovered cell in every arm, and a second outline drawn by this file would be a
  * second answer to *which cell is under the pointer* (trap 269's shape at the
  * boundary between two renderers).
@@ -77,6 +81,86 @@ export class EditorViewError extends Error {
 }
 
 const fail = (message) => { throw new EditorViewError(message); };
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ THE SHAPE VOCABULARY — EDITOR v3 D2, ADDITIVE
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓⛓⛓ **WHAT THE OVERLAY CAN DRAW.** Two of these three are A2's and their
+ * bytes on the maze did not move; `polyline` is the one this slice adds.
+ *
+ * ⛔ **WHY A POLYLINE AND NOT "AN ARROW".** Four slices have now wanted the
+ * same picture — *this room leads to that one* — and an `arrow` primitive would
+ * have been a shape that can only ever be a straight segment between two
+ * points. A polyline with an optional head at either end draws the arrow, the
+ * elbowed arrow that clears the cells between, and the plain path a later slice
+ * will want for a corridor; the head is a FLAG on the line rather than a kind of
+ * its own, because *"a line, drawn with a head"* is one thing to reason about
+ * and two kinds would be two.
+ *
+ * ⛔ **AND THE COORDINATES ARE CELL SPACE, FRACTIONS ALLOWED.** The painter
+ * multiplies by the cell size and nothing else, so the CENTRE of cell 3 is
+ * `{x: 3.5, y: 0.5}` and the producer says where the line goes. A painter that
+ * centred points itself would make every polyline that is NOT between two cell
+ * centres impossible to express.
+ */
+export const SHAPE_KINDS = Object.freeze(['rect', 'paste', 'polyline']);
+
+/** ⛓ The arrowhead, in overlay pixels — a length and a half-spread. */
+const ARROW_PX = Object.freeze({ length: 9, spread: 0.45 });
+
+const isFinitePoint = (p) => p !== null && typeof p === 'object'
+    && Number.isFinite(p.x) && Number.isFinite(p.y);
+
+/**
+ * ⛓⛓ **THE ONE AUTHORITY ON WHAT A SHAPE IS**, called where a shape is
+ * PRODUCED (the merge below) and again by the painter's dispatch when it meets
+ * a kind it has no painter for — one function, so there is exactly one sentence
+ * about a malformed shape no matter which side notices it.
+ *
+ * ⛔ AN UNKNOWN KIND REFUSES BY NAME rather than being skipped. A page that
+ * contributed `{kind:'arrow'}` and saw nothing drawn would look at its
+ * geometry, at its `repaint`, and at the overlay element long before it looked
+ * at the spelling — ⚖ the graceful-skip trap, which this file already refuses
+ * to fall into when there is no document to draw on at all.
+ */
+export function assertShape(shape, where = 'a shape') {
+    if (shape === null || typeof shape !== 'object' || Array.isArray(shape)) {
+        fail(`editorView: ${where} must be an object, got ${JSON.stringify(shape)}.`);
+    }
+    if (!SHAPE_KINDS.includes(shape.kind)) {
+        fail(`editorView: ${where} names kind ${JSON.stringify(shape.kind)} and the `
+            + `vocabulary is [${SHAPE_KINDS.join(', ')}]. ⛔ Refused by name rather than `
+            + 'skipped: a shape nobody draws cannot be told from one nobody produced.');
+    }
+    if (shape.kind === 'polyline') {
+        if (!Array.isArray(shape.points) || shape.points.length < 2
+            || !shape.points.every(isFinitePoint)) {
+            fail(`editorView: ${where} is a polyline, so it needs \`points\` — at least TWO `
+                + '`{x, y}` in CELL space, every coordinate finite. ⛔ A one-point polyline '
+                + 'has no direction, so it has no segment to hang an arrowhead on and '
+                + 'nothing to stroke; it is refused rather than drawn as a dot.');
+        }
+        for (const flag of ['arrow', 'arrowBack', 'highlight']) {
+            if (shape[flag] !== undefined && typeof shape[flag] !== 'boolean') {
+                fail(`editorView: ${where} carries \`${flag}\` = `
+                    + `${JSON.stringify(shape[flag])}; it is a boolean or absent.`);
+            }
+        }
+        if (shape.label !== undefined && typeof shape.label !== 'string') {
+            fail(`editorView: ${where} carries a non-string \`label\`.`);
+        }
+        return shape;
+    }
+    for (const n of ['x', 'y', 'w', 'h']) {
+        if (!Number.isFinite(shape[n])) {
+            fail(`editorView: ${where} is a ${shape.kind}, so \`${n}\` must be a finite `
+                + `number, got ${JSON.stringify(shape[n])}.`);
+        }
+    }
+    return shape;
+}
 
 /**
  * ⛓ THE FOUR TOOLS. ⛔ Exported as data so a page's buttons, this file's key
@@ -147,6 +231,22 @@ export function mountEditorView({
      * a page tool that wants to be one-shot calls `setTool` from its own `at`.
      */
     tools = [],
+    /**
+     * ⛓⛓⛓ **THE PAGE'S OWN SHAPES** — EDITOR v3 D2, optional. `() => shape[]`,
+     * merged into this file's own on every repaint and validated at the moment
+     * they are produced.
+     *
+     * ⛔ **WHY THE PAGE NEEDED A DOOR AT ALL.** Seedling's set editor draws a
+     * strip of rooms and the EXITS BETWEEN THEM — a picture that is neither the
+     * substrate (the page's renderer draws the rooms) nor a selection (the view
+     * draws that), and the only thing on the page that knows where the cells
+     * land in pixels is this file. Left to the page it would have meant a THIRD
+     * canvas stacked on the same two, aligned by a geometry copied from here.
+     *
+     * ⚠ It is a FUNCTION and not an array: the arrows change with every
+     * `connect`, and a stored list would be the picture as it was at mount.
+     */
+    shapes: pageShapes = null,
     onChange = null,
     say = () => {},
     offRoom = () => 'that point is outside the level',
@@ -229,6 +329,50 @@ export function mountEditorView({
      * rectangle nobody can see is a rectangle the person cannot tell from one
      * they never dragged.
      */
+    /**
+     * ⛓⛓⛓ **A POLYLINE, AND ITS HEADS** — EDITOR v3 D2.
+     *
+     * ⛔ THE HEAD IS DRAWN OFF THE LAST **SEGMENT**, not off the first-to-last
+     * point: an elbowed arrow that took its direction from the whole span would
+     * point at the target while arriving from somewhere else, and the picture's
+     * whole job is to say which way the door goes.
+     *
+     * ⚠ A degenerate segment (two identical points — two rooms whose centres
+     * coincide, which is what a one-room set does to a self-join) has NO
+     * direction, so the head is omitted rather than drawn at an angle
+     * `Math.atan2(0, 0)` invented.
+     */
+    const paintHead = (ctx, from, to) => {
+        const dx = to.x - from.x;
+        const dy = to.y - from.y;
+        if (dx === 0 && dy === 0) return;
+        const a = Math.atan2(dy, dx);
+        for (const side of [-1, 1]) {
+            ctx.beginPath();
+            ctx.moveTo(to.x, to.y);
+            ctx.lineTo(
+                to.x - ARROW_PX.length * Math.cos(a + side * ARROW_PX.spread),
+                to.y - ARROW_PX.length * Math.sin(a + side * ARROW_PX.spread),
+            );
+            ctx.stroke();
+        }
+    };
+
+    const paintPolyline = (ctx, s, px, py) => {
+        const pts = s.points.map((p) => ({ x: p.x * px, y: p.y * py }));
+        ctx.beginPath();
+        ctx.moveTo(pts[0].x, pts[0].y);
+        for (const p of pts.slice(1)) ctx.lineTo(p.x, p.y);
+        ctx.stroke();
+        if (s.arrow) paintHead(ctx, pts[pts.length - 2], pts[pts.length - 1]);
+        if (s.arrowBack) paintHead(ctx, pts[1], pts[0]);
+        if (typeof s.label === 'string' && s.label !== '') {
+            const mid = pts[Math.floor((pts.length - 1) / 2)];
+            ctx.fillStyle = ctx.strokeStyle;
+            ctx.fillText(s.label, mid.x + 3, mid.y - 3);
+        }
+    };
+
     const overlay = (() => {
         if (isFn(paint)) return { paint, el: null };
         const parent = canvas.parentNode;
@@ -262,23 +406,51 @@ export function mountEditorView({
                 const py = el.height / b.h;
                 for (const s of shapes) {
                     ctx.save();
-                    ctx.strokeStyle = s.kind === 'paste' ? '#7fe0ff' : '#ffd75f';
+                    ctx.strokeStyle = s.kind === 'paste' || s.highlight ? '#7fe0ff' : '#ffd75f';
                     ctx.setLineDash(s.kind === 'paste' ? [4, 3] : []);
                     ctx.lineWidth = 2;
-                    ctx.strokeRect(s.x * px + 1, s.y * py + 1, s.w * px - 2, s.h * py - 2);
+                    if (s.kind === 'polyline') paintPolyline(ctx, s, px, py);
+                    else if (s.kind === 'rect' || s.kind === 'paste') {
+                        ctx.strokeRect(s.x * px + 1, s.y * py + 1, s.w * px - 2, s.h * py - 2);
+                    } else {
+                        // ⛓ UNREACHABLE THROUGH `shapes()` (the merge asserts every
+                        // shape before it is returned) and here anyway, so the ONE
+                        // sentence about an unknown kind is this file's either way.
+                        ctx.restore();
+                        assertShape(s, 'the shape the painter was handed');
+                    }
                     ctx.restore();
                 }
             },
         };
     })();
 
-    /** ⛓ THE SHAPES THE OVERLAY DRAWS — derived, never stored. */
+    /**
+     * ⛓ THE SHAPES THE OVERLAY DRAWS — derived, never stored.
+     *
+     * ⛓⛓ **AND THE PAGE MAY CONTRIBUTE** (EDITOR v3 D2). ⛔ The one-renderer
+     * law SURVIVES this and that is the point of the shape: the view still owns
+     * the overlay element, still clears it, still decides when to repaint — the
+     * page hands over WHAT to draw, never a second surface to draw it on. A
+     * page that had made its own overlay canvas would be back to two answers
+     * about which pixels the selection lives in.
+     *
+     * ⛔ THE PAGE'S SHAPES COME **AFTER** the view's own, so a selection
+     * rectangle is never buried under whatever the page contributed.
+     */
     const shapes = () => {
         const out = [];
         if (corner) out.push({ kind: 'rect', x: corner.tx, y: corner.ty, w: 1, h: 1 });
         if (tool === TOOLS.PASTE && clip) {
             out.push({ kind: 'paste', x: 0, y: 0, w: clip.w, h: clip.h });
         }
+        if (!pageShapes) return out;
+        const extra = pageShapes();
+        if (!Array.isArray(extra)) {
+            fail('editorView: the injected `shapes` must return an ARRAY of shapes, got '
+                + `${JSON.stringify(extra)}.`);
+        }
+        for (const s of extra) out.push(assertShape(s, 'a shape the page contributed'));
         return out;
     };
     const repaint = () => overlay.paint(shapes());

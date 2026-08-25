@@ -25,7 +25,7 @@ import { describe, expect, it } from 'vitest';
 
 import { canonicalJson, createEditSession, describeOps } from './editCore.js';
 import { createLifetime } from './pageLifetime.js';
-import { EditorViewError, TOOLS, mountEditorView } from './editorView.js';
+import { EditorViewError, SHAPE_KINDS, TOOLS, assertShape, mountEditorView } from './editorView.js';
 
 /* ══════════════════════════════════════════════════════════════════════
  * ⛓ THE TOY SUBSTRATE — `editCore.test.js`'s, in the smallest form this
@@ -796,6 +796,180 @@ describe('⛓⛓⛓ `view.apply` — a control that is not a GESTURE, on the one
         t.view.apply({ op: 'setTile', x: 2, y: 2, tile: 'b' });
         expect(t.view.tool).toBe(TOOLS.RECT);
         expect(t.view.clip).toBe(null);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ SHAPES — THE OVERLAY LEARNS A POLYLINE (EDITOR v3 D2)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓ A 2D CONTEXT THAT RECORDS. The arrowhead is a PAINTER behaviour — a `paint`
+ * spy sees the shape and never sees the head — so the rows below that are about
+ * the head drive the file's OWN painter through a hand-built document and read
+ * back the call sequence. ⛔ That is the only place the head exists; asserting
+ * `arrow: true` on the shape would be asserting that the test passed a flag.
+ */
+class RecordingCtx {
+    constructor() { this.calls = []; this.strokeStyle = null; }
+
+    /* eslint-disable class-methods-use-this */
+    save() {} restore() {} clearRect() {} setLineDash() {}
+    /* eslint-enable class-methods-use-this */
+
+    beginPath() { this.calls.push(['beginPath']); }
+    moveTo(x, y) { this.calls.push(['moveTo', x, y]); }
+    lineTo(x, y) { this.calls.push(['lineTo', x, y]); }
+    stroke() { this.calls.push(['stroke']); }
+    strokeRect(...a) { this.calls.push(['strokeRect', ...a]); }
+    fillText(...a) { this.calls.push(['fillText', ...a]); }
+
+    /** ⛓ One `stroke()` per path — the head is TWO extra paths, so counting
+     *  strokes is counting heads once the line's own stroke is subtracted. */
+    strokes() { return this.calls.filter((c) => c[0] === 'stroke').length; }
+}
+
+/** ⛓ The smallest document that lets the file build its own overlay. */
+const domHarness = (rest = {}) => {
+    const ctx = new RecordingCtx();
+    const overlayEl = { width: 0, height: 0, style: {}, getContext: () => ctx };
+    const parent = { appendChild() {}, removeChild() {} };
+    const canvas = new FakeCanvas();
+    canvas.parentNode = parent;
+    canvas.clientWidth = 64;
+    canvas.clientHeight = 64;
+    const doc = { createElement: () => overlayEl };
+    const t = harness({ canvas, doc, paint: undefined, ...rest });
+    /**
+     * ⛔ THE CLICK IS DISPATCHED ON **THIS** CANVAS. `harness` builds one of its
+     * own and hands its `click` over that; the listeners here were registered on
+     * the canvas passed in, so the borrowed helper would dispatch into a target
+     * nothing is listening to — a row that then asserts an ABSENCE passes over a
+     * painter that never ran.
+     */
+    return { ...t, ctx, overlayEl, canvas, click: (tx, ty) => canvas.dispatch('click', { tx, ty }) };
+};
+
+describe('⛓⛓⛓ the overlay draws POLYLINES, and a page may contribute shapes', () => {
+    const line = (extra = {}) => ({
+        kind: 'polyline', points: [{ x: 0.5, y: 0.5 }, { x: 2.5, y: 0.5 }], ...extra,
+    });
+
+    it('⛓ with NO `shapes` injected the list is A2\'s two and nothing else — the maze passes '
+        + 'none, and this is the row that says its picture did not move', () => {
+        const t = harness();
+        t.view.setTool(TOOLS.RECT);
+        t.click(1, 1);
+        const last = t.painted[t.painted.length - 1];
+        expect(last).toEqual([{ kind: 'rect', x: 1, y: 1, w: 1, h: 1 }]);
+        expect(new Set(last.map((s) => s.kind)).has('polyline')).toBe(false);
+    });
+
+    /** ⛓ MUTANT: the page's shapes are merged BEFORE the view's own — a paste
+     *  ghost buried under whatever the page contributed. */
+    it('⛓⛓ an injected `shapes()` is MERGED AFTER the view\'s own, on every repaint', () => {
+        let extra = [line({ arrow: true, label: 'L0 → L2' })];
+        const t = harness({ shapes: () => extra });
+        t.view.setTool(TOOLS.RECT);
+        t.click(1, 1);
+        const last = t.painted[t.painted.length - 1];
+        expect(last.map((s) => s.kind)).toEqual(['rect', 'polyline']);
+        expect(last[1].label).toBe('L0 → L2');
+        // ⛓ …and it is re-ASKED, not captured: the arrows change with every op.
+        extra = [];
+        t.view.setTool(null);
+        expect(t.painted[t.painted.length - 1]).toEqual([]);
+    });
+
+    /**
+     * ⛓ AND IT REFUSES AT **MOUNT**, which is where `repaint()` first asks —
+     * the same moment a malformed page TOOL refuses, and for the same reason:
+     * a shape the overlay cannot draw should not wait for the first gesture to
+     * be found out.
+     */
+    it('⛔ an UNKNOWN kind refuses BY NAME and names the vocabulary', () => {
+        expect(() => harness({ shapes: () => [{ kind: 'arrow', points: [] }] }))
+            .toThrow(EditorViewError);
+        expect(() => assertShape({ kind: 'arrow' })).toThrow(
+            new RegExp(`\\[${SHAPE_KINDS.join(', ')}\\]`));
+    });
+
+    it('⛔ a polyline with fewer than TWO points refuses — it has no segment to hang a head '
+        + 'on', () => {
+        expect(() => assertShape({ kind: 'polyline', points: [{ x: 0, y: 0 }] }))
+            .toThrow(/at least TWO/);
+        expect(() => assertShape({ kind: 'polyline', points: [{ x: 0, y: 0 }, { x: 1 }] }))
+            .toThrow(/at least TWO/);
+    });
+
+    it('⛔ the injected `shapes()` must return an ARRAY', () => {
+        expect(() => harness({ shapes: () => null })).toThrow(/must return an ARRAY/);
+    });
+
+    it('⛔ a rect with a non-finite field refuses too — the two A2 kinds are checked by the '
+        + 'same one authority', () => {
+        expect(() => assertShape({ kind: 'rect', x: 0, y: 0, w: 1, h: NaN })).toThrow(/`h`/);
+    });
+
+    /**
+     * ⛓⛓⛓ MUTANT: `paintPolyline` drops the arrowhead. The picture is then a
+     * bare line between two rooms and the reader cannot tell which way the door
+     * goes — which is the whole claim the overview makes.
+     */
+    it('⛓⛓⛓ the PAINTER strokes the line AND an arrowhead at its LAST segment', () => {
+        const t = domHarness({ shapes: () => [line({ arrow: true })] });
+        const plain = t.ctx.strokes();
+        expect(plain).toBe(3); // the line, plus the head's two legs
+        const heads = t.ctx.calls.filter((c) => c[0] === 'moveTo').slice(1);
+        // ⛓ …and both legs start AT THE LAST POINT (2.5 of a 6-wide grid on a
+        //   64px overlay = 26.67px), which is what "at its last segment" means.
+        const px = 64 / 6;
+        for (const h of heads) expect(h[1]).toBeCloseTo(2.5 * px, 6);
+    });
+
+    it('⛓⛓ `arrowBack` adds a SECOND head, pointing the other way — a two-way door is ONE '
+        + 'line with two heads and not two lines', () => {
+        const one = domHarness({ shapes: () => [line({ arrow: true })] }).ctx.strokes();
+        const two = domHarness({ shapes: () => [line({ arrow: true, arrowBack: true })] })
+            .ctx.strokes();
+        expect(two - one).toBe(2);
+    });
+
+    it('⛓ the head takes its direction from the LAST SEGMENT, not from the whole span — an '
+        + 'elbowed arrow arrives the way it actually arrives', () => {
+        const elbow = {
+            kind: 'polyline',
+            points: [{ x: 0.5, y: 0.5 }, { x: 2.5, y: 0.1 }, { x: 2.5, y: 0.5 }],
+            arrow: true,
+        };
+        const t = domHarness({ shapes: () => [elbow] });
+        const legs = t.ctx.calls.filter((c) => c[0] === 'lineTo').slice(-2);
+        // ⛓ The last segment runs straight DOWN, so both legs end ABOVE the tip.
+        const py = 64 / 1;
+        for (const l of legs) expect(l[2]).toBeLessThan(0.5 * py);
+    });
+
+    it('⛔ a DEGENERATE last segment draws NO head rather than one at an invented angle', () => {
+        const t = domHarness({
+            shapes: () => [{
+                kind: 'polyline', points: [{ x: 1.5, y: 0.5 }, { x: 1.5, y: 0.5 }], arrow: true,
+            }],
+        });
+        expect(t.ctx.strokes()).toBe(1);
+    });
+
+    it('⛓ a `label` is filled, once, near the line', () => {
+        const t = domHarness({ shapes: () => [line({ label: 'L0 → L2' })] });
+        expect(t.ctx.calls.filter((c) => c[0] === 'fillText').map((c) => c[1]))
+            .toEqual(['L0 → L2']);
+    });
+
+    it('⛓ the two A2 kinds still reach `strokeRect` — the polyline arm did not take the '
+        + 'rectangle\'s path with it', () => {
+        const t = domHarness();
+        t.view.setTool(TOOLS.RECT);
+        t.click(1, 1);
+        expect(t.ctx.calls.some((c) => c[0] === 'strokeRect')).toBe(true);
     });
 });
 
