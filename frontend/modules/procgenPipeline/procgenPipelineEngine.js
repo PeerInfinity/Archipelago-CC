@@ -14,7 +14,7 @@ import { namespaceNamed } from '../procgenCore/apIdNamespaces.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
 import { ScenarioPool } from '../shared/procgen/scenarioPool.js';
-import { makeRulesJsonScaffold, makeHasRule, makeAndRule } from '../shared/rulesJsonBuilder.js';
+import { makeRulesJsonScaffold, makeHasRule, makeAndRule, makeExit } from '../shared/rulesJsonBuilder.js';
 import { validateSpherePlan } from './spherePlanner.js';
 import { generateSphereLog } from '../shared/procgen/forwardSimulator.js';
 import { generateLoopCosts } from '../shared/procgen/loopCostGenerator.js';
@@ -2259,11 +2259,10 @@ export function compileRegionGraph(grid, opts = {}) {
             : obstacleLib;
         const compiled = compileRegion(region.extracted_rules, { obstacleLib: mergedLib });
 
-        const regionExits = compiled.exits.map((e) => ({
-            name: e.id,
-            connected_region: e.target_region,
-            access_rule: e.rule,
-        }));
+        // ⛓ `makeExit` (shared/rulesJsonBuilder) instead of a fourth inline twin.
+        // Byte-identical here: `compileAccessRule` never returns null, so
+        // makeExit's null→True_ rewrite cannot fire.
+        const regionExits = compiled.exits.map((e) => makeExit(e.id, e.target_region, e.rule));
 
         const regionLocations = compiled.locations.map((loc) => {
             const globalName = loc.global_name
@@ -6203,15 +6202,11 @@ export function buildRulesJson(grid, opts = {}) {
     // Synthetic Menu region prefixed in front of compiled regions.
     // Object-literal insertion order is preserved in JSON output, so
     // Menu appears first.
+    // ⛓ makeExit's own null→True_ rewrite IS the `{rule:'True_'}` this used to
+    // spell inline — the third copy of that literal.
     const menuRegion = {
         name: 'Menu',
-        exits: [
-            {
-                name: 'GameStart',
-                connected_region: compiled.start_region_name,
-                access_rule: { rule: 'True_' },
-            },
-        ],
+        exits: [makeExit('GameStart', compiled.start_region_name)],
         locations: [],
     };
     scaffold.regions[playerId] = { Menu: menuRegion, ...compiled.regions };

@@ -20,11 +20,16 @@ import {
   renameLocationInRules,
   cloneFullRulesDoc,
 } from './rulesUtils.js';
+import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
+import { makeExit, makeTrueRule } from '../shared/rulesJsonBuilder.js';
 
 const RAW_JSON_LOADED = 'stateManager:rawJsonDataLoaded';
 const APP_READY = 'app:readyForUiDataLoad';
 const APPLY_SOURCE = 'apworldEditorApply';
-const PLAYER_ID = '1';
+// ⛓ Was a module-local `= '1'` — one of the three duplicates of
+// shared/playerIdUtils' DEFAULT_PLAYER_ID (§15 D12). The other two are inside
+// the `shared/` SUBMODULE and are not this slice's to delete.
+const PLAYER_ID = DEFAULT_PLAYER_ID;
 
 const TABS = [
   { id: 'regions', label: 'Regions' },
@@ -47,10 +52,6 @@ function log(level, message, ...data) {
     const consoleMethod = console[level === 'info' ? 'log' : level] || console.log;
     consoleMethod(`[apworldEditorUI] ${message}`, ...data);
   }
-}
-
-function defaultAccessRule() {
-  return { rule: 'True_' };
 }
 
 class ApworldEditorUI {
@@ -413,11 +414,7 @@ class ApworldEditorUI {
     let i = 1;
     let name = `${regionName} → ?`;
     while (existingNames.has(name)) name = `${regionName} → ? ${++i}`;
-    region.exits.push({
-      name,
-      connected_region: '',
-      access_rule: defaultAccessRule(),
-    });
+    region.exits.push(makeExit(name, ''));
     this._render();
   }
 
@@ -439,7 +436,7 @@ class ApworldEditorUI {
     region.locations.push({
       name,
       id: null,
-      access_rule: defaultAccessRule(),
+      access_rule: makeTrueRule(),
     });
     this._render();
   }
