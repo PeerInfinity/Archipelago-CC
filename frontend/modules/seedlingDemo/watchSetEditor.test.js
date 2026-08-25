@@ -14,7 +14,7 @@
  * row pass is a row that measures nothing.
  *
  * ⛓ EDITOR v3 E1 ADDS THE OTHER KIND — the last describe block runs the same
- * functions over the REAL 116 (`vanillaXmlSet` of the committed map extract and
+ * functions over the REAL 116 (`vanillaRecordSet` of the committed map extract and
  * the committed manifest), which is data nobody wrote for this file and the only
  * place its numbers can be measured rather than chosen.
  *
@@ -31,8 +31,10 @@ import { compileRegionAtlas } from '../procgenPipeline/regionAtlasCompiler.js';
 import { validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js';
 import { assertShape } from '../procgenCore/editorView.js';
 import { tileTypeForPlacement } from '../flashPanel/seedlingSemantics.js';
-import { NAMED_ROOMS, MUSIC_COUNT, MUSIC_NONE } from './levelSetValidator.js';
-import { buildLevelSet, vanillaXmlSet } from './levelSetExporter.js';
+import {
+    NAMED_ROOMS, MUSIC_COUNT, MUSIC_NONE, stampLevelSetIdentity,
+} from './levelSetValidator.js';
+import { buildLevelSet, vanillaRecordSet } from './levelSetExporter.js';
 import { emptyLevel } from './procgenLevel.js';
 import { parseOelLevel, recordToOel } from './procgenLevelOel.js';
 import { emptyOverlay, exitRuleKey, locationRuleKey } from './seedlingSetOverlay.js';
@@ -41,7 +43,7 @@ import {
 } from './seedlingSetAdapter.js';
 import {
     LINK_SCAN, OVERVIEW, addRoomMapping, exitArrowShapes, freeEdgesOf, inertRulesOf,
-    linkScanBound, linkScanKb, manifestFormRows, moveOrder, overlayLocationCount,
+    linkScanBound, linkScanCost, linkScanKb, manifestFormRows, moveOrder, overlayLocationCount,
     overviewLayout, removeRoomMapping, renumberDecision, reorderMapping, reportOf, roomCentre,
     roomFormRows, roomRowsOf, ruleTargetKeys, ruleTargetsOf,
 } from './watchSetEditor.js';
@@ -84,9 +86,20 @@ const withEmbedRoom = (set, index) => ({
  * THE LINK-SCAN BOUND
  * ══════════════════════════════════════════════════════════════════════ */
 
-describe('⛓⛓ the whole-set link scan is BOUNDED ON BYTES, and the bound is SAID', () => {
-    it('⛓ the scan size is n × the set — n rooms, each parsing the whole document', () => {
-        const record = setRecord(generatedSet(4));
+/**
+ * ⛓ EDITOR v3 E1b — `buildLevelSet` writes `source: {record}`, so a row about
+ * OEL BYTES has to render one on purpose. This is the LEGACY `xml` kind, which
+ * the format still accepts and the bound still prices in KB.
+ */
+const asXmlSet = (set) => stampLevelSetIdentity({
+    ...set,
+    provenance: { ...(set.provenance ?? {}) },
+    rooms: set.rooms.map((r) => ({ ...r, source: { xml: recordToOel(r.source.record) } })),
+}, 'rendered');
+
+describe('⛓⛓ the whole-set link scan is BOUNDED, and the bound is SAID', () => {
+    it('⛓ the scan size of an `xml` set is n × the set — n rooms, each parsing the whole document', () => {
+        const record = setRecord(asXmlSet(generatedSet(4)));
         const bytes = record.set.rooms.reduce((a, r) => a + r.source.xml.length, 0);
         expect(linkScanKb(record)).toBeCloseTo((4 * bytes) / 1024, 6);
     });
@@ -105,7 +118,7 @@ describe('⛓⛓ the whole-set link scan is BOUNDED ON BYTES, and the bound is S
      */
     it('⛔⛔ a set whose BYTES blow the budget is bounded, and the sentence NAMES the column '
         + 'it stopped computing rather than leaving it blank', () => {
-        const set = generatedSet(2);
+        const set = asXmlSet(generatedSet(2));
         const fat = 'x'.repeat(Math.ceil(
             (LINK_SCAN.budgetMs / LINK_SCAN.msPerKb) * 1024,
         ));
@@ -120,6 +133,85 @@ describe('⛓⛓ the whole-set link scan is BOUNDED ON BYTES, and the bound is S
         // ⛓ …and the ARROWS are unaffected — they are ONE pass, not n of them.
         expect(b.why).toMatch(/ARROWS are UNAFFECTED/);
         expect(roomRowsOf(record, { links: false })[0].linkedFrom).toBe(null);
+    });
+
+    /* ══ EDITOR v3 E1b — THE RECORD HALF, PRICED IN ENTITIES ══════════════ */
+
+    /** The same generated set, carried as RECORDS. */
+    // ⛓ EDITOR v3 E1b — the exporter WRITES records, so this IS `generatedSet`.
+    const recordSet = (n = ROOMS, setId = 'watch-set-editor-record') => generatedSet(n, setId);
+
+    it('⛓⛓ a RECORD set is priced in ENTITIES, not bytes — its KB are ZERO', () => {
+        const record = setRecord(recordSet(4));
+        const entities = record.set.rooms.reduce((a, r) => a + r.source.record.entities.length, 0);
+        const cost = linkScanCost(record);
+        expect(cost.kb).toBe(0);
+        expect(cost.entities).toBe(4 * entities);
+        expect(cost.ms).toBeCloseTo(4 * entities * LINK_SCAN.msPerEntity, 9);
+    });
+
+    it('⛓ a MIXED set sums both halves, and an EMBED room costs nothing', () => {
+        const rec = recordSet(4);
+        const mixed = setRecord({
+            ...rec,
+            rooms: rec.rooms.map((r, i) => {
+                if (i === 0) return { ...r, source: { xml: recordToOel(r.source.record) } };
+                if (i === 1) return { ...r, source: { embed: 'levels/Test.oel' } };
+                return r;
+            }),
+        });
+        const cost = linkScanCost(mixed);
+        expect(cost.kb).toBeCloseTo(
+            (4 * recordToOel(rec.rooms[0].source.record).length) / 1024, 6,
+        );
+        const rest = rec.rooms.slice(2).reduce((a, r) => a + r.source.record.entities.length, 0);
+        expect(cost.entities).toBe(4 * rest);
+        expect(cost.ms).toBeCloseTo(
+            cost.kb * LINK_SCAN.msPerKb + cost.entities * LINK_SCAN.msPerEntity, 9,
+        );
+    });
+
+    /**
+     * ⛔⛔ **THE RE-PRICING DID NOT DELETE THE BOUND, AND THAT IS THE FINDING.**
+     * A record room parses nothing, so the whole column got ~47× cheaper — but
+     * it is still O(n²) room visits, and at the size of the real vanilla set it
+     * is still over a quarter-second. What moved is WHERE the bound bites:
+     * ~89 rooms on records against ~21 on text.
+     */
+    it('⛓⛓ the bound still BITES on a vanilla-sized record set, and lets a small one through',
+        () => {
+            const entitiesPerRoom = 2461 / 116;      // the measured vanilla mean
+            const at = (n) => n * n * entitiesPerRoom * LINK_SCAN.msPerEntity;
+            expect(at(116)).toBeGreaterThan(LINK_SCAN.budgetMs);
+            expect(at(21)).toBeLessThan(LINK_SCAN.budgetMs);
+            // and the text price at the same sizes, for the comparison
+            const kbPerRoom = 1332 / 116;
+            const textAt = (n) => n * n * kbPerRoom * LINK_SCAN.msPerKb;
+            expect(textAt(116) / at(116)).toBeGreaterThan(10);
+            expect(textAt(30)).toBeGreaterThan(LINK_SCAN.budgetMs);
+            expect(at(30)).toBeLessThan(LINK_SCAN.budgetMs);
+            // a real small record set is computed
+            const small = setRecord(recordSet(ROOMS));
+            expect(linkScanBound(small).ok).toBe(true);
+            expect(roomRowsOf(small)[0].linkedFrom).not.toBe(null);
+        });
+
+    it('⛓ the bounded sentence NAMES the quantity it priced, per kind', () => {
+        const rec = recordSet(2);
+        const fatRoom = {
+            ...rec.rooms[0].source.record,
+            entities: Array.from(
+                { length: Math.ceil(LINK_SCAN.budgetMs / LINK_SCAN.msPerEntity) },
+                () => ({ type: 'torchpickup', x: 0, y: 0, attrs: {} }),
+            ),
+        };
+        const record = setRecord({
+            ...rec, rooms: rec.rooms.map((r, i) => (i === 0 ? { ...r, source: { record: fatRoom } } : r)),
+        });
+        const b = linkScanBound(record);
+        expect(b.ok).toBe(false);
+        expect(b.why).toMatch(/record entities \(every room, once per room\)/);
+        expect(b.why).not.toMatch(/KB of OEL text/);
     });
 });
 
@@ -616,7 +708,7 @@ describe('⛓⛓⛓ the REPORT is a LIST, and the rules.json download rides on i
         + 'tell that an overlay did not travel with its set', () => {
         const s = sessionOf(ROOMS);
         const room = s.record().set.rooms[0];
-        const entity = parseOelLevel(room.source.xml, 'room 0').entities[0];
+        const entity = room.source.record.entities[0];
         expect(entity).toBeTruthy();
         apply(s, {
             op: 'mark-location',
@@ -706,7 +798,7 @@ describe('⛔ the set editor draws no substrate — the ONE-RENDERER law, as a s
  *
  * Every row above drives a GENERATED set, because until E1 there was no way to
  * put the vanilla rooms in front of this file: all 116 committed rooms are
- * `embed`-sourced and the set editor cannot read one. `vanillaXmlSet` makes the
+ * `embed`-sourced and the set editor cannot read one. `vanillaRecordSet` makes the
  * same 116 an `xml` set out of two committed documents, so the rows below are
  * the FIRST measurements of this code over data nobody wrote for it.
  *
@@ -717,7 +809,7 @@ describe('⛔ the set editor draws no substrate — the ONE-RENDERER law, as a s
  */
 describe('the VANILLA 116, through the set editor\'s pure half', () => {
     const vanillaSession = () => {
-        const { set } = vanillaXmlSet(
+        const { set } = vanillaRecordSet(
             JSON.parse(readFileSync(fileURLToPath(
                 new URL('./fixtures/seedling-vanilla-set.json', import.meta.url)), 'utf8')),
             JSON.parse(readFileSync(fileURLToPath(
@@ -728,20 +820,32 @@ describe('the VANILLA 116, through the set editor\'s pure half', () => {
     };
 
     /**
-     * ⛔ §21.4's BOUND, MEASURED ON THE CORPUS IT WAS SIZED FOR. `whatLinksHere`
-     * parses the WHOLE set, so asking it per room is n × the document — 116 ×
-     * 1,332 KB = 154,528 KB here. The estimate at 0.05 ms/KB is 7,726 ms; the
-     * scan actually took ~19 s in node on a loaded box, so the bound is
-     * CONSERVATIVE IN THE RIGHT DIRECTION (it under-predicts the cost it
-     * refuses). Both are far over the 250 ms budget: the column reads
-     * `(bounded)` and the sentence says why.
+     * ⛔ §21.4's BOUND, RE-PRICED FOR E1b AND MEASURED ON THE CORPUS IT WAS
+     * SIZED FOR. `whatLinksHere` READS the whole set, so asking it per room is
+     * n × the set — and the QUANTITY changed with the kind. E1 measured 116 ×
+     * 1,332 KB = 154,528 KB of TEXT, estimated 7,726 ms at 0.05 ms/KB and
+     * actually ~19 s. A record room parses NOTHING: the same corpus is 116 ×
+     * 2,461 = 285,476 ENTITY visits, ≈ 428 ms at the measured ceiling of
+     * 0.0015 ms/entity, and 365 ms in fact — **~47× cheaper and STILL over the
+     * 250 ms budget**, so the verdict is unchanged and only the size of the
+     * refused work moved. The bound now bites at about 89 rooms instead of 21.
+     *
+     * ⛓ The remaining cost is STRUCTURAL: `roomRowsOf` asks once per room and
+     * each answer is a full pass, so the column is O(n²) over a graph ONE pass
+     * could bucket (3.5 ms at n=116, measured). That is `whatLinksHere`'s
+     * contract and therefore E3's; §24 names it with the number.
      */
     it('BOUNDS the links column at 116 rooms, and the rows still list every exit', () => {
         const session = vanillaSession();
         const scan = linkScanBound(session.record());
         expect(scan.ok).toBe(false);
-        expect(Math.round(scan.kb)).toBe(154528);
+        // ⛓ ZERO KB of text — the whole set is records now — and the price is
+        //   the entity visits instead.
+        expect(scan.kb).toBe(0);
+        expect(scan.entities).toBe(116 * 2461);
+        expect(scan.ms).toBeGreaterThan(LINK_SCAN.budgetMs);
         expect(scan.why).toMatch(/reads `\(bounded\)`/);
+        expect(scan.why).toMatch(/record entities/);
         expect(scan.why).toMatch(/ARROWS are UNAFFECTED/);
 
         const rows = roomRowsOf(session.record(), { links: scan.ok });

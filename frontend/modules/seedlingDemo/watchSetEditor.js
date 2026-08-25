@@ -52,7 +52,9 @@ import {
     readSetCell, rulesJsonOf, validateForDownload, whatLinksHere,
 } from './seedlingSetAdapter.js';
 import { exitRuleKey, locationRuleKey } from './seedlingSetOverlay.js';
-import { MUSIC_COUNT, MUSIC_NONE, NAMED_ROOMS } from './levelSetValidator.js';
+import {
+    MUSIC_COUNT, MUSIC_NONE, NAMED_ROOMS, roomRecordOf, roomSourceKind,
+} from './levelSetValidator.js';
 import {
     DEFAULT_PLAYER_ID, reachableRegions, regionsOf, startRegionsOf,
 } from '../procgenCore/rulesGraph.js';
@@ -77,34 +79,81 @@ const isAdapterRefusal = (e) => e?.name === 'SeedlingSetAdapterError'
  * ══════════════════════════════════════════════════════════════════════ */
 
 /**
- * ⛓⛓ **`whatLinksHere` PARSES THE WHOLE SET, SO ASKING IT PER ROOM IS n × the
- * set's BYTES** — and the bound is on the BYTES rather than on the room count,
- * because a count is a proxy and the parse is not counted in rooms.
+ * ⛓⛓ **`whatLinksHere` READS THE WHOLE SET, SO ASKING IT PER ROOM IS n × the
+ * set** — and the QUANTITY the set is measured in depends on the kind of
+ * document its rooms carry.
  *
- * ⛔ MEASURED 2026-08-25 over the 116 committed rooms, exported to OEL: the
- * cost of `parseRoomXml` is **linear in bytes and flat across the corpus** —
- * 0.034 ms/KB on the smallest room (1,243 B), 0.047 ms/KB over the whole set
- * (1,332 KB in 63 ms) and 0.039 ms/KB on the widest single room (133 KB). The
- * spread is a factor of 1.4, so a byte budget is not a proxy for anything: it
- * IS the quantity ([[feedback_proxy_constant_fails_worst_window]] is what a
- * ROOM-COUNT bound would have walked into — the widest room is 107× the
- * smallest).
+ * ⛔ **THE TEXT HALF, MEASURED 2026-08-25** over the 116 committed rooms
+ * exported to OEL: `parseRoomXml` costs **0.034 ms/KB on the smallest room
+ * (1,243 B), 0.047 ms/KB over the whole set (1,332 KB in 63 ms) and 0.039 ms/KB
+ * on the widest single room (133 KB)** — a 1.4× spread over a corpus whose
+ * widest room is 107× the smallest. Bytes ARE the quantity; a room COUNT would
+ * have been the proxy trap ([[feedback_proxy_constant_fails_worst_window]]).
  *
- * ⇒ the ceiling of the measured spread is taken, and the budget is a quarter of
- * a second of main-thread work.
+ * ⛓⛓⛓ **THE RECORD HALF — RE-MEASURED FOR EDITOR v3 E1b, AND IT IS A DIFFERENT
+ * QUANTITY.** A `record` room parses NOTHING: `indexRoom` walks `entities[]`.
+ * MEASURED 2026-08-25 over the same 116, carried as records (node, loadavg
+ * 0.45):
+ *
+ *   ·  the widest room (346 entities)     369.9 µs  → **1.069 µs/entity**
+ *   ·  the whole set (2,461 entities)       3.46 ms → **1.405 µs/entity**
+ *   ·  the smallest room (0 entities)       0.80 µs → the per-room floor
+ *
+ * a 1.31× spread in µs/entity — the same shape the byte measurement has. ⛔ AND
+ * A ROOM COUNT IS AGAIN THE PROXY TRAP, harder here than for text: the widest
+ * room costs **464×** the narrowest (369.9 µs vs 0.797 µs), because one has 346
+ * entities and the other has none.
+ *
+ * ⇒ `msPerEntity` is the ceiling of the measured spread, and a MIXED set sums
+ * both halves — an `embed` room costs nothing here and is named by `unreadable`.
+ *
+ * ⚠⚠ **AND THE BOUND STILL BITES ON THE VANILLA 116 — RE-PRICING DID NOT
+ * DELETE IT.** The whole column is 116 × 116 room visits: measured **365 ms**,
+ * against the same 250 ms budget. What changed is the SIZE of the refused work,
+ * not the verdict: E1 measured the text column at **16,989–19,390 ms**, so the
+ * record path is **~47× cheaper** and the bound now bites at about **89 rooms**
+ * instead of about **21**. ⛓ The remaining cost is STRUCTURAL rather than
+ * per-room: `roomRowsOf` asks `whatLinksHere` once per room and each answer is
+ * a full pass, so the column is O(n²) over a graph that ONE pass could bucket —
+ * measured, that one pass is **3.5 ms** at n=116, a hundredfold under budget.
+ * ⛔ NOT DONE HERE: it changes `whatLinksHere`'s contract, which is the
+ * adapter's vocabulary and E3's. §24 names it with this number.
  */
 export const LINK_SCAN = Object.freeze({
     msPerKb: 0.05,
+    msPerEntity: 0.0015,
     budgetMs: 250,
 });
 
-/** The kilobytes a full link scan of this record would parse: n × the set. */
-export function linkScanKb(record) {
+/**
+ * What a full link scan of this record would read: n × the set, priced in the
+ * quantity each room's KIND is actually measured in.
+ */
+export function linkScanCost(record) {
     const rooms = record?.set?.rooms ?? [];
-    const bytes = rooms.reduce(
-        (n, r) => n + (typeof r?.source?.xml === 'string' ? r.source.xml.length : 0), 0,
-    );
-    return (rooms.length * bytes) / 1024;
+    let bytes = 0;
+    let entities = 0;
+    for (const r of rooms) {
+        const kind = roomSourceKind(r?.source);
+        if (kind === 'record') entities += (r.source.record.entities ?? []).length;
+        else if (kind === 'xml') bytes += r.source.xml.length;
+        // an `embed` room is UNREADABLE here and costs nothing — `whatLinksHere`
+        // names it in `unreadable` rather than pretending it was scanned.
+    }
+    const n = rooms.length;
+    const kb = (n * bytes) / 1024;
+    const scanned = n * entities;
+    return {
+        rooms: n,
+        kb,
+        entities: scanned,
+        ms: kb * LINK_SCAN.msPerKb + scanned * LINK_SCAN.msPerEntity,
+    };
+}
+
+/** ⛓ Kept: the TEXT half alone, which is what §21.4's bound was made of. */
+export function linkScanKb(record) {
+    return linkScanCost(record).kb;
 }
 
 /**
@@ -114,15 +163,20 @@ export function linkScanKb(record) {
  * in which nothing links anywhere.
  */
 export function linkScanBound(record) {
-    const kb = linkScanKb(record);
-    const ms = kb * LINK_SCAN.msPerKb;
-    if (ms <= LINK_SCAN.budgetMs) return { ok: true, kb, ms, why: null };
+    const cost = linkScanCost(record);
+    const { kb, entities, ms } = cost;
+    if (ms <= LINK_SCAN.budgetMs) return { ok: true, kb, entities, ms, why: null };
+    const what = [
+        kb > 0 ? `${Math.round(kb)} KB of OEL text` : null,
+        entities > 0 ? `${entities} record entities` : null,
+    ].filter(Boolean).join(' + ') || 'nothing readable';
     return {
         ok: false,
         kb,
+        entities,
         ms,
-        why: `the whole-set link scan would parse ${Math.round(kb)} KB (every room, once per `
-            + `room) ≈ ${Math.round(ms)} ms, over the ${LINK_SCAN.budgetMs} ms budget — so the `
+        why: `the whole-set link scan would read ${what} (every room, once per room) `
+            + `≈ ${Math.round(ms)} ms, over the ${LINK_SCAN.budgetMs} ms budget — so the `
             + '"links here" COLUMN is not computed and reads `(bounded)`. ⛔ Bounded and said, '
             + 'not skipped. ⚠ The overview ARROWS are UNAFFECTED: they come from each room\'s '
             + 'own exit list, which is ONE pass over the set and not n of them.',
@@ -231,7 +285,7 @@ export const removeRoomMapping = (room) => (old) => {
  * silently REOPENED on the room's new index.
  *
  * ⛔ NOT closed-and-written-back. Writing back would turn a press on MOVE UP
- * into a `replace-room-xml` nobody asked for, and it would land in the same
+ * into a `replace-room` nobody asked for, and it would land in the same
  * group as the reorder — a person who moved a room would find an edit to its
  * contents in the payload. ⚠ And not kept open either: the base tag names a
  * room INDEX, and after the renumbering that index is a different room, so the
@@ -251,7 +305,7 @@ export function renumberDecision(open, mapOldToNew, what) {
             warning: `⛔ the room session on room ${open.room} was DISCARDED — ${what} renumbers `
                 + `the rooms, so room ${open.room} no longer names the room that was open, and `
                 + `${open.ops} unwritten edit(s) went with it. ⚠ Close a room BEFORE reordering `
-                + 'and its edits become one `replace-room-xml` in the set; a write-back after '
+                + 'and its edits become one `replace-room` in the set; a write-back after '
                 + 'the renumbering would land on a room nobody opened.',
         });
     }
@@ -847,7 +901,6 @@ const el = (doc, tag, className, text) => {
  * @param {Function} o.compileRegionAtlas  injected — `procgenPipeline/`
  * @param {Function} o.validateRegionAtlas injected — `procgenPipeline/`
  * @param {object}  [o.atlasSchema]  the fetched `region-atlas.schema.json`
- * @param {Function} o.recordToOel   `procgenLevelOel.recordToOel`
  * @param {Function} [o.drawRoomStill] `(canvas, roomRecord) => why|null` — the
  *   PAGE's own renderer. Absent, the overview draws labelled boxes and says so.
  * @param {Function} o.emptyLevel  `(w, h) => record` — what an ADD ROOM starts from
@@ -860,14 +913,23 @@ const el = (doc, tag, className, text) => {
  */
 export function mountWatchSetEditor({
     lifetime, session, adapter, deps = {}, compileRegionAtlas, validateRegionAtlas,
-    atlasSchema = undefined, recordToOel, drawRoomStill = null, emptyLevel = null,
+    atlasSchema = undefined, drawRoomStill = null, emptyLevel = null,
     say = () => {}, roomSession = () => null, openRoomAt = () => false,
     discardRoom = () => {}, download = () => {}, onSetChange = null,
     doc = globalThis.document,
 } = {}) {
+    /**
+     * ⛓⛓ **EDITOR v3 E1b — `recordToOel` IS GONE FROM THIS MOUNT.** It was
+     * REQUIRED BY NAME until now, for the two places this panel rendered a
+     * record: ADD ROOM's blank and CLOSE ROOM's write-back. Both hand a RECORD
+     * to the adapter since plan §22.8, and the one render left in the pipeline
+     * happens at the chunk boundary (`planLevelSetChunks`). ⚠ A caller still
+     * PASSING it is harmless — an unread property of the options object — which
+     * is why the page's own call site did not have to move for this.
+     */
     for (const [name, v] of [
         ['lifetime', lifetime], ['session', session], ['adapter', adapter],
-        ['compileRegionAtlas', compileRegionAtlas], ['recordToOel', recordToOel],
+        ['compileRegionAtlas', compileRegionAtlas],
     ]) {
         if (!v) fail(`watchSetEditor: \`${name}\` is required — refused by name.`);
     }
@@ -940,20 +1002,30 @@ export function mountWatchSetEditor({
             ctx.save();
             ctx.fillStyle = i === selected ? '#204050' : '#181818';
             ctx.fillRect(x + 1, top + 1, layout.cellPx - 2, h - 2);
-            const xml = room?.source?.xml ?? null;
+            /**
+             * ⛓⛓ EDITOR v3 E1b — THE STILL READS `roomRecordOf`, so a `record`
+             * room draws with no parse at all and a legacy `xml` room parses
+             * exactly as it did. ⛔ THE CACHE IS KEYED ON THE `source` OBJECT,
+             * not on a string: every op here is copy-on-write, so a room whose
+             * document changed has a NEW `source` by construction — and a
+             * record has no string to compare in the first place.
+             */
+            const source = room?.source ?? null;
             let drew = false;
-            if (layout.stills && drawRoomStill && typeof xml === 'string') {
+            if (layout.stills && drawRoomStill && source !== null) {
                 let still = stills.get(i);
-                if (!still || still.xml !== xml) {
+                if (!still || still.source !== source) {
                     const c = doc.createElement('canvas');
                     let why = null;
                     try {
-                        why = drawRoomStill(c, { ...deps.parseOel(xml, `room ${i}`), level: i });
+                        why = drawRoomStill(c, {
+                            ...roomRecordOf(room, { parseOel: deps.parseOel }), level: i,
+                        });
                     } catch (e) {
                         if (!(e instanceof Error)) throw e;
                         why = e.message;
                     }
-                    still = { xml, canvas: why ? null : c, why };
+                    still = { source, canvas: why ? null : c, why };
                     stills.set(i, still);
                 }
                 if (still.canvas && still.canvas.width > 0) {
@@ -1037,11 +1109,11 @@ export function mountWatchSetEditor({
         const sel = $('editSetLocEntity');
         if (!sel) return;
         sel.innerHTML = '';
-        const xml = record().set.rooms[room]?.source?.xml;
+        const target = record().set.rooms[room];
         let entities = [];
-        if (typeof xml === 'string' && typeof deps.parseOel === 'function') {
+        if (target) {
             try {
-                entities = deps.parseOel(xml, `room ${room}`).entities ?? [];
+                entities = roomRecordOf(target, { parseOel: deps.parseOel }).entities ?? [];
             } catch (e) {
                 if (!(e instanceof Error)) throw e;
                 entities = [];
@@ -1562,9 +1634,10 @@ export function mountWatchSetEditor({
     };
 
     /**
-     * ⛓ ADD ROOM starts from `emptyLevel` — the page's own blank record,
-     * rendered through `recordToOel`, so a new room is exactly what the
-     * exporter would have written for it. ⛔ APPENDED, and `add-room` refuses an
+     * ⛓ ADD ROOM starts from `emptyLevel` — the page's own blank record — and
+     * hands it to `add-room` AS A RECORD (EDITOR v3 E1b). ⛔ No render: a new
+     * room is exactly what the exporter would have written for it, and since
+     * §22.8 that is the record itself. ⛔ APPENDED, and `add-room` refuses an
      * `at` outside `0..rooms.length` on its own.
      */
     on('editSetAddRoom', () => {
@@ -1573,7 +1646,7 @@ export function mountWatchSetEditor({
             return;
         }
         const at = roomCount();
-        applySet({ op: 'add-room', xml: recordToOel(emptyLevel()), name: `room ${at}` },
+        applySet({ op: 'add-room', record: emptyLevel(), name: `room ${at}` },
             { renumber: addRoomMapping(at), what: 'ADD ROOM' });
     });
 
@@ -1653,11 +1726,11 @@ export function mountWatchSetEditor({
     on('editRoomClose', () => {
         const open = roomSession();
         if (!open) return;
-        closeRoomSession(session, open.session, open.room, recordToOel);
+        closeRoomSession(session, open.session, open.room);
         discardRoom();
         stills.clear();
         say(`the room session on room ${open.room} was CLOSED into the SET — ${open.ops} room `
-            + 'edit(s) became ONE `replace-room-xml`');
+            + 'edit(s) became ONE `replace-room`');
         render();
         onSetChange?.();
     });
@@ -1680,7 +1753,7 @@ export function mountWatchSetEditor({
          * ⛔⛔ **AN OPEN ROOM SESSION WITH EDITS REFUSES THE DOWNLOAD BY NAME.**
          * C2 folded the open room into the download automatically, which was
          * right when the page had exactly ONE write path; a room's edits reach
-         * the set through `closeRoomSession` now (ONE `replace-room-xml`), so a
+         * the set through `closeRoomSession` now (ONE `replace-room`), so a
          * download that ignored them would hand somebody a set that is missing
          * work they can see on the canvas — and the stamp would say it is a
          * different set, truthfully, for the wrong reason.
@@ -1688,7 +1761,7 @@ export function mountWatchSetEditor({
         const open = roomSession();
         if (open && open.ops > 0) {
             setNote(`⛔ NOT DOWNLOADED — room ${open.room} is open with ${open.ops} unwritten `
-                + 'edit(s). Press CLOSE first: that makes them ONE `replace-room-xml` in the '
+                + 'edit(s). Press CLOSE first: that makes them ONE `replace-room` in the '
                 + 'SET session, and the download stamps once over everything.', true);
             return;
         }
