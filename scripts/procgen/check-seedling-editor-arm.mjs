@@ -73,7 +73,7 @@
  * ── SLICE E1 — the REAL 116 ───────────────────────────────────────────
  *
  * 27. **`#editLoadVanilla` BUILDS THE VANILLA 116 AS `xml`, FETCHING NOTHING** —
- *     the same `vanillaXmlSet` node calls, so the two `set_id`s agreeing IS the
+ *     the same `vanillaRecordSet` node calls, so the two `set_id`s agreeing IS the
  *     byte proof; 116 openable rooms; the links column `(bounded)` (§21.4 on the
  *     corpus it was sized for) with the arrows still drawn; the REPORT's verdict
  *     on the real game (every edge FREE, `level_58` UNREACHABLE, the rules.json
@@ -113,8 +113,10 @@ const {
 const {
     ROOM_FLAG_TAGS, ROOM_GEOMETRY_BOSSES, flagModelReach, roomFlagsIn,
 } = await M('watchEdit.js');
-const { buildLevelSet, vanillaXmlSet } = await M('levelSetExporter.js');
-const { parseRoomXml, validateLevelSet } = await M('levelSetValidator.js');
+const { buildLevelSet, vanillaRecordSet } = await M('levelSetExporter.js');
+const {
+    indexRoom, planLevelSetChunks, validateLevelSet,
+} = await M('levelSetValidator.js');
 const { emptyLevel } = await M('procgenLevel.js');
 const { recordToOel } = await M('procgenLevelOel.js');
 const { TILE_SIZE } = await M('levelWorld.js');
@@ -396,10 +398,11 @@ const SET_DOC = SET_LEVEL === null ? null : buildLevelSet(
     { setId: 'arm-probe', generator: 'check-seedling-editor-arm.mjs' },
 ).set;
 check(SET_DOC !== null && validateLevelSet(SET_DOC).ok
-    && typeof SET_DOC.rooms[0].source?.xml === 'string',
+    && typeof SET_DOC.rooms[0].source?.record === 'object',
     '⛓⛓ the `set-room` subject is a one-room set node BUILT and node VALIDATED, whose room '
-    + 'carries a real `source.xml` — the vanilla set is 116 EMBED-sourced rooms and cannot '
-    + 'be one', `L${SET_LEVEL} → ${SET_DOC?.set_id}, ${SET_DOC?.rooms.length} room(s)`);
+    + 'carries a real `source.record` (E1b — the exporter writes records) — the vanilla '
+    + 'fixture is 116 EMBED-sourced rooms and cannot be one',
+    `L${SET_LEVEL} → ${SET_DOC?.set_id}, ${SET_DOC?.rooms.length} room(s)`);
 /**
  * ⛓ NODE'S OWN `set-room` RESOLVER, over the same document the page is handed —
  * so claim 18's record comparison is against a fold this file performed and not
@@ -412,9 +415,13 @@ const adapter2 = createSeedlingEditAdapter({
     parseOel: parseOelLevel,
     levelSetSource: (id) => (SET_DOC && id === SET_DOC.set_id ? SET_DOC : null),
 });
-check(VANILLA.rooms.every((r) => typeof r.source?.xml !== 'string'),
-    '⛓ …and NOT ONE of the vanilla set\'s 116 rooms carries an `xml` source, which is what '
-    + 'claim 19 is about', `${VANILLA.rooms.length} rooms, 0 with xml`);
+// ⛔ THE COMMITTED FIXTURE IS UNTOUCHED BY E1b: all 116 rooms are still `embed`
+//    (⚖ §22.8 is ADDITIVE), which is exactly what claim 19 is about.
+check(VANILLA.rooms.every((r) => typeof r.source?.embed === 'string'
+    && r.source.xml === undefined && r.source.record === undefined),
+    '⛓ …and NOT ONE of the vanilla set\'s 116 rooms carries an `xml` OR a `record` source — '
+    + 'every one is still an `embed`, which is what claim 19 is about',
+    `${VANILLA.rooms.length} rooms, 0 with xml, 0 with record`);
 
 /* ══════════════════════════════════════════════════════════════════════
  * ⛓⛓⛓ EDITOR v3 D2 — THE SET SESSION'S OWN SUBJECTS, ALL NODE-BUILT
@@ -450,17 +457,17 @@ const D2_SET = buildLevelSet(
     { setId: 'arm-d2', link: true },
 ).set;
 check(validateLevelSet(D2_SET).ok && D2_SET.rooms.length === D2_ROOMS
-    && D2_SET.rooms.every((r) => typeof r.source?.xml === 'string'),
+    && D2_SET.rooms.every((r) => typeof r.source?.record === 'object'),
     `⛓⛓ the SET-EDITOR subject is a node-BUILT, node-VALIDATED ${D2_ROOMS}-room set whose `
-    + 'rooms are all `xml`-sourced — the linker wired it, so it has exits to move, connect '
-    + 'and disconnect', `${D2_SET.set_id}, ${D2_SET.rooms.length} room(s)`);
+    + 'rooms are all `record`-sourced (E1b) — the linker wired it, so it has exits to move, '
+    + 'connect and disconnect', `${D2_SET.set_id}, ${D2_SET.rooms.length} room(s)`);
 
 /**
  * ⛓ …and an OVERLAY for it, built here rather than typed: §20.11 #3's third
  * document, and the thing a page that forgets it loses silently.
  */
 const D2_OVERLAY_LOCATION = (() => {
-    const ent = (parseOelLevel(D2_SET.rooms[0].source.xml, 'room 0').entities ?? [])
+    const ent = (D2_SET.rooms[0].source.record.entities ?? [])
         .find((e) => e.type === 'torchpickup') ?? null;
     return ent ? { type: ent.type, x: ent.x, y: ent.y } : null;
 })();
@@ -503,33 +510,39 @@ check(D2_ROWS.length === D2_ROOMS && D2_ROWS.reduce((n, r) => n + r.exits, 0) > 
  * ⛓⛓⛓ EDITOR v3 E1 — **THE REAL 116, AS NODE'S OWN ANSWER.** Everything
  * above this line is a set node BUILT for the row; claim 27 drives the
  * VANILLA rooms, and every number it checks the page against is computed
- * here first (trap 269). `vanillaXmlSet` is the SAME function the page's
+ * here first (trap 269). `vanillaRecordSet` is the SAME function the page's
  * button calls, which is what makes comparing the two `set_id`s a byte
  * proof rather than a coincidence.
  * ══════════════════════════════════════════════════════════════════════ */
 
-const VANILLA_XML = vanillaXmlSet(VANILLA, ATLAS).set;
+const VANILLA_XML = vanillaRecordSet(VANILLA, ATLAS).set;
 check(VANILLA_XML.rooms.length === VANILLA.rooms.length
-    && VANILLA_XML.rooms.every((r) => typeof r.source?.xml === 'string')
-    && VANILLA_XML.set_id.startsWith('seedling-vanilla-xml-')
+    // ⛓⛓ EDITOR v3 E1b — EVERY ROOM IS A `record` NOW, and NOT ONE carries the
+    //    rendered text: OEL appears only inside a chunk (claim 27b below).
+    && VANILLA_XML.rooms.every((r) => r.source?.record !== null
+        && typeof r.source?.record === 'object' && r.source.xml === undefined)
+    && VANILLA_XML.set_id.startsWith('seedling-vanilla-record-')
     && VANILLA_XML.provenance.derived_from.set_id === VANILLA.set_id,
-    `⛓⛓ node's own xml-sourced VANILLA set — ${VANILLA.rooms.length} rooms (the COMMITTED `
+    `⛓⛓ node's own record-sourced VANILLA set — ${VANILLA.rooms.length} rooms (the COMMITTED `
     + 'set\'s own count, so the join is total by construction rather than by a typed number), '
-    + 'every one `xml`, an id that cannot be mistaken for the committed set\'s, and '
-    + '`derived_from` naming it',
+    + 'every one `record` and NOT ONE carrying `xml`, an id that cannot be mistaken for the '
+    + 'committed set\'s, and `derived_from` naming it',
     `${VANILLA.set_id} → ${VANILLA_XML.set_id}`);
 const VANILLA_XML_RECORD = setRecord(VANILLA_XML, emptyOverlay());
 const VANILLA_XML_SCAN = linkScanBound(VANILLA_XML_RECORD);
 const VANILLA_XML_ROWS = roomRowsOf(VANILLA_XML_RECORD, { links: VANILLA_XML_SCAN.ok });
 const VANILLA_XML_ARROWS = exitArrowShapes(VANILLA_XML_ROWS).length;
-check(VANILLA_XML_SCAN.ok === false && VANILLA_XML_ROWS.length === 116
+check(VANILLA_XML_SCAN.ok === false && VANILLA_XML_SCAN.kb === 0
+    && VANILLA_XML_SCAN.entities > 0 && VANILLA_XML_ROWS.length === 116
     && VANILLA_XML_ROWS.every((r) => r.linkedFrom === null && r.openable)
     && VANILLA_XML_ARROWS > 100,
-    `⛓⛓ …and §21.4's LINK-SCAN BOUND BITES at 116 rooms — ${Math.round(VANILLA_XML_SCAN.kb)} KB `
-    + `of parsing, ≈ ${Math.round(VANILLA_XML_SCAN.ms)} ms against a 250 ms budget — so the `
-    + 'column is `(bounded)` while every room is still OPENABLE and the arrows are still built '
-    + '(ONE pass over the set, not n of them)',
-    `${VANILLA_XML_ARROWS} arrow shape(s)`);
+    '⛓⛓ …and §21.4\'s LINK-SCAN BOUND STILL BITES at 116 rooms — but RE-PRICED (E1b): a '
+    + `record room parses NOTHING, so the quantity is ENTITIES, not bytes. ${
+        VANILLA_XML_SCAN.entities} entity visits ≈ ${Math.round(VANILLA_XML_SCAN.ms)} ms `
+    + 'against the same 250 ms budget, and 0 KB of text — so the column is still `(bounded)` '
+    + 'while every room is still OPENABLE and the arrows are still built (ONE pass over the '
+    + 'set, not n of them)',
+    `${VANILLA_XML_ARROWS} arrow shape(s), ${Math.round(VANILLA_XML_SCAN.kb)} KB`);
 const VANILLA_XML_SESSION = createSetSession(setAdapter, VANILLA_XML_RECORD,
     { base: { kind: 'set', set_id: VANILLA_XML.set_id } });
 const VANILLA_XML_REPORT = reportOf(VANILLA_XML_SESSION, SET_DEPS,
@@ -577,8 +590,9 @@ check(VANILLA_INERT !== null,
 /** ⛓ The room claim 27 OPENS, and a paint cell measured inside it (trap 235). */
 const VANILLA_OPEN_ROOM = LEVEL;
 const VANILLA_PAINT = (() => {
-    const room = parseOelLevel(VANILLA_XML.rooms[VANILLA_OPEN_ROOM].source.xml,
-        `vanilla room ${VANILLA_OPEN_ROOM}`);
+    // ⛓ E1b — the room IS the record; no parse.
+    const room = { ...VANILLA_XML.rooms[VANILLA_OPEN_ROOM].source.record,
+        level: VANILLA_OPEN_ROOM };
     const b = adapter.bounds(room);
     for (let y = 1; y < b.h - 1; y += 1) {
         for (let x = 1; x < b.w - 1; x += 1) {
@@ -1629,8 +1643,8 @@ try {
     await page.waitForTimeout(400);
     const added = await setRead();
     check(added.edit.set.rooms === D2_ROOMS + 1 && added.edit.set.edits === 1,
-        '⛓ ADD ROOM appends one room as ONE op — the blank record is rendered through '
-        + '`recordToOel`, so a new room is exactly what the exporter would have written',
+        '⛓ ADD ROOM appends one room as ONE op — the blank RECORD is the payload (E1b; no '
+        + 'render), so a new room is exactly what the exporter would have written',
         `${added.edit.set.rooms} room(s), ${added.edit.set.edits} edit(s)`);
 
     await page.click(`#editSetRowRemove_${D2_ROOMS}`);
@@ -1678,7 +1692,7 @@ try {
      * than failing a claim (trap 235, the same reasoning as `pickPaintCell`).
      */
     const roomPaint = (() => {
-        const rec = parseOelLevel(D2_SET.rooms[2].source.xml, 'room 2');
+        const rec = D2_SET.rooms[2].source.record;
         const b = adapter.bounds(rec);
         for (let y = 1; y < b.h - 1; y += 1) {
             for (let x = 1; x < b.w - 1; x += 1) {
@@ -1769,7 +1783,7 @@ try {
 
     /**
      * ⛔⛔ **DISCONNECT DELETES THE EXIT ELEMENT** — D1 §20.5, and the check is
-     * `parseRoomXml`'s ANSWER rather than the XML's text: the two spellings D1
+     * the room INDEX's ANSWER rather than the document's text: the two spellings D1
      * measured and refused (`to=""` and an absent `@to`) BOTH read as "no exit"
      * to every JS reader while a live Teleporter built from `int("")` = 0 still
      * warps the player to room 0. A row that grepped the XML could not tell the
@@ -1785,14 +1799,20 @@ try {
     const nodeCut = nodeSetSession();
     const nodeBeforeExits = exitsOfRoom(nodeCut.record(), 0).length;
     nodeCut.apply({ op: 'disconnect', room: 0, exitIndex: 0 });
-    const nodeAfter = parseRoomXml(nodeCut.record().set.rooms[0].source.xml);
-    check(nodeAfter.exits.length === nodeBeforeExits - 1
-        && !/<teleporter[^>]*to=""/.test(nodeCut.record().set.rooms[0].source.xml)
+    // ⛓ E1b — the room is a RECORD, so the "no inert door" check asks the
+    //    ENTITIES: no exit element may survive with a blank `@to` either.
+    const cutRecord = nodeCut.record().set.rooms[0].source.record;
+    const nodeAfter = indexRoom(cutRecord);
+    const blankTo = (cutRecord.entities ?? []).some(
+        (e) => ['teleporter', 'stairsup', 'stairsdown'].includes(e.type)
+            && (e.attrs?.to === '' || (e.attrs !== undefined && !('to' in e.attrs))),
+    );
+    check(nodeAfter.exits.length === nodeBeforeExits - 1 && !blankTo
         && cutSet.edit.set.edits === 2,
-        '⛔⛔ **DISCONNECT DELETES THE DOOR** — one fewer exit in `parseRoomXml`\'s answer AND '
-        + 'no `to=""` left behind: the OEL has NO INERT SPELLING, and a blanked `@to` builds a '
-        + 'live Teleporter that warps to room 0 while every JS reader calls it unwired '
-        + '(D1 §20.5)', `${nodeBeforeExits} → ${nodeAfter.exits.length} exit(s)`);
+        '⛔⛔ **DISCONNECT DELETES THE DOOR** — one fewer exit in the room INDEX\'s answer AND '
+        + 'no blank `@to` left behind: the OEL has NO INERT SPELLING, and a blanked `@to` '
+        + 'builds a live Teleporter that warps to room 0 while every JS reader calls it '
+        + 'unwired (D1 §20.5)', `${nodeBeforeExits} → ${nodeAfter.exits.length} exit(s)`);
 
     /* ══ CLAIM 24 — THE FORMS ROUND TRIP THROUGH UNDO ══════════════ */
 
@@ -1837,7 +1857,7 @@ try {
     await page.waitForFunction(() => window.__editorEdit?.baseKind === 'set-room', null,
         { timeout: 60000 });
     const undoPaint = (() => {
-        const rec = parseOelLevel(D2_SET.rooms[1].source.xml, 'room 1');
+        const rec = D2_SET.rooms[1].source.record;
         const b = adapter.bounds(rec);
         for (let y = 1; y < b.h - 1; y += 1) {
             for (let x = 1; x < b.w - 1; x += 1) {
@@ -1921,7 +1941,7 @@ try {
     await page.waitForTimeout(300);
     const entityOpts = await page.evaluate(() => [
         ...document.getElementById('editSetLocEntity').options].map((o) => o.value));
-    const nodeEntities = (parseOelLevel(D2_SET.rooms[2].source.xml, 'room 2').entities ?? [])
+    const nodeEntities = (D2_SET.rooms[2].source.record.entities ?? [])
         .map((e) => JSON.stringify({ type: e.type, x: e.x, y: e.y }));
     check(entityOpts.length > 0 && json(entityOpts) === json(nodeEntities),
         '⛓⛓ **THE LOCATION FORM OFFERS THE ROOM\'S OWN BODIES, READ OUT OF ITS OEL** — the '
@@ -2211,7 +2231,7 @@ try {
     check(van.edit.set?.set_id === VANILLA_XML.set_id && van.edit.set.rooms === 116
         && van.edit.set.openable === 116,
         '⛓⛓⛓ **THE PAGE BUILDS THE SAME SET NODE DOES** — 116 rooms, every one OPENABLE, and '
-        + 'the `set_id` is `vanillaXmlSet`\'s own: the SAME FUNCTION ran on both sides, so '
+        + 'the `set_id` is `vanillaRecordSet`\'s own: the SAME FUNCTION ran on both sides, so '
         + 'comparing the two content hashes IS the byte proof',
         `${json(van.edit.set)} in ${vanBuildMs} ms`);
     check(vanillaReqs.filter((u) => /seedling-vanilla-set\.json|seedling-map\.json/.test(u))
@@ -2388,7 +2408,7 @@ try {
         mapping: window.__editorSetMappingOut,
     }));
     check(vanOut.set.set_id !== VANILLA_XML.set_id
-        && vanOut.set.set_id.startsWith('seedling-vanilla-xml-')
+        && vanOut.set.set_id.startsWith('seedling-vanilla-record-')
         && vanOut.set.set_id.endsWith(`-${vanOut.set.provenance.content_hash}`)
         && typeof vanOut.overlay.overlay_id === 'string' && vanOut.mapping !== null,
         '⛓⛓⛓ **THREE BLOBS, ONE STAMP, AND THE BASE SURVIVES THE RE-STAMP** — an edited set is '
@@ -2403,9 +2423,31 @@ try {
         json(vanOut.set.provenance.derived_from));
     check(validateLevelSet(vanOut.set).ok
         && vanOut.set.rooms.length === 116
-        && vanOut.set.rooms.every((r) => typeof r.source?.xml === 'string'),
-        '⛓ …and node validates what the page wrote — 116 `xml` rooms, still',
+        && vanOut.set.rooms.every((r) => typeof r.source?.record === 'object'
+            && r.source.xml === undefined),
+        '⛓ …and node validates what the page wrote — 116 `record` rooms, still, and NOT ONE '
+        + 'rendered: the page never turns a set into text (E1b — the render is the chunk\'s)',
         json(validateLevelSet(vanOut.set).errors));
+    /**
+     * ⛓⛓⛓ **CLAIM 27b (E1b) — AND OEL EXISTS EXACTLY ONCE, AT THE BOUNDARY.**
+     * The DOWNLOADED SET has no text in it at all; `planLevelSetChunks` over
+     * that same document produces chunks whose every room is `{xml}` and whose
+     * every room's text is `recordToOel`'s. ⛔ Asserted on the CHUNK DOCUMENT
+     * and not through the wasm: a row that needed the runtime to notice a
+     * missing render would be a row that cannot fail in node.
+     */
+    const vanChunks = planLevelSetChunks(vanOut.set).chunks;
+    const vanChunkRooms = vanChunks.flatMap((c) => c.rooms);
+    check(vanChunks.length === 9 && vanChunkRooms.length === 116
+        && vanChunkRooms.every((r) => typeof r.source.xml === 'string'
+            && r.source.record === undefined)
+        && vanChunkRooms.every((r, i) => r.source.xml
+            === recordToOel(vanOut.set.rooms[i].source.record)),
+        '⛓⛓⛓ **AND THE RENDER IS THE CHUNK\'S, EXACTLY ONCE** — the set the page downloaded '
+        + 'carries 0 bytes of OEL; planning it for delivery renders every room and NOTHING '
+        + 'else, so what crosses is what `LevelSet.as:139` reads',
+        `${vanChunks.length} chunk(s), largest ${
+            Math.max(...vanChunks.map((c) => JSON.stringify(c).length))} B`);
 
     /**
      * ⛔⛔⛔ **THE OVERVIEW ARROWS ARE NOT PAINTED UNTIL SOMETHING REPAINTS THE
