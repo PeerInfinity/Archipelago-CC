@@ -1765,7 +1765,16 @@ try {
         `set ${setOpsBefore} → ${afterStripUndo.edit.set.edits}, room ${roomOpsBefore} → `
         + `${afterStripUndo.edit.edits}`);
 
-    await page.evaluate(() => document.body.focus());
+    /**
+     * ⛔ **BLUR, NOT `body.focus()` — AND THAT WAS A HARNESS FINDING, NOT A PAGE
+     * ONE.** `<body>` has no `tabindex`, so `focus()` on it is a NO-OP: the
+     * strip kept the focus and the second press hit the SET session again, which
+     * this row then reported as "the room did not undo". Blurring the strip
+     * leaves `document.activeElement` at the body, so the keydown's target is
+     * the body and it bubbles to the document — which is the path the room
+     * editor's view listens on.
+     */
+    await page.evaluate(() => document.getElementById('editSetOverview').blur());
     await page.keyboard.press('Control+z');
     await page.waitForTimeout(500);
     const afterRoomUndo = await setRead();
