@@ -424,7 +424,13 @@ export function buildPlaythroughAtlas() {
     // Exits: one per link on the source side, one arrival per link on the
     // destination side. Both sides deduplicated by id — two links arriving at
     // the same spot share one arrival exit.
-    const connections = [];
+    //
+    // ⛓ EDITOR v3 slice D0b: the connections are made THROUGH the session now
+    // (`connect(from, to, { one_way: true })`). Until D0b `AtlasSession.connect`
+    // could only pair endpoints undirected, so this generator collected the
+    // rows itself and assigned `vanilla_layout.connections` wholesale — which
+    // also skipped the each-endpoint-once law. Same rows, same order, and the
+    // law now applies to them.
     const seenArrival = new Set();
     for (const level of LEVELS) {
         for (const { e, to } of linksOf(level)) {
@@ -444,11 +450,11 @@ export function buildPlaythroughAtlas() {
                     exit_id: inId, tiles: [arrivalTileOf(e)], kind: 'teleporter',
                 });
             }
-            connections.push({
-                from: [regionIdFor(level.level), outExitId(e)],
-                to: [regionIdFor(to), inId],
-                one_way: true,
-            });
+            session.connect(
+                [regionIdFor(level.level), outExitId(e)],
+                [regionIdFor(to), inId],
+                { one_way: true },
+            );
         }
         const pit = pitOf(level);
         if (pit && OV.NEVER_ENTER_LEVELS.includes(pit.to)) {
@@ -463,11 +469,11 @@ export function buildPlaythroughAtlas() {
                 session.addExit(regionIdFor(pit.to), {
                     exit_id: inId, tiles: [g.arrival], kind: 'teleporter',
                 });
-                connections.push({
-                    from: [regionIdFor(level.level), outId],
-                    to: [regionIdFor(pit.to), inId],
-                    one_way: true,
-                });
+                session.connect(
+                    [regionIdFor(level.level), outId],
+                    [regionIdFor(pit.to), inId],
+                    { one_way: true },
+                );
             }
         }
     }
@@ -476,10 +482,6 @@ export function buildPlaythroughAtlas() {
         for (const loc of locationsFor(level)) session.addLocation(regionIdFor(level.level), loc);
     }
 
-    // `AtlasSession.connect` pairs endpoints bidirectionally; these are one-way
-    // and are written onto the layout directly, which is the same field the
-    // compiler reads.
-    session.atlas.vanilla_layout.connections = connections;
     session.setStart(regionIdFor(0));
 
     // ⛔ REGIONS WITH NO DOOR AT ALL, dropped and NAMED. Three of them, each for
