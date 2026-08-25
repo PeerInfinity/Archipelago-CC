@@ -111,7 +111,8 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import {
-    bootFromEnvelopeOnly, chainSubjects, latchCacheKey, mergePersistence, timedClearHazard,
+    accountingUniverse, bootFromEnvelopeOnly, chainSubjects, latchCacheKey, mergePersistence,
+    timedClearHazard,
 } from './rerecordCampaign.js';
 import {
     CHECK_FLAG, LICENSE_FLAG, applyLicence, cascadeFrom, licenceFrom, movedSegments,
@@ -232,6 +233,29 @@ function subjects() {
 }
 
 /**
+ * ⛓⛓⛓ R9 SLICE 12e′ — **WHO THE WALK MEASUREMENT MUST ACCOUNT FOR, which is
+ * NOT the same list as whose boots it re-derives.** See
+ * `rerecordCampaign.accountingUniverse` for the defect that taught the
+ * difference: `r8-solve-11`'s walk move was reported by its own producer and
+ * dropped, because its chain has one segment and `subjects()` — correctly, for
+ * ITS question — does not enumerate it.
+ *
+ * ⛔ A one-segment chain still authors no boot and reaches neither S1's
+ * boundaries nor S2's writes. It is here so a walk move in it is a ROW the
+ * licence can cover, and so a segment nobody can measure is NAMED.
+ */
+function accountingChains() {
+    const subject = new Map(subjects().map((c) => [c.id, c]));
+    return accountingUniverse(PLAYTHROUGH_CHAINS).map((c) => ({
+        id: c.id,
+        kind: subject.get(c.id)?.kind ?? (PLAYTHROUGH_CHAINS.find((x) => x.id === c.id)?.kind
+            ?? 'custody'),
+        trueStartCustody: subject.get(c.id)?.trueStartCustody ?? false,
+        segments: c.segments.slice(),
+    }));
+}
+
+/**
  * ⛓⛓⛓ R9 SLICE 12c′, ⚖ RULING 43 — **THE WALK MOVES, MEASURED OUT OF THE
  * PRODUCERS.**
  *
@@ -310,7 +334,7 @@ async function measureWalks(chains) {
             + `${nominatedBy.length} nominated, ${(ms / 1000).toFixed(1)}s, exit ${status}`);
     }
     const { rows, unmeasured, stops } = reportRows(reports, chains,
-        participation.filter((p) => !p.participates));
+        participation.filter((p) => !p.participates), nominated);
     const moved = movedSegments(rows);
     const cascade = cascadeFrom(chains, moved);
     return { rows, unmeasured, stops: [...stops, ...crashed], moved, cascade, owners,
@@ -319,11 +343,21 @@ async function measureWalks(chains) {
 
 async function predict() {
     console.log('# S0 · PREDICT — offline, no browser\n');
-    const chains = subjects();
+    /**
+     * ⛓ TWO LISTS, TWO QUESTIONS (R9 12e′). `subjects()` is whose BOOTS are
+     * re-derived — multi-segment chains, because a one-segment chain has no
+     * boundary. `accountingChains()` is who the WALK MEASUREMENT must account
+     * for — every chain, deduplicated — because a producer can report a walk
+     * move in a chain this pipeline authors no boot for, and dropping it is
+     * how `r8-solve-11` went unnoticed (§33).
+     */
+    const chains = accountingChains();
+    const bootSubjects = new Set(subjects().map((c) => c.id));
     check('⛓ the subject is DERIVED from PLAYTHROUGH_CHAINS',
         chains.length > 0,
         chains.map((c) => `${c.id}(${c.segments.length}${c.trueStartCustody
-            ? ', true-start custody' : `, ${c.kind}`})`).join(' · '));
+            ? ', true-start custody' : `, ${c.kind}`}${bootSubjects.has(c.id) ? ''
+            : ', walk-accounting only'})`).join(' · '));
 
     const table = [];
     for (const chain of chains) {

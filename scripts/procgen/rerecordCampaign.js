@@ -53,6 +53,52 @@ export function chainSubjects(chains, tapeOf) {
 }
 
 /**
+ * ⛓⛓⛓ R9 SLICE 12e′ — **THE ACCOUNTING UNIVERSE, WHICH IS A DIFFERENT
+ * QUESTION FROM THE SUBJECT, AND CONFLATING THEM LOST A REAL WALK MOVE.**
+ *
+ * `subjects()` answers *"whose BOOTS does this pipeline re-derive"* — and the
+ * honest answer is "multi-segment chains", because a one-segment chain has no
+ * boundary to author. S0's walk accounting was handed that same list and so
+ * answered a question nobody asked: *"every chain segment is ACCOUNTED FOR"*
+ * was total over the chains it ENUMERATED rather than over the chains that
+ * EXIST. `r8-solve-11` lives in the one-segment chain `r8-battery-11`, its own
+ * producer REPORTED it as a walk move, and `reportRows` dropped it on the
+ * floor — in neither the table nor the named `unmeasured` list. Measured
+ * 2026-08-25 (R9 §33): it re-solves 87 t -> 84 t under ⚖ ruling 46 and the
+ * only thing that surfaced it was a producer's `--check` going red much later.
+ *
+ * ⇒ the universe is every chain's segments, DEDUPLICATED, because ten of the
+ * twelve one-segment chains name a segment `r9-campaign` already carries and
+ * a segment counted twice would break the arithmetic that makes the check
+ * mean anything ("in exactly one report" cannot survive a duplicate subject).
+ * The first chain to claim a segment keeps it, and multi-segment chains are
+ * offered first so no existing row changes its `chain` label.
+ *
+ * ⛔ IT IS NOT A WIDER SUBJECT. Nothing here reaches S1's boundaries or S2's
+ * writes; a one-segment chain still authors no boot. What it widens is who
+ * gets NOMINATED, MEASURED and NAMED — so a walk move in one of them is a row
+ * the licence can cover, and a segment nobody can measure is named with its
+ * reason instead of vanishing.
+ *
+ * @param {Array} chains `PLAYTHROUGH_CHAINS`
+ * @returns {Array<{id: string, segments: string[]}>}
+ */
+export function accountingUniverse(chains) {
+    const claimed = new Set();
+    const out = [];
+    const inOrder = [
+        ...chains.filter((c) => (c.segments ?? []).length >= 2),
+        ...chains.filter((c) => (c.segments ?? []).length === 1),
+    ];
+    for (const c of inOrder) {
+        const mine = (c.segments ?? []).filter((s) => !claimed.has(s));
+        for (const s of mine) claimed.add(s);
+        if (mine.length) out.push({ id: c.id, segments: mine });
+    }
+    return out;
+}
+
+/**
  * ⛔⛔ THE CACHE KEY IS THE **COMPLETE** BYTES DRIVEN, NOT THE GAME-VISIBLE
  * PROJECTION.
  *

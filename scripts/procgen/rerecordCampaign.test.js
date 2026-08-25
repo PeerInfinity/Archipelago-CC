@@ -13,6 +13,7 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { PLAYTHROUGH_CHAINS } from '../../frontend/modules/seedlingDemo/playthroughWalk.js';
 import {
+    accountingUniverse,
     bootFromEnvelopeOnly,
     chainSubjects,
     isTrueStart,
@@ -135,6 +136,56 @@ describe('the subject is DERIVED', () => {
             { id: 'not-a-start', segments: ['t2', 't2'] },
         ];
         expect(chainSubjects(chains, tapeOf).map((c) => c.id)).toEqual(['pair']);
+    });
+});
+
+/**
+ * ⛓⛓⛓ R9 SLICE 12e′ — **THE ACCOUNTING UNIVERSE IS NOT THE SUBJECT, AND THE
+ * DAY THEY WERE THE SAME LIST A REAL WALK MOVE WENT UNREPORTED.**
+ *
+ * S0's *"every chain segment is ACCOUNTED FOR"* was total over the chains it
+ * ENUMERATED — the multi-segment ones — rather than over the chains that
+ * EXIST. `r8-solve-11` is the only segment of the one-segment chain
+ * `r8-battery-11`; its own producer reported it as a walk move; `reportRows`
+ * dropped it into neither the table nor the named `unmeasured` list. Measured
+ * 2026-08-25: 87 t -> 84 t under ⚖ ruling 46 (R9 §33).
+ */
+describe('R9 12e′: the walk accounting is total over the chains that EXIST', () => {
+    it('⛓ every chain contributes, and a segment two chains name is claimed ONCE', () => {
+        const chains = [
+            { id: 'pair', segments: ['a', 'b'] },
+            { id: 'solo-dup', segments: ['a'] },
+            { id: 'solo-new', segments: ['z'] },
+        ];
+        expect(accountingUniverse(chains)).toEqual([
+            { id: 'pair', segments: ['a', 'b'] },
+            { id: 'solo-new', segments: ['z'] },
+        ]);
+    });
+
+    it('⛔ the MULTI-segment chain claims first, so no existing row changes its label', () => {
+        // Declared solo-first on purpose: the order of `chains` must not decide
+        // which chain owns `a`, or the table's `chain` column would depend on a
+        // declaration order nobody is holding still.
+        const chains = [
+            { id: 'solo', segments: ['a'] },
+            { id: 'pair', segments: ['a', 'b'] },
+        ];
+        expect(accountingUniverse(chains)).toEqual([
+            { id: 'pair', segments: ['a', 'b'] },
+        ]);
+    });
+
+    it('⛓ on the REAL tree it adds exactly the segments nobody could see', () => {
+        const subject = new Set(PLAYTHROUGH_CHAINS
+            .filter((c) => (c.segments ?? []).length >= 2)
+            .flatMap((c) => c.segments));
+        const extra = accountingUniverse(PLAYTHROUGH_CHAINS)
+            .flatMap((c) => c.segments).filter((s) => !subject.has(s));
+        // ⛔ DERIVED, not typed: ten of the twelve one-segment chains name a
+        // segment `r9-campaign` already carries, so only two are new — and one
+        // of them is the segment that was lost.
+        expect(extra).toEqual(['r8-solve-11', 'r8-solve-20']);
     });
 });
 

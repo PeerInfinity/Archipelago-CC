@@ -167,9 +167,16 @@ export function participationOf(files, { instrumentRows } = {}) {
  *   `{producer, segments}`)
  * @param {object[]} chains `[{id, segments}]`
  * @param {object[]} unmeasurable `participationOf` rows that cannot participate
+ * @param {Map<string, string[]>} [nominations] `nominateOwners`' map, producer
+ *   -> the segments that nominated it. ⛔ R9 12e′: WITHOUT it an unmeasured
+ *   segment's `why` was every blocked producer's reason joined together, which
+ *   is a TRUE sentence about the WRONG SUBJECT — `r8-solve-20` was told it was
+ *   unmeasured because a producer it never nominated imports playwright. With
+ *   it, a segment names only the producers IT nominated, and a segment that
+ *   nominated nobody says that instead.
  * @returns {{rows, unmeasured, stops}}
  */
-export function reportRows(reports, chains, unmeasurable = []) {
+export function reportRows(reports, chains, unmeasurable = [], nominations = null) {
     const owner = new Map();
     const stops = [];
     for (const report of reports) {
@@ -195,9 +202,14 @@ export function reportRows(reports, chains, unmeasurable = []) {
                 rows.push({ chain: chain.id, index, segment, ...hit });
                 continue;
             }
-            const why = [...blocked.values()].length
-                ? `no participating producer reported it — ${[...blocked.values()].join('; ')}`
-                : 'no producer reported it, and no nominated producer was blocked — so '
+            const mine = nominations
+                ? [...nominations.entries()]
+                    .filter(([file, segs]) => segs.includes(segment) && blocked.has(file))
+                    .map(([file]) => blocked.get(file))
+                : [...blocked.values()];
+            const why = mine.length
+                ? `no participating producer reported it — ${mine.join('; ')}`
+                : 'no producer reported it, and no producer IT NOMINATED was blocked — so '
                     + 'nothing in this tree claims to author it';
             unmeasured.push({ chain: chain.id, index, segment, why });
         }

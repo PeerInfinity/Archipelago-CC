@@ -116,6 +116,44 @@ describe('walkMoves: the accounting, and it must balance', () => {
     });
 });
 
+/**
+ * ⛓⛓ R9 SLICE 12e′ — **AN UNMEASURED SEGMENT MUST NAME THE PRODUCER **IT**
+ * NOMINATED**, not every blocked producer in the tree.
+ *
+ * The joined form is a TRUE sentence about the WRONG SUBJECT (trap 566's
+ * family): on the real tree `r8-solve-20` was told it was unmeasurable because
+ * `plan-seedling-r7-ends-meet.mjs` imports playwright — a producer it has
+ * never named and that has nothing to do with it. The reader who acts on that
+ * sentence fixes the wrong instrument.
+ */
+describe('R9 12e′: an unmeasured segment names ITS OWN blocked producer', () => {
+    const report = (producer, segments) => ({ producer, segments });
+    const seg = (segment) => ({ segment, verdict: 'none', solvedTicks: 10,
+        committedTicks: 10, moved: [], inputsIdentical: true });
+    const toy = [{ id: 'toy', segments: ['a', 'b', 'c'] }];
+    const blocked = [{ file: 'browser.mjs', why: 'browser.mjs DRIVES A BROWSER' },
+        { file: 'noflag.mjs', why: 'noflag.mjs does not accept `--walk-report`' }];
+    const nominations = new Map([['browser.mjs', ['b']], ['noflag.mjs', ['c']]]);
+
+    it('⛓ each unmeasured segment carries ONLY its own nominee\'s reason', () => {
+        const r = reportRows([report('p.mjs', [seg('a')])], toy, blocked, nominations);
+        const why = new Map(r.unmeasured.map((u) => [u.segment, u.why]));
+        expect(why.get('b')).toMatch(/DRIVES A BROWSER/);
+        expect(why.get('b')).not.toMatch(/--walk-report/);
+        expect(why.get('c')).toMatch(/does not accept/);
+        expect(why.get('c')).not.toMatch(/DRIVES A BROWSER/);
+    });
+
+    it('⛓ a segment that nominated NOBODY says so, rather than borrowing a reason', () => {
+        // `r7-ends-meet-1`'s own shape: its description names no producer at
+        // all (trap 576), so no blocked producer is ITS blocker.
+        const r = reportRows([report('p.mjs', [seg('a'), seg('b')])], toy, blocked,
+            new Map([['browser.mjs', ['b']]]));
+        const c = r.unmeasured.find((u) => u.segment === 'c');
+        expect(c.why).toMatch(/no producer IT NOMINATED was blocked/);
+    });
+});
+
 describe('walkMoves: the cascade — and the row is NOT vacuous', () => {
     const seg = (segment, verdict, before = 10, after = 10) => ({
         segment, verdict, solvedTicks: after, committedTicks: before, moved: [],
