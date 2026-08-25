@@ -114,8 +114,7 @@ export const CAMPAIGN_SEGMENTS = Object.freeze([
         why: 'L11 — THE CHEST (`chest@L11`) and out by the TELEPORTER to L3. ⛔ NOT '
             + '`r8-solve-11`, which takes the same chest and returns to L10: that is the '
             + 'BATTERY\'s room (its goals come from `act2-the-sword`\'s units) and this '
-            + 'is the ROUTE\'s step 11, which the survey solves at 119 t for the exit '
-            + 'alone. One room, two goals, in the sphere order\'s sense',
+            + 'is the ROUTE\'s step 11. One room, two goals, in the sphere order\'s sense',
     }),
     Object.freeze({
         name: 'r9-solve-3', level: 3, to: 2,
@@ -133,16 +132,13 @@ export const CAMPAIGN_SEGMENTS = Object.freeze([
     Object.freeze({
         name: 'r9-solve-13', level: 13, to: 14,
         why: 'L13 — a corridor and a door, into the six-bob room the next segment '
-            + 'crosses. ⛓ R9 slice 12b″: route step 16 was this chain\'s STOP for four '
-            + 'slices (the survey refused L14\'s camera band); slice 12b\' solved it and '
-            + '`r9-solve-14` records it, so L14 is a room the chain walks THROUGH now '
-            + 'rather than the arrival it parked at',
+            + 'crosses',
     }),
     Object.freeze({
         name: 'r9-solve-14', level: 14, to: 15,
-        why: 'L14 — the SIX-BOB room, crossed by the PARRY-WALK (⚖ ruling 29(a)): '
-            + 'six presses, five bobs knocked back, none killed, no hit taken. The '
-            + 'chaser arm exists and this room does not need it',
+        why: 'L14 — the SIX-BOB room, crossed by the PARRY-WALK (⚖ ruling 29(a)): the '
+            + 'strike opens its window ahead of the walk, so the bobs are knocked back '
+            + 'rather than killed and the crossing takes no hit',
     }),
 ]);
 
