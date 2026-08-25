@@ -387,16 +387,23 @@ touch; a page that offers locations should expect the derivation's refusal.
 
 The vanilla Seedling rooms exist as two level sets: the committed
 `fixtures/seedling-vanilla-set.json`, whose 116 rooms are `embed` paths into the
-SWF's `[Embed]` table, and the `xml`-sourced set `levelSetExporter.vanillaXmlSet`
-derives from that manifest plus the map extract. They hold the same rooms BY
-VALUE and they are different documents, so they have different content hashes and
-therefore different ids — `seedling-vanilla-<hash>` and
-`seedling-vanilla-xml-<hash>`.
+SWF's `[Embed]` table, and the `record`-sourced set
+`levelSetExporter.vanillaRecordSet` derives from that manifest plus the map
+extract. They hold the same rooms BY VALUE and they are different documents, so
+they have different content hashes and therefore different ids —
+`seedling-vanilla-<hash>` and `seedling-vanilla-record-<hash>`.
+
+⚠ AND THE DERIVED ONE HAS ALREADY MOVED ONCE. It was
+`seedling-vanilla-xml-02a70624` while a room's `source` carried OEL TEXT; rooms
+became JSON records and it is `seedling-vanilla-record-1040ace1` now. Same 116
+rooms, same join, a different document — which is exactly what a derived
+document's id is for, and why the old one is written down here rather than
+quietly forgotten.
 
 ⛔ THEY ARE NOT INTERCHANGEABLE. The EMBED id is the one the AS3 fork's
 `VanillaSet.SET_ID` names, the one every save stamp keys on, and the one
 `?source=edit&level=N`'s ATLAS base checks; re-stamping the committed fixture with
-xml rooms would move all three. The XML id is the SET EDITOR's, and it carries
+record rooms would move all three. The DERIVED id is the SET EDITOR's, and it carries
 `provenance.derived_from` naming the embed one so a reader of either document —
 or of a re-stamped descendant of one — can say which vanilla it is looking at.
 The stamp BASE is what keeps them apart (`stampLevelSetIdentity` rebuilds
@@ -404,10 +411,42 @@ The stamp BASE is what keeps them apart (`stampLevelSetIdentity` rebuilds
 leave the hash as the only difference, which is one careless truncation away from
 a set claiming to be the one the save files name.
 
-⚠ And the §6.1 AP-mapping companion reads `invalidated` for the xml set too. That
+⚠ And the §6.1 AP-mapping companion reads `invalidated` for the derived set too. That
 contract is per IDENTITY, not per content — a refused debug-teleport is the safe
 failure — so the CLI prints one note saying the set reproduces the vanilla rooms
 by value rather than widening the companion's vocabulary.
+
+## A level set carries JSON records, and OEL exists only inside a chunk
+
+A room's `source` is exactly one of `record`, `xml` or `embed`. **The exporter
+writes `record`** — `{width, height, layers, entities}`, the shape
+`parseOelLevel` returns and `recordToOel` accepts — and `planLevelSetChunks`
+renders each one to `{xml}` on the way out, because the receiver ends at
+`LevelSet.as:139`, which reads `room.source.xml as String`. So:
+
+- a SET document with an `xml` room is either a legacy artifact or a step that
+  did not happen; a CHUNK document with a `record` room is a delivery that will
+  not load;
+- the chunk byte bound is measured **after** the render. Sizing the record
+  instead prices a document 3.12× smaller than the one delivered (528,752 B vs
+  1,652,312 B over the vanilla 116) and plans it into 8 chunks instead of 9 —
+  one of them a call the proven envelope was never measured for;
+- the CLI's `--out-dir` writes both: `<id>.json` is the set (records, no text)
+  and `<id>.chunks.json` is the delivery (text, no records).
+
+⛔ **`xml` IS STILL ACCEPTED EVERYWHERE, AND A ROOM'S KIND IS THE AUTHOR'S.** No
+edit converts one: a legacy `xml` room is retargeted as text and stays `xml`, a
+`record` room is retargeted on `entities[].attrs`, and a mixed set edits each
+room in its own kind. Converting on touch would rewrite a document nobody asked
+to change and move the set's content hash for a reason no reader could name.
+
+⚠ **AND DO NOT ROUTE LEGACY TEXT THROUGH `parseOelLevel`.** All 70 `xml` rooms
+of `fixtures/seedling-level-set-delivery-conformance.json` fail it, every one
+with `<level> has no <width>`: they are REDUCED OEL, carrying the
+cross-reference-bearing elements and no geometry. The index door
+(`indexOfRoom`) keeps the lenient regex reader on the text kinds for exactly
+that reason, and the equality row over the vanilla 116 — three arms, one of them
+the disk `.oel` files — is what makes the two readers one index.
 
 ## Related documentation
 
