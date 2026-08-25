@@ -10660,6 +10660,12 @@
         "refutedBy": "Generate.py --seed 1 on rules v1 (R7 slice 5) + the offline fixpoint that agrees with it",
         "observed": "the row makes the DARK SUIT a prerequisite for itself: L76 is the only way into D7, its every crossing carried the row, and the suit is the only collectible beyond it. AP refused 7 locations, all of them downstream of Level 079 - Darksuit. At source the tile is walkable until eight frames of proximity convert it and a level entry rebuilds it (Tile.as:83-85,390-424) — see IGNEOUS_IS_FREE.",
         "cite": "Scenery/Tile.as:83-85,390-424 + Game.as:1966-2010 + R7 kickoff §14"
+      },
+      {
+        "row": "lock@32,80 in L20, ruled OPEN by the general tSet >= 0 arm (\"any body presses its button — pure choreography, FREE under the puzzle policy\")",
+        "refutedBy": "the map, read against R6 kickoff §13.8 (R7 slice 6)",
+        "observed": "the lock's group has exactly ONE presser, `buttonroom@192,16`, and it stands behind `shieldlocknorm@176,16` — so the press is not free, it costs the SHIELD. And the lock is the only exit from the four cells L13's `stairsdown@96,32` drops the player into ((0,3),(1,3),(2,3),(2,4)), so with the row ruled OPEN the analyzer folded that alcove into the room and AP took **Level 020 - Shield at sphere 0.4**, before the Red Key it needs, THROUGH A WALL. Gated on hasShield the alcove becomes its own region, the Shield moves to sphere 2.1 behind `Level 019 - Boss Key 0` at 1.2, and the walkthrough cross-check over the intended vocabulary is unchanged.",
+        "cite": "Dungeon2/7.oel + Puzzlements/ShieldLock.as:33 + Puzzlements/ButtonRoom.as + R6 kickoff §13.8 + R7 kickoff §15 — see GROUPED_LOCK_EXCEPTIONS"
       }
     ],
     "atlas_id": "seedling-7dc27a95"
