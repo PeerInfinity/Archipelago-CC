@@ -1513,6 +1513,15 @@ export function strikePolicyFor(run, { dashPlan = null } = {}) {
     return createStrikePolicy({
         facingToward, facingKeys: FACING_KEYS, hasSword, dashPlan,
         allowDash: dashPlan ? true : ALLOW_DASH_ROSTER_WIDE,
+        /**
+         * ⛓⛓⛓ R9 SLICE 12e‴ (⚖ RULING 53) — the talk circles, from the run,
+         * at the ONE construction site so the preview and the drive refuse
+         * identically (⚖ ruling 30(c)). A press whose RELEASE would land
+         * inside one opens a placed NPC's dialogue — `NPCs/NPC.as:191` reads
+         * the SWORD key — and that is a freeze, not a cost: the policy
+         * refuses rather than prices it.
+         */
+        talkCircles: run.talkCircles ?? [],
     });
 }
 

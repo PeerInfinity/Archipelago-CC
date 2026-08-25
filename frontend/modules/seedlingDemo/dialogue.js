@@ -372,3 +372,156 @@ export const PICKUP_TEXT_FROM_ATTRIBUTE = Object.freeze({
 
 /** The tape key whose RELEASE advances a dialogue — `Player.keys[6]` is X. */
 export const TALK_KEY = 'primary';
+
+/**
+ * `NPCs/NPC.as:46` — a placed NPC's default `_lineLength`, the column count
+ * `lineWrap()` folds its pages to. Only `Statue` passes anything else.
+ */
+export const NPC_LINE_LENGTH_DEFAULT = 28;
+
+/**
+ * ⛓⛓⛓ R9 SLICE 12e‴ — **THE PLACED NPCs THAT TALK, AND THE KEY THAT OPENS
+ * THEM.**
+ *
+ * ── The defect this table exists to close ─────────────────────────────
+ *
+ * `NPC.talk()` reads its key as `Input.released(p.keys[6])` (`NPCs/NPC.as:
+ * 191`) and `Player.as:59` is
+ *
+ * ```as3
+ *   keys = new Array(Key.RIGHT, Key.UP, Key.LEFT, Key.DOWN,
+ *                    Key.X, Key.C, Key.X, Key.V, Key.I);
+ * //                 [0]        [1]     [2]      [3]
+ * //                 [4]  [5]   [6]  [7]  [8]
+ * ```
+ *
+ * — so **`keys[6]` is `Key.X`, the SWORD key**, which `tapeFormat` spells
+ * `primary` and which every walk presses constantly. `levelWorld`'s NPC
+ * comment used to say a placed NPC "needs `Input.released(V)`"; V is
+ * `keys[7]`, which no tape has ever pressed. That one index is why no sign
+ * has ever spoken in the model, and it cost 28 ticks of `r8-d2-19`
+ * (kickoff §36): the walk swings the sword next to L19's sign, the GAME
+ * opens the dialogue and freezes the player for the 28 ticks between the
+ * opening release and the release that finally exhausts the page, and the
+ * model walked straight on.
+ *
+ * ⛔ **28 IS NOT A CONSTANT AND THERE IS NONE TO FIND.** It is
+ * `t_close − t_open` for one tape against one page: the release at t=15
+ * opens it (the first inside the circle — the releases at t=1, 3 and 9 are
+ * 26–35 px away), the releases at t=23 and t=25 do NOT close it because
+ * `NPC.as:205` sets `currentCharacter = length - 1` and never `length`, and
+ * the release at t=43 finds the typewriter past the end and exhausts the
+ * last page. Any other press schedule gives another number.
+ *
+ * ── What a row carries, and why the table is a table ──────────────────
+ *
+ * `keyNeeded` is assigned in exactly ONE place in the whole AS3 —
+ * `NPCs/Watcher.as:46` — so every OTHER placed NPC keeps `NPC.as:41`'s
+ * `true` and opens only on an X release inside `talkRange`. The Watcher
+ * therefore keeps its own arm (`levelRun.stepWatchersNow`) and is absent
+ * here BY NAME rather than by omission.
+ *
+ * The rest of a row is the two things `Game.loadlevel`'s spawn line and the
+ * class's own `super()` decide and that a walk cannot see:
+ *
+ *   · `lineLength` — `NPC.as:46`'s `_lineLength:int = 28` default, EXCEPT
+ *     `Statue`, whose ctor passes **34** (`NPCs/Statue.as:20`). The wrapped
+ *     page's `.length` is what the page-advance test compares against, so a
+ *     wrong column count retimes every boundary.
+ *   · `doneTalking` — whether finishing (or LEAVING, which runs the same
+ *     setter) has an effect on the world. `⛔ REFUSED` rows are the ones
+ *     whose effect is real and is not transcribed; opening one throws BY
+ *     NAME rather than running a dialogue that silently omits a spawned
+ *     item or a persistence write. [[feedback_fallback_reinstates_the_defect]]
+ *
+ * ⚠ `talkingSpeed` is NOT here: it is the `frames` ATTRIBUTE
+ * (`Game.as:2265-2282` pass `o.@frames` as `_talkingSpeed` for every one of
+ * these classes), so it is DATA and `levelWorld` reads it off the entity.
+ * ⚠ And it defaults to **0**, not to the AS3 signature's 10: `o.@frames` on
+ * a missing attribute is an empty XMLList and `int("")` is 0 in AS3, so the
+ * parameter default is unreachable from a level file. 0 is a real speed —
+ * one character per frame. Same reading as the watcher roster's.
+ */
+export const PLACED_NPC_TALK = Object.freeze({
+    // ── the plain ones: `doneTalking()` is NOT overridden at all, so the
+    // base's empty body runs and finishing writes nothing. Their only
+    // overrides are `render()`/`layering()`, which no model reads.
+    sign: Object.freeze({ as3: 'Sign', spawn: 'Game.as:2276',
+        ctor: 'NPCs/Sign.as:13-17', lineLength: NPC_LINE_LENGTH_DEFAULT, doneTalking: null }),
+    totem: Object.freeze({ as3: 'Totem', spawn: 'Game.as:2277',
+        ctor: 'NPCs/Totem.as:14-17', lineLength: NPC_LINE_LENGTH_DEFAULT, doneTalking: null,
+        why: 'NPCs/Totem.as overrides NOTHING — it is a bare NPC with a two-tile offset' }),
+    hermit: Object.freeze({ as3: 'Hermit', spawn: 'Game.as:2273',
+        ctor: 'NPCs/Hermit.as:19-21', lineLength: NPC_LINE_LENGTH_DEFAULT, doneTalking: null }),
+    sensei: Object.freeze({ as3: 'Sensei', spawn: 'Game.as:2275',
+        ctor: 'NPCs/Sensei.as:19-21', lineLength: NPC_LINE_LENGTH_DEFAULT, doneTalking: null }),
+    rekcahdam: Object.freeze({ as3: 'Rekcahdam', spawn: 'Game.as:2266',
+        ctor: 'NPCs/Rekcahdam.as:17-19', lineLength: NPC_LINE_LENGTH_DEFAULT, doneTalking: null }),
+    adnanchar: Object.freeze({ as3: 'AdnanCharacter', spawn: 'Game.as:2269',
+        ctor: 'NPCs/AdnanCharacter.as:17-19', lineLength: NPC_LINE_LENGTH_DEFAULT, doneTalking: null }),
+    forestchar: Object.freeze({ as3: 'ForestCharacter', spawn: 'Game.as:2267',
+        ctor: 'NPCs/ForestCharacter.as:17-19', lineLength: NPC_LINE_LENGTH_DEFAULT, doneTalking: null }),
+    introchar: Object.freeze({ as3: 'IntroCharacter', spawn: 'Game.as:2265',
+        ctor: 'NPCs/IntroCharacter.as:17-19', lineLength: NPC_LINE_LENGTH_DEFAULT, doneTalking: null }),
+    /**
+     * ⚠ `Statue` is the one class that passes its own `_lineLength`, and it
+     * is also the one whose ctor stacks an offset on top of `NPC`'s — both
+     * on the SAME line, `NPCs/Statue.as:20`. `statue1` and `statue2` are one
+     * class with different `_t`, which is why the atlas has two type names
+     * and this table has two rows.
+     */
+    statue1: Object.freeze({ as3: 'Statue', spawn: 'Game.as:2281',
+        ctor: 'NPCs/Statue.as:18-20', lineLength: 34, doneTalking: null }),
+    statue2: Object.freeze({ as3: 'Statue', spawn: 'Game.as:2282',
+        ctor: 'NPCs/Statue.as:18-20', lineLength: 34, doneTalking: null }),
+    /**
+     * ⚠ MODELLED, and the reason is that its effect is not the WORLD's.
+     * `Karlore.doneTalking()` is `super.doneTalking(); Main.unlockMedal(
+     * Main.badges[1])` (`NPCs/Karlore.as:35-39`) — a Newgrounds badge. It
+     * writes no persistence, no item and no entity, and `botStatus` reports
+     * no medal, so there is nothing for a run to carry. Named rather than
+     * silently lumped with the empty ones.
+     */
+    karlore: Object.freeze({ as3: 'Karlore', spawn: 'Game.as:2268',
+        ctor: 'NPCs/Karlore.as:17-19', lineLength: NPC_LINE_LENGTH_DEFAULT, doneTalking: 'medal',
+        why: 'Main.unlockMedal(Main.badges[1]) — no world state' }),
+
+    // ── ⛔ REFUSED BY NAME. Their `doneTalking()` DOES something, and
+    // `NPC.talk()`'s out-of-range arm runs the same setter — so walking away
+    // mid-page pays it too ([[feedback_leaving_the_radius_still_pays]]).
+    // A dialogue modelled without its effect is worse than no dialogue.
+    oracle: Object.freeze({ as3: 'Oracle', spawn: 'Game.as:2271',
+        ctor: 'NPCs/Oracle.as:24-26', lineLength: NPC_LINE_LENGTH_DEFAULT,
+        doneTalking: 'REFUSED',
+        why: 'NPCs/Oracle.as:95-109 — under `Game.cutscene[1]` it either `exitToMenu()` '
+            + 'or plays the player\'s DEATH animation, and `Oracle.as` is also the only '
+            + 'class with a `talking_extras()` override' }),
+    witch: Object.freeze({ as3: 'Witch', spawn: 'Game.as:2272',
+        ctor: 'NPCs/Witch.as:23-25', lineLength: NPC_LINE_LENGTH_DEFAULT,
+        doneTalking: 'REFUSED',
+        why: 'NPCs/Witch.as:46-53 — `if (Main.hasWand && !Main.hasDarkSword)` it ADDS a '
+            + '`DarkSword` pickup at the player\'s feet, which is a new entity and a new '
+            + 'ceremony this model would not know about' }),
+    yeti: Object.freeze({ as3: 'Yeti', spawn: 'Game.as:2274',
+        ctor: 'NPCs/Yeti.as:19-21', lineLength: NPC_LINE_LENGTH_DEFAULT,
+        doneTalking: 'REFUSED',
+        why: 'NPCs/Yeti.as:40-50 — it clears its OWN tag and tag 1 (the portal in '
+            + 'DeadBoss.oel), two persistence writes the run\'s ledger would miss' }),
+});
+
+/**
+ * `watcher` is deliberately ABSENT from `PLACED_NPC_TALK`, and this names it.
+ *
+ * `NPCs/Watcher.as:46` `keyNeeded = !Game.checkPersistence(tag)` is the only
+ * assignment of that field anywhere, and a fresh boot's persistence is all
+ * `true`, so a Watcher AUTO-TALKS on proximity with no key at all. It has its
+ * own roster, its own `doneTalking` (the `{114,0}` clear), a live `Seed` that
+ * a stance can soft-lock on, and a sword half — all of it in
+ * `levelRun.stepWatchersNow`. Two implementations of the FREEZE would be the
+ * defect; two implementations of the WATCHER would be a rewrite. So the
+ * generic arm skips this type by name and asserts the reason.
+ */
+export const TALK_OWNED_ELSEWHERE = Object.freeze({
+    watcher: 'levelRun.stepWatchersNow — `keyNeeded` false (NPCs/Watcher.as:46), so it '
+        + 'opens on PROXIMITY, and its doneTalking/seed/sword halves are R6 slice 6c-d',
+});

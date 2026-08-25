@@ -53,7 +53,9 @@
  * is named here because this rung has to predict BOTH kinds in one window.
  */
 
-import { INITIAL_FRAMES_THIS_CHARACTER, beginDialogue, stepDialogue } from './dialogue.js';
+import {
+    INITIAL_FRAMES_THIS_CHARACTER, NPC_LINE_LENGTH_DEFAULT, beginDialogue, stepDialogue,
+} from './dialogue.js';
 // ⛓ From the browser-safe half: `r6Acceptance` reaches `node:fs` and the
 // live run needs this module in a browser (editor arc slice 1).
 import { animCallbackUpdate } from './r6AnimClock.js';
@@ -68,8 +70,16 @@ const fail = (m) => { throw new EndingError(m); };
 /** `NPCs/NPC.as:27` — the talk radius, an origin-to-origin CIRCLE. */
 export const TALK_RANGE = 24;
 
-/** `NPCs/NPC.as:45` — a placed NPC's default `_lineLength`. */
-export const NPC_LINE_LENGTH = 28;
+/**
+ * `NPCs/NPC.as:46` — a placed NPC's default `_lineLength`.
+ *
+ * ⛓ R9 slice 12e‴: RE-EXPORTED, not re-declared. `dialogue.js` now owns the
+ * placed-NPC talk table and resolves every class's own `lineLength` against
+ * this same number; two spellings of 28 would be two rules
+ * ([[feedback_two_cost_models_must_agree]]). The name is kept because
+ * `endingChain`'s own callers and rows use it.
+ */
+export const NPC_LINE_LENGTH = NPC_LINE_LENGTH_DEFAULT;
 
 /**
  * `Watcher`'s own constants (`NPCs/Watcher.as:20-30,46-49`).

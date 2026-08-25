@@ -39,7 +39,7 @@ import {
 } from './levelWorld.js';
 import {
     INITIAL_FRAMES_THIS_CHARACTER, PICKUP_CEREMONY, PICKUP_CEREMONY_BY_KEYTYPE,
-    PICKUP_TEXT_FROM_ATTRIBUTE, TALK_KEY,
+    PICKUP_TEXT_FROM_ATTRIBUTE, PLACED_NPC_TALK, TALK_KEY,
     beginDialogue, stepDialogue,
 } from './dialogue.js';
 // ⛓⛓⛓ R6 SLICE 6c: the ENDING's own transcription — the placed NPC's
@@ -780,6 +780,10 @@ export function createLevelRun({
         // see `watcherStateFor`. Nothing an item grants adds or removes one;
         // dropped anyway, for the reason the spinner's is.
         watcherStates.delete(n);
+        // ⛓ R9 slice 12e‴: and the talkers, for the same reason — a rebuilt
+        // NPC has `talked` false, so a second visit can open the dialogue
+        // again.
+        talkerStates.delete(n);
         // ⛓ R6 slice 6c: and the door, whose rebuild re-arms `seenSeal`.
         finalDoorStates.delete(n);
         bridgeStates.delete(n);
@@ -1931,6 +1935,17 @@ export function createLevelRun({
      * from the flag alone. → [[feedback_leaving_the_radius_still_pays]]
      */
     const watcherTalks = [];
+    /**
+     * ⛓ R9 slice 12e‴: the same record for a PLACED, key-opened NPC —
+     * `{t, level, id, cause, pages, page, frames}`. No `flag`: every class in
+     * `dialogue.PLACED_NPC_TALK` that is MODELLED has a `doneTalking()` that
+     * writes nothing to the world (the three that do not are REFUSED at the
+     * tick they would open), so there is no ledger entry to carry. `cause` is
+     * kept for the watcher's reason — `'left'` and `'done'` are the same
+     * setter — even though nothing reads it yet, because the day a class with
+     * an effect is transcribed it will.
+     */
+    const talkerTalks = [];
     /** The `{114,0}` write `doneTalking()` makes — keyed like `bossFlags`. */
     const watcherFlags = new Map();
     /**
@@ -3106,6 +3121,12 @@ export function createLevelRun({
         // the CLEARED tag is what keeps `talk()` from running again — the
         // flag, not the roster, is the memory. See `watcherStateFor`.
         watcherStates.delete(n);
+        // ⛓ R9 slice 12e‴: the talkers rebuild the same way. ⚠ For a talker
+        // the CLEARED tag is the only memory too — and every `Statue` carries
+        // tag −1 (`NPCs/Statue.as:20` passes it literally), so a statue can be
+        // read once per VISIT for ever. That is the game's behaviour, not a
+        // gap.
+        talkerStates.delete(n);
         // ⛓ R6 slice 6c. A rebuilt door has `seenSeal` false, so a second
         // visit fires a second ceremony — and if its own tag has been
         // cleared, `FinalDoor.check()` removes it and the build's
@@ -9605,6 +9626,34 @@ export function createLevelRun({
         // ceremony. The same argument as `freezeStep` above, one frame higher
         // up.
         stepCameraNow(state, world.world);
+        /**
+         * ⛓⛓⛓ R9 SLICE 12e‴: AND SO DOES `slash()`'s TIMER, one line ABOVE
+         * `super.update()` instead of below it — same flag, same argument,
+         * and it is the SECOND divergence L19's sign exposed.
+         *
+         * `Player.as:560-563` is
+         *
+         * ```as3
+         *   if (hasSword) { slash(); }        // slashTimer--  …then
+         *   if (!dying)   { super.update(); } // …mobileUpdate, which the
+         *                                     //   freeze gates
+         * ```
+         *
+         * so on a frozen frame the double-press window KEEPS DRAINING while
+         * `useItem` — inside `input()`, inside the gated block — never sees a
+         * press. ⛓ MEASURED on `r8-d2-19`: with the freeze modelled but this
+         * line missing, the model and the game agreed to t=44 and parted at
+         * t=45 by EXACTLY 2.0 px — `SLASH_DASH_FORCE`. The model still had
+         * 28 ticks of `slashTimer` left from the t=14 press and read t=44's
+         * press as the second half of a double-tap; the game's had run to
+         * zero somewhere around t=34 and read it as a fresh swing. With the
+         * tick here the model reproduces the game's whole 709-tick stream.
+         *
+         * ⚠ The PRESS is deliberately NOT stepped: `slashSet` stays on the
+         * live path, because `set slashing` is reached only through
+         * `useItem`, which the freeze really does gate.
+         */
+        slashState = slashTimerTick(slashState);
         // ⛓⛓⛓ R6 SLICE 3: AND SO DOES `hitUpdate()`, for the SAME reason one
         // line lower — it sits outside `super.update()` in `Player.update`,
         // and `Game.freezeObjects` gates only what is inside `mobileUpdate`.
@@ -9833,6 +9882,193 @@ export function createLevelRun({
                     liveAt: ticksCompleted + 1,
                 });
             }
+        }
+        return { frozen };
+    };
+
+    /**
+     * ⛓⛓⛓ R9 SLICE 12e‴: THE PLACED NPCs THAT ARE NOT THE WATCHER.
+     *
+     * ── The tick this arm exists to spend ─────────────────────────────
+     *
+     * `r8-d2-19`'s walk swings the sword next to L19's sign and the GAME
+     * stops dead for 28 ticks. The model went straight on, because
+     * `NPC.talk()`'s key had been read as V — it is `p.keys[6]`, and
+     * `Player.as:59` puts `Key.X` at index 6 as well as index 4, so the
+     * SWORD key is the talk key. `dialogue.PLACED_NPC_TALK` carries the
+     * whole reading.
+     *
+     * ⛔ **28 IS NOT A CONSTANT.** For that tape it is `t_close − t_open`:
+     * the release at t=15 (the first inside the 24 px circle — the ones at
+     * t=1/3/9 are 26–35 px out), then t=23 and t=25 fail to close it
+     * because `NPC.as:205` sets `currentCharacter = length - 1` and never
+     * `length`, then t=43 finds the typewriter past the end. Driving THIS
+     * arm against the game's own 709-tick stream reproduces open 15 /
+     * close 43 / span 28 exactly, which is the pin.
+     *
+     * ── Why it is a separate arm from the Watcher's ───────────────────
+     *
+     * They share `stepNpcDialogue` — the freeze, the pages, the radius and
+     * the `length - 1` quirk are ONE implementation — and nothing else.
+     * The Watcher's `keyNeeded` is false (`NPCs/Watcher.as:46`, the only
+     * assignment of that field anywhere), so it auto-talks on proximity;
+     * it also owns a `doneTalking` that clears `{114,0}`, a live `Seed` a
+     * stance can soft-lock on, and a sword half. Two implementations of
+     * the FREEZE would be the defect; folding the Watcher's four extra
+     * mechanisms into a generic arm would be a rewrite.
+     *
+     * ⚠ THE UPDATE ORDER IS DERIVED, NOT ASSUMED. `World.addUpdate`
+     * PREPENDS, so entities added LATER update EARLIER, and
+     * `Game.loadlevel` adds the NPC classes in the fixed line order
+     * `dialogue.PLACED_NPC_TALK` records (`Game.as:2265…2282`), each in
+     * `.oel` order. So the update order is the REVERSE of (spawn line,
+     * `.oel` index) — computed here rather than typed. It only ever
+     * matters when two talkers are in range and a release lands on the
+     * same tick, because `NPC.as:225`'s `!Game.talking` lets exactly one
+     * dialogue be open at a time; four rooms have two talkers each
+     * (L0, L12, L37, L87), so the case is reachable and is not left to
+     * `.oel` order by accident.
+     *
+     * ⚠ AND THE TALKERS UPDATE BEFORE THE WATCHER, by the same rule
+     * (`sign` is added at `Game.as:2276`, `watcher` at `:2270`). That
+     * ordering is a BOUNDED VACUITY today — the only watcher is L114's and
+     * L114 has no other texted NPC — and it is stated rather than inferred
+     * from nothing having broken.
+     *
+     * @returns {{frozen: boolean}} `frozen` means the player must not move
+     */
+    const talkerStates = new Map();
+    const talkerStateFor = (n) => {
+        if (!talkerStates.has(n)) {
+            const rows = worldFor(n).talkers ?? [];
+            /**
+             * `Game.as:22NN` -> NN. The spawn line IS the add order, so this
+             * is the game's own sequence read off the provenance the table
+             * already carries — not a second list to keep in sync.
+             */
+            const spawnLine = (tag) => {
+                const src = PLACED_NPC_TALK[tag]?.spawn ?? '';
+                const m = /:(\d+)/.exec(src);
+                if (!m) {
+                    throw new Error(`levelRun: \`${tag}\` has no parseable spawn line in `
+                        + '`dialogue.PLACED_NPC_TALK`, so its update order cannot be '
+                        + 'derived. The order decides which of two in-range talkers '
+                        + 'opens on a shared release.');
+                }
+                return Number(m[1]);
+            };
+            const ordered = rows
+                .map((w, i) => ({ w, i, line: spawnLine(w.tag) }))
+                // PREPEND: later add == earlier update, so descending on both.
+                .sort((a, b) => (b.line - a.line) || (b.i - a.i))
+                .map((r) => r.w);
+            const byId = new Map();
+            for (const w of ordered) {
+                byId.set(w.id, {
+                    id: w.id,
+                    tag: w.tag,
+                    level: n,
+                    ex: w.ex,
+                    ey: w.ey,
+                    persistTag: w.persistTag ?? -1,
+                    text: w.text,
+                    talkingSpeed: w.talkingSpeed,
+                    lineLength: w.lineLength,
+                    doneTalking: w.doneTalking,
+                    // `NPC.talked` — reset only by the out-of-range arm.
+                    talked: false,
+                    talking: false,
+                    dialogue: null,
+                    /**
+                     * `NPCs/NPC.as:119-126` — `check()` REMOVES the entity when
+                     * `tag >= 0 && !Game.checkPersistence(tag)`, i.e. once the
+                     * tag is CLEARED. A `tag` of −1 (every `Statue`, which
+                     * passes `-1` literally at `NPCs/Statue.as:20`) is never
+                     * removed. Same polarity the watcher roster reads.
+                     */
+                    cleared: (clearedByLevel.get(n) ?? []).includes(w.persistTag ?? -1),
+                });
+            }
+            talkerStates.set(n, byId);
+        }
+        return talkerStates.get(n);
+    };
+    const stepTalkersNow = (released) => {
+        const st = talkerStateFor(level);
+        if (st.size === 0) return { frozen: false };
+        let frozen = false;
+        let open = false;
+        for (const w of st.values()) {
+            const canTalk = !w.cleared && !!w.text;
+            const inRange = inTalkRange({ x: w.ex, y: w.ey }, { x: state.x, y: state.y });
+            if (!canTalk) continue;
+            if (w.talking) {
+                // `NPC.as:195` — `Game.freezeObjects = true`, every frame,
+                // ABOVE the key test and inside the `talking` block.
+                frozen = true;
+                open = true;
+                const r = stepNpcDialogue(w.dialogue, released, inRange);
+                if (w.dialogue.done) {
+                    w.talking = false;
+                    frozen = false;
+                    open = false;
+                    framesThisCharacter = w.dialogue.framesThisCharacter;
+                    talkerTalks.push({
+                        t: ticksCompleted + 1,
+                        level: w.level,
+                        id: w.id,
+                        cause: r.left ? 'left' : 'done',
+                        pages: w.dialogue.pages.length,
+                        page: w.dialogue.page,
+                        frames: w.dialogue.frames,
+                    });
+                }
+                continue;
+            }
+            /**
+             * `NPC.as:225` — `(hitKey || !keyNeeded) && !Game.talking &&
+             * !Game.inventory.open`. `keyNeeded` is TRUE for every class here
+             * (it is assigned in one place in the AS3, `Watcher.as:46`), so
+             * the release is required; `!Game.talking` is `!open`, which is
+             * why one dialogue at a time is a property of the loop rather
+             * than of a comment.
+             */
+            if (!inRange) {
+                // `NPC.as:230-237` — the out-of-range arm resets `talked`.
+                w.talked = false;
+                continue;
+            }
+            if (!released || w.talked || open) continue;
+            if (w.doneTalking === 'REFUSED') {
+                const row = PLACED_NPC_TALK[w.tag];
+                throw new Error(`levelRun: the walk opens \`${w.tag}\`'s dialogue at tick `
+                    + `${ticksCompleted} in level ${w.level} (an X release `
+                    + `${Math.hypot(w.ex - state.x, w.ey - state.y).toFixed(2)} px from `
+                    + `it, inside \`talkRange\` ${TALK_RANGE}), and that class's `
+                    + `\`doneTalking()\` is NOT transcribed: ${row?.why ?? '(no reason '
+                    + 'recorded)'}. Finishing the dialogue AND walking out of the circle `
+                    + 'both run it, so there is no safe half to model. Transcribe the '
+                    + 'effect or keep the walk out of the circle — a dialogue run '
+                    + 'without its effect is a silently wrong world.');
+            }
+            // `startTalking()`, and NOT an advance this frame: `if (talking)`
+            // is tested ABOVE it, so the opening release is spent opening.
+            w.dialogue = beginNpcDialogue(w.text, {
+                talkingSpeed: w.talkingSpeed,
+                lineLength: w.lineLength,
+                framesThisCharacter,
+            });
+            w.talking = true;
+            w.talked = true;
+            open = true;
+            // ⛓ The RENDER still types — `Game.talk()` is in `render()` — so
+            // the opening frame costs one character.
+            stepDialogue(w.dialogue, false);
+            // ⛔ NOT frozen on this frame: the freeze is raised by the NEXT
+            // frame's `talk()`, and `Game.update`'s `else if (inventory)
+            // inventory.open = false` has already lowered whatever this frame
+            // left up. The GAME agrees — `r8-d2-19` still moves +3.05 px into
+            // t=16 after the t=15 release, and holds still from t=17.
         }
         return { frozen };
     };
@@ -11098,6 +11334,37 @@ export function createLevelRun({
          * a press is modelled, and the policy asks that separately; this field
          * is the family, and naming it here keeps the two questions apart.
          */
+        /**
+         * ⛓⛓⛓ R9 SLICE 12e‴ (⚖ RULING 53) — **THE TALK CIRCLES THE PLANNER
+         * MUST NOT RELEASE THE SWORD KEY INSIDE.**
+         *
+         * ⚖ Ruling 53 (user, 2026-08-25): *"Wouldn't it be better to just not
+         * trigger the sign reading? … Track when the player is in range of
+         * triggering a sign or NPC, and don't press the button that triggers
+         * it in range."* So the dialogue is not a cost the planner PRICES —
+         * it is a CONSTRAINT the planner never violates, and this is the
+         * live set the constraint is read from.
+         *
+         * ⚠ ONLY THE ONES THAT CAN STILL TALK. `NPCs/NPC.as:119-126` removes
+         * an NPC whose tag has been CLEARED, and `talk()` does nothing with
+         * empty text — so a cleared or textless row is not a circle, and
+         * offering it as one would refuse presses in a room where the game
+         * has nothing to open.
+         *
+         * ⚠ AND THE WATCHER IS ABSENT, deliberately: `keyNeeded` is false for
+         * it (`NPCs/Watcher.as:46`), so no key choice can avoid its dialogue
+         * and a constraint over it would be a refusal with no alternative.
+         * Its four committed tapes open it BY DESIGN.
+         */
+        get talkCircles() {
+            if (noclip) return [];
+            const out = [];
+            for (const w of talkerStateFor(level).values()) {
+                if (w.cleared || !w.text) continue;
+                out.push({ id: w.id, tag: w.tag, ex: w.ex, ey: w.ey, level: w.level });
+            }
+            return out;
+        },
         get strikeBodies() {
             if (noclip || noDamage) return [];
             const out = [];
@@ -11902,6 +12169,9 @@ export function createLevelRun({
          * `doneTalking()`. ⛔ `cause` is `'done'` or `'left'` and BOTH write
          * the flag — the pair's whole design turns on that (§16.6).
          */
+        get talkerTalks() {
+            return talkerTalks.map((r) => ({ ...r }));
+        },
         get watcherTalks() {
             return watcherTalks.map((r) => ({ ...r, flag: { ...r.flag } }));
         },
@@ -12525,6 +12795,39 @@ export function createLevelRun({
             // frame while `Game.talking`). A window that ran both at once
             // would have to interleave two clocks — so it is REFUSED rather
             // than approximated, and the refusal names both.
+            /**
+             * ⛓⛓⛓ R9 SLICE 12e‴: THE PLACED TALKERS, ABOVE THE WATCHER.
+             *
+             * `Game.loadlevel` adds `watcher` at `:2270` and every other
+             * texted NPC class at `:2265-2282`; `World.addUpdate` PREPENDS,
+             * so `sign` (`:2276`) updates BEFORE `watcher`. The two families
+             * never share a room today (the only watcher is L114's and L114
+             * has no other texted NPC), so this order is a BOUNDED VACUITY —
+             * stated because the alternative is inferring it from nothing
+             * having broken.
+             *
+             * ⚠ ONE release feeds BOTH arms, which is the game's own reading:
+             * `Input.released(p.keys[6])` is a global, and each `NPC.talk()`
+             * reads it. `!Game.talking` is what stops two dialogues opening
+             * on it, and that is `open` inside each arm plus the ceremony
+             * refusal below.
+             */
+            if (!noclip) {
+                const talkerRelease = releasedThisTick(held, TALK_KEY);
+                const tr = stepTalkersNow(talkerRelease);
+                if (tr.frozen) {
+                    if (ceremony !== null) {
+                        throw new Error('levelRun: a placed NPC\'s dialogue and a pickup '
+                            + `ceremony are both up at tick ${ticksCompleted}. One X `
+                            + 'release would be read by BOTH `NPC.talk()` calls, and the '
+                            + 'two freezes cost the tape different things — a dialogue '
+                            + 'frame is a TICK, a ceremony\'s phase A is a DEAD frame. '
+                            + 'Refused rather than approximated.');
+                    }
+                    prevHeld = new Set(held);
+                    return runFrozenTick(activators, 'a placed NPC\'s dialogue');
+                }
+            }
             if (!noclip) {
                 const watcherRelease = releasedThisTick(held, TALK_KEY);
                 const wr = stepWatchersNow(watcherRelease);

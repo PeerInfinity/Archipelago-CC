@@ -72,6 +72,9 @@ import { HARMFUL_CLASSES } from './seedlingDamageSites.js';
 // `breakableRocks.js`, which imports nothing at all, so this is a leaf-ward
 // edge and not a cycle — the same care `combat.js`'s import above records.
 import { treeBuiltIn } from './burnableTree.js';
+// ⛓ R9 slice 12e‴: the PLACED-NPC talk table. `dialogue.js` imports nothing at
+// all, so this is the leaf-most edge in the file — same care as the two above.
+import { PLACED_NPC_TALK, TALK_OWNED_ELSEWHERE } from './dialogue.js';
 
 /**
  * The player hitbox origin, for recovering the entity position from a box.
@@ -1667,9 +1670,20 @@ export const ENTITY_CLASSES = Object.freeze({
 
     // NPCs. `keyNeeded` is `true` for every one of them (it is assigned in
     // exactly one place in the codebase, `Watcher.as:46`), so `NPC.talk()`
-    // needs `Input.released(V)` and proximity alone does nothing but set an
-    // `inRange` render flag. They ARE `type = "Solid"`, which is why their
+    // needs a RELEASE of `p.keys[6]` and proximity alone does nothing but set
+    // an `inRange` render flag. They ARE `type = "Solid"`, which is why their
     // blocking classification still matters at R2.
+    //
+    // ⛔⛔ R9 SLICE 12e‴ — THIS COMMENT USED TO SAY `Input.released(V)`, AND
+    // THAT ONE LETTER WAS A DEFECT. `Player.as:59` is
+    // `[RIGHT, UP, LEFT, DOWN, X, C, X, V, I]`: `keys[6]` is **X**, the sword
+    // key (`primary`), not `keys[7]`'s V. No tape has ever pressed V, so the
+    // model held that no placed NPC could talk; every tape presses X
+    // constantly, so in the GAME they talk all the time. It cost `r8-d2-19`
+    // a 28-tick freeze the model could not see (kickoff §36). The rosters
+    // these rows feed are `talkers` (below) and `dialogue.PLACED_NPC_TALK`.
+    // ⚠ A true sentence about the wrong subject reads exactly like a checked
+    // one — [[feedback_header_warning_is_not_a_check]].
     witch: {
         as3: 'Witch',
         roles: ROLES, collider: 'rect', type: 'Solid',
@@ -3681,6 +3695,7 @@ export function buildLevelWorld(levelRecord, {
     const finalBosses = [];
     const pods = [];
     const watchers = [];
+    const talkers = [];
     /**
      * ⛓⛓⛓ R6 SLICE 6d: every placed `Oracle`, for the ONE question W-blood
      * has to answer about it — how close did the scripted walk get?
@@ -4387,6 +4402,77 @@ export function buildLevelWorld(levelRecord, {
                 ey: y + TILE_SIZE / 2,
                 persistTag: entityTag,
             });
+        }
+        /**
+         * ⛓⛓⛓ R9 SLICE 12e‴: THE TALKER ROSTER — every PLACED NPC whose
+         * dialogue a walk can open with the SWORD key.
+         *
+         * ⛔ THE KEY IS `keys[6]`, WHICH IS `Key.X`, WHICH IS `primary`.
+         * `NPCs/NPC.as:191` reads `Input.released(p.keys[6])` and
+         * `Player.as:59`'s array has X at BOTH index 4 and index 6. Until
+         * this roster existed the model had no placed dialogue but the
+         * Watcher's — and the Watcher is the one NPC that needs no key
+         * (`NPCs/Watcher.as:46`), so the key was never exercised. See
+         * `dialogue.PLACED_NPC_TALK` for the whole reading and for the 28
+         * ticks it cost `r8-d2-19`.
+         *
+         * ⚠ THE TEST IS A CIRCLE, NOT THE SOLID BOX. `NPC.as:190` is
+         * `FP.distance(x, y, p.x, p.y) <= talkRange` on ENTITY positions —
+         * so L19's sign, whose 16x16 solid spans y in [120, 136), still
+         * talks to a player standing at y = 152: the origins are 17.09 px
+         * apart and `talkRange` is 24. The blocking rect and the talk radius
+         * answer different questions and neither substitutes for the other.
+         *
+         * ⛔ AND AN UNTRANSCRIBED TALKER REFUSES BY NAME. A texted entity
+         * whose type is in neither `PLACED_NPC_TALK` nor
+         * `TALK_OWNED_ELSEWHERE` throws HERE, at build time, rather than
+         * walking past a dialogue the game would have run
+         * ([[feedback_fallback_reinstates_the_defect]]).
+         */
+        if (consults.has('proximity-hazard') && (e.attrs?.text ?? '') !== ''
+            && !cls.pickup && e.type !== 'seed') {
+            const row = PLACED_NPC_TALK[e.type];
+            if (!row && !TALK_OWNED_ELSEWHERE[e.type]) {
+                throw new Error(`levelWorld: level ${level}'s \`${e.type}\` at `
+                    + `(${e.x}, ${e.y}) carries a \`text\` attribute and no `
+                    + '`dialogue.PLACED_NPC_TALK` row. A placed NPC with text TALKS — '
+                    + '`NPCs/NPC.as:225` opens on an X release inside `talkRange` — and '
+                    + 'the dialogue freezes the player for as long as its pages take. '
+                    + 'Transcribe the class (its `Game.as` spawn line, its `_lineLength` '
+                    + 'and whether `doneTalking()` does anything) rather than letting a '
+                    + 'walk pass through it.');
+            }
+            if (row) {
+                if (typeof cls.dx !== 'number' || typeof cls.dy !== 'number') {
+                    throw new Error(`levelWorld: \`${e.type}\` is a talker but its class `
+                        + 'row carries no ctor offset, so the talk CIRCLE has no centre. '
+                        + '`NPC.as:47` puts the entity at the stacked ctor offset and '
+                        + '`dx`/`dy` are exactly that stack.');
+                }
+                talkers.push({
+                    id: `${e.type}@${e.x},${e.y}`,
+                    tag: e.type,
+                    x, y,
+                    // ⛓ DERIVED, not re-transcribed: `dx`/`dy` on a `rect` row
+                    // ARE the stacked constructor offset (`Statue`'s row carries
+                    // the two-level derivation in full), so the talk circle's
+                    // centre is the same number the solid rect is built from and
+                    // the two cannot drift apart. The watcher roster transcribes
+                    // its half-tile only because `watcher` is a `collider:
+                    // 'none'` row with no dx/dy to read.
+                    ex: x + cls.dx,
+                    ey: y + cls.dy,
+                    persistTag: entityTag,
+                    text: e.attrs.text,
+                    // ⚠ 0, NOT the AS3 signature's 10. `o.@frames` on a missing
+                    // attribute is an empty XMLList and `int("")` is 0, so the
+                    // parameter default is unreachable from a level file and 0 —
+                    // one character per frame — is the game's own value.
+                    talkingSpeed: intAttr(e.attrs, 'frames', 0),
+                    lineLength: row.lineLength,
+                    doneTalking: row.doneTalking,
+                });
+            }
         }
         /**
          * ⛓⛓⛓ R6 SLICE 6f: THE OWL ROSTER — the FIFTEENTH per-visit family,
@@ -5301,6 +5387,13 @@ export function buildLevelWorld(levelRecord, {
         proximityHazards,
         entryHazards,
         watchers,
+        /**
+         * ⛓ R9 slice 12e‴: `{id, tag, x, y, ex, ey, persistTag, text,
+         * talkingSpeed, lineLength, doneTalking}` for every placed NPC with
+         * text that is not the Watcher — the rows `levelRun.stepTalkersNow`
+         * runs. In `.oel` order, like every other roster here.
+         */
+        talkers,
         oracles,
         /**
          * ⛓⛓⛓ R6 slice 6f: the Owl, `{id, tag, x, y, ex, ey, persistTag}`,

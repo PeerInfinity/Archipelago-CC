@@ -151,6 +151,10 @@ import {
     SLASH_HIT_TICKS, distanceRectPoint, slashReachFor, slashRect,
 } from './presses.js';
 import { rectsOverlap } from './levelWorld.js';
+// ⛓ R9 slice 12e‴ (⚖ ruling 53): the talk radius, from the module that
+// transcribed it. Two spellings of 24 would be two rules
+// ([[feedback_two_cost_models_must_agree]]).
+import { TALK_RANGE } from './endingChain.js';
 
 export class StrikePolicyError extends Error {
     constructor(message) { super(message); this.name = 'StrikePolicyError'; }
@@ -613,8 +617,88 @@ export function certifyDash(state, bodies, deferred, { held = null } = {}) {
  *   THE PLANNER SCHEDULED, and nothing else.
  * @param {?object} opts.dashPlan  ⚖ ruling 35, R9 slice 12c′ — see below.
  */
+/**
+ * ⛓⛓⛓ R9 SLICE 12e‴ (⚖ RULING 53) — **THE TALK GUARD: THE SWORD KEY IS ALSO
+ * THE TALK KEY, SO A PRESS NEXT TO A SIGN IS A 28-TICK STOP.**
+ *
+ * `NPCs/NPC.as:191` is `Input.released(p.keys[6])` and `Player.as:59` puts
+ * `Key.X` at index 6 as well as index 4 — the SWORD key opens a placed NPC's
+ * dialogue, which raises `Game.freezeObjects` until its pages run out. On
+ * `r8-d2-19` that was 28 ticks of a walk that thought it was swinging at the
+ * Shieldspire (kickoff §36).
+ *
+ * ⚖ Ruling 53 (user): *"Wouldn't it be better to just not trigger the sign
+ * reading? … don't press the button that triggers it in range."* ⇒ the
+ * dialogue is NOT priced. It is FORBIDDEN: no press this policy schedules may
+ * have its RELEASE inside a circle. `levelRun` still steps a dialogue
+ * faithfully if one is somehow opened — that is the model's knowledge, and
+ * the recorded-stream pin rests on it — but the planner never plans into one.
+ *
+ * ── ⛔ THE TRIGGER IS THE RELEASE, WHICH IS THE TICK *AFTER* THE PRESS ──
+ *
+ * Every press arm here holds `primary` for exactly one tick, so the release
+ * lands at `tick + 1` and the position that matters is the one the player
+ * will have THEN — which this side cannot know. So the guard is a SAFE
+ * OVER-APPROXIMATION: it tests THIS tick's distance against `TALK_RANGE` plus
+ * a bound on one tick's travel. It can refuse a press that would in fact have
+ * been released just outside a circle; it cannot let one through that would
+ * have been released inside. For a constraint whose violation costs 28 ticks
+ * and whose false positive costs one re-timed press, that is the correct
+ * direction to be wrong in — and the refusals are traced by name so the
+ * choice is visible rather than silent.
+ *
+ * ── The bound, DERIVED ────────────────────────────────────────────────
+ *
+ * `Mobile.mobileUpdate` is friction -> `input()` -> `moveX(v.x)`/`moveY(v.y)`.
+ * Friction only SHRINKS `v`; `applyInput` adds at most `moveSpeed` on each
+ * axis; `set slashing`'s dash arm adds at most `SLASH_DASH_FORCE`. So one
+ * tick moves the player at most `|v| + moveSpeed*sqrt(2) + SLASH_DASH_FORCE`,
+ * and `moveSpeed` is bounded by the largest entry in `MOVE_SPEEDS`. Nothing
+ * here is typed.
+ */
+export const MAX_MOVE_SPEED = Math.max(...MOVE_SPEEDS);
+
+/** One tick's greatest possible displacement, from a velocity. */
+export function oneTickTravelBound(vx = 0, vy = 0) {
+    return Math.hypot(vx, vy) + MAX_MOVE_SPEED * Math.SQRT2 + SLASH_DASH_FORCE;
+}
+
+/**
+ * Would a `primary` press decided at THIS tick be released inside a talk
+ * circle? Returns the offending circle (with its distance and the guard
+ * radius) or `null`.
+ *
+ * @param {object} state       the player, `{x, y, vx, vy}`
+ * @param {object[]} circles   `[{id, tag, ex, ey}]` — `run.talkCircles`
+ * @param {number} aheadTicks  how many ticks until the RELEASE (1 for a press
+ *   decided now, 2 for an aim whose press lands next tick)
+ */
+export function talkGuard(state, circles, aheadTicks = 1) {
+    if (!circles || circles.length === 0) return null;
+    const reach = TALK_RANGE + aheadTicks * oneTickTravelBound(state.vx ?? 0, state.vy ?? 0);
+    let worst = null;
+    for (const c of circles) {
+        const d = Math.hypot(c.ex - state.x, c.ey - state.y);
+        if (d <= reach && (worst === null || d < worst.distance)) {
+            worst = { id: c.id, tag: c.tag, distance: d, guardRadius: reach, aheadTicks };
+        }
+    }
+    return worst;
+}
+
+/** The refusal sentence, one spelling, so every arm names the same rule. */
+function talkWhy(g, pressTick) {
+    return `a \`primary\` press at tick ${pressTick} would be RELEASED inside `
+        + `\`${g.id}\`'s talk range — ${g.distance.toFixed(2)} px from it, guard radius `
+        + `${g.guardRadius.toFixed(2)} (talkRange ${TALK_RANGE} + ${g.aheadTicks} tick(s) of `
+        + 'travel). `NPCs/NPC.as:191` reads the SWORD key as the talk key, so the release '
+        + 'would open the dialogue and freeze the player until its pages run out (⚖ ruling '
+        + '53). The press is refused, not priced — re-time it or route around the circle.';
+}
+
 export function createStrikePolicy({
     facingToward, facingKeys, allowDash = false, hasSword = true, dashPlan = null,
+    talkCircles = [],
 } = {}) {
     if (typeof facingToward !== 'function') fail('createStrikePolicy: facingToward is required');
     if (!facingKeys) fail('createStrikePolicy: facingKeys is required');
@@ -692,6 +776,13 @@ export function createStrikePolicy({
         },
         /** ⛓ R9 slice 12c — the rows where a dash was refused, either arm. */
         get dashRefusals() { return trace.filter((t) => t.dashRefused).map((t) => ({ ...t })); },
+        /**
+         * ⛓ R9 slice 12e‴ (⚖ ruling 53) — the presses this policy refused
+         * because their RELEASE would have landed inside a talk circle. A
+         * positive witness for a constraint that must never be violated: a
+         * refusal with no row is a rule nobody can see working (trap 101).
+         */
+        get talkRefusals() { return trace.filter((t) => t.talkRefused).map((t) => ({ ...t })); },
         /** ⛓ R9 slice 12c′ — the presses `planSwordDash` SCHEDULED and this walk took. */
         get plannedPresses() {
             return trace.filter((t) => t.decision === STRIKE_PRESS && t.planned)
@@ -718,6 +809,27 @@ export function createStrikePolicy({
             if (aimed !== null) {
                 const target = aimed.id;
                 const dash = aimed.dash ?? false;
+                /**
+                 * ⚖ RULING 53 — LAST CHANCE, AND IT IS NOT REDUNDANT WITH THE
+                 * ONE AT THE AIM. The aim was taken a tick ago against a
+                 * bound on TWO ticks of travel; this tick's real position is
+                 * measured, so a press that drifted into a circle is caught
+                 * here with one tick's bound instead of an estimate of two.
+                 * The aim is dropped, not deferred: `owed` is untouched, so
+                 * the same body is aimable again once the walk is clear.
+                 */
+                const late = talkGuard(state, talkCircles, 1);
+                if (late !== null) {
+                    aimed = null;
+                    trace.push({
+                        tick,
+                        decision: STRIKE_NONE,
+                        target,
+                        talkRefused: late,
+                        why: talkWhy(late, tick),
+                    });
+                    return { held: walkHeld, decision: STRIKE_NONE };
+                }
                 aimed = null;
                 owed.set(target, tick);
                 lastPressAt = tick;
@@ -750,6 +862,21 @@ export function createStrikePolicy({
              * walk keeps.
              */
             if (allowDash && plannedTicks.has(tick) && slash && !state.fall) {
+                // ⚖ RULING 53 — a SCHEDULED press is still a press, and its
+                // release opens the same dialogue. The plan yields rather
+                // than triggers; `planSwordDash` is free to schedule the
+                // displacement elsewhere on the route.
+                const near = talkGuard(state, talkCircles, 1);
+                if (near !== null) {
+                    trace.push({
+                        tick,
+                        decision: STRIKE_NONE,
+                        planned: true,
+                        talkRefused: near,
+                        why: talkWhy(near, tick),
+                    });
+                    return { held: walkHeld, decision: STRIKE_NONE };
+                }
                 const now = slashPressForecast(slash, {
                     tick, ticksAhead: 0, direction: state.direction ?? 0,
                     vx: state.vx ?? 0, vy: state.vy ?? 0,
@@ -835,6 +962,25 @@ export function createStrikePolicy({
              * the plain rect is the only rect a press can swing and the two
              * arms agree by construction. A row asserts it.
              */
+            /**
+             * ⚖ RULING 53, AND IT IS TAKEN AT THE AIM FOR THE SAME REASON THE
+             * DASH REFUSAL IS: an aim spends a direction key on a press that
+             * will not be taken. The press this aim earns lands at `tick + 1`
+             * and is RELEASED at `tick + 2`, so the bound is two ticks of
+             * travel — and the press arm re-checks with one tick's when the
+             * real position is known.
+             */
+            const aimTalk = talkGuard(state, talkCircles, 2);
+            if (aimTalk !== null) {
+                trace.push({
+                    tick,
+                    decision: STRIKE_NONE,
+                    saw: bodies.length,
+                    talkRefused: aimTalk,
+                    why: talkWhy(aimTalk, tick + 1),
+                });
+                return { held: walkHeld, decision: STRIKE_NONE };
+            }
             const forecast = (slash && allowDash)
                 ? slashPressForecast(slash, {
                     tick, ticksAhead: 1, direction: state.direction ?? 0,
