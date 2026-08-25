@@ -4734,6 +4734,48 @@ a rung routing through L1, L12 or L58 owes their `doneTalking()`; §35.8's mutan
 (d) is still owed by whoever completes the re-record; ⚖ 47b (5) and (6) carry
 forward.
 
+### ⛔⛔⛔ SLICE 12e′ THIRD RUN — **THE THIRTEEN WALKS ARE AUTHORED AND THE GAME ANSWERED EVERY LATCH; S3 IS A THIRD STOP, ON ONE ULP** (kickoff §37, ⚖ ruling 55, 2026-08-25)
+
+**What the game said.** All thirteen licensed walks were re-authored and driven:
+the campaign ten on (D′) to the digit with all fifteen boundaries CALM
+(78 · 84 · 410 · 229 · 97 · 152 · 23 · 145 · 36 · **118 at 0 hits**, chain
+**3326**), and the three `r8-d2` rows on (D″) — ⛓⛓⛓ **`r8-d2-19` at 721 t,
+0 hits, 0 deaths, arrival 19→20, `the arrival is CALM — v=(0,0)`, 46 signature
+rows latched at tick 721**, which is ⚖ 53's witness and the row two runs died
+on; `r8-d2-20` 554; headline **1685 = 410 + 721 + 554** tick for tick, both
+seams green. S3 derived its record set correctly — 149 projected, **13 moved**,
+0 appeared, 0 vanished, every one inside the sealed licence.
+
+**Then `--record` came back `327 / 9 / 47`.** Eight tapes red on
+*"THE MODEL REPRODUCES THE RECORDING IT JUST MADE"*, every one **~1 ULP**
+(±7.1e-15 px), with a **13/13 predictor**: a `primary` DOUBLE-PRESS released
+while BOTH a horizontal and a vertical direction key are held — a DIAGONAL dash.
+`r9-solve-3` has 21 AXIS dashes over 152 ticks and passes; `r9-solve-13` fails
+at tick 5 of 36. The ninth is `r8-solve-10`'s `saw_auto_advance=0 against 1
+earned`, where the sword IS collected and the ceremony IS priced.
+
+⛓ **CLASS A IS ALREADY CLOSED, OFFLINE, TO 13/13** — TWO ULP sources in ONE AS3
+expression: `Player.as:788`'s position ROUND TRIP `x − (x − v.x)`, which the
+model's spend site skips, and `knockbackImpulse` spelling `Point.normalize` with
+`Math.hypot` + `cx / length` where the model's own `pointNormalize` spells it
+`sqrt(x*x+y*y)` + `*= (1/length)`. Ablation: round trip alone **10/13**,
+normalize alone **5/13 (nothing)**, both **13/13**; inert over the whole roster
+(137 → 145 EXACT of 149, same four pre-existing residuals). Class B's reading is
+that 12e‴'s Help model made the CHECK's premise false, with the intra-frame
+order of `Help.update` vs `Bot.update` named as unproven.
+
+⚖ **RULING 55 (user): both are a NEW session, slice 12e⁗.** ⇒ **the 12c batch
+does NOT close here.** The series is parked LOCAL on
+**`r9/re-record-attempt-4` @`763bf3cb8`** (`-3` @`8078cd3d7` kept as the
+archive); `main` = **`3081682bf`**, which is a TAPE-INERT pipeline fix and the
+only thing that landed: `predict()` returned a SUBSET of what it flushed, so
+§35.4's chain-order fix had **only ever worked on the `--from=S1` resume path**,
+and S2's sealed-table guard tested the GLOBAL failure counter. The kit for 12e⁗
+— failing ticks, deltas, the ablation, the run directory and the `--from=S3`
+command — is kickoff **§37.7a**. §35.8's mutant (d) is **SPENT** at last.
+⇒ **NEXT: 12e⁗ → the re-record's FOURTH run → the 12c batch closes → ⚖ 54's
+streamlining P1–P4 → L15 `shove`.**
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
