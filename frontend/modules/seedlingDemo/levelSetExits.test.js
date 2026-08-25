@@ -20,6 +20,9 @@ import {
     planTopology,
     retargetLevelSet,
     retargetRoomXml,
+    retargetRoomRecord,
+    removeExitFromRoomXml,
+    removeExitFromRecord,
     signForTransition,
     walkableCellsFrom,
 } from './levelSetExits.js';
@@ -34,6 +37,9 @@ import { buildLevelSet, reachabilityOf } from './levelSetExporter.js';
 import { emptyLevel, oelAtTile, withEntities, withTerrain } from './procgenLevel.js';
 import { TILE_SIZE } from './levelWorld.js';
 import roomRefs from './fixtures/seedling-vanilla-room-refs.json';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { recordToOel, parseOelLevel } from './procgenLevelOel.js';
 
 const VANILLA = Object.keys(roomRefs.rooms).map(Number).sort((a, b) => a - b);
 const vanillaDoc = (id) => parseRoomXml(roomRefs.rooms[id]);
@@ -553,5 +559,259 @@ describe('the validator rule Phase 5b added', () => {
 
     it('keeps the tile constant it checks against in step with the engine', () => {
         expect(TILE_PX).toBe(TILE_SIZE);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ **EDITOR v3 E1b — THE RECORD TWINS, AND THEIR EQUALITY ROWS**
+ * (plan §22.8; as-built §24)
+ *
+ * ⛔ THE CLAIM IS AN EQUALITY, NOT A RESEMBLANCE: for every room of every
+ * corpus and every edit the text tests above use,
+ *
+ *     parseOelLevel(retargetRoomXml(recordToOel(r), e))  ===  retargetRoomRecord(r, e).record
+ *     parseOelLevel(removeExitFromRoomXml(recordToOel(r), k).xml)
+ *                                                        ===  removeExitFromRecord(r, k).record
+ *
+ * so the twin cannot drift from the writer it twins without a row going red.
+ * ⚠ AND THE REFUSALS ARE PART OF THE EQUALITY — where one side refuses, the
+ * other must refuse too, or the record path would quietly write something the
+ * text path would not.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+const MAP_DOC = JSON.parse(readFileSync(fileURLToPath(
+    new URL('../flashPanel/atlases/seedling-map.json', import.meta.url)), 'utf8'));
+
+/** ⛔ The core four — the shape a set carries. See levelSetValidator.test.js. */
+const coreRecord = (r) => ({
+    width: r.width, height: r.height, layers: r.layers, entities: r.entities,
+});
+
+/** The 116 vanilla rooms as RECORDS, straight off the committed map extract. */
+const VANILLA_RECORDS = MAP_DOC.levels.map(coreRecord);
+
+/**
+ * A GENERATED corpus, through the exporter's own path — `buildLevelSet` with
+ * `{link: true}`, which is what actually wires exits into generated rooms. ⛔ Not
+ * a hand-written fixture: the point is that the twin agrees with the writer over
+ * documents this repo really produces.
+ */
+const GENERATED_RECORDS = (() => {
+    const { set } = buildLevelSet(
+        Array.from({ length: 6 }, (_, level) => emptyLevel({ level })),
+        { setId: 'e1b-twin-probe', link: true },
+    );
+    return set.rooms.map((r) => (typeof r.source.xml === 'string'
+        ? parseOelLevel(r.source.xml, r.name)
+        : r.source.record));
+})();
+
+const CORPORA = [['vanilla 116', VANILLA_RECORDS], ['generated 6', GENERATED_RECORDS]];
+
+/** Both sides of a refusal, compared as a pair. */
+const attempt = (fn) => {
+    try { return { ok: true, value: fn() }; } catch (e) { return { ok: false, why: e.message }; }
+};
+
+describe('EDITOR v3 E1b — retargetRoomRecord is retargetRoomXml, on records', () => {
+    for (const [label, records] of CORPORA) {
+        it(`${label}: every exit, retargeted, agrees with the text writer`, () => {
+            let edited = 0;
+            records.forEach((record, id) => {
+                const doc = parseRoomXml(recordToOel(record));
+                doc.exits.forEach((_, index) => {
+                    // The edit vocabulary the text tests use, plus the vanilla
+                    // one the retargeter was written for.
+                    for (const edit of [
+                        { index, to: (id + 1) % records.length, playerx: 64, playery: 80, sign: 5 },
+                        { index, to: id, sign: SIGN_NONE },
+                        { index, sign: 3 },
+                    ]) {
+                        const viaText = attempt(() => parseOelLevel(
+                            retargetRoomXml(recordToOel(record), { exits: [edit] }).xml, `r${id}`,
+                        ));
+                        const viaRecord = attempt(
+                            () => retargetRoomRecord(record, { exits: [edit] }).record,
+                        );
+                        expect(viaRecord.ok, `${label} room ${id} exit ${index}`).toBe(viaText.ok);
+                        if (viaText.ok) {
+                            expect(viaRecord.value, `${label} room ${id} exit ${index}`)
+                                .toEqual(viaText.value);
+                        }
+                        edited += 1;
+                    }
+                });
+            });
+            expect(edited).toBeGreaterThan(0);
+        });
+
+        /**
+         * ⛔ THE COUNT IS PINNED PER CORPUS, because ZERO is a legitimate answer
+         * here and a bare `> 0` would either fail on the generated set or pass
+         * vacuously on it. `@fallthrough` rides `<control>`, and the LINKER
+         * emits only teleporters — so the generated corpus carries none, which
+         * this row states rather than skips ([[feedback_bounded_sweep_must_name_what_it_bounded]]).
+         * The vanilla figure is the extractor's own measured total (12) × the
+         * two edits below.
+         */
+        const FALLTHROUGH_EDITS = { 'vanilla 116': 24, 'generated 6': 0 };
+        it(`${label}: every fallthrough, retargeted, agrees with the text writer `
+            + `(${FALLTHROUGH_EDITS[label]} edit(s) in this corpus)`, () => {
+            let edited = 0;
+            records.forEach((record, id) => {
+                const doc = parseRoomXml(recordToOel(record));
+                doc.fallthroughs.forEach((_, index) => {
+                    for (const edit of [{ index, to: id, sign: 4 }, { index, to: 0, sign: SIGN_NONE }]) {
+                        const viaText = parseOelLevel(retargetRoomXml(
+                            recordToOel(record), { fallthroughs: [edit] },
+                        ).xml, `r${id}`);
+                        expect(retargetRoomRecord(record, { fallthroughs: [edit] }).record,
+                            `${label} room ${id} fallthrough ${index}`).toEqual(viaText);
+                        edited += 1;
+                    }
+                });
+            });
+            expect(edited).toBe(FALLTHROUGH_EDITS[label]);
+        });
+
+        it(`${label}: \`seen\` and \`applied\` agree, ordinal for ordinal`, () => {
+            records.forEach((record, id) => {
+                const text = retargetRoomXml(recordToOel(record), {});
+                const rec = retargetRoomRecord(record, {});
+                expect(rec.seen, `${label} room ${id}`).toEqual(text.seen);
+                expect(rec.applied).toBe(text.applied);
+            });
+        });
+    }
+
+    /**
+     * ⛔⛔ **THE ORDINAL IS THE ORDINAL `ELEMENT_RE` SEES.** This is the mutant
+     * the design is most exposed to: a record walk that visited entities in any
+     * other order would still produce a legal document and would move the WRONG
+     * DOOR. The row addresses each exit by its own index and asserts the door
+     * that moved is the one the text writer moved.
+     */
+    it('addresses the SAME door as the text writer, exit by exit, over the 116', () => {
+        let checked = 0;
+        VANILLA_RECORDS.forEach((record, id) => {
+            const doc = parseRoomXml(recordToOel(record));
+            doc.exits.forEach((exit, index) => {
+                const edit = { index, to: 7, playerx: 111, playery: 222, sign: 6 };
+                const after = parseRoomXml(recordToOel(
+                    retargetRoomRecord(record, { exits: [edit] }).record,
+                ));
+                after.exits.forEach((ex, k) => {
+                    if (k === index) {
+                        expect(ex, `room ${id} exit ${index}`)
+                            .toMatchObject({ to: 7, playerx: 111, playery: 222, sign: 6 });
+                    } else {
+                        expect(ex, `room ${id} exit ${k} must be untouched`).toEqual(doc.exits[k]);
+                    }
+                });
+                checked += 1;
+            });
+        });
+        expect(checked).toBe(280);
+    });
+
+    it('refuses a destination move with no sign, on both sides', () => {
+        const record = VANILLA_RECORDS.find((r) => parseRoomXml(recordToOel(r)).exits.length > 0);
+        expect(() => retargetRoomRecord(record, { exits: [{ index: 0, to: 9 }] }))
+            .toThrow(/announces the region of the room the player did NOT go to/);
+    });
+
+    it('adds no sign attribute where there was none and the new sign is 0', () => {
+        const record = { width: 10, height: 10, layers: [], entities: [
+            { type: 'stairsdown', x: 48, y: 16, attrs: { to: '4', playerx: '16', playery: '16' } },
+        ] };
+        const out = retargetRoomRecord(record, { exits: [{ index: 0, to: 2, sign: SIGN_NONE }] });
+        expect(Object.hasOwn(out.record.entities[0].attrs, 'sign')).toBe(false);
+        expect(out.record.entities[0].attrs.to).toBe('2');
+        expect(recordToOel(out.record)).not.toMatch(/stairsdown[^>]*sign=/);
+    });
+
+    it('writes attribute values as STRINGS, so the render round trips', () => {
+        const record = { width: 10, height: 10, layers: [], entities: [
+            { type: 'teleporter', x: 16, y: 16, attrs: { to: '3', sign: '0' } },
+        ] };
+        const out = retargetRoomRecord(record, { exits: [{ index: 0, to: 9, sign: 5 }] }).record;
+        expect(out.entities[0].attrs).toEqual({ to: '9', sign: '5' });
+        expect(parseOelLevel(recordToOel(out), 'probe')).toEqual(out);
+    });
+
+    it('is COPY-ON-WRITE — an edit that changes nothing returns the same object', () => {
+        const record = VANILLA_RECORDS[0];
+        expect(retargetRoomRecord(record, {}).record).toBe(record);
+        const out = retargetRoomRecord(record, {
+            exits: [{ index: 0, to: 1, sign: 1 }],
+        }).record;
+        expect(out).not.toBe(record);
+        expect(record.entities[0]).toEqual(VANILLA_RECORDS[0].entities[0]);
+    });
+});
+
+describe('EDITOR v3 E1b — removeExitFromRecord is removeExitFromRoomXml, on records', () => {
+    for (const [label, records] of CORPORA) {
+        it(`${label}: every exit, unwired, agrees with the text writer`, () => {
+            let removed = 0;
+            records.forEach((record, id) => {
+                const doc = parseRoomXml(recordToOel(record));
+                doc.exits.forEach((_, index) => {
+                    const viaText = attempt(() => parseOelLevel(
+                        removeExitFromRoomXml(recordToOel(record), index).xml, `r${id}`,
+                    ));
+                    const viaRecord = attempt(() => removeExitFromRecord(record, index).record);
+                    expect(viaRecord.ok, `${label} room ${id} exit ${index}`).toBe(viaText.ok);
+                    if (viaText.ok) {
+                        expect(viaRecord.value, `${label} room ${id} exit ${index}`)
+                            .toEqual(viaText.value);
+                    }
+                    removed += 1;
+                });
+            });
+            expect(removed).toBeGreaterThan(0);
+        });
+
+        it(`${label}: \`removed\` and \`seen\` agree with the text writer`, () => {
+            records.forEach((record, id) => {
+                const doc = parseRoomXml(recordToOel(record));
+                doc.exits.forEach((_, index) => {
+                    const text = attempt(() => removeExitFromRoomXml(recordToOel(record), index));
+                    const rec = attempt(() => removeExitFromRecord(record, index));
+                    if (!text.ok) return;
+                    expect(rec.value.removed, `${label} room ${id} exit ${index}`)
+                        .toEqual(text.value.removed);
+                    expect(rec.value.seen).toEqual(text.value.seen);
+                });
+            });
+        });
+    }
+
+    it('refuses an exit carrying `nodes`, exactly as the text side refuses one with children', () => {
+        const record = { width: 10, height: 10, layers: [], entities: [
+            { type: 'teleporter', x: 16, y: 16, attrs: { to: '1', sign: '0' },
+                nodes: [{ x: 32, y: 16 }] },
+        ] };
+        expect(() => removeExitFromRecord(record, 0)).toThrow(/nodes.*CHILDREN/s);
+        expect(() => removeExitFromRoomXml(recordToOel(record), 0)).toThrow(/CHILDREN/);
+    });
+
+    it('refuses an ordinal the room does not have, BY NAME', () => {
+        const record = { width: 10, height: 10, layers: [], entities: [] };
+        expect(() => removeExitFromRecord(record, 0)).toThrow(/this room has 0 exits/);
+    });
+
+    it('shifts the ordinals after it down by one, and says so in `seen`', () => {
+        const record = parseOelLevel(recordToOel({
+            width: 10, height: 10, layers: [], entities: [
+                { type: 'teleporter', x: 16, y: 16, attrs: { to: '1', sign: '0' } },
+                { type: 'teleporter', x: 32, y: 16, attrs: { to: '2', sign: '0' } },
+                { type: 'teleporter', x: 48, y: 16, attrs: { to: '3', sign: '0' } },
+            ],
+        }), 'probe');
+        const out = removeExitFromRecord(record, 1);
+        expect(out.seen).toEqual({ exits: 3 });
+        expect(out.removed).toMatchObject({ element: 'teleporter', to: 2, x: 32, y: 16 });
+        expect(parseRoomXml(recordToOel(out.record)).exits.map((e) => e.to)).toEqual([1, 3]);
     });
 });

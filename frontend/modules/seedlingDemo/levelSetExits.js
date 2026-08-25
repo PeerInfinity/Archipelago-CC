@@ -702,3 +702,199 @@ export function removeExitFromRoomXml(xml, exitIndex) {
         seen: { exits: index },
     };
 }
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ **EDITOR v3 E1b — THE TWO TEXT WRITERS' RECORD TWINS** (plan §22.8,
+ * as-built §24)
+ *
+ * ⚖ A level-set room is a JSON RECORD now, so a retarget and an unwire have to
+ * be expressible on `entities[].attrs` — copy-on-write, no text anywhere.
+ *
+ * ⛔ **THE TEXT WRITERS STAY, AND A MIXED SET RETARGETS EACH ROOM IN ITS OWN
+ * KIND.** `retargetRoomXml` / `removeExitFromRoomXml` / `retargetLevelSet` are
+ * how a LEGACY `xml` room is edited, and converting one to a record because it
+ * was touched would silently change the document's kind — which is the author's,
+ * never the editor's.
+ *
+ * ⛓ **THE EDIT VOCABULARY IS TAKEN VERBATIM** from `retargetRoomXml` above, and
+ * that includes the two rules a reimplementation would have quietly dropped:
+ *
+ *   ·  **absent + default stays absent.** Vanilla writes `sign="0"` on
+ *      teleporters and omits it on stairs; adding the attribute where it was not
+ *      would make a retarget that changed no destination still change the
+ *      document.
+ *   ·  **the sign is rewritten with the destination or not at all** — `sign` is
+ *      a property of the TRANSITION, so an unchanged sign announces the region
+ *      of the room the player did NOT go to.
+ *
+ * ⛓ **AND THE ORDINAL IS THE SAME ORDINAL.** `recordToOel` writes `entities[]`
+ * into `<objects>` in array order and `ELEMENT_RE` scans in document order, so
+ * the k-th exit of a record and the k-th exit of its render are the same door.
+ * `levelSetExits.test.js` asserts that as an EQUALITY over the whole vanilla
+ * corpus rather than as a comment.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * An entity's attribute bag as the writers see it: `attrs` alone. ⛔ `x`/`y`
+ * live in the ENTITY and never in `attrs` (`parseOelLevel` hoists them out,
+ * `recordToOel` refuses a duplicate), and no edit below touches them — exactly
+ * as no text edit above does.
+ */
+const attrsOfEntity = (e) => (e?.attrs !== null && typeof e?.attrs === 'object'
+    && !Array.isArray(e.attrs) ? e.attrs : {});
+
+const isExitEntity = (e) => {
+    const a = attrsOfEntity(e);
+    return EXIT_ELEMENTS.includes(e?.type) && a.to !== undefined && a.to !== '';
+};
+
+const hasFallthrough = (e) => {
+    const a = attrsOfEntity(e);
+    return a.fallthrough !== undefined && a.fallthrough !== '';
+};
+
+/**
+ * `setAttr`'s record twin: replace in place when present, append when absent,
+ * and LEAVE IT ABSENT when the value is the omissible default.
+ *
+ * ⚠ THE VALUE IS WRITTEN AS A STRING, because that is what `parseOelLevel`
+ * answers with for every attribute and what `recordToOel` renders back — a
+ * number here would make `parseOel(render(record))` and `record` differ on a
+ * field neither the game nor any reader distinguishes, and the equality rows
+ * would be measuring this function's taste.
+ */
+function setRecordAttr(attrs, name, value, { omitWhen = null } = {}) {
+    if (Object.hasOwn(attrs, name)) return { ...attrs, [name]: String(value) };
+    if (omitWhen !== null && String(value) === String(omitWhen)) return attrs;
+    return { ...attrs, [name]: String(value) };
+}
+
+/**
+ * RETARGET the exits of one room's RECORD — `retargetRoomXml`'s twin.
+ *
+ * @param {object} record `{width, height, layers, entities}`
+ * @param {object} edits
+ * @param {object[]} [edits.exits]         sparse: `{index, to, playerx, playery, sign}`
+ * @param {object[]} [edits.fallthroughs]  sparse: `{index, to, sign}`
+ * @returns {{record: object, applied: number, seen: {exits: number, fallthroughs: number}}}
+ */
+export function retargetRoomRecord(record, edits = {}) {
+    if (record === null || typeof record !== 'object' || Array.isArray(record)) {
+        fail('levelSetExits: retargetRoomRecord needs a level record');
+    }
+    const byExit = new Map((edits.exits ?? []).map((e) => [e.index, e]));
+    const byFall = new Map((edits.fallthroughs ?? []).map((e) => [e.index, e]));
+
+    let exitIndex = 0;
+    let fallIndex = 0;
+    let applied = 0;
+    let touched = false;
+    const entities = (Array.isArray(record.entities) ? record.entities : []).map((e) => {
+        const before = attrsOfEntity(e);
+        let attrs = before;
+        if (isExitEntity(e)) {
+            const edit = byExit.get(exitIndex);
+            exitIndex += 1;
+            if (edit) {
+                applied += 1;
+                if (edit.to !== undefined) attrs = setRecordAttr(attrs, 'to', edit.to);
+                if (edit.playerx !== undefined) attrs = setRecordAttr(attrs, 'playerx', edit.playerx);
+                if (edit.playery !== undefined) attrs = setRecordAttr(attrs, 'playery', edit.playery);
+                if (edit.to !== undefined && edit.sign === undefined) {
+                    fail(`levelSetExits: exit ${exitIndex - 1} is retargeted to room ${edit.to} `
+                        + 'with no sign. `sign` is a property of the TRANSITION, not of the '
+                        + 'source, so an unchanged sign announces the region of the room the '
+                        + 'player did NOT go to. Pass sign: 0 to announce nothing.');
+                }
+                if (edit.sign !== undefined) {
+                    attrs = setRecordAttr(attrs, 'sign', edit.sign, { omitWhen: SIGN_NONE });
+                }
+            }
+        }
+        // ⚠ A SECOND, INDEPENDENT ORDINAL — `@fallthrough` rides `<control>`,
+        // not an exit element, so an entity can be neither, either or (in
+        // principle) both, exactly as the text writer allows.
+        if (hasFallthrough(e)) {
+            const edit = byFall.get(fallIndex);
+            fallIndex += 1;
+            if (edit) {
+                applied += 1;
+                if (edit.to !== undefined) attrs = setRecordAttr(attrs, 'fallthrough', edit.to);
+                if (edit.to !== undefined && edit.sign === undefined) {
+                    fail(`levelSetExits: fallthrough ${fallIndex - 1} is retargeted to room `
+                        + `${edit.to} with no sign. \`Game.as:2148\` reads its own @sign as `
+                        + '`int(o.@sign) - 1`, exactly as a teleporter does, so the same rule '
+                        + 'applies (plan §8.2b).');
+                }
+                if (edit.sign !== undefined) {
+                    attrs = setRecordAttr(attrs, 'sign', edit.sign, { omitWhen: SIGN_NONE });
+                }
+            }
+        }
+        if (attrs === before) return e;
+        touched = true;
+        return { ...e, attrs };
+    });
+
+    return {
+        record: touched ? { ...record, entities } : record,
+        applied,
+        seen: { exits: exitIndex, fallthroughs: fallIndex },
+    };
+}
+
+/**
+ * UNWIRE one exit of a room's RECORD — `removeExitFromRoomXml`'s twin, and the
+ * same ruling: **an unwired exit is a DELETED exit** (§20.5's measured table —
+ * `to=""` and an absent `@to` both read as "no exit" to every JS reader while
+ * the game still builds a live Teleporter warping to room 0).
+ *
+ * ⛔ **AN EXIT WITH `nodes` IS REFUSED**, exactly as the text version refuses a
+ * non-self-closing element: `recordToOel` writes a container element precisely
+ * when `nodes.length > 0`, so the two refusals are the same refusal seen from
+ * the two sides of one render.
+ *
+ * @returns {{record: object, removed: object, seen: {exits: number}}}
+ */
+export function removeExitFromRecord(record, exitIndex) {
+    if (record === null || typeof record !== 'object' || Array.isArray(record)) {
+        fail('levelSetExits: removeExitFromRecord needs a level record');
+    }
+    if (!Number.isInteger(exitIndex) || exitIndex < 0) {
+        fail('levelSetExits: removeExitFromRecord needs a non-negative integer exit ordinal, '
+            + `got ${JSON.stringify(exitIndex)}`);
+    }
+    const entities = Array.isArray(record.entities) ? record.entities : [];
+    let index = 0;
+    let cut = -1;
+    let removed = null;
+    for (let i = 0; i < entities.length; i += 1) {
+        const e = entities[i];
+        if (!isExitEntity(e)) continue;
+        const here = index;
+        index += 1;
+        if (here !== exitIndex) continue;
+        if (Array.isArray(e.nodes) && e.nodes.length > 0) {
+            fail(`levelSetExits: exit ${exitIndex} is <${e.type}> with ${e.nodes.length} `
+                + '`nodes`, which renders as an element with CHILDREN. Removing only its '
+                + 'opening tag would leave the closing tag behind and make the room '
+                + 'unparseable, so this refuses rather than half-deleting — the same refusal '
+                + '`removeExitFromRoomXml` makes on the text side.');
+        }
+        const a = attrsOfEntity(e);
+        removed = { element: e.type, to: Number(a.to), x: Number(e.x), y: Number(e.y) };
+        cut = i;
+    }
+    if (removed === null) {
+        fail(`levelSetExits: this room has ${index} exit${index === 1 ? '' : 's'} `
+            + `(0..${index - 1}); there is no exit ${exitIndex} to unwire`);
+    }
+    return {
+        record: { ...record, entities: entities.filter((_, i) => i !== cut) },
+        removed,
+        // ⚠ THE ORDINALS AFTER IT SHIFT DOWN BY ONE — inherent, since the
+        // address IS the position in the exit list, and returned so a caller can
+        // say so rather than discover it.
+        seen: { exits: index },
+    };
+}
