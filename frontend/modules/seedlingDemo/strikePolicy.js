@@ -140,6 +140,10 @@ import {
     DASH_DISPLACEMENT, ORDINARY_SWING_PERIOD, SLASH_DASH_FORCE, SLASH_SCALE_NORMAL,
     slashPressForecast,
 } from './combatVerbs.js';
+import {
+    DEFAULT_FRICTION, MOVE_SPEEDS, WALK_SPEED, applyFriction, applyInput,
+    knockbackImpulse,
+} from './playerPhysicsV1.js';
 import { plannerContactFree } from './combat.js';
 import { chaseEnvelope } from './encounters.js';
 import { KILL_ARM_POLICY, MODELLED_KILL_ARMS } from './enemyDamage.js';
@@ -423,16 +427,98 @@ export function harmlessThroughDash(body) {
  * the only kind any committed corridor takes — that is exact against
  * `DASH_DISPLACEMENT`.
  *
+ * ⛓⛓⛓ R9 SLICE 12e″ — **AND THE IMPULSE ARRIVES DEFERRED, SO THIS FUNCTION
+ * RESOLVES IT ITSELF.** `combatVerbs.slashSet` names a `force` and no
+ * direction, because the direction is the velocity `useItem` reads and
+ * `useItem` runs BELOW this tick's movement arms. `dashImpulseAtPress`
+ * forecasts that velocity from the walk's own keys with the run's own
+ * primitives; the press this arm is asked about is `ticksAhead: 0`, so those
+ * keys are `decide`'s own `walkHeld` and nothing is guessed. ⛔ There is no
+ * `dvx` on the incoming object to read by accident: the stale direction is
+ * not merely unused here, it does not exist.
+ *
+ * @param {?Set<string>} opts.held  the walk's keys on the press tick.
  * @returns {{certified: boolean, why: ?string, worst: ?object}}
  */
-export function certifyDash(state, bodies, impulse) {
+export function dashImpulseAtPress(state, impulse, held) {
+    if (!impulse) return { impulse: null, refusal: null };
+    // A SETTLED delta — a contact knockback, whose centre is the other body's
+    // position and owes nothing to this tick's keys. Spent as it stands.
+    if (impulse.force === undefined) return { impulse, refusal: null };
+    const v = { x: state.vx ?? 0, y: state.vy ?? 0 };
+    const keys = held ?? new Set();
+    const atRest = v.x === 0 && v.y === 0;
+    /**
+     * ⛔⛔ THE PAIR IS ONLY READ WHEN IT IS NEEDED, AND WHEN IT IS NEEDED IT IS
+     * REFUSED OFF DRY FLAT GROUND rather than guessed. `speedFrictionFor`
+     * picks `SLIDING_*` on ice, `WATER_FRICTION` + a swim burst in water and
+     * lava, and the table's own `STAIR_SPEED` on the two stair states — and
+     * the swim burst comes off a channel this side cannot read. ⛓ The same
+     * bound already sits under `DASH_DISPLACEMENT`, whose 8 ticks and 9 px are
+     * `SLASH_DASH_FORCE / DEFAULT_FRICTION` — so a dash certified on any of
+     * those terrains was already being priced with the wrong decay, and this
+     * refusal closes that hole rather than opening a new one.
+     *
+     * ⚠ THE TERRAIN TERM READS THE **RAW** STATE, so a `noHazards` run walking
+     * over a hazard tile refuses a dash the tick would in fact run at
+     * `WALK_SPEED`. That is the SAFE direction (a refused dash, never an
+     * unpriced one) and it is stated rather than tidied: the coercion needs
+     * the run's `noHazards` list, which the policy is not given.
+     */
+    if (!atRest) {
+        const flags = state.hazard ?? null;
+        const wet = flags
+            && (flags.inWater || flags.inLava || flags.onIce || flags.onWaterfall);
+        const terrain = state.terrain;
+        const stair = terrain !== undefined && MOVE_SPEEDS[terrain] !== WALK_SPEED;
+        if (wet || stair) {
+            return { impulse: null, refusal: 'the dash\'s direction is the velocity '
+                + '`useItem` reads — AFTER this tick\'s movement keys — and resolving it '
+                + 'needs the tick\'s own `moveSpeed`/friction pair. This player is not on '
+                + `dry flat ground (terrain ${terrain}, hazard `
+                + `${JSON.stringify(flags)}), where \`speedFrictionFor\` picks a different `
+                + 'pair and, in water, one this side cannot read at all (the swim burst is '
+                + 'a stepped channel). ⚖ Ruling 35 puts safety over speed, so an '
+                + 'unresolvable direction is a refused dash — and `DASH_DISPLACEMENT`\'s '
+                + 'own decay is wrong on that ground too' };
+        }
+    }
+    /**
+     * ⛓⛓⛓ R9 SLICE 12e″ — **THE VELOCITY `useItem` READS, FORECAST WITH THE
+     * RUN'S OWN PRIMITIVES.** `mobileUpdate` is friction -> `input()` -> the
+     * sweeps, and `useItem(Main.primary)` is `input()`'s LAST act, so the
+     * velocity the dash points along is this tick's post-key one.
+     *
+     * ⛓ AT REST THE PAIR IS NOT READ AT ALL, AND THAT IS THE CASE THAT
+     * DISCRIMINATES. `applyFriction` of the zero vector is the zero vector,
+     * and `applyInput` then writes `±moveSpeed` on each held axis — so the
+     * normalisation inside `knockbackImpulse` divides the scale straight back
+     * out and the direction is the KEYS', exactly, whatever `moveSpeed` is.
+     * That is the press R9 kickoff §33 measured the game paying
+     * `SLASH_DASH_FORCE` for and this model paying nothing.
+     */
+    const vAtPress = applyInput(applyFriction(v, DEFAULT_FRICTION), keys, WALK_SPEED);
+    return {
+        impulse: knockbackImpulse(vAtPress.x, vAtPress.y, impulse.force),
+        refusal: null,
+    };
+}
+
+export function certifyDash(state, bodies, deferred, { held = null } = {}) {
+    const { impulse, refusal } = dashImpulseAtPress(state, deferred, held);
+    if (refusal) return { certified: false, why: refusal, worst: null, contactFree: [] };
     if (!impulse || (impulse.dvx === 0 && impulse.dvy === 0)) {
-        // ⛓ AT REST THE IMPULSE IS EXACTLY (0,0) — `point_normalize` no-ops at
-        // zero length — so the dash moves the player NOWHERE and adds no
-        // ground to price. Certified, and said rather than left to the
-        // arithmetic returning 0.
-        return { certified: true, why: 'the impulse is (0,0) — a dash at rest carries '
-            + 'the player nowhere, so it adds no ground to price', worst: null,
+        /**
+         * ⛓ THE ZERO-LENGTH NO-OP, AND R9 SLICE 12e″ NARROWED WHAT IT COVERS.
+         * It is a dash pressed at rest with NO direction key down: `v` is
+         * still (0,0) when `useItem` reads it, `point_normalize` no-ops and
+         * both guards reject — the game does nothing there either. A dash at
+         * rest with a key STARTING that tick is NOT this case; it pays
+         * `SLASH_DASH_FORCE` along the key and is priced above.
+         */
+        return { certified: true, why: 'the impulse is (0,0) — a dash pressed at rest '
+            + 'with no direction key down carries the player nowhere, so it adds no '
+            + 'ground to price', worst: null,
         contactFree: [] };
     }
     const path = DASH_DISPLACEMENT.perTick.map((carried, k) => ({
@@ -669,8 +755,18 @@ export function createStrikePolicy({
                     vx: state.vx ?? 0, vy: state.vy ?? 0,
                 });
                 const opens = now.outcome === 'dash' || now.outcome === 'slash';
+                /**
+                 * ⛓ R9 SLICE 12e″ — **THE WALK'S OWN KEYS GO WITH THE
+                 * IMPULSE**, because the impulse is DEFERRED: the dash points
+                 * along the velocity `useItem` reads, which is this tick's
+                 * post-key one. At rest with a direction key starting here
+                 * that is the KEY's direction and 9 px of real ground; the
+                 * model used to price it as (0,0) and certify nothing.
+                 * `walkHeld` and not the returned set — `primary` is not a
+                 * direction key and `applyInput` never reads it.
+                 */
                 const verdict = now.outcome === 'dash'
-                    ? certifyDash(state, bodies, now.impulse)
+                    ? certifyDash(state, bodies, now.impulse, { held: walkHeld })
                     : { certified: true, why: null, worst: null };
                 if (opens && verdict.certified) {
                     /**

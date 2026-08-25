@@ -58,7 +58,6 @@
 import { assertRect, rect, rectsOverlap } from './levelWorld.js';
 import { ENEMY_CLASSES, ENEMY_IFRAMES, KILL_CADENCE_FLOOR, SLASH_TIMER_MAX } from './combat.js';
 import { DEFAULT_FRICTION } from './playerPhysicsV1.js';
-import { knockbackImpulse } from './playerPhysicsV2.js';
 import { CHASERS, killWindowTicks } from './chasers.js';
 
 export class CombatVerbError extends Error {
@@ -271,16 +270,19 @@ export const INITIAL_SLASH_STATE = Object.freeze({
  *   `hasSword` / `hasGhostSword` / `wanding` / `firing` / `deathRaying` /
  *   `spearing`    the outer gate's six terms, each named.
  *   `direction`   `Player.direction` — what `slashDirection` latches.
- *   `vx` / `vy`   the player's velocity, for the dash's `knockback` centre.
+ *   ⛔ R9 slice 12e″ REMOVED `vx`/`vy`. They fed the dash's `knockback` centre,
+ *   and a centre taken here is taken a tick early — see the dash arm.
  * @returns {{state: object, outcome: string, slashDirection: ?number,
- *   impulse: ?{dvx: number, dvy: number}, why: string}}
+ *   impulse: ?{force: number}, why: string}}
+ *   `impulse` is DEFERRED: a magnitude with no direction, resolved against the
+ *   velocity `useItem` reads (`playerPhysicsV1.step`'s spend site).
  *   `outcome` is one of `dash` · `slash` · `swallowed` · `release` · `gated`.
  */
 export function slashSet(st, {
     pressed,
     hasSword = false, hasGhostSword = false,
     wanding = false, firing = false, deathRaying = false, spearing = false,
-    direction = null, vx = 0, vy = 0,
+    direction = null,
 } = {}) {
     const gateOpen = (hasSword || hasGhostSword)
         && !wanding && !firing && !deathRaying && !spearing;
@@ -305,13 +307,38 @@ export function slashSet(st, {
         // (1) THE DASH. ⚠ No `!slashing` term — see note 1.
         slashDashed = true;
         anim = SLASH_ANIM_DASH;
-        impulse = knockbackImpulse(vx, vy, SLASH_DASH_FORCE);
+        /**
+         * ⛓⛓⛓ R9 SLICE 12e″ — **THE IMPULSE IS DEFERRED, AND NAMING NO
+         * DIRECTION HERE IS THE WHOLE FIX.**
+         *
+         * `knockback(2, Point(x - v.x, y - v.y))` takes its direction from the
+         * player's velocity — read where `useItem(Main.primary)` runs, which
+         * is `Player.input()`'s LAST act, below the movement arms that have
+         * already written `v` on this tick. This setter is called ABOVE the
+         * step, so the only velocity it could be handed is the one the tick
+         * STARTED with, and that one is a tick stale. It cost the ladder
+         * `SLASH_DASH_FORCE` exactly, on every dash pressed from a standstill
+         * with a direction key starting the same tick: R9 kickoff §33 measured
+         * the game paying 2.80 px on `r9-solve-3`'s t=114 where the model paid
+         * 0.80, and 37 ticks later the model was in a different room.
+         *
+         * ⇒ the setter states the MAGNITUDE and refuses the direction.
+         * `playerPhysicsV1.step`'s `useItemImpulse` spend site resolves it
+         * with `knockbackImpulse` against the velocity `useItem` itself reads
+         * — the one place that velocity exists — and the policy's
+         * `certifyDash` resolves the same way for the ground it prices. There
+         * is no `dvx`/`dvy` to read here, so the stale direction cannot be
+         * re-introduced by reading a field.
+         */
+        impulse = { force: SLASH_DASH_FORCE };
         slashDirection = direction;
         outcome = 'dash';
         why = `a second press with slashTimer ${slashTimer} still up and slashDashed `
             + 'false: `play("slashnarrow", true)` restarts the swing with the DASH rect '
             + `and \`knockback(${SLASH_DASH_FORCE}, Point(x - v.x, y - v.y))\` shoves the `
-            + 'player along their own velocity. `slashTimer` is NOT refreshed.';
+            + 'player along their own velocity — as `useItem` reads it, BELOW this '
+            + 'tick\'s movement arms, so the impulse is DEFERRED to the spend site and '
+            + 'carries a force rather than a direction. `slashTimer` is NOT refreshed.';
     } else if (!slashing && pressed) {
         // (2) THE ORDINARY SWING.
         anim = SLASH_ANIM_NORMAL;
@@ -391,13 +418,16 @@ export function slashTimerTick(st) {
  *
  * @param {object} slash `{state, endsAt, gate}` — `levelRun.slashInfo`'s shape.
  * @param {object} opts `tick` (the tick `state` is entering), `ticksAhead`,
- *   and the press's own `direction`/`vx`/`vy`, which decide `slashDirection`
- *   and the impulse but never the OUTCOME.
+ *   and the press's own `direction`, which decides `slashDirection` but never
+ *   the OUTCOME. ⛔ R9 slice 12e″ removed `vx`/`vy`: the dash's impulse is
+ *   DEFERRED (`{force}`), because the direction it points is the velocity
+ *   `useItem` reads — below the tick's movement arms, which is one tick after
+ *   any forecast could name it.
  * @returns {object} `slashSet`'s own return, plus `scale` (the rect that press
  *   swings, via `slashScaleFor`) and `at` (the tick it lands on).
  */
 export function slashPressForecast(slash, {
-    tick, ticksAhead = 1, direction = null, vx = 0, vy = 0,
+    tick, ticksAhead = 1, direction = null,
 } = {}) {
     if (!slash || !slash.state || !slash.gate) {
         fail('slashPressForecast: needs `levelRun.slashInfo`\'s shape — {state, endsAt, '
@@ -419,7 +449,7 @@ export function slashPressForecast(slash, {
     }
     const at = tick + ticksAhead;
     st = slashTimerTick(st);
-    const r = slashSet(st, { pressed: true, ...gate, direction, vx, vy });
+    const r = slashSet(st, { pressed: true, ...gate, direction });
     return { ...r, at, scale: slashScaleFor(r.state.anim) };
 }
 
@@ -514,7 +544,7 @@ export const DASH_CHAIN = (() => {
     let keyHeld = false;
     const at = [];
     const swallowed = [];
-    const opening = slashSet(st, { pressed: true, hasSword: true, direction: 0, vx: 1, vy: 0 });
+    const opening = slashSet(st, { pressed: true, hasSword: true, direction: 0 });
     st = opening.state;
     endsAt = SLASH_ANIM_TICKS[opening.state.anim];
     keyHeld = true;
@@ -524,7 +554,7 @@ export const DASH_CHAIN = (() => {
         const press = !keyHeld;
         keyHeld = press;
         if (press) {
-            const r = slashSet(st, { pressed: true, hasSword: true, direction: 0, vx: 1, vy: 0 });
+            const r = slashSet(st, { pressed: true, hasSword: true, direction: 0 });
             st = r.state;
             if (r.outcome === 'dash') { at.push(k); endsAt = k + SLASH_ANIM_TICKS[st.anim]; }
             if (r.outcome === 'swallowed') swallowed.push(k);

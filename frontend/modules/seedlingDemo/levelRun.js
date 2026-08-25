@@ -13338,8 +13338,6 @@ export function createLevelRun({
                     deathRaying: false,
                     spearing: swordWindow.pending?.weapon === 'spear',
                     direction: pressFacing,
-                    vx: state.vx,
-                    vy: state.vy,
                 });
                 slashState = slashPress.state;
                 slashPresses.push({

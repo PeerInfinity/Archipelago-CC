@@ -1745,8 +1745,6 @@ export function previewWalk(run, wps, tolerance = 0, { strike = null, standFor =
                 pressed: true,
                 ...gate,
                 direction: state.direction ?? 0,
-                vx: state.vx ?? 0,
-                vy: state.vy ?? 0,
             });
             slashState = r.state;
             if (r.outcome === 'slash' || r.outcome === 'dash') {

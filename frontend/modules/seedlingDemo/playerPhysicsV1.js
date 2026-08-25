@@ -237,6 +237,77 @@ export function applyInput(v, held, moveSpeed) {
 }
 
 /**
+ * ⛓⛓⛓ R9 SLICE 12b — `Player.knockback(f, p)`'s VELOCITY HALF
+ * (`Player.as:1493-1510`), transcribed with its two asymmetries intact.
+ *
+ * ```as3
+ *   public function knockback(f:Number = 0, p:Point = null):void {
+ *       if (p) {
+ *           if (hitsTimer > 0) { directionFace = direction; }
+ *           var center:Point = new Point(x - p.x, y - p.y);
+ *           center.normalize(1);
+ *           if (Math.abs(center.x) >= 0.5) { v.x += f * center.x; }
+ *           if (Math.abs(center.y) >  0.5) { v.y += f * center.y; }
+ *       }
+ *   }
+ * ```
+ *
+ * The caller computes `center` — `(x - p.x, y - p.y)` — and passes it,
+ * exactly as the AS3 builds it, because the four callers build `p`
+ * differently and a signature that took `p` would have to know which. The
+ * SWORD DASH's is `p = (x - v.x, y - v.y)`, so its centre is exactly the
+ * velocity; a contact's is the other body's position.
+ *
+ * ⚠⚠ **THE TWO GUARDS ARE NOT THE SAME COMPARISON.** `>=` on x and `>` on
+ * y. They differ on exactly one input — a centre whose normalised component
+ * is exactly 0.5, i.e. a velocity at 30° or 60° to an axis — where the x
+ * axis takes the impulse and the y axis does not. Transcribed rather than
+ * regularised: a model that made them agree would be right on every
+ * axis-aligned and every 45° case and wrong on the one the source
+ * distinguishes.
+ *
+ * ⛓⛓ **AT ZERO LENGTH THE WHOLE CALL IS EXACTLY INERT, AND THAT IS A
+ * RUNTIME FACT RATHER THAN AN INFERENCE.** `Point.normalize` in the runtime
+ * the game actually runs — `SWFModernRuntime/src/avm2/avm2_globals.c:1075`
+ * `point_normalize` — skips when the length is 0 (`if (length != 0.0 &&
+ * !isnan(length) …)`), leaving the point at (0,0) rather than producing NaN
+ * or a unit vector. Both guards then reject it.
+ *
+ * ⛔⛔⛔ **R9 SLICE 12e″ — AND THE SENTENCE THAT USED TO STAND HERE, "so a
+ * dash pressed at rest moves the player by nothing at all", WAS TRUE OF THIS
+ * FORMULA AND FALSE OF THE TICK.** It is a statement about a zero ARGUMENT,
+ * and the ladder read it as a statement about a standstill. The sword dash
+ * reaches `knockback` from `useItem(Main.primary)`, which is
+ * `Player.input()`'s LAST act — BELOW the movement arms that have already
+ * written `v` on this very tick. So the `v` a dash is handed is the POST-key
+ * velocity: a dash pressed from a standstill with a direction key STARTING
+ * that tick is handed `(±moveSpeed, …)` and pays `f` IN FULL. The argument is
+ * zero only when the player is at rest AND no direction key is down — the one
+ * case the game does nothing in either, and the no-op that survives.
+ *
+ * ⇒ **THE CALLER OWES THIS FUNCTION THE VELOCITY `useItem` READS, NOT THE ONE
+ * THE TICK STARTED WITH.** For the sword dash that caller is `step`'s own
+ * `useItemImpulse` spend site below — the only place the post-input `v`
+ * exists — so `combatVerbs.slashSet` returns a DEFERRED impulse (`{force}`)
+ * and names no direction at all. ⛓ MEASURED against the game on `r9-solve-3`
+ * (R9 kickoff §33): the stale read cost exactly `SLASH_DASH_FORCE` on t=114,
+ * and 37 ticks later the model was 25 px from where the game actually stood.
+ *
+ * @returns {{dvx: number, dvy: number}} the velocity DELTA, per axis.
+ */
+export function knockbackImpulse(cx, cy, f) {
+    const length = Math.hypot(cx, cy);
+    // `center.normalize(1)` — a no-op at zero length, so the components stay
+    // (0,0) and both guards below reject them.
+    const nx = length === 0 ? 0 : cx / length;
+    const ny = length === 0 ? 0 : cy / length;
+    return {
+        dvx: Math.abs(nx) >= 0.5 ? f * nx : 0,
+        dvy: Math.abs(ny) > 0.5 ? f * ny : 0,
+    };
+}
+
+/**
  * `Player.moveX` / `Player.moveY` (`Player.as:1687` / `:1717`) — ONE loop,
  * used by both rungs, because the AS3 has one loop too.
  *
@@ -389,8 +460,14 @@ export function step(state, held, opts = {}) {
          * the waterfall and above this — a damaged player cannot steer and CAN
          * still dash.
          *
-         * `{dvx, dvy}` — a DELTA, because `knockback` adds to `v` rather than
-         * setting it.
+         * ⛓ TWO SHAPES, and the second is R9 slice 12e″'s:
+         *   - `{dvx, dvy}` — a SETTLED delta, because `knockback` adds to `v`
+         *     rather than setting it. A contact knockback's centre is the
+         *     other body's position, which this tick's keys cannot move.
+         *   - `{force}` — a DEFERRED one, whose direction is the player's own
+         *     velocity and therefore is not knowable until the arms above have
+         *     run. Resolved below by `knockbackImpulse` against the `v`
+         *     `useItem` itself would read.
          */
         useItemImpulse = null,
         /**
@@ -476,9 +553,38 @@ export function step(state, held, opts = {}) {
             // `if` in the source and runs either way.
             if (!steerBlocked) v = applyInput(v, held, moveSpeed);
             if (postInput) v = postInput(v);
-            // `useItem(Main.primary)` — below the waterfall, above the sweeps.
+            /**
+             * `useItem(Main.primary)` — below the waterfall, above the sweeps.
+             *
+             * ⛓⛓⛓ R9 SLICE 12e″ — **AND THIS IS WHERE A SWORD DASH LEARNS
+             * WHICH WAY IT POINTS.** `set slashing`'s dash arm is
+             * `knockback(2, Point(x - v.x, y - v.y))`: its direction is the
+             * player's own velocity AS READ HERE, four lines below the
+             * movement arms that have already written `v` this tick. The model
+             * used to resolve it up in `combatVerbs.slashSet`, which runs
+             * ABOVE the step and can only see the velocity the tick STARTED
+             * with — one tick stale, and exactly `SLASH_DASH_FORCE` wrong
+             * whenever a dash is pressed from a standstill with a direction
+             * key starting that same tick (R9 kickoff §33; the game paid 2.80
+             * px on `r9-solve-3`'s t=114 where the model paid 0.80).
+             *
+             * ⇒ a `force`-carrying impulse is DEFERRED: it names the magnitude
+             * and refuses to name a direction, and the direction is resolved
+             * here, from the velocity the game itself would read. An impulse
+             * with `dvx`/`dvy` is a settled delta (a CONTACT knockback, whose
+             * centre is the other body's position and owes nothing to this
+             * tick's keys) and is spent as it always was.
+             *
+             * ⛓ THE ZERO-LENGTH NO-OP SURVIVES, and it is now the case the
+             * GAME is also inert in: at rest with no direction key down, `v`
+             * is still (0,0) here, `point_normalize` no-ops and both guards
+             * reject — so the dash moves the player by nothing.
+             */
             if (useItemImpulse) {
-                v = { x: v.x + useItemImpulse.dvx, y: v.y + useItemImpulse.dvy };
+                const d = useItemImpulse.force !== undefined
+                    ? knockbackImpulse(v.x, v.y, useItemImpulse.force)
+                    : useItemImpulse;
+                v = { x: v.x + d.dvx, y: v.y + d.dvy };
             }
         }
         // X is FULLY resolved before Y, and Y's probe sees the NEW x —

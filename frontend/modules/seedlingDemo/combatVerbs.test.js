@@ -37,11 +37,9 @@ import {
     DASH_CHAIN,
     DASH_CHAIN_MAX,
     ORDINARY_SWING_PERIOD,
-    KILL_PRESS_CADENCE,
     SLASH_SCALE_DASH,
     SLASH_SCALE_NORMAL,
     SLASH_SPRITES,
-    SLASH_TIMER_MAX,
     swing,
     swingHits,
     SWORD_DAMAGE,
@@ -426,13 +424,23 @@ describe('R9 slice 12b: `set slashing` (Player.as:779-804), the whole setter', (
         expect(press(open).outcome).toBe('dash');
     });
 
-    it('shoves along the player\'s own velocity, and is inert at rest', () => {
+    /**
+     * ⛓⛓⛓ R9 SLICE 12e″ — RE-STATED. The setter used to be handed `vx`/`vy`
+     * and to answer with a DELTA; it now answers with a MAGNITUDE and no
+     * direction at all, because the direction is the velocity `useItem` reads
+     * and `useItem` runs BELOW this tick's movement arms (see the arm's own
+     * note). The two velocity arguments are gone from the signature, so this
+     * row can no longer even ask the old question — which is the point.
+     */
+    it('names the FORCE and refuses the direction — the impulse is DEFERRED', () => {
         const open = ticks(press(INITIAL_SLASH_STATE).state, 1);
-        expect(press(open, { vx: 2, vy: 0 }).impulse)
-            .toEqual({ dvx: SLASH_DASH_FORCE, dvy: 0 });
-        // ⛓ Four of the eight roster tapes that reach the dash press at rest,
-        // and this is why they are blind to the knockback half.
-        expect(press(open, { vx: 0, vy: 0 }).impulse).toEqual({ dvx: 0, dvy: 0 });
+        const dash = press(open);
+        expect(dash.outcome).toBe('dash');
+        expect(dash.impulse).toEqual({ force: SLASH_DASH_FORCE });
+        // ⛔ There is no `dvx` to read by accident: the stale direction is not
+        // merely unused, it does not exist.
+        expect(dash.impulse.dvx).toBeUndefined();
+        expect(dash.impulse.dvy).toBeUndefined();
     });
 
     it('SWALLOWS a third press whole — note 4', () => {
@@ -472,20 +480,27 @@ describe('R9 slice 12b: `set slashing` (Player.as:779-804), the whole setter', (
      * flips it BY NAME: the slice that hands `set slashing` the post-key
      * velocity re-states this row, and this row is that slice's mutant.
      */
-    it('⛔ a dash taken AT REST pays NOTHING — the model reads the PRE-KEY velocity', () => {
+    it('⛓ a dash at rest is DEFERRED, not zeroed — the direction is a tick away', () => {
         // The 111-112 press opens the swing; two ticks later the 113 press is
         // the DASH arm, and `right` starts on that same tick from a standstill.
         const open = ticks(press(INITIAL_SLASH_STATE).state, 2);
-        const dash = press(open, { direction: 0, vx: 0, vy: 0 });
+        const dash = press(open, { direction: 0 });
         expect(dash.outcome).toBe('dash');
         expect(dash.state.anim).toBe(SLASH_ANIM_DASH);
-        // ⛔ WRONG, and pinned as such: at rest the impulse is the zero vector.
-        expect(dash.impulse).toEqual({ dvx: 0, dvy: 0 });
-        // ⛓ What the POST-key velocity gives, which is what the game paid: the
-        // direction key has already written v = (+moveSpeed, 0) by the time
-        // `useItem` runs, so the unit vector is (1, 0) and the guard passes.
+        // ⛓ RE-STATED. The setter cannot answer this: it runs above the step,
+        // and the velocity that decides the direction is written INSIDE the
+        // step, by the movement arms `useItem` sits below.
+        expect(dash.impulse).toEqual({ force: SLASH_DASH_FORCE });
+        // ⛓ What the spend site then resolves it to, which is what the game
+        // paid: the direction key has already written v = (+moveSpeed, 0) by
+        // the time `useItem` runs, so the unit vector is (1, 0), the guard
+        // passes and the dash is worth `SLASH_DASH_FORCE` in full.
         expect(knockbackImpulse(1, 0, SLASH_DASH_FORCE))
             .toEqual({ dvx: SLASH_DASH_FORCE, dvy: 0 });
+        // ⛔ AND THE NO-OP SURVIVES, narrowed to the case the GAME is inert in
+        // too: at rest with NO direction key down, `v` is still (0,0) when
+        // `useItem` reads it and `point_normalize` no-ops.
+        expect(knockbackImpulse(0, 0, SLASH_DASH_FORCE)).toEqual({ dvx: 0, dvy: 0 });
     });
 
     /**
@@ -499,16 +514,24 @@ describe('R9 slice 12b: `set slashing` (Player.as:779-804), the whole setter', (
      * SECOND witness rather than a second mechanism, which is why only the
      * first is asserted against the constant.
      */
-    it('⛓ the displacement the game paid and the model did not — the measured pair', () => {
+    it('⛓ the displacement the game paid, and the model pays it now — the measured pair', () => {
         const AT_REST_DASHES = Object.freeze([
             // t=113, `right` starting, L3 (39.65, 40.45)
-            Object.freeze({ tick: 113, key: 'right', model: 0.80, game: 2.80 }),
+            Object.freeze({ tick: 113, key: 'right', wasModel: 0.80, game: 2.80 }),
             // t=137, `up` starting, same room, geometry in the y sweep
-            Object.freeze({ tick: 137, key: 'up', model: 0.80, game: 2.45 }),
+            Object.freeze({ tick: 137, key: 'up', wasModel: 0.80, game: 2.45 }),
         ]);
-        for (const row of AT_REST_DASHES) expect(row.game).toBeGreaterThan(row.model);
+        // ⛓ RE-STATED, R9 slice 12e″: the deficit WAS `SLASH_DASH_FORCE` on the
+        // clean pair, and it is what the fix pays back. The row still carries
+        // the old column, because a fix is only legible beside what it moved.
         const [x] = AT_REST_DASHES;
-        expect(x.game - x.model).toBeCloseTo(SLASH_DASH_FORCE, 10);
+        expect(x.game - x.wasModel).toBeCloseTo(SLASH_DASH_FORCE, 10);
+        // ⛔ AND THE MODEL IS ASKED, not asserted at: the x row's game digit is
+        // reproduced by a real tick below (`[0, 0, 2.8, 2.55]`), and the y row
+        // is a SECOND witness with room geometry in it rather than a second
+        // mechanism — which is why only the first is measured against the
+        // constant, exactly as when it was pinned wrong.
+        for (const row of AT_REST_DASHES) expect(row.game).toBeGreaterThan(row.wasModel);
     });
 
     /**
@@ -567,16 +590,43 @@ describe('R9 slice 12b: `set slashing` (Player.as:779-804), the whole setter', (
             return xs.slice(1).map((v, i) => Number((v - xs[i]).toFixed(3)));
         };
 
-        it('⛔ AT REST the dash buys NOTHING — it walks exactly like no press at all', () => {
+        it('⛓⛓⛓ AT REST the dash PAYS — the game\'s own 2.80, and it is not the walk', () => {
             // press (opens the swing) · release · press + `right` STARTING
             // this tick, from a standstill · `right`.
             const dashed = walk([['primary'], [], ['primary', 'right'], ['right']]);
             const control = walk([[], [], ['right'], ['right']]);
+            // ⛓ RE-STATED, R9 slice 12e″. It used to be an EQUALITY — the dash
+            // moved the player exactly as far as pressing nothing — and that
+            // equality WAS the defect: the model resolved the impulse from the
+            // velocity the tick STARTED with, which is zero at a standstill.
+            expect(dashed).not.toEqual(control);
+            // ⛓⛓ AND THESE ARE THE GAME'S OWN DIGITS. `r9-solve-3` @151 t,
+            // driven on Windows Chrome 2026-08-25 (R9 kickoff §33.6): the game
+            // moved 2.80 px on t=114 and 2.55 on t=115, where this model moved
+            // 0.80 and 1.35. It now moves what the game moved, to the
+            // hundredth, from the same pixel and the same key.
+            expect(dashed).toEqual([0, 0, 2.8, 2.55]);
+            expect(control).toEqual([0, 0, 0.8, 1.35]);
+            // ⛓ The dash's first tick is worth exactly `SLASH_DASH_FORCE` more
+            // than not pressing — the constant, not a fitted number.
+            expect(dashed[2] - control[2]).toBeCloseTo(SLASH_DASH_FORCE, 10);
+        });
+
+        /**
+         * ⛓⛓⛓ R9 SLICE 12e″ — **THE NO-OP THAT SURVIVES, AND IT IS THE CASE
+         * THE GAME IS INERT IN TOO.** `knockbackImpulse`'s zero-length skip is
+         * faithful `point_normalize`; what was wrong was the ARGUMENT it was
+         * handed, never the function. With no direction key down, `v` is still
+         * (0,0) when `useItem` reads it, both guards reject, and the dash
+         * moves the player by nothing at all — so this row is an EQUALITY
+         * against the same control the row above now differs from. It is the
+         * mutant for "the fix made every dash pay".
+         */
+        it('⛓ AT REST with NO direction key, the dash is still worth nothing', () => {
+            const dashed = walk([['primary'], [], ['primary'], ['right']]);
+            const control = walk([[], [], [], ['right']]);
             expect(dashed).toEqual(control);
-            // ⛓ And these are the model's own digits, which are `r9-solve-3`'s
-            // t=114 and t=115 to the hundredth. The GAME moved 2.80 on the
-            // first of them.
-            expect(dashed).toEqual([0, 0, 0.8, 1.35]);
+            expect(dashed).toEqual([0, 0, 0, 0.8]);
         });
 
         it('⛓ MOVING, the same arm fires and pays SLASH_DASH_FORCE exactly', () => {

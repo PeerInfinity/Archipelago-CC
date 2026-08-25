@@ -1623,10 +1623,24 @@ describe('R9 slice 12c: the DASH, MODELLED — the oracle steps it and the polic
         expect(r.preview.slice(0, 110)).toEqual(r.drive);
         // ⚠ AND NOT VACUOUSLY. A stand where nothing dashed would pass this
         // row with the `false` arm's own sequence.
-        expect(r.pa.dashes).toBe(15);
-        expect(r.pb.dashes).toBe(15);
-        expect(r.pa.strikes).toBe(21);
-        expect(r.pb.strikes).toBe(21);
+        /**
+         * ⛓⛓⛓ R9 SLICE 12e″ — **RE-DERIVED, AND THE COUNTS MOVED BECAUSE THE
+         * CERTIFICATION IS ASKED A DIFFERENT QUESTION NOW.** `slashSet` hands
+         * out a DEFERRED impulse (`{force}`), so `certifyDash` resolves the
+         * direction itself, from the velocity `useItem` reads — i.e. AFTER
+         * this tick's friction and keys. Two consequences on this stand, both
+         * corrections rather than drift: a dash pressed while the player is
+         * coasting below one friction quantum now prices as the ZERO the game
+         * gives it (`applyFriction` empties the vector, `point_normalize`
+         * no-ops), and a dash from a standstill with a key down now prices the
+         * 9 px it really carries. Different dashes certify ⇒ different counts.
+         * ⛔ WHAT DID NOT MOVE IS THE CLAIM: preview and drive still spend the
+         * same keys for all 110 ticks and end on the same pixel.
+         */
+        expect(r.pa.dashes).toBe(16);
+        expect(r.pb.dashes).toBe(16);
+        expect(r.pa.strikes).toBe(22);
+        expect(r.pb.strikes).toBe(22);
         /**
          * ⛔⛔⛔ **AND THE PREVIEWED PLAYER ENDS ON THE DRIVEN ONE'S PIXEL** —
          * the half of ⚖ ruling 30(c) a held-set sequence cannot see, and the
@@ -1640,7 +1654,9 @@ describe('R9 slice 12c: the DASH, MODELLED — the oracle steps it and the polic
          */
         expect(r.at(110).x).toBe(r.run.state.x);
         expect(r.at(110).y).toBe(r.run.state.y);
-        expect(r.at(110).x).toBeCloseTo(99.75, 2);
+        // ⛓ R9 slice 12e″: 99.75 -> 108.75. The stand's dashes pay what the
+        // game pays now, so the corridor it walks is nine pixels further on.
+        expect(r.at(110).x).toBeCloseTo(108.75, 2);
         // ⛓ AND THE STAND MOVED — the dashes carry the player off the stance
         // they started on, which is what makes the position half of this claim
         // a claim about a corridor rather than about a point.
@@ -1666,7 +1682,10 @@ describe('R9 slice 12c: the DASH, MODELLED — the oracle steps it and the polic
         expect(runDashTicks).toEqual(policyDashTicks);
         // ⛓ R9 slice 12c″ — 19 over 130 ticks became 15 over 110: the horizon
         // moved (the stand is only a valid subject to 120 now), not the claim.
-        expect(policyDashTicks).toHaveLength(15);
+        // ⛓ R9 slice 12e″ — 15 became 16: the deferred impulse re-prices which
+        // dashes certify (see the row above). The EQUALITY is what this row
+        // asserts, and it is untouched.
+        expect(policyDashTicks).toHaveLength(16);
         // ⛓ AND THE SCHEDULE IS `DASH_CHAIN`'s, not a list somebody typed:
         // the first window's dashes land at its own offsets.
         expect(policyDashTicks.slice(0, 3)).toEqual(DASH_CHAIN_PATTERN.slice(1));
@@ -1761,17 +1780,36 @@ describe('R9 slice 12c: the DASH, MODELLED — the oracle steps it and the polic
          * the pin says is that a RAW schedule is a valid subject only inside
          * this horizon — which is why the rows above stand at 110 and 120.
          */
-        expect(stand(130).run.playerHits).toHaveLength(1);
+        /**
+         * ⛔⛔⛔ **R9 SLICE 12e″ — THE 130-TICK HORIZON IS RETIRED, AND IT IS
+         * RETIRED BY MEASUREMENT RATHER THAN RE-TUNED.** With the dash paying
+         * what the game pays, this raw schedule takes NO HIT AT ALL: measured
+         * at 130, 200, 300, 400 and 800 ticks, zero every time. It carries the
+         * player off the stance and out of the reach of the bodies that used
+         * to catch it — which is the same mechanism ⚖ ruling 35 was written
+         * about, arriving where the ruling predicted and not where 12c″ could
+         * see it.
+         *
+         * ⚠ SO THE BOUND IS NOT REPLACED BY A BIGGER NUMBER. A horizon nobody
+         * has found is not a horizon, and pinning 800 would pin the last place
+         * I happened to look (trap 574's shape). What is pinned is the 130
+         * that USED to bite, stated as the zero it now is, so the retirement
+         * is visible in the fixture rather than only in an as-built.
+         */
+        expect(stand(130).run.playerHits).toHaveLength(0);
         // ⛓ NOT BY REFUSING EVERYTHING. A certification that never certified
         // would also report zero hits, and would be a rename of `false`.
-        expect(r.policy.dashes).toBe(16);
-        expect(r.run.dashes.length).toBe(16);
-        expect(r.policy.plannedPresses).toHaveLength(21);
+        // ⛓ R9 slice 12e″: 16 -> 17 dashes, 21 -> 22 planned presses.
+        expect(r.policy.dashes).toBe(17);
+        expect(r.run.dashes.length).toBe(17);
+        expect(r.policy.plannedPresses).toHaveLength(22);
         // ⛓ AND IT YIELDED BY NAME where the ground could not be priced —
         // ⚖ ruling 35's safety half, on a schedule rather than on an
         // opportunity.
         const yielded = r.policy.plannedSkipped;
-        expect(yielded).toHaveLength(2);
+        // ⛓ R9 slice 12e″: 2 -> 1. One of the two yields was a dash the old
+        // arithmetic pointed at a body it is not in fact carried toward.
+        expect(yielded).toHaveLength(1);
         for (const row of yielded) expect(row.plannedSkipped.why).toMatch(/NOT CERTIFIED/);
         // ⛓ …and the BODY-GATED arm still refuses every dash it is offered,
         // which is the retirement being non-vacuous on the same fixture.
@@ -1813,10 +1851,15 @@ describe('R9 slice 12c: the DASH, MODELLED — the oracle steps it and the polic
                 new Set(), { slash: run.slashInfo });
             run.advance(d.held);
         }
-        expect(policy.dashes).toBe(44);
-        expect(run.dashes.length).toBe(44);
-        expect(policy.plannedPresses).toHaveLength(62);
-        expect(policy.plannedSkipped).toHaveLength(15);
+        // ⛓ R9 slice 12e″ — RE-DERIVED under the deferred impulse: 44 -> 45
+        // dashes, 62 -> 63 planned presses, 15 -> 14 yields. ⛔ THE HIT IS
+        // STILL THERE, and that is what keeps this row non-vacuous: the
+        // certification is not a blanket refusal wearing a `why`, and it is
+        // not a blanket permission either.
+        expect(policy.dashes).toBe(45);
+        expect(run.dashes.length).toBe(45);
+        expect(policy.plannedPresses).toHaveLength(63);
+        expect(policy.plannedSkipped).toHaveLength(14);
         expect(run.playerHits).toHaveLength(1);
     });
 
@@ -1844,7 +1887,8 @@ describe('R9 slice 12c: the DASH, MODELLED — the oracle steps it and the polic
         }
         const swallowed = policy.trace.filter((r) => r.pressWouldBe === 'swallowed');
         // ⛓ NON-VACUOUS: the branch is reached, and reached often.
-        expect(swallowed.length).toBe(64);
+        // ⛓ R9 slice 12e″: 64 -> 68, the same re-pricing as the rows above.
+        expect(swallowed.length).toBe(68);
         for (const r of swallowed) {
             expect(r.decision).toBe('none');
             expect(r.why).toMatch(/No window opens/);
@@ -2276,7 +2320,10 @@ describe('R9 slice 12c: the DASH, MODELLED — the oracle steps it and the polic
             { tick: 1, ticksAhead: 1, vx: 1, vy: 0 });
         expect(d.at).toBe(2);
         expect(d.outcome).toBe('dash');
-        expect(d.impulse).toEqual({ dvx: SLASH_DASH_FORCE, dvy: 0 });
+        // ⛓ R9 slice 12e″ — the forecast's impulse is DEFERRED: a magnitude
+        // and no direction, because the direction is the velocity `useItem`
+        // reads and that is written a tick's worth of arms below this call.
+        expect(d.impulse).toEqual({ force: SLASH_DASH_FORCE });
         expect(d.scale).toEqual({ x: 1.5, y: 0.65 });
         /**
          * ⛔⛔ THE DISCRIMINATOR, and it is the one claim only this tape can

@@ -139,6 +139,8 @@ const EAST_PRESS = new Set(['right', 'primary']);
 const perTick = [];
 /** The player's own centre at tick 0 — `BOOT` is the TILE, 8 px to its west. */
 const startX = run.state.x;
+/** …and its centre on the other axis, which a dash along travel must not move. */
+const startY = run.state.y;
 
 /**
  * ⛓ THE WARM-UP IS DERIVED FROM THE WALK, NOT CHOSEN. `right` is held until
@@ -203,9 +205,25 @@ check('⛓⛓⛓ the schedule is `DASH_CHAIN`\'s own — three dashes, and the g
     + `(DASH_CHAIN.at = ${DASH_CHAIN.at.join(', ')})`);
 check('⛓ the opening press is an ORDINARY swing',
     at(0)?.outcome === 'slash', `outcome = ${at(0)?.outcome}`);
-check(`⛓⛓ each dash is +${SLASH_DASH_FORCE} along travel and NOTHING across it`,
-    dashRows.every((p) => p.impulse.dvx === SLASH_DASH_FORCE && p.impulse.dvy === 0),
+/**
+ * ⛓ R9 SLICE 12e″ — RE-STATED, AND THE CLAIM IS NOW SPLIT WHERE THE MODEL
+ * SPLITS IT. `set slashing` names the FORCE and refuses the direction, because
+ * the direction is the velocity `useItem` reads — below this tick's movement
+ * arms — and the setter runs above the step. So the SETTER's row asserts the
+ * magnitude, and the direction is asserted by the DISPLACEMENT rows below: a
+ * dash that pointed anywhere but along travel would not show a +2-minus-
+ * friction jump in x followed by a −0.25/tick decay, and this corridor's `y`
+ * never moves at all.
+ */
+check(`⛓⛓ each dash names ${SLASH_DASH_FORCE} and NO direction — the impulse is `
+    + 'DEFERRED to the velocity `useItem` reads',
+    dashRows.every((p) => p.impulse.force === SLASH_DASH_FORCE
+        && p.impulse.dvx === undefined && p.impulse.dvy === undefined),
     JSON.stringify(dashRows.map((p) => p.impulse)));
+check('⛓ …and the player never leaves the corridor\'s own line — every dash '
+    + 'resolved ALONG TRAVEL and NOTHING across it',
+    run.state.y === startY,
+    `y ${startY} -> ${run.state.y} over ${perTick.length} ticks`);
 check('⛔ the press inside a dash\'s own animation is SWALLOWED, and costs nothing',
     at(SWALLOW_AT)?.outcome === 'swallowed' && at(SWALLOW_AT)?.impulse === null,
     `k = ${SWALLOW_AT}: outcome ${at(SWALLOW_AT)?.outcome}, impulse `

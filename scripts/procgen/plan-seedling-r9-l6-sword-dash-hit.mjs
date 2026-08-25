@@ -316,10 +316,17 @@ check('⛓⛓⛓ two presses inside `SLASH_HIT_TICKS` fire ONE rect per tick, co
         && firedTicks.every((v, i) => i === 0 || v === firedTicks[i - 1] + 1),
     `presses ${dashTick - swingTick} tick(s) apart; rects fired on `
     + `${firedTicks.join(',')} (${firedTicks.length} rect(s), no tick twice)`);
-check(`⛓ the dash's own +${SLASH_DASH_FORCE} impulse is on the record, along travel and `
-    + 'nothing across it',
-    run.dashes.length === 1 && run.dashes[0].impulse.dvx === SLASH_DASH_FORCE
-        && run.dashes[0].impulse.dvy === 0,
+/**
+ * ⛓ R9 SLICE 12e″ — RE-STATED. The impulse on the record is DEFERRED: `set
+ * slashing` names `SLASH_DASH_FORCE` and refuses a direction, because the
+ * direction is the velocity `useItem` reads and `useItem` runs BELOW this
+ * tick's movement arms. The direction claim is carried by the landed REACH
+ * row below instead, which is where this witness's own question lives.
+ */
+check(`⛓ the dash's own ${SLASH_DASH_FORCE} is on the record, and it names NO `
+    + 'direction — resolved at the spend site from the post-key velocity',
+    run.dashes.length === 1 && run.dashes[0].impulse.force === SLASH_DASH_FORCE
+        && run.dashes[0].impulse.dvx === undefined,
     JSON.stringify(run.dashes.map((d) => d.impulse)));
 check('⛔ the player took no hits and never left the room',
     run.playerHits.length === 0 && run.playerDeaths.length === 0
