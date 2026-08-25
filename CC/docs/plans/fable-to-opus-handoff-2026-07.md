@@ -4418,6 +4418,98 @@ is LIFTED. Licences per segment unchanged (⚖ 35(c)/41 for the flip's, ⚖ 46/4
 for the economies'), except that the two `r8-d2-*` rows are now separable.
 ⛔ **123 is still L14's certified number and 108 is not.**
 
+⛔⛔⛔ **R9 SLICE 12e′ — THE RE-RECORD IS A STOP, 2026-08-25** (kickoff §33).
+`main` @**`de6d80283`** and **NO TAPE MOVED**; the series never reached `main`.
+
+**THE OFFLINE HALF REPRODUCED TABLE (D) TEN FOR TEN, DIGIT FOR DIGIT.** Then
+the pipeline's EMIT path drove the game and it disagreed about one of them:
+`r9-solve-3`'s 151-tick re-solve ends, in the GAME, still in **L3** — 25 px
+short of the exit, `v = (-0.951, -0.618)` — while the model has crossed to L2
+at (56, 88) with `v = 0`. Re-driven in the primary tree it reproduces to the
+last digit.
+
+**THE MECHANISM IS A WITHIN-TICK ORDERING.** `levelRun.js:13340-41` hands
+`slashSet` `vx: state.vx, vy: state.vy` — the PRE-tick velocity — while the
+game's `useItem(Main.primary)` runs inside `input()` AFTER the movement keys
+have written `v`. A dash pressed **at rest with a direction key starting that
+same tick** is worth `0.00` to the model and the full `SLASH_DASH_FORCE = 2.00`
+to the game; `knockbackImpulse(0, 0, 2)` is `point_normalize`'s faithful no-op.
+Over **22 presses in three driven tapes** the two agree to 0.01 px on every one
+EXCEPT the two with that shape (t=114 model 0.80 / game **2.80**; t=137 0.80 /
+**2.45**). Neither half of the discriminator decides alone — an ordinary swing
+at rest agrees, and a dash with a same-tick key start while MOVING agrees.
+
+⛓ **A SCRATCH CORRECTION (in §33.8 verbatim; one spend site,
+`playerPhysicsV1.js:480`, because `playerPhysicsV2.step` delegates to `stepV1`)
+makes the model reproduce the game TICK FOR TICK from t=0 to t=141** — and it
+also agrees the walk **never crosses** (`transitions: []`; it walks into water
+at the game's own t=131 pixel). ⇒ **`r9-solve-3` 226→151 was a PLAN, never a
+walk, and TABLE (D) IS SUPERSEDED.** The re-record re-runs on 12e″'s **(D′)**,
+re-measured after the ordering fix — which re-prices every corridor the planner
+opens from a standstill, so it is a **DESIGN ASK, not a slice item**.
+
+⛔⛔ **AND WHAT THE EARLIER COLUMNS WERE EVIDENCE OF.** Every "driven 0-hit,
+calm arrival" in kickoff §30.6/§31.6/§32.5 is the MODEL's word: `--check`
+latches the COMMITTED tapes (`latchOf(name, raw)`, :492) and only the EMIT path
+latches the provisional one (:565). The game had never been asked about a
+single new walk until 2026-08-25; three of twelve have now been asked and one
+fails.
+
+**WHAT LANDED — four commits, all green, no tape moved.** Two GREEN pins of the
+defect (`40d4cc401`, `6e152d065`): the second is the one that DISCRIMINATES —
+a dash at rest moves the player EXACTLY as far as no press at all
+(`[0, 0, 0.8, 1.35]`, `r9-solve-3`'s own t=114/115), with a POSITIVE CONTROL
+(moving, the same arm pays **2.85** against the walk's **0.85** =
+`SLASH_DASH_FORCE`) because *"the dash bought nothing"* and *"no dash was
+taken"* predict the same equality. Its mutant reds on the NUMBER —
+`[0, 0, 2.8, 2.55]`, the game's own digits. Plus `fdcc5cde5`: **S0's walk
+accounting is now total over the chains that EXIST** — `r8-solve-11` (87→84,
+⚖ 46's own subject) lived in a ONE-segment chain, its producer reported the
+move, and `reportRows` dropped it into neither the table nor `unmeasured`;
+19+2=21 becomes 20+3=23, with per-segment `unmeasured` reasons. And
+`de6d80283`, the tracked doc + the reference regenerated in the same commit.
+
+⚖ **RULING 49 AND ITS USER EXTENSION (2026-08-25 — `r8-solve-11` + the four
+battery trace sidecars, which move with byte-identical tapes because the flip
+makes the planner's REFUSAL a recorded trace row) ARE LICENSED AND UNSPENT.**
+The series is parked on the LOCAL branch **`r9/re-record-attempt` @`2aa070932`**
+(`e329d18db` + the two `r9/economies` commits rebased, with the
+`solverBot.test.js` append/append conflict resolved). `ALLOW_DASH_ROSTER_WIDE`
+is still `false` everywhere.
+
+⚠ **THREE STANDING MOVERS THE BRIEF DID NOT PREDICT**, measured under the
+series build: `solve-seedling-r8-d2` `6e0967bf…`→`88151a03…`,
+`solve-seedling-r8-battery` `18682c65…`→`b7e00ec4…` (predicted UNMOVED), and
+`solve-seedling-r9-l3` `8ac17aca…`→`2e8e8a9d…` (unpredicted; emits nothing).
+`plan-seedling-r7-attribution` was predicted to MOVE and does NOT.
+
+**⇒ 12e″'s WORK LIST** (kickoff §33.13): (1) the ordering fix, as a DESIGN ASK,
+with the user-licensed from-rest witness tape **`r9-l0-sword-dash-rest`**, then
+(D′) re-measured; (2) **S3's record set** — it selects on `s2.wrote`, the BOOT
+movers, so each chain's FIRST moved walk falls out: 8 recorded where TWELVE are
+owed, and S4 would then red on four stale expectations. The design is a
+`gameVisibleTape` projection-md5 diff snapshotted at the top of S1 and diffed at
+S3; deferred here because its only honest witness is a live cascade; (3) the
+`r8-d2` HEADLINE's accounting (it is in the d2-chain's walk report and is not a
+`segment`, so it is dropped the same way `r8-solve-11` was); (4) **⚖ 47b items
+(5) and (6)** below; (5) the unspent `why` sweep, three edits drafted.
+
+⚖ **47b ITEM (5) — A BROWSER PREDICATE KEYED ON A PLAYWRIGHT IMPORT MISSES A
+`py.exe` SHELL-OUT.** `solve-seedling-r9-campaign.mjs` and
+`solve-seedling-r8-d2-chain.mjs` DRIVE Windows Chrome (`latchOf` shells
+`/mnt/c/Windows/py.exe` at `localhost:8000` on a latch-cache MISS) and
+`walkMoves.participationOf` classes them offline, so S0 calls itself "offline by
+contract" while able to spend the GPU. The witness is 12e′'s own three
+unannounced drives at 00:25 on 2026-08-25. ⚠ `/mnt/c/playwright/latch-*.json` is
+a MACHINE-GLOBAL cache keyed on tape bytes, shared across trees and sessions.
+
+⚖ **47b ITEM (6) — `node --check` IS THE STANDING SYNTAX GATE AND AT LEAST ONE
+FILE FAILS IT SILENTLY AT HEAD.** `combatVerbs.test.js` throws
+`SyntaxError: Identifier 'KILL_PRESS_CADENCE' has already been declared` (a
+duplicate named import, esbuild-tolerated, 51/51 green). Fix the duplicate AND
+add a gate that runs `node --check` over every `.js`/`.mjs` the instruments
+index and the test roster name, so the syntax gate cannot decay.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
