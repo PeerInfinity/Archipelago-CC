@@ -98,6 +98,14 @@ export const outExitId = (e) => `out_${e.type}_${e.x}_${e.y}`;
 export const inExitId = (from, e) => `in_L${from}_${e.x}_${e.y}`;
 
 export const labelFor = (row) => {
+    /**
+     * ⛓ EDITOR v3 D1 — the ENTITY-ADDRESSED row's label is AUTHORED, and it is
+     * the one arm that does not derive its own name. An edited set has no
+     * ledger to name rows out of, so the person who marked the location typed
+     * the label; every other arm reads a `kind` whose naming is a fact about
+     * the vanilla game.
+     */
+    if (row.kind === 'entity') return row.label;
     if (row.kind === 'chest') return 'Chest';
     if (row.kind === 'key') return `Boss Key ${/bosskey(\d)@/.exec(row.id)[1]}`;
     if (row.kind === 'totempart') return `Totem Part ${/:(\d+),(\d+)$/.exec(row.id).slice(1).join(',')}`;
@@ -217,6 +225,23 @@ export function locationsFor(room, overlay = {}, deps = {}) {
             }
             [entity] = chests;
             item = ITEM_FOR_TAG.chest;
+        } else if (row.kind === 'entity') {
+            /**
+             * ⛓⛓ EDITOR v3 D1 — **THE ARM A LEVEL-SET EDITOR NEEDS.** Every
+             * other arm finds its entity by a KIND whose meaning is a fact about
+             * the vanilla game (`the one chest`, `the bosskey of type 3`). An
+             * edited set has no such vocabulary, and the address a person
+             * clicking a room can actually produce is the entity's own
+             * `{type, x, y}` in PIXELS — which is what the OEL element carries.
+             *
+             * ⛔ EXACT, never nearest. Two entities of one type in a room are
+             * ordinary (L12 has three teleporters), so a tolerant match would
+             * silently move a location to whichever one sorted first.
+             */
+            const want = row.entity ?? {};
+            entity = room.entities.find((e) => e.type === want.type
+                && e.x === want.x && e.y === want.y);
+            item = row.vanilla_item;
         } else if (row.kind === 'ending') {
             entity = room.entities.find((e) => e.type === 'seed');
             item = VICTORY_ITEM;
@@ -404,4 +429,66 @@ export function deriveAtlas(rooms, overlay = {}, deps = {}) {
             connections: atlas.vanilla_layout.connections.length,
         },
     };
+}
+
+/**
+ * ⛓⛓⛓ **AUTHORED EXIT RULES, APPLIED TO A DERIVED ATLAS** (EDITOR v3 D1).
+ *
+ * The third authored thing §16.3 names is *"access rules the analyzer cannot
+ * derive"*. `deriveAtlas` already hangs a rule on a LOCATION (through the
+ * overlay's `locationGuard`, because a location's rule has to be attached while
+ * the location is being built). An EXIT's rule has no such moment: the exits are
+ * built from the rooms and the rule is a fact about the author's intent, so it
+ * is written on afterwards.
+ *
+ * ⛔ **A KEY THAT NAMES NO EXIT IS REFUSED BY NAME, and the refusal lists what
+ * the region does have.** Silently dropping it would produce an atlas whose
+ * author believes a door is gated and whose compiler says it is free — a
+ * difference nothing downstream can see, because a missing `access_rule` and an
+ * absent rule are the same bytes.
+ *
+ * ⛓ COPY-ON-WRITE, like `atlasOps`: untouched regions are the SAME objects.
+ *
+ * @param {object} atlas   a derived atlas document
+ * @param {Map<number, Map<string, object>>} byRoom  room index -> exit_id -> rule
+ * @returns {{atlas: object, applied: number}}
+ */
+export function applyOverlayRules(atlas, byRoom) {
+    if (!byRoom || byRoom.size === 0) return { atlas, applied: 0 };
+    let applied = 0;
+    const regions = atlas.regions.map((region) => {
+        const rules = byRoom.get(region.map_ref);
+        if (!rules || rules.size === 0) return region;
+        const exits = region.exits.map((exit) => {
+            const rule = rules.get(exit.exit_id);
+            if (rule === undefined) return exit;
+            applied += 1;
+            return { ...exit, access_rule: rule };
+        });
+        for (const exitId of rules.keys()) {
+            if (!region.exits.some((e) => e.exit_id === exitId)) {
+                throw new Error(`applyOverlayRules: region "${region.region_id}" (room `
+                    + `${region.map_ref}) has no exit "${exitId}" to hang an access rule on. `
+                    + `Its exits are ${region.exits.map((e) => e.exit_id).join(', ') || '(none)'}. `
+                    + '⛔ REFUSED rather than dropped: an authored rule that vanished would '
+                    + 'leave the author believing a door is gated and the compiler treating '
+                    + 'it as free, and a missing access_rule is indistinguishable from one '
+                    + 'that was never written.');
+            }
+        }
+        return { ...region, exits };
+    });
+    // ⛔ AND A RULE FOR A ROOM WITH NO REGION AT ALL IS ALSO A REFUSAL. The
+    // derivation DROPS a doorless region by name; a rule authored on one of its
+    // exits would otherwise be silently discarded by the loop above, which never
+    // visits it.
+    const byMapRef = new Set(atlas.regions.map((r) => r.map_ref));
+    for (const room of byRoom.keys()) {
+        if (!byMapRef.has(room)) {
+            throw new Error(`applyOverlayRules: the overlay authors an exit rule on room `
+                + `${room}, but the derived atlas holds no region for it — a room with no `
+                + 'door at all is DROPPED, so there is nothing to gate.');
+        }
+    }
+    return { atlas: { ...atlas, regions }, applied };
 }
