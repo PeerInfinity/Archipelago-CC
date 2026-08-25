@@ -462,27 +462,46 @@ const settled = async (n) => {
         + 'wait that never returned', `${got}`);
 };
 
-const read = () => page.evaluate(() => ({
-    edit: window.__editorEdit,
-    url: window.location.search,
-    base: document.getElementById('editBase').textContent,
-    status: document.getElementById('status').textContent,
-    clip: document.getElementById('genEditClipNote').textContent,
-    bound: document.getElementById('genEditTranscribe').textContent,
-    boundHidden: document.getElementById('genEditTranscribe').hidden,
-    loadNote: document.getElementById('editLoadNote').textContent,
-    rows: [...document.querySelectorAll('#genEdits .eRow')].map((e) => e.textContent),
-    /* ── slice C2's readouts ─────────────────────────────────────── */
-    cell: document.getElementById('genEditCellNote').textContent,
-    flagNote: document.getElementById('genEditFlagNote').textContent,
-    reach: document.getElementById('genEditFlagReach').textContent,
-    resizeNote: document.getElementById('genEditResizeNote').textContent,
-    setNote: document.getElementById('editSetNote').textContent,
-    setRooms: [...document.getElementById('editSetRoom').options].map((o) => o.textContent),
-    pasteOptions: [...document.getElementById('genEditPasteOnly').options].map((o) => o.value),
-    flagsChecked: [...document.querySelectorAll('#genEditFlags input[type=checkbox]')]
-        .filter((e) => e.checked).map((e) => e.dataset.flag),
-}));
+/**
+ * ⛔⛔ **EVERY ELEMENT READ IS NULL-SAFE, AND THE MISSING ONES ARE REPORTED AS A
+ * VALUE.** A mutant that renames one shared id made this reader THROW on
+ * `getElementById(...).options` — so the row died as *"the row itself threw"*
+ * before claim 11, the row that exists to catch exactly that rename, could run.
+ * A reader is not a claim: it must be able to describe a page that is WRONG,
+ * or the claims behind it never get their turn (trap 599's family — a wrong
+ * build must fail as a FINDING, not as the harness falling over).
+ */
+const read = () => page.evaluate(() => {
+    const missing = [];
+    const el = (id) => {
+        const e = document.getElementById(id);
+        if (!e) missing.push(id);
+        return e;
+    };
+    const text = (id) => el(id)?.textContent ?? null;
+    return {
+        missing,
+        edit: window.__editorEdit,
+        url: window.location.search,
+        base: text('editBase'),
+        status: text('status'),
+        clip: text('genEditClipNote'),
+        bound: text('genEditTranscribe'),
+        boundHidden: el('genEditTranscribe')?.hidden ?? null,
+        loadNote: text('editLoadNote'),
+        rows: [...document.querySelectorAll('#genEdits .eRow')].map((e) => e.textContent),
+        /* ── slice C2's readouts ─────────────────────────────────── */
+        cell: text('genEditCellNote'),
+        flagNote: text('genEditFlagNote'),
+        reach: text('genEditFlagReach'),
+        resizeNote: text('genEditResizeNote'),
+        setNote: text('editSetNote'),
+        setRooms: [...(el('editSetRoom')?.options ?? [])].map((o) => o.textContent),
+        pasteOptions: [...(el('genEditPasteOnly')?.options ?? [])].map((o) => o.value),
+        flagsChecked: [...document.querySelectorAll('#genEditFlags input[type=checkbox]')]
+            .filter((e) => e.checked).map((e) => e.dataset.flag),
+    };
+});
 
 /**
  * ⛓⛓ **HOVER A CELL AND READ WHAT THE PAGE SAYS IT IS.** ⛔ The mouse is moved
@@ -554,6 +573,18 @@ try {
 
     await load(`source=edit&level=${LEVEL}`);
     const boot = await read();
+    /**
+     * ⛔⛔ **FIRST, AND BEFORE ANY CLAIM: DOES EVERY ELEMENT THESE ROWS NAME
+     * EXIST?** A mutant that renames one control makes the DRIVER fail — a
+     * `selectOption` timeout naming a selector — and a timeout is a finding
+     * about the harness, not about the page. This row runs before the first
+     * gesture so the mutant's real cause is NAMED, and the driver failures that
+     * follow are its consequences rather than the whole report.
+     */
+    check(boot.missing.length === 0,
+        '⛔ EVERY ELEMENT THE ROWS BELOW READ EXISTS — a renamed or dropped control is a '
+        + 'NAMED finding here, before any gesture times out looking for it',
+        json(boot.missing));
     check(boot.edit.status === 'ok' && boot.edit.baseKind === 'atlas'
         && json(boot.edit.base) === json(BASE_TAG),
         '⛓⛓⛓ `?source=edit&level=14` BOOTS INTO THE FIFTH ARM on an ATLAS base, with the '
@@ -822,6 +853,9 @@ try {
             genStar: rows.filter((r) => r.id.startsWith('genEdit')),
         };
     });
+    check((await read()).missing.length === 0,
+        '⛔ every element the rows below read EXISTS — a renamed id is a CLAIM failure here '
+        + 'and in claim 11, never the reader falling over', json((await read()).missing));
     check(ids.editStar.length > 0 && ids.genStar.length > 0,
         '⛓ the id scan is not vacuous — the panel really does hold both prefixes',
         `${ids.editStar.length} edit* · ${ids.genStar.length} genEdit* of ${ids.rows.length}`);
@@ -1058,8 +1092,14 @@ try {
      * a claim about `null`, and a 116-room document takes a real moment to
      * cross the box.
      */
+    /**
+     * ⛔ A BOUNDED WAIT THAT BECOMES A CHECK. The wait is on the value the claim
+     * names, which is right — but a build that NEVER sets it can only time out,
+     * and a timeout reports the WAIT rather than the claim. Caught here so the
+     * finding is *"the page did not hold the set"* with what it did hold.
+     */
     await page.waitForFunction((id) => window.__editorEdit?.set?.set_id === id,
-        SET_DOC.set_id, { timeout: 60000 });
+        SET_DOC.set_id, { timeout: 60000 }).catch(() => {});
     const held = await read();
     check(held.edit.set?.set_id === SET_DOC.set_id && held.edit.set.rooms === 1
         && held.edit.set.openable === 1,
