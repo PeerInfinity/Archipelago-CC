@@ -14579,3 +14579,64 @@ upstream of its own move and therefore never changes. And the licensed producers
 now run in the order the chains require rather than the order the file system
 lists them, which the first cascade exposed by driving the game for the latch of
 a tape the same run was about to replace.
+
+⛓⛓⛓ The stop was not a fight at all. The room's middle segment walks past a
+signpost, and the key a signpost is read with is the same key the sword is
+swung with — the game's key table lists that one keycode twice, once as the
+weapon and once as "talk", and the model's own notes had transcribed the second
+entry as a different key that no recording has ever pressed. So in the game
+every walk that swings a sword beside a sign opens the sign, and in the model
+none of them ever had. The twenty-eight ticks are not a constant and there is
+no constant to find: they are the gap between the release that opens the page
+and the release that finally exhausts it, and the two releases in between fail
+to close it only because the game advances its typewriter to one character
+short of the end rather than to the end. The distance test is a circle drawn
+between the two bodies' origins rather than an overlap of their boxes, which is
+why the earlier reading — that the declared geometry does not touch — was a
+correct refusal of the wrong measurement: the signpost's body stops eight
+pixels above the player and it speaks to them anyway.
+
+Modelling the dialogue moved the first disagreement from the seventeenth tick
+to the forty-fifth, and what was left there was exactly the dash impulse. The
+sword's double-tap window is decremented one line above the block the freeze
+gates, so it keeps draining while the player is held still and no press can
+reach the weapon at all; the model had been carrying twenty-eight ticks of a
+window the game had already spent. With both lines transcribed the model
+reproduces the game's whole recorded walk — every level, the terminal position
+to the digit, and every tick through the freeze and its resume exactly, with
+the fractional drift afterwards agreeing to within three units in the last
+place. That bound is measured and written down rather than hidden behind a
+convenient tolerance.
+
+The user then changed the shape of the fix from pricing to prohibition: rather
+than teach the planner what a sign costs, teach it never to release the sword
+key inside a sign's radius. The run now publishes the live set of talk circles
+and the strike policy refuses any press whose release would land inside one,
+naming the circle and the distance when it does. Because the release is the
+tick after the press, and that position is not knowable when the press is
+decided, the guard tests the current distance against the radius plus a bound
+on one tick's travel derived from the movement constants — deliberately
+over-cautious in the only direction that is safe. The segment costs thirteen
+ticks more than the unconstrained plan rather than the twenty-eight the
+dialogue would have cost, because the planner re-times the swing out of the
+circle instead of paying for it.
+
+The same recording pass had left a second, smaller disagreement: one dead frame
+at a boundary where every other boundary agreed. Driving both versions of that
+room's walk while sampling the game's own dead-frame counter showed the
+difference immediately — the help prompt the sword's collection raises costs
+two frozen frames when the tape does not press one of the two keys that
+dismisses it while it is up, and one when it does. Two separate readings had
+called that hypothesis refuted, and both had compared the tick the prompt is
+CREATED rather than the tick it is first UPDATED; the engine queues additions,
+so the read that matters is one tick later, and there the two walks differ.
+With the count deferred to the tick where the keys are known, the invariant
+that every other boundary keeps is restored on both walks, and the committed
+walk's own number does not move.
+
+None of it moves a recording. All one hundred and forty-nine committed tapes
+replay identically on both builds — position, level, transitions, refusals, the
+dead-frame ledger and the game clock — and every one of the seven solver
+producers emits the same bytes it emitted before. Seven tapes do move the label
+a dead-frame span is filed under, by one tick, and the game's own counter says
+the new label is the correct one.
