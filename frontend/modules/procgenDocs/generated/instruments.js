@@ -2051,7 +2051,11 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [
                 "arg",
                 "has",
-                "num"
+                "j",
+                "note",
+                "num",
+                "passed",
+                "say"
             ],
             "browser": false,
             "category": "export",
@@ -2060,7 +2064,8 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [
                 "out-dir",
                 "seeds",
-                "set-id"
+                "set-id",
+                "vanilla"
             ],
             "file": "export-seedling-level-set.mjs",
             "flags": [
@@ -2123,6 +2128,12 @@ export const INSTRUMENTS = frz({
                         "num"
                     ],
                     "name": "tries"
+                },
+                {
+                    "how": [
+                        "has"
+                    ],
+                    "name": "vanilla"
                 }
             ],
             "oneLiner": "export-seedling-level-set — Phase 5's CLI: seeds in, a mountable level set out.",

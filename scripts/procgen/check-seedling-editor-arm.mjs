@@ -509,12 +509,14 @@ check(D2_ROWS.length === D2_ROOMS && D2_ROWS.reduce((n, r) => n + r.exits, 0) > 
  * ══════════════════════════════════════════════════════════════════════ */
 
 const VANILLA_XML = vanillaXmlSet(VANILLA, ATLAS).set;
-check(VANILLA_XML.rooms.length === 116
+check(VANILLA_XML.rooms.length === VANILLA.rooms.length
     && VANILLA_XML.rooms.every((r) => typeof r.source?.xml === 'string')
     && VANILLA_XML.set_id.startsWith('seedling-vanilla-xml-')
     && VANILLA_XML.provenance.derived_from.set_id === VANILLA.set_id,
-    '⛓⛓ node\'s own xml-sourced VANILLA set — 116 rooms, every one `xml`, an id that cannot '
-    + 'be mistaken for the committed set\'s, and `derived_from` naming it',
+    `⛓⛓ node's own xml-sourced VANILLA set — ${VANILLA.rooms.length} rooms (the COMMITTED `
+    + 'set\'s own count, so the join is total by construction rather than by a typed number), '
+    + 'every one `xml`, an id that cannot be mistaken for the committed set\'s, and '
+    + '`derived_from` naming it',
     `${VANILLA.set_id} → ${VANILLA_XML.set_id}`);
 const VANILLA_XML_RECORD = setRecord(VANILLA_XML, emptyOverlay());
 const VANILLA_XML_SCAN = linkScanBound(VANILLA_XML_RECORD);
@@ -550,8 +552,8 @@ check(VANILLA_XML_FREE.length > 0 && VANILLA_XML_REPORT.download.rules.allowed =
 const D2_FREE = freeEdgesOf(reportOf(nodeSetSession(), SET_DEPS,
     { compileRegionAtlas, validateRegionAtlas }).rules);
 check(D2_FREE.length !== VANILLA_XML_FREE.length && D2_FREE.length > 0,
-    '⛓ …and that count really is a function of the SET — the D2 subject\'s is different, so a '
-    + 'hardcoded expectation would be red on one of the two',
+    '⛓ …and that count really is a function of the SET — the D2 subject\'s differs, so a '
+    + 'hardcoded expectation would be red on whichever document it was not written for',
     `vanilla ${VANILLA_XML_FREE.length} vs D2 ${D2_FREE.length}`);
 
 /**

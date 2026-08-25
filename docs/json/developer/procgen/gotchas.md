@@ -383,6 +383,32 @@ every later derivation then refuses by name (*"no entity for it in level N"*).
 A row that wants a location subject should mark a body no transition op can
 touch; a page that offers locations should expect the derivation's refusal.
 
+## TWO `set_id`s can describe the same 116 rooms, and only one is the save stamp's
+
+The vanilla Seedling rooms exist as two level sets: the committed
+`fixtures/seedling-vanilla-set.json`, whose 116 rooms are `embed` paths into the
+SWF's `[Embed]` table, and the `xml`-sourced set `levelSetExporter.vanillaXmlSet`
+derives from that manifest plus the map extract. They hold the same rooms BY
+VALUE and they are different documents, so they have different content hashes and
+therefore different ids — `seedling-vanilla-<hash>` and
+`seedling-vanilla-xml-<hash>`.
+
+⛔ THEY ARE NOT INTERCHANGEABLE. The EMBED id is the one the AS3 fork's
+`VanillaSet.SET_ID` names, the one every save stamp keys on, and the one
+`?source=edit&level=N`'s ATLAS base checks; re-stamping the committed fixture with
+xml rooms would move all three. The XML id is the SET EDITOR's, and it carries
+`provenance.derived_from` naming the embed one so a reader of either document —
+or of a re-stamped descendant of one — can say which vanilla it is looking at.
+The stamp BASE is what keeps them apart (`stampLevelSetIdentity` rebuilds
+`<base>-<hash>` around the same base on every re-stamp), so a shared base would
+leave the hash as the only difference, which is one careless truncation away from
+a set claiming to be the one the save files name.
+
+⚠ And the §6.1 AP-mapping companion reads `invalidated` for the xml set too. That
+contract is per IDENTITY, not per content — a refused debug-teleport is the safe
+failure — so the CLI prints one note saying the set reproduces the vanilla rooms
+by value rather than widening the companion's vocabulary.
+
 ## Related documentation
 
 - [Architecture](./architecture.md)
