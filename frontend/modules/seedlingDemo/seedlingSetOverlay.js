@@ -50,6 +50,10 @@
  */
 
 import { SIGN_NONE, SIGN_TABLE_SIZE } from './levelSetValidator.js';
+import {
+    BASE_LOCATION_FIELDS, OVERLAY_SCHEMA_VERSION, ROOM_OVERLAY_FIELDS, RULE_TARGET_PREFIXES,
+    createSetOverlay, exitRuleKey, locationRuleKey,
+} from '../procgenCore/setOverlay.js';
 
 export class SeedlingSetOverlayError extends Error {
     constructor(message) {
@@ -58,211 +62,130 @@ export class SeedlingSetOverlayError extends Error {
     }
 }
 
-const fail = (message) => { throw new SeedlingSetOverlayError(message); };
-
-/** The overlay format's own version. Bumped when a key's meaning changes. */
-export const OVERLAY_SCHEMA_VERSION = 1;
-
-/** The two prefixes a `rules` key may carry. The refusals read this. */
-export const RULE_TARGET_PREFIXES = Object.freeze(['exit:', 'loc:']);
-
-/** The fields a per-room overlay entry may carry. A seventh cannot arrive silently. */
-export const ROOM_OVERLAY_FIELDS = Object.freeze(['name', 'locations', 'rules']);
-
-/** The fields a location row may carry. */
-export const LOCATION_FIELDS = Object.freeze(['entity', 'name', 'vanilla_item']);
+/** ⛓ RE-EXPORTED so every caller reads the overlay vocabulary off THIS module —
+ *  the same frozen values and the same functions, never a second spelling. */
+export {
+    BASE_LOCATION_FIELDS, OVERLAY_SCHEMA_VERSION, ROOM_OVERLAY_FIELDS, RULE_TARGET_PREFIXES,
+    exitRuleKey, locationRuleKey,
+};
 
 const isPlainObject = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
 const isNonEmptyString = (v) => typeof v === 'string' && v.length > 0;
 
-/** An EMPTY overlay — what `bases.set` resolves when no `overlay_id` is named. */
-export const emptyOverlay = () => ({ schema_version: OVERLAY_SCHEMA_VERSION, rooms: {} });
-
 /**
- * ⛓ **PARSE A RULE-TARGET KEY.** Returns `{kind: 'exit'|'loc', id}`, or refuses.
+ * ⛓⛓⛓ **EDITOR v3 E2a — THE SHAPE IS THE TOOLKIT'S; THE ADDRESS AND THE TWO
+ * EXTRA FIELDS ARE SEEDLING'S.**
  *
- * ⛔ The refusal names BOTH prefixes and the key it got, because the mistake
- * this catches is a person writing the exit id bare — which would have silently
- * become a location named `out_teleporter_32_48` under a looser reader.
+ * §22.3 measured this module by exported function: 8 of its 11 were already
+ * substrate-free and 2 more became so once parameterised, so 10/11 = 90.9%
+ * moved to `procgenCore/setOverlay.js` and this file BINDS them. Every sentence
+ * below is the one that was here before — the lift is byte-inert on behaviour,
+ * which `seedlingSetOverlay.test.js` pins by snapshotting the messages over its
+ * existing fixtures.
+ *
+ * ⛔ What did NOT move, and why each is genuinely Seedling's:
+ *
+ *  ·  **`overlayToDeriveInput`** — it speaks the vanilla ledger's vocabulary
+ *     (`{id, kind, tag, level}`) and BUILDS `deriveAtlas`'s `locationGuard`
+ *     closure. It is the one export that is about Seedling's derivation rather
+ *     than about the overlay's shape.
+ *  ·  **the location row's ADDRESS** — `entity: {type, x, y}` in PIXELS, the
+ *     room's own OEL element. The maze addresses a payload item by INDEX;
+ *     neither address generalises the other.
+ *  ·  **`neverEnter` and `regions`** — the trap-room ruling and the seven
+ *     `Message.as` region titles. Both are facts about `Game.as` call sites.
  */
-export function parseRuleTarget(key) {
-    if (!isNonEmptyString(key)) {
-        fail(`seedlingSetOverlay: a rule target is a non-empty string, got ${JSON.stringify(key)}`);
-    }
-    for (const prefix of RULE_TARGET_PREFIXES) {
-        if (key.startsWith(prefix)) {
-            const id = key.slice(prefix.length);
-            if (id === '') {
-                fail(`seedlingSetOverlay: rule target ${JSON.stringify(key)} carries the `
-                    + `"${prefix}" prefix and nothing after it`);
-            }
-            return { kind: prefix === 'exit:' ? 'exit' : 'loc', id };
-        }
-    }
-    fail(`seedlingSetOverlay: rule target ${JSON.stringify(key)} carries neither `
-        + `"exit:" nor "loc:". ⛔ REFUSED rather than guessed: an exit id and a location `
-        + 'name are both free-form strings, so a bare key that happened to look like an '
-        + 'exit id would silently author a rule on the wrong thing. The exit ids are the '
-        + 'derivation\'s own (`out_<type>_<x>_<y>`, `in_L<from>_<x>_<y>`, `out_pit_<x>_<y>`, '
-        + '`in_pit_L<from>_<x>_<y>`); a location is named by the `mark-location` op\'s '
-        + '`name`, not by its AP name.');
-}
 
-/** Build a rule-target key. The ONE spelling, so a caller never types the prefix. */
-export const exitRuleKey = (exitId) => `exit:${exitId}`;
-export const locationRuleKey = (name) => `loc:${name}`;
+const SEEDLING_OVERLAY = createSetOverlay({
+    moduleName: 'seedlingSetOverlay',
+    ErrorClass: SeedlingSetOverlayError,
+    schemaVersion: OVERLAY_SCHEMA_VERSION,
 
-/**
- * ⛓⛓ **THE OVERLAY'S SHAPE CHECK — small, and every refusal names the path.**
- *
- * ⛔ Not a JSON Schema. `procgenCore/jsonSchemaCheck.js` exists and is good, but
- * it takes an INJECTED schema document, and the overlay's schema would then be a
- * fourth file on disk for a shape with five keys. What matters is that the
- * refusal is BY NAME and that an unknown key is refused rather than carried:
- * an overlay that quietly held a typo'd field would derive an atlas missing the
- * thing the author thought they had authored.
- *
- * @returns {string[]} errors; empty means the shape is good
- */
-export function overlayErrors(overlay, { roomCount = null } = {}) {
-    const errors = [];
-    const err = (m) => errors.push(m);
-    if (!isPlainObject(overlay)) return [`overlay must be an object, got ${JSON.stringify(overlay)}`];
-    if (overlay.schema_version !== OVERLAY_SCHEMA_VERSION) {
-        err(`overlay.schema_version must be ${OVERLAY_SCHEMA_VERSION}, got ${JSON.stringify(overlay.schema_version)}`);
-    }
-    if (overlay.overlay_id !== undefined && !isNonEmptyString(overlay.overlay_id)) {
-        err('overlay.overlay_id must be a non-empty string when present');
-    }
-    for (const key of Object.keys(overlay)) {
-        if (!['schema_version', 'overlay_id', 'rooms', 'neverEnter', 'regions', 'provenance'].includes(key)) {
-            err(`overlay.${key} is not a declared field — the overlay carries schema_version, `
-                + 'overlay_id, rooms, neverEnter, regions and provenance');
-        }
-    }
-    if (!isPlainObject(overlay.rooms)) {
-        err('overlay.rooms must be an object keyed by ROOM INDEX');
-        return errors;
-    }
-    const seenNames = new Map();
-    for (const [rawIndex, entry] of Object.entries(overlay.rooms)) {
-        const label = `overlay.rooms[${rawIndex}]`;
-        // ⛔ THE KEY IS A ROOM INDEX AND JSON MAKES IT A STRING. `"3"` is room 3;
-        // `"03"`, `"3.0"` and `"three"` are not, and a reader that coerced them
-        // would key an overlay onto a room the author never named.
-        if (!/^(0|[1-9][0-9]*)$/.test(rawIndex)) {
-            err(`${label}: the key must be a decimal room index with no leading zeros`);
-            continue;
-        }
-        const index = Number(rawIndex);
-        if (roomCount !== null && index >= roomCount) {
-            err(`${label}: room ${index} does not exist (the set has ${roomCount})`);
-        }
-        if (!isPlainObject(entry)) {
-            err(`${label} must be an object`);
-            continue;
-        }
-        for (const field of Object.keys(entry)) {
-            if (!ROOM_OVERLAY_FIELDS.includes(field)) {
-                err(`${label}.${field} is not a declared field — a room overlay carries `
-                    + `${ROOM_OVERLAY_FIELDS.join(', ')}`);
-            }
-        }
-        if (entry.name !== undefined && !isNonEmptyString(entry.name)) {
-            err(`${label}.name must be a non-empty string when present`);
-        }
-        if (entry.locations !== undefined) {
-            if (!Array.isArray(entry.locations)) {
-                err(`${label}.locations must be an array`);
-            } else {
-                entry.locations.forEach((row, i) => {
-                    const rlabel = `${label}.locations[${i}]`;
-                    if (!isPlainObject(row)) { err(`${rlabel} must be an object`); return; }
-                    for (const field of Object.keys(row)) {
-                        if (!LOCATION_FIELDS.includes(field)) {
-                            err(`${rlabel}.${field} is not a declared field — a location row carries `
-                                + `${LOCATION_FIELDS.join(', ')}`);
-                        }
-                    }
-                    if (!isNonEmptyString(row.name)) err(`${rlabel}.name must be a non-empty string`);
-                    if (!isNonEmptyString(row.vanilla_item)) {
-                        err(`${rlabel}.vanilla_item must be a non-empty string — an AP location `
-                            + 'with no item behind it is a location the fill cannot use');
-                    }
-                    if (!isPlainObject(row.entity) || !isNonEmptyString(row.entity.type)
-                        || !Number.isInteger(row.entity.x) || !Number.isInteger(row.entity.y)) {
-                        err(`${rlabel}.entity must be {type, x, y} with integer PIXEL coordinates `
-                            + '— the same (x, y) the room\'s OEL element carries, so the row '
-                            + 'addresses one entity and not a class of them');
-                    }
-                    if (isNonEmptyString(row.name)) {
-                        // ⛔ GLOBAL, not per room. The compiler allocates AP location ids
-                        // from `loc.name` ALONE (regionAtlasCompiler.js:376), and the
-                        // derivation prefixes the level — but two rooms that swap places
-                        // under a `reorder` would then swap AP names, so uniqueness is
-                        // asked of the AUTHORED name, which a reorder never touches.
-                        if (seenNames.has(row.name)) {
-                            err(`${rlabel}.name "${row.name}" duplicates `
-                                + `overlay.rooms[${seenNames.get(row.name)}] — location names `
-                                + 'are unique across the SET');
-                        } else {
-                            seenNames.set(row.name, index);
-                        }
+    /** ⛓ `entity` FIRST, because that is the field that makes the row an address. */
+    locationFields: ['entity', ...BASE_LOCATION_FIELDS],
+
+    locationRowErrors: (row, rlabel) => (
+        isPlainObject(row.entity) && isNonEmptyString(row.entity.type)
+            && Number.isInteger(row.entity.x) && Number.isInteger(row.entity.y)
+            ? []
+            : [`${rlabel}.entity must be {type, x, y} with integer PIXEL coordinates `
+                + '— the same (x, y) the room\'s OEL element carries, so the row '
+                + 'addresses one entity and not a class of them']
+    ),
+
+    exitIdHint: 'The exit ids are the derivation\'s own (`out_<type>_<x>_<y>`, '
+        + '`in_L<from>_<x>_<y>`, `out_pit_<x>_<y>`, `in_pit_L<from>_<x>_<y>`); a location is '
+        + 'named by the `mark-location` op\'s `name`, not by its AP name.',
+
+    extraFields: {
+        /**
+         * ⛔ THE TRAP ROOMS. A level the derivation must wire NO link into,
+         * because its exit teleporter is created on death.
+         */
+        neverEnter: {
+            errors: (value, { roomCount }) => {
+                if (!Array.isArray(value) || !value.every(Number.isInteger)) {
+                    return ['overlay.neverEnter must be an array of integer room indices'];
+                }
+                if (roomCount === null) return [];
+                return value
+                    .filter((i) => i < 0 || i >= roomCount)
+                    .map((i) => `overlay.neverEnter names room ${i}, which does not exist`);
+            },
+            renumber: (value, mapping) => value
+                .map((i) => mapping.get(i))
+                .filter((i) => i !== null && i !== undefined)
+                .sort((a, b) => a - b),
+        },
+
+        /**
+         * ⛔⛔ `regions` LIVES IN THE OVERLAY AND NOT IN THE MANIFEST.
+         * `signForTransition(fromRegion, toRegion)` needs a room → region map,
+         * and `levelSetExits.js`'s header proves it must be an INPUT (vanilla
+         * names the region of 7 of its 116 rooms and says nothing about the
+         * other 109, so there is no honest derivation). But
+         * `seedling-level-set.schema.json` is `additionalProperties: false` at
+         * the top level and declares no such field, so a SET carrying one would
+         * be REFUSED by its own schema. MEASURED — the overlay is this editor's
+         * document and the set is the game's.
+         */
+        regions: {
+            errors: (value) => {
+                if (!Array.isArray(value) || !value.every(Number.isInteger)) {
+                    return ['overlay.regions must be an array of integers, room index -> region'];
+                }
+                const errors = [];
+                value.forEach((r, i) => {
+                    if (r < SIGN_NONE || r > SIGN_TABLE_SIZE) {
+                        errors.push(`overlay.regions[${i}] is ${r}, outside ${SIGN_NONE}..${SIGN_TABLE_SIZE} — `
+                            + 'Message.as holds exactly seven titles and the table is CLOSED');
                     }
                 });
-            }
-        }
-        if (entry.rules !== undefined) {
-            if (!isPlainObject(entry.rules)) {
-                err(`${label}.rules must be an object keyed by "exit:<id>" or "loc:<name>"`);
-            } else {
-                for (const [key, rule] of Object.entries(entry.rules)) {
-                    try {
-                        parseRuleTarget(key);
-                    } catch (e) {
-                        err(`${label}.rules: ${e.message}`);
-                        continue;
-                    }
-                    if (!isPlainObject(rule) || !isNonEmptyString(rule.rule)) {
-                        err(`${label}.rules[${JSON.stringify(key)}] must be a Rule Builder node `
-                            + '({rule: "<Kind>", …})');
-                    }
-                }
-            }
-        }
-    }
-    if (overlay.neverEnter !== undefined) {
-        if (!Array.isArray(overlay.neverEnter) || !overlay.neverEnter.every(Number.isInteger)) {
-            err('overlay.neverEnter must be an array of integer room indices');
-        } else if (roomCount !== null) {
-            for (const i of overlay.neverEnter) {
-                if (i < 0 || i >= roomCount) err(`overlay.neverEnter names room ${i}, which does not exist`);
-            }
-        }
-    }
-    if (overlay.regions !== undefined) {
-        if (!Array.isArray(overlay.regions) || !overlay.regions.every(Number.isInteger)) {
-            err('overlay.regions must be an array of integers, room index -> region');
-        } else {
-            overlay.regions.forEach((r, i) => {
-                if (r < SIGN_NONE || r > SIGN_TABLE_SIZE) {
-                    err(`overlay.regions[${i}] is ${r}, outside ${SIGN_NONE}..${SIGN_TABLE_SIZE} — `
-                        + 'Message.as holds exactly seven titles and the table is CLOSED');
-                }
-            });
-        }
-    }
-    return errors;
-}
+                return errors;
+            },
+            renumber: (value, mapping) => {
+                const regions = [];
+                value.forEach((r, i) => {
+                    const to = mapping.get(i);
+                    if (to !== null && to !== undefined) regions[to] = r;
+                });
+                // ⛔ HOLES FILLED WITH `SIGN_NONE`, not left sparse. A sparse array
+                // round-trips through JSON as `null`s, and `signForTransition` reads a
+                // non-integer as "no region" anyway — writing it out means the document
+                // says what it means instead of relying on a reader's coercion.
+                return Array.from({ length: regions.length }, (_, i) => regions[i] ?? SIGN_NONE);
+            },
+        },
+    },
+});
 
-/** Refuse a bad overlay BY NAME, quoting every error. */
-export function assertOverlay(overlay, options = {}) {
-    const errors = overlayErrors(overlay, options);
-    if (errors.length > 0) {
-        fail(`seedlingSetOverlay: this overlay is not well formed — ${errors.join(' · ')}`);
-    }
-    return overlay;
-}
+/** ⛓ The fields a location row may carry — `entity` is what makes it an address. */
+export const LOCATION_FIELDS = SEEDLING_OVERLAY.LOCATION_FIELDS;
+
+export const {
+    assertOverlay, emptyOverlay, exitRulesByRoom, overlayErrors, overlayLocationNames,
+    overlayRoomIndices, parseRuleTarget, renumberOverlay,
+} = SEEDLING_OVERLAY;
 
 /**
  * ⛓⛓⛓ **THE BRIDGE: DATA → the three things `deriveAtlas` reads.**
@@ -314,82 +237,6 @@ export function overlayToDeriveInput(overlay) {
             levels: [...overlay.neverEnter],
             cite: Object.fromEntries(overlay.neverEnter.map((i) => [i, 'authored in the set overlay'])),
         };
-    }
-    return out;
-}
-
-/**
- * The EXIT rules of an overlay, grouped by room index. Locations are NOT here —
- * they ride the derivation's own `locationGuard` path (above), because a
- * location's rule has to be attached while the location is being built.
- *
- * @returns {Map<number, Map<string, object>>} room index -> exit_id -> rule
- */
-export function exitRulesByRoom(overlay) {
-    const out = new Map();
-    for (const [rawIndex, entry] of Object.entries(overlay?.rooms ?? {})) {
-        const index = Number(rawIndex);
-        for (const [key, rule] of Object.entries(entry?.rules ?? {})) {
-            const target = parseRuleTarget(key);
-            if (target.kind !== 'exit') continue;
-            if (!out.has(index)) out.set(index, new Map());
-            out.get(index).set(target.id, rule);
-        }
-    }
-    return out;
-}
-
-/**
- * ⛓ **RE-KEY AN OVERLAY UNDER A ROOM RENUMBERING** — what `reorder`,
- * `add-room` and `remove-room` all need, in ONE place.
- *
- * `mapping` is `oldIndex -> newIndex | null` (null = the room is gone). A room
- * overlay whose room disappears is DROPPED, and the caller is told how many —
- * silently losing an authored location is the shape the derivation's own
- * lost-collectible throw exists to prevent, one layer up.
- *
- * @returns {{overlay: object, dropped: number[]}}
- */
-export function renumberOverlay(overlay, mapping) {
-    const rooms = {};
-    const dropped = [];
-    for (const [rawIndex, entry] of Object.entries(overlay?.rooms ?? {})) {
-        const from = Number(rawIndex);
-        const to = mapping.get(from);
-        if (to === null || to === undefined) { dropped.push(from); continue; }
-        rooms[String(to)] = entry;
-    }
-    const next = { ...overlay, rooms };
-    if (Array.isArray(overlay?.neverEnter)) {
-        next.neverEnter = overlay.neverEnter
-            .map((i) => mapping.get(i))
-            .filter((i) => i !== null && i !== undefined)
-            .sort((a, b) => a - b);
-    }
-    if (Array.isArray(overlay?.regions)) {
-        const regions = [];
-        overlay.regions.forEach((r, i) => {
-            const to = mapping.get(i);
-            if (to !== null && to !== undefined) regions[to] = r;
-        });
-        // ⛔ HOLES FILLED WITH `SIGN_NONE`, not left sparse. A sparse array
-        // round-trips through JSON as `null`s, and `signForTransition` reads a
-        // non-integer as "no region" anyway — writing it out means the document
-        // says what it means instead of relying on a reader's coercion.
-        next.regions = Array.from({ length: regions.length }, (_, i) => regions[i] ?? SIGN_NONE);
-    }
-    return { overlay: next, dropped };
-}
-
-/** The room-index keys of an overlay, as numbers, ascending. */
-export const overlayRoomIndices = (overlay) => Object.keys(overlay?.rooms ?? {})
-    .map(Number).sort((a, b) => a - b);
-
-/** Every authored location name in the set, with the room it sits in. */
-export function overlayLocationNames(overlay) {
-    const out = new Map();
-    for (const [rawIndex, entry] of Object.entries(overlay?.rooms ?? {})) {
-        for (const row of entry?.locations ?? []) out.set(row.name, Number(rawIndex));
     }
     return out;
 }

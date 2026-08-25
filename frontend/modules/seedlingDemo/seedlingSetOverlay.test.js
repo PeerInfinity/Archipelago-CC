@@ -283,3 +283,161 @@ describe('renumbering re-keys everything an index reaches', () => {
         expect(JSON.parse(JSON.stringify(sparse))).toEqual(sparse);
     });
 });
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ EDITOR v3 E2a — THE LIFT IS BYTE-INERT ON BEHAVIOUR
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * §22.3: 10 of this module's 11 exported functions moved to
+ * `procgenCore/setOverlay.js` and this file BINDS them. A lift is only worth
+ * anything if the sentences did not move with it — an editor's refusal IS its
+ * evidence channel, and a paraphrase introduced by a refactor is exactly the
+ * kind of change no behavioural row would catch.
+ *
+ * ⛔⛔ **THE EXPECTATIONS BELOW WERE CAPTURED FROM THE MODULE AS IT STOOD AT
+ * `0727d40df`, BEFORE THE LIFT** (a probe over the pre-lift file, diffed
+ * against the post-lift one: 27 cases, byte-identical). They are therefore a
+ * pin and not a fixed point — a row that asked the new module whether it
+ * agreed with itself would pass for ever (trap 250).
+ */
+const CASES = [
+  ['not an object', 5],
+  ['bad version', { schema_version: 2, rooms: {} }],
+  ['bad overlay_id', { schema_version: 1, overlay_id: '', rooms: {} }],
+  ['undeclared field', { schema_version: 1, rooms: {}, nope: 1 }],
+  ['rooms not object', { schema_version: 1, rooms: [] }],
+  ['bad key', { schema_version: 1, rooms: { '03': {} } }],
+  ['out of range', { schema_version: 1, rooms: { 5: {} } }],
+  ['entry not object', { schema_version: 1, rooms: { 0: 7 } }],
+  ['undeclared room field', { schema_version: 1, rooms: { 0: { notes: 'x' } } }],
+  ['bad name', { schema_version: 1, rooms: { 0: { name: '' } } }],
+  ['locations not array', { schema_version: 1, rooms: { 0: { locations: {} } } }],
+  ['row not object', { schema_version: 1, rooms: { 0: { locations: [1] } } }],
+  ['undeclared row field', { schema_version: 1, rooms: { 0: { locations: [{ name: 'a', vanilla_item: 'b', entity: { type: 't', x: 1, y: 2 }, extra: 1 }] } } }],
+  ['row missing everything', { schema_version: 1, rooms: { 0: { locations: [{}] } } }],
+  ['dup name', { schema_version: 1, rooms: { 0: { locations: [{ name: 'a', vanilla_item: 'i', entity: { type: 't', x: 0, y: 0 } }] }, 1: { locations: [{ name: 'a', vanilla_item: 'i', entity: { type: 't', x: 0, y: 0 } }] } } }],
+  ['rules not object', { schema_version: 1, rooms: { 0: { rules: [] } } }],
+  ['bare rule key', { schema_version: 1, rooms: { 0: { rules: { bare: { rule: 'True_' } } } } }],
+  ['empty prefix', { schema_version: 1, rooms: { 0: { rules: { 'exit:': { rule: 'True_' } } } } }],
+  ['bad rule node', { schema_version: 1, rooms: { 0: { rules: { 'exit:a': 3 } } } }],
+  ['neverEnter bad', { schema_version: 1, rooms: {}, neverEnter: ['x'] }],
+  ['neverEnter range', { schema_version: 1, rooms: {}, neverEnter: [9] }],
+  ['regions bad', { schema_version: 1, rooms: {}, regions: ['x'] }],
+  ['regions range', { schema_version: 1, rooms: {}, regions: [99] }],
+];
+
+describe('⛔⛔ every refusal SENTENCE survived the lift to procgenCore, verbatim', () => {
+    const EXPECTED = new Map([
+    ["not an object", [
+        "overlay must be an object, got 5",
+    ]],
+    ["bad version", [
+        "overlay.schema_version must be 1, got 2",
+    ]],
+    ["bad overlay_id", [
+        "overlay.overlay_id must be a non-empty string when present",
+    ]],
+    ["undeclared field", [
+        "overlay.nope is not a declared field — the overlay carries schema_version, overlay_id, rooms, neverEnter, regions and provenance",
+    ]],
+    ["rooms not object", [
+        "overlay.rooms must be an object keyed by ROOM INDEX",
+    ]],
+    ["bad key", [
+        "overlay.rooms[03]: the key must be a decimal room index with no leading zeros",
+    ]],
+    ["out of range", [
+        "overlay.rooms[5]: room 5 does not exist (the set has 3)",
+    ]],
+    ["entry not object", [
+        "overlay.rooms[0] must be an object",
+    ]],
+    ["undeclared room field", [
+        "overlay.rooms[0].notes is not a declared field — a room overlay carries name, locations, rules",
+    ]],
+    ["bad name", [
+        "overlay.rooms[0].name must be a non-empty string when present",
+    ]],
+    ["locations not array", [
+        "overlay.rooms[0].locations must be an array",
+    ]],
+    ["row not object", [
+        "overlay.rooms[0].locations[0] must be an object",
+    ]],
+    ["undeclared row field", [
+        "overlay.rooms[0].locations[0].extra is not a declared field — a location row carries entity, name, vanilla_item",
+    ]],
+    ["row missing everything", [
+        "overlay.rooms[0].locations[0].name must be a non-empty string",
+        "overlay.rooms[0].locations[0].vanilla_item must be a non-empty string — an AP location with no item behind it is a location the fill cannot use",
+        "overlay.rooms[0].locations[0].entity must be {type, x, y} with integer PIXEL coordinates — the same (x, y) the room's OEL element carries, so the row addresses one entity and not a class of them",
+    ]],
+    ["dup name", [
+        "overlay.rooms[1].locations[0].name \"a\" duplicates overlay.rooms[0] — location names are unique across the SET",
+    ]],
+    ["rules not object", [
+        "overlay.rooms[0].rules must be an object keyed by \"exit:<id>\" or \"loc:<name>\"",
+    ]],
+    ["bare rule key", [
+        "overlay.rooms[0].rules: seedlingSetOverlay: rule target \"bare\" carries neither \"exit:\" nor \"loc:\". ⛔ REFUSED rather than guessed: an exit id and a location name are both free-form strings, so a bare key that happened to look like an exit id would silently author a rule on the wrong thing. The exit ids are the derivation's own (`out_<type>_<x>_<y>`, `in_L<from>_<x>_<y>`, `out_pit_<x>_<y>`, `in_pit_L<from>_<x>_<y>`); a location is named by the `mark-location` op's `name`, not by its AP name.",
+    ]],
+    ["empty prefix", [
+        "overlay.rooms[0].rules: seedlingSetOverlay: rule target \"exit:\" carries the \"exit:\" prefix and nothing after it",
+    ]],
+    ["bad rule node", [
+        "overlay.rooms[0].rules[\"exit:a\"] must be a Rule Builder node ({rule: \"<Kind>\", …})",
+    ]],
+    ["neverEnter bad", [
+        "overlay.neverEnter must be an array of integer room indices",
+    ]],
+    ["neverEnter range", [
+        "overlay.neverEnter names room 9, which does not exist",
+    ]],
+    ["regions bad", [
+        "overlay.regions must be an array of integers, room index -> region",
+    ]],
+    ["regions range", [
+        "overlay.regions[0] is 99, outside 0..7 — Message.as holds exactly seven titles and the table is CLOSED",
+    ]],
+    ]);
+
+    it.each(CASES)('the messages for "%s" are unchanged', (label, doc) => {
+        expect(overlayErrors(doc, { roomCount: 3 })).toEqual(EXPECTED.get(label));
+    });
+
+    it('⛓ the two THROWING doors kept their sentences too', () => {
+        const thrown = (fn) => { try { fn(); return null; } catch (e) { return `${e.name}: ${e.message}`; } };
+        const PINS = new Map([
+    ["assert throw", "SeedlingSetOverlayError: seedlingSetOverlay: this overlay is not well formed — overlay.schema_version must be 1, got 2"],
+    ["parse bare", "SeedlingSetOverlayError: seedlingSetOverlay: rule target \"bare\" carries neither \"exit:\" nor \"loc:\". ⛔ REFUSED rather than guessed: an exit id and a location name are both free-form strings, so a bare key that happened to look like an exit id would silently author a rule on the wrong thing. The exit ids are the derivation's own (`out_<type>_<x>_<y>`, `in_L<from>_<x>_<y>`, `out_pit_<x>_<y>`, `in_pit_L<from>_<x>_<y>`); a location is named by the `mark-location` op's `name`, not by its AP name."],
+    ["parse empty", "SeedlingSetOverlayError: seedlingSetOverlay: a rule target is a non-empty string, got \"\""],
+    ["parse null", "SeedlingSetOverlayError: seedlingSetOverlay: a rule target is a non-empty string, got null"],
+        ]);
+        expect(thrown(() => assertOverlay({ schema_version: 2, rooms: {} })))
+            .toBe(PINS.get('assert throw'));
+        expect(thrown(() => parseRuleTarget('bare'))).toBe(PINS.get('parse bare'));
+        expect(thrown(() => parseRuleTarget(''))).toBe(PINS.get('parse empty'));
+        expect(thrown(() => parseRuleTarget(null))).toBe(PINS.get('parse null'));
+    });
+
+    /**
+     * ⛔ NON-VACUITY. Every case must actually produce at least one message, or
+     * the pin would be 27 rows agreeing that nothing happened.
+     */
+    it('⛓ the pin is not vacuous — every case refuses something', () => {
+        expect(CASES).toHaveLength(EXPECTED.size);
+        for (const [label] of CASES) {
+            expect(EXPECTED.get(label), label).toBeTruthy();
+            expect(EXPECTED.get(label).length, label).toBeGreaterThan(0);
+        }
+    });
+
+    /** ⛓ …and the refusal class is still SEEDLING's, not the core's default. */
+    it('⛔ the ERROR CLASS is still this module\'s own', () => {
+        let thrown = null;
+        try { assertOverlay({ schema_version: 9, rooms: {} }); } catch (e) { thrown = e; }
+        expect(thrown).toBeInstanceOf(SeedlingSetOverlayError);
+        expect(thrown.name).toBe('SeedlingSetOverlayError');
+    });
+});
