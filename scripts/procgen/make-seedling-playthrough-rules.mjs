@@ -53,7 +53,7 @@ const PRESET_OUT = path.join(repoRoot,
     'frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json');
 const GAME_NAME = 'Seedling Playthrough';
 
-const { AtlasSession, createEmptyAtlas } = await imp('frontend/modules/regionMarkingTool/atlasSession.js');
+const { AtlasSession } = await imp('frontend/modules/regionMarkingTool/atlasSession.js');
 const { validateRegionAtlas } = await imp('frontend/modules/procgenPipeline/regionAtlasValidator.js');
 const { compactJsonFile } = await imp('frontend/modules/procgenPipeline/compactJson.js');
 const { analyzeRegion, applyRegionAnalysis } = await imp('frontend/modules/procgenPipeline/regionAtlasAnalyzer.js');
@@ -62,6 +62,11 @@ const { stringifyRulesJson } = await imp('frontend/modules/shared/rulesJsonBuild
 const SEM = await imp('frontend/modules/flashPanel/seedlingSemantics.js');
 const OV = await imp('frontend/modules/flashPanel/seedlingPlaythroughOverlay.js');
 const { R7_GOAL_LEDGER } = await imp('frontend/modules/seedlingDemo/r7Acceptance.js');
+// ⛓ EDITOR v3 slice D0b — the derivation LIFTED out of this script (plan §16.3):
+//   the atlas's regions, exits and connections are a FUNCTION of the rooms, and
+//   only the OVERLAY below is authored. The vanilla 116 and an edited level set
+//   now go through ONE `deriveAtlas`.
+const { deriveAtlas, regionIdFor, VICTORY_ITEM } = await imp('frontend/modules/seedlingDemo/seedlingAtlasDerivation.js');
 const { buildLevelWorld, ROLES, maskHitsBox } = await imp('frontend/modules/seedlingDemo/levelWorld.js');
 const { playerBoxAt } = await imp('frontend/modules/seedlingDemo/playerPhysicsV2.js');
 
@@ -196,193 +201,22 @@ const gridFor = (level) => SEM.buildSeedlingRegionGrid(
     { entityOverride, tileOverride: OV.overlayTileSemantics },
 );
 
-// ── the links, and why every one of them is ONE-WAY ────────────────────────
+// ── what the derivation needs, and what this script keeps ─────────────────
 //
-// §2.1: there is ONE transition primitive and every level edge is an invisible
-// Teleporter. A transition writes `FP._goto` and the swap happens in
-// `Engine.checkWorld()` — it is a one-way jump to `(playerx, playery)` in the
-// destination, and the way BACK is a separate entity that may not exist at all
-// (L40's pits drop into L43; L43's stairs come back out somewhere else).
+// ⛓⛓ EDITOR v3 slice D0b — `linksOf`, `pitOf`, `tileOf`/`arrivalTileOf`,
+// `regionIdFor`/`outExitId`/`inExitId`, `locationsFor`, `levelName`/`labelFor`
+// and the region-building core of `buildPlaythroughAtlas` all LIVE IN
+// `seedlingDemo/seedlingAtlasDerivation.js` now (plan §16.3, ⚖ ruled). They
+// were never about THIS generator: they are what turns a list of Seedling
+// rooms into an atlas, and a level-set editor needs exactly the same function.
 //
-// So this atlas emits one exit per link ENTITY on the source side, one arrival
-// exit on the destination side, and a ONE-WAY connection between them. Pairing
-// them into bidirectional connections would invent return edges the game does
-// not have, and AP would route a collectible through a door that only opens
-// one way.
-const LINK_TAGS = ['teleporter', 'stairsup', 'stairsdown'];
-const tileOf = (e) => [Math.floor(e.x / TILE), Math.floor(e.y / TILE)];
-const arrivalTileOf = (e) => [
-    Math.floor(Number(e.attrs.playerx) / TILE), Math.floor(Number(e.attrs.playery) / TILE),
-];
-const regionIdFor = (level) => `level_${level}`;
-const outExitId = (e) => `out_${e.type}_${e.x}_${e.y}`;
-const inExitId = (from, e) => `in_L${from}_${e.x}_${e.y}`;
-
-/**
- * ⛓ THE SECOND TRANSPORT CLASS, and leaving it out made four levels
- * unreachable — which is exactly the shape the standing instruction says to
- * treat as a defect in the logic.
- *
- * A Pit tile is not a wall and not a door: `Player.checkFallingInPit`
- * (`Player.as:718`) hands the player to the level `<control>` object's
- * `fallthrough` target. The transcription already marks the cells `sink` —
- * "enterable from anywhere, never leavable" — precisely so this could be wired
- * rather than guessed.
- *
- * ⛔ AND THE OFFSET IS SUBTRACTED FROM WHERE YOU FELL, NOT AN ARRIVAL POINT.
- * `Player.as:758-764`:
- *
- *     x = floor(max(fallInPitPos.x - Game.fallthroughOffset.x, 0) / Tile.w) * Tile.w
- *
- * with `fallthroughOffset = (control.x + xOff, control.y + yOff)`
- * (`Game.as:2125-2129`). So a level's pits are NOT one transport: each pit tile
- * lands somewhere different, translated by a constant. The first cut of this
- * generator read the offset as the destination and put L12's pit at tile
- * (31,38) of an 11x11 room — which the atlas session caught, because a tile
- * outside its region is an error there rather than a shrug.
- *
- * ⇒ one exit per DISTINCT ARRIVAL, carrying the pit tiles that produce it.
- */
-const PIT_TILE_TYPE = 6;
-
-function pitOf(level) {
-    const control = level.entities.find((e) => e.type === 'control');
-    const to = Number(control?.attrs?.fallthrough);
-    if (!Number.isInteger(to) || !levelOf(to)) return null;
-    const dest = levelOf(to);
-    const offX = Number(control.x) + Number(control.attrs.xOff);
-    const offY = Number(control.y) + Number(control.attrs.yOff);
-    if (!Number.isFinite(offX) || !Number.isFinite(offY)) return null;
-    const byArrival = new Map();
-    for (const layer of level.layers ?? []) {
-        if (layer.name === 'cliffsides') continue;
-        for (const p of layer.tiles ?? []) {
-            if (SEM.tileTypeForPlacement(p) !== PIT_TILE_TYPE) continue;
-            // The game's own arithmetic, then the clamp `Player.as:581-582`
-            // applies to every arrival anyway (the level rect is hard).
-            const ax = Math.min(dest.width - 1,
-                Math.floor(Math.max(p[0] * TILE - offX, 0) / TILE));
-            const ay = Math.min(dest.height - 1,
-                Math.floor(Math.max(p[1] * TILE - offY, 0) / TILE));
-            const key = `${ax},${ay}`;
-            if (!byArrival.has(key)) byArrival.set(key, { arrival: [ax, ay], tiles: [] });
-            byArrival.get(key).tiles.push([p[0], p[1]]);
-        }
-    }
-    if (byArrival.size === 0) return null;
-    const groups = [...byArrival.values()]
-        .map((g) => ({ ...g, tiles: g.tiles.sort((a, b) => (a[1] - b[1]) || (a[0] - b[0])) }))
-        .sort((a, b) => (a.arrival[1] - b.arrival[1]) || (a.arrival[0] - b.arrival[0]));
-    return { to, groups };
-}
-
-function linksOf(level) {
-    return level.entities
-        .filter((e) => LINK_TAGS.includes(e.type) && e.attrs?.to !== undefined)
-        .map((e) => ({ e, to: Number(e.attrs.to) }))
-        .filter((l) => Number.isInteger(l.to) && levelOf(l.to))
-        .sort((a, b) => (a.e.x - b.e.x) || (a.e.y - b.e.y) || (a.to - b.to));
-}
-
-// ── the goal ledger, as AP locations ───────────────────────────────────────
-//
-// The census is NOT retyped: `seedlingDemo/r7Acceptance.R7_GOAL_LEDGER` is the
-// frozen 41-row ledger slice 0 built and mutation-tested, and every location
-// here is one of its rows. A row whose entity cannot be found on the map is an
-// ERROR, never a skip — a census that silently loses a row is trap 110.
-const ITEM_FOR_TAG = Object.freeze({
-    sword: 'Progressive Sword', shield: 'Progressive Shield',
-    darkshield: 'Progressive Shield', conch: 'Progressive Swim',
-    feather: 'Progressive Swim', wand: 'Wand', firewand: 'Fire Wand Fusion',
-    ghostspear: 'Ghost Spear', ghostsword: 'Ghost Sword Fusion',
-    darksuit: 'Dark Suit', torchpickup: 'Light', health: 'Health',
-    totempart: 'Totem Shard', chest: 'Seal',
-});
-const ITEM_FOR_KEY = Object.freeze(['Red Key', 'Green Key', 'Purple Key', 'Blue Key', 'Yellow Key']);
-/** The ending. Not a Seedling pickup flag — the AP goal, so it needs its own item. */
-const VICTORY_ITEM = 'The Seed';
-
-/** Which entity on the map each ledger row is. */
-function locationsFor(level) {
-    const out = [];
-    for (const row of R7_GOAL_LEDGER) {
-        if (row.level !== level.level) continue;
-        let entity = null;
-        let item = null;
-        if (row.kind === 'pickup') {
-            entity = level.entities.find((e) => e.type === row.tag);
-            item = ITEM_FOR_TAG[row.tag];
-        } else if (row.kind === 'key') {
-            const kt = Number(/bosskey(\d)@/.exec(row.id)[1]);
-            entity = level.entities.find((e) => e.type === 'bosskey' && Number(e.attrs.keyType) === kt);
-            item = ITEM_FOR_KEY[kt];
-        } else if (row.kind === 'totempart') {
-            const [, x, y] = /:(\d+),(\d+)$/.exec(row.id).map(Number);
-            entity = level.entities.find((e) => e.type === 'totempart' && e.x === x && e.y === y);
-            item = ITEM_FOR_TAG.totempart;
-        } else if (row.kind === 'chest') {
-            const chests = level.entities.filter((e) => e.type === 'chest');
-            if (chests.length !== 1) {
-                throw new Error(`ledger row ${row.id} expects ONE chest in level ${level.level}, found ${chests.length}`);
-            }
-            [entity] = chests;
-            item = ITEM_FOR_TAG.chest;
-        } else if (row.kind === 'ending') {
-            entity = level.entities.find((e) => e.type === 'seed');
-            item = VICTORY_ITEM;
-        } else if (row.kind === 'encounter') {
-            // The two grants with no pickup entity of their own: Fire is a
-            // BobBoss DROP (`BobBoss.as:194`) and the Dark Sword is the Witch's
-            // trade (`Witch.as:32-52`). The location is the thing that grants
-            // it, which is what a player has to reach.
-            //
-            // ⛔ AND THE FIRST HALF IS A FINDING (R7 slice 4). The ledger cites
-            // "BobBoss drop, L32", and **no .oel in the game places a bobboss
-            // at all** — grep every `.oel` for the three tags and get nothing.
-            // The fight is started by a FALLING ROCK:
-            // `FallRockLarge.as:115-117`, `if (bossRock && thirdBoss)
-            // FP.world.add(new BobBoss(72, 72))`. So the location that grants
-            // Fire is L32's `fallrocklarge {bossrock 1, thirdboss 1}`, and the
-            // three `bobboss*` construction cases in `Game.as:2143-2145` are
-            // dead editor vocabulary.
-            entity = row.id.startsWith('fire@')
-                ? level.entities.find((e) => e.type === 'fallrocklarge'
-                    && e.attrs?.bossrock === '1' && e.attrs?.thirdboss === '1')
-                : level.entities.find((e) => e.type === 'witch');
-            item = row.id.startsWith('fire@') ? 'Fire' : 'Progressive Sword';
-        }
-        if (!entity) throw new Error(`ledger row ${row.id}: no entity for it in level ${row.level}`);
-        if (!item) throw new Error(`ledger row ${row.id}: no AP item name`);
-        const loc = {
-            name: `${levelName(level.level)} - ${labelFor(row)}`,
-            tile: tileOf(entity),
-            vanilla_item: item,
-        };
-        // ⛔ THE GATE THAT IS NOT A DOOR: an item guarded by something standing
-        // in the same room has no crossing to hang a rule on (OV.LOCATION_GUARDS).
-        const guard = OV.locationGuard(row.id);
-        if (guard) {
-            const rule = analyzerOptions.resolveCondition(guard.condition);
-            if (!rule) throw new Error(`location guard for ${row.id} does not resolve to a rule`);
-            loc.access_rule = rule;
-            locationGuards.push(`${loc.name} — ${guard.cite}`);
-            note(`${regionIdFor(level.level)}: location "${loc.name}" GUARDED — ${guard.why} (${guard.cite})`);
-        }
-        out.push(loc);
-    }
-    return out;
-}
-
-/** A stable, readable name per level. Location names must be globally unique. */
-const levelName = (id) => `Level ${String(id).padStart(3, '0')}`;
-const labelFor = (row) => {
-    if (row.kind === 'chest') return 'Chest';
-    if (row.kind === 'key') return `Boss Key ${/bosskey(\d)@/.exec(row.id)[1]}`;
-    if (row.kind === 'totempart') return `Totem Part ${/:(\d+),(\d+)$/.exec(row.id).slice(1).join(',')}`;
-    if (row.kind === 'ending') return 'The Seed';
-    if (row.kind === 'encounter') return row.id.startsWith('fire@') ? 'Bob Boss' : 'Witch';
-    return row.tag.replace(/^\w/, (c) => c.toUpperCase());
-};
+// ⛔ WHAT STAYED HERE IS THE POINT, NOT THE LEFTOVERS. Everything below —
+// the analyzer pass, `applyCrossingCostToBindings`, `applyLavaTrapPulls`,
+// `applyHandRulings`, `pruneUnreachableSubRegions` — is the VANILLA OVERLAY,
+// and §16.3 says an atlas is `derive(rooms) + authored overlay`. That the
+// 116-room vanilla build needs one is the evidence the shape is right; a
+// derivation that had swallowed the hand rulings would have proved the
+// opposite.
 
 // ── build ──────────────────────────────────────────────────────────────────
 
@@ -395,116 +229,45 @@ export function buildPlaythroughAtlas() {
     permissiveBindings.length = 0;
     crossingCharged.length = 0;
     arrivalsUncharged.length = 0;
-    const session = new AtlasSession(createEmptyAtlas({
-        game: 'seedling',
-        name: 'Seedling — the honest playthrough (rules v1)',
-        description: 'GENERATED — do not edit. One region per level for all 116 levels, '
-            + 'sub-regions and their crossing rules computed by the Phase-5a reachability '
-            + 'analyzer over seedlingSemantics\' transcription, with seedlingPlaythroughOverlay '
-            + 'supplying the item rulings the transcription refuses and the physics model\'s '
-            + 'own pixel masks supplying the building outlines. Every link is ONE-WAY, because '
-            + 'the game has exactly one transition primitive and it is a one-way jump. '
-            + 'Regenerate with scripts/procgen/make-seedling-playthrough-rules.mjs.',
+    /**
+     * ⛓⛓ THE ATLAS IS DERIVED; ONLY THE OVERLAY IS AUTHORED (plan §16.3, ⚖
+     * ruled by the user 2026-08-25). Everything this call produces — one region
+     * per room, the boundary exits from the link entities and the pits, the
+     * one-way connections, the ledger locations — is a FUNCTION of the rooms.
+     * The three authored things travel in `overlay`.
+     *
+     * ⚠ THE MAP EXTRACT'S LEVELS ARE ALREADY THE RECORD SHAPE `deriveAtlas`
+     * TAKES: `{level, width, height, layers, entities}`. A level set's parsed
+     * room (`procgenLevelOel.parseOelLevel`) presents the same record MINUS
+     * `level`, which the set supplies — the adaptation is at the call site, by
+     * design, because the two sources mean different numberings.
+     */
+    const derived = deriveAtlas(LEVELS, {
+        locations: R7_GOAL_LEDGER,
+        locationGuard: OV.locationGuard,
+        neverEnter: { levels: OV.NEVER_ENTER_LEVELS, cite: OV.NEVER_ENTER_CITE },
+    }, {
         tileSize: TILE,
-        mapSource: 'ogmo-extract',
-        mapDocument: path.basename(MAP_FILE),
-    }));
-
-    // Regions first, so a connection can name any of them.
-    for (const level of LEVELS) {
-        session.addRegion({
-            region_id: regionIdFor(level.level),
-            name: levelName(level.level),
-            bounds: { x: 0, y: 0, w: level.width, h: level.height },
-            map_ref: level.level,
-            rules_source: 'analyzer',
-        });
-    }
-
-    // Exits: one per link on the source side, one arrival per link on the
-    // destination side. Both sides deduplicated by id — two links arriving at
-    // the same spot share one arrival exit.
-    //
-    // ⛓ EDITOR v3 slice D0b: the connections are made THROUGH the session now
-    // (`connect(from, to, { one_way: true })`). Until D0b `AtlasSession.connect`
-    // could only pair endpoints undirected, so this generator collected the
-    // rows itself and assigned `vanilla_layout.connections` wholesale — which
-    // also skipped the each-endpoint-once law. Same rows, same order, and the
-    // law now applies to them.
-    const seenArrival = new Set();
-    for (const level of LEVELS) {
-        for (const { e, to } of linksOf(level)) {
-            if (OV.NEVER_ENTER_LEVELS.includes(to)) {
-                note(`L${level.level} ${outExitId(e)} -> L${to}: NOT WIRED — trap room, `
-                    + `never-enter (${OV.NEVER_ENTER_CITE[to]})`);
-                continue;
-            }
-            session.addExit(regionIdFor(level.level), {
-                exit_id: outExitId(e), tiles: [tileOf(e)], kind: 'teleporter',
-            });
-            const inId = inExitId(level.level, e);
-            const key = `${to}/${inId}`;
-            if (!seenArrival.has(key)) {
-                seenArrival.add(key);
-                session.addExit(regionIdFor(to), {
-                    exit_id: inId, tiles: [arrivalTileOf(e)], kind: 'teleporter',
-                });
-            }
-            session.connect(
-                [regionIdFor(level.level), outExitId(e)],
-                [regionIdFor(to), inId],
-                { one_way: true },
-            );
-        }
-        const pit = pitOf(level);
-        if (pit && OV.NEVER_ENTER_LEVELS.includes(pit.to)) {
-            note(`L${level.level} pits -> L${pit.to}: NOT WIRED — trap room, never-enter`);
-        } else if (pit) {
-            for (const g of pit.groups) {
-                const outId = `out_pit_${g.arrival[0]}_${g.arrival[1]}`;
-                const inId = `in_pit_L${level.level}_${g.arrival[0]}_${g.arrival[1]}`;
-                session.addExit(regionIdFor(level.level), {
-                    exit_id: outId, tiles: g.tiles, kind: 'teleporter',
-                });
-                session.addExit(regionIdFor(pit.to), {
-                    exit_id: inId, tiles: [g.arrival], kind: 'teleporter',
-                });
-                session.connect(
-                    [regionIdFor(level.level), outId],
-                    [regionIdFor(pit.to), inId],
-                    { one_way: true },
-                );
-            }
-        }
-    }
-
-    for (const level of LEVELS) {
-        for (const loc of locationsFor(level)) session.addLocation(regionIdFor(level.level), loc);
-    }
-
-    session.setStart(regionIdFor(0));
-
-    // ⛔ REGIONS WITH NO DOOR AT ALL, dropped and NAMED. Three of them, each for
-    // a reason the source states:
-    //   L57 / L69 — the trap rooms. Their exit teleporter is CREATED ON DEATH
-    //     (`TentacleBeast.as:213`, `LightBossController.as:104`), so the .oel
-    //     holds no link out and this generator wires none in. The never-enter
-    //     ruling is thereby encoded as an ABSENCE, which is stronger than a
-    //     rule: AP's fill cannot route through a region that is not in the graph.
-    //   L81 — "an orphaned empty room" (§2.2's census, spot-verified at §8.2).
-    // A dropped region holding a ledger row would be a lost collectible, so
-    // that is an error rather than a note.
-    for (const region of [...session.atlas.regions]) {
-        if ((region.exits ?? []).length > 0) continue;
-        if (session.atlas.vanilla_layout?.start_region === region.region_id) continue;
-        if ((region.locations ?? []).length > 0) {
-            throw new Error(`${region.region_id} has no entry point but holds `
-                + `${region.locations.length} ledger location(s) — that is a lost collectible, not a pocket`);
-        }
-        note(`${region.region_id}: DROPPED — no link in the whole map reaches it and it holds nothing`);
-        droppedRegions.push(region.region_id);
-        session.atlas.regions.splice(session.atlas.regions.indexOf(region), 1);
-    }
+        tileTypeForPlacement: SEM.tileTypeForPlacement,
+        resolveCondition: (c) => analyzerOptions.resolveCondition(c),
+        note,
+        onGuard: (loc, guard) => locationGuards.push(`${loc.name} — ${guard.cite}`),
+        atlas: {
+            game: 'seedling',
+            name: 'Seedling — the honest playthrough (rules v1)',
+            description: 'GENERATED — do not edit. One region per level for all 116 levels, '
+                + 'sub-regions and their crossing rules computed by the Phase-5a reachability '
+                + 'analyzer over seedlingSemantics\' transcription, with seedlingPlaythroughOverlay '
+                + 'supplying the item rulings the transcription refuses and the physics model\'s '
+                + 'own pixel masks supplying the building outlines. Every link is ONE-WAY, because '
+                + 'the game has exactly one transition primitive and it is a one-way jump. '
+                + 'Regenerate with scripts/procgen/make-seedling-playthrough-rules.mjs.',
+            mapSource: 'ogmo-extract',
+            mapDocument: path.basename(MAP_FILE),
+        },
+    });
+    droppedRegions.push(...derived.dropped);
+    const session = new AtlasSession(derived.atlas);
 
     // ── the analysis pass ────────────────────────────────────────────────
     for (const region of [...session.atlas.regions]) {

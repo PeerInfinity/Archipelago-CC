@@ -247,6 +247,35 @@ describe('⛔ KEY ORDER is preserved exactly — the atlases are byte-gated', ()
         expect(Object.keys(subbed.regions[0]).at(-1)).toBe('subgraph');
     });
 
+    /**
+     * ⛓ THE SUB-REGION SLOT'S POSITION, which the `set-sub-regions` row above
+     * does NOT cover: that one rewrites exits through `keep()`, while
+     * `add-exit` / `add-location` / `assign-sub-region` go through
+     * `withSubRegion`. A mutant that prepended the key there passed every other
+     * row in this file — a fixture only gates a change it can DISTINGUISH.
+     */
+    it('withSubRegion writes `sub_region` where the format has always put it', () => {
+        const subbed = ok(fixture(), { op: 'set-sub-regions', region: 'hall', sub_regions: ['a', 'b'] }).atlas;
+        const withExit = ok(subbed, {
+            op: 'add-exit', region: 'hall', exit_id: 'north', tiles: [[3, 0]],
+            sub_region: 'b', access_rule: { rule: 'True_' },
+        }).atlas;
+        expect(Object.keys(withExit.regions[0].exits.at(-1)))
+            .toEqual(['exit_id', 'kind', 'side', 'exit_tiles', 'entrance_tile', 'sub_region', 'access_rule']);
+        const withLoc = ok(subbed, {
+            op: 'add-location', region: 'hall', name: 'New', tile: [1, 1],
+            sub_region: 'a', vanilla_item: 'Wand',
+        }).atlas;
+        expect(Object.keys(withLoc.regions[0].locations.at(-1)))
+            .toEqual(['name', 'sub_region', 'tile', 'vanilla_item']);
+        // and re-assigning an EXISTING slot keeps its position
+        const moved = ok(withLoc, {
+            op: 'assign-sub-region', region: 'hall', kind: 'location', id: 'New', sub_region: 'b',
+        }).atlas;
+        expect(Object.keys(moved.regions[0].locations.at(-1)))
+            .toEqual(['name', 'sub_region', 'tile', 'vanilla_item']);
+    });
+
     it('dropping a subgraph removes the key rather than setting it undefined', () => {
         const subbed = ok(fixture(), { op: 'set-sub-regions', region: 'hall', sub_regions: ['a'] }).atlas;
         const bare = ok(subbed, { op: 'set-sub-regions', region: 'hall', sub_regions: [] }).atlas;
