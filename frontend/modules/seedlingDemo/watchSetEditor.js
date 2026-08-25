@@ -1019,7 +1019,8 @@ export function mountWatchSetEditor({
         const row = rows[room];
         for (const ex of row?.exitList ?? []) {
             const o = el(doc, 'option', null,
-                `#${ex.index} ${ex.element} → room ${ex.to} @(${ex.playerx ?? '·'},${ex.playery ?? '·'})`);
+                `#${ex.index} ${ex.element} → room ${ex.to} `
+                + `@(${ex.playerx ?? '·'},${ex.playery ?? '·'})`);
             o.value = String(ex.index);
             sel.appendChild(o);
         }
@@ -1677,7 +1678,9 @@ export function mountWatchSetEditor({
             if (box) {
                 box.innerHTML = '';
                 const list = el(doc, 'ul', 'setReport');
-                for (const e of check.errors) list.appendChild(el(doc, 'li', 'bad', `[download] ${e}`));
+                for (const e of check.errors) {
+                    list.appendChild(el(doc, 'li', 'bad', `[download] ${e}`));
+                }
                 box.appendChild(list);
             }
             setNote(`⛔ NOT DOWNLOADED — the set does not validate (${check.errors.length} `
