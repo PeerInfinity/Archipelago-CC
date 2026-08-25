@@ -243,6 +243,33 @@ function oelBase(tag, { parseOel }) {
  * which are the page's business), and an adapter that reached for one would be
  * reading a document nobody handed it.
  *
+ * ── ⛓⛓ EDITOR v3 D1 — OPENING A ROOM FROM INSIDE A **SET SESSION** ───────
+ *
+ * `levelSetSource` is a FUNCTION, so it may answer a live document: point it at
+ * a set session's current fold (`seedlingSetAdapter.setSessionRoomSource(session)`)
+ * and a room opens against the set as it is NOW — which is what a page wants,
+ * because a room opened after a `reorder` must be the room that is there now.
+ * MEASURED, 2026-08-25: this needed no change here. The base resolves the room
+ * out of whatever set the source answers, and a set session's fold keeps the
+ * base tag's `set_id` (no op stamps; the one stamp is at download), so the tag
+ * still names the document it opened on.
+ *
+ * ⚠ **AND THE ID CHECK IS THE INJECTION'S, NOT THIS FUNCTION'S.** `atlasBase`
+ * above compares `tag.set_id` against the vanilla set's (⚖ ruling 2);
+ * `setRoomBase` does NOT compare the set it is handed against the tag, so a page
+ * that injected a bare `() => session.record().set` and later opened a DIFFERENT
+ * set into that session would silently resolve an old tag against the new
+ * document. `setSessionRoomSource` is the closure that makes the comparison, and
+ * it is the injection a page should use. Left here as it was rather than
+ * hardened in place: an existing caller passes a source that deliberately
+ * ignores the id, and two authorities for one identity rule is how the two come
+ * to disagree.
+ *
+ * ⛓ A room session is COMMITTED BACK with one `replace-room-xml` op on the set
+ * session (`seedlingSetAdapter.closeRoomSession`), so N room edits are ONE set
+ * edit and ONE undo — C2's batching residue (plan §13.10), closed by
+ * construction rather than by policy.
+ *
  * ⛔⛔ **AN `embed`-SOURCED ROOM REFUSES BY NAME, AND THAT IS THE WHOLE VANILLA
  * SET.** An `embed` is a path into a SWF's `[Embed]` table — a fact about a
  * SOURCE TREE, not about this document — and all 116 rooms of
@@ -312,7 +339,10 @@ const refuseKind = (kind, why) => () => fail(
  * @param {Function} [o.levelSource] `(level) => record`, for the `atlas` base
  * @param {string} [o.vanillaSetId]  the vanilla set's stamped `set_id` (⚖ ruling 2)
  * @param {Function} [o.parseOel]    `(xml, where) => {width, height, layers, entities}`
- * @param {Function} [o.levelSetSource] `(set_id) => set`, for the `set-room` base
+ * @param {Function} [o.levelSetSource] `(set_id) => set`, for the `set-room` base.
+ *                                   May answer a LIVE set session's fold — see
+ *                                   `seedlingSetAdapter.setSessionRoomSource`,
+ *                                   which is the injection that checks the id
  * @param {boolean} [o.fillDefaults] fill omitted attrs from the schema's defaults
  */
 export function createSeedlingEditAdapter({

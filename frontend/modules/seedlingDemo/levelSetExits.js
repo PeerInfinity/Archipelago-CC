@@ -595,3 +595,110 @@ export function retargetLevelSet(set, {
 
 /** Exported for the tests that assert the flood's geometry claim directly. */
 export const cellRect = (tx, ty) => rect(tx * TILE_SIZE, ty * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+
+/**
+ * ⛓⛓⛓ **UNWIRE ONE EXIT — BY DELETING THE DOOR, because the format has no
+ * spelling for a door that goes nowhere** (EDITOR v3 D1).
+ *
+ * MEASURED, 2026-08-25, over a generated 4-room set — the four candidate
+ * representations of "this exit leads nowhere", each asked of every reader:
+ *
+ * | written as        | `parseRoomXml` | `reachabilityOf` | `validateLevelSet` | the game |
+ * |-------------------|----------------|------------------|--------------------|----------|
+ * | `to=""`           | no exit        | unreachable      | **PASSES**         | `int(o.@to)` is **0** — warps to room 0 |
+ * | `to` absent       | no exit        | unreachable      | **PASSES**         | the same 0 |
+ * | `to="-1"`         | exit to -1     | unreachable      | REFUSES by name    | out of range (`§8.3`) |
+ * | element DELETED   | no exit        | unreachable      | PASSES             | there is no teleporter |
+ *
+ * ⛔ THE FIRST TWO ARE THE TRAP AND THEY ARE THE OBVIOUS CHOICES. Every JS
+ * reader in this repo agrees they are "no exit" — `parseRoomXml` skips an
+ * `@to` that is absent or empty, so `linksOf`, `reachabilityOf` and
+ * `validateLevelSet` all go quiet — while a live `Teleporter` is still standing
+ * in the room, built from `int(o.@to)`, which is `0` for both an absent
+ * attribute and an empty one (`Game.as:2261-2263`; E4X yields an empty XMLList
+ * for a missing attribute and `int("")` is `0`). The set would validate clean
+ * and the player would be warped to room 0 by a door the editor calls unwired.
+ * That is [[feedback_header_warning_is_not_a_check]] exactly: a true sentence
+ * about the wrong subject.
+ *
+ * ⚠ AND THERE IS NO DATA PRECEDENT EITHER WAY — all 280 vanilla exits carry a
+ * `to` (measured over `flashPanel/atlases/seedling-map.json`), so the vanilla
+ * corpus cannot arbitrate. The arbiter is the reader list above.
+ *
+ * ⇒ **an unwired exit is a DELETED exit.** In Seedling a door that goes nowhere
+ * is not a door, and this is the only representation all four readers agree on.
+ *
+ * Exits are addressed by ORDINAL in document order, exactly as
+ * `retargetRoomXml` addresses them. ⚠ **THE ORDINALS AFTER IT SHIFT DOWN BY
+ * ONE** — that is inherent (the address IS the position in the exit list) and is
+ * returned in `seen` so a caller can say so rather than discover it.
+ *
+ * @param {string} xml
+ * @param {number} exitIndex  the ordinal among exits carrying a `@to`
+ * @returns {{xml: string, removed: object, seen: {exits: number}}}
+ */
+export function removeExitFromRoomXml(xml, exitIndex) {
+    if (typeof xml !== 'string') fail('levelSetExits: removeExitFromRoomXml needs OEL text');
+    if (!Number.isInteger(exitIndex) || exitIndex < 0) {
+        fail(`levelSetExits: removeExitFromRoomXml needs a non-negative integer exit ordinal, `
+            + `got ${JSON.stringify(exitIndex)}`);
+    }
+    let index = 0;
+    let removed = null;
+    let cutAt = -1;
+    let cutLength = 0;
+    ELEMENT_RE.lastIndex = 0;
+    // ⚠ THE OFFSET COMES FROM `replace` ITSELF, not from a later `indexOf`.
+    // Two identical `<teleporter …/>` elements in one room are ordinary once a
+    // set is edited, and `indexOf` would find the first of them every time.
+    xml.replace(ELEMENT_RE, (whole, el, attrText, selfClose, offset) => {
+        const a = attrsOf(attrText);
+        if (!EXIT_ELEMENTS.includes(el) || a.to === undefined || a.to === '') return whole;
+        const here = index;
+        index += 1;
+        if (here !== exitIndex) return whole;
+        // ⛔ AN EXIT WITH CHILDREN IS REFUSED RATHER THAN HALF-DELETED. Ogmo
+        // writes `<node>` children for the entities that are sized by a path,
+        // and dropping an opening tag alone would leave its `</teleporter>`
+        // behind and make the room unparseable — a defect with no visible cause
+        // until the next load.
+        if (selfClose !== '/') {
+            fail(`levelSetExits: exit ${exitIndex} is <${el}> with CHILDREN, not a `
+                + 'self-closing element. Removing only its opening tag would leave the '
+                + 'closing tag behind and make the room unparseable, so this refuses '
+                + 'rather than half-deleting.');
+        }
+        removed = { element: el, to: Number(a.to), x: Number(a.x), y: Number(a.y) };
+        cutAt = offset;
+        cutLength = whole.length;
+        return whole;
+    });
+    if (removed === null) {
+        fail(`levelSetExits: this room has ${index} exit${index === 1 ? '' : 's'} `
+            + `(0..${index - 1}); there is no exit ${exitIndex} to unwire`);
+    }
+    /**
+     * ⛓ **THE LINE THE REMOVAL EMPTIES IS DROPPED, AND ONLY THAT LINE.** Ogmo
+     * writes one element per line, so cutting the element alone leaves its
+     * indent and its newline behind. A blanket "strip whitespace-only lines"
+     * would also rewrite lines that were blank BEFORE, and then a byte
+     * comparison of two sets differing by one door would also differ by N blank
+     * lines. So the cut is widened to the leading run of spaces/tabs and the
+     * ONE trailing newline, and only when the element really did own the line.
+     */
+    let from = cutAt;
+    let to = cutAt + cutLength;
+    const indent = /[ \t]*$/.exec(xml.slice(0, cutAt))[0];
+    const newline = /^\r?\n/.exec(xml.slice(to))?.[0] ?? '';
+    const ownsTheLine = newline !== ''
+        && (cutAt - indent.length === 0 || /[\r\n]$/.test(xml.slice(0, cutAt - indent.length)));
+    if (ownsTheLine) {
+        from = cutAt - indent.length;
+        to += newline.length;
+    }
+    return {
+        xml: xml.slice(0, from) + xml.slice(to),
+        removed,
+        seen: { exits: index },
+    };
+}
