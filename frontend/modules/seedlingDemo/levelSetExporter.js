@@ -44,9 +44,21 @@
  * CHECKED by `validateLevelSet` rather than assumed, which is what makes the
  * empty object a statement instead of a default. See `levelSetValidator.js`.
  *
+ * ── EDITOR v3 E1: `vanillaXmlSet` — THE SAME ASSEMBLER OVER REAL DATA ───────
+ *
+ * `buildLevelSet` was written for GENERATED rooms and every Tier-B feature of
+ * the set editor was demonstrated on them, because the committed vanilla set is
+ * 116 `embed`-sourced rooms and an `embed` cannot be opened (plan §13.5). The
+ * missing piece was never a fixture: the map extract's records are exactly what
+ * `recordToOel` takes, so the vanilla 116 in `xml` form is a pure FUNCTION of
+ * two committed documents. `vanillaXmlSet` below is that function and the only
+ * writer of it; the CLI's `--vanilla` arm and the watch page's
+ * `#editLoadVanilla` button are its two callers.
+ *
  * Headless-safe: no `node:` imports and no DOM.
  */
 
+import { stableStringify } from '../procgenCore/contentIdentity.js';
 import { recordToOel } from './procgenLevelOel.js';
 import { linkGeneratedRooms } from './levelSetExits.js';
 import {
@@ -293,6 +305,249 @@ export function reachabilityOf(set) {
         // unreadable here, so a reachable count computed over them would be a
         // floor presented as a fact.
         rooms_not_walked: unknown,
+    };
+}
+
+// --- THE VANILLA 116 AS `xml` -------------------------------------------------
+
+/**
+ * The stamp base for the xml-sourced vanilla set — ⛔ **NEVER
+ * `seedling-vanilla`**, and the difference is the whole point.
+ *
+ * `fixtures/seedling-vanilla-set.json` carries `seedling-vanilla-02408e1d`:
+ * ⚖ ruling 2's subject, `VanillaSet.SET_ID` in the AS3 fork, and what every
+ * save stamp keys on (`levelSetValidator.js:222`). The set THIS function builds
+ * is DIFFERENT BYTES — the same 116 rooms carried as OEL text instead of as
+ * `[Embed]` paths — so it takes an id of its own and the two COEXIST by
+ * construction. A shared base would have made `<base>-<hash>` the only thing
+ * telling them apart, i.e. one careless truncation away from a set claiming to
+ * be the one the save files name.
+ */
+export const VANILLA_XML_SET_ID_BASE = 'seedling-vanilla-xml';
+
+/** The one place the two committed inputs' shapes are checked, by name. */
+function requireArray(value, label) {
+    if (!Array.isArray(value) || value.length === 0) {
+        fail(`levelSetExporter: vanillaXmlSet needs ${label} — got ${JSON.stringify(value)?.slice(0, 60)}`);
+    }
+    return value;
+}
+
+/**
+ * The longest `/`-terminated prefix every string shares. REPORTED, never used
+ * to join: it is the MEASUREMENT of the difference between the two documents'
+ * roots, and a set whose rooms all sat in one subdirectory would give a longer
+ * one that is still perfectly true about the corpus and useless as a rule.
+ */
+function commonDirPrefix(paths) {
+    if (paths.length === 0) return '';
+    let prefix = paths[0];
+    for (const p of paths) {
+        let i = 0;
+        while (i < prefix.length && i < p.length && prefix[i] === p[i]) i += 1;
+        prefix = prefix.slice(0, i);
+    }
+    const cut = prefix.lastIndexOf('/');
+    return cut < 0 ? '' : prefix.slice(0, cut + 1);
+}
+
+/**
+ * The vanilla 116 as an `xml`-sourced level set — a pure function of TWO
+ * COMMITTED DOCUMENTS and nothing else.
+ *
+ * ── WHY THIS IS A FUNCTION AND NOT A FIXTURE ─────────────────────────────────
+ *
+ * Both inputs are already in the repository and both already reach the watch
+ * page: `flashPanel/atlases/seedling-map.json` (the Phase-2 extract, 116
+ * records) and `fixtures/seedling-vanilla-set.json` (the manifest, 116
+ * `embed`-sourced rooms). `recordToOel` takes exactly a map record's shape and
+ * `buildLevelSet` already writes rooms as `source: {xml: recordToOel(record)}`.
+ * ⇒ a third committed copy of the 116 (1.6 MB) would be a document that is a
+ * pure function of two documents beside it, stale the day either moves. The
+ * CLI's `--vanilla` arm and the page's `#editLoadVanilla` button are two
+ * CALLERS of this; there is exactly ONE writer.
+ *
+ * ── ⛔ THE JOIN IS BY PATH, NEVER BY INDEX ───────────────────────────────────
+ *
+ * MEASURED 2026-08-25: the map's `levels[i].level === i` and the set's
+ * `rooms[i].id === i` for all 116, so an index join gives the same answer TODAY
+ * on this corpus — which is exactly what makes it the dangerous spelling. The
+ * two documents are produced by two different extractors
+ * (`extract-seedling-map.mjs` and `extract-seedling-vanilla-set.py`) and
+ * nothing keeps their orders in step; a set built from a reordered map would
+ * carry every room's geometry under its neighbour's name and validate clean.
+ * The join key is the FILE: a record's `path` relative to the map document's
+ * own `source.level_root`, matched against the room's `source.embed` on a
+ * SEGMENT BOUNDARY (measured difference: `assets/levels/…` vs `levels/…`, i.e.
+ * one leading directory — reported in `report.join`, not typed into the rule).
+ * A room whose embed matches no record, or two records, or a record another
+ * room already claimed, REFUSES BY NAME.
+ *
+ * ── WHAT IS CARRIED, AND HOW THAT IS PROVED ──────────────────────────────────
+ *
+ * Every manifest field (`name`, `description`, `start`, `menu_rooms`,
+ * `named_rooms`) and every room field but `source` is carried VERBATIM from the
+ * embed set, and the function CHECKS both by re-encoding through the identity's
+ * own `stableStringify` rather than promising it. `report.invented` must come
+ * back EMPTY — that is the proof no field was guessed, so a non-empty one is a
+ * refusal here rather than a line in a report nobody reads.
+ *
+ * @param {object} embedSet  the committed vanilla manifest (116 `embed` rooms)
+ * @param {object} mapDoc    the committed map extract (116 records)
+ * @returns {{set: object, report: object}} `report` is `buildLevelSet`'s, plus
+ *   `join` (the measured prefixes and the match tally)
+ */
+export function vanillaXmlSet(embedSet, mapDoc) {
+    const rooms = requireArray(embedSet?.rooms, 'the embed set\'s `rooms`');
+    const levels = requireArray(mapDoc?.levels, 'the map document\'s `levels`');
+    const levelRoot = mapDoc?.source?.level_root;
+    if (typeof levelRoot !== 'string' || levelRoot === '') {
+        fail('levelSetExporter: vanillaXmlSet needs the map document\'s `source.level_root` — '
+            + 'it is what the join key is measured relative to, and guessing a root would make '
+            + 'every path in the document mean something this function chose');
+    }
+
+    // --- the join key: each record's path, relative to the map's own root -----
+    const root = `${levelRoot}/`;
+    const byRel = new Map();
+    levels.forEach((record, i) => {
+        const path = record?.path;
+        if (typeof path !== 'string' || !path.startsWith(root)) {
+            fail(`levelSetExporter: vanillaXmlSet — map levels[${i}].path ${JSON.stringify(path)} `
+                + `is not under the document's own source.level_root ${JSON.stringify(levelRoot)}`);
+        }
+        const rel = path.slice(root.length);
+        if (byRel.has(rel)) {
+            fail(`levelSetExporter: vanillaXmlSet — map levels[${i}] and levels[${byRel.get(rel).i}] `
+                + `both name ${JSON.stringify(rel)}; the join key would be ambiguous`);
+        }
+        byRel.set(rel, { record, i });
+    });
+
+    const claimedBy = new Map();
+    let exact = 0;
+    let bySuffix = 0;
+    const entries = rooms.map((room, id) => {
+        const embed = room?.source?.embed;
+        if (typeof embed !== 'string' || embed === '') {
+            fail(`levelSetExporter: vanillaXmlSet — rooms[${id}] `
+                + `${JSON.stringify(room?.name ?? null)} is not embed-sourced `
+                + `(source: ${JSON.stringify(room?.source)}); this function turns `
+                + '`embed` paths into `xml`, and has nothing to look up for any other source');
+        }
+        const hits = [...byRel.entries()]
+            .filter(([rel]) => embed === rel || embed.endsWith(`/${rel}`));
+        if (hits.length === 0) {
+            fail(`levelSetExporter: vanillaXmlSet — rooms[${id}] "${room.name}" embeds `
+                + `${JSON.stringify(embed)} and NO map record names that file (the map's `
+                + `${levels.length} records are rooted at ${JSON.stringify(levelRoot)}). A renamed `
+                + 'or re-extracted level is the ordinary cause, and joining by position instead '
+                + 'would have carried the neighbouring room\'s geometry silently');
+        }
+        if (hits.length > 1) {
+            fail(`levelSetExporter: vanillaXmlSet — rooms[${id}] "${room.name}" embeds `
+                + `${JSON.stringify(embed)} and ${hits.length} map records name that file `
+                + `(${hits.map(([rel]) => rel).join(', ')}); the join would have to guess`);
+        }
+        const [rel, { record, i }] = hits[0];
+        if (claimedBy.has(rel)) {
+            fail(`levelSetExporter: vanillaXmlSet — rooms[${id}] "${room.name}" and rooms[`
+                + `${claimedBy.get(rel)}] both join to map levels[${i}] (${rel}); one record `
+                + 'cannot be two rooms');
+        }
+        claimedBy.set(rel, id);
+        if (embed === rel) exact += 1; else bySuffix += 1;
+
+        // ⛓ EVERY ROOM FIELD BUT `source` AND `id` TRAVELS. `id` is the array
+        // position and `buildLevelSet` assigns it; `source` is what this
+        // function replaces. Anything else is the manifest's and is passed
+        // through — the CHECK below is what makes that a fact rather than a
+        // hope, because this spread reaches `buildLevelSet`, which writes the
+        // fields it knows and would drop a seventh in silence.
+        const { source: _source, id: _id, ...carried } = room;
+        return { ...carried, record };
+    });
+
+    const { set, report } = buildLevelSet(entries, {
+        setId: VANILLA_XML_SET_ID_BASE,
+        generator: 'levelSetExporter.vanillaXmlSet',
+        // Only the fields the embed set ACTUALLY carries: passing `undefined`
+        // for an absent one would put `buildLevelSet` back on its own defaults
+        // and list them as invented, which is the failure this arm exists to
+        // make impossible.
+        ...(Object.hasOwn(embedSet, 'name') ? { name: embedSet.name } : {}),
+        ...(Object.hasOwn(embedSet, 'description') ? { description: embedSet.description } : {}),
+        ...(Object.hasOwn(embedSet, 'start') ? { start: embedSet.start } : {}),
+        ...(Object.hasOwn(embedSet, 'menu_rooms') ? { menuRooms: embedSet.menu_rooms } : {}),
+        ...(Object.hasOwn(embedSet, 'named_rooms') ? { namedRooms: embedSet.named_rooms } : {}),
+        provenance: {
+            // ⛓ WHICH SET THIS REPRODUCES, BY ITS OWN IDENTITY. `derived_from`
+            // is what lets a reader of the xml set — or of a re-stamped
+            // descendant of it — say which vanilla it came from, and it is what
+            // the §6.1 companion's note points at.
+            derived_from: {
+                set_id: embedSet.set_id ?? null,
+                content_hash: embedSet.provenance?.content_hash ?? null,
+            },
+            map: {
+                generator: mapDoc.generator ?? null,
+                source: mapDoc.source,
+            },
+        },
+    });
+
+    // --- ⛔ THE CARRY IS CHECKED, NOT PROMISED --------------------------------
+    //
+    // `buildLevelSet` writes a room from a closed set of fields
+    // (`id, name, source, music` + two flags) and a manifest from a closed set
+    // of options. Both are the RIGHT authorities — but a field the embed set
+    // carries and this exporter cannot express would be DROPPED in silence, and
+    // "silently drops what it cannot carry" is the failure this whole arc is
+    // written against. So the output is differenced against the input, under
+    // the identity's own encoding, and a drop REFUSES BY NAME.
+    for (const field of ['name', 'description', 'start', 'menu_rooms', 'named_rooms']) {
+        if (!Object.hasOwn(embedSet, field)) continue;
+        if (stableStringify(set[field]) !== stableStringify(embedSet[field])) {
+            fail(`levelSetExporter: vanillaXmlSet — the manifest field \`${field}\` did not `
+                + `survive: ${JSON.stringify(embedSet[field])} went in and `
+                + `${JSON.stringify(set[field])} came out`);
+        }
+    }
+    set.rooms.forEach((out, id) => {
+        const { source: _outSource, ...outRest } = out;
+        const { source: _inSource, ...inRest } = rooms[id];
+        if (stableStringify(outRest) !== stableStringify({ ...inRest, id })) {
+            fail(`levelSetExporter: vanillaXmlSet — rooms[${id}] "${rooms[id].name}" lost or `
+                + `gained a field: ${JSON.stringify(inRest)} went in and `
+                + `${JSON.stringify(outRest)} came out (\`source\` excluded — it is what this `
+                + 'function replaces)');
+        }
+    });
+    if (report.invented.length > 0) {
+        fail('levelSetExporter: vanillaXmlSet INVENTED '
+            + `${report.invented.join(', ')} — every field of this set comes from one of the two `
+            + 'committed documents, so an invented one means a field was not passed through and '
+            + 'the set would carry a value nobody chose');
+    }
+
+    return {
+        set,
+        report: {
+            ...report,
+            /**
+             * The MEASUREMENT of the two documents' roots, and the tally of how
+             * each room found its record. A reader who wants to know why the
+             * join is a suffix match rather than a strip-and-compare gets the
+             * answer from the data instead of from a comment.
+             */
+            join: {
+                rooms: rooms.length,
+                level_root: levelRoot,
+                embed_prefix: commonDirPrefix(rooms.map((r) => r.source.embed)),
+                matched_exact: exact,
+                matched_by_suffix: bySuffix,
+            },
+        },
     };
 }
 

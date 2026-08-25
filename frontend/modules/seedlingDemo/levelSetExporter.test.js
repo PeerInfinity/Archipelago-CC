@@ -8,9 +8,14 @@
 // of a rule that already exists; asserting "what this exporter emits SURVIVES
 // that rule" is the claim worth making, and it is the one that fails if either
 // side moves.
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+
 import { describe, it, expect } from 'vitest';
 
 import { emptyLevel, withTerrain } from './procgenLevel.js';
+import { recordToOel } from './procgenLevelOel.js';
+import { stableStringify } from '../procgenCore/contentIdentity.js';
 
 import {
     buildLevelSet,
@@ -19,6 +24,8 @@ import {
     VANILLA_AP_REFERENCE_COUNT,
     DEFAULT_MUSIC,
     LevelSetExportError,
+    vanillaXmlSet,
+    VANILLA_XML_SET_ID_BASE,
 } from './levelSetExporter.js';
 import {
     validateLevelSet,
@@ -47,6 +54,11 @@ const record = (overrides = {}) => ({
 });
 
 const summary = { startCell: { tx: 1, ty: 1 }, goalCell: { tx: 5, ty: 7 } };
+
+/** The committed documents E1's rows read — both already in the browser graph. */
+const fixture = (name) => JSON.parse(readFileSync(
+    fileURLToPath(new URL(`./fixtures/${name}`, import.meta.url)), 'utf8',
+));
 
 describe('buildLevelSet — what it emits survives the inherited validator', () => {
     it('builds a set of N generated rooms that validates clean', () => {
@@ -326,5 +338,188 @@ describe('buildLevelSet({link}) — exits as data', () => {
 
     it('carries the link report into the export report only when linking happened', () => {
         expect(buildLevelSet([record(), record()], { setId: 'x' }).report.link).toBeUndefined();
+    });
+});
+
+// ── EDITOR v3 E1 — `vanillaXmlSet`, THE VANILLA 116 AS `xml` ─────────────────
+//
+// ⛓ THE ORACLE IS AGAIN SOMEBODY ELSE'S. The VALUE round trip
+// (`record → recordToOel → parseOelLevel → record′`, 116/116) is
+// `procgenLevelOel.test.js:59`'s row and is NOT repeated here; what these rows
+// own is the JOIN — WHICH record fed WHICH room — plus the manifest carry, the
+// empty `invented`, and the id that must never be mistaken for the embed set's.
+describe('vanillaXmlSet — two committed documents in, an xml-sourced set out', () => {
+    const embedSet = fixture('seedling-vanilla-set.json');
+    const mapDoc = JSON.parse(readFileSync(fileURLToPath(
+        new URL('../flashPanel/atlases/seedling-map.json', import.meta.url)), 'utf8'));
+
+    /** The record whose `path` names the file a room embeds — the join, spelled out. */
+    const recordFor = (embed) => {
+        const root = `${mapDoc.source.level_root}/`;
+        const hits = mapDoc.levels.filter((r) => r.path.slice(root.length) === embed
+            || embed.endsWith(`/${r.path.slice(root.length)}`));
+        expect(hits, `no unique map record for ${embed}`).toHaveLength(1);
+        return hits[0];
+    };
+
+    it('turns all 116 embed rooms into xml rooms the validator accepts with NO embed warning', () => {
+        const { set } = vanillaXmlSet(embedSet, mapDoc);
+        expect(set.rooms).toHaveLength(116);
+        expect(set.rooms.every((r) => typeof r.source.xml === 'string')).toBe(true);
+        expect(set.rooms.some((r) => 'embed' in r.source)).toBe(false);
+        const v = validateLevelSet(set);
+        expect(v.errors).toEqual([]);
+        expect(v.ok).toBe(true);
+        // ⛔ THE POINT OF THE WHOLE ARM, AS A MEASUREMENT. The EMBED set warns
+        // that it could not check ONE THING about any of its 116 rooms; the xml
+        // set carries no such warning because every room is now readable.
+        expect(validateLevelSet(embedSet).warnings.filter((w) => /embed source/.test(w)))
+            .toHaveLength(1);
+        expect(v.warnings.filter((w) => /embed/.test(w))).toEqual([]);
+    });
+
+    it('carries every manifest field and every room field but `source` VERBATIM', () => {
+        const { set, report } = vanillaXmlSet(embedSet, mapDoc);
+        for (const field of ['name', 'description', 'start', 'menu_rooms', 'named_rooms']) {
+            expect(stableStringify(set[field]), field).toBe(stableStringify(embedSet[field]));
+        }
+        const noSource = (r) => { const { source, ...rest } = r; return rest; };
+        expect(stableStringify(set.rooms.map(noSource)))
+            .toBe(stableStringify(embedSet.rooms.map(noSource)));
+        // ⛓ AN EMPTY `invented` IS THE PROOF NO FIELD WAS GUESSED — the same
+        // list `buildLevelSet` writes for a generated set, where it is never
+        // empty. `vanillaXmlSet` REFUSES rather than emitting a non-empty one,
+        // so this row is the statement and the function is the guard.
+        expect(report.invented).toEqual([]);
+        expect(set.provenance.invented).toEqual([]);
+    });
+
+    /**
+     * ⛔⛔ **THE ID IS PINNED AS A MEASURED LITERAL, AND THAT IS THE POINT.**
+     * `seedling-vanilla-xml-02a70624` is the FNV-1a-32 of the whole document
+     * (`contentIdentity.js`'s contract) over the 116 rooms as
+     * `recordToOel(record)` writes them, measured 2026-08-25 at
+     * `989d385ab` from `extract-seedling-map.mjs`'s committed extract.
+     * A change to `recordToOel`'s output, or a re-extract of the map, MOVES it —
+     * and moving it BY NAME here is the whole reason a derived document gets a
+     * pinned id instead of a comment saying it is derived.
+     */
+    it('stamps its own id, which can never be mistaken for the embed set\'s', () => {
+        const { set } = vanillaXmlSet(embedSet, mapDoc);
+        expect(VANILLA_XML_SET_ID_BASE).toBe('seedling-vanilla-xml');
+        expect(set.set_id).toBe('seedling-vanilla-xml-02a70624');
+        expect(set.set_id).toMatch(/^seedling-vanilla-xml-[0-9a-f]{8}$/);
+        expect(set.set_id).not.toBe(embedSet.set_id);
+        expect(computeLevelSetContentHash(set)).toBe(set.provenance.content_hash);
+        // `derived_from` names the set it reproduces, by ITS identity.
+        expect(set.provenance.derived_from).toEqual({
+            set_id: embedSet.set_id, content_hash: embedSet.provenance.content_hash,
+        });
+        expect(set.provenance.map.generator).toBe(mapDoc.generator);
+    });
+
+    it('joins by PATH: every room\'s xml is the record whose path it embeds', () => {
+        const { set, report } = vanillaXmlSet(embedSet, mapDoc);
+        set.rooms.forEach((room, i) => {
+            expect(room.source.xml, `rooms[${i}] "${room.name}"`)
+                .toBe(recordToOel(recordFor(embedSet.rooms[i].source.embed)));
+        });
+        // The MEASURED difference between the two documents' roots — one leading
+        // directory — reported rather than typed into the rule.
+        expect(report.join).toMatchObject({
+            rooms: 116,
+            level_root: 'assets/levels',
+            embed_prefix: 'levels/',
+            matched_exact: 0,
+            matched_by_suffix: 116,
+        });
+    });
+
+    /**
+     * ⛔ **THE MUTANT FOR "JOIN BY INDEX", AND IT NEEDED A PERMUTED MAP TO BITE.**
+     * Measured: `levels[i].level === i` and `rooms[i].id === i` for all 116, so
+     * an index join agrees with a path join on today's corpus and no row over
+     * the committed documents alone could tell them apart. Reversing the map's
+     * `levels` leaves a PATH join's answer byte-identical and sends an INDEX
+     * join's to a different set entirely.
+     */
+    it('is unmoved by the ORDER of the map\'s levels', () => {
+        const straight = vanillaXmlSet(embedSet, mapDoc).set;
+        const reversed = vanillaXmlSet(embedSet,
+            { ...mapDoc, levels: [...mapDoc.levels].reverse() }).set;
+        expect(stableStringify(reversed)).toBe(stableStringify(straight));
+        expect(reversed.set_id).toBe(straight.set_id);
+    });
+
+    it('is deterministic — two calls produce the same document', () => {
+        expect(stableStringify(vanillaXmlSet(embedSet, mapDoc).set))
+            .toBe(stableStringify(vanillaXmlSet(embedSet, mapDoc).set));
+    });
+
+    it('REFUSES a renamed path by name rather than joining to the neighbour', () => {
+        const renamed = {
+            ...mapDoc,
+            levels: mapDoc.levels.map((r, i) => (i === 3
+                ? { ...r, path: r.path.replace(/\.oel$/, '.renamed.oel') } : r)),
+        };
+        expect(() => vanillaXmlSet(embedSet, renamed)).toThrow(LevelSetExportError);
+        expect(() => vanillaXmlSet(embedSet, renamed))
+            .toThrow(/rooms\[3\] "Dungeon1_1" embeds "levels\/Dungeon1\/1\.oel" and NO map record/);
+    });
+
+    it('REFUSES two rooms that would claim one record, and a room with no embed', () => {
+        const twice = {
+            ...embedSet,
+            rooms: [embedSet.rooms[0], { ...embedSet.rooms[1], source: { ...embedSet.rooms[0].source } }],
+        };
+        expect(() => vanillaXmlSet(twice, mapDoc)).toThrow(/both join to map levels\[0\]/);
+        const already = { ...embedSet, rooms: [{ ...embedSet.rooms[0], source: { xml: '<level/>' } }] };
+        expect(() => vanillaXmlSet(already, mapDoc)).toThrow(/is not embed-sourced/);
+    });
+
+    it('REFUSES a map document with no `source.level_root` rather than guessing one', () => {
+        expect(() => vanillaXmlSet(embedSet, { ...mapDoc, source: {} }))
+            .toThrow(/needs the map document's `source.level_root`/);
+    });
+
+    /**
+     * The MANIFEST-DEFAULT mutant, on a two-room stand-in: `buildLevelSet`
+     * DERIVES `start` from `entries[0].summary.startCell` (and falls back to
+     * `{level: 0}`) when the caller supplies none, so a `vanillaXmlSet` that
+     * forgot to pass the embed set's would emit a set that starts in the wrong
+     * room and lists `start` as invented. Both halves are asserted.
+     */
+    it('carries a manifest `start` that is NOT the one buildLevelSet would derive', () => {
+        const rec = (path) => ({ ...record(), path, level: 0 });
+        const smallMap = {
+            generator: 'test', source: { level_root: 'assets/levels' },
+            levels: [{ ...rec('assets/levels/A.oel'), level: 0 }, { ...rec('assets/levels/B.oel'), level: 1 }],
+        };
+        const smallSet = {
+            schema_version: 1,
+            set_id: 'stand-in-deadbeef',
+            name: 'stand-in',
+            provenance: { content_hash: 'deadbeef' },
+            rooms: [
+                { id: 0, name: 'a', source: { embed: 'levels/A.oel' }, music: 3 },
+                { id: 1, name: 'b', source: { embed: 'levels/B.oel' }, music: 4, snow_gradient: true },
+            ],
+            start: { level: 1, x: 32, y: 48 },
+            menu_rooms: [1],
+            named_rooms: {},
+        };
+        const { set, report } = vanillaXmlSet(smallSet, smallMap);
+        expect(set.start).toEqual({ level: 1, x: 32, y: 48 });
+        expect(set.menu_rooms).toEqual([1]);
+        expect(set.rooms[1].snow_gradient).toBe(true);
+        expect(set.rooms.map((r) => r.music)).toEqual([3, 4]);
+        expect(report.invented).toEqual([]);
+        // What `buildLevelSet` WOULD have chosen with nothing supplied — the
+        // mutant's answer, measured beside the real one so the row cannot pass
+        // by both being the same.
+        const bare = buildLevelSet(smallMap.levels.map((r) => ({ record: r })), { setId: 'x' });
+        expect(bare.set.start).toEqual({ level: 0 });
+        expect(bare.set.menu_rooms).toEqual([0]);
+        expect(bare.report.invented).toContain('start');
     });
 });
