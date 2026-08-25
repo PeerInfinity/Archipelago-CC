@@ -283,6 +283,55 @@ it reads the LAST value for every record, because the element is live by then.
 Push per RECORD and read `addedNodes[0]`: assigning `textContent` replaces the
 node, so the added node carries exactly what was written at that moment.
 
+## A class table's `as3: null` answers CONSTRUCTION, never REACH
+
+`levelWorld.ENTITY_CLASSES` gives every one of the seven Seedling room-flag tags
+`as3: null` — *"not an entity at all, a flag `loadlevel` reads with
+`hasOwnProperty`"*. That is a true sentence about whether the model builds an
+object, and it is not the answer to *"can the JS oracle see a change to this
+flag"*. Measured by building the room with the flag and without it and comparing
+the worlds, six of the seven leave the world byte-identical and `<control>` does
+not: its `fallthrough` is what `Player.checkFallingInPit` reads, so a pit is a
+transport primitive and the flag reaches the model. A readout derived from the
+table would have reported all seven as ignored — a true sentence about the wrong
+subject. Ask the MODEL, not the table.
+
+## An op that addresses "the last entity in the cell" cannot always name what you mean
+
+Seedling's `remove` and `attrs` both take the LAST body in the named cell. That
+is fine for a brush, where the reader is pointing at what they can see, and it is
+not fine for a FORM that names a specific body. Measured over the committed
+116 rooms: of 155 level-property instances, 14 share their cell with another body
+and **2 of those are not the last one**, so a room-flags form emitting a bare
+`remove` there would delete somebody else's body and call it turning a flag off.
+Refuse those by name rather than guessing — an op that could say WHICH body is a
+vocabulary change, i.e. a decision, and not something a DOM slice may make.
+
+## A `<details>` that is closed makes its controls invisible to a driver
+
+`page.check` on a control inside a collapsed `<details>` fails as *"element is
+not visible"* after the full timeout — a driver failure naming the WAIT rather
+than the claim. Open the section explicitly, which is the reader's own gesture,
+instead of relying on the markup carrying `open`.
+
+## A page's readout only learns what its `render` writes
+
+Holding a level-set document changes the page's state and changes NO room, so
+nothing calls `redraw` — and a readout whose `set` field is written only inside
+`render` reports `null` to anything that looks before the next edit. A state
+change with no canvas consequence still needs the readout redrawn; the rule is
+"redraw the canvas when the room changed, redraw the readout when the STATE
+changed", and they are not the same event.
+
+## A record's provenance field carries an identity that a re-stamp MOVES
+
+A `set-room` record's `path` is `<set_id>#<room>`. Downloading an edited set
+re-stamps it (`stampLevelSetIdentity`), so the reloaded room's `path` names the
+NEW id by construction. A round-trip row demanding byte equality including `path`
+would be demanding that an edited set keep its old identity — the one thing the
+stamp exists to prevent. Compare the CONTENT and assert that the provenance
+moved, to the id that was actually written.
+
 ## Related documentation
 
 - [Architecture](./architecture.md)

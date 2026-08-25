@@ -49,6 +49,27 @@
  *     --level=14 --tick=0` writes a PNG, and says `?tick=` names nothing here.
  * 10. **⛔ NO EDIT REACHES A URL**, in either arm, ever.
  *
+ * ── SLICE C2 — the rest of Tier A's DOM ───────────────────────────────
+ *
+ * 11. **THE ID RULE IS TRUE OF THE LIVE DOM** — `edit*` is a control only the
+ *     EDIT arm has (inside `#editOnly`), `genEdit*` is one BOTH arms mount.
+ * 12. **THE LAYER PICKER PAINTS A CLIFFSIDE**, and the hovered-cell readout
+ *     shows it — the first time the page says what a cell IS.
+ * 13. **A COLUMN OUTSIDE THE FOUR TERRAIN NAMES PAINTS**, and the HUD names
+ *     the tile TYPE it built.
+ * 14. **THE ROOM-FLAGS FORM ROUND TRIPS THROUGH UNDO** — a presence flag and
+ *     an attribute flag, each an op in the identity.
+ * 15. **THE FLAG REACH BOUND IS DISPLAYED AND MEASURED** — six flags the JS
+ *     model cannot see, and the one it can.
+ * 16. **⚖ RULING 5's WARNING, PRESENT AND ABSENT BY LEVEL** — L14 has no
+ *     compiled-in boss geometry and the boss level does, named.
+ * 17. **A CROP THAT WOULD DROP SOMETHING IS REFUSED, VERBATIM.**
+ * 18. **`set-room` IS A LAUNCHABLE BASE** — load a set, open a room, edit it,
+ *     download the set, load it back: the same record.
+ * 19. **AN `embed`-SOURCED ROOM IS REFUSED BY NAME**, which is the whole
+ *     committed VANILLA set.
+ * 20. **THE PASTE FILTER'S OPTIONS ARE DERIVED** from the descriptor.
+ *
  * Run: node scripts/procgen/check-seedling-editor-arm.mjs
  *      node scripts/procgen/check-seedling-editor-arm.mjs --host=http://localhost:8000
  */
@@ -71,11 +92,20 @@ const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name
 const M = (p) => import(join(REPO, 'frontend/modules/seedlingDemo', p));
 const { createSeedlingEditAdapter } = await M('seedlingEditAdapter.js');
 const { levelSourceFromAtlas } = await M('atlasSource.js');
-const { ENTITY_CLASSES } = await M('levelWorld.js');
+const { ENTITY_CLASSES, buildLevelWorld } = await M('levelWorld.js');
 const { untranscribedTypes } = await M('watchEdit.js');
 const { DEFAULT_PLACE_TYPE } = await M('watchEditor.js');
 const { parseOelLevel } = await M('procgenLevelOel.js');
-const { columnOfSpec } = await M('procgenLevel.js');
+const {
+    LAYER_COLUMNS, TERRAIN_NAMES, columnOfSpec,
+} = await M('procgenLevel.js');
+const {
+    ROOM_FLAG_TAGS, ROOM_GEOMETRY_BOSSES, flagModelReach, roomFlagsIn,
+} = await M('watchEdit.js');
+const { buildLevelSet } = await M('levelSetExporter.js');
+const { validateLevelSet } = await M('levelSetValidator.js');
+const { TILE_COLUMN_TO_TYPE, TILE_TYPE_NAMES } = await import(
+    join(REPO, 'frontend/modules/flashPanel/seedlingSemantics.js'));
 const { foldEdits, resolveBase } = await import(
     join(REPO, 'frontend/modules/procgenCore/editCore.js'));
 
@@ -246,6 +276,142 @@ const PLACE_OP = { op: 'place', tx: FREE.tx, ty: FREE.ty, type: WIDE_ONLY, attrs
  * the same every time: a number typed into a name beside a `.length` in scope
  * is a claim nothing keeps in step.
  */
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ SLICE C2's SUBJECTS — every one DERIVED
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓ THE LEVEL WHOSE RESIZE RAISES ⚖ RULING 5's WARNING — DERIVED, not the
+ * brief's guess. ⛔ The brief said *"level 94 (or whichever holds a
+ * `bosstotem`)"*: level 94 holds none. Measured over the committed atlas, five
+ * levels hold one of the five compiled-in-geometry classes and L43 is the
+ * `bosstotem` one — a subject read out of the data, so the day the atlas moves
+ * the row follows it instead of asserting the warning's ABSENCE under a name
+ * that says presence (§12.7 item 2's shape).
+ */
+const BOSS = (() => {
+    for (const l of ATLAS.levels) {
+        const held = [...new Set((l.entities ?? []).map((e) => e.type)
+            .filter((t) => Object.prototype.hasOwnProperty.call(ROOM_GEOMETRY_BOSSES, t)))];
+        if (held.length > 0) return { level: l.level, classes: held, w: l.width, h: l.height };
+    }
+    return null;
+})();
+check(BOSS !== null && BOSS.classes.length > 0,
+    '⛓⛓ the ⚖ RULING 5 subject is a level DERIVED from the atlas as holding one of the five '
+    + 'compiled-in-geometry classes — the brief named level 94 and level 94 holds none',
+    json(BOSS));
+const L14_BOSSES = (ATLAS.levels.find((l) => l.level === LEVEL)?.entities ?? [])
+    .filter((e) => Object.prototype.hasOwnProperty.call(ROOM_GEOMETRY_BOSSES, e.type));
+check(L14_BOSSES.length === 0,
+    `⛓ …and level ${LEVEL} holds NONE of them, which is what makes claim 16's ABSENT half a `
+    + 'real half rather than a coincidence', `${L14_BOSSES.length}`);
+
+/**
+ * ⛓ A CROP THAT MUST BE REFUSED — the smallest rectangle that still drops
+ * something, derived from where L14's own contents actually are. ⛔ Chosen
+ * against the RECORD rather than typed: a crop to a size the room already
+ * exceeds by nothing would be refused for being out of range instead, which is
+ * a different refusal with a different sentence.
+ */
+const CROP = (() => {
+    const b = adapter.bounds(baseRecord);
+    for (let w = b.w - 1; w >= 3; w -= 1) {
+        // ⛓ `foldEdits` THROWS on a refused op (its own rule: a fold that
+        // skipped one would reconstruct a different level), so the refusal is
+        // the answer this loop is looking for.
+        try {
+            foldEdits(adapter, baseRecord, [{ op: 'resize', width: w, height: b.h }]);
+        } catch (e) {
+            if (/would drop/.test(e.message)) return { width: w, height: b.h, why: e.message };
+            throw e;
+        }
+    }
+    return null;
+})();
+check(CROP !== null && /would drop/.test(CROP.why ?? ''),
+    '⛓⛓ the CROP subject is the WIDEST rectangle node has proved `resizeRoom` refuses — a '
+    + 'crop the room could absorb would make claim 17 assert the refusal\'s ABSENCE under a '
+    + 'name that says presence',
+    `${CROP?.width}x${CROP?.height}`);
+
+/** ⛓ …and the GROWN size for claim 16, one axis, inside `ROOM_TILES_MAX`. */
+const GROW_BY = 2;
+
+/**
+ * ⛓⛓⛓ A LEVEL SET THIS PAGE CAN ACTUALLY OPEN — built here, out of the atlas.
+ *
+ * ⛔ **LEVEL 110 AND NOT 14, AND THAT IS A MEASUREMENT.** `validateLevelSet`
+ * refuses a one-room set whose room carries an `@to` outside `0..0`, and over
+ * the 116 committed rooms exactly TWO (81 and 110) survive on their own. A set
+ * built around L14 would be REFUSED by the page's own validator and the row
+ * would be about the validator rather than about the base (trap 235).
+ */
+const SET_LEVEL = (() => {
+    for (const l of ATLAS.levels) {
+        const { set } = buildLevelSet(
+            [{ seed: 0, record: levelSourceFromAtlas(ATLAS)(l.level), summary: null,
+                name: `L${l.level}` }],
+            { setId: 'arm-probe', generator: 'check-seedling-editor-arm.mjs' },
+        );
+        if (validateLevelSet(set).ok) return l.level;
+    }
+    return null;
+})();
+const SET_DOC = SET_LEVEL === null ? null : buildLevelSet(
+    [{ seed: 0, record: levelSourceFromAtlas(ATLAS)(SET_LEVEL), summary: null,
+        name: `L${SET_LEVEL}` }],
+    { setId: 'arm-probe', generator: 'check-seedling-editor-arm.mjs' },
+).set;
+check(SET_DOC !== null && validateLevelSet(SET_DOC).ok
+    && typeof SET_DOC.rooms[0].source?.xml === 'string',
+    '⛓⛓ the `set-room` subject is a one-room set node BUILT and node VALIDATED, whose room '
+    + 'carries a real `source.xml` — the vanilla set is 116 EMBED-sourced rooms and cannot '
+    + 'be one', `L${SET_LEVEL} → ${SET_DOC?.set_id}, ${SET_DOC?.rooms.length} room(s)`);
+/**
+ * ⛓ NODE'S OWN `set-room` RESOLVER, over the same document the page is handed —
+ * so claim 18's record comparison is against a fold this file performed and not
+ * against the page's echo (trap 269).
+ */
+const adapter2 = createSeedlingEditAdapter({
+    schema: null,
+    levelSource: levelSourceFromAtlas(ATLAS),
+    vanillaSetId: VANILLA.set_id,
+    parseOel: parseOelLevel,
+    levelSetSource: (id) => (SET_DOC && id === SET_DOC.set_id ? SET_DOC : null),
+});
+check(VANILLA.rooms.every((r) => typeof r.source?.xml !== 'string'),
+    '⛓ …and NOT ONE of the vanilla set\'s 116 rooms carries an `xml` source, which is what '
+    + 'claim 19 is about', `${VANILLA.rooms.length} rooms, 0 with xml`);
+
+/** ⛓ A CLIFFSIDE COLUMN and a NON-TERRAIN tile column, both derived. */
+const CLIFF_COLUMN = 0;
+const CLIFF_CELL = FREE;
+const WIDE_COLUMN = (() => {
+    const names = new Set(TERRAIN_NAMES.map((n) => columnOfSpec(n, 'tiles', 'arm')));
+    for (let c = 0; c < LAYER_COLUMNS.tiles; c += 1) if (!names.has(c)) return c;
+    return null;
+})();
+check(WIDE_COLUMN !== null && !TERRAIN_NAMES.some(
+    (n) => columnOfSpec(n, 'tiles', 'arm') === WIDE_COLUMN),
+    `⛓ the wide-column subject is column ${WIDE_COLUMN} — one of the `
+    + `${LAYER_COLUMNS.tiles} the picker reaches and NOT one of the `
+    + `${TERRAIN_NAMES.length} named terrains, so painting it is a claim about the new `
+    + 'control and not about the old one',
+    `type ${TILE_COLUMN_TO_TYPE[WIDE_COLUMN]} ${TILE_TYPE_NAMES[TILE_COLUMN_TO_TYPE[WIDE_COLUMN]]}`);
+
+/** ⛓ THE FLAGS — one PRESENCE flag and one ATTRIBUTE flag, off the schema. */
+const FLAG_PRESENCE = ROOM_FLAG_TAGS
+    .find((t) => SCHEMA.entities[t] && SCHEMA.entities[t].values.length === 0);
+const FLAG_ATTR = ROOM_FLAG_TAGS
+    .find((t) => SCHEMA.entities[t] && SCHEMA.entities[t].values.length > 0
+        && !roomFlagsIn(baseRecord).some((f) => f.tag === t));
+const FLAG_HELD = roomFlagsIn(baseRecord);
+check(Boolean(FLAG_PRESENCE) && Boolean(FLAG_ATTR) && FLAG_HELD.length > 0,
+    '⛓ the flag subjects are DERIVED from the schema and the room: a presence flag (no '
+    + 'declared values), an attribute flag this room does NOT already hold, and the flag it '
+    + 'DOES hold', `${FLAG_PRESENCE} · ${FLAG_ATTR} · held ${json(FLAG_HELD.map((f) => f.tag))}`);
+
 const NODE_OPS = [PAINT_OP, PLACE_OP];
 const nodeAfterTwo = foldEdits(adapter, baseRecord, NODE_OPS).record;
 const nodeAfterUndo = foldEdits(adapter, baseRecord, NODE_OPS.slice(0, -1)).record;
@@ -301,12 +467,52 @@ const read = () => page.evaluate(() => ({
     url: window.location.search,
     base: document.getElementById('editBase').textContent,
     status: document.getElementById('status').textContent,
-    clip: document.getElementById('editClipNote').textContent,
+    clip: document.getElementById('genEditClipNote').textContent,
     bound: document.getElementById('genEditTranscribe').textContent,
     boundHidden: document.getElementById('genEditTranscribe').hidden,
     loadNote: document.getElementById('editLoadNote').textContent,
     rows: [...document.querySelectorAll('#genEdits .eRow')].map((e) => e.textContent),
+    /* ── slice C2's readouts ─────────────────────────────────────── */
+    cell: document.getElementById('genEditCellNote').textContent,
+    flagNote: document.getElementById('genEditFlagNote').textContent,
+    reach: document.getElementById('genEditFlagReach').textContent,
+    resizeNote: document.getElementById('genEditResizeNote').textContent,
+    setNote: document.getElementById('editSetNote').textContent,
+    setRooms: [...document.getElementById('editSetRoom').options].map((o) => o.textContent),
+    pasteOptions: [...document.getElementById('genEditPasteOnly').options].map((o) => o.value),
+    flagsChecked: [...document.querySelectorAll('#genEditFlags input[type=checkbox]')]
+        .filter((e) => e.checked).map((e) => e.dataset.flag),
 }));
+
+/**
+ * ⛓⛓ **HOVER A CELL AND READ WHAT THE PAGE SAYS IT IS.** ⛔ The mouse is moved
+ * with this file's OWN arithmetic over the last pixel of the cell, exactly as
+ * `clickCell` does — nothing here calls `tileAtPoint`.
+ */
+/**
+ * ⛓ **OPEN A COLLAPSED `<details>`** — the flags form and the resize form are
+ * closed sections, which is what keeps the shared panel readable in the
+ * GENERATE arm. ⛔ Opening one is the reader's own gesture and it is performed
+ * rather than assumed: a `page.check` on a control inside a closed `<details>`
+ * fails as *"element is not visible"* — a driver timeout naming the WAIT
+ * instead of the claim (trap 599's family, met here in another costume).
+ */
+const openSection = async (id) => {
+    await page.evaluate((k) => { document.getElementById(k).open = true; }, id);
+};
+
+const hoverCell = async (cell) => {
+    const geo = await page.evaluate(() => {
+        document.getElementById('canvas').scrollIntoView({ block: 'center' });
+        const r = document.getElementById('canvas').getBoundingClientRect();
+        const lv = window.__editorEdit.level;
+        return { left: r.left, top: r.top, width: r.width, height: r.height,
+            cols: lv.width, rows: lv.height };
+    });
+    await page.mouse.move(geo.left + ((cell.tx + 1) * geo.width) / geo.cols - 1,
+        geo.top + ((cell.ty + 1) * geo.height) / geo.rows - 1);
+    return (await read()).cell;
+};
 
 /**
  * ⛓⛓ THE CANVAS RECTANGLE IS RE-READ BEFORE **EVERY** CLICK and the target is
@@ -434,7 +640,7 @@ try {
 
     /* ══ CLAIM 4 — RECT + PASTE with a FILTER, and the bound SAID ═══ */
 
-    await page.click('#editTool_rect');
+    await page.click('#genEditGesture_rect');
     await clickCell({ tx: COPY.x, ty: COPY.y });
     await clickCell({ tx: COPY.x + COPY.w - 1, ty: COPY.y + COPY.h - 1 });
     const copied = await read();
@@ -453,8 +659,8 @@ try {
         '⛓⛓ …and the CLIPBOARD note counts the bodies node counted, so the sentence is a '
         + 'MEASUREMENT of this clip and not a standing warning printed for every copy',
         copied.clip.slice(0, 120));
-    await page.selectOption('#editPasteOnly', 'tile');
-    await page.click('#editTool_paste');
+    await page.selectOption('#genEditPasteOnly', 'tile');
+    await page.click('#genEditGesture_paste');
     const beforePaste = (await read()).edit.edits;
     /**
      * ⛔⛔ **AN ORDERING CANNOT BE READ OFF THE END STATE**, and this row learned
@@ -577,9 +783,398 @@ try {
     await page.click('#editLoadGo');
     await page.waitForTimeout(500);
     const setBase = (await read()).loadNote;
-    check(/LEVEL SET/.test(setBase) && /phase 3/.test(setBase),
-        '⛓ …and a LEVEL SET is refused as the level-set arm\'s, rather than read as a '
-        + 'payload that happens to be missing fields', setBase.slice(0, 110));
+    /**
+     * ⛓ SLICE C2 MOVED THIS HALF. A level set is no longer refused as *"the
+     * level-set arm's — plan phase 3"*: it LOADS, and what refuses a bad one is
+     * `validateLevelSet`, whose errors are printed VERBATIM. ⛔ The sentence
+     * changed because the behaviour did, and it is recorded here rather than
+     * quietly matched with a looser regex.
+     */
+    check(/LEVEL SET/.test(setBase) && /validateLevelSet` REFUSES it/.test(setBase)
+        && /rooms must be a non-empty array/.test(setBase),
+        '⛓ …and a document that IS a level set and does not VALIDATE is refused with the '
+        + 'validator\'s own words — a page that said "invalid set" would have thrown away '
+        + 'the whole answer', setBase.slice(0, 140));
+
+
+    /* ══ CLAIM 11 — THE ID RULE, OVER THE LIVE DOM ═════════════════ */
+
+    await load(`source=edit&level=${LEVEL}`);
+    /**
+     * ⛔⛔ **A RULE ASSERTED OVER THE DOM, NOT AGAINST A LIST IN THIS FILE.**
+     * §12.10 left the `genEdit*` prefix *"a lie in one arm"* and C1's own
+     * three new SHARED controls carried `edit*` names — the rule's other
+     * direction. It is a rule now: `edit*` is a control ONLY the edit arm has
+     * (inside `#editOnly`), `genEdit*` is one BOTH arms mount. ⛓ A list here
+     * would decay the day a control was added (trap 574); the scan derives
+     * both sides off the page and says how many it looked at.
+     */
+    const ids = await page.evaluate(() => {
+        const inside = (el, id) => Boolean(document.getElementById(id)?.contains(el));
+        const rows = [...document.querySelectorAll('#editPanel [id]')].map((el) => ({
+            id: el.id,
+            onlyArm: inside(el, 'editOnly'),
+            inPanel: inside(el, 'editPanel'),
+        }));
+        return {
+            rows,
+            editStar: rows.filter((r) => /^edit(?!Panel$|Only$)/.test(r.id)),
+            genStar: rows.filter((r) => r.id.startsWith('genEdit')),
+        };
+    });
+    check(ids.editStar.length > 0 && ids.genStar.length > 0,
+        '⛓ the id scan is not vacuous — the panel really does hold both prefixes',
+        `${ids.editStar.length} edit* · ${ids.genStar.length} genEdit* of ${ids.rows.length}`);
+    check(ids.editStar.every((r) => r.onlyArm),
+        '⛓⛓⛓ **EVERY `edit*` ID IS INSIDE `#editOnly`** — an `edit*` name is a promise that '
+        + 'the GENERATE arm never shows the control, and `PANELS.editOnly` is what keeps it',
+        json(ids.editStar.filter((r) => !r.onlyArm).map((r) => r.id)));
+    check(ids.genStar.every((r) => r.inPanel && !r.onlyArm),
+        '⛓⛓⛓ **AND EVERY `genEdit*` ID IS SHARED** — inside `#editPanel` and OUTSIDE '
+        + '`#editOnly`. ⛓ C1 shipped three shared controls under `edit*` names '
+        + '(`editTools`, `editPasteOnly`, `editClipNote`); they are `genEditGestures` / '
+        + '`genEditPasteOnly` / `genEditClipNote` now, and this row is what would notice a '
+        + 'fourth', json(ids.genStar.filter((r) => r.onlyArm).map((r) => r.id)));
+
+    /* ══ CLAIM 20 — THE PASTE FILTER'S OPTIONS ARE DERIVED ═════════ */
+
+    const nodeFields = Object.keys(adapter.readCell(baseRecord, 0, 0));
+    const opts = (await read()).pasteOptions;
+    check(json(opts) === json(['', ...nodeFields]),
+        '⛓⛓⛓ §12.10\'s LAST TYPED ROSTER IS GONE — the paste filter offers exactly the '
+        + 'fields `adapter.readCell` presents, so a FOURTH descriptor field arrives as an '
+        + '`<option>` with no edit on the page', `${json(opts)} vs ${json(nodeFields)}`);
+
+    /* ══ CLAIM 12 — THE LAYER PICKER PAINTS A CLIFFSIDE ════════════ */
+
+    const beforeCliff = await read();
+    check(beforeCliff.edit.level.layers.every((l) => l.name !== 'cliffsides'),
+        `⛓ level ${LEVEL} has NO cliffsides layer to begin with, so the paint below has to `
+        + 'CREATE one — which is the half a page that only ever painted `tiles` could not '
+        + 'have exercised',
+        json(beforeCliff.edit.level.layers.map((l) => l.name)));
+    await page.selectOption('#genEditTool', 'paint');
+    await page.selectOption('#genEditLayer', 'cliffsides');
+    const cliffOpts = await page.evaluate(() => ({
+        values: [...document.getElementById('genEditTerrain').options].map((o) => o.value),
+        groups: [...document.getElementById('genEditTerrain').querySelectorAll('optgroup')]
+            .map((g) => g.label),
+    }));
+    check(cliffOpts.values.every((v) => v.startsWith('column:'))
+        && cliffOpts.values.length === LAYER_COLUMNS.cliffsides,
+        `⛓⛓ picking \`cliffsides\` REFILLS the picker with that layer's `
+        + `${LAYER_COLUMNS.cliffsides} pixelmasks and NO terrain name — a name there is `
+        + 'refused by `columnOfSpec`, so offering one would arm a brush whose every click '
+        + 'refused', json(cliffOpts));
+    await page.selectOption('#genEditTerrain', `column:${CLIFF_COLUMN}`);
+    await clickCell(CLIFF_CELL);
+    await settled(1);
+    const cliffed = await read();
+    const nodeCliff = foldEdits(adapter, baseRecord, [{
+        op: 'paint', tx: CLIFF_CELL.tx, ty: CLIFF_CELL.ty, layer: 'cliffsides',
+        column: CLIFF_COLUMN,
+    }]).record;
+    check(json(cliffed.edit.level) === json(nodeCliff),
+        '⛓⛓⛓ **THE BROWSER PAINTED A CLIFFSIDE AND IT IS NODE\'S FOLD, BYTE FOR BYTE** — '
+        + '`paint {layer, column}` has existed since slice B and nothing on the page could '
+        + 'reach it');
+    check(/\[cliffsides\]/.test(cliffed.rows[0] ?? ''),
+        '⛓ …and the op\'s own row says which LAYER it painted', cliffed.rows[0]?.slice(0, 70));
+    const hudCliff = await hoverCell(CLIFF_CELL);
+    check(new RegExp(`cliffside column ${CLIFF_COLUMN}`).test(hudCliff),
+        '⛓⛓ …and the HOVERED-CELL READOUT SHOWS IT. `readCell` has answered `{tile, cliff, '
+        + 'entities}` since slice B and no page ever displayed it; this is the first time '
+        + 'the page says what a cell IS', hudCliff.slice(0, 110));
+
+    /* ══ CLAIM 13 — A COLUMN OUTSIDE THE FOUR NAMES ════════════════ */
+
+    await load(`source=edit&level=${LEVEL}`);
+    await page.selectOption('#genEditTool', 'paint');
+    await page.selectOption('#genEditLayer', 'tiles');
+    const tileOpts = await page.evaluate(() => [
+        ...document.getElementById('genEditTerrain').options].map((o) => o.value));
+    check(tileOpts.length === TERRAIN_NAMES.length + LAYER_COLUMNS.tiles
+        && json(tileOpts.slice(0, TERRAIN_NAMES.length)) === json([...TERRAIN_NAMES]),
+        `⛓⛓⛓ the picker reaches ALL ${LAYER_COLUMNS.tiles} COLUMNS, with the `
+        + `${TERRAIN_NAMES.length} terrain NAMES first and still spelling themselves — a `
+        + 'respelling would have moved bytes in every committed `?gen=` payload',
+        `${tileOpts.length} option(s)`);
+    await page.selectOption('#genEditTerrain', `column:${WIDE_COLUMN}`);
+    await clickCell(PAINT);
+    await settled(1);
+    const wide = await read();
+    const nodeWide = foldEdits(adapter, baseRecord,
+        [{ op: 'paint', tx: PAINT.tx, ty: PAINT.ty, column: WIDE_COLUMN }]).record;
+    check(json(wide.edit.level) === json(nodeWide),
+        `⛓⛓ a column outside the four names PAINTS, and the record is node's fold — column `
+        + `${WIDE_COLUMN} builds tile type ${TILE_COLUMN_TO_TYPE[WIDE_COLUMN]}`);
+    const hudWide = await hoverCell(PAINT);
+    check(hudWide.includes(`column ${WIDE_COLUMN}`)
+        && hudWide.includes(TILE_TYPE_NAMES[TILE_COLUMN_TO_TYPE[WIDE_COLUMN]]),
+        '⛓⛓ …and the HUD names the tile TYPE it built, off `TILE_COLUMN_TO_TYPE` — which is '
+        + 'the only way a reader can tell 45 columns apart', hudWide.slice(0, 110));
+
+    /* ══ CLAIM 14 — THE ROOM-FLAGS FORM ROUND TRIPS ════════════════ */
+
+    await load(`source=edit&level=${LEVEL}`);
+    const flagsAtBoot = await read();
+    check(json(flagsAtBoot.flagsChecked) === json(FLAG_HELD.map((f) => f.tag))
+        && json(flagsAtBoot.edit.flags) === json(FLAG_HELD.map((f) => f.tag)),
+        '⛓⛓ THE FORM READS THE ROOM — a loaded vanilla L14 shows the flag it actually '
+        + 'carries and no other', json(flagsAtBoot.flagsChecked));
+    const heldValue = await page.evaluate(
+        (t) => document.getElementById(`genEditFlag_${t}_alpha`)?.value, FLAG_HELD[0].tag);
+    check(heldValue === FLAG_HELD[0].attrs.alpha,
+        '⛓ …and the TYPED INPUT carries that flag\'s own attribute value off the record',
+        `${heldValue} vs ${FLAG_HELD[0].attrs.alpha}`);
+
+    await openSection('genEditFlagsSection');
+    await page.check(`#genEditFlag_${FLAG_PRESENCE}`);
+    await settled(1);
+    const placedFlag = await read();
+    const nodeFlag = foldEdits(adapter, baseRecord, [{
+        op: 'place', tx: 0, ty: 0, type: FLAG_PRESENCE, attrs: {},
+    }]).record;
+    check(json(placedFlag.edit.level) === json(nodeFlag),
+        `⛓⛓⛓ A PRESENCE FLAG IS A \`place\` AT THE ORIGIN, and the record is node's fold — `
+        + `<${FLAG_PRESENCE}> is an ENTITY in the OEL and a LEVEL PROPERTY in the game, so `
+        + 'it needed no new op, only a form');
+    check(placedFlag.rows.length === 1 && placedFlag.rows[0].includes(FLAG_PRESENCE),
+        '⛔ …AND IT IS IN THE EDIT LIST. The form writes through the SESSION, so undo, the '
+        + 'payload and the identity line all see a flag change exactly as they see a brush '
+        + 'stroke', placedFlag.rows[0]?.slice(0, 60));
+    await page.click('#genEditUndo');
+    await settled(0);
+    check(json((await read()).edit.level) === json(baseRecord),
+        '⛓⛓ …and ONE UNDO puts the room back to the base, byte for byte');
+
+    await page.check(`#genEditFlag_${FLAG_ATTR}`);
+    await settled(1);
+    await page.fill(`#genEditFlag_${FLAG_ATTR}_${SCHEMA.entities[FLAG_ATTR].values[0].name}`,
+        '7');
+    await page.evaluate((id) => document.getElementById(id).dispatchEvent(
+        new Event('change', { bubbles: true })),
+    `genEditFlag_${FLAG_ATTR}_${SCHEMA.entities[FLAG_ATTR].values[0].name}`);
+    await settled(2);
+    const attred = await read();
+    check(attred.rows.length === 2 && /EDIT attrs \(0,0\)/.test(attred.rows[1]),
+        `⛓⛓ AN ATTRIBUTE FLAG IS A \`place\` THEN AN \`attrs\` — two ops, both in the `
+        + 'identity, both at the flag\'s own cell', attred.rows[1]?.slice(0, 70));
+    const wrote = attred.edit.level.entities.find((e) => e.type === FLAG_ATTR);
+    check(wrote?.attrs?.[SCHEMA.entities[FLAG_ATTR].values[0].name] === '7',
+        `⛓ …and the value the form typed is the value the RECORD carries`, json(wrote?.attrs));
+    await page.uncheck(`#genEditFlag_${FLAG_ATTR}`);
+    await settled(3);
+    check(!(await read()).edit.level.entities.some((e) => e.type === FLAG_ATTR),
+        '⛓⛓ …and UNTICKING is a `remove` at that flag\'s own cell — the flag is gone from '
+        + 'the record and the removal is the THIRD op, not an erasure of the first two');
+
+    /* ══ CLAIM 15 — THE FLAG REACH BOUND, MEASURED ═════════════════ */
+
+    const reach = (await read()).reach;
+    const nodeReach = flagModelReach(baseRecord, buildLevelWorld, {
+        attrsFor: (t) => Object.fromEntries((SCHEMA.entities[t]?.values ?? [])
+            .filter((v) => v.default !== null && v.default !== undefined)
+            .map((v) => [v.name, v.default])),
+    });
+    const ignored = nodeReach.filter((r) => r.reads === false).map((r) => r.tag);
+    const reads = nodeReach.filter((r) => r.reads === true).map((r) => r.tag);
+    check(ignored.length > 0 && reads.length > 0,
+        '⛔⛔ NODE\'S OWN MEASUREMENT FIRST, AND IT IS WHAT OVERTURNED THE BRIEF: the brief '
+        + 'said to derive "which flags the JS model ignores" from `levelWorld`\'s class '
+        + 'table, and that table gives ALL SEVEN `as3: null` — it answers CONSTRUCTION. '
+        + 'Built with and without, six worlds are byte-identical and <control> is NOT',
+        `${json(ignored)} ignored · ${json(reads)} read`);
+    check(reach.includes(`${ignored.length} of these ${nodeReach.length} flags`)
+        && ignored.every((t) => reach.includes(t)) && reads.every((t) => reach.includes(t)),
+        '⛓⛓⛓ …and the PAGE says exactly that, naming both sides — ⚖ ruling 3\'s shape one '
+        + 'layer up: the edit is never refused, and what the reader is told is what the JS '
+        + 'oracle can and cannot answer about it', reach.slice(0, 150));
+    check(/the wasm is the only certifier/.test(reach),
+        '⛔ …and it names the CERTIFIER, because a room-flags form that changed `lightalpha` '
+        + 'cannot be checked in JS at all (§12.10)');
+
+    /* ══ CLAIM 16 — ⚖ RULING 5's WARNING, PRESENT AND ABSENT ═══════ */
+
+    await load(`source=edit&level=${LEVEL}`);
+    await openSection('genEditResizeSection');
+    const grow = { w: baseRecord.width + GROW_BY, h: baseRecord.height };
+    await page.fill('#genEditResizeW', String(grow.w));
+    const previewNoBoss = (await read()).resizeNote;
+    check(/new cells hold NO TILE/.test(previewNoBoss)
+        && !/fight geometry is COMPILED IN/.test(previewNoBoss),
+        `⛓⛓⛓ ⚖ RULING 5 — GROWING level ${LEVEL} by ${GROW_BY} columns warns about the `
+        + 'UNTILED cells and says NOTHING about boss geometry, because this room holds none '
+        + `of the ${Object.keys(ROOM_GEOMETRY_BOSSES).length} classes`,
+        previewNoBoss.slice(0, 130));
+    await page.click('#genEditResizeGo');
+    await settled(1);
+    const grown = await read();
+    check(grown.edit.level.width === grow.w && grown.edit.level.height === grow.h,
+        `⛓ …and the room really is ${grow.w}x${grow.h} now`,
+        `${grown.edit.level.width}x${grown.edit.level.height}`);
+    check(/EDIT resize → /.test(grown.rows[0] ?? '')
+        && /new cells hold NO TILE/.test(grown.rows[0] ?? ''),
+        '⛓⛓ …and the SAME sentences come back AFTER, off `foldEdits().steps` — the preview '
+        + 'and the readout cannot disagree about a room they are both describing',
+        grown.rows[0]?.slice(0, 90));
+
+    await load(`source=edit&level=${BOSS.level}`);
+    await openSection('genEditResizeSection');
+    await page.fill('#genEditResizeW', String(BOSS.w + GROW_BY));
+    const previewBoss = (await read()).resizeNote;
+    check(/fight geometry is COMPILED IN/.test(previewBoss)
+        && BOSS.classes.every((c) => previewBoss.includes(`<${c}>`))
+        && BOSS.classes.every((c) => previewBoss.includes(ROOM_GEOMETRY_BOSSES[c])),
+        `⛓⛓⛓ …AND ON LEVEL ${BOSS.level} THE WARNING IS PRESENT AND NAMES THE CLASS — `
+        + `${BOSS.classes.join(', ')}, with the AS3 constants that hold its rectangle. ⚖ `
+        + 'Ruling 5: displayed until plan §5 #1 lands, and the edit is never blocked',
+        previewBoss.slice(0, 170));
+
+    /* ══ CLAIM 17 — A CROP THAT WOULD DROP SOMETHING ═══════════════ */
+
+    await load(`source=edit&level=${LEVEL}`);
+    await openSection('genEditResizeSection');
+    await page.fill('#genEditResizeW', String(CROP.width));
+    await page.click('#genEditResizeGo');
+    await page.waitForTimeout(800);
+    const cropped = await read();
+    check(cropped.edit.edits === 0 && json(cropped.edit.level) === json(baseRecord),
+        '⛔ A CROP THAT WOULD DROP SOMETHING IS REFUSED — nothing was applied and the room '
+        + 'is untouched', `${cropped.edit.edits} edit(s)`);
+    check(/would drop/.test(cropped.resizeNote) && /REFUSED/.test(cropped.resizeNote)
+        && /Clear the cells first/.test(cropped.resizeNote),
+        '⛓⛓⛓ …and the refusal is `procgenLevel`\'s OWN SENTENCE, VERBATIM — it names the '
+        + 'tiles and the bodies that would be lost, and a page that paraphrased it would be '
+        + 'a second opinion about which cells are in danger', cropped.resizeNote.slice(0, 150));
+
+    /* ══ CLAIM 18 — `set-room` IS A LAUNCHABLE BASE ════════════════ */
+
+    await page.fill('#editLoad', JSON.stringify(SET_DOC));
+    await page.click('#editLoadGo');
+    /**
+     * ⛔ THE WAIT IS ON THE VALUE THE CLAIM NAMES — the HELD set's own id — and
+     * not on a sleep. A fixed pause is a wait that a slower machine turns into
+     * a claim about `null`, and a 116-room document takes a real moment to
+     * cross the box.
+     */
+    await page.waitForFunction((id) => window.__editorEdit?.set?.set_id === id,
+        SET_DOC.set_id, { timeout: 60000 });
+    const held = await read();
+    check(held.edit.set?.set_id === SET_DOC.set_id && held.edit.set.rooms === 1
+        && held.edit.set.openable === 1,
+        '⛓⛓ A LEVEL SET LOADS AND IS HELD — validated on the way in, and the page says how '
+        + 'many of its rooms it could open', json(held.edit.set));
+    check(held.setRooms.length === SET_DOC.rooms.length
+        && held.setRooms[0].includes(SET_DOC.rooms[0].name),
+        '⛓ …and its ROOMS ARE OFFERED, named', json(held.setRooms));
+    await page.selectOption('#editSetRoom', '0');
+    await page.click('#editSetOpen');
+    await page.waitForFunction(() => window.__editorEdit?.baseKind === 'set-room', null,
+        { timeout: 60000 });
+    const opened = await read();
+    const nodeRoom = resolveBase(adapter2, { kind: 'set-room', set_id: SET_DOC.set_id, room: 0 });
+    check(json(opened.edit.base) === json({ kind: 'set-room', set_id: SET_DOC.set_id, room: 0 })
+        && json(opened.edit.level) === json(nodeRoom),
+        '⛓⛓⛓ **§3.2\'s FOURTH BASE IS LAUNCHABLE** — picking a room resolves it through the '
+        + '`oel` arm, and the record is node\'s own `resolveBase`, byte for byte',
+        json(opened.edit.base));
+    check(opened.base.includes(SET_DOC.set_id) && opened.base.includes('room 0'),
+        '⛓ …and the IDENTITY LINE prints the set\'s `set_id` and the room id',
+        opened.base.slice(0, 110));
+
+    const roomFree = (() => {
+        const b = adapter.bounds(nodeRoom);
+        for (let y = 1; y < b.h - 1; y += 1) {
+            for (let x = 1; x < b.w - 1; x += 1) {
+                const c = adapter.readCell(nodeRoom, x, y);
+                if (c.tile && c.tile.column !== PAINT_COLUMN && c.entities.length === 0) {
+                    return { tx: x, ty: y };
+                }
+            }
+        }
+        return null;
+    })();
+    check(roomFree !== null,
+        '⛓ …and the set room has a cell whose column is not the one about to be painted, so '
+        + 'the edit below is a real change', json(roomFree));
+    await page.selectOption('#genEditTool', 'paint');
+    await page.selectOption('#genEditLayer', 'tiles');
+    await page.selectOption('#genEditTerrain', PAINT_TERRAIN);
+    await clickCell(roomFree);
+    await settled(1);
+    const editedRoom = (await read()).edit.level;
+    await page.click('#editDownloadSet');
+    await page.waitForFunction(() => window.__editorSetOut, null, { timeout: 30000 });
+    const out = await page.evaluate(() => window.__editorSetOut);
+    check(out.set_id !== SET_DOC.set_id
+        && out.set_id.endsWith(`-${out.provenance.content_hash}`),
+        '⛓⛓⛓ THE SET COMES BACK RE-STAMPED — `stampLevelSetIdentity` recomputes the content '
+        + 'hash and rebuilds the id around it, so an EDITED SET IS A DIFFERENT SET BY '
+        + 'CONSTRUCTION (plan §4.2, the one thing a save file cannot otherwise detect)',
+        `${SET_DOC.set_id} → ${out.set_id}`);
+    check(validateLevelSet(out).ok,
+        '⛓ …and node validates what the page wrote', json(validateLevelSet(out).errors));
+    await page.fill('#editLoad', JSON.stringify(out));
+    await page.click('#editLoadGo');
+    await page.waitForFunction((id) => window.__editorEdit?.set?.set_id === id, out.set_id,
+        { timeout: 60000 });
+    await page.selectOption('#editSetRoom', '0');
+    await page.click('#editSetOpen');
+    await page.waitForFunction((id) => window.__editorEdit?.base?.set_id === id, out.set_id,
+        { timeout: 60000 });
+    const reopened = await read();
+    /**
+     * ⛔⛔ **THE COMPARISON DROPS `path`, AND THAT IS THE RE-STAMP, NOT A
+     * LOOSENING.** A `set-room` record's `path` is provenance — it is
+     * `<set_id>#<room>` — and the download RE-STAMPS the set, so the reloaded
+     * room's `path` names the NEW id BY CONSTRUCTION. A row that demanded byte
+     * equality including `path` would be demanding that an edited set keep its
+     * old identity, which is the one thing §4.2 says it must not do. ⇒ the
+     * CONTENT is compared byte for byte and the provenance is asserted to have
+     * MOVED, to the id the page actually wrote.
+     */
+    const contentOf = (r) => {
+        const { path: _p, ...rest } = r;
+        return json(rest);
+    };
+    check(contentOf(reopened.edit.level) === contentOf(editedRoom)
+        && reopened.edit.edits === 0,
+        '⛓⛓⛓ **AND IT ROUND TRIPS**: the set with the edited room\'s XML replaced, loaded '
+        + 'back and opened, IS the record that was on screen — with an EMPTY op list, '
+        + 'because the edit is in the room now and not beside it. That is Tier B\'s first '
+        + 'write path, whole', `${reopened.edit.edits} edit(s)`);
+    check(reopened.edit.level.path === `${out.set_id}#0`
+        && editedRoom.path === `${SET_DOC.set_id}#0`,
+        '⛓⛓ …and the ONE field that differs is the room\'s PROVENANCE, which names the '
+        + 'RE-STAMPED set — an edited set is a different set by construction, so a room of it '
+        + 'says so',
+        `${editedRoom.path} → ${reopened.edit.level.path}`);
+
+    /* ══ CLAIM 19 — AN `embed`-SOURCED ROOM ════════════════════════ */
+
+    await page.fill('#editLoad', JSON.stringify(VANILLA));
+    await page.click('#editLoadGo');
+    await page.waitForFunction((id) => window.__editorEdit?.set?.set_id === id, VANILLA.set_id,
+        { timeout: 120000 });
+    const vanillaHeld = await read();
+    check(vanillaHeld.edit.set?.set_id === VANILLA.set_id
+        && vanillaHeld.edit.set.openable === 0,
+        '⛓⛓ THE COMMITTED VANILLA SET LOADS AND NOT ONE OF ITS 116 ROOMS IS OPENABLE HERE',
+        json(vanillaHeld.edit.set));
+    check(/EMBED-sourced and NOT openable/.test(vanillaHeld.setNote)
+        && /source=edit&level=N/.test(vanillaHeld.setNote),
+        '⛓ …and the page says WHY and WHERE THE DOOR IS: an `embed` is a path into a SWF\'s '
+        + '`[Embed]` table, a fact about a source tree, and the ATLAS base is how that set '
+        + 'is edited', vanillaHeld.setNote.slice(0, 150));
+    await page.selectOption('#editSetRoom', '0');
+    await page.click('#editSetOpen');
+    await page.waitForTimeout(800);
+    const refusedRoom = await read();
+    check(/EMBED-sourced/.test(refusedRoom.status)
+        && json(refusedRoom.edit.level) === json(vanillaHeld.edit.level),
+        '⛔⛔ …and PRESSING OPEN REFUSES BY NAME — with the room the reader was editing '
+        + 'still on screen', refusedRoom.status.slice(0, 130));
 
     /* ══ CLAIM 8 — "open in editor" from GENERATE ══════════════════ */
 
@@ -587,6 +1182,23 @@ try {
         { waitUntil: 'domcontentloaded' });
     await page.waitForFunction(() => window.__editorGenerate?.status === 'ok'
         && !document.getElementById('genRunAll').disabled, null, { timeout: 300000 });
+    /**
+     * ⛓⛓⛓ CLAIM 11's OTHER HALF — THE SAME RULE, IN THE GENERATE ARM. ⛔ The
+     * `genEdit*` half is what a shared id PROMISES, and this is where the
+     * promise is kept or broken: every one of them is present and visible here,
+     * and `#editOnly`'s controls are not.
+     */
+    const genIds = await page.evaluate((wanted) => ({
+        missing: wanted.filter((id) => !document.getElementById(id)),
+        hiddenPanel: document.getElementById('editPanel').hidden,
+        onlyHidden: document.getElementById('editOnly').hidden,
+    }), ids.genStar.map((r) => r.id));
+    check(genIds.missing.length === 0 && genIds.hiddenPanel === false
+        && genIds.onlyHidden === true,
+        `⛓⛓⛓ **ALL ${ids.genStar.length} \`genEdit*\` CONTROLS ARE MOUNTED IN THE GENERATE `
+        + 'ARM TOO** — one edit implementation, two hosts — and `#editOnly` is HIDDEN here, '
+        + 'which is what makes the `edit*` prefix a promise rather than a naming habit',
+        json(genIds));
     await page.selectOption('#genEditTool', 'paint');
     await page.selectOption('#genEditTerrain', 'wall');
     const genGeo = await page.evaluate(() => {

@@ -201,7 +201,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 231,
         "browser": 75,
-        "cited": 78,
+        "cited": 79,
         "files": 250,
         "lineStyle": 19,
         "withDocblock": 250,
@@ -1179,7 +1179,9 @@ export const INSTRUMENTS = frz({
             ],
             "browser": true,
             "category": "check",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/architecture.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [
                 "host"
