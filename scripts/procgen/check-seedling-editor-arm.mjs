@@ -2251,45 +2251,34 @@ try {
         + 'printed would read as a set in which nothing links anywhere',
         `${Math.round(VANILLA_XML_SCAN.kb)} KB claimed`);
     /**
-     * ⛓ THE ARROWS ARE DRAWN — measured as INK in the top band of the strip,
-     * where the arcs live (they rise ABOVE the room cells, §21.3). Node says
-     * there are shapes to draw; this says the canvas has them.
+     * ⛓ THE STRIP'S OWN GEOMETRY, READ OFF THE PAGE. `overviewLayout` sets the
+     * canvas to `cellPx × rooms`, so the width divided by 116 IS the cell size
+     * it chose; below `minStillPx` a cell is a LABELLED BOX (§21.3).
      */
-    const stripInk = await page.evaluate((roomTop) => {
+    const inkOf = () => page.evaluate((roomTop) => {
         const c = document.getElementById('editSetOverview');
         if (!c) return null;
-        const ctx = c.getContext('2d');
-        // ⛓ EXACTLY THE BAND ABOVE THE ROOM CELLS — `OVERVIEW.roomTop` is where
-        // they start, passed in rather than guessed, so the ink counted here can
-        // only be the arcs.
-        const band = Math.max(1, Math.floor(c.height * roomTop));
-        const d = ctx.getImageData(0, 0, c.width, band).data;
-        const bg = [d[0], d[1], d[2], d[3]];
-        let ink = 0;
-        for (let i = 0; i < d.length; i += 4) {
-            if (d[i] !== bg[0] || d[i + 1] !== bg[1] || d[i + 2] !== bg[2] || d[i + 3] !== bg[3]) {
-                ink += 1;
-            }
-        }
-        return { ink, w: c.width, h: c.height, band };
+        const ov = c.parentNode?.querySelector('canvas.editorViewOverlay') ?? null;
+        const band = (cv) => Math.max(1, Math.floor(cv.height * roomTop));
+        const ink = (cv) => {
+            const d = cv.getContext('2d').getImageData(0, 0, cv.width, band(cv)).data;
+            let n = 0;
+            for (let i = 3; i < d.length; i += 4) if (d[i] !== 0) n += 1;
+            return n;
+        };
+        return {
+            w: c.width, h: c.height, stripInk: ink(c),
+            ovW: ov?.width ?? null, ovH: ov?.height ?? null, ovInk: ov ? ink(ov) : null,
+        };
     }, OVERVIEW.roomTop);
-    check(stripInk !== null && stripInk.ink > 0 && VANILLA_XML_ARROWS > 100,
-        '⛓⛓ **THE ARROWS SURVIVE THE BOUND** — the link-scan COLUMN is what was bounded; the '
-        + 'arcs come from each room\'s own exit list, which is ONE pass, and node counts '
-        + `${VANILLA_XML_ARROWS} shapes for this set`, json(stripInk));
-    /**
-     * ⛓ …and the CELL SIZE IS READ OFF THE PAGE'S OWN CANVAS rather than
-     * re-derived from a width this file guessed: `overviewLayout` sets the
-     * canvas to `cellPx × rooms`, so the strip's width divided by 116 IS the
-     * cell size it chose. Below `minStillPx` a cell is a LABELLED BOX (§21.3).
-     */
-    const vanCellPx = stripInk === null ? null : stripInk.w / 116;
+    const stripGeo = await inkOf();
+    const vanCellPx = stripGeo === null ? null : stripGeo.w / 116;
     check(vanCellPx !== null && Number.isInteger(vanCellPx)
         && vanCellPx < OVERVIEW.minStillPx && vanCellPx >= OVERVIEW.minCellPx,
         '⛓ …and at 116 cells the strip draws LABELLED BOXES rather than stills — the canvas is '
         + `${vanCellPx} px per room, under \`OVERVIEW.minStillPx\` (${OVERVIEW.minStillPx}) and `
         + `at or above \`minCellPx\` (${OVERVIEW.minCellPx}), which is the floor that keeps a `
-        + 'cell clickable', `${stripInk?.w} px / 116 rooms`);
+        + 'cell clickable', json(stripGeo));
 
     /* ── the REPORT on the real game ─────────────────────────────── */
 
@@ -2417,6 +2406,48 @@ try {
         && vanOut.set.rooms.every((r) => typeof r.source?.xml === 'string'),
         '⛓ …and node validates what the page wrote — 116 `xml` rooms, still',
         json(validateLevelSet(vanOut.set).errors));
+
+    /**
+     * ⛔⛔⛔ **THE OVERVIEW ARROWS ARE NOT PAINTED UNTIL SOMETHING REPAINTS THE
+     * VIEW — A D2 DEFECT THIS ROW FOUND ON REAL DATA, AND IT IS NOT E1's TO
+     * FIX.**
+     *
+     * The arcs are POLYLINE shapes contributed through `editorView`'s `shapes()`
+     * door, and that file paints them on a `.editorViewOverlay` canvas it
+     * appends to the target's PARENT and SIZES FROM THE TARGET. It paints once
+     * at mount — where `#editSetOverview` is still the HTML's `width="1"
+     * height="1"` and the rooms list is still EMPTY — and nothing repaints it
+     * afterwards: `render()` calls `paintStrip()` (which sizes the canvas and
+     * draws the room boxes) and never asks the view to repaint. MEASURED with a
+     * standalone probe: after a vanilla LOAD the strip canvas is 2088×132 with
+     * 181,674 ink pixels and the overlay is still **1×1 with 0**; a click on the
+     * strip does not change it; `#editSetGesture` — which is `setTool`, and
+     * `setTool` repaints — takes the overlay to **2088×132 with 67,289**.
+     *
+     * ⛓ SO THE CLAIM THIS ROW MAKES IS THE ONE THAT SURVIVES A FIX: the shapes
+     * exist, they reach the overlay, and they land at the STRIP's size once the
+     * view repaints. The load-time value travels in the DETAIL rather than in
+     * the condition, because a row asserting `0` there would go red the day
+     * somebody fixes it. ⛔ NOT FIXED HERE: `mountEditorView` exposes no
+     * `repaint`, `editorView.js` is outside this slice, and the only door
+     * `watchSetEditor.js` has (`setTool`) also clears the view's `corner` and
+     * fires `onChange` — a two-click gesture and a re-entrant render are exactly
+     * what that would put at risk.
+     */
+    const beforeArm = await inkOf();
+    await page.click('#editSetGesture');
+    await page.waitForTimeout(500);
+    const afterArm = await inkOf();
+    check(afterArm !== null && afterArm.ovInk > 0
+        && afterArm.ovW === afterArm.w && afterArm.ovH === afterArm.h
+        && VANILLA_XML_ARROWS > 100,
+        '⛓⛓⛓ **THE ARROWS SURVIVE THE BOUND — the link-scan COLUMN is what was bounded** — and '
+        + 'they land on the OVERLAY canvas at the STRIP\'s size once the view repaints; node '
+        + `counts ${VANILLA_XML_ARROWS} shapes for this set. ⛔ ON LOAD THE OVERLAY IS `
+        + `${beforeArm?.ovW}×${beforeArm?.ovH} WITH ${beforeArm?.ovInk} INK — the view paints it `
+        + 'once at MOUNT, before `paintStrip` has sized the canvas and while the rooms list is '
+        + 'still empty, and nothing repaints it after. A D2 defect, named here, NOT fixed here',
+        `${json(beforeArm)} → ${json(afterArm)}`);
 
     /* ══ CLAIM 10 — no edit reaches a URL, in either arm ═══════════ */
 
