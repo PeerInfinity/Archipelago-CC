@@ -2000,18 +2000,69 @@ describe('R9 slice 12c: the DASH, MODELLED — the oracle steps it and the polic
     });
 
     /**
-     * ⛔⛔ **A DASH AT REST IS CERTIFIED, AND SAYING SO IS THE POINT.**
-     * `knockbackImpulse` normalises the player's velocity and
-     * `point_normalize` no-ops at zero length, so a dash pressed standing
-     * still carries the player NOWHERE — there is no added ground to price.
-     * ⚠ Four of §22.9's eight roster candidates would have been blind to the
-     * dash for exactly this reason.
+     * ⛔⛔ **A DASH AT REST WITH NO KEY DOWN IS CERTIFIED, AND SAYING SO IS THE
+     * POINT.** `knockbackImpulse` normalises the velocity `useItem` reads and
+     * `point_normalize` no-ops at zero length, so with nothing held that
+     * velocity is still (0,0) when the dash asks — the player is carried
+     * NOWHERE and there is no added ground to price. The game is inert here
+     * too, which is why the no-op survives R9 slice 12e″.
+     *
+     * ⛓ R9 slice 12e″ RE-STATED IT FROM THE DEFERRED SHAPE: `slashSet` hands
+     * out `{force}` and `certifyDash` resolves the direction itself, so the
+     * `held` set is now half of the question and the row asks it that way.
      */
-    it('⛔ certification of a dash AT REST is trivially true — the impulse is (0,0)', () => {
+    it('⛔ certification of a dash AT REST with NO key is trivially true — (0,0)', () => {
         const run = l14();
-        const v = certifyDash(run.state, run.strikeBodies, { dvx: 0, dvy: 0 });
+        const v = certifyDash(run.state, run.strikeBodies,
+            { force: SLASH_DASH_FORCE }, { held: new Set() });
         expect(v.certified).toBe(true);
         expect(v.why).toMatch(/carries the player nowhere/);
+    });
+
+    /**
+     * ⛓⛓⛓ R9 SLICE 12e″ — **THE CELL THAT PRICES THE 9 PX A DASH FROM REST
+     * ACTUALLY CARRIES, AND IT IS THE MUTANT FOR THE WHOLE POLICY HALF.**
+     *
+     * ⛔ The row ABOVE and this one differ by ONE direction key. At rest with
+     * `right` STARTING this tick, `Player.input()`'s movement arm writes
+     * `v = (+moveSpeed, 0)` BEFORE `useItem` reads it, so the dash points east
+     * and carries the player `DASH_DISPLACEMENT.total` = 9 px of real ground.
+     * The model used to resolve that impulse from the velocity the tick
+     * STARTED with — zero — and `certifyDash` therefore answered *"carries
+     * the player nowhere"* and certified 9 px it had never looked at.
+     *
+     * ⛓ THE CELL IS NAMED RATHER THAN DESCRIBED: a body placed on the dashed
+     * path's own fourth offset (`DASH_DISPLACEMENT.perTick[3]` = 6.5 px east,
+     * inside the 9 px the dash covers and OUTSIDE the ground a walk would
+     * cover in those ticks). Under the fix the certification REFUSES and names
+     * that body; under a policy resolving from the pre-key velocity it
+     * certifies, because it prices a path of length zero.
+     *
+     * ⚠ AND THE CONTROL IS THE SAME BODY WITH THE SAME KEY AND NO DASH: a
+     * settled zero impulse still certifies, so the refusal is the dash's own
+     * ground and not the body simply being near.
+     */
+    it('⛓⛓⛓ at rest with `right` STARTING, the dash is priced along the KEY — the 9 px '
+        + 'the pre-key direction could not see', () => {
+        const run = l14();
+        const onPath = [{ ...run.strikeBodies[0], id: 'east-of-me', hitsTimer: 0,
+            x: run.state.x + DASH_DISPLACEMENT.perTick[3], y: run.state.y,
+            rect: { x: run.state.x + DASH_DISPLACEMENT.perTick[3] - 4, y: run.state.y - 4,
+                w: 8, h: 8,
+                right: run.state.x + DASH_DISPLACEMENT.perTick[3] + 4,
+                bottom: run.state.y + 4 } }];
+        const held = new Set(['right']);
+        const v = certifyDash(run.state, onPath, { force: SLASH_DASH_FORCE }, { held });
+        expect(v.certified).toBe(false);
+        expect(v.why).toMatch(/east-of-me/);
+        // ⛔ THE CONTROL: the same body, the same key, and NO dash to price.
+        const none = certifyDash(run.state, onPath, { dvx: 0, dvy: 0 }, { held });
+        expect(none.certified).toBe(true);
+        // ⛓ …and the direction really is the KEY's: the same standstill with
+        // `left` held prices WESTWARD ground and never meets this body.
+        const west = certifyDash(run.state, onPath, { force: SLASH_DASH_FORCE },
+            { held: new Set(['left']) });
+        expect(west.certified).toBe(true);
     });
 
     /**
