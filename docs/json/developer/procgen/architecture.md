@@ -252,10 +252,12 @@ edit panel, each on its arm's own lifetime.
 
 ## The rules.json and atlas toolkit (`procgenCore/`)
 
-Six modules, FLAT beside the edit core, for the documents every substrate
+Eight modules, FLAT beside the edit core, for the documents every substrate
 shares. They were lifted from copies that already existed and agreed — the
 point was never new behaviour, it was ONE place for behaviour there was already
-consensus on.
+consensus on. The last two arrived the other way round: the SET EDITOR's
+substrate-free half was measured inside `seedlingDemo/` and moved out when a
+second substrate needed it.
 
 | module | what it is | what it replaced |
 |---|---|---|
@@ -265,6 +267,8 @@ consensus on.
 | `jsonSchemaCheck.js` | a draft-07 evaluator over the keyword subset this repo's two schemas use, plus `rulesJsonSchemaErrors` and `atlasSchemaErrors` | a 132-line evaluator that was TEST-ONLY BY ACCIDENT — its only disqualifications were a `node:fs` import and a home under `runnerDemo/` |
 | `atlasOps.js` | `applyAtlasOp(atlas, op)` over an 18-kind vocabulary, pure and copy-on-write | `AtlasSession`'s sixteen in-place mutating bodies, which no headless caller could reach |
 | `ruleTreeOps.js` | `getRuleAt` / `replaceRuleAt` / `removeRuleAt` / `wrapRuleAt`, path-addressed and copy-on-write | `ruleTreeEditor.js`'s per-node closures, which existed only while the DOM was rendering |
+| `setEditorCore.js` | the set editor's substrate-free half — `roomRowsOf`, `moveOrder` and the three renumbering mappings, `renumberDecision`, the `OVERVIEW` strip and `exitArrowShapes`, `gateabilityOf`, `inertRulesOf`, `freeEdgesOf`, and `reportOver` | `seedlingDemo/watchSetEditor.js`, where D2 built all of it; the page now RE-EXPORTS the moved names by the same function object |
+| `setOverlay.js` | `createSetOverlay(spec)` — the authored half's shape: the prefixed rule-target key, `overlayErrors`, `assertOverlay`, `exitRulesByRoom`, `renumberOverlay` and the two readers | `seedlingDemo/seedlingSetOverlay.js`, measured at 10 of 11 exported functions substrate-free (90.9%) before the lift |
 
 **Identity is a CONTRACT, not an implementation.** Ten documents committed to
 this repository carry ids minted with that exact algorithm: a sorted-key
@@ -346,10 +350,71 @@ ids by NAME with dedup, so two regions sharing an id do not collide, they
 COLLAPSE into one, and the second one's exits and locations attach quietly to
 the first.
 
-All six are under the no-substrate law described above for the edit core, and
+All eight are under the no-substrate law described above for the edit core, and
 that law was widened to `flashPanel/` when the first three landed: a toolkit
 about atlases is exactly the code that would otherwise reach for one Seedling
-tile constant.
+tile constant. ⛓ The law's gate reads the DIRECTORY rather than a list, so a
+module added to `procgenCore/` is under it the moment it exists — which is what
+made the two set-editor modules parameterise rather than import: everything a
+set adapter can supply (`readSetCell`, `exitsOfRoom`, `whatLinksHere`,
+`bounds`, `validateForDownload`, `deriveAtlasOf`, `rulesJsonOf`) is handed in,
+and so is the document's own NOUN, because the row that says *"validateLevelSet:
+ok — 6 room(s)"* is about a document `procgenCore/` has never heard of.
+
+**⛓ WHAT AN OVERLAY CARRIES IS THE SUBSTRATE'S; WHAT AN OVERLAY IS IS NOT.**
+Every set substrate's overlay is `rooms` keyed by ROOM INDEX, each room carrying
+`{name?, locations[], rules{}}`, and rules keyed `exit:<exit_id>` or
+`loc:<name>` — collision-free by construction, because an exit id and a location
+name are both free-form strings. What differs is two things, and
+`createSetOverlay` takes exactly those as parameters:
+
+| | the LOCATION's address | the extra top-level fields |
+|---|---|---|
+| Seedling | `entity: {type, x, y}` — the room's own OEL element, in PIXELS | `neverEnter` (the trap rooms) · `regions` (`Message.as`'s seven titles) |
+| maze | `item: <index>` into the entry's `payload.items[]` — a captured slot POSITION | `links[]` · `start` |
+
+⛓ Neither address generalises the other, so there is no default: a binding that
+declares no `locationFields` is refused by name.
+
+**⛓ THE MAZE DERIVES ITS ATLAS FROM A REGION LIBRARY, AND ITS LINKS ARE
+AUTHORED — because the library's contract forbids them inside an entry.**
+`mazeRoom/mazeAtlasDerivation.js` is the second `deriveAtlas`. Its input is a
+`frontend/region-libraries/*.json` file, whose every payload exit carries
+`targetRegion: null` and whose every entry carries `carried_rules: null`, both
+BY CONTRACT (`regionLibraryValidator.js`): a library entry is interchangeable
+content that `stitchGrid` wires at instantiate time. So the atlas is still
+derived — `region_id` ← the ENTRY id (stable across a reorder, because the AP
+region is named after it), `map_ref` ← the entry INDEX (what moves), bounds ←
+the payload's size, boundary exits ← `payload.exits[]` with their `exit_id`
+verbatim, locations ← the payload items the overlay has MARKED — and the
+CONNECTIONS come from the overlay, because no maze room fact carries one.
+
+Three of its decisions are worth reading before writing the next one:
+
+- **A boundary exit is an `edge`, and its `side` is DERIVED.** The atlas
+  schema's `kind` is the closed enum `edge | teleporter`, so a third value fails
+  the structural pass. `atlasOps.deriveEdgeSide` reads the side off the tile and
+  the bounds, and the payload's own `side` becomes a CROSS-CHECK that refuses an
+  entry whose metadata has drifted from its tiles.
+- **`one_way` defaults to FALSE — the opposite of Seedling's.** Seedling's one
+  transition primitive is a one-way jump, so its derivation emits
+  `{one_way: true}` on every connection; a maze crossing is a tile the player
+  walks both ways. The consequence is visible in the REPORT, through the shared
+  `gateabilityOf`: the arrival side of a one-way connection gates nothing
+  (`regionAtlasCompiler` records it as `arrivalOnly` and builds no AP exit), and
+  a two-way arrival gates.
+- **NO `subgraph`, and a refusal instead.** `regionAtlasMazeProjection`
+  recomputes a region's components from the grid and throws a staleness sentence
+  when they disagree with a declared subgraph. A maze room is one component by
+  construction, so the derivation floods the payload from its entrance and
+  refuses a split floor BY NAME rather than emitting a subgraph the projection
+  would reject.
+
+⚠ And the maze needed a `gridFor` of its own: `compileRegionAtlas`'s maze arm
+refuses without one because *"the cell grid and the condition vocabulary are the
+GAME's"*, and every `gridFor` that existed indexed SEEDLING levels through a
+semantics table. A maze payload's tiles ARE the grid, so `mazeGridFor` is nearly
+the identity.
 
 **⛓ The atlas is DERIVED from the rooms; the overlay is AUTHORED.** ⚖ Ruled by
 the user, 2026-08-25. The playthrough generator had already proved it: a region

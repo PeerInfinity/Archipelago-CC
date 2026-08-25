@@ -480,6 +480,23 @@ describe('⛓⛓⛓ derive → validate → compile → the real maze world → 
             .toThrow(/needs `compileRegionAtlas` injected/);
     });
 
+    /**
+     * ⛔⛔⛔ MUTANT: `rulesJsonOf` passes `sidecarFlavor: 'maze'` and lets
+     * `mazeProjection` be `undefined`, or swallows the compiler's refusal. The
+     * compile would then either throw a sentence nobody catches or — worse, if
+     * the flavour were dropped instead — emit FLASH sidecars for a maze
+     * library, which boot an engine that has no such game. This row asserts the
+     * refusal is REAL, so a caller that forgot the grid cannot be silent.
+     */
+    it('⛔⛔ the maze arm REFUSES without a `gridFor`, by name — the grid is the GAME\'s', () => {
+        const atlas = deriveAtlasOf(recordOf()).atlas;
+        expect(() => compileRegionAtlas(atlas, { sidecarFlavor: 'maze' }))
+            .toThrow(/sidecarFlavor "maze" needs options\.mazeProjection\.\{gridFor,conditionKey,resolveCondition\}/);
+        // ⛓ …and the flavour really is what this module passes: a compile
+        //   WITHOUT it emits no maze sidecars at all.
+        expect(compileRegionAtlas(atlas, {}).report.sidecar_flavor).not.toBe('maze');
+    });
+
     /** ⛓ The tile vocabulary has ONE spelling here, re-exported rather than retyped. */
     it('⛓ the tile constants are `shared/procgen/mazeAlgorithms/gridTiles.js`\'s own', () => {
         expect(TILE_FLOOR).toBe(0);

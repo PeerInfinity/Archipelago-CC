@@ -511,6 +511,27 @@ Two members of one kind refuse by name too: a container with two level sets has
 no answer to "which set is this", and taking the first would be an answer the
 reader invented.
 
+## A region library's exit knows its SIDE, and the atlas does not take its word for it
+
+A maze region-library entry's payload carries, per exit, both a tile
+(`{x, y}`) and a `side` (`N`/`E`/`S`/`W`) — and a derivation that copied the
+`side` across would be trusting metadata over geometry. `atlasOps.addExit`
+DERIVES the side from the tile against the region's bounds (`deriveEdgeSide`;
+N = minimum y), so `mazeAtlasDerivation` passes the tile and then compares: a
+payload whose `side` disagrees with where its tile actually sits refuses BY
+NAME, quoting both. The two can disagree for a real reason — a payload edited
+by hand, or an entry captured before a resize — and the failure it prevents is
+silent: the projected world would put the door on the wrong wall, and every
+later stitch would agree with it.
+
+⛔ **AND `kind` IS NOT FREE TEXT.** `region-atlas.schema.json` declares an
+exit's `kind` as the closed enum `edge | teleporter`. A derivation that emitted
+a third value (`crossing`, say — the word the maze's own vocabulary uses for a
+walkable tile between rooms) would produce an atlas that fails the STRUCTURAL
+pass, and the set editor's REPORT would refuse every export with a schema error
+about a field the author never typed. The maze's crossings are `edge` exits;
+the word "crossing" belongs to the projection, not to the format.
+
 ## Related documentation
 
 - [Architecture](./architecture.md)
