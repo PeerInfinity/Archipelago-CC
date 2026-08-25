@@ -349,7 +349,17 @@ describe('⛔ procgenCore imports nothing substrate-side', () => {
         .sort();
     const ELEMENTS = ['elements.js', ...shippingIn('elements')];
     const SHIPPING = [...shippingIn('.'), ...shippingIn('elements')];
-    const BINDING = /(^|\/)(mazeRoom|seedlingDemo)\//;
+    /**
+     * ⛓ EDITOR v3 slice D0a WIDENED THIS to `flashPanel/`. The toolkit modules
+     * that landed in this slice (contentIdentity, rulesGraph, apIdNamespaces)
+     * are all about documents FLASHPANEL OWNS — the atlases, the compiled
+     * rules.json, the per-game `ap_id_offset` — so reaching into
+     * `flashPanel/seedlingSemantics.js` for "just one" tile constant is the
+     * exact next mistake available, and it would make the core know which
+     * substrate it is on just as surely as a `seedlingDemo/` import would.
+     * Measured before widening: ZERO procgenCore files imported flashPanel/.
+     */
+    const BINDING = /(^|\/)(mazeRoom|seedlingDemo|flashPanel)\//;
     const SHARED = /(^|\/)shared\//;
     const GRID_TILES = 'shared/procgen/mazeAlgorithms/gridTiles.js';
 
