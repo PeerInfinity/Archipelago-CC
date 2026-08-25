@@ -200,8 +200,27 @@ try {
             (d) => window.__e1c.notes.push(`${d.type}: ${d.message}`), 'e1cTap');
     });
 
+    /**
+     * ⛔ **THE INPUT IS GONE AFTER A LOAD, AND THAT IS THE PANEL WORKING.**
+     * `displayLoadedJsonFileDetails` REPLACES the games list with a detail view
+     * whose only navigation is `#back-to-presets` — so a second
+     * `setInputFiles('#json-file-input')` waits 30 s for an element the page
+     * deliberately removed. Measured here, on the second upload. ⇒ every upload
+     * re-enters through the panel's own BACK button rather than through a
+     * re-render nobody can press, which also makes each load a fresh journey
+     * through the same door a person would take.
+     */
     const upload = async (path, why) => {
         const before = await page.evaluate(() => window.__e1c.loaded.length);
+        if (!await page.evaluate(() => Boolean(document.getElementById('json-file-input')))) {
+            await page.click('#back-to-presets');
+            await page.waitForFunction(
+                () => Boolean(document.getElementById('json-file-input')),
+                null, { timeout: 30000 },
+            ).catch((e) => {
+                throw new Error(`STUCK re-entering the games list before ${why}: ${e.message}`);
+            });
+        }
         await page.setInputFiles('#json-file-input', path);
         await page.waitForFunction(
             (n) => window.__e1c.loaded.length > n, before, { timeout: 60000 },
