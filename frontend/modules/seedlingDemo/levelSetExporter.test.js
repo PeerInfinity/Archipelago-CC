@@ -370,7 +370,7 @@ describe('buildLevelSet({link}) — exits as data', () => {
 // `procgenLevelOel.test.js:59`'s row and is NOT repeated here; what these rows
 // own is the JOIN — WHICH record fed WHICH room — plus the manifest carry, the
 // empty `invented`, and the id that must never be mistaken for the embed set's.
-describe('vanillaRecordSet — two committed documents in, a record-sourced set out', () => {
+describe('vanillaRecordSet — the manifest and the map extract in, a record-sourced set out', () => {
     const embedSet = fixture('seedling-vanilla-set.json');
     const mapDoc = JSON.parse(readFileSync(fileURLToPath(
         new URL('../flashPanel/atlases/seedling-map.json', import.meta.url)), 'utf8'));
@@ -678,7 +678,10 @@ describe('OEL is rendered at the chunk boundary, and the bound is measured there
      * chunk COUNT is unchanged. ⛓ A different count would have meant the render
      * moved bytes, and the number is here so nobody has to wonder.
      */
-    it('plans the vanilla 116 to the SAME 9 chunks E1 measured, +3 bytes of set_id', () => {
+    // ⛓ THE NAME CARRIES NO COUNT ON PURPOSE — every number below is DERIVED
+    //   or pinned with its provenance in the docblock, and `lint-gate-labels`
+    //   reds a name that states a cardinality its own body computes.
+    it('plans the vanilla set to the SAME chunks E1 measured, plus the set_id\'s own bytes', () => {
         const { chunks, oversized } = planLevelSetChunks(VANILLA_SET());
         expect(chunks).toHaveLength(9);
         expect(oversized).toEqual([]);
