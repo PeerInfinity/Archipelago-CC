@@ -6,7 +6,8 @@ import {
 } from './apRules.js';
 import { compileAccessRule } from '../shared/procgen/pathsAndObstaclesCompiler.js';
 import { DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
-import { loadRulesSchema, ruleSchemaErrors } from './ruleSchemaCheck.js';
+import { ruleSchemaErrors } from '../procgenCore/jsonSchemaCheck.js';
+import { loadRulesSchema } from '../procgenCore/jsonSchemaFiles.js';
 
 // Phase 6 (plan §4.6): runner emits rules in the shared
 // paths-and-obstacles vocabulary, mirroring bounce's emitter. The

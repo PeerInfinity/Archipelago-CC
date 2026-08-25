@@ -27,6 +27,7 @@ import {
     stableStringify,
     stampIdentity,
 } from '../procgenCore/contentIdentity.js';
+import { atlasSchemaErrors } from '../procgenCore/jsonSchemaCheck.js';
 
 // Re-exported because regionAtlasPool.js has imported it from here since Phase 6.
 export { stableStringify };
@@ -199,9 +200,19 @@ export function indexMapDocument(doc) {
 
 /**
  * @param {object} atlas
- * @param {{ mapDoc?: object }} [options] the parsed document named by
- *   tile_space.map_document. Supply it and map_ref values are resolved against
- *   real levels; omit it and only the shape of map_ref is checked.
+ * @param {{ mapDoc?: object, schema?: object }} [options]
+ *   `mapDoc` — the parsed document named by tile_space.map_document. Supply it
+ *   and map_ref values are resolved against real levels; omit it and only the
+ *   shape of map_ref is checked.
+ *   `schema` — the parsed `frontend/schema/region-atlas.schema.json`. Supply it
+ *   and the STRUCTURAL pass below runs FIRST; omit it and only the referential
+ *   rules run, exactly as before slice D0b.
+ *
+ * ⛓ EDITOR v3 slice D0b — WHY THE SCHEMA IS A PARAMETER AND NOT A READ. This
+ * module is in the bundled browser graph (see the header), so it cannot import
+ * `node:fs`, and `procgenCore/jsonSchemaCheck.js` refuses to read a schema for
+ * exactly the same reason. Node callers hand in
+ * `jsonSchemaFiles.loadAtlasSchema()`; a page hands in what it fetched.
  */
 export function validateRegionAtlas(atlas, options = {}) {
     const errors = [];
@@ -212,6 +223,25 @@ export function validateRegionAtlas(atlas, options = {}) {
 
     if (!isPlainObject(atlas)) {
         return { ok: false, errors: ['atlas is not an object'], warnings, stats: null };
+    }
+
+    // --- structural pass (D0b) ---
+    //
+    // ⛔ IT RETURNS RATHER THAN ACCUMULATES. A document whose SHAPE is wrong
+    // produces a cascade of referential complaints that are all downstream of
+    // the one real fault; reporting the shape error alone is the honest answer,
+    // and it is the same order a compiler reports a parse error before a type
+    // error. The rules below still own everything a schema cannot say.
+    if (options.schema !== undefined) {
+        const structural = atlasSchemaErrors(atlas, options.schema);
+        if (structural.length > 0) {
+            return {
+                ok: false,
+                errors: structural.map((m) => `schema: ${m}`),
+                warnings,
+                stats: null,
+            };
+        }
     }
 
     // --- envelope ---

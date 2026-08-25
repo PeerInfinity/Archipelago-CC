@@ -57,13 +57,18 @@
         },
         "connections": {
           "type": "array",
-          "description": "Undirected pairings of exits. Each endpoint is [region_id, exit_id] and may appear in at most one connection. Edge/edge pairs are normally opposite sides (N↔S, E↔W); teleporter endpoints need not be grid neighbours.",
+          "description": "Pairings of exits. Each endpoint is [region_id, exit_id] and may appear in at most one connection. Edge/edge pairs are normally opposite sides (N↔S, E↔W); teleporter endpoints need not be grid neighbours. A connection is UNDIRECTED unless one_way is true.",
           "items": {
             "type": "object",
             "required": ["from", "to"],
+            "additionalProperties": false,
             "properties": {
               "from": { "$ref": "#/$defs/exitRef" },
-              "to": { "$ref": "#/$defs/exitRef" }
+              "to": { "$ref": "#/$defs/exitRef" },
+              "one_way": {
+                "type": "boolean",
+                "description": "TRUE = traversable from -> to only; the reverse edge is not implied. Read by regionAtlasCompiler.js (the AP projection emits one exit instead of two). Games whose transition primitive is a one-way jump write it on every connection (Seedling: all 312). ABSENT means undirected — the format's own default, and the only one an atlas written before R7 could have meant."
+              }
             }
           }
         }

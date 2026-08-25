@@ -23,7 +23,8 @@ import {
 } from '../mazeRoom/mazeRoomEngine.js';
 import { isObstacleCleared } from '../shared/procgen/library.js';
 import { stringifyRulesJson } from '../shared/rulesJsonBuilder.js';
-import { rulesJsonSchemaErrors } from '../runnerDemo/ruleSchemaCheck.js';
+import { rulesJsonSchemaErrors } from '../procgenCore/jsonSchemaCheck.js';
+import { loadRulesSchema } from '../procgenCore/jsonSchemaFiles.js';
 import { seedlingMazeProjectionDeps } from '../flashPanel/seedlingAtlasAnalysis.js';
 import { compileRegionAtlas } from './regionAtlasCompiler.js';
 import {
@@ -706,7 +707,7 @@ describe('the real Seedling starter atlas as a maze world', () => {
     });
 
     it('compiles to a schema-valid rules.json', () => {
-        expect(rulesJsonSchemaErrors(rules)).toEqual([]);
+        expect(rulesJsonSchemaErrors(rules, loadRulesSchema())).toEqual([]);
     });
 
     it('the COMMITTED seedling_atlas_maze preset is exactly what the atlas compiles to', () => {

@@ -2,7 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { doubleGap, oneWay } from './fixtures.js';
 import { assignSidePortals, makeExtractZoneRules } from './zoneRules.js';
 import { RUNNER_OBSTACLE_ID_BY_ABILITY } from './apRules.js';
-import { loadRulesSchema, ruleSchemaErrors } from './ruleSchemaCheck.js';
+import { ruleSchemaErrors } from '../procgenCore/jsonSchemaCheck.js';
+import { loadRulesSchema } from '../procgenCore/jsonSchemaFiles.js';
 
 // Phase 6 (plan §4.6): the zone-locations channel hook the phase-7
 // registry entry hands the pipeline. Fixture zones cover the single-exit

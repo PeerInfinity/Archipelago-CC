@@ -18,7 +18,8 @@ import { fileURLToPath } from 'node:url';
 import { describe, it, expect } from 'vitest';
 
 import { stringifyRulesJson } from '../shared/rulesJsonBuilder.js';
-import { rulesJsonSchemaErrors } from '../runnerDemo/ruleSchemaCheck.js';
+import { rulesJsonSchemaErrors } from '../procgenCore/jsonSchemaCheck.js';
+import { loadRulesSchema } from '../procgenCore/jsonSchemaFiles.js';
 import { apRegionName, stampAtlasIdentity } from './regionAtlasValidator.js';
 import {
     compileRegionAtlas,
@@ -419,11 +420,11 @@ describe('projection 3 — play-time sidecars (Phase 4)', () => {
 
 describe('schema conformance', () => {
     it('the fixture compiles to a schema-valid rules.json', () => {
-        expect(rulesJsonSchemaErrors(compileFixture().rules)).toEqual([]);
+        expect(rulesJsonSchemaErrors(compileFixture().rules, loadRulesSchema())).toEqual([]);
     });
 
     it('the starter atlas compiles to a schema-valid rules.json', () => {
-        expect(rulesJsonSchemaErrors(compileStarter().rules)).toEqual([]);
+        expect(rulesJsonSchemaErrors(compileStarter().rules, loadRulesSchema())).toEqual([]);
     });
 
     it('every emitted exit and location carries the keys the schema requires', () => {
