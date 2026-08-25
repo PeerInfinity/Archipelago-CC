@@ -14525,3 +14525,57 @@ campaign chain is two ticks shorter than the superseded column and the other
 chain twelve longer. Every one of those numbers is still the model's own word:
 the byte check re-solves each segment from its committed boot and never drives
 it, and only the recording pass will let the game answer.
+
+⛓⛔ R9's re-run of that recording pass got most of the way and then met a
+second parting, on a chain the first attempt had never reached. The campaign
+chain is now re-recorded end to end: ten tapes re-authored to the re-measured
+table's numbers exactly, and — the thing the previous attempt died for want of
+— every one of its fifteen boundary latches asked of the game and answered
+CALM, the return leg among them, at the tick count the corrected model
+predicted. The room whose plan turned out not to be a walk at all now crosses,
+on the game's own word, and lands where the model says it lands with the player
+at rest.
+
+⛔ The other chain stopped. Its middle segment's re-solved walk parts from the
+game at the seventeenth tick, and the parting is the same mechanism as the
+previous slice's with the sign reversed: the model buys a dash from a standstill
+worth walk speed plus the impulse, and the game buys nothing at all. The game
+then holds one position — to the pixel, on integer coordinates, with a direction
+key held and no damage taken — for twenty-eight ticks, drifts west on fractional
+coordinates that read as contact with something moving, and leaves by the
+teleporter back to the room it came from. The model's dead-frame ledger for that
+walk has no entry there at all, so this is not a mispriced dash: it is a state
+the model does not represent. Two eliminations narrow it — the player's own
+freeze routine has exactly one caller in the whole game and that projectile does
+not exist in this room, and the boss's knockback is an empty override, so
+nothing priced against its body moves it. A solid signpost and a teleporter sit
+close enough to be candidates and the geometry does not quite close on either,
+which is recorded as an open question rather than fitted to. Twenty-eight
+matches no constant in the model.
+
+⛓ A smaller parting was measured on the campaign chain and attributed without a
+single browser run. One clock row disagrees by one frame, and the tape is not
+the side that is wrong: it carries the game's own reading. The model's
+dead-frame count sits one below the game's on every segment measured, and that
+offset is exactly what makes the successor-clock arithmetic land on the declared
+value; on the one segment that collects the sword it does not, so the
+cancellation fails. Three cached recordings of that segment settle it — the
+game spent one more frame under the old walk than under the new one, and the
+model spends the same number for both. The obvious explanation was tested
+against the two tapes and refuted, and it is recorded as a dead hypothesis so
+the next session does not spend it again.
+
+⛓ The pipeline itself gained four fixes, all of them tape-inert and all of them
+found by running the thing rather than reading it. Its accounting now reaches a
+chain's headline, which had been reported by its own producer and thrown away
+for not being a segment — a two-thousand-tick tape with no row anywhere. The
+producer that owns the shield room learned to report its walk, without which
+that room's re-record had no path into the licence at all. The recording pass
+now selects its set from the bytes the game would be handed, before and after
+the run, rather than from which boots the write pass happened to touch: the
+older selection would have recorded eight tapes where thirteen were owed, and
+the five it could not see were each a chain's first mover, whose boot is
+upstream of its own move and therefore never changes. And the licensed producers
+now run in the order the chains require rather than the order the file system
+lists them, which the first cascade exposed by driving the game for the latch of
+a tape the same run was about to replace.

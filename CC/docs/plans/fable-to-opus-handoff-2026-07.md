@@ -4440,6 +4440,59 @@ is LIFTED. Licences per segment unchanged (⚖ 35(c)/41 for the flip's, ⚖ 46/4
 for the economies'), except that the two `r8-d2-*` rows are now separable.
 ⛔ **123 is still L14's certified number and 108 is not.**
 
+⛓⛔ **R9 SLICE 12e′ RE-RUN — THE CAMPAIGN CHAIN IS RE-RECORDED AND GAME-CALM;
+THE `r8-d2` CHAIN IS A SECOND STOP, 2026-08-25** (kickoff §35). ⚖ **RULING 51
+(user): *"We will need to fix the freeze. We can start a new session for this.
+We can leave the chain incomplete until this is fixed."*** ⇒ the ONE-SERIES LAW
+stands, the WHOLE series stays PARKED on local `r9/re-record-attempt-3`
+@`8078cd3d7` (never pushed), **a campaign-only push is NOT authorised**, and the
+freeze is **12e‴ — its own session, AHEAD of L15 `shove`.**
+
+⛓ **WHAT LANDED, AND IT IS THE HEADLINE EVEN INSIDE A STOP.** The campaign
+chain's re-record is COMPLETE: ten tapes re-authored to **(D′) to the digit**
+(`r8-solve-10` 78 · `r8-solve-11` 84 · `r8-solve-18` 410 · `r8-solve-20` 229 ·
+`r9-solve-11` 97 · `r9-solve-3` **152** · `r9-solve-2` 23 · `r9-solve-0` 145 ·
+`r9-solve-13` 36 · `r9-solve-14` **118**; chain **3326**), and **every one of
+its fifteen boundary latches is CALM IN THE GAME** — `r9-solve-3` among them,
+`latch.tick 152 · level 2 · (48, 80) · v=(0,0)`, against 12e′'s level 3,
+(81.25, 33.20), v=(−0.951, −0.618). 12e″'s ordering fix is confirmed on the
+exact segment that stopped the last attempt.
+
+⛔ **THE STOP.** `r8-d2-19`'s 708-t walk parts from the game at **t=17**: the
+MODEL buys a from-rest dash of **+2.800** (`WALK_SPEED + SLASH_DASH_FORCE`) and
+the GAME buys **0.000** — 12e′'s sign INVERTED. The game then holds exactly
+(66.000, 152.000) for **28 ticks**, `right` held, 0 hits, drifts west on
+fractional coordinates and leaves by L19's teleporter into **L18**. The model's
+ledger has NO span there. ⛓ Measured TWICE, on two different predecessors
+(stale 541-t and correct 410-t `r8-solve-18`), same answer to the digit — so the
+pipeline's ordering defect was real and was never this cause. ⛓ ⚖ 51(c): this is
+a **MODEL FEATURE, not a tape retirement** — `r8-d2-19` is already
+solver-authored. Two eliminations with lines (`Player.freeze` has ONE caller,
+`IceTurretBlast.as:52`; `ShieldBoss.knockback` is an EMPTY override), one
+candidate whose arithmetic does NOT close (a solid Sign, `NPC.as:59`), and
+**28 names nothing**. Kit for 12e‴ in kickoff §35.7a.
+
+⛔ **A SECOND, SMALLER PARTING, ATTRIBUTED WITH NO BROWSER**: one clock frame at
+`r8-solve-10 → r9-solve-11`. The tape is RIGHT (it carries the game's
+`beginEntry.save.time − BOOT_PRESWAP_FRAMES`); the invariant
+`gameDead = modelDead + 1` holds on twelve segments and fails only on the one
+with a walk-dependent span. Three cached latches settle it: the GAME spent
+**192** under the old 90-t walk and **191** under the new 78-t one; the model
+says 191 for both. The obvious hypothesis was tested against the tapes and
+REFUTED, and is recorded as dead.
+
+⛓ **FOUR TAPE-INERT PIPELINE FIXES SHIPPED TO `main`** (`99da909a0..989d385ab`
++ `f4b3ff9d6`): the accounting reaches a chain's HEADLINE (`r8-d2`, 2186 t, had
+a row in its producer's report and none in the table); `solve-seedling-r8-d2`
+reports its walk (without it `r8-solve-20` had no path into the licence at all,
+and its `--check` md5 is byte-identical with the flag absent); **S3's record set
+is the game-visible PROJECTION DIFF, not `s2.wrote`** — which would have
+recorded EIGHT where THIRTEEN are owed, the five it cannot see each being a
+chain's first mover; and the licensed producers run in the **chains' order**,
+not the file system's. Unfiltered vitest **353/11,031 ALL PASS** (+18 then +5,
+every row named; two `canRun` rows came back STARVED at load 8.88 and are
+**53/53 solo**); `standing-values --check` ALL CHECKS PASSED, nothing moved.
+
 ⛓⛓⛓ **R9 SLICE 12e″ SHIPPED 2026-08-25 — THE GAME'S OWN WITHIN-TICK ORDER IS
 THE MODEL'S NOW, AND THE GAME SAID SO** (kickoff §34). `main` @ six commits;
 roster **148 → 149**; ⚖ 50's witness spent, ⚖ 49 + its extension still LICENSED
