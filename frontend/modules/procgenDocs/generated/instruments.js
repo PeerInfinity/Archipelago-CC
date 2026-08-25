@@ -48,8 +48,8 @@ export const INSTRUMENTS = frz({
             "id": "census"
         },
         {
-            "browser": 21,
-            "count": 27,
+            "browser": 22,
+            "count": 28,
             "id": "check"
         },
         {
@@ -114,7 +114,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 2,
+            "count": 3,
             "id": "no prefix"
         },
         {
@@ -204,13 +204,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 233,
-        "browser": 75,
-        "cited": 80,
-        "files": 252,
+        "blockStyle": 235,
+        "browser": 76,
+        "cited": 82,
+        "files": 254,
         "lineStyle": 19,
-        "withDocblock": 252,
-        "withFlags": 156
+        "withDocblock": 254,
+        "withFlags": 157
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -1046,6 +1046,29 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "check-maze-lab — THE CONSTRUCTIVE-MODE SLICE 3 ACCEPTANCE ROW.",
             "path": "scripts/procgen/check-maze-lab.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host"
+            ],
+            "file": "check-preset-bundle-load.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                }
+            ],
+            "oneLiner": "check-preset-bundle-load — **THE MAIN APP OPENS A BUNDLE AND A `.json.gz`.**",
+            "path": "scripts/procgen/check-preset-bundle-load.mjs"
         },
         {
             "argvHelpers": [
@@ -2058,7 +2081,9 @@ export const INSTRUMENTS = frz({
             ],
             "browser": false,
             "category": "export",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/architecture.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [
                 "out-dir",
@@ -2082,6 +2107,12 @@ export const INSTRUMENTS = frz({
                 },
                 {
                     "how": [
+                        "has"
+                    ],
+                    "name": "bundle"
+                },
+                {
+                    "how": [
                         "num"
                     ],
                     "name": "count"
@@ -2091,6 +2122,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "exits"
+                },
+                {
+                    "how": [
+                        "has"
+                    ],
+                    "name": "minify"
                 },
                 {
                     "how": [
@@ -2841,6 +2878,20 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "lint-gate-labels — **A CHECK'S LABEL, OR A TEST'S NAME, THAT CARRIES A NUMBER THE SAME CHECK ALREADY COMPUTES** (R9 slice 12e, ⚖ ruling 38 item (4b); traps 572 and 573).",
             "path": "scripts/procgen/lint-gate-labels.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "no prefix",
+            "citedBy": [
+                "docs/json/developer/procgen/architecture.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "loadJSZipNode.mjs",
+            "flags": [],
+            "oneLiner": "⛓⛓ **THE VENDORED JSZip, IN NODE — ONE IMPLEMENTATION, TWO ENVIRONMENTS.**",
+            "path": "scripts/procgen/loadJSZipNode.mjs"
         },
         {
             "argvHelpers": [],

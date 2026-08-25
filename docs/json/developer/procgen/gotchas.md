@@ -448,6 +448,69 @@ cross-reference-bearing elements and no geometry. The index door
 that reason, and the equality row over the vanilla 116 — three arms, one of them
 the disk `.oel` files — is what makes the two readers one index.
 
+## A gunzip keyed on a NAME or a HEADER double-decodes a file that was never gzipped
+
+GitHub Pages serves this repo's presets `content-encoding: gzip` — measured:
+`presets/seedling_playthrough/AP_1/AP_1_rules.json` is 806,703 B on disk and
+**43,140 B** on the wire. The browser has ALREADY decoded that before any of our
+code sees it, so `response.headers.get('content-encoding') === 'gzip'` is TRUE of
+a response whose body is plain JSON. A gunzip keyed on that header — or on a
+`.gz` in the name, for a server that decoded transparently — throws on bytes that
+are perfectly fine.
+
+⇒ `gunzipIfNeeded` sniffs the **`1f 8b` magic** and nothing else. Bytes that
+start `{` pass through untouched, which is why running it twice is a no-op and
+why the `-arm` row loads the plain `.json` through the same seam as a control.
+
+⚠ The same measurement is the reason **no committed preset is gzipped**. The wire
+already saves 95% of it; a committed `.gz` would buy roughly nothing, and it
+would break the sphere-log sidecar derivation, which keys on `_rules.json`
+(`deriveSphereLogPath` strips a trailing `.gz` before the suffix test — without
+that strip, `AP_1_rules.json.gz` derives
+`AP_1_rules.json.gz_sphere_log.jsonl` from the error branch, logging about a
+missing extension rather than about the sidecar).
+
+## `json.dumps(indent=0)` is not minified, and the Python mirror is not byte-identical to the JS writer
+
+Two separate facts, both measured, both about `exporter.py`'s
+`_dump_with_compact_sidecar_tiles` and its JS twin `stringifyRulesJson`:
+
+1. **`indent=0` differs by language.** `JSON.stringify(obj, null, 0)` is minified;
+   `json.dumps(obj, indent=0)` still emits a newline before every element and a
+   space after every colon. The exporter maps 0 to `separators=(',', ':')` for
+   exactly this reason — a `rules_json_indent: 0` that used `indent=0` literally
+   would produce a file that is neither indented nor minified.
+
+2. **⚠ The two writers already disagree on sidecar tiles, and this is NOT fixed.**
+   The docstring says the Python helper "mirrors `stringifyRulesJson` … so files
+   written here look the same as files downloaded from the procgen panel". It
+   does not: the spliced tiles array is `json.dumps(tiles)` → `[0, 0, 0]` in
+   Python and `[0,0,0]` in JS. Measured on `jta_mixed_test/AP_1`: 3,189 B from
+   Python vs 3,142 B from JS. Separately, Python escapes non-ASCII (`\u00a7`)
+   where JS emits `§` — a 70-byte delta on `seedling_playthrough/AP_1`. Both are
+   one-line fixes (`separators=(',', ':')` on the spliced dump; `ensure_ascii=False`)
+   and both would move committed bytes across the byte-pinned preset corpus, so
+   neither is anybody's to make casually. A true sentence in a docstring about
+   the wrong subject.
+
+## A container that carried everything derivable from its own contents would describe itself
+
+A `.zip` bundle's members are the four DOCUMENTS (`rules`, `level-set`,
+`overlay`, `region-atlas`) and nothing else. Two things that look like they
+belong and do not:
+
+- **`.chunks.json` is DELIVERY** — how a set too large for one response is
+  shipped. `readBundle` refuses one BY NAME rather than ignoring it, because a
+  half-delivered set silently ignored looks exactly like a whole one.
+- **`.ap-invalidation.json` is a DERIVED table** — `apMappingInvalidation`
+  rebuilds it from the set, and its own `reason` field says so. It travels as a
+  named EXTRA (reported in `notes`), never as a member; `classifyDocument`
+  returns null for it, which is the honest answer.
+
+Two members of one kind refuse by name too: a container with two level sets has
+no answer to "which set is this", and taking the first would be an answer the
+reader invented.
+
 ## Related documentation
 
 - [Architecture](./architecture.md)

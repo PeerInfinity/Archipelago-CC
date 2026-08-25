@@ -84,9 +84,9 @@ Headless equivalents of everything the pages do live in `scripts/procgen/`. The 
 
 <!-- GENERATED:procgen-instruments BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**252 instruments** live in `scripts/procgen/`, by prefix: `probe-` 60 (22 browser) · `verify-` 49 (30 browser) · `plan-` 36 (1 browser) · `check-` 27 (21 browser) · `census-` 12 · `solve-` 7 · `dump-` 6 · `sweep-` 6 · `make-` 5 · `recon-` 5 · `region-` 5 · `generate-` 4 · `extract-` 3 · `attribute-` 2 · `audit-` 2 · `export-` 2 (1 browser) · no prefix 2 · `batch-` 1 · `build-` 1 · `ci-` 1 · `derive-` 1 · `find-` 1 · `harvest-` 1 · `lint-` 1 · `measure-` 1 · `mine-` 1 · `prove-` 1 · `reach-` 1 · `record-` 1 · `rerecord-` 1 · `run-` 1 · `seedling-` 1 · `show-` 1 · `stamp-` 1 · `standing-` 1 · `survey-` 1.
+**254 instruments** live in `scripts/procgen/`, by prefix: `probe-` 60 (22 browser) · `verify-` 49 (30 browser) · `plan-` 36 (1 browser) · `check-` 28 (22 browser) · `census-` 12 · `solve-` 7 · `dump-` 6 · `sweep-` 6 · `make-` 5 · `recon-` 5 · `region-` 5 · `generate-` 4 · `extract-` 3 · no prefix 3 · `attribute-` 2 · `audit-` 2 · `export-` 2 (1 browser) · `batch-` 1 · `build-` 1 · `ci-` 1 · `derive-` 1 · `find-` 1 · `harvest-` 1 · `lint-` 1 · `measure-` 1 · `mine-` 1 · `prove-` 1 · `reach-` 1 · `record-` 1 · `rerecord-` 1 · `run-` 1 · `seedling-` 1 · `show-` 1 · `stamp-` 1 · `standing-` 1 · `survey-` 1.
 
-75 of them drive a real browser; 156 accept at least one `--flag`; 80 are cited by one of these documents; and 0 open with no comment at all.
+76 of them drive a real browser; 157 accept at least one `--flag`; 82 are cited by one of these documents; and 0 open with no comment at all.
 
 One row each — the one-liner from the file's own docblock, the flags it reads out of `argv`, whether it needs a browser, and which document cites it — is on the [reference page](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/reference.html#section-instruments), which can filter them.
 
@@ -502,6 +502,40 @@ Download also hands the set back with an edited room's XML replaced and the iden
 **The id rule.** `genEdit*` is a control both arms mount (the `gen` prefix is history — free editing lived inside `#generatePanel` before the split); `edit*` is a control only the edit arm has, i.e. one inside `#editOnly`. `check-seedling-editor-arm.mjs` asserts the rule over the live DOM rather than against a list, so a control added under the wrong prefix reddens instead of quietly making the name a lie.
 
 **The round trip, over all 116 shipped rooms.** `record → recordToOel → parseOelLevel → record` is a value fixed point 116 of 116, and parsing the DISK OEL reproduces the committed atlas record 116 of 116 — that second arm is the one with an independent source in it, and it is what keeps the first from being two implementations agreeing about the same mistake. Byte identity against the disk file is a MEASUREMENT and not an assertion: 0 of 116 exact, 64 of 116 modulo a trailing newline, with exactly three difference classes — the newline this writer adds and Ogmo does not, the out-of-rectangle tiles the extract discards in 51 rooms, and one room whose raw `>` inside an attribute value this writer escapes.
+
+## Bundles
+
+The single `rules.json` is **canonical** and always loadable. A **bundle** is an optional ZIP whose members are exactly the documents this repo already writes — no new format and no manifest, because a manifest would be a second description of four self-describing documents and the two would disagree the first time somebody edited one.
+
+| Kind | What it is | How it is recognized |
+|------|------------|----------------------|
+| `rules` | a `rules.json` | `schema_version === 3` and `regions` is an object |
+| `level-set` | a Seedling level set | `rooms` is an **array** (positions are ids) |
+| `overlay` | the set's rule/location overlay | an `overlay_id`, or `rooms` keyed **by index** |
+| `region-atlas` | a region atlas | an `atlas_id` and `regions[].region_id` |
+
+`frontend/modules/presets/documentBundle.js` is the whole container. `classifyDocument` is the ONE classifier — `watchViewer`'s `sniffLoadBox` delegates to it, so the LOAD box and the bundle reader cannot drift — and the kind is derived from the **document**, never from the entry name, which is why a renamed member still reads back. `writeBundle` is deterministic: fixed entry order by kind, a fixed DOS-epoch mtime (the date does reach the bytes, and JSZip writes it from UTC getters, so this is stable across machines and timezones), and the rules member through `stringifyRulesJson` so the tile-array splice survives.
+
+**What is refused, and what is merely named.** Two members of one kind refuse by name — a container with two level sets has no answer to "which set is this", and picking the first would be an answer the reader invented. A `.chunks.json` member refuses by name too: chunking is DELIVERY (how a set too large for one response is shipped), not a document anybody authored. An unclassifiable member is NAMED in `notes` and kept out of `members` — the CLI's `.ap-invalidation.json` companion travels that way, as a named extra rather than a member, because it is a derived table regenerated per set. A member that vanished without a word is indistinguishable from one that was never there.
+
+**Where bundles appear.** `#editDownloadBundle` on `watch.html` (one press, one `.zip`, the same stamp the three-blob press writes — a fourth way to press, not a fourth stamp); `#editLoadFile` on the same page, which sniffs the FIRST TWO BYTES (`50 4b` for a zip, `1f 8b` for gzip) rather than the extension; the main app's preset file input, which loads the `rules` member and names the siblings it walked past; and `export-seedling-level-set.mjs --bundle`, which writes one beside the plain files and leaves STDOUT — the determinism channel — untouched.
+
+JSZip is **injected**, never imported: `frontend/libs/jszip/jszip.min.js` is a vendored UMD script, so a page injects it (`loadJSZipBrowser`) and node evaluates it (`scripts/procgen/loadJSZipNode.mjs`). ⛔ `createRequire` cannot load it — the root `package.json` is `"type": "module"`, so node's resolver calls the UMD an ES module and refuses. That is why the loader evaluates the same vendored bytes the browser runs, rather than the repo gaining a second zip implementation.
+
+## Minify, and gzip
+
+`stringifyRulesJson(doc, {indent})` has had an `indent` parameter since it was written and no caller ever passed one. It is a setting now, declared once and mirrored on both sides:
+
+- **Frontend** — `rulesJson.indent`, a top-level `settingsManager` scope (the schema is the default source; it is declared in `documentBundle.js` and registered by `app/core/coreSettingsSchemas.js`, so `watch.html` — which has no settingsManager at all — reads the same default without any of `app/core`). The `#editMinify` box on that page is its read.
+- **Python** — `json_tools.rules_json_indent`, mirrored in the installer's `ExportSettings`; `exporter.py`'s write site reads it instead of a literal `indent=2`.
+
+⛔ **The default does not move.** Every committed `*_rules.json` is byte pinned (29 byte-identity dumps, `test_schema_validation.py`, every `--check`), so `indent: 0` is only ever what a person asked for, per output.
+
+⚠ **`json.dumps(obj, indent=0)` is NOT minified in Python** — it emits a newline before every element — while JavaScript's `JSON.stringify(obj, null, 0)` is. The exporter maps 0 to `separators=(',', ':')`; the two writers would otherwise disagree about what "minify" means. On `seedling_playthrough/AP_1`: 806,684 B at indent 2 → 362,912 B at indent 0 (45.0%).
+
+**Gzip is a LOADER seam, not a delivery optimization.** `gunzipIfNeeded` sniffs the `1f 8b` MAGIC — never a name, never a `content-encoding` header — because a wire-gzipped response has ALREADY been decoded by the browser and a header-keyed gunzip would double-decode a file that was never a `.gz`. It is one path, feature-detected on `DecompressionStream`, which is native in both browsers and node ≥ 18.
+
+⛔ **No committed preset is gzipped, and none should be.** GitHub Pages already gzips on the wire: `presets/seedling_playthrough/AP_1/AP_1_rules.json` is 806,703 B on disk and **43,140 B** with `Accept-Encoding: gzip` (`preset_files.json`: 242,329 → 9,668). A committed `.gz` would buy roughly nothing and cost a decode. The seam exists so a `.json.gz` somebody else hands you loads.
 
 ## Determinism and verification
 
