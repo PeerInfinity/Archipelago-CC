@@ -285,6 +285,77 @@ export function cascadeFrom(chains, moved) {
 }
 
 /**
+ * ⛓⛓⛓ R9 SLICE 12e′ RE-RUN — **THE ORDER THE LICENSED PRODUCERS MUST RUN IN,
+ * AND IT IS A DERIVATION FROM THE CHAINS RATHER THAN A LIST.**
+ *
+ * ⛔ THE DEFECT THIS EXISTS FOR, MEASURED. `spendWalkLicence` ran the licensed
+ * producers in SORTED FILE ORDER. `r8-solve-18` is the FIRST segment of the
+ * `r8-d2` chain and is owned by `solve-seedling-r8-l18.mjs`; the rest of that
+ * chain is owned by `solve-seedling-r8-d2-chain.mjs` — which sorts EARLIER. So
+ * the chain producer ran first, drove the game for the latch of the tape the
+ * series was about to replace (the committed 541-tick `r8-solve-18`, observed
+ * as `REPLAY_OK ticks=542`), and solved `r8-d2-19` from a predecessor that no
+ * longer exists. It then reported that the headline's first 541 ticks were not
+ * its segment's walk — a true statement about a stale artifact.
+ *
+ * ⛓ THE RULE IS THE CHAIN'S OWN SHAPE. A producer solves segment k from
+ * segment k−1's MEASURED LATCH, so every producer owning a segment EARLIER in
+ * a chain must finish before a producer owning a later one. Nothing about
+ * "promotion" is named here: a promoted segment is simply one whose owner is a
+ * different producer, and the edge falls out of the indices.
+ *
+ * ⛔ EDGES ARE DROPPED, NEVER INVENTED, FOR A PRODUCER THAT IS NOT RUNNING. A
+ * predecessor whose walk did not move is not re-authored, so its tape is
+ * already final and it constrains nothing.
+ *
+ * ⛔ A CYCLE REFUSES BY NAME. Two chains that order the same pair of producers
+ * oppositely cannot both be satisfied, and picking one silently would make the
+ * run's answer depend on which chain was declared first.
+ *
+ * @param {object[]} rows `reportRows`' rows — every chain segment with its
+ *   owner, in chain order (NOT just the movers).
+ * @param {string[]} running the producer files the licence will actually run
+ * @returns {string[]} the same set, in an order every chain agrees with; ties
+ *   broken by name so the run is reproducible.
+ */
+export function producerOrder(rows, running) {
+    const set = new Set(running);
+    const before = new Map([...set].map((f) => [f, new Set()]));
+    const byChain = new Map();
+    for (const r of rows) {
+        if (!r.producer || !set.has(r.producer)) continue;
+        if (!byChain.has(r.chain)) byChain.set(r.chain, []);
+        byChain.get(r.chain).push(r);
+    }
+    for (const chainRows of byChain.values()) {
+        const ordered = [...chainRows].sort((a, b) => a.index - b.index);
+        for (let i = 0; i < ordered.length; i += 1) {
+            for (let j = i + 1; j < ordered.length; j += 1) {
+                const earlier = ordered[i].producer;
+                const later = ordered[j].producer;
+                if (earlier !== later) before.get(later).add(earlier);
+            }
+        }
+    }
+    const out = [];
+    const done = new Set();
+    while (out.length < set.size) {
+        const ready = [...set].filter((f) => !done.has(f)
+            && [...before.get(f)].every((d) => done.has(d))).sort();
+        if (!ready.length) {
+            const stuck = [...set].filter((f) => !done.has(f)).sort();
+            fail('producerOrder: the chains order these producers in a CYCLE — '
+                + `${stuck.map((f) => `${f} after [${[...before.get(f)].sort().join(', ')}]`)
+                    .join('; ')}. A producer solves each segment from its predecessor's `
+                + 'latch, so a cycle means two chains disagree about which tape is final '
+                + 'first, and picking one would make the run depend on declaration order.');
+        }
+        for (const f of ready) { out.push(f); done.add(f); }
+    }
+    return out;
+}
+
+/**
  * The licence, read off argv.
  *
  * ⛔ REFUSED BY NAME WITHOUT A RULING ID. The whole value of the flag is that

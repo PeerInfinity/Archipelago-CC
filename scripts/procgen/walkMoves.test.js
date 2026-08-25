@@ -16,7 +16,7 @@ import { PLAYTHROUGH_CHAINS } from '../../frontend/modules/seedlingDemo/playthro
 import { buildInstruments } from './reference/instruments.mjs';
 import {
     LICENSE_FLAG, applyLicence, cascadeFrom, licenceFrom, movedSegments, nominateOwners,
-    participationOf, reportRows,
+    participationOf, producerOrder, reportRows,
 } from './walkMoves.js';
 
 const TAPES = join(process.cwd(), 'frontend/modules/seedlingDemo/fixtures/tapes');
@@ -275,6 +275,74 @@ describe('R9 12e′ RE-RUN: the headline is accounted for, and it never opens a 
         expect(cascadeFrom(chain, movedSegments(r.rows)).get('c')).toEqual({
             firstMove: 0, firstMoveSegment: 's1', successors: ['s2'],
         });
+    });
+});
+
+/**
+ * ⛓⛓⛓ R9 SLICE 12e′ RE-RUN — **THE LICENSED PRODUCERS RUN IN THE ORDER THE
+ * CHAINS REQUIRE, AND A SORTED-FILE ORDER GOT IT WRONG ON THE REAL TREE.**
+ *
+ * Measured 2026-08-25: `spendWalkLicence` sorted by file name, so
+ * `solve-seedling-r8-d2-chain.mjs` ran before `solve-seedling-r8-l18.mjs` —
+ * which OWNS `r8-solve-18`, that chain's FIRST segment. The chain producer
+ * drove the game for the latch of the 541-tick tape the series was about to
+ * replace with a 410-tick one and solved `r8-d2-19` from it.
+ */
+describe('R9 12e′ RE-RUN: the producers run in the CHAINS\' order, not the file system\'s', () => {
+    const row = (chain, index, segment, producer) => ({ chain, index, segment, producer,
+        role: 'segment', verdict: 'walk-moves' });
+
+    it('⛔⛔ on the REAL `r8-d2` shape, `-l18` runs BEFORE `-d2-chain` — and file order does not', () => {
+        // ⛓ The chain and its owners are the tree's own: `r8-solve-18` is
+        //   `r8-d2` segment 0 and belongs to the l18 producer.
+        const c = PLAYTHROUGH_CHAINS.find((x) => x.id === 'r8-d2');
+        expect(c.segments[0]).toBe('r8-solve-18');
+        const rows = [
+            row('r8-d2', 0, 'r8-solve-18', 'solve-seedling-r8-l18.mjs'),
+            row('r8-d2', 1, 'r8-d2-19', 'solve-seedling-r8-d2-chain.mjs'),
+            row('r8-d2', 2, 'r8-d2-20', 'solve-seedling-r8-d2-chain.mjs'),
+        ];
+        const running = ['solve-seedling-r8-d2-chain.mjs', 'solve-seedling-r8-l18.mjs'];
+        expect(producerOrder(rows, running))
+            .toEqual(['solve-seedling-r8-l18.mjs', 'solve-seedling-r8-d2-chain.mjs']);
+        // …and this is the MUTANT stated as a row: the order it replaces is the
+        // sorted one, which puts them the other way round.
+        expect([...running].sort()).toEqual(
+            ['solve-seedling-r8-d2-chain.mjs', 'solve-seedling-r8-l18.mjs']);
+    });
+
+    it('⛓ a producer that is NOT running constrains nothing — the edge is dropped', () => {
+        // Its predecessor's walk did not move, so its tape is already final.
+        const rows = [
+            row('c', 0, 's1', 'first.mjs'),
+            row('c', 1, 's2', 'second.mjs'),
+        ];
+        expect(producerOrder(rows, ['second.mjs'])).toEqual(['second.mjs']);
+    });
+
+    it('⛓ producers no chain orders come back in NAME order, so a run is reproducible', () => {
+        expect(producerOrder([], ['b.mjs', 'a.mjs', 'c.mjs']))
+            .toEqual(['a.mjs', 'b.mjs', 'c.mjs']);
+    });
+
+    it('⛔ two chains that disagree are a CYCLE, refused by name', () => {
+        const rows = [
+            row('one', 0, 's1', 'p.mjs'), row('one', 1, 's2', 'q.mjs'),
+            row('two', 0, 't1', 'q.mjs'), row('two', 1, 't2', 'p.mjs'),
+        ];
+        expect(() => producerOrder(rows, ['p.mjs', 'q.mjs']))
+            .toThrow(/CYCLE.*p\.mjs after \[q\.mjs\].*q\.mjs after \[p\.mjs\]/s);
+    });
+
+    it('⛓ a HEADLINE sits after every segment, so it never re-orders its own producer', () => {
+        const rows = [
+            row('c', 0, 's1', 'first.mjs'),
+            row('c', 1, 's2', 'second.mjs'),
+            { chain: 'c', index: 2, segment: 'c-full', producer: 'second.mjs',
+                role: 'headline', verdict: 'walk-moves' },
+        ];
+        expect(producerOrder(rows, ['first.mjs', 'second.mjs']))
+            .toEqual(['first.mjs', 'second.mjs']);
     });
 });
 

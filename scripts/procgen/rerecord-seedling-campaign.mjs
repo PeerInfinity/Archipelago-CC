@@ -116,7 +116,7 @@ import {
 } from './rerecordCampaign.js';
 import {
     CHECK_FLAG, LICENSE_FLAG, applyLicence, cascadeFrom, licenceFrom, movedSegments,
-    nominateOwners, participationOf, reportRows,
+    nominateOwners, participationOf, producerOrder, reportRows,
 } from './walkMoves.js';
 import { buildInstruments } from './reference/instruments.mjs';
 
@@ -697,11 +697,22 @@ function spendWalkLicence(s0) {
     const licence = s0.walk?.licence ?? null;
     const permitted = licence?.segments ?? [];
     if (!permitted.length) return { ran: [] };
-    const producers = [...new Set(permitted.map((p) => p.producer))].sort();
+    /**
+     * ⛔⛔ **THE ORDER IS THE CHAINS', NOT THE FILE SYSTEM'S** (R9 12e′ re-run).
+     * A sorted-file order ran `solve-seedling-r8-d2-chain.mjs` before
+     * `solve-seedling-r8-l18.mjs`, which OWNS that chain's first segment — so
+     * the chain producer drove the game for the latch of the very tape this
+     * run was about to replace and solved from a predecessor that no longer
+     * exists. `producerOrder` derives the order from the chains' own indices
+     * and refuses a cycle by name.
+     */
+    const producers = producerOrder(s0.walk?.rows ?? [],
+        [...new Set(permitted.map((p) => p.producer))]);
     console.log(`## ⚖ THE WALK LICENCE, SPENT — \`${licence.ruling}\` permits `
         + `${permitted.length} walk move(s): `
         + `${permitted.map((p) => `${p.segment} ${p.before}t->${p.after}t`).join(', ')}`);
-    console.log(`## their producer(s) re-author every tape they own: ${producers.join(', ')}`);
+    console.log('## their producer(s) re-author every tape they own, in the order the '
+        + `CHAINS require: ${producers.join(' -> ')}`);
     const ran = [];
     for (const file of producers) {
         const r = shell(`${file} re-authors its walks under ⚖ ${licence.ruling}`,
@@ -769,10 +780,19 @@ function measure(s0) {
             if (!blockSetChecked) {
                 blockSetChecked = true;
                 const got = Object.keys(segmentBootFromLatch(env)).sort();
-                check('⛓ BOOT_BLOCKS is `segmentBootFromLatch`\'s own key set',
-                    JSON.stringify(got) === JSON.stringify([...BOOT_BLOCKS].sort()),
+                /**
+                 * ⛔ IT TESTS ITS OWN CHECK, NOT THE GLOBAL COUNTER (R9 12e′
+                 * re-run). `if (failures)` here made ANY earlier failure — a
+                 * producer exiting 1, three rows up — throw this message,
+                 * which is a TRUE SENTENCE ABOUT THE WRONG SUBJECT: it named
+                 * the projection while the key sets it had just compared were
+                 * identical, and printed PASS one line above the throw.
+                 */
+                const blockSetOk = JSON.stringify(got)
+                    === JSON.stringify([...BOOT_BLOCKS].sort());
+                check('⛓ BOOT_BLOCKS is `segmentBootFromLatch`\'s own key set', blockSetOk,
                     `${got.join(',')} against ${[...BOOT_BLOCKS].sort().join(',')}`);
-                if (failures) {
+                if (!blockSetOk) {
                     throw new Error('⛔ STOP: the projection authors a block this pipeline '
                         + 'does not write, so every write would be silently partial.');
                 }
