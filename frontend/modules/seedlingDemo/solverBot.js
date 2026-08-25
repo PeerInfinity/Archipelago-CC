@@ -2800,11 +2800,15 @@ function deriveShove(run, row, aim, allowTeleporter, contacts, blocked = []) {
  *     band below the probe line, at the chest's centre column. The band is
  *     the mechanism's own derivation, so the stance cannot drift from the
  *     check.
- *   · a PICKUP's stance is the nearest walkable lattice cell OUTSIDE its
- *     avoid volume, found by ring search (the pickup's own cell is refused
- *     by the planner — kickoff: "a leg that aimed AT the sword would be
- *     refused by name"); `runCollect`'s approach loop drives the last
- *     pixels from there, exactly as it did from a hand-authored stance.
+ *   · a PICKUP's stance is a walkable lattice cell OUTSIDE its avoid volume,
+ *     found by ring search (the pickup's own cell is refused by the planner —
+ *     kickoff: "a leg that aimed AT the sword would be refused by name", and
+ *     ⚖ ruling 46's own measurement is why that refusal STAYS); `runCollect`'s
+ *     approach loop drives the last pixels from there, exactly as it did from
+ *     a hand-authored stance. ⛓ R9 slice 12d′, ⚖ ruling 46: WHICH cell is the
+ *     one the whole errand is cheapest THROUGH — the corridor the walk drives
+ *     plus the line the approach presses — not the one nearest the pickup. See
+ *     the scoring block below for the measurement that moved it.
  */
 function deriveStance(run, resolved, contacts) {
     if (resolved.strategy === 'chest') {
@@ -2910,15 +2914,22 @@ function deriveStance(run, resolved, contacts) {
     const approachOpts = solverPlanOpts(run, contacts, {
         avoidVolumes: false, nodeMargin: 0, triggerMargin: 0,
     });
-    const plans = (from, to, opts) => {
+    /**
+     * ⛓ R9 SLICE 12d′ — `route` IS `plans` WITH ITS ANSWER KEPT. The corridor
+     * is planned either way; throwing the waypoint list away and re-planning it
+     * to measure the walk would be two derivations of one route, which is the
+     * defect this file spends its docblocks refusing. `plans` stays as the
+     * boolean spelling for the callers that only ask a yes/no.
+     */
+    const route = (from, to, opts) => {
         try {
-            planWaypoints(run.world, from, to, null, opts);
-            return true;
+            return planWaypoints(run.world, from, to, null, opts);
         } catch (e) {
             if (!(e instanceof BotDriverV2Error)) throw e;
-            return false;
+            return null;
         }
     };
+    const plans = (from, to, opts) => route(from, to, opts) !== null;
     const canCollectFrom = (c) => plans({ x: c.x, y: c.y }, centre, approachOpts);
     /**
      * ⛓ THREE PASSES, AND THE THIRD IS THE COMMITTED CORE'S OWN ANSWER — so
@@ -2927,11 +2938,85 @@ function deriveStance(run, resolved, contacts) {
      * has no opinion left to offer and the ladder gets the nearest cell, which
      * is exactly what the slice's first half already did.
      */
-    for (const c of candidates) {
-        if (plans(run.state, { x: c.x, y: c.y }, solverPlanOpts(run, contacts))
-            && canCollectFrom(c)) {
-            return { x: c.x, y: c.y, corridor: true };
+    /**
+     * ⛓⛓⛓ R9 SLICE 12d′, ⚖ RULING 46 — **THE STANCE IS THE ONE THE WHOLE
+     * ERRAND IS CHEAPEST THROUGH, NOT THE ONE NEAREST THE PICKUP** (user,
+     * 2026-08-24: *"It first walks around the item to specifically reach the
+     * tile to the north of the item, and then walks one tile south from there.
+     * It should just plan a path directly to the item."*).
+     *
+     * ⛔ THE DETOUR WAS NEVER THE AVOID VOLUME. It is the `(d, y, x)` order
+     * above: among the four cells at `d = 16` the smallest `y` is the NORTH
+     * one, so **north wins every tie whichever side the walk arrives from**.
+     * Measured on `shield@112,48` (L20, centre `(120,56)`, boot state
+     * `(200,72)`): the corridor to the ring stance is FIVE waypoints
+     * `(200,104) → (168,104) → (168,56) → (136,56) → (120,40)` and
+     * `runCollect` then presses 16 px back SOUTH — while `(136,56)` is itself
+     * at `d = 16`, collectable, and ALREADY ON THAT CORRIDOR. On
+     * `sword@48,48` (L10, centre `(56,56)`) the walk is spurious outright: the
+     * stance `(40,56)` costs 30 walk + 11 approach ticks where the BOOT cell
+     * `(56,88)` collects in 24 with no walk at all — 70 t against 53 t.
+     *
+     * ⇒ **THE APPROACH KEEPS ITS RING AND THE WALK BREAKS THE TIE.** Among the
+     * candidates that can collect and that a corridor reaches, take the ones at
+     * the MINIMUM `d` — the shortest approach, exactly the population the
+     * committed core already drove — and among THOSE take the shortest corridor,
+     * then `(y, x)` so the emitted tape stays deterministic.
+     *
+     * ⛔⛔ AND THE `d` TIER IS NOT DECORATION — IT IS A MEASURED SAFETY BOUND,
+     * paid for by a red I caused and then attributed. The first cut of this
+     * scored `walk + d` outright, which on L10 preferred the boot cell at
+     * `d = 32` (70 t → 53 t, real) and on L20 preferred a stance whose straight
+     * approach crosses WATER: `r8-solve-20` refused by name — *"the player
+     * entered Water in level 20 at (158.96, 95.76) on a tape that does not pin
+     * `sound`"*. `canCollectFrom` is a TILE-PATH probe and its own docblock
+     * says it is WEAKER THAN THE DRIVE IT MODELS — it answers "same walkable
+     * component", not "clear line" — so a longer approach is a longer bet on a
+     * question this function cannot ask. The CONTROL: at the same head with
+     * only the dash flip, `r8-solve-20` solves in 267 t through the ring stance
+     * `(120,40)` and its five-waypoint corridor. ⚖ Ruling 35 puts safety over
+     * speed: the detour goes, the approach does not grow. [[feedback_certify_with_what_the_walk_can_have]]
+     *
+     * ⛔⛔ AND THE PICKUP'S OWN CELL STAYS REFUSED — the avoid-volume rule
+     * encodes a GAME FACT, re-measured for this slice rather than inherited.
+     * Every placed `Pickup` subclass is `special` with non-empty text, so
+     * `pick_up()` raises `Game.freezeObjects` and spawns an NPC that only
+     * `Input.released(keys[6])` dismisses (`NPCs/NPC.as:191`); `drive` presses
+     * MOVEMENT keys and has no ceremony cadence. Driving straight at
+     * `sword@48,48`'s centre from `r8-solve-10`'s boot burns the whole
+     * 400-tick budget frozen at `(56,61.65)` with `collected 0` — L89's
+     * feather stall, reproduced on demand. So the ceremony stays
+     * `runCollect`'s, and its approach loop is KEPT: it IS the "path directly
+     * to the item" the ruling asks for.
+     *
+     * ⚠ THE COST IS EXHAUSTIVE SCORING where the old order short-circuited:
+     * every candidate is routed rather than the first one that fits. The
+     * candidate set is bounded by the ring search (≤ 48 cells) and a collect
+     * goal is rare, so this is a planner cost, not a walk cost.
+     */
+    const walkOpts = solverPlanOpts(run, contacts);
+    const pathLength = (from, wps) => {
+        let total = 0;
+        let at = from;
+        for (const wp of wps) {
+            total += Math.hypot(wp.x - at.x, wp.y - at.y);
+            at = wp;
         }
+        return total;
+    };
+    const scored = [];
+    for (const c of candidates) {
+        if (!canCollectFrom(c)) continue;
+        const wps = route(run.state, { x: c.x, y: c.y }, walkOpts);
+        if (wps === null) continue;
+        scored.push({ ...c, walk: pathLength(run.state, wps) });
+    }
+    if (scored.length > 0) {
+        const nearest = Math.min(...scored.map((c) => c.d));
+        const tier = scored.filter((c) => c.d === nearest);
+        tier.sort((a, b) => a.walk - b.walk || a.y - b.y || a.x - b.x);
+        const c = tier[0];
+        return { x: c.x, y: c.y, corridor: true };
     }
     const collectable = candidates.filter(canCollectFrom);
     /**

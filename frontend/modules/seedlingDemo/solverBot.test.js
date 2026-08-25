@@ -46,8 +46,11 @@ import { createLevelRun } from './levelRun.js';
 import { atlasLevelSource } from './levelSource.js';
 import { buildTape } from './botDriverV1.js';
 import { plannerObstacleAt, planWaypoints } from './botDriverV2.js';
+// ⛓ R9 slice 12d′: the chest control derives its band from the mechanism.
+import { chestStanceBand } from './chest.js';
+import { HITBOX } from './playerPhysicsV1.js';
 import {
-    LIVE_GEOMETRY_KEYS, ROLES, isNormalizedLiveOpts, normalizeLiveOpts, rect,
+    LIVE_GEOMETRY_KEYS, ROLES, TILE_SIZE, isNormalizedLiveOpts, normalizeLiveOpts, rect,
 } from './levelWorld.js';
 import { assertEscalationIsOrdered } from './r8Acceptance.js';
 import {
@@ -3081,5 +3084,115 @@ describe('R9 12d″: the touch lean is the mechanism OWN probe', () => {
         const run = at(168.12, 24.44);
         expect(() => STRATEGY_EXECUTORS.touch(run, [], order(run, { tag: 'lock' }),
             { what: 'fixture' })).toThrow(/is a `lock`, and .*carries no PROBE for that class/s);
+    });
+});
+
+/**
+ * ⛓⛓⛓ R9 SLICE 12d′, ⚖ RULING 46 — **THE COLLECT STANCE STOPS WALKING ROUND
+ * THE ITEM**, and the three rows below are the three claims the change makes.
+ *
+ * ⛔ THE RULING'S OWN LETTER IS NOT WHAT SHIPPED, AND THE MEASUREMENT IS WHY.
+ * "Aim at the pickup's centre and drop the avoid-volume refusal" was refuted
+ * on the running code before a line was written: `drive`ing straight at
+ * `sword@48,48`'s centre from `r8-solve-10`'s boot enters the pickup ceremony
+ * and burns its whole budget frozen, `collected 0` — every placed `Pickup`
+ * subclass is `special` with text, `pick_up()` raises `Game.freezeObjects`,
+ * and only `Input.released(keys[6])` pages the NPC (`NPCs/NPC.as:191`), which
+ * `drive` has no cadence for. The avoid volume encodes a GAME FACT and stays;
+ * `runCollect` keeps the approach because the approach IS the direct path.
+ *
+ * What the user saw was the ring search's `(d, y, x)` tie-break: among the
+ * cells at the minimum distance the smallest `y` is the NORTH one, so north
+ * won every tie whichever side the walk came from. The corridor is the tie-
+ * break now.
+ */
+describe('R9 slice 12d′: ⚖ 46 — the collect stance is the one the corridor already reaches', () => {
+    /**
+     * ⛓ L20 IS THE USER'S ROOM, DIGIT FOR DIGIT: *"It first walks around the
+     * item to specifically reach the tile to the north of the item, and then
+     * walks one tile south from there."* `shield@112,48`'s volume is
+     * `[116,124) x [52,60)`, centre `(120,56)`; the walk arrives from the
+     * east. `(120,40)` is the cell due NORTH and `(136,56)` the cell due EAST
+     * — both at distance 16, both collectable — and the corridor passes
+     * THROUGH `(136,56)` on its way to `(120,40)`. So the north stance costs a
+     * whole extra waypoint and then `runCollect` presses back south.
+     *
+     * ⛔ THE CONTROL IS THE PATH, NOT THE TICK COUNT: the tick count moves with
+     * the dash flip (⚖ 41) and this claim is about the PLAN.
+     */
+    it('⛓ the L20 shield stance is the corridor-side cell, and the north cell is not planned', () => {
+        const { run, committed } = runFromCommitted('r8-solve-20');
+        const L20 = levelSource(20);
+        const shield = (L20.entities ?? []).find((e) => e.type === 'shield');
+        const exit = (L20.entities ?? []).find(
+            (e) => e.type === 'stairsdown' && Number(e.attrs.to) === 19);
+        const out = solveSegment({
+            run,
+            goals: [
+                { kind: 'collect-placement', placement: { x: shield.x, y: shield.y } },
+                { kind: 'reach-exit', exit: { x: exit.x, y: exit.y } },
+            ],
+            name: 'r8-solve-20', boot: committed.boot,
+        });
+        const walk = out.trace.rows.find(
+            (r) => r.goal?.kind === 'collect-placement' && r.strategy.verb === 'walk');
+        expect(walk.goal.aim).toEqual({ x: 136, y: 56 });
+        // The last waypoint IS the stance, and the north cell is nowhere in the plan.
+        expect(walk.path[walk.path.length - 1]).toEqual({ x: 136, y: 56 });
+        expect(walk.path).not.toContainEqual({ x: 120, y: 40 });
+        expect(run.inventory.hasShield).toBe(true);
+    });
+
+    /**
+     * ⛓ L10 IS THE SAME MECHANISM SEEN FROM THE SOUTH. `sword@48,48`'s volume
+     * is `[52,60)²`, centre `(56,56)`; the boot leaves the player at `(56,88)`,
+     * due south. `(40,56)` and `(72,56)` are 16 px away and so is `(56,72)`,
+     * which is the one the walk is already heading through — and `(56,40)`,
+     * the north cell, is unreachable (the room's north pocket, which is the
+     * case this ring search was built around in the first place).
+     */
+    it('⛓ the L10 sword stance is the near-side cell, not the one across the volume', () => {
+        const { run, committed } = runFromCommitted('r8-solve-10');
+        const out = solveSegment({
+            run,
+            goals: [
+                { kind: 'collect-placement', placement: { x: 48, y: 48 } },
+                { kind: 'reach-exit', exit: { x: 48, y: 16 } },
+            ],
+            name: 'r8-solve-10', boot: committed.boot,
+        });
+        const walk = out.trace.rows.find(
+            (r) => r.goal?.kind === 'collect-placement' && r.strategy.verb === 'walk');
+        expect(walk.goal.aim).toEqual({ x: 56, y: 72 });
+        expect(run.collected.length).toBe(1);
+        expect(run.inventory.hasSword).toBe(true);
+    });
+
+    /**
+     * ⛔⛔ THE CHEST IS UNTOUCHED, AND IT IS THE GAME'S OWN LINE THAT MAKES IT
+     * A DIFFERENT QUESTION. `Chest.update` opens on `FP.world.collideLine` one
+     * pixel BELOW the bottom edge, inset by 2 (`Chest.as:59-66`) — so a chest's
+     * stance is `chestStanceBand`'s own answer and there is no ring, no tie and
+     * nothing for ⚖ 46 to reorder. The witness is the aim's `y`: 66 is inside
+     * the band and is not a lattice row, which no pickup stance can ever be.
+     */
+    it('⛔ the L11 chest stance is still the band the mechanism derives', () => {
+        const { run, committed } = runFromCommitted('r8-solve-11');
+        const out = solveSegment({
+            run,
+            goals: [
+                { kind: 'collect-placement', placement: { x: 32, y: 48 } },
+                { kind: 'reach-exit', exit: { x: 32, y: 80 } },
+            ],
+            name: 'r8-solve-11', boot: committed.boot,
+        });
+        const walk = out.trace.rows.find(
+            (r) => r.goal?.kind === 'collect-placement' && r.strategy.verb === 'walk');
+        // ⛓ DERIVED, NOT TYPED: the expected stance is the mechanism's own
+        // band at the chest's centre column — the same call `deriveStance`
+        // makes — so a band change moves the test and the code together.
+        const band = chestStanceBand(32, 48, HITBOX);
+        expect(walk.goal.aim).toEqual({ x: 32 + TILE_SIZE / 2, y: band[0] });
+        expect(walk.goal.aim).toEqual({ x: 40, y: 66 });
     });
 });
