@@ -2293,10 +2293,21 @@ try {
 
     /* ── the REPORT on the real game ─────────────────────────────── */
 
+    /**
+     * ⛓ THE REPORT'S COST ON 116 ROOMS IS MEASURED HERE, not tuned. It derives
+     * the atlas and compiles it on the main thread; §22.2 decision 9 says
+     * memoisation is E3's IF the number says so, and this is the number.
+     */
+    const repT0 = Date.now();
     await page.click('#editSetReport');
     await page.waitForFunction((n) => document.querySelectorAll('#editSetReportOut li').length >= n,
         VANILLA_XML_REPORT.rows.length, { timeout: 180000 }).catch(() => {});
+    const repMs = Date.now() - repT0;
     const vanReport = await setRead();
+    check(vanReport.report.length === VANILLA_XML_REPORT.rows.length,
+        `⛓ **THE PAGE'S REPORT IS NODE'S, ROW FOR ROW** — and it took ${repMs} ms on the main `
+        + 'thread for this set, which is the MEASUREMENT §22.2 decision 9 defers memoisation to',
+        `page ${vanReport.report.length} row(s), node ${VANILLA_XML_REPORT.rows.length}`);
     const pageFree = vanReport.report.filter((r) => /^\[free\]/.test(r)).length;
     check(pageFree === VANILLA_XML_FREE.length && pageFree > 0,
         '⛓⛓⛓ **EVERY EDGE OF VANILLA IS FREE, AND THE COUNT IS DERIVED FROM THE COMPILED '
