@@ -13,6 +13,7 @@ import { describe, expect, it } from 'vitest';
 
 import { ENEMY_IFRAMES, KILL_CADENCE_FLOOR } from './combat.js';
 import { rect } from './levelWorld.js';
+import { knockbackImpulse } from './playerPhysicsV2.js';
 import {
     distanceRectPoint,
     HITABLE_TYPES,
@@ -443,6 +444,69 @@ describe('R9 slice 12b: `set slashing` (Player.as:779-804), the whole setter', (
             slashing: true, slashTimer: SLASH_TIMER_MAX - 2, slashDashed: true,
             anim: SLASH_ANIM_DASH,
         });
+    });
+
+    /**
+     * ⛔⛔⛔ R9 SLICE 12e′ — **THE DASH IMPULSE IS READ FROM A ONE-TICK-STALE
+     * VELOCITY, AND THIS ROW PINS THE WRONG ANSWER ON PURPOSE.**
+     *
+     * `levelRun.js` calls this setter with `vx: state.vx, vy: state.vy` — the
+     * velocity the player had ENTERING the tick. The GAME reaches
+     * `useItem(Main.primary)` from inside `input()`, whose movement keys have
+     * ALREADY written `v` this tick (`mobileUpdate` = friction -> input ->
+     * moveX/moveY, `useItem` input's last act). The two agree whenever the
+     * player was already moving, which is every dash on the committed roster —
+     * and they part exactly when a dash press lands AT REST with a direction
+     * key starting the same tick, because `knockbackImpulse`'s faithful
+     * `point_normalize` no-op at zero length then pays NOTHING.
+     *
+     * ⛓ MEASURED, 2026-08-25, against the real game on `r9-solve-3`'s 151-tick
+     * re-solve (R9 kickoff §33): over 22 presses in three driven tapes the
+     * model and the game agree to 0.01 px on every one EXCEPT the two dashes
+     * taken from rest with the direction key starting that tick.
+     *
+     * ⛔ THE EXPECTATION BELOW IS TODAY'S ANSWER AND IT IS THE DEFECT. It is
+     * pinned rather than left red so that the tree stays green and the fix
+     * flips it BY NAME: the slice that hands `set slashing` the post-key
+     * velocity re-states this row, and this row is that slice's mutant.
+     */
+    it('⛔ a dash taken AT REST pays NOTHING — the model reads the PRE-KEY velocity', () => {
+        // The 111-112 press opens the swing; two ticks later the 113 press is
+        // the DASH arm, and `right` starts on that same tick from a standstill.
+        const open = ticks(press(INITIAL_SLASH_STATE).state, 2);
+        const dash = press(open, { direction: 0, vx: 0, vy: 0 });
+        expect(dash.outcome).toBe('dash');
+        expect(dash.state.anim).toBe(SLASH_ANIM_DASH);
+        // ⛔ WRONG, and pinned as such: at rest the impulse is the zero vector.
+        expect(dash.impulse).toEqual({ dvx: 0, dvy: 0 });
+        // ⛓ What the POST-key velocity gives, which is what the game paid: the
+        // direction key has already written v = (+moveSpeed, 0) by the time
+        // `useItem` runs, so the unit vector is (1, 0) and the guard passes.
+        expect(knockbackImpulse(1, 0, SLASH_DASH_FORCE))
+            .toEqual({ dvx: SLASH_DASH_FORCE, dvy: 0 });
+    });
+
+    /**
+     * ⛓⛓ THE SAME DEFECT AS DISPLACEMENT, IN THE GAME'S OWN DIGITS.
+     *
+     * Literals with provenance: both pairs are the first tick after the dash
+     * press, model from `tapeRunner.runTape` and game from the Windows-Chrome
+     * replay of the same game-visible bytes, `r9-solve-3` @151 t, 2026-08-25.
+     * ⛔ The x-axis pair is the clean one — the deficit is `SLASH_DASH_FORCE`
+     * EXACTLY. The y-axis pair has room geometry in it and is carried as a
+     * SECOND witness rather than a second mechanism, which is why only the
+     * first is asserted against the constant.
+     */
+    it('⛓ the displacement the game paid and the model did not — the measured pair', () => {
+        const AT_REST_DASHES = Object.freeze([
+            // t=113, `right` starting, L3 (39.65, 40.45)
+            Object.freeze({ tick: 113, key: 'right', model: 0.80, game: 2.80 }),
+            // t=137, `up` starting, same room, geometry in the y sweep
+            Object.freeze({ tick: 137, key: 'up', model: 0.80, game: 2.45 }),
+        ]);
+        for (const row of AT_REST_DASHES) expect(row.game).toBeGreaterThan(row.model);
+        const [x] = AT_REST_DASHES;
+        expect(x.game - x.model).toBeCloseTo(SLASH_DASH_FORCE, 10);
     });
 
     it('the RELEASE re-arms the dash inside the same timer window — note 3', () => {
