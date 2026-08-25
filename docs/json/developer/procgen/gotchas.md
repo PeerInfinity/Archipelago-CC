@@ -239,6 +239,50 @@ transcribes), and Ogmo does not reliably write every declared value (183 of
 2,461 instances lack one, each of them a value added to the project file after
 that room was last saved).
 
+## NOT-IN-THE-PALETTE and NOT-TRANSCRIBED are two different sets
+
+The generator's palette places five entity types; `Shrum.oep` declares 144; and
+`levelWorld.ENTITY_CLASSES` transcribes 137 of those. So a type can be outside
+the palette and still perfectly buildable by the JS model — `bob` is — and only
+seven declared types (`bobboss1..3`, `building3`, `lightbosstotem`, `fire`,
+`player`) are outside the model. A gate that placed a non-palette type expecting
+the two-oracle bound would assert that bound's ABSENCE under a name that said
+presence. Ask `ENTITY_CLASSES`, never the palette.
+
+## A page control filled by ONE arm is an empty control on the other
+
+`watch.html`'s edit panel is shown for two SOURCE arms. Anything mounted from
+inside one arm's function — the terrain `<select>` was — is empty when the other
+arm shows the same DOM, and it fails as a driver timeout ("did not find some
+options") rather than as a claim. Anything the shared panel needs belongs to the
+shared mount.
+
+## An `editorView` overlay repaint asks the adapter for the record's bounds
+
+`mountEditorView` repaints its selection overlay at MOUNT, and the repaint reads
+`adapter.bounds(session.record())`. So the mount is a CONSUMER of the page's
+state, not a sibling of its controls: mounting it beside the other wiring, before
+the arm has built a record, takes the whole arm down with a `TypeError` on
+`null`. Mount where the state exists.
+
+## A module-level `const` cannot read one declared below it
+
+`watchViewer.js` is 10,000 lines and its constants are grouped by topic, which
+makes it easy to declare a path constant beside its first reader. A second
+module-level `const` that interpolates it then hits a temporal dead zone at LOAD
+— not a hoist — and the page goes blank with one console line. `?.` does not
+help; only ordering does.
+
+## A `MutationObserver` callback is a microtask, and it is handed a LIST
+
+Asserting that one status line was written BEFORE another needs the sequence,
+not the end state. Two synchronous `textContent` writes in one task arrive as two
+records in ONE callback invocation, so a callback that pushes once per invocation
+records one of the two — and reading the element's own `textContent` from inside
+it reads the LAST value for every record, because the element is live by then.
+Push per RECORD and read `addedNodes[0]`: assigning `textContent` replaces the
+node, so the added node carries exactly what was written at that moment.
+
 ## Related documentation
 
 - [Architecture](./architecture.md)

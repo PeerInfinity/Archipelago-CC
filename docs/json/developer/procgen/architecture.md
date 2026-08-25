@@ -84,9 +84,9 @@ Headless equivalents of everything the pages do live in `scripts/procgen/`. The 
 
 <!-- GENERATED:procgen-instruments BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**249 instruments** live in `scripts/procgen/`, by prefix: `probe-` 59 (22 browser) · `verify-` 49 (30 browser) · `plan-` 36 (1 browser) · `check-` 26 (20 browser) · `census-` 12 · `solve-` 7 · `dump-` 6 · `sweep-` 6 · `make-` 5 · `recon-` 5 · `region-` 5 · `generate-` 4 · `extract-` 3 · `attribute-` 2 · `audit-` 2 · `export-` 2 (1 browser) · no prefix 2 · `batch-` 1 · `build-` 1 · `derive-` 1 · `find-` 1 · `harvest-` 1 · `lint-` 1 · `measure-` 1 · `mine-` 1 · `prove-` 1 · `reach-` 1 · `record-` 1 · `rerecord-` 1 · `run-` 1 · `seedling-` 1 · `show-` 1 · `stamp-` 1 · `standing-` 1 · `survey-` 1.
+**250 instruments** live in `scripts/procgen/`, by prefix: `probe-` 59 (22 browser) · `verify-` 49 (30 browser) · `plan-` 36 (1 browser) · `check-` 27 (21 browser) · `census-` 12 · `solve-` 7 · `dump-` 6 · `sweep-` 6 · `make-` 5 · `recon-` 5 · `region-` 5 · `generate-` 4 · `extract-` 3 · `attribute-` 2 · `audit-` 2 · `export-` 2 (1 browser) · no prefix 2 · `batch-` 1 · `build-` 1 · `derive-` 1 · `find-` 1 · `harvest-` 1 · `lint-` 1 · `measure-` 1 · `mine-` 1 · `prove-` 1 · `reach-` 1 · `record-` 1 · `rerecord-` 1 · `run-` 1 · `seedling-` 1 · `show-` 1 · `stamp-` 1 · `standing-` 1 · `survey-` 1.
 
-74 of them drive a real browser; 153 accept at least one `--flag`; 78 are cited by one of these documents; and 0 open with no comment at all.
+75 of them drive a real browser; 154 accept at least one `--flag`; 78 are cited by one of these documents; and 0 open with no comment at all.
 
 One row each — the one-liner from the file's own docblock, the flags it reads out of `argv`, whether it needs a browser, and which document cites it — is on the [reference page](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/reference.html#section-instruments), which can filter them.
 
@@ -224,7 +224,7 @@ what a press on the canvas does. It imports `editCore.js` and nothing else.
 
 It owns four things:
 
-1. **The canvas tool — one `armed` value.** `brush`, `rect`, `paste`, `flood`, or nothing; `Escape` clears it. A page that kept a second "which tool" flag beside it would have two answers to what a click does.
+1. **The canvas tool — one `armed` value.** `brush`, `rect`, `paste`, `flood`, a tool the page brought, or nothing; `Escape` clears it. A page that kept a second "which tool" flag beside it would have two answers to what a click does. A **page tool** is `{id, label, key, at(cell)}` — Seedling's GENERATE arm has a click-to-anchor template gesture that predates this file and is not an edit, and delegating only the editing half would have left two armed states on one canvas. The four remain the vocabulary the view owns; `tool` may also name a gesture the page brought, and whether that gesture is one-shot is decided in its own `at`, not here.
 2. **The stroke is ONE group.** A drag paints every cell it visits, de-duplicated and in visit order, and records ONE `group` — so one undo takes the whole stroke back and `describeOps` reports a history a person can count. The click a browser fires after the release is swallowed, so a single press lands exactly once.
 3. **The command table is the one writer of the key map.** The page supplies `{id, label, key, run}` rows; the view adds the four tools and `Escape`; the keyboard is a VIEW of that list. Two rows claiming one key are refused by name rather than resolved by walk order, and `Ctrl/Cmd+Z` resolves to the page's own `undo` row — there is no private undo behind the page's back.
 4. **The selection overlay, and nothing else.** The substrate is drawn by the page (the one-renderer law); the view creates its own element and draws on it the rectangle a copy is being dragged out of and the paste anchor. Hover stays the page's, or two renderers would answer "which cell is under the pointer".
@@ -238,8 +238,15 @@ printed BEFORE a paste lands), and `say`. Having no `document` and no injected
 painter is a refusal, not a silent skip: a selection rectangle nobody can see
 cannot be told from one nobody dragged.
 
-**Mounted today** on the maze lab page's EDIT arm, on that arm's own lifetime.
-Seedling's page is a later slice.
+`brushOp` has three answers, not two: an op, `null` (nothing armed), or
+`{refused}` — the palette cannot build an op and says why. The third exists
+because Seedling's PLACE brush parses a JSON attributes box, and reporting an
+unparseable box as "no brush is armed" is a true sentence about the wrong
+subject; a throw would be worse, since a substrate-agnostic file cannot tell a
+page's own refusal class from a `TypeError`.
+
+**Mounted today** on the maze lab page's EDIT arm and on `watch.html`'s shared
+edit panel, each on its arm's own lifetime.
 
 ## The Seedling editor's data model (`seedlingDemo/`)
 
@@ -263,6 +270,25 @@ The schema is **injected**, never read by the modules that use it — one `node:
 **The `base` union** (`{kind, …}`, the payload's identity half). Seedling resolves `atlas` — refusing a `set_id` that is not the vanilla set's content hash, in the same shape the game's save stamp refuses a save written against different level bytes — and `oel`, a pasted document through the injected parser. `generate` and `set-room` are members that refuse by name, because "the GENERATE ladder owns that identity" is a more useful sentence than "no such kind".
 
 **The bounds it names.** A paste does not clear the destination's bodies: Seedling has no clear-cell op, `remove` takes one body at a time, and `writeOps` sees a descriptor rather than a record — so a paste onto an empty cell reproduces it exactly and onto an occupied cell it accumulates. And a vanilla record's attributes carry the author's key order while every op path canonicalises to sorted, so an editor that rewrites a vanilla cell re-orders that entity's attributes in the saved OEL: value-inert, byte-visible.
+
+## The Seedling editor on the page (`watch.html`)
+
+`?source=edit` is the page's fifth SOURCE arm, beside REPLAY, SOLVE, MANUAL and GENERATE. It is asked for by name and never inferred: `?level=N` is shared with SOLVE and MANUAL, and a stale link that landed in an editor would be a page that changed what a link meant.
+
+**One edit implementation, two hosts.** The free-editing controls were a `<details>` nested inside `#generatePanel` with every handler a closure in the GENERATE arm. They are `#editPanel` now, shown for both arms, mounted by `seedlingDemo/watchEditor.js` over `procgenCore/editorView.js`. What differs between the arms is the HOST — the object `editorView` applies ops through:
+
+- the EDIT arm's is an `editCore.createEditSession`, so `base, then edits` is the whole identity;
+- the GENERATE arm's is a session-SHAPED object over the ladder's `state`, folding through `watchEdit.editState` exactly as it always did. The GENERATE payload, the `?gen=` replay and every committed fixture are byte-identical across the split because the fold that produces them never moved — not because something compares them afterwards.
+
+**The armed value is the view's, and there is still one of it.** The GENERATE arm's click-to-anchor AT… gesture is registered as a page tool, so the vocabulary is six gestures in one table rather than two kinds in a page-local variable. `armedTemplate` is that gesture's parameter — which template it will place — exactly as the terrain `<select>` is the brush's. The page keeps a second canvas listener for `procgenLab:selectTile`, which fires in every arm and is not an edit; two listeners answering different questions is the maze page's own arrangement.
+
+**The offered vocabulary is the whole `.oep`.** 144 types in the `<datalist>`, grouped by the folder the project file files them under — in each option's label AND as a `<select>` that narrows the SUGGESTIONS, since no engine renders groups inside a datalist. The type field stays a free `<input>`: narrowing what is suggested must never narrow what can be typed, and the op builder is still called WITHOUT a schema so a type Ogmo does not declare still reaches `buildLevelWorld` and refuses with its own construction site. The attribute form is generated from the declaration's own `values` with their declared ranges; it writes the JSON box and re-reads it, and the box stays the one value the op is built from, so an undeclared type still has somewhere to be spelled. **Empty means omitted** — `fillDefaults` is off, for the reason the corpus measurement gives above.
+
+**The page's default place type is a named constant with a checked provenance.** It used to be `ENTITY_ROSTER[0].type`, which made *what the page opens on* and *the order of the offered list* one fact — so widening the list would silently have moved what a browser gate's `place` gesture places. `watchEditor.DEFAULT_PLACE_TYPE` is the first body `procgenPalette` places, and the tie is asserted at import time rather than remembered in a comment.
+
+**The two-oracle bound is displayed and refuses nothing.** `levelWorld.ENTITY_CLASSES` transcribes a subset of the declared types — seven of the 144 are outside it — and a room holding one of those cannot be built by the JS model. The edit lands anyway, the readout names the types, and ▶ load in wasm is the certifier. SOLVE stays offered and the bound says what it will answer: removing the press would remove the page's only way to see `buildLevelWorld`'s own refusal. Note that *not one of the five the generator places* and *not transcribed* are different sets — `bob` is in the first and not the second.
+
+**Launching, loading and saving.** `?source=edit&level=N` resolves an `atlas` base with the vanilla set's `set_id` read off the committed set, so the hash check is a real comparison. The LOAD box sniffs a payload or a raw OEL by SHAPE; a `generate` base is refused by name as the ladder's ("open it from GENERATE"), and a level set as the level-set arm's. Download is the payload and the room as OEL, browser downloads only — the page never writes `fixtures/`. ▶ load in wasm ships the one-room set with a ZERO-INPUT tape and no expectation, because nothing has solved that room and the keyboard drives it. "Open in editor" in GENERATE hands the record and the `base` tag across in memory, with no reload and no edit in the URL: the edits cross AS the record and the tag says how many were already folded in, since handing both would apply them twice.
 
 **The round trip, over all 116 shipped rooms.** `record → recordToOel → parseOelLevel → record` is a value fixed point 116 of 116, and parsing the DISK OEL reproduces the committed atlas record 116 of 116 — that second arm is the one with an independent source in it, and it is what keeps the first from being two implementations agreeing about the same mistake. Byte identity against the disk file is a MEASUREMENT and not an assertion: 0 of 116 exact, 64 of 116 modulo a trailing newline, with exactly three difference classes — the newline this writer adds and Ogmo does not, the out-of-rectangle tiles the extract discards in 51 rooms, and one room whose raw `>` inside an attribute value this writer escapes.
 

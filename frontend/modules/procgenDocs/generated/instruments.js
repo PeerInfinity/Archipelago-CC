@@ -48,8 +48,8 @@ export const INSTRUMENTS = frz({
             "id": "census"
         },
         {
-            "browser": 20,
-            "count": 26,
+            "browser": 21,
+            "count": 27,
             "id": "check"
         },
         {
@@ -199,13 +199,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 230,
-        "browser": 74,
+        "blockStyle": 231,
+        "browser": 75,
         "cited": 78,
-        "files": 249,
+        "files": 250,
         "lineStyle": 19,
-        "withDocblock": 249,
-        "withFlags": 153
+        "withDocblock": 250,
+        "withFlags": 154
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -1172,6 +1172,29 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "check-procgen-reference — **THE REFERENCE PAGE RENDERS WHAT THE GENERATED MODULES HOLD, AND THE MODULES ARE WHAT THE CODE SAYS** (PROCGEN DOCS · P3a, D5).",
             "path": "scripts/procgen/check-procgen-reference.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host"
+            ],
+            "file": "check-seedling-editor-arm.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                }
+            ],
+            "oneLiner": "check-seedling-editor-arm — **THE FIFTH SOURCE, `?source=edit`.**",
+            "path": "scripts/procgen/check-seedling-editor-arm.mjs"
         },
         {
             "argvHelpers": [
