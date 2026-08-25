@@ -59,6 +59,7 @@ import {
 import { ruleSchemaErrors } from '../procgenCore/jsonSchemaCheck.js';
 import { stringifyRulesJson } from '../shared/rulesJsonBuilder.js';
 import { UNDO_COMMAND_ID, mountEditorView } from '../procgenCore/editorView.js';
+import { createLifetime } from '../procgenCore/pageLifetime.js';
 
 export class WatchSetEditorError extends Error {
     constructor(message) {
@@ -872,6 +873,27 @@ export function mountWatchSetEditor({
     }
     const $ = (id) => doc.getElementById(id);
 
+    /**
+     * ⛓⛓⛓ **THIS MOUNT OWNS ITS OWN LIFETIME, AND THAT IS A DEFECT THIS SLICE
+     * FOUND BY DRIVING IT.**
+     *
+     * ⛔ A new set REMOUNTS this panel — `takeLevelSet` destroys and rebuilds —
+     * and every listener registered on the ARM's lifetime survives that, because
+     * the arm has not been retired. Measured: after a second LOAD, `#editSetDisconnect`
+     * fired on BOTH mounts, the DEAD one applied its op to the OLD session and
+     * repainted the OLD `<select>` over the live one, and the rule-target list
+     * the page offered was a document nobody was editing. The op that followed
+     * was refused BY NAME against an exit the live record does not have — a true
+     * sentence about the wrong subject, produced by a listener nobody had
+     * detached.
+     *
+     * ⇒ every listener here rides a lifetime of THIS mount's, retired by
+     * `destroy()`; and it is retired with the arm too, so a page teardown takes
+     * it even if nobody calls `destroy`.
+     */
+    const mine = createLifetime('watchSetEditor');
+    lifetime.onRetire(() => mine.retire('the EDIT arm was retired'));
+
     /* ── STATE: exactly three things, and each is one fact ─────────── */
 
     /** Which room the forms, the rule box and the highlight are about. */
@@ -967,6 +989,29 @@ export function mountWatchSetEditor({
         return tx >= 0 && tx < n ? { tx, ty: 0 } : null;
     };
 
+    /**
+     * ⛓⛓ **THE RETURN DOOR IS AN ORDINAL, NOT A ROOM'S EXIT** — and that is
+     * forced by the gesture: `connect` lands on the DESTINATION's return door
+     * (D1 §20.4), and which room is the destination is not known until the
+     * second click happens. ⛔ The range is DERIVED from the widest room in the
+     * set, and a target that has no such exit is refused BY NAME by the adapter
+     * with its real count in the sentence — one authority, not two.
+     */
+    const fillOrdinalSelect = () => {
+        const sel = $('editSetTargetExit');
+        if (!sel) return;
+        const keep = sel.value;
+        const most = rows.reduce((n, r) => Math.max(n, r.exitList.length), 0);
+        sel.innerHTML = '';
+        for (let i = 0; i < Math.max(1, most); i += 1) {
+            const o = el(doc, 'option', null, `#${i}`);
+            o.value = String(i);
+            sel.appendChild(o);
+        }
+        if (keep !== '' && Number(keep) < Math.max(1, most)) sel.value = keep;
+        sel.disabled = most === 0;
+    };
+
     const fillExitSelect = (id, room) => {
         const sel = $(id);
         if (!sel) return;
@@ -982,6 +1027,35 @@ export function mountWatchSetEditor({
     };
 
     /**
+     * ⛓⛓ **THE ROOM'S OWN ENTITIES, FOR `mark-location`.** ⛔ Read out of the
+     * room's OEL through the injected parser — `mark-location` refuses an
+     * entity the room does not hold AT EXACTLY THOSE PIXELS, so a list built
+     * from anything else would offer choices the op rejects.
+     */
+    const fillEntitySelect = (room) => {
+        const sel = $('editSetLocEntity');
+        if (!sel) return;
+        sel.innerHTML = '';
+        const xml = record().set.rooms[room]?.source?.xml;
+        let entities = [];
+        if (typeof xml === 'string' && typeof deps.parseOel === 'function') {
+            try {
+                entities = deps.parseOel(xml, `room ${room}`).entities ?? [];
+            } catch (e) {
+                if (!(e instanceof Error)) throw e;
+                entities = [];
+            }
+        }
+        for (const ent of entities) {
+            const value = JSON.stringify({ type: ent.type, x: ent.x, y: ent.y });
+            const o = el(doc, 'option', null, `${ent.type} @(${ent.x},${ent.y})`);
+            o.value = value;
+            sel.appendChild(o);
+        }
+        sel.disabled = entities.length === 0;
+    };
+
+    /**
      * ⛓⛓⛓ **THE TWO-CLICK EXIT GESTURE.** Click the SOURCE room, then the
      * TARGET room, and ONE `connect` lands. ⛔ `armed` is still `editorView`'s
      * single `tool`; `armedExit` is this gesture's PARAMETER, exactly as the
@@ -991,10 +1065,10 @@ export function mountWatchSetEditor({
     const connectAt = (cell) => {
         if (armedExit === null) {
             selectRoom(cell.tx);
-            fillExitSelect('editSetExitList', cell.tx);
             armedExit = { room: cell.tx };
             say(`CONNECT — source is room ${cell.tx}; pick WHICH exit in the list, then click `
-                + 'the TARGET room. ⚠ Escape disarms.');
+                + 'the TARGET room (its RETURN DOOR is the ordinal beside the list). '
+                + '⚠ Escape disarms.');
             render();
             return;
         }
@@ -1055,15 +1129,24 @@ export function mountWatchSetEditor({
         onChange: ({ result }) => {
             if (result?.applied) {
                 stills.clear();
+                /**
+                 * ⛓⛓ **THE RULE TARGETS ARE RE-DERIVED ON EVERY APPLIED OP, and
+                 * that is still §20.11 #4's bound.** The rule was *"once per
+                 * SELECTION change, never per keystroke"*, and an op is neither:
+                 * a `disconnect` DELETES a door, so a target list that only
+                 * refreshed on selection would offer an exit id the derivation
+                 * no longer has — and the commit would be refused for a list the
+                 * page itself had gone stale on. Measured: it was.
+                 */
                 onSetChange?.();
             }
             render();
         },
-        lifetime,
+        lifetime: mine,
     });
 
     // ⛓ See `keyTarget` above — the strip owns its keys.
-    lifetime.on(overview, 'keydown', (e) => e.stopPropagation());
+    mine.on(overview, 'keydown', (e) => e.stopPropagation());
 
     /* ── THE ONE OP PATH ───────────────────────────────────────────── */
 
@@ -1080,7 +1163,31 @@ export function mountWatchSetEditor({
         const decision = renumber
             ? renumberDecision(roomSession(), renumber, what ?? op.op)
             : null;
-        const res = view.apply(op);
+        let res;
+        try {
+            res = view.apply(op);
+        } catch (e) {
+            /**
+             * ⛔⛔ **A DERIVATION FAILURE IS NOT A REFUSAL CLASS, AND IT REACHED
+             * THE PAGE AS AN UNCAUGHT THROW.** Measured by this slice's own
+             * driving: `set-access-rule` builds the atlas to check its target,
+             * and `deriveAtlas` throws a PLAIN `Error` — which
+             * `seedlingSetAdapter.apply` deliberately does NOT catch (*"a
+             * TypeError here is a defect"*, D1) and `editorView.applyOp` does
+             * not either (it catches `EditCoreError`). So a set whose atlas
+             * cannot derive — e.g. one where a `disconnect` deleted the very
+             * `<teleporter>` a marked LOCATION sits on — took the arm down.
+             *
+             * ⛓ CAUGHT HERE, WHERE THE PAGE IS: reported as a refusal with the
+             * producer's own sentence, so the reader gets the finding instead of
+             * a dead panel. ⚠ The gap itself is D1's and is NAMED rather than
+             * changed (§21's out-of-scope list).
+             */
+            if (!(e instanceof Error)) throw e;
+            say(`the op was REFUSED by the DERIVATION — ${e.message}`, true);
+            setNote(`⛔ ${op.op} could not be applied: ${e.message}`, true);
+            return { ok: false, applied: false, description: e.message };
+        }
         if (res.ok && res.applied && decision) {
             if (decision.action === 'discard') discardRoom();
             else if (decision.action === 'reopen' && decision.room !== roomSession()?.room) {
@@ -1088,6 +1195,15 @@ export function mountWatchSetEditor({
                 openRoomAt(decision.room);
             }
             if (decision.warning) setNote(decision.warning, decision.action === 'discard');
+            /**
+             * ⛔ **AND THE READOUT IS REDRAWN AFTER THE DECISION, NOT ONLY
+             * BEFORE IT.** `view.apply` fires `onChange` INSIDE the op, which is
+             * before the room session is discarded — so a page that rendered
+             * only there would still be reporting the discarded room as open.
+             * C2 met the same shape from the other side ("a page's readout only
+             * learns what its `render` writes").
+             */
+            onSetChange?.();
         }
         return res;
     };
@@ -1106,11 +1222,7 @@ export function mountWatchSetEditor({
         selected = index;
         const sel = $('editSetRoom');
         if (sel) sel.value = String(index);
-        // ⛓ §20.11 #4 — the derivation runs HERE and nowhere else.
-        targets = ruleTargetsOf(record(), index, deps);
-        fillExitSelect('editSetTargetExit', index);
-        renderRuleTargets();
-        renderRoomForm();
+        render();
     }
 
     /* ── THE ROOMS LIST ────────────────────────────────────────────── */
@@ -1141,7 +1253,7 @@ export function mountWatchSetEditor({
                 const b = el(doc, 'button', null, label);
                 b.id = `${id}_${row.index}`;
                 b.disabled = disabled;
-                lifetime.on(b, 'click', run);
+                mine.on(b, 'click', run);
                 acts.appendChild(b);
             };
             button('editSetRowOpen', 'OPEN', () => {
@@ -1164,7 +1276,7 @@ export function mountWatchSetEditor({
                     { renumber: removeRoomMapping(row.index), what: 'REMOVE' });
             });
             tr.appendChild(acts);
-            lifetime.on(tr, 'click', () => { selectRoom(row.index); render(); });
+            mine.on(tr, 'click', () => { selectRoom(row.index); render(); });
             if (row.why) {
                 const note = el(doc, 'tr');
                 const td = el(doc, 'td', 'note bad', row.why);
@@ -1197,7 +1309,7 @@ export function mountWatchSetEditor({
                 const input = el(doc, 'input');
                 input.id = `editSetField_${row.field}`;
                 input.value = set[row.field] ?? '';
-                lifetime.on(input, 'change', () => applySet({
+                mine.on(input, 'change', () => applySet({
                     op: 'set-field', path: row.field, value: input.value,
                 }));
                 line.appendChild(input);
@@ -1210,7 +1322,7 @@ export function mountWatchSetEditor({
                     input.value = cur[part] === undefined ? '' : String(cur[part]);
                     input.style.width = '5em';
                     line.appendChild(el(doc, 'span', 'note', ` ${part} `));
-                    lifetime.on(input, 'change', () => {
+                    mine.on(input, 'change', () => {
                         const next = { level: Number($('editSetStart_level').value) };
                         for (const p of ['x', 'y']) {
                             const raw = $(`editSetStart_${p}`).value;
@@ -1228,7 +1340,7 @@ export function mountWatchSetEditor({
                 input.id = `editSetField_${row.field}`;
                 input.value = (set[row.field] ?? []).join(', ');
                 input.style.width = '20em';
-                lifetime.on(input, 'change', () => applySet({
+                mine.on(input, 'change', () => applySet({
                     op: 'set-field',
                     path: row.field,
                     value: input.value.split(',').map((v) => v.trim()).filter((v) => v !== '')
@@ -1250,7 +1362,7 @@ export function mountWatchSetEditor({
                     const v = cur[key.key];
                     input.value = v === undefined ? ''
                         : String(typeof v === 'object' ? v.level : v);
-                    lifetime.on(input, 'change', () => {
+                    mine.on(input, 'change', () => {
                         const next = { ...cur };
                         if (input.value === '') delete next[key.key];
                         else if (key.position) {
@@ -1291,7 +1403,7 @@ export function mountWatchSetEditor({
             } else {
                 input.value = cell.room[row.field] ?? '';
             }
-            lifetime.on(input, 'change', () => applySet({
+            mine.on(input, 'change', () => applySet({
                 op: 'set-room-field',
                 room: selected,
                 field: row.field,
@@ -1411,12 +1523,29 @@ export function mountWatchSetEditor({
 
     /* ── RENDER ────────────────────────────────────────────────────── */
 
+    /**
+     * ⛓⛓⛓ **ONE RENDER, AND THE DERIVATION HAPPENS IN IT — ONCE.**
+     *
+     * ⛔ §20.11 #4's bound is *"once per SELECTION change, never per
+     * keystroke"*, and this is the honest reading of it: the rule targets are a
+     * function of (the record, the selected room), so they are re-derived
+     * exactly when one of those two can have moved — an applied op, an UNDO, or
+     * a selection. ⚠ MEASURED, TWICE: a list refreshed only on selection went
+     * stale behind a `disconnect`, and a list refreshed only on `onChange` went
+     * stale behind an UNDO, and both times the COMMIT was refused for a list the
+     * page itself had let rot. Typing in the rule box derives nothing.
+     */
     function render() {
         const scan = bound();
         rows = roomRowsOf(record(), { links: scan.ok });
         if (selected >= roomCount()) selected = Math.max(0, roomCount() - 1);
+        targets = ruleTargetsOf(record(), selected, deps);
         renderRooms();
         paintStrip();
+        fillExitSelect('editSetExitList', selected);
+        fillOrdinalSelect();
+        fillEntitySelect(selected);
+        renderRuleTargets();
         renderManifest();
         renderRoomForm();
         renderIdentity();
@@ -1428,7 +1557,7 @@ export function mountWatchSetEditor({
 
     const on = (id, run) => {
         const node = $(id);
-        if (node) lifetime.on(node, 'click', run);
+        if (node) mine.on(node, 'click', run);
     };
 
     /**
@@ -1447,14 +1576,12 @@ export function mountWatchSetEditor({
             { renumber: addRoomMapping(at), what: 'ADD ROOM' });
     });
 
-    on('editSetConnect', () => {
-        applySet({
-            op: 'connect',
-            from: [selected, Number($('editSetExitList')?.value ?? 0)],
-            to: [Number($('editSetRoom')?.value ?? 0), Number($('editSetTargetExit')?.value ?? 0)],
-            one_way: Boolean($('editSetOneWay')?.checked),
-        });
-    });
+    /**
+     * ⛔ **THERE IS NO SECOND "CONNECT" BUTTON.** A button that took the same two
+     * rooms from two `<select>`s would be a second spelling of the gesture, and
+     * the first slice to change one would leave the other saying something else.
+     * The gesture is the one way; the SELECTS are its parameters.
+     */
 
     on('editSetDisconnect', () => {
         applySet({
@@ -1487,6 +1614,21 @@ export function mountWatchSetEditor({
 
     on('editSetReport', () => { runReport(); render(); });
 
+    /**
+     * ⛓ ARMING THE GESTURE IS THE COMMAND TABLE'S OWN ROW — `view.setTool` —
+     * so the button, the `c` key and `editorView`'s own vocabulary are one
+     * list and not three (A2's law, kept one panel over).
+     */
+    on('editSetGesture', () => {
+        armedExit = null;
+        view.setTool('connect');
+        say('CONNECT is ARMED — click the SOURCE room on the strip, then the TARGET. '
+            + '⚠ Escape disarms.');
+        render();
+    });
+
+    on('editSetUndo', () => view.run(UNDO_COMMAND_ID));
+
     on('editRoomClose', () => {
         const open = roomSession();
         if (!open) return;
@@ -1513,6 +1655,22 @@ export function mountWatchSetEditor({
      * other download in this arm.
      */
     on('editDownloadSet', () => {
+        /**
+         * ⛔⛔ **AN OPEN ROOM SESSION WITH EDITS REFUSES THE DOWNLOAD BY NAME.**
+         * C2 folded the open room into the download automatically, which was
+         * right when the page had exactly ONE write path; a room's edits reach
+         * the set through `closeRoomSession` now (ONE `replace-room-xml`), so a
+         * download that ignored them would hand somebody a set that is missing
+         * work they can see on the canvas — and the stamp would say it is a
+         * different set, truthfully, for the wrong reason.
+         */
+        const open = roomSession();
+        if (open && open.ops > 0) {
+            setNote(`⛔ NOT DOWNLOADED — room ${open.room} is open with ${open.ops} unwritten `
+                + 'edit(s). Press CLOSE first: that makes them ONE `replace-room-xml` in the '
+                + 'SET session, and the download stamps once over everything.', true);
+            return;
+        }
         const check = validateForDownload(session);
         if (!check.ok) {
             const box = $('editSetReportOut');
@@ -1566,16 +1724,23 @@ export function mountWatchSetEditor({
             setNote(rep.download.rules.why, true);
             return;
         }
-        download('rules.json', stringifyRulesJson(rep.rules), 'application/json');
+        /**
+         * ⛓ THE BYTES ARE THE WRITER'S, and BOTH are put where a driver can read
+         * them: the document AND the exact text, so a row can ask node whether
+         * they are the same bytes `region-atlas-compile` would have written.
+         */
+        const text = stringifyRulesJson(rep.rules);
+        download('rules.json', text, 'application/json');
         globalThis.__editorSetRulesOut = rep.rules;
+        globalThis.__editorSetRulesBytes = text;
         setNote(`DOWNLOADED rules.json — ${rep.report.ap_regions} AP region(s), `
             + `${rep.report.exits} exit(s), ${rep.report.locations} location(s)`);
     });
 
-    lifetime.on($('editSetRuleJson') ?? doc.createElement('textarea'), 'input', checkRuleJson);
+    mine.on($('editSetRuleJson') ?? doc.createElement('textarea'), 'input', checkRuleJson);
 
     if ($('editSetRoom')) {
-        lifetime.on($('editSetRoom'), 'change', () => {
+        mine.on($('editSetRoom'), 'change', () => {
             selectRoom(Number($('editSetRoom').value));
             render();
         });
@@ -1597,6 +1762,7 @@ export function mountWatchSetEditor({
         destroy() {
             view.destroy();
             stills.clear();
+            mine.retire('this set editor was replaced by a new one');
         },
     };
 }

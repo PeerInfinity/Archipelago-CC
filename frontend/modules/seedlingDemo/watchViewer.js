@@ -288,6 +288,24 @@ import {
  */
 import { DEFAULT_PLACE_TYPE, mountWatchEditor } from './watchEditor.js';
 import { createSeedlingEditAdapter } from './seedlingEditAdapter.js';
+/**
+ * ⛓⛓⛓ EDITOR v3 D2 — the SET session's DOM, and the three things it cannot
+ * import for itself.
+ *
+ * ⛔ `compileRegionAtlas` / `validateRegionAtlas` LIVE IN `procgenPipeline/` AND
+ * ARE HANDED IN, because `seedlingSetAdapter.js` names no pipeline dependency
+ * of its own and `watchSetEditor.js` keeps the same rule (its own test scans
+ * for it). Both are headless-safe by their own headers — no `node:` imports, no
+ * top-level await — which is what makes them loadable on this page at all.
+ */
+import { mountWatchSetEditor } from './watchSetEditor.js';
+import {
+    createSeedlingSetAdapter, createSetSession, downloadSet, setRecord, setSessionRoomSource,
+} from './seedlingSetAdapter.js';
+import { emptyOverlay } from './seedlingSetOverlay.js';
+import { compileRegionAtlas } from '../procgenPipeline/regionAtlasCompiler.js';
+import { validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js';
+import { tileTypeForPlacement } from '../flashPanel/seedlingSemantics.js';
 import { TOOLS, UNDO_COMMAND_ID } from '../procgenCore/editorView.js';
 import { createEditSession, foldEdits, resolveBase } from '../procgenCore/editCore.js';
 /**
@@ -3640,12 +3658,33 @@ function chooseSpawn(levelSource, block, level) {
  * still finish mounting, or a bad `?level=` would leave you with no panel to
  * fix it in.
  */
-function previewLevel(levelSource, staging, layers, lifetime, afterDraw = null) {
+/**
+ * ⛓⛓⛓ EDITOR v3 D2 — **`target` AND `readouts`, AND WHY BOTH HAD TO EXIST.**
+ *
+ * The set editor's OVERVIEW draws one still per room, and ⚖ the one-renderer
+ * law says the page draws the substrate — so it draws them THROUGH THIS
+ * FUNCTION rather than through a second construction of `makeRenderer` +
+ * `makeWorldFor` that would be free to drift from it.
+ *
+ * ⛔ **AND `readouts` IS NOT A CONVENIENCE.** This function writes
+ * `window.__editorSpawn` and `window.__editorStill`, which answer *"where is
+ * the player in the room ON THE CANVAS"* — global, and read by browser rows.
+ * Called once per room for a strip, the last cell would silently overwrite what
+ * the main canvas's own draw had put there, and a gate would be reading a
+ * readout about a thumbnail. ⇒ an off-canvas draw says so, and the readouts
+ * stay the property of the page's one canvas.
+ *
+ * ⚠ Both default to the previous behaviour exactly, so the four existing
+ * callers are byte-inert.
+ */
+function previewLevel(levelSource, staging, layers, lifetime, afterDraw = null,
+    { target = null, readouts = true } = {}) {
     try {
+        const canvas = target ?? $('canvas');
         const run = createRunForStaging(solveStaging(staging), levelSource,
             { scratchPersistence: isHeldLevel(staging.boot.level) });
         const world = makeWorldFor(levelSource, staging)(run.level);
-        const renderer = makeRenderer($('canvas'));
+        const renderer = makeRenderer(canvas);
         renderer.reset();
         renderer.fit(world);
         renderer.draw(world, run.state, {
@@ -3699,7 +3738,7 @@ function previewLevel(levelSource, staging, layers, lifetime, afterDraw = null) 
             dangerQueries: null,
         });
         // ⛓ SLICE 5a (D5) — the SIBLING overlays, on the same canvas.
-        afterDraw?.($('canvas'));
+        afterDraw?.(target ?? $('canvas'));
         /**
          * ⛓⛓⛓ WHERE THE PLAYER ACTUALLY IS IN THE DRAWN ROOM, AND WHETHER
          * THEY FIT — ⚖ the entrances item's own witness.
@@ -3723,7 +3762,7 @@ function previewLevel(levelSource, staging, layers, lifetime, afterDraw = null) 
         const blockers = [...(world.solids ?? []), ...(world.objectSolids ?? [])];
         const inside = blockers.find((s) => box.x < s.rect.right && box.right > s.rect.x
             && box.y < s.rect.bottom && box.bottom > s.rect.y);
-        window.__editorSpawn = {
+        if (readouts) window.__editorSpawn = {
             level: run.level,
             boot: { x: staging.boot.x, y: staging.boot.y },
             player: { x: run.state.x, y: run.state.y },
@@ -3749,7 +3788,7 @@ function previewLevel(levelSource, staging, layers, lifetime, afterDraw = null) 
          * derivation nothing on screen used, and it would agree with a renderer
          * that drew nothing at all.
          */
-        window.__editorStill = {
+        if (readouts) window.__editorStill = {
             level: run.level,
             drawn: renderer.drawn,
             // ⚠ The ONE sample the frame was handed, named so a row can tell
@@ -8441,6 +8480,9 @@ const loadVanillaSetId = () => {
  * and both are unambiguous on their own bytes. ⚠ A third thing (a level-set
  * JSON) is REFUSED with whose job it is, rather than being read as a payload
  * that happens to be missing fields.
+ *
+ * ⛓ EDITOR v3 D2 adds a FOURTH: an OVERLAY, told from a set by the shape of its
+ * `rooms` (an object keyed by index, never an array).
  */
 export function sniffLoadBox(text) {
     const t = String(text ?? '').trim();
@@ -8472,6 +8514,22 @@ export function sniffLoadBox(text) {
     if (parsed && typeof parsed === 'object' && Array.isArray(parsed.rooms)) {
         return { kind: 'levelset', set: parsed };
     }
+    /**
+     * ⛓⛓⛓ EDITOR v3 D2 — **THE OVERLAY IS A THIRD DOCUMENT** (§20.11 #3), and
+     * it is sniffed by SHAPE like the other two: a set's `rooms` is an ARRAY
+     * (positions are ids) and an overlay's is an OBJECT KEYED BY ROOM INDEX,
+     * which is exactly why the two cannot be confused. An `overlay_id` settles
+     * it outright.
+     *
+     * ⛔ IT MATTERS THAT THIS EXISTS AT ALL: a page that could not load one
+     * would lose every location and every authored rule on the first reload,
+     * and the only thing that would say so is the REPORT's location count.
+     */
+    if (parsed && typeof parsed === 'object'
+        && (typeof parsed.overlay_id === 'string'
+            || (parsed.rooms !== undefined && !Array.isArray(parsed.rooms)))) {
+        return { kind: 'overlay', overlay: parsed };
+    }
     if (!parsed || typeof parsed !== 'object' || !parsed.base) {
         return { kind: null, why: 'this JSON carries no `base`, so it is not an editor '
             + 'payload. A payload is `{base, edits, …}` — the identity is `base, then edits`, '
@@ -8496,8 +8554,19 @@ export function sniffLoadBox(text) {
 async function runEditor(params, lifetime) {
     const { atlas } = await armPrelude(params, lifetime);
     if (!lifetime.alive()) return;
-    const [ogmoSchema, vanillaSetId] = await Promise.all([
+    /**
+     * ⛓ EDITOR v3 D2 — three more documents, all OPTIONAL and all degraded to a
+     * NAMED absence rather than a refusal: the rules schema (the rule box says
+     * only the SHAPE is checked without it), the atlas schema (the REPORT says
+     * the STRUCTURAL pass did not run) and the level-set schema (the manifest
+     * form falls back to `SET_FIELDS` alone). A data file must not be a single
+     * point of failure for a control that works without it.
+     */
+    const [ogmoSchema, vanillaSetId, rulesSchema, atlasSchema, levelSetSchema] = await Promise.all([
         loadOgmoSchema(), loadVanillaSetId(),
+        loadOptionalJson('frontend/schema/rules.schema.json', 'the rules schema'),
+        loadOptionalJson('frontend/schema/region-atlas.schema.json', 'the region-atlas schema'),
+        loadOptionalJson('frontend/schema/seedling-level-set.schema.json', 'the level-set schema'),
     ]);
     if (!lifetime.alive()) return;
 
@@ -8517,14 +8586,46 @@ async function runEditor(params, lifetime) {
      * in hand — a `set_id` carries the document's content hash, so a room
      * resolved out of a different set would be a room the base never named.
      */
-    let loadedSet = null;
+    /**
+     * ⛓⛓⛓ EDITOR v3 D2 — **C2's `loadedSet` CLOSURE IS GONE.** A held set is a
+     * SET SESSION now (`createSetSession` over `{set, overlay}`), because a set
+     * is a document somebody EDITS and not a document the page merely holds.
+     *
+     * ⛔ AND THE ROOM ADAPTER'S `levelSetSource` IS `setSessionRoomSource`, D1
+     * §20.10 #1's SAFE injection: it resolves a room out of the session's
+     * CURRENT FOLDED set — which is what a room opened after a `reorder` needs —
+     * and it CHECKS the `set_id`, which `setRoomBase` itself does not. A bare
+     * `() => setSession.record().set` would silently resolve an old tag against
+     * a new document.
+     */
+    let setSession = null;
+    let setRoomSource = null;
+    let setUi = null;
+    /** ⛓ Which room of the SET the room session below was opened on, or null. */
+    let openRoom = null;
     const adapter = createSeedlingEditAdapter({
         schema: null,
         levelSource: levelSourceFromAtlas(atlas),
         vanillaSetId,
         parseOel: parseOelLevel,
-        levelSetSource: (id) => (loadedSet && loadedSet.set_id === id ? loadedSet : null),
+        levelSetSource: (id) => (setRoomSource ? setRoomSource(id) : null),
     });
+    /**
+     * ⛓ THE SET ADAPTER'S OWN DEPENDENCIES, all injected — the OEL parser, the
+     * tile size the derivation measures in, the semantics table's classifier and
+     * the two schemas the page fetched. ⛔ `levelSetSchema` is not the set
+     * adapter's; it is the MANIFEST FORM's, and it is carried in the same bag so
+     * there is one place the page's set knowledge lives.
+     */
+    const setDeps = {
+        parseOel: parseOelLevel,
+        tileSize: TILE_SIZE,
+        tileTypeForPlacement,
+        rulesSchema,
+        levelSetSchema,
+        atlas: { game: 'seedling-watch-edit', mapDocument: 'watch.html set editor' },
+    };
+    const setAdapter = createSeedlingSetAdapter(setDeps);
 
     const atlasLevels = (atlas.levels ?? []).map((l) => l.level);
     const wantLevel = Number.isInteger(params.level) ? params.level : atlasLevels[0];
@@ -8596,7 +8697,7 @@ async function runEditor(params, lifetime) {
         if (tag.kind === 'atlas') return `the VANILLA atlas, level ${tag.level} — set_id ${tag.set_id}`;
         if (tag.kind === 'oel') return `a PASTED OEL (${tag.xml.length} bytes)`;
         if (tag.kind === 'set-room') {
-            const room = (loadedSet?.rooms ?? [])[tag.room];
+            const room = (setSession?.record().set.rooms ?? [])[tag.room];
             return `room ${tag.room}${room?.name ? ` "${room.name}"` : ''} of the LOADED SET `
                 + `${tag.set_id}`;
         }
@@ -8693,10 +8794,21 @@ async function runEditor(params, lifetime) {
              * page could open. ⛔ The set itself is NOT echoed here: it is up to
              * 700 KB of XML and a readout is not a transport.
              */
-            set: loadedSet ? {
-                set_id: loadedSet.set_id,
-                rooms: loadedSet.rooms.length,
-                openable: loadedSet.rooms.filter((r) => typeof r.source?.xml === 'string').length,
+            set: setSession ? {
+                set_id: setSession.record().set.set_id,
+                overlay_id: setSession.record().overlay.overlay_id ?? null,
+                rooms: setSession.record().set.rooms.length,
+                openable: setSession.record().set.rooms
+                    .filter((r) => typeof r.source?.xml === 'string').length,
+                /**
+                 * ⛓ EDITOR v3 D2 — the SET SESSION's own numbers, because a set
+                 * is a thing that is EDITED now and "which set is held" no longer
+                 * answers "what has been done to it".
+                 */
+                edits: setSession.ops().length,
+                openRoom,
+                locations: Object.values(setSession.record().overlay.rooms ?? {})
+                    .reduce((n, r) => n + (r?.locations?.length ?? 0), 0),
             } : null,
             flags: roomFlagsIn(session.record()).map((f) => f.tag),
         };
@@ -8757,7 +8869,46 @@ async function runEditor(params, lifetime) {
      * exactly as MANUAL's arm already ships. An `expect` invented here would be
      * a claim about a run nobody made.
      */
-    const shippableEdit = () => ({
+    /**
+     * ⛓⛓⛓ EDITOR v3 D2 — **WITH A SET SESSION HELD, ▶ SHIPS THE WHOLE SET.**
+     *
+     * ⛔ THROUGH `downloadSet(session).set` — the SAME stamped document the
+     * download writes, validated and chunk-planned by the same
+     * `validatedChunks` the one-room ship uses. A ship that built its own set
+     * would be able to disagree with the file the person just saved.
+     *
+     * ⚠ ZERO-INPUT TAPE AND NO EXPECTATION, exactly as the one-room ship: no
+     * walk has been taken through this set, so an `expect` here would be a
+     * claim about a run nobody made. It boots at the set's own `start.level`,
+     * which is the manifest's answer to *where does a new game begin*.
+     */
+    const shippableSet = () => ({
+        what: 'ship the WHOLE EDITED SET into the recompiled game (keyboard-driven; no '
+            + 'expectation) — it boots at the manifest\'s `start`',
+        build: () => {
+            const out = downloadSet(setSession);
+            const { set, chunks } = buildSetShip(out.set);
+            const startLevel = set.start?.level ?? 0;
+            return {
+                levelSet: set,
+                chunks,
+                tape: { boot: { ...boot.boot, level: startLevel }, presses: [] },
+                expect: null,
+                expectWhy: 'nothing has walked this SET — the EDIT arm has no oracle, so the '
+                    + 'ship carries a ZERO-INPUT tape and the keyboard drives (MANUAL\'s arm, '
+                    + 'already). An expectation here would be a claim about a run nobody made.',
+                modelStream: null,
+                modelStreamWhy: 'no per-tick comparison: there is no recorded walk of an '
+                    + 'edited set to compare the game against',
+                label: `the WHOLE SET ${set.set_id} — ${set.rooms.length} room(s), `
+                    + `${setSession.ops().length} set edit(s), booting at room ${startLevel}`,
+                note: `overlay ${out.overlay.overlay_id} rides along in the editor, not in the `
+                    + 'game: an overlay is AP logic and the game has never heard of it',
+            };
+        },
+    });
+
+    const shippableEdit = () => (setSession ? shippableSet() : {
         what: 'ship this room into the recompiled game (keyboard-driven; no expectation)',
         build: () => {
             const record = session.record();
@@ -8900,7 +9051,7 @@ async function runEditor(params, lifetime) {
         });
     }
 
-    /* ── ⛓⛓⛓ THE LEVEL SET — §3.2's FOURTH BASE (EDITOR v3 C2) ────── */
+    /* ── ⛓⛓⛓ THE LEVEL SET — the SET SESSION (EDITOR v3 C2, D2) ────── */
 
     const setSel = () => $('editSetRoom');
     const setNote = (text, bad = false) => {
@@ -8914,11 +9065,17 @@ async function runEditor(params, lifetime) {
      * marked in its own option rather than left to fail on the press: the
      * refusal is a fact about the document, and a reader picking a room should
      * not have to press to find out the page has no embeds.
+     *
+     * ⛓ D2: it reads the SESSION's folded set, so a `reorder` moves the options
+     * with the rooms. The list in `#editSetRooms` is the same rooms with the
+     * per-room actions; this `<select>` is what "the SELECTED room" means, and
+     * both drive ONE `openRoomAt`.
      */
     const renderSetRooms = () => {
         const sel = setSel();
+        const keep = sel.value;
         sel.innerHTML = '';
-        const rooms = loadedSet?.rooms ?? [];
+        const rooms = setSession?.record().set.rooms ?? [];
         for (const [i, r] of rooms.entries()) {
             const o = document.createElement('option');
             o.value = String(i);
@@ -8927,10 +9084,57 @@ async function runEditor(params, lifetime) {
                 + (openable ? '' : ' — ⛔ embed-sourced, not openable here');
             sel.appendChild(o);
         }
+        if (keep !== '' && Number(keep) < rooms.length) sel.value = keep;
         const has = rooms.length > 0;
         sel.disabled = !has;
-        $('editSetOpen').disabled = !has;
-        $('editDownloadSet').disabled = !has;
+        for (const id of ['editSetOpen', 'editDownloadSet', 'editSetAddRoom', 'editSetGesture',
+            'editSetDisconnect', 'editSetReport', 'editSetUndo',
+            'editSetRuleCommit', 'editSetMarkLocation']) {
+            if ($(id)) $(id).disabled = !has;
+        }
+    };
+
+    /**
+     * ⛓⛓⛓ **OPEN ONE ROOM OF THE SET — THE BRIDGE, AND THE ONLY ONE.**
+     *
+     * ⛔ A ROOM SESSION ALREADY OPEN IS NOT SILENTLY REPLACED. `closeRoomSession`
+     * is the ONE way a room's edits reach the set (D1 §20.7), so opening another
+     * room while one holds edits would drop them — the same loss §20.11 #2 rules
+     * about for a renumbering, and it is refused here in the same words.
+     */
+    const openRoomAt = (index) => {
+        if (!setSession) return false;
+        if (openRoom !== null && openRoom !== index && session?.ops().length > 0) {
+            setNote(`⛔ room ${openRoom} is open with ${session.ops().length} unwritten edit(s). `
+                + 'CLOSE it into the SET first (that is ONE `replace-room-xml`), or its edits '
+                + 'go nowhere — a room session is the only place they live until then.', true);
+            return false;
+        }
+        const setId = setSession.record().set.set_id;
+        if (!openBase({ kind: 'set-room', set_id: setId, room: index })) return false;
+        openRoom = index;
+        editorUi.palette.setType(DEFAULT_PLACE_TYPE);
+        setNote(`OPEN: ${describeBase(baseTag)}`);
+        redraw(`OPENED ${describeBase(baseTag)}`);
+        return true;
+    };
+
+    /** ⛓ Drop the room session without writing it back — the DISCARD half of §20.11 #2. */
+    const discardRoom = () => {
+        openRoom = null;
+    };
+
+    /**
+     * ⛓⛓ **ONE ROOM STILL, THROUGH THE PAGE'S OWN `previewLevel`** — ⚖ the
+     * one-renderer law. ⛔ `readouts: false`: `previewLevel` writes
+     * `window.__editorSpawn`/`__editorStill` about the room ON THE CANVAS, and a
+     * strip of thumbnails would overwrite them with its last cell.
+     */
+    const drawRoomStill = (target, roomRecord) => {
+        const src = levelSourceFromAtlas(atlasOf(roomRecord));
+        const block = { ...boot, boot: { ...boot.boot, level: roomRecord.level } };
+        return previewLevel(src, block, layerSetFor(params), lifetime, null,
+            { target, readouts: false }).why ?? null;
     };
 
     /**
@@ -8940,8 +9144,13 @@ async function runEditor(params, lifetime) {
      * page that said *"invalid set"* instead would have thrown away the whole
      * answer. ⚠ WARNINGS ARE SHOWN AND DO NOT REFUSE — an unstamped set and a
      * one-room set both warn, and both are documents a person may want to edit.
+     *
+     * ⛓ D2: what it HOLDS is a SET SESSION over `{set, overlay}`. An overlay
+     * pasted separately re-opens the session onto the same set — which is what
+     * makes an overlay a document that can arrive at all.
      */
-    const takeLevelSet = (set) => {
+    let heldOverlay = null;
+    const takeLevelSet = (set, overlay = null) => {
         const v = validateLevelSet(set);
         if (!v.ok) {
             const why = `this JSON has \`rooms\`, so it is a LEVEL SET — and `
@@ -8951,10 +9160,69 @@ async function runEditor(params, lifetime) {
             $('status').textContent = `the LOAD box was REFUSED — ${why}`;
             return false;
         }
-        loadedSet = set;
+        if (overlay !== null) heldOverlay = overlay;
+        const base = { kind: 'set', set_id: set.set_id };
+        if (heldOverlay?.overlay_id) base.overlay_id = heldOverlay.overlay_id;
+        let record;
+        try {
+            record = setRecord(set, heldOverlay ?? emptyOverlay());
+        } catch (e) {
+            const why = `the OVERLAY was refused for this set — ${e.message}`;
+            $('editLoadNote').textContent = `⛔ REFUSED — ${why}`;
+            $('status').className = 'bad';
+            $('status').textContent = `the LOAD box was REFUSED — ${why}`;
+            return false;
+        }
+        setSession = createSetSession(setAdapter, record, { base });
+        setRoomSource = setSessionRoomSource(setSession);
+        openRoom = null;
+        setUi?.destroy();
+        setUi = mountWatchSetEditor({
+            lifetime,
+            session: setSession,
+            adapter: setAdapter,
+            deps: setDeps,
+            compileRegionAtlas,
+            validateRegionAtlas,
+            atlasSchema: atlasSchema ?? undefined,
+            recordToOel,
+            drawRoomStill,
+            emptyLevel: () => emptyLevel({ level: setSession.record().set.rooms.length }),
+            say: (text, bad) => {
+                $('status').className = bad ? 'bad' : '';
+                $('status').textContent = text;
+            },
+            /**
+             * ⛓ THE ROOM SESSION, AS THE SET EDITOR SEES IT — `{room, ops,
+             * session}`. ⛔ It is a FUNCTION, because the op count changes with
+             * every paint and a captured number would be the count at mount.
+             */
+            roomSession: () => (openRoom === null || !session ? null
+                : { room: openRoom, ops: session.ops().length, session }),
+            openRoomAt,
+            discardRoom,
+            download,
+            onSetChange: () => {
+                renderSetRooms();
+                render();
+                /**
+                 * ⛓ ▶ IS RE-OFFERED, because what it would send has CHANGED: with
+                 * a set held it ships the WHOLE SET, and the button's own
+                 * sentence is what says so. ⛔ A `shippable` computed only in
+                 * `redraw` would still be describing the room the canvas shows.
+                 */
+                setShippable(shippableEdit());
+            },
+        });
         renderSetRooms();
+        // ⛓ ▶ NOW SHIPS THE WHOLE SET — what the button would send has changed,
+        //   and the button's own sentence is what says so.
+        setShippable(shippableEdit());
         const embeds = (set.rooms ?? []).filter((r) => typeof r.source?.xml !== 'string').length;
         setNote(`HELD: ${set.set_id} — ${set.rooms.length} room(s)`
+            + (heldOverlay ? `, overlay ${heldOverlay.overlay_id ?? '(unstamped)'}` : ', NO overlay '
+                + '(⚠ every location and every authored rule lives there — paste one in too, or '
+                + 'the REPORT\'s location count is the only thing that will say it is missing)')
             + (embeds ? `, ⛔ ${embeds} of them EMBED-sourced and NOT openable here (an `
                 + '`embed` is a path into a SWF\'s [Embed] table, a fact about a source tree; '
                 + 'the committed VANILLA set is all 116 of them, and its door is '
@@ -8970,20 +9238,47 @@ async function runEditor(params, lifetime) {
          * so `redraw` would be a lie about the canvas — but `window.__editorEdit`
          * carries which set is held, and a page whose readout learned about it
          * only at the next EDIT would report `set: null` to anything that
-         * looked before then. Found by this slice's own driving.
+         * looked before then. Found by C2's own driving.
          */
         render();
         return true;
     };
 
-    lifetime.on($('editSetOpen'), 'click', () => {
-        if (!loadedSet) return;
-        const room = Number(setSel().value);
-        if (openBase({ kind: 'set-room', set_id: loadedSet.set_id, room })) {
-            editorUi.palette.setType(DEFAULT_PLACE_TYPE);
-            setNote(`OPEN: ${describeBase(baseTag)}`);
-            redraw(`OPENED ${describeBase(baseTag)}`);
+    /**
+     * ⛓ An OVERLAY pasted on its own OPENS A NEW SESSION over the same set.
+     *
+     * ⛔ **AND IT REFUSES WHILE THE SESSION HOLDS OPS, BY NAME.** A new session
+     * starts with an empty op list, so swapping the overlay under a set that has
+     * been edited would silently drop every one of those edits — the same loss
+     * §20.11 #2 rules about for a room session, and it gets the same answer.
+     *
+     * ⚠ AND IT DOES NOT RE-VALIDATE THE HELD SET. Found by this slice's own
+     * driving: `validateLevelSet` REFUSES a document whose stamp and content
+     * have parted, which is TRUE of every mid-edit set by design — the stamp
+     * happens once, at download (§20.6). Re-validating here read a correct
+     * session as a broken document and silently kept the old overlay.
+     */
+    const takeOverlay = (overlay) => {
+        if (!setSession) {
+            heldOverlay = overlay;
+            setNote(`HELD an OVERLAY (${overlay.overlay_id ?? 'unstamped'}) with no set to `
+                + 'attach it to — paste the LEVEL SET next and it opens with this overlay.');
+            return true;
         }
+        const ops = setSession.ops().length;
+        if (ops > 0) {
+            setNote(`⛔ REFUSED — attaching an overlay opens a NEW session over this set, and `
+                + `this one holds ${ops} edit(s) that would go with the old one. Download the `
+                + 'set (that writes the overlay too) or undo back to zero first.', true);
+            return false;
+        }
+        return takeLevelSet(setSession.record().set, overlay);
+    };
+
+    lifetime.on($('editSetOpen'), 'click', () => {
+        if (!setSession) return;
+        openRoomAt(Number(setSel().value));
+        setUi?.render();
     });
 
     /* ── LAUNCH ───────────────────────────────────────────────────── */
@@ -9005,7 +9300,10 @@ async function runEditor(params, lifetime) {
     editorUi.setMode('off');
     renderSetRooms();
     setNote('no level set loaded — paste one into the LOAD box above (schema v1, `rooms`) and '
-        + 'its rooms are offered here. ⛔ The committed VANILLA set is 116 EMBED-sourced rooms '
+        + 'its rooms are offered here, with the whole SET EDITOR below them. ⛓ An OVERLAY '
+        + '(`{rooms: {…}}` keyed by room index) may be pasted in the same box, before or after '
+        + 'the set: it is the THIRD document, and it is where every location and every '
+        + 'authored access rule lives. ⛔ The committed VANILLA set is 116 EMBED-sourced rooms '
         + 'and cannot be opened this way; `?source=edit&level=N` is its door.');
     redraw(`EDIT — ${describeBase(baseTag)}`);
 
@@ -9043,6 +9341,10 @@ async function runEditor(params, lifetime) {
         }
         if (got.kind === 'levelset') {
             takeLevelSet(got.set);
+            return;
+        }
+        if (got.kind === 'overlay') {
+            takeOverlay(got.overlay);
             return;
         }
         const tag = got.payload.base;
@@ -9087,47 +9389,20 @@ async function runEditor(params, lifetime) {
         recordToOel(session.record()), 'application/xml'));
 
     /**
-     * ⛓⛓⛓ **THE FIRST WRITE PATH FOR TIER B** — the SET back out, with the
-     * edited room's XML replaced and the identity RE-STAMPED.
+     * ⛓⛓⛓ **THE SET, THE OVERLAY AND THE `apMapping` COMPANION — `#editDownloadSet`
+     * IS `watchSetEditor`'s NOW** (EDITOR v3 D2). C2's version replaced ONE
+     * room's XML in a held document and re-stamped it; the set is an editable
+     * SESSION now, so the write path is `downloadSet(session)` — validated,
+     * stamped ONCE, three blobs — and it lives beside the ops that produced it.
      *
-     * ⛔ **RE-STAMPED, NOT REUSED.** `stampLevelSetIdentity` recomputes the
-     * content hash and rebuilds the `set_id` around it, so an edited set is a
-     * DIFFERENT set by construction — which is the one thing a save file cannot
-     * otherwise detect (plan §4.2, and `validateLevelSet` refuses a document
-     * whose stamp and content have parted). A download that kept the old id
-     * would hand somebody a set that lies about what it is.
-     *
-     * ⛔ **AND IT IS A DEEP COPY.** `stampLevelSetIdentity` writes in place; the
-     * held document is what the open room was resolved against, and mutating it
-     * under the session would make the base tag name a set that no longer
-     * exists. ⚠ The page NEVER writes `fixtures/` — this is a browser blob,
-     * like every other download here.
+     * ⛔ **WHAT MOVED, SAID PLAINLY:** a room's edits reach the set through
+     * `closeRoomSession` (ONE `replace-room-xml`) and NOT through the download,
+     * so the download REFUSES BY NAME while a room session holds unwritten
+     * edits. C2 folded the open room in automatically, which was right when the
+     * page had exactly one write and is wrong now that five rooms can be edited
+     * before one stamp (§13.10's own question, answered).
      */
-    lifetime.on($('editDownloadSet'), 'click', () => {
-        if (!loadedSet || baseTag?.kind !== 'set-room') {
-            setNote('⛔ REFUSED — this download replaces the room the session is EDITING, and '
-                + `the current base is ${baseTag?.kind ? `a \`${baseTag.kind}\`` : 'none'}. `
-                + 'Open a room of the loaded set first: the write path is "the set, with THIS '
-                + 'room replaced", and there is nothing to replace otherwise.', true);
-            return;
-        }
-        const out = JSON.parse(JSON.stringify(loadedSet));
-        out.rooms[baseTag.room].source = { xml: recordToOel(session.record()) };
-        stampLevelSetIdentity(out);
-        const v = validateLevelSet(out);
-        setNote(`DOWNLOADED ${out.set_id} — room ${baseTag.room} replaced (${session.ops()
-            .length} edit(s) folded in) and the identity RE-STAMPED from ${loadedSet.set_id}. `
-            + `⛓ validateLevelSet: ${v.ok ? 'ok' : `⛔ ${v.errors.join(' | ')}`}`, !v.ok);
-        /**
-         * ⛓ …AND WHAT IT WROTE IS READABLE. A browser download is a blob and a
-         * click; the CLAIM is that the document round trips, so the document is
-         * put where a driver can read it — the same reason claim 5 reads the
-         * PAYLOAD off the readout rather than off a file the browser happened
-         * to write somewhere.
-         */
-        window.__editorSetOut = out;
-        download(`${out.set_id}.json`, `${JSON.stringify(out, null, 2)}\n`, 'application/json');
-    });
+
 }
 
 /**
@@ -9160,20 +9435,44 @@ async function runEditor(params, lifetime) {
  * expectation, because nobody has solved that room and the keyboard is what
  * drives it (MANUAL's arm, already).
  */
-function buildOneRoomSet({ record, summary = null, seed = 0, name, setId, provenance }) {
-    const { set } = buildLevelSet(
-        [{ seed, record, summary, name }],
-        { setId, generator: 'watch.html ▶ load in wasm', provenance },
-    );
+/**
+ * ⛓⛓⛓ **VALIDATE ON THE SENDER, THEN PLAN THE CHUNKS** — EDITOR v3 D2,
+ * EXTRACTED so the ONE-ROOM ship and the WHOLE-SET ship ask the same two
+ * questions in the same order and get the same two sentences.
+ *
+ * ⛔ There is no third caller and there will not be one: shipping a set is
+ * exactly *"is it a set"* and *"does every room fit the proven envelope"*, and
+ * an arm that answered either of those its own way would be a second opinion
+ * about whether a document is shippable.
+ */
+function validatedChunks(set, what) {
     const v = validateLevelSet(set);
     if (!v.ok) {
-        throw new Error(`the one-room set would not validate on the SENDER: ${v.errors.join(' | ')}`);
+        throw new Error(`the ${what} would not validate on the SENDER: ${v.errors.join(' | ')}`);
     }
     const { chunks, oversized } = planLevelSetChunks(set);
     if (oversized.length) {
         throw new Error('a room exceeds the proven chunk envelope on its own: '
             + JSON.stringify(oversized));
     }
+    return chunks;
+}
+
+/**
+ * ⛓⛓ **THE WHOLE SET, SHIPPED** (EDITOR v3 D2). `downloadSet(session).set` is
+ * the SAME stamped document the download hands a person — ⛔ not a second build
+ * — so what the game is asked to run is what the editor says it wrote.
+ */
+function buildSetShip(set) {
+    return { set, chunks: validatedChunks(set, 'set') };
+}
+
+function buildOneRoomSet({ record, summary = null, seed = 0, name, setId, provenance }) {
+    const { set } = buildLevelSet(
+        [{ seed, record, summary, name }],
+        { setId, generator: 'watch.html ▶ load in wasm', provenance },
+    );
+    const chunks = validatedChunks(set, 'one-room set');
     /**
      * ⛓ THE SET'S ORDER IS ITS IDENTITY — position is the room id, which is
      * `buildLevelSet`'s own rule. One entry, so the order is one record.
@@ -9270,6 +9569,23 @@ const NOTHING_TO_SHIP = Object.freeze({
 
 function setShippable(next) {
     shippable = next && next.build ? next : null;
+    /**
+     * ⛓⛓ EDITOR v3 D2 — **THE BUILDER, WHERE A DRIVER CAN ASK IT.** ⛔ It is the
+     * SAME closure `shipToWasm` presses, re-read at press time, so a row that
+     * asks what would be sent gets what WOULD be sent — not a copy captured when
+     * the arm mounted, which is the very defect `shippable` is a builder to
+     * avoid.
+     */
+    window.__editorShipProbe = shippable ? () => {
+        // ⛓ A BUILD THAT REFUSES ANSWERS `{error}` rather than throwing out of
+        // the probe: a driver asking what would be sent must be able to read
+        // "it would refuse, and here is the producer's sentence".
+        try {
+            return shippable.build();
+        } catch (e) {
+            return { error: e.message };
+        }
+    } : null;
     const btn = $('loadWasm');
     if (!btn) return;
     btn.disabled = !shippable;
@@ -9671,6 +9987,26 @@ const OGMO_SCHEMA_PATH = `${FIXTURES_DIR}/seedling-ogmo-schema.json`;
  * console. A refusal that stopped the arm would make a data file a
  * single point of failure for a control that predates it.
  */
+/**
+ * ⛓⛓ EDITOR v3 D2 — **A SCHEMA THAT DID NOT ARRIVE IS `null`, NOT A THROW**, on
+ * `loadOgmoSchema`'s own reasoning: the control that wants it works without it
+ * and SAYS what it lost, and a page that died on a missing JSON file would make
+ * a data file a single point of failure for the whole arm.
+ *
+ * ⛔ Memoised by PATH, so three arms asking for one schema fetch it once.
+ */
+const optionalJsonCache = new Map();
+function loadOptionalJson(path, what) {
+    if (!optionalJsonCache.has(path)) {
+        optionalJsonCache.set(path, fetchJson(repoUrl(path), what).catch((e) => {
+            console.warn(`${what} would not load (${e.message}) — the control that reads it `
+                + 'degrades to a NAMED absence and says so on the page.');
+            return null;
+        }));
+    }
+    return optionalJsonCache.get(path);
+}
+
 let ogmoSchemaPromise = null;
 function loadOgmoSchema() {
     if (!ogmoSchemaPromise) {

@@ -976,11 +976,92 @@
       <label for="editSetRoom">the LOADED SET's rooms</label>
       <select id="editSetRoom" disabled></select>
       <button id="editSetOpen" disabled>OPEN that room</button>
-      <button id="editDownloadSet" disabled>Download the SET (this room replaced, re-stamped)</button>
+      <button id="editRoomClose" disabled>CLOSE the open room INTO the set</button>
+      <button id="editSetAddRoom" disabled>ADD ROOM</button>
+      <button id="editDownloadSet" disabled>Download the SET · OVERLAY · apMapping</button>
     </div>
     <div class="line">
       <span id="editSetNote" class="note"></span>
     </div>
+    </details>
+
+    <!--
+      ⛓⛓⛓ EDITOR v3 D2 — **THE SET SESSION ON THE PAGE** (plan §16.4, §21).
+      C2 HELD a level set and offered its rooms; D1 made the set an `editCore`
+      substrate with twelve ops, a derived atlas and `rules.json` as its output.
+      This section is that session's DOM.
+
+      ⛔ THE OVERVIEW IS A **STRIP**, one cell per room, because `bounds` is
+      `{w: rooms.length, h: 1}` — a set IS a positionally addressed LIST and a
+      square grid would have been a second coordinate system to keep in step
+      with the adapter's. It carries its own `editorView`: the arrows are
+      POLYLINE shapes contributed through that file's new `shapes()` door, and
+      the two-click CONNECT gesture is a page TOOL in the same one `armed`.
+
+      ⛔ AND THE STRIP OWNS ITS KEYS (`tabindex`, plus a keydown stopper): the
+      room canvas's view binds Ctrl+Z to the ROOM session and this one binds it
+      to the SET session, so which session an undo hits is the DOM's own focus
+      and not a router somebody has to keep true.
+    -->
+    <details class="genSection" open id="editSetPanel">
+    <summary data-term="payload">the LEVEL SET — rooms, exits, manifest, rules, REPORT</summary>
+    <div class="line">
+      <span id="editSetIdentity" class="note"></span>
+    </div>
+    <div id="editSetRooms"></div>
+    <div class="line" id="editSetOverviewWrap"
+         style="position:relative;overflow-x:auto;max-width:100%">
+      <canvas id="editSetOverview" tabindex="0" width="1" height="1"></canvas>
+    </div>
+    <div class="line">
+      <button id="editSetGesture" disabled>CONNECT — click the SOURCE room, then the TARGET</button>
+      <label for="editSetExitList">the selected room's exits</label>
+      <select id="editSetExitList" disabled></select>
+      <!--
+        ⛓ `connect` lands on the DESTINATION's RETURN DOOR (D1 §20.4), so it
+        needs an ordinal IN THE TARGET ROOM — and the target is whichever room
+        the second click lands on, which is not known until it happens. ⇒ this
+        is the ORDINAL, and a target that has no such exit is refused BY NAME by
+        the adapter with its real count in the sentence.
+      -->
+      <label for="editSetTargetExit">return door (ordinal in the TARGET)</label>
+      <select id="editSetTargetExit" disabled></select>
+      <label for="editSetOneWay">one_way</label>
+      <input type="checkbox" id="editSetOneWay">
+      <button id="editSetDisconnect" disabled>DISCONNECT the selected exit</button>
+    </div>
+    <!--
+      ⛓ THE MANIFEST FORM is generated from `SET_FIELDS` and the level-set
+      schema; `named_rooms`' six keys come from `levelSetValidator.NAMED_ROOMS`,
+      because the schema itself says that file is the authority for them.
+    -->
+    <div id="editSetManifest"></div>
+    <div id="editSetRoomForm"></div>
+    <div class="line">
+      <label for="editSetRuleTarget">access rule on</label>
+      <select id="editSetRuleTarget" disabled></select>
+      <button id="editSetRuleCommit" disabled>COMMIT the access rule</button>
+    </div>
+    <div class="line">
+      <textarea id="editSetRuleJson" rows="3" style="width:40em"
+        placeholder='a Rule Builder tree, e.g. {"rule":"Has","args":{"item":"Sword"}}'>{"rule":"True_"}</textarea>
+    </div>
+    <div class="line"><span id="editSetRuleErrors" class="note"></span></div>
+    <div class="line"><span id="editSetRuleNote" class="note"></span></div>
+    <div class="line">
+      <label for="editSetLocEntity">mark a LOCATION</label>
+      <select id="editSetLocEntity" disabled></select>
+      <input id="editSetLocName" placeholder="location name (unique across the SET)">
+      <input id="editSetLocItem" placeholder="vanilla_item">
+      <button id="editSetMarkLocation" disabled>MARK</button>
+    </div>
+    <div class="line">
+      <button id="editSetReport" disabled>REPORT — validate, compile, and say what is FREE</button>
+      <button id="editSetUndo" disabled>UNDO the last SET edit</button>
+      <button id="editDownloadRules" disabled>Download rules.json</button>
+      <span id="editSetReportNote" class="note"></span>
+    </div>
+    <div id="editSetReportOut"></div>
     </details>
     </div>
     <!--

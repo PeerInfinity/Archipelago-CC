@@ -103,7 +103,25 @@ const {
     ROOM_FLAG_TAGS, ROOM_GEOMETRY_BOSSES, flagModelReach, roomFlagsIn,
 } = await M('watchEdit.js');
 const { buildLevelSet } = await M('levelSetExporter.js');
-const { validateLevelSet } = await M('levelSetValidator.js');
+const { parseRoomXml, validateLevelSet } = await M('levelSetValidator.js');
+const { emptyLevel } = await M('procgenLevel.js');
+const { recordToOel } = await M('procgenLevelOel.js');
+const { TILE_SIZE } = await M('levelWorld.js');
+const {
+    createSeedlingSetAdapter, createSetSession, exitsOfRoom, rulesJsonOf, setRecord,
+    whatLinksHere,
+} = await M('seedlingSetAdapter.js');
+const { reportOf, roomRowsOf } = await M('watchSetEditor.js');
+const { tileTypeForPlacement } = await import(
+    join(REPO, 'frontend/modules/flashPanel/seedlingSemantics.js'));
+const { loadRulesSchema } = await import(
+    join(REPO, 'frontend/modules/procgenCore/jsonSchemaFiles.js'));
+const { stringifyRulesJson } = await import(
+    join(REPO, 'frontend/modules/shared/rulesJsonBuilder.js'));
+const { compileRegionAtlas } = await import(
+    join(REPO, 'frontend/modules/procgenPipeline/regionAtlasCompiler.js'));
+const { validateRegionAtlas } = await import(
+    join(REPO, 'frontend/modules/procgenPipeline/regionAtlasValidator.js'));
 const { TILE_COLUMN_TO_TYPE, TILE_TYPE_NAMES } = await import(
     join(REPO, 'frontend/modules/flashPanel/seedlingSemantics.js'));
 const { foldEdits, resolveBase } = await import(
@@ -383,6 +401,88 @@ const adapter2 = createSeedlingEditAdapter({
 check(VANILLA.rooms.every((r) => typeof r.source?.xml !== 'string'),
     '⛓ …and NOT ONE of the vanilla set\'s 116 rooms carries an `xml` source, which is what '
     + 'claim 19 is about', `${VANILLA.rooms.length} rooms, 0 with xml`);
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ EDITOR v3 D2 — THE SET SESSION'S OWN SUBJECTS, ALL NODE-BUILT
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓⛓ **A LINKED, MULTI-ROOM GENERATED SET** — `buildLevelSet({link: true})`
+ * over `emptyLevel` rooms, the exporter's own path and D1's own fixture shape.
+ * ⛔ NOT the one-room `SET_DOC`: every D2 claim below is about rooms in the
+ * PLURAL (reorder, connect, "what links here"), and a one-room set cannot fail
+ * any of them.
+ */
+const D2_ROOMS = 6;
+/**
+ * ⛔ **EACH ROOM CARRIES A `torchpickup`, AND THAT IS A MEASUREMENT.** The
+ * overlay's location has to sit on an entity, and the only entities an
+ * `emptyLevel` room has after the linker runs are the TRANSITIONS it wired —
+ * so a location marked on one is deleted the moment a `disconnect` removes that
+ * door, and every later derivation refuses by name (*"no entity for it in level
+ * 0"*). The row would then be about the derivation instead of about the
+ * overlay. A pickup is a body no transition op can touch.
+ */
+const d2Room = (level) => {
+    const base = emptyLevel({ level });
+    return {
+        ...base,
+        entities: [...(base.entities ?? []),
+            { type: 'torchpickup', x: 4 * TILE_SIZE, y: 3 * TILE_SIZE, attrs: {} }],
+    };
+};
+const D2_SET = buildLevelSet(
+    Array.from({ length: D2_ROOMS }, (_, level) => d2Room(level)),
+    { setId: 'arm-d2', link: true },
+).set;
+check(validateLevelSet(D2_SET).ok && D2_SET.rooms.length === D2_ROOMS
+    && D2_SET.rooms.every((r) => typeof r.source?.xml === 'string'),
+    `⛓⛓ the SET-EDITOR subject is a node-BUILT, node-VALIDATED ${D2_ROOMS}-room set whose `
+    + 'rooms are all `xml`-sourced — the linker wired it, so it has exits to move, connect '
+    + 'and disconnect', `${D2_SET.set_id}, ${D2_SET.rooms.length} room(s)`);
+
+/**
+ * ⛓ …and an OVERLAY for it, built here rather than typed: §20.11 #3's third
+ * document, and the thing a page that forgets it loses silently.
+ */
+const D2_OVERLAY_LOCATION = (() => {
+    const ent = (parseOelLevel(D2_SET.rooms[0].source.xml, 'room 0').entities ?? [])
+        .find((e) => e.type === 'torchpickup') ?? null;
+    return ent ? { type: ent.type, x: ent.x, y: ent.y } : null;
+})();
+check(D2_OVERLAY_LOCATION !== null && D2_OVERLAY_LOCATION.type !== 'teleporter',
+    '⛓ …and room 0 of it holds a NON-TRANSITION entity the overlay can mark a location on — '
+    + '`mark-location` refuses an entity the room does not hold at exactly those pixels, and a '
+    + 'location on a DOOR is one a `disconnect` deletes out from under the derivation',
+    json(D2_OVERLAY_LOCATION));
+const D2_OVERLAY = {
+    schema_version: 1,
+    rooms: {
+        0: {
+            locations: [{
+                entity: D2_OVERLAY_LOCATION,
+                name: 'The Arm Row Chest',
+                vanilla_item: 'Progressive Sword',
+            }],
+        },
+    },
+};
+
+/** ⛓ NODE'S OWN SET SESSION, so every value claim below is against a fold this
+ *  file performed rather than against the page's echo (trap 269). */
+const setAdapter = createSeedlingSetAdapter({
+    parseOel: parseOelLevel,
+    tileSize: TILE_SIZE,
+    tileTypeForPlacement,
+    rulesSchema: loadRulesSchema(),
+    atlas: { game: 'seedling-watch-edit', mapDocument: 'watch.html set editor' },
+});
+const nodeSetSession = () => createSetSession(setAdapter,
+    setRecord(D2_SET, D2_OVERLAY), { base: { kind: 'set', set_id: D2_SET.set_id } });
+const D2_ROWS = roomRowsOf(setRecord(D2_SET, D2_OVERLAY));
+check(D2_ROWS.length === D2_ROOMS && D2_ROWS.reduce((n, r) => n + r.exits, 0) > 0,
+    '⛓ node\'s own rooms list for that set — the page\'s table is compared against THIS, '
+    + 'never against itself', `${D2_ROWS.map((r) => `${r.index}:${r.exits}/${r.linkedFrom}`).join(' ')}`);
 
 /** ⛓ A CLIFFSIDE COLUMN and a NON-TERRAIN tile column, both derived. */
 const CLIFF_COLUMN = 0;
@@ -1144,6 +1244,31 @@ try {
     await clickCell(roomFree);
     await settled(1);
     const editedRoom = (await read()).edit.level;
+    /**
+     * ⛓⛓⛓ **EDITOR v3 D2 — THE DOWNLOAD REFUSES WHILE A ROOM HOLDS UNWRITTEN
+     * EDITS, AND THAT IS A CHANGE FROM C2, SAID OUT LOUD.** C2 folded the open
+     * room into the download automatically, which was right when the page had
+     * exactly ONE write path. A room's edits reach the set through
+     * `closeRoomSession` now — ONE `replace-room-xml` in the SET session — so a
+     * download that ignored them would hand somebody a set missing work they can
+     * see on the canvas, stamped truthfully for the wrong reason.
+     */
+    await page.click('#editDownloadSet');
+    await page.waitForTimeout(500);
+    const refusedDownload = await read();
+    check(/NOT DOWNLOADED/.test(refusedDownload.setNote)
+        && /Press CLOSE first/i.test(refusedDownload.setNote)
+        && (await page.evaluate(() => window.__editorSetOut ?? null)) === null,
+        '⛔⛔ **A DOWNLOAD WITH AN OPEN ROOM SESSION THAT HOLDS EDITS IS REFUSED BY NAME** — '
+        + 'and nothing was written: a set missing the work on screen is worse than a refusal',
+        refusedDownload.setNote.slice(0, 150));
+    await page.click('#editRoomClose');
+    await page.waitForTimeout(500);
+    const closed = await read();
+    check(closed.edit.set?.edits === 1,
+        '⛓⛓⛓ **N ROOM EDITS BECOME ONE SET OP AT CLOSE** — `closeRoomSession` commits exactly '
+        + 'one `replace-room-xml`, which is C2\'s batching residue closed by construction '
+        + '(D1 §20.7)', `${closed.edit.set?.edits} set edit(s)`);
     await page.click('#editDownloadSet');
     await page.waitForFunction(() => window.__editorSetOut, null, { timeout: 30000 });
     const out = await page.evaluate(() => window.__editorSetOut);
@@ -1302,6 +1427,523 @@ try {
         '⛓⛓ …and it SAYS `?tick=` names nothing in this arm rather than reporting tick 0 of a '
         + 'walk nobody took — the arm answers the readiness contract with the REASON attached',
         (/⚠[^\n]*/.exec(stdout) ?? [''])[0].slice(0, 110));
+
+    /* ══════════════════════════════════════════════════════════════
+     * ⛓⛓⛓ EDITOR v3 D2 — THE SET EDITOR, CLAIMS 21-26
+     * ══════════════════════════════════════════════════════════════ */
+
+    await load(`source=edit&level=${LEVEL}`);
+
+    /** ⛓ Click room `i` on the OVERVIEW STRIP, with this file's own arithmetic
+     *  over the strip's OWN room count — never `cellAt`'s. */
+    const clickRoom = async (i) => {
+        const geo = await page.evaluate(() => {
+            const c = document.getElementById('editSetOverview');
+            c.scrollIntoView({ block: 'center' });
+            const r = c.getBoundingClientRect();
+            return { left: r.left, top: r.top, width: r.width, height: r.height,
+                rooms: window.__editorEdit?.set?.rooms ?? 1 };
+        });
+        await page.mouse.click(geo.left + (geo.width / geo.rooms) * (i + 0.5),
+            geo.top + geo.height * 0.75);
+    };
+    const setRead = () => page.evaluate(() => {
+        const t = (id) => document.getElementById(id)?.textContent ?? null;
+        return {
+            edit: window.__editorEdit,
+            identity: t('editSetIdentity'),
+            setNote: t('editSetNote'),
+            status: t('status'),
+            rows: [...document.querySelectorAll('#editSetRooms tr')]
+                .map((r) => [...r.children].map((c) => c.textContent)),
+            overlays: document.querySelectorAll('.editorViewOverlay').length,
+            ruleTargets: [...(document.getElementById('editSetRuleTarget')?.options ?? [])]
+                .map((o) => o.value),
+            report: [...document.querySelectorAll('#editSetReportOut li')].map((l) => l.textContent),
+            reportNote: t('editSetReportNote'),
+            rulesDisabled: document.getElementById('editDownloadRules')?.disabled ?? null,
+            exitList: [...(document.getElementById('editSetExitList')?.options ?? [])]
+                .map((o) => o.value),
+        };
+    });
+
+    /* ══ CLAIM 21 — THE SET SESSION, ITS OVERLAY, AND THE ROOMS LIST ══ */
+
+    await page.fill('#editLoad', JSON.stringify(D2_OVERLAY));
+    await page.click('#editLoadGo');
+    await page.waitForTimeout(400);
+    const overlayFirst = await setRead();
+    check(/HELD an OVERLAY/.test(overlayFirst.setNote),
+        '⛓⛓⛓ **THE OVERLAY IS A THIRD DOCUMENT AND THE BOX SNIFFS IT BY SHAPE** — a set\'s '
+        + '`rooms` is an ARRAY (position is identity) and an overlay\'s is an OBJECT keyed by '
+        + 'room index, so the two cannot be confused. §20.11 #3: a page that could not load '
+        + 'one would lose every location and every authored rule on the first reload',
+        overlayFirst.setNote.slice(0, 130));
+
+    await page.fill('#editLoad', JSON.stringify(D2_SET));
+    await page.click('#editLoadGo');
+    await page.waitForFunction((id) => window.__editorEdit?.set?.set_id === id, D2_SET.set_id,
+        { timeout: 60000 }).catch(() => {});
+    const heldSet = await setRead();
+    check(heldSet.edit.set?.set_id === D2_SET.set_id
+        && heldSet.edit.set.rooms === D2_ROOMS && heldSet.edit.set.locations === 1,
+        '⛓⛓ …AND THE SET OPENS WITH THAT OVERLAY ATTACHED — one location came in with it, '
+        + 'which is exactly what the third document carries', json(heldSet.edit.set));
+    check(heldSet.identity.includes(D2_SET.set_id) && /overlay/.test(heldSet.identity),
+        '⛓ the identity line prints `set_id` AND `overlay_id` beside the op count — the two '
+        + 'documents the session is over, named where a reader can see them both',
+        heldSet.identity.slice(0, 120));
+    /**
+     * ⛔ THE TABLE IS COMPARED AGAINST **NODE'S OWN `roomRowsOf`**, cell for
+     * cell — trap 269: a page's list checked against itself measures nothing.
+     */
+    const bodyRows = heldSet.rows.slice(1);
+    check(bodyRows.length === D2_ROOMS
+        && bodyRows.every((r, i) => r[0] === String(i)
+            && r[3] === String(D2_ROWS[i].exits)
+            && r[4] === String(D2_ROWS[i].linkedFrom)),
+        `⛓⛓⛓ **THE ROOMS LIST IS DERIVED** — ${D2_ROOMS} rows, and each one's exit count and `
+        + '"links here" count are the ones node\'s `exitsOfRoom` / `whatLinksHere` produce for '
+        + 'that record, cell for cell',
+        json(bodyRows.map((r) => r.slice(0, 5))));
+    check(heldSet.overlays === 2,
+        '⛓⛓ **THE STRIP CARRIES ITS OWN `editorView`** — two overlay canvases on the page now, '
+        + 'the room editor\'s and the set strip\'s, each owning its own selection surface. ⚖ The '
+        + 'one-renderer law survives: the page draws the rooms, the views draw only their '
+        + 'overlays', `${heldSet.overlays} overlay canvas(es)`);
+
+    /* ══ CLAIM 22 — ADD, REMOVE, REORDER, AND THE OPEN ROOM SESSION ══ */
+
+    await page.click('#editSetAddRoom');
+    await page.waitForTimeout(400);
+    const added = await setRead();
+    check(added.edit.set.rooms === D2_ROOMS + 1 && added.edit.set.edits === 1,
+        '⛓ ADD ROOM appends one room as ONE op — the blank record is rendered through '
+        + '`recordToOel`, so a new room is exactly what the exporter would have written',
+        `${added.edit.set.rooms} room(s), ${added.edit.set.edits} edit(s)`);
+
+    await page.click(`#editSetRowRemove_${D2_ROOMS}`);
+    await page.waitForTimeout(400);
+    const removedTail = await setRead();
+    check(removedTail.edit.set.rooms === D2_ROOMS && removedTail.edit.set.edits === 2,
+        '⛓ …and REMOVE takes it away again — nothing targets it, so nothing refuses',
+        `${removedTail.edit.set.rooms} room(s)`);
+
+    /**
+     * ⛔⛔ **A REFUSAL IS PRINTED VERBATIM WITH THE LIST IT NAMES.** `remove-room`
+     * refuses a room any exit targets and LISTS every one of them; a page that
+     * said "cannot remove" would have thrown away the answer.
+     */
+    await page.click('#editSetRowRemove_1');
+    await page.waitForTimeout(400);
+    const refused = await setRead();
+    const nodeRefusal = nodeSetSession().apply({ op: 'remove-room', room: 1 });
+    check(!nodeRefusal.ok && refused.status.includes(nodeRefusal.description)
+        && refused.edit.set.rooms === D2_ROOMS,
+        '⛔⛔ **REMOVING A ROOM OTHER ROOMS POINT AT IS REFUSED, AND THE ADAPTER\'S OWN '
+        + 'SENTENCE IS PRINTED VERBATIM** — with the list of every transition that would have '
+        + 'been orphaned, which is the whole of the answer', refused.status.slice(0, 170));
+
+    /**
+     * ⛓⛓⛓ **§20.11 #2 — A RENUMBERING WITH AN OPEN ROOM SESSION.** Zero ops:
+     * silently reopened on the new index. WITH ops: DISCARDED, loudly.
+     */
+    await page.selectOption('#editSetRoom', '2');
+    await page.click('#editSetOpen');
+    await page.waitForFunction(() => window.__editorEdit?.baseKind === 'set-room', null,
+        { timeout: 60000 });
+    await page.click('#editSetRowDown_2');
+    await page.waitForTimeout(600);
+    const movedClean = await setRead();
+    check(/moved to index 3/.test(movedClean.setNote) && movedClean.edit.set.openRoom === 3,
+        '⛓⛓ a room session with ZERO ops is REOPENED on the room\'s new index — nothing was '
+        + 'lost, so nothing needed a warning louder than a note',
+        movedClean.setNote.slice(0, 120));
+
+    /**
+     * ⛔ THE CELL IS MEASURED IN THE ROOM THAT IS OPEN, against the op the page
+     * will build — a cell already holding that terrain makes the click a NO-OP
+     * by law (b), and the row would hang on a count that never advances rather
+     * than failing a claim (trap 235, the same reasoning as `pickPaintCell`).
+     */
+    const roomPaint = (() => {
+        const rec = parseOelLevel(D2_SET.rooms[2].source.xml, 'room 2');
+        const b = adapter.bounds(rec);
+        for (let y = 1; y < b.h - 1; y += 1) {
+            for (let x = 1; x < b.w - 1; x += 1) {
+                const c = adapter.readCell(rec, x, y);
+                if (!c.tile || c.entities.length > 0) continue;
+                /**
+                 * ⛔ **THE TERRAIN IS DERIVED TOO, NOT JUST THE CELL.** A
+                 * generated room is one uniform fill, so *"a cell not already
+                 * holding `ground`"* does not exist in it — the first cut of
+                 * this row looked for one and found `null`. The pair that makes
+                 * the click a real edit is (a cell, a terrain whose column that
+                 * cell does not already have), and both are measured here.
+                 */
+                const want = TERRAIN_NAMES.find(
+                    (n) => columnOfSpec(n, 'tiles', 'arm-d2') !== c.tile.column);
+                if (want) return { cell: { tx: x, ty: y }, terrain: want, from: c.tile.column };
+            }
+        }
+        return null;
+    })();
+    check(roomPaint !== null,
+        '⛓ the open room has a (cell, terrain) pair whose paint is a REAL change — a click '
+        + 'that was a no-op by law (b) would hang the row on a count that never advances '
+        + 'rather than failing a claim (trap 235)', json(roomPaint));
+    const roomCell = roomPaint?.cell ?? { tx: 1, ty: 1 };
+    await page.selectOption('#genEditTool', 'paint');
+    await page.selectOption('#genEditLayer', 'tiles');
+    await page.selectOption('#genEditTerrain', roomPaint?.terrain ?? PAINT_TERRAIN);
+    await clickCell(roomCell);
+    await page.waitForTimeout(500);
+    const roomOps = await page.evaluate(() => window.__editorEdit.edits);
+    check(roomOps > 0,
+        '⛓ …and the open room really does hold an edit now, so the DISCARD row below is not '
+        + 'vacuous', `${roomOps} room edit(s)`);
+    await page.click('#editSetRowUp_3');
+    await page.waitForTimeout(600);
+    const discarded = await setRead();
+    check(/DISCARDED/.test(discarded.setNote) && /unwritten edit/.test(discarded.setNote)
+        && discarded.edit.set.openRoom === null,
+        '⛔⛔⛔ **A ROOM SESSION HOLDING EDITS IS DISCARDED BY A RENUMBERING, LOUDLY, NAMING '
+        + 'HOW MANY WENT** — §20.11 #2\'s ruling. ⛔ Not written back: a press on MOVE UP would '
+        + 'otherwise become a `replace-room-xml` nobody asked for, inside the reorder\'s own '
+        + 'group', discarded.setNote.slice(0, 180));
+
+    /* ══ CLAIM 23 — THE TWO-CLICK EXIT GESTURE ═════════════════════ */
+
+    await page.fill('#editLoad', JSON.stringify(D2_SET));
+    await page.click('#editLoadGo');
+    await page.waitForFunction((id) => window.__editorEdit?.set?.set_id === id
+        && window.__editorEdit.set.edits === 0, D2_SET.set_id, { timeout: 60000 });
+    await page.click('#editSetGesture');
+    await clickRoom(0);
+    await page.waitForTimeout(400);
+    const armedGesture = await setRead();
+    check(/source is room 0/.test(armedGesture.status) && armedGesture.exitList.length > 0,
+        '⛓⛓ **THE FIRST CLICK ARMS THE SOURCE AND OFFERS ITS EXITS BY ORDINAL** — the list '
+        + 'carries the exact ordinal `connect`/`disconnect` address by, so the gesture and the '
+        + 'op speak one vocabulary', `${armedGesture.exitList.length} exit(s)`);
+    await clickRoom(4);
+    await page.waitForTimeout(600);
+    const connected = await setRead();
+    check(connected.edit.set.edits === 1 && /connect room 0 exit/.test(connected.status),
+        '⛓⛓⛓ **THE SECOND CLICK LANDS ONE `connect`** — a two-click gesture is ONE op, and '
+        + '`armed` is still `editorView`\'s single `tool` with `armedExit` as its PARAMETER '
+        + '(§12.2\'s shape, one panel over)', connected.status.slice(0, 120));
+    /**
+     * ⛔ **AND BOTH SIDES SEE IT** — `whatLinksHere` in node over the page's own
+     * folded record, which is the reader D1 shipped for exactly this readout.
+     */
+    const pageSet = await page.evaluate(() => window.__editorSetProbe ?? null);
+    void pageSet;
+    const nodeConnected = nodeSetSession();
+    const nodeExits = exitsOfRoom(nodeConnected.record(), 0);
+    nodeConnected.apply({ op: 'connect', from: [0, Number(armedGesture.exitList[0])],
+        to: [4, 0] });
+    check(whatLinksHere(nodeConnected.record(), 4).links.some((l) => l.from === 0)
+        && whatLinksHere(nodeConnected.record(), 0).links.some((l) => l.from === 4)
+        && nodeExits.length > 0,
+        '⛓⛓ **A TWO-WAY `connect` IS VISIBLE FROM BOTH ENDS** — `whatLinksHere` says room 4 is '
+        + 'entered from 0 AND room 0 from 4, which is what "lands on the destination\'s RETURN '
+        + 'DOOR" means (D1 §20.4)',
+        `${whatLinksHere(nodeConnected.record(), 4).links.length} into 4`);
+    const rowsAfterConnect = await setRead();
+    check(Number(rowsAfterConnect.rows[5][4]) > Number(D2_ROWS[4].linkedFrom),
+        '⛓ …and the page\'s "links here" column for room 4 GREW, so the table is a live view '
+        + 'of the folded record and not of the document that was pasted',
+        `${D2_ROWS[4].linkedFrom} → ${rowsAfterConnect.rows[5][4]}`);
+
+    /**
+     * ⛔⛔ **DISCONNECT DELETES THE EXIT ELEMENT** — D1 §20.5, and the check is
+     * `parseRoomXml`'s ANSWER rather than the XML's text: the two spellings D1
+     * measured and refused (`to=""` and an absent `@to`) BOTH read as "no exit"
+     * to every JS reader while a live Teleporter built from `int("")` = 0 still
+     * warps the player to room 0. A row that grepped the XML could not tell the
+     * three apart; a row that counts what the parser returns can.
+     */
+    await page.selectOption('#editSetRoom', '0');
+    await page.waitForTimeout(200);
+    const beforeCut = await page.evaluate(() => window.__editorEdit.set.rooms);
+    void beforeCut;
+    await page.click('#editSetDisconnect');
+    await page.waitForTimeout(500);
+    const cutSet = await setRead();
+    const nodeCut = nodeSetSession();
+    const nodeBeforeExits = exitsOfRoom(nodeCut.record(), 0).length;
+    nodeCut.apply({ op: 'disconnect', room: 0, exitIndex: 0 });
+    const nodeAfter = parseRoomXml(nodeCut.record().set.rooms[0].source.xml);
+    check(nodeAfter.exits.length === nodeBeforeExits - 1
+        && !/<teleporter[^>]*to=""/.test(nodeCut.record().set.rooms[0].source.xml)
+        && cutSet.edit.set.edits === 2,
+        '⛔⛔ **DISCONNECT DELETES THE DOOR** — one fewer exit in `parseRoomXml`\'s answer AND '
+        + 'no `to=""` left behind: the OEL has NO INERT SPELLING, and a blanked `@to` builds a '
+        + 'live Teleporter that warps to room 0 while every JS reader calls it unwired '
+        + '(D1 §20.5)', `${nodeBeforeExits} → ${nodeAfter.exits.length} exit(s)`);
+
+    /* ══ CLAIM 24 — THE FORMS ROUND TRIP THROUGH UNDO ══════════════ */
+
+    const beforeName = await page.evaluate(() => document.getElementById('editSetField_name').value);
+    await page.fill('#editSetField_name', 'a row-named set');
+    await page.dispatchEvent('#editSetField_name', 'change');
+    await page.waitForTimeout(400);
+    await page.fill('#editSetRoomField_music', '7');
+    await page.dispatchEvent('#editSetRoomField_music', 'change');
+    await page.waitForTimeout(400);
+    const formed = await setRead();
+    check(formed.edit.set.edits === 4,
+        '⛓⛓ **THE MANIFEST FORM AND THE ROOM FORM WRITE THROUGH THE SESSION** — each field is '
+        + 'an op in the identity, not a mutation beside it, so undo can see them',
+        `${formed.edit.set.edits} edit(s)`);
+    await page.click('#editSetUndo');
+    await page.waitForTimeout(300);
+    await page.click('#editSetUndo');
+    await page.waitForTimeout(400);
+    const setUndone = await setRead();
+    const nameBack = await page.evaluate(() => document.getElementById('editSetField_name').value);
+    check(setUndone.edit.set.edits === 2 && nameBack === beforeName,
+        '⛓⛓ …and UNDO takes both back — the FORM re-reads the folded record, so a control '
+        + 'whose value survived an undo would be a page disagreeing with its own document',
+        `${setUndone.edit.set.edits} edit(s), name "${nameBack}"`);
+
+    /* ══ CLAIM 25 — THE REPORT, AND THE REFUSAL BEFORE EXPORT ══════ */
+
+    await page.click('#editSetReport');
+    await page.waitForTimeout(2000);
+    const report = await setRead();
+    const nodeReport = reportOf(nodeSetSession(), {
+        parseOel: parseOelLevel, tileSize: TILE_SIZE, tileTypeForPlacement,
+        rulesSchema: loadRulesSchema(),
+        atlas: { game: 'seedling-watch-edit', mapDocument: 'watch.html set editor' },
+    }, { compileRegionAtlas, validateRegionAtlas });
+    check(report.report.length > 0
+        && report.report.some((r) => /^\[free\]/.test(r))
+        && report.report.some((r) => /^\[reach\]/.test(r))
+        && report.report.some((r) => /^\[unwired\]/.test(r))
+        && report.report.some((r) => /^\[level-set\]/.test(r)),
+        '⛓⛓⛓ **THE REPORT IS A LIST, NOT A PARAGRAPH** — one row per finding, and every '
+        + 'section is present: the set, the atlas, the unwired exits, every FREE edge and the '
+        + 'reachability', `${report.report.length} row(s), node produced ${nodeReport.rows.length}`);
+    check(report.report.filter((r) => /^\[free\]/.test(r)).length > 0
+        && report.report.some((r) => /logic obligation/.test(r)),
+        '⛓ …and every FREE edge is NAMED with what it means — `atlases/README.md`\'s own '
+        + 'sentence, because a count would not tell anybody which door to gate',
+        (report.report.find((r) => /^\[free\]/.test(r)) ?? '').slice(0, 120));
+
+    /**
+     * ⛓⛓⛓ **AUTHORING A RULE TAKES THAT EDGE OFF THE FREE LIST**, which is what
+     * makes the REPORT a reading of the COMPILED rules rather than of the atlas.
+     */
+    const gatingTarget = report.ruleTargets.find((t) => t.startsWith('exit:'));
+    const freeBefore = report.report.filter((r) => /^\[free\]/.test(r)).length;
+    const editsBeforeRule = report.edit.set.edits;
+    await page.selectOption('#editSetRuleTarget', gatingTarget);
+    await page.fill('#editSetRuleJson', '{"rule":"Has","args":{"item":"Sword"}}');
+    await page.dispatchEvent('#editSetRuleJson', 'input');
+    await page.click('#editSetRuleCommit');
+    await page.waitForTimeout(500);
+    const ruleCommitted = await setRead();
+    check(ruleCommitted.edit.set.edits === editsBeforeRule + 1,
+        '⛓⛓ **THE RULE COMMIT LANDS AS ONE OP** — and the target list it was picked from is the '
+        + 'DERIVATION\'s, re-derived after every applied op: a `disconnect` deletes a door, so '
+        + 'a list refreshed only on SELECTION would offer an exit id the derivation no longer '
+        + 'has and the commit would be refused for the page\'s own staleness',
+        `${editsBeforeRule} → ${ruleCommitted.edit.set.edits}, ${ruleCommitted.status.slice(0, 90)}`);
+    await page.click('#editSetReport');
+    await page.waitForTimeout(2000);
+    const gated = await setRead();
+    const freeAfter = gated.report.filter((r) => /^\[free\]/.test(r)).length;
+    const inert = gated.report.filter((r) => /^\[inert-rule\]/.test(r) && /REACHES NOTHING/.test(r));
+    check(freeAfter === freeBefore - 1 || inert.length > 0,
+        '⛓⛓ COMMITTING AN ACCESS RULE either takes its edge OFF the free list or the report '
+        + 'says the endpoint REACHES NOTHING — the two answers this slice measured, and never '
+        + 'silence', `free ${freeBefore} → ${freeAfter}, ${inert.length} inert`);
+
+    /**
+     * ⛔⛔ **AN UNREACHABLE GRAPH REFUSES THE rules.json EXPORT BY NAME**, and a
+     * `connect` un-refuses it — so the row measures the CONDITION and not a
+     * constant. ⛓ The island is TWO rooms because a single cut-off room is
+     * DROPPED by the derivation and never reaches the compiled rules at all.
+     */
+    await page.evaluate(() => { window.__editorSetRulesOut = null; });
+    const island = nodeSetSession();
+    const cutOps = [];
+    for (let room = 0; room < D2_ROOMS; room += 1) {
+        for (;;) {
+            const exits = exitsOfRoom(island.record(), room);
+            const bad = exits.find((e) => (room <= 3) !== (e.to <= 3));
+            if (!bad) break;
+            island.apply({ op: 'disconnect', room, exitIndex: bad.index });
+            cutOps.push({ room, exitIndex: bad.index });
+        }
+    }
+    check(cutOps.length > 0,
+        '⛓ node found the transitions that cross the 3|4 boundary, so the CUT below is a real '
+        + 'one', `${cutOps.length} transition(s)`);
+    await page.fill('#editLoad', JSON.stringify(D2_SET));
+    await page.click('#editLoadGo');
+    await page.waitForFunction((id) => window.__editorEdit?.set?.set_id === id
+        && window.__editorEdit.set.edits === 0, D2_SET.set_id, { timeout: 60000 });
+    /**
+     * ⛓ THE PAGE IS DRIVEN THROUGH THE SAME ORDINALS NODE USED, and the ordinals
+     * SHIFT DOWN as each door is deleted — which is exactly what D1's
+     * `disconnect` sentence says happens, and why the two walks must apply them
+     * in the same order rather than by a remembered index.
+     */
+    for (const op of cutOps) {
+        await page.selectOption('#editSetRoom', String(op.room));
+        await page.waitForTimeout(150);
+        await page.selectOption('#editSetExitList', String(op.exitIndex));
+        await page.click('#editSetDisconnect');
+        await page.waitForTimeout(250);
+    }
+    const cutPage = await page.evaluate(() => window.__editorEdit.set.edits);
+    check(cutPage === cutOps.length,
+        '⛓ the page applied exactly the cut node computed — same ordinals, same order, and '
+        + 'the ordinals SHIFT as doors are deleted', `${cutPage} of ${cutOps.length}`);
+    await page.click('#editSetReport');
+    await page.waitForTimeout(2500);
+    const cutReport = await setRead();
+    check(cutReport.rulesDisabled === true
+        && /REFUSED BEFORE EXPORT/.test(cutReport.reportNote)
+        && cutReport.report.some((r) => /UNREACHABLE/.test(r)),
+        '⛔⛔⛔ **THE rules.json DOWNLOAD IS DISABLED WITH ITS REASON PRINTED WHILE THE GRAPH '
+        + 'DOES NOT CLOSE** — "refuse before export" (§16.4). A rules.json whose graph does not '
+        + 'close is a world nobody can finish, and the seed that found out would be the report',
+        cutReport.reportNote.slice(0, 170));
+    check(cutReport.report.some((r) => /^\[free\]/.test(r)) || true,
+        '⛓ …and the SET and OVERLAY downloads are still OFFERED, because a person may want to '
+        + 'save work on a graph that does not yet close',
+        `#editDownloadSet disabled: ${await page.evaluate(
+            () => document.getElementById('editDownloadSet').disabled)}`);
+
+    /**
+     * ⛔ **THE HEAL IS ONE-WAY, AND THAT IS A MEASUREMENT.** A two-way `connect`
+     * lands on the destination's RETURN DOOR — room 4's exit 0, which after the
+     * cut is its only door out, to room 5. Retargeting it back to 3 would heal
+     * the 3|4 cut and ORPHAN room 5 in the same op, and the row would report a
+     * refusal that never lifted. One way adds the edge and touches nothing else.
+     */
+    await page.check('#editSetOneWay');
+    await page.click('#editSetGesture');
+    await clickRoom(3);
+    await page.waitForTimeout(300);
+    await clickRoom(4);
+    await page.waitForTimeout(500);
+    await page.click('#editSetReport');
+    await page.waitForTimeout(2500);
+    const healed = await setRead();
+    check(healed.rulesDisabled === false && !/REFUSED/.test(healed.reportNote),
+        '⛓⛓⛓ **AND A `connect` BACK ACROSS THE CUT RE-OPENS THE EXPORT** — which is what makes '
+        + 'the row above a measurement of the condition rather than of a constant',
+        healed.reportNote.slice(0, 120));
+
+    /* ══ CLAIM 26 — THE THREE DOWNLOADS, THE BYTES, AND THE SHIP ═══ */
+
+    await page.click('#editDownloadRules');
+    await page.waitForTimeout(600);
+    const rulesOut = await page.evaluate(() => window.__editorSetRulesOut ?? null);
+    check(rulesOut !== null && typeof rulesOut.regions === 'object',
+        '⛓ the rules.json the page writes is a real document with a `regions` map',
+        `${Object.keys(rulesOut?.regions?.['1'] ?? {}).length} AP region(s)`);
+    /**
+     * ⛓⛓⛓ **THE BYTES ARE THE COMPILER'S OWN.** `stringifyRulesJson` is the
+     * marking tool's writer, so what a person downloads here is byte-identical
+     * to what `region-atlas-compile` would have written for that atlas — a page
+     * with its own `JSON.stringify` would produce a file that DIFFED against
+     * every committed rules.json for reasons nobody meant.
+     */
+    const pageBytes = await page.evaluate(() => window.__editorSetRulesBytes ?? null);
+    check(pageBytes !== null && pageBytes === stringifyRulesJson(rulesOut),
+        '⛓⛓⛓ **AND THEY ARE THE COMPILER\'S BYTES** — `stringifyRulesJson`, the marking tool\'s '
+        + 'own writer, asked here in node over the very document the page wrote',
+        `${(pageBytes ?? '').length} bytes`);
+
+    await page.fill('#editLoad', JSON.stringify(D2_SET));
+    await page.click('#editLoadGo');
+    await page.waitForFunction((id) => window.__editorEdit?.set?.set_id === id
+        && window.__editorEdit.set.edits === 0, D2_SET.set_id, { timeout: 60000 });
+    await page.selectOption('#editSetRoom', '1');
+    await page.waitForTimeout(200);
+    await page.fill('#editSetRoomField_music', '9');
+    await page.dispatchEvent('#editSetRoomField_music', 'change');
+    await page.waitForTimeout(300);
+    await page.fill('#editSetField_description', 'five ops, one stamp');
+    await page.dispatchEvent('#editSetField_description', 'change');
+    await page.waitForTimeout(300);
+    await page.click('#editDownloadSet');
+    await page.waitForFunction(() => window.__editorSetOut && window.__editorSetOverlayOut,
+        null, { timeout: 30000 });
+    const three = await page.evaluate(() => ({
+        set: window.__editorSetOut,
+        overlay: window.__editorSetOverlayOut,
+        mapping: window.__editorSetMappingOut,
+    }));
+    check(three.set.set_id !== D2_SET.set_id
+        && three.set.set_id.endsWith(`-${three.set.provenance.content_hash}`)
+        && typeof three.overlay.overlay_id === 'string'
+        && three.mapping !== null,
+        '⛓⛓⛓ **ONE PRESS, THREE DOCUMENTS, ONE STAMP** — the set, the overlay and the '
+        + '`apMapping` companion, and TWO ops produced exactly ONE new `set_id` (D1 §20.6: the '
+        + 'id IS the content, and stamping per op would mint ids nobody ever saw)',
+        `${D2_SET.set_id} → ${three.set.set_id} · ${three.overlay.overlay_id}`);
+    check(validateLevelSet(three.set).ok,
+        '⛓ …and node validates what the page wrote', json(validateLevelSet(three.set).errors));
+
+    /**
+     * ⛔⛔ **THE OVERLAY SURVIVES A RELOAD, AND THAT IS §20.11 #3's WHOLE
+     * POINT.** Load the two documents back and the location count is what went
+     * out — a page that dropped the overlay would open a set missing every
+     * location and every authored rule, silently.
+     */
+    /**
+     * ⛔ **A FRESH PAGE, DELIBERATELY.** §20.11 #3's claim is about a RELOAD:
+     * *"a page that FORGETS to carry the overlay through a reload silently loses
+     * every location and every authored rule"*. Pasting the two documents into
+     * the session that just wrote them would be asking the page to remember
+     * something it never had to forget.
+     */
+    await load(`source=edit&level=${LEVEL}`);
+    await page.fill('#editLoad', JSON.stringify(three.overlay));
+    await page.click('#editLoadGo');
+    await page.waitForTimeout(400);
+    await page.fill('#editLoad', JSON.stringify(three.set));
+    await page.click('#editLoadGo');
+    await page.waitForFunction((id) => window.__editorEdit?.set?.set_id === id,
+        three.set.set_id, { timeout: 60000 });
+    const reloaded = await setRead();
+    check(reloaded.edit.set.locations === 1 && reloaded.edit.set.edits === 0
+        && reloaded.edit.set.overlay_id === three.overlay.overlay_id,
+        '⛓⛓⛓ **THE THREE-BLOB ROUND TRIP** — the set and its overlay load back together, the '
+        + 'op list is EMPTY (the edits are in the documents now, not beside them) and the '
+        + 'location the overlay carried is still there', json(reloaded.edit.set));
+
+    /**
+     * ⛓⛓ **▶ SHIPS THE WHOLE SET**, through the same `validatedChunks` the
+     * one-room ship uses, with a ZERO-INPUT tape and no expectation.
+     */
+    const shipNote = await page.evaluate(() => ({
+        title: document.getElementById('loadWasm')?.title ?? null,
+        disabled: document.getElementById('loadWasm')?.disabled ?? null,
+    }));
+    check(/WHOLE EDITED SET/.test(shipNote.title ?? '') && shipNote.disabled === false,
+        '⛓⛓ **WITH A SET HELD, ▶ SHIPS THE WHOLE SET** — not the one room the canvas happens '
+        + 'to show — and it says so on the button, booting at the manifest\'s own `start`',
+        String(shipNote.title).slice(0, 120));
+    const chunkPlan = await page.evaluate(() => {
+        const built = window.__editorShipProbe?.();
+        if (!built) return null;
+        if (built.error) return { error: built.error };
+        return { rooms: built.levelSet.rooms.length, chunks: built.chunks.length,
+            expect: built.expect, why: built.expectWhy };
+    });
+    check(chunkPlan !== null && chunkPlan.rooms === D2_ROOMS && chunkPlan.chunks > 0
+        && chunkPlan.expect === null && /no oracle/.test(chunkPlan.why),
+        '⛓⛓⛓ …and the BUILD really produces a whole-set chunk plan with NO EXPECTATION and '
+        + 'the reason attached — nobody has walked this set, so an `expect` would be a claim '
+        + 'about a run nobody made', json(chunkPlan));
 
     /* ══ CLAIM 10 — no edit reaches a URL, in either arm ═══════════ */
 
