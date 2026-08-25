@@ -1374,7 +1374,7 @@ try {
      * EDITS, AND THAT IS A CHANGE FROM C2, SAID OUT LOUD.** C2 folded the open
      * room into the download automatically, which was right when the page had
      * exactly ONE write path. A room's edits reach the set through
-     * `closeRoomSession` now — ONE `replace-room-xml` in the SET session — so a
+     * `closeRoomSession` now — ONE `replace-room` in the SET session — so a
      * download that ignored them would hand somebody a set missing work they can
      * see on the canvas, stamped truthfully for the wrong reason.
      */
@@ -1392,7 +1392,7 @@ try {
     const closed = await read();
     check(closed.edit.set?.edits === 1,
         '⛓⛓⛓ **N ROOM EDITS BECOME ONE SET OP AT CLOSE** — `closeRoomSession` commits exactly '
-        + 'one `replace-room-xml`, which is C2\'s batching residue closed by construction '
+        + 'one `replace-room`, which is C2\'s batching residue closed by construction '
         + '(D1 §20.7)', `${closed.edit.set?.edits} set edit(s)`);
     await page.click('#editDownloadSet');
     await page.waitForFunction(() => window.__editorSetOut, null, { timeout: 30000 });
@@ -1734,7 +1734,7 @@ try {
         && discarded.edit.set.openRoom === null,
         '⛔⛔⛔ **A ROOM SESSION HOLDING EDITS IS DISCARDED BY A RENUMBERING, LOUDLY, NAMING '
         + 'HOW MANY WENT** — §20.11 #2\'s ruling. ⛔ Not written back: a press on MOVE UP would '
-        + 'otherwise become a `replace-room-xml` nobody asked for, inside the reorder\'s own '
+        + 'otherwise become a `replace-room` nobody asked for, inside the reorder\'s own '
         + 'group', discarded.setNote.slice(0, 180));
 
     /* ══ CLAIM 23 — THE TWO-CLICK EXIT GESTURE ═════════════════════ */
@@ -1922,7 +1922,7 @@ try {
     /**
      * ⛓⛓⛓ **CLOSING A ROOM SESSION THAT HOLDS NO OPS ADDS NO SET OP.** The undo
      * above took the room's only edit back, so the write-back is a
-     * `replace-room-xml` with the SAME bytes — and the core's own law (a click
+     * `replace-room` with the SAME bytes — and the core's own law (a click
      * that changed nothing is not an edit) drops it. A page that recorded one
      * anyway would put an edit in the payload for a room nobody changed.
      */
@@ -1934,7 +1934,7 @@ try {
     await page.waitForTimeout(500);
     const afterClose = await setRead();
     check(afterClose.edit.set.edits === beforeClose.edit.set.edits,
-        '⛓⛓⛓ **AND THE SET OP LIST DID NOT GROW** — N room edits become ONE `replace-room-xml`, '
+        '⛓⛓⛓ **AND THE SET OP LIST DID NOT GROW** — N room edits become ONE `replace-room`, '
         + 'and ZERO room edits become NONE', `${beforeClose.edit.set.edits} → `
         + `${afterClose.edit.set.edits}`);
     await page.selectOption('#editSetRoom', '2');
@@ -2264,12 +2264,16 @@ try {
         `${vanRows.length} row(s), links column ${json([...new Set(vanRows.map((r) => r[4]))])}`);
     const boundSaid = await page.evaluate(
         () => document.getElementById('editSetRooms')?.textContent ?? '');
-    check(/whole-set link scan would parse/.test(boundSaid)
-        && boundSaid.includes(String(Math.round(VANILLA_XML_SCAN.kb)))
+    // ⛓ E1b — the sentence names the quantity it PRICED, and for a record set
+    //   that is ENTITY VISITS, not kilobytes of text (there are 0 of those).
+    check(/whole-set link scan would read/.test(boundSaid)
+        && boundSaid.includes(`${VANILLA_XML_SCAN.entities} record entities`)
+        && !/KB of OEL text/.test(boundSaid)
         && /ARROWS are UNAFFECTED/.test(boundSaid),
         '⛔ …**AND THE PAGE SAYS WHY**, with the number — a blank column for a reason nobody '
         + 'printed would read as a set in which nothing links anywhere',
-        `${Math.round(VANILLA_XML_SCAN.kb)} KB claimed`);
+        `${VANILLA_XML_SCAN.entities} entity visits claimed, ${
+            Math.round(VANILLA_XML_SCAN.kb)} KB of text`);
     /**
      * ⛓ THE STRIP'S OWN GEOMETRY, READ OFF THE PAGE. `overviewLayout` sets the
      * canvas to `cellPx × rooms`, so the width divided by 116 IS the cell size
@@ -2384,9 +2388,10 @@ try {
     check(json(vanOpened.edit.base) === json({
         kind: 'set-room', set_id: VANILLA_XML.set_id, room: VANILLA_OPEN_ROOM,
     }),
-        `⛓⛓⛓ **ROOM ${VANILLA_OPEN_ROOM} OF THE REAL GAME OPENS**, through the \`oel\` arm, from `
-        + 'a set whose every room is `xml`-sourced — the thing claim 19 measures as impossible '
-        + 'for the committed `embed` set', json(vanOpened.edit.base));
+        `⛓⛓⛓ **ROOM ${VANILLA_OPEN_ROOM} OF THE REAL GAME OPENS**, through the \`set-room\` base `
+        + 'with NO PARSE at all (E1b), from a set whose every room is `record`-sourced — the '
+        + 'thing claim 19 measures as impossible for the committed `embed` set',
+        json(vanOpened.edit.base));
     await page.selectOption('#genEditTool', 'paint');
     await page.selectOption('#genEditLayer', 'tiles');
     await page.selectOption('#genEditTerrain', PAINT_TERRAIN);
@@ -2397,7 +2402,7 @@ try {
         { timeout: 60000 }).catch(() => {});
     const vanClosed = await setRead();
     check(vanClosed.edit.set?.edits === 1,
-        '⛓⛓ **N ROOM EDITS BECOME ONE `replace-room-xml`** — the same law D1 §20.7 states, on a '
+        '⛓⛓ **N ROOM EDITS BECOME ONE `replace-room`** — the same law D1 §20.7 states, on a '
         + '116-room document', `${vanClosed.edit.set?.edits} set edit(s)`);
     await page.click('#editDownloadSet');
     await page.waitForFunction(() => window.__editorSetOut && window.__editorSetOverlayOut,

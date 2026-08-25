@@ -140,7 +140,7 @@ import { levelSourceFromAtlas } from './atlasSource.js';
 import { buildStagedTape } from './botDriverV1.js';
 import { buildLevelSet, vanillaRecordSet } from './levelSetExporter.js';
 import {
-    planLevelSetChunks, stampLevelSetIdentity, validateLevelSet,
+    planLevelSetChunks, roomSourceKind, stampLevelSetIdentity, validateLevelSet,
 } from './levelSetValidator.js';
 import { createRunForStaging, rolesForStaging, solveStaging } from './tapeRunner.js';
 /**
@@ -8811,8 +8811,11 @@ async function runEditor(params, lifetime) {
                 set_id: setSession.record().set.set_id,
                 overlay_id: setSession.record().overlay.overlay_id ?? null,
                 rooms: setSession.record().set.rooms.length,
+                // ⛓ E1b — OPENABLE means "not an `embed`". A room is openable
+                //   whether it carries a `record` or legacy OEL `xml`; only an
+                //   `[Embed]` path is a document this page cannot reach.
                 openable: setSession.record().set.rooms
-                    .filter((r) => typeof r.source?.xml === 'string').length,
+                    .filter((r) => roomSourceKind(r?.source) !== 'embed').length,
                 /**
                  * ⛓ EDITOR v3 D2 — the SET SESSION's own numbers, because a set
                  * is a thing that is EDITED now and "which set is held" no longer
@@ -9092,7 +9095,7 @@ async function runEditor(params, lifetime) {
         for (const [i, r] of rooms.entries()) {
             const o = document.createElement('option');
             o.value = String(i);
-            const openable = typeof r.source?.xml === 'string';
+            const openable = roomSourceKind(r?.source) !== 'embed';
             o.textContent = `${i}${r.name ? ` · ${r.name}` : ''}`
                 + (openable ? '' : ' — ⛔ embed-sourced, not openable here');
             sel.appendChild(o);
@@ -9231,7 +9234,7 @@ async function runEditor(params, lifetime) {
         // ⛓ ▶ NOW SHIPS THE WHOLE SET — what the button would send has changed,
         //   and the button's own sentence is what says so.
         setShippable(shippableEdit());
-        const embeds = (set.rooms ?? []).filter((r) => typeof r.source?.xml !== 'string').length;
+        const embeds = (set.rooms ?? []).filter((r) => roomSourceKind(r?.source) === 'embed').length;
         /**
          * ⛓ EDITOR v3 E1 — **WHICH SET IS HELD, WHEN TWO IDS DESCRIBE ONE
          * GAME'S 116 ROOMS.** The xml-sourced vanilla set carries
