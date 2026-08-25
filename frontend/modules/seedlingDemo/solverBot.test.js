@@ -2955,9 +2955,17 @@ describe('R9 slice 12c′: the PLANNER dashes toward the exit', () => {
         expect(crossed.truncated.why).toMatch(/crossed to level 0/);
     });
 
-    /** ⛓ The roster-wide default is still `false` — the flip is 12c″'s. */
-    it('⛓ the roster-wide dash permission is still OFF at this head', () => {
-        expect(ALLOW_DASH_ROSTER_WIDE).toBe(false);
+    /**
+     * ⛓⛓⛓ **THE ROSTER-WIDE DASH PERMISSION IS ON**, flipped at R9 slice 12e′'s
+     * re-run under ⚖ rulings 41 + 49 + 50. The row is RE-STATED rather than
+     * deleted: what it pins is that the flag has ONE state for the whole
+     * roster and that the state is a deliberate, dated decision — a row that
+     * vanished at the flip would leave the tree with no assertion about it at
+     * all, which is how a permission becomes a default nobody remembers
+     * granting.
+     */
+    it('⛓ the roster-wide dash permission is ON at this head', () => {
+        expect(ALLOW_DASH_ROSTER_WIDE).toBe(true);
     });
 });
 

@@ -1478,8 +1478,23 @@ function senseContacts(run) {
  * which is what lets the offline proof run at a `false` head: the plan and the
  * flag are the same grant said two ways, and `walkTo` only ever builds a plan
  * when this is true — so at `false` no committed corridor can reach one.
+ *
+ * ⛓⛓⛓ **FLIPPED TO `true` AT R9 SLICE 12e′'s RE-RUN, UNDER ⚖ RULINGS 41 + 49
+ * + 50, AND IT IS ONE HALF OF ONE SERIES.** ⚖ Ruling 42's tail: the flip and
+ * the re-record of the corridors it re-prices are never apart on a pushed head
+ * — at `true` with nothing re-recorded, `solve-seedling-r9-campaign --check`
+ * is RED by name on every segment the planner now dashes (12c′ measured 26
+ * failures). So this commit is red BY NAME and BY DESIGN until the pipeline
+ * has re-authored the thirteen tapes ⚖ 49 licenses.
+ *
+ * ⛔ WHAT IT DOES NOT MEAN. It is still the PERMISSION and not the choice, and
+ * the two things that made an earlier flip a regression are both gone: the
+ * opportunistic dash was RETIRED at 12c′ (§27.7's 400 t removed at its source)
+ * and the planner primitive `planSwordDash` decides press by press. Table (D′)
+ * — §34.7, thirteen rows, every one the MODEL's word until S1 asks the game —
+ * is what this state was measured to buy.
  */
-export const ALLOW_DASH_ROSTER_WIDE = false;
+export const ALLOW_DASH_ROSTER_WIDE = true;
 
 /**
  * ⛓⛓⛓ R9 SLICE 12b — **THE ONE PLACE A STRIKE POLICY IS CONSTRUCTED.**
