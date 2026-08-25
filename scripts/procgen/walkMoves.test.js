@@ -321,8 +321,35 @@ describe('R9 12e′ RE-RUN: the producers run in the CHAINS\' order, not the fil
     });
 
     it('⛓ producers no chain orders come back in NAME order, so a run is reproducible', () => {
-        expect(producerOrder([], ['b.mjs', 'a.mjs', 'c.mjs']))
+        // ⚠ REWRITTEN at R9 12e′ (third run). This row used to pass `[]` for
+        //   `rows`, which BLESSED the exact answer the lost-rows defect
+        //   produced — sorted file order — and so could never have caught it.
+        //   The subject is "no chain ORDERS these producers", and that is
+        //   expressible with real rows about somebody else.
+        const rows = [
+            row('other', 0, 's1', 'unrelated.mjs'),
+            row('other', 1, 's2', 'unrelated.mjs'),
+        ];
+        expect(producerOrder(rows, ['b.mjs', 'a.mjs', 'c.mjs']))
             .toEqual(['a.mjs', 'b.mjs', 'c.mjs']);
+    });
+
+    it('⛔⛔ ZERO rows with more than one producer REFUSES — it would BE the file order', () => {
+        // ⛓ The defect this refuses is measured, not imagined: `predict()`
+        //   returned a `walk` without `rows`, so a straight-through S0→S1 run
+        //   handed this function `[]` and got the sorted order back — with
+        //   `solve-seedling-r8-d2-chain.mjs` ahead of the `-l18` that owns its
+        //   chain's first segment, which is what §35.4 removed.
+        expect(() => producerOrder([], [
+            'solve-seedling-r8-d2-chain.mjs', 'solve-seedling-r8-l18.mjs',
+        ])).toThrow(/ZERO report rows[\s\S]*FILE SYSTEM'S order[\s\S]*lost `walk\.rows`/);
+        // …and the answer it refuses to give is exactly the wrong one.
+        expect(['solve-seedling-r8-d2-chain.mjs', 'solve-seedling-r8-l18.mjs'].sort())
+            .toEqual(['solve-seedling-r8-d2-chain.mjs', 'solve-seedling-r8-l18.mjs']);
+    });
+
+    it('⛓ ONE producer needs no order, so zero rows still answers', () => {
+        expect(producerOrder([], ['only.mjs'])).toEqual(['only.mjs']);
     });
 
     it('⛔ two chains that disagree are a CYCLE, refused by name', () => {

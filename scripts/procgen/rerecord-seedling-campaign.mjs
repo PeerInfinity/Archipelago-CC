@@ -576,7 +576,21 @@ async function predict() {
         licence.stops.length ? licence.stops.join(' · ')
             : (LICENCE ? `under ${LICENCE.ruling}` : 'nothing moved, so nothing needed one'));
 
-    flush('S0', {
+    /**
+     * ⛔⛔ **ONE OBJECT FOR BOTH THE FLUSH AND THE RETURN — R9 slice 12e′
+     * (third run).** These used to be written twice, and the second copy was a
+     * strict SUBSET: the flushed state carried `walk.rows`, the returned value
+     * carried only `moved` and `licence`. So `spendWalkLicence`'s
+     * `producerOrder(s0.walk?.rows ?? [], …)` saw rows on a `--from=S1` RESUME
+     * (which reads the flushed file) and an empty array on a straight-through
+     * S0→S1 run — and an empty row set silently means the file system's order,
+     * which is the very thing §35.4's fix removed. The fix that only works on
+     * the resume path is the shape this rewrite makes unspellable: the state
+     * S1 resumes and the state S1 is handed are now the SAME OBJECT, so they
+     * cannot drift apart again. `producerOrder` refuses an empty row set by
+     * name as the second half of the same fix.
+     */
+    const s0State = {
         licensed,
         tick0Set,
         table,
@@ -589,8 +603,9 @@ async function predict() {
             cascade: [...walk.cascade.entries()].map(([id, c]) => ({ chain: id, ...c })),
             licence: licence.sealed,
         },
-    });
-    return { licensed, tick0Set, table, walk: { moved: walk.moved, licence: licence.sealed } };
+    };
+    flush('S0', s0State);
+    return s0State;
 }
 
 // ── THE WINDOWS CHANNEL ───────────────────────────────────────────────
@@ -874,12 +889,23 @@ function writeBoot(label, blocks) {
 function write(s0, s1) {
     console.log('\n# S2 · WRITE — exactly the sealed set\n');
     const wrote = [];
+    /**
+     * ⛔⛔ **THIS COUNTER IS THE CHECK'S OWN SUBJECT — R9 slice 12e′ (third
+     * run), and it is §35.4 item 5's defect a second time, in S2.** The row
+     * below used to test the GLOBAL `failures`, so a producer that exited 1
+     * three stages earlier reddened *"the projection authors a block this
+     * pipeline does not write"* while every write on this page was in fact
+     * licensed and no `FAIL: <label> would move …` line had been printed. A
+     * guard that names the wrong subject is worse than no guard: it is read as
+     * evidence about the writes.
+     */
+    let offTable = 0;
     for (const [label, rec] of Object.entries(s1.pending ?? s1.measured ?? {})) {
         const blocks = committedBlocks(parseTape(rec.complete));
         const onTable = s0.licensed.includes(label);
         const moved = writeBootDry(label, blocks);
         if (moved && !onTable) {
-            failures += 1;
+            offTable += 1;
             console.log(`FAIL: ${label} would move ${moved.join(', ')} and is not on the `
                 + 'sealed table — the table IS the licence');
             continue;
@@ -889,7 +915,9 @@ function write(s0, s1) {
         wrote.push({ label, fields: moved });
         console.log(`  wrote ${label}: ${moved.join(', ')}`);
     }
-    check('⛓ every write is on the sealed table', failures === 0);
+    check('⛓ every write is on the sealed table', offTable === 0,
+        offTable ? `⛔ ${offTable} write(s) named above are off the table`
+            : `${wrote.length} write(s), every one licensed`);
     /**
      * ⛓⛓ THE TICK-0 HALF IS THE OTHER INSTRUMENT'S JOB (trap 169 — one
      * producer per artifact). `derive-seedling-tick0.mjs` owns the v11 block:

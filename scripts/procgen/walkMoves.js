@@ -312,6 +312,17 @@ export function cascadeFrom(chains, moved) {
  * oppositely cannot both be satisfied, and picking one silently would make the
  * run's answer depend on which chain was declared first.
  *
+ * ⛔⛔ AND AN EMPTY `rows` WITH MORE THAN ONE PRODUCER REFUSES BY NAME TOO — a
+ * defect this function shipped with and R9 slice 12e′ (third run) caught. With
+ * no rows there are no edges, every producer is ready in wave one, and the tie
+ * break hands back `[...set].sort()`: **the file system's order, which is the
+ * exact thing this function was written to replace.** The caller cannot have
+ * measured an empty chain set and still have a licence to spend, so an empty
+ * `rows` here always means the rows were LOST between S0 and S1 — and a lost
+ * guarantee that degrades silently into the behaviour it guards against is
+ * worse than no guarantee at all. One producer needs no order, so that case
+ * still answers.
+ *
  * @param {object[]} rows `reportRows`' rows — every chain segment with its
  *   owner, in chain order (NOT just the movers).
  * @param {string[]} running the producer files the licence will actually run
@@ -320,6 +331,14 @@ export function cascadeFrom(chains, moved) {
  */
 export function producerOrder(rows, running) {
     const set = new Set(running);
+    if (!rows.length && set.size > 1) {
+        fail(`producerOrder: asked to order ${set.size} producers `
+            + `(${[...set].sort().join(', ')}) from ZERO report rows. With no rows there `
+            + 'are no edges and the answer degrades to `[...running].sort()` — the FILE '
+            + 'SYSTEM\'S order, which is the defect this function replaced (R9 12e′ §35.4). '
+            + 'A licence with segments in it always has rows behind it, so this means the '
+            + 'caller lost `walk.rows` between S0 and S1, not that the chains are empty.');
+    }
     const before = new Map([...set].map((f) => [f, new Set()]));
     const byChain = new Map();
     for (const r of rows) {
