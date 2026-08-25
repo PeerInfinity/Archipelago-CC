@@ -67,7 +67,7 @@ const refusal = (session, op) => {
  * THE CORE'S OWN CONTRACT
  * ══════════════════════════════════════════════════════════════════════ */
 
-describe('⛓⛓⛓ `editCore`\'s seven contract laws hold over a region library', () => {
+describe('⛓⛓⛓ `editCore`\'s contract laws hold over a region library', () => {
     it('⛓ `assertAdapterBehaviour` passes — including law 7 at a DIFFERENT cell', () => {
         expect(assertAdapterBehaviour(adapterOf(), {
             record: recordOf(),
@@ -120,8 +120,25 @@ describe('⛓⛓⛓ `editCore`\'s seven contract laws hold over a region library
         expect(a.equal(base, linked.record)).toBe(false);
     });
 
-    it('⛓ the op vocabulary is TWELVE, and an unknown op quotes the list', () => {
-        expect(SET_OP_KINDS).toHaveLength(12);
+    /**
+     * ⛓ THE COUNT IN THE NAME IS INTERPOLATED, not typed — `lint-gate-labels`
+     * flags a label that states a number its own check derives from a roster,
+     * and interpolating is its prescribed cure. It is the better name anyway:
+     * a thirteenth op changes the sentence.
+     *
+     * ⛔ And the pin is the SET, not the LENGTH. `toHaveLength(12)` is green
+     * for any twelve names, so an op RENAMED — the change that would silently
+     * break every page pressing the old button — would pass it. These are
+     * §20.4's own names, which is the whole reason `setEditorCore` needs no
+     * per-substrate op table.
+     */
+    it(`⛓ the op vocabulary is ${SET_OP_KINDS.length}, in §20.4's own names, and an unknown `
+        + 'op quotes the list', () => {
+        expect([...SET_OP_KINDS]).toEqual([
+            'add-room', 'connect', 'disconnect', 'mark-location', 'remove-room', 'reorder',
+            'replace-room', 'set-access-rule', 'set-field', 'set-overlay', 'set-room-field',
+            'unmark-location',
+        ]);
         const r = adapterOf().apply(recordOf(), { op: 'nope' });
         expect(r.ok).toBe(false);
         expect(r.description).toContain(SET_OP_KINDS.join(', '));
