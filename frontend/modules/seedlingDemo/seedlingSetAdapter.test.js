@@ -135,7 +135,10 @@ describe('⛓⛓⛓ the core\'s contract laws, on a substrate whose cells are RO
         const record = baseRecord();
         const desc = adapter.readCell(record, 2, 0);
         expect(Object.keys(desc).sort()).toEqual(['overlay', 'room']);
-        expect(Object.keys(desc.room).sort()).toEqual(['music', 'name', 'xml']);
+        // ⛓ EDITOR v3 E1b — the whole `source` travels, KIND AND ALL, so a
+        //   copy never converts an `xml` room to a record or the reverse.
+        expect(Object.keys(desc.room).sort()).toEqual(['music', 'name', 'source']);
+        expect(desc.room.source).toEqual(record.set.rooms[2].source);
         expect(desc.overlay).toBeNull();
         expect(desc.room.name).toBe(record.set.rooms[2].name);
     });
@@ -219,7 +222,7 @@ describe('⛓⛓⛓ the core\'s contract laws, on a substrate whose cells are RO
         const record = baseRecord();
         const desc = adapter.readCell(record, 0, 0);
         const ops = adapter.writeOps(desc, ROOMS, 0);
-        expect(ops[0]).toMatchObject({ op: 'replace-room-xml', room: ROOMS });
+        expect(ops[0]).toMatchObject({ op: 'replace-room', room: ROOMS });
         expect(adapter.apply(record, ops[0]).ok).toBe(false);
         expect(adapter.apply(record, ops[0]).description).toMatch(/names room 6; this set has 6/);
         // the core CLIPS, so a paste running off the end writes only what lands
@@ -275,7 +278,14 @@ describe('the op vocabulary, and every refusal by name', () => {
     it('add-room refuses unparseable xml, a non-level document and an `at` out of range', () => {
         const { s } = session();
         expect(s.apply({ op: 'add-room', xml: '<level><objects/></level>' }).description)
-            .toMatch(/carries no <width>\/<height>/);
+            .toMatch(/carries no rectangle/);
+        // ⛓ E1b — ONE OP, TWO DOORS, and exactly one of them at a time
+        expect(s.apply({ op: 'add-room' }).description)
+            .toMatch(/needs exactly one of `record`.*got neither/s);
+        expect(s.apply({
+            op: 'add-room', xml: recordToOel(emptyLevel({ level: 9 })),
+            record: emptyLevel({ level: 9 }),
+        }).description).toMatch(/needs exactly one of `record`.*got both/s);
         expect(s.apply({ op: 'add-room', xml: recordToOel(emptyLevel({ level: 9 })), at: 99 }).description)
             .toMatch(/`at` is 99; it must be 0\.\.6/);
         expect(s.apply({ op: 'add-room', xml: wiredRoom(9, 42) }).description)
@@ -360,16 +370,16 @@ describe('the op vocabulary, and every refusal by name', () => {
             .toMatch(/snow_gradient is a boolean/);
     });
 
-    it('replace-room-xml refuses a transition out of range, quoting the game\'s own hazard', () => {
+    it('replace-room refuses a transition out of range, quoting the game\'s own hazard', () => {
         const { s } = session();
-        expect(s.apply({ op: 'replace-room-xml', room: 1, xml: wiredRoom(1, 9) }).description)
+        expect(s.apply({ op: 'replace-room', room: 1, xml: wiredRoom(1, 9) }).description)
             .toMatch(/a transition to room 9, outside 0\.\.5/);
-        expect(apply(s, { op: 'replace-room-xml', room: 1, xml: wiredRoom(1, 2) }).applied).toBe(true);
+        expect(apply(s, { op: 'replace-room', room: 1, xml: wiredRoom(1, 2) }).applied).toBe(true);
     });
 
     it('mark-location refuses an entity the room does not hold, and a duplicate name', () => {
         const { s } = session();
-        apply(s, { op: 'replace-room-xml', room: 1, xml: wiredRoom(1, 2, { pickup: true }) });
+        apply(s, { op: 'replace-room', room: 1, xml: wiredRoom(1, 2, { pickup: true }) });
         expect(s.apply({
             op: 'mark-location', room: 1, entity: { type: 'torchpickup', x: 0, y: 0 },
             name: 'T', vanilla_item: 'Light',
@@ -378,7 +388,7 @@ describe('the op vocabulary, and every refusal by name', () => {
             op: 'mark-location', room: 1, entity: { type: 'torchpickup', x: 4 * TILE, y: 3 * TILE },
             name: 'T', vanilla_item: 'Light',
         });
-        apply(s, { op: 'replace-room-xml', room: 2, xml: wiredRoom(2, 3, { pickup: true }) });
+        apply(s, { op: 'replace-room', room: 2, xml: wiredRoom(2, 3, { pickup: true }) });
         expect(s.apply({
             op: 'mark-location', room: 2, entity: { type: 'torchpickup', x: 4 * TILE, y: 3 * TILE },
             name: 'T', vanilla_item: 'Light',
@@ -387,7 +397,7 @@ describe('the op vocabulary, and every refusal by name', () => {
 
     it('unmark-location takes the rule with it, and refuses a name the room lacks', () => {
         const { s } = session();
-        apply(s, { op: 'replace-room-xml', room: 1, xml: wiredRoom(1, 2, { pickup: true }) });
+        apply(s, { op: 'replace-room', room: 1, xml: wiredRoom(1, 2, { pickup: true }) });
         apply(s, {
             op: 'mark-location', room: 1, entity: { type: 'torchpickup', x: 4 * TILE, y: 3 * TILE },
             name: 'T', vanilla_item: 'Light',
@@ -885,11 +895,11 @@ describe('⛓⛓⛓ the ROOM session inside the SET session — C2\'s batching r
         expect(roomSession.ops()).toHaveLength(3);
         expect(s.ops()).toHaveLength(0);
 
-        const closed = closeRoomSession(s, roomSession, 2, recordToOel);
+        const closed = closeRoomSession(s, roomSession, 2);
         expect(closed.ok).toBe(true);
         expect(closed.applied).toBe(true);
         expect(s.ops()).toHaveLength(1);
-        expect(s.ops()[0].op).toBe('replace-room-xml');
+        expect(s.ops()[0].op).toBe('replace-room');
         expect(s.record().set.rooms[2].source.xml).not.toBe(before);
         expect(s.record().set.set_id).toBe(record.set.set_id);
 
@@ -909,7 +919,7 @@ describe('⛓⛓⛓ the ROOM session inside the SET session — C2\'s batching r
      */
     it('the room source follows the session, and CHECKS the set_id', () => {
         const { s, roomAdapter, tag } = open();
-        apply(s, { op: 'replace-room-xml', room: 2, xml: wiredRoom(2, 3, { pickup: true }) });
+        apply(s, { op: 'replace-room', room: 2, xml: wiredRoom(2, 3, { pickup: true }) });
         const reopened = roomAdapter.bases['set-room'](tag);
         expect(reopened.entities.some((e) => e.type === 'torchpickup')).toBe(true);
 
@@ -920,11 +930,28 @@ describe('⛓⛓⛓ the ROOM session inside the SET session — C2\'s batching r
             .toThrow(/no level set with set_id "some-other-set" is loaded here/);
     });
 
-    it('closeRoomSession refuses without a renderer, and quotes a refused write', () => {
+    /**
+     * ⛓⛓⛓ **EDITOR v3 E1b — `closeRoomSession` NEEDS NO RENDERER ANY MORE.** It
+     * was the one record → text hinge in the editor; a set carries records now,
+     * so the room session's fold IS the payload and the render moved to the
+     * chunk boundary. ⛔ The row asserts the op it emits carries a `record` and
+     * NO `xml`, which is what makes "the render is gone" a fact rather than a
+     * claim about a parameter list.
+     */
+    it('closeRoomSession commits the room session\'s RECORD, with no renderer', () => {
         const { s, roomSession } = open();
-        expect(() => closeRoomSession(s, roomSession, 2, null)).toThrow(/needs `recordToOel` injected/);
-        expect(() => closeRoomSession(s, roomSession, 99, recordToOel))
-            .toThrow(/was REFUSED/);
+        expect(closeRoomSession.length).toBe(3);
+        const closed = closeRoomSession(s, roomSession, 2);
+        expect(closed.ok).toBe(true);
+        const op = s.ops()[0];
+        expect(op.op).toBe('replace-room');
+        expect(op.record).toEqual(roomSession.record());
+        expect(Object.hasOwn(op, 'xml')).toBe(false);
+    });
+
+    it('closeRoomSession quotes a refused write', () => {
+        const { s, roomSession } = open();
+        expect(() => closeRoomSession(s, roomSession, 99)).toThrow(/was REFUSED/);
     });
 });
 
@@ -1189,5 +1216,189 @@ describe('"what links here" and the room exit list — what D2\'s DOM will read'
             expect.objectContaining({ index: 0, to: 1 }),
             expect.objectContaining({ index: 1, to: 3 }),
         ]);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ **EDITOR v3 E1b — THE ADAPTER READS AND WRITES RECORDS, AND NEVER
+ * CONVERTS A KIND** (plan §22.8; as-built §24)
+ * ══════════════════════════════════════════════════════════════════ */
+
+/** The same generated set, carried as RECORDS. ⛔ Re-stamped: the content moved. */
+const recordSet = (n = ROOMS, setId = 'set-adapter-record') => {
+    const xmlSet = generatedSet(n, setId);
+    return stampLevelSetIdentity({
+        ...xmlSet,
+        rooms: xmlSet.rooms.map((r) => ({
+            ...r, source: { record: parseOelLevel(r.source.xml, r.name) },
+        })),
+    }, { base: setId });
+};
+
+/** A set where room 0 is legacy `xml` and every other room is a `record`. */
+const mixedSet = (n = ROOMS) => {
+    const rec = recordSet(n, 'set-adapter-mixed');
+    return stampLevelSetIdentity({
+        ...rec,
+        rooms: rec.rooms.map((r, i) => (i !== 0 ? r
+            : { ...r, source: { xml: recordToOel(r.source.record) } })),
+    }, { base: 'set-adapter-mixed' });
+};
+
+const kindsOf = (set) => set.rooms.map((r) => (typeof r.source.record === 'object' ? 'record'
+    : (typeof r.source.xml === 'string' ? 'xml' : 'embed')));
+
+/**
+ * ⚠ AN EDITED SET IS RE-STAMPED BEFORE IT IS VALIDATED, and that is the
+ * download path's own order. `validateLevelSet` refuses a document whose
+ * `content_hash` no longer matches — which is precisely §4.2's point — so
+ * asking it about a mid-session fold would be asking it about the stamp rather
+ * than about the edit.
+ */
+const validAfterEdit = (set) => validateLevelSet(
+    stampLevelSetIdentity(set, { base: 'e1b-edited' }),
+);
+
+describe('EDITOR v3 E1b — a RECORD set drives every op the xml set does', () => {
+    const recSession = (n = ROOMS) => {
+        const record = setRecord(recordSet(n));
+        return {
+            record,
+            s: createSetSession(adapter, record, { base: { kind: 'set', set_id: record.set.set_id } }),
+        };
+    };
+
+    it('validates, and every room is `record`', () => {
+        const set = recordSet();
+        expect(validateLevelSet(set).ok).toBe(true);
+        expect(kindsOf(set)).toEqual(Array(ROOMS).fill('record'));
+    });
+
+    it('assertAdapterBehaviour passes on a record set', () => {
+        const record = setRecord(recordSet());
+        expect(assertAdapterBehaviour(adapter, {
+            record,
+            op: { op: 'set-room-field', room: 0, field: 'music', value: 5 },
+            refused: { op: 'set-room-field', room: 99, field: 'music', value: 5 },
+            cell: { x: 0, y: 0 },
+            other: { x: ROOMS - 1, y: 0 },
+        })).toBe(true);
+    });
+
+    it('connect / disconnect / reorder / remove-room over records', () => {
+        const { s } = recSession();
+        // CONNECT — writes both ends on records
+        expect(apply(s, { op: 'connect', from: [0, 0], to: [2, 0] }).applied).toBe(true);
+        expect(exitsOfRoom(s.record(), 0)[0].to).toBe(2);
+        expect(exitsOfRoom(s.record(), 2)[0].to).toBe(0);
+        // DISCONNECT — §20.5: the door is DELETED
+        const before = exitsOfRoom(s.record(), 0).length;
+        expect(apply(s, { op: 'disconnect', room: 0, exitIndex: 0 }).description)
+            .toMatch(/is DELETED \(Seedling has no inert/);
+        expect(exitsOfRoom(s.record(), 0)).toHaveLength(before - 1);
+        // REORDER — every `@to` rewritten, on records
+        const order = [...Array(ROOMS).keys()].reverse();
+        expect(apply(s, { op: 'reorder', order }).applied).toBe(true);
+        expect(validAfterEdit(s.record().set).ok).toBe(true);
+        expect(kindsOf(s.record().set)).toEqual(Array(ROOMS).fill('record'));
+    });
+
+    it('add-room takes a RECORD, and the room it makes is `record`-sourced', () => {
+        const { s } = recSession();
+        expect(apply(s, { op: 'add-room', record: emptyLevel({ level: 9 }), name: 'New' })
+            .description).toMatch(/add room 6 "New" as `record`/);
+        expect(kindsOf(s.record().set)[6]).toBe('record');
+        expect(validAfterEdit(s.record().set).errors).toEqual([]);
+    });
+
+    it('mark-location finds an entity in a RECORD room, with no parse and no regex', () => {
+        const { s } = recSession();
+        const withPickup = parseOelLevel(wiredRoom(1, 2, { pickup: true }), 'probe');
+        apply(s, { op: 'replace-room', room: 1, record: withPickup });
+        expect(s.apply({
+            op: 'mark-location', room: 1, entity: { type: 'torchpickup', x: 0, y: 0 },
+            name: 'T', vanilla_item: 'Light',
+        }).description).toMatch(/room 1 holds no <torchpickup> at \(0, 0\)/);
+        expect(apply(s, {
+            op: 'mark-location', room: 1, entity: { type: 'torchpickup', x: 4 * TILE, y: 3 * TILE },
+            name: 'T', vanilla_item: 'Light',
+        }).applied).toBe(true);
+    });
+
+    it('whatLinksHere and exitsOfRoom read records', () => {
+        const record = setRecord(recordSet());
+        const links = whatLinksHere(record, 1);
+        expect(links.unreadable).toEqual([]);
+        expect(links.links.length).toBeGreaterThan(0);
+        // the same answer the xml twin gives
+        const xmlRecord = baseRecord();
+        expect(whatLinksHere(xmlRecord, 1).links).toEqual(links.links);
+    });
+
+    /**
+     * ⛔⛔ **THE PIN: AN EDIT NEVER CONVERTS A KIND.** The document's form is the
+     * AUTHOR's. A retarget that quietly turned a legacy `xml` room into a record
+     * would rewrite a document nobody asked to change and move the set's content
+     * hash for a reason no reader could name — which is the whole reason §22.8's
+     * ruling is ADDITIVE.
+     */
+    it('a MIXED set edits each room IN ITS OWN KIND, and reorder keeps both', () => {
+        const record = setRecord(mixedSet());
+        expect(kindsOf(record.set)).toEqual(['xml', ...Array(ROOMS - 1).fill('record')]);
+        const s = createSetSession(adapter, record,
+            { base: { kind: 'set', set_id: record.set.set_id } });
+        // a reorder rewrites EVERY room's exits
+        apply(s, { op: 'reorder', order: [...Array(ROOMS).keys()].reverse() });
+        expect(kindsOf(s.record().set))
+            .toEqual([...Array(ROOMS - 1).fill('record'), 'xml']);
+        expect(validAfterEdit(s.record().set).errors).toEqual([]);
+        // …and a connect touching the xml room leaves it xml
+        apply(s, { op: 'connect', from: [ROOMS - 1, 0], to: [0, 0] });
+        expect(kindsOf(s.record().set)[ROOMS - 1]).toBe('xml');
+        expect(kindsOf(s.record().set)[0]).toBe('record');
+    });
+
+    it('a COPY between kinds carries the source, so a paste does not convert either', () => {
+        const mixed = setRecord(mixedSet());
+        const fromXml = adapter.readCell(mixed, 0, 0);
+        const fromRecord = adapter.readCell(mixed, 1, 0);
+        expect(Object.keys(fromXml.room.source)).toEqual(['xml']);
+        expect(Object.keys(fromRecord.room.source)).toEqual(['record']);
+        // pasting the RECORD room onto the xml room makes that cell a record —
+        // the author replaced the document, which is the one conversion there is
+        const s = createSetSession(adapter, mixed,
+            { base: { kind: 'set', set_id: mixed.set.set_id } });
+        for (const op of adapter.writeOps(fromRecord, 0, 0)) apply(s, op);
+        expect(kindsOf(s.record().set)[0]).toBe('record');
+        expect(canonicalJson(adapter.readCell(s.record(), 0, 0)))
+            .toBe(canonicalJson(fromRecord));
+    });
+
+    it('replace-room describes ENTITIES and TILES, not bytes, for a record', () => {
+        const { s } = recSession();
+        const rec = parseOelLevel(wiredRoom(1, 2, { pickup: true }), 'probe');
+        expect(s.apply({ op: 'replace-room', room: 1, record: rec }).description)
+            .toMatch(/`record`, \d+ entities, \d+x\d+ tiles, 1 exit/);
+        // …and BYTES for a legacy xml payload, because that one really has some
+        expect(s.apply({ op: 'replace-room', room: 1, xml: wiredRoom(1, 2) }).description)
+            .toMatch(/`xml`, \d+ bytes, \d+x\d+ tiles, 1 exit/);
+    });
+
+    it('every op touching a room refuses an EMBED room BY NAME, as before', () => {
+        const set = recordSet();
+        const withEmbed = {
+            ...set,
+            rooms: set.rooms.map((r, i) => (i !== 1 ? r : { ...r, source: { embed: 'levels/X.oel' } })),
+        };
+        const record = setRecord(stampLevelSetIdentity(withEmbed, { base: 'embed-probe' }));
+        for (const op of [
+            { op: 'connect', from: [1, 0], to: [2, 0] },
+            { op: 'disconnect', room: 1, exitIndex: 0 },
+            { op: 'mark-location', room: 1, entity: { type: 'x', x: 0, y: 0 }, name: 'n', vanilla_item: 'i' },
+        ]) {
+            expect(adapter.apply(record, op).description, op.op)
+                .toMatch(/EMBED-sourced \(levels\/X\.oel\)/);
+        }
+        expect(whatLinksHere(record, 2).unreadable).toEqual([1]);
     });
 });

@@ -43,7 +43,7 @@
  * y)` is handed a DESCRIPTOR and two coordinates and never sees the record, so
  * it cannot know where the end is. `rectPasteOps` clips to `bounds` before
  * calling it, so the case only arises from a hand-built op list — and there
- * `replace-room-xml` refusing room N of an N-room set by name is a better
+ * `replace-room` refusing room N of an N-room set by name is a better
  * answer than an append the caller did not ask for. Growing a set is
  * `add-room {at}`, deliberately.
  *
@@ -87,12 +87,14 @@ import { ruleSchemaErrors } from '../procgenCore/jsonSchemaCheck.js';
 import { replaceRuleAt } from '../procgenCore/ruleTreeOps.js';
 import { applyOverlayRules, deriveAtlas } from './seedlingAtlasDerivation.js';
 import {
-    REGION_NONE, removeExitFromRoomXml, retargetRoomXml, signForTransition,
+    REGION_NONE, removeExitFromRecord, removeExitFromRoomXml, retargetRoomRecord,
+    retargetRoomXml, signForTransition,
 } from './levelSetExits.js';
 import { apMappingInvalidation } from './levelSetExporter.js';
 import {
     LEVEL_SET_SCHEMA_VERSION, MUSIC_COUNT, MUSIC_NONE, NAMED_ROOMS,
-    parseRoomXml, stampLevelSetIdentity, validateLevelSet,
+    indexOfRoom, roomRecordOf, roomSourceKind,
+    stampLevelSetIdentity, validateLevelSet,
 } from './levelSetValidator.js';
 import {
     assertOverlay, emptyOverlay, exitRuleKey, exitRulesByRoom, locationRuleKey,
@@ -117,7 +119,7 @@ export const ROOM_FIELDS = Object.freeze(['name', 'music', 'music_override_exemp
 /** Every op kind this adapter understands, sorted. The refusals read this. */
 export const SET_OP_KINDS = Object.freeze([
     'add-room', 'connect', 'disconnect', 'mark-location', 'remove-room', 'reorder',
-    'replace-room-xml', 'set-access-rule', 'set-field', 'set-overlay', 'set-room-field',
+    'replace-room', 'set-access-rule', 'set-field', 'set-overlay', 'set-room-field',
     'unmark-location',
 ].sort());
 
@@ -146,18 +148,12 @@ export function roomsOfSet(set, parseOel) {
             + '`frontend/` imports anything under `scripts/` — the direction is scripts → '
             + 'frontend, every time (`seedlingEditAdapter.js`\'s own note).');
     }
-    return (set?.rooms ?? []).map((room, level) => {
-        const xml = room?.source?.xml;
-        if (typeof xml !== 'string') {
-            fail(`seedlingSetAdapter: room ${level} ${JSON.stringify(room?.name ?? '')} is `
-                + `${room?.source?.embed ? `EMBED-sourced (${room.source.embed})` : 'sourced by '
-                    + JSON.stringify(room?.source)} — an \`embed\` is a path into a SWF's `
-                + '`[Embed]` table and this module has no embeds, so the room cannot be '
-                + 'parsed and the atlas cannot be derived from it. A set session can HOLD '
-                + 'such a set; it cannot derive from one.');
-        }
-        return { ...parseOel(xml, `room ${level}`), level };
-    });
+    // ⛓⛓ EDITOR v3 E1b — ONE NORMALISER. `roomRecordOf` resolves all three
+    // source kinds and REFUSES an unreadable `embed` by name; a `record` room
+    // costs no parse at all, which is what the ruling was for.
+    return (set?.rooms ?? []).map((room, level) => ({
+        ...roomRecordOf({ ...room, id: room?.id ?? level }, { parseOel }), level,
+    }));
 }
 
 /**
@@ -233,8 +229,8 @@ function renumberSet(set, overlay, plan, mapping) {
          * far the first time this function was written.
          */
         if (from === null) return room.id === newIndex ? room : { ...room, id: newIndex };
-        const xml = room?.source?.xml;
-        if (typeof xml !== 'string') {
+        const doc = indexOfRoom(room);
+        if (doc === null) {
             // ⛔ NAMED, NOT SKIPPED — `retargetLevelSet`'s own rule. An
             // embed-sourced room's exits are invisible here and leaving them
             // pointing at the old layout is the graceful-skip failure.
@@ -242,7 +238,6 @@ function renumberSet(set, overlay, plan, mapping) {
                 + 'EMBED-sourced, so its exits cannot be read and a renumbering cannot '
                 + 'rewrite them. A set with embed rooms can be HELD but not reordered.');
         }
-        const doc = parseRoomXml(xml);
         const exits = [];
         const fallthroughs = [];
         doc.exits.forEach((ex, index) => {
@@ -278,11 +273,10 @@ function renumberSet(set, overlay, plan, mapping) {
                 sign: signForTransition(roomRegion(overlay, from), roomRegion(overlay, f.to)),
             });
         });
-        const nextXml = (exits.length === 0 && fallthroughs.length === 0)
-            ? xml
-            : retargetRoomXml(xml, { exits, fallthroughs }).xml;
-        const same = nextXml === xml && room.id === newIndex;
-        return same ? room : { ...room, id: newIndex, source: { ...room.source, xml: nextXml } };
+        const next = (exits.length === 0 && fallthroughs.length === 0)
+            ? room
+            : retargetRoomInKind(room, { exits, fallthroughs });
+        return (next === room && room.id === newIndex) ? room : { ...next, id: newIndex };
     });
 
     const next = { ...set, rooms };
@@ -329,18 +323,96 @@ const requireRoom = (record, index, what) => {
     return rooms[index];
 };
 
-const parsedRoom = (record, index, what) => {
+/**
+ * ⛓⛓⛓ **EDITOR v3 E1b — A ROOM'S INDEX, IN WHATEVER KIND IT IS.**
+ * `indexOfRoom` is `parseRoomXml` for the two TEXT kinds and `indexRoom` for
+ * the RECORD kind; `null` is the answer for a room nothing here can read, and
+ * this is where that becomes a refusal BY NAME.
+ */
+const indexedRoom = (record, index, what) => {
     const room = requireRoom(record, index, what);
-    const xml = room?.source?.xml;
-    if (typeof xml !== 'string') {
-        fail(`seedlingSetAdapter: ${what} needs room ${index}'s OEL and it is EMBED-sourced `
-            + `(${room?.source?.embed ?? JSON.stringify(room?.source)}). An \`embed\` is a path `
-            + 'into a SWF\'s `[Embed]` table; this module has no embeds, so the room is a '
-            + 'document the session can HOLD but not EDIT — the same refusal '
+    const doc = indexOfRoom(room);
+    if (doc === null) {
+        fail(`seedlingSetAdapter: ${what} needs room ${index}'s level document and it is `
+            + `EMBED-sourced (${room?.source?.embed ?? JSON.stringify(room?.source)}). An `
+            + '`embed` is a path into a SWF\'s `[Embed]` table; this module has no embeds, so '
+            + 'the room is a document the session can HOLD but not EDIT — the same refusal '
             + '`seedlingEditAdapter`\'s `set-room` base makes one layer down.');
     }
-    return { room, xml, doc: parseRoomXml(xml) };
+    return { room, kind: roomSourceKind(room.source), doc };
 };
+
+/**
+ * ⛓⛓⛓ **THE KIND OF A ROOM'S DOCUMENT IS THE AUTHOR'S, AND NO EDIT CONVERTS
+ * IT** (plan §22.8's additive rule, PINNED by
+ * `seedlingSetAdapter.test.js`'s "an edit never converts a kind" row).
+ *
+ * ⛔ A retarget of a legacy `xml` room happens AS TEXT — `retargetRoomXml`,
+ * byte-preserving — and a retarget of a `record` room happens on
+ * `entities[].attrs`. Converting on touch would silently rewrite a document the
+ * author chose the form of, and would move the set's content hash for a reason
+ * nobody asked for.
+ */
+function retargetRoomInKind(room, edits) {
+    const kind = roomSourceKind(room?.source);
+    if (kind === 'record') {
+        const { record } = retargetRoomRecord(room.source.record, edits);
+        return record === room.source.record
+            ? room : { ...room, source: { ...room.source, record } };
+    }
+    if (kind === 'xml') {
+        const { xml } = retargetRoomXml(room.source.xml, edits);
+        return xml === room.source.xml ? room : { ...room, source: { ...room.source, xml } };
+    }
+    fail(`seedlingSetAdapter: room ${room?.id} ${JSON.stringify(room?.name ?? '')} is `
+        + 'EMBED-sourced, so its exits cannot be rewritten here.');
+    return room;
+}
+
+/** Unwire one exit of a room, IN ITS OWN KIND. §20.5: an unwired exit is DELETED. */
+function removeExitInKind(room, exitIndex) {
+    const kind = roomSourceKind(room?.source);
+    if (kind === 'record') {
+        const { record, removed } = removeExitFromRecord(room.source.record, exitIndex);
+        return { room: { ...room, source: { ...room.source, record } }, removed };
+    }
+    const { xml, removed } = removeExitFromRoomXml(room.source.xml, exitIndex);
+    return { room: { ...room, source: { ...room.source, xml } }, removed };
+}
+
+/**
+ * ⛓ A room `source` built from an op payload. ⛔ ONE OP, TWO DOORS: the payload
+ * arrives as `{record}` or as `{xml}` and is STORED IN THE KIND IT ARRIVED IN —
+ * an author who pastes OEL gets an `xml` room and an author who hands a record
+ * gets a `record` room, and neither is quietly turned into the other.
+ */
+function sourceFromPayload(what, { record: rec, xml }) {
+    const hasRecord = isPlainObject(rec);
+    const hasXml = typeof xml === 'string' && xml !== '';
+    if (hasRecord === hasXml) {
+        fail(`seedlingSetAdapter: ${what} needs exactly one of \`record\` (a `
+            + '`{width, height, layers, entities}` level record) or `xml` (OEL text), got '
+            + `${hasRecord ? 'both' : 'neither'}`);
+    }
+    return hasRecord ? { record: rec } : { xml };
+}
+
+/** The index of a room built from an op payload, with the parse refusal named. */
+function indexOfPayload(what, source) {
+    let doc;
+    try {
+        doc = indexOfRoom({ id: 0, source });
+    } catch (e) {
+        if (!(e instanceof Error)) throw e;
+        fail(`seedlingSetAdapter: ${what}'s document does not read — ${e.message}`);
+    }
+    if (doc === null || doc.size === null) {
+        fail(`seedlingSetAdapter: ${what}'s document carries no rectangle `
+            + `(${source.record ? '`record.width`/`record.height`' : '<width>/<height>'}), so it `
+            + 'is not a level');
+    }
+    return doc;
+}
 
 const withRoomAt = (record, index, room) => frozenRecord(
     { ...record.set, rooms: record.set.rooms.map((r, i) => (i === index ? room : r)) },
@@ -357,18 +429,9 @@ const withOverlayRoom = (record, index, entry) => {
     return frozenRecord(record.set, { ...record.overlay, rooms });
 };
 
-function addRoom(record, { xml, name = null, music = null, at = null }) {
-    if (typeof xml !== 'string' || xml === '') fail('seedlingSetAdapter: add-room needs `xml`');
-    let doc;
-    try {
-        doc = parseRoomXml(xml);
-    } catch (e) {
-        fail(`seedlingSetAdapter: add-room's xml does not parse — ${e.message}`);
-    }
-    if (doc.size === null) {
-        fail('seedlingSetAdapter: add-room\'s xml carries no <width>/<height>, so it is not an '
-            + 'OEL level document');
-    }
+function addRoom(record, { xml, record: newRecord, name = null, music = null, at = null }) {
+    const source = sourceFromPayload('add-room', { record: newRecord, xml });
+    const doc = indexOfPayload('add-room', source);
     const rooms = record.set.rooms ?? [];
     const index = at === null ? rooms.length : at;
     if (!Number.isInteger(index) || index < 0 || index > rooms.length) {
@@ -387,7 +450,7 @@ function addRoom(record, { xml, name = null, music = null, at = null }) {
     const nextRoom = {
         id: index,
         name: name ?? `Room${String(index).padStart(3, '0')}`,
-        source: { xml },
+        source,
         music: music ?? 0,
     };
     if (music !== null && (!Number.isInteger(music) || music < MUSIC_NONE || music >= MUSIC_COUNT)) {
@@ -405,7 +468,8 @@ function addRoom(record, { xml, name = null, music = null, at = null }) {
     const { set, overlay } = renumberSet(record.set, record.overlay, plan, mapping);
     return {
         record: frozenRecord(set, overlay),
-        description: `add room ${index} "${nextRoom.name}" (${total} rooms)`,
+        description: `add room ${index} "${nextRoom.name}" as \`${
+            roomSourceKind(source)}\` (${total} rooms)`,
     };
 }
 
@@ -423,9 +487,8 @@ function removeRoom(record, { room, retarget = null }) {
     const orphans = [];
     rooms.forEach((r, from) => {
         if (from === room) return;
-        const xml = r?.source?.xml;
-        if (typeof xml !== 'string') return;
-        const doc = parseRoomXml(xml);
+        const doc = indexOfRoom(r);
+        if (doc === null) return;
         doc.exits.forEach((ex, index) => {
             if (ex.to === room && cover[`${from}_${index}`] === undefined) {
                 orphans.push(`room ${from} exit ${index}`);
@@ -478,13 +541,7 @@ function removeRoom(record, { room, retarget = null }) {
             if (m[2] === 'f') fallthroughs.push(entry); else exits.push(entry);
         }
         if (exits.length === 0 && fallthroughs.length === 0) return { room: r, from: oldIndex };
-        return {
-            room: {
-                ...r,
-                source: { ...r.source, xml: retargetRoomXml(r.source.xml, { exits, fallthroughs }).xml },
-            },
-            from: oldIndex,
-        };
+        return { room: retargetRoomInKind(r, { exits, fallthroughs }), from: oldIndex };
     }).filter((entry) => entry !== null);
     const { set, overlay, droppedOverlays } = renumberSet(record.set, record.overlay, patched, mapping);
     const dropNote = droppedOverlays.length === 0 ? ''
@@ -566,8 +623,8 @@ function connect(record, { from, to, one_way: oneWay = false, arrival = null }) 
     };
     const [fromRoom, fromExit] = pair(from, 'from');
     const [toRoom, toExit] = pair(to, 'to');
-    const a = parsedRoom(record, fromRoom, 'connect `from`');
-    const b = parsedRoom(record, toRoom, 'connect `to`');
+    const a = indexedRoom(record, fromRoom, 'connect `from`');
+    const b = indexedRoom(record, toRoom, 'connect `to`');
     if (fromRoom === toRoom && fromExit === toExit) {
         fail(`seedlingSetAdapter: connect joins room ${fromRoom} exit ${fromExit} to itself`);
     }
@@ -585,9 +642,9 @@ function connect(record, { from, to, one_way: oneWay = false, arrival = null }) 
         playery: land.y,
         sign: signForTransition(roomRegion(record.overlay, fromRoom), roomRegion(record.overlay, toRoom)),
     };
-    let rooms = record.set.rooms.map((r, i) => (i !== fromRoom ? r : {
-        ...r, source: { ...r.source, xml: retargetRoomXml(a.xml, { exits: [forward] }).xml },
-    }));
+    let rooms = record.set.rooms.map(
+        (r, i) => (i !== fromRoom ? r : retargetRoomInKind(r, { exits: [forward] })),
+    );
     if (!oneWay) {
         const back = {
             index: toExit,
@@ -596,12 +653,11 @@ function connect(record, { from, to, one_way: oneWay = false, arrival = null }) 
             playery: source.y,
             sign: signForTransition(roomRegion(record.overlay, toRoom), roomRegion(record.overlay, fromRoom)),
         };
-        // ⚠ read the DESTINATION's xml out of `rooms`, not out of `b`: when both
-        // ends are in the SAME room the forward write has already happened.
-        const current = rooms[toRoom].source.xml;
-        rooms = rooms.map((r, i) => (i !== toRoom ? r : {
-            ...r, source: { ...r.source, xml: retargetRoomXml(current, { exits: [back] }).xml },
-        }));
+        // ⚠ the BACK write reads the destination out of `rooms`, not out of
+        // `b`: when both ends are in the SAME room the forward write has
+        // already happened, and `retargetRoomInKind` takes the room it is
+        // handed rather than a document captured earlier.
+        rooms = rooms.map((r, i) => (i !== toRoom ? r : retargetRoomInKind(r, { exits: [back] })));
     }
     return {
         record: frozenRecord({ ...record.set, rooms }, record.overlay),
@@ -611,12 +667,10 @@ function connect(record, { from, to, one_way: oneWay = false, arrival = null }) 
 }
 
 function disconnect(record, { room, exitIndex }) {
-    const { xml, doc } = parsedRoom(record, room, 'disconnect');
+    const { room: current, doc } = indexedRoom(record, room, 'disconnect');
     exitAt(doc, exitIndex, 'disconnect');
-    const { xml: next, removed } = removeExitFromRoomXml(xml, exitIndex);
-    const rooms = record.set.rooms.map((r, i) => (i !== room ? r : {
-        ...r, source: { ...r.source, xml: next },
-    }));
+    const { room: next, removed } = removeExitInKind(current, exitIndex);
+    const rooms = record.set.rooms.map((r, i) => (i !== room ? r : next));
     return {
         record: frozenRecord({ ...record.set, rooms }, record.overlay),
         // ⛔ THE SENTENCE SAYS THE DOOR IS GONE, because it is: the OEL format
@@ -687,7 +741,7 @@ function setRoomField(record, { room, field, value }) {
         fail(`seedlingSetAdapter: set-room-field ${JSON.stringify(field)} is not one the schema `
             + `declares — a room's writable fields are ${ROOM_FIELDS.join(', ')}. ⛔ NOT \`id\` `
             + '(position IS identity — a reorder moves a room, an assignment does not) and NOT '
-            + '`source` (that is `replace-room-xml`, which parses what it is given).');
+            + '`source` (that is `replace-room`, which takes the whole document).');
     }
     if (field === 'name' && (typeof value !== 'string' || value === '')) {
         fail('seedlingSetAdapter: a room name must be a non-empty string');
@@ -715,35 +769,44 @@ function setRoomField(record, { room, field, value }) {
     };
 }
 
-function replaceRoomXml(record, { room, xml }) {
-    requireRoom(record, room, 'replace-room-xml');
-    if (typeof xml !== 'string' || xml === '') {
-        fail('seedlingSetAdapter: replace-room-xml needs `xml`');
-    }
-    let doc;
-    try {
-        doc = parseRoomXml(xml);
-    } catch (e) {
-        fail(`seedlingSetAdapter: replace-room-xml's xml does not parse — ${e.message}`);
-    }
-    if (doc.size === null) {
-        fail('seedlingSetAdapter: replace-room-xml\'s xml carries no <width>/<height>, so it is '
-            + 'not an OEL level document');
-    }
+/**
+ * ⛓⛓⛓ **EDITOR v3 E1b — `replace-room-xml` BECAME `replace-room`, BECAUSE ITS
+ * PAYLOAD DID.** The op now takes a whole level DOCUMENT: `{record}` (the shape
+ * a set carries since plan §22.8) or `{xml}` (OEL text, the legacy door). ⛔ The
+ * NAME changed with the payload rather than staying and meaning something else
+ * — an op called `replace-room-xml` that mostly carries records is a true
+ * sentence about the wrong subject.
+ *
+ * ⛓ AND THE PAYLOAD'S KIND BECOMES THE ROOM'S KIND, which is the one place this
+ * adapter converts anything: a `replace-room` is the author REPLACING the
+ * document, so the document they hand over is the one that lands.
+ */
+function replaceRoom(record, { room, record: newRecord, xml }) {
+    requireRoom(record, room, 'replace-room');
+    const source = sourceFromPayload('replace-room', { record: newRecord, xml });
+    const doc = indexOfPayload('replace-room', source);
     const count = record.set.rooms.length;
     for (const ex of [...doc.exits, ...doc.fallthroughs]) {
         if (!Number.isInteger(ex.to) || ex.to < 0 || ex.to >= count) {
-            fail(`seedlingSetAdapter: replace-room-xml carries a transition to room ${ex.to}, `
+            fail(`seedlingSetAdapter: replace-room carries a transition to room ${ex.to}, `
                 + `outside 0..${count - 1}. ⛔ REFUSED rather than written: the game passes @to `
                 + 'straight to `new Game()` unvalidated, and an out-of-range level boots with '
                 + 'no error and reads its whole persistence row as everything already cleared.');
         }
     }
     const current = record.set.rooms[room];
+    const entities = source.record
+        ? (source.record.entities ?? []).length
+        : indexOfPayload('replace-room', source).exits.length;
+    // ⛓ THE SENTENCE COUNTS WHAT THE DOCUMENT HAS, NOT THE BYTES IT WOULD
+    // RENDER TO. A record has no byte count until the chunk boundary, and
+    // quoting one here would be quoting a number this op never produced.
     return {
-        record: withRoomAt(record, room, { ...current, source: { ...current.source, xml } }),
-        description: `replace room ${room} "${current.name}" OEL `
-            + `(${doc.exits.length} exit${doc.exits.length === 1 ? '' : 's'}, ${xml.length} bytes)`,
+        record: withRoomAt(record, room, { ...current, source }),
+        description: `replace room ${room} "${current.name}" (\`${roomSourceKind(source)}\`, `
+            + `${source.record ? `${entities} entit${entities === 1 ? 'y' : 'ies'}` : `${xml.length} bytes`}`
+            + `, ${doc.size.w / 16}x${doc.size.h / 16} tiles, `
+            + `${doc.exits.length} exit${doc.exits.length === 1 ? '' : 's'})`,
     };
 }
 
@@ -767,9 +830,9 @@ function setOverlay(record, { room, overlay }) {
 }
 
 function markLocation(record, { room, entity, name, vanilla_item: item }) {
-    // ⛓ `parsedRoom` is called for its REFUSAL, not its parse: an embed-sourced
-    // room has no XML to find an entity in, and the sentence should say so.
-    parsedRoom(record, room, 'mark-location');
+    // ⛓ `indexedRoom` is called for its REFUSAL, not its index: an embed-sourced
+    // room has no document to find an entity in, and the sentence should say so.
+    indexedRoom(record, room, 'mark-location');
     if (!isPlainObject(entity) || typeof entity.type !== 'string'
         || !Number.isInteger(entity.x) || !Number.isInteger(entity.y)) {
         fail(`seedlingSetAdapter: mark-location \`entity\` is {type, x, y} in PIXELS, got `
@@ -788,7 +851,7 @@ function markLocation(record, { room, entity, name, vanilla_item: item }) {
     // ⛔ THE ENTITY MUST BE IN THE ROOM'S XML, EXACTLY. A location marked on
     // nothing derives an atlas that throws at build time with a message about a
     // ledger row; refusing here names the room and the click.
-    const found = findEntityInXml(record.set.rooms[room].source.xml, entity);
+    const found = findEntityInRoom(record.set.rooms[room], entity);
     if (!found) {
         fail(`seedlingSetAdapter: room ${room} holds no <${entity.type}> at (${entity.x}, `
             + `${entity.y}). ⚠ The coordinates are the OEL element's own @x/@y in PIXELS, and `
@@ -906,12 +969,31 @@ function assertExitTargetExists(record, room, exitId, deps) {
 }
 
 /**
+ * ⛓⛓ **EDITOR v3 E1b — whether the room holds this exact entity, IN WHATEVER
+ * KIND IT IS.** A `record` room answers from `entities[]` (no parse, no regex);
+ * an `xml` room answers from the text, as it always did.
+ *
+ * ⚠ THE MATCH IS EXACT ON BOTH SIDES — two entities of one type in a room are
+ * ordinary, so a tolerant match would silently mark whichever sorted first.
+ */
+function findEntityInRoom(room, entity) {
+    const kind = roomSourceKind(room?.source);
+    if (kind === 'record') {
+        return (room.source.record.entities ?? []).some(
+            (e) => e?.type === entity.type && e.x === entity.x && e.y === entity.y,
+        );
+    }
+    if (kind === 'xml') return findEntityInXml(room.source.xml, entity);
+    return false;
+}
+
+/**
  * Whether the room's OEL holds this exact entity.
  *
  * ⚠ REGEX, like every other OEL reader in this module's neighbourhood
  * (`levelSetValidator.js`'s own note: the files are flat machine-generated Ogmo
  * output and this graph is in the browser). It asks the ELEMENT, not a parsed
- * record, so a `mark-location` needs no `parseOel` injection.
+ * record, so a `mark-location` on a legacy `xml` room needs no `parseOel`.
  */
 function findEntityInXml(xml, entity) {
     const re = new RegExp(`<${entity.type}((?:\\s+[\\w.:-]+\\s*=\\s*"[^"]*")*)\\s*/?>`, 'g');
@@ -941,7 +1023,7 @@ const OPS = Object.freeze({
     'set-access-rule': setAccessRule,
     'mark-location': markLocation,
     'unmark-location': unmarkLocation,
-    'replace-room-xml': replaceRoomXml,
+    'replace-room': replaceRoom,
     'set-overlay': setOverlay,
 });
 
@@ -964,10 +1046,16 @@ export function readSetCell(record, x, y) {
         fail(`seedlingSetAdapter: readCell was asked for room ${x}; this set has `
             + `${record.set.rooms.length}`);
     }
+    // ⛓⛓ EDITOR v3 E1b — THE WHOLE `source` TRAVELS, KIND AND ALL. A
+    // descriptor that force-converted an `xml` room to a record on COPY would
+    // silently change the document's kind on PASTE, which is the one thing
+    // §22.8's additive rule forbids. So a `record` room copies as `{record}`
+    // and a legacy `xml` room copies as `{xml}` — and law 7 (write the
+    // descriptor at a DIFFERENT cell, read it back) holds for both.
     const desc = {
         room: {
             name: room.name,
-            xml: room.source?.xml ?? null,
+            source: room.source ?? null,
             music: room.music,
         },
         overlay: record.overlay.rooms[String(x)] ?? null,
@@ -985,7 +1073,7 @@ export function readSetCell(record, x, y) {
  *
  * ⛔ `writeOps` NEVER SEES THE RECORD — that is the core's signature and it is
  * why "paste past the end appends a room" is not implementable here (the file
- * docblock). Every op it emits is one `replace-room-xml` / `set-room-field` /
+ * docblock). Every op it emits is one `replace-room` / `set-room-field` /
  * `set-overlay` refuses by name against a room that does not exist.
  */
 export function setWriteOps(desc, x, y) {
@@ -998,7 +1086,8 @@ export function setWriteOps(desc, x, y) {
     const ops = [];
     const room = desc.room ?? null;
     if (room !== null) {
-        if (typeof room.xml === 'string') ops.push({ op: 'replace-room-xml', room: x, xml: room.xml });
+        // ⛓ ONE `replace-room` CARRYING THE DESCRIPTOR'S OWN KIND.
+        if (isPlainObject(room.source)) ops.push({ op: 'replace-room', room: x, ...room.source });
         for (const field of ROOM_FIELDS) {
             // ⛓ ONLY THE FIELDS THE DESCRIPTOR PRESENTS — a filtered paste
             // (`only: 'overlay'`) hands over a descriptor with no `room` at all,
@@ -1289,28 +1378,28 @@ export function setSessionRoomSource(session) {
  *
  * §13.10: *"a slice that edits five rooms in a row either re-stamps five times
  * (five ids, four of them never seen by anybody) or holds the edits and stamps
- * once."* Here N room edits become ONE `replace-room-xml` on the set session,
+ * once."* Here N room edits become ONE `replace-room` on the set session,
  * and the set is stamped exactly once, at download. Five rooms edited = five set
  * ops = one id.
  *
- * ⛓ AND UNDO IS THE FOLD'S, NOT A SNAPSHOT'S. Undoing the `replace-room-xml`
- * re-folds the set session's shorter op list, so the room's OLD OEL comes back
- * BYTE-FOR-BYTE — not because anything saved it, but because the fold never
- * had it any other way.
+ * ⛓ AND UNDO IS THE FOLD'S, NOT A SNAPSHOT'S. Undoing the `replace-room`
+ * re-folds the set session's shorter op list, so the room's OLD document comes
+ * back EXACTLY — not because anything saved it, but because the fold never had
+ * it any other way.
+ *
+ * ⛓⛓⛓ **EDITOR v3 E1b — THE `recordToOel` PARAMETER IS GONE, AND THAT IS THE
+ * WHOLE POINT OF THE RULING.** This function was the ONE existing record → text
+ * hinge in the editor: a room session's fold IS a level record, and it had to be
+ * rendered because a set carried text. It does not any more — the room session's
+ * `record()` is the payload — so the render moved to the ONE place OEL is
+ * actually needed, the chunk boundary (`planLevelSetChunks`).
  *
  * @param {object} setSession   the set session
  * @param {object} roomSession  a room session opened on room `room` of it
  * @param {number} room         the room index the room session was opened on
- * @param {Function} recordToOel `procgenLevelOel.recordToOel`, injected
  */
-export function closeRoomSession(setSession, roomSession, room, recordToOel) {
-    if (typeof recordToOel !== 'function') {
-        fail('seedlingSetAdapter: closeRoomSession needs `recordToOel` injected — a room record '
-            + 'becomes OEL text through `procgenLevelOel.recordToOel`, and this module names no '
-            + 'renderer of its own');
-    }
-    const xml = recordToOel(roomSession.record());
-    const result = setSession.apply({ op: 'replace-room-xml', room, xml });
+export function closeRoomSession(setSession, roomSession, room) {
+    const result = setSession.apply({ op: 'replace-room', room, record: roomSession.record() });
     if (!result.ok) {
         fail(`seedlingSetAdapter: closing room ${room} into the set session was REFUSED — `
             + `${result.description}`);
@@ -1328,9 +1417,9 @@ export const foldSetEdits = (adapter, record, ops) => foldEdits(adapter, record,
 /** A labelled group of set ops — ONE undo. ⛔ `reorder` is NOT one of these. */
 export const setGroup = (label, ops) => group(label, ops);
 
-/** The exits of one room, as `parseRoomXml` numbers them — what a UI lists. */
+/** The exits of one room, in the ordinal both writers address — what a UI lists. */
 export function exitsOfRoom(record, room) {
-    const { doc } = parsedRoom(record, room, 'exitsOfRoom');
+    const { doc } = indexedRoom(record, room, 'exitsOfRoom');
     return doc.exits.map((ex, index) => ({ index, ...ex }));
 }
 
@@ -1348,9 +1437,8 @@ export function whatLinksHere(record, room) {
     const links = [];
     const unreadable = [];
     (record.set.rooms ?? []).forEach((r, from) => {
-        const xml = r?.source?.xml;
-        if (typeof xml !== 'string') { unreadable.push(from); return; }
-        const doc = parseRoomXml(xml);
+        const doc = indexOfRoom(r);
+        if (doc === null) { unreadable.push(from); return; }
         doc.exits.forEach((ex, index) => {
             if (ex.to === room) links.push({ from, kind: 'exit', index, element: ex.element });
         });
