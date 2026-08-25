@@ -12,8 +12,10 @@
 import { describe, expect, it } from 'vitest';
 
 import { ENEMY_IFRAMES, KILL_CADENCE_FLOOR } from './combat.js';
-import { rect } from './levelWorld.js';
+import { rect, ROLES } from './levelWorld.js';
 import { knockbackImpulse } from './playerPhysicsV2.js';
+import { createLevelRun } from './levelRun.js';
+import { atlasLevelSource } from './levelSource.js';
 import {
     distanceRectPoint,
     HITABLE_TYPES,
@@ -507,6 +509,87 @@ describe('R9 slice 12b: `set slashing` (Player.as:779-804), the whole setter', (
         for (const row of AT_REST_DASHES) expect(row.game).toBeGreaterThan(row.model);
         const [x] = AT_REST_DASHES;
         expect(x.game - x.model).toBeCloseTo(SLASH_DASH_FORCE, 10);
+    });
+
+    /**
+     * ⛓⛓⛓ R9 SLICE 12e′ — **THE ROW THAT DISCRIMINATES, AND WHY THE UNIT ROW
+     * ABOVE DOES NOT.**
+     *
+     * The `slashSet` row above pins the SETTER's answer, and a fix that moves
+     * the impulse computation downstream to the spend site leaves that answer
+     * `{0, 0}` and the row GREEN. Measured: the 12e″ prototype reddens it only
+     * through the marker field the prototype happens to carry, which is a
+     * fixture discriminating two builds by their scaffolding rather than by
+     * the number that matters. So the mechanism is pinned HERE, through a real
+     * `levelRun` tick, where the only thing under test is displacement.
+     *
+     * ⛔ THE DEFECT, STATED AS AN EQUALITY: a dash pressed AT REST with the
+     * direction key starting that same tick moves the player EXACTLY as far as
+     * pressing nothing at all. `knockbackImpulse(0, 0, 2)` is
+     * `point_normalize`'s faithful no-op, and the run hands `set slashing` the
+     * velocity from BEFORE this tick's `applyInput`, so the dash buys nothing.
+     *
+     * ⛓ AND THE POSITIVE CONTROL IS WHAT KEEPS THAT FROM BEING A TRUE SENTENCE
+     * ABOUT THE WRONG SUBJECT (trap 566's shape): "the dash bought nothing"
+     * and "no dash was taken" predict the same equality. The MOVING pair shows
+     * the arm firing and paying `SLASH_DASH_FORCE` **exactly**, on the same
+     * boot, the same room and the same key — so the at-rest zero is a dash
+     * that paid nothing rather than a dash that never happened.
+     *
+     * ⛓ THE GAME'S OWN ANSWER, measured 2026-08-25 on `r9-solve-3` @151 t
+     * (R9 kickoff §33): on the dash tick the game moved **2.80 px** where this
+     * model moves **0.80** — the deficit is `SLASH_DASH_FORCE` to the digit.
+     * ⛔ The row is GREEN on purpose: it states today's WRONG answer so the
+     * tree stays green, and any fix that makes the dash pay flips the equality
+     * BY NAME. This row is that fix's mutant.
+     */
+    describe('R9 12e′: the dash impulse, through a real tick', () => {
+        const source = atlasLevelSource();
+        /**
+         * ⛔ The boot block is in PLACEMENT coordinates and the entity centre
+         * is placement + 8 on both axes (12d″'s trap), so the pixel this row
+         * means is named once and the offset is undone here. It is
+         * `r9-solve-3`'s own t=113 pixel in L3, at rest, with the sword.
+         */
+        const REST = Object.freeze({ x: 39.65, y: 40.45 });
+        const at = () => createLevelRun({
+            levelSource: source, boot: { level: 3, x: REST.x - 8, y: REST.y - 8 },
+            noclip: false, noHazards: [], noDamage: false, grants: [], persistence: [],
+            despawn: [], equips: [], pins: [],
+            save: { totem_parts: [], keys: [], seal_parts: [] },
+            rng: null, seam: { items: { hasSword: true } }, roles: ROLES,
+        });
+        /** The per-tick x displacement of a key sequence, from that boot. */
+        const walk = (seq) => {
+            const run = at();
+            const xs = [run.state.x];
+            for (const keys of seq) { run.advance(new Set(keys)); xs.push(run.state.x); }
+            return xs.slice(1).map((v, i) => Number((v - xs[i]).toFixed(3)));
+        };
+
+        it('⛔ AT REST the dash buys NOTHING — it walks exactly like no press at all', () => {
+            // press (opens the swing) · release · press + `right` STARTING
+            // this tick, from a standstill · `right`.
+            const dashed = walk([['primary'], [], ['primary', 'right'], ['right']]);
+            const control = walk([[], [], ['right'], ['right']]);
+            expect(dashed).toEqual(control);
+            // ⛓ And these are the model's own digits, which are `r9-solve-3`'s
+            // t=114 and t=115 to the hundredth. The GAME moved 2.80 on the
+            // first of them.
+            expect(dashed).toEqual([0, 0, 0.8, 1.35]);
+        });
+
+        it('⛓ MOVING, the same arm fires and pays SLASH_DASH_FORCE exactly', () => {
+            const dashed = walk([['right'], ['right', 'primary'], ['right'],
+                ['right', 'primary'], ['right']]);
+            const control = walk([['right'], ['right'], ['right'], ['right'], ['right']]);
+            // The first three ticks are the plain walk in both.
+            expect(dashed.slice(0, 3)).toEqual(control.slice(0, 3));
+            // The fourth is the dash, and the difference is the constant.
+            expect(dashed[3] - control[3]).toBeCloseTo(SLASH_DASH_FORCE, 10);
+            expect(dashed[3]).toBeCloseTo(2.85, 10);
+            expect(control[3]).toBeCloseTo(0.85, 10);
+        });
     });
 
     it('the RELEASE re-arms the dash inside the same timer window — note 3', () => {
