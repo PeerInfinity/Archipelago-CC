@@ -29,6 +29,11 @@ import {
 } from './reachabilityAnalyzer.js';
 import { probeOneTilePhysics } from './reachabilityPhysics.js';
 import { exportRulesJson } from './rulesExporter.js';
+import settingsManager from '../../app/core/settingsManager.js';
+import {
+    DEFAULT_RULES_JSON_INDENT, RULES_JSON_INDENT_KEY,
+} from '../presets/documentBundle.js';
+import { stringifyRulesJson } from '../shared/rulesJsonBuilder.js';
 import { TileMapCanvasRenderer } from './canvasRenderer.js';
 
 function log(level, message, ...data) {
@@ -621,8 +626,17 @@ export class TileMapAnalyzerUI {
   async _exportRulesJson() {
     const { rules, debugLog, stats } = await this._buildRulesJson('export');
 
-    // Download rules.json
-    const json = JSON.stringify(rules, null, 2);
+    /**
+     * ⛓ EDITOR v3 E1c — **THIS PANEL ADOPTS THE SHARED WRITER.** A bare
+     * `JSON.stringify(…, null, 2)` here was a second rules.json writer: no
+     * tile-array splice, and no way to honour `rulesJson.indent`. The bytes are
+     * byte-identical at the default (pinned in `rulesJsonWriters.test.js` — this
+     * exporter builds no `preset_sidecars`, so the splice is a no-op), and a
+     * person who asked for MINIFY now gets it here too.
+     */
+    const indent = await settingsManager.getSetting(
+        RULES_JSON_INDENT_KEY, DEFAULT_RULES_JSON_INDENT);
+    const json = stringifyRulesJson(rules, { indent });
     const blob = new Blob([json], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');

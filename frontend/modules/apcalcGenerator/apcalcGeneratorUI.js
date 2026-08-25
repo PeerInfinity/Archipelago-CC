@@ -7,6 +7,11 @@
 
 import { setPanelInstance, getModuleApis } from './index.js';
 import { generate, exportRulesJson } from './apcalcGeneratorEngine.js';
+import settingsManager from '../../app/core/settingsManager.js';
+import {
+    DEFAULT_RULES_JSON_INDENT, RULES_JSON_INDENT_KEY,
+} from '../presets/documentBundle.js';
+import { stringifyRulesJson } from '../shared/rulesJsonBuilder.js';
 
 const LS_KEY = 'apcalcGenerator_params';
 
@@ -29,6 +34,19 @@ export class APCalcGeneratorUI {
         this.params = { ...DEFAULT_PARAMS };
         this.logLines = [];
         this.generatedRulesJson = null;
+        /**
+         * ⛓ EDITOR v3 E1c — this panel used to write its rules.json with a bare
+         * `JSON.stringify(…, null, 2)`, which is a SECOND rules.json writer: it
+         * has no tile-array splice and no `indent` knob, so a procgen document
+         * downloaded from here would not be the bytes every other path writes.
+         * It goes through `stringifyRulesJson` now, and the indent is the
+         * `rulesJson.indent` SETTING (the schema is its default source).
+         *
+         * ⚠ It is CACHED rather than awaited in `_renderResults`, because that
+         * function is synchronous and is called on every render. It is refreshed
+         * where the document is produced.
+         */
+        this.rulesJsonIndent = DEFAULT_RULES_JSON_INDENT;
         this.isGenerating = false;
         this.rootElement = document.createElement('div');
         this.rootElement.className = 'apcalc-gen-panel';
@@ -174,7 +192,10 @@ export class APCalcGeneratorUI {
         btnRow.className = 'apcalc-gen-btn-row';
 
         // Download link
-        const blob = new Blob([JSON.stringify(this.generatedRulesJson, null, 2)], { type: 'application/json' });
+        const blob = new Blob(
+            [stringifyRulesJson(this.generatedRulesJson, { indent: this.rulesJsonIndent })],
+            { type: 'application/json' },
+        );
         const url = URL.createObjectURL(blob);
         const downloadLink = document.createElement('a');
         downloadLink.className = 'apcalc-gen-btn';
@@ -280,6 +301,8 @@ export class APCalcGeneratorUI {
         try {
             const gameData = await generate(config, log);
             this.generatedRulesJson = exportRulesJson(gameData);
+            this.rulesJsonIndent = await settingsManager.getSetting(
+                RULES_JSON_INDENT_KEY, DEFAULT_RULES_JSON_INDENT);
             log('Export complete.');
         } catch (e) {
             log(`ERROR: ${e.message}`);

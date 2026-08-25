@@ -14,6 +14,11 @@ class JSONToolsSettings(Group):
     skip_required_files: bool = False  # Also extracted early in Settings.__init__ for Group.__getattribute__
     save_rules_json: bool = False
     rules_json_format: str = "rule_builder"  # Options: "rule_builder", "ast", "both"
+    # EDITOR v3 E1c — spaces per level in a written rules.json. 0 MINIFIES
+    # (one line, no spaces; the Python writer maps 0 to json's `separators`,
+    # because json.dumps(indent=0) still emits a newline per token). The
+    # DEFAULT DOES NOT MOVE: every committed preset is byte-pinned at 2.
+    rules_json_indent: int = 2
     save_tracker_pickle: bool = False  # Export multiworld as pickle for tracker (alternative to rules_json)
     skip_preset_copy_if_rules_identical: bool = False
     save_sphere_log: bool = False

@@ -42,9 +42,46 @@ auto_enable_from_env()
 logger = logging.getLogger(__name__)
 
 
+def _json_dumps_at_indent(data: Any, indent: int) -> str:
+    """json.dumps at `indent`, where indent 0 means MINIFIED.
+
+    EDITOR v3 E1c. ``json.dumps(obj, indent=0)`` is NOT minified in
+    Python: it still emits a newline before every element and a space
+    after every colon, so `{"a": [1, 2]}` becomes 7 lines. JavaScript's
+    ``JSON.stringify(obj, null, 0)`` IS minified (measured, both ways).
+    The two writers have to agree, so 0 maps to `separators` here.
+    """
+    if indent == 0:
+        return json.dumps(data, separators=(',', ':'))
+    return json.dumps(data, indent=indent)
+
+
+def _rules_json_indent() -> int:
+    """The `json_tools.rules_json_indent` setting, or its declared default.
+
+    EDITOR v3 E1c. Read HERE rather than threaded through six call frames,
+    and read from the settings Group so the default has exactly one home
+    (`worlds/json_tools_installer/json_tools_settings.py`) — an absent or
+    unreadable host.yaml falls back to that Group's own default, never to
+    a literal typed here.
+    """
+    try:
+        from worlds.json_tools_installer.json_tools_settings import (
+            JSONToolsSettings, get_json_tools_settings,
+        )
+        return int(getattr(get_json_tools_settings(), 'rules_json_indent',
+                           JSONToolsSettings.rules_json_indent))
+    except Exception:
+        return 2
+
+
 def _dump_with_compact_sidecar_tiles(data: Any, indent: int = 2) -> str:
     """Serialize a rules.json-shaped dict to a string with `indent`,
     but collapse each sidecar's `tiles` array onto a single line.
+
+    `indent=0` MINIFIES (see `_json_dumps_at_indent`) — the sidecar
+    splice is then a no-op in effect, since a compact tiles array is
+    already what a minified dump writes.
 
     Procgen output carries per-region playable_payload.tiles arrays
     of width*height integers; the default json.dump(indent=2) puts
@@ -61,7 +98,7 @@ def _dump_with_compact_sidecar_tiles(data: Any, indent: int = 2) -> str:
     No-op for inputs without a `preset_sidecars` key.
     """
     if not isinstance(data, dict) or 'preset_sidecars' not in data:
-        return json.dumps(data, indent=indent)
+        return _json_dumps_at_indent(data, indent)
 
     import copy as _copy
     marker = '__PROCGEN_TILES_'
@@ -81,7 +118,7 @@ def _dump_with_compact_sidecar_tiles(data: Any, indent: int = 2) -> str:
                     captured.append(pp['tiles'])
                     pp['tiles'] = f'{marker}{idx}__'
 
-    text = json.dumps(patched, indent=indent)
+    text = _json_dumps_at_indent(patched, indent)
     for i, tiles in enumerate(captured):
         placeholder = f'"{marker}{i}__"'
         compact = json.dumps(tiles)
@@ -2853,8 +2890,14 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
             # file ~10× larger than it needs to be. Mirrors
             # stringifyRulesJson in
             # frontend/modules/procgenPipeline/procgenPipelineEngine.js.
+            # EDITOR v3 E1c — the indent is a SETTING (`json_tools.rules_json_indent`,
+            # default 2, mirrored by the frontend's `rulesJson.indent`). ⛔ THE
+            # DEFAULT DOES NOT MOVE: every committed preset is byte-pinned at 2
+            # (29 byte-identity dumps, test_schema_validation.py, every --check),
+            # so `indent=0` is only ever something a person asked for.
             with open(filepath, 'w', encoding='utf-8') as f:
-                f.write(_dump_with_compact_sidecar_tiles(filtered_data, indent=2))
+                f.write(_dump_with_compact_sidecar_tiles(
+                    filtered_data, indent=_rules_json_indent()))
 
             # Check final file size against limit
             file_size_bytes = os.path.getsize(filepath)

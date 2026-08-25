@@ -78,6 +78,7 @@ class ExportSettings:
     skip_required_files: bool = False
     save_rules_json: bool = False
     rules_json_format: str = "rule_builder"  # "rule_builder", "ast", "both"
+    rules_json_indent: int = 2  # EDITOR v3 E1c — 0 minifies; mirrors JSONToolsSettings
     skip_preset_copy_if_rules_identical: bool = False
     save_sphere_log: bool = False
     verbose_sphere_log: bool = False
@@ -172,6 +173,7 @@ class InstallerConfig:
             skip_required_files=export_settings.get("skip_required_files", False),
             save_rules_json=export_settings.get("save_rules_json", False),
             rules_json_format=export_settings.get("rules_json_format", "rule_builder"),
+            rules_json_indent=export_settings.get("rules_json_indent", 2),
             skip_preset_copy_if_rules_identical=export_settings.get("skip_preset_copy_if_rules_identical", False),
             save_sphere_log=export_settings.get("save_sphere_log", False),
             verbose_sphere_log=export_settings.get("verbose_sphere_log", False),

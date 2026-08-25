@@ -90,6 +90,51 @@ export const DELIVERY_SUFFIX = '.chunks.json';
  */
 export const BUNDLE_MTIME = new Date(Date.UTC(1980, 0, 1));
 
+/**
+ * ⛓⛓⛓ **THE MINIFY KNOB IS A SETTING, AND THE SCHEMA IS ITS DEFAULT SOURCE.**
+ *
+ * EDITOR v3 E1c (§25, plan §22.8 item 3). MINIFY is not a new format and not a
+ * new writer — it is `stringifyRulesJson`'s `indent`, which has been PLUMBED
+ * AND NEVER PASSED by any of its callers since it was written. This is the one
+ * declaration of what `indent` may be and what it is when nobody says.
+ *
+ * ⛔ **THE DEFAULT DOES NOT MOVE.** Every committed `*_rules.json` is byte-pinned
+ * (29 byte-identity dumps, `test_schema_validation.py`, every `--check`), so a
+ * default of anything but 2 would re-write 74 MB of committed presets. `indent: 0`
+ * is a thing a PERSON asks for, per output.
+ *
+ * ⛓ Registered as the TOP-LEVEL `rulesJson` scope (`app/core/coreSettingsSchemas.js`)
+ * rather than under one module, because four different writers across three
+ * panels and a lab page all answer to it — `settingsManager.getSetting`
+ * resolves `rulesJson.indent` from HERE
+ * ([[architecture_schema_default_source]]: override > persisted > SCHEMA default
+ * > call-site). ⚠ `watch.html` is a standalone lab page with no settingsManager
+ * at all; it reads `DEFAULT_RULES_JSON_INDENT` off this same object, so there is
+ * still exactly one default.
+ */
+export const RULES_JSON_SETTINGS_SCHEMA = Object.freeze({
+    type: 'object',
+    title: 'rules.json Output',
+    properties: {
+        indent: {
+            type: 'integer',
+            default: 2,
+            minimum: 0,
+            maximum: 8,
+            label: 'rules.json indent',
+            description: 'Spaces per level when a rules.json is written. 0 MINIFIES '
+                + '(one line, no spaces) — about 45% of the indented bytes. The committed '
+                + 'presets are byte-pinned at 2 and are never re-written from here.',
+        },
+    },
+});
+
+/** The settings key the four writers read. */
+export const RULES_JSON_INDENT_KEY = 'rulesJson.indent';
+
+/** ⛓ THE default — read off the schema, never typed a second time. */
+export const DEFAULT_RULES_JSON_INDENT = RULES_JSON_SETTINGS_SCHEMA.properties.indent.default;
+
 const GZIP_MAGIC = Object.freeze([0x1f, 0x8b]);
 
 const isPlainObject = (v) => !!v && typeof v === 'object' && !Array.isArray(v);
@@ -262,7 +307,8 @@ export async function readBundle(bytes, { jszip } = {}) {
  * @param {{jszip: Function, indent?: number, mtime?: Date}} deps
  * @returns {Promise<Uint8Array>}
  */
-export async function writeBundle(members, { jszip, indent = 2, mtime = BUNDLE_MTIME } = {}) {
+export async function writeBundle(members,
+    { jszip, indent = DEFAULT_RULES_JSON_INDENT, mtime = BUNDLE_MTIME } = {}) {
     const JSZip = requireZip(jszip, 'writeBundle');
     const list = Array.isArray(members) ? members : [];
     const byKind = new Map();

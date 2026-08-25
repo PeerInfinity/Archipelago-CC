@@ -46,6 +46,14 @@
       },
       "additionalProperties": false
     },
+    "rulesJson": {
+      "type": "object",
+      "description": "How a rules.json is written when this app writes one (EDITOR v3 E1c). The DEFAULT lives in the registered schema (modules/presets/documentBundle.js, registered by app/core/coreSettingsSchemas.js) — this entry exists because the top level is additionalProperties:false, so a persisted rulesJson scope would otherwise fail validation.",
+      "properties": {
+        "indent": { "type": "integer", "minimum": 0, "maximum": 8, "default": 2 }
+      },
+      "additionalProperties": false
+    },
     "moduleSettings": {
       "type": "object",
       "description": "Settings specific to each module, keyed by module ID.",
