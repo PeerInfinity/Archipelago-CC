@@ -48,8 +48,10 @@ import { buildTape } from './botDriverV1.js';
 import { plannerObstacleAt, planWaypoints } from './botDriverV2.js';
 // ⛓ R9 slice 12d′: the chest control derives its band from the mechanism.
 import { chestStanceBand } from './chest.js';
-// ⛓ R9 slice 12d′: ⚖ 47's wait is the responder's own arithmetic, derived here too.
-import { RESPONDERS, opensOnTick } from './activators.js';
+// ⛓ R9 slice 12d′: ⚖ 47's wait is the responder's own arithmetic, derived from
+// the SAME `activators.js` import 12d″'s lean row already takes below — the
+// duplicate named import this line used to be is tolerated by esbuild/vitest
+// and is FATAL to `node --check` (⚖ 47b item (6)).
 import { HITBOX } from './playerPhysicsV1.js';
 import {
     LIVE_GEOMETRY_KEYS, ROLES, TILE_SIZE, isNormalizedLiveOpts, normalizeLiveOpts, rect,
