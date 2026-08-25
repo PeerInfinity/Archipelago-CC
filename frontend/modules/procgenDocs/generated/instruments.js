@@ -5747,6 +5747,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "check"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "walk-report"
                 }
             ],
             "oneLiner": "solve-seedling-r8-d2 — D2 AND THE SHIELD, driven by the LIVE SOLVER from a STAGED POST-SWORD BOOT.",

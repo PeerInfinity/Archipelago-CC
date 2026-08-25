@@ -59,11 +59,46 @@ import { dirname, join } from 'node:path';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
+import { createWalkReport } from './walkReport.js';
+
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
 const MODULE = join(REPO, 'frontend', 'modules', 'seedlingDemo');
 const TAPES = join(MODULE, 'fixtures', 'tapes');
 const TRACES = join(MODULE, 'fixtures', 'traces');
+
+/**
+ * ⛓⛓⛓ R9 slice 12e′ RE-RUN, ⚖ ruling 43 — **THIS PRODUCER'S OWN WALK REPORT,
+ * AND WITHOUT IT `r8-solve-20` COULD NOT BE RE-RECORDED BY THE PIPELINE AT
+ * ALL.**
+ *
+ * S0 measured this producer `UNMEASURED` — *"does not accept `--walk-report`,
+ * so it cannot report which of its walks moved"* — which was true and which
+ * had a consequence nobody had followed through: `spendWalkLicence` re-authors
+ * only the producers of MEASURED segments, so an unmeasured walk move can
+ * never be licensed, never be re-authored, and never appear in a projection
+ * diff. `r8-solve-20` is on ⚖ ruling 49's licence at 365 t -> 229 t, and the
+ * pipeline had no way to author it. Its instruments row is
+ * `browser: false, flags: check`, so the missing flag was the whole block.
+ *
+ * ⛔ IT IS OFF BY DEFAULT AND WRITES NOTHING WHEN ABSENT, so this script's
+ * `--check` stdout — and therefore its standing md5 `6e0967bf…` — is
+ * byte-identical with the flag not given. A row asserts that.
+ */
+const WALK_REPORT = createWalkReport({
+    producer: 'solve-seedling-r8-d2.mjs',
+    tapesDir: TAPES,
+    /**
+     * ⛓ THE FLAG TOKEN IS FOUND **HERE**, not only inside the helper: the
+     * instruments index publishes "the flags it reads out of `argv`" by
+     * scanning each instrument's own text, and a flag parsed one module away
+     * is a flag its table would omit — about the very producer ⚖ ruling 43's
+     * mode has to be able to measure. `walkReport.js` still owns the PARSE (a
+     * bare `--walk-report` is refused by name there).
+     */
+    arg: process.argv.find((a) => a === '--walk-report'
+        || a.startsWith('--walk-report=')),
+});
 
 const CHECK = process.argv.includes('--check');
 
@@ -265,6 +300,9 @@ function tapeJson(obj) {
 }
 
 function emit(path, json, what) {
+    // ⛓ R9 slice 12e′ RE-RUN — the walk report is taken HERE, above the write,
+    // so the committed side is read BEFORE a `--check`-less run overwrites it.
+    WALK_REPORT.note(path, json);
     if (CHECK) {
         const have = existsSync(path) ? readFileSync(path, 'utf8') : null;
         check(`${what} is byte-identical to what this solver derives`, have === json,

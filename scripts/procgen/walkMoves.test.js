@@ -63,16 +63,21 @@ describe('walkMoves: the two derivations, calibrated against the REAL tree', () 
      * imports playwright and launches chromium at module scope, so it can
      * never be measured inside an OFFLINE S0. The four solvers do not.
      */
-    it('⛓⛓⛓ participation: the four solvers YES, the browser producer NO — and it says why', async () => {
+    it('⛓⛓⛓ participation: the five solvers YES, the browser producer NO — and it says why', async () => {
         const rows = (await buildInstruments()).rows;
         const p = participationOf([
             'solve-seedling-r9-campaign.mjs', 'solve-seedling-r8-battery.mjs',
             'solve-seedling-r8-l18.mjs', 'solve-seedling-r8-d2-chain.mjs',
+            // ⛓ R9 12e′ RE-RUN — the FIFTH. `r8-solve-20` is on ⚖ 49's licence
+            //   (365 t -> 229 t) and was `unmeasured` for want of this flag,
+            //   which meant `spendWalkLicence` could never re-author it.
+            'solve-seedling-r8-d2.mjs',
             'plan-seedling-r7-ends-meet.mjs',
         ], { instrumentRows: rows });
         const by = new Map(p.map((r) => [r.file, r]));
         for (const file of ['solve-seedling-r9-campaign.mjs', 'solve-seedling-r8-battery.mjs',
-            'solve-seedling-r8-l18.mjs', 'solve-seedling-r8-d2-chain.mjs']) {
+            'solve-seedling-r8-l18.mjs', 'solve-seedling-r8-d2-chain.mjs',
+            'solve-seedling-r8-d2.mjs']) {
             expect(by.get(file).participates, `${file} should participate`).toBe(true);
             expect(by.get(file).browser).toBe(false);
         }
