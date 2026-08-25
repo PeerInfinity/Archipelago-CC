@@ -30,13 +30,19 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 import {
-    ALL_FOLDERS, DEFAULT_PLACE_ATTRS, DEFAULT_PLACE_TYPE, attrFormRows, attrsFromRows,
-    foldersOf, renderTranscribeBound, rosterFor,
+    ALL_FOLDERS, COLUMN_VALUE, DEFAULT_PLACE_ATTRS, DEFAULT_PLACE_TYPE, WatchEditorError,
+    attrFormRows, attrsFromRows, flagFormRows, foldersOf, paintOptionGroups, paintSpecOf,
+    renderTranscribeBound, rosterFor, swatchColour,
 } from './watchEditor.js';
 import {
     ENTITY_ROSTER_PROCGEN, entityRosterFrom, transcribeBoundText, untranscribedTypes,
 } from './watchEdit.js';
 import { ENTITY_CLASSES } from './levelWorld.js';
+import {
+    LAYER_COLUMNS, TERRAIN, TERRAIN_NAMES, TILE_LAYERS, columnOfSpec,
+} from './procgenLevel.js';
+import { TILE_COLUMN_TO_TYPE, TILE_TYPE_NAMES, tileSemantics } from '../flashPanel/seedlingSemantics.js';
+import { ROOM_FLAG_TAGS } from './watchEdit.js';
 
 const SCHEMA = JSON.parse(readFileSync(
     fileURLToPath(new URL('./fixtures/seedling-ogmo-schema.json', import.meta.url)), 'utf8',
@@ -205,5 +211,99 @@ describe('⚖ RULING 3 — the two-oracle bound is a SENTENCE and not a refusal'
         expect(box.hidden).toBe(false);
         expect(box.textContent).toContain('fire');
         expect(box.className).toContain('bad');
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ EDITOR v3 C2 — THE LAYER AND 45-COLUMN PICKER
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('⛓⛓⛓ THE PAINT PICKER REACHES EVERY COLUMN OF BOTH LAYERS', () => {
+    it('⛓⛓ `tiles` offers the four NAMES first and then all 45 columns — nothing missing '
+        + 'and nothing twice', () => {
+        const groups = paintOptionGroups('tiles');
+        expect(groups[0].label).toMatch(/GENERATOR/);
+        expect(groups[0].options.map((o) => o.value)).toEqual([...TERRAIN_NAMES]);
+        const columns = groups.slice(1).flatMap((g) => g.options.map((o) => o.column));
+        expect(columns.slice().sort((a, b) => a - b))
+            .toEqual([...Array(LAYER_COLUMNS.tiles).keys()]);
+        expect(new Set(columns).size).toBe(LAYER_COLUMNS.tiles);
+    });
+
+    it('⛓⛓⛓ …and the GROUPING is `tileSemantics().kind`, DERIVED — which is a grouping, '
+        + 'while grouping by the type NAME would be 38 groups of one', () => {
+        const groups = paintOptionGroups('tiles').slice(1);
+        const byName = new Set(TILE_COLUMN_TO_TYPE.map((t) => TILE_TYPE_NAMES[t]));
+        expect(byName.size).toBeGreaterThan(groups.length * 4);
+        for (const g of groups) {
+            for (const o of g.options) expect(tileSemantics(o.type).kind).toBe(g.label);
+        }
+        // every group label is one of the analyzer's OWN kinds
+        for (const g of groups) {
+            expect(TILE_COLUMN_TO_TYPE.some((t) => tileSemantics(t).kind === g.label)).toBe(true);
+        }
+    });
+
+    it('⛓⛓ `cliffsides` offers its five pixelmasks and NO terrain name — a name there is '
+        + 'refused by `columnOfSpec`, so offering one would arm a brush that always refuses',
+    () => {
+        const groups = paintOptionGroups('cliffsides');
+        const options = groups.flatMap((g) => g.options);
+        expect(options.length).toBe(LAYER_COLUMNS.cliffsides);
+        expect(options.map((o) => o.value)).toEqual(
+            [...Array(LAYER_COLUMNS.cliffsides).keys()].map(COLUMN_VALUE));
+        for (const name of TERRAIN_NAMES) {
+            expect(options.map((o) => o.value)).not.toContain(name);
+            expect(() => columnOfSpec(name, 'cliffsides', 'test')).toThrow(/asked of the/);
+        }
+    });
+
+    it('⛔ a layer this game does not build is refused BY NAME', () => {
+        expect(() => paintOptionGroups('decor')).toThrow(WatchEditorError);
+        expect(TILE_LAYERS).toEqual(['tiles', 'cliffsides']);
+    });
+
+    it('⛓⛓⛓ EVERY option this picker offers builds a REAL paint spec, on its own layer — '
+        + 'the picker and the op cannot disagree about what a value means', () => {
+        for (const layer of TILE_LAYERS) {
+            for (const g of paintOptionGroups(layer)) {
+                for (const o of g.options) {
+                    const spec = paintSpecOf(o.value);
+                    expect(columnOfSpec(spec.terrain ?? spec, layer, 'test')).toBe(o.column);
+                }
+            }
+        }
+    });
+
+    it('⛔ the four names keep spelling THEMSELVES — a respelling would move bytes in every '
+        + 'committed `?gen=` payload', () => {
+        expect(paintSpecOf('ground')).toEqual({ terrain: 'ground' });
+        expect(paintSpecOf(COLUMN_VALUE(TERRAIN.wall.column))).toEqual({ column: 3 });
+        expect(() => paintSpecOf('column:nope')).toThrow(/is not a paint option/);
+    });
+
+    it('⛓⛓ the SWATCH is the canvas\'s own colour, and its fallback is the canvas\'s rule', () => {
+        const palette = { tileColours: { 17: '#8a2b12' }, solidColour: '#solid', floorColour: '#floor' };
+        expect(swatchColour(17, palette)).toBe('#8a2b12');
+        // an unlisted WALL type falls to the solid colour, anything else to floor
+        const wall = TILE_COLUMN_TO_TYPE.find((t) => tileSemantics(t).kind === 'wall'
+            && !palette.tileColours[t]);
+        expect(swatchColour(wall, palette)).toBe('#solid');
+        expect(swatchColour(0, palette)).toBe('#floor');
+        // ⛓ a cliffside column has no TILE type, and a null type is not a wall
+        expect(swatchColour(null, palette)).toBe('#floor');
+    });
+});
+
+describe('⛓ the room-flags form reuses the ENTITY form builder — one answer per Ogmo type', () => {
+    it('⛓ every declared flag\'s rows are `attrFormRows`, and a presence flag has none', () => {
+        for (const tag of ROOM_FLAG_TAGS) {
+            expect(flagFormRows(SCHEMA, tag)).toEqual(attrFormRows(SCHEMA, tag));
+        }
+        expect(flagFormRows(SCHEMA, 'snow')).toEqual([]);
+        expect(flagFormRows(SCHEMA, 'lightalpha').map((r) => r.name)).toEqual(['alpha']);
+        // ⛓ …and the input kind is DERIVED from the declaration
+        expect(flagFormRows(SCHEMA, 'lightalpha')[0].control).toBe('number');
+        expect(flagFormRows(SCHEMA, 'droplet').find((r) => r.name === 'color').control).toBe('text');
     });
 });

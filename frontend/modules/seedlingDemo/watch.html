@@ -907,11 +907,27 @@
     own panel now and `PANELS` shows it for BOTH `generate` and `edit` — the
     same DOM, the same ids, the same handlers, mounted over a different HOST.
 
-    ⛔ THE IDS ARE KEPT (`genEdit*`), and deliberately: `check-seedling-editor-
-    edit.mjs` drives eleven claims through these selectors, and renaming them to
-    match the new panel would have made a 71-check row's diff indistinguishable
-    from a behaviour change. The `gen` prefix is now a fact about their history,
-    which is what the comment is for.
+    ⛔⛔ **THE ID RULE, AND IT IS NOW A RULE RATHER THAN AN ACCIDENT** (EDITOR
+    v3 C2, closing §12.10's third "what C1 made hard"):
+
+      ·  `genEdit*` — a control BOTH ARMS mount. The `gen` prefix is a fact
+         about their HISTORY (free editing was a `<details>` inside
+         `#generatePanel` and every one of these ids predates the split);
+         `check-seedling-editor-edit.mjs` drives eleven claims through them, so
+         renaming would have made a 71-check row's diff indistinguishable from
+         a behaviour change. C2's own shared controls take the prefix too, so
+         the rule reads the same in both directions.
+      ·  `edit*` — a control ONLY THE EDIT ARM has, i.e. one inside `#editOnly`
+         below: the base identity line, the LOAD box, the downloads, the
+         level-set room picker.
+
+    ⛓ C1 left three SHARED controls with `edit*` names (`editTools`,
+    `editPasteOnly`, `editClipNote`) — the rule's other direction, and the ids
+    are `genEditGestures` / `genEditPasteOnly` / `genEditClipNote` now.
+    ⛔ `check-seedling-editor-arm.mjs` asserts the rule over the LIVE DOM rather
+    than against a list here: every `edit*` id is inside `#editOnly` and every
+    `genEdit*` id is inside `#editPanel` and outside it. A comment nothing reads
+    is a claim nothing keeps.
 
     ⛓ `#editOnly` below is the half the GENERATE arm has no use for — the base
     identity line, the LOAD box and the OEL download — and `PANELS` hides it
@@ -932,13 +948,38 @@
     <div class="line">
       <label for="editLoad">LOAD</label>
       <textarea id="editLoad" rows="3" style="width:44em"
-        placeholder="paste a payload JSON (with its `base`) or a raw OEL &lt;level&gt;…&lt;/level&gt; — sniffed by SHAPE, refused BY NAME"></textarea>
+        placeholder="paste a payload JSON (with its `base`), a LEVEL SET JSON (schema v1, with `rooms`), or a raw OEL &lt;level&gt;…&lt;/level&gt; — sniffed by SHAPE, refused BY NAME"></textarea>
     </div>
     <div class="line">
       <button id="editLoadGo">LOAD what is in the box</button>
       <button id="editDownload">Download the PAYLOAD (base + edits)</button>
       <button id="editDownloadOel">Download the ROOM as OEL</button>
       <span id="editLoadNote" class="note"></span>
+    </div>
+    <!--
+      ⛓⛓⛓ EDITOR v3 C2 — **`set-room`: THE FOURTH BASE BECOMES LAUNCHABLE**
+      (plan §3.2). A level-set document loaded into the box above is HELD on the
+      page and its rooms are offered here; picking one resolves that room's
+      `source.xml` through the `oel` path, so one adapter arm serves both.
+
+      ⛔ AN `embed`-SOURCED ROOM IS REFUSED BY NAME — the page has no embeds
+      (an `embed` is a path into a SWF's `[Embed]` table, a fact about a source
+      tree). ⚠ THAT IS THE WHOLE VANILLA SET: all 116 of its rooms are
+      `embed`-sourced, so `seedling-vanilla-set.json` cannot be opened this way,
+      and `?source=edit&level=N` — the ATLAS base — is its door.
+
+      ⛓ DOWNLOAD gives the SET back with this room's XML replaced and the
+      identity RE-STAMPED (`stampLevelSetIdentity`), which is the first WRITE
+      path for Tier B. ⛔ No exits editing and no manifest form: slice D's.
+    -->
+    <div class="line">
+      <label for="editSetRoom">the LOADED SET's rooms</label>
+      <select id="editSetRoom" disabled></select>
+      <button id="editSetOpen" disabled>OPEN that room</button>
+      <button id="editDownloadSet" disabled>Download the SET (this room replaced, re-stamped)</button>
+    </div>
+    <div class="line">
+      <span id="editSetNote" class="note"></span>
     </div>
     </details>
     </div>
@@ -977,15 +1018,16 @@
       spell it.
     -->
     <div class="line">
-      <span id="editTools"></span>
-      <label for="editPasteOnly">paste</label>
-      <select id="editPasteOnly">
-        <option value="">everything the clip holds</option>
-        <option value="tile">tiles only</option>
-        <option value="cliff">cliffsides only</option>
-        <option value="entities">entities only</option>
-      </select>
-      <span id="editClipNote" class="note"></span>
+      <span id="genEditGestures"></span>
+      <label for="genEditPasteOnly">paste</label>
+      <!-- ⛓⛓ EDITOR v3 C2 — **THE OPTIONS ARE DERIVED AND THIS ELEMENT IS
+           EMPTY.** They were a typed list of three (`tile` / `cliff` /
+           `entities`), which was the last typed roster on this panel: the core
+           takes a descriptor FIELD name, so the offer is
+           `Object.keys(adapter.readCell(...))` and a fourth field arrives as an
+           option with no edit here (`editCore.descriptorFieldsOf`). -->
+      <select id="genEditPasteOnly"></select>
+      <span id="genEditClipNote" class="note"></span>
     </div>
     <div class="line">
       <label for="genEditTool">tool</label>
@@ -996,6 +1038,17 @@
         <option value="attrs">EDIT attrs</option>
         <option value="remove">REMOVE entity</option>
       </select>
+      <!-- ⛓⛓⛓ EDITOR v3 C2 — **THE LAYER, AND THE 45-COLUMN PICKER.** A
+           Seedling room has TWO tile layers and `paint {layer, column}` has
+           reached both since slice B; what was missing was the control.
+           ⛔ THE FOUR TERRAIN NAMES ARE STILL THE FIRST GROUP and still spell
+           themselves (`value="ground"`), because that is the op the generator
+           writes and every committed payload carries — the 41 other columns
+           spell `column:N`, which is the op `Game.as`'s own 45-case switch
+           reads. Picking `cliffsides` REFILLS the picker with that layer's
+           pixelmasks; a terrain NAME there is refused by `columnOfSpec`. -->
+      <label for="genEditLayer">layer</label>
+      <select id="genEditLayer"></select>
       <label for="genEditTerrain">terrain</label>
       <select id="genEditTerrain"></select>
       <!-- ⛔ A free INPUT with a datalist and NOT a select: the WORLD is the
@@ -1025,6 +1078,14 @@
     <div class="line">
       <span id="genEditNote" class="note"></span>
     </div>
+    <!-- ⛓⛓ EDITOR v3 C2 — **WHAT A CELL IS.** `adapter.readCell` has answered
+         `{tile, cliff, entities}` since slice B and nothing on the page ever
+         showed it. Hovering the level prints the hovered cell's column, its
+         tile TYPE (`TILE_COLUMN_TO_TYPE`'s own name), its cliffside and its
+         bodies — the first time this page says what is under the cursor. -->
+    <div class="line">
+      <span id="genEditCellNote" class="note"></span>
+    </div>
     <div class="line">
       <span id="genEditCert" class="note"></span>
     </div>
@@ -1036,7 +1097,76 @@
     </div>
     <div id="genEdits"></div>
     </details>
-    <div id="editNote" class="note"></div>
+    <!--
+      ⛓⛓⛓ EDITOR v3 C2 — **THE ROOM FLAGS** (plan §3.3 Tier A's last row).
+      `lightalpha`, `daynight`, `snow`, `blur`, `blur2`, `droplet` and
+      `<control>` are ENTITIES in the OEL and LEVEL PROPERTIES in the game:
+      `Game.loadLevelXML` reads them off `xml.objects[0]` and never constructs
+      anything (`Game.as:1963-1985, 2134-2151`). So they need no new op — a
+      presence flag is a `place`/`remove` and an attribute flag a `place` +
+      `attrs`, on slice B's own vocabulary — and this form is what was missing.
+
+      ⛔ THE ROSTER IS DERIVED, and from the classification that already exists:
+      `seedlingSemantics.LEVEL_PROPERTY_TAGS`, keyed off `Game.as` line by line.
+      The typed inputs come from `Shrum.oep`'s own declaration for each tag.
+
+      ⛔⛔ AND THE EDIT ARM HAS NO JS ORACLE FOR THESE. The readout below says
+      which of them the JS model can see AT ALL, MEASURED on the room on screen
+      (build the world with the flag and without it, and compare) — not read off
+      the class table, which answers CONSTRUCTION and would report all seven as
+      ignored when `<control>`'s fallthrough demonstrably reaches the model.
+    -->
+    <!-- ⛓ OPEN, like every other section but the three the page closes on
+         purpose (`check-seedling-editor-generate.mjs` pins that set BY NAME: the
+         boot block, the CATALOGUE and the tape I/O). ⛔ A new section that
+         arrived CLOSED would move that pin — measured, it went red — and the
+         fresh-load default is a fact somebody deliberately fixed. -->
+    <details class="genSection" open id="genEditFlagsSection">
+    <summary data-term="payload">the room's FLAGS <span class="note">— level properties, not bodies: `lightalpha`, `daynight`, `snow`, `blur`, `blur2`, `droplet`, `&lt;control&gt;`</span></summary>
+    <div id="genEditFlags"></div>
+    <div class="line">
+      <span id="genEditFlagNote" class="note"></span>
+    </div>
+    <div class="line">
+      <span id="genEditFlagReach" class="note"></span>
+    </div>
+    </details>
+    <!--
+      ⛓⛓⛓ EDITOR v3 C2 — **THE ROOM'S SIZE**, ⚖ ruling 5. `resize {width,
+      height, anchor}` shipped in slice B with `resizeWarnings` beside it; this
+      is the control, and ruling 5's whole content is that the boss warning is
+      DISPLAYED rather than the edit refused.
+
+      ⛔ THE WARNING IS SHOWN BEFORE THE OP IS APPLIED — a preview line, no
+      confirm — and again after, off `foldEdits().steps`. A crop that would drop
+      a tile or a body is refused by the op itself and the refusal is printed
+      VERBATIM: `procgenLevel` names what would be lost, and a page that
+      paraphrased it would be a second opinion about which cells are in danger.
+    -->
+    <!-- ⛓ OPEN, like every other section but the three the page closes on
+         purpose (`check-seedling-editor-generate.mjs` pins that set BY NAME: the
+         boot block, the CATALOGUE and the tape I/O). ⛔ A new section that
+         arrived CLOSED would move that pin — measured, it went red — and the
+         fresh-load default is a fact somebody deliberately fixed. -->
+    <details class="genSection" open id="genEditResizeSection">
+    <summary data-term="payload">the room's SIZE <span class="note">— grow or crop; ⚖ ruling 5's compiled-in boss geometry is a WARNING, never a refusal</span></summary>
+    <div class="line">
+      <label>width <input id="genEditResizeW" type="number" style="width:5em"></label>
+      <label>height <input id="genEditResizeH" type="number" style="width:5em"></label>
+      <label for="genEditResizeAnchor">anchor</label>
+      <select id="genEditResizeAnchor"></select>
+      <button id="genEditResizeGo">RESIZE the room</button>
+    </div>
+    <div class="line">
+      <span id="genEditResizeNote" class="note"></span>
+    </div>
+    </details>
+    <!-- ⛓ EDITOR v3 C2 — RENAMED from `editNote`. It sits in `#editPanel` and
+         OUTSIDE `#editOnly`, so by the id rule above it is a SHARED control and
+         its name has to say so. ⚠ Nothing writes it today (measured: no reader
+         in the tree); it is the panel's own note slot, kept and renamed rather
+         than deleted, because the rule is about what a name PROMISES. -->
+    <div id="genEditPanelNote" class="note"></div>
   </div>
   <!--
     ⛓⛓⛓ IS THIS PAGE RUNNING THE CODE THAT IS ON DISK?

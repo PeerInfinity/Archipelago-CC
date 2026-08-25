@@ -1,14 +1,25 @@
 /**
  * seedlingDemo/watchEditor — **THE SEEDLING EDITOR'S DOM GLUE**, over
  * `procgenCore/editorView.js` (substrate-agnostic) and `watchEdit.js` (pure).
- * Plan `NewDocs/plans/seedling-editor-v3.md` §3.1, slice C1.
+ * Plan `NewDocs/plans/seedling-editor-v3.md` §3.1, slices C1 and C2.
  *
  * ⛔ **WHAT IS HERE AND WHAT IS NOT.** Here: the CONTROLS — the entity
- * palette, the typed attribute form, the terrain picker, the brush-mode
- * selector, the two-oracle bound's readout. Not here: geometry (the page's
+ * palette, the typed attribute form, the layer and 45-column tile picker, the
+ * brush-mode selector, the ROOM-FLAGS form, the RESIZE form, the hovered-cell
+ * readout and the two-oracle bound's readout. Not here: geometry (the page's
  * pixel→tile map), the record (the session's), the ops (`watchEdit`'s), the
  * tool machinery (`editorView`'s). This file's whole job is to turn a form
  * into an op AT THE PRESS and to turn a schema into a form.
+ *
+ * ── ⛓ THE ID RULE (EDITOR v3 C2) ──────────────────────────────────────
+ *
+ * `genEdit*` is a control BOTH ARMS mount (the `gen` prefix is history — free
+ * editing was a `<details>` inside `#generatePanel` before the split, and
+ * `check-seedling-editor-edit.mjs` drives eleven claims through those ids).
+ * `edit*` is a control ONLY THE EDIT ARM has, i.e. one inside `#editOnly` —
+ * the base identity line, the LOAD box, the downloads, the level-set picker.
+ * ⛔ Everything this file touches is therefore `genEdit*`, and
+ * `check-seedling-editor-arm.mjs` asserts the rule over the LIVE DOM.
  *
  * ── ⛓⛓⛓ THE DEFAULT PLACE TYPE HAS A NAME NOW ────────────────────────
  *
@@ -31,11 +42,24 @@
  */
 
 import {
-    ENTITY_ROSTER_PROCGEN, entityRosterFrom, transcribeBoundText, untranscribedTypes,
+    ENTITY_ROSTER_PROCGEN, ROOM_FLAG_CELL, ROOM_FLAG_TAGS, entityRosterFrom, flagModelReach,
+    flagReachText, resizeWarnings, roomFlagOpRefusal, roomFlagRoster, roomFlagsIn,
+    transcribeBoundText, untranscribedTypes,
 } from './watchEdit.js';
-import { TERRAIN_NAMES, columnOfSpec } from './procgenLevel.js';
+import {
+    LAYER_COLUMNS, RESIZE_ANCHORS, ROOM_TILES_MAX, ROOM_TILES_MIN, TERRAIN, TERRAIN_NAMES,
+    TILE_LAYERS, columnOfSpec,
+} from './procgenLevel.js';
+/**
+ * ⛓ EDITOR v3 C2 — the SEMANTICS table, for the column picker's GROUPS and for
+ * a swatch's fallback. ⛔ It is the same table `procgenLevel` reads to build a
+ * paint op, so the picker cannot group columns one way and paint them another.
+ */
+import {
+    CLIFFSIDE_FRAME_FACES, TILE_COLUMN_TO_TYPE, TILE_TYPE_NAMES, tileSemantics,
+} from '../flashPanel/seedlingSemantics.js';
 import { TOOLS, UNDO_COMMAND_ID, mountEditorView } from '../procgenCore/editorView.js';
-import { describeOps } from '../procgenCore/editCore.js';
+import { describeOps, descriptorFieldsOf } from '../procgenCore/editCore.js';
 
 export class WatchEditorError extends Error {
     constructor(message) {
@@ -373,6 +397,486 @@ export function renderTranscribeBound(box, record, entityClasses) {
 }
 
 /* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ THE TILE PICKER — EDITOR v3 SLICE C2
+ *
+ * §3.3 Tier A's *"all 45 tile columns, grouped by `TILE_COLUMN_TO_TYPE`"*.
+ * `paint {layer, column}` has reached both layers and all 45 columns since
+ * slice B; what the page had was four names, which is the vocabulary the
+ * GENERATOR reasons about and not the one a person editing a vanilla room is
+ * looking at.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓⛓ **A PAINT OPTION'S VALUE, AND WHY IT IS TWO SPELLINGS.**
+ *
+ * ⛔ THE FOUR TERRAIN NAMES KEEP SPELLING THEMSELVES (`value="ground"`). They
+ * are what `procgenPalette` writes, what every committed `?gen=` payload
+ * carries and what three browser rows drive by `selectOption('ground')` — and
+ * `{terrain:'ground'}` and `{column:0}` are two DIFFERENT ops that fold to the
+ * same record, so respelling them would have moved bytes in payloads this
+ * slice must leave inert. The other 41 columns have no name and spell
+ * `column:N`, which is the op `Game.as`'s own 45-case switch reads.
+ */
+export const COLUMN_VALUE = (column) => `column:${column}`;
+
+/** ⛓ …and its inverse: an option's value → the `paint` op's spec fields. */
+export function paintSpecOf(value) {
+    const text = String(value ?? '');
+    if (!text.startsWith('column:')) return { terrain: text };
+    const column = Number(text.slice('column:'.length));
+    if (!Number.isInteger(column)) {
+        fail(`watchEditor: ${JSON.stringify(text)} is not a paint option — they are either `
+            + `one of the four terrain NAMES [${TERRAIN_NAMES.join(', ')}] or `
+            + '`column:N`, and nothing else can reach this `<select>`.');
+    }
+    return { column };
+}
+
+/**
+ * ⛓⛓⛓ **THE OPTION GROUPS OF ONE LAYER, DERIVED — never a typed table.**
+ *
+ * `tiles` — the four TERRAIN names first (the group a generator reader is
+ * looking for), then every column of `TILE_COLUMN_TO_TYPE` grouped by what the
+ * ENGINE does with the type it builds. ⛔ The grouping key is
+ * `tileSemantics(type).kind` and NOT the type NAME: 45 columns carry 38
+ * distinct type names, so grouping by name is 38 groups of one and is no
+ * grouping at all, while `CELL_KINDS` is the six-way answer
+ * `seedlingSemantics` already computes for the analyzer — walkable, wall,
+ * gated, one-way, a pit that leaves the room, and the one whose cost no static
+ * rule expresses. That is plan §3.3's *"walkable / solid / lethal / pit"* as
+ * the table actually spells it.
+ *
+ * `cliffsides` — the five pixelmasks `CliffSide.as:19-32` switches over,
+ * grouped by which FACE each one blocks (`CLIFFSIDE_FRAME_FACES`, with frames
+ * ≥ 4 falling into the default arm's N). ⛔ No terrain names: `columnOfSpec`
+ * refuses one on this layer BY NAME, because the four are (column, TILE type)
+ * pairs and this layer's columns are masks.
+ */
+export function paintOptionGroups(layer) {
+    const columns = LAYER_COLUMNS[layer];
+    if (columns === undefined) {
+        fail(`watchEditor: ${JSON.stringify(layer)} is not one of this game's tile layers `
+            + `[${TILE_LAYERS.join(', ')}].`);
+    }
+    const groups = [];
+    const into = (label, row) => {
+        const g = groups.find((x) => x.label === label);
+        if (g) g.options.push(row);
+        else groups.push({ label, options: [row] });
+    };
+    if (layer === 'tiles') {
+        groups.push({
+            label: `the GENERATOR's ${TERRAIN_NAMES.length} terrain names`,
+            options: TERRAIN_NAMES.map((name) => ({
+                value: name,
+                label: `${name} — column ${TERRAIN[name].column}`,
+                column: TERRAIN[name].column,
+                type: TERRAIN[name].type,
+            })),
+        });
+        for (let column = 0; column < columns; column += 1) {
+            const type = TILE_COLUMN_TO_TYPE[column];
+            const kind = tileSemantics(type).kind;
+            into(`${kind}`, {
+                value: COLUMN_VALUE(column),
+                label: `${column} · ${TILE_TYPE_NAMES[type] ?? `type ${type}`}`,
+                column,
+                type,
+            });
+        }
+        return Object.freeze(groups.map((g) => Object.freeze({
+            label: g.label, options: Object.freeze(g.options.map(Object.freeze)),
+        })));
+    }
+    for (let column = 0; column < columns; column += 1) {
+        const faces = Object.keys(CLIFFSIDE_FRAME_FACES[column] ?? { N: null }).join('');
+        into(`blocks the ${faces} face(s)`, {
+            value: COLUMN_VALUE(column),
+            label: `${column} · pixelmask ${faces}`,
+            column,
+            type: null,
+        });
+    }
+    return Object.freeze(groups.map((g) => Object.freeze({
+        label: g.label, options: Object.freeze(g.options.map(Object.freeze)),
+    })));
+}
+
+/**
+ * ⛓⛓ **THE SWATCH IS THE CANVAS'S OWN COLOUR, HANDED IN.**
+ *
+ * ⚠ **THERE IS NO TILESET IMAGE TO SHOW, MEASURED.** The brief asked for the
+ * tile IMAGE *"if the tileset PNG is served"*: it is not — there is not one
+ * `.png` under `frontend/modules/flashPanel/` at all, and the art lives inside
+ * the recompiled `.wasm` (`seedling_bot_ap_p4b.wasm`), which is where the SWF
+ * put it. ⇒ a colour swatch, and it is the SAME table `previewLevel` paints the
+ * canvas with, INJECTED rather than copied: a picker with its own palette would
+ * show a reader one colour and paint them another.
+ *
+ * ⚠ AND THE FALLBACK IS THE CANVAS'S TOO — anything the table does not name is
+ * floor, unless the semantics call the type a wall.
+ */
+export function swatchColour(type, { tileColours = null, solidColour = null, floorColour = null } = {}) {
+    if (type === null || type === undefined) return floorColour;
+    if (tileColours && tileColours[type]) return tileColours[type];
+    return tileSemantics(type).kind === 'wall' ? solidColour : floorColour;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ THE ROOM-FLAGS FORM — EDITOR v3 SLICE C2
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓⛓ **ONE FLAG'S CONTROLS, AS DATA** — a presence CHECKBOX always, plus one
+ * typed input per value `Shrum.oep` declares for that tag. ⛔ It reuses
+ * `attrFormRows` rather than growing a second typed-form builder: a flag's
+ * values are declared exactly the way a body's are, and two builders would be
+ * two answers to *"what input does an Ogmo `boolean` get"*.
+ */
+export function flagFormRows(schema, tag) {
+    return attrFormRows(schema, tag);
+}
+
+/**
+ * ⛓⛓⛓ **MOUNT THE ROOM-FLAGS FORM.**
+ *
+ * ⛔ **IT WRITES THROUGH THE SESSION, NEVER THE RECORD.** Every change is a
+ * `place` / `remove` / `attrs` op applied through `view.apply`, so UNDO, the
+ * payload, the identity line and the certification drop all see a flag change
+ * exactly as they see a brush stroke. A form that reached for the record would
+ * be a second writer and the op list would stop being the level's identity.
+ *
+ * ⛔⛔ **AND TWO OF ITS THREE OPS CAN BE INEXPRESSIBLE.** `remove` and `attrs`
+ * address *the last entity in the cell*; a flag that is not the last body in
+ * its own cell cannot be named by either (`watchEdit.roomFlagOpRefusal`, and
+ * MEASURED: 2 of the committed atlas's 155 flag instances sit that way). The
+ * form REFUSES those by name and reverts the control rather than editing
+ * somebody else's body — a checkbox that silently deleted a `<rock>` would be
+ * the worst kind of working.
+ */
+export function mountRoomFlags({
+    box, noteEl, reachEl, host, view, schema, lifetime, buildWorld = null,
+    doc = globalThis.document,
+} = {}) {
+    for (const [name, v] of [['box', box], ['host', host], ['view', view], ['lifetime', lifetime]]) {
+        if (!v) fail(`watchEditor: mountRoomFlags \`${name}\` is required — refused by name.`);
+    }
+    if (!schema) {
+        box.textContent = '⚠ the Ogmo schema did not load, so there is no declaration to build '
+            + 'the flag form from. The flags are still `place`/`attrs`/`remove` ops on the '
+            + 'brush palette above; what is missing here is the typed form.';
+        return { rows: () => [], render: () => {}, roster: [] };
+    }
+    const roster = roomFlagRoster(schema);
+    /**
+     * ⛓ THE TAGS `Game.as` CALLS A LEVEL PROPERTY AND `Shrum.oep` DOES NOT
+     * DECLARE — said out loud rather than silently dropped. The two lists come
+     * from two files and a tag in one and not the other is worth seeing.
+     */
+    const undeclared = ROOM_FLAG_TAGS.filter((t) => !schema.entities[t]);
+
+    const inputs = new Map();      // `${tag}:${valueName}` -> element
+    const boxes = new Map();       // tag -> the presence checkbox
+    const notes = new Map();       // tag -> that row's own note span
+
+    /* ── THE FORM, BUILT ONCE ─────────────────────────────────────── */
+
+    box.innerHTML = '';
+    for (const row of roster) {
+        const line = doc.createElement('div');
+        line.className = 'line';
+        line.dataset.flag = row.tag;
+        const label = doc.createElement('label');
+        const cb = doc.createElement('input');
+        cb.type = 'checkbox';
+        cb.id = `genEditFlag_${row.tag}`;
+        cb.dataset.flag = row.tag;
+        label.appendChild(cb);
+        label.appendChild(doc.createTextNode(` ${row.tag}`));
+        line.appendChild(label);
+        boxes.set(row.tag, cb);
+        for (const v of flagFormRows(schema, row.tag)) {
+            const l = doc.createElement('label');
+            l.textContent = ` ${v.name} `;
+            l.title = `${v.type}`
+                + (v.default === null ? ' · no declared default' : ` · default ${v.default}`)
+                + (v.min === null ? '' : ` · min ${v.min}`)
+                + (v.max === null ? '' : ` · max ${v.max}`);
+            const el = doc.createElement('input');
+            el.id = `genEditFlag_${row.tag}_${v.name}`;
+            el.dataset.flag = row.tag;
+            el.dataset.attr = v.name;
+            if (v.control === 'checkbox') {
+                el.type = 'checkbox';
+            } else {
+                el.type = v.control;
+                el.style.width = v.control === 'number' ? '5em' : '7em';
+                if (v.step) el.step = v.step;
+                if (v.min !== null) el.min = String(v.min);
+                if (v.max !== null) el.max = String(v.max);
+                if (v.maxChars !== null) el.maxLength = v.maxChars;
+                el.placeholder = v.default === null ? '(no default)' : String(v.default);
+            }
+            inputs.set(`${row.tag}:${v.name}`, el);
+            l.appendChild(el);
+            line.appendChild(l);
+        }
+        const n = doc.createElement('span');
+        n.className = 'note';
+        n.id = `genEditFlagNote_${row.tag}`;
+        notes.set(row.tag, n);
+        line.appendChild(n);
+        box.appendChild(line);
+    }
+
+    /* ── READING THE RECORD ───────────────────────────────────────── */
+
+    const say = (text, bad = false) => {
+        if (!noteEl) return;
+        noteEl.textContent = text;
+        noteEl.className = bad ? 'note bad' : 'note';
+    };
+
+    const present = () => {
+        const map = new Map();
+        for (const f of roomFlagsIn(host.record())) map.set(f.tag, f);
+        return map;
+    };
+
+    /** ⛓ The typed inputs of one row → an attrs object. EMPTY MEANS OMITTED —
+     *  `attrsFromRows`' own rule, and the same reason (§11.5 item 2). */
+    const attrsOf = (tag) => attrsFromRows(flagFormRows(schema, tag), (r) => {
+        const el = inputs.get(`${tag}:${r.name}`);
+        return r.control === 'checkbox' ? el.checked : el.value;
+    });
+
+    /* ── ⛓⛓ THE REACH READOUT, MEASURED AND MEMOISED BY RECORD ────── */
+
+    let reachFor = null;
+    let reachOf = null;
+    const reachNow = () => {
+        const record = host.record();
+        if (!buildWorld || !record) return null;
+        if (reachFor === record) return reachOf;
+        reachOf = flagModelReach(record, buildWorld, {
+            tags: roster.map((r) => r.tag),
+            attrsFor: (t) => Object.fromEntries((schema.entities[t]?.values ?? [])
+                .filter((v) => v.default !== null && v.default !== undefined)
+                .map((v) => [v.name, v.default])),
+        });
+        reachFor = record;
+        return reachOf;
+    };
+
+    const render = () => {
+        const here = present();
+        for (const row of roster) {
+            const f = here.get(row.tag);
+            boxes.get(row.tag).checked = Boolean(f);
+            for (const v of flagFormRows(schema, row.tag)) {
+                const el = inputs.get(`${row.tag}:${v.name}`);
+                const has = f && Object.prototype.hasOwnProperty.call(f.attrs, v.name);
+                if (v.control === 'checkbox') el.checked = Boolean(has) && String(f.attrs[v.name]) === 'true';
+                else el.value = has ? String(f.attrs[v.name]) : '';
+            }
+            const n = notes.get(row.tag);
+            if (!f) n.textContent = '';
+            else if (!f.last) {
+                n.textContent = `⛔ at (${f.tx},${f.ty}) and NOT the last body there — `
+                    + 'this row cannot be changed (see the note below)';
+                n.className = 'note bad';
+            } else {
+                n.textContent = `at (${f.tx},${f.ty})`;
+                n.className = 'note';
+            }
+        }
+        if (reachEl) {
+            const text = flagReachText(reachNow());
+            reachEl.textContent = text ?? '';
+            reachEl.hidden = !text;
+        }
+        if (noteEl && !noteEl.textContent) {
+            say(`${here.size} of ${roster.length} flag(s) set in this room. A NEW flag is `
+                + `placed at (${ROOM_FLAG_CELL.tx},${ROOM_FLAG_CELL.ty}) — the origin, which `
+                + 'is where the committed 116 rooms put theirs; an existing one is read, '
+                + 'written and removed AT ITS OWN CELL.'
+                + (undeclared.length
+                    ? ` ⚠ ${undeclared.join(', ')} is a level property \`Game.as\` reads and `
+                        + '`Shrum.oep` does not declare, so it has no row here.'
+                    : ''));
+        }
+    };
+
+    /* ── THE THREE OPS ────────────────────────────────────────────── */
+
+    const guard = (tag, what) => {
+        const f = present().get(tag);
+        const why = roomFlagOpRefusal(host.record(), f, what);
+        if (why) {
+            say(why, true);
+            render();
+            return null;
+        }
+        return f;
+    };
+
+    for (const row of roster) {
+        lifetime.on(boxes.get(row.tag), 'change', () => {
+            say('');
+            const want = boxes.get(row.tag).checked;
+            const f = present().get(row.tag);
+            if (want && !f) {
+                view.apply({
+                    op: 'place',
+                    tx: ROOM_FLAG_CELL.tx,
+                    ty: ROOM_FLAG_CELL.ty,
+                    type: row.tag,
+                    attrs: attrsOf(row.tag),
+                });
+                return;
+            }
+            if (!want && f) {
+                if (guard(row.tag, 'remove') === null) return;
+                view.apply({ op: 'remove', tx: f.tx, ty: f.ty });
+                return;
+            }
+            render();
+        });
+        for (const v of flagFormRows(schema, row.tag)) {
+            lifetime.on(inputs.get(`${row.tag}:${v.name}`), 'change', () => {
+                say('');
+                const f = present().get(row.tag);
+                if (!f) {
+                    say(`⛓ <${row.tag}> is not in this room — tick the box to place it, and `
+                        + 'the values you have typed go on with it.');
+                    return;
+                }
+                if (guard(row.tag, 'attrs') === null) return;
+                view.apply({ op: 'attrs', tx: f.tx, ty: f.ty, attrs: attrsOf(row.tag) });
+            });
+        }
+    }
+
+    render();
+    return { roster, render, reach: reachNow, undeclared };
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ THE RESIZE CONTROL — ⚖ RULING 5, EDITOR v3 SLICE C2
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓⛓⛓ **MOUNT THE RESIZE FORM.**
+ *
+ * ⛔ **⚖ RULING 5's WARNING IS SHOWN BEFORE THE OP, AND AGAIN AFTER IT.**
+ * Before: `resizeWarnings(record, op)` on the values in the boxes, redrawn as
+ * they are typed — a preview line with no confirm behind it, because ruling 5
+ * says the edit is never blocked and a modal would be a block wearing a
+ * question's clothes. After: the same sentences, from `foldEdits().steps` via
+ * the adapter's own `describeApplied`, so the readout and the preview cannot
+ * disagree about a room they are both describing.
+ *
+ * ⛔ **A CROP THAT WOULD DROP SOMETHING IS REFUSED BY THE OP AND PRINTED
+ * VERBATIM.** `procgenLevel.resizeRoom` names the tiles and the bodies that
+ * lie outside the new rectangle; a page that paraphrased it would be a second
+ * opinion about which cells are in danger, and the reader would have to guess
+ * which to believe.
+ */
+export function mountResizeControl({
+    widthEl, heightEl, anchorEl, goEl, noteEl, host, adapter, view, lifetime,
+    doc = globalThis.document,
+} = {}) {
+    for (const [name, v] of [
+        ['widthEl', widthEl], ['heightEl', heightEl], ['anchorEl', anchorEl],
+        ['goEl', goEl], ['host', host], ['adapter', adapter], ['view', view],
+        ['lifetime', lifetime],
+    ]) {
+        if (!v) fail(`watchEditor: mountResizeControl \`${name}\` is required — refused by name.`);
+    }
+    /** ⛓ THE ANCHORS ARE `procgenLevel`'s OWN LIST — one today (§11.9 bound 5),
+     *  and a second one arrives here as an option rather than as an edit. */
+    anchorEl.innerHTML = RESIZE_ANCHORS
+        .map((a) => `<option value="${a}">${a}</option>`).join('');
+    anchorEl.value = RESIZE_ANCHORS[0];
+    for (const el of [widthEl, heightEl]) {
+        el.min = String(ROOM_TILES_MIN);
+        el.max = String(ROOM_TILES_MAX);
+        el.step = '1';
+    }
+
+    const opNow = () => ({
+        op: 'resize',
+        width: Number(widthEl.value),
+        height: Number(heightEl.value),
+        anchor: anchorEl.value,
+    });
+
+    /**
+     * ⛓ THE PREVIEW. ⛔ It says the SIZE LIMITS itself rather than letting the
+     * op refuse them silently through an `<input min>` the browser may or may
+     * not enforce — `assertRoomSize` is the authority and this quotes its
+     * bounds from the same constants.
+     */
+    const preview = () => {
+        const record = host.record();
+        if (!record) return;
+        const op = opNow();
+        if (!Number.isInteger(op.width) || !Number.isInteger(op.height)) {
+            noteEl.textContent = 'width and height are whole numbers of TILES.';
+            noteEl.className = 'note';
+            return;
+        }
+        const bad = [op.width, op.height]
+            .some((v) => v < ROOM_TILES_MIN || v > ROOM_TILES_MAX);
+        const warnings = resizeWarnings(record, op);
+        const same = op.width === record.width && op.height === record.height;
+        noteEl.className = bad ? 'note bad' : 'note';
+        noteEl.textContent = (bad
+            ? `⛔ ${ROOM_TILES_MIN}..${ROOM_TILES_MAX} tiles per axis — `
+                + `${ROOM_TILES_MAX} is the VANILLA MAXIMUM measured over the 116 rooms. `
+            : '')
+            + (same ? `the room is already ${op.width}x${op.height} — a resize to its own `
+                + 'size changes no bytes and is not an edit (law: a click that changed '
+                + 'nothing is not an edit). ' : '')
+            + `${record.width}x${record.height} → ${op.width}x${op.height} (${op.anchor}). `
+            + (warnings.length
+                ? `⚠ BEFORE YOU PRESS: ${warnings.join(' · ')}`
+                : '⚠ nothing to warn about for THIS room — no compiled-in boss geometry, and '
+                    + 'no new cells (⚖ ruling 5\'s warning is about what the room HOLDS).');
+    };
+
+    const reset = () => {
+        const record = host.record();
+        if (!record) return;
+        widthEl.value = String(record.width);
+        heightEl.value = String(record.height);
+        preview();
+    };
+
+    lifetime.on(widthEl, 'input', preview);
+    lifetime.on(heightEl, 'input', preview);
+    lifetime.on(anchorEl, 'change', preview);
+    lifetime.on(goEl, 'click', () => {
+        const res = view.apply(opNow());
+        /**
+         * ⛔ THE REFUSAL IS PRINTED VERBATIM, and it is the OP's own sentence —
+         * `resizeRoom` names the tiles and bodies that would be dropped.
+         */
+        if (!res.ok) {
+            noteEl.className = 'note bad';
+            noteEl.textContent = res.description;
+            return;
+        }
+        noteEl.className = 'note';
+        noteEl.textContent = res.applied
+            ? res.description
+            : `${res.description} — and it changed no bytes, so it is not in the edit list.`;
+    });
+
+    return { preview, reset, opNow };
+}
+
+/* ══════════════════════════════════════════════════════════════════════
  * ⛓⛓⛓ **THE MOUNT — ONE EDIT IMPLEMENTATION, TWO HOSTS** (plan §3.1)
  * ══════════════════════════════════════════════════════════════════════ */
 
@@ -463,7 +967,23 @@ export function seedlingClipWarnings(clip, record, adapter) {
 export function mountWatchEditor({
     canvas, host, adapter, cellAt, lifetime, schema = null,
     commands = [], tools = [], say = () => {}, onChange = null, onDisarm = null,
-    entityClasses = null, doc = globalThis.document,
+    entityClasses = null,
+    /**
+     * ⛓ EDITOR v3 C2 — the MODEL's builder, for the room-flags reach readout.
+     * ⛔ A PARAMETER for the same reason `entityClasses` is one: which model is
+     * being asked is the host's fact, and a module that imported one would be a
+     * second opinion about it. Absent, the reach line simply does not appear.
+     */
+    buildWorld = null,
+    /**
+     * ⛓ …and the CANVAS's own tile palette, injected. ⚠ There is no tileset PNG
+     * in this repo (measured: not one `.png` under `frontend/modules/flashPanel/`
+     * — the art is inside the recompiled `.wasm`), so the column picker shows a
+     * SWATCH, and it must be the colour the canvas actually paints or the picker
+     * would show one thing and the room another.
+     */
+    tileColours = null, solidColour = null, floorColour = null,
+    doc = globalThis.document,
 } = {}) {
     const $ = (id) => doc.getElementById(id);
     for (const [name, v] of [
@@ -479,14 +999,63 @@ export function mountWatchEditor({
      * here and not in the GENERATE arm: the EDIT arm mounts the same DOM, and a
      * picker filled by only one of the two hosts is an empty `<select>` on the
      * other — measured, by the browser driver, which timed out on
-     * *"did not find some options"* rather than failing a claim.
+     * *"did not find some options"* rather than failing a claim (trap 609).
      *
-     * ⚠ THE FOUR NAMES, NOT THE 45 COLUMNS. `TERRAIN_NAMES` is what the
-     * GENERATOR reasons about and the `paint` op takes either; the full column
-     * picker is a control, not an op, and it is slice C2's (§11.3).
+     * ⛓ **AND IT IS ALL 45 COLUMNS NOW, ON EITHER LAYER** (C2). The four
+     * `TERRAIN` names stay the first group and keep spelling themselves,
+     * because that is the op the generator writes and every committed payload
+     * carries; the rest address a COLUMN, which is what the game reads.
      */
-    $('genEditTerrain').innerHTML = TERRAIN_NAMES
-        .map((t) => `<option value="${t}">${t}</option>`).join('');
+    /* ── ⛓⛓⛓ THE LAYER, AND THE PICKER THAT FOLLOWS IT (C2) ────────── */
+
+    const layerSel = $('genEditLayer');
+    const terrainSel = $('genEditTerrain');
+    const layerNow = () => layerSel?.value ?? 'tiles';
+    const swatchOf = (type) => swatchColour(type, { tileColours, solidColour, floorColour });
+
+    if (layerSel) {
+        layerSel.innerHTML = TILE_LAYERS
+            .map((l) => `<option value="${l}">${l} — ${LAYER_COLUMNS[l]} column(s)</option>`)
+            .join('');
+        layerSel.value = TILE_LAYERS[0];
+    }
+
+    /**
+     * ⛓⛓ THE PICKER IS REFILLED PER LAYER, and the selection is kept when the
+     * new layer still offers it. ⛔ It cannot always be kept: a terrain NAME is
+     * refused on `cliffsides` by `columnOfSpec`, so switching layers with
+     * `ground` selected has to fall back to that layer's first column rather
+     * than arm a brush whose every click would refuse.
+     */
+    const fillTerrain = () => {
+        const want = terrainSel.value;
+        const groups = paintOptionGroups(layerNow());
+        terrainSel.innerHTML = '';
+        for (const g of groups) {
+            const og = doc.createElement('optgroup');
+            og.label = `${g.label} (${g.options.length})`;
+            for (const o of g.options) {
+                const el = doc.createElement('option');
+                el.value = o.value;
+                el.textContent = o.label;
+                const colour = swatchOf(o.type);
+                if (colour) {
+                    el.style.backgroundColor = colour;
+                    el.title = `${o.label} — swatch ${colour} (the canvas's own colour for `
+                        + 'this tile TYPE; there is no tileset image in this repo)';
+                }
+                og.appendChild(el);
+            }
+            terrainSel.appendChild(og);
+        }
+        const has = [...terrainSel.options].some((o) => o.value === want);
+        terrainSel.value = has ? want : terrainSel.options[0].value;
+        const sel = groups.flatMap((g) => g.options).find((o) => o.value === terrainSel.value);
+        terrainSel.style.backgroundColor = swatchOf(sel?.type ?? null) ?? '';
+    };
+    fillTerrain();
+    if (layerSel) lifetime.on(layerSel, 'change', fillTerrain);
+    lifetime.on(terrainSel, 'change', fillTerrain);
 
     const palette = mountEntityPalette({
         typeInput: $('genEditType'),
@@ -527,7 +1096,15 @@ export function mountWatchEditor({
     const brushOp = (tx, ty) => {
         const m = mode();
         if (!BRUSH_MODES.includes(m) || m === 'off') return null;
-        if (m === 'paint') return { op: 'paint', tx, ty, terrain: $('genEditTerrain').value };
+        /**
+         * ⛓⛓ C2 — THE PAINT OP CARRIES THE LAYER AND EITHER SPELLING.
+         * ⛔ `normalizePaint` OMITS a `layer: 'tiles'` from the canonical op, so
+         * passing it is BYTE-INERT: every committed `?gen=` payload's paint ops
+         * are unchanged, which is what lets a layer picker exist at all.
+         */
+        if (m === 'paint') {
+            return { op: 'paint', tx, ty, layer: layerNow(), ...paintSpecOf(terrainSel.value) };
+        }
         if (m === 'remove') return { op: 'remove', tx, ty };
         /**
          * ⛔ `{refused}` AND NOT `null` — `editorView`'s third answer. An
@@ -556,8 +1133,18 @@ export function mountWatchEditor({
     const floodTarget = () => {
         const m = mode();
         if (m === 'paint') {
-            return { tile: { column: columnOfSpec($('genEditTerrain').value, 'tiles',
-                'watchEditor: the FLOOD target') } };
+            /**
+             * ⛓ C2 — THE FLOOD FILLS THE LAYER THE BRUSH IS ON, and it names
+             * that layer's DESCRIPTOR FIELD. ⛔ `writeOps` emits ops only for
+             * the fields a descriptor presents, so a `cliffsides` flood carries
+             * `{cliff}` alone and leaves the terrain and the bodies of every
+             * cell it fills untouched — which is what a reader means by
+             * "flood this cliffside".
+             */
+            const layer = layerNow();
+            const column = columnOfSpec(paintSpecOf(terrainSel.value), layer,
+                'watchEditor: the FLOOD target');
+            return layer === 'cliffsides' ? { cliff: { column } } : { tile: { column } };
         }
         if (m === 'place') {
             try {
@@ -569,8 +1156,43 @@ export function mountWatchEditor({
         return null;
     };
 
+    /**
+     * ⛓⛓⛓ **THE PASTE FILTER'S OPTIONS ARE THE DESCRIPTOR'S OWN FIELDS** —
+     * §12.10's *"the last typed roster in this panel"*, closed. The core takes
+     * a FIELD name, so the offer is `Object.keys(adapter.readCell(...))` and a
+     * fourth field arrives as an `<option>` with no edit here.
+     *
+     * ⛔ THE PROBE CELL IS THE ORIGIN and it is only sound because a
+     * descriptor's field set is FIXED — slice B's bound 2 made that promise on
+     * purpose (*"`cliff` IS ALWAYS A FIELD, even in a room with no cliffsides
+     * layer"*), so that a filter could not come and go with the room.
+     */
+    const pasteSel = $('genEditPasteOnly');
+    const fillPasteFilter = () => {
+        if (!pasteSel) return;
+        const record = host.record();
+        if (!record) return;
+        const fields = descriptorFieldsOf(adapter, record);
+        const want = pasteSel.value;
+        pasteSel.innerHTML = '';
+        const all = doc.createElement('option');
+        all.value = '';
+        all.textContent = `everything the clip holds (${fields.length} field(s))`;
+        pasteSel.appendChild(all);
+        for (const f of fields) {
+            const o = doc.createElement('option');
+            o.value = f;
+            o.textContent = `${f} only`;
+            o.title = `keeps the \`${f}\` field of every copied cell — the name is the `
+                + `${adapter.name} descriptor's own, not a list this page holds`;
+            pasteSel.appendChild(o);
+        }
+        if ([...pasteSel.options].some((o) => o.value === want)) pasteSel.value = want;
+    };
+    fillPasteFilter();
+
     const pasteOptions = () => {
-        const only = $('editPasteOnly')?.value ?? '';
+        const only = pasteSel?.value ?? '';
         return only === '' ? {} : { only };
     };
 
@@ -616,14 +1238,14 @@ export function mountWatchEditor({
      * hand-written row of buttons would be a second list that drifts from it —
      * the very shape §11.7's linter fires on one level up.
      */
-    const toolBox = $('editTools');
+    const toolBox = $('genEditGestures');
     const buttons = new Map();
     if (toolBox) {
         toolBox.innerHTML = '';
         for (const row of view.commands) {
             if (!Object.values(TOOLS).includes(row.id)) continue;
             const b = doc.createElement('button');
-            b.id = `editTool_${row.id}`;
+            b.id = `genEditGesture_${row.id}`;
             b.textContent = row.key ? `${row.label} (${row.key})` : row.label;
             b.title = `arms the ${row.id} gesture`;
             lifetime.on(b, 'click', () => { view.run(row.id); });
@@ -671,7 +1293,7 @@ export function mountWatchEditor({
         syncArmed();
     });
 
-    const clipNote = $('editClipNote');
+    const clipNote = $('genEditClipNote');
     const renderClip = () => {
         if (!clipNote) return;
         clipNote.textContent = view.clip
@@ -680,7 +1302,70 @@ export function mountWatchEditor({
             : 'clipboard: EMPTY — arm RECT and click two opposite corners.';
     };
 
+    /* ── ⛓⛓⛓ THE TWO FORMS THAT ARE NOT GESTURES (C2) ─────────────── */
+
+    /**
+     * ⛓ Both go through `view.apply` — `editorView`'s own op path — so a flag
+     * toggled and a corridor painted reach the host by the same road and are
+     * reported by the same sentence.
+     */
+    const flags = $('genEditFlags') ? mountRoomFlags({
+        box: $('genEditFlags'),
+        noteEl: $('genEditFlagNote'),
+        reachEl: $('genEditFlagReach'),
+        host,
+        view,
+        schema,
+        lifetime,
+        buildWorld,
+        doc,
+    }) : null;
+
+    const resize = $('genEditResizeGo') ? mountResizeControl({
+        widthEl: $('genEditResizeW'),
+        heightEl: $('genEditResizeH'),
+        anchorEl: $('genEditResizeAnchor'),
+        goEl: $('genEditResizeGo'),
+        noteEl: $('genEditResizeNote'),
+        host,
+        adapter,
+        view,
+        lifetime,
+        doc,
+    }) : null;
+
+    /* ── ⛓⛓ WHAT A CELL **IS** — the HUD `readCell` never had (C2) ── */
+
+    /**
+     * ⛔ IT IS A READ AND NOTHING ELSE. A hover is not a gesture: no op is
+     * built, no tool is consulted and nothing is applied, which is why it does
+     * not go through `editorView` — that file owns what a CLICK means.
+     */
+    const cellNote = $('genEditCellNote');
+    const describeCell = (at) => {
+        const record = host.record();
+        if (!record || !at) return '';
+        const c = adapter.readCell(record, at.tx, at.ty);
+        const tile = c.tile
+            ? `column ${c.tile.column} · ${c.tile.typeName ?? `type ${c.tile.type}`}`
+                + `${c.tile.terrain ? ` · the terrain name "${c.tile.terrain}"` : ''}`
+            : 'NO TILE — and an absent cell is not a wall';
+        const cliff = c.cliff ? `cliffside column ${c.cliff.column}` : 'no cliffside';
+        const bodies = c.entities.length === 0
+            ? 'no bodies'
+            : `${c.entities.length} body/bodies: ${c.entities.map((e) => `<${e.type}>`).join(' ')}`
+                + ' (the LAST one is what `attrs` and `remove` address)';
+        return `(${at.tx},${at.ty}) — ${tile} · ${cliff} · ${bodies}`;
+    };
+    if (cellNote) {
+        lifetime.on(canvas, 'mousemove', (ev) => {
+            cellNote.textContent = describeCell(cellAt(ev));
+        });
+        lifetime.on(canvas, 'mouseleave', () => { cellNote.textContent = ''; });
+    }
+
     /** ⛓ THE ONE PLACE the section's readouts are redrawn. */
+    let lastRecord = null;
     const render = () => {
         syncArmed();
         renderClip();
@@ -689,6 +1374,20 @@ export function mountWatchEditor({
         }
         const list = $('genEdits');
         if (list) list.dataset.summary = describeOps(host.ops());
+        flags?.render();
+        /**
+         * ⛓⛓ THE SIZE BOXES FOLLOW THE **RECORD**, NOT EVERY DRAW. ⛔ Resetting
+         * them on each render would erase a width being typed the moment any
+         * other readout moved — and a control the page keeps overwriting is a
+         * control nobody can use. They are rewritten exactly when the room
+         * changes, which is when they became wrong.
+         */
+        const record = host.record();
+        if (resize && record && record !== lastRecord) {
+            resize.reset();
+            fillPasteFilter();
+        }
+        lastRecord = record;
     };
 
     render();
@@ -696,6 +1395,8 @@ export function mountWatchEditor({
     return {
         view,
         palette,
+        flags,
+        resize,
         render,
         /** ⛓ The mode, for a host that has to write it (a reset, a replay). */
         setMode(m) {

@@ -139,7 +139,9 @@ import { levelSourceFromAtlas } from './atlasSource.js';
  */
 import { buildStagedTape } from './botDriverV1.js';
 import { buildLevelSet } from './levelSetExporter.js';
-import { planLevelSetChunks, validateLevelSet } from './levelSetValidator.js';
+import {
+    planLevelSetChunks, stampLevelSetIdentity, validateLevelSet,
+} from './levelSetValidator.js';
 import { createRunForStaging, rolesForStaging, solveStaging } from './tapeRunner.js';
 /**
  * ⛓⛓⛓ R9 SLICE 2 — THE DIRECTOR, **IMPORTED**, NEVER RE-SPELLED (⚖ ruling 10).
@@ -274,7 +276,7 @@ import {
  * and UNCERTIFIED-until-SOLVE).
  */
 import {
-    describeEdit, editState, editStates, undoEdit, untranscribedTypes,
+    describeEdit, editState, editStates, roomFlagsIn, undoEdit, untranscribedTypes,
 } from './watchEdit.js';
 /**
  * ⛓⛓⛓ EDITOR v3 SLICE C1 — the CONTROLS move out. `watchEditor.js` is this
@@ -8227,6 +8229,20 @@ async function runGenerate(params, lifetime) {
         lifetime,
         schema: ogmoSchema,
         entityClasses: ENTITY_CLASSES,
+        /**
+         * ⛓⛓ EDITOR v3 C2 — the two things the new controls need from THIS
+         * file: the MODEL's builder (the room-flags reach readout MEASURES a
+         * flag by building the world with it and without it, rather than
+         * reading `as3: null` off the class table, which answers construction
+         * and not reach) and the CANVAS's own tile palette (there is no tileset
+         * PNG in this repo — the art is inside the recompiled `.wasm` — so the
+         * column picker shows a SWATCH, and it must be the colour the canvas
+         * actually paints).
+         */
+        buildWorld: buildLevelWorld,
+        tileColours: TILE_COLOURS,
+        solidColour: SOLID_COLOUR,
+        floorColour: FLOOR_COLOUR,
         say: (text, bad) => {
             $('status').className = bad ? 'bad' : '';
             $('status').textContent = text;
@@ -8442,10 +8458,19 @@ export function sniffLoadBox(text) {
         return { kind: null, why: `this is neither an OEL (it does not start with \`<\`) nor `
             + `JSON (${e.message})` };
     }
+    /**
+     * ⛓⛓ EDITOR v3 C2 — **A LEVEL SET LOADS NOW** (§3.2's fourth base). It was
+     * refused here with *"loading a set is the level-set arm's — plan phase 3"*,
+     * and this slice is the half of that arm a ROOM editor needs: the document
+     * is held, its rooms are offered, and picking one is a `set-room` base.
+     *
+     * ⛔ THE SNIFF IS STILL BY SHAPE — `rooms` is what a level-set document has
+     * and a payload does not — and the validator, not this function, is what
+     * says whether the document is one. ⚠ Exits and the manifest are NOT edited
+     * here (slice D); what a set buys today is a door into its rooms.
+     */
     if (parsed && typeof parsed === 'object' && Array.isArray(parsed.rooms)) {
-        return { kind: null, why: 'this is a LEVEL SET (it has `rooms`), and loading a set is '
-            + 'the level-set arm\'s — plan phase 3. One room of one is not the same thing as '
-            + 'the set, and pretending otherwise would drop every exit it declares' };
+        return { kind: 'levelset', set: parsed };
     }
     if (!parsed || typeof parsed !== 'object' || !parsed.base) {
         return { kind: null, why: 'this JSON carries no `base`, so it is not an editor '
@@ -8483,11 +8508,22 @@ async function runEditor(params, lifetime) {
      * no value for an attribute that HAS a declared default. A vocabulary gate
      * on the op path would be a hardening rule refusing the corpus it is about.
      */
+    /**
+     * ⛓⛓ EDITOR v3 C2 — **THE LOADED SET**, and it is the PAGE's. A level-set
+     * document arrives by paste; the adapter is handed a reader for it, so
+     * `set-room` resolves through the same `oel` arm a pasted room does.
+     *
+     * ⛔ THE READER CHECKS THE `set_id` rather than answering with whatever is
+     * in hand — a `set_id` carries the document's content hash, so a room
+     * resolved out of a different set would be a room the base never named.
+     */
+    let loadedSet = null;
     const adapter = createSeedlingEditAdapter({
         schema: null,
         levelSource: levelSourceFromAtlas(atlas),
         vanillaSetId,
         parseOel: parseOelLevel,
+        levelSetSource: (id) => (loadedSet && loadedSet.set_id === id ? loadedSet : null),
     });
 
     const atlasLevels = (atlas.levels ?? []).map((l) => l.level);
@@ -8559,6 +8595,11 @@ async function runEditor(params, lifetime) {
         if (!tag) return '(no base)';
         if (tag.kind === 'atlas') return `the VANILLA atlas, level ${tag.level} — set_id ${tag.set_id}`;
         if (tag.kind === 'oel') return `a PASTED OEL (${tag.xml.length} bytes)`;
+        if (tag.kind === 'set-room') {
+            const room = (loadedSet?.rooms ?? [])[tag.room];
+            return `room ${tag.room}${room?.name ? ` "${room.name}"` : ''} of the LOADED SET `
+                + `${tag.set_id}`;
+        }
         if (tag.kind === 'generate') {
             /**
              * ⛓ THE LADDER'S OWN IDENTITY, CARRIED ACROSS THE HANDOVER — and
@@ -8647,6 +8688,17 @@ async function runEditor(params, lifetime) {
             level: session.record(),
             why: lastWhy,
             transcribe: untranscribedTypes(session.record(), ENTITY_CLASSES),
+            /**
+             * ⛓ EDITOR v3 C2 — WHICH SET IS HELD and how many of its rooms this
+             * page could open. ⛔ The set itself is NOT echoed here: it is up to
+             * 700 KB of XML and a readout is not a transport.
+             */
+            set: loadedSet ? {
+                set_id: loadedSet.set_id,
+                rooms: loadedSet.rooms.length,
+                openable: loadedSet.rooms.filter((r) => typeof r.source?.xml === 'string').length,
+            } : null,
+            flags: roomFlagsIn(session.record()).map((f) => f.tag),
         };
     };
 
@@ -8809,6 +8861,20 @@ async function runEditor(params, lifetime) {
             lifetime,
             schema: ogmoSchema,
             entityClasses: ENTITY_CLASSES,
+            /**
+             * ⛓⛓ EDITOR v3 C2 — the two things the new controls need from THIS
+             * file: the MODEL's builder (the room-flags reach readout MEASURES a
+             * flag by building the world with it and without it, rather than
+             * reading `as3: null` off the class table, which answers construction
+             * and not reach) and the CANVAS's own tile palette (there is no tileset
+             * PNG in this repo — the art is inside the recompiled `.wasm` — so the
+             * column picker shows a SWATCH, and it must be the colour the canvas
+             * actually paints).
+             */
+            buildWorld: buildLevelWorld,
+            tileColours: TILE_COLOURS,
+            solidColour: SOLID_COLOUR,
+            floorColour: FLOOR_COLOUR,
             say: (text, bad) => {
                 $('status').className = bad ? 'bad' : '';
                 $('status').textContent = text;
@@ -8834,6 +8900,92 @@ async function runEditor(params, lifetime) {
         });
     }
 
+    /* ── ⛓⛓⛓ THE LEVEL SET — §3.2's FOURTH BASE (EDITOR v3 C2) ────── */
+
+    const setSel = () => $('editSetRoom');
+    const setNote = (text, bad = false) => {
+        $('editSetNote').textContent = text;
+        $('editSetNote').className = bad ? 'note bad' : 'note';
+    };
+
+    /**
+     * ⛓⛓ THE ROOM PICKER IS A VIEW OF THE HELD DOCUMENT — and it says, per
+     * room, whether that room can be OPENED. ⛔ An `embed`-sourced room is
+     * marked in its own option rather than left to fail on the press: the
+     * refusal is a fact about the document, and a reader picking a room should
+     * not have to press to find out the page has no embeds.
+     */
+    const renderSetRooms = () => {
+        const sel = setSel();
+        sel.innerHTML = '';
+        const rooms = loadedSet?.rooms ?? [];
+        for (const [i, r] of rooms.entries()) {
+            const o = document.createElement('option');
+            o.value = String(i);
+            const openable = typeof r.source?.xml === 'string';
+            o.textContent = `${i}${r.name ? ` · ${r.name}` : ''}`
+                + (openable ? '' : ' — ⛔ embed-sourced, not openable here');
+            sel.appendChild(o);
+        }
+        const has = rooms.length > 0;
+        sel.disabled = !has;
+        $('editSetOpen').disabled = !has;
+        $('editDownloadSet').disabled = !has;
+    };
+
+    /**
+     * ⛔ **THE SET IS VALIDATED BEFORE IT IS HELD.** `validateLevelSet` is the
+     * one authority on whether a document is a level set, and its errors are
+     * printed VERBATIM: they name the room, the attribute and the range, and a
+     * page that said *"invalid set"* instead would have thrown away the whole
+     * answer. ⚠ WARNINGS ARE SHOWN AND DO NOT REFUSE — an unstamped set and a
+     * one-room set both warn, and both are documents a person may want to edit.
+     */
+    const takeLevelSet = (set) => {
+        const v = validateLevelSet(set);
+        if (!v.ok) {
+            const why = `this JSON has \`rooms\`, so it is a LEVEL SET — and `
+                + `\`validateLevelSet\` REFUSES it: ${v.errors.join(' | ')}`;
+            $('editLoadNote').textContent = `⛔ REFUSED — ${why}`;
+            $('status').className = 'bad';
+            $('status').textContent = `the LOAD box was REFUSED — ${why}`;
+            return false;
+        }
+        loadedSet = set;
+        renderSetRooms();
+        const embeds = (set.rooms ?? []).filter((r) => typeof r.source?.xml !== 'string').length;
+        setNote(`HELD: ${set.set_id} — ${set.rooms.length} room(s)`
+            + (embeds ? `, ⛔ ${embeds} of them EMBED-sourced and NOT openable here (an `
+                + '`embed` is a path into a SWF\'s [Embed] table, a fact about a source tree; '
+                + 'the committed VANILLA set is all 116 of them, and its door is '
+                + '`?source=edit&level=N`)' : '')
+            + (v.warnings.length ? ` ⚠ ${v.warnings.length} warning(s): ${v.warnings[0]}` : ''));
+        $('editLoadNote').textContent = '';
+        $('status').className = '';
+        $('status').textContent = `LOADED a LEVEL SET — ${set.set_id}, ${set.rooms.length} `
+            + 'room(s). Pick one and press OPEN.';
+        /**
+         * ⛔ **AND THE READOUT IS REDRAWN, BECAUSE HOLDING A SET IS A CHANGE TO
+         * THE PAGE'S STATE THAT NO `redraw` FOLLOWS.** The ROOM did not change —
+         * so `redraw` would be a lie about the canvas — but `window.__editorEdit`
+         * carries which set is held, and a page whose readout learned about it
+         * only at the next EDIT would report `set: null` to anything that
+         * looked before then. Found by this slice's own driving.
+         */
+        render();
+        return true;
+    };
+
+    lifetime.on($('editSetOpen'), 'click', () => {
+        if (!loadedSet) return;
+        const room = Number(setSel().value);
+        if (openBase({ kind: 'set-room', set_id: loadedSet.set_id, room })) {
+            editorUi.palette.setType(DEFAULT_PLACE_TYPE);
+            setNote(`OPEN: ${describeBase(baseTag)}`);
+            redraw(`OPENED ${describeBase(baseTag)}`);
+        }
+    });
+
     /* ── LAUNCH ───────────────────────────────────────────────────── */
 
     /**
@@ -8851,6 +9003,10 @@ async function runEditor(params, lifetime) {
     }
     editorUi.palette.setType(DEFAULT_PLACE_TYPE);
     editorUi.setMode('off');
+    renderSetRooms();
+    setNote('no level set loaded — paste one into the LOAD box above (schema v1, `rooms`) and '
+        + 'its rooms are offered here. ⛔ The committed VANILLA set is 116 EMBED-sourced rooms '
+        + 'and cannot be opened this way; `?source=edit&level=N` is its door.');
     redraw(`EDIT — ${describeBase(baseTag)}`);
 
     lifetime.on($('genEditUndo'), 'click', () => editorUi.view.run(UNDO_COMMAND_ID));
@@ -8883,6 +9039,10 @@ async function runEditor(params, lifetime) {
                 editorUi.palette.setType(DEFAULT_PLACE_TYPE);
                 redraw('LOADED a pasted OEL');
             }
+            return;
+        }
+        if (got.kind === 'levelset') {
+            takeLevelSet(got.set);
             return;
         }
         const tag = got.payload.base;
@@ -8925,6 +9085,49 @@ async function runEditor(params, lifetime) {
     lifetime.on($('editDownloadOel'), 'click', () => download(
         `edit-${baseTag?.kind ?? 'room'}-${session.record().level}.oel`,
         recordToOel(session.record()), 'application/xml'));
+
+    /**
+     * ⛓⛓⛓ **THE FIRST WRITE PATH FOR TIER B** — the SET back out, with the
+     * edited room's XML replaced and the identity RE-STAMPED.
+     *
+     * ⛔ **RE-STAMPED, NOT REUSED.** `stampLevelSetIdentity` recomputes the
+     * content hash and rebuilds the `set_id` around it, so an edited set is a
+     * DIFFERENT set by construction — which is the one thing a save file cannot
+     * otherwise detect (plan §4.2, and `validateLevelSet` refuses a document
+     * whose stamp and content have parted). A download that kept the old id
+     * would hand somebody a set that lies about what it is.
+     *
+     * ⛔ **AND IT IS A DEEP COPY.** `stampLevelSetIdentity` writes in place; the
+     * held document is what the open room was resolved against, and mutating it
+     * under the session would make the base tag name a set that no longer
+     * exists. ⚠ The page NEVER writes `fixtures/` — this is a browser blob,
+     * like every other download here.
+     */
+    lifetime.on($('editDownloadSet'), 'click', () => {
+        if (!loadedSet || baseTag?.kind !== 'set-room') {
+            setNote('⛔ REFUSED — this download replaces the room the session is EDITING, and '
+                + `the current base is ${baseTag?.kind ? `a \`${baseTag.kind}\`` : 'none'}. `
+                + 'Open a room of the loaded set first: the write path is "the set, with THIS '
+                + 'room replaced", and there is nothing to replace otherwise.', true);
+            return;
+        }
+        const out = JSON.parse(JSON.stringify(loadedSet));
+        out.rooms[baseTag.room].source = { xml: recordToOel(session.record()) };
+        stampLevelSetIdentity(out);
+        const v = validateLevelSet(out);
+        setNote(`DOWNLOADED ${out.set_id} — room ${baseTag.room} replaced (${session.ops()
+            .length} edit(s) folded in) and the identity RE-STAMPED from ${loadedSet.set_id}. `
+            + `⛓ validateLevelSet: ${v.ok ? 'ok' : `⛔ ${v.errors.join(' | ')}`}`, !v.ok);
+        /**
+         * ⛓ …AND WHAT IT WROTE IS READABLE. A browser download is a blob and a
+         * click; the CLAIM is that the document round trips, so the document is
+         * put where a driver can read it — the same reason claim 5 reads the
+         * PAYLOAD off the readout rather than off a file the browser happened
+         * to write somewhere.
+         */
+        window.__editorSetOut = out;
+        download(`${out.set_id}.json`, `${JSON.stringify(out, null, 2)}\n`, 'application/json');
+    });
 }
 
 /**
