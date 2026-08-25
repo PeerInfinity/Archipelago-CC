@@ -9,7 +9,7 @@
  */
 
 import { createRng } from '../shared/rng.js';
-import { startRegionsOf } from '../procgenCore/rulesGraph.js';
+import { regionsOf, startRegionsOf, walkRulesGraph } from '../procgenCore/rulesGraph.js';
 import { namespaceNamed } from '../procgenCore/apIdNamespaces.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
@@ -1357,6 +1357,16 @@ function resolveTopDownStart(sourceRegions, declaredStart) {
     if (!declaredStart) return null;
     const region = sourceRegions[declaredStart];
     if (!region) return null;
+    /**
+     * ⛓ EDITOR v3 E2a — LEFT AS A HAND READ, and why: this asks for a region's
+     * FIRST exit. `walkRulesGraph` visits every exit of every region in
+     * document order and `reachableRegions` answers about the whole graph;
+     * neither can say "exit 0 of this one region", and adding an accessor to
+     * `procgenCore/rulesGraph.js` is out of this slice's scope. The DOCUMENT
+     * read that WAS a hand walk — `rulesJson.regions[playerId]` — now goes
+     * through `regionsOf` at both call sites, so what is left here is a read of
+     * a REGION object whose shape the format guarantees.
+     */
     if (/^menu$/i.test(declaredStart) && (region.exits ?? []).length > 0) {
         const firstExit = region.exits[0];
         if (firstExit?.connected_region && sourceRegions[firstExit.connected_region]) {
@@ -1382,7 +1392,10 @@ function resolveTopDownStart(sourceRegions, declaredStart) {
  * rules.json.
  */
 export function computeSourceCounts(rulesJson, playerId = '1') {
-    const sourceRegions = rulesJson?.regions?.[playerId] ?? {};
+    // ⛓ EDITOR v3 E2a — the ONE reader of a rules.json's region map
+    //   (`procgenCore/rulesGraph.js`), which is the module §17 named and whose
+    //   own header says this file had sixteen such hand reads.
+    const sourceRegions = regionsOf(rulesJson, playerId);
     // ⛓ Both start_regions shapes, through the ONE reader. These two sites were
     // a VERBATIM four-line copy of each other (§16.1 #5).
     const [declaredStart = null] = startRegionsOf(rulesJson, playerId).default;
@@ -1396,18 +1409,27 @@ export function computeSourceCounts(rulesJson, playerId = '1') {
     const isNonTrivial = (rule) =>
         rule != null && !(typeof rule === 'object' && rule.rule === 'True_');
 
-    for (const [name, region] of Object.entries(sourceRegions)) {
-        if (menuName && name === menuName) continue;
-        regionCount += 1;
-        for (const exit of region?.exits ?? []) {
+    /**
+     * ⛓ EDITOR v3 E2a — THE WALK, through `rulesGraph.walkRulesGraph`. It
+     * visits regions, exits and locations in DOCUMENT ORDER, which is the order
+     * the hand loop had, so the counts are byte-identical. ⛔ The Menu skip
+     * rides each visitor rather than the walker: the walker is structural and
+     * knows nothing about which region a driver considers synthetic.
+     */
+    const isMenu = (regionName) => Boolean(menuName) && regionName === menuName;
+    walkRulesGraph(rulesJson, playerId, {
+        region: (_region, { regionName }) => { if (!isMenu(regionName)) regionCount += 1; },
+        exit: (exit, { regionName }) => {
+            if (isMenu(regionName)) return;
             exitCount += 1;
             if (isNonTrivial(exit?.access_rule)) logicGateCount += 1;
-        }
-        for (const loc of region?.locations ?? []) {
+        },
+        location: (loc, { regionName }) => {
+            if (isMenu(regionName)) return;
             locationCount += 1;
             if (isNonTrivial(loc?.access_rule)) logicGateCount += 1;
-        }
-    }
+        },
+    });
     return {
         regions: regionCount,
         locations: locationCount,
@@ -1484,7 +1506,10 @@ export function layoutTopDown(rulesJson, opts, rng) {
         throw new Error('topDownFromRulesJson: rulesJson required');
     }
 
-    const sourceRegions = rulesJson?.regions?.[playerId] ?? {};
+    // ⛓ EDITOR v3 E2a — the ONE reader again; every `sourceRegions[...]` below
+    //   is a read of a REGION the format guarantees the shape of, not of the
+    //   document's own layout.
+    const sourceRegions = regionsOf(rulesJson, playerId);
     if (Object.keys(sourceRegions).length === 0) {
         throw new Error(`topDownFromRulesJson: no regions for player '${playerId}'`);
     }
@@ -1532,6 +1557,14 @@ export function layoutTopDown(rulesJson, opts, rng) {
     grid.placeRegion(startCell, { region_id: actualStartName });
 
     const bfsQueue = [actualStartName];
+    /**
+     * ⛓ EDITOR v3 E2a — LEFT AS A HAND BFS, and why: `rulesGraph.reachableRegions`
+     * is the same traversal and returns a SET OF NAMES. This one's PRODUCT is a
+     * grid placement — it consumes rng, assigns cells and records exit sides as
+     * it goes — so the walk and the placement are one loop, and replacing the
+     * walk half would mean running the traversal twice and keeping the two in
+     * step. The byte gates could not see the difference; the placement would.
+     */
     while (bfsQueue.length > 0) {
         const fromName = bfsQueue.shift();
         const fromCell = cellsByName.get(fromName);
@@ -1672,6 +1705,9 @@ function buildTopDownRegionSpec(layout, name, exitSidesByExit) {
     // adjacent (teleporter case), omit the side and the substrate clockwise-
     // assigns. The exit pointing back to the BFS parent gets pinned to the
     // entrance tile so the two regions' exit tiles line up across the shared wall.
+    // ⛓ EDITOR v3 E2a — LEFT: ONE region's exits, in a per-region realise.
+    //   `walkRulesGraph` walks the whole document; this is a read of the region
+    //   `regionsOf` already handed back.
     const exitSpecs = (sourceRegion.exits ?? []).map((srcExit) => {
         const targetName = srcExit.connected_region;
         const targetCell = targetName ? cellsByName.get(targetName) : null;
@@ -1869,6 +1905,9 @@ export function finalizeTopDown(layout) {
     for (const tele of teleporterEdges) {
         const fromCell = cellsByName.get(tele.from_name);
         const exitInfo = exitSidesByExit.get(`${tele.from_name}:${tele.exit_id}`);
+        // ⛓ EDITOR v3 E2a — LEFT: a single exit LOOKUP BY NAME. `rulesGraph`
+        //   exports no `exitOf(doc, region, exitName)` and this slice may not
+        //   add one to it; the document read above it is `regionsOf`'s.
         const targetName = sourceRegions[tele.from_name]?.exits?.find(
             (e) => e.name === tele.exit_id,
         )?.connected_region;
@@ -6209,6 +6248,10 @@ export function buildRulesJson(grid, opts = {}) {
         exits: [makeExit('GameStart', compiled.start_region_name)],
         locations: [],
     };
+    // ⛓ EDITOR v3 E2a — LEFT: this is a WRITE. `rulesGraph` is a reader with no
+    //   mutating door, by design (its header: "structural and knows no rule
+    //   logic"), and a writer added for one caller would be the second spelling
+    //   of the document shape it exists to make single.
     scaffold.regions[playerId] = { Menu: menuRegion, ...compiled.regions };
     scaffold.items[playerId] = compiled.items;
     scaffold.itempool_counts[playerId] = compiled.itempool_counts;
@@ -6258,14 +6301,18 @@ export function buildRulesJson(grid, opts = {}) {
         for (const region of grid.allRegions()) {
             regionsByName[region.region_id] = region;
         }
+        // ⛓ EDITOR v3 E2a — the SCAFFOLD is a rules.json document by now
+        //   (`scaffold.regions[playerId]` was written above), so its region map
+        //   is read through the ONE reader like any other.
+        const compiledRegions = regionsOf(scaffold, playerId);
         for (const region of grid.allRegions()) {
-            const compiledRegion = scaffold.regions[playerId][region.region_id];
+            const compiledRegion = compiledRegions[region.region_id];
             if (!compiledRegion) continue;
             for (const exit of compiledRegion.exits) {
                 const worldExit = getRegionExits(region)?.get(exit.name);
                 if (!worldExit?.isBackExit) continue;
                 const targetRegion = regionsByName[exit.connected_region];
-                const compiledTarget = scaffold.regions[playerId][exit.connected_region];
+                const compiledTarget = compiledRegions[exit.connected_region];
                 if (!targetRegion || !compiledTarget) continue;
                 const fwdExit = compiledTarget.exits.find(
                     (e) => e.name === worldExit.targetExitId,
