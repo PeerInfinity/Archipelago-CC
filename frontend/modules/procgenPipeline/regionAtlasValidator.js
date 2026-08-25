@@ -22,6 +22,15 @@
 // in the bundled browser graph. CLI:
 //   node scripts/procgen/region-atlas-validate.mjs [--restamp] <atlas.json>
 
+import {
+    computeContentHash,
+    stableStringify,
+    stampIdentity,
+} from '../procgenCore/contentIdentity.js';
+
+// Re-exported because regionAtlasPool.js has imported it from here since Phase 6.
+export { stableStringify };
+
 export const REGION_ATLAS_SCHEMA_VERSION = 1;
 
 const VALID_SIDES = new Set(['N', 'E', 'S', 'W']);
@@ -92,47 +101,15 @@ export function apRegionName(regionId, subRegionId = null) {
 // both after a deliberate hand edit. region_id / sub_region / exit_id / location
 // names are author-chosen and STABLE across restamps.
 
-export function stableStringify(value) {
-    if (value === null || typeof value !== 'object') return JSON.stringify(value);
-    if (Array.isArray(value)) return `[${value.map(stableStringify).join(',')}]`;
-    const keys = Object.keys(value).sort();
-    return `{${keys.map((k) => `${JSON.stringify(k)}:${stableStringify(value[k])}`).join(',')}}`;
-}
-
-function fnv1a32(str) {
-    let h = 0x811c9dc5;
-    for (let i = 0; i < str.length; i += 1) {
-        h ^= str.charCodeAt(i);
-        h = Math.imul(h, 0x01000193);
-    }
-    return (h >>> 0).toString(16).padStart(8, '0');
-}
-
 export function computeAtlasContentHash(atlas) {
-    const content = { ...atlas };
-    delete content.provenance;
-    delete content.atlas_id;
-    return fnv1a32(stableStringify(content));
+    return computeContentHash(atlas, { idKey: 'atlas_id' });
 }
 
 // Stamp (or re-stamp) the identity in place: sets provenance.content_hash and
 // appends the short hash to `baseId` (defaults to the current atlas_id with a
 // previously stamped hash suffix stripped — idempotent). Returns the atlas.
 export function stampAtlasIdentity(atlas, baseId = null) {
-    const hash = computeAtlasContentHash(atlas);
-    let base = baseId ?? atlas.atlas_id ?? 'atlas';
-    if (baseId == null) {
-        const prior = atlas.provenance?.content_hash;
-        if (typeof prior === 'string' && base.endsWith(`-${prior}`)) {
-            base = base.slice(0, -(prior.length + 1));
-        }
-    }
-    atlas.atlas_id = `${base}-${hash}`;
-    if (atlas.provenance == null || typeof atlas.provenance !== 'object') {
-        atlas.provenance = {};
-    }
-    atlas.provenance.content_hash = hash;
-    return atlas;
+    return stampIdentity(atlas, { idKey: 'atlas_id', defaultBase: 'atlas', baseId });
 }
 
 // --- helpers -----------------------------------------------------------------

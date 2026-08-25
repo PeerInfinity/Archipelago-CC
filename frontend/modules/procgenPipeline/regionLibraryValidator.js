@@ -15,6 +15,8 @@
 // Node CLI (scripts/procgen/region-library-validate.mjs). No top-level await, no
 // literal node: imports — this module is in the bundled browser graph.
 
+import { computeContentHash, stampIdentity } from '../procgenCore/contentIdentity.js';
+
 export const REGION_LIBRARY_SCHEMA_VERSION = 1;
 
 // The substrates a v1 library may carry, and each one's CAPTURE CONTRACT
@@ -45,47 +47,15 @@ const VALID_SIDES = new Set(['N', 'E', 'S', 'W']);
 // and STABLE across restamps (it is hashed content, but the author keeps it), so
 // selections and provenance survive edits even as library_id churns.
 
-export function stableStringify(value) {
-    if (value === null || typeof value !== 'object') return JSON.stringify(value);
-    if (Array.isArray(value)) return `[${value.map(stableStringify).join(',')}]`;
-    const keys = Object.keys(value).sort();
-    return `{${keys.map((k) => `${JSON.stringify(k)}:${stableStringify(value[k])}`).join(',')}}`;
-}
-
-function fnv1a32(str) {
-    let h = 0x811c9dc5;
-    for (let i = 0; i < str.length; i += 1) {
-        h ^= str.charCodeAt(i);
-        h = Math.imul(h, 0x01000193);
-    }
-    return (h >>> 0).toString(16).padStart(8, '0');
-}
-
 export function computeLibraryContentHash(library) {
-    const content = { ...library };
-    delete content.provenance;
-    delete content.library_id;
-    return fnv1a32(stableStringify(content));
+    return computeContentHash(library, { idKey: 'library_id' });
 }
 
 // Stamp (or re-stamp) the identity in place: sets provenance.content_hash and
 // appends the short hash to `baseId` (defaults to the current library_id with a
 // previously stamped hash suffix stripped — idempotent). Returns the library.
 export function stampLibraryIdentity(library, baseId = null) {
-    const hash = computeLibraryContentHash(library);
-    let base = baseId ?? library.library_id ?? 'library';
-    if (baseId == null) {
-        const prior = library.provenance?.content_hash;
-        if (typeof prior === 'string' && base.endsWith(`-${prior}`)) {
-            base = base.slice(0, -(prior.length + 1));
-        }
-    }
-    library.library_id = `${base}-${hash}`;
-    if (library.provenance == null || typeof library.provenance !== 'object') {
-        library.provenance = {};
-    }
-    library.provenance.content_hash = hash;
-    return library;
+    return stampIdentity(library, { idKey: 'library_id', defaultBase: 'library', baseId });
 }
 
 // --- structural validation ---------------------------------------------------

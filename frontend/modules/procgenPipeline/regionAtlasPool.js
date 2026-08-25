@@ -53,7 +53,7 @@
 //
 // Headless-safe: no top-level await, no literal node: imports.
 
-import { stableStringify } from './regionAtlasValidator.js';
+import { computeContentHash, stampIdentity } from '../procgenCore/contentIdentity.js';
 
 export const ATLAS_POOL_SCHEMA_VERSION = 1;
 
@@ -77,35 +77,22 @@ export const atlasSourceGame = (id) =>
 
 // --- content-hash identity (mirrors regionAtlasValidator / library) ----------
 
-function fnv1a32(str) {
-    let h = 0x811c9dc5;
-    for (let i = 0; i < str.length; i += 1) {
-        h ^= str.charCodeAt(i);
-        h = Math.imul(h, 0x01000193);
-    }
-    return (h >>> 0).toString(16).padStart(8, '0');
-}
-
 export function computePoolContentHash(pool) {
-    const content = { ...pool };
-    delete content.provenance;
-    delete content.pool_id;
-    return fnv1a32(stableStringify(content));
+    return computeContentHash(pool, { idKey: 'pool_id' });
 }
 
-/** Stamp `provenance.content_hash` + the hash-suffixed `pool_id` in place. */
+/**
+ * Stamp `provenance.content_hash` + the hash-suffixed `pool_id` in place.
+ *
+ * ⚠ THIS USED TO *REPLACE* `provenance` (`{...prov, content_hash}`) where the
+ * other four copies mutated it. The family mutates in place; the only inputs
+ * that could tell the two apart are a non-plain-object provenance (a string
+ * would have been spread into index keys — strictly worse) and reference
+ * identity. The committed pool's id recomputes unchanged under the family
+ * (pinned by contentIdentity.test.js's ten-document row).
+ */
 export function stampPoolIdentity(pool, baseId = null) {
-    const hash = computePoolContentHash(pool);
-    let base = baseId ?? pool.pool_id ?? 'atlas-pool';
-    if (baseId == null) {
-        const prior = pool.provenance?.content_hash;
-        if (typeof prior === 'string' && base.endsWith(`-${prior}`)) {
-            base = base.slice(0, -(prior.length + 1));
-        }
-    }
-    pool.pool_id = `${base}-${hash}`;
-    pool.provenance = { ...(pool.provenance ?? {}), content_hash: hash };
-    return pool;
+    return stampIdentity(pool, { idKey: 'pool_id', defaultBase: 'atlas-pool', baseId });
 }
 
 // --- the entry-rule vocabulary ------------------------------------------------

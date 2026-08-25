@@ -32,6 +32,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { chromium } from 'playwright';
+import { stableStringify } from '../../frontend/modules/procgenCore/contentIdentity.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, '../..');
@@ -90,13 +91,10 @@ function monolithRulesJson() {
     });
 }
 
-function canon(v) {
-    if (Array.isArray(v)) return `[${v.map(canon).join(',')}]`;
-    if (v && typeof v === 'object') {
-        return `{${Object.keys(v).sort().map((k) => `${JSON.stringify(k)}:${canon(v[k])}`).join(',')}}`;
-    }
-    return JSON.stringify(v);
-}
+// Canonical stringify = THE family's (procgenCore/contentIdentity.js), so a
+// key-order difference between the panel's stringifyRulesJson round-trip and the
+// headless object cannot false-fail. It was an identical hand copy until D0a.
+const canon = stableStringify;
 
 const MONO = canon(monolithRulesJson());
 // A library-mixed world must build MORE than the bare maze quota (proves the

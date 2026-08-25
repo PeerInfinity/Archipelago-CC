@@ -12,6 +12,7 @@
 // profile-derived parameters — it lives with the Pass-A generator (5d),
 // not here.
 
+import { computeContentHash, stampIdentity } from "../procgenCore/contentIdentity.js";
 import {
   EFFECT_KINDS,
   PERK_BEHAVIORS,
@@ -44,47 +45,15 @@ function isPlaceholder(entry) {
 // dataset_id ends with the 8-hex short hash. validateJtaDataset errors on a
 // mismatch; `--restamp` rewrites both after a deliberate hand edit.
 
-export function stableStringify(value) {
-  if (value === null || typeof value !== "object") return JSON.stringify(value);
-  if (Array.isArray(value)) return `[${value.map(stableStringify).join(",")}]`;
-  const keys = Object.keys(value).sort();
-  return `{${keys.map((k) => `${JSON.stringify(k)}:${stableStringify(value[k])}`).join(",")}}`;
-}
-
-function fnv1a32(str) {
-  let h = 0x811c9dc5;
-  for (let i = 0; i < str.length; i += 1) {
-    h ^= str.charCodeAt(i);
-    h = Math.imul(h, 0x01000193);
-  }
-  return (h >>> 0).toString(16).padStart(8, "0");
-}
-
 export function computeDatasetContentHash(dataset) {
-  const content = { ...dataset };
-  delete content.provenance;
-  delete content.dataset_id;
-  return fnv1a32(stableStringify(content));
+  return computeContentHash(dataset, { idKey: "dataset_id" });
 }
 
 // Stamp (or re-stamp) the identity in place: sets provenance.content_hash and
 // appends the short hash to `baseId` (defaults to the current dataset_id with
 // a previously stamped hash suffix stripped — idempotent). Returns the dataset.
 export function stampDatasetIdentity(dataset, baseId = null) {
-  const hash = computeDatasetContentHash(dataset);
-  let base = baseId ?? dataset.dataset_id ?? "dataset";
-  if (baseId == null) {
-    const prior = dataset.provenance?.content_hash;
-    if (typeof prior === "string" && base.endsWith(`-${prior}`)) {
-      base = base.slice(0, -(prior.length + 1));
-    }
-  }
-  dataset.dataset_id = `${base}-${hash}`;
-  if (dataset.provenance == null || typeof dataset.provenance !== "object") {
-    dataset.provenance = {};
-  }
-  dataset.provenance.content_hash = hash;
-  return dataset;
+  return stampIdentity(dataset, { idKey: "dataset_id", defaultBase: "dataset", baseId });
 }
 
 export function validateJtaDataset(dataset) {

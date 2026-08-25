@@ -16,6 +16,7 @@
  * Prereq: dev server on :8000. Run: node scripts/procgen/verify-spiral-steps-ui.mjs
  */
 import { chromium } from 'playwright';
+import { stableStringify } from '../../frontend/modules/procgenCore/contentIdentity.js';
 
 // Substrate libraries register on import (maze is the procedural, rng-consuming
 // substrate — ③ regions draws rng, so this exercises the ①→③ rng threading).
@@ -64,15 +65,10 @@ function monolithRulesJson() {
     });
 }
 
-// Canonical stringify (sorted keys) so a key-order difference between the panel's
-// stringifyRulesJson round-trip and the headless object doesn't false-fail.
-function canon(v) {
-    if (Array.isArray(v)) return `[${v.map(canon).join(',')}]`;
-    if (v && typeof v === 'object') {
-        return `{${Object.keys(v).sort().map((k) => `${JSON.stringify(k)}:${canon(v[k])}`).join(',')}}`;
-    }
-    return JSON.stringify(v);
-}
+// Canonical stringify = THE family's (procgenCore/contentIdentity.js), so a
+// key-order difference between the panel's stringifyRulesJson round-trip and the
+// headless object cannot false-fail. It was an identical hand copy until D0a.
+const canon = stableStringify;
 
 const MONO = canon(monolithRulesJson());
 

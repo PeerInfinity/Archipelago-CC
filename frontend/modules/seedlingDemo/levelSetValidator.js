@@ -23,6 +23,7 @@
 // in the bundled browser graph and the OEL parse below is deliberately regex
 // based rather than DOMParser/ElementTree based for that reason.
 
+import { computeContentHash, stampIdentity } from '../procgenCore/contentIdentity.js';
 import { TAGS_PER_LEVEL } from './breakableRocks.js';
 
 export const LEVEL_SET_SCHEMA_VERSION = 1;
@@ -196,43 +197,16 @@ const isNonEmptyString = (v) => typeof v === 'string' && v.length > 0;
 // reinterpretation §4.2 exists to prevent. Stamping the id WITH the hash closes
 // it: an edited set is a different set by construction.
 
-export function stableStringify(value) {
-    if (value === null || typeof value !== 'object') return JSON.stringify(value);
-    if (Array.isArray(value)) return `[${value.map(stableStringify).join(',')}]`;
-    const keys = Object.keys(value).sort();
-    return `{${keys.map((k) => `${JSON.stringify(k)}:${stableStringify(value[k])}`).join(',')}}`;
-}
-
-function fnv1a32(str) {
-    let h = 0x811c9dc5;
-    for (let i = 0; i < str.length; i += 1) {
-        h ^= str.charCodeAt(i);
-        h = Math.imul(h, 0x01000193);
-    }
-    return (h >>> 0).toString(16).padStart(8, '0');
-}
-
+// ⛓ THE PLAIN-OBJECT PROVENANCE GUARD THIS FILE INTRODUCED IS NOW THE FAMILY'S
+// (procgenCore/contentIdentity.js) — the other four copies used `typeof !==
+// 'object'`, which lets an ARRAY provenance through and hangs the hash on it.
 export function computeLevelSetContentHash(set) {
-    const content = { ...set };
-    delete content.provenance;
-    delete content.set_id;
-    return fnv1a32(stableStringify(content));
+    return computeContentHash(set, { idKey: 'set_id' });
 }
 
 /** Stamp (or re-stamp) identity in place; idempotent. Returns the set. */
 export function stampLevelSetIdentity(set, baseId = null) {
-    const hash = computeLevelSetContentHash(set);
-    let base = baseId ?? set.set_id ?? 'level-set';
-    if (baseId == null) {
-        const prior = set.provenance?.content_hash;
-        if (typeof prior === 'string' && base.endsWith(`-${prior}`)) {
-            base = base.slice(0, -(prior.length + 1));
-        }
-    }
-    set.set_id = `${base}-${hash}`;
-    if (!isPlainObject(set.provenance)) set.provenance = {};
-    set.provenance.content_hash = hash;
-    return set;
+    return stampIdentity(set, { idKey: 'set_id', defaultBase: 'level-set', baseId });
 }
 
 /**
