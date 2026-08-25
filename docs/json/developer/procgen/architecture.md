@@ -86,7 +86,7 @@ Headless equivalents of everything the pages do live in `scripts/procgen/`. The 
 
 **250 instruments** live in `scripts/procgen/`, by prefix: `probe-` 59 (22 browser) · `verify-` 49 (30 browser) · `plan-` 36 (1 browser) · `check-` 27 (21 browser) · `census-` 12 · `solve-` 7 · `dump-` 6 · `sweep-` 6 · `make-` 5 · `recon-` 5 · `region-` 5 · `generate-` 4 · `extract-` 3 · `attribute-` 2 · `audit-` 2 · `export-` 2 (1 browser) · no prefix 2 · `batch-` 1 · `build-` 1 · `derive-` 1 · `find-` 1 · `harvest-` 1 · `lint-` 1 · `measure-` 1 · `mine-` 1 · `prove-` 1 · `reach-` 1 · `record-` 1 · `rerecord-` 1 · `run-` 1 · `seedling-` 1 · `show-` 1 · `stamp-` 1 · `standing-` 1 · `survey-` 1.
 
-75 of them drive a real browser; 154 accept at least one `--flag`; 79 are cited by one of these documents; and 0 open with no comment at all.
+75 of them drive a real browser; 154 accept at least one `--flag`; 80 are cited by one of these documents; and 0 open with no comment at all.
 
 One row each — the one-liner from the file's own docblock, the flags it reads out of `argv`, whether it needs a browser, and which document cites it — is on the [reference page](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/reference.html#section-instruments), which can filter them.
 
@@ -250,7 +250,7 @@ edit panel, each on its arm's own lifetime.
 
 ## The rules.json and atlas toolkit (`procgenCore/`)
 
-Three modules, FLAT beside the edit core, for the documents every substrate
+Six modules, FLAT beside the edit core, for the documents every substrate
 shares. They were lifted from copies that already existed and agreed — the
 point was never new behaviour, it was ONE place for behaviour there was already
 consensus on.
@@ -258,8 +258,11 @@ consensus on.
 | module | what it is | what it replaced |
 |---|---|---|
 | `contentIdentity.js` | `stableStringify`, `fnv1a32`, `computeContentHash(doc, {idKey})`, `stampIdentity(doc, {idKey, defaultBase, baseId})` | five byte-equivalent copies in the atlas, library, pool, level-set and JtA-dataset validators, plus two hand `canon` clones in `scripts/procgen` |
-| `rulesGraph.js` | `regionsOf`, `startRegionsOf`, `walkRulesGraph`, `walkRuleTrees`, `reachableRegions` | no named walker existed; sixteen production sites each opened their own region loop, and `start_regions` was read five ways |
+| `rulesGraph.js` | `regionsOf`, `startRegionsOf`, `walkRulesGraph`, `walkRuleTrees`, `walkRuleTree`, `reachableRegions` | no named walker existed; sixteen production sites each opened their own region loop, and `start_regions` was read five ways |
 | `apIdNamespaces.js` | the register of every AP id base, with provenance and pins, plus `allocateIdsBySortedName` | three id bases the inventory knew about and five it had missed |
+| `jsonSchemaCheck.js` | a draft-07 evaluator over the keyword subset this repo's two schemas use, plus `rulesJsonSchemaErrors` and `atlasSchemaErrors` | a 132-line evaluator that was TEST-ONLY BY ACCIDENT — its only disqualifications were a `node:fs` import and a home under `runnerDemo/` |
+| `atlasOps.js` | `applyAtlasOp(atlas, op)` over an 18-kind vocabulary, pure and copy-on-write | `AtlasSession`'s sixteen in-place mutating bodies, which no headless caller could reach |
+| `ruleTreeOps.js` | `getRuleAt` / `replaceRuleAt` / `removeRuleAt` / `wrapRuleAt`, path-addressed and copy-on-write | `ruleTreeEditor.js`'s per-node closures, which existed only while the DOM was rendering |
 
 **Identity is a CONTRACT, not an implementation.** Ten documents committed to
 this repository carry ids minted with that exact algorithm: a sorted-key
@@ -295,9 +298,77 @@ ids and location ids live in separate Archipelago id spaces, so a row whose
 item base equals its location base is not a collision; what must not overlap is
 two rows in the same space.
 
-All three are under the no-substrate law described above for the edit core, and
-that law was widened to `flashPanel/` when they landed: a toolkit about atlases
-is exactly the code that would otherwise reach for one Seedling tile constant.
+**No ajv, and the schema is INJECTED rather than read.** The repo ships no
+JSON-Schema library for JS, and it does not need one: `rules.schema.json` uses
+only keywords the promoted evaluator already had, and `region-atlas.schema.json`
+needed six more (`$id`, `minLength`, `minItems`, `maxItems`, `uniqueItems`,
+`pattern`). Adding a library would buy a user-visible dependency, a bundling
+question for the dev-server page path, and a second evaluator for a schema the
+hand one covers. The law the promotion kept is that an unknown ASSERTION keyword
+THROWS by name: a checker that shrugs at what it does not understand reports
+"valid" for documents it never looked at. Every entry point takes the parsed
+schema as a parameter and refuses without one, because `procgenCore/` is in the
+browser page graph and one `node:fs` there makes the whole graph unloadable —
+the same rule the Seedling editor's `.oep` schema keeps (below). A node-only
+sibling, `jsonSchemaFiles.js`, owns the disk read. `validateRegionAtlas` runs the
+structural pass FIRST when a schema is injected, so a document whose SHAPE is
+wrong is reported as a shape error instead of a cascade of referential ones
+downstream of it. The rows are the COMMITTED documents: every atlas in
+`flashPanel/atlases/` and all 259 preset `rules.json` files, with Python's
+`jsonschema` agreeing on the same 259 — when a hardening rule and the real
+corpus disagree, the rule is what moves. That is what forced
+`vanilla_layout.connections[].one_way` into the atlas schema, undeclared since
+R7 though the compiler reads it and the playthrough writes it 312 times. ⚠ And
+declaring it was NOT enough: draft-07 allows unknown properties by default, so
+the field had been passing an undeclared schema with zero errors and deleting
+the declaration again would have changed nothing. The connection item is CLOSED
+(`additionalProperties: false`) as well, which is what makes the declaration
+load-bearing.
+
+**Editing is a VOCABULARY of pure ops.** `atlasOps` and `ruleTreeOps` both take
+a document and an op and return a NEW one, never mutating the input, with
+structural sharing along the untouched branches — the playthrough atlas is 271
+KB and its build applies about 1,100 ops, so a clone per op would be quadratic
+inside a `--check` gate. Copy-on-write is also what lets an editor hold, name,
+log and undo an edit, which per-node closures could not. ⛔ The spreads are
+key-order-exact on purpose: an overwritten key keeps its position, a new key
+appends, a dropped key is deleted rather than set to `undefined`. The atlases
+are byte-gated, and key order is part of those bytes. Three atlas ops did not
+exist before the lift — `rename-region`, `connect` with `one_way`, and `unwire`
+by endpoint — and the first two are why the playthrough generator used to bypass
+the session entirely and assign `vanilla_layout.connections` wholesale. That
+bypass is gone, which also means its 312 connections are now subject to the
+each-endpoint-once law they had been skipping. `rename-region` REFUSES a
+colliding region id, and the reason is not cosmetic: the AP projection allocates
+ids by NAME with dedup, so two regions sharing an id do not collide, they
+COLLAPSE into one, and the second one's exits and locations attach quietly to
+the first.
+
+All six are under the no-substrate law described above for the edit core, and
+that law was widened to `flashPanel/` when the first three landed: a toolkit
+about atlases is exactly the code that would otherwise reach for one Seedling
+tile constant.
+
+**⛓ The atlas is DERIVED from the rooms; the overlay is AUTHORED.** ⚖ Ruled by
+the user, 2026-08-25. The playthrough generator had already proved it: a region
+per room, boundary exits read off the `teleporter`/`stairsup`/`stairsdown`
+entities and the `<control fallthrough>` pits, one-way connections between them
+— all of it a FUNCTION of the rooms. Only three things are authored: locations
+(with their `vanilla_item`), the access rules the analyzer cannot derive, and
+names. So the derivation is a module, `seedlingDemo/seedlingAtlasDerivation.js`
+— seedling-side, because it reads OEL entity types — and the editor's document
+is `{set, overlay}` with the atlas rebuilt on demand rather than typed. A
+reorder then rewrites the OEL `@to`/`@fallthrough` and re-keys the overlay, and
+the atlas needs no rewriting because it is not stored. ⛔ The vanilla hand
+rulings STAYED in `make-seedling-playthrough-rules.mjs`, and that is the
+evidence rather than the residue: an atlas is `derive(rooms) + authored
+overlay`, and the fact that the 116-room vanilla build needs an overlay is what
+makes the shape right. The two sources feed one function because they present
+one record — measured field by field, the map extract's levels and
+`procgenLevelOel.parseOelLevel`'s output differ in exactly one thing a
+derivation can see: a parsed `.oel` does not carry its own `level` id, because
+it does not know its index and the SET does. That adaptation is one line at the
+call site, and a room without one is refused by name rather than guessed.
 
 ## The Seedling editor's data model (`seedlingDemo/`)
 

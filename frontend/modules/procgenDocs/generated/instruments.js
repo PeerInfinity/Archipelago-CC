@@ -201,7 +201,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 231,
         "browser": 75,
-        "cited": 79,
+        "cited": 80,
         "files": 250,
         "lineStyle": 19,
         "withDocblock": 250,
@@ -2830,7 +2830,9 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "make",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/architecture.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "make-seedling-playthrough-rules.mjs",
