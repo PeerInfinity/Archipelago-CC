@@ -8,6 +8,7 @@
 // of a rule that already exists; asserting "what this exporter emits SURVIVES
 // that rule" is the claim worth making, and it is the one that fails if either
 // side moves.
+import { spawnSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
@@ -522,4 +523,52 @@ describe('vanillaXmlSet — two committed documents in, an xml-sourced set out',
         expect(bare.set.menu_rooms).toEqual([0]);
         expect(bare.report.invented).toContain('start');
     });
+});
+
+/**
+ * ── THE CLI'S `--vanilla` ARM, DRIVEN ────────────────────────────────────────
+ *
+ * ⛓ THE ROWS LIVE BESIDE THE FUNCTION, because the arm owns no format logic:
+ * it reads two committed files, calls `vanillaXmlSet` and prints. What is worth
+ * gating is that STDOUT is still the DETERMINISM CHANNEL (the script's own law),
+ * that the id it prints is the one this module's function produces — the SAME
+ * function on both sides, which is what makes the page's row a comparison and
+ * not a second implementation — and that the two arms REFUSE to be mixed.
+ */
+describe('export-seedling-level-set --vanilla', () => {
+    const SCRIPT = fileURLToPath(
+        new URL('../../../scripts/procgen/export-seedling-level-set.mjs', import.meta.url));
+    const run = (...args) => spawnSync(process.execPath, [SCRIPT, ...args], { encoding: 'utf8' });
+
+    it('prints a byte-identical STDOUT twice, carrying the id the function stamps', () => {
+        const a = run('--vanilla');
+        const b = run('--vanilla');
+        expect(a.status).toBe(0);
+        expect(a.stdout).toBe(b.stdout);
+        const { set } = vanillaXmlSet(
+            fixture('seedling-vanilla-set.json'),
+            JSON.parse(readFileSync(fileURLToPath(
+                new URL('../flashPanel/atlases/seedling-map.json', import.meta.url)), 'utf8')),
+        );
+        expect(a.stdout).toContain(`set_id:       ${set.set_id}`);
+        expect(a.stdout).toContain(`derived_from: ${set.provenance.derived_from.set_id}`);
+        // The §6.1 companion is `invalidated` for this set too — per IDENTITY,
+        // deliberately (plan §22.2 decision 5) — and the note that says the
+        // rooms are nevertheless the vanilla ones is printed under it.
+        expect(a.stdout).toMatch(/§6\.1 — the vanilla AP mapping under this set: invalidated/);
+        expect(a.stdout).toMatch(/reproduces the vanilla rooms BY VALUE/);
+    }, 30000);
+
+    it('REFUSES every generation flag by name, and still refuses `fixtures/`', () => {
+        const clash = run('--vanilla', '--seeds=1-4');
+        expect(clash.status).toBe(2);
+        expect(clash.stderr).toMatch(/--vanilla takes no generation flag, and --seeds is one/);
+        expect(clash.stdout).toBe('');
+        const biome = run('--vanilla', '--biome=post-sword', '--exits=ring');
+        expect(biome.status).toBe(2);
+        expect(biome.stderr).toMatch(/--biome, --exits are one/);
+        const fixtures = run('--vanilla', '--out-dir=/tmp/nope/fixtures/out');
+        expect(fixtures.status).toBe(2);
+        expect(fixtures.stderr).toMatch(/REFUSED to write under `fixtures\/`/);
+    }, 30000);
 });

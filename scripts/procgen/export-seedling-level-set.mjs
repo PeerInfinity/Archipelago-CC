@@ -42,10 +42,26 @@
  *
  * ⛔ NOTHING IS WRITTEN UNDER `fixtures/`, EVER (standing law).
  *
+ * ── EDITOR v3 E1: THE SECOND ARM, `--vanilla` ────────────────────────────────
+ *
+ * This script had no arm that does not GENERATE, and the set editor's whole
+ * Tier B was therefore demonstrated on generated rooms: the committed vanilla
+ * set is 116 `embed`-sourced rooms and an `embed` cannot be opened (plan §13.5).
+ * `--vanilla` prints the SAME REPORT over `vanillaXmlSet(embedSet, mapDoc)` —
+ * the vanilla 116 carried as `xml`, derived from two committed documents and
+ * nothing else — so the two arms can be read line by line against each other.
+ *
+ * ⛔ IT TAKES NO GENERATION FLAG. There is no seed, biome, exit topology or set
+ * id to honour: the document is a function of two files and its id is the hash
+ * of that document. `--vanilla --seeds=1-4` REFUSES BY NAME (exit 2) rather
+ * than printing a set that ignored the flag.
+ *
  * Run:
  *   node scripts/procgen/export-seedling-level-set.mjs --seeds=1-8
  *   node scripts/procgen/export-seedling-level-set.mjs --seeds=1,2,5 --out-dir=/tmp/set
  *   node scripts/procgen/export-seedling-level-set.mjs --seeds=1-4 --set-id=procgen-demo
+ *   node scripts/procgen/export-seedling-level-set.mjs --vanilla
+ *   node scripts/procgen/export-seedling-level-set.mjs --vanilla --out-dir=/tmp/vanilla
  */
 
 import { mkdirSync, writeFileSync } from 'node:fs';
@@ -59,8 +75,21 @@ const M = (p) => import(join(REPO, 'frontend/modules/seedlingDemo', p));
 
 const { generateSeedlingLevel } = await M('procgenSeedling.js');
 const { GENERATE_BIOMES } = await M('watchGenerate.js');
-const { buildLevelSet, apMappingInvalidation } = await M('levelSetExporter.js');
+const { buildLevelSet, vanillaXmlSet, apMappingInvalidation } = await M('levelSetExporter.js');
 const { validateLevelSet, planLevelSetChunks } = await M('levelSetValidator.js');
+// ⛓ THE MAP EXTRACT'S PATH IS `levelSource.js`'s, NOT A SECOND COPY OF IT.
+// That module is the node-only edge that already owns `ATLAS_PATH` and memoises
+// the 976 KB read; a `join(REPO, …)` here would be a second address for one file.
+const { loadAtlas, ATLAS_PATH } = await M('levelSource.js');
+/**
+ * The vanilla manifest. ⚠ DEFINED ONCE, HERE, because nothing exports it: the
+ * five scripts that read it each `join(REPO, …)` their own copy of this string
+ * (`check-seedling-vanilla-manifest.mjs:111`, `check-seedling-save-stamp.mjs:69`,
+ * `stamp-seedling-vanilla-set.mjs:30`, `check-seedling-editor-arm.mjs:134`,
+ * `probe-seedling-level-set-transport.mjs:119`). ⛔ READ-ONLY here — this file
+ * is ⚖ ruling 2's subject and its own stamper owns writing it.
+ */
+const VANILLA_SET_PATH = join(REPO, 'frontend/modules/seedlingDemo/fixtures/seedling-vanilla-set.json');
 
 const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
     ?? `--${name}=${fallback}`).slice(`--${name}=`.length);
@@ -69,6 +98,33 @@ const num = (name, fallback) => Number(arg(name, fallback));
 
 const say = (line) => process.stdout.write(`${line}\n`);
 const note = (line) => process.stderr.write(`${line}\n`);
+
+/**
+ * ⛓ WAS THE FLAG TYPED? `arg()` answers with its FALLBACK, so `--vanilla
+ * --seeds=1-4` could not be told from `--vanilla` alone by reading `SEEDS`.
+ * The two arms are mutually exclusive and the refusal has to name what the
+ * reader actually typed, so it asks argv rather than the parsed value.
+ */
+const passed = (name) => process.argv.some(
+    (a) => a === `--${name}` || a.startsWith(`--${name}=`));
+
+// ── EDITOR v3 E1 — the second arm, and what it refuses ───────────────────────
+const VANILLA = has('vanilla');
+/** Every flag that only means something to the GENERATED arm. */
+const GENERATE_ONLY = ['seeds', 'biome', 'exits', 'regions', 'count', 'tries',
+    'saturation', 'allow-aborts', 'set-id'];
+if (VANILLA) {
+    const clash = GENERATE_ONLY.filter(passed);
+    if (clash.length > 0) {
+        note(`export-seedling-level-set: --vanilla takes no generation flag, and `
+            + `${clash.map((f) => `--${f}`).join(', ')} ${clash.length === 1 ? 'is' : 'are'} one.`);
+        note('  The vanilla arm derives its whole document from two committed files — the map');
+        note('  extract and the vanilla manifest — and its set_id from the content of what they');
+        note('  produce. There is nothing for a seed, a biome, an exit topology or a set id to');
+        note('  change, and accepting one would print a set that silently ignored it.');
+        process.exit(2);
+    }
+}
 
 /** `1-8`, `1,2,5`, or a mix. Order is set order — position is identity. */
 function parseSeeds(spec) {
@@ -121,13 +177,28 @@ if (!GENERATE_BIOMES[BIOME]) {
 let loadavg = 'unavailable';
 try { loadavg = readFileSync('/proc/loadavg', 'utf8').trim(); } catch { /* not linux */ }
 note(`# load at start: ${loadavg}`);
-note(`# ${SEEDS.length} seed(s), biome ${BIOME}, obstacleTarget ${OBSTACLES}`);
+note(VANILLA
+    ? `# --vanilla: ${ATLAS_PATH} + ${VANILLA_SET_PATH}`
+    : `# ${SEEDS.length} seed(s), biome ${BIOME}, obstacleTarget ${OBSTACLES}`);
 
 const bounds = { obstacleTarget: OBSTACLES, triesPerStep: TRIES, saturationK: SATURATION_K };
 const entries = [];
 const aborted = [];
 const t0 = Date.now();
 
+/**
+ * ⛓ ONE `{set, report}`, TWO PRODUCERS. Everything below the branch — validate,
+ * plan, invalidate, print, write — is the SAME code for both arms, which is what
+ * makes the two reports comparable line by line instead of merely similar.
+ */
+let set;
+let report;
+if (VANILLA) {
+    const embedSet = JSON.parse(readFileSync(VANILLA_SET_PATH, 'utf8'));
+    ({ set, report } = vanillaXmlSet(embedSet, loadAtlas()));
+    note(`  ${report.join.rooms} room(s) joined by path, `
+        + `${report.join.matched_by_suffix} on the shared suffix`);
+} else {
 for (const seed of SEEDS) {
     let out;
     try {
@@ -164,7 +235,7 @@ if (entries.length === 0) {
     process.exit(3);
 }
 
-const { set, report } = buildLevelSet(entries, {
+({ set, report } = buildLevelSet(entries, {
     setId: SET_ID,
     name: `Procgen ${BIOME} (${entries.length} rooms)`,
     generator: 'scripts/procgen/export-seedling-level-set.mjs',
@@ -182,17 +253,34 @@ const { set, report } = buildLevelSet(entries, {
     ...(EXITS === 'none'
         ? {}
         : { link: { topology: EXITS, ...(REGIONS.length > 0 ? { regions: REGIONS } : {}) } }),
-});
+}));
+}
 
 const verdict = validateLevelSet(set);
 const { chunks, oversized } = planLevelSetChunks(set);
 const invalidation = apMappingInvalidation(set);
 
-say(`# generated Seedling level set — ${entries.length} room(s), biome ${BIOME}`);
+say(VANILLA
+    ? `# the VANILLA 116 as an xml-sourced level set — ${set.rooms.length} room(s)`
+    : `# generated Seedling level set — ${entries.length} room(s), biome ${BIOME}`);
 say('');
 say(`set_id:       ${set.set_id}`);
 say(`content_hash: ${set.provenance.content_hash}`);
-say(`seeds:        ${SEEDS.join(', ')}${aborted.length ? `   (ABORTED: ${aborted.map((a) => a.seed).join(', ')})` : ''}`);
+if (VANILLA) {
+    // ⛓ WHICH SET THIS ONE REPRODUCES, AND WHERE THE ROOMS CAME FROM. Two ids
+    // exist for one game's 116 rooms and this is the line that says which is in
+    // hand: the embed id is ⚖ ruling 2's and the AS3 fork's `VanillaSet.SET_ID`;
+    // the one above is this document's own.
+    say(`derived_from: ${set.provenance.derived_from.set_id} `
+        + `(content_hash ${set.provenance.derived_from.content_hash})`);
+    say(`map:          ${set.provenance.map.generator}, `
+        + `rooted at ${set.provenance.map.source.level_root}`);
+    say(`join:         ${report.join.matched_by_suffix} of ${report.join.rooms} matched by PATH `
+        + `on the shared suffix (\`${report.join.embed_prefix}…\` under `
+        + `\`${report.join.level_root}/…\`), ${report.join.matched_exact} exact`);
+} else {
+    say(`seeds:        ${SEEDS.join(', ')}${aborted.length ? `   (ABORTED: ${aborted.map((a) => a.seed).join(', ')})` : ''}`);
+}
 say(`start:        ${JSON.stringify(set.start)}`);
 say(`menu_rooms:   ${JSON.stringify(set.menu_rooms)}`);
 say(`named_rooms:  ${JSON.stringify(set.named_rooms)}`);
@@ -251,6 +339,20 @@ say('');
 say(`## §6.1 — the vanilla AP mapping under this set: ${invalidation.status}`);
 invalidation.references.forEach((r) => say(`  ${r.count.toString().padStart(2)} ${r.artifact} ${r.table}`));
 say(`  ${invalidation.total_references} references, none of which forces a named_rooms entry`);
+if (VANILLA) {
+    /**
+     * ⛔ THE COMPANION STILL READS `invalidated`, AND THAT IS THE CONTRACT
+     * (plan §22.2 decision 5). `apMappingInvalidation` is keyed on IDENTITY, not
+     * on content: this set has a different `set_id`, so a consumer must refuse
+     * the 24 references under it. Deliberately conservative — a refused
+     * debug-teleport is the safe failure, and widening the vocabulary to say
+     * "same content, different id" would put a second authority beside the
+     * stamp. The one thing owed to the reader is the sentence below.
+     */
+    say(`  ⚠ this set reproduces the vanilla rooms BY VALUE — derived_from names `
+        + `${set.provenance.derived_from.set_id}, and those 24 references still describe its `
+        + 'rooms until one is EDITED. The status is per identity, not per content.');
+}
 
 if (OUT_DIR) {
     const dir = resolve(OUT_DIR);
