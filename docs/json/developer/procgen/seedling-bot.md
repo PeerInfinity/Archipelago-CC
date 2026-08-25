@@ -14450,3 +14450,78 @@ with every blocked producer's reason joined together. The second defect is
 recorded and deferred: the recording stage selects the tapes whose BOOT moved,
 which silently omits the first moved walk in each chain, and its only honest
 witness is the live re-record that has not happened yet.
+
+⛓⛓ R9 slice 12e″ made the ordering the model's and then asked the game about
+it. The correction is one sentence long: a sword dash's direction is the
+velocity the item routine reads, and the item routine runs below the movement
+arms, so the setter that decides *whether* a press dashes cannot know *which
+way* it dashes. The setter now names the magnitude and refuses the direction
+outright, and the direction is resolved at the single place the tick's
+post-key velocity exists — the spend site inside the step, where the game
+itself resolves it. The velocity arguments were removed from the setter and
+from the policy's forecast, so the stale reading is no longer merely unused;
+it cannot be spelled. The knockback primitive moved down a rung to sit beside
+the spend site, re-exported under its old name so nothing that imported it had
+to change, and the docblock sentence that said a dash pressed at rest moves the
+player by nothing at all was rewritten, because it was true of the formula and
+false of the tick.
+
+⛓ The acceptance number was already on disk. The previous slice's driven run
+had left both the provisional tape and the game's own recorded stream in the
+replay cache, so the comparison cost no browser at all: a hundred and
+fifty-two model ticks against a hundred and fifty-two game ticks, identical
+tick for tick from the first to the hundred and forty-first, and both sides
+reporting no level transition whatsoever. The corrected model walks the game's
+own pixels — two point eight where it used to buy nought point eight, then
+forty-five, fifty-one, sixty-eight, eighty point six — and then walks into
+water at exactly the pixel the game walked into water at. The plan was never a
+walk, and now the model says so too.
+
+⛔ The certification had the same defect from the other side and it needed
+naming separately. The policy prices the nine pixels a dash adds along the
+impulse's direction; handed a direction resolved from the pre-key velocity it
+answered *"carries the player nowhere"* for a dash from a standstill and
+certified ground it had never looked at. It now resolves the direction the same
+way the step does, from the walk's own keys, and it refuses by name when the
+player is not on dry flat ground — where the speed and friction the tick will
+run at are chosen from a swim channel this side cannot read, and where the
+dash's own nine-pixel decay was already the wrong arithmetic. That refusal is
+new reach, and it fired zero times across all five producers, so it closed a
+latent hole without moving a single measured row.
+
+⛓ The witness the user licensed asks the game two questions one key apart,
+both from a dead stop with the sword: a dash with the direction key starting on
+that same tick, and — after a derived coast back to a genuine standstill — a
+dash with no direction key at all. A model reading the pre-key velocity pays
+nothing for both; a model that has broken the zero-length no-op pays for both;
+only the game separates them. The model's whole per-tick column was committed
+before the drive, and the game reproduced every digit of it: two point eight
+for the first press, then the impulse's own quarter-pixel-a-tick decay with the
+key already released, and nothing at all for the second. So the no-op is now
+confirmed rather than merely preserved — the game is inert in exactly the case
+that has no key, and the correction narrowed the no-op to it.
+
+⛓ The roster is untouched, and the proof is a difference rather than a
+classification. Both builds were loaded side by side and all one hundred and
+forty-eight committed tapes replayed through each: the streams are identical,
+tick for tick, with no tape's reachability changed. Classifying presses by
+whether they were "at rest" would have been a claim about what a press is
+called; the fix changes a direction, and a diagonal press at speed can
+re-quantise across the knockback guards without ever being at rest. The census
+that rides along explains the zero rather than establishing it — a hundred and
+sixty-three sword presses on the roster, of which four are dashes and all four
+are taken by a moving player, on the only two tapes that reach the dash arm at
+all.
+
+⛓ With the model corrected the licensed table was re-measured, and it moved
+less than the mechanism suggested it would. Six of thirteen rows changed. The
+two rows that had actually been driven clean did not move at all, which is the
+sharpest confirmation available that the correction reaches only what it should.
+Three rooms cost one tick more, because a chain opened from a standstill now
+pays for its first dash where it used to get it free. One room lost fifteen
+ticks and another five, because a dash the old arithmetic pointed at a body it
+was not in fact carried toward is a dash the planner can now take. The
+campaign chain is two ticks shorter than the superseded column and the other
+chain twelve longer. Every one of those numbers is still the model's own word:
+the byte check re-solves each segment from its committed boot and never drives
+it, and only the recording pass will let the game answer.
