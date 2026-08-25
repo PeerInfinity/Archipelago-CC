@@ -1708,6 +1708,121 @@ try {
         + 'whose value survived an undo would be a page disagreeing with its own document',
         `${setUndone.edit.set.edits} edit(s), name "${nameBack}"`);
 
+    /* ══ CLAIM 24b — WHICH SESSION `Ctrl+Z` HITS IS THE DOM'S FOCUS ══ */
+
+    /**
+     * ⛓⛓⛓ **§20.11 #2's OTHER HALF, PINNED.** Two sessions live on this page and
+     * ONE key means undo. The router is the DOM's own focus: the strip's view
+     * binds its keys to the STRIP CANVAS and the room editor's binds its own to
+     * the document, and a keydown STOPPER on the strip is what keeps one press
+     * from reaching two undo rows.
+     *
+     * ⛔ MUTANT: the stopper is removed. The press then runs BOTH rows and the
+     * two counts fall together — which is exactly what this row measures, and
+     * which no readout on the page would otherwise report.
+     */
+    await page.selectOption('#editSetRoom', '1');
+    await page.click('#editSetOpen');
+    await page.waitForFunction(() => window.__editorEdit?.baseKind === 'set-room', null,
+        { timeout: 60000 });
+    const undoPaint = (() => {
+        const rec = parseOelLevel(D2_SET.rooms[1].source.xml, 'room 1');
+        const b = adapter.bounds(rec);
+        for (let y = 1; y < b.h - 1; y += 1) {
+            for (let x = 1; x < b.w - 1; x += 1) {
+                const c = adapter.readCell(rec, x, y);
+                if (!c.tile || c.entities.length > 0) continue;
+                const want = TERRAIN_NAMES.find(
+                    (n) => columnOfSpec(n, 'tiles', 'arm-d2') !== c.tile.column);
+                if (want) return { cell: { tx: x, ty: y }, terrain: want };
+            }
+        }
+        return null;
+    })();
+    await page.selectOption('#genEditTool', 'paint');
+    await page.selectOption('#genEditLayer', 'tiles');
+    await page.selectOption('#genEditTerrain', undoPaint?.terrain ?? PAINT_TERRAIN);
+    await clickCell(undoPaint?.cell ?? { tx: 1, ty: 1 });
+    await page.waitForTimeout(500);
+    const twoSessions = await setRead();
+    check(twoSessions.edit.edits > 0 && twoSessions.edit.set.edits > 0,
+        '⛓ BOTH sessions hold at least one op, so the two rows below can tell them apart',
+        `room ${twoSessions.edit.edits} · set ${twoSessions.edit.set.edits}`);
+    check(/Ctrl\+Z here hits the/.test(twoSessions.identity),
+        '⛓ …and the identity line SAYS which session an undo will hit, rather than leaving a '
+        + 'person to press and find out', twoSessions.identity.slice(-90));
+
+    const setOpsBefore = twoSessions.edit.set.edits;
+    const roomOpsBefore = twoSessions.edit.edits;
+    await page.evaluate(() => document.getElementById('editSetOverview').focus());
+    await page.keyboard.press('Control+z');
+    await page.waitForTimeout(500);
+    const afterStripUndo = await setRead();
+    check(afterStripUndo.edit.set.edits === setOpsBefore - 1
+        && afterStripUndo.edit.edits === roomOpsBefore,
+        '⛓⛓⛓ **WITH THE STRIP FOCUSED, `Ctrl+Z` UNDOES THE **SET** SESSION AND LEAVES THE ROOM '
+        + 'ALONE** — one press, one session, and the DOM\'s own focus is the router',
+        `set ${setOpsBefore} → ${afterStripUndo.edit.set.edits}, room ${roomOpsBefore} → `
+        + `${afterStripUndo.edit.edits}`);
+
+    await page.evaluate(() => document.body.focus());
+    await page.keyboard.press('Control+z');
+    await page.waitForTimeout(500);
+    const afterRoomUndo = await setRead();
+    check(afterRoomUndo.edit.edits === roomOpsBefore - 1
+        && afterRoomUndo.edit.set.edits === afterStripUndo.edit.set.edits,
+        '⛓⛓⛓ **AND ANYWHERE ELSE IT UNDOES THE ROOM** — the set is untouched. ⛔ Without the '
+        + 'strip\'s keydown STOPPER a press on the strip would bubble to the document and BOTH '
+        + 'rows would run, and the two counts would fall together',
+        `room ${roomOpsBefore} → ${afterRoomUndo.edit.edits}, set `
+        + `${afterStripUndo.edit.set.edits} → ${afterRoomUndo.edit.set.edits}`);
+
+    /* ══ CLAIM 24c — `mark-location` FROM THE FORM ═════════════════ */
+
+    /**
+     * ⛓⛓⛓ **CLOSING A ROOM SESSION THAT HOLDS NO OPS ADDS NO SET OP.** The undo
+     * above took the room's only edit back, so the write-back is a
+     * `replace-room-xml` with the SAME bytes — and the core's own law (a click
+     * that changed nothing is not an edit) drops it. A page that recorded one
+     * anyway would put an edit in the payload for a room nobody changed.
+     */
+    const beforeClose = await setRead();
+    check(beforeClose.edit.edits === 0 && beforeClose.edit.set.edits > 0,
+        '⛓ the room session is back to ZERO ops, which is what makes the close below a no-op',
+        `room ${beforeClose.edit.edits} · set ${beforeClose.edit.set.edits}`);
+    await page.click('#editRoomClose');
+    await page.waitForTimeout(500);
+    const afterClose = await setRead();
+    check(afterClose.edit.set.edits === beforeClose.edit.set.edits,
+        '⛓⛓⛓ **AND THE SET OP LIST DID NOT GROW** — N room edits become ONE `replace-room-xml`, '
+        + 'and ZERO room edits become NONE', `${beforeClose.edit.set.edits} → `
+        + `${afterClose.edit.set.edits}`);
+    await page.selectOption('#editSetRoom', '2');
+    await page.waitForTimeout(300);
+    const entityOpts = await page.evaluate(() => [
+        ...document.getElementById('editSetLocEntity').options].map((o) => o.value));
+    const nodeEntities = (parseOelLevel(D2_SET.rooms[2].source.xml, 'room 2').entities ?? [])
+        .map((e) => JSON.stringify({ type: e.type, x: e.x, y: e.y }));
+    check(entityOpts.length > 0 && json(entityOpts) === json(nodeEntities),
+        '⛓⛓ **THE LOCATION FORM OFFERS THE ROOM\'S OWN BODIES, READ OUT OF ITS OEL** — the '
+        + 'same list node\'s parser produces, in the same order. `mark-location` refuses an '
+        + 'entity the room does not hold at exactly those pixels, so a list from anywhere else '
+        + 'would be offering choices the op rejects', `${entityOpts.length} entity(ies)`);
+    const locBefore = (await setRead()).edit.set.locations;
+    await page.selectOption('#editSetLocEntity', entityOpts[entityOpts.length - 1]);
+    await page.fill('#editSetLocName', 'A Row-Marked Chest');
+    await page.fill('#editSetLocItem', 'Progressive Sword');
+    await page.click('#editSetMarkLocation');
+    await page.waitForTimeout(500);
+    const marked = await setRead();
+    check(marked.edit.set.locations === locBefore + 1,
+        '⛓⛓ …and MARK lands one location in the OVERLAY — the third document growing by a '
+        + 'press, which is the only thing the REPORT\'s location count can see',
+        `${locBefore} → ${marked.edit.set.locations}`);
+    check(marked.ruleTargets.some((t) => t === 'loc:A Row-Marked Chest'),
+        '⛓ …and it becomes a RULE TARGET immediately, because the targets are re-derived on '
+        + 'every applied op', json(marked.ruleTargets.filter((t) => t.startsWith('loc:'))));
+
     /* ══ CLAIM 25 — THE REPORT, AND THE REFUSAL BEFORE EXPORT ══════ */
 
     await page.click('#editSetReport');

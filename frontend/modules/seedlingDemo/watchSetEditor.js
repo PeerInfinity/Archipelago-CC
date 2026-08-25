@@ -1603,11 +1603,31 @@ export function mountWatchSetEditor({
         });
     });
 
+    /**
+     * ⛔ **THE ENTITY IS PARSED BEHIND A GUARD.** `JSON.parse('')` THROWS, and an
+     * empty `<select>` is exactly what a room with no bodies gives — so a press
+     * with nothing selected would have thrown out of the handler before
+     * `applySet` could turn anything into a refusal. Named here rather than
+     * left to the disabled attribute, which is a hint and not a gate.
+     */
     on('editSetMarkLocation', () => {
+        const raw = $('editSetLocEntity')?.value ?? '';
+        if (raw === '') {
+            setNote('⛔ pick an ENTITY first — `mark-location` names a body the room holds at '
+                + 'exactly those pixels, and this room offers none', true);
+            return;
+        }
+        let entity;
+        try {
+            entity = JSON.parse(raw);
+        } catch (e) {
+            setNote(`⛔ the entity could not be read — ${e.message}`, true);
+            return;
+        }
         applySet({
             op: 'mark-location',
             room: selected,
-            entity: JSON.parse($('editSetLocEntity')?.value ?? 'null'),
+            entity,
             name: $('editSetLocName')?.value ?? '',
             vanilla_item: $('editSetLocItem')?.value ?? '',
         });
