@@ -1301,21 +1301,31 @@ export function exitsOfRoom(record, room) {
     return doc.exits.map((ex, index) => ({ index, ...ex }));
 }
 
-/** Which rooms carry a transition INTO `room` — D2's "what links here". */
+/**
+ * Which rooms carry a transition INTO `room` — D2's "what links here".
+ *
+ * ⛔ **A ROOM THIS CANNOT READ IS NAMED, NOT SKIPPED.** An `embed`-sourced
+ * room's exits are invisible here, and a readout that quietly reported "nothing
+ * links here" over a set holding one would be a floor presented as a fact —
+ * `reachabilityOf`'s `rooms_not_walked` exists for the same reason.
+ *
+ * @returns {{links: object[], unreadable: number[]}}
+ */
 export function whatLinksHere(record, room) {
-    const out = [];
+    const links = [];
+    const unreadable = [];
     (record.set.rooms ?? []).forEach((r, from) => {
         const xml = r?.source?.xml;
-        if (typeof xml !== 'string') return;
+        if (typeof xml !== 'string') { unreadable.push(from); return; }
         const doc = parseRoomXml(xml);
         doc.exits.forEach((ex, index) => {
-            if (ex.to === room) out.push({ from, kind: 'exit', index, element: ex.element });
+            if (ex.to === room) links.push({ from, kind: 'exit', index, element: ex.element });
         });
         doc.fallthroughs.forEach((f, index) => {
-            if (f.to === room) out.push({ from, kind: 'fallthrough', index, element: f.element });
+            if (f.to === room) links.push({ from, kind: 'fallthrough', index, element: f.element });
         });
     });
-    return out;
+    return { links, unreadable };
 }
 
 /** ⛓ Re-exported so a caller reads the rule-target vocabulary off the adapter's

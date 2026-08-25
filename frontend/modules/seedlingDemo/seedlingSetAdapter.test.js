@@ -1149,19 +1149,38 @@ describe('the `set` base resolves both halves, or refuses BY NAME', () => {
 describe('"what links here" and the room exit list — what D2\'s DOM will read', () => {
     it('names every transition INTO a room, exits and fallthroughs alike', () => {
         const record = baseRecord();
-        expect(whatLinksHere(record, 3)).toEqual([
-            { from: 2, kind: 'exit', index: 1, element: 'teleporter' },
-            { from: 4, kind: 'exit', index: 0, element: 'teleporter' },
-        ]);
+        expect(whatLinksHere(record, 3)).toEqual({
+            links: [
+                { from: 2, kind: 'exit', index: 1, element: 'teleporter' },
+                { from: 4, kind: 'exit', index: 0, element: 'teleporter' },
+            ],
+            unreadable: [],
+        });
         const pit = setRecord(buildLevelSet([
             { ...emptyLevel({ level: 0 }),
                 entities: [...(emptyLevel({ level: 0 }).entities ?? []),
                     { type: 'control', x: 0, y: 0, attrs: { fallthrough: 1, xOff: 0, yOff: 0, sign: 0 } }] },
             emptyLevel({ level: 1 }),
         ], { setId: 'links-pit', link: true }).set);
-        expect(whatLinksHere(pit, 1)).toContainEqual(
+        expect(whatLinksHere(pit, 1).links).toContainEqual(
             { from: 0, kind: 'fallthrough', index: 0, element: 'control' },
         );
+    });
+
+    /**
+     * ⛔ AN `embed`-SOURCED ROOM IS NAMED, NOT SKIPPED. A readout that reported
+     * "nothing links here" over a set holding one would be a floor presented as
+     * a fact — the same reason `reachabilityOf` carries `rooms_not_walked`.
+     */
+    it('names the rooms whose links it could NOT read', () => {
+        const set = generatedSet(3);
+        const record = setRecord({
+            ...set,
+            rooms: set.rooms.map((r, i) => (i === 2 ? { ...r, source: { embed: 'levels/X.oel' } } : r)),
+        });
+        const out = whatLinksHere(record, 1);
+        expect(out.unreadable).toEqual([2]);
+        expect(out.links.map((l) => l.from)).toEqual([0]);
     });
 
     it('the exit list carries the ordinal `connect` and `disconnect` address by', () => {
