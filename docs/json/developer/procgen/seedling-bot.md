@@ -14392,3 +14392,61 @@ branch reaches exactly the number it reached before. The rescue was real and it
 was also redundant. The same shape lives on in the key-lock executor, whose
 mechanism probes a line beneath itself, but there the two rules give the same
 answer with fifteen pixels to spare, so it is a tidy-up rather than a defect.
+
+⛔ R9 slice 12e′ set out to record the re-record that all of this was building
+toward, and stopped instead. The offline half went exactly as forecast: with
+the flip on and both economies applied, every one of the ten committed walks
+the licence named re-solved to the tick the table predicted. Then the pipeline
+asked the game, and the game disagreed about one of them. The return leg
+through the rock room solves in a hundred and fifty-one ticks in the model and
+ends in the next room; driven, it ends in the room it started in, twenty-five
+pixels short of the exit and still moving. The producer refused to author the
+next segment from an arrival that is not calm, which is the refusal working
+exactly as intended, and re-driving the identical bytes from the primary tree
+reproduced the disagreement digit for digit.
+
+⛓ The parting is one tick wide and its cause is an ordering inside that tick.
+The sword dash shoves the player along their own velocity, and the game reaches
+it from inside the input routine, after the movement keys have already written
+that velocity for the tick. The model asks for the impulse using the velocity
+the player had ENTERING the tick. Whenever the player was already moving the
+two agree, which is every dash on the committed roster — and they part exactly
+when a dash press lands from a standstill with a direction key starting on the
+same tick, because a shove along a velocity of zero is a shove of nothing. Over
+twenty-two presses in three driven tapes, the model and the game agree to a
+hundredth of a pixel on every one except the two that have that shape, and
+there the game pays the dash's full two pixels where the model pays none.
+
+⛓ Correcting the ordering in a scratch build makes the model reproduce the
+game tick for tick for a hundred and forty-two ticks, which is where the walk
+enters water and a sound-dependent swim term takes over. That build also
+agrees the walk never reaches the next room at all: the plan was priced by a
+model that under-pays a dash taken from rest, and the six pixels it did not
+know about carry the player somewhere the exit is not. So the number was a
+plan and never a walk, and the whole licensed table has to be re-measured on a
+corrected model before any of it is recorded. Nothing was written; the flip is
+still off; the two economies are still on a local branch.
+
+⛔ The wider lesson is about what the earlier columns were evidence of. A
+producer's byte check re-solves each segment from its COMMITTED boot, so it can
+compare a new walk against an old one but never drive it; only the authoring
+path drives the provisional artifact. Every "zero hits, calm arrival" recorded
+for the new walks in the preceding slices was therefore the model agreeing with
+itself. Three of the twelve have now been asked of the game and one of the
+three fails, which is a better basis for the next attempt than a full table
+nobody had driven.
+
+⛓ Two instrument defects surfaced on the way and one of them is fixed. The
+pipeline's walk accounting claimed every chain segment was accounted for, and
+it was total over the chains it enumerated rather than over the chains that
+exist: a one-segment chain has no boundary whose boot needs re-deriving, which
+is a good reason to leave it out of one list and no reason at all to leave it
+out of the other. A segment living in such a chain had its walk move reported
+by its own producer and dropped on the floor, surfacing only much later as a
+red byte check. The accounting now covers every chain, deduplicated so a
+segment two chains name is still counted once, and a segment nobody can measure
+is named with the reason belonging to the producer IT nominated rather than
+with every blocked producer's reason joined together. The second defect is
+recorded and deferred: the recording stage selects the tapes whose BOOT moved,
+which silently omits the first moved walk in each chain, and its only honest
+witness is the live re-record that has not happened yet.
