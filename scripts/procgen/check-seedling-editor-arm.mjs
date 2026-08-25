@@ -70,6 +70,17 @@
  *     committed VANILLA set.
  * 20. **THE PASTE FILTER'S OPTIONS ARE DERIVED** from the descriptor.
  *
+ * ── SLICE E1 — the REAL 116 ───────────────────────────────────────────
+ *
+ * 27. **`#editLoadVanilla` BUILDS THE VANILLA 116 AS `xml`, FETCHING NOTHING** —
+ *     the same `vanillaXmlSet` node calls, so the two `set_id`s agreeing IS the
+ *     byte proof; 116 openable rooms; the links column `(bounded)` (§21.4 on the
+ *     corpus it was sized for) with the arrows still drawn; the REPORT's verdict
+ *     on the real game (every edge FREE, `level_58` UNREACHABLE, the rules.json
+ *     export REFUSED); §21.2's inert rule on a real arrival endpoint; and
+ *     OPEN · PAINT · CLOSE · DOWNLOAD with `derived_from` surviving the
+ *     re-stamp.
+ *
  * Run: node scripts/procgen/check-seedling-editor-arm.mjs
  *      node scripts/procgen/check-seedling-editor-arm.mjs --host=http://localhost:8000
  */
@@ -102,7 +113,7 @@ const {
 const {
     ROOM_FLAG_TAGS, ROOM_GEOMETRY_BOSSES, flagModelReach, roomFlagsIn,
 } = await M('watchEdit.js');
-const { buildLevelSet } = await M('levelSetExporter.js');
+const { buildLevelSet, vanillaXmlSet } = await M('levelSetExporter.js');
 const { parseRoomXml, validateLevelSet } = await M('levelSetValidator.js');
 const { emptyLevel } = await M('procgenLevel.js');
 const { recordToOel } = await M('procgenLevelOel.js');
@@ -111,7 +122,10 @@ const {
     createSeedlingSetAdapter, createSetSession, exitsOfRoom, rulesJsonOf, setRecord,
     whatLinksHere,
 } = await M('seedlingSetAdapter.js');
-const { reportOf, roomRowsOf } = await M('watchSetEditor.js');
+const {
+    OVERVIEW, exitArrowShapes, freeEdgesOf, linkScanBound, reportOf, roomRowsOf,
+} = await M('watchSetEditor.js');
+const { emptyOverlay } = await M('seedlingSetOverlay.js');
 const { tileTypeForPlacement } = await import(
     join(REPO, 'frontend/modules/flashPanel/seedlingSemantics.js'));
 const { loadRulesSchema } = await import(
@@ -470,19 +484,114 @@ const D2_OVERLAY = {
 
 /** ⛓ NODE'S OWN SET SESSION, so every value claim below is against a fold this
  *  file performed rather than against the page's echo (trap 269). */
-const setAdapter = createSeedlingSetAdapter({
+const SET_DEPS = {
     parseOel: parseOelLevel,
     tileSize: TILE_SIZE,
     tileTypeForPlacement,
     rulesSchema: loadRulesSchema(),
     atlas: { game: 'seedling-watch-edit', mapDocument: 'watch.html set editor' },
-});
+};
+const setAdapter = createSeedlingSetAdapter(SET_DEPS);
 const nodeSetSession = () => createSetSession(setAdapter,
     setRecord(D2_SET, D2_OVERLAY), { base: { kind: 'set', set_id: D2_SET.set_id } });
 const D2_ROWS = roomRowsOf(setRecord(D2_SET, D2_OVERLAY));
 check(D2_ROWS.length === D2_ROOMS && D2_ROWS.reduce((n, r) => n + r.exits, 0) > 0,
     '⛓ node\'s own rooms list for that set — the page\'s table is compared against THIS, '
     + 'never against itself', `${D2_ROWS.map((r) => `${r.index}:${r.exits}/${r.linkedFrom}`).join(' ')}`);
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ EDITOR v3 E1 — **THE REAL 116, AS NODE'S OWN ANSWER.** Everything
+ * above this line is a set node BUILT for the row; claim 27 drives the
+ * VANILLA rooms, and every number it checks the page against is computed
+ * here first (trap 269). `vanillaXmlSet` is the SAME function the page's
+ * button calls, which is what makes comparing the two `set_id`s a byte
+ * proof rather than a coincidence.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+const VANILLA_XML = vanillaXmlSet(VANILLA, ATLAS).set;
+check(VANILLA_XML.rooms.length === 116
+    && VANILLA_XML.rooms.every((r) => typeof r.source?.xml === 'string')
+    && VANILLA_XML.set_id.startsWith('seedling-vanilla-xml-')
+    && VANILLA_XML.provenance.derived_from.set_id === VANILLA.set_id,
+    '⛓⛓ node\'s own xml-sourced VANILLA set — 116 rooms, every one `xml`, an id that cannot '
+    + 'be mistaken for the committed set\'s, and `derived_from` naming it',
+    `${VANILLA.set_id} → ${VANILLA_XML.set_id}`);
+const VANILLA_XML_RECORD = setRecord(VANILLA_XML, emptyOverlay());
+const VANILLA_XML_SCAN = linkScanBound(VANILLA_XML_RECORD);
+const VANILLA_XML_ROWS = roomRowsOf(VANILLA_XML_RECORD, { links: VANILLA_XML_SCAN.ok });
+const VANILLA_XML_ARROWS = exitArrowShapes(VANILLA_XML_ROWS).length;
+check(VANILLA_XML_SCAN.ok === false && VANILLA_XML_ROWS.length === 116
+    && VANILLA_XML_ROWS.every((r) => r.linkedFrom === null && r.openable)
+    && VANILLA_XML_ARROWS > 100,
+    `⛓⛓ …and §21.4's LINK-SCAN BOUND BITES at 116 rooms — ${Math.round(VANILLA_XML_SCAN.kb)} KB `
+    + `of parsing, ≈ ${Math.round(VANILLA_XML_SCAN.ms)} ms against a 250 ms budget — so the `
+    + 'column is `(bounded)` while every room is still OPENABLE and the arrows are still built '
+    + '(ONE pass over the set, not n of them)',
+    `${VANILLA_XML_ARROWS} arrow shape(s)`);
+const VANILLA_XML_SESSION = createSetSession(setAdapter, VANILLA_XML_RECORD,
+    { base: { kind: 'set', set_id: VANILLA_XML.set_id } });
+const VANILLA_XML_REPORT = reportOf(VANILLA_XML_SESSION, SET_DEPS,
+    { compileRegionAtlas, validateRegionAtlas });
+const VANILLA_XML_FREE = freeEdgesOf(VANILLA_XML_REPORT.rules);
+check(VANILLA_XML_FREE.length > 0 && VANILLA_XML_REPORT.download.rules.allowed === false,
+    '⛓⛓⛓ …and node\'s REPORT over the real game: every compiled edge FREE (vanilla opens with '
+    + 'an EMPTY overlay — the playthrough\'s own "vanilla overlay" is CODE, not a document) and '
+    + 'the rules.json export REFUSED. ⛔ The free COUNT is `freeEdgesOf(rules)`, never a '
+    + 'literal: a typed number would pass over a one-room set too',
+    `${VANILLA_XML_FREE.length} free edge(s) — ${VANILLA_XML_REPORT.download.rules.why?.slice(0, 90)}`);
+/**
+ * ⛔ **AND THE MUTANT FOR "THE COUNT WAS TYPED" IS MEASURED HERE**, not
+ * described: the same `freeEdgesOf` over the 6-room D2 set gives a different
+ * number, so a claim 27 that carried a literal 319 would pass on vanilla and go
+ * red the moment anybody pointed it at another document. ⛓ The JOIN-BY-INDEX
+ * mutant is `levelSetExporter.test.js`'s ("is unmoved by the ORDER of the map's
+ * levels", the permuted map) and is not repeated in a browser.
+ */
+const D2_FREE = freeEdgesOf(reportOf(nodeSetSession(), SET_DEPS,
+    { compileRegionAtlas, validateRegionAtlas }).rules);
+check(D2_FREE.length !== VANILLA_XML_FREE.length && D2_FREE.length > 0,
+    '⛓ …and that count really is a function of the SET — the D2 subject\'s is different, so a '
+    + 'hardcoded expectation would be red on one of the two',
+    `vanilla ${VANILLA_XML_FREE.length} vs D2 ${D2_FREE.length}`);
+
+/**
+ * ⛓ THE ARRIVAL ENDPOINT §21.2 IS ABOUT, FOUND ON A REAL ROOM. `in_*` is what
+ * the derivation calls the far end of a one-way jump, and every Seedling
+ * connection is one-way — so the compiler builds NO AP exit for it and a rule
+ * authored there gates nothing. ⛔ The atlas is derived ONCE and searched, not
+ * re-derived per room: `ruleTargetsOf` builds the whole atlas per call.
+ */
+const VANILLA_INERT = (() => {
+    const region = (VANILLA_XML_REPORT.atlas.regions ?? [])
+        .find((r) => (r.exits ?? []).some((e) => e.exit_id.startsWith('in_')));
+    if (!region) return null;
+    const exit = region.exits.find((e) => e.exit_id.startsWith('in_'));
+    return { room: region.map_ref, exitId: exit.exit_id, target: `exit:${exit.exit_id}` };
+})();
+check(VANILLA_INERT !== null,
+    '⛓ …and a VANILLA room whose derived exits include an ARRIVAL endpoint — §21.2\'s subject '
+    + 'on real data rather than on a set built to have one', json(VANILLA_INERT));
+
+/** ⛓ The room claim 27 OPENS, and a paint cell measured inside it (trap 235). */
+const VANILLA_OPEN_ROOM = LEVEL;
+const VANILLA_PAINT = (() => {
+    const room = parseOelLevel(VANILLA_XML.rooms[VANILLA_OPEN_ROOM].source.xml,
+        `vanilla room ${VANILLA_OPEN_ROOM}`);
+    const b = adapter.bounds(room);
+    for (let y = 1; y < b.h - 1; y += 1) {
+        for (let x = 1; x < b.w - 1; x += 1) {
+            const c = adapter.readCell(room, x, y);
+            if (c.tile && c.tile.column !== PAINT_COLUMN && c.entities.length === 0) {
+                return { tx: x, ty: y };
+            }
+        }
+    }
+    return null;
+})();
+check(VANILLA_PAINT !== null,
+    `⛓ …and room ${VANILLA_OPEN_ROOM} of it holds a cell whose column is not the one about to `
+    + 'be painted, so claim 27\'s edit is a real change and not a NO-OP the row would hang on',
+    json(VANILLA_PAINT));
 
 /** ⛓ A CLIFFSIDE COLUMN and a NON-TERRAIN tile column, both derived. */
 const CLIFF_COLUMN = 0;
@@ -2068,6 +2177,233 @@ try {
         '⛓⛓⛓ …and the BUILD really produces a whole-set chunk plan with NO EXPECTATION and '
         + 'the reason attached — nobody has walked this set, so an `expect` would be a claim '
         + 'about a run nobody made', json(chunkPlan));
+
+    /* ══ CLAIM 27 — THE VANILLA 116, THROUGH THE PAGE'S OWN DOOR ═══ */
+
+    /**
+     * ⛓⛓⛓ **EDITOR v3 E1 — THE FIRST TIME THIS ARM DRIVES REAL DATA.** Every
+     * claim above uses a set node BUILT for the row, because the committed
+     * vanilla set is 116 `embed`-sourced rooms and claim 19 is the proof they
+     * cannot be opened. `#editLoadVanilla` derives the same 116 as an `xml` set
+     * from two documents the page already holds, and the checks below are what
+     * that is worth: a set nobody wrote for this file, 116 openable rooms, and
+     * the REPORT's verdict on the real game.
+     */
+    await load(`source=edit&level=${LEVEL}`);
+    /**
+     * ⛔ **THE MUTANT IS ARMED BEFORE THE CLICK, NOT ASSERTED AFTER IT.** The
+     * button's whole shape is *"no new URL and no second fetch"* — both inputs
+     * are already in scope — so the row COUNTS REQUESTS across the press. A
+     * build that re-fetched either document would pass every other check here.
+     */
+    const vanillaReqs = [];
+    const onVanillaReq = (r) => vanillaReqs.push(r.url());
+    page.on('request', onVanillaReq);
+    const vanT0 = Date.now();
+    await page.click('#editLoadVanilla');
+    await page.waitForFunction((id) => window.__editorEdit?.set?.set_id === id,
+        VANILLA_XML.set_id, { timeout: 180000 }).catch(() => {});
+    const vanBuildMs = Date.now() - vanT0;
+    page.off('request', onVanillaReq);
+    const van = await setRead();
+    check(van.edit.set?.set_id === VANILLA_XML.set_id && van.edit.set.rooms === 116
+        && van.edit.set.openable === 116,
+        '⛓⛓⛓ **THE PAGE BUILDS THE SAME SET NODE DOES** — 116 rooms, every one OPENABLE, and '
+        + 'the `set_id` is `vanillaXmlSet`\'s own: the SAME FUNCTION ran on both sides, so '
+        + 'comparing the two content hashes IS the byte proof',
+        `${json(van.edit.set)} in ${vanBuildMs} ms`);
+    check(vanillaReqs.filter((u) => /seedling-vanilla-set\.json|seedling-map\.json/.test(u))
+        .length === 0,
+        '⛔⛔ **AND IT FETCHED NEITHER INPUT AGAIN** — the map extract came from `armPrelude`\'s '
+        + 'memoised `loadAtlas` and the manifest from the same `Promise.all` that read ⚖ ruling '
+        + '2\'s id. A second fetch would be a second reader of a document this page has',
+        `${vanillaReqs.length} request(s) across the click: ${vanillaReqs.slice(0, 3).join(' ')}`);
+    check(van.setNote.includes(VANILLA_XML.set_id)
+        && van.setNote.includes(`derived from ${VANILLA.set_id}`),
+        '⛓⛓ **THE IDENTITY LINE SAYS WHICH SET IS HELD, AND WHICH IT REPRODUCES** — two ids '
+        + 'describe one game\'s 116 rooms now, and `provenance.derived_from` is read off the '
+        + 'document rather than matched against anything the page knows',
+        van.setNote.slice(0, 150));
+
+    /**
+     * ⛔ §21.4's BOUND, ON THE CORPUS IT WAS SIZED FOR — 116 × 1,332 KB is
+     * 154,528 KB of parsing, ~7.7 s by the bound's own arithmetic and ~19 s
+     * measured, against a 250 ms budget. The COLUMN reads `(bounded)`, the
+     * sentence says so, and the ARROWS are unaffected because they come from one
+     * pass over the set rather than n of them.
+     */
+    const vanRows = van.rows.slice(1);
+    check(vanRows.length === 116
+        && vanRows.every((r, i) => r[0] === String(i) && r[4] === '(bounded)')
+        && vanRows.every((r, i) => r[3] === String(VANILLA_XML_ROWS[i].exits)),
+        '⛓⛓⛓ **116 ROWS, THE LINKS COLUMN `(bounded)`, AND THE EXIT COUNTS ARE NODE\'S** — the '
+        + 'bound is a MEASUREMENT of §21.4 on real data, not a defect, and every exit count is '
+        + '`exitsOfRoom`\'s own answer for that room',
+        `${vanRows.length} row(s), links column ${json([...new Set(vanRows.map((r) => r[4]))])}`);
+    const boundSaid = await page.evaluate(
+        () => document.getElementById('editSetRooms')?.textContent ?? '');
+    check(/whole-set link scan would parse/.test(boundSaid)
+        && boundSaid.includes(String(Math.round(VANILLA_XML_SCAN.kb)))
+        && /ARROWS are UNAFFECTED/.test(boundSaid),
+        '⛔ …**AND THE PAGE SAYS WHY**, with the number — a blank column for a reason nobody '
+        + 'printed would read as a set in which nothing links anywhere',
+        `${Math.round(VANILLA_XML_SCAN.kb)} KB claimed`);
+    /**
+     * ⛓ THE ARROWS ARE DRAWN — measured as INK in the top band of the strip,
+     * where the arcs live (they rise ABOVE the room cells, §21.3). Node says
+     * there are shapes to draw; this says the canvas has them.
+     */
+    const stripInk = await page.evaluate((roomTop) => {
+        const c = document.getElementById('editSetOverview');
+        if (!c) return null;
+        const ctx = c.getContext('2d');
+        // ⛓ EXACTLY THE BAND ABOVE THE ROOM CELLS — `OVERVIEW.roomTop` is where
+        // they start, passed in rather than guessed, so the ink counted here can
+        // only be the arcs.
+        const band = Math.max(1, Math.floor(c.height * roomTop));
+        const d = ctx.getImageData(0, 0, c.width, band).data;
+        const bg = [d[0], d[1], d[2], d[3]];
+        let ink = 0;
+        for (let i = 0; i < d.length; i += 4) {
+            if (d[i] !== bg[0] || d[i + 1] !== bg[1] || d[i + 2] !== bg[2] || d[i + 3] !== bg[3]) {
+                ink += 1;
+            }
+        }
+        return { ink, w: c.width, h: c.height, band };
+    }, OVERVIEW.roomTop);
+    check(stripInk !== null && stripInk.ink > 0 && VANILLA_XML_ARROWS > 100,
+        '⛓⛓ **THE ARROWS SURVIVE THE BOUND** — the link-scan COLUMN is what was bounded; the '
+        + 'arcs come from each room\'s own exit list, which is ONE pass, and node counts '
+        + `${VANILLA_XML_ARROWS} shapes for this set`, json(stripInk));
+    /**
+     * ⛓ …and the CELL SIZE IS READ OFF THE PAGE'S OWN CANVAS rather than
+     * re-derived from a width this file guessed: `overviewLayout` sets the
+     * canvas to `cellPx × rooms`, so the strip's width divided by 116 IS the
+     * cell size it chose. Below `minStillPx` a cell is a LABELLED BOX (§21.3).
+     */
+    const vanCellPx = stripInk === null ? null : stripInk.w / 116;
+    check(vanCellPx !== null && Number.isInteger(vanCellPx)
+        && vanCellPx < OVERVIEW.minStillPx && vanCellPx >= OVERVIEW.minCellPx,
+        '⛓ …and at 116 cells the strip draws LABELLED BOXES rather than stills — the canvas is '
+        + `${vanCellPx} px per room, under \`OVERVIEW.minStillPx\` (${OVERVIEW.minStillPx}) and `
+        + `at or above \`minCellPx\` (${OVERVIEW.minCellPx}), which is the floor that keeps a `
+        + 'cell clickable', `${stripInk?.w} px / 116 rooms`);
+
+    /* ── the REPORT on the real game ─────────────────────────────── */
+
+    await page.click('#editSetReport');
+    await page.waitForFunction((n) => document.querySelectorAll('#editSetReportOut li').length >= n,
+        VANILLA_XML_REPORT.rows.length, { timeout: 180000 }).catch(() => {});
+    const vanReport = await setRead();
+    const pageFree = vanReport.report.filter((r) => /^\[free\]/.test(r)).length;
+    check(pageFree === VANILLA_XML_FREE.length && pageFree > 0,
+        '⛓⛓⛓ **EVERY EDGE OF VANILLA IS FREE, AND THE COUNT IS DERIVED FROM THE COMPILED '
+        + 'RULES** — not typed here: `freeEdgesOf(rules)` in node over the same set, so a '
+        + 'one-room set moves the expectation with the data (§22.2 bound 1 — the playthrough\'s '
+        + '"vanilla overlay" is CODE, so a set editor opening vanilla has NOTHING authored)',
+        `page ${pageFree}, node ${VANILLA_XML_FREE.length}`);
+    check(vanReport.report.some((r) => /^\[region-atlas\] validateRegionAtlas: ok/.test(r))
+        && vanReport.report.some((r) => /^\[region-atlas\]/.test(r) && /DELIBERATELY UNSTAMPED/.test(r)),
+        '⛓⛓ **THE `region-atlas` SUMMARY ROW IS THERE** — always added, ok or not (§21.8) — and '
+        + 'the permanent unstamped warning is explained beside it rather than left to teach a '
+        + 'reader to skip the warning list',
+        (vanReport.report.find((r) => /^\[region-atlas\]/.test(r)) ?? '').slice(0, 120));
+    check(vanReport.report.some((r) => /^\[reach\]/.test(r) && /level_58/.test(r))
+        && vanReport.rulesDisabled === true
+        && /level_58/.test(vanReport.reportNote),
+        '⛔⛔⛔ **AND THE VANILLA GAME\'S OWN rules.json IS REFUSED — `level_58` IS UNREACHABLE.** '
+        + 'Not a defect in the derivation and not a surprise about the room: the only way into '
+        + 'that room in the real game is a mechanism no walk over the ROOM DATA can see (a boss '
+        + 'that warps you, a debug key, `named_rooms` — `reachabilityOf`\'s own list). D2\'s '
+        + '"refuse before export" doing its job on real data, and the first measurement of what '
+        + 'a vanilla OVERLAY as a document would have to carry',
+        vanReport.reportNote.slice(0, 170));
+
+    /* ── an authored rule on an ARRIVAL endpoint, on REAL rooms ──── */
+
+    await page.selectOption('#editSetRoom', String(VANILLA_INERT.room));
+    await page.waitForTimeout(400);
+    const inertTargets = (await setRead()).ruleTargets;
+    check(inertTargets.includes(VANILLA_INERT.target),
+        `⛓ room ${VANILLA_INERT.room} of the real set offers the ARRIVAL endpoint `
+        + `\`${VANILLA_INERT.target}\` — an \`in_*\` id the derivation gives the room and the `
+        + 'compiler builds NO AP exit for (§21.2)', json(inertTargets.slice(0, 4)));
+    await page.selectOption('#editSetRuleTarget', VANILLA_INERT.target);
+    await page.fill('#editSetRuleJson', '{"rule":"Has","args":{"item":"Sword"}}');
+    await page.dispatchEvent('#editSetRuleJson', 'input');
+    await page.click('#editSetRuleCommit');
+    await page.waitForFunction(() => window.__editorEdit?.set?.edits === 1, null,
+        { timeout: 60000 }).catch(() => {});
+    await page.click('#editSetReport');
+    await page.waitForFunction(() => [...document.querySelectorAll('#editSetReportOut li')]
+        .some((l) => /^\[inert-rule\]/.test(l.textContent)), null, { timeout: 180000 })
+        .catch(() => {});
+    const inertReport = await setRead();
+    check(inertReport.report.some((r) => /^\[inert-rule\]/.test(r) && /REACHES NOTHING/.test(r))
+        && /reach no compiled edge/.test(inertReport.reportNote)
+        && inertReport.reportNote.includes(VANILLA_INERT.exitId)
+        && inertReport.rulesDisabled === true,
+        '⛔⛔ **§21.2 ON REAL DATA** — a rule authored onto an ARRIVAL endpoint of a VANILLA '
+        + 'room reaches nothing, the report NAMES it, and the export refusal lists it beside '
+        + 'the unreachable region rather than reporting only the first condition it found',
+        inertReport.reportNote.slice(0, 200));
+
+    /* ── OPEN · PAINT · CLOSE · DOWNLOAD, on the real 116 ────────── */
+
+    await load(`source=edit&level=${LEVEL}`);
+    await page.click('#editLoadVanilla');
+    await page.waitForFunction((id) => window.__editorEdit?.set?.set_id === id
+        && window.__editorEdit.set.edits === 0, VANILLA_XML.set_id, { timeout: 180000 });
+    await page.selectOption('#editSetRoom', String(VANILLA_OPEN_ROOM));
+    await page.click('#editSetOpen');
+    await page.waitForFunction(() => window.__editorEdit?.baseKind === 'set-room', null,
+        { timeout: 60000 });
+    const vanOpened = await read();
+    check(json(vanOpened.edit.base) === json({
+        kind: 'set-room', set_id: VANILLA_XML.set_id, room: VANILLA_OPEN_ROOM,
+    }),
+        `⛓⛓⛓ **ROOM ${VANILLA_OPEN_ROOM} OF THE REAL GAME OPENS**, through the \`oel\` arm, from `
+        + 'a set whose every room is `xml`-sourced — the thing claim 19 measures as impossible '
+        + 'for the committed `embed` set', json(vanOpened.edit.base));
+    await page.selectOption('#genEditTool', 'paint');
+    await page.selectOption('#genEditLayer', 'tiles');
+    await page.selectOption('#genEditTerrain', PAINT_TERRAIN);
+    await clickCell(VANILLA_PAINT);
+    await settled(1);
+    await page.click('#editRoomClose');
+    await page.waitForFunction(() => window.__editorEdit?.set?.edits === 1, null,
+        { timeout: 60000 }).catch(() => {});
+    const vanClosed = await setRead();
+    check(vanClosed.edit.set?.edits === 1,
+        '⛓⛓ **N ROOM EDITS BECOME ONE `replace-room-xml`** — the same law D1 §20.7 states, on a '
+        + '116-room document', `${vanClosed.edit.set?.edits} set edit(s)`);
+    await page.click('#editDownloadSet');
+    await page.waitForFunction(() => window.__editorSetOut && window.__editorSetOverlayOut,
+        null, { timeout: 60000 });
+    const vanOut = await page.evaluate(() => ({
+        set: window.__editorSetOut,
+        overlay: window.__editorSetOverlayOut,
+        mapping: window.__editorSetMappingOut,
+    }));
+    check(vanOut.set.set_id !== VANILLA_XML.set_id
+        && vanOut.set.set_id.startsWith('seedling-vanilla-xml-')
+        && vanOut.set.set_id.endsWith(`-${vanOut.set.provenance.content_hash}`)
+        && typeof vanOut.overlay.overlay_id === 'string' && vanOut.mapping !== null,
+        '⛓⛓⛓ **THREE BLOBS, ONE STAMP, AND THE BASE SURVIVES THE RE-STAMP** — an edited set is '
+        + 'a different set by construction, and `stampLevelSetIdentity` rebuilds the id around '
+        + 'the SAME base, so the new id still cannot be mistaken for the embed set\'s',
+        `${VANILLA_XML.set_id} → ${vanOut.set.set_id}`);
+    check(vanOut.set.provenance?.derived_from?.set_id === VANILLA.set_id
+        && vanOut.set.provenance.derived_from.content_hash === VANILLA.provenance.content_hash,
+        '⛔⛔ **AND `derived_from` SURVIVES THE DOWNLOAD PATH** — the re-stamp rewrites `set_id` '
+        + 'and `provenance.content_hash` and must touch nothing else: a download that dropped '
+        + 'it would hand somebody 116 rooms with no way to say which vanilla they are',
+        json(vanOut.set.provenance.derived_from));
+    check(validateLevelSet(vanOut.set).ok
+        && vanOut.set.rooms.length === 116
+        && vanOut.set.rooms.every((r) => typeof r.source?.xml === 'string'),
+        '⛓ …and node validates what the page wrote — 116 `xml` rooms, still',
+        json(validateLevelSet(vanOut.set).errors));
 
     /* ══ CLAIM 10 — no edit reaches a URL, in either arm ═══════════ */
 
