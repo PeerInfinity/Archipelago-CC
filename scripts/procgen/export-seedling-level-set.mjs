@@ -82,6 +82,15 @@ const { validateLevelSet, planLevelSetChunks } = await M('levelSetValidator.js')
 // the 976 KB read; a `join(REPO, …)` here would be a second address for one file.
 const { loadAtlas, ATLAS_PATH } = await M('levelSource.js');
 /**
+ * ⛓ EDITOR v3 E1c — the BUNDLE writer and the vendored JSZip. ⛔ Both are the
+ * ONES the page uses: `documentBundle` is the container's only implementation,
+ * and `loadJSZipNode` evaluates the same vendored UMD the browser injects.
+ */
+const {
+    DEFAULT_RULES_JSON_INDENT, writeBundle,
+} = await import(join(REPO, 'frontend/modules/presets/documentBundle.js'));
+const { loadJSZipNode } = await import(join(REPO, 'scripts/procgen/loadJSZipNode.mjs'));
+/**
  * The vanilla manifest. ⚠ DEFINED ONCE, HERE, because nothing exports it: the
  * five scripts that read it each `join(REPO, …)` their own copy of this string
  * (`check-seedling-vanilla-manifest.mjs:111`, `check-seedling-save-stamp.mjs:69`,
@@ -161,6 +170,34 @@ const EXITS = arg('exits', 'chain');
 // room -> region (1..7), e.g. `--regions=1,1,1,2,2,2`. Empty means no set announces
 // anything, which is reported rather than defaulted (see `linkGeneratedRooms`).
 const REGIONS = arg('regions', '').split(',').filter(Boolean).map(Number);
+
+/**
+ * ⛓⛓⛓ **EDITOR v3 E1c — `--bundle` AND `--minify`** (plan §25).
+ *
+ * `--bundle` writes ONE `<set_id>.zip` BESIDE the plain files, never instead of
+ * them: the single documents stay canonical and this script's `--out-dir` is
+ * what `levelSetExporter.test.js` reads. Its members are the set and its
+ * `.ap-invalidation.json`… ⛔ and NOT the `.chunks.json`, which is DELIVERY
+ * (§24.12) and is refused BY NAME by `readBundle` if anybody puts one in.
+ *
+ * ⛔ **STDOUT IS UNCHANGED BY EITHER FLAG** — it is the determinism channel, and
+ * a report that grew a line when a file was written would make
+ * `--seeds=1-4 > a; … > b; cmp a b` a proof about the flags rather than the
+ * generator. What they change is what lands in `--out-dir`.
+ *
+ * ⚠ `--minify` applies to every JSON this script writes, and to the bundle's
+ * members. It writes NOTHING under `fixtures/` or `presets/` (the refusal below
+ * is older than this flag).
+ */
+const BUNDLE = has('bundle');
+const MINIFY = has('minify');
+
+if ((BUNDLE || MINIFY) && !OUT_DIR) {
+    note('export-seedling-level-set: --bundle and --minify only describe what is WRITTEN, and '
+        + 'nothing is written without --out-dir=DIR. STDOUT is the determinism channel and '
+        + 'neither flag touches it.');
+    process.exit(2);
+}
 
 if (!['chain', 'ring', 'none'].includes(EXITS)) {
     note(`export-seedling-level-set: --exits=${EXITS} is not one of chain, ring, none`);
@@ -361,7 +398,14 @@ if (OUT_DIR) {
         process.exit(2);
     }
     mkdirSync(dir, { recursive: true });
-    const j = (v) => `${JSON.stringify(v, null, 2)}\n`;
+    /**
+     * ⛓ EDITOR v3 E1c — the indent is `--minify`'s, and 0 is a REAL minify in
+     * JS (`JSON.stringify(x, null, 0)` emits no newlines; Python's
+     * `json.dumps(indent=0)` does NOT, which is why the exporter maps 0 to
+     * `separators`). The DEFAULT is the schema's, not a literal here.
+     */
+    const indent = MINIFY ? 0 : DEFAULT_RULES_JSON_INDENT;
+    const j = (v) => `${JSON.stringify(v, null, indent)}\n`;
     writeFileSync(join(dir, `${set.set_id}.json`), j(set));
     writeFileSync(join(dir, `${set.set_id}.ap-invalidation.json`), j(invalidation));
     /**
@@ -376,6 +420,27 @@ if (OUT_DIR) {
     writeFileSync(join(dir, `${set.set_id}.chunks.json`), j(chunks));
     say('');
     say(`written: ${dir}/${set.set_id}.{json,ap-invalidation.json,chunks.json}`);
+    /**
+     * ⛓⛓ **THE BUNDLE IS WRITTEN LAST AND SAID ON STDERR.** ⛔ The `say` above
+     * is STDOUT — the determinism channel — and it names the same three files
+     * whether or not `--bundle` was typed, because those three ARE the output
+     * and the zip is a second copy of two of them.
+     *
+     * ⚠ The `.ap-invalidation.json` is not one of `documentBundle`'s four kinds
+     * (it is a derived invalidation table, and `classifyDocument` returns null
+     * for it), so it goes in as a NAMED extra entry that `readBundle` reports in
+     * `notes` rather than as a member. That is the honest shape: the container
+     * carries it, the classifier does not pretend it is a document.
+     */
+    if (BUNDLE) {
+        const bytes = await writeBundle([{ kind: 'level-set', doc: set }], {
+            jszip: loadJSZipNode(),
+            indent,
+            extras: [{ name: `${set.set_id}.ap-invalidation.json`, text: j(invalidation) }],
+        });
+        writeFileSync(join(dir, `${set.set_id}.zip`), bytes);
+        note(`# bundle: ${dir}/${set.set_id}.zip (${bytes.length} B, indent ${indent})`);
+    }
 }
 
 note(`# ${Date.now() - t0} ms`);

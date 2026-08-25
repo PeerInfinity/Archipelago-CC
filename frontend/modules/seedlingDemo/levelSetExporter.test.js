@@ -9,7 +9,7 @@
 // that rule" is the claim worth making, and it is the one that fails if either
 // side moves.
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, readFileSync, readdirSync, rmSync, statSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -19,6 +19,9 @@ import { describe, it, expect } from 'vitest';
 import { emptyLevel, withTerrain } from './procgenLevel.js';
 import { recordToOel, parseOelLevel } from './procgenLevelOel.js';
 import { stableStringify } from '../procgenCore/contentIdentity.js';
+import { canonicalJson } from '../procgenCore/editCore.js';
+import { readBundle } from '../presets/documentBundle.js';
+import { loadJSZipNode } from '../../../scripts/procgen/loadJSZipNode.mjs';
 
 import {
     buildLevelSet,
@@ -644,6 +647,79 @@ describe('export-seedling-level-set --vanilla', () => {
             });
         } finally {
             rmSync(dir, { recursive: true, force: true });
+        }
+    }, 60000);
+
+    /**
+     * ⛓⛓⛓ **EDITOR v3 E1c — `--bundle` AND `--minify`** (plan §25).
+     *
+     * ⛔ The bundle is written BESIDE the plain files, never instead of them,
+     * and the `.chunks.json` stays a plain file — DELIVERY is not a member
+     * (§24.12). ⛔ STDOUT is unchanged by either flag: it is the determinism
+     * channel, and a report that grew a line when a file was written would make
+     * `cmp` a proof about the flags rather than about the generator.
+     */
+    it('--bundle writes a DETERMINISTIC zip beside the plain files, chunks excluded', async () => {
+        const a = mkdtempSync(join(tmpdir(), 'e1c-bundle-a-'));
+        const b = mkdtempSync(join(tmpdir(), 'e1c-bundle-b-'));
+        try {
+            const plain = run('--vanilla', `--out-dir=${a}`);
+            expect(plain.status).toBe(0);
+            rmSync(a, { recursive: true, force: true });
+            const one = run('--vanilla', `--out-dir=${a}`, '--bundle');
+            const two = run('--vanilla', `--out-dir=${b}`, '--bundle');
+            expect(one.status).toBe(0);
+            expect(two.status).toBe(0);
+            const id = 'seedling-vanilla-record-1040ace1';
+            // STDOUT names the same three files with or without --bundle.
+            expect(one.stdout).toBe(plain.stdout.split(a).join(a));
+            expect(readdirSync(a).sort()).toEqual([
+                `${id}.ap-invalidation.json`, `${id}.chunks.json`, `${id}.json`, `${id}.zip`,
+            ]);
+            const bytesA = readFileSync(join(a, `${id}.zip`));
+            const bytesB = readFileSync(join(b, `${id}.zip`));
+            expect(bytesB.equals(bytesA)).toBe(true);
+            const { members, notes } = await readBundle(bytesA, { jszip: loadJSZipNode() });
+            expect(members.map((m) => m.kind)).toEqual(['level-set']);
+            expect(canonicalJson(members[0].doc))
+                .toBe(canonicalJson(JSON.parse(readFileSync(join(a, `${id}.json`), 'utf8'))));
+            // The companion travels as a NAMED extra, not as a member.
+            expect(notes.join(' ')).toContain(`${id}.ap-invalidation.json`);
+            // ⛔ And DELIVERY never got in.
+            expect(notes.join(' ')).not.toContain('.chunks.json');
+        } finally {
+            rmSync(a, { recursive: true, force: true });
+            rmSync(b, { recursive: true, force: true });
+        }
+    }, 90000);
+
+    it('--minify shrinks what is written and leaves STDOUT alone', () => {
+        const dir = mkdtempSync(join(tmpdir(), 'e1c-minify-'));
+        try {
+            const id = 'seedling-vanilla-record-1040ace1';
+            const plain = run('--vanilla', `--out-dir=${dir}`);
+            expect(plain.status).toBe(0);
+            const big = statSync(join(dir, `${id}.json`)).size;
+            const bigDoc = JSON.parse(readFileSync(join(dir, `${id}.json`), 'utf8'));
+            rmSync(dir, { recursive: true, force: true });
+            const small = run('--vanilla', `--out-dir=${dir}`, '--minify');
+            expect(small.status).toBe(0);
+            expect(small.stdout).toBe(plain.stdout);
+            const text = readFileSync(join(dir, `${id}.json`), 'utf8');
+            expect(text.trimEnd()).not.toContain('\n');
+            expect(statSync(join(dir, `${id}.json`)).size).toBeLessThan(big / 2);
+            expect(canonicalJson(JSON.parse(text))).toBe(canonicalJson(bigDoc));
+        } finally {
+            rmSync(dir, { recursive: true, force: true });
+        }
+    }, 90000);
+
+    it('REFUSES --bundle / --minify with no --out-dir, because neither touches STDOUT', () => {
+        for (const flag of ['--bundle', '--minify']) {
+            const r = run('--vanilla', flag);
+            expect(r.status).toBe(2);
+            expect(r.stderr).toMatch(/only describe what is WRITTEN/);
+            expect(r.stdout).toBe('');
         }
     }, 60000);
 });

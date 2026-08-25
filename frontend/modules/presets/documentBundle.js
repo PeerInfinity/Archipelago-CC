@@ -303,12 +303,20 @@ export async function readBundle(bytes, { jszip } = {}) {
  * `json.dumps(indent=0)` does NOT, which is why the exporter maps 0 to
  * `separators`).
  *
+ * ⚠ `extras` are entries that are NOT members — a companion table a producer
+ * wants to travel with the documents (the CLI's `.ap-invalidation.json` is the
+ * one that exists). They are written verbatim at the same fixed mtime and come
+ * back from `readBundle` in `notes`, never in `members`: the container carries
+ * them, and the classifier does not pretend they are documents. ⛔ An `extra`
+ * whose name is a DELIVERY artefact is still refused on the way back in.
+ *
  * @param {Array<{kind: string, doc: object}>} members
- * @param {{jszip: Function, indent?: number, mtime?: Date}} deps
+ * @param {{jszip: Function, indent?: number, mtime?: Date,
+ *          extras?: Array<{name: string, text: string}>}} deps
  * @returns {Promise<Uint8Array>}
  */
 export async function writeBundle(members,
-    { jszip, indent = DEFAULT_RULES_JSON_INDENT, mtime = BUNDLE_MTIME } = {}) {
+    { jszip, indent = DEFAULT_RULES_JSON_INDENT, mtime = BUNDLE_MTIME, extras = [] } = {}) {
     const JSZip = requireZip(jszip, 'writeBundle');
     const list = Array.isArray(members) ? members : [];
     const byKind = new Map();
@@ -332,6 +340,14 @@ export async function writeBundle(members,
             ? stringifyRulesJson(doc, { indent })
             : JSON.stringify(doc, null, indent);
         zip.file(BUNDLE_ENTRY_NAMES[kind], `${text}\n`, { date: mtime });
+    }
+    for (const extra of extras) {
+        if (Object.values(BUNDLE_ENTRY_NAMES).includes(extra?.name)) {
+            throw new Error(`documentBundle: \`${extra.name}\` is a MEMBER entry name — an `
+                + 'extra may not shadow one, or the reader would classify a companion as a '
+                + 'document');
+        }
+        zip.file(extra.name, extra.text, { date: mtime });
     }
     return zip.generateAsync({
         type: 'uint8array',
