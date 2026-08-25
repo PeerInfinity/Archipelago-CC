@@ -9,6 +9,7 @@
  */
 
 import { createRng } from '../shared/rng.js';
+import { startRegionsOf } from '../procgenCore/rulesGraph.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
 import { ScenarioPool } from '../shared/procgen/scenarioPool.js';
@@ -1381,10 +1382,9 @@ function resolveTopDownStart(sourceRegions, declaredStart) {
  */
 export function computeSourceCounts(rulesJson, playerId = '1') {
     const sourceRegions = rulesJson?.regions?.[playerId] ?? {};
-    const startField = rulesJson?.start_regions?.[playerId];
-    let declaredStart = null;
-    if (Array.isArray(startField?.default)) declaredStart = startField.default[0];
-    else if (Array.isArray(startField)) declaredStart = startField[0];
+    // ⛓ Both start_regions shapes, through the ONE reader. These two sites were
+    // a VERBATIM four-line copy of each other (§16.1 #5).
+    const [declaredStart = null] = startRegionsOf(rulesJson, playerId).default;
     const resolved = resolveTopDownStart(sourceRegions, declaredStart);
     const menuName = resolved?.menuName ?? null;
 
@@ -1489,10 +1489,9 @@ export function layoutTopDown(rulesJson, opts, rng) {
     }
 
     // Locate the declared start.
-    const startField = rulesJson?.start_regions?.[playerId];
-    let declaredStart = null;
-    if (Array.isArray(startField?.default)) declaredStart = startField.default[0];
-    else if (Array.isArray(startField)) declaredStart = startField[0];
+    // ⛓ Both start_regions shapes, through the ONE reader. These two sites were
+    // a VERBATIM four-line copy of each other (§16.1 #5).
+    const [declaredStart = null] = startRegionsOf(rulesJson, playerId).default;
     const resolved = resolveTopDownStart(sourceRegions, declaredStart);
     if (!resolved) {
         throw new Error(`topDownFromRulesJson: no usable start region for player '${playerId}'`);

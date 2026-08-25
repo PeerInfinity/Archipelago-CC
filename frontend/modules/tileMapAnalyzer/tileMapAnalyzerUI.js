@@ -18,6 +18,7 @@ import {
   TileMapDataMissingError,
   isDefaultDataPath,
 } from './tileMapDataManager.js';
+import { DEFAULT_PLAYER_ID, regionsOf, walkRulesGraph } from '../procgenCore/rulesGraph.js';
 import { buildEffectiveGrids } from './tileCategorizer.js';
 import {
   computeReachable,
@@ -601,11 +602,11 @@ export class TileMapAnalyzerUI {
       },
     );
     const t1 = performance.now();
-    const regionCount = Object.keys(rules.regions['1']).length;
+    // ⛓ The player slot came from a literal '1'; DEFAULT_PLAYER_ID is that
+    // literal's one home (§15 D12), and the walker is the one exit iteration.
+    const regionCount = Object.keys(regionsOf(rules)).length;
     let exitCount = 0;
-    for (const r of Object.values(rules.regions['1'])) {
-      exitCount += r.exits.length;
-    }
+    walkRulesGraph(rules, DEFAULT_PLAYER_ID, { exit: () => { exitCount += 1; } });
     return {
       rules,
       debugLog,

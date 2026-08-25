@@ -7,6 +7,8 @@
  * a generated world" for the architecture this implements.
  */
 
+import { startRegionsOf } from '../procgenCore/rulesGraph.js';
+
 /**
  * In-memory store of deserialized regions for the currently-loaded
  * procgen world. Built from rules.json's `preset_sidecars` block.
@@ -115,13 +117,8 @@ export function buildWarehouse(rulesJson, playerId, registry, opts = {}) {
  * declared start.
  */
 export function findStartRegion(rulesJson, playerId, warehouse) {
-    const startRegions = rulesJson?.start_regions?.[playerId];
-    let startName = null;
-    if (Array.isArray(startRegions?.default)) {
-        startName = startRegions.default[0];
-    } else if (Array.isArray(startRegions)) {
-        startName = startRegions[0];
-    }
+    // ⛓ Both start_regions shapes, through the ONE reader (procgenCore/rulesGraph).
+    const [startName] = startRegionsOf(rulesJson, playerId).default;
     if (!startName) return null;
     if (warehouse.has(startName)) {
         return { region: startName, sourceRegion: null, exitName: null };

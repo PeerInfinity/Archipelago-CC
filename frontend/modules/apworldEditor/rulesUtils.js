@@ -2,6 +2,10 @@
  * Rules-doc utilities: walk access-rule trees, cascade renames into rule
  * references, and validate references across the doc.
  *
+ * ⛓ The WALKING is not this module's any more — `procgenCore/rulesGraph.js` is
+ * the one graph walker (§15 D7). `walkRules` is re-exported from there under
+ * its old name so every caller and cascade here is unchanged.
+ *
  * Rule format: Rule Builder ({ rule: "Has", args: {...}, children?: [...] }).
  * Unknown rule types are walked for structural children but their args are
  * left untouched — we don't know their reference shape.
@@ -23,6 +27,13 @@
  * silently drop those keys and sever the round-trip. The regression test in
  * rulesUtils.test.js guards exactly that.
  */
+import {
+  regionsOf,
+  startRegionsOf,
+  walkRulesGraph,
+  walkRuleTrees,
+} from '../procgenCore/rulesGraph.js';
+
 export function cloneFullRulesDoc(rulesDoc) {
   return JSON.parse(JSON.stringify(rulesDoc));
 }
@@ -39,38 +50,7 @@ export function cloneFullRulesDoc(rulesDoc) {
  *
  * The callback may mutate node in place (used by the rename cascades).
  */
-export function walkRules(rulesDoc, playerId, visit) {
-  const regions = rulesDoc?.regions?.[playerId] || {};
-  for (const [regionName, region] of Object.entries(regions)) {
-    for (const exit of region.exits || []) {
-      walkRuleTree(exit.access_rule, visit, { regionName, exitName: exit.name });
-    }
-    for (const loc of region.locations || []) {
-      walkRuleTree(loc.access_rule, visit, { regionName, locationName: loc.name });
-      if (loc.item_rule) {
-        walkRuleTree(loc.item_rule, visit, {
-          regionName, locationName: loc.name, fieldName: 'item_rule',
-        });
-      }
-    }
-  }
-}
-
-function walkRuleTree(node, visit, ctx) {
-  if (!node || typeof node !== 'object') return;
-  visit(node, ctx);
-  if (Array.isArray(node.children)) {
-    for (const child of node.children) walkRuleTree(child, visit, ctx);
-  }
-  if (node.rule === 'Compare' && node.args) {
-    if (node.args.left && typeof node.args.left === 'object') {
-      walkRuleTree(node.args.left, visit, ctx);
-    }
-    if (node.args.right && typeof node.args.right === 'object') {
-      walkRuleTree(node.args.right, visit, ctx);
-    }
-  }
-}
+export const walkRules = walkRuleTrees;
 
 // ---------- Rename cascades ----------
 
@@ -137,20 +117,18 @@ export function validateRules(rulesDoc, playerId) {
   const issues = [];
   if (!rulesDoc) return issues;
 
-  const regions = rulesDoc.regions?.[playerId] || {};
+  const regions = regionsOf(rulesDoc, playerId);
   const items = rulesDoc.items?.[playerId] || {};
   const regionNames = new Set(Object.keys(regions));
   const itemNames = new Set(Object.keys(items));
   const locationNames = new Set();
-  for (const r of Object.values(regions)) {
-    for (const loc of r.locations || []) {
-      if (loc && loc.name) locationNames.add(loc.name);
-    }
-  }
+  walkRulesGraph(rulesDoc, playerId, {
+    location: (loc) => { if (loc && loc.name) locationNames.add(loc.name); },
+  });
 
   // Exits pointing at missing or empty destinations
-  for (const [regionName, region] of Object.entries(regions)) {
-    for (const exit of region.exits || []) {
+  walkRulesGraph(rulesDoc, playerId, {
+    exit: (exit, { regionName }) => {
       const dest = exit.connected_region;
       const label = `Exit "${exit.name || '(unnamed)'}" in "${regionName}"`;
       if (!dest) {
@@ -164,11 +142,15 @@ export function validateRules(rulesDoc, playerId) {
           message: `${label} points at unknown region "${dest}".`,
         });
       }
-    }
-  }
+    },
+  });
 
-  // Start regions
-  const startDefault = rulesDoc.start_regions?.[playerId]?.default || [];
+  // Start regions.
+  // ⛓ THIS LINE USED TO BE `rulesDoc.start_regions?.[playerId]?.default || []`,
+  // which reads the ARRAY shape (`start_regions["1"] = [...]`) as EMPTY and then
+  // warns "No start region set." about a document that has one. `startRegionsOf`
+  // reads both shapes; the cure is pinned by rulesUtils.test.js's array row.
+  const startDefault = startRegionsOf(rulesDoc, playerId).default;
   for (const rn of startDefault) {
     if (rn && !regionNames.has(rn)) {
       issues.push({
