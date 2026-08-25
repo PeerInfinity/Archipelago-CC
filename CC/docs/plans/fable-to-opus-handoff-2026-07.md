@@ -4663,6 +4663,77 @@ duplicate named import, esbuild-tolerated, 51/51 green). Fix the duplicate AND
 add a gate that runs `node --check` over every `.js`/`.mjs` the instruments
 index and the test roster name, so the syntax gate cannot decay.
 
+### ⛓⛓⛓ SLICE 12e‴ SHIPPED 2026-08-25 — **⚖ 51 DISCHARGED: THE 28-TICK FREEZE IS L19's SIGN, READ WITH THE SWORD KEY** (`27f318161` … `d9b71e94a`, PUSHED)
+
+`r8-d2-19` was never fighting the Shieldspire. `NPCs/NPC.as:191` takes a placed
+NPC's talk key as `Input.released(p.keys[6])` and `Player.as:59` is
+`[RIGHT, UP, LEFT, DOWN, X, C, **X**, V, I]` — index 6 is the SECOND `Key.X`,
+the SWORD key. The model's own class table said "needs `Input.released(V)`"
+(index 7), which no tape has ever pressed, so no sign had ever spoken in the
+model while every walk presses X constantly. `NPC.as:190`'s `inRange` is a
+CIRCLE on entity origins with `talkRange` 24 (`:27`), not an overlap of the
+16×16 solid — which is why §35's box arithmetic "would not close" and was a
+correct refusal of the wrong measurement: the sign's body ends at y 144, the
+player stands at 152, and it talks from **17.088 px**. ⛔ **28 IS NOT A
+CONSTANT**: it is `t_close(43) − t_open(15)`, a number the tape's own press
+schedule produces against one wrapped page (the releases at t=1/3/9 are 26–35 px
+out; t=23 and t=25 fail because `NPC.as:205` sets `currentCharacter = length − 1`
+and never `length`).
+
+A SECOND AS3 line was invisible until the first was right: `Player.as:560-563`
+puts `slash()` ABOVE `super.update()`, so the sword's double-tap window drains
+on FROZEN frames while `useItem` — inside the gated block — never sees a press.
+With the dialogue alone the model parted from the game at t=45 by **exactly
+2.0 px** (`SLASH_DASH_FORCE`); `slashTimerTick` inside `runFrozenTick` closed it.
+The pin is the GAME's own 709-tick recording, committed as
+`fixtures/r8-d2-19-freeze-oracle.json`: EXACT through t=60 (the freeze, its open
+frame and its resume), 0 level mismatches, the terminal position to the digit,
+and a MEASURED ≤ 3 ULP bound on the fractional drift after.
+
+⚖ **RULING 53 changed the shape mid-slice** (user: *"Wouldn't it be better to
+just not trigger the sign reading? … don't press the button that triggers it in
+range"*): the dialogue is NOT priced, it is FORBIDDEN. `run.talkCircles` is the
+live set (the Watcher absent by name — its `keyNeeded` is false, so no key
+choice avoids it) and `strikePolicy.talkGuard` refuses any press whose RELEASE
+would land inside a circle, in all three press arms, with a derived
+over-approximate radius and a `talkRefusals` witness. It costs `r8-d2-19`
+**+13 ticks**, not 28: the planner re-times the swing out of the circle.
+
+⚖ 51's SECOND item fell the same way. One announced GPU row, two READ-ONLY
+drives with the driver's new opt-in `--dead-curve`: the sword `Help` costs the
+game **two** dead frames when the tape does not press X or C while it is up
+(`NPCs/Help.as:23`, `:87-103`) and **one** when it does. Two prior readings had
+called that refuted, both comparing the tick `Sword.removed()` FIRES — engine
+adds are QUEUED, so the read that matters is one tick later, and there the walks
+differ. `spendPickupHelp` now defers to the tick where the keys are known:
+committed 90-t **191 UNCHANGED** (game 192) and branch 78-t **190** (game 191),
+so `gameDead = modelDead + 1` is restored on both.
+
+**TABLE (D″), offline, the model's word:** `r8-solve-18` 410 (promoted) ·
+**`r8-d2-19` 721 with `the arrival is CALM — v=(0,0)`** · `r8-d2-20` 554 ·
+headline **1685**. ⛓ **THE ROSTER IS INERT BY MEASUREMENT**: the two-build
+stream diff over all 149 committed tapes — now also differencing
+`deadFramesOwed`/`deadFrameSpans`/`gameTime` — moves 0 streams, 0 totals, 0
+clocks and 0 refusals; the arm census (dashes / slash presses / ceremony starts)
+moves 0; all seven producer `--check` md5s are byte-identical. Seven tapes move
+the sword-Help span's `t` LABEL by +1, and the game's own counter says the new
+label is the right one.
+
+**⚖ 52's FIRST SLICE**: no local unfiltered vitest was run at any point —
+bounded runs only, and the unfiltered number read from CI by SHA with
+`ci-vitest-summary.mjs`, which this slice landed as its W0 hygiene item
+(`27f318161`). CI `4ed3d3377` **355/11058** + slow 12/217; `gates.sh local`
+**27/27 green**. Kickoff as-built **§36**; the tracked narrative is in
+`docs/json/developer/procgen/seedling-bot.md`.
+
+⇒ **NEXT: the re-record re-runs on (D″)**, by the orchestrator, from the parked
+series `r9/re-record-attempt-3` @`8078cd3d7` (never pushed; the ONE-SERIES LAW
+unchanged). ⚠ Residue: the three REFUSED talker classes (`oracle`, `witch`,
+`yeti`) throw by name at the tick a walk would open them and have NO WITNESS —
+a rung routing through L1, L12 or L58 owes their `doneTalking()`; §35.8's mutant
+(d) is still owed by whoever completes the re-record; ⚖ 47b (5) and (6) carry
+forward.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
