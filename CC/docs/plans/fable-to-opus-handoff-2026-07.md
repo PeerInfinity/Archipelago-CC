@@ -4257,6 +4257,27 @@ the tape (0.25 s poll at 30 fps), so a tape ending near an event reports one the
 scheduled — the driver-side fix is GAME-FACING and therefore ⚖ ruling 40's full-roster
 checkpoint class. Until it lands, a tape's post-tape MARGIN is part of its design.
 
+**⇒ ⚖ 47b — PROTOCOL FIXES III, scheduled (user, 2026-08-24) RIGHT AFTER the
+re-record session, tape-inert, one slice, bundling three queued instrument
+items:** (1) `lint-gate-labels.mjs` `callsIn` must SKIP COMMENTS — one
+apostrophe in a `//` comment opens a fake string and a `describe(` swallows
+the rest of the file (12c‴, kickoff §30.8b; `solverBot.test.js` has been a
+~2,000-line dead zone since 12c″); the fix moves the corpus 101 → 91 findings
+across ~10 files (12 gone / 2 new) and EACH is triaged with a calibration set
++ mutants (traps 579/580) — never waved through. (2) the replay driver's
+POST-TAPE POLLER WINDOW (`seedling-bot-replay-win.py:69`: `botStatus` polled
+at 0.25 s × 30 fps ≈ 8 frames past the tape's last observation with the last
+keys held; a KILLING post-tape hit zeroes `hits` via `die()` — trap 600):
+read the status at the tape's LAST OBSERVATION — a game-facing driver change
+⇒ ⚖ ruling 40's FULL-roster run, which doubles as the overdue checkpoint
+re-bank (the standing roster row is 145 tapes @3ca80b3c1; the index is 148).
+(3) 12d's residues: the third `standing-values` row state (GPU, measured
+in-session, un-re-runnable headlessly) and `identity-block.sh`'s invisibility
+to the instruments index. INTERIM (approved): the 12d′ and re-record briefs
+carry "run the lint with a SCRATCH comment-skip patch as a REPORT ONLY on the
+test files you touched" so a typed count landing in the dead zone is seen
+before the real fix lands.
+
 **NEXT in R9: THE RE-RECORD SESSION**, on kickoff §30.6 column (C) — the flip plus the
 seven moved segments through `rerecord-seedling-campaign.mjs` under ⚖ ruling 43's
 `--license-walks`, with ⚖ ruling 39's `why` sweep riding the run. Then the route:
