@@ -9,7 +9,9 @@
 // that rule" is the claim worth making, and it is the one that fails if either
 // side moves.
 import { spawnSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { describe, it, expect } from 'vitest';
@@ -25,8 +27,8 @@ import {
     VANILLA_AP_REFERENCE_COUNT,
     DEFAULT_MUSIC,
     LevelSetExportError,
-    vanillaXmlSet,
-    VANILLA_XML_SET_ID_BASE,
+    vanillaRecordSet,
+    VANILLA_RECORD_SET_ID_BASE,
 } from './levelSetExporter.js';
 import {
     validateLevelSet,
@@ -36,6 +38,7 @@ import {
     levelSetSaveStamp,
     computeLevelSetContentHash,
     NAMED_ROOM_KEYS,
+    MAX_CHUNK_BYTES,
 } from './levelSetValidator.js';
 
 /** A record shaped exactly as `procgenSeedling` emits one — 900 and all. */
@@ -273,7 +276,25 @@ describe('the export survives the whole delivery pipeline', () => {
 
         const back = assembleLevelSetChunks(chunks);
         expect(back.errors).toEqual([]);
-        expect(back.set).toEqual(set);
+        /**
+         * ⛓⛓⛓ **EDITOR v3 E1b — THE DELIVERY ROUND TRIP IS AN IDENTITY ON
+         * CONTENT AND A ONE-WAY RENDER ON FORM.** A set carries `record` rooms;
+         * `planLevelSetChunks` renders each one to `{xml}` because the receiver
+         * ends at `LevelSet.as:139`. So the reassembled set is the same document
+         * carried in the delivery's own form — ⛔ and asserting `toEqual(set)`
+         * here would be asserting that the render never happened, which is the
+         * mutant this row is meant to catch rather than to hide.
+         */
+        expect(back.set.rooms.every((r) => typeof r.source.xml === 'string')).toBe(true);
+        expect(back.set.rooms.some((r) => 'record' in r.source)).toBe(false);
+        expect(back.set).toEqual({
+            ...set,
+            rooms: set.rooms.map((r) => ({ ...r, source: { xml: recordToOel(r.source.record) } })),
+        });
+        // …and the CONTENT survives it, room for room.
+        back.set.rooms.forEach((r, i) => {
+            expect(parseOelLevel(r.source.xml, `room ${i}`)).toEqual(set.rooms[i].source.record);
+        });
 
         // The save stamp keys on both fields, so a re-export with one room
         // changed must not match a save written against the original.
@@ -342,14 +363,14 @@ describe('buildLevelSet({link}) — exits as data', () => {
     });
 });
 
-// ── EDITOR v3 E1 — `vanillaXmlSet`, THE VANILLA 116 AS `xml` ─────────────────
+// ── EDITOR v3 E1/E1b — `vanillaRecordSet`, THE VANILLA 116 AS `record` ──────
 //
 // ⛓ THE ORACLE IS AGAIN SOMEBODY ELSE'S. The VALUE round trip
 // (`record → recordToOel → parseOelLevel → record′`, 116/116) is
 // `procgenLevelOel.test.js:59`'s row and is NOT repeated here; what these rows
 // own is the JOIN — WHICH record fed WHICH room — plus the manifest carry, the
 // empty `invented`, and the id that must never be mistaken for the embed set's.
-describe('vanillaXmlSet — two committed documents in, an xml-sourced set out', () => {
+describe('vanillaRecordSet — two committed documents in, a record-sourced set out', () => {
     const embedSet = fixture('seedling-vanilla-set.json');
     const mapDoc = JSON.parse(readFileSync(fileURLToPath(
         new URL('../flashPanel/atlases/seedling-map.json', import.meta.url)), 'utf8'));
@@ -363,11 +384,13 @@ describe('vanillaXmlSet — two committed documents in, an xml-sourced set out',
         return hits[0];
     };
 
-    it('turns all 116 embed rooms into xml rooms the validator accepts with NO embed warning', () => {
-        const { set } = vanillaXmlSet(embedSet, mapDoc);
+    it('turns all 116 embed rooms into record rooms the validator accepts with NO embed warning', () => {
+        const { set } = vanillaRecordSet(embedSet, mapDoc);
         expect(set.rooms).toHaveLength(116);
-        expect(set.rooms.every((r) => typeof r.source.xml === 'string')).toBe(true);
-        expect(set.rooms.some((r) => 'embed' in r.source)).toBe(false);
+        // ⛓ EDITOR v3 E1b — `record`, and NOT a rendered `xml` anywhere in the
+        //   SET document. The render happens at the chunk boundary, below.
+        expect(set.rooms.every((r) => typeof r.source.record === 'object')).toBe(true);
+        expect(set.rooms.some((r) => 'embed' in r.source || 'xml' in r.source)).toBe(false);
         const v = validateLevelSet(set);
         expect(v.errors).toEqual([]);
         expect(v.ok).toBe(true);
@@ -380,7 +403,7 @@ describe('vanillaXmlSet — two committed documents in, an xml-sourced set out',
     });
 
     it('carries every manifest field and every room field but `source` VERBATIM', () => {
-        const { set, report } = vanillaXmlSet(embedSet, mapDoc);
+        const { set, report } = vanillaRecordSet(embedSet, mapDoc);
         for (const field of ['name', 'description', 'start', 'menu_rooms', 'named_rooms']) {
             expect(stableStringify(set[field]), field).toBe(stableStringify(embedSet[field]));
         }
@@ -389,7 +412,7 @@ describe('vanillaXmlSet — two committed documents in, an xml-sourced set out',
             .toBe(stableStringify(embedSet.rooms.map(noSource)));
         // ⛓ AN EMPTY `invented` IS THE PROOF NO FIELD WAS GUESSED — the same
         // list `buildLevelSet` writes for a generated set, where it is never
-        // empty. `vanillaXmlSet` REFUSES rather than emitting a non-empty one,
+        // empty. `vanillaRecordSet` REFUSES rather than emitting a non-empty one,
         // so this row is the statement and the function is the guard.
         expect(report.invented).toEqual([]);
         expect(set.provenance.invented).toEqual([]);
@@ -406,10 +429,19 @@ describe('vanillaXmlSet — two committed documents in, an xml-sourced set out',
      * pinned id instead of a comment saying it is derived.
      */
     it('stamps its own id, which can never be mistaken for the embed set\'s', () => {
-        const { set } = vanillaXmlSet(embedSet, mapDoc);
-        expect(VANILLA_XML_SET_ID_BASE).toBe('seedling-vanilla-xml');
-        expect(set.set_id).toBe('seedling-vanilla-xml-02a70624');
-        expect(set.set_id).toMatch(/^seedling-vanilla-xml-[0-9a-f]{8}$/);
+        const { set } = vanillaRecordSet(embedSet, mapDoc);
+        /**
+         * ⛓⛓⛓ **EDITOR v3 E1b — THE ID MOVED, AND PLAN §23.12 ITEM 6 SAID IT
+         * WOULD.** E1 pinned `seedling-vanilla-xml-02a70624`, the hash of the
+         * OEL-bearing document; ⚖ §22.8 made the room a `{record}`, so this is
+         * a different document and takes a different hash under a different
+         * base. ⛔ THE RETIRED ID IS NAMED HERE so a reader meeting it in an
+         * old note knows which document it was about.
+         */
+        expect(VANILLA_RECORD_SET_ID_BASE).toBe('seedling-vanilla-record');
+        expect(set.set_id).toBe('seedling-vanilla-record-1040ace1');
+        expect(set.set_id).toMatch(/^seedling-vanilla-record-[0-9a-f]{8}$/);
+        expect(set.set_id).not.toBe('seedling-vanilla-xml-02a70624');
         expect(set.set_id).not.toBe(embedSet.set_id);
         expect(computeLevelSetContentHash(set)).toBe(set.provenance.content_hash);
         // `derived_from` names the set it reproduces, by ITS identity.
@@ -419,12 +451,22 @@ describe('vanillaXmlSet — two committed documents in, an xml-sourced set out',
         expect(set.provenance.map.generator).toBe(mapDoc.generator);
     });
 
-    it('joins by PATH: every room\'s xml is the record whose path it embeds', () => {
-        const { set, report } = vanillaXmlSet(embedSet, mapDoc);
+    it('joins by PATH: every room\'s record IS the map record whose path it embeds', () => {
+        const { set, report } = vanillaRecordSet(embedSet, mapDoc);
         set.rooms.forEach((room, i) => {
-            expect(room.source.xml, `rooms[${i}] "${room.name}"`)
-                .toBe(recordToOel(recordFor(embedSet.rooms[i].source.embed)));
+            const mapRecord = recordFor(embedSet.rooms[i].source.embed);
+            // ⛓ THE CORE FOUR, and NOT `level`/`class`/`path`/
+            //   `tiles_outside_level` — each of those is a second authority for
+            //   something the SET already says. 51 of the 116 carry the last one.
+            expect(room.source.record, `rooms[${i}] "${room.name}"`).toEqual({
+                width: mapRecord.width, height: mapRecord.height,
+                layers: mapRecord.layers, entities: mapRecord.entities,
+            });
+            for (const dropped of ['level', 'class', 'path', 'tiles_outside_level']) {
+                expect(Object.hasOwn(room.source.record, dropped), dropped).toBe(false);
+            }
         });
+        expect(mapDoc.levels.filter((l) => l.tiles_outside_level !== undefined)).toHaveLength(51);
         // The MEASURED difference between the two documents' roots — one leading
         // directory — reported rather than typed into the rule.
         expect(report.join).toMatchObject({
@@ -445,16 +487,16 @@ describe('vanillaXmlSet — two committed documents in, an xml-sourced set out',
      * join's to a different set entirely.
      */
     it('is unmoved by the ORDER of the map\'s levels', () => {
-        const straight = vanillaXmlSet(embedSet, mapDoc).set;
-        const reversed = vanillaXmlSet(embedSet,
+        const straight = vanillaRecordSet(embedSet, mapDoc).set;
+        const reversed = vanillaRecordSet(embedSet,
             { ...mapDoc, levels: [...mapDoc.levels].reverse() }).set;
         expect(stableStringify(reversed)).toBe(stableStringify(straight));
         expect(reversed.set_id).toBe(straight.set_id);
     });
 
     it('is deterministic — two calls produce the same document', () => {
-        expect(stableStringify(vanillaXmlSet(embedSet, mapDoc).set))
-            .toBe(stableStringify(vanillaXmlSet(embedSet, mapDoc).set));
+        expect(stableStringify(vanillaRecordSet(embedSet, mapDoc).set))
+            .toBe(stableStringify(vanillaRecordSet(embedSet, mapDoc).set));
     });
 
     it('REFUSES a renamed path by name rather than joining to the neighbour', () => {
@@ -463,8 +505,8 @@ describe('vanillaXmlSet — two committed documents in, an xml-sourced set out',
             levels: mapDoc.levels.map((r, i) => (i === 3
                 ? { ...r, path: r.path.replace(/\.oel$/, '.renamed.oel') } : r)),
         };
-        expect(() => vanillaXmlSet(embedSet, renamed)).toThrow(LevelSetExportError);
-        expect(() => vanillaXmlSet(embedSet, renamed))
+        expect(() => vanillaRecordSet(embedSet, renamed)).toThrow(LevelSetExportError);
+        expect(() => vanillaRecordSet(embedSet, renamed))
             .toThrow(/rooms\[3\] "Dungeon1_1" embeds "levels\/Dungeon1\/1\.oel" and NO map record/);
     });
 
@@ -473,20 +515,20 @@ describe('vanillaXmlSet — two committed documents in, an xml-sourced set out',
             ...embedSet,
             rooms: [embedSet.rooms[0], { ...embedSet.rooms[1], source: { ...embedSet.rooms[0].source } }],
         };
-        expect(() => vanillaXmlSet(twice, mapDoc)).toThrow(/both join to map levels\[0\]/);
+        expect(() => vanillaRecordSet(twice, mapDoc)).toThrow(/both join to map levels\[0\]/);
         const already = { ...embedSet, rooms: [{ ...embedSet.rooms[0], source: { xml: '<level/>' } }] };
-        expect(() => vanillaXmlSet(already, mapDoc)).toThrow(/is not embed-sourced/);
+        expect(() => vanillaRecordSet(already, mapDoc)).toThrow(/is not embed-sourced/);
     });
 
     it('REFUSES a map document with no `source.level_root` rather than guessing one', () => {
-        expect(() => vanillaXmlSet(embedSet, { ...mapDoc, source: {} }))
+        expect(() => vanillaRecordSet(embedSet, { ...mapDoc, source: {} }))
             .toThrow(/needs the map document's `source.level_root`/);
     });
 
     /**
      * The MANIFEST-DEFAULT mutant, on a two-room stand-in: `buildLevelSet`
      * DERIVES `start` from `entries[0].summary.startCell` (and falls back to
-     * `{level: 0}`) when the caller supplies none, so a `vanillaXmlSet` that
+     * `{level: 0}`) when the caller supplies none, so a `vanillaRecordSet` that
      * forgot to pass the embed set's would emit a set that starts in the wrong
      * room and lists `start` as invented. Both halves are asserted.
      */
@@ -509,7 +551,7 @@ describe('vanillaXmlSet — two committed documents in, an xml-sourced set out',
             menu_rooms: [1],
             named_rooms: {},
         };
-        const { set, report } = vanillaXmlSet(smallSet, smallMap);
+        const { set, report } = vanillaRecordSet(smallSet, smallMap);
         expect(set.start).toEqual({ level: 1, x: 32, y: 48 });
         expect(set.menu_rooms).toEqual([1]);
         expect(set.rooms[1].snow_gradient).toBe(true);
@@ -529,7 +571,7 @@ describe('vanillaXmlSet — two committed documents in, an xml-sourced set out',
  * ── THE CLI'S `--vanilla` ARM, DRIVEN ────────────────────────────────────────
  *
  * ⛓ THE ROWS LIVE BESIDE THE FUNCTION, because the arm owns no format logic:
- * it reads two committed files, calls `vanillaXmlSet` and prints. What is worth
+ * it reads two committed files, calls `vanillaRecordSet` and prints. What is worth
  * gating is that STDOUT is still the DETERMINISM CHANNEL (the script's own law),
  * that the id it prints is the one this module's function produces — the SAME
  * function on both sides, which is what makes the page's row a comparison and
@@ -545,7 +587,7 @@ describe('export-seedling-level-set --vanilla', () => {
         const b = run('--vanilla');
         expect(a.status).toBe(0);
         expect(a.stdout).toBe(b.stdout);
-        const { set } = vanillaXmlSet(
+        const { set } = vanillaRecordSet(
             fixture('seedling-vanilla-set.json'),
             JSON.parse(readFileSync(fileURLToPath(
                 new URL('../flashPanel/atlases/seedling-map.json', import.meta.url)), 'utf8')),
@@ -571,6 +613,120 @@ describe('export-seedling-level-set --vanilla', () => {
         expect(fixtures.status).toBe(2);
         expect(fixtures.stderr).toMatch(/REFUSED to write under `fixtures\/`/);
     }, 30000);
+
+    /**
+     * ⛓⛓⛓ **EDITOR v3 E1b — WHERE OEL LIVES ON DISK NOW.** The `.json` is the
+     * SET (records, no text); the `.chunks.json` is the DELIVERY (text, no
+     * records). ⛔ A set file carrying an `xml` room, or a chunk file carrying a
+     * `record` room, is a step one of the two did not take — and the row asks
+     * the FILES rather than the functions, because the CLI is the seam a person
+     * actually reads.
+     */
+    it('writes a set with ZERO xml rooms and chunks with ZERO record rooms', () => {
+        const dir = mkdtempSync(join(tmpdir(), 'e1b-vanilla-'));
+        try {
+            const r = run('--vanilla', `--out-dir=${dir}`);
+            expect(r.status).toBe(0);
+            const id = 'seedling-vanilla-record-1040ace1';
+            expect(r.stdout).toContain(`${dir}/${id}.{json,ap-invalidation.json,chunks.json}`);
+            const set = JSON.parse(readFileSync(join(dir, `${id}.json`), 'utf8'));
+            const chunks = JSON.parse(readFileSync(join(dir, `${id}.chunks.json`), 'utf8'));
+            expect(set.rooms).toHaveLength(116);
+            expect(set.rooms.filter((x) => 'xml' in x.source)).toHaveLength(0);
+            expect(set.rooms.filter((x) => 'record' in x.source)).toHaveLength(116);
+            const chunkRooms = chunks.flatMap((c) => c.rooms);
+            expect(chunkRooms).toHaveLength(116);
+            expect(chunkRooms.filter((x) => 'record' in x.source)).toHaveLength(0);
+            expect(chunkRooms.filter((x) => typeof x.source.xml === 'string')).toHaveLength(116);
+            // …and the text on disk is exactly what the one writer produces.
+            chunkRooms.forEach((room, i) => {
+                expect(room.source.xml, `room ${i}`).toBe(recordToOel(set.rooms[i].source.record));
+            });
+        } finally {
+            rmSync(dir, { recursive: true, force: true });
+        }
+    }, 60000);
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ **EDITOR v3 E1b — THE BOUNDARY, AND THE BYTES IT IS MEASURED ON**
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('OEL is rendered at the chunk boundary, and the bound is measured there', () => {
+    const VANILLA_SET = () => vanillaRecordSet(
+        fixture('seedling-vanilla-set.json'),
+        JSON.parse(readFileSync(fileURLToPath(
+            new URL('../flashPanel/atlases/seedling-map.json', import.meta.url)), 'utf8')),
+    ).set;
+
+    it('a RECORD set and its xml-rendered twin produce IDENTICAL chunk documents', () => {
+        const rec = VANILLA_SET();
+        const twin = {
+            ...rec,
+            rooms: rec.rooms.map((r) => ({ ...r, source: { xml: recordToOel(r.source.record) } })),
+        };
+        expect(stableStringify(planLevelSetChunks(rec).chunks))
+            .toBe(stableStringify(planLevelSetChunks(twin).chunks));
+    });
+
+    /**
+     * ⛔⛔ **THE PLAN IS THE SAME PLAN E1 MEASURED, TO WITHIN THE ID'S OWN
+     * LENGTH.** E1 recorded 9 chunks with a largest of 237,194 B over
+     * `seedling-vanilla-xml-02a70624` (29 characters). This set's id is
+     * `seedling-vanilla-record-1040ace1` (32), and a `set_id` appears once per
+     * chunk — so the largest chunk is 237,197 B, EXACTLY 3 bytes more, and the
+     * chunk COUNT is unchanged. ⛓ A different count would have meant the render
+     * moved bytes, and the number is here so nobody has to wonder.
+     */
+    it('plans the vanilla 116 to the SAME 9 chunks E1 measured, +3 bytes of set_id', () => {
+        const { chunks, oversized } = planLevelSetChunks(VANILLA_SET());
+        expect(chunks).toHaveLength(9);
+        expect(oversized).toEqual([]);
+        const largest = Math.max(...chunks.map((c) => JSON.stringify(c).length));
+        expect(largest).toBe(237197);
+        expect(largest).toBe(237194 + ('seedling-vanilla-record-1040ace1'.length
+            - 'seedling-vanilla-xml-02a70624'.length));
+        expect(largest).toBeLessThan(MAX_CHUNK_BYTES);
+    });
+
+    /**
+     * ⛔⛔ **THE ORDER IS THE CLAIM: SIZE AFTER THE RENDER, NEVER BEFORE.**
+     * Sizing the record would price a document 3.1× smaller than the one
+     * delivered — and it plans to EIGHT chunks, one of which the proven
+     * envelope was never measured for. This row is the mutant's own answer,
+     * measured beside the real one so it cannot pass by both being the same.
+     */
+    it('sizing the RECORD instead of the render gives a DIFFERENT, wrong plan', () => {
+        const set = VANILLA_SET();
+        const unrendered = planLevelSetChunks(set, { render: () => '' });
+        expect(unrendered.chunks.length).toBe(8);
+        const recordBytes = JSON.stringify(set).length;
+        const renderedBytes = JSON.stringify({
+            ...set,
+            rooms: set.rooms.map((r) => ({ ...r, source: { xml: recordToOel(r.source.record) } })),
+        }).length;
+        expect(recordBytes).toBe(528752);
+        expect(renderedBytes).toBe(1652312);
+        expect(renderedBytes / recordBytes).toBeGreaterThan(3);
+    });
+
+    it('the LEGACY conformance corpus plans exactly as it did — nothing rendered', () => {
+        const conformance = fixture('seedling-level-set-delivery-conformance.json');
+        for (const [ci, c] of conformance.cases.entries()) {
+            for (const [chi, chunk] of (c.chunks ?? []).entries()) {
+                const rooms = chunk.rooms ?? [];
+                if (rooms.length === 0 || rooms.some((r) => typeof r.source?.xml !== 'string')) continue;
+                const set = {
+                    schema_version: 1, set_id: chunk.set_id, rooms, start: { level: 0 },
+                    menu_rooms: [0], named_rooms: {},
+                };
+                const plan = planLevelSetChunks(set);
+                // ⛓ EVERY room passes through byte for byte — no record, no render.
+                expect(plan.chunks.flatMap((x) => x.rooms), `case ${ci} chunk ${chi}`)
+                    .toEqual(rooms);
+            }
+        }
+    });
 });
 
 /**
@@ -611,13 +767,13 @@ describe('the vanilla xml set derives the SAME atlas as the map extract', () => 
         // ⛓ THE ADAPTATION IS ONE FIELD, AND `seedlingAtlasDerivation.js`'s own
         // header says so: a parsed room is a map record minus `level`/`class`/
         // `path`, and the SET is what supplies the numbering.
-        ...parseOelLevel(r.source.xml), level,
+        ...r.source.record, level,
     }));
 
     it('reproduces the regions, the boundary exits and the connections, 1:1', async () => {
         const { derivePlaythroughLayer } = await import(
             '../../../scripts/procgen/make-seedling-playthrough-rules.mjs');
-        const { set } = vanillaXmlSet(fixture('seedling-vanilla-set.json'),
+        const { set } = vanillaRecordSet(fixture('seedling-vanilla-set.json'),
             JSON.parse(readFileSync(fileURLToPath(
                 new URL('../flashPanel/atlases/seedling-map.json', import.meta.url)), 'utf8')));
 
@@ -670,7 +826,7 @@ describe('the vanilla xml set derives the SAME atlas as the map extract', () => 
     it('goes RED when one connection is dropped from the xml side', async () => {
         const { derivePlaythroughLayer } = await import(
             '../../../scripts/procgen/make-seedling-playthrough-rules.mjs');
-        const { set } = vanillaXmlSet(fixture('seedling-vanilla-set.json'),
+        const { set } = vanillaRecordSet(fixture('seedling-vanilla-set.json'),
             JSON.parse(readFileSync(fileURLToPath(
                 new URL('../flashPanel/atlases/seedling-map.json', import.meta.url)), 'utf8')));
         const rooms = roomsOfXmlSet(set);

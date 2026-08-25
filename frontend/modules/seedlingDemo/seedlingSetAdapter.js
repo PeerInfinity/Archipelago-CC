@@ -93,7 +93,7 @@ import {
 import { apMappingInvalidation } from './levelSetExporter.js';
 import {
     LEVEL_SET_SCHEMA_VERSION, MUSIC_COUNT, MUSIC_NONE, NAMED_ROOMS,
-    indexOfRoom, roomRecordOf, roomSourceKind,
+    coreLevelRecord, indexOfRoom, roomRecordOf, roomSourceKind,
     stampLevelSetIdentity, validateLevelSet,
 } from './levelSetValidator.js';
 import {
@@ -394,7 +394,16 @@ function sourceFromPayload(what, { record: rec, xml }) {
             + '`{width, height, layers, entities}` level record) or `xml` (OEL text), got '
             + `${hasRecord ? 'both' : 'neither'}`);
     }
-    return hasRecord ? { record: rec } : { xml };
+    /**
+     * ⛔ **`coreLevelRecord` AND NOT THE PAYLOAD AS HANDED IN**, at every door a
+     * record enters a set by. A ROOM SESSION's fold carries `level`, `class` and
+     * `path` (the base's provenance) and `closeRoomSession` hands that straight
+     * over — storing it would put a SECOND authority for the room's index into
+     * a document whose whole rule is that POSITION IS IDENTITY. It also
+     * normalises attribute values to strings, which is what makes the stored
+     * record survive the render at the chunk boundary by value (see its note).
+     */
+    return hasRecord ? { record: coreLevelRecord(rec) } : { xml };
 }
 
 /** The index of a room built from an op payload, with the parse refusal named. */

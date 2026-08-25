@@ -57,7 +57,9 @@ function generatedSet() {
  * its own index, the SET does. One line, here, not inside the module.
  */
 function roomsOf(set) {
-    return set.rooms.map((room, level) => ({ ...parseOelLevel(room.source.xml), level }));
+    // ⛓ E1b — the exporter writes `source: {record}`; the record IS the shape
+    //   the derivation wants, so there is nothing to parse.
+    return set.rooms.map((room, level) => ({ ...room.source.record, level }));
 }
 
 describe('the two input shapes really are one record', () => {
@@ -68,7 +70,7 @@ describe('the two input shapes really are one record', () => {
      * ([[feedback_header_warning_is_not_a_check]]).
      */
     it('a parsed set room carries width/height/layers/entities and NOT `level`', () => {
-        const doc = parseOelLevel(generatedSet().set.rooms[0].source.xml);
+        const doc = generatedSet().set.rooms[0].source.record;
         for (const key of ['width', 'height', 'layers', 'entities']) {
             expect(doc, `parsed room is missing ${key}`).toHaveProperty(key);
         }

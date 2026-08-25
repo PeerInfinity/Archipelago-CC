@@ -138,7 +138,7 @@ import { levelSourceFromAtlas } from './atlasSource.js';
  * why a browser page may import them at all.
  */
 import { buildStagedTape } from './botDriverV1.js';
-import { buildLevelSet, vanillaXmlSet } from './levelSetExporter.js';
+import { buildLevelSet, vanillaRecordSet } from './levelSetExporter.js';
 import {
     planLevelSetChunks, stampLevelSetIdentity, validateLevelSet,
 } from './levelSetValidator.js';
@@ -8467,7 +8467,7 @@ const VANILLA_SET_PATH = `${FIXTURES_DIR}/seedling-vanilla-set.json`;
  * ⛓ EDITOR v3 E1 — **THE DOCUMENT IS HELD, AND THE ID IS DERIVED FROM IT.**
  * This used to keep only `set.set_id` and throw the 116-room manifest away,
  * which was right while the id was the only thing anybody wanted. `#editLoadVanilla`
- * wants the MANIFEST — it is one of `vanillaXmlSet`'s two inputs — and a second
+ * wants the MANIFEST — it is one of `vanillaRecordSet`'s two inputs — and a second
  * `fetch` for a document this page already downloaded would be a second reader
  * of one file, i.e. two answers to "what is the vanilla set" whenever the two
  * requests could disagree. ONE promise, memoised; the id is `.set_id` of it.
@@ -9352,10 +9352,12 @@ async function runEditor(params, lifetime) {
     });
 
     /**
-     * ⛓⛓⛓ EDITOR v3 E1 — **THE VANILLA 116, AS `xml`, FROM WHAT THIS PAGE
-     * ALREADY HOLDS** (plan §22.2 #6).
+     * ⛓⛓⛓ EDITOR v3 E1 — **THE VANILLA 116 FROM WHAT THIS PAGE ALREADY HOLDS**
+     * (plan §22.2 #6). ⛓ E1b: it arrives as `record` rooms now (⚖ §22.8), so
+     * the built set is 528,752 B instead of 1,652,312 B and its id MOVED —
+     * `seedling-vanilla-record-1040ace1` retires `seedling-vanilla-xml-02a70624`.
      *
-     * ⛔ **NO NEW URL AND NO SECOND FETCH.** Both of `vanillaXmlSet`'s inputs
+     * ⛔ **NO NEW URL AND NO SECOND FETCH.** Both of `vanillaRecordSet`'s inputs
      * are in scope here already: `atlas` is the map extract this arm awaited at
      * mount (`armPrelude` → the memoised `loadAtlas`) and `vanillaSet` is the
      * committed manifest the same `Promise.all` fetched for ⚖ ruling 2's id.
@@ -9370,7 +9372,7 @@ async function runEditor(params, lifetime) {
      *
      * ⚠ THE EMBED SET IS UNTOUCHED, and both ids are printed: the `atlas` base
      * (`?source=edit&level=N`) still pins `vanillaSetId`, and what this button
-     * builds carries its own `seedling-vanilla-xml-…` with `derived_from`
+     * builds carries its own `seedling-vanilla-record-…` with `derived_from`
      * naming that one.
      */
     lifetime.on($('editLoadVanilla'), 'click', () => {
@@ -9378,7 +9380,7 @@ async function runEditor(params, lifetime) {
         const t0 = performance.now();
         let built;
         try {
-            built = vanillaXmlSet(vanillaSet, atlas);
+            built = vanillaRecordSet(vanillaSet, atlas);
         } catch (e) {
             // The function refuses BY NAME (an unjoinable path, a manifest field
             // that did not survive, an invented one); the page prints its
@@ -9390,7 +9392,7 @@ async function runEditor(params, lifetime) {
         }
         const ms = Math.round(performance.now() - t0);
         if (!takeLevelSet(built.set)) return;
-        $('status').textContent = `LOADED the VANILLA 116 as \`xml\` — ${built.set.set_id}, `
+        $('status').textContent = `LOADED the VANILLA 116 as \`record\` — ${built.set.set_id}, `
             + `built here in ${ms} ms from the map extract + the committed manifest `
             + `(${built.report.join.matched_by_suffix}/${built.report.join.rooms} rooms joined by `
             + `PATH). Every room is OPENABLE — an \`embed\` never was.`;
@@ -9517,6 +9519,14 @@ async function runEditor(params, lifetime) {
  * exactly *"is it a set"* and *"does every room fit the proven envelope"*, and
  * an arm that answered either of those its own way would be a second opinion
  * about whether a document is shippable.
+ */
+/**
+ * ⛓⛓ **EDITOR v3 E1b — MEASURED, AND THIS FUNCTION DID NOT HAVE TO MOVE.** A
+ * set carries `record` rooms now and a chunk must carry OEL text; the render
+ * happens INSIDE `planLevelSetChunks`, so both callers here got it for free and
+ * `watchWasm.js:1166-1174` still ships whatever chunk it is handed. ⛔ The
+ * boundary is UPSTREAM of the sender, which is the only place it can be if
+ * there is to be exactly one of it.
  */
 function validatedChunks(set, what) {
     const v = validateLevelSet(set);

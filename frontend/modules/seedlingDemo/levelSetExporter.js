@@ -44,27 +44,32 @@
  * CHECKED by `validateLevelSet` rather than assumed, which is what makes the
  * empty object a statement instead of a default. See `levelSetValidator.js`.
  *
- * ── EDITOR v3 E1: `vanillaXmlSet` — THE SAME ASSEMBLER OVER REAL DATA ───────
+ * ── EDITOR v3 E1/E1b: `vanillaRecordSet` — THE SAME ASSEMBLER OVER REAL DATA ─
  *
  * `buildLevelSet` was written for GENERATED rooms and every Tier-B feature of
  * the set editor was demonstrated on them, because the committed vanilla set is
  * 116 `embed`-sourced rooms and an `embed` cannot be opened (plan §13.5). The
- * missing piece was never a fixture: the map extract's records are exactly what
- * `recordToOel` takes, so the vanilla 116 in `xml` form is a pure FUNCTION of
- * two committed documents. `vanillaXmlSet` below is that function and the only
+ * missing piece was never a fixture: the map extract's records are exactly the
+ * shape a set's room carries, so the vanilla 116 is a pure FUNCTION of two
+ * committed documents. `vanillaRecordSet` below is that function and the only
  * writer of it; the CLI's `--vanilla` arm and the watch page's
  * `#editLoadVanilla` button are its two callers.
+ *
+ * ⛓ E1 built it as `xml` (`vanillaXmlSet`, id base `seedling-vanilla-xml`);
+ * ⚖ §22.8 made a room's `source` a `{record}` and E1b RE-POINTED the same PATH
+ * join at the record, dropped the render and minted a new id. Same join, same
+ * refusals, a different document.
  *
  * Headless-safe: no `node:` imports and no DOM.
  */
 
 import { stableStringify } from '../procgenCore/contentIdentity.js';
-import { recordToOel } from './procgenLevelOel.js';
 import { linkGeneratedRooms } from './levelSetExits.js';
 import {
     LEVEL_SET_SCHEMA_VERSION,
     NAMED_ROOM_KEYS,
-    parseRoomXml,
+    coreLevelRecord,
+    indexOfRoom,
     stampLevelSetIdentity,
 } from './levelSetValidator.js';
 
@@ -117,13 +122,13 @@ export function buildLevelSet(entries, options = {}) {
         fail('levelSetExporter: buildLevelSet needs a non-empty array of generated rooms');
     }
 
-    // --- PHASE 5b: exits, before anything is rendered to OEL ------------------
+    // --- PHASE 5b: exits, on the RECORDS ---------------------------------------
     //
-    // ⛓ IT HAS TO HAPPEN HERE. `linkGeneratedRooms` adds ENTITIES to a record;
-    // `recordToOel` below turns a record into the text a set carries. Linking
-    // after the render would mean parsing the XML back out and editing it as
-    // text, which is what the RETARGET arm is for and is the wrong tool when the
-    // record is still in hand.
+    // ⛓ IT HAS TO HAPPEN HERE. `linkGeneratedRooms` adds ENTITIES to a record.
+    // ⛓⛓ EDITOR v3 E1b: this used to be "before anything is rendered to OEL",
+    // and the render is GONE from this function — so the argument is now simply
+    // that a record is the thing to edit while it is still in hand, and the
+    // RETARGET arm exists for the legacy `xml` rooms that are not.
     let linkReport = null;
     let doors = [];
     if (options.link) {
@@ -182,7 +187,19 @@ export function buildLevelSet(entries, options = {}) {
         const music = entry.music ?? options.music ?? DEFAULT_MUSIC;
         if (entry.music === undefined && options.music === undefined) inventedFields.add('rooms[].music');
 
-        const room = { id, name, source: { xml: recordToOel(record) }, music };
+        /**
+         * ⛓⛓⛓ **EDITOR v3 E1b — THE SET CARRIES THE RECORD, NOT ITS RENDER**
+         * (⚖ plan §22.8). `recordToOel` used to be the LAST step of this
+         * function; it is now the FIRST step of delivery
+         * (`planLevelSetChunks`), because the game's Ogmo loader is the last
+         * hop and everything between here and it is JSON.
+         *
+         * ⛔ `coreLevelRecord` and not the record as handed in: a generated
+         * record carries `level`, a map-extract record carries `class`, `path`
+         * and `tiles_outside_level`, and each of those would be a second
+         * authority for something the SET already says (see its own note).
+         */
+        const room = { id, name, source: { record: coreLevelRecord(record) }, music };
         // Absent means false in the schema, so the flags are written only when
         // true — a set full of `false` would be noise, and the generator has no
         // opinion about either.
@@ -276,9 +293,10 @@ export function reachabilityOf(set) {
     const rooms = Array.isArray(set?.rooms) ? set.rooms : [];
     const startLevel = Number.isInteger(set?.start?.level) ? set.start.level : 0;
     const edges = rooms.map((room) => {
-        const xml = room?.source?.xml;
-        if (typeof xml !== 'string') return null;      // embed-sourced: unknown
-        const doc = parseRoomXml(xml);
+        // ⛓ EDITOR v3 E1b — ONE INDEX DOOR. `null` is an `embed` room, still
+        // counted in `rooms_not_walked` rather than passed off as having none.
+        const doc = indexOfRoom(room);
+        if (doc === null) return null;
         return [...new Set([
             ...doc.exits.map((e) => e.to),
             ...doc.fallthroughs.map((f) => f.to),
@@ -308,27 +326,35 @@ export function reachabilityOf(set) {
     };
 }
 
-// --- THE VANILLA 116 AS `xml` -------------------------------------------------
+// --- THE VANILLA 116 AS `record` ----------------------------------------------
 
 /**
- * The stamp base for the xml-sourced vanilla set — ⛔ **NEVER
+ * The stamp base for the record-sourced vanilla set — ⛔ **NEVER
  * `seedling-vanilla`**, and the difference is the whole point.
  *
  * `fixtures/seedling-vanilla-set.json` carries `seedling-vanilla-02408e1d`:
  * ⚖ ruling 2's subject, `VanillaSet.SET_ID` in the AS3 fork, and what every
  * save stamp keys on (`levelSetValidator.js:222`). The set THIS function builds
- * is DIFFERENT BYTES — the same 116 rooms carried as OEL text instead of as
- * `[Embed]` paths — so it takes an id of its own and the two COEXIST by
+ * is DIFFERENT BYTES — the same 116 rooms carried as level RECORDS instead of
+ * as `[Embed]` paths — so it takes an id of its own and the two COEXIST by
  * construction. A shared base would have made `<base>-<hash>` the only thing
  * telling them apart, i.e. one careless truncation away from a set claiming to
  * be the one the save files name.
+ *
+ * ⛓⛓⛓ **EDITOR v3 E1b RETIRED `seedling-vanilla-xml`, AND THE MOVE WAS THE
+ * POINT OF SAYING SO.** E1 pinned `seedling-vanilla-xml-02a70624` — the hash of
+ * the OEL-BEARING document. ⚖ §22.8 makes a room's `source` a `{record}`, so
+ * this function's output is a different document and MUST take a different
+ * hash; a base that stayed put would have produced a THIRD id under an old
+ * name. Plan §23.12 item 6 pinned the retirement in advance, and §24 pins the
+ * replacement.
  */
-export const VANILLA_XML_SET_ID_BASE = 'seedling-vanilla-xml';
+export const VANILLA_RECORD_SET_ID_BASE = 'seedling-vanilla-record';
 
 /** The one place the two committed inputs' shapes are checked, by name. */
 function requireArray(value, label) {
     if (!Array.isArray(value) || value.length === 0) {
-        fail(`levelSetExporter: vanillaXmlSet needs ${label} — got ${JSON.stringify(value)?.slice(0, 60)}`);
+        fail(`levelSetExporter: vanillaRecordSet needs ${label} — got ${JSON.stringify(value)?.slice(0, 60)}`);
     }
     return value;
 }
@@ -352,7 +378,7 @@ function commonDirPrefix(paths) {
 }
 
 /**
- * The vanilla 116 as an `xml`-sourced level set — a pure function of TWO
+ * The vanilla 116 as a `record`-sourced level set — a pure function of TWO
  * COMMITTED DOCUMENTS and nothing else.
  *
  * ── WHY THIS IS A FUNCTION AND NOT A FIXTURE ─────────────────────────────────
@@ -360,12 +386,19 @@ function commonDirPrefix(paths) {
  * Both inputs are already in the repository and both already reach the watch
  * page: `flashPanel/atlases/seedling-map.json` (the Phase-2 extract, 116
  * records) and `fixtures/seedling-vanilla-set.json` (the manifest, 116
- * `embed`-sourced rooms). `recordToOel` takes exactly a map record's shape and
- * `buildLevelSet` already writes rooms as `source: {xml: recordToOel(record)}`.
- * ⇒ a third committed copy of the 116 (1.6 MB) would be a document that is a
- * pure function of two documents beside it, stale the day either moves. The
- * CLI's `--vanilla` arm and the page's `#editLoadVanilla` button are two
- * CALLERS of this; there is exactly ONE writer.
+ * `embed`-sourced rooms). A map record IS the shape a set's room carries since
+ * ⚖ plan §22.8, so `buildLevelSet` writes `source: {record}` and there is no
+ * render on this path at all. ⇒ a third committed copy of the 116 would be a
+ * document that is a pure function of two documents beside it, stale the day
+ * either moves. The CLI's `--vanilla` arm and the page's `#editLoadVanilla`
+ * button are two CALLERS of this; there is exactly ONE writer.
+ *
+ * ⛓⛓ **AND E1b TOOK 1.12 MB OUT OF IT.** MEASURED: this set is **528,752 B**
+ * as records and **1,652,312 B** with every room rendered — **32.0%**, a 3.12×
+ * reduction —
+ * because the text form escapes every attribute and repeats an element name
+ * twice per entity. The OEL is regenerated at the chunk boundary, where it is
+ * what crosses.
  *
  * ── ⛔ THE JOIN IS BY PATH, NEVER BY INDEX ───────────────────────────────────
  *
@@ -397,12 +430,12 @@ function commonDirPrefix(paths) {
  * @returns {{set: object, report: object}} `report` is `buildLevelSet`'s, plus
  *   `join` (the measured prefixes and the match tally)
  */
-export function vanillaXmlSet(embedSet, mapDoc) {
+export function vanillaRecordSet(embedSet, mapDoc) {
     const rooms = requireArray(embedSet?.rooms, 'the embed set\'s `rooms`');
     const levels = requireArray(mapDoc?.levels, 'the map document\'s `levels`');
     const levelRoot = mapDoc?.source?.level_root;
     if (typeof levelRoot !== 'string' || levelRoot === '') {
-        fail('levelSetExporter: vanillaXmlSet needs the map document\'s `source.level_root` — '
+        fail('levelSetExporter: vanillaRecordSet needs the map document\'s `source.level_root` — '
             + 'it is what the join key is measured relative to, and guessing a root would make '
             + 'every path in the document mean something this function chose');
     }
@@ -413,12 +446,12 @@ export function vanillaXmlSet(embedSet, mapDoc) {
     levels.forEach((record, i) => {
         const path = record?.path;
         if (typeof path !== 'string' || !path.startsWith(root)) {
-            fail(`levelSetExporter: vanillaXmlSet — map levels[${i}].path ${JSON.stringify(path)} `
+            fail(`levelSetExporter: vanillaRecordSet — map levels[${i}].path ${JSON.stringify(path)} `
                 + `is not under the document's own source.level_root ${JSON.stringify(levelRoot)}`);
         }
         const rel = path.slice(root.length);
         if (byRel.has(rel)) {
-            fail(`levelSetExporter: vanillaXmlSet — map levels[${i}] and levels[${byRel.get(rel).i}] `
+            fail(`levelSetExporter: vanillaRecordSet — map levels[${i}] and levels[${byRel.get(rel).i}] `
                 + `both name ${JSON.stringify(rel)}; the join key would be ambiguous`);
         }
         byRel.set(rel, { record, i });
@@ -430,28 +463,28 @@ export function vanillaXmlSet(embedSet, mapDoc) {
     const entries = rooms.map((room, id) => {
         const embed = room?.source?.embed;
         if (typeof embed !== 'string' || embed === '') {
-            fail(`levelSetExporter: vanillaXmlSet — rooms[${id}] `
+            fail(`levelSetExporter: vanillaRecordSet — rooms[${id}] `
                 + `${JSON.stringify(room?.name ?? null)} is not embed-sourced `
                 + `(source: ${JSON.stringify(room?.source)}); this function turns `
-                + '`embed` paths into `xml`, and has nothing to look up for any other source');
+                + '`embed` paths into `record`s, and has nothing to look up for any other source');
         }
         const hits = [...byRel.entries()]
             .filter(([rel]) => embed === rel || embed.endsWith(`/${rel}`));
         if (hits.length === 0) {
-            fail(`levelSetExporter: vanillaXmlSet — rooms[${id}] "${room.name}" embeds `
+            fail(`levelSetExporter: vanillaRecordSet — rooms[${id}] "${room.name}" embeds `
                 + `${JSON.stringify(embed)} and NO map record names that file (the map's `
                 + `${levels.length} records are rooted at ${JSON.stringify(levelRoot)}). A renamed `
                 + 'or re-extracted level is the ordinary cause, and joining by position instead '
                 + 'would have carried the neighbouring room\'s geometry silently');
         }
         if (hits.length > 1) {
-            fail(`levelSetExporter: vanillaXmlSet — rooms[${id}] "${room.name}" embeds `
+            fail(`levelSetExporter: vanillaRecordSet — rooms[${id}] "${room.name}" embeds `
                 + `${JSON.stringify(embed)} and ${hits.length} map records name that file `
                 + `(${hits.map(([rel]) => rel).join(', ')}); the join would have to guess`);
         }
         const [rel, { record, i }] = hits[0];
         if (claimedBy.has(rel)) {
-            fail(`levelSetExporter: vanillaXmlSet — rooms[${id}] "${room.name}" and rooms[`
+            fail(`levelSetExporter: vanillaRecordSet — rooms[${id}] "${room.name}" and rooms[`
                 + `${claimedBy.get(rel)}] both join to map levels[${i}] (${rel}); one record `
                 + 'cannot be two rooms');
         }
@@ -469,8 +502,8 @@ export function vanillaXmlSet(embedSet, mapDoc) {
     });
 
     const { set, report } = buildLevelSet(entries, {
-        setId: VANILLA_XML_SET_ID_BASE,
-        generator: 'levelSetExporter.vanillaXmlSet',
+        setId: VANILLA_RECORD_SET_ID_BASE,
+        generator: 'levelSetExporter.vanillaRecordSet',
         // Only the fields the embed set ACTUALLY carries: passing `undefined`
         // for an absent one would put `buildLevelSet` back on its own defaults
         // and list them as invented, which is the failure this arm exists to
@@ -508,7 +541,7 @@ export function vanillaXmlSet(embedSet, mapDoc) {
     for (const field of ['name', 'description', 'start', 'menu_rooms', 'named_rooms']) {
         if (!Object.hasOwn(embedSet, field)) continue;
         if (stableStringify(set[field]) !== stableStringify(embedSet[field])) {
-            fail(`levelSetExporter: vanillaXmlSet — the manifest field \`${field}\` did not `
+            fail(`levelSetExporter: vanillaRecordSet — the manifest field \`${field}\` did not `
                 + `survive: ${JSON.stringify(embedSet[field])} went in and `
                 + `${JSON.stringify(set[field])} came out`);
         }
@@ -517,14 +550,14 @@ export function vanillaXmlSet(embedSet, mapDoc) {
         const { source: _outSource, ...outRest } = out;
         const { source: _inSource, ...inRest } = rooms[id];
         if (stableStringify(outRest) !== stableStringify({ ...inRest, id })) {
-            fail(`levelSetExporter: vanillaXmlSet — rooms[${id}] "${rooms[id].name}" lost or `
+            fail(`levelSetExporter: vanillaRecordSet — rooms[${id}] "${rooms[id].name}" lost or `
                 + `gained a field: ${JSON.stringify(inRest)} went in and `
                 + `${JSON.stringify(outRest)} came out (\`source\` excluded — it is what this `
                 + 'function replaces)');
         }
     });
     if (report.invented.length > 0) {
-        fail('levelSetExporter: vanillaXmlSet INVENTED '
+        fail('levelSetExporter: vanillaRecordSet INVENTED '
             + `${report.invented.join(', ')} — every field of this set comes from one of the two `
             + 'committed documents, so an invented one means a field was not passed through and '
             + 'the set would carry a value nobody chose');

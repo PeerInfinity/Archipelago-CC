@@ -34,7 +34,9 @@ import { indexMapDocument, validateRegionAtlas } from '../procgenPipeline/region
 import { tileTypeForPlacement } from '../flashPanel/seedlingSemantics.js';
 import { buildLevelSet, reachabilityOf } from './levelSetExporter.js';
 import { removeExitFromRoomXml } from './levelSetExits.js';
-import { parseRoomXml, stampLevelSetIdentity, validateLevelSet } from './levelSetValidator.js';
+import {
+    indexOfRoom, parseRoomXml, stampLevelSetIdentity, validateLevelSet,
+} from './levelSetValidator.js';
 import { emptyLevel } from './procgenLevel.js';
 import { parseOelLevel, recordToOel } from './procgenLevelOel.js';
 import { createSeedlingEditAdapter } from './seedlingEditAdapter.js';
@@ -68,6 +70,18 @@ function generatedSet(n = ROOMS, setId = 'set-adapter-test') {
 }
 
 const baseRecord = (n = ROOMS) => setRecord(generatedSet(n));
+
+/**
+ * ⛓⛓ EDITOR v3 E1b — `buildLevelSet` writes `source: {record}` now, so a row
+ * that is genuinely ABOUT OEL TEXT has to say so and render one. ⛔ Rendering
+ * here rather than at the exporter is the point: the set is JSON and the text
+ * is a form it is put into.
+ */
+const asXmlSet = (set) => stampLevelSetIdentity({
+    ...set,
+    provenance: { ...(set.provenance ?? {}) },
+    rooms: set.rooms.map((r) => ({ ...r, source: { xml: recordToOel(r.source.record) } })),
+}, 'rendered');
 
 const session = (n = ROOMS) => {
     const record = baseRecord(n);
@@ -268,10 +282,10 @@ describe('the op vocabulary, and every refusal by name', () => {
         expect(s.record().set.rooms[0].name).toBe('Inserted');
         expect(s.record().set.rooms.map((r) => r.id)).toEqual([0, 1, 2, 3, 4, 5, 6]);
         // the NEW room's exit still names room 5, which it was authored against
-        expect(parseRoomXml(s.record().set.rooms[0].source.xml).exits.map((e) => e.to)).toEqual([5]);
+        expect(exitsOfRoom(s.record(), 0).map((e) => e.to)).toEqual([5]);
         // …and every OLD room's exits shifted up by one
-        expect(parseRoomXml(s.record().set.rooms[1].source.xml).exits.map((e) => e.to)).toEqual([2]);
-        expect(parseRoomXml(s.record().set.rooms[3].source.xml).exits.map((e) => e.to)).toEqual([2, 4]);
+        expect(exitsOfRoom(s.record(), 1).map((e) => e.to)).toEqual([2]);
+        expect(exitsOfRoom(s.record(), 3).map((e) => e.to)).toEqual([2, 4]);
         expect(s.record().set.start.level).toBe(1);
     });
 
@@ -580,7 +594,8 @@ describe('⛔⛔ `disconnect` — the OEL has NO inert door, and the four reader
      *
      * ⇒ the only representation ALL readers agree on is DELETING the element.
      */
-    const setDoc = generatedSet(4, 'unwired-measure');
+    // ⛓ THIS ROW IS ABOUT OEL SPELLINGS, so its subject is RENDERED on purpose.
+    const setDoc = asXmlSet(generatedSet(4, 'unwired-measure'));
     const xml = setDoc.rooms[0].source.xml;
     const stamped = (next) => stampLevelSetIdentity({
         ...setDoc,
@@ -674,13 +689,13 @@ describe('⛓⛓ `reorder` rewrites EVERY index a room reaches — exits AND fal
      * ([[feedback_fixture_must_discriminate_two_builds]]).
      */
     it('a @fallthrough is renumbered with the exits, and reachability survives', () => {
-        expect(parseRoomXml(pitSet.rooms[0].source.xml).fallthroughs).toEqual([
+        expect(indexOfRoom(pitSet.rooms[0]).fallthroughs).toEqual([
             { element: 'control', to: 2, sign: 0 },
         ]);
         const s = createSetSession(adapter, setRecord(pitSet), { base: { kind: 'set', set_id: pitSet.set_id } });
         apply(s, { op: 'reorder', order: [2, 1, 0] });
         const moved = s.record().set.rooms[2];        // old room 0 is now room 2
-        expect(parseRoomXml(moved.source.xml).fallthroughs).toEqual([
+        expect(indexOfRoom(moved).fallthroughs).toEqual([
             { element: 'control', to: 0, sign: 0 },   // old 2 is now 0
         ]);
         expect(reachabilityOf(s.record().set))
@@ -730,7 +745,7 @@ describe('⛓⛓ `reorder` rewrites EVERY index a room reaches — exits AND fal
         apply(s, { op: 'reorder', order: [2, 1, 0] });
         // after: old room 1 is still room 1; its exit to old 2 (now room 0)
         // still crosses 1 -> 4 and must still announce 4
-        const exits = parseRoomXml(s.record().set.rooms[1].source.xml).exits;
+        const exits = indexOfRoom(s.record().set.rooms[1]).exits;
         const toZero = exits.find((e) => e.to === 0);
         expect(toZero.sign).toBe(4);
         const toTwo = exits.find((e) => e.to === 2);
@@ -888,7 +903,7 @@ describe('⛓⛓⛓ the ROOM session inside the SET session — C2\'s batching r
 
     it('N room edits become ONE set op, and the set_id does not move', () => {
         const { record, s, roomSession } = open();
-        const before = s.record().set.rooms[2].source.xml;
+        const before = s.record().set.rooms[2].source.record;
         for (const [tx, ty] of [[2, 2], [3, 2], [4, 2]]) {
             expect(roomSession.apply({ op: 'paint', layer: 'tiles', tx, ty, terrain: 'wall' }).ok).toBe(true);
         }
@@ -900,7 +915,7 @@ describe('⛓⛓⛓ the ROOM session inside the SET session — C2\'s batching r
         expect(closed.applied).toBe(true);
         expect(s.ops()).toHaveLength(1);
         expect(s.ops()[0].op).toBe('replace-room');
-        expect(s.record().set.rooms[2].source.xml).not.toBe(before);
+        expect(s.record().set.rooms[2].source.record).not.toBe(before);
         expect(s.record().set.set_id).toBe(record.set.set_id);
 
         /**
@@ -908,7 +923,7 @@ describe('⛓⛓⛓ the ROOM session inside the SET session — C2\'s batching r
          * FOR BYTE because the fold never had it any other way.
          */
         expect(s.undo()).toBe(true);
-        expect(s.record().set.rooms[2].source.xml).toBe(before);
+        expect(s.record().set.rooms[2].source.record).toBe(before);
         expect(adapter.equal(s.record(), record)).toBe(true);
     });
 
@@ -941,12 +956,38 @@ describe('⛓⛓⛓ the ROOM session inside the SET session — C2\'s batching r
     it('closeRoomSession commits the room session\'s RECORD, with no renderer', () => {
         const { s, roomSession } = open();
         expect(closeRoomSession.length).toBe(3);
+        expect(roomSession.apply({ op: 'paint', layer: 'tiles', tx: 2, ty: 2, terrain: 'wall' }).ok)
+            .toBe(true);
         const closed = closeRoomSession(s, roomSession, 2);
         expect(closed.ok).toBe(true);
         const op = s.ops()[0];
         expect(op.op).toBe('replace-room');
         expect(op.record).toEqual(roomSession.record());
         expect(Object.hasOwn(op, 'xml')).toBe(false);
+        /**
+         * ⛔⛔ **AND THE ROOM THAT LANDS IS THE CORE FOUR.** A room session's
+         * fold carries `level`, `class` and `path` — the base's provenance —
+         * and storing them would put a SECOND authority for the room's index
+         * into a document whose whole rule is that POSITION IS IDENTITY.
+         * `coreLevelRecord` at the op's door is what drops them.
+         */
+        const stored = s.record().set.rooms[2].source.record;
+        expect(Object.keys(stored).sort()).toEqual(['entities', 'height', 'layers', 'width']);
+        for (const dropped of ['level', 'class', 'path', 'tiles_outside_level']) {
+            expect(Object.hasOwn(stored, dropped), dropped).toBe(false);
+        }
+    });
+
+    /**
+     * ⛓⛓ …and closing a room session that changed NOTHING is a NO-OP, because
+     * the fold compares payloads: the record going back in is the record that
+     * came out, so no set op is created at all.
+     */
+    it('closeRoomSession on an UNEDITED room session adds no set op', () => {
+        const { s, roomSession } = open();
+        expect(roomSession.ops()).toHaveLength(0);
+        expect(closeRoomSession(s, roomSession, 2).ok).toBe(true);
+        expect(s.ops()).toHaveLength(0);
     });
 
     it('closeRoomSession quotes a refused write', () => {
@@ -1073,7 +1114,7 @@ describe('§19.5\'s field census — the ONE line of adaptation, and the gate th
             const all = new Set(docs.flatMap((d) => Object.keys(d)));
             return [...all].filter((k) => docs.every((d) => Object.hasOwn(d, k))).sort();
         };
-        const parsedRooms = generatedSet().rooms.map((r) => parseOelLevel(r.source.xml));
+        const parsedRooms = generatedSet().rooms.map((r) => r.source.record);
         const extractKeys = new Set(mapDoc.levels.flatMap((lv) => Object.keys(lv)));
         const parsedKeys = new Set(parsedRooms.flatMap((d) => Object.keys(d)));
 
@@ -1225,24 +1266,18 @@ describe('"what links here" and the room exit list — what D2\'s DOM will read'
  * ══════════════════════════════════════════════════════════════════ */
 
 /** The same generated set, carried as RECORDS. ⛔ Re-stamped: the content moved. */
-const recordSet = (n = ROOMS, setId = 'set-adapter-record') => {
-    const xmlSet = generatedSet(n, setId);
-    return stampLevelSetIdentity({
-        ...xmlSet,
-        rooms: xmlSet.rooms.map((r) => ({
-            ...r, source: { record: parseOelLevel(r.source.xml, r.name) },
-        })),
-    }, { base: setId });
-};
+// ⛓ EDITOR v3 E1b — the exporter WRITES records, so this IS `generatedSet`.
+const recordSet = (n = ROOMS, setId = 'set-adapter-record') => generatedSet(n, setId);
 
 /** A set where room 0 is legacy `xml` and every other room is a `record`. */
 const mixedSet = (n = ROOMS) => {
     const rec = recordSet(n, 'set-adapter-mixed');
     return stampLevelSetIdentity({
         ...rec,
+        provenance: { ...(rec.provenance ?? {}) },
         rooms: rec.rooms.map((r, i) => (i !== 0 ? r
             : { ...r, source: { xml: recordToOel(r.source.record) } })),
-    }, { base: 'set-adapter-mixed' });
+    }, 'set-adapter-mixed');
 };
 
 const kindsOf = (set) => set.rooms.map((r) => (typeof r.source.record === 'object' ? 'record'
@@ -1256,7 +1291,7 @@ const kindsOf = (set) => set.rooms.map((r) => (typeof r.source.record === 'objec
  * than about the edit.
  */
 const validAfterEdit = (set) => validateLevelSet(
-    stampLevelSetIdentity(set, { base: 'e1b-edited' }),
+    stampLevelSetIdentity(set, 'e1b-edited'),
 );
 
 describe('EDITOR v3 E1b — a RECORD set drives every op the xml set does', () => {
@@ -1390,7 +1425,7 @@ describe('EDITOR v3 E1b — a RECORD set drives every op the xml set does', () =
             ...set,
             rooms: set.rooms.map((r, i) => (i !== 1 ? r : { ...r, source: { embed: 'levels/X.oel' } })),
         };
-        const record = setRecord(stampLevelSetIdentity(withEmbed, { base: 'embed-probe' }));
+        const record = setRecord(stampLevelSetIdentity(withEmbed, 'embed-probe'));
         for (const op of [
             { op: 'connect', from: [1, 0], to: [2, 0] },
             { op: 'disconnect', room: 1, exitIndex: 0 },

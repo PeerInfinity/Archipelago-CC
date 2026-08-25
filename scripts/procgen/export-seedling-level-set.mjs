@@ -42,13 +42,13 @@
  *
  * ⛔ NOTHING IS WRITTEN UNDER `fixtures/`, EVER (standing law).
  *
- * ── EDITOR v3 E1: THE SECOND ARM, `--vanilla` ────────────────────────────────
+ * ── EDITOR v3 E1/E1b: THE SECOND ARM, `--vanilla` ───────────────────────────
  *
  * This script had no arm that does not GENERATE, and the set editor's whole
  * Tier B was therefore demonstrated on generated rooms: the committed vanilla
  * set is 116 `embed`-sourced rooms and an `embed` cannot be opened (plan §13.5).
- * `--vanilla` prints the SAME REPORT over `vanillaXmlSet(embedSet, mapDoc)` —
- * the vanilla 116 carried as `xml`, derived from two committed documents and
+ * `--vanilla` prints the SAME REPORT over `vanillaRecordSet(embedSet, mapDoc)` —
+ * the vanilla 116 carried as `record`s, derived from two committed documents and
  * nothing else — so the two arms can be read line by line against each other.
  *
  * ⛔ IT TAKES NO GENERATION FLAG. There is no seed, biome, exit topology or set
@@ -75,7 +75,7 @@ const M = (p) => import(join(REPO, 'frontend/modules/seedlingDemo', p));
 
 const { generateSeedlingLevel } = await M('procgenSeedling.js');
 const { GENERATE_BIOMES } = await M('watchGenerate.js');
-const { buildLevelSet, vanillaXmlSet, apMappingInvalidation } = await M('levelSetExporter.js');
+const { buildLevelSet, vanillaRecordSet, apMappingInvalidation } = await M('levelSetExporter.js');
 const { validateLevelSet, planLevelSetChunks } = await M('levelSetValidator.js');
 // ⛓ THE MAP EXTRACT'S PATH IS `levelSource.js`'s, NOT A SECOND COPY OF IT.
 // That module is the node-only edge that already owns `ATLAS_PATH` and memoises
@@ -195,7 +195,7 @@ let set;
 let report;
 if (VANILLA) {
     const embedSet = JSON.parse(readFileSync(VANILLA_SET_PATH, 'utf8'));
-    ({ set, report } = vanillaXmlSet(embedSet, loadAtlas()));
+    ({ set, report } = vanillaRecordSet(embedSet, loadAtlas()));
     note(`  ${report.join.rooms} room(s) joined by path, `
         + `${report.join.matched_by_suffix} on the shared suffix`);
 } else {
@@ -364,6 +364,15 @@ if (OUT_DIR) {
     const j = (v) => `${JSON.stringify(v, null, 2)}\n`;
     writeFileSync(join(dir, `${set.set_id}.json`), j(set));
     writeFileSync(join(dir, `${set.set_id}.ap-invalidation.json`), j(invalidation));
+    /**
+     * ⛓⛓⛓ **EDITOR v3 E1b — THE `.chunks.json` IS WHERE OEL LIVES ON DISK
+     * NOW.** The `.json` is the SET: pure JSON records, no text. The
+     * `.chunks.json` is the DELIVERY: `planLevelSetChunks` rendered every
+     * `record` room to `{xml}` on its way out, because the receiver ends at
+     * `LevelSet.as:139`. ⛔ So a set file with an `xml` room, or a chunk file
+     * with a `record` room, is a document one of these two steps did not take —
+     * which is what `levelSetExporter.test.js` asserts over a real `--out-dir`.
+     */
     writeFileSync(join(dir, `${set.set_id}.chunks.json`), j(chunks));
     say('');
     say(`written: ${dir}/${set.set_id}.{json,ap-invalidation.json,chunks.json}`);

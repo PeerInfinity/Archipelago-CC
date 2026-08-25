@@ -339,7 +339,7 @@ describe('⛓⛓⛓ §3.2\'s `base` UNION — two resolved, two refused by name'
     /* ══ EDITOR v3 C2 — `set-room` HAS A BODY ═══════════════════════════ */
 
     /**
-     * ⛓ A SET WITH A REAL `source.xml`, BUILT FROM THE ATLAS. ⛔ Level 110 and
+     * ⛓ A SET WITH A REAL room document, BUILT FROM THE ATLAS. ⛔ Level 110 and
      * not 14: `validateLevelSet` REFUSES a one-room set whose room carries an
      * `@to` outside `0..0`, and measured over the 116, exactly TWO levels (81
      * and 110) survive alone. A subject chosen for the claim rather than for
@@ -382,7 +382,7 @@ describe('⛓⛓⛓ §3.2\'s `base` UNION — two resolved, two refused by name'
                 { kind: 'set-room', set_id: VANILLA.set_id, room: 0 }))
                 .toThrow(/its door is/i);
             // ⛓ …and it is EVERY room, not the first one only.
-            expect(VANILLA.rooms.filter((r) => typeof r.source?.xml === 'string').length).toBe(0);
+            expect(VANILLA.rooms.filter((r) => typeof r.source?.embed !== 'string').length).toBe(0);
             expect(VANILLA.rooms.length).toBe(116);
         });
 
@@ -395,11 +395,15 @@ describe('⛓⛓⛓ §3.2\'s `base` UNION — two resolved, two refused by name'
      */
     it('⛓⛓ a `record`-sourced room opens to the SAME record as its `xml` twin, and needs '
         + 'NO parseOel', () => {
-        const xmlSet = setOf();
-        const record = parseOelLevel(xmlSet.rooms[0].source.xml, 'L110');
-        const recordSet = stampLevelSetIdentity({
-            ...xmlSet, rooms: [{ ...xmlSet.rooms[0], source: { record } }],
-        }, { base: 'probe-record' });
+        // ⛓ E1b — `buildLevelSet` writes the RECORD; the `xml` twin is the
+        //   legacy form, rendered here on purpose so the row compares two kinds.
+        const recordSet = setOf();
+        const record = recordSet.rooms[0].source.record;
+        const xmlSet = stampLevelSetIdentity({
+            ...recordSet,
+            provenance: { ...(recordSet.provenance ?? {}) },
+            rooms: [{ ...recordSet.rooms[0], source: { xml: recordToOel(record) } }],
+        }, 'probe-xml');
 
         const viaXml = resolveBase(createSeedlingEditAdapter({
             parseOel: parseOelLevel,
@@ -420,8 +424,9 @@ describe('⛓⛓⛓ §3.2\'s `base` UNION — two resolved, two refused by name'
     it('⛓ a `record` room whose rectangle is wrong is refused by `assertRoomSize`, BY NAME', () => {
         const bad = stampLevelSetIdentity({
             ...setOf(),
+            provenance: { ...(setOf().provenance ?? {}) },
             rooms: [{ ...setOf().rooms[0], source: { record: { width: 0, height: 0, layers: [], entities: [] } } }],
-        }, { base: 'probe-bad' });
+        }, 'probe-bad');
         expect(() => resolveBase(createSeedlingEditAdapter({
             levelSetSource: () => bad,
         }), { kind: 'set-room', set_id: bad.set_id, room: 0 })).toThrow(/set-room base/);

@@ -25,6 +25,15 @@
 
 import { computeContentHash, stampIdentity } from '../procgenCore/contentIdentity.js';
 import { TAGS_PER_LEVEL } from './breakableRocks.js';
+// ⛓⛓ EDITOR v3 E1b — THE ONE RENDER, AND IT IS HERE BECAUSE THE CHUNK IS THE
+// BOUNDARY. A set carries records (plan §22.8); what CROSSES has to be the OEL
+// text `LevelSet.as:139` reads. ⚠ MEASURED IMPORT COST: this module's graph goes
+// from 3 modules to 10 (`procgenLevelOel` → `levelWorld` and its five), which is
+// a real widening of a header that calls itself dependency-light — accepted
+// because every browser caller already imports both (`watchViewer.js`), and
+// because the alternative, an injected renderer, puts a MISSING render one
+// forgotten argument away from shipping a room the game cannot read.
+import { recordToOel } from './procgenLevelOel.js';
 
 export const LEVEL_SET_SCHEMA_VERSION = 1;
 
@@ -76,6 +85,10 @@ export const TILE_PX = 16;
 // chunk size is only ever validated BY REPETITION, never by a single call.
 export const MAX_ROOMS_PER_CHUNK = 16;
 
+// ⛓ EDITOR v3 E1b: the byte figure is measured on the RENDERED room — a
+// `record`-sourced room is turned into OEL text by `planLevelSetChunks` before
+// it is sized, because that is the form that crosses.
+//
 // ⚠ AND 16 ROOMS ALONE IS NOT SUFFICIENT — measured, and it bites on VANILLA.
 // The 16-room figure was proven on a corpus whose mean room is 11,946 B, so it
 // is a proxy for the thing that actually failed: allocation volume. Vanilla's
@@ -83,8 +96,12 @@ export const MAX_ROOMS_PER_CHUNK = 16;
 // set order is 424,299 B — larger than the 404,224 B chunk that ABORTED at 32
 // rooms. A rooms-only bound would hand that window to the runtime as one call.
 // ⇒ bound on rooms AND bytes, whichever binds first. The byte figure is the
-// serialized chunk JSON — what actually crosses and gets parsed — and 239,967 B
-// is the size proven over 15 consecutive calls.
+// serialized ROOM (`JSON.stringify(room).length`, summed per chunk) — ⚠ the
+// comment here said "chunk JSON" until E1b and the code has always measured the
+// room; the two differ by the chunk envelope's own ~120 bytes, which is why the
+// planner's largest chunk (237,194 B over the vanilla 116) is under the 239,967 B
+// bound with a 2,773 B margin rather than exactly at it. 239,967 B is the size
+// proven over 15 consecutive calls.
 export const MAX_CHUNK_BYTES = 239967;
 
 // The nine LIVE debug warps on keys 1-9 (Player.as:1827-1999), each preceded by
@@ -527,6 +544,68 @@ export function indexRoom(record) {
 }
 
 /**
+ * ⛓⛓ **THE CORE FOUR, AND WHAT A SET DELIBERATELY DOES NOT CARRY.** A level
+ * record in the wild may carry more than `{width, height, layers, entities}`:
+ * the map extract's records carry `level`, `class`, `path` and
+ * `tiles_outside_level`. None of them belongs in a set:
+ *
+ *   ·  `level` — the SET assigns the id, BY POSITION. Keeping the record's own
+ *      would put a second, disagreeing authority in the document, and every
+ *      generated record answers to the same one (`buildLevelSet`'s own note).
+ *   ·  `class` / `path` — provenance about a SOURCE TREE, not about this
+ *      document. The manifest's `name` is the room's name.
+ *   ·  `tiles_outside_level` — a fact about the DISK FILE (how many placements
+ *      the parser discarded), which is why `seedlingEditAdapter`'s `oelBase`
+ *      drops it too.
+ *
+ * ⛓ It is also what makes `parseOelLevel(recordToOel(core)) === core` a fixed
+ * point — measured 116/116 over the vanilla corpus — and THAT is the property
+ * the delivery boundary rests on: a set's room and the room the game is handed
+ * must be the same document.
+ *
+ * ⛔⛔ **AND THAT IS WHY ATTRIBUTE VALUES ARE NORMALISED TO STRINGS HERE. A ROW
+ * FOUND THIS: `linkGeneratedRooms` WRITES NUMBERS.** An OEL attribute is text,
+ * `parseOelLevel` answers with strings, `recordToOel` renders `String(v)` — and
+ * the linker appends `attrs: {to: 1, playerx: 128, …}` as NUMBERS. While a set
+ * carried the RENDER (E1) that difference could not be seen; now that the set
+ * carries the RECORD, a linked generated set was a document that did NOT
+ * survive its own delivery boundary by value. MEASURED: the map extract's 3,574
+ * attribute values are all strings already, so normalising moves NO committed
+ * id — it only closes the generated case.
+ *
+ * ⚠ Value-inert for every reader (`intOr` reads both), byte-visible in the
+ * document and in its content hash — §11.8's third difference class, one layer
+ * up. Identity is preserved where nothing changes, so a record that came out of
+ * `parseOelLevel` is returned as the same objects.
+ */
+export function coreLevelRecord(record) {
+    if (!isPlainObject(record)) {
+        fail(`levelSetValidator: coreLevelRecord needs a level record, got ${
+            JSON.stringify(record)?.slice(0, 80)}`);
+    }
+    const { width, height, layers, entities } = record;
+    return {
+        width,
+        height,
+        layers,
+        entities: Array.isArray(entities) ? entities.map(withStringAttrs) : entities,
+    };
+}
+
+/** One entity with its `attrs` values as strings — the same object if already so. */
+function withStringAttrs(entity) {
+    const attrs = entity?.attrs;
+    if (!isPlainObject(attrs)) return entity;
+    let changed = false;
+    const out = {};
+    for (const [k, v] of Object.entries(attrs)) {
+        out[k] = typeof v === 'string' ? v : String(v);
+        if (out[k] !== v) changed = true;
+    }
+    return changed ? { ...entity, attrs: out } : entity;
+}
+
+/**
  * ⛓⛓ **THE INDEX OF A ROOM, whatever kind it is** — `parseRoomXml` for the two
  * TEXT kinds, `indexRoom` for the record kind.
  *
@@ -556,7 +635,31 @@ export function indexOfRoom(room, { xmlByRoomId = null } = {}) {
 export function planLevelSetChunks(set, options = {}) {
     const maxRooms = options.maxRooms ?? MAX_ROOMS_PER_CHUNK;
     const maxBytes = options.maxBytes ?? MAX_CHUNK_BYTES;
-    const rooms = Array.isArray(set?.rooms) ? set.rooms : [];
+    /**
+     * ⛓⛓⛓ **EDITOR v3 E1b — OEL IS RENDERED HERE AND NOWHERE ELSE** (plan
+     * §22.8). A `record` room becomes `{xml}` BEFORE it is sized and packed, so
+     * the chunk that crosses is exactly what `LevelSet.as:139` reads
+     * (`room.source.xml as String`) and the byte bound below is measured on
+     * what actually crosses. `xml` and `embed` rooms pass through untouched.
+     *
+     * ⛔ **THE ORDER IS THE WHOLE CLAIM.** Sizing the RECORD would price a
+     * document 3.12× smaller than the one delivered — measured over the
+     * vanilla 116: 528,752 B of records against 1,652,312 B of OEL, which plans
+     * as 8 chunks instead of 9 and would hand the runtime a call the envelope
+     * was never proven for.
+     *
+     * ⚠ `render` is overridable so a row can prove the render is load-bearing;
+     * the DEFAULT is the repo's one writer and no caller passes it.
+     */
+    const render = options.render ?? recordToOel;
+    const rooms = (Array.isArray(set?.rooms) ? set.rooms : []).map((room) => (
+        roomSourceKind(room?.source) === 'record'
+            // ⛔ `{xml}` REPLACES `{record}` rather than joining it: the
+            // exactly-one-of rule holds for a chunk's rooms too, and a room
+            // carrying both would be a document no reader has a rule for.
+            ? { ...room, source: { xml: render(room.source.record) } }
+            : room
+    ));
     const chunks = [];
     const oversized = [];
     let current = [];

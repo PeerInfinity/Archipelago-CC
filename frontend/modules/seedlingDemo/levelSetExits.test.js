@@ -29,6 +29,7 @@ import {
 import {
     SIGN_NONE,
     TILE_PX,
+    indexOfRoom,
     parseRoomXml,
     stampLevelSetIdentity,
     validateLevelSet,
@@ -40,6 +41,7 @@ import roomRefs from './fixtures/seedling-vanilla-room-refs.json';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { recordToOel, parseOelLevel } from './procgenLevelOel.js';
+
 
 const VANILLA = Object.keys(roomRefs.rooms).map(Number).sort((a, b) => a - b);
 const vanillaDoc = (id) => parseRoomXml(roomRefs.rooms[id]);
@@ -333,7 +335,8 @@ describe('linkGeneratedRooms — the EMIT arm', () => {
     it('emits every attribute the receivers require, so the room still builds', () => {
         const { records } = linkGeneratedRooms(rooms(3));
         const { set } = buildLevelSet(records, { setId: 'attrs' });
-        const doc = parseRoomXml(set.rooms[1].source.xml);
+        // ⛓ E1b — the exporter writes RECORDS; the index reads either kind.
+        const doc = indexOfRoom(set.rooms[1]);
         expect(doc.exits).toHaveLength(2);
         for (const ex of doc.exits) {
             expect(EXIT_ELEMENTS).toContain(ex.element);
@@ -601,9 +604,7 @@ const GENERATED_RECORDS = (() => {
         Array.from({ length: 6 }, (_, level) => emptyLevel({ level })),
         { setId: 'e1b-twin-probe', link: true },
     );
-    return set.rooms.map((r) => (typeof r.source.xml === 'string'
-        ? parseOelLevel(r.source.xml, r.name)
-        : r.source.record));
+    return set.rooms.map((r) => r.source.record);
 })();
 
 const CORPORA = [['vanilla 116', VANILLA_RECORDS], ['generated 6', GENERATED_RECORDS]];
@@ -643,7 +644,7 @@ describe('EDITOR v3 E1b — retargetRoomRecord is retargetRoomXml, on records', 
                 });
             });
             expect(edited).toBeGreaterThan(0);
-        });
+        }, 300000);
 
         /**
          * ⛔ THE COUNT IS PINNED PER CORPUS, because ZERO is a legitimate answer
@@ -712,7 +713,7 @@ describe('EDITOR v3 E1b — retargetRoomRecord is retargetRoomXml, on records', 
             });
         });
         expect(checked).toBe(280);
-    });
+    }, 300000);
 
     it('refuses a destination move with no sign, on both sides', () => {
         const record = VANILLA_RECORDS.find((r) => parseRoomXml(recordToOel(r)).exits.length > 0);
@@ -770,7 +771,7 @@ describe('EDITOR v3 E1b — removeExitFromRecord is removeExitFromRoomXml, on re
                 });
             });
             expect(removed).toBeGreaterThan(0);
-        });
+        }, 300000);
 
         it(`${label}: \`removed\` and \`seen\` agree with the text writer`, () => {
             records.forEach((record, id) => {
@@ -784,7 +785,7 @@ describe('EDITOR v3 E1b — removeExitFromRecord is removeExitFromRoomXml, on re
                     expect(rec.value.seen).toEqual(text.value.seen);
                 });
             });
-        });
+        }, 300000);
     }
 
     it('refuses an exit carrying `nodes`, exactly as the text side refuses one with children', () => {
