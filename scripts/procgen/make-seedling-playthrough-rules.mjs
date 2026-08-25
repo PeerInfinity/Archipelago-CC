@@ -220,29 +220,27 @@ const gridFor = (level) => SEM.buildSeedlingRegionGrid(
 
 // ── build ──────────────────────────────────────────────────────────────────
 
-export function buildPlaythroughAtlas() {
-    notes.length = 0;
-    prunedPockets.length = 0;
-    droppedRegions.length = 0;
-    lavaTrapLifts.length = 0;
-    locationGuards.length = 0;
-    permissiveBindings.length = 0;
-    crossingCharged.length = 0;
-    arrivalsUncharged.length = 0;
-    /**
-     * ⛓⛓ THE ATLAS IS DERIVED; ONLY THE OVERLAY IS AUTHORED (plan §16.3, ⚖
-     * ruled by the user 2026-08-25). Everything this call produces — one region
-     * per room, the boundary exits from the link entities and the pits, the
-     * one-way connections, the ledger locations — is a FUNCTION of the rooms.
-     * The three authored things travel in `overlay`.
-     *
-     * ⚠ THE MAP EXTRACT'S LEVELS ARE ALREADY THE RECORD SHAPE `deriveAtlas`
-     * TAKES: `{level, width, height, layers, entities}`. A level set's parsed
-     * room (`procgenLevelOel.parseOelLevel`) presents the same record MINUS
-     * `level`, which the set supplies — the adaptation is at the call site, by
-     * design, because the two sources mean different numberings.
-     */
-    const derived = deriveAtlas(LEVELS, {
+/**
+ * ⛓ EDITOR v3 E1 — **THE DERIVED LAYER, ON ITS OWN.** Everything below this
+ * call in `buildPlaythroughAtlas` is the VANILLA OVERLAY (the analyzer pass,
+ * the lava-trap pulls, the hand rulings, the pocket pruning), so a caller that
+ * wants to know what the ROOMS alone say had no way to ask: the only export was
+ * the finished document with all four layers folded in.
+ *
+ * ⛔ ADDITIVE AND BYTE-INERT — `buildPlaythroughAtlas` calls it, so there is
+ * exactly ONE `deriveAtlas` call site with exactly one set of arguments, and
+ * `--check` still regenerates both committed files byte for byte.
+ *
+ * ⛓ `rooms` DEFAULTS TO THE MAP EXTRACT'S LEVELS, and the parameter exists for
+ * exactly one caller: E1's cross-check runs this SAME derivation, with the SAME
+ * authored overlay and the SAME deps, over the same 116 rooms arriving as
+ * `parseOelLevel(recordToOel(record))` instead of as map records, and compares
+ * the region set, the boundary exits and the connections — the three fact-sets
+ * this function owns and the overlay never touches. Passing the rooms in is what
+ * makes that a difference of ONE variable instead of a second derivation.
+ */
+export function derivePlaythroughLayer(rooms = LEVELS) {
+    return deriveAtlas(rooms, {
         locations: R7_GOAL_LEDGER,
         locationGuard: OV.locationGuard,
         neverEnter: { levels: OV.NEVER_ENTER_LEVELS, cite: OV.NEVER_ENTER_CITE },
@@ -266,6 +264,31 @@ export function buildPlaythroughAtlas() {
             mapDocument: path.basename(MAP_FILE),
         },
     });
+}
+
+export function buildPlaythroughAtlas() {
+    notes.length = 0;
+    prunedPockets.length = 0;
+    droppedRegions.length = 0;
+    lavaTrapLifts.length = 0;
+    locationGuards.length = 0;
+    permissiveBindings.length = 0;
+    crossingCharged.length = 0;
+    arrivalsUncharged.length = 0;
+    /**
+     * ⛓⛓ THE ATLAS IS DERIVED; ONLY THE OVERLAY IS AUTHORED (plan §16.3, ⚖
+     * ruled by the user 2026-08-25). Everything this call produces — one region
+     * per room, the boundary exits from the link entities and the pits, the
+     * one-way connections, the ledger locations — is a FUNCTION of the rooms.
+     * The three authored things travel in `overlay`.
+     *
+     * ⚠ THE MAP EXTRACT'S LEVELS ARE ALREADY THE RECORD SHAPE `deriveAtlas`
+     * TAKES: `{level, width, height, layers, entities}`. A level set's parsed
+     * room (`procgenLevelOel.parseOelLevel`) presents the same record MINUS
+     * `level`, which the set supplies — the adaptation is at the call site, by
+     * design, because the two sources mean different numberings.
+     */
+    const derived = derivePlaythroughLayer();
     droppedRegions.push(...derived.dropped);
     const session = new AtlasSession(derived.atlas);
 

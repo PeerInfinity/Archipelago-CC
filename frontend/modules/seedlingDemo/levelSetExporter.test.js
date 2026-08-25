@@ -15,7 +15,7 @@ import { fileURLToPath } from 'node:url';
 import { describe, it, expect } from 'vitest';
 
 import { emptyLevel, withTerrain } from './procgenLevel.js';
-import { recordToOel } from './procgenLevelOel.js';
+import { recordToOel, parseOelLevel } from './procgenLevelOel.js';
 import { stableStringify } from '../procgenCore/contentIdentity.js';
 
 import {
@@ -571,4 +571,119 @@ describe('export-seedling-level-set --vanilla', () => {
         expect(fixtures.status).toBe(2);
         expect(fixtures.stderr).toMatch(/REFUSED to write under `fixtures\/`/);
     }, 30000);
+});
+
+/**
+ * ── THE CROSS-CHECK: THE SAME DERIVATION, A DIFFERENT INPUT ──────────────────
+ *
+ * §11.8(a) proved `record → recordToOel → parseOelLevel → record′` by VALUE,
+ * 116/116, and §11.8(b) proved the map extract equals the disk `.oel` by value
+ * as well. This row is what makes that agreement CARRY: the playthrough
+ * generator derives its atlas from the map RECORDS, the set editor derives one
+ * from a set's PARSED XML, and if the two derivations disagree then the value
+ * round trip was preserving something the atlas does not read.
+ *
+ * ⛓ ONE VARIABLE. `derivePlaythroughLayer(rooms)` is the generator's own call —
+ * same overlay (`R7_GOAL_LEDGER`, `locationGuard`, `NEVER_ENTER_LEVELS`), same
+ * deps, same `deriveAtlas` — with the ROOMS passed in. Nothing here re-derives
+ * anything, which is the difference between a cross-check and a second opinion.
+ *
+ * ⛔ WHAT THIS COMPARES IS THE **DERIVED LAYER** AND NOTHING ELSE, and the
+ * layers it does NOT compare are named and MEASURED below rather than dissolved
+ * by a looser comparison: the analyzer's sub-regions and internal exits, the
+ * `sub_region`/`access_rule` fields it and the hand rulings write onto exits and
+ * locations, and the atlas's own stamp. Those are the VANILLA OVERLAY (plan
+ * §22.1 #4) — CODE in `make-seedling-playthrough-rules.mjs`, not a D1 overlay
+ * document — and a set editor opening vanilla has none of them.
+ */
+describe('the vanilla xml set derives the SAME atlas as the map extract', () => {
+    /** The three fact-sets `deriveAtlas` owns: regions, boundary exits, connections. */
+    const derivedFacts = (atlas) => ({
+        regions: atlas.regions.map((r) => ({
+            region_id: r.region_id, map_ref: r.map_ref, bounds: r.bounds,
+        })),
+        exits: atlas.regions.map((r) => [r.region_id, (r.exits ?? []).map((e) => e.exit_id).sort()]),
+        connections: (atlas.vanilla_layout?.connections ?? [])
+            .map((c) => ({ from: c.from, to: c.to, one_way: c.one_way })),
+    });
+
+    const roomsOfXmlSet = (set) => set.rooms.map((r, level) => ({
+        // ⛓ THE ADAPTATION IS ONE FIELD, AND `seedlingAtlasDerivation.js`'s own
+        // header says so: a parsed room is a map record minus `level`/`class`/
+        // `path`, and the SET is what supplies the numbering.
+        ...parseOelLevel(r.source.xml), level,
+    }));
+
+    it('reproduces the regions, the boundary exits and the connections, 1:1', async () => {
+        const { derivePlaythroughLayer } = await import(
+            '../../../scripts/procgen/make-seedling-playthrough-rules.mjs');
+        const { set } = vanillaXmlSet(fixture('seedling-vanilla-set.json'),
+            JSON.parse(readFileSync(fileURLToPath(
+                new URL('../flashPanel/atlases/seedling-map.json', import.meta.url)), 'utf8')));
+
+        const fromMap = derivePlaythroughLayer();
+        const fromXml = derivePlaythroughLayer(roomsOfXmlSet(set));
+
+        // The counts, pinned — a comparison of two empty things is also equal.
+        expect(fromMap.atlas.regions).toHaveLength(113);
+        expect(fromMap.atlas.regions.flatMap((r) => r.exits ?? [])).toHaveLength(624);
+        expect(fromMap.atlas.vanilla_layout.connections).toHaveLength(312);
+        expect(fromMap.dropped).toHaveLength(3);
+
+        expect(stableStringify(derivedFacts(fromXml.atlas)))
+            .toBe(stableStringify(derivedFacts(fromMap.atlas)));
+        // ⛓ AND IT IS STRONGER THAN THE ROW ASKS FOR, MEASURED: the whole
+        // derived document agrees, locations and all — so the three fact-sets
+        // are what this row CLAIMS, not the most it could prove.
+        expect(stableStringify(fromXml.atlas)).toBe(stableStringify(fromMap.atlas));
+        expect(stableStringify(fromXml.dropped)).toBe(stableStringify(fromMap.dropped));
+
+        // …and against the COMMITTED atlas, which is the artifact anybody else
+        // reads. Its extra layers are asserted PRESENT, so the exclusion below
+        // is a measurement rather than a looser comparison.
+        const committed = JSON.parse(readFileSync(fileURLToPath(
+            new URL('../flashPanel/atlases/seedling-playthrough.json', import.meta.url)), 'utf8'));
+        expect(stableStringify(derivedFacts(fromXml.atlas)))
+            .toBe(stableStringify(derivedFacts(committed)));
+        expect(committed.regions.filter((r) => r.subgraph)).toHaveLength(52);
+        expect(committed.regions.flatMap((r) => r.subgraph?.internal_exits ?? [])).toHaveLength(285);
+        expect(fromXml.atlas.regions.filter((r) => r.subgraph)).toHaveLength(0);
+        const exitKeys = new Set(committed.regions.flatMap((r) => (r.exits ?? [])
+            .flatMap((e) => Object.keys(e))));
+        expect([...exitKeys].sort()).toEqual(
+            ['access_rule', 'entrance_tile', 'exit_id', 'exit_tiles', 'kind', 'sub_region']);
+        const derivedExitKeys = new Set(fromXml.atlas.regions.flatMap((r) => (r.exits ?? [])
+            .flatMap((e) => Object.keys(e))));
+        expect([...derivedExitKeys].sort()).toEqual(
+            ['entrance_tile', 'exit_id', 'exit_tiles', 'kind']);
+        expect(committed.atlas_id).toBe('seedling-7dc27a95');
+        expect(fromXml.atlas.atlas_id).toBe('seedling');   // D1 §20.6: DELIBERATELY unstamped
+    }, 60000);
+
+    /**
+     * ⛔ THE MUTANT, AND IT GOES THROUGH THE DERIVATION RATHER THAN THE
+     * COMPARISON. One link entity is removed from one room's parsed record, so
+     * the xml side emits one connection fewer — which is exactly the shape a
+     * lossy `recordToOel`/`parseOelLevel` pair would produce, and the row that
+     * would otherwise pass by comparing two things nobody perturbed.
+     */
+    it('goes RED when one connection is dropped from the xml side', async () => {
+        const { derivePlaythroughLayer } = await import(
+            '../../../scripts/procgen/make-seedling-playthrough-rules.mjs');
+        const { set } = vanillaXmlSet(fixture('seedling-vanilla-set.json'),
+            JSON.parse(readFileSync(fileURLToPath(
+                new URL('../flashPanel/atlases/seedling-map.json', import.meta.url)), 'utf8')));
+        const rooms = roomsOfXmlSet(set);
+        const linkIndex = rooms[0].entities.findIndex((e) => e.type === 'teleporter');
+        expect(linkIndex).toBeGreaterThanOrEqual(0);
+        const lamed = rooms.map((r, i) => (i !== 0 ? r
+            : { ...r, entities: r.entities.filter((_, k) => k !== linkIndex) }));
+
+        const straight = derivePlaythroughLayer(rooms);
+        const dropped = derivePlaythroughLayer(lamed);
+        expect(dropped.atlas.vanilla_layout.connections.length)
+            .toBe(straight.atlas.vanilla_layout.connections.length - 1);
+        expect(stableStringify(derivedFacts(dropped.atlas)))
+            .not.toBe(stableStringify(derivedFacts(straight.atlas)));
+    }, 60000);
 });
