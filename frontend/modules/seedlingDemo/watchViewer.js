@@ -303,7 +303,10 @@ import {
     createSeedlingSetAdapter, createSetSession, downloadSet, setRecord, setSessionRoomSource,
 } from './seedlingSetAdapter.js';
 import { emptyOverlay } from './seedlingSetOverlay.js';
-import { classifyDocument } from '../presets/documentBundle.js';
+import {
+    classifyDocument, describeBundle, gunzipIfNeeded, readBundle,
+} from '../presets/documentBundle.js';
+import { loadJSZipBrowser } from '../presets/loadJSZipBrowser.js';
 import { compileRegionAtlas } from '../procgenPipeline/regionAtlasCompiler.js';
 import { validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js';
 import { tileTypeForPlacement } from '../flashPanel/seedlingSemantics.js';
@@ -392,6 +395,20 @@ const ATLAS_URL = repoUrl('frontend/modules/flashPanel/atlases/seedling-map.json
  * can hit the TDZ of state declared below it, and `?.` does not help.
  */
 const FIXTURES_DIR = 'frontend/modules/seedlingDemo/fixtures';
+
+/**
+ * ⛓ THE VENDORED JSZip, reached the way THIS page reaches everything else in the
+ * tree. `presetUI` injects the same file at `libs/jszip/jszip.min.js` relative to
+ * the app root; `watch.html` sits three directories down, so the URL is the half
+ * that has to be passed and `loadJSZipBrowser` is the half that is shared.
+ *
+ * ⛔ **MODULE LEVEL, BESIDE `ATLAS_URL` — NOT beside its first reader.** It is
+ * handed to `mountWatchSetEditor` AT MOUNT TIME, and the mount runs ~200 lines
+ * above the file-input handler that also uses it; a `const` declared down there
+ * would be in its temporal dead zone when the options object is built, and `?.`
+ * does not help (the trap `FIXTURES_DIR`'s own note records).
+ */
+const loadZip = () => loadJSZipBrowser({ src: repoUrl('frontend/libs/jszip/jszip.min.js') });
 
 const PIT = HAZARD_STATES.pit;
 
@@ -9123,7 +9140,8 @@ async function runEditor(params, lifetime) {
         if (keep !== '' && Number(keep) < rooms.length) sel.value = keep;
         const has = rooms.length > 0;
         sel.disabled = !has;
-        for (const id of ['editSetOpen', 'editDownloadSet', 'editSetAddRoom', 'editSetGesture',
+        for (const id of ['editSetOpen', 'editDownloadSet', 'editDownloadBundle',
+            'editSetAddRoom', 'editSetGesture',
             'editSetDisconnect', 'editSetReport', 'editSetUndo',
             'editSetRuleCommit', 'editSetMarkLocation']) {
             if ($(id)) $(id).disabled = !has;
@@ -9238,6 +9256,7 @@ async function runEditor(params, lifetime) {
             openRoomAt,
             discardRoom,
             download,
+            loadZip,
             onSetChange: () => {
                 renderSetRooms();
                 render();
@@ -9421,30 +9440,33 @@ async function runEditor(params, lifetime) {
             + `PATH). Every room is OPENABLE — an \`embed\` never was.`;
     });
 
-    lifetime.on($('editLoadGo'), 'click', () => {
-        const got = sniffLoadBox($('editLoad').value);
-        $('editLoadNote').textContent = '';
+    /**
+     * ⛓⛓⛓ **ONE INTAKE, THREE DOORS** (EDITOR v3 E1c). This was the body of
+     * `#editLoadGo`. It is a function now because a FILE — a `.json`, a
+     * `.json.gz`, or one member of a `.zip` bundle — has to land in exactly the
+     * same session by exactly the same rules; a second path would be a second
+     * chance to disagree about what a set is.
+     *
+     * @returns {boolean} whether anything was taken
+     */
+    const intakeLoadText = (text) => {
+        const got = sniffLoadBox(text);
         if (got.kind === null) {
             $('editLoadNote').textContent = `⛔ REFUSED — ${got.why}`;
             $('status').className = 'bad';
             $('status').textContent = `the LOAD box was REFUSED — ${got.why}`;
-            return;
+            return false;
         }
         if (got.kind === 'oel') {
             if (openBase({ kind: 'oel', xml: got.xml })) {
                 editorUi.palette.setType(DEFAULT_PLACE_TYPE);
                 redraw('LOADED a pasted OEL');
+                return true;
             }
-            return;
+            return false;
         }
-        if (got.kind === 'levelset') {
-            takeLevelSet(got.set);
-            return;
-        }
-        if (got.kind === 'overlay') {
-            takeOverlay(got.overlay);
-            return;
-        }
+        if (got.kind === 'levelset') return takeLevelSet(got.set) !== false;
+        if (got.kind === 'overlay') return takeOverlay(got.overlay) !== false;
         const tag = got.payload.base;
         /**
          * ⛔ **A `generate` BASE IS REFUSED BY NAME IN THIS ARM** — §3.2's rule
@@ -9459,12 +9481,96 @@ async function runEditor(params, lifetime) {
             $('editLoadNote').textContent = `⛔ REFUSED — ${why}`;
             $('status').className = 'bad';
             $('status').textContent = `the LOAD box was REFUSED — ${why}`;
-            return;
+            return false;
         }
         if (openBase(tag, got.payload.edits ?? [])) {
             editorUi.palette.setType(DEFAULT_PLACE_TYPE);
             redraw(`LOADED a payload — ${describeBase(baseTag)}, then `
                 + `${session.ops().length} edit(s)`);
+            return true;
+        }
+        return false;
+    };
+
+    lifetime.on($('editLoadGo'), 'click', () => {
+        $('editLoadNote').textContent = '';
+        intakeLoadText($('editLoad').value);
+    });
+
+    /**
+     * ⛓⛓⛓ **A FILE, INCLUDING A BUNDLE** (EDITOR v3 E1c, §25).
+     *
+     * ⛔ **THE KIND IS THE FIRST TWO BYTES**, never the extension: `50 4b` is a
+     * zip local-file header and `1f 8b` is gzip. The `accept` list on the input
+     * is a picker HINT — a renamed file still loads, and a `.zip` full of
+     * something else is refused by what it holds.
+     *
+     * ⛔ **AND THE SET AND ITS OVERLAY GO IN ONE CALL.** `takeOverlay` refuses to
+     * attach an overlay to a session that holds edits, and `takeLevelSet` opens
+     * a NEW session — so handing them over separately would either refuse or
+     * silently drop one. `takeLevelSet(set, overlay)` is the door that takes
+     * both, and it is the one D2 already built.
+     *
+     * ⚠ THE `rules.json` AND `region-atlas` MEMBERS ARE NOT LOADED. This page
+     * DERIVES both from the set and the overlay; loading them back would be
+     * loading its own output as its input. They are NAMED, because a member that
+     * vanished without a word is indistinguishable from one that was never there.
+     */
+    lifetime.on($('editLoadFile'), 'change', async (event) => {
+        const input = event?.target;
+        const file = input?.files?.[0];
+        $('editLoadNote').textContent = '';
+        const note = (text, bad = false) => {
+            const box = $('editLoadFileNote');
+            if (box) {
+                box.textContent = text;
+                box.className = bad ? 'note bad' : 'note';
+            }
+        };
+        note('');
+        if (!file) return;
+        try {
+            const bytes = new Uint8Array(await file.arrayBuffer());
+            const isZip = bytes[0] === 0x50 && bytes[1] === 0x4b;
+            if (!isZip) {
+                const text = new TextDecoder().decode(await gunzipIfNeeded(bytes));
+                const gz = bytes[0] === 0x1f && bytes[1] === 0x8b;
+                if (intakeLoadText(text)) {
+                    note(`LOADED \`${file.name}\`${gz ? ' (gunzipped)' : ''} — `
+                        + `${bytes.length} byte(s) on disk`);
+                }
+                return;
+            }
+            const { members, notes } = await readBundle(bytes, { jszip: await loadZip() });
+            const byKind = new Map(members.map((m) => [m.kind, m.doc]));
+            const skipped = ['rules', 'region-atlas'].filter((k) => byKind.has(k));
+            let took = null;
+            if (byKind.has('level-set')) {
+                took = takeLevelSet(byKind.get('level-set'), byKind.get('overlay') ?? null)
+                    ? 'the SET' : null;
+            } else if (byKind.has('overlay')) {
+                took = takeOverlay(byKind.get('overlay')) ? 'the OVERLAY' : null;
+            }
+            if (took === null && skipped.length === members.length && members.length > 0) {
+                note(`⛔ NOTHING TO LOAD in \`${file.name}\` — it carries only `
+                    + `${skipped.join(' and ')}, and this page DERIVES both from a set. `
+                    + `${describeBundle({ members, notes })}`, true);
+                return;
+            }
+            note(`${took === null ? '⛔ NOT LOADED' : `LOADED ${took} from`} \`${file.name}\` `
+                + `— ${describeBundle({ members, notes })}`
+                + (skipped.length
+                    ? ` · ⚠ the ${skipped.join(' and ')} member(s) were NOT loaded: this page `
+                      + 'derives both from the set and the overlay'
+                    : ''), took === null);
+        } catch (e) {
+            note(`⛔ REFUSED — ${e.message}`, true);
+            $('status').className = 'bad';
+            $('status').textContent = `the FILE was REFUSED — ${e.message}`;
+        } finally {
+            // ⛔ Cleared, or picking the SAME file twice fires no `change` event
+            // and the second press would look like a page that stopped working.
+            if (input) input.value = '';
         }
     });
 

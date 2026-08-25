@@ -975,6 +975,31 @@
       <span id="editLoadNote" class="note"></span>
     </div>
     <!--
+      ⛓⛓⛓ EDITOR v3 E1c — **LOAD A FILE, INCLUDING A BUNDLE** (§25; ⚖ plan
+      §22.8). The box above takes text somebody pasted; this takes the file
+      itself, which is the only way a `.zip` or a `.json.gz` can arrive at all.
+
+      ⛔ THE KIND IS SNIFFED FROM THE **BYTES**, not the extension: `PK` is
+      a zip and `1f 8b` is gzip, and both are unambiguous on their own first two
+      bytes. The `accept` list is a FILE PICKER HINT and nothing more — a
+      renamed file still loads, and a `.zip` full of something else is refused
+      by what it holds rather than by what it is called.
+
+      ⛔ AND EVERY MEMBER GOES THROUGH THE SAME INTAKE `LOAD what is in the box`
+      USES. A second door into the session would be a second chance to disagree
+      about what a set is.
+
+      ⚠ THE `rules.json` MEMBER OF A BUNDLE IS **NOT** LOADED: this page DERIVES
+      one from the set and the overlay (the REPORT compiles it, the button
+      writes it), so loading one back would be loading the page's own output as
+      its input. The note names it rather than dropping it in silence.
+    -->
+    <div class="line">
+      <label for="editLoadFile">LOAD a FILE</label>
+      <input type="file" id="editLoadFile" accept=".json,.json.gz,.zip">
+      <span id="editLoadFileNote" class="note"></span>
+    </div>
+    <!--
       ⛓⛓⛓ EDITOR v3 C2 — **`set-room`: THE FOURTH BASE BECOMES LAUNCHABLE**
       (plan §3.2). A level-set document loaded into the box above is HELD on the
       page and its rooms are offered here; picking one resolves that room's
@@ -1000,6 +1025,26 @@
       <button id="editRoomClose" disabled>CLOSE the open room INTO the set</button>
       <button id="editSetAddRoom" disabled>ADD ROOM</button>
       <button id="editDownloadSet" disabled>Download the SET · OVERLAY · apMapping</button>
+      <!--
+        ⛓⛓⛓ EDITOR v3 E1c — **ONE PRESS, ONE `.zip`.** The members are the FOUR
+        documents (§24.12): the set, the overlay, the compiled `rules.json` and
+        the derived region atlas. ⛔ The `apMapping` companion is NOT one — it is
+        a DERIVED table `apMappingInvalidation` regenerates from the set, which
+        is the same reason `.chunks.json` (DELIVERY) is refused as a member.
+        ⛓ It goes through the SAME `downloadSet(session)`, so §21.9's law holds:
+        the ids inside the zip are the ids the three separate presses write.
+      -->
+      <button id="editDownloadBundle" disabled>Download the BUNDLE (.zip)</button>
+      <!--
+        ⛓⛓ MINIFY is `stringifyRulesJson`'s `indent`, which has been plumbed and
+        never passed since it was written. In the APP it is the `rulesJson.indent`
+        settingsManager scope; this page has no settingsManager, so the BOX is
+        the read — and unchecked IS the schema's default (2). ⛔ Nothing here
+        ever writes `fixtures/` or `presets/`, so no committed byte moves.
+      -->
+      <label for="editMinify" title="0-space output — about 45% of the indented bytes">
+        <input type="checkbox" id="editMinify"> MINIFY what this panel writes
+      </label>
     </div>
     <div class="line">
       <span id="editSetNote" class="note"></span>

@@ -60,6 +60,9 @@ import {
 } from '../procgenCore/rulesGraph.js';
 import { ruleSchemaErrors } from '../procgenCore/jsonSchemaCheck.js';
 import { stringifyRulesJson } from '../shared/rulesJsonBuilder.js';
+import {
+    DEFAULT_RULES_JSON_INDENT, writeBundle,
+} from '../presets/documentBundle.js';
 import { UNDO_COMMAND_ID, mountEditorView } from '../procgenCore/editorView.js';
 import { createLifetime } from '../procgenCore/pageLifetime.js';
 
@@ -916,6 +919,7 @@ export function mountWatchSetEditor({
     atlasSchema = undefined, drawRoomStill = null, emptyLevel = null,
     say = () => {}, roomSession = () => null, openRoomAt = () => false,
     discardRoom = () => {}, download = () => {}, onSetChange = null,
+    loadZip = null,
     doc = globalThis.document,
 } = {}) {
     /**
@@ -955,6 +959,19 @@ export function mountWatchSetEditor({
      */
     const mine = createLifetime('watchSetEditor');
     lifetime.onRetire(() => mine.retire('the EDIT arm was retired'));
+
+    /**
+     * ⛓⛓ **MINIFY, ON THE PAGE** (EDITOR v3 E1c, §25). `rulesJson.indent` is a
+     * `settingsManager` scope in the APP; `watch.html` is a standalone lab page
+     * with no settingsManager at all, so the control IS the read — and its
+     * UNCHECKED state is `DEFAULT_RULES_JSON_INDENT`, the SAME schema default
+     * the app resolves. One default, two doors.
+     *
+     * ⛔ It is a FUNCTION, not a captured number: the box can be ticked between
+     * two presses, and a value read at mount would be the state the page opened
+     * with rather than the one the reader chose.
+     */
+    const indentNow = () => ($('editMinify')?.checked ? 0 : DEFAULT_RULES_JSON_INDENT);
 
     /* ── STATE: exactly three things, and each is one fact ─────────── */
 
@@ -1781,12 +1798,13 @@ export function mountWatchSetEditor({
             return;
         }
         const out = downloadSet(session);
-        download(`${out.set.set_id}.json`, `${JSON.stringify(out.set, null, 2)}\n`,
+        const indent = indentNow();
+        download(`${out.set.set_id}.json`, `${JSON.stringify(out.set, null, indent)}\n`,
             'application/json');
         download(`${out.overlay.overlay_id}.overlay.json`,
-            `${JSON.stringify(out.overlay, null, 2)}\n`, 'application/json');
+            `${JSON.stringify(out.overlay, null, indent)}\n`, 'application/json');
         download(`${out.set.set_id}.apmapping.json`,
-            `${JSON.stringify(out.apMapping, null, 2)}\n`, 'application/json');
+            `${JSON.stringify(out.apMapping, null, indent)}\n`, 'application/json');
         setNote(`DOWNLOADED ${out.set.set_id} · overlay ${out.overlay.overlay_id} · the `
             + `apMapping companion — ONE stamp for ${out.report.edits} edit(s)`
             + (out.report.warnings.length ? ` ⚠ ${out.report.warnings.join(' | ')}` : ''));
@@ -1825,12 +1843,97 @@ export function mountWatchSetEditor({
          * them: the document AND the exact text, so a row can ask node whether
          * they are the same bytes `region-atlas-compile` would have written.
          */
-        const text = stringifyRulesJson(rep.rules);
+        const text = stringifyRulesJson(rep.rules, { indent: indentNow() });
         download('rules.json', text, 'application/json');
         globalThis.__editorSetRulesOut = rep.rules;
         globalThis.__editorSetRulesBytes = text;
         setNote(`DOWNLOADED rules.json — ${rep.report.ap_regions} AP region(s), `
             + `${rep.report.exits} exit(s), ${rep.report.locations} location(s)`);
+    });
+
+    /**
+     * ⛓⛓⛓ **THE BUNDLE — ONE PRESS, ONE `.zip`, THE SAME STAMP** (EDITOR v3 E1c,
+     * §25; ⚖ the ruling at plan §22.8). A person who has edited a set now walks
+     * away with FOUR documents in one file instead of four saves and a folder
+     * they have to keep together — and the single `rules.json` is still
+     * canonical, still downloadable on its own, still what everything reads.
+     *
+     * ⛔ **THE MEMBERS ARE THE FOUR DOCUMENTS AND NOTHING ELSE** (§24.12). The
+     * `apMapping` companion is NOT one: `apMappingInvalidation` derives it from
+     * the set on demand, and its own `reason` field says it is a DERIVED table
+     * that can be regenerated per set. It stays a separate blob for the same
+     * reason `.chunks.json` is refused as a member — a container that carried
+     * everything derivable from its own contents would be describing itself.
+     *
+     * ⛓ **AND THE IDS ARE THE THREE-BLOB DOWNLOAD'S IDS.** It goes through the
+     * SAME `downloadSet(session)` — validated, stamped ONCE — so `set_id` and
+     * `overlay_id` inside the zip are the ones the separate presses write. §21.9
+     * holds: this is a fourth WAY to press, not a fourth stamp.
+     *
+     * ⛔ **THE RULES MEMBER IS REFUSED ON THE SAME THREE CONDITIONS**, and the
+     * bundle is then written WITHOUT it, saying why — a person may still want to
+     * save work on a graph that does not close, which is exactly why the set and
+     * overlay downloads stay offered next door. The DERIVED ATLAS travels with
+     * the rules or not at all: both are the compile's output, and an atlas
+     * beside no rules.json would be half an answer with nothing to say so.
+     */
+    const bundleBtn = $('editDownloadBundle');
+    if (bundleBtn) bundleBtn.disabled = true;
+    on('editDownloadBundle', async () => {
+        if (typeof loadZip !== 'function') {
+            setNote('⛔ NOT BUNDLED — this mount was given no `loadZip`, and nothing here '
+                + 'implements a zip container of its own', true);
+            return;
+        }
+        const open = roomSession();
+        if (open && open.ops > 0) {
+            setNote(`⛔ NOT BUNDLED — room ${open.room} is open with ${open.ops} unwritten `
+                + 'edit(s). Press CLOSE first: the bundle stamps once over everything, exactly '
+                + 'as the three-blob download does.', true);
+            return;
+        }
+        const check = validateForDownload(session);
+        if (!check.ok) {
+            setNote(`⛔ NOT BUNDLED — the set does not validate (${check.errors.length} `
+                + `error(s)): ${check.errors.join(' · ')}`, true);
+            return;
+        }
+        const out = downloadSet(session);
+        const rep = lastReport ?? runReport();
+        const members = [
+            { kind: 'level-set', doc: out.set },
+            { kind: 'overlay', doc: out.overlay },
+        ];
+        const notes = [];
+        if (rep.download.rules.allowed && rep.rules) {
+            members.push({ kind: 'rules', doc: rep.rules });
+            if (rep.atlas) members.push({ kind: 'region-atlas', doc: rep.atlas });
+        } else {
+            notes.push(`no \`rules.json\` member — ${rep.download.rules.why}`);
+        }
+        notes.push('the `apMapping` companion is NOT a member — it is a DERIVED table '
+            + 'regenerated per set; press the three-blob download for it');
+        const indent = indentNow();
+        let bytes;
+        try {
+            bytes = await writeBundle(members, { jszip: await loadZip(), indent });
+        } catch (e) {
+            setNote(`⛔ NOT BUNDLED — ${e.message}`, true);
+            return;
+        }
+        download(`${out.set.set_id}.zip`, bytes, 'application/zip');
+        /**
+         * ⛓ …AND WHAT IT WROTE IS READABLE, like every other download on this
+         * page (C2's own reason for `__editorSetOut`): the BYTES, so a row can
+         * read the zip back in node, and the member kinds, so a row can ask what
+         * the press decided without unzipping first.
+         */
+        globalThis.__editorSetBundleOut = bytes;
+        globalThis.__editorSetBundleKinds = members.map((m) => m.kind);
+        setNote(`BUNDLED ${out.set.set_id}.zip — ${members.length} member(s) `
+            + `(${members.map((m) => m.kind).join(', ')}), ${bytes.length} bytes at indent `
+            + `${indent}${indent === 0 ? ' (MINIFIED)' : ''} · ${notes.join(' | ')}`);
+        render();
     });
 
     mine.on($('editSetRuleJson') ?? doc.createElement('textarea'), 'input', checkRuleJson);
