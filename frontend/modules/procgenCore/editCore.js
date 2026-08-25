@@ -665,6 +665,36 @@ export const FILTER_ALIASES = Object.freeze({
     entitiesOnly: 'entity',
 });
 
+/**
+ * ⛓⛓⛓ **THE DESCRIPTOR'S FIELDS, DERIVED FROM THE DESCRIPTOR** — EDITOR v3
+ * slice C2, and it closes §12.10's *"the last typed roster in this panel"*.
+ *
+ * `only:` names a descriptor FIELD (slice B generalised the maze's two
+ * booleans into it), so the set a page may OFFER is exactly the set the
+ * adapter's own `readCell` presents — and until now every page spelled that
+ * set out by hand. ⛔ A typed list of three is a claim about a substrate the
+ * substrate is already making, and the day a fourth field arrives the page
+ * offers three filters for a four-field cell with nothing saying so.
+ *
+ * ⚠ **IT ASKS ONE CELL, AND THAT IS ONLY SOUND BECAUSE A DESCRIPTOR'S FIELD
+ * SET IS FIXED.** Slice B's bound 2 is exactly this promise on the Seedling
+ * side — *"`cliff` IS ALWAYS A FIELD, even in a room with no cliffsides
+ * layer"* — and it was made so a filter could not come and go with the room.
+ * An adapter whose cells carried different fields in different places would
+ * break `filterFieldOf`'s own refusal long before it broke this.
+ */
+export function descriptorFieldsOf(adapter, record, { tx = 0, ty = 0 } = {}) {
+    assertAdapter(adapter);
+    const desc = adapter.readCell(record, tx, ty);
+    if (!desc || typeof desc !== 'object' || Array.isArray(desc)) {
+        fail(`editCore: \`${adapter.name}\`'s readCell answered `
+            + `${JSON.stringify(desc)} at (${tx},${ty}) — a cell DESCRIPTOR is a plain `
+            + 'object whose keys are the fields a filter may keep, and a page that offered '
+            + 'filters derived from this would offer none at all.');
+    }
+    return Object.freeze(Object.keys(desc));
+}
+
 /** The descriptor field a filter option names, or `null` for "no filter". */
 export function filterFieldOf({ tilesOnly = false, entitiesOnly = false, only = null } = {}) {
     const asked = [

@@ -25,10 +25,12 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-    CELL_OPS, EDIT_OPS, ENTITY_ROSTER, ENTITY_ROSTER_PROCGEN, ENTITY_ROSTER_TYPES, ROOM_OPS,
-    ROOM_GEOMETRY_BOSSES, WatchEditError, applyEdit, applyEdits, coerceAttrValue, describeEdit,
-    editState, editStates, entityDecl, entityIndexAt, entityRosterFrom, normalizeAttrsAgainst,
-    normalizeEdit, normalizeGroupOrEdit, resizeWarnings, undoEdit,
+    CELL_OPS, EDIT_OPS, ENTITY_ROSTER, ENTITY_ROSTER_PROCGEN, ENTITY_ROSTER_TYPES,
+    ROOM_FLAG_CELL, ROOM_FLAG_TAGS, ROOM_OPS, ROOM_GEOMETRY_BOSSES, WatchEditError, applyEdit,
+    applyEdits, coerceAttrValue, describeEdit, editState, editStates, entityDecl, entityIndexAt,
+    entityRosterFrom, flagModelReach, flagReachText, normalizeAttrsAgainst, normalizeEdit,
+    normalizeGroupOrEdit, resizeWarnings, roomFlagOpRefusal, roomFlagRoster, roomFlagsIn,
+    undoEdit,
 } from './watchEdit.js';
 import {
     LAYER_COLUMNS, LAYER_TILESETS, TERRAIN_NAMES, TILE_LAYERS, assertColumnsModelled, emptyLevel,
@@ -38,7 +40,9 @@ import {
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { CLIFFSIDE_FRAME_MASKS, MODELLED_TILE_TYPES } from './levelWorld.js';
-import { TILE_COLUMN_TO_TYPE } from '../flashPanel/seedlingSemantics.js';
+import {
+    ENTITY_SEMANTICS, LEVEL_PROPERTY_TAGS, TILE_COLUMN_TO_TYPE, isLevelPropertyTag,
+} from '../flashPanel/seedlingSemantics.js';
 import { loadAtlas } from './levelSource.js';
 import { ENTITY_CLASSES, buildLevelWorld, LevelWorldError } from './levelWorld.js';
 import { generateStep, generateWithDirectives } from './watchGenerate.js';
@@ -983,5 +987,171 @@ describe('the tile-layer facts this slice DERIVES, pinned against the 116', () =
     it('⛓ the schema\'s <layers> and the record\'s tile layers agree on the two names', () => {
         expect(SCHEMA.layers.filter((l) => l.kind === 'tiles').map((l) => l.name))
             .toEqual(TILE_LAYERS);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ EDITOR v3 C2 — THE ROOM FLAGS
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('⛓⛓⛓ THE ROOM-FLAG ROSTER IS THE CLASSIFICATION THAT ALREADY EXISTED', () => {
+    /**
+     * ⛔ THE BRIEF ASKED FOR *"the schema's `utility` folder minus the ones that
+     * are bodies at a cell"*. That subtraction needs a rule for which is which,
+     * and `seedlingSemantics` already has one keyed off `Game.as` line by line.
+     * These rows are what make the IMPORT a derivation rather than a coincidence.
+     */
+    it('⛔ it IS `LEVEL_PROPERTY_TAGS` — the same frozen array, not a copy', () => {
+        expect(ROOM_FLAG_TAGS).toBe(LEVEL_PROPERTY_TAGS);
+    });
+
+    it('⛓⛓ …and the FOLDER derivation the brief proposed would have been WRONG: the '
+        + '`utility` folder holds bodies too', () => {
+        const utility = Object.entries(SCHEMA.entities)
+            .filter(([, d]) => d.folder === 'utility').map(([t]) => t);
+        // every flag IS in `utility` …
+        for (const tag of ROOM_FLAG_TAGS) expect(utility).toContain(tag);
+        // … and `utility` holds strictly more, every extra one a PLACED body.
+        const extra = utility.filter((t) => !ROOM_FLAG_TAGS.includes(t));
+        expect(extra.length).toBeGreaterThan(0);
+        for (const t of extra) {
+            expect(isLevelPropertyTag(t)).toBe(false);
+            // `player` is the one the class table does not carry (§12.7 item 2's
+            // 7 untranscribed); every other extra is a classified PLACED body.
+            if (t !== 'player') expect(ENTITY_SEMANTICS[t]).toBeTruthy();
+        }
+    });
+
+    it('⛓⛓ PINNED AGAINST VANILLA: every property tag the 116 rooms place is in the list, '
+        + 'and no placed BODY is', () => {
+        const placedFlags = new Set();
+        const placedBodies = new Set();
+        for (const l of ATLAS.levels) {
+            for (const e of l.entities ?? []) {
+                (isLevelPropertyTag(e.type) ? placedFlags : placedBodies).add(e.type);
+            }
+        }
+        expect([...placedFlags].sort()).toEqual([...ROOM_FLAG_TAGS].sort());
+        for (const t of placedBodies) expect(ROOM_FLAG_TAGS).not.toContain(t);
+    });
+
+    it('⛓ the roster is the DECLARED ones, each with the values `Shrum.oep` gives it', () => {
+        const roster = roomFlagRoster(SCHEMA);
+        expect(roster.map((r) => r.tag)).toEqual(ROOM_FLAG_TAGS.filter((t) => SCHEMA.entities[t]));
+        const control = roster.find((r) => r.tag === 'control');
+        expect(control.values.map((v) => v.name)).toEqual(['fallthrough', 'xOff', 'yOff', 'sign']);
+        // ⛓ a PRESENCE flag has no values at all — which is what makes it a checkbox.
+        expect(roster.find((r) => r.tag === 'snow').values).toEqual([]);
+    });
+});
+
+describe('⛓⛓⛓ A FLAG IS READ AT ITS OWN CELL, AND `last` IS WHETHER THE OPS CAN NAME IT', () => {
+    const SRC = levelSourceFromAtlas(ATLAS);
+
+    it('⛓ L14 carries exactly one flag, and the ORIGIN is the vanilla convention', () => {
+        const flags = roomFlagsIn(SRC(14));
+        expect(flags.map((f) => f.tag)).toEqual(['lightalpha']);
+        expect({ tx: flags[0].tx, ty: flags[0].ty }).toEqual({ ...ROOM_FLAG_CELL });
+        expect(flags[0].attrs.alpha).toBe('0.4');
+        expect(flags[0].last).toBe(true);
+    });
+
+    it('⛔⛔ MEASURED: 2 of the 155 committed flag instances are NOT the last body in their '
+        + 'cell, so `remove`/`attrs` cannot name them — and the refusal says so', () => {
+        let total = 0;
+        let shared = 0;
+        let notLast = 0;
+        for (const l of ATLAS.levels) {
+            const record = SRC(l.level);
+            for (const f of roomFlagsIn(record)) {
+                total += 1;
+                const cell = (record.entities ?? []).filter((e) => {
+                    const at = tileAtOel(e.x, e.y);
+                    return at.tx === f.tx && at.ty === f.ty;
+                });
+                if (cell.length > 1) shared += 1;
+                if (!f.last) {
+                    notLast += 1;
+                    const why = roomFlagOpRefusal(record, f, 'remove');
+                    expect(why).toMatch(/NOT the last body in that cell/);
+                    expect(why).toMatch(/DELETE/);
+                    expect(roomFlagOpRefusal(record, f, 'attrs')).toMatch(/REWRITE/);
+                }
+            }
+        }
+        expect(total).toBe(155);
+        expect(shared).toBe(14);
+        expect(notLast).toBe(2);
+    });
+
+    it('⛓ a flag that IS the last body in its cell is not refused', () => {
+        const record = SRC(14);
+        expect(roomFlagOpRefusal(record, roomFlagsIn(record)[0], 'remove')).toBe(null);
+        expect(roomFlagOpRefusal(record, null, 'remove')).toBe(null);
+    });
+});
+
+describe('⛓⛓⛓ THE FLAG REACH IS MEASURED AGAINST THE MODEL, NOT READ OFF THE CLASS TABLE', () => {
+    const SRC = levelSourceFromAtlas(ATLAS);
+
+    /**
+     * ⛔⛔ THIS IS THE ROW THAT OVERTURNS THE BRIEF. Deriving the readout from
+     * `ENTITY_CLASSES` — *"which flags the JS model ignores"* — would report all
+     * SEVEN as ignored, because the table gives every one of them `as3: null`.
+     * The table answers CONSTRUCTION. `<control>`'s `fallthrough` demonstrably
+     * reaches the built world, and a sentence saying otherwise would be true
+     * about the wrong subject (trap 566's shape).
+     */
+    it('⛔ the CLASS TABLE says all seven build nothing — which is not the question', () => {
+        for (const tag of ROOM_FLAG_TAGS) {
+            expect(ENTITY_CLASSES[tag]).toBeTruthy();
+            expect(ENTITY_CLASSES[tag].as3).toBe(null);
+        }
+    });
+
+    /**
+     * ⛓ THE PROBE PLACES EACH FLAG WITH ITS DECLARED DEFAULTS — the same
+     * `attrsFor` the page hands in. ⛔ It matters: `<control>` with NO
+     * `fallthrough` is a room `buildLevelWorld` REFUSES (`Game.fallthroughLevel`
+     * has no value), so a probe with empty attrs answers `reads: null` for it,
+     * which is *"could not be asked"* and not *"ignored"*. Both are below.
+     */
+    const flagAttrs = (t) => Object.fromEntries((SCHEMA.entities[t]?.values ?? [])
+        .filter((v) => v.default !== null && v.default !== undefined)
+        .map((v) => [v.name, v.default]));
+
+    it(`⛓⛓⛓ …and MEASURED, ${ROOM_FLAG_TAGS.length - 1} leave the world byte-identical and `
+        + '`control` does NOT', () => {
+        const reach = flagModelReach(SRC(14), buildLevelWorld, { attrsFor: flagAttrs });
+        expect(reach.map((r) => r.tag)).toEqual([...ROOM_FLAG_TAGS]);
+        expect(reach.filter((r) => r.reads === true).map((r) => r.tag)).toEqual(['control']);
+        expect(reach.filter((r) => r.reads === false).length).toBe(ROOM_FLAG_TAGS.length - 1);
+        const text = flagReachText(reach);
+        expect(text).toMatch(/builds the SAME world with and without 6 of these 7 flags/);
+        expect(text).toMatch(/control DOES reach it/);
+        expect(text).toMatch(/the wasm is the only certifier/);
+    });
+
+    it('⛔ a `<control>` probed with NO declared values answers `reads: null` — the model '
+        + 'refuses the room, and that is "could not be asked", never "ignored"', () => {
+        const reach = flagModelReach(SRC(14), buildLevelWorld, { tags: ['control'] });
+        expect(reach[0].reads).toBe(null);
+        expect(reach[0].why).toMatch(/LevelWorldError/);
+    });
+
+    it('⛔ a room the model REFUSES TO BUILD answers `reads: null` — not `false`, which '
+        + 'would say "the model ignores this" about a model that never saw the room', () => {
+        const record = applyEdit(SRC(14),
+            { op: 'place', tx: 1, ty: 1, type: 'building3', attrs: {} });
+        expect(() => buildLevelWorld(record)).toThrow(LevelWorldError);
+        const reach = flagModelReach(record, buildLevelWorld, { attrsFor: flagAttrs });
+        expect(reach.every((r) => r.reads === null)).toBe(true);
+        expect(flagReachText(reach)).toMatch(/could not be asked about any of the 7 room flags/);
+    });
+
+    it('⛔ the builder is a PARAMETER and its absence refuses BY NAME', () => {
+        expect(() => flagModelReach(SRC(14), null)).toThrow(WatchEditError);
+        expect(() => flagModelReach(SRC(14), null)).toThrow(/takes the MODEL's own builder/);
+        expect(flagReachText([])).toBe(null);
     });
 });

@@ -627,6 +627,24 @@ export function mountEditorView({
         commands: table,
         keys,
         run,
+        /**
+         * ⛓⛓ **A CONTROL THAT IS NOT A GESTURE, APPLYING THROUGH THE ONE
+         * PATH** — EDITOR v3 C2, ADDITIVE.
+         *
+         * ⛔ Seedling's room-flags form and its resize control are FORMS: they
+         * build an op from typed inputs and a press, with no cell and no
+         * canvas click, so no `tool` can carry them. Left to call
+         * `session.apply` themselves they would each need their own copy of
+         * *"say the description, tell the host, repaint"* — three copies of the
+         * one sequence that makes an applied op visible, and the first one to
+         * drift would be a page whose readout and canvas disagreed about what
+         * had happened. ⇒ the sequence stays here and the door is opened.
+         *
+         * ⚠ It is NOT a second `session`: the record and the op list are still
+         * the host's, and this is `applyOp` — the same function every gesture
+         * above already goes through.
+         */
+        apply: applyOp,
         /** ⛓ WHAT A READOUT PRINTS — `describeOps` over the session's own list. */
         describe: () => describeOps(session.ops()),
         /**

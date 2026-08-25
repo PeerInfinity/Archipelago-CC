@@ -28,13 +28,15 @@ import { EDIT_OPS, applyEdit, applyEdits, undoEdit } from './watchEdit.js';
 import { emptyLevel, layerNamed, tileCellAt } from './procgenLevel.js';
 import { atlasLevelSource, loadAtlas } from './levelSource.js';
 import { recordToOel } from './procgenLevelOel.js';
+import { buildLevelSet } from './levelSetExporter.js';
 import { parseOelLevel } from '../../../scripts/procgen/seedlingOgmo.js';
 
 const FIX = (name) => JSON.parse(readFileSync(
     fileURLToPath(new URL(`./fixtures/${name}`, import.meta.url)), 'utf8',
 ));
 const SCHEMA = FIX('seedling-ogmo-schema.json');
-const VANILLA_SET_ID = FIX('seedling-vanilla-set.json').set_id;
+const VANILLA = FIX('seedling-vanilla-set.json');
+const VANILLA_SET_ID = VANILLA.set_id;
 const SOURCE = atlasLevelSource();
 
 const adapter = createSeedlingEditAdapter({
@@ -324,15 +326,79 @@ describe('⛓⛓⛓ §3.2\'s `base` UNION — two resolved, two refused by name'
             .toThrow(/needs a `parseOel`/);
     });
 
-    it('⛔ `generate` and `set-room` are MEMBERS that refuse — a kind that is somebody '
+    it('⛔ `generate` is a MEMBER that refuses — a kind that is somebody '
         + 'else\'s job gets a sentence, not a "no such kind"', () => {
         expect(() => resolveBase(adapter, { kind: 'generate', seed: 1 }))
             .toThrow(/it is the GENERATE ladder's identity/);
-        expect(() => resolveBase(adapter, { kind: 'set-room', set_id: 'x', room: 3 }))
-            .toThrow(/loading a set is the level-set arm's/);
         // …and a kind outside the union gets the other sentence.
         expect(() => resolveBase(adapter, { kind: 'nope' }))
             .toThrow(/is not a base kind the seedling adapter resolves/);
+    });
+
+    /* ══ EDITOR v3 C2 — `set-room` HAS A BODY ═══════════════════════════ */
+
+    /**
+     * ⛓ A SET WITH A REAL `source.xml`, BUILT FROM THE ATLAS. ⛔ Level 110 and
+     * not 14: `validateLevelSet` REFUSES a one-room set whose room carries an
+     * `@to` outside `0..0`, and measured over the 116, exactly TWO levels (81
+     * and 110) survive alone. A subject chosen for the claim rather than for
+     * the story is what keeps the round trip about the base and not about the
+     * validator (trap 235).
+     */
+    const SET_ROOM_LEVEL = 110;
+    const setOf = () => buildLevelSet(
+        [{ seed: 0, record: SOURCE(SET_ROOM_LEVEL), summary: null, name: `L${SET_ROOM_LEVEL}` }],
+        { setId: 'probe', generator: 'seedlingEditAdapter.test.js' },
+    ).set;
+
+    it('⛓⛓ the `set-room` base resolves a room of an INJECTED set, through the `oel` arm',
+        () => {
+            const set = setOf();
+            const ad = createSeedlingEditAdapter({
+                parseOel: parseOelLevel,
+                levelSetSource: (id) => (id === set.set_id ? set : null),
+            });
+            const r = resolveBase(ad, { kind: 'set-room', set_id: set.set_id, room: 0 });
+            const src = SOURCE(SET_ROOM_LEVEL);
+            expect(r.width).toBe(src.width);
+            expect(r.height).toBe(src.height);
+            expect(r.entities.length).toBe(src.entities.length);
+            // ⛓ the room ID is the record's `level`, and the PATH says which set.
+            expect(r.level).toBe(0);
+            expect(r.path).toBe(`${set.set_id}#0`);
+        });
+
+    it('⛔⛔ an EMBED-sourced room is refused BY NAME, and that is the whole VANILLA set',
+        () => {
+            const ad = createSeedlingEditAdapter({
+                parseOel: parseOelLevel,
+                levelSetSource: () => VANILLA,
+            });
+            expect(() => resolveBase(ad,
+                { kind: 'set-room', set_id: VANILLA.set_id, room: 0 }))
+                .toThrow(/EMBED-sourced/);
+            expect(() => resolveBase(ad,
+                { kind: 'set-room', set_id: VANILLA.set_id, room: 0 }))
+                .toThrow(/its door is/i);
+            // ⛓ …and it is EVERY room, not the first one only.
+            expect(VANILLA.rooms.filter((r) => typeof r.source?.xml === 'string').length).toBe(0);
+            expect(VANILLA.rooms.length).toBe(116);
+        });
+
+    it('⛔ a `set-room` base with the WRONG set_id, a missing set or a missing room refuses '
+        + 'BY NAME — the identity check ⚖ ruling 2 makes one layer down', () => {
+        const set = setOf();
+        const ad = createSeedlingEditAdapter({
+            parseOel: parseOelLevel,
+            levelSetSource: (id) => (id === set.set_id ? set : null),
+        });
+        expect(() => resolveBase(ad, { kind: 'set-room', set_id: 'other', room: 0 }))
+            .toThrow(/no level set with set_id "other" is loaded here/);
+        expect(() => resolveBase(ad, { kind: 'set-room', set_id: set.set_id, room: 9 }))
+            .toThrow(/has no room 9/);
+        expect(() => resolveBase(createSeedlingEditAdapter({ parseOel: parseOelLevel }),
+            { kind: 'set-room', set_id: set.set_id, room: 0 }))
+            .toThrow(/needs a `levelSetSource`/);
     });
 
     it('⛔ an adapter with no `bases` says so, rather than saying "unknown kind"', () => {

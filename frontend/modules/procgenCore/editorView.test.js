@@ -752,6 +752,53 @@ describe('a PAGE TOOL joins the four — one armed value, one listener, one tabl
  * ⛔⛔ THE SPLIT IS REAL — asserted on the SOURCE
  * ══════════════════════════════════════════════════════════════════════ */
 
+describe('⛓⛓⛓ `view.apply` — a control that is not a GESTURE, on the one op path', () => {
+    /**
+     * ⛔ EDITOR v3 C2. Seedling's room-flags form and its resize control build
+     * an op from typed inputs and a press: no cell, no click, no `tool`. Left
+     * to call `session.apply` themselves each would carry its own copy of *"say
+     * the description, tell the host, repaint"*, and the first to drift would
+     * be a page whose readout and canvas disagreed about what had happened.
+     */
+    it('⛓ it applies through the SESSION and reports like a gesture does', () => {
+        const t = harness();
+        const res = t.view.apply({ op: 'setTile', x: 1, y: 1, tile: 'b' });
+        expect(res.ok).toBe(true);
+        expect(res.applied).toBe(true);
+        expect(t.session.ops()).toHaveLength(1);
+        // the same three things a click causes: a sentence, an onChange, a repaint
+        expect(t.last().text).toBe(res.description);
+        expect(t.changes).toHaveLength(1);
+        expect(t.painted.length).toBeGreaterThan(0);
+    });
+
+    it('⛓⛓ a refusal is REPORTED, not thrown, and the op list does not grow', () => {
+        const t = harness();
+        const res = t.view.apply({ op: 'nope' });
+        expect(res.ok).toBe(false);
+        expect(t.session.ops()).toHaveLength(0);
+        expect(t.last().bad).toBe(true);
+        expect(t.changes[t.changes.length - 1].result.ok).toBe(false);
+    });
+
+    it('⛓ an op that changed NOTHING answers `applied:false` — the law a form needs as much '
+        + 'as a click does', () => {
+        const t = harness();
+        const res = t.view.apply({ op: 'setTile', x: 1, y: 1, tile: 'a' });
+        expect(res.ok).toBe(true);
+        expect(res.applied).toBe(false);
+        expect(t.session.ops()).toHaveLength(0);
+    });
+
+    it('⛔ it is NOT a second session — the tool and the clip are untouched by it', () => {
+        const t = harness();
+        t.view.setTool(TOOLS.RECT);
+        t.view.apply({ op: 'setTile', x: 2, y: 2, tile: 'b' });
+        expect(t.view.tool).toBe(TOOLS.RECT);
+        expect(t.view.clip).toBe(null);
+    });
+});
+
 describe('⛔ the view test imports nothing substrate-side', () => {
     const source = readFileSync(fileURLToPath(import.meta.url), 'utf8');
     const specifiers = [...source.matchAll(/^\s*(?:import|export)[^'"]*from\s*['"]([^'"]+)['"]/gm)]

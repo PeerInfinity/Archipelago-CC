@@ -69,6 +69,13 @@ import {
  * `bindingContract.test.js` pins.
  */
 import { GROUP_OP, isGroup } from '../procgenCore/editCore.js';
+/**
+ * ⛓ THE LEVEL-PROPERTY TAGS, IMPORTED — EDITOR v3 slice C2. `seedlingSemantics`
+ * is already on this file's graph (`procgenLevel` imports it) and it already
+ * classifies every Ogmo tag against `Game.as`. ⛔ The room-flags roster is that
+ * classification, never a second one derived from the schema's folders.
+ */
+import { LEVEL_PROPERTY_TAGS } from '../flashPanel/seedlingSemantics.js';
 
 export class WatchEditError extends Error {
     constructor(message) {
@@ -297,6 +304,200 @@ export function transcribeBoundText(types) {
         + `${list.join(', ')}. The room still EDITS and still SHIPS; what it cannot get `
         + 'here is a JS certification (SOLVE will refuse from the engine, by name). '
         + '⚖ Ruling 3: ▶ load in wasm is the certifier for these.';
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ THE ROOM FLAGS — EDITOR v3, SLICE C2
+ *
+ * §3.3 Tier A's last unshipped row. `lightalpha`, `daynight`, `snow`,
+ * `blur`, `blur2`, `droplet` and `<control>` are ENTITIES in the OEL and
+ * LEVEL PROPERTIES in the game: `Game.loadLevelXML` reads them off
+ * `xml.objects[0]` with `hasOwnProperty` (or as a parameter block) and never
+ * constructs anything (`Game.as:1963-1985, 2134-2151`). So they need no new
+ * op — they are `place` / `attrs` / `remove` on the vocabulary slice B
+ * shipped — and what was missing is the FORM.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓⛓⛓ **THE LINE BETWEEN A FLAG AND A BODY WAS ALREADY DRAWN, AND THIS IS
+ * THAT LINE — NOT A SECOND OPINION ABOUT IT.**
+ *
+ * ⛔⛔ THE BRIEF ASKED FOR *"the schema's `utility` folder minus the ones that
+ * are bodies at a cell"* AND THAT DERIVATION MUST NOT BE WRITTEN. The
+ * `utility` folder holds 13 types, and six of them (`player`, `lightray`,
+ * `shadow`, `stairsup`, `stairsdown`, `teleporter`) are bodies at a cell —
+ * so the subtraction needs a rule for which is which, and `seedlingSemantics`
+ * ALREADY HAS ONE, keyed off `Game.as` line by line
+ * (`LEVEL_PROPERTY_TAGS` / `isLevelPropertyTag`). A second derivation would be
+ * a second answer to the same question, and the day they parted the form would
+ * offer a body as a flag with nothing saying which was right.
+ *
+ * ⇒ the roster is `LEVEL_PROPERTY_TAGS`, IMPORTED. `watchEdit.test.js` pins it
+ * against the folder and against the committed atlas: every tag the 116 rooms
+ * place that the classifier calls a level property is in this list, and no tag
+ * `ENTITY_SEMANTICS` classifies as a placed body is.
+ */
+export const ROOM_FLAG_TAGS = LEVEL_PROPERTY_TAGS;
+
+/**
+ * ⛓⛓ **WHERE A NEW FLAG GOES — MEASURED, NOT CHOSEN.** A level property has
+ * coordinates in the file and no presence on the map, so the cell is a
+ * convention rather than a fact; over the 116 committed rooms the convention
+ * is the ORIGIN. Measured: 155 flag instances, and the modal cell of every one
+ * of the seven tags is (0,0) — 75 of the 97 `lightalpha`, 12 of the 13
+ * `droplet`, 9 of the 16 `daynight`, all 4 `snow`, 5 of the 9 `blur`.
+ *
+ * ⚠ IT IS ONLY WHERE A **NEW** ONE GOES. A flag already in the room is read,
+ * written and removed AT ITS OWN CELL — moving one would be an edit nobody
+ * asked for, and `<control>` in particular sits wherever the author put it
+ * (measured: 11 distinct cells across the 12 rooms that have one).
+ */
+export const ROOM_FLAG_CELL = Object.freeze({ tx: 0, ty: 0 });
+
+/**
+ * ⛓ ONE ROW PER FLAG THE SCHEMA DECLARES — the tag, and the typed values
+ * `Shrum.oep` gives it, which is what turns a presence flag (no values) into a
+ * CHECKBOX and an attribute flag into a checkbox plus typed inputs.
+ *
+ * ⛔ A TAG THE SCHEMA DOES NOT DECLARE IS OMITTED AND SAID SO by the caller,
+ * rather than offered with an empty form: the two lists come from two files
+ * (`Game.as` via `seedlingSemantics`, and `Shrum.oep` via the extract) and a
+ * tag in one and not the other is a fact worth seeing.
+ */
+export function roomFlagRoster(schema) {
+    assertOgmoSchema(schema);
+    return Object.freeze(ROOM_FLAG_TAGS
+        .filter((tag) => schema.entities[tag])
+        .map((tag) => Object.freeze({
+            tag,
+            folder: schema.entities[tag].folder,
+            values: Object.freeze(schema.entities[tag].values.map((v) => Object.freeze({ ...v }))),
+        })));
+}
+
+/**
+ * ⛓ THE FLAGS THIS RECORD ACTUALLY CARRIES — one row per PRESENT flag, at the
+ * cell it is at, with the index it holds among the room's entities and whether
+ * it is the LAST body in that cell.
+ *
+ * ⛔⛔ **`last` IS NOT BOOKKEEPING — IT IS WHETHER THE OP VOCABULARY CAN
+ * EXPRESS THE REMOVAL AT ALL.** `remove` and `attrs` both address *the last
+ * entity in the cell* (slice 11's rule, and `entityIndexAt` is its one
+ * spelling). MEASURED over the committed 116 rooms: of 155 flag instances, 14
+ * share their cell with another body and **2 of those are not the last one** —
+ * so a form that emitted a bare `remove` there would delete somebody else's
+ * body and call it turning a flag off. ⇒ the form REFUSES those two by name
+ * (`roomFlagOpRefusal`), and the vocabulary gap is slice D's to close.
+ */
+export function roomFlagsIn(record) {
+    const out = [];
+    (record?.entities ?? []).forEach((e, i) => {
+        if (!ROOM_FLAG_TAGS.includes(e.type)) return;
+        const at = tileAtOel(e.x, e.y);
+        out.push(Object.freeze({
+            tag: e.type,
+            tx: at.tx,
+            ty: at.ty,
+            index: i,
+            attrs: Object.freeze({ ...(e.attrs ?? {}) }),
+            last: entityIndexAt(record, at.tx, at.ty) === i,
+        }));
+    });
+    return Object.freeze(out);
+}
+
+/**
+ * ⛓ THE SENTENCE THAT REFUSES A `remove` / `attrs` THE VOCABULARY CANNOT
+ * EXPRESS, or `null` when it can. ⛔ It refuses the OP, never the edit: every
+ * other way of reaching that body is untouched.
+ */
+export function roomFlagOpRefusal(record, flag, what) {
+    if (!flag || flag.last) return null;
+    const i = entityIndexAt(record, flag.tx, flag.ty);
+    const other = record.entities[i];
+    return `⛔ REFUSED — <${flag.tag}> is at (${flag.tx},${flag.ty}) and it is NOT the last `
+        + `body in that cell: <${other?.type}> is. A \`${what}\` op addresses *the last `
+        + 'entity in the cell* (slice 11\'s rule, one spelling), so this one would '
+        + `${what === 'remove' ? 'DELETE' : 'REWRITE'} <${other?.type}> and call it a flag `
+        + 'change. ⚠ MEASURED: 2 of the 116 vanilla rooms\' 155 flag instances sit this way. '
+        + 'Move the other body, or edit the OEL — an op that could name WHICH body is a '
+        + 'vocabulary change, i.e. a decision (§11.9 bound 1\'s shape).';
+}
+
+/**
+ * ⛓⛓⛓ **WHAT THE JS MODEL DOES WITH EACH FLAG — MEASURED ON THE ROOM ON
+ * SCREEN, NOT READ OFF A TABLE.**
+ *
+ * ⛔⛔ **THE CLASS TABLE ANSWERS *CONSTRUCTION*, AND THE QUESTION IS *REACH*.**
+ * `ENTITY_CLASSES` gives all seven `as3: null` — *"not an entity at all"* —
+ * so a readout derived from the table would say the model ignores all seven.
+ * MEASURED, IT DOES NOT: `buildLevelWorld` reads `<control>`'s `fallthrough`
+ * into the world (a pit is a transport primitive), and a world built with and
+ * without a `control` DIFFERS. The other six leave the world byte-identical.
+ * A sentence derived from `as3` alone would have been true about construction
+ * and false about the reader's actual question (trap 566's shape).
+ *
+ * ⇒ this ASKS THE MODEL: build the room with the flag and without it, and
+ * report whether the two worlds differ. `buildWorld` is a PARAMETER for the
+ * same reason the class table is one — this file holds no opinion about which
+ * model is in play.
+ *
+ * ⚠ `reads: null` IS A REAL ANSWER: a room the model refuses to build (⚖ ruling
+ * 3) cannot be asked, and reporting `false` there would say *"the model ignores
+ * this flag"* about a model that never saw the room.
+ */
+export function flagModelReach(record, buildWorld, { tags = ROOM_FLAG_TAGS, attrsFor = () => ({}) } = {}) {
+    if (typeof buildWorld !== 'function') {
+        fail('watchEdit: `flagModelReach` takes the MODEL\'s own builder '
+            + '(`levelWorld.buildLevelWorld`) as a parameter — the reach of a flag is a fact '
+            + 'about a MODEL, and a module that imported one would be a second opinion about '
+            + 'which model is being asked.');
+    }
+    const digest = (r) => {
+        try {
+            // ⛓ `JSON.stringify` DROPS THE WORLD'S FUNCTIONS and keeps its data,
+            // which is exactly the half a flag could move. Two 40 KB strings.
+            return { text: JSON.stringify(buildWorld(r)), why: null };
+        } catch (e) {
+            return { text: null, why: `${e.name}: ${e.message}` };
+        }
+    };
+    return Object.freeze(tags.map((tag) => {
+        const without = withEntitiesReplaced(record,
+            (record.entities ?? []).filter((e) => e.type !== tag));
+        const with_ = withEntities(without,
+            [{ type: tag, ...oelAtTile(ROOM_FLAG_CELL.tx, ROOM_FLAG_CELL.ty), attrs: attrsFor(tag) }]);
+        const a = digest(without);
+        const b = digest(with_);
+        if (a.text === null || b.text === null) {
+            return Object.freeze({ tag, reads: null, why: a.why ?? b.why });
+        }
+        return Object.freeze({ tag, reads: a.text !== b.text, why: null });
+    }));
+}
+
+/**
+ * ⛓⛓ THE SENTENCE THE PAGE SHOWS — ⚖ ruling 3's own shape, one layer over: the
+ * edit is never refused, and what the reader is told is what the JS oracle can
+ * and cannot answer about it.
+ */
+export function flagReachText(reach) {
+    const rows = [...(reach ?? [])];
+    if (rows.length === 0) return null;
+    const unknown = rows.filter((r) => r.reads === null);
+    if (unknown.length === rows.length) {
+        return `⚠ the JS model could not be asked about any of the ${rows.length} room flags `
+            + `— ${unknown[0].why}. ⚖ Ruling 3: the room still edits and ▶ load in wasm is `
+            + 'the certifier.';
+    }
+    const ignored = rows.filter((r) => r.reads === false).map((r) => r.tag);
+    const read = rows.filter((r) => r.reads === true).map((r) => r.tag);
+    return `⚠ MEASURED on this room: the JS model builds the SAME world with and without `
+        + `${ignored.length} of these ${rows.length} flags — ${ignored.join(', ')} — so `
+        + 'changing one changes NOTHING it can certify; ⛔ the wasm is the only certifier of '
+        + `those. ${read.length === 0 ? 'None of them reaches the model.'
+            : `${read.join(', ')} DOES reach it (its data is in the built world).`}`
+        + `${unknown.length ? ` ${unknown.length} could not be asked (${unknown[0].why}).` : ''}`;
 }
 
 /**

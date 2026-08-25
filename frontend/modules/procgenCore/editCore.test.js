@@ -26,6 +26,7 @@ import {
     canonicalJson,
     createEditSession,
     describeOps,
+    descriptorFieldsOf,
     floodOps,
     foldEdits,
     group,
@@ -583,6 +584,43 @@ describe('⛓ assertAdapter', () => {
  * them. The subject here is exactly one file — this one — so there is nothing
  * to allowlist, and the non-vacuity row below is what proves the pattern bites.
  */
+describe('⛓⛓⛓ descriptorFieldsOf — the filter offer, derived from the DESCRIPTOR', () => {
+    const rec = toyWorld(3, 3);
+
+    it('⛓ it is the descriptor\'s own keys, in the descriptor\'s own order', () => {
+        expect(descriptorFieldsOf(toyAdapter, rec))
+            .toEqual(Object.keys(toyAdapter.readCell(rec, 0, 0)));
+    });
+
+    it('⛓⛓ a FOURTH field arrives as an offer with no edit at the call site — which is the '
+        + 'whole point of deriving it', () => {
+        const wider = Object.freeze({
+            ...toyAdapter,
+            readCell: (r, x, y) => ({ ...toyAdapter.readCell(r, x, y), weather: 'rain' }),
+        });
+        expect(descriptorFieldsOf(wider, rec))
+            .toEqual([...descriptorFieldsOf(toyAdapter, rec), 'weather']);
+    });
+
+    it('⛓ every field it offers is one `rectPasteOps` will actually accept as `only`', () => {
+        for (const field of descriptorFieldsOf(toyAdapter, rec)) {
+            expect(() => rectPasteOps(toyAdapter, rec, rectCopy(toyAdapter, rec,
+                { x: 0, y: 0, w: 2, h: 2 }), 1, 1, { only: field })).not.toThrow();
+        }
+        // ⛔ …and a field the descriptor does NOT carry is refused BY NAME
+        expect(() => rectPasteOps(toyAdapter, rec, rectCopy(toyAdapter, rec,
+            { x: 0, y: 0, w: 2, h: 2 }), 1, 1, { only: 'weather' }))
+            .toThrow(/no `weather` field, so the split does not exist on this substrate/);
+    });
+
+    it('⛔ an adapter whose readCell is not a plain object refuses BY NAME rather than '
+        + 'offering nothing', () => {
+        const broken = Object.freeze({ ...toyAdapter, readCell: () => ['a'] });
+        expect(() => descriptorFieldsOf(broken, rec)).toThrow(EditCoreError);
+        expect(() => descriptorFieldsOf(broken, rec)).toThrow(/a cell DESCRIPTOR is a plain/);
+    });
+});
+
 describe('⛔ the toy test imports nothing substrate-side', () => {
     const source = readFileSync(fileURLToPath(import.meta.url), 'utf8');
     const specifiers = [...source.matchAll(/^\s*(?:import|export)[^'"]*from\s*['"]([^'"]+)['"]/gm)]

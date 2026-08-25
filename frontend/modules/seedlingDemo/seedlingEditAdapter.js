@@ -229,6 +229,73 @@ function oelBase(tag, { parseOel }) {
     };
 }
 
+/**
+ * ⛓⛓⛓ **§3.2's FOURTH BASE — A ROOM OF A LOADED SET** (EDITOR v3 slice C2).
+ *
+ * ⛔ **IT RESOLVES THROUGH THE `oel` ARM AND THAT IS THE WHOLE POINT.** A set's
+ * room IS an OEL document plus a manifest row; giving `set-room` its own parse
+ * would be a second reader of one format, and the two would part on the first
+ * thing the manifest could not express. So this resolves the ROOM and hands the
+ * XML to `oelBase`, which is already the one door for pasted rooms.
+ *
+ * ⛔ **THE SET IS INJECTED, LIKE EVERYTHING ELSE.** `levelSetSource(set_id)` is
+ * the page's own held document (a set arrives by paste or by fetch, both of
+ * which are the page's business), and an adapter that reached for one would be
+ * reading a document nobody handed it.
+ *
+ * ⛔⛔ **AN `embed`-SOURCED ROOM REFUSES BY NAME, AND THAT IS THE WHOLE VANILLA
+ * SET.** An `embed` is a path into a SWF's `[Embed]` table — a fact about a
+ * SOURCE TREE, not about this document — and all 116 rooms of
+ * `fixtures/seedling-vanilla-set.json` carry one. ⇒ the vanilla set cannot be
+ * opened this way and the refusal says so; `?source=edit&level=N` (the ATLAS
+ * base, ⚖ ruling 2's hash) is its door.
+ */
+function setRoomBase(tag, { levelSetSource, parseOel }) {
+    if (typeof tag.set_id !== 'string' || !Number.isInteger(tag.room)) {
+        fail(`seedlingEditAdapter: a \`set-room\` base is {kind, set_id, room}, got `
+            + `${JSON.stringify(tag)}.`);
+    }
+    if (!levelSetSource) {
+        fail('seedlingEditAdapter: a `set-room` base needs a `levelSetSource`, and none was '
+            + 'injected. A level set arrives by PASTE or by fetch — both of them the PAGE\'s '
+            + 'business — so the document is handed in, exactly as the atlas is.');
+    }
+    const set = levelSetSource(tag.set_id);
+    if (!set) {
+        fail(`seedlingEditAdapter: no level set with set_id ${JSON.stringify(tag.set_id)} is `
+            + 'loaded here. ⛔ REFUSED rather than opened against whatever set happens to be '
+            + 'in hand: a `set_id` carries the DOCUMENT\'s CONTENT HASH '
+            + '(`stampLevelSetIdentity`), so a room resolved out of a different set would be '
+            + 'a room this base never named — the same refusal ⚖ ruling 2 makes about the '
+            + 'vanilla atlas one layer down.');
+    }
+    const room = (set.rooms ?? [])[tag.room];
+    if (!room) {
+        fail(`seedlingEditAdapter: set ${JSON.stringify(tag.set_id)} has no room `
+            + `${tag.room} — it has ${(set.rooms ?? []).length} (0..`
+            + `${Math.max(0, (set.rooms ?? []).length - 1)}). ⚠ A room id is its POSITION in `
+            + '`rooms[]` (the schema\'s own rule), which is why a reorder rewrites every '
+            + '`@to`.');
+    }
+    if (!room.source || typeof room.source.xml !== 'string') {
+        fail(`seedlingEditAdapter: room ${tag.room} ${JSON.stringify(room.name ?? '')} of `
+            + `${JSON.stringify(tag.set_id)} is `
+            + `${room.source?.embed ? `EMBED-sourced (${room.source.embed})` : 'sourced by '
+                + `${JSON.stringify(room.source)}`} and this page has no embeds. ⛔ An `
+            + '`embed` is a path into a SWF\'s `[Embed]` table — a fact about a SOURCE TREE, '
+            + 'not about this document — and all 116 rooms of the committed VANILLA set '
+            + 'carry one, so that set cannot be opened room by room here. Its door is '
+            + '`?source=edit&level=N`, the ATLAS base.');
+    }
+    return oelBase({
+        kind: 'oel',
+        xml: room.source.xml,
+        level: tag.room,
+        class: room.name ?? `Room${tag.room}`,
+        path: `${tag.set_id}#${tag.room}`,
+    }, { parseOel });
+}
+
 const refuseKind = (kind, why) => () => fail(
     `seedlingEditAdapter: \`${kind}\` is one of §3.2's four base kinds and this adapter does `
     + `NOT resolve it — ${why}`,
@@ -245,11 +312,12 @@ const refuseKind = (kind, why) => () => fail(
  * @param {Function} [o.levelSource] `(level) => record`, for the `atlas` base
  * @param {string} [o.vanillaSetId]  the vanilla set's stamped `set_id` (⚖ ruling 2)
  * @param {Function} [o.parseOel]    `(xml, where) => {width, height, layers, entities}`
+ * @param {Function} [o.levelSetSource] `(set_id) => set`, for the `set-room` base
  * @param {boolean} [o.fillDefaults] fill omitted attrs from the schema's defaults
  */
 export function createSeedlingEditAdapter({
     schema = null, levelSource = null, vanillaSetId = null, parseOel = null,
-    fillDefaults = false,
+    levelSetSource = null, fillDefaults = false,
 } = {}) {
     const opts = { schema, fillDefaults };
     return Object.freeze({
@@ -309,9 +377,13 @@ export function createSeedlingEditAdapter({
                 'it is the GENERATE ladder\'s identity (seed, biome, directives, skeleton) '
                 + 'and reconstructing it means RUNNING the ladder. "Open in editor" hands the '
                 + 'record over; the tag rides along so the identity line survives.'),
-            'set-room': refuseKind('set-room',
-                'a room of a LOADED SET is Tier B, and loading a set is the level-set arm\'s '
-                + '(plan phase 3). It is named here so the refusal says whose it is.'),
+            /**
+             * ⛓ EDITOR v3 C2 — it has a BODY now, and it still refuses by name
+             * when no set is loaded or the room is `embed`-sourced. ⚠ Without a
+             * `levelSetSource` the sentence is about the missing DOCUMENT, not
+             * about the kind: a page with no set has not asked a bad question.
+             */
+            'set-room': (tag) => setRoomBase(tag, { levelSetSource, parseOel }),
         }),
     });
 }
