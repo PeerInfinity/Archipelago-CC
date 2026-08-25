@@ -138,12 +138,39 @@ const errors = [];
 const notFound = [];
 const NO_URL_404 = 'Failed to load resource: the server responded with a status of 404';
 /**
- * ⛓ ONE KNOWN-BENIGN 404, EXCLUDED BY NAME AND COUNTED — `app/buildInfo.js`
- * probes `/_source-mtime`, which only `serve-nocache.py` serves. Named rather
- * than matched loosely, and the count is printed, because a bounded exclusion
- * that does not say what it excluded reads as "there was nothing to exclude".
+ * ⛓ TWO KNOWN-BENIGN 404s, EXCLUDED BY NAME AND COUNTED.
+ *
+ * `/_source-mtime` — `app/buildInfo.js` probes it and only `serve-nocache.py`
+ * serves it; under a plain static server the build stamp stays empty.
+ *
+ * `<game>_textadventure.json` — the text-adventure wrapper probes for an
+ * OPTIONAL per-game prose document (`customData.js`: *"otherwise null, and the
+ * engine keeps its generic prose"*). Only `adventure` ships one, so every other
+ * game 404s BY DESIGN. ⚠ It is in this row because the anchor preset is Baking
+ * Adventure; a row that had quietly picked a game with a prose file would have
+ * been green for a reason nobody chose.
+ *
+ * ⛔ Named rather than matched loosely, and the counts are PRINTED, because a
+ * bounded exclusion that does not say what it excluded reads as "there was
+ * nothing to exclude".
  */
-const BENIGN_404 = ['/_source-mtime'];
+const BENIGN_404 = ['/_source-mtime', '_textadventure.json'];
+/**
+ * ⛓ ONE KNOWN-BENIGN CONSOLE ERROR, EXCLUDED BY NAME AND COUNTED.
+ *
+ * ⛔ **IT IS THE DRIVER'S NAVIGATION, NOT THE APP'S DEFECT.** Every upload gets
+ * a fresh page (see `openApp`), and each load kicks off `sphereState`'s own
+ * auto-load for the app's DEFAULT preset — `presets/adventure/…_sphere_log.jsonl`,
+ * a file that has nothing to do with the three documents under test. Navigating
+ * away cancels that fetch mid-flight and the app reports it, correctly, as
+ * `TypeError: Failed to fetch`.
+ *
+ * ⚠ MATCHED ON BOTH HALVES so it cannot swallow a real fetch failure, and the
+ * count is asserted at MOST ONE PER NAVIGATION — a second one on the same page
+ * would be something else and would red this row.
+ */
+const BENIGN_ERROR = (text) => text.includes('Failed to load sphere log')
+    && text.includes('TypeError: Failed to fetch');
 
 try {
     const page = await browser.newPage({ viewport: { width: 1600, height: 1000 } });
@@ -163,12 +190,59 @@ try {
     const dialogs = [];
     page.on('dialog', async (d) => { dialogs.push(d.message()); await d.accept(); });
 
-    await page.goto(`${base}/frontend/index.html`, { waitUntil: 'domcontentloaded' });
+    /**
+     * ⛓⛓⛓ **A FRESH PAGE PER UPLOAD, AND THAT IS A MEASUREMENT, NOT A HABIT.**
+     *
+     * ⛔ THE PRESETS PANEL IS A BACKGROUND TAB OF ITS GOLDENLAYOUT STACK — AT
+     * LOAD, before anything is loaded into it. Probed: the chain above
+     * `#back-to-presets` is `button → #presets-list → #presets-panel →
+     * .lm_content → div{display:none}`. `setInputFiles` never noticed (a file
+     * input takes no actionability check, which is why the first upload works
+     * and is why this went unseen); the first `page.click` did, timing out 30 s
+     * on *"element is not visible"*. And `ui:activatePanel {panelId:
+     * 'presetsPanel'}` did not lift it either.
+     *
+     * ⇒ each upload gets its OWN page load. That is what a person doing three
+     * separate loads does anyway, it removes every coupling to layout state,
+     * and it keeps the row's subject where it belongs: what `files:jsonLoaded`
+     * carries, not which tab is in front.
+     *
+     * ⚠ `displayLoadedJsonFileDetails` ALSO replaces the games list with a
+     * detail view, so `#json-file-input` is gone after a load even when the
+     * panel IS in front — a second reason the same page cannot serve two
+     * uploads.
+     */
+    let NAVIGATIONS = 0;
+    const openApp = async () => {
+        NAVIGATIONS += 1;
+        await page.goto(`${base}/frontend/index.html`, { waitUntil: 'domcontentloaded' });
+        await page.waitForFunction(
+            () => Boolean(document.getElementById('json-file-input')) && Boolean(window.eventBus),
+            null, { timeout: 120000 },
+        ).catch((e) => { throw new Error(`STUCK waiting for the presets panel: ${e.message}`); });
+        /**
+         * ⛓⛓ THE TAP, installed before the upload: every `files:jsonLoaded` and
+         * `ui:notification` IN ORDER. ⛔ A row that read only a final state
+         * could not tell "the bundle published this document" from "the page
+         * still shows the previous load".
+         */
+        await page.evaluate(() => {
+            window.__e1c = { loaded: [], notes: [] };
+            window.eventBus.subscribe('files:jsonLoaded', (d) => {
+                const byPlayer = d.jsonData?.regions ?? {};
+                window.__e1c.loaded.push({
+                    sourceName: d.sourceName,
+                    game_name: d.jsonData?.game_name,
+                    seed_name: d.jsonData?.seed_name,
+                    playerRegions: Object.keys(byPlayer[Object.keys(byPlayer)[0]] ?? {}).length,
+                });
+            }, 'e1cTap');
+            window.eventBus.subscribe('ui:notification',
+                (d) => window.__e1c.notes.push(`${d.type}: ${d.message}`), 'e1cTap');
+        });
+    };
 
-    await page.waitForFunction(
-        () => Boolean(document.getElementById('json-file-input')) && Boolean(window.eventBus),
-        null, { timeout: 120000 },
-    ).catch((e) => { throw new Error(`STUCK waiting for the presets panel: ${e.message}`); });
+    await openApp();
 
     /* ── CLAIM 1 ─────────────────────────────────────────────────────── */
     const accept = await page.evaluate(
@@ -178,54 +252,16 @@ try {
         '⛓ CLAIM 1 — the file input OFFERS the three shapes and keeps `.archipelago`',
         `accept="${accept}"`);
 
-    /**
-     * ⛓⛓ THE TAP, installed before the first upload: every `files:jsonLoaded`
-     * and `ui:notification` IN ORDER. ⛔ A row that read only a final state
-     * could not tell "the bundle published this document" from "the previous
-     * load is still on screen".
-     */
-    await page.evaluate(() => {
-        window.__e1c = { loaded: [], notes: [] };
-        window.eventBus.subscribe('files:jsonLoaded', (d) => {
-            window.__e1c.loaded.push({
-                sourceName: d.sourceName,
-                game_name: d.jsonData?.game_name,
-                seed_name: d.jsonData?.seed_name,
-                regions: Object.keys(d.jsonData?.regions ?? {}).length,
-                playerRegions: Object.keys(
-                    d.jsonData?.regions?.[Object.keys(d.jsonData?.regions ?? {})[0]] ?? {}).length,
-            });
-        }, 'e1cTap');
-        window.eventBus.subscribe('ui:notification',
-            (d) => window.__e1c.notes.push(`${d.type}: ${d.message}`), 'e1cTap');
-    });
-
-    /**
-     * ⛔ **THE INPUT IS GONE AFTER A LOAD, AND THAT IS THE PANEL WORKING.**
-     * `displayLoadedJsonFileDetails` REPLACES the games list with a detail view
-     * whose only navigation is `#back-to-presets` — so a second
-     * `setInputFiles('#json-file-input')` waits 30 s for an element the page
-     * deliberately removed. Measured here, on the second upload. ⇒ every upload
-     * re-enters through the panel's own BACK button rather than through a
-     * re-render nobody can press, which also makes each load a fresh journey
-     * through the same door a person would take.
-     */
     const upload = async (path, why) => {
-        const before = await page.evaluate(() => window.__e1c.loaded.length);
-        if (!await page.evaluate(() => Boolean(document.getElementById('json-file-input')))) {
-            await page.click('#back-to-presets');
-            await page.waitForFunction(
-                () => Boolean(document.getElementById('json-file-input')),
-                null, { timeout: 30000 },
-            ).catch((e) => {
-                throw new Error(`STUCK re-entering the games list before ${why}: ${e.message}`);
-            });
-        }
+        await openApp();
         await page.setInputFiles('#json-file-input', path);
         await page.waitForFunction(
-            (n) => window.__e1c.loaded.length > n, before, { timeout: 60000 },
+            () => window.__e1c.loaded.length > 0, null, { timeout: 60000 },
         ).catch((e) => { throw new Error(`STUCK waiting for ${why} to publish: ${e.message}`); });
-        return page.evaluate(() => window.__e1c.loaded[window.__e1c.loaded.length - 1]);
+        return page.evaluate(() => ({
+            ...window.__e1c.loaded[window.__e1c.loaded.length - 1],
+            notes: window.__e1c.notes.slice(),
+        }));
     };
 
     /* ── CLAIM 2 — THE ANCHOR ────────────────────────────────────────── */
@@ -238,7 +274,6 @@ try {
         + `${anchor.playerRegions} region(s) (node: ${NODE_REGIONS})`);
 
     /* ── CLAIMS 3 + 4 — THE BUNDLE ───────────────────────────────────── */
-    const notesBefore = await page.evaluate(() => window.__e1c.notes.length);
     const bundled = await upload(BUNDLE, 'the .zip bundle');
     check(bundled.game_name === anchor.game_name && bundled.seed_name === anchor.seed_name
         && bundled.playerRegions === anchor.playerRegions,
@@ -248,9 +283,7 @@ try {
     check(/rules\.json/.test(bundled.sourceName ?? ''),
         '⛓ CLAIM 3b — the source name says which MEMBER was loaded',
         bundled.sourceName);
-    const newNotes = await page.evaluate(
-        (n) => window.__e1c.notes.slice(n), notesBefore);
-    const named = newNotes.join(' | ');
+    const named = bundled.notes.join(' | ');
     check(['level-set', 'overlay', 'region-atlas'].every((k) => named.includes(k)),
         '⛓⛓ CLAIM 4 — the IGNORED members are NAMED, by kind and by entry name',
         named.slice(0, 300));
@@ -275,10 +308,14 @@ try {
     /* ── CLAIM 7 ─────────────────────────────────────────────────────── */
     const benign = notFound.filter((u) => BENIGN_404.some((b) => u.includes(b)));
     const real404 = notFound.filter((u) => !BENIGN_404.some((b) => u.includes(b)));
-    check(errors.length === 0 && real404.length === 0,
+    const cancelled = errors.filter(BENIGN_ERROR);
+    const realErrors = errors.filter((e) => !BENIGN_ERROR(e));
+    check(realErrors.length === 0 && real404.length === 0 && cancelled.length <= NAVIGATIONS,
         '⛓ CLAIM 7 — no page error and no unexpected 404 across all four loads '
-        + `(${benign.length} benign ${BENIGN_404.join(', ')} 404(s) excluded by name)`,
-        [...errors, ...real404].join(' | ').slice(0, 400));
+        + `(${benign.length} benign ${BENIGN_404.join(', ')} 404(s) and ${cancelled.length} `
+        + `navigation-cancelled sphere-log fetch(es) over ${NAVIGATIONS} page loads, both `
+        + 'excluded BY NAME and counted)',
+        [...realErrors, ...real404].join(' | ').slice(0, 400));
 } catch (e) {
     check(false, 'the row ran to the end', e.message);
 }
