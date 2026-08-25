@@ -196,8 +196,11 @@ describe('the COMMITTED Seedling pool, through the hook', () => {
         });
         expect(notes.filter((n) => n.kind === 'pruned_exit')).toHaveLength(6);
         expect([...region.exits.keys()]).toEqual([]);
-        // The real geometry survives: 109 floor tiles is what Phase 5b measured.
-        expect(region.playable_payload.tiles.filter((t) => t === 0)).toHaveLength(109);
+        // The real geometry survives. Phase 5b measured 109 floor tiles on the
+        // pool committed at e0fcce518; the pool regenerated at c8447dd56 (after
+        // the sorter learned OR and counts, 5cfc715fe) projects 111 — this row
+        // pins the COMMITTED artifact, so it moves when the artifact does.
+        expect(region.playable_payload.tiles.filter((t) => t === 0)).toHaveLength(111);
     });
 
     it('spawns on a walkable tile — the projection\'s own entrance', () => {
