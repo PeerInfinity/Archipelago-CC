@@ -4,6 +4,8 @@ import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
 import { resolvePlayerId } from '../../utils/playerInference.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import settingsManager from '../../app/core/settingsManager.js';
+import { JSZIP_SCRIPT, loadJSZipBrowser } from './loadJSZipBrowser.js';
+import { describeBundle, gunzipIfNeeded, readBundle } from './documentBundle.js';
 
 const DEV_INDEX_PATH = './presets/preset_files.json';
 const LIVE_INDEX_PATH = './presets/preset_files.live.json';
@@ -20,6 +22,23 @@ const VIEW_LS_KEY = 'presetUI_view';
 // goal is to bail when the network is genuinely stuck, not to
 // interrupt large but legitimate loads.
 const LOAD_FETCH_TIMEOUT_MS = 30_000;
+
+/**
+ * ⛓⛓ **WHAT COUNTS AS A rules.json IN THE PRESET INDEX** (EDITOR v3 E1c).
+ * `preset_files.json` lists BARE NAMES with no types, so every consumer keys off
+ * this suffix. It was five separate `endsWith('_rules.json')` literals; a
+ * `.json.gz` had to be recognised in all five or in none, and five copies of one
+ * fact is exactly how "in some of them" happens.
+ *
+ * ⚠ **NO COMMITTED PRESET IS GZIPPED, AND ONE SHOULD NOT BE**: GitHub Pages
+ * already gzips on the wire (measured — `presets/seedling_playthrough/AP_1/
+ * AP_1_rules.json` is 806,703 B on disk and 43,140 B with `Accept-Encoding:
+ * gzip`), so a committed `.gz` buys ~nothing and costs a decode. This exists so
+ * a preset directory somebody else assembled is not silently unlistable.
+ */
+const RULES_SUFFIX = '_rules.json';
+const isRulesFileName = (name) => typeof name === 'string'
+    && (name.endsWith(RULES_SUFFIX) || name.endsWith(`${RULES_SUFFIX}.gz`));
 const LOAD_WATCHDOG_MS = 3_000;
 const DEFAULT_VIEW_STATE = Object.freeze({
     showSphereLog: false,
@@ -1194,7 +1213,7 @@ export class PresetUI {
     let html = `
       <div class="preset-header">
         <h3>Select a Game Preset</h3>
-        <input type="file" id="json-file-input" accept=".json,.archipelago" style="display: none;" />
+        <input type="file" id="json-file-input" accept=".json,.json.gz,.zip,.archipelago" style="display: none;" />
         <button id="load-json-button" class="button" style="margin-left: 10px;">Load File</button>
       </div>
       ${this._renderToolbarHtml()}
@@ -1358,37 +1377,28 @@ export class PresetUI {
         jsonFileInput.click(); // Trigger file input when button is clicked
       });
 
+      // EDITOR v3 E1c — three shapes arrive here now: a plain `.json`, a
+      // gzipped `.json.gz`, and a `.zip` BUNDLE whose members are the four
+      // documents this repo already writes. ⛔ An `.archipelago` keeps its own
+      // branch: that archive is a MULTIWORLD's output — many files, possibly
+      // several `*_rules.json` — and `readBundle` would refuse it by name for
+      // carrying two `rules` members, which is exactly right for a bundle and
+      // wrong for an archive whose first match has always been the answer.
       jsonFileInput.addEventListener('change', (event) => {
         const file = event.target.files[0];
-        if (file) {
-          // Check if file is an .archipelago file (zip format)
-          if (file.name.endsWith('.archipelago')) {
-            this.loadArchipelagoFile(file);
-          } else {
-            // Regular JSON file handling
-            const reader = new FileReader();
-            reader.onload = (e) => {
-              try {
-                const jsonData = JSON.parse(e.target.result);
-                this.displayLoadedJsonFileDetails(jsonData, file.name);
-              } catch (err) {
-                log('error', 'Error parsing JSON file:', err);
-                this.eventBus.publish('ui:notification', {
-                  type: 'error',
-                  message: `Error parsing ${file.name}: ${err.message}`,
-                });
-              }
-            };
-            reader.onerror = (err) => {
-              log('error', 'Error reading file:', err);
-              this.eventBus.publish('ui:notification', {
-                type: 'error',
-                message: `Error reading ${file.name}.`,
-              });
-            };
-            reader.readAsText(file);
-          }
+        event.target.value = '';
+        if (!file) return;
+        if (file.name.endsWith('.archipelago')) {
+          this.loadArchipelagoFile(file);
+          return;
         }
+        this.loadDocumentFile(file).catch((err) => {
+          log('error', 'Error reading file:', err);
+          this.eventBus.publish('ui:notification', {
+            type: 'error',
+            message: `Error reading ${file.name}: ${err.message}`,
+          });
+        });
       });
     }
 
@@ -1471,7 +1481,7 @@ export class PresetUI {
     // doesn't — the old behaviour hardcoded player 1 and silently loaded the
     // wrong game.
     if (
-      fileName.endsWith('_rules.json') ||
+      isRulesFileName(fileName) ||
       confirm('Is this a rules.json file for a game?')
     ) {
       this.resolvePlayerIdInteractive(fileName, jsonData).then((playerId) => {
@@ -1558,26 +1568,68 @@ export class PresetUI {
    * @returns {Promise<JSZip>} The JSZip constructor
    */
   async loadJSZip() {
-    if (window.JSZip) {
-      return window.JSZip;
-    }
+    // EDITOR v3 E1c — the injection moved to `loadJSZipBrowser` so the set
+    // editor on watch.html injects the same vendored file the same way. The
+    // `src` stays HERE because it is the half that differs between the two
+    // pages: this one runs from the app root, that one from three directories
+    // down.
+    return loadJSZipBrowser({ src: `./${JSZIP_SCRIPT}` });
+  }
 
-    return new Promise((resolve, reject) => {
-      const script = document.createElement('script');
-      script.src = './libs/jszip/jszip.min.js';
-      script.onload = () => {
-        if (window.JSZip) {
-          log('info', 'JSZip library loaded successfully');
-          resolve(window.JSZip);
-        } else {
-          reject(new Error('JSZip failed to initialize'));
-        }
-      };
-      script.onerror = () => {
-        reject(new Error('Failed to load JSZip library'));
-      };
-      document.head.appendChild(script);
-    });
+  /**
+   * ⛓⛓⛓ **A DOCUMENT FILE — PLAIN, GZIPPED, OR A BUNDLE** (EDITOR v3 E1c, §25).
+   *
+   * ⛔ **SNIFFED ON THE FIRST TWO BYTES, NOT THE EXTENSION.** `50 4b` is a zip
+   * local-file header and `1f 8b` is gzip; both are unambiguous on their own
+   * bytes, and a file somebody renamed still loads. The `accept` list on the
+   * input is a picker HINT.
+   *
+   * ⛔ **AND THE IGNORED MEMBERS ARE NAMED.** A bundle carries the level set,
+   * the overlay and the region atlas beside the `rules.json`; this panel loads
+   * exactly the `rules` member — the single `rules.json` is CANONICAL and that
+   * has not changed — and says which siblings it walked past. A member that
+   * vanished without a word is indistinguishable from one that was never there.
+   *
+   * @param {File} file
+   */
+  async loadDocumentFile(file) {
+    const bytes = new Uint8Array(await file.arrayBuffer());
+    if (bytes[0] === 0x50 && bytes[1] === 0x4b) {
+      const JSZip = await this.loadJSZip();
+      const { members, notes } = await readBundle(bytes, { jszip: JSZip });
+      const rules = members.find((m) => m.kind === 'rules');
+      const others = members.filter((m) => m.kind !== 'rules');
+      const summary = describeBundle({ members, notes });
+      if (!rules) {
+        throw new Error(`${file.name} carries no rules.json — ${summary}`);
+      }
+      log('info', `Bundle ${file.name}: ${summary}`);
+      if (others.length || notes.length) {
+        this.eventBus.publish('ui:notification', {
+          type: 'info',
+          message: `${file.name}: loaded the rules member; NOT loaded — `
+            + `${[...others.map((m) => `${m.kind} (\`${m.name}\`)`), ...notes].join(', ')}`,
+        });
+      }
+      this.displayLoadedJsonFileDetails(rules.doc, `${file.name} → ${rules.name}`);
+      return;
+    }
+    /**
+     * ⛔ `gunzipIfNeeded` sniffs the MAGIC, so bytes that are already plain
+     * JSON pass straight through. That matters for the FETCH path more than
+     * here: GitHub Pages serves this repo's presets `content-encoding: gzip`
+     * (measured — 806,703 B on disk, 43,140 B on the wire), and the browser has
+     * ALREADY decoded those before anything here sees them. A gunzip keyed on
+     * the header or the name would double-decode a file that was never a `.gz`.
+     */
+    const text = new TextDecoder().decode(await gunzipIfNeeded(bytes));
+    let jsonData;
+    try {
+      jsonData = JSON.parse(text);
+    } catch (err) {
+      throw new Error(`Error parsing ${file.name}: ${err.message}`);
+    }
+    this.displayLoadedJsonFileDetails(jsonData, file.name);
   }
 
   /**
@@ -1789,7 +1841,7 @@ export class PresetUI {
           const file = link.getAttribute('data-file');
 
           // If this is a rules.json file, load it into the game
-          if (file.endsWith('_rules.json')) {
+          if (isRulesFileName(file)) {
             e.preventDefault(); // Prevent opening in a new tab
             this.loadRulesFile(gameDirectory, seedName, file, playerId);
           }
@@ -1897,7 +1949,7 @@ export class PresetUI {
           `Player-specific rules file not found for P${effectivePlayerId}, falling back to the combined rules.json`
         );
       }
-      rulesFile = files.find((file) => file.endsWith('_rules.json'));
+      rulesFile = files.find((file) => isRulesFileName(file));
     }
 
     if (!rulesFile) {
@@ -1967,7 +2019,21 @@ export class PresetUI {
           `Failed to load rules file ${fullPath}: ${response.status} ${response.statusText}`
         );
       }
-      const rulesData = await response.json();
+      /**
+       * ⛓⛓ **THE GZIP SEAM ON THE FETCH PATH** (EDITOR v3 E1c).
+       *
+       * ⛔ **A `content-encoding: gzip` RESPONSE IS ALREADY DECODED** by the
+       * browser — measured on the live site, where every preset arrives that
+       * way — so `response.json()` stays the path for every ordinary file and
+       * nothing is double-decoded. Only a name the INDEX says is a `.gz` takes
+       * the buffer path, and even then `gunzipIfNeeded` sniffs the `1f 8b`
+       * MAGIC rather than trusting that name: a server that transparently
+       * decoded it hands over plain JSON, and that must still load.
+       */
+      const rulesData = rulesFile.endsWith('.gz')
+        ? JSON.parse(new TextDecoder().decode(
+          await gunzipIfNeeded(await response.arrayBuffer())))
+        : await response.json();
       if (isStale()) return;
 
       // Resolve the player before anything downstream sees the rules. For a
@@ -2560,7 +2626,7 @@ export class PresetUI {
     const gameData = this.presets?.[gameDirectory];
     const folderData = gameData?.folders?.[seedName];
     const sphereFile = (folderData?.files ?? []).find((f) => f.endsWith('_sphere_log.jsonl'));
-    const rulesFile = (folderData?.files ?? []).find((f) => f.endsWith('_rules.json'));
+    const rulesFile = (folderData?.files ?? []).find((f) => isRulesFileName(f));
 
     // Embedded-first: a procgen rules.json may carry the sphere log
     // as a top-level `sphere_log` array (Phase 4 of the
