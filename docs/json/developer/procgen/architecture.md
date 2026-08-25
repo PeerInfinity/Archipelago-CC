@@ -248,6 +248,57 @@ page's own refusal class from a `TypeError`.
 **Mounted today** on the maze lab page's EDIT arm and on `watch.html`'s shared
 edit panel, each on its arm's own lifetime.
 
+## The rules.json and atlas toolkit (`procgenCore/`)
+
+Three modules, FLAT beside the edit core, for the documents every substrate
+shares. They were lifted from copies that already existed and agreed — the
+point was never new behaviour, it was ONE place for behaviour there was already
+consensus on.
+
+| module | what it is | what it replaced |
+|---|---|---|
+| `contentIdentity.js` | `stableStringify`, `fnv1a32`, `computeContentHash(doc, {idKey})`, `stampIdentity(doc, {idKey, defaultBase, baseId})` | five byte-equivalent copies in the atlas, library, pool, level-set and JtA-dataset validators, plus two hand `canon` clones in `scripts/procgen` |
+| `rulesGraph.js` | `regionsOf`, `startRegionsOf`, `walkRulesGraph`, `walkRuleTrees`, `reachableRegions` | no named walker existed; sixteen production sites each opened their own region loop, and `start_regions` was read five ways |
+| `apIdNamespaces.js` | the register of every AP id base, with provenance and pins, plus `allocateIdsBySortedName` | three id bases the inventory knew about and five it had missed |
+
+**Identity is a CONTRACT, not an implementation.** Ten documents committed to
+this repository carry ids minted with that exact algorithm: a sorted-key
+recursive stringify, then FNV-1a/32 over UTF-16 code units, hashed over the
+document minus `provenance` and minus its own id key, rendered as eight
+lowercase hex digits and appended to the base id. Change any part of it and
+every save file keyed on a `set_id`, every preset naming an `atlas_id`, and
+every byte-identity `--check` under `scripts/procgen/` moves at once. A test row
+globs the five stamping directories and recomputes all ten; that row is the pin.
+Not part of the family, deliberately: `shared/rulesHash.js` (not stable, a
+localStorage key), the JtA `paramsHash` (not stable, and its value is committed
+in two presets), the omsi 64-bit hash, and the two seed derivations.
+
+**The walker reads BOTH shapes of `start_regions`.** Every committed rules.json
+uses the object form, `{"1": {default: […], available: […]}}`; the array form,
+`{"1": […]}`, lives only in test fixtures. `startRegionsOf` returns a frozen
+`{default, available}` from either, which cured a real defect on adoption — the
+APWorld editor's validator read the array form as empty and warned "No start
+region set." about a document that named one. `reachableRegions` takes its rule
+`evaluate` as a PARAMETER, because seven rule interpreters exist in this repo
+and the core commits to none; with no interpreter every edge is free, so the
+answer is the STRUCTURAL one — which regions are connected at all — and never
+the logic one.
+
+**The id register records; it does not decide.** Every base in it is already
+minted into committed data, so nothing in it may move: each row carries the
+path:line where the literal lives and what goes red if it changes. Its working
+part is a census that sweeps the tree for id-base literals AND for the
+`ap_id_offset` fields in the per-game configs, failing by name on any value the
+table does not declare — two of the six bases are JSON data rather than JS, so
+a code-only sweep would have reported full coverage while seeing neither. Item
+ids and location ids live in separate Archipelago id spaces, so a row whose
+item base equals its location base is not a collision; what must not overlap is
+two rows in the same space.
+
+All three are under the no-substrate law described above for the edit core, and
+that law was widened to `flashPanel/` when they landed: a toolkit about atlases
+is exactly the code that would otherwise reach for one Seedling tile constant.
+
 ## The Seedling editor's data model (`seedlingDemo/`)
 
 `watchEdit.js` is the op vocabulary and `seedlingEditAdapter.js` is the wrapper that makes it an `editCore` adapter. The ops address CELLS, never list indices, because the edit list is IDENTITY and travels in a payload a person reads.

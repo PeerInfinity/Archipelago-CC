@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 17,
-        "headings": 719,
+        "headings": 720,
         "indexHeadings": 2,
-        "lines": 17366,
+        "lines": 17417,
         "pages": 4,
-        "words": 202678
+        "words": 203250
     },
     "descriptionRule": "the document's OWN first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence. ⛔ Never a hand-written summary — if an entry reads thin, the fix is a better opening paragraph in the document.",
     "dir": "docs/json/developer/procgen",
@@ -36,8 +36,8 @@ export const DOCS_INDEX = frz({
             "description": "This is the orientation document for the procedural-generation (\"procgen\") system: the pipeline, the four layout drivers, **level generation's two passes** (elements and the certified area graph, then the site-typed keep-or-revert loop), the substrates, what a world compiles to, and how it is played back. Read this first; the rest of this section goes deeper on individual pieces.",
             "file": "architecture.md",
             "h1": "Procedural Generation Architecture",
-            "headings": 19,
-            "lines": 314,
+            "headings": 20,
+            "lines": 365,
             "links": [
                 "demos.md",
                 "maze.md",
@@ -45,7 +45,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/architecture.md",
-            "words": 7401
+            "words": 7973
         },
         {
             "description": "`frontend/modules/shared/procgen/substrateRegistry.js` is the dispatch hub between the pipeline, the runtime player and the substrates: each registers an **entry**, and consumers look entries up by `id` instead of importing substrate modules. This is the reference for that entry contract — field by field, a capability matrix GENERATED from the eight entries, and a checklist for adding one.",
