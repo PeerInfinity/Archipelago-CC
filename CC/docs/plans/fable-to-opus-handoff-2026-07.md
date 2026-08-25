@@ -4440,6 +4440,84 @@ is LIFTED. Licences per segment unchanged (⚖ 35(c)/41 for the flip's, ⚖ 46/4
 for the economies'), except that the two `r8-d2-*` rows are now separable.
 ⛔ **123 is still L14's certified number and 108 is not.**
 
+⛓⛓⛓ **R9 SLICE 12e″ SHIPPED 2026-08-25 — THE GAME'S OWN WITHIN-TICK ORDER IS
+THE MODEL'S NOW, AND THE GAME SAID SO** (kickoff §34). `main` @ six commits;
+roster **148 → 149**; ⚖ 50's witness spent, ⚖ 49 + its extension still LICENSED
+and UNSPENT, re-attached to **(D′)**.
+
+**THE FIX IS ONE SENTENCE IN ONE PLACE.** A sword dash's direction is the
+velocity `useItem` READS, and `useItem` is `input()`'s LAST act — below the
+movement arms that have already written `v`. So `set slashing` names a
+MAGNITUDE and refuses the direction (`{force: SLASH_DASH_FORCE}`), and the
+direction is resolved at `playerPhysicsV1.step`'s `useItemImpulse` spend site,
+which is where the game resolves it. `knockbackImpulse` MOVED to v1 and is
+RE-EXPORTED from v2 so no importer changed. ⛔ `vx`/`vy` LEFT `slashSet` and
+`slashPressForecast`: the stale read is not merely unused, **it cannot be
+spelled** — which is why the predicted "the policy still prices the pre-key
+direction" mutant could not be built by forgetting and had to be built by
+editing the resolver. ⛔ The brief's other shape was REFUSED as a measurement:
+the velocity is post-friction AND post-`applyInput` AND post-waterfall, and the
+pair that decides it comes off a swim channel no caller can read, so any
+pre-step reconstruction duplicates `stepV2`'s prelude.
+
+**THE ACCEPTANCE NUMBER COST NO BROWSER.** 12e′'s announced drive had left both
+artefacts in the machine-global replay cache, so the comparison is a script:
+**152 model ticks / 152 game ticks, IDENTICAL tick for tick t=0…t=141, and BOTH
+sides report `transitions: []`.** t=114 is 42.4500 — the game's 2.80 px where
+this model used to buy 0.80 — and the UNPINNED model refuses the wet tick at
+(80.60000000000007, 40.44999999999996), the game's t=131 row to the last digit.
+⇒ the corrected model agrees on its own that `r9-solve-3` 226→151 was a PLAN
+and never a walk.
+
+**THE LICENSED WITNESS WAS SEALED IN A COMMIT AND THEN DRIVEN.**
+`r9-l0-sword-dash-rest` asks the game two questions ONE KEY apart, both from a
+dead stop with the sword: a dash with the direction key STARTING that tick, and
+— after a DERIVED coast back to a genuine standstill — a dash with no direction
+key at all. A model reading the pre-key velocity pays nothing for both; a model
+that has broken the zero-length no-op pays for both; only the game separates
+them. The per-tick column was committed ONE COMMIT BEFORE the announced
+`--win --record`, and **the game reproduced every digit: 2.800 px for the first
+press, then the impulse's own −0.25/tick decay, and 0.000 for the second.**
+⇒ the no-op is CONFIRMED rather than merely preserved: the fix NARROWED it to
+the case the game is inert in too. `r9-l0-sword-dash.json` is BYTE-IDENTICAL.
+
+**THE ROSTER IS INERT, AND THE PROOF IS A DIFFERENCE RATHER THAN A LABEL.**
+Both builds loaded in ONE process (`git archive <parent> frontend | tar -x`,
+not a worktree) and all **148** committed tapes replayed through each: streams
+identical, **0 movers, 0 changed refusals**. A classification by "at rest"
+would have missed a DIAGONAL press re-quantising across `knockbackImpulse`'s
+asymmetric guards at speed. The census rides along as the explanation: 163
+sword presses, 158 ordinary swings, 1 swallowed, **4 dashes — all on a MOVING
+player**, on the only two tapes that reach the arm at all.
+
+**⛔ TABLE (D) IS SUPERSEDED BY (D′).** Six of thirteen rows move, none by more
+than 6.1%, and **the two rows 12e′ actually DROVE CLEAN do not move at all**:
+`r8-solve-18` 410 · `r8-d2-19` 696→**708** · `r8-d2-20` 554 · `r8-d2` headline
+1660→**1672** · `r8-solve-20` 244→**229** · `r8-solve-11` 84 · `r8-solve-10`
+**78** · `r9-solve-11` **97** · `r9-solve-3` 151→**152** · `r9-solve-2` 23 ·
+`r9-solve-0` 144→**145** · `r9-solve-13` 35→**36** · `r9-solve-14` 123→**118**;
+campaign chain 3328→**3326**. ⛓ **118 is (D′)'s CERTIFIED L14 row; 123 was
+(D)'s; 108 is never quoted.** The new `certifyDash` terrain refusal is new reach
+and fires **0 times across all five producers**, so every mover is the from-rest
+re-price. ⚠ **Every (D′) row is still the MODEL's word** — a `--check` re-solves
+from the committed boot and never drives, which is 12e′'s epistemic note applied
+to its own successor. The `r9-solve-3` fresh drive was NOT taken, by that same
+law: only the EMIT path latches a provisional walk, and running the cascade here
+would be the re-record's act.
+
+**GATES:** unfiltered vitest ALONE **352 / 10,951 ALL PASS, +5 exactly**.
+⚖ 47b **(6) cleared** in `combatVerbs.test.js` (its gate still owed). ⚠ One row
+started and WITHDRAWN, recorded so no log reads as a completed replay:
+`verify-seedling-bot-differential --tier=full` without `--win` still drives
+LOCAL HEADLESS CHROMIUM, ~350 s/tape under load; killed by captured PID plus its
+`headless_shell` child by ppid, and not re-run — it answers nothing the two-build
+diff has not.
+
+**NEXT in R9: THE RE-RECORD, RE-RUN ON (D′)** under ⚖ 49 + its extension. Its
+first work item is still S3's record set (the `gameVisibleTape` projection-md5
+diff, so all TWELVE land rather than the 8 BOOT movers) — deferred again for the
+same reason, its only honest witness is the live cascade.
+
 ⛔⛔⛔ **R9 SLICE 12e′ — THE RE-RECORD IS A STOP, 2026-08-25** (kickoff §33).
 `main` @**`de6d80283`** and **NO TAPE MOVED**; the series never reached `main`.
 
