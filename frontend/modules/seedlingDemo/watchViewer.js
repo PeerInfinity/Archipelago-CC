@@ -303,6 +303,7 @@ import {
     createSeedlingSetAdapter, createSetSession, downloadSet, setRecord, setSessionRoomSource,
 } from './seedlingSetAdapter.js';
 import { emptyOverlay } from './seedlingSetOverlay.js';
+import { classifyDocument } from '../presets/documentBundle.js';
 import { compileRegionAtlas } from '../procgenPipeline/regionAtlasCompiler.js';
 import { validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js';
 import { tileTypeForPlacement } from '../flashPanel/seedlingSemantics.js';
@@ -8519,9 +8520,6 @@ export function sniffLoadBox(text) {
      * says whether the document is one. ⚠ Exits and the manifest are NOT edited
      * here (slice D); what a set buys today is a door into its rooms.
      */
-    if (parsed && typeof parsed === 'object' && Array.isArray(parsed.rooms)) {
-        return { kind: 'levelset', set: parsed };
-    }
     /**
      * ⛓⛓⛓ EDITOR v3 D2 — **THE OVERLAY IS A THIRD DOCUMENT** (§20.11 #3), and
      * it is sniffed by SHAPE like the other two: a set's `rooms` is an ARRAY
@@ -8532,11 +8530,33 @@ export function sniffLoadBox(text) {
      * ⛔ IT MATTERS THAT THIS EXISTS AT ALL: a page that could not load one
      * would lose every location and every authored rule on the first reload,
      * and the only thing that would say so is the REPORT's location count.
+     *
+     * ⛓⛓ EDITOR v3 E1c — **THE PREDICATES MOVED, THE ANSWERS DID NOT.** D2's
+     * two shape tests are now `documentBundle.classifyDocument`, because a
+     * BUNDLE has to answer the same question about the same four documents and
+     * a second copy of the test would be a second answer — drifting apart on
+     * the first new field either side learned about. ⚠ The predicates were
+     * carried over VERBATIM, so this box accepts exactly what it accepted.
+     *
+     * ⛔ AND THE TWO KINDS THIS BOX DOES *NOT* LOAD ARE NAMED. A `rules.json` or
+     * a region atlas dropped in here used to come back as *"this JSON carries no
+     * `base`"* — a true sentence about the wrong subject (⚖ the header-warning
+     * trap): the document is perfectly well formed and simply belongs to
+     * another reader. The set editor DERIVES both, so neither is loadable, and
+     * saying which one it is beats saying it is not a payload.
      */
-    if (parsed && typeof parsed === 'object'
-        && (typeof parsed.overlay_id === 'string'
-            || (parsed.rooms !== undefined && !Array.isArray(parsed.rooms)))) {
-        return { kind: 'overlay', overlay: parsed };
+    const kind = classifyDocument(parsed);
+    if (kind === 'level-set') return { kind: 'levelset', set: parsed };
+    if (kind === 'overlay') return { kind: 'overlay', overlay: parsed };
+    if (kind === 'rules') {
+        return { kind: null, why: 'this is a `rules.json` — the set editor DERIVES one from '
+            + 'the set and the overlay (press `rules.json` to download it), so loading one '
+            + 'back would be loading this page\'s own output as its input' };
+    }
+    if (kind === 'region-atlas') {
+        return { kind: null, why: 'this is a REGION ATLAS — the set editor derives its atlas '
+            + 'from the set and the overlay, so an atlas has no input to be. Load the SET '
+            + 'this atlas was compiled from instead' };
     }
     if (!parsed || typeof parsed !== 'object' || !parsed.base) {
         return { kind: null, why: 'this JSON carries no `base`, so it is not an editor '
