@@ -138,7 +138,7 @@ import { levelSourceFromAtlas } from './atlasSource.js';
  * why a browser page may import them at all.
  */
 import { buildStagedTape } from './botDriverV1.js';
-import { buildLevelSet } from './levelSetExporter.js';
+import { buildLevelSet, vanillaXmlSet } from './levelSetExporter.js';
 import {
     planLevelSetChunks, stampLevelSetIdentity, validateLevelSet,
 } from './levelSetValidator.js';
@@ -8463,13 +8463,21 @@ async function runGenerate(params, lifetime) {
  * refuse.
  */
 const VANILLA_SET_PATH = `${FIXTURES_DIR}/seedling-vanilla-set.json`;
-let vanillaSetIdPromise = null;
-const loadVanillaSetId = () => {
-    if (!vanillaSetIdPromise) {
-        vanillaSetIdPromise = fetchJson(repoUrl(VANILLA_SET_PATH), 'the vanilla level set')
-            .then((set) => set.set_id);
+/**
+ * ⛓ EDITOR v3 E1 — **THE DOCUMENT IS HELD, AND THE ID IS DERIVED FROM IT.**
+ * This used to keep only `set.set_id` and throw the 116-room manifest away,
+ * which was right while the id was the only thing anybody wanted. `#editLoadVanilla`
+ * wants the MANIFEST — it is one of `vanillaXmlSet`'s two inputs — and a second
+ * `fetch` for a document this page already downloaded would be a second reader
+ * of one file, i.e. two answers to "what is the vanilla set" whenever the two
+ * requests could disagree. ONE promise, memoised; the id is `.set_id` of it.
+ */
+let vanillaSetPromise = null;
+const loadVanillaSet = () => {
+    if (!vanillaSetPromise) {
+        vanillaSetPromise = fetchJson(repoUrl(VANILLA_SET_PATH), 'the vanilla level set');
     }
-    return vanillaSetIdPromise;
+    return vanillaSetPromise;
 };
 
 /**
@@ -8562,13 +8570,18 @@ async function runEditor(params, lifetime) {
      * form falls back to `SET_FIELDS` alone). A data file must not be a single
      * point of failure for a control that works without it.
      */
-    const [ogmoSchema, vanillaSetId, rulesSchema, atlasSchema, levelSetSchema] = await Promise.all([
-        loadOgmoSchema(), loadVanillaSetId(),
+    const [ogmoSchema, vanillaSet, rulesSchema, atlasSchema, levelSetSchema] = await Promise.all([
+        loadOgmoSchema(), loadVanillaSet(),
         loadOptionalJson('frontend/schema/rules.schema.json', 'the rules schema'),
         loadOptionalJson('frontend/schema/region-atlas.schema.json', 'the region-atlas schema'),
         loadOptionalJson('frontend/schema/seedling-level-set.schema.json', 'the level-set schema'),
     ]);
     if (!lifetime.alive()) return;
+    /**
+     * ⚖ RULING 2's HASH, READ off the committed document rather than typed —
+     * the same value it always was, now taken from the manifest this arm holds.
+     */
+    const vanillaSetId = vanillaSet.set_id;
 
     /**
      * ⛔ **NO SCHEMA ON THE OP PATH HERE EITHER**, for the GENERATE arm's
@@ -9219,7 +9232,19 @@ async function runEditor(params, lifetime) {
         //   and the button's own sentence is what says so.
         setShippable(shippableEdit());
         const embeds = (set.rooms ?? []).filter((r) => typeof r.source?.xml !== 'string').length;
+        /**
+         * ⛓ EDITOR v3 E1 — **WHICH SET IS HELD, WHEN TWO IDS DESCRIBE ONE
+         * GAME'S 116 ROOMS.** The xml-sourced vanilla set carries
+         * `provenance.derived_from` naming the EMBED set it reproduces
+         * (⚖ ruling 2's `seedling-vanilla-…`, the AS3 `VanillaSet.SET_ID`, the
+         * save stamp's). Printing only the held id would leave a reader of this
+         * line unable to tell the derived set from the committed one it is
+         * about — so the line says both, READ off the document rather than
+         * matched against anything this file knows.
+         */
+        const derivedFrom = set.provenance?.derived_from?.set_id;
         setNote(`HELD: ${set.set_id} — ${set.rooms.length} room(s)`
+            + (derivedFrom ? `, derived from ${derivedFrom}` : '')
             + (heldOverlay ? `, overlay ${heldOverlay.overlay_id ?? '(unstamped)'}` : ', NO overlay '
                 + '(⚠ every location and every authored rule lives there — paste one in too, or '
                 + 'the REPORT\'s location count is the only thing that will say it is missing)')
@@ -9303,8 +9328,11 @@ async function runEditor(params, lifetime) {
         + 'its rooms are offered here, with the whole SET EDITOR below them. ⛓ An OVERLAY '
         + '(`{rooms: {…}}` keyed by room index) may be pasted in the same box, before or after '
         + 'the set: it is the THIRD document, and it is where every location and every '
-        + 'authored access rule lives. ⛔ The committed VANILLA set is 116 EMBED-sourced rooms '
-        + 'and cannot be opened this way; `?source=edit&level=N` is its door.');
+        + 'authored access rule lives. ⛓ Or press LOAD the VANILLA 116 as `xml`: the committed '
+        + 'VANILLA set is 116 EMBED-sourced rooms that cannot be OPENED (`?source=edit&level=N` '
+        + 'is that document\'s door), and the button derives the same 116 as an xml-sourced set '
+        + 'from the map extract this page already holds — every room openable, a `set_id` of its '
+        + 'own, and `derived_from` naming the committed one.');
     redraw(`EDIT — ${describeBase(baseTag)}`);
 
     lifetime.on($('genEditUndo'), 'click', () => editorUi.view.run(UNDO_COMMAND_ID));
@@ -9321,6 +9349,51 @@ async function runEditor(params, lifetime) {
             + 'palette and no pin union to solve it under, and inventing one would certify it '
             + 'under an inventory nobody asked for (§3.5). ▶ load in wasm is the certifier '
             + 'here; "open in editor" from GENERATE keeps the ladder\'s.';
+    });
+
+    /**
+     * ⛓⛓⛓ EDITOR v3 E1 — **THE VANILLA 116, AS `xml`, FROM WHAT THIS PAGE
+     * ALREADY HOLDS** (plan §22.2 #6).
+     *
+     * ⛔ **NO NEW URL AND NO SECOND FETCH.** Both of `vanillaXmlSet`'s inputs
+     * are in scope here already: `atlas` is the map extract this arm awaited at
+     * mount (`armPrelude` → the memoised `loadAtlas`) and `vanillaSet` is the
+     * committed manifest the same `Promise.all` fetched for ⚖ ruling 2's id.
+     * A button that re-fetched either would be a second reader of a document
+     * the page has, and the `-arm` row counts requests across the click to
+     * keep it that way.
+     *
+     * ⛓ AND IT GOES DOWN THE PASTED SET'S OWN PATH — `takeLevelSet` — so there
+     * is ONE intake for a level set on this page: the same validation, the same
+     * overlay handling, the same session, the same note. A second door would be
+     * a second place for the set editor to be opened WRONG.
+     *
+     * ⚠ THE EMBED SET IS UNTOUCHED, and both ids are printed: the `atlas` base
+     * (`?source=edit&level=N`) still pins `vanillaSetId`, and what this button
+     * builds carries its own `seedling-vanilla-xml-…` with `derived_from`
+     * naming that one.
+     */
+    lifetime.on($('editLoadVanilla'), 'click', () => {
+        $('editLoadNote').textContent = '';
+        const t0 = performance.now();
+        let built;
+        try {
+            built = vanillaXmlSet(vanillaSet, atlas);
+        } catch (e) {
+            // The function refuses BY NAME (an unjoinable path, a manifest field
+            // that did not survive, an invented one); the page prints its
+            // sentence rather than "could not build the vanilla set".
+            $('editLoadNote').textContent = `⛔ REFUSED — ${e.message}`;
+            $('status').className = 'bad';
+            $('status').textContent = `the VANILLA set could not be built — ${e.message}`;
+            return;
+        }
+        const ms = Math.round(performance.now() - t0);
+        if (!takeLevelSet(built.set)) return;
+        $('status').textContent = `LOADED the VANILLA 116 as \`xml\` — ${built.set.set_id}, `
+            + `built here in ${ms} ms from the map extract + the committed manifest `
+            + `(${built.report.join.matched_by_suffix}/${built.report.join.rooms} rooms joined by `
+            + `PATH). Every room is OPENABLE — an \`embed\` never was.`;
     });
 
     lifetime.on($('editLoadGo'), 'click', () => {

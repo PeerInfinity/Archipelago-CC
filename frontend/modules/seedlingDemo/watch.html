@@ -952,6 +952,24 @@
     </div>
     <div class="line">
       <button id="editLoadGo">LOAD what is in the box</button>
+      <!--
+        ⛓⛓ EDITOR v3 E1 — **THE VANILLA 116 AS `xml`, WITH NOTHING TO PASTE.**
+        The committed vanilla set is 116 EMBED-sourced rooms and an `embed` is a
+        path into a SWF's [Embed] table, so none of them can be OPENED here
+        (§13.5) and every Tier-B feature of the set editor below had to be
+        demonstrated on GENERATED rooms. This button builds the same 116 as an
+        `xml`-sourced set out of the two documents THIS PAGE ALREADY HOLDS — the
+        map extract and the committed manifest — and hands it down the same
+        intake a pasted set takes. ⛔ It fetches nothing: both inputs are in
+        scope, and the `-arm` row counts requests across the click.
+
+        ⚠ TWO IDS, ONE GAME'S ROOMS, and the note beside the rooms list says
+        which is held: this set is `seedling-vanilla-xml-<hash>` with
+        `provenance.derived_from` naming ⚖ ruling 2's `seedling-vanilla-<hash>`,
+        which stays the ATLAS base's (`?source=edit&level=N`), the AS3 fork's
+        `VanillaSet.SET_ID` and every save stamp's.
+      -->
+      <button id="editLoadVanilla">LOAD the VANILLA 116 as `xml`</button>
       <button id="editDownload">Download the PAYLOAD (base + edits)</button>
       <button id="editDownloadOel">Download the ROOM as OEL</button>
       <span id="editLoadNote" class="note"></span>
@@ -966,7 +984,10 @@
       (an `embed` is a path into a SWF's `[Embed]` table, a fact about a source
       tree). ⚠ THAT IS THE WHOLE VANILLA SET: all 116 of its rooms are
       `embed`-sourced, so `seedling-vanilla-set.json` cannot be opened this way,
-      and `?source=edit&level=N` — the ATLAS base — is its door.
+      and `?source=edit&level=N` — the ATLAS base — is that DOCUMENT's door.
+      ⛓ EDITOR v3 E1: the LOAD-the-VANILLA-116-as-`xml` button above builds those 116
+      rooms as an xml-sourced set (a different `set_id`, `derived_from` naming
+      this one), and every room of THAT set opens here.
 
       ⛓ DOWNLOAD gives the SET back with this room's XML replaced and the
       identity RE-STAMPED (`stampLevelSetIdentity`), which is the first WRITE
