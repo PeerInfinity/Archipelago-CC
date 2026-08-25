@@ -9,12 +9,20 @@
  * whole REPORT — and `check-seedling-editor-arm.mjs` drives the mount with a
  * real mouse.
  *
- * ⛔ **EVERY SET HERE IS GENERATED**, `buildLevelSet({link: true})` over
+ * ⛔ **EVERY SET HERE WAS GENERATED**, `buildLevelSet({link: true})` over
  * `emptyLevel` rooms, exactly as D1's rows are: a document written to make a
  * row pass is a row that measures nothing.
  *
+ * ⛓ EDITOR v3 E1 ADDS THE OTHER KIND — the last describe block runs the same
+ * functions over the REAL 116 (`vanillaXmlSet` of the committed map extract and
+ * the committed manifest), which is data nobody wrote for this file and the only
+ * place its numbers can be measured rather than chosen.
+ *
  * ⛓ EVERY CLAIM NAMES ITS MUTANT.
  */
+
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
@@ -24,7 +32,7 @@ import { validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js'
 import { assertShape } from '../procgenCore/editorView.js';
 import { tileTypeForPlacement } from '../flashPanel/seedlingSemantics.js';
 import { NAMED_ROOMS, MUSIC_COUNT, MUSIC_NONE } from './levelSetValidator.js';
-import { buildLevelSet } from './levelSetExporter.js';
+import { buildLevelSet, vanillaXmlSet } from './levelSetExporter.js';
 import { emptyLevel } from './procgenLevel.js';
 import { parseOelLevel, recordToOel } from './procgenLevelOel.js';
 import { emptyOverlay, exitRuleKey, locationRuleKey } from './seedlingSetOverlay.js';
@@ -691,4 +699,115 @@ describe('⛔ the set editor draws no substrate — the ONE-RENDERER law, as a s
         expect(/procgenPipeline\//.test('../procgenPipeline/regionAtlasCompiler.js')).toBe(true);
         expect(specs).toContain('./seedlingSetAdapter.js');
     });
+});
+
+/**
+ * ── EDITOR v3 E1 — **THE SAME PURE HALF, OVER THE REAL 116** ─────────────────
+ *
+ * Every row above drives a GENERATED set, because until E1 there was no way to
+ * put the vanilla rooms in front of this file: all 116 committed rooms are
+ * `embed`-sourced and the set editor cannot read one. `vanillaXmlSet` makes the
+ * same 116 an `xml` set out of two committed documents, so the rows below are
+ * the FIRST measurements of this code over data nobody wrote for it.
+ *
+ * ⛓ They are MEASUREMENTS, and each number is here because it is the number a
+ * reader would otherwise guess: what the link-scan bound does at 116 rooms,
+ * what the overview draws at 116 cells, how many edges a vanilla set with NO
+ * overlay leaves FREE, and whether the rules.json export is offered at all.
+ */
+describe('the VANILLA 116, through the set editor\'s pure half', () => {
+    const vanillaSession = () => {
+        const { set } = vanillaXmlSet(
+            JSON.parse(readFileSync(fileURLToPath(
+                new URL('./fixtures/seedling-vanilla-set.json', import.meta.url)), 'utf8')),
+            JSON.parse(readFileSync(fileURLToPath(
+                new URL('../flashPanel/atlases/seedling-map.json', import.meta.url)), 'utf8')),
+        );
+        const record = setRecord(set, emptyOverlay());
+        return createSetSession(adapter, record, { base: { kind: 'set', set_id: set.set_id } });
+    };
+
+    /**
+     * ⛔ §21.4's BOUND, MEASURED ON THE CORPUS IT WAS SIZED FOR. `whatLinksHere`
+     * parses the WHOLE set, so asking it per room is n × the document — 116 ×
+     * 1,332 KB = 154,528 KB here. The estimate at 0.05 ms/KB is 7,726 ms; the
+     * scan actually took ~19 s in node on a loaded box, so the bound is
+     * CONSERVATIVE IN THE RIGHT DIRECTION (it under-predicts the cost it
+     * refuses). Both are far over the 250 ms budget: the column reads
+     * `(bounded)` and the sentence says why.
+     */
+    it('BOUNDS the links column at 116 rooms, and the rows still list every exit', () => {
+        const session = vanillaSession();
+        const scan = linkScanBound(session.record());
+        expect(scan.ok).toBe(false);
+        expect(Math.round(scan.kb)).toBe(154528);
+        expect(scan.why).toMatch(/reads `\(bounded\)`/);
+        expect(scan.why).toMatch(/ARROWS are UNAFFECTED/);
+
+        const rows = roomRowsOf(session.record(), { links: scan.ok });
+        expect(rows).toHaveLength(116);
+        // ⛓ `null`, NOT `0` — "not computed" and "nothing links here" are
+        // different facts and the column prints different things for them.
+        expect(rows.every((r) => r.linkedFrom === null)).toBe(true);
+        // ⛔ AND EVERY ROOM IS OPENABLE, which is the whole point of the arm:
+        // the committed vanilla set's 116 rooms are all refused by name.
+        expect(rows.every((r) => r.openable)).toBe(true);
+        expect(rows.filter((r) => r.exits > 0).length).toBeGreaterThan(100);
+        // The ARROWS come from each room's own exit list — ONE pass — so they
+        // are computed at 116 rooms even though the column is not.
+        expect(exitArrowShapes(rows, overviewLayout(rows.length, 1200)).length)
+            .toBeGreaterThan(100);
+    }, 60000);
+
+    /** At 116 cells the strip is below `minStillPx`, so a cell is a LABELLED BOX. */
+    it('draws the overview as boxes rather than stills at 116 cells', () => {
+        const lay = overviewLayout(116, 1200);
+        expect(lay.rooms).toBe(116);
+        expect(lay.stills).toBe(false);
+        expect(lay.cellPx).toBeLessThan(OVERVIEW.minStillPx);
+        expect(lay.scrolls).toBe(true);
+    });
+
+    /**
+     * ⛔⛔ **VANILLA OPENS WITH AN EMPTY OVERLAY, AND THE REPORT SAYS SO IN
+     * NUMBERS** (plan §22.2 bound 1). The playthrough generator's "vanilla
+     * overlay" is CODE — the analyzer pass, the lava-trap pulls, the hand
+     * rulings — not a `{rooms: {i: {locations, rules}}}` document, so a set
+     * editor opening vanilla has NOTHING authored: every compiled edge is
+     * `True_`, and the count below is that fact as a number.
+     *
+     * ⚠ AND THE EXPORT IS **REFUSED**, which nobody predicted: region
+     * `level_58` is UNREACHABLE from the start under any rule set, because the
+     * only way into it in the real game is a mechanism the derivation cannot
+     * see (`reachabilityOf`'s own docblock names them: a boss that warps you, a
+     * debug key, `named_rooms`). The D2 refusal is doing exactly its job on real
+     * data — and it is the first evidence for what a vanilla overlay AS A
+     * DOCUMENT would have to carry.
+     */
+    it('reports every edge FREE and REFUSES the rules export, naming the region', () => {
+        const session = vanillaSession();
+        const rep = reportOf(session, DEPS,
+            { compileRegionAtlas, validateRegionAtlas, atlasSchema: ATLAS_SCHEMA });
+
+        // ⛓ DERIVED FROM THE COMPILED RULES, never typed: a hardcoded 319 would
+        // pass over a one-room set too, and that is the mutant.
+        const free = freeEdgesOf(rep.rules);
+        expect(rep.rows.filter((r) => r.kind === 'free')).toHaveLength(free.length);
+        expect(free.length).toBe(319);
+        expect(overlayLocationCount(session.record())).toBe(0);
+
+        const reach = rep.rows.filter((r) => r.kind === 'reach');
+        expect(reach).toHaveLength(1);
+        expect(reach[0].severity).toBe('error');
+        expect(reach[0].text).toMatch(/region "level_58" is UNREACHABLE/);
+        expect(rep.download.rules.allowed).toBe(false);
+        expect(rep.download.rules.why).toMatch(/level_58/);
+
+        // The summary row is present whatever the verdict (§21.8), and the
+        // derived atlas is the 116 minus the one region nothing reaches.
+        const summary = rep.rows.find((r) => r.kind === 'region-atlas');
+        expect(summary.text).toMatch(/115 region\(s\)/);
+        expect(rep.rows.filter((r) => r.kind === 'derive')[0].text)
+            .toMatch(/region "level_81" was DROPPED/);
+    }, 120000);
 });
