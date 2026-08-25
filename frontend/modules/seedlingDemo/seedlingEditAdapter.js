@@ -219,8 +219,19 @@ function oelBase(tag, { parseOel }) {
      * and `tiles_outside_level` is dropped, because it is a fact about the DISK
      * FILE (how many placements the parser discarded) and not about the room.
      */
+    return baseFromRecord(parsed, tag, 'seedlingEditAdapter: oel base');
+}
+
+/**
+ * ⛓⛓⛓ **EDITOR v3 E1b — THE TAIL OF `oelBase`, WITH THE PARSE TAKEN OUT.**
+ * A `record`-sourced room (plan §22.8) IS this shape already, so the `set-room`
+ * base below reaches it WITHOUT A PARSER — which is the ruling's whole point one
+ * layer down. The three provenance fields stay the TAG's, defaulted rather than
+ * invented, and `tiles_outside_level` stays dropped.
+ */
+function baseFromRecord(parsed, tag, where) {
     const { tiles_outside_level: _dropped, ...core } = parsed;
-    assertRoomSize({ width: core.width, height: core.height }, 'seedlingEditAdapter: oel base');
+    assertRoomSize({ width: core.width, height: core.height }, where);
     return {
         level: tag.level ?? 0,
         class: tag.class ?? 'PastedOel',
@@ -304,6 +315,22 @@ function setRoomBase(tag, { levelSetSource, parseOel }) {
             + '`rooms[]` (the schema\'s own rule), which is why a reorder rewrites every '
             + '`@to`.');
     }
+    /**
+     * ⛓ THE PROVENANCE IS THE SAME FOR BOTH READABLE KINDS, so a room opened as
+     * a `record` and the same room opened as `xml` produce EQUAL records — the
+     * row `seedlingEditAdapter.test.js` makes of it.
+     */
+    const provenance = {
+        level: tag.room,
+        class: room.name ?? `Room${tag.room}`,
+        path: `${tag.set_id}#${tag.room}`,
+    };
+    // ⛓⛓ EDITOR v3 E1b — A `record` ROOM OPENS WITH NO PARSE AT ALL.
+    if (room.source && room.source.record !== null && typeof room.source.record === 'object'
+        && !Array.isArray(room.source.record)) {
+        return baseFromRecord(room.source.record, provenance,
+            `seedlingEditAdapter: set-room base ${JSON.stringify(provenance.path)}`);
+    }
     if (!room.source || typeof room.source.xml !== 'string') {
         fail(`seedlingEditAdapter: room ${tag.room} ${JSON.stringify(room.name ?? '')} of `
             + `${JSON.stringify(tag.set_id)} is `
@@ -314,13 +341,7 @@ function setRoomBase(tag, { levelSetSource, parseOel }) {
             + 'carry one, so that set cannot be opened room by room here. Its door is '
             + '`?source=edit&level=N`, the ATLAS base.');
     }
-    return oelBase({
-        kind: 'oel',
-        xml: room.source.xml,
-        level: tag.room,
-        class: room.name ?? `Room${tag.room}`,
-        path: `${tag.set_id}#${tag.room}`,
-    }, { parseOel });
+    return oelBase({ kind: 'oel', xml: room.source.xml, ...provenance }, { parseOel });
 }
 
 const refuseKind = (kind, why) => () => fail(

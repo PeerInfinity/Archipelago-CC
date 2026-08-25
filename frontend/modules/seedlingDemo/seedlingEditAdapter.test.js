@@ -29,6 +29,7 @@ import { emptyLevel, layerNamed, tileCellAt } from './procgenLevel.js';
 import { atlasLevelSource, loadAtlas } from './levelSource.js';
 import { recordToOel } from './procgenLevelOel.js';
 import { buildLevelSet } from './levelSetExporter.js';
+import { stampLevelSetIdentity } from './levelSetValidator.js';
 import { parseOelLevel } from '../../../scripts/procgen/seedlingOgmo.js';
 
 const FIX = (name) => JSON.parse(readFileSync(
@@ -384,6 +385,47 @@ describe('⛓⛓⛓ §3.2\'s `base` UNION — two resolved, two refused by name'
             expect(VANILLA.rooms.filter((r) => typeof r.source?.xml === 'string').length).toBe(0);
             expect(VANILLA.rooms.length).toBe(116);
         });
+
+    /**
+     * ⛓⛓⛓ **EDITOR v3 E1b — THE SAME ROOM, CARRIED BOTH WAYS, OPENS TO EQUAL
+     * RECORDS** (plan §22.8). ⛔ The `record` arm reaches the base WITH NO
+     * PARSER AT ALL — the adapter is constructed without a `parseOel` for that
+     * half of the row, which is what makes "no parse" a fact rather than a
+     * claim about a code path.
+     */
+    it('⛓⛓ a `record`-sourced room opens to the SAME record as its `xml` twin, and needs '
+        + 'NO parseOel', () => {
+        const xmlSet = setOf();
+        const record = parseOelLevel(xmlSet.rooms[0].source.xml, 'L110');
+        const recordSet = stampLevelSetIdentity({
+            ...xmlSet, rooms: [{ ...xmlSet.rooms[0], source: { record } }],
+        }, { base: 'probe-record' });
+
+        const viaXml = resolveBase(createSeedlingEditAdapter({
+            parseOel: parseOelLevel,
+            levelSetSource: (id) => (id === xmlSet.set_id ? xmlSet : null),
+        }), { kind: 'set-room', set_id: xmlSet.set_id, room: 0 });
+
+        // ⛔ NO `parseOel` INJECTED. A record room that secretly parsed would
+        //   refuse here by name instead of opening.
+        const viaRecord = resolveBase(createSeedlingEditAdapter({
+            levelSetSource: (id) => (id === recordSet.set_id ? recordSet : null),
+        }), { kind: 'set-room', set_id: recordSet.set_id, room: 0 });
+
+        expect(viaRecord).toEqual({ ...viaXml, path: `${recordSet.set_id}#0` });
+        expect(viaRecord.level).toBe(0);
+        expect(Object.hasOwn(viaRecord, 'tiles_outside_level')).toBe(false);
+    });
+
+    it('⛓ a `record` room whose rectangle is wrong is refused by `assertRoomSize`, BY NAME', () => {
+        const bad = stampLevelSetIdentity({
+            ...setOf(),
+            rooms: [{ ...setOf().rooms[0], source: { record: { width: 0, height: 0, layers: [], entities: [] } } }],
+        }, { base: 'probe-bad' });
+        expect(() => resolveBase(createSeedlingEditAdapter({
+            levelSetSource: () => bad,
+        }), { kind: 'set-room', set_id: bad.set_id, room: 0 })).toThrow(/set-room base/);
+    });
 
     it('⛔ a `set-room` base with the WRONG set_id, a missing set or a missing room refuses '
         + 'BY NAME — the identity check ⚖ ruling 2 makes one layer down', () => {
