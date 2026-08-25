@@ -127,6 +127,78 @@ export function accountingUniverse(chains) {
 }
 
 /**
+ * ⛓⛓⛓ R9 SLICE 12e′ RE-RUN — **WHICH TAPES S3 MUST RE-RECORD, DERIVED FROM
+ * WHAT THE GAME WOULD BE HANDED, NEVER FROM WHAT S2 HAPPENED TO WRITE.**
+ *
+ * ⛔ THE DEFECT. `record()` selected `s2.wrote` — the tapes whose BOOT blocks
+ * S2 edited. That set is the CASCADE's successors, so it is precisely every
+ * moved segment EXCEPT THE FIRST ONE IN EACH CHAIN: a segment whose WALK moved
+ * but whose boot did not is not in it, and the first mover's boot never moves
+ * (it is upstream of the move). 12e′ predicted the cost exactly — **eight
+ * recorded where thirteen are owed** — and the four (now five) it drops
+ * (`r8-solve-10`, `r8-solve-18`, `r8-d2`, `r8-solve-20`, `r8-solve-11`) would
+ * then carry STALE EXPECTATIONS into S4, which reds by name after the GPU has
+ * already been spent.
+ *
+ * ⇒ the question is asked of the ARTIFACT rather than of the bookkeeping:
+ * **snapshot every tape's game-visible projection before the run authors
+ * anything, and record every tape whose projection moved.** A tape reaches the
+ * game as `gameVisibleTape(parseTape(raw))` and its expectation is the stream
+ * the game produced from exactly those bytes, so a projection that moved is a
+ * recording that is out of date — however it moved, whoever moved it, and
+ * whether or not anyone predicted it.
+ *
+ * ⛓ IT IS THE PIPELINE'S OWN PROJECTION, IMPORTED AND NOT RE-SPELLED. That
+ * matters twice: `tick0` is a `GAME_VISIBLE_DROPS` field, so S2's tick-0
+ * re-derivations — FIFTEEN of them at this head, more than the record set
+ * itself — are projected away and cost no GPU at all; and if the drop list
+ * grows tomorrow, this selector follows it instead of drifting.
+ *
+ * ⚠ AND IT IS OVER-INCLUSIVE IN EXACTLY ONE DIRECTION, WHICH IS STATED RATHER
+ * THAN HIDDEN. `description` SURVIVES `gameVisibleTape` (measured: the
+ * projection's keys end `…, name, description`), so a prose-only edit — ⚖
+ * ruling 39's `why` sweep — moves the projection and would be recorded. That
+ * is a GPU row spent on nothing, never a missed one, and the defect being
+ * repaired is under-recording. A drop list naming `description` would be two
+ * field names typed against ⚖ ruling 17; if it is ever wanted, the honest
+ * form is `GAME_VISIBLE_DROPS` growing and this function following.
+ *
+ * @param {string[]} names tape labels
+ * @param {function} projectionOf label -> the game-visible bytes, as a string
+ * @returns {Object<string, string>} label -> md5, plain so it flushes to JSON
+ */
+export function projectionIndex(names, projectionOf) {
+    const out = {};
+    for (const name of names) {
+        out[name] = createHash('md5').update(projectionOf(name)).digest('hex');
+    }
+    return out;
+}
+
+/**
+ * ⛓ THE DIFF, WITH ITS THREE OUTCOMES NAMED. A tape that APPEARED is a growth
+ * and must be recorded; a tape that VANISHED cannot be and is reported rather
+ * than silently dropped, because "nothing to record" and "the artifact is
+ * gone" must not print the same thing.
+ *
+ * @returns {{moved: string[], appeared: string[], vanished: string[]}} each in
+ *   sorted order, so the set a run records does not depend on directory order.
+ */
+export function movedProjections(before, after) {
+    const moved = [];
+    const appeared = [];
+    const vanished = [];
+    for (const name of Object.keys(after)) {
+        if (!Object.prototype.hasOwnProperty.call(before, name)) appeared.push(name);
+        else if (before[name] !== after[name]) moved.push(name);
+    }
+    for (const name of Object.keys(before)) {
+        if (!Object.prototype.hasOwnProperty.call(after, name)) vanished.push(name);
+    }
+    return { moved: moved.sort(), appeared: appeared.sort(), vanished: vanished.sort() };
+}
+
+/**
  * ⛔⛔ THE CACHE KEY IS THE **COMPLETE** BYTES DRIVEN, NOT THE GAME-VISIBLE
  * PROJECTION.
  *

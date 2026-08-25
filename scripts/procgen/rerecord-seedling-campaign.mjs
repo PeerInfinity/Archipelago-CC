@@ -112,7 +112,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import {
     accountingUniverse, bootFromEnvelopeOnly, chainSubjects, latchCacheKey, mergePersistence,
-    timedClearHazard,
+    movedProjections, projectionIndex, timedClearHazard,
 } from './rerecordCampaign.js';
 import {
     CHECK_FLAG, LICENSE_FLAG, applyLicence, cascadeFrom, licenceFrom, movedSegments,
@@ -211,6 +211,19 @@ const resume = (stage) => {
 const textOf = (label) => readFileSync(join(TAPES, `${label}.json`), 'utf8');
 const rawOf = (label) => JSON.parse(textOf(label));
 const tapeOf = (label) => parseTape(rawOf(label));
+
+/**
+ * ⛓ EVERY TAPE ON DISK, derived from the directory — not the chain lists.
+ * S3's record set is a question about ARTIFACTS, and a tape this pipeline
+ * authors no boot for (`r8-solve-20`, the `r8-d2` headline) still has an
+ * expectation that goes stale when its producer re-authors it.
+ */
+const allTapeLabels = () => readdirSync(TAPES)
+    .filter((f) => f.endsWith('.json') && f !== 'index.json')
+    .map((f) => f.slice(0, -5)).sort();
+
+/** The bytes the GAME is handed — `driveLatch`'s own projection, one spelling. */
+const gameVisibleTextOf = (label) => JSON.stringify(gameVisibleTape(tapeOf(label)));
 
 // ── S0 · PREDICT ──────────────────────────────────────────────────────
 /**
@@ -701,6 +714,18 @@ function spendWalkLicence(s0) {
 
 function measure(s0) {
     console.log('\n# S1 · MEASURE — the GAME, in chain order\n');
+    /**
+     * ⛓⛓⛓ R9 SLICE 12e′ RE-RUN — **THE RECORD SET'S `BEFORE`, TAKEN HERE AND
+     * NOWHERE ELSE.** It has to be above `spendWalkLicence`, because that is
+     * the line where the producers re-author the moved walks: a snapshot taken
+     * one line lower would compare the new bytes against themselves and find
+     * nothing moved, which is the same defect `walkReport.note`'s placement
+     * exists to avoid one level down.
+     */
+    const projectionsBefore = projectionIndex(allTapeLabels(), gameVisibleTextOf);
+    console.log(`## the game-visible projection of ${Object.keys(projectionsBefore).length} `
+        + 'tape(s), snapshotted BEFORE the licence is spent — S3\'s record set is the '
+        + 'diff against this, never S2\'s boot writes');
     const spent = spendWalkLicence(s0);
     let blockSetChecked = false;
     const chains = subjects();
@@ -795,8 +820,8 @@ function measure(s0) {
             measured[successor] = { complete: next };
         }
     }
-    flush('S1', { boundaries, pending: measured, licenceSpent: spent.ran });
-    return { boundaries, measured };
+    flush('S1', { boundaries, pending: measured, licenceSpent: spent.ran, projectionsBefore });
+    return { boundaries, measured, projectionsBefore };
 }
 
 // ── S2 · WRITE ────────────────────────────────────────────────────────
@@ -903,18 +928,76 @@ function shell(what, cmd, args, logName) {
     }
 }
 
-function record(s2) {
-    console.log('\n# S3 · RECORD — one --record over the licensed set\n');
-    const set = (s2.wrote ?? []).map((w) => w.label);
+/**
+ * ⛓⛓⛓ R9 SLICE 12e′ RE-RUN — **THE RECORD SET IS DERIVED FROM THE GAME-VISIBLE
+ * PROJECTION DIFF, AND `s2.wrote` IS THE DEFECT IT REPLACES.**
+ *
+ * `s2.wrote` is the tapes whose BOOT blocks S2 edited — which is the cascade's
+ * SUCCESSORS, so it is every moved segment except the FIRST in each chain,
+ * whose boot is upstream of its own move and never changes. 12e′ predicted the
+ * cost to the name: eight recorded where thirteen are owed, the five dropped
+ * ones (`r8-solve-10`, `r8-solve-18`, `r8-d2`, `r8-solve-20`, `r8-solve-11`)
+ * left carrying stale expectations into S4 — a red AFTER the GPU is spent.
+ *
+ * ⛔ THE SET IS NOT `s0.licensed` EITHER, and that is not a near miss. That
+ * list is the BOOT permission: at this head it holds thirteen segments whose
+ * walks nothing has moved, and it holds neither the headline nor
+ * `r8-solve-20`. A permission says what MAY move; only the artifacts say what
+ * DID.
+ *
+ * ⛔ AND A MOVE OUTSIDE THE LICENCE IS A STOP, NOT A BIGGER RECORDING. The
+ * diff is over EVERY tape in the directory, so it can see a tape no stage of
+ * this pipeline was supposed to touch — and the honest answer to that is to
+ * name it and refuse, because ⚖ ruling 49's licence is a list of tapes and a
+ * run that recorded a fourteenth would have spent the user's permission on
+ * something they did not give.
+ */
+function record(s0, s1, s2) {
+    console.log('\n# S3 · RECORD — the tapes whose GAME-VISIBLE PROJECTION moved\n');
+    const before = s1?.projectionsBefore;
+    if (!before) {
+        throw new Error('⛔ S3 has no `projectionsBefore` from S1. The record set is the '
+            + 'projection diff across the run, so a S1 state written before this was built '
+            + 'cannot answer it — re-enter at --from=S1 rather than recording a guess.');
+    }
+    const after = projectionIndex(allTapeLabels(), gameVisibleTextOf);
+    const { moved, appeared, vanished } = movedProjections(before, after);
+    const set = [...moved, ...appeared];
+    const wrote = new Set((s2?.wrote ?? []).map((w) => w.label));
+    console.log(`## ${Object.keys(after).length} tape(s) projected; ${moved.length} moved, `
+        + `${appeared.length} appeared, ${vanished.length} vanished`);
+    for (const label of set) {
+        console.log(`   ${label.padEnd(18)} ${appeared.includes(label) ? 'APPEARED' : 'moved'}`
+            + `${wrote.has(label) ? '' : '   ⛓ NOT in S2\'s boot writes — the row `s2.wrote` '
+                + 'could not see'}`);
+    }
+    check('⛔ no tape VANISHED under this run', vanished.length === 0, vanished.join(', '));
+    /**
+     * ⛓ THE LICENCE IS THE BOUND, AND IT IS CHECKED HERE RATHER THAN TRUSTED.
+     * S0 sealed the segments ⚖ ruling 43's licence permits; a projection that
+     * moved outside that set is a tape this run had no permission to author.
+     */
+    const permitted = new Set((s0?.walk?.licence?.segments ?? []).map((p) => p.segment));
+    const unlicensed = set.filter((label) => !permitted.has(label) && !wrote.has(label));
+    check('⛓ every projection that moved is on the sealed licence, or is a boot S2 wrote',
+        unlicensed.length === 0,
+        unlicensed.length ? `⛔ ${unlicensed.join(', ')} moved and no licence covers it`
+            : `${set.length} tape(s) inside the permission`);
+    if (failures) {
+        flush('S3', { set: [], moved, appeared, vanished, stopped: true });
+        throw new Error('⛔ STOP before the GPU: the projection diff names a tape this run '
+            + 'was not licensed to move.');
+    }
     if (!set.length) {
-        console.log('## nothing was written, so there is nothing to record.');
-        flush('S3', { set: [], skipped: true });
+        console.log('## no projection moved, so there is nothing to record — and that is a '
+            + 'MEASUREMENT, not a skip.');
+        flush('S3', { set: [], moved, appeared, vanished, skipped: true });
         return;
     }
-    shell('the differential RECORDS the licensed set', 'node',
+    shell('the differential RECORDS the derived set', 'node',
         ['scripts/procgen/verify-seedling-bot-differential.mjs', '--win', '--record',
             `--only=${set.join(',')}`]);
-    flush('S3', { set });
+    flush('S3', { set, moved, appeared, vanished });
 }
 
 /**
@@ -1447,9 +1530,12 @@ if (GROW) {
 }
 
 const s0 = wants('S0') ? await predict() : resume('S0');
-const s1 = wants('S1') ? measure(s0) : (wants('S2') || wants('S5') ? resume('S1') : null);
+// ⛓ S3 needs S1's state too now — the record set is the projection diff S1
+//   snapshotted, so re-entering at `--from=S3` resumes S1 rather than guessing.
+const s1 = wants('S1') ? measure(s0)
+    : (wants('S2') || wants('S3') || wants('S5') ? resume('S1') : null);
 const s2 = wants('S2') ? write(s0, s1) : (wants('S3') || wants('S5') ? resume('S2') : null);
-if (wants('S3')) record(s2);
+if (wants('S3')) record(s0, s1, s2);
 if (wants('S4')) prove();
 if (wants('S5')) report(s0, s1, s2);
 

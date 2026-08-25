@@ -12,8 +12,12 @@ import { readFileSync } from 'node:fs';
 
 import { describe, expect, it } from 'vitest';
 import { PLAYTHROUGH_CHAINS } from '../../frontend/modules/seedlingDemo/playthroughWalk.js';
+import { gameVisibleTape, parseTape } from '../../frontend/modules/seedlingDemo/tapeFormat.js';
+import { cascadeFrom } from './walkMoves.js';
 import {
     accountingUniverse,
+    movedProjections,
+    projectionIndex,
     bootFromEnvelopeOnly,
     chainSubjects,
     isTrueStart,
@@ -334,3 +338,152 @@ describe('a persistence row has a MEASURED half and a MODEL half', () => {
  *     a gate's subject frozen as a literal, decaying once per growth — and it
  *     is now the artifact `--grow` itself asks before it writes anything.
  */
+
+/**
+ * ⛓⛓⛓ R9 SLICE 12e′ RE-RUN — **S3's RECORD SET, DERIVED FROM THE ARTIFACTS
+ * RATHER THAN FROM S2's BOOKKEEPING** (§33.4 item 4).
+ *
+ * `record()` used to select `s2.wrote`: the tapes whose BOOT blocks S2 edited.
+ * That is the cascade's SUCCESSORS, so it is every moved segment EXCEPT the
+ * first in each chain — whose boot is upstream of its own move and never
+ * changes. The dropped ones then carry stale expectations into S4, which reds
+ * by name AFTER the GPU has been spent.
+ */
+describe('R9 12e′ RE-RUN: the record set is the game-visible projection diff', () => {
+    it('⛓ the index is keyed on the PROJECTION, so two tapes with the same bytes agree', () => {
+        const idx = projectionIndex(['a', 'b'], (n) => (n === 'a' ? 'X' : 'X'));
+        expect(idx.a).toBe(idx.b);
+        expect(idx.a).toMatch(/^[0-9a-f]{32}$/);
+    });
+
+    it('⛓ a moved projection, an APPEARED tape and a VANISHED one are told apart', () => {
+        const before = { keep: '1', move: '1', gone: '1' };
+        const after = { keep: '1', move: '2', fresh: '9' };
+        expect(movedProjections(before, after)).toEqual({
+            moved: ['move'], appeared: ['fresh'], vanished: ['gone'],
+        });
+    });
+
+    it('⛓ the answer does not depend on directory order — both lists come back sorted', () => {
+        const r = movedProjections({ z: '1', a: '1', m: '1' }, { z: '2', a: '2', m: '2' });
+        expect(r.moved).toEqual(['a', 'm', 'z']);
+    });
+
+    /**
+     * ⛔⛔⛔ **MUTANT (e), AS A ROW.** The synthetic run below is this slice's
+     * own licensed set: thirteen tapes move, and the EIGHT `s2.wrote` would
+     * have selected are the cascade successors. The five it cannot see are
+     * named, because a count would have passed on the wrong five.
+     */
+    describe('⛔ against `s2.wrote`, which is what it replaces', () => {
+        // The ⚖ ruling 49 + extension licence, in chain order.
+        const LICENSED = ['r8-solve-18', 'r8-d2-19', 'r8-d2-20', 'r8-d2', 'r8-solve-20',
+            'r8-solve-11', 'r8-solve-10', 'r9-solve-11', 'r9-solve-3', 'r9-solve-2',
+            'r9-solve-0', 'r9-solve-13', 'r9-solve-14'];
+        // Two tapes the run does not touch, so the diff has something to be
+        // silent about — an all-movers fixture could not tell a selector from
+        // a constant.
+        const INERT = ['r8-solve-1', 'r9-l0-sword-dash-rest'];
+        const before = projectionIndex([...LICENSED, ...INERT], (n) => `committed:${n}`);
+        const after = projectionIndex([...LICENSED, ...INERT],
+            (n) => (LICENSED.includes(n) ? `re-authored:${n}` : `committed:${n}`));
+
+        /**
+         * ⛔ `s2.wrote` IS DERIVED HERE, NOT TYPED, and that is what makes the
+         * comparison mean something. S2 writes the boots the CASCADE
+         * downgrades, so the set is `cascadeFrom`'s own successors over the
+         * REAL chain shapes — read out of `PLAYTHROUGH_CHAINS` — against the
+         * same thirteen movers. A second typed roster would have been a list
+         * agreeing with a list.
+         */
+        const chains = ['r9-campaign', 'r8-d2'].map((id) => {
+            const c = PLAYTHROUGH_CHAINS.find((x) => x.id === id);
+            return { id, segments: c.segments.slice(), headline: c.headline ?? null };
+        });
+        const moved = LICENSED.map((segment) => {
+            const chain = chains.find((c) => c.segments.includes(segment)
+                || c.headline === segment);
+            if (!chain) return { chain: 'other', index: 0, segment, role: 'segment' };
+            const index = chain.segments.indexOf(segment);
+            return index === -1
+                ? { chain: chain.id, index: chain.segments.length, segment, role: 'headline' }
+                : { chain: chain.id, index, segment, role: 'segment' };
+        });
+        const s2Wrote = [...cascadeFrom(chains, moved).values()]
+            .flatMap((c) => c.successors);
+
+        it('⛓⛓ the projection diff lands on every licensed tape, and on nothing else', () => {
+            const r = movedProjections(before, after);
+            expect(r.moved).toEqual([...LICENSED].sort());
+            expect(r.appeared).toEqual([]);
+            expect(r.vanished).toEqual([]);
+        });
+
+        it('⛔⛔ the tapes `s2.wrote` DROPS are NAMED — a count would pass on the wrong ones', () => {
+            const dropped = movedProjections(before, after).moved
+                .filter((n) => !s2Wrote.includes(n));
+            // ⛓ The two chains' first movers, the headline that is in no
+            //   chain's boot order, and the segment whose chain has no
+            //   boundary at all.
+            expect(dropped.sort()).toEqual(
+                ['r8-d2', 'r8-solve-10', 'r8-solve-11', 'r8-solve-18', 'r8-solve-20']);
+            // …and the complement is exactly what a cascade CAN see, so the
+            // two sets partition the licence rather than merely differing.
+            expect([...dropped, ...s2Wrote].sort()).toEqual([...LICENSED].sort());
+        });
+
+        /**
+         * ⛓ AND A TICK-0-ONLY MOVE COSTS NO GPU, which is the saving the
+         * projection buys rather than a claim about it: `tick0` is a
+         * `GAME_VISIBLE_DROPS` field, and S2 re-derives FIFTEEN of them at this
+         * head — more tapes than the record set itself.
+         */
+        it('⛓ a change the projection drops does NOT enter the set', () => {
+            const same = projectionIndex(INERT, (n) => `committed:${n}`);
+            expect(movedProjections(same, same).moved).toEqual([]);
+        });
+    });
+});
+
+/**
+ * ⛓⛓⛓ R9 SLICE 12e′ RE-RUN — **WHAT THE SELECTOR CAN AND CANNOT SEE, MEASURED
+ * ON A REAL COMMITTED TAPE RATHER THAN ASSERTED IN ITS DOCBLOCK.**
+ *
+ * The design this replaces was written believing `gameVisibleTape` projects
+ * `description` away, so a ⚖ ruling 39 prose edit would cost no GPU. It does
+ * not — and the two rows below are the difference between knowing that and
+ * hoping it.
+ */
+describe('R9 12e′ RE-RUN: the projection\'s reach, on a committed tape', () => {
+    const TAPES = 'frontend/modules/seedlingDemo/fixtures/tapes';
+    const rawOf = (n) => JSON.parse(readFileSync(`${TAPES}/${n}.json`, 'utf8'));
+    const projected = (raw) => JSON.stringify(gameVisibleTape(parseTape(raw)));
+
+    it('⛔ `description` SURVIVES the projection — the selector is over-inclusive here', () => {
+        const raw = rawOf('r9-solve-13');
+        expect(raw.description.length).toBeGreaterThan(0);
+        expect(projected(raw)).not.toBe(projected({ ...raw, description: 'edited' }));
+        // ⛓ …and the direction is the safe one: it can spend a GPU row on a
+        //   prose edit, never miss a walk. The defect being repaired is
+        //   UNDER-recording.
+    });
+
+    it('⛓ `tick0` is DROPPED — S2\'s fifteen re-derivations cost no GPU at all', () => {
+        const raw = rawOf('r9-solve-13');
+        expect(raw.tick0).toBeTruthy();
+        const moved = { ...raw, tick0: { ...raw.tick0, rng: { ...raw.tick0.rng, seed: 12345 } } };
+        expect(projected(moved)).toBe(projected(raw));
+    });
+
+    it('⛓ `inputs` moving MOVES it — the case the whole selector exists for', () => {
+        const raw = rawOf('r9-solve-13');
+        // ⛓ THE SPAN BOUNDS ARE KEPT and only the KEY is swapped, so the tape
+        //   still parses: a shortened `tick_count` is refused by `parseTape`
+        //   ("the bot would disarm mid-hold") and would have tested the
+        //   validator rather than the projection.
+        const swapped = { ...raw,
+            inputs: raw.inputs.map((r, i) => (i === 0 ? { ...r, key: 'right' } : r)) };
+        expect(swapped.inputs[0].key).not.toBe(raw.inputs[0].key);
+        expect(projected(swapped)).not.toBe(projected(raw));
+    });
+});
