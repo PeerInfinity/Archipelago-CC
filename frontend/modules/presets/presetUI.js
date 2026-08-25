@@ -1444,7 +1444,15 @@ export class PresetUI {
     }
   }
 
-  displayLoadedJsonFileDetails(jsonData, fileName) {
+  /**
+   * @param {object} jsonData the parsed document
+   * @param {string} fileName what to call it in the log and the status line
+   * @param {{isRules?: boolean}} [options] `isRules` when the CALLER already
+   *   knows — a bundle member `classifyDocument` called `rules` is one, and
+   *   asking the reader to confirm a fact the classifier has already
+   *   established is a prompt with only one honest answer.
+   */
+  displayLoadedJsonFileDetails(jsonData, fileName, { isRules = false } = {}) {
     log('info',
       `Displaying details for manually loaded JSON file: ${fileName}`,
       jsonData
@@ -1481,6 +1489,7 @@ export class PresetUI {
     // doesn't — the old behaviour hardcoded player 1 and silently loaded the
     // wrong game.
     if (
+      isRules ||
       isRulesFileName(fileName) ||
       confirm('Is this a rules.json file for a game?')
     ) {
@@ -1611,7 +1620,8 @@ export class PresetUI {
             + `${[...others.map((m) => `${m.kind} (\`${m.name}\`)`), ...notes].join(', ')}`,
         });
       }
-      this.displayLoadedJsonFileDetails(rules.doc, `${file.name} → ${rules.name}`);
+      this.displayLoadedJsonFileDetails(rules.doc, `${file.name} → ${rules.name}`,
+        { isRules: true });
       return;
     }
     /**

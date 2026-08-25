@@ -81,6 +81,25 @@
  *     OPEN · PAINT · CLOSE · DOWNLOAD with `derived_from` surviving the
  *     re-stamp.
  *
+ * ── SLICE E1c — MINIFY, AND THE BUNDLE ────────────────────────────────
+ *
+ * 28. **MINIFY IS `indent: 0` OF THE SAME WRITER** — the bytes are
+ *     `stringifyRulesJson`'s at that indent (asked in node over the document
+ *     the page wrote), under half the indented size, and UNCHECKING the box
+ *     returns the DEFAULT bytes exactly. The default does not move.
+ * 29. **ONE PRESS, ONE `.zip`, FOUR MEMBERS** — read back in node through the
+ *     page's own `readBundle`, classified BY SHAPE; §21.9 holds (the ids inside
+ *     the container are the three-blob press's ids — a fourth WAY to press, not
+ *     a fourth STAMP); the `rules.json` member is byte-identical to
+ *     `#editDownloadRules`'s; the `apMapping` companion is NOT a member and the
+ *     note says so.
+ * 30. **THE BUNDLE ROUND TRIPS THROUGH `#editLoadFile`** on a FRESH page — the
+ *     set and its overlay open together from ONE file with an empty op list —
+ *     and the `rules` / `region-atlas` members it did NOT load are NAMED.
+ * 31. **A REFUSED `rules.json` STILL BUNDLES THE WORK** — on the real vanilla
+ *     116, whose graph does not close, the container carries the SET and the
+ *     OVERLAY and says why the other two are absent.
+ *
  * Run: node scripts/procgen/check-seedling-editor-arm.mjs
  *      node scripts/procgen/check-seedling-editor-arm.mjs --host=http://localhost:8000
  */
@@ -142,6 +161,14 @@ const { TILE_COLUMN_TO_TYPE, TILE_TYPE_NAMES } = await import(
     join(REPO, 'frontend/modules/flashPanel/seedlingSemantics.js'));
 const { foldEdits, resolveBase } = await import(
     join(REPO, 'frontend/modules/procgenCore/editCore.js'));
+/**
+ * ⛓ EDITOR v3 E1c — the BUNDLE reader and the vendored JSZip. ⛔ The SAME module
+ * the page uses, asked on the other side of a browser download, so "it round
+ * trips" is a statement about the bytes and not about the page's echo.
+ */
+const { readBundle } = await import(
+    join(REPO, 'frontend/modules/presets/documentBundle.js'));
+const { loadJSZipNode } = await import(join(REPO, 'scripts/procgen/loadJSZipNode.mjs'));
 
 const PAGE_PATH = '/frontend/modules/seedlingDemo/watch.html';
 const ATLAS = JSON.parse(readFileSync(
@@ -2116,6 +2143,123 @@ try {
         + 'own writer, asked here in node over the very document the page wrote',
         `${(pageBytes ?? '').length} bytes`);
 
+    /* ══ CLAIM 28 (E1c) — MINIFY, AND THE BUNDLE ═════════════════════ */
+
+    /**
+     * ⛓⛓⛓ **MINIFY IS THE SAME WRITER AT A DIFFERENT `indent`** (EDITOR v3 E1c,
+     * §25). `stringifyRulesJson`'s `indent` has been plumbed and never passed by
+     * any of its callers since it was written; the box on this page is the read,
+     * and UNCHECKED is `DEFAULT_RULES_JSON_INDENT` — the same schema default the
+     * APP resolves through `settingsManager` as `rulesJson.indent`.
+     *
+     * ⛔ ASKED IN NODE, over the document the page wrote, exactly like the row
+     * above: the claim is that the bytes are the WRITER's at that indent, not
+     * that they are short.
+     */
+    await page.check('#editMinify');
+    await page.click('#editDownloadRules');
+    await page.waitForTimeout(600);
+    const minBytes = await page.evaluate(() => window.__editorSetRulesBytes ?? null);
+    check(minBytes !== null && minBytes === stringifyRulesJson(rulesOut, { indent: 0 })
+        && !minBytes.includes('\n') && minBytes.length < pageBytes.length / 2,
+        '⛓⛓⛓ **MINIFY IS `indent: 0` OF THE SAME WRITER** — the bytes are `stringifyRulesJson`\'s '
+        + 'at indent 0, they carry no newline, and they are under half the indented size',
+        `${pageBytes.length} → ${minBytes.length} B `
+        + `(${((minBytes.length / pageBytes.length) * 100).toFixed(1)}%)`);
+    await page.uncheck('#editMinify');
+    await page.click('#editDownloadRules');
+    await page.waitForTimeout(600);
+    const backBytes = await page.evaluate(() => window.__editorSetRulesBytes ?? null);
+    check(backBytes === pageBytes,
+        '⛓ …and UNCHECKING it returns the DEFAULT bytes exactly — the default does not move, '
+        + 'which is what every byte-pinned committed preset depends on',
+        `${(backBytes ?? '').length} B`);
+
+    /**
+     * ⛓⛓⛓ **THE BUNDLE — ONE PRESS, ONE `.zip`, THE SAME STAMP** (§21.9's law,
+     * kept). The ids INSIDE the container are the ids the three separate presses
+     * write, because it goes through the same `downloadSet(session)`; the rules
+     * member's bytes are the ones `#editDownloadRules` just produced; and the
+     * members are the FOUR documents — never the `apMapping` companion, which is
+     * a DERIVED table (§24.12's ground, the same one `.chunks.json` is refused
+     * on).
+     *
+     * ⛔ THE ZIP IS READ BACK IN NODE, through `readBundle` — the page's own
+     * module, asked on the other side of a browser download — so "it round
+     * trips" is a statement about the bytes and not about the page's echo.
+     */
+    await page.click('#editDownloadSet');
+    await page.waitForFunction(() => window.__editorSetOut && window.__editorSetOverlayOut,
+        null, { timeout: 30000 });
+    const beforeBundle = await page.evaluate(() => ({
+        set_id: window.__editorSetOut.set_id,
+        overlay_id: window.__editorSetOverlayOut.overlay_id,
+    }));
+    await page.click('#editDownloadBundle');
+    await page.waitForFunction(() => Array.isArray(window.__editorSetBundleKinds),
+        null, { timeout: 60000 });
+    const bundled = await page.evaluate(() => ({
+        bytes: Array.from(window.__editorSetBundleOut),
+        kinds: window.__editorSetBundleKinds,
+        note: document.getElementById('editSetNote')?.textContent ?? '',
+    }));
+    const readBack = await readBundle(Uint8Array.from(bundled.bytes), { jszip: loadJSZipNode() });
+    const kindsOf = readBack.members.map((m) => m.kind);
+    const rulesMember = readBack.members.find((m) => m.kind === 'rules');
+    const setMember = readBack.members.find((m) => m.kind === 'level-set');
+    const overlayMember = readBack.members.find((m) => m.kind === 'overlay');
+    check(json(kindsOf) === json(['rules', 'level-set', 'overlay', 'region-atlas'])
+        && readBack.notes.length === 0,
+        '⛓⛓⛓ **ONE PRESS, ONE `.zip`, FOUR MEMBERS** — read back in node through the page\'s '
+        + 'own `readBundle`, classified BY SHAPE, nothing ignored',
+        `${json(kindsOf)} · ${bundled.bytes.length} B`);
+    check(setMember?.doc.set_id === beforeBundle.set_id
+        && overlayMember?.doc.overlay_id === beforeBundle.overlay_id,
+        '⛓⛓⛓ **§21.9 HOLDS — THE IDS INSIDE THE ZIP ARE THE THREE-BLOB PRESS\'S IDS.** The '
+        + 'bundle is a fourth WAY TO PRESS, not a fourth STAMP',
+        `${beforeBundle.set_id} · ${beforeBundle.overlay_id}`);
+    check(stringifyRulesJson(rulesMember.doc) === pageBytes,
+        '⛓⛓ **AND THE `rules.json` MEMBER IS THE SAME DOCUMENT `#editDownloadRules` WROTE**, '
+        + 'byte for byte at the same indent',
+        `${pageBytes.length} B`);
+    check(!/apmapping/i.test(json(kindsOf)) && /NOT a member/.test(bundled.note),
+        '⛔ …and the `apMapping` companion is NOT a member — the note SAYS SO rather than '
+        + 'leaving a person to notice it is missing',
+        bundled.note.slice(0, 200));
+
+    /**
+     * ⛓⛓⛓ **THE BUNDLE ROUND TRIP — THROUGH THE FILE INPUT, ON A FRESH PAGE.**
+     * ⛔ Fresh for the same reason the three-blob round trip is: the claim is
+     * about a RELOAD, and handing the documents back to the session that wrote
+     * them would ask the page to remember something it never had to forget.
+     *
+     * ⚠ The `rules` and `region-atlas` members are NOT loaded — this page
+     * DERIVES both — and the note NAMES them.
+     */
+    await load(`source=edit&level=${LEVEL}`);
+    await page.setInputFiles('#editLoadFile', {
+        name: `${beforeBundle.set_id}.zip`,
+        mimeType: 'application/zip',
+        buffer: Buffer.from(bundled.bytes),
+    });
+    await page.waitForFunction((id) => window.__editorEdit?.set?.set_id === id,
+        beforeBundle.set_id, { timeout: 60000 })
+        .catch((e) => { throw new Error(`STUCK on the bundle round trip: ${e.message}`); });
+    const fromBundle = await setRead();
+    const fileNote = await page.evaluate(
+        () => document.getElementById('editLoadFileNote')?.textContent ?? '');
+    check(fromBundle.edit.set.set_id === beforeBundle.set_id
+        && fromBundle.edit.set.overlay_id === beforeBundle.overlay_id
+        && fromBundle.edit.set.edits === 0,
+        '⛓⛓⛓ **THE BUNDLE ROUND TRIPS THROUGH `#editLoadFile`** — the set AND its overlay open '
+        + 'together from ONE file, with an EMPTY op list (the edits are in the documents now)',
+        `${fromBundle.edit.set.set_id} · ${fromBundle.edit.set.overlay_id}`);
+    check(/rules/.test(fileNote) && /region-atlas/.test(fileNote)
+        && /NOT loaded/.test(fileNote),
+        '⛔ …and the two members it did NOT load are NAMED — a member that vanished without a '
+        + 'word is indistinguishable from one that was never there',
+        fileNote.slice(0, 220));
+
     await page.fill('#editLoad', JSON.stringify(D2_SET));
     await page.click('#editLoadGo');
     await page.waitForFunction((id) => window.__editorEdit?.set?.set_id === id
@@ -2453,6 +2597,47 @@ try {
         + 'else, so what crosses is what `LevelSet.as:139` reads',
         `${vanChunks.length} chunk(s), largest ${
             Math.max(...vanChunks.map((c) => JSON.stringify(c).length))} B`);
+
+    /**
+     * ⛓⛓⛓ **E1c — THE REFUSED BUNDLE.** The vanilla game's own graph does NOT
+     * close (`level_58` is unreachable — the claim two rows up), so
+     * `#editDownloadRules` is disabled with its reason printed. The BUNDLE is
+     * still written, WITHOUT a `rules.json` member and WITHOUT the derived
+     * atlas, and the note carries the SAME sentence the disabled button carries.
+     *
+     * ⛔ **THIS IS THE HALF THAT IS EASY TO GET WRONG IN EITHER DIRECTION**: a
+     * bundle that refused outright would lose a person's 116 rooms over a rule
+     * about an export they did not ask for; a bundle that shipped a rules.json
+     * anyway would put a world nobody can finish inside a container that looks
+     * complete.
+     */
+    await page.click('#editSetReport');
+    await page.waitForTimeout(2500);
+    const vanBundleReport = await setRead();
+    await page.click('#editDownloadBundle');
+    await page.waitForFunction(() => Array.isArray(window.__editorSetBundleKinds),
+        null, { timeout: 60000 });
+    const vanBundle = await page.evaluate(() => ({
+        bytes: Array.from(window.__editorSetBundleOut),
+        kinds: window.__editorSetBundleKinds,
+        note: document.getElementById('editSetNote')?.textContent ?? '',
+    }));
+    const vanRead = await readBundle(Uint8Array.from(vanBundle.bytes),
+        { jszip: loadJSZipNode() });
+    const vanKinds = vanRead.members.map((m) => m.kind);
+    check(vanBundleReport.rulesDisabled === true
+        && json(vanKinds) === json(['level-set', 'overlay'])
+        && /no `rules.json` member/.test(vanBundle.note),
+        '⛓⛓⛓ **E1c — A REFUSED rules.json STILL BUNDLES THE WORK.** The vanilla graph does not '
+        + 'close, so the container carries the SET and the OVERLAY and says WHY the third and '
+        + 'fourth members are absent — a person may still want to save 116 rooms',
+        `${json(vanKinds)} · ${vanBundle.bytes.length} B · ${vanBundle.note.slice(0, 150)}`);
+    check(vanRead.members.find((m) => m.kind === 'level-set')?.doc.set_id === vanOut.set.set_id
+        && vanRead.members.find((m) => m.kind === 'overlay')?.doc.overlay_id
+            === vanOut.overlay.overlay_id,
+        '⛓ …and the ids inside it are the ones the three-blob press wrote for THIS set '
+        + '(§21.9, on the real 116)',
+        `${vanOut.set.set_id} · ${vanOut.overlay.overlay_id}`);
 
     /**
      * ⛔⛔⛔ **THE OVERVIEW ARROWS ARE NOT PAINTED UNTIL SOMETHING REPAINTS THE
