@@ -1170,19 +1170,52 @@ export function setRecord(set, overlay = emptyOverlay()) {
  *
  * @returns {{set, overlay, apMapping, report}}
  */
+const stampedSetOf = (record) => stampLevelSetIdentity({
+    ...record.set,
+    schema_version: LEVEL_SET_SCHEMA_VERSION,
+    provenance: { ...(record.set.provenance ?? {}) },
+});
+
+/**
+ * ⛓⛓⛓ **THE DOWNLOAD'S VERDICT AS A LIST — §20.11 #5, ADDITIVE (EDITOR v3 D2).**
+ *
+ * `downloadSet` quotes every validator error into ONE throw, which is right for
+ * a module and wrong for a form: a page wants to print them as rows, and the
+ * only way to get them back out of that sentence is to split it on the ` · `
+ * the join used.
+ *
+ * ⛔ **AND THAT SPLIT IS NOT RECOVERABLE, MEASURED.** Nothing stops a validator
+ * sentence carrying the separator — `levelSetValidator.js` builds its messages
+ * by interpolation from room NAMES and `named_rooms` citations, both of which
+ * are free-form — so a page that split would silently turn ONE error into two
+ * rows on the first set whose room is called `a · b`. Today's corpus cannot
+ * arbitrate (zero of the sentences a bare set produces carry it), and *"zero
+ * today"* is exactly the reasoning §20.5 refused to accept about an inert door.
+ * ⇒ the structured answer is returned rather than reconstructed.
+ *
+ * ⛓ It validates the SAME stamped document the download would, through
+ * `stampedSetOf` — one spelling, so a page cannot be told the set is fine and
+ * then have the download refuse it.
+ *
+ * @returns {{ok: boolean, errors: string[], warnings: string[], set_id: string}}
+ */
+export function validateForDownload(session) {
+    const set = stampedSetOf(session.record());
+    const { ok, errors, warnings } = validateLevelSet(set);
+    return { ok, errors: [...errors], warnings: [...warnings], set_id: set.set_id };
+}
+
 export function downloadSet(session, { validate = true } = {}) {
     const record = session.record();
-    const set = stampLevelSetIdentity({
-        ...record.set,
-        schema_version: LEVEL_SET_SCHEMA_VERSION,
-        provenance: { ...(record.set.provenance ?? {}) },
-    });
+    const set = stampedSetOf(record);
+    let warnings = [];
     if (validate) {
         const result = validateLevelSet(set);
         if (!result.ok) {
             fail(`seedlingSetAdapter: this set is not valid and is NOT downloaded — `
                 + `${result.errors.join(' · ')}`);
         }
+        warnings = result.warnings;
     }
     const overlay = stampIdentity(
         { ...record.overlay, provenance: { ...(record.overlay.provenance ?? {}) } },
@@ -1197,7 +1230,7 @@ export function downloadSet(session, { validate = true } = {}) {
             overlay_id: overlay.overlay_id,
             rooms: set.rooms.length,
             edits: session.ops().length,
-            warnings: validate ? validateLevelSet(set).warnings : [],
+            warnings,
         },
     };
 }
