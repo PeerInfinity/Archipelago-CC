@@ -153,6 +153,27 @@ describe('⛓⛓⛓ the core\'s contract laws, on a substrate whose cells are RO
     });
 
     /**
+     * ⛔⛔ **ABSENT MEANS FALSE, SO REPRODUCING A DESCRIPTOR MEANS CLEARING A
+     * FLAG THE DESTINATION HAPPENS TO CARRY.** Measured: without this row
+     * nothing reached `writeOps`' clearing branch at all — the contract's law 7
+     * writes room 0 onto room 5 and neither carries a flag, so a `writeOps`
+     * that emitted no clearing op read back identical and the branch was a
+     * comment with an `if` in front of it ([[feedback_fixture_must_discriminate_two_builds]]).
+     */
+    it('a paste of an UNFLAGGED room onto a FLAGGED one clears the flag', () => {
+        const { record, s } = session();
+        apply(s, { op: 'set-room-field', room: 5, field: 'snow_gradient', value: true });
+        apply(s, { op: 'set-room-field', room: 5, field: 'music_override_exempt', value: true });
+        const desc = adapter.readCell(record, 0, 0);
+        expect(desc.room.snow_gradient).toBeUndefined();
+        apply(s, { op: 'group', label: 'paste room 0 onto room 5', ops: adapter.writeOps(desc, 5, 0) });
+        expect(canonicalJson(adapter.readCell(s.record(), 5, 0).room))
+            .toBe(canonicalJson(desc.room));
+        expect(Object.hasOwn(s.record().set.rooms[5], 'snow_gradient')).toBe(false);
+        expect(Object.hasOwn(s.record().set.rooms[5], 'music_override_exempt')).toBe(false);
+    });
+
+    /**
      * ⛓⛓ **`rectCopy`/`rectPasteOps` ARE A ROOM COPY BETWEEN SETS, with no new
      * code** — reason 2 for the row grid, exercised rather than asserted.
      */
@@ -229,6 +250,26 @@ describe('the op vocabulary, and every refusal by name', () => {
             expect(res.description, kind).not.toContain('no op');
         }
         expect([...SET_OP_KINDS].sort()).toEqual([...SET_OP_KINDS]);
+    });
+
+    /**
+     * ⛔⛔ **A BRAND-NEW ROOM'S `@to`s ARE ALREADY IN NEW COORDINATES**, and an
+     * APPEND cannot show it: appending at the end leaves an IDENTITY mapping, so
+     * a renumbering that wrongly remapped the new room's exits would move them
+     * to exactly where they already were. Inserting at 0 is the discriminator —
+     * every old room shifts up by one and a wrongly-remapped `to: 5` becomes 6.
+     */
+    it('add-room INSERTED at 0 leaves the new room\'s own @to alone and shifts the rest', () => {
+        const { s } = session();
+        apply(s, { op: 'add-room', xml: wiredRoom(9, 5), name: 'Inserted', at: 0 });
+        expect(s.record().set.rooms[0].name).toBe('Inserted');
+        expect(s.record().set.rooms.map((r) => r.id)).toEqual([0, 1, 2, 3, 4, 5, 6]);
+        // the NEW room's exit still names room 5, which it was authored against
+        expect(parseRoomXml(s.record().set.rooms[0].source.xml).exits.map((e) => e.to)).toEqual([5]);
+        // …and every OLD room's exits shifted up by one
+        expect(parseRoomXml(s.record().set.rooms[1].source.xml).exits.map((e) => e.to)).toEqual([2]);
+        expect(parseRoomXml(s.record().set.rooms[3].source.xml).exits.map((e) => e.to)).toEqual([2, 4]);
+        expect(s.record().set.start.level).toBe(1);
     });
 
     it('add-room refuses unparseable xml, a non-level document and an `at` out of range', () => {
@@ -389,6 +430,40 @@ describe('the op vocabulary, and every refusal by name', () => {
             .description).toMatch(/no such location is marked/);
     });
 
+    /**
+     * ⛔⛔⛔ **THE STORED-CLOSURE HAZARD, REACHED THROUGH THE ADAPTER.**
+     * `seedlingSetOverlay.test.js` demonstrates that `canonicalJson` renders a
+     * function as `null` and keeps the key; this is the consequence a code
+     * mutation can actually produce. If an op ever put a FUNCTION into the
+     * overlay, two different rules on one target would canonicalise identically,
+     * `equal` would call the record unchanged, and the fold would DROP the
+     * second authoring op — the edit would never reach the payload. So the row
+     * is: the same target, two different rules, both APPLIED.
+     */
+    it('re-authoring a rule with a DIFFERENT tree is a real edit, not a no-op', () => {
+        const { s } = session();
+        const exit = deriveAtlasOf(s.record(), DEPS).atlas.regions
+            .find((r) => r.map_ref === 0).exits[0].exit_id;
+        const first = apply(s, {
+            op: 'set-access-rule', room: 0, target: exitRuleKey(exit), rule: { rule: 'True_' },
+        });
+        expect(first.applied).toBe(true);
+        const second = s.apply({
+            op: 'set-access-rule', room: 0, target: exitRuleKey(exit),
+            rule: { rule: 'Has', args: { item: 'Light', count: 1 } },
+        });
+        expect(second.ok).toBe(true);
+        expect(second.applied).toBe(true);
+        expect(s.ops()).toHaveLength(2);
+        expect(s.record().overlay.rooms['0'].rules[exitRuleKey(exit)].rule).toBe('Has');
+        // ⛔ and re-authoring the SAME tree really IS a no-op, so `applied` is
+        //    discriminating rather than always true
+        expect(s.apply({
+            op: 'set-access-rule', room: 0, target: exitRuleKey(exit),
+            rule: { rule: 'Has', args: { item: 'Light', count: 1 } },
+        }).applied).toBe(false);
+    });
+
     it('set-access-rule refuses a rule the schema rejects, and edits IN PLACE through a path', () => {
         const { s } = session();
         const exit = deriveAtlasOf(s.record(), DEPS).atlas.regions
@@ -408,6 +483,44 @@ describe('the op vocabulary, and every refusal by name', () => {
         expect(s.apply({
             op: 'set-access-rule', room: 1, target: exitRuleKey(exit), path: [0], rule: { rule: 'True_' },
         }).description).toMatch(/has no rule on .* yet/);
+    });
+
+    /**
+     * ⛔⛔ **`set-overlay` WRITES THE WHOLE ENTRY AND DOES NOT ASK THE
+     * DERIVATION** — so it is the door a stale rule key comes in through (an
+     * overlay pasted from another set, an exit that was later disconnected).
+     * `applyOverlayRules` is the second net, and it REFUSES rather than
+     * dropping: a rule that vanished leaves the author believing a door is
+     * gated and the compiler treating it as free, and a missing `access_rule`
+     * is indistinguishable from one that was never written.
+     */
+    it('a rule key that survives `set-overlay` is caught at DERIVE time, by name', () => {
+        const { s } = session();
+        apply(s, {
+            op: 'set-overlay',
+            room: 0,
+            overlay: { rules: { [exitRuleKey('out_teleporter_999_999')]: { rule: 'True_' } } },
+        });
+        expect(() => deriveAtlasOf(s.record(), DEPS))
+            .toThrow(/region "level_0" \(room 0\) has no exit "out_teleporter_999_999"/);
+        expect(() => deriveAtlasOf(s.record(), DEPS)).toThrow(/Its exits are out_/);
+    });
+
+    /**
+     * ⛓ AND A RULE ON A ROOM THE DERIVATION DROPPED is its own sentence: a room
+     * with no door at all has no region, so the per-region loop never visits it
+     * and a rule authored there would be discarded in silence.
+     */
+    it('a rule on a room with no region at all refuses, naming the drop', () => {
+        const bare = setRecord(buildLevelSet(
+            Array.from({ length: 3 }, (_, level) => emptyLevel({ level })), { setId: 'no-doors' },
+        ).set);
+        const s = createSetSession(adapter, bare, { base: { kind: 'set', set_id: bare.set.set_id } });
+        apply(s, {
+            op: 'set-overlay', room: 2, overlay: { rules: { [exitRuleKey('anything')]: { rule: 'True_' } } },
+        });
+        expect(() => deriveAtlasOf(s.record(), DEPS))
+            .toThrow(/authors an exit rule on room 2, but the derived atlas holds no region for it/);
     });
 
     it('set-overlay refuses a shape the overlay validator rejects, and clears with null', () => {
@@ -618,15 +731,24 @@ describe('⛓⛓ `reorder` rewrites EVERY index a room reaches — exits AND fal
 /* ══════════════════════════════════════════════════════════════════ */
 
 describe('⛓⛓ `connect` — two-way by default, arriving on the return door', () => {
+    /**
+     * ⚠ **THE TWO ENDS MUST SIT AT DIFFERENT CELLS OR THIS ROW PROVES NOTHING.**
+     * Measured: the exporter's linker puts room 5's only door and room 0's only
+     * door BOTH at (128, 128), so a `connect` that landed the player on the
+     * SOURCE exit instead of the destination's return door would read back
+     * identical. Room 1's SECOND exit is at (128, 96) — the discriminating pair
+     * ([[feedback_fixture_must_discriminate_two_builds]]).
+     */
     it('writes BOTH sides, and the arrival is the destination exit\'s own cell', () => {
         const { s } = session();
         const before = exitsOfRoom(s.record(), 5)[0];
-        const dest = exitsOfRoom(s.record(), 0)[0];
-        apply(s, { op: 'connect', from: [5, 0], to: [0, 0] });
+        const dest = exitsOfRoom(s.record(), 1)[1];
+        expect([dest.x, dest.y]).not.toEqual([before.x, before.y]);
+        apply(s, { op: 'connect', from: [5, 0], to: [1, 1] });
         const after = exitsOfRoom(s.record(), 5)[0];
-        expect(after.to).toBe(0);
+        expect(after.to).toBe(1);
         expect([after.playerx, after.playery]).toEqual([dest.x, dest.y]);
-        const back = exitsOfRoom(s.record(), 0)[0];
+        const back = exitsOfRoom(s.record(), 1)[1];
         expect(back.to).toBe(5);
         expect([back.playerx, back.playery]).toEqual([before.x, before.y]);
     });
@@ -939,6 +1061,20 @@ describe('§19.5\'s field census — the ONE line of adaptation, and the gate th
          */
         expect(universal(mapDoc.levels).filter((k) => !universal(parsedRooms).includes(k)))
             .toEqual(['class', 'level', 'path']);
+        /**
+         * ⛔⛔ **AND THE SAME CENSUS THROUGH `roomsOfSet`, WHICH IS THE ONE PLACE
+         * THE ADAPTATION LIVES.** Measured: a census that only ever called
+         * `parseOelLevel` did not gate the adapter at all — a `roomsOfSet` that
+         * stamped an extra field, or the wrong `level`, passed it untouched. So
+         * the claim is made about what the DERIVATION is handed: after the one
+         * line, the only extract fields still missing are the two provenance
+         * ones nothing here reads.
+         */
+        const adapted = roomsOfSet(generatedSet(), parseOelLevel);
+        expect(universal(mapDoc.levels).filter((k) => !universal(adapted).includes(k)))
+            .toEqual(['class', 'path']);
+        expect(universal(adapted).filter((k) => !universal(mapDoc.levels).includes(k)))
+            .toEqual([]);
         // ⛔ THE DIRECTION THAT MATTERS MOST: a parser that grew a field the
         //    extract lacks would break "one derivation serves both sources"
         //    just as surely, and nothing else in the repo would notice.
