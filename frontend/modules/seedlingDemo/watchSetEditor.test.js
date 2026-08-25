@@ -41,11 +41,12 @@ import { emptyOverlay, exitRuleKey, locationRuleKey } from './seedlingSetOverlay
 import {
     createSeedlingSetAdapter, createSetSession, setRecord,
 } from './seedlingSetAdapter.js';
+import * as setEditorCore from '../procgenCore/setEditorCore.js';
+import * as watchSetEditor from './watchSetEditor.js';
 import {
     LINK_SCAN, OVERVIEW, addRoomMapping, exitArrowShapes, freeEdgesOf, inertRulesOf,
     linkScanBound, linkScanCost, linkScanKb, manifestFormRows, moveOrder, overlayLocationCount,
-    overviewLayout, removeRoomMapping, renumberDecision, reorderMapping, reportOf, roomCentre,
-    roomFormRows, roomRowsOf, ruleTargetKeys, ruleTargetsOf,
+    overviewLayout, reportOf, roomFormRows, roomRowsOf, ruleTargetKeys, ruleTargetsOf,
 } from './watchSetEditor.js';
 
 const TILE = 16;
@@ -290,54 +291,9 @@ describe('⛓⛓ MOVE is ONE `reorder`, and its `order` is pinned in BOTH readin
         expect(s.ops().length).toBe(1);
     });
 
-    it('⛔ the ends refuse BY NAME rather than clamping — a press that did nothing and said '
-        + 'nothing is indistinguishable from a broken button', () => {
-        expect(() => moveOrder(4, 0, -1)).toThrow(/already first/);
-        expect(() => moveOrder(4, 3, 1)).toThrow(/already last/);
-        expect(() => moveOrder(4, 9, 1)).toThrow(/outside 0\.\.3/);
-    });
 });
 
 describe('⛓⛓⛓ §20.11 #2 — a RENUMBERING closes or DISCARDS an open room session', () => {
-    /**
-     * ⛓⛓⛓ MUTANT: the decision is `none` for every renumbering (the room
-     * session is left open). It would not be visible until the WRITE-BACK, and
-     * then a `replace-room-xml` would land on a room the reader never opened.
-     */
-    it('⛔⛔ a room session WITH edits is DISCARDED, loudly, naming how many went', () => {
-        const d = renumberDecision({ room: 1, ops: 3 }, reorderMapping([0, 2, 1, 3]), 'MOVE DOWN');
-        expect(d.action).toBe('discard');
-        expect(d.warning).toMatch(/DISCARDED/);
-        expect(d.warning).toMatch(/3 unwritten edit\(s\)/);
-    });
-
-    it('⛓ a room session with ZERO ops is silently REOPENED on the room\'s new index', () => {
-        const d = renumberDecision({ room: 1, ops: 0 }, reorderMapping([0, 2, 1, 3]), 'MOVE DOWN');
-        expect(d).toMatchObject({ action: 'reopen', room: 2 });
-        expect(d.warning).toMatch(/moved to index 2/);
-    });
-
-    it('⛓ …and one whose index did NOT move is reopened with nothing to say', () => {
-        const d = renumberDecision({ room: 3, ops: 0 }, reorderMapping([0, 2, 1, 3]), 'MOVE');
-        expect(d).toEqual({ action: 'reopen', room: 3, warning: null });
-    });
-
-    it('⛓ no open session is `none`', () => {
-        expect(renumberDecision(null, reorderMapping([0, 1]), 'MOVE').action).toBe('none');
-    });
-
-    it('⛓⛓ the ONE decision function serves all THREE renumbering ops, and each mapping is '
-        + 'measured against what the op really did', () => {
-        // add-room at the end shifts nothing; at 0 it shifts everything.
-        expect(addRoomMapping(0)(0)).toBe(1);
-        expect(addRoomMapping(4)(0)).toBe(0);
-        // remove-room DELETES its own room and pulls the rest down.
-        expect(removeRoomMapping(1)(1)).toBe(null);
-        expect(removeRoomMapping(1)(2)).toBe(1);
-        expect(renumberDecision({ room: 1, ops: 0 }, removeRoomMapping(1), 'REMOVE').action)
-            .toBe('discard');
-    });
-
     it('⛓⛓ the ADD mapping matches the op — a set-session `add-room` at 0 really does move '
         + 'every old room up by one', () => {
         const s = sessionOf(3);
@@ -351,29 +307,8 @@ describe('⛓⛓⛓ §20.11 #2 — a RENUMBERING closes or DISCARDS an open room
 });
 
 /* ══════════════════════════════════════════════════════════════════════
- * THE OVERVIEW
+ * THE OVERVIEW'S ARROWS, OVER A REAL SET
  * ══════════════════════════════════════════════════════════════════════ */
-
-describe('⛓⛓ the overview is the ADAPTER\'s grid — one row, one cell per room', () => {
-    it('⛓ it shrinks to fit and then SCROLLS, never below a clickable cell', () => {
-        expect(overviewLayout(4, 4000).cellPx).toBe(OVERVIEW.cellPx);
-        expect(overviewLayout(200, 600).cellPx).toBe(OVERVIEW.minCellPx);
-        expect(overviewLayout(200, 600).scrolls).toBe(true);
-        expect(overviewLayout(4, 4000).scrolls).toBe(false);
-    });
-
-    it('⛓ a cell too small for a still says so, and the strip draws labelled boxes instead', () => {
-        expect(overviewLayout(200, 600).stills).toBe(false);
-        expect(overviewLayout(4, 4000).stills).toBe(true);
-    });
-
-    it('⛓ a room\'s centre is in CELL space — room 3 is at x 3.5, which is what the painter '
-        + 'multiplies by the cell width', () => {
-        expect(roomCentre(3).x).toBe(3.5);
-        expect(roomCentre(3).y).toBeGreaterThan(OVERVIEW.roomTop);
-        expect(roomCentre(3).y).toBeLessThan(1);
-    });
-});
 
 describe('⛓⛓⛓ the exits, as POLYLINES the view can actually paint', () => {
     const shapesOf = (record, opts) => exitArrowShapes(roomRowsOf(record, { links: false }), opts);
@@ -414,24 +349,6 @@ describe('⛓⛓⛓ the exits, as POLYLINES the view can actually paint', () => 
         const lit = shapesOf(s.record(), { selected: 3 }).filter((sh) => sh.highlight);
         expect(lit.map((sh) => sh.label)).toContain('L0 → L3');
         expect(shapesOf(s.record(), { selected: null }).some((sh) => sh.highlight)).toBe(false);
-    });
-
-    it('⛔ a link to a room the set does not have is DROPPED from the picture rather than '
-        + 'drawn off the end of the strip — the REPORT is where a dangling target is named', () => {
-        const rows = [{ index: 0, exitList: [{ index: 0, to: 99 }] }];
-        expect(exitArrowShapes(rows)).toEqual([]);
-    });
-
-    it('⛓ a SELF-JOIN is a LOOP with real length — `assertShape` refuses a one-point '
-        + 'polyline, so a zero-length line would have refused at mount', () => {
-        const rows = [
-            { index: 0, exitList: [{ index: 0, to: 0 }] },
-            { index: 1, exitList: [] },
-        ];
-        const [loop] = exitArrowShapes(rows);
-        expect(loop.points.length).toBeGreaterThan(2);
-        expect(() => assertShape(loop)).not.toThrow();
-        expect(loop.label).toMatch(/↺/);
     });
 });
 
@@ -767,6 +684,69 @@ describe('⛓⛓⛓ the REPORT is a LIST, and the rules.json download rides on i
         expect(kinds(withSchema, 'region-atlas').some((r) => r.severity === 'warn')).toBe(true);
         expect(kinds(withSchema, 'region-atlas').some(
             (r) => /DELIBERATELY UNSTAMPED/.test(r.text))).toBe(true);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ EDITOR v3 E2a — THE HALF THAT MOVED, AND THAT IT IS THE SAME HALF
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * §22.3: the substrate-free functions MOVED to `procgenCore/setEditorCore.js`
+ * so the maze can have them, and this file RE-EXPORTS them so D2's rows, E1's
+ * rows and `check-seedling-editor-arm.mjs` are byte-inert.
+ *
+ * ⛔⛔ **RE-EXPORT MEANS THE SAME OBJECT, AND THAT IS WHAT `===` ASKS.** A copy
+ * would pass every behavioural row in this file and in `setEditorCore.test.js`
+ * on the day it was made, and drift the first time one of the two was edited —
+ * the page and the maze would then disagree about what an arrow is while both
+ * suites stayed green.
+ */
+describe('⛓⛓⛓ the moved half is RE-EXPORTED — the same function object, not a copy', () => {
+    /**
+     * ⛓⛓ THE FIVE THAT ARE **BOUND** RATHER THAN RE-EXPORTED, and why each is:
+     * `roomRowsOf` takes the adapter's three readers, `ruleTargetsOf` takes the
+     * derivation, `ruleTargetKeys`/`inertRulesOf` take the key BUILDERS and
+     * `reportOf` takes all four plus the document's own noun.
+     */
+    const BOUND = Object.freeze([
+        'roomRowsOf', 'ruleTargetsOf', 'ruleTargetKeys', 'inertRulesOf', 'reportOf',
+    ]);
+
+    /** ⛓ DERIVED from the core's own exports, so a NEW core function that the
+     *  page forgets to re-export is a red row rather than a silence. */
+    const MOVED = Object.keys(setEditorCore)
+        .filter((name) => name in watchSetEditor && !BOUND.includes(name))
+        .sort();
+
+    it.each(MOVED)('`%s` is the SAME object on both modules', (name) => {
+        expect(watchSetEditor[name]).toBe(setEditorCore[name]);
+    });
+
+    it('⛓ the roster is not vacuous — it holds the names §22.3 named', () => {
+        for (const name of ['moveOrder', 'reorderMapping', 'addRoomMapping', 'removeRoomMapping',
+            'renumberDecision', 'OVERVIEW', 'overviewLayout', 'roomCentre', 'exitArrowShapes',
+            'freeEdgesOf', 'gateabilityOf', 'overlayLocationCount']) {
+            expect(MOVED, name).toContain(name);
+        }
+    });
+
+    /** ⛔ A bound name must NOT be `===`, or the binding would not be happening. */
+    it.each(BOUND)(
+        '`%s` is BOUND here, not re-exported', (name) => {
+            expect(typeof watchSetEditor[name]).toBe('function');
+            expect(watchSetEditor[name]).not.toBe(setEditorCore[name]);
+        },
+    );
+
+    /** ⛔ `linkScanBound` DELIBERATELY did not move: it prices SEEDLING bytes
+     *  and record entities (§24.7), and the maze's analogue is a different
+     *  quantity over a different structure. */
+    it('⛔ the link-scan bound STAYED — it is not the core\'s to own', () => {
+        for (const name of ['LINK_SCAN', 'linkScanCost', 'linkScanKb', 'linkScanBound']) {
+            expect(watchSetEditor[name], name).toBeTruthy();
+            expect(setEditorCore[name], name).toBeUndefined();
+        }
     });
 });
 

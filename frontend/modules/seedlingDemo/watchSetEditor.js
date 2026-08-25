@@ -48,16 +48,19 @@
  */
 
 import {
-    ROOM_FIELDS, SET_FIELDS, closeRoomSession, deriveAtlasOf, downloadSet, exitsOfRoom,
-    readSetCell, rulesJsonOf, validateForDownload, whatLinksHere,
+    ROOM_FIELDS, SET_FIELDS, closeRoomSession, createSeedlingSetAdapter, deriveAtlasOf,
+    downloadSet, exitsOfRoom, readSetCell, rulesJsonOf, validateForDownload, whatLinksHere,
 } from './seedlingSetAdapter.js';
 import { exitRuleKey, locationRuleKey } from './seedlingSetOverlay.js';
 import {
     MUSIC_COUNT, MUSIC_NONE, NAMED_ROOMS, roomRecordOf, roomSourceKind,
 } from './levelSetValidator.js';
+import { DEFAULT_PLAYER_ID } from '../procgenCore/rulesGraph.js';
 import {
-    DEFAULT_PLAYER_ID, reachableRegions, regionsOf, startRegionsOf,
-} from '../procgenCore/rulesGraph.js';
+    OVERVIEW, addRoomMapping, exitArrowShapes, inertRulesOf as coreInertRulesOf, moveOrder,
+    overviewLayout, removeRoomMapping, renumberDecision, reorderMapping, reportOver,
+    roomRowsOf as coreRoomRowsOf, ruleTargetKeys as coreRuleTargetKeys, ruleTargetsOver,
+} from '../procgenCore/setEditorCore.js';
 import { ruleSchemaErrors } from '../procgenCore/jsonSchemaCheck.js';
 import { stringifyRulesJson } from '../shared/rulesJsonBuilder.js';
 import {
@@ -187,281 +190,107 @@ export function linkScanBound(record) {
 }
 
 /* ══════════════════════════════════════════════════════════════════════
- * ⛓ THE ROOMS LIST
- * ══════════════════════════════════════════════════════════════════════ */
+ * ⛓⛓⛓ THE SUBSTRATE-FREE HALF — MOVED TO `procgenCore/setEditorCore.js`,
+ *      AND RE-EXPORTED HERE BY THE SAME FUNCTION OBJECT
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * EDITOR v3 slice E2a. §22.1 #7 measured which of this file's functions read
+ * anything a LEVEL SET owns, and the answer was: the rooms strip, the reorder
+ * permutation, the renumbering ruling, the arrow shapes, the gateability
+ * answer, the free-edge scan and the REPORT's sections 3–4 read NONE of it.
+ * They moved so the maze can have them (`mazeRoom/mazeSetAdapter.js` is the
+ * second caller); this file is where Seedling BINDS them.
+ *
+ * ⛔ **RE-EXPORTED, NOT RE-WRAPPED, WHEREVER NOTHING IS BOUND.** D2's 45 rows,
+ * E1/E1b/E1c's rows and `check-seedling-editor-arm.mjs` all import these names
+ * from HERE, and a copy would be a second function that could drift from the
+ * one the maze runs. `setEditorCore.test.js` and `watchSetEditor.test.js`
+ * assert the identity with `===` for exactly that reason.
+ *
+ * ⚠ `LINK_SCAN`/`linkScanCost`/`linkScanBound` above did NOT move: they price
+ * SEEDLING quantities (OEL bytes, then record entities — §24.7). The maze
+ * prices its own scan; the column the price gates is the core's.
+ */
+
+export {
+    OVERVIEW, addRoomMapping, exitArrowShapes, freeEdgesOf, gateabilityOf, moveOrder,
+    overlayLocationCount, overviewLayout, removeRoomMapping, renumberDecision, reorderMapping,
+    roomCentre,
+} from '../procgenCore/setEditorCore.js';
 
 /**
- * ⛓⛓ **ONE ROW PER ROOM, DERIVED FROM THE RECORD** — never from a list this
- * file keeps. `bounds().w` is `rooms.length` and `readSetCell` is the cell
- * descriptor, so the list is a view of exactly what the adapter addresses.
+ * ⛓ THE FOUR THINGS THE CORE IS HANDED, IN ONE PLACE.
  *
- * ⛔ A ROOM THIS CANNOT READ IS NAMED, not dropped — `exitsOfRoom` refuses an
- * `embed`-sourced room by name and that sentence becomes the row's `why`, the
- * same law `whatLinksHere` keeps about `unreadable`.
- *
- * @param {object} record `{set, overlay}`
- * @param {object} [o]
- * @param {boolean} [o.links] compute the "links here" count for every room —
- *   `false` when `linkScanBound` says the scan does not fit, and the column
- *   reads `null` rather than `0`.
+ * ⛔ `bounds` IS THE ADAPTER'S OWN, read off a freshly constructed adapter
+ * rather than re-spelled as `record.set.rooms.length` here. The strip, the
+ * arrows and the REPORT's room count must all agree with what `rectCopy` and
+ * `editorView` address, and one spelling is how that stays true.
  */
-export function roomRowsOf(record, { links = true } = {}) {
-    const rooms = record?.set?.rooms ?? [];
-    const inbound = links ? rooms.map((_, i) => whatLinksHere(record, i)) : null;
-    return rooms.map((_room, index) => {
-        const cell = readSetCell(record, index, 0);
-        let exits = null;
-        let why = null;
-        try {
-            exits = exitsOfRoom(record, index);
-        } catch (e) {
-            if (!isAdapterRefusal(e)) throw e;
-            why = e.message;
-        }
-        const overlay = cell.overlay ?? null;
-        return Object.freeze({
-            index,
-            name: cell.room.name ?? '',
-            music: cell.room.music ?? null,
-            openable: exits !== null,
-            why,
-            exits: exits === null ? null : exits.length,
-            exitList: Object.freeze(exits ?? []),
-            linkedFrom: inbound ? inbound[index].links.length : null,
-            unreadable: inbound ? Object.freeze([...inbound[index].unreadable]) : null,
-            locations: overlay?.locations?.length ?? 0,
-            rules: Object.keys(overlay?.rules ?? {}).length,
-        });
-    });
-}
+const SET_BOUNDS = createSeedlingSetAdapter().bounds;
+
+/** ⛓ The rule-target key BUILDERS — so no prefix literal is typed anywhere. */
+const RULE_KEYS = Object.freeze({ exit: exitRuleKey, location: locationRuleKey });
 
 /**
- * ⛓⛓ **MOVE ONE ROOM, AS THE `order` A SINGLE `reorder` TAKES.**
- *
- * ⛔ `order` IS THE NEW ARRAY IN OLD INDICES (`rooms_new[i] = rooms_old[order[i]]`,
- * D1 §20.4) — the inverse reading is equally natural, which is exactly why the
- * one place that builds it is here and it is pinned both ways.
- *
- * ⛓ ONE op, not two retargets that compose: a reader can count the edits in a
- * payload only if a move IS one.
+ * ⛓ WHAT SECTION 1 OF THE REPORT CALLS THE DOCUMENT IT VALIDATED. Every word
+ * of that row is about a LEVEL SET, which the core has never heard of.
  */
-export function moveOrder(count, index, delta) {
-    if (!Number.isInteger(count) || count < 1) {
-        fail(`watchSetEditor: moveOrder needs a room count, got ${JSON.stringify(count)}`);
-    }
-    const to = index + delta;
-    if (!Number.isInteger(index) || index < 0 || index >= count) {
-        fail(`watchSetEditor: room ${index} is outside 0..${count - 1}`);
-    }
-    if (to < 0 || to >= count) {
-        fail(`watchSetEditor: room ${index} cannot move ${delta > 0 ? 'DOWN' : 'UP'} — it is `
-            + `already ${delta > 0 ? 'last' : 'first'} of ${count}.`);
-    }
-    const order = Array.from({ length: count }, (_, i) => i);
-    order[index] = to;
-    order[to] = index;
-    return order;
-}
+const SET_DOCUMENT = Object.freeze({
+    kind: 'level-set',
+    noun: 'set',
+    validator: 'validateLevelSet',
+    idOf: (check) => check.set_id,
+});
 
-/** The old → new room mapping a `reorder` with this `order` performs. */
-export const reorderMapping = (order) => (old) => {
-    const at = order.indexOf(old);
-    return at === -1 ? null : at;
-};
+const SET_ADAPTER_FNS = Object.freeze({
+    validateForDownload, deriveAtlasOf, rulesJsonOf, bounds: SET_BOUNDS,
+});
 
-/** …and the two other renumbering ops', so ONE decision function serves all three. */
-export const addRoomMapping = (at) => (old) => (old >= at ? old + 1 : old);
-export const removeRoomMapping = (room) => (old) => {
-    if (old === room) return null;
-    return old > room ? old - 1 : old;
-};
+/** ⛓ The rooms list, over the SEEDLING adapter's three readers. */
+export const roomRowsOf = (record, { links = true } = {}) => coreRoomRowsOf(record, {
+    links,
+    readSetCell,
+    exitsOfRoom,
+    whatLinksHere,
+    bounds: SET_BOUNDS,
+    isRefusal: isAdapterRefusal,
+});
 
-/**
- * ⛓⛓⛓ **§20.11 #2 — WHAT A RENUMBERING DOES TO AN OPEN ROOM SESSION.**
- *
- * *"A room session left open while the set is reordered is holding a record
- * whose room index no longer means what it did… nothing refuses that today, and
- * it would not be visible until the write-back."*
- *
- * ⛔ **THE RULING, AND IT IS THE PAGE'S TO MAKE:** a room session with EDITS in
- * it is **DISCARDED**, loudly, naming how many edits went; one with ZERO ops is
- * silently REOPENED on the room's new index.
- *
- * ⛔ NOT closed-and-written-back. Writing back would turn a press on MOVE UP
- * into a `replace-room` nobody asked for, and it would land in the same
- * group as the reorder — a person who moved a room would find an edit to its
- * contents in the payload. ⚠ And not kept open either: the base tag names a
- * room INDEX, and after the renumbering that index is a different room, so the
- * write-back would overwrite a room the reader never opened.
- *
- * @param {{room: number, ops: number}|null} open  the open room session, or null
- * @param {Function} mapOldToNew  `(old) => new|null`
- * @param {string} what           the op, for the sentence
- */
-export function renumberDecision(open, mapOldToNew, what) {
-    if (!open) return Object.freeze({ action: 'none', room: null, warning: null });
-    const next = mapOldToNew(open.room);
-    if (open.ops > 0) {
-        return Object.freeze({
-            action: 'discard',
-            room: null,
-            warning: `⛔ the room session on room ${open.room} was DISCARDED — ${what} renumbers `
-                + `the rooms, so room ${open.room} no longer names the room that was open, and `
-                + `${open.ops} unwritten edit(s) went with it. ⚠ Close a room BEFORE reordering `
-                + 'and its edits become one `replace-room` in the set; a write-back after '
-                + 'the renumbering would land on a room nobody opened.',
-        });
-    }
-    if (next === null) {
-        return Object.freeze({
-            action: 'discard',
-            room: null,
-            warning: `⛓ the room session on room ${open.room} was closed — ${what} removed that `
-                + 'room. It held no edits, so nothing was lost.',
-        });
-    }
-    return Object.freeze({
-        action: 'reopen',
-        room: next,
-        warning: next === open.room ? null
-            : `⛓ the open room moved to index ${next} (it held no edits, so it was simply `
-                + 'reopened there).',
-    });
-}
+/** ⛓ The rule targets of one room, over the SEEDLING derivation. */
+export const ruleTargetsOf = (record, room, deps) => ruleTargetsOver(record, room, deps, {
+    deriveAtlasOf,
+});
 
-/* ══════════════════════════════════════════════════════════════════════
- * ⛓ THE OVERVIEW — ROOMS AS A STRIP, EXITS AS ARROWS
- * ══════════════════════════════════════════════════════════════════════ */
+/** ⛓ …and their overlay keys, in the overlay module's own spelling. */
+export const ruleTargetKeys = (targets) => coreRuleTargetKeys(targets, RULE_KEYS);
 
-/**
- * ⛓⛓⛓ **THE OVERVIEW IS THE ADAPTER'S OWN GRID, AND THAT IS WHY IT IS A STRIP.**
- *
- * `bounds(record)` is `{w: rooms.length, h: 1}` — D1's honest statement that a
- * level set IS a positionally addressed LIST. ⛔ A square grid of rooms would
- * have needed a SECOND coordinate system: `editorView`'s painter derives its
- * cell size from `adapter.bounds`, `cellAt` must answer in the adapter's
- * coordinates, and `rectCopy`/`rectPasteOps` address rooms in them. A page that
- * laid the rooms out 6-across would be maintaining a mapping between the
- * picture and the document for no gain but the aspect ratio.
- *
- * ⇒ one row, one cell per room, and the strip SCROLLS.
- */
-export const OVERVIEW = Object.freeze({
-    /** The cell a room gets when there is room for it — wide enough for a still. */
-    cellPx: 96,
-    /** Below this a still is a smudge, so the cell is drawn as a labelled box. */
-    minStillPx: 40,
-    /** …and below THIS the strip stops shrinking and starts scrolling. */
-    minCellPx: 18,
-    /** The height of the strip, and the arrows arc above the rooms inside it. */
-    heightPx: 132,
-    /** How far down the strip the room boxes start — the rest is arrow space. */
-    roomTop: 0.34,
+/** ⛓ Every authored exit rule that gates nothing, keyed by Seedling's prefix. */
+export const inertRulesOf = (record, atlas) => coreInertRulesOf(record, atlas, {
+    ruleKeys: RULE_KEYS,
 });
 
 /**
- * The strip's pixel size for a set of `count` rooms inside `availablePx`.
- * ⛓ It SHRINKS to fit and then SCROLLS — never below `minCellPx`, because a
- * two-pixel room is a room nobody can click.
+ * ⛓⛓ **THE REPORT — three lines of binding over `reportOver`.** The verdict,
+ * the row list and the export refusal are the core's; the four adapter
+ * functions and the document's own noun are Seedling's.
  */
-export function overviewLayout(count, availablePx) {
-    const n = Math.max(1, count);
-    const ideal = Math.floor(Math.max(0, availablePx) / n);
-    const cellPx = Math.max(OVERVIEW.minCellPx, Math.min(OVERVIEW.cellPx, ideal || 0));
-    return Object.freeze({
-        rooms: n,
-        cellPx,
-        width: cellPx * n,
-        height: OVERVIEW.heightPx,
-        stills: cellPx >= OVERVIEW.minStillPx,
-        scrolls: cellPx * n > availablePx,
+export function reportOf(session, deps, {
+    compileRegionAtlas, validateRegionAtlas, atlasSchema = undefined,
+    playerId = DEFAULT_PLAYER_ID,
+} = {}) {
+    return reportOver({
+        session,
+        deps,
+        adapterFns: SET_ADAPTER_FNS,
+        document: SET_DOCUMENT,
+        ruleKeys: RULE_KEYS,
+        compileRegionAtlas,
+        validateRegionAtlas,
+        atlasSchema,
+        playerId,
     });
 }
 
-/** A room's centre in the view's CELL space — the strip is one row. */
-export const roomCentre = (index) => Object.freeze({
-    x: index + 0.5,
-    y: OVERVIEW.roomTop + (1 - OVERVIEW.roomTop) / 2,
-});
-
-/**
- * ⛓⛓⛓ **THE EXITS, AS POLYLINES** — one line per PAIR of rooms, arced above
- * the strip so a long link does not run through every room it passes.
- *
- * ⛔ **A TWO-WAY DOOR IS ONE LINE WITH TWO HEADS**, not two lines. Drawing both
- * directions would put two arcs on the same span with the same colour and the
- * reader could not tell that from two separate one-way doors — which is the one
- * distinction `connect {one_way}` exists to make.
- *
- * ⛓ A SELF-JOIN gets a small loop rather than a zero-length line: `assertShape`
- * refuses a one-point polyline, and a degenerate segment would have no
- * direction to hang a head on.
- *
- * @param {object[]} rows      `roomRowsOf`'s rows — the exits are already read
- * @param {object} [o]
- * @param {number|null} [o.selected] highlight what links INTO this room
- */
-export function exitArrowShapes(rows, { selected = null } = {}) {
-    /** ⛓ ONE ENTRY PER ORDERED PAIR, so the fold below can see both directions. */
-    const seen = new Map();
-    for (const row of rows) {
-        for (const exit of row.exitList) {
-            if (!Number.isInteger(exit.to) || exit.to < 0 || exit.to >= rows.length) continue;
-            const key = `${row.index}>${exit.to}`;
-            if (!seen.has(key)) seen.set(key, { from: row.index, to: exit.to, n: 0 });
-            seen.get(key).n += 1;
-        }
-    }
-    const shapes = [];
-    const drawn = new Set();
-    for (const link of seen.values()) {
-        const back = `${link.to}>${link.from}`;
-        const key = `${link.from}>${link.to}`;
-        if (drawn.has(key)) continue;
-        const twoWay = seen.has(back) && link.from !== link.to;
-        drawn.add(key);
-        if (twoWay) drawn.add(back);
-        const a = roomCentre(link.from);
-        const b = roomCentre(link.to);
-        const highlight = selected !== null
-            && (link.to === selected || (twoWay && link.from === selected));
-        if (link.from === link.to) {
-            // ⛓ A LOOP, above its own room.
-            shapes.push({
-                kind: 'polyline',
-                points: [
-                    { x: a.x - 0.28, y: a.y - 0.06 },
-                    { x: a.x - 0.2, y: OVERVIEW.roomTop * 0.45 },
-                    { x: a.x + 0.2, y: OVERVIEW.roomTop * 0.45 },
-                    { x: a.x + 0.28, y: a.y - 0.06 },
-                ],
-                arrow: true,
-                highlight,
-                label: `L${link.from} ↺`,
-            });
-            continue;
-        }
-        /**
-         * ⛓ THE APEX RISES WITH THE SPAN, so two arcs over the same rooms are
-         * distinguishable and a neighbour-to-neighbour link stays low.
-         */
-        const span = Math.abs(link.to - link.from);
-        const apexY = Math.max(0.02, OVERVIEW.roomTop * (1 - Math.min(0.85, span / rows.length)));
-        shapes.push({
-            kind: 'polyline',
-            points: [
-                { x: a.x, y: a.y - 0.08 },
-                { x: (a.x + b.x) / 2, y: apexY },
-                { x: b.x, y: b.y - 0.08 },
-            ],
-            arrow: true,
-            arrowBack: twoWay,
-            highlight,
-            label: twoWay ? `L${link.from} ↔ L${link.to}` : `L${link.from} → L${link.to}`,
-        });
-    }
-    return shapes;
-}
 
 /* ══════════════════════════════════════════════════════════════════════
  * ⛓ THE FORMS — SCHEMA-DERIVED, never typed here
@@ -531,350 +360,6 @@ export function roomFormRows() {
             });
         }
         return Object.freeze({ field, control: 'checkbox', label: field });
-    });
-}
-
-/* ══════════════════════════════════════════════════════════════════════
- * ⛓⛓⛓ RULE AUTHORING — the targets, derived ONCE per selection (§20.11 #4)
- * ══════════════════════════════════════════════════════════════════════ */
-
-/**
- * ⛓⛓⛓ **WHICH ENDPOINTS A RULE CAN ACTUALLY GATE — MEASURED, NOT ASSUMED.**
- *
- * ⛔⛔ **AN `in_*` ARRIVAL EXIT GATES NOTHING, AND THE ADAPTER ACCEPTS A RULE ON
- * ONE.** Measured 2026-08-25 against `regionAtlasCompiler.js:320-347`: for a
- * connection with `one_way: true` — which is EVERY connection the Seedling
- * derivation emits, because the game's one transition primitive is a one-way
- * jump — the `to` endpoint is recorded as `{apExitName: null, arrivalOnly:
- * true}` and **no AP exit is built for it**, so its `access_rule` reaches
- * nothing. An UNWIRED endpoint is omitted from the graph outright and reaches
- * nothing either.
- *
- * ⇒ a rule authored on one of those is exactly the failure `applyOverlayRules`
- * refuses in its own words: *"the author believing a door is gated and the
- * compiler treating it as free"*. The list therefore MARKS them, and the REPORT
- * names any that were authored anyway. ⛔ They are still OFFERED, because
- * refusing here would be a second authority over an op the adapter accepts.
- *
- * @returns {{id: string, gates: boolean, why: string|null}}
- */
-function gateabilityOf(atlas, regionId, exitId) {
-    for (const conn of atlas?.vanilla_layout?.connections ?? []) {
-        if (conn.from?.[0] === regionId && conn.from?.[1] === exitId) {
-            return { gates: true, why: null };
-        }
-        if (conn.to?.[0] === regionId && conn.to?.[1] === exitId) {
-            return conn.one_way === true
-                ? {
-                    gates: false,
-                    why: 'the ARRIVAL side of a ONE-WAY connection — the compiler builds no AP '
-                        + 'exit for it (`regionAtlasCompiler.js:341`, `arrivalOnly`), so a rule '
-                        + 'here gates nothing and the edge stays FREE',
-                }
-                : { gates: true, why: null };
-        }
-    }
-    return {
-        gates: false,
-        why: 'UNWIRED — no connection in the layout covers this crossing, so it is OMITTED '
-            + 'from the graph and a rule on it reaches nothing',
-    };
-}
-
-/**
- * The rule targets of ONE room: every exit id the derivation gives it — each
- * marked with whether a rule on it can gate anything — and every location the
- * overlay has marked in it.
- *
- * ⛔ **THE EXITS COST A DERIVATION AND THE LOCATIONS DO NOT.** An exit id is the
- * derivation's (`out_<type>_<x>_<y>`…), so asking for one means building the
- * atlas — §20.11 #4's *"correct, and not free"*. A location is named by the
- * `mark-location` op's own `name` and lives in the overlay, so it is read
- * directly. ⇒ this is called on SELECTION CHANGE, never on a keystroke.
- *
- * @returns {{exits: object[], locations: string[], why: string|null}}
- */
-export function ruleTargetsOf(record, room, deps) {
-    const locations = (record?.overlay?.rooms?.[String(room)]?.locations ?? [])
-        .map((l) => l.name);
-    let exits = [];
-    let why = null;
-    try {
-        const { atlas } = deriveAtlasOf(record, deps);
-        for (const region of atlas.regions ?? []) {
-            if (region.map_ref !== room) continue;
-            exits = (region.exits ?? []).map((e) => Object.freeze({
-                id: e.exit_id,
-                ...gateabilityOf(atlas, region.region_id, e.exit_id),
-            }));
-        }
-    } catch (e) {
-        if (!(e instanceof Error)) throw e;
-        why = `the exit targets could not be derived — ${e.message}`;
-    }
-    return { exits, locations, why };
-}
-
-/** The two rule-target spellings, as the overlay keys them. */
-export const ruleTargetKeys = (targets) => [
-    ...targets.exits.map((e) => exitRuleKey(e.id)),
-    ...targets.locations.map((name) => locationRuleKey(name)),
-];
-
-/**
- * ⛓⛓ **EVERY AUTHORED EXIT RULE THAT GATES NOTHING** — the overlay's `rules`
- * map read against the derived atlas. ⛔ Named rather than counted, because
- * "3 rules do nothing" and "the rule on `in_L0_128_128` of room 1 does nothing"
- * are the same verdict and very different findings.
- */
-export function inertRulesOf(record, atlas) {
-    const out = [];
-    for (const [key, entry] of Object.entries(record?.overlay?.rooms ?? {})) {
-        const room = Number(key);
-        const region = (atlas?.regions ?? []).find((r) => r.map_ref === room);
-        for (const target of Object.keys(entry?.rules ?? {})) {
-            if (!target.startsWith('exit:')) continue;
-            const exitId = target.slice('exit:'.length);
-            if (!region) {
-                out.push({ room, exitId, why: 'the derivation kept no region for this room' });
-                continue;
-            }
-            const g = gateabilityOf(atlas, region.region_id, exitId);
-            if (!g.gates) out.push({ room, exitId, why: g.why });
-        }
-    }
-    return out;
-}
-
-/* ══════════════════════════════════════════════════════════════════════
- * ⛓⛓⛓ THE REPORT — a LIST, and the refusal that rides on it
- * ══════════════════════════════════════════════════════════════════════ */
-
-/**
- * ⛓⛓ **EVERY FREE EDGE, NAMED.** `atlases/README.md:117`: *"a FREE AP exit is a
- * logic obligation"*. The compiler writes `{rule: 'True_'}` for an edge nobody
- * gated, so the answer is read off the COMPILED rules rather than off the
- * atlas — the atlas is what an author typed and the rules are what the world
- * will do.
- */
-export function freeEdgesOf(rules, playerId = DEFAULT_PLAYER_ID) {
-    const free = [];
-    for (const [regionName, region] of Object.entries(regionsOf(rules, playerId))) {
-        for (const exit of region?.exits ?? []) {
-            if (exit?.access_rule?.rule === 'True_' || exit?.access_rule === undefined) {
-                free.push({ kind: 'exit', region: regionName, name: exit?.name ?? '(unnamed)' });
-            }
-        }
-        for (const loc of region?.locations ?? []) {
-            if (loc?.access_rule?.rule === 'True_' || loc?.access_rule === undefined) {
-                free.push({ kind: 'location', region: regionName, name: loc?.name ?? '(unnamed)' });
-            }
-        }
-    }
-    return free;
-}
-
-/** How many locations the OVERLAY holds — §20.11 #3's tell. */
-export function overlayLocationCount(record) {
-    return Object.values(record?.overlay?.rooms ?? {})
-        .reduce((n, r) => n + (r?.locations?.length ?? 0), 0);
-}
-
-/**
- * ⛓⛓⛓ **THE REPORT, AS DATA.** Every row is `{severity, kind, text}` and the
- * DOM below only renders them — which is what makes the whole verdict testable
- * in node and printable as a LIST rather than as a paragraph (§16.4:
- * *"an unreachable graph REFUSES the rules.json download by name"*).
- *
- * ⛔ **THE REFUSAL IS COMPUTED HERE AND NOTHING ELSE DECIDES IT.** `download`
- * carries `{rules: {allowed, why}}`; the button reads it. A page that disabled
- * the button on its own condition would be a second answer to *"may this be
- * exported"*.
- *
- * ⚠ THE SET AND OVERLAY DOWNLOADS ARE **NOT** GATED BY THIS. A person may want
- * to save work on a graph that does not yet close, and refusing that would make
- * the editor unusable exactly when it is most needed.
- */
-export function reportOf(session, deps, {
-    compileRegionAtlas, validateRegionAtlas, atlasSchema = undefined,
-    playerId = DEFAULT_PLAYER_ID,
-} = {}) {
-    const rows = [];
-    const add = (severity, kind, text) => rows.push(Object.freeze({ severity, kind, text }));
-    const record = session.record();
-
-    /* 1 ── the SET itself, through the same door the download uses */
-    const setCheck = validateForDownload(session);
-    for (const e of setCheck.errors) add('error', 'level-set', e);
-    for (const w of setCheck.warnings) add('warn', 'level-set', w);
-    if (setCheck.ok && setCheck.warnings.length === 0) {
-        add('ok', 'level-set', `validateLevelSet: ok — ${record.set.rooms.length} room(s), `
-            + `stamped ${setCheck.set_id}`);
-    }
-
-    /* 2 ── the DERIVED atlas */
-    let derived = null;
-    try {
-        derived = deriveAtlasOf(record, deps);
-    } catch (e) {
-        if (!(e instanceof Error)) throw e;
-        add('error', 'derive', `the atlas could not be derived — ${e.message}`);
-        return Object.freeze({
-            rows: Object.freeze(rows),
-            rules: null,
-            report: null,
-            download: Object.freeze({
-                rules: Object.freeze({
-                    allowed: false,
-                    why: 'the atlas does not derive, so there is nothing to compile',
-                }),
-            }),
-        });
-    }
-    if (typeof validateRegionAtlas === 'function') {
-        const v = validateRegionAtlas(derived.atlas,
-            atlasSchema === undefined ? {} : { schema: atlasSchema });
-        /**
-         * ⛓ THE SUMMARY ROW IS ALWAYS ADDED, ok or not. It is the row that says
-         * whether the STRUCTURAL pass ran at all — and a page that only printed
-         * it on a clean atlas would go quiet about the schema exactly when the
-         * atlas had something to say (⚖ a true sentence about the wrong
-         * subject, printed only in the easy case).
-         */
-        add(v.ok ? 'ok' : 'error', 'region-atlas',
-            `validateRegionAtlas: ${v.ok ? 'ok' : `${v.errors.length} error(s)`} — `
-            + `${(derived.atlas.regions ?? []).length} region(s), ${v.warnings.length} `
-            + `warning(s); ${atlasSchema === undefined
-                ? '⚠ no schema was injected, so the STRUCTURAL pass did not run'
-                : 'schema included'}`);
-        for (const e of v.errors) add('error', 'region-atlas', e);
-        for (const w of v.warnings) add('warn', 'region-atlas', w);
-        /**
-         * ⛔ **ONE OF THOSE WARNINGS IS EXPECTED HERE AND IT IS SAID SO**, from
-         * the ATLAS itself rather than by matching the sentence: the derived
-         * atlas is NEVER STAMPED (D1 §20.6, §19.10 hard #1), so a validator that
-         * wants a `provenance.content_hash` will always warn. Left unexplained,
-         * a permanent warning teaches a reader to ignore the warning list.
-         */
-        if (!derived.atlas.provenance?.content_hash) {
-            add('ok', 'region-atlas', 'the derived atlas is DELIBERATELY UNSTAMPED — it is not '
-                + 'a document anybody keeps, it is rebuilt from the set on every report, so the '
-                + '`provenance.content_hash` warning above is expected here and only here');
-        }
-    }
-    for (const id of derived.dropped ?? []) {
-        add('warn', 'derive', `region "${id}" was DROPPED by the derivation — no link in the `
-            + 'whole set reaches it and it holds nothing');
-    }
-
-    /* 3 ── the COMPILE, its unwired exits, its free edges, its reachability */
-    let compiled = null;
-    try {
-        compiled = rulesJsonOf(session, deps, { compileRegionAtlas });
-    } catch (e) {
-        if (!(e instanceof Error)) throw e;
-        add('error', 'compile', `compileRegionAtlas REFUSED — ${e.message}`);
-        return Object.freeze({
-            rows: Object.freeze(rows),
-            rules: null,
-            report: null,
-            download: Object.freeze({
-                rules: Object.freeze({
-                    allowed: false,
-                    why: 'the atlas does not compile, so there is no rules.json to write',
-                }),
-            }),
-        });
-    }
-    const roomOf = new Map((derived.atlas.regions ?? []).map((r) => [r.region_id, r.map_ref]));
-    for (const u of compiled.report.unwired_exits ?? []) {
-        add('warn', 'unwired', `UNWIRED exit "${u.exit_id}" of region "${u.region_id}" (room `
-            + `${roomOf.get(u.region_id) ?? '?'}) — a boundary crossing the layout does not `
-            + 'cover, OMITTED from the graph');
-    }
-    if ((compiled.report.unwired_exits ?? []).length === 0) {
-        add('ok', 'unwired', 'no unwired exits — every boundary crossing is in the graph');
-    }
-
-    const free = freeEdgesOf(compiled.rules, playerId);
-    for (const f of free) {
-        add('warn', 'free', `FREE ${f.kind} "${f.name}" in region "${f.region}" — its compiled `
-            + '`access_rule` is `True_`, which is a logic obligation nobody has met');
-    }
-    if (free.length === 0) add('ok', 'free', 'no FREE edges — every exit and location is gated');
-
-    /**
-     * ⛓⛓⛓ **AND AN AUTHORED RULE THAT GATES NOTHING IS THE OTHER HALF OF THAT
-     * SENTENCE.** A FREE edge is a rule nobody wrote; an INERT rule is one
-     * somebody wrote onto an endpoint the compiler builds no exit for. Both end
-     * with the compiler treating the door as free, and only one of them looks
-     * like an omission.
-     */
-    const inert = inertRulesOf(record, derived.atlas);
-    for (const r of inert) {
-        add('error', 'inert-rule', `the rule authored on exit "${r.exitId}" of room ${r.room} `
-            + `REACHES NOTHING — ${r.why}`);
-    }
-    if (inert.length === 0 && Object.keys(record.overlay.rooms ?? {}).length > 0) {
-        add('ok', 'inert-rule', 'every authored exit rule sits on an endpoint the compiler '
-            + 'builds an AP exit for');
-    }
-
-    /**
-     * ⛔ **THE STRUCTURAL ANSWER, DELIBERATELY.** `reachableRegions` with no
-     * `evaluate` treats every edge as free, so what it reports is *"which
-     * regions are connected to the start at all"* — and an unreachable region
-     * is unreachable under EVERY rule set, which is exactly the failure worth
-     * refusing an export over. ⚠ It is NOT the logic answer: a region this
-     * reaches may still sit behind an unobtainable item, and this editor owns
-     * no interpreter to say so (`rulesGraph`'s own note).
-     */
-    const all = Object.keys(regionsOf(compiled.rules, playerId));
-    const reached = reachableRegions(compiled.rules, playerId);
-    const unreachable = all.filter((n) => !reached.has(n));
-    for (const n of unreachable) {
-        add('error', 'reach', `region "${n}" is UNREACHABLE from the start — no chain of exits `
-            + 'gets there at all, under any rule set');
-    }
-    if (unreachable.length === 0) {
-        add('ok', 'reach', `every one of the ${all.length} compiled region(s) is reachable from `
-            + `"${startRegionsOf(compiled.rules, playerId).default.join(', ')}"`);
-    }
-
-    /* 4 ── §20.11 #3's TELL — the overlay's locations against the compiled ones */
-    const overlayLocs = overlayLocationCount(record);
-    const compiledLocs = compiled.report.locations ?? 0;
-    add(overlayLocs === compiledLocs ? 'ok' : 'warn', 'locations',
-        `${overlayLocs} location(s) in the OVERLAY, ${compiledLocs} compiled`
-        + (overlayLocs === compiledLocs ? ''
-            : ' ⚠ they DISAGREE — an overlay that did not travel with its set loses every '
-              + 'location and every authored rule, and this count is the only thing that says so'));
-
-    const allowed = setCheck.ok && unreachable.length === 0 && inert.length === 0;
-    return Object.freeze({
-        rows: Object.freeze(rows),
-        rules: compiled.rules,
-        report: compiled.report,
-        atlas: derived.atlas,
-        download: Object.freeze({
-            rules: Object.freeze({
-                allowed,
-                why: allowed ? null : `⛔ REFUSED BEFORE EXPORT — ${[
-                    setCheck.ok ? null
-                        : `the set itself is not valid: ${setCheck.errors.join(' | ')}`,
-                    unreachable.length === 0 ? null
-                        : `${unreachable.length} region(s) (${unreachable.join(', ')}) cannot `
-                          + 'be reached from the start; a rules.json whose graph does not close '
-                          + 'is a world nobody can finish, and the seed that found out would be '
-                          + 'the report',
-                    inert.length === 0 ? null
-                        : `${inert.length} authored rule(s) reach no compiled edge `
-                          + `(${inert.map((r) => `room ${r.room} / ${r.exitId}`).join(', ')}); `
-                          + 'exporting would ship a world whose author and whose compiler '
-                          + 'disagree about which doors are gated',
-                ].filter(Boolean).join(' · ')}`,
-            }),
-        }),
     });
 }
 
