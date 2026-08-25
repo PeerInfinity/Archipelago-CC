@@ -3827,6 +3827,28 @@ close (user). Handed off to session 4
 discussion (the COMPLETE dash model in the ORACLE → a `--mobiles` dash-hit witness → the planner
 primitive; number to beat 145 t; ruling 39's `why` sweep rides its pipeline run).
 
+**⇒ CAMPAIGN ORCHESTRATION, session 4 → 5 (Fable, 2026-08-23/25).** Session 4
+designed and verified SEVEN slices — 12c (the oracle) · 12c′ (`planSwordDash` +
+`--license-walks`; the flip alone = a 2.76× regression) · 12c″ (the harmless
+window) · 12c‴ (the skew cure; L14 = **123 t driven, certified**; ruling 45) ·
+12d′ (the two economies on local `r9/economies`; the flip alone refuses r8-d2)
+· 12d″ (the L20 lean derived from the responder's own probe) · 12e′ (THE
+RE-RECORD — **STOPPED, `main` untouched**: the dash impulse direction is read
+from a one-tick-stale velocity, so a dash from rest with a same-tick key pays 0
+in the model and 2 px in the game; two green pins; the series parked on local
+`r9/re-record-attempt` @2aa070932) — recorded ⚖ rulings 41–50, opened the
+editor arc's merge windows (A1+A2+B, C1, C2, D0a, D0b+D1 all ff-merged with
+standing-values written), and handed off at **`a68b661bf`** to session 5
+(prompt `NewDocs/plans/seedling-bot-r9-campaign5-planning-prompt.md`). NEXT for
+session 5: launch **12e″** (brief ready: the from-rest dash fix, the licensed
+witness `r9-l0-sword-dash-rest`, the roster proven inert, table (D′)) → the
+re-record re-run on (D′) under ⚖ 49 + extension (licensed, unspent; S3's
+record set derived from the projection diff is its W1) → the 12c batch closes
+→ L15 `shove` VERB-APPLY design → L16; protocol lane ⚖ 47b (six items) after
+the re-record. `ALLOW_DASH_ROSTER_WIDE` is still `false`; 123 is L14's number,
+108 is never quoted; the local branches are never pushed without asking.
+
+
 ⛓⛓⛓ **R9 SLICE 12b SHIPPED 2026-08-23** (`12e80cb73` · `213d3078e` · `0055442f4` ·
 `3dc6d632f` · `a736eac1e` · `2d6d33949` · `3b171ec1e`) — **THE SWORD DASH, BUILT AND
 WITNESSED; THE CADENCE FLOOR RETIRED; THE STRIKE ON EVERY WALK.** As-built kickoff **§23**.
