@@ -1204,6 +1204,13 @@
       "noHazards": []
     },
     {
+      "file": "r9-l0-sword-dash-rest.json",
+      "tickCount": 28,
+      "bootLevel": 0,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "r9-l0-sword-dash.json",
       "tickCount": 37,
       "bootLevel": 0,
