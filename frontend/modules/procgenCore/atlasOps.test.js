@@ -72,10 +72,23 @@ describe('the op vocabulary', () => {
         }
     });
 
-    it('names 18 kinds, including the three the session never had', () => {
-        expect(ATLAS_OP_KINDS).toHaveLength(18);
+    /**
+     * ⛓ The COUNT is interpolated, never typed: the roster is derived from the
+     * op table, so its length is a property of that table and pinning it here
+     * would be a second declaration of the same fact
+     * ([[feedback_deriving_a_roster_arms_a_dormant_lint]]). What IS asserted is
+     * what the roster must CONTAIN and that it is a well-formed vocabulary.
+     */
+    it(`names ${ATLAS_OP_KINDS.length} kinds, sorted and unique, including the three the session never had`, () => {
+        expect(new Set(ATLAS_OP_KINDS).size).toBe(ATLAS_OP_KINDS.length);
+        expect([...ATLAS_OP_KINDS].sort()).toEqual(ATLAS_OP_KINDS);
         for (const kind of ['rename-region', 'connect', 'unwire']) {
             expect(ATLAS_OP_KINDS).toContain(kind);
+        }
+        // ⛔ every kind really resolves — a name in the list with no op behind
+        //   it would refuse as "no op", which is the vacuity this catches.
+        for (const kind of ATLAS_OP_KINDS) {
+            expect(applyAtlasOp(fixture(), { op: kind }).error ?? '').not.toMatch(/no op "/);
         }
     });
 
