@@ -124,7 +124,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 22,
-            "count": 59,
+            "count": 60,
             "id": "probe"
         },
         {
@@ -204,13 +204,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 232,
+        "blockStyle": 233,
         "browser": 75,
         "cited": 80,
-        "files": 251,
+        "files": 252,
         "lineStyle": 19,
-        "withDocblock": 251,
-        "withFlags": 155
+        "withDocblock": 252,
+        "withFlags": 156
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -4043,6 +4043,29 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-deadframes — how much does the fade cost VARY, and does it care about wall-clock?",
             "path": "scripts/procgen/probe-seedling-deadframes.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "only"
+            ],
+            "file": "probe-seedling-help-frame.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                }
+            ],
+            "oneLiner": "probe-seedling-help-frame — WHERE does `r8-solve-10` spend the dead frame the model does not know about?",
+            "path": "scripts/procgen/probe-seedling-help-frame.mjs"
         },
         {
             "argvHelpers": [],

@@ -95,6 +95,15 @@ def main():
                     help="sample botMobiles on every poll and emit the trace "
                          "(R7 slice 6 — diagnosis only; OFF by default because the "
                          "block is KBs and the poll runs 4x/sec)")
+    ap.add_argument("--dead-curve", action="store_true",
+                    help="record the (tick, dead_frames) CURVE — one row per change, "
+                         "polled as fast as the bridge allows (R9 slice 12e‴). OFF by "
+                         "default and it makes the poll TIGHT, so it is a diagnosis "
+                         "instrument and never a path a producer takes. The frame "
+                         "sequence is unaffected: probe-seedling-deadframes measured the "
+                         "fade count identical across a ~50x frame-rate difference, so "
+                         "the recompiled runtime is frame-clocked and a slower wall "
+                         "clock changes nothing it counts.")
     ap.add_argument("--headed", action="store_true", default=True)
     args = ap.parse_args()
 
@@ -289,6 +298,11 @@ def main():
 
                 t0 = time.time()
                 mobiles = []
+                # ⛓ R9 slice 12e‴: the (tick, dead_frames) curve. One row per
+                # CHANGE, so a 200-frame ceremony is ~2 rows and a walk is one
+                # row per tick — kilobytes, not megabytes, and only when asked.
+                dead_curve = []
+                dead_last = [None]
                 # ⚠ A LIVE PROGRESS SIDECAR, because stdout is not one. The
                 # caller runs this with `execFileSync` and a pipe, so nothing
                 # printed here is visible until the process exits — and an R1
@@ -322,6 +336,16 @@ def main():
                             mobiles.append(bot_json(page, "botMobiles"))
                         except RuntimeError:
                             pass  # a build without the callback traces nothing
+                    if args.dead_curve:
+                        # ⛔ ON CHANGE, not on poll: the poll is wall-clock and
+                        # the game is frame-clocked, so a row per poll would be
+                        # a dozen duplicates per frame and would say nothing the
+                        # edge does not.
+                        pair = (status.get("tick"), status.get("dead_frames"))
+                        if pair != dead_last[0]:
+                            dead_curve.append({"tick": pair[0], "dead": pair[1],
+                                               "level": status.get("level")})
+                            dead_last[0] = pair
 
                     if args.progress and now - last_written[0] >= 1.0:
                         last_written[0] = now
@@ -334,7 +358,8 @@ def main():
                             json.dump({**status, "elapsed": round(now - t0, 1)}, fh)
                     return status if status.get("finished") else None
 
-                status = wait_for("tape to finish", note_progress, args.deadline_sec)
+                status = wait_for("tape to finish", note_progress, args.deadline_sec,
+                                  poll_sec=0.0 if args.dead_curve else 0.25)
                 elapsed = time.time() - t0
                 drained = bot_json(page, "botDrain")
                 ticks = drained.get("ticks", [])
@@ -365,6 +390,11 @@ def main():
                     "status": status,
                     "seam": seam,
                 })
+                if args.dead_curve:
+                    dead_curve.append({"tick": status.get("tick"),
+                                       "dead": status.get("dead_frames"),
+                                       "level": status.get("level"), "final": True})
+                    windows[-1]["dead_curve"] = dead_curve
                 if args.mobiles:
                     # The last sample is taken AFTER the tape finished, so the
                     # trace always ends on the state the status block describes.
@@ -387,6 +417,8 @@ def main():
                     # committed fixtures' contract is "these three keys".
                     if args.mobiles:
                         one["mobiles"] = w.get("mobiles")
+                    if args.dead_curve:
+                        one["dead_curve"] = w.get("dead_curve")
                     json.dump(one, fh)
                 else:
                     json.dump({"windows": [
@@ -395,7 +427,9 @@ def main():
                          "boundary_before": w["before"],
                          "boundary_after_start": w["after_start"],
                          "moved_at_boundary": w["moved_at_boundary"],
-                         **({"mobiles": w.get("mobiles")} if args.mobiles else {})}
+                         **({"mobiles": w.get("mobiles")} if args.mobiles else {}),
+                         **({"dead_curve": w.get("dead_curve")} if args.dead_curve
+                            else {})}
                         for w in windows]}, fh)
         except Exception as exc:  # noqa: BLE001 — report and fail loudly
             print(f"REPLAY_FAIL {type(exc).__name__}: {exc}", flush=True)

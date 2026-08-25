@@ -370,6 +370,16 @@ export const PICKUP_TEXT_FROM_ATTRIBUTE = Object.freeze({
     }),
 });
 
+/**
+ * ⛓ R9 slice 12e‴ — the keys a `Help` is DISMISSED by, and it is a PRESS not
+ * a release. `NPCs/Help.as:23` is
+ * `keys = [[V,V], [ANY,M], [RIGHT,UP,LEFT,DOWN], [X,C]]` and the sword's is
+ * `Help(3)` — "press X or C". `Help.update:92` reads `Input.pressed`, so a
+ * key already held registers nothing (FlashPunk's `onKeyDown` records a press
+ * only `if (!_key[code])`).
+ */
+export const HELP_DISMISS_KEYS = Object.freeze(['primary', 'secondary']);
+
 /** The tape key whose RELEASE advances a dialogue — `Player.keys[6]` is X. */
 export const TALK_KEY = 'primary';
 

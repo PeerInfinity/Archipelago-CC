@@ -1,0 +1,3168 @@
+{
+ "note": "GAME ORACLE for `r8-solve-10`'s dead-frame ledger (R9 slice 12e\u2034, item (iii); kickoff \u00a735.6 and \u00a736). Two READ-ONLY drives of the real Flash build through `probe-seedling-help-frame.mjs` with the driver's `--dead-curve`: the COMMITTED 90-tick walk and the re-recorded 78-tick one from the parked series `r9/re-record-attempt-3` @8078cd3d7. NEITHER TAPE WAS WRITTEN. The curve is one {tick, dead, level} row per CHANGE of (tick, dead_frames).",
+ "why": "`NPCs/Help.as:23` is `keys = [[V,V],[ANY,M],[RIGHT,UP,LEFT,DOWN],[X,C]]` and the sword's Help is `Help(3)` \u2014 \"press X or C\". `Help.update:87-103` sets `remove` on `Input.pressed` of one of them and, for `frame != 1`, lowers `Game.freezeObjects` IN THE SAME UPDATE (`:107-110`). So a tape that presses X or C while the Help is up costs the GAME one dead frame where a tape that does not costs two, and `Bot.autoAdvance` pays the difference. \u26d4 \u00a735.6 and slice 12e\u2034's own W0 seal both compared the tick `Sword.removed()` FIRES \u2014 empty in both walks \u2014 instead of the tick the Help is UP, which is the next one.",
+ "walks": {
+  "old": {
+   "which": "the COMMITTED 90-tick walk",
+   "tick_count": 90,
+   "dead_frames": 192,
+   "modelOwes": 191,
+   "heldAtHelpTick": [
+    "right",
+    "up"
+   ],
+   "helpDeadTicks": [
+    70,
+    71
+   ],
+   "curve": [
+    {
+     "tick": 0,
+     "dead": 2,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 3,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 4,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 5,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 6,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 7,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 8,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 9,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 10,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 11,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 12,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 13,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 14,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 15,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 16,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 17,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 18,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 19,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 20,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 1,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 2,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 3,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 4,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 5,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 6,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 7,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 8,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 9,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 10,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 11,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 12,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 13,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 14,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 15,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 16,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 17,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 18,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 19,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 20,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 21,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 22,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 23,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 24,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 25,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 26,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 27,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 28,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 29,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 30,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 31,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 32,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 33,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 34,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 35,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 37,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 38,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 39,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 40,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 22,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 23,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 24,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 25,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 26,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 27,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 28,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 29,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 30,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 31,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 32,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 33,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 34,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 35,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 36,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 37,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 38,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 39,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 40,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 41,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 42,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 43,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 44,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 45,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 46,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 47,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 48,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 49,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 50,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 51,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 52,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 53,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 54,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 55,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 56,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 57,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 58,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 59,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 60,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 61,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 62,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 63,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 64,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 65,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 66,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 67,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 68,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 69,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 70,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 71,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 72,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 73,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 74,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 75,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 76,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 77,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 78,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 79,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 80,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 81,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 82,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 83,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 84,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 85,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 86,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 87,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 88,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 89,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 90,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 91,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 92,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 93,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 94,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 95,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 96,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 97,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 98,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 99,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 100,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 101,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 102,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 103,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 104,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 105,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 106,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 107,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 108,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 109,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 110,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 111,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 112,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 113,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 114,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 115,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 116,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 117,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 118,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 119,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 120,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 121,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 122,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 123,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 124,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 125,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 126,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 127,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 128,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 129,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 130,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 131,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 132,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 133,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 134,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 135,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 136,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 137,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 138,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 139,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 140,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 141,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 142,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 143,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 144,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 145,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 146,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 147,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 148,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 149,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 150,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 151,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 152,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 153,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 154,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 155,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 156,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 157,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 158,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 159,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 160,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 161,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 162,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 163,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 164,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 165,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 166,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 167,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 168,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 169,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 42,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 43,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 44,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 45,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 46,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 47,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 48,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 49,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 50,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 51,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 52,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 53,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 54,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 55,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 56,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 57,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 58,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 59,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 60,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 61,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 62,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 63,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 64,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 65,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 66,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 67,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 68,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 69,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 70,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 70,
+     "dead": 171,
+     "level": 10
+    },
+    {
+     "tick": 71,
+     "dead": 171,
+     "level": 10
+    },
+    {
+     "tick": 71,
+     "dead": 172,
+     "level": 10
+    },
+    {
+     "tick": 72,
+     "dead": 172,
+     "level": 10
+    },
+    {
+     "tick": 73,
+     "dead": 172,
+     "level": 10
+    },
+    {
+     "tick": 74,
+     "dead": 172,
+     "level": 10
+    },
+    {
+     "tick": 75,
+     "dead": 172,
+     "level": 10
+    },
+    {
+     "tick": 76,
+     "dead": 172,
+     "level": 10
+    },
+    {
+     "tick": 77,
+     "dead": 172,
+     "level": 10
+    },
+    {
+     "tick": 78,
+     "dead": 172,
+     "level": 10
+    },
+    {
+     "tick": 79,
+     "dead": 172,
+     "level": 10
+    },
+    {
+     "tick": 80,
+     "dead": 172,
+     "level": 10
+    },
+    {
+     "tick": 81,
+     "dead": 172,
+     "level": 10
+    },
+    {
+     "tick": 82,
+     "dead": 172,
+     "level": 10
+    },
+    {
+     "tick": 83,
+     "dead": 172,
+     "level": 10
+    },
+    {
+     "tick": 84,
+     "dead": 172,
+     "level": 10
+    },
+    {
+     "tick": 85,
+     "dead": 172,
+     "level": 10
+    },
+    {
+     "tick": 86,
+     "dead": 172,
+     "level": 10
+    },
+    {
+     "tick": 87,
+     "dead": 172,
+     "level": 10
+    },
+    {
+     "tick": 88,
+     "dead": 172,
+     "level": 10
+    },
+    {
+     "tick": 89,
+     "dead": 172,
+     "level": 10
+    },
+    {
+     "tick": 90,
+     "dead": 172,
+     "level": 11
+    },
+    {
+     "tick": 90,
+     "dead": 173,
+     "level": 11
+    },
+    {
+     "tick": 90,
+     "dead": 174,
+     "level": 11
+    },
+    {
+     "tick": 90,
+     "dead": 175,
+     "level": 11
+    },
+    {
+     "tick": 90,
+     "dead": 176,
+     "level": 11
+    },
+    {
+     "tick": 90,
+     "dead": 177,
+     "level": 11
+    },
+    {
+     "tick": 90,
+     "dead": 178,
+     "level": 11
+    },
+    {
+     "tick": 90,
+     "dead": 179,
+     "level": 11
+    },
+    {
+     "tick": 90,
+     "dead": 180,
+     "level": 11
+    },
+    {
+     "tick": 90,
+     "dead": 181,
+     "level": 11
+    },
+    {
+     "tick": 90,
+     "dead": 182,
+     "level": 11
+    },
+    {
+     "tick": 90,
+     "dead": 183,
+     "level": 11
+    },
+    {
+     "tick": 90,
+     "dead": 184,
+     "level": 11
+    },
+    {
+     "tick": 90,
+     "dead": 185,
+     "level": 11
+    },
+    {
+     "tick": 90,
+     "dead": 186,
+     "level": 11
+    },
+    {
+     "tick": 90,
+     "dead": 187,
+     "level": 11
+    },
+    {
+     "tick": 90,
+     "dead": 188,
+     "level": 11
+    },
+    {
+     "tick": 90,
+     "dead": 189,
+     "level": 11
+    },
+    {
+     "tick": 90,
+     "dead": 190,
+     "level": 11
+    },
+    {
+     "tick": 90,
+     "dead": 191,
+     "level": 11
+    },
+    {
+     "tick": 90,
+     "dead": 192,
+     "level": 11
+    },
+    {
+     "tick": 90,
+     "dead": 192,
+     "level": 11,
+     "final": true
+    }
+   ],
+   "held": {
+    "0": [
+     "left",
+     "up"
+    ],
+    "1": [
+     "left",
+     "up"
+    ],
+    "2": [
+     "left",
+     "up"
+    ],
+    "3": [
+     "left",
+     "up"
+    ],
+    "4": [
+     "left",
+     "up"
+    ],
+    "5": [
+     "left",
+     "up"
+    ],
+    "6": [
+     "left",
+     "up"
+    ],
+    "7": [
+     "left",
+     "up"
+    ],
+    "8": [
+     "left",
+     "up"
+    ],
+    "9": [
+     "left",
+     "up"
+    ],
+    "10": [
+     "left",
+     "up"
+    ],
+    "11": [
+     "up",
+     "right"
+    ],
+    "12": [
+     "up",
+     "left"
+    ],
+    "13": [
+     "up",
+     "right"
+    ],
+    "14": [
+     "up",
+     "left"
+    ],
+    "15": [
+     "up"
+    ],
+    "16": [
+     "up"
+    ],
+    "17": [
+     "up"
+    ],
+    "18": [
+     "up",
+     "right"
+    ],
+    "19": [
+     "up",
+     "right"
+    ],
+    "20": [
+     "up"
+    ],
+    "21": [
+     "up"
+    ],
+    "22": [
+     "up",
+     "left"
+    ],
+    "23": [
+     "up",
+     "left"
+    ],
+    "24": [
+     "up"
+    ],
+    "25": [
+     "up"
+    ],
+    "26": [
+     "down"
+    ],
+    "27": [
+     "right"
+    ],
+    "30": [
+     "up",
+     "right"
+    ],
+    "31": [
+     "right",
+     "down"
+    ],
+    "32": [
+     "right",
+     "up"
+    ],
+    "33": [
+     "right",
+     "down"
+    ],
+    "34": [
+     "right",
+     "down"
+    ],
+    "35": [
+     "right",
+     "up"
+    ],
+    "36": [
+     "right",
+     "up"
+    ],
+    "37": [
+     "right",
+     "down"
+    ],
+    "38": [
+     "right",
+     "up"
+    ],
+    "39": [
+     "right",
+     "down"
+    ],
+    "40": [
+     "right",
+     "down"
+    ],
+    "41": [
+     "primary"
+    ],
+    "50": [
+     "primary"
+    ],
+    "59": [
+     "primary"
+    ],
+    "68": [
+     "primary"
+    ],
+    "70": [
+     "right",
+     "up"
+    ],
+    "71": [
+     "up",
+     "left"
+    ],
+    "72": [
+     "up",
+     "right"
+    ],
+    "73": [
+     "up"
+    ],
+    "74": [
+     "up"
+    ],
+    "75": [
+     "up",
+     "left"
+    ],
+    "76": [
+     "up"
+    ],
+    "77": [
+     "up"
+    ],
+    "78": [
+     "up"
+    ],
+    "79": [
+     "up"
+    ],
+    "80": [
+     "up"
+    ],
+    "81": [
+     "up"
+    ],
+    "82": [
+     "up"
+    ],
+    "83": [
+     "up"
+    ],
+    "84": [
+     "up"
+    ],
+    "85": [
+     "up"
+    ],
+    "86": [
+     "up"
+    ],
+    "87": [
+     "up"
+    ],
+    "88": [
+     "up"
+    ],
+    "89": [
+     "up"
+    ]
+   }
+  },
+  "new": {
+   "which": "the re-recorded 78-tick walk (r9/re-record-attempt-3, never pushed)",
+   "tick_count": 78,
+   "dead_frames": 191,
+   "modelOwes": 190,
+   "heldAtHelpTick": [
+    "primary",
+    "up"
+   ],
+   "helpDeadTicks": [
+    65
+   ],
+   "curve": [
+    {
+     "tick": 0,
+     "dead": 0,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 1,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 2,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 3,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 4,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 5,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 6,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 7,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 8,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 9,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 10,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 11,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 12,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 13,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 14,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 15,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 16,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 17,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 18,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 19,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 20,
+     "level": 10
+    },
+    {
+     "tick": 0,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 1,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 2,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 3,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 4,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 5,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 6,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 7,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 8,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 9,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 10,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 11,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 12,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 13,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 14,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 16,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 17,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 18,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 19,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 20,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 21,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 22,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 23,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 24,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 25,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 26,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 27,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 28,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 29,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 30,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 31,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 32,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 33,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 34,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 35,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 21,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 22,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 23,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 24,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 25,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 26,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 27,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 28,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 29,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 30,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 31,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 32,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 33,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 34,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 35,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 36,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 37,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 38,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 39,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 40,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 41,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 42,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 43,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 44,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 45,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 46,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 47,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 48,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 49,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 50,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 51,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 52,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 53,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 54,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 55,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 56,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 57,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 58,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 59,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 60,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 61,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 62,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 63,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 64,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 65,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 66,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 67,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 68,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 69,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 70,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 71,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 72,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 73,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 74,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 75,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 76,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 77,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 78,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 79,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 80,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 81,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 82,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 83,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 84,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 85,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 86,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 87,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 88,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 89,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 90,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 91,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 92,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 93,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 94,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 95,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 96,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 97,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 98,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 99,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 100,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 101,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 102,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 103,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 104,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 105,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 106,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 107,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 108,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 109,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 110,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 111,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 112,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 113,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 114,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 115,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 116,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 117,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 118,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 119,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 120,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 121,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 122,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 123,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 124,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 125,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 126,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 127,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 128,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 129,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 130,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 131,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 132,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 133,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 134,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 135,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 136,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 137,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 138,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 139,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 140,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 141,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 142,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 143,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 144,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 145,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 146,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 147,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 148,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 149,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 150,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 151,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 152,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 153,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 154,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 155,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 156,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 157,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 158,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 159,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 160,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 161,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 162,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 163,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 164,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 165,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 166,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 167,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 168,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 169,
+     "level": 10
+    },
+    {
+     "tick": 36,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 37,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 38,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 39,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 40,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 41,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 42,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 43,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 44,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 45,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 46,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 47,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 48,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 49,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 50,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 51,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 52,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 53,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 54,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 55,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 56,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 57,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 58,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 59,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 60,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 61,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 62,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 63,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 64,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 65,
+     "dead": 170,
+     "level": 10
+    },
+    {
+     "tick": 65,
+     "dead": 171,
+     "level": 10
+    },
+    {
+     "tick": 66,
+     "dead": 171,
+     "level": 10
+    },
+    {
+     "tick": 67,
+     "dead": 171,
+     "level": 10
+    },
+    {
+     "tick": 68,
+     "dead": 171,
+     "level": 10
+    },
+    {
+     "tick": 69,
+     "dead": 171,
+     "level": 10
+    },
+    {
+     "tick": 70,
+     "dead": 171,
+     "level": 10
+    },
+    {
+     "tick": 71,
+     "dead": 171,
+     "level": 10
+    },
+    {
+     "tick": 72,
+     "dead": 171,
+     "level": 10
+    },
+    {
+     "tick": 73,
+     "dead": 171,
+     "level": 10
+    },
+    {
+     "tick": 74,
+     "dead": 171,
+     "level": 10
+    },
+    {
+     "tick": 75,
+     "dead": 171,
+     "level": 10
+    },
+    {
+     "tick": 76,
+     "dead": 171,
+     "level": 10
+    },
+    {
+     "tick": 77,
+     "dead": 171,
+     "level": 10
+    },
+    {
+     "tick": 78,
+     "dead": 171,
+     "level": 11
+    },
+    {
+     "tick": 78,
+     "dead": 172,
+     "level": 11
+    },
+    {
+     "tick": 78,
+     "dead": 173,
+     "level": 11
+    },
+    {
+     "tick": 78,
+     "dead": 174,
+     "level": 11
+    },
+    {
+     "tick": 78,
+     "dead": 175,
+     "level": 11
+    },
+    {
+     "tick": 78,
+     "dead": 176,
+     "level": 11
+    },
+    {
+     "tick": 78,
+     "dead": 177,
+     "level": 11
+    },
+    {
+     "tick": 78,
+     "dead": 178,
+     "level": 11
+    },
+    {
+     "tick": 78,
+     "dead": 179,
+     "level": 11
+    },
+    {
+     "tick": 78,
+     "dead": 180,
+     "level": 11
+    },
+    {
+     "tick": 78,
+     "dead": 181,
+     "level": 11
+    },
+    {
+     "tick": 78,
+     "dead": 182,
+     "level": 11
+    },
+    {
+     "tick": 78,
+     "dead": 183,
+     "level": 11
+    },
+    {
+     "tick": 78,
+     "dead": 184,
+     "level": 11
+    },
+    {
+     "tick": 78,
+     "dead": 185,
+     "level": 11
+    },
+    {
+     "tick": 78,
+     "dead": 186,
+     "level": 11
+    },
+    {
+     "tick": 78,
+     "dead": 187,
+     "level": 11
+    },
+    {
+     "tick": 78,
+     "dead": 188,
+     "level": 11
+    },
+    {
+     "tick": 78,
+     "dead": 189,
+     "level": 11
+    },
+    {
+     "tick": 78,
+     "dead": 190,
+     "level": 11
+    },
+    {
+     "tick": 78,
+     "dead": 191,
+     "level": 11
+    },
+    {
+     "tick": 78,
+     "dead": 191,
+     "level": 11,
+     "final": true
+    }
+   ],
+   "held": {
+    "0": [
+     "up"
+    ],
+    "1": [
+     "up"
+    ],
+    "2": [
+     "up"
+    ],
+    "3": [
+     "up"
+    ],
+    "4": [
+     "up"
+    ],
+    "5": [
+     "up"
+    ],
+    "6": [
+     "up"
+    ],
+    "7": [
+     "up"
+    ],
+    "8": [
+     "up"
+    ],
+    "9": [
+     "up"
+    ],
+    "10": [
+     "up"
+    ],
+    "11": [
+     "down"
+    ],
+    "12": [
+     "up"
+    ],
+    "13": [
+     "up"
+    ],
+    "16": [
+     "down"
+    ],
+    "17": [
+     "down"
+    ],
+    "18": [
+     "down"
+    ],
+    "20": [
+     "up"
+    ],
+    "21": [
+     "up"
+    ],
+    "26": [
+     "up"
+    ],
+    "27": [
+     "up"
+    ],
+    "28": [
+     "up"
+    ],
+    "29": [
+     "up"
+    ],
+    "30": [
+     "up"
+    ],
+    "31": [
+     "up"
+    ],
+    "32": [
+     "up"
+    ],
+    "33": [
+     "up"
+    ],
+    "34": [
+     "up"
+    ],
+    "35": [
+     "up"
+    ],
+    "36": [
+     "primary"
+    ],
+    "45": [
+     "primary"
+    ],
+    "54": [
+     "primary"
+    ],
+    "63": [
+     "primary"
+    ],
+    "65": [
+     "primary",
+     "up"
+    ],
+    "66": [
+     "up"
+    ],
+    "67": [
+     "up",
+     "primary"
+    ],
+    "68": [
+     "up"
+    ],
+    "69": [
+     "up"
+    ],
+    "70": [
+     "up"
+    ],
+    "71": [
+     "up"
+    ],
+    "72": [
+     "up"
+    ],
+    "73": [
+     "up",
+     "primary"
+    ],
+    "74": [
+     "down"
+    ],
+    "75": [
+     "up"
+    ],
+    "76": [
+     "up"
+    ],
+    "77": [
+     "up"
+    ]
+   }
+  }
+ },
+ "invariant": "`gameDead = modelDead + 1` at every chain boundary \u2014 that +1 is `BOOT_PRESWAP_FRAMES`, and it is what makes the successor-clock formula land on the DECLARED seam time. `r8-solve-10` was the only row where the difference was 0, which is the symptom this fixture pins away: 192 vs 191 for the old walk, 191 vs 190 for the new."
+}

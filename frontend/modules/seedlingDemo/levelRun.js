@@ -39,7 +39,7 @@ import {
 } from './levelWorld.js';
 import {
     INITIAL_FRAMES_THIS_CHARACTER, PICKUP_CEREMONY, PICKUP_CEREMONY_BY_KEYTYPE,
-    PICKUP_TEXT_FROM_ATTRIBUTE, PLACED_NPC_TALK, TALK_KEY,
+    HELP_DISMISS_KEYS, PICKUP_TEXT_FROM_ATTRIBUTE, PLACED_NPC_TALK, TALK_KEY,
     beginDialogue, stepDialogue,
 } from './dialogue.js';
 // ⛓⛓⛓ R6 SLICE 6c: the ENDING's own transcription — the placed NPC's
@@ -2335,8 +2335,71 @@ export function createLevelRun({
     };
     const spendCeremonyPhaseA = (tag) => clock.spend(
         CEREMONY_DEAD_FRAMES.pickup, 'ceremony', `pickup phase A (${tag})`, ticksCompleted);
-    const spendPickupHelp = (tag) => clock.spend(
-        PICKUP_HELP_DEAD_FRAMES.frames[tag] ?? 0, 'help', `${tag} Help`, ticksCompleted);
+    /**
+     * ⛓⛓⛓ R9 SLICE 12e‴, item (iii) — **THE HELP'S FRAME IS DEFERRED,
+     * BECAUSE ITS COUNT IS THE NEXT TICK'S KEYS.**
+     *
+     * `Sword.removed()` adds `Help(3)` and `FP.world.add` QUEUES, so the
+     * Help's first update — and therefore its freeze — is the NEXT frame's.
+     * The count is not a constant: `NPCs/Help.as:23` is
+     * `keys[3] = [Key.X, Key.C]` ("press X or C") and `Help.update:87-103`
+     * sets `remove` on `Input.pressed` of one of them, lowering the freeze
+     * IN THE SAME UPDATE for `frame != 1` (`:107-110`). So a tape that
+     * presses X or C while the Help is up costs the game one dead frame
+     * where a tape that does not costs two, and `Bot.autoAdvance` pays the
+     * difference.
+     *
+     * ⛓ MEASURED ON THE GAME, both walks, one announced row
+     * (`probe-seedling-help-frame.mjs`, the driver's `--dead-curve`):
+     * ```
+     *   COMMITTED 90-t   dead 170 -> 171 at tick 70,  171 -> 172 at tick 71
+     *   RE-RECORDED 78-t dead 170 -> 171 at tick 65   (and no second)
+     * ```
+     * and the tapes at those ticks are `right,up` (no X) and `primary,up`
+     * (X pressed). Every other span is identical to the frame: boot fade
+     * 21, ceremony 149, exit load 20.
+     *
+     * ⛔ §35.6 AND MY OWN W0 SEAL BOTH READ THE WRONG TICK. Both compared
+     * the tick `removed()` FIRES — empty in both walks — and concluded the
+     * walks were identical in shape. The tick that decides is the one the
+     * Help is UP, which is the next one.
+     * → [[feedback_classification_read_off_the_wrong_tick]]
+     *
+     * ⚠ THE MODEL'S NUMBER IS THE GAME'S MINUS ONE, and that is not a fudge:
+     * every chain boundary keeps `gameDead = modelDead + 1` (that +1 is
+     * `BOOT_PRESWAP_FRAMES`, and it is what makes the successor-clock
+     * formula land on the DECLARED seam time). `r8-solve-10` was the only
+     * row where the difference was 0, which is exactly the symptom of a
+     * span the model priced as a constant.
+     */
+    let pendingPickupHelp = null;
+    const spendPickupHelp = (tag) => {
+        const frames = PICKUP_HELP_DEAD_FRAMES.frames[tag] ?? 0;
+        if (frames === 0) return;
+        // Deferred to the top of the next tick, where `held` is in hand.
+        pendingPickupHelp = { tag, frames };
+    };
+    /**
+     * Drain the deferred Help at the top of the tick it is actually up.
+     *
+     * ⛔ AT THE TOP, and drained through EVERY exit the tick has — the same
+     * argument `pendingSeedAdds` is drained here for: a tick can leave
+     * through a transition, a freeze, a death or the ordinary bottom, and
+     * only one of those is the bottom.
+     */
+    const drainPickupHelp = (held) => {
+        if (pendingPickupHelp === null) return;
+        const { tag, frames } = pendingPickupHelp;
+        pendingPickupHelp = null;
+        // `Input.pressed`, not `check`: `NPCs/Help.as:92` reads the EDGE, and
+        // FlashPunk's `onKeyDown` records a press only `if (!_key[code])`
+        // (`net/flashpunk/utils/Input.as`), so a key already down registers
+        // nothing at all.
+        const pressed = HELP_DISMISS_KEYS.some(
+            (k) => held.has(k) && !prevHeld.has(k));
+        clock.spend(pressed ? frames - 1 : frames, 'help',
+            `${tag} Help${pressed ? ' (dismissed by the TAPE)' : ''}`, ticksCompleted);
+    };
     /**
      * ⛓⛓⛓ R5 SLICE 23: HAS THE WAND LEFT THE WORLD?
      *
@@ -12320,6 +12383,9 @@ export function createLevelRun({
             // tick numbered `at` begins, which is what "the game cleared it
             // by then" means.
             applyTimedClears(ticksCompleted);
+            // ⛓ R9 slice 12e‴: and the Help the previous tick's `removed()`
+            // queued — its count is THIS tick's keys (see `spendPickupHelp`).
+            drainPickupHelp(held);
             // ⛓ R8 slice 8: and the kill-lock openings the tape owes, checked
             // at the tick the CLEAR lands rather than at the removal.
             firePendingKillLockThrows();
