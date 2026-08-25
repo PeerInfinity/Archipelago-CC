@@ -14363,3 +14363,32 @@ whole fade, so the world an early walk crosses is the world the planner already
 prices — the tile before the lock needs no hypothetical geometry, only the cells
 the still-solid planner can still reach, and the wait that follows is the
 responder's own `opensOnTick` arithmetic rather than a margin.
+
+⛓ R9 slice 12d″ cured the defect that finding exposed, and the cure was a
+deletion rather than a tolerance. The touch executor decided which way to lean
+by asking which axis was longer to the lock's centre, and at the stance the
+derivation itself returns, the two axes are equal — eight pixels each way — so
+a comparison of their magnitudes decided nothing and the tie-break decided
+everything. The drive's own arrival scatter is a whole pixel wide, an order of
+magnitude larger than a margin of zero, so the room worked or failed according
+to which side of the tie the braking happened to land on, and failing was not
+slow but fatal: the lock is opened by a collide one pixel WEST of its body, so
+a player leaning north walks into a wall and never closes the gap at all. The
+lock's own code already says which side it is touched from. Transcribing that
+offset onto the responder table and negating it — the probe shifts the mask,
+the body is solid, so the only air it adds is on the side it points at, and the
+player stands there and walks back in — removes the comparison instead of
+widening it, and a class whose probe nobody has read now refuses by name
+instead of guessing an axis. The change is byte-inert on every committed
+artifact, because at the stance that tie already fell the right way; what it
+buys is that it no longer has to.
+
+⛓ It also settles a question the branch had left open. With the roster-wide
+dash permission on, the three-room chain that ends in the westward crossing had
+been refusing outright, and the pickup economy appeared to rescue it — but only
+by landing the collect on a different pixel, which is not a fix of anything.
+With the lean derived, that chain solves on the flip alone, and the economies
+branch reaches exactly the number it reached before. The rescue was real and it
+was also redundant. The same shape lives on in the key-lock executor, whose
+mechanism probes a line beneath itself, but there the two rules give the same
+answer with fifteen pixels to spare, so it is a tidy-up rather than a defect.

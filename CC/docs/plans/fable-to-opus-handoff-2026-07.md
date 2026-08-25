@@ -4361,6 +4361,63 @@ not.** Run through `rerecord-seedling-campaign.mjs` under ⚖ ruling 43's
 `--license-walks`, with ⚖ ruling 39's `why` sweep riding it. Then the route:
 L15 `shove` VERB-APPLY → L16 BRIDGE → L8 ORACLE → A14 → A16.
 
+⛓⛓⛓ **R9 SLICE 12d″ SHIPPED 2026-08-24 — THE TOUCH LEAN IS THE MECHANISM'S
+OWN PROBE** (kickoff §32; ⚖ ruling 48 DISCHARGED). `main` @**`2473a520f`**.
+⛔ **NO TAPE MOVED, AND THE INERTNESS IS MEASURED RATHER THAN ASSUMED**: all
+FIFTEEN producers' `--check` md5s are byte-identical to `standing-values.json`
+— campaign `8f8389ee…`, battery `18682c65…`, d2-chain `4e21c680…`, l18
+`c0ecf701…`, r8-d2 `6e0967bf…` and the rest — so the fix landed on `main`
+rather than on `r9/economies`, which stays 12d′'s and untouched.
+
+**THE FIX IS A REMOVAL.** `execTouch` chose its lean by the dominant axis to
+the lock's CENTRE, and §31.7 measured that comparison sitting on **0.00 px** at
+L20's derived stance with a 1.0 px drive tolerance on top of it.
+`ShieldLock.update` is `collide("Player", x - 1, y)`, so the approach is WESTERN
+by construction: the probe offset is transcribed onto `activators.
+TOUCH_RESPONDERS` with its AS3 line, `approachKeyFromProbe` NEGATES it (the
+probe shifts the responder's mask, the body is solid, so the only air it adds is
+on the side it points at), and the lean is `right` by derivation at every
+stance. ⛔ A responder with no transcribed probe **REFUSES BY NAME** — a
+dominant-axis fallback would reinstate the defect for exactly the classes nobody
+has read. All three `collide("Player", …)` probes in `Puzzlements/` were read:
+`PushableBlock` probes four faces (the side is the PUSH direction, `execShove`'s
+question) and `Whirlpool` is CENTRED (adds no air, names no side) — neither is a
+touch responder, so **no touch responder keeps the dominant axis**.
+
+⛓⛓ **UNDER THE FLIP, `r8-d2` NOW SOLVES WITHOUT ⚖ 46 — 1801 t**, with
+`r8-d2-19` **727** and `r8-d2-20` **588**, the first flip-only digits those two
+segments have ever had (§31.6 could only write ⛔). The campaign is UNMOVED at
+**3331** (L14's **123** included), and with the economies branch the table
+reproduces §31.6 column (E) digit for digit: **`r8-d2` 1660, campaign 3328**.
+⇒ **⚖ 46's L20 RESCUE IS NOW REDUNDANT RATHER THAN LOAD-BEARING** — the branch
+reaches 1660 for what it buys, not because it moved the shield collect 1.27 px
+off a threshold. And trap 623's joint rows are separable at last: `r8-d2-19`
+864 → **727** (flip) → 696 (+⚖ 46); `r8-d2-20` 781 → **588** → 554.
+
+⛔ **⚖ 48's HYPOTHESIS IS TESTED AND IS NOT THE MECHANISM; NO GATE WAS BUILT.**
+All six of §31.7's measured arrivals are inside `DEFAULT_TOLERANCE = 1.0` on
+BOTH axes (widest 0.86 px), and the margin they land on is 0.00 px exactly — no
+leg length makes permitted scatter smaller than a zero margin, so a leg-length
+gate would gate the scatter and leave the threshold. The row that says so is
+committed, and halving the tolerance reds it.
+
+⚠ **`execKeylock` CARRIES THE SAME SHAPE AND IT IS MEASURED NOT TO MATTER.**
+`BossLock.as:62` probes a line at `y + height + 1` — SOUTH ⇒ `up` — and the
+running numbers at `bosslock@48,32` are `|dx| − |dy|` = **−14.78** (flip+fix)
+and **−16.43** (control): ~15 px against a 1.0 px tolerance, with the dominant
+axis and the probe AGREEING. ⇒ **`r8-d2-19` does not stand on a coin toss and
+the re-record does NOT wait for an `execKeylock` fix.** Landing the same
+one-line derivation there is worth doing on its own merits — it would make the
+agreement a fact rather than a coincidence — but it blocks nothing. **A QUEUE
+LINE, NOT A SLICE.**
+
+**⇒ THE RE-RECORD SESSION'S TABLE IS COLUMN (D)**, superseding §31.10's (E)
+caveat: campaign **3328**, `r8-d2` **1660**, on a build where **no row depends
+on a tie**. §31.7's "no `r8-d2` row in any column is evidence about the flip"
+is LIFTED. Licences per segment unchanged (⚖ 35(c)/41 for the flip's, ⚖ 46/47
+for the economies'), except that the two `r8-d2-*` rows are now separable.
+⛔ **123 is still L14's certified number and 108 is not.**
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
