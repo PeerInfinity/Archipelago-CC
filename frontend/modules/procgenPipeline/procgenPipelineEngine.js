@@ -10,6 +10,7 @@
 
 import { createRng } from '../shared/rng.js';
 import { startRegionsOf } from '../procgenCore/rulesGraph.js';
+import { namespaceNamed } from '../procgenCore/apIdNamespaces.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
 import { ScenarioPool } from '../shared/procgen/scenarioPool.js';
@@ -2179,8 +2180,13 @@ function linkReverseExits(grid) {
 // globally unique. Numeric location ids start at LOCATION_ID_BASE and
 // increment in deterministic region-iteration order.
 
-const LOCATION_ID_BASE = 1000;
-const ITEM_ID_BASE = 1;
+// ⛓ From procgenCore/apIdNamespaces.js — the one register (§15 D11). ⛔ The
+// ALLOCATION stays a running counter in region-iteration order: 29 preset
+// byte-identity dumps encode that order, so this row takes the BASE and nothing
+// else from the table.
+const PIPELINE_NAMESPACE = namespaceNamed('procgen-pipeline');
+const LOCATION_ID_BASE = PIPELINE_NAMESPACE.locationBase;
+const ITEM_ID_BASE = PIPELINE_NAMESPACE.itemBase;
 
 // Construct a location's globally unique name from its region name,
 // extracted location id, and position. Position is appended so that

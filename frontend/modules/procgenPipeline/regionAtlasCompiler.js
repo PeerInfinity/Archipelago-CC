@@ -59,6 +59,7 @@ import {
     makeExit,
     makeLocation,
 } from '../shared/rulesJsonBuilder.js';
+import { allocateIdsBySortedName, namespaceNamed } from '../procgenCore/apIdNamespaces.js';
 import { validateRegionAtlas, apRegionName } from './regionAtlasValidator.js';
 import {
     projectAtlasToMaze,
@@ -71,8 +72,14 @@ import {
 // carries its own `ap_id_offset` (20000000) for the ids the injected game
 // speaks. Aligning the two is Phase 4's binding concern; until then these must
 // simply not collide with it.
-export const REGION_ATLAS_LOCATION_ID_BASE = 30000000;
-export const REGION_ATLAS_ITEM_ID_BASE = 30000000;
+//
+// ⛓ The VALUES now come from procgenCore/apIdNamespaces.js, the one register of
+// every AP id base in the repo (§15 D11) — with the provenance and the pins.
+// They stay exported from here because that is where every caller and
+// regionAtlasCompiler.test.js reads them.
+const REGION_ATLAS_NAMESPACE = namespaceNamed('region-atlas');
+export const REGION_ATLAS_LOCATION_ID_BASE = REGION_ATLAS_NAMESPACE.locationBase;
+export const REGION_ATLAS_ITEM_ID_BASE = REGION_ATLAS_NAMESPACE.itemBase;
 
 // The AP region the projection hangs the start on. An atlas region named Menu
 // would silently merge with it, so the compiler refuses instead.
@@ -366,13 +373,14 @@ export function compileRegionAtlas(atlas, options = {}) {
     // the name set alone — no dependence on authoring order.
     const locationIdBase = options.locationIdBase ?? REGION_ATLAS_LOCATION_ID_BASE;
     const itemIdBase = options.itemIdBase ?? REGION_ATLAS_ITEM_ID_BASE;
-    const locationIds = new Map(
-        placements.map((p) => p.loc.name).sort().map((name, i) => [name, locationIdBase + i]),
+    const locationIds = allocateIdsBySortedName(
+        placements.map((p) => p.loc.name), locationIdBase,
     );
-    const itemNames = [...new Set(
+    const itemIds = allocateIdsBySortedName(
         placements.map((p) => p.loc.vanilla_item).filter((n) => typeof n === 'string' && n.length > 0),
-    )].sort();
-    const itemIds = new Map(itemNames.map((name, i) => [name, itemIdBase + i]));
+        itemIdBase,
+    );
+    const itemNames = [...itemIds.keys()];
 
     const itempoolCounts = {};
     let placedItems = 0;
