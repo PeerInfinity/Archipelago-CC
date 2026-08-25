@@ -20,7 +20,9 @@
 // nothing about either, so the two are deliberately different implementations,
 // and the reference counts below are asserted against the extractor's own
 // independently measured totals.
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
+import { homedir } from 'node:os';
+import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { describe, it, expect } from 'vitest';
@@ -28,6 +30,11 @@ import { describe, it, expect } from 'vitest';
 import {
     validateLevelSet,
     parseRoomXml,
+    indexRoom,
+    indexOfRoom,
+    roomRecordOf,
+    roomSourceKind,
+    TILE_PX,
     planLevelSetChunks,
     assembleLevelSetChunks,
     stampLevelSetIdentity,
@@ -42,6 +49,7 @@ import {
     MUSIC_COUNT,
 } from './levelSetValidator.js';
 import { TAGS_PER_LEVEL } from './breakableRocks.js';
+import { recordToOel, parseOelLevel } from './procgenLevelOel.js';
 
 const fixture = (name) => JSON.parse(readFileSync(
     fileURLToPath(new URL(`./fixtures/${name}`, import.meta.url)), 'utf8',
@@ -305,16 +313,21 @@ describe('level-set validator — REJECTIONS, each for its own named reason', ()
             .toHaveLength(2);
     });
 
-    it('refuses a source carrying both xml and embed, or neither', () => {
+    // ⛓ EDITOR v3 E1b — EXACTLY ONE OF **THREE** (plan §22.8). `record` joined
+    // `xml` and `embed`; the refusal names which ones it actually found, because
+    // "both" stopped being expressible the moment there were three kinds.
+    it('refuses a source carrying more than one of record/xml/embed, or none', () => {
         for (const [source, word] of [
-            [{ xml: '<level/>', embed: 'levels/x.oel' }, 'both'],
+            [{ xml: '<level/>', embed: 'levels/x.oel' }, 'xml + embed'],
+            [{ record: { width: 1, height: 1, layers: [], entities: [] }, xml: '<level/>' }, 'record + xml'],
+            [{ record: { width: 1, height: 1, layers: [], entities: [] }, embed: 'levels/x.oel' }, 'record + embed'],
             [{}, 'neither'],
         ]) {
             const set = minimalSet();
             set.rooms[0].source = source;
             const r = validateLevelSet(set);
             expect(r.ok).toBe(false);
-            expect(soleError(r, /exactly one of xml\/embed/)).toContain(word);
+            expect(soleError(r, /exactly one of record\/xml\/embed/)).toContain(word);
         }
     });
 
@@ -896,5 +909,235 @@ describe('chunked delivery (§8.1)', () => {
             expect(r.ok, `pass ${pass}`).toBe(true);
             expect(r.set.rooms).toHaveLength(116);
         }
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ **EDITOR v3 E1b — THE THIRD KIND, AND THE TWO-SOURCE EQUALITY ROW**
+ * (plan §22.8; as-built §24)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+// The map extract's own 116 records — the SECOND committed document E1's
+// `vanillaXmlSet` joins, read here directly so this file's record arm does not
+// go through the exporter it is meant to be independent of.
+const MAP = JSON.parse(readFileSync(fileURLToPath(
+    new URL('../flashPanel/atlases/seedling-map.json', import.meta.url)), 'utf8'));
+
+/**
+ * ⛔ THE CORE FOUR AND NOTHING ELSE. A map record carries `level`, `class`,
+ * `path` and `tiles_outside_level` too; `level` is a second authority for an id
+ * the SET assigns by position, `class`/`path` are provenance about a SOURCE
+ * TREE, and `tiles_outside_level` is a fact about the DISK FILE (how many
+ * placements the parser discarded) — `seedlingEditAdapter`'s `oelBase` drops it
+ * for exactly that reason. This is the shape the exporter writes.
+ */
+const coreRecord = (r) => ({
+    width: r.width, height: r.height, layers: r.layers, entities: r.entities,
+});
+
+// The join E1 measured: an embed path against the map's own `source.level_root`.
+const MAP_BY_ROOM = (() => {
+    const root = `${MAP.source.level_root}/`;
+    const byRel = new Map(MAP.levels.map((l) => [l.path.slice(root.length), l]));
+    return VANILLA.rooms.map((room) => {
+        const embed = room.source.embed;
+        const hit = [...byRel.entries()].find(([rel]) => embed === rel || embed.endsWith(`/${rel}`));
+        return hit ? coreRecord(hit[1]) : null;
+    });
+})();
+
+/** Both index docs as comparable JSON — `triggers` is a Set. */
+const idx = (d) => JSON.stringify({ ...d, triggers: [...d.triggers].sort() });
+
+describe('EDITOR v3 E1b — `source: {record}` as a third kind', () => {
+    it('joins all 116 vanilla rooms to a map record', () => {
+        expect(MAP_BY_ROOM.filter(Boolean)).toHaveLength(116);
+    });
+
+    /**
+     * ⛓⛓ **ARM (a) — THE FIXED POINT.** `indexRoom(record)` and
+     * `parseRoomXml(recordToOel(record))` are the same document over the whole
+     * corpus. ⚠ ON ITS OWN THIS IS SELF-CONSISTENCY, not correctness
+     * ([[feedback_fixed_point_is_not_correctness]]): both sides are derived from
+     * the same record by code written in the same hour. Arm (b) is what makes it
+     * mean something.
+     */
+    it('ARM (a): indexRoom(record) === parseRoomXml(recordToOel(record)), all 116', () => {
+        let same = 0;
+        MAP_BY_ROOM.forEach((record, i) => {
+            expect(idx(indexRoom(record)), `room ${i}`).toBe(idx(parseRoomXml(recordToOel(record))));
+            same += 1;
+        });
+        expect(same).toBe(116);
+    });
+
+    /**
+     * ⛓⛓ **ARM (b1) — AN INDEPENDENT SOURCE, COMMITTED.**
+     * `seedling-vanilla-room-refs.json` is the REDUCED vanilla OEL: a SECOND
+     * walk over the same 116 disk files, by the Python extractor, keeping every
+     * cross-reference-bearing element and dropping the tile grid. So the text
+     * this arm reads was produced by a different program from a different
+     * parser, and nothing about it came from `MAP`.
+     *
+     * ⚠ `size` IS EXCLUDED HERE AND NOWHERE ELSE, because the reduced text
+     * carries no `<width>`/`<height>` at all — `parseRoomXml` answers `null`
+     * there by construction. The size arm is (b1a) below, against the render.
+     */
+    it('ARM (b1): parseRoomXml(the REDUCED vanilla OEL) === indexRoom(the map record), all 116', () => {
+        MAP_BY_ROOM.forEach((record, i) => {
+            const fromText = parseRoomXml(VANILLA_REFS.rooms[String(i)]);
+            expect(fromText.size, `room ${i} reduced text carries no <width>`).toBeNull();
+            expect(idx({ ...fromText, size: null }), `room ${i}`)
+                .toBe(idx({ ...indexRoom(record), size: null }));
+        });
+    });
+
+    it('ARM (b1a): a record\'s size is the OEL rectangle in PIXELS, all 116', () => {
+        MAP_BY_ROOM.forEach((record, i) => {
+            expect(indexRoom(record).size, `room ${i}`)
+                .toEqual({ w: record.width * TILE_PX, h: record.height * TILE_PX });
+            expect(indexRoom(record).size, `room ${i}`)
+                .toEqual(parseRoomXml(recordToOel(record)).size);
+        });
+    });
+
+    /**
+     * ⛓⛓ **ARM (b2) — THE DISK FILES, and it SKIPS without the AS3 checkout.**
+     * The strongest arm: the OEL text as Ogmo wrote it, with the tile grid, the
+     * `<node>` children and the one raw `>` inside an attribute value that
+     * `procgenLevelOel`'s docblock has named since Phase 5 — none of which the
+     * committed reduced fixture can reach. ⛔ The skip is NAMED, because a
+     * silently-skipped arm is an unmade claim wearing a green tick (§11.8).
+     */
+    const SEEDLING = process.env.SEEDLING_SRC ?? join(homedir(), 'CC', 'seedling');
+    const HAVE_CHECKOUT = existsSync(join(SEEDLING, 'assets', 'levels'));
+    it.skipIf(!HAVE_CHECKOUT)(
+        'ARM (b2): parseRoomXml(the DISK OEL) === indexRoom(parseOelLevel(the DISK OEL)), all 116',
+        () => {
+            let checked = 0;
+            for (const lvl of MAP.levels) {
+                const text = readFileSync(join(SEEDLING, lvl.path), 'utf8');
+                expect(idx(parseRoomXml(text)), lvl.path)
+                    .toBe(idx(indexRoom(parseOelLevel(text, lvl.path))));
+                checked += 1;
+            }
+            expect(checked).toBe(116);
+        },
+    );
+
+    it('roomSourceKind names exactly one kind, or null', () => {
+        const rec = { width: 1, height: 1, layers: [], entities: [] };
+        expect(roomSourceKind({ record: rec })).toBe('record');
+        expect(roomSourceKind({ xml: '<level/>' })).toBe('xml');
+        expect(roomSourceKind({ embed: 'levels/x.oel' })).toBe('embed');
+        expect(roomSourceKind({ record: rec, xml: '<level/>' })).toBeNull();
+        expect(roomSourceKind({})).toBeNull();
+        expect(roomSourceKind(null)).toBeNull();
+    });
+
+    it('roomRecordOf resolves all three kinds through ONE door', () => {
+        const record = MAP_BY_ROOM[0];
+        const xml = recordToOel(record);
+        expect(roomRecordOf({ id: 0, name: 'r', source: { record } })).toBe(record);
+        expect(roomRecordOf({ id: 0, name: 'r', source: { xml } }, { parseOel: parseOelLevel }))
+            .toEqual(record);
+        expect(roomRecordOf({ id: 0, name: 'r', source: { embed: 'levels/x.oel' } },
+            { parseOel: parseOelLevel, xmlByRoomId: { 0: xml } })).toEqual(record);
+    });
+
+    it('roomRecordOf FREEZES the record it hands out', () => {
+        const record = { width: 1, height: 1, layers: [], entities: [] };
+        const out = roomRecordOf({ id: 0, name: 'r', source: { record } });
+        expect(Object.isFrozen(out)).toBe(true);
+    });
+
+    it('roomRecordOf refuses an embed with nothing to read, BY NAME', () => {
+        expect(() => roomRecordOf({ id: 3, name: 'Cave', source: { embed: 'levels/Cave.oel' } }))
+            .toThrow(/EMBED-sourced.*levels\/Cave\.oel.*SOURCE TREE/s);
+    });
+
+    it('roomRecordOf refuses a text kind with no parseOel, BY NAME', () => {
+        expect(() => roomRecordOf({ id: 0, name: 'r', source: { xml: '<level/>' } }))
+            .toThrow(/needs a `parseOel`/);
+    });
+
+    /**
+     * ⛓ **THE VALIDATOR ACCEPTS A RECORD SET, and the verdict is the SAME
+     * verdict.** The subject is the real 116, carried both ways.
+     */
+    const vanillaRecordRooms = () => VANILLA.rooms.map((room, i) => ({
+        ...room, source: { record: MAP_BY_ROOM[i] },
+    }));
+
+    it('validates the vanilla 116 as `record` rooms, with no unresolved-source warning', () => {
+        const set = stampLevelSetIdentity({ ...VANILLA, rooms: vanillaRecordRooms() },
+            { base: 'e1b-record-probe' });
+        const r = validateLevelSet(set);
+        expect(r.errors).toEqual([]);
+        expect(r.ok).toBe(true);
+        // ⛔ THE POINT OF THE KIND: an `embed` room is a room the validator
+        // cannot read, and 116 of them is the whole set. A record set has none.
+        expect(r.warnings.filter((w) => /embed source the validator cannot read/.test(w)))
+            .toHaveLength(0);
+        expect(r.stats.rooms_checked).toBe(116);
+    });
+
+    it('reads the SAME cross-reference totals from records as from the reduced text', () => {
+        const set = stampLevelSetIdentity({ ...VANILLA, rooms: vanillaRecordRooms() },
+            { base: 'e1b-record-probe' });
+        const viaRecords = validateLevelSet(set).stats;
+        const viaText = validateLevelSet(VANILLA, { xmlByRoomId: vanillaXmlByRoomId() }).stats;
+        for (const key of ['exits', 'fallthroughs', 'button_rooms', 'rooms_checked']) {
+            expect(viaRecords[key], key).toBe(viaText[key]);
+        }
+    });
+
+    it('refuses a record whose width/height/layers/entities are wrong, BY NAME', () => {
+        const bad = [
+            [{ width: 0, height: 1, layers: [], entities: [] }, /record\.width must be a positive integer in TILES/],
+            [{ width: 1, height: '4', layers: [], entities: [] }, /record\.height must be a positive integer in TILES/],
+            [{ width: 1, height: 1, entities: [] }, /record\.layers must be an array/],
+            [{ width: 1, height: 1, layers: [] }, /record\.entities must be an array/],
+        ];
+        for (const [record, re] of bad) {
+            const set = minimalSet();
+            set.rooms[0].source = { record };
+            const r = validateLevelSet(set);
+            expect(r.ok).toBe(false);
+            expect(r.errors.some((e) => re.test(e)), `${re}\ngot: ${JSON.stringify(r.errors)}`)
+                .toBe(true);
+        }
+    });
+
+    /**
+     * ⛔⛔ **THE LEGACY `xml` PATH IS NOT ROUTED THROUGH THE RECORD PARSER, AND
+     * THIS IS THE MEASUREMENT THAT SAYS WHY.** The design that reads EVERY room
+     * as a record first would refuse this repo's own conformance corpus: all 70
+     * of its `xml` rooms are REDUCED OEL with no `<width>`, and `parseOelLevel`
+     * refuses a level with no rectangle. [[feedback_hardening_rule_refuses_real_data]].
+     */
+    it('the legacy `xml` corpus PARSES with parseRoomXml and would REFUSE parseOelLevel', () => {
+        const conformance = fixture('seedling-level-set-delivery-conformance.json');
+        const xmlRooms = conformance.cases
+            .flatMap((c) => (c.chunks ?? []).flatMap((ch) => ch.rooms ?? []))
+            .filter((r) => typeof r.source?.xml === 'string');
+        expect(xmlRooms.length).toBe(70);
+        let refusedAsRecord = 0;
+        for (const room of xmlRooms) {
+            // the index door reads it, exactly as it did before E1b
+            expect(indexOfRoom(room)).toEqual(parseRoomXml(room.source.xml));
+            try { parseOelLevel(room.source.xml, 'conformance'); } catch (e) {
+                expect(e.message).toMatch(/has no <width>/);
+                refusedAsRecord += 1;
+            }
+        }
+        expect(refusedAsRecord).toBe(70);
+    });
+
+    it('indexOfRoom returns null for an embed with nothing supplied, and NAMES nothing', () => {
+        expect(indexOfRoom({ id: 0, source: { embed: 'levels/x.oel' } })).toBeNull();
+        expect(indexOfRoom({ id: 0, source: { embed: 'levels/x.oel' } },
+            { xmlByRoomId: { 0: VANILLA_REFS.rooms['0'] } }))
+            .toEqual(parseRoomXml(VANILLA_REFS.rooms['0']));
     });
 });

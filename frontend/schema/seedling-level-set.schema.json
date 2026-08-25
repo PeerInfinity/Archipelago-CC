@@ -112,8 +112,25 @@
         },
         "source": {
           "type": "object",
-          "description": "Where this room's OEL XML comes from. EXACTLY ONE of xml/embed (§4.3 shape (c)): a page-supplied set carries XML text, the built-in vanilla set carries a reference to the [Embed]ed asset, and both resolve to XML before the one loadLevelXML implementation.",
+          "description": "Where this room's level document comes from. EXACTLY ONE of record/xml/embed. \u26d3 EDITOR v3 E1b (plan §22.8): `record` is a JSON level record and is what the exporter WRITES from now on — every tool sees JSON, and OEL text is rendered only at the chunk boundary, because the game's Ogmo loader is the last hop and is unchanged (LevelSet.as:139 reads room.source.xml). `xml` is OEL text inline and stays ACCEPTED so committed generated-set artifacts keep loading; `embed` is a reference to an [Embed]ed asset and is the built-in vanilla set's. All three resolve to XML before the one loadLevelXML implementation — the RECORD arm through recordToOel at delivery time (planLevelSetChunks), which is why a chunk never carries a record.",
           "oneOf": [
+            {
+              "required": ["record"],
+              "additionalProperties": false,
+              "properties": {
+                "record": {
+                  "type": "object",
+                  "required": ["width", "height", "layers", "entities"],
+                  "description": "A level RECORD: the `{width, height, layers, entities}` document `seedlingDemo/procgenLevelOel.parseOelLevel` returns and `recordToOel` accepts. \u26d4 THE FOUR FIELDS ARE DECLARED HERE AND THE REST OF THE OGMO DIALECT IS NOT — the authority on a record's shape is `levelSetValidator` plus `parseOelLevel`'s own contract, and re-typing the dialect in JSON Schema would be a second description of one format that the first change would part from. \u26a0 `width`/`height` are in TILES; the OEL <width>/<height> they render to are PIXELS (16x).",
+                  "properties": {
+                    "width": { "type": "integer", "minimum": 1, "description": "Room width in TILES." },
+                    "height": { "type": "integer", "minimum": 1, "description": "Room height in TILES." },
+                    "layers": { "type": "array", "description": "Tile layers, each `{name, set, tiles:[[x, y, tx, ty]]}` with x/y in TILES and tx/ty raw tileset coordinates. Seedling has two ('tiles' and 'cliffsides'); the parser reads them generically so a level with a third does not silently lose it." },
+                    "entities": { "type": "array", "description": "Ogmo objects in DOCUMENT ORDER, each `{type, x, y, attrs?, nodes?}` with x/y in raw PIXELS. \u26d4 ORDER IS THE CONTRACT: an exit ORDINAL addresses the k-th transition-bearing entity in this array, and `recordToOel` writes them into <objects> in exactly this order." }
+                  }
+                }
+              }
+            },
             {
               "required": ["xml"],
               "additionalProperties": false,

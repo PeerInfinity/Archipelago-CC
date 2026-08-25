@@ -183,6 +183,21 @@ function hitboxesOverlap(ax, ay, aSize, bx, by, bSize) {
 
 // --- helpers -----------------------------------------------------------------
 
+/**
+ * ⛓ EDITOR v3 E1b. The refusal class for a room `source` this module cannot
+ * resolve. ⛔ A CLASS OF ITS OWN, because `seedlingSetAdapter.apply` catches
+ * refusals BY CLASS and turns them into `{ok:false}` — an unnamed `Error` there
+ * would make a crash look like an edit the substrate declined.
+ */
+export class LevelSetSourceError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'LevelSetSourceError';
+    }
+}
+
+const fail = (message) => { throw new LevelSetSourceError(message); };
+
 const isPlainObject = (v) => v != null && typeof v === 'object' && !Array.isArray(v);
 const isNonEmptyString = (v) => typeof v === 'string' && v.length > 0;
 
@@ -341,6 +356,193 @@ export function parseRoomXml(xml) {
         m = ELEMENT_RE.exec(xml);
     }
     return { size, exits, fallthroughs, buttonRooms, finalBosses, tags, tsets, moonrocks, triggers };
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ **EDITOR v3 E1b — A ROOM'S SOURCE HAS THREE KINDS, AND EVERY READER
+ * GOES THROUGH ONE OF TWO NORMALISERS.**
+ *
+ * ⚖ The user RULED 2026-08-25 (plan §22.8) that a level-set room becomes a JSON
+ * RECORD — `source: {record: {width, height, layers, entities}}`, the shape
+ * `parseOelLevel` returns and `recordToOel` accepts — so every tool in the repo
+ * sees JSON, and OEL text is rendered ONLY at the chunk boundary, because the
+ * game's Ogmo loader is the last hop and is unchanged (`LevelSet.as:139` reads
+ * `room.source.xml as String`).
+ *
+ * ⛓ **ADDITIVE.** `record` is a THIRD kind beside `xml` and `embed`; the
+ * committed vanilla fixture (116 `embed` rooms) is byte-untouched and the
+ * committed generated-set artifacts stay `xml`-sourced and loadable.
+ *
+ * ⛔ **TWO NORMALISERS, ONE KIND SWITCH — AND THE SECOND ONE IS A MEASUREMENT,
+ * NOT A CONVENIENCE.** The obvious design is one door: resolve every room to a
+ * RECORD and index the record. MEASURED over
+ * `fixtures/seedling-level-set-delivery-conformance.json` — this repo's legacy
+ * `xml` corpus, which the format's own conformance suite is written against —
+ * **all 70 of its `xml` rooms FAIL `parseOelLevel`**, every one of them with
+ * `<level> has no <width>`: they are REDUCED OEL, carrying the
+ * cross-reference-bearing elements and no geometry at all. Routing the legacy
+ * text through the record parser would therefore REFUSE the corpus this
+ * validator exists to accept — [[feedback_hardening_rule_refuses_real_data]],
+ * the original data as the fixture the rule must satisfy.
+ *
+ * ⇒ `roomRecordOf` is the ONE door for a reader that needs a RECORD, and
+ * `indexOfRoom` is the ONE door for a reader that needs the cross-reference
+ * INDEX. They share `roomSourceKind`; the index door keeps `parseRoomXml`
+ * (regex, lenient, no geometry required) on the `xml`/`embed` arms and uses
+ * `indexRoom` on the `record` arm. What licenses that as ONE index rather than
+ * two is the equality row in `levelSetValidator.test.js`, which has an
+ * INDEPENDENT SOURCE in it (§11.8's shape): over the 116 vanilla rooms
+ * `indexRoom(record)` deep-equals `parseRoomXml(recordToOel(record))` — a fixed
+ * point on its own — AND over the 116 OEL files ON DISK `parseRoomXml(text)`
+ * deep-equals `indexRoom(parseOelLevel(text))`, which is the arm the fixed point
+ * cannot make for itself.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * Which of the three kinds this `source` is, or `null` when it is not exactly
+ * one of them. ⛔ The exactly-one-of rule lives HERE so the validator's refusal
+ * and every reader's dispatch cannot drift apart.
+ */
+export function roomSourceKind(source) {
+    if (!isPlainObject(source)) return null;
+    const kinds = [];
+    if (isPlainObject(source.record)) kinds.push('record');
+    if (isNonEmptyString(source.xml)) kinds.push('xml');
+    if (isNonEmptyString(source.embed)) kinds.push('embed');
+    return kinds.length === 1 ? kinds[0] : null;
+}
+
+/**
+ * ⛓⛓ **THE RECORD OF A ROOM — the ONE normaliser for every reader that wants
+ * `{width, height, layers, entities}`.**
+ *
+ * @param {object} room  a level-set room
+ * @param {{parseOel?: Function, xmlByRoomId?: Record<number,string>}} [deps]
+ * @returns {object} the level record, shallow-FROZEN
+ */
+export function roomRecordOf(room, { parseOel = null, xmlByRoomId = null } = {}) {
+    const src = room?.source;
+    const kind = roomSourceKind(src);
+    const level = room?.id;
+    const where = `room ${level} ${JSON.stringify(room?.name ?? '')}`;
+    if (kind === 'record') {
+        // ⛓ FROZEN, not copied. The record IS the set document's own object —
+        // a deep copy per read would be O(set) on every stills repaint over 116
+        // rooms — so the freeze is what makes "this is a reader" true rather
+        // than merely intended.
+        return Object.freeze(src.record);
+    }
+    if (kind === 'xml' || (kind === 'embed' && isNonEmptyString(xmlByRoomId?.[level]))) {
+        if (typeof parseOel !== 'function') {
+            fail(`levelSetValidator: ${where} is ${kind}-sourced and reading it as a RECORD `
+                + 'needs a `parseOel`, and none was injected. The OEL reader is '
+                + '`seedlingDemo/procgenLevelOel.parseOelLevel`; it arrives as a parameter '
+                + 'because a module that reached for a concrete parser would be choosing one '
+                + 'for its callers (`roomsOfSet`\'s own note).');
+        }
+        return Object.freeze(parseOel(kind === 'xml' ? src.xml : xmlByRoomId[level], where));
+    }
+    if (kind === 'embed') {
+        fail(`levelSetValidator: ${where} is EMBED-sourced (${JSON.stringify(src.embed)}) — an `
+            + '`embed` is a path into a SWF\'s `[Embed]` table, a fact about a SOURCE TREE and '
+            + 'not about this document, and no embeds are reachable from here. A set holding '
+            + 'one can be HELD; it cannot be read as a record.');
+    }
+    fail(`levelSetValidator: ${where} carries ${JSON.stringify(src)}, which is not exactly one `
+        + 'of record/xml/embed');
+    return null;
+}
+
+/**
+ * ⛓⛓ **`parseRoomXml`'s RECORD TWIN** — the same
+ * `{size, exits, fallthroughs, buttonRooms, finalBosses, tags, tsets, moonrocks,
+ * triggers}` document, read off a record's entities instead of off OEL text.
+ *
+ * ⛔ **ENTITY ORDER IS DOCUMENT ORDER, and that is what makes an exit ORDINAL
+ * mean the same thing on both sides.** `recordToOel` writes `entities[]` into
+ * `<objects>` in array order and `ELEMENT_RE` scans the text in document order,
+ * so the k-th exit of the record and the k-th exit of its render are the same
+ * door (§20.5's ordinal contract).
+ *
+ * ⚠ `size` is in PIXELS, because `parseRoomXml` reads the OEL `<width>` which is
+ * pixels, and a record's `width` is TILES. The x16 is the only conversion here
+ * and it is the one `recordToOel` performs in the other direction.
+ *
+ * ⛓ Only `entities` is walked. MEASURED over the 116 vanilla rooms: nothing a
+ * tile layer or a `<node>` child carries reaches any branch below (`<tile>`
+ * carries `tx/ty/x/y`, a layer carries `set` and not `tset`, a `<node>` carries
+ * `x/y`), which is why the two indexes agree element for element.
+ */
+export function indexRoom(record) {
+    const exits = [];
+    const fallthroughs = [];
+    const buttonRooms = [];
+    const finalBosses = [];
+    const tags = [];
+    const tsets = [];
+    const moonrocks = [];
+    const triggers = new Set();
+    const size = (Number.isInteger(record?.width) && Number.isInteger(record?.height))
+        ? { w: record.width * TILE_PX, h: record.height * TILE_PX }
+        : null;
+    for (const e of (Array.isArray(record?.entities) ? record.entities : [])) {
+        if (!isPlainObject(e)) continue;
+        const el = e.type;
+        // ⛔ `x`/`y` LIVE IN THE ENTITY, NOT IN `attrs` — `parseOelLevel` hoists
+        // them out and `recordToOel` refuses an `attrs.x` that would duplicate
+        // them. Re-joining them here is what makes this the same attribute bag
+        // `attrsOf` builds from the text.
+        const a = { ...(isPlainObject(e.attrs) ? e.attrs : {}), x: e.x, y: e.y };
+
+        if (el === 'teleporter' || el === 'stairsup' || el === 'stairsdown') {
+            if (a.to !== undefined && a.to !== '') {
+                exits.push({
+                    element: el,
+                    to: intOr(a.to, NaN),
+                    playerx: intOr(a.playerx, null),
+                    playery: intOr(a.playery, null),
+                    sign: intOr(a.sign, SIGN_NONE),
+                    x: intOr(a.x, NaN),
+                    y: intOr(a.y, NaN),
+                });
+            }
+        }
+        if (a.fallthrough !== undefined && a.fallthrough !== '') {
+            fallthroughs.push({
+                element: el,
+                to: intOr(a.fallthrough, NaN),
+                sign: intOr(a.sign, SIGN_NONE),
+            });
+        }
+        if (el === 'buttonroom' && a.room !== undefined && a.room !== '') {
+            buttonRooms.push({ room: intOr(a.room, NaN), tset: intOr(a.tset, -1) });
+        }
+        if (el === 'finalboss') finalBosses.push({ tag: intOr(a.tag, -1) });
+        if (el === 'moonrock') moonrocks.push({ x: intOr(a.x, NaN), y: intOr(a.y, NaN) });
+        if (NAMED_ROOM_TRIGGERS.includes(el)) triggers.add(el);
+        if (a.tag !== undefined && a.tag !== '') tags.push({ element: el, tag: intOr(a.tag, NaN) });
+        if (a.tset !== undefined && a.tset !== '') tsets.push({ element: el, tset: intOr(a.tset, NaN) });
+    }
+    return { size, exits, fallthroughs, buttonRooms, finalBosses, tags, tsets, moonrocks, triggers };
+}
+
+/**
+ * ⛓⛓ **THE INDEX OF A ROOM, whatever kind it is** — `parseRoomXml` for the two
+ * TEXT kinds, `indexRoom` for the record kind.
+ *
+ * @returns {object|null} the index, or `null` for an `embed` room with no text
+ *   supplied — NAMED by the caller rather than passed off as an empty room.
+ */
+export function indexOfRoom(room, { xmlByRoomId = null } = {}) {
+    const src = room?.source;
+    const kind = roomSourceKind(src);
+    if (kind === 'record') return indexRoom(src.record);
+    if (kind === 'xml') return parseRoomXml(src.xml);
+    if (kind === 'embed') {
+        const xml = xmlByRoomId?.[room?.id];
+        return isNonEmptyString(xml) ? parseRoomXml(xml) : null;
+    }
+    return null;
 }
 
 // --- chunk planning -----------------------------------------------------------
@@ -611,18 +813,46 @@ export function validateLevelSet(set, options = {}) {
 
         const src = room.source;
         if (!isPlainObject(src)) {
-            err(`${label}.source must be an object with exactly one of xml/embed`);
+            err(`${label}.source must be an object with exactly one of record/xml/embed`);
             return;
         }
-        const hasXml = isNonEmptyString(src.xml);
-        const hasEmbed = isNonEmptyString(src.embed);
-        if (hasXml === hasEmbed) {
-            err(`${label}.source must carry exactly one of xml/embed (got ${hasXml ? 'both' : 'neither'})`);
+        // ⛓ EDITOR v3 E1b — EXACTLY ONE OF THREE (plan §22.8). `record` is the
+        // kind the exporter writes from now on; `xml` stays accepted so the
+        // committed generated-set artifacts keep loading; `embed` is still the
+        // committed vanilla manifest's.
+        const kind = roomSourceKind(src);
+        if (kind === null) {
+            const present = ['record', 'xml', 'embed'].filter((k) => src[k] !== undefined);
+            err(`${label}.source must carry exactly one of record/xml/embed (got `
+                + `${present.length === 0 ? 'neither' : present.join(' + ')})`);
             return;
         }
-        const xml = hasXml ? src.xml : xmlById?.[room.id];
-        if (isNonEmptyString(xml)) parsed.set(i, parseRoomXml(xml));
-        else unresolved.push(`${label} "${room.name}" (embed ${JSON.stringify(src.embed)})`);
+        // ⛔ THE VALIDATOR IS THE AUTHORITY ON A RECORD'S SHAPE, not the JSON
+        // Schema: the schema declares the four fields and defers the rest to
+        // `parseOelLevel`'s contract by prose, because re-typing the Ogmo
+        // dialect there would be a second description of one format.
+        if (kind === 'record') {
+            const rec = src.record;
+            for (const axis of ['width', 'height']) {
+                if (!Number.isInteger(rec[axis]) || rec[axis] < 1) {
+                    err(`${label}.source.record.${axis} must be a positive integer in TILES `
+                        + `(the OEL <${axis}> it renders to is PIXELS — ${TILE_PX}x this), got `
+                        + `${JSON.stringify(rec[axis])}`);
+                }
+            }
+            for (const field of ['layers', 'entities']) {
+                if (!Array.isArray(rec[field])) {
+                    err(`${label}.source.record.${field} must be an array — a record is the `
+                        + '`{width, height, layers, entities}` document `parseOelLevel` returns '
+                        + 'and `recordToOel` accepts, and a missing half is not an empty one');
+                }
+            }
+        }
+        if (kind === 'embed' && !isNonEmptyString(xmlById?.[room.id])) {
+            unresolved.push(`${label} "${room.name}" (embed ${JSON.stringify(src.embed)})`);
+            return;
+        }
+        parsed.set(i, indexOfRoom(room, { xmlByRoomId: xmlById }));
     });
 
     // ⛔ NAME WHAT WAS NOT CHECKED. A set whose rooms could not be read must not

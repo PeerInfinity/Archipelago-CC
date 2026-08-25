@@ -23,7 +23,7 @@
       "type": "array",
       "minItems": 1,
       "maxItems": 16,
-      "description": "This chunk's rooms, in set order, each a seedling-level-set.schema.json room. maxItems mirrors MAX_ROOMS_PER_CHUNK, the measured safe size — it is a REPETITION-proven transport constant, not a guarantee about bytes. Room ids must be dense and ascending across the assembled delivery; the assembler checks that, not this file.",
+      "description": "This chunk's rooms, in set order, each a seedling-level-set.schema.json room. \u26d3 EDITOR v3 E1b: a chunk is the DELIVERY form, so a `record`-sourced room is RENDERED to `{xml}` by `planLevelSetChunks` before it is sized and packed \u2014 the receiver ends in `LevelSet.as:139`, which reads `room.source.xml as String`, and the byte bound below is measured on the RENDERED room because that is what actually crosses. \u26d4 A chunk therefore never carries a `record`, and a set document written after E1b never carries the rendered text. maxItems mirrors MAX_ROOMS_PER_CHUNK, the measured safe size — it is a REPETITION-proven transport constant, not a guarantee about bytes. Room ids must be dense and ascending across the assembled delivery; the assembler checks that, not this file.",
       "items": { "type": "object" }
     }
   }
