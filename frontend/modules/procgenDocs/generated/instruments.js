@@ -55,6 +55,11 @@ export const INSTRUMENTS = frz({
         {
             "browser": 0,
             "count": 1,
+            "id": "ci"
+        },
+        {
+            "browser": 0,
+            "count": 1,
             "id": "derive"
         },
         {
@@ -199,13 +204,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 231,
+        "blockStyle": 232,
         "browser": 75,
         "cited": 80,
-        "files": 250,
+        "files": 251,
         "lineStyle": 19,
-        "withDocblock": 250,
-        "withFlags": 154
+        "withDocblock": 251,
+        "withFlags": 155
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -1834,6 +1839,31 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "check-seedling-wasm-ship — **THE ONLY ARM THAT CAN SEE A REAL SOLVE'S VERDICT.**",
             "path": "scripts/procgen/check-seedling-wasm-ship.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "ci",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "ci-vitest-summary.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "wait"
+                }
+            ],
+            "oneLiner": "ci-vitest-summary.mjs — read a pushed head's UNFILTERED vitest result from CI instead of re-running it locally (⚖ R9 ruling 52).",
+            "path": "scripts/procgen/ci-vitest-summary.mjs"
         },
         {
             "argvHelpers": [

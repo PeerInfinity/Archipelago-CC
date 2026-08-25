@@ -120,7 +120,23 @@ export function standingRows({ repo = REPO, host = LOCAL_HOST, pages = PAGES_ORI
         });
     }
 
-    push({ key: 'suite: vitest (unfiltered)', kind: 'suite', command: 'npx vitest run' });
+    /**
+     * ⚖ R9 RULING 52 (user, 2026-08-25): **THE UNFILTERED SUITE IS NOT RUN
+     * LOCALLY.** CI's `JavaScript Unit Tests` job runs the same unfiltered
+     * `vitest run` on every pushed head and its log carries the same two
+     * numbers to the digit (measured on four heads: `9fdd344e0` -> 353/11031,
+     * `989d385ab` -> 353/11026, `1c8ca217d` -> 352/10951 — each equal to the
+     * standing row a session had spent ~8 minutes measuring). So the row's
+     * recipe is now "read CI's answer for this SHA", and `alwaysQuoted` keeps
+     * `--check` from ever re-running it: a value that can only be produced by
+     * a PUSH must not red a check on an unpushed head.
+     */
+    push({
+        key: 'suite: vitest (unfiltered)',
+        kind: 'ci-suite',
+        command: 'node scripts/procgen/ci-vitest-summary.mjs --json',
+        alwaysQuoted: true,
+    });
     return rows;
 }
 
@@ -164,6 +180,22 @@ export function headlineOf(kind, out) {
         const files = (/Test Files\s+.*?\((\d+)\)/.exec(body) ?? [])[1];
         const tests = (/\bTests\s+.*?\((\d+)\)/.exec(body) ?? [])[1];
         return { value: files && tests ? `${files}/${tests}` : null, total: null };
+    }
+    if (kind === 'ci-suite') {
+        /**
+         * `ci-vitest-summary.mjs --json` already did the reading — it parses
+         * vitest's OWN summary lines out of the CI job log — so this reads its
+         * `standingRow` rather than re-deriving `files/tests` from prose. A
+         * non-zero exit prints a one-line reason on stderr and no JSON at all
+         * (exit 2 no run for this SHA, 3 not concluded, 4 no summary in the
+         * log), which lands here as a `null` value: the caller KEEPS the value
+         * it had rather than blanking a standing number because a head is not
+         * pushed yet.
+         */
+        try {
+            const j = JSON.parse(plain(out));
+            return { value: j.standingRow ?? null, total: j.conclusion ?? null };
+        } catch { return { value: null, total: null }; }
     }
     const last = [...lines].reverse().find((l) => l.trim());
     return { value: last ? last.trim() : null, total: null };

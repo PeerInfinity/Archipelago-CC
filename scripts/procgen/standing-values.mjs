@@ -31,6 +31,13 @@
  * unfiltered vitest are QUOTED with the head they were measured at. A check
  * that costs an hour is a check nobody runs, and a standing value nobody
  * checks is the thing this file exists to stop.
+ *
+ * ⚖ **R9 RULING 52 (user, 2026-08-25): THE UNFILTERED SUITE IS CI'S, READ BY
+ * SHA.** `suite: vitest (unfiltered)` is no longer an `npx vitest run` here —
+ * its recipe is `ci-vitest-summary.mjs --json`, which reads the same numbers
+ * out of the `JavaScript Unit Tests` job log for a pushed head, and the row is
+ * `alwaysQuoted` so `--check` prints it rather than re-reading it. A local
+ * vitest run is now BOUNDED to the files a slice touched.
  */
 
 import { writeFileSync } from 'node:fs';
@@ -95,13 +102,38 @@ if (flag('write')) {
             continue;
         }
         const r = await runRow(row);
+        /**
+         * ⚖ R9 RULING 52. A row whose value can only come from a PUSHED head
+         * (the CI-read suite row) answers `null` on an unpushed one — the
+         * helper exits 2/3 and prints its reason on stderr. Blanking the
+         * standing number there would lose the last measured suite count to a
+         * condition that says nothing about the suite, so the previous value
+         * and ITS head are KEPT and the reason is recorded beside them. Nothing
+         * is invented: the row still carries the head it was measured at.
+         */
+        const prev = out.rows[row.key];
+        if (r.value === null && row.alwaysQuoted && prev) {
+            out.rows[row.key] = {
+                ...prev,
+                cheap: false,
+                why: `not re-read at ${HEAD}: \`${row.command}\` exited ${r.exit} `
+                    + '(no CI run for this SHA, or it has not concluded) — ⚖ ruling 52',
+            };
+            console.log(`KEEP  ${row.key.padEnd(46)} ${String(prev.value).padEnd(46)} `
+                + `@${prev.measuredAt} (helper exit ${r.exit})`);
+            continue;
+        }
         out.rows[row.key] = {
             value: r.value,
             command: row.command,
             kind: row.kind,
             exit: r.exit,
             ms: r.ms,
-            cheap: r.ms < CHEAP_MS,
+            // ⚖ ruling 52: `alwaysQuoted` is a property of the RECIPE, not of
+            // how long it took. The CI read is fast and would otherwise be
+            // classified cheap, which would put a network call — and a red on
+            // every unpushed head — inside every `--check`.
+            cheap: row.alwaysQuoted ? false : r.ms < CHEAP_MS,
             measuredAt: HEAD,
             ...(row.browser ? { browser: true } : {}),
             ...(row.windows ? { windows: true } : {}),
