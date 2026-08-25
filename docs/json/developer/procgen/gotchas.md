@@ -332,6 +332,57 @@ would be demanding that an edited set keep its old identity — the one thing th
 stamp exists to prevent. Compare the CONTENT and assert that the provenance
 moved, to the id that was actually written.
 
+## A REMOUNTED panel keeps every listener the OLD mount registered
+
+A page section that is rebuilt when a new document arrives — destroy the old
+mount, build a new one — does NOT lose its listeners if they were registered on
+the ARM's lifetime, because the arm was never retired. Measured: after a second
+LOAD, one button fired on BOTH mounts; the dead one applied its op to the OLD
+session and repainted the OLD `<select>` over the live one, so the page offered
+a value from a document nobody was editing and the next op was refused BY NAME
+against something the live record does not have — a true sentence about the
+wrong subject, produced by a listener nobody detached. A mount that can be
+replaced needs a lifetime of ITS OWN, retired by its `destroy` and again by the
+arm's `onRetire`.
+
+## An ARRIVAL endpoint accepts an access rule and gates NOTHING
+
+`regionAtlasCompiler` records the `to` endpoint of a `one_way` connection as
+`{apExitName: null, arrivalOnly: true}` and builds no AP exit for it — and every
+connection the Seedling derivation emits is `one_way`, because the game's one
+transition primitive is a one-way jump. So a rule authored on an `in_*` exit id
+is accepted by the op, written into the overlay, applied to the atlas, and then
+reaches nothing: the door stays FREE while its author believes it is gated. Ask
+the atlas's own `vanilla_layout.connections` whether an endpoint is a `from`
+(or the `to` of a two-way) before offering it, and NAME the ones that are not.
+
+## Re-validating a document that is being EDITED reads a correct session as broken
+
+`validateLevelSet` refuses a document whose stamp and content have parted — and
+that is TRUE of every mid-edit set by design, because the stamp happens once, at
+download. A page that re-validated the set it already holds before attaching a
+second document to it therefore refused a perfectly good session and silently
+kept the old attachment. Validate a document when it ARRIVES; after that the op
+list is the authority until the next stamp.
+
+## A derivation failure is neither a refusal class nor a defect
+
+`seedlingSetAdapter.apply` catches its three refusal classes and rethrows
+everything else on purpose (*"a `TypeError` here is a defect"*), and
+`editorView.applyOp` catches only `EditCoreError`. A plain `Error` from
+`deriveAtlas` — a set whose atlas cannot be built, e.g. because a `disconnect`
+deleted the very entity a marked LOCATION sits on — is neither, so it escapes
+both and takes the arm down. The page is where it has to be caught, and it is
+reported as a refusal with the producer's own sentence.
+
+## A location marked on a TRANSITION is deleted by `disconnect`
+
+`disconnect` DELETES the exit element, and if a `mark-location` names that same
+entity the overlay is left pointing at a body the room no longer has —
+every later derivation then refuses by name (*"no entity for it in level N"*).
+A row that wants a location subject should mark a body no transition op can
+touch; a page that offers locations should expect the derivation's refusal.
+
 ## Related documentation
 
 - [Architecture](./architecture.md)
