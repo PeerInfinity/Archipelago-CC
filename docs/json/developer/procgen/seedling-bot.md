@@ -14346,3 +14346,20 @@ speed, and the trade is 15 ticks on one room against 93 on another.
 ⛓ The roster-wide flag is still `false` and every one of the four owning
 producers' `--check` md5s is byte-identical at each of this slice's four
 commits — the whole slice is TAPE-INERT apart from the two witness tapes it adds.
+
+⛓ R9 slice 12d′ took the two solver ECONOMIES the user asked for — plan straight
+to a pickup, and walk during a lock's fade — and built both on a retained branch
+rather than on `main`, because neither has a flag and each moves committed solves
+the moment it lands. Two findings are worth carrying even if the branch never
+merges. First, aiming a WALK at a pickup's centre cannot work: every placed
+`Pickup` subclass is `special` with text, so `pick_up()` raises
+`Game.freezeObjects` and only a RELEASE of the talk key pages the NPC that
+follows, and the walk driver has no such cadence — driving at the sword's centre
+burns its whole budget frozen on top of the item. The avoid volume is a game
+fact; the detour the user saw came from somewhere else entirely, the stance ring
+search's `(distance, y, x)` tie-break, which sends the walk to the NORTH
+neighbour whichever side it arrives from. Second, a lock stays SOLID for its
+whole fade, so the world an early walk crosses is the world the planner already
+prices — the tile before the lock needs no hypothetical geometry, only the cells
+the still-solid planner can still reach, and the wait that follows is the
+responder's own `opensOnTick` arithmetic rather than a margin.

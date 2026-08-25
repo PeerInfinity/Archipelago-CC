@@ -4278,9 +4278,77 @@ carry "run the lint with a SCRATCH comment-skip patch as a REPORT ONLY on the
 test files you touched" so a typed count landing in the dead zone is seen
 before the real fix lands.
 
-**NEXT in R9: THE RE-RECORD SESSION**, on kickoff §30.6 column (C) — the flip plus the
-seven moved segments through `rerecord-seedling-campaign.mjs` under ⚖ ruling 43's
-`--license-walks`, with ⚖ ruling 39's `why` sweep riding the run. Then the route:
+⛓⛓⛓ **R9 SLICE 12d′ SHIPPED 2026-08-24 — THE TWO ECONOMIES, MEASURED ON A
+RETAINED BRANCH** (kickoff §31; ⚖ rulings 46 + 47). Branch **`r9/economies`**,
+HEAD **`3c3592282`**, parent **`5cf81e4ad`** — two commits, `648bf9af2` (⚖ 46)
+and `3c3592282` (⚖ 47). **NO TAPE MOVED; `main` carries records only** (the
+branch law: neither economy has a flag, so each moves committed solves the
+moment it lands and `solve-seedling-r9-campaign --check` goes red BY NAME on any
+tree carrying them — that red IS the measurement). The scratch dash flip is
+never committed.
+
+⛔ **⚖ 46's LETTER WAS REFUTED BEFORE A LINE WAS WRITTEN.** Driving straight at
+`sword@48,48`'s centre from `r8-solve-10`'s boot enters the pickup ceremony and
+burns the whole 400-tick budget frozen at (56,61.65), `collected 0` — L89's
+feather stall on demand. Every placed `Pickup` is `special` with text and only
+`Input.released(keys[6])` pages the NPC (`NPC.as:191`), which `drive` has no
+cadence for. **The avoid-volume rule encodes a GAME FACT and STAYS**;
+`runCollect` keeps the approach loop. What the user saw is `deriveStance`'s
+`(d, y, x)` **tie-break**, which sends the walk to the NORTH neighbour whichever
+side it arrives from. Cure: among candidates that can collect and that a
+corridor reaches, take the MINIMUM-distance tier and inside it the SHORTEST
+corridor. ⛔ The wider score (`walk + d`) is worth a further −13 t on
+`r8-solve-10` and drives `r8-solve-20` INTO WATER — measured, controlled,
+rejected under ⚖ 35.
+
+⛓ **⚖ 47 IS BUILT ON THE ONE CLASS WHERE IT IS LEGAL** — a `tset == -1`
+kill-lock, whose trigger survives the player. `preLockStance` = an orthogonal
+neighbour of the lock's cell that the STILL-SOLID planner can reach; the wait is
+`max(0, removal.t + opensOnTick(fade) − now)`, the executor's own sum read once.
+`r8-solve-18` **541 → 437 t**, waits 0, and the committed tape's own key-less
+gap t=292→394 is the 101 ticks it removes.
+
+⛔ **L5 — the campaign's ONLY lock room — IS THE NULL, MEASURED**: 22–36 arrows
+in flight through the whole fade (the player is on the button, so the ceiling is
+FIRING, not draining). Saving 0. ⇒ **⚖ 47's campaign reach is ZERO.**
+
+**THE TABLES** (every campaign segment DRIVEN, 0 hits, 0 deaths, calm, in all
+five columns; column (B) reproduces §30.6 (C) digit for digit — the calibration):
+campaign (A) 3615 · (B) 3331 · (C) 3328 · (D) 3331 · **(E) 3328**;
+`r8-d2` (A) 2186 · (B) ⛔ REFUSED · (C) 1736 · (D) ⛔ REFUSED · **(E) 1660**;
+and **(E₀), both economies with the flip WITHHELD**: campaign **3614**,
+`r8-d2` **2000**, every row solving.
+
+⛔⛔⛔ **AND THE SLICE'S LARGEST FINDING IS NEITHER ECONOMY: ⚖ 41's ROSTER-WIDE
+DASH FLIP, ALONE, REFUSES THE `r8-d2` CHAIN** — `shieldlocknorm@176,16` never
+opens inside its 131-tick bound, the snap never fires. §30.6's table is
+CAMPAIGN-ONLY and `r8-d2` was never in it. The mechanism is pinned to the pixel:
+`execTouch` leans by `leanKeys` = `|dx| >= |dy|` against the lock's CENTRE, and
+at the derived stance **(168,24)** that comparison is an **EXACT TIE**
+(`dx = +8.00`, `dy = −8.00`) resolved only by the `>=`. `DEFAULT_TOLERANCE = 1.0`
+is an order of magnitude larger than that zero margin, so which lean the room
+gets is decided by braking noise: measured `|dx| − |dy|` is +0.52 (A) · **−0.56
+(B/D, fatal `up`)** · +0.74 (C/E) · **+0.12 (E₀)**. `up` is fatal because
+`ShieldLock.update`'s probe is `collide("Player", x − 1, y)`, a WESTERN
+approach. ⚠ **NO COLUMN IS ROBUST — three fall right, two fall wrong, the sixth
+clears by a tenth of a pixel** (trap 588). The dash-overshoot hypothesis is
+TESTED AND REFUTED: every column's arrival is inside `DEFAULT_TOLERANCE` on both
+axes, so a leg-length gate would gate the wrong quantity.
+
+**⇒ 12d″'s FIRST ACT: derive the touch lean from the mechanism's own probe
+direction** (`x − 1` ⇒ horizontal, from the west) rather than from the dominant
+axis to the centre — which REMOVES the comparison instead of widening its
+margin. Until it lands, **no `r8-d2` row in any column is evidence about the
+flip.**
+
+**NEXT in R9: THE RE-RECORD SESSION**, whose inputs are now: branch
+`r9/economies` @`3c3592282`; kickoff §31's table **(E)** (campaign 3328 +
+`r8-d2` 1660) or **(E₀)** (3614 + 2000) depending on the flip decision; each
+mover's licence cited per segment (⚖ 35(c)/41 for the flip's, ⚖ 46/47 for the
+economies'; ⚠ the two `r8-d2-*` rows are flip+46 JOINTLY and are NOT separable,
+because the flip alone refuses). ⛔ **123 is L14's certified number and 108 is
+not.** Run through `rerecord-seedling-campaign.mjs` under ⚖ ruling 43's
+`--license-walks`, with ⚖ ruling 39's `why` sweep riding it. Then the route:
 L15 `shove` VERB-APPLY → L16 BRIDGE → L8 ORACLE → A14 → A16.
 
 ## 6. Everything else (unchanged queues)
