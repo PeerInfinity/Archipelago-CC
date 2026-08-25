@@ -80,7 +80,14 @@ const check = (ok, what, detail) => {
  * ⛓⛓ NODE BUILDS THE THREE FILES FIRST — from COMMITTED documents.
  * ══════════════════════════════════════════════════════════════════════ */
 
-const RULES_PATH = 'frontend/presets/seedling_atlas/AP_1/AP_1_rules.json';
+/**
+ * ⛓ **A SMALL COMMITTED PRESET WITH A NON-EMPTY `seed_name`.** The seedling
+ * presets stamp an EMPTY `seed_name`, and an equality row over `'' === ''` is
+ * a row that cannot fail; this one carries a real 20-digit seed, so all three
+ * of the compared fields say something.
+ */
+const RULES_PATH =
+    'frontend/presets/bakingadventure/AP_14089154938208861744/AP_14089154938208861744_rules.json';
 const RULES_TEXT = readFileSync(join(REPO, RULES_PATH), 'utf8');
 const RULES = JSON.parse(RULES_TEXT);
 const LEVEL_SET = JSON.parse(readFileSync(
@@ -205,6 +212,7 @@ try {
     /* ── CLAIM 2 — THE ANCHOR ────────────────────────────────────────── */
     const anchor = await upload(PLAIN, 'the plain .json');
     check(anchor.game_name === RULES.game_name && anchor.seed_name === RULES.seed_name
+        && anchor.seed_name !== ''
         && anchor.playerRegions === NODE_REGIONS,
         '⛓ CLAIM 2 — the plain `.json` loads, and node agrees with the page about it',
         `game_name ${anchor.game_name}, seed_name ${anchor.seed_name}, `
