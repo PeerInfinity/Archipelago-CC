@@ -4277,6 +4277,16 @@ to the instruments index. INTERIM (approved): the 12d′ and re-record briefs
 carry "run the lint with a SCRATCH comment-skip patch as a REPORT ONLY on the
 test files you touched" so a typed count landing in the dead zone is seen
 before the real fix lands.
+(4) **`--help` behaves as expected on every instrument** (user, 2026-08-24): a
+shared `argvHelp()` called first by every instrument's argv parsing prints the
+docblock summary + the flags DERIVED from the instruments index's argv scan
+(never hand-typed) and exits 0 side-effect-free; ⚠ ESM imports are hoisted, so
+module-scope producers (the campaign producer solves on import) either move
+their work into a `main()` (whole-roster replay + their own `--check` as the
+gate) or answer through an index-backed `scripts/procgen/help.mjs <instrument>`
+that never imports the script; plus a gate in the instruments scan that every
+instrument is `--help`-safe. The "no `--help` probes" hygiene rule retires when
+that gate is green.
 
 ⛓⛓⛓ **R9 SLICE 12d′ SHIPPED 2026-08-24 — THE TWO ECONOMIES, MEASURED ON A
 RETAINED BRANCH** (kickoff §31; ⚖ rulings 46 + 47). Branch **`r9/economies`**,
