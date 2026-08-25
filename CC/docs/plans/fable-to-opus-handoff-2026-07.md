@@ -3848,6 +3848,37 @@ record set derived from the projection diff is its W1) → the 12c batch closes
 the re-record. `ALLOW_DASH_ROSTER_WIDE` is still `false`; 123 is L14's number,
 108 is never quoted; the local branches are never pushed without asking.
 
+**⇒ CAMPAIGN ORCHESTRATION, session 5 → 6 (Fable, 2026-08-25).** Session 5
+verified FOUR slices — **12e″** (the dash impulse DEFERRED to the velocity
+`useItem` reads; the game reproduced the sealed witness column digit for
+digit; the roster proven inert by a two-build stream diff; table (D′)) · the
+re-record's **SECOND run** (STOP: the campaign chain re-recorded and GAME-CALM
+at all fifteen boundaries, but `r8-d2-19` NOT CALM — a 28-tick freeze) ·
+**12e‴** (the freeze = L19's SIGN opened by the SWORD key — the model's table
+said V; ⚖ 53 the dialogue is never triggered; the Help frame; ⚖ 51
+DISCHARGED; (D″)) · the re-record's **THIRD run** (STOP at S3: every latch
+CALM in the GAME incl. `r8-d2-19` @721 v=(0,0), the record set derived 13/13,
+then eight tapes red by ONE ULP on diagonal dashes — the game's dash direction
+is a position round trip normalised by `sqrt(x²+y²)`; attributed offline to
+13/13 EXACT, roster-inert, NOT applied) — recorded ⚖ rulings **51–55** (51 the
+freeze first; **52 NO local unfiltered vitest — CI read by SHA via
+`scripts/procgen/ci-vitest-summary.mjs`, the standing suite row QUOTED from
+CI**; 53; **54 the STREAMLINING BATCH P1–P4**; 55 the ULP class in a new
+session), landed four tape-inert pipeline fixes on `main` (producer ORDER
+derived from the chains; the S3 record set from the projection diff; the
+headline accounting; two wrong-subject guards), opened the editor arc's
+windows (D2, E1/E1b, E1c/E2a), and handed off at **`67b20e6a1`** to session 6
+(prompt `NewDocs/plans/seedling-bot-r9-campaign6-planning-prompt.md`). The
+series is parked LOCAL on `r9/re-record-attempt-4` @763bf3cb8 (thirteen tapes
+at their numbers + the thirteen RECORDED expectations as a refused WIP; ⚖ 49
++ extension UNFINISHED, not re-opened). SETTLED SEQUENCE for session 6 (user):
+**12e⁗** (brief ready — the two ULP edits, the 13/13 verify, Class B) → **P1**
+(brief ready — the provisional-latch mode, `--table`, the offline S0→S5
+rehearsal, projection-keyed caches) → **P2** (the economies behind the flag)
+→ the re-record's **FOURTH run** (no re-drive: verify + S4 + one push; closes
+the 12c batch) → **P3** (CI-quoted rows + a box lock) → **P4** (one record
+surface, one file per trap, 47b's leftovers) → L15 `shove`.
+
 
 ⛓⛓⛓ **R9 SLICE 12b SHIPPED 2026-08-23** (`12e80cb73` · `213d3078e` · `0055442f4` ·
 `3dc6d632f` · `a736eac1e` · `2d6d33949` · `3b171ec1e`) — **THE SWORD DASH, BUILT AND
