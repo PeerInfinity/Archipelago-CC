@@ -81,6 +81,9 @@ import { BOSS_CLASS_SHAKE_WRITERS, SHAKE_WRITERS } from './camera.js';
 import { killWindowTicks } from './chasers.js';
 import { ENEMY_CLASSES, enemyHitPlayerFires, plannerContactFree } from './combat.js';
 import { DEFAULT_TOLERANCE } from './botDriverV1.js';
+// ⛓ R9 slice 12d″ — the touch lean is the responder OWN probe, so the row that
+// measures it reads the same table `execTouch` reads.
+import { RESPONDERS, opensOnTick, touchApproachKey } from './activators.js';
 import { SLASH_HIT_TICKS } from './presses.js';
 // ⛓ R9 slice 1 (A3) — the kill lock's own tset, read from the module that owns it.
 import { KILL_LOCK_TSET } from './combat.js';
@@ -2850,5 +2853,135 @@ describe('R9 slice 12c′: the PLANNER dashes toward the exit', () => {
     /** ⛓ The roster-wide default is still `false` — the flip is 12c″'s. */
     it('⛓ the roster-wide dash permission is still OFF at this head', () => {
         expect(ALLOW_DASH_ROSTER_WIDE).toBe(false);
+    });
+});
+
+/**
+ * ⛓⛓⛓ R9 SLICE 12d″ — **THE L20 TOUCH, AT THE PIXEL THAT WAS FATAL.**
+ *
+ * R9 §31.7 measured `execTouch` choosing its lean by `|dx| >= |dy|` against
+ * the lock CENTRE, and the derived stance `(168,24)` against the target
+ * `(176,16)` makes that comparison `|+8.00| - |-8.00| = 0.00` — an EXACT tie
+ * that the `>=` alone decides, underneath `DEFAULT_TOLERANCE = 1.0`. Six
+ * measured builds scattered across it; three leaned `right` and solved and
+ * two leaned `up`, which is not slow but FATAL.
+ *
+ * ⛔ THESE ROWS DO NOT NEED THE CHAIN, THE FLIP, OR EITHER ECONOMY. The
+ * defect reproduces from a bare boot at the arrival pixel the flip column
+ * measured, which is what makes it a fixture rather than a re-run: the whole
+ * mechanism is two coordinates and one comparison.
+ */
+describe('R9 12d″: the touch lean is the mechanism OWN probe', () => {
+    const LOCK = 'shieldlocknorm@176,16';
+    /** The derived stance `deriveTouchStance` returns for L20 — cell (10,1). */
+    const STANCE = Object.freeze({ x: 168, y: 24 });
+    /**
+     * ⛓ §31.7's six measured touch-start pixels, one per build. Literals
+     * whose provenance is that table; nothing here re-derives them, and the
+     * row below is about their DISTANCE from `STANCE`, not their values.
+     */
+    const COLUMNS = Object.freeze([
+        { col: '(A) false', x: 167.26, y: 24.22, lean: 'right', solved: true },
+        { col: '(B) flip', x: 168.12, y: 24.44, lean: 'up', solved: false },
+        { col: '(C) flip+46', x: 168.09, y: 23.17, lean: 'right', solved: true },
+        { col: '(D) flip+47', x: 168.12, y: 24.44, lean: 'up', solved: false },
+        { col: '(E) flip+46+47', x: 168.09, y: 23.17, lean: 'right', solved: true },
+        { col: '(E0) economies', x: 167.99, y: 23.89, lean: 'right', solved: true },
+    ]);
+
+    /**
+     * A live L20 run standing at (x, y) with the plain shield. ⛔ The boot
+     * block is in PLACEMENT coordinates and the entity centre is placement +
+     * 8 on both axes, so the caller names the pixel it means and the offset
+     * is undone here — a row that booted `x` directly would sit 8 px east of
+     * the stance it claimed and prove nothing about either lean.
+     */
+    const at = (x, y) => createLevelRun({
+        levelSource, boot: { level: 20, x: x - 8, y: y - 8 }, noclip: false,
+        noHazards: [], noDamage: false, grants: [], persistence: [], despawn: [],
+        equips: [], pins: [], save: { totem_parts: [], keys: [], seal_parts: [] },
+        rng: null, seam: { items: { hasShield: true } }, roles: ROLES,
+    });
+
+    /** The work order `execTouch` is handed, built from the row the world has. */
+    const order = (run, over = {}) => {
+        const row = run.world.activators.find((a) => a.id === LOCK);
+        return {
+            strategy: 'touch', postCondition: 'open', held: true, lock: row.id,
+            target: { x: row.x, y: row.y }, tag: row.tag, need: row.shield,
+            window: opensOnTick(RESPONDERS[row.tag].fade), ...over,
+        };
+    };
+
+    it('⛓ the pixel that was FATAL under the dominant axis now snaps', () => {
+        const run = at(168.12, 24.44);
+        expect(run.state.x).toBeCloseTo(168.12, 6);
+        expect(run.state.y).toBeCloseTo(24.44, 6);
+        // ⛔ THE TWO RULES DISAGREE HERE, which is the whole reason this pixel
+        // is the fixture. Against the target the dominant axis is VERTICAL...
+        const dx = 176 - run.state.x;
+        const dy = 16 - run.state.y;
+        expect(Math.abs(dx) - Math.abs(dy)).toBeCloseTo(-0.56, 6);
+        expect(Math.abs(dx) >= Math.abs(dy)).toBe(false);
+        // ...and the probe says WEST, so the lean is `right` whatever the
+        // arithmetic to the centre says.
+        expect(touchApproachKey('shieldlocknorm')).toBe('right');
+        const out = STRATEGY_EXECUTORS.touch(run, [], order(run), { what: 'fixture' });
+        expect(out.snappedAt).not.toBeNull();
+        expect(out.ticks).toBe(105);
+    });
+
+    it('⛓ ...and the stance it is scattered around gives the SAME answer', () => {
+        // The tie itself. Under the old rule this one passed on the `>=`
+        // alone; under the derivation there is no comparison left to pass.
+        const run = at(STANCE.x, STANCE.y);
+        expect(Math.abs(176 - STANCE.x) - Math.abs(16 - STANCE.y)).toBe(0);
+        const out = STRATEGY_EXECUTORS.touch(run, [], order(run), { what: 'fixture' });
+        expect(out.snappedAt).not.toBeNull();
+        expect(out.ticks).toBe(105);
+    });
+
+    /**
+     * ⛓⛓⛓ ⚖ RULING 48, TESTED AND NOT THE MECHANISM — the user hypothesis
+     * (2026-08-24): *"I suspect that the fix is to limit dashes to paths that
+     * are long enough to complete at least one dash segment."*
+     *
+     * ⛔ THAT WOULD GATE THE WRONG QUANTITY, and this row is the arithmetic
+     * that says so. A dash overshoot would have to show as a displacement the
+     * drive does not permit; every one of §31.7's six measured touch-start
+     * pixels is inside `DEFAULT_TOLERANCE` of the derived stance on BOTH axes,
+     * so what separates a solving column from a fatal one is the drive OWN
+     * arrival scatter — 0.86 px at the very widest — landing either side of a
+     * comparison whose margin at that stance is EXACTLY ZERO. No leg length
+     * makes 1.0 px of allowed scatter smaller than a 0.00 px margin. ⇒ the
+     * cure is to remove the comparison, which is what this slice did.
+     */
+    it('⚖ 48: every measured arrival is inside the drive OWN tolerance', () => {
+        for (const c of COLUMNS) {
+            expect(Math.abs(c.x - STANCE.x), c.col).toBeLessThanOrEqual(DEFAULT_TOLERANCE);
+            expect(Math.abs(c.y - STANCE.y), c.col).toBeLessThanOrEqual(DEFAULT_TOLERANCE);
+        }
+        // ⛔ AND THE MARGIN THE SCATTER IS LANDING ON IS ZERO. At the stance
+        // the old rule compared `|+8.00|` with `|-8.00|`, so `>=` was the
+        // whole decision — an order of magnitude inside the tolerance above.
+        expect(Math.abs(176 - STANCE.x) - Math.abs(16 - STANCE.y)).toBe(0);
+        // The columns whose OLD lean was fatal are the ones whose scatter
+        // pushed `|dx| - |dy|` negative; the derivation gives all six `right`.
+        const fatal = COLUMNS.filter((c) => !c.solved);
+        expect(fatal.map((c) => c.col)).toEqual(['(B) flip', '(D) flip+47']);
+        for (const c of fatal) {
+            expect(Math.abs(176 - c.x) - Math.abs(16 - c.y), c.col).toBeLessThan(0);
+            expect(c.lean, c.col).toBe('up');
+        }
+        expect(touchApproachKey('shieldlocknorm')).toBe('right');
+    });
+
+    it('⛔ a responder with NO transcribed probe REFUSES BY NAME', () => {
+        // ⛔ The fallback IS the defect. A class nobody has read is the
+        // population least able to survive a guessed lean, so the verb says
+        // which class and what the work order is instead of picking an axis.
+        const run = at(168.12, 24.44);
+        expect(() => STRATEGY_EXECUTORS.touch(run, [], order(run, { tag: 'lock' }),
+            { what: 'fixture' })).toThrow(/is a `lock`, and .*carries no PROBE for that class/s);
     });
 });

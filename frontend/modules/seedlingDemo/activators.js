@@ -131,10 +131,91 @@ export const PRESSERS = Object.freeze({
  * ⚠ `directionFace` is deliberately absent: it selects a sprite row and
  * nothing in the observation stream can see it.
  */
-export const TOUCH_RESPONDERS = Object.freeze({
-    shieldlock: { as3: 'ShieldLock', src: 'Puzzlements/ShieldLock.as:30-51' },
-    shieldlocknorm: { as3: 'ShieldLock', src: 'Puzzlements/ShieldLock.as:30-51' },
+/**
+ * ⛓⛓⛓ R9 SLICE 12d″ — **THE PROBE, WHICH IS THE ONLY THING THAT KNOWS WHICH
+ * SIDE A TOUCH IS APPROACHED FROM.**
+ *
+ * `ShieldLock.update` does not test the player against its OWN rect. It
+ * shifts its mask one pixel and tests THAT: `collide("Player", x - 1, y)`
+ * (`Puzzlements/ShieldLock.as:32`). The offset is not decoration — the lock
+ * body is SOLID, so the only air the shifted mask adds is the one-pixel
+ * column on the side the shift points at, and that column is the entire
+ * approach. `levelWorld.js` already builds the geometry from the same fact
+ * (the `shieldlock*` class rows carry `hazard.dx = -1`, which is why
+ * `touchRect` is `rect` shifted west); what was missing is the DIRECTION as
+ * something a consumer can read, rather than a difference it would have to
+ * re-derive from two rects.
+ *
+ * ⛔ AND THE CONSUMER THAT NEEDED IT WAS GETTING IT WRONG. R9 §31.7 measured
+ * `execTouch` choosing its lean by the dominant axis to the lock's CENTRE —
+ * `|dx| >= |dy|` — and at L20's derived stance `(168,24)` against target
+ * `(176,16)` that comparison is `|+8.00| - |-8.00| = 0.00`: an EXACT TIE
+ * decided by the `>=`, with a drive tolerance of 1.0 px scattering arrivals
+ * across it. Three of six measured builds fell one way and two the other,
+ * and the wrong way is FATAL rather than slow (a lean of `up` walks the
+ * player north into the wall and `x` never closes, because a western probe
+ * is a western approach). The cure is not a wider margin — it is to have no
+ * comparison at all, which is what a transcribed probe gives.
+ *
+ * The offset is stored as the AS3 writes it, and `touchApproachKey` negates
+ * it: the player stands on the side the probe reaches toward and walks back
+ * INTO the body.
+ */
+const WEST_PROBE = Object.freeze({
+    dx: -1,
+    dy: 0,
+    as3: 'collide("Player", x - 1, y)',
+    src: 'Puzzlements/ShieldLock.as:32',
 });
+
+export const TOUCH_RESPONDERS = Object.freeze({
+    shieldlock: { as3: 'ShieldLock', src: 'Puzzlements/ShieldLock.as:30-51', probe: WEST_PROBE },
+    shieldlocknorm: { as3: 'ShieldLock', src: 'Puzzlements/ShieldLock.as:30-51', probe: WEST_PROBE },
+});
+
+/**
+ * The key a touch approach LEANS ON, derived from the responder's own probe.
+ *
+ * ⛔ `null` IS AN ANSWER AND IT MEANS "REFUSE", never "guess". Three shapes
+ * come back null, and the caller must name the class rather than fall back to
+ * a dominant axis — the fallback IS the defect this function exists to
+ * remove:
+ *
+ * 1. **NO TRANSCRIBED PROBE.** A tag that is not a touch responder, or one
+ *    whose row was added without reading its AS3.
+ * 2. **A CENTRED PROBE** (`dx == 0 && dy == 0`). `Whirlpool.as:61` is the
+ *    game's one example — `collide("Player", x, y)`, its own rect. A centred
+ *    probe adds NO air on any side and therefore names no side; a class like
+ *    that is approached from wherever it is reachable and the question this
+ *    function answers does not arise. (It is also not solid and not an
+ *    activator, so it has no row here — the arm is transcribed for the reader,
+ *    not for a caller.)
+ * 3. **A DIAGONAL PROBE.** The game has none; a lean is one key by
+ *    construction and inventing an order for two would be a policy nobody
+ *    reviewed.
+ *
+ * ⚠ `PushableBlock.as:39-54` probes all FOUR faces and is deliberately not a
+ * touch responder: which side is approached there is chosen by the PUSH
+ * DIRECTION the planner picks, not by the class, and that is `execShove`'s
+ * question.
+ */
+export function approachKeyFromProbe(probe) {
+    if (!probe) return null;
+    if (probe.dx !== 0 && probe.dy !== 0) return null;
+    if (probe.dx !== 0) return probe.dx < 0 ? 'right' : 'left';
+    if (probe.dy !== 0) return probe.dy < 0 ? 'down' : 'up';
+    return null;
+}
+
+/**
+ * ⛓ The same answer asked of a TAG. Split from the arithmetic above so the
+ * derivation can be exercised on the directions the game does not currently
+ * have — a table with two rows, both west, would otherwise let three of the
+ * four arms and both null arms go unmeasured.
+ */
+export function touchApproachKey(tag) {
+    return approachKeyFromProbe(TOUCH_RESPONDERS[tag]?.probe);
+}
 
 /**
  * ── THE RESPONDERS THAT OPEN ON A KEY (R4) ────────────────────────────

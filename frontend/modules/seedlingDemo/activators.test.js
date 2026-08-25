@@ -39,6 +39,7 @@ import {
     PRESSERS,
     RESPONDERS,
     TOUCH_RESPONDERS,
+    approachKeyFromProbe,
     createActivatorState,
     keyLineTouches,
     openActivatorIds,
@@ -47,6 +48,7 @@ import {
     pressedGroups,
     staticPressesIn,
     stepActivators,
+    touchApproachKey,
 } from './activators.js';
 
 const MAP = JSON.parse(readFileSync(
@@ -447,6 +449,74 @@ describe('R3: the lock that presses itself', () => {
         const state = createActivatorState(L71);
         expect(() => stepActivators(state, L71, playerBox(AGAINST, 264)))
             .toThrow(/no inventory/);
+    });
+
+    /**
+     * ⛓⛓⛓ R9 SLICE 12d″ — THE PROBE, AND THE TWO PLACES IT HAS TO AGREE.
+     *
+     * The `x - 1` in `ShieldLock.update` is already load-bearing twice over:
+     * `levelWorld.js` builds `touchRect` from it (the `shieldlock*` class
+     * rows carry `hazard.dx = -1`), and the neighbouring row above measures
+     * that the shift leaves exactly one touchable pixel column, on the WEST.
+     * What was missing is the DIRECTION as a fact a consumer can read — and
+     * `execTouch` was guessing it from the dominant axis to the lock centre,
+     * a comparison R9 §31.7 measured sitting on an EXACT TIE at the derived
+     * stance. This row binds the transcription to the geometry so the two
+     * cannot drift apart; a probe transcribed east would red here and at the
+     * pixel, which is the point.
+     */
+    it('the touch probe is TRANSCRIBED from the AS3, and the world geometry agrees', () => {
+        for (const tag of Object.keys(TOUCH_RESPONDERS)) {
+            const probe = TOUCH_RESPONDERS[tag].probe;
+            expect(probe, tag).toBeDefined();
+            expect(probe.src, tag).toBe('Puzzlements/ShieldLock.as:32');
+            expect({ dx: probe.dx, dy: probe.dy }, tag).toEqual({ dx: -1, dy: 0 });
+        }
+        // ...and the rects the world builds carry the same offset. L71 is the
+        // dark lock, L20 the plain one — the two placements the roster has.
+        const l20 = buildLevelWorld(levelRecord(20));
+        for (const level of [L71, l20]) {
+            for (const a of level.activators.filter((x) => x.touchRect)) {
+                const probe = TOUCH_RESPONDERS[a.tag].probe;
+                expect({ dx: a.touchRect.x - a.rect.x, dy: a.touchRect.y - a.rect.y }, a.id)
+                    .toEqual({ dx: probe.dx, dy: probe.dy });
+            }
+        }
+    });
+
+    /**
+     * ⛔ THE DERIVATION IS A NEGATION, AND `null` MEANS REFUSE.
+     * The probe SHIFTS the responder mask before testing the player, so the
+     * only air it adds is on the side it points at; the body itself is solid.
+     * The player therefore stands on that side and walks back INTO the body —
+     * the lean is the probe direction NEGATED. The three null arms are the
+     * whole of the safety: a caller that guessed instead would put §31.7's
+     * defect back for exactly the classes nobody has read yet.
+     */
+    it('the lean NEGATES the probe, and answers null rather than guessing', () => {
+        expect(touchApproachKey('shieldlocknorm')).toBe('right');
+        expect(touchApproachKey('shieldlock')).toBe('right');
+        // All four directions, because a two-row table that is west twice
+        // would leave three arms of the derivation unmeasured.
+        expect(approachKeyFromProbe({ dx: -1, dy: 0 })).toBe('right');
+        expect(approachKeyFromProbe({ dx: 1, dy: 0 })).toBe('left');
+        expect(approachKeyFromProbe({ dx: 0, dy: -1 })).toBe('down');
+        expect(approachKeyFromProbe({ dx: 0, dy: 1 })).toBe('up');
+        // `BossLock.as:62` probes a line at `y + height + 1` — SOUTH, so a
+        // key approach leans `up`. Recorded here as the reading it is; the
+        // `keylock` executor still leans by the dominant axis and that is
+        // named residue, not a claim this table makes.
+        expect(approachKeyFromProbe({ dx: 0, dy: 1 })).toBe('up');
+        // ⛔ NOT A DIRECTION: a tag with no row, a tag in another family, a
+        // CENTRED probe (`Whirlpool.as:61` is `collide("Player", x, y)` — it
+        // adds no air on any side and so names no side), and a diagonal the
+        // game does not have.
+        expect(touchApproachKey('nosuchtag')).toBeNull();
+        expect(touchApproachKey('lock')).toBeNull();
+        expect(touchApproachKey('bosslock')).toBeNull();
+        expect(approachKeyFromProbe({ dx: 0, dy: 0 })).toBeNull();
+        expect(approachKeyFromProbe({ dx: -1, dy: 1 })).toBeNull();
+        expect(approachKeyFromProbe(undefined)).toBeNull();
     });
 });
 

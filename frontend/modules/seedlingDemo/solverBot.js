@@ -72,7 +72,7 @@ import {
 import { resolvePresser } from './botDriverV2.js';
 import {
     KEY_RESPONDERS, RESPONDERS, TOUCH_RESPONDERS, keyLineTouches, localPublish,
-    opensOnKeyTick, opensOnTick,
+    opensOnKeyTick, opensOnTick, touchApproachKey,
 } from './activators.js';
 import {
     SHIELD_BOSS, shieldBossBandRect, shieldBossBodyRect, shieldBossDeathSchedule,
@@ -5772,6 +5772,15 @@ function resolveTouchStrategy(run, obstacle, contacts, blocked = []) {
         postCondition: 'open',
         target: { x: row.x, y: row.y },
         lock: obstacle.id,
+        /**
+         * ⛓ R9 SLICE 12d″ — the CLASS, carried so the executor can ask the
+         * responder's own probe which way to lean. ⛔ It is the tag and not a
+         * direction: the direction is `activators.touchApproachKey`'s to
+         * derive, and a resolver that computed one here would be a second
+         * place the answer lives. Not projected into the trace —
+         * `seeRow`'s `strategy` is an explicit whitelist.
+         */
+        tag: row.tag,
         need,
         stance,
         discharged,
@@ -5862,7 +5871,46 @@ function execTouch(run, perTick, resolved, ctx) {
             + 'which this run does not hold.');
     }
     const NO_KEYS = new Set();
-    const into = leanKeys(run.state, resolved.target);
+    /**
+     * ⛓⛓⛓ R9 SLICE 12d″ — **THE LEAN IS THE MECHANISM'S OWN PROBE, NOT A
+     * DOMINANT AXIS**, and the change is a REMOVAL: there is no longer a
+     * comparison for arrival scatter to decide.
+     *
+     * `leanKeys(run.state, resolved.target)` asked `|dx| >= |dy|` against the
+     * lock's CENTRE. R9 §31.7 measured what that costs on L20: the derived
+     * stance is `(168,24)`, the target `(176,16)`, so the comparison is
+     * `|+8.00| - |-8.00| = 0.00` — an EXACT TIE, broken only by the `>=`,
+     * underneath a drive tolerance of 1.0 px (`botDriverV1.js:48`). Six
+     * measured builds arrived at ±0.86 px of that point and scattered across
+     * it: three leaned `right` and solved, two leaned `up` and the room was
+     * UNSOLVABLE — `up` walks the player north into the wall at y = 18.04,
+     * `x` never closes, and the pinned box's closest approach stays 4.88 px
+     * for all 131 ticks. A room that works because a tie fell one way is not
+     * a room that works.
+     *
+     * ⛔ AND THE ANSWER WAS NEVER A GEOMETRIC QUESTION. `ShieldLock.update`
+     * is `p = collide("Player", x - 1, y)` — the mask shifted ONE PIXEL WEST
+     * — so the touch is a WESTERN approach for every ShieldLock in the game,
+     * at every stance, whatever the arithmetic to its centre says. The lean
+     * is `right` by DERIVATION.
+     *
+     * ⛔ A RESPONDER WHOSE PROBE IS NOT TRANSCRIBED REFUSES BY NAME. Falling
+     * back to the dominant axis for the unknown case would put this exact
+     * defect back for exactly the classes nobody has read yet, which is the
+     * population least able to survive it (trap 588's family).
+     */
+    const lean = touchApproachKey(resolved.tag);
+    if (!lean) {
+        return fail(`${ctx.what}: ${resolved.lock} is a \`${resolved.tag}\`, and `
+            + '`activators.TOUCH_RESPONDERS` carries no PROBE for that class — so which '
+            + 'side the touch is approached from is not a fact this run holds. ⛔ The '
+            + 'lean is NOT guessed from the dominant axis to the lock CENTRE: R9 '
+            + '§31.7 measured that comparison sitting on an exact tie at the derived '
+            + 'stance, where a fatal `up` and a working `right` are separated by less '
+            + 'than the tolerance the drive itself allows. The work order is to READ '
+            + 'that class `collide("Player", …)` AND TRANSCRIBE ITS OFFSET — one line.');
+    }
+    const into = new Set([lean]);
     const from = perTick.length;
     const bound = resolved.window + HOLD_SLACK;
     let snappedAt = null;
