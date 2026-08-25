@@ -110,7 +110,11 @@ export function nominateOwners(chains, { tapesDir } = {}) {
     if (!tapesDir) fail('nominateOwners: `tapesDir` is required');
     const out = new Map();
     for (const chain of chains) {
-        for (const segment of chain.segments) {
+        // ⛓ R9 12e′ RE-RUN: a chain's HEADLINE is a tape a producer authors
+        //   too, so it nominates exactly the way a segment does. Derived from
+        //   the accounting universe's own row rather than re-read from
+        //   `PLAYTHROUGH_CHAINS`, so the two lists cannot drift apart.
+        for (const segment of [...chain.segments, ...(chain.headline ? [chain.headline] : [])]) {
             const path = join(tapesDir, `${segment}.json`);
             if (!existsSync(path)) continue;
             let desc = '';
@@ -195,23 +199,38 @@ export function reportRows(reports, chains, unmeasurable = [], nominations = nul
     for (const u of unmeasurable) blocked.set(u.file, u.why);
     const rows = [];
     const unmeasured = [];
+    /**
+     * ⛓⛓⛓ R9 12e′ RE-RUN — **THE HEADLINE IS ACCOUNTED FOR AS A ROW OF ITS
+     * OWN, AND IT CARRIES `role` SO NOTHING DOWNSTREAM HAS TO GUESS.** A
+     * headline is authored by the chain's own producer and reported by it, but
+     * it is NOT at an index in the walk: it has no successor to cascade to and
+     * no boot for S2 to write. So it gets `role: 'headline'` and an `index` one
+     * past the last segment — a position that reads in the table and that
+     * `cascadeFrom` refuses to take a `firstMove` from.
+     */
+    const accountOne = (chain, index, segment, role) => {
+        const hit = owner.get(segment);
+        if (hit) {
+            rows.push({ chain: chain.id, index, segment, role, ...hit });
+            return;
+        }
+        const mine = nominations
+            ? [...nominations.entries()]
+                .filter(([file, segs]) => segs.includes(segment) && blocked.has(file))
+                .map(([file]) => blocked.get(file))
+            : [...blocked.values()];
+        const why = mine.length
+            ? `no participating producer reported it — ${mine.join('; ')}`
+            : 'no producer reported it, and no producer IT NOMINATED was blocked — so '
+                + 'nothing in this tree claims to author it';
+        unmeasured.push({ chain: chain.id, index, segment, role, why });
+    };
     for (const chain of chains) {
         for (const [index, segment] of chain.segments.entries()) {
-            const hit = owner.get(segment);
-            if (hit) {
-                rows.push({ chain: chain.id, index, segment, ...hit });
-                continue;
-            }
-            const mine = nominations
-                ? [...nominations.entries()]
-                    .filter(([file, segs]) => segs.includes(segment) && blocked.has(file))
-                    .map(([file]) => blocked.get(file))
-                : [...blocked.values()];
-            const why = mine.length
-                ? `no participating producer reported it — ${mine.join('; ')}`
-                : 'no producer reported it, and no producer IT NOMINATED was blocked — so '
-                    + 'nothing in this tree claims to author it';
-            unmeasured.push({ chain: chain.id, index, segment, why });
+            accountOne(chain, index, segment, 'segment');
+        }
+        if (chain.headline) {
+            accountOne(chain, chain.segments.length, chain.headline, 'headline');
         }
     }
     return { rows, unmeasured, stops };
@@ -223,6 +242,7 @@ export function reportRows(reports, chains, unmeasurable = [], nominations = nul
 export function movedSegments(rows) {
     return rows.filter((r) => r.verdict === LICENSABLE)
         .map((r) => ({ chain: r.chain, index: r.index, segment: r.segment,
+            role: r.role ?? 'segment',
             producer: r.producer, before: r.committedTicks, after: r.solvedTicks }));
 }
 
@@ -239,6 +259,15 @@ export function movedSegments(rows) {
 export function cascadeFrom(chains, moved) {
     const first = new Map();
     for (const m of moved) {
+        /**
+         * ⛔ A HEADLINE NEVER OPENS A CASCADE. It is the whole chain driven in
+         * one run, so it has no successor whose boot is its latch — and it
+         * sits at `index === segments.length`, which a naive `min` would
+         * simply never pick anyway. That is the accident, not the rule: a
+         * headline is excluded because of WHAT IT IS, so the row keeps
+         * meaning what it says if the index ever moves.
+         */
+        if ((m.role ?? 'segment') === 'headline') continue;
         const at = first.get(m.chain);
         if (at === undefined || m.index < at) first.set(m.chain, m.index);
     }

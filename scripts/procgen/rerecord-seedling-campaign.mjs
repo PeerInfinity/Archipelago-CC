@@ -252,6 +252,12 @@ function accountingChains() {
             ?? 'custody'),
         trueStartCustody: subject.get(c.id)?.trueStartCustody ?? false,
         segments: c.segments.slice(),
+        /**
+         * ⛓ R9 12e′ RE-RUN — the chain's HEADLINE, when it is a tape no chain
+         * claims as a segment (§33.4 item 2). `accountingUniverse` decides
+         * that; nothing here re-asks it.
+         */
+        headline: c.headline ?? null,
     }));
 }
 
@@ -391,6 +397,7 @@ async function predict() {
             table.push({
                 chain: chain.id,
                 segment: r.name,
+                role: 'segment',
                 index: r.i,
                 bootLevel: r.t.boot.level,
                 committed: {
@@ -411,6 +418,46 @@ async function predict() {
                         ? 'its own build now spawns the gated body, so its TICK-0 block is '
                             + 're-derived; its BOOT is upstream of every move and does not'
                         : 'nothing upstream of it moved',
+            });
+        }
+        /**
+         * ⛓⛓⛓ R9 12e′ RE-RUN — **THE HEADLINE'S OWN ROW (§33.4 item 2).**
+         *
+         * `solve-seedling-r8-d2-chain.mjs` re-authors `r8-d2` on every run and
+         * REPORTS it (measured at this head: *"3 segment(s) reported, 2
+         * nominated"*), and until now the row went in neither the table nor
+         * `unmeasured` — the same floor `r8-solve-11` fell through, one level
+         * up, on a 2186 t tape.
+         *
+         * ⛔ ITS BOOT VERDICT IS `none` BY CONSTRUCTION, NOT BY MEASUREMENT.
+         * A headline is the whole chain driven in ONE run, so its boot is
+         * segment 0's own — upstream of every move ⚖ ruling 23 predicts, and
+         * there is no predecessor latch for this pipeline to re-derive. What
+         * it CAN have is a WALK move, which the merge below gives it.
+         */
+        if (chain.headline) {
+            const t = tapeOf(chain.headline);
+            const posture = rngPostureForBootLevel(t.boot.level, atlasLevelSource());
+            table.push({
+                chain: chain.id,
+                segment: chain.headline,
+                role: 'headline',
+                index: chain.segments.length,
+                bootLevel: t.boot.level,
+                committed: {
+                    rngSeed: t.rng?.seed ?? null,
+                    rngFp: t.rng?.fp ?? null,
+                    seamTime: t.seam?.time ?? null,
+                    tick0Seed: t.tick0?.rng?.seed ?? null,
+                },
+                ownRoomTimedClears: [],
+                continuationHazard: false,
+                posture: { comparable: posture.comparable, verdict: posture.verdict },
+                verdict: 'none',
+                tick0Rederived: false,
+                why: 'a chain HEADLINE is the whole walk driven in ONE run — its boot is '
+                    + 'segment 1\'s own and this pipeline authors no boot for it. Only its '
+                    + 'WALK can move.',
             });
         }
     }
@@ -460,7 +507,8 @@ async function predict() {
     const tick0Set = table.filter((r) => r.tick0Rederived).map((r) => r.segment);
     console.log('\n## THE SEALED TABLE');
     for (const r of table) {
-        console.log(`   ${r.chain.padEnd(14)} ${String(r.index + 1).padStart(2)} `
+        console.log(`   ${r.chain.padEnd(14)} `
+            + `${(r.role === 'headline' ? 'HL' : String(r.index + 1)).padStart(2)} `
             + `${r.segment.padEnd(14)} L${String(r.bootLevel).padEnd(3)} `
             + `${r.verdict.padEnd(11)} tick0:${r.tick0Rederived ? 'RE-DERIVE' : 'keep     '} `
             + `walk:${(r.walk?.verdict ?? 'unmeasured').padEnd(11)} `

@@ -158,8 +158,8 @@ describe('R9 12e′: the walk accounting is total over the chains that EXIST', (
             { id: 'solo-new', segments: ['z'] },
         ];
         expect(accountingUniverse(chains)).toEqual([
-            { id: 'pair', segments: ['a', 'b'] },
-            { id: 'solo-new', segments: ['z'] },
+            { id: 'pair', segments: ['a', 'b'], headline: null },
+            { id: 'solo-new', segments: ['z'], headline: null },
         ]);
     });
 
@@ -172,7 +172,7 @@ describe('R9 12e′: the walk accounting is total over the chains that EXIST', (
             { id: 'pair', segments: ['a', 'b'] },
         ];
         expect(accountingUniverse(chains)).toEqual([
-            { id: 'pair', segments: ['a', 'b'] },
+            { id: 'pair', segments: ['a', 'b'], headline: null },
         ]);
     });
 
@@ -186,6 +186,54 @@ describe('R9 12e′: the walk accounting is total over the chains that EXIST', (
         // segment `r9-campaign` already carries, so only two are new — and one
         // of them is the segment that was lost.
         expect(extra).toEqual(['r8-solve-11', 'r8-solve-20']);
+    });
+});
+
+/**
+ * ⛓⛓⛓ R9 SLICE 12e′ RE-RUN — **THE HEADLINE FELL THROUGH THE SAME FLOOR, ONE
+ * LEVEL UP.** `solve-seedling-r8-d2-chain.mjs` re-authors and REPORTS `r8-d2`
+ * (2186 t) on every run, and it is not in `chain.segments`, so `reportRows`
+ * threw the row away exactly as it threw `r8-solve-11`'s away.
+ */
+describe('R9 12e′ RE-RUN: a chain HEADLINE is accounted for, and never twice', () => {
+    it('⛓ a headline no chain claims as a segment becomes the chain\'s own row', () => {
+        const chains = [{ id: 'pair', segments: ['a', 'b'], headline: 'pair-full' }];
+        expect(accountingUniverse(chains)).toEqual([
+            { id: 'pair', segments: ['a', 'b'], headline: 'pair-full' },
+        ]);
+    });
+
+    it('⛔ a headline that IS its own only segment is NOT counted a second time', () => {
+        // This is the shape twelve of the fifteen declared chains have
+        // (`r8-battery-*`, `r8-d2-shield`): claiming the tape twice would break
+        // the "in exactly one report" arithmetic the universe exists for.
+        const chains = [{ id: 'solo', segments: ['a'], headline: 'a' }];
+        expect(accountingUniverse(chains)).toEqual([
+            { id: 'solo', segments: ['a'], headline: null },
+        ]);
+    });
+
+    it('⛔ a headline that is ANOTHER chain\'s segment is claimed by that chain alone', () => {
+        // The second pass exists for exactly this: a one-pass claim would let
+        // the declaration ORDER decide whether the tape is counted once or
+        // twice, which is the defect the multi-first ordering already fixed
+        // for segments.
+        const chains = [
+            { id: 'owner', segments: ['a', 'b'] },
+            { id: 'other', segments: ['z'], headline: 'a' },
+        ];
+        expect(accountingUniverse(chains)).toEqual([
+            { id: 'owner', segments: ['a', 'b'], headline: null },
+            { id: 'other', segments: ['z'], headline: null },
+        ]);
+    });
+
+    it('⛓ on the REAL tree exactly TWO headlines are new, and one of them is `r8-d2`', () => {
+        // ⛔ DERIVED, not typed: every other declared headline is already its
+        // own chain's segment.
+        const extra = accountingUniverse(PLAYTHROUGH_CHAINS)
+            .map((c) => c.headline).filter(Boolean).sort();
+        expect(extra).toEqual(['r7-ends-meet-full', 'r8-d2']);
     });
 });
 

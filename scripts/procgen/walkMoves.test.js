@@ -202,6 +202,77 @@ describe('walkMoves: the cascade — and the row is NOT vacuous', () => {
     });
 });
 
+/**
+ * ⛓⛓⛓ R9 SLICE 12e′ RE-RUN — **THE HEADLINE ROW.** §33.4 item 2: the d2-chain
+ * producer reports `r8-d2` (2186 t) on every run and `reportRows` discarded it,
+ * because it is not in `chain.segments`. It is accounted for now, with a `role`
+ * so nothing downstream has to infer what it is from its index.
+ */
+describe('R9 12e′ RE-RUN: the headline is accounted for, and it never opens a cascade', () => {
+    const seg = (segment, verdict, before = 10, after = 10) => ({
+        segment, verdict, solvedTicks: after, committedTicks: before, moved: [],
+    });
+    const chain = [{ id: 'c', segments: ['s1', 's2'], headline: 'c-full' }];
+
+    it('⛓ a reported headline is a ROW, at one past the last segment', () => {
+        const r = reportRows([{ producer: 'p.mjs',
+            segments: [seg('s1', 'none'), seg('s2', 'none'), seg('c-full', 'none')] }], chain);
+        expect(r.rows.map((x) => [x.segment, x.role, x.index]))
+            .toEqual([['s1', 'segment', 0], ['s2', 'segment', 1], ['c-full', 'headline', 2]]);
+        expect(r.unmeasured).toEqual([]);
+    });
+
+    it('⛔ a headline NOBODY reported is NAMED unmeasured, not dropped', () => {
+        // ⛔ THE MUTANT THIS ROW IS: with the headline arm removed, `unmeasured`
+        //   comes back EMPTY and the accounting balances at 2 — which is
+        //   exactly how a 2186 t tape went missing without a single red row.
+        const r = reportRows([{ producer: 'p.mjs',
+            segments: [seg('s1', 'none'), seg('s2', 'none')] }], chain,
+        [{ file: 'q.mjs', why: 'q.mjs DRIVES A BROWSER' }]);
+        expect(r.unmeasured.map((u) => [u.segment, u.role])).toEqual([['c-full', 'headline']]);
+        expect(r.unmeasured[0].why).toMatch(/DRIVES A BROWSER/);
+    });
+
+    it('⛓ a headline nominates its own producer, so its reason is ITS producer\'s', () => {
+        // The nomination map is what keeps an unmeasured row from carrying a
+        // TRUE sentence about the WRONG SUBJECT (12e′'s `r8-solve-20`).
+        const r = reportRows([], chain,
+            [{ file: 'mine.mjs', why: 'mine.mjs does not accept `--walk-report`' },
+                { file: 'theirs.mjs', why: 'theirs.mjs DRIVES A BROWSER' }],
+            new Map([['mine.mjs', ['c-full']], ['theirs.mjs', ['s1', 's2']]]));
+        const hl = r.unmeasured.find((u) => u.segment === 'c-full');
+        expect(hl.why).toMatch(/does not accept/);
+        expect(hl.why).not.toMatch(/DRIVES A BROWSER/);
+    });
+
+    /**
+     * ⛔⛔ **A HEADLINE MOVING MUST NOT CASCADE, AND THE ROW DISCRIMINATES.**
+     * The headline is at `index === segments.length`, so a `min` would never
+     * pick it — that is an ACCIDENT of the index, not the rule. Here the
+     * headline is the ONLY mover, so a cascade that took it would name a
+     * chain with an empty successor list where the honest answer is no entry
+     * at all.
+     */
+    it('⛔⛔ the headline is the ONLY mover — and NOTHING cascades', () => {
+        const r = reportRows([{ producer: 'p.mjs',
+            segments: [seg('s1', 'none'), seg('s2', 'none'),
+                seg('c-full', 'walk-moves', 2186, 1672)] }], chain);
+        const moved = movedSegments(r.rows);
+        expect(moved.map((m) => [m.segment, m.role, m.before, m.after]))
+            .toEqual([['c-full', 'headline', 2186, 1672]]);
+        expect(cascadeFrom(chain, moved).size).toBe(0);
+    });
+
+    it('⛓ a segment moving beside it still cascades, from the SEGMENT', () => {
+        const r = reportRows([{ producer: 'p.mjs',
+            segments: [seg('s1', 'walk-moves', 541, 410), seg('s2', 'none'),
+                seg('c-full', 'walk-moves', 2186, 1672)] }], chain);
+        expect(cascadeFrom(chain, movedSegments(r.rows)).get('c')).toEqual({
+            firstMove: 0, firstMoveSegment: 's1', successors: ['s2'],
+        });
+    });
+});
+
 describe('walkMoves: the licence', () => {
     const moved = [{ chain: 'c', index: 1, segment: 's2', producer: 'p.mjs',
         before: 145, after: 96 }];

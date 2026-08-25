@@ -80,8 +80,28 @@ export function chainSubjects(chains, tapeOf) {
  * the licence can cover, and a segment nobody can measure is named with its
  * reason instead of vanishing.
  *
+ * ⛓⛓⛓ R9 SLICE 12e′ RE-RUN — **AND A CHAIN'S `headline` IS A TAPE THE SAME
+ * PRODUCERS AUTHOR, SO IT IS THE SAME QUESTION AND IT WAS BEING DROPPED TOO.**
+ * `solve-seedling-r8-d2-chain.mjs` re-authors `r8-d2` on every run and REPORTS
+ * it — measured 2026-08-25 at this head, *"3 segment(s) reported, 2
+ * nominated"* — but `r8-d2` is not in `chain.segments`, so `reportRows` threw
+ * its row away exactly as it threw `r8-solve-11`'s away (§33.4 item 2). A
+ * 2186 t tape moving to 1672 t with nothing in the table saying so is the same
+ * defect one level up.
+ *
+ * ⛔ A HEADLINE THAT IS ALREADY A SEGMENT IS NOT COUNTED TWICE. Twelve of the
+ * fifteen declared headlines ARE their own chain's only segment
+ * (`r8-battery-*`, `r8-d2-shield`); claiming them again would break the very
+ * arithmetic the universe exists for ("in exactly one report" cannot survive a
+ * duplicate subject). Only `toy-west-pair`'s `r7-ends-meet-full` and `r8-d2`'s
+ * `r8-d2` are new, and they are DERIVED that way rather than named.
+ *
+ * ⛔ THE SECOND PASS IS NOT A TIDINESS. A headline of chain A can be a SEGMENT
+ * of chain B declared later in the list, and a one-pass claim would let the
+ * declaration order decide whether it is counted once or twice.
+ *
  * @param {Array} chains `PLAYTHROUGH_CHAINS`
- * @returns {Array<{id: string, segments: string[]}>}
+ * @returns {Array<{id: string, segments: string[], headline: ?string}>}
  */
 export function accountingUniverse(chains) {
     const claimed = new Set();
@@ -93,7 +113,15 @@ export function accountingUniverse(chains) {
     for (const c of inOrder) {
         const mine = (c.segments ?? []).filter((s) => !claimed.has(s));
         for (const s of mine) claimed.add(s);
-        if (mine.length) out.push({ id: c.id, segments: mine });
+        if (mine.length) out.push({ id: c.id, segments: mine, headline: null });
+    }
+    for (const c of chains) {
+        const h = c.headline;
+        if (!h || claimed.has(h)) continue;
+        claimed.add(h);
+        const row = out.find((x) => x.id === c.id);
+        if (row) row.headline = h;
+        else out.push({ id: c.id, segments: [], headline: h });
     }
     return out;
 }
