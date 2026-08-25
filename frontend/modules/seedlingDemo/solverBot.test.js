@@ -48,6 +48,8 @@ import { buildTape } from './botDriverV1.js';
 import { plannerObstacleAt, planWaypoints } from './botDriverV2.js';
 // ⛓ R9 slice 12d′: the chest control derives its band from the mechanism.
 import { chestStanceBand } from './chest.js';
+// ⛓ R9 slice 12d′: ⚖ 47's wait is the responder's own arithmetic, derived here too.
+import { RESPONDERS, opensOnTick } from './activators.js';
 import { HITBOX } from './playerPhysicsV1.js';
 import {
     LIVE_GEOMETRY_KEYS, ROLES, TILE_SIZE, isNormalizedLiveOpts, normalizeLiveOpts, rect,
@@ -3194,5 +3196,114 @@ describe('R9 slice 12d′: ⚖ 46 — the collect stance is the one the corridor
         const band = chestStanceBand(32, 48, HITBOX);
         expect(walk.goal.aim).toEqual({ x: 32 + TILE_SIZE / 2, y: band[0] });
         expect(walk.goal.aim).toEqual({ x: 40, y: 66 });
+    });
+});
+
+/**
+ * ⛓⛓⛓ R9 SLICE 12d′, ⚖ RULING 47 — **THE WALK RUNS DURING THE FADE**, on the
+ * one class where it is legal and on the one room this roster has of it.
+ *
+ * `Lock.activationStep` drains alpha 0.01/tick and only `turnOff()` (alpha ≤ 0)
+ * writes `type = ""` (`Puzzlements/Lock.as:63-104`), so the lock is SOLID for
+ * the whole `opensOnTick` fade and the world the early walk crosses is the
+ * world the planner already prices. What makes it legal is the TRIGGER: a
+ * `tset == -1` lock is armed by `checkEnemies()` when `Game.totalEnemies()`
+ * reaches zero and no button in the game answers one, so the trigger stays
+ * satisfied without the player.
+ *
+ * ⛔ THE TWO CLASSES THAT CANNOT TAKE IT ARE GATED BY THEIR OWN INSTRUMENTS,
+ * not re-asserted here (trap 605): that leaving a player-held button
+ * re-solidifies its lock is `activators.test.js`'s *"releasing the button
+ * re-solidifies it — but only once clear"* and `levelRun.test.js`'s *"shuts
+ * again when the player steps off a lock they are not inside"*; the block-held
+ * dwell is `procgenWeigh.test.js`'s. This change lives only in the kill-lock
+ * arm, and those files are what would notice if it did not.
+ */
+describe('R9 slice 12d′: ⚖ 47 — the fade is spent walking, and the wait is arithmetic', () => {
+    /**
+     * ⛓ THE ARRIVE-LATE ARM, IN THE WILD. `r8-solve-18`'s committed tape holds
+     * NO key from t=292 to t=394 — the fade, standing still at the loiter cell,
+     * measurable in the artifact. The walk to the tile before `lock@144,112`
+     * outlasts it, so the wait is ZERO and the whole fade is spent travelling.
+     */
+    it('⛓ L18 spends the fade walking to the tile before the lock and waits ZERO', () => {
+        const { run, committed } = runFromCommitted('r8-solve-18');
+        const L18 = levelSource(18);
+        const exit = (L18.entities ?? []).find((e) => Number(e.attrs?.to) === 19);
+        const out = solveSegment({
+            run, goals: [{ kind: 'reach-exit', exit: { x: exit.x, y: exit.y } }],
+            name: 'r8-solve-18', boot: committed.boot,
+        });
+        const kill = out.records.find((r) => r.verb === 'kill');
+        // The stance is the cell WEST of `lock@144,112` — its rect is
+        // [144,160) x [112,128), so the neighbour's centre is (136,120).
+        expect(kill.earlyWalk.stance).toEqual({ x: 136, y: 120 });
+        // ⛓ THE ARITHMETIC, DERIVED — `opensOnTick` over the responder's own
+        // fade, never a margin and never a poll.
+        expect(kill.earlyWalk.fade).toBe(opensOnTick(RESPONDERS.lock.fade));
+        expect(kill.earlyWalk.clearTick)
+            .toBe(kill.earlyWalk.removedAt + kill.earlyWalk.fade);
+        // Arrived AFTER the clear ⇒ nothing left to wait for.
+        expect(kill.earlyWalk.arrivedAt).toBeGreaterThan(kill.earlyWalk.clearTick);
+        expect(kill.earlyWalk.waits).toBe(0);
+        // The room still solves, faster than the tape that stood through it.
+        expect(run.playerHits.length).toBe(0);
+        expect(run.playerDeaths.length).toBe(0);
+        expect(out.perTick.length).toBeLessThan(committed.tick_count);
+    });
+
+    /**
+     * ⛓ THE ARRIVE-EARLY ARM — the SAME room, differing only in where the
+     * segment boots, which is what puts the last strike near the lock and makes
+     * the walk shorter than the fade. The wait is then the remainder and
+     * nothing else: `clearTick − arrivedAt`, exactly.
+     */
+    it('⛓ a walk that beats the fade waits the ARITHMETIC remainder, not a margin', () => {
+        const { run } = runFromCommitted('r8-solve-18', { boot: { level: 18, x: 128, y: 112 } });
+        const L18 = levelSource(18);
+        const exit = (L18.entities ?? []).find((e) => Number(e.attrs?.to) === 19);
+        const out = solveSegment({
+            run, goals: [{ kind: 'reach-exit', exit: { x: exit.x, y: exit.y } }],
+            name: 'L18 from the lock\'s own chamber', boot: { level: 18, x: 128, y: 112 },
+        });
+        const kill = out.records.find((r) => r.verb === 'kill');
+        expect(kill.earlyWalk.stance).toEqual({ x: 136, y: 120 });
+        expect(kill.earlyWalk.arrivedAt).toBeLessThan(kill.earlyWalk.clearTick);
+        expect(kill.earlyWalk.waits)
+            .toBe(kill.earlyWalk.clearTick - kill.earlyWalk.arrivedAt);
+        expect(kill.earlyWalk.waits).toBeGreaterThan(0);
+        expect(run.playerHits.length).toBe(0);
+    });
+
+    /**
+     * ⛔ THE STANCE IS INSIDE THE ROOM, WHICH IS TRAP 150's WHOLE CONDITION: a
+     * counted body that respawns behind the walker would un-arm the very lock
+     * this wait is for. It holds by construction — every candidate is an
+     * orthogonal neighbour of a cell in THIS level — and the row says so out
+     * loud because the consequence is silent when it fails.
+     */
+    it('⛔ the pre-lock stance is a neighbour of the lock\'s own cell, inside the room', () => {
+        const { run, committed } = runFromCommitted('r8-solve-18');
+        const lock = (run.world.activators ?? []).find((a) => a.id === 'lock@144,112');
+        const L18 = levelSource(18);
+        const exit = (L18.entities ?? []).find((e) => Number(e.attrs?.to) === 19);
+        const out = solveSegment({
+            run, goals: [{ kind: 'reach-exit', exit: { x: exit.x, y: exit.y } }],
+            name: 'r8-solve-18', boot: committed.boot,
+        });
+        const { stance } = out.records.find((r) => r.verb === 'kill').earlyWalk;
+        const centre = {
+            x: (lock.rect.x + lock.rect.right) / 2,
+            y: (lock.rect.y + lock.rect.bottom) / 2,
+        };
+        // Orthogonal, one lattice step, and the step is a whole tile.
+        const dx = Math.abs(stance.x - centre.x);
+        const dy = Math.abs(stance.y - centre.y);
+        expect(Math.min(dx, dy)).toBe(0);
+        expect(Math.max(dx, dy)).toBe(TILE_SIZE);
+        expect(stance.x).toBeGreaterThanOrEqual(0);
+        expect(stance.y).toBeGreaterThanOrEqual(0);
+        expect(stance.x).toBeLessThan(run.world.width * TILE_SIZE);
+        expect(stance.y).toBeLessThan(run.world.height * TILE_SIZE);
     });
 });

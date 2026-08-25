@@ -5122,6 +5122,71 @@ function execKill(run, perTick, resolved, ctx) {
  * HIT (traps 85/93). The loop presses only when the body's own `hitsTimer` is
  * down — the run's own field, never a counter kept here.
  */
+/**
+ * ⛓⛓⛓ R9 SLICE 12d′, ⚖ RULING 47 — **THE TILE BEFORE THE LOCK, DERIVED FROM
+ * THE STILL-SOLID WORLD** (user, 2026-08-24: *"It could save time by starting
+ * the walk immediately after triggering the lock to clear, and only waiting if
+ * the lock hasn't cleared by the time it reaches the tile before the lock."*).
+ *
+ * A `Lock` stays SOLID for its whole fade — `activationStep` only drains alpha,
+ * and `turnOff()` writes `type = ""` at the END of it (`Puzzlements/Lock.as:63-104`)
+ * — so the world the early walk crosses is the world the planner already
+ * prices, unchanged. That is why this needs no hypothetical: the tile before
+ * the lock is an ORTHOGONAL neighbour of the lock's own cell that the
+ * STILL-SOLID planner can reach, and the cells beyond the lock are exactly the
+ * ones it cannot.
+ *
+ * ⛔ ORTHOGONAL, NOT THE EIGHT. A lock sits in a corridor and "the tile before
+ * it" is the one the onward step leaves from; a diagonal neighbour is adjacent
+ * without being on the way, and offering one would be a wait spot dressed as a
+ * route. The shortest corridor wins — the errand is to spend the fade getting
+ * close, not to pick a scenic neighbour — then `(y, x)` so the emitted tape is
+ * deterministic.
+ *
+ * ⚠ **INSIDE THE ROOM BY CONSTRUCTION**, which trap 150 requires: every
+ * candidate is a neighbour of a cell in THIS level, so no early walk can cross
+ * a room edge and let a counted body respawn behind it. Asserted by the caller
+ * rather than assumed.
+ *
+ * @returns {?{x: number, y: number, walk: number}} the stance, or `null` when
+ *   no orthogonal neighbour is both walkable and reachable — the honest null,
+ *   and the caller then waits where it stands exactly as before.
+ */
+function preLockStance(run, lock, contacts) {
+    const opts = solverPlanOpts(run, contacts);
+    const centre = {
+        x: (lock.rect.x + lock.rect.right) / 2,
+        y: (lock.rect.y + lock.rect.bottom) / 2,
+    };
+    const cell = nodeAt(centre.x, centre.y, DEFAULT_LATTICE);
+    const nx = run.world.width * TILE_SIZE / DEFAULT_LATTICE;
+    const ny = run.world.height * TILE_SIZE / DEFAULT_LATTICE;
+    const found = [];
+    for (const [dx, dy] of [[0, -1], [-1, 0], [1, 0], [0, 1]]) {
+        const tx = cell.tx + dx;
+        const ty = cell.ty + dy;
+        if (tx < 0 || ty < 0 || tx >= nx || ty >= ny) continue;
+        const c = nodeCentre(tx, ty, DEFAULT_LATTICE);
+        if (plannerObstacleAt(run.world, c.x, c.y, null, opts)) continue;
+        let wps;
+        try {
+            wps = planWaypoints(run.world, run.state, { x: c.x, y: c.y }, null, opts);
+        } catch (e) {
+            if (!(e instanceof BotDriverV2Error)) throw e;
+            continue;
+        }
+        let walk = 0;
+        let at = run.state;
+        for (const wp of wps) {
+            walk += Math.hypot(wp.x - at.x, wp.y - at.y);
+            at = wp;
+        }
+        found.push({ x: c.x, y: c.y, walk });
+    }
+    found.sort((a, b) => a.walk - b.walk || a.y - b.y || a.x - b.x);
+    return found[0] ?? null;
+}
+
 function execKillByPress(run, perTick, resolved, ctx) {
     const NO_KEYS = new Set();
     const PRESS = new Set(['primary']);
@@ -5355,10 +5420,85 @@ function execKillByPress(run, perTick, resolved, ctx) {
      * it, so a spinner room could kill everything and then sit out a 101-tick
      * fade waiting for a writer that does not exist.
      */
-    for (let i = 0; i <= fade + HOLD_SLACK; i += 1) {
+    /**
+     * ⛓⛓⛓ R9 SLICE 12d′, ⚖ RULING 47 — **THE WALK STARTS AT THE TRIGGER, NOT
+     * AT THE CLEAR**, and it is legal here for a reason this arm has in writing
+     * one paragraph up: a `tset == -1` lock is opened by `checkEnemies()` and
+     * NO button answers one, so the trigger — the last counted body's removal —
+     * **stays satisfied without the player**. Nothing the walk does can
+     * un-arm it. (The classes that CANNOT take this are the ones whose trigger
+     * is the player: a plain `Button` re-assigns `activate` from whoever
+     * collides EVERY tick (`Button.as:27-38`), so leaving snaps the lock's
+     * alpha back to 1 and `returnToNormal()` re-solidifies it; and a
+     * `ShieldLock` refuses the player input for the whole fade and restores it
+     * only `if (p)` — a player who drifted out of its check rect is refused
+     * input FOREVER.)
+     *
+     * ⛔ THE CLEAR TICK IS ARITHMETIC, NEVER A MARGIN AND NEVER A POLL. It is
+     * the ledger's own removal tick plus `activators.opensOnTick` — the SAME
+     * sum this executor's tail already declares, read here rather than
+     * re-derived, so the wait and the declaration cannot drift apart.
+     *
+     * ⚠ AND THE REMAINDER IS `max(0, clearTick − now)`: a walk that outlasts
+     * the fade waits ZERO and the loop below simply finds the lock gone.
+     */
+    const removals = (run.spinnerKillLockOpens ?? [])
+        .filter((o) => !o.nil && o.level === run.level);
+    const removalsMine = removals.filter(
+        (o) => o.opens.some((x) => x.at === resolved.lock.id));
+    const removal = removalsMine[removalsMine.length - 1]
+        ?? removals[removals.length - 1] ?? null;
+    let earlyWalk = null;
+    if (removal !== null) {
+        const stance = preLockStance(run, resolved.lock, contacts);
+        if (stance && !hasArrived(run.state, stance, DEFAULT_TOLERANCE)) {
+            const level = run.level;
+            ctx.walkTo(ctx.goal, { x: stance.x, y: stance.y }, {
+                what: `${ctx.what} -> the tile before ${resolved.lock.id} (⚖ 47: the `
+                    + 'fade runs while the walk does)',
+                contactsOverride: new Set(),
+            });
+            /**
+             * ⛔ TRAP 150's OWN CONDITION, ASSERTED RATHER THAN ASSUMED. The
+             * stance is a neighbour of a cell in this level, so a crossing is
+             * impossible by construction — and a claim that cannot fail is
+             * still worth making where the consequence is a room whose counted
+             * bodies came back behind the walker.
+             */
+            if (run.level !== level) {
+                fail(`${ctx.what}: the early walk to the tile before ${resolved.lock.id} `
+                    + `crossed from level ${level} to ${run.level}. A kill does not `
+                    + 'survive the door (trap 150), so the count this lock is waiting on '
+                    + 'would be back.');
+            }
+            earlyWalk = {
+                stance: { x: stance.x, y: stance.y },
+                walk: stance.walk,
+                arrivedAt: run.ticksCompleted,
+            };
+        }
+    }
+    const clearTick = removal === null ? null : removal.t + fade;
+    const remaining = clearTick === null
+        ? fade
+        : Math.max(0, clearTick - run.ticksCompleted);
+    /**
+     * ⛓ THE RECORD CARRIES THE ARITHMETIC, not just its answer — `removedAt`,
+     * `fade`, `clearTick` and the tick the walk ARRIVED on, so a reader can
+     * re-do the subtraction. The row that gates ⚖ 47 asserts exactly that
+     * identity, which is what makes a margin substituted for the arithmetic
+     * fail BY NAME rather than by a tick count nobody can attribute.
+     */
+    if (earlyWalk !== null) {
+        earlyWalk.removedAt = removal.t;
+        earlyWalk.fade = fade;
+        earlyWalk.clearTick = clearTick;
+        earlyWalk.waits = remaining;
+    }
+    for (let i = 0; i <= remaining + HOLD_SLACK; i += 1) {
         if (!(run.world.activators ?? []).some((a) => a.id === resolved.lock.id)) {
             return { verb: 'kill', arm: 'press', from, ticks: perTick.length - from,
-                landings, cycles, bodies: resolved.bodies };
+                landings, cycles, bodies: resolved.bodies, earlyWalk };
         }
         /**
          * ⚠ THE FADE IS A WAIT TOO, and with the bodies gone the discs are
@@ -5375,10 +5515,13 @@ function execKillByPress(run, perTick, resolved, ctx) {
      * after the killing blow) and `opensOnTick` is the `Lock`'s own hundred
      * alpha steps. Neither is measured here; both are read.
      */
-    const opens = (run.spinnerKillLockOpens ?? [])
-        .filter((o) => !o.nil && o.level === run.level);
-    const mine = opens.filter((o) => o.opens.some((x) => x.at === resolved.lock.id));
-    const last = mine[mine.length - 1] ?? opens[opens.length - 1] ?? null;
+    /**
+     * ⛓ R9 SLICE 12d′: READ ONCE, ABOVE — `removal` is this same ledger row,
+     * taken before ⚖ 47's early walk so the wait and the declaration are the
+     * same arithmetic rather than two readings of it. Nothing between there and
+     * here can add a row: every counted body is already gone.
+     */
+    const last = removal;
     if (!last) {
         return fail(`${ctx.what}: every counted body is dead and the run's own kill-lock `
             + 'ledger (`spinnerKillLockOpens`) recorded NOTHING — so nothing computed the '
