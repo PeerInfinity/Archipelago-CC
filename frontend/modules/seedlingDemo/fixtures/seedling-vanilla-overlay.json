@@ -1,0 +1,387 @@
+{
+  "schema_version": 1,
+  "rooms": {
+    "10": {
+      "locations": [
+        {
+          "entity": { "type": "sword", "x": 48, "y": 48 },
+          "name": "Sword",
+          "vanilla_item": "Progressive Sword"
+        }
+      ]
+    },
+    "11": {
+      "locations": [
+        {
+          "entity": { "type": "chest", "x": 32, "y": 48 },
+          "name": "Chest (L11)",
+          "vanilla_item": "Seal"
+        }
+      ]
+    },
+    "12": {
+      "locations": [
+        {
+          "entity": { "type": "chest", "x": 320, "y": 816 },
+          "name": "Chest (L12)",
+          "vanilla_item": "Seal"
+        },
+        {
+          "entity": { "type": "witch", "x": 416, "y": 384 },
+          "name": "Witch",
+          "vanilla_item": "Progressive Sword"
+        }
+      ],
+      "rules": { "loc:Witch": { "rule": "Has", "args": { "item_name": "Wand" } } }
+    },
+    "15": {
+      "locations": [
+        {
+          "entity": { "type": "chest", "x": 144, "y": 96 },
+          "name": "Chest (L15)",
+          "vanilla_item": "Seal"
+        }
+      ]
+    },
+    "17": {
+      "locations": [
+        {
+          "entity": { "type": "chest", "x": 128, "y": 16 },
+          "name": "Chest (L17)",
+          "vanilla_item": "Seal"
+        }
+      ]
+    },
+    "19": {
+      "locations": [
+        {
+          "entity": { "type": "bosskey", "x": 96, "y": 64 },
+          "name": "Boss Key 0",
+          "vanilla_item": "Red Key"
+        }
+      ]
+    },
+    "20": {
+      "locations": [
+        {
+          "entity": { "type": "shield", "x": 112, "y": 48 },
+          "name": "Shield",
+          "vanilla_item": "Progressive Shield"
+        }
+      ]
+    },
+    "25": {
+      "locations": [
+        {
+          "entity": { "type": "chest", "x": 96, "y": 96 },
+          "name": "Chest (L25)",
+          "vanilla_item": "Seal"
+        }
+      ]
+    },
+    "29": {
+      "locations": [
+        {
+          "entity": { "type": "bosskey", "x": 112, "y": 64 },
+          "name": "Boss Key 1",
+          "vanilla_item": "Green Key"
+        }
+      ]
+    },
+    "30": {
+      "locations": [
+        {
+          "entity": { "type": "torchpickup", "x": 64, "y": 64 },
+          "name": "Torchpickup",
+          "vanilla_item": "Light"
+        }
+      ]
+    },
+    "32": {
+      "locations": [
+        {
+          "entity": { "type": "fallrocklarge", "x": 64, "y": 128 },
+          "name": "Bob Boss",
+          "vanilla_item": "Fire"
+        }
+      ],
+      "rules": {
+        "loc:Bob Boss": {
+          "rule": "Or",
+          "children": [
+            { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+            { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+          ]
+        }
+      }
+    },
+    "36": {
+      "locations": [
+        {
+          "entity": { "type": "chest", "x": 64, "y": 48 },
+          "name": "Chest (L36)",
+          "vanilla_item": "Seal"
+        }
+      ]
+    },
+    "38": {
+      "locations": [
+        {
+          "entity": { "type": "chest", "x": 144, "y": 112 },
+          "name": "Chest (L38)",
+          "vanilla_item": "Seal"
+        }
+      ]
+    },
+    "39": {
+      "locations": [
+        {
+          "entity": { "type": "totempart", "x": 72, "y": 40 },
+          "name": "Totem Part 72,40",
+          "vanilla_item": "Totem Shard"
+        }
+      ]
+    },
+    "40": {
+      "locations": [
+        {
+          "entity": { "type": "bosskey", "x": 656, "y": 528 },
+          "name": "Boss Key 2",
+          "vanilla_item": "Purple Key"
+        },
+        {
+          "entity": { "type": "totempart", "x": 64, "y": 144 },
+          "name": "Totem Part 64,144",
+          "vanilla_item": "Totem Shard"
+        },
+        {
+          "entity": { "type": "totempart", "x": 160, "y": 640 },
+          "name": "Totem Part 160,640",
+          "vanilla_item": "Totem Shard"
+        },
+        {
+          "entity": { "type": "chest", "x": 880, "y": 816 },
+          "name": "Chest (L40)",
+          "vanilla_item": "Seal"
+        }
+      ]
+    },
+    "41": {
+      "locations": [
+        {
+          "entity": { "type": "totempart", "x": 240, "y": 144 },
+          "name": "Totem Part 240,144",
+          "vanilla_item": "Totem Shard"
+        }
+      ]
+    },
+    "42": {
+      "locations": [
+        {
+          "entity": { "type": "totempart", "x": 184, "y": 152 },
+          "name": "Totem Part 184,152",
+          "vanilla_item": "Totem Shard"
+        }
+      ]
+    },
+    "43": {
+      "locations": [
+        { "entity": { "type": "wand", "x": 144, "y": 224 }, "name": "Wand", "vanilla_item": "Wand" }
+      ],
+      "rules": {
+        "loc:Wand": {
+          "rule": "And",
+          "children": [
+            { "rule": "Has", "args": { "item_name": "Totem Shard", "count": 5 } },
+            {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+                { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "46": {
+      "locations": [
+        {
+          "entity": { "type": "chest", "x": 424, "y": 40 },
+          "name": "Chest (L46)",
+          "vanilla_item": "Seal"
+        }
+      ]
+    },
+    "48": {
+      "locations": [
+        {
+          "entity": { "type": "chest", "x": 152, "y": 184 },
+          "name": "Chest (L48)",
+          "vanilla_item": "Seal"
+        }
+      ]
+    },
+    "49": {
+      "locations": [
+        {
+          "entity": { "type": "conch", "x": 32, "y": 80 },
+          "name": "Conch",
+          "vanilla_item": "Progressive Swim"
+        }
+      ]
+    },
+    "55": {
+      "locations": [
+        {
+          "entity": { "type": "bosskey", "x": 40, "y": 88 },
+          "name": "Boss Key 3",
+          "vanilla_item": "Blue Key"
+        }
+      ]
+    },
+    "63": {
+      "locations": [
+        {
+          "entity": { "type": "chest", "x": 224, "y": 80 },
+          "name": "Chest (L63)",
+          "vanilla_item": "Seal"
+        }
+      ]
+    },
+    "64": {
+      "locations": [
+        {
+          "entity": { "type": "ghostspear", "x": 72, "y": 24 },
+          "name": "Ghostspear",
+          "vanilla_item": "Ghost Spear"
+        }
+      ]
+    },
+    "67": {
+      "locations": [
+        {
+          "entity": { "type": "bosskey", "x": 48, "y": 64 },
+          "name": "Boss Key 4",
+          "vanilla_item": "Yellow Key"
+        }
+      ]
+    },
+    "68": {
+      "locations": [
+        {
+          "entity": { "type": "health", "x": 16, "y": 16 },
+          "name": "Health",
+          "vanilla_item": "Health"
+        }
+      ]
+    },
+    "71": {
+      "locations": [
+        {
+          "entity": { "type": "chest", "x": 160, "y": 256 },
+          "name": "Chest (L71)",
+          "vanilla_item": "Seal"
+        }
+      ]
+    },
+    "74": {
+      "locations": [
+        {
+          "entity": { "type": "darkshield", "x": 48, "y": 32 },
+          "name": "Darkshield",
+          "vanilla_item": "Progressive Shield"
+        }
+      ]
+    },
+    "79": {
+      "locations": [
+        {
+          "entity": { "type": "darksuit", "x": 40, "y": 152 },
+          "name": "Darksuit",
+          "vanilla_item": "Dark Suit"
+        }
+      ]
+    },
+    "80": {
+      "locations": [
+        {
+          "entity": { "type": "chest", "x": 16, "y": 128 },
+          "name": "Chest (L80)",
+          "vanilla_item": "Seal"
+        }
+      ]
+    },
+    "86": {
+      "locations": [
+        {
+          "entity": { "type": "chest", "x": 48, "y": 16 },
+          "name": "Chest (L86)",
+          "vanilla_item": "Seal"
+        }
+      ]
+    },
+    "89": {
+      "locations": [
+        {
+          "entity": { "type": "feather", "x": 160, "y": 96 },
+          "name": "Feather",
+          "vanilla_item": "Progressive Swim"
+        }
+      ]
+    },
+    "90": {
+      "locations": [
+        {
+          "entity": { "type": "chest", "x": 48, "y": 32 },
+          "name": "Chest (L90)",
+          "vanilla_item": "Seal"
+        }
+      ]
+    },
+    "98": {
+      "locations": [
+        {
+          "entity": { "type": "chest", "x": 160, "y": 32 },
+          "name": "Chest (L98)",
+          "vanilla_item": "Seal"
+        }
+      ]
+    },
+    "106": {
+      "locations": [
+        {
+          "entity": { "type": "ghostsword", "x": 64, "y": 72 },
+          "name": "Ghostsword",
+          "vanilla_item": "Ghost Sword Fusion"
+        }
+      ]
+    },
+    "109": {
+      "locations": [
+        {
+          "entity": { "type": "firewand", "x": 160, "y": 72 },
+          "name": "Firewand",
+          "vanilla_item": "Fire Wand Fusion"
+        }
+      ]
+    },
+    "113": {
+      "rules": {
+        "exit:out_teleporter_112_0": { "rule": "Has", "args": { "item_name": "Seal", "count": 16 } },
+        "exit:out_teleporter_128_0": { "rule": "Has", "args": { "item_name": "Seal", "count": 16 } }
+      }
+    },
+    "115": {
+      "locations": [
+        {
+          "entity": { "type": "seed", "x": 72, "y": 72 },
+          "name": "The Seed",
+          "vanilla_item": "The Seed"
+        }
+      ]
+    }
+  },
+  "provenance": { "content_hash": "1604b508" },
+  "overlay_id": "seedling-vanilla-overlay-1604b508"
+}
