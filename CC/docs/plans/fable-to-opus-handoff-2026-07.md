@@ -5478,6 +5478,18 @@ parked series + the bank + the three `r7-act2-*` descriptions, ONE push. Suite
 row deliberately STALE in the file (375/11631; CI 376/11638) until 12h's
 `--write`.
 
+**⚖ RULING 60 (the user, 2026-08-26: "Push.") — EXECUTED by 12g′ (§46, close
+`e9d1e2ef3`):** `seedling_bot_ap_p4c` PUBLISHED (`PeerInfinity/seedling-wasm`
+`1bc0003 → 7aaaa0a`, verified at the far end; gitlink in `a0b8f10c3`; CI's pin
+gate reads "2 pinned builds" on a fresh checkout). The race is REMOVED: `Bot.as`
+arms on `FP.world` identity — exactly one pending frame, idle-invariant; p4c
+passes at every idle that loses on p4b; the only observable is `dead_frames`
+41 → 40, which the `-ship` gate's CLAIM 6 asserted in its own source (253/1 →
+fixed build-aware, 254/0). Standing: suite 376/11638 @1eed5988a; two `cheap`
+flips named. p4b stays pinned by one labelled README line until 12h retires it
+(README line + whitelist + manifest + the CLAIM 6 branch, together). NEXT: 12h
+(§47), the FIFTH run on p4c.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
