@@ -104,6 +104,27 @@ def main():
                          "fade count identical across a ~50x frame-rate difference, so "
                          "the recompiled runtime is frame-clocked and a slower wall "
                          "clock changes nothing it counts.")
+    ap.add_argument("--rng-curve",
+                    help="Windows path for the (tick, Rng.state) CURVE sidecar - "
+                         "one row per CHANGE, polled as fast as the bridge allows "
+                         "(R9 slice 12f). OFF by default; it makes the poll TIGHT "
+                         "exactly like --dead-curve, so it is a diagnosis "
+                         "instrument and never a path a producer takes. ITS OWN "
+                         "FILE rather than a key in --out, so the 121 committed "
+                         "fixtures' three-key contract is untouched even when the "
+                         "flag is on. The state is the raw 31-bit LFSR register "
+                         "(SWFModernRuntime avm2_number.c rng_state), so a "
+                         "consumer can convert each sample to an ABSOLUTE DRAW "
+                         "INDEX offline - see rngRuler.js.")
+    ap.add_argument("--preboot-delay-sec", type=float, default=0.0,
+                    help="seconds to idle AFTER the bot callbacks are up and "
+                         "BEFORE the first botLoadTape (R9 slice 12f). The page's "
+                         "own boot builds `new Game(0, 80, 128)` (Main.as:51) and "
+                         "that world runs on the WALL CLOCK until botStart, so "
+                         "how long it idled is a real input to any state botStart "
+                         "does not reset - the REAL Sfx mixer's open channels "
+                         "among them. 0.0 is the historical behaviour and is "
+                         "byte-inert.")
     ap.add_argument("--headed", action="store_true", default=True)
     args = ap.parse_args()
 
@@ -200,6 +221,22 @@ def main():
             # Printed so a run that silently fell back to software rendering is
             # visible in the log rather than just mysteriously slow.
             print(f"WEBGPU_ADAPTER: {adapter}", flush=True)
+
+            # ⛓ R9 SLICE 12f: THE PRE-BOOT IDLE, MADE AN ARGUMENT.
+            # Everything above this line has already spent an unmeasured
+            # amount of WALL CLOCK in the page's own level-0 world, and
+            # `botStart` resets the RNG, the tick, the save arrays and the
+            # persistence ledger but NOT the real `Sfx` mixer's open
+            # channels. `Music.soundIsPlaying` reads those channels
+            # whenever the tape does not declare the `sound` pin
+            # (`Music.as:823/832`), and `Music.playSound(set, -1)` redraws
+            # while the last-played sound matches - so which channels were
+            # still open at `botStart` decides a DRAW COUNT. Making the
+            # idle an argument turns that from an uncontrolled input into
+            # a measured one. Default 0.0 => the historical path.
+            if args.preboot_delay_sec > 0:
+                print(f"PREBOOT_DELAY {args.preboot_delay_sec:.1f}s", flush=True)
+                page.wait_for_timeout(int(args.preboot_delay_sec * 1000))
 
             windows = []
             for wi, tape in enumerate(tapes):
@@ -303,6 +340,12 @@ def main():
                 # row per tick — kilobytes, not megabytes, and only when asked.
                 dead_curve = []
                 dead_last = [None]
+                # ⛓ R9 slice 12f: the (tick, Rng.state) curve. Read off the
+                # SAME `botStatus` block the dead curve reads, so it costs no
+                # extra bridge call - `botStatus` already carries `rng.state`
+                # (`Bot.as:2027`).
+                rng_curve = []
+                rng_last = [None]
                 # ⚠ A LIVE PROGRESS SIDECAR, because stdout is not one. The
                 # caller runs this with `execFileSync` and a pipe, so nothing
                 # printed here is visible until the process exits — and an R1
@@ -347,6 +390,25 @@ def main():
                                                "level": status.get("level")})
                             dead_last[0] = pair
 
+                    if args.rng_curve:
+                        # ⛔ ON CHANGE of the PAIR, not on poll. The tick moves
+                        # without the stream moving (most frames draw nothing)
+                        # and the stream moves within one tick (a level build
+                        # is three draws per Tile), so keying on either alone
+                        # would lose the other's edges.
+                        rpair = (status.get("tick"),
+                                 (status.get("rng") or {}).get("state"))
+                        if rpair != rng_last[0]:
+                            rng_curve.append({
+                                "tick": rpair[0], "state": rpair[1],
+                                "cosmetic": (status.get("rng") or {})
+                                            .get("cosmetic_state"),
+                                "dead": status.get("dead_frames"),
+                                "level": status.get("level"),
+                                "game_time": status.get("game_time"),
+                            })
+                            rng_last[0] = rpair
+
                     if args.progress and now - last_written[0] >= 1.0:
                         last_written[0] = now
                         with open(args.progress, "w", encoding="utf-8") as fh:
@@ -359,7 +421,8 @@ def main():
                     return status if status.get("finished") else None
 
                 status = wait_for("tape to finish", note_progress, args.deadline_sec,
-                                  poll_sec=0.0 if args.dead_curve else 0.25)
+                                  poll_sec=0.0 if (args.dead_curve or args.rng_curve)
+                                  else 0.25)
                 elapsed = time.time() - t0
                 drained = bot_json(page, "botDrain")
                 ticks = drained.get("ticks", [])
@@ -395,6 +458,21 @@ def main():
                                        "dead": status.get("dead_frames"),
                                        "level": status.get("level"), "final": True})
                     windows[-1]["dead_curve"] = dead_curve
+                if args.rng_curve:
+                    # ⚠ The final row is taken from the SAME status block the
+                    # `seam` is read beside, so `curve[-1].state` must equal
+                    # `seam["rng.gameplay"]` of this drive. That equality is
+                    # the instrument's own control: a curve that does not end
+                    # where the latch ended is reading a different generator.
+                    rng_curve.append({"tick": status.get("tick"),
+                                      "state": (status.get("rng") or {}).get("state"),
+                                      "cosmetic": (status.get("rng") or {})
+                                                  .get("cosmetic_state"),
+                                      "dead": status.get("dead_frames"),
+                                      "level": status.get("level"),
+                                      "game_time": status.get("game_time"),
+                                      "final": True})
+                    windows[-1]["rng_curve"] = rng_curve
                 if args.mobiles:
                     # The last sample is taken AFTER the tape finished, so the
                     # trace always ends on the state the status block describes.
@@ -408,6 +486,14 @@ def main():
             # unchanged, so all 57 committed fixtures keep the same contract
             # and the harness needs no version branch. `--tapes` writes the
             # list, which is a different question and gets a different key.
+            # ⛓ R9 slice 12f: THE CURVE GOES TO ITS OWN FILE. `--out`'s
+            # shape is the 121 committed fixtures' contract; a diagnosis
+            # instrument does not get to widen it, even behind a flag.
+            if args.rng_curve:
+                with open(args.rng_curve, "w", encoding="utf-8") as fh:
+                    json.dump({"windows": [{"label": w["label"],
+                                            "curve": w.get("rng_curve") or []}
+                                           for w in windows]}, fh)
             with open(args.out, "w", encoding="utf-8") as fh:
                 if args.tape:
                     w = windows[0]
