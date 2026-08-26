@@ -3332,51 +3332,92 @@ describe('R9 slice 12d′: ⚖ 47 — the fade is spent walking, and the wait is
  */
 describe('R9 slice P2: ⚖ 54 (5) — the economies are behind the roster-wide permission', () => {
     /**
-     * ⛓ ⚖ 46's ROOM, AT THE DEFAULT. `shield@112,48`'s ring search returns to
-     * its `(d, y, x)` order, so the NORTH cell `(120,40)` wins the d=16 tie
-     * again and `runCollect` presses back south — the detour the ruling
-     * retires, which is the committed core's own walk.
+     * ⛓ ⚖ 46's ROOM, BOTH WAYS — AND THE CLAIM IS FLAG-FREE ON PURPOSE.
+     *
+     * ⛔ A ROW THAT READ THE DEFAULT WOULD BE A LANDMINE UNDER THE FLIP. The
+     * first cut of this asserted the committed answer at the DEFAULT and the
+     * solve against `committed.tick_count` — true at this head and FALSE for
+     * ever after `ALLOW_DASH_ROSTER_WIDE` goes `true` and the roster is
+     * re-recorded, which is a red the re-record could not repair by
+     * re-authoring anything. The gate is a claim about TWO BUILDS
+     * ([[feedback_fixture_must_discriminate_two_builds]]), so it is spelled
+     * as two builds; the flag's own state is pinned once, above, and the
+     * committed lengths are the producers' `--check` to gate, not this file's.
+     *
+     * `shield@112,48`'s ring search at OFF returns to its `(d, y, x)` order,
+     * so the NORTH cell `(120,40)` wins the d=16 tie again and `runCollect`
+     * presses 16 px back south; at ON the corridor breaks the tie and
+     * `(136,56)` — already on the way — is the stance.
      */
-    it('⛓ ⚖ 46 OFF: L20 takes the north cell again and solves its committed length', () => {
-        const { run, committed } = runFromCommitted('r8-solve-20');
-        const L20 = levelSource(20);
-        const shield = (L20.entities ?? []).find((e) => e.type === 'shield');
-        const exit = (L20.entities ?? []).find(
-            (e) => e.type === 'stairsdown' && Number(e.attrs.to) === 19);
-        const out = solveSegment({
-            run,
-            goals: [
-                { kind: 'collect-placement', placement: { x: shield.x, y: shield.y } },
-                { kind: 'reach-exit', exit: { x: exit.x, y: exit.y } },
-            ],
-            name: 'r8-solve-20', boot: committed.boot,
-        });
-        const walk = out.trace.rows.find(
-            (r) => r.goal?.kind === 'collect-placement' && r.strategy.verb === 'walk');
-        expect(walk.goal.aim).toEqual({ x: 120, y: 40 });
-        // ⛓ THE NUMBER THE PRODUCER CHECKS: un-gated this room solves in 332.
-        expect(out.perTick.length).toBe(committed.tick_count);
+    it('⛓ ⚖ 46: OFF takes the north cell and is SLOWER; ON takes the corridor cell', () => {
+        const solveL20 = (over) => {
+            const { run, committed } = runFromCommitted('r8-solve-20');
+            const L20 = levelSource(20);
+            const shield = (L20.entities ?? []).find((e) => e.type === 'shield');
+            const exit = (L20.entities ?? []).find(
+                (e) => e.type === 'stairsdown' && Number(e.attrs.to) === 19);
+            const out = solveSegment({
+                run,
+                goals: [
+                    { kind: 'collect-placement', placement: { x: shield.x, y: shield.y } },
+                    { kind: 'reach-exit', exit: { x: exit.x, y: exit.y } },
+                ],
+                name: 'r8-solve-20', boot: committed.boot, ...over,
+            });
+            const walk = out.trace.rows.find(
+                (r) => r.goal?.kind === 'collect-placement' && r.strategy.verb === 'walk');
+            return { aim: walk.goal.aim, path: walk.path, ticks: out.perTick.length };
+        };
+        const off = solveL20({ economies: false });
+        const on = solveL20({ economies: true });
+        expect(off.aim).toEqual({ x: 120, y: 40 });
+        expect(off.path).toContainEqual({ x: 120, y: 40 });
+        expect(on.aim).toEqual({ x: 136, y: 56 });
+        expect(on.path).not.toContainEqual({ x: 120, y: 40 });
+        // ⛓ THE ECONOMY IS AN ECONOMY: the detour costs ticks, both builds
+        // measured here rather than either number typed.
+        expect(off.ticks).toBeGreaterThan(on.ticks);
     });
 
     /**
-     * ⛓ ⚖ 47's ROOM, AT THE DEFAULT — and the claim is about the RECORD'S
+     * ⛓ ⚖ 47's ROOM, BOTH WAYS — and the OFF claim is about the RECORD'S
      * SHAPE as much as its ticks. `earlyWalk` must be ABSENT, not `null`: the
      * trace sidecars are `--check`ed byte-for-byte beside the tapes, so a key
      * carrying `null` would move `r8-solve-18.trace.json` on its own.
      */
-    it('⛓ ⚖ 47 OFF: L18 stands through the whole fade, and the record grows no key', () => {
-        const { run, committed } = runFromCommitted('r8-solve-18');
-        const exit = (levelSource(18).entities ?? []).find(
-            (e) => Number(e.attrs?.to) === 19);
-        const out = solveSegment({
-            run, goals: [{ kind: 'reach-exit', exit: { x: exit.x, y: exit.y } }],
-            name: 'r8-solve-18', boot: committed.boot,
-        });
-        const kill = out.records.find((r) => r.verb === 'kill');
-        expect(kill.arm).toBe('press');
-        expect(Object.prototype.hasOwnProperty.call(kill, 'earlyWalk')).toBe(false);
-        // ⛓ THE NUMBER THE PRODUCER CHECKS: un-gated this room solves in 437.
-        expect(out.perTick.length).toBe(committed.tick_count);
+    it('⛓ ⚖ 47: OFF stands through the whole fade and grows no key; ON walks it', () => {
+        const solveL18 = (over) => {
+            const { run, committed } = runFromCommitted('r8-solve-18');
+            const exit = (levelSource(18).entities ?? []).find(
+                (e) => Number(e.attrs?.to) === 19);
+            const out = solveSegment({
+                run, goals: [{ kind: 'reach-exit', exit: { x: exit.x, y: exit.y } }],
+                name: 'r8-solve-18', boot: committed.boot, ...over,
+            });
+            return { kill: out.records.find((r) => r.verb === 'kill'),
+                ticks: out.perTick.length };
+        };
+        const off = solveL18({ economies: false });
+        const on = solveL18({ economies: true });
+        expect(off.kill.arm).toBe('press');
+        expect(Object.prototype.hasOwnProperty.call(off.kill, 'earlyWalk')).toBe(false);
+        expect(on.kill.earlyWalk.stance).toEqual({ x: 136, y: 120 });
+        /**
+         * ⛓ THE ARITHMETIC, NOT A NUMBER — and deliberately NOT `waits === 0`.
+         * ⛔ Whether this room arrives before or after the clear is a property
+         * of the WALK'S SPEED, so it flips with `ALLOW_DASH_ROSTER_WIDE`: at
+         * `false` the walk outlasts the fade and `waits` is 0; at `true` the
+         * dash gets there first and it is 24. A row that pinned the 0 would be
+         * a red no re-record could repair (the flip's own §40 finding). What
+         * the mechanism actually promises is the SUBTRACTION, and that holds
+         * either way.
+         */
+        expect(on.kill.earlyWalk.waits).toBe(
+            Math.max(0, on.kill.earlyWalk.clearTick - on.kill.earlyWalk.arrivedAt));
+        expect(on.kill.earlyWalk.clearTick)
+            .toBe(on.kill.earlyWalk.removedAt + opensOnTick(RESPONDERS.lock.fade));
+        // ⛓ THE ECONOMY IS AN ECONOMY, both builds measured here.
+        expect(off.ticks).toBeGreaterThan(on.ticks);
     });
 
     /**
