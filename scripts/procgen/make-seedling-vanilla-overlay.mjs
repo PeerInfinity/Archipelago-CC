@@ -124,6 +124,42 @@ function authoredNames(rows) {
 }
 
 /**
+ * ⛓⛓⛓ **THE GATE ON "A LIFT THE ADAPTER REFUSES IS ONE THE SCRIPT REPORTS."**
+ *
+ * ⛔ THIS IS A FUNCTION AND NOT A LOOP INSIDE `liftVanillaOverlay` FOR ONE
+ * REASON, AND IT IS A MEASUREMENT. The first spelling was that loop, and the
+ * mutant for it — delete the `catch`, push every op into `expressed` whatever
+ * happened — CAME BACK GREEN. Nothing in the vanilla lift is refused today, so
+ * the loop's whole promise was untested: a lift that started being refused
+ * tomorrow would be written into the fixture and nobody would find out until
+ * the editor refused the document on LOAD.
+ *
+ * ⇒ the mechanism is its own function, and `vanillaOverlay.test.js` drives it
+ * with an op the adapter really does refuse. ⚠ A row over the vanilla corpus
+ * alone CANNOT gate this — the corpus has no refusal in it to see.
+ *
+ * ⛔ ONE OP PER FOLD, deliberately: `foldSetEdits` over the whole list would
+ * lose every op after the first refusal, so a single bad lift would silently
+ * truncate the document instead of costing exactly itself.
+ *
+ * @returns {{record, expressed: object[], refused: Array<{op, why}>}}
+ */
+export function foldLifted(adapter, base, ops) {
+    let record = base;
+    const expressed = [];
+    const refused = [];
+    for (const op of ops) {
+        try {
+            record = foldSetEdits(adapter, record, [op]).record;
+            expressed.push(op);
+        } catch (e) {
+            refused.push({ op, why: e.message });
+        }
+    }
+    return { record, expressed, refused };
+}
+
+/**
  * ⛓ THE LIFT.
  *
  * @returns {{overlay, ops, expressed, refused, cannot, stats}}
@@ -208,18 +244,8 @@ export function liftVanillaOverlay() {
     }
 
     // ── fold them through the REAL adapter, one at a time ─────────────────
-    const adapter = createSeedlingSetAdapter(DEPS);
-    let record = setRecord(set, emptyOverlay());
-    const expressed = [];
-    const refused = [];
-    for (const op of ops) {
-        try {
-            record = foldSetEdits(adapter, record, [op]).record;
-            expressed.push(op);
-        } catch (e) {
-            refused.push({ op, why: e.message });
-        }
-    }
+    const { record, expressed, refused } = foldLifted(
+        createSeedlingSetAdapter(DEPS), setRecord(set, emptyOverlay()), ops);
 
     const overlay = stampIdentity(
         { ...record.overlay, provenance: { ...(record.overlay.provenance ?? {}) } },

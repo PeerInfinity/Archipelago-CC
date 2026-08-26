@@ -34,7 +34,7 @@ import {
 import { reportOf } from './watchSetEditor.js';
 
 const {
-    buildOverlayText, cannotExpress, liftVanillaOverlay,
+    buildOverlayText, cannotExpress, foldLifted, liftVanillaOverlay,
 } = await import('../../../scripts/procgen/make-seedling-vanilla-overlay.mjs');
 
 const ATLAS = JSON.parse(readFileSync(fileURLToPath(
@@ -151,6 +151,44 @@ describe('⛓⛓ E5 — the lift, and what it put through the adapter', () => {
         expect(LIFT.overlay.regions).toBeUndefined();
         expect(Object.keys(LIFT.overlay).sort())
             .toEqual(['overlay_id', 'provenance', 'rooms', 'schema_version']);
+    });
+
+    /**
+     * ⛔⛔ **THE ROW THE VANILLA CORPUS CANNOT PROVIDE.** "A lift the adapter
+     * refuses is a lift the script REPORTS, not writes" is the whole safety
+     * property of this script — and NOTHING in the vanilla lift is refused, so
+     * the mutant for it (delete the `catch`, push every op into `expressed`)
+     * came back GREEN over the corpus. A fixture only gates a change it can
+     * DISTINGUISH, so the mechanism is driven here with an op the adapter
+     * really does refuse.
+     *
+     * ⛓ THE REFUSAL IS A REAL ONE: `mark-location` refuses an entity the room
+     * does not hold at exactly those pixels, and it says so by name.
+     */
+    it('REPORTS a refused lift instead of writing it, and keeps the ops around it', () => {
+        const adapter = createSeedlingSetAdapter(DEPS);
+        const base = setRecord(LIFT.set, emptyOverlay());
+        const good = LIFT.expressed.filter((o) => o.op === 'mark-location').slice(0, 2);
+        const impossible = {
+            op: 'mark-location',
+            room: good[0].room,
+            entity: { type: good[0].entity.type, x: 99991, y: 99993 },
+            name: 'A Location On Nothing',
+            vanilla_item: 'Progressive Sword',
+        };
+
+        const out = foldLifted(adapter, base, [good[0], impossible, good[1]]);
+        expect(out.refused).toHaveLength(1);
+        expect(out.refused[0].op).toBe(impossible);
+        expect(out.refused[0].why).toMatch(/holds no <.*> at \(99991, 99993\)/);
+        // ⛔ AND THE REFUSED ROW IS NOT IN THE DOCUMENT.
+        const names = Object.values(out.record.overlay.rooms)
+            .flatMap((r) => (r.locations ?? []).map((l) => l.name));
+        expect(names).not.toContain('A Location On Nothing');
+        // ⛔ AND THE OPS AFTER IT SURVIVED — one fold per op, so a bad lift
+        //    costs exactly itself rather than truncating the document.
+        expect(out.expressed).toEqual([good[0], good[1]]);
+        expect(names).toContain(good[1].name);
     });
 
     it('is IDEMPOTENT — two builds are byte-equal and carry one stamped id', () => {
