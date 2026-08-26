@@ -16,6 +16,7 @@
  *
  *   node scripts/procgen/standing-values.mjs --write        measure everything
  *   node scripts/procgen/standing-values.mjs --write --only=producer
+ *   node scripts/procgen/standing-values.mjs --write --key='gate: x (arm)'
  *   node scripts/procgen/standing-values.mjs --check        re-run the CHEAP
  *                                                           rows and diff
  *   node scripts/procgen/standing-values.mjs --list         the rows, derived
@@ -25,7 +26,17 @@
  *
  *   --host=<origin>   the repo-root dev server the gate rows are pointed at
  *   --only=<substr>   restrict to matching keys
+ *   --key=<key>       restrict to ONE key, matched EXACTLY
  *   --json            machine-readable
+ *
+ * ⛔⛔ `--only=` IS A SUBSTRING AND THAT IS A TRAP ONCE A GATE HAS TWO ARMS
+ * (editor v3 · Q6). `--only=seedling-editor-generate` selected one row until
+ * `gate: seedling-editor-generate (own server)` existed; now it selects BOTH,
+ * and the second is a ~2-minute browser row that brings its own server. A
+ * merge recipe that names a row by substring is a recipe that silently grows
+ * a measurement. `--key=` matches the whole key and REFUSES BY NAME when it
+ * matches nothing, so a typo in a quoted key is a red line rather than a
+ * `--write` that measures zero rows and reports success.
  *
  * ⛔⛔ `--check` NEVER RE-RUNS AN EXPENSIVE ROW. The Windows/GPU rows and the
  * unfiltered vitest are QUOTED with the head they were measured at. A check
@@ -55,11 +66,32 @@ const arg = (name, fallback) => (argv.find((a) => a.startsWith(`--${name}=`))
 
 const HOST = arg('host', LOCAL_HOST);
 const ONLY = arg('only', '');
+const KEY = arg('key', '');
 const JSON_OUT = flag('json');
 
-const ROWS = standingRows({ host: HOST })
-    .filter((r) => !ONLY || r.key.includes(ONLY));
+/** ⛓ The ONE selection rule, so `--check`'s row-list half cannot drift from
+ *  the row list it is checking. `--key=` is exact; `--only=` is a substring. */
+const selects = (key) => (!ONLY || key.includes(ONLY)) && (!KEY || key === KEY);
+
+const ALL_ROWS = standingRows({ host: HOST });
+const ROWS = ALL_ROWS.filter((r) => selects(r.key));
 const HEAD = head();
+
+/**
+ * ⛔ A `--key=` THAT NAMES NOTHING IS A FAILURE, NOT AN EMPTY RUN. The whole
+ * point of the exact form is that a merge recipe quotes a key verbatim; a
+ * mistyped one would otherwise `--write` zero rows and exit 0.
+ */
+if (KEY && ROWS.length === 0) {
+    console.log(`FAIL: --key=${JSON.stringify(KEY)} matches no derived row.`);
+    /** ⛓ …and the nearest keys, ranked by SHARED PREFIX — a mistyped key is
+     *  almost always right up to the character that went wrong. */
+    const shared = (k) => { let i = 0; while (i < k.length && k[i] === KEY[i]) i += 1; return i; };
+    const best = Math.max(0, ...ALL_ROWS.map((r) => shared(r.key)));
+    const near = ALL_ROWS.map((r) => r.key).filter((k) => shared(k) === best).slice(0, 4);
+    if (best > 0) console.log(`  nearest: ${near.map((k) => JSON.stringify(k)).join(', ')}`);
+    process.exit(1);
+}
 
 if (flag('list')) {
     for (const r of ROWS) console.log(`${r.key.padEnd(46)} ${r.command}`);
@@ -179,7 +211,7 @@ for (const key of derived) {
 }
 for (const key of known) {
     if (derived.has(key)) continue;
-    if (ONLY && !key.includes(ONLY)) continue;
+    if (!selects(key)) continue;
     /**
      * ⛔⛔ A QUOTED ROW IS *SUPPOSED* TO BE OUTSIDE THE DERIVATION, and the two
      * halves of this file did not COMPOSE until this line existed. The row-list

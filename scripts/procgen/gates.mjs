@@ -33,6 +33,7 @@
  *   node scripts/procgen/gates.mjs local editor-overlays phases   by substring
  *   node scripts/procgen/gates.mjs reach <base>..HEAD [local|live]
  *   node scripts/procgen/gates.mjs --list                 the roster, derived
+ *                                                         (arms under their gate)
  *
  *   --host=<origin>    default http://localhost:8000 (a REPO-ROOT server)
  *   --pages=<origin>   default the published site
@@ -41,6 +42,17 @@
  *
  * ⛓ `bash scripts/procgen/gates.sh …` is the same thing — the shim exists so
  * the one-liner reads like the other shell instrument in this directory.
+ *
+ * ⛓⛓⛓ A GATE CAN BE TWO ARMS, AND `local` RUNS BOTH (editor v3 · Q6). A gate
+ * whose docblock declares an `@standing-variant` is a SECOND standing row —
+ * `check-seedling-editor-generate.mjs` reads 224/0 under `--host=` and 230/0
+ * on its own server, because six rows have no vehicle when the caller supplies
+ * the server (⚖ §26.7a). This file exists so nobody rebuilds the list by hand,
+ * and a row that is not in the list is a row somebody types; so the arms are
+ * IN the `local` run and in the `reach` selection with the gate they belong
+ * to. ⛔ NOT in `live`: an arm's argv is a LITERAL, and `argvFor(…, 'live')`
+ * is the authority on what a published origin can be asked — an arm carrying
+ * `--host=` flags cannot be re-pointed at one.
  *
  * ⛓⛓ THE `reach` MODE is ⚖ ruling 32 A's other half. "Re-measure only what the
  * reach names" leaves a hole exactly when the list is LONG: the solver slices
@@ -85,19 +97,44 @@ gates — run the gates in one line, keyed on exit codes.
 /* ── the roster, derived ─────────────────────────────────────────────── */
 
 const ROSTER = gateRoster();
+const VARIANTS = ROSTER.flatMap((g) => g.variants.map((v) => ({ gate: g, ...v })));
+
+/**
+ * ⛓ THE ARMS a world can answer, in roster order, each arm right after the
+ * gate it belongs to. The BASE arm is `argvFor`'s answer; a DECLARED arm
+ * carries its own literal argv and belongs to `local` only.
+ */
+const armsIn = (where, gates = ROSTER) => gates.flatMap((g) => {
+    const base = argvFor(g, where, { host: HOST, pages: PAGES });
+    const out = base === null ? [] : [{ gate: g, argv: base, label: null }];
+    if (where === 'local') {
+        for (const v of g.variants) out.push({ gate: g, argv: v.argv, label: v.label });
+    }
+    return out;
+});
+/** ⛓ How an arm is NAMED, everywhere — the gate, then the arm it is. */
+const nameOf = (arm) => `${arm.gate.file}${arm.label ? ` (${arm.label})` : ''}`;
 
 if (flag('list') || words[0] === 'list') {
+    const flagsOf = (argvList) => argvList
+        .map((a) => a.replace(/^--/, '').split('=')[0]).join(',') || '-';
     for (const g of ROSTER) {
         const kinds = [g.browser ? 'browser' : null, g.windows ? 'windows' : null]
             .filter(Boolean).join('+') || 'node';
         console.log(`${g.file.padEnd(40)} [${g.flags.join(',') || '-'}] ${kinds}`
             + `${g.browserVia ? ` (via ${g.browserVia})` : ''}`);
+        /** ⛓ …and its declared arms, under it — a second STANDING ROW, run
+         *  in `local` beside the gate it is an arm of. */
+        for (const v of g.variants) {
+            console.log(`  └ (${v.label})`.padEnd(40)
+                + ` [${flagsOf(v.argv)}] ${kinds}`);
+        }
     }
-    console.log(`\n${ROSTER.length} gate(s); `
+    console.log(`\n${ROSTER.length} gate(s)`
+        + `${VARIANTS.length ? ` + ${VARIANTS.length} declared arm(s)` : ''}; `
         + `${ROSTER.filter((g) => g.browser).length} browser, `
         + `${ROSTER.filter((g) => g.windows).length} windows. `
-        + `local ${ROSTER.filter((g) => argvFor(g, 'local', { host: HOST, pages: PAGES })).length}`
-        + `, live ${ROSTER.filter((g) => argvFor(g, 'live', { host: HOST, pages: PAGES })).length}`);
+        + `local ${armsIn('local').length}, live ${armsIn('live').length}`);
     process.exit(0);
 }
 
@@ -138,9 +175,7 @@ if (MODE === 'reach') {
 
 if (flag('no-windows')) selection = selection.filter((g) => !g.windows);
 
-const PLAN = selection
-    .map((g) => ({ gate: g, argv: argvFor(g, where, { host: HOST, pages: PAGES }) }))
-    .filter((r) => r.argv !== null);
+const PLAN = armsIn(where, selection);
 /** ⛓ …and the ones this world CANNOT answer are named, not dropped in silence. */
 const UNRUNNABLE = selection.filter((g) => argvFor(g, where, { host: HOST, pages: PAGES }) === null);
 
@@ -171,8 +206,11 @@ const tally = (out) => ({
     skip: (out.match(/^SKIP:/gm) ?? []).length,
 });
 
+const ARMS_IN_PLAN = PLAN.filter((a) => a.label).length;
 console.log(`# gates ${where}${MODE === 'reach' ? ' (reach)' : ''} — `
-    + `${PLAN.length} gate(s), host ${HOST}${where === 'live' ? `, pages ${PAGES}` : ''}`);
+    + `${PLAN.length - ARMS_IN_PLAN} gate(s)`
+    + `${ARMS_IN_PLAN ? ` + ${ARMS_IN_PLAN} declared arm(s)` : ''}`
+    + `, host ${HOST}${where === 'live' ? `, pages ${PAGES}` : ''}`);
 if (reachNote) console.log(`  ⛓ ${reachNote}`);
 if (UNRUNNABLE.length) {
     console.log(`  ⚠ ${UNRUNNABLE.length} gate(s) cannot address the ${where} world and are NOT `
@@ -185,7 +223,8 @@ if (UNRUNNABLE.length) {
 console.log('');
 
 const results = [];
-for (const { gate, argv: gargv } of PLAN) {
+for (const arm of PLAN) {
+    const { gate, argv: gargv } = arm;
     const t0 = process.hrtime.bigint();
     let out = '';
     let code = 0;
@@ -214,14 +253,17 @@ for (const { gate, argv: gargv } of PLAN) {
      * not get them — but they are different facts and the line says which.
      */
     const skipped = total === null && counts.skip > 0 && counts.pass === 0;
-    results.push({ file: gate.file, code, ms, total, ...counts, skipped, red });
+    results.push({
+        file: gate.file, ...(arm.label ? { arm: arm.label } : {}), code, ms, total,
+        ...counts, skipped, red,
+    });
     const verdict = red ? 'FAIL' : 'PASS';
     const why = code !== 0
         ? `exit ${code}`
         : (skipped
             ? 'SKIPPED — it declined and checked nothing, which is not a pass'
             : (total === null ? 'NO TOTAL LINE — it printed no verdict at all' : total));
-    console.log(`${verdict}  ${gate.file.padEnd(40)} ${String(counts.pass)}/${counts.fail}`
+    console.log(`${verdict}  ${nameOf(arm).padEnd(40)} ${String(counts.pass)}/${counts.fail}`
         + `${counts.skip ? `/${counts.skip} skipped` : ''}  ${(ms / 1000).toFixed(1)}s  — ${why}`);
     if (red) {
         for (const line of out.split('\n').filter((l) => l.startsWith('FAIL:')).slice(0, 6)) {
@@ -233,5 +275,6 @@ for (const { gate, argv: gargv } of PLAN) {
 const reds = results.filter((r) => r.red);
 if (JSON_OUT) console.log(JSON.stringify({ where, host: HOST, results }, null, 2));
 console.log(`\n${results.length - reds.length}/${results.length} gate(s) green`
-    + `${reds.length ? ` — RED: ${reds.map((r) => r.file).join(', ')}` : ''}`);
+    + `${reds.length ? ` — RED: ${reds.map((r) => `${r.file}${r.arm ? ` (${r.arm})` : ''}`)
+        .join(', ')}` : ''}`);
 process.exit(reds.length ? 1 : 0);
