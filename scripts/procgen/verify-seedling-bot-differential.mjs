@@ -187,6 +187,9 @@ const {
 const {
     runTape, runTapeToStream,
 } = await import(join(REPO, 'frontend/modules/seedlingDemo/tapeRunner.js'));
+const {
+    autoAdvanceArrivals,
+} = await import(join(REPO, 'frontend/modules/seedlingDemo/dialogue.js'));
 const { r2AcceptanceFindings } =
     await import(join(REPO, 'frontend/modules/seedlingDemo/r2Acceptance.js'));
 const { r2TapeSpecs } = await import(join(REPO, 'frontend/modules/seedlingDemo/r2Walk.js'));
@@ -875,23 +878,62 @@ function checkReadout(name, tape, status, stream) {
     // every version and stayed that way (the batch's stated refusal), so no
     // frozen frame shifted, no LFSR draw moved, and the roster is expected
     // BYTE-IDENTICAL. This is the whole of what changed.
+    // ── ⛓⛓⛓ R9 SLICE 12e⁗: THE EXPECTATION IS THE HELP MODEL'S, NOT ────
+    //     THE PICKUP COUNT'S — AND THE PREMISE IT REPLACES IS ONE 12e‴
+    //     MEASURED FALSE
+    //
+    // What stood here was `wantAutoAdvance = swordPickups`, justified as
+    // *"each raising `Sword.removed()`'s unguarded `Help(3)`"*. A sword
+    // pickup DOES raise the Help — that half was never wrong. What is wrong
+    // is the step from "a Help was raised" to "`Bot.autoAdvance` counted an
+    // arrival", because `autoAdvance()` is reached ONLY from the dead-frame
+    // branch (`Bot.as:2877-2882`) and `Help.update` raises AND lowers the
+    // freeze inside one update when the TAPE presses X or C
+    // (`NPCs/Help.as:92-110`) — and `Main.as:67` puts `Bot.update()` above
+    // `super.update()`, so `Bot` samples the freeze the PREVIOUS frame's
+    // `Help.update()` left behind. A Help the tape dismisses on its own first
+    // update is therefore never seen by the counter at all.
+    //
+    // ⛔ THE THIRD RE-RECORD RUN IS WHERE THAT CAME DUE (R9 §37.7): the
+    // 78-tick `r8-solve-10` collects its sword, the game raises the Help, the
+    // ceremony is priced, the inventory mirror matches — and the game's
+    // `saw_auto_advance` is 0 against this check's 1. The counter was right
+    // and the derivation was stale.
+    //
+    // `autoAdvanceArrivals` reads the model's OWN ledger (`drainPickupHelp`
+    // already carries the `Input.pressed` edge predicate; a dismissed Help
+    // spends zero frames and `gameClock.spend` drops a zero-frame span), so
+    // there is one rule in one place rather than a second spelling of it here.
+    //
+    // ⛓ AND THE CHANGE CANNOT MOVE THIS GATE'S VERDICT ON ANYTHING COMMITTED,
+    // WHICH IS MEASURED RATHER THAN HOPED: over all 149 committed tapes the
+    // new derivation equals the old `swordPickups` on every one (149/149,
+    // 0 disagreements) — `dialogueAutoAdvance.test.js` re-runs that agreement
+    // on every suite run, so a future tape that separates them reds THERE
+    // instead of surprising a `--win` sweep.
     const swordPickups = (expected.collected ?? []).filter((c) => c.item === 'sword').length;
-    const wantAutoAdvance = swordPickups;
+    const wantAutoAdvance = autoAdvanceArrivals(expected.deadFrameSpans);
+    const dismissed = swordPickups - wantAutoAdvance;
     check(`${name}: dialogue auto-advance is exactly what the route earns`,
         status.saw_auto_advance === wantAutoAdvance,
         status.saw_auto_advance === wantAutoAdvance
-            ? `saw_auto_advance=${status.saw_auto_advance}, and the route earns `
+            ? `saw_auto_advance=${status.saw_auto_advance}, and the Help model earns `
                 + `${wantAutoAdvance}${swordPickups > 0
-                    ? ` — ${swordPickups} sword pickup(s), each raising \`Sword.removed()\`'s`
-                        + ' unguarded `Help(3)` (R7: counted on EVERY version)'
+                    ? ` — ${swordPickups} sword pickup(s) raising \`Sword.removed()\`'s`
+                        + ` unguarded \`Help(3)\`, ${dismissed} of them dismissed by the`
+                        + ' TAPE on the Help\'s own first update (`NPCs/Help.as:92-110`),'
+                        + ' which `Bot.autoAdvance` never gets a dead frame to see'
                     : ''}`
             : `saw_auto_advance=${status.saw_auto_advance} against ${wantAutoAdvance} earned `
-                + `(${swordPickups} sword pickup(s), tape v${tape.tape_version}). `
+                + `(${swordPickups} sword pickup(s), ${dismissed} dismissed by the tape, `
+                + `tape v${tape.tape_version}). `
                 + (status.saw_auto_advance > wantAutoAdvance
                     ? 'A dialogue or Help the route was supposed to avoid froze the game, so '
                         + 'the proximity-hazard census missed something.'
-                    : 'The route collected a sword and the game raised NO Help — so either '
-                        + 'the pickup never fired or the counter has stopped seeing it.'));
+                    : 'The model says this route leaves a Help standing into a dead frame and '
+                        + 'the game counted no arrival — so either the pickup never fired, or '
+                        + 'the tape dismissed the Help on a tick the model has in the wrong '
+                        + 'place.'));
 
     // ── ⛓⛓ AND ITS FIRST RUN FOUND WHAT IT WAS MISSING — R5 slice 11 ───
     //

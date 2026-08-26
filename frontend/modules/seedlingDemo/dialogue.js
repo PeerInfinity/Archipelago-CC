@@ -380,6 +380,66 @@ export const PICKUP_TEXT_FROM_ATTRIBUTE = Object.freeze({
  */
 export const HELP_DISMISS_KEYS = Object.freeze(['primary', 'secondary']);
 
+/**
+ * ⛓⛓⛓ R9 SLICE 12e⁗ — **HOW MANY FREEZE ARRIVALS `Bot.autoAdvance` CAN
+ * COUNT, DERIVED FROM THE HELP MODEL RATHER THAN FROM A PICKUP COUNT.**
+ *
+ * `verify-seedling-bot-differential.mjs` used to derive its expectation as
+ * `wantAutoAdvance = swordPickups` — *"each raising `Sword.removed()`'s
+ * unguarded `Help(3)`"*. That premise is the one 12e‴ made false, and the
+ * third re-record run is where it came due: the re-recorded 78-tick
+ * `r8-solve-10` collects its sword, the game raises the Help, and the game's
+ * `saw_auto_advance` is **0** against the check's 1 (R9 §37.7).
+ *
+ * ⛓ **THE INTRA-FRAME ORDER, WHICH §37.7 LEFT OPEN, IS EXPLICIT IN THE
+ * SOURCE AND NEEDS NO ENTITY-LIST ARGUMENT.** `Main.as:67` calls
+ * `Bot.update()` **above** `super.update()`, with the fork's own comment
+ * saying why ("drive the tape before entities update"), and `super.update()`
+ * is `net/flashpunk/Engine.as:69-77` — `FP._world.update()` (every entity,
+ * `Help.update()` among them) and only then `updateLists()`. So `Bot.update()`
+ * runs BEFORE every entity update on the frame, unconditionally; `Bot` is not
+ * an Entity at all (`Bot.as` `public static function update()`), so where a
+ * `Help` sits in the list cannot matter.
+ *
+ * ⇒ the mechanism, end to end:
+ *   - `Game.freezeObjects = true` is set INSIDE `Help.update()`
+ *     (`NPCs/Help.as:100`), never at construction, so the freeze a `Help`
+ *     raises on frame T is first visible to `Bot` on frame T+1;
+ *   - `Help.as:92-103` sets `remove` on an `Input.pressed` EDGE of
+ *     {@link HELP_DISMISS_KEYS} and `:107-110` lowers the freeze IN THE SAME
+ *     UPDATE for `frame != 1`;
+ *   - `autoAdvance()` is reached ONLY from the dead-frame branch
+ *     (`Bot.as:2877-2882` — `blackCover > 0 || Game.freezeObjects`), and the
+ *     arrival is counted there (`Bot.as:3151`).
+ * ⇒ **a `Help` the tape dismisses at its own first update never produces a
+ * frame on which `autoAdvance()` runs, and its arrival is never counted.**
+ *
+ * The model already computes exactly that predicate — `levelRun.js`'s
+ * `drainPickupHelp` spends `pressed ? frames - 1 : frames` on the same
+ * `Input.pressed` edge, and `gameClock.spend` drops a zero-frame span — so
+ * this function is a READ of the ledger and not a second spelling of the
+ * rule. [[feedback_two_gates_one_opener]]
+ *
+ * ⛓ CALIBRATED AGAINST THE GAME AT BOTH POINTS OF THE ONE DISCRIMINATING
+ * PAIR (`fixtures/r8-solve-10-help-frame-oracle.json`, 12e‴'s two read-only
+ * drives): the 90-tick walk holds `right,up` at the Help's tick → 1 span →
+ * game `saw_auto_advance` **1**; the 78-tick walk holds `primary,up` → 0
+ * spans → game **0**.
+ *
+ * ⛔ NOT A CENSUS OF EVERY FREEZE. `Bot`'s predicate is
+ * `Game.talking || helpUp`, so the seal ceremony and `FallRock` make dead
+ * frames and are correctly NOT counted; the dead-frame budget is the
+ * instrument that sees those.
+ *
+ * @param {Array<{kind: string, frames: number}>} deadFrameSpans
+ *   `runTape(...).deadFrameSpans` — the game clock's ledger for the tape.
+ * @returns {number} the freeze arrivals `Bot.autoAdvance` can see.
+ */
+export function autoAdvanceArrivals(deadFrameSpans) {
+    return (deadFrameSpans ?? [])
+        .filter((s) => s.kind === 'help' && s.frames > 0).length;
+}
+
 /** The tape key whose RELEASE advances a dialogue — `Player.keys[6]` is X. */
 export const TALK_KEY = 'primary';
 
