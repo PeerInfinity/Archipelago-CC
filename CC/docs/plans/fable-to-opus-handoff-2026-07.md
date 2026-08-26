@@ -5253,6 +5253,19 @@ user and the fifth run's `sound`-pin re-record: **18 of 18 chain boundaries have
 an UNPINNED predecessor**, so every `rng.seed` row in the new gate is a
 sample-vs-sample comparison until that lands.
 
+**⚖ RULINGS 57–59 (the user, 2026-08-26, after §43/§44 — session 8):** **57 PIN
+ROSTER-WIDE** (§43.8 option 2 ⇒ the FIFTH run is a full-roster re-record under
+⚖ 40; the pin moves the count, so no committed expectation survives unmeasured).
+**58 THE WORLD-SWAP GATE** — a gate detects a lost race, it does not remove it;
+slice **12g** (§45) lands the byte-inert driver gate unconditionally and measures
+whether the fix is a phase-aligned `botStart` call (driver) or arming after the
+swap (`Bot.as`, a `p4c` build riding the fifth run's re-record); lands BEFORE the
+fifth run. **59 BRANCHES** — `r9/economies`, `r9/re-record-attempt`, `-2` deleted
+(patches on main); `-3`/`-4`/`-5` kept. Session 8 so far: 12f ✓ (`c2e076196`) ·
+P3 ✓ (`2feb53acc`; 63 standing rows, suite 375/11631 @b060f5b31) · 12g launched.
+Sequence: 12g → the FIFTH run (⚖ 57 + the series + the bank retirement + the
+three `r7-act2-*` description repairs) → P3b → P4 → L15.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
