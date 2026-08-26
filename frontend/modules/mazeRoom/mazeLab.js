@@ -67,6 +67,7 @@ import {
     refuseDuplicateParams,
     writeBounds, writeElementsParam, writeInt, writeRequireParam, writeRosterParam, writeRunFlag,
     writeSkeletonParam,
+    readRoomParam,
 } from '../procgenCore/urlParams.js';
 import {
     DEFAULT_AREAS, formatAreaSpec, formatRequireList, normalizeAreaSpec,
@@ -239,6 +240,34 @@ export const DIRECTED_ANCHOR_TRIES = 12;
  * waits for a press must not be the one a stale URL lands in. A maze solve is
  * milliseconds, and a page with no default would open on nothing.
  */
+/**
+ * ⛓⛓⛓ EDITOR INTEGRATION W3 — **`?room=` OPENS ONE ENTRY OF THE HELD LIBRARY.**
+ *
+ * The room-editor contract's middle move (`NewDocs/plans/editor-integration.md`
+ * §3.2): a host hands this page a REGION LIBRARY over `procgenLab:load` and
+ * then asks for room *n* of it over `procgenLab:navigate`. ⛔ It is a
+ * NAVIGATION parameter, not a load channel — `?library=` names the document and
+ * this names which of its entries the SET arm opens a room session on, through
+ * the page's own `openSetRoomAt`, which is the ONE bridge into a room (D1
+ * §20.7). Nothing new is minted: the base tag stays `library-room`.
+ *
+ * ⛔ **NOTHING HELD ⇒ THE ARM REFUSES IN ITS OWN BOX, NOT A THROW.** A URL
+ * naming a room of a library the page does not have is a link a reader can
+ * write by hand, and a page that died on it would lose the arm as well as the
+ * room. The refusal is where every other SET refusal is printed
+ * (`mazeLabView`, at the mount).
+ *
+ * ⚠ AND IT IS **COPIED FORWARD** by `writeLabParams`, like `?library=`, for the
+ * writer's own law (*"it rewrites the ones it owns and copies the rest"*) — so
+ * a reload re-opens the room, and the SET readout is where a reader sees which
+ * room is ACTUALLY open.
+ *
+ * ⛓ THE PARSE IS `urlParams.readRoomParam` and is SHARED with `watch.html`:
+ * both pages spell the parameter the same way and refuse the same values, and
+ * two copies of *"is this a room index"* would be two answers.
+ */
+export { readRoomParam };
+
 export function readLabParams(search) {
     const q = new URLSearchParams(search);
     const source = (q.get('source') || SOURCES.GENERATE).toLowerCase();
@@ -305,6 +334,12 @@ export function readLabParams(search) {
          * quietly promising a document nobody is editing.
          */
         library: q.get('library'),
+        /**
+         * ⛓⛓ EDITOR INTEGRATION W3 — **WHICH ENTRY OF THE HELD LIBRARY TO
+         * OPEN**, `?library=`'s own sibling. `null` is *"open no room"* and is
+         * not the same as `0`. See `readRoomParam`.
+         */
+        room: readRoomParam(q.get('room')),
         /** RUN-ALL on load. `?run=1` is also how the step encoding is read. */
         run: q.get('run') === '1',
     };

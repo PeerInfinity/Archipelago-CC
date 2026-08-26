@@ -41,7 +41,41 @@
  */
 
 import { createLabBridge } from '../procgenCore/labBridge.js';
+import { makeSetRecordEnvelope } from '../procgenCore/labRoomEnvelope.js';
 import { AdapterClient } from '../shared/adapterClient.js';
+
+/**
+ * ⛓⛓⛓ EDITOR INTEGRATION W3 — **WHAT THIS PAGE HANDS THE HOST, AND IT IS
+ * ARM-AWARE.**
+ *
+ * `labBridge.announce` publishes `procgenLab:levelChanged` whenever what
+ * `page.payload()` returns differs from the last one published. Before W3 that
+ * was always the LADDER payload, so every SET-arm edit — including the ONE
+ * `replace-room` a room close folds — was invisible to a host. Now: while the
+ * SET arm HOLDS a session, the page's payload IS that document, wrapped in the
+ * `labRoomEnvelope` both pages and the host share.
+ *
+ * ⛔ **THE GATE IS `setArm()`, NOT THE `?source=`.** The condition is *"is a
+ * session HELD"*, which is the SAME condition `window.__mazeLab.set` is
+ * published under — a library can be held while another arm is on screen, and
+ * a host that had to drive the page to the SET arm before it could hear about
+ * the document could never send the document and the navigate as two messages.
+ *
+ * ⚠ BYTE-INERT FOR EVERY EXISTING CLAIM: no library held ⇒ no session ⇒ the
+ * ladder payload, exactly as before. The hosting row's payloads are lab levels.
+ *
+ * @param {object|null|undefined} readout `window.__mazeLab`
+ * @param {{room:number|null, record:object}|null} setArm the held session, or null
+ */
+export function mazeLabPayload(readout, setArm) {
+    if (!readout || readout.fatal) return null;
+    if (setArm) {
+        return makeSetRecordEnvelope({
+            substrate: 'maze', room: setArm.room, record: setArm.record,
+        });
+    }
+    return readout.payload ?? null;
+}
 
 /**
  * ⛓⛓ THE PROJECTION, AS A PURE FUNCTION — `window.__mazeLab` onto the
@@ -93,8 +127,13 @@ export function mazeLabSummary(readout, href) {
  * @param {() => object} opts.readout         `() => window.__mazeLab`
  * @param {(payload:object) => void} opts.load     the page's ONE reconstruction
  * @param {(search:string) => void} opts.navigate  the page's ONE URL reader
+ * @param {() => ({room:number|null, record:object})|null} [opts.setArm]
+ *        the SET arm's own session, or `null` when it holds none — see
+ *        `mazeLabPayload`
  */
-export async function installMazeLabBridge({ iframeId, readout, load, navigate }) {
+export async function installMazeLabBridge({
+    iframeId, readout, load, navigate, setArm = () => null,
+}) {
     if (!iframeId) return null;
     const client = new AdapterClient();
     return createLabBridge({
@@ -105,8 +144,10 @@ export async function installMazeLabBridge({ iframeId, readout, load, navigate }
             summary: () => mazeLabSummary(readout(), window.location.href),
             // ⛔ THE PAGE'S OWN PAYLOAD, from its own readout — `labPayload(state)`
             // is what Download writes and what LOAD takes, so the host and the
-            // file on disk are the same artifact.
-            payload: () => (readout()?.fatal ? null : (readout()?.payload ?? null)),
+            // file on disk are the same artifact. ⛓ …unless the SET arm is
+            // holding a document, in which case what this page HAS is that
+            // document — see `mazeLabPayload`.
+            payload: () => mazeLabPayload(readout(), setArm()),
             load,
             navigate,
         },

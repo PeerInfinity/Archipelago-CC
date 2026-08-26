@@ -18,7 +18,7 @@ import {
     planFrames,
     readLabParams, SKELETON_KIND_NAMES, DEFAULT_SKELETON, serializeMazeLevel,
     skeletonCatalogue, solveState, stepFromParams, undoEdit, writeLabParams,
-    certifyInto, editBaseTag, openEditSession, projectSession,
+    certifyInto, editBaseTag, openEditSession, projectSession, readRoomParam,
 } from './mazeLab.js';
 import { deserializeMazeLevel } from './procgenMaze.js';
 import { TILE_FLOOR, TILE_WALL, getTile } from './mazeRoomEngine.js';
@@ -1608,5 +1608,63 @@ describe('mazeLab — the edit SESSION (editor v3 slice A2)', () => {
         expect(session.undo()).toBe(true);
         expect(serializeMazeLevel(session.record()))
             .toEqual(serializeMazeLevel(generateStep({ seed: 3, step: 2, ...ROOM }).record));
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * EDITOR INTEGRATION W3 — `?room=`
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('mazeLab — `?room=`, the SET arm\'s room selector', () => {
+    it('⛓ absent is `null`, and `null` is NOT `0`', () => {
+        expect(readLabParams('?source=set').room).toBe(null);
+        expect(readLabParams('?source=set&library=x.json').room).toBe(null);
+        expect(readLabParams('?source=set&room=0').room).toBe(0);
+    });
+
+    it('reads a non-negative integer INDEX', () => {
+        for (const n of [0, 1, 7, 42]) {
+            expect(readLabParams(`?source=set&room=${n}`).room).toBe(n);
+        }
+    });
+
+    it('⛔ REFUSES anything that is not one, by name — a typo that silently opened a '
+        + 'different room would edit one room under a link naming another', () => {
+        // ⛓ `UrlParamsError`, not `MazeLabError`: the PARSE is shared with
+        //   watch.html (`urlParams.readRoomParam`), because two copies of "is
+        //   this a room index" would be two answers.
+        for (const bad of ['x', '-1', '1.5', '', ' ', '1e2', '0x2']) {
+            expect(() => readLabParams(`?source=set&room=${encodeURIComponent(bad)}`))
+                .toThrow(UrlParamsError);
+        }
+        expect(() => readLabParams('?source=set&room=x')).toThrow(/room INDEX/);
+    });
+
+    it('⛓ `readRoomParam` takes the RAW value, so the reader keeps its ONE `q.get`', () => {
+        expect(readRoomParam(null)).toBe(null);
+        expect(readRoomParam(undefined)).toBe(null);
+        expect(readRoomParam('3')).toBe(3);
+        expect(readRoomParam(' 3 ')).toBe(3);
+    });
+
+    it('⛓⛓ the WRITER copies it forward — it is not a parameter this page OWNS, and '
+        + '`?library=`\'s own rule applies', () => {
+        const out = writeLabParams('?source=set&room=2&library=packs%2Fdemo.json', {
+            source: SOURCES.SET,
+            seed: 1,
+            biome: DEFAULT_MAZE_BIOME,
+            width: 11,
+            height: 11,
+            bounds: readLabParams('').bounds,
+            budget: readLabParams('').budget,
+            step: 0,
+        });
+        expect(new URLSearchParams(out).get('room')).toBe('2');
+        expect(readLabParams(`?${out}`).room).toBe(2);
+    });
+
+    it('⛔ a duplicate `?room=` is refused by the query-shape check, like every other '
+        + 'parameter', () => {
+        expect(() => readLabParams('?source=set&room=1&room=2')).toThrow();
     });
 });

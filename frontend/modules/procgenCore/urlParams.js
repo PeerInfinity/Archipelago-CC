@@ -157,6 +157,8 @@ export const URL_PARAM_REFUSALS = Object.freeze([
     'cannot-write-a-value-outside-the-domain',
     /* ── the RNG seam ── */
     'directive-seed-needs-the-seed-max',
+    /* ── the ROOM-EDITOR door (editor integration, W3) ── */
+    'not-a-room-index',
 ]);
 
 /* ══════════════════════════════════════════════════════════════════════
@@ -173,6 +175,42 @@ export const URL_PARAM_REFUSALS = Object.freeze([
  * empty integer, so `?count=` is not a value somebody set to nothing; the list
  * parameters below treat `''` differently and say why.
  */
+/**
+ * ⛓⛓⛓ EDITOR INTEGRATION W3 — **`?room=`, THE ONE READER BOTH PAGES SHARE.**
+ *
+ * The room-editor contract's middle move (`NewDocs/plans/editor-integration.md`
+ * §3.2): a host hands a lab page a SET DOCUMENT over `procgenLab:load` and then
+ * asks for room *n* of it over `procgenLab:navigate`. Both pages spell the
+ * parameter the same way and both refuse the same values — ⛔ which is why the
+ * PARSE lives here and not on either page: two copies of *"is this a room
+ * index"* would be two answers, and the first slice to change one would leave
+ * the other saying something else.
+ *
+ * ⚠ IT TAKES THE **RAW VALUE**, not the `URLSearchParams`. Each page keeps its
+ * own `q.get('room')` inside its own ONE reader, which is what the URL-grammar
+ * generator scans to say the parameter belongs to that page.
+ *
+ * ⚠ `null` IS *"open no room"* AND IS NOT `0`. The arms differ (`?source=set`
+ * on the maze, `?source=edit` on Seedling) and so does what a room IS, but the
+ * INDEX is an index into the held document's rooms on both.
+ *
+ * @param {string|null|undefined} value the raw `?room=` value
+ * @returns {number|null}
+ */
+export function readRoomParam(value) {
+    if (value === null || value === undefined) return null;
+    const raw = String(value).trim();
+    if (!/^\d+$/.test(raw)) {
+        fail('not-a-room-index',
+            `?room=${JSON.stringify(value)} is not a room INDEX. It must be a non-negative `
+            + 'integer — the position of a room in the document this page is HOLDING. '
+            + '⛔ It REFUSES rather than falling back to room 0: a typo that silently opened '
+            + 'a different room would let a reader edit one room under a link that names '
+            + 'another.');
+    }
+    return Number(raw);
+}
+
 export function intParam(q, name, fallback) {
     const raw = q.get(name);
     if (raw === null || raw === '') return fallback;

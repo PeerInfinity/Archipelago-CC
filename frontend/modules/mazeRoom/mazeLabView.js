@@ -2646,7 +2646,49 @@ export function main() {
          * mount measures a laid-out parent. ⚠ A row asserting only INK could not
          * have seen this; the strip's WIDTH is asserted too.
          */
-        if (source === SOURCES.SET) mountSetArm(lt);
+        if (source === SOURCES.SET) {
+            mountSetArm(lt);
+            /**
+             * ⛓⛓⛓ EDITOR INTEGRATION W3 — **`?room=` OPENS ONE ENTRY, AFTER
+             * THE ARM IS MOUNTED.** ⛔ Here and not in `boot()`: `boot` is what
+             * FETCHES a `?library=`, and the room session mounts its tool on
+             * `#canvas` inside a `#setPanel` the arm has just unhidden — the
+             * same laid-out-parent rule the strip pays above. A room opened
+             * before the mount would measure a hidden canvas.
+             *
+             * ⛔ AND `openSetRoomAt` IS THE ONE BRIDGE — the same function the
+             * strip's own press calls, so a host-driven room and a hand-clicked
+             * one are the same session with the same base tag. It refuses in
+             * `say()` when nothing is held, and a `false` here is that refusal
+             * already printed.
+             */
+            if (params.room !== null && params.room !== undefined) {
+                if (!setSession) {
+                    say(`⛔ ?room=${params.room} — this arm is holding NO region library, so `
+                        + 'there is no room to open. Load one first (the LOAD box, Upload, a '
+                        + 'served pack, or `?library=`), or send one over `procgenLab:load`.',
+                    true);
+                    render();
+                } else if (params.room >= setSession.record().library.entries.length) {
+                    /**
+                     * ⛔ THE BOUND IS CHECKED HERE AND NOT INSIDE `openSetRoomAt`:
+                     * that function's callers are the strip's own presses, which
+                     * can only name a row that exists. A URL can name anything,
+                     * and `setAdapter.readCell` would throw on an index the
+                     * library does not have — a page-killing answer to a typo.
+                     */
+                    say(`⛔ ?room=${params.room} — the held library "`
+                        + `${setSession.record().library.library_id ?? '(unstamped)'}" has `
+                        + `${setSession.record().library.entries.length} room(s), numbered from `
+                        + '0. No room was opened.', true);
+                    render();
+                } else if (!openSetRoomAt(params.room)) {
+                    // ⛓ `openSetRoomAt` printed its own reason (a room already
+                    //   open with unwritten edits, or one that would not open).
+                    render();
+                }
+            }
+        }
     };
 
     /* ══════════════════════════════════════════════════════════════════
@@ -2894,8 +2936,39 @@ export function main() {
      * + `mount` — the SWITCH arc's law, in place, with no reload.
      */
 
-    /** HOST → PAGE `procgenLab:load`. ⛔ The LOAD box's own function, verbatim. */
+    /**
+     * HOST → PAGE `procgenLab:load`. ⛔ A LOAD BOX'S own function, verbatim —
+     * and since EDITOR INTEGRATION W3 the page decides WHICH box by SNIFFING,
+     * through the classifier it already had.
+     *
+     * ⛓⛓⛓ **THE SNIFF IS `sniffSetDocument`, NOT A SECOND TEST.** It is
+     * `documentBundle.classifyDocument` — the same answer the SET arm's paste
+     * box, the `.zip` bundle reader and Seedling's load box get — so a REGION
+     * LIBRARY or an OVERLAY handed over by a host lands in the SET arm's intake
+     * and anything else keeps going exactly where it went before. ⛔ A
+     * host-only routing test here would be the two-spellings failure at the one
+     * boundary this arc keeps paying for.
+     *
+     * ⚠ BYTE-INERT FOR EVERY EXISTING CLAIM: `check-procgen-lab-hosting.mjs`
+     * sends LAB LEVEL payloads, which classify as they always did and go to
+     * `#labText` / `loadFromBox()` unchanged.
+     *
+     * ⛔ AND IT DOES **NOT** RE-NAVIGATE. The SET arm may not be the arm on
+     * screen; holding the document is what `procgenLab:navigate ?source=set&room=n`
+     * arrives for, one message later. A load that switched arms by itself would
+     * make the host's next navigate a second, contradictory decision about what
+     * the reader is looking at.
+     */
     const loadFromHost = (payload) => {
+        const sniff = sniffSetDocument(payload);
+        if (sniff.kind === 'library' || sniff.kind === 'overlay') {
+            $('labSetText').value = JSON.stringify(payload, null, 2);
+            ensureSetSchemas().then(() => {
+                takeSetJson(payload, 'the HOST');
+                render();
+            });
+            return;
+        }
         $('labText').value = JSON.stringify(payload, null, 2);
         loadFromBox();
     };
@@ -2949,6 +3022,17 @@ export function main() {
             readout: () => window.__mazeLab,
             load: loadFromHost,
             navigate,
+            /**
+             * ⛓⛓⛓ EDITOR INTEGRATION W3 — **THE SET ARM, FOR THE PAYLOAD.**
+             * ⛔ Off the SESSION and the open-room index, not off
+             * `window.__mazeLab.set`: the readout carries COUNTS of the record
+             * (rooms, links, ops), never the record itself, and a host cannot
+             * fold a `replace-room` back into a count. The same law the readout
+             * itself states — *"the counts are read off the SESSION's record"*.
+             */
+            setArm: () => (setSession
+                ? { room: setRoomIndex, record: setSession.record() }
+                : null),
         });
     };
 

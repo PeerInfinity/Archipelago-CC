@@ -12,8 +12,9 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { mazeLabSummary } from './mazeLabBridge.js';
-import { assertStateChanged } from '../procgenCore/labProtocol.js';
+import { mazeLabPayload, mazeLabSummary } from './mazeLabBridge.js';
+import { assertStateChanged, assertLevelChanged } from '../procgenCore/labProtocol.js';
+import { isSetRecordEnvelope, openRoomOf } from '../procgenCore/labRoomEnvelope.js';
 
 const HREF = 'http://localhost:8000/frontend/modules/mazeRoom/lab.html?seed=3&count=4';
 
@@ -81,5 +82,64 @@ describe('mazeLabSummary', () => {
         expect(Object.keys(mazeLabSummary(READOUT, HREF)).sort()).toEqual([
             'certified', 'directives', 'edits', 'identity', 'seed', 'source', 'step', 'url',
         ]);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * EDITOR INTEGRATION W3 — THE ARM-AWARE PAYLOAD
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('mazeLabPayload — what this page hands the host', () => {
+    const RECORD = { library: { library_id: 'demo', entries: [{}, {}] }, overlay: {} };
+
+    it('⛓ with NO set session it is the LADDER payload — byte-inert for every claim '
+        + 'that existed before W3', () => {
+        expect(mazeLabPayload(READOUT, null)).toBe(READOUT.payload);
+        // ⛔ …and `undefined` is not smuggled through as an object.
+        expect(mazeLabPayload({ ...READOUT, payload: undefined }, null)).toBe(null);
+    });
+
+    it('⛔ a FATAL boot hands over NOTHING, on either arm', () => {
+        expect(mazeLabPayload({ fatal: 'the URL was refused' }, null)).toBe(null);
+        expect(mazeLabPayload({ fatal: 'the URL was refused' },
+            { room: 0, record: RECORD })).toBe(null);
+        expect(mazeLabPayload(null, { room: 0, record: RECORD })).toBe(null);
+    });
+
+    it('⛓⛓⛓ with a set session HELD it is the ENVELOPE, carrying the record and the '
+        + 'OPEN ROOM — and `null` room is a value, not an absence', () => {
+        const closed = mazeLabPayload(READOUT, { room: null, record: RECORD });
+        expect(isSetRecordEnvelope(closed)).toBe(true);
+        expect(closed.substrate).toBe('maze');
+        expect(openRoomOf(closed)).toBe(null);
+        expect(closed.record).toBe(RECORD);
+
+        const open = mazeLabPayload(READOUT, { room: 1, record: RECORD });
+        expect(openRoomOf(open)).toBe(1);
+    });
+
+    it('⛓⛓ the ENVELOPE is a payload `assertLevelChanged` accepts — the protocol gains '
+        + 'no field, the envelope rides inside the one it already has', () => {
+        const message = {
+            substrate: 'maze',
+            iframeId: 'procgenLab-maze-1',
+            payload: mazeLabPayload(READOUT, { room: 0, record: RECORD }),
+        };
+        expect(() => assertLevelChanged(message)).not.toThrow();
+    });
+
+    it('⛔ the arm gate is the SESSION, not the `?source=` — a library held while '
+        + 'another arm is on screen still announces the document', () => {
+        const onGenerate = mazeLabPayload({ ...READOUT, source: 'generate' },
+            { room: null, record: RECORD });
+        expect(isSetRecordEnvelope(onGenerate)).toBe(true);
+    });
+
+    it('⛓ the envelope MOVES when the record does — which is what makes '
+        + '`labBridge.announce`\'s diff publish a set edit', () => {
+        const before = JSON.stringify(mazeLabPayload(READOUT, { room: 1, record: RECORD }));
+        const edited = { library: { library_id: 'demo', entries: [{}, { t: 1 }] }, overlay: {} };
+        const after = JSON.stringify(mazeLabPayload(READOUT, { room: null, record: edited }));
+        expect(after).not.toBe(before);
     });
 });

@@ -132,6 +132,20 @@
              TRANSPORT failure (the fetch threw, or `!res.ok`) is FATAL BY NAME;
              a CONTENT failure goes in the arm's own LOAD box and the rest of
              the page still works.
+  ?room=N    WHICH ENTRY of the held region library the SET arm opens a room
+             session on — `?library=`'s sibling, and a NAVIGATION parameter
+             rather than a load channel. It goes through the page's own
+             `openSetRoomAt`, so a host-driven room and a hand-clicked one are
+             the SAME session with the same `library-room` base tag. ⛔ With
+             NOTHING HELD it REFUSES in the arm's own box (a link naming a room
+             of a library this page does not have is one a reader can write by
+             hand, and a page that died on it would lose the arm too); an index
+             past the last entry refuses the same way, naming the count. ⚠ It is
+             COPIED FORWARD by the URL writer like `?library=`, so a reload
+             re-opens the room — what is ACTUALLY open is in the SET readout.
+             ⛓ EDITOR INTEGRATION W3: this is how a host asks for ONE room over
+             `procgenLab:navigate`, after handing the document over
+             `procgenLab:load`.
 
   ?expansions=N  the BFS NODE CAP. ⚠ Seedling's budget is `?tickbudget=` and is
              denominated in solver TICKS; these are different quantities and one

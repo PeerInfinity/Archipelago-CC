@@ -947,6 +947,21 @@ export const REFUSALS = frz({
             "file": "frontend/modules/procgenCore/urlParams.js",
             "inTheConstant": true,
             "kind": "constant",
+            "meaning": "?room=… is not a room INDEX. It must be a non-negative integer — the position of a room in the document this page is HOLDING. ⛔ It REFUSES rather than falling back to room 0: a typo that silently opened a different room would let a reader edit one room under a link that names another.",
+            "name": "not-a-room-index",
+            "named": true,
+            "scanFound": true,
+            "source": "url-params",
+            "sourceTitle": "The URL grammar itself",
+            "where": "urlParams.readRoomParam"
+        },
+        {
+            "alsoFiresIn": [],
+            "channel": "a `UrlParamsError` thrown at READ time — the page's fatal line, and the CLI's stderr. `error.code` IS the name in this column.",
+            "constant": "URL_PARAM_REFUSALS",
+            "file": "frontend/modules/procgenCore/urlParams.js",
+            "inTheConstant": true,
+            "kind": "constant",
             "meaning": "urlParams: ?…=… is not an integer. Every bound this loop runs under is named in its own trace (⚖ kickoff §5), so there is no value that means \"whatever\".",
             "name": "not-an-integer",
             "named": true,
@@ -2156,14 +2171,14 @@ export const REFUSALS = frz({
         {
             "channel": "a `UrlParamsError` thrown at READ time; `error.code` is the name",
             "constant": "URL_PARAM_REFUSALS",
-            "declaredCount": 32,
+            "declaredCount": 33,
             "file": "frontend/modules/procgenCore/urlParams.js",
             "id": "url-params",
             "kind": "constant",
             "patterns": [
                 "/\\bfail\\('([a-z][a-z0-9-]+)',/g + the string run after it"
             ],
-            "scannedCount": 33,
+            "scannedCount": 34,
             "spansModules": false,
             "title": "The URL grammar itself",
             "where": "every `export function` in urlParams.js"

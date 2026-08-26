@@ -12,8 +12,8 @@
  * said the day it was written.
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { describe, it, expect, beforeAll, afterEach, vi } from 'vitest';
+import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -35,9 +35,16 @@ let substrateRegistry;
 let mod;
 let labRoomEditor;
 let eventBus;
+/** ⛓ The eight real entries, kept so a PROBE registered by a row can be undone. */
+let realEntries;
 
-beforeEach(async () => {
-    vi.resetModules();
+/**
+ * ⛔ IMPORTED ONCE, AND THE STATE IS RESTORED PER ROW instead. The eight
+ * libraries cost ~2.8s to import; a `vi.resetModules()` in `beforeEach` paid
+ * that ten times over and pushed the file past vitest's 5s per-test timeout the
+ * moment it ran beside other files — which is a FLAKE, not a finding.
+ */
+beforeAll(async () => {
     ({ default: eventBus } = await import('../../app/core/eventBus.js'));
     ({ substrateRegistry } = await import('../shared/procgen/substrateRegistry.js'));
     for (const rel of LIBRARIES) {
@@ -46,15 +53,33 @@ beforeEach(async () => {
     }
     mod = await import('./regionEditors.js');
     labRoomEditor = await import('../procgenLabPanel/labRoomEditor.js');
-    labRoomEditor.clearLabPanelInstances();
+    realEntries = substrateRegistry.getAll();
     eventBus.registerPublisher('procgenLab:levelChanged', 'testFrame');
-});
+/**
+ * ⛔ AND THE HOOK CARRIES ITS OWN TIMEOUT. The eight libraries are ~24s of
+ * TRANSFORM the first time vitest sees them, and the default hook budget is
+ * 10s — measured: this hook passed alone and timed out two runs in three when
+ * the file ran beside `procgenCore/`. A budget the work cannot fit in is a
+ * flake, not a finding.
+ */
+}, 120_000);
 
 afterEach(() => {
+    // ⛓ THE REGISTRY BACK TO THE EIGHT, so a row's PROBE entry cannot be seen
+    //   by the roster row that follows it.
+    substrateRegistry.clear();
+    for (const entry of realEntries) substrateRegistry.register(entry);
+    for (const key of Object.keys(mod.regionEditors)) delete mod.regionEditors[key];
     labRoomEditor.clearLabPanelInstances();
 });
 
-function fakePanel(substrate, iframeId) {
+/**
+ * ⛓ A UNIQUE iframeId PER PANEL, ACROSS THE WHOLE FILE. Modules are no longer
+ * reset per row, so an opener whose room never closed is still subscribed —
+ * and `addressedTo` is what keeps it from hearing the next row's announce.
+ */
+let panelSeq = 0;
+function fakePanel(substrate, iframeId = `procgenLab-${substrate}-${(panelSeq += 1)}`) {
     return {
         substrate,
         iframeId,
@@ -82,18 +107,26 @@ describe('regionEditors — the answer comes off the substrate entry', () => {
     it('⛔ …and no module CALLS `registerRegionEditor` either — the table being empty '
         + 'at import time would also be true of a call made at `initialize()`', () => {
         const callers = [];
+        /**
+         * ⛔ `latin1`, NEVER `utf8`-with-a-grep: `procgenPipelineUI.js` carries
+         * a NUL byte, which makes plain `grep` treat it as BINARY and SKIP it
+         * silently — and it is the file that CALLS `getRegionEditor` four
+         * times, so a scan that skipped it would be a scan of everything except
+         * the one place that matters.
+         */
         const walk = (dir) => {
-            for (const name of readdirSync(dir)) {
-                const full = join(dir, name);
-                if (statSync(full).isDirectory()) {
-                    if (name === 'node_modules' || name === 'wasm') continue;
+            for (const e of readdirSync(dir, { withFileTypes: true })) {
+                const full = join(dir, e.name);
+                if (e.isDirectory()) {
+                    if (e.name === 'node_modules' || e.name === 'wasm') continue;
                     walk(full);
                     continue;
                 }
-                if (!name.endsWith('.js') || name.endsWith('.test.js')) continue;
+                if (!e.name.endsWith('.js') || e.name.endsWith('.test.js')) continue;
                 if (full.endsWith(join('procgenPipeline', 'regionEditors.js'))) continue;
-                const src = readFileSync(full, 'latin1');
-                if (/\bregisterRegionEditor\s*\(/.test(src)) callers.push(full);
+                if (readFileSync(full, 'latin1').includes('registerRegionEditor(')) {
+                    callers.push(full);
+                }
             }
         };
         walk(MODULES_DIR);
@@ -116,8 +149,8 @@ describe('regionEditors — the answer comes off the substrate entry', () => {
     });
 
     it('⛓⛓ resolves the two LAB substrates to an opener bound to THEIR page and arm', () => {
-        const maze = fakePanel('maze', 'procgenLab-maze-1');
-        const seed = fakePanel('seedling', 'procgenLab-seedling-2');
+        const maze = fakePanel('maze');
+        const seed = fakePanel('seedling');
         labRoomEditor.registerLabPanelInstance(maze);
         labRoomEditor.registerLabPanelInstance(seed);
 
@@ -137,8 +170,8 @@ describe('regionEditors — the answer comes off the substrate entry', () => {
             'procgenLab:levelChanged',
             { substrate, iframeId, payload: { kind: 'set-record', substrate, room, record: RECORD } },
             'testFrame');
-        announce('maze', 'procgenLab-maze-1', null);
-        announce('seedling', 'procgenLab-seedling-2', null);
+        announce('maze', maze.iframeId, null);
+        announce('seedling', seed.iframeId, null);
         // ⛓ THE ARMS DIFFER, and this is the row that would go red if one
         //   opener were bound to the other page's grammar.
         expect(maze.navigates).toEqual(['?source=set&room=1']);

@@ -385,14 +385,19 @@ describe('refusals names every constant, and its scan is the non-vacuity witness
          *  would red if `urlParams`' names were ever taken away again. */
         expect(REFUSALS.rows.filter((r) => !r.named)).toEqual([]);
         /**
-         * ⛓ **32 — arc 5, slice 1 adds FOUR**: the room contract's reader and
+         * ⛓ **33 — EDITOR INTEGRATION W3 adds ONE**: `not-a-room-index`, the
+         * `?room=` reader BOTH lab pages share. It lives here rather than on
+         * either page because both spell the parameter the same way and refuse
+         * the same values, and two copies of *"is this a room index"* would be
+         * two answers.
+         * ⛓ **32 — arc 5, slice 1 added FOUR**: the room contract's reader and
          * writer each refuse a size and a fill by name (`room-size-refused`,
          * `cannot-write-a-room-size`, `fill-mode-refused`,
          * `cannot-write-a-fill-mode`). ⛔ The number is PINNED rather than
          * bounded for the reason P5 pinned it: a slice that adds a refusal
          * should have to come here and say so.
          */
-        expect(URL_PARAM_REFUSALS.length).toBe(32);
+        expect(URL_PARAM_REFUSALS.length).toBe(33);
         for (const r of REFUSALS.rows.filter((x) => x.source === 'url-params')) {
             expect(URL_PARAM_REFUSALS, r.name).toContain(r.name);
             expect(r.where, r.name).toMatch(/^urlParams\./);

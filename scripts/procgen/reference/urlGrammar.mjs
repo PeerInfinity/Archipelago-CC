@@ -170,6 +170,17 @@ const PARAM_NOTES = {
      * failure is FATAL by name; a CONTENT failure goes in the arm's own LOAD box.
      */
     library: { field: { watch: null, lab: 'library' }, codec: 'a path to a region-library JSON', terms: ['content-source', 'region'] },
+    /**
+     * ⛓⛓ EDITOR INTEGRATION W3 — `?library=`'s SIBLING, and a NAVIGATION
+     * parameter rather than a load channel: `?library=` names the DOCUMENT and
+     * this names WHICH OF ITS ENTRIES the SET arm opens a room session on,
+     * through the page's own `openSetRoomAt` (the ONE bridge into a room). ⛔
+     * With nothing held it REFUSES in the arm's own box rather than throwing —
+     * a link naming a room of a library the page does not have is one a reader
+     * can write by hand. It is how a HOST asks for one room over
+     * `procgenLab:navigate`, after handing the document over `procgenLab:load`.
+     */
+    room: { field: { watch: 'room', lab: 'room' }, codec: 'a non-negative integer INDEX into the held document\'s rooms — `urlParams.readRoomParam`, shared by both pages', terms: ['region'] },
     tickbudget: { field: { watch: 'budget.maxTicksPerTarget', lab: null }, codec: 'intParam', terms: ['tick-budget', 'solver'] },
     expansions: { field: { watch: null, lab: 'budget.maxExpansions' }, codec: 'intParam', terms: ['bfs-oracle', 'certification'] },
     /**
@@ -258,6 +269,14 @@ const DEFAULTS_ON_EMPTY = {
         speed: 1,
         layers: null,
         attackHold: null,
+        /**
+         * ⛓ EDITOR INTEGRATION W3. ⚠ Listed here like its five neighbours
+         * because `watchViewer.readParams` reads `window.location.search` and
+         * cannot be called headless — the VALUE is still the reader's own
+         * (`urlParams.readRoomParam(null)` is `null`, and that is `null` for
+         * "open no room", never `0`).
+         */
+        room: null,
     },
     lab: M.mazeLab.readLabParams(''),
 };

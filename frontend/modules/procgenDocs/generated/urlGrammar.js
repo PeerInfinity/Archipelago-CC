@@ -87,6 +87,7 @@ export const URL_GRAMMAR = frz({
                 "name": null,
                 "phase": null,
                 "require": null,
+                "room": null,
                 "roster": null,
                 "run": false,
                 "seed": 1,
@@ -633,6 +634,27 @@ export const URL_GRAMMAR = frz({
                 },
                 {
                     "absentMeans": null,
+                    "atDefault": "not written by this page",
+                    "codec": "a non-negative integer INDEX into the held document's rooms — `urlParams.readRoomParam`, shared by both pages",
+                    "defaultField": "room",
+                    "defaultIsUndefined": false,
+                    "defaultValue": null,
+                    "name": "room",
+                    "retired": false,
+                    "terms": [
+                        "region"
+                    ],
+                    "via": [
+                        {
+                            "file": "frontend/modules/seedlingDemo/watchViewer.js",
+                            "fn": "readParams",
+                            "how": "get",
+                            "role": "read"
+                        }
+                    ]
+                },
+                {
+                    "absentMeans": null,
                     "atDefault": "DELETED at the default",
                     "codec": "the literal `1`",
                     "defaultField": "run",
@@ -1012,7 +1034,7 @@ export const URL_GRAMMAR = frz({
                 {
                     "file": "frontend/modules/seedlingDemo/watchViewer.js",
                     "fn": "readParams",
-                    "line": 657,
+                    "line": 658,
                     "role": "read"
                 },
                 {
@@ -1062,6 +1084,7 @@ export const URL_GRAMMAR = frz({
                 "height": 11,
                 "library": null,
                 "require": null,
+                "room": null,
                 "roster": null,
                 "run": false,
                 "seed": 1,
@@ -1440,6 +1463,27 @@ export const URL_GRAMMAR = frz({
                 },
                 {
                     "absentMeans": null,
+                    "atDefault": "not written by this page",
+                    "codec": "a non-negative integer INDEX into the held document's rooms — `urlParams.readRoomParam`, shared by both pages",
+                    "defaultField": "room",
+                    "defaultIsUndefined": false,
+                    "defaultValue": null,
+                    "name": "room",
+                    "retired": false,
+                    "terms": [
+                        "region"
+                    ],
+                    "via": [
+                        {
+                            "file": "frontend/modules/mazeRoom/mazeLab.js",
+                            "fn": "readLabParams",
+                            "how": "get",
+                            "role": "read"
+                        }
+                    ]
+                },
+                {
+                    "absentMeans": null,
                     "atDefault": "DELETED at the default",
                     "codec": "the literal `1`",
                     "defaultField": "run",
@@ -1640,7 +1684,7 @@ export const URL_GRAMMAR = frz({
                 {
                     "file": "frontend/modules/mazeRoom/mazeLab.js",
                     "fn": "readLabParams",
-                    "line": 242,
+                    "line": 271,
                     "role": "read"
                 }
             ],
@@ -1649,7 +1693,7 @@ export const URL_GRAMMAR = frz({
                 {
                     "file": "frontend/modules/mazeRoom/mazeLab.js",
                     "fn": "writeLabParams",
-                    "line": 328,
+                    "line": 363,
                     "role": "write"
                 }
             ],
@@ -1702,13 +1746,13 @@ export const URL_GRAMMAR = frz({
         {
             "file": "frontend/modules/procgenCore/urlParams.js",
             "fn": "directiveSeed",
-            "line": 969,
+            "line": 1007,
             "params": []
         },
         {
             "file": "frontend/modules/procgenCore/urlParams.js",
             "fn": "dropDirectedParam",
-            "line": 1267,
+            "line": 1305,
             "params": [
                 "directed"
             ]
@@ -1716,31 +1760,31 @@ export const URL_GRAMMAR = frz({
         {
             "file": "frontend/modules/procgenCore/urlParams.js",
             "fn": "formatDirectives",
-            "line": 1124,
+            "line": 1162,
             "params": []
         },
         {
             "file": "frontend/modules/procgenCore/urlParams.js",
             "fn": "intParam",
-            "line": 176,
+            "line": 214,
             "params": []
         },
         {
             "file": "frontend/modules/procgenCore/urlParams.js",
             "fn": "parseDirective",
-            "line": 998,
+            "line": 1036,
             "params": []
         },
         {
             "file": "frontend/modules/procgenCore/urlParams.js",
             "fn": "parseDirectives",
-            "line": 1106,
+            "line": 1144,
             "params": []
         },
         {
             "file": "frontend/modules/procgenCore/urlParams.js",
             "fn": "readAreas",
-            "line": 595,
+            "line": 633,
             "params": [
                 "areas"
             ]
@@ -1748,7 +1792,7 @@ export const URL_GRAMMAR = frz({
         {
             "file": "frontend/modules/procgenCore/urlParams.js",
             "fn": "readBounds",
-            "line": 190,
+            "line": 228,
             "params": [
                 "anchortries",
                 "count",
@@ -1759,7 +1803,7 @@ export const URL_GRAMMAR = frz({
         {
             "file": "frontend/modules/procgenCore/urlParams.js",
             "fn": "readElements",
-            "line": 690,
+            "line": 728,
             "params": [
                 "elements"
             ]
@@ -1767,7 +1811,7 @@ export const URL_GRAMMAR = frz({
         {
             "file": "frontend/modules/procgenCore/urlParams.js",
             "fn": "readElementsTyped",
-            "line": 714,
+            "line": 752,
             "params": [
                 "elements"
             ]
@@ -1775,7 +1819,7 @@ export const URL_GRAMMAR = frz({
         {
             "file": "frontend/modules/procgenCore/urlParams.js",
             "fn": "readFill",
-            "line": 384,
+            "line": 422,
             "params": [
                 "fill"
             ]
@@ -1783,15 +1827,21 @@ export const URL_GRAMMAR = frz({
         {
             "file": "frontend/modules/procgenCore/urlParams.js",
             "fn": "readRequire",
-            "line": 641,
+            "line": 679,
             "params": [
                 "require"
             ]
         },
         {
             "file": "frontend/modules/procgenCore/urlParams.js",
+            "fn": "readRoomParam",
+            "line": 200,
+            "params": []
+        },
+        {
+            "file": "frontend/modules/procgenCore/urlParams.js",
             "fn": "readRosterSpec",
-            "line": 796,
+            "line": 834,
             "params": [
                 "families",
                 "templates"
@@ -1800,7 +1850,7 @@ export const URL_GRAMMAR = frz({
         {
             "file": "frontend/modules/procgenCore/urlParams.js",
             "fn": "readSize",
-            "line": 314,
+            "line": 352,
             "params": [
                 "height",
                 "width"
@@ -1809,7 +1859,7 @@ export const URL_GRAMMAR = frz({
         {
             "file": "frontend/modules/procgenCore/urlParams.js",
             "fn": "readSkeleton",
-            "line": 464,
+            "line": 502,
             "params": [
                 "skeleton"
             ]
@@ -1817,7 +1867,7 @@ export const URL_GRAMMAR = frz({
         {
             "file": "frontend/modules/procgenCore/urlParams.js",
             "fn": "readSkeletonTyped",
-            "line": 493,
+            "line": 531,
             "params": [
                 "skeleton"
             ]
@@ -1825,7 +1875,7 @@ export const URL_GRAMMAR = frz({
         {
             "file": "frontend/modules/procgenCore/urlParams.js",
             "fn": "refuseDirectedParam",
-            "line": 1246,
+            "line": 1284,
             "params": [
                 "directed"
             ]
@@ -1833,19 +1883,19 @@ export const URL_GRAMMAR = frz({
         {
             "file": "frontend/modules/procgenCore/urlParams.js",
             "fn": "refuseDuplicateParams",
-            "line": 1227,
+            "line": 1265,
             "params": []
         },
         {
             "file": "frontend/modules/procgenCore/urlParams.js",
             "fn": "stepFromParams",
-            "line": 862,
+            "line": 900,
             "params": []
         },
         {
             "file": "frontend/modules/procgenCore/urlParams.js",
             "fn": "writeAreasParam",
-            "line": 613,
+            "line": 651,
             "params": [
                 "areas"
             ]
@@ -1853,7 +1903,7 @@ export const URL_GRAMMAR = frz({
         {
             "file": "frontend/modules/procgenCore/urlParams.js",
             "fn": "writeBounds",
-            "line": 254,
+            "line": 292,
             "params": [
                 "anchortries",
                 "count",
@@ -1864,7 +1914,7 @@ export const URL_GRAMMAR = frz({
         {
             "file": "frontend/modules/procgenCore/urlParams.js",
             "fn": "writeElementsParam",
-            "line": 732,
+            "line": 770,
             "params": [
                 "elements"
             ]
@@ -1872,7 +1922,7 @@ export const URL_GRAMMAR = frz({
         {
             "file": "frontend/modules/procgenCore/urlParams.js",
             "fn": "writeFillParam",
-            "line": 397,
+            "line": 435,
             "params": [
                 "fill"
             ]
@@ -1880,13 +1930,13 @@ export const URL_GRAMMAR = frz({
         {
             "file": "frontend/modules/procgenCore/urlParams.js",
             "fn": "writeInt",
-            "line": 211,
+            "line": 249,
             "params": []
         },
         {
             "file": "frontend/modules/procgenCore/urlParams.js",
             "fn": "writeRequireParam",
-            "line": 766,
+            "line": 804,
             "params": [
                 "require"
             ]
@@ -1894,7 +1944,7 @@ export const URL_GRAMMAR = frz({
         {
             "file": "frontend/modules/procgenCore/urlParams.js",
             "fn": "writeRosterParam",
-            "line": 836,
+            "line": 874,
             "params": [
                 "families",
                 "templates"
@@ -1903,7 +1953,7 @@ export const URL_GRAMMAR = frz({
         {
             "file": "frontend/modules/procgenCore/urlParams.js",
             "fn": "writeRunFlag",
-            "line": 867,
+            "line": 905,
             "params": [
                 "run"
             ]
@@ -1911,13 +1961,13 @@ export const URL_GRAMMAR = frz({
         {
             "file": "frontend/modules/procgenCore/urlParams.js",
             "fn": "writeSizeParams",
-            "line": 342,
+            "line": 380,
             "params": []
         },
         {
             "file": "frontend/modules/procgenCore/urlParams.js",
             "fn": "writeSkeletonParam",
-            "line": 517,
+            "line": 555,
             "params": [
                 "skeleton"
             ]
