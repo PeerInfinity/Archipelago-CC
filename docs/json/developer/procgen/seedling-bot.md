@@ -14940,3 +14940,114 @@ Running the whole file with the flag flipped, which is what caught it, also
 found two older rows with the same shape that nobody had run that way. They are
 written into the handover for the run that flips the flag, because no amount of
 re-recording repairs those either.
+
+### R9 slice 12f: THE TWO PAGES WERE BOTH RIGHT — a recorded random-number state is a draw counter, and the thing moving it is how long the page sat idle before the tape started
+
+The campaign re-record had stopped on a single row. Two programs had driven the
+same recording of the same room on the same build, and one reported the random
+number generator sitting at 1029458650 when the player crossed into the last
+level while the other reported 1196888758. Everything else agreed: the two
+programs had handed the game byte-identical instructions, and the hundred and
+forty-six positions the game reported back were identical, position for
+position. The obvious next move was to work out which of the two numbers was
+the game's real answer and record that one. The instruction was not to do that
+— investigate first, and if the tools cannot say what happened, improve the
+tools.
+
+They could say, and it turned out they could say it without touching the
+graphics card at all. The number those readouts carry is not a hash or a
+sample; it is the generator's entire state, one thirty-one-bit register, and
+the generator advances it by a shift and an exclusive-or that never reads
+anything else. So the register is a position on a fixed loop, and the gap
+between two recorded numbers is simply how many draws apart they are. Counted
+that way the disagreement stops being mysterious and becomes a sentence: the
+second program's page drew exactly two more times than the first, all of it
+before the last level, and not one draw more afterwards — both pages spent
+precisely two hundred and seventy draws building that final room. Two
+independent pairs of numbers agreeing on the same gap of two is not a
+coincidence on a loop two billion states long.
+
+The brief said the split followed the program rather than the moment: five
+recorded drives, two values, no crossover. The third drive of this slice killed
+that. It repeated the first drive exactly — same instructions, same file names,
+same page, ninety seconds later — and came back with a third number, one draw
+between the other two. The count is not a property of which program drives; it
+is a property of the drive. Both of the numbers the pipeline had been arguing
+over were samples.
+
+Samples of what took one more instrument. The page boots itself into the
+overworld and sits there running on real time while the driver waits for the
+browser, asks the graphics adapter to identify itself, and reads the recording
+off disk; only then does the tape start. Nobody had ever measured how long that
+wait is, because nothing was supposed to depend on it. Making it an argument —
+idle for a stated number of seconds before starting — turned the whole question
+into a knob. At a twentieth of a second the page draws 3296 times before the
+last level. Between a tenth and four tenths it draws 3297, which is the first
+program's number. At forty-five hundredths it draws 3298, and then 3299, which
+is the second program's number. Every one of those drives reports the same
+hundred and forty-six positions as every other, to the digit. Both sides of the
+stopped row can be produced at will on one page at one head by waiting slightly
+longer before pressing start.
+
+What the waiting changes is sound. The recompiled runtime has one random number
+generator and everything draws from it, decoration included, unless a recording
+asks for the two streams to be separated — and these recordings do not. Picking
+which of several samples to play for a sword swing draws from that generator,
+and it draws in a loop that keeps redrawing while it would repeat the sound it
+played last, so how many draws one swing costs depends on what played before
+it. Whether the sound before it played at all is a question the game asks the
+audio mixer, and the mixer runs on wall-clock time, not on frames. A page that
+idled a fraction of a second longer has a channel that has finished when
+another page's has not, so a gated sound fires on one and not the other, so the
+next swing's redraw loop runs a different number of times. None of it is
+visible in the player's position, which is why a hundred and forty-six
+identical positions sat next to two different generator states and looked like
+a contradiction.
+
+There is already a switch for this. An earlier rung built a pinned mixer that
+answers those questions from the frame counter instead of the clock, precisely
+so that the generator would stop being frame-rate dependent, and the comment
+above it says so in as many words. It is off unless a recording asks for it,
+and these recordings ask only for the dead-frame pin. Turning it on is the
+proof: with it, the same knob moves nothing at all — seventeen drives across
+three different idle settings, every one of them landing on 3298. Off, the knob
+moves the number over four values. That is a mechanism named by something that
+can be switched in both directions, rather than narrated.
+
+One caution belongs with it, because the instrument built to find the tick
+turned out to change the answer. Sampling the generator on every poll means
+flooding the page with calls, and that flood is itself a change to the pacing
+the mixer rides on; with the sampler running, the knob stops working and every
+drive returns the same number. So the tick where the *pinned* and *unpinned*
+runs part is measured — it is the fortieth, where one spends four draws and the
+other none, after which the gap wanders by ones and threes through eight more
+ticks before settling — but the tick where two unpinned runs part is not, and
+this slice does not claim it. An instrument that suppresses the effect it is
+pointed at is not a broken instrument; it is one whose reading has to be
+labelled.
+
+Two other things fell out. A recording that starts in a level the page is not
+already showing is untouched by any of this — driven five times, pinned and
+unpinned, it returns the same count every time — but that proves less than it
+looks like it does: the pin cannot move it either, so it simply never reaches
+the mechanism. What separates an exposed recording from a safe one is whether
+its walk ever reaches a sound whose playing is gated, not which level it starts
+in. And the idle experiment found a second, larger problem on its way past: idle
+for half a second or more and the recording does not merely draw differently,
+it comes apart. Starting the tape swaps the world, the swap lands on the next
+frame, and with enough delay the first recorded position is the one from before
+the swap. The whole recording then runs one frame out of step and the player
+never leaves the first level. Below forty-five hundredths of a second it never
+happens. Nothing has ever tested that it does not, and every committed
+recording depends on winning that race.
+
+The question left for the user is not which number to write down. It is what
+the recorded exit of a segment should mean when the next segment has to start
+from it, given that the game's answer depends on an instrument nobody was
+measuring: ask every affected recording for the pinned mixer and re-record just
+those; ask for it everywhere; bound the idle in the driver and accept a
+narrower range rather than a fixed one; or stop asserting that two independent
+drives must agree on this field at all. The new boundary gate landed alongside
+this work cannot decide it either — it catches a boot field copied from the
+wrong chain, and here there is no wrong number to catch, only two correct
+readings of two real drives.
