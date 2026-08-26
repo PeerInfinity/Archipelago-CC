@@ -56,11 +56,10 @@
 
 import { AtlasSession, createEmptyAtlas } from '../regionMarkingTool/atlasSession.js';
 import { TILE_FLOOR, TILE_WALL } from '../shared/procgen/mazeAlgorithms/gridTiles.js';
-import { applyOverlayRules } from '../seedlingDemo/seedlingAtlasDerivation.js';
 import { reachableFrom } from '../procgenCore/gridFlood.js';
 import {
     BASE_LOCATION_FIELDS, OVERLAY_SCHEMA_VERSION, ROOM_OVERLAY_FIELDS, RULE_TARGET_PREFIXES,
-    createSetOverlay, exitRuleKey, locationRuleKey,
+    applyOverlayRules, createSetOverlay, exitRuleKey, locationRuleKey,
 } from '../procgenCore/setOverlay.js';
 
 export class MazeAtlasDerivationError extends Error {
@@ -504,13 +503,13 @@ export function deriveAtlas(entries, overlay = {}, deps = {}) {
  * ⛓ The derivation a SESSION's record goes through: derive, then hang the
  * overlay's authored EXIT rules on it.
  *
- * ⛔ `applyOverlayRules` is imported from the SEEDLING derivation rather than
- * re-spelled: it is a pure function of an atlas and a `Map<room, Map<exit_id,
- * rule>>` with nothing Seedling in it, and its refusal (*"a rule that vanished
- * would leave the author believing a door is gated and the compiler treating it
- * as free"*) is exactly the refusal the maze wants. ⚠ It should move to
- * `procgenCore/` the next time that file is opened; E2a does not move a
- * Seedling file it was not given.
+ * ⛓ `applyOverlayRules` comes from `procgenCore/setOverlay.js` — E3b moved it
+ * there, which is what §26.5 asked for. It is a pure function of an atlas and a
+ * `Map<room, Map<exit_id, rule>>` with nothing Seedling in it, and its refusal
+ * (*"a rule that vanished would leave the author believing a door is gated and
+ * the compiler treating it as free"*) is exactly the refusal the maze wants.
+ * ⛓ Until E3b this import reached across into `seedlingDemo/`, which is the
+ * cross-substrate reach the move retires.
  */
 export function deriveAtlasOf(record, deps = {}) {
     const library = record?.library ?? {};

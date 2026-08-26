@@ -390,3 +390,81 @@ export function createSetOverlay({
         overlayLocationNames,
     });
 }
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ THE OVERLAY'S EXIT RULES, ON A DERIVED ATLAS — EDITOR v3 E3b
+ *
+ * ⛔ **WHY HERE AND NOT IN A FILE OF ITS OWN.** `applyOverlayRules`'s second
+ * argument is exactly what this module's `exitRulesByRoom` produces, so the
+ * producer and its only consumer now live together; a `procgenCore/
+ * atlasOverlayRules.js` would be a file holding one function whose sole input
+ * comes from here. ⛓ It is TOP-LEVEL rather than part of `createSetOverlay`'s
+ * closure because nothing in it is a substrate's: it reads `regions[].exits[]`
+ * off an atlas and a `Map<room, Map<exit_id, rule>>`, and neither is bound.
+ *
+ * §26.5 named the move: E2a imported it from `seedlingAtlasDerivation.js`
+ * rather than re-spelling it, and said it *"should move to `procgenCore/` next
+ * time that file is opened"*. E3b opened it.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓⛓⛓ **AUTHORED EXIT RULES, APPLIED TO A DERIVED ATLAS** (EDITOR v3 D1).
+ *
+ * The third authored thing §16.3 names is *"access rules the analyzer cannot
+ * derive"*. `deriveAtlas` already hangs a rule on a LOCATION (through the
+ * overlay's `locationGuard`, because a location's rule has to be attached while
+ * the location is being built). An EXIT's rule has no such moment: the exits are
+ * built from the rooms and the rule is a fact about the author's intent, so it
+ * is written on afterwards.
+ *
+ * ⛔ **A KEY THAT NAMES NO EXIT IS REFUSED BY NAME, and the refusal lists what
+ * the region does have.** Silently dropping it would produce an atlas whose
+ * author believes a door is gated and whose compiler says it is free — a
+ * difference nothing downstream can see, because a missing `access_rule` and an
+ * absent rule are the same bytes.
+ *
+ * ⛓ COPY-ON-WRITE, like `atlasOps`: untouched regions are the SAME objects.
+ *
+ * @param {object} atlas   a derived atlas document
+ * @param {Map<number, Map<string, object>>} byRoom  room index -> exit_id -> rule
+ * @returns {{atlas: object, applied: number}}
+ */
+export function applyOverlayRules(atlas, byRoom) {
+    if (!byRoom || byRoom.size === 0) return { atlas, applied: 0 };
+    let applied = 0;
+    const regions = atlas.regions.map((region) => {
+        const rules = byRoom.get(region.map_ref);
+        if (!rules || rules.size === 0) return region;
+        const exits = region.exits.map((exit) => {
+            const rule = rules.get(exit.exit_id);
+            if (rule === undefined) return exit;
+            applied += 1;
+            return { ...exit, access_rule: rule };
+        });
+        for (const exitId of rules.keys()) {
+            if (!region.exits.some((e) => e.exit_id === exitId)) {
+                throw new Error(`applyOverlayRules: region "${region.region_id}" (room `
+                    + `${region.map_ref}) has no exit "${exitId}" to hang an access rule on. `
+                    + `Its exits are ${region.exits.map((e) => e.exit_id).join(', ') || '(none)'}. `
+                    + '⛔ REFUSED rather than dropped: an authored rule that vanished would '
+                    + 'leave the author believing a door is gated and the compiler treating '
+                    + 'it as free, and a missing access_rule is indistinguishable from one '
+                    + 'that was never written.');
+            }
+        }
+        return { ...region, exits };
+    });
+    // ⛔ AND A RULE FOR A ROOM WITH NO REGION AT ALL IS ALSO A REFUSAL. The
+    // derivation DROPS a doorless region by name; a rule authored on one of its
+    // exits would otherwise be silently discarded by the loop above, which never
+    // visits it.
+    const byMapRef = new Set(atlas.regions.map((r) => r.map_ref));
+    for (const room of byRoom.keys()) {
+        if (!byMapRef.has(room)) {
+            throw new Error(`applyOverlayRules: the overlay authors an exit rule on room `
+                + `${room}, but the derived atlas holds no region for it — a room with no `
+                + 'door at all is DROPPED, so there is nothing to gate.');
+        }
+    }
+    return { atlas: { ...atlas, regions }, applied };
+}

@@ -432,63 +432,18 @@ export function deriveAtlas(rooms, overlay = {}, deps = {}) {
 }
 
 /**
- * ⛓⛓⛓ **AUTHORED EXIT RULES, APPLIED TO A DERIVED ATLAS** (EDITOR v3 D1).
+ * ⛓⛓ **`applyOverlayRules` MOVED TO `procgenCore/setOverlay.js` (EDITOR v3
+ * E3b), AND IS RE-EXPORTED HERE BY THE SAME FUNCTION OBJECT.**
  *
- * The third authored thing §16.3 names is *"access rules the analyzer cannot
- * derive"*. `deriveAtlas` already hangs a rule on a LOCATION (through the
- * overlay's `locationGuard`, because a location's rule has to be attached while
- * the location is being built). An EXIT's rule has no such moment: the exits are
- * built from the rooms and the rule is a fact about the author's intent, so it
- * is written on afterwards.
+ * ⛔ RE-EXPORTED, NOT RE-WRAPPED — the E1c/E2b pattern. D1's rows, E2a's maze
+ * derivation and `seedlingSetAdapter` all import this name from HERE, and a
+ * copy would be a second function that could drift from the one the maze runs;
+ * a row asserts the identity with `===` across all three paths.
  *
- * ⛔ **A KEY THAT NAMES NO EXIT IS REFUSED BY NAME, and the refusal lists what
- * the region does have.** Silently dropping it would produce an atlas whose
- * author believes a door is gated and whose compiler says it is free — a
- * difference nothing downstream can see, because a missing `access_rule` and an
- * absent rule are the same bytes.
- *
- * ⛓ COPY-ON-WRITE, like `atlasOps`: untouched regions are the SAME objects.
- *
- * @param {object} atlas   a derived atlas document
- * @param {Map<number, Map<string, object>>} byRoom  room index -> exit_id -> rule
- * @returns {{atlas: object, applied: number}}
+ * ⛓ WHY IT MOVED: §26.5 measured that it is a pure function of an atlas and a
+ * `Map<room, Map<exit_id, rule>>` with nothing Seedling in it, and E2a's maze
+ * derivation was already importing it across substrates. Its refusal — *"an
+ * authored rule that vanished would leave the author believing a door is gated
+ * and the compiler treating it as free"* — is every substrate's.
  */
-export function applyOverlayRules(atlas, byRoom) {
-    if (!byRoom || byRoom.size === 0) return { atlas, applied: 0 };
-    let applied = 0;
-    const regions = atlas.regions.map((region) => {
-        const rules = byRoom.get(region.map_ref);
-        if (!rules || rules.size === 0) return region;
-        const exits = region.exits.map((exit) => {
-            const rule = rules.get(exit.exit_id);
-            if (rule === undefined) return exit;
-            applied += 1;
-            return { ...exit, access_rule: rule };
-        });
-        for (const exitId of rules.keys()) {
-            if (!region.exits.some((e) => e.exit_id === exitId)) {
-                throw new Error(`applyOverlayRules: region "${region.region_id}" (room `
-                    + `${region.map_ref}) has no exit "${exitId}" to hang an access rule on. `
-                    + `Its exits are ${region.exits.map((e) => e.exit_id).join(', ') || '(none)'}. `
-                    + '⛔ REFUSED rather than dropped: an authored rule that vanished would '
-                    + 'leave the author believing a door is gated and the compiler treating '
-                    + 'it as free, and a missing access_rule is indistinguishable from one '
-                    + 'that was never written.');
-            }
-        }
-        return { ...region, exits };
-    });
-    // ⛔ AND A RULE FOR A ROOM WITH NO REGION AT ALL IS ALSO A REFUSAL. The
-    // derivation DROPS a doorless region by name; a rule authored on one of its
-    // exits would otherwise be silently discarded by the loop above, which never
-    // visits it.
-    const byMapRef = new Set(atlas.regions.map((r) => r.map_ref));
-    for (const room of byRoom.keys()) {
-        if (!byMapRef.has(room)) {
-            throw new Error(`applyOverlayRules: the overlay authors an exit rule on room `
-                + `${room}, but the derived atlas holds no region for it — a room with no `
-                + 'door at all is DROPPED, so there is nothing to gate.');
-        }
-    }
-    return { atlas: { ...atlas, regions }, applied };
-}
+export { applyOverlayRules } from '../procgenCore/setOverlay.js';

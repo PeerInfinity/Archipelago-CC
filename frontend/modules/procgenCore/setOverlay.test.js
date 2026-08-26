@@ -19,11 +19,14 @@
  * ⛓ EVERY CLAIM NAMES ITS MUTANT.
  */
 
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+
 import { describe, expect, it } from 'vitest';
 
 import {
     BASE_LOCATION_FIELDS, OVERLAY_SCHEMA_VERSION, ROOM_OVERLAY_FIELDS, RULE_TARGET_PREFIXES,
-    SetOverlayError, createSetOverlay, exitRuleKey, locationRuleKey,
+    SetOverlayError, applyOverlayRules, createSetOverlay, exitRuleKey, locationRuleKey,
 } from './setOverlay.js';
 
 class WidgetOverlayError extends Error {
@@ -313,5 +316,60 @@ describe('⛔ `createSetOverlay` refuses a binding that cannot work', () => {
         expect(bare.DECLARED_FIELDS)
             .toEqual(['schema_version', 'overlay_id', 'rooms', 'provenance']);
         expect(bare.overlayErrors(ok({}, { links: [] }))[0]).toMatch(/links is not a declared field/);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ EDITOR v3 E3b — `applyOverlayRules`, MOVED HERE FROM `seedlingDemo/`
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('⛓⛓ `applyOverlayRules` — the same function object down all three paths', () => {
+    /**
+     * ⛔⛔ **THE IDENTITY IS THE POINT OF THE MOVE.** §26.5 had the maze
+     * derivation importing this function OUT of `seedlingDemo/` — a
+     * cross-substrate reach that worked only because nothing in the function is
+     * Seedling's. E3b moved it to the core and RE-EXPORTED it from the Seedling
+     * derivation by the same object. A copy anywhere would be a second function
+     * that could drift from the one the maze runs, so the row is `===`, not a
+     * behavioural comparison.
+     */
+    it('⛔ the core, the Seedling re-export and the maze\'s import are ONE function', async () => {
+        const seedling = await import('../seedlingDemo/seedlingAtlasDerivation.js');
+        const maze = await import('../mazeRoom/mazeAtlasDerivation.js');
+        expect(typeof applyOverlayRules).toBe('function');
+        expect(seedling.applyOverlayRules).toBe(applyOverlayRules);
+        // ⛓ the maze does not re-export it, so its USE is what is checked: no
+        //   module under `mazeRoom/` may reach into `seedlingDemo/` for it.
+        expect(maze.applyOverlayRules).toBeUndefined();
+        const src = readFileSync(
+            fileURLToPath(new URL('../mazeRoom/mazeAtlasDerivation.js', import.meta.url)), 'utf8',
+        );
+        expect(src).toMatch(/applyOverlayRules,?\s/);
+        expect(src).not.toMatch(/from '\.\.\/seedlingDemo\//);
+    });
+
+    /** ⛓ The rows that were the Seedling derivation's stay true of the core's. */
+    it('⛓ it hangs a rule on the named exit, copies on write, and REFUSES a key that names none', () => {
+        const atlas = {
+            regions: [
+                { region_id: 'a', map_ref: 0, exits: [{ exit_id: 'out_1' }, { exit_id: 'in_2' }] },
+                { region_id: 'b', map_ref: 1, exits: [{ exit_id: 'out_3' }] },
+            ],
+        };
+        const rule = { rule: 'Has', args: { item: 'Light', count: 1 } };
+        const out = applyOverlayRules(atlas, new Map([[0, new Map([['out_1', rule]])]]));
+        expect(out.applied).toBe(1);
+        expect(out.atlas.regions[0].exits[0].access_rule).toBe(rule);
+        expect(out.atlas.regions[0].exits[1].access_rule).toBeUndefined();
+        // ⛓ COPY-ON-WRITE: the untouched region is the SAME object
+        expect(out.atlas.regions[1]).toBe(atlas.regions[1]);
+        expect(atlas.regions[0].exits[0].access_rule).toBeUndefined();
+        // ⛓ …and an empty map is the identity, atlas object included
+        expect(applyOverlayRules(atlas, new Map())).toEqual({ atlas, applied: 0 });
+
+        expect(() => applyOverlayRules(atlas, new Map([[0, new Map([['nope', rule]])]])))
+            .toThrow(/has no exit "nope" to hang an access rule on/);
+        expect(() => applyOverlayRules(atlas, new Map([[9, new Map([['out_1', rule]])]])))
+            .toThrow(/holds no region for it/);
     });
 });
