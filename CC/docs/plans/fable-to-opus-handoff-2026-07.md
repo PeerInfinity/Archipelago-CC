@@ -4871,6 +4871,60 @@ hurt; `knockbackImpulse` kept the re-spelling for three rungs. A standing
 FILE-level pin over every remaining re-spelling of a transcribed primitive is
 cheap and nobody has built it — P3/P4-adjacent.
 
+⛓⛓⛓ **SLICE P1 SHIPPED 2026-08-26 (`ca7edfd23` … `2beabea8c`, PUSHED) — ⚖ 54
+(1), (2) AND (4) DISCHARGED; (3) IS P1b, NAMED NOT THINNED.** `--latch-
+provisional=<segment>` puts a walk to the GAME ahead of the series — read-only
+by default, `--drive` for the GPU, `--branch=<ref>` by `git show` behind a
+gitlink guard on the wasm submodule (§26.6's law, closed for this mode) — and
+the certification column has THREE states where every planning table had two:
+`GAME-CERTIFIED` · `MODEL-CERTIFIED` · **`unasked`**, with ⚖ 49's conditions by
+name plus `unlatched`, which the four presuppose. ⛓ **The pixel row needs NO
+tolerance constant:** the latch carries the args the current `Game` was
+CONSTRUCTED with, so the model's side is `levelRun.worldCtor` and never
+`state.x/y` — (192,64) against (200,72) on `r8-d2-19`, one `SPAWN_OFFSET` apart;
+comparing `end` would have refused every arrival on the roster. `--table` prints
+all 25 rows (md + JSON) and the ⛔ **fixture is TWO branches, not one**:
+`attempt-3` gives §35's ten (90→78 · 87→84 · 541→410 · 365→229 · 119→97 ·
+226→152 · 47→23 · 237→145 · 74→36 · 145→118) and `attempt-4` gives §36.7's three
+(864→721 · 781→554 · headline 2186→**1685**), every digit.
+⛓⛓ **ITS FIRST RUN IS A CENSUS §33.2 COULD ONLY DESCRIBE: 19 GAME-CERTIFIED · 6
+the game had NEVER been asked about · 0 REFUSED** — and the six are structural,
+not arbitrary: a latch is driven ONLY to author a SUCCESSOR's boot, so a LAST
+SEGMENT, a HEADLINE and a ONE-SEGMENT chain are never asked. One was closed by
+driving it (`r8-d2-20`, 33.5 s of game, calm at L13 (96,48)); **five remain,
+named** — `r8-d2` headline · `r9-solve-14` (L14's own arrival, the frontier's) ·
+`r8-solve-11` · `r8-solve-20` · toy-west-pair's two.
+⛔⛔ **AND THE CACHE HAD BEEN DISCARDING THE GPU RUNS IT PAID FOR, ONE FIELD
+WIDE.** `r8-d2-19`'s 721-t answer — the row two runs died on — is in
+`rerecord-cache/` under §37.4's `558c4596083c`, and `attempt-4`'s committed tape
+for that same walk keys `67990818be8a` and cannot reach it:
+`md5({...branchTape, tick0: <the block it held at S1>}) === 558c4596083c`, to
+the digit. S2 re-derives `tick0` AFTER S1 drives, on the one axis
+`GAME_VISIBLE_DROPS` exists to remove. Across the branch that is **five** lost
+latches (17 reachable at `attempt-3`, 12 at `attempt-4`). ⇒ the key is now
+`gameVisibleTape` minus the fields no consumer READS — exactly `description`,
+DERIVED by enumerating `Bot.botLoadTape`'s fourteen named reads (and
+`description` spelled 0× in all of `Bot.as`), with an unclassified field
+REFUSED BY NAME — so **a prose edit costs no drive**, and a legacy hit RE-KEYS
+FORWARD so the migration converges rather than decaying. ⛔ `gameVisibleTape`
+itself is UNTOUCHED: the record-set projection stays over-inclusive in the prose
+direction (§35's safe sign) and ⚖ 40's roster event is not armed.
+Tape-inert: all seven producer `--check` md5s byte-identical to their standing
+values, `fixtures/` empty in `git status` at every commit. CI at `d113f9f8c`
+**366/11438 + slow 12/217**, +1 file / +31 tests, all mine by name. Mutants (b)
+and (h) spent and red; ⛔ **(a) is NOT reproducible from `main`'s tapes and that
+is a measurement**: guard removed ⇒ 864, guard removed + flip ⇒ 746, and the
+CONTROL (flip alone) ⇒ 746 too, so ⚖ 53's guard is inert on every walk reachable
+from `main` — the 708-t freeze walk is a (D′)-BRANCH product. The refusal
+witness is a truncated walk instead: `REFUSED: not-calm — v=(1.4500000000000006,
+0)`, the game's word. As-built kickoff **§39**, P1b's inputs **§39.12**.
+⇒ **NEXT: P1b (⚖ 54 (3) whole — the injection seam is the bulk, not the fixture)
+→ the re-record's FOURTH run → the 12c batch closes → P2/P3/P4 → L15 `shove`.**
+⚠ TWO RESIDUE LINES: **`nominateOwners` still derives ownership from a tape's
+`description`** (trap 576's shape surviving in nomination after `walkReport`
+fixed it for reporting) — P3/P4; and **the five never-driven rows** above are
+now a standing list rather than a discovery waiting for the next cascade.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
