@@ -12,10 +12,6 @@
  * one on the tile, and that the "cannot express" census is a MEASUREMENT of the
  * atlas rather than a paragraph.
  *
- * ⛔ THE COMMITTED FIXTURE'S BYTES ARE GATED SEPARATELY, in the commit that
- * introduces it — a `--check` row here would have made the commit that writes
- * the script red until the commit that writes the fixture landed, and the
- * fixture lands on its own window.
  */
 
 import { readFileSync } from 'node:fs';
@@ -176,6 +172,52 @@ describe('⛓⛓ E5 — the lift, and what it put through the adapter', () => {
  * discharges 3; the two liftable exit rules discharge 2 of the 334 doors. The
  * overlay does not make the world smaller, it makes what is UNSTATED visible.
  */
+/**
+ * ── THE COMMITTED FIXTURE ────────────────────────────────────────────────────
+ *
+ * ⛔ THE BYTES, NOT THE VERDICT. `--check` already exits non-zero on drift, so
+ * a row that only ran it would be asserting an exit code
+ * ([[feedback_identity_moves_while_verdict_stays_green]]). These read the file
+ * and compare it to a fresh build in-process, then run the CLI so that the
+ * two answers are known to agree.
+ */
+describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
+    const fixturePath = fileURLToPath(
+        new URL('./fixtures/seedling-vanilla-overlay.json', import.meta.url));
+
+    it('is byte-equal to a fresh build', () => {
+        expect(readFileSync(fixturePath, 'utf8')).toBe(buildOverlayText().text);
+    });
+
+    it('carries the stamped id the build computes, and 41 locations over its rooms', () => {
+        const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
+        expect(committed.overlay_id).toBe(LIFT.overlay.overlay_id);
+        expect(Object.values(committed.rooms)
+            .reduce((n, r) => n + (r.locations ?? []).length, 0)).toBe(41);
+        expect(Object.values(committed.rooms)
+            .reduce((n, r) => n + Object.keys(r.rules ?? {}).length, 0)).toBe(5);
+        // ⛔ EVERY authored name is unique across the SET — `mark-location`'s
+        //    own law, asserted on the artifact rather than only on the fold.
+        const names = Object.values(committed.rooms)
+            .flatMap((r) => (r.locations ?? []).map((l) => l.name));
+        expect(new Set(names).size).toBe(names.length);
+    });
+
+    it('`--check` agrees with the committed bytes', async () => {
+        const { execFileSync } = await import('node:child_process');
+        const script = fileURLToPath(
+            new URL('../../../scripts/procgen/make-seedling-vanilla-overlay.mjs', import.meta.url));
+        const out = execFileSync(process.execPath, [script, '--check'], { encoding: 'utf8' });
+        expect(out).toContain('OK: frontend/modules/seedlingDemo/fixtures/'
+            + 'seedling-vanilla-overlay.json matches a fresh build');
+        // ⛔ AND THE COMPARE IS NOT BYPASSED: the same run over a mutated
+        //    document must be able to FAIL, which is what the mutant list
+        //    drives — here the row pins that `--check` printed a COMPARISON
+        //    rather than the report alone.
+        expect(out).not.toContain('report only');
+    }, 120000);
+});
+
 describe('⛓⛓ E5 — the REPORT over vanilla + the lifted overlay', () => {
     const reportWith = (overlay) => {
         const session = createSetSession(

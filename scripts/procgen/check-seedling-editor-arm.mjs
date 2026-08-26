@@ -76,10 +76,25 @@
  *     the same `vanillaRecordSet` node calls, so the two `set_id`s agreeing IS the
  *     byte proof; 116 openable rooms; the links column `(bounded)` (§21.4 on the
  *     corpus it was sized for) with the arrows still drawn; the REPORT's verdict
- *     on the real game (every edge FREE, `level_58` UNREACHABLE, the rules.json
- *     export REFUSED); §21.2's inert rule on a real arrival endpoint; and
+ *     on the real game (every edge FREE; ⛓ E5: `level_58` is REACHED and the
+ *     rules.json export ALLOWED — E1 measured both the other way, and the
+ *     sentence that named the mechanism it could not see is the one E5
+ *     implemented); §21.2's inert rule on a real arrival endpoint; and
  *     OPEN · PAINT · CLOSE · DOWNLOAD with `derived_from` surviving the
  *     re-stamp.
+ *
+ * ── SLICE E5 — the MANIFEST'S WARPS, and the VANILLA AUTHORED OVERLAY ──
+ *
+ * 32. **`named_rooms` IS A CONNECTION** — the derivation reads the manifest it
+ *     is handed, `<tentaclebeast>` in L57 becomes the door into `level_58`, and
+ *     the page's own free list NAMES that region (a row that only checked the
+ *     refusal was gone would pass on a build that dropped the region instead).
+ * 33. **THE COMMITTED VANILLA OVERLAY LOADS THROUGH THE EXISTING DOOR** —
+ *     `sniffLoadBox` classifies it by shape and `takeOverlay` attaches it to
+ *     the live 116-room set at zero ops, so no page path was added. 41
+ *     locations, the `overlay_id` on the identity line, the free count moving
+ *     to node's own answer (UPWARD — a location is a logic obligation), and
+ *     the rules.json export ALLOWED.
  *
  * ── SLICE E1c — MINIFY, AND THE BUNDLE ────────────────────────────────
  *
@@ -96,8 +111,9 @@
  * 30. **THE BUNDLE ROUND TRIPS THROUGH `#editLoadFile`** on a FRESH page — the
  *     set and its overlay open together from ONE file with an empty op list —
  *     and the `rules` / `region-atlas` members it did NOT load are NAMED.
- * 31. **A REFUSED `rules.json` STILL BUNDLES THE WORK** — on the real vanilla
- *     116, whose graph does not close, the container carries the SET and the
+ * 31. **A REFUSED `rules.json` STILL BUNDLES THE WORK** — ⛓ E5 re-homed this
+ *     onto the CUT set, whose graph does not close by construction (vanilla's
+ *     does close now); the container carries the SET and the
  *     OVERLAY and says why the other two are absent.
  *
  * Run: node scripts/procgen/check-seedling-editor-arm.mjs
@@ -134,7 +150,7 @@ const {
 } = await M('watchEdit.js');
 const { buildLevelSet, vanillaRecordSet } = await M('levelSetExporter.js');
 const {
-    indexRoom, planLevelSetChunks, validateLevelSet,
+    NAMED_ROOM_KEYS, indexRoom, planLevelSetChunks, validateLevelSet,
 } = await M('levelSetValidator.js');
 const { emptyLevel } = await M('procgenLevel.js');
 const { recordToOel } = await M('procgenLevelOel.js');
@@ -609,12 +625,75 @@ const VANILLA_XML_SESSION = createSetSession(setAdapter, VANILLA_XML_RECORD,
 const VANILLA_XML_REPORT = reportOf(VANILLA_XML_SESSION, SET_DEPS,
     { compileRegionAtlas, validateRegionAtlas });
 const VANILLA_XML_FREE = freeEdgesOf(VANILLA_XML_REPORT.rules);
-check(VANILLA_XML_FREE.length > 0 && VANILLA_XML_REPORT.download.rules.allowed === false,
+/**
+ * ⛓⛓⛓ **EDITOR v3 E5 — THE VERDICT ON THIS ROW FLIPPED, AND THAT IS THE SLICE.**
+ *
+ * E1 measured vanilla opening with every compiled edge FREE and the rules.json
+ * export REFUSED, and §23.8 found the reason: `level_58` is unreachable, because
+ * the ONE thing in the whole 116 that reaches it is `named_rooms
+ * .tentacle_beast_mouth` — a MANIFEST fact `linksOf` cannot see. `deriveAtlasOf`
+ * hands the manifest to the derivation now, so the graph closes and the export
+ * is ALLOWED.
+ *
+ * ⛔ THE COUNT IS STILL `freeEdgesOf(rules)` AND STILL NEVER A LITERAL. It moved
+ * 319 → 334 with the fifteen new doors, and a row carrying either number would
+ * have been wrong on one side of this commit.
+ */
+check(VANILLA_XML_FREE.length > 0 && VANILLA_XML_REPORT.download.rules.allowed === true
+    && VANILLA_XML_REPORT.download.rules.why === null,
     '⛓⛓⛓ …and node\'s REPORT over the real game: every compiled edge FREE (vanilla opens with '
     + 'an EMPTY overlay — the playthrough\'s own "vanilla overlay" is CODE, not a document) and '
-    + 'the rules.json export REFUSED. ⛔ The free COUNT is `freeEdgesOf(rules)`, never a '
-    + 'literal: a typed number would pass over a one-room set too',
-    `${VANILLA_XML_FREE.length} free edge(s) — ${VANILLA_XML_REPORT.download.rules.why?.slice(0, 90)}`);
+    + 'the rules.json export now ALLOWED, because E5\'s `named_rooms` arrivals close the graph. '
+    + '⛔ The free COUNT is `freeEdgesOf(rules)`, never a literal: a typed number would pass '
+    + 'over a one-room set too',
+    `${VANILLA_XML_FREE.length} free edge(s), export allowed=${
+        VANILLA_XML_REPORT.download.rules.allowed}`);
+
+/**
+ * ⛓⛓⛓ **EDITOR v3 E5 — THE FIFTEEN WARPS THE MANIFEST DERIVES, AS NODE'S OWN
+ * ANSWER.** The page's REPORT is compared against these, never against itself.
+ */
+const VANILLA_NAMED = VANILLA_XML_REPORT.atlas.vanilla_layout.connections.filter(
+    (c) => NAMED_ROOM_KEYS.some((k) => c.to[1].startsWith(`in_${k}_`)));
+const VANILLA_L58_IN = VANILLA_XML_REPORT.atlas.vanilla_layout.connections
+    .filter((c) => c.to[0] === 'level_58');
+check(VANILLA_NAMED.length > 0 && VANILLA_L58_IN.length > 0
+    && VANILLA_L58_IN.every((c) => c.to[1].startsWith('in_tentacle_beast_mouth_')),
+    '⛓⛓⛓ **AND `level_58` HAS AN INBOUND CONNECTION AT LAST** — the manifest\'s '
+    + '`tentacle_beast_mouth`, derived from the `<tentaclebeast>` element `NAMED_ROOMS` cites '
+    + 'as the entry\'s trigger. ⛔ The count is read off the DERIVED atlas, so a build that '
+    + 'stopped passing the manifest is a VALUE failure here rather than a silent one',
+    `${VANILLA_NAMED.length} manifest warp(s); into level_58: ${
+        VANILLA_L58_IN.map((c) => `${c.from[0]} ${c.from[1]}`).join(', ')}`);
+
+/**
+ * ⛓⛓⛓ **EDITOR v3 E5 — THE VANILLA AUTHORED OVERLAY, AS NODE BUILT IT.** The
+ * committed fixture is READ, not rebuilt: the page fetches the same bytes, so
+ * comparing the two answers is a comparison of one document rather than of two
+ * builds that happen to agree.
+ */
+const VANILLA_OVERLAY = JSON.parse(readFileSync(
+    join(REPO, 'frontend/modules/seedlingDemo/fixtures/seedling-vanilla-overlay.json'), 'utf8'));
+const VANILLA_OVERLAY_RECORD = setRecord(VANILLA_XML, VANILLA_OVERLAY);
+const VANILLA_OVERLAY_REPORT = reportOf(
+    createSetSession(setAdapter, VANILLA_OVERLAY_RECORD,
+        { base: { kind: 'set', set_id: VANILLA_XML.set_id } }),
+    SET_DEPS, { compileRegionAtlas, validateRegionAtlas });
+const VANILLA_OVERLAY_FREE = freeEdgesOf(VANILLA_OVERLAY_REPORT.rules);
+const VANILLA_OVERLAY_LOCS = VANILLA_OVERLAY_REPORT.atlas.regions
+    .reduce((n, r) => n + (r.locations ?? []).length, 0);
+check(VANILLA_OVERLAY_LOCS > 0
+    && VANILLA_OVERLAY_FREE.length !== VANILLA_XML_FREE.length
+    && VANILLA_OVERLAY_REPORT.download.rules.allowed === true,
+    '⛓⛓⛓ **NODE\'S ANSWER FOR VANILLA + THE AUTHORED OVERLAY** — the committed fixture read '
+    + 'off disk, folded onto the same 116-room set. ⛔ The free count RISES rather than falls: '
+    + '`freeEdgesOf` counts LOGIC OBLIGATIONS and a LOCATION is one of those edges, so '
+    + 'authoring 41 of them creates 41 obligations and the overlay\'s own logic discharges 3. '
+    + 'The overlay does not make the world smaller — it makes what is unstated VISIBLE',
+    `${VANILLA_OVERLAY.overlay_id}: ${VANILLA_OVERLAY_LOCS} location(s), free ${
+        VANILLA_XML_FREE.length} -> ${VANILLA_OVERLAY_FREE.length} (${
+        VANILLA_OVERLAY_FREE.filter((e) => e.kind === 'exit').length} exit + ${
+        VANILLA_OVERLAY_FREE.filter((e) => e.kind === 'location').length} location)`);
 /**
  * ⛔ **AND THE MUTANT FOR "THE COUNT WAS TYPED" IS MEASURED HERE**, not
  * described: the same `freeEdgesOf` over the 6-room D2 set gives a different
@@ -2239,6 +2318,49 @@ try {
             () => document.getElementById('editDownloadSet').disabled)}`);
 
     /**
+     * ⛓⛓⛓ **E1c's REFUSED BUNDLE, RE-HOMED HERE BY E5.**
+     *
+     * This claim was driven on the VANILLA 116, whose graph did not close
+     * because `level_58` was unreachable. E5 gave the derivation the manifest
+     * and vanilla's graph closes now — so the claim needed a subject that still
+     * refuses, and the CUT set above IS one, by construction and on purpose.
+     *
+     * ⛔ **THE CLAIM IS NOT WEAKER FOR MOVING.** It was never about vanilla: it
+     * is about the half that is easy to get wrong in either direction — a
+     * bundle that refused outright would lose a person's rooms over an export
+     * they did not ask for, and one that shipped a `rules.json` anyway would
+     * put a world nobody can finish inside a container that looks complete.
+     */
+    await page.click('#editDownloadBundle');
+    await page.waitForFunction(() => Array.isArray(window.__editorSetBundleKinds),
+        null, { timeout: 60000 });
+    const cutBundle = await page.evaluate(() => ({
+        bytes: Array.from(window.__editorSetBundleOut),
+        note: document.getElementById('editSetNote')?.textContent ?? '',
+    }));
+    const cutBundleKinds = (await readBundle(Uint8Array.from(cutBundle.bytes),
+        { jszip: loadJSZipNode() })).members.map((m) => m.kind);
+    /**
+     * ⛔⛔ **AND THE GLOBALS ARE CLEARED BEHIND THIS PRESS.** Every later bundle
+     * row waits for `Array.isArray(window.__editorSetBundleKinds)` — a wait
+     * this press SATISFIES, so leaving it set makes the next row read THIS
+     * container without waiting for its own. Measured: it turned two downstream
+     * claims red and a third into `the row itself threw`.
+     */
+    await page.evaluate(() => {
+        delete window.__editorSetBundleKinds;
+        delete window.__editorSetBundleOut;
+    });
+    check(json(cutBundleKinds) === json(['level-set', 'overlay'])
+        && /no `rules.json` member/.test(cutBundle.note),
+        '⛓⛓⛓ **A REFUSED rules.json STILL BUNDLES THE WORK** — the graph of this set does not '
+        + 'close (the row above), so the container carries the SET and the OVERLAY and says WHY '
+        + 'the third and fourth members are absent. ⛓ E1c drove this on the vanilla 116; E5 '
+        + 'closed vanilla\'s graph, so the claim moved to a subject that still refuses rather '
+        + 'than being retired with the defect it was measured on',
+        `${json(cutBundleKinds)} · ${cutBundle.bytes.length} B · ${cutBundle.note.slice(0, 120)}`);
+
+    /**
      * ⛔ **THE HEAL IS ONE-WAY, AND THAT IS A MEASUREMENT.** A two-way `connect`
      * lands on the destination's RETURN DOOR — room 4's exit 0, which after the
      * cut is its only door out, to room 5. Retargeting it back to 3 would heal
@@ -2626,16 +2748,47 @@ try {
         + 'the permanent unstamped warning is explained beside it rather than left to teach a '
         + 'reader to skip the warning list',
         (vanReport.report.find((r) => /^\[region-atlas\]/.test(r)) ?? '').slice(0, 120));
-    check(vanReport.report.some((r) => /^\[reach\]/.test(r) && /level_58/.test(r))
-        && vanReport.rulesDisabled === true
-        && /level_58/.test(vanReport.reportNote),
-        '⛔⛔⛔ **AND THE VANILLA GAME\'S OWN rules.json IS REFUSED — `level_58` IS UNREACHABLE.** '
-        + 'Not a defect in the derivation and not a surprise about the room: the only way into '
-        + 'that room in the real game is a mechanism no walk over the ROOM DATA can see (a boss '
-        + 'that warps you, a debug key, `named_rooms` — `reachabilityOf`\'s own list). D2\'s '
-        + '"refuse before export" doing its job on real data, and the first measurement of what '
-        + 'a vanilla OVERLAY as a document would have to carry',
-        vanReport.reportNote.slice(0, 170));
+    /**
+     * ⛓⛓⛓ **EDITOR v3 E5 — THIS ROW ASSERTED THE REFUSAL AND NOW ASSERTS THE
+     * FIX, ON THE SAME PAGE AND THE SAME DATA.**
+     *
+     * E1's version: *"the vanilla game's own rules.json is REFUSED — `level_58`
+     * is UNREACHABLE"*, and its sentence named the mechanism the walk could not
+     * see: *"a boss that warps you, a debug key, `named_rooms`"*. E5 gave the
+     * derivation the third of those. The graph closes, every compiled region is
+     * reachable, and the export is ALLOWED.
+     *
+     * ⛔ THE `[reach]` ROW IS ASSERTED **OK**, NOT ABSENT. `setEditorCore` adds
+     * a `reach` row either way (§21.8's law: the summary row is always there);
+     * a row that checked only for the ABSENCE of `level_58` would pass on a
+     * build that stopped running the reachability pass at all.
+     */
+    check(vanReport.report.some((r) => /^\[reach\] every one of the \d+ compiled region/.test(r))
+        && vanReport.report.every((r) => !/^\[reach\].*UNREACHABLE/.test(r))
+        && vanReport.rulesDisabled === false,
+        '⛓⛓⛓ **AND THE VANILLA GAME\'S OWN rules.json IS ALLOWED — `level_58` IS REACHED.** '
+        + 'E1 measured this row REFUSING, and its own sentence named the mechanism no walk over '
+        + 'the ROOM DATA can see: a boss that warps you, a debug key, `named_rooms`. E5 handed '
+        + 'the derivation the manifest, `<tentaclebeast>` in L57 became the door, and the graph '
+        + 'closes. D2\'s "refuse before export" is unchanged — it has nothing left to refuse',
+        `${(vanReport.report.find((r) => /^\[reach\]/.test(r)) ?? '').slice(0, 130)} · note ${
+            json(vanReport.reportNote)}`);
+    /**
+     * ⛔ **AND `level_58` IS IN THE COMPILED DOCUMENT THE PAGE BUILT, not merely
+     * absent from a refusal.** A row that only checked that nothing said
+     * UNREACHABLE would pass on a build that dropped the region entirely — and
+     * a dropped region is exactly what `deriveAtlas` does to a room no door
+     * reaches. So the row asks the page's own free list to NAME it.
+     */
+    const pageL58 = vanReport.report.filter(
+        (r) => /^\[free\]/.test(r) && /region "level_58"/.test(r));
+    check(pageL58.length > 0 && pageFree === VANILLA_XML_FREE.length,
+        '⛓⛓ …**and `level_58` IS A COMPILED REGION IN THE PAGE\'S OWN DOCUMENT** — its doors '
+        + 'appear in the free list, which they could not do if the derivation had dropped the '
+        + 'region for having no way in. ⛓ The free COUNT is still node\'s `freeEdgesOf` over '
+        + 'the same set, so the manifest\'s fifteen doors moved BOTH numbers or neither',
+        `page ${pageFree}, node ${VANILLA_XML_FREE.length}; ${pageL58.length} free edge(s) in `
+        + `level_58; ${VANILLA_NAMED.length} manifest warp(s)`);
 
     /* ── an authored rule on an ARRIVAL endpoint, on REAL rooms ──── */
 
@@ -2691,16 +2844,81 @@ try {
         .catch(() => {});
     const inertReport = await setRead();
     check(inertReport.report.every((r) => !/^\[inert-rule\]/.test(r))
-        && inertReport.rulesDisabled === true
-        && /level_58/.test(inertReport.reportNote)
+        && inertReport.rulesDisabled === false
         && !inertReport.reportNote.includes(VANILLA_INERT.exitId)
         && !/reach no compiled edge/.test(inertReport.reportNote),
-        '⛔⛔ **…AND THE REPORT HAS NOTHING INERT TO NAME, SO THE EXPORT REFUSAL LISTS '
-        + '`level_58` ALONE** — the unreachable region is a fact about the real game and the '
-        + 'inert rule was a fact about a defect. ⛓ `inertRulesOf` is NOT retired with it: '
-        + '`set-overlay` writes a whole room entry and asks no derivation, so it is still the '
-        + 'one door such a rule can arrive through, and `watchSetEditor.test.js` drives it',
-        inertReport.reportNote.slice(0, 200));
+        '⛔⛔ **…AND THE REPORT HAS NOTHING LEFT TO REFUSE ON** — no inert rule (the op refused '
+        + 'it, so nothing landed) and no unreachable region (E5\'s manifest arrivals closed the '
+        + 'graph). E1 saw `level_58` listed here alone; E3b removed the inert rule beside it and '
+        + 'E5 removed the region. ⛓ `inertRulesOf` is NOT retired: `set-overlay` writes a whole '
+        + 'room entry and asks no derivation, so it is still the one door such a rule can '
+        + 'arrive through, and `watchSetEditor.test.js` drives it',
+        `disabled=${inertReport.rulesDisabled} note ${json(inertReport.reportNote)}`);
+
+    /* ── EDITOR v3 E5 — VANILLA + THE AUTHORED OVERLAY ───────────── */
+
+    /**
+     * ⛓⛓⛓ **THE VANILLA AUTHORED OVERLAY, THROUGH THE PAGE'S EXISTING DOOR.**
+     *
+     * ⛔ **NO NEW PAGE PATH WAS ADDED, AND THAT WAS MEASURED BEFORE ANYTHING
+     * WAS WRITTEN.** `sniffLoadBox` already classifies an overlay BY SHAPE (a
+     * set's `rooms` is an ARRAY, an overlay's is an OBJECT keyed by room index)
+     * and `takeOverlay` attaches one to the live set while the session holds
+     * ZERO ops — which is exactly the state a fresh LOAD vanilla leaves. So the
+     * fixture goes in the LOAD box like any other document, and
+     * `watchSetEditor.js` is untouched by this slice.
+     *
+     * ⚠ **AND THE SET IT LANDS ON IS THE `record` ONE.** The COMMITTED
+     * `seedling-vanilla-set.json` is 116 `embed` rooms and `mark-location`
+     * refuses an embed room by name; `#editLoadVanilla` builds the RECORD set,
+     * which is what the overlay was authored against.
+     */
+    await page.fill('#editLoad', JSON.stringify(VANILLA_OVERLAY));
+    await page.click('#editLoadGo');
+    await page.waitForFunction((n) => window.__editorEdit?.set?.locations === n,
+        VANILLA_OVERLAY_LOCS, { timeout: 180000 }).catch(() => {});
+    const vanOverlay = await setRead();
+    check(vanOverlay.edit.set?.set_id === VANILLA_XML.set_id
+        && vanOverlay.edit.set.rooms === 116
+        && vanOverlay.edit.set.locations === VANILLA_OVERLAY_LOCS
+        && vanOverlay.edit.set.edits === 0
+        && vanOverlay.identity.includes(VANILLA_OVERLAY.overlay_id),
+        '⛓⛓⛓ **THE COMMITTED VANILLA OVERLAY LOADS ONTO THE REAL 116** — the same 116-room set '
+        + 'the page just built, now carrying the locations the playthrough atlas has always '
+        + 'had and the set editor never could. ⛔ The count is node\'s own answer over the same '
+        + 'fixture read off disk, and the identity line prints the `overlay_id` the file '
+        + 'carries — so a page that silently loaded a DIFFERENT document is a value failure',
+        `${json(vanOverlay.edit.set)} · ${vanOverlay.identity.slice(0, 120)}`);
+
+    const repOvT0 = Date.now();
+    await page.click('#editSetReport');
+    await page.waitForFunction((n) => document.querySelectorAll('#editSetReportOut li').length >= n,
+        VANILLA_OVERLAY_REPORT.rows.length, { timeout: 180000 }).catch(() => {});
+    const repOvMs = Date.now() - repOvT0;
+    const vanOvReport = await setRead();
+    const pageOvFree = vanOvReport.report.filter((r) => /^\[free\]/.test(r)).length;
+    const pageOvLocFree = vanOvReport.report.filter(
+        (r) => /^\[free\] FREE location/.test(r)).length;
+    check(pageOvFree === VANILLA_OVERLAY_FREE.length
+        && pageOvLocFree === VANILLA_OVERLAY_FREE.filter((e) => e.kind === 'location').length
+        && pageOvFree !== pageFree,
+        '⛓⛓⛓ **AND THE FREE COUNT MOVES — UPWARD, WHICH IS THE HONEST DIRECTION.** §27.6 '
+        + 'predicted it would DROP. `freeEdgesOf` counts LOGIC OBLIGATIONS and a LOCATION is '
+        + 'one of those edges, so authoring 41 of them creates 41 obligations of which the '
+        + 'overlay\'s own guards discharge 3, while its two liftable exit rules gate 2 of the '
+        + 'doors. ⛔ Both numbers are node\'s `freeEdgesOf` over the same session — neither is '
+        + 'typed, so the page and node moved together or the row is red',
+        `page ${pageFree} -> ${pageOvFree} (node ${VANILLA_XML_FREE.length} -> ${
+            VANILLA_OVERLAY_FREE.length}), of which ${pageOvLocFree} are LOCATIONS; report took `
+        + `${repOvMs} ms`);
+    check(vanOvReport.rulesDisabled === false
+        && vanOvReport.report.some((r) => /^\[reach\] every one of the \d+ compiled region/.test(r))
+        && VANILLA_OVERLAY_REPORT.download.rules.allowed === true,
+        '⛓⛓⛓ **THE EXPORT IS ALLOWED WITH THE OVERLAY ON** — 41 locations, two authored exit '
+        + 'rules, a graph that closes. That is the whole of §23.12 #1: the vanilla AUTHORED '
+        + 'OVERLAY is a D1 document now, and opening the real game in this editor produces a '
+        + 'rules.json rather than a refusal',
+        `disabled=${vanOvReport.rulesDisabled} note ${json(vanOvReport.reportNote)}`);
 
     /* ── OPEN · PAINT · CLOSE · DOWNLOAD, on the real 116 ────────── */
 
@@ -2809,19 +3027,15 @@ try {
     const vanRead = await readBundle(Uint8Array.from(vanBundle.bytes),
         { jszip: loadJSZipNode() });
     const vanKinds = vanRead.members.map((m) => m.kind);
-    check(vanBundleReport.rulesDisabled === true
-        && json(vanKinds) === json(['level-set', 'overlay'])
-        && /no `rules.json` member/.test(vanBundle.note),
-        '⛓⛓⛓ **E1c — A REFUSED rules.json STILL BUNDLES THE WORK.** The vanilla graph does not '
-        + 'close, so the container carries the SET and the OVERLAY and says WHY the third and '
-        + 'fourth members are absent — a person may still want to save 116 rooms',
-        `${json(vanKinds)} · ${vanBundle.bytes.length} B · ${vanBundle.note.slice(0, 150)}`);
-    check(vanRead.members.find((m) => m.kind === 'level-set')?.doc.set_id === vanOut.set.set_id
-        && vanRead.members.find((m) => m.kind === 'overlay')?.doc.overlay_id
-            === vanOut.overlay.overlay_id,
-        '⛓ …and the ids inside it are the ones the three-blob press wrote for THIS set '
-        + '(§21.9, on the real 116)',
-        `${vanOut.set.set_id} · ${vanOut.overlay.overlay_id}`);
+    check(vanBundleReport.rulesDisabled === false
+        && json([...vanKinds].sort()) === json(['level-set', 'overlay', 'region-atlas', 'rules'])
+        && !/no `rules.json` member/.test(vanBundle.note),
+        '⛓⛓⛓ **E5 — THE VANILLA CONTAINER IS COMPLETE NOW: FOUR MEMBERS.** E1c drove this row '
+        + 'as the REFUSED bundle, because vanilla\'s graph did not close; the manifest\'s '
+        + 'arrivals closed it, so the third and fourth members are present and the note has no '
+        + 'absence to explain. ⛓ The refused-bundle claim did not go with it — it is driven on '
+        + 'the CUT set above, whose graph still does not close by construction',
+        `${json(vanKinds)} · ${vanBundle.bytes.length} B · ${vanBundle.note.slice(0, 140)}`);
 
     /**
      * ⛓⛓⛓ **THE OVERVIEW ARROWS ARE PAINTED AT LOAD — D2's DEFECT, FOUND BY
