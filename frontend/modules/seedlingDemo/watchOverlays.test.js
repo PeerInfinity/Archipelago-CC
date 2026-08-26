@@ -503,31 +503,54 @@ describe('⛔ kickoff §4 slice 2 acceptance — the overlays on committed tapes
         // frames), which is why the comparison names `t`.
         const action = markers.filter((m) => m.layer === 'action');
         const pressTicks = [...new Set(collected.run.presses.map((p) => p.t))].sort((a, b) => a - b);
-        // ⛓⛓ R9 SLICE 11 — SIX PRESSES BECAME FIVE, and the arithmetic says why.
-        //   Repairing `solverBot.facingToward` (trap 498) gave the kill arm
-        //   strike cells ABOVE and BELOW a body for the first time, and the
-        //   walk is 32 ticks shorter (573 -> 541). ⛔ The press COUNT dropping
-        //   is the sharper fact: two Spinners at `hitsMax` 3 need SIX landed
-        //   hits, the producer measures `6 landed of 19 test(s)`, and ONE PRESS
-        //   CANNOT LAND TWICE ON ONE BODY (`hitSpinner` sets `hitsTimer = 30`,
-        //   so tests 2..5 of the same swing are refused on i-frames — traps
-        //   85/93). Six landed hits from five presses therefore means ONE SWING
-        //   LANDED ON BOTH BODIES — which is exactly the opportunity a vertical
-        //   slash rect makes reachable and the old numbering could never accept.
-        expect(pressTicks).toEqual([44, 112, 145, 245, 278]);
         expect(action.map((m) => m.tick)).toEqual(pressTicks);
         expect(new Set(collected.run.presses.map((p) => p.fired - p.t))).toEqual(new Set([1, 2, 3, 4, 5]));
+
+        /**
+         * ⛓⛓ R9 SLICE 11 — SIX PRESSES BECAME FIVE, and the arithmetic says why.
+         * Repairing `solverBot.facingToward` (trap 498) gave the kill arm strike
+         * cells ABOVE and BELOW a body for the first time, and the walk is 32
+         * ticks shorter (573 -> 541). ⛔ The press COUNT dropping is the sharper
+         * fact: two Spinners at `hitsMax` 3 need SIX landed hits, and ONE PRESS
+         * CANNOT LAND TWICE ON ONE BODY (`hitSpinner` sets `hitsTimer = 30`, so
+         * tests 2..5 of the same swing are refused on i-frames — traps 85/93).
+         * Six landed hits from five presses therefore means ONE SWING LANDED ON
+         * BOTH BODIES — exactly the opportunity a vertical slash rect makes
+         * reachable and the old numbering could never accept.
+         *
+         * ⛔⛔ AND THE ROW NOW READS THE LEDGER THAT CARRIES THAT FINDING, NOT
+         * THE WALK'S WHOLE PRESS LIST. `ALLOW_DASH_ROSTER_WIDE` went `true` at
+         * R9 slice 12e′'s fourth run and `r8-solve-18` was re-recorded 541 ->
+         * 410; the walk now spends FOURTEEN more sword presses, every one of
+         * them AFTER the second Spinner dies, because a sword-dash is a press.
+         * The STRIKE ledger — the presses that LAND — is unmoved by the flip in
+         * both its ticks and its arithmetic, and it is what slice 11 measured.
+         * A row that compared the raw press list was pinning the tail of a walk
+         * alongside the finding it meant to keep.
+         */
+        const landing = collected.run.presses.filter((p) => p.hits.some((h) => h.landed));
+        expect([...new Set(landing.map((p) => p.t))].sort((a, b) => a - b))
+            .toEqual([44, 112, 145, 245, 278]);
+        expect(landing.reduce((n, p) => n + p.hits.filter((h) => h.landed).length, 0)).toBe(6);
+        // …and every press that does NOT land comes after the last kill.
+        const lastKill = Math.max(...collected.run.spinnerPressKills.map((k) => k.t));
+        for (const t of pressTicks) {
+            if (![44, 112, 145, 245, 278].includes(t)) expect(t).toBeGreaterThan(lastKill);
+        }
 
         // (c) ZERO damage markers — the honest L18 took nothing.
         expect(markers.filter((m) => m.layer === 'damage')).toEqual([]);
         expect(collected.run.playerHits).toEqual([]);
         expect(collected.run.spinnerContacts).toEqual([]);
 
-        // …and the one event this walk does have. ⛓ R9 slice 11: 573 -> 541,
-        //   the same 32 ticks as the press ledger above — the transition is the
-        //   walk's LAST tick, so it moves with the walk and not on its own.
+        // …and the one event this walk does have. ⛓ R9 slice 11: 573 -> 541;
+        //   R9 slice 12e′'s fourth run: 541 -> 410. The transition is the
+        //   walk's LAST tick, so it moves with the walk and not on its own —
+        //   which is the reason to DERIVE it from the tape (⚖ 17) rather than
+        //   re-type it once per licence.
         expect(markers.filter((m) => m.layer === 'events')
-            .map((m) => `${m.source}@${m.tick}`)).toEqual(['transition@541']);
+            .map((m) => `${m.source}@${m.tick}`))
+            .toEqual([`transition@${tape('r8-solve-18').tick_count}`]);
         // ⚠ NOT A SILENCE: nothing in this walk is unplaceable.
         expect(unplaced).toEqual([]);
     }, 60000);
