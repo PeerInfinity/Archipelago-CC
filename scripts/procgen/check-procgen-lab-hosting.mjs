@@ -1110,6 +1110,28 @@ try {
         '⛔ …and it is a REFUSAL, not a THROW — zero pageerrors so far, which is the half '
         + 'a note alone cannot say', errors.slice(0, 2).join(' | '));
 
+    /**
+     * ⛓ …AND THE SAME REFUSAL ON THE OTHER PAGE, in the other page's own box.
+     * ⛔ Both halves are here because the two pages REFUSE IN DIFFERENT PLACES
+     * — `watch.html` in the SET arm's `#editSetNote`, `lab.html` in the shared
+     * `#status` — and a row that checked only one would leave the other's
+     * branch with no instance at all (a mutant over a corpus with no instance
+     * is vacuous). ⚠ Sent BEFORE the library, for 11a's reason.
+     */
+    await navigateFrame('maze', maze.iframeId, `source=set&room=${SUBJECT_ROOM}`);
+    await settledFrame(mazeFrame,
+        () => /\?room=/.test(document.getElementById('status')?.textContent ?? ''),
+        'the maze SET arm to REFUSE a ?room= with nothing held');
+    const mazeRefused = await mazeFrame.evaluate(() => ({
+        text: document.getElementById('status').textContent,
+        bad: document.getElementById('status').className,
+        set: window.__mazeLab?.set ?? null,
+    }));
+    check(/holding NO region library/.test(mazeRefused.text) && mazeRefused.bad === 'bad'
+        && mazeRefused.set === null,
+    '⛓⛓ …and `lab.html` refuses the same way in ITS own box, with nothing held',
+    `${mazeRefused.text.slice(0, 96)} · set=${json(mazeRefused.set)}`);
+
     /* ── 11b. THE MAZE ROUND TRIP ──────────────────────────────────── */
 
     await sendDocument(maze.iframeId, mazeLibrary);

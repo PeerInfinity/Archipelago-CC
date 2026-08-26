@@ -55,6 +55,13 @@ export const PAGE_PARAMS = Object.freeze([
     'name', 'layers', 'tick', 'shot',
     // ⛓ PROCGEN PoC slice 5 — the GENERATE arm's own vocabulary.
     'seed', 'biome', 'count', 'tries', 'k', 'budgetms', 'tickbudget', 'run', 'gen',
+    /**
+     * ⛓ EDITOR INTEGRATION W3 — the EDIT arm's room selector
+     * (`?source=edit&room=N`), which is how a host — and now this CLI — asks
+     * for ONE room of the LEVEL SET the arm is holding. ⛔ It is not `?level=`:
+     * that names a room of the COMMITTED atlas set.
+     */
+    'room',
 ]);
 
 /** `--name=value` / `--name` → `{name, value}`; anything else → null. */
