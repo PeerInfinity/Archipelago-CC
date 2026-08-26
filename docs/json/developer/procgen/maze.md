@@ -825,6 +825,28 @@ a `clear_set_type: 'rule'` obstacle with the atlas's access rule, and a location
 is an item overlay with its AP location name. Nothing in mazeRoom knows about
 it — the projection speaks the ordinary sidecar shape, which is the point.
 
+Which regions go through that projection is **per region**, not per compile.
+An atlas region may carry an optional `substrate`; `compileRegionAtlas`
+resolves each region's id as *its own field, else this compile's default* (the
+`substrateId` override, else the maze flavour, else the atlas game's own
+`flash_<game>`) and hands it to the matching row of a sidecar-builder table.
+That table IS the compiler's roster — the substrate registry sits outside
+`procgenPipeline/`'s import fence, so a region naming a row the table lacks is
+refused by name rather than compiled as something else. The compile report
+carries both: `substrate` is the default, and `substrates` counts the sidecars
+actually emitted, one entry per substrate id. A region that names no substrate
+compiles exactly as it did before the field existed, which is why every
+committed atlas, preset and pool is byte-identical across the change.
+
+The maze's own atlas derivation follows the same split. A region library may
+legally mix substrates, so `mazeAtlasDerivation` writes each entry's substrate
+onto that entry's region and refuses AT THE ENTRY — naming the index, the
+entry id and what it declared — when the entry is one this derivation cannot
+read, because it reads tile-grid maze payloads and would mis-read any other
+kind rather than merely mis-label it. The derived atlas's `game` is the
+LIBRARY (its name, else its `library_id`), never the entries' substrate: `game`
+says what the document is of, and what plays a room is the region's field.
+
 Two payload facts are load-bearing for **any** hand-built or projected maze
 sidecar, not just that one:
 

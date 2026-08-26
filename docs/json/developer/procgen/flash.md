@@ -43,7 +43,7 @@ No `SubstrateInactiveOverlay` in v1: the flashPanel panel predates the overlay a
 
 Gate: `scripts/procgen/verify-seedling-atlas-play.mjs` (skips when the wasm artifact is absent).
 
-The same atlas also compiles to a **maze**-flavoured preset (`seedling_atlas_maze`) — the same geometry and the same computed item gating, playable with no wasm artifact, which is why the in-app suite can test that one and not this one. The two are separate presets and never merged: one sidecar per AP region per preset. See [Maze Substrate](./maze.md#a-real-games-map-as-maze-regions).
+The same atlas also compiles to a **maze**-flavoured preset (`seedling_atlas_maze`) — the same geometry and the same computed item gating, playable with no wasm artifact, which is why the in-app suite can test that one and not this one. The two are separate presets — but *never merged* was always the narrower claim than it sounded. What holds is **one sidecar per AP region**: the player's warehouse has one slot per region and dispatches that region's load event by the sidecar's own substrate id, so two sidecars for one region would ask two substrates to own it. What does NOT hold, since the editor-integration arc, is one substrate per preset. An atlas region may name its own `substrate`, `compileRegionAtlas` dispatches the sidecar builder per region on it, and a single preset may therefore carry real flash rooms beside maze ones. The flavour is only what a region that names nothing falls back to. See [Maze Substrate](./maze.md#a-real-games-map-as-maze-regions).
 
 ## Related documentation
 

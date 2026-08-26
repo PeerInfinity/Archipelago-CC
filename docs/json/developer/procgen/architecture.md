@@ -129,7 +129,7 @@ A procgen-compiled `rules.json` is a standard rules file plus up to three extra 
 
 | Key | Purpose |
 |-----|---------|
-| `preset_sidecars` | Per-player, per-region **playable payloads** — the serialized substrate world for each region (tile grids, platform geometry, prose templates, …), keyed by region id with the substrate id alongside. This key is also the marker the runtime uses to recognize a procgen world. |
+| `preset_sidecars` | Per-player, per-region **playable payloads** — the serialized substrate world for each region (tile grids, platform geometry, prose templates, …), keyed by region id with the substrate id alongside. **The substrate is per REGION, and always was on this side**: one sidecar per AP region, each naming its own. What the atlas compiler adds is where that id comes from — the atlas region's own optional `substrate` field, else the compile's default (`options.substrateId`, else the maze flavour, else the atlas game's `flash_<game>`) — so one compiled preset can now carry two substrates the way a grown one always could. This key is also the marker the runtime uses to recognize a procgen world. |
 | `procgen_metadata` | Generation metadata: source counts, the sphere tree, and enough structure that a stepped-pipeline envelope can be rebuilt from a compiled `rules.json` (`rebuildEnvelopeFromRulesJson` in the engine). |
 | `loop_costs` | Per-action mana costs for loop mode. Its presence is what enables loop mode for the world. |
 
