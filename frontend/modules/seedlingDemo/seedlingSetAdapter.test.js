@@ -29,6 +29,7 @@ import {
 import { rulesJsonSchemaErrors } from '../procgenCore/jsonSchemaCheck.js';
 import { loadAtlasSchema, loadRulesSchema } from '../procgenCore/jsonSchemaFiles.js';
 import { reachableRegions } from '../procgenCore/rulesGraph.js';
+import { reportOver, roomRowsOf, ruleTargetsOver } from '../procgenCore/setEditorCore.js';
 import { compileRegionAtlas } from '../procgenPipeline/regionAtlasCompiler.js';
 import { indexMapDocument, validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js';
 import { tileTypeForPlacement } from '../flashPanel/seedlingSemantics.js';
@@ -43,9 +44,9 @@ import { createSeedlingEditAdapter } from './seedlingEditAdapter.js';
 import { regionIdFor } from './seedlingAtlasDerivation.js';
 import { emptyOverlay, exitRuleKey, locationRuleKey } from './seedlingSetOverlay.js';
 import {
-    ROOM_FIELDS, SET_FIELDS, SET_OP_KINDS, closeRoomSession, createSeedlingSetAdapter,
-    createSetSession, deriveAtlasOf, downloadSet, exitsOfRoom, roomsOfSet, rulesJsonOf,
-    setRecord, setSessionRoomSource, whatLinksHere,
+    ROOM_FIELDS, SET_FIELDS, SET_OP_KINDS, SeedlingSetDeriveRefusal, closeRoomSession,
+    createSeedlingSetAdapter, createSetSession, deriveAtlasOf, downloadSet, exitsOfRoom,
+    roomsOfSet, rulesJsonOf, setRecord, setSessionRoomSource, validateForDownload, whatLinksHere,
 } from './seedlingSetAdapter.js';
 
 const TILE = 16;
@@ -452,6 +453,193 @@ describe('the op vocabulary, and every refusal by name', () => {
         // a location rule must name a location in THAT room
         expect(s.apply({ op: 'set-access-rule', room: 0, target: locationRuleKey('Nope'), rule: { rule: 'True_' } })
             .description).toMatch(/no such location is marked/);
+    });
+
+    /**
+     * ⛓⛓⛓ **EDITOR v3 E3b — §21.2's DEFECT, REFUSED IN THE OP.**
+     *
+     * ⛔ Every Seedling connection is `one_way` (the game's one transition
+     * primitive is a one-way jump to a declared destination), and
+     * `regionAtlasCompiler.js:320-347` builds NO AP exit for the `to` endpoint
+     * of one. So the discrimination this row asserts is not a naming
+     * convention: the `out_` of a link ACCEPTS a rule and its `in_` REFUSES,
+     * naming the arrival, over the same derived atlas.
+     *
+     * ⚠ A TWO-WAY arrival succeeding is the other half of the distinction, and
+     * it is **the maze's row, not Seedling's** — Seedling has no two-way
+     * connection to build one from (`mazeSetAdapter.test.js` owns it, §26.6).
+     * Faking one here would be a row about a fixture rather than about the game.
+     */
+    it('set-access-rule REFUSES an ARRIVAL endpoint and accepts its SOURCE side', () => {
+        const { s } = session();
+        const { atlas } = deriveAtlasOf(s.record(), DEPS);
+        // ⛓ DERIVED, not typed: the ids are the derivation's own spelling.
+        expect(atlas.vanilla_layout.connections.every((c) => c.one_way === true)).toBe(true);
+        const region = atlas.regions.find((r) => r.map_ref === 1);
+        const out = region.exits.find((e) => e.exit_id.startsWith('out_')).exit_id;
+        const arrival = region.exits.find((e) => e.exit_id.startsWith('in_')).exit_id;
+
+        expect(s.apply({
+            op: 'set-access-rule', room: 1, target: exitRuleKey(out), rule: { rule: 'True_' },
+        }).ok).toBe(true);
+        const refused = s.apply({
+            op: 'set-access-rule', room: 1, target: exitRuleKey(arrival), rule: { rule: 'True_' },
+        });
+        expect(refused.ok).toBe(false);
+        expect(refused.description).toContain(arrival);
+        expect(refused.description).toMatch(/ARRIVAL side of a ONE-WAY connection/);
+        // ⛔ and the overlay is untouched by the refusal
+        expect(Object.keys(s.record().overlay.rooms['1'].rules)).toEqual([exitRuleKey(out)]);
+    });
+
+    /**
+     * ⛓⛓⛓ **ONE READING, TWO READERS — ASSERTED AS AN AGREEMENT, NOT AS TWO
+     * LISTS.** `ruleTargetsOver` MARKS each exit with `gateabilityOf`'s answer
+     * and (since E3b) the OP refuses on the same one. The row sweeps EVERY exit
+     * of EVERY region: for each the marker says `gates:false` the op refuses,
+     * and for each it says `gates:true` the op applies. ⛔ It also asserts that
+     * BOTH answers occur, so a mutant that made `gateabilityOf` constant would
+     * not pass by making the sweep vacuous.
+     */
+    it('the op and the rule-target MARKER agree on every exit of every region', () => {
+        const record = baseRecord();
+        const { atlas } = deriveAtlasOf(record, DEPS);
+        let gated = 0;
+        let inert = 0;
+        for (const region of atlas.regions) {
+            for (const exit of region.exits) {
+                const marked = ruleTargetsOver(record, region.map_ref, DEPS, { deriveAtlasOf })
+                    .exits.find((e) => e.id === exit.exit_id);
+                const applied = adapter.apply(record, {
+                    op: 'set-access-rule', room: region.map_ref,
+                    target: exitRuleKey(exit.exit_id), rule: { rule: 'True_' },
+                });
+                expect(applied.ok, `${region.region_id}/${exit.exit_id}`).toBe(marked.gates);
+                if (marked.gates) gated += 1; else inert += 1;
+            }
+        }
+        expect(gated).toBeGreaterThan(0);
+        expect(inert).toBeGreaterThan(0);
+    });
+
+    /* ══════════════════════════════════════════════════════════════════
+     * ⛓⛓⛓ EDITOR v3 E3b — THE FOURTH REFUSAL CLASS (§21.11 #2)
+     * ══════════════════════════════════════════════════════════════════ */
+
+    /**
+     * ⛔ A room no link reaches that HOLDS A LOCATION is a "lost collectible"
+     * — `deriveAtlas` throws a plain `Error` for it, which is a DATA condition
+     * an author fixes, not a defect. Before E3b it was neither of `apply`'s
+     * three names and took the page's arm down.
+     */
+    const lostCollectibleRecord = () => {
+        const orphan = { ...emptyLevel({ level: ROOMS }) };
+        orphan.entities = [...(orphan.entities ?? []),
+            { type: 'torchpickup', x: 4 * TILE, y: 3 * TILE, attrs: {} }];
+        const base = generatedSet();
+        const withOrphan = setRecord({
+            ...base,
+            rooms: [...base.rooms, { id: ROOMS, name: 'orphan', source: { record: orphan } }],
+        });
+        const marked = adapter.apply(withOrphan, {
+            op: 'mark-location', room: ROOMS,
+            entity: { type: 'torchpickup', x: 4 * TILE, y: 3 * TILE },
+            name: 'Orphan Torch', vanilla_item: 'Light',
+        });
+        expect(marked.ok).toBe(true);
+        return marked.record;
+    };
+
+    it('a DERIVATION failure is the FOURTH refusal class — `apply` names it and does NOT throw', () => {
+        const record = lostCollectibleRecord();
+        const out = adapter.apply(record, {
+            op: 'set-access-rule', room: 0, target: exitRuleKey('out_teleporter_128_128'),
+            rule: { rule: 'True_' },
+        });
+        expect(out.ok).toBe(false);
+        expect(out.reason).toBe('SeedlingSetDeriveRefusal');
+        expect(out.description).toMatch(/cannot be DERIVED as it stands/);
+        // ⛓ the derivation's OWN sentence survives the wrap, so the author is
+        //   told what to fix rather than that something went wrong
+        expect(out.description).toMatch(/lost collectible/);
+        // ⛔ and the wrapper keeps the `cause`, so a reader can reach the original
+        let thrown = null;
+        try { deriveAtlasOf(record, DEPS); } catch (e) { thrown = e; }
+        expect(thrown).toBeInstanceOf(SeedlingSetDeriveRefusal);
+        expect(thrown.cause).toBeInstanceOf(Error);
+        expect(thrown.cause.name).toBe('Error');
+    });
+
+    /**
+     * ⛓⛓ **AND THE OTHER READER SEES THE SAME CLASS.** `deriveAtlasOf` is called
+     * OUTSIDE `apply` too — by `reportOver`, through the substrate's own
+     * `isRefusal`. The row: the same lost collectible reaches the REPORT as a
+     * NAMED `derive` row that refuses the export, not as a crash.
+     *
+     * ⛓ `reportOver` is bound here rather than through `watchSetEditor.reportOf`
+     * so this file stays free of the page module; the four adapter functions and
+     * the document nouns are the same ones that binding passes.
+     */
+    it('the same derivation refusal reaches the REPORT as a NAMED row, not a crash', () => {
+        const record = lostCollectibleRecord();
+        const s = createSetSession(adapter, record,
+            { base: { kind: 'set', set_id: record.set.set_id } });
+        const report = reportOver({
+            session: s,
+            deps: DEPS,
+            adapterFns: {
+                validateForDownload, deriveAtlasOf, rulesJsonOf, bounds: adapter.bounds,
+            },
+            document: {
+                kind: 'level-set', noun: 'set', validator: 'validateLevelSet',
+                idOf: (check) => check.set_id,
+            },
+            ruleKeys: { exit: exitRuleKey, location: locationRuleKey },
+            compileRegionAtlas,
+            validateRegionAtlas,
+        });
+        const derive = report.rows.filter((r) => r.kind === 'derive');
+        expect(derive).toHaveLength(1);
+        expect(derive[0].severity).toBe('error');
+        expect(derive[0].text).toMatch(/lost collectible/);
+        expect(report.download.rules.allowed).toBe(false);
+        // ⛔ and the rooms list still renders — a data condition is not a crash
+        expect(roomRowsOf(record, {
+            links: false,
+            readSetCell: adapter.readCell,
+            exitsOfRoom,
+            whatLinksHere,
+            bounds: adapter.bounds,
+            isRefusal: (e) => e?.name === 'SeedlingSetAdapterError',
+        })).toHaveLength(ROOMS + 1);
+    });
+
+    /**
+     * ⚠⚠ **THE NET DID NOT WIDEN.** Only a plain `Error` out of the derivation
+     * is re-labelled; a `TypeError` inside it is still a DEFECT and still
+     * escapes both `deriveAtlasOf` and `apply`, exactly as `apply`'s docblock
+     * promises. ⛓ The injector is a `note` that throws, because `note` is
+     * called from INSIDE the derivation's own body (on a dropped region), so
+     * the row is about the try/catch and not about the call site.
+     */
+    it('a TypeError inside the derivation still ESCAPES — the fourth class is not a blanket', () => {
+        const base = generatedSet();
+        const withOrphan = setRecord({
+            ...base,
+            rooms: [...base.rooms,
+                { id: ROOMS, name: 'orphan', source: { record: { ...emptyLevel({ level: ROOMS }) } } }],
+        });
+        // the control: the orphan really is DROPPED, so `note` really is called
+        const notes = [];
+        deriveAtlasOf(withOrphan, { ...DEPS, note: (m) => notes.push(m) });
+        expect(notes.some((m) => /DROPPED/.test(m))).toBe(true);
+
+        const boom = { ...DEPS, note: () => { throw new TypeError('boom'); } };
+        expect(() => deriveAtlasOf(withOrphan, boom)).toThrow(TypeError);
+        expect(() => createSeedlingSetAdapter(boom).apply(withOrphan, {
+            op: 'set-access-rule', room: 0, target: exitRuleKey('out_teleporter_128_128'),
+            rule: { rule: 'True_' },
+        })).toThrow(TypeError);
     });
 
     /**

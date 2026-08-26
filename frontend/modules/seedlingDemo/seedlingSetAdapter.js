@@ -85,6 +85,13 @@ import {
 import { stampIdentity } from '../procgenCore/contentIdentity.js';
 import { ruleSchemaErrors } from '../procgenCore/jsonSchemaCheck.js';
 import { replaceRuleAt } from '../procgenCore/ruleTreeOps.js';
+/**
+ * ⛓⛓ **ONE READING OF GATEABILITY, TWO READERS** (E3b, §21.2). The REPORT's
+ * inert-rule row already asks `gateabilityOf`; from this slice the OP asks the
+ * same function over the same derived atlas, so the two cannot disagree about
+ * which endpoint a rule can reach.
+ */
+import { gateabilityOf } from '../procgenCore/setEditorCore.js';
 import { applyOverlayRules, deriveAtlas } from './seedlingAtlasDerivation.js';
 import {
     REGION_NONE, removeExitFromRecord, removeExitFromRoomXml, retargetRoomRecord,
@@ -109,6 +116,34 @@ export class SeedlingSetAdapterError extends Error {
 }
 
 const fail = (message) => { throw new SeedlingSetAdapterError(message); };
+
+/**
+ * ⛓⛓⛓ **THE FOURTH REFUSAL CLASS — A DERIVATION FAILURE IS DATA, NOT A DEFECT.**
+ *
+ * EDITOR v3 E3b, §21.11 #2. `deriveAtlas` throws a plain `Error` for a set the
+ * author has not finished — a collectible in a room no door reaches ("lost
+ * collectible"), a room with no integer level, a `neverEnter` fact that
+ * contradicts the doors. Those are legitimate DATA conditions, and until this
+ * slice they were neither of `apply`'s three names, so they were RETHROWN and
+ * took the page's arm down.
+ *
+ * ⛔ **THE WRAP IS AT `deriveAtlasOf`, NOT AT `apply`,** because `deriveAtlasOf`
+ * is called from BOTH sides: inside an op (through `apply`) and outside it, by
+ * `roomRowsOf`/`reportOver` through the substrate's `isRefusal`. Wrapping at the
+ * one derivation door is what makes both readers see the SAME class — wrapping
+ * inside `apply` would have left the readout's reader still holding a bare
+ * `Error`.
+ *
+ * ⚠ **THE NET DID NOT WIDEN.** Only a plain `Error` out of `deriveAtlas` /
+ * `applyOverlayRules` is wrapped; a `TypeError` still escapes both catches,
+ * exactly as `apply`'s docblock promises, and a row pins that.
+ */
+export class SeedlingSetDeriveRefusal extends Error {
+    constructor(message, cause) {
+        super(message, { cause });
+        this.name = 'SeedlingSetDeriveRefusal';
+    }
+}
 
 /** The manifest fields `set-field` may write. A path outside this is refused. */
 export const SET_FIELDS = Object.freeze(['name', 'description', 'start', 'menu_rooms', 'named_rooms']);
@@ -169,12 +204,30 @@ export function roomsOfSet(set, parseOel) {
  */
 export function deriveAtlasOf(record, deps = {}) {
     const rooms = roomsOfSet(record.set, deps.parseOel);
-    const derived = deriveAtlas(rooms, overlayToDeriveInput(record.overlay), {
-        resolveCondition: (condition) => condition,
-        ...deps,
-    });
-    const { atlas, applied } = applyOverlayRules(derived.atlas, exitRulesByRoom(record.overlay));
-    return { ...derived, atlas, rulesApplied: applied };
+    /**
+     * ⛔ **THE ONE DOOR THE DERIVATION'S DATA REFUSALS COME THROUGH** (E3b,
+     * §21.11 #2). `deriveAtlas` and `applyOverlayRules` throw a plain `Error`
+     * for a set the author has not finished; `SeedlingSetDeriveRefusal` is the
+     * class that makes that a REFUSAL both `apply` and the readout can name.
+     *
+     * ⚠ `err.constructor === Error` and not `instanceof Error`: a `TypeError`
+     * IS an `Error`, and re-labelling one as a data condition is exactly the
+     * widening the fourth class was written not to do.
+     */
+    let derived;
+    try {
+        derived = deriveAtlas(rooms, overlayToDeriveInput(record.overlay), {
+            resolveCondition: (condition) => condition,
+            ...deps,
+        });
+        const { atlas, applied } = applyOverlayRules(derived.atlas, exitRulesByRoom(record.overlay));
+        return { ...derived, atlas, rulesApplied: applied };
+    } catch (err) {
+        if (err?.constructor !== Error) throw err;
+        throw new SeedlingSetDeriveRefusal(
+            `seedlingSetAdapter: this set cannot be DERIVED as it stands — ${err.message}`, err,
+        );
+    }
 }
 
 /* ══════════════════════════════════════════════════════════════════════
@@ -934,7 +987,7 @@ function setAccessRule(record, { room, target, rule, path = null }, deps) {
                     ? `it lives in room ${names.get(parsed.id)}` : 'no such location is marked'}`);
         }
     } else {
-        assertExitTargetExists(record, room, parsed.id, deps);
+        assertExitGateable(record, room, parsed.id, deps);
     }
     const rules = { ...(entry.rules ?? {}), [target]: node };
     return {
@@ -953,8 +1006,24 @@ function setAccessRule(record, { room, target, rule, path = null }, deps) {
  * would leave the author believing a door is gated. Checking here costs one
  * derivation of a set the editor is holding anyway.
  * [[feedback_fallback_reinstates_the_defect]] — the underived case refuses.
+ *
+ * ⛓⛓⛓ **AND SINCE E3b IT ASKS TWO QUESTIONS, WHICH IS WHY IT IS NO LONGER
+ * CALLED `assertExitTargetExists`** (§21.2, §22.4). Existing is not enough: the
+ * derivation gives a room its ARRIVAL ids too (`in_L<from>_<x>_<y>`), and
+ * `regionAtlasCompiler.js:320-347` records the `to` endpoint of a `one_way`
+ * connection as `{apExitName: null, arrivalOnly: true}` and builds NO AP exit
+ * for it. **Every Seedling connection is `one_way`** — the game's one transition
+ * primitive is a one-way jump to a declared destination — so before this slice
+ * a rule authored on any `in_*` was written into the overlay, applied to the
+ * atlas, and reached nothing: the door stayed FREE.
+ *
+ * ⛔ The gateability answer is `setEditorCore.gateabilityOf` over the SAME
+ * derived atlas the REPORT's `inertRulesOf` reads, so the OP and the REPORT
+ * cannot disagree — which is the point of routing both through one function
+ * rather than re-spelling the connection rule here. `mazeSetAdapter` has
+ * refused on this reading since E2a (§26.6); this is Seedling catching up.
  */
-function assertExitTargetExists(record, room, exitId, deps) {
+function assertExitGateable(record, room, exitId, deps) {
     if (typeof deps.parseOel !== 'function' || !Number.isInteger(deps.tileSize)
         || typeof deps.tileTypeForPlacement !== 'function') {
         fail(`seedlingSetAdapter: set-access-rule on ${JSON.stringify(exitRuleKey(exitId))} cannot `
@@ -962,7 +1031,8 @@ function assertExitTargetExists(record, room, exitId, deps) {
             + '`in_L<from>_<x>_<y>`, `out_pit_<x>_<y>`, `in_pit_L<from>_<x>_<y>`), so knowing '
             + 'whether it exists means deriving the atlas, and this adapter was built without '
             + 'a `parseOel`/`tileSize`/`tileTypeForPlacement`. ⛔ REFUSED rather than accepted unchecked: a rule on an '
-            + 'exit that is not there does nothing and says nothing.');
+            + 'exit that is not there — or on one the compiler builds no edge for — does '
+            + 'nothing and says nothing.');
     }
     const { atlas } = deriveAtlasOf(record, deps);
     const region = atlas.regions.find((r) => r.map_ref === room);
@@ -974,6 +1044,15 @@ function assertExitTargetExists(record, room, exitId, deps) {
         fail(`seedlingSetAdapter: region ${JSON.stringify(region.region_id)} has no exit `
             + `${JSON.stringify(exitId)}. Its exits are `
             + `${region.exits.map((e) => e.exit_id).join(', ') || '(none)'}.`);
+    }
+    const gate = gateabilityOf(atlas, region.region_id, exitId);
+    if (!gate.gates) {
+        fail(`seedlingSetAdapter: a rule on exit ${JSON.stringify(exitId)} of room ${room} `
+            + `(region ${JSON.stringify(region.region_id)}) would REACH NOTHING — ${gate.why}. `
+            + '⛔ REFUSED rather than accepted: an authored rule the compiler builds no edge '
+            + 'for leaves the author believing a door is gated and the world treating it as '
+            + 'free, and a missing `access_rule` is the same bytes downstream as one that was '
+            + 'never written. ⛓ This is the SAME reading the REPORT\'s inert-rule row uses.');
     }
 }
 
@@ -1150,10 +1229,15 @@ export function createSeedlingSetAdapter({
          * ⛔ ONE CATCH, AND IT NAMES THE CLASSES. `SeedlingSetAdapterError` is
          * this file's refusal; `SeedlingSetOverlayError` is the overlay's;
          * `LevelSetExitError` is `retargetRoomXml`'s (a `to` with no `sign`, an
-         * exit with children). All three are REFUSALS in the core's vocabulary.
+         * exit with children); **`SeedlingSetDeriveRefusal` is the DERIVATION's**
+         * (E3b, §21.11 #2) — a set that cannot be derived as it stands is a data
+         * condition an author fixes, not a crash. All four are REFUSALS in the
+         * core's vocabulary.
          * ⚠ Anything else is NOT caught — a `TypeError` here is a defect, and
          * swallowing it into `{ok:false}` would make a crash look like an edit
-         * the substrate declined.
+         * the substrate declined. ⛓ The fourth class is wrapped at
+         * `deriveAtlasOf` rather than here precisely so the net stays that
+         * narrow: only a plain `Error` out of the derivation is re-labelled.
          */
         apply(record, op) {
             const kind = op?.op;
@@ -1171,7 +1255,8 @@ export function createSeedlingSetAdapter({
             } catch (err) {
                 if (err?.name === 'SeedlingSetAdapterError'
                     || err?.name === 'SeedlingSetOverlayError'
-                    || err?.name === 'LevelSetExitError') {
+                    || err?.name === 'LevelSetExitError'
+                    || err?.name === 'SeedlingSetDeriveRefusal') {
                     return { ok: false, description: `seedling-set: ${err.message}`, reason: err.name };
                 }
                 throw err;

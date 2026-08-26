@@ -87,8 +87,17 @@ export class WatchSetEditorError extends Error {
 }
 
 const fail = (message) => { throw new WatchSetEditorError(message); };
+/**
+ * ⛓ **THE FOUR REFUSAL CLASSES, AS THE PAGE'S READERS SEE THEM.** The same four
+ * `seedlingSetAdapter.apply` catches — the adapter's, the overlay's,
+ * `retargetRoomXml`'s, and (E3b, §21.11 #2) the DERIVATION's. ⛔ It has to be
+ * the same list: `roomRowsOf`/`reportOver` call `deriveAtlasOf` OUTSIDE `apply`,
+ * so a class one reader named and the other did not is a data condition that
+ * crashes on one path and is a row on the other.
+ */
 const isAdapterRefusal = (e) => e?.name === 'SeedlingSetAdapterError'
-    || e?.name === 'SeedlingSetOverlayError' || e?.name === 'LevelSetExitError';
+    || e?.name === 'SeedlingSetOverlayError' || e?.name === 'LevelSetExitError'
+    || e?.name === 'SeedlingSetDeriveRefusal';
 
 /* ══════════════════════════════════════════════════════════════════════
  * ⛓⛓⛓ THE COST OF READING THE LINK GRAPH — MEASURED, NOT GUESSED
