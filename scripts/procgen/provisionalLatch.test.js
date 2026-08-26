@@ -12,8 +12,9 @@
 import { describe, it, expect } from 'vitest';
 
 import {
-    CERT_LEVELS, KEY_DROPS, KEY_KEEPS, certificationCell, certifyAgainstLatch,
-    latchCacheCandidates, latchKeyOf, latchKeyTape, modelArrivalOf,
+    CERT_LEVELS, KEY_DROPS, KEY_KEEPS, TABLE_COLUMNS, certificationCell, certifyAgainstLatch,
+    latchCacheCandidates, latchCell, latchKeyOf, latchKeyTape, modelArrivalOf,
+    renderTableMarkdown,
 } from './provisionalLatch.js';
 
 /** A projected tape — the shape `gameVisibleTape` returns. */
@@ -283,5 +284,61 @@ describe('the model arrival', () => {
         const a = modelArrivalOf({ ...run, transitions: [], level: 13 }, null);
         expect(a.level).toBe(13);
         expect(a.lastTransition).toBeNull();
+    });
+});
+
+/* ── ⚖ 54 (2) — the table a seal quotes ──────────────────────────── */
+
+describe('the table', () => {
+    const row = (over = {}) => ({
+        chain: 'r8-d2', index: 1, role: 'segment', segment: 'r8-d2-19',
+        committedTicks: 864, refTicks: 721, modelTicks: 864, verdict: 'none',
+        arrival: modelOf(), latch: latchCell(latchOf(), { key: 'abc', era: 'key' }),
+        certification: 'GAME-CERTIFIED', reasons: [], ...over,
+    });
+
+    /**
+     * ⛔ THE `ref` COLUMN IS PRESENT ONLY WHEN A REF WAS ASKED FOR. An empty
+     * column in a QUOTED table reads as a measurement that came back blank.
+     */
+    it('⛓ the ref column appears only with a ref', () => {
+        expect(renderTableMarkdown([row()])).not.toMatch(/@r9/);
+        expect(renderTableMarkdown([row()], { ref: 'r9/x' })).toMatch(/@r9\/x/);
+    });
+
+    /**
+     * ⛔⛔ THE THIRD STATE HAS TO BE LOUD. §33.2's whole finding is that a row
+     * nobody put to the game reads GREEN in a two-state column.
+     */
+    it('⛓ a row with no latch prints **unasked**, not a blank', () => {
+        const md = renderTableMarkdown([row({ latch: null, certification: 'MODEL-CERTIFIED' })]);
+        expect(md).toMatch(/\*\*unasked\*\*/);
+        expect(md).toMatch(/MODEL-CERTIFIED/);
+    });
+
+    it('⛓ a REFUSED row carries its reasons into the cell', () => {
+        const md = renderTableMarkdown([row({ certification: 'REFUSED',
+            reasons: ['not-calm: latch: arrival.velocity'] })]);
+        expect(md).toMatch(/\*\*REFUSED: not-calm/);
+    });
+
+    it('⛓ a headline has no index and says so', () => {
+        const md = renderTableMarkdown([row({ role: 'headline', index: 3 })]);
+        expect(md).toMatch(/\| headline /);
+        expect(md.split('\n')[2]).toMatch(/\| — +\|/);
+    });
+
+    it('⛓ every declared column is rendered', () => {
+        const head = renderTableMarkdown([row()]).split('\n')[0];
+        for (const c of TABLE_COLUMNS) {
+            if (c === 'ref') continue;
+            expect(head).toContain(c);
+        }
+    });
+
+    it('⛓ `latchCell` is null-in null-out', () => {
+        expect(latchCell(null, null)).toBeNull();
+        expect(latchCell(latchOf(), { key: 'k', era: 'key' }))
+            .toMatchObject({ tick: 99, level: 20, x: 192, y: 64, vx: 0, vy: 0, hits: 0 });
     });
 });

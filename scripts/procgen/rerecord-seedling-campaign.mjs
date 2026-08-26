@@ -122,7 +122,8 @@ import {
 } from './walkMoves.js';
 import {
     BRANCH_FLAG, DRIVE_FLAG, PROVISIONAL_FLAG, TABLE_FLAG,
-    certifyAgainstLatch, certificationCell, latchCacheCandidates,
+    certifyAgainstLatch, certificationCell, latchCacheCandidates, latchCell,
+    renderTableMarkdown,
 } from './provisionalLatch.js';
 import { buildInstruments } from './reference/instruments.mjs';
 
@@ -766,13 +767,13 @@ function driveLatch(label, completeTape) {
  * there is the answer; re-writing it would be a second opinion about a
  * measurement nobody re-took.
  */
-function readLatchCache(label, candidates) {
+function readLatchCache(label, candidates, { rekey = true } = {}) {
     for (const c of candidates) {
         const file = join(CACHE, `latch-${label}-${c.key}.json`);
         if (!existsSync(file)) continue;
         const record = JSON.parse(readFileSync(file, 'utf8'));
         let rekeyed = null;
-        if (c.era !== 'key') {
+        if (rekey && c.era !== 'key') {
             const forward = join(CACHE, `latch-${label}-${candidates[0].key}.json`);
             if (!existsSync(forward)) {
                 mkdirSync(CACHE, { recursive: true });
@@ -1874,6 +1875,119 @@ function latchProvisional(names, { branch = null, drive = false }) {
     }
 }
 
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⚖ 54 (2) — `--table`: THE PIPELINE PRODUCES THE TABLE A SEAL QUOTES
+ * ══════════════════════════════════════════════════════════════════════ */
+/**
+ * ⛓⛓⛓ R9 P1 — **EVERY TABLE IN §30.6 / §31.6 / §32.5 / §33.3 WAS A HAND
+ * TRANSCRIPTION OF A PRODUCER'S STDOUT**, and §33.2 is what happens when one
+ * of those columns is later read as a verdict it never was. ⚖ 54 (2): the
+ * pipeline prints it, and a seal QUOTES the instrument.
+ *
+ * ⛔ IT NEVER DRIVES AND IT NEVER WRITES A LATCH. The game column is read out
+ * of the cache and says `unasked` when nobody has answered — which is the
+ * third state the hand tables did not have. Asking the game is
+ * `--latch-provisional`'s job, on purpose, one segment at a time.
+ *
+ * ⛓ `--branch=<ref>` ADDS A COLUMN rather than replacing one. "Committed" is
+ * the tape on disk in this tree and `@ref` is the tape at that ref, so the
+ * pair reads the way (D′)/(D″) were always written — 541 → 410 — and neither
+ * number has to be carried in a human's head. The tapes come out of git
+ * objects: no checkout, no worktree, so nobody's tree is detached under them.
+ *
+ * ⚠ THE MODEL COLUMN IS THIS TREE'S SOLVER. At a ref whose solver differs
+ * (a pre-flip archive, say) it will not agree with the `@ref` column, and the
+ * arrival is admitted only when the two lengths match — the row then says
+ * `unasked` for the arrival rather than describing a different walk.
+ */
+async function table({ branch = null }) {
+    const chains = accountingChains();
+    const walk = await measureWalks(chains);
+    const refTickOf = (segment) => {
+        if (!branch) return null;
+        try {
+            return JSON.parse(gitShow(branch,
+                `frontend/modules/seedlingDemo/fixtures/tapes/${segment}.json`)).tick_count ?? null;
+        } catch { return null; }
+    };
+    const tapeAt = (segment) => {
+        if (!branch) return existsSync(join(TAPES, `${segment}.json`)) ? rawOf(segment) : null;
+        try {
+            return JSON.parse(gitShow(branch,
+                `frontend/modules/seedlingDemo/fixtures/tapes/${segment}.json`));
+        } catch { return null; }
+    };
+
+    const rows = [];
+    const seen = [
+        ...walk.rows.map((r) => ({ ...r, measured: true })),
+        ...walk.unmeasured.map((r) => ({ ...r, measured: false })),
+    ].sort((a, b) => (a.chain === b.chain ? a.index - b.index
+        : chains.findIndex((c) => c.id === a.chain) - chains.findIndex((c) => c.id === b.chain)));
+
+    for (const r of seen) {
+        const raw = tapeAt(r.segment);
+        let latch = null;
+        let hitBy = null;
+        if (raw) {
+            const projected = gameVisibleTape(parseTape(raw));
+            const candidates = latchCacheCandidates(
+                { complete: raw, projected, legacy: 'complete' });
+            /**
+             * ⛔ `rekey: false` — a TABLE reports, it does not tidy. The
+             * forward re-key is `--latch-provisional`'s, where a human asked
+             * for the answer.
+             */
+            const hit = readLatchCache(r.segment, candidates, { rekey: false });
+            latch = hit.record;
+            hitBy = hit.hitBy;
+        }
+        const refTicks = refTickOf(r.segment);
+        const subjectTicks = branch ? refTicks : (r.committedTicks ?? null);
+        const arrival = (r.arrival && r.solvedTicks === subjectTicks) ? r.arrival : null;
+        const cert = certifyAgainstLatch({
+            latch,
+            model: arrival,
+            latchFindings: latch
+                ? seamLatchFindings(latch.envelope, { requireCalm: true }) : null,
+        });
+        rows.push({
+            chain: r.chain,
+            index: r.index,
+            role: r.role,
+            segment: r.segment,
+            producer: r.producer ?? null,
+            committedTicks: r.committedTicks ?? null,
+            refTicks,
+            modelTicks: r.solvedTicks ?? null,
+            verdict: r.measured ? r.verdict : null,
+            why: r.measured ? null : r.why,
+            arrival,
+            latch: latchCell(latch, hitBy),
+            certification: cert.level,
+            reasons: cert.reasons,
+        });
+    }
+
+    const markdown = renderTableMarkdown(rows, { ref: branch });
+    console.log(`\n# ⚖ 54 (2) · THE TABLE — ${rows.length} row(s)`
+        + `${branch ? `, against \`${branch}\`` : ''}\n`);
+    console.log(markdown);
+    const mdPath = join(RUN_DIR, 'table.md');
+    const jsonPath = join(RUN_DIR, 'table.json');
+    writeFileSync(mdPath, `${markdown}\n`);
+    writeFileSync(jsonPath, `${JSON.stringify({ ref: branch, rows }, null, 2)}\n`);
+    console.log(`\n## ${mdPath}\n## ${jsonPath}`);
+    const unasked = rows.filter((r) => r.certification === 'unasked'
+        || r.certification === 'MODEL-CERTIFIED').length;
+    console.log(`\n## ${rows.filter((r) => r.certification === 'GAME-CERTIFIED').length} `
+        + `GAME-CERTIFIED · ${unasked} the game has NOT been asked about · `
+        + `${rows.filter((r) => r.certification === 'REFUSED').length} REFUSED`);
+    for (const st of walk.stops) console.log(`⚠ ${st}`);
+    return { rows, markdown };
+}
+
 // ── the run ───────────────────────────────────────────────────────────
 console.log(`# rerecord-seedling-campaign — ${READ_ONLY.length
     ? `${READ_ONLY.join(' ')} (READ-ONLY: no stage runs)` : `stages ${FROM}..${TO}`}`
@@ -1914,6 +2028,12 @@ if (PROVISIONAL_TOKEN !== undefined) {
         process.exit(1);
     }
     latchProvisional(names, { branch: BRANCH, drive: DRIVE });
+    console.log(failures ? `\n${failures} FAILURE(S)` : '\nall checks green');
+    process.exit(failures ? 1 : 0);
+}
+
+if (TABLE) {
+    await table({ branch: BRANCH });
     console.log(failures ? `\n${failures} FAILURE(S)` : '\nall checks green');
     process.exit(failures ? 1 : 0);
 }
