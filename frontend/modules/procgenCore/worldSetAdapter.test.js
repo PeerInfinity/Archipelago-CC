@@ -550,6 +550,34 @@ describe('the paste, the rows and the download check', () => {
             .toMatch(/joins two rooms of part "a"/);
     });
 
+    /**
+     * ⛔⛔ **THE SESSION STORES THE OP IT IS HANDED BACK AND REFOLDS THE LIST
+     * FROM THE BASE, SO A RE-BASED OP IN THAT LIST ADDRESSES THE WRONG PART.**
+     *
+     * ⛓ The first spelling returned the re-based op — `{room: <LOCAL>}` — and
+     * every row in this file stayed GREEN, because each of them touched part
+     * "a", whose local indices ARE the global ones. The chain row over the two
+     * real adapters found it on the first refold, with the MAZE part's own
+     * `connect` arriving at the Seedling part. This is that case, brought back
+     * where it belongs: an op in the SECOND part, replayed.
+     * ⛔ mutant: return `inner` instead of `op` from `forward`.
+     */
+    it('an op in the SECOND part survives a REFOLD — the stored op is GLOBAL', () => {
+        const record = RECORD();
+        const s = createEditSession(adapter(), record);
+        s.apply({ op: 'set-room-field', room: 3, field: 'name', value: 'B0!' });
+        s.apply({ op: 'set-room-field', room: 4, field: 'name', value: 'B1!' });
+        // the stored edits address GLOBAL rooms, which is what a refold replays
+        expect(s.payload().edits.map((o) => o.room)).toEqual([3, 4]);
+        // one undo REFOLDS the remaining op from the base — the moment a local
+        // index in the list would land on part "a" instead
+        expect(s.undo()).toBe(true);
+        expect(adapter().readCell(s.record(), 3, 0).room.name).toBe('B0!');
+        expect(adapter().readCell(s.record(), 0, 0).room.name).toBe('A0');
+        expect(s.undo()).toBe(true);
+        expect(canonicalJson(s.record())).toBe(canonicalJson(record));
+    });
+
     it('a session over the composite undoes back to its base', () => {
         const record = RECORD();
         const s = createEditSession(adapter(), record);

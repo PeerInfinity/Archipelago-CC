@@ -267,8 +267,16 @@ function mappingFor(op, span) {
 /**
  * ⛓ Forward one op to the part that owns it, re-key the world's links when the
  * op renumbers, and re-wrap the result.
+ *
+ * ⛔⛔ **`op` IS THE WORLD'S OWN OP AND `inner` IS THE RE-BASED ONE, AND THE
+ * RESULT CARRIES `op`.** The session STORES what `apply` hands back and REFOLDS
+ * the stored list from the base on every undo — so returning the re-based op
+ * would put a LOCAL room index into a list that is replayed against GLOBAL
+ * ones, and the replay would silently address a different part. Found by the
+ * undo row of `seedlingDemo/worldChain.test.js`, which reddened with the maze
+ * part's own `connect` arriving at the Seedling part on the first refold.
  */
-function forward(record, span, op, opKindsOf) {
+function forward(record, span, op, inner, opKindsOf) {
     const { part } = span;
     if (!opKindsOf(part).includes(op.op)) {
         return {
@@ -277,7 +285,6 @@ function forward(record, span, op, opKindsOf) {
                 + `"${op.op}" — its vocabulary is ${opKindsOf(part).join(', ')}`,
         };
     }
-    const { part: _drop, ...inner } = op;
     const result = part.adapter.apply(span.record, inner);
     if (!result.ok) {
         return { ...result, description: `world: part "${part.id}": ${result.description}` };
@@ -453,7 +460,7 @@ export function createWorldSetAdapter({ parts = [] } = {}) {
                             + 'DERIVED ATLAS exit id while a part\'s own array endpoint spells its '
                             + 'exits its own way (Seedling an ORDINAL, the maze an exit id).');
                     }
-                    return forward(record, from, {
+                    return forward(record, from, op, {
                         ...op, from: [from.local, op.from[1]], to: [to.local, op.to[1]],
                     }, opKindsOf);
                 }
@@ -465,8 +472,9 @@ export function createWorldSetAdapter({ parts = [] } = {}) {
                             + 'cross parts: position is identity inside each one, and a room that '
                             + 'moved between them would change which document it is in.');
                     }
-                    return forward(record, partNamed(record, op.part, parts, `\`${kind}\``),
-                        op, opKindsOf);
+                    const span = partNamed(record, op.part, parts, `\`${kind}\``);
+                    const { part: _named, ...inner } = op;
+                    return forward(record, span, op, inner, opKindsOf);
                 }
                 /* ── room-addressed: forward with the index re-based ──── */
                 if (Number.isInteger(op.room)) {
@@ -479,7 +487,8 @@ export function createWorldSetAdapter({ parts = [] } = {}) {
                             + 'else on the other side — and law 7 would be writing a room to a '
                             + 'cell the substrate cannot address.');
                     }
-                    return forward(record, span, { ...op, room: span.local }, opKindsOf);
+                    const { part: _owner, ...rest } = op;
+                    return forward(record, span, op, { ...rest, room: span.local }, opKindsOf);
                 }
                 return refuse(`world: \`${kind}\` names neither a room nor a part — every op that `
                     + 'reaches a room carries `room` (a GLOBAL index), and `add-room`/`reorder` '
