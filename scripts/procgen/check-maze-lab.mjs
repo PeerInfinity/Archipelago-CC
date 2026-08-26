@@ -2090,15 +2090,27 @@ try {
     await page.click('#editSetGesture');
     await page.waitForTimeout(400);
     const afterArm = await stripInk();
+    /**
+     * ⛓⛓⛓ **EDITOR v3 E3a — THE ARROWS ARE PAINTED AT LOAD, ON THIS SUBSTRATE
+     * TOO.** E2c inherited D2's defect (§23.11 #5) and carried the load-time
+     * numbers in this DETAIL so the row would survive the fix; the fix has
+     * landed, and the claim moves into the CONDITION. `mountEditorView`'s
+     * returned surface now names `repaint` and `setEditorView.render()` calls
+     * it right after `paintStrip()` has sized the canvas.
+     * ⛔ MUTANT: drop that call — `beforeArm` reads 1×1 with 0 ink again, here
+     * and on `-arm`, while `editorView.test.js`'s own rows stay green.
+     */
+    check(beforeArm !== null && beforeArm.ovInk > 0
+        && beforeArm.ovW === beforeArm.w && beforeArm.ovH === beforeArm.h,
+        '⛓⛓⛓ **THE ARROWS ARE ON THE OVERLAY AT LOAD, AT THE STRIP\'S SIZE** — nothing armed, '
+        + 'nothing clicked. E2c measured `1×1` with `0` ink here over a strip that was already '
+        + `${beforeArm?.w}×${beforeArm?.h}, because the view painted once at mount and nothing `
+        + 'asked it again (§23.11 #5)', json(beforeArm));
     check(afterArm !== null && afterArm.ovInk > 0
         && afterArm.ovW === afterArm.w && afterArm.ovH === afterArm.h,
-        '⛓⛓⛓ **THE ARROWS LAND ON THE OVERLAY CANVAS AT THE STRIP\'S SIZE, ONCE THE VIEW '
-        + `REPAINTS.** ⛔ ON LOAD THE OVERLAY IS ${beforeArm?.ovW}×${beforeArm?.ovH} WITH `
-        + `${beforeArm?.ovInk} INK — D2's unpainted-arrows defect (§23.11 #5), inherited here `
-        + 'and still E3\'s: `mountEditorView` paints once at mount, before `paintStrip` has '
-        + 'sized the canvas and while the rows are still empty, and nothing repaints it after. '
-        + 'The load-time numbers ride in this DETAIL rather than in the condition, because a '
-        + 'row asserting 0 there would redden the day somebody fixes it',
+        '⛓⛓ …**AND ARMING THE GESTURE LEAVES THEM THERE** — `#editSetGesture` is `setTool`, '
+        + 'which repaints too, so this is the control that says the load-time paint and the '
+        + 'gesture-time paint land on the same surface at the same size',
         `${json(beforeArm)} → ${json(afterArm)}`);
 
     /* ── CLAIM 19: the ROOM SESSION lives INSIDE the SET arm ─────────── */

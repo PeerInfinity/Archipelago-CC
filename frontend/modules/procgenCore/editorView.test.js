@@ -850,6 +850,80 @@ const domHarness = (rest = {}) => {
     return { ...t, ctx, overlayEl, canvas, click: (tx, ty) => canvas.dispatch('click', { tx, ty }) };
 };
 
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ EDITOR v3 E3a — **THE HOST'S OWN REPAINT DOOR** (§23.11 #5, §31.1 #2)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('⛓⛓⛓ EDITOR v3 E3a — `repaint` is on the surface, and it is the ONLY quiet door', () => {
+    /**
+     * ⛔⛔⛔ **THE DEFECT THIS KEY EXISTS FOR.** This file paints its overlay
+     * ONCE at mount. A host that sizes the TARGET canvas afterwards — which is
+     * what `setEditorView.paintStrip` does, because `watch.html` ships the strip
+     * at `width="1" height="1"` — left the overlay 1×1 and holding a picture of
+     * an EMPTY shapes list until some gesture happened to repaint it. MEASURED
+     * on the vanilla 116: strip 2088×132 / 181,674 ink, overlay 1×1 / 0.
+     *
+     * ⛓ THIS ROW PINS THE DOOR EXISTS AND WORKS. That the SET panel USES it is
+     * the browser gates' claim (`-arm`, `maze-lab`), and dropping the call site
+     * reddens those two while leaving this row green — said out loud so a
+     * reader does not mistake one for the other.
+     */
+    it('the surface NAMES `repaint`, and it repaints without touching any state', () => {
+        const t = domHarness({ shapes: () => [{ kind: 'rect', x: 0, y: 0, w: 1, h: 1 }] });
+        expect(typeof t.view.repaint).toBe('function');
+        t.canvas.width = 60;
+        t.canvas.height = 50;
+        t.view.setTool(TOOLS.RECT);
+        t.click(2, 2);
+        // ⛓ a RECT's first click arms a corner — the state `setTool` would eat
+        expect(t.view.corner).toEqual({ tx: 2, ty: 2 });
+        const drawn = t.ctx.calls.length;
+        const changes = t.changes.length;
+        const said = t.said.length;
+        t.view.repaint();
+        expect(t.ctx.calls.length).toBeGreaterThan(drawn);
+        /**
+         * ⛔ …AND IT IS NOT `setTool`'S DOOR. That is the ONLY repaint a host
+         * had before this key, and it clears `corner` and `stroke` and fires
+         * `onChange` — a half-armed two-click gesture and a re-entrant render,
+         * in exchange for a repaint.
+         */
+        expect(t.view.tool).toBe(TOOLS.RECT);
+        expect(t.view.corner).toEqual({ tx: 2, ty: 2 });
+        expect(t.changes.length).toBe(changes);
+        expect(t.said.length).toBe(said);
+        expect(t.session.ops()).toEqual([]);
+    });
+
+    /**
+     * ⛓⛓ **A CANVAS SIZED AFTER MOUNT IS THE WHOLE CASE.** The overlay follows
+     * the TARGET's size at paint time, so growing the target and repainting is
+     * what turns 1×1-and-empty into the strip's own geometry with ink in it.
+     * ⛓ MUTANT: `repaint` dropped from the surface — this row cannot even be
+     * written, which is why the browser rows carry the ink numbers.
+     */
+    it('a target sized AFTER mount only reaches the overlay once `repaint` is called', () => {
+        const t = domHarness({ shapes: () => [{ kind: 'rect', x: 0, y: 0, w: 1, h: 1 }] });
+        // ⛓ AT MOUNT the overlay is the target's size, and the target is 0×0 —
+        //   `watch.html`'s strip ships `width="1" height="1"` for the same reason.
+        expect(t.overlayEl.width).toBe(t.canvas.width);
+        const atMount = t.ctx.calls.filter((c) => c[0] === 'strokeRect');
+        t.canvas.width = 640;
+        t.canvas.height = 64;
+        t.canvas.clientWidth = 640;
+        // ⛔ the overlay has NOT followed — nothing has asked it to
+        expect(t.overlayEl.width).not.toBe(640);
+        t.view.repaint();
+        expect(t.overlayEl.width).toBe(640);
+        expect(t.overlayEl.height).toBe(64);
+        const after = t.ctx.calls.filter((c) => c[0] === 'strokeRect');
+        expect(after.length).toBe(atMount.length + 1);
+        // ⛓ …and the rect is drawn at the NEW geometry: 640 / 6 columns per cell
+        expect(after.at(-1)[3]).toBeCloseTo((640 / 6) - 2, 6);
+        expect(atMount.at(-1)[3]).not.toBeCloseTo((640 / 6) - 2, 6);
+    });
+});
+
 describe('⛓⛓⛓ the overlay draws POLYLINES, and a page may contribute shapes', () => {
     const line = (extra = {}) => ({
         kind: 'polyline', points: [{ x: 0.5, y: 0.5 }, { x: 2.5, y: 0.5 }], ...extra,

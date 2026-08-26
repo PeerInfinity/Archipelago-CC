@@ -1041,6 +1041,25 @@ export function mountSetEditor({
             { deriveAtlasOf: adapterFns.deriveAtlasOf });
         renderRooms();
         paintStrip();
+        /**
+         * ⛓⛓⛓ **AND THE ARROWS FOLLOW THE STRIP — EDITOR v3 E3a, §31.1 #2.**
+         *
+         * ⛔ D2's shipped defect (§23.11 #5): `mountEditorView` paints its
+         * overlay ONCE, at mount, when `#editSetOverview` is still the HTML's
+         * `width="1" height="1"` and `rows` is still `[]` — and `paintStrip`,
+         * which is what SIZES the canvas, never asked it to paint again. So the
+         * exit arcs existed, reached the overlay and landed on a 1×1 surface
+         * nobody could see until the first gesture repainted it. MEASURED on the
+         * vanilla 116: strip 2088×132 / 181,674 ink, overlay 1×1 / 0.
+         *
+         * ⛔ HERE AND NOT INSIDE `paintStrip`: the strip painter draws room
+         * boxes and knows nothing about a selection overlay, and the ORDER is
+         * the contract — the canvas has to be sized before the overlay is asked
+         * to match it. ⚠ `render()` is only ever entered after `const view` is
+         * initialised (its first call is the last statement of this mount), so
+         * this is not the mount-time call that hits the TDZ.
+         */
+        view.repaint();
         fillExitSelect('editSetExitList', selected);
         fillOrdinalSelect();
         fillEntitySelect(selected);

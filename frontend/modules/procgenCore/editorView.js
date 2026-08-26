@@ -796,6 +796,30 @@ export function mountEditorView({
         get clip() { return clip; },
         get corner() { return corner; },
         setTool,
+        /**
+         * ⛓⛓⛓ **REPAINT THE OVERLAY, ON DEMAND — EDITOR v3 E3a, ADDITIVE.**
+         *
+         * ⛔ **A SHIPPED DEFECT IS WHY THIS KEY EXISTS** (§23.11 #5, found by
+         * `check-seedling-editor-arm`'s first run on real data). This file
+         * paints ONCE at mount and then only from its own gestures. A HOST that
+         * sizes the target canvas AFTER mount — which is exactly what
+         * `setEditorView`'s `paintStrip` does, and what `watch.html`'s
+         * `width="1" height="1"` strip forces it to do — left the overlay at
+         * 1×1 with 0 ink, holding a picture of an EMPTY rows list, until the
+         * first gesture happened to repaint it. MEASURED on the vanilla 116:
+         * strip 2088×132 with 181,674 ink, overlay 1×1 with 0.
+         *
+         * ⛔ The host's only door until now was `setTool`, which also CLEARS
+         * `corner` and `stroke` and fires `onChange` — a half-armed two-click
+         * gesture and a re-entrant render, in exchange for a repaint. This is
+         * the repaint alone: it asks `shapes()` again and paints, and touches
+         * no state at all.
+         *
+         * ⛓ NOTHING READS THIS SURFACE'S KEY SET (measured before it grew: no
+         * `Object.keys`, no spread, no `for…in` over a mount result anywhere in
+         * the repo, and no row pins the roster), so a sixth key is additive.
+         */
+        repaint,
         commands: table,
         keys,
         run,

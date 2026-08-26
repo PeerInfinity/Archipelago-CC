@@ -2640,46 +2640,52 @@ try {
         `${vanOut.set.set_id} · ${vanOut.overlay.overlay_id}`);
 
     /**
-     * ⛔⛔⛔ **THE OVERVIEW ARROWS ARE NOT PAINTED UNTIL SOMETHING REPAINTS THE
-     * VIEW — A D2 DEFECT THIS ROW FOUND ON REAL DATA, AND IT IS NOT E1's TO
-     * FIX.**
+     * ⛓⛓⛓ **THE OVERVIEW ARROWS ARE PAINTED AT LOAD — D2's DEFECT, FOUND BY
+     * THIS ROW'S FIRST RUN ON REAL DATA (§23.11 #5) AND FIXED IN E3a.**
      *
      * The arcs are POLYLINE shapes contributed through `editorView`'s `shapes()`
      * door, and that file paints them on a `.editorViewOverlay` canvas it
-     * appends to the target's PARENT and SIZES FROM THE TARGET. It paints once
+     * appends to the target's PARENT and SIZES FROM THE TARGET. It painted ONCE
      * at mount — where `#editSetOverview` is still the HTML's `width="1"
-     * height="1"` and the rooms list is still EMPTY — and nothing repaints it
-     * afterwards: `render()` calls `paintStrip()` (which sizes the canvas and
-     * draws the room boxes) and never asks the view to repaint. MEASURED with a
-     * standalone probe: after a vanilla LOAD the strip canvas is 2088×132 with
-     * 181,674 ink pixels and the overlay is still **1×1 with 0**; a click on the
-     * strip does not change it; `#editSetGesture` — which is `setTool`, and
-     * `setTool` repaints — takes the overlay to **2088×132 with 67,289**.
+     * height="1"` and the rooms list is still EMPTY — and nothing repainted it
+     * afterwards: `render()` called `paintStrip()` (which sizes the canvas and
+     * draws the room boxes) and never asked the view to repaint. MEASURED with a
+     * standalone probe: after a vanilla LOAD the strip canvas was 2088×132 with
+     * 181,674 ink pixels and the overlay was still **1×1 with 0**; a click on
+     * the strip did not change it; `#editSetGesture` — which is `setTool`, and
+     * `setTool` repaints — took the overlay to **2088×132 with 67,289**.
      *
-     * ⛓ SO THE CLAIM THIS ROW MAKES IS THE ONE THAT SURVIVES A FIX: the shapes
-     * exist, they reach the overlay, and they land at the STRIP's size once the
-     * view repaints. The load-time value travels in the DETAIL rather than in
-     * the condition, because a row asserting `0` there would go red the day
-     * somebody fixes it. ⛔ NOT FIXED HERE: `mountEditorView` exposes no
-     * `repaint`, `editorView.js` is outside this slice, and the only door
-     * `watchSetEditor.js` has (`setTool`) also clears the view's `corner` and
-     * fires `onChange` — a two-click gesture and a re-entrant render are exactly
-     * what that would put at risk.
+     * ⛓ **E3a's FIX IS ONE KEY AND ONE CALL:** `mountEditorView`'s returned
+     * surface names `repaint`, and `setEditorView`'s `render()` calls it right
+     * after `paintStrip()` has sized the canvas. ⛔ NOT `setTool`, which was the
+     * only door before and which also clears the view's `corner` and fires
+     * `onChange` — a half-armed two-click gesture and a re-entrant render.
+     *
+     * ⛓⛓ SO THE CLAIM IS NOW THE LOAD-TIME ONE, and the gesture is kept as the
+     * control: the overlay is the STRIP's size WITH INK IN IT before anything
+     * is pressed, and arming a tool does not shrink it. ⛔ MUTANT: drop
+     * `view.repaint()` from `render()` — `beforeArm` goes back to 1×1/0 and
+     * this row is the witness (`editorView.test.js`'s own rows stay GREEN,
+     * because they pin that the DOOR exists, not that this panel uses it).
      */
     const beforeArm = await inkOf();
     await page.click('#editSetGesture');
     await page.waitForTimeout(500);
     const afterArm = await inkOf();
+    check(beforeArm !== null && beforeArm.ovInk > 0
+        && beforeArm.ovW === beforeArm.w && beforeArm.ovH === beforeArm.h,
+        '⛓⛓⛓ **THE ARROWS ARE ON THE OVERLAY AT LOAD, AT THE STRIP\'S SIZE** — no gesture, no '
+        + 'click, nothing pressed. Before EDITOR v3 E3a this read `1×1` with `0` ink over a '
+        + `strip that was already ${beforeArm?.w}×${beforeArm?.h}: the view painted once at `
+        + 'mount, while the canvas was `width="1"` and the rooms list was empty, and nothing '
+        + 'repainted it after (§23.11 #5, a D2 defect shipped on `main`)', json(beforeArm));
     check(afterArm !== null && afterArm.ovInk > 0
         && afterArm.ovW === afterArm.w && afterArm.ovH === afterArm.h
         && VANILLA_XML_ARROWS > 100,
-        '⛓⛓⛓ **THE ARROWS SURVIVE THE BOUND — the link-scan COLUMN is what was bounded** — and '
-        + 'they land on the OVERLAY canvas at the STRIP\'s size once the view repaints; node '
-        + `counts ${VANILLA_XML_ARROWS} shapes for this set. ⛔ ON LOAD THE OVERLAY IS `
-        + `${beforeArm?.ovW}×${beforeArm?.ovH} WITH ${beforeArm?.ovInk} INK — the view paints it `
-        + 'once at MOUNT, before `paintStrip` has sized the canvas and while the rooms list is '
-        + 'still empty, and nothing repaints it after. A D2 defect, named here, NOT fixed here',
-        `${json(beforeArm)} → ${json(afterArm)}`);
+        '⛓⛓ …**AND THE ARROWS SURVIVE THE BOUND — the link-scan COLUMN is what was bounded** — '
+        + 'so arming the gesture (which is `setTool`, and `setTool` repaints too) leaves them '
+        + `on the overlay at the strip's size; node counts ${VANILLA_XML_ARROWS} shapes for `
+        + 'this set', `${json(beforeArm)} → ${json(afterArm)}`);
 
     /* ══ CLAIM 10 — no edit reaches a URL, in either arm ═══════════ */
 
