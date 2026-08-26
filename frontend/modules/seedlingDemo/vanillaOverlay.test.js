@@ -160,14 +160,22 @@ describe('⛓⛓ E5 — the lift, and what it put through the adapter', () => {
     });
 
     /**
-     * ⛔⛔ **NEITHER `neverEnter` NOR `regions` IS IN THE FIXTURE, AND THE
-     * REASON IS NOT THE SCHEMA.** Both fields exist on the overlay and
-     * `overlayToDeriveInput` reads `neverEnter`. NO OP WRITES EITHER — so a
-     * document built by folding ops through the adapter cannot carry them, and
-     * a script that wrote them by hand would be emitting a fixture the editor
-     * could never have produced.
+     * ⛔⛔ **NEITHER `neverEnter` NOR `regions` IS IN THE FIXTURE, AND SINCE
+     * EDITOR v3 E6a THE REASON HAS CHANGED.** It used to be that NO OP WROTE
+     * EITHER, so a document built by folding ops through the adapter could not
+     * carry them. `set-overlay-field` writes both now — and the lift still
+     * authors neither, because the RULING IS THE PRODUCER'S (§34.3):
+     * `NEVER_ENTER_LEVELS` is a hand ruling in
+     * `make-seedling-playthrough-rules.mjs` about rooms whose exit is created
+     * on death, not a fact readable off the committed atlas; and `regions` has
+     * nothing to lift at all, since every one of the atlas's regions is exactly
+     * one room.
+     *
+     * ⇒ the row is UNMOVED and its meaning is not: it now pins a CHOICE rather
+     * than a limitation, and a lift that started authoring either would have to
+     * come here and say why.
      */
-    it('carries no `neverEnter` and no `regions` — no op writes them', () => {
+    it('carries no `neverEnter` and no `regions` — the lift does not author them', () => {
         expect(LIFT.overlay.neverEnter).toBeUndefined();
         expect(LIFT.overlay.regions).toBeUndefined();
         expect(Object.keys(LIFT.overlay).sort())

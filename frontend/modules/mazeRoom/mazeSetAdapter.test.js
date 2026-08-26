@@ -136,6 +136,16 @@ describe('⛓⛓⛓ `editCore`\'s contract laws hold over a region library', () 
      * break every page pressing the old button — would pass it. These are
      * §20.4's own names, which is the whole reason `setEditorCore` needs no
      * per-substrate op table.
+     *
+     * ⚠⚠ **THE TWO ROSTERS ARE EQUAL ON §20.4's TWELVE, NOT EQUAL FULL STOP**
+     * (EDITOR v3 E6a). Seedling's is THIRTEEN since it gained
+     * `set-overlay-field`, which writes `overlay.neverEnter` / `overlay.regions`
+     * — fields the maze's overlay does not have, because its extra fields are
+     * `links` and `start`. A substrate's own overlay fields may add an op, and
+     * `setEditorCore` still needs no table: it reads each adapter's roster.
+     * ⛔ So this row is a pin on the MAZE's twelve; it is NOT a claim about
+     * Seedling's, and a row that asserted the two were identical would go red
+     * for a correct change.
      */
     it(`⛓ the op vocabulary is ${SET_OP_KINDS.length}, in §20.4's own names, and an unknown `
         + 'op quotes the list', () => {

@@ -337,20 +337,25 @@ export function cannotExpress({ cannotRules, disambiguated }) {
         {
             category: 'the never-enter ruling',
             count: VANILLA.rooms.length - regioned.size,
-            why: '⛔ NOT because the overlay lacks the field — `overlay.neverEnter` exists and '
-                + '`overlayToDeriveInput` reads it. **NO OP WRITES IT**: `SET_OP_KINDS` has '
-                + 'twelve entries and the only one that touches the overlay wholesale, '
-                + '`set-overlay`, writes a ROOM entry (`name`, `locations`, `rules`). A '
-                + 'document carrying it can be LOADED; the editor cannot AUTHOR it, so a lift '
-                + 'that folds through the adapter cannot emit it.',
+            why: '⛔ NOT because the overlay lacks the field, and SINCE EDITOR v3 E6a NOT '
+                + 'because no op writes it: `set-overlay-field {path: "neverEnter", value}` '
+                + 'exists and this document could carry the ruling. THE LIFT DOES NOT AUTHOR '
+                + 'IT BECAUSE THE RULING IS THE PRODUCER\'S. `NEVER_ENTER_LEVELS` is a hand '
+                + 'ruling in `make-seedling-playthrough-rules.mjs` about which rooms the game '
+                + 'creates an exit in on DEATH; it is not a fact this script can read off the '
+                + 'committed atlas, and lifting a number by copying its source would be '
+                + 'inventing agreement rather than measuring it (§34.3\'s split, on purpose).',
         },
         {
             category: 'the room -> region map',
             count: ATLAS.regions.filter((r) => r.map_ref === undefined).length,
-            why: 'same reason as never-enter — `overlay.regions` exists and no op writes it. '
-                + 'And there is NOTHING TO LIFT anyway: every one of the committed atlas\'s '
-                + `${ATLAS.regions.length} regions is exactly one room (\`map_ref\` 1:1), so it `
-                + 'holds no grouping, which is why this count is zero rather than absent.',
+            why: 'same shape as never-enter — `overlay.regions` is authorable since E6a '
+                + '(`set-overlay-field {path: "regions"}`, which also RE-SIGNS every '
+                + 'transition), and the lift still writes nothing. Here the reason is '
+                + 'stronger than a ruling: there is NOTHING TO LIFT. Every one of the '
+                + `committed atlas's ${ATLAS.regions.length} regions is exactly one room `
+                + '(`map_ref` 1:1), so it holds no grouping, which is why this count is zero '
+                + 'rather than absent.',
         },
         {
             category: 'location names that had to be disambiguated',

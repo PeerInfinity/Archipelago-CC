@@ -191,6 +191,22 @@ const SEEDLING_OVERLAY = createSetOverlay({
     },
 });
 
+/**
+ * ⛓⛓⛓ **THE TOP-LEVEL OVERLAY FIELDS AN OP MAY WRITE WHOLESALE** — EDITOR v3
+ * E6a, and it lives HERE beside the validator that owns their shapes.
+ *
+ * ⛔ NOT `rooms` (`set-overlay` writes ONE room entry and the cell descriptor
+ * is paired to it — §36.1 #2), NOT `schema_version` or `overlay_id`
+ * (the envelope's, and the id is STAMPED rather than typed), NOT `provenance`.
+ * What is left is exactly the two SEEDLING fields, and the list is frozen and
+ * SORTED so a refusal can name it in a stable order.
+ *
+ * ⚠ The op that reads this is `set-overlay-field` in `seedlingSetAdapter.js`,
+ * and it validates by PROBING — `{...overlay, [path]: value}` through
+ * `overlayErrors` — so the shapes are spelled ONCE, in `extraFields` above.
+ */
+export const OVERLAY_FIELDS = Object.freeze(['neverEnter', 'regions'].sort());
+
 /** ⛓ The fields a location row may carry — `entity` is what makes it an address. */
 export const LOCATION_FIELDS = SEEDLING_OVERLAY.LOCATION_FIELDS;
 

@@ -34,7 +34,7 @@ import { compileRegionAtlas } from '../procgenPipeline/regionAtlasCompiler.js';
 import { indexMapDocument, validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js';
 import { tileTypeForPlacement } from '../flashPanel/seedlingSemantics.js';
 import { buildLevelSet, reachabilityOf } from './levelSetExporter.js';
-import { removeExitFromRoomXml } from './levelSetExits.js';
+import { removeExitFromRoomXml, signForTransition } from './levelSetExits.js';
 import {
     indexOfRoom, parseRoomXml, stampLevelSetIdentity, validateLevelSet,
 } from './levelSetValidator.js';
@@ -791,6 +791,139 @@ describe('the op vocabulary, and every refusal by name', () => {
         });
         expect(() => deriveAtlasOf(s.record(), DEPS))
             .toThrow(/authors an exit rule on room 2, but the derived atlas holds no region for it/);
+    });
+
+    /* ══════════════════════════════════════════════════════════════════
+     * ⛓⛓⛓ EDITOR v3 E6a — `set-overlay-field`, the op §34.10 #2 said was
+     * missing. `overlay.neverEnter` and `overlay.regions` were READ by
+     * `overlayToDeriveInput` and `roomRegion` and written by nothing.
+     * ══════════════════════════════════════════════════════════════════ */
+
+    /**
+     * ⛔ THE SHAPE REFUSALS ARE THE VALIDATOR'S OWN SENTENCES, not a second
+     * spelling: the op probes `{...overlay, [path]: value}` through
+     * `overlayErrors`. Driving all four so a copy-pasted `0..7` in the adapter
+     * would show up as a message that does not match.
+     */
+    it('set-overlay-field refuses an undeclared path and every shape the VALIDATOR refuses', () => {
+        const { s } = session();
+        expect(s.apply({ op: 'set-overlay-field', path: 'rooms', value: {} }).description)
+            .toMatch(/`path` is "rooms"; the overlay's writable top-level fields are neverEnter, regions/);
+        expect(s.apply({ op: 'set-overlay-field', path: 'neverEnter', value: 3 }).description)
+            .toMatch(/must be an array of integer room indices/);
+        expect(s.apply({ op: 'set-overlay-field', path: 'neverEnter', value: [ROOMS] }).description)
+            .toMatch(new RegExp(`neverEnter names room ${ROOMS}, which does not exist`));
+        expect(s.apply({ op: 'set-overlay-field', path: 'regions', value: [0, 'x'] }).description)
+            .toMatch(/must be an array of integers, room index -> region/);
+        expect(s.apply({ op: 'set-overlay-field', path: 'regions', value: [0, 9] }).description)
+            .toMatch(/regions\[1\] is 9, outside 0\.\.7/);
+        // ⛓ …and a REFUSED op wrote nothing.
+        expect(s.record().overlay.neverEnter).toBeUndefined();
+        expect(s.record().overlay.regions).toBeUndefined();
+    });
+
+    /**
+     * ⛓⛓ `neverEnter` IS READ AT DERIVE TIME, so the very next report reflects
+     * it and no set bytes move. The link INTO the named room stops being wired
+     * and the derivation NOTES it.
+     */
+    it('set-overlay-field neverEnter changes the very next derivation, and the set bytes do not move', () => {
+        const { s } = session();
+        apply(s, { op: 'replace-room', room: 1, xml: wiredRoom(1, 2) });
+        const before = s.record().set;
+        const out = apply(s, { op: 'set-overlay-field', path: 'neverEnter', value: [2] });
+        expect(out.description).toBe('set overlay neverEnter (1 entry)');
+        expect(s.record().set).toBe(before);
+
+        const notes = [];
+        const { atlas } = deriveAtlasOf(s.record(), { ...DEPS, note: (m) => notes.push(m) });
+        expect(notes.filter((m) => /NOT WIRED — trap room, never-enter/.test(m)).length)
+            .toBeGreaterThan(0);
+        const into2 = atlas.vanilla_layout.connections
+            .filter((c) => c.to?.[0] === regionIdFor(2));
+        expect(into2).toHaveLength(0);
+    });
+
+    /**
+     * ⛔⛔ **THE OP REFUSES ONLY THE SHAPE; A DERIVATION THE WRITE BREAKS
+     * SURFACES ON THE REPORT.** Both halves pinned, because the tempting
+     * version — deriving inside the op — would move a legitimate authoring
+     * step (write the ruling, then fix the world) into a refusal.
+     */
+    it('a `neverEnter` that strands a location is ok:true on the OP and a refusal on the REPORT', () => {
+        const record = lostCollectibleRecord();
+        const s = createSetSession(adapter, record,
+            { base: { kind: 'set', set_id: record.set.set_id } });
+        const out = s.apply({ op: 'set-overlay-field', path: 'neverEnter', value: [ROOMS] });
+        expect(out.ok).toBe(true);
+        let thrown = null;
+        try { deriveAtlasOf(s.record(), DEPS); } catch (e) { thrown = e; }
+        expect(thrown).toBeInstanceOf(SeedlingSetDeriveRefusal);
+    });
+
+    /**
+     * ⛓⛓⛓ **`regions` RE-SIGNS EVERY TRANSITION, AND THE ROW WALKS THEM ALL.**
+     * A `sign` announces the region the player ARRIVES in, so the region map is
+     * the input to every one of them — writing it and stopping would leave the
+     * whole set announcing the map in force when each door was wired.
+     * ⛔ `renumberSet` could not have done this: it early-returns on an unmoved
+     * target, and no room moves here (§36.1 #2).
+     */
+    it('set-overlay-field regions RE-SIGNS every exit, and no sign disagrees afterwards', () => {
+        const { s } = session();
+        for (const room of [0, 1, 2]) apply(s, { op: 'replace-room', room, xml: wiredRoom(room, room + 1) });
+        const signsOf = (rec) => rec.set.rooms.flatMap((r, from) => {
+            const doc = indexOfRoom(r);
+            return doc.exits.map((ex) => ({ from, to: ex.to, sign: ex.sign ?? 0 }));
+        });
+        expect(signsOf(s.record()).every((e) => e.sign === 0)).toBe(true);
+
+        const regions = Array.from({ length: ROOMS }, (_, i) => (i % 3) + 1);
+        const out = apply(s, { op: 'set-overlay-field', path: 'regions', value: regions });
+        expect(out.description).toBe(`set overlay regions (${ROOMS} entries)`);
+
+        const after = signsOf(s.record());
+        expect(after.length).toBeGreaterThan(0);
+        for (const e of after) {
+            expect(e.sign, `room ${e.from} -> ${e.to}`)
+                .toBe(signForTransition(regions[e.from], regions[e.to]));
+        }
+        // ⛔ NOT VACUOUS — at least one sign really moved off 0.
+        expect(after.some((e) => e.sign !== 0)).toBe(true);
+    });
+
+    /** ⛓ `null` DELETES the key: `neverEnter: null` would be refused on the
+     *  next LOAD, so "clear it" has to mean absent. */
+    it('set-overlay-field null deletes the key and the document is four-key again', () => {
+        const { s } = session();
+        apply(s, { op: 'set-overlay-field', path: 'neverEnter', value: [2] });
+        expect(Object.keys(s.record().overlay).sort())
+            .toEqual(['neverEnter', 'rooms', 'schema_version']);
+        expect(apply(s, { op: 'set-overlay-field', path: 'neverEnter', value: null }).description)
+            .toBe('set overlay neverEnter (cleared)');
+        expect(Object.keys(s.record().overlay).sort()).toEqual(['rooms', 'schema_version']);
+    });
+
+    /**
+     * ⚠⚠ **IT IS NOT A CELL OP, AND `setWriteOps` MUST NOT EMIT IT.**
+     * `readSetCell`/`setWriteOps` describe a ROOM — its descriptor plus its
+     * overlay ENTRY — and the session's law 7 writes that descriptor to a
+     * DIFFERENT cell. A top-level overlay field belongs to no cell, so emitting
+     * it from `setWriteOps` would make law 7's closure unsatisfiable: the
+     * regions of the set are not a property of the room being copied.
+     */
+    it('⛔ `setWriteOps` does NOT emit set-overlay-field, and undo round-trips one anyway', () => {
+        const { s } = session();
+        apply(s, { op: 'set-overlay-field', path: 'regions', value: Array(ROOMS).fill(2) });
+        const cell = adapter.readCell(s.record(), 0, 0);
+        expect(adapter.writeOps(cell, 1, 0).map((o) => o.op))
+            .not.toContain('set-overlay-field');
+        // ⛓ …and the op is still a first-class edit: undo restores the record.
+        const before = canonicalJson(s.record());
+        apply(s, { op: 'set-overlay-field', path: 'neverEnter', value: [1] });
+        expect(canonicalJson(s.record())).not.toBe(before);
+        s.undo();
+        expect(canonicalJson(s.record())).toBe(before);
     });
 
     it('set-overlay refuses a shape the overlay validator rejects, and clears with null', () => {

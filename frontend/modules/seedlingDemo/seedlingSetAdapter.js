@@ -105,7 +105,8 @@ import {
 } from './levelSetValidator.js';
 import {
     assertOverlay, emptyOverlay, exitRuleKey, exitRulesByRoom, locationRuleKey,
-    overlayErrors, overlayLocationNames, overlayToDeriveInput, parseRuleTarget, renumberOverlay,
+    OVERLAY_FIELDS, overlayErrors, overlayLocationNames, overlayToDeriveInput, parseRuleTarget,
+    renumberOverlay,
 } from './seedlingSetOverlay.js';
 
 export class SeedlingSetAdapterError extends Error {
@@ -154,8 +155,8 @@ export const ROOM_FIELDS = Object.freeze(['name', 'music', 'music_override_exemp
 /** Every op kind this adapter understands, sorted. The refusals read this. */
 export const SET_OP_KINDS = Object.freeze([
     'add-room', 'connect', 'disconnect', 'mark-location', 'remove-room', 'reorder',
-    'replace-room', 'set-access-rule', 'set-field', 'set-overlay', 'set-room-field',
-    'unmark-location',
+    'replace-room', 'set-access-rule', 'set-field', 'set-overlay', 'set-overlay-field',
+    'set-room-field', 'unmark-location',
 ].sort());
 
 const isPlainObject = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
@@ -949,6 +950,113 @@ function setOverlay(record, { room, overlay }) {
     };
 }
 
+/**
+ * ⛓⛓⛓ **RE-SIGN EVERY TRANSITION IN THE SET FROM THE CURRENT `overlay.regions`**
+ * — EDITOR v3 E6a, and it is a pass of its own for one measured reason.
+ *
+ * A `sign` is a property of the TRANSITION, not of the room
+ * (`levelSetExits.js`'s own sentence): `signForTransition(fromRegion,
+ * toRegion)` announces the region the player is ARRIVING in. `connect` signs
+ * the one door it makes and `renumberSet` re-signs the doors a renumbering
+ * moves — so writing `overlay.regions` and stopping there would leave every
+ * door in the set announcing the region map that was in force when it was
+ * wired. The map is the input to every sign, so a write to it re-signs
+ * EVERYTHING.
+ *
+ * ⛔ **`renumberSet` CANNOT BE REUSED FOR THIS** (§36.1 #2). It early-returns
+ * on an unmoved target (`if (to === ex.to) return;`) — which is exactly the
+ * case here, since no room moves — so an identity renumbering would re-sign
+ * nothing at all and the op would look like it had worked.
+ *
+ * ⛓ A room whose doors are all correctly signed already is returned BY
+ * IDENTITY, so an op that changes nothing writes nothing.
+ *
+ * ⛔ AN EMBED ROOM WITH A SIGN TO CHANGE IS REFUSED BY NAME, not skipped —
+ * `retargetRoomInKind`'s own sentence. A silently-skipped embed room would
+ * leave a door announcing the old map with nothing saying so.
+ */
+function resignTransitions(record) {
+    const { overlay } = record;
+    const rooms = record.set.rooms.map((room, from) => {
+        const doc = indexOfRoom(room);
+        if (doc === null) {
+            // ⛓ An embed room's exits cannot be READ, so whether any sign needs
+            //   to move is unanswerable. Refusing only when the set actually has
+            //   regions to apply keeps an all-embed set holdable with no regions.
+            fail(`seedlingSetAdapter: room ${from} ${JSON.stringify(room?.name ?? '')} is `
+                + 'EMBED-sourced, so its transitions cannot be read and `regions` cannot be '
+                + 're-signed. A `sign` announces the region the player ARRIVES in, so leaving '
+                + 'one alone would announce the map that was in force when the door was wired.');
+        }
+        const here = roomRegion(overlay, from);
+        const edits = { exits: [], fallthroughs: [] };
+        doc.exits.forEach((ex, index) => {
+            const sign = signForTransition(here, roomRegion(overlay, ex.to));
+            if (sign !== (ex.sign ?? REGION_NONE)) edits.exits.push({ index, sign });
+        });
+        doc.fallthroughs.forEach((f, index) => {
+            const sign = signForTransition(here, roomRegion(overlay, f.to));
+            if (sign !== (f.sign ?? REGION_NONE)) edits.fallthroughs.push({ index, sign });
+        });
+        if (edits.exits.length === 0 && edits.fallthroughs.length === 0) return room;
+        return retargetRoomInKind(room, edits);
+    });
+    return rooms.every((r, i) => r === record.set.rooms[i])
+        ? record.set : { ...record.set, rooms };
+}
+
+/**
+ * ⛓⛓⛓ **`set-overlay-field` — THE OP §34.10 #2 SAID DID NOT EXIST.**
+ *
+ * `overlay.neverEnter` and `overlay.regions` were READABLE and not AUTHORABLE:
+ * both are read (`overlayToDeriveInput` and `roomRegion`), neither had an op,
+ * so a document carrying them could be LOADED but never TYPED and the vanilla
+ * lift had to report them as things it could not express.
+ *
+ * ⛔ **ONE OP FOR BOTH, AND THE SHAPES ARE NOT RESPELLED HERE.** Validation is
+ * `set-overlay`'s own probe pattern: build `{...overlay, [path]: value}` and
+ * hand it to `overlayErrors`, so `0..7`, "an array of integer room indices" and
+ * the room-count bound are spelled ONCE, in `seedlingSetOverlay`'s
+ * `extraFields`. A second spelling here is how the two come to disagree.
+ *
+ * ⛔ **`value === null` DELETES THE KEY** rather than writing `null`. A
+ * `neverEnter: null` would be refused by the validator on the next LOAD, so
+ * "clear it" has to mean absent — the same reading `set-overlay`'s
+ * `overlay === null` already has for a room entry.
+ *
+ * ⛓ **`regions` RE-SIGNS.** See `resignTransitions`. `neverEnter` does not: it
+ * is read at DERIVE time (`overlayToDeriveInput`), not at wiring time, so the
+ * very next report reflects it and no set bytes move.
+ *
+ * ⚠ **THIS IS NOT A CELL OP.** `readSetCell`/`setWriteOps` describe a ROOM —
+ * a room's descriptor plus its overlay entry — and law 7 writes that descriptor
+ * to a DIFFERENT cell. A top-level overlay field belongs to no cell, so
+ * `setWriteOps` does NOT emit this op and law 7's closure is untouched.
+ */
+function setOverlayField(record, { path, value }) {
+    if (!OVERLAY_FIELDS.includes(path)) {
+        fail(`seedlingSetAdapter: set-overlay-field \`path\` is ${JSON.stringify(path)}; the `
+            + `overlay's writable top-level fields are ${OVERLAY_FIELDS.join(', ')}. ⛔ `
+            + '`rooms` is written one entry at a time by `set-overlay`, and the envelope '
+            + '(`schema_version`, `overlay_id`, `provenance`) is not authored at all.');
+    }
+    const next = { ...record.overlay };
+    if (value === null) delete next[path];
+    else next[path] = value;
+    const errors = overlayErrors(next, { roomCount: record.set.rooms.length });
+    if (errors.length > 0) {
+        fail(`seedlingSetAdapter: set-overlay-field ${path} is refused — ${errors.join(' · ')}`);
+    }
+    const overlay = Object.freeze(next);
+    const set = path === 'regions' ? resignTransitions({ ...record, overlay }) : record.set;
+    const size = value === null ? 'cleared'
+        : `${value.length} entr${value.length === 1 ? 'y' : 'ies'}`;
+    return {
+        record: frozenRecord(set, overlay),
+        description: `set overlay ${path} (${size})`,
+    };
+}
+
 function markLocation(record, { room, entity, name, vanilla_item: item }) {
     // ⛓ `indexedRoom` is called for its REFUSAL, not its index: an embed-sourced
     // room has no document to find an entity in, and the sentence should say so.
@@ -1193,6 +1301,7 @@ const OPS = Object.freeze({
     'unmark-location': unmarkLocation,
     'replace-room': replaceRoom,
     'set-overlay': setOverlay,
+    'set-overlay-field': setOverlayField,
 });
 
 /**
