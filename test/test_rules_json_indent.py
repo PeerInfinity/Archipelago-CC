@@ -9,9 +9,12 @@
    0 to ``separators=(',', ':')``, and this row is the reason that mapping
    exists rather than being an unexplained special case.
 
-2. **THE DEFAULT DOES NOT MOVE.** Every committed ``*_rules.json`` is byte
-   pinned; the setting's default is 2 in both the settings Group and the
-   installer's mirror, and a change to either goes red here.
+2. **THE DEFAULT DOES NOT MOVE.** The setting's default is 2 in both the
+   settings Group and the installer's mirror, and a change to either goes
+   red here. (⛔ This paragraph used to say the committed presets were
+   "byte pinned". W1 measured that nothing pins them — see
+   ``test_rules_json_writer_agreement.py``. The default stays 2 because it
+   is the frontend's default and the committed corpus is indented at 2.)
 
 3. **MINIFYING CHANGES NO DATA** — the round trip is object-equal.
 """
@@ -90,6 +93,21 @@ class TestRulesJsonIndent(unittest.TestCase):
         plain = {'schema_version': 3, 'regions': {}}
         self.assertNotIn('\n', dump_rules(plain, indent=0))
         self.assertEqual(dump_rules(plain, indent=2), json.dumps(plain, indent=2))
+
+    def test_a_non_ascii_document_diverges_from_a_default_json_dumps(self):
+        """EDITOR v3 W1. The row above is ASCII, so it reads the same whether
+        or not `ensure_ascii` is set — it cannot see the escaping fix at all.
+        This is its non-ASCII twin: the seam must now DIVERGE from a default
+        `json.dumps` and agree with it once `ensure_ascii=False` is asked for.
+        `JSON.stringify` writes the character itself; that is what is matched.
+        """
+        sectioned = {'schema_version': 3, 'note': 'R6 \u00a719.7'}
+        written = dump_rules(sectioned, indent=2)
+        self.assertIn('\u00a7', written)
+        self.assertNotIn('\\u00a7', written)
+        self.assertNotEqual(written, json.dumps(sectioned, indent=2))
+        self.assertEqual(written, json.dumps(sectioned, indent=2, ensure_ascii=False))
+        self.assertEqual(json.loads(written), sectioned)
 
     def test_the_default_is_two_in_both_declarations(self):
         sys.path.insert(0, REPO)
