@@ -438,7 +438,18 @@ def main():
                 print("  " + line, flush=True)
             return 1
         finally:
-            browser.close()
+            # ⛔ R9 §42.4: A THROW HERE COST A 63-TAPE SWEEP. `browser.close()`
+            # can raise after a run that already SUCCEEDED and already wrote
+            # `--out` - a closing page, a target that went away - and an
+            # exception out of `finally` REPLACES the return value, so the
+            # caller saw a crash where the stream was on disk. The close is
+            # still attempted and its failure is still PRINTED, by name; it
+            # just no longer decides the exit code of work that is done.
+            try:
+                browser.close()
+            except Exception as exc:  # noqa: BLE001 - report, never re-raise
+                print(f"BROWSER_CLOSE_FAILED {type(exc).__name__}: {exc}",
+                      flush=True)
     return 0
 
 
