@@ -661,6 +661,19 @@ export function mountWatchSetEditor({
 
     const view = mountEditorView({
         canvas: overview,
+        /**
+         * ⛓⛓ **THE `doc` IS THREADED THROUGH, AND UNTIL EDITOR v3 E2b IT WAS
+         * NOT.** `mountEditorView` defaults its own `doc` to
+         * `globalThis.document` and CREATES the selection overlay with it, so on
+         * the page the two were the same object and nothing could tell. ⛔ A
+         * mount handed a different `doc` — which is the only way this function
+         * is drivable under `environment: 'node'` — built its overlay in a
+         * document nobody was looking at, or refused by name when there was no
+         * `globalThis.document` at all. Byte-inert on the page BY CONSTRUCTION
+         * (the same object), and it is what makes `setEditorView.test.js` a
+         * measurement rather than a browser-only hope.
+         */
+        doc,
         session,
         adapter,
         cellAt,
