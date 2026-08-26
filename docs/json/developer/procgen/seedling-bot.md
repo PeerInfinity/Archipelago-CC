@@ -15226,3 +15226,84 @@ frames. The race has been won every time because it has been won comfortably —
 but nothing was watching, and on a machine six tenths of a second slower at
 getting started it would have been lost silently. Now it is refused loudly
 instead.
+
+### R9 slice 12g′: THE RACE IS NOT WON ANY MORE, IT IS GONE — the bot waits until the world it asked for is actually the one in front of it
+
+The previous slice ended by saying the race had been won every time, that it had
+been won comfortably, and that on a slower machine it would have been lost
+silently. This slice removes it.
+
+The fix is one idea. Starting the bot used to say "replace the world" and "begin
+recording" in the same breath, and only the first of those takes effect
+immediately — the replacement happens at the end of the next frame. So the bot
+began recording while the old world was still on screen. Now starting the bot
+keeps hold of the world it asked for and does not begin recording; the bot checks
+once per frame whether the world in front of it *is* that one, and begins the
+instant it is. That is one frame of waiting, every time, no matter how fast or
+slow the machine is, because it is the graphics library's own order of
+operations rather than a margin somebody tuned.
+
+**The obvious way to write that check would not have worked, and it would have
+looked like it did.** The natural question is "am I in the room the recording
+asks for, at the position it asks for?" Both of those facts are written down by
+the room builder's constructor, at the moment it is called — which is *before*
+the replacement happens. So the answer is already yes on the frame the bot is
+trying to rule out, and a version built on that question would have behaved
+exactly like the old one while appearing to fix it. The previous slice found the
+first half of this and warned about it; the position turns out to be the same
+trap one field over, and the comment on the position check even describes the
+behaviour approvingly, because for the *other* place that check is used — deciding
+whether a replacement is needed at all, before anything is built — it is
+correct. A field being written early is not a property of the field. It is a
+property of where you read it.
+
+What the check actually asks is whether the world object in front of the bot is
+the identical object it asked for. That is not a stand-in for the thing that
+matters: it is the same object the bot reads the room number and the player
+position out of, two lines later.
+
+**What it was measured against.** A new build of the game was made and driven on
+the real page, against the same recording, at three different amounts of
+deliberate delay before starting — the delays that make the old build lose. The
+new build succeeded at all seven attempts. The old build, driven the same way,
+refused. The sharpest pair is this: the old build refused on an attempt that
+began thirty-one frames into the page's own start-up, and the new build succeeded
+on an attempt that began at exactly the same point. Same recording, same machine,
+minutes apart; the only difference was the build.
+
+And the recordings themselves did not move. Every successful run of the new build
+produced the same hundred and forty-six positions as every other, **including the
+old build's own successful run** — same positions, same random-number state at
+the end, same clock reading at the end. Exactly one number changed anywhere:
+the count of frames the bot skipped while the room was fading, which went from
+forty-one to forty. That is the one frame it now spends waiting and no longer
+counts, because the recording has not started yet, and it is the difference
+between the two builds stated as a measurement rather than as an argument.
+
+**A guard that turned out to be guarding the wrong thing.** The driver also
+gained an optional early refusal: before starting the bot at all, check how long
+the page's own world has been running and refuse if it is already past the point
+where the old build would lose — so a doomed run costs no time on the graphics
+card instead of being discovered at the end. Its documentation said it could
+never fire on the new build, which was true about the build and false about the
+code, because the code had no way to tell which build it was driving. On its very
+first measurement it refused the new build four times out of four while the same
+build without it succeeded three times out of three at the same points. It now
+asks the game which kind of build it is — the new one reports when it began
+recording, the old one cannot — and steps aside when the question is meaningless.
+Both halves were then re-driven: the new build passes with the guard on, the old
+build is refused by it before any recording is attempted. Its cost, which the
+previous slice left unmeasured, is exactly one frame.
+
+**And one measurement that had to be taken twice, for a reason worth keeping.**
+The plan was to confirm the one-frame wait by comparing when the bot began
+recording against a reading taken just before it was told to start. Those two
+numbers disagreed by thousands. Neither was wrong: starting the bot can *reset
+the game's clock*, because a recording is allowed to declare what time of day it
+starts at, and this one does. The two readings were on different origins. Against
+the origin the recording sets, the answer is exactly one frame, on all seven runs,
+identical whether the delay before starting was zero, one second or two — and
+that invariance is the claim that the race is gone, stated in the game's own
+units. On recordings that declare no time of day, the original comparison holds
+and also reads one. A number in "the game's own units" can have its zero moved by
+the very call being measured.
