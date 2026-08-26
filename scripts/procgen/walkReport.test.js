@@ -183,3 +183,36 @@ describe('walkReport: the report NAMES what the producer actually emitted', () =
         expect(r.segments[0].verdict).toBe('walk-moves');
     });
 });
+
+/**
+ * ⛓⛓ R9 P1, ⚖ 54 (1) — **THE ARRIVAL IS OPTIONAL AND IT REACHES THE REPORT
+ * FILE ONLY.** A producer that offers none reports `null`, and a reader must
+ * print `unasked` rather than inventing a green row (§33.2's third state).
+ */
+describe('the model arrival rides the report', () => {
+    it('⛓ a producer that offers no arrival reports null, not a green row', () => {
+        const dir = mkdtempSync(join(tmpdir(), 'walk-report-arrival-'));
+        const tape = join(dir, 'seg.json');
+        writeFileSync(tape, '{"inputs":[1],"tick_count":1}');
+        const target = join(dir, 'out.json');
+        const r = createWalkReport({ producer: 'p.mjs', tapesDir: dir,
+            arg: `--walk-report=${target}`, onExit: false });
+        r.note(tape, '{"inputs":[1],"tick_count":1}');
+        expect(r.segments[0].arrival).toBeNull();
+    });
+
+    it('⛓ an arrival is carried verbatim', () => {
+        const dir = mkdtempSync(join(tmpdir(), 'walk-report-arrival-'));
+        const tape = join(dir, 'seg.json');
+        writeFileSync(tape, '{"inputs":[1],"tick_count":1}');
+        const target = join(dir, 'out.json');
+        const r = createWalkReport({ producer: 'p.mjs', tapesDir: dir,
+            arg: `--walk-report=${target}`, onExit: false });
+        const arrival = { hits: 0, deaths: 0, level: 20, to: 20,
+            ctor: { x: 192, y: 64 }, end: { x: 200, y: 72 } };
+        r.note(tape, '{"inputs":[1],"tick_count":1}', arrival);
+        expect(r.segments[0].arrival).toEqual(arrival);
+        const written = JSON.parse(readFileSync(r.write() && target, 'utf8'));
+        expect(written.segments[0].arrival.ctor).toEqual({ x: 192, y: 64 });
+    });
+});

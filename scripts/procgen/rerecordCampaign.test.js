@@ -103,14 +103,27 @@ describe('the successor boot is the ENVELOPE\'s, never a merge', () => {
     });
 });
 
-describe('the latch cache key covers the COMPLETE bytes', () => {
+describe('the PRE-P1 latch cache key — kept only so the migration can read it', () => {
     /**
-     * ⛔ THE MUTANT: keying on the game-visible projection. `tick0` is a
-     * `GAME_VISIBLE_DROPS` field, so two tapes that differ ONLY in the block a
-     * continuation window is driven with project to the same bytes — and a
-     * projection-keyed cache would hand the second one the first one's latch.
+     * ⛔⛔ THIS ROW IS ABOUT THE LEGACY SPELLING AND IS NO LONGER A CLAIM THAT
+     * THE LEGACY SPELLING IS RIGHT (R9 P1, ⚖ 54 (4)).
+     *
+     * It used to carry the argument: `tick0` is a `GAME_VISIBLE_DROPS` field,
+     * so two tapes differing only in "the block a continuation window is
+     * driven with" project to the same bytes, and a projection-keyed cache
+     * would hand the second one the first one's latch. ⛔ The continuation
+     * window that is driven with `tick0` is `watchWasm`'s, not this cache's:
+     * `driveLatch` ships `gameVisibleTape(parsed)`, so `tick0` never reaches
+     * the game and a latch cannot depend on it. Separating those two tapes is
+     * what made `r8-d2-19`'s 721-tick answer unreachable in a cache that held
+     * it — the whole difference being the `tick0` block S2 re-derives AFTER S1
+     * has driven.
+     *
+     * ⇒ the live key is `provisionalLatch.latchCacheCandidates`, whose own
+     * rows assert the OPPOSITE of this one; this stays because the migration
+     * still has to compute the old key to find the old files.
      */
-    it('⛓ two boots that differ ONLY in `tick0` get DIFFERENT keys', () => {
+    it('⛓ the LEGACY key separates two boots that differ ONLY in `tick0`', () => {
         const base = { name: 'x', boot: { level: 6 }, rng: { seed: 1 }, inputs: [] };
         const a = { ...base, tick0: { rng: { seed: 111 } } };
         const b = { ...base, tick0: { rng: { seed: 222 } } };

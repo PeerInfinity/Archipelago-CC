@@ -65,6 +65,7 @@ import { fileURLToPath } from 'node:url';
 import { committedTick0, tick0ParseFields, despawnField, tick0Field }
     from './tick0Carry.js';
 import { createWalkReport } from './walkReport.js';
+import { modelArrivalOf } from './provisionalLatch.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
@@ -150,13 +151,36 @@ function arrivalInto(fromLevel, toLevel) {
     if (!e) throw new Error(`no L${fromLevel} -> L${toLevel} teleporter in the atlas`);
     return { level: toLevel, x: Number(e.attrs.playerx), y: Number(e.attrs.playery) };
 }
+const EXIT_TO = new Map();
 const exitTo = (level, to) => {
     const e = (levelSource(level).entities ?? []).find(
         (x) => (x.type === 'stairsup' || x.type === 'stairsdown' || x.type === 'teleporter')
             && Number(x.attrs?.to) === to);
     if (!e) throw new Error(`L${level} has no exit to L${to}`);
+    EXIT_TO.set(`${e.x},${e.y}`, to);
     return { x: e.x, y: e.y };
 };
+/**
+ * ⛓⛓ R9 P1, ⚖ 54 (1) — **THE DECLARED DESTINATION, CAPTURED FROM `exitTo`'s
+ * OWN ARGUMENT RATHER THAN RE-TYPED** (⚖ 17).
+ *
+ * The certification column needs the level a segment says it is heading for,
+ * and `exitTo(level, to)` already knows it: the caller wrote it, and the
+ * entity `exitTo` finds is the one the level source says goes there. Recording
+ * it in a side map keyed by the exit's own coordinates costs no second literal
+ * — and, crucially, LEAVES THE GOAL OBJECT ALONE. A `to` added to the returned
+ * `{x, y}` would reach the solver, and through it the trace sidecar's bytes,
+ * which would move this producer's `--check` md5 for a column that is supposed
+ * to be inert.
+ */
+
+const declaredTo = (goalsOrSeg) => {
+    const goals = Array.isArray(goalsOrSeg) ? goalsOrSeg : (goalsOrSeg?.goals ?? []);
+    const last = [...goals].reverse().find((g) => g.kind === 'reach-exit' && g.exit);
+    if (!last) return null;
+    return EXIT_TO.get(`${last.exit.x},${last.exit.y}`) ?? null;
+};
+
 
 const BOOT = Object.freeze(arrivalInto(16, 18));
 const GOALS = [{ kind: 'reach-exit', exit: exitTo(18, 19) }];
@@ -343,10 +367,10 @@ function tapeJson(obj) {
     }, null, 4)}\n`;
 }
 
-function emit(path, json, what) {
+function emit(path, json, what, arrival = null) {
     // ⛓ R9 slice 12c′ — the walk report is taken HERE, above the write, so the
     // committed side is read BEFORE `--check`-less runs overwrite it.
-    WALK_REPORT.note(path, json);
+    WALK_REPORT.note(path, json, arrival);
     if (CHECK) {
         const have = existsSync(path) ? readFileSync(path, 'utf8') : null;
         check(`${what} is byte-identical to what this solver derives`, have === json,
@@ -363,7 +387,8 @@ const budget = assertTapeWithinRuntimeBudget(tape, NAME);
 console.log(`## budget: ${budget.spans} span(s), ${Math.round(budget.bytes / 1024)} KB`);
 
 mkdirSync(TRACES, { recursive: true });
-emit(join(TAPES, `${NAME}.json`), tapeJson(tape), NAME);
+emit(join(TAPES, `${NAME}.json`), tapeJson(tape), NAME,
+    modelArrivalOf(run, declaredTo(GOALS)));
 emit(join(TRACES, `${NAME}.trace.json`),
     `${JSON.stringify(out.trace, null, 4)}\n`, `${NAME} trace`);
 

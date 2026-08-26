@@ -85,6 +85,7 @@ import { fileURLToPath } from 'node:url';
 import { committedTick0, tick0ParseFields, despawnField, tick0Field }
     from './tick0Carry.js';
 import { createWalkReport } from './walkReport.js';
+import { modelArrivalOf } from './provisionalLatch.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
@@ -350,10 +351,10 @@ function tapeJson(obj, description) {
     }, null, 4)}\n`;
 }
 
-function emit(path, json, what) {
+function emit(path, json, what, arrival = null) {
     // ⛓ R9 slice 12c′ — the walk report is taken HERE, above the write, so the
     // committed side is read BEFORE `--check`-less runs overwrite it.
-    WALK_REPORT.note(path, json);
+    WALK_REPORT.note(path, json, arrival);
     if (CHECK) {
         const have = existsSync(path) ? readFileSync(path, 'utf8') : null;
         check(`${what} is byte-identical to what this solver derives`, have === json,
@@ -514,7 +515,10 @@ for (const row of rows) {
         console.log(`   ⛓ ${row.name}: SOLVED (${out.perTick.length} ticks) and NOT `
             + `EMITTED — ${row.handedOver}`);
     } else {
-        emit(join(TAPES, `${row.name}.json`), tapeJson(tape, description), row.name);
+        // ⛓ R9 P1 — ⛔ `to` is NULL: a battery segment is a STAGED probe with no
+        //   declared destination level, so its certification makes no level claim.
+        emit(join(TAPES, `${row.name}.json`), tapeJson(tape, description), row.name,
+            modelArrivalOf(run, null));
         emit(join(TRACES, `${row.name}.trace.json`),
             `${JSON.stringify(out.trace, null, 4)}\n`, `${row.name} trace`);
     }

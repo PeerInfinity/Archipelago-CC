@@ -5661,6 +5661,18 @@ export const INSTRUMENTS = frz({
             "flags": [
                 {
                     "how": [
+                        "arg"
+                    ],
+                    "name": "branch"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "drive"
+                },
+                {
+                    "how": [
                         "includes"
                     ],
                     "name": "dry-run"
@@ -5682,6 +5694,12 @@ export const INSTRUMENTS = frz({
                     "how": [
                         "startsWith"
                     ],
+                    "name": "latch-provisional"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
                     "name": "license-walks"
                 },
                 {
@@ -5695,6 +5713,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "run-dir"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "table"
                 },
                 {
                     "how": [

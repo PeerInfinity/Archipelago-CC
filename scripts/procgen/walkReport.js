@@ -204,8 +204,20 @@ export function createWalkReport({
          * and is skipped; a tape emitted twice by one producer is a refusal,
          * because the report is what S0's "exactly one owner" calibration
          * rests on.
+         *
+         * ⛓ R9 P1, ⚖ 54 (1) — the OPTIONAL third argument is the producer's
+         * own arrival for that segment: `{hits, deaths, level, to, ctor,
+         * velocity}`, the quantities `claimArrival` already asserts. It is
+         * written into the REPORT FILE only, so every producer's `--check`
+         * STDOUT — and therefore its standing `--check` md5 — is untouched by
+         * it, exactly as the flag itself is.
+         *
+         * ⛔ `ctor` IS THE SPAWN PAIR (`levelRun.worldCtor`), never
+         * `state.x/y`: the game's latch carries `Main.playerPositionX/Y`,
+         * which is what the world was CONSTRUCTED with. See
+         * `provisionalLatch.certifyAgainstLatch`.
          */
-        note(path, derivedText) {
+        note(path, derivedText, arrival = null) {
             if (!target) return;
             if (resolve(dirname(path)) !== dir) return;
             const segment = basename(path).replace(/\.json$/, '');
@@ -216,7 +228,17 @@ export function createWalkReport({
             }
             seen.add(segment);
             const committedText = existsSync(path) ? readFileSync(path, 'utf8') : null;
-            segments.push({ segment, ...verdictFor(derivedText, committedText) });
+            segments.push({
+                segment,
+                ...verdictFor(derivedText, committedText),
+                /**
+                 * ⛓ R9 P1, ⚖ 54 (1) — **THE MODEL'S OWN ARRIVAL, CARRIED SO A
+                 * TABLE CAN SAY WHOSE WORD IT IS.** `null` when the producer
+                 * did not offer one; a reader must print `unasked` rather than
+                 * inventing a green row, which is §33.2's whole finding.
+                 */
+                arrival: arrival ?? null,
+            });
         },
         write,
     };

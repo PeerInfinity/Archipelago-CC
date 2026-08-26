@@ -199,21 +199,33 @@ export function movedProjections(before, after) {
 }
 
 /**
- * ⛔⛔ THE CACHE KEY IS THE **COMPLETE** BYTES DRIVEN, NOT THE GAME-VISIBLE
- * PROJECTION.
+ * ⛔⛔⛔ **THE PRE-P1 SPELLING — KEPT ONLY SO THE MIGRATION CAN READ THE FILES
+ * IT WROTE.** `provisionalLatch.latchCacheCandidates` is the live key.
  *
- * `solve-seedling-r9-campaign.mjs`'s `latchOf` keys on
- * `gameVisibleTape(parseTape(t))` — the projection. That is honest for what it
- * measures (a latch is a pure function of what the GAME ran) and it is exactly
- * one field short of honest for what it CACHES: two different COMPLETE boots
- * can project to the same game-visible bytes, because `GAME_VISIBLE_DROPS`
- * removes `tick0` — and the tick-0 block is what a CONTINUATION window is
- * driven with. A cache keyed on the projection would hand a second complete
- * boot the first one's latch file.
+ * ⛓⛓ THE ARGUMENT THIS DOCBLOCK USED TO MAKE WAS ABOUT THE WRONG CONSUMER,
+ * AND THE CACHE PAID FOR IT. It read: `GAME_VISIBLE_DROPS` removes `tick0`,
+ * "and the tick-0 block is what a CONTINUATION window is driven with", so a
+ * projection-keyed cache would hand a second complete boot the first one's
+ * latch. The continuation window that really is driven with `tick0` is
+ * `watchWasm`'s, through `continuationTape` — a different code path with a
+ * different projection and no cache here. `driveLatch` ships
+ * `JSON.stringify(gameVisibleTape(parsed))`, so `tick0` never reaches the
+ * game at all and a latch cannot depend on it.
  *
- * ⇒ this keys on the serialised COMPLETE tape. A projection-keyed cache can
- * only ever be too permissive; a complete-bytes one can only ever be too
- * strict, and too strict costs a GPU run rather than a wrong number.
+ * ⛔ THE COST WAS MEASURED, NOT ARGUED (R9 P1 W0). `r8-d2-19`'s 721-tick walk
+ * was driven at §37's third run and its answer is in `rerecord-cache/` under
+ * `558c4596083c`; the tape `r9/re-record-attempt-4` committed for that same
+ * walk keys to `67990818be8a` and MISSES — and
+ * `md5({...branchTape, tick0: <the block it carried at S1>}) === 558c4596083c`
+ * to the digit. S2 re-derives `tick0` after S1 drives, so the "too strict"
+ * key threw away the GPU run it had just paid for, on the one axis
+ * `GAME_VISIBLE_DROPS` exists to remove.
+ *
+ * ⛓ "Too strict costs a GPU run rather than a wrong number" is still true and
+ * is still the tie-break — it is why `provisionalLatch.KEY_KEEPS` keeps
+ * `tick_count`, which `botLoadTape` does not read by name. What changed is
+ * that `tick0` is not a case of it: dropping a field the game never receives
+ * is not permissiveness, it is accuracy.
  *
  * @param {object} completeTape the tape as it will be committed/driven, whole
  */

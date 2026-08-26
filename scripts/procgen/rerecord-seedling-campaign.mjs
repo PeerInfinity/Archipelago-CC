@@ -54,10 +54,12 @@
  *    the verdict is a function of the TAPES it reads the same before and after
  *    a run, so it is NOT the idempotence claim: that one is S1 measuring zero
  *    movers, which costs a browser.
- *  · THE CACHE IS KEYED ON THE COMPLETE BYTES, not on the game-visible
- *    projection: two different complete boots project to the same bytes
- *    (`tick0` is dropped), so a projection-keyed cache can hand the second
- *    one the first one's latch.
+ *  · THE CACHE IS KEYED ON THE BYTES THE GAME **READS** (R9 P1, ⚖ 54 (4)) —
+ *    `gameVisibleTape` minus the fields no consumer of the shipped bytes can
+ *    read, which is exactly `description` today. It used to be the COMPLETE
+ *    bytes, and that threw away answers the GPU had already paid for: the
+ *    difference is `tick0`, which S2 re-derives AFTER S1 has driven and which
+ *    is never in the bytes shipped. See `provisionalLatch.js`.
  *  · RESUMABLE. Each stage writes its state to the run directory with a
  *    `finished` flag, and `--from=`/`--to=` re-enter at a stage boundary.
  *
@@ -111,13 +113,17 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import {
-    accountingUniverse, bootFromEnvelopeOnly, chainSubjects, latchCacheKey, mergePersistence,
+    accountingUniverse, bootFromEnvelopeOnly, chainSubjects, mergePersistence,
     movedProjections, projectionIndex, timedClearHazard,
 } from './rerecordCampaign.js';
 import {
     CHECK_FLAG, LICENSE_FLAG, applyLicence, cascadeFrom, licenceFrom, movedSegments,
     nominateOwners, participationOf, producerOrder, reportRows,
 } from './walkMoves.js';
+import {
+    BRANCH_FLAG, DRIVE_FLAG, PROVISIONAL_FLAG, TABLE_FLAG,
+    certifyAgainstLatch, certificationCell, latchCacheCandidates,
+} from './provisionalLatch.js';
 import { buildInstruments } from './reference/instruments.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -174,6 +180,51 @@ if (process.argv.includes(CHECK_FLAG)) {
         + 'move artifacts. Use `--dry-run` for the offline S0 verdict, or `--to=S0`.');
     process.exit(1);
 }
+/**
+ * ⛓⛓⛓ R9 P1, ⚖ 54 (1)/(2)/(3) — **THE READ-ONLY MODES.** Each answers a
+ * question about the pipeline's SUBJECT without running the pipeline, and each
+ * exits before S0. They are parsed here, beside the licence, for the same
+ * reason: `process.argv` is read in this file so the instruments index's argv
+ * scan can see the flags an instrument accepts.
+ *
+ * ⛔ A BARE `--latch-provisional` IS A REFUSAL, not a default over every
+ * segment: driving "everything" is the shape that spent three runs' worth of
+ * GPU before the game disagreed with the first row.
+ */
+/**
+ * ⛔⛔ THE LITERALS ARE SPELLED HERE, AND THE ASSERTION IS WHY THAT IS NOT A
+ * SECOND SOURCE OF TRUTH (⚖ 17). `instruments.mjs` derives an instrument's
+ * flags by scanning its OWN source for a `--x` literal near a read of `argv`,
+ * so a flag parsed only through an imported constant is one the reference
+ * table omits — measured: the first build of this block published `--branch`
+ * and NOT `--latch-provisional`, `--table` or `--drive`. `--license-walks`
+ * above already spells its literal for exactly this reason and says so; this
+ * adds the row that keeps the two from drifting apart.
+ */
+const PROVISIONAL_TOKEN = process.argv.find((a) => a === '--latch-provisional'
+    || a.startsWith('--latch-provisional='));
+const TABLE = process.argv.includes('--table');
+const DRIVE = process.argv.includes('--drive');
+const BRANCH = arg('branch', null);
+for (const [literal, constant, where] of [
+    ['--latch-provisional', PROVISIONAL_FLAG, 'PROVISIONAL_FLAG'],
+    ['--table', TABLE_FLAG, 'TABLE_FLAG'],
+    ['--drive', DRIVE_FLAG, 'DRIVE_FLAG'],
+    ['--branch', BRANCH_FLAG, 'BRANCH_FLAG'],
+]) {
+    if (literal !== constant) {
+        console.log(`FAIL: this file parses \`${literal}\` and provisionalLatch.${where} is `
+            + `\`${constant}\` — the spelling the reference table publishes and the spelling `
+            + 'the command accepts have come apart.');
+        process.exit(1);
+    }
+}
+/** The read-only modes actually asked for — the header names them. */
+const READ_ONLY = [
+    PROVISIONAL_TOKEN !== undefined ? PROVISIONAL_FLAG : null,
+    TABLE ? TABLE_FLAG : null,
+].filter(Boolean);
+
 const FROM = arg('from', 'S0');
 const TO = DRY_RUN ? 'S0' : arg('to', 'S5');
 const RUN_DIR = arg('run-dir', join(process.env.TMPDIR || '/tmp',
@@ -616,20 +667,48 @@ const DOS = 'C:\\playwright';
 const CACHE = join(WSL, 'rerecord-cache');
 
 /**
- * ⛔ THE CACHE KEY IS THE COMPLETE TAPE. See `rerecordCampaign.latchCacheKey`
- * for why the game-visible projection is one field short of a safe key. A
- * cache HIT prints its key and the file it reused, so a reuse is never silent.
+ * ⛓⛓⛓ R9 P1, ⚖ 54 (4) — **THE KEY IS THE BYTES THE GAME READS.**
+ *
+ * It used to be the COMPLETE tape (`rerecordCampaign.latchCacheKey`), on the
+ * argument that `GAME_VISIBLE_DROPS` removes `tick0` and two complete boots
+ * could therefore share a projection. ⛔ That argument is about the WRONG
+ * CONSUMER: the bytes this function ships are
+ * `JSON.stringify(gameVisibleTape(parsed))` — three lines below — so `tick0`
+ * is never driven and a latch cannot depend on it. The measurement is in
+ * `provisionalLatch.js`'s docblock: `r8-d2-19`'s 721-tick answer sits in this
+ * cache under `558c4596083c` and the tape the branch committed for that same
+ * walk misses it, the whole difference being the `tick0` block S2 re-derives
+ * AFTER S1 has driven.
+ *
+ * ⇒ `latchCacheCandidates` looks under the new key FIRST and the pre-P1
+ * spelling second, and a hit always says WHICH — a legacy reuse is never
+ * mistaken for a current one, and nothing is deleted (⚖ 47b(5): this cache is
+ * machine-global and shared across trees and sessions).
+ *
+ * ⛓ AND A LEGACY HIT RE-KEYS FORWARD. "md5 is one-way" is true of the cache
+ * files alone and false at the moment one of them hits: the tape that produced
+ * it is in hand, so `readLatchCache` copies the record under the new key and
+ * says it did. The legacy arm therefore converges instead of decaying — and
+ * nothing is ever deleted.
  */
 function driveLatch(label, completeTape) {
-    const key = latchCacheKey(completeTape);
-    mkdirSync(CACHE, { recursive: true });
-    const cached = join(CACHE, `latch-${label}-${key}.json`);
-    if (existsSync(cached) && !NO_CACHE) {
-        console.log(`    ${label}: latch REUSED key=${key} file=${cached}`);
-        return JSON.parse(readFileSync(cached, 'utf8'));
-    }
     const parsed = parseTape(completeTape);
-    const shipped = JSON.stringify(gameVisibleTape(parsed));
+    const projected = gameVisibleTape(parsed);
+    const candidates = latchCacheCandidates(
+        { complete: completeTape, projected, legacy: 'complete' });
+    const key = candidates[0].key;
+    mkdirSync(CACHE, { recursive: true });
+    if (!NO_CACHE) {
+        const { record, hitBy, rekeyed } = readLatchCache(label, candidates);
+        if (record) {
+            console.log(`    ${label}: latch REUSED key=${hitBy.key} (${hitBy.era}) `
+                + `file=${hitBy.file}`);
+            if (rekeyed) console.log(`    ${label}: RE-KEYED forward -> ${rekeyed}`);
+            return record;
+        }
+    }
+    const cached = join(CACHE, `latch-${label}-${key}.json`);
+    const shipped = JSON.stringify(projected);
     mkdirSync(WSL, { recursive: true });
     writeFileSync(join(WSL, 'seedling-bot-replay-win.py'),
         readFileSync(join(HERE, 'seedling-bot-replay-win.py')));
@@ -669,6 +748,41 @@ function driveLatch(label, completeTape) {
     };
     writeFileSync(cached, JSON.stringify(record));
     return record;
+}
+
+
+/**
+ * ⛓⛓⛓ R9 P1 — **THE CACHE READ, AND THE RE-KEY THAT MAKES THE MIGRATION
+ * CONVERGE.**
+ *
+ * `latchCacheCandidates` returns the new key first and the pre-P1 spelling
+ * second. "md5 is one-way, so the old files cannot be re-keyed" is true of the
+ * files ALONE — and false at the moment one of them HITS: the tape that
+ * produced it is in hand. So a legacy hit copies the record forward under the
+ * new key and SAYS it did. Nothing is deleted (this cache is machine-global,
+ * ⚖ 47b(5)); the legacy arm simply stops being consulted for that tape.
+ *
+ * ⛔ IT NEVER WRITES OVER AN EXISTING FILE. A new-key file that is already
+ * there is the answer; re-writing it would be a second opinion about a
+ * measurement nobody re-took.
+ */
+function readLatchCache(label, candidates) {
+    for (const c of candidates) {
+        const file = join(CACHE, `latch-${label}-${c.key}.json`);
+        if (!existsSync(file)) continue;
+        const record = JSON.parse(readFileSync(file, 'utf8'));
+        let rekeyed = null;
+        if (c.era !== 'key') {
+            const forward = join(CACHE, `latch-${label}-${candidates[0].key}.json`);
+            if (!existsSync(forward)) {
+                mkdirSync(CACHE, { recursive: true });
+                writeFileSync(forward, JSON.stringify(record));
+                rekeyed = forward;
+            }
+        }
+        return { record, hitBy: { ...c, file }, rekeyed };
+    }
+    return { record: null, hitBy: null, rekeyed: null };
 }
 
 // ── S1 · MEASURE ──────────────────────────────────────────────────────
@@ -1566,10 +1680,243 @@ function appendSegment(plan) {
     writeFileSync(CHAIN_DECL, `${text.slice(0, at)}\n${rowSrc}${text.slice(at)}`);
 }
 
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⚖ 54 (1) — `--latch-provisional`: ASK THE GAME BEFORE THE SERIES
+ * ══════════════════════════════════════════════════════════════════════ */
+/**
+ * ⛓⛓⛓ R9 P1 — **S1's LATCH DRIVE FOR ONE SEGMENT, WITHOUT S0..S5.**
+ *
+ * Kickoff §33.2: a producer's `--check` latches the COMMITTED tape and only
+ * its EMIT path latches the provisional one, so a walk the producers called
+ * certified had never met the game. Three re-record attempts STOPPED at S1 on
+ * exactly such a row, each after the GPU had been spent on its predecessors.
+ * This asks the same question for ONE named segment, ahead of the series.
+ *
+ * ⛔⛔ **READ-ONLY BY DEFAULT, AND IT NEVER ENTERS A STAGE.** A cache miss
+ * REPORTS `unasked` and exits 0; driving requires `--drive`, which is a GPU
+ * row and is meant to be announced. It writes no tape, no expectation and no
+ * trace — the only thing a `--drive` writes is the latch file in the
+ * machine-global cache, which is that cache's job, and the run names the file.
+ *
+ * ⛔ THE FOREIGN-REF GUARD (§26.6's law, closed for this mode). `--branch=`
+ * reads a tape out of a git object — no checkout, no worktree, so a slice's
+ * tree is never detached under its owner. But the PAGE is the tree the dev
+ * server is serving, and a tape from a ref whose game build differs would be
+ * driven against the wrong game. So the ref's gitlink for the wasm submodule
+ * must equal this tree's, and a difference is a REFUSAL BY NAME rather than a
+ * green that means nothing.
+ *
+ * ⚠ THE MODEL COLUMN AND THE GAME COLUMN MUST BE ABOUT THE SAME WALK. The
+ * model's arrival comes from the OWNING producer's `--check --walk-report` in
+ * THIS tree; it is used only when that producer's own solve length equals the
+ * tape's `tick_count`. Otherwise the row says the two are about different
+ * walks and makes no model claim — which is exactly what a pre-flip branch
+ * tape prints here, by name.
+ */
+function gitShow(ref, path) {
+    try {
+        return execFileSync('git', ['show', `${ref}:${path}`],
+            { cwd: ROOT, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
+    } catch (e) {
+        throw new Error(`⛔ ${ref} has no ${path} — ${(e.stderr || e.message).trim()}`);
+    }
+}
+
+const WASM_SUBMODULE = 'frontend/modules/flashPanel/wasm';
+function gitlinkOf(ref) {
+    const out = execFileSync('git', ['ls-tree', ref, WASM_SUBMODULE],
+        { cwd: ROOT, encoding: 'utf8' }).trim();
+    const m = /^160000 commit ([0-9a-f]{40})\t/.exec(out);
+    if (!m) throw new Error(`⛔ ${ref} declares no gitlink for ${WASM_SUBMODULE} — the game `
+        + 'build a tape from it would be driven against cannot be established.');
+    return m[1];
+}
+
+/**
+ * The model's own word about every segment a participating producer owns, in
+ * THIS tree. One `--check --walk-report` per producer; offline by measurement,
+ * not by contract — both `latchOf` call sites in the two browser-driving
+ * producers are `!CHECK`-guarded, so `--check` cannot reach the GPU.
+ */
+function walkReportsFor(files) {
+    const out = new Map();
+    for (const file of files) {
+        const target = join(RUN_DIR, `provisional-walk-${file.replace(/\.mjs$/, '')}.json`);
+        if (existsSync(target)) unlinkSync(target);
+        try {
+            execFileSync('node', [`scripts/procgen/${file}`, CHECK_FLAG,
+                `--walk-report=${target}`],
+            { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'],
+                maxBuffer: 256 * 1024 * 1024 });
+        } catch { /* ⛔ a non-zero exit is the EXPECTED case: a moved walk fails
+                     its own byte check. The verdict is the REPORT existing. */ }
+        if (!existsSync(target)) continue;
+        const report = JSON.parse(readFileSync(target, 'utf8'));
+        for (const seg of report.segments ?? []) {
+            out.set(seg.segment, { ...seg, producer: report.producer });
+        }
+    }
+    return out;
+}
+
+function latchProvisional(names, { branch = null, drive = false }) {
+    console.log('# ⚖ 54 (1) · --latch-provisional — the GAME\'s word on a walk, '
+        + 'ahead of the series\n');
+    const chains = accountingChains();
+    const known = new Set(chains.flatMap((c) => [...c.segments, c.headline].filter(Boolean)));
+    const unknown = names.filter((n) => !known.has(n));
+    if (unknown.length) {
+        console.log(`FAIL: ${unknown.join(', ')} — no chain declares this segment. The `
+            + `declared set is: ${[...known].sort().join(', ')}`);
+        failures += 1;
+        return;
+    }
+
+    if (branch) {
+        const here = gitlinkOf('HEAD');
+        const there = gitlinkOf(branch);
+        check(`⛓ ${branch} drives the same game build this tree serves`, here === there,
+            here === there ? `${WASM_SUBMODULE} @${here.slice(0, 12)} on both sides`
+                : `⛔ ${WASM_SUBMODULE} is ${there.slice(0, 12)} at ${branch} and `
+                    + `${here.slice(0, 12)} here — the dev server serves ONE tree, so a `
+                    + 'tape from that ref would be driven against a different game');
+        if (here !== there) {
+            console.log('⛔ STOP: refusing to drive a foreign build\'s tape against this '
+                + 'tree\'s page.');
+            return;
+        }
+    }
+
+    const owners = nominateOwners(chains, { tapesDir: TAPES });
+    const wanted = new Set();
+    for (const [file, segs] of owners) if (segs.some((x) => names.includes(x))) wanted.add(file);
+    console.log(`## the model's word — ${[...wanted].join(', ') || '(no owner nominated)'}`);
+    const model = walkReportsFor([...wanted]);
+
+    for (const name of names) {
+        const raw = branch
+            ? JSON.parse(gitShow(branch, `frontend/modules/seedlingDemo/fixtures/tapes/${name}.json`))
+            : rawOf(name);
+        const parsed = parseTape(raw);
+        const projected = gameVisibleTape(parsed);
+        const candidates = latchCacheCandidates(
+            { complete: raw, projected, legacy: 'complete' });
+
+        console.log(`\n## ${name}${branch ? ` @${branch}` : ''} — ${parsed.tick_count} tick(s)`);
+        for (const c of candidates) {
+            console.log(`   key ${c.key} (${c.era}) — ${c.why}`);
+        }
+
+        const cached = readLatchCache(name, candidates);
+        let latch = cached.record;
+        let hitBy = cached.hitBy;
+        if (latch) {
+            console.log(`   ⛓ CACHE HIT under ${hitBy.era} — ${hitBy.file}`);
+            if (cached.rekeyed) {
+                console.log(`   ⛓ RE-KEYED forward — WROTE ${cached.rekeyed} (the legacy `
+                    + 'file is kept; this tape will hit under the new key from now on)');
+            }
+        } else if (drive) {
+            console.log('   ⛔ CACHE MISS — DRIVING (this is the GPU row).');
+            latch = driveLatch(name, raw);
+            hitBy = { key: candidates[0].key, era: 'driven',
+                file: join(CACHE, `latch-${name}-${candidates[0].key}.json`) };
+            console.log(`   ⛓ WROTE ${hitBy.file}`);
+        } else {
+            console.log(`   ⛔ CACHE MISS and no ${DRIVE_FLAG} — this row is \`unasked\`. `
+                + 'A miss is NOT a pass: nobody has put this walk to the game.');
+        }
+
+        /**
+         * ⛔ THE MODEL COLUMN IS ONLY ADMITTED WHEN IT IS ABOUT THIS WALK. A
+         * producer in this tree that solves the room differently is reporting
+         * a different walk's arrival, and a certification built on it would be
+         * §33.2's defect with the sides swapped.
+         */
+        const reported = model.get(name) ?? null;
+        let arrival = null;
+        if (reported && reported.arrival && reported.solvedTicks === parsed.tick_count) {
+            arrival = reported.arrival;
+        } else if (reported && reported.arrival) {
+            console.log(`   ⚠ the model column is NOT admitted: ${reported.producer} solves `
+                + `${name} at ${reported.solvedTicks} t and this tape is `
+                + `${parsed.tick_count} t — a different walk, so it makes no claim here`);
+        } else if (reported) {
+            console.log(`   ⚠ ${reported.producer} reported ${name} but offered no arrival `
+                + '(a producer older than ⚖ 54 (1))');
+        } else {
+            console.log(`   ⚠ no participating producer in this tree reported ${name}`);
+        }
+
+        const findings = latch
+            ? seamLatchFindings(latch.envelope, { requireCalm: true }) : null;
+        const cert = certifyAgainstLatch({ latch, model: arrival, latchFindings: findings });
+        for (const r of cert.rows) {
+            console.log(`   ${r.ok ? '  ' : '⛔'} ${r.side.padEnd(5)} ${r.name.padEnd(14)} `
+                + `${r.detail}`);
+        }
+        if (latch) {
+            const seam = latch.envelope.seam;
+            console.log(`   GAME: tick ${seam['latch.tick']} · L${seam.level} · `
+                + `(${seam.playerPositionX}, ${seam.playerPositionY}) · `
+                + `v=(${seam['arrival.velocity']?.vx}, ${seam['arrival.velocity']?.vy}) · `
+                + `hits=${latch.hits} · ${latch.observations} observation(s)`);
+        }
+        if (arrival) {
+            console.log(`   MODEL: L${arrival.level} (declared L${arrival.to ?? '—'}) · `
+                + `ctor (${arrival.ctor?.x}, ${arrival.ctor?.y}) · `
+                + `end (${arrival.end?.x}, ${arrival.end?.y}) · `
+                + `v=(${arrival.velocity?.vx}, ${arrival.velocity?.vy}) · `
+                + `hits=${arrival.hits} deaths=${arrival.deaths}`);
+        }
+        check(`${name}: certification`, cert.level !== 'REFUSED', certificationCell(cert));
+    }
+}
+
 // ── the run ───────────────────────────────────────────────────────────
-console.log(`# rerecord-seedling-campaign — stages ${FROM}..${TO}`
+console.log(`# rerecord-seedling-campaign — ${READ_ONLY.length
+    ? `${READ_ONLY.join(' ')} (READ-ONLY: no stage runs)` : `stages ${FROM}..${TO}`}`
     + `${DRY_RUN ? ' (--dry-run)' : ''}${NO_CACHE ? ' (--no-cache)' : ''}`);
 console.log(`# run directory: ${RUN_DIR}\n`);
+
+/**
+ * ⛔⛔ THE READ-ONLY MODES RUN INSTEAD OF THE PIPELINE, NEVER BESIDE IT. A
+ * caller who typed `--latch-provisional --from=S2` means one of two things and
+ * the command must not pick; a stage flag alongside a read-only mode is a
+ * REFUSAL BY NAME.
+ */
+if (READ_ONLY.length) {
+    const conflicts = [
+        GROW ? '--grow' : null,
+        DRY_RUN ? '--dry-run' : null,
+        LICENCE ? LICENSE_FLAG : null,
+        process.argv.some((a) => a.startsWith('--from=')) ? '--from=' : null,
+        process.argv.some((a) => a.startsWith('--to=')) ? '--to=' : null,
+    ].filter(Boolean);
+    if (READ_ONLY.length > 1 || conflicts.length) {
+        console.log(`FAIL: ${READ_ONLY.join(' + ')}${conflicts.length
+            ? ` with ${conflicts.join(', ')}` : ''} — the read-only modes answer a question `
+            + 'ABOUT the pipeline and do not run it. Run one at a time, with no stage flag.');
+        process.exit(1);
+    }
+}
+
+if (PROVISIONAL_TOKEN !== undefined) {
+    const value = PROVISIONAL_TOKEN === PROVISIONAL_FLAG
+        ? '' : PROVISIONAL_TOKEN.slice(PROVISIONAL_FLAG.length + 1);
+    const names = value.split(',').map((x) => x.trim()).filter(Boolean);
+    if (!names.length) {
+        console.log(`FAIL: ${PROVISIONAL_FLAG} needs a segment — `
+            + `\`${PROVISIONAL_FLAG}=<segment>[,<segment>…]\`. It drives the GAME for the `
+            + 'walk you name; a default over every segment is the shape that spent three '
+            + 'runs of GPU before the game disagreed with the first row.');
+        process.exit(1);
+    }
+    latchProvisional(names, { branch: BRANCH, drive: DRIVE });
+    console.log(failures ? `\n${failures} FAILURE(S)` : '\nall checks green');
+    process.exit(failures ? 1 : 0);
+}
 
 if (GROW) {
     const g = await grow();

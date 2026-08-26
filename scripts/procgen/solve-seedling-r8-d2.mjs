@@ -60,6 +60,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 import { createWalkReport } from './walkReport.js';
+import { modelArrivalOf } from './provisionalLatch.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
@@ -299,10 +300,10 @@ function tapeJson(obj) {
     }, null, 4)}\n`;
 }
 
-function emit(path, json, what) {
+function emit(path, json, what, arrival = null) {
     // ⛓ R9 slice 12e′ RE-RUN — the walk report is taken HERE, above the write,
     // so the committed side is read BEFORE a `--check`-less run overwrites it.
-    WALK_REPORT.note(path, json);
+    WALK_REPORT.note(path, json, arrival);
     if (CHECK) {
         const have = existsSync(path) ? readFileSync(path, 'utf8') : null;
         check(`${what} is byte-identical to what this solver derives`, have === json,
@@ -316,7 +317,15 @@ function emit(path, json, what) {
 }
 
 mkdirSync(TRACES, { recursive: true });
-emit(join(TAPES, 'r8-solve-20.json'), tapeJson(tape), 'r8-solve-20');
+/**
+ * ⛓ R9 P1 — the model's arrival rides the walk report. ⛔ `to` IS NULL: this
+ * producer declares no destination level anywhere the report can read (its
+ * arrival row spells the number inline), so the certification makes NO level
+ * claim for this segment and SAYS so, rather than inventing one from the walk
+ * it is supposed to be judging.
+ */
+emit(join(TAPES, 'r8-solve-20.json'), tapeJson(tape), 'r8-solve-20',
+    modelArrivalOf(run, null));
 emit(join(TRACES, 'r8-solve-20.trace.json'),
     `${JSON.stringify(out.trace, null, 4)}\n`, 'r8-solve-20 trace');
 

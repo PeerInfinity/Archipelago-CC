@@ -101,6 +101,7 @@ import { fileURLToPath } from 'node:url';
 import { committedTick0, tick0ParseFields, despawnField, tick0Field }
     from './tick0Carry.js';
 import { createWalkReport } from './walkReport.js';
+import { modelArrivalOf } from './provisionalLatch.js';
 /**
  * ⛔ THE ONE DECLARATION (⚖ ruling 38 (1), R9 slice 12d). A static import
  * rather than the dynamic `await import(MODULE, …)` the runtime modules below
@@ -753,10 +754,10 @@ function tapeJson(obj, description, label) {
     }, null, 4)}\n`;
 }
 
-function emit(path, json, what) {
+function emit(path, json, what, arrival = null) {
     // ⛓ R9 slice 12c′ — the walk report is taken HERE, above the write, so the
     // committed side is read BEFORE `--check`-less runs overwrite it.
-    WALK_REPORT.note(path, json);
+    WALK_REPORT.note(path, json, arrival);
     if (CHECK) {
         const have = existsSync(path) ? readFileSync(path, 'utf8') : null;
         check(`${what} is byte-identical to what this solver derives`, have === json,
@@ -788,7 +789,7 @@ for (let i = 0; i < results.length; i += 1) {
             { noclip: false, noDamage: false, noHazards: [], grants: [] }).inputs,
     };
     emit(join(TAPES, `${r.seg.name}.json`), tapeJson(obj, descriptionFor(r, i), r.seg.name),
-        r.seg.name);
+        r.seg.name, modelArrivalOf(r.run, r.seg.to));
     emit(join(TRACES, `${r.seg.name}.trace.json`),
         `${JSON.stringify(r.out.trace, null, 4)}\n`, `${r.seg.name} trace`);
 }
