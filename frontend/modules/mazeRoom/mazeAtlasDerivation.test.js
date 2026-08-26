@@ -339,11 +339,33 @@ describe('⛓⛓⛓ the atlas is DERIVED from the entries plus the authored link
      * names a map_ref, so the document those level ids live in has to be
      * identified"*, and if it did not, it would name the wrong game.
      */
-    it('⛔⛔ the atlas names the LIBRARY as its map document and the ENTRIES\' substrate as its '
-        + 'game — never `createEmptyAtlas`\'s Seedling defaults', () => {
+    it('⛔⛔ the atlas names the LIBRARY as its map document AND as its game — never the '
+        + 'entries\' substrate, and never `createEmptyAtlas`\'s Seedling defaults', () => {
         expect(derived.atlas.tile_space.map_document).toBe(LIBRARY.library_id);
-        expect(derived.atlas.game).toBe('maze');
         expect(derived.atlas.name).toBe(LIBRARY.name);
+        // ⛓⛓ W1: `game` USED TO BE `'maze'` — the entries' substrate in the
+        //   slot that says what the document is OF. Two different questions
+        //   wearing one word. `game` is the LIBRARY; what plays a room is the
+        //   region's own `substrate`, and the two are asserted apart here.
+        expect(derived.atlas.game).toBe(LIBRARY.name);
+        expect(derived.atlas.game).not.toBe('maze');
+        expect(new Set(derived.atlas.regions.map((r) => r.substrate))).toEqual(new Set(['maze']));
+    });
+
+    it('⛓ `game` falls back to the LIBRARY_ID when the pack is unnamed — never to a literal', () => {
+        const unnamed = { ...LIBRARY };
+        delete unnamed.name;
+        const { atlas } = deriveAtlasOf({ library: unnamed, overlay: overlayOf() });
+        expect(atlas.game).toBe(LIBRARY.library_id);
+        expect(atlas.name).toBeUndefined();
+    });
+
+    it('⛓ a bare `entries[]` names no library, so `deriveAtlas` says the readable substrate', () => {
+        // `deriveAtlas` takes entries, not a library — there is no name to read.
+        // The fallback is the one true thing left to say, and `deriveAtlasOf`
+        // overrides it through the same `deps.atlas` seam.
+        const { atlas } = deriveAtlas(ENTRIES, overlayOf(), { atlas: { mapDocument: 'x' } });
+        expect(atlas.game).toBe(READS_SUBSTRATE);
     });
 
     it('⛔ the derived atlas is DELIBERATELY UNSTAMPED — the caller owns identity', () => {

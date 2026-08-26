@@ -412,10 +412,24 @@ export function deriveAtlas(entries, overlay = {}, deps = {}) {
     });
 
     /**
-     * ⛓ **THE GAME NAME IS THE ENTRIES' OWN `substrate`**, not a literal.
-     * `createEmptyAtlas` defaults `game` (and therefore `atlas_id`) to
-     * `'seedling'`, so a maze atlas that let the default stand would name the
-     * wrong game in `rules.region_atlas` and in every derived identifier.
+     * ⛓⛓ **`game` IS A GAME, NOT A SUBSTRATE** (EDITOR INTEGRATION W1, plan §1).
+     *
+     * This used to put the ENTRIES' substrate in the `game` slot — a category
+     * error that only looked right while a maze library's substrate and its
+     * identity were the same word. They are different questions: `game` says
+     * WHAT THIS DOCUMENT IS OF (it reaches `rules.region_atlas.game`, the
+     * compiler's `substrateIdFor(atlas.game)` and, unstamped, `atlas_id`),
+     * while the substrate says WHAT PLAYS IT — and that now lives on the
+     * regions, one per entry, where it belongs.
+     *
+     * ⛓ The LIBRARY is what this atlas is of, so `deriveAtlasOf` supplies its
+     * `name ?? library_id`. A caller holding only a bare `entries[]` array —
+     * which is what `deriveAtlas` takes — names no library at all, and the
+     * readable substrate is the only true thing left to say about the document;
+     * that is what this fallback is, and `deriveAtlasOf` overrides it through
+     * the same `deps.atlas` seam every other envelope field travels on.
+     * ⛔ `createEmptyAtlas` REFUSES a nameless `game` (it used to default to
+     * `'seedling'`), so there is no silent mislabelling either way.
      */
     const session = new AtlasSession(createEmptyAtlas({
         game: READS_SUBSTRATE, tileSize, ...(deps.atlas ?? {}),
@@ -572,6 +586,16 @@ export function deriveAtlasOf(record, deps = {}) {
         //   its name and description travel, and a caller may still override.
         atlas: {
             mapDocument: library.library_id,
+            // ⛓⛓ THE LIBRARY IS WHAT THIS ATLAS IS *OF* — its `game` (W1).
+            //   Not the entries' substrate: that answers "what plays it" and
+            //   rides on the regions now. `name` first because it is what a
+            //   reader sees in `rules.region_atlas.game`; `library_id` when the
+            //   pack is unnamed, so the slot is never empty and never a literal.
+            //   ⚠ Both are the library's own — every committed pack carries a
+            //   `name` (demo-maze/bounce/runner, measured), so the fallback is
+            //   for hand-assembled and in-editor libraries.
+            ...(library.name || library.library_id
+                ? { game: library.name || library.library_id } : {}),
             ...(library.name ? { name: library.name } : {}),
             ...(library.description ? { description: library.description } : {}),
             ...(deps.atlas ?? {}),
