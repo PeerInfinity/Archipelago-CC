@@ -683,7 +683,29 @@ export function normalizeEdit(op, { schema = null, fillDefaults = false } = {}) 
     });
     const base = { op: op.op, tx: cell[0], ty: cell[1] };
     if (op.op === 'paint') return normalizePaint(op, base);
-    if (op.op === 'remove') return Object.freeze(base);
+    if (op.op === 'remove') {
+        /**
+         * ⛓⛓ **`which` IS OMITTED WHEN IT WAS NOT GIVEN, and that is the whole
+         * byte-inertness claim** (E3b, §22.4). The normalized op is compared
+         * BYTE FOR BYTE between a payload and a page (`agreementWithPayload`),
+         * so a `which: <n>` written into every `remove` would make every edit
+         * list recorded before this slice disagree with itself. The default is
+         * the ABSENCE — exactly as `layer`, `nodes` and `attrs` are absent when
+         * they carry nothing.
+         *
+         * ⛔ AND IT IS CARRIED RATHER THAN DROPPED. §21's rule at
+         * `requireEntityAt` — *an op recorded in the edit list is part of the
+         * level's IDENTITY* — makes a silent drop the worst of the three
+         * options: the page would remove one body and the replay another.
+         */
+        if (op.which === undefined) return Object.freeze(base);
+        if (!Number.isInteger(op.which) || op.which < 0) {
+            fail(`watchEdit: a remove edit's \`which\` is a 0-based ordinal among the `
+                + `entities in that cell, got ${JSON.stringify(op.which)}. Omit it for `
+                + '"the last", which is what every edit list recorded before it means.');
+        }
+        return Object.freeze({ ...base, which: op.which });
+    }
     if (op.op === 'nodes') return Object.freeze({ ...base, nodes: normalizeNodes(op, schema) });
     // place / attrs — both carry an attrs object; place also carries a type.
     if (op.op === 'attrs') {
@@ -859,7 +881,54 @@ export function entityIndexAt(record, tx, ty) {
     return found;
 }
 
+/**
+ * ⛓⛓ **EVERY entity whose OEL point lands in this cell, in `record.entities`
+ * ORDER** — which is the order `recordToOel` writes them and `parseOelLevel`
+ * reads them back, so the ordinal a `remove {which}` names survives the round
+ * trip through text.
+ *
+ * ⛓ `entityIndexAt` is the LAST of these, and stays the answer a bare `remove`
+ * takes: this is the same walk with the whole list kept rather than the last
+ * write winning, so the two cannot drift apart.
+ */
+export function entityIndicesAt(record, tx, ty) {
+    const out = [];
+    (record.entities ?? []).forEach((e, i) => {
+        const at = tileAtOel(e.x, e.y);
+        if (at.tx === tx && at.ty === ty) out.push(i);
+    });
+    return out;
+}
+
+/**
+ * ⛓⛓⛓ **THE ENTITY AN OP ADDRESSES — the LAST in the cell, or the `which`th.**
+ *
+ * ⛔ `which` IS `remove`'s ALONE (E3b, §22.4). `normalizeEdit` lets it through
+ * on no other op, so the branch below cannot be reached by an `attrs` or
+ * `nodes` edit even though they come through this same door: "the last entity
+ * in this cell" is those two ops' whole contract, and a second address for
+ * them would be a second vocabulary.
+ *
+ * ⚠ AN OUT-OF-RANGE `which` REFUSES AND SAYS HOW MANY THE CELL HOLDS. Clamping
+ * to the last would make a payload reconstruct a DIFFERENT level on a record
+ * whose cell has since lost a body — the same reason the no-entity case refuses
+ * rather than doing nothing.
+ */
 const requireEntityAt = (record, op) => {
+    if (op.which !== undefined) {
+        const all = entityIndicesAt(record, op.tx, op.ty);
+        if (op.which >= all.length) {
+            fail(`watchEdit: a ${op.op} edit names entity ${op.which} of cell `
+                + `(${op.tx},${op.ty}), which holds ${all.length} `
+                + `${all.length === 1 ? 'entity' : 'entities'}`
+                + `${all.length === 0 ? '' : ` (0..${all.length - 1}, in \`entities\` order — the `
+                    + 'order `recordToOel` writes and `parseOelLevel` reads back)'}. `
+                + '⛔ REFUSED rather than clamped to the last: an op recorded in the edit list '
+                + 'is part of the level\'s IDENTITY, and one that quietly hit a different body '
+                + 'would reconstruct a different level.');
+        }
+        return all[op.which];
+    }
     const i = entityIndexAt(record, op.tx, op.ty);
     if (i < 0) {
         fail(`watchEdit: a ${op.op} edit names cell (${op.tx},${op.ty}), which holds no `
@@ -1108,7 +1177,12 @@ export function describeEdit(op) {
         return `EDIT place ${at} → ${op.type}`
             + (keys.length ? ` {${keys.map((k) => `${k}=${op.attrs[k]}`).join(' ')}}` : '');
     }
-    if (op.op === 'remove') return `EDIT remove ${at} → the entity there is gone`;
+    if (op.op === 'remove') {
+        // ⛓ the ordinal is named only when it was GIVEN — a bare `remove`'s row
+        //   reads exactly as it did before E3b (the pane's own pinned sentence).
+        return `EDIT remove ${at} → ${op.which === undefined ? 'the entity there'
+            : `entity ${op.which} there`} is gone`;
+    }
     const keys = Object.keys(op.attrs ?? {});
     return `EDIT attrs ${at} → {${keys.map((k) => `${k}=${op.attrs[k]}`).join(' ')}}`;
 }

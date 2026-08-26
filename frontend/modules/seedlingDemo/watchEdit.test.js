@@ -29,8 +29,8 @@ import {
     ROOM_FLAG_CELL, ROOM_FLAG_TAGS, ROOM_OPS, ROOM_GEOMETRY_BOSSES, WatchEditError, applyEdit,
     applyEdits, coerceAttrValue, describeEdit, editState, editStates, entityDecl, entityIndexAt,
     entityRosterFrom, flagModelReach, flagReachText, normalizeAttrsAgainst, normalizeEdit,
-    normalizeGroupOrEdit, resizeWarnings, roomFlagOpRefusal, roomFlagRoster, roomFlagsIn,
-    undoEdit,
+    entityIndicesAt, normalizeGroupOrEdit, resizeWarnings, roomFlagOpRefusal, roomFlagRoster,
+    roomFlagsIn, undoEdit,
 } from './watchEdit.js';
 import {
     LAYER_COLUMNS, LAYER_TILESETS, TERRAIN_NAMES, TILE_LAYERS, assertColumnsModelled, emptyLevel,
@@ -250,6 +250,82 @@ describe('the ops, applied — PURE, and the record before is untouched', () => 
         const noGoal = applyEdit(s.record, { op: 'remove', tx: goal.tx, ty: goal.ty });
         expect(noGoal.entities.some((e) => e.type === 'torchpickup')).toBe(false);
         expect(noGoal.entities).toHaveLength(s.record.entities.length - 1);
+    });
+
+    /**
+     * ⛓⛓⛓ **EDITOR v3 E3b — `remove {which}` (§22.4).** A cell can hold more
+     * than one body, and until now the only one `remove` could reach was the
+     * LAST. `which` is a 0-based ordinal among the entities at that tile, in
+     * `record.entities` order — the order `recordToOel` writes and
+     * `parseOelLevel` reads back, so the address survives the round trip
+     * through text.
+     */
+    it('remove {which} addresses a cell\'s bodies by ORDINAL, and bare remove still takes the LAST', () => {
+        const s = skeleton();
+        const at = { tx: 4, ty: 6 };
+        const three = applyEdits(s.record, [
+            { op: 'place', ...at, type: 'button', attrs: {} },
+            { op: 'place', ...at, type: 'lock', attrs: {} },
+            { op: 'place', ...at, type: 'seed', attrs: {} },
+        ]);
+        expect(entityIndicesAt(three, at.tx, at.ty)).toHaveLength(3);
+        const types = (r) => entityIndicesAt(r, at.tx, at.ty).map((i) => r.entities[i].type);
+        expect(types(three)).toEqual(['button', 'lock', 'seed']);
+
+        // the MIDDLE one, which no bare `remove` can reach
+        expect(types(applyEdit(three, { op: 'remove', ...at, which: 1 })))
+            .toEqual(['button', 'seed']);
+        // …the FIRST…
+        expect(types(applyEdit(three, { op: 'remove', ...at, which: 0 })))
+            .toEqual(['lock', 'seed']);
+        // …and `which: 2` is the same body a BARE remove takes
+        expect(types(applyEdit(three, { op: 'remove', ...at, which: 2 })))
+            .toEqual(types(applyEdit(three, { op: 'remove', ...at })));
+        expect(types(applyEdit(three, { op: 'remove', ...at }))).toEqual(['button', 'lock']);
+
+        // ⛔ out of range REFUSES and says how many the cell holds
+        expect(() => applyEdit(three, { op: 'remove', ...at, which: 3 }))
+            .toThrow(/holds 3 entities \(0\.\.2/);
+        expect(() => applyEdit(three, { op: 'remove', tx: 9, ty: 9, which: 0 }))
+            .toThrow(/holds 0 entities/);
+        // …and a `which` that is not a 0-based ordinal refuses in NORMALISATION
+        expect(() => normalizeEdit({ op: 'remove', ...at, which: -1 }))
+            .toThrow(/0-based ordinal/);
+        expect(() => normalizeEdit({ op: 'remove', ...at, which: 1.5 }))
+            .toThrow(/0-based ordinal/);
+
+        // ⛓ the ordinal, when GIVEN, is CARRIED and is the LAST key — appended,
+        //   never woven in, so the bare spelling below stays a prefix of this one
+        expect(Object.keys(normalizeEdit({ op: 'remove', which: 1, tx: 3, ty: 4 })))
+            .toEqual(['op', 'tx', 'ty', 'which']);
+        expect(describeEdit(normalizeEdit({ op: 'remove', tx: 3, ty: 4, which: 1 })))
+            .toBe('EDIT remove (3,4) → entity 1 there is gone');
+    });
+
+    /**
+     * ⛔⛔ **THE CONTROL — AND IT IS THE POINT OF THE PIN.** The normalized op
+     * travels in a payload and is compared BYTE FOR BYTE
+     * (`agreementWithPayload`), so a `which` written into every `remove` would
+     * make every edit list recorded before E3b disagree with itself. A bare
+     * `remove` therefore folds to the SAME KEYS IN THE SAME ORDER, and its
+     * `describeEdit` row reads exactly as it did.
+     *
+     * ⛓ MEASURED 2026-08-26: the repo carries NO committed `.oep` or edit-list
+     * payload holding a `remove` op (`grep -rl '"op": *"remove"'` over the whole
+     * tree, `node_modules`/`.git` excluded, is empty), so "byte-inert for every
+     * committed payload" is true over an EMPTY set — which is said here rather
+     * than left implied. The claim that has teeth is the SPELLING below, which
+     * is what any such payload would have been written in.
+     */
+    it('a BARE remove is BYTE-INERT — same keys, same order, same row', () => {
+        const bare = normalizeEdit({ op: 'remove', tx: 3, ty: 4 });
+        expect(Object.keys(bare)).toEqual(['op', 'tx', 'ty']);
+        expect(JSON.stringify(bare)).toBe('{"op":"remove","tx":3,"ty":4}');
+        expect(describeEdit(bare)).toBe('EDIT remove (3,4) → the entity there is gone');
+        // ⛓ …inside a GROUP too, which is the other shape an edit list holds
+        expect(JSON.stringify(normalizeGroupOrEdit({
+            op: 'group', label: 'x', ops: [{ op: 'remove', ty: 4, tx: 3 }],
+        }))).toBe('{"op":"group","label":"x","ops":[{"op":"remove","tx":3,"ty":4}]}');
     });
 
     it('attrs REPLACES rather than merges — clearing is spelled by leaving out', () => {
