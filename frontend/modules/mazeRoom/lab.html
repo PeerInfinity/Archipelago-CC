@@ -527,7 +527,15 @@
         <label for="editSetRoom">the LOADED LIBRARY's rooms</label>
         <select id="editSetRoom" disabled></select>
         <button id="editRoomClose" disabled>CLOSE the open room INTO the library</button>
-        <button id="editSetAddRoom" disabled>ADD ROOM</button>
+        <!-- ⛔ DISABLED HERE, WITH ITS REASON. Seedling's `add-room` takes a
+             blank RECORD the page can mint; the maze's takes a PAYLOAD — a
+             captured maze WORLD — and this arm has no blank room to capture.
+             E2c leaves it (plan §30); the alternative was a button whose press
+             says "no `addRoomOp` was injected", which is the mount telling a
+             reader about a parameter instead of the page telling them about the
+             substrate. -->
+        <button id="editSetAddRoom" disabled
+          title="ADD ROOM is not offered here: the maze's `add-room` takes a captured maze WORLD as its payload, and this arm has no blank room to mint. Add rooms with `region-library-validate.mjs`, or edit an existing one and CLOSE it.">ADD ROOM</button>
       </div>
       <div class="line">
         <label for="editSetRuleTarget">access rule on</label>

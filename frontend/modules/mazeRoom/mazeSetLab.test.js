@@ -14,8 +14,31 @@ import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
-import { LAB_SUBSTRATE, mazeLibraryRows, sniffSetDocument } from './mazeSetLab.js';
-import { emptyMazeOverlay } from './mazeSetAdapter.js';
+import {
+    LAB_SUBSTRATE, makeDrawRoomStill, mazeLibraryRows, mazeSetBindings, roomBaseTag,
+    sniffSetDocument,
+} from './mazeSetLab.js';
+import { ADAPTER_FNS } from '../procgenCore/setEditorView.js';
+import { OVERVIEW } from '../procgenCore/setEditorCore.js';
+import { emptyMazeOverlay, readSetCell, setRecord } from './mazeSetAdapter.js';
+import { deserializeMazeWorld } from './mazeRoomEngine.js';
+import { deserializeMazeLevel } from './procgenMaze.js';
+import { TILE_PX, drawWorld, plainView } from './mazeRoomRender.js';
+
+/**
+ * ⛓ A RECORDING 2D CONTEXT and a fake canvas — `editorView.test.js`'s
+ * discipline. ⛔ The claims below are about what the still DID: how big it made
+ * the surface and how many marks it laid down, not what it looked like.
+ */
+const recordingContext = (calls) => new Proxy({}, {
+    get: (_t, key) => {
+        if (key === 'canvas') return {};
+        return (...args) => { calls.push(`${String(key)}(${JSON.stringify(args)})`); };
+    },
+    set: (_t, key, value) => { calls.push(`${String(key)}=${JSON.stringify(value)}`); return true; },
+});
+const fakeCanvas = (calls) => ({ width: 0, height: 0, getContext: () => recordingContext(calls) });
+const cellOf = (i) => readSetCell(setRecord(MAZE_PACK, emptyMazeOverlay()), i, 0);
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..', '..');
@@ -125,5 +148,130 @@ describe('mazeSetLab — ONE intake path per document kind', () => {
             expect(classifyDocument(doc)).toBe(kind);
             expect(sniffSetDocument(doc).kind).toBe(mine);
         }
+    });
+});
+
+describe('mazeSetLab — the STILL is `drawWorld` on the payload\'s own world', () => {
+    /**
+     * ⛓⛓⛓ **THE TILE SIZE IS DERIVED FROM THE CELL AND THE ROOM, NEVER
+     * `TILE_PX`.** ⛔ MUTANT: `plainView()` with its default — `TILE_PX` is 20,
+     * the EDIT canvas's scale, and an 11-tile room would be drawn 220 px wide
+     * into a 96 px strip cell. The row asserts the SIZE against numbers it
+     * computes from the cell and the room, and states what the mutant's would
+     * have been.
+     */
+    it('sizes the surface from the strip cell and the room, not from TILE_PX', () => {
+        for (const cellPx of [OVERVIEW.cellPx, OVERVIEW.minStillPx]) {
+            const calls = [];
+            const canvas = fakeCanvas(calls);
+            expect(makeDrawRoomStill({ cellPx })(canvas, cellOf(0), 0)).toBe(null);
+            const world = deserializeMazeWorld(cellOf(0).payload);
+            const tilePx = Math.floor(cellPx / Math.max(world.width, world.height));
+            expect(tilePx).toBeGreaterThan(0);
+            expect(canvas.width).toBe(world.width * tilePx);
+            expect(canvas.height).toBe(world.height * tilePx);
+            expect(canvas.width).toBeLessThanOrEqual(cellPx);
+        }
+        // ⛔ what the mutant would have produced, stated:
+        expect(11 * TILE_PX).toBe(220);
+        expect(220).toBeGreaterThan(OVERVIEW.cellPx);
+    });
+
+    /**
+     * ⛓ **IT PAINTS.** ⚖ §23.11 #5's law, at the node level: assert INK, not
+     * that a canvas exists. The base tile layer alone is one `fillRect` per
+     * cell, so a still that drew nothing cannot reach the count.
+     */
+    it('lays down at least one mark per tile, on every committed entry', () => {
+        for (const [i, entry] of MAZE_PACK.entries.entries()) {
+            const calls = [];
+            makeDrawRoomStill()(fakeCanvas(calls), cellOf(i), i);
+            const world = deserializeMazeWorld(entry.payload);
+            const fills = calls.filter((c) => c.startsWith('fillRect(')).length;
+            expect(`${entry.entry_id}: ${fills >= world.width * world.height}`)
+                .toBe(`${entry.entry_id}: true`);
+        }
+    });
+
+    /**
+     * ⛔⛔ **THE MUTANT THE KICKOFF PREDICTED IS NOT DISCRIMINATING, AND THIS ROW
+     * IS THE MEASUREMENT THAT SAYS SO** (trap 713's lesson: a green row over a
+     * mutant nothing can see is not a row). Drawing the LIBRARY payload through
+     * `deserializeMazeLevel` — the LAB spelling — produces a BYTE-IDENTICAL
+     * draw-op stream on every committed entry, because `drawWorld` reads tiles,
+     * items, obstacles, the entrance and exit POSITIONS, and both spellings
+     * agree on all of them; what parts company is AP vocabulary (`side`,
+     * `exitName`, `targetRegion`) the renderer never looks at.
+     *
+     * ⛓ The right spelling is STILL load-bearing — `mazeSetAdapter`'s CLOSE row
+     * (§28.5) is what sees it, where an unedited close through the lab spelling
+     * MINTS AN EDIT and every exit's `side` comes back `null`. This row pins the
+     * identity so that a renderer which one day DOES read `side` reddens here
+     * and the claim gets re-examined instead of quietly becoming true.
+     */
+    it('⛔ paints IDENTICALLY through the LAB spelling — the still cannot see the difference', () => {
+        for (const entry of MAZE_PACK.entries) {
+            const a = [];
+            const b = [];
+            drawWorld(recordingContext(a), deserializeMazeWorld(entry.payload),
+                plainView({ tilePx: 8 }));
+            drawWorld(recordingContext(b), deserializeMazeLevel(entry.payload),
+                plainView({ tilePx: 8 }));
+            expect(`${entry.entry_id}: ${a.join('|') === b.join('|')}`)
+                .toBe(`${entry.entry_id}: true`);
+            expect(a.length).toBeGreaterThan(300);
+        }
+        // ⛓ …and the two worlds ARE different documents, which is why the
+        //   spelling matters somewhere else: the AP vocabulary is gone.
+        const p = MAZE_PACK.entries[0].payload;
+        expect([...deserializeMazeWorld(p).exits.values()].every((e) => e.side !== null)).toBe(true);
+        expect([...deserializeMazeLevel(p).exits.values()].every((e) => e.side === null)).toBe(true);
+    });
+});
+
+describe('mazeSetLab — the base tag and the binding list', () => {
+    /**
+     * ⛓⛓ **A ROOM SESSION'S BASE NAMES THE LIBRARY, THE INDEX *AND* THE ENTRY.**
+     * ⛔ MUTANT: the index alone. A `library_id` carries the document's CONTENT
+     * HASH, so a payload naming only `room: 2` could be re-opened against a
+     * library these edits were never edits OF; and a reorder MOVES the index
+     * while the `entry_id` does not, so a reader of a stale tag can tell WHICH
+     * fact went stale.
+     */
+    it('names the library, the index and the entry', () => {
+        const entry = MAZE_PACK.entries[2];
+        expect(roomBaseTag(MAZE_PACK, 2, entry)).toEqual({
+            kind: 'library-room',
+            library_id: MAZE_PACK.library_id,
+            room: 2,
+            entry_id: entry.entry_id,
+        });
+        expect(Object.isFrozen(roomBaseTag(MAZE_PACK, 0, MAZE_PACK.entries[0]))).toBe(true);
+        expect(roomBaseTag(null, 0, null))
+            .toEqual({ kind: 'library-room', library_id: null, room: 0, entry_id: null });
+    });
+
+    /**
+     * ⛓ **THE BINDING LIST IS COMPLETE AGAINST THE MOUNT'S OWN ROSTER.** ⛔ Read
+     * off `setEditorView.ADAPTER_FNS` rather than typed here: the mount
+     * `need()`-checks every one BY NAME at mount, so a binding that fell out
+     * would refuse on the page — and a roster copied into this row would go
+     * stale the day the mount asks for a tenth.
+     */
+    it('supplies every `ADAPTER_FNS` name the mount checks for', () => {
+        const b = mazeSetBindings({});
+        for (const name of ADAPTER_FNS) expect(typeof b.adapterFns[name]).toBe('function');
+        expect(Object.keys(b.adapterFns).sort()).toEqual([...ADAPTER_FNS].sort());
+        expect(b.document).toMatchObject({
+            kind: 'region-library', noun: 'library', validator: 'validateRegionLibrary',
+        });
+        expect(b.document.idOf(MAZE_PACK)).toBe(MAZE_PACK.library_id);
+        expect(b.document.docOf({ library: MAZE_PACK })).toBe(MAZE_PACK);
+        // ⛓ the still is THREADED, and absent by default (the node rows stub it).
+        expect(mazeSetBindings({}).drawRoomStill).toBe(null);
+        const still = makeDrawRoomStill();
+        expect(mazeSetBindings({ drawRoomStill: still }).drawRoomStill).toBe(still);
+        // ⛔ …and the bound is SAID, not defaulted: there is none, and it says so.
+        expect(b.linkBound()).toEqual({ ok: true, why: null });
     });
 });

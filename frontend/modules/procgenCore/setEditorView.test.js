@@ -55,14 +55,18 @@ import { exitArrowShapes } from './setEditorCore.js';
 import { BUNDLE_KINDS } from '../presets/documentBundle.js';
 import { loadJSZipNode } from '../../../scripts/procgen/loadJSZipNode.mjs';
 import {
-    LIBRARY_FIELDS, ROOM_FIELDS, closeRoomSession as closeMazeRoomSession,
-    createMazeSetAdapter, createSetSession as createMazeSetSession, downloadLibrary,
-    emptyMazeOverlay, exitRuleKey as mazeExitRuleKey, exitsOfRoom as mazeExitsOfRoom,
-    isMazeSetRefusal, locationRuleKey as mazeLocationRuleKey,
-    deriveAtlasOf as mazeDeriveAtlasOf, readSetCell as mazeReadSetCell,
-    rulesJsonOf as mazeRulesJsonOf, setRecord as mazeSetRecord,
-    validateForDownload as mazeValidateForDownload, whatLinksHere as mazeWhatLinksHere,
+    createMazeSetAdapter, createSetSession as createMazeSetSession,
+    emptyMazeOverlay, setRecord as mazeSetRecord,
 } from '../mazeRoom/mazeSetAdapter.js';
+/**
+ * ⛓⛓⛓ EDITOR v3 E2c — **THE BINDING LIST MOVED, IT DID NOT GET COPIED.** §28.9
+ * left it here as a literal for E2c to copy; a copy would have been two answers
+ * to *"what is the maze's `exits.addressOf`"*, and the first slice to change one
+ * would leave the other saying something else. It lives in
+ * `mazeRoom/mazeSetLab.js` now, `lab.html`'s SET arm hands the SAME object to
+ * the SAME mount, and the ten rows below are that module's rows too.
+ */
+import { mazeSetBindings } from '../mazeRoom/mazeSetLab.js';
 
 /* ══════════════════════════════════════════════════════════════════════
  * ⛓ THE HAND-BUILT DOM — `editorView.test.js`'s discipline, widened to
@@ -896,95 +900,17 @@ const MAZE_LIB = JSON.parse(readFileSync(
     fileURLToPath(new URL('../../region-libraries/demo-maze-pack.json', import.meta.url)), 'utf8'));
 
 /**
- * ⛓⛓ **THE MAZE'S BINDINGS, IN ONE PLACE — AND THIS IS THE LIST E2c COPIES.**
- * Every one of them is a fact about the maze that `setEditorView.js` may not
- * know: an exit is addressed by `exit_id` and not by an ordinal, a location is
- * an `items[]` ORDINAL and not an entity at pixels, the manifest form is
- * `LIBRARY_FIELDS`, the document is a `region-library` whose id is
- * `library_id`, and there is no link-scan bound at all (E2a priced the whole
- * column at 0.363 ms — §26.6).
+ * ⛓ **THE MAZE'S BINDINGS — `mazeSetLab.mazeSetBindings`, AND THIS FILE NO
+ * LONGER OWNS THEM.** ⛔ The wrapper stays so the ten rows below read exactly as
+ * they did before the move: what they assert is the mount's behaviour OVER this
+ * binding, and rewriting them at the same time as the code under them would
+ * have made the move unverifiable.
+ *
+ * ⚠ `drawRoomStill` is left `null` here and STUBBED by the harness — the claim
+ * these rows make is *which room the mount asked for*, not what it looked like.
+ * `mazeSetLab.test.js` drives the REAL one against a recording context.
  */
-const mazeBindings = (rulesSchema) => ({
-    adapterFns: {
-        readSetCell: mazeReadSetCell,
-        exitsOfRoom: mazeExitsOfRoom,
-        whatLinksHere: mazeWhatLinksHere,
-        bounds: (record) => ({ w: (record?.library?.entries ?? []).length, h: 1 }),
-        validateForDownload: mazeValidateForDownload,
-        deriveAtlasOf: mazeDeriveAtlasOf,
-        rulesJsonOf: mazeRulesJsonOf,
-        closeRoomSession: closeMazeRoomSession,
-        download: (session) => {
-            const out = downloadLibrary(session);
-            return {
-                members: [
-                    {
-                        kind: 'region-library',
-                        doc: out.library,
-                        name: `${out.library.library_id}.json`,
-                        label: out.library.library_id,
-                        readout: '__editorSetOut',
-                    },
-                    {
-                        kind: 'overlay',
-                        doc: out.overlay,
-                        name: `${out.overlay.overlay_id}.overlay.json`,
-                        label: `overlay ${out.overlay.overlay_id}`,
-                        readout: '__editorSetOverlayOut',
-                    },
-                ],
-                report: out.report,
-                apMappingWhy: out.apMappingWhy,
-            };
-        },
-    },
-    document: {
-        kind: 'region-library',
-        noun: 'library',
-        validator: 'validateRegionLibrary',
-        idOf: (c) => c.library_id,
-        docOf: (record) => record.library,
-    },
-    ruleKeys: { exit: mazeExitRuleKey, location: mazeLocationRuleKey },
-    forms: {
-        manifestRows: () => LIBRARY_FIELDS.map((field) => ({ field, control: 'text', label: field })),
-        roomRows: () => ROOM_FIELDS.map((field) => ({ field, control: 'text', label: field })),
-    },
-    /**
-     * ⛔⛔ **ENDPOINT-ADDRESSED, NOT ORDINAL.** `targetOptions` is the DISTINCT
-     * `exit_id`s the library holds, because the destination room is not known
-     * until the second click and a maze exit is not positional — a target whose
-     * entry has no such exit is refused BY NAME by `connect`, listing what it
-     * does have. That is the adapter's sentence, not a second authority here.
-     */
-    exits: {
-        valueOf: (ex) => ex.exit_id,
-        labelOf: (ex) => `${ex.exit_id} (${ex.side ?? '·'}) → `
-            + `${ex.to === null ? 'unlinked' : `room ${ex.to} ${ex.toExit}`}`,
-        addressOf: (value) => String(value),
-        targetOptions: (rows) => [...new Set(rows.flatMap((r) => r.exitList.map((e) => e.exit_id)))]
-            .map((id) => ({ value: id, label: id })),
-        disconnectOp: (room, value) => ({ op: 'disconnect', room, exit_id: String(value) }),
-    },
-    locations: {
-        options: (cell) => (cell.payload?.items ?? []).map((it, i) => ({
-            value: String(i), label: `${it.id ?? `slot_${i}`} @(${it.x},${it.y})`,
-        })),
-        emptyWhy: '⛔ pick a SLOT first — `mark-location` names an `items[]` ORDINAL and this '
-            + 'entry carries none',
-        targetOf: (value) => ({ item: Number(value) }),
-    },
-    /**
-     * ⛔ **THERE IS NO BOUND, AND THAT IS SAID RATHER THAN DEFAULTED.** E2a
-     * measured the whole "links here" column at 0.363 ms over a 116-entry
-     * library — 0.15 % of `LINK_SCAN`'s 250 ms budget — because the links are ONE
-     * authored list and no payload is read at all.
-     */
-    linkBound: () => ({ ok: true, why: null }),
-    isRefusal: isMazeSetRefusal,
-    rulesSchema,
-    stillKey: (cell) => cell.payload,
-});
+const mazeBindings = (rulesSchema) => mazeSetBindings({ rulesSchema });
 
 const mazeHarness = ({ overlay = emptyMazeOverlay(), loadZip = null, extraMember = null } = {}) => {
     for (const k of READOUT_NAMES) delete globalThis[k];

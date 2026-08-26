@@ -95,7 +95,22 @@ import { applyGlossaryTips } from '../procgenDocs/glossaryTips.js';
  * `{ok, library, errors, warnings}`, so there is ONE validator door and not a
  * second one written here.
  */
-import { mazeLibraryRows, sniffSetDocument } from './mazeSetLab.js';
+import {
+    makeDrawRoomStill, mazeLibraryRows, mazeSetBindings, sniffSetDocument,
+} from './mazeSetLab.js';
+/**
+ * ⛓⛓⛓ **THE SHARED SET EDITOR, MOUNTED — THE SAME FUNCTION `watch.html` BINDS
+ * TO SEEDLING** (EDITOR v3 E2b lifted it; §7/§16.2's one-toolkit law). ⛔ The
+ * strip, the two-click CONNECT gesture, the rooms table, both forms, the rule
+ * box, the REPORT, the identity line and the four downloads are NOT re-spelled
+ * here: writing them a second time would be a 1,000-line copy that drifts from
+ * the day it lands. What this page supplies is the maze's BINDINGS
+ * (`mazeSetLab.js`) and the two pipeline functions the mount refuses to import
+ * for itself.
+ */
+import { mountSetEditor } from '../procgenCore/setEditorView.js';
+import { compileRegionAtlas } from '../procgenPipeline/regionAtlasCompiler.js';
+import { validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js';
 import {
     loadServedIndex, loadServedLibrary, parseRegionLibrary,
 } from '../procgenPipeline/regionLibraryLoader.js';
@@ -272,6 +287,10 @@ export function main() {
      */
     let setAdapter = null;
     let setSession = null;
+    /** ⛓ The lifted mount, alive only while the SET arm is. */
+    let setUi = null;
+    /** ⛓ The SET arm's own lifetime, so a LOAD arriving later can remount on it. */
+    let setArmLt = null;
     let heldLibrary = null;
     let heldOverlay = null;
     let setSource = null;
@@ -1318,6 +1337,121 @@ export function main() {
     };
 
     /**
+     * ⛓⛓ **THE ROOM `<select>` IS THE PAGE'S TO FILL, AND THAT IS THE MOUNT'S
+     * OWN DIVISION** — `selectRoom` only ever sets its VALUE (`setEditorView.js`),
+     * exactly as `watchViewer.renderSetRooms` fills Seedling's. ⛔ It is filled
+     * BEFORE the mount, because `mountSetEditor` ends with `selectRoom(0)` and
+     * a `value = '0'` on an empty `<select>` sets nothing.
+     */
+    const fillSetRoomSelect = () => {
+        const sel = $('editSetRoom');
+        if (!sel) return;
+        const keep = sel.value;
+        sel.innerHTML = '';
+        const entries = setSession?.record().library.entries ?? [];
+        for (const [i, e] of entries.entries()) {
+            sel.appendChild(new Option(`${i}${e.name ? ` · ${e.name}` : ''}`, String(i)));
+        }
+        if (keep !== '' && Number(keep) < entries.length) sel.value = keep;
+        sel.disabled = entries.length === 0;
+    };
+
+    /**
+     * ⛓⛓ **THE CONTROLS ARE ENABLED BY THE PAGE, NOT BY THE MOUNT** — the same
+     * division `watchViewer` uses. ⛔ `editRoomClose` is NOT in this roster: the
+     * mount owns it and disables it on every render when no room is open, and a
+     * page that also wrote it would be a second authority on a control whose
+     * state is a fact only the mount has. `editDownloadRules` is the REPORT's,
+     * for the same reason.
+     *
+     * ⛔ `editSetAddRoom` is NOT in it either, and its title says why: the maze's
+     * `add-room` takes a PAYLOAD, and this arm has no blank maze room to mint
+     * (E2c leaves it — see §30).
+     */
+    const SET_CONTROLS = Object.freeze([
+        'editSetRoom', 'editSetGesture', 'editSetDisconnect', 'editSetReport', 'editSetUndo',
+        'editSetRuleCommit', 'editSetMarkLocation', 'editDownloadSet', 'editDownloadBundle',
+    ]);
+
+    const enableSetControls = () => {
+        const has = Boolean(setSession) && setSession.record().library.entries.length > 0;
+        for (const id of SET_CONTROLS) { if ($(id)) $(id).disabled = !has; }
+    };
+
+    /**
+     * ⛓ THE PAGE'S BLOB WRITER, handed to the mount so every one of its four
+     * downloads lands the same way `#labDownload` does. ⛔ The page NEVER writes
+     * a repo path — a blob and a click, like every other download in this arc.
+     *
+     * ⚠ DECLARED ABOVE ITS READER ON PURPOSE: `remountSetEditor` passes it into
+     * the options bag, and a `const` declared below a mount-time call is in its
+     * temporal dead zone when the bag is built — `?.` does not help
+     * ([[feedback_mount_time_call_hits_tdz]], and `watchViewer`'s `loadZip`
+     * carries the same note for the same reason).
+     */
+    const setDownload = (name, text, type) => {
+        const blob = new Blob([text], { type });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = name;
+        a.click();
+        URL.revokeObjectURL(a.href);
+    };
+
+    /**
+     * ⛓⛓⛓ **THE LIFTED MOUNT, OVER THE MAZE'S BINDINGS.** ⛔ Destroy-then-create,
+     * and the reason is the one `setEditorView.js`'s own docblock records: a new
+     * document REMOUNTS this panel, and a dead mount's listeners survive the
+     * remount (they ride the ARM's lifetime, which has not been retired) — the
+     * dead one then applies its ops to the OLD session and repaints the OLD
+     * `<select>` over the live one ([[feedback_remounted_panel_keeps_old_listeners]]).
+     */
+    const remountSetEditor = () => {
+        setUi?.destroy();
+        setUi = null;
+        if (!setSession || !setArmLt?.alive()) return;
+        fillSetRoomSelect();
+        setUi = mountSetEditor({
+            lifetime: setArmLt,
+            session: setSession,
+            adapter: setAdapter,
+            deps: {},
+            compileRegionAtlas,
+            validateRegionAtlas,
+            atlasSchema: atlasSchema ?? undefined,
+            /**
+             * ⛓ THE BINDINGS ARE `mazeSetLab.js`'s — the SAME object
+             * `setEditorView.test.js` drives in node, with the ONE thing it
+             * stubs made real: `drawRoomStill` is `drawWorld` on the entry's
+             * own world (§27.1 #2 measured that it reads no `window.`).
+             */
+            ...mazeSetBindings({ rulesSchema, drawRoomStill: makeDrawRoomStill() }),
+            say,
+            roomSession: () => null,
+            openRoomAt: () => false,
+            discardRoom: () => {},
+            download: setDownload,
+            loadZip: () => loadJSZipBrowser({ src: frontendUrl('libs/jszip/jszip.min.js') }),
+            /**
+             * ⛔ THE PAGE'S OWN `render`, NOT THE MOUNT'S: the mount re-renders
+             * itself on every applied op, and what this has to refresh is the
+             * PAGE — `window.__mazeLab.set`, the canvas and the LOAD note.
+             */
+            onSetChange: () => { enableSetControls(); render(); },
+            doc: document,
+        });
+        enableSetControls();
+        /**
+         * ⛔ AND THE PAGE'S READOUT IS REDRAWN AFTER THE MOUNT, not only before
+         * it: `window.__mazeLab.set` carries the strip, the selection and the
+         * mount's own identity line, and a page whose readout learned about them
+         * at the next press would report `mounted: false` to anything that
+         * looked in between (C2 met the same shape from the other side).
+         */
+        render();
+    };
+
+    /**
      * ⛓ HOLD A VALIDATED LIBRARY. Takes the loader's OWN result shape, so both
      * doors (`parseRegionLibrary`, `loadServedLibrary`) arrive here unchanged.
      */
@@ -1341,10 +1475,12 @@ export function main() {
              */
             heldOverlay = null;
             openSetSession();
+            remountSetEditor();
             setNote(`LOADED ${heldLibrary.library_id} (${how}) — ⚠ the OVERLAY held before it `
                 + `was DROPPED: ${e.message}`, true);
             return true;
         }
+        remountSetEditor();
         setNote(`LOADED ${heldLibrary.library_id} (${how}) — `
             + `${heldLibrary.entries.length} room(s)`
             + (heldOverlay
@@ -1372,10 +1508,12 @@ export function main() {
         } catch (e) {
             heldOverlay = previous;
             openSetSession();
+            remountSetEditor();
             setNote(`⛔ NOT LOADED — this overlay does not fit \`${heldLibrary.library_id}\`: `
                 + `${e.message}`, true);
             return false;
         }
+        remountSetEditor();
         setNote(`LOADED an OVERLAY (${how}) — ${overlay.overlay_id ?? '(unstamped)'}, `
             + `${(overlay.links ?? []).length} link(s) over `
             + `${heldLibrary.entries.length} room(s)`);
@@ -1479,6 +1617,7 @@ export function main() {
             note.className = setLoadBad ? 'note bad' : 'note';
         }
         fillLibraryPick();
+        enableSetControls();
     };
 
     /* ══════════════════════════════════════════════════════════════════
@@ -1618,6 +1757,36 @@ export function main() {
                 servedOffered: (servedRows ?? []).map((r) => r.library_id),
                 /** ⛓ Which optional schema actually arrived — a NAMED absence. */
                 schemas: { rules: Boolean(rulesSchema), atlas: Boolean(atlasSchema) },
+                /**
+                 * ⛓⛓ WHAT THE MOUNT ITSELF HOLDS. ⛔ `mounted: false` is a real
+                 * state and not a hole: a library can be held while the arm is
+                 * not on screen, and a row that could not tell those apart would
+                 * read a page that had loaded nothing exactly like one that had.
+                 */
+                mounted: Boolean(setUi),
+                selected: setUi ? setUi.selected : null,
+                strip: setUi
+                    ? setUi.rows().map((r) => ({
+                        index: r.index,
+                        name: r.name,
+                        exits: r.exits,
+                        linkedFrom: r.linkedFrom,
+                        locations: r.locations,
+                        rules: r.rules,
+                        openable: r.openable,
+                    }))
+                    : null,
+                report: setUi?.report()
+                    ? {
+                        allowed: setUi.report().download.rules.allowed,
+                        why: setUi.report().download.rules.why,
+                        errors: setUi.report().rows.filter((r) => r.severity === 'error')
+                            .map((r) => `[${r.kind}] ${r.text}`),
+                        kinds: [...new Set(setUi.report().rows.map((r) => r.kind))],
+                    }
+                    : null,
+                note: $('editSetNote')?.textContent ?? '',
+                identity: $('editSetIdentity')?.textContent ?? '',
             } : null,
             directives: (state.directives ?? []).map((d) => ({
                 instance: d.instance, outcome: d.outcome, keptKind: d.keptKind, at: d.at,
@@ -1792,6 +1961,14 @@ export function main() {
     };
 
     const mountSetArm = (lt) => {
+        setArmLt = lt;
+        lt.onRetire(() => {
+            setUi?.destroy();
+            setUi = null;
+            setArmLt = null;
+        });
+        // ⛓ A library held at BOOT (`?library=`) predates this arm — mount over it now.
+        remountSetEditor();
         lt.on($('labSetLoad'), 'click', loadSetFromBox);
         lt.on($('labSetUpload'), 'change', (e) => {
             const file = e.target.files?.[0];
@@ -2130,15 +2307,27 @@ export function main() {
             lt.onRetire(() => { tool?.destroy(); tool = null; });
         }
 
+        render();
+
         /**
          * ⛓⛓⛓ EDITOR v3 E2c — **THE SET ARM, ON THIS ARM'S OWN LIFETIME.** ⛔ Its
-         * LOAD controls, its served index and (next commit) the shared set-editor
-         * mount all ride `lt`, so leaving the arm detaches every one of them —
-         * the same retire-then-create the EDIT arm's tool follows.
+         * LOAD controls, its served index and the shared set-editor mount all
+         * ride `lt`, so leaving the arm detaches every one of them — the same
+         * retire-then-create the EDIT arm's tool follows.
+         *
+         * ⛔⛔ **AFTER `render()`, AND THAT IS A DEFECT THIS SLICE'S OWN PROBE
+         * FOUND.** `mountSetEditor` paints the strip during mount, and
+         * `overviewLayout` sizes it from `overview.parentNode.clientWidth` — which
+         * is **0 while `#setPanel` is still `hidden`**, because a hidden element
+         * has no layout. MEASURED on the first browser run: the strip came up
+         * **72×132** (4 rooms × `OVERVIEW.minCellPx` = 18, the SCROLL floor)
+         * instead of the ~300 px cells the stage has room for, with ink in it —
+         * so every readout said the strip had drawn and the picture was a
+         * quarter of an inch wide. ⇒ the page unhides the panel FIRST and the
+         * mount measures a laid-out parent. ⚠ A row asserting only INK could not
+         * have seen this; the strip's WIDTH is asserted too.
          */
         if (source === SOURCES.SET) mountSetArm(lt);
-
-        render();
     };
 
     /* ══════════════════════════════════════════════════════════════════
