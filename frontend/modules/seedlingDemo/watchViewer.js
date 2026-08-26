@@ -201,6 +201,7 @@ import {
 // ⛓ SLICE 7: the ONE formatter/normalizer for a skeleton spec — the identity
 // line, the URL bar and this form all spell a room the same way.
 import { formatSkeleton } from '../procgenCore/skeletonKinds.js';
+import { readRoomParam } from '../procgenCore/urlParams.js';
 /**
  * ⛓⛓ ARC 3 SLICE 5a (D2) — the ONE resolver of a Seedling skeleton spec and the
  * ONE list of the keys this binding spells explicitly. ⛔ The form used to
@@ -677,6 +678,13 @@ function readParams() {
          * silently become the single-tape arm.
          */
         tapes: parseTapesParam(q.get('tapes')),
+        /**
+         * ⛓⛓ EDITOR INTEGRATION W3 — **WHICH ROOM OF THE HELD SET THE EDIT ARM
+         * OPENS.** `null` is *"open no room"* and is not `0`. ⛔ The PARSE is
+         * `urlParams.readRoomParam`, shared with `lab.html`: both pages spell
+         * the parameter the same way and refuse the same values.
+         */
+        room: readRoomParam(q.get('room')),
         side: (q.get('side') || 'js').toLowerCase(),
         speed: Number(q.get('speed') || 1),
         // ⚠ RAW. `parseLayersParam` is where it is decided, and it is pure so
@@ -3891,6 +3899,43 @@ const takeEditHandover = () => {
     editHandover = null;
     return h;
 };
+
+/**
+ * ⛓⛓⛓ EDITOR INTEGRATION W3 — **A SET DOCUMENT A HOST HANDED OVER**, and it is
+ * HELD rather than TAKEN.
+ *
+ * The room-editor contract (`NewDocs/plans/editor-integration.md` §3.2) is two
+ * messages: `procgenLab:load` carries the LEVEL SET (or an OVERLAY), and
+ * `procgenLab:navigate` with `?source=edit&room=n` asks for ONE room of it. ⛔
+ * `navigateTo` REMOUNTS THE ARM UNCONDITIONALLY — measured — and this page's
+ * held set lives in `runEditor`'s closure, so a one-shot slot in `editHandover`'s
+ * shape would be consumed by the first mount and the room navigate would arrive
+ * at an arm holding nothing. That is why this one is READ, not taken.
+ *
+ * ⛓ AND THE SET EDITOR WRITES BACK TO IT on every set change, so a remount
+ * restores the document WITH its edits folded in rather than the one that
+ * arrived. ⚠ THE OP LOG DOES NOT SURVIVE: undo history is the session's, the
+ * session is the arm's, and an arm switch has always ended it. What survives is
+ * the DOCUMENT, which is what the host asked to have edited.
+ *
+ * ⛔ It is `{set, overlay}` — the set session's own two members — so a mount
+ * replays it through `takeLevelSet`, the SAME door the LOAD box uses. An
+ * overlay may arrive before its set (the page already supports that), which is
+ * why `set` is nullable.
+ */
+let hostSetDocument = null;
+const peekHostSetDocument = () => hostSetDocument;
+const holdHostSetDocument = (doc) => { hostSetDocument = doc; };
+
+/**
+ * ⛓⛓ WHAT THE SET ARM IS HOLDING, FOR THE HOST BRIDGE — `{room, record}` or
+ * `null`. ⛔ A FUNCTION installed by the arm, in `replayLoadedTape`'s shape:
+ * the session and the open-room index are `runEditor` closure locals and the
+ * bridge is installed at module level, and a captured VALUE would be the record
+ * at mount rather than the one on screen.
+ */
+let setArmSnapshot = () => null;
+const installSetArmSnapshot = (fn) => { setArmSnapshot = fn; };
 
 /**
  * A source that answers for the held generated level and defers to the atlas
@@ -8653,6 +8698,13 @@ async function runEditor(params, lifetime) {
     let setUi = null;
     /** ⛓ Which room of the SET the room session below was opened on, or null. */
     let openRoom = null;
+    /**
+     * ⛓ EDITOR INTEGRATION W3 — a RETIRED arm reports nothing to the host.
+     * ⛔ Registered here, beside the locals it is about, rather than beside the
+     * install: trap 259's law is that a subscription's undo is written where
+     * the subscription is, and this is the module-level handle's own undo.
+     */
+    lifetime.onRetire(() => installSetArmSnapshot(() => null));
     const adapter = createSeedlingEditAdapter({
         schema: null,
         levelSource: levelSourceFromAtlas(atlas),
@@ -9244,6 +9296,15 @@ async function runEditor(params, lifetime) {
         setSession = createSetSession(setAdapter, record, { base });
         setRoomSource = setSessionRoomSource(setSession);
         openRoom = null;
+        /**
+         * ⛓⛓ EDITOR INTEGRATION W3 — the host bridge's window onto this arm.
+         * ⛔ A FUNCTION over the live locals, and it is re-installed on every
+         * session (a new document is a new record); the arm's lifetime clears
+         * it, so a retired arm reports nothing.
+         */
+        installSetArmSnapshot(() => (setSession
+            ? { room: openRoom, record: setSession.record() }
+            : null));
         setUi?.destroy();
         setUi = mountWatchSetEditor({
             lifetime,
@@ -9281,6 +9342,29 @@ async function runEditor(params, lifetime) {
                  * `redraw` would still be describing the room the canvas shows.
                  */
                 setShippable(shippableEdit());
+                /**
+                 * ⛓⛓⛓ EDITOR INTEGRATION W3 — **THE HOST'S DOCUMENT IS KEPT
+                 * CURRENT.** A `navigateTo` remounts this arm and the session
+                 * dies with it; writing the folded record back means a remount
+                 * restores what is on screen rather than what arrived. ⚠ Only
+                 * while a host handed one over — a set the READER pasted is
+                 * theirs and this page has never restored one across a switch.
+                 */
+                if (peekHostSetDocument()) {
+                    holdHostSetDocument({
+                        set: setSession.record().set,
+                        overlay: setSession.record().overlay,
+                    });
+                }
+                /**
+                 * ⛓⛓ AND THE HOST IS TOLD. ⛔ `publishWatch` is what runs
+                 * `hostBridge.announce()`, and this arm reached it only from
+                 * `mountArm`'s `finally` — so before W3 every SET edit,
+                 * including the ONE `replace-room-xml` a room CLOSE folds, was
+                 * invisible to a host. The maze page has always announced from
+                 * its own `render`.
+                 */
+                if (lifetime.alive()) publishWatch(params.source);
             },
         });
         renderSetRooms();
@@ -9621,6 +9705,49 @@ async function runEditor(params, lifetime) {
      * before one stamp (§13.10's own question, answered).
      */
 
+    /* ── ⛓⛓⛓ EDITOR INTEGRATION W3 — THE HOST'S DOCUMENT, AND ITS ROOM ──
+     *
+     * ⛔ **LAST, AFTER THE ARM IS FULLY WIRED.** `takeLevelSet` mounts the SET
+     * EDITOR, and a mount over an arm whose buttons are not bound yet would be
+     * a strip whose presses reach nothing.
+     *
+     * ⛔ AND IT GOES THROUGH `takeLevelSet` / `takeOverlay` — the LOAD box's own
+     * doors, validation included. A host-only intake would be a second answer
+     * to *"is this a level set"*, on the boundary where a second answer is
+     * silent.
+     */
+    const hostDoc = peekHostSetDocument();
+    if (hostDoc?.set) takeLevelSet(hostDoc.set, hostDoc.overlay ?? null);
+    else if (hostDoc?.overlay) takeOverlay(hostDoc.overlay);
+
+    /**
+     * ⛓⛓ **`?room=` OPENS ONE ROOM OF WHAT IS HELD**, through `openRoomAt` —
+     * the SAME function `#editSetOpen` presses, so a host-driven room and a
+     * hand-picked one are one session with one `set-room` base tag.
+     *
+     * ⛔ **NOTHING HELD ⇒ IT REFUSES IN THIS ARM'S OWN BOX**, never a throw: a
+     * URL naming a room of a set the page does not have is one a reader can
+     * write by hand, and a page that died on it would lose the arm too. An
+     * index past the last room refuses the same way, naming the count —
+     * `openRoomAt` would otherwise hand `openBase` a `set-room` tag the
+     * adapter resolves to nothing.
+     */
+    if (params.room !== null && params.room !== undefined) {
+        if (!setSession) {
+            setNote(`⛔ ?room=${params.room} — this arm is holding NO level set, so there is `
+                + 'no room to open. Load one into the LOAD box above, or send one over '
+                + '`procgenLab:load`.', true);
+        } else if (params.room >= setSession.record().set.rooms.length) {
+            setNote(`⛔ ?room=${params.room} — the held set "`
+                + `${setSession.record().set.set_id ?? '(unstamped)'}" has `
+                + `${setSession.record().set.rooms.length} room(s), numbered from 0. No room `
+                + 'was opened.', true);
+        } else {
+            openRoomAt(params.room);
+        }
+        setUi?.render();
+        render();
+    }
 }
 
 /**
@@ -11168,6 +11295,14 @@ async function installHostBridge() {
             readout: () => window.__watch,
             load: hostLoad,
             navigate: (search) => navigateTo(search, 'the HOST navigated'),
+            /**
+             * ⛓⛓ EDITOR INTEGRATION W3 — the SET arm's own session, for the
+             * arm-aware payload. ⛔ Through `setArmSnapshot` rather than a
+             * readout field: `__editorEdit.set` carries COUNTS of the document
+             * (rooms, openable, edits) and never the document, and a host
+             * cannot fold a `replace-room-xml` back into a count.
+             */
+            setArm: () => setArmSnapshot(),
         });
     } catch (e) {
         // eslint-disable-next-line no-console
@@ -11185,6 +11320,37 @@ async function installHostBridge() {
  * and the URL must not name a different one.
  */
 async function hostLoad(payload) {
+    /**
+     * ⛓⛓⛓ EDITOR INTEGRATION W3 — **THE SNIFF IS `sniffLoadBox`, NOT A SECOND
+     * TEST.** It is the page's ONE classifier (`documentBundle.classifyDocument`
+     * under it), the same answer the EDIT arm's LOAD box, a `.zip` member and
+     * the maze page's SET arm all get — so a LEVEL SET or an OVERLAY handed over
+     * by a host lands on the EDIT arm's own intake, and a `?gen=`-shaped payload
+     * keeps going exactly where it went before.
+     *
+     * ⛔ **AND A SET DOES NOT DO THE `?gen=` DANCE.** The generate branch below
+     * FORCES `source=generate` because reproducing a payload means RUNNING the
+     * ladder; a set is a DOCUMENT and the arm that edits it is `edit`. Forcing
+     * generate for one would have handed the ladder a document it cannot
+     * reproduce and reported the mismatch as a defect.
+     *
+     * ⚠ `?room=` IS DROPPED HERE. A load is a NEW document, and re-opening the
+     * room index the previous one happened to have open would be a room the
+     * host never asked for. The host asks for a room in its own next message.
+     */
+    const got = sniffLoadBox(JSON.stringify(payload));
+    if (got.kind === 'levelset' || got.kind === 'overlay') {
+        const held = peekHostSetDocument();
+        holdHostSetDocument(got.kind === 'levelset'
+            ? { set: got.set, overlay: held?.overlay ?? null }
+            : { set: held?.set ?? null, overlay: got.overlay });
+        const q = new URLSearchParams(window.location.search);
+        q.set('source', 'edit');
+        q.delete('gen');
+        q.delete('room');
+        await navigateTo(q.toString(), `the HOST sent a ${got.kind}`);
+        return;
+    }
     pendingHostPayload = payload;
     const q = new URLSearchParams(window.location.search);
     q.set('source', 'generate');

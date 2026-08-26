@@ -225,7 +225,25 @@
   ?level=N   ?boot=PATH   ?goals=   ?solve=1   ?name=
   ?layers=a,b,c   ?tick=N   ?shot=1
   ?seed=N  ?biome=  ?count=N  ?tries=N  ?k=N  ?budgetms=  ?tickbudget=
-  ?run=1  ?gen=PATH
+  ?run=1  ?gen=PATH   ?room=N
+
+  ?room=N   ⛓⛓ EDITOR INTEGRATION W3 — WHICH ROOM of the LEVEL SET the EDIT
+            arm is holding to open a room session on (`?source=edit&room=N`).
+            It goes through the page's own `openRoomAt`, the same function
+            `#editSetOpen` presses, so a host-driven room and a hand-picked one
+            are ONE session with one `set-room` base tag. ⛔ With NOTHING HELD
+            it REFUSES in the arm's own LOAD note — a link naming a room of a
+            set this page does not have is one a reader can write by hand, and
+            a page that died on it would lose the arm too; an index past the
+            last room refuses the same way, naming the count. ⚠ It is NOT
+            `?level=N`: that names a room of the COMMITTED atlas set (the
+            `atlas` base), and this names one of the document in hand.
+            ⛓ The parse is `urlParams.readRoomParam`, SHARED with `lab.html` —
+            both pages spell it the same way and refuse the same values.
+            ⛓ This is how a HOST asks for one room over `procgenLab:navigate`,
+            after handing the document over `procgenLab:load` (which this page
+            SNIFFS: a level set or an overlay lands on the EDIT arm's intake
+            instead of the `?gen=` reconstruction).
 
   ?tick=N   the initial cursor. The page lands there PAUSED — landing and
             then playing forward would make the parameter a flicker. Out of

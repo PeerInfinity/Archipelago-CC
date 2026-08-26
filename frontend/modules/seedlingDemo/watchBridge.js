@@ -37,6 +37,7 @@
  */
 
 import { createLabBridge } from '../procgenCore/labBridge.js';
+import { makeSetRecordEnvelope } from '../procgenCore/labRoomEnvelope.js';
 import { AdapterClient } from '../shared/adapterClient.js';
 
 /**
@@ -68,6 +69,39 @@ export function watchBridgeSummary(watch) {
 }
 
 /**
+ * ⛓⛓⛓ EDITOR INTEGRATION W3 — **WHAT THIS PAGE HANDS THE HOST, AND IT IS
+ * ARM-AWARE.**
+ *
+ * `labBridge.announce` publishes `procgenLab:levelChanged` whenever
+ * `page.payload()` differs from the last one published. Before W3 that was
+ * always the GENERATE arm's ladder payload, so every SET edit on the EDIT arm —
+ * including the ONE `replace-room-xml` a room CLOSE folds — was invisible to a
+ * host. Now: while the EDIT arm HOLDS a set session, the page's payload IS that
+ * document, wrapped in the `labRoomEnvelope` both pages and the host share.
+ *
+ * ⛔ **THE GATE IS `setArm()`, NOT THE `?source=`** — the same condition
+ * `__editorEdit.set` is published under. A set can be held while another arm is
+ * on screen, and a host that had to drive the page to the EDIT arm before it
+ * could hear about the document could never send the document and the room as
+ * two messages.
+ *
+ * ⚠ BYTE-INERT FOR EVERY EXISTING CLAIM: no set held ⇒ the ladder payload,
+ * exactly as before. `check-procgen-lab-hosting.mjs`' Seedling claims send
+ * `?gen=`-shaped payloads and never a set.
+ *
+ * @param {object|null|undefined} readout `window.__watch`
+ * @param {{room:number|null, record:object}|null} setArm the held session, or null
+ */
+export function watchLabPayload(readout, setArm) {
+    if (setArm) {
+        return makeSetRecordEnvelope({
+            substrate: 'seedling', room: setArm.room, record: setArm.record,
+        });
+    }
+    return readout?.payload ?? null;
+}
+
+/**
  * Install the bridge. Returns the handle `watchViewer` keeps, or `null` when
  * the page is standalone.
  *
@@ -76,8 +110,13 @@ export function watchBridgeSummary(watch) {
  * @param {() => object} opts.readout             `() => window.__watch`
  * @param {(payload:object) => any} opts.load     the `?gen=` reconstruction
  * @param {(search:string) => any} opts.navigate  the ONE URL reader, no reload
+ * @param {() => ({room:number|null, record:object})|null} [opts.setArm]
+ *        the EDIT arm's SET session, or `null` when it holds none — see
+ *        `watchLabPayload`
  */
-export async function installWatchBridge({ iframeId, readout, load, navigate }) {
+export async function installWatchBridge({
+    iframeId, readout, load, navigate, setArm = () => null,
+}) {
     if (!iframeId) return null;
     const client = new AdapterClient();
     return createLabBridge({
@@ -89,7 +128,7 @@ export async function installWatchBridge({ iframeId, readout, load, navigate }) 
             // `__watch` on every arm switch, so a bridge holding a reference
             // would report the outgoing arm for as long as the page lived.
             summary: () => watchBridgeSummary(readout()),
-            payload: () => readout()?.payload ?? null,
+            payload: () => watchLabPayload(readout(), setArm()),
             load,
             navigate,
         },
