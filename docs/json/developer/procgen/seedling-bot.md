@@ -15295,6 +15295,22 @@ Both halves were then re-driven: the new build passes with the guard on, the old
 build is refused by it before any recording is attempted. Its cost, which the
 previous slice left unmeasured, is exactly one frame.
 
+**One number changed, and something was watching it after all.** The slice's
+own reasoning had said nothing checks the count of skipped frames, on the
+grounds that every stored recording holds only positions and room changes. That
+is true of the stored recordings and it was the wrong place to look: a *check*
+asserted the number in its own code, and no amount of searching the recordings
+could have turned that up. It failed on the first full run after the change,
+correctly — it had been asserting that a run which declares where it starts
+skips one more frame than the model expects, which was true of the old build and
+is exactly what the new one stops doing. The check now asks the game which kind
+of build it is rather than assuming, in the same way and for the same reason the
+optional guard above does. And the arm of that check which covers runs starting
+from the very beginning of the game **passed in the same run** — those runs
+never replace the world at all, so they never had the extra frame to lose —
+which is what makes this a corrected claim rather than a standard relaxed to
+fit.
+
 **And one measurement that had to be taken twice, for a reason worth keeping.**
 The plan was to confirm the one-frame wait by comparing when the bot began
 recording against a reading taken just before it was told to start. Those two

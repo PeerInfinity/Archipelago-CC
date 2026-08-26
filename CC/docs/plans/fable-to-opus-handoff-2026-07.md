@@ -5320,10 +5320,38 @@ held by ONE deliberate `wasm/seedling_bot_ap_p4b/game.html` in
 `flashPanel/README.md`, labelled there as the repository's only manufactured
 reference, cost named, retirement scheduled at 12h's close.
 
-⚠ **PUSH IS WITH THE USER** — the submodule push publishes a new 33.8 MB
-`.wasm` to `PeerInfinity/seedling-wasm` (first publication) and the outer
-gitlink cannot precede it. `standing-values --write` is HELD until then (a
-`--write` freezes a HEAD that cannot be pushed).
+⛓ **PUSHED (⚖ user: "Push.")** — submodule `1bc0003 → 7aaaa0a`, verified AT THE
+FAR END (the four blobs read back out of `origin/main`, both whitelist lines,
+both manifest entries); outer `d0a2a188f..1eed5988a` then `12934b870`. CI at the
+pushed head: **`Seedling wasm submodule` STEP 1 (gating) `success` — "ALL PASS —
+2 pinned builds, four views in agreement", on a FRESH RUNNER that fetched the
+submodule from the remote**, which is the real far-end proof of the pin (read by
+STEP OUTCOME, not job conclusion — `continue-on-error` rewrites the latter);
+STEP 3's `failure` is the pre-existing, self-documented `py.exe` refusal.
+`JavaScript Unit Tests` **376/11638, 0 failed**, unmoved from 12g.
+
+⛔⛔ **THE `--write` FOUND ONE RED, IT WAS MINE, AND THE GATE WAS RIGHT:
+`gate: seedling-wasm-ship` 254/0 → 253/1.** CLAIM 6 asserts a DECLARED boot pays
+`SHARES[0] + BOOT_PRESWAP_FRAMES`; p4c no longer spends that frame, so the row
+read `game 40 vs model 40`. **W0 had cleared this as safe on "nothing asserts
+`dead_frames`" — measured over the expectation FILES (§45.6 (m4)) and TRUE of
+them, and the wrong population: a GATE asserts it in CODE.** The known family is
+"a code sweep misses the data"; this is that error run backwards. Fixed
+`12934b870` by asking the BUILD: `watchWasm.js` surfaces `rec.arm = st.arm ??
+null` from the status block it already reads, and CLAIM 6 keys on the
+capability's PRESENCE, never a build name — the same lesson `--arm-bound` taught
+one file over the same day. ⛓ The control was free and already in the failing
+run: the CAMPAIGN arm (a TRUE START, which takes `botStart`'s skip path and
+never had the frame) **PASSED at `40 − 1` while the CHAIN arm failed at
+`40 + 1`** — opposite directions, only the touched arm moved. Re-run **ALL PASS
+254/0**.
+
+**STANDING VALUES: exactly the two predicted movers.** `suite:` `375/11631` →
+**376/11638** (CI-quoted at `1eed5988a`); `gate: seedling-wasm-pins`'s **`total`
+string only** ("1 pinned build" → "2 pinned builds"), `value` `0/0` held.
+UNMOVED: `-pages` 20/0 · `-element` 11/0 · `-ship` 254/0 · `-generated-set` 32/0
+· `-save-stamp` 21/0 · `-vanilla-manifest` 24/0 — the last three Windows rows
+now driving p4c. Two `cheap` flips named, both timing-boundary crossings.
 
 ⛔ **A HAZARD FOR 12h's INPUTS:** `/mnt/c/playwright/tape-r9-solve-0.json`
 (`ac86d87c…`, the evidence bytes) is **145 ticks / 57 spans**; the committed
