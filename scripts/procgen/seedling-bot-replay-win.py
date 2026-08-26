@@ -40,9 +40,161 @@ import json
 import sys
 import time
 
-# Resolved by the WINDOWS interpreter (py.exe -3.12), not the Linux one —
-# a missing-import warning from a Linux type checker here is expected.
-from playwright.sync_api import sync_playwright  # type: ignore[import-not-found]
+# ⛔ THE PLAYWRIGHT IMPORT IS INSIDE `main()`, NOT HERE (R9 slice 12g). This
+# file has to be IMPORTABLE ON LINUX so `seedlingSwapGate.test.js` can reach
+# the world-swap gate's predicate without a Windows Playwright install; a
+# top-level import made that impossible, and the predicate would have been the
+# one part of this driver no row could ever exercise. Nothing above `main()`
+# touches the browser, so the move costs only the line's position: an
+# ImportError now names itself when a run STARTS rather than when it loads.
+
+
+# ── R9 slice 12g: THE WORLD-SWAP GATE (⚖ 58) ─────────────────────────────────
+#
+# ⛔ IT LIVES IN THIS FILE, and that is a decision rather than an accident.
+# SEVENTEEN consumers COPY this single file into the Windows scratch directory
+# and run it from there (`verify-seedling-bot-differential.mjs:620` and the
+# rest). A sibling module would have to be copied by every one of them, and the
+# first consumer that forgot would not lose the GATE — it would lose the whole
+# driver to an ImportError. One file cannot be half-copied.
+#
+# ⛓⛓⛓ WHAT THE RACE IS (12f, §43.7). `Bot.botStart` ends with
+# `FP.world = new Game(bootLevel, bootX, bootY)` (`Bot.as:1731`), which only
+# writes `FP._goto`: FlashPunk applies the swap in `Engine.checkWorld()` at the
+# END of the next `Engine.update()` (`Engine.as:77`). `Main.update()` calls
+# `Bot.update()` ABOVE `super.update()` (`Main.as:62-67`), so exactly ONE
+# `Bot.update()` runs against the OUTGOING world before the swap lands — the
+# `BOOT_PRESWAP_FRAMES = 1` law (`r7Acceptance.js:652`, measured with a
+# negative control).
+#
+# ⛓ WHETHER THAT PRE-SWAP FRAME IS RECORDED IS DECIDED AT `Bot.as:2877`:
+#
+#     if (game.blackCover > 0 || Game.freezeObjects) { deadFrames++; ...; return; }
+#
+# with `game = FP.world as Game` — the OUTGOING world. The observation is
+# pushed at `Bot.as:2910`, BELOW that gate. So the pre-swap frame is DROPPED
+# (and counted DEAD) while the page's own boot world is still covered, and
+# RECORDED once that world's fade has finished. 12f measured both sides on one
+# box: a pre-boot idle <= 0.45 s dropped it (walkdiff 0/146, 41 dead), >= 0.5 s
+# recorded it (146/146, 40 dead, t=0 reading the page's own boot position and
+# the whole stream shifted by one tick, so every tape input lands a frame off
+# and the walk dies in level 0).
+#
+# ⇒ every committed fixture, every latch and every ship-gate window rests on
+# winning a wall-clock race that nothing had ever tested is won. This is that
+# test. ⚖ 58: A GATE DETECTS A LOST RACE; IT DOES NOT REMOVE IT. The removal is
+# a separate change, argued in §45.
+#
+# ── THE TWO SIGNALS ─────────────────────────────────────────────────────────
+#
+# (1) THE FIRST DRAINED TICK IS THE BOOT. `botStart` arms with `tick = 0` and
+#     `Bot.update` RECORDS BEFORE IT ACTS (`Bot.as:2910` precedes the dispatch
+#     loop), so the first observation is taken before any tape input exists: it
+#     IS the boot state. ⚠ IN A DIFFERENT COORDINATE SPACE than the
+#     declaration. A `boot` block is the `Game` CONSTRUCTOR's argument (the OEL
+#     cell) and `Player.as:375` is `super(_x + Tile.w / 2, _y + Tile.h / 2)`,
+#     so the observation is the declaration plus the constructor HALF-TILE.
+#     Measured over the committed corpus at `54c242adf`: 149 of 149 fixtures
+#     have `ticks[0] == {t: 0, level, x + 8, y + 8}`.
+#
+# (2) THE DRAIN IS ONE LONGER THAN THE TAPE. `Bot.update` disarms at
+#     `tick >= tickCount` AFTER recording that tick (`Bot.as:2963`), so a tape
+#     of `tick_count` N drains N + 1 observations: the boot plus N driven
+#     ticks. Structural, not incidental — and 149 of 149 fixtures agree.
+#
+# ⚠ SAID PLAINLY: the race as measured PRESERVES the length (146 either way),
+# so signal (2) does not fire on it. It is here because a gate with one signal
+# cannot tell "the stream is right" from "the one thing I look at is right",
+# and because a shift that DID change the length would otherwise slip past
+# signal (1) on any tape that boots where the page does. (m2) is the row that
+# keeps it from being decorative.
+#
+# ── THE SKIP PATH, AND WHY IT IS CORRECT HERE ───────────────────────────────
+#
+# `botStart` skips `new Game` entirely when `bootLevel == Main.level &&
+# atBootPosition()` (`Bot.as:1730`). No swap is pending, so there is no race,
+# and the first drained tick equals the boot trivially — the gate PASSES, which
+# is the right answer and not a hole. That is also the whole `--tapes` director
+# path: chains are cut at level ARRIVALS precisely so a `boot` block can
+# reproduce the tick, and all 18 committed chain boundaries have
+# `previous-segment-end == next-boot + half-tile`. So the race lives at the
+# FIRST window of a page and nowhere else.
+#
+# ⛔ ASCII ONLY in every string below: they are printed and raised on the
+# WINDOWS console, which is cp1252, and a stray arrow raises
+# UnicodeEncodeError — killing a run that had already succeeded.
+
+# `Tile.w / 2` == `Tile.h / 2` == 8. The game's own constant is `Tile.w`, which
+# `playerPhysicsV1.js:98` transcribes as `TILE = {w: 16, h: 16}`; this is the
+# driver's side of the same number, and `seedlingSwapGate.test.js` asserts the
+# two agree rather than letting a second spelling drift.
+CONSTRUCTOR_HALF_TILE = 8
+
+RACE_LOST = "WORLD_SWAP_RACE_LOST"
+LENGTH_UNEXPECTED = "DRAIN_LENGTH_UNEXPECTED"
+UNVERIFIABLE = "WORLD_SWAP_GATE_UNVERIFIABLE"
+
+
+def expected_boot_observation(boot):
+    """The `{level, x, y}` the first drained tick must carry, or None.
+
+    None means the tape cannot be checked at all — which the caller surfaces as
+    a REFUSAL and never as a pass (`tapeFormat.js:1757` makes a well-formed
+    `boot` mandatory, so this is a cannot-happen, reported as one).
+    """
+    if not isinstance(boot, dict):
+        return None
+    for key in ("level", "x", "y"):
+        value = boot.get(key)
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
+            return None
+    return {
+        "level": boot["level"],
+        "x": boot["x"] + CONSTRUCTOR_HALF_TILE,
+        "y": boot["y"] + CONSTRUCTOR_HALF_TILE,
+    }
+
+
+def check_drain(label, boot, tick_count, ticks):
+    """Refuse a drained window BY NAME, or return None.
+
+    `label` names the window, `boot` is the tape's declared block, `tick_count`
+    is the tape's own — read back off `botStatus`, so it is the number the GAME
+    loaded rather than the one the caller believes it sent — and `ticks` is the
+    drained observation list.
+    """
+    expected = expected_boot_observation(boot)
+    if expected is None:
+        return (f"{UNVERIFIABLE}: {label} declares no usable boot block "
+                f"({boot!r}), so the first drained tick cannot be checked "
+                "against anything")
+    if not ticks:
+        return (f"{UNVERIFIABLE}: {label} drained NO ticks, so there is no t=0 "
+                "to compare with the declared boot")
+
+    first = ticks[0]
+    if (first.get("level") != expected["level"]
+            or first.get("x") != expected["x"]
+            or first.get("y") != expected["y"]):
+        return (f"{RACE_LOST}: t=0 reads L{first.get('level')} "
+                f"({first.get('x')},{first.get('y')}) vs declared boot "
+                f"L{expected['level']} ({expected['x']},{expected['y']}) "
+                f"[{label}; the declaration is L{boot['level']} "
+                f"({boot['x']},{boot['y']}) plus the constructor half-tile]. "
+                "botStart's world swap lands one Engine.update() after the "
+                "call (Bot.as:1731, Engine.as:77) and the pre-swap frame was "
+                "RECORDED instead of counted dead (Bot.as:2877), so the whole "
+                "stream is shifted by one tick and every tape input lands a "
+                "frame off.")
+
+    if isinstance(tick_count, int) and not isinstance(tick_count, bool):
+        expected_len = tick_count + 1
+        if len(ticks) != expected_len:
+            return (f"{LENGTH_UNEXPECTED}: {label} drained {len(ticks)} ticks, "
+                    f"expected {expected_len} (tick_count {tick_count} plus the "
+                    "one boot observation Bot.update records before it acts; it "
+                    "disarms at tick >= tickCount AFTER recording, Bot.as:2963)")
+    return None
 
 
 def evaluate_bot(page, name, arg=None):
@@ -83,6 +235,11 @@ def wait_for(desc, fn, deadline_sec, poll_sec=0.25):
 
 
 def main():
+    # Resolved by the WINDOWS interpreter (py.exe -3.12), not the Linux one —
+    # a missing-import warning from a Linux type checker here is expected.
+    # ⛔ INSIDE `main()` on purpose; see the note beside the imports.
+    from playwright.sync_api import sync_playwright  # type: ignore[import-not-found]
+
     ap = argparse.ArgumentParser()
     ap.add_argument("--url", required=True)
     ap.add_argument("--tape", help="Windows path to ONE tape JSON")
@@ -204,6 +361,13 @@ def main():
                      lambda: page.evaluate(
                          "() => !!(window.__swfBridge && window.__swfBridge.game"
                          " && window.__swfBridge.game.botStatus)"), 180)
+            # ⛓ R9 slice 12g: the instant the page's own boot world became
+            # reachable. Everything between here and `botStart` is wall clock
+            # the OUTGOING world spends fading, and the world-swap race is
+            # decided by how many of its frames have gone by (`Bot.as:2877`).
+            # Recorded unconditionally because it is a `time.time()` and costs
+            # nothing; only ever PRINTED under `--preboot-delay-sec`.
+            ready_at = time.time()
 
             adapter = page.evaluate(
                 """async () => {
@@ -306,6 +470,30 @@ def main():
                 loaded = evaluate_bot(page, "botLoadTape", json.dumps(tape))
                 if loaded != "ok":
                     raise RuntimeError(f"{label}: botLoadTape: {loaded}")
+                # ⛓⛓ R9 slice 12g: THE FADE EDGE, IN THE GAME'S OWN UNITS.
+                # "idle 0.47 s" is a fact about THIS box; "botStart at frame N
+                # of the outgoing world" is not, and N is what a later
+                # driver-side bound would have to assert on. `Game.time` is
+                # `Main.time`, incremented once per `Game.update()` BELOW the
+                # `blackCover` gate but outside it (`Game.as:832`), so it is a
+                # frame counter for the world that is fading. Read here, at the
+                # last instant before the arm.
+                #
+                # ⛔ ONLY UNDER `--preboot-delay-sec`, and that is what keeps
+                # this byte-inert: the extra bridge call costs milliseconds
+                # BEFORE the arm, which pushes the race toward the losing side
+                # (§43.5's lesson — the instrument perturbs what it measures).
+                # No producer passes the flag, so no producer takes this path.
+                # The control is 12f's own boundary: if the sweep still breaks
+                # between 0.45 s and 0.5 s with the readout on, the readout is
+                # inert to the thing being measured.
+                if args.preboot_delay_sec > 0:
+                    arm = bot_json(page, "botStatus")
+                    print(f"ARM_STATE window={wi} game_time={arm.get('game_time')} "
+                          f"level={arm.get('level')} x={arm.get('x')} "
+                          f"y={arm.get('y')} "
+                          f"since_ready={time.time() - ready_at:.2f}s",
+                          flush=True)
                 started = evaluate_bot(page, "botStart")
                 if started != "ok":
                     raise RuntimeError(f"{label}: botStart: {started}")
@@ -430,6 +618,27 @@ def main():
                 print(f"REPLAY_OK ticks={len(ticks)} "
                       f"dead_frames={status.get('dead_frames')} "
                       f"seconds={elapsed:.1f} frames_per_sec={fps:.2f}", flush=True)
+
+                # ⛓⛓⛓ R9 slice 12g: THE WORLD-SWAP GATE FIRES HERE (⚖ 58) —
+                # after the drain and BEFORE this window is kept, so a lost
+                # race can never reach `--out`. `tick_count` comes off
+                # `botStatus`, i.e. what the GAME loaded, not what this
+                # process believes it sent.
+                #
+                # ⛔ REFUSAL IS A RAISE, AND `--out` IS NEVER WRITTEN — not
+                # even as a sidecar. The file is written after the whole loop,
+                # so the raise skips it; the consumers all delete `--out`
+                # before a run and every one of them re-raises with this
+                # driver's stdout attached (`verify-seedling-bot-differential
+                # .mjs:647`, `run-seedling-director.mjs:135`,
+                # `derive-seedling-tick0.mjs:256`,
+                # `rerecord-seedling-campaign.mjs:906/1267`), so the refusal
+                # arrives NAMED rather than as "no stream". A sidecar would be
+                # a second thing to read and a second thing to forget.
+                refusal = check_drain(label, tape.get("boot"),
+                                      status.get("tick_count"), ticks)
+                if refusal:
+                    raise RuntimeError(refusal)
 
                 # ⛓ R7 slice 1: THE SEAM LATCH, drained like the stream.
                 #
