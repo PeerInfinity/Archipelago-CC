@@ -42,7 +42,9 @@ import { emptyLevel } from './procgenLevel.js';
 import { parseOelLevel, recordToOel } from './procgenLevelOel.js';
 import { createSeedlingEditAdapter } from './seedlingEditAdapter.js';
 import { regionIdFor } from './seedlingAtlasDerivation.js';
-import { emptyOverlay, exitRuleKey, locationRuleKey } from './seedlingSetOverlay.js';
+import {
+    emptyOverlay, exitRuleKey, locationRuleKey, overlayErrors,
+} from './seedlingSetOverlay.js';
 import {
     ROOM_FIELDS, SET_FIELDS, SET_OP_KINDS, SeedlingSetDeriveRefusal, closeRoomSession,
     createSeedlingSetAdapter, createSetSession, deriveAtlasOf, downloadSet, exitsOfRoom,
@@ -466,6 +468,17 @@ describe('the op vocabulary, and every refusal by name', () => {
         expect(names.filter((n) => n.endsWith(' - Chest')).sort())
             .toEqual(['Level 001 - Chest', 'Level 002 - Chest']);
         expect(new Set(names).size).toBe(names.length);
+        /**
+         * ⛔⛔ **THE TWO AUTHORITIES AGREE, AND THIS IS THE ROW THAT SAYS SO.**
+         * `mark-location` refuses per room by reading `rooms[room].locations`
+         * directly; `overlayErrors` refuses per the binding's
+         * `locationNameScope`. They are two spellings of one law, and a
+         * document the OP built that the VALIDATOR would refuse on LOAD is the
+         * failure that costs an author their work rather than a message.
+         * ⛓ MUTANT: flip Seedling's `locationNameScope` to `'set'` — this line
+         * goes red while the ops above all still apply.
+         */
+        expect(overlayErrors(s.record().overlay, { roomCount: ROOMS })).toEqual([]);
     });
 
     it('unmark-location takes the rule with it, and refuses a name the room lacks', () => {
