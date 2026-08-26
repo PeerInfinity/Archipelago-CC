@@ -688,7 +688,9 @@ check(VANILLA_OVERLAY_LOCS > 0
     '⛓⛓⛓ **NODE\'S ANSWER FOR VANILLA + THE AUTHORED OVERLAY** — the committed fixture read '
     + 'off disk, folded onto the same 116-room set. ⛔ The free count RISES rather than falls: '
     + '`freeEdgesOf` counts LOGIC OBLIGATIONS and a LOCATION is one of those edges, so '
-    + 'authoring 41 of them creates 41 obligations and the overlay\'s own logic discharges 3. '
+    + `authoring ${VANILLA_OVERLAY_LOCS} of them creates ${VANILLA_OVERLAY_LOCS} obligations `
+    + `and the overlay's own logic discharges ${VANILLA_OVERLAY_LOCS
+        - VANILLA_OVERLAY_FREE.filter((e) => e.kind === 'location').length}. `
     + 'The overlay does not make the world smaller — it makes what is unstated VISIBLE',
     `${VANILLA_OVERLAY.overlay_id}: ${VANILLA_OVERLAY_LOCS} location(s), free ${
         VANILLA_XML_FREE.length} -> ${VANILLA_OVERLAY_FREE.length} (${
@@ -2786,7 +2788,8 @@ try {
         '⛓⛓ …**and `level_58` IS A COMPILED REGION IN THE PAGE\'S OWN DOCUMENT** — its doors '
         + 'appear in the free list, which they could not do if the derivation had dropped the '
         + 'region for having no way in. ⛓ The free COUNT is still node\'s `freeEdgesOf` over '
-        + 'the same set, so the manifest\'s fifteen doors moved BOTH numbers or neither',
+        + `the same set, so the manifest's ${VANILLA_NAMED.length} doors moved BOTH numbers `
+        + 'or neither',
         `page ${pageFree}, node ${VANILLA_XML_FREE.length}; ${pageL58.length} free edge(s) in `
         + `level_58; ${VANILLA_NAMED.length} manifest warp(s)`);
 
@@ -2904,9 +2907,12 @@ try {
         && pageOvFree !== pageFree,
         '⛓⛓⛓ **AND THE FREE COUNT MOVES — UPWARD, WHICH IS THE HONEST DIRECTION.** §27.6 '
         + 'predicted it would DROP. `freeEdgesOf` counts LOGIC OBLIGATIONS and a LOCATION is '
-        + 'one of those edges, so authoring 41 of them creates 41 obligations of which the '
-        + 'overlay\'s own guards discharge 3, while its two liftable exit rules gate 2 of the '
-        + 'doors. ⛔ Both numbers are node\'s `freeEdgesOf` over the same session — neither is '
+        + `one of those edges, so authoring ${VANILLA_OVERLAY_LOCS} of them creates `
+        + `${VANILLA_OVERLAY_LOCS} obligations of which the overlay's own guards discharge `
+        + `${VANILLA_OVERLAY_LOCS - VANILLA_OVERLAY_FREE.filter((e) => e.kind === 'location').length}, `
+        + `while its authored exit rules gate ${VANILLA_XML_FREE.length
+            - VANILLA_OVERLAY_FREE.filter((e) => e.kind === 'exit').length} of the doors. `
+        + '⛔ Both numbers are node\'s `freeEdgesOf` over the same session — neither is '
         + 'typed, so the page and node moved together or the row is red',
         `page ${pageFree} -> ${pageOvFree} (node ${VANILLA_XML_FREE.length} -> ${
             VANILLA_OVERLAY_FREE.length}), of which ${pageOvLocFree} are LOCATIONS; report took `

@@ -99,7 +99,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 5,
+            "count": 6,
             "id": "make"
         },
         {
@@ -204,13 +204,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 236,
+        "blockStyle": 237,
         "browser": 76,
-        "cited": 84,
-        "files": 255,
+        "cited": 85,
+        "files": 256,
         "lineStyle": 19,
-        "withDocblock": 255,
-        "withFlags": 157
+        "withDocblock": 256,
+        "withFlags": 158
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -1209,7 +1209,8 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "check",
             "citedBy": [
-                "docs/json/developer/procgen/architecture.md"
+                "docs/json/developer/procgen/architecture.md",
+                "docs/json/developer/procgen/gotchas.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -2938,7 +2939,8 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "make",
             "citedBy": [
-                "docs/json/developer/procgen/architecture.md"
+                "docs/json/developer/procgen/architecture.md",
+                "docs/json/developer/procgen/gotchas.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [],
@@ -3009,6 +3011,36 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Author the Seedling STARTER atlas (region-atlas plan, Phase 2, Deliverable 5): the first real regions around the game start, which the user grows from here with the marking-tool panel.",
             "path": "scripts/procgen/make-seedling-starter-atlas.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "make",
+            "citedBy": [
+                "docs/json/developer/procgen/architecture.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check",
+                "write"
+            ],
+            "file": "make-seedling-vanilla-overlay.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "write"
+                }
+            ],
+            "oneLiner": "scripts/procgen/make-seedling-vanilla-overlay — **THE VANILLA AUTHORED OVERLAY** (EDITOR v3 slice E5; plan §27.6, §34).",
+            "path": "scripts/procgen/make-seedling-vanilla-overlay.mjs"
         },
         {
             "argvHelpers": [

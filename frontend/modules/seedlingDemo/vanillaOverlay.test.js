@@ -51,16 +51,27 @@ const DEPS = Object.freeze({
 /** ⛓ ONE lift for the whole file — it parses the 116-room map extract. */
 const LIFT = liftVanillaOverlay();
 
+/**
+ * ⛓ THE ATLAS'S OWN ROSTERS, so no row below pins a number this file also owns.
+ * A lift that lost a location must be RED, which it cannot be against a literal
+ * somebody updated to match it.
+ */
+const ATLAS_LOCATIONS = ATLAS.regions.flatMap((r) => r.locations ?? []);
+const ATLAS_RULES = ATLAS.regions
+    .flatMap((r) => (r.exits ?? []).filter((e) => e.access_rule))
+    .concat(ATLAS_LOCATIONS.filter((l) => l.access_rule));
+/** The lifted rows whose atlas TILE holds more than one entity. */
+const AMBIGUOUS = (() => {
+    const rooms = LIFT.set.rooms.map((r) => r.source.record);
+    return LIFT.rows.filter((r) => (rooms[r.level].entities ?? [])
+        .filter((e) => String(tileOf(e, TILE_SIZE)) === String(r.atlasLoc.tile)).length > 1);
+})();
+
 describe('⛓⛓ E5 — the lift, and what it put through the adapter', () => {
-    it('expresses every one of the atlas\'s 41 locations and 5 authored rules, refusing none', () => {
-        const atlasLocations = ATLAS.regions.flatMap((r) => r.locations ?? []);
-        const atlasRules = ATLAS.regions.flatMap((r) => (r.exits ?? []).filter((e) => e.access_rule))
-            .concat(atlasLocations.filter((l) => l.access_rule));
-        // ⛔ THE EXPECTATIONS ARE THE ATLAS'S OWN COUNTS, not literals: a lift
-        //    that lost a row would be red, and so would one written against a
-        //    number that stopped being true.
-        expect(atlasLocations).toHaveLength(41);
-        expect(atlasRules).toHaveLength(6);
+    it(`expresses every one of the atlas's ${ATLAS_LOCATIONS.length} locations and `
+        + `${ATLAS_RULES.length - 1} of its ${ATLAS_RULES.length} authored rules, refusing none`, () => {
+        const atlasLocations = ATLAS_LOCATIONS;
+        const atlasRules = ATLAS_RULES;
 
         expect(LIFT.unjoined).toEqual([]);
         expect(LIFT.refused).toEqual([]);
@@ -81,14 +92,15 @@ describe('⛓⛓ E5 — the lift, and what it put through the adapter', () => {
      * carries only a TILE. Five of the 41 sit on a tile holding more than one
      * entity, so a by-tile join would silently mark a `<cover>` or a `<wire>`.
      */
-    it('resolves the five ambiguous tiles through `entityForLedgerRow`, and every tile agrees', () => {
-        expect(LIFT.rows).toHaveLength(41);
+    it(`resolves the ${AMBIGUOUS.length} ambiguous tiles through \`entityForLedgerRow\`, `
+        + 'and every tile agrees', () => {
+        // ⛔ THE EXPECTATION IS THE ATLAS'S OWN COUNT, never a pin on the
+        //    roster's own length — a lift that lost a row must be red, and a
+        //    row asserting `LIFT.rows.length === LIFT.rows.length` is not.
+        expect(LIFT.rows).toHaveLength(ATLAS_LOCATIONS.length);
         expect(LIFT.rows.filter((r) => !r.tileAgrees)).toEqual([]);
 
-        const rooms = LIFT.set.rooms.map((r) => r.source.record);
-        const ambiguous = LIFT.rows.filter((r) => (rooms[r.level].entities ?? [])
-            .filter((e) => String(tileOf(e, TILE_SIZE)) === String(r.atlasLoc.tile)).length > 1);
-        expect(ambiguous.map((r) => `${r.level}:${r.entity.type}`).sort()).toEqual([
+        expect(AMBIGUOUS.map((r) => `${r.level}:${r.entity.type}`).sort()).toEqual([
             '115:seed', '32:fallrocklarge', '38:chest', '40:chest', '67:bosskey',
         ].sort());
     });

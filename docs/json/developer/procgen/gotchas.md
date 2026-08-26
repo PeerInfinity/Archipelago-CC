@@ -808,3 +808,70 @@ passes X", "no module imports Y" — should read files itself (`readFileSync`)
 rather than trust a tool that can decline to look. `atlasSession.test.js` does
 that, and pins that NUL-bearing sources still exist so the hazard is under test
 rather than in a comment.
+
+## A FREE edge is a LOGIC OBLIGATION, not a door — so authoring locations RAISES the count
+
+`setEditorCore.freeEdgesOf(rules)` reads the COMPILED rules and counts every
+edge whose `access_rule` is `True_` or absent — and it counts **locations as
+well as exits**, because `atlases/README.md` calls a free AP exit *"a logic
+obligation"* and an ungated collectible is one of those too.
+
+⇒ authoring an overlay **raises** the number. Measured on the vanilla 116:
+
+| state | free exits | free locations | total |
+|---|---|---|---|
+| vanilla, EMPTY overlay (before editor v3 E5) | 319 | 0 | **319** |
+| vanilla, EMPTY overlay (after E5's `named_rooms` warps) | 334 | 0 | **334** |
+| vanilla + the committed authored overlay | 332 | 38 | **370** |
+
+The 41 lifted locations create 41 obligations, of which vanilla's own guards
+discharge 3; the two liftable exit rules gate 2 of the 334 doors. The editor v3
+plan (§27.6) predicted the count would DROP when the overlay landed, and it was
+reading the number as *"doors nobody gated"*. It is not: **the overlay does not
+make the world smaller, it makes what is unstated VISIBLE.** A row expecting a
+fall would go red for the right reason and be read as a regression.
+
+⚠ Related: **the fixture directory is `frontend/modules/seedlingDemo/fixtures/`.**
+`frontend/fixtures/` does not exist, and a plan section named it.
+
+## `level_58` is UNREACHABLE over the room data alone — FIXED (editor v3 E5)
+
+Opening the vanilla 116 in the set editor refused the `rules.json` export, and
+not for the free edges: region `level_58` (`Dungeon5_DeadBoss`) is
+UNREACHABLE from the start under any rule set. Measured over all 116 rooms, **not
+one entity in the game targets it** — three outgoing teleporters, zero incoming.
+The committed `seedling-playthrough.json` has the same hole and nothing had ever
+failed on it, because the region carries no locations.
+
+⛓ What reaches it is the MANIFEST: `named_rooms.tentacle_beast_mouth`, which the
+AS3 dereferences when the beast swallows the player. E5 gave `deriveAtlas` an
+OPTIONAL `deps.namedRooms` and derives each arrival's SOURCE from the entry's
+`trigger` element — the OEL element `levelSetValidator.NAMED_ROOMS` already cites
+as the one thing that makes the entry mandatory. The graph closes and the export
+is ALLOWED.
+
+⛔ **THE PRODUCER STILL PASSES NOTHING, ON PURPOSE.** `make-seedling-playthrough-rules.mjs`
+has exactly ONE `deriveAtlas` call site and it names no `namedRooms`, so the
+committed atlas and its preset are byte-identical — pinned by comparing the
+FILE's md5 across a real `--check`, because an exit code is not an identity.
+⚠ And under the playthrough's own `NEVER_ENTER_LEVELS` = `[57, 69, 82]` the fix
+would NOT have reached `level_58` anyway: its only source is L57, a trap room,
+and a warp OUT of a never-enter room is noted rather than made — never-enter is
+encoded in this derivation as an ABSENCE. Ten connections there, fifteen under
+the empty overlay the editor opens vanilla with.
+
+## A wait that a PRIOR press already satisfied reads the previous result
+
+`check-seedling-editor-arm.mjs` presses `#editDownloadBundle` and then waits for
+`Array.isArray(window.__editorSetBundleKinds)`. The global is set by the press
+and never cleared — so a SECOND press added earlier in the file leaves the wait
+already true, and every later bundle row reads the FIRST container without
+waiting for its own.
+
+Measured when editor v3 E5 added one press mid-file: two downstream claims went
+red with the wrong container's member list, a third died as *"the row itself
+threw"*, and the run stopped 44 rows early. The cure is local — delete
+`window.__editorSetBundleKinds` and `window.__editorSetBundleOut` behind any
+press that is not the row consuming them — but the shape is general: **a wait on
+a global a previous step can set is not a wait.** Prefer a wait on a value that
+CHANGES (a counter, a new id) over one on a key that merely exists.
