@@ -301,6 +301,93 @@ export function namedRoomArrivals(rooms, namedRooms, { roomById }) {
  * cannot be found is an ERROR, never a skip: a census that silently loses a row
  * is trap 110.
  */
+/**
+ * ⛓⛓⛓ **EDITOR v3 E5 — WHICH ENTITY A LEDGER ROW IS, ON ITS OWN.**
+ *
+ * This block was inline in `locationsFor` and is EXTRACTED VERBATIM — same
+ * branches, same order, same messages. It is lifted because a SECOND caller
+ * needs the answer and cannot get it from the finished location:
+ * `make-seedling-vanilla-overlay.mjs` lifts the playthrough's 41 locations into
+ * a D1 overlay, whose location ADDRESS is the entity's own `{type, x, y}` in
+ * PIXELS — and a location row carries only its TILE. Five of the 41 sit on a
+ * tile that holds more than one entity (L32 `stairsdown`+`fallrocklarge`, L38
+ * `chest`+`cover`, L40 `wire`+`chest`, L67 `bosskey`+`orb`, L115
+ * `lightray`+`shadow`+`seed`), so a by-tile join would pick whichever sorted
+ * first. Asking the derivation which entity it MEANT is the derived answer; a
+ * type table in the script would be the hardcoded one.
+ *
+ * ⛔ BYTE-INERT ON THE PRODUCER. `locationsFor` calls it and does the same thing
+ * with the result, and `make-seedling-playthrough-rules --check` plus the atlas
+ * md5 are what say so.
+ *
+ * @returns {{entity: object|undefined, item: string|undefined}} both may be
+ *   absent — `locationsFor` owns the refusal, so that its message is unchanged.
+ */
+export function entityForLedgerRow(room, row) {
+    let entity = null;
+    let item = null;
+    if (row.kind === 'pickup') {
+        entity = room.entities.find((e) => e.type === row.tag);
+        item = ITEM_FOR_TAG[row.tag];
+    } else if (row.kind === 'key') {
+        const kt = Number(/bosskey(\d)@/.exec(row.id)[1]);
+        entity = room.entities.find((e) => e.type === 'bosskey' && Number(e.attrs.keyType) === kt);
+        item = ITEM_FOR_KEY[kt];
+    } else if (row.kind === 'totempart') {
+        const [, x, y] = /:(\d+),(\d+)$/.exec(row.id).map(Number);
+        entity = room.entities.find((e) => e.type === 'totempart' && e.x === x && e.y === y);
+        item = ITEM_FOR_TAG.totempart;
+    } else if (row.kind === 'chest') {
+        const chests = room.entities.filter((e) => e.type === 'chest');
+        if (chests.length !== 1) {
+            throw new Error(`ledger row ${row.id} expects ONE chest in level ${room.level}, found ${chests.length}`);
+        }
+        [entity] = chests;
+        item = ITEM_FOR_TAG.chest;
+    } else if (row.kind === 'entity') {
+        /**
+         * ⛓⛓ EDITOR v3 D1 — **THE ARM A LEVEL-SET EDITOR NEEDS.** Every
+         * other arm finds its entity by a KIND whose meaning is a fact about
+         * the vanilla game (`the one chest`, `the bosskey of type 3`). An
+         * edited set has no such vocabulary, and the address a person
+         * clicking a room can actually produce is the entity's own
+         * `{type, x, y}` in PIXELS — which is what the OEL element carries.
+         *
+         * ⛔ EXACT, never nearest. Two entities of one type in a room are
+         * ordinary (L12 has three teleporters), so a tolerant match would
+         * silently move a location to whichever one sorted first.
+         */
+        const want = row.entity ?? {};
+        entity = room.entities.find((e) => e.type === want.type
+            && e.x === want.x && e.y === want.y);
+        item = row.vanilla_item;
+    } else if (row.kind === 'ending') {
+        entity = room.entities.find((e) => e.type === 'seed');
+        item = VICTORY_ITEM;
+    } else if (row.kind === 'encounter') {
+        // The two grants with no pickup entity of their own: Fire is a
+        // BobBoss DROP (`BobBoss.as:194`) and the Dark Sword is the Witch's
+        // trade (`Witch.as:32-52`). The location is the thing that grants
+        // it, which is what a player has to reach.
+        //
+        // ⛔ AND THE FIRST HALF IS A FINDING (R7 slice 4). The ledger cites
+        // "BobBoss drop, L32", and **no .oel in the game places a bobboss
+        // at all** — grep every `.oel` for the three tags and get nothing.
+        // The fight is started by a FALLING ROCK:
+        // `FallRockLarge.as:115-117`, `if (bossRock && thirdBoss)
+        // FP.world.add(new BobBoss(72, 72))`. So the location that grants
+        // Fire is L32's `fallrocklarge {bossrock 1, thirdboss 1}`, and the
+        // three `bobboss*` construction cases in `Game.as:2143-2145` are
+        // dead editor vocabulary.
+        entity = row.id.startsWith('fire@')
+            ? room.entities.find((e) => e.type === 'fallrocklarge'
+                && e.attrs?.bossrock === '1' && e.attrs?.thirdboss === '1')
+            : room.entities.find((e) => e.type === 'witch');
+        item = row.id.startsWith('fire@') ? 'Fire' : 'Progressive Sword';
+    }
+    return { entity, item };
+}
+
 export function locationsFor(room, overlay = {}, deps = {}) {
     const { tileSize } = deps;
     const rows = overlay.locations ?? [];
@@ -309,67 +396,7 @@ export function locationsFor(room, overlay = {}, deps = {}) {
     const out = [];
     for (const row of rows) {
         if (row.level !== room.level) continue;
-        let entity = null;
-        let item = null;
-        if (row.kind === 'pickup') {
-            entity = room.entities.find((e) => e.type === row.tag);
-            item = ITEM_FOR_TAG[row.tag];
-        } else if (row.kind === 'key') {
-            const kt = Number(/bosskey(\d)@/.exec(row.id)[1]);
-            entity = room.entities.find((e) => e.type === 'bosskey' && Number(e.attrs.keyType) === kt);
-            item = ITEM_FOR_KEY[kt];
-        } else if (row.kind === 'totempart') {
-            const [, x, y] = /:(\d+),(\d+)$/.exec(row.id).map(Number);
-            entity = room.entities.find((e) => e.type === 'totempart' && e.x === x && e.y === y);
-            item = ITEM_FOR_TAG.totempart;
-        } else if (row.kind === 'chest') {
-            const chests = room.entities.filter((e) => e.type === 'chest');
-            if (chests.length !== 1) {
-                throw new Error(`ledger row ${row.id} expects ONE chest in level ${room.level}, found ${chests.length}`);
-            }
-            [entity] = chests;
-            item = ITEM_FOR_TAG.chest;
-        } else if (row.kind === 'entity') {
-            /**
-             * ⛓⛓ EDITOR v3 D1 — **THE ARM A LEVEL-SET EDITOR NEEDS.** Every
-             * other arm finds its entity by a KIND whose meaning is a fact about
-             * the vanilla game (`the one chest`, `the bosskey of type 3`). An
-             * edited set has no such vocabulary, and the address a person
-             * clicking a room can actually produce is the entity's own
-             * `{type, x, y}` in PIXELS — which is what the OEL element carries.
-             *
-             * ⛔ EXACT, never nearest. Two entities of one type in a room are
-             * ordinary (L12 has three teleporters), so a tolerant match would
-             * silently move a location to whichever one sorted first.
-             */
-            const want = row.entity ?? {};
-            entity = room.entities.find((e) => e.type === want.type
-                && e.x === want.x && e.y === want.y);
-            item = row.vanilla_item;
-        } else if (row.kind === 'ending') {
-            entity = room.entities.find((e) => e.type === 'seed');
-            item = VICTORY_ITEM;
-        } else if (row.kind === 'encounter') {
-            // The two grants with no pickup entity of their own: Fire is a
-            // BobBoss DROP (`BobBoss.as:194`) and the Dark Sword is the Witch's
-            // trade (`Witch.as:32-52`). The location is the thing that grants
-            // it, which is what a player has to reach.
-            //
-            // ⛔ AND THE FIRST HALF IS A FINDING (R7 slice 4). The ledger cites
-            // "BobBoss drop, L32", and **no .oel in the game places a bobboss
-            // at all** — grep every `.oel` for the three tags and get nothing.
-            // The fight is started by a FALLING ROCK:
-            // `FallRockLarge.as:115-117`, `if (bossRock && thirdBoss)
-            // FP.world.add(new BobBoss(72, 72))`. So the location that grants
-            // Fire is L32's `fallrocklarge {bossrock 1, thirdboss 1}`, and the
-            // three `bobboss*` construction cases in `Game.as:2143-2145` are
-            // dead editor vocabulary.
-            entity = row.id.startsWith('fire@')
-                ? room.entities.find((e) => e.type === 'fallrocklarge'
-                    && e.attrs?.bossrock === '1' && e.attrs?.thirdboss === '1')
-                : room.entities.find((e) => e.type === 'witch');
-            item = row.id.startsWith('fire@') ? 'Fire' : 'Progressive Sword';
-        }
+        const { entity, item } = entityForLedgerRow(room, row);
         if (!entity) throw new Error(`ledger row ${row.id}: no entity for it in level ${row.level}`);
         if (!item) throw new Error(`ledger row ${row.id}: no AP item name`);
         const loc = {
