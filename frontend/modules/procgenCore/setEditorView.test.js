@@ -50,6 +50,19 @@ import {
     createSeedlingSetAdapter, createSetSession, setRecord,
 } from '../seedlingDemo/seedlingSetAdapter.js';
 import { mountWatchSetEditor } from '../seedlingDemo/watchSetEditor.js';
+import { mountSetEditor } from './setEditorView.js';
+import { exitArrowShapes } from './setEditorCore.js';
+import { BUNDLE_KINDS } from '../presets/documentBundle.js';
+import { loadJSZipNode } from '../../../scripts/procgen/loadJSZipNode.mjs';
+import {
+    LIBRARY_FIELDS, ROOM_FIELDS, closeRoomSession as closeMazeRoomSession,
+    createMazeSetAdapter, createSetSession as createMazeSetSession, downloadLibrary,
+    emptyMazeOverlay, exitRuleKey as mazeExitRuleKey, exitsOfRoom as mazeExitsOfRoom,
+    isMazeSetRefusal, locationRuleKey as mazeLocationRuleKey,
+    deriveAtlasOf as mazeDeriveAtlasOf, readSetCell as mazeReadSetCell,
+    rulesJsonOf as mazeRulesJsonOf, setRecord as mazeSetRecord,
+    validateForDownload as mazeValidateForDownload, whatLinksHere as mazeWhatLinksHere,
+} from '../mazeRoom/mazeSetAdapter.js';
 
 /* ══════════════════════════════════════════════════════════════════════
  * ⛓ THE HAND-BUILT DOM — `editorView.test.js`'s discipline, widened to
@@ -839,5 +852,349 @@ describe('⛔⛔ EDITOR v3 E2b — the lift is BYTE-INERT on Seedling, and it is
             'applySet', 'armedExit', 'destroy', 'render', 'report', 'rows',
             'runReport', 'selectRoom', 'selected', 'view',
         ]);
+    });
+});
+
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ THE SECOND BINDING — THE SAME MOUNT, OVER `mazeSetAdapter`, WITH
+ *   NO PAGE. E2c's `lab.html` arm rests on exactly this.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+const MAZE_LIB = JSON.parse(readFileSync(
+    fileURLToPath(new URL('../../region-libraries/demo-maze-pack.json', import.meta.url)), 'utf8'));
+
+/**
+ * ⛓⛓ **THE MAZE'S BINDINGS, IN ONE PLACE — AND THIS IS THE LIST E2c COPIES.**
+ * Every one of them is a fact about the maze that `setEditorView.js` may not
+ * know: an exit is addressed by `exit_id` and not by an ordinal, a location is
+ * an `items[]` ORDINAL and not an entity at pixels, the manifest form is
+ * `LIBRARY_FIELDS`, the document is a `region-library` whose id is
+ * `library_id`, and there is no link-scan bound at all (E2a priced the whole
+ * column at 0.363 ms — §26.6).
+ */
+const mazeBindings = (rulesSchema) => ({
+    adapterFns: {
+        readSetCell: mazeReadSetCell,
+        exitsOfRoom: mazeExitsOfRoom,
+        whatLinksHere: mazeWhatLinksHere,
+        bounds: (record) => ({ w: (record?.library?.entries ?? []).length, h: 1 }),
+        validateForDownload: mazeValidateForDownload,
+        deriveAtlasOf: mazeDeriveAtlasOf,
+        rulesJsonOf: mazeRulesJsonOf,
+        closeRoomSession: closeMazeRoomSession,
+        download: (session) => {
+            const out = downloadLibrary(session);
+            return {
+                members: [
+                    {
+                        kind: 'region-library',
+                        doc: out.library,
+                        name: `${out.library.library_id}.json`,
+                        label: out.library.library_id,
+                        readout: '__editorSetOut',
+                    },
+                    {
+                        kind: 'overlay',
+                        doc: out.overlay,
+                        name: `${out.overlay.overlay_id}.overlay.json`,
+                        label: `overlay ${out.overlay.overlay_id}`,
+                        readout: '__editorSetOverlayOut',
+                    },
+                ],
+                report: out.report,
+                apMappingWhy: out.apMappingWhy,
+            };
+        },
+    },
+    document: {
+        kind: 'region-library',
+        noun: 'library',
+        validator: 'validateRegionLibrary',
+        idOf: (c) => c.library_id,
+        docOf: (record) => record.library,
+    },
+    ruleKeys: { exit: mazeExitRuleKey, location: mazeLocationRuleKey },
+    forms: {
+        manifestRows: () => LIBRARY_FIELDS.map((field) => ({ field, control: 'text', label: field })),
+        roomRows: () => ROOM_FIELDS.map((field) => ({ field, control: 'text', label: field })),
+    },
+    /**
+     * ⛔⛔ **ENDPOINT-ADDRESSED, NOT ORDINAL.** `targetOptions` is the DISTINCT
+     * `exit_id`s the library holds, because the destination room is not known
+     * until the second click and a maze exit is not positional — a target whose
+     * entry has no such exit is refused BY NAME by `connect`, listing what it
+     * does have. That is the adapter's sentence, not a second authority here.
+     */
+    exits: {
+        valueOf: (ex) => ex.exit_id,
+        labelOf: (ex) => `${ex.exit_id} (${ex.side ?? '·'}) → `
+            + `${ex.to === null ? 'unlinked' : `room ${ex.to} ${ex.toExit}`}`,
+        addressOf: (value) => String(value),
+        targetOptions: (rows) => [...new Set(rows.flatMap((r) => r.exitList.map((e) => e.exit_id)))]
+            .map((id) => ({ value: id, label: id })),
+        disconnectOp: (room, value) => ({ op: 'disconnect', room, exit_id: String(value) }),
+    },
+    locations: {
+        options: (cell) => (cell.payload?.items ?? []).map((it, i) => ({
+            value: String(i), label: `${it.id ?? `slot_${i}`} @(${it.x},${it.y})`,
+        })),
+        emptyWhy: '⛔ pick a SLOT first — `mark-location` names an `items[]` ORDINAL and this '
+            + 'entry carries none',
+        targetOf: (value) => ({ item: Number(value) }),
+    },
+    /**
+     * ⛔ **THERE IS NO BOUND, AND THAT IS SAID RATHER THAN DEFAULTED.** E2a
+     * measured the whole "links here" column at 0.363 ms over a 116-entry
+     * library — 0.15 % of `LINK_SCAN`'s 250 ms budget — because the links are ONE
+     * authored list and no payload is read at all.
+     */
+    linkBound: () => ({ ok: true, why: null }),
+    isRefusal: isMazeSetRefusal,
+    rulesSchema,
+    stillKey: (cell) => cell.payload,
+});
+
+const mazeHarness = ({ overlay = emptyMazeOverlay(), loadZip = null } = {}) => {
+    for (const k of READOUT_NAMES) delete globalThis[k];
+    const adapter = createMazeSetAdapter({ rulesSchema: DEPS.rulesSchema });
+    const record = mazeSetRecord(MAZE_LIB, overlay);
+    const session = createMazeSetSession(adapter, record);
+    const doc = new FakeDocument();
+    const said = [];
+    const downloads = [];
+    const stillCalls = [];
+    let open = null;
+    const ui = mountSetEditor({
+        lifetime: createLifetime('setEditorView.test.maze'),
+        session,
+        adapter,
+        deps: {},
+        compileRegionAtlas,
+        validateRegionAtlas,
+        atlasSchema: ATLAS_SCHEMA,
+        ...mazeBindings(DEPS.rulesSchema),
+        /** ⛓ A RECORDING STILL — E2c points this at `mazeRoomRender.drawWorld`. */
+        drawRoomStill: (canvas, cell, index) => {
+            stillCalls.push({ index, width: cell.payload.width, height: cell.payload.height });
+            canvas.width = 32;
+            canvas.height = 32;
+            return null;
+        },
+        say: (text, bad) => said.push({ text, bad: Boolean(bad) }),
+        roomSession: () => open,
+        openRoomAt: () => false,
+        discardRoom: () => { open = null; },
+        download: (name, text) => downloads.push({ name, bytes: String(text).length }),
+        loadZip,
+        doc,
+    });
+    return {
+        adapter,
+        session,
+        doc,
+        said,
+        downloads,
+        stillCalls,
+        ui,
+        openRoom: (room, ops = 1) => { open = { room, ops, session: { record: () => null } }; },
+    };
+};
+
+/** ⛓ The 4-link RING over the demo pack, built through the adapter's own op. */
+const RING = Object.freeze([
+    { from: [0, 'exit_1'], to: [1, 'exit_3'] },
+    { from: [1, 'exit_1'], to: [2, 'exit_3'] },
+    { from: [2, 'exit_1'], to: [3, 'exit_3'] },
+    { from: [3, 'exit_1'], to: [0, 'exit_3'] },
+]);
+
+const connectAll = (h, links) => links.map((l) => h.ui.applySet({
+    op: 'connect', from: l.from, to: l.to, one_way: false,
+}));
+
+describe('⛓⛓⛓ EDITOR v3 E2b — the SAME mount, bound to `mazeSetAdapter`, with no page', () => {
+    /**
+     * ⛓⛓⛓ **THE MUTANT THIS BINDING EXISTS TO CATCH.** `roomCount()` reading
+     * `record().set.rooms.length` is GREEN over Seedling for ever and THROWS
+     * here — a maze record has no `set` key at all. The Seedling pin cannot see
+     * it; this row is the whole reason the second binding is not optional.
+     */
+    it('the STRIP is four rooms, and every one drew a still', () => {
+        const h = mazeHarness();
+        expect(h.ui.rows()).toHaveLength(4);
+        expect(h.ui.rows().map((r) => r.name)).toEqual(
+            MAZE_LIB.entries.map((e) => e.name));
+        expect(h.stillCalls.slice(0, 4).map((c) => c.index)).toEqual([0, 1, 2, 3]);
+        expect(h.stillCalls[0]).toMatchObject({ width: 11, height: 11 });
+    });
+
+    /**
+     * ⛓⛓ MUTANT: `exitsOfRoom`'s overlay JOIN is dropped — `row.exitList[].to`
+     * is `null` everywhere and `exitArrowShapes` draws nothing, on a library
+     * whose links are the WHOLE graph.
+     */
+    it('the ARROWS are `exitArrowShapes` over the JOINED exits — none, then two', () => {
+        const h = mazeHarness();
+        expect(exitArrowShapes(h.ui.rows(), { selected: 0 })).toHaveLength(0);
+        connectAll(h, RING.slice(0, 2));
+        const shapes = exitArrowShapes(h.ui.rows(), { selected: 0 });
+        expect(shapes.length).toBeGreaterThan(0);
+        expect(h.ui.rows()[0].exitList.filter((e) => e.to !== null).map((e) => e.to))
+            .toEqual([1]);
+        expect(h.ui.rows()[1].exitList.filter((e) => e.to !== null).map((e) => e.to).sort())
+            .toEqual([0, 2]);
+    });
+
+    /**
+     * ⛓⛓⛓ **THE TWO-CLICK GESTURE EMITS ONE `connect`, ENDPOINT-ADDRESSED.**
+     * ⛔ MUTANT: `exits.addressOf` coerces with `Number()` (Seedling's spelling)
+     * — every endpoint becomes `NaN` and `connect` refuses by name, listing the
+     * exits the entry really has.
+     */
+    it('the two-click gesture lands ONE `connect` whose endpoints are [room, exit_id]', () => {
+        const h = mazeHarness();
+        click(h, 'editSetGesture');
+        setValue(h, 'editSetExitList', 'exit_1');
+        setValue(h, 'editSetTargetExit', 'exit_3');
+        clickRoom(h, 0, 4);
+        clickRoom(h, 1, 4);
+        expect(h.session.ops()).toHaveLength(1);
+        expect(h.session.ops()[0]).toEqual({
+            op: 'connect', from: [0, 'exit_1'], to: [1, 'exit_3'], one_way: false,
+        });
+        expect(h.session.record().overlay.links).toHaveLength(1);
+    });
+
+    /**
+     * ⛓ MUTANT: the exit `<option>`'s value is built by one binding and read
+     * back by another — the select offers `exit_1` and the op carries `0`.
+     */
+    it('the exit SELECT offers `exit_id`s and the target list is the DISTINCT set', () => {
+        const h = mazeHarness();
+        expect(rowsOf(h, 'editSetExitList')).toEqual([
+            'exit_0=exit_0 (N) → unlinked', 'exit_1=exit_1 (E) → unlinked',
+            'exit_2=exit_2 (S) → unlinked', 'exit_3=exit_3 (W) → unlinked',
+        ]);
+        expect(rowsOf(h, 'editSetTargetExit')).toEqual([
+            'exit_0=exit_0', 'exit_1=exit_1', 'exit_2=exit_2', 'exit_3=exit_3',
+        ]);
+    });
+
+    /**
+     * ⛓⛓⛓ §21.5's third rule, on the SECOND substrate — ⛔ MUTANT:
+     * `renumberDecision` computed AFTER the op, or the decision not routed at
+     * all: the note stops being `bad` and the room session survives a
+     * renumbering that moved the room out from under its index.
+     */
+    it('MOVE UP with an edited room session open DISCARDS it, and the note is `bad`', () => {
+        const h = mazeHarness();
+        h.openRoom(2, 1);
+        h.ui.render();
+        click(h, 'editSetRowUp_2');
+        const note = $(h, 'editSetNote');
+        expect(note.textContent).toContain('DISCARDED');
+        expect(note.className).toBe('note bad');
+        expect(h.session.ops().map((o) => o.op)).toEqual(['reorder']);
+    });
+
+    /**
+     * ⛓⛓⛓ **THE REPORT REFUSES AN UNCLOSED GRAPH BY NAME AND ALLOWS A CLOSED
+     * ONE.** ⛔ MUTANT: `document` not threaded through to `reportOver` — §1 of
+     * the verdict names `validateLevelSet` and a `set`, over a library.
+     */
+    it('the REPORT refuses an UNCLOSED graph by name and allows the 4-link ring', () => {
+        const two = mazeHarness();
+        connectAll(two, RING.slice(0, 2));
+        const r2 = two.ui.runReport();
+        expect(r2.download.rules.allowed).toBe(false);
+        expect(r2.download.rules.why).toMatch(/cannot be reached from the start/);
+        expect(r2.rows.some((row) => /validateRegionLibrary: ok/.test(row.text))).toBe(true);
+        // ⛓ the row's KIND is the DOCUMENT's, so §1 of the verdict cannot be
+        //   about a level set on a substrate that has none.
+        expect(r2.rows.some((row) => row.kind === 'region-library')).toBe(true);
+        expect(r2.rows.some((row) => row.kind === 'level-set')).toBe(false);
+
+        const four = mazeHarness();
+        connectAll(four, RING);
+        const r4 = four.ui.runReport();
+        expect(r4.download.rules.allowed).toBe(true);
+        expect(r4.rows.filter((row) => row.severity === 'error')).toEqual([]);
+    });
+
+    /**
+     * ⛓ MUTANT: the identity line reads `record().set.set_id` — `undefined` on
+     * a library, printed as `(unstamped)` over a document that IS stamped.
+     */
+    it('the IDENTITY line prints `library_id` and the document NOUN', () => {
+        const h = mazeHarness();
+        const line = textOf(h, 'editSetIdentity');
+        expect(line.startsWith(`LIBRARY ${MAZE_LIB.library_id} · overlay (unstamped)`)).toBe(true);
+        expect(line).toContain('focus it to undo the LIBRARY');
+    });
+
+    /**
+     * ⛓⛓⛓ **THE DOWNLOAD IS TWO MEMBERS AND A SENTENCE ABOUT THE THIRD.**
+     * ⛔ MUTANT: `apMappingWhy` dropped — a person reads two files where
+     * Seedling gives three and nothing says a region library has no vanilla
+     * mapping to invalidate (E2a's §26.6: an empty companion would read as
+     * "checked, nothing to say").
+     */
+    it('the DOWNLOAD writes library + overlay, and PRINTS `apMappingWhy`', () => {
+        const h = mazeHarness();
+        connectAll(h, RING);
+        click(h, 'editDownloadSet');
+        expect(h.downloads.map((d) => d.name.replace(/-[0-9a-f]{8}/g, '-<hash>'))).toEqual([
+            'demo-maze-pack-<hash>.json', 'maze-overlay-<hash>.overlay.json',
+        ]);
+        const note = textOf(h, 'editSetNote');
+        expect(note).toMatch(/^DOWNLOADED demo-maze-pack-[0-9a-f]{8} · overlay maze-overlay-/);
+        expect(note).toContain('ONE stamp for 4 edit(s)');
+        expect(note).toContain('a region library has no VANILLA mapping to invalidate');
+        expect(READOUT_NAMES.filter((k) => globalThis[k] !== undefined))
+            .toEqual(['__editorSetOut', '__editorSetOverlayOut']);
+    });
+
+    /**
+     * ⛓⛓⛓ **THE BUNDLE REFUSES `region-library` BY NAME, QUOTING THE ROSTER.**
+     * `BUNDLE_KINDS` is `rules, level-set, overlay, region-atlas` and there is no
+     * fifth kind until E2c adds it (§25.12 #1). ⛔ MUTANT: the button pushes an
+     * unknown kind silently — `writeBundle` then either throws about a document
+     * the reader never named or writes a zip missing the very document the press
+     * was for.
+     */
+    it('the BUNDLE button refuses the `region-library` member BY NAME, and still writes the rest', async () => {
+        const h = mazeHarness({ loadZip: async () => loadJSZipNode() });
+        connectAll(h, RING);
+        h.ui.runReport();
+        click(h, 'editDownloadBundle');
+        for (let i = 0; i < 200 && globalThis.__editorSetBundleKinds === undefined; i += 1) {
+            // eslint-disable-next-line no-await-in-loop
+            await new Promise((r) => { setTimeout(r, 5); });
+        }
+        const note = textOf(h, 'editSetNote');
+        expect(BUNDLE_KINDS).not.toContain('region-library');
+        expect(note).toContain('the `region-library` document is NOT a member');
+        expect(note).toContain(BUNDLE_KINDS.join(', '));
+        expect(globalThis.__editorSetBundleKinds).toEqual(['overlay', 'rules', 'region-atlas']);
+    });
+
+    /**
+     * ⛓ MUTANT: `locations.options` reads an OEL entity list — a maze cell has
+     * no `entities` and the picker is empty, so `mark-location` can never be
+     * pressed on the substrate whose whole location model is the slot ordinal.
+     */
+    it('the LOCATION picker offers `items[]` ORDINALS, and `mark-location` takes one', () => {
+        const h = mazeHarness();
+        expect(rowsOf(h, 'editSetLocEntity')).toEqual([
+            '0=slot_0 @(0,5)', '1=slot_1 @(8,7)', '2=slot_2 @(1,8)',
+        ]);
+        setValue(h, 'editSetLocEntity', '1');
+        setValue(h, 'editSetLocName', 'the hub chest');
+        setValue(h, 'editSetLocItem', 'Coin');
+        click(h, 'editSetMarkLocation');
+        expect(h.session.ops()).toEqual([{
+            op: 'mark-location', room: 0, item: 1, name: 'the hub chest', vanilla_item: 'Coin',
+        }]);
     });
 });
