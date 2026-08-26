@@ -891,7 +891,7 @@ describe('the vanilla xml set derives the SAME atlas as the map extract', () => 
             .flatMap((e) => Object.keys(e))));
         expect([...derivedExitKeys].sort()).toEqual(
             ['entrance_tile', 'exit_id', 'exit_tiles', 'kind']);
-        expect(committed.atlas_id).toBe('seedling-7dc27a95');
+        expect(committed.atlas_id).toBe('seedling-ae833c1e');
         expect(fromXml.atlas.atlas_id).toBe('seedling');   // D1 §20.6: DELIBERATELY unstamped
     }, 60000);
 

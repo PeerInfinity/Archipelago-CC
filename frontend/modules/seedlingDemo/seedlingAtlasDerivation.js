@@ -56,6 +56,7 @@
  */
 
 import { AtlasSession, createEmptyAtlas } from '../regionMarkingTool/atlasSession.js';
+import { substrateIdFor } from '../procgenPipeline/regionAtlasCompiler.js';
 import { NAMED_ROOMS } from './levelSetValidator.js';
 
 /**
@@ -466,6 +467,22 @@ export function deriveAtlas(rooms, overlay = {}, deps = {}) {
         game: 'seedling', tileSize, ...(deps.atlas ?? {}),
     }));
 
+    /**
+     * ⛓⛓ THE SUBSTRATE IS DERIVED FROM THE ATLAS'S OWN GAME, NEVER SPELLED
+     * (EDITOR INTEGRATION W1, plan §2.2 #1).
+     *
+     * `substrateIdFor` is the compiler's own function — the ONE spelling of
+     * `flash_<game>` in the tree, and the standing per-game-substrate ruling of
+     * 2026-07-25 lives in it. Writing `'flash_seedling'` here would be a SECOND
+     * spelling that happens to agree today: the moment `deps.atlas.game`
+     * overrides the default (the editor's `seedling-watch-edit`, the arm's own
+     * document — every existing caller relies on that override), the literal
+     * would name a substrate the compile is not defaulting to, and the compiler
+     * would refuse the whole atlas by name because its table has no such row.
+     * So it is read off the SESSION'S atlas, after the override has applied.
+     */
+    const substrate = substrateIdFor(session.atlas.game);
+
     // Regions first, so a connection can name any of them.
     for (const room of ordered) {
         session.addRegion({
@@ -473,6 +490,7 @@ export function deriveAtlas(rooms, overlay = {}, deps = {}) {
             name: levelName(room.level),
             bounds: { x: 0, y: 0, w: room.width, h: room.height },
             map_ref: room.level,
+            substrate,
             rules_source: 'analyzer',
         });
     }

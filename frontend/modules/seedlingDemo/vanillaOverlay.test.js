@@ -316,7 +316,7 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         const playthroughPath = fileURLToPath(
             new URL('../flashPanel/atlases/seedling-playthrough.json', import.meta.url));
         expect(createHash('md5').update(readFileSync(playthroughPath)).digest('hex'))
-            .toBe('2bfe8d558187ded423c1a3c85284a83a');
+            .toBe('1c4836d11cd9390cbb61f99c94f26d1e');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);

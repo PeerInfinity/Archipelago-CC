@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "atlas_id": "seedling-7dc27a95",
+  "atlas_id": "seedling-ae833c1e",
   "game": "seedling",
   "name": "Seedling — the honest playthrough (rules v1)",
   "description": "GENERATED — do not edit. One region per level for all 116 levels, sub-regions and their crossing rules computed by the Phase-5a reachability analyzer over seedlingSemantics' transcription, with seedlingPlaythroughOverlay supplying the item rulings the transcription refuses and the physics model's own pixel masks supplying the building outlines. Every link is ONE-WAY, because the game has exactly one transition primitive and it is a one-way jump. Regenerate with scripts/procgen/make-seedling-playthrough-rules.mjs.",
-  "provenance": { "generator": "region-marking-tool", "content_hash": "7dc27a95" },
+  "provenance": { "generator": "region-marking-tool", "content_hash": "ae833c1e" },
   "tile_space": { "tile_size": 16, "map_source": "ogmo-extract", "map_document": "seedling-map.json" },
   "regions": [
     {
@@ -12,6 +12,7 @@
       "name": "Level 000",
       "bounds": { "x": 0, "y": 0, "w": 20, "h": 20 },
       "map_ref": 0,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "out_teleporter_0_128",
@@ -215,6 +216,7 @@
       "name": "Level 001",
       "bounds": { "x": 0, "y": 0, "w": 9, "h": 8 },
       "map_ref": 1,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L0_80_96",
@@ -237,6 +239,7 @@
       "name": "Level 002",
       "bounds": { "x": 0, "y": 0, "w": 7, "h": 7 },
       "map_ref": 2,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L0_256_272",
@@ -271,6 +274,7 @@
       "name": "Level 003",
       "bounds": { "x": 0, "y": 0, "w": 9, "h": 9 },
       "map_ref": 3,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L2_48_96",
@@ -355,6 +359,7 @@
       "name": "Level 004",
       "bounds": { "x": 0, "y": 0, "w": 7, "h": 6 },
       "map_ref": 4,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L3_128_48",
@@ -389,6 +394,7 @@
       "name": "Level 005",
       "bounds": { "x": 0, "y": 0, "w": 7, "h": 8 },
       "map_ref": 5,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L4_64_16",
@@ -453,6 +459,7 @@
       "name": "Level 006",
       "bounds": { "x": 0, "y": 0, "w": 17, "h": 5 },
       "map_ref": 6,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L5_48_112",
@@ -487,6 +494,7 @@
       "name": "Level 007",
       "bounds": { "x": 0, "y": 0, "w": 14, "h": 5 },
       "map_ref": 7,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L6_224_32",
@@ -521,6 +529,7 @@
       "name": "Level 008",
       "bounds": { "x": 0, "y": 0, "w": 12, "h": 13 },
       "map_ref": 8,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L7_192_32",
@@ -555,6 +564,7 @@
       "name": "Level 009",
       "bounds": { "x": 0, "y": 0, "w": 11, "h": 3 },
       "map_ref": 9,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L8_96_192",
@@ -589,6 +599,7 @@
       "name": "Level 010",
       "bounds": { "x": 0, "y": 0, "w": 7, "h": 7 },
       "map_ref": 10,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L9_16_0",
@@ -625,6 +636,7 @@
       "name": "Level 011",
       "bounds": { "x": 0, "y": 0, "w": 5, "h": 7 },
       "map_ref": 11,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L3_96_128",
@@ -661,6 +673,7 @@
       "name": "Level 012",
       "bounds": { "x": 0, "y": 0, "w": 40, "h": 60 },
       "map_ref": 12,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L0_304_176",
@@ -934,6 +947,7 @@
       "name": "Level 013",
       "bounds": { "x": 0, "y": 0, "w": 9, "h": 10 },
       "map_ref": 13,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L0_32_192",
@@ -980,6 +994,7 @@
       "name": "Level 014",
       "bounds": { "x": 0, "y": 0, "w": 14, "h": 9 },
       "map_ref": 14,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L13_32_32",
@@ -1014,6 +1029,7 @@
       "name": "Level 015",
       "bounds": { "x": 0, "y": 0, "w": 11, "h": 9 },
       "map_ref": 15,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L14_32_64",
@@ -1066,6 +1082,7 @@
       "name": "Level 016",
       "bounds": { "x": 0, "y": 0, "w": 25, "h": 9 },
       "map_ref": 16,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L15_144_16",
@@ -1154,6 +1171,7 @@
       "name": "Level 017",
       "bounds": { "x": 0, "y": 0, "w": 12, "h": 7 },
       "map_ref": 17,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L16_112_64",
@@ -1220,6 +1238,7 @@
       "name": "Level 018",
       "bounds": { "x": 0, "y": 0, "w": 12, "h": 9 },
       "map_ref": 18,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L16_352_80",
@@ -1276,6 +1295,7 @@
       "name": "Level 019",
       "bounds": { "x": 0, "y": 0, "w": 11, "h": 11 },
       "map_ref": 19,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L18_176_112",
@@ -1354,6 +1374,7 @@
       "name": "Level 020",
       "bounds": { "x": 0, "y": 0, "w": 15, "h": 9 },
       "map_ref": 20,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L13_96_32",
@@ -1418,6 +1439,7 @@
       "name": "Level 021",
       "bounds": { "x": 0, "y": 0, "w": 11, "h": 11 },
       "map_ref": 21,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_pit_L12_5_5",
@@ -1470,6 +1492,7 @@
       "name": "Level 022",
       "bounds": { "x": 0, "y": 0, "w": 13, "h": 13 },
       "map_ref": 22,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L21_80_160",
@@ -1528,6 +1551,7 @@
       "name": "Level 023",
       "bounds": { "x": 0, "y": 0, "w": 6, "h": 5 },
       "map_ref": 23,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L21_0_80",
@@ -1562,6 +1586,7 @@
       "name": "Level 024",
       "bounds": { "x": 0, "y": 0, "w": 10, "h": 10 },
       "map_ref": 24,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L12_40_688",
@@ -1602,6 +1627,7 @@
       "name": "Level 025",
       "bounds": { "x": 0, "y": 0, "w": 10, "h": 9 },
       "map_ref": 25,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L22_0_128",
@@ -1650,6 +1676,7 @@
       "name": "Level 026",
       "bounds": { "x": 0, "y": 0, "w": 10, "h": 20 },
       "map_ref": 26,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L25_0_96",
@@ -1720,6 +1747,7 @@
       "name": "Level 027",
       "bounds": { "x": 0, "y": 0, "w": 16, "h": 6 },
       "map_ref": 27,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L26_64_304",
@@ -1754,6 +1782,7 @@
       "name": "Level 028",
       "bounds": { "x": 0, "y": 0, "w": 20, "h": 20 },
       "map_ref": 28,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L25_96_128",
@@ -1821,6 +1850,7 @@
       "name": "Level 029",
       "bounds": { "x": 0, "y": 0, "w": 12, "h": 20 },
       "map_ref": 29,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L21_160_80",
@@ -1906,6 +1936,7 @@
       "name": "Level 030",
       "bounds": { "x": 0, "y": 0, "w": 20, "h": 20 },
       "map_ref": 30,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L22_96_192",
@@ -2040,6 +2071,7 @@
       "name": "Level 031",
       "bounds": { "x": 0, "y": 0, "w": 30, "h": 40 },
       "map_ref": 31,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L29_112_32",
@@ -2097,6 +2129,7 @@
       "name": "Level 032",
       "bounds": { "x": 0, "y": 0, "w": 10, "h": 10 },
       "map_ref": 32,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L30_224_160",
@@ -2144,6 +2177,7 @@
       "name": "Level 033",
       "bounds": { "x": 0, "y": 0, "w": 6, "h": 5 },
       "map_ref": 33,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L12_432_352",
@@ -2166,6 +2200,7 @@
       "name": "Level 034",
       "bounds": { "x": 0, "y": 0, "w": 11, "h": 10 },
       "map_ref": 34,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L12_336_688",
@@ -2194,6 +2229,7 @@
       "name": "Level 035",
       "bounds": { "x": 0, "y": 0, "w": 7, "h": 5 },
       "map_ref": 35,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L12_112_96",
@@ -2216,6 +2252,7 @@
       "name": "Level 036",
       "bounds": { "x": 0, "y": 0, "w": 9, "h": 9 },
       "map_ref": 36,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L12_168_368",
@@ -2240,6 +2277,7 @@
       "name": "Level 037",
       "bounds": { "x": 0, "y": 0, "w": 40, "h": 20 },
       "map_ref": 37,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L12_592_0",
@@ -2332,6 +2370,7 @@
       "name": "Level 038",
       "bounds": { "x": 0, "y": 0, "w": 19, "h": 20 },
       "map_ref": 38,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L37_288_0",
@@ -2384,6 +2423,7 @@
       "name": "Level 039",
       "bounds": { "x": 0, "y": 0, "w": 19, "h": 40 },
       "map_ref": 39,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L38_144_0",
@@ -2420,6 +2460,7 @@
       "name": "Level 040",
       "bounds": { "x": 0, "y": 0, "w": 60, "h": 58 },
       "map_ref": 40,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L39_144_0",
@@ -2721,6 +2762,7 @@
       "name": "Level 041",
       "bounds": { "x": 0, "y": 0, "w": 21, "h": 22 },
       "map_ref": 41,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L40_944_96",
@@ -2770,6 +2812,7 @@
       "name": "Level 042",
       "bounds": { "x": 0, "y": 0, "w": 20, "h": 22 },
       "map_ref": 42,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L40_848_0",
@@ -2794,6 +2837,7 @@
       "name": "Level 043",
       "bounds": { "x": 0, "y": 0, "w": 19, "h": 35 },
       "map_ref": 43,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L40_320_576",
@@ -2954,6 +2998,7 @@
       "name": "Level 044",
       "bounds": { "x": 0, "y": 0, "w": 10, "h": 10 },
       "map_ref": 44,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L37_0_256",
@@ -3024,6 +3069,7 @@
       "name": "Level 045",
       "bounds": { "x": 0, "y": 0, "w": 20, "h": 20 },
       "map_ref": 45,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L44_64_0",
@@ -3095,6 +3141,7 @@
       "name": "Level 046",
       "bounds": { "x": 0, "y": 0, "w": 30, "h": 30 },
       "map_ref": 46,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L45_112_0",
@@ -3215,6 +3262,7 @@
       "name": "Level 047",
       "bounds": { "x": 0, "y": 0, "w": 30, "h": 30 },
       "map_ref": 47,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L46_176_0",
@@ -3510,6 +3558,7 @@
       "name": "Level 048",
       "bounds": { "x": 0, "y": 0, "w": 20, "h": 20 },
       "map_ref": 48,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L47_216_112",
@@ -3595,6 +3644,7 @@
       "name": "Level 049",
       "bounds": { "x": 0, "y": 0, "w": 5, "h": 9 },
       "map_ref": 49,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_pit_L48_2_2",
@@ -3625,6 +3675,7 @@
       "name": "Level 050",
       "bounds": { "x": 0, "y": 0, "w": 6, "h": 20 },
       "map_ref": 50,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L49_32_128",
@@ -3659,6 +3710,7 @@
       "name": "Level 051",
       "bounds": { "x": 0, "y": 0, "w": 17, "h": 20 },
       "map_ref": 51,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L50_48_304",
@@ -3758,6 +3810,7 @@
       "name": "Level 052",
       "bounds": { "x": 0, "y": 0, "w": 15, "h": 10 },
       "map_ref": 52,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L51_256_256",
@@ -3816,6 +3869,7 @@
       "name": "Level 053",
       "bounds": { "x": 0, "y": 0, "w": 14, "h": 16 },
       "map_ref": 53,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L48_0_112",
@@ -3905,6 +3959,7 @@
       "name": "Level 054",
       "bounds": { "x": 0, "y": 0, "w": 20, "h": 30 },
       "map_ref": 54,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L52_112_0",
@@ -4200,6 +4255,7 @@
       "name": "Level 055",
       "bounds": { "x": 0, "y": 0, "w": 6, "h": 10 },
       "map_ref": 55,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L52_0_48",
@@ -4224,6 +4280,7 @@
       "name": "Level 056",
       "bounds": { "x": 0, "y": 0, "w": 10, "h": 9 },
       "map_ref": 56,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L52_224_112",
@@ -4246,6 +4303,7 @@
       "name": "Level 058",
       "bounds": { "x": 0, "y": 0, "w": 8, "h": 8 },
       "map_ref": 58,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "out_teleporter_80_16",
@@ -4394,6 +4452,7 @@
       "name": "Level 059",
       "bounds": { "x": 0, "y": 0, "w": 20, "h": 20 },
       "map_ref": 59,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "out_teleporter_0_128",
@@ -4452,6 +4511,7 @@
       "name": "Level 060",
       "bounds": { "x": 0, "y": 0, "w": 11, "h": 12 },
       "map_ref": 60,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L59_304_128",
@@ -4514,6 +4574,7 @@
       "name": "Level 061",
       "bounds": { "x": 0, "y": 0, "w": 15, "h": 15 },
       "map_ref": 61,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L60_160_80",
@@ -4620,6 +4681,7 @@
       "name": "Level 062",
       "bounds": { "x": 0, "y": 0, "w": 20, "h": 20 },
       "map_ref": 62,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L61_112_0",
@@ -4690,6 +4752,7 @@
       "name": "Level 063",
       "bounds": { "x": 0, "y": 0, "w": 20, "h": 20 },
       "map_ref": 63,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L61_224_48",
@@ -4845,6 +4908,7 @@
       "name": "Level 064",
       "bounds": { "x": 0, "y": 0, "w": 7, "h": 7 },
       "map_ref": 64,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L62_112_64",
@@ -4869,6 +4933,7 @@
       "name": "Level 065",
       "bounds": { "x": 0, "y": 0, "w": 15, "h": 15 },
       "map_ref": 65,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L63_32_304",
@@ -4947,6 +5012,7 @@
       "name": "Level 066",
       "bounds": { "x": 0, "y": 0, "w": 10, "h": 12 },
       "map_ref": 66,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L65_0_128",
@@ -4998,6 +5064,7 @@
       "name": "Level 067",
       "bounds": { "x": 0, "y": 0, "w": 15, "h": 15 },
       "map_ref": 67,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L59_0_128",
@@ -5041,6 +5108,7 @@
       "name": "Level 068",
       "bounds": { "x": 0, "y": 0, "w": 5, "h": 6 },
       "map_ref": 68,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L65_184_64",
@@ -5103,6 +5171,7 @@
       "name": "Level 070",
       "bounds": { "x": 0, "y": 0, "w": 5, "h": 5 },
       "map_ref": 70,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L66_72_64",
@@ -5125,6 +5194,7 @@
       "name": "Level 071",
       "bounds": { "x": 0, "y": 0, "w": 20, "h": 20 },
       "map_ref": 71,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "out_teleporter_16_304",
@@ -5244,6 +5314,7 @@
       "name": "Level 072",
       "bounds": { "x": 0, "y": 0, "w": 20, "h": 18 },
       "map_ref": 72,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L71_304_96",
@@ -5278,6 +5349,7 @@
       "name": "Level 073",
       "bounds": { "x": 0, "y": 0, "w": 10, "h": 10 },
       "map_ref": 73,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L72_176_0",
@@ -5335,6 +5407,7 @@
       "name": "Level 074",
       "bounds": { "x": 0, "y": 0, "w": 20, "h": 10 },
       "map_ref": 74,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L73_64_0",
@@ -5371,6 +5444,7 @@
       "name": "Level 075",
       "bounds": { "x": 0, "y": 0, "w": 10, "h": 15 },
       "map_ref": 75,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L71_96_0",
@@ -5405,6 +5479,7 @@
       "name": "Level 076",
       "bounds": { "x": 0, "y": 0, "w": 20, "h": 10 },
       "map_ref": 76,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L71_304_256",
@@ -5439,6 +5514,7 @@
       "name": "Level 077",
       "bounds": { "x": 0, "y": 0, "w": 15, "h": 20 },
       "map_ref": 77,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L76_304_112",
@@ -5473,6 +5549,7 @@
       "name": "Level 078",
       "bounds": { "x": 0, "y": 0, "w": 20, "h": 10 },
       "map_ref": 78,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L77_96_304",
@@ -5530,6 +5607,7 @@
       "name": "Level 079",
       "bounds": { "x": 0, "y": 0, "w": 10, "h": 15 },
       "map_ref": 79,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L78_32_0",
@@ -5594,6 +5672,7 @@
       "name": "Level 080",
       "bounds": { "x": 0, "y": 0, "w": 10, "h": 20 },
       "map_ref": 80,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L71_224_304",
@@ -5688,6 +5767,7 @@
       "name": "Level 082",
       "bounds": { "x": 0, "y": 0, "w": 20, "h": 24 },
       "map_ref": 82,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "out_teleporter_144_0",
@@ -5704,6 +5784,7 @@
       "name": "Level 083",
       "bounds": { "x": 0, "y": 0, "w": 5, "h": 5 },
       "map_ref": 83,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L12_32_848",
@@ -5732,6 +5813,7 @@
       "name": "Level 084",
       "bounds": { "x": 0, "y": 0, "w": 5, "h": 5 },
       "map_ref": 84,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_pit_L83_2_2",
@@ -5813,6 +5895,7 @@
       "name": "Level 085",
       "bounds": { "x": 0, "y": 0, "w": 10, "h": 10 },
       "map_ref": 85,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L71_16_304",
@@ -5889,6 +5972,7 @@
       "name": "Level 086",
       "bounds": { "x": 0, "y": 0, "w": 6, "h": 5 },
       "map_ref": 86,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L0_160_272",
@@ -5913,6 +5997,7 @@
       "name": "Level 087",
       "bounds": { "x": 0, "y": 0, "w": 30, "h": 20 },
       "map_ref": 87,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L44_0_80",
@@ -6054,6 +6139,7 @@
       "name": "Level 088",
       "bounds": { "x": 0, "y": 0, "w": 15, "h": 20 },
       "map_ref": 88,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L12_304_0",
@@ -6100,6 +6186,7 @@
       "name": "Level 089",
       "bounds": { "x": 0, "y": 0, "w": 19, "h": 20 },
       "map_ref": 89,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L0_240_0",
@@ -6339,6 +6426,7 @@
       "name": "Level 090",
       "bounds": { "x": 0, "y": 0, "w": 7, "h": 7 },
       "map_ref": 90,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L89_256_0",
@@ -6363,6 +6451,7 @@
       "name": "Level 091",
       "bounds": { "x": 0, "y": 0, "w": 20, "h": 10 },
       "map_ref": 91,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L89_208_0",
@@ -6397,6 +6486,7 @@
       "name": "Level 092",
       "bounds": { "x": 0, "y": 0, "w": 20, "h": 10 },
       "map_ref": 92,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L87_16_32",
@@ -6487,6 +6577,7 @@
       "name": "Level 093",
       "bounds": { "x": 0, "y": 0, "w": 15, "h": 18 },
       "map_ref": 93,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L87_368_0",
@@ -6552,6 +6643,7 @@
       "name": "Level 094",
       "bounds": { "x": 0, "y": 0, "w": 20, "h": 20 },
       "map_ref": 94,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L0_0_128",
@@ -6735,6 +6827,7 @@
       "name": "Level 095",
       "bounds": { "x": 0, "y": 0, "w": 40, "h": 10 },
       "map_ref": 95,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L12_0_352",
@@ -6793,6 +6886,7 @@
       "name": "Level 096",
       "bounds": { "x": 0, "y": 0, "w": 5, "h": 5 },
       "map_ref": 96,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L82_144_0",
@@ -6821,6 +6915,7 @@
       "name": "Level 097",
       "bounds": { "x": 0, "y": 0, "w": 5, "h": 5 },
       "map_ref": 97,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L37_576_144",
@@ -6855,6 +6950,7 @@
       "name": "Level 098",
       "bounds": { "x": 0, "y": 0, "w": 15, "h": 13 },
       "map_ref": 98,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L93_112_80",
@@ -6891,6 +6987,7 @@
       "name": "Level 099",
       "bounds": { "x": 0, "y": 0, "w": 15, "h": 13 },
       "map_ref": 99,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L98_112_112",
@@ -6947,6 +7044,7 @@
       "name": "Level 100",
       "bounds": { "x": 0, "y": 0, "w": 23, "h": 13 },
       "map_ref": 100,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L99_48_96",
@@ -6996,6 +7094,7 @@
       "name": "Level 101",
       "bounds": { "x": 0, "y": 0, "w": 23, "h": 20 },
       "map_ref": 101,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L100_288_96",
@@ -7095,6 +7194,7 @@
       "name": "Level 102",
       "bounds": { "x": 0, "y": 0, "w": 15, "h": 13 },
       "map_ref": 102,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L101_48_96",
@@ -7162,6 +7262,7 @@
       "name": "Level 103",
       "bounds": { "x": 0, "y": 0, "w": 20, "h": 19 },
       "map_ref": 103,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L102_0_96",
@@ -7196,6 +7297,7 @@
       "name": "Level 104",
       "bounds": { "x": 0, "y": 0, "w": 10, "h": 10 },
       "map_ref": 104,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L103_0_64",
@@ -7230,6 +7332,7 @@
       "name": "Level 105",
       "bounds": { "x": 0, "y": 0, "w": 15, "h": 10 },
       "map_ref": 105,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L104_0_16",
@@ -7264,6 +7367,7 @@
       "name": "Level 106",
       "bounds": { "x": 0, "y": 0, "w": 20, "h": 10 },
       "map_ref": 106,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L105_80_144",
@@ -7294,6 +7398,7 @@
       "name": "Level 107",
       "bounds": { "x": 0, "y": 0, "w": 20, "h": 15 },
       "map_ref": 107,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L102_224_96",
@@ -7344,6 +7449,7 @@
       "name": "Level 108",
       "bounds": { "x": 0, "y": 0, "w": 15, "h": 18 },
       "map_ref": 108,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L107_304_176",
@@ -7408,6 +7514,7 @@
       "name": "Level 109",
       "bounds": { "x": 0, "y": 0, "w": 20, "h": 10 },
       "map_ref": 109,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L108_224_224",
@@ -7438,6 +7545,7 @@
       "name": "Level 110",
       "bounds": { "x": 0, "y": 0, "w": 10, "h": 11 },
       "map_ref": 110,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L101_104_24",
@@ -7460,6 +7568,7 @@
       "name": "Level 111",
       "bounds": { "x": 0, "y": 0, "w": 20, "h": 14 },
       "map_ref": 111,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L3_0_64",
@@ -7494,6 +7603,7 @@
       "name": "Level 112",
       "bounds": { "x": 0, "y": 0, "w": 15, "h": 15 },
       "map_ref": 112,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L111_128_48",
@@ -7534,6 +7644,7 @@
       "name": "Level 113",
       "bounds": { "x": 0, "y": 0, "w": 10, "h": 10 },
       "map_ref": 113,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L112_112_0",
@@ -7612,6 +7723,7 @@
       "name": "Level 114",
       "bounds": { "x": 0, "y": 0, "w": 10, "h": 10 },
       "map_ref": 114,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L113_16_0",
@@ -7646,6 +7758,7 @@
       "name": "Level 115",
       "bounds": { "x": 0, "y": 0, "w": 10, "h": 10 },
       "map_ref": 115,
+      "substrate": "flash_seedling",
       "exits": [
         {
           "exit_id": "in_L113_112_0",

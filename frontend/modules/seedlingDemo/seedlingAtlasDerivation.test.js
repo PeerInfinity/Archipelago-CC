@@ -25,7 +25,7 @@ import { emptyLevel } from './procgenLevel.js';
 import { parseOelLevel } from './procgenLevelOel.js';
 import * as OV from '../flashPanel/seedlingPlaythroughOverlay.js';
 import { tileTypeForPlacement } from '../flashPanel/seedlingSemantics.js';
-import { compileRegionAtlas } from '../procgenPipeline/regionAtlasCompiler.js';
+import { compileRegionAtlas, substrateIdFor } from '../procgenPipeline/regionAtlasCompiler.js';
 import { indexMapDocument, validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js';
 import { rulesJsonSchemaErrors } from '../procgenCore/jsonSchemaCheck.js';
 import { loadAtlasSchema, loadRulesSchema } from '../procgenCore/jsonSchemaFiles.js';
@@ -119,6 +119,41 @@ describe('⛓ a GENERATED 6-room set derives an atlas the pipeline accepts', () 
             expect(region.map_ref).toBe(i);
             expect(region.bounds).toEqual({ x: 0, y: 0, w: rooms[i].width, h: rooms[i].height });
         }
+    });
+
+    /**
+     * ⛓⛓ EDITOR INTEGRATION W1 — the region's substrate, DERIVED not spelled.
+     *
+     * ⛔ THIS SET'S `game` IS `'seedling-generated'`, WHICH IS THE WHOLE POINT
+     * OF SCORING IT HERE. The literal `'flash_seedling'` would be GREEN against
+     * the vanilla set — that is the mutant's trap. Against a caller that
+     * overrode `deps.atlas.game`, the literal names a substrate this compile is
+     * not defaulting to and the compiler refuses the whole atlas by name, so
+     * the row below compares against `substrateIdFor` and the id it produces
+     * for THIS document rather than against a constant.
+     */
+    it('every region carries the substrate DERIVED from the atlas\'s own game', () => {
+        expect(atlas.game).toBe('seedling-generated');
+        for (const region of atlas.regions) {
+            expect(region.substrate).toBe(substrateIdFor(atlas.game));
+        }
+        // …and that is NOT the vanilla id, which a literal would have written.
+        expect(atlas.regions[0].substrate).toBe('flash_seedling_generated');
+        expect(atlas.regions[0].substrate).not.toBe('flash_seedling');
+    });
+
+    it('the field AGREES with the compile default — `compileRegionAtlas` with NO options', () => {
+        // The point of the field being optional is that writing it changes
+        // nothing about how a single-substrate set compiles. Both halves are
+        // asserted: the sidecars carry the derived id, and the report counts
+        // them all under it with no second substrate anywhere.
+        const { rules, report } = compileRegionAtlas(atlas, {});
+        const sidecars = rules.preset_sidecars['1'];
+        for (const sc of Object.values(sidecars)) {
+            expect(sc.substrate).toBe(substrateIdFor(atlas.game));
+        }
+        expect(report.substrates).toEqual({ [substrateIdFor(atlas.game)]: Object.keys(sidecars).length });
+        expect(report.substrate).toBe(substrateIdFor(atlas.game));
     });
 
     it('the exits are the link entities, and every connection is ONE-WAY', () => {
