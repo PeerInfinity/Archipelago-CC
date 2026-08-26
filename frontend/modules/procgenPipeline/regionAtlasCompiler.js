@@ -277,6 +277,10 @@ function deriveIdentifiers(atlas, options) {
  * @param {object} [options.mazeProjection] deps for every region that compiles
  *   to the maze: { gridFor(region), conditionKey, resolveCondition } — all
  *   game-supplied
+ * @param {Object<string, Function>} [options.sidecarBuilders] EXTRA sidecar
+ *   builders, `{<substrateId>: (region, substrateId) => {sidecars, bound,
+ *   notes?}}`, MERGED OVER the built-in table — see the table's own comment for
+ *   what that means and what it lets a caller do
  * @param {number} [options.seed] rules.json generation_seed (default 1)
  * @param {string} [options.seedName] rules.json seed_name (default '')
  * @param {string} [options.playerName] player 1's name (default 'Player1')
@@ -559,9 +563,25 @@ export function compileRegionAtlas(atlas, options = {}) {
     //
     // The flash row is keyed on the atlas game's own id AND on `substrateId`
     // when that relabel differs, so either spelling resolves to the one builder
-    // that can serve them. W2 adds its row here.
+    // that can serve them.
+    //
+    // ⛓⛓ **AND A CALLER MAY ADD A ROW — `options.sidecarBuilders`, MERGED OVER
+    // THESE** (EDITOR INTEGRATION W2; W1 §7.7 recommended this shape and W2
+    // took it). The precedent is already in this file: the maze row's grid deps
+    // arrive as `options.mazeProjection` for exactly the reason a new
+    // substrate's whole builder would — the cell grid and the payload are the
+    // GAME's, not the compiler's. The refusal's "Buildable here:" list is
+    // derived from the MERGED table, so it stays honest with no second place
+    // to update.
+    //
+    // ⚠ **IT ALSO LETS A CALLER REPLACE THE FLASH OR THE MAZE ROW**, and that
+    // is said out loud rather than guarded: the merge is OVER, so an injected
+    // key that collides WINS. A caller who wants the built-in behaviour simply
+    // does not name that id. Guarding it would refuse the one thing a second
+    // flash-family game (a relabelled export, a wasm tier with a different
+    // payload) would legitimately want.
     const flashSubstrate = substrateIdFor(atlas.game);
-    const sidecarBuilders = {
+    const builtInBuilders = {
         [flashSubstrate]: (region, id) => buildFlashRegionSidecars(atlas, region, wiredInfo, id),
         ...(substrate === flashSubstrate || substrate === MAZE_SUBSTRATE ? {} : {
             [substrate]: (region, id) => buildFlashRegionSidecars(atlas, region, wiredInfo, id),
@@ -582,6 +602,16 @@ export function compileRegionAtlas(atlas, options = {}) {
             return { sidecars: projected.sidecars, bound: true, notes: projected.notes };
         },
     };
+    for (const [id, build] of Object.entries(options.sidecarBuilders ?? {})) {
+        if (typeof build !== 'function') {
+            throw new Error(
+                `options.sidecarBuilders["${id}"] is a ${typeof build}; a sidecar builder is `
+                + '`(region, substrateId) => {sidecars, bound, notes?}` — the same shape the '
+                + 'built-in rows have, because the dispatch below calls them all the same way.',
+            );
+        }
+    }
+    const sidecarBuilders = { ...builtInBuilders, ...(options.sidecarBuilders ?? {}) };
 
     // --- the dispatch, one region at a time --------------------------------
     const sidecars = {};

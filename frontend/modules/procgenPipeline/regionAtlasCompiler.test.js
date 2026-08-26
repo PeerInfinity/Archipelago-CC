@@ -557,6 +557,92 @@ describe('per-region substrate dispatch (EDITOR INTEGRATION W1)', () => {
             .toThrow(/Buildable here: flash_seedling, maze/);
     });
 
+    /* ══════════════════════════════════════════════════════════════
+     * ⛓⛓⛓ `options.sidecarBuilders` — EDITOR INTEGRATION W2
+     * ══════════════════════════════════════════════════════════════ */
+
+    /**
+     * ⛔ **AN INJECTED ROW IS A REAL ROW: IT BUILDS, AND THE REFUSAL LISTS IT.**
+     * W1 §7.7 recommended this shape over a third literal row because the
+     * precedent is already in the file — `options.mazeProjection` injects the
+     * GAME's half of the maze row for exactly this reason. ⛔ mutant: build the
+     * table and ignore `options.sidecarBuilders`; both halves of this row go red.
+     */
+    it('an INJECTED sidecar builder compiles its own regions, and the refusal lists it', () => {
+        const atlas = twoRegionAtlas('bounce');
+        const seen = [];
+        const { rules, report } = compileRegionAtlas(atlas, {
+            mapDoc: MAP_DOC,
+            mazeProjection: mazeDeps(),
+            sidecarBuilders: {
+                bounce: (region, id) => {
+                    seen.push([region.region_id, id]);
+                    return {
+                        sidecars: { [region.region_id]: { substrate: id, playable_payload: { bounceLevel: region.map_ref } } },
+                        bound: true,
+                    };
+                },
+            },
+        });
+        // it was CALLED with (region, substrateId) — the built-in rows' own shape
+        expect(seen).toEqual([['starting_house', 'bounce']]);
+        const sidecars = rules.preset_sidecars['1'];
+        expect(sidecars.starting_house.substrate).toBe('bounce');
+        expect(sidecars.starting_house.playable_payload)
+            .toEqual({ bounceLevel: atlasRegion(atlas, 'starting_house').map_ref });
+        // …and the OTHER region still went down the built-in flash row.
+        expect(sidecars.owls_nest_entrance.substrate).toBe('flash_seedling');
+        expect(report.substrates).toEqual({ bounce: 1, flash_seedling: 1 });
+        // ⛓ the "Buildable here:" list is DERIVED from the MERGED table
+        expect(() => compileRegionAtlas(twoRegionAtlas('runner'), {
+            mapDoc: MAP_DOC, mazeProjection: mazeDeps(), sidecarBuilders: { bounce: () => ({}) },
+        })).toThrow(/Buildable here: flash_seedling, maze, bounce/);
+    });
+
+    /**
+     * ⚠ **AND IT MAY REPLACE A BUILT-IN ROW — SAID OUT LOUD IN THE TABLE'S OWN
+     * COMMENT AND PINNED HERE.** The merge is OVER, so a colliding key wins;
+     * that is what a second flash-family game would want, and pretending
+     * otherwise would be a guard nobody could get past.
+     */
+    it('an injected row REPLACES the built-in one of the same id', () => {
+        const { rules } = compileRegionAtlas(twoRegionAtlas(), {
+            mapDoc: MAP_DOC,
+            sidecarBuilders: {
+                flash_seedling: (region, id) => ({
+                    sidecars: { [region.region_id]: { substrate: id, playable_payload: { replaced: true } } },
+                    bound: true,
+                }),
+            },
+        });
+        for (const entry of Object.values(rules.preset_sidecars['1'])) {
+            expect(entry.playable_payload).toEqual({ replaced: true });
+        }
+    });
+
+    it('REFUSES a `sidecarBuilders` value that is not a function, by id and by type', () => {
+        expect(() => compileRegionAtlas(twoRegionAtlas(), {
+            mapDoc: MAP_DOC, sidecarBuilders: { bounce: 'nope' },
+        })).toThrow(/options\.sidecarBuilders\["bounce"\] is a string/);
+        expect(() => compileRegionAtlas(twoRegionAtlas(), {
+            mapDoc: MAP_DOC, sidecarBuilders: { bounce: 'nope' },
+        })).toThrow(/\(region, substrateId\) => \{sidecars, bound, notes\?\}/);
+    });
+
+    /**
+     * ⛔ **W1'S ROWS ARE UNMOVED WITH THE OPTION ABSENT.** The whole point of a
+     * merge OVER the built-ins is that a compile that names none is the compile
+     * it was yesterday — pinned here rather than assumed.
+     */
+    it('with no `sidecarBuilders` the table is exactly the built-in two', () => {
+        expect(() => compileRegionAtlas(twoRegionAtlas('bounce'), {
+            mapDoc: MAP_DOC, mazeProjection: mazeDeps(),
+        })).toThrow(/Buildable here: flash_seedling, maze/);
+        expect(() => compileRegionAtlas(twoRegionAtlas('bounce'), {
+            mapDoc: MAP_DOC, mazeProjection: mazeDeps(), sidecarBuilders: {},
+        })).toThrow(/Buildable here: flash_seedling, maze/);
+    });
+
     it('REFUSES a maze region when the caller passed no mazeProjection, naming the region', () => {
         // The old refusal fired on the FLAVOUR, before any region was looked at.
         // A region can now ask for the maze on its own, so the refusal has to
