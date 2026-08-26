@@ -4,8 +4,12 @@
  *
  * ⛓ Every claim is against a document this repo already commits, never against
  * a shape invented here: the 259 committed `_rules.json`, the vanilla level set,
- * the three committed region atlases, and an overlay built by the overlay
- * module's own `emptyOverlay()`.
+ * the three committed region atlases, the three committed region libraries, and
+ * an overlay built by the overlay module's own `emptyOverlay()`.
+ *
+ * ⛓⛓ EDITOR v3 E2c added the FIFTH kind, `region-library` — one predicate and
+ * one entry (§25.12 #1). The rows below carry it the same way they carry the
+ * other four: against the committed packs, walked rather than listed.
  */
 
 import { readFileSync, readdirSync } from 'node:fs';
@@ -53,12 +57,24 @@ const VANILLA_SET = readJson('frontend/modules/seedlingDemo/fixtures/seedling-va
 const SMALL_RULES = readJson('frontend/presets/seedling_atlas/AP_1/AP_1_rules.json');
 const SMALL_ATLAS = readJson(`${ATLAS_DIR}/seedling-fixture.json`);
 const OVERLAY = { ...emptyOverlay(), overlay_id: 'overlay-e1c-row', rooms: { 3: { rules: {} } } };
+/** ⛓ EDITOR v3 E2c — the LIBRARY dir is WALKED, so a fourth committed pack joins by existing. */
+const LIBRARY_DIR = 'frontend/region-libraries';
+const everyCommittedLibrary = () => readdirSync(join(REPO, LIBRARY_DIR))
+    .filter((f) => f.endsWith('.json') && f !== 'region_library_files.json')
+    .map((f) => [f, readJson(`${LIBRARY_DIR}/${f}`)]);
+const MAZE_PACK = readJson(`${LIBRARY_DIR}/demo-maze-pack.json`);
 
-const FOUR = [
+/**
+ * ⛓ THE FIVE, in `BUNDLE_KINDS` order. ⚠ It was FOUR until EDITOR v3 E2c; the
+ * rows below read `BUNDLE_KINDS` rather than a count, so the roster is the one
+ * authority and adding a sixth would not need them rewritten.
+ */
+const FIVE = [
     { kind: 'rules', doc: SMALL_RULES },
     { kind: 'level-set', doc: VANILLA_SET },
     { kind: 'overlay', doc: OVERLAY },
     { kind: 'region-atlas', doc: SMALL_ATLAS },
+    { kind: 'region-library', doc: MAZE_PACK },
 ];
 
 describe('classifyDocument — the kind is the document\'s SHAPE', () => {
@@ -88,12 +104,39 @@ describe('classifyDocument — the kind is the document\'s SHAPE', () => {
         }
     });
 
+    /**
+     * ⛓⛓⛓ EDITOR v3 E2c — **THE FIFTH KIND, AND THE PREDICATE THAT CANNOT
+     * MISTAKE AN ATLAS FOR IT.** ⛔ MUTANT: `region-library` keyed on
+     * `isNonEmptyString(doc.library_id)` alone, or on `Array.isArray(doc.entries)`
+     * alone — the first would still refuse an atlas (no `library_id`), the second
+     * would claim any document that happens to carry an `entries` array. The
+     * PAIR is the claim, and the row below asserts BOTH halves are needed by
+     * stripping one at a time off a real committed pack.
+     */
+    it('classifies every committed region library as `region-library`, never as an atlas', () => {
+        const libs = everyCommittedLibrary();
+        expect(libs.length).toBeGreaterThan(0);
+        for (const [name, doc] of libs) {
+            expect(`${name} → ${classifyDocument(doc)}`).toBe(`${name} → region-library`);
+        }
+        // ⛔ Both halves are load-bearing: neither alone names this document.
+        const { library_id: _id, ...noId } = MAZE_PACK;
+        const { entries: _entries, ...noEntries } = MAZE_PACK;
+        expect(classifyDocument(noId)).toBeNull();
+        expect(classifyDocument(noEntries)).toBeNull();
+        // ⛔ …and an ATLAS is still an atlas, whichever order the two are tried in:
+        //    `atlas_id`+`regions[]` and `library_id`+`entries[]` share no key.
+        expect(classifyDocument(SMALL_ATLAS)).toBe('region-atlas');
+        expect(MAZE_PACK.atlas_id).toBeUndefined();
+        expect(SMALL_ATLAS.library_id).toBeUndefined();
+    });
+
     it('classifies an overlay as `overlay` — `rooms` keyed by index, not an array', () => {
         expect(classifyDocument(OVERLAY)).toBe('overlay');
         expect(classifyDocument(emptyOverlay())).toBe('overlay');
     });
 
-    it('refuses to name a kind for a document that is none of the four', () => {
+    it('refuses to name a kind for a document that is none of the five', () => {
         // The MAP document — `{levels: […]}` — travels beside an atlas and is
         // not one; an editor payload is `{base, edits}`.
         expect(classifyDocument(readJson(`${ATLAS_DIR}/seedling-map.json`))).toBeNull();
@@ -107,15 +150,15 @@ describe('classifyDocument — the kind is the document\'s SHAPE', () => {
     });
 });
 
-describe('writeBundle / readBundle — the four documents round trip', () => {
-    it('round trips all four by canonicalJson, and derives the entry names', async () => {
-        const bytes = await writeBundle(FOUR, { jszip });
+describe('writeBundle / readBundle — the five documents round trip', () => {
+    it('round trips all five by canonicalJson, and derives the entry names', async () => {
+        const bytes = await writeBundle(FIVE, { jszip });
         const { members, notes } = await readBundle(bytes, { jszip });
         expect(notes).toEqual([]);
         expect(members.map((m) => m.kind)).toEqual(BUNDLE_KINDS);
         expect(members.map((m) => m.name)).toEqual(BUNDLE_KINDS.map((k) => BUNDLE_ENTRY_NAMES[k]));
         for (const member of members) {
-            const original = FOUR.find((f) => f.kind === member.kind).doc;
+            const original = FIVE.find((f) => f.kind === member.kind).doc;
             expect(canonicalJson(member.doc)).toBe(canonicalJson(original));
         }
     });
@@ -132,19 +175,19 @@ describe('writeBundle / readBundle — the four documents round trip', () => {
     });
 
     it('writes DETERMINISTIC bytes — fixed order, fixed mtime', async () => {
-        const a = await writeBundle(FOUR, { jszip });
-        const b = await writeBundle([...FOUR].reverse(), { jszip });
+        const a = await writeBundle(FIVE, { jszip });
+        const b = await writeBundle([...FIVE].reverse(), { jszip });
         expect(Buffer.from(b).equals(Buffer.from(a))).toBe(true);
         // The mtime DOES reach the bytes — so leaving it to the clock is a real
         // determinism defect, not a hypothetical one.
-        const c = await writeBundle(FOUR, { jszip, mtime: new Date(Date.UTC(2020, 0, 1)) });
+        const c = await writeBundle(FIVE, { jszip, mtime: new Date(Date.UTC(2020, 0, 1)) });
         expect(Buffer.from(c).equals(Buffer.from(a))).toBe(false);
         expect(BUNDLE_MTIME.getTime()).toBe(Date.UTC(1980, 0, 1));
     });
 
     it('writes the rules member through stringifyRulesJson at the given indent', async () => {
         for (const indent of [2, 0]) {
-            const bytes = await writeBundle([FOUR[0]], { jszip, indent });
+            const bytes = await writeBundle([FIVE[0]], { jszip, indent });
             const zip = await jszip.loadAsync(bytes);
             const text = await zip.file(BUNDLE_ENTRY_NAMES.rules).async('string');
             expect(text).toBe(`${stringifyRulesJson(SMALL_RULES, { indent })}\n`);
@@ -152,12 +195,12 @@ describe('writeBundle / readBundle — the four documents round trip', () => {
     });
 
     it('is smaller at indent 0 and parses to the same object', async () => {
-        const two = await writeBundle(FOUR, { jszip, indent: 2 });
-        const zero = await writeBundle(FOUR, { jszip, indent: 0 });
+        const two = await writeBundle(FIVE, { jszip, indent: 2 });
+        const zero = await writeBundle(FIVE, { jszip, indent: 0 });
         expect(zero.length).toBeLessThan(two.length);
         const back = await readBundle(zero, { jszip });
         for (const member of back.members) {
-            const original = FOUR.find((f) => f.kind === member.kind).doc;
+            const original = FIVE.find((f) => f.kind === member.kind).doc;
             expect(canonicalJson(member.doc)).toBe(canonicalJson(original));
         }
     });
@@ -198,7 +241,9 @@ describe('readBundle — what it refuses, and what it merely names', () => {
     it('refuses a kind writeBundle does not carry', async () => {
         await expect(writeBundle([{ kind: 'sphere-log', doc: {} }], { jszip }))
             .rejects.toThrow(/not a bundle member kind/);
-        await expect(writeBundle([FOUR[1], FOUR[1]], { jszip }))
+        // ⛓ E2c: `region-library` is no longer one of those — the roster grew.
+        expect(BUNDLE_KINDS).toContain('region-library');
+        await expect(writeBundle([FIVE[1], FIVE[1]], { jszip }))
             .rejects.toThrow(/two `level-set` members/);
     });
 
@@ -240,7 +285,7 @@ describe('gunzipIfNeeded — one seam, sniffed by the magic bytes', () => {
     });
 
     it('reads a gzipped BUNDLE (`.zip.gz`) through the same seam', async () => {
-        const bytes = await writeBundle([FOUR[1]], { jszip });
+        const bytes = await writeBundle([FIVE[1]], { jszip });
         const stream = new Blob([bytes]).stream().pipeThrough(new CompressionStream('gzip'));
         const gz = new Uint8Array(await new Response(stream).arrayBuffer());
         expect([gz[0], gz[1]]).toEqual([0x1f, 0x8b]);

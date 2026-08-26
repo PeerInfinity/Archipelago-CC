@@ -37,10 +37,20 @@
  *  2. **A PLAIN `.json` LOADS** — and what it published is the ANCHOR.
  *  3. **THE BUNDLE LOADS THE SAME DOCUMENT** — `game_name`, `seed_name` and the
  *     region count all equal the anchor's.
- *  4. **THE IGNORED MEMBERS ARE NAMED** — the level set, the overlay and the
- *     region atlas travelled in the same zip and the app said so, by kind and
- *     by entry name. A member that vanished without a word is
- *     indistinguishable from one that was never there.
+ *  4. **THE IGNORED MEMBERS ARE NAMED** — the level set, the overlay, the
+ *     region atlas and (since EDITOR v3 E2c) the REGION LIBRARY travelled in
+ *     the same zip and the app said so, by kind and by entry name. A member
+ *     that vanished without a word is indistinguishable from one that was never
+ *     there.
+ *  4b. **THE FIFTH KIND REACHES THIS DOOR** — the bundle written above carries
+ *     a committed `region-library` and the app names it. ⛔ Asserted as its own
+ *     row rather than folded into claim 4's list, because a kind ADDED to
+ *     `BUNDLE_KINDS` that never reached the app's loader would leave claim 4
+ *     green over a roster the app has no branch for
+ *     ([[feedback_roster_readout_type_filter]] — check what a readout
+ *     ENUMERATES before gating on it: `presetUI.loadDocumentFile` names
+ *     `members.filter(kind !== 'rules')`, so the library IS enumerated and the
+ *     row can see it).
  *  5. **A `.json.gz` LOADS THE SAME DOCUMENT** — gunzipped by the `1f 8b` magic.
  *  6. **NOTHING WAS DOUBLE-DECODED** — the plain `.json` went through the same
  *     `gunzipIfNeeded` seam and is unharmed, which is the mutant that a gunzip
@@ -94,6 +104,15 @@ const LEVEL_SET = JSON.parse(readFileSync(
     join(REPO, 'frontend/modules/seedlingDemo/fixtures/seedling-vanilla-set.json'), 'utf8'));
 const ATLAS = JSON.parse(readFileSync(
     join(REPO, 'frontend/modules/flashPanel/atlases/seedling-fixture.json'), 'utf8'));
+/**
+ * ⛓⛓ EDITOR v3 E2c — **THE FIFTH MEMBER KIND, FROM A COMMITTED PACK.** The
+ * region library is the maze SET arm's primary document; it is not a preset and
+ * the app has no reader for it, which is exactly why it belongs in this row —
+ * the claim is that an IGNORED member is NAMED, and a fifth kind that nothing
+ * named would be a silent drop wearing a new label.
+ */
+const LIBRARY = JSON.parse(readFileSync(
+    join(REPO, 'frontend/region-libraries/demo-maze-pack.json'), 'utf8'));
 /** ⛓ An overlay of the shape D2 writes — `rooms` keyed BY INDEX, never an array. */
 const OVERLAY = { schema_version: 1, overlay_id: 'overlay-e1c-gate', rooms: { 3: { rules: {} } } };
 
@@ -110,6 +129,7 @@ writeFileSync(BUNDLE, await writeBundle([
     { kind: 'level-set', doc: LEVEL_SET },
     { kind: 'overlay', doc: OVERLAY },
     { kind: 'region-atlas', doc: ATLAS },
+    { kind: 'region-library', doc: LIBRARY },
 ], { jszip: loadJSZipNode() }));
 writeFileSync(GZ, gzipSync(Buffer.from(RULES_TEXT)));
 
@@ -287,6 +307,17 @@ try {
     check(['level-set', 'overlay', 'region-atlas'].every((k) => named.includes(k)),
         '⛓⛓ CLAIM 4 — the IGNORED members are NAMED, by kind and by entry name',
         named.slice(0, 300));
+    /**
+     * ⛓⛓⛓ EDITOR v3 E2c — **CLAIM 4b: THE FIFTH KIND REACHES THE APP'S DOOR.**
+     * ⛔ MUTANT: `classifyDocument`'s `region-library` predicate added and the
+     * entry left out of `BUNDLE_KINDS` — `writeBundle` throws above and this row
+     * never runs; the reverse (the entry added, the predicate not) writes the
+     * member and `readBundle` reports it in `notes` as unclassifiable, so the
+     * KIND does not appear here and this row goes red while claim 4 stays green.
+     */
+    check(named.includes('region-library'),
+        '⛓⛓ CLAIM 4b — the `region-library` member is NAMED too (the FIFTH bundle kind, E2c)',
+        named.slice(0, 400));
 
     /* ── CLAIM 5 — THE `.json.gz` ────────────────────────────────────── */
     const gz = await upload(GZ, 'the .json.gz');

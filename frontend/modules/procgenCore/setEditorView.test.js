@@ -986,7 +986,7 @@ const mazeBindings = (rulesSchema) => ({
     stillKey: (cell) => cell.payload,
 });
 
-const mazeHarness = ({ overlay = emptyMazeOverlay(), loadZip = null } = {}) => {
+const mazeHarness = ({ overlay = emptyMazeOverlay(), loadZip = null, extraMember = null } = {}) => {
     for (const k of READOUT_NAMES) delete globalThis[k];
     const adapter = createMazeSetAdapter({ rulesSchema: DEPS.rulesSchema });
     const record = mazeSetRecord(MAZE_LIB, overlay);
@@ -1004,7 +1004,22 @@ const mazeHarness = ({ overlay = emptyMazeOverlay(), loadZip = null } = {}) => {
         compileRegionAtlas,
         validateRegionAtlas,
         atlasSchema: ATLAS_SCHEMA,
-        ...mazeBindings(DEPS.rulesSchema),
+        ...(() => {
+            const b = mazeBindings(DEPS.rulesSchema);
+            if (!extraMember) return b;
+            /** ⛓ ONE EXTRA MEMBER, to drive the by-name refusal path. */
+            const inner = b.adapterFns.download;
+            return {
+                ...b,
+                adapterFns: {
+                    ...b.adapterFns,
+                    download: (s) => {
+                        const out = inner(s);
+                        return { ...out, members: [...out.members, extraMember] };
+                    },
+                },
+            };
+        })(),
         /** ⛓ A RECORDING STILL — E2c points this at `mazeRoomRender.drawWorld`. */
         drawRoomStill: (canvas, cell, index) => {
             stillCalls.push({ index, width: cell.payload.width, height: cell.payload.height });
@@ -1187,14 +1202,22 @@ describe('⛓⛓⛓ EDITOR v3 E2b — the SAME mount, bound to `mazeSetAdapter`,
     });
 
     /**
-     * ⛓⛓⛓ **THE BUNDLE REFUSES `region-library` BY NAME, QUOTING THE ROSTER.**
-     * `BUNDLE_KINDS` is `rules, level-set, overlay, region-atlas` and there is no
-     * fifth kind until E2c adds it (§25.12 #1). ⛔ MUTANT: the button pushes an
-     * unknown kind silently — `writeBundle` then either throws about a document
-     * the reader never named or writes a zip missing the very document the press
-     * was for.
+     * ⛓⛓⛓ **THE BUNDLE CARRIES THE LIBRARY — THIS ROW FLIPPED IN E2c's FIRST
+     * COMMIT.** Until then `BUNDLE_KINDS` was `rules, level-set, overlay,
+     * region-atlas` and the mount refused the maze's own PRIMARY document by
+     * name, quoting that roster (§28.9: the flip has to be a deliberate edit and
+     * not a silence). ⛔ The `region-library` kind is `documentBundle`'s now —
+     * one predicate and one entry, §25.12 #1 — so the four documents a person
+     * pressing this button has are library · overlay · rules · region-atlas,
+     * and NOTHING is refused.
+     *
+     * ⛔ MUTANT (still live): the button pushes an unknown kind silently —
+     * `writeBundle` then either throws about a document the reader never named
+     * or writes a zip missing the very document the press was for. The refusal
+     * PATH is still asserted, one row down, against a kind that really is not a
+     * member.
      */
-    it('the BUNDLE button refuses the `region-library` member BY NAME, and still writes the rest', async () => {
+    it('the BUNDLE button carries `region-library` · overlay · rules · region-atlas', async () => {
         const h = mazeHarness({ loadZip: async () => loadJSZipNode() });
         connectAll(h, RING);
         h.ui.runReport();
@@ -1204,10 +1227,50 @@ describe('⛓⛓⛓ EDITOR v3 E2b — the SAME mount, bound to `mazeSetAdapter`,
             await new Promise((r) => { setTimeout(r, 5); });
         }
         const note = textOf(h, 'editSetNote');
-        expect(BUNDLE_KINDS).not.toContain('region-library');
-        expect(note).toContain('the `region-library` document is NOT a member');
+        expect(BUNDLE_KINDS).toContain('region-library');
+        expect(note).not.toContain('is NOT a member');
+        expect(globalThis.__editorSetBundleKinds)
+            .toEqual(['region-library', 'overlay', 'rules', 'region-atlas']);
+        expect(note).toMatch(/^BUNDLED demo-maze-pack-[0-9a-f]{8}\.zip — 4 member\(s\)/);
+        // ⛓ the zip's NAME is the primary document's own id — `document.idOf` of
+        //   the member whose kind IS the document's kind, derived and not passed.
+        expect(h.downloads.at(-1).name).toMatch(/^demo-maze-pack-[0-9a-f]{8}\.zip$/);
+    });
+
+    /**
+     * ⛓⛓ **AND THE BY-NAME REFUSAL IS STILL THERE, ASSERTED AGAINST A KIND THAT
+     * IS REALLY NOT A MEMBER.** ⛔ Without this row, flipping the one above would
+     * have DELETED the only witness that an unknown member kind is NAMED rather
+     * than dropped — an E1c claim retired by a slice that was only supposed to
+     * widen the roster. The subject is `ap-mapping`, the companion §24.12
+     * refuses on purpose and which no roster will ever carry.
+     */
+    it('a member kind OUTSIDE `BUNDLE_KINDS` is still refused BY NAME, quoting the roster', async () => {
+        const h = mazeHarness({
+            loadZip: async () => loadJSZipNode(),
+            extraMember: {
+                kind: 'ap-mapping',
+                doc: { reason: 'a DERIVED table, regenerated per set' },
+                name: 'ap-mapping.json',
+                label: 'the apMapping companion',
+                whyNotMember: 'it is DERIVED from the set on demand',
+            },
+        });
+        connectAll(h, RING);
+        h.ui.runReport();
+        click(h, 'editDownloadBundle');
+        for (let i = 0; i < 200 && globalThis.__editorSetBundleKinds === undefined; i += 1) {
+            // eslint-disable-next-line no-await-in-loop
+            await new Promise((r) => { setTimeout(r, 5); });
+        }
+        const note = textOf(h, 'editSetNote');
+        expect(BUNDLE_KINDS).not.toContain('ap-mapping');
+        expect(note).toContain('the `ap-mapping` document is NOT a member');
         expect(note).toContain(BUNDLE_KINDS.join(', '));
-        expect(globalThis.__editorSetBundleKinds).toEqual(['overlay', 'rules', 'region-atlas']);
+        expect(note).toContain('it is DERIVED from the set on demand');
+        // ⛓ …and the rest still travels: the refusal drops ONE member, not the zip.
+        expect(globalThis.__editorSetBundleKinds)
+            .toEqual(['region-library', 'overlay', 'rules', 'region-atlas']);
     });
 
     /**

@@ -8,15 +8,25 @@
  * ── ⚖ WHAT THE RULING SETTLED, AND WHAT THIS MODULE THEREFORE IS NOT ───
  *
  * The single `rules.json` stays **CANONICAL** and always loadable. A bundle is
- * the OPTIONAL multi-document CONTAINER, and its members are exactly the four
- * documents this repo already writes:
+ * the OPTIONAL multi-document CONTAINER, and its members are exactly the
+ * documents this repo already writes — FOUR at E1c, FIVE since E2c:
  *
- *   `rules`         a rules.json — `schema_version === 3`, `regions` an object
- *   `level-set`     a Seedling level set — `rooms` an ARRAY (positions are ids)
- *   `overlay`       the set's rule/location overlay — `rooms` keyed BY INDEX
- *   `region-atlas`  a region atlas — `atlas_id` + `regions[].region_id`
+ *   `rules`            a rules.json — `schema_version === 3`, `regions` an object
+ *   `level-set`        a Seedling level set — `rooms` an ARRAY (positions are ids)
+ *   `overlay`          the set's rule/location overlay — `rooms` keyed BY INDEX
+ *   `region-atlas`     a region atlas — `atlas_id` + `regions[].region_id`
+ *   `region-library`   a region library — `library_id` + an `entries` ARRAY
  *
- * ⛔ **THERE IS NO MANIFEST.** A manifest would be a SECOND description of four
+ * ⛓⛓ **THE FIFTH KIND IS EDITOR v3 E2c's, AND IT COST WHAT §25.12 #1 SAID IT
+ * WOULD: ONE PREDICATE AND ONE ENTRY.** The maze lab page's SET arm edits a
+ * REGION LIBRARY, and its bundle button was refusing its own primary document
+ * by name (§28.9) — the roster it quoted had no `region-library` in it. ⛔ The
+ * kind is APPENDED to `BUNDLE_KINDS` rather than slotted beside `level-set`:
+ * the order is half of what makes two writes of the same documents the same
+ * bytes, so appending leaves every four-member bundle written before today
+ * byte-for-byte where it was.
+ *
+ * ⛔ **THERE IS NO MANIFEST.** A manifest would be a SECOND description of
  * documents that already describe themselves, and the two would disagree the
  * first time somebody edited one and not the other. The kind is DERIVED FROM
  * THE DOCUMENT — never from the entry name — which is also why `readBundle`
@@ -63,7 +73,9 @@ export const RULES_SCHEMA_VERSION = makeRulesJsonScaffold({
  * and not the caller's, because it is half of what makes two writes of the same
  * four documents the same bytes.
  */
-export const BUNDLE_KINDS = Object.freeze(['rules', 'level-set', 'overlay', 'region-atlas']);
+export const BUNDLE_KINDS = Object.freeze([
+    'rules', 'level-set', 'overlay', 'region-atlas', 'region-library',
+]);
 
 /**
  * ⛓ Entry names are DERIVED from the kind — one direction only. Reading does
@@ -154,18 +166,31 @@ const isNonEmptyString = (v) => typeof v === 'string' && v !== '';
 /**
  * ⛓⛓ **THE KIND IS THE DOCUMENT'S SHAPE.**
  *
- * ⛔ The four predicates are ordered most-specific-first and are deliberately
+ * ⛔ The five predicates are ordered most-specific-first and are deliberately
  * DISJOINT on the committed corpus — the row that proves it runs every committed
- * `_rules.json` under `frontend/presets`, the vanilla level set and the committed
- * atlases through here, and the mutant that swaps two of them goes red on the
- * set-vs-atlas pair.
+ * `_rules.json` under `frontend/presets`, the vanilla level set, the committed
+ * atlases and the three committed region libraries through here, and the mutant
+ * that swaps two of them goes red on the set-vs-atlas pair.
  *
  * ⚠ `level-set` and `overlay` keep D2's exact predicates (`rooms` an array vs
  * `rooms` anything else / an `overlay_id`) so that lifting the sniff out of
  * `sniffLoadBox` changes NOTHING about what that box accepts.
  *
+ * ⛓⛓ **`region-library` IS `library_id` + AN `entries` ARRAY, AND THAT PAIR IS
+ * WHAT CANNOT MISTAKE AN ATLAS FOR IT** (EDITOR v3 E2c). The alternative — the
+ * library's own `validateRegionLibrary` — would make this classifier IMPORT a
+ * validator that walks every entry's payload and asks the substrate registry
+ * about it, to answer a question about the document's SHAPE; and it would
+ * classify a library with one bad entry as *nothing at all*, so a bundle
+ * carrying one would report the member missing rather than invalid. ⛔ The
+ * shape decides the kind and the VALIDATOR decides whether it is a good one —
+ * exactly as `level-set` and `validateLevelSet` already divide the work. ⚠
+ * `atlas_id` + `regions[]` and `library_id` + `entries[]` share no key, so the
+ * two cannot collide whichever way round they are tried; the ordering here is
+ * the reader's convenience and not load-bearing, and the row says so.
+ *
  * @param {unknown} doc a parsed JSON document
- * @returns {'rules'|'level-set'|'overlay'|'region-atlas'|null}
+ * @returns {'rules'|'level-set'|'overlay'|'region-atlas'|'region-library'|null}
  */
 export function classifyDocument(doc) {
     if (!isPlainObject(doc)) return null;
@@ -173,6 +198,7 @@ export function classifyDocument(doc) {
         return 'rules';
     }
     if (Array.isArray(doc.rooms)) return 'level-set';
+    if (isNonEmptyString(doc.library_id) && Array.isArray(doc.entries)) return 'region-library';
     if (isNonEmptyString(doc.atlas_id) && Array.isArray(doc.regions)
         && doc.regions.every((r) => isPlainObject(r) && isNonEmptyString(r.region_id))) {
         return 'region-atlas';
