@@ -5267,6 +5267,69 @@ user and the fifth run's `sound`-pin re-record: **18 of 18 chain boundaries have
 an UNPINNED predecessor**, so every `rng.seed` row in the new gate is a
 sample-vs-sample comparison until that lands.
 
+**⛓⛓⛓ R9 SLICE 12g′ — CLOSED 2026-08-26 @`a3811e5ea`** (four outer commits: `e7858a880` the arm bound · `00f83c989` its own measurement refuting it · `a0b8f10c3` the default flip + gitlink · `a3811e5ea` the tracked doc; fork `~/CC/seedling` `bot @ d4f1f37`; submodule `7aaaa0a`; kickoff §46; ⚖ 58's (F)).
+**THE RACE IS REMOVED, NOT NARROWED, AND THE NUMBER IS 1.** `botStart` holds the
+constructed `Game` and `Bot.update` arms on the first frame where `FP.world`
+IS that instance — **one pending frame, always**, by the frame loop's own
+structure (`FP.as:87-90` · `Engine.as:77`, `:242-252` · `Main.as:61-66`;
+`BOOT_PRESWAP_FRAMES = 1` was already measured at R7 with a control). Built as
+**`seedling_bot_ap_p4c`**, FRESH, 21m47s under load.
+
+**MEASURED, 18 DRIVES:** p4c **PASSES 7/7** at 0.0/1.0/2.0 s of pre-boot idle,
+arm frames **28–64**, every one inside the region where p4b loses; p4b
+**REFUSES** at 1.0 s with `--out` absent. ⛓ **The discrimination is one frame
+wide and the build is the only variable: p4b refused at arm frame 31, p4c
+passed at arm frame 31.** Streams **0/146 differing on every passing drive,
+including against p4b's OWN winning idle-0 drive** — same `rng.state`, same
+final `game_time`. The ONLY observable that moves is `dead_frames` **41 → 40**,
+the pending frame the fix stops counting, and that pair is **12h's inertness
+proof**. Skip path 0/46 on both builds.
+
+⛔⛔ **§45.5's SPECIFIED CONDITION WOULD HAVE BUILT A NO-OP — CAUGHT AT W0.**
+`Main.level` **and** `Main.playerPositionX/Y` are both written synchronously
+inside `new Game(...)` (`Game.as:630-631` → `:526-528`, `:555-561`), so
+`Main.level == bootLevel && atBootPosition()` is already true while the swap is
+still only `FP._goto`. Trap 806 one field over — and `atBootPosition()`'s own
+docblock praises the early write, because for its OTHER caller (the skip test,
+which runs before any construction) it is correct. ⇒ **a field's eagerness is a
+property of WHERE it is read.** The gate became object identity on `FP.world`,
+which is not a proxy for the observation's source but IS it.
+
+⛔ **(E) REFUTED ITS OWN DOCBLOCK.** `--arm-bound` (⚖ 58's third option, landed
+OFF) claimed "on p4c this cannot fire" — a true sentence about the BUILD
+attached to code that could not tell which build it was driving. It refused p4c
+**4/4** while the flagless build passed 3/3 at the same arm frames. Fixed: the
+build ANNOUNCES its capability (`arm` in `botStatus`) and the bound skips
+itself by name. Both arms re-driven; **perturbation measured at exactly ONE
+frame, 4/4**, without self-reference (both pre-`botStart` reads back to back).
+§45.9 residues **2 and 3 DISCHARGED**.
+
+⚠ **THE ARM-FRAME READOUT'S ZERO IS MOVED BY THE CALL BEING MEASURED.**
+`armed_at` read **8568 on all seven** p4c drives regardless of idle, because
+`r9-solve-0` declares `seam.time = 8567` and `botStart` writes `Main.time =
+seamTime` above the `new Game` line. The law is **`armed_at − seam.time = 1`,
+7/7, idle-invariant**; the sealed `armed_at − ARM_STATE.game_time` form holds on
+the SKIP path, which declares no `seam.time`, and also reads 1.
+
+**(D) DERIVED:** 53 files / 69 lines flipped, `*.md` excluded as history;
+`check-seedling-wasm-pins` **ALL PASS — 2 pinned builds**, (m5) reds 3 ways by
+name; `verify-seedling-wasm-bridge` ALL PASS on p4c; `-pages` **20/0**. (D) and
+the gitlink are ONE commit, verified in both directions (7 failures unnamed, 3
+unlisted). ⛔ **p4b's pin is NOT free: the gate cannot see prose**, so it is
+held by ONE deliberate `wasm/seedling_bot_ap_p4b/game.html` in
+`flashPanel/README.md`, labelled there as the repository's only manufactured
+reference, cost named, retirement scheduled at 12h's close.
+
+⚠ **PUSH IS WITH THE USER** — the submodule push publishes a new 33.8 MB
+`.wasm` to `PeerInfinity/seedling-wasm` (first publication) and the outer
+gitlink cannot precede it. `standing-values --write` is HELD until then (a
+`--write` freezes a HEAD that cannot be pushed).
+
+⛔ **A HAZARD FOR 12h's INPUTS:** `/mnt/c/playwright/tape-r9-solve-0.json`
+(`ac86d87c…`, the evidence bytes) is **145 ticks / 57 spans**; the committed
+`fixtures/tapes/r9-solve-0.json` is **237 / 22**. Same name, same boot,
+different walk. A scratch file named after a fixture is not that fixture.
+
 **⛓⛓⛓ R9 SLICE 12g — CLOSED 2026-08-26 @`2018e463c`** (three commits: `05c6f7e1c` the gate · `2b0ef4a98` docs+queue · `2018e463c` the vacuous-`level` finding; kickoff §45; ⚖ 58).
 **(G) THE GATE LANDED AND IT IS ALREADY RED ON A REAL DRIVE.** After the drain
 and before a window is kept, the driver refuses `WORLD_SWAP_RACE_LOST` when the
