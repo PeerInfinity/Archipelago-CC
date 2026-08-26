@@ -166,10 +166,20 @@ describe('the plan is chosen so that FILE ORDER is the wrong answer', () => {
         expect(REHEARSAL_PLAN.chains[0].segments[0]).toBe('rh-a');
     });
 
-    it('⛓ the plan carries a HEADLINE and a ONE-SEGMENT chain — the two floors §33.4 '
-        + 'items 1 and 2 named', () => {
+    /**
+     * ⛔ THE COUNT IS DERIVED, NOT PINNED. `lint-gate-labels` names a
+     * `toHaveLength(<literal>)` over a declared roster for exactly this reason:
+     * the claim is not "one segment", it is "a chain with NO BOUNDARY" — the
+     * shape `subjects()` filters out and the walk accounting must still see.
+     * A pinned length would go stale the day the plan grows a segment and
+     * would say nothing about why the row exists.
+     */
+    it('⛓ the plan carries a HEADLINE, and a chain with NO BOUNDARY — the floors §33.4 '
+        + 'named', () => {
         expect(REHEARSAL_PLAN.chains[0].headline).toBe('rh-main-full');
-        expect(REHEARSAL_PLAN.chains[1].segments).toHaveLength(1);
+        const boundaries = REHEARSAL_PLAN.chains.map((c) => c.segments.length - 1);
+        expect(Math.min(...boundaries)).toBe(0);
+        expect(Math.max(...boundaries)).toBeGreaterThan(0);
     });
 
     it('⛓ every source tape is on the committed roster, and none is named twice', () => {

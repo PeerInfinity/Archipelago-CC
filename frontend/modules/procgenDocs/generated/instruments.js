@@ -49,7 +49,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 22,
-            "count": 28,
+            "count": 29,
             "id": "check"
         },
         {
@@ -204,12 +204,12 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 235,
+        "blockStyle": 236,
         "browser": 76,
         "cited": 82,
-        "files": 254,
+        "files": 255,
         "lineStyle": 19,
-        "withDocblock": 254,
+        "withDocblock": 255,
         "withFlags": 157
     },
     "dir": "scripts/procgen",
@@ -1654,6 +1654,18 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "check-seedling-generated-set — THE PHASE 5 ROUND TRIP.",
             "path": "scripts/procgen/check-seedling-generated-set.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-seedling-rerecord-rehearsal.mjs",
+            "flags": [],
+            "oneLiner": "check-seedling-rerecord-rehearsal — **THE RE-RECORD PIPELINE IS REHEARSED BEFORE IT SPENDS A GPU, AND THIS GATE IS WHAT MAKES THAT A STANDING CLAIM.** R9 slice P1b, ⚖ ruling 54 (3).",
+            "path": "scripts/procgen/check-seedling-rerecord-rehearsal.mjs"
         },
         {
             "argvHelpers": [],

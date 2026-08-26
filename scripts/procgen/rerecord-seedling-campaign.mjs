@@ -2229,10 +2229,10 @@ function rehearsalScenarios() {
             argv: [],
             exit: 0,
             rows: (out) => [
-                ['⛓ CONTROL: every boundary measures ZERO movers',
+                ['⛓ (control) every boundary measures ZERO movers',
                     (out.match(/field\(s\) compared, 0 moved/g) ?? []).length === 3,
                     `${(out.match(/field\(s\) compared, \d+ moved/g) ?? []).join(' · ')}`],
-                ['⛓ CONTROL: S3 records NOTHING, and that is a MEASUREMENT not a skip',
+                ['⛓ (control-empty) S3 records NOTHING, and that is a MEASUREMENT not a skip',
                     out.includes('no projection moved, so there is nothing to record'),
                     'S3'],
                 ['⛓ …ACROSS a real tick-0 re-derivation of every tape — `tick0` is a '
@@ -2240,10 +2240,10 @@ function rehearsalScenarios() {
                     + '(§35.4 item 3)',
                     /\d+ tick-0 block\(s\) re-derived/.test(out)
                         && out.includes('no projection moved'), 'S2 -> S3'],
-                ['⛓ THE HEADLINE HAS A ROW OF ITS OWN (§33.4 item 2) — the floor '
+                ['⛓ (c4) THE HEADLINE HAS A ROW OF ITS OWN (§33.4 item 2) — the floor '
                     + '`r8-d2` fell through',
                     /rh-main\s+HL rh-main-full/.test(out), 'the sealed table'],
-                ['⛓ THE ONE-SEGMENT CHAIN IS ACCOUNTED FOR (§33.4 item 1) — the floor '
+                ['⛓ (c4b) THE ONE-SEGMENT CHAIN IS ACCOUNTED FOR (§33.4 item 1) — the floor '
                     + '`r8-solve-11` fell through',
                     /rh-solo\s+1 rh-e/.test(out), 'the sealed table'],
                 ['⛓ every chain segment is accounted for by exactly one producer',
@@ -2352,7 +2352,7 @@ function rehearsalScenarios() {
                     + 'DROPS `description` by ⚖ 54 (4) — over-inclusive here, exact there, '
                     + 'and the two must never be conflated',
                     /^\s+rh-main-full\s+moved/m.test(out), 'S3'],
-                ['⛔ …and a prose mover no licence covers is a STOP BEFORE THE GPU, named',
+                ['⛔ (c5-stop) a prose mover no licence covers is a STOP BEFORE THE GPU, named',
                     out.includes('rh-main-full moved and no licence covers it')
                         && out.includes('STOP before the GPU'), 'S3'],
             ],
