@@ -765,14 +765,25 @@ describe('createTapeStepper — the resume run', () => {
         const w2 = stream(loadTape('r8-d2-20'),
             { levelSource, run: live, onTick: (t, s, h, r) => { resumed = r; } });
         expect(resumed).toBe(live);
-        // …and the ledgers are the SEQUENCE's, not this window's own.
+        /**
+         * …and the ledgers are the SEQUENCE's, not this window's own — which is
+         * exactly why the ticks are DERIVED from the two tapes rather than
+         * typed (⚖ 17). A window-relative ledger would put the second crossing
+         * at `w2` alone; a sequence-absolute one puts it at `w1 + w2`, and that
+         * difference is what discriminates the re-staging mutant this row
+         * exists for. ⛔ The literals used to be 864 and 1645 and went stale
+         * the moment the re-record moved `r8-d2-19` to 721 (R9 slice 12e′'s
+         * fourth run) — a constant that any licensed walk move falsifies.
+         */
+        const w1Ticks = loadTape('r8-d2-19').tick_count;
+        const w2Ticks = loadTape('r8-d2-20').tick_count;
         expect(w2.done.transitions).toEqual([
-            { t: 864, from_level: 19, to_level: 20 },
-            { t: 1645, from_level: 20, to_level: 13 },
+            { t: w1Ticks, from_level: 19, to_level: 20 },
+            { t: w1Ticks + w2Ticks, from_level: 20, to_level: 13 },
         ]);
         expect(live.earnedClears.map((c) => `${c.level}:${c.tag}`).sort())
             .toEqual(['19:0', '19:1', '20:0', '20:2', '20:4']);
-        expect(live.ticksCompleted).toBe(1645);
+        expect(live.ticksCompleted).toBe(w1Ticks + w2Ticks);
     });
 
     it('⛓ the resumed window CONTINUES the run rather than staging its own', () => {

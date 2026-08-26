@@ -39,6 +39,10 @@
  * [[feedback_fixture_must_discriminate_two_builds]]
  */
 
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 import { describe, expect, it } from 'vitest';
 
 import { HELP_DISMISS_KEYS, autoAdvanceArrivals } from './dialogue.js';
@@ -47,6 +51,10 @@ import { atlasLevelSource } from './levelSource.js';
 import { runTape } from './tapeRunner.js';
 
 const levelSource = atlasLevelSource();
+const HERE = dirname(fileURLToPath(import.meta.url));
+/** The GAME's dead-frame curve for both `r8-solve-10` walks — see §36. */
+const HELP_FRAME_ORACLE = JSON.parse(readFileSync(
+    join(HERE, 'fixtures', 'r8-solve-10-help-frame-oracle.json'), 'utf8'));
 const swordPickupsOf = (run) =>
     (run.collected ?? []).filter((c) => c.item === 'sword').length;
 
@@ -73,14 +81,46 @@ const rosterSweep = () => {
 /** The roster is 149 tapes of real replay; give the sweep room. */
 const SWEEP_TIMEOUT_MS = 600000;
 
-describe('the corrected derivation cannot move the `--win` differential', () => {
-    it('⛓⛓ over EVERY committed tape it equals the count it replaces', () => {
+/**
+ * ⛓⛓⛓ R9 SLICE 12e′'s FOURTH RUN LANDED THE SERIES AND MADE THIS BLOCK'S
+ * INERTNESS CLAIM FALSE — IN THE DIRECTION THE CHECK WAS CORRECTED FOR.
+ *
+ * The block used to read *"the corrected derivation cannot move the `--win`
+ * differential"*, on the ground that the two derivations agreed over all 149
+ * committed tapes. That ground was the OLD roster. The whole content of Class
+ * B (kickoff §37.7) is that the re-recorded 78-tick `r8-solve-10` collects its
+ * sword and earns NO auto-advance arrival, and the series committed that walk
+ * — so the two derivations now part on it, by design, and the corrected one is
+ * the one that matches the GAME's `saw_auto_advance = 0`.
+ *
+ * ⇒ the claim is restated as what it always should have been: the derivations
+ * agree EXCEPT where a walk dismisses its own Help, the exception set is
+ * NAMED, and 148 of 149 are still inert.
+ */
+describe('the corrected derivation moves the differential on exactly one tape, toward the GAME', () => {
+    it('⛓⛓ the two derivations part on EXACTLY ONE committed tape, and the GAME picked it', () => {
         const rows = rosterSweep();
-        // ⛔ Named, not counted: a future tape that separates the two reds
-        // HERE, in seconds, instead of surprising a GPU sweep.
-        expect(rows.filter((r) => r.swordPickups !== r.arrivals)
-            .map((r) => `${r.name}: ${r.swordPickups} → ${r.arrivals}`)).toEqual([]);
+        const parted = rows.filter((r) => r.swordPickups !== r.arrivals);
+        // ⛔ NAMED, NOT COUNTED, and the name carries its provenance: the third
+        // re-record run drove this walk and the GAME reported
+        // `saw_auto_advance = 0` against the old derivation's 1 (§37.7). A
+        // SECOND tape appearing here is a finding, in seconds, instead of a
+        // surprise in a GPU sweep — which is exactly what this row did when the
+        // series landed.
+        expect(parted.map((r) => `${r.name}: ${r.swordPickups} → ${r.arrivals}`))
+            .toEqual(['r8-solve-10: 1 → 0']);
+        // …and the REASON is read off the ledger rather than asserted: a walk
+        // that dismisses the Help on its own first update collects its sword
+        // and carries no `help` span at all.
+        for (const r of parted) {
+            const run = runTape(loadTape(r.name), { levelSource });
+            expect(run.deadFrameSpans.filter((x) => x.kind === 'help'), r.name).toEqual([]);
+            expect(r.swordPickups, r.name).toBeGreaterThan(0);
+        }
+        // ⛓ EVERY OTHER TAPE IS STILL INERT — no other committed row's verdict
+        //   can move under the corrected derivation.
         expect(rows).toHaveLength(149);
+        expect(rows.length - parted.length).toBe(148);
     }, SWEEP_TIMEOUT_MS);
 
     it('⛓ and it is not vacuous — the roster really does collect swords', () => {
@@ -92,43 +132,78 @@ describe('the corrected derivation cannot move the `--win` differential', () => 
 
 describe('what SEPARATES them is a Help the tape dismisses itself', () => {
     /**
-     * The 78-tick walk lives only on the parked series, so the discriminating
-     * partner is DERIVED from the committed one exactly as
-     * `helpFrame.test.js` derives it: the same bytes with one `primary` press
-     * added on the tick the Help is up. Taking the tick from the model's own
-     * span rather than typing it keeps this a test of the RULE.
-     * [[feedback_minimize_hardcoding]]
+     * ⛔ THE ROLES TRADED PLACES WHEN THE SERIES LANDED. This block used to
+     * open *"the 78-tick walk lives only on the parked series, so the
+     * discriminating partner is DERIVED"*. The committed `r8-solve-10` IS that
+     * walk now, so the COMMITTED tape is the discriminating half and the
+     * not-dismissed half is the one that has to be built — by REMOVING the
+     * dismiss press the walk holds on the Help's tick, which is the exact
+     * inverse of what this block used to do. The tick is still taken from the
+     * model's own span rather than typed. [[feedback_minimize_hardcoding]]
      */
-    const base = () => loadTape('r8-solve-10');
+    const committed = () => loadTape('r8-solve-10');
     const helpTickOf = (run) => run.deadFrameSpans.find((s) => s.kind === 'help').t;
+    /**
+     * The synthetic NOT-dismissed partner, with its own non-vacuity check.
+     *
+     * ⛔ WHICH press to remove is taken from the GAME'S OWN CURVE, not
+     * searched for: `r8-solve-10-help-frame-oracle.json` is two read-only
+     * drives of the real Flash build (kickoff §36) and names `helpDeadTicks`
+     * per walk. A search was tried first and is NOT unique — FOUR of the
+     * walk's seven `primary` presses put a `help` span back, because removing
+     * an earlier one re-times the ceremony's pages and moves the Help. The
+     * oracle row is selected by the tape's own length and REFUSES BY NAME if
+     * the game has never been driven at that length, so a later licence that
+     * moves this tape stops the row rather than quietly re-aiming it.
+     */
+    const notDismissed = () => {
+        const tape = committed();
+        const walk = Object.values(HELP_FRAME_ORACLE.walks)
+            .find((w) => w.tick_count === tape.tick_count);
+        expect(walk, `r8-solve-10 is ${tape.tick_count} ticks and the game oracle `
+            + `${JSON.stringify(Object.values(HELP_FRAME_ORACLE.walks)
+                .map((w) => w.tick_count))} has never been driven at that length`)
+            .toBeTruthy();
+        const base = { ...tape,
+            inputs: tape.inputs.filter((r) => !(HELP_DISMISS_KEYS.includes(r.key)
+                && walk.helpDeadTicks.some((t) => r.from <= t && t < r.to))) };
+        expect(base.inputs.length, 'a dismiss press must have been removed')
+            .toBeLessThan(tape.inputs.length);
+        const control = runTape(base, { levelSource });
+        const span = control.deadFrameSpans.find((s) => s.kind === 'help');
+        expect(span, 'removing the press must put the Help frame back').toBeTruthy();
+        expect(span.t).toBe(walk.helpDeadTicks[0]);
+        return { base, control };
+    };
 
-    it('⛓⛓ the COMMITTED 90-tick walk earns ONE — the positive control', () => {
-        const run = runTape(base(), { levelSource });
+    it('⛓⛓ the COMMITTED walk earns NONE — and that is the GAME\'s number', () => {
+        const run = runTape(committed(), { levelSource });
+        // The sword IS collected — this is not a route that skipped the
+        // pickup, which is the reading the old failure message offered and the
+        // one that would have sent 12e⁗ hunting the wrong thing.
         expect(swordPickupsOf(run)).toBe(1);
-        expect(autoAdvanceArrivals(run.deadFrameSpans)).toBe(1);
-        // ⛓ AND THAT IS THE GAME'S OWN NUMBER, not the model's opinion of it:
-        // 12e‴'s read-only drive of this very walk reported
-        // `saw_auto_advance = 1`, and the differential has passed this tape on
-        // `main` under the OLD derivation for two rungs.
+        expect(autoAdvanceArrivals(run.deadFrameSpans)).toBe(0);
+        // ⛔ AND THE OLD DERIVATION WOULD HAVE SAID 1 — the whole defect, in
+        //   one line, now standing on the committed roster instead of on a
+        //   tape built to show it.
+        expect(swordPickupsOf(run)).not.toBe(autoAdvanceArrivals(run.deadFrameSpans));
     });
 
-    it('⛓⛓ …and dismissing the Help on its own tick earns NONE', () => {
-        const control = runTape(base(), { levelSource });
+    it('⛓⛓ …and NOT dismissing the Help earns ONE — the positive control', () => {
+        const { control } = notDismissed();
+        expect(swordPickupsOf(control)).toBe(1);
+        expect(autoAdvanceArrivals(control.deadFrameSpans)).toBe(1);
+    });
+
+    it('⛓⛓ dismissing it again, on its own tick, earns NONE — either key', () => {
+        const { base, control } = notDismissed();
         const helpTick = helpTickOf(control);
         for (const key of HELP_DISMISS_KEYS) {
-            const dismissed = runTape({
-                ...base(),
-                inputs: [...base().inputs, { key, from: helpTick, to: helpTick + 1 }],
+            const dismissed = runTape({ ...base,
+                inputs: [...base.inputs, { key, from: helpTick, to: helpTick + 1 }],
             }, { levelSource });
-            // The sword is STILL collected — this is not a route that skipped
-            // the pickup, which is the reading the old failure message offered
-            // and the one that would have sent 12e⁗ hunting the wrong thing.
             expect(swordPickupsOf(dismissed), key).toBe(1);
             expect(autoAdvanceArrivals(dismissed.deadFrameSpans), key).toBe(0);
-            // ⛔ AND THE OLD DERIVATION WOULD HAVE SAID 1 — the whole defect,
-            // in one line.
-            expect(swordPickupsOf(dismissed), key).not
-                .toBe(autoAdvanceArrivals(dismissed.deadFrameSpans));
         }
     });
 
@@ -136,12 +211,11 @@ describe('what SEPARATES them is a Help the tape dismisses itself', () => {
         // The tick `Sword.removed()` fires, which two sessions in a row read
         // instead of the tick the Help is up (`FP.world.add` queues).
         // [[feedback_classification_read_off_the_wrong_tick]]
-        const control = runTape(base(), { levelSource });
+        const { base, control } = notDismissed();
         const helpTick = helpTickOf(control);
-        const early = runTape({
-            ...base(),
-            inputs: [...base().inputs,
-                { key: 'primary', from: helpTick - 1, to: helpTick }],
+        const early = runTape({ ...base,
+            inputs: [...base.inputs,
+                { key: 'secondary', from: helpTick - 1, to: helpTick }],
         }, { levelSource });
         expect(autoAdvanceArrivals(early.deadFrameSpans)).toBe(1);
     });
@@ -152,11 +226,10 @@ describe('what SEPARATES them is a Help the tape dismisses itself', () => {
         // `secondary`: X is also the dialogue key and holding it across the
         // ceremony would move the Help's tick, so the fixture would be
         // measuring a different walk.
-        const control = runTape(base(), { levelSource });
+        const { base, control } = notDismissed();
         const helpTick = helpTickOf(control);
-        const held = runTape({
-            ...base(),
-            inputs: [...base().inputs,
+        const held = runTape({ ...base,
+            inputs: [...base.inputs,
                 { key: 'secondary', from: helpTick - 4, to: helpTick + 2 }],
         }, { levelSource });
         expect(autoAdvanceArrivals(held.deadFrameSpans)).toBe(1);

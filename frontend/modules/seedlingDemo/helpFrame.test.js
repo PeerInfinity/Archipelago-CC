@@ -100,61 +100,111 @@ describe('the game\'s own dead-frame curve says where the frame is', () => {
     });
 });
 
+/**
+ * ⛓⛓⛓ R9 SLICE 12e′'s FOURTH RUN INVERTED THIS BLOCK'S PREMISE, AND THE SWAP
+ * MADE IT STRONGER.
+ *
+ * It used to open *"the 78-tick walk lives only on the parked series, so the
+ * discriminating partner is BUILT here"*. The series landed, and the COMMITTED
+ * `r8-solve-10` **is** the 78-tick walk now — the one that holds `primary` on
+ * the tick the Help is up and pays the model nothing. So the roles trade
+ * places: the committed tape is the DISCRIMINATING half and is checked
+ * straight against the game's own curve, and the not-dismissed half is the one
+ * that has to be built, by REMOVING that press.
+ *
+ * ⚠ AND THE REMOVAL IS NOT FREE, which is stated rather than hidden: dropping
+ * the press perturbs the walk from t=68 (dy=2) and moves `deadFramesOwed` to
+ * 171. That is fine and it is the point — the rule rows below compare the
+ * synthetic base against ITSELF plus one press, never against the committed
+ * walk. ⛔ The probe key is `secondary` throughout for the reason the last row
+ * already gave: X is ALSO the dialogue key, and on this base it re-advances
+ * the ceremony's pages (measured: +19 frames, not −1), so only C isolates
+ * `Help.as:23`'s rule. [[feedback_fixture_must_discriminate_two_builds]]
+ */
 describe('the MODEL reproduces both halves of the pair', () => {
-    it('⛓⛓ the COMMITTED 90-tick walk still owes 191 — the positive control', () => {
-        const r = runTape(loadTape('r8-solve-10'), { levelSource });
-        expect(r.deadFramesOwed).toBe(ORACLE.walks.old.modelOwes);
-        const help = r.deadFrameSpans.filter((s) => s.kind === 'help');
-        expect(help).toHaveLength(1);
-        expect(help[0].frames).toBe(1);
-        // ⛓ AND THE SPAN IS LABELLED AT THE TICK THE GAME'S CURVE SHOWS. The
-        // old label was the tick `removed()` fires; `FP.world.add` queues, so
-        // the freeze is the NEXT tick's and so is the span.
-        expect(help[0].t).toBe(ORACLE.walks.old.helpDeadTicks[0]);
+    /** The oracle row for whatever `r8-solve-10` is TODAY, refusing by name. */
+    const oracleWalk = (tape) => {
+        const w = Object.values(ORACLE.walks).find((x) => x.tick_count === tape.tick_count);
+        expect(w, `r8-solve-10 is ${tape.tick_count} ticks and the game oracle `
+            + `${JSON.stringify(Object.values(ORACLE.walks).map((x) => x.tick_count))} `
+            + 'has never been driven at that length').toBeTruthy();
+        return w;
+    };
+    /** Does the walk itself press a dismiss key while the Help is up? */
+    const dismissesOwnHelp = (tape, walk) => walk.helpDeadTicks
+        .some((t) => tape.inputs
+            .some((r) => r.from <= t && t < r.to && HELP_DISMISS_KEYS.includes(r.key)));
+
+    it('⛓⛓ the COMMITTED walk owes exactly what the GAME says it owes', () => {
+        const tape = loadTape('r8-solve-10');
+        const walk = oracleWalk(tape);
+        const r = runTape(tape, { levelSource });
+        expect(r.deadFramesOwed).toBe(walk.modelOwes);
+        // ⛓ THE GAME PAYS ONE FRAME PER `helpDeadTick`; THE MODEL PAYS ONE
+        //   FEWER WHEN THE WALK DISMISSES IT ITSELF, and the difference is the
+        //   whole finding. Derived, so a later licence cannot leave it stale.
+        const help = r.deadFrameSpans.filter((x) => x.kind === 'help');
+        const dismissed = dismissesOwnHelp(tape, walk);
+        expect(help.reduce((n, x) => n + x.frames, 0))
+            .toBe(walk.helpDeadTicks.length - (dismissed ? 1 : 0));
+        // …and the span, when there is one, is labelled at the tick the GAME's
+        // curve shows — not the tick `removed()` fires. `FP.world.add` queues,
+        // so the freeze is the NEXT tick's and so is the span.
+        if (help.length) expect(help[0].t).toBe(walk.helpDeadTicks[0]);
+        else expect(dismissed, 'no model help span, so the walk must dismiss it').toBe(true);
     });
 
     /**
-     * ⛔ THE OTHER HALF IS DERIVED, NOT COMMITTED. The 78-tick walk lives only
-     * on the parked series, so the discriminating partner is BUILT here from
-     * a committed tape: the same bytes with one `primary` press added on the
-     * tick the Help is up. Deriving the tick from the model's own span rather
-     * than typing it is what keeps this a test of the RULE and not of a
-     * number [[feedback_minimize_hardcoding]].
+     * ⛔ THE NOT-DISMISSED HALF IS THE DERIVED ONE NOW. Built from the
+     * committed tape by removing the dismiss press the walk holds on the
+     * oracle's Help tick; the tick is then read back off the model's own span
+     * rather than typed, which is what keeps this a test of the RULE and not
+     * of a number [[feedback_minimize_hardcoding]].
      */
-    it('⛓⛓ adding ONE X press on the Help\'s tick removes the frame — and only then', () => {
-        const base = loadTape('r8-solve-10');
+    const notDismissed = () => {
+        const tape = loadTape('r8-solve-10');
+        const walk = oracleWalk(tape);
+        const base = { ...tape,
+            inputs: tape.inputs.filter((r) => !(HELP_DISMISS_KEYS.includes(r.key)
+                && walk.helpDeadTicks.some((t) => r.from <= t && t < r.to))) };
         const control = runTape(base, { levelSource });
-        const helpTick = control.deadFrameSpans.find((s) => s.kind === 'help').t;
+        const span = control.deadFrameSpans.find((x) => x.kind === 'help');
+        // Non-vacuity: removing the press must have PUT THE FRAME BACK.
+        expect(span, 'the synthetic base must owe the Help frame').toBeTruthy();
+        expect(span.frames).toBe(1);
+        return { base, control, helpTick: span.t };
+    };
 
-        const withPress = {
-            ...base,
-            inputs: [...base.inputs, { key: 'primary', from: helpTick, to: helpTick + 1 }],
-        };
+    it('⛓⛓ adding ONE C press on the Help\'s tick removes the frame — and only then', () => {
+        const { base, control, helpTick } = notDismissed();
+        const withPress = { ...base,
+            inputs: [...base.inputs, { key: 'secondary', from: helpTick, to: helpTick + 1 }] };
         const pressed = runTape(withPress, { levelSource });
         expect(pressed.deadFramesOwed).toBe(control.deadFramesOwed - 1);
-        expect(pressed.deadFrameSpans.filter((s) => s.kind === 'help')).toHaveLength(0);
+        expect(pressed.deadFrameSpans.filter((x) => x.kind === 'help')).toHaveLength(0);
 
         // ⛔ THE NEGATIVE CONTROL, and it is what makes the rule a rule: the
         // SAME press one tick EARLIER — the tick `removed()` fires, which is
         // what two sessions read — changes nothing at all.
-        const early = {
-            ...base,
+        const early = { ...base,
             inputs: [...base.inputs,
-                { key: 'primary', from: helpTick - 1, to: helpTick }],
-        };
+                { key: 'secondary', from: helpTick - 1, to: helpTick }] };
         expect(runTape(early, { levelSource }).deadFramesOwed).toBe(control.deadFramesOwed);
     });
 
-    it('⛓ `secondary` (C) dismisses it too — `Help.as:23` lists both keys', () => {
-        const base = loadTape('r8-solve-10');
-        const control = runTape(base, { levelSource });
-        const helpTick = control.deadFrameSpans.find((s) => s.kind === 'help').t;
+    it('⛓ BOTH keys in `Help.as:23` dismiss it — the SPAN is what they share', () => {
+        const { base, helpTick } = notDismissed();
         for (const key of HELP_DISMISS_KEYS) {
             const t = { ...base,
                 inputs: [...base.inputs, { key, from: helpTick, to: helpTick + 1 }] };
-            expect(runTape(t, { levelSource }).deadFramesOwed, key)
-                .toBe(control.deadFramesOwed - 1);
+            expect(runTape(t, { levelSource }).deadFrameSpans
+                .filter((x) => x.kind === 'help'), key).toHaveLength(0);
         }
+        // ⚠ THE FRAME ARITHMETIC IS ASSERTED FOR `secondary` ONLY, ABOVE, and
+        //   this row says why rather than averaging over the two: X is the
+        //   dialogue key as well, so on this base it also re-advances the
+        //   ceremony's pages and `deadFramesOwed` moves by +19 instead of −1.
+        //   The Help is dismissed either way, which is this row's claim.
         expect([...HELP_DISMISS_KEYS]).toEqual(['primary', 'secondary']);
     });
 
@@ -162,16 +212,7 @@ describe('the MODEL reproduces both halves of the pair', () => {
         // FlashPunk's `onKeyDown` is `if (!_key[code]) { … _press[…] = code; }`,
         // so a key held across the frame registers nothing and the Help
         // survives.
-        //
-        // ⚠ THE PROBE KEY IS `secondary`, NOT `primary`, and that is the whole
-        // care in this row: X is ALSO the dialogue key, so holding it across
-        // the ceremony's phase B advances the pages and moves the Help's tick
-        // — the fixture would then be measuring a different walk and reporting
-        // it as this rule. C is in `Help.as:23`'s pair and in nothing else on
-        // this route. [[feedback_fixture_must_discriminate_two_builds]]
-        const base = loadTape('r8-solve-10');
-        const control = runTape(base, { levelSource });
-        const helpTick = control.deadFrameSpans.find((s) => s.kind === 'help').t;
+        const { base, control, helpTick } = notDismissed();
         const heldThrough = { ...base,
             inputs: [...base.inputs,
                 { key: 'secondary', from: helpTick - 4, to: helpTick + 2 }] };

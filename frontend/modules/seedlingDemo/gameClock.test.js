@@ -7,6 +7,10 @@
  * module existed. So "the accumulator agrees" is a measurement against ten
  * independent recordings, not a re-run of the same arithmetic.
  */
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -19,9 +23,19 @@ import { PLAYTHROUGH_CHAINS } from './playthroughWalk.js';
 import { loadTape } from './fixtures/index.js';
 import { createTapeStepper, runTape } from './tapeRunner.js';
 import { atlasLevelSource } from './levelSource.js';
+import { HELP_DISMISS_KEYS } from './dialogue.js';
 import { BOOT_COST_FRAMES } from './watchWasm.js';
 
 const levelSource = atlasLevelSource();
+const HERE = dirname(fileURLToPath(import.meta.url));
+/**
+ * ⛓ THE GAME'S OWN DEAD-FRAME CURVE for `r8-solve-10`, both walks — two
+ * READ-ONLY drives of the real Flash build (R9 slice 12e‴, kickoff §36).
+ * `helpFrame.test.js` owns the finding; this file reads one field of it so
+ * the Help row below is derived from the game rather than typed.
+ */
+const HELP_FRAME_ORACLE = JSON.parse(readFileSync(
+    join(HERE, 'fixtures', 'r8-solve-10-help-frame-oracle.json'), 'utf8'));
 
 describe('the fade is SIMULATED, not divided', () => {
     it('one room load is twenty dead frames under the pin', () => {
@@ -171,14 +185,50 @@ describe('⛓⛓⛓ THE FREE ORACLE — the game latched every one of these', ()
         }
     });
 
-    it('⛓ and the SWORD is the one that also spends a Help frame', () => {
-        // ⛓ R9 slice 7: was `r7-act2-10`, retired by ⚖ ruling 14. `r8-solve-10`
-        //   is the solver's walk of the same room taking the same sword, and it
-        //   is on the ceremony list above by MEASUREMENT, not by assumption.
-        const sword = runTape(loadTape('r8-solve-10'), { levelSource });
+    /**
+     * ⛓ R9 slice 7: was `r7-act2-10`, retired by ⚖ ruling 14. `r8-solve-10` is
+     * the solver's walk of the same room taking the same sword, and it is on
+     * the ceremony list above by MEASUREMENT, not by assumption.
+     *
+     * ⛔⛔ AND THE MODEL'S SHARE OF THE SWORD'S HELP IS A PROPERTY OF THE WALK,
+     * NOT OF THE PICKUP — which is what the re-record made visible. `Help(3)`
+     * is "press X or C" (`NPCs/Help.as:23`) and `Help.update:107-110` lowers
+     * `Game.freezeObjects` IN THE SAME UPDATE when one of them is pressed, so
+     * a walk that holds a dismiss key while the Help is UP costs the GAME one
+     * dead frame and a walk that does not costs two — and the model owes one
+     * less than the game either way (`BOOT_PRESWAP_FRAMES`). The retired
+     * 90-tick walk held `right`+`up` at its Help tick and paid the model a
+     * frame; the re-recorded 78-tick walk holds `primary` and pays it none.
+     * ⛓ Both halves are the GAME's own word, driven read-only through
+     * `probe-seedling-help-frame.mjs --dead-curve` and banked in
+     * `r8-solve-10-help-frame-oracle.json`, which `helpFrame.test.js` owns.
+     * ⇒ the expectation is DERIVED from that oracle's own dismiss-key rule
+     * rather than typed, so the row cannot go stale behind a later licence.
+     */
+    it('⛓ and the SWORD is the one that opens a Help at all — the key never does', () => {
+        const swordTape = loadTape('r8-solve-10');
+        const sword = runTape(swordTape, { levelSource });
         const key = runTape(loadTape('r8-d2-19'), { levelSource });
-        expect(sword.deadFrameSpans.filter((s) => s.kind === 'help')
-            .reduce((n, s) => n + s.frames, 0)).toBe(1);
+        const helpFrames = (r) => r.deadFrameSpans
+            .filter((s) => s.kind === 'help').reduce((n, s) => n + s.frames, 0);
+        // The tick the Help is UP is the one AFTER `removed()` fires — the
+        // distinction two sessions in a row got wrong (kickoff §36's oracle).
+        // ⛔ THE ORACLE ROW IS SELECTED BY THE TAPE'S OWN LENGTH, and a tape
+        //   the oracle has never seen is a REFUSAL BY NAME rather than a
+        //   silent pass — the shape a later licence needs it to have.
+        const walk = Object.values(HELP_FRAME_ORACLE.walks)
+            .find((w) => w.tick_count === swordTape.tick_count);
+        expect(walk, `r8-solve-10 is ${swordTape.tick_count} ticks and the game oracle `
+            + `${JSON.stringify(Object.values(HELP_FRAME_ORACLE.walks)
+                .map((w) => w.tick_count))} has never been driven at that length`)
+            .toBeTruthy();
+        const dismissedAtHelpTick = walk.helpDeadTicks
+            .some((t) => swordTape.inputs
+                .some((r) => r.from <= t && t < r.to && HELP_DISMISS_KEYS.includes(r.key)));
+        expect(helpFrames(sword))
+            .toBe(walk.helpDeadTicks.length - (dismissedAtHelpTick ? 1 : 0));
+        // ⛔ THE KEY PICKUP OPENS NO HELP AT ALL — a different 0 from the
+        //   sword's, and the reason each is 0 is the whole row.
         expect(key.deadFrameSpans.filter((s) => s.kind === 'help')).toEqual([]);
         // Both spend the same phase A; only the sword's `removed()` adds a Help.
         expect(sword.deadFrameSpans.find((s) => s.kind === 'ceremony').frames)

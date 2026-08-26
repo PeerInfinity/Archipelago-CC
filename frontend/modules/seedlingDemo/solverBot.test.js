@@ -515,11 +515,28 @@ describe('the refusal shapes — never a silent stall', () => {
         const bait = rungs.find((r) => r.strategy.rung === 'bait');
         expect(bait.strategy.target).toBe('bob@112,48');
         expect(bait.strategy.stance).toEqual({ x: 56, y: 24 });
-        // …and it names BOTH cheaper rungs, in ladder order, with a reason
-        // each — the chain, not just the rung below.
-        expect(bait.rejected.map((j) => j.option)).toEqual(['avoid', 'time']);
-        expect(bait.rejected[0].why).toMatch(/no admissible corridor/);
-        expect(bait.rejected[1].why).toMatch(/MOVER_RANGE/);
+        /**
+         * …and it names BOTH cheaper rungs, in ladder order, with a reason
+         * each — the chain, not just the rung below.
+         *
+         * ⛔⛔ THE CLAIM IS ABOUT THE LADDER, SO IT READS THE LADDER'S
+         * MEMBERS. `rejected` is the acting rung's WHOLE refusal list and the
+         * planner puts its own refused options on it too, which are not rungs:
+         * at `ALLOW_DASH_ROSTER_WIDE === true` (flipped at R9 slice 12e′'s
+         * fourth run) the list reads `['avoid', 'time', 'sword-dash']`. A row
+         * that compared the raw list was asserting the flag's state through a
+         * sentence about escalation — §40.6's landmine, one file over. The
+         * build is NAMED below instead, so neither state is silently green.
+         */
+        const refusedRungs = bait.rejected
+            .filter((j) => ESCALATION_LADDER.includes(j.option));
+        expect(refusedRungs.map((j) => j.option)).toEqual(['avoid', 'time']);
+        const whyOf = (option) => bait.rejected.find((j) => j.option === option).why;
+        expect(whyOf('avoid')).toMatch(/no admissible corridor/);
+        expect(whyOf('time')).toMatch(/MOVER_RANGE/);
+        expect(bait.rejected.map((j) => j.option)
+            .filter((o) => !ESCALATION_LADDER.includes(o)))
+            .toEqual(ALLOW_DASH_ROSTER_WIDE ? ['sword-dash'] : []);
 
         // ⛓ AND THE ROOM DID THE KILLING. Both bodies drown — the baited one
         // reaching the player, the other following during the crossing —
@@ -3231,12 +3248,18 @@ describe('R9 slice 12d′: ⚖ 46 — the collect stance is the one the corridor
  */
 describe('R9 slice 12d′: ⚖ 47 — the fade is spent walking, and the wait is arithmetic', () => {
     /**
-     * ⛓ THE ARRIVE-LATE ARM, IN THE WILD. `r8-solve-18`'s committed tape holds
-     * NO key from t=292 to t=394 — the fade, standing still at the loiter cell,
-     * measurable in the artifact. The walk to the tile before `lock@144,112`
-     * outlasts it, so the wait is ZERO and the whole fade is spent travelling.
+     * ⛓ THE ARRIVE-LATE ARM, IN THE WILD — AND THE FLIP MOVED IT TO THE OTHER
+     * ARM, WHICH IS WHY THE ROW PINS THE ARITHMETIC.
+     *
+     * At `ALLOW_DASH_ROSTER_WIDE === false` the walk to the tile before
+     * `lock@144,112` OUTLASTS the fade, so the wait is zero and the whole fade
+     * is spent travelling — `r8-solve-18`'s pre-flip 541-tick tape held no key
+     * from t=292 to t=394, the fade standing still at the loiter cell,
+     * measurable in the artifact. At `true` the same room gets there FIRST and
+     * the wait is the remainder. Both are ⚖ 47 being right; neither is the
+     * claim. The claim is `max(0, clearTick − arrivedAt)`.
      */
-    it('⛓ L18 spends the fade walking to the tile before the lock and waits ZERO', () => {
+    it('⛓ L18 spends the fade WALKING, and the wait is the subtraction', () => {
         const { run, committed } = runFromCommitted('r8-solve-18');
         const L18 = levelSource(18);
         const exit = (L18.entities ?? []).find((e) => Number(e.attrs?.to) === 19);
@@ -3253,13 +3276,46 @@ describe('R9 slice 12d′: ⚖ 47 — the fade is spent walking, and the wait is
         expect(kill.earlyWalk.fade).toBe(opensOnTick(RESPONDERS.lock.fade));
         expect(kill.earlyWalk.clearTick)
             .toBe(kill.earlyWalk.removedAt + kill.earlyWalk.fade);
-        // Arrived AFTER the clear ⇒ nothing left to wait for.
-        expect(kill.earlyWalk.arrivedAt).toBeGreaterThan(kill.earlyWalk.clearTick);
-        expect(kill.earlyWalk.waits).toBe(0);
-        // The room still solves, faster than the tape that stood through it.
+        /**
+         * ⛓⛓ THE WAIT IS THE SUBTRACTION, NOT THE INSTANCE (§40.6's repair).
+         * Whether L18 arrives before or after the clear is a property of the
+         * WALK'S SPEED, so it flips with `ALLOW_DASH_ROSTER_WIDE`: at `false`
+         * the walk outlasts the fade and the wait is 0; at `true` (flipped at
+         * R9 slice 12e′'s fourth run) the dash gets there first — 369 against
+         * a clear at 393 — and the wait is the remaining 24. Pinning either
+         * instance pins a build; the SUBTRACTION holds in both, and it is the
+         * whole content of ⚖ 47 ("wait `max(0, clearTick − arrivalTick)`,
+         * never a margin and never a poll").
+         */
+        expect(kill.earlyWalk.waits)
+            .toBe(Math.max(0, kill.earlyWalk.clearTick - kill.earlyWalk.arrivedAt));
+        // …and the BUILD is named, so neither flag state is silently green.
+        if (ALLOW_DASH_ROSTER_WIDE) {
+            expect(kill.earlyWalk.arrivedAt).toBeLessThan(kill.earlyWalk.clearTick);
+            expect(kill.earlyWalk.waits).toBeGreaterThan(0);
+        } else {
+            expect(kill.earlyWalk.arrivedAt).toBeGreaterThan(kill.earlyWalk.clearTick);
+            expect(kill.earlyWalk.waits).toBe(0);
+        }
+        // The room still solves, and takes nothing doing it.
         expect(run.playerHits.length).toBe(0);
         expect(run.playerDeaths.length).toBe(0);
-        expect(out.perTick.length).toBeLessThan(committed.tick_count);
+        /**
+         * ⛔⛔ THIS ROW USED TO READ `< committed.tick_count` AND WAS §40.6's
+         * LANDMINE ONE LINE FURTHER DOWN THAN §40.6 LOOKED. It compared the
+         * economy walk against the tape that stood through the fade — true
+         * while `r8-solve-18` was 541. The re-record landed 410 at
+         * `ALLOW_DASH_ROSTER_WIDE === true`, and the comparison became the tape
+         * against ITSELF: 410 < 410. §40.6 could not have caught it, because at
+         * the head it swept the tape was still the old one.
+         * ⇒ the row NAMES ITS BUILD and asserts the difference. Both numbers
+         * are measured at this head: at `true` this solve IS the committed
+         * walk; at `false` the same call — `economies: true` is passed
+         * explicitly, so ⚖ 47 is on either way — solves it in 437, which is
+         * ⚖ 54's CASE B column (541 → 437) to the digit.
+         */
+        if (ALLOW_DASH_ROSTER_WIDE) expect(out.perTick.length).toBe(committed.tick_count);
+        else expect(out.perTick.length).toBeGreaterThan(committed.tick_count);
     });
 
     /**
