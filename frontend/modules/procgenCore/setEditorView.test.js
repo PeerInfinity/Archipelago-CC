@@ -118,6 +118,18 @@ class FakeElement {
     appendChild(child) {
         child.parentNode = this;
         this.children.push(child);
+        /**
+         * ⛓⛓ **A `<select>` ADOPTS ITS FIRST OPTION** (EDITOR v3 E3a). ⛔ Added
+         * because the fake DOM was MORE FORGIVING THAN A BROWSER and that is
+         * what let §30.12 #1 hide here: a real `<select>` whose options are
+         * replaced reports the FIRST option's value, and one whose options are
+         * cleared reports `''`. Modelling neither meant a value simply persisted
+         * across `innerHTML = ''`, so a row could not tell a panel that
+         * PRESERVES its selection from one that merely never lost it.
+         */
+        if (this.tagName === 'SELECT' && child.tagName === 'OPTION' && this.value === '') {
+            this.value = child.value;
+        }
         return child;
     }
 
@@ -132,6 +144,8 @@ class FakeElement {
         if (v !== '') throw new Error(`FakeElement: innerHTML = ${JSON.stringify(v)} is not supported; the mount only ever empties a box`);
         for (const c of this.children) c.parentNode = null;
         this.children = [];
+        // ⛓ …and an EMPTIED `<select>` has no value — see `appendChild`.
+        if (this.tagName === 'SELECT') this.value = '';
     }
 
     get innerHTML() { return ''; }
@@ -179,14 +193,28 @@ const PANEL_IDS = Object.freeze([
     'editDownloadSet', 'editDownloadRules', 'editDownloadBundle',
 ]);
 
+/** ⛓ The ids that are `<select>` in both documents this mount is bound in. */
+const SELECT_IDS = Object.freeze([
+    'editSetRoom', 'editSetExitList', 'editSetTargetExit', 'editSetLocEntity',
+    'editSetRuleTarget',
+]);
+
 class FakeDocument {
     constructor() {
         this.root = new FakeElement(this, 'div');
         this.activeElement = null;
         this.byId = new Map();
         for (const id of PANEL_IDS) {
+            /**
+             * ⛓⛓ **THE `<select>`s ARE `<select>`s** (EDITOR v3 E3a). ⛔ They
+             * were `div`s, which is why §30.12 #1 could not be seen from node:
+             * a `div`'s `value` is an ordinary property that survives
+             * `innerHTML = ''`, and a browser's `<select>` loses it. The five
+             * ids below are `<select>` on `watch.html` and on `lab.html`.
+             */
             const tag = id === 'editSetOverview' ? 'canvas'
-                : (id.startsWith('editSetRule') && id.endsWith('Json') ? 'textarea' : 'div');
+                : (SELECT_IDS.includes(id) ? 'select'
+                    : (id.startsWith('editSetRule') && id.endsWith('Json') ? 'textarea' : 'div'));
             const node = this.createElement(tag);
             node.id = id;
             // ⛓ the overview lives in a sized parent — `overviewLayout` reads it
@@ -956,6 +984,97 @@ describe('⛔⛔ EDITOR v3 E2b — the lift is BYTE-INERT on Seedling, and it is
     });
 });
 
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ EDITOR v3 E3a — **`fillExitSelect` KEEPS ITS VALUE** (§31.1 #4)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('⛓⛓⛓ EDITOR v3 E3a — the exit list preserves its selection, as the ordinal list does', () => {
+    /** ⛓ The `<option>` VALUES of a select, in order — `rowsOf` gives
+     *  `value=label`, and what a gesture reads back is the value. */
+    const valuesOf = (h, id) => (rowsOf(h, id) ?? []).map((r) => r.slice(0, r.indexOf('=')));
+    /**
+     * ⛓ THE ROOM WITH THE MOST EXITS — DERIVED, never a literal index. The set
+     * is a generated CHAIN, so its end rooms have ONE exit and a row that
+     * hard-coded room 0 would be asserting the shape of the linker's output.
+     */
+    const widestRoom = (h) => h.ui.rows()
+        .reduce((best, r) => ((r.exits ?? 0) > (best.exits ?? 0) ? r : best)).index;
+
+    /**
+     * ⛔⛔ **D2's ASYMMETRY, NAMED IN §30.12 #1 AND MEASURED HERE.**
+     * `fillOrdinalSelect` preserved its value across a render and this one did
+     * not, so a value chosen before the first click of the CONNECT gesture was
+     * gone by the second — and E2c's browser row had to pick the exit BETWEEN
+     * the two clicks to work at all.
+     *
+     * ⛓⛓ MUTANT: drop the `keep`/restore pair from `fillExitSelect` — the
+     * value falls back to the FIRST option and this row goes red.
+     * ⚠ It could only go red once the fake `<select>`s became `<select>`s: a
+     * `div`'s `value` is an ordinary property that survives `innerHTML = ''`,
+     * which is exactly why node saw nothing while the browser row worked around
+     * it (⚖ a fixture only gates a change it can DISTINGUISH).
+     */
+    it('the chosen exit SURVIVES a render that does not change the list', () => {
+        const h = seedlingHarness();
+        h.ui.selectRoom(widestRoom(h));
+        const values = valuesOf(h, 'editSetExitList');
+        expect(values.length).toBeGreaterThan(1);
+        setValue(h, 'editSetExitList', values[1]);
+        h.ui.render();
+        expect($(h, 'editSetExitList').value).toBe(values[1]);
+        // …and again, over an op that leaves room 0's exits alone
+        click(h, 'editSetReport');
+        expect($(h, 'editSetExitList').value).toBe(values[1]);
+        expect(valuesOf(h, 'editSetExitList')).toEqual(values);
+    });
+
+    /**
+     * ⛓⛓⛓ **A ROOM CHANGE DOES NOT CARRY THE VALUE ACROSS, AND THAT IS WHY
+     * THIS IS NOT `fillOrdinalSelect`'s THREE LINES COPIED.** The ordinal list
+     * is the SET's distinct target exits and does not depend on the selection;
+     * this list IS *"the selected room's exits"*, so a value preserved across a
+     * room change would be an exit id belonging to a different room.
+     */
+    it('…but a change of ROOM refills from scratch — the list is the SELECTED room\'s', () => {
+        const h = seedlingHarness();
+        const wide = widestRoom(h);
+        h.ui.selectRoom(wide);
+        const room0 = valuesOf(h, 'editSetExitList');
+        setValue(h, 'editSetExitList', room0[room0.length - 1]);
+        h.ui.selectRoom(wide === 0 ? 1 : 0);
+        const room1 = valuesOf(h, 'editSetExitList');
+        expect($(h, 'editSetExitList').value).toBe(room1[0]);
+        expect(h.said.some((x) => /no longer on room/.test(x.text))).toBe(false);
+    });
+
+    /**
+     * ⛔⛔ **AND A VANISHED SELECTION FALLS BACK *AND SAYS SO*.** A `disconnect`
+     * deletes the very door a person picked; falling back to the first option in
+     * silence would leave the next press addressing an exit nobody chose.
+     * ⛓ Said through `say`, never `setNote` — the note is where the op that
+     * removed it is explaining itself.
+     */
+    it('a render that REMOVES the chosen exit falls back to the first, and SAYS so', () => {
+        const h = seedlingHarness();
+        const wide = widestRoom(h);
+        h.ui.selectRoom(wide);
+        const before = valuesOf(h, 'editSetExitList');
+        expect(before.length).toBeGreaterThan(1);
+        setValue(h, 'editSetExitList', before[before.length - 1]);
+        click(h, 'editSetDisconnect');
+        const after = valuesOf(h, 'editSetExitList');
+        expect(after.length).toBe(before.length - 1);
+        expect(after).not.toContain(before[before.length - 1]);
+        expect($(h, 'editSetExitList').value).toBe(after[0]);
+        const fell = h.said.filter((x) => new RegExp(`no longer on room ${wide}`).test(x.text));
+        expect(fell.length).toBe(1);
+        expect(fell[0].bad).toBe(true);
+        // ⛔ …and it is said ONCE: the next render's kept value is a live one
+        h.ui.render();
+        expect(h.said.filter((x) => /no longer on room/.test(x.text)).length).toBe(1);
+    });
+});
 
 /* ══════════════════════════════════════════════════════════════════════
  * ⛓⛓⛓ EDITOR v3 E3a — **ONE ORDERING RULE FOR `onSetChange`** (§31.1 #1)

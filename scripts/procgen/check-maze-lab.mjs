@@ -2044,21 +2044,49 @@ try {
         'the SET arm for the two-click gesture');
     check(gesture.set.links === 0 && gesture.set.ops === 0,
         '⛓ the gesture starts from an UNLINKED library — 0 links, 0 ops');
+    /**
+     * ⛓⛓⛓ **THE EXIT IS PICKED BEFORE THE FIRST CLICK — EDITOR v3 E3a, §31.1
+     * #4.** E2c had to pick it BETWEEN the two clicks, because
+     * `fillExitSelect` cleared and refilled the `<select>` on every render and
+     * did NOT preserve its value while `fillOrdinalSelect` did (§30.12 #1) — so
+     * a value set before the first click was gone by the second. The panel's own
+     * flow hid it (the list IS the selected room's exits and the first click is
+     * what selects the room) and nothing declared the asymmetry.
+     * ⛓ It preserves now, keyed on the room the list was last filled FOR, and
+     * this is the gesture a person would actually make: pick the door, then say
+     * where it goes. MUTANT: drop the preservation — the `connect` lands on
+     * `exit_0` and the readout's `opList` still says `['connect']`, so it is the
+     * ENDPOINT below that catches it, not the count.
+     */
     await page.click('#editSetGesture');
-    await clickStripRoom(0);
     await page.selectOption('#editSetExitList', 'exit_1');
     await page.selectOption('#editSetTargetExit', 'exit_3');
+    await clickStripRoom(0);
     await clickStripRoom(1);
     await settled(() => window.__mazeLab?.set?.ops === 1, 'the two-click CONNECT to land');
     const connected = await read();
     const gestureTable = await roomsTable();
+    /**
+     * ⛓ THE EXIT LIST'S OWN LABELS NAME WHERE EACH DOOR GOES
+     *  (`mazeSetBindings.exits.labelOf`), so this is where the `connect`'s
+     *  SOURCE ENDPOINT is readable off the page without unpacking the overlay.
+     */
+    const exitLabels = () => page.evaluate(() => [
+        ...document.querySelectorAll('#editSetExitList option'),
+    ].map((o) => o.textContent));
+    const gestureExits = await exitLabels();
     check(json(connected.set.opList) === json(['connect']) && connected.set.links === 1
-        && json(gestureTable.map((r) => r[4])) === json(['1', '1', '0', '0']),
-        '⛓⛓⛓ **THE TWO-CLICK GESTURE LANDS ONE `connect`, ENDPOINT-ADDRESSED** — click the '
-        + 'SOURCE room on the strip, pick WHICH exit, then click the TARGET. One link, and '
-        + 'both its ends count as inbound because a maze crossing is TWO-WAY by default',
+        && json(gestureTable.map((r) => r[4])) === json(['1', '1', '0', '0'])
+        && /^exit_1 .*→ room 1 exit_3$/.test(gestureExits.find((l) => l.startsWith('exit_1')))
+        && /unlinked/.test(gestureExits.find((l) => l.startsWith('exit_0'))),
+        '⛓⛓⛓ **THE TWO-CLICK GESTURE LANDS ONE `connect`, ENDPOINT-ADDRESSED** — arm it, pick '
+        + 'WHICH exit and its return ordinal, then click the SOURCE room and the TARGET. One '
+        + 'link, and both its ends count as inbound because a maze crossing is TWO-WAY by '
+        + 'default. ⛔ The ENDPOINT is asserted, not just the count: a `connect` that lost the '
+        + 'picked exit across the first click\'s render would still be ONE op on ONE link, and '
+        + 'only the door it actually joined says which build drew it (§30.12 #1)',
         `${json(connected.set.opList)} · links ${connected.set.links} · `
-        + `${json(gestureTable.map((r) => r[4]))}`);
+        + `${json(gestureTable.map((r) => r[4]))} · ${json(gestureExits)}`);
     /**
      * ⛓⛓⛓ **EDITOR v3 E3a — `set.strip` IS BACK, AND THIS IS THE EXACT
      * MEASUREMENT THAT KILLED IT.** E2c drove this same two-click CONNECT and

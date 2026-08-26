@@ -439,17 +439,53 @@ export function mountSetEditor({
         sel.disabled = most === 0;
     };
 
+    /**
+     * ⛓⛓ **WHICH ROOM THE EXIT LIST WAS LAST FILLED FOR** — the one piece of
+     * state preserving its value needs, and the reason it is not simply
+     * `fillOrdinalSelect`'s three lines copied over. That list is the SET's
+     * distinct target ordinals and does not depend on the selection; THIS one is
+     * *"the SELECTED room's exits"*, so a value carried across a room change
+     * would be an exit id belonging to a different room.
+     */
+    let exitListRoom = null;
+
+    /**
+     * ⛓⛓⛓ **AND IT KEEPS ITS VALUE ACROSS A RENDER** (EDITOR v3 E3a, §31.1 #4).
+     *
+     * ⛔ D2's asymmetry, found by E2c's browser row and named in §30.12 #1:
+     * `fillOrdinalSelect` preserved and this did not, so a value set before the
+     * first click of the CONNECT gesture was gone by the second. The panel's own
+     * flow hid it — the list IS the selected room's exits and the first click is
+     * what selects the room — but the gesture row had to pick the exit BETWEEN
+     * the two clicks to work at all, and nothing declared why.
+     *
+     * ⛔ **A VANISHED SELECTION FALLS BACK AND SAYS SO.** A `disconnect` or a
+     * renumbering can delete the very exit a person had chosen; falling back to
+     * the first option silently would leave the next press addressing a door
+     * nobody picked. ⚠ Said through `say`, never `setNote`: the note is where
+     * the op that removed it is explaining itself, and overwriting that with a
+     * consequence of it would be the panel talking over its own account.
+     */
     const fillExitSelect = (id, room) => {
         const sel = $(id);
         if (!sel) return;
+        const keep = exitListRoom === room ? sel.value : '';
         sel.innerHTML = '';
-        const row = rows[room];
-        for (const ex of row?.exitList ?? []) {
+        const list = rows[room]?.exitList ?? [];
+        for (const ex of list) {
             const o = el(doc, 'option', null, exits.labelOf(ex));
             o.value = exits.valueOf(ex);
             sel.appendChild(o);
         }
-        sel.disabled = (row?.exitList ?? []).length === 0;
+        sel.disabled = list.length === 0;
+        const values = list.map((ex) => String(exits.valueOf(ex)));
+        if (keep !== '' && values.includes(keep)) sel.value = keep;
+        else if (keep !== '') {
+            say(`the exit ${keep} you had picked is no longer on room ${room} — the list `
+                + `fell back to ${values.length ? values[0] : 'EMPTY (this room has no exits)'}`,
+            true);
+        }
+        exitListRoom = room;
     };
 
     /**
