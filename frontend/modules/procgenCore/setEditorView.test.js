@@ -770,9 +770,15 @@ describe('⛔⛔ EDITOR v3 E2b — the lift is BYTE-INERT on Seedling, and it is
     });
 
     /**
-     * ⛓⛓ MUTANT: `ruleKeys.exit` replaced by the literal `'exit:'`. Seedling's
-     * prefix IS `exit:`, so this row stays green and the MAZE one does not —
-     * said out loud rather than left as a claim this file cannot make.
+     * ⛔⛔ **AND ONE MUTANT NEITHER BINDING CAN CATCH, SAID RATHER THAN
+     * CLAIMED.** `ruleKeys.exit` replaced by the literal `'exit:'` is GREEN on
+     * both substrates: ⛓ MEASURED — `mazeSetAdapter.exitRuleKey('')` and
+     * `seedlingSetOverlay.exitRuleKey('')` are both `exit:`, because both
+     * overlays are built by `createSetOverlay`. The parameter is still the law
+     * (E2a's reason stands: a literal reports ZERO inert rules for any
+     * substrate that spells it differently), but the two substrates that exist
+     * today cannot discriminate it, and a row asserting otherwise would be a
+     * claim about a build nobody has. Trap 713's lesson.
      */
     it('the rule targets, their note and the REPORT rows are unchanged', () => {
         const out = runScript(seedlingHarness());
@@ -842,11 +848,36 @@ describe('⛔⛔ EDITOR v3 E2b — the lift is BYTE-INERT on Seedling, and it is
     });
 
     /**
-     * ⛓ MUTANT: `mountWatchSetEditor` re-exports `mountSetEditor` by the SAME
-     * object instead of binding it — then it takes `mountSetEditor`'s options
-     * and the page's call site is silently wrong. The surface is D2's.
+     * ⛓⛓⛓ **THE KEYDOWN STOPPER IS STILL ON THE STRIP** (§21.5). ⛔ MUTANT: the
+     * `mine.on(overview, 'keydown', …)` line is dropped in the move — a key
+     * pressed on the strip then BUBBLES to the document, both undo rows run on
+     * one press, and a reader cannot tell which session answered.
+     * ⚠ The fake DOM deliberately does NOT bubble (the PIN was captured against
+     * it, and adding bubbling would move every click through the rooms table),
+     * so what this row measures is the CALL: the handler exists and it calls
+     * `stopPropagation` on the event it is handed.
      */
-    it('the wrapper returns D2\'s own surface', () => {
+    it('§21.5 — a keydown on the strip is STOPPED before it can reach the document', () => {
+        const h = seedlingHarness();
+        const overview = $(h, 'editSetOverview');
+        let stopped = 0;
+        overview.dispatch('keydown', {
+            key: 'z', ctrlKey: true, stopPropagation: () => { stopped += 1; }, preventDefault: () => {},
+        });
+        expect(stopped).toBe(1);
+    });
+
+    /**
+     * ⛓ MUTANT: `mountWatchSetEditor` re-exports `mountSetEditor` by the SAME
+     * object instead of binding it — then it takes `mountSetEditor`'s options,
+     * refuses `adapterFns` by name at the page's own call site, and the surface
+     * below never exists. The surface is D2's.
+     */
+    it('the wrapper returns D2\'s own surface, and is NOT the core\'s function', () => {
+        expect(mountWatchSetEditor).not.toBe(mountSetEditor);
+        expect(() => mountSetEditor({
+            lifetime: createLifetime('x'), session: {}, adapter: {}, compileRegionAtlas: () => {},
+        })).toThrow(/`document` is required/);
         expect(runScript(seedlingHarness()).surface).toEqual(PIN.surface);
         expect(PIN.surface).toEqual([
             'applySet', 'armedExit', 'destroy', 'render', 'report', 'rows',
