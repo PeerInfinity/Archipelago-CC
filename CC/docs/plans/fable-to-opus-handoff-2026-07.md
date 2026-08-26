@@ -4988,6 +4988,16 @@ gates ARE the 28 `gate:` rows `--write` had just re-measured. As-built kickoff
 orchestrator's sequencing — then the 12c batch closes → P3/P4 → L15 `shove`.**
 
 
+**⇒ CAMPAIGN ORCHESTRATION SESSION 6 → 7 (2026-08-26, `9cc43071c`).** Session 6
+verified 12e⁗ (§38) · P1 (§39) · P2 (§40) against disk and opened two editor
+windows; ⚖ 55 and ⚖ 54 (1)(2)(4)(5) discharged; (3) = P1b (brief ready, §41).
+Successor prompt `NewDocs/plans/seedling-bot-r9-campaign7-planning-prompt.md`;
+sequence SETTLED **P1b → the fourth run (§42, from §38.8 + §40.9) → P3 → P4 →
+L15**; the user has said the successor may start on decided work unattended —
+only the branch rewrite (`r9/re-record-attempt-4` → four commits) and the L15
+design wait for them. Session 6's own misreads are in kickoff §1's session-6
+block.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
