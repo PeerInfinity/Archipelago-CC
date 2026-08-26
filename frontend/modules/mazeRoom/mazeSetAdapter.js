@@ -796,6 +796,56 @@ export function createSetSession(adapter, record, { base = null, certified = nul
     return createEditSession(adapter, record, { base, certified });
 }
 
+/**
+ * ⛓⛓⛓ **CLOSE A ROOM SESSION INTO THE LIBRARY — ONE `replace-room`.**
+ *
+ * EDITOR v3 E2b (§27.1 #3, §28). Seedling's twin takes the room session's
+ * `record()` straight over, because an E1b room session's record IS the payload.
+ * A MAZE room session's record is a live WORLD — `exits` and `items` are `Map`s
+ * and the tiles are an `Int8Array` — so somebody owes the serialisation hop, and
+ * E2a deliberately left `replace-room` taking a PAYLOAD so the choice was this
+ * slice's. ⇒ **THE ADAPTER OWES IT**, not the page: then no page can pick the
+ * wrong spelling.
+ *
+ * ⛔⛔ **AND THERE ARE TWO SPELLINGS.** `procgenMaze.js:270-281` says so by name:
+ * `serializeMazeLevel`/`deserializeMazeLevel` is the LAB's loop-determinism
+ * channel and carries NO AP vocabulary, while
+ * `serializeMazeWorld`/`deserializeMazeWorld` is the LIBRARY payload with
+ * AP-canonical exit and location names baked in. ⛓ This goes through
+ * `MAZE_CAPTURE_DEPS` — the SAME composition `entryFromPayload` captures with —
+ * so the spelling cannot drift from the one the entry constructor uses, and the
+ * `regionId` handed to `extract` is the ENTRY'S OWN id for the same reason.
+ * (Trap 714's shape, one arc over: one function, two spellings, only one
+ * matches.)
+ *
+ * ⛓ Everything DERIVED — `region_size`, `exit_sides`, `location_slots`,
+ * `carried_rules: null` — comes back from `replace-room`'s own re-capture rather
+ * than from anything assembled here (§26.1 overturn #5).
+ *
+ * @param {object} setSession   the LIBRARY session
+ * @param {object} roomSession  the ROOM session; its `record()` is a maze WORLD
+ * @param {number} room         which entry it was opened from
+ * @param {object} [o.capture]  the capture composition (the registry's, by default)
+ */
+export function closeRoomSession(setSession, roomSession, room, { capture = null } = {}) {
+    const deps = capture ?? MAZE_CAPTURE_DEPS;
+    const entry = roomAt(setSession.record(), room, 'closeRoomSession');
+    const world = roomSession.record();
+    if (!world || !(world.exits instanceof Map)) {
+        fail(`mazeSetAdapter: closing room ${room} ("${entry.entry_id}") needs a room session `
+            + 'whose `record()` is a tile-grid maze WORLD (its `exits` is a Map). ⛔ A PAYLOAD '
+            + 'was handed over instead, and re-serialising one would be a second spelling of '
+            + 'the capture path.');
+    }
+    const payload = deps.serialize(world, deps.extract(world, { regionId: entry.entry_id }));
+    const result = setSession.apply({ op: 'replace-room', room, payload });
+    if (!result.ok) {
+        fail(`mazeSetAdapter: closing room ${room} ("${entry.entry_id}") into the library `
+            + `session was REFUSED — ${result.description}`);
+    }
+    return result;
+}
+
 /** Fold an op list onto a record without opening a session. */
 export const foldSetEdits = (adapter, record, ops) => foldEdits(adapter, record, ops);
 

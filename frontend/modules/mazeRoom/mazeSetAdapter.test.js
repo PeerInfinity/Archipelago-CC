@@ -28,11 +28,16 @@ import { validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js'
 import { validateRegionLibrary } from '../procgenPipeline/regionLibraryValidator.js';
 import { reachableRegions, regionsOf } from '../procgenCore/rulesGraph.js';
 import { roomRowsOf } from '../procgenCore/setEditorCore.js';
+import { createEditSession } from '../procgenCore/editCore.js';
+import { mazeEditAdapter } from './mazeEditAdapter.js';
+import { deserializeMazeWorld, extractPathsAndObstacles } from './mazeRoomEngine.js';
+import { serializeMazeWorld } from '../procgenPipeline/procgenPipelineEngine.js';
+import { serializeMazeLevel } from './procgenMaze.js';
 import {
-    LIBRARY_FIELDS, MazeSetAdapterError, ROOM_FIELDS, SET_OP_KINDS, createMazeSetAdapter,
-    createSetSession, deriveAtlasOf, downloadLibrary, emptyMazeOverlay, exitRuleKey, exitsOfRoom,
-    isMazeSetRefusal, locationRuleKey, readSetCell, rulesJsonOf, setRecord, setWriteOps,
-    validateForDownload, whatLinksHere,
+    LIBRARY_FIELDS, MAZE_CAPTURE_DEPS, MazeSetAdapterError, ROOM_FIELDS, SET_OP_KINDS,
+    closeRoomSession, createMazeSetAdapter, createSetSession, deriveAtlasOf, downloadLibrary,
+    emptyMazeOverlay, exitRuleKey, exitsOfRoom, isMazeSetRefusal, locationRuleKey, readSetCell,
+    rulesJsonOf, setRecord, setWriteOps, validateForDownload, whatLinksHere,
 } from './mazeSetAdapter.js';
 
 const LIBRARY = JSON.parse(readFileSync(
@@ -645,5 +650,211 @@ describe('⛓⛓⛓ THE CHAIN — a 4-entry pack, end to end, through the shared
         expect(() => exitsOfRoom(recordOf(), 9)).toThrow(MazeSetAdapterError);
         expect(() => setRecord(LIBRARY, { ...emptyMazeOverlay(), links: 'no' }))
             .toThrow(/overlay\.links must be an array/);
+    });
+});
+
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ `closeRoomSession` — THE MAZE TWIN (EDITOR v3 E2b, §27.1 #3)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/** ⛓ A ROOM session over entry `i`, opened exactly as `lab.html`'s SET arm will
+ *  (E2c): the LIBRARY payload through `deserializeMazeWorld`, never the lab's
+ *  own `deserializeMazeLevel`. */
+const roomSessionAt = (setSession, i) => createEditSession(
+    mazeEditAdapter, deserializeMazeWorld(setSession.record().library.entries[i].payload));
+
+const entryAt = (session, i) => session.record().library.entries[i];
+
+describe('⛓⛓⛓ a maze ROOM session closes into the library as ONE `replace-room`', () => {
+    /**
+     * ⛓⛓⛓ **THE CLAIM.** N room edits become ONE set op, and every DERIVED
+     * field comes back from the capture path rather than from anything carried.
+     * ⛔ MUTANT: `closeRoomSession` builds the entry itself instead of applying
+     * `replace-room` — `exit_sides` and `location_slots` would then be whatever
+     * it assembled, which is §26.1 overturn #5's whole shape.
+     */
+    it('open entry 1, paint one tile, CLOSE — one op, and the tiles differ at exactly that cell', () => {
+        const set = sessionOf();
+        const before = entryAt(set, 1);
+        const room = roomSessionAt(set, 1);
+        /**
+          * ⛓ a FLOOR cell made a WALL — chosen off the payload rather than
+          * picked, and ⛔ NOT one an exit, the entrance or an item stands on:
+          * `applyEditOp` refuses a wall under any of them BY NAME, which this
+          * row discovered by being refused.
+          */
+        const taken = new Set([
+            ...before.payload.exits.map((e) => `${e.x},${e.y}`),
+            `${before.payload.entrance.x},${before.payload.entrance.y}`,
+            ...(before.payload.items ?? []).map((i) => `${i.x},${i.y}`),
+            ...(before.payload.obstacles ?? []).map((o) => `${o.x},${o.y}`),
+        ]);
+        const at = before.payload.tiles.findIndex((t, i) => t === 0
+            && !taken.has(`${i % before.payload.width},${Math.floor(i / before.payload.width)}`));
+        const x = at % before.payload.width;
+        const y = Math.floor(at / before.payload.width);
+        const painted = room.apply({ op: 'setTile', x, y, tile: 'wall' });
+        expect(painted.ok, painted.description).toBe(true);
+        expect(room.ops()).toHaveLength(1);
+
+        const res = closeRoomSession(set, room, 1);
+        expect(res.applied).toBe(true);
+        expect(set.ops()).toHaveLength(1);
+        expect(set.ops()[0].op).toBe('replace-room');
+
+        const after = entryAt(set, 1);
+        const moved = after.payload.tiles
+            .map((t, i) => (t === before.payload.tiles[i] ? null : i))
+            .filter((i) => i !== null);
+        expect(moved).toEqual([at]);
+    });
+
+    /**
+     * ⛓⛓ **THE DERIVED FIELDS FOLLOW THE PAYLOAD, THEY ARE NOT CARRIED.**
+     * ⛔ MUTANT: `replace-room` copies the old entry's `location_slots` — green
+     * on any close that changes only tiles, and wrong the first time somebody
+     * places one. `location_slots` is the field an EDIT OP can actually move
+     * (`applyEditOp`'s vocabulary is `setTile, setEntrance, setItem,
+     * setObstacle, setBlock, setButton, setFlag, clearEntity` — ⛓ MEASURED,
+     * there is no exit op at all, so `exit_sides` cannot be moved from a room
+     * session and this row says so instead of pretending otherwise).
+     */
+    it('`location_slots` FOLLOWS the payload; `exit_sides` and `carried_rules` hold', () => {
+        const set = sessionOf();
+        const before = entryAt(set, 0);
+        expect(before.exit_sides).toEqual(['N', 'E', 'S', 'W']);
+        const room = roomSessionAt(set, 0);
+        // ⛔ not an exit, the entrance, an item or an obstacle — `applyEditOp`
+        //   refuses an item on any of them BY NAME (⛓ measured, by being refused).
+        const taken = new Set([
+            ...before.payload.exits.map((e) => `${e.x},${e.y}`),
+            `${before.payload.entrance.x},${before.payload.entrance.y}`,
+            ...(before.payload.items ?? []).map((i) => `${i.x},${i.y}`),
+            ...(before.payload.obstacles ?? []).map((o) => `${o.x},${o.y}`),
+        ]);
+        const free = before.payload.tiles.findIndex((t, i) => t === 0
+            && !taken.has(`${i % before.payload.width},${Math.floor(i / before.payload.width)}`));
+        const placed = room.apply({
+            op: 'setItem',
+            x: free % before.payload.width,
+            y: Math.floor(free / before.payload.width),
+            id: 1,
+        });
+        expect(placed.ok, placed.description).toBe(true);
+
+        const res = closeRoomSession(set, room, 0);
+        expect(res.applied).toBe(true);
+        const after = entryAt(set, 0);
+        expect(after.location_slots).toBe(before.location_slots + 1);
+        expect(after.payload.items.map((i) => i.id))
+            .toEqual(Array.from({ length: after.location_slots }, (_, i) => `slot_${i}`));
+        expect(after.exit_sides).toEqual(before.exit_sides);
+        expect(after.carried_rules).toBe(null);
+        expect(after.entry_id).toBe(before.entry_id);
+        expect(after.name).toBe(before.name);
+    });
+
+    /**
+     * ⛓⛓⛓ **AN UNEDITED SESSION CLOSES AS `applied: false`** — and that is
+     * §26.6's byte-identical round trip, now a row rather than a measurement in
+     * a plan. ⛔ MUTANT: the serialise hop drifts from `entryFromPayload`'s (a
+     * different `regionId`, a different serializer) and this becomes `true`:
+     * every CLOSE would then mint an edit nobody made, and a `library_id` would
+     * move for a room somebody only looked at.
+     */
+    it('an UNEDITED room session closes as `applied: false` — the round trip is byte-identical', () => {
+        const set = sessionOf();
+        for (let i = 0; i < set.record().library.entries.length; i += 1) {
+            const room = roomSessionAt(set, i);
+            const res = closeRoomSession(set, room, i);
+            expect(res.ok, res.description).toBe(true);
+            expect(res.applied, `entry ${i} re-captured to different bytes`).toBe(false);
+        }
+        expect(set.ops()).toHaveLength(0);
+    });
+
+    /**
+     * ⛔⛔⛔ **THE MUTANT: CLOSE THROUGH `serializeMazeLevel` INSTEAD.**
+     * `procgenMaze.js:270-281` says the two serializers are DELIBERATELY
+     * different — `serializeMazeLevel`/`deserializeMazeLevel` is the LAB's
+     * loop-determinism channel with NO AP vocabulary, and
+     * `serializeMazeWorld`/`deserializeMazeWorld` is the LIBRARY payload. This
+     * row spells the mutant out and MEASURES which fields part company, so the
+     * `MAZE_CAPTURE_DEPS` choice is a finding rather than a preference.
+     * (Trap 714's shape: one function, two spellings, only one matches.)
+     */
+    it('⛔ the LAB\'s `serializeMazeLevel` produces a DIFFERENT payload — named, not assumed', () => {
+        const set = sessionOf();
+        const entry = entryAt(set, 0);
+        const world = deserializeMazeWorld(entry.payload);
+        const capture = MAZE_CAPTURE_DEPS.serialize(
+            world, MAZE_CAPTURE_DEPS.extract(world, { regionId: entry.entry_id }));
+        const lab = serializeMazeLevel(world);
+        const keys = (o) => Object.keys(o).sort();
+        const differing = [...new Set([...keys(capture), ...keys(lab)])]
+            .filter((k) => canonicalJson(capture[k]) !== canonicalJson(lab[k]));
+        /**
+         * ⛓ MEASURED over all four committed entries: FIVE keys part company —
+         * `exits` (the lab writes `{exit_id, x, y}` and the capture path adds
+         * `side, exitName, targetRegion, targetExitId, isBackExit,
+         * isTeleporter`), `items`, `itemLib`, `obstacleLib` and
+         * `longestShortestPath`.
+         */
+        expect(differing).toEqual([
+            'exits', 'itemLib', 'items', 'longestShortestPath', 'obstacleLib',
+        ]);
+        /**
+         * ⛔⛔ **AND THE LAB PAYLOAD SURVIVES `deserializeMazeWorld` WITHOUT A
+         * WORD** — measured, and it is why this mutant needed a row rather than
+         * a comment. Nothing refuses it; it simply writes a DIFFERENT document.
+         */
+        expect(() => deserializeMazeWorld(lab)).not.toThrow();
+
+        /**
+         * ⛓⛓⛓ **SO THE MUTANT IS RUN, AND IT IS DISCRIMINATING.** Closing an
+         * UNEDITED session through the lab serializer MINTS AN EDIT — `applied`
+         * flips to `true` — so every look at a room would restamp the library
+         * and every exit in it would lose its `side`.
+         */
+        const mutantSet = sessionOf();
+        const mutantRoom = roomSessionAt(mutantSet, 0);
+        const mutated = closeRoomSession(mutantSet, mutantRoom, 0, {
+            capture: { ...MAZE_CAPTURE_DEPS, serialize: (w) => serializeMazeLevel(w) },
+        });
+        expect(mutated.applied).toBe(true);
+        /**
+         * ⛓ AND THE MEASURED SYMPTOM, named rather than left as "different":
+         * `replace-room` re-captures whatever it is handed, so the entry that
+         * lands IS a capture-path payload again — but the lab spelling never
+         * carried the exit's SIDE, so `deserializeMazeWorld` had none to read
+         * and the re-capture writes `side: null` where the committed entry says
+         * `'N'`. ⛔ A silent downgrade: same shape, same keys, one fact gone.
+         */
+        expect(mutantSet.record().library.entries[0].payload.exits[0].side).toBe(null);
+        expect(entryAt(sessionOf(), 0).payload.exits[0].side).toBe('N');
+        expect(mutantSet.record().library.entries[0].exit_sides)
+            .not.toEqual(entryAt(sessionOf(), 0).exit_sides);
+    });
+
+    /** ⛓ MUTANT: the guard is dropped — a PAYLOAD handed in would be
+     *  re-serialised as if it were a world, which is a second spelling of the
+     *  capture path arriving through the back door. */
+    it('a room session whose `record()` is a PAYLOAD is refused BY NAME', () => {
+        const set = sessionOf();
+        const fake = { record: () => entryAt(set, 0).payload };
+        expect(() => closeRoomSession(set, fake, 0))
+            .toThrow(/tile-grid maze WORLD/);
+        expect(() => closeRoomSession(set, roomSessionAt(set, 0), 9))
+            .toThrow(/this library has 4/);
+    });
+
+    /** ⛓ The two serializers are BOTH real, and this file names them so a reader
+     *  meeting `serializeMazeWorld` here can tell it from its twin. */
+    it('the capture composition IS `serializeMazeWorld` + `extractPathsAndObstacles`', () => {
+        expect(MAZE_CAPTURE_DEPS.serialize).toBe(serializeMazeWorld);
+        expect(MAZE_CAPTURE_DEPS.extract).toBe(extractPathsAndObstacles);
+        expect(MAZE_CAPTURE_DEPS.serialize).not.toBe(serializeMazeLevel);
+        expect(MAZE_CAPTURE_DEPS.substrate).toBe('maze');
     });
 });
