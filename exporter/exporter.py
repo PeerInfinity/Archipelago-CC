@@ -2909,9 +2909,21 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
             # since EDITOR v3 W1, pinned by test/test_rules_json_writer_agreement.py.
             # EDITOR v3 E1c — the indent is a SETTING (`json_tools.rules_json_indent`,
             # default 2, mirrored by the frontend's `rulesJson.indent`).
-            # ⛔ THE DEFAULT DOES NOT MOVE: every committed preset is byte-pinned at 2
-            # (29 byte-identity dumps, test_schema_validation.py, every --check),
-            # so `indent=0` is only ever something a person asked for.
+            # ⛔ THE DEFAULT DOES NOT MOVE — but NOT for the reason this comment
+            # used to give. It claimed the committed presets were "byte-pinned at
+            # 2 (29 byte-identity dumps, test_schema_validation.py, every
+            # --check)". EDITOR v3 W1 opened all three and none of them pins a
+            # byte: scripts/procgen/dump-*-byteidentity.mjs (four of them) read
+            # frontend/presets/ ZERO times — they pin in-process generator
+            # determinism; test/general/test_schema_validation.py is json.load +
+            # jsonschema.validate, blind to formatting; and no workflow runs a
+            # --check over presets. The presets are committed DATA, regenerated
+            # only on demand by .github/workflows/generate-presets.yml
+            # (workflow_dispatch, onto a `generated-presets` branch).
+            # The default stays 2 because it is the frontend's default and the
+            # committed corpus is indented at 2; `indent=0` is only ever
+            # something a person asked for, per output.
+            # ⛓ encoding='utf-8' below is what makes `ensure_ascii=False` safe.
             # ⛓ encoding='utf-8' below is what makes `ensure_ascii=False` safe.
             with open(filepath, 'w', encoding='utf-8') as f:
                 f.write(_dump_with_compact_sidecar_tiles(

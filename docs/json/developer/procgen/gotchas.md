@@ -470,7 +470,7 @@ that strip, `AP_1_rules.json.gz` derives
 `AP_1_rules.json.gz_sphere_log.jsonl` from the error branch, logging about a
 missing extension rather than about the sidecar).
 
-## `json.dumps(indent=0)` is not minified, and the Python mirror is not byte-identical to the JS writer
+## `json.dumps(indent=0)` is not minified, and the Python mirror took two lines to become byte-identical to the JS writer
 
 Two separate facts, both measured, both about `exporter.py`'s
 `_dump_with_compact_sidecar_tiles` and its JS twin `stringifyRulesJson`:
@@ -481,17 +481,66 @@ Two separate facts, both measured, both about `exporter.py`'s
    exactly this reason — a `rules_json_indent: 0` that used `indent=0` literally
    would produce a file that is neither indented nor minified.
 
-2. **⚠ The two writers already disagree on sidecar tiles, and this is NOT fixed.**
-   The docstring says the Python helper "mirrors `stringifyRulesJson` … so files
-   written here look the same as files downloaded from the procgen panel". It
-   does not: the spliced tiles array is `json.dumps(tiles)` → `[0, 0, 0]` in
-   Python and `[0,0,0]` in JS. Measured on `jta_mixed_test/AP_1`: 3,189 B from
-   Python vs 3,142 B from JS. Separately, Python escapes non-ASCII (`\u00a7`)
-   where JS emits `§` — a 70-byte delta on `seedling_playthrough/AP_1`. Both are
-   one-line fixes (`separators=(',', ':')` on the spliced dump; `ensure_ascii=False`)
-   and both would move committed bytes across the byte-pinned preset corpus, so
-   neither is anybody's to make casually. A true sentence in a docstring about
-   the wrong subject.
+2. **⚖ The two writers used to disagree on sidecar tiles, and on non-ASCII —
+   FIXED in `bc81a69e4` (EDITOR v3 W1).** The docstring had said since it was
+   written that the Python helper "mirrors `stringifyRulesJson` … so files
+   written here look the same as files downloaded from the procgen panel", and
+   it did not. Two facts, two one-line fixes:
+   the spliced tiles array was `json.dumps(tiles)` → `[0, 0, 0]` in Python
+   against `[0,0,0]` in JS (measured on `jta_mixed_test/AP_1`: 3,189 B from
+   Python vs 3,142 B from JS), now `json.dumps(tiles, separators=(',', ':'))`;
+   and Python escaped non-ASCII to `\u00a7` where JS emits `§` (a 70-byte delta
+   on `seedling_playthrough/AP_1`), now `ensure_ascii=False` on BOTH paths of
+   `_json_dumps_at_indent` — safe because the one production caller opens its
+   file with `encoding='utf-8'`. `test/test_rules_json_writer_agreement.py`
+   pins the agreement: every JS-written committed preset re-dumps to the file's
+   exact bytes.
+
+   ⛔ **THE FIX MOVED NO COMMITTED PRESET, and the reason it was deferred for a
+   day was FALSE.** It was deferred because "both would move committed bytes
+   across the byte-pinned preset corpus". Nothing pins that corpus — see the
+   entry below — and, measured at `956af2029`, the Python splice has never
+   written a committed file at all.
+
+3. **⛓ THE CORPUS CARRIES THREE FORMATTING LINEAGES, and the Python "mirror"
+   wrote none of them.** Of the 259 committed `AP_*_rules.json`, 34 carry a
+   `preset_sidecars[…].playable_payload`, and they split three ways (measured
+   at `956af2029`):
+
+   | lineage | signature | count | who wrote it |
+   |---|---|---|---|
+   | JS-spliced | `"tiles": [0,0,…]` | 16 | `stringifyRulesJson` — all of `procgen_topdown/AP_1..12`, `procgen_maze/AP_1..3`, `seedling_atlas_maze/AP_1` |
+   | exploded | `"tiles": [\n  0,…]` | 7 | a plain `json.dump(indent=2)`, no splice — e.g. `jta_mixed_test/AP_1`, the five `omsi_*_test`, `seedling_atlas_sphere/AP_1` |
+   | no tiles | `playable_payload` with no `tiles` array | 11 | e.g. every `jta_*_test`, `seedling_playthrough/AP_1`, `seedling_atlas/AP_1` |
+   | **Python-spliced** | `"tiles": [0, 0,…]` | **0** | — |
+
+   ⛓ The trailing newline is the WRITE SITE's, not the writer's: neither
+   `stringifyRulesJson` nor `_dump_with_compact_sidecar_tiles` emits one, the
+   node write sites append it (`scripts/utils/generate-procgen-rules.js`:
+   `text + '\n'`) and the Python write site does not. All 16 JS-written files
+   carry it; 30 of the 259 do.
+
+## "Byte-pinned" was a sentence three files repeated and no mechanism backed
+
+`exporter.py`, `frontend/modules/presets/documentBundle.js` and
+[architecture.md](./architecture.md) all said the committed presets were
+byte-pinned by "29 byte-identity dumps, `test_schema_validation.py`, every
+`--check`". EDITOR v3 W1 opened all three:
+
+| the named pin | what it actually reads |
+|---|---|
+| the four `scripts/procgen/dump-*-byteidentity.mjs` | `frontend/presets/` **zero** times — they pin in-process generator determinism (AP id namespace bases) |
+| `test/general/test_schema_validation.py` | 39 lines of `json.load` + `jsonschema.validate` — blind to formatting |
+| "every `--check`" | no workflow runs a `--check` over presets at all |
+
+The presets are committed **DATA**, regenerated only on demand by
+`.github/workflows/generate-presets.yml` (`workflow_dispatch`, onto a
+`generated-presets` branch). What IS pinned is that the two writers agree
+(`test/test_rules_json_writer_agreement.py`) — and that pin did not exist
+until the sentence was checked.
+
+⇒ **A claim that a corpus is pinned NAMES the pin — open it and check what it
+READS.** A sentence copied into three files is one claim, not three witnesses.
 
 ## A container that carried everything derivable from its own contents would describe itself
 

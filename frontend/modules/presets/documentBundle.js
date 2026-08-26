@@ -98,10 +98,21 @@ export const BUNDLE_MTIME = new Date(Date.UTC(1980, 0, 1));
  * AND NEVER PASSED by any of its callers since it was written. This is the one
  * declaration of what `indent` may be and what it is when nobody says.
  *
- * ⛔ **THE DEFAULT DOES NOT MOVE.** Every committed `*_rules.json` is byte-pinned
- * (29 byte-identity dumps, `test_schema_validation.py`, every `--check`), so a
- * default of anything but 2 would re-write 74 MB of committed presets. `indent: 0`
- * is a thing a PERSON asks for, per output.
+ * ⛔ **THE DEFAULT DOES NOT MOVE** — and EDITOR v3 W1 corrected the reason. This
+ * block used to say the committed presets were "byte-pinned (29 byte-identity
+ * dumps, `test_schema_validation.py`, every `--check`)". NONE of those three
+ * reads a committed preset's bytes: the four `scripts/procgen/dump-*-byteidentity.mjs`
+ * never open `frontend/presets/` at all (they pin in-process generator
+ * determinism), `test/general/test_schema_validation.py` is `json.load` +
+ * `jsonschema.validate` and cannot see formatting, and no workflow runs a
+ * `--check` over presets. The presets are committed DATA, regenerated only on
+ * demand by `.github/workflows/generate-presets.yml`. The default stays 2
+ * because it is what the corpus is indented at and what every reader expects;
+ * `indent: 0` is a thing a PERSON asks for, per output. What IS pinned is that
+ * the two writers AGREE — `test/test_rules_json_writer_agreement.py` re-dumps
+ * every JS-written committed preset through `exporter.py` and asserts the file's
+ * exact bytes. ⛓ A sentence repeated in three files is one claim, not three
+ * witnesses ([[reference_seedling_arc_traps]] 717).
  *
  * ⛓ Registered as the TOP-LEVEL `rulesJson` scope (`app/core/coreSettingsSchemas.js`)
  * rather than under one module, because four different writers across three
