@@ -199,7 +199,10 @@ function withSubRegion(region, target, value, what) {
 // the refusals as throws is what let the sixteen bodies move verbatim, messages
 // included — and those messages are pinned by `atlasSession.test.js`.
 
-function addRegion(atlas, { region_id, name = null, bounds, map_ref = undefined, rules_source = 'manual' }) {
+function addRegion(atlas, {
+    region_id, name = null, bounds, map_ref = undefined,
+    substrate = undefined, rules_source = 'manual',
+}) {
     requireId(region_id, 'region_id');
     if (atlas.regions.some((r) => r.region_id === region_id)) {
         throw new Error(`region "${region_id}" already exists`);
@@ -214,6 +217,14 @@ function addRegion(atlas, { region_id, name = null, bounds, map_ref = undefined,
     if (name) ordered.name = name;
     ordered.bounds = { ...bounds };
     if (map_ref !== undefined) ordered.map_ref = map_ref;
+    // ⛓ WHICH SUBSTRATE PLAYS THIS REGION (EDITOR INTEGRATION W1) — carried
+    // ONLY when the caller names one. This op rebuilds the region from a fixed
+    // param set rather than spreading the spec, so an unnamed key is DROPPED,
+    // and both atlas derivations write this field through here. Omitted when
+    // absent so every atlas authored before the field is byte-identical: the
+    // compiler reads absence as "this compile's default", which is exactly what
+    // those documents meant.
+    if (substrate !== undefined) ordered.substrate = substrate;
     ordered.exits = [];
     ordered.locations = [];
     ordered.annotations = { rules_source };

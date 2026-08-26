@@ -33,9 +33,12 @@ import { gateabilityOf } from '../procgenCore/setEditorCore.js';
 import { reachableRegions, regionsOf } from '../procgenCore/rulesGraph.js';
 import { deserializeMazeWorld } from './mazeRoomEngine.js';
 import { TILE_FLOOR, TILE_WALL } from '../shared/procgen/mazeAlgorithms/gridTiles.js';
+import { MAZE_SUBSTRATE } from '../procgenPipeline/regionAtlasMazeProjection.js';
+import { LIBRARY_V1_SUBSTRATES } from '../procgenPipeline/regionLibraryValidator.js';
+import { MAZE_CAPTURE_DEPS } from './mazeSetAdapter.js';
 import {
-    LINK_ONE_WAY_DEFAULT, MazeAtlasDerivationError, assertOverlay, deriveAtlas, deriveAtlasOf,
-    emptyMazeOverlay, mazeGridFor, overlayErrors, renumberOverlay, rulesJsonOf,
+    LINK_ONE_WAY_DEFAULT, MazeAtlasDerivationError, READS_SUBSTRATE, assertOverlay, deriveAtlas,
+    deriveAtlasOf, emptyMazeOverlay, mazeGridFor, overlayErrors, renumberOverlay, rulesJsonOf,
 } from './mazeAtlasDerivation.js';
 
 const LIBRARY = JSON.parse(readFileSync(
@@ -250,6 +253,74 @@ describe('⛓⛓⛓ the atlas is DERIVED from the entries plus the authored link
             .toThrow(/floor splits into more than one component/);
     });
 
+    /**
+     * ⛓⛓ EDITOR INTEGRATION W1: the per-entry substrate, and the refusal that
+     * moved from the DOCUMENT to the ENTRY. The rows below use a real
+     * `demo-bounce-pack.json` entry spliced into the maze library, so the
+     * mutant "the per-entry refusal dropped" is scored against a payload that
+     * genuinely is not a tile grid — not against a relabelled maze room.
+     */
+    it('⛓⛓ every derived region carries its OWN entry\'s substrate', () => {
+        const { atlas } = deriveAtlas(ENTRIES, overlayOf(), { atlas: { mapDocument: 'x' } });
+        expect(atlas.regions).toHaveLength(ENTRIES.length);
+        for (const [i, region] of atlas.regions.entries()) {
+            expect(region.substrate).toBe(ENTRIES[i].substrate);
+        }
+        // ⛓ Read off the ENTRY, not off the document: the two agree today only
+        //   because the refusal keeps them agreeing, and the row says which one
+        //   is the source by naming the entry it came from.
+        expect(new Set(atlas.regions.map((r) => r.substrate))).toEqual(new Set(['maze']));
+    });
+
+    it('⛓ the field sits immediately after `map_ref`, the key order the schema documents', () => {
+        // The compact writer emits insertion order, so this IS the committed
+        // bytes of any atlas that carries the field. atlasOps.addRegion rebuilds
+        // the region from a fixed param set, and this is where it puts it.
+        const { atlas } = deriveAtlas(ENTRIES, overlayOf(), { atlas: { mapDocument: 'x' } });
+        expect(Object.keys(atlas.regions[0]))
+            .toEqual(['region_id', 'name', 'bounds', 'map_ref', 'substrate', 'exits', 'locations', 'annotations']);
+    });
+
+    it('⛔⛔ a BOUNCE entry spliced into the library refuses AT THE ENTRY, naming it', () => {
+        const bounce = JSON.parse(readFileSync(
+            fileURLToPath(new URL('../../region-libraries/demo-bounce-pack.json', import.meta.url)), 'utf8',
+        )).entries[0];
+        // A real content-substrate entry: floats, platforms, no tile grid at all.
+        expect(bounce.substrate).toBe('bounce');
+        expect(bounce.payload.tiles).toBeUndefined();
+
+        const mixed = [ENTRIES[0], bounce, ENTRIES[1]];
+        expect(() => deriveAtlas(mixed, overlayOf([]), { atlas: { mapDocument: 'x' } }))
+            .toThrow(new RegExp(`entry 1 \\(\`${bounce.entry_id}\`\\) declares "bounce"`));
+        expect(() => deriveAtlas(mixed, overlayOf([]), { atlas: { mapDocument: 'x' } }))
+            .toThrow(/this derivation reads `maze` payloads \(a tile grid\)/);
+        // ⛔ AT THE ENTRY, not at the document: the index and the entry_id are
+        //   in the sentence, which is what lets a mixed library be fixed one
+        //   room at a time instead of rejected whole.
+        expect(() => deriveAtlas(mixed, overlayOf([]), { atlas: { mapDocument: 'x' } }))
+            .toThrow(MazeAtlasDerivationError);
+    });
+
+    it('⛔ the refusal fires BEFORE any payload is read — a bounce payload is never mis-parsed', () => {
+        // `mazeGridFor` would read `payload.width`/`payload.tiles` off a bounce
+        // entry and build a 0-cell grid, or throw something about tiles. The
+        // refusal has to come first, or the error names the wrong thing.
+        const bounce = JSON.parse(readFileSync(
+            fileURLToPath(new URL('../../region-libraries/demo-bounce-pack.json', import.meta.url)), 'utf8',
+        )).entries[0];
+        expect(() => deriveAtlas([bounce], overlayOf([]), { atlas: { mapDocument: 'x' } }))
+            .toThrow(/declares "bounce"/);
+    });
+
+    it('⛓ `READS_SUBSTRATE` is the SAME id the pipeline and the capture path spell', () => {
+        // This module cannot import either home (the registry drags the panel,
+        // mazeSetAdapter imports this file). A test file can import both, so
+        // the second spelling is GATED rather than merely commented.
+        expect(READS_SUBSTRATE).toBe(MAZE_SUBSTRATE);
+        expect(READS_SUBSTRATE).toBe(MAZE_CAPTURE_DEPS.substrate);
+        expect(LIBRARY_V1_SUBSTRATES[READS_SUBSTRATE]).toBe('procedural');
+    });
+
     it('⛔ every refusal that names a stale entry is this module\'s class', () => {
         expect(() => deriveAtlas([], overlayOf([]), { atlas: { mapDocument: 'x' } }))
             .toThrow(MazeAtlasDerivationError);
@@ -258,7 +329,7 @@ describe('⛓⛓⛓ the atlas is DERIVED from the entries plus the authored link
         expect(() => deriveAtlas(
             [ENTRIES[0], { ...ENTRIES[1], substrate: 'bounce' }],
             overlayOf([]), { atlas: { mapDocument: 'x' } },
-        )).toThrow(/must declare the SAME `substrate`/);
+        )).toThrow(/entry 1 \(`mz_hub`\) declares "bounce"; this derivation reads `maze` payloads/);
     });
 
     /**
@@ -483,18 +554,28 @@ describe('⛓⛓⛓ derive → validate → compile → the real maze world → 
     /**
      * ⛔⛔⛔ MUTANT: `rulesJsonOf` passes `sidecarFlavor: 'maze'` and lets
      * `mazeProjection` be `undefined`, or swallows the compiler's refusal. The
-     * compile would then either throw a sentence nobody catches or — worse, if
-     * the flavour were dropped instead — emit FLASH sidecars for a maze
-     * library, which boot an engine that has no such game. This row asserts the
-     * refusal is REAL, so a caller that forgot the grid cannot be silent.
+     * compile would then throw a sentence nobody catches. This row asserts the
+     * refusal is REAL, so a caller that forgot the grid cannot be silent — and
+     * that it now NAMES THE REGION, because a region asks for the maze on its
+     * own `substrate` field and the compile has to say which one did.
+     *
+     * ⛓⛓ THE SECOND HALF OF THIS ROW GOT STRICTLY STRONGER IN W1, and its old
+     * form no longer holds. It used to read "a compile WITHOUT the flavour
+     * emits no maze sidecars at all" — guarding the worse mutant, `rulesJsonOf`
+     * DROPPING the flavour and shipping FLASH sidecars for a maze library. That
+     * mutant is now unreachable rather than merely caught: the derived regions
+     * carry `substrate: 'maze'` themselves, so the flavour is not what decides
+     * it, and a flavourless compile of this atlas refuses by the SAME sentence
+     * instead of quietly compiling the wrong substrate.
      */
     it('⛔⛔ the maze arm REFUSES without a `gridFor`, by name — the grid is the GAME\'s', () => {
         const atlas = deriveAtlasOf(recordOf()).atlas;
-        expect(() => compileRegionAtlas(atlas, { sidecarFlavor: 'maze' }))
-            .toThrow(/sidecarFlavor "maze" needs options\.mazeProjection\.\{gridFor,conditionKey,resolveCondition\}/);
-        // ⛓ …and the flavour really is what this module passes: a compile
-        //   WITHOUT it emits no maze sidecars at all.
-        expect(compileRegionAtlas(atlas, {}).report.sidecar_flavor).not.toBe('maze');
+        const refusal = /atlas region "\w+" compiles to substrate "maze", and sidecarFlavor "maze" needs options\.mazeProjection\.\{gridFor,conditionKey,resolveCondition\}/;
+        expect(() => compileRegionAtlas(atlas, { sidecarFlavor: 'maze' })).toThrow(refusal);
+        // ⛓ …and dropping the flavour does NOT get flash sidecars any more: the
+        //   regions say maze on their own, so the same refusal fires.
+        expect(() => compileRegionAtlas(atlas, {})).toThrow(refusal);
+        expect(atlas.regions.every((r) => r.substrate === 'maze')).toBe(true);
     });
 
     /** ⛓ The tile vocabulary has ONE spelling here, re-exported rather than retyped. */

@@ -71,6 +71,27 @@ export class MazeAtlasDerivationError extends Error {
 
 const fail = (message) => { throw new MazeAtlasDerivationError(message); };
 
+/**
+ * ⛓⛓ **THE SUBSTRATE THIS DERIVATION CAN READ**, and the one spelling of it in
+ * this file (EDITOR INTEGRATION W1).
+ *
+ * ⛔ It is a LOCAL constant only because all three importable homes are shut:
+ * `shared/procgen/substrateRegistry.js` is reached through `mazeRoomLibrary.js`,
+ * which drags `./index.js` — the PANEL — into a node-only module and registers a
+ * substrate as a side effect of opening an editor session (`mazeSetAdapter.js`
+ * documents the same refusal for the same reason); `mazeSetAdapter.js`'s own
+ * `MAZE_CAPTURE_DEPS.substrate` imports THIS module, so reading it back is a
+ * cycle; and `procgenPipeline/regionAtlasMazeProjection.js`'s `MAZE_SUBSTRATE`
+ * is a PIPELINE dependency, which this module deliberately names none of —
+ * that is why `rulesJsonOf` takes `compileRegionAtlas` injected.
+ *
+ * ⛓ So the second spelling is GATED instead of avoided: a row in
+ * `mazeAtlasDerivation.test.js` asserts this equals both `MAZE_SUBSTRATE` and
+ * `MAZE_CAPTURE_DEPS.substrate`, which a test file can import and this one
+ * cannot. A drift is a red row, not a silent disagreement.
+ */
+export const READS_SUBSTRATE = 'maze';
+
 const isPlainObject = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
 
 /* ══════════════════════════════════════════════════════════════════════
@@ -360,22 +381,44 @@ export function deriveAtlas(entries, overlay = {}, deps = {}) {
             + 'INDEX) and the atlas validator refuses a map_ref whose document is unnamed.');
     }
     /**
+     * ⛓⛓ **THE REFUSAL IS PER ENTRY NOW, AND THAT IS THE WHOLE POINT** (EDITOR
+     * INTEGRATION W1, plan §2.2 #1).
+     *
+     * It used to be per DOCUMENT: `[...new Set(entries.map(e => e.substrate))]`
+     * had to be exactly one id, and a library mixing maze with anything else
+     * was refused whole — while the refusal's own text conceded *"a region
+     * library may legally mix them"*. That was the honest thing to say when
+     * nothing downstream could carry a per-room substrate. Now the atlas region
+     * can (`region.substrate`) and `compileRegionAtlas` dispatches on it, so the
+     * document-level refusal is the last thing standing between a mixed library
+     * and a mixed world.
+     *
+     * ⛔ WHAT DOES NOT CHANGE: an entry this derivation cannot READ is still
+     * refused. `mazeGridFor` reads a tile-grid maze payload and a bounce entry's
+     * `{size, platforms[], springs[]}` is not one — it would be mis-read, not
+     * merely mis-labelled. So the refusal survives at the ENTRY, naming which
+     * one and what it declared, which is what lets a library mixing maze with a
+     * substrate W2 teaches this about fail at the row rather than at the
+     * document.
+     */
+    entries.forEach((entry, index) => {
+        const declared = entry?.substrate;
+        if (declared === READS_SUBSTRATE) return;
+        fail(`mazeAtlasDerivation: entry ${index} (\`${entry?.entry_id ?? '?'}\`) declares `
+            + `${JSON.stringify(declared)}; this derivation reads \`${READS_SUBSTRATE}\` payloads `
+            + '(a tile grid) and would silently mis-read any other kind. ⛓ A region library may '
+            + 'legally mix substrates and the ATLAS can now carry one per region — so this is a '
+            + 'refusal about what THIS derivation can read, not about the library.');
+    });
+
+    /**
      * ⛓ **THE GAME NAME IS THE ENTRIES' OWN `substrate`**, not a literal.
      * `createEmptyAtlas` defaults `game` (and therefore `atlas_id`) to
      * `'seedling'`, so a maze atlas that let the default stand would name the
      * wrong game in `rules.region_atlas` and in every derived identifier.
-     * ⛔ A library holding two substrates refuses: this module reads maze
-     * payloads and nothing else.
      */
-    const substrates = [...new Set(entries.map((e) => e?.substrate))];
-    if (substrates.length !== 1 || typeof substrates[0] !== 'string') {
-        fail('mazeAtlasDerivation: every entry must declare the SAME `substrate`, and these '
-            + `declare ${JSON.stringify(substrates)}. A region library may legally mix them; `
-            + 'this derivation reads tile-grid maze payloads and would silently mis-read any '
-            + 'other kind.');
-    }
     const session = new AtlasSession(createEmptyAtlas({
-        game: substrates[0], tileSize, ...(deps.atlas ?? {}),
+        game: READS_SUBSTRATE, tileSize, ...(deps.atlas ?? {}),
     }));
 
     // Regions first, so a link can name any of them.
@@ -392,6 +435,16 @@ export function deriveAtlas(entries, overlay = {}, deps = {}) {
             name: entry.name ?? regionId,
             bounds: { x: 0, y: 0, w: payload.width, h: payload.height },
             map_ref: index,
+            // ⛓⛓ THE ENTRY'S OWN SUBSTRATE, WRITTEN ON ITS OWN REGION — never
+            //   the DOCUMENT's. Today the per-entry refusal above means every
+            //   entry that gets here declares the same id, so the two readings
+            //   agree; the moment W2 teaches this derivation a second payload
+            //   kind they stop agreeing, and a document-wide value would then
+            //   label every region with whatever the first entry happened to be.
+            //   Read it off the entry now, while the two are still the same, so
+            //   the change that separates them is not also the change that has
+            //   to notice this line.
+            substrate: entry.substrate,
             // ⛓ `manual`: a maze region's access rules come from the AUTHORED
             //   overlay. The enum is analyzer|manual|mixed and nothing else.
             rules_source: 'manual',

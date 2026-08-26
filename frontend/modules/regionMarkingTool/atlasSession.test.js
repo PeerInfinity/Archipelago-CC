@@ -83,6 +83,37 @@ describe('region ids', () => {
     });
 });
 
+describe('region.substrate — the op-level passthrough (EDITOR INTEGRATION W1)', () => {
+    // ⛔ `atlasOps.addRegion` rebuilds the region from a FIXED param set rather
+    // than spreading the spec, so a key it does not name is silently DROPPED.
+    // Both atlas derivations write `substrate` through this op, so the op has to
+    // carry it — and this row is what says so: it is the whole reason the field
+    // reaches a derived atlas at all.
+    it('carries `substrate` when the caller names one', () => {
+        const s = session();
+        s.addRegion({ region_id: 'cave', bounds: BOUNDS, map_ref: 1, substrate: 'maze' });
+        expect(s.atlas.regions.find((r) => r.region_id === 'cave').substrate).toBe('maze');
+    });
+
+    it('OMITS the key when the caller does not — which is why no committed atlas moved', () => {
+        const s = session();
+        s.addRegion({ region_id: 'cave', bounds: BOUNDS, map_ref: 1 });
+        const region = s.atlas.regions.find((r) => r.region_id === 'cave');
+        expect('substrate' in region).toBe(false);
+        expect(Object.keys(region)).toEqual(['region_id', 'bounds', 'map_ref', 'exits', 'locations', 'annotations']);
+    });
+
+    it('places it immediately after `map_ref` — the compact writer emits INSERTION order', () => {
+        // The key's position IS the committed bytes of any atlas carrying it,
+        // and it must match `region-atlas.schema.json`'s `$defs.region.properties`
+        // order. Named here so a later writer cannot move it quietly.
+        const s = session();
+        s.addRegion({ region_id: 'cave', name: 'Cave', bounds: BOUNDS, map_ref: 1, substrate: 'maze' });
+        expect(Object.keys(s.atlas.regions.find((r) => r.region_id === 'cave')))
+            .toEqual(['region_id', 'name', 'bounds', 'map_ref', 'substrate', 'exits', 'locations', 'annotations']);
+    });
+});
+
 describe('exits', () => {
     it('derives kind and side from geometry rather than asking', () => {
         const s = session();
