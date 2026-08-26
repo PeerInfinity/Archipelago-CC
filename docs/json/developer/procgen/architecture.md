@@ -428,11 +428,16 @@ that had already emptied the boxes the page was showing.
 | `locations` | `{options(cell), emptyWhy, targetOf(value)}` | `mark-location` names an OEL entity at exact pixels on one substrate and an `items[]` ORDINAL on the other |
 | `drawRoomStill(canvas, cell, index)` · `stillKey(cell)` | ⚖ the ONE-RENDERER law: the page draws its own substrate and the mount blits what it is handed | the KEY is the substrate's too — what makes a still stale is what the substrate copies on write (the room's `source` object · the entry's `payload`) |
 | `linkBound(record)` | `{ok, why}` | Seedling prices OEL bytes then record entities; the maze's links are ONE authored list and its bound says `ok` for ever — and SAYS so, because what is not bounded has to be named too |
-| `isRefusal` · `rulesSchema` · `addRoomOp(at)` | the substrate's refusal classes, the parsed `rules.schema.json`, and the whole `add-room` op (a `record` on one side, a `payload` on the other) | |
+| `isRefusal` · `rulesSchema` · `addRoomOp(at)` | the substrate's refusal classes, the parsed `rules.schema.json`, and the whole `add-room` op (a `record` on one side, a `payload` on the other) | ⛓ the press says only WHERE (`at = roomCount()`) and BUILDS THE OP INSIDE A `try`: a binding may refuse to MINT — the maze's calls `createWorld`, which refuses a dimension below 2 — and the argument position is outside `applySet`'s own catch |
+| `sourceKind(cell)` → `badges()` | WHERE the room's contents live (`record \| xml \| embed`); the mount records the `embed` answer PER CELL as it paints and exposes it as `badges()` | the strip's `⛔embed` glyph is drawn OVER an opaque room box, so no ink count can see it (`gotchas.md`); the painter's own decision, published as `strip.badges` / `set.badges`, is the browser's only reader of it |
 
 The DOWNLOAD is the shape that generalised least obviously: `adapterFns.download`
 returns `{members: [{kind, doc, name, label, readout}], report, apMappingWhy?}`
-and the mount writes one blob and one readout per member. ⛔ A member whose
+and the mount writes one blob and one readout per member. ⛓ **Every download
+readout is PRESS-SCOPED**: the handler nulls its whole family and bumps
+`__editorSet{Bundle,Rules}Presses` before its FIRST guard, so a refused press is
+told apart from the last success and a driver waits on a counter that CHANGES
+rather than on a key that merely exists (`gotchas.md`). ⛔ A member whose
 `kind` is not in `documentBundle.BUNDLE_KINDS` is refused BY NAME by the bundle
 button, with the roster quoted — Seedling's `ap-mapping` companion and the
 maze's `region-library` are both outside it today, and a silent drop would hand

@@ -762,9 +762,23 @@ see `gotchas.md` for why, and for the hidden-panel layout trap this arm's first
 browser run found. `#editRoomClose` folds N room edits into ONE `replace-room`
 through the ADAPTER's `closeRoomSession`, the capture path.
 
-⚠ **ADD ROOM is not offered**, with its reason in the button's own `title`:
-Seedling's `add-room` takes a blank RECORD a page can mint and the maze's takes
-a captured maze WORLD, which this arm has none of.
+⛓ **ADD ROOM mints a BLANK room, and the SIZE is the page's.** E2c shipped the
+button disabled with its reason in the `title` — Seedling's `add-room` takes a
+blank RECORD a page can mint and the maze's takes a captured maze WORLD, which
+that arm had none of. `blankMazeRoomPayload({width, height})` is that vocabulary
+now: a DOORLESS, all-floor world whose `exit_sides` are `[]`, so the room arrives
+unwired and the REPORT refuses the `rules.json` export until a `connect` gives it
+a door. The two size inputs beside the button are seeded from `MAZE_DEFAULTS` —
+the same constant `?width=`/`?height=` fall back to — and read at the PRESS, as a
+THUNK the view hands the binding, because `mazeSetLab.js` may not touch a DOM.
+
+⛔ **`min="2"` on those inputs is a HINT, not a check.** `createWorld` refuses a
+dimension below 2 by name and it is the ONE authority; the refusal reaches
+`#editSetNote` verbatim. ⚠ It only reaches it because the mount builds the op
+INSIDE a `try`: `applySet(addRoomOp(at), …)` evaluated the binding as an
+ARGUMENT, i.e. before `applySet`'s own catch, so a binding that refuses to mint
+threw straight out of the click listener. Invisible until a substrate whose
+`addRoomOp` can refuse existed — see `gotchas.md`.
 
 ## The action queue (`mazeRoomQueue.js`)
 

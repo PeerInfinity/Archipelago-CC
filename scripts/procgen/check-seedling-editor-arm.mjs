@@ -1755,11 +1755,12 @@ try {
     const vanBadge = await inkOf();
     const vanBadges = await page.evaluate(() => window.__editorEdit?.set?.badges ?? null);
     check(vanBadge.badgeInk > 0 && vanBadge.captionInk > 0
-        && Array.isArray(vanBadges) && vanBadges.length === 116
+        && Array.isArray(vanBadges) && vanBadges.length === VANILLA.rooms.length
         && vanBadges.every((b) => b === true),
-        '⛓⛓⛓ **EVERY ONE OF THE 116 COMMITTED ROOMS IS BADGED, IN THE READOUT *AND* IN THE '
-        + 'PIXELS** — they are all `embed`s, so this is the build where the badge is CORRECT '
-        + 'under every room. ⛔ The A/B is claim 27, over the same 116 rooms built as `record`s',
+        `⛓⛓⛓ **EVERY ONE OF THE ${VANILLA.rooms.length} COMMITTED ROOMS IS BADGED, IN THE `
+        + 'READOUT *AND* IN THE PIXELS** — they are all `embed`s, so this is the build where '
+        + 'the badge is CORRECT under every room. ⛔ The A/B is claim 27, over the same rooms '
+        + 'built as `record`s',
         `badgeInk ${vanBadge.badgeInk} · captionInk ${vanBadge.captionInk} · `
         + `${vanBadges.filter(Boolean).length}/${vanBadges.length} badged`);
     await page.selectOption('#editSetRoom', '0');
@@ -2848,13 +2849,14 @@ try {
      */
     const recBadge = await inkOf();
     check(recBadge.badgeInk === 0 && recBadge.captionInk > 0
-        && Array.isArray(van.edit.set.badges) && van.edit.set.badges.length === 116
+        && Array.isArray(van.edit.set.badges)
+        && van.edit.set.badges.length === VANILLA_XML.rooms.length
         && van.edit.set.badges.every((b) => b === false),
-        '⛓⛓⛓ **AND NOT ONE OF THE 116 `record`-BUILT ROOMS IS BADGED — IN THE READOUT *AND* '
-        + 'IN THE PIXELS.** ⛔ The A/B against claim 19 is the whole claim: the same 116 rooms, '
-        + 'one document `embed`-sourced and one `record`-sourced, and the strip tells them '
-        + 'apart. A count of non-zero ALPHA cannot (§32.6) — this band is a per-column '
-        + 'DIFFERENCE against a reference row no glyph reaches',
+        `⛓⛓⛓ **AND NOT ONE OF THE ${VANILLA_XML.rooms.length} \`record\`-BUILT ROOMS IS `
+        + 'BADGED — IN THE READOUT *AND* IN THE PIXELS.** ⛔ The A/B against claim 19 is the '
+        + 'whole claim: the same rooms, one document `embed`-sourced and one `record`-sourced, '
+        + 'and the strip tells them apart. A count of non-zero ALPHA cannot (§32.6) — this '
+        + 'band is a per-column DIFFERENCE against a reference row no glyph reaches',
         `badgeInk ${recBadge.badgeInk} · captionInk ${recBadge.captionInk} · `
         + `${van.edit.set.badges.filter(Boolean).length}/${van.edit.set.badges.length} badged`);
     check(van.setNote.includes(VANILLA_XML.set_id)

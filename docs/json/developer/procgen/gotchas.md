@@ -400,7 +400,6 @@ on a stale object nothing publishes. The arm lifetime's own listener counter is
 the witness, and it must not move across a remount.
 
 ## An ARRIVAL endpoint accepts an access rule and gates NOTHING — FIXED (editor v3 E3b)
->>>>>>> 65ab2e20f (docs(procgen): editor v3 E3b — the adapter's vocabulary, and three gotchas closed on their fix)
 
 `regionAtlasCompiler` records the `to` endpoint of a `one_way` connection as
 `{apExitName: null, arrivalOnly: true}` and builds no AP exit for it — and every
@@ -860,7 +859,7 @@ and a warp OUT of a never-enter room is noted rather than made — never-enter i
 encoded in this derivation as an ABSENCE. Ten connections there, fifteen under
 the empty overlay the editor opens vanilla with.
 
-## A wait that a PRIOR press already satisfied reads the previous result
+## A wait that a PRIOR press already satisfied reads the previous result — FIXED (editor v3 E6b)
 
 `check-seedling-editor-arm.mjs` presses `#editDownloadBundle` and then waits for
 `Array.isArray(window.__editorSetBundleKinds)`. The global is set by the press
@@ -870,11 +869,31 @@ waiting for its own.
 
 Measured when editor v3 E5 added one press mid-file: two downstream claims went
 red with the wrong container's member list, a third died as *"the row itself
-threw"*, and the run stopped 44 rows early. The cure is local — delete
+threw"*, and the run stopped 44 rows early. E5's cure was local — delete
 `window.__editorSetBundleKinds` and `window.__editorSetBundleOut` behind any
 press that is not the row consuming them — but the shape is general: **a wait on
 a global a previous step can set is not a wait.** Prefer a wait on a value that
 CHANGES (a counter, a new id) over one on a key that merely exists.
+
+✅ **FIXED at the source in editor v3 E6b, and the gate-side cures are gone.**
+`setEditorView.js`'s two download handlers call `pressScope` BEFORE their first
+guard: the whole readout family goes `null` and `__editorSetBundlePresses` /
+`__editorSetRulesPresses` advances. A driver reads the counter before its click
+and waits for `n + 1`, which nothing but that press can satisfy — so a REFUSED
+press is now a fact a row can wait for, and both gates have one (a bundle press
+with a room open holding unwritten edits: counter advanced, readouts `null`,
+`⛔ NOT BUNDLED`).
+
+⚠ **AND THE FIX BROKE THREE WAITS THAT WERE ALREADY THE SAME MISTAKE**, which is
+how you find them: `settled(() => window.__editorSetRulesBytes !== undefined)`
+and two node loops spinning on `__editorSetBundleKinds === undefined` all became
+true the instant the handler nulled the key. A wait that a `null` satisfies was
+never waiting for the press.
+
+⛔ **AND THE PROBE THAT READS THE RESULT MUST NOT USE `??`.** `null ?? 'ABSENT'`
+is `'ABSENT'`, which collapses the cured build (`null` — scoped) and the mutant
+(`undefined` — never written) into one answer. `=== undefined ? 'ABSENT' : v`.
+Measured on the first run of the new rows.
 
 ## A uniqueness law asked of the AUTHORED name, justified by a fact about the DERIVED one — FIXED (editor v3 E6a)
 
@@ -955,3 +974,65 @@ NEVER invents one: an adapter that gives no `reason` produces a result with no
 `reason` KEY, so `'reason' in res` means the substrate answered rather than that
 the core guessed — and the rows drive both halves on one adapter, because a row
 that only asserted the field arrived would pass a version that defaulted it.
+## An ARGUMENT is evaluated OUTSIDE the callee's `try`
+
+`setEditorView.js`'s ADD ROOM press was
+
+```js
+applySet(addRoomOp(at), { renumber: addRoomMapping(at), what: 'ADD ROOM' });
+```
+
+and `applySet` opens with a `try` that turns a thrown `Error` into a refusal in
+`#editSetNote`. `addRoomOp(at)` is an ARGUMENT, so it runs BEFORE that `try`
+does: a binding that refuses to MINT threw straight out of the click listener —
+no note, no `say`, a console error, and the note left holding the previous
+press's sentence.
+
+⚠ **NOTHING COULD SEE IT UNTIL A SECOND SUBSTRATE ARRIVED.** Seedling's
+`addRoomOp` is `emptyLevel()` and never refuses; editor v3 E6b gave the maze one
+that calls `createWorld`, which refuses a dimension below 2 by name — and the
+first node row over a 1-wide blank room came back with an uncaught stack rather
+than a red assertion.
+
+⛓ The cure is three lines and no substrate knowledge: build the op inside its own
+`try`, wording the refusal exactly as `applySet`'s catch does — one spelling of
+*"refused"* per page. ⛓ The general shape: **a guard covers the callee's body, not
+its call site.** If the value a guarded call is handed can itself throw, the
+guard is in the wrong place.
+
+## An ALPHA count cannot see ink drawn over opaque ink
+
+The set editor's overview strip paints each room as an opaque box and then draws
+its caption and its `⛔embed` badge ON TOP. Both gates' ink probes count pixels
+whose ALPHA is non-zero — so the badge contributes nothing to any of them.
+
+Measured in editor v3 E3a with trap 722's own mutant (`typeof <undeclared> !==
+'string'`, which badges EVERY room): `check-maze-lab` stayed **ALL CHECKS
+PASSED** and `stripInk` read **33,504 in BOTH builds**. On
+`check-seedling-editor-arm` the same probe reads the ARROW band above the rooms,
+so it is `0` either way. ⇒ for two slices the badge had **no browser witness on
+either substrate**, and the node rows were the only evidence there was.
+
+✅ **FIXED in editor v3 E6b, with TWO independent readers** — a readout alone
+would be a fixed point, and a probe alone cannot say what the painter decided:
+
+- **`badges()`** — `paintStrip` records `sourceKind(cell) === 'embed'` per cell
+  AS IT DRAWS, and the mount exposes a copy. ⛔ Never re-derived from the record:
+  trap 722 was exactly those two answers coming apart, and a readout computed
+  from the record would have agreed with the record while the strip disagreed
+  with both. Published as `__mazeLab.set.strip.badges` and `__editorEdit.set.badges`.
+- **`badgeInk`** — a per-column DIFFERENCE over the badge's own y-band
+  (`[top+16, top+30)`, derived from `OVERVIEW.roomTop` and the painter's
+  baselines) against a reference row near the bottom of the same box that no
+  glyph reaches. Every non-glyph pixel, both vertical borders and the SELECTED
+  cell's different fill cancel against their own column; what survives is glyph
+  pixels. MEASURED on the `-arm`: 15,307 over the committed all-`embed` vanilla,
+  **0** over the same 116 rooms built as `record`s, with `captionInk` 7,040 in
+  BOTH as the positive control.
+
+⚠ **A BAND PROBE IS ONLY VALID WHERE THE STRIP DRAWS NO STILLS.** 116 rooms get
+18 px each — under `OVERVIEW.minStillPx` — so the box is FLAT under both bands.
+`check-maze-lab`'s four rooms get 96 px and DO carry stills, so a difference
+there would be counting the picture; that gate reads `strip.badges` instead, with
+the array's LENGTH against the room count as its positive control (`[]` is what a
+strip that painted nothing answers).
