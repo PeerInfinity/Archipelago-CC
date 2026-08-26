@@ -257,6 +257,21 @@ arm shows the same DOM, and it fails as a driver timeout ("did not find some
 options") rather than as a claim. Anything the shared panel needs belongs to the
 shared mount.
 
+## A canvas sized AFTER a view mounts leaves its overlay holding an empty picture
+
+`editorView` paints its selection overlay once at mount and then only from its
+own gestures. A host that sizes the TARGET canvas afterwards — which any page
+does whose canvas ships at `width="1" height="1"` and is laid out by the page's
+own painter — got an overlay at the old size, drawn from whatever the shapes
+list held at mount, which is usually nothing. Measured on the set editor's
+116-room strip: 2088×132 with 181,674 ink on the strip and 1×1 with 0 on the
+overlay, unchanged by a click, until arming a tool happened to repaint it. ⛔ And
+the gate that found it had asserted the two overlay canvases EXIST, which is
+true of a picture nobody drew — **assert INK, not elements.** The cure is the
+view's own `repaint()`, called by the host after it has sized the canvas; the
+only door before it was `setTool`, which also clears the armed corner and fires
+`onChange`.
+
 ## An `editorView` overlay repaint asks the adapter for the record's bounds
 
 `mountEditorView` repaints its selection overlay at MOUNT, and the repaint reads
@@ -307,12 +322,44 @@ and **2 of those are not the last one**, so a room-flags form emitting a bare
 Refuse those by name rather than guessing — an op that could say WHICH body is a
 vocabulary change, i.e. a decision, and not something a DOM slice may make.
 
+## A fake `<select>` that is a `<div>` cannot see a panel losing its selection
+
+A `<div>`'s `value` is an ordinary property and survives `innerHTML = ''`; a
+browser's `<select>` loses it, and reports its FIRST option once options are
+appended. A hand-built DOM that spells the selects as divs is therefore MORE
+FORGIVING than the page, and a panel that clears and refills a `<select>` on
+every render looks like one that preserves its selection. Measured: a control
+that dropped its value across every render passed every node row for two slices
+while the browser row worked around it by setting the value between the two
+clicks of a gesture — and the moment the fake DOM modelled both halves, the fix
+became visible and a THIRD row (one that had been green on the forgiveness) went
+red without it. A fixture only gates a change it can distinguish.
+
 ## A `<details>` that is closed makes its controls invisible to a driver
 
 `page.check` on a control inside a collapsed `<details>` fails as *"element is
 not visible"* after the full timeout — a driver failure naming the WAIT rather
 than the claim. Open the section explicitly, which is the reader's own gesture,
 instead of relying on the markup carrying `open`.
+
+## RETIRED — "publish only what you derive from the SESSION, never from the MOUNT"
+
+This rule was recorded while the set editor's `onSetChange` had two faces: the
+applied-op path called the page BEFORE the mount's own `render()`, and the
+REPORT path did not call it at all. A page's snapshot was therefore written
+while the mount's rows, note, identity line and report box were still the
+previous press's — measured on a two-click link gesture, where `links` read 1
+off the session's record while a `strip` field read `linkedFrom: [0,0,0,0]`.
+Four readout fields were dropped rather than published stale, and their rows
+read the DOM instead.
+
+⛔ It was a rule about a broken SEAM, not about readouts, and generalising it
+would have made every mount-derived readout permanently unwritable. The mount
+has ONE ordering rule now — its own `render()` first, then `onSetChange({why})`,
+on every path that changes what a page could publish — and the four fields are
+back, each with one DOM read beside it so the claim is that the readout and the
+box AGREE. The rule that survives is the one below it: a readout learns what its
+own `render` writes, so something has to tell it when to run.
 
 ## A page's readout only learns what its `render` writes
 
@@ -344,6 +391,13 @@ against something the live record does not have — a true sentence about the
 wrong subject, produced by a listener nobody detached. A mount that can be
 replaced needs a lifetime of ITS OWN, retired by its `destroy` and again by the
 arm's `onRetire`.
+
+⛓ Cured on all three of this repo's replaceable mounts now — the set panel, the
+shared edit panel and its entity palette — and the browser row that guards it
+COUNTS rather than presses: every op-applying handler routes to the session its
+OWN mount captured, so a doubled press lands one op on the live record and one
+on a stale object nothing publishes. The arm lifetime's own listener counter is
+the witness, and it must not move across a remount.
 
 ## An ARRIVAL endpoint accepts an access rule and gates NOTHING
 

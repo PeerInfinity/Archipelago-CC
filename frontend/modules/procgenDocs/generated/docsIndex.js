@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 17,
-        "headings": 742,
+        "headings": 745,
         "indexHeadings": 2,
-        "lines": 18646,
+        "lines": 18732,
         "pages": 4,
-        "words": 220728
+        "words": 221734
     },
     "descriptionRule": "the document's OWN first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence. ⛔ Never a hand-written summary — if an entry reads thin, the fix is a better opening paragraph in the document.",
     "dir": "docs/json/developer/procgen",
@@ -37,7 +37,7 @@ export const DOCS_INDEX = frz({
             "file": "architecture.md",
             "h1": "Procedural Generation Architecture",
             "headings": 23,
-            "lines": 657,
+            "lines": 689,
             "links": [
                 "demos.md",
                 "gotchas.md",
@@ -46,7 +46,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/architecture.md",
-            "words": 15293
+            "words": 15690
         },
         {
             "description": "`frontend/modules/shared/procgen/substrateRegistry.js` is the dispatch hub between the pipeline, the runtime player and the substrates: each registers an **entry**, and consumers look entries up by `id` instead of importing substrate modules. This is the reference for that entry contract — field by field, a capability matrix GENERATED from the eight entries, and a checklist for adding one.",
@@ -78,8 +78,8 @@ export const DOCS_INDEX = frz({
             "description": "Short entries for the things most likely to mislead someone orienting in the procgen code. Each is a present-state fact with file pointers, not a bug report.",
             "file": "gotchas.md",
             "h1": "Procgen Gotchas and Disambiguations",
-            "headings": 49,
-            "lines": 691,
+            "headings": 52,
+            "lines": 745,
             "links": [
                 "architecture.md",
                 "jta.md",
@@ -88,7 +88,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/gotchas.md",
-            "words": 8734
+            "words": 9343
         },
         {
             "description": "Bounce (\"Bounce Demo\", substrate id `bounce`) is a Doodle-Jump-style vertical platformer substrate in `frontend/modules/bounceDemo/`.",

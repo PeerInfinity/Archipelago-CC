@@ -247,8 +247,21 @@ unparseable box as "no brush is armed" is a true sentence about the wrong
 subject; a throw would be worse, since a substrate-agnostic file cannot tell a
 page's own refusal class from a `TypeError`.
 
+**And the HOST may ask for a repaint, which is the surface's sixth key.** The
+view paints once at mount and then only from its own gestures, so a host that
+sizes the TARGET canvas *after* mounting left the overlay at the target's
+old size holding a picture of an empty shapes list — measured on the set
+editor's strip, which ships `width="1" height="1"` in the HTML and is sized by
+the page's own painter: 2088×132 with 181,674 ink on the strip against 1×1 with
+0 on the overlay, until the first gesture happened to repaint it. `repaint()`
+asks `shapes()` again and paints, and touches nothing else. It exists because
+the only door before it was `setTool`, which also clears the armed corner and
+the stroke and fires `onChange` — a half-armed two-click gesture and a
+re-entrant render, in exchange for a repaint.
+
 **Mounted today** on the maze lab page's EDIT arm and on `watch.html`'s shared
-edit panel, each on its arm's own lifetime.
+edit panel, each on its arm's own lifetime — and each panel on a lifetime of its
+OWN inside that, so a remount cannot leave the previous mount listening.
 
 ## The rules.json and atlas toolkit (`procgenCore/`)
 
@@ -281,6 +294,25 @@ would leave the other saying something else. What the maze's page supplies that
 the node rows stub is `drawRoomStill` — `mazeRoomRender.drawWorld` on the
 entry's own world, at the strip cell's own tile size — and the two pipeline
 functions the mount refuses to import for itself.
+
+**`onSetChange({why})` has ONE ordering rule, and it is the contract.** The
+mount's own `render()` has already run when a page is called, on every path — so
+a page may publish what it derives from the MOUNT and not only what it derives
+from the SESSION. It was not always so, and the cost was measured rather than
+argued: the applied-op path called the page BEFORE its own render and the REPORT
+path did not call it at all, so after a two-click link gesture a page's `links`
+read 1 off the session's record while anything it read off the mount read
+`linkedFrom: [0,0,0,0]`, one op behind. Four readout fields (`report`, `strip`,
+`note`, `identity`) were therefore published NOWHERE rather than published
+stale, and their browser rows read the DOM instead. `why` is one of
+`SET_CHANGE_WHY` — `op` (an applied op, an undo, or the second notification a
+renumbering sends after its decision about the open room session), `report`,
+`close`, `select`, `room` (the rooms table's OPEN, which runs the PAGE's own
+`openRoomAt` before this mount re-renders) and `download` (all three download
+presses, which write readout globals and a note) — so a page can ignore what it
+does not publish. `select` fires only when the selection actually MOVES: the
+mount ends with a `selectRoom(0)` that changes nothing, and a page notified
+there would be reading a mount handle it has not been given yet.
 
 ⛔ **Two divisions belong to the PAGE, on both pages.** The room `<select>` is
 FILLED by the page (`selectRoom` only ever sets its VALUE), and the set controls
