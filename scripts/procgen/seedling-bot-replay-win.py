@@ -97,6 +97,19 @@ import time
 #     Measured over the committed corpus at `54c242adf`: 149 of 149 fixtures
 #     have `ticks[0] == {t: 0, level, x + 8, y + 8}`.
 #
+# ⛔⛔ AND THE `level` HALF OF THAT COMPARISON IS VACUOUS ON ITS OWN — DO NOT
+#     "SIMPLIFY" THIS TO A LEVEL CHECK. `Game`'s constructor runs
+#     `level = _level` (`Game.as:632`) and that setter writes the STATIC
+#     `Main.level` (`Game.as:526-528`), so the level is updated the instant
+#     `new Game(...)` is EVALUATED — synchronously, inside `botStart`, while
+#     the swap is still only `FP._goto`. `Bot.update` then reads `Main.level`
+#     for the observation while taking the position off the OUTGOING world's
+#     player, so on the pre-swap frame the two halves of one observation come
+#     from DIFFERENT WORLDS and the level half already names the world that has
+#     not arrived. Every refusal slice 12g measured reads the tape's boot LEVEL
+#     beside the page's boot POSITION — `t=0 reads L2 (88,136) vs declared boot
+#     L2 (56,40)`. A gate on the level alone would have passed all of them.
+#
 # (2) THE DRAIN IS ONE LONGER THAN THE TAPE. `Bot.update` disarms at
 #     `tick >= tickCount` AFTER recording that tick (`Bot.as:2963`), so a tape
 #     of `tick_count` N drains N + 1 observations: the boot plus N driven

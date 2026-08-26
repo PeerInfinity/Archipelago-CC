@@ -15194,6 +15194,18 @@ boundary a stopwatch measures is that fade minus however long the driver happene
 to spend getting ready — which is why it looked like a property of the machine.
 The fade is not a property of the machine.
 
+One detail of the refusal is worth keeping, because the obvious cheaper version
+of the check would not have worked. Each position the game reports carries a room
+number alongside its coordinates, and it is tempting to compare only the room —
+the losing runs, after all, never leave the first room. But the room number is
+written the moment the replacement world is CONSTRUCTED, which happens
+immediately, while the coordinates still come from the world that is on screen.
+So on the one frame in between, the two halves of a single reported position come
+from different rooms: the number already names the room that has not arrived yet.
+Every refusal this slice produced reads the recording's own room beside the old
+room's coordinates. A check on the room number alone would have passed all of
+them.
+
 That also settles what to do about it. If the deciding factor had been where
 inside a frame the start call happened to land, the fix would have been to line
 the call up with the frame boundary, which costs nothing. It was tried: a driver
