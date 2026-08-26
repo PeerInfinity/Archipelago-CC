@@ -31,9 +31,10 @@ import { fileURLToPath } from 'node:url';
 
 import {
     ALL_FOLDERS, COLUMN_VALUE, DEFAULT_PLACE_ATTRS, DEFAULT_PLACE_TYPE, WatchEditorError,
-    attrFormRows, attrsFromRows, flagFormRows, foldersOf, paintOptionGroups, paintSpecOf,
-    renderTranscribeBound, rosterFor, swatchColour,
+    attrFormRows, attrsFromRows, flagFormRows, foldersOf, mountEntityPalette,
+    paintOptionGroups, paintSpecOf, renderTranscribeBound, rosterFor, swatchColour,
 } from './watchEditor.js';
+import { createLifetime } from './watchLifetime.js';
 import {
     ENTITY_ROSTER_PROCGEN, entityRosterFrom, transcribeBoundText, untranscribedTypes,
 } from './watchEdit.js';
@@ -305,5 +306,123 @@ describe('⛓ the room-flags form reuses the ENTITY form builder — one answer 
         // ⛓ …and the input kind is DERIVED from the declaration
         expect(flagFormRows(SCHEMA, 'lightalpha')[0].control).toBe('number');
         expect(flagFormRows(SCHEMA, 'droplet').find((r) => r.name === 'color').control).toBe('text');
+    });
+});
+
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ EDITOR v3 E3a — **A REMOUNT DOES NOT LEAVE THE OLD MOUNT LISTENING**
+ *   (§21.11 #4, §31.1 #5 — D2's `setEditorView` cure, applied here)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/** ⛓ The six elements `mountEntityPalette` needs, and nothing else — the
+ *  smallest DOM that makes the LISTENERS real under `environment: 'node'`. */
+class Node6 {
+    constructor(tag = 'div') {
+        this.tagName = String(tag).toUpperCase();
+        this.children = [];
+        this.handlers = new Map();
+        this.value = '';
+        this.textContent = '';
+        this.innerHTML = '';
+        this.hidden = false;
+        this.className = '';
+    }
+
+    appendChild(c) { this.children.push(c); return c; }
+
+    addEventListener(type, fn, options = undefined) {
+        if (!this.handlers.has(type)) this.handlers.set(type, new Set());
+        this.handlers.get(type).add(fn);
+        options?.signal?.addEventListener('abort',
+            () => { this.handlers.get(type)?.delete(fn); });
+    }
+
+    removeEventListener(type, fn) { this.handlers.get(type)?.delete(fn); }
+
+    live(type) { return this.handlers.get(type)?.size ?? 0; }
+
+    dispatch(type) { for (const fn of [...(this.handlers.get(type) ?? [])]) fn({ target: this }); }
+}
+
+const paletteHarness = (lifetime) => {
+    const els = {
+        typeInput: new Node6('input'),
+        typeList: new Node6('datalist'),
+        folderSel: new Node6('select'),
+        attrsInput: new Node6('input'),
+        attrsForm: new Node6('div'),
+        rosterNote: new Node6('div'),
+    };
+    return {
+        els,
+        ui: mountEntityPalette({
+            ...els,
+            schema: SCHEMA,
+            lifetime,
+            doc: { createElement: (t) => new Node6(t) },
+        }),
+    };
+};
+
+describe('⛓⛓⛓ EDITOR v3 E3a — the entity palette rides its OWN lifetime', () => {
+    /**
+     * ⛔⛔ **THE DEFECT §21.11 #4 NAMED AND LEFT.** `mountWatchEditor` — and this
+     * palette with it — is REMOUNTED by `watchViewer.js`'s `openBase` on every
+     * base open, and `destroy()` only took the `editorView` down. Every listener
+     * here rode the ARM's lifetime, which the remount does not retire, so the
+     * DEAD mount stayed attached to `watch.html`'s STATIC controls
+     * (`#genEditFolder`, `#genEditType`, `#genEditAttrs`) and answered every
+     * press beside the live one. D2 measured exactly that on the SET panel.
+     *
+     * ⛓ MUTANT: register on `lifetime` again instead of `mine` — the first
+     * mount's handler survives `destroy()` and both counts below double.
+     */
+    it('a second mount + `destroy()` leaves exactly ONE handler on each shared control', () => {
+        const arm = createLifetime('watchEditor.test.arm');
+        const first = paletteHarness(arm);
+        expect(first.els.folderSel.live('change')).toBe(1);
+        expect(first.els.typeInput.live('change')).toBe(1);
+
+        // ⛔ THE REMOUNT'S SHAPE, exactly as `openBase` performs it.
+        first.ui.destroy();
+        expect(first.els.folderSel.live('change')).toBe(0);
+        expect(first.els.attrsInput.live('input')).toBe(0);
+
+        const second = paletteHarness(arm);
+        expect(second.els.folderSel.live('change')).toBe(1);
+        expect(second.els.typeInput.live('change')).toBe(1);
+        expect(second.els.attrsInput.live('input')).toBe(1);
+    });
+
+    /**
+     * ⛓⛓ **AND THE ARM IS STILL THE OUTER BOUND** — a page teardown takes the
+     * palette even if nobody calls `destroy`, because `mine` is chained to it.
+     * ⛔ Without the chain the cure would trade one leak for another: a panel
+     * whose listeners outlive the whole arm.
+     */
+    it('retiring the ARM retires the palette too, with nobody calling `destroy`', () => {
+        const arm = createLifetime('watchEditor.test.arm2');
+        const h = paletteHarness(arm);
+        expect(h.els.folderSel.live('change')).toBe(1);
+        arm.retire('the page moved to another arm');
+        expect(h.els.folderSel.live('change')).toBe(0);
+        expect(h.els.typeInput.live('change')).toBe(0);
+        expect(h.els.attrsInput.live('input')).toBe(0);
+    });
+
+    /**
+     * ⛓ **AND THE ARM'S OWN COUNTER DOES NOT MOVE** — which is precisely what
+     * `check-seedling-editor-arm` asserts through `window.__editorLifetime`
+     * after a second LOAD, on the whole panel rather than on this one mount.
+     */
+    it('the ARM\'s listener count is unchanged by a mount, a destroy and a remount', () => {
+        const arm = createLifetime('watchEditor.test.arm3');
+        expect(arm.state().listeners).toBe(0);
+        const first = paletteHarness(arm);
+        expect(arm.state().listeners).toBe(0);
+        first.ui.destroy();
+        paletteHarness(arm);
+        expect(arm.state().listeners).toBe(0);
     });
 });

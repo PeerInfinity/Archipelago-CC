@@ -59,6 +59,7 @@ import {
     CLIFFSIDE_FRAME_FACES, TILE_COLUMN_TO_TYPE, TILE_TYPE_NAMES, tileSemantics,
 } from '../flashPanel/seedlingSemantics.js';
 import { TOOLS, UNDO_COMMAND_ID, mountEditorView } from '../procgenCore/editorView.js';
+import { createLifetime } from './watchLifetime.js';
 import { describeOps, descriptorFieldsOf } from '../procgenCore/editCore.js';
 
 export class WatchEditorError extends Error {
@@ -223,6 +224,21 @@ export function mountEntityPalette({
                 + 'skipped, so a half-wired palette cannot boot looking whole.');
         }
     }
+    /**
+     * ⛓⛓⛓ **THIS MOUNT OWNS ITS OWN LIFETIME** (EDITOR v3 E3a, §31.1 #5;
+     * §21.11 #4). D2 gave the SET panel one after MEASURING what its absence
+     * costs — a remount left every listener of the DEAD mount attached to the
+     * ARM's lifetime, and the dead one went on applying ops to the old session
+     * and repainting its own `<select>` over the live one. `mountWatchEditor` is
+     * remounted by `openBase` on EVERY base open (`watchViewer.js`:
+     * `editorUi?.destroy(); editorUi = mountEditor();`) and this palette goes
+     * with it, so both had exactly the same shape and neither had the cure.
+     *
+     * ⛔ Chained to the arm's, so a page teardown takes it even if nobody calls
+     * `destroy` — the arm is the outer bound and this is the inner one.
+     */
+    const mine = createLifetime('watchEditor.entityPalette');
+    lifetime.onRetire(() => mine.retire('the arm that held this palette was retired'));
     const roster = rosterFor(schema);
     const folders = foldersOf(roster);
 
@@ -333,8 +349,8 @@ export function mountEntityPalette({
             inputs.set(row.name, el);
             label.appendChild(el);
             attrsForm.appendChild(label);
-            lifetime.on(el, 'input', formToJson);
-            lifetime.on(el, 'change', formToJson);
+            mine.on(el, 'input', formToJson);
+            mine.on(el, 'change', formToJson);
         }
         jsonToForm();
     };
@@ -353,9 +369,9 @@ export function mountEntityPalette({
     };
 
     fillList();
-    lifetime.on(folderSel, 'change', fillList);
-    lifetime.on(typeInput, 'change', onType);
-    lifetime.on(attrsInput, 'input', jsonToForm);
+    mine.on(folderSel, 'change', fillList);
+    mine.on(typeInput, 'change', onType);
+    mine.on(attrsInput, 'input', jsonToForm);
 
     if (rosterNote) {
         rosterNote.textContent = schema
@@ -376,6 +392,9 @@ export function mountEntityPalette({
         },
         rows: () => rows,
         refresh: onType,
+        /** ⛓ RETIRING THE LIFETIME IS WHAT DETACHES EVERY LISTENER — they were
+         *  all registered through it, so there is nothing else to take down. */
+        destroy() { mine.retire('this palette was replaced by a new one'); },
     };
 }
 
@@ -994,6 +1013,30 @@ export function mountWatchEditor({
     }
 
     /**
+     * ⛓⛓⛓ **THIS MOUNT OWNS ITS OWN LIFETIME, AND UNTIL EDITOR v3 E3a IT DID
+     * NOT** (§21.11 #4, §31.1 #5; D2's `setEditorView` `mine` is the template).
+     *
+     * ⛔ `watchViewer.js`'s `openBase` REMOUNTS this panel on every base open —
+     * `editorUi?.destroy(); editorUi = mountEditor();` — and `destroy()` only
+     * took the `editorView` down. Every button, `<select>` and canvas listener
+     * below rode the ARM's lifetime, which the remount does not retire, so after
+     * a second LOAD the DEAD mount's controls were still live: two handlers on
+     * one press, the older one addressing a session nobody is editing. D2
+     * MEASURED exactly that on the set panel (`#editSetDisconnect` fired on both
+     * mounts and the dead one repainted its `<select>` over the live one), and
+     * §21.11 #4 recorded that these two mounts have the same shape and left the
+     * fix for a slice that owned this file.
+     *
+     * ⛓ EVERY sub-mount is handed `mine` rather than the arm's lifetime — the
+     * palette, the room-flags form, the resize control and `editorView` — so
+     * ONE retirement takes the whole panel down and there is no second bound to
+     * keep in step. ⛔ Chained to the arm's, so a page teardown takes it even if
+     * nobody calls `destroy`.
+     */
+    const mine = createLifetime('watchEditor');
+    lifetime.onRetire(() => mine.retire('the arm that held this editor was retired'));
+
+    /**
      * ⛓ **THE TERRAIN PICKER, FROM `procgenLevel`'s OWN VOCABULARY** — moved
      * here from `runGenerate` with the section it belongs to. ⛔ It has to be
      * here and not in the GENERATE arm: the EDIT arm mounts the same DOM, and a
@@ -1054,8 +1097,8 @@ export function mountWatchEditor({
         terrainSel.style.backgroundColor = swatchOf(sel?.type ?? null) ?? '';
     };
     fillTerrain();
-    if (layerSel) lifetime.on(layerSel, 'change', fillTerrain);
-    lifetime.on(terrainSel, 'change', fillTerrain);
+    if (layerSel) mine.on(layerSel, 'change', fillTerrain);
+    mine.on(terrainSel, 'change', fillTerrain);
 
     const palette = mountEntityPalette({
         typeInput: $('genEditType'),
@@ -1065,7 +1108,7 @@ export function mountWatchEditor({
         attrsForm: $('genEditAttrForm'),
         rosterNote: $('genEditRoster'),
         schema,
-        lifetime,
+        lifetime: mine,
         doc,
     });
 
@@ -1225,7 +1268,7 @@ export function mountWatchEditor({
         clipWarnings,
         say,
         onChange: afterChange,
-        lifetime,
+        lifetime: mine,
         doc,
         offRoom: (tool) => `the ${tool} click landed outside the level`,
     });
@@ -1248,7 +1291,7 @@ export function mountWatchEditor({
             b.id = `genEditGesture_${row.id}`;
             b.textContent = row.key ? `${row.label} (${row.key})` : row.label;
             b.title = `arms the ${row.id} gesture`;
-            lifetime.on(b, 'click', () => { view.run(row.id); });
+            mine.on(b, 'click', () => { view.run(row.id); });
             toolBox.appendChild(b);
             buttons.set(row.id, b);
         }
@@ -1288,7 +1331,7 @@ export function mountWatchEditor({
         }
     };
 
-    lifetime.on($('genEditTool'), 'change', () => {
+    mine.on($('genEditTool'), 'change', () => {
         view.setTool(mode() === 'off' ? null : TOOLS.BRUSH);
         syncArmed();
     });
@@ -1316,7 +1359,7 @@ export function mountWatchEditor({
         host,
         view,
         schema,
-        lifetime,
+        lifetime: mine,
         buildWorld,
         doc,
     }) : null;
@@ -1330,7 +1373,7 @@ export function mountWatchEditor({
         host,
         adapter,
         view,
-        lifetime,
+        lifetime: mine,
         doc,
     }) : null;
 
@@ -1358,10 +1401,10 @@ export function mountWatchEditor({
         return `(${at.tx},${at.ty}) — ${tile} · ${cliff} · ${bodies}`;
     };
     if (cellNote) {
-        lifetime.on(canvas, 'mousemove', (ev) => {
+        mine.on(canvas, 'mousemove', (ev) => {
             cellNote.textContent = describeCell(cellAt(ev));
         });
-        lifetime.on(canvas, 'mouseleave', () => { cellNote.textContent = ''; });
+        mine.on(canvas, 'mouseleave', () => { cellNote.textContent = ''; });
     }
 
     /** ⛓ THE ONE PLACE the section's readouts are redrawn. */
@@ -1407,6 +1450,16 @@ export function mountWatchEditor({
         mode,
         brushOp,
         undoCommandId: UNDO_COMMAND_ID,
-        destroy() { view.destroy(); },
+        /**
+         * ⛓⛓ **RETIRING `mine` IS WHAT DETACHES EVERY LISTENER THIS PANEL
+         * REGISTERED** — its own, the palette's, the flags form's, the resize
+         * control's and `editorView`'s, because all five ride it. `view.destroy`
+         * is still called: the overlay CANVAS is an element it appended to the
+         * page, and a lifetime does not remove DOM.
+         */
+        destroy() {
+            view.destroy();
+            mine.retire('this editor panel was replaced by a new one');
+        },
     };
 }

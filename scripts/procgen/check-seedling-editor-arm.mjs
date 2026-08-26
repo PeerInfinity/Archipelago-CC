@@ -1033,9 +1033,43 @@ try {
         base: window.__editorEdit.base, edits: window.__editorEdit.editList,
     }));
     const before = await read();
+    /**
+     * ⛓⛓⛓ **EDITOR v3 E3a, §31.1 #5 — THE REMOUNT DOES NOT LEAVE THE OLD PANEL
+     * LISTENING, AND THE ARM'S OWN COUNTER IS THE WITNESS.**
+     *
+     * `openBase` REMOUNTS `mountWatchEditor` on every base open
+     * (`editorUi?.destroy(); editorUi = mountEditor();`) and `destroy()` only
+     * took the `editorView` down. Every listener the panel, its entity palette,
+     * its room-flags form, its resize control and its view registered rode the
+     * ARM's lifetime — which a remount does not retire — so after a second LOAD
+     * the DEAD mount's handlers were still attached to `watch.html`'s STATIC
+     * controls (`#genEditTool`, `#genEditTerrain`, `#genEditResizeGo`, the
+     * canvas), each addressing a session nobody was editing. §21.11 #4 measured
+     * the same shape on the SET panel, where the dead mount applied its op to
+     * the old session and repainted its `<select>` over the live one; D2 cured
+     * that one and named these two.
+     *
+     * ⛔ **THE COUNT, NOT A PRESS.** Every op-applying handler routes to the
+     * session its OWN mount captured, so a doubled press lands ONE op on the
+     * live record and one on a stale object nothing publishes — a symptom no
+     * readout can see. `pageLifetime` counts every registration, and
+     * `window.__editorLifetime.current.listeners` is that number for the ARM:
+     * with the panel on its own lifetime it does not move across a remount, and
+     * before E3a it grew by the whole panel every time.
+     * ⛓ MUTANT: hand the sub-mounts `lifetime` instead of `mine` — this number
+     * climbs and the row goes red with both counts in the DETAIL.
+     */
+    const armBefore = await page.evaluate(() => window.__editorLifetime.current.listeners);
     await page.fill('#editLoad', JSON.stringify(shipped));
     await page.click('#editLoadGo');
     await settled(1);
+    const armAfter = await page.evaluate(() => window.__editorLifetime.current.listeners);
+    check(armBefore > 0 && armAfter === armBefore,
+        '⛓⛓⛓ **A REMOUNT ADDS NOTHING TO THE ARM\'S LIFETIME** — the editor panel and every '
+        + 'control it builds ride a lifetime of their OWN, retired by `destroy()`, so the '
+        + 'second LOAD\'s mount is the only one listening to `watch.html`\'s static controls '
+        + '(§21.11 #4, cured for the SET panel by D2 and for this one by E3a)',
+        `arm listeners ${armBefore} → ${armAfter}`);
     const after = await read();
     check(json(after.edit.base) === json(shipped.base)
         && json(after.edit.editList) === json(shipped.edits),
