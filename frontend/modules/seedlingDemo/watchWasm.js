@@ -1458,6 +1458,25 @@ export async function shipToWasm(payload, host) {
         rec.ticks = st.tick ?? null;
 
         /**
+         * ⛓⛓ R9 slice 12g′: THE ARM, AS THE BUILD REPORTS IT — and it is what
+         * makes `deadFrames` above interpretable ACROSS BUILDS.
+         *
+         * `seedling_bot_ap_p4c` arms on the first frame where `FP.world` IS
+         * the world `botStart` constructed, so it no longer counts the
+         * pre-swap frame as a dead one; `p4b` and earlier armed beside the
+         * swap and did. That is a ONE FRAME difference in `deadFrames` on any
+         * window that boots by DECLARATION, and a consumer asserting the
+         * number has to know which build produced it.
+         *
+         * ⛔ `null` on a build without the readout is the SIGNAL, not a gap:
+         * the field's PRESENCE is the capability. Reading it here costs
+         * nothing — `st` is the status block `deadFrames` already came from —
+         * and it means no consumer has to key on a build NAME, which would
+         * break the next time one is minted.
+         */
+        rec.arm = st.arm ?? null;
+
+        /**
          * ── ⛓⛓⛓ drain — ONCE PER WINDOW, AND ONLY ONCE ─────────────────
          *
          * `botDrain` is a BUFFERED stream the game has been filling since

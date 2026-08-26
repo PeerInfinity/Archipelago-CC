@@ -1535,14 +1535,50 @@ function runChainArm(ARM, CHAIN_ID, WINDOWS, REFUSES_AT = null) {
             const t = loadTape(WINDOWS[0]);
             return (t.rng?.seed ?? 0) === 0 && (t.seam === null || t.seam === undefined);
         })();
-        const bootCorrection = firstIsTrueStart ? -BOOT_PRESWAP_FRAMES : BOOT_PRESWAP_FRAMES;
+        /**
+         * ⛓⛓⛓ R9 SLICE 12g′ — THE DECLARED-BOOT CORRECTION IS A PROPERTY OF
+         * THE BUILD, AND THE BUILD IS ASKED RATHER THAN ASSUMED.
+         *
+         * `seedling_bot_ap_p4c` arms on the first frame where `FP.world` IS
+         * the world `botStart` constructed (⚖ 58's (F)). The pre-swap frame is
+         * therefore no longer COUNTED as a dead one — the tape has not started
+         * while it elapses — so a DECLARED boot pays the model's share
+         * EXACTLY, where `p4b` and earlier paid it plus `BOOT_PRESWAP_FRAMES`.
+         *
+         * ⛔ THE TRUE-START ARM IS UNCHANGED ON BOTH BUILDS, and that is not an
+         * assumption either — a true start boots where the page already is, so
+         * `botStart` takes its SKIP path (`Bot.as:1731`), no swap is requested
+         * and there is no pending frame to stop counting. Measured in the same
+         * run this correction was derived from: the CAMPAIGN arm (a true
+         * start) PASSED at `40 − 1` on p4c while the CHAIN arm (declared)
+         * failed at `40 + 1`. The two arms still disagree in opposite
+         * directions, which is what keeps this from being a gate loosened to
+         * fit — only the arm the fix touches moved.
+         *
+         * ⛔⛔ AND THE BUILD ANNOUNCES ITSELF: `w.arm` is the `botStatus.arm`
+         * block, present exactly on builds that arm after the swap. Keying on
+         * a build NAME would break at the next rebuild; keying on the
+         * CAPABILITY cannot. (R9 12g′ learned this the hard way one file over:
+         * the driver's `--arm-bound` asserted in prose that it could not fire
+         * on p4c and then refused it four times out of four, because the code
+         * had no way to see which build it was driving.)
+         */
+        const armsAfterSwap = wins[0]?.arm != null;
+        const bootCorrection = firstIsTrueStart
+            ? -BOOT_PRESWAP_FRAMES
+            : (armsAfterSwap ? 0 : BOOT_PRESWAP_FRAMES);
         check(wins[0]?.deadFrames === SHARES[0] + bootCorrection,
             `${ARM}: ⛔⛔ CLAIM 6 — window 1 is a FRESH BOOT and pays the model's share `
-                + `${firstIsTrueStart ? 'MINUS the pre-swap frame it never spends (a TRUE '
-                    + 'START swaps out of no outgoing world)' : 'PLUS the pre-swap frame'}`
-                + ` — ${SHARES[0]} ${bootCorrection < 0 ? '−' : '+'} `
-                + `${BOOT_PRESWAP_FRAMES}`,
-            `game ${wins[0]?.deadFrames} vs model ${SHARES[0]}`);
+                + `${firstIsTrueStart
+                    ? 'MINUS the pre-swap frame it never spends (a TRUE START swaps out '
+                        + `of no outgoing world) — ${SHARES[0]} − ${BOOT_PRESWAP_FRAMES}`
+                    : armsAfterSwap
+                        ? 'EXACTLY — this build arms AFTER the world swap lands, so the '
+                            + `pre-swap frame is not counted dead — ${SHARES[0]}`
+                        : 'PLUS the pre-swap frame — '
+                            + `${SHARES[0]} + ${BOOT_PRESWAP_FRAMES}`}`,
+            `game ${wins[0]?.deadFrames} vs model ${SHARES[0]} · `
+                + `arm ${JSON.stringify(wins[0]?.arm ?? null)}`);
         for (let k = 1; k < N; k += 1) {
             check(wins[k]?.deadFrames === SHARES[k],
                 `${ARM}: ⛔⛔ …and window ${k + 1} pays the MODEL'S SHARE EXACTLY — a `
