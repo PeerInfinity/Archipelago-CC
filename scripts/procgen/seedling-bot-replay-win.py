@@ -146,6 +146,47 @@ CONSTRUCTOR_HALF_TILE = 8
 RACE_LOST = "WORLD_SWAP_RACE_LOST"
 LENGTH_UNEXPECTED = "DRAIN_LENGTH_UNEXPECTED"
 UNVERIFIABLE = "WORLD_SWAP_GATE_UNVERIFIABLE"
+ARM_TOO_LATE = "WORLD_SWAP_ARM_TOO_LATE"
+
+# ── R9 slice 12g-prime (SS46): THE DRIVER-SIDE ARM BOUND, OFF BY DEFAULT ─────
+#
+# SS45.5's third option, and the ONE guard that survives on a box whose setup
+# is slower than the one 12g measured. It is NOT a fix and cannot make a late
+# arm win: it converts a silently-shifted recording into a refusal BEFORE the
+# GPU time is spent, where the gate below refuses AFTER the drain.
+#
+# Both numbers are derived, and both are cited rather than typed:
+#
+#   GAME_TIME_AT_BOOT - `Main.time`'s unset value is `Game.dayLength / 2`
+#     (`Main.as:158`), and `dayLength` is `160 * Main.FPS` (`Game.as:459`) with
+#     `Main.FPS = 60`. So a fresh page reads 4800 and every increment after
+#     that is one `Game.update()` (`Game.as:846`, BELOW the `blackCover` gate
+#     but outside it) - i.e. `game_time - 4800` is a FRAME COUNT for the
+#     page's own boot world.
+#
+#   ARM_BOUND_MAX_FRAME - 12g's measured cut, not a margin someone chose:
+#     19 wins at arm frame <= 18 and 8 losses at >= 19 over 27 drives, with no
+#     overlap anywhere (SS45.3). `dead_frames` 41/40 tracked it without an
+#     exception.
+#
+# ⚠ WHAT THE READ COSTS, AND WHY THE DEFAULT IS OFF. The bound needs a
+# `botStatus` call on window 0's DEFAULT path, milliseconds before the arm, and
+# SS43.5's standing lesson is that the instrument perturbs what it measures: the
+# call spends some of the ~15-frame margin in order to protect the rest. ⛓ And
+# the existing `before = bot_json(...)` read is NO help - it is gated on
+# `wi > 0`, i.e. it happens at exactly the windows where the race cannot
+# happen (every director boundary takes the skip path) and is absent at the one
+# window where it can.
+#
+# ⛓ ON `seedling_bot_ap_p4c` THIS IS BELT-AND-BRACES, NOT THE GUARD. That build
+# arms in `Bot.update` on the first frame where `FP.world` IS the world
+# `botStart` constructed, so the arm cannot land late at all and this bound can
+# only ever agree. It is kept because a driver that is run against an OLDER
+# build still needs it, and because p4c's own `arm.armed_at` readout is what
+# made the perturbation MEASURABLE - before it, the only instrument that could
+# see the arm frame was the extra read itself.
+GAME_TIME_AT_BOOT = 4800
+ARM_BOUND_MAX_FRAME = 18
 
 
 def expected_boot_observation(boot):
@@ -295,6 +336,15 @@ def main():
                          "does not reset - the REAL Sfx mixer's open channels "
                          "among them. 0.0 is the historical behaviour and is "
                          "byte-inert.")
+    ap.add_argument("--arm-bound", action="store_true", default=False,
+                    help="R9 slice 12g-prime (kickoff SS46, SS45.5's third "
+                         "option): REFUSE to arm window 0 when the page's own "
+                         "boot world has already run past the fade, instead of "
+                         "discovering it after the drain. OFF BY DEFAULT and "
+                         "the default is load-bearing - see ARM_BOUND_MAX_FRAME "
+                         "for what the read costs and why the build named "
+                         "seedling_bot_ap_p4c makes this belt-and-braces "
+                         "rather than the guard.")
     ap.add_argument("--headed", action="store_true", default=True)
     args = ap.parse_args()
 
@@ -507,10 +557,44 @@ def main():
                           f"y={arm.get('y')} "
                           f"since_ready={time.time() - ready_at:.2f}s",
                           flush=True)
+                # ── R9 slice 12g-prime (SS46): THE ARM BOUND, IF ASKED ────
+                # OFF by default; see ARM_BOUND_MAX_FRAME for the two derived
+                # numbers and for what this read costs. Window 0 only - the
+                # race lives at the first window of a page and nowhere else
+                # (SS45.2), so paying the read at a boundary would be spending
+                # the margin to guard a path that has none to lose.
+                if args.arm_bound and wi == 0:
+                    bound = bot_json(page, "botStatus")
+                    frame = bound.get("game_time", GAME_TIME_AT_BOOT) - GAME_TIME_AT_BOOT
+                    print(f"ARM_BOUND window={wi} frame={frame} "
+                          f"max={ARM_BOUND_MAX_FRAME}", flush=True)
+                    if frame > ARM_BOUND_MAX_FRAME:
+                        raise RuntimeError(
+                            f"{ARM_TOO_LATE}: {label}: the page's own boot world has run "
+                            f"{frame} frame(s) (game_time {bound.get('game_time')} - "
+                            f"{GAME_TIME_AT_BOOT}), past the measured cut of "
+                            f"{ARM_BOUND_MAX_FRAME}. On a build that arms beside the world "
+                            "swap the tape's first tick would be recorded off the OUTGOING "
+                            "world; refusing here spends no GPU time on a recording that "
+                            "cannot be trusted. On seedling_bot_ap_p4c the arm waits for "
+                            "the swap and this cannot fire.")
                 started = evaluate_bot(page, "botStart")
                 if started != "ok":
                     raise RuntimeError(f"{label}: botStart: {started}")
                 after = bot_json(page, "botStatus")
+                # ⛓ R9 slice 12g-prime: the arm frame, FROM THE GAME, when the
+                # build carries it. `arm.armed_at` is `Game.time` on the frame
+                # the tape armed (`Bot.as` botStatus), so `armed_at -
+                # GAME_TIME_AT_BOOT` is the arm frame with no extra bridge call
+                # and no perturbation - which is what makes ARM_BOUND's own cost
+                # measurable at all. Absent on older builds; printed only when
+                # present, so a build without it is silent rather than wrong.
+                arm_readout = after.get("arm")
+                if isinstance(arm_readout, dict):
+                    print(f"ARM window={wi} pending={arm_readout.get('pending')} "
+                          f"armed_at={arm_readout.get('armed_at')} "
+                          f"frame={arm_readout.get('armed_at', GAME_TIME_AT_BOOT) - GAME_TIME_AT_BOOT}",
+                          flush=True)
                 # ⛔ REPORTED, NOT RAISED — and the first run of the bridge is
                 # why. `botStart` re-boots only when the tape's boot block does
                 # not name the current world's CONSTRUCTION args, and whether
