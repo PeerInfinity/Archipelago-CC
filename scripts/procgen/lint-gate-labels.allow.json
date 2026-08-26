@@ -21,7 +21,7 @@
     "frontend/modules/procgenCore/labProtocol.test.js::name-over-a-roster::names all seven events under the procgenLab: prefix, and nothing else",
     "frontend/modules/procgenCore/labProtocol.test.js::roster-length-pinned::ALL_EVENTS → toHaveLength(7)",
     "frontend/modules/procgenDocs/docLinks.test.js::name-over-a-roster::is the generated index — README plus the seventeen, in reading order",
-    "frontend/modules/procgenDocs/docLinks.test.js::name-over-a-roster::resolves all 213 links into five kinds and no others",
+    "frontend/modules/procgenDocs/docLinks.test.js::name-over-a-roster::resolves all 215 links into five kinds and no others",
     "frontend/modules/procgenDocs/docLinks.test.js::roster-length-pinned::DOC_FILES → toHaveLength(18)",
     "frontend/modules/procgenDocs/docsRender.test.js::name-over-a-roster::renders all 18 files the index allows, and the corpus IS those files",
     "frontend/modules/procgenDocs/docsRender.test.js::roster-length-pinned::DOC_FILES → toHaveLength(18)",
