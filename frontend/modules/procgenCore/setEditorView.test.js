@@ -806,6 +806,29 @@ describe('⛔⛔ EDITOR v3 E2b — the lift is BYTE-INERT on Seedling, and it is
     });
 
     /**
+     * ⛔⛔⛔ **A SHIPPED DEFECT, MEASURED AND CARRIED ACROSS THE LIFT UNCHANGED.**
+     * The strip's `⛔embed` label was drawn behind `typeof xml !== 'string'`, and
+     * `xml` has been an UNDECLARED free variable since E1b replaced the room's
+     * `xml` with its `source`. `typeof <undeclared>` is `'undefined'` and never
+     * throws, so the test is TRUE on every pass and every room carries the label
+     * whether it drew a still or not. ⛓ MEASURED here rather than reasoned
+     * about: six rooms, six labels, on a set whose rooms are all `record`-sourced
+     * and all drew.
+     * ⛔ NOT FIXED (§27.3 #7): the lift moves code, and the `-arm`'s load-time
+     * INK numbers carry this label — E3 owns it. This row is what stops the fix
+     * from being silent when it comes.
+     */
+    it('⛔ every room is labelled `⛔embed`, drawn or not — the defect, pinned as it is', () => {
+        const h = seedlingHarness();
+        runScript(h);
+        const calls = $(h, 'editSetOverview').calls;
+        const labels = calls.filter((c) => c.startsWith('fillText(⛔embed'));
+        const drew = calls.filter((c) => c.startsWith('drawImage('));
+        expect(labels.length).toBe(calls.filter((c) => c.startsWith('fillText(L')).length);
+        expect(drew.length).toBeGreaterThan(0);
+    });
+
+    /**
      * ⛓ MUTANT: `mountWatchSetEditor` re-exports `mountSetEditor` by the SAME
      * object instead of binding it — then it takes `mountSetEditor`'s options
      * and the page's call site is silently wrong. The surface is D2's.
