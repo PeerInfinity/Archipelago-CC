@@ -206,7 +206,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 236,
         "browser": 76,
-        "cited": 82,
+        "cited": 83,
         "files": 255,
         "lineStyle": 19,
         "withDocblock": 255,
@@ -1659,7 +1659,9 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "check",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "check-seedling-rerecord-rehearsal.mjs",

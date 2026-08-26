@@ -12691,6 +12691,66 @@ correctness claim — S0's verdict is a function of the tapes and reads the same
 before and after a run, so the fixed point is S1 re-measuring zero movers, which
 costs a browser.
 
+#### Rehearsing it before it spends a GPU
+
+```
+node scripts/procgen/rerecord-seedling-campaign.mjs --rehearse
+node scripts/procgen/check-seedling-rerecord-rehearsal.mjs      # the standing gate
+```
+
+Three separate re-record attempts stopped partway through a run — each after the
+GPU had already been paid for the boundaries before it — and every defect that
+stopped them was bookkeeping, not physics: producers run in sorted FILE order
+instead of chain order; a fix for that which was inert on the straight-through
+path and worked only on a `--from=S1` resume; guards that tested the GLOBAL
+failure counter and so named the wrong subject (three of them, in S1, S2 and
+S3); a record set taken from `s2.wrote`, which drops the first mover of every
+chain; a chain HEADLINE and a one-segment chain falling through the accounting
+floor into neither the table nor `unmeasured`.
+
+Every one of those is decidable offline against a subject the pipeline can be
+pointed at. `--rehearse` builds that subject and runs **S0..S5 over it in about
+ten seconds** — no browser, no Windows, no dev server, and no read of the
+machine-global latch cache.
+
+**The seam.** The pipeline used to resolve its whole subject from its own file
+location. It now builds one `context` at the top from argv and hands it to every
+stage: the tapes root, the chains, the instruments rows `participationOf` needs,
+where a named script lives, the process runner, and the latch source. Defaults
+are the real values, so the real pipeline is unchanged. ⛔ `playthroughWalk.js`
+is taken as DATA rather than imported, and that is forced rather than chosen: it
+loads every declared segment's tape at MODULE SCOPE through the fixtures'
+own hard-wired directory, which no context can redirect.
+
+**The fake tree is GENERATED, never hand-written** (`rehearsalTree.js`), because
+a typed fixture decays the day the tape format grows a field. Its latches are
+derived by running `segmentBootFromLatch` BACKWARDS: `seamBootFields(tape)`
+already maps a tape onto the signature fields a latch carries, so a fake latch
+is the successor's own boot plus the six rows a boot side never declares (the
+five calm invariants and the arrival velocity) and `rng.cosmetic`, which the
+boot side omits at 0 because 0 means "undeclared" on the wire while a latch
+always read something. A signature row with no fill rule is a refusal BY NAME.
+
+**And the tree proves itself before the gate uses it.** Each derived envelope is
+run through `segmentBootFromLatch` and diffed against its successor's committed
+blocks with the pipeline's own persistence merge: 38 fields compared, **0 moved**
+at every boundary. That is what makes the control the strong one — zero movers,
+the state the pipeline is supposed to report when nothing changed — rather than
+a fixed point.
+
+Seven scenarios: an untouched control; a walk move with and without a licence;
+the `--from=S1` resume; a seeded producer failure; a prose-only re-emission; and
+an off-table boot move. The gate reads the rehearsal's report and claims each
+defect by a stable marker, so a scenario that stops being run is a red naming
+the marker rather than a smaller green. It also fingerprints the machine-global
+latch cache around the run and requires it unchanged — measured, not a
+repetition of the mode's own claim.
+
+⛔ **What it cannot say.** It never opens a browser and never asks the game
+anything. The game's word on a walk is `--latch-provisional`'s; S4's real gates
+and the game's calm at every boundary are the re-record run's own. A rehearsal
+that pretended otherwise would be claiming a stratum it does not have.
+
 #### The first run
 
 Twelve boots re-derived, in chain order. `rng.seed` was the only field that moved
