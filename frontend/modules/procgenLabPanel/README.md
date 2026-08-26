@@ -71,7 +71,39 @@ N edit(s)`), an **open standalone** link — the frame's *current* URL minus
 initial `src` — and a payload textarea with **SEND** (`load`) and **TAKE** (the
 last `levelChanged`).
 
-Nothing consumes `levelChanged` beyond the panel yet; it is on the bus, by name.
+## The ROOM-EDITOR DOOR (editor integration, W3)
+
+`labRoomEditor.js` beside this file is the host half of the **room-editor
+contract** (`NewDocs/plans/editor-integration.md` §3.2, §9): a substrate whose
+registry entry declares `roomEditor: {kind: 'lab', page, arm}` gets an
+`Edit ▸`-shaped door with **no second editor written**, because the door is the
+lab page this panel already hosts. Three moves, and **not one new
+`procgenLab:` name or field**:
+
+1. a SET document in over `load` — each page sniffs it through the ONE
+   classifier it already has, so it lands on that page's SET arm;
+2. ONE room over `navigate` with the page's own `?source=<arm>&room=<n>`;
+3. the folded document back out over `levelChanged`, whose payload is a
+   `procgenCore/labRoomEnvelope` (`{kind:'set-record', substrate, room, record}`)
+   for as long as a SET arm holds a session. `onSave` fires on that envelope's
+   `room` going *n* → `null` — the CLOSE as a **transition**, never a count of
+   edits, because a close that folds a no-op room session moves no count at all.
+
+⛔ **`ui:activatePanel` CANNOT REACH ONE OF TWO LAB PANELS.** It matches on
+`componentType` and both instances are `procgenLabPanel`, so it can only ever
+raise the first — measured, and recorded in `check-procgen-lab-hosting.mjs`.
+Hence two things here: `ProcgenLabPanelUI.raise()` goes through Golden Layout's
+own API on the item CONTAINING *this* instance's root (with the event kept as a
+fallback), and `labRoomEditor` holds an INSTANCE registry the panel writes
+itself into per MOUNT and drops in `destroy()` — a remount that kept the old
+entry would hand a caller an iframe that is already `about:blank`.
+
+⚠ It is not cosmetic: Golden Layout hides a non-active stack member with
+`display: none`, and `getBoundingClientRect()` on a hidden element is all
+zeros — an unraised lab is a canvas the page itself refuses to map a click onto.
+
+`levelChanged` therefore has TWO consumers now: this panel's TAKE box, and
+`labRoomEditor`'s wait for the room transition.
 
 ## Registering it (the three places)
 
@@ -90,7 +122,8 @@ in bundled mode and duplicates every singleton
 ## Gates
 
 ```bash
-npx vitest run frontend/modules/procgenLabPanel frontend/modules/procgenCore/labProtocol.test.js
+npx vitest run frontend/modules/procgenLabPanel frontend/modules/procgenCore/labProtocol.test.js \
+                frontend/modules/procgenCore/labRoomEnvelope.test.js
 node scripts/procgen/check-procgen-lab-hosting.mjs      # boots the frontend, both frames
 ```
 
