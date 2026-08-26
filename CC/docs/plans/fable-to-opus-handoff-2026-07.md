@@ -5049,6 +5049,62 @@ rebased head BEFORE any browser stage; it costs ten seconds and it is the only
 thing that can say a bookkeeping defect is live before the GPU is spent. Then
 the 12c batch closes → P3 → P4 → L15 `shove`.**
 
+⛔⛔⛔ **R9 SLICE 12e′ — THE FOURTH RUN IS A FOURTH STOP, 2026-08-26. `main` IS
+UNCHANGED AT `4ec64471f` AND THE 12c BATCH DOES NOT CLOSE.** As-built kickoff
+**§42**. Everything §38.8 predicted held: the rebase is clean and four commits,
+the three `fixtures/` tree objects are byte-identical to `-4`'s, the thirteen are
+**13/13 EXACT** offline, the roster is **145/149** with only the four known `r5`
+residuals, `--rehearse` is **18/0**, and the GAME matched the committed oracle
+stream on **all 26 tapes** of S4's roster with **sixteen of seventeen seams green
+over 46 signature rows each**. ⛔ **ONE ROW STOPS IT:**
+`r9-solve-0 -> r9-solve-13: rng.gameplay [exit 1029458650 vs boot 1196888758]`,
+and the wasm ship gate refuses boundary 14/16 on the same integer — **234/19**
+against `254/0` before.
+
+⛓⛓⛓ **AND THE CHASE FOUND SOMETHING LARGER THAN THE SEAM.**
+`solve-seedling-r9-campaign --check` reads each successor's boot **out of its own
+committed tape**, so it compares the tape against a derivation seeded from the
+tape — **a FIXED POINT** — and it is GREEN at a head where its own emit rewrites
+two committed artifacts. The file's own comment claims the opposite in so many
+words. The blindness is **LATENT on `main`** (there the emit changes nothing, so
+self-consistency and correctness coincide); the series is simply the first tree in
+which S2 has ever overridden a producer-derived boot. ⇒ the committed tape is a
+**splice of two coherent chains** — the producer's (1029458650 → 1785346831) and
+S1's (1196888758 → 1906746288) — which is exactly why only one seam is red.
+
+⛔ **A MECHANISM PUBLISHED AND WITHDRAWN, kept because the withdrawal is the
+lesson:** this is NOT ⚖ 23's fresh-page-versus-continuation class. The `--win`
+differential drives a fresh page per tape, exactly as S1 does, and agrees with the
+continuous ship gate, with the model and with the producer. **S1's drive is the
+sole outlier, and it gave the same answer in two independent runs.** The root
+question — why S1's fresh-page drive of `r9-solve-0` latches a different exit than
+the differential's replay of the same tape — is **OPEN**, and §42.5c measured the
+obvious lead to a residue: the two boots agree on **all 38 compared fields**, so
+any difference lives OUTSIDE `BOOT_BLOCKS`, with `tick0` the named suspect and
+`r9-solve-2`'s green seam its named exception.
+
+PARKED on **`r9/re-record-attempt-5` @`73bf6d724`**, six commits, never pushed:
+the flip · ⚖ 39's `why` sweep · **the thirteen** (`299387a63` + `763bf3cb8`
+SQUASHED, resulting tree byte-identical to the four-commit rebase's) · **seven
+build-named test repairs** (§40.6 named two; there were six, in six files, plus a
+seventh file only a DATA reach finds) · **four trace sidecars re-emitted** (five
+last-bit ULP digits; two producers exit 1 → exit 0) · CLAIM 8's count derived from
+its tape. The five pre-existing `r9/*` branches are byte-identical before and
+after. **No `standing-values --write`** — nothing reached a pushable head. Traps
+**769–773**. ⚖ 49 + its extension stay SPENT-BUT-UNLANDED and ⚖ 51 (a) is
+unchanged.
+
+⇒ **NEXT: the boundary-14 slice. §42.10 states the design question as THREE
+candidate ⚖ answers plus one repair, and it is THE USER'S: (α) the record carries
+the producer's derived chain (inverts "every boot field comes from the
+measurement"); (β) S1's envelope-boot is itself the defect (the only one that
+explains rather than chooses); (γ) the record keeps S1's measurement and both game
+instruments are wrong (weakest). The REPAIR is independent of all three — make
+`--check` derive the successor's boot from the PREDECESSOR's committed exit, so an
+override shows as the byte diff its comment already claims. Then P3 (which
+inherits the fixed point AND the latch-key projection as ONE item) → P4 → L15
+`shove`.**
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
