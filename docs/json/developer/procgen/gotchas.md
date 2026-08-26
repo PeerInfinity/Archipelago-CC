@@ -399,16 +399,27 @@ OWN mount captured, so a doubled press lands one op on the live record and one
 on a stale object nothing publishes. The arm lifetime's own listener counter is
 the witness, and it must not move across a remount.
 
-## An ARRIVAL endpoint accepts an access rule and gates NOTHING
+## An ARRIVAL endpoint accepts an access rule and gates NOTHING — FIXED (editor v3 E3b)
+>>>>>>> 65ab2e20f (docs(procgen): editor v3 E3b — the adapter's vocabulary, and three gotchas closed on their fix)
 
 `regionAtlasCompiler` records the `to` endpoint of a `one_way` connection as
 `{apExitName: null, arrivalOnly: true}` and builds no AP exit for it — and every
 connection the Seedling derivation emits is `one_way`, because the game's one
 transition primitive is a one-way jump. So a rule authored on an `in_*` exit id
-is accepted by the op, written into the overlay, applied to the atlas, and then
-reaches nothing: the door stays FREE while its author believes it is gated. Ask
-the atlas's own `vanilla_layout.connections` whether an endpoint is a `from`
-(or the `to` of a two-way) before offering it, and NAME the ones that are not.
+was accepted by the op, written into the overlay, applied to the atlas, and then
+reached nothing: the door stayed FREE while its author believed it was gated.
+
+⛓ **`set-access-rule` now REFUSES on `setEditorCore.gateabilityOf`** — the SAME
+reading `ruleTargetsOver` marks the offered targets with and `inertRulesOf`
+names the authored ones with, so the op, the list and the report cannot
+disagree. The general lesson survives the fix: when a page OFFERS a target an op
+will accept, ask the atlas's own `vanilla_layout.connections` whether the
+endpoint is a `from` (or the `to` of a two-way) rather than trusting the id, and
+route both the offer and the refusal through ONE function.
+
+⚠ `set-overlay` is still a door such a rule can arrive through — it writes the
+whole room entry and asks no derivation — which is why `inertRulesOf` is not
+retired with the defect.
 
 ## Re-validating a document that is being EDITED reads a correct session as broken
 
@@ -419,23 +430,39 @@ second document to it therefore refused a perfectly good session and silently
 kept the old attachment. Validate a document when it ARRIVES; after that the op
 list is the authority until the next stamp.
 
-## A derivation failure is neither a refusal class nor a defect
+## A derivation failure is neither a refusal class nor a defect — FIXED (editor v3 E3b)
 
-`seedlingSetAdapter.apply` catches its three refusal classes and rethrows
-everything else on purpose (*"a `TypeError` here is a defect"*), and
-`editorView.applyOp` catches only `EditCoreError`. A plain `Error` from
-`deriveAtlas` — a set whose atlas cannot be built, e.g. because a `disconnect`
-deleted the very entity a marked LOCATION sits on — is neither, so it escapes
-both and takes the arm down. The page is where it has to be caught, and it is
-reported as a refusal with the producer's own sentence.
+`seedlingSetAdapter.apply` catches its refusal classes and rethrows everything
+else on purpose (*"a `TypeError` here is a defect"*), and `editorView.applyOp`
+catches only `EditCoreError`. A plain `Error` from `deriveAtlas` — a set whose
+atlas cannot be built, e.g. a collectible in a room no door reaches — was
+neither, so it escaped both and took the arm down.
 
-## A location marked on a TRANSITION is deleted by `disconnect`
+⛓ **`SeedlingSetDeriveRefusal` is the FOURTH class**, and the shape of the fix
+is the transferable part: it is thrown by **`deriveAtlasOf`, not by `apply`**.
+`deriveAtlasOf` is called from BOTH sides — inside an op, and outside one by
+`roomRowsOf`/`reportOver` through the substrate's `isRefusal` — so wrapping at
+the one derivation door is what makes both readers name the same class; wrapping
+inside `apply` would have left the readout's reader still holding a bare
+`Error`. ⚠ And the net must not widen while you are at it: only
+`err.constructor === Error` is re-labelled, so a `TypeError` still escapes both
+catches and is still a defect. A `TypeError` IS an `Error`, so `instanceof` here
+would have relabelled every crash as a data condition.
 
-`disconnect` DELETES the exit element, and if a `mark-location` names that same
-entity the overlay is left pointing at a body the room no longer has —
-every later derivation then refuses by name (*"no entity for it in level N"*).
-A row that wants a location subject should mark a body no transition op can
-touch; a page that offers locations should expect the derivation's refusal.
+## A location marked on a TRANSITION is deleted by `disconnect` — FIXED (editor v3 E3b)
+
+`disconnect` DELETES the exit element, and if a `mark-location` named that same
+entity the overlay was left pointing at a body the room no longer had — every
+later derivation then refused by name (*"no entity for it in level N"*), which
+is a refusal arriving one edit LATE, about a room the author had not touched.
+
+⛓ **`disconnect` now refuses while any location's `entity` matches the exit**,
+names it, and names `unmark-location` as the door out. Two things about the fix
+generalise. **The comparison must happen BEFORE the deletion** — afterwards the
+entity is gone and the check can never fire, which is the mutant the row is
+built to catch. And **it must be exact on the COORDINATES, not just the element
+type**: two `<teleporter>`s in one room are ordinary, so an element-only check
+would freeze every door in a room holding one marked one.
 
 ## TWO `set_id`s can describe the same 116 rooms, and only one is the save stamp's
 
@@ -742,3 +769,42 @@ rather than measuring zero rows and exiting 0.
 
 - [Architecture](./architecture.md)
 - [Substrate Registry Reference](./substrate-registry.md)
+
+## `createEmptyAtlas`'s `game` defaulted to `'seedling'`, and so did `atlas_id` — RETIRED (editor v3 E3b)
+
+`createEmptyAtlas({...})` defaulted `game` to `'seedling'`, and `atlas_id` is
+built from `game`, so a caller that did not name a substrate got a document that
+VALIDATES and names the wrong game. Harmless while Seedling was the only
+derivation; a landmine the moment there were two — the maze derivation had to
+work around it by deriving `game` from its entries' own `substrate`.
+
+⛓ `game` is REQUIRED now, and the default was not replaced by a better default:
+there is no substrate that module can guess, so it refuses by name. `new
+AtlasSession()` with no document refuses too, because a default there would be
+the same landmine one layer up.
+
+⚠ **The interesting part is how a caller was FOUND.** Making it required is only
+safe if every call site passes one, and a missed site is a CRASH IN A PAGE that
+no node row can see. The sweep is a source scan — and it found
+`regionMarkingToolUI.js`, the region-marking tool's own panel, constructing an
+atlas with no `game` in its CONSTRUCTOR. Two `grep` sweeps had reported that
+file clean: see the next entry.
+
+## `grep` skips a whole SOURCE FILE, silently, when it carries a NUL byte
+
+`regionMarkingToolUI.js` is tracked, not ignored, valid UTF-8 — and carries **3
+stray NUL bytes**. `grep` therefore classifies it as BINARY, and `grep -I`
+(which this repo's tooling passes) then skips the WHOLE FILE: **zero hits, exit
+1, no warning**. A census that shells out to `grep` reports such a file clean
+and cannot tell that apart from the file having nothing to report.
+
+Measured 2026-08-26, five tracked `.js`/`.mjs` sources are invisible this way:
+`procgenPipeline/procgenPipelineUI.js`, `procgenPipeline/regionAtlasAnalyzer.js`,
+`regionMarkingTool/regionMarkingToolUI.js`, `scripts/procgen/check-procgen-docs.mjs`,
+`scripts/procgen/probe-seedling-killlock-span1.mjs`.
+
+⇒ `grep -a` finds them. But a sweep whose ANSWER is load-bearing — "every caller
+passes X", "no module imports Y" — should read files itself (`readFileSync`)
+rather than trust a tool that can decline to look. `atlasSession.test.js` does
+that, and pins that NUL-bearing sources still exist so the hazard is under test
+rather than in a comment.

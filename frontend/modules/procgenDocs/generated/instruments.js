@@ -206,7 +206,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 236,
         "browser": 76,
-        "cited": 83,
+        "cited": 84,
         "files": 255,
         "lineStyle": 19,
         "withDocblock": 255,
@@ -1118,6 +1118,7 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "check",
             "citedBy": [
+                "docs/json/developer/procgen/gotchas.md",
                 "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
@@ -4162,7 +4163,9 @@ export const INSTRUMENTS = frz({
             ],
             "browser": false,
             "category": "probe",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/gotchas.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "probe-seedling-killlock-span1.mjs",
