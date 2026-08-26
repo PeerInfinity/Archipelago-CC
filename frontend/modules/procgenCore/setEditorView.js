@@ -945,10 +945,16 @@ export function mountSetEditor({
         if (!sel) return;
         sel.innerHTML = '';
         /**
-         * ⛔ **AN ENDPOINT THAT GATES NOTHING IS MARKED, NOT HIDDEN.** The op
-         * accepts it, so hiding it would be a second authority; leaving it
-         * unmarked would let a person gate a door the compiler will treat as
-         * free. The option says which it is, in the derivation's own words.
+         * ⛔ **AN ENDPOINT THAT GATES NOTHING IS MARKED, NOT HIDDEN.** ⛓ The
+         * justification moved at E3b and the docblock did not (§33.12 #3b,
+         * fixed E6a): it used to read *"the op accepts it, so hiding it would
+         * be a second authority"*, and the op has REFUSED it by name since E3b
+         * (`seedlingSetAdapter`'s `gateabilityOf`). The DECISION is unchanged
+         * and the reason is a different one — MARKING rather than hiding keeps
+         * the derivation's own sentence in front of the author, so a person
+         * meeting an inert endpoint learns that it exists and why it gates
+         * nothing instead of meeting a list it is silently missing from. The
+         * option says which it is, in the derivation's own words.
          */
         for (const e of targets.exits) {
             const o = el(doc, 'option', null,

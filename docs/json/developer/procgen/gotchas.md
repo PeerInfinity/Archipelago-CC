@@ -875,3 +875,83 @@ threw"*, and the run stopped 44 rows early. The cure is local — delete
 press that is not the row consuming them — but the shape is general: **a wait on
 a global a previous step can set is not a wait.** Prefer a wait on a value that
 CHANGES (a counter, a new id) over one on a key that merely exists.
+
+## A uniqueness law asked of the AUTHORED name, justified by a fact about the DERIVED one — FIXED (editor v3 E6a)
+
+`mark-location` and the shared overlay validator both refused a location name
+that was not unique **across the whole SET**, asked of the AUTHORED half. The
+reason both of them gave was about a `reorder`: *"two rooms that swap places
+would then swap AP names, so uniqueness is asked of the AUTHORED name, which a
+reorder never touches."* That sentence is TRUE and it is about the wrong
+property. A reorder RE-PREFIXES every derived name, so the SET of derived names
+stays unique either way — swapping is not colliding, and nothing in the law
+followed from it.
+
+What the law actually protects is the compiler: `regionAtlasCompiler` allocates
+AP location ids from `loc.name` alone, and `regionAtlasValidator` refuses a
+duplicate DERIVED name globally. So the question is **whether the substrate's
+derivation prefixes the room into the name it emits**, and the two committed
+substrates disagree: `seedlingAtlasDerivation` emits `Level NNN - <authored>`
+(and `NNN` is the room's ARRAY POSITION, unique by construction), while
+`mazeAtlasDerivation` emits the authored name VERBATIM.
+
+⇒ `createSetOverlay` takes `locationNameScope ∈ {'room','set'}`, DEFAULT `'set'`
+— the stricter answer, so a substrate that has not thought about it cannot lose
+an item — and Seedling declares `'room'` beside the fact that earns it. ⛔ The
+flat relaxation the design first called for was measured RED on
+`mazeSetAdapter.test.js`'s own duplicate row: it would have moved the maze's
+refusal from the click to `validateRegionAtlas`, a worse and much later place to
+learn it.
+
+⛓ The cost of the old law was real and had been REPORTED rather than gated: the
+vanilla lift could not reproduce the playthrough's AP names for the sixteen
+rooms holding a `Chest`, and wrote `Chest (L38)` instead. Since E6a the labels
+lift verbatim, the fixture is `seedling-vanilla-overlay-e2d5c131` (8,863 B, was
+`-1604b508` / 9,149 B), and a row DERIVES the committed fixture and compares its
+location names to the playthrough atlas's as a SET: 41 names, 0 divergent.
+
+**The general shape.** When a check's justification names a property of a
+document the check does not read, ask which document the harm actually happens
+in, and ask whether the answer is the same for every binding of the module the
+check lives in. Here it was not, and the parameter is one line.
+
+## An op that takes an ordinal nobody passes is an op nobody can reach — FIXED (editor v3 E6a)
+
+E3b taught `remove` a `which` ordinal so a caller could name a body that is not
+the last one in its cell, and `entityIndicesAt` / `requireEntityAt` are its two
+spellings. Nothing passed one for a whole slice: the room-flags form still built
+a bare `{op:'remove', tx, ty}` and REFUSED the 2 of the committed 155 flag
+instances that are not last, quoting a sentence that promised *"an op that could
+name WHICH body is a vocabulary change, i.e. a decision"* — the decision it was
+asking for had already been taken.
+
+⚠ **AND THE FIRST CALLER FOUND AN IDENTITY HAZARD THE BARE OP DID NOT HAVE.**
+The form's guard read `host.record()`, its refusal check read it again, and the
+gesture built its op from a third read. Two reads of one cell's `{tx, ty}` agree;
+an ORDINAL read off one snapshot, checked against another and applied to a third
+can name a DIFFERENT body. The cure is that the guard reads the record ONCE and
+RETURNS the row its decision was about, and the caller builds the op out of that
+row. **A more precise address needs a more careful snapshot.**
+
+⛓ `attrs` keeps its refusal and it is not an oversight: addressing the last
+entity in the cell is that op's whole contract, so a second address for it would
+be a second vocabulary rather than the same one used properly. The docs and the
+refusal both say which of the two the sentence is about now.
+
+## A refusal that knows its CLASS and reports only its SENTENCE — FIXED (editor v3 E6a)
+
+`seedlingSetAdapter.apply` has told its four refusal classes apart since E3b and
+returns `reason: err.name`. `editCore`'s session dropped the field at ONE line,
+so the only consumer that would branch on it — a page choosing between "you
+typed something wrong" and "the world is not finished yet" — had nothing but
+`description`, the one channel the core promises never to paraphrase. Zero
+readers existed, which is exactly why it went unnoticed: a field nobody reads
+looks the same whether it arrives or not.
+
+⛓ `reason` is now carried by the session, by the group's member-refused arm (the
+MEMBER's class — the group adds none of its own), and by the two catches that
+SYNTHESISE a refusal, which set it to the thrown error's own `name`. ⛔ The core
+NEVER invents one: an adapter that gives no `reason` produces a result with no
+`reason` KEY, so `'reason' in res` means the substrate answered rather than that
+the core guessed — and the rows drive both halves on one adapter, because a row
+that only asserted the field arrived would pass a version that defaulted it.
