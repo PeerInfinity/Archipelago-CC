@@ -52,8 +52,8 @@ def _json_dumps_at_indent(data: Any, indent: int) -> str:
     The two writers have to agree, so 0 maps to `separators` here.
     """
     if indent == 0:
-        return json.dumps(data, separators=(',', ':'))
-    return json.dumps(data, indent=indent)
+        return json.dumps(data, separators=(',', ':'), ensure_ascii=False)
+    return json.dumps(data, indent=indent, ensure_ascii=False)
 
 
 def _rules_json_indent() -> int:
@@ -91,9 +91,25 @@ def _dump_with_compact_sidecar_tiles(data: Any, indent: int = 2) -> str:
     the compact array back in.
 
     Mirrors stringifyRulesJson in
-    frontend/modules/procgenPipeline/procgenPipelineEngine.js so
-    files written here look the same as files downloaded from the
-    procgen panel.
+    frontend/modules/shared/rulesJsonBuilder.js so files written here
+    look the same as files downloaded from the procgen panel.
+    (`procgenPipeline/procgenPipelineEngine.js` only RE-EXPORTS it; the
+    body this mirrors lives in `shared/`.)
+
+    EDITOR v3 W1 — the mirror was FALSE OF THE BYTES until this slice, in
+    two places, both now fixed and pinned by
+    `test/test_rules_json_writer_agreement.py`:
+
+    * the splice below re-inserts `json.dumps(tiles, separators=(',', ':'))`;
+      the default separators put a SPACE after every tile integer and
+      `JSON.stringify(array)` does not.
+    * `_json_dumps_at_indent` passes `ensure_ascii=False`; `json.dumps`
+      escapes `\u00a7` where `JSON.stringify` writes `§`. Safe because the
+      ONE production caller opens its file with `encoding='utf-8'`.
+
+    ⛓ The trailing newline is the WRITE SITE's, not the writer's — neither
+    function emits one (`scripts/utils/generate-procgen-rules.js` appends
+    `text + '\n'` itself; the Python write site appends nothing).
 
     No-op for inputs without a `preset_sidecars` key.
     """
@@ -121,7 +137,7 @@ def _dump_with_compact_sidecar_tiles(data: Any, indent: int = 2) -> str:
     text = _json_dumps_at_indent(patched, indent)
     for i, tiles in enumerate(captured):
         placeholder = f'"{marker}{i}__"'
-        compact = json.dumps(tiles)
+        compact = json.dumps(tiles, separators=(',', ':'))
         text = text.replace(placeholder, compact, 1)
     return text
 
@@ -2888,13 +2904,15 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
             # onto a single line — Python's default json.dump puts
             # every tile integer on its own line, which makes the
             # file ~10× larger than it needs to be. Mirrors
-            # stringifyRulesJson in
-            # frontend/modules/procgenPipeline/procgenPipelineEngine.js.
+            # stringifyRulesJson in frontend/modules/shared/rulesJsonBuilder.js
+            # (procgenPipelineEngine.js only re-exports it) — byte for byte
+            # since EDITOR v3 W1, pinned by test/test_rules_json_writer_agreement.py.
             # EDITOR v3 E1c — the indent is a SETTING (`json_tools.rules_json_indent`,
-            # default 2, mirrored by the frontend's `rulesJson.indent`). ⛔ THE
-            # DEFAULT DOES NOT MOVE: every committed preset is byte-pinned at 2
+            # default 2, mirrored by the frontend's `rulesJson.indent`).
+            # ⛔ THE DEFAULT DOES NOT MOVE: every committed preset is byte-pinned at 2
             # (29 byte-identity dumps, test_schema_validation.py, every --check),
             # so `indent=0` is only ever something a person asked for.
+            # ⛓ encoding='utf-8' below is what makes `ensure_ascii=False` safe.
             with open(filepath, 'w', encoding='utf-8') as f:
                 f.write(_dump_with_compact_sidecar_tiles(
                     filtered_data, indent=_rules_json_indent()))
