@@ -47,6 +47,10 @@
                 {
                     "option": "time",
                     "why": "the aim is 193 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff §3.1); it is not a room-crossing one, and the bound is named rather than widened."
+                },
+                {
+                    "option": "sword-dash",
+                    "why": "this room holds no sword, so `set slashing`'s outer gate refuses every press and no schedule can buy a single pixel"
                 }
             ],
             "keys": [
@@ -85,6 +89,10 @@
                 {
                     "option": "keep-plan",
                     "why": "the previous corridor was refuted by the world (a blocked sweep or a stall); re-planned from the live position"
+                },
+                {
+                    "option": "sword-dash",
+                    "why": "this room holds no sword, so `set slashing`'s outer gate refuses every press and no schedule can buy a single pixel"
                 }
             ],
             "keys": [

@@ -64,6 +64,10 @@
                 {
                     "option": "shove S",
                     "why": "the near-side stance (120,40) for a S lean does not plan a corridor from the live position — a lean needs the player box on the block's +-1 px probe with velocity INTO it, so a direction whose stance is in another component is not a direction"
+                },
+                {
+                    "option": "sword-dash",
+                    "why": "this room holds no sword, so `set slashing`'s outer gate refuses every press and no schedule can buy a single pixel"
                 }
             ],
             "keys": [
@@ -131,6 +135,10 @@
                 {
                     "option": "shove N",
                     "why": "the near-side stance (104,136) for a N lean does not plan a corridor from the live position — a lean needs the player box on the block's +-1 px probe with velocity INTO it, so a direction whose stance is in another component is not a direction"
+                },
+                {
+                    "option": "sword-dash",
+                    "why": "this room holds no sword, so `set slashing`'s outer gate refuses every press and no schedule can buy a single pixel"
                 }
             ],
             "keys": [
@@ -158,7 +166,17 @@
             },
             "strategy": {
                 "verb": "walk",
-                "waypoints": 1
+                "waypoints": 1,
+                "swordDash": {
+                    "planned": false,
+                    "ticks": null,
+                    "baseline": null,
+                    "saved": null,
+                    "windows": null,
+                    "legs": null,
+                    "scanned": 0,
+                    "why": "this room holds no sword, so `set slashing`'s outer gate refuses every press and no schedule can buy a single pixel"
+                }
             },
             "path": [
                 {
@@ -166,7 +184,12 @@
                     "y": 72
                 }
             ],
-            "rejected": [],
+            "rejected": [
+                {
+                    "option": "sword-dash",
+                    "why": "this room holds no sword, so `set slashing`'s outer gate refuses every press and no schedule can buy a single pixel"
+                }
+            ],
             "keys": [
                 "down"
             ]
@@ -190,7 +213,17 @@
             },
             "strategy": {
                 "verb": "walk",
-                "waypoints": 4
+                "waypoints": 4,
+                "swordDash": {
+                    "planned": false,
+                    "ticks": null,
+                    "baseline": null,
+                    "saved": null,
+                    "windows": null,
+                    "legs": null,
+                    "scanned": 0,
+                    "why": "this room holds no sword, so `set slashing`'s outer gate refuses every press and no schedule can buy a single pixel"
+                }
             },
             "path": [
                 {
@@ -214,6 +247,10 @@
                 {
                     "option": "keep-plan",
                     "why": "the previous corridor was refuted by the world (a blocked sweep or a stall); re-planned from the live position"
+                },
+                {
+                    "option": "sword-dash",
+                    "why": "this room holds no sword, so `set slashing`'s outer gate refuses every press and no schedule can buy a single pixel"
                 }
             ],
             "keys": [
@@ -260,6 +297,10 @@
                 {
                     "option": "bait",
                     "why": "sandtrap@96,128 is a STATIC census body (`speed 0`, and this room's chaser roster is refused) — it never writes `v`, so there is no straight line to bend and nothing to lure. That is a KILL question, and the kill is the room's own ceiling."
+                },
+                {
+                    "option": "sword-dash",
+                    "why": "this room holds no sword, so `set slashing`'s outer gate refuses every press and no schedule can buy a single pixel"
                 }
             ],
             "keys": [
@@ -287,7 +328,17 @@
             },
             "strategy": {
                 "verb": "walk",
-                "waypoints": 1
+                "waypoints": 1,
+                "swordDash": {
+                    "planned": false,
+                    "ticks": null,
+                    "baseline": null,
+                    "saved": null,
+                    "windows": null,
+                    "legs": null,
+                    "scanned": 0,
+                    "why": "this room holds no sword, so `set slashing`'s outer gate refuses every press and no schedule can buy a single pixel"
+                }
             },
             "path": [
                 {
@@ -295,7 +346,12 @@
                     "y": 72
                 }
             ],
-            "rejected": [],
+            "rejected": [
+                {
+                    "option": "sword-dash",
+                    "why": "this room holds no sword, so `set slashing`'s outer gate refuses every press and no schedule can buy a single pixel"
+                }
+            ],
             "keys": [
                 "down"
             ]
@@ -319,7 +375,17 @@
             },
             "strategy": {
                 "verb": "walk",
-                "waypoints": 2
+                "waypoints": 2,
+                "swordDash": {
+                    "planned": false,
+                    "ticks": null,
+                    "baseline": null,
+                    "saved": null,
+                    "windows": null,
+                    "legs": null,
+                    "scanned": 0,
+                    "why": "this room holds no sword, so `set slashing`'s outer gate refuses every press and no schedule can buy a single pixel"
+                }
             },
             "path": [
                 {
@@ -335,6 +401,10 @@
                 {
                     "option": "keep-plan",
                     "why": "the previous corridor was refuted by the world (a blocked sweep or a stall); re-planned from the live position"
+                },
+                {
+                    "option": "sword-dash",
+                    "why": "this room holds no sword, so `set slashing`'s outer gate refuses every press and no schedule can buy a single pixel"
                 }
             ],
             "keys": [

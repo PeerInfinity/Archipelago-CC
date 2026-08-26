@@ -27,7 +27,17 @@
             },
             "strategy": {
                 "verb": "walk",
-                "waypoints": 3
+                "waypoints": 3,
+                "swordDash": {
+                    "planned": false,
+                    "ticks": null,
+                    "baseline": null,
+                    "saved": null,
+                    "windows": null,
+                    "legs": null,
+                    "scanned": 0,
+                    "why": "this room holds no sword, so `set slashing`'s outer gate refuses every press and no schedule can buy a single pixel"
+                }
             },
             "path": [
                 {
@@ -43,7 +53,12 @@
                     "y": 280
                 }
             ],
-            "rejected": [],
+            "rejected": [
+                {
+                    "option": "sword-dash",
+                    "why": "this room holds no sword, so `set slashing`'s outer gate refuses every press and no schedule can buy a single pixel"
+                }
+            ],
             "keys": [
                 "down",
                 "right"
