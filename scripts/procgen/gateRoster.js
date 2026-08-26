@@ -68,6 +68,63 @@ const SIBLING_RE = /(?:scripts\/procgen\/|\.\/)([a-z][a-zA-Z0-9-]*\.mjs)/g;
 const readsFlag = (text, name) => new RegExp(`\\barg\\(\\s*'${name}'`).test(text);
 
 /**
+ * ⛓⛓⛓ A SECOND ARM OF THE SAME GATE, DECLARED BY THE GATE ITSELF.
+ *
+ * One gate can be two standing rows. `check-seedling-editor-generate.mjs`
+ * BRINGS ITS OWN SERVER when no `--host=` is given, and claim 4 (`?gen=`) is
+ * guarded on that — under `--host=` the caller's server has no route to serve
+ * the payload at, so the gate prints a NOTE and six rows do not run. Both
+ * numbers are correct readings of two DIFFERENT COMMANDS (⚖ editor v3 §26.7a:
+ * `--host=` 224/0, own server 230/0). A roster with one row per FILE can only
+ * carry one of them, and the other becomes a number somebody re-types.
+ *
+ * ⛔ SO THE SECOND ARM IS DECLARED WHERE THE FIRST ONE IS — in the gate's own
+ * docblock, read the way `readsFlag` reads a flag (⚖ ruling 17: the roster is
+ * READ OUT OF THE GATES, never a typed list; a variant in a table here would
+ * be exactly the hand-kept list this file exists to refuse):
+ *
+ *     * @standing-variant <label>: <argv | (none)>
+ *
+ * `<argv>` is the LITERAL extra flags that arm is run with — `(none)` when the
+ * arm IS the absence of a flag, which is this gate's case.
+ *
+ * ⛔⛔ THE ANCHOR IS LOAD-BEARING. The declaring gate's docblock also SPELLS
+ * the syntax out for a reader, so a regex that matched the token anywhere on a
+ * line would read that sentence as a second declaration. A declaration is a
+ * docblock line that STARTS with the tag, which is the same narrowness
+ * `readsFlag` has.
+ */
+const VARIANT_LINE_RE = /^[ \t]*\*[ \t]*@standing-variant\b(.*)$/gm;
+const VARIANT_BODY_RE = /^[ \t]+([^:]+?)[ \t]*:[ \t]*(\S.*?)[ \t]*$/;
+
+/**
+ * The variants a gate's docblock declares, refusing a malformed line BY NAME —
+ * ⛔ never skipping it. A declaration nobody parsed is a standing row that
+ * silently does not exist, which is the failure this whole mechanism is for.
+ */
+export function variantsIn(text, { file = '(text)' } = {}) {
+    const out = [];
+    for (const m of text.matchAll(VARIANT_LINE_RE)) {
+        const body = VARIANT_BODY_RE.exec(m[1]);
+        if (!body) {
+            throw new Error(`gateRoster: ${file} has a malformed @standing-variant line `
+                + `— expected \`@standing-variant <label>: <argv | (none)>\`, got `
+                + `${JSON.stringify(m[0].trim())}`);
+        }
+        const [, label, rhs] = body;
+        const argv = rhs === '(none)' ? [] : rhs.split(/\s+/);
+        const bad = argv.find((a) => !a.startsWith('--'));
+        if (bad) {
+            throw new Error(`gateRoster: ${file} declares variant ${JSON.stringify(label)} with `
+                + `${JSON.stringify(bad)}, which is not a flag — the argv is the LITERAL extra `
+                + 'flags that arm is run with, or `(none)`');
+        }
+        out.push({ label, argv });
+    }
+    return out;
+}
+
+/**
  * Every gate in `scripts/procgen/`, with the flags it reads and whether it
  * drives a browser — the gate's own text is the only source.
  */
@@ -94,6 +151,9 @@ export function gateRoster({ repo = REPO } = {}) {
             flags,
             browser,
             windows: WINDOWS_RE.test(text),
+            /** ⛓ …and the SECOND ARMS this gate declares — `[]` for every gate
+             *  that declares none, which is all of them but one. */
+            variants: variantsIn(text, { file }),
             /** ⛓ …and by which sibling, when it is not by itself. */
             browserVia: PLAYWRIGHT_RE.test(text)
                 ? null

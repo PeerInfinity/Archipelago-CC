@@ -16,6 +16,27 @@
  * skip condition.** `--host=` uses an existing server instead, which is a
  * convenience and not an escape.
  *
+ * ── ⛓⛓⛓ …AND THAT IS WHY THIS GATE IS TWO STANDING ROWS ──────────
+ *
+ * The convenience has a COST, and it is measurable: claim 4 (`?gen=`) is
+ * guarded on `!host` — with `--host=` the caller's server has no route to
+ * serve the payload at — so six rows do not run and this file prints a NOTE
+ * instead. The standing row's command carries `--host=http://localhost:8000`
+ * and reads **224/0**; the no-flag arm reads **230/0**, and 224 + 6 = 230
+ * (⚖ editor v3 §26.7a: both arms run at the same head, minutes apart, and
+ * running the `--host=` arm on a PRIVATE port still gave 224 — the flag is
+ * the variable, not the tree). Neither number is wrong. They are two
+ * DIFFERENT COMMANDS, and a roster with one row per FILE can only carry one
+ * of them.
+ *
+ * ⛔ So the second arm is DECLARED, not re-typed by whoever next needs it.
+ * `gateRoster` reads the tagged line below the way it reads a flag; the
+ * spelling is `@standing-variant <label>: <argv | (none)>`, where the argv is
+ * the LITERAL extra flags that arm is run with — `(none)` here, because this
+ * arm IS the absence of `--host=`.
+ *
+ * @standing-variant own server: (none)
+ *
  * ── WHAT IT CAN CATCH, AND WHAT IT CANNOT ─────────────────────────────
  *
  * Both sides call the same loop, so this is NOT a check that the loop is
