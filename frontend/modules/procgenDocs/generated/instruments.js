@@ -3829,6 +3829,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "check"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "segments"
                 }
             ],
             "oneLiner": "plan-seedling-r7-ends-meet — AUTHOR the toy chain's tapes, from the walk and from the GAME's own latch.",
@@ -5906,6 +5912,12 @@ export const INSTRUMENTS = frz({
                 },
                 {
                     "how": [
+                        "includes"
+                    ],
+                    "name": "segments"
+                },
+                {
+                    "how": [
                         "startsWith"
                     ],
                     "name": "walk-report"
@@ -5937,6 +5949,12 @@ export const INSTRUMENTS = frz({
                 },
                 {
                     "how": [
+                        "includes"
+                    ],
+                    "name": "segments"
+                },
+                {
+                    "how": [
                         "startsWith"
                     ],
                     "name": "walk-report"
@@ -5962,6 +5980,12 @@ export const INSTRUMENTS = frz({
                 },
                 {
                     "how": [
+                        "includes"
+                    ],
+                    "name": "segments"
+                },
+                {
+                    "how": [
                         "startsWith"
                     ],
                     "name": "walk-report"
@@ -5984,6 +6008,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "check"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "segments"
                 },
                 {
                     "how": [
@@ -6044,6 +6074,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "check"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "segments"
                 },
                 {
                     "how": [

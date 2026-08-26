@@ -709,9 +709,116 @@ export function identityShellHelpers({ repo = REPO } = {}) {
         .map((h) => h[0].trim()).join('\n');
 }
 
+// ── the DATA reach ────────────────────────────────────────────────────
+
+/**
+ * ⛓⛓⛓ **A CODE-IMPORT REACH CANNOT SEE A DATA MOVE** — R9 §42.2, trap 770.
+ *
+ * The closure above walks IMPORTS. A committed tape is JSON: nothing imports
+ * it, so a changed tape is not a node, and the instrument's own output says so
+ * — *"49 changed path(s) are NOT nodes of this graph"*. A reader has to act on
+ * that sentence, and at the fourth re-record nobody did: deriving the data
+ * reach separately (the thirteen moved names grepped over the tracked test
+ * files) and `comm`ing it against the code reach's 59 names surfaced **FIVE
+ * files the reach could not see** — `dialogueAutoAdvance`, `helpFrame`,
+ * `ulpDash`, `watchManual`, `provisionalLatch` — **two of them red**, and
+ * `helpFrame.test.js` would have reached CI unseen.
+ *
+ * ⛔ AND A THIRD POPULATION NEITHER SET CONTAINS: a `check-*.mjs` GATE.
+ * `check-seedling-editor-sequence.mjs`'s CLAIM 8 carried `/865 observations/` —
+ * `r8-d2-19`'s old `tick_count + 1` — and S4 was the only thing that could have
+ * found it. Gates are not tests and are not imported by the changed data, so
+ * they are enumerated here as their own list.
+ *
+ * ⇒ the honest bound is the UNION, and this function makes it DERIVED rather
+ * than remembered. [[feedback_code_sweep_misses_the_data]]
+ *
+ * ⛔⛔ WHAT THIS LIST CANNOT SEE, stated rather than implied: a consumer that
+ * carries a NUMBER derived from a tape without ever naming the tape. CLAIM 8's
+ * `865` was found because the gate ALSO spelled `r8-d2-19`; a gate that only
+ * spelled `865` is invisible to every population here, and the instrument says
+ * so in its own output rather than letting a union imply completeness.
+ *
+ * @param {string[]} changed the changed paths (any paths — non-fixture ones
+ *   are ignored, which is what makes this composable with the code reach)
+ * @returns {{labels: string[], tests: string[], gates: string[],
+ *            uncovered: string[]}}
+ */
+export function dataReach(changed, { repo = REPO } = {}) {
+    /**
+     * ⛓ A NAME IS A BASENAME, DERIVED. `fixtures/tapes/<name>.json` and
+     * `fixtures/traces/<name>.trace.json` are one walk under two spellings, so
+     * the `.trace` suffix is dropped and the STEM is what is searched for — a
+     * consumer that spells `r8-d2-19.trace.json` still matches on the stem,
+     * because the token match below treats `.` as a delimiter. Nothing about
+     * which fixture directories exist is typed here: the rule is "a changed
+     * JSON under a `fixtures/` directory".
+     *
+     * ⛔ EXCEPT THE TAPE INDEX, AND THE EXCLUSION IS DERIVED TOO. Its stem is
+     * `index`, which is a token that appears in almost every file in the tree —
+     * including it turned this list into 166 files on its first run, which is
+     * an upper bound so loose it says nothing. It is not a tape label: it is a
+     * GENERATED roster, `fixtures/index.js` READS it (so it is already on the
+     * code reach) and `tapeIndexManifest.test.js` gates it against the
+     * directory. The name is read out of `fixtures/index.js`'s own
+     * `TAPE_INDEX_FILE` rather than typed here (⚖ ruling 17), and the file is
+     * REPORTED as excluded rather than dropped silently.
+     */
+    let indexStem = null;
+    try {
+        const src = readFileSync(
+            join(repo, 'frontend/modules/seedlingDemo/fixtures/index.js'), 'utf8');
+        const m = /TAPE_INDEX_FILE\s*=\s*'([^']+)'/.exec(src);
+        if (m) indexStem = m[1].replace(/\.json$/, '');
+    } catch { /* no fixtures index — nothing to exclude */ }
+
+    const labels = new Set();
+    const excluded = [];
+    for (const p of changed) {
+        if (!/(^|\/)fixtures\//.test(p) || !p.endsWith('.json')) continue;
+        const base = p.split('/').pop().slice(0, -'.json'.length)
+            .replace(/\.trace$/, '');
+        if (indexStem !== null && base === indexStem) { excluded.push(p); continue; }
+        labels.add(base);
+    }
+    const names = [...labels].sort();
+    if (!names.length) {
+        return { labels: names, tests: [], gates: [], excluded, uncovered: [] };
+    }
+
+    const git = (args) => execFileSync('git', args, { cwd: repo, encoding: 'utf8',
+        maxBuffer: 64 * 1024 * 1024 }).split('\n').filter(Boolean);
+    /**
+     * ⛓ A DELIMITED TOKEN, not a substring. `r8-solve-1` is a substring of
+     * `r8-solve-10` and of `r8-solve-11`, so a naive `includes` reports every
+     * consumer of the tenth and eleventh rooms as a consumer of the first — an
+     * upper bound that is true and useless. `-` and `_` count as name
+     * characters; `.`, `'`, `"`, `/` and whitespace are delimiters, which is
+     * how a test actually spells a label (`loadTape('r8-solve-1')`).
+     */
+    const token = (n) => new RegExp(`(?<![A-Za-z0-9_-])${n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![A-Za-z0-9_-])`);
+    const patterns = names.map(token);
+    /**
+     * ⛔ `readFileSync`, NEVER a shell `grep`. Tracked `.js`/`.mjs` files in
+     * this tree hold stray NUL bytes, and plain `grep` treats such a file as
+     * BINARY and skips it silently — a whole file dropping out of a bound that
+     * claims to be an upper one (trap 764).
+     */
+    const namesIn = (file) => {
+        let text = '';
+        try { text = readFileSync(join(repo, file), 'utf8'); } catch { return false; }
+        return patterns.some((re) => re.test(text));
+    };
+    const tests = git(['ls-files', '--', '*.test.js', '*.test.mjs']).filter(namesIn).sort();
+    const gates = git(['ls-files', '--', 'scripts/procgen/check-*.mjs']).filter(namesIn).sort();
+    return { labels: names, tests, gates, excluded, uncovered: [] };
+}
+
 /**
  * The whole answer for one set of changed files: the closure, its partitions,
- * the tapes and chains its producers own, and the identity rows it reaches.
+ * the tapes and chains its producers own, the identity rows it reaches — and
+ * the DATA reach beside it, so the bound printed is the union rather than the
+ * import graph alone.
  */
 export async function reachReport(changed, { repo = REPO, roots = DEFAULT_ROOTS, graph } = {}) {
     const g = graph ?? buildGraph({ repo, roots });
@@ -722,8 +829,19 @@ export async function reachReport(changed, { repo = REPO, roots = DEFAULT_ROOTS,
     const tapes = tapesForProducers(parts.producers, { repo });
     const chains = await chainsForTapes(tapes.map((t) => t.tape), { repo });
     const identity = identityRows({ repo }).filter((r) => reached.has(r.script));
+    const data = dataReach(changed, { repo });
+    /**
+     * ⛓ WHICH LIST COVERS AN OFF-GRAPH PATH — the sentence §42.2 says a reader
+     * has to act on, computed instead of printed as a warning. A changed path
+     * that is neither a node nor a fixture whose name anything spells is
+     * covered by NOTHING, and that is the row a seal owes an opinion about.
+     */
+    const covered = new Set(data.labels.length && (data.tests.length || data.gates.length)
+        ? changed.filter((p) => /(^|\/)fixtures\//.test(p) && p.endsWith('.json'))
+        : []);
+    data.uncovered = offGraph.filter((p) => !covered.has(p));
     return {
-        seeds, offGraph, reached, ...parts, tapes, chains, identity,
+        seeds, offGraph, reached, ...parts, tapes, chains, identity, data,
         unresolved: g.unresolved,
     };
 }

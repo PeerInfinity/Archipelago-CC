@@ -57,8 +57,6 @@
  * the predecessor's walk just changed.
  */
 
-import { existsSync, readFileSync } from 'node:fs';
-import { join } from 'node:path';
 
 export class WalkMovesError extends Error {
     constructor(message) { super(message); this.name = 'WalkMovesError'; }
@@ -95,19 +93,43 @@ export const CHECK_FLAG = '--check';
 export const LICENSABLE = 'walk-moves';
 
 /**
- * The producers a chain's segments NOMINATE — read out of each committed
- * tape's own `description`, which names the script that authored it.
+ * The producers a chain's segments NOMINATE — **DERIVED FROM THE PRODUCERS
+ * THEMSELVES**, never from the tapes' English.
  *
- * ⛔ THIS IS A NOMINATION, NOT AN ANSWER. It exists to keep the candidate set
- * finite and cheap (five producers rather than every instrument with a
- * `--check`); `reportRows` below takes the producers' own reports as the
- * ownership answer.
+ * ── ⛔⛔⛔ WHAT THIS USED TO BE, AND WHY IT WAS WRONG ─────────────────
  *
- * @returns {Map<string, string[]>} producer file name -> the segments that
- *   nominated it, in chain order.
+ * It regexed `/scripts\/procgen\/([A-Za-z0-9._-]+\.mjs)/g` out of each
+ * committed tape's `description` — a sentence a human typed, standing in for a
+ * fact the producer already knows. ⚖ Ruling 17's opposite, and it had already
+ * decayed: `plan-seedling-r7-act2.mjs` is RETIRED (⚖ ruling 14) and three
+ * committed descriptions still name it, so the map contained a producer that
+ * is not in the tree. R9 slice P3 (C), trap 773.
+ *
+ * ⛓ THE OWNER OF A TAPE IS THE PRODUCER THAT EMITS IT, and each one now says
+ * so under `--segments` (`producerSegments.js`). The prose survives in exactly
+ * one place — `proseOwnerDisagreements`, the lint that requires it to AGREE.
+ *
+ * ⛔ THE MAP IS INJECTED, NOT LOOKED UP HERE, and that is what keeps the
+ * REHEARSAL honest: `--rehearse` runs the real pipeline against a FAKE tree
+ * whose producers are generated, and a function that reached into
+ * `scripts/procgen/` would answer about THIS repository while every other
+ * stage answered about the scratch one. The caller supplies the tree's own
+ * ownership; `rerecord-seedling-campaign.mjs` derives it from the producers
+ * and the rehearsal context reads it off its marker.
+ *
+ * @param {object[]} chains `[{segments, headline?}]`
+ * @param {object} opts
+ * @param {Map<string, string>} opts.owners tape name -> producer file
+ * @returns {Map<string, string[]>} producer file name -> the segments it owns
+ *   here, in chain order.
  */
-export function nominateOwners(chains, { tapesDir } = {}) {
-    if (!tapesDir) fail('nominateOwners: `tapesDir` is required');
+export function nominateOwners(chains, { owners } = {}) {
+    if (!(owners instanceof Map)) {
+        fail('nominateOwners: `owners` must be a Map of tape -> producer file. It used to '
+            + "read the tapes' `description` prose; ownership is now DERIVED from the "
+            + 'producers themselves (`producerSegments.ownersByEmit`), and the map is passed '
+            + 'in so a REHEARSAL answers about its own tree.');
+    }
     const out = new Map();
     for (const chain of chains) {
         // ⛓ R9 12e′ RE-RUN: a chain's HEADLINE is a tape a producer authors
@@ -115,14 +137,16 @@ export function nominateOwners(chains, { tapesDir } = {}) {
         //   the accounting universe's own row rather than re-read from
         //   `PLAYTHROUGH_CHAINS`, so the two lists cannot drift apart.
         for (const segment of [...chain.segments, ...(chain.headline ? [chain.headline] : [])]) {
-            const path = join(tapesDir, `${segment}.json`);
-            if (!existsSync(path)) continue;
-            let desc = '';
-            try { desc = JSON.parse(readFileSync(path, 'utf8')).description ?? ''; } catch { /* */ }
-            for (const m of desc.matchAll(/scripts\/procgen\/([A-Za-z0-9._-]+\.mjs)/g)) {
-                if (!out.has(m[1])) out.set(m[1], []);
-                if (!out.get(m[1]).includes(segment)) out.get(m[1]).push(segment);
-            }
+            const producer = owners.get(segment);
+            /**
+             * ⛔ A SEGMENT NOBODY CLAIMS TO EMIT IS SILENT HERE, not guessed.
+             * `reportRows` already says "no producer IT NOMINATED was blocked"
+             * for such a segment (trap 576's own shape), and inventing an owner
+             * would be the prose regex wearing a new coat.
+             */
+            if (!producer) continue;
+            if (!out.has(producer)) out.set(producer, []);
+            if (!out.get(producer).includes(segment)) out.get(producer).push(segment);
         }
     }
     return out;

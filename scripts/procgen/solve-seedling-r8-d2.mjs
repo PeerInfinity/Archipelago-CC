@@ -61,6 +61,7 @@ import { fileURLToPath } from 'node:url';
 
 import { createWalkReport } from './walkReport.js';
 import { modelArrivalOf } from './provisionalLatch.js';
+import { emitSegments } from './producerSegments.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
@@ -102,6 +103,27 @@ const WALK_REPORT = createWalkReport({
 });
 
 const CHECK = process.argv.includes('--check');
+
+/**
+ * ⛓ THE ONE TAPE THIS PRODUCER OWNS, spelled ONCE — it was written literally at
+ * four code sites and this collapses them. R9 P3 (C).
+ */
+const NAME = 'r8-solve-20';
+
+/**
+ * ⛓⛓⛓ R9 P3 (C), ⚖ 54 (7) — **THIS PRODUCER CAN BE ASKED WHAT IT OWNS,
+ * WITHOUT BEING RUN.** Byte-inert to ⚖ 8: nothing is printed on the `--check`
+ * path.
+ */
+// ⛓ THE FLAG TOKEN IS SPELLED **HERE**, not only inside the helper — the
+// instruments index publishes "the flags it reads out of `argv`" by scanning
+// each instrument's own text, and a flag parsed one module away is a flag its
+// table would omit (the same reason `--walk-report`'s token is spelled here).
+// `emitSegments` REFUSES a producer whose token is not `SEGMENTS_FLAG`, so the
+// two spellings cannot drift apart.
+if (process.argv.includes('--segments')) {
+    emitSegments({ producer: 'solve-seedling-r8-d2.mjs', emits: [NAME], declares: [NAME] });
+}
 
 const { parseTape, requiredTapeVersion } = await import(join(MODULE, 'tapeFormat.js'));
 const { createLevelRun } = await import(join(MODULE, 'levelRun.js'));
@@ -207,7 +229,7 @@ check('hasShield is NOT held at the boot (a flip needs somewhere to flip from)',
 check('hasSword IS held at the boot (the campaign\'s own latch)',
     run.inventory.hasSword === true);
 
-const out = solveSegment({ run, goals: GOALS, name: 'r8-solve-20', boot: BOOT });
+const out = solveSegment({ run, goals: GOALS, name: NAME, boot: BOOT });
 
 const hits = run.playerHits.length;
 const deaths = run.playerDeaths.length;
@@ -238,11 +260,11 @@ check('the arrival is CALM (v = 0 at the latch)',
     `v=(${run.state.vx},${run.state.vy})`);
 
 // ── emit ──────────────────────────────────────────────────────────────
-const folded = buildTape(out.perTick, BOOT, 'r8-solve-20',
+const folded = buildTape(out.perTick, BOOT, NAME,
     { noclip: false, noDamage: false, noHazards: [], grants: [] });
 const tape = {
     game: 'seedling',
-    name: 'r8-solve-20',
+    name: NAME,
     boot: BOOT,
     noclip: false,
     noDamage: false,

@@ -154,6 +154,7 @@ if (ONLY_LIST) {
         tapes: report.tapes,
         chains: report.chains,
         identity: report.identity,
+        data: report.data,
         movers: movers(report),
         unresolvedEdges: report.unresolved.length,
         upperBound: UPPER_BOUND_SENTENCE,
@@ -171,6 +172,25 @@ if (ONLY_LIST) {
         console.log(`\n⚠ ${report.offGraph.length} changed path(s) are NOT nodes of this `
             + `graph (outside ${DEFAULT_ROOTS.join(' / ')}, or not a .js/.mjs/.html): `
             + `${report.offGraph.join(', ')}`);
+        /**
+         * ⛓ — AND WHICH LIST COVERS THEM. R9 §42.2 / trap 770: this warning
+         * used to end here, and at the fourth re-record 49 changed paths sat
+         * behind it with nothing enumerating their consumers. The DATA lists
+         * below are that enumeration, and the ones NOTHING covers are named.
+         */
+        const fixtureRows = report.offGraph.filter(
+            (p) => /(^|\/)fixtures\//.test(p) && p.endsWith('.json'));
+        if (fixtureRows.length) {
+            console.log(`   → ${fixtureRows.length} of them are fixture JSON and are covered `
+                + 'by the TESTS-BY-NAME and GATES-BY-NAME lists below, which is what makes '
+                + 'the bound a UNION rather than the import graph alone.');
+        }
+        const restRows = report.offGraph.filter((p) => !fixtureRows.includes(p));
+        if (restRows.length) {
+            console.log(`   ⛔ ${restRows.length} of them are covered by NEITHER list — not a `
+                + `node, not a fixture whose name anything spells: ${restRows.join(', ')}. A `
+                + 'seal owes those an opinion of its own.');
+        }
     }
     if (symbolNote) console.log(`\n⚠ --symbol: ${symbolNote}`);
     section('SEEDS', report.seeds);
@@ -183,6 +203,41 @@ if (ONLY_LIST) {
     section('CHAINS those tapes belong to', report.chains);
     section('IDENTITY-BLOCK rows reached', report.identity,
         (r) => `${r.label}  ← ${r.script.split('/').pop()}`);
+    /**
+     * ⛓⛓⛓ THE DATA REACH — the two populations a code-import closure cannot
+     * contain (§42.2, trap 770). Printed even when empty, because "no fixture
+     * changed" and "nobody looked" must not read the same.
+     */
+    console.log(`\n── DATA REACH: ${report.data.labels.length} changed fixture name(s) ──`);
+    if (report.data.labels.length === 0) {
+        console.log('   (no changed path under a `fixtures/` directory — the two lists below '
+            + 'are empty BECAUSE THERE WAS NOTHING TO LOOK FOR, not because nothing names a '
+            + 'tape)');
+    } else {
+        console.log(`   ${report.data.labels.join(', ')}`);
+    }
+    if (report.data.excluded?.length) {
+        console.log(`   ⛔ EXCLUDED from the name search: ${report.data.excluded.join(', ')} — `
+            + 'the GENERATED tape index, whose stem is a token half the tree spells. It is '
+            + 'not a tape label: `fixtures/index.js` READS it, so it is already on the code '
+            + 'reach, and `tapeIndexManifest.test.js` gates it against the directory.');
+    }
+    section('TESTS THAT NAME A CHANGED FIXTURE (not importers — spellers)', report.data.tests);
+    section('check-*.mjs GATES THAT NAME A CHANGED FIXTURE (the third population)',
+        report.data.gates);
+    const union = [...new Set([...report.tests, ...report.data.tests])].sort();
+    console.log(`\n⛓ THE BOUND IS THE UNION: ${report.tests.length} test(s) reached by IMPORT `
+        + `∪ ${report.data.tests.length} test(s) that NAME a changed fixture = ${union.length} `
+        + 'file(s).');
+    const blind = union.filter((t) => !report.tests.includes(t));
+    if (blind.length) {
+        console.log(`   ⛔ ${blind.length} of them the import graph CANNOT SEE: `
+            + `${blind.join(', ')}`);
+    }
+    console.log('   ⛔ AND NEITHER POPULATION SEES a consumer carrying a NUMBER derived from a '
+        + "tape without naming the tape — CLAIM 8's `/865 observations/` was found only "
+        + 'because the gate ALSO spelled `r8-d2-19`. That is what this union does NOT cover, '
+        + 'and it is stated rather than left to be discovered.');
     console.log(`\n── OTHER MODULES REACHED (${report.modules.length}) ──`);
     console.log(`   ${report.modules.length} module file(s); pass --json for the list`);
     if (report.unresolved.length > 0) {

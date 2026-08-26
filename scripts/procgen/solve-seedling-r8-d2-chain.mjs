@@ -73,6 +73,7 @@ import { committedTick0, tick0ParseFields, despawnField, tick0Field }
     from './tick0Carry.js';
 import { createWalkReport } from './walkReport.js';
 import { modelArrivalOf } from './provisionalLatch.js';
+import { emitSegments } from './producerSegments.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
@@ -392,6 +393,27 @@ const HEADLINE = Object.freeze({
     goals: SEGMENTS.flatMap((s) => s.goals),
     headline: 'ALL THREE ROOMS IN ONE RUN — what the three segments are sliced from',
 });
+
+/**
+ * ⛓⛓⛓ R9 P3 (C), ⚖ 54 (7) — **THIS PRODUCER CAN BE ASKED WHAT IT OWNS,
+ * WITHOUT BEING RUN.** `--segments` prints its table and EXITS, above every
+ * solve. `emits` is what this script WRITES; a PROMOTED row is declared and
+ * left to the producer that owns it. Byte-inert to ⚖ 8: nothing is printed on
+ * the `--check` path.
+ */
+// ⛓ THE FLAG TOKEN IS SPELLED **HERE**, not only inside the helper — the
+// instruments index publishes "the flags it reads out of `argv`" by scanning
+// each instrument's own text, and a flag parsed one module away is a flag its
+// table would omit (the same reason `--walk-report`'s token is spelled here).
+// `emitSegments` REFUSES a producer whose token is not `SEGMENTS_FLAG`, so the
+// two spellings cannot drift apart.
+if (process.argv.includes('--segments')) {
+    emitSegments({
+        producer: 'solve-seedling-r8-d2-chain.mjs',
+        emits: [HEADLINE.name, ...SEGMENTS.filter((s) => !s.promoted).map((s) => s.name)],
+        declares: [HEADLINE.name, ...SEGMENTS.map((s) => s.name)],
+    });
+}
 
 const results = [];
 let carried = null;      // the previous segment's latch, as boot fields

@@ -18,8 +18,11 @@ import {
     LICENSE_FLAG, applyLicence, cascadeFrom, licenceFrom, movedSegments, nominateOwners,
     participationOf, producerOrder, reportRows,
 } from './walkMoves.js';
+import { ownersByEmit } from './producerSegments.js';
 
 const TAPES = join(process.cwd(), 'frontend/modules/seedlingDemo/fixtures/tapes');
+/** ⛓ The real tree's ownership, DERIVED from the producers (R9 P3 (C)). */
+const owners = () => ownersByEmit({ repo: process.cwd() });
 const chains = () => PLAYTHROUGH_CHAINS
     .filter((c) => (c.segments ?? []).length >= 2)
     .map((c) => ({ id: c.id, segments: c.segments.slice() }));
@@ -31,8 +34,8 @@ describe('walkMoves: the two derivations, calibrated against the REAL tree', () 
      * descriptions. A nomination scan that silently found nothing would leave
      * every segment `unmeasured` and every walk move invisible.
      */
-    it('⛓⛓ the nomination finds the four solvers the committed tapes NAME', () => {
-        const nominated = nominateOwners(chains(), { tapesDir: TAPES });
+    it('⛓⛓ the nomination finds the four solvers that EMIT the chain segments', () => {
+        const nominated = nominateOwners(chains(), { owners: owners() });
         for (const file of ['solve-seedling-r9-campaign.mjs', 'solve-seedling-r8-battery.mjs',
             'solve-seedling-r8-l18.mjs', 'solve-seedling-r8-d2-chain.mjs']) {
             expect([...nominated.keys()], `${file} was not nominated`).toContain(file);
@@ -42,19 +45,29 @@ describe('walkMoves: the two derivations, calibrated against the REAL tree', () 
     });
 
     /**
-     * ⛔⛔ **AND THE NOMINATION IS NOT THE ANSWER.** `r7-ends-meet-1`'s
-     * description names NO producer at all, and yet
-     * `plan-seedling-r7-ends-meet.mjs` emits it. A description says what a tape
-     * SAYS ABOUT ITSELF; ownership is the producer's own claim (trap 576).
-     * This row exists so nobody re-derives ownership from descriptions later.
+     * ⛓⛓⛓ **THE DEFECT THIS ROW USED TO PIN IS CURED, AND THE ROW IS THE
+     * PROOF.** `r7-ends-meet-1`'s description names NO producer at all — it
+     * never has (trap 576) — so while ownership was regexed out of prose it was
+     * an owner-less segment, and this file asserted that MISS as a fact of
+     * life. `plan-seedling-r7-ends-meet.mjs` emits it and always did; asking the
+     * producer instead of the tape returns the owner the prose could not.
+     * R9 P3 (C), trap 773.
      */
-    it('⛔⛔ a nomination can MISS a real owner — `r7-ends-meet-1` names none', () => {
-        const nominated = nominateOwners(chains(), { tapesDir: TAPES });
-        const nominatedSegments = new Set([...nominated.values()].flat());
-        expect(nominatedSegments.has('r7-ends-meet-1')).toBe(false);
+    it('⛓⛓⛓ the segment whose PROSE names nobody now has its real owner', () => {
+        const nominated = nominateOwners(chains(), { owners: owners() });
+        expect(nominated.get('plan-seedling-r7-ends-meet.mjs')).toContain('r7-ends-meet-1');
         // …and the file that really writes it does exist in this directory.
         expect(readdirSync(join(process.cwd(), 'scripts/procgen')))
             .toContain('plan-seedling-r7-ends-meet.mjs');
+    });
+
+    /**
+     * ⛔ AND THE MAP IS INJECTED — a caller that passes none is REFUSED by
+     * name rather than falling back to this repository, which is what keeps a
+     * REHEARSAL answering about its own tree.
+     */
+    it('⛔ nominateOwners refuses an absent owner map rather than guessing', () => {
+        expect(() => nominateOwners(chains(), {})).toThrow(/must be a Map of tape -> producer/);
     });
 
     /**

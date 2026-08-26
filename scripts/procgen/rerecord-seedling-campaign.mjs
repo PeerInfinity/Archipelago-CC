@@ -120,6 +120,8 @@ import {
     CHECK_FLAG, LICENSE_FLAG, applyLicence, cascadeFrom, licenceFrom, movedSegments,
     nominateOwners, participationOf, producerOrder, reportRows,
 } from './walkMoves.js';
+import { ownersByEmit, proseOwnerDisagreements, solverRosterFromData }
+    from './producerSegments.js';
 import {
     BRANCH_FLAG, DRIVE_FLAG, PROVISIONAL_FLAG, TABLE_FLAG,
     certifyAgainstLatch, certificationCell, latchCacheCandidates, latchCell,
@@ -357,6 +359,13 @@ async function buildContext(overrides = {}) {
             }
             return instrumentRowsCache;
         },
+        /**
+         * ⛓⛓⛓ R9 P3 (C) — **WHO OWNS EACH TAPE, AS DATA.** For the real tree
+         * that is every producer's own `--segments` answer; a REHEARSAL
+         * overrides it with its marker's owner table, so the fake tree is
+         * answered about instead of this repository (⚖ 17, trap 773).
+         */
+        tapeOwners: overrides.tapeOwners ?? (() => ownersByEmit({ repo: root })),
     };
 
     ctx.textOf = (label) => readFileSync(join(ctx.tapesDir, `${label}.json`), 'utf8');
@@ -399,6 +408,14 @@ async function rehearsalContext(dir) {
         cacheDir: join(dir, 'cache'),
         chains: marker.chains,
         instrumentRows: marker.instrumentRows,
+        /**
+         * ⛓ THE REHEARSAL'S OWN OWNERSHIP, inverted off the marker's
+         * `owners` table (producer -> segments). Without this the derivation
+         * would answer about THIS repository's producers while every other
+         * stage answered about the scratch tree.
+         */
+        tapeOwners: () => new Map(Object.entries(marker.owners)
+            .flatMap(([file, segs]) => segs.map((seg) => [seg, file]))),
         rehearsal: dir,
         scriptPath: (file) => {
             for (const sub of ['producers', 'stubs']) {
@@ -496,7 +513,7 @@ function accountingChains(ctx) {
  * cannot run a browser stage at all.
  */
 async function measureWalks(ctx, chains) {
-    const nominated = nominateOwners(chains, { tapesDir: ctx.tapesDir });
+    const nominated = nominateOwners(chains, { owners: ctx.tapeOwners() });
     const participation = participationOf([...nominated.keys()],
         { instrumentRows: await ctx.instrumentRows() });
     console.log('\n## THE WALK MEASUREMENT — the producers, and what each may answer');
@@ -1352,15 +1369,42 @@ function record(ctx, s0, s1, s2) {
 }
 
 /**
- * ⛓ DERIVED, NEVER TYPED: every tape whose own `description` says a solver
- * authored it, plus the four hand witnesses the gate carries as controls.
+ * ⛓⛓⛓ DERIVED FROM THE PRODUCERS, NEVER FROM THE TAPES' PROSE — R9 P3 (C),
+ * ⚖ ruling 17, trap 773.
+ *
+ * ⛔ IT USED TO BE A REGEX OVER `description`
+ * (`/Authored by scripts\/procgen\/solve-seedling|LIVE SOLVER/i`). Every
+ * `solve-seedling-*` producer now DECLARES its segments under `--segments`, so
+ * the roster is the union of what they declare — including the PROMOTED rows a
+ * chain declares and the battery emits, which belong on the roster either way.
+ * ⛓ MEASURED BEFORE THE REGEX WAS DELETED: the derived set and the prose set
+ * are the SAME 22 tapes, element for element.
+ *
+ * ⛔⛔ AND THE COVERAGE GAP §42.7 (ii) FOUND IS CLOSED HERE RATHER THAN NOTED.
+ * ⚖ ruling 40's targeted roster is 25 — these 22 ∪ the three `plan-seedling-*`
+ * DASH WITNESSES — so `prove()` covered 22 of 25 while ⚖ 32 E called it "the
+ * gate run". The witnesses are not solver-authored and never will be, so they
+ * are named as their OWN list with the reason, and `prove()` gives them a row.
+ * A quiet union would have hidden which claim each half is making.
  */
+const DASH_WITNESSES = Object.freeze(
+    ['r9-l0-sword-dash', 'r9-l0-sword-dash-rest', 'r9-l6-sword-dash-hit']);
+
+/** The four hand witnesses this gate has always carried as controls. */
+const HAND_WITNESSES = Object.freeze(
+    ['r8-hammer-arm', 'r8-hammer-control', 'r8-l18-spinner-press', 'r8-l6-bob-contact']);
+
 function solverRoster(ctx) {
-    const names = ctx.allTapeLabels();
-    const solver = names.filter((n) => /Authored by scripts\/procgen\/solve-seedling|LIVE SOLVER/i
-        .test(ctx.rawOf(n).description || ''));
-    return [...solver, 'r8-hammer-arm', 'r8-hammer-control',
-        'r8-l18-spinner-press', 'r8-l6-bob-contact'];
+    const derived = ctx.rehearsal
+        /**
+         * ⛓ A REHEARSAL'S ROSTER IS ITS OWN TREE'S. The producers under
+         * `scripts/procgen/` know nothing about a scratch tree's fake tapes,
+         * so the rehearsal answers from the ownership table it already has —
+         * the same substitution `nominateOwners` takes.
+         */
+        ? [...new Set([...ctx.tapeOwners().keys()])].sort()
+        : solverRosterFromData({ repo: ctx.root });
+    return [...derived, ...HAND_WITNESSES];
 }
 
 function prove(ctx) {
@@ -1379,10 +1423,31 @@ function prove(ctx) {
      * witnesses the gate has always carried alongside it.
      */
     const solver = solverRoster(ctx);
-    console.log(`## the solver roster: ${solver.length} tape(s), derived`);
+    console.log(`## the solver roster: ${solver.length} tape(s), derived from the producers' `
+        + 'own `--segments` (⚖ 17) plus the four hand witnesses');
     rows.push(['the solver-roster differential', shell(ctx, 'the solver-roster differential',
         'node', [ctx.scriptPath('verify-seedling-bot-differential.mjs'), '--win',
             `--only=${solver.join(',')}`]).ok]);
+    /**
+     * ⛓⛓⛓ R9 P3 (C) — **THE THREE ⚖ 40 WITNESSES S4 NEVER COVERED** (§42.7 ii).
+     *
+     * ⚖ ruling 40's targeted roster is the chain tapes ∪ the DASH-BEARING set,
+     * and the three `plan-seedling-*` dash witnesses are in the second half and
+     * not the first. `solverRoster` cannot reach them — they are not
+     * solver-authored — so ⚖ 32 E's *"S4 IS the gate run"* was covering 22 of
+     * 25 and saying 25. This row is the missing third, run as its OWN command
+     * so that a failure names the witnesses rather than being lost in a
+     * 22-tape sweep.
+     *
+     * ⛔ A MISSING WITNESS IS A STOP, NOT A SKIP. If the tape is not on disk the
+     * differential says so by name; a row silently narrowed to the tapes that
+     * happen to exist is how a coverage gap survives a second time.
+     */
+    console.log(`## the ⚖ 40 dash witnesses: ${DASH_WITNESSES.length} tape(s) — outside the `
+        + 'solver roster by construction, and covered here rather than assumed');
+    rows.push(['the ⚖ 40 dash witnesses', shell(ctx, 'the ⚖ 40 dash witnesses', 'node',
+        [ctx.scriptPath('verify-seedling-bot-differential.mjs'), '--win',
+            `--only=${DASH_WITNESSES.join(',')}`]).ok]);
     flush(ctx, 'S4', { rows });
     return rows;
 }
@@ -1976,7 +2041,7 @@ function latchProvisional(ctx, names, { branch = null, drive = false }) {
         }
     }
 
-    const owners = nominateOwners(chains, { tapesDir: ctx.tapesDir });
+    const owners = nominateOwners(chains, { owners: ctx.tapeOwners() });
     const wanted = new Set();
     for (const [file, segs] of owners) if (segs.some((x) => names.includes(x))) wanted.add(file);
     console.log(`## the model's word — ${[...wanted].join(', ') || '(no owner nominated)'}`);

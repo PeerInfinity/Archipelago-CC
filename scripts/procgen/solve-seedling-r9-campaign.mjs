@@ -102,6 +102,7 @@ import { committedTick0, tick0ParseFields, despawnField, tick0Field }
     from './tick0Carry.js';
 import { createWalkReport } from './walkReport.js';
 import { modelArrivalOf } from './provisionalLatch.js';
+import { emitSegments } from './producerSegments.js';
 /**
  * ⛔ THE ONE DECLARATION (⚖ ruling 38 (1), R9 slice 12d). A static import
  * rather than the dynamic `await import(MODULE, …)` the runtime modules below
@@ -315,6 +316,30 @@ const SEGMENTS = CAMPAIGN_SEGMENTS.map((s) => Object.freeze({
         reach(s.level, s.to),
     ],
 }));
+
+/**
+ * ⛓⛓⛓ R9 P3 (C), ⚖ 54 (7) — **THE PRODUCER CAN BE ASKED WHAT IT OWNS, WITHOUT
+ * BEING RUN.** `--segments` prints this chain's tables and EXITS, above every
+ * solve and above the first browser drive (trap 584: this file solves the whole
+ * campaign at module scope, so nothing can import it). `emits` is what this
+ * script WRITES — the ownership answer; the four PROMOTED rows are declared and
+ * not emitted, and `solve-seedling-r8-battery.mjs` keeps them.
+ *
+ * ⛓ BYTE-INERT TO ⚖ 8: nothing is printed on the `--check` path.
+ */
+// ⛓ THE FLAG TOKEN IS SPELLED **HERE**, not only inside the helper — the
+// instruments index publishes "the flags it reads out of `argv`" by scanning
+// each instrument's own text, and a flag parsed one module away is a flag its
+// table would omit (the same reason `--walk-report`'s token is spelled here).
+// `emitSegments` REFUSES a producer whose token is not `SEGMENTS_FLAG`, so the
+// two spellings cannot drift apart.
+if (process.argv.includes('--segments')) {
+    emitSegments({
+        producer: 'solve-seedling-r9-campaign.mjs',
+        emits: SEGMENTS.filter((s) => !s.promoted).map((s) => s.name),
+        declares: SEGMENTS.map((s) => s.name),
+    });
+}
 
 /** ⛓ The head of the chain: the committed true start, read off disk. */
 const HEAD_NAME = SEGMENTS[0].name;

@@ -46,6 +46,7 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { committedTick0, tick0ParseFields, despawnField, tick0Field }
     from './tick0Carry.js';
+import { emitSegments } from './producerSegments.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
@@ -55,6 +56,40 @@ const PAGE_URL = `http://localhost:8000/frontend/modules/flashPanel/wasm/${PAGE_
 const TAPES = join(REPO, 'frontend', 'modules', 'seedlingDemo', 'fixtures', 'tapes');
 
 const CHECK = process.argv.includes('--check');
+
+/**
+ * ⛓⛓⛓ R9 P3 (C), ⚖ 54 (7) — **THIS PRODUCER CAN BE ASKED WHAT IT OWNS,
+ * WITHOUT BEING RUN.**
+ *
+ * ⛔ AND IT IS ANSWERED **ABOVE THE ARTIFACT GUARD**, deliberately. The guard
+ * below exits 0 with `SKIP` when the wasm build is absent — which is right for
+ * a browser producer and WRONG for an ownership question: who owns a tape is a
+ * fact about this repository, not about whether a 40 MB build is checked out.
+ * A consumer that asked on a machine without the artifact (CI) would otherwise
+ * get `SKIP:` where it expects JSON and would have to treat a producer that
+ * exists as one that does not.
+ *
+ * ⛓ THE SELECTION IS THE PRODUCER'S OWN — the `walk`-bearing chains and only
+ * those, the same predicate the emit loop below applies (a chain with no
+ * `walk` block is another planner's, and reading one killed this script once).
+ *
+ * ⛓ Byte-inert to ⚖ 8: nothing is printed on the `--check` path.
+ */
+// ⛓ THE FLAG TOKEN IS SPELLED **HERE**, not only inside the helper — the
+// instruments index publishes "the flags it reads out of `argv`" by scanning
+// each instrument's own text, and a flag parsed one module away is a flag its
+// table would omit (the same reason `--walk-report`'s token is spelled here).
+// `emitSegments` REFUSES a producer whose token is not `SEGMENTS_FLAG`, so the
+// two spellings cannot drift apart.
+if (process.argv.includes('--segments')) {
+    const { PLAYTHROUGH_CHAINS: CHAINS } = await import(
+        join(REPO, 'frontend/modules/seedlingDemo/playthroughWalk.js'));
+    const mine = CHAINS.filter((c) => c.walk);
+    const names = mine.flatMap((c) => [...(c.headline ? [c.headline] : []), ...c.segments]);
+    emitSegments({
+        producer: 'plan-seedling-r7-ends-meet.mjs', emits: names, declares: names,
+    });
+}
 
 if (!existsSync(join(ARTIFACT, 'game.html'))) {
     console.log(`SKIP: no wasm artifact at ${ARTIFACT}`);

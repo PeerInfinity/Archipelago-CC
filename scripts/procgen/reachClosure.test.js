@@ -25,7 +25,7 @@ import { describe, expect, it } from 'vitest';
 import {
     REPO, UPPER_BOUND_SENTENCE,
     buildGraph, evalPathExpr, fileEdges, identityRows, loaderHelpers,
-    partition, reachFrom, reachReport,
+    dataReach, partition, reachFrom, reachReport,
 } from './reachClosure.js';
 
 describe('the path expressions this repo actually writes', () => {
@@ -327,5 +327,122 @@ describe('the partitions and the identity rows are derived, not typed', () => {
         expect(labels).toContain('solve-seedling-r9-campaign --check');
         // non-vacuity: every row names a script that is really in the tree
         for (const r of rows) expect(r.script).toMatch(/^scripts\/procgen\/[\w.-]+$/);
+    });
+});
+
+/**
+ * ⛓⛓⛓ R9 SLICE P3 (D), trap 770 — **THE DATA REACH IS A SECOND POPULATION AND
+ * A THIRD ONE, AND BOTH ARE DERIVED.**
+ *
+ * §42.2 measured the gap on the real series: the code reach named 59 tests, the
+ * fixture-name grep named 18 files, and FIVE of them the import graph could not
+ * see — two of those five were RED, and `helpFrame.test.js` would have reached
+ * CI unseen. These rows are that measurement made mechanical.
+ */
+describe('R9 P3: the DATA reach — the population a code-import closure cannot contain', () => {
+    const MOVED = [
+        'frontend/modules/seedlingDemo/fixtures/tapes/r8-d2-19.json',
+        'frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-13.json',
+        'frontend/modules/seedlingDemo/fixtures/traces/r9-solve-13.trace.json',
+    ];
+
+    it('⛓ a changed fixture yields its LABEL, and a `.trace` is the same walk', () => {
+        const d = dataReach(MOVED, { repo: REPO });
+        expect(d.labels).toEqual(['r8-d2-19', 'r9-solve-13']);
+    });
+
+    it('⛓ tests that NAME a moved tape are found, including ones nothing imports', () => {
+        const d = dataReach(MOVED, { repo: REPO });
+        // `tapeRunner.test.js` names `r8-d2-19` (§42.2's own red row).
+        expect(d.tests).toContain('frontend/modules/seedlingDemo/tapeRunner.test.js');
+        expect(d.tests.length).toBeGreaterThan(0);
+        for (const t of d.tests) expect(t).toMatch(/\.test\.m?js$/);
+    });
+
+    /**
+     * ⛔ THE THIRD POPULATION. `check-seedling-editor-sequence.mjs`'s CLAIM 8
+     * carried `/865 observations/` — `r8-d2-19`'s old `tick_count + 1` — and
+     * neither the import graph nor the test list contains a `check-*.mjs`.
+     */
+    it('⛔ check-*.mjs gates that name a moved tape are their OWN list', () => {
+        const d = dataReach(MOVED, { repo: REPO });
+        expect(d.gates)
+            .toContain('scripts/procgen/check-seedling-editor-sequence.mjs');
+        for (const g of d.gates) expect(g).toMatch(/^scripts\/procgen\/check-[a-z0-9-]+\.mjs$/);
+    });
+
+    /**
+     * ⛔⛔ THE MATCH IS A DELIMITED TOKEN, AND THE ROW IS NOT VACUOUS.
+     * `r8-solve-1` is a substring of `r8-solve-10` and `r8-solve-11`; a naive
+     * `includes` reported every consumer of the tenth and eleventh rooms as a
+     * consumer of the first. The positive control is that `r8-solve-10`'s own
+     * consumers are still found when IT is the changed file.
+     */
+    it('⛔ `r8-solve-1` does not match `r8-solve-10` — with a positive control', () => {
+        const one = dataReach(
+            ['frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-1.json'], { repo: REPO });
+        const ten = dataReach(
+            ['frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-10.json'], { repo: REPO });
+        expect(ten.tests.length).toBeGreaterThan(0);
+        const onlyTen = ten.tests.filter((t) => !one.tests.includes(t));
+        expect(onlyTen.length).toBeGreaterThan(0);
+    });
+
+    /**
+     * ⛔ THE TAPE INDEX IS EXCLUDED, AND THE EXCLUSION IS NAMED. Its stem is
+     * `index`, a token half the tree spells; including it made this list 166
+     * files — an upper bound so loose it says nothing.
+     */
+    it('⛔ the generated tape index is excluded BY NAME, not dropped silently', () => {
+        const d = dataReach(
+            ['frontend/modules/seedlingDemo/fixtures/tapes/index.json'], { repo: REPO });
+        expect(d.labels).toEqual([]);
+        expect(d.excluded)
+            .toEqual(['frontend/modules/seedlingDemo/fixtures/tapes/index.json']);
+        expect(d.tests).toEqual([]);
+    });
+
+    /**
+     * ⛔⛔ **THE ORDER OF MAGNITUDE IS THE ROW.** The first draft of this list
+     * used a naive `text.includes(label)` and returned **166 test files** for
+     * the fourth re-record's thirteen names — an upper bound so loose it says
+     * nothing, and it read as a thorough answer. Two causes, both fixed and
+     * both pinned: the tape INDEX's stem (`index`, a token half the tree
+     * spells) and substring collisions between `r8-solve-1` and its
+     * ten/eleven siblings. This row reds if either comes back.
+     */
+    it('⛔⛔ the thirteen series names do NOT drag in the whole tree (the 166 row)', () => {
+        const series = ['r8-d2', 'r8-d2-19', 'r8-d2-20', 'r8-solve-1', 'r8-solve-10',
+            'r8-solve-11', 'r8-solve-18', 'r8-solve-2', 'r8-solve-20', 'r8-solve-3',
+            'r8-solve-4', 'r8-solve-5', 'r8-solve-6', 'r8-solve-7', 'r8-solve-8',
+            'r8-solve-9', 'r9-solve-0', 'r9-solve-11', 'r9-solve-13', 'r9-solve-14',
+            'r9-solve-2', 'r9-solve-3']
+            .map((n) => `frontend/modules/seedlingDemo/fixtures/tapes/${n}.json`);
+        const d = dataReach([...series,
+            'frontend/modules/seedlingDemo/fixtures/tapes/index.json'], { repo: REPO });
+        expect(d.labels).toHaveLength(22);          // the index is excluded, by name
+        // non-vacuity in both directions: it finds real consumers…
+        expect(d.tests.length).toBeGreaterThan(10);
+        // …and it does not find the whole tree. 166 was the naive answer.
+        expect(d.tests.length).toBeLessThan(60);
+        // every one of them is a seedling-side or procgen-side test, not a stray
+        for (const t of d.tests) {
+            expect(t).toMatch(/^(?:frontend\/modules\/seedlingDemo|scripts\/procgen)\//);
+        }
+    });
+
+    it('⛓ a change with no fixture in it yields empty lists and says nothing else', () => {
+        const d = dataReach(['scripts/procgen/reachClosure.js'], { repo: REPO });
+        expect(d.labels).toEqual([]);
+        expect(d.tests).toEqual([]);
+        expect(d.gates).toEqual([]);
+    });
+
+    it('⛓ reachReport carries the data reach beside the closure', async () => {
+        const report = await reachReport(MOVED, { repo: REPO });
+        expect(report.data.labels).toEqual(['r8-d2-19', 'r9-solve-13']);
+        // every moved fixture is off-graph, and the data lists are what cover it
+        expect(report.offGraph).toEqual(MOVED);
+        expect(report.data.uncovered).toEqual([]);
     });
 });
