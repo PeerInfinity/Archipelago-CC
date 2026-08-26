@@ -5375,6 +5375,18 @@ and on integrating ALL procgen editors (the pipeline panel's modes, the
 intermediate-results editor). Memory: `project_platformer_substrate_arc`,
 `project_editor_integration_planning`.
 
+**⇒ SESSION 8 (cont., 2026-08-26): 12g ✓ (§45, `1f592d41a`) — the world-swap race
+is a FRAME COUNT (cut at outgoing frame 18 of the 20-frame `blackCover` fade;
+idle-0 arms at frame 2–4, ~0.6 s headroom), the gate is landed, phase alignment
+refuted ⇒ (F) is an AS3 change. Slice **12g′** (§46) LAUNCHED: `Bot.as` arms
+after the swap, built as **`seedling_bot_ap_p4c`** (p4b untouched), proved at the
+losing idles, defaults flipped. Then **12h** (§47) = the FIFTH run on p4c: ⚖ 57's
+roster-wide `sound` pin (37 ladder tapes by ROOT inheritance; 76 v3/v4 tapes
+EXEMPT by definition — a format-upgrade ⚖ for later; 4 controls exempt) + the
+parked series + the bank + the three `r7-act2-*` descriptions, ONE push. Suite
+row deliberately STALE in the file (375/11631; CI 376/11638) until 12h's
+`--write`.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
