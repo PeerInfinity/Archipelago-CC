@@ -15051,3 +15051,87 @@ drives must agree on this field at all. The new boundary gate landed alongside
 this work cannot decide it either — it catches a boot field copied from the
 wrong chain, and here there is no wrong number to catch, only two correct
 readings of two real drives.
+
+The same session that measured the mixer also went at the other half of the
+fourth run's stop, which was not about a number at all but about who is allowed
+to say one. Every chain segment after the first boots from its predecessor's
+measured exit, and the producers' own `--check` had been claiming to verify
+that. It never could. Under `--check` each segment's boot is read out of its own
+committed tape, so the comparison is between a file and a derivation seeded from
+that same file — self-consistency, which is a different property from
+correctness and cannot see a changed latch by construction. The parked series
+proved the gap in the plainest way available: at that head the campaign
+producer's `--check` printed *all checks green* and the same script's emit,
+run immediately afterwards in a throwaway worktree, rewrote two committed tapes.
+
+The repair is a separate gate rather than a third verdict inside `--check`, and
+the reason is worth keeping. A line printed inside `--check` saying which
+latches the current machine happens to hold would make each producer's published
+stdout digest a property of the box it ran on, and those digests are the tree's
+cheapest evidence that a producer has not moved. So the boundary question lives
+in its own instrument: for every boundary of every multi-segment chain it finds
+the predecessor's cached latch under the key the pipeline itself computes,
+derives the successor's boot from it, and compares that against what the
+successor's tape declares. It reports three states rather than two — verified,
+disagrees, and refused — because on a machine that has never driven a given
+tape there is no evidence either way, and a check that called that a pass would
+be worse than one that could not run. At `main` it is eighteen verified and
+nothing else; at the parked series it is seventeen verified and one
+disagreement, and the one it names is the seam the series really spliced. The
+producer's emit rewrites two tapes there; the gate says only one boundary is
+wrong, because the second is internally consistent with the first one's error.
+
+Ownership got the same treatment. Two consumers had been deciding which script
+owns which recording by reading English out of the recordings themselves — a
+sentence in a `description` naming a file under `scripts/procgen/`. Both had
+already rotted: one of the scripts named that way was retired months ago and
+three committed recordings still nominate it. Producers now answer the question
+directly, printing the list of recordings they emit and exiting before they
+solve anything, and the roster derived that way turns out to be exactly the
+same twenty-two the prose selected — which is the measurement that licensed
+deleting the regexes rather than an argument for it. The prose survives in one
+place only, as a check that it agrees with the data; where it does not, the
+disagreement is named and left, because repairing a `description` means
+rewriting a committed recording and that is not a thing a tooling change may do
+on its own authority.
+
+The change-reach instrument learned to say what it cannot see. It walks
+imports, and a recording is data: nothing imports it, so a changed recording is
+invisible to the graph and the instrument had been printing a count of paths it
+could not place while nobody acted on the sentence. It now emits two more lists
+beside the import closure — the tests that spell a changed recording's name, and
+the check scripts that do — and prints the union as the bound. On the fourth
+run's own range that union is seventy-one files, ten of which the import graph
+could not reach, and two of those ten were red at the time. The instrument also
+prints what the union still misses: a consumer that carries a number derived
+from a recording without ever naming the recording, which is precisely the shape
+that hid a stale count inside a passing gate.
+
+One more thing was expected to be a defect and measured its way out of being
+one. The latch cache had been reported as missing an answer the game had
+already given, and the suspicion was that its key covered fields the pipeline
+rewrites between driving a walk and committing it. Over all twenty-one
+recordings of the third run's own record, comparing the bytes as driven against
+the bytes as committed, not one field the key keeps differs anywhere. The key
+was never the problem. What differs is the *older* spelling of the key, which
+covered the whole file including a block the pipeline re-derives after the
+drive — so the side that drives finds its record and copies it forward under the
+new spelling, and the side that reads a committed recording finds nothing until
+that has happened. The migration works and converges; it is simply lazy, and the
+measurement was taken in the window before it had run. Since then it has, and
+the same table that reported two answered recordings now reports eighteen.
+
+Finally, a law that had been written down three times became a check. The
+runtime computes a vector's length as the square root of the sum of squares and
+normalises by multiplying by a reciprocal, and a model that computes the same
+quantity more accurately diverges from it — a single last-bit difference decided
+a boss's walk-or-coast arm once, and cost a frame. That finding is in this
+document twice and in the fight model's own header once, and forty lines under
+that header the fight model was still computing a distance the accurate way. The
+check now derives its subject from imports rather than from a search for the
+name, so a file that merely mentions the function in a comment is not held to
+the law, and inside that subject the allowed-exception list is empty and stays
+empty: a site that genuinely needs the accurate function does not belong in a
+module whose whole purpose is to reproduce the runtime's arithmetic. It found
+two real violations on its first run — a second definition of the transcription
+in a second file, and the distance under the header — and both are gone.

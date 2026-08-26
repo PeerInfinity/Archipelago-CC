@@ -5195,6 +5195,64 @@ decide it: there is no wrong number to catch, only two correct readings.
 ⛔ Untouched by 12f: every file under `fixtures/`, the parked series, the
 standing values (NONE moved), p4b (no `p4c` was built).
 
+**⛓⛓⛓ R9 SLICE P3 — CLOSED 2026-08-26 @`b060f5b31`** (kickoff §44; ⚖ 54 (6)+(7)
+as GROWN by §42.10's inherited work orders, which the user ruled decided work).
+Five items, all landed on `main` in three commits:
+**(A)** `check-seedling-producer-boundaries.mjs` — a boundary check SEEDED FROM
+THE PREDECESSOR, retiring trap 769's fixed point. **18 VERIFIED / 0 / 0** at
+`main`, **17 / 1 / 0** at the parked series, red by name on `r9-solve-0 →
+r9-solve-13` (`rng.seed 1029458650 != 1196888758`). It finds ONE seam where the
+producer's emit rewrites TWO tapes, which is §42.5's chain step (4) reproduced.
+Three states — VERIFIED / DISAGREES / **REFUSED-UNVERIFIED** — and it exits
+non-zero only on a real disagreement, because the latch cache is machine-global
+and a gate red on its absence would gate nothing anywhere. The false sentence in
+BOTH producers' `--check` comments is repaired. **⚖ 8: zero md5 movers**, which
+is the whole reason the third verdict is a gate.
+**(B)** §42.5b's diagnosis **OVERTURNED**: over all 21 tapes of run 3's `S1.json`
+**not one `KEY_KEEPS` field differs** — the key projection was never the defect.
+The cause is the **LEGACY arm**, keyed on the COMPLETE bytes which carry `tick0`;
+the migration is real, converges, and is **LAZY**, so a lookup from the COMMITTED
+side misses until the DRIVEN side has re-keyed forward. That has since happened:
+`--table --branch=…` reads **18 GAME-CERTIFIED · 7 unasked** where §42.5b read 2
+and 11 — **six of the eleven certified with no GPU**. The five still unasked are
+two chain TAILS, a HEADLINE and two ONE-SEGMENT chains: the tapes no boundary
+consumes. (`--table` is read-only, proved by the cache listing md5;
+`--latch-provisional` WRITES and was not run.)
+**(C)** `nominateOwners` and `solverRoster` are DERIVED from six producers' own
+`--segments` mode (which exits above every solve, trap 584) — the same **22**
+tapes the deleted regexes selected, element for element. ⚖ 40's coverage gap
+(§42.7 ii) closed with a `prove()` row for the three `plan-seedling-*` dash
+witnesses: **25 of 25**. The prose survives only as a LINT that it agrees with
+the data, and its three findings — `r7-act2-5/-6/-full` naming the retired
+`plan-seedling-r7-act2.mjs` — are **PINNED BY NAME** because repairing a
+`description` is a tape move: **three `description` repairs owed to the fifth
+run's licence.**
+**(D)** the reach emits its DATA population — **29** tests that NAME a changed
+fixture and **14** `check-*.mjs` gates, union **71**, with **10 the import graph
+cannot see** (§42.2's five all reappear), and it prints what the union still
+misses.
+**(E)** the one-spelling law is a FILE GATE (a vitest row, so it runs in CI)
+with an **EMPTY** allow-list over a subject derived from IMPORTS. Two real
+findings fixed: a second definition of `pointLength` in `finalBossFight.js`, and
+a live `Math.hypot` forty lines under the docblock forbidding it.
+⛔ **Untouched by P3: every file under `fixtures/`, the parked series, the AS3,
+the wasm submodule, the driver.** Standing values re-measured at `b060f5b31`
+(63 rows; the quoted `roster: --win --tier=full` @`3ca80b3c1` preserved):
+**+1 row `gate: seedling-producer-boundaries` = `18/0`**, suite row quoted from
+CI at that head = **`375/11631`**, all seven producer md5s UNMOVED, and two REAL
+`cheap` crossings banked with their numbers after a quiet-box re-measure
+(`gate: seedling-editor-arm` 57.6 s → 61.5 s, `identity: generated set` 58.3 s →
+62.3 s, both values unchanged) — the arm gate at 2.5 % over the band is the live
+case for P3b's `cheap` HYSTERESIS.
+⇒ **NEXT: P3b** = ⚖ 54 (6)+(7) proper — every headless gate CI-quoted by SHA,
+the **BOX LOCK**, `cheap` **HYSTERESIS** — with §44.9's four inputs, of which the
+sharpest is that this new gate is ALL-REFUSED in CI (the latch cache exists on
+one machine), so (F) must decide whether it is a CI row at all. Then **P4** =
+⚖ 54 (8) + 47b's (1)(4)(6), then **L15**. ⚠ Ahead of both, §43.8's ⚖ for the
+user and the fifth run's `sound`-pin re-record: **18 of 18 chain boundaries have
+an UNPINNED predecessor**, so every `rng.seed` row in the new gate is a
+sample-vs-sample comparison until that lands.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
