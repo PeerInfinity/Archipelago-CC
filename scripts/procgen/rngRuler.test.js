@@ -43,8 +43,16 @@ const SOLVE0 = {
 
 describe('rngRuler — the LFSR step', () => {
     it('takes its mask from the table by the C\'s own index, not by hand', () => {
-        expect(AVM2_RANDOM_XOR_MASKS).toHaveLength(31);
+        // ⛔ DELIBERATELY NOT `toHaveLength(31)`. The table's length is a
+        // property of the transcription, not a claim anything depends on
+        // (`lint-gate-labels` calls that shape `roster-length-pinned`, and it
+        // is right: a row that pins it goes red for a correct edit). What the
+        // C actually guarantees is the INDEXING — `r->uXorMask =
+        // avm2_random_xor_masks[n - 2]` for a register of n bits — so the
+        // table must simply REACH that index, and the mask must be what the
+        // expression selects rather than a number somebody typed.
         expect(AVM2_RANDOM_BITS).toBe(31);
+        expect(AVM2_RANDOM_XOR_MASKS[AVM2_RANDOM_BITS - 2]).toBeDefined();
         expect(AVM2_RANDOM_MASK).toBe(AVM2_RANDOM_XOR_MASKS[AVM2_RANDOM_BITS - 2]);
         expect(AVM2_RANDOM_MASK).toBe(0x48000000);
     });
