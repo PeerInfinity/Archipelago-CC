@@ -1012,6 +1012,30 @@ const inkOf = () => page.evaluate((roomTop) => {
     };
 }, OVERVIEW.roomTop);
 
+/**
+ * ⛓⛓⛓ **A DOWNLOAD PRESS, WAITED FOR BY ITS OWN COUNTER** (EDITOR v3 E6b).
+ *
+ * ⛔⛔ §34.7 #1's finding, cured at the source. Every bundle row used to wait
+ * for `Array.isArray(window.__editorSetBundleKinds)` — a global a press SET and
+ * nothing cleared — so a wait was already satisfied when the next row ran and
+ * it read the PREVIOUS press's container. E5 cured it here with a `delete`
+ * behind one press; `setEditorView.js` nulls the family and bumps a COUNTER at
+ * the top of the handler now, so the wait is on a value that CHANGES and the
+ * gate-side cures are GONE.
+ *
+ * ⛓ The counter is read BEFORE the click and `n + 1` is what is waited for — a
+ * press that REFUSES still advances it, which is what makes a refusal
+ * observable at all.
+ */
+const pressDownload = async (button, counter, { settleOn = null } = {}) => {
+    const before = await page.evaluate((k) => globalThis[k] ?? 0, counter);
+    await page.click(button);
+    await page.waitForFunction(({ k, n, on }) => globalThis[k] === n + 1
+        && (on === null || globalThis[on] !== null),
+    { k: counter, n: before, on: settleOn }, { timeout: 60000 });
+    return before + 1;
+};
+
 
 try {
     /* ══ CLAIM 1 — the arm boots on an ATLAS base ═══════════════════ */
@@ -2033,6 +2057,48 @@ try {
     check(roomOps > 0,
         '⛓ …and the open room really does hold an edit now, so the DISCARD row below is not '
         + 'vacuous', `${roomOps} room edit(s)`);
+    /**
+     * ⛓⛓⛓ **A REFUSED BUNDLE PRESS IS OBSERVABLE NOW** (EDITOR v3 E6b, curing
+     * §34.7 #1). `editDownloadBundle`'s second guard refuses while a room is
+     * open with unwritten edits — *"the bundle stamps once over everything"* —
+     * and that is the state this row is standing in.
+     *
+     * ⛔⛔ **AND BEFORE THIS SLICE THE REFUSAL WAS INVISIBLE.** The globals were
+     * written only at the END of the handler and never cleared, so a refused
+     * press left the PREVIOUS press's array in place and read exactly like a
+     * success: a driver waiting for `Array.isArray(__editorSetBundleKinds)` had
+     * its wait satisfied before it clicked. The page nulls the family and bumps
+     * `__editorSetBundlePresses` BEFORE every guard now, so the counter advances
+     * and the readouts go `null` — which is the difference between *"it
+     * refused"* and *"it wrote what it wrote last time"*.
+     * ⛓ MUTANT: the nulling moved back to the end of the handler — `kinds` here
+     * is the CUT set's `['level-set','overlay']` and this row reds.
+     */
+    const refusedPresses = await pressDownload('#editDownloadBundle',
+        '__editorSetBundlePresses');
+    const refusedBundle = await page.evaluate(() => ({
+        presses: globalThis.__editorSetBundlePresses ?? null,
+        /**
+         * ⛔ `=== undefined`, NEVER `??`. The whole claim is that the readout is
+         * `null` — the press SCOPED it — and `null ?? 'ABSENT'` is `'ABSENT'`,
+         * which would collapse the cured build and the mutant into one answer.
+         * (It did, on this row's first run.)
+         */
+        kinds: globalThis.__editorSetBundleKinds === undefined
+            ? 'ABSENT' : globalThis.__editorSetBundleKinds,
+        out: globalThis.__editorSetBundleOut === undefined ? 'ABSENT'
+            : (globalThis.__editorSetBundleOut === null
+                ? null : `${globalThis.__editorSetBundleOut.length} B`),
+        note: document.getElementById('editSetNote')?.textContent ?? '',
+    }));
+    check(refusedBundle.presses === refusedPresses && refusedBundle.kinds === null
+        && refusedBundle.out === null && /^⛔ NOT BUNDLED/.test(refusedBundle.note),
+        '⛓⛓⛓ **A BUNDLE PRESS THAT REFUSES ADVANCES THE COUNTER AND LEAVES ITS READOUTS '
+        + '`null`** — the press is SCOPED, so a refusal cannot be mistaken for the last '
+        + 'success. ⚖ THE GENERAL SHAPE §34.7 #1 LEFT: wait on a value that CHANGES, '
+        + 'never on a key that merely exists',
+        `presses ${refusedPresses} · kinds ${json(refusedBundle.kinds)} · `
+        + refusedBundle.note.slice(0, 120));
     await page.click('#editSetRowUp_3');
     await page.waitForTimeout(600);
     const discarded = await setRead();
@@ -2388,7 +2454,12 @@ try {
      * constant. ⛓ The island is TWO rooms because a single cut-off room is
      * DROPPED by the derivation and never reaches the compiled rules at all.
      */
-    await page.evaluate(() => { window.__editorSetRulesOut = null; });
+    /**
+     * ⛓ EDITOR v3 E6b — the `window.__editorSetRulesOut = null` that stood here
+     * is GONE: `editDownloadRules` nulls its own family and bumps
+     * `__editorSetRulesPresses` before its first guard, so a row that waits on
+     * the counter cannot read a previous press's document.
+     */
     const island = nodeSetSession();
     const cutOps = [];
     for (let room = 0; room < D2_ROOMS; room += 1) {
@@ -2454,9 +2525,8 @@ try {
      * they did not ask for, and one that shipped a `rules.json` anyway would
      * put a world nobody can finish inside a container that looks complete.
      */
-    await page.click('#editDownloadBundle');
-    await page.waitForFunction(() => Array.isArray(window.__editorSetBundleKinds),
-        null, { timeout: 60000 });
+    await pressDownload('#editDownloadBundle', '__editorSetBundlePresses',
+        { settleOn: '__editorSetBundleKinds' });
     const cutBundle = await page.evaluate(() => ({
         bytes: Array.from(window.__editorSetBundleOut),
         note: document.getElementById('editSetNote')?.textContent ?? '',
@@ -2464,16 +2534,16 @@ try {
     const cutBundleKinds = (await readBundle(Uint8Array.from(cutBundle.bytes),
         { jszip: loadJSZipNode() })).members.map((m) => m.kind);
     /**
-     * ⛔⛔ **AND THE GLOBALS ARE CLEARED BEHIND THIS PRESS.** Every later bundle
-     * row waits for `Array.isArray(window.__editorSetBundleKinds)` — a wait
-     * this press SATISFIES, so leaving it set makes the next row read THIS
-     * container without waiting for its own. Measured: it turned two downstream
-     * claims red and a third into `the row itself threw`.
+     * ⛓ EDITOR v3 E6b — **AND NOTHING IS CLEARED BEHIND THIS PRESS ANY MORE.**
+     * E5 had to `delete` both globals here, because every later bundle row
+     * waited for `Array.isArray(window.__editorSetBundleKinds)` and this press
+     * satisfied that wait (§34.7 #1: two downstream claims red with the wrong
+     * member list, a third dead as *"the row itself threw"*, the run 44 rows
+     * short). The PAGE nulls them and bumps `__editorSetBundlePresses` at the
+     * top of the handler now, and `pressDownload` waits on the counter — so
+     * the cure is where the defect was, and a driver that never heard of it is
+     * safe.
      */
-    await page.evaluate(() => {
-        delete window.__editorSetBundleKinds;
-        delete window.__editorSetBundleOut;
-    });
     check(json(cutBundleKinds) === json(['level-set', 'overlay'])
         && /no `rules.json` member/.test(cutBundle.note),
         '⛓⛓⛓ **A REFUSED rules.json STILL BUNDLES THE WORK** — the graph of this set does not '
@@ -2506,8 +2576,8 @@ try {
 
     /* ══ CLAIM 26 — THE THREE DOWNLOADS, THE BYTES, AND THE SHIP ═══ */
 
-    await page.click('#editDownloadRules');
-    await page.waitForTimeout(600);
+    await pressDownload('#editDownloadRules', '__editorSetRulesPresses',
+        { settleOn: '__editorSetRulesOut' });
     const rulesOut = await page.evaluate(() => window.__editorSetRulesOut ?? null);
     check(rulesOut !== null && typeof rulesOut.regions === 'object',
         '⛓ the rules.json the page writes is a real document with a `regions` map',
@@ -2539,8 +2609,8 @@ try {
      * that they are short.
      */
     await page.check('#editMinify');
-    await page.click('#editDownloadRules');
-    await page.waitForTimeout(600);
+    await pressDownload('#editDownloadRules', '__editorSetRulesPresses',
+        { settleOn: '__editorSetRulesBytes' });
     const minBytes = await page.evaluate(() => window.__editorSetRulesBytes ?? null);
     check(minBytes !== null && minBytes === stringifyRulesJson(rulesOut, { indent: 0 })
         && !minBytes.includes('\n') && minBytes.length < pageBytes.length / 2,
@@ -2549,8 +2619,8 @@ try {
         `${pageBytes.length} → ${minBytes.length} B `
         + `(${((minBytes.length / pageBytes.length) * 100).toFixed(1)}%)`);
     await page.uncheck('#editMinify');
-    await page.click('#editDownloadRules');
-    await page.waitForTimeout(600);
+    await pressDownload('#editDownloadRules', '__editorSetRulesPresses',
+        { settleOn: '__editorSetRulesBytes' });
     const backBytes = await page.evaluate(() => window.__editorSetRulesBytes ?? null);
     check(backBytes === pageBytes,
         '⛓ …and UNCHECKING it returns the DEFAULT bytes exactly — the default does not move, '
@@ -2577,9 +2647,8 @@ try {
         set_id: window.__editorSetOut.set_id,
         overlay_id: window.__editorSetOverlayOut.overlay_id,
     }));
-    await page.click('#editDownloadBundle');
-    await page.waitForFunction(() => Array.isArray(window.__editorSetBundleKinds),
-        null, { timeout: 60000 });
+    await pressDownload('#editDownloadBundle', '__editorSetBundlePresses',
+        { settleOn: '__editorSetBundleKinds' });
     const bundled = await page.evaluate(() => ({
         bytes: Array.from(window.__editorSetBundleOut),
         kinds: window.__editorSetBundleKinds,
@@ -3144,9 +3213,8 @@ try {
     await page.click('#editSetReport');
     await page.waitForTimeout(2500);
     const vanBundleReport = await setRead();
-    await page.click('#editDownloadBundle');
-    await page.waitForFunction(() => Array.isArray(window.__editorSetBundleKinds),
-        null, { timeout: 60000 });
+    await pressDownload('#editDownloadBundle', '__editorSetBundlePresses',
+        { settleOn: '__editorSetBundleKinds' });
     const vanBundle = await page.evaluate(() => ({
         bytes: Array.from(window.__editorSetBundleOut),
         kinds: window.__editorSetBundleKinds,

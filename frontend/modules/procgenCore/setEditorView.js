@@ -1149,6 +1149,40 @@ export function mountSetEditor({
     };
 
     /**
+     * ⛓⛓⛓ **A DOWNLOAD'S READOUTS BELONG TO THE PRESS THAT WROTE THEM**
+     * (EDITOR v3 E6b, curing §34.7 #1).
+     *
+     * ⛔⛔ THE DEFECT: these globals were written ONLY at the END of a handler
+     * and never cleared, and every handler has early returns (`editDownloadBundle`
+     * has four). So a REFUSED press left the PREVIOUS press's array in place and
+     * was indistinguishable from the last success — and a driver waiting for
+     * `Array.isArray(window.__editorSetBundleKinds)` had its wait satisfied
+     * BEFORE it clicked. Measured in E5: two downstream claims red with the
+     * wrong member list, a third dead as *"the row itself threw"*, and the run
+     * 44 rows short. E5 cured it GATE-SIDE with a `delete` behind the press;
+     * the page owns it now, so a driver that never heard of that cure is safe.
+     *
+     * ⛓ **AND THE COUNTER IS THE POINT.** ⚖ The general shape §34.7 #1 left:
+     * *prefer a wait on a value that CHANGES over one on a key that merely
+     * exists*. `null` is still a value a stale reader can misread as an answer;
+     * `presses === n + 1` cannot be satisfied by anything but THIS press.
+     *
+     * ⛓ Called BEFORE every guard — the whole point is that a refusal is
+     * visible — and it nulls EVERY readout of the family, `…RulesBytes`
+     * included: leaving one behind would reinstate the defect for whichever
+     * reader read that one.
+     *
+     * ⛔ **EVERY GLOBAL IS SPELLED OUT AT THE CALL SITE, never built from a
+     * template.** These names are a ROSTER two gates and `setEditorView.test.js`
+     * read BY NAME; a counter assembled as `__editorSet${family}Presses` would
+     * be a global no `grep` could trace back to the line that writes it.
+     */
+    const pressScope = (counter, readouts) => {
+        for (const name of readouts) globalThis[name] = null;
+        globalThis[counter] = (globalThis[counter] ?? 0) + 1;
+    };
+
+    /**
      * ⛓ ADD ROOM applies the SUBSTRATE'S OWN op — Seedling's `add-room` takes
      * a blank `record` (EDITOR v3 E1b, §22.8) and the maze's takes a `payload`,
      * so the whole op is the binding's and this press only says WHERE. ⛔ No
@@ -1366,6 +1400,8 @@ export function mountSetEditor({
     const rulesBtn = $('editDownloadRules');
     if (rulesBtn) rulesBtn.disabled = true;
     on('editDownloadRules', () => {
+        pressScope('__editorSetRulesPresses',
+            ['__editorSetRulesOut', '__editorSetRulesBytes']);
         const rep = lastReport ?? runReport();
         if (!rep.download.rules.allowed) {
             setNote(rep.download.rules.why, true);
@@ -1423,6 +1459,8 @@ export function mountSetEditor({
     const bundleBtn = $('editDownloadBundle');
     if (bundleBtn) bundleBtn.disabled = true;
     on('editDownloadBundle', async () => {
+        pressScope('__editorSetBundlePresses',
+            ['__editorSetBundleOut', '__editorSetBundleKinds']);
         if (typeof loadZip !== 'function') {
             setNote('⛔ NOT BUNDLED — this mount was given no `loadZip`, and nothing here '
                 + 'implements a zip container of its own', true);

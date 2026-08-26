@@ -607,7 +607,7 @@ await page.route(
  * report about a level the run had not reached (traps 246/258; the Seedling row
  * paid for exactly this once).
  */
-const settled = (pred, why) => page.waitForFunction(pred, null, { timeout: 60000 })
+const settled = (pred, why, arg = null) => page.waitForFunction(pred, arg, { timeout: 60000 })
     .catch((e) => { throw new Error(`STUCK waiting for ${why}: ${e.message}`); });
 
 const load = async (query, pred, why) => {
@@ -1923,6 +1923,29 @@ try {
         errorRows: [...document.querySelectorAll('#editSetReportOut li.bad')].length,
         readout: window.__mazeLab?.set?.report ?? null,
     }));
+    /**
+     * ⛓⛓⛓ **A DOWNLOAD PRESS, WAITED FOR BY ITS OWN COUNTER** (EDITOR v3 E6b,
+     * curing §34.7 #1). The mount nulls a download's readout family and bumps
+     * `__editorSet<Family>Presses` BEFORE its first guard, so the wait is on a
+     * value that CHANGES rather than on a key that merely exists.
+     *
+     * ⛔⛔ **AND THAT MADE ONE WAIT HERE FALSE.** `settled(() =>
+     * window.__editorSetRulesBytes !== undefined)` was true the instant the
+     * handler nulled it — `null !== undefined` — so the row would have read the
+     * PREVIOUS press's bytes, which is §34.7 #1's own defect wearing a
+     * different coat. The counter cannot be satisfied by anything but THIS
+     * press.
+     */
+    const pressDownload = async (button, counter, { settleOn = null } = {}) => {
+        const before = await page.evaluate((k) => globalThis[k] ?? 0, counter);
+        await page.click(button);
+        await settled(({ k, n, on }) => globalThis[k] === n + 1
+            && (on === null || globalThis[on] !== null),
+        `the ${button} press to answer (press ${before + 1})`,
+        { k: counter, n: before, on: settleOn });
+        return before + 1;
+    };
+
     /** ⛓ PASTE a document into the SET arm's OWN box — never `#labText`, which
      *  `refreshSaveBox` overwrites with the LEVEL payload on every render. */
     const pasteSet = async (doc, pred, why) => {
@@ -2285,6 +2308,50 @@ try {
     const floorAt = firstFloorCell(roomEntry.payload);
     await paintRoom(roomEntry.payload, floorAt);
     await settled(() => window.__mazeLab?.set?.openRoomOps === 1, 'the first ROOM edit');
+    /**
+     * ⛓⛓⛓ **A REFUSED BUNDLE PRESS IS OBSERVABLE NOW** (EDITOR v3 E6b, curing
+     * §34.7 #1). `editDownloadBundle`'s second guard refuses while a room is
+     * open with unwritten edits — *"the bundle stamps once over everything"* —
+     * and that is exactly the state this claim is standing in one line before
+     * it presses CLOSE.
+     *
+     * ⛔⛔ **BEFORE THIS SLICE THE REFUSAL WAS INVISIBLE.** The readout globals
+     * were written only at the END of the handler and never cleared, so a
+     * refused press left the previous press's array in place and read like a
+     * success. This gate pressed the bundle exactly once, after a `goto`, and
+     * was safe BY ACCIDENT; the `-arm` pressed three times and was not (§34.7
+     * #1: two claims red with the wrong member list, a third dead, the run 44
+     * rows short). The page nulls the family and bumps the counter BEFORE every
+     * guard now.
+     * ⛓ MUTANT: the nulling moved back to the end of the handler — this row
+     * reds, and on a FIRST press it reds as `'ABSENT'` rather than `null`,
+     * which is the same defect seen from its other side.
+     */
+    const refusedPresses = await pressDownload('#editDownloadBundle',
+        '__editorSetBundlePresses');
+    const refusedBundle = await page.evaluate(() => ({
+        presses: globalThis.__editorSetBundlePresses ?? null,
+        /**
+         * ⛔ `=== undefined`, NEVER `??`. The whole claim is that the readout is
+         * `null` — the press SCOPED it — and `null ?? 'ABSENT'` is `'ABSENT'`,
+         * which would collapse the cured build and the mutant into one answer.
+         * (It did, on this row's first run.)
+         */
+        kinds: globalThis.__editorSetBundleKinds === undefined
+            ? 'ABSENT' : globalThis.__editorSetBundleKinds,
+        out: globalThis.__editorSetBundleOut === undefined ? 'ABSENT'
+            : (globalThis.__editorSetBundleOut === null
+                ? null : `${globalThis.__editorSetBundleOut.length} B`),
+        note: document.getElementById('editSetNote')?.textContent ?? '',
+    }));
+    check(refusedBundle.presses === refusedPresses && refusedBundle.kinds === null
+        && refusedBundle.out === null && /^⛔ NOT BUNDLED/.test(refusedBundle.note),
+        '⛓⛓⛓ **A BUNDLE PRESS THAT REFUSES ADVANCES THE COUNTER AND LEAVES ITS READOUTS '
+        + '`null`** — a refusal is a fact a driver can WAIT FOR now, instead of being '
+        + 'indistinguishable from the last success. ⚖ THE GENERAL SHAPE §34.7 #1 LEFT: wait on '
+        + 'a value that CHANGES, never on a key that merely exists',
+        `presses ${refusedPresses} · kinds ${json(refusedBundle.kinds)} · `
+        + refusedBundle.note.slice(0, 130));
     const stillBefore = { edited: await stripCellHash(ROOM), other: await stripCellHash(0) };
     await page.click('#editRoomClose');
     await settled(() => window.__mazeLab?.set?.ops === 1 && window.__mazeLab?.set?.openRoom === null,
@@ -2639,8 +2706,8 @@ try {
         '⛓⛓ **THE READOUT\'S `note` AND `#editSetNote` ARE THE SAME SENTENCE** — the third of '
         + 'the four fields E2c had to drop (§30.8)',
         `${dlRead.set.note?.slice(0, 90)}`);
-    await page.click('#editDownloadRules');
-    await settled(() => window.__editorSetRulesBytes !== undefined, 'the rules.json readout');
+    await pressDownload('#editDownloadRules', '__editorSetRulesPresses',
+        { settleOn: '__editorSetRulesBytes' });
     /**
      * ⛔ **`regions` IS KEYED BY PLAYER FIRST**, so a count of its top-level keys
      * is 1 for every rules.json this repo writes and would have been green over
@@ -2674,8 +2741,8 @@ try {
         '⛓ …and `rules.json` names an AP region after EVERY library entry, through the '
         + `MARKING TOOL's own writer (${rulesOut.regions} region(s) for `
         + `${MAZE_PACK.entries.length} entries — the extra is ${json(extra)})`, json(rulesOut));
-    await page.click('#editDownloadBundle');
-    await settled(() => Array.isArray(window.__editorSetBundleKinds), 'the BUNDLE readout');
+    await pressDownload('#editDownloadBundle', '__editorSetBundlePresses',
+        { settleOn: '__editorSetBundleKinds' });
     const bundle = await page.evaluate(() => ({
         kinds: window.__editorSetBundleKinds,
         bytes: window.__editorSetBundleOut?.length ?? 0,

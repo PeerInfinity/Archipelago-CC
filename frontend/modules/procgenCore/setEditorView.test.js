@@ -366,6 +366,23 @@ const READOUT_NAMES = Object.freeze([
     '__editorSetBundleOut', '__editorSetBundleKinds',
 ]);
 
+/**
+ * ⛓⛓⛓ **THE PRESS COUNTERS** (EDITOR v3 E6b). ⛔ A SECOND roster and not two
+ * more entries in the one above: `READOUT_NAMES` is the DOCUMENTS a download
+ * writes, one per member plus the mount's two derived, and a press COUNT is not
+ * a document. The `-arm` reads these by name too.
+ *
+ * ⛔⛔ **AND EVERY WAIT ON A DOWNLOAD MOVED TO THEM.** The handlers null their
+ * readout family before their first guard now, so `__editorSetBundleKinds ===
+ * undefined` — which is what the two async bundle rows below used to spin on —
+ * is FALSE the instant the press starts, and the row would read the previous
+ * press's container. That is §34.7 #1's defect, and it comes back the moment a
+ * wait is on a key that merely exists.
+ */
+const PRESS_COUNTERS = Object.freeze([
+    '__editorSetRulesPresses', '__editorSetBundlePresses',
+]);
+
 const $ = (h, id) => h.doc.getElementById(id);
 const textOf = (h, id) => $(h, id)?.textContent ?? null;
 /** ⛓ Rows of a table / list / select — the DOM's own account, as text. */
@@ -417,6 +434,26 @@ const snapshot = (h) => ({
 });
 
 const click = (h, id) => $(h, id)?.dispatch('click');
+
+/**
+ * ⛓ **PRESS A DOWNLOAD AND WAIT FOR ITS OWN COUNTER** — `editDownloadBundle` is
+ * `async` (it awaits `loadZip`), so a row has to yield to the microtask queue
+ * before it can read what the press wrote. ⛔ The wait is on the COUNTER and on
+ * the readout being non-`null`, never on the readout merely EXISTING: the
+ * handler sets it to `null` on its way in, so `!== undefined` is true before the
+ * press has done anything at all.
+ */
+const pressDownload = async (h, id, counter, readout) => {
+    const before = globalThis[counter] ?? 0;
+    click(h, id);
+    for (let i = 0; i < 200; i += 1) {
+        if (globalThis[counter] === before + 1
+            && (readout === null || globalThis[readout] !== null)) break;
+        // eslint-disable-next-line no-await-in-loop
+        await new Promise((r) => { setTimeout(r, 5); });
+    }
+    return before + 1;
+};
 const setValue = (h, id, v) => { const n = $(h, id); if (n) n.value = v; };
 
 /** ⛓ A click ON THE STRIP at room `i` — `cellAt` reads `clientX` against the rect. */
@@ -433,7 +470,7 @@ const clickRoom = (h, i, n) => {
  * what this file pins is the MOUNT and not the adapter.
  */
 const runScript = (h) => {
-    for (const k of READOUT_NAMES) delete globalThis[k];
+    for (const k of [...READOUT_NAMES, ...PRESS_COUNTERS]) delete globalThis[k];
     const steps = [];
     const step = (what) => steps.push({
         what,
@@ -1400,7 +1437,7 @@ const mazeBindings = (rulesSchema, blankSize = null) => mazeSetBindings({ rulesS
 const mazeHarness = ({
     overlay = emptyMazeOverlay(), loadZip = null, extraMember = null, blankSize = null,
 } = {}) => {
-    for (const k of READOUT_NAMES) delete globalThis[k];
+    for (const k of [...READOUT_NAMES, ...PRESS_COUNTERS]) delete globalThis[k];
     const adapter = createMazeSetAdapter({ rulesSchema: DEPS.rulesSchema });
     const record = mazeSetRecord(MAZE_LIB, overlay);
     const session = createMazeSetSession(adapter, record);
@@ -1728,12 +1765,13 @@ describe('⛓⛓⛓ EDITOR v3 E2b — the SAME mount, bound to `mazeSetAdapter`,
         const h = mazeHarness({ loadZip: async () => loadJSZipNode() });
         connectAll(h, RING);
         h.ui.runReport();
-        click(h, 'editDownloadBundle');
-        for (let i = 0; i < 200 && globalThis.__editorSetBundleKinds === undefined; i += 1) {
-            // eslint-disable-next-line no-await-in-loop
-            await new Promise((r) => { setTimeout(r, 5); });
-        }
+        const presses = await pressDownload(h, 'editDownloadBundle',
+            '__editorSetBundlePresses', '__editorSetBundleKinds');
         const note = textOf(h, 'editSetNote');
+        // ⛓ EDITOR v3 E6b — the press SCOPES its own readouts, and the counter
+        //   is the only thing this row can honestly wait on (see `pressDownload`).
+        expect(presses).toBe(1);
+        expect(globalThis.__editorSetBundlePresses).toBe(1);
         expect(BUNDLE_KINDS).toContain('region-library');
         expect(note).not.toContain('is NOT a member');
         expect(globalThis.__editorSetBundleKinds)
@@ -1765,11 +1803,8 @@ describe('⛓⛓⛓ EDITOR v3 E2b — the SAME mount, bound to `mazeSetAdapter`,
         });
         connectAll(h, RING);
         h.ui.runReport();
-        click(h, 'editDownloadBundle');
-        for (let i = 0; i < 200 && globalThis.__editorSetBundleKinds === undefined; i += 1) {
-            // eslint-disable-next-line no-await-in-loop
-            await new Promise((r) => { setTimeout(r, 5); });
-        }
+        await pressDownload(h, 'editDownloadBundle',
+            '__editorSetBundlePresses', '__editorSetBundleKinds');
         const note = textOf(h, 'editSetNote');
         expect(BUNDLE_KINDS).not.toContain('ap-mapping');
         expect(note).toContain('the `ap-mapping` document is NOT a member');
@@ -1778,6 +1813,69 @@ describe('⛓⛓⛓ EDITOR v3 E2b — the SAME mount, bound to `mazeSetAdapter`,
         // ⛓ …and the rest still travels: the refusal drops ONE member, not the zip.
         expect(globalThis.__editorSetBundleKinds)
             .toEqual(['region-library', 'overlay', 'rules', 'region-atlas']);
+    });
+
+    /**
+     * ⛓⛓⛓ **A DOWNLOAD'S READOUTS BELONG TO THE PRESS THAT WROTE THEM**
+     * (EDITOR v3 E6b, curing §34.7 #1). E5 measured the defect from the gate's
+     * side: the globals were written only at the END of a handler and never
+     * cleared, so a REFUSED press left the previous press's array in place and
+     * a driver waiting for `Array.isArray(__editorSetBundleKinds)` had its wait
+     * satisfied BEFORE it clicked — two downstream claims red with the wrong
+     * member list, a third dead, the run 44 rows short. It was cured GATE-side;
+     * this is the property, in node, where it belongs.
+     *
+     * ⛔ THE COUNTER IS THE POINT. `null` is still a value a stale reader can
+     * misread; `presses === n + 1` cannot be satisfied by anything but THIS
+     * press. ⚖ §34.7 #1's general shape: wait on a value that CHANGES.
+     * ⛓ MUTANT: the nulling moved back to the END of the handler — the second
+     * press below refuses and this row reads the FIRST press's four kinds.
+     */
+    it('a REFUSED bundle press advances the counter and NULLS its readouts', async () => {
+        const h = mazeHarness({ loadZip: async () => loadJSZipNode() });
+        connectAll(h, RING);
+        h.ui.runReport();
+        expect(globalThis.__editorSetBundlePresses).toBeUndefined();
+        await pressDownload(h, 'editDownloadBundle',
+            '__editorSetBundlePresses', '__editorSetBundleKinds');
+        expect(globalThis.__editorSetBundleKinds).toHaveLength(4);
+        // ⛓ …now open a room and give it an unwritten edit: `:1370`'s guard.
+        h.openRoom(1, 1);
+        const presses = await pressDownload(h, 'editDownloadBundle',
+            '__editorSetBundlePresses', null);
+        expect(presses).toBe(2);
+        expect(globalThis.__editorSetBundlePresses).toBe(2);
+        expect(globalThis.__editorSetBundleKinds).toBe(null);
+        expect(globalThis.__editorSetBundleOut).toBe(null);
+        expect(textOf(h, 'editSetNote')).toMatch(/^⛔ NOT BUNDLED — room 1 is open/);
+    });
+
+    /**
+     * ⛓⛓ **AND THE RULES PRESS IS THE SAME SHAPE, INCLUDING `…RulesBytes`.**
+     * ⛔ The whole FAMILY is nulled, not just the document: leaving the bytes
+     * behind would reinstate the defect for whichever reader read that one —
+     * and `check-maze-lab` had a wait (`__editorSetRulesBytes !== undefined`)
+     * that this slice had to move for exactly that reason.
+     */
+    it('the rules press scopes `…RulesOut` AND `…RulesBytes`, and counts', () => {
+        const h = mazeHarness();
+        connectAll(h, RING);
+        h.ui.runReport();
+        expect($(h, 'editDownloadRules').disabled).toBe(false);
+        click(h, 'editDownloadRules');
+        expect(globalThis.__editorSetRulesPresses).toBe(1);
+        expect(globalThis.__editorSetRulesOut).not.toBe(null);
+        expect(typeof globalThis.__editorSetRulesBytes).toBe('string');
+        // ⛓ a REFUSING press — the report is stale-proofed by re-running it on a
+        //   graph that does not close, so the second press takes the `why` arm.
+        for (const l of RING) {
+            h.ui.applySet({ op: 'disconnect', room: l.from[0], exit_id: l.from[1] });
+        }
+        h.ui.runReport();
+        click(h, 'editDownloadRules');
+        expect(globalThis.__editorSetRulesPresses).toBe(2);
+        expect(globalThis.__editorSetRulesOut).toBe(null);
+        expect(globalThis.__editorSetRulesBytes).toBe(null);
     });
 
     /**
