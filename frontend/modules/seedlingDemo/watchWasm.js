@@ -130,7 +130,7 @@ export const BOOT_COST_FRAMES = LOAD_FADE_FRAMES + BOOT_PRESWAP_FRAMES;
  * would be invisible to it and could clear the build for retirement while this
  * page still loaded it (§18.14.5, trap 411).
  */
-export const WASM_PAGE = '../flashPanel/wasm/seedling_bot_ap_p4b/game.html';
+export const WASM_PAGE = '../flashPanel/wasm/seedling_bot_ap_p4c/game.html';
 
 /** ⛓ The ordered stage vocabulary. The rows assert on these names. */
 export const WASM_STAGES = Object.freeze([
@@ -142,7 +142,7 @@ export const WASM_STAGES = Object.freeze([
  * ── ⛓⛓⛓ THE END-STATE TOLERANCE — **MEASURED AT ZERO**, WITH ITS COMMAND ──
  *
  * Five committed tapes replayed through the JS model (`tapeRunner.runTape`)
- * and through `seedling_bot_ap_p4b` on real-GPU Windows Chrome (WEBGPU_ADAPTER
+ * and through `seedling_bot_ap_p4c` on real-GPU Windows Chrome (WEBGPU_ADAPTER
  * `intel / gen-9`), comparing the model's LAST observation against `botStatus`
  * at `finished`. Every arm finished; every level, x, y and item set was
  * **identical**, floats included:

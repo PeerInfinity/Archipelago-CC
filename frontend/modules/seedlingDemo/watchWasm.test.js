@@ -79,7 +79,7 @@ describe('the stage vocabulary', () => {
         // §18.14.5: the gate's REFERENCED view scans for `wasm/<name>/`, and a
         // name composed from a variable is invisible to it — which would clear
         // a build for retirement while this page still loaded it (trap 411).
-        expect(WASM_PAGE).toBe('../flashPanel/wasm/seedling_bot_ap_p4b/game.html');
+        expect(WASM_PAGE).toBe('../flashPanel/wasm/seedling_bot_ap_p4c/game.html');
     });
 });
 

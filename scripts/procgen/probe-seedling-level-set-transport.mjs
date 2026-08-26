@@ -52,7 +52,7 @@
  * The wasm-hygiene slice ran all three arms on real-GPU Windows Chrome:
  *
  *   seedling_bot_ap_phase3  (the default)   26 PASS / 2 FAIL
- *   seedling_bot_ap_p4b                     28 PASS / 0 FAIL
+ *   seedling_bot_ap_p4c                     28 PASS / 0 FAIL
  *   seedling_bot_ap         (the control)   16 PASS / 12 FAIL
  *
  * ⛔ The default was RED, and had been since phase 4 landed. The two arms it
@@ -64,7 +64,7 @@
  * this row automatically: it drives Windows Chrome through `py.exe`, which a
  * Linux CI runner does not have.
  *
- * ⇒ the default is `seedling_bot_ap_p4b`, on which every arm passes, and
+ * ⇒ the default is `seedling_bot_ap_p4c`, on which every arm passes, and
  * `seedling_bot_ap_phase3` is retired from the submodule. The CONTROL is what
  * still makes this a claim rather than a description, and it still refuses:
  * an older build fails twelve arms including the positive control.
@@ -90,7 +90,7 @@ import { fileURLToPath } from 'node:url';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
-const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4b';
+const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4c';
 const SEEDLING = process.env.SEEDLING_SRC || join(process.env.HOME, 'CC', 'seedling');
 const ARTIFACT = join(REPO, 'frontend', 'modules', 'flashPanel', 'wasm', PAGE_NAME);
 const PAGE_URL = `http://localhost:8000/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;

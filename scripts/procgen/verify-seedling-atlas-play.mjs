@@ -32,7 +32,7 @@
  *     PeerInfinity/seedling-wasm at frontend/modules/flashPanel/wasm/, so a
  *     `--recurse-submodules` checkout has it. SKIPs (exit 0) when absent.
  *     ⛓ 2026-08-19: the build moved off the teleport variant. The flash panel
- *     ran `seedling_bot_ap_p4b` from that day — the bridge verify passes 12/12
+ *     ran `seedling_bot_ap_p4c` from that day — the bridge verify passes 12/12
  *     on it, teleport check included — and the variant retired from the
  *     submodule, so this row must not name it either.
  *
@@ -48,9 +48,9 @@ import { fileURLToPath } from 'node:url';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
-const ARTIFACT = join(REPO, 'frontend', 'modules', 'flashPanel', 'wasm', 'seedling_bot_ap_p4b');
+const ARTIFACT = join(REPO, 'frontend', 'modules', 'flashPanel', 'wasm', 'seedling_bot_ap_p4c');
 if (!existsSync(join(ARTIFACT, 'game.html'))
-    || !existsSync(join(ARTIFACT, 'seedling_bot_ap_p4b.wasm'))) {
+    || !existsSync(join(ARTIFACT, 'seedling_bot_ap_p4c.wasm'))) {
     console.log(`SKIP: seedling wasm artifact not staged at ${ARTIFACT}`
         + ' — see frontend/modules/flashPanel/README.md for the copy command');
     process.exit(0);
@@ -109,7 +109,7 @@ async function waitFor(desc, fn, timeoutMs = 60000) {
 }
 
 function gameFrame() {
-    const f = page.frames().find((fr) => fr.url().includes('seedling_bot_ap_p4b/game.html'));
+    const f = page.frames().find((fr) => fr.url().includes('seedling_bot_ap_p4c/game.html'));
     if (!f) throw new Error('seedling wasm iframe not found');
     return f;
 }
@@ -183,7 +183,7 @@ try {
         return true;
     }));
     await waitFor('wasm iframe mounted', async () =>
-        page.frames().some((fr) => fr.url().includes('seedling_bot_ap_p4b/game.html')));
+        page.frames().some((fr) => fr.url().includes('seedling_bot_ap_p4c/game.html')));
     await waitFor('start button enabled', () => gameFrame().evaluate(() => {
         const b = document.getElementById('btn-start');
         return !!b && !b.disabled;

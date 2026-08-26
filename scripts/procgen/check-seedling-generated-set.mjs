@@ -58,7 +58,7 @@
  *
  * Run:
  *   node scripts/procgen/check-seedling-generated-set.mjs
- *   SEEDLING_PAGE=seedling_bot_ap_p4b node scripts/procgen/check-seedling-generated-set.mjs --seeds=1-6
+ *   SEEDLING_PAGE=seedling_bot_ap_p4c node scripts/procgen/check-seedling-generated-set.mjs --seeds=1-6
  */
 
 import { execFileSync } from 'node:child_process';
@@ -76,7 +76,7 @@ const { buildLevelSet, apMappingInvalidation } = await M('levelSetExporter.js');
 const { validateLevelSet, planLevelSetChunks } = await M('levelSetValidator.js');
 const { parseTape } = await M('tapeFormat.js');
 
-const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4b';
+const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4c';
 const PAGE_URL = `http://localhost:8000/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
 const WIN_WSL = '/mnt/c/playwright';
 const WIN_DOS = 'C:\\playwright';

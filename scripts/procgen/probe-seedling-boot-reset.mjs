@@ -51,7 +51,7 @@
  * USAGE
  *   node scripts/procgen/probe-seedling-boot-reset.mjs
  *   node scripts/procgen/probe-seedling-boot-reset.mjs --expect=fresh
- *   SEEDLING_PAGE=seedling_bot_ap_p4bctl node scripts/procgen/probe-seedling-boot-reset.mjs
+ *   SEEDLING_PAGE=seedling_bot_ap_p4cctl node scripts/procgen/probe-seedling-boot-reset.mjs
  *
  * Headless swiftshader, like `check-seedling-wasm-pages.mjs` — it needs no GPU
  * because it takes no live ticks. Needs a dev server at the repo root on :8000.
@@ -61,7 +61,7 @@ import { chromium } from 'playwright';
 const args = process.argv.slice(2);
 const arg = (n, d) => (args.find((a) => a.startsWith(`--${n}=`)) || `=${d}`).split('=').slice(1).join('=');
 const HOST = arg('host', 'http://localhost:8000');
-const PAGE_NAME = process.env.SEEDLING_PAGE || arg('page', 'seedling_bot_ap_p4b');
+const PAGE_NAME = process.env.SEEDLING_PAGE || arg('page', 'seedling_bot_ap_p4c');
 const EXPECT = arg('expect', '');
 const PAGE_URL = `${HOST}/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
 

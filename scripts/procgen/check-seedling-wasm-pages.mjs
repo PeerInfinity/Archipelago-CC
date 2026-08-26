@@ -100,7 +100,7 @@ const NO_PLAY = process.argv.includes('--no-play');
 const NO_SHIP = process.argv.includes('--no-ship');
 if (!ROOT) { console.log('FAIL: --root=<siteRoot> is required'); process.exit(1); }
 
-const BUILD = 'seedling_bot_ap_p4b';   // the build watch.html's WASM_PAGE names
+const BUILD = 'seedling_bot_ap_p4c';   // the build watch.html's WASM_PAGE names
 const GAME = `${ROOT}/modules/flashPanel/wasm/${BUILD}/game.html`;
 const WASM = `${ROOT}/modules/flashPanel/wasm/${BUILD}/${BUILD}.wasm`;
 const TAPE = 'frontend/modules/seedlingDemo/fixtures/tapes/pit-fall-chain-85.json';

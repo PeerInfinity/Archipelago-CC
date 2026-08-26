@@ -148,7 +148,7 @@ const { twoPassSolve } = await import(join(MODULE, 'twoPassSolve.js'));
  * does. That is what makes `boot(N+1) == latch(N)` a MEASURED equality over
  * all 46 signature rows rather than a claim.
  */
-const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4b';
+const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4c';
 const PAGE_URL = `http://localhost:8000/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
 const WIN_SCRATCH_WSL = '/mnt/c/playwright';
 const WIN_SCRATCH_DOS = 'C:\\playwright';

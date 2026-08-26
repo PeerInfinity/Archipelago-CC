@@ -527,7 +527,7 @@ export function paintOptionGroups(layer) {
  * ⚠ **THERE IS NO TILESET IMAGE TO SHOW, MEASURED.** The brief asked for the
  * tile IMAGE *"if the tileset PNG is served"*: it is not — there is not one
  * `.png` under `frontend/modules/flashPanel/` at all, and the art lives inside
- * the recompiled `.wasm` (`seedling_bot_ap_p4b.wasm`), which is where the SWF
+ * the recompiled `.wasm` (`seedling_bot_ap_p4c.wasm`), which is where the SWF
  * put it. ⇒ a colour swatch, and it is the SAME table `previewLevel` paints the
  * canvas with, INJECTED rather than copied: a picker with its own palette would
  * show a reader one colour and paint them another.

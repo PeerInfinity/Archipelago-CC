@@ -34,7 +34,7 @@ A world's preset `rules.json` carries a `flash_panel` section:
 "flash_panel": {
   "config": "seedling.json",
   "swf": "seedling_injected.swf",
-  "wasm": "seedling_bot_ap_p4b/game.html"
+  "wasm": "seedling_bot_ap_p4c/game.html"
 }
 ```
 
@@ -120,7 +120,39 @@ four independent views.
 
 | build | named by |
 |---|---|
-| `seedling_bot_ap_p4b` | `seedlingDemo/watchWasm.js` (`WASM_PAGE`), the three seedling presets' `flash_panel.wasm`, `procgenPipeline/regionAtlasCompiler.js`, the `SEEDLING_PAGE` **default** of `verify-seedling-bot-differential.mjs`, of `check-seedling-{generated-set,save-stamp,vanilla-manifest}.mjs`, of `probe-seedling-level-set-transport.mjs` and of ~23 `scripts/procgen/{probe,plan,solve,run}-seedling-*.mjs`, `check-seedling-wasm-pages.mjs`'s `BUILD`, and three verify rows |
+| `seedling_bot_ap_p4c` | **every default**: `seedlingDemo/watchWasm.js` (`WASM_PAGE`) and `watchEditor.js`, the three seedling presets' `flash_panel.wasm`, `procgenPipeline/regionAtlasCompiler.js`, `check-seedling-wasm-pages.mjs`'s `BUILD` literal, the `SEEDLING_PAGE` **default** of `verify-seedling-bot-differential.mjs`, of `check-seedling-{generated-set,save-stamp,vanilla-manifest}.mjs`, of `probe-seedling-level-set-transport.mjs` and of ~35 more `scripts/procgen/{probe,plan,solve,run,derive,rerecord}-seedling-*.mjs`, three verify rows, and the two TESTS that assert the name (`watchWasm.test.js`, `regionAtlasCompiler.test.js`). **53 tracked files, 69 lines** — derived with `git grep -ln <name> -- ':!*.md'`, never typed |
+| `seedling_bot_ap_p4b` | ⛔ **nothing names it as a DEFAULT any more, and this table cell is the only thing holding its pin: `wasm/seedling_bot_ap_p4b/game.html`.** That path is written here DELIBERATELY, and saying so is the point — see below |
+
+⛔⛔ **p4b's PIN IS HELD BY ONE LINE OF PROSE, ON PURPOSE, AND IT IS THE ONLY
+MANUFACTURED REFERENCE IN THIS REPOSITORY.** When slice 12g′ flipped the
+defaults it expected p4b to stay pinned "for free" through the two lines of
+`docs/json/developer/procgen/seedling-bot.md` that record which build §43's
+and §45's measurements ran against. **Measured: the gate does not see them.**
+Its reference scan reads five SPELLINGS — a `wasm/<name>/` path, a quoted
+`PAGE_NAME`, a `SEEDLING_PAGE` default, a preset's `flash_panel.wasm`, and
+split literals — and backticked prose is none of them. So the choice was to
+retire p4b immediately or to write a path the gate can see. The path above is
+that second choice, taken with its cost named: **~34 MB of tracked artifact
+held by one table cell.**
+
+⇒ **RETIRE IT AT SLICE 12h's CLOSE** by deleting this cell's path, the
+`.gitignore` whitelist line and the `builds.json` entry. The directory may stay
+on a developer's disk and remains reachable as
+`SEEDLING_PAGE=seedling_bot_ap_p4b` — which is what the whitelist is for, and
+why retiring costs nothing locally. ⚠ Do not "tidy" the path out of this cell
+before then: the gate will red on the next commit, correctly, saying p4b is
+tracked and unnamed.
+
+⛓ **p4b → p4c ON 2026-08-26 (R9 slice 12g′, ⚖ ruling 58's (F)).** One
+behavioural difference and it is an ARM TIME, not a game rule: `botStart` used
+to set `armed = true; tick = 0` beside the world swap it requested, and
+`FP.world = x` only writes `FP._goto` — the swap lands one `Engine.update()`
+later — so the first `Bot.update` ran against the OUTGOING world and, whenever
+that world's fade had already ended, recorded t=0 off a player about to be
+discarded. p4c arms on the first frame where `FP.world` IS the instance
+`botStart` constructed. Measured on the real page: p4b REFUSES the world-swap
+gate 3/3 at 1.0 s of pre-boot idle and p4c PASSES 7/7 across 0/1.0/2.0 s, with
+the observation stream **0/146 differing from p4b's own winning drive**.
 
 ⚠ **THIS TABLE WAS STALE FOR A DAY, AND THAT IS THE ARGUMENT FOR THE GATE.**
 It said *"Three qualify today"* and listed `seedling_bot_ap_phase3` after that

@@ -37,7 +37,7 @@
  * ── Prereqs ───────────────────────────────────────────────────────────
  *   - dev server on :8000 at the REPO ROOT (`python -m http.server 8000`)
  *   - the wasm artifact at
- *     frontend/modules/flashPanel/wasm/seedling_bot_ap_p4b/ — no longer
+ *     frontend/modules/flashPanel/wasm/seedling_bot_ap_p4c/ — no longer
  *     uncommitted: since `0aa7878e8` that directory is the submodule
  *     PeerInfinity/seedling-wasm, so a `--recurse-submodules` checkout has it.
  *     ⛓ AND THE DEFAULT MOVED OFF `seedling_bot_ap` at the wasm-hygiene
@@ -126,7 +126,7 @@ const REPO = join(HERE, '..', '..');
 // sweep against both, and swapping directories on disk to do that is how a
 // baseline gets lost. The artifact identity rides in the checkpoint
 // fingerprint below, so a resumed run can never reuse another build's verdict.
-const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4b';
+const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4c';
 const ARTIFACT = join(REPO, 'frontend', 'modules', 'flashPanel', 'wasm', PAGE_NAME);
 // ⚠ THE DIRECTORY IS NOT THE PAYLOAD NAME, IN EITHER DIRECTION.
 // `deploy_wasm_avm2.sh` names the payload after the BUILD, not the folder, so
@@ -135,7 +135,7 @@ const ARTIFACT = join(REPO, 'frontend', 'modules', 'flashPanel', 'wasm', PAGE_NA
 // exactly like a green run. That was the whole reason this was a CONSTANT.
 //
 // ⛓ BUT A CONSTANT IS THE OTHER HALF OF THE SAME MISTAKE: builds whose
-// payload really IS named after their directory (`seedling_bot_ap_p4b`) then
+// payload really IS named after their directory (`seedling_bot_ap_p4c`) then
 // SKIP just as silently, and the wasm-hygiene slice needed exactly that
 // comparison. So the name is read where the browser reads it — out of
 // `game.html`'s own <script src>, the authority `check-seedling-wasm-pins.mjs`
