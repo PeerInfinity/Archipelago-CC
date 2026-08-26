@@ -4807,6 +4807,52 @@ command — is kickoff **§37.7a**. §35.8's mutant (d) is **SPENT** at last.
 ⇒ **NEXT: 12e⁗ → the re-record's FOURTH run → the 12c batch closes → ⚖ 54's
 streamlining P1–P4 → L15 `shove`.**
 
+⛓⛓⛓ **R9 SLICE 12e⁗ SHIPPED 2026-08-25** — **⚖ RULING 55 IS DISCHARGED AND BOTH
+CLASSES ARE CLOSED ON `main`.** Class A is TWO EDITS, transcribed with their AS3
+lines: the spend site derives the dash direction the game's way
+(`knockbackImpulse(x − (x − v.x), y − (y − v.y), force)` — `Player.as:788`'s
+POSITION ROUND TRIP, which the model had been skipping) and `knockbackImpulse`
+normalises through `pointNormalize` with the game's `>=`/`>` guards, so
+`Math.hypot` and `cx / length` LEAVE THE FILE and the model spells
+`Point.normalize` ONE way. Measured offline, no GPU, seconds per pass:
+**E0 5/13 → E3 13/13 EXACT** against the game's own thirteen recordings.
+Class B's one open step is closed by a LINE rather than an argument —
+**`Main.as:67` calls `Bot.update()` ABOVE `super.update()`** (= `Engine.as:69-77`'s
+`FP._world.update()`), so `autoAdvance()` runs before every entity update and
+reads the freeze the PREVIOUS frame's `Help.update()` left, and a Help the tape
+dismisses on its own first update never makes a frame the counter can see; the
+check derives from the model's dead-frame ledger now
+(`dialogue.js`'s `autoAdvanceArrivals`) and **equals the old `swordPickups` on
+149 of 149 committed tapes**, so the `--win` gate's verdict cannot move.
+⛔ **TWO CORRECTIONS TO §37.6, both measured.** (a) The ROSTER probe the brief
+names is **145/4 on `main` BEFORE the fix** — 137/12 was taken at the BRANCH
+head, so that probe cannot discriminate; the load-bearing instrument is the
+**two-build stream diff over all 149 committed tapes: 0 MOVERS, and the two 8 MB
+dumps carry the SAME md5.** (b) The second ULP source is **TWO** differences —
+`hypot` vs `sqrt(x*x+y*y)` (diagonals only, and its `0 of 200 000` for axes is
+PROVABLE, not a sampling artefact) and `cx / L` vs `cx * (1/L)` (**both**, 14 %
+of axes) — so the fix moves axis arithmetic too, and the roster's inertness is a
+statement about the CORPUS, never a guarantee about axes. ⚠ A drafted claim that
+§37.6 had measured the wrong sample was **REFUTED BY ITS OWN PIN** before it
+shipped. Zero ledger: `standing-values --check` **47/0 with a line-by-line diff
+against BEFORE that is EMPTY**, all seven producer md5s unmoved, no `--write`
+needed; docs pins NAMED (`docsIndex` 214,642 → 215,198 words) with the generator
+in the same commit; bounded vitest **490/490** incl. `procgenDocs/`; four mutants
+spent and red as sealed. **No tape moved, the roster is still 149, the series is
+still parked whole**, and the eight refused recordings are banked in
+`fixtures/refuted/` (not enumerated by the roster) as the free oracles they are.
+As-built kickoff **§38**; the fourth run's shape is **§38.8** — flip → VERIFY the
+thirteen offline (13/13, NO re-drive, no GPU) → S4 → targeted roster + `--write`
+of §37.4's six movers at a pushable head → ONE push.
+⇒ **NEXT: the re-record's FOURTH run (or P1 first — the orchestrator's
+sequencing) → the 12c batch closes → ⚖ 54's streamlining P1–P4 → L15 `shove`.**
+⚠ NEW BOARD LINE from this slice: **a one-spelling law is a property of a FILE,
+not a call site.** R6 already paid this exact defect class (the tracked doc has
+carried *"the model used `Math.hypot`"* since then) and fixed it only where it
+hurt; `knockbackImpulse` kept the re-spelling for three rungs. A standing
+FILE-level pin over every remaining re-spelling of a transcribed primitive is
+cheap and nobody has built it — P3/P4-adjacent.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:

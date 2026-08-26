@@ -14640,3 +14640,50 @@ dead-frame ledger and the game clock — and every one of the seven solver
 producers emits the same bytes it emitted before. Seven tapes do move the label
 a dead-frame span is filed under, by one tick, and the game's own counter says
 the new label is the correct one.
+
+The recording pass that followed drove all thirteen of the licensed walks in
+the real game and got the game's answer on every one of them — and then the
+recorder refused eight of its own recordings. Each refusal was a single tick
+where the model's player stood seven thousandths of a millionth of a pixel away
+from where the game had put it, and never recovered. The tapes that failed were
+exactly the ones whose sword dash was released while both a sideways and an
+up-or-down key were held: a diagonal dash. The twenty-one dashes along an axis
+in another walk were exact.
+
+Two separate roundings, inside one line of the original game's code, and the
+model had both of them wrong. The first is that the dash does not tell the game
+which way it points. It hands the game a point BEHIND the player — the player's
+position minus the player's velocity — and the game then subtracts that point
+from the position again to recover the direction. Subtracting and re-adding a
+small number to a large one does not always give the small number back, and the
+model had been passing the velocity straight through instead of making the
+round trip. The second is that the model had two different spellings of the
+same routine from the game's runtime: one faithful transcription used
+everywhere the walk needed it, and one convenient re-spelling inside the dash's
+own impulse. Neither correction is enough on its own — the round trip alone
+leaves three of the thirteen still refused, the faithful spelling alone leaves
+all eight — and together they are thirteen for thirteen, tick for tick, against
+what the game recorded. That is the reason to transcribe an expression rather
+than to repair the part of it that looks wrong.
+
+Nothing else moved. All one hundred and forty-nine committed tapes replay to
+the identical stream on both builds, the two dumps agreeing to the byte, and
+every standing value including all seven solver producers reproduces its
+recorded number. The eight recordings the game refused are kept beside the
+tapes that produced them, in the bank this project keeps for exactly that — a
+withdrawn recording is a free oracle — and they are not roster tapes, so the
+licensed series still lands whole rather than piecemeal.
+
+The same pass left one more disagreement, and it was a check that had gone
+stale rather than a model that was wrong. The recorder had been asking whether
+the game auto-advanced one help prompt for every sword the route collects. It
+does not, and the reason is the order the frame runs in: the tape driver runs
+before any object in the world updates, so what it sees is the freeze that the
+PREVIOUS frame's prompt left behind — and a tape that dismisses the prompt on
+the prompt's own first update raises and clears the freeze inside that one
+update, leaving no frozen frame for the driver to count. The expectation now
+comes from the model's own ledger of frozen frames rather than from a count of
+swords, which is where the rule already lived. Over every one of the one
+hundred and forty-nine committed tapes the two derivations agree, so no
+recorded verdict moves; what separates them is the walk that is not committed
+yet.
