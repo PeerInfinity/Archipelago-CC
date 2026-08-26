@@ -127,16 +127,6 @@ export const SET_CHANGE_WHY = Object.freeze([
     'op', 'report', 'close', 'select', 'room', 'download',
 ]);
 
-/**
- * ⛔⛔ **A SHIPPED DEFECT, CARRIED ACROSS THE LIFT ON PURPOSE.** See the call
- * site in `paintStrip`: the strip's `⛔embed` label has been drawn under EVERY
- * room since E1b, because its condition read an undeclared `xml`. §27.3 #7 says
- * a lift moves code and does not fix it — the `-arm` gate's load-time INK
- * numbers carry this label, and fixing it here would move a number this slice
- * promised not to move. E3 owns it.
- */
-const EMBED_LABEL_ALWAYS = true;
-
 const el = (doc, tag, className, text) => {
     const node = doc.createElement(tag);
     if (className) node.className = className;
@@ -171,6 +161,9 @@ const el = (doc, tag, className, text) => {
  * @param {Function} [o.drawRoomStill] `(canvas, cell, index) => why|null` — the
  *   PAGE's own renderer. Absent, the overview draws labelled boxes and says so.
  * @param {Function} o.stillKey    `(cell) => any` — the stills cache's key
+ * @param {Function} o.sourceKind  `(cell) => string|null` — WHERE the room's
+ *   contents live, in the substrate's own vocabulary. The strip's `⛔embed`
+ *   badge is the one reader: it draws iff this answers `'embed'`
  * @param {Function} [o.addRoomOp] `(at) => op` — what an ADD ROOM press applies
  * @param {Function} o.say         the status line
  * @param {Function} o.roomSession `() => {room, ops, session}|null`
@@ -191,7 +184,7 @@ export function mountSetEditor({
     adapterFns = null, document = null, ruleKeys = null, forms = null,
     exits = null, locations = null,
     linkBound = null, isRefusal = null, rulesSchema = null,
-    drawRoomStill = null, stillKey = null, addRoomOp = null,
+    drawRoomStill = null, stillKey = null, sourceKind = null, addRoomOp = null,
     say = () => {}, roomSession = () => null, openRoomAt = () => false,
     discardRoom = () => {}, download = () => {}, onSetChange = null,
     loadZip = null,
@@ -232,6 +225,7 @@ export function mountSetEditor({
     need(document.docOf, 'document.docOf');
     need(linkBound, 'linkBound');
     need(stillKey, 'stillKey');
+    need(sourceKind, 'sourceKind');
     need(isRefusal, 'isRefusal');
     /** ⛓ The document's NOUN, upper-cased once — every sentence below uses it. */
     const NOUN = String(document.noun).toUpperCase();
@@ -381,21 +375,26 @@ export function mountSetEditor({
             ctx.font = '10px monospace';
             ctx.fillText(`L${i}`, x + 4, top + 12);
             /**
-             * ⛔⛔ **A DEFECT MOVED VERBATIM, NAMED RATHER THAN FIXED.** This
-             * read was `typeof xml !== 'string'` and `xml` has been an
+             * ⛓⛓⛓ **THE BADGE IS KEYED ON THE CELL, AND THE VOCABULARY IS THE
+             * SUBSTRATE'S** (EDITOR v3 E3a, §31.1 #3; trap 722).
+             *
+             * ⛔ This read `typeof xml !== 'string'` and `xml` had been an
              * UNDECLARED free variable since E1b replaced the room's `xml` with
-             * its `source` — so the test was `'undefined' !== 'string'`, i.e.
-             * TRUE on every pass, and EVERY room in the strip is labelled
-             * `⛔embed` whether it drew or not. ⛓ MEASURED, not reasoned
-             * about — `setEditorView.test.js` counts the labels against the
-             * `L${i}` captions and finds them equal over six rooms that all
-             * drew a still.
-             * ⛔ Preserved bit-for-bit (a `const true` instead of an undeclared
-             * global, which is the same ink and no longer a free variable):
-             * §27.3 #7 — the lift MOVES code, it does not fix it, and the
-             * `-arm`'s load-time INK numbers carry this label. E3 owns the fix.
+             * its `source`. `typeof <undeclared>` is `'undefined'` and never
+             * throws, so the test was TRUE on every pass and EVERY room in the
+             * strip carried `⛔embed` — all 116 vanilla rooms (which ARE embeds,
+             * so nobody could see it there) and all four maze rooms, which have
+             * no embeds at all. E2b carried it as a named `const` with a row so
+             * that the fix could not be silent; this is the fix, and the row is
+             * flipped rather than deleted.
+             *
+             * ⛔ `sourceKind` is a PARAMETER because *"where does this room's
+             * contents live"* is a question only the substrate can answer:
+             * Seedling's is `record | xml | embed` off `room.source`, and a maze
+             * library entry carries its world INLINE, so its answer is a
+             * constant.
              */
-            if (EMBED_LABEL_ALWAYS) ctx.fillText('⛔embed', x + 4, top + 24);
+            if (sourceKind(cell) === 'embed') ctx.fillText('⛔embed', x + 4, top + 24);
             ctx.restore();
         }
     };

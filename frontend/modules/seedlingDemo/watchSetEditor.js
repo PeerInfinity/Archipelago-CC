@@ -535,6 +535,20 @@ export function mountWatchSetEditor({
         ),
         stillKey: (cell) => cell.room.source ?? null,
         /**
+         * ⛓⛓ **WHERE THE ROOM'S CONTENTS LIVE — `roomSourceKind`, THE ONE
+         * ANSWER THIS SUBSTRATE ALREADY HAS** (EDITOR v3 E3a, trap 722).
+         * `record | xml | embed`, and `null` for a `source` that names none of
+         * them or more than one. ⛔ Not a predicate spelled here: `linkScanCost`,
+         * `roomRecordOf` and the rooms `<select>` all route through the same
+         * function, and a second reading of `room.source` in this file would be
+         * a second authority for what an `embed` IS.
+         * ⚠ The committed vanilla fixture is 116 rooms and ALL 116 are embeds,
+         * so the badge is correct there both before and after the fix; the set
+         * that DISCRIMINATES the two builds is a GENERATED one, whose rooms are
+         * `record`-sourced and carried the badge under every one of them.
+         */
+        sourceKind: (cell) => roomSourceKind(cell.room?.source),
+        /**
          * ⛓ ADD ROOM starts from `emptyLevel` — the page's own blank record —
          * and hands it to `add-room` AS A RECORD (EDITOR v3 E1b, §22.8).
          */

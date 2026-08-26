@@ -293,6 +293,20 @@ export function mazeSetBindings({ rulesSchema = null, drawRoomStill = null } = {
         isRefusal: isMazeSetRefusal,
         rulesSchema,
         stillKey: (cell) => cell.payload,
+        /**
+         * ⛓⛓ **EVERY MAZE ROOM IS `record`-EQUIVALENT, BY CONSTRUCTION**
+         * (EDITOR v3 E3a, trap 722). A region-library ENTRY carries its whole
+         * captured world INLINE as `payload` — there is no external file to
+         * point at and no compiled-in blob to name, so the vocabulary Seedling
+         * needs three words for has exactly one answer here.
+         *
+         * ⛔ SAID rather than defaulted, and NOT `null`: `null` would read as
+         * *"this substrate does not know"*, and the mount would then have to
+         * decide what an unknown kind means for the badge. The maze knows —
+         * the badge is never drawn on this page, and that is a claim its gate
+         * makes rather than a silence.
+         */
+        sourceKind: () => 'record',
         drawRoomStill,
     };
 }

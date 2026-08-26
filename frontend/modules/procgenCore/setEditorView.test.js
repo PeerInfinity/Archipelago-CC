@@ -42,7 +42,7 @@ import { validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js'
 import { createLifetime } from './pageLifetime.js';
 import { tileTypeForPlacement } from '../flashPanel/seedlingSemantics.js';
 import { buildLevelSet } from '../seedlingDemo/levelSetExporter.js';
-import { roomRecordOf } from '../seedlingDemo/levelSetValidator.js';
+import { roomRecordOf, roomSourceKind } from '../seedlingDemo/levelSetValidator.js';
 import { emptyLevel } from '../seedlingDemo/procgenLevel.js';
 import { parseOelLevel } from '../seedlingDemo/procgenLevelOel.js';
 import { emptyOverlay } from '../seedlingDemo/seedlingSetOverlay.js';
@@ -239,7 +239,7 @@ const generatedSet = (n = ROOMS, setId = 'set-editor-view-test') => buildLevelSe
     Array.from({ length: n }, (_, level) => emptyLevel({ level })), { setId, link: true },
 ).set;
 
-const seedlingHarness = ({ rooms = ROOMS, onSetChange = null } = {}) => {
+const seedlingHarness = ({ rooms = ROOMS, onSetChange = null, embeds = [] } = {}) => {
     const adapter = createSeedlingSetAdapter(DEPS);
     /**
      * ⛓ A ROOM SESSION STUB — the mount reads `{room, ops}` and
@@ -264,7 +264,21 @@ const seedlingHarness = ({ rooms = ROOMS, onSetChange = null } = {}) => {
         };
         return { room: index, ops: 1, session: { record: () => edited } };
     };
-    const record = setRecord(generatedSet(rooms), emptyOverlay());
+    /**
+     * ⛓⛓ **AND SOME ROOMS MAY BE MADE `embed`s** (EDITOR v3 E3a). The generated
+     * set is all `record`-sourced, which is the document where the `⛔embed`
+     * badge fix is VISIBLE; the committed vanilla fixture is 116 rooms and all
+     * 116 ARE embeds, so a row over that one would be green under both builds.
+     * ⛔ The source is REPLACED in the document rather than applied as an op:
+     * there is no adapter op that turns a room into an embed, and inventing one
+     * for a row would be a second way to write a set.
+     */
+    const built = generatedSet(rooms);
+    const record = setRecord(embeds.length === 0 ? built : {
+        ...built,
+        rooms: built.rooms.map((r, i) => (embeds.includes(i)
+            ? { ...r, source: { embed: `levels/room_${i}.oel` } } : r)),
+    }, emptyOverlay());
     const session = createSetSession(adapter, record,
         { base: { kind: 'set', set_id: record.set.set_id } });
     const doc = new FakeDocument();
@@ -836,26 +850,71 @@ describe('⛔⛔ EDITOR v3 E2b — the lift is BYTE-INERT on Seedling, and it is
     });
 
     /**
-     * ⛔⛔⛔ **A SHIPPED DEFECT, MEASURED AND CARRIED ACROSS THE LIFT UNCHANGED.**
-     * The strip's `⛔embed` label was drawn behind `typeof xml !== 'string'`, and
-     * `xml` has been an UNDECLARED free variable since E1b replaced the room's
-     * `xml` with its `source`. `typeof <undeclared>` is `'undefined'` and never
-     * throws, so the test is TRUE on every pass and every room carries the label
-     * whether it drew a still or not. ⛓ MEASURED here rather than reasoned
-     * about: six rooms, six labels, on a set whose rooms are all `record`-sourced
-     * and all drew.
-     * ⛔ NOT FIXED (§27.3 #7): the lift moves code, and the `-arm`'s load-time
-     * INK numbers carry this label — E3 owns it. This row is what stops the fix
-     * from being silent when it comes.
+     * ⛓⛓⛓ **THE ROW E2b LEFT SO THE FIX COULD NOT BE SILENT — FLIPPED, NOT
+     * DELETED** (EDITOR v3 E3a, §31.1 #3, trap 722).
+     *
+     * The strip's `⛔embed` label was drawn behind `typeof xml !== 'string'`,
+     * and `xml` had been an UNDECLARED free variable since E1b replaced the
+     * room's `xml` with its `source`. `typeof <undeclared>` is `'undefined'` and
+     * never throws, so the test was TRUE on every pass and EVERY room carried
+     * the label whether it drew a still or not — six labels against six `L${i}`
+     * captions, measured here.
+     *
+     * ⛔⛔ **AND THE SUBJECT IS WHAT MAKES THIS A MEASUREMENT.** The committed
+     * vanilla fixture is 116 rooms and ALL 116 ARE `embed`s, so on that document
+     * the badge is under every room BOTH before and after the fix and a row over
+     * it would be green for the wrong reason. This harness's set is GENERATED —
+     * every room `record`-sourced (E1b, §22.8) — which is the document where the
+     * two builds differ: six badges before, ZERO after.
+     * ⛓ MUTANT: key the badge on `typeof xml` again, or bind `sourceKind` to a
+     * constant `'embed'` — this row goes red on the first expectation.
      */
-    it('⛔ every room is labelled `⛔embed`, drawn or not — the defect, pinned as it is', () => {
+    it('⛓ the `⛔embed` badge is drawn on EMBED rooms only — ZERO on a generated set', () => {
         const h = seedlingHarness();
         runScript(h);
         const calls = $(h, 'editSetOverview').calls;
         const labels = calls.filter((c) => c.startsWith('fillText(⛔embed'));
+        const captions = calls.filter((c) => c.startsWith('fillText(L'));
         const drew = calls.filter((c) => c.startsWith('drawImage('));
-        expect(labels.length).toBe(calls.filter((c) => c.startsWith('fillText(L')).length);
+        expect(captions.length).toBeGreaterThan(0);
         expect(drew.length).toBeGreaterThan(0);
+        // ⛓ every room of this set is `record`-sourced, and none is an embed
+        expect(h.session.record().set.rooms
+            .map((r) => roomSourceKind(r.source))).toEqual(Array(6).fill('record'));
+        expect(labels.length).toBe(0);
+    });
+
+    /**
+     * ⛓⛓ **AND ON ROOMS THAT REALLY ARE EMBEDS THE BADGE IS STILL DRAWN** — the
+     * fix is a CONDITION, not a deletion. ⛔ This is the half the row above
+     * cannot see on its own: a `sourceKind` bound to a constant `'record'`, or
+     * a badge simply removed, would pass *"zero on a generated set"* and lose
+     * the label for ever. ⛓ EXACTLY the embed rooms, by index — a count alone
+     * cannot tell six badges spread over the right two rooms from six over the
+     * wrong ones.
+     */
+    it('⛓ …and EXACTLY the `embed` rooms carry it — by index, not by count', () => {
+        const h = seedlingHarness({ embeds: [0, 3] });
+        // ⛔ ONE render's worth of calls: the mount renders twice on its way up
+        //   (`render()` then `selectRoom(0)`), and a count over the accumulated
+        //   log would be a multiple of the answer rather than the answer.
+        const calls = $(h, 'editSetOverview').calls;
+        calls.length = 0;
+        h.ui.render();
+        expect(h.session.record().set.rooms.map((r) => roomSourceKind(r.source)))
+            .toEqual(['embed', 'record', 'record', 'embed', 'record', 'record']);
+        /**
+         * ⛓ THE BADGE'S `x` IS THE CELL'S — `paintStrip` draws it at
+         * `x + 4` where `x = i * cellPx`, and the caption `L${i}` is drawn at
+         * the same `x + 4`. So the rooms that carry a badge are the rooms whose
+         * caption shares its x, and THAT is an index claim rather than a count.
+         */
+        const xOf = (c) => Number(c.slice(c.indexOf(',') + 1, c.lastIndexOf(',')));
+        const badgeX = calls.filter((c) => c.startsWith('fillText(⛔embed')).map(xOf);
+        const captionX = new Map(calls.filter((c) => c.startsWith('fillText(L'))
+            .map((c) => [xOf(c), Number(c.slice('fillText(L'.length, c.indexOf(',')))]));
+        expect(badgeX.length).toBe(2);
+        expect([...new Set(badgeX.map((x) => captionX.get(x)))].sort()).toEqual([0, 3]);
     });
 
     /**
@@ -963,7 +1022,7 @@ describe('⛓⛓⛓ EDITOR v3 E3a — the mount renders FIRST, then tells the pa
      * the roster SHRINKS (a value is dropped from `SET_CHANGE_WHY`, or a call
      * site stops passing one) — the second expectation names exactly which.
      */
-    it('`SET_CHANGE_WHY` is the five reasons, and every call site passes one of them', () => {
+    it('`SET_CHANGE_WHY` is the SIX reasons, and every call site passes one of them', () => {
         expect(SET_CHANGE_WHY)
             .toEqual(['op', 'report', 'close', 'select', 'room', 'download']);
         const h = recordingHarness();
@@ -1212,6 +1271,26 @@ describe('⛓⛓⛓ EDITOR v3 E2b — the SAME mount, bound to `mazeSetAdapter`,
      * is `null` everywhere and `exitArrowShapes` draws nothing, on a library
      * whose links are the WHOLE graph.
      */
+    /**
+     * ⛓⛓ **AND THE `⛔embed` BADGE IS DRAWN ON NONE OF THEM** (EDITOR v3 E3a,
+     * trap 722). A region-library entry carries its captured world INLINE as
+     * `payload`, so `mazeSetBindings.sourceKind` answers `'record'` for every
+     * one and the strip has no reason to warn about anything. ⛔ E2b shipped
+     * this badge under all FOUR maze rooms, because the condition read an
+     * undeclared `xml` and `typeof <undeclared>` is `'undefined'`.
+     * ⛓ The CAPTIONS are counted beside it: a row that only asserted "no
+     * badges" would be green over a strip that drew nothing at all.
+     */
+    it('⛓ NO room carries the `⛔embed` badge — the maze has no embeds at all', () => {
+        const h = mazeHarness();
+        const calls = $(h, 'editSetOverview').calls;
+        calls.length = 0;
+        h.ui.render();
+        expect(calls.filter((c) => c.startsWith('fillText(L')).length)
+            .toBe(MAZE_LIB.entries.length);
+        expect(calls.filter((c) => c.startsWith('fillText(⛔embed')).length).toBe(0);
+    });
+
     it('the ARROWS are `exitArrowShapes` over the JOINED exits — none, then two', () => {
         const h = mazeHarness();
         expect(exitArrowShapes(h.ui.rows(), { selected: 0 })).toHaveLength(0);

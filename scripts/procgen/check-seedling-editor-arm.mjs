@@ -444,6 +444,20 @@ const adapter2 = createSeedlingEditAdapter({
 });
 // ⛔ THE COMMITTED FIXTURE IS UNTOUCHED BY E1b: all 116 rooms are still `embed`
 //    (⚖ §22.8 is ADDITIVE), which is exactly what claim 19 is about.
+/**
+ * ⛓⛓ **AND THAT IS ALSO WHY THIS FIXTURE CANNOT WITNESS TRAP 722's FIX.**
+ * EDITOR v3 E3a keyed the strip's `⛔embed` badge on the CELL
+ * (`sourceKind(cell) === 'embed'`) after it had been drawn under EVERY room
+ * since E1b — the condition read an undeclared `xml`, and `typeof
+ * <undeclared>` is `'undefined'`. ⛔ On THIS document every one of the 116
+ * rooms IS an embed, so the badge is under every room BOTH before and after
+ * the fix and the vanilla strip's INK does not move at all. The documents that
+ * discriminate the two builds are the GENERATED sets, whose rooms are
+ * `record`-sourced, and the maze's library, whose entries carry their world
+ * inline — and both are witnessed by `setEditorView.test.js`'s rows BY INDEX
+ * (six badges → zero; four → zero) rather than by a browser ink count that
+ * could not separate a glyph from the still underneath it.
+ */
 check(VANILLA.rooms.every((r) => typeof r.source?.embed === 'string'
     && r.source.xml === undefined && r.source.record === undefined),
     '⛓ …and NOT ONE of the vanilla set\'s 116 rooms carries an `xml` OR a `record` source — '
