@@ -524,6 +524,32 @@ const fakeReport = (over = {}) => {
 };
 
 describe('⛓⛓⛓ the REPORT is a LIST, and it names the document the SUBSTRATE names', () => {
+    /**
+     * ⛔⛔ **A RECORD WITH NO `overlay` HALF AT ALL REPORTS — IT DOES NOT
+     * CRASH** (EDITOR INTEGRATION W2, measurement 4). `record.overlay.rooms`
+     * was the ONE unguarded read of the overlay in this function, beside two
+     * that already went through `?.`; a WORLD's record is `{world, parts}`
+     * with its parts' overlays inside the world document, so it is the first
+     * record that has none, and the `TypeError` landed in the REPORT rather
+     * than in the thing under test.
+     *
+     * ⛔ mutant: put `record.overlay.rooms` back — this row goes red with
+     * *"Cannot read properties of undefined (reading 'rooms')"* and every
+     * other row in this file stays green, because every other record here has
+     * an overlay.
+     */
+    it('⛔ a record with NO overlay half reports instead of throwing', () => {
+        const noOverlay = Object.freeze({ cells: [{ name: 'a', exits: [] }, { name: 'b', exits: [] }] });
+        const rep = fakeReport({ record: noOverlay });
+        expect(rep.rows.some((r) => r.kind === 'reach' && r.severity === 'ok')).toBe(true);
+        // ⛓ …and the two rows the overlay would have driven are simply ABSENT,
+        //   rather than claiming something about an overlay that is not there.
+        expect(rep.rows.some((r) => r.kind === 'inert-rule')).toBe(false);
+        expect(rep.rows.find((r) => r.kind === 'locations').text)
+            .toMatch(/^0 location\(s\) in the OVERLAY, 0 compiled$/);
+        expect(rep.download.rules.allowed).toBe(true);
+    });
+
     it('⛓⛓ section 1 quotes the injected validator, noun and id — none of them Seedling\'s', () => {
         const rep = fakeReport();
         const row = rep.rows.find((r) => r.kind === 'region-library');

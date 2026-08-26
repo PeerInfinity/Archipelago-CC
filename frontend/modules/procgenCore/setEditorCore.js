@@ -688,7 +688,21 @@ export function reportOver({
         add('error', 'inert-rule', `the rule authored on exit "${r.exitId}" of room ${r.room} `
             + `REACHES NOTHING — ${r.why}`);
     }
-    if (inert.length === 0 && Object.keys(record.overlay.rooms ?? {}).length > 0) {
+    /**
+     * ⛓ `record.overlay?.rooms` — OPTIONAL, and EDITOR INTEGRATION W2's
+     * measurement 4 is why. This was the ONE unguarded read of the overlay half
+     * in this function, beside two (`inertRulesOf`, `overlayLocationCount`)
+     * that already went through `?.`, so a record with no `overlay` at all died
+     * here with a `TypeError` about `rooms` rather than reporting anything. A
+     * WORLD's record is `{world, parts}` — its parts' overlays live INSIDE the
+     * world document, keyed by part — so it is the first such record, and the
+     * crash would have been in the REPORT rather than in the thing under test.
+     * ⚠ The row it guards then simply does not fire: a substrate whose record
+     * carries no overlay has no authored exit rules for this scan to find, and
+     * saying "every authored rule gates something" over nothing would be a true
+     * sentence about the wrong subject.
+     */
+    if (inert.length === 0 && Object.keys(record.overlay?.rooms ?? {}).length > 0) {
         add('ok', 'inert-rule', 'every authored exit rule sits on an endpoint the compiler '
             + 'builds an AP exit for');
     }
