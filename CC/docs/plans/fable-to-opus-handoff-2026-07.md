@@ -4925,6 +4925,69 @@ witness is a truncated walk instead: `REFUSED: not-calm — v=(1.450000000000000
 fixed it for reporting) — P3/P4; and **the five never-driven rows** above are
 now a standing list rather than a discovery waiting for the next cascade.
 
+⛓⛓⛓ **SLICE P2 SHIPPED 2026-08-26 (`e44a0e39f` … `7a6b3bc11`, PUSHED) — ⚖ 54
+(5) DISCHARGED, AND THE ANSWER IS CASE B: THE ECONOMIES WERE NOT NATURALLY
+INERT, SO THE GATE IS A MEASUREMENT'S CONSEQUENCE AND ITS DOCBLOCKS NAME THE
+MOVERS.** ⚖ 46 (the collect stance) and ⚖ 47 (the kill-lock's fade spent
+walking) were cherry-picked from `r9/re-record-attempt-4` and MEASURED un-gated
+at `ALLOW_DASH_ROSTER_WIDE === false` first, as the design required: **five
+committed artifacts move** — `r8-solve-10` 90→**89** · `r8-solve-18` 541→**437**
+· `r8-solve-20` 365→**332** · `r8-d2-19` 864→**807** · `r8-d2-20` 781→**756** ⇒
+the `r8-d2` headline 2186→**2000** — and **five of seven producer md5s** with
+them. That is §31.6's (E₀) column *"economies, NO flip"* reproduced at today's
+head, three model fixes later, and its three `r8-d2` rows agree to the digit.
+⚠ **THE BATTERY IS THE ROW TO REMEMBER: its md5 moved while it reported exit 0,
+all checks green** (its `r8-solve-10` row is PRINTED, not emitted) — *"did the
+producers stay green?"* would have called this economy invisible. The md5 is the
+instrument; the exit code is not.
+⛓ **GATED, ALL SEVEN ARE BYTE-IDENTICAL AGAIN** and the two-build stream diff
+over all 149 tapes is 0 movers with the same dump md5 — reported as
+NON-DISCRIMINATING, since `solverBot.js` is not among the 48 modules a reverse
+import walk from `tapeRunner.js` reaches. ONE permission, `economies`,
+defaulting to the flag (`strikePolicyFor`'s `dashPlan` shape — a second flag
+state is the cost ⚖ 41 refused); ⚖ 47 needed THREE things off, not one — the
+walk, `remaining` (⇒ `fade`), and the record's `earlyWalk` key **ABSENT rather
+than `null`**, because the trace sidecars are `--check`ed byte-for-byte too.
+⛓⛓⛓ **AND THE MUTANT IS THE STRONGEST SENTENCE: with the flag flipped, THIS
+TREE reproduces BOTH archive branches' thirteen walks to the digit** — campaign
+**3326**, `r8-d2` headline **1685**, and `--table`'s MODEL column equals its
+`@ref` column 13/13 on `attempt-3`'s ten AND `attempt-4`'s three. ⚖ 49's licence
+numbers are now derivable from `main` in ~30 s of CPU with no GPU, and 12e⁗'s
+ULP fix moves no row at `true`.
+⛔ **⚖ 39's `why` SWEEP IS NOT TAPE-INERT AND STAYS ON THE BRANCH** — a segment's
+`why` is interpolated into its tape's `description` and `emit`'s `--check` is a
+BYTE compare, so it reds `r9-solve-11`/`-13`/`-14` (tapes only; traces carry no
+description). ⛓ But the KEY projection is UNMOVED on all three, so the sweep
+costs **zero GPU drives** — ⚖ 54 (4)'s win on the segments that spend it.
+⇒ **THE SERIES IS FOUR COMMITS, NOT SEVEN**: the flip · the `why` sweep ·
+`299387a63` · `763bf3cb8`, by
+`git rebase --onto <head> de7c0da7b r9/re-record-attempt-4` — rehearsed in a
+THROWAWAY detached worktree (removed; every `r9/*` branch untouched), **no
+conflict**, and `fixtures/tapes|expectations|traces` come out as the SAME TREE
+OBJECTS as `-4`'s.
+⛓ **§38.8 STEP 2 IS ALREADY VERIFIED: the thirteen are 13/13 EXACT** at the
+rebased head and the roster is 145/149 with exactly the four known `r5`
+residuals — the 5011-tick drive is not paid again. The third run's directory
+survives and was copied out of another session's `/tmp` to
+**`~/.cache/seedling-r9-rerecord-run3/`**; `--from=S4` reads S0/S1/S2 from it,
+and S4 is a Windows/GPU row twice over.
+⚠ THREE RESIDUE LINES OF ITS OWN: **two pre-existing unit rows go red under the
+flip and no re-record repairs either** (`solverBot.test.js:520`'s
+`['avoid','time']` against `['avoid','time','sword-dash']`, and `:3250`'s
+`waits === 0` against **24**) — the fourth run owns them; **a SIXTH producer
+moves at the flip and is in no licence table**, `solve-seedling-r9-l3`
+`8ac17aca…`→`6cd35fe1…`, green but moved, so the fourth run's `--write`
+prediction is six producers BY NAME; and **⚖ 49's extension mis-attributes
+`r8-solve-11` 87→84 to ⚖ 46** — at `false` that row does not move at all, 84
+needs the flip. Standing values re-measured at `5f5323d9d`: **exactly ONE
+`value` mover and it is CI's suite row** 366/11438 → **366/11447**, zero `cheap`
+flips, and `gates.sh local` deliberately NOT run because `gates.mjs --list`'s 28
+gates ARE the 28 `gate:` rows `--write` had just re-measured. As-built kickoff
+**§40**; the fourth run's inputs **§40.9**.
+⇒ **NEXT: the re-record's FOURTH run (§40.9's inputs) or P1b — the
+orchestrator's sequencing — then the 12c batch closes → P3/P4 → L15 `shove`.**
+
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
