@@ -14714,3 +14714,77 @@ the game's arithmetic and not a curve fitted to it. The lesson kept beside it is
 that a measured bound records what was seen and does not license a story about
 why: "the last few bits belong to the emulator" survived two rungs on the
 strength of a number that was never in dispute.
+
+### R9 slice P1: ASK THE GAME BEFORE THE SERIES — a third column state, a table the archive branches reproduce, and a cache that was discarding the runs it had paid for
+
+The campaign re-record had been attempted three times, and twice it stopped on a
+segment the model had certified and the game had never been asked about. The
+reason was structural rather than careless. A producer's `--check` measures its
+walks against the tapes already committed; only the emit path, deep inside a
+pipeline run, ever hands a *provisional* walk to the game. So every column in
+the planning tables that read "driven, no hits, calm arrival" was the model's
+word about itself, and the first time the game saw those walks was in the middle
+of a cascade, after the graphics card had already been spent on their
+predecessors.
+
+This slice gives that question its own command. One segment is named, its walk
+is put to the game from the predecessor's measured latch, and the answer is
+reported beside the model's own arrival. The command is read-only by default: if
+nobody has measured that walk, it says so and stops, and driving takes an
+explicit flag. That third state is the whole point. A certification column with
+two values reads a row nobody asked about as a passing row, which is exactly how
+three runs' worth of measurement went into walks the game had never seen. There
+are three values now — the game agreed, the model alone says so, and nobody
+asked — and a refusal names which of the arrival conditions failed: the run
+never latched, the arrival was not calm, the player was hit, the level was
+wrong, or the pixel was.
+
+The pixel comparison turned out to need no tolerance at all, once the right two
+numbers were compared. The game's latch carries the coordinates its current
+world was *constructed* with, not where the player is standing; the model's copy
+of exactly those is a separate field from its position, and on the boss-key room
+the two are eight pixels apart in each axis — one spawn offset. Comparing the
+standing position would have refused every arrival in the roster; comparing the
+construction pair matches exactly, everywhere, with no constant to tune.
+
+The pipeline also prints the whole table now, so a write-up quotes an instrument
+instead of transcribing a producer's output by hand. Pointed at a branch it adds
+a column rather than replacing one, so a row reads the way these tables have
+always been written — the committed length, then the branch's — with neither
+number carried in anyone's head. Run against the two archive branches it
+reproduces both of the tables the earlier attempts recorded, digit for digit,
+which is what makes it a fixture and not a convenience.
+
+Its first run on the mainline found something nobody had gone looking for. Of
+twenty-five committed chain artifacts, **six had never met the game**, and the
+six are not arbitrary: a latch is driven only to author the *next* segment's
+starting state, so a chain's last segment, a chain's headline, and any
+one-segment chain is never asked. One of the six was closed on the spot by
+driving it — thirty-three seconds of play, and it came back calm. Five remain,
+and they are a named list now rather than a discovery waiting for the next
+cascade to make.
+
+The last part is the cache, and it is the finding to keep. Both latch caches key
+on the bytes of the tape, and the pipeline's keyed on the *complete* tape rather
+than on what the game is actually handed. The reasoning written beside it was
+careful and it was about the wrong consumer: it worried that two different
+starting states could project to the same game-visible bytes, which is true of a
+different code path entirely. The pipeline ships the projection, so the field in
+question never reaches the game, and keying on it cannot prevent a wrong answer
+— it can only discard a right one. That is not hypothetical. The boss-key room's
+seven-hundred-and-twenty-one-tick answer, the row two attempts died on, has been
+sitting in the cache since the third run; the tape the branch committed for that
+same walk keys differently and cannot find it, and the entire difference is one
+block that is re-derived *after* the drive. Across the branch that costs five
+measurements the graphics card had already paid for.
+
+So the key is now taken over the bytes the game reads, and what that means is
+enumerated rather than assumed: the fork's tape loader reads its input field by
+field, by name, and the one field the projection carries that no consumer reads
+is the human-readable description. Dropping it makes a prose edit free — a
+sentence rewritten in a tape no longer costs a replay — and any field that is in
+neither list refuses by name rather than being guessed at, because keeping a
+field wastes a run while dropping one returns the wrong answer. The old keys are
+never deleted and never re-derived from the files, which is impossible; but when
+an old key hits, the tape that produced it is in hand, so the record is copied
+forward and the migration converges instead of merely decaying.
