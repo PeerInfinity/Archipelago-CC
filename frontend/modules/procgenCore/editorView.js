@@ -472,7 +472,12 @@ export function mountEditorView({
             res = session.apply(op);
         } catch (e) {
             if (!(e instanceof EditCoreError)) throw e;
-            res = Object.freeze({ ok: false, applied: false, description: e.message });
+            // ⛓ E6a — `reason` is the CLASS, so a synthesised refusal names the
+            //   error's own `name` rather than leaving the field absent and
+            //   making "no class" and "caught here" indistinguishable.
+            res = Object.freeze({
+                ok: false, applied: false, description: e.message, reason: e?.name,
+            });
         }
         say(res.description, !res.ok);
         if (onChange) onChange({ session, result: res, tool, clip });

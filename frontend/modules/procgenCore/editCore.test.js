@@ -22,6 +22,7 @@ import { describe, expect, it } from 'vitest';
 import {
     ADAPTER_MEMBERS,
     EditCoreError,
+    applyOne,
     assertAdapter,
     canonicalJson,
     createEditSession,
@@ -88,9 +89,14 @@ const toyAdapter = Object.freeze({
             };
         }
         // ⛓ THE TOY'S OWN LEGALITY RULE — an entity may not stand on a 'b'.
+        // ⛓⛓ EDITOR v3 E6a — and it names its refusal CLASS in `reason`, which
+        //    is what a real substrate does (`SeedlingSetDeriveRefusal`). ⛔ The
+        //    toy's OTHER refusals give none, so every row below separates "the
+        //    core carried the substrate's class" from "the core invented one".
         if (op.entity && cell.tile === 'b') {
             return {
                 ok: false,
+                reason: 'toy-rule',
                 description: `toy: (${x},${y}) is a 'b' tile and nothing stands on a 'b'.`,
             };
         }
@@ -373,6 +379,58 @@ describe('⛓ group — atomic, one undo, flat', () => {
 /* ══════════════════════════════════════════════════════════════════════
  * RECT COPY / PASTE
  * ══════════════════════════════════════════════════════════════════════ */
+
+describe('⛓⛓ EDITOR v3 E6a — the substrate\'s refusal CLASS survives the session', () => {
+    /**
+     * ⛔ **A PAGE THAT WANTS TO BRANCH ON THE REFUSAL CLASS COULD NOT**
+     * (§33.12 #1, §33.13). The adapter's `reason` died at the session's refusal
+     * arm, so every caller that needed the class had to match `description`
+     * text — the one channel the core promises never to paraphrase.
+     *
+     * ⛓ The field is OPTIONAL and the core NEVER INVENTS ONE: the two rows here
+     * drive a refusal that HAS a class and one that does not, and assert
+     * `'reason' in res` both ways. A version that defaulted `reason` to
+     * something would pass the first row and fail the second.
+     */
+    it('a refusal with a `reason` carries it; one without has no `reason` KEY at all', () => {
+        const s = createEditSession(toyAdapter, toyWorld(3, 3));
+        expect(s.apply(tileOp(0, 0, 'b')).applied).toBe(true);
+        const refused = s.apply(entOp(0, 0, 'rock'));
+        expect(refused.ok).toBe(false);
+        expect(refused.reason).toBe('toy-rule');
+        // ⛔ and a refusal the toy gives no class for stays classless
+        const shapeless = s.apply({ op: 'nope' });
+        expect(shapeless.ok).toBe(false);
+        expect(Object.prototype.hasOwnProperty.call(shapeless, 'reason')).toBe(false);
+    });
+
+    /**
+     * ⛓⛓ **THROUGH A GROUP IT IS THE MEMBER'S CLASS**, because the group's
+     * refusal IS the member's — the group adds no class of its own, and a page
+     * that branches should see what it would have seen had the member been
+     * applied alone.
+     */
+    it('a group refused by a member carries THAT member\'s reason, and the description still nests', () => {
+        const s = createEditSession(toyAdapter, toyWorld(3, 3));
+        expect(s.apply(tileOp(1, 1, 'b')).applied).toBe(true);
+        const res = s.apply(group('stroke', [tileOp(0, 0, 'a'), entOp(1, 1, 'rock')]));
+        expect(res.ok).toBe(false);
+        expect(res.reason).toBe('toy-rule');
+        expect(res.description).toMatch(/member #2 of group "stroke"/);
+        // ⛓ …and the all-or-nothing law is untouched: member #1 did not land.
+        expect(s.record().cells[0].tile).toBe('a');
+        expect(s.ops()).toHaveLength(1);
+    });
+
+    /** ⛔ `applyOne` itself — the layer the session reads — carries it too, so
+     *  the field is not something only the session knows about. */
+    it('applyOne carries the reason for a bare op and for a group', () => {
+        const rec = toyAdapter.apply(toyWorld(2, 2), tileOp(0, 0, 'b')).record;
+        expect(applyOne(toyAdapter, rec, entOp(0, 0, 'rock')).reason).toBe('toy-rule');
+        expect(applyOne(toyAdapter, rec, group('g', [entOp(0, 0, 'rock')])).reason)
+            .toBe('toy-rule');
+    });
+});
 
 describe('⛓ rectCopy / rectPasteOps', () => {
     const gadgetWorld = () => foldEdits(toyAdapter, toyWorld(8, 6), [

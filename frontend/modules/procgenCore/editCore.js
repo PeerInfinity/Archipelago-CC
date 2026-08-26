@@ -40,7 +40,7 @@
  * ```
  * {
  *   name:     'toy' | 'maze' | …,          // what a refusal calls the substrate
- *   apply:    (record, op) => {ok, op, description, record?},
+ *   apply:    (record, op) => {ok, op, description, record?, reason?},
  *   equal:    (a, b) => boolean,
  *   bounds:   (record) => {w, h},
  *   readCell: (record, x, y) => descriptor,
@@ -51,7 +51,14 @@
  *  · **`apply`** applies ONE ATOMIC op and returns the RESOLVED op (every
  *    drawn parameter spent — the maze's `setButton index` law, and the same one
  *    a recorded directive follows). `ok: false` is a refusal BY NAME in
- *    `description`; `record` is then unread. ⛔ On success `record` is the NEW
+ *    `description`; `record` is then unread. ⛓ **`reason` is OPTIONAL and it
+ *    is a CLASS, not a sentence** (EDITOR v3 E6a, §33.12 #1): a substrate that
+ *    tells its refusal classes apart may name the one this refusal is —
+ *    Seedling's `SeedlingSetDeriveRefusal` for "this set cannot be derived as
+ *    it stands", say — so a page can BRANCH without parsing `description`. The
+ *    core carries it and never invents one: an adapter that gives no `reason`
+ *    produces a result with no `reason` key at all, so `'reason' in res` means
+ *    the substrate answered rather than that the core guessed. ⛔ On success `record` is the NEW
  *    record and the input is NEVER mutated — the core hands the same record to
  *    two calls (a group's dry run and its commit are the same walk, but
  *    `rectCopy` and a caller's own reader both hold one).
@@ -344,7 +351,7 @@ export function applyOne(adapter, record, op, { depth = 0 } = {}) {
         const res = adapter.apply(record, op);
         if (!res || typeof res.ok !== 'boolean') {
             fail(`editCore: ${adapter.name}.apply returned ${JSON.stringify(res)} — the `
-                + 'contract is `{ok, op, description, record?}`, and a missing `ok` reads as '
+                + 'contract is `{ok, op, description, record?, reason?}`, and a missing `ok` reads as '
                 + 'a refusal to every caller that checks it.');
         }
         return res;
@@ -385,6 +392,11 @@ export function applyOne(adapter, record, op, { depth = 0 } = {}) {
         if (!res.ok) {
             return {
                 ok: false,
+                // ⛓ THE MEMBER'S `reason`, because the group's refusal IS the
+                //   member's — the group adds no class of its own, and a page
+                //   that branches on the class should see the same one it would
+                //   have seen had the member been applied alone.
+                ...(res.reason ? { reason: res.reason } : {}),
                 description: `editCore: member #${i + 1} of group ${JSON.stringify(op.label)} `
                     + `(${op.ops.length} ops) was REFUSED, so the WHOLE group is refused and `
                     + `the record is unchanged — ${res.description}`,
@@ -530,7 +542,16 @@ export function createEditSession(adapter, baseRecord, { base = null, certified 
         apply(op) {
             const res = applyOne(adapter, record, op);
             if (!res.ok) {
-                return Object.freeze({ ok: false, applied: false, description: res.description });
+                // ⛓ EDITOR v3 E6a — the substrate's refusal CLASS survives the
+                //   session (§33.12 #1). It died here: a page could see WHAT was
+                //   refused and never WHICH KIND of refusal it was, so branching
+                //   meant matching `description` text.
+                return Object.freeze({
+                    ok: false,
+                    applied: false,
+                    description: res.description,
+                    ...(res.reason ? { reason: res.reason } : {}),
+                });
             }
             if (adapter.equal(record, res.record)) {
                 return Object.freeze({

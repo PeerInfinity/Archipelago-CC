@@ -667,7 +667,11 @@ export function mountSetEditor({
             if (!(e instanceof Error)) throw e;
             say(`the op was REFUSED by the DERIVATION — ${e.message}`, true);
             setNote(`⛔ ${op.op} could not be applied: ${e.message}`, true);
-            return { ok: false, applied: false, description: e.message };
+            // ⛓ EDITOR v3 E6a — the SYNTHESISED refusal carries a `reason` too,
+            //   and it is the thrown error's own class name. A caller branching
+            //   on `res.reason` must not have to tell "the session refused" from
+            //   "the derivation threw and the page caught it".
+            return { ok: false, applied: false, description: e.message, reason: e?.name };
         }
         if (res.ok && res.applied && decision) {
             if (decision.action === 'discard') discardRoom();

@@ -989,6 +989,60 @@ describe('⛔⛔ EDITOR v3 E2b — the lift is BYTE-INERT on Seedling, and it is
  * ⛓⛓⛓ EDITOR v3 E3a — **`fillExitSelect` KEEPS ITS VALUE** (§31.1 #4)
  * ══════════════════════════════════════════════════════════════════════ */
 
+describe('⛓⛓ EDITOR v3 E6a — `applySet` hands the page the REFUSAL CLASS', () => {
+    /**
+     * ⛔⛔ **§33.12 #1's DEFECT, AT THE LAYER THAT CARED.** The Seedling adapter
+     * has told its refusal classes apart since E3b — `SeedlingSetAdapterError`,
+     * `SeedlingSetOverlayError`, `LevelSetExitError` and the fourth,
+     * `SeedlingSetDeriveRefusal` for *"this set cannot be DERIVED as it
+     * stands"*. `editCore`'s session dropped the field, so the ONE consumer
+     * that would branch on it — a page choosing between "you typed something
+     * wrong" and "the world is not finished" — had only `description` text.
+     *
+     * ⛓ THE SUBJECT IS BUILT, NOT FOUND: an added room holding a `torchpickup`
+     * that nothing links to is the smallest set `deriveAtlas` refuses (a lost
+     * collectible), and `set-access-rule` derives to check its target.
+     *
+     * ⛓⛓ MUTANT: drop the `...(res.reason ? {reason} : {})` spread from
+     * `editCore.js`'s session refusal arm — `reason` reads `undefined` here and
+     * the row goes red while `description` stays word-for-word the same, which
+     * is the point: the sentence was never the missing thing.
+     */
+    it('a set-access-rule on an UNDERIVABLE set returns reason === "SeedlingSetDeriveRefusal"', () => {
+        const h = seedlingHarness();
+        const orphan = emptyLevel({ level: ROOMS });
+        const added = h.ui.applySet({
+            op: 'add-room',
+            record: {
+                ...orphan,
+                entities: [...(orphan.entities ?? []),
+                    { type: 'torchpickup', x: 4 * TILE, y: 3 * TILE, values: {} }],
+            },
+            name: 'orphan',
+        });
+        expect(added.ok).toBe(true);
+        const marked = h.ui.applySet({
+            op: 'mark-location', room: ROOMS,
+            entity: { type: 'torchpickup', x: 4 * TILE, y: 3 * TILE },
+            name: 'Orphan Torch', vanilla_item: 'Light',
+        });
+        expect(marked.ok).toBe(true);
+
+        const res = h.ui.applySet({
+            op: 'set-access-rule', room: 0, target: 'exit:out_teleporter_128_128',
+            rule: { rule: 'True_' },
+        });
+        expect(res.ok).toBe(false);
+        expect(res.reason).toBe('SeedlingSetDeriveRefusal');
+        expect(res.description).toMatch(/cannot be DERIVED as it stands/);
+        // ⛔ NOT VACUOUS in the other direction: an ordinary refusal on the SAME
+        //    mount carries the adapter's OWN class, not the derive one.
+        const plain = h.ui.applySet({ op: 'set-room-field', room: 0, field: 'nope', value: 1 });
+        expect(plain.ok).toBe(false);
+        expect(plain.reason).toBe('SeedlingSetAdapterError');
+    });
+});
+
 describe('⛓⛓⛓ EDITOR v3 E3a — the exit list preserves its selection, as the ordinal list does', () => {
     /** ⛓ The `<option>` VALUES of a select, in order — `rowsOf` gives
      *  `value=label`, and what a gesture reads back is the value. */
