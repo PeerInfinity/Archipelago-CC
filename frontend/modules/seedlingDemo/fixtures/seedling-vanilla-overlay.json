@@ -12,18 +12,14 @@
     },
     "11": {
       "locations": [
-        {
-          "entity": { "type": "chest", "x": 32, "y": 48 },
-          "name": "Chest (L11)",
-          "vanilla_item": "Seal"
-        }
+        { "entity": { "type": "chest", "x": 32, "y": 48 }, "name": "Chest", "vanilla_item": "Seal" }
       ]
     },
     "12": {
       "locations": [
         {
           "entity": { "type": "chest", "x": 320, "y": 816 },
-          "name": "Chest (L12)",
+          "name": "Chest",
           "vanilla_item": "Seal"
         },
         {
@@ -38,7 +34,7 @@
       "locations": [
         {
           "entity": { "type": "chest", "x": 144, "y": 96 },
-          "name": "Chest (L15)",
+          "name": "Chest",
           "vanilla_item": "Seal"
         }
       ]
@@ -47,7 +43,7 @@
       "locations": [
         {
           "entity": { "type": "chest", "x": 128, "y": 16 },
-          "name": "Chest (L17)",
+          "name": "Chest",
           "vanilla_item": "Seal"
         }
       ]
@@ -72,11 +68,7 @@
     },
     "25": {
       "locations": [
-        {
-          "entity": { "type": "chest", "x": 96, "y": 96 },
-          "name": "Chest (L25)",
-          "vanilla_item": "Seal"
-        }
+        { "entity": { "type": "chest", "x": 96, "y": 96 }, "name": "Chest", "vanilla_item": "Seal" }
       ]
     },
     "29": {
@@ -117,18 +109,14 @@
     },
     "36": {
       "locations": [
-        {
-          "entity": { "type": "chest", "x": 64, "y": 48 },
-          "name": "Chest (L36)",
-          "vanilla_item": "Seal"
-        }
+        { "entity": { "type": "chest", "x": 64, "y": 48 }, "name": "Chest", "vanilla_item": "Seal" }
       ]
     },
     "38": {
       "locations": [
         {
           "entity": { "type": "chest", "x": 144, "y": 112 },
-          "name": "Chest (L38)",
+          "name": "Chest",
           "vanilla_item": "Seal"
         }
       ]
@@ -161,7 +149,7 @@
         },
         {
           "entity": { "type": "chest", "x": 880, "y": 816 },
-          "name": "Chest (L40)",
+          "name": "Chest",
           "vanilla_item": "Seal"
         }
       ]
@@ -208,7 +196,7 @@
       "locations": [
         {
           "entity": { "type": "chest", "x": 424, "y": 40 },
-          "name": "Chest (L46)",
+          "name": "Chest",
           "vanilla_item": "Seal"
         }
       ]
@@ -217,7 +205,7 @@
       "locations": [
         {
           "entity": { "type": "chest", "x": 152, "y": 184 },
-          "name": "Chest (L48)",
+          "name": "Chest",
           "vanilla_item": "Seal"
         }
       ]
@@ -244,7 +232,7 @@
       "locations": [
         {
           "entity": { "type": "chest", "x": 224, "y": 80 },
-          "name": "Chest (L63)",
+          "name": "Chest",
           "vanilla_item": "Seal"
         }
       ]
@@ -280,7 +268,7 @@
       "locations": [
         {
           "entity": { "type": "chest", "x": 160, "y": 256 },
-          "name": "Chest (L71)",
+          "name": "Chest",
           "vanilla_item": "Seal"
         }
       ]
@@ -307,18 +295,14 @@
       "locations": [
         {
           "entity": { "type": "chest", "x": 16, "y": 128 },
-          "name": "Chest (L80)",
+          "name": "Chest",
           "vanilla_item": "Seal"
         }
       ]
     },
     "86": {
       "locations": [
-        {
-          "entity": { "type": "chest", "x": 48, "y": 16 },
-          "name": "Chest (L86)",
-          "vanilla_item": "Seal"
-        }
+        { "entity": { "type": "chest", "x": 48, "y": 16 }, "name": "Chest", "vanilla_item": "Seal" }
       ]
     },
     "89": {
@@ -332,18 +316,14 @@
     },
     "90": {
       "locations": [
-        {
-          "entity": { "type": "chest", "x": 48, "y": 32 },
-          "name": "Chest (L90)",
-          "vanilla_item": "Seal"
-        }
+        { "entity": { "type": "chest", "x": 48, "y": 32 }, "name": "Chest", "vanilla_item": "Seal" }
       ]
     },
     "98": {
       "locations": [
         {
           "entity": { "type": "chest", "x": 160, "y": 32 },
-          "name": "Chest (L98)",
+          "name": "Chest",
           "vanilla_item": "Seal"
         }
       ]
@@ -382,6 +362,6 @@
       ]
     }
   },
-  "provenance": { "content_hash": "1604b508" },
-  "overlay_id": "seedling-vanilla-overlay-1604b508"
+  "provenance": { "content_hash": "e2d5c131" },
+  "overlay_id": "seedling-vanilla-overlay-e2d5c131"
 }

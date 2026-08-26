@@ -97,27 +97,44 @@ const atlasExitRules = () => ATLAS.regions.flatMap(
         .map((e) => ({ region: r.region_id, map_ref: r.map_ref, ...e })));
 
 /**
- * ⛓⛓ **THE AUTHORED NAME, AND WHY IT CANNOT BE THE PLAYTHROUGH'S.**
+ * ⛓⛓ **THE AUTHORED NAME IS THE LABEL — AND SINCE E6a IT CAN BE.**
  *
  * The derivation names a location `Level NNN - <authored name>` (`labelFor`
- * returns an `entity` row's own label), and `mark-location` refuses a name that
- * is not unique **across the whole set** — asked of the AUTHORED half.
- * Sixteen of vanilla's 41 locations are called `Chest`. So the label alone
- * cannot be the authored name for all of them, and the full atlas name would
- * derive `Level 038 - Level 038 - Chest`.
+ * returns an `entity` row's own label), so the AUTHORED half is the label and
+ * the full atlas name would derive `Level 038 - Level 038 - Chest`.
  *
- * ⇒ the label is used where it is unique, and disambiguated by its ROOM where
- * it is not. The count of disambiguated names is REPORTED, because it is the
- * one place the lifted document's AP names differ from the playthrough's.
+ * ⛔ **WHAT E6a CHANGED, AND WHY THE `(LNN)` SUFFIX IS GONE.** `mark-location`
+ * used to refuse a name that was not unique across the WHOLE SET, asked of the
+ * authored half — while the name the compiler actually reads is the PREFIXED
+ * one, already unique because the prefix is the room's level. Sixteen of
+ * vanilla's 41 locations are called `Chest`, so under the old law no authored
+ * name could reproduce the playthrough's AP names and this function used
+ * `<label> (L<level>)` for them, REPORTING the count as the one place the
+ * lifted document diverged (§34.4). Uniqueness is now (room, name), sixteen
+ * rooms holding one `Chest` each is legal, and the label alone is the authored
+ * name for every row.
+ *
+ * ⇒ the divergence is retired: `vanillaOverlay.test.js` compares the DERIVED
+ * names of this lift against the playthrough atlas's names AS A SET, and they
+ * are equal. `disambiguated` is still returned and still counted, because a
+ * TWO-IN-ONE-ROOM clash would still have to be disambiguated and a category
+ * that vanished could not report the day it happened.
  */
 function authoredNames(rows) {
-    const seen = new Map();
-    for (const r of rows) seen.set(r.label, (seen.get(r.label) ?? 0) + 1);
+    const perRoom = new Map();
     const out = new Map();
     let disambiguated = 0;
     for (const r of rows) {
-        if (seen.get(r.label) === 1) { out.set(r.id, r.label); continue; }
-        out.set(r.id, `${r.label} (L${r.level})`);
+        const seen = perRoom.get(r.level) ?? new Set();
+        perRoom.set(r.level, seen);
+        if (!seen.has(r.label)) { seen.add(r.label); out.set(r.id, r.label); continue; }
+        // ⛔ NOT REACHED BY VANILLA (the count is 0) and kept anyway: two rows of
+        //   ONE room sharing a label is the clash the per-room law still refuses,
+        //   and a lift that hit it would otherwise be refused with no reason given.
+        let n = 2;
+        while (seen.has(`${r.label} #${n}`)) n += 1;
+        seen.add(`${r.label} #${n}`);
+        out.set(r.id, `${r.label} #${n}`);
         disambiguated += 1;
     }
     return { names: out, disambiguated };
@@ -338,12 +355,15 @@ export function cannotExpress({ cannotRules, disambiguated }) {
         {
             category: 'location names that had to be disambiguated',
             count: disambiguated,
-            why: '⛔ THE ONE PLACE THE LIFTED DOCUMENT\'S AP NAMES DIFFER FROM THE '
-                + 'PLAYTHROUGH\'S. `mark-location` requires the AUTHORED name to be unique '
-                + 'across the set, while the name the derivation emits is `Level NNN - '
-                + '<authored>` — already unique BY THE PREFIX. Sixteen rooms hold a location '
-                + 'the playthrough calls `Chest`, so the authored name carries its room and '
-                + 'the derived name reads `Level 038 - Chest (L38)`.',
+            why: '⛓ ZERO SINCE EDITOR v3 E6a, AND THE CATEGORY IS KEPT FOR THAT REASON. It '
+                + 'was SIXTEEN: `mark-location` asked the AUTHORED name to be unique across '
+                + 'the whole SET, while the name the compiler reads is `Level NNN - '
+                + '<authored>` — already unique BY THE PREFIX — so the sixteen rooms holding '
+                + 'a `Chest` lifted as `Chest (L38)` and the document\'s AP names could not '
+                + 'match the playthrough\'s. Uniqueness is now (room, name), the labels lift '
+                + 'verbatim, and the divergence is gone. A count above zero would now mean '
+                + 'TWO ROWS OF ONE ROOM share a label, which the per-room law still refuses '
+                + 'and this script still disambiguates (`<label> #2`) rather than dropping.',
         },
     ];
 }

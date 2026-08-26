@@ -29,7 +29,7 @@ import { parseOelLevel } from './procgenLevelOel.js';
 import { tileOf } from './seedlingAtlasDerivation.js';
 import { emptyOverlay } from './seedlingSetOverlay.js';
 import {
-    createSeedlingSetAdapter, createSetSession, setRecord,
+    createSeedlingSetAdapter, createSetSession, deriveAtlasOf, setRecord,
 } from './seedlingSetAdapter.js';
 import { reportOf } from './watchSetEditor.js';
 
@@ -144,7 +144,16 @@ describe('⛓⛓ E5 — the lift, and what it put through the adapter', () => {
         expect(count('the never-enter ruling'))
             .toBe(LIFT.set.rooms.length - new Set(ATLAS.regions.map((r) => r.map_ref)).size);
         expect(count('the room -> region map')).toBe(0);
-        expect(count('location names that had to be disambiguated')).toBe(LIFT.disambiguated);
+        // ⛔⛔ THE ONE COUNT PINNED AS A LITERAL, AND E6a IS WHY. Every other row
+        //    here compares the census against the ATLAS, so a lift that lost
+        //    something goes red. This one had no second source — it was
+        //    `toBe(LIFT.disambiguated)`, the script's own number compared to
+        //    itself ([[feedback_fixed_point_is_not_correctness]]). It was 16
+        //    while uniqueness was global; E6a made it ZERO, and zero is the
+        //    claim worth gating: a re-tightened law, or a producer that started
+        //    suffixing again, moves it off 0 and the row says so.
+        expect(count('location names that had to be disambiguated')).toBe(0);
+        expect(LIFT.disambiguated).toBe(0);
         // …and every category says WHY, because a count with no reason is a
         // number a reader cannot act on.
         expect(census.every((c) => c.why.length > 40)).toBe(true);
@@ -235,8 +244,21 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
     const fixturePath = fileURLToPath(
         new URL('./fixtures/seedling-vanilla-overlay.json', import.meta.url));
 
-    it('is byte-equal to a fresh build', () => {
-        expect(readFileSync(fixturePath, 'utf8')).toBe(buildOverlayText().text);
+    it('is byte-equal to a fresh build, and the SIZE is a measured literal', () => {
+        const committed = readFileSync(fixturePath, 'utf8');
+        expect(committed).toBe(buildOverlayText().text);
+        /**
+         * ⛓⛓ **A SECOND SOURCE FOR THE SAME FILE.** The line above is a FIXED
+         * POINT — it says the committed bytes agree with a build, which stays
+         * true after BOTH move together ([[feedback_fixed_point_is_not_correctness]]).
+         * The byte count is the outside number: E6a measured 8,863 B after the
+         * `(LNN)` suffixes came off, down from E5's 9,149 B, and a change that
+         * moves the document has to come here and say so.
+         */
+        expect(Buffer.byteLength(committed, 'utf8')).toBe(8863);
+        expect(JSON.parse(committed).overlay_id).toBe('seedling-vanilla-overlay-e2d5c131');
+        // ⛔ AND THE SUFFIXES ARE GONE — the artifact, not the producer.
+        expect(committed).not.toMatch(/Chest \(L\d/);
     });
 
     it('carries the stamped id the build computes, and 41 locations over its rooms', () => {
@@ -255,6 +277,53 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
             expect(new Set(names).size, `room ${index}`).toBe(names.length);
         }
     });
+
+    /**
+     * ⛔⛔⛔ **THE ROW E6a EXISTS FOR — THE DIVERGENCE §34.4 REPORTED IS GONE,
+     * AND THIS IS THE MEASUREMENT RATHER THAN THE CLAIM** (trap 778).
+     *
+     * E5 could not reproduce the playthrough's AP names: sixteen rooms hold a
+     * location the playthrough calls `Chest`, `mark-location` asked the
+     * AUTHORED name to be unique across the whole SET, so the lift wrote
+     * `Chest (L38)` and the derived name read `Level 038 - Chest (L38)`. That
+     * count was REPORTED as a census category and nothing gated it.
+     *
+     * Uniqueness is (room, name) since E6a, the labels lift verbatim, and the
+     * DERIVED names of the committed fixture now equal the playthrough atlas's
+     * location names AS A SET. ⛓ Driven from the FIXTURE ON DISK through the
+     * real `deriveAtlasOf`, not from the in-process lift: the artifact is what
+     * `#editLoadVanilla` loads, and a producer that drifted from its own output
+     * would still pass a row that only asked the lift.
+     *
+     * ⛔ AS A SET, not as a list: `deriveAtlasOf` walks the rooms in index
+     * order and the atlas's regions are the analyzer's order
+     * ([[feedback_grouping_reorders_so_assert_the_set]]).
+     *
+     * ⚠ `seedling-playthrough.json` is READ, never rebuilt — its md5 is pinned
+     * here so a row that started agreeing because the OTHER side moved is
+     * impossible.
+     */
+    it('⛔⛔ the DERIVED names of the committed fixture EQUAL the playthrough atlas\'s, as a set', async () => {
+        const { createHash } = await import('node:crypto');
+        const playthroughPath = fileURLToPath(
+            new URL('../flashPanel/atlases/seedling-playthrough.json', import.meta.url));
+        expect(createHash('md5').update(readFileSync(playthroughPath)).digest('hex'))
+            .toBe('2bfe8d558187ded423c1a3c85284a83a');
+
+        const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
+        const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);
+        const derived = atlas.regions.flatMap((r) => (r.locations ?? []).map((l) => l.name));
+        const playthrough = ATLAS_LOCATIONS.map((l) => l.name);
+
+        expect(derived).toHaveLength(41);
+        expect(new Set(derived).size).toBe(41);
+        expect([...new Set(derived)].sort()).toEqual([...new Set(playthrough)].sort());
+        // ⛓ THE NUMBER §37 QUOTES: how many derived names the playthrough does
+        //   not have. E5's answer was 16; E6a's is 0.
+        expect(derived.filter((n) => !new Set(playthrough).has(n))).toEqual([]);
+        // ⛔ NOT VACUOUS: the sixteen `Chest`es really are in there, one per room.
+        expect(derived.filter((n) => n.endsWith(' - Chest'))).toHaveLength(16);
+    }, 120000);
 
     it('`--check` agrees with the committed bytes', async () => {
         const { execFileSync } = await import('node:child_process');
