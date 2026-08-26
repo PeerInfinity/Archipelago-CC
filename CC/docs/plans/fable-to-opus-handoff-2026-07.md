@@ -5159,6 +5159,42 @@ trace (`botStatus`, `botRngProbe` as a draw-distance meter; a NEW build name
 flips it both ways → the ⚖ written for the user. Sequence after both: the
 FIFTH run's brief → P3b → P4 → L15.
 
+⛓⛓⛓ **SLICE 12f CLOSED 2026-08-26 @ `2fa6bda1e` (as-built §43) — AND IT
+OVERTURNS THE PARAGRAPH ABOVE.** "It is per-PATH, not per-time" was the
+orchestrator's premise from five samples, and the orchestrator has withdrawn it:
+a **byte-identical re-run of the producer's own invocation** returned a THIRD
+value. `Rng.state` is the raw 31-bit LFSR register (`avm2_number.c:574`,
+stepped at :509), so a recorded state IS a draw index — landed as
+`scripts/procgen/rngRuler.js` + its test — and in draws the stop reads *"S1's
+page drew exactly TWO MORE, all of it before tick 145 and none after"* (3297 vs
+3299; both spent 270 from `beginEntry` to the terminal latch). ⛓ **THE
+MECHANISM, NAMED BY A KNOB THAT TURNS BOTH WAYS:** the page's own boot builds
+`new Game(0, 80, 128)` (`Main.as:51`) and that world runs on the WALL CLOCK
+until `botStart`, which resets the RNG, the tick and the save arrays but NOT the
+real `Sfx` mixer's open channels. The new `--preboot-delay-sec` flag makes that
+idle an argument: **0.05 s → 3296 · 0.10–0.40 s → 3297 (the producer's number) ·
+0.45 s → 3298 and 3299 (S1's number)**, with the 146 observation ticks **0/146
+differing** in every drive. `Rng.split` is false so cosmetic draws advance the
+gameplay stream, and `Music.playSound(set,-1)`'s redraw loop (`Music.as:726-732`)
+costs a different number of draws depending on what played last — which the
+UNPINNED mixer answers from the clock (`Music.as:823/832`). Declaring the R5
+`sound` pin kills the knob: **17 drives, 17 × 3298, zero deviation.** ⇒ **§42.10's
+(α)/(β)/(γ) are moot — there was no per-path truth to choose between**, and the
+fix belongs in the tape/driver, never in a number. ⚠ Two riders: the
+`--rng-curve` instrument SUPPRESSES the effect (unpinned + instrument is 3297 in
+8/8), so the pin's divergence tick (t=40) is measured and the natural one is
+NOT; and a **second, separate defect** was found on the way past — a pre-boot
+idle ≥ 0.5 s flips `botStart`'s world-swap race, shifting the whole stream by
+one tick (≤ 0.45 s never does), which every committed fixture silently depends
+on winning. **⚖ FOR THE USER (§43.8):** four remedies costed — the `sound` pin
+on the exposed tapes only (a ⚖ 49 re-record; the exposed set is unmeasured, 2
+drives per tape), the pin roster-wide, a driver-side bound on the idle (cheap,
+narrows but does not remove), or stop asserting cross-path equality on
+`rng.gameplay` at all. P3's `check-seedling-producer-boundaries.mjs` cannot
+decide it: there is no wrong number to catch, only two correct readings.
+⛔ Untouched by 12f: every file under `fixtures/`, the parked series, the
+standing values (NONE moved), p4b (no `p4c` was built).
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
