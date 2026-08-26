@@ -9,6 +9,7 @@ import { fileURLToPath } from 'node:url';
 
 import { describe, it, expect } from 'vitest';
 
+import { loadAtlasSchema } from '../procgenCore/jsonSchemaFiles.js';
 import { compactJsonFile } from './compactJson.js';
 import {
     validateRegionAtlas,
@@ -28,6 +29,13 @@ const FIXTURE_PATH = fileURLToPath(
 );
 
 const FIXTURE = JSON.parse(readFileSync(FIXTURE_PATH, 'utf8'));
+
+// The committed STARTER atlas — read here (as well as in its own describe far
+// below) so the "no committed atlas carries `substrate`" row can name both
+// documents the W1 byte pin actually rests on.
+const STARTER_PATH = fileURLToPath(
+    new URL('../flashPanel/atlases/seedling.json', import.meta.url),
+);
 
 const clone = (v) => JSON.parse(JSON.stringify(v));
 const makeAtlas = () => clone(FIXTURE);
@@ -570,6 +578,94 @@ describe('vanilla_layout', () => {
 // with its own origin. `map_ref` names which one a region lives in. The whole
 // point of the delta is that it is ADDITIVE: the Phase-1 fixture, which has no
 // map_ref anywhere, must keep validating byte-for-byte as it did.
+describe('region.substrate (EDITOR INTEGRATION W1 — the per-region override)', () => {
+    it('is absent from every committed atlas, which is why no --check moved', () => {
+        // The whole byte pin of slice W1 rests on this: the field is OPTIONAL and
+        // nothing committed carries it, so every producer regenerates identically.
+        for (const atlas of [makeAtlas(), JSON.parse(readFileSync(STARTER_PATH, 'utf8'))]) {
+            expect(atlas.regions.some((r) => r.substrate !== undefined)).toBe(false);
+        }
+    });
+
+    it('accepts a non-empty string on any region', () => {
+        const r = mutated((atlas) => { regionOf(atlas, 'owls_nest').substrate = 'maze'; });
+        expect(r.errors).toEqual([]);
+        expect(r.ok).toBe(true);
+    });
+
+    it('accepts an id no substrate registry knows — the ROSTER is the compiler\'s', () => {
+        // The refusal for an unknown id lives in regionAtlasCompiler (its
+        // sidecar-builder table IS the roster). This module has no registry, so
+        // it must not invent one: a shape-only check is the honest answer.
+        const r = mutated((atlas) => { regionOf(atlas, 'owls_nest').substrate = 'not_a_substrate'; });
+        expect(r.errors).toEqual([]);
+        expect(r.ok).toBe(true);
+    });
+
+    it('refuses an EMPTY string by name — it would read downstream as "no override"', () => {
+        const r = mutated((atlas) => { regionOf(atlas, 'owls_nest').substrate = ''; });
+        expect(r.ok).toBe(false);
+        expect(hasError(r, /region "owls_nest"\.substrate must be a non-empty string when present/)).toBe(true);
+    });
+
+    it('refuses a non-string by name', () => {
+        for (const bad of [7, null, ['maze'], { id: 'maze' }]) {
+            const r = mutated((atlas) => { regionOf(atlas, 'owls_nest').substrate = bad; });
+            expect(r.ok).toBe(false);
+            expect(hasError(r, /\.substrate must be a non-empty string when present/)).toBe(true);
+        }
+    });
+
+    it('the SCHEMA agrees with the validator on both halves', () => {
+        const schema = loadAtlasSchema();
+        const good = makeAtlas();
+        regionOf(good, 'owls_nest').substrate = 'maze';
+        stampAtlasIdentity(good);
+        expect(validateRegionAtlas(good, { schema }).ok).toBe(true);
+
+        const empty = makeAtlas();
+        regionOf(empty, 'owls_nest').substrate = '';
+        stampAtlasIdentity(empty);
+        const r = validateRegionAtlas(empty, { schema });
+        expect(r.ok).toBe(false);
+        // The structural pass RETURNS rather than accumulates, so this is the
+        // schema's minLength speaking, not the referential rule.
+        expect(r.errors.every((e) => e.startsWith('schema: '))).toBe(true);
+        expect(r.errors.some((e) => /minLength 1/.test(e))).toBe(true);
+    });
+
+    it('IS CONTENT: the field moves the content hash and therefore the atlas_id', () => {
+        // The field has to be hashed, or an edit that only changes which
+        // substrate plays a region would leave every downstream projection
+        // keyed on an atlas_id that no longer describes the document.
+        const before = makeAtlas();
+        const withField = makeAtlas();
+        regionOf(withField, 'owls_nest').substrate = 'maze';
+        expect(computeAtlasContentHash(withField)).not.toBe(computeAtlasContentHash(before));
+
+        stampAtlasIdentity(withField);
+        expect(withField.atlas_id).not.toBe(before.atlas_id);
+        expect(validateRegionAtlas(withField).ok).toBe(true);
+
+        // ...and removing it restores the original identity exactly.
+        delete regionOf(withField, 'owls_nest').substrate;
+        stampAtlasIdentity(withField);
+        expect(withField.atlas_id).toBe(before.atlas_id);
+    });
+
+    it('round-trips through the compact writer the marking tool saves with', () => {
+        const atlas = makeAtlas();
+        regionOf(atlas, 'owls_nest').substrate = 'maze';
+        stampAtlasIdentity(atlas);
+        const text = compactJsonFile(atlas);
+        expect(text).toContain('"substrate": "maze"');
+        const reread = JSON.parse(text);
+        expect(regionOf(reread, 'owls_nest').substrate).toBe('maze');
+        expect(validateRegionAtlas(reread, { schema: loadAtlasSchema() }).ok).toBe(true);
+        expect(computeAtlasContentHash(reread)).toBe(computeAtlasContentHash(atlas));
+    });
+});
+
 describe('map_ref (multi-level coordinate spaces)', () => {
     // Two levels, shaped like the committed Seedling extract.
     const MAP_DOC = { levels: [{ level: 0, width: 40, height: 30 }, { level: 12, width: 10, height: 10 }] };

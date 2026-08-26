@@ -13,6 +13,13 @@
 // downstream projections (vanilla rules.json, sphere-sorter input, play-time
 // payload) — consumers never read each other's output.
 //
+// ⛔ ONE CHECK THIS MODULE DELIBERATELY DOES NOT OWN: whether a region's
+// optional `substrate` names a substrate that EXISTS. That is a ROSTER
+// question and this file has no roster — it is in the browser page graph and
+// the substrate registry is not one of its imports. `regionAtlasCompiler`
+// holds the roster (its sidecar-builder table) and refuses an unknown id by
+// name; here the field is checked for SHAPE only.
+//
 // Home: procgenPipeline, beside regionLibraryValidator.js (its identity/split
 // precedent) and the sphere-growth consumer that lands in Phase 6. The atlas
 // itself is game-agnostic data; the authored documents live beside each game's
@@ -339,6 +346,22 @@ export function validateRegionAtlas(atlas, options = {}) {
             && Number.isInteger(b.h) && b.h > 0;
         if (!boundsOk) {
             err(`${where}.bounds must be { x, y integers; w, h positive integers }`);
+        }
+
+        // --- substrate: which substrate PLAYS this region (optional) ---
+        //
+        // ⛔ THE ONE RULE HERE IS "NON-EMPTY STRING", AND THAT IS DELIBERATE.
+        // Whether the id names a substrate that EXISTS is a roster question, and
+        // this module has no roster: `procgenPipeline/` is in the browser page
+        // graph (bindingContract) and the substrate registry is not among the
+        // three modules this file may import. The COMPILER has one — its
+        // sidecar-builder table IS the set of substrates an atlas can compile
+        // to — so `compileRegionAtlas` refuses an unknown id by name and this
+        // validator checks only the shape. An empty string is refused here
+        // because it would read downstream as "no override" while occupying the
+        // key, which is the one way this field can lie about itself.
+        if (region.substrate !== undefined && !isNonEmptyString(region.substrate)) {
+            err(`${where}.substrate must be a non-empty string when present (got ${JSON.stringify(region.substrate)})`);
         }
 
         // --- map_ref: which coordinate space these bounds are in ---

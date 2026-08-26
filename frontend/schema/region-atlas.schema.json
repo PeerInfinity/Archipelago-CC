@@ -123,6 +123,11 @@
             "h": { "type": "integer", "minimum": 1 }
           }
         },
+        "substrate": {
+          "type": "string",
+          "minLength": 1,
+          "description": "OPTIONAL. Which substrate PLAYS this region — the per-region override of compileRegionAtlas's one-substrate-per-compile default (options.substrateId, else the flavour's). Absent means 'whatever this compile defaults to', so every atlas written before this field compiles byte-identically. DELIBERATELY NOT ENUMERATED: the substrate registry (frontend/modules/shared/procgen/substrateRegistry.js) is the authority on which ids exist, and a roster spelled here too would be a second one to keep in sync. The compiler owns the roster check — it holds the sidecar-builder table that IS the set of substrates an atlas can compile to, and refuses an unknown id by name."
+        },
         "map_ref": {
           "type": ["integer", "string"],
           "description": "Which coordinate space this region's bounds and tiles live in: the id of a level in tile_space.map_document. A game whose map is ONE space (RWK) omits it; a game built of many per-level spaces (Seedling: 116 levels, each with its own origin) names one per region. Geometry checks never cross regions, so this adds only the resolution check — and only when the map document is available to the validator."
