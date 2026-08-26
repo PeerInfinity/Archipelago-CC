@@ -5267,7 +5267,7 @@ user and the fifth run's `sound`-pin re-record: **18 of 18 chain boundaries have
 an UNPINNED predecessor**, so every `rng.seed` row in the new gate is a
 sample-vs-sample comparison until that lands.
 
-**⛓⛓⛓ R9 SLICE 12g — CLOSED 2026-08-26 @`05c6f7e1c`** (kickoff §45; ⚖ 58).
+**⛓⛓⛓ R9 SLICE 12g — CLOSED 2026-08-26 @`2018e463c`** (three commits: `05c6f7e1c` the gate · `2b0ef4a98` docs+queue · `2018e463c` the vacuous-`level` finding; kickoff §45; ⚖ 58).
 **(G) THE GATE LANDED AND IT IS ALREADY RED ON A REAL DRIVE.** After the drain
 and before a window is kept, the driver refuses `WORLD_SWAP_RACE_LOST` when the
 first drained tick is not the tape's declared boot plus the constructor
@@ -5301,14 +5301,26 @@ was a scratch copy and is NOT committed. ⚖ A third option for the fifth run's
 driver: refuse to ARM when the fade has already ended (frame > 18) — a bound,
 not a fix, and its cost (a `botStatus` read on the default path, §43.5's
 perturbation lesson) must be measured there.
-**(R)** the gate over the live arm path: the 16 `r9-campaign` segments + the 3
-dash witnesses at idle 0, and three non-skip-path tapes at idle 1.0 s.
+**(R) 19 PASS at idle 0 / 3 REFUSE at idle 1.0 s** over 19 boot blocks (the 16
+`r9-campaign` segments derived from `PLAYTHROUGH_CHAINS` + the 3 dash witnesses,
+3702 ticks) — and **all 22 drains were exactly `tick_count + 1`**.
+⛔⛔ **AND (R) FOUND SOMETHING: `level` CANNOT DISCRIMINATE A LOST RACE** (trap
+806). All 8 refusals read the tape's boot LEVEL beside the page's boot POSITION,
+because `Game`'s ctor runs `level = _level` (`Game.as:632`) to the STATIC
+`Main.level` (`:526-528`) SYNCHRONOUSLY inside `botStart` while the swap is still
+`FP._goto`, and `Bot.update` takes the position off the OUTGOING world: the two
+halves of one observation come from different worlds. The cheap level-only gate —
+the one a reader of §43.7 reaches for, since the losing runs never leave level 0
+— is **VACUOUS**, and it is now named in the driver AND the tracked doc.
+⚠ SCOPE ON THE 41/40 CO-SIGNAL: exact for one tape at neighbouring idles only —
+across the roster `dead_frames` runs 21…372 by ceremony, and one tape reads 41 at
+idle 0 vs 20 at idle 1.0 s. That is why signal 2 is the LENGTH, not the dead count.
 **(m4)** the SKIP-PATH tape at idle 1.0 s PASSES and reproduces its committed
 stream 0/46 — immune, not unchecked; its `dead_frames` is idle-dependent and
 nothing asserts it (named non-defect).
 ⛔ Untouched: every file under `fixtures/`, the parked series, the AS3, the wasm
 submodule, the tapes. Standing movers: the **suite row ONLY** — `375/11631` →
-**`376/11638`** at `05c6f7e1c` (CI success), +1 file / +7 rows, no `--write` run.
+**`376/11638`** at `05c6f7e1c` (CI success), +1 file / +7 rows, no `--write` run. Traps **802–806**.
 ⛓ `scripts/**/*.py` added to the JS-unit-test trigger — **⚖ 34's FOURTH
 instance**, by its own criterion (what the suite READS).
 ⇒ NEXT unchanged: the FIFTH run (⚖ 57 + this slice's (F) together) → P3b → P4 →
