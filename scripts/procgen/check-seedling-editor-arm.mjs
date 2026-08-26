@@ -1679,6 +1679,15 @@ try {
             overlays: document.querySelectorAll('.editorViewOverlay').length,
             ruleTargets: [...(document.getElementById('editSetRuleTarget')?.options ?? [])]
                 .map((o) => o.value),
+            /**
+             * ⛓⛓ EDITOR v3 E3b — the same options WITH THE MARK. `ruleTargets`
+             * is left alone (a dozen rows read it) and this is additive: the
+             * option's LABEL carries ` ⚠ gates NOTHING` and its `title` carries
+             * `gateabilityOf`'s own `why`, which is what makes "the page MARKED
+             * it and the op REFUSED it" a comparison rather than two assertions.
+             */
+            ruleTargetMarks: [...(document.getElementById('editSetRuleTarget')?.options ?? [])]
+                .map((o) => ({ value: o.value, label: o.textContent, why: o.title })),
             report: [...document.querySelectorAll('#editSetReportOut li')].map((l) => l.textContent),
             reportNote: t('editSetReportNote'),
             rulesDisabled: document.getElementById('editDownloadRules')?.disabled ?? null,
@@ -2085,31 +2094,91 @@ try {
     /**
      * ⛓⛓⛓ **AUTHORING A RULE TAKES THAT EDGE OFF THE FREE LIST**, which is what
      * makes the REPORT a reading of the COMPILED rules rather than of the atlas.
+     *
+     * ⛔⛔ **EDITOR v3 E3b — THE TARGET IS NOW PICKED BY ITS MARK, AND THAT IS
+     * THE FIX FOR A ROW THAT USED TO PASS EITHER WAY.** This block took
+     * `ruleTargets.find(t => t.startsWith('exit:'))` and called it
+     * `gatingTarget` without ever asking whether it gates — and on this set the
+     * FIRST exit target of the selected room is an `in_*` ARRIVAL. While the op
+     * ACCEPTED an arrival (§21.2's defect) the commit landed anyway and the old
+     * `freeAfter === freeBefore - 1 || inert.length > 0` absorbed both outcomes,
+     * so the row was green on a target it had not chosen. E3b made the op
+     * REFUSE an arrival, and the row went red — correctly.
+     *
+     * ⇒ both targets are taken from the PAGE'S OWN MARKS, and the two outcomes
+     * are two rows instead of one disjunction.
      */
-    const gatingTarget = report.ruleTargets.find((t) => t.startsWith('exit:'));
-    const freeBefore = report.report.filter((r) => /^\[free\]/.test(r)).length;
-    const editsBeforeRule = report.edit.set.edits;
-    await page.selectOption('#editSetRuleTarget', gatingTarget);
+    const marks = report.ruleTargetMarks.filter((m) => m.value.startsWith('exit:'));
+    const inertMark = marks.find((m) => / ⚠ gates NOTHING$/.test(m.label));
+    const gatingMark = marks.find((m) => !/ ⚠ gates NOTHING$/.test(m.label));
+    check(inertMark !== undefined && gatingMark !== undefined
+        && inertMark.why !== '' && gatingMark.why === '',
+        '⛓⛓ **THE ROOM OFFERS BOTH KINDS OF EXIT TARGET, AND THE PAGE MARKS WHICH IS WHICH** — '
+        + 'the option label carries `⚠ gates NOTHING` and its tooltip carries `gateabilityOf`\'s '
+        + 'own sentence. ⛔ Asserted BEFORE either commit, because the two rows below are only a '
+        + 'discrimination if both kinds are present to be told apart',
+        `inert ${json(inertMark?.value)}, gating ${json(gatingMark?.value)}`);
+
+    /**
+     * ⛔⛔⛔ **E3b — THE OP REFUSES THE MARKED-INERT TARGET, AND THE RECORD DOES
+     * NOT MOVE.** This is §21.2 closed at the page: the list MARKS the endpoint
+     * and the OP refuses it on the SAME reading (`setEditorCore.gateabilityOf`),
+     * so a person cannot author a rule the compiler would build no edge for.
+     * ⛓ The edit count being UNCHANGED is the claim now — it used to be the
+     * failure mode.
+     */
+    const editsBeforeInert = report.edit.set.edits;
+    await page.selectOption('#editSetRuleTarget', inertMark.value);
     await page.fill('#editSetRuleJson', '{"rule":"Has","args":{"item":"Sword"}}');
     await page.dispatchEvent('#editSetRuleJson', 'input');
     await page.click('#editSetRuleCommit');
-    await page.waitForTimeout(500);
+    await page.waitForFunction(
+        () => /REACH NOTHING/.test(document.getElementById('status')?.textContent ?? ''),
+        null, { timeout: 30000 }).catch(() => {});
+    const inertRefused = await setRead();
+    check(inertRefused.edit.set.edits === editsBeforeInert
+        && /REACH NOTHING/.test(inertRefused.status)
+        && inertRefused.status.includes(inertMark.value.slice('exit:'.length)),
+        '⛔⛔ **THE COMMIT ON A MARKED-INERT ENDPOINT IS REFUSED BY THE OP, AND THE RECORD IS '
+        + 'UNMOVED** (E3b, §21.2) — the page MARKS the target and `set-access-rule` refuses it '
+        + 'on the SAME `gateabilityOf` reading, so the mark and the refusal cannot disagree. '
+        + 'The edit count NOT moving is the claim: before E3b the rule landed and reached '
+        + 'nothing',
+        `${editsBeforeInert} → ${inertRefused.edit.set.edits}, ${inertRefused.status.slice(0, 110)}`);
+
+    /**
+     * ⛓⛓ **AND THE MARKED-GATING ONE COMMITS AS ONE OP** — the same press, the
+     * same JSON, the other target. ⛓ The target list is the DERIVATION's,
+     * re-derived after every applied op: a `disconnect` deletes a door, so a
+     * list refreshed only on SELECTION would offer an exit id the derivation no
+     * longer has and the commit would be refused for the page's own staleness.
+     */
+    const freeBefore = report.report.filter((r) => /^\[free\]/.test(r)).length;
+    const editsBeforeRule = inertRefused.edit.set.edits;
+    await page.selectOption('#editSetRuleTarget', gatingMark.value);
+    await page.fill('#editSetRuleJson', '{"rule":"Has","args":{"item":"Sword"}}');
+    await page.dispatchEvent('#editSetRuleJson', 'input');
+    await page.click('#editSetRuleCommit');
+    await page.waitForFunction((n) => window.__editorEdit?.set?.edits === n,
+        editsBeforeRule + 1, { timeout: 30000 }).catch(() => {});
     const ruleCommitted = await setRead();
     check(ruleCommitted.edit.set.edits === editsBeforeRule + 1,
-        '⛓⛓ **THE RULE COMMIT LANDS AS ONE OP** — and the target list it was picked from is the '
-        + 'DERIVATION\'s, re-derived after every applied op: a `disconnect` deletes a door, so '
-        + 'a list refreshed only on SELECTION would offer an exit id the derivation no longer '
-        + 'has and the commit would be refused for the page\'s own staleness',
+        '⛓⛓ **THE RULE COMMIT LANDS AS ONE OP** — on the endpoint the page marked as GATING, '
+        + 'through the same control that refused the arrival one press earlier',
         `${editsBeforeRule} → ${ruleCommitted.edit.set.edits}, ${ruleCommitted.status.slice(0, 90)}`);
     await page.click('#editSetReport');
     await page.waitForTimeout(2000);
     const gated = await setRead();
     const freeAfter = gated.report.filter((r) => /^\[free\]/.test(r)).length;
     const inert = gated.report.filter((r) => /^\[inert-rule\]/.test(r) && /REACHES NOTHING/.test(r));
-    check(freeAfter === freeBefore - 1 || inert.length > 0,
-        '⛓⛓ COMMITTING AN ACCESS RULE either takes its edge OFF the free list or the report '
-        + 'says the endpoint REACHES NOTHING — the two answers this slice measured, and never '
-        + 'silence', `free ${freeBefore} → ${freeAfter}, ${inert.length} inert`);
+    check(freeAfter === freeBefore - 1 && inert.length === 0,
+        '⛓⛓ **COMMITTING AN ACCESS RULE TAKES ITS EDGE OFF THE FREE LIST — EXACTLY ONE, AND '
+        + 'THERE IS NOTHING INERT TO REPORT** (E3b). ⛔ This was a DISJUNCTION until E3b (*"or '
+        + 'the report says the endpoint REACHES NOTHING"*) because the op accepted an arrival '
+        + 'and either answer was possible from one press. The op refuses one now, so the two '
+        + 'answers are two rows and this one is an EQUALITY — which is what makes it a reading '
+        + 'of the COMPILED rules rather than of the atlas',
+        `free ${freeBefore} → ${freeAfter}, ${inert.length} inert`);
 
     /**
      * ⛔⛔ **AN UNREACHABLE GRAPH REFUSES THE rules.json EXPORT BY NAME**, and a
@@ -2577,24 +2646,60 @@ try {
         `⛓ room ${VANILLA_INERT.room} of the real set offers the ARRIVAL endpoint `
         + `\`${VANILLA_INERT.target}\` — an \`in_*\` id the derivation gives the room and the `
         + 'compiler builds NO AP exit for (§21.2)', json(inertTargets.slice(0, 4)));
+    /**
+     * ⛔⛔⛔ **§21.2 ON REAL DATA — AND E3b TURNED THIS ROW INSIDE OUT.**
+     *
+     * It used to author the rule onto the arrival, let it land, and assert that
+     * the REPORT named it inert and listed it in the export refusal beside
+     * `level_58`. That was §21.2's defect being measured on the real game, and
+     * it was the right row while the op accepted the rule. `set-access-rule`
+     * refuses it now, on `setEditorCore.gateabilityOf` — the SAME reading that
+     * put ` ⚠ gates NOTHING` on the option the row above just found — so the
+     * rule never reaches the overlay and there is nothing inert to name.
+     *
+     * ⇒ what is measured on real data now: the page MARKED the endpoint, the OP
+     * REFUSED it in the same words, the record did NOT move, and the export
+     * refusal names `level_58` ALONE — the unreachable region, which is a fact
+     * about the game and not about anything this row authored.
+     */
+    const vanMark = (await setRead()).ruleTargetMarks
+        .find((m) => m.value === VANILLA_INERT.target);
     await page.selectOption('#editSetRuleTarget', VANILLA_INERT.target);
     await page.fill('#editSetRuleJson', '{"rule":"Has","args":{"item":"Sword"}}');
     await page.dispatchEvent('#editSetRuleJson', 'input');
     await page.click('#editSetRuleCommit');
-    await page.waitForFunction(() => window.__editorEdit?.set?.edits === 1, null,
-        { timeout: 60000 }).catch(() => {});
+    await page.waitForFunction(
+        () => /REACH NOTHING/.test(document.getElementById('status')?.textContent ?? ''),
+        null, { timeout: 60000 }).catch(() => {});
+    const vanRefused = await setRead();
+    check(vanRefused.edit.set.edits === 0
+        && /REACH NOTHING/.test(vanRefused.status)
+        && vanRefused.status.includes(VANILLA_INERT.exitId)
+        && / ⚠ gates NOTHING$/.test(vanMark?.label ?? '')
+        && /ARRIVAL side of a ONE-WAY connection/.test(vanMark?.why ?? '')
+        && /ARRIVAL side of a ONE-WAY connection/.test(vanRefused.status),
+        '⛔⛔ **§21.2 ON REAL DATA, CLOSED (E3b)** — a rule authored onto an ARRIVAL endpoint of '
+        + 'a VANILLA room is REFUSED BY THE OP, and the page had already MARKED that endpoint '
+        + 'with the same sentence: both read `gateabilityOf` over the same derived atlas, so '
+        + 'the mark and the refusal quote each other word for word. The record does not move. '
+        + '⛓ Until E3b this row measured the DEFECT — the rule landed, the report named it '
+        + 'inert, and the export refusal listed it beside the unreachable region',
+        `${json(vanMark?.label)} · ${vanRefused.status.slice(0, 150)}`);
     await page.click('#editSetReport');
     await page.waitForFunction(() => [...document.querySelectorAll('#editSetReportOut li')]
-        .some((l) => /^\[inert-rule\]/.test(l.textContent)), null, { timeout: 180000 })
+        .some((l) => /^\[reach\]/.test(l.textContent)), null, { timeout: 180000 })
         .catch(() => {});
     const inertReport = await setRead();
-    check(inertReport.report.some((r) => /^\[inert-rule\]/.test(r) && /REACHES NOTHING/.test(r))
-        && /reach no compiled edge/.test(inertReport.reportNote)
-        && inertReport.reportNote.includes(VANILLA_INERT.exitId)
-        && inertReport.rulesDisabled === true,
-        '⛔⛔ **§21.2 ON REAL DATA** — a rule authored onto an ARRIVAL endpoint of a VANILLA '
-        + 'room reaches nothing, the report NAMES it, and the export refusal lists it beside '
-        + 'the unreachable region rather than reporting only the first condition it found',
+    check(inertReport.report.every((r) => !/^\[inert-rule\]/.test(r))
+        && inertReport.rulesDisabled === true
+        && /level_58/.test(inertReport.reportNote)
+        && !inertReport.reportNote.includes(VANILLA_INERT.exitId)
+        && !/reach no compiled edge/.test(inertReport.reportNote),
+        '⛔⛔ **…AND THE REPORT HAS NOTHING INERT TO NAME, SO THE EXPORT REFUSAL LISTS '
+        + '`level_58` ALONE** — the unreachable region is a fact about the real game and the '
+        + 'inert rule was a fact about a defect. ⛓ `inertRulesOf` is NOT retired with it: '
+        + '`set-overlay` writes a whole room entry and asks no derivation, so it is still the '
+        + 'one door such a rule can arrive through, and `watchSetEditor.test.js` drives it',
         inertReport.reportNote.slice(0, 200));
 
     /* ── OPEN · PAINT · CLOSE · DOWNLOAD, on the real 116 ────────── */
