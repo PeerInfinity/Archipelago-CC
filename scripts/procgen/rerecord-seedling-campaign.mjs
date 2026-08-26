@@ -126,6 +126,9 @@ import {
     renderTableMarkdown,
 } from './provisionalLatch.js';
 import { buildInstruments } from './reference/instruments.mjs';
+import {
+    REHEARSAL_PLAN, buildRehearsalTree, readRehearsalMarker,
+} from './rehearsalTree.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..', '..');
@@ -205,6 +208,16 @@ const PROVISIONAL_TOKEN = process.argv.find((a) => a === '--latch-provisional'
 const TABLE = process.argv.includes('--table');
 const DRIVE = process.argv.includes('--drive');
 const BRANCH = arg('branch', null);
+/**
+ * ⛓⛓⛓ R9 P1b, ⚖ 54 (3) — **THE REHEARSAL.** `--rehearse` generates a FAKE
+ * tree and runs S0..S5 against it in child processes, asserting the things
+ * three GPU-spending runs found out the expensive way. `--rehearse-tree=<dir>`
+ * is the child's own entry: it builds the context from that tree instead of
+ * from this repository. Both literals are spelled HERE, in the file the
+ * instruments index scans, for the reason `--license-walks` gives above.
+ */
+const REHEARSE = process.argv.includes('--rehearse');
+const REHEARSE_TREE = arg('rehearse-tree', null);
 for (const [literal, constant, where] of [
     ['--latch-provisional', PROVISIONAL_FLAG, 'PROVISIONAL_FLAG'],
     ['--table', TABLE_FLAG, 'TABLE_FLAG'],
@@ -318,6 +331,8 @@ async function buildContext(overrides = {}) {
         runDir: overrides.runDir ?? RUN_DIR,
         cacheDir: overrides.cacheDir ?? CACHE,
         noCache: overrides.noCache ?? NO_CACHE,
+        /** ⛓ the rehearsal tree this context speaks for, or `null` for the real one. */
+        rehearsal: overrides.rehearsal ?? null,
         chains,
         parseTape: tape.parseTape,
         gameVisibleTape: tape.gameVisibleTape,
@@ -363,6 +378,49 @@ async function buildContext(overrides = {}) {
 
     mkdirSync(ctx.runDir, { recursive: true });
     return ctx;
+}
+
+/**
+ * ⛓⛓⛓ R9 P1b — **THE CONTEXT A REHEARSAL TREE IMPLIES.** Every field it
+ * moves is one of `buildContext`'s, and the ones it does NOT move are the real
+ * `tapeFormat`/`r7Acceptance`/`seamPosture`/`levelSource` functions — the
+ * rehearsal exists to run THOSE against a subject it controls.
+ *
+ * ⛔⛔ AND THE WINDOWS DRIVER IS MADE UNREACHABLE BY NAME, not merely unused.
+ * `ctx.rehearsal` is the tree's path, and `windowsDriveLatch` refuses when it
+ * is set: the machine-global cache under `/mnt/c/playwright/` is shared across
+ * trees and sessions (⚖ 47b (5)), so a rehearsal that reached it would write
+ * latch files for tapes that do not exist.
+ */
+async function rehearsalContext(dir) {
+    const marker = readRehearsalMarker(dir);
+    return buildContext({
+        tapesDir: join(dir, 'tapes'),
+        cacheDir: join(dir, 'cache'),
+        chains: marker.chains,
+        instrumentRows: marker.instrumentRows,
+        rehearsal: dir,
+        scriptPath: (file) => {
+            for (const sub of ['producers', 'stubs']) {
+                const p = join(dir, sub, file);
+                if (existsSync(p)) return p;
+            }
+            throw new Error(`⛔ the rehearsal tree at ${dir} has no producer or stub named `
+                + `${file}. A rehearsal that silently fell through to this repository's `
+                + 'copy would be running the REAL instrument against a fake roster, which '
+                + 'is the one thing the tree exists to prevent.');
+        },
+        driveLatch: (label) => {
+            const p = join(dir, 'latches', `${label}.json`);
+            if (!existsSync(p)) {
+                throw new Error(`⛔ the rehearsal tree has no latch for ${label}. The fake `
+                    + 'latches are DERIVED per boundary by `rehearsalTree.js`; a missing '
+                    + 'one means the chain declaration and the generated tree have come '
+                    + 'apart.');
+            }
+            return JSON.parse(readFileSync(p, 'utf8'));
+        },
+    });
 }
 
 // ── S0 · PREDICT ──────────────────────────────────────────────────────
@@ -780,6 +838,19 @@ const CACHE = join(WSL, 'rerecord-cache');
  * nothing is ever deleted.
  */
 function windowsDriveLatch(ctx, label, completeTape) {
+    /**
+     * ⛔⛔ ASSERTED, NOT ASSUMED. A rehearsal supplies its own `driveLatch`, so
+     * this is unreachable — and "unreachable" is exactly the kind of claim that
+     * rots. The cache under `/mnt/c/playwright/` is machine-global and shared
+     * (⚖ 47b (5)); a rehearsal that reached it would write latch files keyed on
+     * tapes that exist in no tree.
+     */
+    if (ctx.rehearsal) {
+        throw new Error(`⛔ ${label}: the WINDOWS latch driver was reached from a REHEARSAL `
+            + `(tree ${ctx.rehearsal}). A rehearsal spends no GPU and never touches the `
+            + 'machine-global latch cache; reaching here means the fake driver was not '
+            + 'installed on the context.');
+    }
     const parsed = ctx.parseTape(completeTape);
     const projected = ctx.gameVisibleTape(parsed);
     const candidates = latchCacheCandidates(
@@ -2108,6 +2179,297 @@ async function table(ctx, { branch = null }) {
     return { rows, markdown };
 }
 
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⚖ 54 (3) — `--rehearse`: S0..S5 AGAINST A FAKE TREE, BEFORE A GPU IS SPENT
+ * ══════════════════════════════════════════════════════════════════════ */
+/**
+ * ⛓⛓⛓ R9 P1b — **THE PIPELINE IS REHEARSED BEFORE IT SPENDS A GPU.**
+ *
+ * Three re-record attempts STOPPED at S1 or S3 after the browser had already
+ * been driven, and every defect that stopped them is bookkeeping: a producer
+ * order taken from the FILE SYSTEM (§35.4 item 4), a fix for it that only
+ * worked on the RESUME path (§37.3 (a)), guards naming the GLOBAL failure
+ * counter instead of their own subject (§35.4 item 5, §37.3 (b), and a FOURTH
+ * in S3 this rehearsal itself found), a record set taken from `s2.wrote`
+ * rather than the projection diff (§33.4 item 4). Each is decidable offline.
+ *
+ * ⛔ WHAT IT REHEARSES, AND WHAT IT CANNOT. It runs S0..S5 end to end against
+ * `rehearsalTree.js`'s generated tree, in CHILD PROCESSES, and asserts on what
+ * they print. It rehearses producer ORDER, the licence spend and its refusal,
+ * the cascade, the record set, the headline and one-segment accounting, the
+ * boot-block guard under a seeded failure, the sealed-table refusal and the
+ * `--from=` resume path. ⛔ IT CANNOT rehearse the GAME: no browser, no
+ * Windows, no `:8000`, no physics. The game's word on a walk is
+ * `--latch-provisional`'s job (⚖ 54 (1)) and S4's real gates are the fourth
+ * run's; here S4 is rehearsed for WIRING and the stubs say so out loud.
+ *
+ * ⛔ IT RUNS INSTEAD OF THE PIPELINE, NEVER BESIDE IT, and it refuses to
+ * combine with a real `--drive` or `--license-walks`: the licences the
+ * scenarios spend are the REHEARSAL'S OWN, manufactured per scenario, and a
+ * user's ruling id has no business inside a fake tree.
+ */
+const REHEARSAL_RULING = 'rehearsal-p1b';
+/** ⛓ A seed no committed tape carries, so an override always MOVES something. */
+const REHEARSAL_MOVED_SEED = 424242;
+
+/**
+ * One scenario: a tree shape, the argv the child gets, and the rows it owes.
+ * ⛔ EVERY ROW NAMES THE DEFECT IT WOULD CATCH, because a rehearsal whose rows
+ * said only "green" would be a fixed point (trap: a fixed point tests
+ * self-consistency, never correctness).
+ */
+function rehearsalScenarios() {
+    const bothMove = { moves: { 'rh-a': 'walk', 'rh-c': 'walk' } };
+    return [
+        {
+            id: 'control',
+            why: 'nothing moved anywhere — the state the pipeline is supposed to report',
+            tree: {},
+            argv: [],
+            exit: 0,
+            rows: (out) => [
+                ['⛓ CONTROL: every boundary measures ZERO movers',
+                    (out.match(/field\(s\) compared, 0 moved/g) ?? []).length === 3,
+                    `${(out.match(/field\(s\) compared, \d+ moved/g) ?? []).join(' · ')}`],
+                ['⛓ CONTROL: S3 records NOTHING, and that is a MEASUREMENT not a skip',
+                    out.includes('no projection moved, so there is nothing to record'),
+                    'S3'],
+                ['⛓ …ACROSS a real tick-0 re-derivation of every tape — `tick0` is a '
+                    + 'GAME_VISIBLE_DROPS field, so S2\'s re-derivations cost no GPU '
+                    + '(§35.4 item 3)',
+                    /\d+ tick-0 block\(s\) re-derived/.test(out)
+                        && out.includes('no projection moved'), 'S2 -> S3'],
+                ['⛓ THE HEADLINE HAS A ROW OF ITS OWN (§33.4 item 2) — the floor '
+                    + '`r8-d2` fell through',
+                    /rh-main\s+HL rh-main-full/.test(out), 'the sealed table'],
+                ['⛓ THE ONE-SEGMENT CHAIN IS ACCOUNTED FOR (§33.4 item 1) — the floor '
+                    + '`r8-solve-11` fell through',
+                    /rh-solo\s+1 rh-e/.test(out), 'the sealed table'],
+                ['⛓ every chain segment is accounted for by exactly one producer',
+                    out.includes('PASS: ⛓ every chain segment is ACCOUNTED FOR'), 'S0'],
+                ['⛓ S5 reports and the run is green', out.includes('# S5 · REPORT')
+                    && out.includes('all checks green'), 'S5'],
+            ],
+        },
+        {
+            id: 'walk-unlicensed',
+            why: 'a measured walk move with no licence is a STOP, named',
+            tree: bothMove,
+            argv: ['--to=S0'],
+            exit: 1,
+            rows: (out) => [
+                ['⛔ a measured WALK MOVE without a licence STOPS BY NAME (⚖ 43)',
+                    out.includes('RE-SOLVES DIFFERENTLY') && out.includes('no licence was given')
+                        && out.includes('FAIL: ⛓ every measured WALK MOVE is covered by a '
+                            + 'licence'), 'S0'],
+                ['⛔ …and it names BOTH movers rather than the first',
+                    out.includes('rh-a RE-SOLVES') && out.includes('rh-c RE-SOLVES'), 'S0'],
+            ],
+        },
+        {
+            id: 'walk-licensed',
+            why: 'the licence is spent — order, cascade, record set',
+            tree: { ...bothMove,
+                latchOverrides: { 'rh-a': { 'rng.gameplay': REHEARSAL_MOVED_SEED } } },
+            argv: [`--license-walks=${REHEARSAL_RULING}`],
+            exit: 0,
+            rows: (out) => [
+                ['⛓ (c1) THE PRODUCERS RUN IN THE ORDER THE CHAINS REQUIRE, not the FILE '
+                    + 'SYSTEM\'S (§35.4 item 4) — `solve-rh-chain` sorts FIRST and must run '
+                    + 'SECOND',
+                    out.includes('solve-rh-first.mjs -> solve-rh-chain.mjs')
+                        && !out.includes('solve-rh-chain.mjs -> solve-rh-first.mjs'), 'S1'],
+                ['⛓ THE CASCADE opens from the FIRST move and names its successors (⚖ 43)',
+                    /cascade in rh-main: the first move is rh-a/.test(out)
+                        && out.includes('3 successor(s) become boot-only — rh-b, rh-c, rh-d'),
+                    'S0'],
+                ['⛓ (c3) S3\'s RECORD SET IS THE PROJECTION DIFF, and it holds the FIRST '
+                    + 'mover of each chain — the tape `s2.wrote` can never see (§33.4 '
+                    + 'item 4)',
+                    /^\s+rh-a\s+moved\s+⛓ NOT in S2's boot writes/m.test(out)
+                        && /^\s+rh-c\s+moved/m.test(out), 'S3'],
+                ['⛓ …and S2 wrote exactly the boot the moved latch authored',
+                    out.includes('wrote rh-b: rng'), 'S2'],
+                ['⛓ the run completes S0..S5 green under the licence',
+                    out.includes('all checks green'), 'S5'],
+            ],
+        },
+        {
+            id: 'resume',
+            why: '§37.3 (a) — the order fix must hold on the RESUME path too',
+            tree: { ...bothMove,
+                latchOverrides: { 'rh-a': { 'rng.gameplay': REHEARSAL_MOVED_SEED } } },
+            /**
+             * ⛔ THE LICENCE IS SEALED AT S0 AND READ BACK FROM THE FLUSHED
+             * STATE, so the FIRST run has to carry it: a `--to=S0` without one
+             * flushes `licence: null` and the resumed S1 spends nothing —
+             * which would make this row green for the wrong reason.
+             */
+            argv: ['--to=S0', `--license-walks=${REHEARSAL_RULING}`],
+            then: ['--from=S1', '--to=S2'],
+            exit: 0,
+            rows: (out, _e, thenOut) => [
+                ['⛓ (c1-resume) A `--from=S1` RESUME derives the SAME chain order — the '
+                    + 'defect §37.3 (a) found was a fix that worked ONLY here, so both '
+                    + 'paths are rowed',
+                    thenOut.includes('solve-rh-first.mjs -> solve-rh-chain.mjs')
+                        && !thenOut.includes('solve-rh-chain.mjs -> solve-rh-first.mjs'),
+                    'S1 resumed'],
+                ['⛓ …and S0\'s flushed state carried the rows the order is derived FROM',
+                    !thenOut.includes('from ZERO report rows'), 'producerOrder'],
+            ],
+        },
+        {
+            id: 'seeded-failure',
+            why: '§35.4 item 5 / §37.3 (b) — a guard must name its OWN subject',
+            tree: { ...bothMove, exits: { 'solve-rh-first.mjs': 1 } },
+            argv: [`--license-walks=${REHEARSAL_RULING}`, '--to=S2'],
+            exit: 1,
+            rows: (out) => [
+                ['⛓ the seeded producer failure IS reported, in its own words',
+                    /FAIL: solve-rh-first\.mjs re-authors its walks/.test(out), 'S1'],
+                ['⛓ (c2) …and S1\'s BOOT_BLOCKS guard still names ITS OWN subject (§35.4 '
+                    + 'item 5): it PASSES, and the projection sentence is never printed',
+                    out.includes('PASS: ⛓ BOOT_BLOCKS is `segmentBootFromLatch`\'s own key set')
+                        && !out.includes('the projection authors a block this pipeline does '
+                            + 'not write'), 'S1'],
+                ['⛓ (c2b) …and S2\'s sealed-table guard counts ITS OWN off-table writes '
+                    + '(§37.3 (b))',
+                    out.includes('PASS: ⛓ every write is on the sealed table'), 'S2'],
+            ],
+        },
+        {
+            id: 'prose-only',
+            why: '⚖ 54 (4) — the RECORD-SET projection KEEPS `description`',
+            tree: { moves: { 'rh-c': 'walk', 'rh-main-full': 'description' } },
+            argv: [`--license-walks=${REHEARSAL_RULING}`],
+            exit: 1,
+            rows: (out) => [
+                ['⛓ (c5) THE RECORD-SET PROJECTION (`gameVisibleTape`) KEEPS '
+                    + '`description`: a PROSE-ONLY re-emission MOVES the projection and is '
+                    + 'SEEN. ⚠ THE OPPOSITE OF THE KEY PROJECTION (`latchKeyTape`), which '
+                    + 'DROPS `description` by ⚖ 54 (4) — over-inclusive here, exact there, '
+                    + 'and the two must never be conflated',
+                    /^\s+rh-main-full\s+moved/m.test(out), 'S3'],
+                ['⛔ …and a prose mover no licence covers is a STOP BEFORE THE GPU, named',
+                    out.includes('rh-main-full moved and no licence covers it')
+                        && out.includes('STOP before the GPU'), 'S3'],
+            ],
+        },
+        {
+            id: 'off-table',
+            why: 'the sealed table is a PERMISSION — an unpredicted boot move is refused',
+            tree: { latchOverrides: { 'rh-b': { 'rng.gameplay': REHEARSAL_MOVED_SEED } } },
+            argv: ['--to=S2'],
+            exit: 1,
+            rows: (out) => [
+                ['⛔ S1 refuses a boot move the SEALED TABLE did not predict, by name',
+                    /FAIL: rh-c: its move is on the SEALED TABLE/.test(out)
+                        && out.includes('the sealed table is the licence'), 'S1'],
+                ['⛔ …and S2 refuses to WRITE it, counting its own off-table writes',
+                    out.includes('FAIL: rh-c would move rng')
+                        && out.includes('write(s) named above are off the table'), 'S2'],
+            ],
+        },
+    ];
+}
+
+async function rehearse() {
+    console.log('# ⚖ 54 (3) · --rehearse — S0..S5 against a GENERATED fake tree, no GPU\n');
+    const { SEAM_PREBUILD_FIELDS, SEAM_SIGNATURE, seamBootFields, segmentBootFromLatch }
+        = await import(join(MODULE, 'r7Acceptance.js'));
+    const { parseTape } = await import(join(MODULE, 'tapeFormat.js'));
+    const deps = {
+        parseTape,
+        signature: SEAM_SIGNATURE,
+        prebuildFields: SEAM_PREBUILD_FIELDS,
+        seamBootFields,
+        segmentBootFromLatch,
+        bootFromEnvelopeOnly,
+        mergePersistence,
+    };
+    const sourceTapes = join(MODULE, 'fixtures/tapes');
+    const base = join(RUN_DIR, 'rehearse');
+    console.log(`## the tree is GENERATED from ${sourceTapes} (READ-ONLY) into ${base}`);
+    console.log(`## ${Object.keys(REHEARSAL_PLAN.sources).length} tape(s), `
+        + `${REHEARSAL_PLAN.chains.length} chain(s), `
+        + `${Object.keys(REHEARSAL_PLAN.owners).length} producer(s)\n`);
+
+    const report = { scenarios: [] };
+    for (const sc of rehearsalScenarios()) {
+        const dir = join(base, sc.id);
+        console.log(`\n## SCENARIO \`${sc.id}\` — ${sc.why}`);
+        const marker = buildRehearsalTree({
+            dir, repo: ROOT, sourceTapes, deps, scenario: sc.tree,
+        });
+        /**
+         * ⛓ THE GENERATOR'S OWN PROOF, PRINTED. Every boundary's derived latch
+         * was diffed against its successor's committed blocks before it was
+         * written; a mover the scenario did not ASK for is a refusal inside
+         * `buildRehearsalTree`, so these numbers are a measurement rather than
+         * a hope.
+         */
+        for (const p of marker.latchProof) {
+            console.log(`   latch ${p.from} -> ${p.to}: ${p.compared} field(s) compared, `
+                + `${p.moved.length} moved${p.asked.length
+                    ? ` (asked: ${p.asked.join(', ')})` : ''}`);
+        }
+        const run = (extra) => {
+            const args = [process.argv[1], `--rehearse-tree=${dir}`,
+                `--run-dir=${join(dir, 'run')}`, ...extra];
+            try {
+                return { out: execFileSync('node', args, { cwd: ROOT, encoding: 'utf8',
+                    stdio: ['ignore', 'pipe', 'pipe'], maxBuffer: 64 * 1024 * 1024 }),
+                exit: 0 };
+            } catch (e) {
+                return { out: [e.stdout, e.stderr].filter(Boolean).join('\n'),
+                    exit: e.status ?? -1 };
+            }
+        };
+        const first = run(sc.argv);
+        writeFileSync(join(dir, 'stdout.log'), first.out);
+        const second = sc.then ? run(sc.then) : { out: '', exit: 0 };
+        if (sc.then) writeFileSync(join(dir, 'stdout.then.log'), second.out);
+        const judged = sc.then ? second : first;
+        check(`⛓ scenario \`${sc.id}\` exits ${sc.exit}`, judged.exit === sc.exit,
+            `exit ${judged.exit}, ${judged.out.split('\n').length} line(s) -> `
+                + `${join(dir, sc.then ? 'stdout.then.log' : 'stdout.log')}`);
+        const rows = sc.rows(first.out, first.exit, second.out);
+        for (const [name, ok, where] of rows) check(`${sc.id} · ${name}`, ok, where);
+        report.scenarios.push({ id: sc.id, why: sc.why, exit: first.exit,
+            thenExit: sc.then ? second.exit : null, latchProof: marker.latchProof,
+            rows: rows.map(([name, ok]) => ({ name, ok })) });
+    }
+
+    /* ── the two refusals that keep a rehearsal out of the real roster ── */
+    console.log('\n## THE REFUSALS');
+    let refusedFixtures = null;
+    try {
+        buildRehearsalTree({ dir: join(sourceTapes, '..', 'rehearsal-tree'),
+            repo: ROOT, sourceTapes, deps, scenario: {} });
+    } catch (e) { refusedFixtures = e.message; }
+    check('⛔ (m7) the GENERATOR refuses to build a tree inside the committed fixtures — a '
+        + 'rehearsal WRITES tapes, re-derives tick-0 blocks and runs a fake `--record`',
+    Boolean(refusedFixtures) && refusedFixtures.includes('inside the committed fixtures'),
+    (refusedFixtures ?? '⛔ IT DID NOT REFUSE').slice(0, 120));
+
+    let refusedUnmarked = null;
+    try { readRehearsalMarker(sourceTapes); } catch (e) { refusedUnmarked = e.message; }
+    check('⛔ (m7) …and `--rehearse-tree` refuses a directory carrying no marker, so it can '
+        + 'never be pointed at `fixtures/tapes`',
+    Boolean(refusedUnmarked) && refusedUnmarked.includes('carries no rehearsal.json'),
+    (refusedUnmarked ?? '⛔ IT DID NOT REFUSE').slice(0, 120));
+
+    const reportPath = join(RUN_DIR, 'rehearsal.report.json');
+    writeFileSync(reportPath, `${JSON.stringify(report, null, 2)}\n`);
+    console.log(`\n## ${reportPath}`);
+    console.log('\n## ⛔ WHAT THIS RUN CANNOT SAY: it never opened a browser, never spent a '
+        + 'GPU frame and never read the machine-global latch cache. The GAME\'s word on a '
+        + 'walk is `--latch-provisional`\'s (⚖ 54 (1)); S4\'s real gates and the game\'s '
+        + 'calm are the re-record run\'s own.');
+}
+
 // ── the run ───────────────────────────────────────────────────────────
 /**
  * ⛓ THE CONTEXT IS BUILT ONCE, HERE, ABOVE EVERY MODE — and above the header,
@@ -2115,11 +2477,66 @@ async function table(ctx, { branch = null }) {
  * defaults are today's values, so every line below runs against exactly the
  * subject it ran against before this seam existed.
  */
-const CTX = await buildContext();
+/**
+ * ⛔⛔ THE REHEARSAL RUNS INSTEAD OF THE PIPELINE, AND IT REFUSES THE USER'S
+ * OWN LICENCE. The licences its scenarios spend are the REHEARSAL'S — a ruling
+ * id belongs to tapes a human is permitting, and there are none in a fake
+ * tree. A `--drive` beside it would be a GPU row inside a mode whose whole
+ * claim is that it spends none.
+ */
+if (REHEARSE) {
+    const conflicts = [
+        REHEARSE_TREE ? '--rehearse-tree=' : null,
+        DRIVE ? DRIVE_FLAG : null,
+        PROVISIONAL_TOKEN !== undefined ? PROVISIONAL_FLAG : null,
+        TABLE ? TABLE_FLAG : null,
+        GROW ? '--grow' : null,
+        DRY_RUN ? '--dry-run' : null,
+        LICENCE ? LICENSE_FLAG : null,
+        process.argv.some((a) => a.startsWith('--from=')) ? '--from=' : null,
+        process.argv.some((a) => a.startsWith('--to=')) ? '--to=' : null,
+    ].filter(Boolean);
+    if (conflicts.length) {
+        console.log(`FAIL: --rehearse with ${conflicts.join(', ')} — the rehearsal runs `
+            + 'S0..S5 against a GENERATED fake tree and drives its own scenarios. It '
+            + 'spends no GPU, and the licences its scenarios spend are its own: a ruling '
+            + 'id names tapes a human is permitting, and a fake tree has none.');
+        process.exit(1);
+    }
+    await rehearse();
+    console.log(failures ? `\n${failures} FAILURE(S)` : '\nall checks green');
+    process.exit(failures ? 1 : 0);
+}
+
+/**
+ * ⛔ A REHEARSAL CHILD NEVER DRIVES. `--rehearse-tree` installs a fake latch
+ * source; `--drive` beside it would be a caller asking for a GPU row against
+ * tapes that exist in no tree.
+ */
+if (REHEARSE_TREE && DRIVE) {
+    console.log(`FAIL: --rehearse-tree with ${DRIVE_FLAG} — a rehearsal spends no GPU.`);
+    process.exit(1);
+}
+
+/**
+ * ⛔ A REFUSAL IS PRINTED, NOT THROWN. `--rehearse-tree` is how a rehearsal
+ * child is pointed at its tree, and the one thing it must never accept is the
+ * committed roster — so the refusal has to read like every other refusal in
+ * this file (a `FAIL:` line and exit 1), not like a crash.
+ */
+let CTX;
+try {
+    CTX = REHEARSE_TREE ? await rehearsalContext(REHEARSE_TREE) : await buildContext();
+} catch (e) {
+    if (!REHEARSE_TREE) throw e;
+    console.log(`FAIL: --rehearse-tree=${REHEARSE_TREE} — ${e.message}`);
+    process.exit(1);
+}
 
 console.log(`# rerecord-seedling-campaign — ${READ_ONLY.length
     ? `${READ_ONLY.join(' ')} (READ-ONLY: no stage runs)` : `stages ${FROM}..${TO}`}`
-    + `${DRY_RUN ? ' (--dry-run)' : ''}${NO_CACHE ? ' (--no-cache)' : ''}`);
+    + `${DRY_RUN ? ' (--dry-run)' : ''}${NO_CACHE ? ' (--no-cache)' : ''}`
+    + `${CTX.rehearsal ? ` ⛓ REHEARSAL against ${CTX.rehearsal} — no browser, no GPU` : ''}`);
 console.log(`# run directory: ${CTX.runDir}\n`);
 
 /**

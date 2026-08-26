@@ -5710,6 +5710,18 @@ export const INSTRUMENTS = frz({
                 },
                 {
                     "how": [
+                        "includes"
+                    ],
+                    "name": "rehearse"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "rehearse-tree"
+                },
+                {
+                    "how": [
                         "arg"
                     ],
                     "name": "run-dir"
