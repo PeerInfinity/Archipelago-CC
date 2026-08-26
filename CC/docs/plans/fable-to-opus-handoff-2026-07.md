@@ -4844,6 +4844,24 @@ still parked whole**, and the eight refused recordings are banked in
 As-built kickoff **§38**; the fourth run's shape is **§38.8** — flip → VERIFY the
 thirteen offline (13/13, NO re-drive, no GPU) → S4 → targeted roster + `--write`
 of §37.4's six movers at a pushable head → ONE push.
+⛓⛓⛓ **AND CI FOUND THE FIX'S STRONGEST WITNESS** (head `638b0bbec`, §38.11).
+The first push came back 364/11379 with **2 failed** — both fixtures OUTSIDE the
+bounded set, reached by the Class A edit, exactly ⚖ 52's by-design catch.
+**(1)** `r8-d2-19-freeze-oracle.json` — a 709-observation recording made in the
+real game two slices earlier, for an unrelated question, pinned at *226 exact
+within 9.9e-14* with a note explaining the tail as the recompiled build's own
+drift. Under the fix it is **709/709 EXACT, maxAbsDeltaPx 0**. **Nothing was
+tuned to it and it is not one of the thirteen** — the strongest independent
+evidence the change is the game's arithmetic rather than a curve fitted to it.
+⛔ The measurement was honest and the CAUSE was wrong: a bound records what you
+saw, it does not license a story about why, and *"the last few bits are the
+emulator's"* survived two rungs on the strength of a number nobody disputed.
+**(2)** the guard-asymmetry row's witness `(1, √3)` belonged to the spelling that
+just left — under the transcription its normalised x is 0.5000000000000001,
+STRICTLY above the boundary where `>` and `>=` both admit, so re-banking the
+expectation would have left the row green and **non-discriminating**; the witness
+is searched for against the transcription now, and mutant (c) re-spent reds BOTH
+rows by name.
 ⇒ **NEXT: the re-record's FOURTH run (or P1 first — the orchestrator's
 sequencing) → the 12c batch closes → ⚖ 54's streamlining P1–P4 → L15 `shove`.**
 ⚠ NEW BOARD LINE from this slice: **a one-spelling law is a property of a FILE,

@@ -14687,3 +14687,30 @@ swords, which is where the rule already lived. Over every one of the one
 hundred and forty-nine committed tapes the two derivations agree, so no
 recorded verdict moves; what separates them is the walk that is not committed
 yet.
+
+Two checks elsewhere in the suite failed on the corrected model, and neither was
+a regression. The first was a guard test whose witness had been chosen for the
+arithmetic that just left: it used a velocity at sixty degrees to an axis
+because, under the old spelling, that velocity's normalised component was
+exactly one half — the single input on which the two guards in the game's
+knockback disagree. Under the game's own spelling it is a hair above one half,
+where both guards accept, so the check would have gone on passing while testing
+nothing. Its witness is now searched for against the transcription rather than
+typed, and the row asserts it found the boundary before it asserts anything
+about the guards.
+
+The second is the better news. A recording of a seven-hundred-and-nine-frame
+walk, made in the real game two slices earlier for an unrelated question, had
+been pinned with a measured tolerance: two hundred and twenty-six of its frames
+matched exactly and the rest agreed to within a ten-trillionth of a pixel. The
+note beside it explained the remainder as the recompiled build's own drift and
+said that demanding exact agreement would be asking more than the arithmetic
+could give. The measurement was honest and the explanation was wrong. With both
+roundings transcribed the model reproduces **every one of the seven hundred and
+nine observations exactly**, and the tolerance is now zero. Nothing was tuned to
+that recording — it is not one of the thirteen the correction was derived
+against — which makes it the strongest independent evidence that the change is
+the game's arithmetic and not a curve fitted to it. The lesson kept beside it is
+that a measured bound records what was seen and does not license a story about
+why: "the last few bits belong to the emulator" survived two rungs on the
+strength of a number that was never in dispute.
