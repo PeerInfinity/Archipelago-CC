@@ -24,7 +24,7 @@ export const REGISTRY = frz({
     "columnOrder": "the registry is a Map, so `getAll()` is INSERTION order; the generator imports the libraries in the order declared in `scripts/procgen/reference/registry.mjs` — the table at the end of this region prints it — and each entry lands when the library that registers it is imported",
     "columns": [
         {
-            "fields": 21,
+            "fields": 22,
             "id": "maze",
             "label": "Maze",
             "registeredBy": "frontend/modules/mazeRoom/mazeRoomLibrary.js"
@@ -36,7 +36,7 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/bounceDemo/bounceDemoLibrary.js"
         },
         {
-            "fields": 35,
+            "fields": 36,
             "id": "bounce",
             "label": "Bounce Demo",
             "registeredBy": "frontend/modules/bounceDemo/bounceDemoLibrary.js"
@@ -54,7 +54,7 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js"
         },
         {
-            "fields": 9,
+            "fields": 10,
             "id": "flash_seedling",
             "label": "Seedling (region atlas)",
             "registeredBy": "frontend/modules/flashPanel/flashSeedlingLibrary.js"
@@ -122,6 +122,12 @@ export const REGISTRY = frz({
                 "sharing.mana.loopActionDelegation"
             ],
             "title": "Cross-substrate sharing"
+        },
+        {
+            "rows": [
+                "roomEditor"
+            ],
+            "title": "Editing"
         },
         {
             "rows": [
@@ -3792,6 +3798,85 @@ export const REGISTRY = frz({
             "documentedHow": "bullet",
             "group": "Build-time — driver-facing adapter hooks (bounce and runner)",
             "name": "renderProcgenParams"
+        },
+        {
+            "carriedBy": [
+                "maze",
+                "bounce",
+                "flash_seedling"
+            ],
+            "cells": [
+                {
+                    "id": "maze",
+                    "present": true,
+                    "short": "{arm, kind, page}",
+                    "type": "object",
+                    "value": [
+                        "arm",
+                        "kind",
+                        "page"
+                    ]
+                },
+                {
+                    "id": "flash",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "bounce",
+                    "present": true,
+                    "short": "{kind, open}",
+                    "type": "object",
+                    "value": [
+                        "kind",
+                        "open"
+                    ]
+                },
+                {
+                    "id": "runner",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": true,
+                    "short": "{arm, kind, page}",
+                    "type": "object",
+                    "value": [
+                        "arm",
+                        "kind",
+                        "page"
+                    ]
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Editing",
+            "name": "roomEditor"
         },
         {
             "carriedBy": [

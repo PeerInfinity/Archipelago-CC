@@ -10,11 +10,12 @@
  *   - standalone: the panel boots itself with a fixture when no session is
  *     pending (own load/save).
  *
- * The editor registers itself in the procgen regionEditors registry so Edit ▸
- * routes bounce regions here (chunk 5 wires the write-back save path).
+ * ⛓ EDITOR INTEGRATION W3: the SUBSTRATE ENTRY declares this launcher
+ * (`bounceDemoLibrary` → `roomEditor: {kind: 'panel', open}`) and
+ * `regionEditors.getRegionEditor` resolves Edit ▸ through the registry. This
+ * module registers nothing any more.
  */
 import { BounceRegionEditorUI } from './bounceRegionEditorUI.js';
-import { registerRegionEditor } from '../procgenPipeline/regionEditors.js';
 
 export const LOAD_EVENT = 'bounceRegionEditor:load';
 export const BOUNCE_EDITOR_COMPONENT_TYPE = 'bounceRegionEditorPanel';
@@ -52,8 +53,15 @@ export async function initialize(_moduleId, _priorityIndex, initializationApi) {
     dispatcher = initializationApi.getDispatcher?.() ?? null;
     BounceRegionEditorUI.setModuleApis({ eventBus, dispatcher });
 
-    // Route the procgen panel's 3 Edit ▸ for bounce regions here.
-    registerRegionEditor('bounce', openBounceRegionEditor);
+    /**
+     * ⛓⛓ EDITOR INTEGRATION W3 — **THE REGISTRATION IS GONE, AND THE ENTRY
+     * CARRIES IT INSTEAD.** `bounceDemoLibrary.createBounceSubstrateEntry`
+     * declares `roomEditor: {kind: 'panel', open}` and
+     * `procgenPipeline/regionEditors.getRegionEditor` resolves Edit ▸ through
+     * the substrate registry, so this module no longer has to have RUN for the
+     * panel to know bounce has an editor — which is the property the maze and
+     * Seedling lab PAGES need, since a page never calls `initialize()`.
+     */
 
     return () => {
         panelInstance = null;
@@ -64,8 +72,16 @@ export async function initialize(_moduleId, _priorityIndex, initializationApi) {
 }
 
 /**
- * Launch the editor on a region (the regionEditors registry entry — chunk 5
- * registers this). Pipeline mode passes onSave; standalone omits it.
+ * Launch the editor on a region — the function the substrate entry's
+ * `roomEditor.open` names. Pipeline mode passes onSave; standalone omits it.
+ *
+ * ⚠ THE ENTRY REACHES IT WITH A **DYNAMIC** IMPORT, and the measurement is
+ * why: importing this module from `bounceDemoLibrary.js` statically puts the
+ * whole GL-panel graph — and `centralRegistry`'s init, which PRINTS — into
+ * every headless consumer of that library (the reference generator, ~30
+ * `check-*.mjs` gates). Measured on `1eed5988a`: the library alone loads
+ * silently, the library plus this module prints
+ * `[centralRegistry] CentralRegistry initialized`.
  */
 export function openBounceRegionEditor({ region, contract, onSave } = {}) {
     pendingSession = { region, contract, onSave };

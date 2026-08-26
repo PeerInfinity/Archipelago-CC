@@ -85,22 +85,30 @@ describe('the corpus census — printed, then pinned', () => {
          *              corrected in `architecture.md` and the gotchas entry
          *              closed on measurement — each gained one sibling-doc
          *              link (`doc` 144 → 146; `same-doc` unmoved at 14).
+         *   215 → 220  EDITOR INTEGRATION W3: the ROOM-EDITOR CONTRACT is one
+         *              declaration read by three documents, so each of them
+         *              points at the other two — `substrate-registry.md`'s new
+         *              § *Editing* → `stepped-pipeline.md` + `architecture.md`,
+         *              `stepped-pipeline.md` § *Region editors* →
+         *              `substrate-registry.md`, and `architecture.md`'s
+         *              lab-hosting paragraph → both. FIVE sibling-doc links
+         *              (`doc` 146 → 151; `same-doc` unmoved at 14).
          * ⛔ That is the pin working, not the pin being noisy: a census nobody
          * has to update is a census that stopped being measured.
          */
         expect(by).toEqual({
             'same-doc': 14,
-            doc: 146,
+            doc: 151,
             external: 23,
             repo: 32,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(215);
+        expect(CORPUS.length).toBe(220);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(146);
+        expect(docs).toHaveLength(151);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

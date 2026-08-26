@@ -74,6 +74,25 @@ export const substrateRegistryEntry = Object.freeze({
     ...runtime,
     panelComponentType: FLASH_SEEDLING_PANEL_COMPONENT_TYPE,
     loadRegionEvent: FLASH_SEEDLING_LOAD_REGION_EVENT,
+    /**
+     * ⛓⛓⛓ EDITOR INTEGRATION W3 — **THE ROOM-EDITOR DECLARATION**
+     * (`NewDocs/plans/editor-integration.md` §3.2). Seedling's room editor is
+     * `watch.html`'s EDIT arm holding a LEVEL SET, hosted in `procgenLabPanel`;
+     * `regionEditors.getRegionEditor('flash_seedling')` binds
+     * `procgenLabPanel/labRoomEditor` to it.
+     *
+     * ⛔ **`page` IS `seedling`, NOT `flash_seedling`.** The registry id names
+     * the SUBSTRATE and `labProtocol.SUBSTRATES` names the two LAB PAGES; they
+     * are different vocabularies that happen to agree for the maze, and one
+     * field doing both jobs would be the two-spellings failure this arc keeps
+     * paying for.
+     *
+     * ⚠ AND THE ARM IS `edit`, NOT `set`. `watch.html` holds a level set on its
+     * EDIT arm (`?source=edit`, editor-v3 C2/D1); the maze mints a fourth arm
+     * for it (`?source=set`). Two pages, two grammars, and the entry is where
+     * each one says which is its own.
+     */
+    roomEditor: Object.freeze({ kind: 'lab', page: 'seedling', arm: 'edit' }),
 });
 
 // Side-effect on import — the standing convention (see

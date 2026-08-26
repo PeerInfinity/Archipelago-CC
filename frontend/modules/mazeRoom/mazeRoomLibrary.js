@@ -134,6 +134,27 @@ export const substrateRegistryEntry = Object.freeze({
     ]),
     deserializeWorld: tileGridDeserializer,
 
+    /**
+     * ⛓⛓⛓ EDITOR INTEGRATION W3 — **THE ROOM-EDITOR DECLARATION**
+     * (`NewDocs/plans/editor-integration.md` §3.2). The maze's room editor is
+     * not a panel: it is `lab.html`'s SET arm, hosted in `procgenLabPanel`.
+     * `regionEditors.getRegionEditor('maze')` binds
+     * `procgenLabPanel/labRoomEditor` to this page and arm, and the whole
+     * hand-off is the EXISTING `procgenLab:` vocabulary — a document in over
+     * `load`, ONE room over `navigate ?source=set&room=n`, the folded document
+     * out over `levelChanged`.
+     *
+     * ⛔ **THIS FILE MUST NOT IMPORT A PANEL**, which is exactly why the field
+     * is DATA rather than a function: `mazeRoomLibrary.js` is `loadable: true`
+     * in the generated capability matrix and is imported headless by the
+     * reference generator and the `check-*.mjs` gates.
+     *
+     * ⚠ `page` IS NOT `id`. The registry id is `maze` and the lab page key
+     * happens to match — but Seedling's are `flash_seedling` and `seedling`,
+     * so the two are separate fields on purpose.
+     */
+    roomEditor: Object.freeze({ kind: 'lab', page: 'maze', arm: 'set' }),
+
     // Runtime — playback. Returns the live panel's controller so the
     // bot can drive the visualizer directly. null when no panel mounted.
     getPlaybackController: () => getPanelInstance()?.getPlaybackController?.() ?? null,

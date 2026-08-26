@@ -75,6 +75,18 @@ The optional `sharing` field declares which resource-channel categories the subs
 | `sharing.mana.loopActionDelegation` | boolean (optional) | The loops queue delegates action execution + per-step charging for this substrate's `manaEnabled` regions to the substrate's own walker instead of the queue's flat tick-progress model. |
 | `sharing.items` | object (optional) | The substrate offers discrete shareable consumables, namespaced `<substrateId>/<type>`. Carries the type list as **exactly one of** a static `types: string[]` or a `getTypes(): string[]` provider. Grant routing (`grantItem`) validates against it. |
 
+### Editing
+
+One field, and it is the whole *room-editor contract* (`NewDocs/plans/editor-integration.md` §3.2): **"open room i of document D in this substrate's editor and receive ONE saved room back."** Two spellings of that existed before it — the pipeline panel's `Edit ▸` (`procgenPipeline/regionEditors.js`, bounce only) and the set editors' `openRoomAt` → room session → one `replace-room` op (maze on `lab.html`, Seedling on `watch.html`) — and the second one is on a LAB PAGE, which a module self-registration in the app could never have reached, because a page never calls `initialize()`.
+
+| Field | Type | Meaning |
+|-------|------|---------|
+| `roomEditor` | object | **Declares this substrate's room editor, as DATA.** `kind` selects how it is opened; the rest of the object is that kind's own. `kind: 'panel'` carries `open({region \| record, base?, contract?, onSave})`, a Golden Layout panel launcher (bounce's, reached by a DYNAMIC import so this library stays node-loadable). `kind: 'lab'` carries `page` — the `procgenLabPanel` lab page (`maze`, `seedling`; **not** the substrate id, which is `flash_seedling` for Seedling) — and `arm`, that page's own `?source=` for the arm that holds a SET document (`set` on `lab.html`, `edit` on `watch.html`). `procgenPipeline/regionEditors.getRegionEditor(id)` resolves the declaration; an entry with no `roomEditor` is the graceful *"No region editor for X yet"* the panel already prints. |
+
+⛔ **It is a declaration, not a registration**, and that is what lets a headless caller (this matrix, a `check-*.mjs` gate) ask *"does this substrate have a room editor, and of what kind"* with no browser: `substrateRegistry.register` validates only `id` and `sharing`, so the field costs the `shared/` submodule nothing.
+
+The `lab` kind's hand-off adds **no** `procgenLab:` vocabulary — a document in over `load` (each page sniffs it through the ONE classifier it already has), one room over `navigate` with `?source=<arm>&room=<n>`, and the folded document back out over `levelChanged`, whose payload is a `procgenCore/labRoomEnvelope` while a SET arm holds a session. `onSave` fires on that envelope's open-room index going from *n* to `null` — the CLOSE, as a transition rather than a count of edits. See [The stepped pipeline](./stepped-pipeline.md) § *Region editors* and [Architecture](./architecture.md) § the lab-hosting paragraph.
+
 ### Build-time — procedural substrates
 
 Implemented by `maze` and `text_adventure` (both via the shared `adapterPrimitives.js` tile-grid implementations):
@@ -144,7 +156,7 @@ Everything outside the two markers — including the hand-kept annotations below
 
 <!-- GENERATED:substrate-capability-matrix BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**8 registered entries · 60 fields · 9 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
+**8 registered entries · 61 fields · 10 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
 
 Column order: the registry is a Map, so `getAll()` is INSERTION order; the generator imports the libraries in the order declared in `scripts/procgen/reference/registry.mjs` — the table at the end of this region prints it — and each entry lands when the library that registers it is imported.
 
@@ -200,6 +212,12 @@ Groups are this document's own § headings, matched to a field by the section th
 | `sharing.items` | — | — | — | — | — | — | {getTypes} | {types} |
 | `sharing.mana` | {loopActionDelegation} | — | — | — | {} | — | {} | {} |
 | `sharing.mana.loopActionDelegation` | yes | — | — | — | — | — | — | — |
+
+**Editing**
+
+| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `jta` | `omsi` |
+|---|---|---|---|---|---|---|---|---|
+| `roomEditor` | {arm, kind, page} | — | {kind, open} | — | — | {arm, kind, page} | — | — |
 
 **Build-time — procedural substrates**
 

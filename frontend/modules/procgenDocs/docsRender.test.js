@@ -219,7 +219,7 @@ describe('⛓ the links the render emits', () => {
                 checked += 1;
             }
         }
-        expect(checked).toBe(215);
+        expect(checked).toBe(220);
     });
 
     it('tags each link with the kind that produced it', () => {

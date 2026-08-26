@@ -295,6 +295,24 @@ the node rows stub is `drawRoomStill` — `mazeRoomRender.drawWorld` on the
 entry's own world, at the strip cell's own tile size — and the two pipeline
 functions the mount refuses to import for itself.
 
+**And a HOST can open one room of that mount.** Both lab pages run inside the
+frontend in a `procgenLabPanel` iframe, and the editor-integration arc's slice
+W3 made that hosting a room-editor door without adding a word to the
+`procgenLab:` vocabulary: a **document in** over `load` (each page sniffs the
+payload through the ONE classifier it already has — `documentBundle.classifyDocument`
+on the maze, `sniffLoadBox` on Seedling — so a region library / level set /
+overlay lands on the SET arm's intake instead of the lab-level box), **one room**
+over `navigate` with the page's own `?source=<arm>&room=<n>`, and the **folded
+document out** over `levelChanged`, whose payload is a `procgenCore/labRoomEnvelope`
+for as long as a SET arm holds a session. The host's `onSave` fires on that
+envelope's open-room index going `n` → `null` — the CLOSE as a TRANSITION, never
+a count of edits, because a close that folded a no-op room session moves no
+count at all. Which substrates open this way is the registry's
+`roomEditor` declaration ([Substrate registry](./substrate-registry.md)
+§ *Entry contract* → *Editing*), and the resolver is
+`procgenPipeline/regionEditors.js` ([The stepped pipeline](./stepped-pipeline.md)
+§ *Region editors*).
+
 **`onSetChange({why})` has ONE ordering rule, and it is the contract.** The
 mount's own `render()` has already run when a page is called, on every path — so
 a page may publish what it derives from the MOUNT and not only what it derives

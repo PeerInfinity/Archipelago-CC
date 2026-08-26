@@ -824,6 +824,34 @@ export function createBounceSubstrateEntry({
         loadRegionEvent: BOUNCE_LOAD_REGION_EVENT,
         iframeId: BOUNCE_IFRAME_ID,
 
+        /**
+         * ⛓⛓⛓ EDITOR INTEGRATION W3 — **THE ROOM-EDITOR DECLARATION**
+         * (`NewDocs/plans/editor-integration.md` §3.2). `procgenPipeline/
+         * regionEditors.getRegionEditor('bounce')` resolves Edit ▸ through
+         * THIS field; `bounceRegionEditor/index.js` no longer registers
+         * itself, so the panel knows bounce has an editor whether or not that
+         * module has run — the property the maze and Seedling LAB PAGES need,
+         * since a page never calls `initialize()`.
+         *
+         * ⛔ **THE IMPORT IS DYNAMIC AND THAT IS A MEASUREMENT, NOT A STYLE.**
+         * A static `import` of `../bounceRegionEditor/index.js` here would put
+         * the whole Golden-Layout panel graph into every HEADLESS consumer of
+         * this library — the capability-matrix generator loads all eight
+         * libraries, and ~30 `check-*.mjs` gates load this one. Measured on
+         * `1eed5988a`: this file alone imports silently; this file plus that
+         * module prints `[centralRegistry] CentralRegistry initialized`. The
+         * declaration therefore stays DATA, and the door opens on first use.
+         *
+         * ⚠ `open` returns a PROMISE where the maze/Seedling `lab` kind
+         * returns synchronously; no caller reads the return value (the ONE
+         * return path is `onSave`), and `_editRegion` ignores it.
+         */
+        roomEditor: Object.freeze({
+            kind: 'panel',
+            open: (session) => import('../bounceRegionEditor/index.js')
+                .then((m) => m.openBounceRegionEditor(session)),
+        }),
+
         // Playback bot: overrides the flash entry's `() => null` stub.
         // The proxy publishes controller commands on
         // BOUNCE_PLAYBACK_CONTROL_EVENT; the in-iframe flash bridge
