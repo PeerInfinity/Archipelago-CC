@@ -495,11 +495,30 @@ for (let i = 0; i < SEGMENTS.length; i += 1) {
         continue;
     }
     /**
-     * ⚠ UNDER `--check` THE SUCCESSOR READS ITS OWN COMMITTED BOOT rather than
+     * ⚠⚠ UNDER `--check` THE SUCCESSOR READS ITS OWN COMMITTED BOOT rather than
      * re-driving the game for it: the producer check asks "is this artifact
      * what the solver derives", and re-measuring a latch that has not changed
      * would spend a browser run to learn the numbers the tape already carries.
-     * A latch that HAS changed shows up as a byte diff, which is the check.
+     *
+     * ⛔⛔⛔ AND THE SENTENCE THAT USED TO FOLLOW — *"a latch that HAS changed
+     * shows up as a byte diff, which is the check"* — IS FALSE. R9 §42.5
+     * MEASURED it false: under emit this boot is derived from the PREDECESSOR's
+     * latch, so under `--check` the comparison is between the tape and a
+     * derivation SEEDED FROM THAT SAME TAPE. It is a FIXED POINT: it tests
+     * self-consistency and cannot see a changed latch, by construction
+     * ([[feedback_fixed_point_is_not_correctness]], trap 769). At
+     * `r9/re-record-attempt-5` `73bf6d724` this `--check` is GREEN while this
+     * script's own emit rewrites `r9-solve-13.rng.seed` and
+     * `r9-solve-14.rng.seed`.
+     *
+     * ⛓ WHAT THIS `--check` CAN SEE, stated as the bound it is: every claim
+     * BELOW the boot — the solved walk's length, its inputs, its arrival, the
+     * chain arithmetic, the free oracle — against the committed tape. What it
+     * CANNOT see is whether the committed boot is the predecessor's measured
+     * exit. **That question is `check-seedling-producer-boundaries.mjs`'s**,
+     * which derives each successor's boot from the predecessor's cached latch
+     * and REFUSES BY NAME where no latch for those bytes exists. It is not
+     * answered here, and it is not answerable here without a browser.
      */
     if (CHECK) {
         const committed = parseTape(JSON.parse(

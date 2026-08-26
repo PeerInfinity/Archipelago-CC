@@ -84,7 +84,7 @@ Headless equivalents of everything the pages do live in `scripts/procgen/`. The 
 
 <!-- GENERATED:procgen-instruments BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**256 instruments** live in `scripts/procgen/`, by prefix: `probe-` 60 (22 browser) · `verify-` 49 (30 browser) · `plan-` 36 (1 browser) · `check-` 29 (22 browser) · `census-` 12 · `solve-` 7 · `dump-` 6 · `make-` 6 · `sweep-` 6 · `recon-` 5 · `region-` 5 · `generate-` 4 · `extract-` 3 · no prefix 3 · `attribute-` 2 · `audit-` 2 · `export-` 2 (1 browser) · `batch-` 1 · `build-` 1 · `ci-` 1 · `derive-` 1 · `find-` 1 · `harvest-` 1 · `lint-` 1 · `measure-` 1 · `mine-` 1 · `prove-` 1 · `reach-` 1 · `record-` 1 · `rerecord-` 1 · `run-` 1 · `seedling-` 1 · `show-` 1 · `stamp-` 1 · `standing-` 1 · `survey-` 1.
+**257 instruments** live in `scripts/procgen/`, by prefix: `probe-` 60 (22 browser) · `verify-` 49 (30 browser) · `plan-` 36 (1 browser) · `check-` 30 (22 browser) · `census-` 12 · `solve-` 7 · `dump-` 6 · `make-` 6 · `sweep-` 6 · `recon-` 5 · `region-` 5 · `generate-` 4 · `extract-` 3 · no prefix 3 · `attribute-` 2 · `audit-` 2 · `export-` 2 (1 browser) · `batch-` 1 · `build-` 1 · `ci-` 1 · `derive-` 1 · `find-` 1 · `harvest-` 1 · `lint-` 1 · `measure-` 1 · `mine-` 1 · `prove-` 1 · `reach-` 1 · `record-` 1 · `rerecord-` 1 · `run-` 1 · `seedling-` 1 · `show-` 1 · `stamp-` 1 · `standing-` 1 · `survey-` 1.
 
 76 of them drive a real browser; 158 accept at least one `--flag`; 85 are cited by one of these documents; and 0 open with no comment at all.
 

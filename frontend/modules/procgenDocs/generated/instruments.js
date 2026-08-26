@@ -49,7 +49,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 22,
-            "count": 29,
+            "count": 30,
             "id": "check"
         },
         {
@@ -204,12 +204,12 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 237,
+        "blockStyle": 238,
         "browser": 76,
         "cited": 85,
-        "files": 256,
+        "files": 257,
         "lineStyle": 19,
-        "withDocblock": 256,
+        "withDocblock": 257,
         "withFlags": 158
     },
     "dir": "scripts/procgen",
@@ -1657,6 +1657,18 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "check-seedling-generated-set — THE PHASE 5 ROUND TRIP.",
             "path": "scripts/procgen/check-seedling-generated-set.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-seedling-producer-boundaries.mjs",
+            "flags": [],
+            "oneLiner": "check-seedling-producer-boundaries — **A CHAIN BOUNDARY IS CHECKED FROM THE PREDECESSOR, OR IT IS REFUSED BY NAME.** R9 slice P3, ⚖ ruling 54 (6), §42.5 / §42.10's fourth item.",
+            "path": "scripts/procgen/check-seedling-producer-boundaries.mjs"
         },
         {
             "argvHelpers": [],
