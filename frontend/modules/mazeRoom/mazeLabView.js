@@ -2047,6 +2047,19 @@ export function main() {
                     linkedFrom: setUi.rows().map((r) => r.linkedFrom),
                     locations: setUi.rows().map((r) => r.locations),
                     rules: setUi.rows().map((r) => r.rules),
+                    /**
+                     * ⛓⛓ EDITOR v3 E6b — **WHICH CELLS THE PAINTER BADGED.**
+                     * ⛔ `setUi.badges()`, not a re-derivation from the record:
+                     * trap 722 was exactly the two answers coming apart, and a
+                     * readout that computed its own would have agreed with the
+                     * record while the strip disagreed with both. On this
+                     * substrate every entry carries its world INLINE, so
+                     * `mazeSetBindings.sourceKind` is the constant `'record'`
+                     * and this reads `[false × rooms]` — a claim the gate makes
+                     * rather than a silence (§32.6: the browser ink probes
+                     * cannot see the glyph at all).
+                     */
+                    badges: setUi.badges(),
                 } : null,
                 /**
                  * ⛓ THE NOTE AND THE IDENTITY LINE ARE THE MOUNT'S OWN BOXES —

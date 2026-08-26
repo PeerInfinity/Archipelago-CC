@@ -313,11 +313,34 @@ export function mountSetEditor({
     /** ⛓ ONE OFFSCREEN CANVAS PER ROOM, cached by the room's own XML — a still
      *  is only redrawn when the room it draws has changed. */
     const stills = new Map();
+    /**
+     * ⛓⛓⛓ **THE BADGE'S OWN WITNESS — WHAT THE PAINTER DECIDED, PER CELL**
+     * (EDITOR v3 E6b). ⛔ Written by `paintStrip` and by nothing else: E3a's
+     * §32.6 measured that NEITHER gate's ink probe can see this glyph (both
+     * count non-zero ALPHA and the badge is drawn over stills that are already
+     * opaque; the `-arm`'s probe reads a band the strip's rooms sit below), so
+     * trap 722's mutant stayed GREEN in the browser on both substrates and the
+     * node rows were the only evidence there was.
+     *
+     * ⛔ NOT a second authority. A readout derived from `record()` would answer
+     * *"which rooms ARE embeds"*, which is a different question from *"which
+     * rooms did the strip WARN about"* — and the whole of trap 722 is that
+     * those two answers had come apart. This is the painter's own decision,
+     * recorded where it is made.
+     */
+    let badgeFlags = [];
 
     const layoutNow = () => overviewLayout(roomCount(),
         overview?.parentNode?.clientWidth ?? OVERVIEW.cellPx * roomCount());
 
     const paintStrip = () => {
+        /**
+         * ⛔ RESET BEFORE THE EARLY RETURNS, so `badges()` describes THIS paint
+         * and not the last one that got as far as the loop. A mount with no
+         * `#editSetOverview`, or a canvas with no 2D context, painted no badges
+         * and says so with an empty array.
+         */
+        badgeFlags = [];
         if (!overview) return;
         const layout = layoutNow();
         overview.width = layout.width;
@@ -394,7 +417,9 @@ export function mountSetEditor({
              * library entry carries its world INLINE, so its answer is a
              * constant.
              */
-            if (sourceKind(cell) === 'embed') ctx.fillText('⛔embed', x + 4, top + 24);
+            const isEmbed = sourceKind(cell) === 'embed';
+            badgeFlags.push(isEmbed);
+            if (isEmbed) ctx.fillText('⛔embed', x + 4, top + 24);
             ctx.restore();
         }
     };
@@ -1487,6 +1512,12 @@ export function mountSetEditor({
         render,
         runReport,
         rows: () => rows,
+        /**
+         * ⛓⛓ **WHICH CELLS THE LAST PAINT BADGED**, one boolean per room, in
+         * strip order — a COPY, because a caller that could push into the
+         * painter's own array would be a second author of the picture.
+         */
+        badges: () => [...badgeFlags],
         applySet,
         selectRoom,
         report: () => lastReport,

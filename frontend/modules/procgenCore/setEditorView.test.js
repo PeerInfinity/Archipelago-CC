@@ -756,6 +756,7 @@ const PIN = Object.freeze({
         "surface": [
             "applySet",
             "armedExit",
+            "badges",
             "destroy",
             "render",
             "report",
@@ -946,6 +947,44 @@ describe('⛔⛔ EDITOR v3 E2b — the lift is BYTE-INERT on Seedling, and it is
     });
 
     /**
+     * ⛓⛓⛓ **THE BADGE HAS A READOUT NOW, AND IT IS THE PAINTER'S OWN**
+     * (EDITOR v3 E6b). §32.6 measured the hole this fills: BOTH gates' ink
+     * probes count non-zero ALPHA, and `⛔embed` is drawn over stills that are
+     * already opaque — so trap 722's mutant (`typeof <undeclared> !== 'string'`,
+     * every room badged) was **ALL CHECKS PASSED** in Chromium on both
+     * substrates, and these node rows were the only evidence there was.
+     *
+     * ⛔ `badges()` is asserted AGAINST THE `fillText` LOG, not instead of it:
+     * a readout that agreed with itself would be the fixed point
+     * [[feedback_fixed_point_is_not_correctness]] warns about. What makes it a
+     * witness is that the two readers are the DRAW CALLS and the FLAG the same
+     * pass recorded, and a build where they disagree is exactly the build
+     * `strip.badges` exists to expose in a browser.
+     * ⛓ MUTANT: `badgeFlags.push(isEmbed)` moved above the `sourceKind` call
+     * and hardcoded `false` — the by-index rows above stay green and this one
+     * reds.
+     */
+    it('⛓⛓ `badges()` IS the painter\'s own decision — it matches the `⛔embed` draws', () => {
+        const plain = seedlingHarness();
+        runScript(plain);
+        expect(plain.ui.badges()).toEqual(Array(6).fill(false));
+        const h = seedlingHarness({ embeds: [0, 3] });
+        const calls = $(h, 'editSetOverview').calls;
+        calls.length = 0;
+        h.ui.render();
+        expect(h.ui.badges()).toEqual([true, false, false, true, false, false]);
+        // ⛓ ONE flag per CAPTION — the strip drew six cells and answered for six
+        expect(h.ui.badges()).toHaveLength(
+            calls.filter((c) => c.startsWith('fillText(L')).length);
+        expect(h.ui.badges().filter(Boolean)).toHaveLength(
+            calls.filter((c) => c.startsWith('fillText(⛔embed')).length);
+        // ⛔ …and it is a COPY: a caller cannot push into the painter's array
+        const taken = h.ui.badges();
+        taken.push('nonsense');
+        expect(h.ui.badges()).toHaveLength(6);
+    });
+
+    /**
      * ⛓⛓⛓ **THE KEYDOWN STOPPER IS STILL ON THE STRIP** (§21.5). ⛔ MUTANT: the
      * `mine.on(overview, 'keydown', …)` line is dropped in the move — a key
      * pressed on the strip then BUBBLES to the document, both undo rows run on
@@ -977,8 +1016,16 @@ describe('⛔⛔ EDITOR v3 E2b — the lift is BYTE-INERT on Seedling, and it is
             lifetime: createLifetime('x'), session: {}, adapter: {}, compileRegionAtlas: () => {},
         })).toThrow(/`document` is required/);
         expect(runScript(seedlingHarness()).surface).toEqual(PIN.surface);
+        /**
+         * ⛔⛔ **AND THE PIN'S SURFACE MOVED ONCE, ON PURPOSE** (EDITOR v3 E6b).
+         * `badges` is an ADDITION — every accessor the pre-lift capture had is
+         * still here, in the same spelling — so what the pin still catches is a
+         * REMOVAL or a RENAME, which is what it was captured to catch. ⛓ Said
+         * here rather than silently re-captured: a pin edited without a
+         * sentence is a pin that stopped being a control.
+         */
         expect(PIN.surface).toEqual([
-            'applySet', 'armedExit', 'destroy', 'render', 'report', 'rows',
+            'applySet', 'armedExit', 'badges', 'destroy', 'render', 'report', 'rows',
             'runReport', 'selectRoom', 'selected', 'view',
         ]);
     });
@@ -1464,6 +1511,14 @@ describe('⛓⛓⛓ EDITOR v3 E2b — the SAME mount, bound to `mazeSetAdapter`,
         expect(calls.filter((c) => c.startsWith('fillText(L')).length)
             .toBe(MAZE_LIB.entries.length);
         expect(calls.filter((c) => c.startsWith('fillText(⛔embed')).length).toBe(0);
+        /**
+         * ⛓⛓ EDITOR v3 E6b — **AND THE PAINTER SAYS SO IN A READOUT** the
+         * browser can read. ⛔ Four `false`s and not an empty array: `[]` is
+         * what a strip that painted NOTHING answers, and telling those two
+         * apart is the whole of `setEditorView.test.js:918-921`'s warning —
+         * so the length is asserted against the CAPTION count above.
+         */
+        expect(h.ui.badges()).toEqual(Array(MAZE_LIB.entries.length).fill(false));
     });
 
     /**

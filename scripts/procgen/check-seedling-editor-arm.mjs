@@ -935,6 +935,84 @@ const load = async (search) => {
     await settled(0);
 };
 
+/**
+ * ⛓ THE STRIP'S OWN GEOMETRY, READ OFF THE PAGE. `overviewLayout` sets the
+ * canvas to `cellPx × rooms`, so the width divided by 116 IS the cell size
+ * it chose; below `minStillPx` a cell is a LABELLED BOX (§21.3).
+ *
+ * ⛓⛓⛓ **AND SINCE E6b IT CAN SEE THE `⛔embed` BADGE** — §32.6's defect, cured.
+ *
+ * ⛔⛔ **AN ALPHA COUNT CANNOT.** E3a measured it with trap 722's own mutant:
+ * both gates stayed ALL CHECKS PASSED and `stripInk` read 33,504 in BOTH
+ * builds, because every glyph in the strip is drawn ON TOP OF the room box,
+ * which `paintStrip` has already filled OPAQUE. Non-zero alpha is therefore a
+ * constant over the whole box, badge or no badge.
+ *
+ * ⛓ **SO THE PROBE IS A COLUMN DIFFERENCE, NOT A COUNT.** For each column of
+ * the badge's own y-band it compares the pixel against the SAME COLUMN in a
+ * reference row near the bottom of the box, which no glyph ever reaches. Every
+ * non-glyph pixel there is the box fill and cancels; so do both vertical
+ * borders (they run the full height of the box) and the SELECTED cell's
+ * different fill (it is compared against its own column). What survives is
+ * glyph pixels, and nothing else.
+ *
+ * ⛔ **THE BANDS ARE DERIVED FROM `OVERVIEW.roomTop` AND THE PAINTER'S OWN
+ * BASELINES** — the caption `L{i}` sits at `top + 12` and the badge at
+ * `top + 24`, both in `10px monospace`, so `[top+16, top+30)` holds the badge
+ * and none of the caption. ⚠ `captionInk` is the POSITIVE CONTROL and it is
+ * returned beside `badgeInk` on purpose: a `badgeInk === 0` row over a strip
+ * that drew NOTHING would be the vacuous row `setEditorView.test.js:918-921`
+ * warns about, and the caption band is what tells the two apart.
+ *
+ * ⚠ VALID ONLY WHERE THE STRIP DRAWS NO STILLS. At 116 rooms `cellPx` is 18,
+ * under `OVERVIEW.minStillPx` (40), so `layout.stills` is false and the box is
+ * FLAT under both bands. On a strip that draws stills the reference row is a
+ * picture rather than a fill and the difference would count the picture — which
+ * is why `check-maze-lab` (4 rooms at 96 px) reads the PAINTER'S OWN readout
+ * (`strip.badges`) instead of a band.
+ */
+const inkOf = () => page.evaluate((roomTop) => {
+    const c = document.getElementById('editSetOverview');
+    if (!c) return null;
+    const ov = c.parentNode?.querySelector('canvas.editorViewOverlay') ?? null;
+    const band = (cv) => Math.max(1, Math.floor(cv.height * roomTop));
+    const ink = (cv) => {
+        const d = cv.getContext('2d').getImageData(0, 0, cv.width, band(cv)).data;
+        let n = 0;
+        for (let i = 3; i < d.length; i += 4) if (d[i] !== 0) n += 1;
+        return n;
+    };
+    /**
+     * ⛓ ONE BAND'S GLYPH PIXELS — a per-column difference against a
+     * reference row inside the same box that no glyph reaches.
+     */
+    const top = Math.floor(c.height * roomTop);
+    const refY = c.height - 6;
+    const glyphs = (y0, y1) => {
+        const ctx = c.getContext('2d');
+        const ref = ctx.getImageData(0, refY, c.width, 1).data;
+        const d = ctx.getImageData(0, y0, c.width, y1 - y0).data;
+        let n = 0;
+        for (let y = 0; y < y1 - y0; y += 1) {
+            for (let x = 0; x < c.width; x += 1) {
+                const a = (y * c.width + x) * 4;
+                const b = x * 4;
+                if (d[a] !== ref[b] || d[a + 1] !== ref[b + 1]
+                    || d[a + 2] !== ref[b + 2] || d[a + 3] !== ref[b + 3]) n += 1;
+            }
+        }
+        return n;
+    };
+    return {
+        w: c.width, h: c.height, stripInk: ink(c),
+        top,
+        captionInk: glyphs(top + 4, top + 14),
+        badgeInk: glyphs(top + 16, top + 30),
+        ovW: ov?.width ?? null, ovH: ov?.height ?? null, ovInk: ov ? ink(ov) : null,
+    };
+}, OVERVIEW.roomTop);
+
+
 try {
     /* ══ CLAIM 1 — the arm boots on an ATLAS base ═══════════════════ */
 
@@ -1633,6 +1711,33 @@ try {
         '⛓ …and the page says WHY and WHERE THE DOOR IS: an `embed` is a path into a SWF\'s '
         + '`[Embed]` table, a fact about a source tree, and the ATLAS base is how that set '
         + 'is edited', vanillaHeld.setNote.slice(0, 150));
+    /**
+     * ⛓⛓⛓ **AND THE `⛔embed` BADGE HAS A BROWSER WITNESS AT LAST** (EDITOR v3
+     * E6b, curing §32.6). E3a fixed trap 722 — the badge condition had read an
+     * UNDECLARED `xml`, so `typeof <undeclared>` was `'undefined'` and EVERY
+     * room in the strip carried the glyph — and then measured that NEITHER
+     * gate could see the fix: both ink probes count non-zero ALPHA and the
+     * glyph is drawn over an already-opaque box, so the mutant was
+     * ALL CHECKS PASSED on both substrates.
+     *
+     * ⛔ TWO READERS, AND THEY ARE INDEPENDENT: `badges()` is what the PAINTER
+     * decided, recorded in the same pass that draws; `badgeInk` is the PIXELS.
+     * A build where they disagree is exactly the build this row exists for, and
+     * a row with only one of them would be a fixed point.
+     * ⛓ `captionInk` is the POSITIVE CONTROL — 116 `L{i}` captions in a band
+     * the badge never reaches, so a `badgeInk` reading is a fact about badges
+     * and not about a strip that drew nothing.
+     */
+    const vanBadge = await inkOf();
+    const vanBadges = await page.evaluate(() => window.__editorEdit?.set?.badges ?? null);
+    check(vanBadge.badgeInk > 0 && vanBadge.captionInk > 0
+        && Array.isArray(vanBadges) && vanBadges.length === 116
+        && vanBadges.every((b) => b === true),
+        '⛓⛓⛓ **EVERY ONE OF THE 116 COMMITTED ROOMS IS BADGED, IN THE READOUT *AND* IN THE '
+        + 'PIXELS** — they are all `embed`s, so this is the build where the badge is CORRECT '
+        + 'under every room. ⛔ The A/B is claim 27, over the same 116 rooms built as `record`s',
+        `badgeInk ${vanBadge.badgeInk} · captionInk ${vanBadge.captionInk} · `
+        + `${vanBadges.filter(Boolean).length}/${vanBadges.length} badged`);
     await page.selectOption('#editSetRoom', '0');
     await page.click('#editSetOpen');
     await page.waitForTimeout(800);
@@ -1803,6 +1908,22 @@ try {
         '⛓ the identity line prints `set_id` AND `overlay_id` beside the op count — the two '
         + 'documents the session is over, named where a reader can see them both',
         heldSet.identity.slice(0, 120));
+    /**
+     * ⛓⛓ EDITOR v3 E6b — **THE PAINTER'S BADGE READOUT, ON THE SMALL SET.**
+     * Every room of this set is node-BUILT and `record`-sourced (the row at the
+     * top of this file asserts it), so nothing here is an `embed` and the strip
+     * has nothing to warn about. ⛔ The LENGTH is asserted against the room
+     * count, not just the contents: `[]` is what a strip that painted NOTHING
+     * answers, and `[false × 6]` is what one that painted six clean rooms does.
+     * ⛓ MUTANT: trap 722's — `typeof <undeclared> !== 'string'` — reds here as
+     * six `true`s, on the SMALLEST subject in the file.
+     */
+    check(Array.isArray(heldSet.edit.set.badges)
+        && heldSet.edit.set.badges.length === D2_ROOMS
+        && heldSet.edit.set.badges.every((b) => b === false),
+        `⛓⛓ …and the STRIP BADGED NONE OF THE ${D2_ROOMS} — \`badges\` is what \`paintStrip\` `
+        + 'itself decided, one boolean per cell, and every room of this set carries its own '
+        + '`record`', json(heldSet.edit.set.badges));
     /**
      * ⛔ THE TABLE IS COMPARED AGAINST **NODE'S OWN `roomRowsOf`**, cell for
      * cell — trap 269: a page's list checked against itself measures nothing.
@@ -2645,6 +2766,28 @@ try {
         + 'memoised `loadAtlas` and the manifest from the same `Promise.all` that read ⚖ ruling '
         + '2\'s id. A second fetch would be a second reader of a document this page has',
         `${vanillaReqs.length} request(s) across the click: ${vanillaReqs.slice(0, 3).join(' ')}`);
+    /**
+     * ⛓⛓⛓ **THE OTHER HALF OF THE BADGE A/B** (EDITOR v3 E6b). The SAME 116
+     * rooms, built as `record`s rather than read out of the committed `embed`
+     * set — so the strip has nothing to warn about and BOTH readers say so.
+     * ⛔⛔ **THIS IS THE ROW TRAP 722'S MUTANT REDS.** `typeof <undeclared> !==
+     * 'string'` is TRUE for every cell, so that build badges all 116 here;
+     * before this slice it was invisible in the browser (§32.6) and only
+     * `setEditorView.test.js` could see it.
+     * ⛓ `captionInk > 0` is the POSITIVE CONTROL: the strip DID draw, so
+     * `badgeInk === 0` is a fact about badges rather than about an empty strip.
+     */
+    const recBadge = await inkOf();
+    check(recBadge.badgeInk === 0 && recBadge.captionInk > 0
+        && Array.isArray(van.edit.set.badges) && van.edit.set.badges.length === 116
+        && van.edit.set.badges.every((b) => b === false),
+        '⛓⛓⛓ **AND NOT ONE OF THE 116 `record`-BUILT ROOMS IS BADGED — IN THE READOUT *AND* '
+        + 'IN THE PIXELS.** ⛔ The A/B against claim 19 is the whole claim: the same 116 rooms, '
+        + 'one document `embed`-sourced and one `record`-sourced, and the strip tells them '
+        + 'apart. A count of non-zero ALPHA cannot (§32.6) — this band is a per-column '
+        + 'DIFFERENCE against a reference row no glyph reaches',
+        `badgeInk ${recBadge.badgeInk} · captionInk ${recBadge.captionInk} · `
+        + `${van.edit.set.badges.filter(Boolean).length}/${van.edit.set.badges.length} badged`);
     check(van.setNote.includes(VANILLA_XML.set_id)
         && van.setNote.includes(`derived from ${VANILLA.set_id}`),
         '⛓⛓ **THE IDENTITY LINE SAYS WHICH SET IS HELD, AND WHICH IT REPRODUCES** — two ids '
@@ -2690,27 +2833,6 @@ try {
         + 'pass, and `watchSetEditor.test.js` drives that case',
         `${VANILLA_XML_SCAN.entities} entity visits in ONE pass ≈ ${
             Math.round(VANILLA_XML_SCAN.ms)} ms, budget 250 ms`);
-    /**
-     * ⛓ THE STRIP'S OWN GEOMETRY, READ OFF THE PAGE. `overviewLayout` sets the
-     * canvas to `cellPx × rooms`, so the width divided by 116 IS the cell size
-     * it chose; below `minStillPx` a cell is a LABELLED BOX (§21.3).
-     */
-    const inkOf = () => page.evaluate((roomTop) => {
-        const c = document.getElementById('editSetOverview');
-        if (!c) return null;
-        const ov = c.parentNode?.querySelector('canvas.editorViewOverlay') ?? null;
-        const band = (cv) => Math.max(1, Math.floor(cv.height * roomTop));
-        const ink = (cv) => {
-            const d = cv.getContext('2d').getImageData(0, 0, cv.width, band(cv)).data;
-            let n = 0;
-            for (let i = 3; i < d.length; i += 4) if (d[i] !== 0) n += 1;
-            return n;
-        };
-        return {
-            w: c.width, h: c.height, stripInk: ink(c),
-            ovW: ov?.width ?? null, ovH: ov?.height ?? null, ovInk: ov ? ink(ov) : null,
-        };
-    }, OVERVIEW.roomTop);
     const stripGeo = await inkOf();
     const vanCellPx = stripGeo === null ? null : stripGeo.w / 116;
     check(vanCellPx !== null && Number.isInteger(vanCellPx)

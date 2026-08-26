@@ -8859,6 +8859,20 @@ async function runEditor(params, lifetime) {
                  * answers "what has been done to it".
                  */
                 edits: setSession.ops().length,
+                /**
+                 * ⛓⛓ EDITOR v3 E6b — **WHICH CELLS THE STRIP BADGED**, one
+                 * boolean per room, from the PAINTER (`setUi.badges()`) and
+                 * never re-derived here. §32.6 measured that no ink probe on
+                 * either gate can see the `⛔embed` glyph — it is drawn over
+                 * opaque stills, and the `-arm`'s probe reads a band the rooms
+                 * sit below — so trap 722's mutant was GREEN in both browsers
+                 * and only node could see it. This is the browser's reader.
+                 * ⛔ `null` while nothing is mounted: `setSession` can be held
+                 * with no `setUi` (the mount is remade on every load), and an
+                 * empty array there would read as *"the strip badged nothing"*
+                 * rather than *"there is no strip"*.
+                 */
+                badges: setUi ? setUi.badges() : null,
                 openRoom,
                 locations: Object.values(setSession.record().overlay.rooms ?? {})
                     .reduce((n, r) => n + (r?.locations?.length ?? 0), 0),

@@ -2011,6 +2011,38 @@ try {
         '⛓ …and the rooms TABLE is the library\'s own entries, each with its four exits and an '
         + 'enabled OPEN button', json(table.map((r) => `${r[1]}:${r[3]}`)));
     /**
+     * ⛓⛓⛓ **THE `⛔embed` BADGE, AND THE PAINTER'S OWN ANSWER FOR IT**
+     * (EDITOR v3 E6b). E2b shipped this badge under all FOUR maze rooms — the
+     * condition read an UNDECLARED `xml` and `typeof <undeclared>` is
+     * `'undefined'` (trap 722) — and E3a fixed it and then MEASURED that this
+     * gate could not see either build: `stripInk` read 33,504 in both, because
+     * the glyph is drawn over a room box `paintStrip` has already filled
+     * opaque. So the fix had NO browser witness on this substrate at all.
+     *
+     * ⛔⛔ **AND A BAND PROBE IS NOT THE ANSWER HERE.** Four rooms get
+     * `OVERVIEW.cellPx` (96) each, which is at or above `minStillPx` (40), so
+     * every cell carries a STILL: a pixel difference over the badge's y-band
+     * would be counting the picture. (The `-arm` CAN use one — 116 rooms at 18
+     * px draw labelled boxes and no stills — and it does.) ⇒ the witness here
+     * is `strip.badges`, which `paintStrip` writes as it draws.
+     *
+     * ⛔ THE LENGTH IS THE POSITIVE CONTROL, and it is not decoration: `[]` is
+     * what a strip that painted NOTHING answers, and a row asserting only
+     * *"no badges"* would be green over it (`setEditorView.test.js:918-921`).
+     * The strip's INK is asserted two rows up, and the length here ties the
+     * readout to the same four cells that ink came from.
+     * ⛓ MUTANT: trap 722's condition restored — this row reds with four `true`s
+     * while `stripInk` does not move by one pixel.
+     */
+    const mazeBadges = await page.evaluate(() => window.__mazeLab?.set?.strip?.badges ?? null);
+    check(Array.isArray(mazeBadges) && mazeBadges.length === MAZE_PACK.entries.length
+        && mazeBadges.every((b) => b === false),
+        `⛓⛓⛓ **NO ROOM CARRIES THE \`⛔embed\` BADGE**, and the strip says so for all `
+        + `${MAZE_PACK.entries.length} of the cells it just drew. A region-library entry `
+        + 'carries its captured world INLINE, so `mazeSetBindings.sourceKind` answers '
+        + '`record` for every one — SAID by the painter rather than left as a silence',
+        `${json(mazeBadges)} over ${geo.stripInk} ink`);
+    /**
      * ⛓⛓ **EDITOR v3 E3a — `set.selected` TRACKS A ROOM PICK, AND BEFORE THIS
      * SLICE IT DID NOT.** `selectRoom` re-rendered the MOUNT and told the page
      * nothing, so the field sat on whatever value the last APPLIED OP had left
