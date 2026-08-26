@@ -45,6 +45,7 @@ import eventBus from '../../app/core/eventBus.js';
 import {
     LAB_EVENTS, SUBSTRATES, addressedTo, assertLoad, assertNavigate, assertRequestState,
 } from '../procgenCore/labProtocol.js';
+import { registerLabPanelInstance, unregisterLabPanelInstance } from './labRoomEditor.js';
 
 const MODULE_ID = 'procgenLabPanel';
 
@@ -132,10 +133,45 @@ export class ProcgenLabPanelUI {
             this._subscribe();
             this._mountIframe();
         }
+        /**
+         * ⛓⛓ EDITOR INTEGRATION W3 — **THIS MOUNT IS REACHABLE BY SUBSTRATE.**
+         * `labRoomEditor` needs *the maze one* and `ui:activatePanel` cannot
+         * give it that (it matches on `componentType`, and both lab panels are
+         * `procgenLabPanel` — `check-procgen-lab-hosting.mjs` measured it and
+         * raises the Seedling tab through Golden Layout's API instead). ⛔ Per
+         * MOUNT and dropped in `destroy()`: a remounted panel that kept the old
+         * entry would hand a caller an iframe that is already `about:blank`.
+         */
+        registerLabPanelInstance(this);
         this._render();
     }
 
     getRootElement() { return this.rootElement; }
+
+    /**
+     * ⛓⛓ BRING THIS PANEL'S TAB FORWARD. ⛔ Through Golden Layout's OWN API and
+     * matched on THIS instance's root element, because `ui:activatePanel` takes
+     * a `panelId` and both lab panels are `procgenLabPanel` — it can only ever
+     * raise the first. `ui:activatePanel` is still published as the fallback
+     * for a layout that is not a GL stack.
+     *
+     * ⚠ IT MATTERS BEYOND TIDINESS: Golden Layout hides a non-active stack
+     * member with `display: none`, and `getBoundingClientRect()` on a hidden
+     * element is ALL ZEROS — so an unraised lab is a canvas the page itself
+     * refuses to map a click onto (`labView.tileAtPoint`, by name).
+     *
+     * @returns {boolean} whether a GL stack item was actually activated
+     */
+    raise() {
+        eventBus.publish('ui:activatePanel', { panelId: 'procgenLabPanel' }, MODULE_ID);
+        const gl = typeof window !== 'undefined' ? window.goldenLayoutInstance : null;
+        const items = gl?.getAllContentItems?.() ?? [];
+        const item = items.find((it) => it.isComponent
+            && it.element?.contains?.(this.rootElement));
+        if (!item?.parent?.isStack) return false;
+        item.parent.setActiveComponentItem(item);
+        return true;
+    }
 
     onMount(container) {
         if (container && typeof container.setTitle === 'function') {
@@ -430,6 +466,9 @@ export class ProcgenLabPanelUI {
     }
 
     destroy() {
+        // ⛔ FIRST, and before the iframe goes to `about:blank`: a room editor
+        // that resolved this instance a line later would address a dead frame.
+        unregisterLabPanelInstance(this);
         for (const off of this._unsubs) {
             try { off(); } catch { /* the bus may already be gone */ }
         }
