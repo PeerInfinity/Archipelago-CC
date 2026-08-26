@@ -166,7 +166,10 @@ export function pointLength(vx, vy) {
 
 /**
  * `Point.normalize(thickness)`, transcribed from the recompiled runtime
- * (`avm2_globals.c:895-909`), including its guard:
+ * (`SWFModernRuntime/src/avm2/avm2_globals.c:1075-1090` — ⚠ the citation
+ * here said `:895-909` until R9 slice 12e⁗ re-read it; the function moved,
+ * the transcription did not, and the docblock forty lines down already said
+ * `:1075`), including its guard:
  *   AS3 `if (length)` truthiness skips on BOTH 0 and NaN.
  * Returns a new {x, y}; leaves the point untouched when the guard fails,
  * which is why `normalize()` on a zero vector cannot produce NaN.
@@ -296,14 +299,47 @@ export function applyInput(v, held, moveSpeed) {
  * @returns {{dvx: number, dvy: number}} the velocity DELTA, per axis.
  */
 export function knockbackImpulse(cx, cy, f) {
-    const length = Math.hypot(cx, cy);
+    // ⛓⛓⛓ R9 SLICE 12e⁗ — **ONE GAME FUNCTION, ONE SPELLING.** This line
+    // used to be `Math.hypot(cx, cy)` with `cx / length` below it, while
+    // `pointNormalize` twenty lines up spelled the SAME runtime function
+    // `sqrt(x*x + y*y)` with `x * (thickness / length)` — the transcription
+    // `applyFriction` uses on every diagonal tick. Both are `Point.normalize`;
+    // only one of them is the game's.
+    //
+    // ⛓ THE REFUTED SPELLING DIFFERED FROM THE GAME'S IN **TWO** PLACES, and
+    // they are not the same shape. Measured over 200 000 game-like samples:
+    //   · `Math.hypot(x, y)` vs `sqrt(x*x + y*y)` — 21 % of DIAGONALS,
+    //     **0 of 200 000 AXES**, and the zero is provable rather than lucky:
+    //     `hypot(x, 0)` is exactly `|x|` by spec and `sqrt(fl(x*x))` recovers
+    //     `|x|` exactly in binary64 (0 of 500 000, as it must be);
+    //   · `cx / length` vs `cx * (thickness / length)` — 32 % of diagonals and
+    //     **14 % of axes**. `Point.normalize` multiplies by a reciprocal; it
+    //     does not divide.
+    //
+    // ⛓⛓ AND THE PAIR IS WHY THE DEFECT COULD ONLY BE READ OFF A DIAGONAL.
+    // Under the refuted spelling an axis centre normalises to `cx / |cx|` —
+    // EXACTLY ±1 whatever the magnitude — so the POSITION ROUND TRIP below
+    // could not move an axis impulse at all (measured 0 of 200 000). Every
+    // recording the game refused carried a DIAGONAL sword dash, and
+    // `r9-solve-3`'s 21 AXIS dashes were exact under the old model for that
+    // reason. ⚠ Under THIS spelling `cx * (1/|cx|)` is ±1 only 86 % of the
+    // time, so an axis impulse CAN move — the committed roster is inert across
+    // the change by a two-build stream diff over 149 tapes, which is a
+    // measurement about the CORPUS and is stated as one, never as a guarantee
+    // about axes.
+    //
+    // ⚠ It is a ~1 ULP correction and it fixes NOTHING on its own (§37.6's
+    // E2: 5 of 13, the same eight reds). It is the residual that becomes
+    // visible once the spend site stops skipping the game's POSITION ROUND
+    // TRIP, and the two together are 13/13 — which is the reason to
+    // TRANSCRIBE the expression rather than to fix the plausible-looking
+    // arithmetic in it. [[feedback_two_rulings_may_not_compose]]
+    const n = pointNormalize(cx, cy, 1);
     // `center.normalize(1)` — a no-op at zero length, so the components stay
     // (0,0) and both guards below reject them.
-    const nx = length === 0 ? 0 : cx / length;
-    const ny = length === 0 ? 0 : cy / length;
     return {
-        dvx: Math.abs(nx) >= 0.5 ? f * nx : 0,
-        dvy: Math.abs(ny) > 0.5 ? f * ny : 0,
+        dvx: Math.abs(n.x) >= 0.5 ? f * n.x : 0,
+        dvy: Math.abs(n.y) > 0.5 ? f * n.y : 0,
     };
 }
 
@@ -581,8 +617,43 @@ export function step(state, held, opts = {}) {
              * reject — so the dash moves the player by nothing.
              */
             if (useItemImpulse) {
+                /**
+                 * ⛓⛓⛓ R9 SLICE 12e⁗ — **THE POSITION ROUND TRIP, AND IT IS
+                 * NOT A NO-OP.** The dash arm does not hand `knockback` a
+                 * velocity. It hands it a POINT BEHIND THE PLAYER:
+                 *
+                 *     Player.as:788    knockback(2, new Point(x - v.x, y - v.y))
+                 *     Player.as:1497   var center:Point = new Point(x - p.x, y - p.y)
+                 *
+                 * so the centre the game normalises is `x - (x - v.x)`, and
+                 * `x - v.x` ROUNDS. `x` here is `state.x` — the position the
+                 * tick started with, untouched, because the sweeps are below —
+                 * which is exactly the `x` the AS3 reads at `useItem` time.
+                 *
+                 * ⛓ MEASURED (§37.6): the model passed `v.x, v.y` straight
+                 * through, and on EIGHT of the thirteen re-recorded walks it
+                 * lost the game's dash by ~1 ULP (7.105427357601002e-15 px)
+                 * at one tick and never recovered. Writing the round trip out
+                 * is 10 of 13 on its own and 13 of 13 with `knockbackImpulse`'s
+                 * one-spelling fix above.
+                 *
+                 * ⚠ AXIS DASHES COULD NOT SEE IT — **under the OLD spelling**,
+                 * which is why the defect hid for two rungs. The round trip
+                 * rounds just as often on an axis (measured, nearly every
+                 * sample), but `Math.hypot(x, 0)` is exactly `|x|`, so the
+                 * refuted `knockbackImpulse` normalised an axis centre to
+                 * EXACTLY (±1, 0) whatever the magnitude was and both impulses
+                 * came out identical — 0 of 200 000. The bug could only ever be
+                 * read off a DIAGONAL, and eight recordings are what read it.
+                 * [[feedback_relative_claim_cannot_see_collision]]
+                 *
+                 * ⛔ Do NOT "simplify" this to `v.x, v.y`. It is a
+                 * transcription, not an expression — the whole finding is that
+                 * the two are not the same double.
+                 */
                 const d = useItemImpulse.force !== undefined
-                    ? knockbackImpulse(v.x, v.y, useItemImpulse.force)
+                    ? knockbackImpulse(x - (x - v.x), y - (y - v.y),
+                        useItemImpulse.force)
                     : useItemImpulse;
                 v = { x: v.x + d.dvx, y: v.y + d.dvy };
             }
