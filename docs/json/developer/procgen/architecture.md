@@ -271,6 +271,24 @@ substrate needed it — first its calculations, then its overlay, then its DOM.
 | `setOverlay.js` | `createSetOverlay(spec)` — the authored half's shape: the prefixed rule-target key, `overlayErrors`, `assertOverlay`, `exitRulesByRoom`, `renumberOverlay` and the two readers | `seedlingDemo/seedlingSetOverlay.js`, measured at 10 of 11 exported functions substrate-free (90.9%) before the lift |
 | `setEditorView.js` | `mountSetEditor(opts)` — the set editor's DOM: the rooms strip and its stills cache, the two-click link gesture, the rooms table, the manifest and room forms, the rule box, the REPORT and the downloads | `seedlingDemo/watchSetEditor.js`'s 1,051-line mount, measured at ~26 substrate-bound call sites in five spots; each became a named parameter |
 
+**And the mount has TWO pages now.** `watch.html`'s SET arm binds it to Seedling
+(`seedlingDemo/watchSetEditor.js`) and `mazeRoom/lab.html`'s fourth `?source=`
+arm binds it to the maze (`mazeRoom/mazeSetLab.js`) — the same function object,
+over the same `edit*` element ids, in two documents. The binding list is a
+MODULE rather than a literal inside a test, because a copy would be two answers
+to *"what is the maze's `exits.addressOf`"* and the first slice to change one
+would leave the other saying something else. What the maze's page supplies that
+the node rows stub is `drawRoomStill` — `mazeRoomRender.drawWorld` on the
+entry's own world, at the strip cell's own tile size — and the two pipeline
+functions the mount refuses to import for itself.
+
+⛔ **Two divisions belong to the PAGE, on both pages.** The room `<select>` is
+FILLED by the page (`selectRoom` only ever sets its VALUE), and the set controls
+are ENABLED by the page. `#editRoomClose` is in neither roster: the mount owns
+it and disables it on every render when no room is open, and a page that also
+wrote it would be a second authority on a control whose state is a fact only the
+mount has.
+
 **Identity is a CONTRACT, not an implementation.** Ten documents committed to
 this repository carry ids minted with that exact algorithm: a sorted-key
 recursive stringify, then FNV-1a/32 over UTF-16 code units, hashed over the

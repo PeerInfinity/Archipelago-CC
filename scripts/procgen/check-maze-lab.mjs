@@ -106,6 +106,25 @@ const {
     MazeRoomEditor, PALETTE_TYPES, applyEdit, applyEditOpToState, generateStep,
     generateWithDirectives, labPayload, serializeMazeLevel,
 } = await MAZE('mazeLab.js');
+/**
+ * ⛓⛓ EDITOR v3 E2c — THE SET ARM'S NODE-SIDE ANCHORS. ⛔ The strip's geometry
+ * constants are `setEditorCore`'s OWN, never numbers typed here: `overviewLayout`
+ * is what chooses a cell size, and a row that carried its own copy of `cellPx`
+ * would be asserting against the day it was written.
+ */
+const { OVERVIEW } = await import(join(REPO, 'frontend/modules/procgenCore/setEditorCore.js'));
+const { BUNDLE_KINDS } = await import(
+    join(REPO, 'frontend/modules/presets/documentBundle.js'));
+const LIBRARY_PATH = 'frontend/region-libraries/demo-maze-pack.json';
+const MAZE_PACK = JSON.parse(readFileSync(join(REPO, LIBRARY_PATH), 'utf8'));
+/** ⛓ The 4-link RING and the 2-link CHAIN, as OVERLAY documents. */
+const RING_LINKS = [
+    { from: [0, 'exit_1'], to: [1, 'exit_3'] },
+    { from: [1, 'exit_1'], to: [2, 'exit_3'] },
+    { from: [2, 'exit_1'], to: [3, 'exit_3'] },
+    { from: [3, 'exit_1'], to: [0, 'exit_3'] },
+];
+const overlayOf = (n) => ({ schema_version: 1, rooms: {}, links: RING_LINKS.slice(0, n) });
 
 const json = (v) => JSON.stringify(v);
 let failed = 0;
@@ -418,6 +437,26 @@ const PAGE = `${base}/frontend/modules/mazeRoom/lab.html`;
 const browser = await chromium.launch();
 const page = await browser.newPage();
 const errors = [];
+/**
+ * ⛓⛓ **ONE DELIBERATE 404, EXCLUDED BY NAME AND COUNTED** — the discipline
+ * `check-preset-bundle-load` already follows. EDITOR v3 E2c's claim 17b asks the
+ * page for a `?library=` the server has no file for, ON PURPOSE, to prove the
+ * TRANSPORT refusal; Chromium reports that fetch as a console error, and it is
+ * the page working. ⛔ Named rather than matched loosely, and the COUNT is
+ * asserted at exactly one, because a bounded exclusion that does not say what it
+ * excluded reads as "there was nothing to exclude".
+ */
+const NO_SUCH_LIBRARY = '__no-such-pack.json';
+/**
+ * ⛔ **THE URL IS NOT IN THE CONSOLE TEXT** — measured: Chromium's message is
+ * bare *"Failed to load resource: the server responded with a status of 404
+ * (Not Found)"*, so a filter keyed on the FILENAME matched nothing and the
+ * exclusion counted ZERO while the error was right there. The 404 URLs are
+ * enumerated off the RESPONSES instead, and the console's 404 reports are
+ * excluded as a CLASS — which is only safe because the URL list is asserted.
+ */
+const notFound = [];
+page.on('response', (r) => { if (r.status() === 404) notFound.push(r.url()); });
 page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
 page.on('pageerror', (e) => errors.push(`pageerror: ${e.message}`));
 
@@ -1773,6 +1812,549 @@ try {
     '⛓⛓ …and the payload carries the IDENTITY TAG the edits are edits OF (§3.2\'s `base`)',
     json(genGrouped.payload.base));
 
+    /* ══════════════════════════════════════════════════════════════════
+     * ⛓⛓⛓ EDITOR v3 E2c — THE SET ARM (claims 17–20)
+     * ══════════════════════════════════════════════════════════════════
+     *
+     * ⛔ The claim numbers are the next FREE integers. The banners in this file
+     * are NOT uniquely numbered (`CLAIM 14` appears twice and `CLAIM 13` comes
+     * last), and renumbering them would be byte-noise under `lintGateLabels`'
+     * `file::rule::label` key — so nothing above is touched.
+     */
+
+    /** ⛓ Click room `i` on the SET strip, with this file's OWN arithmetic over
+     *  the strip's own room count — never `cellAt`'s. */
+    const clickStripRoom = async (i) => {
+        const geo = await page.evaluate(() => {
+            const c = document.getElementById('editSetOverview');
+            c.scrollIntoView({ block: 'center' });
+            const r = c.getBoundingClientRect();
+            return { left: r.left, top: r.top, width: r.width, height: r.height,
+                rooms: window.__mazeLab?.set?.rooms ?? 1 };
+        });
+        await page.mouse.click(geo.left + (geo.width / geo.rooms) * (i + 0.5),
+            geo.top + geo.height * 0.75);
+    };
+    /** ⛓ The strip's ink, and the OVERLAY canvas `editorView` appends to the
+     *  strip's PARENT and sizes FROM the strip (§23.11 #5 cost two runs there). */
+    const stripInk = () => page.evaluate((roomTop) => {
+        const c = document.getElementById('editSetOverview');
+        if (!c) return null;
+        const ov = c.parentNode?.querySelector('canvas.editorViewOverlay') ?? null;
+        const band = (cv) => Math.max(1, Math.floor(cv.height * roomTop));
+        const ink = (cv) => {
+            const d = cv.getContext('2d').getImageData(0, 0, cv.width, band(cv)).data;
+            let n = 0;
+            for (let i = 3; i < d.length; i += 4) if (d[i] !== 0) n += 1;
+            return n;
+        };
+        const full = (cv) => {
+            const d = cv.getContext('2d').getImageData(0, 0, cv.width, cv.height).data;
+            let n = 0;
+            for (let i = 3; i < d.length; i += 4) if (d[i] !== 0) n += 1;
+            return n;
+        };
+        return { w: c.width, h: c.height, stripInk: full(c), bandInk: ink(c),
+            ovW: ov?.width ?? null, ovH: ov?.height ?? null, ovInk: ov ? ink(ov) : null };
+    }, OVERVIEW.roomTop);
+    /**
+     * ⛓⛓ **ONE STRIP CELL'S PIXELS, HASHED.** ⛔ A COUNT of ink cannot see a
+     * floor turning into a wall — both are opaque — so the claim that a still
+     * was RE-DRAWN needs the pixels themselves. This is what catches the stills
+     * cache keyed on the room INDEX rather than on the payload: an edited room
+     * would keep its old picture and every other readout would still be right.
+     */
+    const stripCellHash = (i) => page.evaluate(({ idx, roomTop }) => {
+        const c = document.getElementById('editSetOverview');
+        const rooms = window.__mazeLab?.set?.rooms ?? 1;
+        const cell = Math.floor(c.width / rooms);
+        const top = Math.floor(c.height * roomTop);
+        const d = c.getContext('2d')
+            .getImageData(idx * cell, top, cell, c.height - top).data;
+        let h = 2166136261;
+        for (let k = 0; k < d.length; k += 1) {
+            h ^= d[k];
+            h = Math.imul(h, 16777619);
+        }
+        return h >>> 0;
+    }, { idx: i, roomTop: OVERVIEW.roomTop });
+
+    /**
+     * ⛓⛓⛓ **THE ROOMS TABLE IS READ OFF THE DOM, AND THAT IS THE SAME SEAM THE
+     * REPORT HIT.** The page's readout is written by the PAGE's `render`, and
+     * the mount calls `onSetChange` **before** its own `render()` — so anything
+     * the readout derives from `setUi.rows()` (or scrapes from a box the mount
+     * writes) is ONE APPLIED OP BEHIND. MEASURED: after the two-click gesture
+     * `set.links` was 1 (read off the SESSION's record, live) while a
+     * `set.strip` field said `linkedFrom: [0,0,0,0]`. ⇒ the page publishes NO
+     * `strip`, `note` or `identity` field, and this row reads the table where
+     * `check-seedling-editor-arm` reads it. Columns: `# · name · music · exits ·
+     * links here · loc · rules · (actions)`.
+     */
+    const roomsTable = () => page.evaluate(() => [
+        ...document.querySelectorAll('#editSetRooms table.setRooms tr'),
+    ].slice(1).map((r) => [...r.children].map((c) => c.textContent)));
+
+    /** ⛓ PASTE a document into the SET arm's OWN box — never `#labText`, which
+     *  `refreshSaveBox` overwrites with the LEVEL payload on every render. */
+    const pasteSet = async (doc, pred, why) => {
+        await page.fill('#labSetText', json(doc));
+        await page.click('#labSetLoad');
+        await settled(pred, why);
+        return read();
+    };
+
+    /* ── CLAIM 17: `?source=set` opens the FOURTH arm and nothing else ─ */
+    const setUrl = `source=set&library=/${LIBRARY_PATH}`;
+    const armed = await load(setUrl, () => window.__mazeLab?.set?.mounted === true,
+        'the SET arm to mount over the served maze pack');
+    check(armed.source === 'set' && armed.set.library_id === MAZE_PACK.library_id
+        && armed.set.rooms === MAZE_PACK.entries.length,
+        '⛓⛓⛓ **CLAIM 17 — `?source=set` OPENS THE FOURTH ARM** over the library `?library=` '
+        + 'names, and the readout is the SESSION\'s record rather than the loaded document',
+        `${armed.set.library_id} · ${armed.set.rooms} room(s) · source ${armed.set.source}`);
+    const panels = await page.evaluate(() => ({
+        generate: document.getElementById('generatePanel').hidden,
+        edit: document.getElementById('editPanel').hidden,
+        solve: document.getElementById('solvePanel').hidden,
+        set: document.getElementById('setPanel').hidden,
+        canvas: document.getElementById('canvas').hidden,
+    }));
+    check(panels.set === false && panels.generate && panels.edit && panels.solve
+        && panels.canvas === true,
+        '⛓ …and NOTHING ELSE: the other three panels are hidden, and `#canvas` is hidden too '
+        + 'because in this arm it belongs to the OPEN ROOM and none is open — the level the '
+        + 'other three arms hold is not this library\'s',
+        json(panels));
+    await settled(() => (window.__mazeLab?.set?.servedOffered ?? []).length > 0,
+        'the served library index to arrive');
+    const withIndex = await read();
+    check(json(withIndex.set.servedOffered) === json([MAZE_PACK.library_id]),
+        '⛓⛓ …and the SERVED PICKER offers ONLY the packs whose own `substrates` include '
+        + '`maze` — the bounce and runner packs are committed beside it and are NOT offered '
+        + '(the claim is the FILTER, not a count). ⚠ WAITED FOR, not read off the mount: the '
+        + 'index is fetched when the arm mounts and only for the SET arm, so a read at '
+        + '`mounted === true` sees an empty picker and a page that never fetched one looks the '
+        + 'same', json(withIndex.set.servedOffered));
+    check(armed.set.schemas.rules === true && armed.set.schemas.atlas === true,
+        '⛓ …and both optional schemas arrived, so the rule box checks the SCHEMA and the '
+        + 'REPORT runs its STRUCTURAL pass', json(armed.set.schemas));
+
+    /* ── CLAIM 17b: the REFUSALS this arm owns ────────────────────────── */
+    await page.goto(`${PAGE}?source=sets`, { waitUntil: 'domcontentloaded' });
+    await settled(() => window.__mazeLab?.fatal, 'the refusal of a near-miss ?source=');
+    const nearMiss = await read();
+    check(/\[generate, edit, solve, set\]/.test(nearMiss.fatal ?? ''),
+        '⛓⛓ **CLAIM 17b — A NEAR-MISS `?source=` STILL REFUSES, NAMING ALL FOUR.** The fourth '
+        + 'arm JOINED the enum; a page that reached `set` around the check would open the arm '
+        + 'and let `sets` fall through to GENERATE', nearMiss.fatal);
+    await page.goto(`${PAGE}?source=set&library=/frontend/region-libraries/__no-such-pack.json`,
+        { waitUntil: 'domcontentloaded' });
+    await settled(() => window.__mazeLab?.fatal, 'the refusal of a bad ?library=');
+    const badLib = await read();
+    check(/\?library=/.test(badLib.fatal ?? '') && /HTTP 404/.test(badLib.fatal ?? '')
+        && /REFUSED rather than opened on nothing/.test(badLib.fatal ?? ''),
+        '⛓⛓ …and a `?library=` the server has no file for is FATAL BY NAME — a TRANSPORT '
+        + 'failure, exactly as `?gen=`\'s is: the address named a document and an arm opened '
+        + 'on nothing would be a page saying something the link does not', badLib.fatal);
+
+    /* ── CLAIM 18: the STRIP is laid out, has INK, and grows arrows ──── */
+    await load(setUrl, () => window.__mazeLab?.set?.mounted === true, 'the SET arm again');
+    const geo = await stripInk();
+    const cellPx = geo === null ? null : geo.w / MAZE_PACK.entries.length;
+    check(cellPx === OVERVIEW.cellPx && geo.h === OVERVIEW.heightPx && geo.stripInk > 0,
+        `⛓⛓⛓ **CLAIM 18 — THE STRIP IS LAID OUT AND IT HAS INK.** ${MAZE_PACK.entries.length} `
+        + `rooms at \`OVERVIEW.cellPx\` (${OVERVIEW.cellPx}) px each. ⛔ ASSERT INK, NOT `
+        + 'ELEMENTS (§23.11 #5) — and assert the WIDTH too: this slice\'s first browser run '
+        + `found the strip at ${OVERVIEW.minCellPx} px per room WITH ink in it, because `
+        + '`overviewLayout` had measured a parent that was still `hidden` and therefore had '
+        + 'no layout. A row asserting only INK is green over both builds', json(geo));
+    check(cellPx >= OVERVIEW.minStillPx,
+        `⛓ …and at ${cellPx} px per room the cells are STILLS rather than labelled boxes `
+        + `(\`OVERVIEW.minStillPx\` is ${OVERVIEW.minStillPx}), which is what makes the ink `
+        + 'above a picture of four rooms and not four rectangles');
+    const table = await roomsTable();
+    const openable = await page.evaluate((n) => Array.from({ length: n }, (_, i) => {
+        const b = document.getElementById(`editSetRowOpen_${i}`);
+        return b ? !b.disabled : null;
+    }), MAZE_PACK.entries.length);
+    check(json(table.map((r) => r[1])) === json(MAZE_PACK.entries.map((e) => e.name))
+        && table.every((r) => r[3] === '4') && openable.every((v) => v === true),
+        '⛓ …and the rooms TABLE is the library\'s own entries, each with its four exits and an '
+        + 'enabled OPEN button', json(table.map((r) => `${r[1]}:${r[3]}`)));
+
+    const linked = await pasteSet(overlayOf(4),
+        () => window.__mazeLab?.set?.links === 4, 'the 4-link RING to be held');
+    const ringTable = await roomsTable();
+    check(linked.set.links === 4
+        && json(ringTable.map((r) => r[4])) === json(['2', '2', '2', '2']),
+        '⛓⛓ **AN OVERLAY PASTED INTO THE ARM\'S OWN BOX IS HELD**, and for the maze the links '
+        + 'ARE the graph. ⛔⛔ TWO inbound per room over a FOUR-link ring, not one — a maze '
+        + '`one_way` DEFAULTS FALSE, the opposite of Seedling\'s (§26.4): Seedling\'s one '
+        + 'transition primitive is a one-way JUMP, and a maze crossing is a tile the player '
+        + 'walks onto and back off. ⚠ This row expected `[1,1,1,1]` on its first run — the '
+        + 'default is the thing it now measures',
+        `${linked.set.links} link(s) · links-here column ${json(ringTable.map((r) => r[4]))}`);
+    /**
+     * ⛓⛓⛓ **THE TWO-CLICK GESTURE, ON THE PAGE.** E2b proved it in node over a
+     * hand-built DOM; this is the page's own geometry — `cellAt` over the STRIP
+     * (`bounds` is `{w: rooms, h: 1}`) and `exits.addressOf` reading the
+     * `<option>` value the same binding built. ⛔ MUTANT: `exits.addressOf`
+     * coercing with `Number()` (Seedling's spelling) — every endpoint becomes
+     * `NaN` and `connect` refuses, listing the exits the entry really has.
+     *
+     * ⚠ THE EXIT IS PICKED **BETWEEN** THE TWO CLICKS, and that is the panel's
+     * own flow rather than a workaround: `fillExitSelect` clears and refills the
+     * list on every render (it is *"the SELECTED room's exits"*, and the first
+     * click is what selects the room), so a value set before the first click is
+     * gone by the second. `fillOrdinalSelect` DOES preserve, because its list is
+     * the library's distinct exit ids and does not depend on the selection.
+     */
+    const gesture = await load(setUrl, () => window.__mazeLab?.set?.mounted === true,
+        'the SET arm for the two-click gesture');
+    check(gesture.set.links === 0 && gesture.set.ops === 0,
+        '⛓ the gesture starts from an UNLINKED library — 0 links, 0 ops');
+    await page.click('#editSetGesture');
+    await clickStripRoom(0);
+    await page.selectOption('#editSetExitList', 'exit_1');
+    await page.selectOption('#editSetTargetExit', 'exit_3');
+    await clickStripRoom(1);
+    await settled(() => window.__mazeLab?.set?.ops === 1, 'the two-click CONNECT to land');
+    const connected = await read();
+    const gestureTable = await roomsTable();
+    check(json(connected.set.opList) === json(['connect']) && connected.set.links === 1
+        && json(gestureTable.map((r) => r[4])) === json(['1', '1', '0', '0']),
+        '⛓⛓⛓ **THE TWO-CLICK GESTURE LANDS ONE `connect`, ENDPOINT-ADDRESSED** — click the '
+        + 'SOURCE room on the strip, pick WHICH exit, then click the TARGET. One link, and '
+        + 'both its ends count as inbound because a maze crossing is TWO-WAY by default',
+        `${json(connected.set.opList)} · links ${connected.set.links} · `
+        + `${json(gestureTable.map((r) => r[4]))}`);
+
+    await load(setUrl, () => window.__mazeLab?.set?.mounted === true, 'the SET arm for arrows');
+    await pasteSet(overlayOf(4), () => window.__mazeLab?.set?.links === 4,
+        'the 4-link RING again, for the arrows');
+    const beforeArm = await stripInk();
+    await page.click('#editSetGesture');
+    await page.waitForTimeout(400);
+    const afterArm = await stripInk();
+    check(afterArm !== null && afterArm.ovInk > 0
+        && afterArm.ovW === afterArm.w && afterArm.ovH === afterArm.h,
+        '⛓⛓⛓ **THE ARROWS LAND ON THE OVERLAY CANVAS AT THE STRIP\'S SIZE, ONCE THE VIEW '
+        + `REPAINTS.** ⛔ ON LOAD THE OVERLAY IS ${beforeArm?.ovW}×${beforeArm?.ovH} WITH `
+        + `${beforeArm?.ovInk} INK — D2's unpainted-arrows defect (§23.11 #5), inherited here `
+        + 'and still E3\'s: `mountEditorView` paints once at mount, before `paintStrip` has '
+        + 'sized the canvas and while the rows are still empty, and nothing repaints it after. '
+        + 'The load-time numbers ride in this DETAIL rather than in the condition, because a '
+        + 'row asserting 0 there would redden the day somebody fixes it',
+        `${json(beforeArm)} → ${json(afterArm)}`);
+
+    /* ── CLAIM 19: the ROOM SESSION lives INSIDE the SET arm ─────────── */
+    const ROOM = 1;
+    const roomEntry = MAZE_PACK.entries[ROOM];
+    await load(setUrl, () => window.__mazeLab?.set?.mounted === true, 'the SET arm for a room');
+    await page.click(`#editSetRowOpen_${ROOM}`);
+    await settled(`window.__mazeLab?.set?.openRoom === ${ROOM}`, `room ${ROOM} to open`);
+    const opened = await read();
+    check(opened.set.openRoom === ROOM && opened.set.openRoomOps === 0
+        && opened.set.openRoomBase?.kind === 'library-room'
+        && opened.set.openRoomBase.library_id === MAZE_PACK.library_id
+        && opened.set.openRoomBase.entry_id === roomEntry.entry_id,
+        `⛓⛓⛓ **CLAIM 19 — OPEN ROOM ${ROOM} INSIDE THE SET ARM.** ⛔ Not by switching `
+        + '`#source` to `edit`: that RETIRES this arm and takes the LIBRARY session with it. '
+        + 'The base names the library, the index AND the entry — a `library_id` carries the '
+        + 'document\'s content hash, and a reorder moves the index while the entry id does not',
+        json(opened.set.openRoomBase));
+    const canvasShown = await page.evaluate(() => ({
+        hidden: document.getElementById('canvas').hidden,
+        editing: document.getElementById('canvas').classList.contains('editing'),
+        w: document.getElementById('canvas').width,
+        palette: document.querySelectorAll('#labSetPalette button').length,
+    }));
+    check(canvasShown.hidden === false && canvasShown.editing === true
+        && canvasShown.w === roomEntry.payload.width * 20 && canvasShown.palette > 0,
+        '⛓ …and `#canvas` now holds THAT room, sized from ITS width, with the ROOM\'s own '
+        + 'palette beside it (⛔ not `#labPalette`: that one is bound to the LAB LEVEL\'s '
+        + 'editor and its UNDO hits the LAB session)', json(canvasShown));
+    const idLine = await page.textContent('#editSetIdentity');
+    check(/ROOM 1 open with 0 edit\(s\)/.test(idLine)
+        && /Ctrl\+Z here hits the ROOM session/.test(idLine),
+        '⛓⛓ §21.5 — THE IDENTITY LINE SAYS WHICH SESSION AN UNDO WILL HIT, read from '
+        + '`document.activeElement`: with the strip unfocused it is the ROOM\'s', idLine);
+    await page.evaluate(() => document.getElementById('editSetOverview').focus());
+    await page.click('#editSetReport');
+    await load(setUrl, () => window.__mazeLab?.set?.mounted === true, 'the SET arm, fresh');
+    await page.click(`#editSetRowOpen_${ROOM}`);
+    await settled(`window.__mazeLab?.set?.openRoom === ${ROOM}`, `room ${ROOM} to open`);
+    /**
+     * ⛔ **SCROLLED INTO VIEW FIRST, AND THAT WAS A HARNESS FINDING.** The rooms
+     * table and the strip are BELOW `#canvas`, so `page.click('#editSetRowOpen_1')`
+     * scrolls them into view and pushes the canvas off the top — the rectangle
+     * then has a NEGATIVE `y` and `page.mouse.click` lands outside the viewport.
+     * It shows up as a STUCK wait for the first room edit, not as a wrong cell.
+     */
+    const roomRect = () => page.$eval('#canvas', (c) => {
+        c.scrollIntoView({ block: 'center' });
+        const r = c.getBoundingClientRect();
+        return { x: r.x, y: r.y, w: r.width, h: r.height };
+    });
+    /** ⛓ A FLOOR cell THIS FILE picks, so the paint is a VALUE claim. */
+    const firstFloorCell = (payload) => {
+        const { width, height, tiles } = payload;
+        for (let y = 1; y < height - 1; y += 1) {
+            for (let x = 1; x < width - 1; x += 1) {
+                if (tiles[y * width + x] === 0) return { tx: x, ty: y, idx: y * width + x };
+            }
+        }
+        return null;
+    };
+    /** ⛔ THE PALETTE FIRST, THE RECTANGLE SECOND: the palette lives below the
+     *  canvas, so clicking it scrolls and a rectangle read before it is stale. */
+    const paintRoom = async (payload, cell) => {
+        await page.click('#labSetPalette button[data-type="wall"]');
+        const b = await roomRect();
+        await page.mouse.click(
+            b.x + Math.floor(((cell.tx + 0.5) * b.w) / payload.width),
+            b.y + Math.floor(((cell.ty + 0.5) * b.h) / payload.height));
+    };
+    const floorAt = firstFloorCell(roomEntry.payload);
+    await paintRoom(roomEntry.payload, floorAt);
+    await settled(() => window.__mazeLab?.set?.openRoomOps === 1, 'the first ROOM edit');
+    const stillBefore = { edited: await stripCellHash(ROOM), other: await stripCellHash(0) };
+    await page.click('#editRoomClose');
+    await settled(() => window.__mazeLab?.set?.ops === 1 && window.__mazeLab?.set?.openRoom === null,
+        'the CLOSE to land ONE set op');
+    const closed = await read();
+    const stillAfter = { edited: await stripCellHash(ROOM), other: await stripCellHash(0) };
+    check(stillAfter.edited !== stillBefore.edited && stillAfter.other === stillBefore.other,
+        `⛓⛓⛓ **AND ROOM ${ROOM}'s STILL WAS RE-DRAWN WHILE THE OTHERS WERE NOT** — the stills `
+        + 'cache is keyed on the `payload`, which a `replace-room` replaces. ⛔ MUTANT: '
+        + '`stillKey` keyed on the room INDEX — the edited room keeps its OLD picture for ever '
+        + 'and every other readout stays right. ⚠ A HASH of the cell\'s pixels and not a count '
+        + 'of ink: a floor turning into a wall is opaque either way',
+        `${json(stillBefore)} → ${json(stillAfter)}`);
+    check(json(closed.set.opList) === json(['replace-room']) && closed.set.openRoom === null,
+        '⛓⛓⛓ **ONE PAINT, ONE `replace-room`.** N room edits become ONE set op through the '
+        + 'ADAPTER\'s `closeRoomSession` — the CAPTURE path, never `serializeMazeLevel`',
+        json(closed.set.opList));
+    await page.click('#editDownloadSet');
+    /**
+     * ⛓⛓ **THE PRESS IS ASKED WHETHER IT WROTE, BEFORE THE READOUT IS WAITED
+     * FOR.** ⛔ MUTANT: `mazeSetAdapter.closeRoomSession` re-spelled with
+     * `serializeMazeLevel` (§28.5). `replace-room` RE-CAPTURES whatever it is
+     * handed, so a lab-spelled payload comes back with `exit_sides: [null]` and
+     * `validateRegionLibrary` REFUSES the whole library —
+     * *"entries[1].exit_sides[0] must be one of N/E/S/W, got null"* (measured in
+     * node). The press then prints `⛔ NOT DOWNLOADED` and writes no blob, and
+     * without this row the only symptom is a 60-second STUCK wait for a readout
+     * that is never coming. A red that names itself beats a red that hangs.
+     */
+    await settled(() => /^(DOWNLOADED|⛔)/.test(
+        document.getElementById('editSetNote')?.textContent ?? ''), 'the DOWNLOAD to answer');
+    const pressNote = await page.textContent('#editSetNote');
+    check(/^DOWNLOADED /.test(pressNote),
+        '⛓⛓ the DOWNLOAD is ALLOWED after the close — the re-captured entry still validates',
+        pressNote.slice(0, 200));
+    await settled(() => window.__editorSetOut !== undefined, 'the library download readout');
+    const out = await page.evaluate(() => window.__editorSetOut);
+    const tilesBefore = roomEntry.payload.tiles;
+    const tilesAfter = out.entries[ROOM].payload.tiles;
+    const differing = tilesBefore
+        .map((t, i) => (t === tilesAfter[i] ? null : i)).filter((i) => i !== null);
+    check(json(differing) === json([floorAt.idx]) && tilesAfter[floorAt.idx] === 1,
+        `⛓⛓⛓ **AND THE PAYLOAD DIFFERS AT EXACTLY THE CELL THIS FILE NAMED** — `
+        + `(${floorAt.tx},${floorAt.ty}), index ${floorAt.idx}, floor → wall. ⛔ A VALUE claim: `
+        + 'the cell is chosen from the COMMITTED entry here, without asking the page anything',
+        `${differing.length} differing index(es): ${json(differing.slice(0, 5))}`);
+    check(out.library_id !== MAZE_PACK.library_id && out.entries.length === 4
+        && json(out.entries.map((e) => e.entry_id))
+            === json(MAZE_PACK.entries.map((e) => e.entry_id)),
+        '⛓⛓ …and the download RE-STAMPS the library: a `library_id` ends in the document\'s '
+        + 'own content hash, so an edited library cannot keep the loaded one\'s id',
+        `${MAZE_PACK.library_id} → ${out.library_id}`);
+    const otherRooms = MAZE_PACK.entries
+        .map((e, i) => (i === ROOM ? null : json(e.payload) === json(out.entries[i].payload)))
+        .filter((v) => v !== null);
+    check(otherRooms.every((v) => v === true),
+        '⛓⛓ …and EVERY OTHER ENTRY IS BYTE-IDENTICAL — §26.6\'s deserialize→capture round trip, '
+        + 'on the page: a close re-captures ONE room and touches nothing else',
+        json(otherRooms));
+
+    /* ── CLAIM 19b: an UNEDITED close, and §21.5's DISCARD ───────────── */
+    await load(setUrl, () => window.__mazeLab?.set?.mounted === true, 'the SET arm, fresh again');
+    await page.click('#editSetRowOpen_2');
+    await settled(() => window.__mazeLab?.set?.openRoom === 2, 'room 2 open');
+    await page.click('#editRoomClose');
+    await settled(() => window.__mazeLab?.set?.openRoom === null, 'the unedited CLOSE');
+    const unedited = await read();
+    check(unedited.set.ops === 0 && json(unedited.set.opList) === json([]),
+        '⛓⛓⛓ **CLAIM 19b — AN UNEDITED CLOSE MINTS NOTHING** (`applied: false`). ⛔ This is '
+        + 'the row that sees `closeRoomSession` re-spelled with `serializeMazeLevel`: the lab '
+        + 'payload survives `deserializeMazeWorld` without a word, so the mutant does not '
+        + 'throw — it MINTS AN EDIT out of a room nobody touched, and every exit\'s `side` '
+        + 'comes back `null` (§28.5)', json(unedited.set.opList));
+    await page.click('#editSetRowOpen_2');
+    await settled(() => window.__mazeLab?.set?.openRoom === 2, 'room 2 open again');
+    await paintRoom(MAZE_PACK.entries[2].payload,
+        firstFloorCell(MAZE_PACK.entries[2].payload));
+    await settled(() => window.__mazeLab?.set?.openRoomOps === 1, 'an edit in room 2');
+    await page.click('#editSetRowUp_2');
+    await settled(() => window.__mazeLab?.set?.openRoom === null, 'the DISCARD');
+    const moved = await read();
+    const moveNote = await page.textContent('#editSetNote');
+    check(/DISCARDED/.test(moveNote) && moved.set.openRoom === null
+        && json(moved.set.opList) === json(['reorder']),
+        '⛓⛓⛓ **CLAIM 19c — §21.5 ON THE SECOND SUBSTRATE: MOVE UP WITH AN EDITED ROOM OPEN '
+        + 'DISCARDS IT, LOUDLY** — and the reorder still lands. ⛔ NOT written back: a press on '
+        + 'MOVE UP would otherwise become a `replace-room` nobody asked for, inside the '
+        + 'reorder\'s own group', `${json(moved.set.opList)} · ${moveNote.slice(0, 140)}`);
+
+    /* ── CLAIM 19d: §21.5 — WHICH SESSION `Ctrl+Z` HITS ──────────────── */
+    /**
+     * ⛓⛓⛓ **THE DOM'S OWN FOCUS IS THE ROUTER, AND THERE IS NO SECOND ONE.**
+     * ⛔ Asserted as BEHAVIOUR and not as the identity line's text — a row that
+     * read the sentence would be green over a build whose router said one thing
+     * and did another. ⚠ AND THE FIRST DRAFT OF THIS ROW *WAS* THAT ROW, and it
+     * could not even be written honestly: reading the line after `focus()`
+     * needs a RENDER, and every way of triggering one through the DOM moves the
+     * focus somewhere else. ⛔ BLUR, not `body.focus()` — `<body>` has no
+     * `tabindex` and focusing it is a no-op (the `-arm` paid for that finding).
+     */
+    await load(setUrl, () => window.__mazeLab?.set?.mounted === true, 'the SET arm for §21.5');
+    await pasteSet(overlayOf(4), () => window.__mazeLab?.set?.links === 4,
+        'the RING, so there is a link to DISCONNECT');
+    await page.selectOption('#editSetExitList', 'exit_1');
+    await page.click('#editSetDisconnect');
+    await settled(() => window.__mazeLab?.set?.ops === 1, 'ONE library op');
+    await page.click(`#editSetRowOpen_${ROOM}`);
+    await settled(`window.__mazeLab?.set?.openRoom === ${ROOM}`, `room ${ROOM} to open`);
+    await paintRoom(roomEntry.payload, floorAt);
+    await settled(() => window.__mazeLab?.set?.openRoomOps === 1, 'ONE room op');
+    const both = await read();
+    check(both.set.ops === 1 && both.set.openRoomOps === 1,
+        '⛓ **CLAIM 19d** — both sessions hold exactly ONE op, so the two presses below can be '
+        + 'told apart', `library ${both.set.ops} · room ${both.set.openRoomOps}`);
+    await page.evaluate(() => document.getElementById('editSetOverview').focus());
+    await page.keyboard.press('Control+z');
+    await page.waitForTimeout(500);
+    const stripUndo = await read();
+    check(stripUndo.set.ops === 0 && stripUndo.set.openRoomOps === 1,
+        '⛓⛓⛓ **WITH THE STRIP FOCUSED, `Ctrl+Z` UNDOES THE LIBRARY AND LEAVES THE ROOM '
+        + 'ALONE** — one press, one session',
+        `library 1 → ${stripUndo.set.ops}, room 1 → ${stripUndo.set.openRoomOps}`);
+    await page.evaluate(() => document.getElementById('editSetOverview').blur());
+    await page.keyboard.press('Control+z');
+    await page.waitForTimeout(500);
+    const roomUndo = await read();
+    check(roomUndo.set.openRoomOps === 0 && roomUndo.set.ops === 0,
+        '⛓⛓⛓ **AND ANYWHERE ELSE IT UNDOES THE ROOM** — the library is untouched. ⛔ Without '
+        + 'the strip\'s keydown STOPPER a press on the strip would bubble to the document and '
+        + 'BOTH rows would run, and the two counts would fall together',
+        `room 1 → ${roomUndo.set.openRoomOps}, library ${stripUndo.set.ops} → `
+        + `${roomUndo.set.ops}`);
+
+    /* ── CLAIM 20: the REPORT, the four downloads and the BUNDLE ─────── */
+    await load(setUrl, () => window.__mazeLab?.set?.mounted === true, 'the SET arm for REPORT');
+    await pasteSet(overlayOf(2), () => window.__mazeLab?.set?.links === 2, 'the 2-link CHAIN');
+    /**
+     * ⛓⛓ **THE REPORT IS READ OFF THE DOM, WHERE `check-seedling-editor-arm`
+     * READS IT — AND THAT IS A SEAM THIS SLICE FOUND RATHER THAN A PREFERENCE.**
+     * `mountSetEditor`'s REPORT button runs `runReport()` and then the MOUNT's
+     * own render; it does NOT call `onSetChange`, so a PAGE cannot learn a
+     * report happened. A `window.__mazeLab.set.report` field would therefore
+     * have carried the verdict as of the LAST PAGE RENDER while the box on
+     * screen showed the current one — the stale-readout defect, shipped. So the
+     * page publishes no such field and this row reads the same three places the
+     * Seedling row does. ⛔ NOT FIXED HERE: `setEditorView.js` is E3's.
+     */
+    const reportOf = () => page.evaluate(() => ({
+        rows: [...document.querySelectorAll('#editSetReportOut li')].map((l) => l.textContent),
+        note: document.getElementById('editSetReportNote')?.textContent ?? '',
+        rulesDisabled: document.getElementById('editDownloadRules')?.disabled ?? null,
+    }));
+    await page.click('#editSetReport');
+    await settled(() => document.querySelectorAll('#editSetReportOut li').length > 0,
+        'the REPORT over the chain to paint its rows');
+    const chain = await reportOf();
+    check(chain.rulesDisabled === true && /cannot be reached from the start/.test(chain.note),
+        '⛓⛓⛓ **CLAIM 20 — THE REPORT REFUSES AN UNCLOSED GRAPH BY NAME.** ⚠ TWO links, not '
+        + 'three: a 3-link two-way chain is a SPANNING TREE over four rooms and everything is '
+        + 'reachable (§28.1 #5 measured it), so a "3-link refuses" row would be green for the '
+        + 'wrong reason', chain.note);
+    check(chain.rows.some((r) => r.startsWith('[region-library]'))
+        && !chain.rows.some((r) => r.startsWith('[level-set]')),
+        '⛓ …and §1 of the verdict is about a REGION LIBRARY — the document\'s own kind, on a '
+        + 'substrate that has no level set at all', json(chain.rows.slice(0, 2)));
+    await pasteSet(overlayOf(4), () => window.__mazeLab?.set?.links === 4, 'the 4-link RING');
+    await page.click('#editSetReport');
+    await settled(() => document.getElementById('editDownloadRules')?.disabled === false,
+        'the REPORT to ALLOW the ring');
+    const ring = await reportOf();
+    check(ring.rulesDisabled === false && /the graph closes/.test(ring.note),
+        '⛓⛓ …and the 4-link RING closes the graph and ALLOWS the export', ring.note);
+
+    await page.click('#editDownloadSet');
+    await settled(() => window.__editorSetOverlayOut !== undefined, 'both download readouts');
+    const dl = await page.evaluate(() => ({
+        library: window.__editorSetOut?.library_id ?? null,
+        overlay: window.__editorSetOverlayOut?.overlay_id ?? null,
+        mapping: window.__editorSetMappingOut ?? null,
+        note: document.getElementById('editSetNote')?.textContent ?? '',
+    }));
+    check(dl.library !== null && dl.overlay !== null && dl.mapping === null
+        && /a region library has no VANILLA mapping to invalidate/.test(dl.note),
+        '⛓⛓⛓ **TWO MEMBERS AND A SENTENCE ABOUT THE THIRD.** ⛔ `apMapping` is NOT emitted '
+        + 'empty and the reason is PRINTED: a region library never shipped as anybody\'s '
+        + 'vanilla game, and an empty companion would read as "checked, nothing to say"',
+        `${dl.library} · ${dl.overlay} · mapping ${dl.mapping} · ${dl.note.slice(0, 120)}`);
+    await page.click('#editDownloadRules');
+    await settled(() => window.__editorSetRulesBytes !== undefined, 'the rules.json readout');
+    /**
+     * ⛔ **`regions` IS KEYED BY PLAYER FIRST**, so a count of its top-level keys
+     * is 1 for every rules.json this repo writes and would have been green over
+     * a document with no regions at all. The AP regions live one level down —
+     * the same reading `check-preset-bundle-load`'s own `NODE_REGIONS` takes.
+     */
+    const rulesOut = await page.evaluate(() => {
+        const doc = window.__editorSetRulesOut ?? {};
+        const players = Object.keys(doc.regions ?? {});
+        const names = Object.keys(doc.regions?.[players[0]] ?? {});
+        return {
+            players: players.length,
+            regions: names.length,
+            names,
+            bytes: window.__editorSetRulesBytes?.length ?? 0,
+        };
+    });
+    /**
+     * ⛔ **A VALUE CLAIM, NOT A COUNT — and the count is what got this row wrong
+     * twice.** First it counted `regions`' top-level keys (1: they are keyed by
+     * PLAYER first), then it counted the player's regions (5, not 4). The fifth
+     * is the graph's own START region, which is not an entry — so the row now
+     * asserts that EVERY entry id is a region NAME (§26.5: `region_id` is the
+     * ENTRY id, and the AP region is named after it) and PRINTS whatever else
+     * is in there rather than pinning a total that says nothing about which.
+     */
+    const extra = rulesOut.names.filter((n) => !MAZE_PACK.entries.some((e) => n.includes(e.entry_id)));
+    check(rulesOut.players === 1
+        && MAZE_PACK.entries.every((e) => rulesOut.names.some((n) => n.includes(e.entry_id)))
+        && rulesOut.bytes > 0,
+        '⛓ …and `rules.json` names an AP region after EVERY library entry, through the '
+        + `MARKING TOOL's own writer (${rulesOut.regions} region(s) for `
+        + `${MAZE_PACK.entries.length} entries — the extra is ${json(extra)})`, json(rulesOut));
+    await page.click('#editDownloadBundle');
+    await settled(() => Array.isArray(window.__editorSetBundleKinds), 'the BUNDLE readout');
+    const bundle = await page.evaluate(() => ({
+        kinds: window.__editorSetBundleKinds,
+        bytes: window.__editorSetBundleOut?.length ?? 0,
+        note: document.getElementById('editSetNote')?.textContent ?? '',
+    }));
+    check(json(bundle.kinds) === json(['region-library', 'overlay', 'rules', 'region-atlas'])
+        && bundle.bytes > 0 && !/NOT a member/.test(bundle.note),
+        '⛓⛓⛓ **THE BUNDLE CARRIES THE LIBRARY — the FIFTH `BUNDLE_KINDS` entry, on the page.** '
+        + `⛔ Before E2c's first commit this press refused the maze's own PRIMARY document by `
+        + `name, quoting a roster of ${BUNDLE_KINDS.length - 1}`,
+        `${json(bundle.kinds)} · ${bundle.bytes} B`);
+
     /* ── CLAIM 13: `?directed=` IS REFUSED BY NAME (SLICE 12) ────────── */
     /**
      * ⛓⛓⛓ ⚖ §3.9 — THE RETIRED PARAMETER, ON THE PAGE. ⛔ A saved link naming a
@@ -1796,8 +2378,15 @@ try {
         '⛔ …and a refused page offers NO level and NO payload — it does not fall through to '
         + 'the ladder the link is not naming');
 
-    check(errors.length === 0, 'STILL zero console errors after every arm was driven',
-        errors.join(' | '));
+    const deliberate = notFound.filter((u) => u.includes(NO_SUCH_LIBRARY));
+    const unexpected404 = notFound.filter((u) => !u.includes(NO_SUCH_LIBRARY));
+    const realErrors = errors.filter((e) => !/status of 404/.test(e));
+    check(realErrors.length === 0 && unexpected404.length === 0 && deliberate.length === 1,
+        'STILL zero console errors after every arm was driven — apart from the ONE deliberate '
+        + `404 claim 17b asks for, which is enumerated OFF THE RESPONSES (\`${NO_SUCH_LIBRARY}\`, `
+        + `counted at exactly ${deliberate.length}) rather than off the console text, which `
+        + 'does not carry the URL',
+        [...realErrors, ...unexpected404].join(' | '));
 } catch (e) {
     check(false, 'the row ran to completion', e.message);
 }

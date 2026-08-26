@@ -273,5 +273,17 @@ describe('mazeSetLab — the base tag and the binding list', () => {
         expect(mazeSetBindings({ drawRoomStill: still }).drawRoomStill).toBe(still);
         // ⛔ …and the bound is SAID, not defaulted: there is none, and it says so.
         expect(b.linkBound()).toEqual({ ok: true, why: null });
+        /**
+         * ⛓⛓ **THE STILLS CACHE IS KEYED ON THE PAYLOAD OBJECT, BY IDENTITY.**
+         * ⛔ MUTANT: keyed on the room INDEX — a `replace-room` swaps the
+         * payload and the index does not move, so an edited room would keep its
+         * OLD picture for ever while every other readout stayed right. ⛔ And
+         * keyed on something FRESH per call (E2b's mutant #4) it would never
+         * hit and every render would redraw every room.
+         */
+        const cell = cellOf(2);
+        expect(b.stillKey(cell)).toBe(cell.payload);
+        expect(b.stillKey(cellOf(2))).toBe(b.stillKey(cellOf(2)));
+        expect(b.stillKey(cellOf(0))).not.toBe(b.stillKey(cellOf(1)));
     });
 });

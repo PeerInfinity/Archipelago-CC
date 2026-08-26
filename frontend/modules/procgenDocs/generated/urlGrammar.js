@@ -1060,6 +1060,7 @@ export const URL_GRAMMAR = frz({
                 },
                 "gen": null,
                 "height": 11,
+                "library": null,
                 "require": null,
                 "roster": null,
                 "run": false,
@@ -1388,6 +1389,28 @@ export const URL_GRAMMAR = frz({
                 },
                 {
                     "absentMeans": null,
+                    "atDefault": "not written by this page",
+                    "codec": "a path to a region-library JSON",
+                    "defaultField": "library",
+                    "defaultIsUndefined": false,
+                    "defaultValue": null,
+                    "name": "library",
+                    "retired": false,
+                    "terms": [
+                        "content-source",
+                        "region"
+                    ],
+                    "via": [
+                        {
+                            "file": "frontend/modules/mazeRoom/mazeLab.js",
+                            "fn": "readLabParams",
+                            "how": "get",
+                            "role": "read"
+                        }
+                    ]
+                },
+                {
+                    "absentMeans": null,
                     "atDefault": "DELETED at the default",
                     "codec": "parseRequireList / parseItemRequireList",
                     "defaultField": "require",
@@ -1617,7 +1640,7 @@ export const URL_GRAMMAR = frz({
                 {
                     "file": "frontend/modules/mazeRoom/mazeLab.js",
                     "fn": "readLabParams",
-                    "line": 223,
+                    "line": 242,
                     "role": "read"
                 }
             ],
@@ -1626,7 +1649,7 @@ export const URL_GRAMMAR = frz({
                 {
                     "file": "frontend/modules/mazeRoom/mazeLab.js",
                     "fn": "writeLabParams",
-                    "line": 299,
+                    "line": 328,
                     "role": "write"
                 }
             ],

@@ -428,11 +428,12 @@ straight through.
 ## The maze lab page (`frontend/modules/mazeRoom/lab.html`)
 
 A **standalone static page** — no frontend, no GL panel, no eventBus — that
-generates, edits and solves maze levels from URL parameters alone. It is the
-maze's counterpart of `seedlingDemo/watch.html`, and what the two have in
-common now lives in `frontend/modules/procgenCore/`
-(`urlParams.js`, `labView.js`, `paletteRoster.js`, `pageLifetime.js`) rather
-than being written twice.
+generates, edits and solves maze levels from URL parameters alone, and (since
+editor v3 E2c) edits a REGION LIBRARY in a fourth arm. It is the maze's
+counterpart of `seedlingDemo/watch.html`, and what the two have in common now
+lives in `frontend/modules/procgenCore/` (`urlParams.js`, `labView.js`,
+`paletteRoster.js`, `pageLifetime.js`, `setEditorView.js`) rather than being
+written twice.
 
 ```
 python3 -m http.server 8000        # from the repo root
@@ -728,6 +729,42 @@ state rather than something to tune away.
   is a KEPT candidate that happens to be decoration today. Named as residue in
   the generation review (2026-08-17, §3 row 7) and unmeasured.
 - ~~**kind parameters**~~ — landed in slice 7; see *Kind parameters* above.
+
+### The SET arm (`?source=set`) — a region library on the shared mount
+
+The fourth arm edits a **region library** through
+`procgenCore/setEditorView.mountSetEditor`, the SAME function `watch.html` binds
+to Seedling. Nothing about the strip, the two-click CONNECT gesture, the rooms
+table, the forms, the rule box, the REPORT or the four downloads is written
+here; what this page supplies is the maze's BINDINGS (`mazeRoom/mazeSetLab.js`,
+node-tested with no page) and the two pipeline functions the mount refuses to
+import for itself.
+
+`SET` joins `SOURCES` rather than bypassing it, so `?source=` still refuses a
+typo and now names all four. A library arrives four ways and through ONE intake
+per document kind: pasted into the arm's own box, uploaded (`.json` or a `.zip`
+BUNDLE, sniffed by the `PK` magic), picked from the served index filtered to the
+packs whose own `substrates` include `maze`, or fetched by `?library=<url>`.
+
+⛔ **The LOAD box is the arm's own** (`#labSetText`), and that is a measurement:
+`render()` calls `refreshSaveBox()` on every render, which overwrites `#labText`
+with the maze LEVEL's payload — a library pasted there is clobbered before the
+reader can press Load.
+
+⛓ **`?library=` is `?gen=`'s sibling and the two failure modes are told apart.**
+A TRANSPORT failure (the fetch threw, or `!res.ok`) is FATAL by name, because the
+address named a document and an arm opened on nothing would be a page saying
+something the link does not. A CONTENT failure is not: `validateRegionLibrary`'s
+own sentences go in the arm's LOAD box, and the rest of the page still works.
+
+⛓ **A room opens INSIDE this arm**, never by switching `#source` to `edit` —
+see `gotchas.md` for why, and for the hidden-panel layout trap this arm's first
+browser run found. `#editRoomClose` folds N room edits into ONE `replace-room`
+through the ADAPTER's `closeRoomSession`, the capture path.
+
+⚠ **ADD ROOM is not offered**, with its reason in the button's own `title`:
+Seedling's `add-room` takes a blank RECORD a page can mint and the maze's takes
+a captured maze WORLD, which this arm has none of.
 
 ## The action queue (`mazeRoomQueue.js`)
 

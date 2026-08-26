@@ -1630,10 +1630,10 @@ export function main() {
         enableSetControls();
         /**
          * ⛔ AND THE PAGE'S READOUT IS REDRAWN AFTER THE MOUNT, not only before
-         * it: `window.__mazeLab.set` carries the strip, the selection and the
-         * mount's own identity line, and a page whose readout learned about them
-         * at the next press would report `mounted: false` to anything that
-         * looked in between (C2 met the same shape from the other side).
+         * it: `window.__mazeLab.set.mounted` and `selected` are facts about a
+         * mount that did not exist a line ago, and a page whose readout learned
+         * about them at the next press would report `mounted: false` to anything
+         * that looked in between (C2 met the same shape from the other side).
          */
         render();
     };
@@ -1991,17 +1991,27 @@ export function main() {
                  */
                 mounted: Boolean(setUi),
                 selected: setUi ? setUi.selected : null,
-                strip: setUi
-                    ? setUi.rows().map((r) => ({
-                        index: r.index,
-                        name: r.name,
-                        exits: r.exits,
-                        linkedFrom: r.linkedFrom,
-                        locations: r.locations,
-                        rules: r.rules,
-                        openable: r.openable,
-                    }))
-                    : null,
+                /**
+                 * ⛔⛔ **THERE IS NO `strip`, `note` OR `identity` FIELD HERE,
+                 * AND IT IS THE SAME SEAM THE REPORT HIT** — one press over, and
+                 * MEASURED rather than reasoned about.
+                 *
+                 * `mountSetEditor`'s view calls `onSetChange` **BEFORE** its own
+                 * `render()` (`onChange: ({result}) => { if (applied) {
+                 * stills.clear(); onSetChange?.(); } render(); }`), so the PAGE's
+                 * render — which is where this snapshot is written — runs while
+                 * the mount's `rows`, its rooms table, its note and its identity
+                 * line are still the PREVIOUS op's. MEASURED on the two-click
+                 * gesture: `links` read 1 (off the SESSION's record, live) while
+                 * a `strip` field read `linkedFrom: [0,0,0,0]`, one op behind.
+                 *
+                 * ⇒ everything above IS live because it comes from
+                 * `setSession.record()` and page-local state; anything derived
+                 * from the MOUNT is not, and is published NOWHERE. The browser
+                 * row reads the rooms table, the note and the identity line off
+                 * the DOM — which has caught up by the time it looks — exactly
+                 * as `check-seedling-editor-arm` does. E3 owns the seam (§30.7).
+                 */
                 /**
                  * ⛔⛔ **THERE IS NO `report` FIELD HERE, AND THAT IS DELIBERATE
                  * — A SEAM, NAMED RATHER THAN FAKED.** `mountSetEditor`'s REPORT
@@ -2019,8 +2029,6 @@ export function main() {
                  * disabled state. Seedling never needed the seam for the same
                  * reason. E3 owns it if a page ever does (§30).
                  */
-                note: $('editSetNote')?.textContent ?? '',
-                identity: $('editSetIdentity')?.textContent ?? '',
                 /**
                  * ⛓⛓ THE OPEN ROOM, AS THE PAGE HOLDS IT. ⛔ `openRoomOps` is a
                  * COUNT and `openRoomOpList` is the list, for the reason the

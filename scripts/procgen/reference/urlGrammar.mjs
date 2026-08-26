@@ -162,6 +162,14 @@ const PARAM_NOTES = {
     require: { field: { watch: 'require', lab: 'require' }, codec: 'parseRequireList / parseItemRequireList', terms: ['require-directive', 'symbol', 'flag'] },
     run: { field: { watch: 'run', lab: 'run' }, codec: 'the literal `1`', terms: ['generation-ladder'] },
     gen: { field: { watch: 'gen', lab: 'gen' }, codec: 'a path to a payload JSON', terms: ['payload'] },
+    /**
+     * ⛓⛓ EDITOR v3 E2c — `?gen=`'s SIBLING, and deliberately NOT a second
+     * `?gen=`: a REGION LIBRARY is not reproducible from a seed, so there is
+     * nothing to reproduce-and-compare and the SET arm takes the document AS IT
+     * STANDS (`validateRegionLibrary` is what refuses one). ⛔ A TRANSPORT
+     * failure is FATAL by name; a CONTENT failure goes in the arm's own LOAD box.
+     */
+    library: { field: { watch: null, lab: 'library' }, codec: 'a path to a region-library JSON', terms: ['content-source', 'region'] },
     tickbudget: { field: { watch: 'budget.maxTicksPerTarget', lab: null }, codec: 'intParam', terms: ['tick-budget', 'solver'] },
     expansions: { field: { watch: null, lab: 'budget.maxExpansions' }, codec: 'intParam', terms: ['bfs-oracle', 'certification'] },
     /**

@@ -603,6 +603,56 @@ spelling MINTS an edit (so merely looking at a room restamps the library), and
 every exit's `side` comes back `null` where the entry said `'N'`. Same shape,
 same keys, one fact gone.
 
+## A room session opened from a SET lives inside the SET arm's lifetime
+
+The maze lab page's fourth `?source=` arm edits a REGION LIBRARY, and one of
+its rooms opens onto the SAME `#canvas` the `edit` arm uses. It is tempting to
+reach that by switching `#source` to `edit` — the arm is already built, the
+canvas is already there. ⛔ **It would take the LIBRARY session with it.**
+`mazeLabView.mount` starts ONE lifetime per arm and RETIRES the previous one, so
+a selector press destroys the set editor, its op list and the document a person
+was editing; what they would get back is the ladder's own level under a strip
+that no longer exists. The room session is therefore a `mazeEditAdapter` session
+mounted UNDER the set arm's lifetime, and the set arm's own `render` is what
+draws it.
+
+⛓ Two consequences follow from that and both are load-bearing:
+
+- **Which world is on the canvas has ONE answer** (`canvasWorld()`). `draw`
+  paints it and `cellAt` addresses cells in it, so a build that drew the library
+  room and addressed the ladder's level cannot exist — the two rooms are
+  different sizes, and the mistake would look like an off-by-one rather than
+  like the wrong document.
+- **The lab's three sibling overlays do not draw over a library room.** The area
+  graph, the element gadget and the solve plan are all facts about the LADDER's
+  model. Painted over somebody else's room they would be an overlay of the wrong
+  subject in a picture that looks right.
+
+⚠ And the room gets its OWN palette, built from the entry's own `itemLib` /
+`obstacleLib`. The `edit` arm's palette is bound to the lab level's editor and
+its UNDO hits the lab session; offering it here would let a press place a body
+the library entry cannot hold, and undo the wrong document.
+
+## A panel that is still `hidden` has NO LAYOUT, so anything that measures its parent measures zero
+
+`setEditorView.mountSetEditor` paints the rooms strip during mount, and
+`overviewLayout` sizes it from `overview.parentNode.clientWidth`. Mount the
+panel while it is still `hidden` and that width is **0**: the layout falls
+through to `OVERVIEW.minCellPx` — the SCROLL floor, 18 px — and the strip comes
+up as a thumbnail with real ink in it.
+
+⛔ **Every readout says it worked.** MEASURED on the maze lab's SET arm: the
+strip came up **72×132 with 6,282 ink** over four rooms; the rows were right,
+the stills had drawn, `mounted` was `true` and the identity line was correct.
+Unhiding the panel first gives **384×132 with 33,504 ink**, four cells at
+`OVERVIEW.cellPx`. ⇒ the page renders (which unhides the panel) BEFORE it
+mounts anything that measures a parent.
+
+⛓ **A row asserting INK is green over both builds.** §23.11 #5's law — *assert
+ink, not elements* — is necessary and not sufficient: the browser row asserts
+the strip's WIDTH against `OVERVIEW.cellPx` too, and that is the only condition
+that could tell the two apart.
+
 ## Related documentation
 
 - [Architecture](./architecture.md)
