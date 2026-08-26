@@ -4884,13 +4884,13 @@
   }
  },
  "agreement": {
-  "note": "The model's agreement with this recording, MEASURED at R9 slice 12e\u2034's head and pinned as a bound. Before the placed-NPC dialogue existed the model parted at t=17 (model +2.800 px, game +0.000) and ended in L20 at (200, 72); the game ends in L18. \u26a0 The tail is not bit-exact and is not claimed to be: the game is a recompiled Flash build and its fractional drift after the freeze differs from the model's in the last few bits. What IS exact is every tick through the freeze and its resume, every LEVEL, and the terminal position.",
-  "exactThroughTick": 60,
-  "exactTicks": 226,
+  "note": "The model's agreement with this recording. \u26d3\u26d3\u26d3 RE-MEASURED AT R9 SLICE 12e\u2057 AND IT IS NOW BIT-EXACT: all 709 observations, maxAbsDeltaPx 0. The bound this block used to carry \u2014 226 exact within 9.947598300641403e-14, 3.06 epsilons at tick 543 \u2014 was honest at 12e\u2034's head and was NOT a property of the recompiled build, as its own note supposed: it was the MODEL's own arithmetic. 12e\u2057 transcribed the two roundings in `Player.as:788`/`:1497` \u2014 the POSITION ROUND TRIP `x - (x - v.x)` the spend site was skipping, and `Point.normalize` spelled ONE way through `pointNormalize` instead of `Math.hypot` + `cx / length` \u2014 and the tail drift went to ZERO. \u26d3 AN INDEPENDENT WITNESS: this tape is NOT one of the thirteen the fix was attributed against, it was recorded at a different slice, and nothing was tuned to it. Before the placed-NPC dialogue existed the model parted at t=17 (model +2.800 px, game +0.000) and ended in L20 at (200, 72); the game ends in L18.",
+  "exactThroughTick": 708,
+  "exactTicks": 709,
   "totalTicks": 709,
   "levelMismatches": 0,
-  "maxAbsDeltaPx": 9.947598300641403e-14,
-  "maxAbsDeltaAtTick": 543,
-  "maxRelativeInEpsilons": 3.06
+  "maxAbsDeltaPx": 0,
+  "maxAbsDeltaAtTick": null,
+  "maxRelativeInEpsilons": 0
  }
 }

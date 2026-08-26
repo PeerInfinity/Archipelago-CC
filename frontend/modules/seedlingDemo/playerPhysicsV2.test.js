@@ -28,7 +28,9 @@ import { atlasLevelSource } from './levelSource.js';
 
 /** Real level records, for the R1 transport block at the bottom. */
 const levelRecord = atlasLevelSource();
-import { CHECK_OFFSET_Y, HITBOX, MOVE_SPEEDS, WALK_SPEED } from './playerPhysicsV1.js';
+import {
+    CHECK_OFFSET_Y, HITBOX, MOVE_SPEEDS, WALK_SPEED, pointNormalize,
+} from './playerPhysicsV1.js';
 import {
     BOUNCE_VELOCITY,
     DESCENT_DROP,
@@ -1239,26 +1241,66 @@ describe('R9 slice 12b: `Player.knockback`\'s velocity half (Player.as:1493-1510
      * ⛓⛓⛓ THE ASYMMETRY, ON THE ONE INPUT THAT CAN SEE IT.
      *
      * `if (Math.abs(center.x) >= 0.5)` against `if (Math.abs(center.y) > 0.5)`.
-     * The two comparisons differ on exactly one value, and `(1, √3)` reaches it
-     * EXACTLY in IEEE doubles: `hypot(1, √3) === 2`, so the normalised x is
-     * exactly 0.5. Mirroring the pair puts that same 0.5 on y, where `>` rejects
-     * it.
+     * The two comparisons differ on exactly one value — a centre at 60° to an
+     * axis, whose normalised component is EXACTLY 0.5 — and this row is the
+     * whole reason the transcription may not regularise them. Without it,
+     * `>`/`>` and `>=`/`>=` both pass every other row in this block.
      *
-     * ⚠ This row is the whole reason the transcription may not regularise the
-     * two guards. Without it, `>`/`>` and `>=`/`>=` both pass every other row
-     * in this block.
+     * ⛔⛔ **R9 SLICE 12e⁗: THIS ROW USED TO TYPE ITS WITNESS AS `(1, √3)`, AND
+     * THAT WITNESS BELONGED TO THE REFUTED SPELLING.** It pinned its own premise
+     * as `Math.hypot(1, √3) === 2`, which is true — and `knockbackImpulse` no
+     * longer computes the length that way. The game's `Point.normalize` is
+     * `sqrt(x*x + y*y)` with a reciprocal multiply
+     * (`avm2_globals.c:1075-1090`), and under it `pointLength(1, √3)` is
+     * **1.9999999999999998**, so the normalised x at `√3` is
+     * **0.5000000000000001** — STRICTLY GREATER than 0.5. The row would not have
+     * failed loudly on that alone; it would have gone quietly non-discriminating,
+     * because `>` and `>=` both admit a value above the boundary. CI caught it
+     * because the row also pinned the exact product.
+     * [[feedback_fixture_must_discriminate_two_builds]]
+     *
+     * ⇒ the witness is SEARCHED FOR against the transcription now, one ULP at a
+     * time out of `sqrt(3)`, and the search asserts it found the boundary. It is
+     * one ULP above `Math.sqrt(3)`. A sibling row in `ulpDash.test.js` derives
+     * the same boundary the same way for the same reason; both assert
+     * `normalised === 0.5` before they assert anything about the guards, so
+     * neither can go vacuous in silence.
      */
     it('takes the x impulse at |n| === 0.5 exactly and refuses the y one', () => {
-        const SQRT3 = Math.sqrt(3);
-        expect(Math.hypot(1, SQRT3)).toBe(2);          // the premise, pinned
-        expect(1 / Math.hypot(1, SQRT3)).toBe(0.5);
+        // Step the bit pattern of `sqrt(3)` (a 60° centre) until the model's own
+        // `pointNormalize` returns EXACTLY 0.5 — never a typed constant.
+        const bits = new DataView(new ArrayBuffer(8));
+        const step = (value, k) => {
+            bits.setFloat64(0, value);
+            bits.setBigInt64(0, bits.getBigInt64(0) + BigInt(k));
+            return bits.getFloat64(0);
+        };
+        const find = (build, read) => {
+            for (let i = -20000; i <= 20000; i++) {
+                const c = step(Math.sqrt(3), i);
+                if (read(pointNormalize(...build(c))) === 0.5) return c;
+            }
+            return null;
+        };
+        const cyAt = find((c) => [1, c, 1], (n) => n.x);
+        const cxAt = find((c) => [c, 1, 1], (n) => n.y);
 
-        const onX = knockbackImpulse(1, SQRT3, DASH_F);
+        // ⛓ THE PREMISE, PINNED — and pinned against the transcription, not
+        // against `Math.hypot`. If the search fails, the row says so.
+        expect(cyAt).not.toBeNull();
+        expect(cxAt).not.toBeNull();
+        expect(pointNormalize(1, cyAt, 1).x).toBe(0.5);
+        expect(pointNormalize(cxAt, 1, 1).y).toBe(0.5);
+        // ⛔ AND THE OLD WITNESS IS NOW ABOVE THE BOUNDARY, kept as a row so the
+        // reason this changed cannot be lost: at `√3` both guards admit.
+        expect(pointNormalize(1, Math.sqrt(3), 1).x).toBeGreaterThan(0.5);
+
+        const onX = knockbackImpulse(1, cyAt, DASH_F);
         expect(onX.dvx).toBe(DASH_F * 0.5);            // `>=` ADMITS it
-        expect(onX.dvy).toBeCloseTo(DASH_F * (SQRT3 / 2), 12);
+        expect(onX.dvy).toBeCloseTo(DASH_F * (Math.sqrt(3) / 2), 12);
 
-        const onY = knockbackImpulse(SQRT3, 1, DASH_F);
-        expect(onY.dvx).toBeCloseTo(DASH_F * (SQRT3 / 2), 12);
+        const onY = knockbackImpulse(cxAt, 1, DASH_F);
+        expect(onY.dvx).toBeCloseTo(DASH_F * (Math.sqrt(3) / 2), 12);
         expect(onY.dvy).toBe(0);                       // `>` REFUSES it
     });
 

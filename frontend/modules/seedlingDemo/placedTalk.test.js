@@ -164,19 +164,33 @@ describe('⛓⛓⛓ THE GAME ORACLE — the model against the real Flash build, 
     const run = runTape(ORACLE.tape, { levelSource });
 
     /**
-     * ⚠ THE TAIL IS NOT BIT-EXACT AND IS NOT CLAIMED TO BE. The game is a
-     * recompiled Flash build; after the freeze lifts, its fractional drift
-     * and the model's differ in the last few bits (≤ 3 units in the last
-     * place, ≤ 1e-13 px). What is EXACT is every tick through the freeze and
-     * its resume, every LEVEL, and the terminal position — and those are what
-     * the defect was about. Pinning "0 differing" here would have been a
-     * claim the arithmetic cannot support; pinning a MEASURED bound is one it
-     * can, and it still reds on any real divergence.
-     * → [[feedback_relative_claim_cannot_see_collision]]'s sibling: a
-     *   tolerance chosen for convenience hides a defect, a tolerance MEASURED
-     *   and recorded does not.
+     * ⛓⛓⛓ **R9 SLICE 12e⁗: THE TAIL IS BIT-EXACT NOW — ALL 709 OBSERVATIONS,
+     * maxAbsDeltaPx 0 — AND THE PARAGRAPH THAT USED TO STAND HERE WAS A TRUE
+     * STATEMENT WITH A FALSE EXPLANATION.**
+     *
+     * It read: *"the game is a recompiled Flash build; after the freeze lifts,
+     * its fractional drift and the model's differ in the last few bits (≤ 3
+     * units in the last place) … pinning '0 differing' here would have been a
+     * claim the arithmetic cannot support."* The MEASUREMENT was honest — 226
+     * of 709 exact within 9.9e-14 at 12e‴'s head — but the drift was **not the
+     * build's**. It was the model's own: `knockbackImpulse` was skipping
+     * `Player.as:788`'s POSITION ROUND TRIP and spelling `Point.normalize` with
+     * `Math.hypot` + `cx / length` where the runtime uses `sqrt(x*x + y*y)` and
+     * a reciprocal multiply. Transcribe both and the drift is ZERO.
+     *
+     * ⚠ THE LESSON IS THE ATTRIBUTION, NOT THE NUMBER. A measured tolerance is
+     * still better than a convenient one — that part stands — but "the last few
+     * bits are the emulator's" is a CLAIM ABOUT A CAUSE, and this one was
+     * wrong for two rungs while a correctly-measured bound made it look
+     * settled. A bound records what you saw; it does not license a story about
+     * why. [[feedback_header_warning_is_not_a_check]]
+     *
+     * ⛓ AND THIS IS AN INDEPENDENT WITNESS FOR THAT FIX: this tape is NOT one
+     * of the thirteen 12e⁗ attributed the ULP against, it was recorded at a
+     * different slice, and nothing was tuned to it. The bound is 0 now, so any
+     * ULP regression reds here.
      */
-    it('agrees with the game on every one of the 709 observations, within a MEASURED bound', () => {
+    it('agrees with the game on every one of the 709 observations, BIT-EXACT', () => {
         const game = ORACLE.stream.ticks;
         const a = ORACLE.agreement;
         expect(run.ticks).toHaveLength(game.length);
