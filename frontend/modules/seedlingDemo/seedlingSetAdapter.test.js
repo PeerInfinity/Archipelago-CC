@@ -106,6 +106,19 @@ function wiredRoom(level, to, { fallthrough = null, pickup = false } = {}) {
     return recordToOel({ ...base, entities });
 }
 
+/** ⛓ TWO `<teleporter>`s in one room, at DIFFERENT cells — an ordinary shape,
+ *  and the one an entity match that compared only the element would confuse. */
+function twoDoorRoom(level, toA, toB) {
+    const base = emptyLevel({ level });
+    const door = (x, y, to) => ({
+        type: 'teleporter', x, y, attrs: { to, playerx: 128, playery: 128, tag: -1, show: 1, sign: 0 },
+    });
+    return recordToOel({
+        ...base,
+        entities: [...(base.entities ?? []), door(2 * TILE, 2 * TILE, toA), door(5 * TILE, 2 * TILE, toB)],
+    });
+}
+
 const apply = (s, op) => {
     const res = s.apply(op);
     if (!res.ok) throw new Error(res.description);
@@ -844,6 +857,83 @@ describe('⛔⛔ `disconnect` — the OEL has NO inert door, and the four reader
         expect(exitsOfRoom(s.record(), 1).map((e) => e.to)).toEqual([2]);
         expect(s.apply({ op: 'disconnect', room: 1, exitIndex: 1 }).description)
             .toMatch(/that room has 1 exit carrying a @to/);
+    });
+
+    /**
+     * ⛓⛓⛓ **EDITOR v3 E3b — §21.11 #3, REFUSED IN THE OP.**
+     *
+     * A location marked ON a transition was deleted with it, leaving the
+     * overlay naming a body the room no longer has — and the refusal arrived
+     * one edit LATER, from the derivation, about a room the author had not
+     * touched. The op now refuses first, names the location, and names
+     * `unmark-location` as the way out.
+     *
+     * ⛔ The comparison is made BEFORE `removeExitInKind` runs, which is what
+     * the mutant below is about: moved after, the entity is already gone and the
+     * check can never fire.
+     */
+    it('disconnect REFUSES over a marked location, and applies once it is unmarked', () => {
+        const { s } = session();
+        // ⛓ a transition the overlay can mark: the teleporter's OWN @x/@y, in
+        //   PIXELS, which is the address `mark-location` stores.
+        apply(s, { op: 'replace-room', room: 1, xml: wiredRoom(1, 2) });
+        const [exit] = exitsOfRoom(s.record(), 1);
+        expect(exit.element).toBe('teleporter');
+        apply(s, {
+            op: 'mark-location', room: 1,
+            entity: { type: exit.element, x: exit.x, y: exit.y },
+            name: 'Door Prize', vanilla_item: 'Light',
+        });
+
+        const refused = s.apply({ op: 'disconnect', room: 1, exitIndex: 0 });
+        expect(refused.ok).toBe(false);
+        expect(refused.description).toMatch(/"Door Prize"/);
+        expect(refused.description).toMatch(/unmark-location/);
+        // ⛔ the door is still there — a refusal writes nothing
+        expect(exitsOfRoom(s.record(), 1)).toHaveLength(1);
+
+        // ⛓ …and a location marked on something ELSE in the same room does NOT
+        //   block it, so the check is about the ENTITY and not about the room.
+        apply(s, { op: 'unmark-location', room: 1, name: 'Door Prize' });
+        apply(s, { op: 'replace-room', room: 1, xml: wiredRoom(1, 2, { pickup: true }) });
+        apply(s, {
+            op: 'mark-location', room: 1,
+            entity: { type: 'torchpickup', x: 4 * TILE, y: 3 * TILE },
+            name: 'Elsewhere', vanilla_item: 'Light',
+        });
+        expect(apply(s, { op: 'disconnect', room: 1, exitIndex: 0 }).ok).toBe(true);
+        expect(exitsOfRoom(s.record(), 1)).toHaveLength(0);
+        // ⛓ and the untouched location survived the unwire
+        expect(s.record().overlay.rooms['1'].locations.map((l) => l.name)).toEqual(['Elsewhere']);
+    });
+
+    /**
+     * ⛔⛔ **AND THE MATCH IS EXACT ON THE COORDINATES, NOT JUST THE TYPE.** Two
+     * `<teleporter>`s in one room are ordinary — `findEntityInRoom`'s own
+     * docblock says so and refuses a tolerant match for the same reason. A
+     * check that compared only `element` would refuse EVERY disconnect in a
+     * room holding one marked door, which is a room the author can no longer
+     * edit at all.
+     */
+    it('…and it compares the COORDINATES too — a marked door does not freeze its neighbour', () => {
+        const { s } = session();
+        apply(s, { op: 'replace-room', room: 1, xml: twoDoorRoom(1, 2, 0) });
+        const exits = exitsOfRoom(s.record(), 1);
+        expect(exits).toHaveLength(2);
+        expect(exits.every((e) => e.element === 'teleporter')).toBe(true);
+        expect(exits[0].x).not.toBe(exits[1].x);
+        // mark the SECOND door only
+        apply(s, {
+            op: 'mark-location', room: 1,
+            entity: { type: exits[1].element, x: exits[1].x, y: exits[1].y },
+            name: 'Second Door', vanilla_item: 'Light',
+        });
+        // ⛓ the FIRST door — same element, different coordinates — still unwires
+        expect(apply(s, { op: 'disconnect', room: 1, exitIndex: 0 }).ok).toBe(true);
+        // ⛔ and the marked one, now ordinal 0, still refuses
+        const refused = s.apply({ op: 'disconnect', room: 1, exitIndex: 0 });
+        expect(refused.ok).toBe(false);
+        expect(refused.description).toMatch(/"Second Door"/);
     });
 });
 

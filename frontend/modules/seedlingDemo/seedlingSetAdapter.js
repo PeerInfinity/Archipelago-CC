@@ -728,9 +728,43 @@ function connect(record, { from, to, one_way: oneWay = false, arrival = null }) 
     };
 }
 
+/**
+ * ⛓⛓⛓ **`disconnect` — AND SINCE E3b IT REFUSES OVER A MARKED LOCATION**
+ * (§21.11 #3).
+ *
+ * ⛔ Seedling has no inert door, so `disconnect` DELETES the `<teleporter>` /
+ * `<stairsup>` / `<stairsdown>` element. A location the overlay marked ON THAT
+ * ELEMENT would then name a body the room no longer has, and every later
+ * derivation refuses by name — a refusal about a room the author did not touch,
+ * one edit after the edit that caused it.
+ *
+ * ⛔ **THE COMPARISON HAPPENS BEFORE THE REMOVAL**, because after
+ * `removeExitInKind` the entity is gone and there is nothing left to compare
+ * against. The exit is read through `exitAt`, whose entries carry the OEL
+ * element's own `@x`/`@y` in PIXELS — the same units `mark-location` stores in
+ * `overlay.rooms[room].locations[].entity` (`{type, x, y}`), so the match is
+ * exact on both sides, as `findEntityInRoom`'s is.
+ *
+ * ⛓ THE DOOR OUT IS NAMED: `unmark-location`, which already takes the `loc:`
+ * rule with it — the same sentence `mazeSetAdapter` prints (§26.6).
+ */
 function disconnect(record, { room, exitIndex }) {
     const { room: current, doc } = indexedRoom(record, room, 'disconnect');
-    exitAt(doc, exitIndex, 'disconnect');
+    const exit = exitAt(doc, exitIndex, 'disconnect');
+    const marked = (record.overlay?.rooms?.[String(room)]?.locations ?? [])
+        .filter((l) => l.entity?.type === exit.element
+            && l.entity?.x === exit.x && l.entity?.y === exit.y);
+    if (marked.length > 0) {
+        fail(`seedlingSetAdapter: room ${room} exit ${exitIndex} is the <${exit.element}> at `
+            + `(${exit.x}, ${exit.y}), and the overlay has marked it as location`
+            + `${marked.length === 1 ? '' : 's'} `
+            + `${marked.map((l) => JSON.stringify(l.name)).join(', ')}. ⛔ REFUSED rather than `
+            + 'unwired: Seedling has no inert door, so this op DELETES the element — the '
+            + 'location would be left naming a body the room no longer has, and every later '
+            + 'derivation would refuse by name, one edit after the edit that caused it. '
+            + `Run \`unmark-location\` on ${marked.map((l) => JSON.stringify(l.name)).join(', ')} `
+            + 'first (it takes the `loc:` access rule with it and says so).');
+    }
     const { room: next, removed } = removeExitInKind(current, exitIndex);
     const rooms = record.set.rooms.map((r, i) => (i !== room ? r : next));
     return {
