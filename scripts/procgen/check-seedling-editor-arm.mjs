@@ -140,11 +140,11 @@ const { emptyLevel } = await M('procgenLevel.js');
 const { recordToOel } = await M('procgenLevelOel.js');
 const { TILE_SIZE } = await M('levelWorld.js');
 const {
-    createSeedlingSetAdapter, createSetSession, exitsOfRoom, rulesJsonOf, setRecord,
-    whatLinksHere,
+    createSeedlingSetAdapter, createSetSession, exitsOfRoom, linksIndexOf, rulesJsonOf,
+    setRecord, whatLinksHere,
 } = await M('seedlingSetAdapter.js');
 const {
-    OVERVIEW, exitArrowShapes, freeEdgesOf, linkScanBound, reportOf, roomRowsOf,
+    OVERVIEW, exitArrowShapes, freeEdgesOf, linkScanBound, linkScanCost, reportOf, roomRowsOf,
 } = await M('watchSetEditor.js');
 const { emptyOverlay } = await M('seedlingSetOverlay.js');
 const { tileTypeForPlacement } = await import(
@@ -573,17 +573,37 @@ const VANILLA_XML_RECORD = setRecord(VANILLA_XML, emptyOverlay());
 const VANILLA_XML_SCAN = linkScanBound(VANILLA_XML_RECORD);
 const VANILLA_XML_ROWS = roomRowsOf(VANILLA_XML_RECORD, { links: VANILLA_XML_SCAN.ok });
 const VANILLA_XML_ARROWS = exitArrowShapes(VANILLA_XML_ROWS).length;
-check(VANILLA_XML_SCAN.ok === false && VANILLA_XML_SCAN.kb === 0
+/**
+ * ⛓⛓⛓ **EDITOR v3 E3b — THE BOUND'S VERDICT FLIPPED, AND THIS IS THE ROW THAT
+ * SAYS SO.** Until E3b the column was n passes over the set — 116 × 2,461 =
+ * 285,476 entity visits, ≈ 428 ms by `LINK_SCAN`'s own arithmetic and 328–397 ms
+ * measured, over the 250 ms budget — so it read `(bounded)`. `linksIndexOf`
+ * buckets the whole graph in ONE pass (2,461 entity visits, ≈ 3.7 ms estimated
+ * and 3.49 ms measured), the bound compares THAT, and the column is COMPUTED.
+ * ⛓ The counts below are `linksIndexOf`'s own, so the page's column is compared
+ * against the index and not against itself.
+ */
+const VANILLA_XML_INDEX = linksIndexOf(VANILLA_XML_RECORD);
+const VANILLA_XML_INBOUND = VANILLA_XML_ROWS.map(
+    (r) => (VANILLA_XML_INDEX.byRoom.get(r.index) ?? []).length);
+const VANILLA_XML_LINKS = VANILLA_XML_ROWS.flatMap(
+    (r) => [...(VANILLA_XML_INDEX.byRoom.get(r.index) ?? [])]);
+check(VANILLA_XML_SCAN.ok === true && VANILLA_XML_SCAN.why === null
+    && VANILLA_XML_SCAN.kb === 0 && VANILLA_XML_SCAN.rooms === 116
     && VANILLA_XML_SCAN.entities > 0 && VANILLA_XML_ROWS.length === 116
-    && VANILLA_XML_ROWS.every((r) => r.linkedFrom === null && r.openable)
+    && VANILLA_XML_ROWS.every((r, i) => r.linkedFrom === VANILLA_XML_INBOUND[i] && r.openable)
+    && VANILLA_XML_INBOUND.reduce((a, b) => a + b, 0) > 0
     && VANILLA_XML_ARROWS > 100,
-    '⛓⛓ …and §21.4\'s LINK-SCAN BOUND STILL BITES at 116 rooms — but RE-PRICED (E1b): a '
-    + `record room parses NOTHING, so the quantity is ENTITIES, not bytes. ${
-        VANILLA_XML_SCAN.entities} entity visits ≈ ${Math.round(VANILLA_XML_SCAN.ms)} ms `
-    + 'against the same 250 ms budget, and 0 KB of text — so the column is still `(bounded)` '
-    + 'while every room is still OPENABLE and the arrows are still built (ONE pass over the '
-    + 'set, not n of them)',
-    `${VANILLA_XML_ARROWS} arrow shape(s), ${Math.round(VANILLA_XML_SCAN.kb)} KB`);
+    '⛓⛓ …and §21.4\'s LINK-SCAN BOUND NO LONGER BITES at 116 rooms — E3b made the column ONE '
+    + `PASS (\`linksIndexOf\`, bucketed by destination). ${VANILLA_XML_SCAN.entities} entity `
+    + `visits ≈ ${Math.round(VANILLA_XML_SCAN.ms)} ms against the same 250 ms budget (the n-pass `
+    + `column was ${linkScanCost(VANILLA_XML_RECORD).entities} visits ≈ ${
+        Math.round(linkScanCost(VANILLA_XML_RECORD).ms)} ms and DID bite) — so the column is `
+    + 'COMPUTED, every count is `linksIndexOf`\'s own, every room is still OPENABLE and the '
+    + 'arrows come from the SAME pass',
+    `${VANILLA_XML_ARROWS} arrow shape(s), ${
+        VANILLA_XML_INBOUND.reduce((a, b) => a + b, 0)} inbound link(s), ${
+        Math.round(VANILLA_XML_SCAN.kb)} KB`);
 const VANILLA_XML_SESSION = createSetSession(setAdapter, VANILLA_XML_RECORD,
     { base: { kind: 'set', set_id: VANILLA_XML.set_id } });
 const VANILLA_XML_REPORT = reportOf(VANILLA_XML_SESSION, SET_DEPS,
@@ -2440,32 +2460,43 @@ try {
         van.setNote.slice(0, 150));
 
     /**
-     * ⛔ §21.4's BOUND, ON THE CORPUS IT WAS SIZED FOR — 116 × 1,332 KB is
-     * 154,528 KB of parsing, ~7.7 s by the bound's own arithmetic and ~19 s
-     * measured, against a 250 ms budget. The COLUMN reads `(bounded)`, the
-     * sentence says so, and the ARROWS are unaffected because they come from one
-     * pass over the set rather than n of them.
+     * ⛓⛓⛓ **EDITOR v3 E3b — THE `(bounded)` COLUMN IS GONE FROM VANILLA.**
+     * §21.4's bound was sized for a set read n times: 116 × 1,332 KB of OEL
+     * (~19 s measured), then 116 × 2,461 entity visits once the rooms became
+     * records (328–397 ms) — both over the 250 ms budget. `linksIndexOf` reads
+     * the set ONCE and buckets by destination, the bound compares that, and the
+     * column now carries a COUNT for every room. ⛔ The counts are compared
+     * against node's `linksIndexOf`, never against the page's own arithmetic.
      */
     const vanRows = van.rows.slice(1);
     check(vanRows.length === 116
-        && vanRows.every((r, i) => r[0] === String(i) && r[4] === '(bounded)')
-        && vanRows.every((r, i) => r[3] === String(VANILLA_XML_ROWS[i].exits)),
-        '⛓⛓⛓ **116 ROWS, THE LINKS COLUMN `(bounded)`, AND THE EXIT COUNTS ARE NODE\'S** — the '
-        + 'bound is a MEASUREMENT of §21.4 on real data, not a defect, and every exit count is '
-        + '`exitsOfRoom`\'s own answer for that room',
-        `${vanRows.length} row(s), links column ${json([...new Set(vanRows.map((r) => r[4]))])}`);
+        && vanRows.every((r, i) => r[0] === String(i)
+            && r[4] === String(VANILLA_XML_INBOUND[i]))
+        && vanRows.every((r, i) => r[3] === String(VANILLA_XML_ROWS[i].exits))
+        && !vanRows.some((r) => r[4] === '(bounded)'),
+        '⛓⛓⛓ **116 ROWS, THE LINKS COLUMN CARRIES A COUNT — `(bounded)` APPEARS NOWHERE — AND '
+        + 'BOTH COLUMNS ARE NODE\'S** — every inbound count is `linksIndexOf`\'s own answer for '
+        + 'that room and every exit count is `exitsOfRoom`\'s, so the page is compared against '
+        + 'the index rather than against itself',
+        `${vanRows.length} row(s), ${VANILLA_XML_INBOUND.reduce((a, b) => a + b, 0)} inbound `
+        + `link(s), links column ${json([...new Set(vanRows.map((r) => r[4]))].slice(0, 8))}`);
     const boundSaid = await page.evaluate(
         () => document.getElementById('editSetRooms')?.textContent ?? '');
-    // ⛓ E1b — the sentence names the quantity it PRICED, and for a record set
-    //   that is ENTITY VISITS, not kilobytes of text (there are 0 of those).
-    check(/whole-set link scan would read/.test(boundSaid)
-        && boundSaid.includes(`${VANILLA_XML_SCAN.entities} record entities`)
-        && !/KB of OEL text/.test(boundSaid)
-        && /ARROWS are UNAFFECTED/.test(boundSaid),
-        '⛔ …**AND THE PAGE SAYS WHY**, with the number — a blank column for a reason nobody '
-        + 'printed would read as a set in which nothing links anywhere',
-        `${VANILLA_XML_SCAN.entities} entity visits claimed, ${
-            Math.round(VANILLA_XML_SCAN.kb)} KB of text`);
+    /**
+     * ⛔ **AND THE PAGE PRINTS NO BOUND SENTENCE, BECAUSE NOTHING WAS REFUSED.**
+     * The sentence was never decoration: a blank column for a reason nobody
+     * printed reads as a set in which nothing links anywhere. Now the column is
+     * not blank, so the row asserts the sentence is ABSENT — a page still
+     * printing it would be saying it refused work it did.
+     */
+    check(!/whole-set link scan would read/.test(boundSaid)
+        && !/reads `\(bounded\)`/.test(boundSaid)
+        && !/ARROWS are UNAFFECTED/.test(boundSaid),
+        '⛔ …**AND NO BOUND SENTENCE IS PRINTED** — the column was computed, so there is nothing '
+        + 'to say it was not; the sentence returns the moment a set is wide enough to bound ONE '
+        + 'pass, and `watchSetEditor.test.js` drives that case',
+        `${VANILLA_XML_SCAN.entities} entity visits in ONE pass ≈ ${
+            Math.round(VANILLA_XML_SCAN.ms)} ms, budget 250 ms`);
     /**
      * ⛓ THE STRIP'S OWN GEOMETRY, READ OFF THE PAGE. `overviewLayout` sets the
      * canvas to `cellPx × rooms`, so the width divided by 116 IS the cell size
@@ -2727,13 +2758,40 @@ try {
         + `strip that was already ${beforeArm?.w}×${beforeArm?.h}: the view painted once at `
         + 'mount, while the canvas was `width="1"` and the rooms list was empty, and nothing '
         + 'repainted it after (§23.11 #5, a D2 defect shipped on `main`)', json(beforeArm));
+    /**
+     * ⛓⛓ **EDITOR v3 E3b — THE ARROWS AND THE COLUMN NOW AGREE BY
+     * CONSTRUCTION.** They used to be two different readings of the graph:
+     * the arrows came from each room's own exit list (one pass) while the
+     * column was n passes and was bounded away. `linksIndexOf` is the one pass
+     * both read now, so "the arrows survive the bound" has become "the arrows
+     * and the column say the same thing" — and that is what is asserted: the
+     * column's inbound EXIT links sum to exactly the outbound exits the rows
+     * list.
+     *
+     * ⚠⚠ **MEASURED, AND THE FIRST SPELLING OF THIS ROW WAS WRONG.** The raw
+     * totals are NOT equal: 292 inbound links against 280 listed exits. The
+     * difference is the **12 `<control @fallthrough>` pits** — a pit is a
+     * transition INTO a room that its source room's exit list does not carry,
+     * because `exitsOfRoom` reads `doc.exits` and a fallthrough rides
+     * `doc.fallthroughs`. So the agreement is over the EXIT kind, and the pits
+     * are counted separately rather than quietly absorbed.
+     */
     check(afterArm !== null && afterArm.ovInk > 0
         && afterArm.ovW === afterArm.w && afterArm.ovH === afterArm.h
-        && VANILLA_XML_ARROWS > 100,
-        '⛓⛓ …**AND THE ARROWS SURVIVE THE BOUND — the link-scan COLUMN is what was bounded** — '
-        + 'so arming the gesture (which is `setTool`, and `setTool` repaints too) leaves them '
-        + `on the overlay at the strip's size; node counts ${VANILLA_XML_ARROWS} shapes for `
-        + 'this set', `${json(beforeArm)} → ${json(afterArm)}`);
+        && VANILLA_XML_ARROWS > 100
+        && VANILLA_XML_LINKS.filter((l) => l.kind === 'exit').length
+            === VANILLA_XML_ROWS.reduce((a, r) => a + r.exits, 0)
+        && VANILLA_XML_LINKS.filter((l) => l.kind === 'fallthrough').length > 0,
+        '⛓⛓⛓ **THE ARROWS AND THE LINKS COLUMN ARE ONE READING OF THE GRAPH (E3b)** — every '
+        + 'inbound EXIT link the column counts is an outbound exit some room lists, so those '
+        + `two totals are equal (${VANILLA_XML_LINKS.filter((l) => l.kind === 'exit').length}); `
+        + `the remaining ${VANILLA_XML_LINKS.filter((l) => l.kind === 'fallthrough').length} `
+        + 'inbound links are `<control @fallthrough>` PITS, which no exit list carries. '
+        + 'And the arrows land on the OVERLAY canvas at the STRIP\'s size '
+        + `once the view repaints; node counts ${VANILLA_XML_ARROWS} shapes for this set. `
+        + 'The arrows were ALREADY there at LOAD (E3a, the row above) and arming the gesture '
+        + '(`setTool`, which repaints too) leaves them on the overlay at the strip\'s size',
+        `${json(beforeArm)} → ${json(afterArm)}`);
 
     /* ══ CLAIM 10 — no edit reaches a URL, in either arm ═══════════ */
 

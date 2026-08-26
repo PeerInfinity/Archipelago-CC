@@ -46,7 +46,8 @@ import { emptyOverlay, exitRuleKey, locationRuleKey } from './seedlingSetOverlay
 import {
     ROOM_FIELDS, SET_FIELDS, SET_OP_KINDS, SeedlingSetDeriveRefusal, closeRoomSession,
     createSeedlingSetAdapter, createSetSession, deriveAtlasOf, downloadSet, exitsOfRoom,
-    roomsOfSet, rulesJsonOf, setRecord, setSessionRoomSource, validateForDownload, whatLinksHere,
+    linkScanBoundOf, linksIndexOf, roomsOfSet, rulesJsonOf, setRecord, setSessionRoomSource,
+    validateForDownload, whatLinksHere,
 } from './seedlingSetAdapter.js';
 
 const TILE = 16;
@@ -1527,6 +1528,128 @@ describe('"what links here" and the room exit list — what D2\'s DOM will read'
         const out = whatLinksHere(record, 1);
         expect(out.unreadable).toEqual([2]);
         expect(out.links.map((l) => l.from)).toEqual([0]);
+    });
+
+    /* ══════════════════════════════════════════════════════════════════
+     * ⛓⛓⛓ EDITOR v3 E3b — ONE PASS, BUCKETED (§24.7)
+     * ══════════════════════════════════════════════════════════════════ */
+
+    /**
+     * ⛔⛔ **THE ORACLE IS THE PRE-SLICE ALGORITHM, SPELLED OUT HERE.** Comparing
+     * `whatLinksHere` against `linksIndexOf` would be a FIXED POINT — they are
+     * one code path since E3b, so agreement would test self-consistency and not
+     * correctness ([[feedback_fixed_point_is_not_correctness]]). `nPassLinks`
+     * below is what the function did before: a full walk of the set per room,
+     * exits then fallthroughs, filtered to the destination. The row asserts the
+     * bucketed answer equals it — INCLUDING ORDER, because a page numbers the
+     * rows it prints.
+     */
+    const nPassLinks = (record, room) => {
+        const links = [];
+        const unreadable = [];
+        (record.set.rooms ?? []).forEach((r, from) => {
+            const doc = indexOfRoom(r);
+            if (doc === null) { unreadable.push(from); return; }
+            doc.exits.forEach((ex, index) => {
+                if (ex.to === room) links.push({ from, kind: 'exit', index, element: ex.element });
+            });
+            doc.fallthroughs.forEach((f, index) => {
+                if (f.to === room) {
+                    links.push({ from, kind: 'fallthrough', index, element: f.element });
+                }
+            });
+        });
+        return { links, unreadable };
+    };
+
+    /** A set with BOTH link kinds, a room two rooms reach, and an unreadable one. */
+    const mixedLinkSet = () => {
+        const wired = buildLevelSet([
+            { ...emptyLevel({ level: 0 }),
+                entities: [...(emptyLevel({ level: 0 }).entities ?? []),
+                    { type: 'control', x: 0, y: 0, attrs: { fallthrough: 2, xOff: 0, yOff: 0, sign: 0 } }] },
+            { ...emptyLevel({ level: 1 }),
+                entities: [...(emptyLevel({ level: 1 }).entities ?? []),
+                    { type: 'control', x: 0, y: 0, attrs: { fallthrough: 2, xOff: 0, yOff: 0, sign: 0 } }] },
+            emptyLevel({ level: 2 }),
+            emptyLevel({ level: 3 }),
+            emptyLevel({ level: 4 }),
+        ], { setId: 'links-index-probe', link: true }).set;
+        return setRecord({
+            ...wired,
+            rooms: wired.rooms.map((r, i) => (i === 4 ? { ...r, source: { embed: 'levels/X.oel' } } : r)),
+        });
+    };
+
+    it('⛓⛓ the BUCKETED index answers exactly what n passes did, room for room and IN ORDER', () => {
+        const record = mixedLinkSet();
+        const index = linksIndexOf(record);
+        let exits = 0;
+        let falls = 0;
+        for (let room = 0; room < record.set.rooms.length; room += 1) {
+            const oracle = nPassLinks(record, room);
+            expect(whatLinksHere(record, room), `room ${room}`).toEqual(oracle);
+            expect([...(index.byRoom.get(room) ?? [])], `room ${room}`).toEqual(oracle.links);
+            exits += oracle.links.filter((l) => l.kind === 'exit').length;
+            falls += oracle.links.filter((l) => l.kind === 'fallthrough').length;
+        }
+        // ⛔ BOTH kinds occur and a room is reached TWICE, so the equality is a
+        //   real comparison rather than one over empty lists
+        expect(exits).toBeGreaterThan(0);
+        expect(falls).toBe(2);
+        expect((index.byRoom.get(2) ?? []).length).toBeGreaterThan(1);
+        // ⛓ …and the unreadable room is named once, identically, for every room
+        expect(index.unreadable).toEqual([4]);
+        expect(whatLinksHere(record, 0).unreadable).toEqual([4]);
+    });
+
+    /**
+     * ⛓⛓⛓ **THE CACHE CANNOT GO STALE, AND THAT IS A FACT ABOUT THE KEY.** It
+     * is a `WeakMap` on the frozen RECORD, and every op rebuilds the record, so
+     * an edited set is a different object and misses. The row proves it the only
+     * way that means anything: it MUTATES through an op and asserts the answer
+     * MOVED — and that the old record still answers what it always did.
+     */
+    it('⛓⛓ an op\'s new record answers from a FRESH index — the cache did not leak', () => {
+        const before = baseRecord();
+        expect(whatLinksHere(before, 2).links.map((l) => l.from)).toEqual([1, 3]);
+        const out = adapter.apply(before, { op: 'disconnect', room: 1, exitIndex: 1 });
+        expect(out.ok).toBe(true);
+        expect(out.record).not.toBe(before);
+        // ⛔ the NEW record's answer moved…
+        expect(whatLinksHere(out.record, 2).links.map((l) => l.from)).toEqual([3]);
+        // …and the OLD one is unchanged, which is what makes undo readable
+        expect(whatLinksHere(before, 2).links.map((l) => l.from)).toEqual([1, 3]);
+        // ⛓ the same object twice IS the same index — the memoisation is real
+        expect(linksIndexOf(out.record)).toBe(linksIndexOf(out.record));
+    });
+
+    /**
+     * ⛓⛓ **THE BOUND IS DERIVED FROM `linkScanCost`, NOT WALKED AGAIN**, so it
+     * is exactly the n-pass cost over the room count. The row drives both ends:
+     * a set that fits and one that does not.
+     */
+    it('⛓ `linkScanBoundOf` prices ONE pass — n × its figures are the n-pass cost', () => {
+        const record = baseRecord();
+        const cost = {
+            rooms: ROOMS, kb: 12, entities: 6 * 240, ms: 6 * 4,
+        };
+        const ok = linkScanBoundOf(cost, 250);
+        expect(ok.ok).toBe(true);
+        expect(ok.why).toBe(null);
+        expect(ok.rooms).toBe(ROOMS);
+        expect(ok.entities * ROOMS).toBe(cost.entities);
+        expect(ok.ms * ROOMS).toBeCloseTo(cost.ms, 9);
+        const bounded = linkScanBoundOf(cost, 1);
+        expect(bounded.ok).toBe(false);
+        expect(bounded.why).toMatch(/ONE pass over the set, bucketed by destination/);
+        expect(bounded.why).toMatch(/reads `\(bounded\)`/);
+        // ⛔ the budget is a PARAMETER — omitting it refuses rather than defaulting
+        expect(() => linkScanBoundOf(cost, undefined)).toThrow(/needs a `budgetMs`/);
+        // ⛓ an EMPTY set divides by nothing
+        expect(linkScanBoundOf({ rooms: 0, kb: 0, entities: 0, ms: 0 }, 250))
+            .toEqual({ ok: true, rooms: 0, kb: 0, entities: 0, ms: 0, why: null });
+        expect(record.set.rooms).toHaveLength(ROOMS);
     });
 
     it('the exit list carries the ordinal `connect` and `disconnect` address by', () => {

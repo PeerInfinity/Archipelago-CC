@@ -66,7 +66,8 @@
 
 import {
     ROOM_FIELDS, SET_FIELDS, closeRoomSession, createSeedlingSetAdapter, deriveAtlasOf,
-    downloadSet, exitsOfRoom, readSetCell, rulesJsonOf, validateForDownload, whatLinksHere,
+    downloadSet, exitsOfRoom, linkScanBoundOf, readSetCell, rulesJsonOf, validateForDownload,
+    whatLinksHere,
 } from './seedlingSetAdapter.js';
 import { exitRuleKey, locationRuleKey } from './seedlingSetOverlay.js';
 import {
@@ -132,17 +133,23 @@ const isAdapterRefusal = (e) => e?.name === 'SeedlingSetAdapterError'
  * ⇒ `msPerEntity` is the ceiling of the measured spread, and a MIXED set sums
  * both halves — an `embed` room costs nothing here and is named by `unreadable`.
  *
- * ⚠⚠ **AND THE BOUND STILL BITES ON THE VANILLA 116 — RE-PRICING DID NOT
- * DELETE IT.** The whole column is 116 × 116 room visits: measured **365 ms**,
- * against the same 250 ms budget. What changed is the SIZE of the refused work,
- * not the verdict: E1 measured the text column at **16,989–19,390 ms**, so the
- * record path is **~47× cheaper** and the bound now bites at about **89 rooms**
- * instead of about **21**. ⛓ The remaining cost is STRUCTURAL rather than
- * per-room: `roomRowsOf` asks `whatLinksHere` once per room and each answer is
- * a full pass, so the column is O(n²) over a graph that ONE pass could bucket —
- * measured, that one pass is **3.5 ms** at n=116, a hundredfold under budget.
- * ⛔ NOT DONE HERE: it changes `whatLinksHere`'s contract, which is the
- * adapter's vocabulary and E3's. §24 names it with this number.
+ * ⚠⚠ **THE n-PASS COLUMN BIT ON THE VANILLA 116, AND E3b IS WHY IT NO LONGER
+ * DOES.** As n passes the column was 116 × 116 room visits — measured **365 ms**
+ * (E1b) and **328–397 ms** re-measured for E3b — against the same 250 ms
+ * budget, so it read `(bounded)`. E1 measured the TEXT column at
+ * **16,989–19,390 ms**, so the record path was already ~47× cheaper without
+ * changing the verdict; what was left was STRUCTURAL, and §24.7 named it with a
+ * number: `roomRowsOf` asked `whatLinksHere` once per room and each answer was
+ * a full pass, so the column was O(n²) over a graph ONE pass can bucket.
+ *
+ * ⇒ **E3b did that pass** (`seedlingSetAdapter.linksIndexOf`, cached on the
+ * frozen record's identity), and MEASURED the whole column at **3.49 ms** over
+ * the vanilla 116 — median of 10 repeats at loadavg 1.97, 2.89 ms at loadavg
+ * 0.94, 5.60 ms on a first COLD run — against 328–397 ms for the n-pass
+ * column: **~100× cheaper**, and comfortably under budget. ⛔ `LINK_SCAN` IS
+ * NOT RETIRED BY THAT: it is what `linkScanCost`
+ * still prices the work in, and the bound now compares the ONE-pass cost —
+ * a set wide enough still bounds, and the sentence says so.
  */
 export const LINK_SCAN = Object.freeze({
     msPerKb: 0.05,
@@ -186,27 +193,18 @@ export function linkScanKb(record) {
  * sentence that says so. ⛔ NAMED, never silently skipped: a rooms list whose
  * "links here" column was blank for a reason nobody printed would read as a set
  * in which nothing links anywhere.
+ *
+ * ⛓⛓⛓ **EDITOR v3 E3b — THE VERDICT MOVED, BECAUSE THE COLUMN IS ONE PASS
+ * NOW.** `whatLinksHere` answers from `linksIndexOf`'s bucketed index, so
+ * asking it once per room reads the set ONCE rather than n times. This is
+ * therefore three lines of BINDING: the ruling lives in
+ * `seedlingSetAdapter.linkScanBoundOf`, and `LINK_SCAN`/`linkScanCost` stay
+ * here because they price SEEDLING quantities — handing the cost and the budget
+ * across keeps ONE authority for both while keeping the adapter free of this
+ * module's graph (importing them there would put `setEditorView.js`, a DOM
+ * module, on the node-only adapter's import graph).
  */
-export function linkScanBound(record) {
-    const cost = linkScanCost(record);
-    const { kb, entities, ms } = cost;
-    if (ms <= LINK_SCAN.budgetMs) return { ok: true, kb, entities, ms, why: null };
-    const what = [
-        kb > 0 ? `${Math.round(kb)} KB of OEL text` : null,
-        entities > 0 ? `${entities} record entities` : null,
-    ].filter(Boolean).join(' + ') || 'nothing readable';
-    return {
-        ok: false,
-        kb,
-        entities,
-        ms,
-        why: `the whole-set link scan would read ${what} (every room, once per room) `
-            + `≈ ${Math.round(ms)} ms, over the ${LINK_SCAN.budgetMs} ms budget — so the `
-            + '"links here" COLUMN is not computed and reads `(bounded)`. ⛔ Bounded and said, '
-            + 'not skipped. ⚠ The overview ARROWS are UNAFFECTED: they come from each room\'s '
-            + 'own exit list, which is ONE pass over the set and not n of them.',
-    };
-}
+export const linkScanBound = (record) => linkScanBoundOf(linkScanCost(record), LINK_SCAN.budgetMs);
 
 /* ══════════════════════════════════════════════════════════════════════
  * ⛓⛓⛓ THE SUBSTRATE-FREE HALF — MOVED TO `procgenCore/setEditorCore.js`,
@@ -226,9 +224,12 @@ export function linkScanBound(record) {
  * one the maze runs. `setEditorCore.test.js` and `watchSetEditor.test.js`
  * assert the identity with `===` for exactly that reason.
  *
- * ⚠ `LINK_SCAN`/`linkScanCost`/`linkScanBound` above did NOT move: they price
+ * ⚠ `LINK_SCAN`/`linkScanCost`/`linkScanKb` above did NOT move: they price
  * SEEDLING quantities (OEL bytes, then record entities — §24.7). The maze
- * prices its own scan; the column the price gates is the core's.
+ * prices its own scan; the column the price gates is the core's. ⛓ E3b moved
+ * `linkScanBound`'s RULING to the adapter (`linkScanBoundOf`) and left the name
+ * here as a three-name binding over those three — the pricing stayed, the
+ * comparison moved to where `whatLinksHere`'s one pass lives.
  */
 
 export {

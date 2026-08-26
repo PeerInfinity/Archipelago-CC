@@ -1551,30 +1551,139 @@ export function exitsOfRoom(record, room) {
     return doc.exits.map((ex, index) => ({ index, ...ex }));
 }
 
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ THE LINK GRAPH — ONE PASS, BUCKETED (EDITOR v3 E3b, §24.7)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/** ⛓ Shared, so a room nothing links to costs no allocation at all. */
+const NO_LINKS = Object.freeze([]);
+
 /**
- * Which rooms carry a transition INTO `room` — D2's "what links here".
+ * ⛓⛓ **THE CACHE IS KEYED ON THE RECORD OBJECT, AND THAT IS WHAT MAKES IT
+ * SAFE.** Every op in this module rebuilds the record (`frozenRecord` — a
+ * refusal leaves the caller's untouched by construction), so a record that has
+ * been edited is a DIFFERENT object and misses the cache. There is no
+ * invalidation to get wrong and nothing to remember to call: the identity of
+ * the frozen document IS the key.
  *
- * ⛔ **A ROOM THIS CANNOT READ IS NAMED, NOT SKIPPED.** An `embed`-sourced
- * room's exits are invisible here, and a readout that quietly reported "nothing
- * links here" over a set holding one would be a floor presented as a fact —
- * `reachabilityOf`'s `rooms_not_walked` exists for the same reason.
- *
- * @returns {{links: object[], unreadable: number[]}}
+ * ⛔ A `WeakMap`, so holding an index never keeps a superseded record alive.
  */
-export function whatLinksHere(record, room) {
-    const links = [];
+const LINK_INDEX = new WeakMap();
+
+/**
+ * ⛓⛓⛓ **EVERY INBOUND LINK IN THE SET, BUCKETED BY DESTINATION — ONE PASS.**
+ *
+ * §24.7 measured the residue this answers: `roomRowsOf` asks `whatLinksHere`
+ * once per room and each answer was a full pass over the set, so the "links
+ * here" COLUMN was **O(n²)** over a graph one pass can bucket. MEASURED over the vanilla 116 carried as
+ * records (node, this tree, 2026-08-26): the COLUMN cost **328–397 ms** as n
+ * passes and **3.49 ms** as one bucketing pass — median of 10 repeats at
+ * loadavg 1.97, 2.89 ms at loadavg 0.94, and 5.60 ms on a first COLD run
+ * (above `LINK_SCAN.msPerEntity`'s ceiling, which warm it is not). **~100×
+ * cheaper**, and far enough under `LINK_SCAN`'s 250 ms budget that the bound
+ * stops biting.
+ *
+ * ⛔ **THE ORDER IS THE SAME ORDER `whatLinksHere` ANSWERED IN**, which is why
+ * the two are interchangeable rather than merely equinumerous: both walk rooms
+ * in index order and, within a room, exits before fallthroughs. Bucketing
+ * preserves that per destination because the outer walk is the same walk.
+ *
+ * ⛔ **A ROOM THIS CANNOT READ IS NAMED, NOT SKIPPED** — an `embed`-sourced
+ * room's exits are invisible, and a readout that quietly reported "nothing
+ * links here" over a set holding one would be a floor presented as a fact
+ * (`reachabilityOf`'s `rooms_not_walked` exists for the same reason).
+ *
+ * @returns {{byRoom: Map<number, object[]>, unreadable: number[]}}
+ */
+export function linksIndexOf(record) {
+    const cached = LINK_INDEX.get(record);
+    if (cached !== undefined) return cached;
+    const byRoom = new Map();
     const unreadable = [];
+    const bucket = (to, link) => {
+        const rows = byRoom.get(to);
+        if (rows === undefined) byRoom.set(to, [link]); else rows.push(link);
+    };
     (record.set.rooms ?? []).forEach((r, from) => {
         const doc = indexOfRoom(r);
         if (doc === null) { unreadable.push(from); return; }
         doc.exits.forEach((ex, index) => {
-            if (ex.to === room) links.push({ from, kind: 'exit', index, element: ex.element });
+            bucket(ex.to, { from, kind: 'exit', index, element: ex.element });
         });
         doc.fallthroughs.forEach((f, index) => {
-            if (f.to === room) links.push({ from, kind: 'fallthrough', index, element: f.element });
+            bucket(f.to, { from, kind: 'fallthrough', index, element: f.element });
         });
     });
-    return { links, unreadable };
+    for (const [to, rows] of byRoom) byRoom.set(to, Object.freeze(rows));
+    const index = Object.freeze({ byRoom, unreadable: Object.freeze(unreadable) });
+    LINK_INDEX.set(record, index);
+    return index;
+}
+
+/**
+ * Which rooms carry a transition INTO `room` — D2's "what links here".
+ *
+ * ⛓ **THE SIGNATURE AND THE ANSWER ARE UNCHANGED; ONLY THE COST IS.** Since
+ * E3b this reads `linksIndexOf`'s bucketed answer, so asking it once per room
+ * is one pass over the set rather than n of them (§24.7).
+ *
+ * @returns {{links: object[], unreadable: number[]}}
+ */
+export function whatLinksHere(record, room) {
+    const { byRoom, unreadable } = linksIndexOf(record);
+    return { links: byRoom.get(room) ?? NO_LINKS, unreadable };
+}
+
+/**
+ * ⛓⛓⛓ **WHETHER THE "LINKS HERE" COLUMN FITS ITS BUDGET — AND SINCE E3b IT IS
+ * PRICED AS ONE PASS.**
+ *
+ * ⛔ **THE COST IS DERIVED FROM THE n-PASS ONE, NOT WALKED AGAIN.** `cost` is
+ * `linkScanCost`'s answer — the substrate's own pricing, over the substrate's
+ * own quantities — and it is exactly n times the one-pass cost by construction
+ * (`kb = n × bytes / 1024`, `entities = n × per-set entities`, `ms` linear in
+ * both). Dividing by the room count is therefore the whole statement "the
+ * column is ONE pass now", said once. ⛓ A second walk of the rooms here would
+ * be a second authority for which room kinds cost what.
+ *
+ * ⚠ `budgetMs` and the pricing behind `cost` are PARAMETERS, not imports:
+ * `LINK_SCAN` and `linkScanCost` price SEEDLING bytes and record entities and
+ * live with the page module that owns them. Importing them here would put
+ * `setEditorView.js` — a DOM module — on this node-only adapter's graph.
+ *
+ * @param {{rooms: number, kb: number, entities: number, ms: number}} cost
+ * @param {number} budgetMs
+ * @returns {{ok, rooms, kb, entities, ms, why}} the figures are ONE PASS's
+ */
+export function linkScanBoundOf(cost, budgetMs) {
+    if (!Number.isFinite(budgetMs)) {
+        fail('seedlingSetAdapter: linkScanBoundOf needs a `budgetMs` — the budget is the page\'s '
+            + '`LINK_SCAN.budgetMs`, and defaulting one here would be a second authority for a '
+            + 'number the substrate already owns.');
+    }
+    const n = cost?.rooms ?? 0;
+    // ⛓ n = 0 is an empty set: nothing to scan, and no division to make.
+    const per = (total) => (n > 0 ? total / n : 0);
+    const kb = per(cost.kb);
+    const entities = per(cost.entities);
+    const ms = per(cost.ms);
+    if (ms <= budgetMs) return { ok: true, rooms: n, kb, entities, ms, why: null };
+    const what = [
+        kb > 0 ? `${Math.round(kb)} KB of OEL text` : null,
+        entities > 0 ? `${entities} record entities` : null,
+    ].filter(Boolean).join(' + ') || 'nothing readable';
+    return {
+        ok: false,
+        rooms: n,
+        kb,
+        entities,
+        ms,
+        why: `the whole-set link scan would read ${what} (ONE pass over the set, bucketed by `
+            + `destination) ≈ ${Math.round(ms)} ms, over the ${budgetMs} ms budget — so the `
+            + '"links here" COLUMN is not computed and reads `(bounded)`. ⛔ Bounded and said, '
+            + 'not skipped. ⚠ The overview ARROWS are UNAFFECTED: they come from each room\'s '
+            + 'own exit list, which is the same one pass.',
+    };
 }
 
 /** ⛓ Re-exported so a caller reads the rule-target vocabulary off the adapter's

@@ -38,8 +38,9 @@ import { buildLevelSet, vanillaRecordSet } from './levelSetExporter.js';
 import { emptyLevel } from './procgenLevel.js';
 import { parseOelLevel, recordToOel } from './procgenLevelOel.js';
 import { emptyOverlay, exitRuleKey, locationRuleKey } from './seedlingSetOverlay.js';
+import { indexOfRoom } from './levelSetValidator.js';
 import {
-    createSeedlingSetAdapter, createSetSession, setRecord,
+    createSeedlingSetAdapter, createSetSession, linksIndexOf, setRecord, whatLinksHere,
 } from './seedlingSetAdapter.js';
 import * as setEditorCore from '../procgenCore/setEditorCore.js';
 import * as watchSetEditor from './watchSetEditor.js';
@@ -197,12 +198,20 @@ describe('⛓⛓ the whole-set link scan is BOUNDED, and the bound is SAID', () 
             expect(roomRowsOf(small)[0].linkedFrom).not.toBe(null);
         });
 
-    it('⛓ the bounded sentence NAMES the quantity it priced, per kind', () => {
+    /**
+     * ⛓⛓ **EDITOR v3 E3b — THE SENTENCE NAMES ONE PASS NOW.** The bound
+     * compares what `linksIndexOf` actually reads: the set ONCE, bucketed by
+     * destination. So the room this row fattens has to blow the budget on ONE
+     * pass, not on n of them — which is the only reason the number below is
+     * derived from the budget rather than from the room count.
+     */
+    it('⛓ the bounded sentence NAMES the quantity it priced, per kind — and prices ONE pass', () => {
         const rec = recordSet(2);
         const fatRoom = {
             ...rec.rooms[0].source.record,
+            // ⛓ enough entities that ONE pass over the set is already over budget
             entities: Array.from(
-                { length: Math.ceil(LINK_SCAN.budgetMs / LINK_SCAN.msPerEntity) },
+                { length: Math.ceil(LINK_SCAN.budgetMs / LINK_SCAN.msPerEntity) + 1 },
                 () => ({ type: 'torchpickup', x: 0, y: 0, attrs: {} }),
             ),
         };
@@ -211,8 +220,13 @@ describe('⛓⛓ the whole-set link scan is BOUNDED, and the bound is SAID', () 
         });
         const b = linkScanBound(record);
         expect(b.ok).toBe(false);
-        expect(b.why).toMatch(/record entities \(every room, once per room\)/);
+        expect(b.why).toMatch(/record entities \(ONE pass over the set, bucketed by destination\)/);
         expect(b.why).not.toMatch(/KB of OEL text/);
+        // ⛔ …and the figures it reports ARE one pass's: n × them is `linkScanCost`
+        const cost = linkScanCost(record);
+        expect(b.rooms).toBe(2);
+        expect(b.entities * b.rooms).toBe(cost.entities);
+        expect(b.ms * b.rooms).toBeCloseTo(cost.ms, 9);
     });
 });
 
@@ -416,8 +430,15 @@ describe('⛓⛓ the forms are DERIVED — from the op vocabulary and from the a
  * ══════════════════════════════════════════════════════════════════════ */
 
 describe('⛓⛓⛓ the rule targets — DERIVED once per selection (§20.11 #4)', () => {
+    /**
+     * ⛓⛓⛓ **EDITOR v3 E3b — THE SENTENCE THAT MOVED.** Until E3b this row read
+     * *"and the op accepts EVERY one of them"*, which was true and was §21.2's
+     * defect: the list MARKED the inert targets and the op took a rule on them
+     * anyway. The op now refuses on `gateabilityOf` — the SAME answer the list
+     * marks with — so the claim is an AGREEMENT rather than a blanket accept.
+     */
     it('⛓⛓ the exit targets are the DERIVATION\'s own exit ids for THAT room, and the op '
-        + 'accepts every one of them', () => {
+        + 'accepts exactly the ones the list marks as GATING', () => {
         const s = sessionOf(ROOMS);
         const targets = ruleTargetsOf(s.record(), 1, DEPS);
         expect(targets.exits.length).toBeGreaterThan(0);
@@ -426,21 +447,30 @@ describe('⛓⛓⛓ the rule targets — DERIVED once per selection (§20.11 #4)
             const probe = sessionOf(ROOMS);
             expect(probe.apply({
                 op: 'set-access-rule', room: 1, target: exitRuleKey(e.id), rule: { rule: 'True_' },
-            }).ok).toBe(true);
+            }).ok, e.id).toBe(e.gates);
         }
+        // ⛔ both verdicts occur, so the loop is a filter and not a formality
+        expect(targets.exits.some((e) => e.gates)).toBe(true);
+        expect(targets.exits.some((e) => !e.gates)).toBe(true);
     });
 
     /**
-     * ⛓⛓⛓⛓ **THE DEFECT THIS SLICE'S OWN ROWS FOUND.** `set-access-rule`
-     * ACCEPTS a rule on an `in_*` arrival exit and the compiler builds NO AP
-     * exit for it — measured at `regionAtlasCompiler.js:341`, where the `to`
-     * endpoint of a `one_way` connection is recorded `{apExitName: null,
-     * arrivalOnly: true}` — so the rule reaches nothing and the door stays
-     * FREE. ⛓ MUTANT: `gates` is `true` for every target; the list stops
-     * marking them and the REPORT stops naming them.
+     * ⛓⛓⛓⛓ **§21.2's DEFECT, AND ITS FIX — THE ROW KEPT ITS MEASUREMENT AND
+     * CHANGED ITS VERDICT (E3b).** `regionAtlasCompiler.js:341` records the `to`
+     * endpoint of a `one_way` connection as `{apExitName: null, arrivalOnly:
+     * true}` and builds NO AP exit for it, so a rule on an `in_*` arrival
+     * reaches nothing and the door stays FREE. Until E3b the list MARKED that
+     * and the OP ACCEPTED it anyway; the op now REFUSES on the same reading.
+     *
+     * ⛔ The measurement that made this a finding rather than an assertion about
+     * a naming convention is KEPT and inverted: a rule on the inert target
+     * cannot be authored at all, so the free-edge count cannot move — and the
+     * only way to get such a rule into the overlay now is `set-overlay`, which
+     * writes the whole entry and asks no derivation. That is the door
+     * `inertRulesOf` still exists for, and this row drives it.
      */
-    it('⛔⛔⛔ an ARRIVAL-side exit is MARKED as gating nothing — the op accepts a rule on it '
-        + 'and the compiled rules never see it', () => {
+    it('⛔⛔⛔ an ARRIVAL-side exit is MARKED as gating nothing, the op REFUSES a rule on it, '
+        + 'and one smuggled in through `set-overlay` is NAMED by the report', () => {
         const s = sessionOf(ROOMS);
         const targets = ruleTargetsOf(s.record(), 1, DEPS);
         const inert = targets.exits.filter((e) => !e.gates);
@@ -450,14 +480,23 @@ describe('⛓⛓⛓ the rule targets — DERIVED once per selection (§20.11 #4)
         expect(inert.every((e) => e.id.startsWith('in_'))).toBe(true);
         expect(inert[0].why).toMatch(/ARRIVAL side of a ONE-WAY connection/);
 
-        // ⛓ …and the claim is MEASURED against the compiler, not asserted about
-        //   a naming convention: a rule on the inert one moves no free edge.
+        // ⛔ the OP refuses, naming the exit and the reason the list marked it
+        const refused = s.apply({
+            op: 'set-access-rule', room: 1, target: exitRuleKey(inert[0].id),
+            rule: { rule: 'Has', args: { item: 'Sword' } },
+        });
+        expect(refused.ok).toBe(false);
+        expect(refused.description).toContain(inert[0].id);
+        expect(refused.description).toMatch(/ARRIVAL side of a ONE-WAY connection/);
+
+        // ⛓ …and `set-overlay` is the door that is still open, by design: it
+        //   writes the whole entry and asks no derivation (§20.4). A rule that
+        //   arrives that way still moves NO free edge, and the REPORT names it.
         const before = freeEdgesOf(reportOf(sessionOf(ROOMS), DEPS, reportArgs).rules).length;
         apply(s, {
-            op: 'set-access-rule',
+            op: 'set-overlay',
             room: 1,
-            target: exitRuleKey(inert[0].id),
-            rule: { rule: 'Has', args: { item: 'Sword' } },
+            overlay: { rules: { [exitRuleKey(inert[0].id)]: { rule: 'Has', args: { item: 'Sword' } } } },
         });
         expect(freeEdgesOf(reportOf(s, DEPS, reportArgs).rules).length).toBe(before);
         expect(inertRulesOf(s.record(), reportOf(s, DEPS, reportArgs).atlas))
@@ -810,37 +849,118 @@ describe('the VANILLA 116, through the set editor\'s pure half', () => {
      * 250 ms budget**, so the verdict is unchanged and only the size of the
      * refused work moved. The bound now bites at about 89 rooms instead of 21.
      *
-     * ⛓ The remaining cost is STRUCTURAL: `roomRowsOf` asks once per room and
-     * each answer is a full pass, so the column is O(n²) over a graph ONE pass
-     * could bucket (3.5 ms at n=116, measured). That is `whatLinksHere`'s
-     * contract and therefore E3's; §24 names it with the number.
+     * ⛓⛓⛓ **AND E3b PAID IT OFF, SO THIS ROW'S VERDICT FLIPPED.** The remaining
+     * cost was STRUCTURAL: `roomRowsOf` asked once per room and each answer was
+     * a full pass, so the column was O(n²) over a graph ONE pass can bucket.
+     * `linksIndexOf` is that pass, cached on the frozen record's identity —
+     * MEASURED at 3.49 ms over these 116 (median of 10 repeats at loadavg 1.97;
+     * 2.89 ms at loadavg 0.94; 5.60 ms cold) against 328–397 ms for the n-pass
+     * column. The bound compares the one-pass cost now, so the vanilla set is
+     * `ok` and the COLUMN IS COMPUTED.
      */
-    it('BOUNDS the links column at 116 rooms, and the rows still list every exit', () => {
+    it('COMPUTES the links column at 116 rooms — the bound no longer bites, and it is MEASURED '
+        + 'against `linksIndexOf`', () => {
         const session = vanillaSession();
         const scan = linkScanBound(session.record());
-        expect(scan.ok).toBe(false);
-        // ⛓ ZERO KB of text — the whole set is records now — and the price is
-        //   the entity visits instead.
+        // ⛔ THE FLIP: `ok`, and NO sentence, because there is nothing refused
+        expect(scan.ok).toBe(true);
+        expect(scan.why).toBe(null);
+        // ⛓ ZERO KB of text — the whole set is records — and ONE pass reads the
+        //   set's 2,461 entities rather than 116 × 2,461 of them.
         expect(scan.kb).toBe(0);
-        expect(scan.entities).toBe(116 * 2461);
-        expect(scan.ms).toBeGreaterThan(LINK_SCAN.budgetMs);
-        expect(scan.why).toMatch(/reads `\(bounded\)`/);
-        expect(scan.why).toMatch(/record entities/);
-        expect(scan.why).toMatch(/ARROWS are UNAFFECTED/);
+        expect(scan.rooms).toBe(116);
+        expect(scan.entities).toBe(2461);
+        expect(scan.ms).toBeLessThan(LINK_SCAN.budgetMs);
+        // ⛓ …and `linkScanCost` still prices the n-pass work, unchanged, so the
+        //   two answers are a ratio of exactly the room count.
+        expect(linkScanCost(session.record()).entities).toBe(116 * 2461);
 
         const rows = roomRowsOf(session.record(), { links: scan.ok });
         expect(rows).toHaveLength(116);
-        // ⛓ `null`, NOT `0` — "not computed" and "nothing links here" are
-        // different facts and the column prints different things for them.
-        expect(rows.every((r) => r.linkedFrom === null)).toBe(true);
+        // ⛓ every row now carries a COUNT, and it is `linksIndexOf`'s own
+        expect(rows.every((r) => r.linkedFrom !== null)).toBe(true);
+        const index = linksIndexOf(session.record());
+        expect(rows.map((r) => r.linkedFrom))
+            .toEqual(rows.map((r) => (index.byRoom.get(r.index) ?? []).length));
+        expect(rows.reduce((a, r) => a + r.linkedFrom, 0)).toBe(292);
         // ⛔ AND EVERY ROOM IS OPENABLE, which is the whole point of the arm:
         // the committed vanilla set's 116 rooms are all refused by name.
         expect(rows.every((r) => r.openable)).toBe(true);
         expect(rows.filter((r) => r.exits > 0).length).toBeGreaterThan(100);
-        // The ARROWS come from each room's own exit list — ONE pass — so they
-        // are computed at 116 rooms even though the column is not.
+        // The ARROWS come from each room's own exit list — the SAME one pass
+        // the column reads now, so the two cannot disagree about the graph.
         expect(exitArrowShapes(rows, overviewLayout(rows.length, 1200)).length)
             .toBeGreaterThan(100);
+    }, 60000);
+
+    /**
+     * ⛓⛓⛓ **THE EQUIVALENCE, OVER THE REAL 116 — AGAINST THE PRE-SLICE
+     * ALGORITHM, NOT AGAINST ITSELF.** `nPassLinks` below is what
+     * `whatLinksHere` was before E3b: a full walk of the set per room, exits
+     * then fallthroughs. Comparing the shipped function against `linksIndexOf`
+     * would be a fixed point — they are one code path now — so the oracle is
+     * spelled out here and the comparison is a real one, in order.
+     */
+    it('⛓⛓ the bucketed index answers exactly what n passes did, over all 116 rooms', () => {
+        const record = vanillaSession().record();
+        const nPassLinks = (room) => {
+            const links = [];
+            const unreadable = [];
+            record.set.rooms.forEach((r, from) => {
+                const doc = indexOfRoom(r);
+                if (doc === null) { unreadable.push(from); return; }
+                doc.exits.forEach((ex, index) => {
+                    if (ex.to === room) links.push({ from, kind: 'exit', index, element: ex.element });
+                });
+                doc.fallthroughs.forEach((f, index) => {
+                    if (f.to === room) {
+                        links.push({ from, kind: 'fallthrough', index, element: f.element });
+                    }
+                });
+            });
+            return { links, unreadable };
+        };
+        const index = linksIndexOf(record);
+        let total = 0;
+        let falls = 0;
+        for (let room = 0; room < 116; room += 1) {
+            const oracle = nPassLinks(room);
+            expect(whatLinksHere(record, room), `room ${room}`).toEqual(oracle);
+            expect([...(index.byRoom.get(room) ?? [])], `room ${room}`).toEqual(oracle.links);
+            total += oracle.links.length;
+            falls += oracle.links.filter((l) => l.kind === 'fallthrough').length;
+        }
+        // ⛔ the real game's numbers, so the comparison is not over empty lists —
+        //   and BOTH link kinds are present, which is the mutant that matters
+        //   (bucketing that dropped `fallthroughs` would still pass on exits).
+        expect(total).toBe(292);
+        expect(falls).toBeGreaterThan(0);
+        expect(index.unreadable).toEqual([]);
+    }, 60000);
+
+    /**
+     * ⛓⛓ **A BOUND, NOT A PIN** — a wall-clock number is a fact about the
+     * machine that ran it. MEASURED on this tree 2026-08-26 (node): the whole
+     * column over these 116 is **3.49 ms** (median of 10 repeats at loadavg
+     * 1.97; 2.89 ms at loadavg 0.94; **5.60 ms on a first COLD run** — above
+     * `LINK_SCAN.msPerEntity`'s ceiling, which warm it is not), against
+     * **328–397 ms** for the n-pass column (3 reps) — **~100×**. The whole
+     * `roomRowsOf` call, which also builds every room's exit list, measured
+     * 9.40 ms. The assertion below is 50 ms: an order of magnitude of headroom
+     * over the measurement and a fifth of the budget, so a laden CI box does
+     * not turn a hundredfold win into a red run.
+     */
+    it('⛓ the whole column over 116 rooms is ONE pass and lands far under the budget', () => {
+        const record = vanillaSession().record();
+        linksIndexOf(record);                    // warm: the row is about the PASS, not the JIT
+        const cold = setRecord(record.set, record.overlay);
+        const started = performance.now();
+        const rows = roomRowsOf(cold);
+        const ms = performance.now() - started;
+        expect(rows).toHaveLength(116);
+        expect(rows.every((r) => r.linkedFrom !== null)).toBe(true);
+        expect(ms).toBeLessThan(50);
+        expect(ms).toBeLessThan(LINK_SCAN.budgetMs / 5);
     }, 60000);
 
     /** At 116 cells the strip is below `minStillPx`, so a cell is a LABELLED BOX. */
