@@ -129,15 +129,13 @@ import { buildInstruments } from './reference/instruments.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..', '..');
+/**
+ * ⛓ THE CODE ROOT — always this tree's, never a rehearsal's. The four modules
+ * below are pure functions of their arguments and the rehearsal WANTS them:
+ * a fake `segmentBootFromLatch` would rehearse nothing. Only the ROSTER moves
+ * (`ctx.tapesDir`); see `buildContext`.
+ */
 const MODULE = join(ROOT, 'frontend/modules/seedlingDemo');
-const TAPES = join(MODULE, 'fixtures/tapes');
-
-const { parseTape, gameVisibleTape } = await import(join(MODULE, 'tapeFormat.js'));
-const { segmentBootFromLatch, seamLatchFindings } = await import(
-    join(MODULE, 'r7Acceptance.js'));
-const { PLAYTHROUGH_CHAINS } = await import(join(MODULE, 'playthroughWalk.js'));
-const { rngPostureForBootLevel } = await import(join(MODULE, 'seamPosture.js'));
-const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
 
 const STAGES = ['S0', 'S1', 'S2', 'S3', 'S4', 'S5'];
 const arg = (name, dflt) => {
@@ -237,21 +235,20 @@ if (!STAGES.includes(FROM) || !STAGES.includes(TO)) {
 const wants = (s) => STAGES.indexOf(s) >= STAGES.indexOf(FROM)
     && STAGES.indexOf(s) <= STAGES.indexOf(TO);
 
-mkdirSync(RUN_DIR, { recursive: true });
 let failures = 0;
 const check = (name, ok, detail) => {
     if (!ok) failures += 1;
     console.log(`${ok ? 'PASS' : 'FAIL'}: ${name}${detail ? ` — ${detail}` : ''}`);
 };
 /** ⛓ 7b's flush rule: a stage's state hits the disk the moment it exists. */
-const flush = (stage, state) => {
-    writeFileSync(join(RUN_DIR, `${stage}.json`),
+const flush = (ctx, stage, state) => {
+    writeFileSync(join(ctx.runDir, `${stage}.json`),
         `${JSON.stringify({ finished: true, ...state }, null, 2)}\n`);
 };
-const resume = (stage) => {
-    const p = join(RUN_DIR, `${stage}.json`);
+const resume = (ctx, stage) => {
+    const p = join(ctx.runDir, `${stage}.json`);
     if (!existsSync(p)) {
-        throw new Error(`⛔ ${stage} has no state in ${RUN_DIR}. A stage entered with `
+        throw new Error(`⛔ ${stage} has no state in ${ctx.runDir}. A stage entered with `
             + `--from=${FROM} needs its predecessor's flushed state; run the earlier `
             + 'stage or point --run-dir at the run that produced it.');
     }
@@ -260,22 +257,113 @@ const resume = (stage) => {
     return s;
 };
 
-const textOf = (label) => readFileSync(join(TAPES, `${label}.json`), 'utf8');
-const rawOf = (label) => JSON.parse(textOf(label));
-const tapeOf = (label) => parseTape(rawOf(label));
-
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ R9 P1b, ⚖ 54 (3) — **THE INJECTION SEAM: ONE `context`, BUILT AT THE
+ * TOP FROM ARGV, HANDED TO EVERY STAGE.**
+ * ══════════════════════════════════════════════════════════════════════ */
 /**
- * ⛓ EVERY TAPE ON DISK, derived from the directory — not the chain lists.
- * S3's record set is a question about ARTIFACTS, and a tape this pipeline
- * authors no boot for (`r8-solve-20`, the `r8-d2` headline) still has an
- * expectation that goes stale when its producer re-authors it.
+ * ⛔⛔ WHY A PIPELINE THAT SPENDS A GPU NEEDS ONE. Three re-record attempts
+ * STOPPED after the browser had already been driven, on defects that are pure
+ * bookkeeping — a producer order taken from the FILE SYSTEM (§35.4 item 4), a
+ * guard reading the GLOBAL failure counter (§35.4 item 5, twice), a record set
+ * taken from `s2.wrote` instead of the projection diff (§33.4 item 4). Every
+ * one of those is decidable offline against a FAKE tree, and none of them was,
+ * because this file resolved its whole subject from its own location: the
+ * roster it reads, the chains it enumerates, the producers it shells and the
+ * Windows driver it spends. ⇒ every one of those becomes a FIELD here, with
+ * TODAY'S VALUE as the default, so the real pipeline is unchanged and a
+ * rehearsal is possible at all.
+ *
+ * ⛓ WHAT MOVES IN A REHEARSAL, AND WHAT DELIBERATELY DOES NOT:
+ *
+ *   MOVES     `tapesDir` · `chains` · `instrumentRows` · `scriptPath` ·
+ *             `exec` · `driveLatch` · `runDir` · `cacheDir`
+ *   DOES NOT  `parseTape`/`gameVisibleTape`, `segmentBootFromLatch`/
+ *             `seamLatchFindings`, `rngPostureForBootLevel`/`atlasLevelSource`
+ *             — the rehearsal's whole point is to run the REAL ones; a fake
+ *             `segmentBootFromLatch` would rehearse nothing. They are fields
+ *             so the context is built in ONE place, not so they can be faked.
+ *
+ * ⛔⛔ `playthroughWalk.js` IS TAKEN AS DATA, NOT AS AN IMPORT, and that is
+ * forced rather than chosen: it `loadTape`s every declared segment AT MODULE
+ * SCOPE (§26.7) through `fixtures/index.js`'s own hard-wired `TAPES_DIR`,
+ * which no context can redirect. Importing it under a fake roster would read
+ * the REAL one; so `chains` is a value, and a rehearsal never imports that
+ * module at all. (Teaching `fixtures/index.js` a tapes root would move a
+ * production module for a test-only reason — a ⚖ 40 event, refused.)
+ *
+ * ⚠ AND ONE SEAM §39.12's TABLE DID NOT NAME: `reference/instruments.mjs`.
+ * `participationOf` keys the instruments scan's rows by producer FILE NAME, so
+ * a fake producer is *"not in the instruments index at all"* and every fake
+ * segment comes back `unmeasured` — the walk measurement would rehearse
+ * nothing. It is LAZY (a memoised provider) because the real default scans the
+ * whole directory and all 18 docs, and `--latch-provisional` does not need it.
  */
-const allTapeLabels = () => readdirSync(TAPES)
-    .filter((f) => f.endsWith('.json') && f !== 'index.json')
-    .map((f) => f.slice(0, -5)).sort();
+async function buildContext(overrides = {}) {
+    const root = overrides.root ?? ROOT;
+    const moduleDir = overrides.moduleDir ?? MODULE;
+    const tapesDir = overrides.tapesDir ?? join(moduleDir, 'fixtures/tapes');
+    const tape = overrides.tapeFormat ?? await import(join(MODULE, 'tapeFormat.js'));
+    const acceptance = overrides.acceptance ?? await import(join(MODULE, 'r7Acceptance.js'));
+    const posture = overrides.posture ?? await import(join(MODULE, 'seamPosture.js'));
+    const levels = overrides.levels ?? await import(join(MODULE, 'levelSource.js'));
+    const chains = overrides.chains
+        ?? (await import(join(MODULE, 'playthroughWalk.js'))).PLAYTHROUGH_CHAINS;
+    let instrumentRowsCache = overrides.instrumentRows ?? null;
 
-/** The bytes the GAME is handed — `driveLatch`'s own projection, one spelling. */
-const gameVisibleTextOf = (label) => JSON.stringify(gameVisibleTape(tapeOf(label)));
+    const ctx = {
+        root,
+        moduleDir,
+        tapesDir,
+        runDir: overrides.runDir ?? RUN_DIR,
+        cacheDir: overrides.cacheDir ?? CACHE,
+        noCache: overrides.noCache ?? NO_CACHE,
+        chains,
+        parseTape: tape.parseTape,
+        gameVisibleTape: tape.gameVisibleTape,
+        segmentBootFromLatch: acceptance.segmentBootFromLatch,
+        seamLatchFindings: acceptance.seamLatchFindings,
+        rngPostureForBootLevel: posture.rngPostureForBootLevel,
+        atlasLevelSource: levels.atlasLevelSource,
+        /**
+         * ⛓ WHERE A NAMED SCRIPT LIVES. Both the producers (`measureWalks`,
+         * `spendWalkLicence`) and every `shell()` stage resolve through this
+         * one function, so a rehearsal substitutes STUBS without either call
+         * site learning that it might be rehearsing.
+         */
+        scriptPath: overrides.scriptPath ?? ((file) => `scripts/procgen/${file}`),
+        /** The process runner — `execFileSync` today, and its exact options. */
+        exec: overrides.exec ?? ((cmd, args, opts) => execFileSync(cmd, args, opts)),
+        /** Filled below: it closes over `ctx` itself. */
+        driveLatch: null,
+        async instrumentRows() {
+            if (instrumentRowsCache === null) {
+                instrumentRowsCache = (await buildInstruments()).rows;
+            }
+            return instrumentRowsCache;
+        },
+    };
+
+    ctx.textOf = (label) => readFileSync(join(ctx.tapesDir, `${label}.json`), 'utf8');
+    ctx.rawOf = (label) => JSON.parse(ctx.textOf(label));
+    ctx.tapeOf = (label) => ctx.parseTape(ctx.rawOf(label));
+    /**
+     * ⛓ EVERY TAPE ON DISK, derived from the directory — not the chain lists.
+     * S3's record set is a question about ARTIFACTS, and a tape this pipeline
+     * authors no boot for (`r8-solve-20`, the `r8-d2` headline) still has an
+     * expectation that goes stale when its producer re-authors it.
+     */
+    ctx.allTapeLabels = () => readdirSync(ctx.tapesDir)
+        .filter((f) => f.endsWith('.json') && f !== 'index.json')
+        .map((f) => f.slice(0, -5)).sort();
+    /** The bytes the GAME is handed — `driveLatch`'s own projection, one spelling. */
+    ctx.gameVisibleTextOf = (label) => JSON.stringify(ctx.gameVisibleTape(ctx.tapeOf(label)));
+    ctx.driveLatch = overrides.driveLatch
+        ?? ((label, completeTape) => windowsDriveLatch(ctx, label, completeTape));
+
+    mkdirSync(ctx.runDir, { recursive: true });
+    return ctx;
+}
 
 // ── S0 · PREDICT ──────────────────────────────────────────────────────
 /**
@@ -285,9 +373,9 @@ const gameVisibleTextOf = (label) => JSON.stringify(gameVisibleTape(tapeOf(label
  * chain's later segments still boot their predecessors' latches, so their
  * boots are re-derived here too. ⛔ Nothing is typed.
  */
-function subjects() {
-    const custody = new Set(chainSubjects(PLAYTHROUGH_CHAINS, tapeOf).map((c) => c.id));
-    return PLAYTHROUGH_CHAINS
+function subjects(ctx) {
+    const custody = new Set(chainSubjects(ctx.chains, ctx.tapeOf).map((c) => c.id));
+    return ctx.chains
         .filter((c) => (c.segments ?? []).length >= 2)
         .map((c) => ({
             id: c.id,
@@ -309,11 +397,11 @@ function subjects() {
  * boundaries nor S2's writes. It is here so a walk move in it is a ROW the
  * licence can cover, and so a segment nobody can measure is NAMED.
  */
-function accountingChains() {
-    const subject = new Map(subjects().map((c) => [c.id, c]));
-    return accountingUniverse(PLAYTHROUGH_CHAINS).map((c) => ({
+function accountingChains(ctx) {
+    const subject = new Map(subjects(ctx).map((c) => [c.id, c]));
+    return accountingUniverse(ctx.chains).map((c) => ({
         id: c.id,
-        kind: subject.get(c.id)?.kind ?? (PLAYTHROUGH_CHAINS.find((x) => x.id === c.id)?.kind
+        kind: subject.get(c.id)?.kind ?? (ctx.chains.find((x) => x.id === c.id)?.kind
             ?? 'custody'),
         trueStartCustody: subject.get(c.id)?.trueStartCustody ?? false,
         segments: c.segments.slice(),
@@ -349,11 +437,10 @@ function accountingChains() {
  * contract is "offline, no browser", and §26.6's law is that a scratch tree
  * cannot run a browser stage at all.
  */
-async function measureWalks(chains) {
-    const nominated = nominateOwners(chains, { tapesDir: TAPES });
-    const instruments = await buildInstruments();
+async function measureWalks(ctx, chains) {
+    const nominated = nominateOwners(chains, { tapesDir: ctx.tapesDir });
     const participation = participationOf([...nominated.keys()],
-        { instrumentRows: instruments.rows });
+        { instrumentRows: await ctx.instrumentRows() });
     console.log('\n## THE WALK MEASUREMENT — the producers, and what each may answer');
     const reports = [];
     const owners = [];
@@ -364,23 +451,23 @@ async function measureWalks(chains) {
             console.log(`   ${'—'.padEnd(6)} ${p.file.padEnd(32)} UNMEASURED — ${p.why}`);
             continue;
         }
-        const out = join(RUN_DIR, `walk-${p.file.replace(/\.mjs$/, '')}.json`);
+        const out = join(ctx.runDir, `walk-${p.file.replace(/\.mjs$/, '')}.json`);
         if (existsSync(out)) unlinkSync(out);
         const t0 = Date.now();
         let status = 0;
         let log = '';
         try {
-            log = execFileSync('node', [`scripts/procgen/${p.file}`, CHECK_FLAG,
+            log = ctx.exec('node', [ctx.scriptPath(p.file), CHECK_FLAG,
                 `--walk-report=${out}`],
-            { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'],
+            { cwd: ctx.root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'],
                 maxBuffer: 256 * 1024 * 1024 });
         } catch (e) {
             status = e.status ?? -1;
             log = [e.stdout, e.stderr].filter(Boolean).join('\n');
         }
         const ms = Date.now() - t0;
-        const logFile = join(RUN_DIR, `walk-${p.file.replace(/\.mjs$/, '')}.log`);
-        writeFileSync(logFile, `$ node scripts/procgen/${p.file} ${CHECK_FLAG} `
+        const logFile = join(ctx.runDir, `walk-${p.file.replace(/\.mjs$/, '')}.log`);
+        writeFileSync(logFile, `$ node ${ctx.scriptPath(p.file)} ${CHECK_FLAG} `
             + `--walk-report=${out}\n${log}`);
         if (!existsSync(out)) {
             crashed.push(`${p.file} produced NO walk report (exit ${status}) — it did not `
@@ -412,7 +499,7 @@ async function measureWalks(chains) {
         participation };
 }
 
-async function predict() {
+async function predict(ctx) {
     console.log('# S0 · PREDICT — offline, no browser\n');
     /**
      * ⛓ TWO LISTS, TWO QUESTIONS (R9 12e′). `subjects()` is whose BOOTS are
@@ -422,8 +509,8 @@ async function predict() {
      * move in a chain this pipeline authors no boot for, and dropping it is
      * how `r8-solve-11` went unnoticed (§33).
      */
-    const chains = accountingChains();
-    const bootSubjects = new Set(subjects().map((c) => c.id));
+    const chains = accountingChains(ctx);
+    const bootSubjects = new Set(subjects(ctx).map((c) => c.id));
     check('⛓ the subject is DERIVED from PLAYTHROUGH_CHAINS',
         chains.length > 0,
         chains.map((c) => `${c.id}(${c.segments.length}${c.trueStartCustody
@@ -449,14 +536,14 @@ async function predict() {
          */
         let firstHazard = -1;
         const rows = chain.segments.map((name, i) => {
-            const t = tapeOf(name);
+            const t = ctx.tapeOf(name);
             const hazard = timedClearHazard(t, i);
             const ownTimed = hazard.ownRoom.length > 0;
             if (ownTimed && firstHazard === -1) firstHazard = i;
             return { name, i, t, hazard, ownTimed };
         });
         for (const r of rows) {
-            const posture = rngPostureForBootLevel(r.t.boot.level, atlasLevelSource());
+            const posture = ctx.rngPostureForBootLevel(r.t.boot.level, ctx.atlasLevelSource());
             const bootMoves = firstHazard !== -1 && r.i > firstHazard;
             const tick0Moves = bootMoves || r.ownTimed;
             table.push({
@@ -501,8 +588,8 @@ async function predict() {
          * it CAN have is a WALK move, which the merge below gives it.
          */
         if (chain.headline) {
-            const t = tapeOf(chain.headline);
-            const posture = rngPostureForBootLevel(t.boot.level, atlasLevelSource());
+            const t = ctx.tapeOf(chain.headline);
+            const posture = ctx.rngPostureForBootLevel(t.boot.level, ctx.atlasLevelSource());
             table.push({
                 chain: chain.id,
                 segment: chain.headline,
@@ -533,7 +620,7 @@ async function predict() {
      * prediction; a walk move is never predicted (§18.4), so it is measured
      * here and merged in.
      */
-    const walk = await measureWalks(chains);
+    const walk = await measureWalks(ctx, chains);
     const byId = new Map(table.map((r) => [r.segment, r]));
     for (const r of walk.rows) {
         const row = byId.get(r.segment);
@@ -656,7 +743,7 @@ async function predict() {
             licence: licence.sealed,
         },
     };
-    flush('S0', s0State);
+    flush(ctx, 'S0', s0State);
     return s0State;
 }
 
@@ -692,15 +779,15 @@ const CACHE = join(WSL, 'rerecord-cache');
  * says it did. The legacy arm therefore converges instead of decaying — and
  * nothing is ever deleted.
  */
-function driveLatch(label, completeTape) {
-    const parsed = parseTape(completeTape);
-    const projected = gameVisibleTape(parsed);
+function windowsDriveLatch(ctx, label, completeTape) {
+    const parsed = ctx.parseTape(completeTape);
+    const projected = ctx.gameVisibleTape(parsed);
     const candidates = latchCacheCandidates(
         { complete: completeTape, projected, legacy: 'complete' });
     const key = candidates[0].key;
-    mkdirSync(CACHE, { recursive: true });
-    if (!NO_CACHE) {
-        const { record, hitBy, rekeyed } = readLatchCache(label, candidates);
+    mkdirSync(ctx.cacheDir, { recursive: true });
+    if (!ctx.noCache) {
+        const { record, hitBy, rekeyed } = readLatchCache(ctx, label, candidates);
         if (record) {
             console.log(`    ${label}: latch REUSED key=${hitBy.key} (${hitBy.era}) `
                 + `file=${hitBy.file}`);
@@ -708,7 +795,7 @@ function driveLatch(label, completeTape) {
             return record;
         }
     }
-    const cached = join(CACHE, `latch-${label}-${key}.json`);
+    const cached = join(ctx.cacheDir, `latch-${label}-${key}.json`);
     const shipped = JSON.stringify(projected);
     mkdirSync(WSL, { recursive: true });
     writeFileSync(join(WSL, 'seedling-bot-replay-win.py'),
@@ -719,7 +806,7 @@ function driveLatch(label, completeTape) {
     const t0 = Date.now();
     let out;
     try {
-        out = execFileSync('/mnt/c/Windows/py.exe', [
+        out = ctx.exec('/mnt/c/Windows/py.exe', [
             '-3.12', `${DOS}\\seedling-bot-replay-win.py`,
             '--url', PAGE_URL,
             '--tape', `${DOS}\\rr-tape-${label}.json`,
@@ -767,16 +854,16 @@ function driveLatch(label, completeTape) {
  * there is the answer; re-writing it would be a second opinion about a
  * measurement nobody re-took.
  */
-function readLatchCache(label, candidates, { rekey = true } = {}) {
+function readLatchCache(ctx, label, candidates, { rekey = true } = {}) {
     for (const c of candidates) {
-        const file = join(CACHE, `latch-${label}-${c.key}.json`);
+        const file = join(ctx.cacheDir, `latch-${label}-${c.key}.json`);
         if (!existsSync(file)) continue;
         const record = JSON.parse(readFileSync(file, 'utf8'));
         let rekeyed = null;
         if (rekey && c.era !== 'key') {
-            const forward = join(CACHE, `latch-${label}-${candidates[0].key}.json`);
+            const forward = join(ctx.cacheDir, `latch-${label}-${candidates[0].key}.json`);
             if (!existsSync(forward)) {
-                mkdirSync(CACHE, { recursive: true });
+                mkdirSync(ctx.cacheDir, { recursive: true });
                 writeFileSync(forward, JSON.stringify(record));
                 rekeyed = forward;
             }
@@ -823,7 +910,7 @@ const committedBlocks = (tape) => {
  * producer re-authors every tape it owns — the ones that did not move come
  * back byte-identical, which is the control.
  */
-function spendWalkLicence(s0) {
+function spendWalkLicence(ctx, s0) {
     const licence = s0.walk?.licence ?? null;
     const permitted = licence?.segments ?? [];
     if (!permitted.length) return { ran: [] };
@@ -845,15 +932,15 @@ function spendWalkLicence(s0) {
         + `CHAINS require: ${producers.join(' -> ')}`);
     const ran = [];
     for (const file of producers) {
-        const r = shell(`${file} re-authors its walks under ⚖ ${licence.ruling}`,
-            'node', [`scripts/procgen/${file}`],
+        const r = shell(ctx, `${file} re-authors its walks under ⚖ ${licence.ruling}`,
+            'node', [ctx.scriptPath(file)],
             `s1-producer-${file.replace(/\.mjs$/, '')}`);
         ran.push({ file, ok: r.ok });
     }
     return { ran };
 }
 
-function measure(s0) {
+function measure(ctx, s0) {
     console.log('\n# S1 · MEASURE — the GAME, in chain order\n');
     /**
      * ⛓⛓⛓ R9 SLICE 12e′ RE-RUN — **THE RECORD SET'S `BEFORE`, TAKEN HERE AND
@@ -863,13 +950,13 @@ function measure(s0) {
      * nothing moved, which is the same defect `walkReport.note`'s placement
      * exists to avoid one level down.
      */
-    const projectionsBefore = projectionIndex(allTapeLabels(), gameVisibleTextOf);
+    const projectionsBefore = projectionIndex(ctx.allTapeLabels(), ctx.gameVisibleTextOf);
     console.log(`## the game-visible projection of ${Object.keys(projectionsBefore).length} `
         + 'tape(s), snapshotted BEFORE the licence is spent — S3\'s record set is the '
         + 'diff against this, never S2\'s boot writes');
-    const spent = spendWalkLicence(s0);
+    const spent = spendWalkLicence(ctx, s0);
     let blockSetChecked = false;
-    const chains = subjects();
+    const chains = subjects(ctx);
     const measured = {};
     const boundaries = [];
     for (const chain of chains) {
@@ -883,15 +970,16 @@ function measure(s0) {
         const pending = {};
         for (let k = 0; k < chain.segments.length; k += 1) {
             const name = chain.segments[k];
-            const complete = pending[name] ?? rawOf(name);
+            const complete = pending[name] ?? ctx.rawOf(name);
             if (k === chain.segments.length - 1) {
                 measured[name] = measured[name] ?? { complete };
                 continue;
             }
             const successor = chain.segments[k + 1];
-            const rec = driveLatch(name, complete);
+            const rec = ctx.driveLatch(name, complete);
             const env = rec.envelope;
-            const calm = seamLatchFindings(env, { requireCalm: true }).filter((r) => !r.ok);
+            const calm = ctx.seamLatchFindings(env, { requireCalm: true })
+                .filter((r) => !r.ok);
             check(`${chain.id} ${k + 1}/${chain.segments.length}: ${name} ends at a CALM `
                 + 'ARRIVAL', calm.length === 0,
             calm.map((r) => `${r.name} [${r.detail}]`).join('; ')
@@ -909,7 +997,7 @@ function measure(s0) {
              */
             if (!blockSetChecked) {
                 blockSetChecked = true;
-                const got = Object.keys(segmentBootFromLatch(env)).sort();
+                const got = Object.keys(ctx.segmentBootFromLatch(env)).sort();
                 /**
                  * ⛔ IT TESTS ITS OWN CHECK, NOT THE GLOBAL COUNTER (R9 12e′
                  * re-run). `if (failures)` here made ANY earlier failure — a
@@ -927,8 +1015,8 @@ function measure(s0) {
                         + 'does not write, so every write would be silently partial.');
                 }
             }
-            const succRaw = pending[successor] ?? rawOf(successor);
-            const succCommitted = committedBlocks(parseTape(succRaw));
+            const succRaw = pending[successor] ?? ctx.rawOf(successor);
+            const succCommitted = committedBlocks(ctx.parseTape(succRaw));
             /**
              * ⛓ `note` and `at` are re-attached BEFORE the diff, not after —
              * see `mergePersistence`. A diff run against the raw measured set
@@ -936,7 +1024,7 @@ function measure(s0) {
              * would then WRITE the rows without it.
              */
             const project = (e) => {
-                const b = segmentBootFromLatch(e);
+                const b = ctx.segmentBootFromLatch(e);
                 return { ...b,
                     persistence: mergePersistence(b.persistence, succCommitted.persistence) };
             };
@@ -970,7 +1058,8 @@ function measure(s0) {
             measured[successor] = { complete: next };
         }
     }
-    flush('S1', { boundaries, pending: measured, licenceSpent: spent.ran, projectionsBefore });
+    flush(ctx, 'S1',
+        { boundaries, pending: measured, licenceSpent: spent.ran, projectionsBefore });
     return { boundaries, measured, projectionsBefore };
 }
 
@@ -982,8 +1071,8 @@ function measure(s0) {
  * and dropped `"note": ""` parse and replay and break byte-identity wholesale.
  * A file that does not round-trip is REFUSED rather than rewritten.
  */
-function writeBoot(label, blocks) {
-    const text = textOf(label);
+function writeBoot(ctx, label, blocks) {
+    const text = ctx.textOf(label);
     const obj = JSON.parse(text);
     if (`${JSON.stringify(obj, null, 4)}\n` !== text) {
         throw new Error(`${label}: the committed tape does not round-trip through a `
@@ -997,11 +1086,11 @@ function writeBoot(label, blocks) {
     }
     const after = `${JSON.stringify(obj, null, 4)}\n`;
     const changed = before !== JSON.stringify(obj);
-    if (changed) writeFileSync(join(TAPES, `${label}.json`), after);
+    if (changed) writeFileSync(join(ctx.tapesDir, `${label}.json`), after);
     return changed;
 }
 
-function write(s0, s1) {
+function write(ctx, s0, s1) {
     console.log('\n# S2 · WRITE — exactly the sealed set\n');
     const wrote = [];
     /**
@@ -1016,9 +1105,9 @@ function write(s0, s1) {
      */
     let offTable = 0;
     for (const [label, rec] of Object.entries(s1.pending ?? s1.measured ?? {})) {
-        const blocks = committedBlocks(parseTape(rec.complete));
+        const blocks = committedBlocks(ctx.parseTape(rec.complete));
         const onTable = s0.licensed.includes(label);
-        const moved = writeBootDry(label, blocks);
+        const moved = writeBootDry(ctx, label, blocks);
         if (moved && !onTable) {
             offTable += 1;
             console.log(`FAIL: ${label} would move ${moved.join(', ')} and is not on the `
@@ -1026,7 +1115,7 @@ function write(s0, s1) {
             continue;
         }
         if (!moved) continue;
-        writeBoot(label, blocks);
+        writeBoot(ctx, label, blocks);
         wrote.push({ label, fields: moved });
         console.log(`  wrote ${label}: ${moved.join(', ')}`);
     }
@@ -1041,15 +1130,15 @@ function write(s0, s1) {
      * `--only=` the predicted movers, so the segments the table says should
      * NOT move are re-measured too and stand as the control.
      */
-    const t0 = shell('the tick-0 blocks are re-derived from the NEW boots', 'node',
-        ['scripts/procgen/derive-seedling-tick0.mjs']);
-    flush('S2', { wrote, tick0: t0.ok });
+    const t0 = shell(ctx, 'the tick-0 blocks are re-derived from the NEW boots', 'node',
+        [ctx.scriptPath('derive-seedling-tick0.mjs')]);
+    flush(ctx, 'S2', { wrote, tick0: t0.ok });
     return { wrote };
 }
 
 /** The fields a write WOULD move, without moving them. */
-function writeBootDry(label, blocks) {
-    const obj = JSON.parse(textOf(label));
+function writeBootDry(ctx, label, blocks) {
+    const obj = JSON.parse(ctx.textOf(label));
     const moved = [];
     for (const b of BOOT_BLOCKS) {
         if (blocks[b] === undefined || !Object.prototype.hasOwnProperty.call(obj, b)) continue;
@@ -1066,10 +1155,10 @@ function writeBootDry(label, blocks) {
  * how a truncated sweep is told from a complete one (trap: a bounded sweep
  * must name what it bounded). The tally line is derived from the whole text.
  */
-function shell(what, cmd, args, logName) {
+function shell(ctx, what, cmd, args, logName) {
     console.log(`\n$ ${cmd} ${args.join(' ')}`);
     const finish = (ok, out, status) => {
-        const file = join(RUN_DIR, `${logName ?? what.replace(/\W+/g, '-')}.log`);
+        const file = join(ctx.runDir, `${logName ?? what.replace(/\W+/g, '-')}.log`);
         writeFileSync(file, `$ ${cmd} ${args.join(' ')}\n${out}`);
         const tally = { PASS: 0, FAIL: 0, SKIP: 0 };
         for (const line of out.split('\n')) {
@@ -1083,7 +1172,7 @@ function shell(what, cmd, args, logName) {
         return { ok, out, tally };
     };
     try {
-        const out = execFileSync(cmd, args, { cwd: ROOT, encoding: 'utf8',
+        const out = ctx.exec(cmd, args, { cwd: ctx.root, encoding: 'utf8',
             stdio: ['ignore', 'pipe', 'pipe'], maxBuffer: 256 * 1024 * 1024 });
         return finish(true, out, 0);
     } catch (e) {
@@ -1115,7 +1204,7 @@ function shell(what, cmd, args, logName) {
  * run that recorded a fourteenth would have spent the user's permission on
  * something they did not give.
  */
-function record(s0, s1, s2) {
+function record(ctx, s0, s1, s2) {
     console.log('\n# S3 · RECORD — the tapes whose GAME-VISIBLE PROJECTION moved\n');
     const before = s1?.projectionsBefore;
     if (!before) {
@@ -1123,7 +1212,7 @@ function record(s0, s1, s2) {
             + 'projection diff across the run, so a S1 state written before this was built '
             + 'cannot answer it — re-enter at --from=S1 rather than recording a guess.');
     }
-    const after = projectionIndex(allTapeLabels(), gameVisibleTextOf);
+    const after = projectionIndex(ctx.allTapeLabels(), ctx.gameVisibleTextOf);
     const { moved, appeared, vanished } = movedProjections(before, after);
     const set = [...moved, ...appeared];
     const wrote = new Set((s2?.wrote ?? []).map((w) => w.label));
@@ -1147,62 +1236,60 @@ function record(s0, s1, s2) {
         unlicensed.length ? `⛔ ${unlicensed.join(', ')} moved and no licence covers it`
             : `${set.length} tape(s) inside the permission`);
     if (failures) {
-        flush('S3', { set: [], moved, appeared, vanished, stopped: true });
+        flush(ctx, 'S3', { set: [], moved, appeared, vanished, stopped: true });
         throw new Error('⛔ STOP before the GPU: the projection diff names a tape this run '
             + 'was not licensed to move.');
     }
     if (!set.length) {
         console.log('## no projection moved, so there is nothing to record — and that is a '
             + 'MEASUREMENT, not a skip.');
-        flush('S3', { set: [], moved, appeared, vanished, skipped: true });
+        flush(ctx, 'S3', { set: [], moved, appeared, vanished, skipped: true });
         return;
     }
-    shell('the differential RECORDS the derived set', 'node',
-        ['scripts/procgen/verify-seedling-bot-differential.mjs', '--win', '--record',
+    shell(ctx, 'the differential RECORDS the derived set', 'node',
+        [ctx.scriptPath('verify-seedling-bot-differential.mjs'), '--win', '--record',
             `--only=${set.join(',')}`]);
-    flush('S3', { set, moved, appeared, vanished });
+    flush(ctx, 'S3', { set, moved, appeared, vanished });
 }
 
 /**
  * ⛓ DERIVED, NEVER TYPED: every tape whose own `description` says a solver
  * authored it, plus the four hand witnesses the gate carries as controls.
  */
-function solverRoster() {
-    const names = readdirSync(TAPES)
-        .filter((f) => f.endsWith('.json') && f !== 'index.json')
-        .map((f) => f.slice(0, -5)).sort();
+function solverRoster(ctx) {
+    const names = ctx.allTapeLabels();
     const solver = names.filter((n) => /Authored by scripts\/procgen\/solve-seedling|LIVE SOLVER/i
-        .test(rawOf(n).description || ''));
+        .test(ctx.rawOf(n).description || ''));
     return [...solver, 'r8-hammer-arm', 'r8-hammer-control',
         'r8-l18-spinner-press', 'r8-l6-bob-contact'];
 }
 
-function prove() {
+function prove(ctx) {
     console.log('\n# S4 · PROVE — the chains play\n');
     const rows = [];
-    rows.push(['the JS sequence gate', shell('the JS sequence gate', 'node',
-        ['scripts/procgen/check-seedling-editor-sequence.mjs']).ok]);
-    rows.push(['the census CONTINUES on every pair', shell('the census', 'node',
-        ['scripts/procgen/census-seedling-campaign.mjs']).ok]);
-    rows.push(['the wasm ship gate (CAMPAIGN arm)', shell('the wasm ship gate', 'node',
-        ['scripts/procgen/check-seedling-wasm-ship.mjs']).ok]);
+    rows.push(['the JS sequence gate', shell(ctx, 'the JS sequence gate', 'node',
+        [ctx.scriptPath('check-seedling-editor-sequence.mjs')]).ok]);
+    rows.push(['the census CONTINUES on every pair', shell(ctx, 'the census', 'node',
+        [ctx.scriptPath('census-seedling-campaign.mjs')]).ok]);
+    rows.push(['the wasm ship gate (CAMPAIGN arm)', shell(ctx, 'the wasm ship gate', 'node',
+        [ctx.scriptPath('check-seedling-wasm-ship.mjs')]).ok]);
     /**
      * ⛓⛓⛓ THE SOLVER-ROSTER GATE IS THE GAME-INVISIBILITY CLAIM, and the
      * roster is DERIVED from the tapes' own provenance (a solver-authored
      * description) rather than named — ⚖ ruling 17, and the four hand
      * witnesses the gate has always carried alongside it.
      */
-    const solver = solverRoster();
+    const solver = solverRoster(ctx);
     console.log(`## the solver roster: ${solver.length} tape(s), derived`);
-    rows.push(['the solver-roster differential', shell('the solver-roster differential',
-        'node', ['scripts/procgen/verify-seedling-bot-differential.mjs', '--win',
+    rows.push(['the solver-roster differential', shell(ctx, 'the solver-roster differential',
+        'node', [ctx.scriptPath('verify-seedling-bot-differential.mjs'), '--win',
             `--only=${solver.join(',')}`]).ok]);
-    flush('S4', { rows });
+    flush(ctx, 'S4', { rows });
     return rows;
 }
 
 // ── S5 · REPORT ───────────────────────────────────────────────────────
-function report(s0, s1, s2) {
+function report(ctx, s0, s1, s2) {
     console.log('\n# S5 · REPORT\n');
     console.log('## the sealed table, with its measured column');
     const movedBy = new Map();
@@ -1233,7 +1320,7 @@ function report(s0, s1, s2) {
             + 'measured no walk move.');
     }
     console.log(`\n## written: ${(s2?.wrote ?? []).map((w) => w.label).join(', ') || '(none)'}`);
-    console.log(`## run directory: ${RUN_DIR}`);
+    console.log(`## run directory: ${ctx.runDir}`);
     console.log('## ⛓ IDEMPOTENCE IS NOT THE CORRECTNESS CLAIM, and it is not S0\'s to '
         + 'make. S0\'s verdict is a PERMISSION — which segments MAY move — and it is a '
         + 'function of the TAPES, so it says the same thing before and after a run. The '
@@ -1328,7 +1415,7 @@ function growCannotAsk(what, cure) {
     process.exit(1);
 }
 
-async function grow() {
+async function grow(ctx) {
     console.log('# --grow — the next room, end to end (⚖ ruling 38 (2), R9 slice 12d)\n');
     const decl = await import(pathToFileURL(CHAIN_DECL).href);
     const names = [...decl.CAMPAIGN_SEGMENT_NAMES];
@@ -1433,7 +1520,7 @@ async function grow() {
             + 'derivation deliberately');
     }
     const newName = `${prefix}-solve-${step.level}`;
-    if (names.includes(newName) || existsSync(join(TAPES, `${newName}.json`))) {
+    if (names.includes(newName) || existsSync(join(ctx.tapesDir, `${newName}.json`))) {
         growCannotAsk(`the derived name "${newName}" is already taken — L${step.level} is `
             + 'being visited a SECOND time, and which tape owns which visit is a decision '
             + 'a human makes (⛔ trap 169: `r9-solve-11` vs `r8-solve-11` is exactly this)',
@@ -1446,7 +1533,7 @@ async function grow() {
      * that cell names the type, which is the same lookup the producer's
      * `placement(level, type)` does in reverse.
      */
-    const src = atlasLevelSource();
+    const src = ctx.atlasLevelSource();
     const collects = [];
     for (const g of step.goals) {
         if (g.kind !== 'collect-placement') continue;
@@ -1577,14 +1664,14 @@ async function grow() {
      * server serves ONE tree, so a browser stage entered from a second one
      * would drive the pages of the first and report about the wrong subject.
      */
-    const passthrough = [`--run-dir=${RUN_DIR}`];
+    const passthrough = [`--run-dir=${ctx.runDir}`];
     if (process.argv.some((a) => a.startsWith('--from='))) passthrough.push(`--from=${FROM}`);
     if (process.argv.some((a) => a.startsWith('--to='))) passthrough.push(`--to=${TO}`);
     const steps = [
         ['the producer authors the new segment and re-emits its predecessor',
-            ['scripts/procgen/solve-seedling-r9-campaign.mjs'], 'grow-producer'],
+            [ctx.scriptPath('solve-seedling-r9-campaign.mjs')], 'grow-producer'],
         [`the pipeline ${FROM}..${TO} over the grown chain`,
-            ['scripts/procgen/rerecord-seedling-campaign.mjs', ...passthrough],
+            [ctx.scriptPath('rerecord-seedling-campaign.mjs'), ...passthrough],
             'grow-pipeline'],
     ];
     /**
@@ -1598,14 +1685,14 @@ async function grow() {
      */
     if (TO === 'S5') {
         steps.push(
-            ['the tape index', ['scripts/procgen/generate-tape-index.mjs'], 'grow-index'],
+            ['the tape index', [ctx.scriptPath('generate-tape-index.mjs')], 'grow-index'],
             ['the frontier, re-derived',
-                ['scripts/procgen/census-seedling-campaign.mjs', '--write-frontier'],
+                [ctx.scriptPath('census-seedling-campaign.mjs'), '--write-frontier'],
                 'grow-frontier'],
             ['the generated reference (the doc\'s chain table)',
-                ['scripts/procgen/generate-procgen-reference.mjs'], 'grow-reference'],
+                [ctx.scriptPath('generate-procgen-reference.mjs')], 'grow-reference'],
             ['the standing values, re-measured',
-                ['scripts/procgen/standing-values.mjs', '--write'], 'grow-standing'],
+                [ctx.scriptPath('standing-values.mjs'), '--write'], 'grow-standing'],
         );
     } else {
         console.log(`\n## ⚠ REHEARSAL (--to=${TO}): the tape index, the frontier, the `
@@ -1614,7 +1701,7 @@ async function grow() {
     }
     const ran = [];
     for (const [what, args, log] of steps) {
-        const r = shell(what, 'node', args, log);
+        const r = shell(ctx, what, 'node', args, log);
         ran.push({ what, ok: r.ok, tally: r.tally });
         if (!r.ok && ran.length === 1) {
             writeFileSync(CHAIN_DECL, before);
@@ -1624,14 +1711,14 @@ async function grow() {
                 + 'solves it from its predecessor\'s MEASURED LATCH, and those are '
                 + 'different starting states. The producer\'s refusal is the one that '
                 + 'counts, because its walk is the one that would be recorded.');
-            console.log(`## Read ${join(RUN_DIR, `${log}.log`)}.`);
+            console.log(`## Read ${join(ctx.runDir, `${log}.log`)}.`);
             break;
         }
         if (!r.ok) {
             console.log(`\n## ⛔⛔ THE GROWTH STOPPED AT: ${what}`);
             console.log('## The declaration is APPENDED and the tree is HALF-GROWN. '
-                + `Read ${join(RUN_DIR, `${log}.log`)}, fix, and re-enter with `
-                + `\`--run-dir=${RUN_DIR}\` — every stage is resumable and the append is `
+                + `Read ${join(ctx.runDir, `${log}.log`)}, fix, and re-enter with `
+                + `\`--run-dir=${ctx.runDir}\` — every stage is resumable and the append is `
                 + 'idempotent only in the sense that it has already happened: do not run '
                 + '`--grow` twice.');
             break;
@@ -1715,19 +1802,19 @@ function appendSegment(plan) {
  * walks and makes no model claim — which is exactly what a pre-flip branch
  * tape prints here, by name.
  */
-function gitShow(ref, path) {
+function gitShow(ctx, ref, path) {
     try {
-        return execFileSync('git', ['show', `${ref}:${path}`],
-            { cwd: ROOT, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
+        return ctx.exec('git', ['show', `${ref}:${path}`],
+            { cwd: ctx.root, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
     } catch (e) {
         throw new Error(`⛔ ${ref} has no ${path} — ${(e.stderr || e.message).trim()}`);
     }
 }
 
 const WASM_SUBMODULE = 'frontend/modules/flashPanel/wasm';
-function gitlinkOf(ref) {
-    const out = execFileSync('git', ['ls-tree', ref, WASM_SUBMODULE],
-        { cwd: ROOT, encoding: 'utf8' }).trim();
+function gitlinkOf(ctx, ref) {
+    const out = ctx.exec('git', ['ls-tree', ref, WASM_SUBMODULE],
+        { cwd: ctx.root, encoding: 'utf8' }).trim();
     const m = /^160000 commit ([0-9a-f]{40})\t/.exec(out);
     if (!m) throw new Error(`⛔ ${ref} declares no gitlink for ${WASM_SUBMODULE} — the game `
         + 'build a tape from it would be driven against cannot be established.');
@@ -1740,15 +1827,16 @@ function gitlinkOf(ref) {
  * not by contract — both `latchOf` call sites in the two browser-driving
  * producers are `!CHECK`-guarded, so `--check` cannot reach the GPU.
  */
-function walkReportsFor(files) {
+function walkReportsFor(ctx, files) {
     const out = new Map();
     for (const file of files) {
-        const target = join(RUN_DIR, `provisional-walk-${file.replace(/\.mjs$/, '')}.json`);
+        const target = join(ctx.runDir,
+            `provisional-walk-${file.replace(/\.mjs$/, '')}.json`);
         if (existsSync(target)) unlinkSync(target);
         try {
-            execFileSync('node', [`scripts/procgen/${file}`, CHECK_FLAG,
+            ctx.exec('node', [ctx.scriptPath(file), CHECK_FLAG,
                 `--walk-report=${target}`],
-            { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'],
+            { cwd: ctx.root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'],
                 maxBuffer: 256 * 1024 * 1024 });
         } catch { /* ⛔ a non-zero exit is the EXPECTED case: a moved walk fails
                      its own byte check. The verdict is the REPORT existing. */ }
@@ -1761,10 +1849,10 @@ function walkReportsFor(files) {
     return out;
 }
 
-function latchProvisional(names, { branch = null, drive = false }) {
+function latchProvisional(ctx, names, { branch = null, drive = false }) {
     console.log('# ⚖ 54 (1) · --latch-provisional — the GAME\'s word on a walk, '
         + 'ahead of the series\n');
-    const chains = accountingChains();
+    const chains = accountingChains(ctx);
     const known = new Set(chains.flatMap((c) => [...c.segments, c.headline].filter(Boolean)));
     const unknown = names.filter((n) => !known.has(n));
     if (unknown.length) {
@@ -1775,8 +1863,8 @@ function latchProvisional(names, { branch = null, drive = false }) {
     }
 
     if (branch) {
-        const here = gitlinkOf('HEAD');
-        const there = gitlinkOf(branch);
+        const here = gitlinkOf(ctx, 'HEAD');
+        const there = gitlinkOf(ctx, branch);
         check(`⛓ ${branch} drives the same game build this tree serves`, here === there,
             here === there ? `${WASM_SUBMODULE} @${here.slice(0, 12)} on both sides`
                 : `⛔ ${WASM_SUBMODULE} is ${there.slice(0, 12)} at ${branch} and `
@@ -1789,18 +1877,19 @@ function latchProvisional(names, { branch = null, drive = false }) {
         }
     }
 
-    const owners = nominateOwners(chains, { tapesDir: TAPES });
+    const owners = nominateOwners(chains, { tapesDir: ctx.tapesDir });
     const wanted = new Set();
     for (const [file, segs] of owners) if (segs.some((x) => names.includes(x))) wanted.add(file);
     console.log(`## the model's word — ${[...wanted].join(', ') || '(no owner nominated)'}`);
-    const model = walkReportsFor([...wanted]);
+    const model = walkReportsFor(ctx, [...wanted]);
 
     for (const name of names) {
         const raw = branch
-            ? JSON.parse(gitShow(branch, `frontend/modules/seedlingDemo/fixtures/tapes/${name}.json`))
-            : rawOf(name);
-        const parsed = parseTape(raw);
-        const projected = gameVisibleTape(parsed);
+            ? JSON.parse(gitShow(ctx, branch,
+                `frontend/modules/seedlingDemo/fixtures/tapes/${name}.json`))
+            : ctx.rawOf(name);
+        const parsed = ctx.parseTape(raw);
+        const projected = ctx.gameVisibleTape(parsed);
         const candidates = latchCacheCandidates(
             { complete: raw, projected, legacy: 'complete' });
 
@@ -1809,7 +1898,7 @@ function latchProvisional(names, { branch = null, drive = false }) {
             console.log(`   key ${c.key} (${c.era}) — ${c.why}`);
         }
 
-        const cached = readLatchCache(name, candidates);
+        const cached = readLatchCache(ctx, name, candidates);
         let latch = cached.record;
         let hitBy = cached.hitBy;
         if (latch) {
@@ -1820,9 +1909,9 @@ function latchProvisional(names, { branch = null, drive = false }) {
             }
         } else if (drive) {
             console.log('   ⛔ CACHE MISS — DRIVING (this is the GPU row).');
-            latch = driveLatch(name, raw);
+            latch = ctx.driveLatch(name, raw);
             hitBy = { key: candidates[0].key, era: 'driven',
-                file: join(CACHE, `latch-${name}-${candidates[0].key}.json`) };
+                file: join(ctx.cacheDir, `latch-${name}-${candidates[0].key}.json`) };
             console.log(`   ⛓ WROTE ${hitBy.file}`);
         } else {
             console.log(`   ⛔ CACHE MISS and no ${DRIVE_FLAG} — this row is \`unasked\`. `
@@ -1851,7 +1940,7 @@ function latchProvisional(names, { branch = null, drive = false }) {
         }
 
         const findings = latch
-            ? seamLatchFindings(latch.envelope, { requireCalm: true }) : null;
+            ? ctx.seamLatchFindings(latch.envelope, { requireCalm: true }) : null;
         const cert = certifyAgainstLatch({ latch, model: arrival, latchFindings: findings });
         for (const r of cert.rows) {
             console.log(`   ${r.ok ? '  ' : '⛔'} ${r.side.padEnd(5)} ${r.name.padEnd(14)} `
@@ -1901,20 +1990,23 @@ function latchProvisional(names, { branch = null, drive = false }) {
  * arrival is admitted only when the two lengths match — the row then says
  * `unasked` for the arrival rather than describing a different walk.
  */
-async function table({ branch = null }) {
-    const chains = accountingChains();
-    const walk = await measureWalks(chains);
+async function table(ctx, { branch = null }) {
+    const chains = accountingChains(ctx);
+    const walk = await measureWalks(ctx, chains);
     const refTickOf = (segment) => {
         if (!branch) return null;
         try {
-            return JSON.parse(gitShow(branch,
+            return JSON.parse(gitShow(ctx, branch,
                 `frontend/modules/seedlingDemo/fixtures/tapes/${segment}.json`)).tick_count ?? null;
         } catch { return null; }
     };
     const tapeAt = (segment) => {
-        if (!branch) return existsSync(join(TAPES, `${segment}.json`)) ? rawOf(segment) : null;
+        if (!branch) {
+            return existsSync(join(ctx.tapesDir, `${segment}.json`))
+                ? ctx.rawOf(segment) : null;
+        }
         try {
-            return JSON.parse(gitShow(branch,
+            return JSON.parse(gitShow(ctx, branch,
                 `frontend/modules/seedlingDemo/fixtures/tapes/${segment}.json`));
         } catch { return null; }
     };
@@ -1931,7 +2023,7 @@ async function table({ branch = null }) {
         let latch = null;
         let hitBy = null;
         if (raw) {
-            const projected = gameVisibleTape(parseTape(raw));
+            const projected = ctx.gameVisibleTape(ctx.parseTape(raw));
             const candidates = latchCacheCandidates(
                 { complete: raw, projected, legacy: 'complete' });
             /**
@@ -1939,7 +2031,7 @@ async function table({ branch = null }) {
              * forward re-key is `--latch-provisional`'s, where a human asked
              * for the answer.
              */
-            const hit = readLatchCache(r.segment, candidates, { rekey: false });
+            const hit = readLatchCache(ctx, r.segment, candidates, { rekey: false });
             latch = hit.record;
             hitBy = hit.hitBy;
         }
@@ -1950,7 +2042,7 @@ async function table({ branch = null }) {
             latch,
             model: arrival,
             latchFindings: latch
-                ? seamLatchFindings(latch.envelope, { requireCalm: true }) : null,
+                ? ctx.seamLatchFindings(latch.envelope, { requireCalm: true }) : null,
         });
         rows.push({
             chain: r.chain,
@@ -1974,8 +2066,8 @@ async function table({ branch = null }) {
     console.log(`\n# ⚖ 54 (2) · THE TABLE — ${rows.length} row(s)`
         + `${branch ? `, against \`${branch}\`` : ''}\n`);
     console.log(markdown);
-    const mdPath = join(RUN_DIR, 'table.md');
-    const jsonPath = join(RUN_DIR, 'table.json');
+    const mdPath = join(ctx.runDir, 'table.md');
+    const jsonPath = join(ctx.runDir, 'table.json');
     writeFileSync(mdPath, `${markdown}\n`);
     writeFileSync(jsonPath, `${JSON.stringify({ ref: branch, rows }, null, 2)}\n`);
     console.log(`\n## ${mdPath}\n## ${jsonPath}`);
@@ -1989,10 +2081,18 @@ async function table({ branch = null }) {
 }
 
 // ── the run ───────────────────────────────────────────────────────────
+/**
+ * ⛓ THE CONTEXT IS BUILT ONCE, HERE, ABOVE EVERY MODE — and above the header,
+ * because the header names the run directory the context resolves. Its
+ * defaults are today's values, so every line below runs against exactly the
+ * subject it ran against before this seam existed.
+ */
+const CTX = await buildContext();
+
 console.log(`# rerecord-seedling-campaign — ${READ_ONLY.length
     ? `${READ_ONLY.join(' ')} (READ-ONLY: no stage runs)` : `stages ${FROM}..${TO}`}`
     + `${DRY_RUN ? ' (--dry-run)' : ''}${NO_CACHE ? ' (--no-cache)' : ''}`);
-console.log(`# run directory: ${RUN_DIR}\n`);
+console.log(`# run directory: ${CTX.runDir}\n`);
 
 /**
  * ⛔⛔ THE READ-ONLY MODES RUN INSTEAD OF THE PIPELINE, NEVER BESIDE IT. A
@@ -2027,32 +2127,33 @@ if (PROVISIONAL_TOKEN !== undefined) {
             + 'runs of GPU before the game disagreed with the first row.');
         process.exit(1);
     }
-    latchProvisional(names, { branch: BRANCH, drive: DRIVE });
+    latchProvisional(CTX, names, { branch: BRANCH, drive: DRIVE });
     console.log(failures ? `\n${failures} FAILURE(S)` : '\nall checks green');
     process.exit(failures ? 1 : 0);
 }
 
 if (TABLE) {
-    await table({ branch: BRANCH });
+    await table(CTX, { branch: BRANCH });
     console.log(failures ? `\n${failures} FAILURE(S)` : '\nall checks green');
     process.exit(failures ? 1 : 0);
 }
 
 if (GROW) {
-    const g = await grow();
+    const g = await grow(CTX);
     console.log(failures ? `\n${failures} FAILURE(S)` : '\nall checks green');
     process.exit(failures || (g.ran ?? []).some((r) => !r.ok) ? 1 : 0);
 }
 
-const s0 = wants('S0') ? await predict() : resume('S0');
+const s0 = wants('S0') ? await predict(CTX) : resume(CTX, 'S0');
 // ⛓ S3 needs S1's state too now — the record set is the projection diff S1
 //   snapshotted, so re-entering at `--from=S3` resumes S1 rather than guessing.
-const s1 = wants('S1') ? measure(s0)
-    : (wants('S2') || wants('S3') || wants('S5') ? resume('S1') : null);
-const s2 = wants('S2') ? write(s0, s1) : (wants('S3') || wants('S5') ? resume('S2') : null);
-if (wants('S3')) record(s0, s1, s2);
-if (wants('S4')) prove();
-if (wants('S5')) report(s0, s1, s2);
+const s1 = wants('S1') ? measure(CTX, s0)
+    : (wants('S2') || wants('S3') || wants('S5') ? resume(CTX, 'S1') : null);
+const s2 = wants('S2') ? write(CTX, s0, s1)
+    : (wants('S3') || wants('S5') ? resume(CTX, 'S2') : null);
+if (wants('S3')) record(CTX, s0, s1, s2);
+if (wants('S4')) prove(CTX);
+if (wants('S5')) report(CTX, s0, s1, s2);
 
 console.log(failures ? `\n${failures} FAILURE(S)` : '\nall checks green');
 process.exit(failures ? 1 : 0);

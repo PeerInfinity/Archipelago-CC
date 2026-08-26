@@ -14,6 +14,7 @@ import { describe, expect, it } from 'vitest';
 import { PLAYTHROUGH_CHAINS } from '../../frontend/modules/seedlingDemo/playthroughWalk.js';
 import { gameVisibleTape, parseTape } from '../../frontend/modules/seedlingDemo/tapeFormat.js';
 import { cascadeFrom } from './walkMoves.js';
+import { producerScripts } from './standingValues.js';
 import {
     accountingUniverse,
     movedProjections,
@@ -498,5 +499,42 @@ describe('R9 12e′ RE-RUN: the projection\'s reach, on a committed tape', () =>
             inputs: raw.inputs.map((r, i) => (i === 0 ? { ...r, key: 'right' } : r)) };
         expect(swapped.inputs[0].key).not.toBe(raw.inputs[0].key);
         expect(projected(swapped)).not.toBe(projected(raw));
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * R9 P1b, ⚖ 54 (3) — THE SEAM'S OWN LANDMINE, ASSERTED RATHER THAN WARNED
+ * ══════════════════════════════════════════════════════════════════════ */
+describe('the pipeline is NOT a producer, and the row that keeps it that way', () => {
+    /**
+     * ⛔⛔ THE DEFECT THIS REFUSES IS ON THE RECORD. `standingValues.producerScripts`
+     * scans this directory for files matching `^(?:solve|plan|rerecord)-…\.mjs$`
+     * that spell `--check` as a LITERAL, and it added a row for
+     * `rerecord-seedling-campaign.mjs` the moment S0's walk measurement started
+     * shelling out with that flag — which then RAN THE WHOLE PIPELINE (browser,
+     * GPU, tape writes) inside a baseline measurement. The cure was to spell the
+     * flag through `walkMoves.CHECK_FLAG`, a `.js` outside that scan.
+     *
+     * ⛓ THE PIPELINE'S OWN HEADER SAYS SO, AND A HEADER IS NOT A CHECK (trap 717).
+     * P1b's injection seam is a large edit to that file; a `'--check'` typed into
+     * it anywhere — a new default, a stub's argv, a rehearsal — re-arms the row
+     * silently. This row is what makes that impossible to do by accident.
+     */
+    it('⛔ `producerScripts` does NOT list the re-record pipeline', () => {
+        const listed = producerScripts();
+        expect(listed).not.toContain('rerecord-seedling-campaign.mjs');
+        // ⛓ …and the scan is NOT vacuous: it finds the real producers.
+        expect(listed).toContain('solve-seedling-r8-d2.mjs');
+        expect(listed.length).toBeGreaterThan(5);
+    });
+
+    it('⛔ …because the file spells the flag through `CHECK_FLAG`, never as a literal', () => {
+        const src = readFileSync(
+            new URL('./rerecord-seedling-campaign.mjs', import.meta.url), 'utf8');
+        // ⛓ the three spellings `producerScripts` matches, by name.
+        for (const literal of ["'--check'", '"--check"', '--check=']) {
+            expect(src.includes(literal)).toBe(false);
+        }
+        expect(src).toContain('CHECK_FLAG');
     });
 });
