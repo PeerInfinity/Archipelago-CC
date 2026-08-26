@@ -15135,3 +15135,82 @@ empty: a site that genuinely needs the accurate function does not belong in a
 module whose whole purpose is to reproduce the runtime's arithmetic. It found
 two real violations on its first run — a second definition of the transcription
 in a second file, and the distance under the header — and both are gone.
+
+### R9 slice 12g: THE RACE NOBODY HAD EVER TESTED WAS WON — and the thing that decides it is not a stopwatch, it is a frame counter
+
+The previous slice found, on its way past something else, that the moment the bot
+is told to start is a race. Starting the bot replaces the world the page booted
+itself into with the one the recording declares, and the graphics library does
+not perform that replacement immediately: it happens at the end of the next
+frame. So there is exactly one frame in which the bot is running but the old
+world is still on screen, and whether the bot writes down a position during that
+frame decides whether the entire recording is shifted by one. Every recording the
+project has ever made rests on that frame going the right way, and nothing had
+ever checked that it did.
+
+Two things were built. The first is a refusal. After the recording finishes and
+before its result is written anywhere, the driver now compares the very first
+position the game reported against the position the recording says it should
+start at, and if they disagree it says so by name and writes nothing. That
+comparison needs one correction: what a recording declares is the argument handed
+to the room builder, while what the game reports is where the player entity ends
+up, and the player is placed half a tile further along in both directions. That
+is not a fudge factor typed into the driver — the number is checked against the
+model's own copy of the tile size, and the whole comparison was run against all
+hundred and forty-nine recordings in the repository before it was allowed to
+refuse anything. All hundred and forty-nine agree. A second, independent check
+rides along: the game writes down one position for the start plus one for every
+instruction the recording contains, so a drain that is not exactly one longer
+than the recording is wrong even if its first position is right.
+
+The refusal lives inside the driver file rather than beside it, and that is a
+deliberate answer to a property of this harness that had not been written down.
+Seventeen different programs copy that one file into a scratch directory and run
+it from there. A helper module next to it would have to be copied by all
+seventeen, and the first program that forgot would not lose the new check — it
+would fail to start the driver at all. One file cannot be half-copied.
+
+The second thing built was a measurement, and it changed the shape of the
+question. The previous slice had studied the race with a stopwatch: wait this
+many fractions of a second before starting, and see which way it goes. It
+reported a boundary a little under half a second. Reading the game's own frame
+counter at the instant the bot is started shows that the stopwatch was standing
+in for something else. At one single stopwatch setting — forty-eight hundredths
+of a second — one run won the race and another lost it. What actually decides is
+how many frames the page's own world has drawn by the time the bot starts, and
+that number varies by as much as six between two runs asked to wait exactly the
+same length of time. Sorted by frames instead of by seconds, twenty-seven runs
+fall into two blocks with nothing in between: nineteen wins at frame eighteen or
+earlier, eight losses at frame nineteen or later. The count of frames the game
+skipped because the screen was still dark moves with it every single time,
+forty-one on every win and forty on every loss.
+
+The frame number is not arbitrary either. A freshly built room fades in from
+black over twenty frames, and the bot treats a frame with the screen still
+darkened as one where nothing happened and nothing is worth writing down. So the
+race is won precisely when the leftover frame in the old world is still one of
+that room's twenty fade frames, and lost as soon as the fade has finished. The
+boundary a stopwatch measures is that fade minus however long the driver happened
+to spend getting ready — which is why it looked like a property of the machine.
+The fade is not a property of the machine.
+
+That also settles what to do about it. If the deciding factor had been where
+inside a frame the start call happened to land, the fix would have been to line
+the call up with the frame boundary, which costs nothing. It was tried: a driver
+that starts the bot from inside the browser's own frame callback wins and loses
+in exactly the same places as one that does not, obeying the same frame law to
+the frame. Lining up the call moves nothing, because what matters is how many
+frames have already gone by. The real repair is in the game side — arm the bot
+only once the replacement world has actually arrived — and that changes when the
+first position is written on every recording that swaps worlds, so it belongs
+with the full re-recording the project has already decided to do for an unrelated
+reason. Doing both at once costs one pass instead of two.
+
+Finally, the number that matters most for that re-recording: on the path the
+project actually uses, with no artificial wait at all, the bot starts at frame
+two, three or four. The boundary is at nineteen. There are about fifteen frames
+of headroom, roughly six tenths of a second, against a run-to-run wobble of six
+frames. The race has been won every time because it has been won comfortably —
+but nothing was watching, and on a machine six tenths of a second slower at
+getting started it would have been lost silently. Now it is refused loudly
+instead.

@@ -5267,6 +5267,53 @@ user and the fifth run's `sound`-pin re-record: **18 of 18 chain boundaries have
 an UNPINNED predecessor**, so every `rng.seed` row in the new gate is a
 sample-vs-sample comparison until that lands.
 
+**⛓⛓⛓ R9 SLICE 12g — CLOSED 2026-08-26 @`05c6f7e1c`** (kickoff §45; ⚖ 58).
+**(G) THE GATE LANDED AND IT IS ALREADY RED ON A REAL DRIVE.** After the drain
+and before a window is kept, the driver refuses `WORLD_SWAP_RACE_LOST` when the
+first drained tick is not the tape's declared boot plus the constructor
+half-tile (`Player.as:375`; **149/149** committed fixtures agree), with a second
+signal `len(ticks) == tick_count + 1` (`Bot.as:2963`, structural; **149/149**).
+The refusal is a RAISE — `--out` is never written, no sidecar — and all five
+consumer shell-out sites already re-raise with the driver's stdout attached, so
+it arrives NAMED. ⛔ It lives IN the driver file because **seventeen consumers
+COPY that one file** into the Windows scratch; a sibling module would have been
+an ImportError waiting for the first one that forgot. The `playwright` import
+moved inside `main()` so a JS row can reach the predicate at all.
+**(M) §43.7's PREMISE REFRAMED — THE SECONDS KNOB WAS A PROXY.**
+`--preboot-delay-sec 0.48` produced BOTH outcomes. Reading `botStatus.game_time`
+at the arm (minus `dayLength/2` = 4800) gives the frames the page's own boot
+world has run, and over **27 drives**: **19 wins at frame ≤ 18, 8 losses at
+frame ≥ 19, no overlap**, `dead_frames` 41/40 as a perfect co-signal. The cut is
+the fade's own constant — `blackCover` 1 → 0 at −0.05 = **20 frames**
+(`Game.as:518-519`), the pre-swap `Bot.update` counted dead at `Bot.as:2877`.
+⇒ the margin is a FRAME COUNT; the seconds boundary is that fade minus the
+driver's setup, which is why it read as "a property of THIS box".
+**⛓ THE NUMBER THE FIFTH RUN NEEDS: the historical path arms at frame 2–4**
+(~15 frames ≈ 0.6 s of headroom, against ±6 frames of run-to-run jitter). The
+race has always been won, and won comfortably — but nothing was watching.
+**(F) PHASE ALIGNMENT REFUTED, BETTER THAN 0/6.** A `requestAnimationFrame`
+-aligned `botStart` went **1 win / 5 losses — the win at frame 16, every loss at
+19+**: the same law, boundary unmoved. ⇒ the fix is AS3 (`armed` deferred to the
+first `Bot.update` whose world is the booted one) and is WRITTEN UP as the fifth
+run's input, not built — it moves tick 0 on every swapping tape, so it must land
+WITH ⚖ 57's `sound` pin or the roster is re-recorded twice. The aligned driver
+was a scratch copy and is NOT committed. ⚖ A third option for the fifth run's
+driver: refuse to ARM when the fade has already ended (frame > 18) — a bound,
+not a fix, and its cost (a `botStatus` read on the default path, §43.5's
+perturbation lesson) must be measured there.
+**(R)** the gate over the live arm path: the 16 `r9-campaign` segments + the 3
+dash witnesses at idle 0, and three non-skip-path tapes at idle 1.0 s.
+**(m4)** the SKIP-PATH tape at idle 1.0 s PASSES and reproduces its committed
+stream 0/46 — immune, not unchecked; its `dead_frames` is idle-dependent and
+nothing asserts it (named non-defect).
+⛔ Untouched: every file under `fixtures/`, the parked series, the AS3, the wasm
+submodule, the tapes. Standing movers: the **suite row ONLY** — `375/11631` →
+**`376/11638`** at `05c6f7e1c` (CI success), +1 file / +7 rows, no `--write` run.
+⛓ `scripts/**/*.py` added to the JS-unit-test trigger — **⚖ 34's FOURTH
+instance**, by its own criterion (what the suite READS).
+⇒ NEXT unchanged: the FIFTH run (⚖ 57 + this slice's (F) together) → P3b → P4 →
+L15.
+
 **⚖ RULINGS 57–59 (the user, 2026-08-26, after §43/§44 — session 8):** **57 PIN
 ROSTER-WIDE** (§43.8 option 2 ⇒ the FIFTH run is a full-roster re-record under
 ⚖ 40; the pin moves the count, so no committed expectation survives unmeasured).
@@ -5276,7 +5323,7 @@ whether the fix is a phase-aligned `botStart` call (driver) or arming after the
 swap (`Bot.as`, a `p4c` build riding the fifth run's re-record); lands BEFORE the
 fifth run. **59 BRANCHES** — `r9/economies`, `r9/re-record-attempt`, `-2` deleted
 (patches on main); `-3`/`-4`/`-5` kept. Session 8 so far: 12f ✓ (`c2e076196`) ·
-P3 ✓ (`2feb53acc`; 63 standing rows, suite 375/11631 @b060f5b31) · 12g launched.
+P3 ✓ (`2feb53acc`; 63 standing rows, suite 375/11631 @b060f5b31) · **12g ✓ (`05c6f7e1c`; suite 376/11638)**.
 Sequence: 12g → the FIFTH run (⚖ 57 + the series + the bank retirement + the
 three `r7-act2-*` description repairs) → P3b → P4 → L15.
 
