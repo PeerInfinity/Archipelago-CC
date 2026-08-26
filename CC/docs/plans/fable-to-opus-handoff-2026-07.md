@@ -5105,6 +5105,25 @@ override shows as the byte diff its comment already claims. Then P3 (which
 inherits the fixed point AND the latch-key projection as ONE item) → P4 → L15
 `shove`.**
 
+
+**⇒ CAMPAIGN ORCHESTRATION SESSION 7 → 8 (2026-08-26, `0f22b9e44`).** Session 7
+verified P1b (§41) and the fourth run's STOP (§42) against disk and opened
+three editor windows (E2c · Q6 + E3a · E3b); ⚖ 54 (1)–(5) are ALL discharged;
+the 12c batch does NOT close. **⚖ FOR THE USER, BLOCKING the fifth run
+(§42.10):** which boot is the record at a chain boundary — the producer-derived
+one (S2 must not override it with a fresh-page latch) or the measured one (then
+S1's envelope-boot is the defect); plus the independent gate repair (a producer
+`--check` that reads the successor's OWN boot is a FIXED POINT, trap 769) and
+one licensed 118-tick drive (`r9-solve-14` @1785346831). The game confirmed all
+thirteen walks; what is parked on `r9/re-record-attempt-5` is ONE boot field
+carrying the wrong chain's value. Session 7's brief errors (nine pairs, S4 once,
+a cache miss read as a certification) are in `feedback_oep_premises_overturned`.
+Successor prompt `NewDocs/plans/seedling-bot-r9-campaign8-planning-prompt.md`;
+sequence: **the user's ruling → P3 (its brief written meanwhile; may launch
+unattended — and it now owns the fixed-point `--check`, the latch key over
+rewritten fields, ⚖ 40's 25 ⊄ S4's 26, the replay teardown throw) → the FIFTH
+run → P4 → L15.** Six local `r9/*` branches now; none pushed, none rewritten.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
