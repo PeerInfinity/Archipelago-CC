@@ -59,8 +59,8 @@ import { gateabilityOf } from '../procgenCore/setEditorCore.js';
 import {
     stampLibraryIdentity, validateRegionLibrary,
 } from '../procgenPipeline/regionLibraryValidator.js';
-import { captureTileGridLibraryEntry } from './mazeLibraryEntry.js';
-import { deserializeMazeWorld, extractPathsAndObstacles } from './mazeRoomEngine.js';
+import { blankTileGridLibraryEntry, captureTileGridLibraryEntry } from './mazeLibraryEntry.js';
+import { createWorld, deserializeMazeWorld, extractPathsAndObstacles } from './mazeRoomEngine.js';
 import { serializeMazeWorld } from '../procgenPipeline/procgenPipelineEngine.js';
 import {
     LINK_ONE_WAY_DEFAULT, assertOverlay, deriveAtlasOf, emptyMazeOverlay, exitRuleKey,
@@ -266,6 +266,29 @@ export const MAZE_CAPTURE_DEPS = Object.freeze({
     serialize: serializeMazeWorld,
     extract: extractPathsAndObstacles,
     substrate: 'maze',
+});
+
+/**
+ * ⛓⛓ **THE BLANK ROOM'S PAYLOAD, BOUND TO THE MAZE'S OWN PRIMITIVES** (E3b).
+ *
+ * `mazeLibraryEntry.js` names no engine — every hook in it takes its
+ * `serialize`/`extract`/`deserialize` as `deps`, and the blank constructor
+ * follows. This is the binding, so a page adding a room calls ONE function and
+ * hands its result straight to `add-room`:
+ *
+ *   `session.apply({ op: 'add-room', payload: blankMazeRoomPayload({width, height}) })`
+ *
+ * ⛓ `createWorld` joins `MAZE_CAPTURE_DEPS`' three here rather than being added
+ * to that frozen object: those three are what the CAPTURE path composes, and a
+ * fourth in it would be a dependency `entryFromPayload` does not use.
+ *
+ * ⛔ The BUTTON is not here. `mazeSetLab.js` is another slice's file; this is
+ * the vocabulary it will call.
+ */
+export const blankMazeRoomPayload = (spec) => blankTileGridLibraryEntry(spec, {
+    createWorld,
+    serialize: MAZE_CAPTURE_DEPS.serialize,
+    extract: MAZE_CAPTURE_DEPS.extract,
 });
 
 /**

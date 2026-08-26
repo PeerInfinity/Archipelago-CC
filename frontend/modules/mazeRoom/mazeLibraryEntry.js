@@ -480,3 +480,59 @@ export function validateTileGridLibraryEntry(entry, deps) {
     }
     return { errors };
 }
+
+/**
+ * ⛓⛓⛓ **A BLANK ROOM'S PAYLOAD — `add-room`'s INPUT FOR A PAGE** (EDITOR v3
+ * E3b; plan §30.13, §31.1 #6).
+ *
+ * ⛔⛔ **IT RETURNS A PAYLOAD, NOT AN ENTRY, AND THAT IS THE WHOLE DESIGN.**
+ * `mazeSetAdapter.add-room` takes `{payload, name?, at?}` and builds the entry
+ * itself, through `captureTileGridLibraryEntry` — which is where `region_size`,
+ * `exit_sides`, `location_slots` and the `carried_rules: null` contract come
+ * from. An entry minted here would be a SECOND spelling of all four, and
+ * §26.6's own note says the capture path is the one place that assertion lives.
+ *
+ * ⛔ **AND THAT IS WHY THERE IS NO `entry_id` OR `name` PARAMETER**, though the
+ * kickoff named both. MEASURED: `serializeMazeWorld`'s output carries
+ * `width, height, tiles, entrance, exits, obstacles, items, obstacleLib,
+ * itemLib, longestShortestPath` — and neither an id nor a name. `add-room`
+ * MINTS the id (`freshEntryId`, derived from the library's count) and takes the
+ * `name`, so accepting either here would be a parameter the caller believes
+ * named the room and that nothing reads.
+ *
+ * ⛓⛓ **DOORLESS, AND VALID — MEASURED, NOT ASSUMED.** `createWorld` is given
+ * an explicit `exits: []` (its default would put one at the bottom-right), and
+ * `validateTileGridLibraryEntry` answers `{errors: []}` for the resulting
+ * entry: its three checks are capability-vs-payload consistency, and declared
+ * `exit_sides: []` agrees with an actual `[]`. So the constructor does NOT mint
+ * an exit it was not asked for. ⛓ The room is then UNWIRED, which
+ * `mazeAtlasDerivation` keeps by name — §26.5 rules that a library entry with
+ * no link YET is a room the author just added, not an orphan — and the REPORT
+ * warns about it until a `connect` gives it a door.
+ *
+ * ⛓ Every tile is FLOOR (`createWorld`'s `Int8Array` is zeros and `TILE_FLOOR`
+ * is 0), so the one-component check `mazeAtlasDerivation` floods from the
+ * entrance passes by construction rather than by luck.
+ *
+ * ⚠ `createWorld` refuses a dimension below 2; the refusal is left to it rather
+ * than duplicated here, so there is one authority for what a world may be.
+ *
+ * @param {{width: number, height: number, entrance?: {x, y}}} spec
+ * @param {{createWorld: Function, serialize: Function, extract: Function}} deps
+ * @returns {object} a sidecar payload `mazeSetAdapter.add-room` accepts unchanged
+ */
+export function blankTileGridLibraryEntry({ width, height, entrance = { x: 0, y: 0 } }, deps) {
+    const { createWorld, serialize, extract } = deps ?? {};
+    for (const [name, fn] of [['createWorld', createWorld], ['serialize', serialize],
+        ['extract', extract]]) {
+        if (typeof fn !== 'function') {
+            throw new Error(`blankTileGridLibraryEntry: \`deps.${name}\` is required — this `
+                + 'module names no engine of its own, exactly as the capture and instantiate '
+                + 'hooks beside it do not.');
+        }
+    }
+    // ⛔ `exits: []` EXPLICITLY. `createWorld`'s default is an exit at the
+    //    bottom-right, which would be a door the author did not draw.
+    const world = createWorld(width, height, { entrance: { ...entrance }, exits: [] });
+    return serialize(world, extract(world, { regionId: null }));
+}
