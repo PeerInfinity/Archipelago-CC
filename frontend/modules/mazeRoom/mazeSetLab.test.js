@@ -274,6 +274,37 @@ describe('mazeSetLab — the base tag and the binding list', () => {
         // ⛔ …and the bound is SAID, not defaulted: there is none, and it says so.
         expect(b.linkBound()).toEqual({ ok: true, why: null });
         /**
+         * ⛓⛓ **`addRoomOp` IS THREADED, AND ABSENT BY DEFAULT** (EDITOR v3
+         * E6b). ⛔ `null` and not a thrower: with no `blankSize` the mount's own
+         * press says *"no `addRoomOp` was injected"*, which is one sentence
+         * about a missing parameter rather than two about a missing size.
+         * ⛓ The op it builds is `blankMazeRoomPayload`'s straight through —
+         * MUTANT: the thunk is CALLED ONCE at binding time instead of at the
+         * press, and the second press mints the size the page had at mount.
+         */
+        expect(b.addRoomOp).toBe(null);
+        const sizes = [];
+        const sized = mazeSetBindings({
+            blankSize: () => {
+                sizes.push(sizes.length);
+                return { width: 4 + sizes.length, height: 3 };
+            },
+        });
+        expect(sizes).toEqual([]);
+        const first = sized.addRoomOp(7);
+        expect(first).toMatchObject({ op: 'add-room', at: 7 });
+        expect(first.payload).toMatchObject({ width: 5, height: 3 });
+        // ⛔ EXITS `[]` — `blankTileGridLibraryEntry` hands `createWorld` an
+        //    explicit empty list, so the blank room is DOORLESS by construction.
+        expect(first.payload.exits).toEqual([]);
+        // ⛓ …and the SECOND press reads the thunk AGAIN, which is the whole
+        //   reason it is a thunk and not a value.
+        expect(sized.addRoomOp(8).payload).toMatchObject({ width: 6, height: 3 });
+        expect(sizes).toEqual([0, 1]);
+        // ⛔ NOTHING HERE CHECKS THE SIZE — `createWorld` is the one authority.
+        expect(() => mazeSetBindings({ blankSize: () => ({ width: 1, height: 11 }) }).addRoomOp(0))
+            .toThrow(/createWorld: invalid dimensions 1x11/);
+        /**
          * ⛓⛓ **THE STILLS CACHE IS KEYED ON THE PAYLOAD OBJECT, BY IDENTITY.**
          * ⛔ MUTANT: keyed on the room INDEX — a `replace-room` swaps the
          * payload and the index does not move, so an edited room would keep its

@@ -1348,9 +1348,11 @@ const MAZE_LIB = JSON.parse(readFileSync(
  * these rows make is *which room the mount asked for*, not what it looked like.
  * `mazeSetLab.test.js` drives the REAL one against a recording context.
  */
-const mazeBindings = (rulesSchema) => mazeSetBindings({ rulesSchema });
+const mazeBindings = (rulesSchema, blankSize = null) => mazeSetBindings({ rulesSchema, blankSize });
 
-const mazeHarness = ({ overlay = emptyMazeOverlay(), loadZip = null, extraMember = null } = {}) => {
+const mazeHarness = ({
+    overlay = emptyMazeOverlay(), loadZip = null, extraMember = null, blankSize = null,
+} = {}) => {
     for (const k of READOUT_NAMES) delete globalThis[k];
     const adapter = createMazeSetAdapter({ rulesSchema: DEPS.rulesSchema });
     const record = mazeSetRecord(MAZE_LIB, overlay);
@@ -1369,7 +1371,7 @@ const mazeHarness = ({ overlay = emptyMazeOverlay(), loadZip = null, extraMember
         validateRegionAtlas,
         atlasSchema: ATLAS_SCHEMA,
         ...(() => {
-            const b = mazeBindings(DEPS.rulesSchema);
+            const b = mazeBindings(DEPS.rulesSchema, blankSize);
             if (!extraMember) return b;
             /** ⛓ ONE EXTRA MEMBER, to drive the by-name refusal path. */
             const inner = b.adapterFns.download;
@@ -1462,6 +1464,72 @@ describe('⛓⛓⛓ EDITOR v3 E2b — the SAME mount, bound to `mazeSetAdapter`,
         expect(calls.filter((c) => c.startsWith('fillText(L')).length)
             .toBe(MAZE_LIB.entries.length);
         expect(calls.filter((c) => c.startsWith('fillText(⛔embed')).length).toBe(0);
+    });
+
+    /**
+     * ⛓⛓⛓ **ADD ROOM ON THE SECOND SUBSTRATE** (EDITOR v3 E6b). E2c left the
+     * button disabled because the maze's `add-room` takes a PAYLOAD and the arm
+     * had no blank room to mint; E3b landed `blankMazeRoomPayload` and this is
+     * the binding that calls it. ⛔ The press is the mount's own and says only
+     * WHERE (`at = roomCount()`), so what this row measures is the BINDING: the
+     * op's shape, the id `add-room` mints, and the `carried_rules: null`
+     * contract the CAPTURE path is the sole author of.
+     *
+     * ⛓ MUTANT: `addRoomOp` builds the entry itself instead of going through
+     * `blankMazeRoomPayload` → `entryFromPayload` — `carried_rules` comes back
+     * `undefined` and `region_size` disagrees with the payload.
+     */
+    it('ADD ROOM appends a BLANK room — `room_4`, `carried_rules: null`, no exits', () => {
+        const h = mazeHarness({ blankSize: () => ({ width: 7, height: 5 }) });
+        expect(h.ui.rows()).toHaveLength(4);
+        click(h, 'editSetAddRoom');
+        expect(h.session.ops()).toHaveLength(1);
+        expect(h.session.ops()[0]).toMatchObject({ op: 'add-room', at: 4 });
+        expect(h.ui.rows()).toHaveLength(5);
+        const added = h.session.record().library.entries[4];
+        expect(added.entry_id).toBe('room_4');
+        expect(added.carried_rules).toBe(null);
+        expect(added.region_size).toEqual({ width: 7, height: 5 });
+        /**
+         * ⛓ **DOORLESS, AND THAT IS THE POINT** — `blankTileGridLibraryEntry`
+         * hands `createWorld` an explicit `exits: []`, so the room arrives with
+         * nothing to link and the REPORT warns about it until a `connect` gives
+         * it a door.
+         */
+        expect(added.payload.exits).toEqual([]);
+        expect(h.ui.rows()[4].exits).toBe(0);
+        expect(h.ui.rows()[4].linkedFrom).toBe(0);
+    });
+
+    /**
+     * ⛔⛔ **THE SIZE HAS ONE AUTHORITY AND IT IS `createWorld`.** The page's
+     * `<input min="2">` is a hint; neither `mazeSetBindings` nor the mount
+     * checks a dimension, so a 1-wide room is refused by the engine's OWN
+     * sentence and that sentence is what `#editSetNote` prints.
+     * ⛓ MUTANT: a pre-check in the binding — the note then carries a paraphrase
+     * and the two sentences drift the day `createWorld`'s bound moves.
+     */
+    it('a `blankSize` below 2 is REFUSED by `createWorld`\'s own sentence, and no room lands',
+        () => {
+            const h = mazeHarness({ blankSize: () => ({ width: 1, height: 11 }) });
+            click(h, 'editSetAddRoom');
+            expect(h.session.ops()).toHaveLength(0);
+            expect(h.ui.rows()).toHaveLength(4);
+            expect(textOf(h, 'editSetNote')).toMatch(/createWorld: invalid dimensions 1x11/);
+        });
+
+    /**
+     * ⛔ **AND WITH NO `blankSize` THE BUTTON STILL SAYS SO** — `mazeSetBindings`
+     * returns `addRoomOp: null`, which is the mount's own "no `addRoomOp` was
+     * injected" sentence and not a second one in the binding.
+     */
+    it('with no `blankSize` the binding injects NO `addRoomOp`, and the press says so', () => {
+        const h = mazeHarness();
+        expect(mazeSetBindings({}).addRoomOp).toBe(null);
+        click(h, 'editSetAddRoom');
+        expect(h.session.ops()).toHaveLength(0);
+        expect(h.said.at(-1)).toMatchObject({ bad: true });
+        expect(h.said.at(-1).text).toMatch(/no `addRoomOp` was injected/);
     });
 
     it('the ARROWS are `exitArrowShapes` over the JOINED exits — none, then two', () => {

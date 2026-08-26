@@ -1136,7 +1136,34 @@ export function mountSetEditor({
             return;
         }
         const at = roomCount();
-        applySet(addRoomOp(at), { renumber: addRoomMapping(at), what: 'ADD ROOM' });
+        /**
+         * ⛔⛔ **THE MINT IS INSIDE THE GUARD, AND IT WAS NOT** (EDITOR v3 E6b).
+         * `applySet(addRoomOp(at), …)` evaluates the binding AS AN ARGUMENT —
+         * before `applySet`'s own `try` (`:647`) ever runs — so a binding that
+         * REFUSES to mint threw straight out of this click listener: no
+         * `#editSetNote`, no `say`, a console error, and the note left holding
+         * the PREVIOUS press's sentence. Nothing could see it while `addRoomOp`
+         * was Seedling-only (`emptyLevel()` never refuses); the maze's takes a
+         * SIZE, and `createWorld` refuses a dimension below 2 by name.
+         *
+         * ⛓ The wording is `applySet`'s own, deliberately: one spelling of
+         * *"refused"* on this page. What differs is the SUBJECT — the op does
+         * not exist yet, so the sentence names the PRESS (`ADD ROOM`) rather
+         * than an `op.op` there is none of.
+         *
+         * ⛔ AND NO SIZE CHECK HERE. What a blank room may be is the
+         * substrate's, said once, by whatever the binding calls.
+         */
+        let op;
+        try {
+            op = addRoomOp(at);
+        } catch (e) {
+            if (!(e instanceof Error)) throw e;
+            say(`the op was REFUSED by the MINT — ${e.message}`, true);
+            setNote(`⛔ ADD ROOM could not be applied: ${e.message}`, true);
+            return;
+        }
+        applySet(op, { renumber: addRoomMapping(at), what: 'ADD ROOM' });
     });
 
     /**

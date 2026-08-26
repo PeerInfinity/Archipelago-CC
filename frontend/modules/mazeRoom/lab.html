@@ -567,15 +567,22 @@
         <label for="editSetRoom">the LOADED LIBRARY's rooms</label>
         <select id="editSetRoom" disabled></select>
         <button id="editRoomClose" disabled>CLOSE the open room INTO the library</button>
-        <!-- ⛔ DISABLED HERE, WITH ITS REASON. Seedling's `add-room` takes a
-             blank RECORD the page can mint; the maze's takes a PAYLOAD — a
-             captured maze WORLD — and this arm has no blank room to capture.
-             E2c leaves it (plan §30); the alternative was a button whose press
-             says "no `addRoomOp` was injected", which is the mount telling a
-             reader about a parameter instead of the page telling them about the
-             substrate. -->
-        <button id="editSetAddRoom" disabled
-          title="ADD ROOM is not offered here: the maze's `add-room` takes a captured maze WORLD as its payload, and this arm has no blank room to mint. Add rooms with `region-library-validate.mjs`, or edit an existing one and CLOSE it.">ADD ROOM</button>
+        <!-- ⛓⛓ EDITOR v3 E6b — **ADD ROOM IS OFFERED**, and the blank room's
+             SIZE is the PAGE's. E3b landed `blankMazeRoomPayload({width, height})`
+             — the maze's own blank-world vocabulary — so the arm that had no
+             blank room to mint now has one. ⛔ `mazeSetLab.js` is DOM-FREE by
+             its own law, so the two inputs below are read by `mazeLabView.js`
+             and handed to the binding as a THUNK; their defaults are written
+             from `MAZE_DEFAULTS`, the same constant `#labWidth`/`#labHeight`
+             fall back to, rather than typed here.
+             ⛔ `min` IS A HINT, NOT A CHECK. `createWorld` refuses anything
+             below 2 with its own sentence and it is the ONE authority; a page
+             that pre-checked would be a second one, and the two would drift. -->
+        <label for="editSetNewW">blank room w</label>
+        <input id="editSetNewW" type="number" min="2" step="1" style="width:4em">
+        <label for="editSetNewH">h</label>
+        <input id="editSetNewH" type="number" min="2" step="1" style="width:4em">
+        <button id="editSetAddRoom" disabled>ADD ROOM</button>
       </div>
       <div class="line">
         <label for="editSetRuleTarget">access rule on</label>

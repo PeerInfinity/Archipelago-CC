@@ -36,7 +36,7 @@ import { OVERVIEW } from '../procgenCore/setEditorCore.js';
 import { deserializeMazeWorld } from './mazeRoomEngine.js';
 import { drawWorld, plainView } from './mazeRoomRender.js';
 import {
-    LIBRARY_FIELDS, ROOM_FIELDS, closeRoomSession, downloadLibrary,
+    LIBRARY_FIELDS, ROOM_FIELDS, blankMazeRoomPayload, closeRoomSession, downloadLibrary,
     exitRuleKey, exitsOfRoom, isMazeSetRefusal, locationRuleKey,
     deriveAtlasOf, readSetCell, rulesJsonOf, validateForDownload, whatLinksHere,
 } from './mazeSetAdapter.js';
@@ -203,12 +203,20 @@ export function roomBaseTag(library, room, entry) {
  * `region-library` whose id is `library_id`, and there is no link-scan bound at
  * all (E2a priced the whole column at 0.363 ms — §26.6).
  *
- * @param {{rulesSchema?: object, drawRoomStill?: Function}} o
+ * @param {{rulesSchema?: object, drawRoomStill?: Function, blankSize?: Function}} o
  *   `drawRoomStill` — the PAGE's renderer. The node rows hand a RECORDING stub
  *   so the claim is *which room was asked for*, not what it looked like;
  *   `mazeLabView.js` hands `makeDrawRoomStill()`.
+ *   `blankSize` — a THUNK `() => ({width, height})` (EDITOR v3 E6b). ⛔ A thunk
+ *   and not a value: the size lives in two `<input>`s a person may retype
+ *   between presses, and a number read once at mount would be the size the page
+ *   had when it loaded rather than the one on screen. ⛔ And a THUNK rather than
+ *   the two elements, because this file may not touch a DOM (the docblock's own
+ *   law) — the page reads its own inputs and hands back a plain object.
  */
-export function mazeSetBindings({ rulesSchema = null, drawRoomStill = null } = {}) {
+export function mazeSetBindings({
+    rulesSchema = null, drawRoomStill = null, blankSize = null,
+} = {}) {
     return {
         adapterFns: {
             readSetCell,
@@ -308,5 +316,29 @@ export function mazeSetBindings({ rulesSchema = null, drawRoomStill = null } = {
          */
         sourceKind: () => 'record',
         drawRoomStill,
+        /**
+         * ⛓⛓⛓ **ADD ROOM, AND THE WHOLE OP IS THE BINDING'S** (EDITOR v3 E6b).
+         * `mountSetEditor`'s press only says WHERE (`at = roomCount()`); what a
+         * blank room IS is the substrate's, and Seedling's twin
+         * (`watchSetEditor.js`) hands a blank `record` where this hands a
+         * `payload`. ⛓ `blankMazeRoomPayload` (E3b) is that vocabulary — a
+         * DOORLESS, all-floor world whose `exit_sides` are `[]`, so the room
+         * arrives unwired and the REPORT warns about it until a `connect` gives
+         * it a door.
+         *
+         * ⛔ **`null` WHEN NO `blankSize` WAS SUPPLIED**, so a binding built
+         * with no page (every node row that does not ask for the button) leaves
+         * the press saying *"no `addRoomOp` was injected"* exactly as it did
+         * before this slice — the mount's own sentence, not a second one here.
+         *
+         * ⛔ **AND NOTHING HERE CHECKS THE SIZE.** `createWorld` refuses a
+         * dimension below 2 by name (`invalid dimensions 1x11`) and
+         * `blankTileGridLibraryEntry`'s docblock already says the refusal is
+         * left to it *"so there is one authority for what a world may be"*. The
+         * `<input min="2">` on the page is a hint to a person, not a gate.
+         */
+        addRoomOp: blankSize === null ? null : (at) => ({
+            op: 'add-room', at, payload: blankMazeRoomPayload(blankSize()),
+        }),
     };
 }

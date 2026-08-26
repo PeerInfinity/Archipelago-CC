@@ -115,6 +115,9 @@ const {
 const { OVERVIEW } = await import(join(REPO, 'frontend/modules/procgenCore/setEditorCore.js'));
 const { BUNDLE_KINDS } = await import(
     join(REPO, 'frontend/modules/presets/documentBundle.js'));
+/** ⛓ EDITOR v3 E6b — the constant the SET arm's blank-room inputs are SEEDED
+ *  from, read from the engine rather than typed, for `OVERVIEW`'s own reason. */
+const { MAZE_DEFAULTS } = await import(join(REPO, 'frontend/modules/mazeRoom/procgenMaze.js'));
 const LIBRARY_PATH = 'frontend/region-libraries/demo-maze-pack.json';
 const MAZE_PACK = JSON.parse(readFileSync(join(REPO, LIBRARY_PATH), 'utf8'));
 /** ⛓ The 4-link RING and the 2-link CHAIN, as OVERLAY documents. */
@@ -1899,6 +1902,27 @@ try {
         ...document.querySelectorAll('#editSetRooms table.setRooms tr'),
     ].slice(1).map((r) => [...r.children].map((c) => c.textContent)));
 
+    /**
+     * ⛓⛓ **THE REPORT, OFF THE DOM *AND* OFF THE READOUT — E3a CLOSED THE SEAM
+     * THAT MADE ONE OF THEM IMPOSSIBLE.**
+     *
+     * E2c: `mountSetEditor`'s REPORT button ran `runReport()` and the MOUNT's
+     * own render and did NOT call `onSetChange`, so a page could not learn a
+     * report had happened; `window.__mazeLab.set.report` would have carried the
+     * verdict as of the LAST PAGE RENDER while the box on screen showed the
+     * current one. E3a's ordering rule fires `onSetChange({why: 'report'})`
+     * AFTER that render, so the field exists — and this probe reads BOTH, so
+     * the claim is that they agree.
+     */
+    const reportOf = () => page.evaluate(() => ({
+        rows: [...document.querySelectorAll('#editSetReportOut li')].map((l) => l.textContent),
+        note: document.getElementById('editSetReportNote')?.textContent ?? '',
+        rulesDisabled: document.getElementById('editDownloadRules')?.disabled ?? null,
+        /** ⛓ THE `bad` ROWS ARE THE ERRORS — the class `runReport` gives a row
+         *  whose severity is `error`, which is what the readout's count counts. */
+        errorRows: [...document.querySelectorAll('#editSetReportOut li.bad')].length,
+        readout: window.__mazeLab?.set?.report ?? null,
+    }));
     /** ⛓ PASTE a document into the SET arm's OWN box — never `#labText`, which
      *  `refreshSaveBox` overwrites with the LEVEL payload on every render. */
     const pasteSet = async (doc, pred, why) => {
@@ -2362,30 +2386,150 @@ try {
         `room 1 → ${roomUndo.set.openRoomOps}, library ${stripUndo.set.ops} → `
         + `${roomUndo.set.ops}`);
 
+    /* ── CLAIM 19e: ADD ROOM, and the one authority on a size ────────── */
+    /**
+     * ⛓⛓⛓ **CLAIM 19e — THE MAZE ARM MINTS A BLANK ROOM** (EDITOR v3 E6b).
+     * E2c shipped `#editSetAddRoom` DISABLED with a `title` saying the maze's
+     * `add-room` takes a captured WORLD and this arm had none to mint; E3b
+     * landed `blankMazeRoomPayload`, and `mazeSetLab.mazeSetBindings` now hands
+     * the mount an `addRoomOp` built from the PAGE's own two size inputs.
+     *
+     * ⛔ The subject is a CLOSED graph first — the 4-link RING, whose export the
+     * REPORT allows — so the refusal further down is caused BY THE ADD and not
+     * by the state the arm was already in.
+     */
+    await load(setUrl, () => window.__mazeLab?.set?.mounted === true, 'the SET arm for ADD ROOM');
+    await pasteSet(overlayOf(4), () => window.__mazeLab?.set?.links === 4,
+        'the 4-link RING, whose graph CLOSES');
+    await page.click('#editSetReport');
+    await settled(() => document.getElementById('editDownloadRules')?.disabled === false,
+        'the REPORT to ALLOW the ring BEFORE the add');
+    /**
+     * ⛓ **THE DEFAULT SIZE IS THE ENGINE'S OWN CONSTANT, NOT A LITERAL IN THE
+     * MARKUP** — `mazeLabView` seeds the two inputs from `MAZE_DEFAULTS`, which
+     * is what `readLabParams` falls back to for `?width=`/`?height=`, so the
+     * SET arm mints the size the GENERATE arm generates. ⛔ MUTANT: the values
+     * typed into `lab.html` — green today and stale the day the constant moves.
+     */
+    const newSize = await page.evaluate(() => ({
+        w: Number(document.getElementById('editSetNewW')?.value),
+        h: Number(document.getElementById('editSetNewH')?.value),
+        min: document.getElementById('editSetNewW')?.getAttribute('min'),
+        addDisabled: document.getElementById('editSetAddRoom')?.disabled ?? null,
+    }));
+    check(newSize.w === MAZE_DEFAULTS.width && newSize.h === MAZE_DEFAULTS.height
+        && newSize.min === '2' && newSize.addDisabled === false,
+        '⛓⛓ **CLAIM 19e — THE BLANK-ROOM INPUTS CARRY `MAZE_DEFAULTS`, AND THE BUTTON IS '
+        + `ENABLED** — ${MAZE_DEFAULTS.width}x${MAZE_DEFAULTS.height}, the same constant `
+        + '`#labWidth`/`#labHeight` fall back to. ⛔ E2c\'s `title` said ADD ROOM was "not '
+        + 'offered here"; that sentence is retired rather than left true-looking',
+        json(newSize));
+    const beforeAdd = await stripInk();
+    const hashesBefore = [];
+    for (let i = 0; i < MAZE_PACK.entries.length; i += 1) hashesBefore.push(await stripCellHash(i));
+    await page.click('#editSetAddRoom');
+    await settled(() => window.__mazeLab?.set?.rooms === 5, 'the ADD ROOM press to land a room');
+    const added = await read();
+    check(added.set.rooms === 5 && added.set.opList.at(-1) === 'add-room'
+        && added.set.strip.rooms === 5,
+        '⛓⛓⛓ **ADD ROOM APPENDS ONE ROOM, AND THE LEDGER SAYS `add-room`** — the mount\'s press '
+        + 'says only WHERE (`at = roomCount()`); the whole op is the binding\'s, exactly as '
+        + 'Seedling\'s hands a blank RECORD where this hands a `payload`',
+        `${added.set.rooms} room(s) · ${json(added.set.opList)}`);
+    /**
+     * ⛓⛓ **AND THE STRIP GREW BY ONE CELL WHOSE PIXELS ARE NOBODY ELSE'S.** ⛔ A
+     * WIDTH claim AND a HASH claim: the width alone is green over a build that
+     * appended a blank rectangle, and a hash alone cannot say the strip grew.
+     * ⚠ The hash is compared against ALL FOUR earlier cells, not just cell 3 —
+     * the demo pack's rooms are not identical to each other, and a new cell
+     * that matched any of them would be a still of the wrong room.
+     */
+    const afterAdd = await stripInk();
+    const hash4 = await stripCellHash(4);
+    check(afterAdd.w === beforeAdd.w + OVERVIEW.cellPx
+        && !hashesBefore.includes(hash4) && afterAdd.stripInk > beforeAdd.stripInk,
+        `⛓⛓ …and the STRIP grew by exactly one \`OVERVIEW.cellPx\` (${OVERVIEW.cellPx}) and the `
+        + 'new cell\'s PIXELS match none of the four that were there',
+        `${beforeAdd.w} → ${afterAdd.w} px · ink ${beforeAdd.stripInk} → ${afterAdd.stripInk} · `
+        + `hash ${hash4} vs ${json(hashesBefore)}`);
+    const table5 = await roomsTable();
+    check(table5.length === 5 && table5[4][3] === '0' && table5[4][4] === '0',
+        '⛓⛓ …and ROW 4 IS DOORLESS — 0 exits, 0 links here. `blankTileGridLibraryEntry` hands '
+        + '`createWorld` an explicit `exits: []` rather than letting its default mint a door at '
+        + 'the bottom-right, so the room arrives unwired and an author has to draw its doors',
+        json(table5[4]));
+    /**
+     * ⛔⛔ **AND THE REPORT REFUSES THE EXPORT WHILE IT IS UNREACHED — THE
+     * SUBJECT IS REAL.** A room with no door cannot be entered, so a
+     * `rules.json` written over this library would describe a world with a
+     * region nobody can get to. ⛓ This is the row that makes the ADD honest:
+     * the arm hands a person a blank room AND tells them it is not finished.
+     */
+    await page.click('#editSetReport');
+    await settled(() => document.getElementById('editDownloadRules')?.disabled === true,
+        'the REPORT to REFUSE the export while room 4 is unreached');
+    const unreached = await reportOf();
+    check(unreached.rulesDisabled === true && unreached.errorRows > 0,
+        '⛓⛓⛓ **THE EXPORT IS REFUSED WHILE THE NEW ROOM IS UNREACHED** — the same REPORT '
+        + 'allowed this very ring one press ago, so the refusal is the ADD\'s and not the '
+        + 'state\'s', `${unreached.errorRows} error row(s) · ${unreached.note.slice(0, 160)}`);
+    /**
+     * ⛔⛔ **A SIZE BELOW 2 IS REFUSED BY `createWorld`'s OWN SENTENCE.** The
+     * `min="2"` on the inputs is a HINT to a person — `page.fill` walks past it,
+     * and so does anyone typing. ⛓ **AND THE PRESS DOES NOT THROW**: E6b found
+     * that `applySet(addRoomOp(at), …)` evaluated the binding as an ARGUMENT,
+     * i.e. BEFORE `applySet`'s own `try`, so a refusing mint escaped the click
+     * listener entirely — no note, a console error, and `#editSetNote` left
+     * holding the previous press's sentence. ⛓ MUTANT: that `try` removed —
+     * this row reds AND the console-error row at the end of the file reds with
+     * it.
+     */
+    await page.fill('#editSetNewW', '1');
+    await page.click('#editSetAddRoom');
+    await settled(() => /createWorld: invalid dimensions/.test(
+        document.getElementById('editSetNote')?.textContent ?? ''),
+    'the MINT refusal to reach `#editSetNote`');
+    /**
+     * ⛔⛔ **AND THE NOTE IS READ OFF THE DOM, NOT OFF `set.note` — MEASURED.**
+     * First run of this row: `#editSetNote` carried the sentence (the `settled`
+     * above returned) while `window.__mazeLab.set.note` was the EMPTY STRING.
+     * ⛓ Because NO REFUSAL PATH IN THIS MOUNT NOTIFIES THE PAGE: `applySet`'s
+     * own catch (`setEditorView.js:669`) returns `{ok: false}` without a
+     * `render()` or an `onSetChange`, and the press's new catch mirrors it. The
+     * readout is written by the PAGE's render, which a refusal never triggers,
+     * so it holds whatever the last APPLIED op left there. ⛓ That is the same
+     * reader CLAIM 19's `pressNote` already uses for the same reason — named
+     * here rather than cured, because curing it is a change to every refusal
+     * path on both substrates.
+     */
+    const refusedNote = await page.textContent('#editSetNote');
+    const refusedAdd = await read();
+    check(refusedAdd.set.rooms === 5
+        && /^⛔ ADD ROOM could not be applied: createWorld: invalid dimensions 1x/
+            .test(refusedNote),
+        '⛓⛓⛓ **A 1-WIDE BLANK ROOM IS REFUSED BY THE ENGINE\'S OWN SENTENCE, AND NO ROOM '
+        + 'LANDS** — one authority for what a world may be (`blankTileGridLibraryEntry`\'s '
+        + 'docblock says the refusal is left to `createWorld`), and the page prints it verbatim '
+        + 'rather than paraphrasing it',
+        `${refusedAdd.set.rooms} room(s) · ${refusedNote.slice(0, 120)}`);
+    /**
+     * ⛓ **AND THE ADD IS UNDOABLE LIKE ANY OTHER SET OP** — the strip's own
+     * `Ctrl+Z`, the idiom CLAIM 19d established. ⛔ The REFUSED press must not
+     * be on the stack: if it were, this undo would put `rooms` back to 5.
+     */
+    await page.evaluate(() => document.getElementById('editSetOverview').focus());
+    await page.keyboard.press('Control+z');
+    await settled(() => window.__mazeLab?.set?.rooms === 4, 'the UNDO to drop the added room');
+    const addUndone = await read();
+    check(addUndone.set.rooms === 4 && addUndone.set.ops === 0
+        && json(addUndone.set.opList) === json([]),
+        '⛓⛓ …and ONE `Ctrl+Z` on the strip takes the room back out — the refused press left '
+        + 'nothing on the stack, so the ledger is empty rather than one short',
+        `${added.set.rooms} → ${addUndone.set.rooms} room(s), ${addUndone.set.ops} op(s)`);
+
     /* ── CLAIM 20: the REPORT, the four downloads and the BUNDLE ─────── */
     await load(setUrl, () => window.__mazeLab?.set?.mounted === true, 'the SET arm for REPORT');
     await pasteSet(overlayOf(2), () => window.__mazeLab?.set?.links === 2, 'the 2-link CHAIN');
-    /**
-     * ⛓⛓ **THE REPORT, OFF THE DOM *AND* OFF THE READOUT — E3a CLOSED THE SEAM
-     * THAT MADE ONE OF THEM IMPOSSIBLE.**
-     *
-     * E2c: `mountSetEditor`'s REPORT button ran `runReport()` and the MOUNT's
-     * own render and did NOT call `onSetChange`, so a page could not learn a
-     * report had happened; `window.__mazeLab.set.report` would have carried the
-     * verdict as of the LAST PAGE RENDER while the box on screen showed the
-     * current one. E3a's ordering rule fires `onSetChange({why: 'report'})`
-     * AFTER that render, so the field exists — and this probe reads BOTH, so
-     * the claim is that they agree.
-     */
-    const reportOf = () => page.evaluate(() => ({
-        rows: [...document.querySelectorAll('#editSetReportOut li')].map((l) => l.textContent),
-        note: document.getElementById('editSetReportNote')?.textContent ?? '',
-        rulesDisabled: document.getElementById('editDownloadRules')?.disabled ?? null,
-        /** ⛓ THE `bad` ROWS ARE THE ERRORS — the class `runReport` gives a row
-         *  whose severity is `error`, which is what the readout's count counts. */
-        errorRows: [...document.querySelectorAll('#editSetReportOut li.bad')].length,
-        readout: window.__mazeLab?.set?.report ?? null,
-    }));
     /**
      * ⛓⛓ **`null` UNTIL THE BUTTON IS PRESSED IS A STATE, NOT A HOLE** — the
      * readout publishes the MOUNT's own `lastReport` and never runs the report

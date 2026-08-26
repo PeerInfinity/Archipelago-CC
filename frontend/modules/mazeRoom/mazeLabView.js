@@ -58,8 +58,8 @@ import { AREA_LAYERS, areaLegend, drawAreaOverlay } from './mazeAreaOverlay.js';
  */
 import { drawElementOverlay, elementLegend } from './mazeElementOverlay.js';
 import {
-    DEFAULT_MAZE_BIOME, DIRECTED_ANCHOR_TRIES, MAZE_BIOME_NAMES, MazeRoomEditor,
-    PALETTE_ENTRIES, PALETTE_TYPES,
+    DEFAULT_MAZE_BIOME, DIRECTED_ANCHOR_TRIES, MAZE_BIOME_NAMES, MAZE_DEFAULTS,
+    MazeRoomEditor, PALETTE_ENTRIES, PALETTE_TYPES,
     SOURCES, agreementWithPayload, applyDirective, applyEdits, certifyInto, describeState,
     generateStep, generateWithDirectives, labCatalogue, labPayload, loadPayload,
     openEditSession, planCells, planFrames, projectSession, readLabParams, serializeMazeLevel,
@@ -1411,13 +1411,19 @@ export function main() {
      * state is a fact only the mount has. `editDownloadRules` is the REPORT's,
      * for the same reason.
      *
-     * ⛔ `editSetAddRoom` is NOT in it either, and its title says why: the maze's
-     * `add-room` takes a PAYLOAD, and this arm has no blank maze room to mint
-     * (E2c leaves it — see §30).
+     * ⛓⛓ `editSetAddRoom` IS IN IT NOW (EDITOR v3 E6b). E2c kept it out with a
+     * `title` saying this arm had no blank maze room to mint; E3b landed
+     * `blankMazeRoomPayload`, so the sentence stopped being true and both
+     * halves of it — the roster comment and the button's own `title` — are
+     * retired rather than left as a true-looking claim about a button that
+     * works. ⛓ It belongs to THIS roster and not to the mount's, for the same
+     * reason every other op button does: whether a library is held is the
+     * PAGE's fact.
      */
     const SET_CONTROLS = Object.freeze([
         'editSetRoom', 'editSetGesture', 'editSetDisconnect', 'editSetReport', 'editSetUndo',
-        'editSetRuleCommit', 'editSetMarkLocation', 'editDownloadSet', 'editDownloadBundle',
+        'editSetRuleCommit', 'editSetMarkLocation', 'editSetAddRoom',
+        'editDownloadSet', 'editDownloadBundle',
     ]);
 
     const enableSetControls = () => {
@@ -1604,8 +1610,24 @@ export function main() {
              * `setEditorView.test.js` drives in node, with the ONE thing it
              * stubs made real: `drawRoomStill` is `drawWorld` on the entry's
              * own world (§27.1 #2 measured that it reads no `window.`).
+             *
+             * ⛓⛓ EDITOR v3 E6b — **THE BLANK ROOM'S SIZE IS READ AT THE PRESS**,
+             * off the page's own two inputs. ⛔ A thunk, not a value: a person
+             * may retype the size between presses, and a number captured at
+             * mount would mint the size the page had when it loaded.
+             * ⛔ No `Number.isInteger` guard and no clamp here — `createWorld`
+             * refuses a dimension below 2 by name and its sentence is what
+             * `#editSetNote` prints (ONE authority; the `min="2"` on the inputs
+             * is a hint to a person, not a check).
              */
-            ...mazeSetBindings({ rulesSchema, drawRoomStill: makeDrawRoomStill() }),
+            ...mazeSetBindings({
+                rulesSchema,
+                drawRoomStill: makeDrawRoomStill(),
+                blankSize: () => ({
+                    width: Number($('editSetNewW').value),
+                    height: Number($('editSetNewH').value),
+                }),
+            }),
             say,
             /**
              * ⛓⛓ §21.5's THREE RULES ARRIVE THROUGH THE MOUNT: it computes the
@@ -2657,6 +2679,19 @@ export function main() {
         ));
     }
     mountElementParams(DEFAULT_ELEMENTS.name);
+    /**
+     * ⛓⛓ EDITOR v3 E6b — **THE BLANK ROOM'S DEFAULT SIZE, FROM THE CONSTANT
+     * `#labWidth`/`#labHeight` FALL BACK TO.** `readLabParams` reads
+     * `MAZE_DEFAULTS.width/height` when `?width=`/`?height=` are absent, and the
+     * GENERATE form is then filled from `state`; the SET arm's two inputs are
+     * not `state`'s, so they are seeded here — from the SAME frozen object.
+     * ⛔ Not typed into `lab.html`: a literal in the markup would be a second
+     * answer to *"how big is a maze room"*, and the first slice to move the
+     * constant would leave this arm minting a size the rest of the page does
+     * not use.
+     */
+    $('editSetNewW').value = String(MAZE_DEFAULTS.width);
+    $('editSetNewH').value = String(MAZE_DEFAULTS.height);
     stamp();
 
     try {
