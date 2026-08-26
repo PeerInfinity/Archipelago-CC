@@ -18,6 +18,14 @@ on:
       # rather than left for the next slice to rediscover: `include` also
       # collects `test_json/unit/**/*.test.js`.
       - 'test_json/unit/**/*.test.js'
+      # ⛓ ⚖ TRAP 721 CLOSED (user, 2026-08-26) — the SAME hole a THIRD time:
+      # `frontend/modules/procgenDocs/*.test.js` pin the link census, heading
+      # counts and the reference generator's `--check` over
+      # `docs/json/developer/procgen/*.md`. Their SUBJECT lives under `docs/`,
+      # so a docs-only push could leave those pins stale and report green on
+      # tests it never ran. The criterion is what the suite READS, not only
+      # what `include` collects.
+      - 'docs/**'
       - 'vitest.config.js'
       - 'vitest.slow.config.js'
       - 'package.json'
@@ -40,6 +48,14 @@ on:
       # rather than left for the next slice to rediscover: `include` also
       # collects `test_json/unit/**/*.test.js`.
       - 'test_json/unit/**/*.test.js'
+      # ⛓ ⚖ TRAP 721 CLOSED (user, 2026-08-26) — the SAME hole a THIRD time:
+      # `frontend/modules/procgenDocs/*.test.js` pin the link census, heading
+      # counts and the reference generator's `--check` over
+      # `docs/json/developer/procgen/*.md`. Their SUBJECT lives under `docs/`,
+      # so a docs-only push could leave those pins stale and report green on
+      # tests it never ran. The criterion is what the suite READS, not only
+      # what `include` collects.
+      - 'docs/**'
       - 'vitest.config.js'
       - 'vitest.slow.config.js'
       - 'package.json'
