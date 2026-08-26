@@ -1132,8 +1132,17 @@ describe('⛓⛓⛓ A FLAG IS READ AT ITS OWN CELL, AND `last` IS WHETHER THE OP
         expect(flags[0].last).toBe(true);
     });
 
+    /**
+     * ⛓⛓⛓ **THE THREE COUNTS ARE UNMOVED AND THE VERDICT ON TWO OF THEM IS
+     * NOT** (EDITOR v3 E6a). 155 flag instances, 14 sharing a cell, 2 of those
+     * not the last body — those are facts about the committed rooms and no
+     * slice moves them. What moved is what the FORM can do about the 2:
+     * `remove` takes a `which` ordinal (E3b) and the form passes one (E6a), so
+     * it returns `null`; `attrs` addresses the last body in the cell BY
+     * CONTRACT and still refuses.
+     */
     it('⛔⛔ MEASURED: 2 of the 155 committed flag instances are NOT the last body in their '
-        + 'cell, so `remove`/`attrs` cannot name them — and the refusal says so', () => {
+        + 'cell — `remove` names them by ordinal, `attrs` still cannot', () => {
         let total = 0;
         let shared = 0;
         let notLast = 0;
@@ -1146,18 +1155,65 @@ describe('⛓⛓⛓ A FLAG IS READ AT ITS OWN CELL, AND `last` IS WHETHER THE OP
                     return at.tx === f.tx && at.ty === f.ty;
                 });
                 if (cell.length > 1) shared += 1;
+                // ⛓ `which` is the IN-CELL ordinal, and it is right for EVERY
+                //   instance, not only the 2 — a row that only looked at the
+                //   awkward ones would not notice `which` being wrong elsewhere.
+                expect(f.which, `L${l.level} <${f.tag}>`)
+                    .toBe(cell.findIndex((e) => e === record.entities[f.index]));
                 if (!f.last) {
                     notLast += 1;
-                    const why = roomFlagOpRefusal(record, f, 'remove');
+                    expect(roomFlagOpRefusal(record, f, 'remove')).toBe(null);
+                    const why = roomFlagOpRefusal(record, f, 'attrs');
                     expect(why).toMatch(/NOT the last body in that cell/);
-                    expect(why).toMatch(/DELETE/);
-                    expect(roomFlagOpRefusal(record, f, 'attrs')).toMatch(/REWRITE/);
+                    expect(why).toMatch(/REWRITE/);
+                    // ⛔ …and the sentence no longer promises a vocabulary change
+                    //    it already got.
+                    expect(why).not.toMatch(/vocabulary change/);
                 }
             }
         }
         expect(total).toBe(155);
         expect(shared).toBe(14);
         expect(notLast).toBe(2);
+    });
+
+    /**
+     * ⛔⛔⛔ **THE OP THE FORM WOULD BUILD, FOLDED — AND IT REMOVES THE RIGHT
+     * BODY.** The row above is about the REFUSAL; this one is about the EDIT.
+     * For each of the 2 not-last flags, `{op:'remove', tx, ty, which}` is folded
+     * through `foldEdits` and the record's entities are compared BY IDENTITY
+     * before and after: the flag is gone, every other body is the SAME OBJECT.
+     *
+     * ⛓⛓ MUTANT: drop `which` from the op (the bare `remove` the form used to
+     * refuse) — the OTHER body disappears and the flag survives, which is
+     * exactly the deletion §33.12 #2 said the form must not perform.
+     */
+    it('⛔⛔ the op the form builds removes THAT flag and leaves the other body untouched', () => {
+        let checked = 0;
+        for (const l of ATLAS.levels) {
+            const record = SRC(l.level);
+            for (const f of roomFlagsIn(record)) {
+                if (f.last) continue;
+                checked += 1;
+                const before = record.entities;
+                const after = applyEdits(record, [{
+                    op: 'remove', tx: f.tx, ty: f.ty, which: f.which,
+                }]).entities;
+                expect(after).toHaveLength(before.length - 1);
+                // ⛓ THE WHOLE REMAINING LIST, BY VALUE AND IN ORDER — which is
+                //   the strong form: "the flag is gone" alone would pass a build
+                //   that also dropped the other body, and "the other body is
+                //   still there" alone would pass one that removed nothing.
+                //   ⚠ BY VALUE, not by identity: `applyEdits` rebuilds the array,
+                //   so an identity check here would pin a fact that is not true.
+                expect(after).toEqual(before.filter((_, i) => i !== f.index));
+                // ⛔ and the OTHER body in that cell really did survive
+                const other = before[entityIndexAt(record, f.tx, f.ty)];
+                expect(after.some((e) => e.type === other.type
+                    && e.x === other.x && e.y === other.y)).toBe(true);
+            }
+        }
+        expect(checked).toBe(2);
     });
 
     it('⛓ a flag that IS the last body in its cell is not refused', () => {

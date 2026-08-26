@@ -380,48 +380,74 @@ export function roomFlagRoster(schema) {
  * cell it is at, with the index it holds among the room's entities and whether
  * it is the LAST body in that cell.
  *
- * ⛔⛔ **`last` IS NOT BOOKKEEPING — IT IS WHETHER THE OP VOCABULARY CAN
- * EXPRESS THE REMOVAL AT ALL.** `remove` and `attrs` both address *the last
- * entity in the cell* (slice 11's rule, and `entityIndexAt` is its one
- * spelling). MEASURED over the committed 116 rooms: of 155 flag instances, 14
- * share their cell with another body and **2 of those are not the last one** —
- * so a form that emitted a bare `remove` there would delete somebody else's
- * body and call it turning a flag off. ⇒ the form REFUSES those two by name
- * (`roomFlagOpRefusal`), and the vocabulary gap is slice D's to close.
+ * ⛔⛔ **`last` IS NOT BOOKKEEPING — IT IS WHETHER A BARE OP CAN EXPRESS THE
+ * EDIT AT ALL, AND SINCE EDITOR v3 E6a THAT IS TRUE OF `attrs` ONLY.**
+ * A bare `remove` / `attrs` addresses *the last entity in the cell* (slice 11's
+ * rule, and `entityIndexAt` is its one spelling). MEASURED over the committed
+ * 116 rooms: of 155 flag instances, 14 share their cell with another body and
+ * **2 of those are not the last one** — so a form emitting a bare op there
+ * would hit somebody else's body and call it a flag change.
+ *
+ * ⛓⛓ `which` IS THE IN-CELL ORDINAL, and it is what closes the gap for
+ * `remove`: E3b taught the op to take one (`entityIndicesAt`, `requireEntityAt`)
+ * and §33.13 recorded that NOTHING PASSED ONE. This row carries it, computed
+ * where `last` is — from the SAME walk over the SAME record, so a caller that
+ * reads a row and builds an op cannot be reading two different snapshots.
+ * ⇒ `roomFlagOpRefusal` refuses `attrs` only; `remove` is expressible for all
+ * 155, and `attrs`'s gap is still a vocabulary change, i.e. a decision.
  */
 export function roomFlagsIn(record) {
     const out = [];
     (record?.entities ?? []).forEach((e, i) => {
         if (!ROOM_FLAG_TAGS.includes(e.type)) return;
         const at = tileAtOel(e.x, e.y);
+        const inCell = entityIndicesAt(record, at.tx, at.ty);
         out.push(Object.freeze({
             tag: e.type,
             tx: at.tx,
             ty: at.ty,
             index: i,
+            // ⛓ THE IN-CELL ORDINAL — `remove {which}`'s address. `index` is
+            //   record-wide and the op does not speak it; `which` is the position
+            //   among the bodies of THIS cell, in `entities` order.
+            which: inCell.indexOf(i),
             attrs: Object.freeze({ ...(e.attrs ?? {}) }),
-            last: entityIndexAt(record, at.tx, at.ty) === i,
+            // ⛓ `entityIndexAt` is the LAST of `inCell` by construction, so this
+            //   is that same fact and the two cannot drift.
+            last: inCell[inCell.length - 1] === i,
         }));
     });
     return Object.freeze(out);
 }
 
 /**
- * ⛓ THE SENTENCE THAT REFUSES A `remove` / `attrs` THE VOCABULARY CANNOT
- * EXPRESS, or `null` when it can. ⛔ It refuses the OP, never the edit: every
- * other way of reaching that body is untouched.
+ * ⛓ THE SENTENCE THAT REFUSES AN OP THE VOCABULARY CANNOT EXPRESS, or `null`
+ * when it can. ⛔ It refuses the OP, never the edit: every other way of
+ * reaching that body is untouched.
+ *
+ * ⛓⛓ **EDITOR v3 E6a — `remove` IS ALWAYS EXPRESSIBLE NOW AND RETURNS `null`.**
+ * The op takes `which` (E3b) and `roomFlagsIn` stamps one, so a form has an
+ * address for the 2-of-155 that are not last. ⛔ `attrs` keeps its refusal and
+ * its sentence STOPS PROMISING A VOCABULARY CHANGE: the vocabulary changed and
+ * `attrs` was deliberately left out of it — *"the last entity in this cell" is
+ * that op's whole contract* (`requireEntityAt`'s own docblock), and giving it a
+ * second address would be a second vocabulary rather than the same one used
+ * properly.
  */
 export function roomFlagOpRefusal(record, flag, what) {
     if (!flag || flag.last) return null;
+    if (what === 'remove') return null;
     const i = entityIndexAt(record, flag.tx, flag.ty);
     const other = record.entities[i];
     return `⛔ REFUSED — <${flag.tag}> is at (${flag.tx},${flag.ty}) and it is NOT the last `
         + `body in that cell: <${other?.type}> is. A \`${what}\` op addresses *the last `
         + 'entity in the cell* (slice 11\'s rule, one spelling), so this one would '
-        + `${what === 'remove' ? 'DELETE' : 'REWRITE'} <${other?.type}> and call it a flag `
-        + 'change. ⚠ MEASURED: 2 of the 116 vanilla rooms\' 155 flag instances sit this way. '
-        + 'Move the other body, or edit the OEL — an op that could name WHICH body is a '
-        + 'vocabulary change, i.e. a decision (§11.9 bound 1\'s shape).';
+        + `REWRITE <${other?.type}> and call it a flag change. ⚠ MEASURED: 2 of the 116 `
+        + 'vanilla rooms\' 155 flag instances sit this way. ⛓ `remove` reaches them since '
+        + 'E6a — it takes a `which` ordinal and the form passes one — but `attrs` does not '
+        + 'and is not meant to: addressing the last body in the cell is that op\'s contract, '
+        + 'so a second address for it would be a second vocabulary. Move the other body, or '
+        + 'edit the OEL.';
 }
 
 /**

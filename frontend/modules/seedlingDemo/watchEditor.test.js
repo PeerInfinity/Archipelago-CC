@@ -31,13 +31,16 @@ import { fileURLToPath } from 'node:url';
 
 import {
     ALL_FOLDERS, COLUMN_VALUE, DEFAULT_PLACE_ATTRS, DEFAULT_PLACE_TYPE, WatchEditorError,
-    attrFormRows, attrsFromRows, flagFormRows, foldersOf, mountEntityPalette,
+    attrFormRows, attrsFromRows, flagFormRows, foldersOf, mountEntityPalette, mountRoomFlags,
     paintOptionGroups, paintSpecOf, renderTranscribeBound, rosterFor, swatchColour,
 } from './watchEditor.js';
 import { createLifetime } from './watchLifetime.js';
 import {
-    ENTITY_ROSTER_PROCGEN, entityRosterFrom, transcribeBoundText, untranscribedTypes,
+    ENTITY_ROSTER_PROCGEN, applyEdits, entityIndicesAt, entityRosterFrom, roomFlagOpRefusal,
+    roomFlagsIn, transcribeBoundText, untranscribedTypes,
 } from './watchEdit.js';
+import { levelSourceFromAtlas } from './atlasSource.js';
+import { loadAtlas } from './levelSource.js';
 import { ENTITY_CLASSES } from './levelWorld.js';
 import {
     LAYER_COLUMNS, TERRAIN, TERRAIN_NAMES, TILE_LAYERS, columnOfSpec,
@@ -424,5 +427,155 @@ describe('⛓⛓⛓ EDITOR v3 E3a — the entity palette rides its OWN lifetime'
         first.ui.destroy();
         paletteHarness(arm);
         expect(arm.state().listeners).toBe(0);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ EDITOR v3 E6a — THE ROOM-FLAGS FORM PASSES `which`
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓ `Node6` is `mountEntityPalette`'s six elements; the flags form builds its
+ * own rows, so it needs three more DOM facts — `dataset`, `style` and
+ * `checked`. ⛔ A SUBCLASS rather than three fields added to `Node6`: the
+ * palette rows above measure a mount that does not have them, and widening
+ * their fixture would be widening what those rows are about.
+ */
+class FlagNode extends Node6 {
+    constructor(tag = 'div') {
+        super(tag);
+        this.dataset = {};
+        this.style = {};
+        this.checked = false;
+        this.title = '';
+        this.disabled = false;
+    }
+}
+
+const FLAG_DOC = {
+    createElement: (t) => new FlagNode(t),
+    createTextNode: (text) => ({ nodeType: 3, textContent: text }),
+};
+
+/**
+ * ⛓⛓ **A REAL MOUNT OVER A REAL ROOM.** The subject is a committed vanilla room
+ * that holds a flag which is NOT the last body in its cell — found by asking
+ * `roomFlagsIn`, never by naming a level number, so a re-extract that moved it
+ * moves this row's subject with it.
+ */
+const notLastSubject = () => {
+    const src = levelSourceFromAtlas(loadAtlas());
+    for (const l of loadAtlas().levels) {
+        const record = src(l.level);
+        const flag = roomFlagsIn(record).find((f) => !f.last);
+        if (flag) return { record, flag, level: l.level };
+    }
+    throw new Error('watchEditor.test: no committed room holds a not-last flag');
+};
+
+const flagsHarness = (record) => {
+    const applied = [];
+    let current = record;
+    const lifetime = createLifetime('watchEditor.test.flags');
+    const box = new FlagNode('div');
+    const noteEl = new FlagNode('div');
+    const ui = mountRoomFlags({
+        box,
+        noteEl,
+        host: { record: () => current },
+        view: {
+            apply: (op) => {
+                applied.push(op);
+                current = applyEdits(current, [op]);
+                return { ok: true, applied: true, description: op.op };
+            },
+        },
+        schema: SCHEMA,
+        lifetime,
+        doc: FLAG_DOC,
+    });
+    const boxFor = (tag) => box.children
+        .find((line) => line.dataset.flag === tag)
+        .children[0].children[0];
+    return {
+        applied, ui, box, noteEl, boxFor, record: () => current, lifetime,
+    };
+};
+
+describe('⛓⛓⛓ EDITOR v3 E6a — the room-flags form passes `which`, so `remove` reaches all 155', () => {
+    /**
+     * ⛔⛔⛔ **§33.12 #2's DEFECT, AS A PRESS.** `remove {which}` existed since
+     * E3b and NOTHING PASSED AN ORDINAL (§33.13), so the form refused to untick
+     * the 2 of 155 flags that are not the last body in their cell — the OP
+     * could name them and the GESTURE could not.
+     *
+     * ⛓⛓ MUTANT: drop `which` from the op the gesture builds — the press
+     * deletes the OTHER body and the flag survives, and the last two
+     * expectations invert. That is exactly the deletion the old refusal was
+     * protecting against, which is why the refusal could not simply be dropped.
+     */
+    it('unticking a NOT-LAST flag applies `remove {which}` and takes THAT body', () => {
+        const { record, flag } = notLastSubject();
+        const h = flagsHarness(record);
+        const before = record.entities;
+
+        expect(h.boxFor(flag.tag).checked).toBe(true);
+        h.boxFor(flag.tag).checked = false;
+        h.boxFor(flag.tag).dispatch('change');
+
+        expect(h.applied).toHaveLength(1);
+        expect(h.applied[0]).toEqual({
+            op: 'remove', tx: flag.tx, ty: flag.ty, which: flag.which,
+        });
+        // ⛔ the FLAG is gone and everything else survived, by value and in order
+        expect(h.record().entities).toEqual(before.filter((_, i) => i !== flag.index));
+        expect(roomFlagsIn(h.record()).some((f) => f.tag === flag.tag)).toBe(false);
+        // ⛓ …and no refusal was said, which is the half that used to fail
+        expect(h.noteEl.textContent).not.toMatch(/REFUSED/);
+    });
+
+    /**
+     * ⛔ **`attrs` STILL REFUSES ON THE SAME ROW**, and that is not an oversight:
+     * addressing the last body in the cell is that op's whole contract
+     * (`requireEntityAt`), so a second address for it would be a second
+     * vocabulary. The two halves are driven on ONE subject, which is what makes
+     * this a statement about the OP rather than about the flag.
+     */
+    it('editing a NOT-LAST flag\'s VALUES still refuses, and applies nothing', () => {
+        const { record, flag } = notLastSubject();
+        const rows = flagFormRows(SCHEMA, flag.tag);
+        if (rows.length === 0) {
+            // a presence-only flag has no value inputs; then the refusal is the
+            // function's, and `watchEdit.test.js` drives it directly.
+            expect(roomFlagOpRefusal(record, flag, 'attrs')).toMatch(/REWRITE/);
+            return;
+        }
+        const h = flagsHarness(record);
+        const input = h.box.children
+            .find((line) => line.dataset.flag === flag.tag)
+            .children.find((c) => c.children?.some?.((g) => g.dataset?.attr === rows[0].name))
+            ?.children.find((g) => g.dataset?.attr === rows[0].name);
+        input.value = '0.9';
+        input.dispatch('change');
+        expect(h.applied).toHaveLength(0);
+        expect(h.noteEl.textContent).toMatch(/REFUSED/);
+        expect(h.noteEl.textContent).toMatch(/REWRITE/);
+    });
+
+    /** ⛓ AND THE ORDINAL IS RIGHT FOR EVERY ROW THE FORM SHOWS, not only the
+     *  awkward ones — `which` is the position among the bodies of that cell. */
+    it('`roomFlagsIn` stamps a `which` that indexes the cell, on every committed room', () => {
+        const atlas = loadAtlas();
+        const src = levelSourceFromAtlas(atlas);
+        let seen = 0;
+        for (const l of atlas.levels) {
+            const record = src(l.level);
+            for (const f of roomFlagsIn(record)) {
+                seen += 1;
+                expect(entityIndicesAt(record, f.tx, f.ty)[f.which], `L${l.level} ${f.tag}`)
+                    .toBe(f.index);
+            }
+        }
+        expect(seen).toBe(155);
     });
 });

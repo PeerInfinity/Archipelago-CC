@@ -565,13 +565,21 @@ export function flagFormRows(schema, tag) {
  * exactly as they see a brush stroke. A form that reached for the record would
  * be a second writer and the op list would stop being the level's identity.
  *
- * ⛔⛔ **AND TWO OF ITS THREE OPS CAN BE INEXPRESSIBLE.** `remove` and `attrs`
- * address *the last entity in the cell*; a flag that is not the last body in
- * its own cell cannot be named by either (`watchEdit.roomFlagOpRefusal`, and
- * MEASURED: 2 of the committed atlas's 155 flag instances sit that way). The
- * form REFUSES those by name and reverts the control rather than editing
- * somebody else's body — a checkbox that silently deleted a `<rock>` would be
- * the worst kind of working.
+ * ⛔⛔ **AND ONE OF ITS THREE OPS CAN STILL BE INEXPRESSIBLE — `attrs`.**
+ * A bare `remove` / `attrs` addresses *the last entity in the cell*, and
+ * MEASURED: 2 of the committed atlas's 155 flag instances are not the last body
+ * in their own cell, so a form emitting a bare op there would hit somebody
+ * else's body — a checkbox that silently deleted a `<rock>` is the worst kind
+ * of working.
+ *
+ * ⛓⛓ **EDITOR v3 E6a — `remove` REACHES ALL 155.** E3b taught the op a `which`
+ * ordinal and §33.13 recorded that nothing passed one; this form is its first
+ * caller. `roomFlagsIn` stamps `which` beside `last`, `roomFlagOpRefusal`
+ * returns `null` for `remove`, and the gesture passes `which: g.which` — taken
+ * from the row the GUARD read, so one snapshot of the record both decides and
+ * addresses. ⛔ `attrs` is UNCHANGED and is meant to be: addressing the last
+ * body in the cell is that op's whole contract, so the form still REFUSES those
+ * two by name and reverts the control.
  */
 export function mountRoomFlags({
     box, noteEl, reachEl, host, view, schema, lifetime, buildWorld = null,
@@ -701,8 +709,13 @@ export function mountRoomFlags({
             const n = notes.get(row.tag);
             if (!f) n.textContent = '';
             else if (!f.last) {
-                n.textContent = `⛔ at (${f.tx},${f.ty}) and NOT the last body there — `
-                    + 'this row cannot be changed (see the note below)';
+                // ⛓ E6a — the note is `attrs`-ONLY now. Unticking the box still
+                //   works here (`remove {which}` names this body), so a note that
+                //   said "cannot be changed" would be telling the author not to
+                //   press a control that does exactly what it says.
+                n.textContent = `⚠ at (${f.tx},${f.ty}) and NOT the last body there — `
+                    + 'it can be REMOVED (the op names it by ordinal) but its values cannot '
+                    + 'be edited here (see the note below)';
                 n.className = 'note bad';
             } else {
                 n.textContent = `at (${f.tx},${f.ty})`;
@@ -728,9 +741,23 @@ export function mountRoomFlags({
 
     /* ── THE THREE OPS ────────────────────────────────────────────── */
 
+    /**
+     * ⛓⛓ **ONE READ OF THE RECORD BACKS BOTH THE DECISION AND THE ADDRESS**
+     * (EDITOR v3 E6a). `guard` used to ask `present()` and `host.record()`
+     * separately, and its caller then built the op out of a THIRD read. That
+     * was harmless while the op carried only `{tx, ty}` — two reads of one
+     * cell's coordinates agree — and it stops being harmless the moment the op
+     * carries `which`: an ordinal read off one snapshot, checked against
+     * another and applied to a third, can name a different body.
+     *
+     * ⇒ the record is read ONCE here, the row that decision was made about is
+     * RETURNED, and the caller builds its op out of THAT row rather than
+     * looking the flag up again.
+     */
     const guard = (tag, what) => {
-        const f = present().get(tag);
-        const why = roomFlagOpRefusal(host.record(), f, what);
+        const record = host.record();
+        const f = roomFlagsIn(record).find((r) => r.tag === tag) ?? undefined;
+        const why = roomFlagOpRefusal(record, f, what);
         if (why) {
             say(why, true);
             render();
@@ -755,8 +782,12 @@ export function mountRoomFlags({
                 return;
             }
             if (!want && f) {
-                if (guard(row.tag, 'remove') === null) return;
-                view.apply({ op: 'remove', tx: f.tx, ty: f.ty });
+                // ⛓⛓ E6a — `which` is the IN-CELL ordinal, and it is taken from
+                //    the row the GUARD read, not from `f`: one snapshot decides
+                //    and addresses (see `guard`'s docblock).
+                const g = guard(row.tag, 'remove');
+                if (g === undefined || g === null) return;
+                view.apply({ op: 'remove', tx: g.tx, ty: g.ty, which: g.which });
                 return;
             }
             render();
@@ -770,8 +801,11 @@ export function mountRoomFlags({
                         + 'the values you have typed go on with it.');
                     return;
                 }
-                if (guard(row.tag, 'attrs') === null) return;
-                view.apply({ op: 'attrs', tx: f.tx, ty: f.ty, attrs: attrsOf(row.tag) });
+                const g = guard(row.tag, 'attrs');
+                if (g === undefined || g === null) return;
+                // ⛔ NO `which` — `attrs` addresses the LAST body in the cell by
+                //    contract, and the guard has just established this row IS it.
+                view.apply({ op: 'attrs', tx: g.tx, ty: g.ty, attrs: attrsOf(row.tag) });
             });
         }
     }
