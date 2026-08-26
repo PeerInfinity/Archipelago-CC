@@ -78,6 +78,43 @@ export function producerScripts({ repo = REPO } = {}) {
  * ══════════════════════════════════════════════════════════════════════ */
 
 /**
+ * ⛓⛓⛓ ONE GATE'S ROWS — the base row, then one per SECOND ARM the gate's own
+ * docblock declares (`@standing-variant`, read by `gateRoster`).
+ *
+ * ⚖ Editor v3 §27.8 Q6. `check-seedling-editor-generate.mjs` reads 224/0 under
+ * `--host=` and 230/0 on its own server, because claim 4 (`?gen=`) has no
+ * vehicle when the caller supplies the server. Both are correct readings of
+ * two DIFFERENT COMMANDS, and before this the second one was a number handed
+ * from prompt to prompt by hand.
+ *
+ * ⛔⛔ A VARIANT WHOSE COMMAND EQUALS THE BASE ROW'S IS REFUSED BY NAME. The
+ * `seen` set in `standingRows` would drop it in SILENCE, and silence is the
+ * wrong answer here: a gate that reads no `host` flag declaring `(none)` has
+ * asked for a SECOND NAME FOR THE SAME MEASUREMENT — two standing rows that
+ * can never disagree, which is a fixed point wearing a second key.
+ */
+export function gateStandingRows(gate, argv) {
+    const name = gate.file.replace(/^check-/, '').replace(/\.mjs$/, '');
+    const commandOf = (a) => `node ${gate.path}${a.length ? ` ${a.join(' ')}` : ''}`;
+    const of = (key, a) => ({
+        key, kind: 'gate', command: commandOf(a), browser: gate.browser, windows: gate.windows,
+    });
+    const base = of(`gate: ${name}`, argv);
+    const rows = [base];
+    for (const v of gate.variants ?? []) {
+        const command = commandOf(v.argv);
+        if (command === base.command) {
+            throw new Error(`standingValues: ${gate.file} declares the variant `
+                + `${JSON.stringify(v.label)}, but its command is the BASE ROW'S — `
+                + `\`${command}\`. That is a second name for the same measurement, `
+                + 'not a second arm.');
+        }
+        rows.push(of(`gate: ${name} (${v.label})`, v.argv));
+    }
+    return rows;
+}
+
+/**
  * Every standing row, with the command that measures it. ⛔ The KEY is stable
  * and human-quotable, because it is what a seal will name.
  */
@@ -111,13 +148,7 @@ export function standingRows({ repo = REPO, host = LOCAL_HOST, pages = PAGES_ORI
     for (const g of gateRoster({ repo })) {
         const argv = argvFor(g, 'local', { host, pages });
         if (argv === null) continue;
-        push({
-            key: `gate: ${g.file.replace(/^check-/, '').replace(/\.mjs$/, '')}`,
-            kind: 'gate',
-            command: `node ${g.path}${argv.length ? ` ${argv.join(' ')}` : ''}`,
-            browser: g.browser,
-            windows: g.windows,
-        });
+        for (const row of gateStandingRows(g, argv)) push(row);
     }
 
     /**
