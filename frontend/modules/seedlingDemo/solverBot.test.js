@@ -3136,7 +3136,7 @@ describe('R9 slice 12d′: ⚖ 46 — the collect stance is the one the corridor
                 { kind: 'collect-placement', placement: { x: shield.x, y: shield.y } },
                 { kind: 'reach-exit', exit: { x: exit.x, y: exit.y } },
             ],
-            name: 'r8-solve-20', boot: committed.boot,
+            name: 'r8-solve-20', boot: committed.boot, economies: true,
         });
         const walk = out.trace.rows.find(
             (r) => r.goal?.kind === 'collect-placement' && r.strategy.verb === 'walk');
@@ -3163,7 +3163,7 @@ describe('R9 slice 12d′: ⚖ 46 — the collect stance is the one the corridor
                 { kind: 'collect-placement', placement: { x: 48, y: 48 } },
                 { kind: 'reach-exit', exit: { x: 48, y: 16 } },
             ],
-            name: 'r8-solve-10', boot: committed.boot,
+            name: 'r8-solve-10', boot: committed.boot, economies: true,
         });
         const walk = out.trace.rows.find(
             (r) => r.goal?.kind === 'collect-placement' && r.strategy.verb === 'walk');
@@ -3188,7 +3188,7 @@ describe('R9 slice 12d′: ⚖ 46 — the collect stance is the one the corridor
                 { kind: 'collect-placement', placement: { x: 32, y: 48 } },
                 { kind: 'reach-exit', exit: { x: 32, y: 80 } },
             ],
-            name: 'r8-solve-11', boot: committed.boot,
+            name: 'r8-solve-11', boot: committed.boot, economies: true,
         });
         const walk = out.trace.rows.find(
             (r) => r.goal?.kind === 'collect-placement' && r.strategy.verb === 'walk');
@@ -3234,7 +3234,7 @@ describe('R9 slice 12d′: ⚖ 47 — the fade is spent walking, and the wait is
         const exit = (L18.entities ?? []).find((e) => Number(e.attrs?.to) === 19);
         const out = solveSegment({
             run, goals: [{ kind: 'reach-exit', exit: { x: exit.x, y: exit.y } }],
-            name: 'r8-solve-18', boot: committed.boot,
+            name: 'r8-solve-18', boot: committed.boot, economies: true,
         });
         const kill = out.records.find((r) => r.verb === 'kill');
         // The stance is the cell WEST of `lock@144,112` — its rect is
@@ -3267,6 +3267,7 @@ describe('R9 slice 12d′: ⚖ 47 — the fade is spent walking, and the wait is
         const out = solveSegment({
             run, goals: [{ kind: 'reach-exit', exit: { x: exit.x, y: exit.y } }],
             name: 'L18 from the lock\'s own chamber', boot: { level: 18, x: 128, y: 112 },
+            economies: true,
         });
         const kill = out.records.find((r) => r.verb === 'kill');
         expect(kill.earlyWalk.stance).toEqual({ x: 136, y: 120 });
@@ -3291,7 +3292,7 @@ describe('R9 slice 12d′: ⚖ 47 — the fade is spent walking, and the wait is
         const exit = (L18.entities ?? []).find((e) => Number(e.attrs?.to) === 19);
         const out = solveSegment({
             run, goals: [{ kind: 'reach-exit', exit: { x: exit.x, y: exit.y } }],
-            name: 'r8-solve-18', boot: committed.boot,
+            name: 'r8-solve-18', boot: committed.boot, economies: true,
         });
         const { stance } = out.records.find((r) => r.verb === 'kill').earlyWalk;
         const centre = {
@@ -3307,5 +3308,104 @@ describe('R9 slice 12d′: ⚖ 47 — the fade is spent walking, and the wait is
         expect(stance.y).toBeGreaterThanOrEqual(0);
         expect(stance.x).toBeLessThan(run.world.width * TILE_SIZE);
         expect(stance.y).toBeLessThan(run.world.height * TILE_SIZE);
+    });
+});
+
+/**
+ * ⛓⛓⛓ R9 SLICE P2, ⚖ RULING 54 (5) — **THE ECONOMIES ARE OFF BY DEFAULT AND
+ * THE COMMITTED CORE IS WHAT RUNS** (user, 2026-08-25: *"the economies behind
+ * the roster-wide flag so every solver change lives on `main` inert"*).
+ *
+ * ⛔ THE GATE IS NOT PRECAUTIONARY — IT WAS FORCED BY A MEASUREMENT. Landed
+ * un-gated on `main` at `ALLOW_DASH_ROSTER_WIDE === false`, ⚖ 46 and ⚖ 47
+ * move FIVE committed artifacts and five of the seven producer `--check`
+ * md5s: `r8-solve-10` 90 → 89 · `r8-solve-18` 541 → 437 · `r8-solve-20`
+ * 365 → 332 · `r8-d2-19` 864 → 807 · `r8-d2-20` 781 → 756, so the `r8-d2`
+ * headline 2186 → 2000. That is §31.6's (E₀) column — *"economies, NO flip"*
+ * — reproduced at this head, and it is why the ONE-SERIES LAW (⚖ 42's tail,
+ * ⚖ 51) still binds the flip and the re-record together.
+ *
+ * ⛓ THESE ROWS ASSERT THE COMMITTED ANSWER, IN THE UNITS THE PRODUCERS USE —
+ * a solved tick count against the committed tape's own `tick_count`, which is
+ * exactly what `--check`'s byte compare fails on. Remove either gate and they
+ * red BY NAME with the numbers above.
+ */
+describe('R9 slice P2: ⚖ 54 (5) — the economies are behind the roster-wide permission', () => {
+    /**
+     * ⛓ ⚖ 46's ROOM, AT THE DEFAULT. `shield@112,48`'s ring search returns to
+     * its `(d, y, x)` order, so the NORTH cell `(120,40)` wins the d=16 tie
+     * again and `runCollect` presses back south — the detour the ruling
+     * retires, which is the committed core's own walk.
+     */
+    it('⛓ ⚖ 46 OFF: L20 takes the north cell again and solves its committed length', () => {
+        const { run, committed } = runFromCommitted('r8-solve-20');
+        const L20 = levelSource(20);
+        const shield = (L20.entities ?? []).find((e) => e.type === 'shield');
+        const exit = (L20.entities ?? []).find(
+            (e) => e.type === 'stairsdown' && Number(e.attrs.to) === 19);
+        const out = solveSegment({
+            run,
+            goals: [
+                { kind: 'collect-placement', placement: { x: shield.x, y: shield.y } },
+                { kind: 'reach-exit', exit: { x: exit.x, y: exit.y } },
+            ],
+            name: 'r8-solve-20', boot: committed.boot,
+        });
+        const walk = out.trace.rows.find(
+            (r) => r.goal?.kind === 'collect-placement' && r.strategy.verb === 'walk');
+        expect(walk.goal.aim).toEqual({ x: 120, y: 40 });
+        // ⛓ THE NUMBER THE PRODUCER CHECKS: un-gated this room solves in 332.
+        expect(out.perTick.length).toBe(committed.tick_count);
+    });
+
+    /**
+     * ⛓ ⚖ 47's ROOM, AT THE DEFAULT — and the claim is about the RECORD'S
+     * SHAPE as much as its ticks. `earlyWalk` must be ABSENT, not `null`: the
+     * trace sidecars are `--check`ed byte-for-byte beside the tapes, so a key
+     * carrying `null` would move `r8-solve-18.trace.json` on its own.
+     */
+    it('⛓ ⚖ 47 OFF: L18 stands through the whole fade, and the record grows no key', () => {
+        const { run, committed } = runFromCommitted('r8-solve-18');
+        const exit = (levelSource(18).entities ?? []).find(
+            (e) => Number(e.attrs?.to) === 19);
+        const out = solveSegment({
+            run, goals: [{ kind: 'reach-exit', exit: { x: exit.x, y: exit.y } }],
+            name: 'r8-solve-18', boot: committed.boot,
+        });
+        const kill = out.records.find((r) => r.verb === 'kill');
+        expect(kill.arm).toBe('press');
+        expect(Object.prototype.hasOwnProperty.call(kill, 'earlyWalk')).toBe(false);
+        // ⛓ THE NUMBER THE PRODUCER CHECKS: un-gated this room solves in 437.
+        expect(out.perTick.length).toBe(committed.tick_count);
+    });
+
+    /**
+     * ⛓ THE DEFAULT IS THE FLAG, DERIVED RATHER THAN TYPED. Passing the flag's
+     * own value explicitly must be indistinguishable from passing nothing —
+     * which is what makes the flip the ONLY switch, and stops the option from
+     * becoming a second flag state the preview/drive equality would have to
+     * cover (⚖ 41's own words).
+     */
+    it('⛓ `economies` DEFAULTS TO the roster-wide flag — the same walk either way', () => {
+        const spell = (over) => {
+            const { run, committed } = runFromCommitted('r8-solve-20');
+            const L20 = levelSource(20);
+            const shield = (L20.entities ?? []).find((e) => e.type === 'shield');
+            const exit = (L20.entities ?? []).find(
+                (e) => e.type === 'stairsdown' && Number(e.attrs.to) === 19);
+            const out = solveSegment({
+                run,
+                goals: [
+                    { kind: 'collect-placement', placement: { x: shield.x, y: shield.y } },
+                    { kind: 'reach-exit', exit: { x: exit.x, y: exit.y } },
+                ],
+                name: 'r8-solve-20', boot: committed.boot, ...over,
+            });
+            return { ticks: out.perTick.length, keys: JSON.stringify(out.perTick) };
+        };
+        const implied = spell({});
+        const spelled = spell({ economies: ALLOW_DASH_ROSTER_WIDE });
+        expect(spelled.ticks).toBe(implied.ticks);
+        expect(spelled.keys).toBe(implied.keys);
     });
 });

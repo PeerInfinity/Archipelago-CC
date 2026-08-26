@@ -2810,7 +2810,16 @@ function deriveShove(run, row, aim, allowTeleporter, contacts, blocked = []) {
  *     plus the line the approach presses — not the one nearest the pickup. See
  *     the scoring block below for the measurement that moved it.
  */
-function deriveStance(run, resolved, contacts) {
+/**
+ * ⛓ R9 SLICE P2 — `economies` IS ⚖ 46's OWN PERMISSION, DEFAULTED TO THE
+ * ROSTER-WIDE FLAG. Exactly the shape `strikePolicyFor`'s `dashPlan` already
+ * has: the permission handed directly IS the grant, which is what lets the
+ * offline proof — and this file's ⚖ 46 rows — run at a `false` head. The
+ * chest arm returns above this, so `resolveChestStrategy`'s call leaves it
+ * defaulted on purpose.
+ */
+function deriveStance(run, resolved, contacts,
+    { economies = ALLOW_DASH_ROSTER_WIDE } = {}) {
     if (resolved.strategy === 'chest') {
         const band = chestStanceBand(resolved.target.x, resolved.target.y, HITBOX);
         /**
@@ -2994,29 +3003,79 @@ function deriveStance(run, resolved, contacts) {
      * candidate set is bounded by the ring search (≤ 48 cells) and a collect
      * goal is rare, so this is a planner cost, not a walk cost.
      */
-    const walkOpts = solverPlanOpts(run, contacts);
-    const pathLength = (from, wps) => {
-        let total = 0;
-        let at = from;
-        for (const wp of wps) {
-            total += Math.hypot(wp.x - at.x, wp.y - at.y);
-            at = wp;
+    /**
+     * ⛓⛓⛓ R9 SLICE P2, ⚖ RULING 54 (5) — **THE ECONOMY IS BEHIND THE
+     * ROSTER-WIDE PERMISSION, AND IT IS THERE BECAUSE IT WAS MEASURED TO MOVE
+     * COMMITTED SOLVES AT `false`** (user, 2026-08-25: *"the economies behind
+     * the roster-wide flag so every solver change lives on `main` inert"*).
+     *
+     * ⛔ IT IS NOT A DEFENSIVE GATE. P2's design says an economy is gated ONLY
+     * if it is measured NOT to be naturally inert, and the gate's docblock
+     * names the movers that forced it. Cherry-picked un-gated onto `main` at
+     * `ALLOW_DASH_ROSTER_WIDE === false`, this block moves FOUR committed
+     * artifacts by name and five of seven producer `--check` md5s with them:
+     *
+     *   · `r8-solve-10`   90 → 89   (campaign segment 10; battery prints it)
+     *   · `r8-solve-20`  365 → 332  (`solve-seedling-r8-d2-chain`)
+     *   · `r8-d2-19`     864 → 807  (`solve-seedling-r8-d2`)
+     *   · `r8-d2-20`     781 → 756  (`solve-seedling-r8-d2`)
+     *   ⇒ the `r8-d2` headline 2186 → 2000
+     *
+     * Those are §31.6's (E₀) column — *"economies, NO flip"* — reproduced at
+     * this head to the digit for the three `r8-d2` rows. So the flip and the
+     * stance are ONE permission said two ways (⚖ 42's tail, ⚖ 51): at `false`
+     * the committed corridors are the committed corridors, and the re-record
+     * series is what turns both on together.
+     *
+     * ⛓ THE `route`/`plans` REFACTOR ABOVE IS NOT GATED — `plans` is spelled
+     * in terms of `route` and returns the same boolean, so it moves nothing.
+     * Only the CHOICE is gated, which is the whole of what ⚖ 46 changed.
+     *
+     * ⚠ THE COST IS EXHAUSTIVE SCORING where the old order short-circuited:
+     * every candidate is routed rather than the first one that fits. The
+     * candidate set is bounded by the ring search (≤ 48 cells) and a collect
+     * goal is rare, so this is a planner cost, not a walk cost — and at
+     * `false` it is not paid at all.
+     */
+    if (economies) {
+        const walkOpts = solverPlanOpts(run, contacts);
+        const pathLength = (from, wps) => {
+            let total = 0;
+            let at = from;
+            for (const wp of wps) {
+                total += Math.hypot(wp.x - at.x, wp.y - at.y);
+                at = wp;
+            }
+            return total;
+        };
+        const scored = [];
+        for (const c of candidates) {
+            if (!canCollectFrom(c)) continue;
+            const wps = route(run.state, { x: c.x, y: c.y }, walkOpts);
+            if (wps === null) continue;
+            scored.push({ ...c, walk: pathLength(run.state, wps) });
         }
-        return total;
-    };
-    const scored = [];
-    for (const c of candidates) {
-        if (!canCollectFrom(c)) continue;
-        const wps = route(run.state, { x: c.x, y: c.y }, walkOpts);
-        if (wps === null) continue;
-        scored.push({ ...c, walk: pathLength(run.state, wps) });
-    }
-    if (scored.length > 0) {
-        const nearest = Math.min(...scored.map((c) => c.d));
-        const tier = scored.filter((c) => c.d === nearest);
-        tier.sort((a, b) => a.walk - b.walk || a.y - b.y || a.x - b.x);
-        const c = tier[0];
-        return { x: c.x, y: c.y, corridor: true };
+        if (scored.length > 0) {
+            const nearest = Math.min(...scored.map((c) => c.d));
+            const tier = scored.filter((c) => c.d === nearest);
+            tier.sort((a, b) => a.walk - b.walk || a.y - b.y || a.x - b.x);
+            const c = tier[0];
+            return { x: c.x, y: c.y, corridor: true };
+        }
+    } else {
+        /**
+         * ⛔ THE COMMITTED CORE'S OWN ORDER, RESTORED VERBATIM — the ring
+         * search's `(d, y, x)` short-circuit, first candidate that both plans
+         * a corridor and can collect. This is the arm every committed tape on
+         * `main` was solved through, and the four artifacts above are the
+         * measurement that says so.
+         */
+        for (const c of candidates) {
+            if (plans(run.state, { x: c.x, y: c.y }, solverPlanOpts(run, contacts))
+                && canCollectFrom(c)) {
+                return { x: c.x, y: c.y, corridor: true };
+            }
+        }
     }
     const collectable = candidates.filter(canCollectFrom);
     /**
@@ -5188,6 +5247,14 @@ function preLockStance(run, lock, contacts) {
 }
 
 function execKillByPress(run, perTick, resolved, ctx) {
+    /**
+     * ⛓ R9 SLICE P2 — ⚖ 47's PERMISSION, off `ctx`, defaulted to the
+     * roster-wide flag. `solveSegment` puts it on every `ctx` it builds, so a
+     * test can grant it at a `false` head exactly as `dashPlan` grants the
+     * dash; the fallback is the flag, so an executor reached through a `ctx`
+     * this option has not been threaded onto still reads the roster's state.
+     */
+    const economies = ctx.economies ?? ALLOW_DASH_ROSTER_WIDE;
     const NO_KEYS = new Set();
     const PRESS = new Set(['primary']);
     const from = perTick.length;
@@ -5448,8 +5515,31 @@ function execKillByPress(run, perTick, resolved, ctx) {
         (o) => o.opens.some((x) => x.at === resolved.lock.id));
     const removal = removalsMine[removalsMine.length - 1]
         ?? removals[removals.length - 1] ?? null;
+    /**
+     * ⛓⛓⛓ R9 SLICE P2, ⚖ RULING 54 (5) — **⚖ 47's ECONOMY IS BEHIND THE
+     * ROSTER-WIDE PERMISSION, AND THE MEASUREMENT IS WHY.** Cherry-picked
+     * un-gated onto `main` at `ALLOW_DASH_ROSTER_WIDE === false`, this early
+     * walk moves ONE committed artifact by name and two producer `--check`
+     * md5s with it:
+     *
+     *   · `r8-solve-18`  541 → 437  (`solve-seedling-r8-l18`)
+     *   ⇒ `solve-seedling-r8-d2`'s headline row *"the headline's first 541
+     *     ticks ARE r8-solve-18's walk, key for key"* fails at tick 292 —
+     *     the tick the fade used to be stood through
+     *
+     * That is §31.6's (E₀) `r8-solve-18` row, 541 → 437, reproduced at this
+     * head to the digit. The campaign's only lock room is L5's arrow ceiling,
+     * whose saving is measured ZERO (the header above), so ⚖ 47's whole win
+     * lives on the `r8-d2` chain — and it lands with the flip, not before it.
+     *
+     * ⛔ AT `false` THE THREE QUANTITIES ARE THE COMMITTED ONES: no walk, no
+     * `earlyWalk` FIELD ON THE RECORD AT ALL (a `null` would move the trace
+     * sidecars, which the producers `--check` byte-for-byte alongside the
+     * tapes), and `remaining === fade` — the loop bound the committed core
+     * spent the whole fade on.
+     */
     let earlyWalk = null;
-    if (removal !== null) {
+    if (economies && removal !== null) {
         const stance = preLockStance(run, resolved.lock, contacts);
         if (stance && !hasArrived(run.state, stance, DEFAULT_TOLERANCE)) {
             const level = run.level;
@@ -5479,7 +5569,7 @@ function execKillByPress(run, perTick, resolved, ctx) {
         }
     }
     const clearTick = removal === null ? null : removal.t + fade;
-    const remaining = clearTick === null
+    const remaining = (!economies || clearTick === null)
         ? fade
         : Math.max(0, clearTick - run.ticksCompleted);
     /**
@@ -5498,7 +5588,8 @@ function execKillByPress(run, perTick, resolved, ctx) {
     for (let i = 0; i <= remaining + HOLD_SLACK; i += 1) {
         if (!(run.world.activators ?? []).some((a) => a.id === resolved.lock.id)) {
             return { verb: 'kill', arm: 'press', from, ticks: perTick.length - from,
-                landings, cycles, bodies: resolved.bodies, earlyWalk };
+                landings, cycles, bodies: resolved.bodies,
+                ...(economies ? { earlyWalk } : {}) };
         }
         /**
          * ⚠ THE FADE IS A WAIT TOO, and with the bodies gone the discs are
@@ -7073,6 +7164,18 @@ export function solveSegment({
     run, goals, name, boot,
     tolerance = DEFAULT_TOLERANCE,
     maxTicksPerTarget = DEFAULT_MAX_TICKS_PER_TARGET,
+    /**
+     * ⛓⛓⛓ R9 SLICE P2, ⚖ RULING 54 (5) — **THE ECONOMIES' PERMISSION, ONE
+     * NAME, DEFAULTED TO THE ROSTER-WIDE FLAG.** ⚖ 46's collect stance and
+     * ⚖ 47's early walk both move committed artifacts the moment they are
+     * live (their own docblocks name which), so on `main` they are OFF and
+     * the flip is what turns them on — the same series ⚖ 42's tail and ⚖ 51
+     * bind together. Handing `economies: true` here IS the grant, which is
+     * how their rows run at a `false` head without a second flag state for
+     * the preview/drive equality to cover (`strikePolicyFor`'s `dashPlan`
+     * is the same shape, and the reason this is one name and not two).
+     */
+    economies = ALLOW_DASH_ROSTER_WIDE,
 }) {
     if (!run || typeof run.advance !== 'function') fail('solveSegment needs a live run');
     if (!Array.isArray(goals) || goals.length === 0) {
@@ -8289,6 +8392,7 @@ export function solveSegment({
                 }
                 const record = STRATEGY_EXECUTORS[plan.strategy](run, perTick, plan.resolved, {
                     maxTicksPerTarget,
+                    economies,
                     what: `${what} -> ${plan.strategy}`,
                     before: beforeStrategy,
                     /**
@@ -8537,14 +8641,14 @@ export function solveSegment({
                 });
             }
             const rec = STRATEGY_EXECUTORS[strategy](run, perTick, resolvedBlocker, {
-                maxTicksPerTarget, what: `${what} -> ${strategy}`, before: null,
+                maxTicksPerTarget, economies, what: `${what} -> ${strategy}`, before: null,
                 walkTo, goal,
             });
             records.push({ goal: goal.kind, strategy, ...rec });
             for (const c of resolvedBlocker.exempt ?? []) exemptions.add(c);
             contacts = senseContacts(run);
         }
-        const stance = deriveStance(run, resolved, contacts);
+        const stance = deriveStance(run, resolved, contacts, { economies });
         /**
          * ⛔ THE SHUT-BEFORE SNAPSHOT, taken BEFORE the approach — `runChest`
          * demands it because the trigger is a line the approach itself may
@@ -8577,7 +8681,7 @@ export function solveSegment({
             });
         }
         const record = exec(run, perTick, resolved, {
-            maxTicksPerTarget, what, before, walkTo, goal,
+            maxTicksPerTarget, economies, what, before, walkTo, goal,
         });
         records.push({ goal: 'collect-placement', strategy: resolved.strategy, ...record });
         if (perTick.length === verbTick) {
