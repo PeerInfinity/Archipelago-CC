@@ -167,6 +167,19 @@ export function latchKeyOf(projected) {
  * therefore decay to nothing on their own as new drives write new-key files,
  * which is the only honest migration available.
  *
+ * ⛔⛔⛔ **AND THE MIGRATION IS LAZY, WHICH IS §42.5b's THIRD CAUSE** — R9 P3
+ * (B). The legacy arm is keyed on the COMPLETE bytes, and those carry `tick0`,
+ * the very block S2 re-derives AFTER S1 has driven. So for a tape whose `tick0`
+ * moved between the drive and the commit, the two sides ask under the SAME
+ * current key and DIFFERENT legacy keys: a lookup from the DRIVEN bytes hits
+ * the legacy arm and re-keys forward, and a lookup from the COMMITTED bytes
+ * misses BOTH arms until that has happened. §42.5b measured `r8-d2-19` in
+ * exactly that window and concluded the KEY PROJECTION was at fault. It is not:
+ * P3 measured all 21 tapes of run 3's `S1.json`, S1-time bytes against the
+ * committed ones, and **not one `KEY_KEEPS` field differs on any tape**. The
+ * asymmetry is pinned by `provisionalLatch.test.js`'s "the legacy arm carries
+ * `tick0`" rows, so nobody re-derives it from a miss.
+ *
  * @param {object} opts
  * @param {object} opts.complete the tape as it will be committed/driven, whole
  * @param {object} opts.projected `gameVisibleTape`'s output for that tape

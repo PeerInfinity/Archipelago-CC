@@ -82,6 +82,17 @@
 import {
     OwlDrawStream, ROCK_FREQUENCY, GRENADE_FREQUENCY, as3Int,
 } from './finalBossRng.js';
+/**
+ * ⛓⛓⛓ R9 P3 (E) — **ONE TRANSCRIPTION OF `Point.length`, NOT TWO.** This file
+ * used to define its own `export const pointLength = (x, y) => Math.sqrt(x*x +
+ * y*y)` — the same three tokens `playerPhysicsV1.js` had already transcribed,
+ * in a second file. Two spellings of one runtime primitive agree until one
+ * moves, and the whole reason this one exists is that a LAST BIT decided an
+ * arm. The definition now lives once and is re-exported here, so every
+ * importer of `finalBossFight.pointLength` keeps working and there is nothing
+ * left to drift.
+ */
+import { pointLength } from './playerPhysicsV1.js';
 
 /** Thrown by everything in this module. */
 export class FinalBossError extends Error {
@@ -319,7 +330,7 @@ export function createFinalBoss({ id = 'finalboss', x, y, tag = -1 } = {}) {
  * through these two, in the runtime's own expression order. `(x / s) * l` is
  * NOT `x * (l / s)`.
  */
-export const pointLength = (x, y) => Math.sqrt(x * x + y * y);
+export { pointLength };
 
 /** `FP.distance(x1, y1, x2, y2)` — `Math.sqrt(dx*dx + dy*dy)`, `FP.as:264`. */
 export const pointDistance = (x1, y1, x2, y2) => pointLength(x2 - x1, y2 - y1);
@@ -981,7 +992,14 @@ export function finalBossCoast({
         if (Math.abs(b.vy) < 0.05) b.vy = 0;
         moveAxis(b, 'x', b.vx, solidAt);
         moveAxis(b, 'y', b.vy, solidAt);
-        const stepped = Math.hypot(b.x - before.x, b.y - before.y);
+        /**
+         * ⛔ R9 P3 (E): THROUGH `pointDistance`, NOT `Math.hypot`. This line was
+         * the ONE live second spelling left in this file, and the docblock forty
+         * lines up already forbade it — *"every length, normalize and distance
+         * the Owl's fight computes goes through these two"*. A true sentence in
+         * a comment is not a check; `oneSpelling.test.js` is.
+         */
+        const stepped = pointDistance(before.x, before.y, b.x, b.y);
         total += stepped;
         if (speed(b) > FINAL_BOSS.velocityCap) normalize(b, FINAL_BOSS.velocityCap);
         const post = speed(b);

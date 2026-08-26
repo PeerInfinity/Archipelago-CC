@@ -342,3 +342,90 @@ describe('the table', () => {
             .toMatchObject({ tick: 99, level: 20, x: 192, y: 64, vx: 0, vy: 0, hits: 0 });
     });
 });
+
+/**
+ * ⛓⛓⛓ R9 SLICE P3 (B) — **§42.5b's THIRD CAUSE, MADE MECHANICAL.**
+ *
+ * §42.5b reported `r8-d2-19` as a CACHE MISS under BOTH spellings and concluded
+ * that *"the latch key is computed over a projection that includes fields the
+ * pipeline itself rewrites between the drive and the commit"*. P3 measured that
+ * over all 21 tapes of run 3's `S1.json`, S1-time bytes against the bytes as
+ * committed on the series branch: **not one `KEY_KEEPS` field differs, on any
+ * tape.** The key projection is already right and `KEY_DROPS` needs nothing.
+ *
+ * ⇒ THE CAUSE IS THE **LEGACY ARM**. It is keyed on the COMPLETE bytes, which
+ * carry `tick0` — the very block S2 re-derives AFTER S1 has driven. So for a
+ * tape whose `tick0` moved between the drive and the commit, the two sides ask
+ * under DIFFERENT legacy keys and the same CURRENT key; before anything has
+ * re-keyed the record forward, a lookup from the COMMITTED bytes misses on both
+ * arms while a lookup from the DRIVEN bytes hits on the legacy one. The
+ * migration is real and it converges — but it is LAZY, and its trigger is the
+ * side that was never the one asking.
+ *
+ * These rows pin that asymmetry so the next reader does not re-derive it.
+ */
+describe('R9 P3 (B): the legacy arm carries `tick0` and the current key does not', () => {
+    const complete = (over = {}) => ({
+        tape_version: 11, game: 'seedling', name: 'x', description: 'a sentence',
+        boot: { level: 19, x: 16, y: 144 }, noclip: false, noDamage: false,
+        noHazards: [], grants: [], persistence: [], despawn: [], equips: [], pins: {},
+        save: {}, rng: { seed: 1 }, seam: { time: 10 }, tick0: { time: 4 }, tick_count: 3,
+        inputs: [{ t: 0, keys: ['right'] }],
+        ...over,
+    });
+    /** The projection really does drop `tick0`, so the current key cannot see it. */
+    const projectionOf = (c) => { const { despawn, tick0, ...rest } = c; return rest; };
+
+    it('⛓⛓⛓ a `tick0` move leaves the CURRENT key put and moves the LEGACY one', () => {
+        const before = complete();
+        const after = complete({ tick0: { time: 5 } });
+        const a = latchCacheCandidates(
+            { complete: before, projected: projectionOf(before), legacy: 'complete' });
+        const b = latchCacheCandidates(
+            { complete: after, projected: projectionOf(after), legacy: 'complete' });
+        // the key the game's bytes produce is the same walk either way…
+        expect(a[0].era).toBe('key');
+        expect(b[0].era).toBe('key');
+        expect(a[0].key).toBe(b[0].key);
+        // …and the pre-P1 spelling is not
+        expect(a[1].era).toBe('legacy:complete');
+        expect(b[1].era).toBe('legacy:complete');
+        expect(a[1].key).not.toBe(b[1].key);
+    });
+
+    /**
+     * ⛔ AND THAT IS EXACTLY WHY A LOOKUP FROM THE COMMITTED SIDE MISSED. The
+     * record on disk was written under the DRIVEN bytes' legacy key; the
+     * committed bytes offer their OWN legacy key and the shared current one,
+     * and only the second can ever match — which needs a re-key to have
+     * happened first.
+     */
+    it('⛔ the two sides share the current key and share NO legacy key', () => {
+        const driven = complete();
+        const committed = complete({ tick0: { time: 5 } });
+        const d = latchCacheCandidates(
+            { complete: driven, projected: projectionOf(driven), legacy: 'complete' });
+        const c = latchCacheCandidates(
+            { complete: committed, projected: projectionOf(committed), legacy: 'complete' });
+        const shared = d.map((x) => x.key).filter((k) => c.some((y) => y.key === k));
+        expect(shared).toEqual([d[0].key]);
+        expect(d[0].era).toBe('key');
+    });
+
+    /**
+     * ⛓ THE CONTROL: a `description` edit moves the pre-P1 PROJECTION spelling
+     * and leaves the current key alone too — the other half of ⚖ 54 (4), and
+     * the reason `latchOf`'s cache and `driveLatch`'s cache need DIFFERENT
+     * legacy eras rather than one guessed spelling.
+     */
+    it('⛓ a prose edit moves `legacy:projection` and not the key', () => {
+        const p1 = projected();
+        const p2 = projected({ description: 'a different sentence' });
+        const a = latchCacheCandidates({ complete: p1, projected: p1, legacy: 'projection' });
+        const b = latchCacheCandidates({ complete: p2, projected: p2, legacy: 'projection' });
+        expect(a[0].key).toBe(b[0].key);
+        expect(a[1].era).toBe('legacy:projection');
+        expect(a[1].key).not.toBe(b[1].key);
+    });
+});
+
