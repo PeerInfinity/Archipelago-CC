@@ -86,7 +86,8 @@ if (KEY && ROWS.length === 0) {
     console.log(`FAIL: --key=${JSON.stringify(KEY)} matches no derived row.`);
     /** ⛓ …and the nearest keys, ranked by SHARED PREFIX — a mistyped key is
      *  almost always right up to the character that went wrong. */
-    const shared = (k) => { let i = 0; while (i < k.length && k[i] === KEY[i]) i += 1; return i; };
+    /* ⛓ a `function` for the same reason `gates.mjs`'s `nameOf` is one. */
+    function shared(k) { let i = 0; while (i < k.length && k[i] === KEY[i]) i += 1; return i; }
     const best = Math.max(0, ...ALL_ROWS.map((r) => shared(r.key)));
     const near = ALL_ROWS.map((r) => r.key).filter((k) => shared(k) === best).slice(0, 4);
     if (best > 0) console.log(`  nearest: ${near.map((k) => JSON.stringify(k)).join(', ')}`);

@@ -112,8 +112,18 @@ const armsIn = (where, gates = ROSTER) => gates.flatMap((g) => {
     }
     return out;
 });
-/** ⛓ How an arm is NAMED, everywhere — the gate, then the arm it is. */
-const nameOf = (arm) => `${arm.gate.file}${arm.label ? ` (${arm.label})` : ''}`;
+/**
+ * ⛓ How an arm is NAMED, everywhere — the gate, then the arm it is.
+ *
+ * ⛓ A `function`, not a `const` arrow: the instruments table DISCOVERS a
+ * file's argv helpers as top-level arrow consts whose next few lines mention
+ * `argv` and a `--` lookup, and an arrow here sits close enough to the
+ * `--list` block to be harvested as one. The table would then publish
+ * `nameOf` as a way this file reads a flag, which it is not.
+ */
+function nameOf(arm) {
+    return `${arm.gate.file}${arm.label ? ` (${arm.label})` : ''}`;
+}
 
 if (flag('list') || words[0] === 'list') {
     const flagsOf = (argvList) => argvList

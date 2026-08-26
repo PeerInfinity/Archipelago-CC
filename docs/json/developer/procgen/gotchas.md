@@ -653,6 +653,37 @@ ink, not elements* — is necessary and not sufficient: the browser row asserts
 the strip's WIDTH against `OVERVIEW.cellPx` too, and that is the only condition
 that could tell the two apart.
 
+## One gate can be TWO standing rows, and `--only=` is a substring
+
+`check-seedling-editor-generate.mjs` reads **224/0** with `--host=` and
+**230/0** without it. Neither number is wrong: claim 4 (`?gen=`) is guarded on
+`!host`, because with a caller-supplied server the gate has no route to serve
+the payload at, so six rows print a NOTE instead of running. **224 + 6 = 230**,
+and the standing row's command carries `--host=http://localhost:8000` — so the
+standing row is the 224 arm. ⚖ Both arms were run at one head, minutes apart,
+and the `--host=` arm on a PRIVATE port still gave 224: the flag is the
+variable, not which tree :8000 serves.
+
+⇒ **the second arm is DECLARED by the gate, not re-typed by whoever needs it.**
+A docblock line
+
+    * @standing-variant <label>: <argv | (none)>
+
+is read by `gateRoster` the way `readsFlag` reads a flag, and `standingRows`
+derives `gate: seedling-editor-generate (own server)` right after the base row.
+⛔ The anchor is load-bearing — a declaration is a line that STARTS with the
+tag, because the declaring docblock also spells the syntax out for a reader. ⛔
+A malformed line, and an arm whose command EQUALS the base row's, are both
+REFUSED BY NAME: a declaration nobody parsed is a standing row that silently
+does not exist, and a second name for one measurement is a fixed point with an
+extra key.
+
+⚠ **And `--only=` is a substring.** `standing-values.mjs --write
+--only=seedling-editor-generate` selected one row until the arm existed; it now
+selects BOTH, the second being a ~2-minute browser row. Name a row with
+`--key=` — exact, and a `--key=` matching nothing FAILS with the nearest keys
+rather than measuring zero rows and exiting 0.
+
 ## Related documentation
 
 - [Architecture](./architecture.md)

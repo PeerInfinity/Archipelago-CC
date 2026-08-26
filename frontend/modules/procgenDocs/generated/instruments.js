@@ -1308,6 +1308,7 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "check",
             "citedBy": [
+                "docs/json/developer/procgen/gotchas.md",
                 "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
@@ -6048,6 +6049,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "standing",
             "citedBy": [
+                "docs/json/developer/procgen/gotchas.md",
                 "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
@@ -6065,6 +6067,12 @@ export const INSTRUMENTS = frz({
                         "flag"
                     ],
                     "name": "json"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "key"
                 },
                 {
                     "how": [
