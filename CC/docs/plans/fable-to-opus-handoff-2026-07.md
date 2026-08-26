@@ -5135,6 +5135,30 @@ divergent tick, a mutant that names the mechanism, and only then a ⚖ on which
 value the record carries. The series stays on `r9/re-record-attempt-5`; the
 `--check` fixed-point repair (trap 769) is independent and may land first.
 
+**⇒ CAMPAIGN ORCHESTRATION SESSION 8 OPENED (2026-08-26, `41d4fbc8f`).** Two
+slices launched: **12f** — the ⚖ 56 DIAGNOSIS (as-built §43; brief
+`seedling-bot-r9-slice12f-prompt.md`) — and **P3** (as-built §44; brief
+`seedling-bot-r9-sliceP3-prompt.md`; in its own worktree; ⚖ 54 (6)+(7) proper —
+CI-quoted rows, the BOX LOCK, `cheap` hysteresis — deferred to **P3b**; P3 now
+carries the trap-769 boundary gate, the §42.5b latch-key measurement, the
+derived roster/owners (trap 773, `nominateOwners` off prose), the reach's data
+population (trap 770) and the one-spelling FILE gate (trap 729)).
+⛓⛓⛓ **MEASURED BEFORE BRIEFING, and it supersedes §42.5c's `tick0` lead for the
+S1-vs-differential pair:** the two paths shipped BYTE-EQUAL bytes for
+`r9-solve-0` (`tape-`/`rr-tape-r9-solve-0.json`, md5 `ac86d87c72c7…`, 3958 B;
+both are `gameVisibleTape`, `tick0` dropped on both), through the same driver
+with the same argv, to the same served build; their 146 tick objects are
+IDENTICAL and only `Rng.state` differs (`beginEntry.rng.gameplay` 1029458650 vs
+1196888758, terminal 1953898394 vs 1427998694) plus a post-latch `game_time`
+8758 vs 8761 (⚖ 47b (2)'s poller window). It is per-PATH, not per-time: five
+real drives, no crossover (producer 08-25 08:34 + ship gate + differential vs
+S1 twice). ⇒ a draw-count/seeding difference invisible to the position stream;
+12f's shape is reproduce-alternating → bisect the path → per-tick `Rng.state`
+trace (`botStatus`, `botRngProbe` as a draw-distance meter; a NEW build name
+`seedling_bot_ap_p4c` only if the poll cannot resolve a tick) → a mutant that
+flips it both ways → the ⚖ written for the user. Sequence after both: the
+FIFTH run's brief → P3b → P4 → L15.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
