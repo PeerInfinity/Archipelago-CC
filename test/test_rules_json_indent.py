@@ -109,6 +109,19 @@ class TestRulesJsonIndent(unittest.TestCase):
         self.assertEqual(written, json.dumps(sectioned, indent=2, ensure_ascii=False))
         self.assertEqual(json.loads(written), sectioned)
 
+        # ⛔ AND THE MINIFIED PATH TOO. `_json_dumps_at_indent` has two
+        # branches and they are separate lines; a row that only ever asks for
+        # indent 2 leaves the indent-0 branch free to escape what the indented
+        # one does not. (Measured: a mutant reverting `ensure_ascii` on the
+        # minified branch alone passed every other row in this file and in
+        # test_rules_json_writer_agreement.py.) `JSON.stringify(obj, null, 0)`
+        # is compact AND raw UTF-8; both branches must be.
+        minified = dump_rules(sectioned, indent=0)
+        self.assertIn('\u00a7', minified)
+        self.assertNotIn('\\u00a7', minified)
+        self.assertNotIn('\n', minified)
+        self.assertEqual(json.loads(minified), sectioned)
+
     def test_the_default_is_two_in_both_declarations(self):
         sys.path.insert(0, REPO)
         from worlds.json_tools_installer.json_tools_settings import JSONToolsSettings
