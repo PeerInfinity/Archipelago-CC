@@ -9,13 +9,26 @@
  *
  * The single `rules.json` stays **CANONICAL** and always loadable. A bundle is
  * the OPTIONAL multi-document CONTAINER, and its members are exactly the
- * documents this repo already writes — FOUR at E1c, FIVE since E2c:
+ * documents this repo already writes — FOUR at E1c, FIVE since E2c, SIX since
+ * EDITOR INTEGRATION W2:
  *
  *   `rules`            a rules.json — `schema_version === 3`, `regions` an object
  *   `level-set`        a Seedling level set — `rooms` an ARRAY (positions are ids)
  *   `overlay`          the set's rule/location overlay — `rooms` keyed BY INDEX
  *   `region-atlas`     a region atlas — `atlas_id` + `regions[].region_id`
  *   `region-library`   a region library — `library_id` + an `entries` ARRAY
+ *   `world`            several set documents, their overlays and the crossings
+ *                      between them — a `parts` OBJECT + a `links` ARRAY
+ *
+ * ⛓⛓ **THE SIXTH KIND IS WHAT MAKES A BUNDLE A WORLD** (EDITOR INTEGRATION W2,
+ * plan §2.2). A bundle carrying `level-set` + `region-library` + `world` is one
+ * world with two parts; one carrying `level-set` + `overlay` is exactly today's
+ * Seedling set. ⛔ APPENDED, for the same reason `region-library` was: the
+ * ORDER is half of what makes two writes of the same documents the same bytes,
+ * so appending leaves every bundle written before today byte-for-byte where it
+ * was. ⛓ And the world is where the SECOND overlay lives — `BUNDLE_ENTRY_NAMES`
+ * derives names from kinds, so there is exactly one `overlay.json` member and
+ * two parts' overlays cannot both ride one bundle.
  *
  * ⛓⛓ **THE FIFTH KIND IS EDITOR v3 E2c's, AND IT COST WHAT §25.12 #1 SAID IT
  * WOULD: ONE PREDICATE AND ONE ENTRY.** The maze lab page's SET arm edits a
@@ -74,7 +87,7 @@ export const RULES_SCHEMA_VERSION = makeRulesJsonScaffold({
  * four documents the same bytes.
  */
 export const BUNDLE_KINDS = Object.freeze([
-    'rules', 'level-set', 'overlay', 'region-atlas', 'region-library',
+    'rules', 'level-set', 'overlay', 'region-atlas', 'region-library', 'world',
 ]);
 
 /**
@@ -197,6 +210,7 @@ export function classifyDocument(doc) {
     if (doc.schema_version === RULES_SCHEMA_VERSION && isPlainObject(doc.regions)) {
         return 'rules';
     }
+    if (isPlainObject(doc.parts) && Array.isArray(doc.links)) return 'world';
     if (Array.isArray(doc.rooms)) return 'level-set';
     if (isNonEmptyString(doc.library_id) && Array.isArray(doc.entries)) return 'region-library';
     if (isNonEmptyString(doc.atlas_id) && Array.isArray(doc.regions)
