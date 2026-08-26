@@ -1235,10 +1235,38 @@ function record(ctx, s0, s1, s2) {
         unlicensed.length === 0,
         unlicensed.length ? `⛔ ${unlicensed.join(', ')} moved and no licence covers it`
             : `${set.length} tape(s) inside the permission`);
-    if (failures) {
+    /**
+     * ⛔⛔ **IT TESTS ITS OWN TWO CONDITIONS, NOT THE GLOBAL COUNTER — R9 P1b,
+     * AND THIS IS THE SAME DEFECT A FOURTH TIME.** §35.4 item 5 found it in
+     * S1's boot-block guard and §37.3 (b) found it again in S2's sealed-table
+     * guard, which swept *"`:892` was the last global-`failures` guard in the
+     * file"* — and this one was written in the same slice that added S3, so
+     * the sweep passed over it.
+     *
+     * `if (failures)` here means a producer that exited 1 at S1, or a boundary
+     * whose calm row went red three stages earlier, throws **"the projection
+     * diff names a tape this run was not licensed to move"** — a sentence that
+     * reads as evidence about the RECORD SET while the `unlicensed` check one
+     * line above may have printed PASS. That is a TRUE-SOUNDING SENTENCE ABOUT
+     * THE WRONG SUBJECT, and it fires BEFORE the GPU, so the run stops with a
+     * misattributed reason and the real one is forty lines up.
+     *
+     * ⛓ THE TWO CONDITIONS ARE S3's OWN: a projection that moved outside the
+     * permission, and a tape that VANISHED. Both are reasons not to record;
+     * neither is "somebody else failed". A failure anywhere still reddens the
+     * run — `failures` is non-zero and the process exits 1 — it just no longer
+     * gets to name S3's subject. Found by the P1b rehearsal, offline, on a
+     * fake tree, which is the whole of what ⚖ 54 (3) is for.
+     */
+    const s3Stops = unlicensed.length + vanished.length;
+    if (s3Stops) {
         flush(ctx, 'S3', { set: [], moved, appeared, vanished, stopped: true });
-        throw new Error('⛔ STOP before the GPU: the projection diff names a tape this run '
-            + 'was not licensed to move.');
+        throw new Error('⛔ STOP before the GPU: '
+            + (unlicensed.length
+                ? `the projection diff names ${unlicensed.length} tape(s) this run was not `
+                    + `licensed to move — ${unlicensed.join(', ')}.`
+                : `${vanished.length} tape(s) VANISHED under this run — `
+                    + `${vanished.join(', ')}.`));
     }
     if (!set.length) {
         console.log('## no projection moved, so there is nothing to record — and that is a '
