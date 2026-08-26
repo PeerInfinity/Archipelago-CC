@@ -50,6 +50,20 @@ table are in `vitest.slow.config.js` itself and in
 ⚠ **The OR-lanes item below (O1–O5) predates the redesign decision** and is not
 re-scoped here; whoever opens the redesign should say whether it survives.
 
+**⛓ 2026-08-26 — the redesign HAS a shape now: it is the tile-based PLATFORMER
+substrate (`platformerDemo`), the next major arc (⚖ user).** Draft plan
+*(NewDocs)* `procedural-platformer/platformer-substrate-v2-draft.md`; it
+REPLACES every previous runner plan (v1 strip plan, OR-lanes O1–O5, the test
+rebalance). Answering the question above: **OR-lanes O1–O5 do NOT survive**
+(strip grammar); branching comes from §5g's area graph. Measured reuse: the
+vendored toolkit + parity test, the profiles/stamp law, `gameCore`, and the
+whole geometry-free ability→AP-rules chain (`apRules`/`deriveRules`/
+`verifyObstacles`) KEEP; collision + `suppression`/`zoneRules` ADAPT (auto-run
+is one line, `physics.js:371`); the strip generator/solver/bot REPLACE. v1 = a
+Robot Wants Kitty clone with the SWFRecomp RWK wasm as the oracle, the toolkit
+physics fitted to RWK by settings, Seedling's tape format, no RWK data in the
+repo. Memory: `project_platformer_substrate_arc`.
+
 1. **~~Implement the test-strategy rebalance~~ — DONE 2026-07-12** (Opus; 5
    commits on `main`, pushed, CI green). Default suite is generation-free;
    heavy sweeps demoted to a manual `vitest.calib.config.js` tier
@@ -5265,6 +5279,42 @@ fifth run. **59 BRANCHES** — `r9/economies`, `r9/re-record-attempt`, `-2` dele
 P3 ✓ (`2feb53acc`; 63 standing rows, suite 375/11631 @b060f5b31) · 12g launched.
 Sequence: 12g → the FIFTH run (⚖ 57 + the series + the bank retirement + the
 three `r7-act2-*` description repairs) → P3b → P4 → L15.
+
+## 5h. The Seedling EDITOR v3 arc — CLOSED 2026-08-26 (arc opened 2026-08-24, post-dates this doc)
+
+**Status: ⛓ CLOSED 2026-08-26 (⚖ user: "let's close arc E"). Editor's last
+commit on main `41d4fbc8f` (trap 721: `docs/**` in both `paths:` blocks of
+`unittests_frontend.yml`; CI 372/11587). Slices A1 … E5, Q6, E6a, E6b.** Plan
+doc *(NewDocs)*: `seedling-editor-v3.md` — §7 the SHARED editor core (Seedling
+first of three substrates), §22 arc E design (E1 real data → E2 the maze on the
+toolkit → E3 the adapter's vocabulary; **E4 the platformer, NAMED not sliced,
+§22.7**), §22.8 ⚖ rooms are JSON RECORDS, OEL only at ship time; as-builts
+§9–§38; ledger §36.5. Memory: `project_seedling_editor_v3`.
+
+**What shipped**: `procgenCore/editCore.js` + `editorView.js` (the OP log, the
+fold, undo/group, "a no-op is not an edit"), the Seedling adapter
+(`seedlingDemo/watchEdit.js`), the SET editor (`setEditorCore`, `AtlasSession`
+/ `atlasOps`, `compileRegionAtlas`, the REPORT, the three-document download),
+the maze on the same toolkit, ▶ LOAD IN WASM for edited sets. Standing rows at
+close: `check-seedling-editor-arm` **226/0** · `check-maze-lab` **194/0** ·
+`-edit` **71/0** · `generate` 224/230 · `preset-bundle-load` 10.
+
+**Residue, by name — reopen only with a need**: the `set-overlay-field`
+manifest-form UI seam (§37.10); refusal paths never notify the page readout
+(`__mazeLab.set.note` lags `#editSetNote`, §38.7); `attrs` cannot name a
+not-last body (deliberate); the vanilla world's **370 free edges** are CONTENT
+authoring with the editor, not editor work; DROPPED with reasons (§22.4):
+memoised derivation, drag-to-reorder, submodule follow-on. **E4 = the platformer
+substrate's editor — it belongs to the platformer arc (§1), because no substrate
+exists for it to edit.**
+
+**Successor planning (⚖ user 2026-08-26)**: (1) the platformer substrate is the
+NEXT MAJOR ARC — draft plan *(NewDocs)* `procedural-platformer/
+platformer-substrate-v2-draft.md`; (2) BEFORE it, a planning session on the
+Seedling + Maze editors supporting **different rooms on different substrates**
+and on integrating ALL procgen editors (the pipeline panel's modes, the
+intermediate-results editor). Memory: `project_platformer_substrate_arc`,
+`project_editor_integration_planning`.
 
 ## 6. Everything else (unchanged queues)
 
