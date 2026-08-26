@@ -178,13 +178,23 @@ ARM_TOO_LATE = "WORLD_SWAP_ARM_TOO_LATE"
 # happen (every director boundary takes the skip path) and is absent at the one
 # window where it can.
 #
-# ⛓ ON `seedling_bot_ap_p4c` THIS IS BELT-AND-BRACES, NOT THE GUARD. That build
-# arms in `Bot.update` on the first frame where `FP.world` IS the world
-# `botStart` constructed, so the arm cannot land late at all and this bound can
-# only ever agree. It is kept because a driver that is run against an OLDER
-# build still needs it, and because p4c's own `arm.armed_at` readout is what
-# made the perturbation MEASURABLE - before it, the only instrument that could
-# see the arm frame was the extra read itself.
+# ⛓ MEASURED COST: EXACTLY ONE GAME FRAME, 4 of 4 (R9 slice 12g-prime). The
+# clean form is to let BOTH pre-botStart reads happen back to back -
+# `--preboot-delay-sec 1.0 --arm-bound` prints ARM_STATE then ARM_BOUND - so
+# the difference between them IS one `botStatus` call, with no self-reference:
+# 4830/31, 4829/30, 4828/29, 4832/33. ⛔ `arm.armed_at` CANNOT be used for this
+# on a tape that declares `seam.time`: `botStart` writes `Main.time = seamTime`
+# BEFORE the world swap, so the arm frame and the pre-botStart reading sit on
+# two different clock origins.
+#
+# ⛓ ON A BUILD THAT ARMS AFTER THE SWAP THIS BOUND IS SKIPPED, NOT SATISFIED,
+# and the build says which it is: `seedling_bot_ap_p4c` carries `arm` in
+# botStatus. ⚠ That branch is not a tidy-up - it is a DEFECT this slice's own
+# measurement found. Without it the bound refused p4c 4/4 at 1.0 s idle while
+# the same build without the flag passed 3/3 at the same arm frames, because
+# the outgoing world's frame count is not an input to a build that waits for
+# the swap. The bound remains the real guard on older builds, where it refuses
+# BEFORE the GPU time is spent rather than after the drain.
 GAME_TIME_AT_BOOT = 4800
 ARM_BOUND_MAX_FRAME = 18
 
@@ -566,9 +576,29 @@ def main():
                 if args.arm_bound and wi == 0:
                     bound = bot_json(page, "botStatus")
                     frame = bound.get("game_time", GAME_TIME_AT_BOOT) - GAME_TIME_AT_BOOT
-                    print(f"ARM_BOUND window={wi} frame={frame} "
-                          f"max={ARM_BOUND_MAX_FRAME}", flush=True)
-                    if frame > ARM_BOUND_MAX_FRAME:
+                    # ⛔⛔ THE BUILD DECIDES WHETHER THIS BOUND MEANS ANYTHING,
+                    # AND IT SAYS SO ITSELF. A build that arms after the swap
+                    # has landed carries `arm: {pending, armed_at}` in
+                    # botStatus; on such a build the OUTGOING world's frame
+                    # count is simply not an input to anything, and refusing on
+                    # it is a FALSE REFUSAL of a drive that would have passed.
+                    #
+                    # ⚠ MEASURED, AND IT IS WHY THIS BRANCH EXISTS. Without it,
+                    # `--arm-bound` refused seedling_bot_ap_p4c 4/4 at 1.0 s of
+                    # pre-boot idle (frames 29-33) while the SAME build without
+                    # the flag passed 3/3 at the same frames (arm frames 28, 33,
+                    # 31). The first version of this docblock asserted "on p4c
+                    # the arm waits for the swap and this cannot fire" - a true
+                    # sentence about the BUILD attached to code that had no way
+                    # to know which build it was driving. The capability is read
+                    # off the readout now instead of assumed, and it costs
+                    # nothing: the status block is already in hand.
+                    if isinstance(bound.get("arm"), dict):
+                        print(f"ARM_BOUND window={wi} frame={frame} SKIPPED "
+                              "(this build arms after the world swap has landed; "
+                              "the outgoing world's frame count is not an input)",
+                              flush=True)
+                    elif frame > ARM_BOUND_MAX_FRAME:
                         raise RuntimeError(
                             f"{ARM_TOO_LATE}: {label}: the page's own boot world has run "
                             f"{frame} frame(s) (game_time {bound.get('game_time')} - "
@@ -576,8 +606,9 @@ def main():
                             f"{ARM_BOUND_MAX_FRAME}. On a build that arms beside the world "
                             "swap the tape's first tick would be recorded off the OUTGOING "
                             "world; refusing here spends no GPU time on a recording that "
-                            "cannot be trusted. On seedling_bot_ap_p4c the arm waits for "
-                            "the swap and this cannot fire.")
+                            "cannot be trusted. A build whose botStatus carries `arm` arms "
+                            "AFTER the swap lands and is skipped above rather than judged "
+                            "here.")
                 started = evaluate_bot(page, "botStart")
                 if started != "ok":
                     raise RuntimeError(f"{label}: botStart: {started}")
