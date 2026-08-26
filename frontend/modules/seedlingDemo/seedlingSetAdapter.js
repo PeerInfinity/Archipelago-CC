@@ -958,15 +958,30 @@ function markLocation(record, { room, entity, name, vanilla_item: item }) {
         fail(`seedlingSetAdapter: mark-location \`entity\` is {type, x, y} in PIXELS, got `
             + `${JSON.stringify(entity)}`);
     }
-    const names = overlayLocationNames(record.overlay);
-    if (names.has(name)) {
-        fail(`seedlingSetAdapter: a location named ${JSON.stringify(name)} already exists in room `
-            + `${names.get(name)}. ⛔ Location names are unique across the SET: `
-            + '`regionAtlasCompiler` allocates AP location ids from `loc.name` ALONE, so two '
-            + 'locations with one name collapse to one id and the second\'s item is lost.');
-    }
+    // ⛔⛔ **VALIDITY BEFORE UNIQUENESS — EDITOR v3 E6a.** These two ran the other
+    // way round, so `{name: 42}` was compared against the authored names first and
+    // only refused as a non-string if it happened not to collide: the refusal a
+    // caller saw depended on the rest of the document. The shape question has one
+    // answer whatever else is marked, so it is asked first and this order is pinned.
     if (typeof name !== 'string' || name === '' || typeof item !== 'string' || item === '') {
         fail('seedlingSetAdapter: mark-location needs a non-empty `name` and `vanilla_item`');
+    }
+    /**
+     * ⛓⛓ **PER ROOM, NOT PER SET** (E6a; §34.10 #1). The compiler allocates AP
+     * location ids from `loc.name`, and the name it reads is the DERIVED one —
+     * `Level NNN - <authored>` (`seedlingAtlasDerivation.levelName`), whose prefix
+     * is the room's LEVEL. A room's level is its array position
+     * (`roomsOfSet`: `.map((room, level) => …)`), so it is unique per set by
+     * construction and two rooms marking one authored name derive two different
+     * AP names. Only a room colliding with ITSELF collapses to one id.
+     */
+    const roomRows = record.overlay.rooms[String(room)]?.locations ?? [];
+    if (roomRows.some((r) => r.name === name)) {
+        fail(`seedlingSetAdapter: room ${room} already holds a location named `
+            + `${JSON.stringify(name)}. ⛔ Location names are unique WITHIN A ROOM: the `
+            + 'derived AP name is `Level NNN - <authored>` and the prefix is the room, so two '
+            + 'rows in ONE room collapse to one id and the second\'s item is lost. Another '
+            + 'room may use the same name.');
     }
     // ⛔ THE ENTITY MUST BE IN THE ROOM'S XML, EXACTLY. A location marked on
     // nothing derives an atlas that throws at build time with a message about a
@@ -1038,11 +1053,18 @@ function setAccessRule(record, { room, target, rule, path = null }, deps) {
         }
     }
     if (parsed.kind === 'loc') {
-        const names = overlayLocationNames(record.overlay);
-        if (names.get(parsed.id) !== room) {
+        // ⛓ THE DECISION IS PER ROOM — the rule namespace already is (`loc:<name>`
+        // lives INSIDE `rooms[i].rules`), and since E6a so is the name. The GLOBAL
+        // view is read only to say where else the name lives, which is the half of
+        // the sentence a `Map<name, room>` could no longer tell the truth about.
+        const here = (record.overlay.rooms[String(room)]?.locations ?? [])
+            .some((r) => r.name === parsed.id);
+        if (!here) {
+            const elsewhere = overlayLocationNames(record.overlay).get(parsed.id) ?? [];
             fail(`seedlingSetAdapter: set-access-rule names location ${JSON.stringify(parsed.id)} `
-                + `in room ${room}, and ${names.has(parsed.id)
-                    ? `it lives in room ${names.get(parsed.id)}` : 'no such location is marked'}`);
+                + `in room ${room}, and ${elsewhere.length > 0
+                    ? `it lives in room${elsewhere.length === 1 ? '' : 's'} `
+                        + `${elsewhere.join(', ')}` : 'no such location is marked'}`);
         }
     } else {
         assertExitGateable(record, room, parsed.id, deps);

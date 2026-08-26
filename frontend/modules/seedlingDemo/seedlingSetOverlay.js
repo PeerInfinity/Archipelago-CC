@@ -104,6 +104,18 @@ const SEEDLING_OVERLAY = createSetOverlay({
     /** ⛓ `entity` FIRST, because that is the field that makes the row an address. */
     locationFields: ['entity', ...BASE_LOCATION_FIELDS],
 
+    /**
+     * ⛓⛓ **EDITOR v3 E6a — PER ROOM, BECAUSE THIS DERIVATION PREFIXES.**
+     * `seedlingAtlasDerivation` emits `Level NNN - <authored>` and `NNN` is the
+     * room's level, which `seedlingSetAdapter.roomsOfSet` sets to the room's
+     * ARRAY POSITION — unique per set by construction. Two rooms marking
+     * `Chest` therefore derive two different AP names and the compiler
+     * allocates two ids; only a room colliding with ITSELF collapses to one.
+     * ⛔ The default is `'set'` and the maze keeps it, because
+     * `mazeAtlasDerivation` emits the authored name verbatim.
+     */
+    locationNameScope: 'room',
+
     locationRowErrors: (row, rlabel) => (
         isPlainObject(row.entity) && isNonEmptyString(row.entity.type)
             && Number.isInteger(row.entity.x) && Number.isInteger(row.entity.y)

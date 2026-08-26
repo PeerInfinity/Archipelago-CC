@@ -119,21 +119,33 @@ describe('the shape check refuses BY NAME and never coerces', () => {
     });
 
     /**
-     * ⛓⛓ GLOBAL, NOT PER ROOM. `regionAtlasCompiler` allocates AP location ids
-     * from `loc.name` ALONE, so two locations sharing a name collapse to ONE id
-     * and the second's item is lost — and the derivation prefixes the LEVEL,
-     * which a `reorder` moves, so the uniqueness has to be asked of the
-     * AUTHORED name that a reorder never touches.
+     * ⛓⛓ **PER ROOM SINCE EDITOR v3 E6a.** `regionAtlasCompiler` allocates AP
+     * location ids from `loc.name` ALONE — but the name it reads is the DERIVED
+     * one, `Level NNN - <authored>`, and the prefix is the room's level, which
+     * is its array position. Two rooms sharing an authored name therefore
+     * derive two different AP names; only a room colliding with ITSELF
+     * collapses to one id.
+     *
+     * ⛔ The law it replaced asked this globally, citing a `reorder` swapping
+     * two rooms' AP names. That sentence was true and about the wrong property:
+     * a reorder re-prefixes EVERY derived name, so the set of them stays
+     * unique. It cost vanilla's lift 16 names it could not reproduce (§34.4).
      */
-    it('refuses a duplicate location name ACROSS rooms', () => {
+    it('refuses a duplicate location name WITHIN a room, and allows it across rooms', () => {
         const errors = overlayErrors(overlay({
-            0: { locations: [row('Chest')] },
-            4: { locations: [row('Chest')] },
+            0: { locations: [row('Chest'), row('Chest')] },
         }));
-        expect(errors).toEqual([expect.stringContaining('duplicates overlay.rooms[0]')]);
-        // ⛔ and NOT vacuous: two DIFFERENT names in the same two rooms pass
+        expect(errors)
+            .toEqual([expect.stringContaining('duplicates overlay.rooms[0].locations[0]')]);
+        expect(errors[0]).toContain('unique WITHIN A ROOM');
+        // ⛓⛓ THE HALF E6a BOUGHT: the same name in two rooms is now legal, and
+        //    this is the row a re-tightened law would red.
         expect(overlayErrors(overlay({
-            0: { locations: [row('Chest')] }, 4: { locations: [row('Other Chest')] },
+            0: { locations: [row('Chest')] }, 4: { locations: [row('Chest')] },
+        }))).toEqual([]);
+        // ⛔ and NOT vacuous: two DIFFERENT names in one room still pass
+        expect(overlayErrors(overlay({
+            0: { locations: [row('Chest'), row('Other Chest')] },
         }))).toEqual([]);
     });
 
@@ -231,8 +243,9 @@ describe('⛓⛓⛓ the bridge BUILDS the closure and STORES it never', () => {
         expect([...byRoom.get(1).keys()]).toEqual(['out_teleporter_0_0']);
     });
 
-    it('overlayLocationNames maps every authored name to its room', () => {
-        expect([...overlayLocationNames(doc)]).toEqual([['Torch', 2], ['Chest', 2], ['Gated', 4]]);
+    it('overlayLocationNames maps every authored name to the ROOMS it sits in', () => {
+        expect([...overlayLocationNames(doc)])
+            .toEqual([['Torch', [2]], ['Chest', [2]], ['Gated', [4]]]);
     });
 });
 
@@ -316,7 +329,7 @@ const CASES = [
   ['row not object', { schema_version: 1, rooms: { 0: { locations: [1] } } }],
   ['undeclared row field', { schema_version: 1, rooms: { 0: { locations: [{ name: 'a', vanilla_item: 'b', entity: { type: 't', x: 1, y: 2 }, extra: 1 }] } } }],
   ['row missing everything', { schema_version: 1, rooms: { 0: { locations: [{}] } } }],
-  ['dup name', { schema_version: 1, rooms: { 0: { locations: [{ name: 'a', vanilla_item: 'i', entity: { type: 't', x: 0, y: 0 } }] }, 1: { locations: [{ name: 'a', vanilla_item: 'i', entity: { type: 't', x: 0, y: 0 } }] } } }],
+  ['dup name', { schema_version: 1, rooms: { 0: { locations: [{ name: 'a', vanilla_item: 'i', entity: { type: 't', x: 0, y: 0 } }, { name: 'a', vanilla_item: 'i', entity: { type: 't', x: 1, y: 0 } }] } } }],
   ['rules not object', { schema_version: 1, rooms: { 0: { rules: [] } } }],
   ['bare rule key', { schema_version: 1, rooms: { 0: { rules: { bare: { rule: 'True_' } } } } }],
   ['empty prefix', { schema_version: 1, rooms: { 0: { rules: { 'exit:': { rule: 'True_' } } } } }],
@@ -374,7 +387,7 @@ describe('⛔⛔ every refusal SENTENCE survived the lift to procgenCore, verbat
         "overlay.rooms[0].locations[0].entity must be {type, x, y} with integer PIXEL coordinates — the same (x, y) the room's OEL element carries, so the row addresses one entity and not a class of them",
     ]],
     ["dup name", [
-        "overlay.rooms[1].locations[0].name \"a\" duplicates overlay.rooms[0] — location names are unique across the SET",
+        "overlay.rooms[0].locations[1].name \"a\" duplicates overlay.rooms[0].locations[0] — location names are unique WITHIN A ROOM — the derived AP name carries the room, so only a room colliding with itself collapses to one id",
     ]],
     ["rules not object", [
         "overlay.rooms[0].rules must be an object keyed by \"exit:<id>\" or \"loc:<name>\"",

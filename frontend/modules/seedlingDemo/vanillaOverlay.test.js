@@ -246,11 +246,14 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
             .reduce((n, r) => n + (r.locations ?? []).length, 0)).toBe(41);
         expect(Object.values(committed.rooms)
             .reduce((n, r) => n + Object.keys(r.rules ?? {}).length, 0)).toBe(5);
-        // ⛔ EVERY authored name is unique across the SET — `mark-location`'s
-        //    own law, asserted on the artifact rather than only on the fold.
-        const names = Object.values(committed.rooms)
-            .flatMap((r) => (r.locations ?? []).map((l) => l.name));
-        expect(new Set(names).size).toBe(names.length);
+        // ⛔ EVERY authored name is unique WITHIN ITS ROOM — `mark-location`'s
+        //    own law since E6a, asserted on the artifact rather than only on the
+        //    fold. ⛓ Across rooms it is NOT unique any more, and the row below
+        //    measures that rather than leaving it to prose.
+        for (const [index, room] of Object.entries(committed.rooms)) {
+            const names = (room.locations ?? []).map((l) => l.name);
+            expect(new Set(names).size, `room ${index}`).toBe(names.length);
+        }
     });
 
     it('`--check` agrees with the committed bytes', async () => {

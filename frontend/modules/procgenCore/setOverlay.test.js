@@ -146,13 +146,60 @@ describe('⛓⛓ the shape check is the toolkit\'s, the ADDRESS is the substrate
         ]);
     });
 
-    it('⛓⛓ location names are unique across the SET, not per room', () => {
-        const errors = WIDGET.overlayErrors(ok({
+    /**
+     * ⛓⛓⛓ **EDITOR v3 E6a — THE SCOPE IS THE SUBSTRATE'S, AND BOTH ANSWERS ARE
+     * DRIVEN HERE.** How wide a location name must be unique depends on whether
+     * the substrate's derivation PREFIXES the room into the name it emits, and
+     * the two committed substrates disagree: Seedling emits
+     * `Level NNN - <authored>`, the maze emits the authored name verbatim. So
+     * the toolkit takes `locationNameScope` and the DEFAULT is the stricter
+     * `'set'` — a substrate that has not thought about it cannot lose an item.
+     *
+     * ⛔ NOT VACUOUS in either direction: each scope is driven with the SAME
+     * two documents, and the pair of verdicts is what separates them. A row
+     * that only asserted the refusal would still pass if the check were
+     * deleted; a row that only asserted the allowance would pass if the whole
+     * scope parameter were ignored.
+     */
+    it('⛓⛓ the default scope is the SET — a cross-room duplicate refuses', () => {
+        const across = WIDGET.overlayErrors(ok({
             0: { locations: [loc({ name: 'dup' })] },
             1: { locations: [loc({ name: 'dup' })] },
         }));
-        expect(errors).toHaveLength(1);
-        expect(errors[0]).toMatch(/duplicates overlay\.rooms\[0\]/);
+        expect(across).toHaveLength(1);
+        expect(across[0]).toMatch(/duplicates overlay\.rooms\[0\]\.locations\[0\]/);
+        expect(across[0]).toMatch(/unique across the SET/);
+        expect(across[0]).toMatch(/does NOT carry the room/);
+        // ⛓ and within one room too — `'set'` is the wider of the two laws.
+        expect(WIDGET.overlayErrors(ok({
+            0: { locations: [loc({ name: 'dup', slot: 0 }), loc({ name: 'dup', slot: 1 })] },
+        }))).toHaveLength(1);
+    });
+
+    it('⛓⛓ `locationNameScope: "room"` allows the SAME two rooms and still refuses one room', () => {
+        const PER_ROOM = createSetOverlay({
+            moduleName: 'scopeProbe', locationFields: ['slot', ...BASE_LOCATION_FIELDS],
+            locationNameScope: 'room',
+        });
+        expect(PER_ROOM.overlayErrors(ok({
+            0: { locations: [loc({ name: 'dup' })] },
+            1: { locations: [loc({ name: 'dup' })] },
+        }))).toEqual([]);
+        const within = PER_ROOM.overlayErrors(ok({
+            0: { locations: [loc({ name: 'dup', slot: 0 }), loc({ name: 'dup', slot: 1 })] },
+        }));
+        expect(within).toHaveLength(1);
+        expect(within[0]).toMatch(/duplicates overlay\.rooms\[0\]\.locations\[0\]/);
+        expect(within[0]).toMatch(/unique WITHIN A ROOM/);
+    });
+
+    /** ⛔ A scope nobody declared is REFUSED, not defaulted — the two answers
+     *  differ in what an author may write. */
+    it('⛔ an unknown `locationNameScope` refuses by name', () => {
+        expect(() => createSetOverlay({
+            moduleName: 'scopeProbe', locationFields: ['slot', ...BASE_LOCATION_FIELDS],
+            locationNameScope: 'level',
+        })).toThrow(/locationNameScope` is "level"; it is room and set/);
     });
 
     /**
@@ -273,10 +320,16 @@ describe('⛓ the three readers', () => {
      * order the fixture happens to be typed in
      * ([[feedback_grouping_reorders_so_assert_the_set]]).
      */
-    it('⛓ every authored location name, with the room it sits in', () => {
+    it('⛓ every authored location name, with the ROOMS it sits in', () => {
         const names = WIDGET.overlayLocationNames(OVERLAY);
-        expect(Object.fromEntries(names)).toEqual({ gem: 2, coin: 0 });
-        expect([...names.values()]).toEqual([0, 2]);
+        expect(Object.fromEntries(names)).toEqual({ gem: [2], coin: [0] });
+        expect([...names.values()]).toEqual([[0], [2]]);
+        // ⛓⛓ E6a — the value is a LIST, and a name in two rooms is the reason:
+        //   the old `Map<name, room>` reported the LAST room and lost the first.
+        const shared = WIDGET.overlayLocationNames({
+            rooms: { 4: { locations: [loc({ name: 'gem' })] }, 0: { locations: [loc({ name: 'gem' })] } },
+        });
+        expect(shared.get('gem')).toEqual([0, 4]);
     });
 });
 

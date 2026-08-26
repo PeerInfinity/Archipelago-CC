@@ -59,6 +59,45 @@ export const RULE_TARGET_PREFIXES = Object.freeze(['exit:', 'loc:']);
 export const ROOM_OVERLAY_FIELDS = Object.freeze(['name', 'locations', 'rules']);
 
 /**
+ * ⛔⛔ **HOW WIDE A LOCATION NAME MUST BE UNIQUE — AND WHY IT IS THE
+ * SUBSTRATE'S ANSWER** (EDITOR v3 E6a).
+ *
+ * `regionAtlasCompiler` allocates AP location ids from the DERIVED `loc.name`
+ * alone and `regionAtlasValidator` refuses a duplicate DERIVED name globally
+ * — so what an AUTHOR may repeat depends entirely on whether the substrate's
+ * derivation PREFIXES the room into the name it emits, and the two committed
+ * substrates give opposite answers:
+ *
+ *   ·  **Seedling PREFIXES** — `seedlingAtlasDerivation` emits
+ *      `Level NNN - <authored>`, and `NNN` is the room's level, which
+ *      `roomsOfSet` sets to the room's ARRAY POSITION. Two rooms marking
+ *      `Chest` derive two different AP names, so `'room'` is the true law and
+ *      the global one was costing the vanilla lift 16 names it could not
+ *      reproduce (§34.4, §34.10 #1).
+ *   ·  **The maze does NOT** — `mazeAtlasDerivation` emits `row.name` verbatim
+ *      (`:456`). Two rooms marking `Gem` really do collapse to ONE id, so
+ *      `'set'` is the true law there and relaxing it would have moved the
+ *      refusal from the click to `validateRegionAtlas`.
+ *
+ * ⛔ THE OLD SENTENCE THIS REPLACES was one law for both, justified by *"two
+ * rooms that swap places under a `reorder` would swap AP names"*. That is true
+ * and about the wrong property: a reorder RE-PREFIXES every derived name and
+ * the set of them stays unique. Swapping is not colliding.
+ *
+ * ⚠ The DEFAULT is `'set'`, the stricter of the two: a substrate that has not
+ * thought about it gets the answer that cannot lose an item.
+ */
+export const LOCATION_NAME_SCOPES = Object.freeze(['room', 'set']);
+
+/** How each scope finishes the refusal sentence. Read by `overlayErrors`. */
+const SCOPE_SENTENCE = Object.freeze({
+    room: 'WITHIN A ROOM — the derived AP name carries the room, so only a room '
+        + 'colliding with itself collapses to one id',
+    set: 'across the SET — the derived AP name does NOT carry the room, so two rooms '
+        + 'sharing one collapse to one id and the second\'s item is lost',
+});
+
+/**
  * ⛓ The envelope every overlay carries, split so a substrate's own fields land
  * BETWEEN `rooms` and `provenance` — which is the order a reader expects (what
  * it is, what it holds, what is authored on it, where it came from) and the
@@ -112,6 +151,7 @@ export function createSetOverlay({
     locationRowErrors = null,
     extraFields = {},
     exitIdHint = '',
+    locationNameScope = 'set',
 } = {}) {
     if (!isNonEmptyString(moduleName)) {
         throw new SetOverlayError('setOverlay: createSetOverlay needs a `moduleName` — every '
@@ -131,6 +171,13 @@ export function createSetOverlay({
                 + `"${field}", which every location row carries — the compiler allocates AP `
                 + 'location ids from `name` alone and the fill needs an item behind each one.');
         }
+    }
+    if (!LOCATION_NAME_SCOPES.includes(locationNameScope)) {
+        throw new SetOverlayError(`setOverlay: ${moduleName}'s \`locationNameScope\` is `
+            + `${JSON.stringify(locationNameScope)}; it is ${andList(LOCATION_NAME_SCOPES)}. ⛔ `
+            + 'REFUSED rather than defaulted: the two answers differ in what an author is '
+            + 'allowed to write, and a typo that fell through to the loose one would be a '
+            + 'relaxation nobody chose.');
     }
     const extraNames = Object.keys(extraFields);
     const declaredFields = [...OVERLAY_ENVELOPE_HEAD, ...extraNames, ...OVERLAY_ENVELOPE_TAIL];
@@ -202,6 +249,8 @@ export function createSetOverlay({
             err('overlay.rooms must be an object keyed by ROOM INDEX');
             return errors;
         }
+        // ⛓ Cleared per room when the scope is `'room'`; carried across rooms when
+        //   it is `'set'`. ONE map, so the message shape is one shape either way.
         const seenNames = new Map();
         for (const [rawIndex, entry] of Object.entries(overlay.rooms)) {
             const label = `overlay.rooms[${rawIndex}]`;
@@ -233,6 +282,7 @@ export function createSetOverlay({
                 if (!Array.isArray(entry.locations)) {
                     err(`${label}.locations must be an array`);
                 } else {
+                    if (locationNameScope === 'room') seenNames.clear();
                     entry.locations.forEach((row, i) => {
                         const rlabel = `${label}.locations[${i}]`;
                         if (!isPlainObject(row)) { err(`${rlabel} must be an object`); return; }
@@ -250,17 +300,12 @@ export function createSetOverlay({
                         // ⛓ THE ADDRESS IS THE SUBSTRATE'S, and so is its sentence.
                         for (const m of locationRowErrors?.(row, rlabel) ?? []) err(m);
                         if (isNonEmptyString(row.name)) {
-                            // ⛔ GLOBAL, not per room. The compiler allocates AP location ids
-                            // from `loc.name` ALONE (regionAtlasCompiler.js:376), and the
-                            // derivation prefixes the room — but two rooms that swap places
-                            // under a `reorder` would then swap AP names, so uniqueness is
-                            // asked of the AUTHORED name, which a reorder never touches.
                             if (seenNames.has(row.name)) {
                                 err(`${rlabel}.name "${row.name}" duplicates `
-                                    + `overlay.rooms[${seenNames.get(row.name)}] — location names `
-                                    + 'are unique across the SET');
+                                    + `${seenNames.get(row.name)} — location names are unique `
+                                    + `${SCOPE_SENTENCE[locationNameScope]}`);
                             } else {
-                                seenNames.set(row.name, index);
+                                seenNames.set(row.name, `${label}.locations[${i}]`);
                             }
                         }
                     });
@@ -367,11 +412,28 @@ export function createSetOverlay({
     const overlayRoomIndices = (overlay) => Object.keys(overlay?.rooms ?? {})
         .map(Number).sort((a, b) => a - b);
 
-    /** Every authored location name in the set, with the room it sits in. */
+    /**
+     * Every authored location name in the set, with the ROOMS that hold it,
+     * ascending.
+     *
+     * ⛓⛓ **EDITOR v3 E6a — THE VALUE IS A LIST BECAUSE THE LAW IS PER ROOM.**
+     * It was `Map<name, room>`, a shape that could not hold a duplicate — fine
+     * while uniqueness was asked across the SET, and a silent lie the moment it
+     * is asked per room: the second room to use a name would have overwritten
+     * the first and every reader would have been told the wrong room.
+     *
+     * ⚠ This is a REPORTING view, not the uniqueness check. A caller asking
+     * "does room R already hold N" reads `rooms[R].locations` directly; this
+     * function is for the sentence that says WHERE else the name lives.
+     */
     function overlayLocationNames(overlay) {
         const out = new Map();
-        for (const [rawIndex, entry] of Object.entries(overlay?.rooms ?? {})) {
-            for (const row of entry?.locations ?? []) out.set(row.name, Number(rawIndex));
+        for (const index of overlayRoomIndices(overlay)) {
+            for (const row of overlay?.rooms?.[String(index)]?.locations ?? []) {
+                const rooms = out.get(row.name);
+                if (rooms === undefined) out.set(row.name, [index]);
+                else if (!rooms.includes(index)) rooms.push(index);
+            }
         }
         return out;
     }

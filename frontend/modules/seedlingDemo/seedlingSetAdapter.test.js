@@ -406,7 +406,14 @@ describe('the op vocabulary, and every refusal by name', () => {
         expect(apply(s, { op: 'replace-room', room: 1, xml: wiredRoom(1, 2) }).applied).toBe(true);
     });
 
-    it('mark-location refuses an entity the room does not hold, and a duplicate name', () => {
+    /**
+     * ⛓⛓ **EDITOR v3 E6a — THE UNIQUENESS IS (room, name), SO THIS ROW ASSERTS
+     * BOTH SIDES OF THE SAME NAME.** Cross-room `T` now APPLIES; the same room
+     * marking `T` twice REFUSES. The property the old global law guarded is
+     * held one layer down by the DERIVED name's prefix, which the row below
+     * measures rather than asserts in prose.
+     */
+    it('mark-location refuses an entity the room does not hold, and a SAME-ROOM duplicate name', () => {
         const { s } = session();
         apply(s, { op: 'replace-room', room: 1, xml: wiredRoom(1, 2, { pickup: true }) });
         expect(s.apply({
@@ -417,11 +424,48 @@ describe('the op vocabulary, and every refusal by name', () => {
             op: 'mark-location', room: 1, entity: { type: 'torchpickup', x: 4 * TILE, y: 3 * TILE },
             name: 'T', vanilla_item: 'Light',
         });
+        // ⛓ ANOTHER ROOM may use the name — the derived names differ by prefix.
         apply(s, { op: 'replace-room', room: 2, xml: wiredRoom(2, 3, { pickup: true }) });
-        expect(s.apply({
+        expect(apply(s, {
             op: 'mark-location', room: 2, entity: { type: 'torchpickup', x: 4 * TILE, y: 3 * TILE },
             name: 'T', vanilla_item: 'Light',
-        }).description).toMatch(/already exists in room 1/);
+        }).applied).toBe(true);
+        // ⛔ THE SAME room may not: two rows in one room derive ONE AP name.
+        expect(s.apply({
+            op: 'mark-location', room: 1, entity: { type: 'torchpickup', x: 4 * TILE, y: 3 * TILE },
+            name: 'T', vanilla_item: 'Light',
+        }).description).toMatch(/room 1 already holds a location named "T"/);
+    });
+
+    /**
+     * ⛔⛔ **THE PROPERTY THE OLD GLOBAL LAW WAS FOR, MEASURED ON THE ATLAS.**
+     * §34.4's finding was that `mark-location` asked uniqueness of the AUTHORED
+     * half while the compiler reads the DERIVED one. This drives two rooms to
+     * mark one authored name and asserts that the derivation allocates TWO ids
+     * — i.e. the collision the law was guarding cannot happen anyway.
+     *
+     * ⛓ And a GLOBAL duplicate of the DERIVED name is UNREACHABLE from the
+     * editor, which is why nothing replaces the law: the prefix is
+     * `levelName(room.level)` and `roomsOfSet` sets `level` to the room's ARRAY
+     * POSITION (`.map((room, level) => …)`), so two rooms of one set cannot
+     * share a prefix. `regionAtlasValidator` still refuses a duplicate derived
+     * name globally, one layer below, for documents that did not come from here.
+     */
+    it('⛔⛔ two rooms marking one authored name derive TWO AP names and TWO ids', () => {
+        const { s } = session();
+        apply(s, { op: 'replace-room', room: 1, xml: wiredRoom(1, 2, { pickup: true }) });
+        apply(s, { op: 'replace-room', room: 2, xml: wiredRoom(2, 3, { pickup: true }) });
+        for (const room of [1, 2]) {
+            apply(s, {
+                op: 'mark-location', room, entity: { type: 'torchpickup', x: 4 * TILE, y: 3 * TILE },
+                name: 'Chest', vanilla_item: 'Light',
+            });
+        }
+        const { atlas } = deriveAtlasOf(s.record(), DEPS);
+        const names = atlas.regions.flatMap((r) => (r.locations ?? []).map((l) => l.name));
+        expect(names.filter((n) => n.endsWith(' - Chest')).sort())
+            .toEqual(['Level 001 - Chest', 'Level 002 - Chest']);
+        expect(new Set(names).size).toBe(names.length);
     });
 
     it('unmark-location takes the rule with it, and refuses a name the room lacks', () => {
