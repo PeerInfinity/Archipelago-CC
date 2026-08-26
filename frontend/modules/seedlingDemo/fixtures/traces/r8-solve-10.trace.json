@@ -1,7 +1,7 @@
 {
     "trace_version": 1,
     "tape": "r8-solve-10",
-    "tick_count": 90,
+    "tick_count": 78,
     "boot": {
         "level": 10,
         "x": 48,
@@ -21,34 +21,48 @@
             "goal": {
                 "kind": "collect-placement",
                 "aim": {
-                    "x": 40,
-                    "y": 56
+                    "x": 56,
+                    "y": 72
                 }
             },
             "strategy": {
                 "verb": "walk",
-                "waypoints": 1
+                "waypoints": 1,
+                "swordDash": {
+                    "planned": false,
+                    "ticks": null,
+                    "baseline": null,
+                    "saved": null,
+                    "windows": null,
+                    "legs": null,
+                    "scanned": 0,
+                    "why": "this room holds no sword, so `set slashing`'s outer gate refuses every press and no schedule can buy a single pixel"
+                }
             },
             "path": [
                 {
-                    "x": 40,
-                    "y": 56
+                    "x": 56,
+                    "y": 72
                 }
             ],
-            "rejected": [],
+            "rejected": [
+                {
+                    "option": "sword-dash",
+                    "why": "this room holds no sword, so `set slashing`'s outer gate refuses every press and no schedule can buy a single pixel"
+                }
+            ],
             "keys": [
-                "left",
                 "up"
             ]
         },
         {
-            "tick": 30,
+            "tick": 26,
             "saw": {
                 "level": 10,
-                "x": 52.108995806634084,
-                "y": 55.61941214287035,
-                "vx": 0.9386758005891723,
-                "vy": 0.19471047447008058,
+                "x": 56,
+                "y": 60.44999999999999,
+                "vx": 0,
+                "vy": -0.9500000000000002,
                 "danger": []
             },
             "goal": {
@@ -69,18 +83,17 @@
                 }
             ],
             "keys": [
-                "right",
                 "up"
             ]
         },
         {
-            "tick": 70,
+            "tick": 65,
             "saw": {
                 "level": 10,
-                "x": 52.108995806634084,
-                "y": 55.61941214287035,
-                "vx": 0.9386758005891723,
-                "vy": 0.19471047447008058,
+                "x": 56,
+                "y": 60.44999999999999,
+                "vx": 0,
+                "vy": -0.9500000000000002,
                 "danger": []
             },
             "goal": {
@@ -92,7 +105,28 @@
             },
             "strategy": {
                 "verb": "walk",
-                "waypoints": 1
+                "waypoints": 1,
+                "swordDash": {
+                    "planned": true,
+                    "ticks": 13,
+                    "baseline": 24,
+                    "saved": 11,
+                    "windows": [
+                        {
+                            "at": 0,
+                            "prefix": [
+                                0,
+                                2,
+                                8
+                            ]
+                        }
+                    ],
+                    "legs": [
+                        13
+                    ],
+                    "scanned": 4,
+                    "why": null
+                }
             },
             "path": [
                 {
@@ -100,9 +134,14 @@
                     "y": 24
                 }
             ],
-            "rejected": [],
+            "rejected": [
+                {
+                    "option": "sword-dash window: not-faster",
+                    "why": "1 of 4 scanned start tick(s) — first at walk-offset 0: 24 tick(s) against 24 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
+                }
+            ],
             "keys": [
-                "right",
+                "primary",
                 "up"
             ]
         }

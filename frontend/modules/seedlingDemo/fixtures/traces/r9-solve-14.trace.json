@@ -1,7 +1,7 @@
 {
     "trace_version": 1,
     "tape": "r9-solve-14",
-    "tick_count": 145,
+    "tick_count": 118,
     "boot": {
         "level": 14,
         "x": 160,
@@ -35,9 +35,19 @@
                 "climb": 1,
                 "waypoints": 4
             },
-            "rejected": [],
+            "rejected": [
+                {
+                    "option": "sword-dash window: not-faster",
+                    "why": "78 of 92 scanned start tick(s) — first at walk-offset 20: 131 tick(s) against 131 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
+                },
+                {
+                    "option": "sword-dash window: danger",
+                    "why": "7 of 92 scanned start tick(s) — first at walk-offset 0: the dashed corridor probes DANGEROUS at (89.9,73.6) at tick 70"
+                }
+            ],
             "keys": [
                 "left",
+                "primary",
                 "up"
             ],
             "note": "merged: walk decided on the same tick"

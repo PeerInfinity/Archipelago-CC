@@ -36,6 +36,10 @@
                 {
                     "option": "route-around",
                     "why": "button@16,64 is on the frontier of the reachable component, so there is no route around it — A* refuses to plan THROUGH an avoid volume or a solid, and a hold is what adds its presser to the exemptions (trap 147)"
+                },
+                {
+                    "option": "sword-dash",
+                    "why": "this room holds no sword, so `set slashing`'s outer gate refuses every press and no schedule can buy a single pixel"
                 }
             ],
             "keys": [
@@ -95,6 +99,10 @@
                 {
                     "option": "shove S",
                     "why": "the near-side stance (40,56) for a S lean does not plan a corridor from the live position — a lean needs the player box on the block's +-1 px probe with velocity INTO it, so a direction whose stance is in another component is not a direction"
+                },
+                {
+                    "option": "sword-dash",
+                    "why": "this room holds no sword, so `set slashing`'s outer gate refuses every press and no schedule can buy a single pixel"
                 }
             ],
             "keys": [
@@ -121,7 +129,17 @@
             },
             "strategy": {
                 "verb": "walk",
-                "waypoints": 1
+                "waypoints": 1,
+                "swordDash": {
+                    "planned": false,
+                    "ticks": null,
+                    "baseline": null,
+                    "saved": null,
+                    "windows": null,
+                    "legs": null,
+                    "scanned": 0,
+                    "why": "this room holds no sword, so `set slashing`'s outer gate refuses every press and no schedule can buy a single pixel"
+                }
             },
             "path": [
                 {
@@ -133,6 +151,10 @@
                 {
                     "option": "keep-plan",
                     "why": "the previous corridor was refuted by the world (a blocked sweep or a stall); re-planned from the live position"
+                },
+                {
+                    "option": "sword-dash",
+                    "why": "this room holds no sword, so `set slashing`'s outer gate refuses every press and no schedule can buy a single pixel"
                 }
             ],
             "keys": [

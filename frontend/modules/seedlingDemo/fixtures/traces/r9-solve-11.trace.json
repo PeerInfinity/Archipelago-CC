@@ -1,7 +1,7 @@
 {
     "trace_version": 1,
     "tape": "r9-solve-11",
-    "tick_count": 119,
+    "tick_count": 97,
     "boot": {
         "level": 11,
         "x": 32,
@@ -27,7 +27,17 @@
             },
             "strategy": {
                 "verb": "walk",
-                "waypoints": 1
+                "waypoints": 1,
+                "swordDash": {
+                    "planned": false,
+                    "ticks": null,
+                    "baseline": 11,
+                    "saved": null,
+                    "windows": null,
+                    "legs": null,
+                    "scanned": 44,
+                    "why": "no dash window certified faster than the undashed 11 tick(s) — 44 start tick(s) scanned, each with its own reason"
+                }
             },
             "path": [
                 {
@@ -35,7 +45,16 @@
                     "y": 66
                 }
             ],
-            "rejected": [],
+            "rejected": [
+                {
+                    "option": "sword-dash window: not-faster",
+                    "why": "44 of 44 scanned start tick(s) — first at walk-offset 0: 11 tick(s) against 11 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
+                },
+                {
+                    "option": "sword-dash",
+                    "why": "no dash window certified faster than the undashed 11 tick(s) — 44 start tick(s) scanned, each with its own reason"
+                }
+            ],
             "keys": [
                 "up"
             ]
@@ -59,7 +78,17 @@
             },
             "strategy": {
                 "verb": "walk",
-                "waypoints": 1
+                "waypoints": 1,
+                "swordDash": {
+                    "planned": false,
+                    "ticks": null,
+                    "baseline": 7,
+                    "saved": null,
+                    "windows": null,
+                    "legs": null,
+                    "scanned": 28,
+                    "why": "no dash window certified faster than the undashed 7 tick(s) — 28 start tick(s) scanned, each with its own reason"
+                }
             },
             "path": [
                 {
@@ -71,6 +100,14 @@
                 {
                     "option": "keep-plan",
                     "why": "the previous corridor was refuted by the world (a blocked sweep or a stall); re-planned from the live position"
+                },
+                {
+                    "option": "sword-dash window: not-faster",
+                    "why": "28 of 28 scanned start tick(s) — first at walk-offset 0: 7 tick(s) against 7 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
+                },
+                {
+                    "option": "sword-dash",
+                    "why": "no dash window certified faster than the undashed 7 tick(s) — 28 start tick(s) scanned, each with its own reason"
                 }
             ],
             "keys": [
@@ -125,7 +162,29 @@
             },
             "strategy": {
                 "verb": "walk",
-                "waypoints": 1
+                "waypoints": 1,
+                "swordDash": {
+                    "planned": true,
+                    "ticks": 21,
+                    "baseline": 43,
+                    "saved": 22,
+                    "windows": [
+                        {
+                            "at": 0,
+                            "prefix": [
+                                0,
+                                2,
+                                8,
+                                14
+                            ]
+                        }
+                    ],
+                    "legs": [
+                        21
+                    ],
+                    "scanned": 8,
+                    "why": null
+                }
             },
             "path": [
                 {
@@ -133,8 +192,14 @@
                     "y": 8
                 }
             ],
-            "rejected": [],
+            "rejected": [
+                {
+                    "option": "sword-dash window: not-faster",
+                    "why": "5 of 8 scanned start tick(s) — first at walk-offset 0: 43 tick(s) against 43 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
+                }
+            ],
             "keys": [
+                "primary",
                 "up"
             ]
         }

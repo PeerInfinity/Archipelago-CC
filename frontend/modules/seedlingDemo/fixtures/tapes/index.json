@@ -1065,21 +1065,21 @@
     },
     {
       "file": "r8-d2-19.json",
-      "tickCount": 864,
+      "tickCount": 721,
       "bootLevel": 19,
       "tapeVersion": 11,
       "noHazards": []
     },
     {
       "file": "r8-d2-20.json",
-      "tickCount": 781,
+      "tickCount": 554,
       "bootLevel": 20,
       "tapeVersion": 11,
       "noHazards": []
     },
     {
       "file": "r8-d2.json",
-      "tickCount": 2186,
+      "tickCount": 1685,
       "bootLevel": 18,
       "tapeVersion": 9,
       "noHazards": []
@@ -1121,21 +1121,21 @@
     },
     {
       "file": "r8-solve-10.json",
-      "tickCount": 90,
+      "tickCount": 78,
       "bootLevel": 10,
       "tapeVersion": 11,
       "noHazards": []
     },
     {
       "file": "r8-solve-11.json",
-      "tickCount": 87,
+      "tickCount": 84,
       "bootLevel": 11,
       "tapeVersion": 8,
       "noHazards": []
     },
     {
       "file": "r8-solve-18.json",
-      "tickCount": 541,
+      "tickCount": 410,
       "bootLevel": 18,
       "tapeVersion": 11,
       "noHazards": []
@@ -1149,7 +1149,7 @@
     },
     {
       "file": "r8-solve-20.json",
-      "tickCount": 365,
+      "tickCount": 229,
       "bootLevel": 20,
       "tapeVersion": 8,
       "noHazards": []
@@ -1247,42 +1247,42 @@
     },
     {
       "file": "r9-solve-0.json",
-      "tickCount": 237,
+      "tickCount": 145,
       "bootLevel": 0,
       "tapeVersion": 11,
       "noHazards": []
     },
     {
       "file": "r9-solve-11.json",
-      "tickCount": 119,
+      "tickCount": 97,
       "bootLevel": 11,
       "tapeVersion": 11,
       "noHazards": []
     },
     {
       "file": "r9-solve-13.json",
-      "tickCount": 74,
+      "tickCount": 36,
       "bootLevel": 13,
       "tapeVersion": 11,
       "noHazards": []
     },
     {
       "file": "r9-solve-14.json",
-      "tickCount": 145,
+      "tickCount": 118,
       "bootLevel": 14,
       "tapeVersion": 11,
       "noHazards": []
     },
     {
       "file": "r9-solve-2.json",
-      "tickCount": 47,
+      "tickCount": 23,
       "bootLevel": 2,
       "tapeVersion": 11,
       "noHazards": []
     },
     {
       "file": "r9-solve-3.json",
-      "tickCount": 226,
+      "tickCount": 152,
       "bootLevel": 3,
       "tapeVersion": 11,
       "noHazards": []

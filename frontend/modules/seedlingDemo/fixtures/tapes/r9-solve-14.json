@@ -2,7 +2,7 @@
     "tape_version": 11,
     "game": "seedling",
     "name": "r9-solve-14",
-    "description": "⛓⛓⛓ R9 SLICE 6 — SEGMENT 16 of `r9-campaign`, THE TRUE-START SOLVER CHAIN (⚖ ruling 11, user 2026-08-20: \"a sequence of tapes to play back our solutions from the beginning of the game … recorded from the solver, not constructed manually\"). L14 — the SIX-BOB room, crossed by the PARRY-WALK (⚖ ruling 29(a)): six presses, five bobs knocked back, none killed, no hit taken. The chaser arm exists and this room does not need it. Solver: 145 ticks, 1 decision(s), 0 re-plan(s), ZERO hits. ⛔ ITS BOOT IS r9-solve-13's MEASURED LATCH — every field read out of the running game by `botSeam()` and turned into blocks by `segmentBootFromLatch`, not a staged declaration: the save arrays, the persistence set, the three RNG streams and `seam.time`. Two of those rows are `modelled: false` by `SEAM_BOOT_SPEC` on purpose, which is exactly why a Windows-driver run and not a model line produces them. GOALS come from the atlas (`placement` / `exitTo`); no stance, waypoint or hold tick was handed to the solver. Authored by scripts/procgen/solve-seedling-r9-campaign.mjs; trace sidecar in fixtures/traces/.",
+    "description": "⛓⛓⛓ R9 SLICE 6 — SEGMENT 16 of `r9-campaign`, THE TRUE-START SOLVER CHAIN (⚖ ruling 11, user 2026-08-20: \"a sequence of tapes to play back our solutions from the beginning of the game … recorded from the solver, not constructed manually\"). L14 — the SIX-BOB room, crossed by the PARRY-WALK (⚖ ruling 29(a)): the strike opens its window ahead of the walk, so the bobs are knocked back rather than killed and the crossing takes no hit. Solver: 118 ticks, 1 decision(s), 0 re-plan(s), ZERO hits. ⛔ ITS BOOT IS r9-solve-13's MEASURED LATCH — every field read out of the running game by `botSeam()` and turned into blocks by `segmentBootFromLatch`, not a staged declaration: the save arrays, the persistence set, the three RNG streams and `seam.time`. Two of those rows are `modelled: false` by `SEAM_BOOT_SPEC` on purpose, which is exactly why a Windows-driver run and not a model line produces them. GOALS come from the atlas (`placement` / `exitTo`); no stance, waypoint or hold tick was handed to the solver. Authored by scripts/procgen/solve-seedling-r9-campaign.mjs; trace sidecar in fixtures/traces/.",
     "boot": {
         "level": 14,
         "x": 160,
@@ -53,14 +53,14 @@
         "totem_parts": [],
         "keys": [],
         "seal_parts": [
-            4
+            2
         ]
     },
     "rng": {
-        "seed": 2009588893,
+        "seed": 1906746288,
         "split": false,
         "cosmetic": 0,
-        "fp": 16394073
+        "fp": 239780230
     },
     "seam": {
         "items": {
@@ -83,10 +83,10 @@
         "hits_max": 3,
         "first_use": false,
         "extended": false,
-        "time": 9051,
+        "time": 8788,
         "primary": 0,
         "secondary": 0,
-        "grass_cut": 0,
+        "grass_cut": 197,
         "cutscene": [
             false,
             false,
@@ -101,17 +101,22 @@
     },
     "tick0": {
         "rng": {
-            "seed": 1059348998,
+            "seed": 1103095148,
             "split": false,
             "cosmetic": 0,
-            "fp": 1873630668
+            "fp": 1924513024
         },
         "seam": {
-            "time": 9072
+            "time": 8809
         }
     },
-    "tick_count": 145,
+    "tick_count": 118,
     "inputs": [
+        {
+            "key": "primary",
+            "from": 0,
+            "to": 1
+        },
         {
             "key": "up",
             "from": 0,
@@ -120,77 +125,122 @@
         {
             "key": "left",
             "from": 0,
+            "to": 19
+        },
+        {
+            "key": "down",
+            "from": 11,
             "to": 12
         },
         {
-            "key": "primary",
+            "key": "up",
             "from": 12,
             "to": 13
         },
         {
-            "key": "left",
+            "key": "down",
             "from": 13,
-            "to": 33
+            "to": 14
+        },
+        {
+            "key": "up",
+            "from": 14,
+            "to": 15
         },
         {
             "key": "down",
-            "from": 16,
-            "to": 17
+            "from": 18,
+            "to": 20
         },
         {
             "key": "primary",
-            "from": 33,
-            "to": 34
+            "from": 20,
+            "to": 21
         },
         {
             "key": "left",
-            "from": 34,
-            "to": 38
+            "from": 21,
+            "to": 23
+        },
+        {
+            "key": "primary",
+            "from": 22,
+            "to": 23
+        },
+        {
+            "key": "up",
+            "from": 22,
+            "to": 24
         },
         {
             "key": "right",
-            "from": 38,
-            "to": 39
+            "from": 23,
+            "to": 24
         },
         {
             "key": "left",
-            "from": 39,
-            "to": 41
-        },
-        {
-            "key": "right",
-            "from": 42,
-            "to": 44
+            "from": 24,
+            "to": 35
         },
         {
             "key": "down",
-            "from": 48,
+            "from": 27,
+            "to": 29
+        },
+        {
+            "key": "up",
+            "from": 31,
+            "to": 32
+        },
+        {
+            "key": "right",
+            "from": 35,
+            "to": 36
+        },
+        {
+            "key": "left",
+            "from": 36,
+            "to": 37
+        },
+        {
+            "key": "primary",
+            "from": 41,
+            "to": 42
+        },
+        {
+            "key": "down",
+            "from": 41,
             "to": 52
         },
         {
             "key": "left",
-            "from": 48,
-            "to": 52
+            "from": 41,
+            "to": 60
         },
         {
-            "key": "right",
+            "key": "up",
             "from": 52,
             "to": 53
         },
         {
-            "key": "primary",
+            "key": "down",
             "from": 53,
             "to": 54
         },
         {
-            "key": "down",
+            "key": "up",
             "from": 54,
-            "to": 60
+            "to": 55
         },
         {
-            "key": "left",
-            "from": 54,
-            "to": 73
+            "key": "down",
+            "from": 55,
+            "to": 56
+        },
+        {
+            "key": "up",
+            "from": 58,
+            "to": 59
         },
         {
             "key": "up",
@@ -198,149 +248,114 @@
             "to": 61
         },
         {
-            "key": "down",
+            "key": "primary",
             "from": 61,
             "to": 62
         },
         {
-            "key": "up",
-            "from": 62,
-            "to": 63
-        },
-        {
             "key": "down",
-            "from": 63,
+            "from": 62,
             "to": 64
         },
         {
+            "key": "left",
+            "from": 62,
+            "to": 67
+        },
+        {
             "key": "up",
-            "from": 64,
-            "to": 65
+            "from": 66,
+            "to": 67
+        },
+        {
+            "key": "right",
+            "from": 69,
+            "to": 71
+        },
+        {
+            "key": "up",
+            "from": 75,
+            "to": 77
+        },
+        {
+            "key": "left",
+            "from": 75,
+            "to": 97
+        },
+        {
+            "key": "primary",
+            "from": 76,
+            "to": 77
         },
         {
             "key": "down",
-            "from": 65,
-            "to": 66
+            "from": 77,
+            "to": 79
         },
         {
             "key": "up",
-            "from": 71,
-            "to": 72
-        },
-        {
-            "key": "primary",
-            "from": 73,
-            "to": 74
-        },
-        {
-            "key": "left",
-            "from": 74,
-            "to": 75
-        },
-        {
-            "key": "right",
-            "from": 75,
-            "to": 76
-        },
-        {
-            "key": "left",
-            "from": 76,
-            "to": 78
-        },
-        {
-            "key": "right",
-            "from": 80,
-            "to": 83
-        },
-        {
-            "key": "left",
-            "from": 84,
+            "from": 79,
             "to": 86
         },
         {
-            "key": "left",
-            "from": 90,
-            "to": 92
-        },
-        {
-            "key": "up",
-            "from": 90,
-            "to": 92
-        },
-        {
-            "key": "right",
-            "from": 92,
-            "to": 93
+            "key": "down",
+            "from": 86,
+            "to": 87
         },
         {
             "key": "primary",
-            "from": 93,
-            "to": 94
+            "from": 88,
+            "to": 89
+        },
+        {
+            "key": "down",
+            "from": 95,
+            "to": 96
+        },
+        {
+            "key": "primary",
+            "from": 96,
+            "to": 97
+        },
+        {
+            "key": "right",
+            "from": 97,
+            "to": 98
         },
         {
             "key": "up",
-            "from": 94,
+            "from": 97,
             "to": 100
         },
         {
             "key": "left",
-            "from": 94,
-            "to": 113
+            "from": 98,
+            "to": 103
         },
         {
-            "key": "down",
-            "from": 100,
-            "to": 101
-        },
-        {
-            "key": "up",
-            "from": 101,
-            "to": 102
-        },
-        {
-            "key": "down",
+            "key": "primary",
             "from": 102,
             "to": 103
         },
         {
-            "key": "up",
+            "key": "right",
             "from": 103,
-            "to": 104
+            "to": 106
         },
         {
             "key": "down",
+            "from": 104,
+            "to": 105
+        },
+        {
+            "key": "left",
             "from": 106,
             "to": 107
         },
         {
-            "key": "primary",
-            "from": 113,
-            "to": 114
-        },
-        {
-            "key": "left",
-            "from": 114,
-            "to": 128
-        },
-        {
-            "key": "right",
-            "from": 128,
-            "to": 129
-        },
-        {
-            "key": "left",
-            "from": 129,
-            "to": 132
-        },
-        {
-            "key": "right",
-            "from": 133,
-            "to": 135
-        },
-        {
             "key": "down",
-            "from": 139,
-            "to": 145
+            "from": 111,
+            "to": 118
         }
     ]
 }

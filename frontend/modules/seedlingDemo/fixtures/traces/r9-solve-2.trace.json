@@ -1,7 +1,7 @@
 {
     "trace_version": 1,
     "tape": "r9-solve-2",
-    "tick_count": 47,
+    "tick_count": 23,
     "boot": {
         "level": 2,
         "x": 48,
@@ -27,7 +27,29 @@
             },
             "strategy": {
                 "verb": "walk",
-                "waypoints": 1
+                "waypoints": 1,
+                "swordDash": {
+                    "planned": true,
+                    "ticks": 23,
+                    "baseline": 47,
+                    "saved": 24,
+                    "windows": [
+                        {
+                            "at": 0,
+                            "prefix": [
+                                0,
+                                2,
+                                8,
+                                14
+                            ]
+                        }
+                    ],
+                    "legs": [
+                        23
+                    ],
+                    "scanned": 16,
+                    "why": null
+                }
             },
             "path": [
                 {
@@ -35,8 +57,14 @@
                     "y": 24
                 }
             ],
-            "rejected": [],
+            "rejected": [
+                {
+                    "option": "sword-dash window: not-faster",
+                    "why": "13 of 16 scanned start tick(s) — first at walk-offset 0: 47 tick(s) against 47 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
+                }
+            ],
             "keys": [
+                "primary",
                 "up"
             ]
         }

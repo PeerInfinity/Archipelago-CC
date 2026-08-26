@@ -41,6 +41,10 @@
                 {
                     "option": "press a body",
                     "why": "level 5 tracks NO live spinner bodies in this run, so there is no position to schedule a strike against — the press arm needs the body's position at the press, not its census cell (trap 157)."
+                },
+                {
+                    "option": "sword-dash",
+                    "why": "this room holds no sword, so `set slashing`'s outer gate refuses every press and no schedule can buy a single pixel"
                 }
             ],
             "keys": [
@@ -67,7 +71,17 @@
             },
             "strategy": {
                 "verb": "walk",
-                "waypoints": 1
+                "waypoints": 1,
+                "swordDash": {
+                    "planned": false,
+                    "ticks": null,
+                    "baseline": null,
+                    "saved": null,
+                    "windows": null,
+                    "legs": null,
+                    "scanned": 0,
+                    "why": "this room holds no sword, so `set slashing`'s outer gate refuses every press and no schedule can buy a single pixel"
+                }
             },
             "path": [
                 {
@@ -75,7 +89,12 @@
                     "y": 56
                 }
             ],
-            "rejected": [],
+            "rejected": [
+                {
+                    "option": "sword-dash",
+                    "why": "this room holds no sword, so `set slashing`'s outer gate refuses every press and no schedule can buy a single pixel"
+                }
+            ],
             "keys": [
                 "right"
             ]
@@ -99,7 +118,17 @@
             },
             "strategy": {
                 "verb": "walk",
-                "waypoints": 1
+                "waypoints": 1,
+                "swordDash": {
+                    "planned": false,
+                    "ticks": null,
+                    "baseline": null,
+                    "saved": null,
+                    "windows": null,
+                    "legs": null,
+                    "scanned": 0,
+                    "why": "this room holds no sword, so `set slashing`'s outer gate refuses every press and no schedule can buy a single pixel"
+                }
             },
             "path": [
                 {
@@ -107,7 +136,12 @@
                     "y": 56
                 }
             ],
-            "rejected": [],
+            "rejected": [
+                {
+                    "option": "sword-dash",
+                    "why": "this room holds no sword, so `set slashing`'s outer gate refuses every press and no schedule can buy a single pixel"
+                }
+            ],
             "keys": [
                 "left"
             ]
@@ -131,7 +165,17 @@
             },
             "strategy": {
                 "verb": "walk",
-                "waypoints": 3
+                "waypoints": 3,
+                "swordDash": {
+                    "planned": false,
+                    "ticks": null,
+                    "baseline": null,
+                    "saved": null,
+                    "windows": null,
+                    "legs": null,
+                    "scanned": 0,
+                    "why": "this room holds no sword, so `set slashing`'s outer gate refuses every press and no schedule can buy a single pixel"
+                }
             },
             "path": [
                 {
@@ -147,7 +191,12 @@
                     "y": 88
                 }
             ],
-            "rejected": [],
+            "rejected": [
+                {
+                    "option": "sword-dash",
+                    "why": "this room holds no sword, so `set slashing`'s outer gate refuses every press and no schedule can buy a single pixel"
+                }
+            ],
             "keys": [
                 "right"
             ]
@@ -171,7 +220,17 @@
             },
             "strategy": {
                 "verb": "walk",
-                "waypoints": 1
+                "waypoints": 1,
+                "swordDash": {
+                    "planned": false,
+                    "ticks": null,
+                    "baseline": null,
+                    "saved": null,
+                    "windows": null,
+                    "legs": null,
+                    "scanned": 0,
+                    "why": "this room holds no sword, so `set slashing`'s outer gate refuses every press and no schedule can buy a single pixel"
+                }
             },
             "path": [
                 {
@@ -183,6 +242,10 @@
                 {
                     "option": "keep-plan",
                     "why": "the previous corridor was refuted by the world (a blocked sweep or a stall); re-planned from the live position"
+                },
+                {
+                    "option": "sword-dash",
+                    "why": "this room holds no sword, so `set slashing`'s outer gate refuses every press and no schedule can buy a single pixel"
                 }
             ],
             "keys": [
