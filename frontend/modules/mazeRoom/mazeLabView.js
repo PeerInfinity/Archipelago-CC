@@ -72,7 +72,7 @@ import {
  * page's is the GEOMETRY (`cellAt`), the PALETTE (an op template), the
  * substrate's own BOUNDS sentences, and the renderer.
  */
-import { mountEditorView } from '../procgenCore/editorView.js';
+import { UNDO_COMMAND_ID, mountEditorView } from '../procgenCore/editorView.js';
 import { describeOps } from '../procgenCore/editCore.js';
 import { mazeEditAdapter } from './mazeEditAdapter.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
@@ -96,8 +96,10 @@ import { applyGlossaryTips } from '../procgenDocs/glossaryTips.js';
  * second one written here.
  */
 import {
-    makeDrawRoomStill, mazeLibraryRows, mazeSetBindings, sniffSetDocument,
+    makeDrawRoomStill, mazeLibraryRows, mazeSetBindings, roomBaseTag, sniffSetDocument,
 } from './mazeSetLab.js';
+import { createEditSession } from '../procgenCore/editCore.js';
+import { deserializeMazeWorld } from './mazeRoomEngine.js';
 /**
  * ⛓⛓⛓ **THE SHARED SET EDITOR, MOUNTED — THE SAME FUNCTION `watch.html` BINDS
  * TO SEEDLING** (EDITOR v3 E2b lifted it; §7/§16.2's one-toolkit law). ⛔ The
@@ -291,6 +293,25 @@ export function main() {
     let setUi = null;
     /** ⛓ The SET arm's own lifetime, so a LOAD arriving later can remount on it. */
     let setArmLt = null;
+    /**
+     * ⛓⛓⛓ **THE ROOM SESSION, AND IT LIVES INSIDE THE SET ARM'S LIFETIME.**
+     *
+     * ⛔⛔ NOT behind `#source=edit`. §27.1 #5: switching the selector RETIRES
+     * this arm, which takes the LIBRARY session with it — a person who opened a
+     * room that way would find the set's whole op list gone. The room is a
+     * `mazeEditAdapter` session over ONE entry's world, mounted on the SAME
+     * `#canvas` the EDIT arm uses, under `setArmLt`.
+     *
+     * ⛓ Three variables and each is one fact: WHICH entry, the SESSION its
+     * edits live in, and the `editorView` mount that is drawing it. The
+     * PALETTE is a fourth, and it is per-room because it is built from the
+     * ROOM's own `itemLib`/`obstacleLib` — the lab level's would offer items
+     * this entry does not have.
+     */
+    let setRoomIndex = null;
+    let setRoomSess = null;
+    let setRoomTool = null;
+    let setRoomEditor = null;
     let heldLibrary = null;
     let heldOverlay = null;
     let setSource = null;
@@ -522,11 +543,24 @@ export function main() {
      * `draw`, `cellAt` and the hover all ask THIS, so a build that drew one
      * world and addressed another cannot exist.
      */
-    const canvasWorld = () => (params?.source === SOURCES.SET ? null : state?.record ?? null);
+    const canvasWorld = () => (params?.source === SOURCES.SET
+        ? (setRoomSess ? setRoomSess.record() : null)
+        : state?.record ?? null);
 
     const draw = () => {
         const canvas = $('canvas');
         if (!state) return;
+        /**
+         * ⛓⛓ **THE EDITING OUTLINE IS A FACT ABOUT WHETHER A CLICK PAINTS, AND
+         * IT IS DECIDED HERE RATHER THAN AT MOUNT.** ⛔ A DEFECT THIS SLICE'S
+         * BROWSER ROW FOUND: it was set once in `mount()`, which for the SET arm
+         * runs BEFORE any room is open — so opening one gave a canvas that
+         * painted with no outline, and closing it left the outline on a canvas
+         * that had nothing to paint. `mount` answers *which arm*; only `draw`
+         * answers *is there a room under the cursor*.
+         */
+        canvas.classList.toggle('editing', params.source === SOURCES.EDIT
+            || (params.source === SOURCES.SET && setRoomSess !== null));
         const w = canvasWorld();
         if (!w) {
             canvas.hidden = true;
@@ -535,7 +569,9 @@ export function main() {
         canvas.width = w.width * TILE_PX;
         canvas.height = w.height * TILE_PX;
         const ctx = canvas.getContext('2d');
-        if (requireRefusal()) {
+        // ⛓ A refused DIRECTIVE is a fact about the LADDER; a library room is
+        //   not one of its rungs, so it draws regardless.
+        if (params.source !== SOURCES.SET && requireRefusal()) {
             canvas.hidden = true;
             return;
         }
@@ -550,31 +586,42 @@ export function main() {
             tilePx: TILE_PX,
             playerPos: play ? play.frames[play.index].player : null,
         }));
-        // ⛓ THE GRAPH, over the grid — the sibling draw, layer by layer.
-        drawAreaOverlay(ctx, state.model?.areas ?? null, { tilePx: TILE_PX, layer: areaLayer });
         /**
-         * ⛓⛓ THE GADGET, over both — the second sibling. `blocks` is the ONE
-         * answer (`overlayBlocks`), so the picture and the readout cannot
-         * disagree about where the block is.
+         * ⛔⛔ EDITOR v3 E2c — **THE THREE SIBLING OVERLAYS ARE THE LAB LEVEL'S,
+         * AND THEY DO NOT DRAW OVER A LIBRARY ROOM.** The area graph, the
+         * gadget and the solve plan are all facts about `state.model` — the
+         * level `?seed=` built. A library ENTRY is a different document
+         * entirely, and painting the ladder's doors and keys over somebody
+         * else's room would be an overlay of the wrong subject drawn in a
+         * picture that looks right.
          */
-        drawElementOverlay(ctx, state.model?.elements ?? null, {
-            tilePx: TILE_PX, layer: areaLayer, blocks: overlayBlocks(),
-        });
-
-        const cells = lastSolve ? planCells(state, lastSolve) : null;
-        if (cells && cells.length > 1) {
-            ctx.save();
-            ctx.strokeStyle = COLORS.player;
-            ctx.lineWidth = 2.5;
-            ctx.globalAlpha = 0.85;
-            ctx.beginPath();
-            cells.forEach((c, i) => {
-                const x = c.x * TILE_PX + TILE_PX / 2;
-                const y = c.y * TILE_PX + TILE_PX / 2;
-                if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        if (params.source !== SOURCES.SET) {
+            // ⛓ THE GRAPH, over the grid — the sibling draw, layer by layer.
+            drawAreaOverlay(ctx, state.model?.areas ?? null, { tilePx: TILE_PX, layer: areaLayer });
+            /**
+             * ⛓⛓ THE GADGET, over both — the second sibling. `blocks` is the ONE
+             * answer (`overlayBlocks`), so the picture and the readout cannot
+             * disagree about where the block is.
+             */
+            drawElementOverlay(ctx, state.model?.elements ?? null, {
+                tilePx: TILE_PX, layer: areaLayer, blocks: overlayBlocks(),
             });
-            ctx.stroke();
-            ctx.restore();
+
+            const cells = lastSolve ? planCells(state, lastSolve) : null;
+            if (cells && cells.length > 1) {
+                ctx.save();
+                ctx.strokeStyle = COLORS.player;
+                ctx.lineWidth = 2.5;
+                ctx.globalAlpha = 0.85;
+                ctx.beginPath();
+                cells.forEach((c, i) => {
+                    const x = c.x * TILE_PX + TILE_PX / 2;
+                    const y = c.y * TILE_PX + TILE_PX / 2;
+                    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+                });
+                ctx.stroke();
+                ctx.restore();
+            }
         }
         if (hover) {
             ctx.save();
@@ -1398,6 +1445,135 @@ export function main() {
         URL.revokeObjectURL(a.href);
     };
 
+    /* ══════════════════════════════════════════════════════════════════
+     * ⛓⛓⛓ EDITOR v3 E2c — THE ROOM SESSION, INSIDE THE SET ARM'S LIFETIME
+     * ══════════════════════════════════════════════════════════════════ */
+
+    /**
+     * ⛓ WHAT THE SET EDITOR SEES OF THE OPEN ROOM — `{room, ops, session}`.
+     * ⛔ A FUNCTION, because the op count changes with every paint and a
+     * captured number would be the count at mount (`watchViewer`'s own note).
+     */
+    const setRoomSessionNow = () => (setRoomIndex === null || !setRoomSess
+        ? null
+        : { room: setRoomIndex, ops: setRoomSess.ops().length, session: setRoomSess });
+
+    /** ⛓ DROP the room session without writing it back — §21.5's DISCARD half. */
+    const discardSetRoom = () => {
+        setRoomTool?.destroy();
+        setRoomTool = null;
+        setRoomSess = null;
+        setRoomIndex = null;
+        setRoomEditor = null;
+    };
+
+    /**
+     * ⛓⛓⛓ **OPEN ONE ENTRY OF THE LIBRARY, AND IT IS THE ONLY BRIDGE.**
+     *
+     * ⛔ **A ROOM SESSION ALREADY OPEN IS NOT SILENTLY REPLACED**, in the words
+     * `watchViewer` refuses it in: `closeRoomSession` is the ONE way a room's
+     * edits reach the library (D1 §20.7), so opening another while one holds
+     * edits would drop them — the same loss §21.5 rules about for a renumbering.
+     *
+     * ⛔ **THE WORLD COMES THROUGH `deserializeMazeWorld`, THE CAPTURE PATH'S
+     * SPELLING** (§27.1 #3). `deserializeMazeLevel` accepts the same bytes
+     * without a word (§28.5 measured it), so nothing refuses the mistake here —
+     * what says it is the CLOSE, where the lab spelling mints an edit out of an
+     * untouched room and every exit's `side` comes back `null`.
+     */
+    const openSetRoomAt = (index) => {
+        if (!setSession) return false;
+        if (setRoomIndex !== null && setRoomIndex !== index
+            && setRoomSess.ops().length > 0) {
+            say(`⛔ room ${setRoomIndex} is open with ${setRoomSess.ops().length} unwritten `
+                + 'edit(s). CLOSE it into the LIBRARY first (that is ONE `replace-room`), or '
+                + 'its edits go nowhere — a room session is the only place they live until '
+                + 'then.', true);
+            return false;
+        }
+        if (setRoomIndex === index) return true;
+        const record = setSession.record();
+        const cell = setAdapter.readCell(record, index, 0);
+        const entry = record.library.entries[index];
+        let world;
+        try {
+            world = deserializeMazeWorld(cell.payload);
+        } catch (e) {
+            say(`⛔ room ${index} ("${entry?.entry_id}") would not open — ${e.message}`, true);
+            return false;
+        }
+        discardSetRoom();
+        setRoomIndex = index;
+        setRoomSess = createEditSession(mazeEditAdapter, world, {
+            base: roomBaseTag(record.library, index, entry),
+        });
+        /**
+         * ⛓ THE PALETTE IS THE ROOM'S OWN. ⛔ Not `ensureEditor()`: that one is
+         * built from the LAB LEVEL's libraries, and a library entry brings its
+         * own `itemLib`/`obstacleLib` — offering the ladder's items on somebody
+         * else's room would let a press place a body the entry cannot hold.
+         */
+        setRoomEditor = new MazeRoomEditor({
+            itemLib: world.itemLib ?? DEFAULT_ITEMS,
+            obstacleLib: world.obstacleLib ?? DEFAULT_OBSTACLES,
+        });
+        setRoomTool = mountEditorView({
+            canvas: $('canvas'),
+            session: setRoomSess,
+            adapter: mazeEditAdapter,
+            // ⛔ THE GEOMETRY STAYS THIS PAGE'S, and it is the SAME `cellAt` the
+            //   EDIT arm uses — it reads `canvasWorld()`, which is this room.
+            cellAt,
+            brushOp: (tx, ty) => setRoomEditor.opFor(tx, ty),
+            floodTarget: () => {
+                const t = setRoomEditor.selectedType;
+                if (t === PALETTE_TYPES.FLOOR) return { tile: 'floor' };
+                if (t === PALETTE_TYPES.WALL) return { tile: 'wall' };
+                return null;
+            },
+            pasteOptions,
+            clipWarnings,
+            /**
+             * ⛓⛓⛓ §21.5 — **WHICH SESSION `Ctrl+Z` HITS IS THE DOM'S OWN FOCUS.**
+             * This view keeps the DOCUMENT as its key target; the STRIP's view
+             * binds to the strip canvas and stops keydown from bubbling. ⛔ So
+             * the undo bound here is the ROOM's, and the identity line reads
+             * `document.activeElement` to say which one a press will reach.
+             */
+            commands: [{
+                id: UNDO_COMMAND_ID,
+                label: 'UNDO one room edit',
+                run: () => {
+                    const n = setRoomSess.ops().length;
+                    if (!setRoomSess.undo()) {
+                        say('this room session has nothing to undo', true);
+                        return;
+                    }
+                    say(`UNDO — ${n - 1} room edit(s) remain`);
+                    render();
+                },
+            }],
+            lifetime: setArmLt,
+            say,
+            offRoom: () => 'that point is outside the room — the cell you name is the cell '
+                + 'that gets edited, so a click past the edge REFUSES rather than clamping '
+                + 'to the last one',
+            onChange: () => { setUi?.render(); render(); },
+        });
+        say(`OPENED room ${index} ("${entry?.entry_id}") — paint on the canvas, then press `
+            + 'CLOSE to fold every edit into ONE `replace-room`');
+        /**
+         * ⛔ **THE PAGE RENDERS HERE, AND THE MOUNT'S OWN `render()` IS NOT THE
+         * SAME ONE.** `editSetRowOpen` calls `openRoomAt` and then the MOUNT's
+         * render — which repaints the strip and the identity line and knows
+         * nothing about `#canvas`, the room palette or `window.__mazeLab`. A
+         * page that waited for its next render would show an opened room on an
+         * empty canvas.
+         */
+        render();
+        return true;
+    };
+
     /**
      * ⛓⛓⛓ **THE LIFTED MOUNT, OVER THE MAZE'S BINDINGS.** ⛔ Destroy-then-create,
      * and the reason is the one `setEditorView.js`'s own docblock records: a new
@@ -1409,6 +1585,10 @@ export function main() {
     const remountSetEditor = () => {
         setUi?.destroy();
         setUi = null;
+        /** ⛔ A NEW DOCUMENT TAKES THE OPEN ROOM WITH IT: the entry a room
+         *  session was opened FROM does not survive a different library, and a
+         *  session left standing would close into rooms it never came from. */
+        discardSetRoom();
         if (!setSession || !setArmLt?.alive()) return;
         fillSetRoomSelect();
         setUi = mountSetEditor({
@@ -1427,9 +1607,16 @@ export function main() {
              */
             ...mazeSetBindings({ rulesSchema, drawRoomStill: makeDrawRoomStill() }),
             say,
-            roomSession: () => null,
-            openRoomAt: () => false,
-            discardRoom: () => {},
+            /**
+             * ⛓⛓ §21.5's THREE RULES ARRIVE THROUGH THE MOUNT: it computes the
+             * renumbering DECISION before the op and calls `discardRoom` /
+             * `openRoomAt` itself, so a MOVE UP over an edited open room is
+             * discarded loudly and a zero-op one is silently reopened on its new
+             * index — the same code that does it on `watch.html`.
+             */
+            roomSession: setRoomSessionNow,
+            openRoomAt: openSetRoomAt,
+            discardRoom: discardSetRoom,
             download: setDownload,
             loadZip: () => loadJSZipBrowser({ src: frontendUrl('libs/jszip/jszip.min.js') }),
             /**
@@ -1618,6 +1805,45 @@ export function main() {
         }
         fillLibraryPick();
         enableSetControls();
+        renderSetRoomBox();
+    };
+
+    /**
+     * ⛓⛓ **THE OPEN ROOM'S PALETTE AND TOOLS** — the EDIT arm's two boxes, in
+     * the SET panel and bound to the ROOM's editor. ⛔ Hidden with no room open,
+     * because a palette with nothing to paint on is a control that refuses on
+     * every press.
+     */
+    const renderSetRoomBox = () => {
+        const box = $('labSetRoomBox');
+        if (!box) return;
+        box.hidden = setRoomSess === null;
+        if (setRoomSess === null) return;
+        const pal = $('labSetPalette');
+        pal.textContent = '';
+        for (const e of PALETTE_ENTRIES) {
+            const b = el('button', 'paletteBtn', `${e.glyph} ${e.label}`);
+            b.dataset.type = e.type;
+            if (setRoomEditor?.selectedType === e.type) b.classList.add('armed');
+            lifetimes.current().on(b, 'click', () => {
+                setRoomEditor.selectType(e.type);
+                say(`palette: ${e.label} — click a tile of room ${setRoomIndex}`);
+                render();
+            });
+            pal.appendChild(b);
+        }
+        const tools = $('labSetTools');
+        tools.textContent = '';
+        for (const row of setRoomTool?.commands ?? []) {
+            const b = el('button', 'toolBtn', `${row.label}${row.key ? ` (${row.key})` : ''}`);
+            b.dataset.tool = row.id;
+            if (setRoomTool && row.id === setRoomTool.tool) b.classList.add('armed');
+            lifetimes.current().on(b, 'click', () => { row.run(); render(); });
+            tools.appendChild(b);
+        }
+        $('labSetRoomNote').textContent = `room ${setRoomIndex} — `
+            + `${setRoomSess.ops().length} unwritten edit(s); CLOSE folds them into ONE `
+            + '`replace-room`, and MOVE UP with edits open DISCARDS them (loudly)';
     };
 
     /* ══════════════════════════════════════════════════════════════════
@@ -1776,17 +2002,43 @@ export function main() {
                         openable: r.openable,
                     }))
                     : null,
-                report: setUi?.report()
-                    ? {
-                        allowed: setUi.report().download.rules.allowed,
-                        why: setUi.report().download.rules.why,
-                        errors: setUi.report().rows.filter((r) => r.severity === 'error')
-                            .map((r) => `[${r.kind}] ${r.text}`),
-                        kinds: [...new Set(setUi.report().rows.map((r) => r.kind))],
-                    }
-                    : null,
+                /**
+                 * ⛔⛔ **THERE IS NO `report` FIELD HERE, AND THAT IS DELIBERATE
+                 * — A SEAM, NAMED RATHER THAN FAKED.** `mountSetEditor`'s REPORT
+                 * button runs `runReport()` and then the MOUNT's own render; it
+                 * does NOT call `onSetChange`, so a page has no way to learn
+                 * that a report happened. A `report:` field here would therefore
+                 * carry the verdict AS OF THE LAST PAGE RENDER — the previous
+                 * one, or `null` — while `#editSetReportOut` on screen showed
+                 * the current one. That is the stale-readout defect this repo
+                 * keeps recording, and a readout that lies is worse than none.
+                 *
+                 * ⛓ The REPORT's verdict is read where `check-seedling-editor-arm`
+                 * reads it: off the DOM — `#editSetReportOut`'s rows (each
+                 * `[kind] text`), `#editSetReportNote` and `#editDownloadRules`'s
+                 * disabled state. Seedling never needed the seam for the same
+                 * reason. E3 owns it if a page ever does (§30).
+                 */
                 note: $('editSetNote')?.textContent ?? '',
                 identity: $('editSetIdentity')?.textContent ?? '',
+                /**
+                 * ⛓⛓ THE OPEN ROOM, AS THE PAGE HOLDS IT. ⛔ `openRoomOps` is a
+                 * COUNT and `openRoomOpList` is the list, for the reason the
+                 * lab's own `editOps` exists: a 3-cell STROKE is ONE entry of
+                 * three members and a count alone cannot tell it from three
+                 * presses.
+                 */
+                openRoom: setRoomIndex,
+                openRoomOps: setRoomSess ? setRoomSess.ops().length : 0,
+                openRoomOpList: setRoomSess
+                    ? setRoomSess.ops().map((o) => (o.op === 'group'
+                        ? { op: 'group', label: o.label, members: o.ops.length } : o))
+                    : null,
+                /** ⛓ THE IDENTITY TAG the room's edits are edits OF — read off
+                 *  the session's own `payload()`, which is the ONE place the
+                 *  core carries a base (it never interprets one). */
+                openRoomBase: setRoomSess ? setRoomSess.payload().base : null,
+                openRoomTool: setRoomTool?.tool ?? null,
             } : null,
             directives: (state.directives ?? []).map((d) => ({
                 instance: d.instance, outcome: d.outcome, keptKind: d.keptKind, at: d.at,
@@ -1965,6 +2217,7 @@ export function main() {
         lt.onRetire(() => {
             setUi?.destroy();
             setUi = null;
+            discardSetRoom();
             setArmLt = null;
         });
         // ⛓ A library held at BOOT (`?library=`) predates this arm — mount over it now.
@@ -2238,7 +2491,9 @@ export function main() {
         });
 
         const canvas = $('canvas');
-        canvas.classList.toggle('editing', source === SOURCES.EDIT);
+        // ⛓ E2c: the `editing` outline moved to `draw()` — see its docblock. It
+        //   is a fact about whether a click paints, and in the SET arm that is
+        //   not known until a room is open.
         lt.on(canvas, 'mousemove', (e) => {
             const c = cellAt(e);
             if (c?.tx === hover?.tx && c?.ty === hover?.ty) return;

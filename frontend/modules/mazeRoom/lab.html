@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <!--
   mazeRoom/lab.html — the MAZE substrate's standalone lab page: GENERATE the
-  Cloudberry loop over the maze bindings, EDIT tiles and entities by hand, and
-  SOLVE with the exact BFS oracle.
+  Cloudberry loop over the maze bindings, EDIT tiles and entities by hand,
+  SOLVE with the exact BFS oracle, and (editor v3 E2c) edit a REGION LIBRARY in
+  the SET arm.
 
   CONSTRUCTIVE-MODE arc, slice 3 (NewDocs/plans/seedling-constructive-mode-
   kickoff.md §3.5, ⚖ rulings 6/7/8/9). TOOLING ONLY: this page makes no claims
@@ -14,7 +15,7 @@
       ss -ltn | grep ":8000" || python3 -m http.server 8000
       http://localhost:8000/frontend/modules/mazeRoom/lab.html?seed=3&count=4
 
-  ── THE THREE MODES ─────────────────────────────────────────────────────
+  ── THE FOUR MODES ──────────────────────────────────────────────────────
 
   GENERATE  seed + palette + room + bounds run the loop IN THIS PAGE: start
             from an open room that solves, add one template at a time, re-solve
@@ -43,6 +44,16 @@
             plan is drawn over the room. SOLVED / REFUSED / BUDGET_EXHAUSTED,
             with the reason verbatim.
 
+  SET       a REGION LIBRARY — a positionally addressed LIST of interchangeable
+            maze rooms — through `procgenCore/setEditorView.mountSetEditor`, the
+            SAME mount `seedlingDemo/watch.html` binds to Seedling. ⛔ Nothing
+            about the strip, the two-click CONNECT gesture, the rooms table, the
+            forms, the rule box, the REPORT or the four downloads is written
+            here: this page supplies the maze's BINDINGS (`mazeSetLab.js`) and
+            the two pipeline functions the mount refuses to import for itself.
+            A room opens INSIDE this arm — never by switching to `edit`, which
+            would retire the arm and take the library session with it.
+
   ── ⚖ RULING 9 — WHAT THE URL IS FOR, AND WHAT IT IS NOT ────────────────
 
   A URL is a RUN somebody could type. It is not a reproduction of an arbitrary
@@ -61,10 +72,12 @@
 
   Shared with watch.html (procgenCore/urlParams.js — one grammar, two pages):
 
-  ?source=   generate | edit | solve. ⚠ Defaults to GENERATE, where watch.html
-             refuses to infer it: a Seedling solve costs SECONDS and an arm that
-             waits for a press must not be the one a stale URL lands in; a maze
-             solve is milliseconds.
+  ?source=   generate | edit | solve | set. ⚠ Defaults to GENERATE, where
+             watch.html refuses to infer it: a Seedling solve costs SECONDS and
+             an arm that waits for a press must not be the one a stale URL lands
+             in; a maze solve is milliseconds. ⛔ A value outside the four
+             REFUSES BY NAME, listing all of them — the fourth arm JOINED the
+             enum rather than being reached around it.
   ?seed=N    the level's identity (⚖ kickoff §5: same seed, same level)
   ?biome=    the PALETTE — `maze-v1` today. ⚠ The same KEY watch.html uses for
              its boot inventory, because one grammar across two pages is worth
@@ -112,6 +125,14 @@
              SATURATED panes would be unreachable and a reader would conclude
              the palette never refuses anything. Try:
              `?width=5&height=5&count=12&run=1`.
+  ?library=PATH  a REGION LIBRARY the SET arm fetches and holds — `?gen=`'s
+             sibling, and NOT `?gen=`: a library is not reproducible from a
+             seed, so there is nothing to compare it against and the page takes
+             it AS IT STANDS (`validateRegionLibrary` is what refuses one). A
+             TRANSPORT failure (the fetch threw, or `!res.ok`) is FATAL BY NAME;
+             a CONTENT failure goes in the arm's own LOAD box and the rest of
+             the page still works.
+
   ?expansions=N  the BFS NODE CAP. ⚠ Seedling's budget is `?tickbudget=` and is
              denominated in solver TICKS; these are different quantities and one
              word for both would be the two-spellings failure at its most
@@ -264,6 +285,8 @@
      the TARGET'S PARENT and sizes FROM the target — lands on top of it and not
      against the viewport (§23.11 #5 cost two runs to learn on the other page). */
   #editSetOverviewWrap { position: relative; overflow-x: auto; max-width: 100%; }
+  #labSetPalette, #labSetTools { display: flex; gap: 4px; flex-wrap: wrap; margin: 4px 0; }
+  #labSetRoomBox { flex-direction: column; align-items: flex-start; }
   #editSetRoomForm, #editSetManifest { font-size: 11px; }
   #editSetRoomForm .line, #editSetManifest .line { margin-bottom: 2px; }
   [hidden] { display: none !important; }
@@ -497,6 +520,23 @@
         placeholder="paste a region library, an overlay, or press a served pack above"></textarea>
       <div id="labSetLoadNote" class="note"></div>
 
+      <!--
+        ⛓⛓⛓ EDITOR v3 E2c — **THE OPEN ROOM'S OWN PALETTE.** ⛔ It is NOT
+        `#labPalette`: that box is the EDIT arm's, bound to the LAB LEVEL's
+        editor, and its UNDO hits the LAB session. A room opened from the
+        library is a different document with its own `itemLib`/`obstacleLib`, so
+        it gets its own palette built from those — offering the ladder's items on
+        somebody else's room would let a press place a body the entry cannot
+        hold. ⚠ Two enumerated containers, never one: the browser row counts
+        `#labPalette`'s buttons, and a second palette dropped into it would count
+        as a member (the group-B lesson).
+      -->
+      <div id="labSetRoomBox" class="line" hidden>
+        <b>open room</b>
+        <span id="labSetRoomNote" class="note"></span>
+        <div id="labSetPalette"></div>
+        <div id="labSetTools"></div>
+      </div>
       <div class="line">
         <span id="editSetIdentity" class="note"></span>
       </div>
