@@ -17,10 +17,25 @@
 // Phase 5b adds a SECOND sidecar flavour of the same graph (`sidecarFlavor:
 // 'maze'`, regionAtlasMazeProjection.js): the region's analyzed tile map
 // projected into the maze substrate, so the geometry and its item gating are
-// walkable with nothing but the committed repo — no wasm artifact. The two
-// flavours are SEPARATE PRESETS and never merged: one sidecar per AP region per
-// preset is the contract, and a preset carrying both would ask two substrates to
-// own one region.
+// walkable with nothing but the committed repo — no wasm artifact.
+//
+// ── ⛓ THE LAW IS *ONE SIDECAR PER REGION*, NOT *ONE SUBSTRATE PER PRESET* ──
+//
+// That sentence used to read "the two flavours are SEPARATE PRESETS and never
+// merged". It was always TWO claims wearing one coat, and only the first is a
+// law: a preset may not give ONE AP region two sidecars, because that asks two
+// substrates to own one region and the player's warehouse has exactly one slot
+// per region (`procgenPlayerEngine.js` dispatches a region's load event by
+// `entry.substrate`). The second claim — that a whole preset is one substrate —
+// was an artefact of the compiler picking a flavour ONCE per compile. Nothing
+// downstream ever needed it: nine committed presets are mixed today, and the
+// player has dispatched per region since it was written.
+//
+// So the flavour is now the DEFAULT and an atlas region may override it with
+// its own `substrate` (EDITOR INTEGRATION plan §2.2 #1–#2). One sidecar per AP
+// region still holds — each region compiles through exactly ONE row of the
+// builder table below, and a region naming a substrate the table has no row for
+// is refused BY NAME rather than quietly compiled as something else.
 //
 // The graph projection, concretely:
 //
@@ -62,7 +77,7 @@ import {
 import { allocateIdsBySortedName, namespaceNamed } from '../procgenCore/apIdNamespaces.js';
 import { validateRegionAtlas, apRegionName } from './regionAtlasValidator.js';
 import {
-    projectAtlasToMaze,
+    projectRegionToMaze,
     formatMazeProjectionNotes,
     MAZE_SUBSTRATE,
 } from './regionAtlasMazeProjection.js';
@@ -89,6 +104,41 @@ export const GAME_START_EXIT = 'GameStart';
 // Projection 3. Per-game substrate ids are the standing ruling (2026-07-25),
 // so an atlas binds to `flash_<game>` rather than the generic `flash` entry.
 export const substrateIdFor = (game) => `flash_${String(game).toLowerCase().replace(/[^a-z0-9]+/g, '_')}`;
+
+/**
+ * The substrate this COMPILE defaults to — what a region that names none plays.
+ *
+ * `options.substrateId` RELABELS the flash builder (the marking tool's "export
+ * as another game" path) rather than selecting a different one, which is why it
+ * sits ahead of the flavour: with no override, the maze flavour defaults to the
+ * maze and everything else to the atlas game's own `flash_<game>`.
+ */
+export const compileDefaultSubstrate = (atlas, options = {}) => (
+    options.substrateId
+    ?? (options.sidecarFlavor === MAZE_SUBSTRATE ? MAZE_SUBSTRATE : substrateIdFor(atlas?.game))
+);
+
+/**
+ * Which substrate PLAYS one atlas region: **its own field, else this compile's
+ * default** (EDITOR INTEGRATION plan §2.2 #2).
+ *
+ * ⛓ The precedence is the whole design in one line. The region's field is the
+ * AUTHORED truth — a set editor derives it, so it is never hand-typed — and the
+ * compile default is what every atlas written before the field said implicitly.
+ * That is why the field is optional and why every committed preset is byte-
+ * unmoved by this change: absent everywhere, this returns exactly what the old
+ * one-substrate-per-compile line returned.
+ *
+ * An EMPTY string is treated as absent here as a belt-and-braces: the validator
+ * already refuses one by name, but `compileRegionAtlas` runs on
+ * `allowInvalid` documents too, and "" resolving to "" would look up a table
+ * row nobody can spell.
+ */
+export const regionSubstrateOf = (region, atlas, options = {}) => (
+    typeof region?.substrate === 'string' && region.substrate.length > 0
+        ? region.substrate
+        : compileDefaultSubstrate(atlas, options)
+);
 
 // Which flashPanel game wiring boots a given atlas's game. This is ENGINE
 // BINDING, not map semantics (decision 6) — the atlas holds neither, and the
@@ -142,52 +192,46 @@ function apBindingsFor(region) {
  * atlas at all — it is already omitted from the graph, and a payload entry for
  * it could only mis-resolve a crossing.
  */
-function buildPresetSidecars(atlas, atlasRegions, wiredInfo, substrate) {
+function buildFlashRegionSidecars(atlas, region, wiredInfo, substrate) {
     const tileSize = atlas.tile_space?.tile_size ?? 1;
     const sidecars = {};
-    const unbound = [];
-    for (const region of atlasRegions) {
-        if (!Number.isInteger(region.map_ref)) {
-            unbound.push(region.region_id);
-            continue;
+    if (!Number.isInteger(region.map_ref)) return { sidecars, bound: false };
+    for (const { sub, apName } of apBindingsFor(region)) {
+        const exits = [];
+        for (const exit of region.exits ?? []) {
+            if (region.subgraph && exit.sub_region !== sub) continue;
+            const info = wiredInfo.get(endpointKey(region.region_id, exit.exit_id));
+            if (!info) continue; // unwired — omitted from the graph too
+            exits.push({
+                exit_id: exit.exit_id,
+                kind: exit.kind,
+                ...(exit.side === undefined ? {} : { side: exit.side }),
+                exit_tiles: exit.exit_tiles,
+                entrance_tile: exit.entrance_tile,
+                entrance_spawn: toPixels(exit.entrance_tile, tileSize),
+                exitName: info.apExitName,
+                targetRegion: info.targetApRegion,
+                targetExitId: info.target.exit.exit_id,
+                target_level: Number.isInteger(info.target.region.map_ref)
+                    ? info.target.region.map_ref : null,
+                target_spawn: Number.isInteger(info.target.region.map_ref)
+                    ? toPixels(info.target.exit.entrance_tile, tileSize) : null,
+            });
         }
-        for (const { sub, apName } of apBindingsFor(region)) {
-            const exits = [];
-            for (const exit of region.exits ?? []) {
-                if (region.subgraph && exit.sub_region !== sub) continue;
-                const info = wiredInfo.get(endpointKey(region.region_id, exit.exit_id));
-                if (!info) continue; // unwired — omitted from the graph too
-                exits.push({
-                    exit_id: exit.exit_id,
-                    kind: exit.kind,
-                    ...(exit.side === undefined ? {} : { side: exit.side }),
-                    exit_tiles: exit.exit_tiles,
-                    entrance_tile: exit.entrance_tile,
-                    entrance_spawn: toPixels(exit.entrance_tile, tileSize),
-                    exitName: info.apExitName,
-                    targetRegion: info.targetApRegion,
-                    targetExitId: info.target.exit.exit_id,
-                    target_level: Number.isInteger(info.target.region.map_ref)
-                        ? info.target.region.map_ref : null,
-                    target_spawn: Number.isInteger(info.target.region.map_ref)
-                        ? toPixels(info.target.exit.entrance_tile, tileSize) : null,
-                });
-            }
-            sidecars[apName] = {
-                substrate,
-                playable_payload: {
-                    gameId: atlas.game,
-                    atlas_ref: atlas.atlas_id,
-                    atlas_region: region.region_id,
-                    ...(sub === undefined ? {} : { atlas_sub_region: sub }),
-                    level: region.map_ref,
-                    tile_size: tileSize,
-                    exits,
-                },
-            };
-        }
+        sidecars[apName] = {
+            substrate,
+            playable_payload: {
+                gameId: atlas.game,
+                atlas_ref: atlas.atlas_id,
+                atlas_region: region.region_id,
+                ...(sub === undefined ? {} : { atlas_sub_region: sub }),
+                level: region.map_ref,
+                tile_size: tileSize,
+                exits,
+            },
+        };
     }
-    return { sidecars, unbound };
+    return { sidecars, bound: true };
 }
 
 /** The AP region names a single atlas region projects into, in declared order. */
@@ -226,10 +270,13 @@ function deriveIdentifiers(atlas, options) {
  * @param {string} [options.gameName] defaults to `atlas.game`
  * @param {string} [options.gameDirectory] defaults to gameName, lowercased
  * @param {string} [options.worldClassName] defaults to PascalCase(gameName)+World
- * @param {'flash'|'maze'} [options.sidecarFlavor] which projection-3 sidecars to
- *   emit (default 'flash' — the real game). 'maze' needs options.mazeProjection
- * @param {object} [options.mazeProjection] maze-flavour deps:
- *   { gridFor(region), conditionKey, resolveCondition } — all game-supplied
+ * @param {'flash'|'maze'} [options.sidecarFlavor] the DEFAULT projection-3
+ *   sidecar for a region that names no `substrate` of its own (default 'flash'
+ *   — the real game). Any region that resolves to 'maze', by this default or by
+ *   its own field, needs options.mazeProjection
+ * @param {object} [options.mazeProjection] deps for every region that compiles
+ *   to the maze: { gridFor(region), conditionKey, resolveCondition } — all
+ *   game-supplied
  * @param {number} [options.seed] rules.json generation_seed (default 1)
  * @param {string} [options.seedName] rules.json seed_name (default '')
  * @param {string} [options.playerName] player 1's name (default 'Player1')
@@ -474,53 +521,117 @@ export function compileRegionAtlas(atlas, options = {}) {
     //   'maze'            — the analyzed tile map in the maze substrate, which
     //                       runs anywhere the repo does (Phase 5b)
     const mazeFlavor = options.sidecarFlavor === MAZE_SUBSTRATE;
-    const substrate = options.substrateId ?? (mazeFlavor ? MAZE_SUBSTRATE : substrateIdFor(atlas.game));
-    let mazeNotes = null;
-    let sidecars;
-    let unbound;
-    if (mazeFlavor) {
-        if (!options.mazeProjection?.gridFor) {
+    const substrate = compileDefaultSubstrate(atlas, options);
+
+    // What the maze builder needs from THIS compile's graph, hoisted out of the
+    // per-region call so the closures are built once rather than per region.
+    const mazeCtx = {
+        wiredExit: (regionId, exitId) => {
+            const info = wiredInfo.get(endpointKey(regionId, exitId));
+            if (info === undefined) return undefined;
+            // The partner exit's own AP name — the edge coming BACK. The maze
+            // keys its exits by AP exit name, so that is what an arrival is
+            // resolved by there (the flash payload uses the atlas exit id,
+            // which is what its own glue resolves against).
+            const back = wiredInfo.get(
+                endpointKey(info.target.region.region_id, info.target.exit.exit_id),
+            );
+            return {
+                apExitName: info.apExitName,
+                targetApRegion: info.targetApRegion,
+                targetExitId: info.target.exit.exit_id,
+                returnApExitName: back?.apExitName ?? null,
+            };
+        },
+        internalExitName: (regionId, from, to) => internalInfo.get(`${regionId}|${from}|${to}`),
+        tileSize: atlas.tile_space?.tile_size ?? 1,
+    };
+
+    // ⛓⛓ THE SIDECAR-BUILDER TABLE — AND IT IS THIS COMPILER'S WHOLE ROSTER.
+    //
+    // ⛔ The substrate REGISTRY is not importable here: `procgenPipeline/` is in
+    // the browser page graph and `bindingContract` fences what this directory
+    // may reach. That is not a gap to paper over — a registry entry says a
+    // substrate EXISTS, and what the compiler needs to know is narrower and
+    // sharper: whether it can BUILD a sidecar for one. So the table IS the
+    // roster, its keys are the answer, and the refusal below says so in as many
+    // words rather than pointing at a registry it cannot read.
+    //
+    // The flash row is keyed on the atlas game's own id AND on `substrateId`
+    // when that relabel differs, so either spelling resolves to the one builder
+    // that can serve them. W2 adds its row here.
+    const flashSubstrate = substrateIdFor(atlas.game);
+    const sidecarBuilders = {
+        [flashSubstrate]: (region, id) => buildFlashRegionSidecars(atlas, region, wiredInfo, id),
+        ...(substrate === flashSubstrate || substrate === MAZE_SUBSTRATE ? {} : {
+            [substrate]: (region, id) => buildFlashRegionSidecars(atlas, region, wiredInfo, id),
+        }),
+        [MAZE_SUBSTRATE]: (region) => {
+            if (!options.mazeProjection?.gridFor) {
+                throw new Error(
+                    `atlas region "${region.region_id}" compiles to substrate "${MAZE_SUBSTRATE}", and `
+                    + 'sidecarFlavor "maze" needs options.mazeProjection.{gridFor,conditionKey,resolveCondition} — '
+                    + 'the cell grid and the condition vocabulary are the GAME\'s, not the compiler\'s',
+                );
+            }
+            const grid = Number.isInteger(region.map_ref) ? options.mazeProjection.gridFor(region) : null;
+            if (!grid) return { sidecars: {}, bound: false };
+            const projected = projectRegionToMaze(region, grid, {
+                ...options.mazeProjection, ...mazeCtx,
+            });
+            return { sidecars: projected.sidecars, bound: true, notes: projected.notes };
+        },
+    };
+
+    // --- the dispatch, one region at a time --------------------------------
+    const sidecars = {};
+    const unbound = [];
+    const notes = [];
+    const substrateCounts = {};
+    let anyFlash = false;
+    let anyMaze = false;
+    for (const region of atlasRegions) {
+        const id = regionSubstrateOf(region, atlas, options);
+        const build = sidecarBuilders[id];
+        if (!build) {
             throw new Error(
-                'sidecarFlavor "maze" needs options.mazeProjection.{gridFor,conditionKey,resolveCondition} — '
-                + 'the cell grid and the condition vocabulary are the GAME\'s, not the compiler\'s',
+                `atlas region "${region.region_id}" names substrate "${id}", which this compile has no `
+                + `sidecar builder for. Buildable here: ${Object.keys(sidecarBuilders).join(', ')}. `
+                + '(The compiler\'s builder table IS its roster — the substrate registry is outside '
+                + 'this module\'s import fence, so a substrate that merely EXISTS is not enough.)',
             );
         }
-        const projected = projectAtlasToMaze(atlas, {
-            ...options.mazeProjection,
-            wiredExit: (regionId, exitId) => {
-                const info = wiredInfo.get(endpointKey(regionId, exitId));
-                if (info === undefined) return undefined;
-                // The partner exit's own AP name — the edge coming BACK. The maze
-                // keys its exits by AP exit name, so that is what an arrival is
-                // resolved by there (the flash payload uses the atlas exit id,
-                // which is what its own glue resolves against).
-                const back = wiredInfo.get(
-                    endpointKey(info.target.region.region_id, info.target.exit.exit_id),
-                );
-                return {
-                    apExitName: info.apExitName,
-                    targetApRegion: info.targetApRegion,
-                    targetExitId: info.target.exit.exit_id,
-                    returnApExitName: back?.apExitName ?? null,
-                };
-            },
-            internalExitName: (regionId, from, to) => internalInfo.get(`${regionId}|${from}|${to}`),
-        });
-        sidecars = projected.sidecars;
-        unbound = projected.regions_without_map_ref;
-        mazeNotes = projected.notes;
-    } else {
-        ({ sidecars, unbound } = buildPresetSidecars(atlas, atlasRegions, wiredInfo, substrate));
+        const built = build(region, id);
+        if (!built.bound) {
+            unbound.push(region.region_id);
+            continue;
+        }
+        Object.assign(sidecars, built.sidecars);
+        if (built.notes) notes.push(...built.notes);
+        if (id === MAZE_SUBSTRATE) anyMaze = true; else anyFlash = true;
     }
+    // ⛓ COUNTED OFF THE SIDECARS THAT WERE ACTUALLY EMITTED, never off the
+    // options or the per-region field. A region with no `map_ref` has no
+    // physical binding and therefore no substrate playing it; a region with a
+    // subgraph emits one sidecar PER SUB-REGION. Reading the emitted entries is
+    // the only count that agrees with the file.
+    for (const entry of Object.values(sidecars)) {
+        substrateCounts[entry.substrate] = (substrateCounts[entry.substrate] ?? 0) + 1;
+    }
+    const mazeNotes = anyMaze ? notes : null;
     const sidecarRegions = Object.keys(sidecars);
     if (sidecarRegions.length > 0) {
         // The flashPanel wiring boots the real game for this preset. It is the
         // same hand-added block the seed-1 seedling preset carries — except
         // here it is COMPILED, so a regeneration no longer drops it (the
         // rulesExporter precedent, and the trap the plan's decision 2 names).
-        // The maze flavour deliberately carries NONE of it: nothing boots the
-        // original engine there, and a stray flash_panel block would start it.
-        if (!mazeFlavor) {
+        // A region compiled to the MAZE deliberately carries none of it:
+        // nothing boots the original engine there, and a stray flash_panel
+        // block would start it. ⛓ The condition is now "did ANY region compile
+        // flash", not "is this compile's flavour flash" — a mixed preset whose
+        // Seedling rooms are real still needs the wiring that boots them, and an
+        // all-maze one still must not have it.
+        if (anyFlash) {
             const wiring = options.flashPanel ?? FLASH_PANEL_WIRING[atlas.game];
             if (wiring) rules.flash_panel = { ...wiring };
         }
@@ -541,7 +652,13 @@ export function compileRegionAtlas(atlas, options = {}) {
         distinct_items: itemNames.length,
         unwired_exits: unwiredExits,
         start_region: startApRegion,
+        // The compile's DEFAULT — what a region naming no substrate played.
         substrate,
+        // ⛓ …and what the regions ACTUALLY compiled to: {substrate id -> how
+        // many sidecar entries carry it}. `substrate` alone stopped being the
+        // answer the moment a region could override it, and a report that named
+        // only the default would read as "all of them" for a mixed preset.
+        substrates: substrateCounts,
         sidecar_flavor: mazeFlavor ? MAZE_SUBSTRATE : 'flash',
         sidecar_regions: sidecarRegions,
         flash_panel: rules.flash_panel ?? null,

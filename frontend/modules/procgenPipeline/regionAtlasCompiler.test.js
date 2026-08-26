@@ -20,6 +20,8 @@ import { describe, it, expect } from 'vitest';
 import { stringifyRulesJson } from '../shared/rulesJsonBuilder.js';
 import { rulesJsonSchemaErrors } from '../procgenCore/jsonSchemaCheck.js';
 import { loadRulesSchema } from '../procgenCore/jsonSchemaFiles.js';
+import { seedlingMazeProjectionDeps } from '../flashPanel/seedlingAtlasAnalysis.js';
+import { MAZE_SUBSTRATE } from './regionAtlasMazeProjection.js';
 import { apRegionName, stampAtlasIdentity } from './regionAtlasValidator.js';
 import {
     compileRegionAtlas,
@@ -29,6 +31,8 @@ import {
     MENU_REGION,
     GAME_START_EXIT,
     substrateIdFor,
+    regionSubstrateOf,
+    compileDefaultSubstrate,
     REGION_ATLAS_LOCATION_ID_BASE,
     REGION_ATLAS_ITEM_ID_BASE,
 } from './regionAtlasCompiler.js';
@@ -49,6 +53,9 @@ const regionsOf = (rules) => rules.regions['1'];
 const exitsOf = (rules, regionName) => regionsOf(rules)[regionName].exits;
 const exitTo = (rules, from, to) => exitsOf(rules, from).find((e) => e.connected_region === to);
 const atlasRegion = (atlas, id) => atlas.regions.find((r) => r.region_id === id);
+
+const GAME_CONFIG = read('../flashPanel/games/seedling.json');
+const mazeDeps = () => seedlingMazeProjectionDeps({ mapDoc: MAP_DOC, gameConfig: GAME_CONFIG });
 
 describe('AP naming', () => {
     it('goes through apRegionName — a region with a subgraph splits, one without does not', () => {
@@ -415,6 +422,165 @@ describe('projection 3 — play-time sidecars (Phase 4)', () => {
         });
         expect(over.preset_sidecars['1'].starting_house.substrate).toBe('flash_other');
         expect(over.flash_panel).toEqual({ config: 'other.json' });
+    });
+});
+
+// ─── EDITOR INTEGRATION W1: the sidecar builder dispatches PER REGION ────────
+//
+// The compiler used to pick ONE substrate per compile and forbid mixing by
+// ruling. The law that survives is narrower — one sidecar per AP region — and
+// the flavour is now only the DEFAULT (plan §2.2 #2). The rows below are the
+// mixed compile in both directions plus the two refusals that keep the table
+// honest about being this module's whole roster.
+describe('per-region substrate dispatch (EDITOR INTEGRATION W1)', () => {
+    // A two-region atlas: `starting_house` (no subgraph, one AP region) is set
+    // to the maze; `owls_nest_entrance` (no subgraph either) is left alone and
+    // therefore plays the compile default. Both name a real level, so both bind.
+    const twoRegionAtlas = (substrateOfHouse) => {
+        const atlas = clone(STARTER);
+        atlas.regions = atlas.regions.filter(
+            (r) => r.region_id === 'starting_house' || r.region_id === 'owls_nest_entrance',
+        );
+        // Drop the wiring that named the regions we removed, or the graph refuses.
+        const kept = new Set(atlas.regions.map((r) => r.region_id));
+        atlas.vanilla_layout.connections = atlas.vanilla_layout.connections
+            .filter((c) => kept.has(c.from[0]) && kept.has(c.to[0]));
+        atlas.vanilla_layout.start_region = 'starting_house';
+        delete atlas.vanilla_layout.start_sub_region;
+        if (substrateOfHouse !== undefined) atlasRegion(atlas, 'starting_house').substrate = substrateOfHouse;
+        stampAtlasIdentity(atlas, 'seedling');
+        return atlas;
+    };
+
+    it('resolves the region\'s own field first, this compile\'s default second', () => {
+        const atlas = twoRegionAtlas(MAZE_SUBSTRATE);
+        const house = atlasRegion(atlas, 'starting_house');
+        const nest = atlasRegion(atlas, 'owls_nest_entrance');
+        expect(regionSubstrateOf(house, atlas, {})).toBe(MAZE_SUBSTRATE);
+        expect(regionSubstrateOf(nest, atlas, {})).toBe('flash_seedling');
+        // ...and the default is what the old one-substrate-per-compile line said.
+        expect(compileDefaultSubstrate(atlas, {})).toBe(substrateIdFor(atlas.game));
+        expect(compileDefaultSubstrate(atlas, { sidecarFlavor: 'maze' })).toBe(MAZE_SUBSTRATE);
+        expect(compileDefaultSubstrate(atlas, { substrateId: 'flash_other' })).toBe('flash_other');
+        // An EMPTY string is not an override — the validator refuses it, and an
+        // allowInvalid compile must not look up a row nobody can spell.
+        expect(regionSubstrateOf({ region_id: 'x', substrate: '' }, atlas, {})).toBe('flash_seedling');
+    });
+
+    it('MIXES: one flash sidecar and one maze sidecar from ONE flash-default compile', () => {
+        const { rules, report } = compileRegionAtlas(twoRegionAtlas(MAZE_SUBSTRATE), {
+            mapDoc: MAP_DOC, mazeProjection: mazeDeps(),
+        });
+        const sidecars = rules.preset_sidecars['1'];
+        expect(Object.keys(sidecars).sort()).toEqual(['owls_nest_entrance', 'starting_house']);
+        expect(sidecars.starting_house.substrate).toBe(MAZE_SUBSTRATE);
+        expect(sidecars.owls_nest_entrance.substrate).toBe('flash_seedling');
+
+        // ⛓ The two payloads are the two BUILDERS' own shapes, not one shape
+        // wearing two labels — which is what makes the mutant "the field ignored
+        // by the compiler" (two identical sidecars) red rather than cosmetic.
+        expect(sidecars.starting_house.playable_payload).toHaveProperty('tiles');
+        expect(sidecars.starting_house.playable_payload).not.toHaveProperty('gameId');
+        expect(sidecars.owls_nest_entrance.playable_payload).toHaveProperty('gameId', 'seedling');
+        expect(sidecars.owls_nest_entrance.playable_payload).not.toHaveProperty('tiles');
+
+        expect(report.substrates).toEqual({ [MAZE_SUBSTRATE]: 1, flash_seedling: 1 });
+        // The DEFAULT is still reported, and it is still the flash id.
+        expect(report.substrate).toBe('flash_seedling');
+        expect(report.sidecar_flavor).toBe('flash');
+    });
+
+    it('the flash_panel wiring follows "did ANY region compile flash", not the flavour', () => {
+        // A mixed preset's Seedling rooms are the REAL game and still need the
+        // block that boots it; an all-maze one still must not have it.
+        const mixed = compileRegionAtlas(twoRegionAtlas(MAZE_SUBSTRATE), {
+            mapDoc: MAP_DOC, mazeProjection: mazeDeps(),
+        });
+        expect(mixed.rules.flash_panel).toEqual({ config: 'seedling.json', wasm: 'seedling_bot_ap_p4c/game.html' });
+
+        const allMaze = compileRegionAtlas(twoRegionAtlas(undefined), {
+            mapDoc: MAP_DOC, sidecarFlavor: 'maze', mazeProjection: mazeDeps(),
+        });
+        expect(allMaze.rules.flash_panel).toBeUndefined();
+
+        // ⛓ THE ROW THAT DISCRIMINATES. The two cases above pass under the OLD
+        // `if (!mazeFlavor)` condition too — they only mix in the flash-default
+        // direction, where the flavour and "any flash region" agree. The mixed
+        // compile that separates them is the REVERSE one: flavour `maze`, and a
+        // region that declares flash anyway. `!mazeFlavor` drops the wiring and
+        // ships a preset whose real Seedling room has nothing to boot it.
+        const mazeDefaultMixed = clone(twoRegionAtlas(undefined));
+        atlasRegion(mazeDefaultMixed, 'starting_house').substrate = 'flash_seedling';
+        stampAtlasIdentity(mazeDefaultMixed, 'seedling');
+        const reverse = compileRegionAtlas(mazeDefaultMixed, {
+            mapDoc: MAP_DOC, sidecarFlavor: 'maze', mazeProjection: mazeDeps(),
+        });
+        expect(reverse.report.substrates).toEqual({ flash_seedling: 1, [MAZE_SUBSTRATE]: 1 });
+        expect(reverse.rules.flash_panel).toEqual({ config: 'seedling.json', wasm: 'seedling_bot_ap_p4c/game.html' });
+    });
+
+    it('the SAME atlas compiled --maze yields two maze sidecars — the field agrees with the default', () => {
+        const { rules, report } = compileRegionAtlas(twoRegionAtlas(MAZE_SUBSTRATE), {
+            mapDoc: MAP_DOC, sidecarFlavor: 'maze', mazeProjection: mazeDeps(),
+        });
+        const sidecars = rules.preset_sidecars['1'];
+        for (const sc of Object.values(sidecars)) expect(sc.substrate).toBe(MAZE_SUBSTRATE);
+        expect(report.substrates).toEqual({ [MAZE_SUBSTRATE]: 2 });
+        expect(rules.flash_panel).toBeUndefined();
+    });
+
+    it('counts SIDECAR ENTRIES, not regions and not options — a subgraph splits', () => {
+        // `overworld_start` has a 6-sub-region subgraph, so it alone emits six
+        // sidecars. A count read off the options or off the atlas regions would
+        // say 4; the file says 10.
+        const { rules, report } = compileStarter();
+        expect(report.substrates).toEqual({ flash_seedling: Object.keys(rules.preset_sidecars['1']).length });
+        expect(report.substrates.flash_seedling).toBe(10);
+    });
+
+    it('a region with no map_ref is in NEITHER count — nothing plays a graph-only region', () => {
+        const atlas = twoRegionAtlas(MAZE_SUBSTRATE);
+        delete atlasRegion(atlas, 'owls_nest_entrance').map_ref;
+        stampAtlasIdentity(atlas, 'seedling');
+        const { report } = compileRegionAtlas(atlas, { mapDoc: MAP_DOC, mazeProjection: mazeDeps() });
+        expect(report.regions_without_map_ref).toEqual(['owls_nest_entrance']);
+        expect(report.substrates).toEqual({ [MAZE_SUBSTRATE]: 1 });
+    });
+
+    it('REFUSES a region naming a substrate the table has no builder for, BY NAME', () => {
+        const atlas = twoRegionAtlas('bounce');
+        expect(() => compileRegionAtlas(atlas, { mapDoc: MAP_DOC, mazeProjection: mazeDeps() }))
+            .toThrow(/atlas region "starting_house" names substrate "bounce", which this compile has no sidecar builder for/);
+        // The refusal NAMES the roster, because the roster is this table and
+        // there is no registry here to point at.
+        expect(() => compileRegionAtlas(atlas, { mapDoc: MAP_DOC, mazeProjection: mazeDeps() }))
+            .toThrow(/Buildable here: flash_seedling, maze/);
+    });
+
+    it('REFUSES a maze region when the caller passed no mazeProjection, naming the region', () => {
+        // The old refusal fired on the FLAVOUR, before any region was looked at.
+        // A region can now ask for the maze on its own, so the refusal has to
+        // name which one did — and keep saying which option is missing.
+        expect(() => compileRegionAtlas(twoRegionAtlas(MAZE_SUBSTRATE), { mapDoc: MAP_DOC }))
+            .toThrow(/atlas region "starting_house" compiles to substrate "maze"/);
+        expect(() => compileRegionAtlas(twoRegionAtlas(MAZE_SUBSTRATE), { mapDoc: MAP_DOC }))
+            .toThrow(/sidecarFlavor "maze" needs options\.mazeProjection\.\{gridFor,conditionKey,resolveCondition\}/);
+    });
+
+    it('`substrateId` RELABELS the flash builder — both spellings resolve to it', () => {
+        // Its one caller is the marking tool's "export as another game", which
+        // means it must not read as "a different substrate the table lacks".
+        const atlas = twoRegionAtlas('flash_seedling');
+        const { rules, report } = compileRegionAtlas(atlas, {
+            mapDoc: MAP_DOC, substrateId: 'flash_other', flashPanel: { config: 'other.json' },
+        });
+        const sidecars = rules.preset_sidecars['1'];
+        // The region that SPELLED flash_seedling keeps it; the one that named
+        // nothing takes the relabel.
+        expect(sidecars.starting_house.substrate).toBe('flash_seedling');
+        expect(sidecars.owls_nest_entrance.substrate).toBe('flash_other');
+        expect(report.substrates).toEqual({ flash_seedling: 1, flash_other: 1 });
+        expect(rules.flash_panel).toEqual({ config: 'other.json' });
     });
 });
 
