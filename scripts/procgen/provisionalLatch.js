@@ -21,7 +21,7 @@
  * |---|---|
  * | `MODEL-CERTIFIED` | `claimArrival`'s three rows pass **in the model** |
  * | `GAME-CERTIFIED`  | a LATCH the GAME produced agrees with them |
- * | `REFUSED: <cond>` | ⚖ 49's STOP conditions, by name |
+ * | `REFUSED: <cond>` | ⚖ 49's four STOP conditions, by name — plus `unlatched`, which is the state all four presuppose |
  * | `unasked`         | no latch, and none was driven |
  *
  * ⛔ `unasked` IS NOT A FAILURE AND IS NOT A PASS. It is the third state
@@ -293,12 +293,33 @@ export function certifyAgainstLatch({ latch = null, model = null, latchFindings 
     let gameVerdict = 'unasked';
     if (latch) {
         const seam = latch.envelope?.seam ?? {};
-        const notCalm = (latchFindings ?? []).filter((r) => !r.ok);
+        /**
+         * ⛔⛔ **AN UNCLAIMED LATCH IS ITS OWN CONDITION, NOT A NON-CALM ONE.**
+         * ⚖ 49 names four STOPs — calm, hit, level, pixel — and every one of
+         * them presupposes that the run ARRIVED. A walk that never latched
+         * fails all four rows at once through `seamLatchFindings`' UNCLAIMED
+         * detail, and reporting that as "not calm" would be a TRUE SENTENCE
+         * ABOUT THE WRONG SUBJECT: the game did not arrive somewhere moving,
+         * it did not arrive. Measured on a truncated walk, where every
+         * signature row reads UNCLAIMED and the arrival velocity is simply
+         * absent.
+         */
+        const whole = Boolean(latch.envelope?.latched) && !latch.envelope?.partial;
+        rows.push({ side: 'game', name: 'latched', ok: whole,
+            detail: whole ? `whole at tick ${seam['latch.tick']}`
+                : `⛔ ${latch.envelope?.latched ? 'PARTIAL' : 'NOTHING LATCHED'}`
+                    + `${latch.envelope?.why ? ` — ${latch.envelope.why}` : ''}` });
+        if (!whole) {
+            reasons.push(`unlatched: ${latch.envelope?.latched
+                ? 'the latch is PARTIAL' : 'the run never latched a seam'}`);
+        }
+        const notCalm = whole ? (latchFindings ?? []).filter((r) => !r.ok) : [];
         rows.push({ side: 'game', name: 'calm', ok: notCalm.length === 0,
-            detail: notCalm.length
-                ? notCalm.map((r) => `${r.name} [${r.detail}]`).join('; ')
-                : `${(latchFindings ?? []).length - 1} signature row(s) latched at tick `
-                    + `${seam['latch.tick']}` });
+            detail: !whole ? 'n/a — nothing arrived to be calm (this row makes NO claim)'
+                : notCalm.length
+                    ? notCalm.map((r) => `${r.name} [${r.detail}]`).join('; ')
+                    : `${(latchFindings ?? []).length - 1} signature row(s) latched at tick `
+                        + `${seam['latch.tick']}` });
         if (notCalm.length) {
             reasons.push(`not-calm: ${notCalm.map((r) => r.name).join(', ')}`);
         }
@@ -356,4 +377,102 @@ export function certifyAgainstLatch({ latch = null, model = null, latchFindings 
 export function certificationCell(cert) {
     if (cert.level !== 'REFUSED') return cert.level;
     return `REFUSED: ${cert.reasons.join(' · ') || '(no reason recorded)'}`;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⚖ 54 (2) — THE TABLE A SEAL QUOTES
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓⛓⛓ **THE COLUMNS, AND WHOSE WORD EACH ONE IS.**
+ *
+ * ⚖ 54 (2): *"a `--table` mode: committed / model / game-latch per segment
+ * from a branch; a seal QUOTES it."* Every table in §30.6, §31.6, §32.5 and
+ * §33.3 was a hand transcription of a producer's stdout, and §33.2 is what
+ * happens when one of those columns is read as a verdict it never was. So the
+ * shape here is fixed by one rule: **a column says whose word it is, and a
+ * column nobody answered says `unasked` rather than nothing.**
+ *
+ * | column | whose word |
+ * |---|---|
+ * | `committed` | the tape ON DISK in the tree the table is run in |
+ * | `ref` | the tape at `--branch=<ref>`, when one is given |
+ * | `model` | the producer's own solve length TODAY |
+ * | `arrival` | the producer's `claimArrival` quantities |
+ * | `latch` | the GAME, out of the cache — never driven by this mode |
+ * | `cert` | `certifyAgainstLatch` over the two |
+ * | `walk` | `walkReport`'s five verdicts |
+ *
+ * ⛔ `--table` NEVER DRIVES. A table that could spend a GPU is a table nobody
+ * can run while thinking, and the whole point of ⚖ 54 (1)'s separate mode is
+ * that asking the game is a decision somebody makes on purpose.
+ */
+export const TABLE_COLUMNS = Object.freeze([
+    'chain', '#', 'segment', 'role', 'committed', 'ref', 'model',
+    'model arrival', 'game latch', 'certification', 'walk',
+]);
+
+/** One latch record, flattened for a cell. `null` in, `null` out. */
+export function latchCell(latch, hitBy) {
+    if (!latch) return null;
+    const seam = latch.envelope?.seam ?? {};
+    const v = seam['arrival.velocity'] ?? {};
+    return {
+        key: hitBy?.key ?? null,
+        era: hitBy?.era ?? null,
+        tick: seam['latch.tick'] ?? null,
+        level: seam.level ?? null,
+        x: seam.playerPositionX ?? null,
+        y: seam.playerPositionY ?? null,
+        vx: v.vx ?? null,
+        vy: v.vy ?? null,
+        hits: latch.hits ?? v.hits ?? null,
+        observations: latch.observations ?? null,
+    };
+}
+
+const cell = (v) => (v === null || v === undefined ? '—' : String(v));
+
+/**
+ * The markdown a seal quotes. ⛔ The `ref` column is present only when a ref
+ * was asked for: an empty column in a quoted table reads as a measurement that
+ * came back blank.
+ */
+export function renderTableMarkdown(rows, { ref = null } = {}) {
+    const cols = TABLE_COLUMNS.filter((c) => c !== 'ref' || ref);
+    const head = cols.map((c) => (c === 'ref' ? `@${ref}` : c));
+    const body = rows.map((r) => cols.map((c) => {
+        switch (c) {
+        case 'chain': return r.chain;
+        case '#': return r.role === 'headline' ? '—' : String(r.index + 1);
+        case 'segment': return `\`${r.segment}\``;
+        case 'role': return r.role;
+        case 'committed': return cell(r.committedTicks);
+        case 'ref': return cell(r.refTicks);
+        case 'model': return cell(r.modelTicks);
+        case 'model arrival': return r.arrival
+            ? `${r.arrival.hits}h/${r.arrival.deaths}d · L${r.arrival.level}`
+                + `${r.arrival.to === null || r.arrival.to === undefined
+                    ? '' : ` (→L${r.arrival.to})`}`
+                + ` · v=(${r.arrival.velocity?.vx}, ${r.arrival.velocity?.vy})`
+            : 'unasked';
+        case 'game latch': return r.latch
+            ? `t${r.latch.tick} · L${r.latch.level} · (${r.latch.x}, ${r.latch.y})`
+                + ` · v=(${r.latch.vx}, ${r.latch.vy}) · ${r.latch.hits}h`
+                + ` · ${r.latch.era}`
+            : '**unasked**';
+        case 'certification': return r.certification === 'REFUSED'
+            ? `**REFUSED: ${r.reasons.join(' · ')}**` : r.certification;
+        case 'walk': return r.verdict ?? 'unmeasured';
+        default: return '';
+        }
+    }));
+    const widths = head.map((h, i) => Math.max(h.length,
+        ...body.map((b) => b[i].length)));
+    const line = (xs) => `| ${xs.map((x, i) => x.padEnd(widths[i])).join(' | ')} |`;
+    return [
+        line(head),
+        `|${widths.map((w) => '-'.repeat(w + 2)).join('|')}|`,
+        ...body.map(line),
+    ].join('\n');
 }

@@ -177,6 +177,35 @@ describe('the certification column', () => {
         expect(certificationCell(c)).toMatch(/arrival\.velocity/);
     });
 
+    /**
+     * ⛔⛔ AN UNCLAIMED LATCH IS ITS OWN CONDITION. ⚖ 49's four all presuppose
+     * that the run ARRIVED; calling "it never arrived" a non-calm arrival is a
+     * true sentence about the wrong subject.
+     */
+    it('⛔ a walk that never LATCHED refuses as `unlatched`, not as not-calm', () => {
+        const c = certifyAgainstLatch({
+            latch: { hits: 0, observations: 41, envelope: { latched: false, seam: {} } },
+            model: modelOf(),
+            latchFindings: [{ name: 'latch: level', ok: false,
+                detail: 'UNCLAIMED — the run never latched a seam' },
+            { name: 'the latch is whole', ok: false, detail: '⛔ NOTHING LATCHED' }],
+        });
+        expect(c.level).toBe('REFUSED');
+        expect(certificationCell(c)).toMatch(/unlatched/);
+        expect(certificationCell(c)).not.toMatch(/not-calm/);
+        // ⛔ BY SIDE, not by name: the MODEL has a `calm` row too and it comes first.
+        expect(c.rows.find((r) => r.side === 'game' && r.name === 'calm').detail)
+            .toMatch(/makes NO claim/);
+    });
+
+    it('⛔ a PARTIAL latch refuses too, and says which', () => {
+        const c = certifyAgainstLatch({
+            latch: { hits: 0, envelope: { latched: true, partial: true,
+                why: 'a failure disarm', seam: {} } },
+            model: modelOf(), latchFindings: [] });
+        expect(certificationCell(c)).toMatch(/unlatched: the latch is PARTIAL/);
+    });
+
     it('⛔ a HIT refuses', () => {
         const c = certifyAgainstLatch({
             latch: latchOf({ hits: 1 }), model: modelOf(), latchFindings: calmFindings });
