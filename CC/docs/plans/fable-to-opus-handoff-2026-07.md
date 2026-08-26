@@ -4998,6 +4998,57 @@ only the branch rewrite (`r9/re-record-attempt-4` → four commits) and the L15
 design wait for them. Session 6's own misreads are in kickoff §1's session-6
 block.
 
+
+⛓⛓⛓ **SLICE P1b SHIPPED 2026-08-26 (`679861c88` … `6abc40463`, PUSHED) — ⚖ 54
+(3) DISCHARGED, AND WITH IT THE WHOLE OF (1)–(5). THE RE-RECORD PIPELINE IS
+REHEARSED BEFORE IT SPENDS A GPU.** Three re-record attempts stopped partway
+through a run, each *after* the browser had been driven for the boundaries
+before it, and every defect that stopped them was bookkeeping rather than
+physics. `rerecord-seedling-campaign.mjs` could not be exercised any other way,
+because it resolved its whole subject — the roster, the chains, the producers it
+shells, the Windows driver — from its own file location.
+
+It now builds ONE `context` at the top from argv and hands it to every stage,
+with today's values as the defaults. That change is **byte-inert**: the seven
+producer `--check` md5s all at their standing values BY NAME, and `--dry-run` /
+`--to=S0` / `--table` stdout with ZERO differing lines. ⚠ Under one mask that
+had to be measured rather than assumed — that stdout prints each producer's wall
+clock, so two runs at the SAME head before any edit differ on exactly four lines
+and nothing else; and the mask then had to be shown discriminating (a fake
+context on the real `--dry-run` moves 22 masked lines).
+
+`--rehearse` GENERATES a fake tree from the committed roster and runs **S0→S5
+over it in about ten seconds** — no browser, no Windows, no `:8000`, no read of
+the machine-global latch cache — over seven scenarios. The fake latches are
+derived by running `segmentBootFromLatch` BACKWARDS (its inverse,
+`seamBootFields`, was already exported beside it), and the generator PROVES each
+one before writing it: 38 fields compared, 0 moved at every boundary, with a
+mover nobody asked for a refusal. `check-seedling-rerecord-rehearsal.mjs` is the
+standing gate — **18/0, `cheap`** — and it claims each of the historical defects
+by a stable marker, so a scenario that stops being run reds by name instead of
+becoming a smaller green. It also fingerprints the machine-global latch cache
+around the run and requires it unchanged.
+
+⛔ **AND THE SLICE'S BEST FINDING ARRIVED BEFORE THE GATE DID.** Writing the
+scenarios surfaced a FOURTH wrong-subject guard, in S3's own stop condition:
+`if (failures)` over the GLOBAL counter, so any earlier red threw *"the
+projection diff names a tape this run was not licensed to move"* one line below
+its own licence check, which may have printed PASS. An earlier slice had swept
+the file and concluded the last such guard was fixed — true of the file it read,
+and this one was written in the same slice that added the stage. Fixed before
+its mutant.
+
+Standing values: **+1 row and nothing else** — rows 60 → 61, all 60 existing
+rows byte-identical including their own `measuredAt`. Five mutants owed, EIGHT
+spent, all red by name; the one worth keeping is the pair that separates the
+straight-through order row from the resume one, which is the historical defect
+of *a fix that only ever worked on the resume path*. No tape licence spent;
+`fixtures/` byte-identical at close. As-built kickoff **§41**.
+⇒ **NEXT: the re-record's FOURTH run (§40.9 / §42) — and run `--rehearse` at the
+rebased head BEFORE any browser stage; it costs ten seconds and it is the only
+thing that can say a bookkeeping defect is live before the GPU is spent. Then
+the 12c batch closes → P3 → P4 → L15 `shove`.**
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
