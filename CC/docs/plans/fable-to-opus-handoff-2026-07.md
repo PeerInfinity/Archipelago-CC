@@ -5124,6 +5124,17 @@ unattended — and it now owns the fixed-point `--check`, the latch key over
 rewritten fields, ⚖ 40's 25 ⊄ S4's 26, the replay teardown throw) → the FIFTH
 run → P4 → L15.** Six local `r9/*` branches now; none pushed, none rewritten.
 
+**⚖ RULING 56 (the user, 2026-08-26, on §42.10): the boundary-14 disagreement is
+INVESTIGATED, not adjudicated** — *"I don't want to just label one of the
+measurements as right and the other wrong without further investigation. If
+necessary, we can update the testing tools to provide more information about the
+game's internal state."* ⇒ the next R9 slice is a DIAGNOSIS (as-built §43): the
+offline diff of the two boot dictionaries for `r9-solve-0`, then — instrument
+changes LICENSED — a per-tick rng/seam dump on both drive paths to the first
+divergent tick, a mutant that names the mechanism, and only then a ⚖ on which
+value the record carries. The series stays on `r9/re-record-attempt-5`; the
+`--check` fixed-point repair (trap 769) is independent and may land first.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
