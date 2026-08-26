@@ -52,6 +52,17 @@
  *     the NETWORK rather than read off the source: the static walker in
  *     `check-maze-lab.mjs` matches `import('…')`, so the source cannot
  *     distinguish "lazy" from "loaded".
+ * 11. **THE ROOM-EDITOR DOOR** (editor integration, W3) — on BOTH pages, with
+ *     no `procgenLab:` vocabulary added: a SET DOCUMENT in over `load` (each
+ *     page SNIFFS it through the ONE classifier it already has, so it lands on
+ *     the SET arm's intake and not in the lab-level box), ONE room over
+ *     `navigate ?source=<arm>&room=n`, one edit through the PAGE'S OWN
+ *     control, a CLOSE — and the folded document back out over `levelChanged`
+ *     as a `labRoomEnvelope` whose `room` went from *n* to `null` and whose
+ *     record differs from the loaded one IN EXACTLY THAT ROOM. The panel's
+ *     TAKE button then holds it with zero panel changes.
+ *     ⛔ AND THE NEGATIVE: `?room=` with nothing held REFUSES in the page's own
+ *     box — not a throw, and claim 10 is what says it was not one.
  * 10. **ZERO CONSOLE ERRORS** at the end, host page and both frames.
  *
  * ⛔ EVERY WAIT IS ON A CONDITION, never on a readout merely EXISTING (traps
@@ -63,10 +74,14 @@
 
 import { chromium } from '@playwright/test';
 import { execFileSync } from 'node:child_process';
+import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { PRE_SWORD_PALETTE } from '../../frontend/modules/seedlingDemo/procgenPalette.js';
+import { buildLevelSet } from '../../frontend/modules/seedlingDemo/levelSetExporter.js';
+import { emptyLevel } from '../../frontend/modules/seedlingDemo/procgenLevel.js';
+import { validateLevelSet } from '../../frontend/modules/seedlingDemo/levelSetValidator.js';
 import { closeServer, serveRepoRoot } from './serveRepoRoot.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -190,6 +205,47 @@ console.log(`node: the DIRECTED Seedling payload carries `
 // eslint-disable-next-line no-console
 console.log(`node: the Seedling payload is seed ${seedlingPayload.seed} `
     + `(${seedlingPayload.biome}) at count ${seedlingPayload.bounds?.obstacleTarget}`);
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ CLAIM 11's TWO DOCUMENTS — one per page, both node-side anchors
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓ THE MAZE'S: a COMMITTED region pack, read off disk. ⛔ Read here rather
+ * than fetched by the page, because the comparison at the end of the round trip
+ * is *"the record differs from the document the host SENT"* — and a page that
+ * fetched its own copy would be compared against itself (a fixed point tests
+ * self-consistency, never correctness).
+ */
+const MAZE_PACK_PATH = 'frontend/region-libraries/demo-maze-pack.json';
+const mazeLibrary = JSON.parse(readFileSync(join(HERE, '../..', MAZE_PACK_PATH), 'utf8'));
+// eslint-disable-next-line no-console
+console.log(`node: the maze SET document is ${MAZE_PACK_PATH} — `
+    + `${mazeLibrary.library_id}, ${mazeLibrary.entries.length} entry(ies)`);
+
+/**
+ * ⛓ SEEDLING'S: a LINKED, multi-room generated set, built here out of
+ * `emptyLevel` rooms — `buildLevelSet({link: true})`, the exporter's own path
+ * and `check-seedling-editor-arm.mjs`' own fixture recipe. ⛔ Multi-room,
+ * because the claim is *"the record differs in EXACTLY that room"* and a
+ * one-room set cannot distinguish "that room" from "the document".
+ */
+const SEEDLING_ROOMS = 4;
+const seedlingSet = buildLevelSet(
+    Array.from({ length: SEEDLING_ROOMS }, (_, level) => emptyLevel({ level })),
+    { setId: 'lab-hosting-w3', link: true },
+).set;
+if (!validateLevelSet(seedlingSet).ok) {
+    throw new Error('check-procgen-lab-hosting: the node-built level set does not VALIDATE — '
+        + `${validateLevelSet(seedlingSet).errors.join(' | ')}. The page refuses it for the `
+        + 'same reason, so the row would be about the validator instead of about the door.');
+}
+// eslint-disable-next-line no-console
+console.log(`node: the Seedling SET document is ${seedlingSet.set_id}, `
+    + `${seedlingSet.rooms.length} linked room(s)`);
+
+/** ⛓ Which entry of a document a room-editor round trip is about. */
+const SUBJECT_ROOM = 1;
 
 /* ══════════════════════════════════════════════════════════════════════
  * THE BROWSER
@@ -919,6 +975,320 @@ try {
         '⛔ …and the frame SAYS its URL is not a reproduction — since slice 12 a DIRECTIVE '
         + 'raises that clause, because the bar carries no directive list',
         directedState.data.identity.slice(-140));
+
+    /* ══════════════════════════════════════════════════════════════════
+     * ⛓⛓⛓ CLAIM 11 — THE ROOM-EDITOR DOOR, ON BOTH PAGES
+     * ══════════════════════════════════════════════════════════════════
+     *
+     * EDITOR INTEGRATION W3. ⛔ Every message below is one of the SEVEN the
+     * `procgenLab:` vocabulary already had — the SET document rides inside
+     * `load.payload` (an OPAQUE object to `assertLoad`) and the folded document
+     * rides back inside `levelChanged.payload` as a `procgenCore/labRoomEnvelope`.
+     * A build that added a field would not be measured here at all; what IS
+     * measured is that the door works without one.
+     */
+
+    /** ⛓ Raise a lab panel's tab through GL's own API — `ui:activatePanel`
+     *  matches on componentType and BOTH lab panels are `procgenLabPanel`. */
+    const raiseTab = (iframeId) => page.evaluate((id) => {
+        const gl = window.goldenLayoutInstance;
+        const item = (gl?.getAllContentItems() ?? []).find(
+            (it) => it.isComponent && it.element?.querySelector?.(
+                `.procgen-lab-root[data-iframe-id="${id}"]`));
+        if (!item?.parent?.isStack) return false;
+        item.parent.setActiveComponentItem(item);
+        return true;
+    }, iframeId);
+
+    /** ⛓ SEND through the panel's own box — the same door claim 3 uses. */
+    const sendDocument = (iframeId, payload) => page.evaluate((a) => {
+        const node = [...document.querySelectorAll('.procgen-lab-root')]
+            .find((n) => n.dataset.iframeId === a.iframeId);
+        node.querySelector('[data-role="payload"]').value = JSON.stringify(a.payload);
+        node.querySelector('[data-role="send"]').onclick();
+    }, { iframeId, payload });
+
+    const navigateFrame = (substrate, iframeId, search) => page.evaluate((a) => {
+        window.eventBus.publish('procgenLab:navigate',
+            { substrate: a.substrate, iframeId: a.iframeId, search: a.search },
+            'procgenLabPanel');
+    }, { substrate, iframeId, search });
+
+    /** ⛓ The LAST envelope this frame announced, or null. */
+    const envelopeOf = (es, iframeId) => [...es].reverse().find(
+        (e) => e.name === 'procgenLab:levelChanged' && e.data?.iframeId === iframeId
+            && e.data?.payload?.kind === 'set-record')?.data?.payload ?? null;
+
+    /**
+     * ⛓⛓ ONE EDIT, THROUGH THE PAGE'S OWN CANVAS — and the cell is PROBED
+     * rather than predicted.
+     *
+     * ⛔ The room session paints the palette's currently selected type, and a
+     * click on a cell that ALREADY holds it is a NO-OP the page correctly
+     * reports as no edit (trap 263 — `applyEdit` stopped trusting the editor's
+     * own descriptor for exactly this). So the row clicks spread-out cells
+     * until the PAGE says an op landed, and FAILS if none of them does — which
+     * is a claim about the room editor being reachable at all, not a retry.
+     *
+     * ⛔ AND THE RECT IS RE-READ IN THE FRAME, IMMEDIATELY BEFORE EACH CLICK
+     * (trap 261): the identity line above the canvas grows as state changes.
+     */
+    const paintOneEdit = async (frame, opsNow, brushes = [null]) => {
+        const spots = [[0.5, 0.06], [0.5, 0.94], [0.06, 0.5], [0.94, 0.5],
+            [0.3, 0.3], [0.7, 0.7], [0.3, 0.7], [0.7, 0.3], [0.5, 0.5]];
+        for (const brush of brushes) {
+            if (brush) {
+                /**
+                 * ⛔ THROUGH THE PAGE'S OWN SELECT AND ITS OWN `change` EVENT.
+                 * `watch.html`'s room editor boots in `off` mode (nothing is
+                 * armed until a reader arms it), so a click with no tool is
+                 * correctly no edit — arming it any other way would be this
+                 * file deciding what the editor does.
+                 */
+                // eslint-disable-next-line no-await-in-loop
+                await frame.evaluate((b) => {
+                    for (const [id, value] of Object.entries(b)) {
+                        const el = document.getElementById(id);
+                        if (!el) continue;
+                        el.value = value;
+                        el.dispatchEvent(new Event('change', { bubbles: true }));
+                    }
+                }, brush);
+            }
+            // eslint-disable-next-line no-await-in-loop
+            const hit = await paintSpots(frame, opsNow, spots);
+            if (hit.ops > 0) return { ...hit, brush };
+        }
+        return { ops: 0, at: null, brush: null };
+    };
+
+    const paintSpots = async (frame, opsNow, spots) => {
+        for (const [fx, fy] of spots) {
+            // eslint-disable-next-line no-await-in-loop
+            await frame.evaluate((a) => {
+                const canvas = document.getElementById('canvas');
+                const rect = canvas.getBoundingClientRect();
+                canvas.dispatchEvent(new MouseEvent('click', {
+                    clientX: rect.left + a.fx * rect.width,
+                    clientY: rect.top + a.fy * rect.height,
+                    bubbles: true,
+                }));
+            }, { fx, fy });
+            // eslint-disable-next-line no-await-in-loop
+            const ops = await frame.evaluate(opsNow);
+            if (ops > 0) return { ops, at: [fx, fy] };
+        }
+        return { ops: 0, at: null };
+    };
+
+    /** ⛓ Which rooms of two documents differ — the claim is "EXACTLY one". */
+    const differingRooms = (before, after) => {
+        const n = Math.max(before.length, after.length);
+        const out = [];
+        for (let i = 0; i < n; i += 1) {
+            if (json(before[i]) !== json(after[i])) out.push(i);
+        }
+        return out;
+    };
+
+    /* ── 11a. THE NEGATIVE, FIRST: `?room=` with NOTHING held ──────────
+     *
+     * ⛔ RUN BEFORE THE DOCUMENT ARRIVES, because afterwards the arm HOLDS one
+     * and the refusal this claim is about is unreachable. It goes to the
+     * Seedling frame, whose EDIT arm has never been mounted in this run.
+     */
+    await navigateFrame('seedling', seed.iframeId, `source=edit&room=${SUBJECT_ROOM}`);
+    await settledFrame(seedFrame,
+        () => /\?room=/.test(document.getElementById('editSetNote')?.textContent ?? ''),
+        'the Seedling EDIT arm to REFUSE a ?room= with nothing held');
+    const refusedNote = await seedFrame.evaluate(
+        () => document.getElementById('editSetNote').textContent);
+    check(refusedNote.includes('⛔') && /holding NO level set/.test(refusedNote),
+        '⛓⛓ CLAIM 11a — `?room=` with NOTHING held REFUSES in the page\'s own box, by name',
+        refusedNote.slice(0, 120));
+    check(errors.length === 0,
+        '⛔ …and it is a REFUSAL, not a THROW — zero pageerrors so far, which is the half '
+        + 'a note alone cannot say', errors.slice(0, 2).join(' | '));
+
+    /* ── 11b. THE MAZE ROUND TRIP ──────────────────────────────────── */
+
+    await sendDocument(maze.iframeId, mazeLibrary);
+    await settledFrame(mazeFrame,
+        () => window.__mazeLab?.set?.library_id !== undefined
+            && window.__mazeLab?.set?.library_id !== null,
+        'the maze SET arm to HOLD the library the host sent');
+    const mazeHeld = await mazeFrame.evaluate(() => window.__mazeLab.set);
+    check(mazeHeld.library_id === mazeLibrary.library_id
+        && mazeHeld.rooms === mazeLibrary.entries.length,
+    '⛓⛓⛓ CLAIM 11b — a REGION LIBRARY sent over `procgenLab:load` landed on the SET arm\'s '
+        + 'intake, NOT in the lab-level box: the page SNIFFED it through its own '
+        + '`classifyDocument`',
+    `${mazeHeld.library_id} · ${mazeHeld.rooms} room(s) · source ${mazeHeld.source}`);
+    check(mazeHeld.openRoom === null,
+        '⛔ …and NO room is open yet — a load holds the document and nothing more; the room '
+        + 'is the host\'s NEXT message', json(mazeHeld.openRoom));
+
+    events = await settledTap((es) => envelopeOf(es, maze.iframeId) !== null,
+        'the maze frame to announce a set-record ENVELOPE');
+    const mazeFirst = envelopeOf(events, maze.iframeId);
+    check(mazeFirst.substrate === 'maze' && mazeFirst.room === null
+        && mazeFirst.record?.library?.entries?.length === mazeLibrary.entries.length,
+    '⛓⛓ …and the HOST heard it as `levelChanged` carrying the ENVELOPE — no new protocol '
+        + 'event and no new protocol field, the document rides inside the payload the '
+        + 'validator already accepts as opaque',
+    `kind=${mazeFirst.kind} room=${json(mazeFirst.room)} `
+        + `rooms=${mazeFirst.record.library.entries.length}`);
+
+    await raiseTab(maze.iframeId);
+    await navigateFrame('maze', maze.iframeId, `source=set&room=${SUBJECT_ROOM}`);
+    await settledFrame(mazeFrame, () => window.__mazeLab?.set?.openRoom !== null
+        && window.__mazeLab?.set?.mounted === true,
+    'the maze SET arm to open a ROOM SESSION on the room the host named');
+    const mazeOpen = await mazeFrame.evaluate(() => window.__mazeLab.set);
+    check(mazeOpen.openRoom === SUBJECT_ROOM,
+        `⛓⛓ …and \`?room=${SUBJECT_ROOM}\` opened THAT room, through the page's own `
+        + '`openSetRoomAt` — the same function the strip presses, so the base tag is the '
+        + 'page\'s own', `openRoom=${json(mazeOpen.openRoom)} base=${json(mazeOpen.openRoomBase)}`);
+    check(mazeOpen.openRoomBase?.kind === 'library-room',
+        '⛔ …and NOTHING NEW WAS MINTED: the base tag is `library-room`, the one the page '
+        + 'already had', json(mazeOpen.openRoomBase?.kind));
+
+    await settledFrame(mazeFrame, () => {
+        const r = document.getElementById('canvas')?.getBoundingClientRect();
+        return Boolean(r) && r.width > 0 && r.height > 0;
+    }, 'the maze room canvas to have a real size (the tab is raised)');
+    const mazePaint = await paintOneEdit(mazeFrame,
+        () => window.__mazeLab?.set?.openRoomOps ?? 0);
+    check(mazePaint.ops > 0,
+        '⛓⛓ …and ONE EDIT through the page\'s OWN control lands in the ROOM session',
+        `${mazePaint.ops} room op(s) after a click at ${json(mazePaint.at)}`);
+
+    await mazeFrame.evaluate(() => document.getElementById('editRoomClose').click());
+    await settledFrame(mazeFrame, () => window.__mazeLab?.set?.openRoom === null,
+        'the maze room session to CLOSE into the library');
+    events = await settledTap((es) => {
+        const env = envelopeOf(es, maze.iframeId);
+        return env !== null && env.room === null && json(env.record.library.entries)
+            !== json(es.find((e) => e.name === 'procgenLab:levelChanged'
+                && e.data?.iframeId
+                && e.data?.payload?.kind === 'set-record')?.data?.payload?.record?.library
+                ?.entries ?? null);
+    }, 'the maze frame to announce the CLOSED envelope');
+    const mazeClosed = envelopeOf(events, maze.iframeId);
+    check(mazeClosed.room === null,
+        '⛓⛓⛓ …and the CLOSE reaches the host as the envelope\'s `room` going back to `null` '
+        + '— a TRANSITION, never a count of edits (a close that folded a no-op moves no '
+        + 'count at all)', `room=${json(mazeClosed.room)}`);
+    const mazeMoved = differingRooms(mazeLibrary.entries, mazeClosed.record.library.entries);
+    check(json(mazeMoved) === json([SUBJECT_ROOM]),
+        `⛔ …and the record differs from the document the HOST SENT in EXACTLY room `
+        + `${SUBJECT_ROOM} — the ONE \`replace-room\` the close folded`,
+        `rooms moved: ${json(mazeMoved)}`);
+
+    const mazeTaken = await page.evaluate((iframeId) => {
+        const node = [...document.querySelectorAll('.procgen-lab-root')]
+            .find((n) => n.dataset.iframeId === iframeId);
+        node.querySelector('[data-role="take"]').onclick();
+        return node.querySelector('[data-role="payload"]').value;
+    }, maze.iframeId);
+    const mazeTakenDoc = JSON.parse(mazeTaken);
+    check(mazeTakenDoc.kind === 'set-record'
+        && json(mazeTakenDoc.record.library.entries) === json(mazeClosed.record.library.entries),
+    '⛓⛓ …and the PANEL\'S OWN TAKE button holds the edited document, with ZERO panel '
+        + 'changes — the envelope is what `levelChanged` already carried',
+    `${mazeTaken.length} bytes, kind=${mazeTakenDoc.kind}`);
+
+    /* ── 11c. THE SEEDLING ROUND TRIP, THROUGH THE OTHER PAGE'S ARM ── */
+
+    await sendDocument(seed.iframeId, seedlingSet);
+    await settledFrame(seedFrame, () => window.__editorEdit?.set?.set_id !== undefined
+        && window.__editorEdit?.set?.set_id !== null,
+    'the Seedling EDIT arm to HOLD the level set the host sent');
+    const seedHeld = await seedFrame.evaluate(() => window.__editorEdit.set);
+    check(seedHeld.set_id === seedlingSet.set_id && seedHeld.rooms === seedlingSet.rooms.length,
+        '⛓⛓⛓ CLAIM 11c — a LEVEL SET sent over `procgenLab:load` landed on the EDIT arm\'s '
+        + 'intake — the page SNIFFED it through `sniffLoadBox` instead of forcing '
+        + '`source=generate`, which is what it did before W3',
+        `${seedHeld.set_id} · ${seedHeld.rooms} room(s)`);
+
+    events = await settledTap((es) => envelopeOf(es, seed.iframeId) !== null,
+        'the Seedling frame to announce a set-record ENVELOPE');
+    const seedFirst = envelopeOf(events, seed.iframeId);
+    check(seedFirst.substrate === 'seedling' && seedFirst.room === null
+        && seedFirst.record?.set?.rooms?.length === seedlingSet.rooms.length,
+    '⛓⛓ …and the HOST heard it — before W3 this arm never announced at all, because '
+        + '`publishWatch` was reached only from `mountArm`\'s `finally`',
+    `kind=${seedFirst.kind} room=${json(seedFirst.room)} `
+        + `rooms=${seedFirst.record.set.rooms.length}`);
+
+    await raiseTab(seed.iframeId);
+    await navigateFrame('seedling', seed.iframeId, `source=edit&room=${SUBJECT_ROOM}`);
+    await settledFrame(seedFrame, () => window.__editorEdit?.baseKind === 'set-room'
+        && window.__editorEdit?.set?.openRoom !== null,
+    'the Seedling EDIT arm to open a ROOM SESSION on the room the host named');
+    const seedOpen = await seedFrame.evaluate(() => window.__editorEdit);
+    check(seedOpen.base?.room === SUBJECT_ROOM && seedOpen.base?.set_id === seedlingSet.set_id,
+        `⛓⛓ …and \`?room=${SUBJECT_ROOM}\` opened THAT room of THAT set, through the page's `
+        + 'own `openRoomAt` — the `set-room` base tag it already had, nothing new minted',
+        json(seedOpen.base));
+
+    await settledFrame(seedFrame, () => {
+        const r = document.getElementById('canvas')?.getBoundingClientRect();
+        return Boolean(r) && r.width > 0 && r.height > 0;
+    }, 'the Seedling room canvas to have a real size (the tab is raised)');
+    /**
+     * ⛓ THE BRUSHES ARE THE PAGE'S OWN OPTIONS, READ OFF ITS SELECT — never a
+     * list this file types. An `emptyLevel` room is mostly one terrain, so a
+     * brush that happens to match what is under the cursor paints nothing; the
+     * row walks the page's own vocabulary until ONE lands.
+     */
+    const seedBrushes = await seedFrame.evaluate(() => [...document
+        .getElementById('genEditTerrain').options].map((o) => ({
+        genEditTool: 'paint', genEditTerrain: o.value,
+    })));
+    const seedPaint = await paintOneEdit(seedFrame,
+        () => window.__editorEdit?.edits ?? 0, seedBrushes);
+    check(seedPaint.ops > 0,
+        '⛓⛓ …and ONE EDIT through the page\'s OWN control lands in the ROOM session',
+        `${seedPaint.ops} room op(s) after a click at ${json(seedPaint.at)} with `
+        + `${json(seedPaint.brush)} (${seedBrushes.length} brush(es) offered)`);
+
+    await seedFrame.evaluate(() => document.getElementById('editRoomClose').click());
+    /**
+     * ⛔ THE WAIT IS ON `set.openRoom`, NOT ON THE BASE TAG. `discardRoom()`
+     * clears the open-room INDEX and deliberately leaves the room's base tag
+     * standing — the canvas still shows that room, it is simply no longer a
+     * session the set is waiting on. A wait on `baseKind` would sit forever on
+     * a close that had already happened.
+     */
+    await settledFrame(seedFrame, () => window.__editorEdit?.set?.openRoom === null,
+        'the Seedling room session to CLOSE into the set');
+    events = await settledTap((es) => {
+        const env = envelopeOf(es, seed.iframeId);
+        return env !== null && env.room === null && env.record.set.rooms.some(
+            (r, i) => i === 0 || json(r) !== json(seedlingSet.rooms[i]));
+    }, 'the Seedling frame to announce the CLOSED envelope');
+    const seedClosed = envelopeOf(events, seed.iframeId);
+    check(seedClosed.room === null,
+        '⛓⛓⛓ …and the CLOSE reaches the host as the envelope\'s `room` going back to `null`',
+        `room=${json(seedClosed.room)}`);
+    const seedMoved = differingRooms(seedlingSet.rooms, seedClosed.record.set.rooms);
+    check(json(seedMoved) === json([SUBJECT_ROOM]),
+        `⛔ …and the record differs from the document the HOST SENT in EXACTLY room `
+        + `${SUBJECT_ROOM} — the ONE \`replace-room-xml\` the close folded`,
+        `rooms moved: ${json(seedMoved)}`);
+
+    const seedTaken = await page.evaluate((iframeId) => {
+        const node = [...document.querySelectorAll('.procgen-lab-root')]
+            .find((n) => n.dataset.iframeId === iframeId);
+        node.querySelector('[data-role="take"]').onclick();
+        return node.querySelector('[data-role="payload"]').value;
+    }, seed.iframeId);
+    const seedTakenDoc = JSON.parse(seedTaken);
+    check(seedTakenDoc.kind === 'set-record'
+        && json(seedTakenDoc.record.set.rooms) === json(seedClosed.record.set.rooms),
+    '⛓⛓ …and the PANEL\'S OWN TAKE button holds the edited document, with ZERO panel changes',
+    `${seedTaken.length} bytes, kind=${seedTakenDoc.kind}`);
 
     /* ── CLAIM 10: zero console errors ─────────────────────────────── */
     const benign = notFound.filter((u) => BENIGN_404.some((b) => new URL(u).pathname === b));
