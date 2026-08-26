@@ -14788,3 +14788,95 @@ field wastes a run while dropping one returns the wrong answer. The old keys are
 never deleted and never re-derived from the files, which is impossible; but when
 an old key hits, the tape that produced it is in hand, so the record is copied
 forward and the migration converges instead of merely decaying.
+
+### R9 slice P2: THE ECONOMIES MOVE ONTO THE MAINLINE — and the flag they hide behind was earned by a measurement, not by its name
+
+Two speed-ups for the solver had been sitting on a local branch for two days.
+One stops the bot walking round an item to reach the tile north of it before
+stepping back south; the other lets it walk while a defeated room's locked door
+fades instead of standing still for the hundred ticks the fade takes. Neither
+has anything to do with the dash permission that the rest of that branch turns
+on. They lived on the branch anyway, because the branch was the only place a
+change that moves a recorded walk was allowed to be.
+
+That is the arrangement this slice was asked to end: put solver changes on the
+mainline behind the roster-wide flag, so that the thing still waiting to be
+recorded is just the flag and the recordings. The instruction that came with it
+was the interesting half — do not gate anything on faith. Land the two changes
+un-gated first, measure whether they actually disturb the committed record, and
+only add a gate for what does, naming in the code the thing that forced it.
+
+They disturb it. Landed as they were written, five committed walks change
+length: an item-collection room drops a tick, the fading-door room drops a
+hundred and four, and three rooms on the second chain drop between twenty-five
+and fifty-seven each, taking that chain's headline walk from 2,186 ticks to
+2,000. Five of the seven scripts that re-derive those walks and compare them to
+what is on disk go from agreeing to disagreeing. This was not a surprise to the
+record — the same numbers were measured on the branch months of work ago, in a
+column labelled "the economies with the dash flag off" — but it had never been
+checked against the mainline as it stands today, three model fixes later, and
+now it has been, and three of the five agree to the digit.
+
+One of those five deserves separate mention, because of how quietly it moved. A
+script that exercises the early rooms prints the collection room's length as a
+line of information and does not compare it to anything; it reports success
+either way. Its fingerprint changed and its verdict did not. Anyone checking
+"did the producers stay green?" would have concluded the change was invisible.
+The fingerprint is the instrument; the exit code is not, and the difference
+between them is one of the two ways this slice could have gone wrong.
+
+The gate itself is small and its shape is decided by what the comparison
+actually reads. Both changes are switched by one permission that defaults to the
+existing flag, so there is still exactly one switch for the whole roster — a
+second switch would mean a second set of defaults for the preview and the drive
+to agree about, which is the thing the roster-wide ruling exists to prevent. The
+fading-door change needed three things turned off, not one: the walk, the length
+of the wait that replaces it, and — least obviously — the field it adds to the
+record it returns. The trace files beside each tape are compared byte for byte
+too, so a field carrying an empty value would have moved one of them on its own.
+
+With the gate in, all seven scripts are identical to their stored fingerprints
+again, and replaying every one of the hundred and forty-nine recorded tapes
+through the model produces exactly the same result as before, to the same
+checksum. That last measurement is reported for what it is rather than as a
+triumph: the solver is not reachable from the replay path at all, so that
+particular probe could not have detected these changes even if they had been
+live. Saying so is the point — a test that cannot tell two builds apart is not
+evidence about either.
+
+Turning the flag on for a moment, without committing it, answers the other half.
+Both changes come alive exactly as the branch measured them: the campaign chain
+solves in 3,326 ticks and the second chain's headline in 1,685, matching the two
+tables the earlier attempts recorded. Better, the pipeline's own table command,
+pointed at each of the two archive branches in turn, now prints the branch's
+thirteen re-recorded walks *and* the current tree's own answer for each — and
+they are the same number thirteen times out of thirteen. The tree reproduces two
+branches' worth of graphics-card time in about thirty seconds of arithmetic.
+
+The third question was whether a prose-only edit could come along too. A
+companion commit rewrites three rooms' one-line explanations, removing sentences
+about where the chain stopped that stopped being true when it grew. It cannot
+come along, and the reason is worth stating plainly: a room's explanation is
+interpolated into its tape's description, and the comparison that guards a tape
+is a byte comparison. Prose is not free to a producer. It *is* free to the
+graphics card, though — the cache key introduced in the previous slice drops the
+description, and all three edits leave the key untouched, so the rewrite costs no
+replay at all. It rides with the recordings, where it was always going to.
+
+The second way this slice could have gone wrong was in its own tests, and it
+did, briefly. The rows written to pin the new gate asserted what the solver does
+*by default* and compared it to the committed tape's length. Both halves are
+true today and both become false the moment the flag flips and the tapes are
+re-recorded — a failure no amount of re-recording could repair. A gate is a claim
+about two builds; it has to be written as two builds. The rows now name which
+build they are asking about and compare them to each other, and the same mistake
+turned out to be lurking one level down in a number that had looked like a
+constant: whether the bot arrives at the fading door before or after it opens
+depends on how fast the walk is, so it is zero ticks of waiting today and
+twenty-four with the dash permission on. What the mechanism actually promises is
+the subtraction, and that is what is pinned now.
+
+Running the whole file with the flag flipped, which is what caught it, also
+found two older rows with the same shape that nobody had run that way. They are
+written into the handover for the run that flips the flag, because no amount of
+re-recording repairs those either.
