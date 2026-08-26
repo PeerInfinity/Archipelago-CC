@@ -145,11 +145,22 @@ export function paletteFor(biome) {
     return palette;
 }
 
-/** The three arms. ⛔ Named, because `?source=` selects one and a typo must refuse. */
+/**
+ * The FOUR arms. ⛔ Named, because `?source=` selects one and a typo must refuse.
+ *
+ * ⛓⛓ EDITOR v3 E2c — **`SET` IS THE FOURTH, AND IT JOINS THE ENUM RATHER THAN
+ * BYPASSING IT.** The refusal in `readLabParams` reads `Object.values(SOURCES)`,
+ * so a new arm is one entry here and the typo message names it for free; a page
+ * that reached `?source=set` around that check would be an arm no link could
+ * be refused for. It edits a REGION LIBRARY (`mazeSetAdapter`) through the
+ * shared `procgenCore/setEditorView.mountSetEditor`, which is the same mount
+ * `watch.html` binds to Seedling — one toolkit, two substrates (plan §27.4).
+ */
 export const SOURCES = Object.freeze({
     GENERATE: 'generate',
     EDIT: 'edit',
     SOLVE: 'solve',
+    SET: 'set',
 });
 
 /**
@@ -204,6 +215,14 @@ export const DIRECTED_ANCHOR_TRIES = 12;
  *                        and is denominated in solver TICKS; these are two
  *                        different quantities and one word for both would be
  *                        the two-spellings failure at its most expensive.
+ *   ?library=            ⛓⛓ EDITOR v3 E2c — `?gen=`'s SIBLING, and it is a
+ *                        LOAD channel rather than a run parameter: it names a
+ *                        REGION LIBRARY the SET arm fetches and holds. ⛔ It is
+ *                        not `?gen=`: a library is not reproducible from a
+ *                        seed, so there is nothing to compare it against and
+ *                        the page TAKES IT AS IT STANDS (`validateRegionLibrary`
+ *                        is what refuses one). A fetch that is not `ok` refuses
+ *                        BY NAME.
  *
  * ⛓ `?skeleton=`         SLICE 5, and SHARED with watch.html through
  *                        `urlParams.readSkeleton`/`writeSkeletonParam`. The
@@ -276,6 +295,16 @@ export function readLabParams(search) {
         budget: { maxExpansions: intParam(q, 'expansions', DEFAULT_MAZE_BUDGET.maxExpansions) },
         /** A payload to REPRODUCE and check against — see `agreementWithPayload`. */
         gen: q.get('gen'),
+        /**
+         * ⛓⛓ EDITOR v3 E2c — **A REGION LIBRARY TO FETCH AND HOLD**, `?gen=`'s
+         * sibling. ⛔ Read and COPIED FORWARD by `writeLabParams` rather than
+         * rewritten: it is not a parameter this page OWNS (the writer's law is
+         * *"it rewrites the ones it owns and copies the rest"*), and the SET
+         * arm's readout says HOW the library it is holding arrived, so a paste
+         * after a `?library=` boot is a fact a reader can see rather than a bar
+         * quietly promising a document nobody is editing.
+         */
+        library: q.get('library'),
         /** RUN-ALL on load. `?run=1` is also how the step encoding is read. */
         run: q.get('run') === '1',
     };

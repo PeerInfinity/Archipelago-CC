@@ -246,6 +246,26 @@
     border: 1px solid #24242c; border-radius: 3px; }
   #labElementLegend .sw { width: 11px; height: 11px; border-radius: 2px; display: inline-block; }
   #labElementLegend b { color: #ff8fd0; }
+  /* ⛓⛓ EDITOR v3 E2c — THE SET ARM's boxes. ⛔ The class names are
+     `procgenCore/setEditorView.js`'s own (`setRooms`, `setReport`, `note bad`),
+     copied from watch.html's stylesheet rather than invented here: the mount
+     writes those classes and a page that styled different ones would show an
+     unstyled table while every readout said it was fine. */
+  .note.bad { color: #ff8080; }
+  #setPanel table.setRooms { border-collapse: collapse; font-size: 11px; width: 100%; }
+  #setPanel table.setRooms th { color: #8a8a98; text-align: left; font-weight: 600;
+    border-bottom: 1px solid #24242c; padding: 2px 6px; }
+  #setPanel table.setRooms td { padding: 2px 6px; border-bottom: 1px solid #15151a; }
+  #setPanel table.setRooms tr.sel td { background: #16222a; }
+  #setPanel table.setRooms button { font-size: 11px; padding: 0 5px; margin-right: 2px; }
+  #setPanel ul.setReport { margin: 4px 0; padding-left: 18px; font-size: 11px; }
+  #setPanel ul.setReport li.bad { color: #ff8080; }
+  /* ⛔ The strip is positioned so `editorView`'s overlay — which it appends to
+     the TARGET'S PARENT and sizes FROM the target — lands on top of it and not
+     against the viewport (§23.11 #5 cost two runs to learn on the other page). */
+  #editSetOverviewWrap { position: relative; overflow-x: auto; max-width: 100%; }
+  #editSetRoomForm, #editSetManifest { font-size: 11px; }
+  #editSetRoomForm .line, #editSetManifest .line { margin-bottom: 2px; }
   [hidden] { display: none !important; }
 </style>
 </head>
@@ -271,6 +291,14 @@
       <option value="generate">GENERATE — the Cloudberry loop, in this page</option>
       <option value="edit">EDIT — tiles and entities by hand</option>
       <option value="solve">SOLVE — the exact BFS oracle</option>
+      <!--
+        ⛓⛓⛓ EDITOR v3 E2c — THE FOURTH ARM. It edits a REGION LIBRARY (a
+        positionally addressed LIST of interchangeable maze rooms) through the
+        SAME `procgenCore/setEditorView.mountSetEditor` watch.html binds to
+        Seedling — one toolkit, two substrates. ⛔ The value joins
+        `mazeLab.SOURCES`, so `?source=` refuses a typo naming all four.
+      -->
+      <option value="set">SET — a REGION LIBRARY: rooms, links, rules, REPORT</option>
     </select>
   </div>
   <!-- ⛓ IS THIS PAGE RUNNING THE CODE THAT IS ON DISK? See mazeLabView.stamp. -->
@@ -426,6 +454,125 @@
         <span id="playNote" class="note"></span>
       </div>
       <div id="solveNote"></div>
+    </div>
+
+    <!--
+      ⛓⛓⛓ EDITOR v3 E2c — **THE SET ARM.** ⛔ Every `edit*` id below is the id
+      `procgenCore/setEditorView.js` looks up on the `doc` it is handed, and
+      they are the SAME ids `watch.html` carries (§27.3 #3) — which is why there
+      is no id map anywhere to go stale. The DOM SHAPES are copied from
+      watch.html's `#editOnly` block, not just the names: a `<select>` where the
+      mount fills options, a `<canvas tabindex="0">` for the strip (it OWNS its
+      keys — §21.5), a `<textarea>` for the rule tree.
+
+      ⛔ THE LOAD BOX IS THIS ARM'S OWN (`#labSetText` / `#labSetLoad` /
+      `#labSetUpload`) AND THAT IS A MEASUREMENT, not a preference: `render()`
+      calls `refreshSaveBox()` on EVERY render, which overwrites `#labText` with
+      `labPayload(state)` — the maze LEVEL's payload. A library pasted into the
+      shared box would be replaced by a level payload before the reader could
+      press Load. One intake path per document KIND, and two boxes because there
+      are two documents.
+    -->
+    <div id="setPanel" class="armPanel" hidden>
+      <div class="line">
+        <b>load a REGION LIBRARY</b>
+        <span class="note">— paste one, upload one, pick a served pack, or
+          <code>?library=&lt;url&gt;</code>. An OVERLAY (links · locations ·
+          rules) goes in the same box; a <code>.zip</code> BUNDLE carries
+          both.</span>
+      </div>
+      <div class="line">
+        <!-- ⛓ FILLED FROM `regionLibraryLoader.loadServedIndex`, FILTERED to the
+             packs whose `substrates` include `maze`. ⛔ The other two committed
+             packs (bounce, runner) are NOT offered: their payloads are not maze
+             worlds and every press on one would refuse. -->
+        <label for="labLibraryPick">served packs</label>
+        <select id="labLibraryPick"></select>
+        <button id="labLibraryLoad">LOAD that pack</button>
+        <button id="labSetLoad">Load from the box</button>
+        <label>Upload <input id="labSetUpload" type="file"
+          accept=".json,.zip,application/json,application/zip"></label>
+      </div>
+      <textarea id="labSetText" class="box" rows="6" spellcheck="false"
+        placeholder="paste a region library, an overlay, or press a served pack above"></textarea>
+      <div id="labSetLoadNote" class="note"></div>
+
+      <div class="line">
+        <span id="editSetIdentity" class="note"></span>
+      </div>
+      <div id="editSetRooms"></div>
+      <div class="line" id="editSetOverviewWrap">
+        <canvas id="editSetOverview" tabindex="0" width="1" height="1"></canvas>
+      </div>
+      <div class="line">
+        <button id="editSetGesture" disabled>CONNECT — click the SOURCE room, then the TARGET</button>
+        <label for="editSetExitList">the selected room's exits</label>
+        <select id="editSetExitList" disabled></select>
+        <!-- ⛔ A MAZE EXIT IS NOT POSITIONAL, so this is the target's `exit_id`
+             and not an ordinal: the DISTINCT set of exit ids the library holds,
+             because which room the second click lands on is not known until it
+             happens. A target whose entry has no such exit is refused BY NAME by
+             `connect`, listing what it does have. -->
+        <label for="editSetTargetExit">return door (`exit_id` in the TARGET)</label>
+        <select id="editSetTargetExit" disabled></select>
+        <label for="editSetOneWay">one_way</label>
+        <input type="checkbox" id="editSetOneWay">
+        <button id="editSetDisconnect" disabled>DISCONNECT the selected exit</button>
+      </div>
+      <!-- ⛓ The manifest form is `LIBRARY_FIELDS` and the room form is
+           `ROOM_FIELDS` — the adapter's own, derived once at mount. -->
+      <div id="editSetManifest"></div>
+      <div id="editSetRoomForm"></div>
+      <div class="line">
+        <label for="editSetRoom">the LOADED LIBRARY's rooms</label>
+        <select id="editSetRoom" disabled></select>
+        <button id="editRoomClose" disabled>CLOSE the open room INTO the library</button>
+        <button id="editSetAddRoom" disabled>ADD ROOM</button>
+      </div>
+      <div class="line">
+        <label for="editSetRuleTarget">access rule on</label>
+        <select id="editSetRuleTarget" disabled></select>
+        <button id="editSetRuleCommit" disabled>COMMIT the access rule</button>
+      </div>
+      <div class="line">
+        <textarea id="editSetRuleJson" rows="2" class="box"
+          placeholder='a Rule Builder tree, e.g. {"rule":"Has","args":{"item":"Sword"}}'>{"rule":"True_"}</textarea>
+      </div>
+      <div class="line"><span id="editSetRuleErrors" class="note"></span></div>
+      <div class="line"><span id="editSetRuleNote" class="note"></span></div>
+      <div class="line">
+        <!-- ⛓ A MAZE LOCATION IS AN `items[]` ORDINAL — a captured slot POSITION
+             (§26.4) — never an entity at pixels. The picker lists the entry's
+             own slots. -->
+        <label for="editSetLocEntity">mark a LOCATION</label>
+        <select id="editSetLocEntity" disabled></select>
+        <input id="editSetLocName" placeholder="location name (unique across the LIBRARY)">
+        <input id="editSetLocItem" placeholder="vanilla_item">
+        <button id="editSetMarkLocation" disabled>MARK</button>
+      </div>
+      <div class="line">
+        <button id="editSetReport" disabled>REPORT — validate, compile, and say what is FREE</button>
+        <button id="editSetUndo" disabled>UNDO the last LIBRARY edit</button>
+        <button id="editDownloadSet" disabled>Download the LIBRARY · OVERLAY</button>
+        <button id="editDownloadRules" disabled>Download rules.json</button>
+        <!--
+          ⛓⛓ EDITOR v3 E2c — ONE PRESS, ONE `.zip`. The members are the library,
+          the overlay, the compiled `rules.json` and the derived region atlas.
+          ⛔ `region-library` became `documentBundle`'s FIFTH kind in this
+          slice's first commit; before it, this button refused the maze's own
+          primary document by name.
+        -->
+        <button id="editDownloadBundle" disabled>Download the BUNDLE (.zip)</button>
+        <!-- ⛓ MINIFY is `stringifyRulesJson`'s `indent`. This page has no
+             settingsManager, so the BOX is the read and unchecked IS the
+             schema's default (2). ⛔ Nothing here ever writes a repo path. -->
+        <label for="editMinify" title="0-space output — about 45% of the indented bytes">
+          <input type="checkbox" id="editMinify"> MINIFY what this arm writes
+        </label>
+        <span id="editSetReportNote" class="note"></span>
+      </div>
+      <div class="line"><span id="editSetNote" class="note"></span></div>
+      <div id="editSetReportOut"></div>
     </div>
 
     <!-- ⛔ THE PAGE NEVER WRITES fixtures/ OR ANY REPO PATH. -->

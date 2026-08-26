@@ -86,6 +86,25 @@ import { normalizeSkeleton } from '../procgenCore/skeletonKinds.js';
  */
 import { applyGlossaryTips } from '../procgenDocs/glossaryTips.js';
 
+/**
+ * ⛓⛓⛓ EDITOR v3 E2c — **THE SET ARM.** The maze's page-side bindings are
+ * `mazeSetLab.js`'s (node-tested, and `setEditorView.test.js` reads the same
+ * list); the ADAPTER is E2a's; the intake doors are
+ * `procgenPipeline/regionLibraryLoader`'s own — `parseRegionLibrary` for text
+ * and `loadServedLibrary` for a committed pack, both returning
+ * `{ok, library, errors, warnings}`, so there is ONE validator door and not a
+ * second one written here.
+ */
+import { mazeLibraryRows, sniffSetDocument } from './mazeSetLab.js';
+import {
+    loadServedIndex, loadServedLibrary, parseRegionLibrary,
+} from '../procgenPipeline/regionLibraryLoader.js';
+import {
+    createMazeSetAdapter, createSetSession, emptyMazeOverlay, setRecord,
+} from './mazeSetAdapter.js';
+import { readBundle } from '../presets/documentBundle.js';
+import { loadJSZipBrowser } from '../presets/loadJSZipBrowser.js';
+
 // ⛓ ELEMENTS ARC 1 SLICE 3: the ONE area codec — the form, the identity line,
 // the URL bar and both CLIs spell a graph the same way.
 import {
@@ -120,6 +139,37 @@ const WORST_CASE_SOLVE_MS = 3;
  * button, so nothing that makes a claim depends on this number.
  */
 const PLAY_FRAME_MS = 110;
+
+/**
+ * ⛓ **ONE RESOLVER FOR EVERY REPO PATH THIS PAGE FETCHES**, against `frontend/`.
+ * ⛔ `import.meta.url`-relative and never a string built from `location`: the
+ * page is served from the repo root on the dev server and from `frontend/` on
+ * Pages, and a path assembled from the address bar would 404 on one of them.
+ * (`watchViewer.repoUrl` is the same idea; this page only ever needs the
+ * `frontend/` half, so it is the whole of it.)
+ */
+const FRONTEND = new URL('../../', import.meta.url).href;
+const frontendUrl = (path) => new URL(path, FRONTEND).href;
+
+/**
+ * ⛓⛓ **THE TWO OPTIONAL SCHEMAS, DEGRADED TO A NAMED ABSENCE** — `watchViewer`'s
+ * own rule (its `loadOptionalJson`): the rule box says only the SHAPE is checked
+ * without the rules schema, and the REPORT says the STRUCTURAL pass did not run
+ * without the atlas one. ⛔ A data file must not be a single point of failure
+ * for a control that works without it.
+ */
+const optionalJson = async (path, what) => {
+    try {
+        const res = await fetch(frontendUrl(path));
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return await res.json();
+    } catch (e) {
+        // eslint-disable-next-line no-console
+        console.warn(`${what} would not load (${e.message}) — the control that reads it `
+            + 'degrades to a NAMED absence and says so on the page.');
+        return null;
+    }
+};
 
 export function main() {
     // ⛓ P2: the summaries' and the two legend boxes' `title=` tooltips,
@@ -201,6 +251,48 @@ export function main() {
      * genuinely the same document.
      */
     let bridge = null;
+
+    /* ══════════════════════════════════════════════════════════════════
+     * ⛓⛓⛓ EDITOR v3 E2c — THE SET ARM'S STATE
+     * ══════════════════════════════════════════════════════════════════
+     *
+     * ⛔ **THE HELD DOCUMENTS AND THE SESSION ARE TWO DIFFERENT FACTS, AND BOTH
+     * ARE KEPT.** `heldLibrary` is the document AS LOADED — it is what
+     * `mazeSetAdapter`'s `librarySource` resolves a `library` base against, and
+     * that base CHECKS THE ID (⚖ ruling 2, §26.6), so a page that kept only the
+     * session's folded record would have nothing to answer with. `setSession`
+     * is where the EDITS live, and its `record()` is the one truth about what
+     * the arm is showing.
+     *
+     * ⛓ `setSource` is HOW the library arrived. It exists because `?library=`
+     * is COPIED FORWARD by the URL writer (it is not a parameter this page
+     * owns): a paste after a `?library=` boot leaves a bar naming a document
+     * nobody is editing, and this is the field that says so out loud instead of
+     * letting the address be the only account.
+     */
+    let setAdapter = null;
+    let setSession = null;
+    let heldLibrary = null;
+    let heldOverlay = null;
+    let setSource = null;
+    /** The LOAD box's own note — separate from `say`, which is the page's. */
+    let setLoadNote = '';
+    let setLoadBad = false;
+    /** The served index, FILTERED to the packs this arm can open. `null` until fetched. */
+    let servedRows = null;
+    /**
+     * ⛓⛓ The two optional schemas, fetched ONCE and only for the SET arm.
+     *
+     * ⛔ **EVERY PATH THAT CAN HOLD A LIBRARY AWAITS `ensureSetSchemas` FIRST**,
+     * and that is an ORDERING the code enforces rather than a convention:
+     * `createMazeSetAdapter` CAPTURES `rulesSchema` at construction, so a
+     * session opened before the fetch landed would check authored rules against
+     * nothing for the rest of its life — and the page would say the rule
+     * validated. Found by reading the capture, not by a row.
+     */
+    let rulesSchema = null;
+    let atlasSchema = null;
+    let setSchemasPromise = null;
 
     const say = (text, bad = false) => { message = text; messageBad = bad; };
 
@@ -398,10 +490,29 @@ export function main() {
      */
     const requireRefusal = () => state?.requireResult?.refused ?? null;
 
+    /**
+     * ⛓⛓⛓ EDITOR v3 E2c — **WHICH WORLD IS ON `#canvas`, IN ONE FUNCTION.**
+     *
+     * ⛔ In the SET arm the canvas belongs to the OPEN ROOM — a `mazeEditAdapter`
+     * session over ONE library entry — and with no room open there is nothing
+     * to draw. The level the other three arms hold is not this library's, and
+     * painting it under a library somebody is editing would be a picture of the
+     * wrong document beside a readout about the right one.
+     *
+     * ⛓ ONE function rather than two agreeing ones, for `overlayBlocks`' reason:
+     * `draw`, `cellAt` and the hover all ask THIS, so a build that drew one
+     * world and addressed another cannot exist.
+     */
+    const canvasWorld = () => (params?.source === SOURCES.SET ? null : state?.record ?? null);
+
     const draw = () => {
         const canvas = $('canvas');
         if (!state) return;
-        const w = state.record;
+        const w = canvasWorld();
+        if (!w) {
+            canvas.hidden = true;
+            return;
+        }
         canvas.width = w.width * TILE_PX;
         canvas.height = w.height * TILE_PX;
         const ctx = canvas.getContext('2d');
@@ -467,14 +578,24 @@ export function main() {
     const cellAt = (event) => {
         const canvas = $('canvas');
         const rect = canvas.getBoundingClientRect();
+        /**
+         * ⛓ EDITOR v3 E2c — THE DIMENSIONS COME FROM `canvasWorld()`, the same
+         * function `draw` paints from. ⛔ `state.record` was right while the
+         * canvas could only ever hold the lab's own level; under the SET arm it
+         * holds one library ENTRY, whose room is a different size, and a build
+         * that addressed cells by the lab level's dimensions would paint the
+         * wrong tile on any entry that is not 11x11.
+         */
+        const world = canvasWorld();
+        if (!world) return null;
         try {
             return tileAtPoint({
                 x: event.clientX - rect.left,
                 y: event.clientY - rect.top,
                 width: rect.width,
                 height: rect.height,
-                cols: state.record.width,
-                rows: state.record.height,
+                cols: world.width,
+                rows: world.height,
             });
         } catch {
             return null;
@@ -1148,6 +1269,219 @@ export function main() {
     };
 
     /* ══════════════════════════════════════════════════════════════════
+     * ⛓⛓⛓ EDITOR v3 E2c — THE SET ARM: ONE INTAKE PATH PER DOCUMENT KIND
+     * ══════════════════════════════════════════════════════════════════
+     *
+     * ⛔ **THE PAGE OWNS NO VALIDATOR.** Text goes through
+     * `regionLibraryLoader.parseRegionLibrary` and a served pack through
+     * `loadServedLibrary`; both return `{ok, library, errors, warnings}` and
+     * both run `validateRegionLibrary`, so the sentence a reader gets is the
+     * validator's own and there is exactly one of them. An OVERLAY is refused by
+     * `mazeSetAdapter.setRecord` (`assertOverlay` names the room, the exit and
+     * the rule), for the same reason.
+     */
+
+    const setNote = (text, bad = false) => { setLoadNote = text; setLoadBad = bad; };
+
+    /** ⛓ ONE promise, awaited by every path that can hold a library. */
+    const ensureSetSchemas = () => {
+        if (!setSchemasPromise) {
+            setSchemasPromise = Promise.all([
+                optionalJson('schema/rules.schema.json', 'the rules schema'),
+                optionalJson('schema/region-atlas.schema.json', 'the region-atlas schema'),
+            ]).then(([rules, atlas]) => { rulesSchema = rules; atlasSchema = atlas; });
+        }
+        return setSchemasPromise;
+    };
+
+    /**
+     * ⛓⛓ **OPEN A SESSION OVER THE HELD PAIR.** ⛔ Re-opened, never edited, when
+     * either document is replaced — the same law `adopt` follows for the level:
+     * a session that kept its op list across a new library would fold yesterday's
+     * presses onto today's rooms.
+     *
+     * ⛓ The `librarySource`/`overlaySource` the adapter is built with resolve
+     * ONLY the held documents and CHECK THE ID (⚖ ruling 2's shape) — a base
+     * naming a different `library_id` refuses by name rather than opening
+     * against whatever happens to be in hand.
+     */
+    const openSetSession = () => {
+        setAdapter = createMazeSetAdapter({
+            rulesSchema,
+            librarySource: (id) => (heldLibrary?.library_id === id ? heldLibrary : null),
+            overlaySource: (id) => (heldOverlay?.overlay_id === id ? heldOverlay : null),
+        });
+        const base = { kind: 'library', library_id: heldLibrary.library_id };
+        if (heldOverlay?.overlay_id) base.overlay_id = heldOverlay.overlay_id;
+        setSession = createSetSession(
+            setAdapter, setRecord(heldLibrary, heldOverlay ?? emptyMazeOverlay()), { base });
+    };
+
+    /**
+     * ⛓ HOLD A VALIDATED LIBRARY. Takes the loader's OWN result shape, so both
+     * doors (`parseRegionLibrary`, `loadServedLibrary`) arrive here unchanged.
+     */
+    const holdLibrary = (res, how) => {
+        if (!res.ok) {
+            setNote(`⛔ REFUSED — \`validateRegionLibrary\` says: ${res.errors.join(' · ')}`, true);
+            return false;
+        }
+        heldLibrary = res.library;
+        setSource = how;
+        try {
+            openSetSession();
+        } catch (e) {
+            /**
+             * ⛔ AN OVERLAY HELD FROM AN EARLIER LIBRARY MAY NOT FIT THIS ONE —
+             * `setRecord` refuses by name (a link naming a room the new library
+             * does not have). ⛓ The LIBRARY is kept and the OVERLAY is dropped,
+             * because the rooms are the document a person just chose and the
+             * overlay is the one that has gone stale; saying which is dropped is
+             * the whole of the fix.
+             */
+            heldOverlay = null;
+            openSetSession();
+            setNote(`LOADED ${heldLibrary.library_id} (${how}) — ⚠ the OVERLAY held before it `
+                + `was DROPPED: ${e.message}`, true);
+            return true;
+        }
+        setNote(`LOADED ${heldLibrary.library_id} (${how}) — `
+            + `${heldLibrary.entries.length} room(s)`
+            + (heldOverlay
+                ? `, overlay ${heldOverlay.overlay_id ?? '(unstamped)'}`
+                : ', NO overlay (⚠ every LINK, every location and every authored rule lives '
+                  + 'there — and for the maze the links ARE the graph, so the REPORT will '
+                  + 'refuse the export until one arrives or you draw them here)')
+            + (res.warnings.length ? ` ⚠ ${res.warnings.length} warning(s): ${res.warnings[0]}`
+                : ''));
+        return true;
+    };
+
+    /** ⛓ HOLD AN OVERLAY over the library already held. */
+    const holdOverlay = (overlay, how) => {
+        if (!heldLibrary) {
+            setNote('⛔ NOT LOADED — this is an OVERLAY and no LIBRARY is held. An overlay is '
+                + 'keyed by ROOM INDEX into a library, so there is nothing for it to be an '
+                + 'overlay OF until one is loaded. Load the library first.', true);
+            return false;
+        }
+        const previous = heldOverlay;
+        heldOverlay = overlay;
+        try {
+            openSetSession();
+        } catch (e) {
+            heldOverlay = previous;
+            openSetSession();
+            setNote(`⛔ NOT LOADED — this overlay does not fit \`${heldLibrary.library_id}\`: `
+                + `${e.message}`, true);
+            return false;
+        }
+        setNote(`LOADED an OVERLAY (${how}) — ${overlay.overlay_id ?? '(unstamped)'}, `
+            + `${(overlay.links ?? []).length} link(s) over `
+            + `${heldLibrary.entries.length} room(s)`);
+        return true;
+    };
+
+    /**
+     * ⛓⛓⛓ **THE ONE JSON DOOR.** `sniffSetDocument` says which document this is
+     * — through `documentBundle.classifyDocument`, the SAME classifier the
+     * bundle and Seedling's load box use — and a kind this arm does not load is
+     * NAMED rather than called "not a library" (a true sentence about the wrong
+     * subject).
+     */
+    const takeSetJson = (parsed, how) => {
+        const sniff = sniffSetDocument(parsed);
+        if (sniff.kind === 'library') return holdLibrary(parseRegionLibrary(JSON.stringify(parsed)), how);
+        if (sniff.kind === 'overlay') return holdOverlay(parsed, how);
+        setNote(`⛔ NOT LOADED — ${sniff.why}`, true);
+        return false;
+    };
+
+    /**
+     * ⛓⛓ **A `.zip` BUNDLE CARRIES BOTH.** ⛔ The library is taken FIRST and the
+     * overlay second, in that order and not the archive's: an overlay is keyed
+     * by room INDEX into a library, so applying one before its rooms are held
+     * would refuse for a reason that is about the ORDER rather than about the
+     * documents. ⚠ `region-library` became a bundle member kind in this slice's
+     * first commit; before it, `readBundle` reported the library in `notes` as
+     * unclassifiable and this branch would have found nothing to take.
+     */
+    const takeSetBundle = async (bytes, how) => {
+        const { members, notes } = await readBundle(bytes, {
+            jszip: await loadJSZipBrowser({ src: frontendUrl('libs/jszip/jszip.min.js') }),
+        });
+        const byKind = new Map(members.map((m) => [m.kind, m.doc]));
+        const skipped = members.map((m) => m.kind)
+            .filter((k) => k !== 'region-library' && k !== 'overlay');
+        if (!byKind.has('region-library') && !byKind.has('overlay')) {
+            setNote('⛔ NOTHING TO LOAD in this bundle — it carries '
+                + `${members.map((m) => m.kind).join(', ') || 'no recognised member'} and this `
+                + 'arm reads a REGION LIBRARY and its OVERLAY. '
+                + (notes.length ? notes.join(' | ') : ''), true);
+            return false;
+        }
+        let ok = true;
+        if (byKind.has('region-library')) {
+            ok = holdLibrary(parseRegionLibrary(JSON.stringify(byKind.get('region-library'))), how);
+        }
+        if (ok && byKind.has('overlay')) ok = holdOverlay(byKind.get('overlay'), how);
+        if (ok && skipped.length) {
+            setNote(`${setLoadNote} · ⚠ the ${skipped.join(' and ')} member(s) were NOT loaded: `
+                + 'this arm DERIVES both from the library and the overlay', setLoadBad);
+        }
+        return ok;
+    };
+
+    /** ⛓ The paste box and the file input, through the ONE door above. */
+    const loadSetFromBox = async () => {
+        await ensureSetSchemas();
+        let parsed;
+        try {
+            parsed = JSON.parse($('labSetText').value);
+        } catch (e) {
+            setNote(`⛔ NOT LOADED — this is not JSON (${e.message}). A \`.zip\` BUNDLE has to `
+                + 'arrive through Upload: a zip is bytes and this box is text.', true);
+            render();
+            return;
+        }
+        takeSetJson(parsed, 'paste');
+        render();
+    };
+
+    /**
+     * ⛓⛓ **THE SERVED PACKS, FILTERED TO WHAT THIS ARM CAN OPEN.**
+     * `mazeLibraryRows` drops the bounce and runner packs by their OWN declared
+     * `substrates` — offering them would be a picker whose rows refuse on the
+     * press, because `deserializeMazeWorld` has nothing to do with a bounce
+     * zone's payload.
+     */
+    const fillLibraryPick = () => {
+        const sel = $('labLibraryPick');
+        if (!sel) return;
+        sel.innerHTML = '';
+        for (const row of servedRows ?? []) {
+            sel.appendChild(new Option(row.label, row.file));
+        }
+        sel.disabled = (servedRows ?? []).length === 0;
+    };
+
+    /**
+     * ⛓ THE SET ARM'S OWN PANE — the LOAD box's note and the served picker.
+     * ⛔ It does NOT drive the set editor's own render: that mount owns its
+     * strip, its forms and its report and re-renders itself on every applied op
+     * (`onChange`), and a page that repainted it from here would redraw the
+     * whole strip on every hover.
+     */
+    const renderSetPanel = () => {
+        const note = $('labSetLoadNote');
+        if (note) {
+            note.textContent = setLoadNote || '— nothing loaded yet';
+            note.className = setLoadBad ? 'note bad' : 'note';
+        }
+        fillLibraryPick();
+    };
+
+    /* ══════════════════════════════════════════════════════════════════
      * RENDER
      * ══════════════════════════════════════════════════════════════════ */
 
@@ -1156,6 +1490,8 @@ export function main() {
         $('generatePanel').hidden = src !== SOURCES.GENERATE;
         $('editPanel').hidden = src !== SOURCES.EDIT;
         $('solvePanel').hidden = src !== SOURCES.SOLVE;
+        // ⛓ EDITOR v3 E2c — the fourth panel, hidden on exactly the same terms.
+        $('setPanel').hidden = src !== SOURCES.SET;
         $('source').value = src;
         fillForm();
         draw();
@@ -1188,6 +1524,7 @@ export function main() {
             renderEditPanel();
         }
         if (src === SOURCES.SOLVE) renderSolvePanel();
+        if (src === SOURCES.SET) renderSetPanel();
         refreshSaveBox();
 
         $('identity').textContent = describeState(state, lastSolve);
@@ -1253,6 +1590,35 @@ export function main() {
              *  outside the EDIT arm, where no tool is mounted. */
             editTool: tool?.tool ?? null,
             editClip: tool?.clip ? { w: tool.clip.w, h: tool.clip.h } : null,
+            /**
+             * ⛓⛓⛓ EDITOR v3 E2c — **THE SET ARM, AS A CHANNEL A ROW CAN READ.**
+             *
+             * ⛔ `null` until a LIBRARY is held, and that is not the same as
+             * "the arm is not mounted": `source` says HOW the document arrived,
+             * so a row can tell a `?library=` boot from a paste — which matters
+             * because `?library=` is COPIED FORWARD by the URL writer and a
+             * paste afterwards leaves the bar naming a document nobody is
+             * editing. ⛔ The counts are read off the SESSION's record, never
+             * off `heldLibrary`: the session is where the edits are, and a
+             * readout of the loaded document would report the library as it
+             * arrived while the strip showed the one being edited.
+             */
+            set: setSession ? {
+                source: setSource,
+                library_id: setSession.record().library.library_id ?? null,
+                overlay_id: setSession.record().overlay.overlay_id ?? null,
+                rooms: setSession.record().library.entries.length,
+                links: (setSession.record().overlay.links ?? []).length,
+                locations: Object.values(setSession.record().overlay.rooms ?? {})
+                    .reduce((n, r) => n + (r.locations ?? []).length, 0),
+                ops: setSession.ops().length,
+                opList: setSession.ops().map((o) => o.op),
+                loadNote: $('labSetLoadNote')?.textContent ?? '',
+                /** ⛓ WHAT THE PICKER OFFERS — the FILTER is the claim, not a count. */
+                servedOffered: (servedRows ?? []).map((r) => r.library_id),
+                /** ⛓ Which optional schema actually arrived — a NAMED absence. */
+                schemas: { rules: Boolean(rulesSchema), atlas: Boolean(atlasSchema) },
+            } : null,
             directives: (state.directives ?? []).map((d) => ({
                 instance: d.instance, outcome: d.outcome, keptKind: d.keptKind, at: d.at,
             })),
@@ -1374,6 +1740,83 @@ export function main() {
         // and from the same object — a second derivation for the host would be
         // a second answer to "what is this page showing".
         bridge?.announce();
+    };
+
+    /* ══════════════════════════════════════════════════════════════════
+     * ⛓⛓⛓ EDITOR v3 E2c — MOUNTING THE SET ARM
+     * ══════════════════════════════════════════════════════════════════ */
+
+    /**
+     * ⛓⛓ **THE TWO OPTIONAL SCHEMAS AND THE SERVED INDEX ARE FETCHED WHEN THIS
+     * ARM MOUNTS, AND ONLY THEN.** ⛔ Not at boot: a person who opened
+     * `?seed=3&count=4` never asked for a schema or a library index, and slice
+     * 3's §10.10(6) promised in writing that this page's module graph and its
+     * network are what a GENERATE load needs. ⚠ Every continuation goes through
+     * `lt.report`, because an arm can be retired while a fetch is in flight and
+     * a late `render()` would repaint a panel the page has moved off.
+     */
+    const primeSetArm = async (lt) => {
+        await ensureSetSchemas();
+        if (servedRows === null) {
+            try {
+                servedRows = mazeLibraryRows(await loadServedIndex(fetch, FRONTEND));
+            } catch (e) {
+                servedRows = [];
+                setNote(`⚠ the served library index would not load (${e.message}) — the picker `
+                    + 'is empty and PASTE, UPLOAD and `?library=` are unaffected', true);
+            }
+        }
+        lt.report('the SET arm was retired while its index was in flight', () => { render(); });
+    };
+
+    /**
+     * ⛓⛓ **ONE FILE INPUT, TWO SHAPES.** A `.zip` is sniffed by its own magic
+     * (`PK`), exactly as `presetUI` and `watchViewer` sniff theirs — never by
+     * the file's NAME, which a person may have changed and which says nothing
+     * about the bytes.
+     */
+    const uploadSetFile = async (file, lt) => {
+        await ensureSetSchemas();
+        const bytes = new Uint8Array(await file.arrayBuffer());
+        const isZip = bytes[0] === 0x50 && bytes[1] === 0x4b;
+        try {
+            if (isZip) await takeSetBundle(bytes, 'upload (.zip)');
+            else {
+                $('labSetText').value = new TextDecoder().decode(bytes);
+                takeSetJson(JSON.parse($('labSetText').value), 'upload');
+            }
+        } catch (e) {
+            setNote(`⛔ REFUSED — ${e.message}`, true);
+        }
+        lt.report('an upload finished after the SET arm was retired', () => { render(); });
+    };
+
+    const mountSetArm = (lt) => {
+        lt.on($('labSetLoad'), 'click', loadSetFromBox);
+        lt.on($('labSetUpload'), 'change', (e) => {
+            const file = e.target.files?.[0];
+            if (!file) return;
+            uploadSetFile(file, lt);
+            // ⛔ Cleared, or picking the SAME file twice fires no `change` event
+            //   and the second press would look like a page that stopped working.
+            e.target.value = '';
+        });
+        lt.on($('labLibraryLoad'), 'click', () => {
+            const file = $('labLibraryPick').value;
+            if (!file) {
+                setNote('⛔ no served pack is offered — the index names none whose `substrates` '
+                    + 'include `maze`', true);
+                render();
+                return;
+            }
+            ensureSetSchemas()
+                .then(() => loadServedLibrary(fetch, file, { basePath: FRONTEND }))
+                .then((res) => lt.report('a served pack arrived after the arm was retired', () => {
+                    holdLibrary(res, `served \`${file}\``);
+                    render();
+                }));
+        });
+        primeSetArm(lt);
     };
 
     /* ══════════════════════════════════════════════════════════════════
@@ -1687,6 +2130,14 @@ export function main() {
             lt.onRetire(() => { tool?.destroy(); tool = null; });
         }
 
+        /**
+         * ⛓⛓⛓ EDITOR v3 E2c — **THE SET ARM, ON THIS ARM'S OWN LIFETIME.** ⛔ Its
+         * LOAD controls, its served index and (next commit) the shared set-editor
+         * mount all ride `lt`, so leaving the arm detaches every one of them —
+         * the same retire-then-create the EDIT arm's tool follows.
+         */
+        if (source === SOURCES.SET) mountSetArm(lt);
+
         render();
     };
 
@@ -1744,7 +2195,50 @@ export function main() {
         return;
     }
 
+    /**
+     * ⛓⛓⛓ EDITOR v3 E2c — **`?library=` IS `?gen=`'s SIBLING, AND THE TWO
+     * FAILURE MODES ARE TOLD APART.**
+     *
+     * ⛔ A TRANSPORT failure is FATAL, exactly as `?gen=`'s is: the address
+     * NAMED a document, the page could not get it, and opening an arm with no
+     * library would be a page pretending the link said something else.
+     * ⛓ A CONTENT failure is NOT: the fetch worked and the document is what is
+     * wrong, so `validateRegionLibrary`'s own sentences go in the arm's LOAD
+     * box where every other refusal about a document goes, and the rest of the
+     * page still works. Two different facts, two different channels.
+     *
+     * ⚠ It is not `?gen=`: a library is not reproducible from a seed, so there
+     * is nothing to REPRODUCE-and-compare and the page takes it as it stands.
+     */
+    const bootLibrary = async (url) => {
+        let res;
+        try {
+            res = await fetch(url);
+        } catch (e) {
+            throw new Error(`?library=${url} — the fetch FAILED (${e.message}). ⛔ REFUSED `
+                + 'rather than opened on nothing: the address names a REGION LIBRARY, and an '
+                + 'arm with no library under a link that names one would be a page saying '
+                + 'something the address does not.');
+        }
+        if (!res.ok) {
+            throw new Error(`?library=${url} — HTTP ${res.status}. ⛔ REFUSED rather than `
+                + 'opened on nothing: the address names a REGION LIBRARY, and an arm with no '
+                + 'library under a link that names one would be a page saying something the '
+                + 'address does not.');
+        }
+        holdLibrary(parseRegionLibrary(await res.text()), `?library=${url}`);
+    };
+
     const boot = async () => {
+        /**
+         * ⛓ FIRST, because it is independent of the ladder: `?library=` fills
+         * the SET arm and `?seed=`/`?gen=` fill the other three, and a URL is
+         * allowed to carry both.
+         */
+        if (params.library) {
+            await ensureSetSchemas();
+            await bootLibrary(params.library);
+        }
         if (params.gen) {
             /**
              * ⛓⛓⛓ `?gen=` REPRODUCES A PAYLOAD AND CHECKS IT, which is a

@@ -64,7 +64,53 @@ describe('mazeLab — the URL, ONE reader and ONE writer', () => {
 
     it('⛔ refuses an unknown ?source= rather than falling back to GENERATE', () => {
         expect(() => readLabParams('?source=drive')).toThrow(MazeLabError);
-        expect(() => readLabParams('?source=drive')).toThrow(/is not one of \[generate, edit, solve\]/);
+        expect(() => readLabParams('?source=drive'))
+            .toThrow(/is not one of \[generate, edit, solve, set\]/);
+    });
+
+    /**
+     * ⛓⛓⛓ EDITOR v3 E2c — **THE FOURTH ARM JOINS THE ENUM**, which is why the
+     * row above now names four. ⛔ MUTANT: `?source=set` reached by bypassing
+     * the enum (a page-side `if (raw === 'set')` before the refusal) — the arm
+     * would open and a TYPO would still fall through to GENERATE, so the row
+     * asserts the ACCEPT and the REFUSAL against the SAME reader.
+     */
+    it('⛓ `?source=set` is the FOURTH arm and it is read by the same enum', () => {
+        expect(SOURCES.SET).toBe('set');
+        expect(readLabParams('?source=set').source).toBe(SOURCES.SET);
+        expect(readLabParams('?source=SET').source).toBe(SOURCES.SET);
+        expect(Object.values(SOURCES)).toEqual(['generate', 'edit', 'solve', 'set']);
+        // ⛔ …and a near-miss still refuses, naming all four.
+        expect(() => readLabParams('?source=sets')).toThrow(/\[generate, edit, solve, set\]/);
+    });
+
+    /**
+     * ⛓⛓ EDITOR v3 E2c — **`?library=` IS `?gen=`'s SIBLING.** ⛔ It is READ and
+     * COPIED FORWARD, never rewritten: it is not a parameter this page OWNS, and
+     * the writer's law is *"it rewrites the ones it owns and copies the rest"*.
+     * A press must not silently drop the address of the document the SET arm is
+     * holding — nor claim to own it.
+     */
+    it('⛓ `?library=` is read, survives a press, and duplicates still refuse', () => {
+        expect(readLabParams('').library).toBe(null);
+        expect(readLabParams('?library=/frontend/region-libraries/demo-maze-pack.json').library)
+            .toBe('/frontend/region-libraries/demo-maze-pack.json');
+        const q = new URLSearchParams(writeLabParams('?source=set&library=/x/y.json&seed=3', {
+            source: SOURCES.SET,
+            seed: 3,
+            biome: DEFAULT_MAZE_BIOME,
+            width: 11,
+            height: 11,
+            bounds: {
+                obstacleTarget: 2, triesPerStep: 4, saturationK: 2, anchorTriesPerCandidate: 3,
+            },
+            budget: { maxExpansions: 20000 },
+            step: 0,
+        }));
+        expect(q.get('library')).toBe('/x/y.json');
+        expect(q.get('source')).toBe('set');
+        expect(() => readLabParams('?library=/a.json&library=/b.json'))
+            .toThrow(/\?library= appears TWICE/);
     });
 
     it('⛔ refuses an unknown ?biome= and a non-integer bound BY NAME', () => {
