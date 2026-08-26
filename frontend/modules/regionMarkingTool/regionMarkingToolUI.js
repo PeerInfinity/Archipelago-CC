@@ -65,7 +65,14 @@ export class RegionMarkingToolUI {
         this.mapDoc = null;
         this.levelsById = new Map();
         this.levelId = null;
-        this.session = new AtlasSession(createEmptyAtlas({ mapSource: 'ogmo-extract' }));
+        // ⛓ `game` is SPELLED (EDITOR v3 E3b): `createEmptyAtlas` no longer
+        //   defaults it — and `atlas_id` with it — to 'seedling'. This panel
+        //   authors SEEDLING atlases (`MAP_DOCUMENT_URL` is `seedling-map.json`,
+        //   and `make-seedling-starter-atlas.mjs`, which drives this same model
+        //   headlessly, has always passed `game: 'seedling'` explicitly).
+        this.session = new AtlasSession(createEmptyAtlas({
+            game: 'seedling', mapSource: 'ogmo-extract',
+        }));
         this.selectedRegionId = null;
         this.selectedExitId = null;
         this.pendingExitKind = null;
@@ -382,6 +389,7 @@ export class RegionMarkingToolUI {
         // eslint-disable-next-line no-alert
         if (this.session.regions().length > 0 && !window.confirm('Discard the current atlas?')) return;
         this.session = new AtlasSession(createEmptyAtlas({
+            game: 'seedling',
             mapSource: 'ogmo-extract',
             mapDocument: MAP_DOCUMENT_URL.split('/').pop(),
             tileSize: this.mapDoc?.tile_size ?? 16,

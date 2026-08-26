@@ -85,9 +85,31 @@ export function rectBounds(from, to) {
     return { x, y, w: Math.abs(to[0] - from[0]) + 1, h: Math.abs(to[1] - from[1]) + 1 };
 }
 
+/**
+ * ⛓⛓⛓ **`game` IS REQUIRED — EDITOR v3 E3b, §26.9.**
+ *
+ * ⛔ It defaulted to `'seedling'`, and so did `atlas_id`, which took it from
+ * `game`. That was harmless while Seedling was the only derivation and a
+ * LANDMINE the moment there were two: E2a's maze derivation had to work around
+ * it by deriving `game` from the entries' own `substrate`, and a caller that
+ * simply forgot would have produced a maze atlas labelled `seedling` — a
+ * document that VALIDATES and names the wrong game
+ * ([[feedback_fallback_reinstates_the_defect]]).
+ *
+ * ⚠ THE DEFAULT WAS NOT REPLACED BY A BETTER DEFAULT. There is no substrate
+ * this module can guess: the answer is the caller's and the refusal says so.
+ */
 export function createEmptyAtlas({
-    game = 'seedling', name = '', description = '', tileSize = 16, mapDocument = null, mapSource = null,
+    game = null, name = '', description = '', tileSize = 16, mapDocument = null, mapSource = null,
 } = {}) {
+    if (typeof game !== 'string' || game === '') {
+        throw new Error('createEmptyAtlas: `game` is REQUIRED and names the substrate this atlas '
+            + `describes, got ${JSON.stringify(game)}. ⛔ It used to default to "seedling" — and `
+            + 'so did `atlas_id`, which is built from it — which was harmless while Seedling was '
+            + 'the only derivation and silently mislabelled every atlas once there were two. '
+            + 'Pass the substrate: `\'seedling\'`, the maze library\'s own entries\' '
+            + '`substrate`, or whatever this document is of.');
+    }
     // Built in the order the schema documents, so a saved atlas reads
     // top-down: what it is, then where its coordinates live, then the map.
     const atlas = {
@@ -107,8 +129,20 @@ export function createEmptyAtlas({
 }
 
 export class AtlasSession {
+    /**
+     * ⚠ **AN EMPTY SESSION NEEDS A `game` TOO, AND IS TOLD SO** (E3b). This
+     * used to call `createEmptyAtlas()` with no arguments and get a document
+     * labelled `seedling`; now the refusal names the constructor the caller
+     * actually has to reach for, because the alternative — a default here —
+     * would be the same landmine one layer up.
+     */
     constructor(atlas) {
-        this.atlas = atlas ?? createEmptyAtlas();
+        if (atlas === undefined || atlas === null) {
+            throw new Error('AtlasSession: no atlas was given, and an EMPTY one cannot be built '
+                + 'without naming its `game` (E3b — `createEmptyAtlas` no longer defaults it to '
+                + '"seedling"). Pass a document, or `new AtlasSession(createEmptyAtlas({game}))`.');
+        }
+        this.atlas = atlas;
         // The id the content hash is appended to. Taken from the loaded
         // document with any prior hash stripped, so a save never grows a chain
         // of stale suffixes.

@@ -5,6 +5,10 @@
 // merely reported: '__' in ids, an entrance off its exit span, a sub_region on
 // a region that has no subgraph (and a missing one on a region that does), and
 // a defaulted `bidirectional`.
+import { readFileSync, readdirSync } from 'node:fs';
+import { join, relative } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 import { describe, it, expect } from 'vitest';
 
 import {
@@ -423,5 +427,194 @@ describe('saving', () => {
         const before = s.toDocument().atlas_id;
         s.addLocation('hall', { name: 'Hall - Second', tile: [6, 5], vanilla_item: 'Health' });
         expect(s.toDocument().atlas_id).not.toBe(before);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ EDITOR v3 E3b — `game` IS REQUIRED, AND EVERY CALLER PASSES ONE
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('⛔⛔ `createEmptyAtlas` REFUSES a nameless `game`, and the repo has no such caller', () => {
+    it('⛔ the refusal names the parameter and the landmine it replaces', () => {
+        expect(() => createEmptyAtlas()).toThrow(/`game` is REQUIRED/);
+        expect(() => createEmptyAtlas({})).toThrow(/`game` is REQUIRED/);
+        expect(() => createEmptyAtlas({ tileSize: 16 })).toThrow(/used to default to "seedling"/);
+        expect(() => createEmptyAtlas({ game: '' })).toThrow(/`game` is REQUIRED/);
+        // ⛓ …and a named one still builds the same document, `atlas_id` included
+        const atlas = createEmptyAtlas({ game: 'maze', tileSize: 8 });
+        expect(atlas.game).toBe('maze');
+        expect(atlas.atlas_id).toBe('maze');
+    });
+
+    /**
+     * ⛓ An EMPTY session used to build a `seedling`-labelled atlas silently.
+     * It now refuses and names the constructor the caller has to reach for —
+     * a default here would be the same landmine one layer up.
+     */
+    it('⛔ `new AtlasSession()` with no document refuses rather than inventing one', () => {
+        expect(() => new AtlasSession()).toThrow(/no atlas was given/);
+        expect(() => new AtlasSession(null)).toThrow(/no atlas was given/);
+        expect(new AtlasSession(createEmptyAtlas({ game: 'maze' })).atlas.game).toBe('maze');
+    });
+
+    /**
+     * ⛔⛔⛔ **THE SWEEP — AND IT IS THE PIN THAT MATTERS, because a caller
+     * missed is a CRASH in a page no node row can see.** Every
+     * `createEmptyAtlas(` call site in the repo must pass a `game`, and every
+     * `new AtlasSession(` must be handed something. The row LISTS the sites it
+     * found, so a scan that silently stopped matching would be visible as a
+     * count rather than as a pass.
+     *
+     * ⛓ The DEFINITION in `atlasSession.js` is excluded by the `function`
+     * prefix; everything else is a call. The argument text is taken by
+     * BALANCING PARENTHESES rather than by a regex to the next `)`, because
+     * every real call nests one.
+     *
+     * ⛔ **WHAT THE SWEEP DOES NOT COVER, SAID OUT LOUD:** THIS FILE. It is the
+     * one that DRIVES the refusal, so it deliberately holds calls with no
+     * `game` (`createEmptyAtlas()`, `new AtlasSession()`) that the sweep would
+     * have to flag. Its own real construction is covered by every other row
+     * here. ⛓ The pattern is also assembled from pieces so the scan cannot
+     * match the scanner.
+     */
+    it('⛔ every `createEmptyAtlas(` / `new AtlasSession(` site in the repo passes a substrate', () => {
+        const root = fileURLToPath(new URL('../../..', import.meta.url));
+        const files = [];
+        const walk = (dir) => {
+            for (const e of readdirSync(dir, { withFileTypes: true })) {
+                if (e.name === 'node_modules' || e.name.startsWith('.')) continue;
+                const full = join(dir, e.name);
+                if (e.isDirectory()) walk(full);
+                else if (/\.(js|mjs|html)$/.test(e.name)) files.push(full);
+            }
+        };
+        for (const top of ['frontend', 'scripts']) walk(join(root, top));
+        expect(files.length).toBeGreaterThan(100);
+
+        /** The text between the balanced parentheses that start at `open`. */
+        const argsAt = (src, open) => {
+            let depth = 0;
+            for (let i = open; i < src.length; i += 1) {
+                if (src[i] === '(') depth += 1;
+                else if (src[i] === ')') {
+                    depth -= 1;
+                    if (depth === 0) return src.slice(open + 1, i);
+                }
+            }
+            return null;
+        };
+
+        // ⛓ assembled, so the scanner is not one of its own findings
+        const SITE_RE = new RegExp(
+            `(function\\s+)?createEmpty${'Atlas'}\\s*\\(|new\\s+Atlas${'Session'}\\s*\\(`, 'g',
+        );
+        const SELF = 'regionMarkingTool/atlasSession.test.js';
+        /**
+         * ⛓ Comments and string literals are BLANKED (length preserved, so line
+         * numbers survive) before matching. A docblock that mentions the call,
+         * or a refusal message that spells the fix, is prose about the call and
+         * not a call — and this file's own refusal message spells exactly that.
+         */
+        const codeOnly = (src) => {
+            let out = '';
+            let i = 0;
+            while (i < src.length) {
+                const c = src[i];
+                const two = src.slice(i, i + 2);
+                const blankTo = (end) => {
+                    const chunk = src.slice(i, end);
+                    out += chunk.replace(/[^\n]/g, ' ');
+                    i = end;
+                };
+                if (two === '/*') {
+                    const end = src.indexOf('*/', i + 2);
+                    blankTo(end === -1 ? src.length : end + 2);
+                } else if (two === '//') {
+                    const end = src.indexOf('\n', i);
+                    blankTo(end === -1 ? src.length : end);
+                } else if (c === '"' || c === "'" || c === '`') {
+                    let j = i + 1;
+                    while (j < src.length && src[j] !== c) j += src[j] === '\\' ? 2 : 1;
+                    blankTo(Math.min(j + 1, src.length));
+                } else {
+                    out += c;
+                    i += 1;
+                }
+            }
+            return out;
+        };
+        const sites = [];
+        for (const file of files) {
+            const rel = relative(root, file);
+            if (rel.endsWith(SELF)) continue;
+            // ⛔ READ AS TEXT, NOT THROUGH `grep` — see `NUL_BEARING` below.
+            const raw = readFileSync(file, 'utf8');
+            // ⛓ cheap prefilter: only the handful of files that mention the
+            //   names at all are worth tokenising (1,480 files → 10).
+            if (!raw.includes(`createEmpty${'Atlas'}`) && !raw.includes(`Atlas${'Session'}`)) continue;
+            const src = codeOnly(raw);
+            for (const m of src.matchAll(SITE_RE)) {
+                if (m[1]) continue;                       // the DEFINITION, not a call
+                const line = src.slice(0, m.index).split('\n').length;
+                const args = argsAt(src, m.index + m[0].length - 1);
+                expect(args, `${rel}:${line} — unbalanced parentheses`).not.toBe(null);
+                const kind = m[0].startsWith('new') ? 'AtlasSession' : 'createEmptyAtlas';
+                const ok = kind === 'createEmptyAtlas'
+                    ? /\bgame\b/.test(args)
+                    : args.trim() !== '';
+                sites.push({ rel, line, kind, ok, args: args.trim().slice(0, 60) });
+            }
+        }
+
+        const bad = sites.filter((x) => !x.ok);
+        expect(bad.map((x) => `${x.rel}:${x.line} ${x.kind}(${x.args})`)).toEqual([]);
+        // ⛔ NOT VACUOUS: both kinds are present and the count is real. If this
+        //   number moves, a call site was added or removed — read the list.
+        expect(sites.filter((x) => x.kind === 'createEmptyAtlas').length).toBeGreaterThanOrEqual(6);
+        expect(sites.filter((x) => x.kind === 'AtlasSession').length).toBeGreaterThanOrEqual(7);
+        expect(sites.some((x) => x.rel.includes('mazeRoom'))).toBe(true);
+        expect(sites.some((x) => x.rel.includes('seedlingDemo'))).toBe(true);
+        expect(sites.some((x) => x.rel.startsWith('scripts/'))).toBe(true);
+    });
+
+    /**
+     * ⛔⛔⛔ **WHY THE SWEEP ABOVE READS FILES INSTEAD OF ASKING `grep` — AND
+     * THE MEASUREMENT THAT MADE IT NECESSARY.**
+     *
+     * `regionMarkingToolUI.js` — the region-marking tool's own panel, tracked
+     * and not ignored — held TWO `createEmptyAtlas` calls with no `game`, and
+     * E3b's first sweep of the repo reported the file CLEAN. Twice. The file
+     * carries **3 stray NUL bytes**, so `grep` classifies it as BINARY, and a
+     * `grep -I` (which this repo's tooling passes) then SKIPS THE WHOLE FILE
+     * SILENTLY — zero hits, exit 1, no warning. `grep -a` finds it.
+     *
+     * ⇒ The sweep row is `readFileSync`-based on purpose, and this row PINS the
+     * hazard so it is a fact under test rather than a comment: these files exist,
+     * and any future census that shells out to `grep` without `-a` will miss
+     * them. ⚠ The LIST is not pinned — files gain and lose stray bytes — but
+     * that it is NOT EMPTY is, because an empty list would mean the hazard had
+     * been fixed and this row could retire.
+     */
+    it('⛔ tracked sources carrying NUL bytes exist, and `grep` skips them SILENTLY', () => {
+        const root = fileURLToPath(new URL('../../..', import.meta.url));
+        const nulBearing = [];
+        const walk = (dir) => {
+            for (const e of readdirSync(dir, { withFileTypes: true })) {
+                if (e.name === 'node_modules' || e.name.startsWith('.')) continue;
+                const full = join(dir, e.name);
+                if (e.isDirectory()) walk(full);
+                else if (/\.(js|mjs)$/.test(e.name)) {
+                    const buf = readFileSync(full);
+                    if (buf.includes(0)) nulBearing.push(relative(root, full));
+                }
+            }
+        };
+        for (const top of ['frontend', 'scripts']) walk(join(root, top));
+        expect(nulBearing.length).toBeGreaterThan(0);
+        // ⛓ the one this slice was bitten by is among them
+        expect(nulBearing).toContain('frontend/modules/regionMarkingTool/regionMarkingToolUI.js');
+        // ⛓ …and it is a HANDFUL, not the corpus — so "grep is unreliable here"
+        //   is a named exception rather than a reason to distrust every scan.
+        expect(nulBearing.length).toBeLessThan(20);
     });
 });

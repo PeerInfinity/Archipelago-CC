@@ -323,7 +323,15 @@ export function deriveAtlas(rooms, overlay = {}, deps = {}) {
     const neverEnter = overlay.neverEnter?.levels ?? [];
     const neverEnterCite = overlay.neverEnter?.cite ?? {};
 
-    const session = new AtlasSession(createEmptyAtlas({ tileSize, ...(deps.atlas ?? {}) }));
+    /**
+     * ⛓ `game: 'seedling'` IS SPELLED, not defaulted (E3b, §26.9). It is FIRST
+     * so `deps.atlas` still overrides it — a caller deriving into a differently
+     * named document (the editor's `seedling-watch-edit`, the arm's own) still
+     * wins, which is the behaviour every existing caller already relies on.
+     */
+    const session = new AtlasSession(createEmptyAtlas({
+        game: 'seedling', tileSize, ...(deps.atlas ?? {}),
+    }));
 
     // Regions first, so a connection can name any of them.
     for (const room of ordered) {
