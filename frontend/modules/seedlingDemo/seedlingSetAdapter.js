@@ -219,6 +219,30 @@ export function deriveAtlasOf(record, deps = {}) {
         derived = deriveAtlas(rooms, overlayToDeriveInput(record.overlay), {
             resolveCondition: (condition) => condition,
             ...deps,
+            /**
+             * ⛓⛓⛓ **EDITOR v3 E5 — THE MANIFEST'S `named_rooms` REACHES THE
+             * DERIVATION, AND ONLY DOWN THIS PATH** (plan §27.6; §23.8's hole).
+             *
+             * A `named_rooms` arrival is a connection nothing in the room data
+             * expresses: `linksOf` sees a transition ENTITY, and this is a
+             * manifest fact one entity's AS3 behaviour dereferences. Vanilla's
+             * `tentacle_beast_mouth` is the ONLY thing in the whole 116 that
+             * reaches `level_58`, which is why opening the real game in the set
+             * editor REFUSED its export with an unreachable region.
+             *
+             * ⛔ **AFTER THE SPREAD, DELIBERATELY.** `deriveAtlasOf`'s subject
+             * IS the record, so the record's own manifest is the answer — a
+             * `deps.namedRooms` from a caller would be a second authority for a
+             * field the set already carries, and the two could disagree about
+             * the document in the caller's own hand.
+             *
+             * ⛔ **AND THE PLAYTHROUGH GENERATOR DOES NOT COME THROUGH HERE.**
+             * `make-seedling-playthrough-rules.mjs` calls `deriveAtlas`
+             * directly with no `namedRooms`, so the committed atlas keeps the
+             * same hole and its bytes do not move. The split is the point: the
+             * EDITOR gains the arrival, the committed preset is untouched.
+             */
+            namedRooms: record?.set?.named_rooms ?? null,
         });
         const { atlas, applied } = applyOverlayRules(derived.atlas, exitRulesByRoom(record.overlay));
         return { ...derived, atlas, rulesApplied: applied };

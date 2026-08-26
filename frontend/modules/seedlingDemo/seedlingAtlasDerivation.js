@@ -56,6 +56,7 @@
  */
 
 import { AtlasSession, createEmptyAtlas } from '../regionMarkingTool/atlasSession.js';
+import { NAMED_ROOMS } from './levelSetValidator.js';
 
 /**
  * ⛓ THE THREE LINK TAGS, and why every link is ONE-WAY.
@@ -96,6 +97,42 @@ export const regionIdFor = (level) => `level_${level}`;
 export const levelName = (id) => `Level ${String(id).padStart(3, '0')}`;
 export const outExitId = (e) => `out_${e.type}_${e.x}_${e.y}`;
 export const inExitId = (from, e) => `in_L${from}_${e.x}_${e.y}`;
+/**
+ * ⛓⛓ EDITOR v3 E5 — **THE ARRIVAL ID OF A `named_rooms` WARP, AND WHY THE KEY
+ * IS IN IT.** `inExitId` names an arrival by the room it came FROM and the
+ * pixel it lands on, which is unique for a link entity because a link's
+ * arrival is its own `@playerx/@playery`. A manifest arrival is the OPPOSITE
+ * shape: ONE tile named by the manifest, reached from every room that holds
+ * the trigger element — vanilla's `bloody_seed_ending` has ELEVEN sources
+ * landing on the same tile of L1. Without the entry key two different entries
+ * arriving on one tile from one room would collide silently; with it, the id
+ * says which manifest fact the door is.
+ *
+ * ⛔ THE OUT SIDE NEEDS NO NEW SPELLING. `outExitId` already namespaces by the
+ * entity's own `type`, and `LINK_TAGS` and the trigger elements are DISJOINT
+ * sets — no trigger is a transition primitive — so `out_<trigger>_<x>_<y>`
+ * cannot collide with a real teleporter's id. `namedRoomTriggersAreNotLinks()`
+ * is that claim as a function rather than as a sentence.
+ */
+export const namedInExitId = (key, from, x, y) => `in_${key}_L${from}_${x}_${y}`;
+
+/**
+ * The OEL element whose presence makes each `named_rooms` entry live, BY ENTRY
+ * KEY. ⛔ NOT `levelSetValidator.NAMED_ROOM_TRIGGERS`, which is the same facts
+ * as a bare LIST: this side needs to know which trigger belongs to which entry,
+ * because the entry is what supplies the arrival.
+ */
+export const TRIGGER_FOR_NAMED_ROOM = Object.freeze(Object.fromEntries(
+    Object.entries(NAMED_ROOMS).map(([key, d]) => [key, d.trigger]),
+));
+
+/**
+ * ⛓ Whether the out-side spelling is collision-free BY CONSTRUCTION. A trigger
+ * that was also a link tag would make `out_<type>_<x>_<y>` ambiguous, and this
+ * is the claim a row asserts instead of measuring one fixture and hoping.
+ */
+export const namedRoomTriggersAreNotLinks = () => Object.values(TRIGGER_FOR_NAMED_ROOM)
+    .every((t) => !LINK_TAGS.includes(t));
 
 export const labelFor = (row) => {
     /**
@@ -184,6 +221,73 @@ export function linksOf(room, { roomById }) {
         .map((e) => ({ e, to: Number(e.attrs.to) }))
         .filter((l) => Number.isInteger(l.to) && roomById.has(l.to))
         .sort((a, b) => (a.e.x - b.e.x) || (a.e.y - b.e.y) || (a.to - b.to));
+}
+
+/**
+ * ⛓⛓⛓ **EDITOR v3 E5 — A `named_rooms` ARRIVAL IS A CONNECTION, AND ITS SOURCE
+ * IS DERIVED FROM THE TRIGGER ELEMENT** (plan §27.6, sharpened; §23.8/§23.11 #2
+ * are the measurement that asked for it).
+ *
+ * `linksOf` sees a transition because a transition IS an entity with an `@to`.
+ * A `named_rooms` arrival is not: it is a MANIFEST fact the AS3 dereferences
+ * from inside one entity's own behaviour, and until this slice the derivation
+ * never saw it. That is why the set editor's REPORT calls `level_58`
+ * UNREACHABLE on the real game — vanilla's `tentacle_beast_mouth` is the only
+ * thing in the whole 116 that reaches it, and it lives in the manifest.
+ *
+ * ⛓ **THE SOURCE IS NOT HAND-TYPED.** `levelSetValidator.NAMED_ROOMS` carries,
+ * per entry, the OEL element whose presence makes the entry MANDATORY, with the
+ * AS3 citation of the ONE reader (`moonrock` → `moonrock_target`, `oracle` →
+ * `dark_shrum_death`, `watcher` → `bloody_seed_ending`, …). The validator needs
+ * that to decide whether an entry may be omitted; this needs it to decide WHO
+ * warps. ⇒ every room whose record holds the trigger element is a SOURCE, the
+ * exit is that element's own tile, and the arrival is the entry's `{x, y}`.
+ *
+ * ⛔ **`position: false` DERIVES NOTHING, AND THE FIELD IS WHY.** `watcher_text`
+ * is `persistence` — a cross-level tag index (`FinalDoor.as:50`), not a warp —
+ * so it has no arrival to connect TO. `NAMED_ROOMS` states `position` as its
+ * own field precisely because `kind` cannot be trusted for it
+ * (`moonrock_target` is BOTH), and this reads the field.
+ *
+ * ⚠ **ONE ROOM CAN BE THE SOURCE OF SEVERAL, AND ELEVEN OF ONE.** Measured over
+ * the vanilla 116: `bloody_seed_ending` has 11 sources (one `<watcher>` each in
+ * L12 L32 L37 L43 L57 L69 L82 L89 L94 L103 L114), every other position entry
+ * has exactly 1 — 15 warps over 13 rooms, because L57 and L69 hold two triggers
+ * each. So the arrival exit is deduplicated the way `deriveAtlas` deduplicates
+ * a link arrival — by id, and the id carries the SOURCE room.
+ *
+ * @param {Array} rooms rooms already sorted, each with an integer `level`
+ * @param {object} namedRooms the SET manifest's own `named_rooms`
+ * @param {{roomById: Map}} ctx
+ * @returns {Array<{key,trigger,from,to,entity,arrival:{x,y}}>} sorted, stable
+ */
+export function namedRoomArrivals(rooms, namedRooms, { roomById }) {
+    const out = [];
+    for (const [key, entry] of Object.entries(namedRooms ?? {})) {
+        const spec = NAMED_ROOMS[key];
+        // ⛔ An unknown key is the VALIDATOR's refusal (`set-field` refuses one
+        //    outside the closed six). A derivation that threw here would make a
+        //    document two authorities disagree about; it derives nothing from
+        //    what it does not recognise.
+        if (!spec || !spec.position) continue;
+        const to = Number(entry?.level);
+        if (!Number.isInteger(to) || !roomById.has(to)) continue;
+        const ax = Number(entry?.x);
+        const ay = Number(entry?.y);
+        if (!Number.isFinite(ax) || !Number.isFinite(ay)) continue;
+        for (const room of rooms) {
+            for (const e of room.entities ?? []) {
+                if (e.type !== spec.trigger) continue;
+                out.push({
+                    key, trigger: spec.trigger, from: room.level, to, entity: e,
+                    arrival: { x: ax, y: ay },
+                });
+            }
+        }
+    }
+    return out.sort((a, b) => (a.from - b.from) || (a.to - b.to)
+        || (a.entity.x - b.entity.x) || (a.entity.y - b.entity.y)
+        || (a.key < b.key ? -1 : (a.key > b.key ? 1 : 0)));
 }
 
 // ── the AUTHORED half: locations ──────────────────────────────────────────
@@ -299,9 +403,11 @@ export function locationsFor(room, overlay = {}, deps = {}) {
  *   the three AUTHORED things §16.3 names. Everything else is derived.
  * @param {{tileSize: number, tileTypeForPlacement: Function,
  *          resolveCondition?: Function, note?: Function, onGuard?: Function,
- *          atlas?: object}} deps
+ *          atlas?: object, namedRooms?: object}} deps
  *   `atlas` is the envelope handed to `createEmptyAtlas` (game, name,
- *   description, mapSource, mapDocument).
+ *   description, mapSource, mapDocument). ⛓ `namedRooms` is the SET manifest's
+ *   own `named_rooms` (EDITOR v3 E5) — OPTIONAL, and absent for the playthrough
+ *   generator, which is what keeps the committed atlas's bytes where they are.
  * @returns {{atlas: object, dropped: string[], stats: object}} the atlas
  *   document, UNSTAMPED — the caller owns identity, and stamping on a path that
  *   did not stamp before would move ten committed ids (D0a §18.9 hard #3).
@@ -392,6 +498,75 @@ export function deriveAtlas(rooms, overlay = {}, deps = {}) {
                 );
             }
         }
+    }
+
+    /**
+     * ⛓⛓⛓ **THE `named_rooms` ARRIVALS — EDITOR PATH ONLY, AND THAT IS THE
+     * WHOLE POINT OF THE OPTIONAL INPUT** (EDITOR v3 E5, plan §27.6).
+     *
+     * ⛔ **WHY `deps` AND NOT `overlay`.** `overlay` is the AUTHORED half — the
+     * three things §16.3 names, and `overlayToDeriveInput` is the one function
+     * that shapes an editor's overlay DOCUMENT into it. `named_rooms` is not
+     * authored here at all: it is a field of the SET manifest
+     * (`seedlingSetAdapter.SET_FIELDS`), and `seedling-level-set.schema.json`
+     * is where its shape lives. Hanging it off `overlay` would invite somebody
+     * to author it in a document whose schema has no place for it, and would
+     * make `overlayToDeriveInput`'s output stop being the whole overlay input.
+     * `deps` is already where a caller's non-overlay facts travel (`atlas`,
+     * `tileSize`, `tileTypeForPlacement`).
+     *
+     * ⛔ **AND THE PRODUCER PASSES NOTHING, SO ITS BYTES DO NOT MOVE.**
+     * `make-seedling-playthrough-rules.mjs` has exactly ONE `deriveAtlas` call
+     * site and it names no `namedRooms`, so the committed
+     * `seedling-playthrough.json` keeps §23.8's hole and its md5 is unmoved —
+     * pinned by a row that compares the FILE's md5 across a `--check` run,
+     * because an exit code is not an identity.
+     *
+     * ⛔ **A NEVER-ENTER SOURCE MAKES NO CONNECTION, AND IT IS NOTED RATHER
+     * THAN THROWN.** The never-enter ruling is encoded in this derivation as an
+     * ABSENCE (see the drop pass below), which is stronger than a rule: AP's
+     * fill cannot route through a region that is not in the graph. A warp OUT of
+     * a trap room would put that room back in the graph with an exit and undo
+     * exactly that. ⚠ MEASURED on vanilla: `tentacle_beast_mouth`'s only source
+     * is L57 and `light_boss_exit`'s only source is L69 — BOTH never-enter — so
+     * under the playthrough's overlay this pass adds 11 connections and
+     * `level_58` stays unreached, while under an EMPTY overlay (what the set
+     * editor opens vanilla with) it adds 15 and `level_58` becomes reachable.
+     * Two different true answers about one game, and the difference is the
+     * overlay.
+     */
+    for (const row of namedRoomArrivals(ordered, deps.namedRooms, { roomById })) {
+        const outId = outExitId(row.entity);
+        if (neverEnter.includes(row.from)) {
+            note?.(`L${row.from} ${outId} -> L${row.to}: NOT WIRED — the \`${row.key}\` warp `
+                + `leaves a trap room, never-enter (${neverEnterCite[row.from]})`);
+            continue;
+        }
+        if (neverEnter.includes(row.to)) {
+            note?.(`L${row.from} ${outId} -> L${row.to}: NOT WIRED — the \`${row.key}\` warp `
+                + `arrives in a trap room, never-enter (${neverEnterCite[row.to]})`);
+            continue;
+        }
+        session.addExit(regionIdFor(row.from), {
+            exit_id: outId, tiles: [tileOf(row.entity, tileSize)], kind: 'teleporter',
+        });
+        const inId = namedInExitId(row.key, row.from, row.arrival.x, row.arrival.y);
+        const key = `${row.to}/${inId}`;
+        if (!seenArrival.has(key)) {
+            seenArrival.add(key);
+            session.addExit(regionIdFor(row.to), {
+                exit_id: inId,
+                tiles: [[Math.floor(row.arrival.x / tileSize), Math.floor(row.arrival.y / tileSize)]],
+                kind: 'teleporter',
+            });
+        }
+        session.connect(
+            [regionIdFor(row.from), outId],
+            [regionIdFor(row.to), inId],
+            { one_way: true },
+        );
+        note?.(`L${row.from} ${outId} -> L${row.to} ${inId}: the \`${row.key}\` warp `
+            + `(${NAMED_ROOMS[row.key].cite})`);
     }
 
     for (const room of ordered) {

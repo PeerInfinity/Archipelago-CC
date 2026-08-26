@@ -1838,3 +1838,94 @@ describe('EDITOR v3 E1b — a RECORD set drives every op the xml set does', () =
         expect(whatLinksHere(record, 2).unreadable).toEqual([1]);
     });
 });
+
+/**
+ * ── EDITOR v3 E5 — `deriveAtlasOf` HANDS THE MANIFEST'S `named_rooms` DOWN ────
+ *
+ * The derivation gained an OPTIONAL `deps.namedRooms` (plan §27.6). This is the
+ * ONE place a record's own manifest reaches it, and the rows below are about
+ * that wire rather than about the rule itself — the rule's own rows, with the
+ * per-entry source counts over the real 116, are in
+ * `seedlingAtlasDerivation.test.js`.
+ *
+ * ⛔ THE SUBJECT IS A GENERATED SET, not vanilla: a wire is a wire, and a row
+ * that needed the real game to see it would be a row about the game.
+ */
+describe('⛓⛓ E5 — `deriveAtlasOf` passes the record\'s own `named_rooms`', () => {
+    /**
+     * A generated set whose room 0 holds a `<tentaclebeast>` and whose manifest
+     * names a `tentacle_beast_mouth` arrival in room 3.
+     *
+     * ⛓ THE TRIGGER IS THE ONLY THING ADDED. `buildLevelSet({link: true})`
+     * wires the chain; nothing in the room data expresses a 0 → 3 jump, so a
+     * connection that appears is one the MANIFEST produced and not one the
+     * linker happened to draw.
+     */
+    const namedRoomSet = () => {
+        const set = generatedSet(ROOMS);
+        const rooms = set.rooms.map((r) => ({ ...r }));
+        const beast = { type: 'tentaclebeast', x: 32, y: 32, attrs: {} };
+        rooms[0] = {
+            ...rooms[0],
+            source: {
+                record: {
+                    ...rooms[0].source.record,
+                    entities: [...(rooms[0].source.record.entities ?? []), beast],
+                },
+            },
+        };
+        return { ...set, rooms, named_rooms: { tentacle_beast_mouth: { level: 3, x: 32, y: 32 } } };
+    };
+
+    it('turns the manifest entry into a one-way connection the room data does not carry', () => {
+        const set = namedRoomSet();
+        const withManifest = deriveAtlasOf(setRecord(set, emptyOverlay()), DEPS);
+        // ⛔ THE MUTANT IS THE INPUT DROPPED, and it is expressed as a set whose
+        //    manifest is EMPTY — the same document down the same call, with the
+        //    one fact removed.
+        const without = deriveAtlasOf(
+            setRecord({ ...set, named_rooms: {} }, emptyOverlay()), DEPS);
+
+        const named = (d) => d.atlas.vanilla_layout.connections
+            .filter((c) => c.to[1].startsWith('in_tentacle_beast_mouth_'));
+        expect(named(withManifest)).toHaveLength(1);
+        expect(named(withManifest)[0]).toEqual({
+            from: [regionIdFor(0), 'out_tentaclebeast_32_32'],
+            to: [regionIdFor(3), 'in_tentacle_beast_mouth_L0_32_32'],
+            one_way: true,
+        });
+        expect(named(without)).toHaveLength(0);
+        expect(withManifest.stats.connections).toBe(without.stats.connections + 1);
+    });
+
+    /**
+     * ⛔ **AND A CALLER CANNOT OVERRIDE IT.** `namedRooms` is placed AFTER the
+     * `...deps` spread on purpose: `deriveAtlasOf`'s subject IS the record, so
+     * a `deps.namedRooms` from a caller would be a second authority for a field
+     * the set already carries.
+     */
+    it('ignores a `deps.namedRooms` — the RECORD\'s manifest is the answer', () => {
+        const set = namedRoomSet();
+        const hijacked = deriveAtlasOf(setRecord(set, emptyOverlay()), {
+            ...DEPS,
+            namedRooms: { tentacle_beast_mouth: { level: 1, x: 0, y: 0 } },
+        });
+        const named = hijacked.atlas.vanilla_layout.connections
+            .filter((c) => c.to[1].startsWith('in_tentacle_beast_mouth_'));
+        expect(named).toHaveLength(1);
+        expect(named[0].to[0]).toBe(regionIdFor(3));       // the RECORD's level 3
+        expect(named[0].to[1]).toBe('in_tentacle_beast_mouth_L0_32_32');
+    });
+
+    /**
+     * ⛓ A set with NO manifest entry at all still derives — `named_rooms` is
+     * omissible (⚖ the user, 2026-08-14) and the derivation must not turn an
+     * absence into a throw.
+     */
+    it('derives a set whose manifest names nothing', () => {
+        const set = generatedSet(ROOMS);
+        expect(set.named_rooms === undefined || Object.keys(set.named_rooms).length >= 0).toBe(true);
+        const derived = deriveAtlasOf(setRecord({ ...set, named_rooms: undefined }, emptyOverlay()), DEPS);
+        expect(derived.atlas.regions.length).toBeGreaterThan(0);
+    });
+});

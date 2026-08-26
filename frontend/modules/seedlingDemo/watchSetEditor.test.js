@@ -980,15 +980,20 @@ describe('the VANILLA 116, through the set editor\'s pure half', () => {
      * editor opening vanilla has NOTHING authored: every compiled edge is
      * `True_`, and the count below is that fact as a number.
      *
-     * ⚠ AND THE EXPORT IS **REFUSED**, which nobody predicted: region
-     * `level_58` is UNREACHABLE from the start under any rule set, because the
-     * only way into it in the real game is a mechanism the derivation cannot
-     * see (`reachabilityOf`'s own docblock names them: a boss that warps you, a
-     * debug key, `named_rooms`). The D2 refusal is doing exactly its job on real
-     * data — and it is the first evidence for what a vanilla overlay AS A
-     * DOCUMENT would have to carry.
+     * ⛓⛓⛓ **EDITOR v3 E5 — THE SECOND HALF OF THIS ROW FLIPPED, AND ITS OWN
+     * SENTENCE IS WHY.** E1 measured the export **REFUSED**, region `level_58`
+     * UNREACHABLE, *"because the only way into it in the real game is a
+     * mechanism the derivation cannot see — a boss that warps you, a debug key,
+     * `named_rooms`"*. E5 handed the derivation the manifest it was already
+     * given: every `NAMED_ROOMS` entry with an arrival POSITION becomes a
+     * one-way connection from every room holding its `trigger` element, so
+     * `<tentaclebeast>` in L57 is the door into `level_58` and the graph closes.
+     *
+     * ⇒ 319 free edges became **334** (fifteen manifest warps, one new free
+     * door each) and the export is ALLOWED. The count is still read off the
+     * COMPILED RULES and never typed, which is what let it move with the data.
      */
-    it('reports every edge FREE and REFUSES the rules export, naming the region', () => {
+    it('reports every edge FREE and now ALLOWS the rules export — the manifest closed the graph', () => {
         const session = vanillaSession();
         const rep = reportOf(session, DEPS,
             { compileRegionAtlas, validateRegionAtlas, atlasSchema: ATLAS_SCHEMA });
@@ -997,15 +1002,25 @@ describe('the VANILLA 116, through the set editor\'s pure half', () => {
         // pass over a one-room set too, and that is the mutant.
         const free = freeEdgesOf(rep.rules);
         expect(rep.rows.filter((r) => r.kind === 'free')).toHaveLength(free.length);
-        expect(free.length).toBe(319);
+        expect(free.length).toBe(334);
         expect(overlayLocationCount(session.record())).toBe(0);
 
+        /**
+         * ⛓ AND `level_58` IS REACHED THROUGH THE MANIFEST'S OWN DOOR, named —
+         * a row that only asserted "no reach errors" would pass on a build that
+         * DROPPED the region instead of connecting it, which is exactly what
+         * `deriveAtlas` does to a room no door reaches.
+         */
         const reach = rep.rows.filter((r) => r.kind === 'reach');
         expect(reach).toHaveLength(1);
-        expect(reach[0].severity).toBe('error');
-        expect(reach[0].text).toMatch(/region "level_58" is UNREACHABLE/);
-        expect(rep.download.rules.allowed).toBe(false);
-        expect(rep.download.rules.why).toMatch(/level_58/);
+        expect(reach[0].severity).toBe('ok');
+        expect(reach[0].text).toMatch(/every one of the \d+ compiled region\(s\) is reachable/);
+        expect(rep.download.rules.allowed).toBe(true);
+        expect(rep.download.rules.why).toBeNull();
+        const into58 = rep.atlas.vanilla_layout.connections.filter((c) => c.to[0] === 'level_58');
+        expect(into58).toHaveLength(1);
+        expect(into58[0].from).toEqual(['level_57', 'out_tentaclebeast_80_48']);
+        expect(into58[0].to[1]).toMatch(/^in_tentacle_beast_mouth_L57_/);
 
         // The summary row is present whatever the verdict (§21.8), and the
         // derived atlas is the 116 minus the one region nothing reaches.

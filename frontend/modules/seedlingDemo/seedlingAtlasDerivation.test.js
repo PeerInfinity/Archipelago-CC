@@ -17,16 +17,21 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { buildLevelSet, reachabilityOf } from './levelSetExporter.js';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+
+import { buildLevelSet, reachabilityOf, vanillaRecordSet } from './levelSetExporter.js';
 import { emptyLevel } from './procgenLevel.js';
 import { parseOelLevel } from './procgenLevelOel.js';
+import * as OV from '../flashPanel/seedlingPlaythroughOverlay.js';
 import { tileTypeForPlacement } from '../flashPanel/seedlingSemantics.js';
 import { compileRegionAtlas } from '../procgenPipeline/regionAtlasCompiler.js';
 import { indexMapDocument, validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js';
 import { rulesJsonSchemaErrors } from '../procgenCore/jsonSchemaCheck.js';
 import { loadAtlasSchema, loadRulesSchema } from '../procgenCore/jsonSchemaFiles.js';
 import {
-    ITEM_FOR_TAG, LINK_TAGS, deriveAtlas, inExitId, levelName, linksOf,
+    ITEM_FOR_TAG, LINK_TAGS, TRIGGER_FOR_NAMED_ROOM, deriveAtlas, inExitId, levelName,
+    linksOf, namedInExitId, namedRoomArrivals, namedRoomTriggersAreNotLinks,
     outExitId, regionIdFor,
 } from './seedlingAtlasDerivation.js';
 
@@ -303,4 +308,347 @@ describe('the derived document is UNSTAMPED — the caller owns identity', () =>
         expect(atlas.atlas_id).toBe('unstamped-check');
         expect(outExitId({ type: 'teleporter', x: 32, y: 48 })).toBe('out_teleporter_32_48');
     });
+});
+
+/**
+ * ── EDITOR v3 E5 — `named_rooms` AS CONNECTIONS, ON THE EDITOR PATH ONLY ─────
+ *
+ * §23.8 measured the hole: opening the vanilla 116 in the set editor REFUSED
+ * the `rules.json` export because `level_58` is unreachable, and the COMMITTED
+ * playthrough atlas has the same hole. The reason is not a bug in either — it
+ * is that the ONE thing in the whole game that reaches `level_58` is a MANIFEST
+ * fact (`named_rooms.tentacle_beast_mouth`), and `linksOf` only sees entities
+ * with an `@to`.
+ *
+ * ⛔ **THE ROWS BELOW ARE ABOUT A SPLIT, NOT ONLY ABOUT A FEATURE.** The
+ * derivation gained an OPTIONAL `deps.namedRooms`; `deriveAtlasOf` passes the
+ * record's own manifest and the playthrough generator passes NOTHING, so the
+ * committed atlas keeps the hole and its bytes do not move. Both halves are
+ * pinned — the second one by reading the producer's source and by comparing the
+ * committed file's md5 across a real `--check` run, because an exit code is not
+ * an identity ([[feedback_identity_moves_while_verdict_stays_green]]).
+ */
+describe('⛓⛓ E5 — a `named_rooms` arrival is a connection, and its source is the trigger', () => {
+    const vanillaRooms = () => {
+        const { set } = vanillaRecordSet(
+            JSON.parse(readFileSync(fileURLToPath(
+                new URL('./fixtures/seedling-vanilla-set.json', import.meta.url)), 'utf8')),
+            JSON.parse(readFileSync(fileURLToPath(
+                new URL('../flashPanel/atlases/seedling-map.json', import.meta.url)), 'utf8')),
+        );
+        return { set, rooms: set.rooms.map((r, level) => ({ ...r.source.record, level })) };
+    };
+
+    /**
+     * ⛔ THE OUT-SIDE SPELLING IS COLLISION-FREE BY CONSTRUCTION, and this row
+     * asserts the CONSTRUCTION rather than measuring one fixture: a trigger that
+     * were also a link tag would make `out_<type>_<x>_<y>` name two doors.
+     */
+    it('reuses `outExitId` because no trigger element is a transition primitive', () => {
+        expect(namedRoomTriggersAreNotLinks()).toBe(true);
+        expect(Object.values(TRIGGER_FOR_NAMED_ROOM).filter((t) => LINK_TAGS.includes(t)))
+            .toEqual([]);
+        // …and the entry key really is what keeps ELEVEN arrivals on one tile apart.
+        expect(namedInExitId('bloody_seed_ending', 12, 64, 96))
+            .not.toBe(namedInExitId('bloody_seed_ending', 32, 64, 96));
+        expect(namedInExitId('light_boss_exit', 69, 112, 96))
+            .not.toBe(namedInExitId('bloody_seed_ending', 69, 112, 96));
+    });
+
+    /**
+     * ⛓ THE SIX ENTRIES, AND THEIR SOURCE COUNTS OVER THE REAL GAME. The counts
+     * are pinned because they are the fact the derivation rule turns into edges;
+     * the SOURCE LIST is derived from the rooms, never typed.
+     */
+    it('finds every source from the trigger element — 15 rows over 13 rooms, 11 of them one entry', () => {
+        const { set, rooms } = vanillaRooms();
+        const roomById = new Map(rooms.map((r) => [r.level, r]));
+        const rows = namedRoomArrivals(rooms, set.named_rooms, { roomById });
+
+        const byKey = new Map();
+        for (const r of rows) byKey.set(r.key, [...(byKey.get(r.key) ?? []), r.from]);
+        expect(Object.fromEntries([...byKey].map(([k, v]) => [k, v.length]))).toEqual({
+            moonrock_target: 1,
+            dark_shrum_death: 1,
+            bloody_seed_ending: 11,
+            light_boss_exit: 1,
+            tentacle_beast_mouth: 1,
+        });
+        expect(byKey.get('bloody_seed_ending').sort((a, b) => a - b))
+            .toEqual([12, 32, 37, 43, 57, 69, 82, 89, 94, 103, 114]);
+        expect(byKey.get('tentacle_beast_mouth')).toEqual([57]);
+        expect(byKey.get('light_boss_exit')).toEqual([69]);
+        expect(rows).toHaveLength(15);
+        // ⚠ 15 ROWS OVER 13 ROOMS — L57 and L69 each hold TWO triggers (a
+        //   `<watcher>` and the trap room's own boss controller), so a count of
+        //   rooms and a count of warps are different numbers.
+        expect(new Set(rows.map((r) => r.from)).size).toBe(13);
+
+        // ⛔ `watcher_text` IS IN THE MANIFEST AND DERIVES NOTHING — `position:
+        //    false`. The `<finaldoor>` element that makes it live IS in the set
+        //    (L113), so this is the FIELD being read and not the trigger being
+        //    missing.
+        expect(byKey.has('watcher_text')).toBe(false);
+        expect(rooms.some((r) => (r.entities ?? []).some((e) => e.type === 'finaldoor')))
+            .toBe(true);
+    });
+
+    /**
+     * ⛓⛓ THE EDITOR PATH — an EMPTY overlay, which is what the set editor opens
+     * vanilla with, so every source is live.
+     */
+    it('adds 15 one-way connections and makes `level_58` reachable — the editor path', () => {
+        const { set, rooms } = vanillaRooms();
+        const deps = { tileSize: TILE, tileTypeForPlacement };
+        const without = deriveAtlas(rooms, {}, deps);
+        const withNamed = deriveAtlas(rooms, {}, { ...deps, namedRooms: set.named_rooms });
+
+        const connOf = (d) => new Set(d.atlas.vanilla_layout.connections
+            .map((c) => `${c.from[0]} ${c.from[1]} -> ${c.to[0]} ${c.to[1]}`));
+        const added = [...connOf(withNamed)].filter((c) => !connOf(without).has(c));
+        expect(added.sort()).toEqual([
+            'level_0 out_moonrock_240_256 -> level_2 in_moonrock_target_L0_48_32',
+            'level_103 out_watcher_120_24 -> level_1 in_bloody_seed_ending_L103_64_96',
+            'level_114 out_watcher_72_72 -> level_1 in_bloody_seed_ending_L114_64_96',
+            'level_12 out_watcher_296_104 -> level_1 in_bloody_seed_ending_L12_64_96',
+            'level_1 out_oracle_64_32 -> level_114 in_dark_shrum_death_L1_72_128',
+            'level_32 out_watcher_8_48 -> level_1 in_bloody_seed_ending_L32_64_96',
+            'level_37 out_watcher_104_264 -> level_1 in_bloody_seed_ending_L37_64_96',
+            'level_43 out_watcher_200_280 -> level_1 in_bloody_seed_ending_L43_64_96',
+            'level_57 out_tentaclebeast_80_48 -> level_58 in_tentacle_beast_mouth_L57_56_96',
+            'level_57 out_watcher_48_32 -> level_1 in_bloody_seed_ending_L57_64_96',
+            'level_69 out_lightbosscontroller_72_72 -> level_36 in_light_boss_exit_L69_112_96',
+            'level_69 out_watcher_144_144 -> level_1 in_bloody_seed_ending_L69_64_96',
+            'level_82 out_watcher_72_96 -> level_1 in_bloody_seed_ending_L82_64_96',
+            'level_89 out_watcher_248_176 -> level_1 in_bloody_seed_ending_L89_64_96',
+            'level_94 out_watcher_152_128 -> level_1 in_bloody_seed_ending_L94_64_96',
+        ].sort());
+        expect(withNamed.stats.connections).toBe(without.stats.connections + 15);
+        expect(withNamed.atlas.vanilla_layout.connections.every((c) => c.one_way === true))
+            .toBe(true);
+
+        // ⛔ AND `level_58` MOVES — a structural walk over the atlas's own
+        //    connections, which is what the REPORT's `reach` section runs.
+        const walk = (atlas) => {
+            const out = new Map();
+            for (const c of atlas.vanilla_layout.connections) {
+                out.set(c.from[0], [...(out.get(c.from[0]) ?? []), c.to[0]]);
+            }
+            const seen = new Set([atlas.vanilla_layout.start_region]);
+            const q = [atlas.vanilla_layout.start_region];
+            while (q.length > 0) {
+                for (const n of out.get(q.pop()) ?? []) if (!seen.has(n)) { seen.add(n); q.push(n); }
+            }
+            return seen;
+        };
+        expect(walk(without.atlas).has('level_58')).toBe(false);
+        expect(walk(withNamed.atlas).has('level_58')).toBe(true);
+        // …and nothing ELSE moved: 58 is the only region the manifest rescues.
+        expect([...walk(withNamed.atlas)].filter((r) => !walk(without.atlas).has(r)))
+            .toEqual(['level_58']);
+    });
+
+    /**
+     * ⛔⛔ **A NEVER-ENTER SOURCE MAKES NO CONNECTION — AND IT COSTS `level_58`
+     * ITS RESCUE.** §27.6 predicted the manifest would make `level_58` reachable
+     * full stop. It does not: `tentacle_beast_mouth`'s ONLY source is L57 and
+     * `light_boss_exit`'s ONLY source is L69, and BOTH are the trap rooms the
+     * playthrough overlay declares never-enter. Under that overlay the pass adds
+     * ELEVEN connections, not fifteen, and 58 stays unreached — which is the
+     * right answer, because never-enter is encoded here as an ABSENCE and a warp
+     * out of a trap room would put the trap room back in the graph.
+     */
+    it('skips a warp whose SOURCE is never-enter, and NOTES it rather than throwing', () => {
+        const { set, rooms } = vanillaRooms();
+        const notes = [];
+        const deps = {
+            tileSize: TILE,
+            tileTypeForPlacement,
+            note: (s) => notes.push(s),
+            namedRooms: set.named_rooms,
+        };
+        /**
+         * ⛔ THE LIST IS THE PLAYTHROUGH OVERLAY'S OWN, NEVER TYPED. It is
+         * [57, 69, **82**] — three rooms, and the third is easy to miss because
+         * only the first two are DROPPED from the committed atlas (L82 keeps
+         * its outbound doors, so it survives the drop pass). A row that typed
+         * `[57, 69]` would be measuring a ruling nobody made.
+         */
+        const overlay = {
+            neverEnter: {
+                levels: OV.NEVER_ENTER_LEVELS,
+                cite: OV.NEVER_ENTER_CITE,
+            },
+        };
+        const guarded = deriveAtlas(rooms, overlay, deps);
+        const open = deriveAtlas(rooms, {}, deps);
+
+        const namedOf = (d) => d.atlas.vanilla_layout.connections
+            .filter((c) => /^in_(moonrock_target|dark_shrum_death|bloody_seed_ending|light_boss_exit|tentacle_beast_mouth)_/
+                .test(c.to[1]));
+        expect(namedOf(open)).toHaveLength(15);
+        expect(namedOf(guarded)).toHaveLength(10);
+        expect(namedOf(guarded).map((c) => c.from[0])
+            .filter((r) => OV.NEVER_ENTER_LEVELS.some((l) => r === `level_${l}`)))
+            .toEqual([]);
+        // ⛓ FIVE refused, not three: L57 and L69 each hold TWO triggers (a
+        //   `<watcher>` and the trap room's own boss controller) and L82 holds
+        //   one — 15 - 5 = 10.
+        const refused = notes.filter((n) => n.includes('NOT WIRED') && n.includes('warp'));
+        expect(refused).toHaveLength(5);
+        expect(refused.some((n) => n.includes('`tentacle_beast_mouth`') && n.includes('leaves a trap room')))
+            .toBe(true);
+        expect(refused.some((n) => n.includes('`light_boss_exit`') && n.includes('leaves a trap room')))
+            .toBe(true);
+        // ⇒ and `level_58` is NOT rescued under that overlay.
+        expect(namedOf(guarded).some((c) => c.to[0] === 'level_58')).toBe(false);
+    });
+
+    /**
+     * ⛓ AN ENTRY THE DERIVATION DOES NOT RECOGNISE, AND A TARGET ROOM THAT IS
+     * NOT IN THE SET, BOTH DERIVE NOTHING RATHER THAN THROWING. Refusing a
+     * manifest key here would be a SECOND authority for `set-field`'s own
+     * closed-six refusal, and the two would come to disagree.
+     */
+    it('derives nothing from an unknown key, a missing level or a position-less entry', () => {
+        const { rooms } = vanillaRooms();
+        const roomById = new Map(rooms.map((r) => [r.level, r]));
+        const rows = (nr) => namedRoomArrivals(rooms, nr, { roomById });
+        expect(rows({ not_a_named_room: { level: 2, x: 0, y: 0 } })).toEqual([]);
+        expect(rows({ tentacle_beast_mouth: { level: 999, x: 56, y: 96 } })).toEqual([]);
+        expect(rows({ tentacle_beast_mouth: { level: 58 } })).toEqual([]);
+        expect(rows({ watcher_text: { level: 114, x: 8, y: 8 } })).toEqual([]);
+        expect(rows(undefined)).toEqual([]);
+        expect(rows(null)).toEqual([]);
+    });
+});
+
+/**
+ * ⛔⛔ **THE SPLIT THAT KEEPS THE COMMITTED BYTES — PINNED FROM BOTH ENDS.**
+ *
+ * E5's whole shape rests on ONE claim: the EDITOR reads `named_rooms` and the
+ * PLAYTHROUGH GENERATOR does not, so `seedling-playthrough.json` keeps §23.8's
+ * hole and every id downstream of it stays where it is. A claim like that fails
+ * silently — somebody adds `namedRooms` to the producer's deps bag "for
+ * consistency" and 113 regions become 115 with no test saying so.
+ *
+ * ⛓ SO IT IS PINNED TWICE, and neither pin is an exit code:
+ *   1. the producer's ONE `deriveAtlas` call site is READ, and its argument list
+ *      is asserted not to name `namedRooms`;
+ *   2. the committed atlas's md5 is compared ACROSS a real `--check` run
+ *      ([[feedback_identity_moves_while_verdict_stays_green]] — a producer's
+ *      md5 can move while its verdict stays 0).
+ */
+describe('⛔ E5 — the producer keeps the hole, and the committed atlas does not move', () => {
+    const producerPath = fileURLToPath(
+        new URL('../../../scripts/procgen/make-seedling-playthrough-rules.mjs', import.meta.url));
+    const atlasPath = fileURLToPath(
+        new URL('../flashPanel/atlases/seedling-playthrough.json', import.meta.url));
+    const presetPath = fileURLToPath(
+        new URL('../../presets/seedling_playthrough/AP_1/AP_1_rules.json', import.meta.url));
+
+    it('has exactly ONE `deriveAtlas` call site and it names no `namedRooms`', () => {
+        const src = readFileSync(producerPath, 'utf8');
+        // ⛔ CALL SITES, not mentions: the import line and the docblocks say the
+        //    name too, and a count over those would pass whatever the code did.
+        const calls = [...src.matchAll(/\bderiveAtlas\s*\(/g)];
+        expect(calls).toHaveLength(1);
+        // The argument list is everything from the call to the end of the
+        // enclosing `return …;` — `derivePlaythroughLayer` is a single return.
+        const from = calls[0].index;
+        const args = src.slice(from, src.indexOf('\n}', from));
+        expect(args).toContain('tileTypeForPlacement');   // the deps bag really is in view
+        expect(args).not.toContain('namedRooms');
+        expect(args).not.toContain('named_rooms');
+    });
+
+    /**
+     * ⛓⛓ **THE CROSS-CHECK'S DIFF, BY NAME** (§22.2 #7's other half). E1's
+     * cross-check proves the set-derived layer equals the committed one 1:1;
+     * this says exactly what `named_rooms` ADDS to that comparison — and it is
+     * NOT the fifteen the editor sees, because the committed atlas is built
+     * under `NEVER_ENTER_LEVELS` = [57, 69, 82] and FIVE of the fifteen leave a
+     * trap room (L57 and L69 hold two triggers each, L82 one).
+     *
+     * ⛔ §27.6 PREDICTED `level_58` WOULD MOVE TO REACHED HERE. IT DOES NOT, and
+     * the reason is the measurement rather than a shrug: L57 is the only source
+     * of the warp that reaches it.
+     */
+    it('adds TEN connections to the playthrough-shaped derivation, and none reach level_58', () => {
+        const committed = JSON.parse(readFileSync(fileURLToPath(
+            new URL('../flashPanel/atlases/seedling-playthrough.json', import.meta.url)), 'utf8'));
+        const { set } = vanillaRecordSet(
+            JSON.parse(readFileSync(fileURLToPath(
+                new URL('./fixtures/seedling-vanilla-set.json', import.meta.url)), 'utf8')),
+            JSON.parse(readFileSync(fileURLToPath(
+                new URL('../flashPanel/atlases/seedling-map.json', import.meta.url)), 'utf8')),
+        );
+        const rooms = set.rooms.map((r, level) => ({ ...r.source.record, level }));
+        const overlay = {
+            neverEnter: { levels: OV.NEVER_ENTER_LEVELS, cite: OV.NEVER_ENTER_CITE },
+        };
+        const guarded = deriveAtlas(rooms, overlay, {
+            tileSize: TILE, tileTypeForPlacement, namedRooms: set.named_rooms,
+        });
+
+        const key = (c) => `${c.from[0]} -> ${c.to[0]}`;
+        const committedKeys = new Set(committed.vanilla_layout.connections.map(key));
+        const added = guarded.atlas.vanilla_layout.connections
+            .filter((c) => /^in_(moonrock_target|dark_shrum_death|bloody_seed_ending|light_boss_exit|tentacle_beast_mouth)_/
+                .test(c.to[1]));
+        expect(added).toHaveLength(15 - 5);
+        /**
+         * ⛓ EVERY ONE OF THEM IS A NEW **DOOR** — no arrival id the manifest
+         * mints exists in the committed atlas.
+         *
+         * ⚠ NOT every one is a new REGION PAIR, and the exception is a fact
+         * about the game rather than a weakening: `level_0 -> level_2` is
+         * already drawn by an ordinary teleporter, because `Moonrock.as:131`
+         * finds the stairs it is about to replace by OVERLAP. So the manifest
+         * warp lands beside a door that is already there, and a row asserting
+         * "all eleven pairs are new" would be asserting the wrong thing.
+         */
+        const committedExits = new Set(committed.regions
+            .flatMap((r) => (r.exits ?? []).map((e) => e.exit_id)));
+        expect(added.filter((c) => committedExits.has(c.to[1]))).toEqual([]);
+        expect(added.filter((c) => committedExits.has(c.from[1]))).toEqual([]);
+        expect(added.filter((c) => committedKeys.has(key(c))).map(key))
+            .toEqual(['level_0 -> level_2']);
+        expect(added.map(key).sort()).toEqual([
+            'level_0 -> level_2',
+            'level_103 -> level_1',
+            'level_114 -> level_1',
+            'level_12 -> level_1',
+            'level_1 -> level_114',
+            'level_32 -> level_1',
+            'level_37 -> level_1',
+            'level_43 -> level_1',
+            'level_89 -> level_1',
+            'level_94 -> level_1',
+        ].sort());
+        // ⛔ AND `level_58` IS STILL UNREACHED IN THE COMMITTED DOCUMENT — the
+        //    hole §23.8 found is exactly where it was.
+        expect(committed.regions.some((r) => r.region_id === 'level_58')).toBe(true);
+        expect(committed.vanilla_layout.connections.filter((c) => c.to[0] === 'level_58'))
+            .toEqual([]);
+        expect(added.filter((c) => c.to[0] === 'level_58')).toEqual([]);
+    });
+
+    it('rebuilds the committed atlas and its preset byte for byte, md5 unmoved', async () => {
+        const { createHash } = await import('node:crypto');
+        const { execFileSync } = await import('node:child_process');
+        const md5 = (p) => createHash('md5').update(readFileSync(p)).digest('hex');
+        const before = { atlas: md5(atlasPath), preset: md5(presetPath) };
+        const out = execFileSync(process.execPath, [producerPath, '--check'], { encoding: 'utf8' });
+        const after = { atlas: md5(atlasPath), preset: md5(presetPath) };
+
+        // ⛔ THE MD5, NOT THE EXIT CODE. `execFileSync` already throws on a
+        //    non-zero exit; what this row adds is that the FILES did not move.
+        expect(after).toEqual(before);
+        expect(out).toContain('matches a fresh build');
+        // …and the shape the hole is part of, so a rebuild that silently gained
+        // the manifest's connections is a VALUE failure here.
+        expect(out).toContain('113 regions');
+        expect(out).toContain('312 one-way connections');
+    }, 120000);
 });
