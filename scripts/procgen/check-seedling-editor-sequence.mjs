@@ -334,9 +334,21 @@ const solo = await page.evaluate(() => ({
     cls: document.getElementById('status').className,
     seq: window.__editorSequence ?? null,
 }));
-check(solo.cls === 'ok' && /865 observations/.test(solo.status) && solo.seq === null,
+/**
+ * ⛔⛔ THE OBSERVATION COUNT IS DERIVED FROM THE TAPE, NOT TYPED (⚖ 17). It
+ * used to read `/865 observations/` — `r8-d2-19`'s tick_count + 1 while that
+ * tape was 864 ticks. R9 slice 12e′'s fourth run re-recorded it to 721 under
+ * ⚖ 49 and the row went red on a number that was never this claim's subject:
+ * what CLAIM 8 pins is that `?tape=` still stages ONE tape with NO sequence
+ * readout, and a walk length has nothing to do with it. Any licensed move of
+ * this tape would have falsified it again.
+ */
+const soloTicks = tapeOf('r8-d2-19').tick_count;
+check(solo.cls === 'ok'
+    && new RegExp(`\\b${soloTicks + 1} observations`).test(solo.status)
+    && solo.seq === null,
     '⛓ CLAIM 8 — `?tape=` IS UNMOVED: one tape, one staged run, no sequence readout',
-    solo.status);
+    `${solo.status} (want ${soloTicks + 1} = r8-d2-19's tick_count + 1)`);
 
 // ══ 9. RETIRED — THE act2 REPORT ═══════════════════════════════════════
 /**
