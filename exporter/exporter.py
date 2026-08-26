@@ -104,12 +104,14 @@ def _dump_with_compact_sidecar_tiles(data: Any, indent: int = 2) -> str:
       the default separators put a SPACE after every tile integer and
       `JSON.stringify(array)` does not.
     * `_json_dumps_at_indent` passes `ensure_ascii=False`; `json.dumps`
-      escapes `\u00a7` where `JSON.stringify` writes `§`. Safe because the
+      escapes `§` to a six-character ``\\u00a7`` where
+      `JSON.stringify` writes the character itself — at indent 0 as much
+      as at indent 2. Safe because the
       ONE production caller opens its file with `encoding='utf-8'`.
 
     ⛓ The trailing newline is the WRITE SITE's, not the writer's — neither
     function emits one (`scripts/utils/generate-procgen-rules.js` appends
-    `text + '\n'` itself; the Python write site appends nothing).
+    ``text + '\\n'`` itself; the Python write site appends nothing).
 
     No-op for inputs without a `preset_sidecars` key.
     """
