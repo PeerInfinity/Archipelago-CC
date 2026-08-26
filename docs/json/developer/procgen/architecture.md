@@ -252,12 +252,12 @@ edit panel, each on its arm's own lifetime.
 
 ## The rules.json and atlas toolkit (`procgenCore/`)
 
-Eight modules, FLAT beside the edit core, for the documents every substrate
+Nine modules, FLAT beside the edit core, for the documents every substrate
 shares. They were lifted from copies that already existed and agreed — the
 point was never new behaviour, it was ONE place for behaviour there was already
-consensus on. The last two arrived the other way round: the SET EDITOR's
-substrate-free half was measured inside `seedlingDemo/` and moved out when a
-second substrate needed it.
+consensus on. The last three arrived the other way round: the SET EDITOR was
+measured inside `seedlingDemo/` and moved out a layer at a time as a second
+substrate needed it — first its calculations, then its overlay, then its DOM.
 
 | module | what it is | what it replaced |
 |---|---|---|
@@ -269,6 +269,7 @@ second substrate needed it.
 | `ruleTreeOps.js` | `getRuleAt` / `replaceRuleAt` / `removeRuleAt` / `wrapRuleAt`, path-addressed and copy-on-write | `ruleTreeEditor.js`'s per-node closures, which existed only while the DOM was rendering |
 | `setEditorCore.js` | the set editor's substrate-free half — `roomRowsOf`, `moveOrder` and the three renumbering mappings, `renumberDecision`, the `OVERVIEW` strip and `exitArrowShapes`, `gateabilityOf`, `inertRulesOf`, `freeEdgesOf`, and `reportOver` | `seedlingDemo/watchSetEditor.js`, where D2 built all of it; the page now RE-EXPORTS the moved names by the same function object |
 | `setOverlay.js` | `createSetOverlay(spec)` — the authored half's shape: the prefixed rule-target key, `overlayErrors`, `assertOverlay`, `exitRulesByRoom`, `renumberOverlay` and the two readers | `seedlingDemo/seedlingSetOverlay.js`, measured at 10 of 11 exported functions substrate-free (90.9%) before the lift |
+| `setEditorView.js` | `mountSetEditor(opts)` — the set editor's DOM: the rooms strip and its stills cache, the two-click link gesture, the rooms table, the manifest and room forms, the rule box, the REPORT and the downloads | `seedlingDemo/watchSetEditor.js`'s 1,051-line mount, measured at ~26 substrate-bound call sites in five spots; each became a named parameter |
 
 **Identity is a CONTRACT, not an implementation.** Ten documents committed to
 this repository carry ids minted with that exact algorithm: a sorted-key
@@ -350,7 +351,7 @@ ids by NAME with dedup, so two regions sharing an id do not collide, they
 COLLAPSE into one, and the second one's exits and locations attach quietly to
 the first.
 
-All eight are under the no-substrate law described above for the edit core, and
+All nine are under the no-substrate law described above for the edit core, and
 that law was widened to `flashPanel/` when the first three landed: a toolkit
 about atlases is exactly the code that would otherwise reach for one Seedling
 tile constant. ⛓ The law's gate reads the DIRECTORY rather than a list, so a
@@ -360,6 +361,32 @@ set adapter can supply (`readSetCell`, `exitsOfRoom`, `whatLinksHere`,
 `bounds`, `validateForDownload`, `deriveAtlasOf`, `rulesJsonOf`) is handed in,
 and so is the document's own NOUN, because the row that says *"validateLevelSet:
 ok — 6 room(s)"* is about a document `procgenCore/` has never heard of.
+
+**⛓ WHAT A SUBSTRATE HANDS IN TO MOUNT THE SET EDITOR.** `mountSetEditor` is the
+DOM half, and the list below is the whole of what it does not know. Each entry
+is `need()`-checked by name at mount, because a reader that arrived as
+`undefined` would otherwise surface three renders later, inside a `paintStrip`
+that had already emptied the boxes the page was showing.
+
+| parameter | what it is | why it cannot be derived |
+|---|---|---|
+| `adapterFns` | `readSetCell`, `exitsOfRoom`, `whatLinksHere`, `bounds`, `validateForDownload`, `deriveAtlasOf`, `rulesJsonOf`, `closeRoomSession`, `download` | D1's vocabulary plus the two PAGE seams: a room session closing into the set, and one press producing N documents |
+| `document` | `{kind, noun, validator, idOf, docOf}` | what §1 of the REPORT calls the thing it validated, and which half of the record that thing IS (`record.set` · `record.library`) |
+| `ruleKeys` | `{exit, location}` — the overlay's key BUILDERS | so the `exit:` prefix is `ruleKeys.exit('')` and never a literal; a literal is green over Seedling for ever and reports ZERO inert rules for everyone else |
+| `forms` | `{manifestRows(), roomRows()}` | `SET_FIELDS`/`NAMED_ROOMS`/`MUSIC_*` on one substrate, `LIBRARY_FIELDS`/`ROOM_FIELDS` on the other. ⛓ MEASURED: neither reads the record, so neither takes one |
+| `exits` | `{valueOf, labelOf, addressOf, targetOptions, disconnectOp}` | a Seedling exit is addressed by its ORDINAL and a maze exit by `exit_id`, so the `<option>`'s VALUE is built and read back by the same binding |
+| `locations` | `{options(cell), emptyWhy, targetOf(value)}` | `mark-location` names an OEL entity at exact pixels on one substrate and an `items[]` ORDINAL on the other |
+| `drawRoomStill(canvas, cell, index)` · `stillKey(cell)` | ⚖ the ONE-RENDERER law: the page draws its own substrate and the mount blits what it is handed | the KEY is the substrate's too — what makes a still stale is what the substrate copies on write (the room's `source` object · the entry's `payload`) |
+| `linkBound(record)` | `{ok, why}` | Seedling prices OEL bytes then record entities; the maze's links are ONE authored list and its bound says `ok` for ever — and SAYS so, because what is not bounded has to be named too |
+| `isRefusal` · `rulesSchema` · `addRoomOp(at)` | the substrate's refusal classes, the parsed `rules.schema.json`, and the whole `add-room` op (a `record` on one side, a `payload` on the other) | |
+
+The DOWNLOAD is the shape that generalised least obviously: `adapterFns.download`
+returns `{members: [{kind, doc, name, label, readout}], report, apMappingWhy?}`
+and the mount writes one blob and one readout per member. ⛔ A member whose
+`kind` is not in `documentBundle.BUNDLE_KINDS` is refused BY NAME by the bundle
+button, with the roster quoted — Seedling's `ap-mapping` companion and the
+maze's `region-library` are both outside it today, and a silent drop would hand
+somebody a zip missing the document they pressed the button for.
 
 **⛓ WHAT AN OVERLAY CARRIES IS THE SUBSTRATE'S; WHAT AN OVERLAY IS IS NOT.**
 Every set substrate's overlay is `rooms` keyed by ROOM INDEX, each room carrying

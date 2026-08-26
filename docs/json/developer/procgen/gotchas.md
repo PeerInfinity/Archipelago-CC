@@ -532,6 +532,28 @@ pass, and the set editor's REPORT would refuse every export with a schema error
 about a field the author never typed. The maze's crossings are `edge` exits;
 the word "crossing" belongs to the projection, not to the format.
 
+⛔⛔ **THERE ARE TWO MAZE SERIALIZERS AND THEY ARE DELIBERATELY DIFFERENT.**
+`procgenMaze.js`'s own docblock says so by name, and picking the wrong one
+produces no error at all:
+
+| pair | what it is for | AP vocabulary |
+|---|---|---|
+| `serializeMazeLevel` / `deserializeMazeLevel` (`mazeRoom/procgenMaze.js`) | the LAB's loop-determinism channel — what the CLI prints, what `#labDownload` writes and `loadPayload` reads | **none** |
+| `serializeMazeWorld` / `deserializeMazeWorld` (`procgenPipeline/procgenPipelineEngine.js`, `mazeRoom/mazeRoomEngine.js`) | the region-LIBRARY payload — AP-canonical exit and location names baked in | yes |
+
+A maze room session closing into a region library goes through the CAPTURE pair
+and never through the lab's, and `mazeSetAdapter.closeRoomSession` is where that
+choice lives so no page can make it. ⛓ MEASURED over all four entries of the
+committed `demo-maze-pack`: five keys part company — `exits` (the lab writes
+`{exit_id, x, y}`; the capture path adds `side, exitName, targetRegion,
+targetExitId, isBackExit, isTeleporter`), `items`, `itemLib`, `obstacleLib` and
+`longestShortestPath` — and **the lab payload survives `deserializeMazeWorld`
+without a word**. Nothing refuses it; it simply writes a different document. The
+symptom arrives later and quietly: closing an UNEDITED room through the lab
+spelling MINTS an edit (so merely looking at a room restamps the library), and
+every exit's `side` comes back `null` where the entry said `'N'`. Same shape,
+same keys, one fact gone.
+
 ## Related documentation
 
 - [Architecture](./architecture.md)
