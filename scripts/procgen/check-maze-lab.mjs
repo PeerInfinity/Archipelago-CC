@@ -1880,16 +1880,20 @@ try {
     }, { idx: i, roomTop: OVERVIEW.roomTop });
 
     /**
-     * ⛓⛓⛓ **THE ROOMS TABLE IS READ OFF THE DOM, AND THAT IS THE SAME SEAM THE
-     * REPORT HIT.** The page's readout is written by the PAGE's `render`, and
-     * the mount calls `onSetChange` **before** its own `render()` — so anything
-     * the readout derives from `setUi.rows()` (or scrapes from a box the mount
-     * writes) is ONE APPLIED OP BEHIND. MEASURED: after the two-click gesture
-     * `set.links` was 1 (read off the SESSION's record, live) while a
-     * `set.strip` field said `linkedFrom: [0,0,0,0]`. ⇒ the page publishes NO
-     * `strip`, `note` or `identity` field, and this row reads the table where
-     * `check-seedling-editor-arm` reads it. Columns: `# · name · music · exits ·
-     * links here · loc · rules · (actions)`.
+     * ⛓⛓⛓ **THE ROOMS TABLE, OFF THE DOM — AND SINCE E3a IT IS THE CROSS-CHECK
+     * RATHER THAN THE ONLY ACCOUNT.**
+     *
+     * E2c measured the seam here: the mount called `onSetChange` **before** its
+     * own `render()`, so anything the page derived from `setUi.rows()` was ONE
+     * APPLIED OP BEHIND — after the two-click gesture `set.links` was 1 (off
+     * the SESSION's record, live) while a `set.strip` field said
+     * `linkedFrom: [0,0,0,0]`. The page therefore published no `strip`, `note`
+     * or `identity` at all. ⛓ E3a gave the mount ONE ordering rule (render
+     * first, then `onSetChange({why})`), the four fields came back, and what
+     * these DOM reads now assert is that the READOUT AND THE BOX AGREE — which
+     * is the claim, and which the mutant (the notification put back in front of
+     * the render) breaks. Columns: `# · name · music · exits · links here ·
+     * loc · rules · (actions)`.
      */
     const roomsTable = () => page.evaluate(() => [
         ...document.querySelectorAll('#editSetRooms table.setRooms tr'),
@@ -1982,6 +1986,32 @@ try {
         && table.every((r) => r[3] === '4') && openable.every((v) => v === true),
         '⛓ …and the rooms TABLE is the library\'s own entries, each with its four exits and an '
         + 'enabled OPEN button', json(table.map((r) => `${r[1]}:${r[3]}`)));
+    /**
+     * ⛓⛓ **EDITOR v3 E3a — `set.selected` TRACKS A ROOM PICK, AND BEFORE THIS
+     * SLICE IT DID NOT.** `selectRoom` re-rendered the MOUNT and told the page
+     * nothing, so the field sat on whatever value the last APPLIED OP had left
+     * it at. ⛔ The notification is GUARDED on an actual move — a re-click on
+     * the room already selected changes nothing a page could publish, and an
+     * unguarded one would also fire from the mount's own closing
+     * `selectRoom(0)`, into a page whose `setUi` handle is still `null`.
+     * ⛓ MUTANT: drop `why: 'select'` — this row reads 0 where the table's
+     * highlighted row says 2.
+     */
+    const startSel = await read();
+    await page.evaluate(() => {
+        const rows = [...document.querySelectorAll('#editSetRooms table.setRooms tr')].slice(1);
+        rows.find((r) => r.children[0]?.textContent === '2')?.click();
+    });
+    await settled(() => window.__mazeLab?.set?.selected === 2, 'the rooms-row click to SELECT');
+    const picked = await read();
+    const selRow = await page.evaluate(() => [
+        ...document.querySelectorAll('#editSetRooms table.setRooms tr.sel'),
+    ].map((r) => r.children[0]?.textContent));
+    check(startSel.set.selected === 0 && picked.set.selected === 2 && json(selRow) === json(['2']),
+        '⛓⛓ **THE READOUT\'S `selected` AND THE TABLE\'S HIGHLIGHTED ROW AGREE** — `selectRoom` '
+        + 'notifies the page now (`why: \'select\'`), so a pick is publishable where before it '
+        + 'was only visible', `readout ${startSel.set.selected} → ${picked.set.selected}, `
+        + `table .sel ${json(selRow)}`);
 
     const linked = await pasteSet(overlayOf(4),
         () => window.__mazeLab?.set?.links === 4, 'the 4-link RING to be held');
@@ -2029,6 +2059,29 @@ try {
         + 'both its ends count as inbound because a maze crossing is TWO-WAY by default',
         `${json(connected.set.opList)} · links ${connected.set.links} · `
         + `${json(gestureTable.map((r) => r[4]))}`);
+    /**
+     * ⛓⛓⛓ **EDITOR v3 E3a — `set.strip` IS BACK, AND THIS IS THE EXACT
+     * MEASUREMENT THAT KILLED IT.** E2c drove this same two-click CONNECT and
+     * found `set.links` reading **1** off the SESSION while a `strip` field read
+     * `linkedFrom: [0,0,0,0]` off the MOUNT — one applied op behind, because
+     * `onSetChange` fired BEFORE the mount's own `render()`. ⛔ The claim is
+     * AGREEMENT, not a literal: the readout is `setUi.rows()` at PAGE-RENDER
+     * time and the table is the DOM read afterwards, so a page told too early
+     * disagrees with the box a person is looking at.
+     * ⛓ MUTANT: put `onSetChange?.({why: 'op'})` back inside the `applied`
+     * branch above `render()` — `strip.linkedFrom` reads `[0,0,0,0]` here while
+     * the table reads `['1','1','0','0']`, and this row is the witness.
+     */
+    check(connected.set.strip !== null
+        && json(connected.set.strip.linkedFrom.map(String))
+            === json(gestureTable.map((r) => r[4]))
+        && json(connected.set.strip.exits.map(String)) === json(gestureTable.map((r) => r[3]))
+        && json(connected.set.strip.names) === json(gestureTable.map((r) => r[1])),
+        '⛓⛓⛓ **THE READOUT\'S `strip` AND THE ROOMS TABLE AGREE, ONE APPLIED OP AFTER THE '
+        + 'GESTURE** — E2c could publish neither (§30.8: `linkedFrom: [0,0,0,0]` against a live '
+        + '`links: 1`), and E3a\'s ONE ordering rule (the mount renders, THEN it says why) is '
+        + 'what makes the field honest',
+        `readout ${json(connected.set.strip.linkedFrom)} · DOM ${json(gestureTable.map((r) => r[4]))}`);
 
     await load(setUrl, () => window.__mazeLab?.set?.mounted === true, 'the SET arm for arrows');
     await pasteSet(overlayOf(4), () => window.__mazeLab?.set?.links === 4,
@@ -2080,6 +2133,23 @@ try {
         && /Ctrl\+Z here hits the ROOM session/.test(idLine),
         '⛓⛓ §21.5 — THE IDENTITY LINE SAYS WHICH SESSION AN UNDO WILL HIT, read from '
         + '`document.activeElement`: with the strip unfocused it is the ROOM\'s', idLine);
+    /**
+     * ⛓⛓⛓ **EDITOR v3 E3a — `set.identity` IS BACK, AND THE OPEN BUTTON IS WHY
+     * IT NEEDED A SIXTH `why`.** The rooms table's OPEN runs `selectRoom`, then
+     * the PAGE's `openRoomAt` (which re-renders the PAGE), then the MOUNT's
+     * `render()` — so a readout written from the page's own render says *"no
+     * room open"* while the line beside it already says *"ROOM 1 open"*. ⛔ The
+     * fix is the ordering rule applied to that press too (`why: 'room'`), and
+     * this row is the witness: the field and the line are the SAME sentence.
+     * ⛓ MUTANT: drop that notification — `set.identity` reads `· no room open`
+     * against an `#editSetIdentity` that reads `· ROOM 1 open with 0 edit(s)`.
+     */
+    const openedRead = await read();
+    check(openedRead.set.identity === idLine && /ROOM 1 open/.test(openedRead.set.identity),
+        '⛓⛓⛓ **THE READOUT\'S `identity` IS THE IDENTITY LINE, CHARACTER FOR CHARACTER, AFTER '
+        + 'AN OPEN** — E2c published no such field because the page could not be told late '
+        + 'enough to write a true one (§30.8)',
+        `readout ${json(openedRead.set.identity?.slice(-60))}`);
     await page.evaluate(() => document.getElementById('editSetOverview').focus());
     await page.click('#editSetReport');
     await load(setUrl, () => window.__mazeLab?.set?.mounted === true, 'the SET arm, fresh');
@@ -2256,21 +2326,37 @@ try {
     await load(setUrl, () => window.__mazeLab?.set?.mounted === true, 'the SET arm for REPORT');
     await pasteSet(overlayOf(2), () => window.__mazeLab?.set?.links === 2, 'the 2-link CHAIN');
     /**
-     * ⛓⛓ **THE REPORT IS READ OFF THE DOM, WHERE `check-seedling-editor-arm`
-     * READS IT — AND THAT IS A SEAM THIS SLICE FOUND RATHER THAN A PREFERENCE.**
-     * `mountSetEditor`'s REPORT button runs `runReport()` and then the MOUNT's
-     * own render; it does NOT call `onSetChange`, so a PAGE cannot learn a
-     * report happened. A `window.__mazeLab.set.report` field would therefore
-     * have carried the verdict as of the LAST PAGE RENDER while the box on
-     * screen showed the current one — the stale-readout defect, shipped. So the
-     * page publishes no such field and this row reads the same three places the
-     * Seedling row does. ⛔ NOT FIXED HERE: `setEditorView.js` is E3's.
+     * ⛓⛓ **THE REPORT, OFF THE DOM *AND* OFF THE READOUT — E3a CLOSED THE SEAM
+     * THAT MADE ONE OF THEM IMPOSSIBLE.**
+     *
+     * E2c: `mountSetEditor`'s REPORT button ran `runReport()` and the MOUNT's
+     * own render and did NOT call `onSetChange`, so a page could not learn a
+     * report had happened; `window.__mazeLab.set.report` would have carried the
+     * verdict as of the LAST PAGE RENDER while the box on screen showed the
+     * current one. E3a's ordering rule fires `onSetChange({why: 'report'})`
+     * AFTER that render, so the field exists — and this probe reads BOTH, so
+     * the claim is that they agree.
      */
     const reportOf = () => page.evaluate(() => ({
         rows: [...document.querySelectorAll('#editSetReportOut li')].map((l) => l.textContent),
         note: document.getElementById('editSetReportNote')?.textContent ?? '',
         rulesDisabled: document.getElementById('editDownloadRules')?.disabled ?? null,
+        /** ⛓ THE `bad` ROWS ARE THE ERRORS — the class `runReport` gives a row
+         *  whose severity is `error`, which is what the readout's count counts. */
+        errorRows: [...document.querySelectorAll('#editSetReportOut li.bad')].length,
+        readout: window.__mazeLab?.set?.report ?? null,
     }));
+    /**
+     * ⛓⛓ **`null` UNTIL THE BUTTON IS PRESSED IS A STATE, NOT A HOLE** — the
+     * readout publishes the MOUNT's own `lastReport` and never runs the report
+     * itself, because a readout that derived the atlas on every page render
+     * would put a compile on the main thread behind every click.
+     */
+    const beforeReport = await read();
+    check(beforeReport.set.report === null,
+        '⛓ **`set.report` IS `null` BEFORE ANY REPORT PRESS** — it is `setUi.report()`, the '
+        + 'mount\'s own last verdict, and not a second authority that re-derives one',
+        json(beforeReport.set.report));
     await page.click('#editSetReport');
     await settled(() => document.querySelectorAll('#editSetReportOut li').length > 0,
         'the REPORT over the chain to paint its rows');
@@ -2291,6 +2377,24 @@ try {
     const ring = await reportOf();
     check(ring.rulesDisabled === false && /the graph closes/.test(ring.note),
         '⛓⛓ …and the 4-link RING closes the graph and ALLOWS the export', ring.note);
+    /**
+     * ⛓⛓⛓ **EDITOR v3 E3a — THE REPORT SEAM, CLOSED AND WITNESSED.** §30.7 left
+     * the REPORT path calling no `onSetChange` at all, so this field could not
+     * exist. ⛔ MUTANT: drop `onSetChange?.({why: 'report'})` from the press —
+     * the readout keeps the CHAIN's refusal (or `null`) while the box shows the
+     * RING's allowance, and the two disagree here.
+     */
+    check(ring.readout !== null
+        && json(ring.readout.rows) === json(ring.rows)
+        && ring.readout.rulesAllowed === !ring.rulesDisabled
+        && (ring.readout.rulesWhy ?? '⛓ the graph closes and the set validates — '
+            + 'rules.json may be exported.') === ring.note
+        && ring.readout.errors === ring.errorRows,
+        '⛓⛓⛓ **THE READOUT\'S `report` AND THE REPORT BOX AGREE** — same rows, same verdict, '
+        + 'same sentence. E2c published NO `report` field because the REPORT press told the '
+        + 'page nothing (§30.7); E3a\'s ordering rule is what this row is the witness for',
+        `readout ${ring.readout?.rows.length} row(s), allowed ${ring.readout?.rulesAllowed} · `
+        + `DOM ${ring.rows.length} row(s), disabled ${ring.rulesDisabled}`);
 
     await page.click('#editDownloadSet');
     await settled(() => window.__editorSetOverlayOut !== undefined, 'both download readouts');
@@ -2306,6 +2410,19 @@ try {
         + 'empty and the reason is PRINTED: a region library never shipped as anybody\'s '
         + 'vanilla game, and an empty companion would read as "checked, nothing to say"',
         `${dl.library} · ${dl.overlay} · mapping ${dl.mapping} · ${dl.note.slice(0, 120)}`);
+    /**
+     * ⛓⛓ **EDITOR v3 E3a — `set.note` IS BACK.** The DOWNLOAD press already
+     * called `onSetChange`; what it did NOT do was call it after the mount's own
+     * render, so a `note` field would have carried the sentence from before the
+     * press. ⛔ The claim is agreement with the box, not the sentence itself —
+     * the sentence is asserted by the row above, and duplicating it here would
+     * be two authorities for one string.
+     */
+    const dlRead = await read();
+    check(dlRead.set.note === dl.note && dl.note !== '',
+        '⛓⛓ **THE READOUT\'S `note` AND `#editSetNote` ARE THE SAME SENTENCE** — the third of '
+        + 'the four fields E2c had to drop (§30.8)',
+        `${dlRead.set.note?.slice(0, 90)}`);
     await page.click('#editDownloadRules');
     await settled(() => window.__editorSetRulesBytes !== undefined, 'the rules.json readout');
     /**

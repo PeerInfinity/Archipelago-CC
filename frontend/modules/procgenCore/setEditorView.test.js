@@ -50,7 +50,7 @@ import {
     createSeedlingSetAdapter, createSetSession, setRecord,
 } from '../seedlingDemo/seedlingSetAdapter.js';
 import { mountWatchSetEditor } from '../seedlingDemo/watchSetEditor.js';
-import { mountSetEditor } from './setEditorView.js';
+import { SET_CHANGE_WHY, mountSetEditor } from './setEditorView.js';
 import { exitArrowShapes } from './setEditorCore.js';
 import { BUNDLE_KINDS } from '../presets/documentBundle.js';
 import { loadJSZipNode } from '../../../scripts/procgen/loadJSZipNode.mjs';
@@ -239,7 +239,7 @@ const generatedSet = (n = ROOMS, setId = 'set-editor-view-test') => buildLevelSe
     Array.from({ length: n }, (_, level) => emptyLevel({ level })), { setId, link: true },
 ).set;
 
-const seedlingHarness = ({ rooms = ROOMS } = {}) => {
+const seedlingHarness = ({ rooms = ROOMS, onSetChange = null } = {}) => {
     const adapter = createSeedlingSetAdapter(DEPS);
     /**
      * ⛓ A ROOM SESSION STUB — the mount reads `{room, ops}` and
@@ -291,6 +291,13 @@ const seedlingHarness = ({ rooms = ROOMS } = {}) => {
         openRoomAt: (index) => { open = openStub(index); return true; },
         discardRoom: () => { open = null; },
         download: (name, text) => downloads.push({ name, bytes: String(text).length }),
+        /**
+         * ⛓ EDITOR v3 E3a — the page seam, RECORDABLE. ⛔ `null` by default, so
+         * every row that predates this slice drives the SAME mount it always
+         * did (`mountSetEditor`'s own default is `null` too), and the byte-inert
+         * PIN is untouched by the existence of this option.
+         */
+        onSetChange,
         doc,
     });
     return {
@@ -887,6 +894,205 @@ describe('⛔⛔ EDITOR v3 E2b — the lift is BYTE-INERT on Seedling, and it is
             'applySet', 'armedExit', 'destroy', 'render', 'report', 'rows',
             'runReport', 'selectRoom', 'selected', 'view',
         ]);
+    });
+});
+
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ EDITOR v3 E3a — **ONE ORDERING RULE FOR `onSetChange`** (§31.1 #1)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓⛓ A RECORDING PAGE. ⛔ The DOM is read INSIDE the callback, which is the
+ * whole point: what §30.8 measured was not *"the readout is wrong"* but
+ * *"the readout is written at the wrong MOMENT"*, and only a probe that looks
+ * at that moment can tell the two builds apart.
+ */
+const recordingHarness = () => {
+    const seen = [];
+    let H = null;
+    const h = seedlingHarness({
+        onSetChange: (arg) => seen.push({
+            why: arg?.why ?? null,
+            arg,
+            rooms: H === null ? null : rowsOf(H, 'editSetRooms'),
+            note: H === null ? null : textOf(H, 'editSetNote'),
+            identity: H === null ? null : textOf(H, 'editSetIdentity'),
+            report: H === null ? null : rowsOf(H, 'editSetReportOut'),
+            closeDisabled: H === null ? null : ($(H, 'editRoomClose')?.disabled ?? null),
+        }),
+    });
+    H = h;
+    h.seen = seen;
+    return h;
+};
+
+describe('⛓⛓⛓ EDITOR v3 E3a — the mount renders FIRST, then tells the page why', () => {
+    /**
+     * ⛔⛔⛔ **THE DEFECT, AS A ROW.** Before E3a the applied-op path was
+     * `onChange: ({result}) => { if (applied) { stills.clear(); onSetChange?.(); } render(); }`
+     * — the page was told BEFORE the mount had re-rendered, so a snapshot
+     * written from the callback carried the PREVIOUS op's rooms table. MEASURED
+     * on `lab.html` (§30.8): `set.links` read 1 off the session while a `strip`
+     * field read `linkedFrom: [0,0,0,0]`, one op behind.
+     *
+     * ⛓⛓ MUTANT: move `onSetChange?.({why: 'op'})` back inside the `applied`
+     * branch, above `render()` — the recorded "links here" column becomes the
+     * PRE-op one and this row goes red on the first expectation.
+     */
+    it('the applied-op callback sees the rooms table ALREADY carrying the new link', () => {
+        const h = recordingHarness();
+        const linksColumn = (rows) => rows.slice(1).map((r) => r.split('\n')[0]);
+        const before = rowsOf(h, 'editSetRooms');
+        click(h, 'editSetGesture');
+        setValue(h, 'editSetExitList', '0');
+        setValue(h, 'editSetTargetExit', '0');
+        clickRoom(h, 0, 6);
+        clickRoom(h, 3, 6);
+        const op = h.seen.filter((c) => c.why === 'op');
+        expect(op.length).toBe(1);
+        // the callback's own view of the table IS the post-render one …
+        expect(op[0].rooms).toEqual(rowsOf(h, 'editSetRooms'));
+        // … and it is NOT the table as it stood before the op landed.
+        expect(op[0].rooms).not.toEqual(before);
+        expect(linksColumn(op[0].rooms)).not.toEqual(linksColumn(before));
+    });
+
+    /**
+     * ⛓⛓⛓ **THE `why` ROSTER IS A CONTRACT, AND IT IS EXPORTED.** ⛔ MUTANT:
+     * the roster SHRINKS (a value is dropped from `SET_CHANGE_WHY`, or a call
+     * site stops passing one) — the second expectation names exactly which.
+     */
+    it('`SET_CHANGE_WHY` is the five reasons, and every call site passes one of them', () => {
+        expect(SET_CHANGE_WHY)
+            .toEqual(['op', 'report', 'close', 'select', 'room', 'download']);
+        const h = recordingHarness();
+        runScript(h);
+        click(h, 'editSetReport');
+        h.ui.selectRoom(0);
+        expect(h.seen.length).toBeGreaterThan(0);
+        for (const c of h.seen) expect(SET_CHANGE_WHY).toContain(c.why);
+        click(h, 'editSetRowOpen_0');
+        expect([...new Set(h.seen.map((c) => c.why))].sort())
+            .toEqual(['close', 'download', 'op', 'report', 'room', 'select']);
+    });
+
+    /**
+     * ⛓⛓⛓ **THE OPEN BUTTON'S OWN HOLE, FOUND BY APPLYING THE RULE.** The rooms
+     * table's OPEN runs `selectRoom` · the PAGE's `openRoomAt` · the mount's
+     * `render()`, so the page re-rendered ITSELF one step before the identity
+     * line and `#editRoomClose` caught up. ⛔ CLOSE always had a notification
+     * and OPEN never did — one control apart, opposite behaviours.
+     * ⛓ MUTANT: drop `onSetChange?.({why: 'room'})` — the roster row above goes
+     * red and this one reports `[]`.
+     */
+    it('the OPEN button notifies with `why: \'room\'`, after the identity line moved', () => {
+        const h = recordingHarness();
+        h.seen.length = 0;
+        click(h, 'editSetRowOpen_1');
+        const room = h.seen.filter((c) => c.why === 'room');
+        expect(room.length).toBe(1);
+        expect(room[0].identity).toMatch(/ROOM 1 open with 1 edit\(s\)/);
+        expect(room[0].closeDisabled).toBe(false);
+    });
+
+    /**
+     * ⛔⛔ **THE SEAM'S OTHER FACE** (§30.7): the REPORT press ran `runReport()`
+     * and the mount's own `render()` and told the page NOTHING, so a page could
+     * only publish a verdict one press stale. ⛓ MUTANT: drop the
+     * `onSetChange?.({why: 'report'})` — `report.length` is 0 and this row goes
+     * red without any other row moving.
+     */
+    it('the REPORT press notifies, and the report box is already filled at that moment', () => {
+        const h = recordingHarness();
+        click(h, 'editSetReport');
+        const report = h.seen.filter((c) => c.why === 'report');
+        expect(report.length).toBe(1);
+        expect(report[0].report.length).toBeGreaterThan(0);
+        expect(report[0].report).toEqual(rowsOf(h, 'editSetReportOut'));
+        // the mount's own `report()` is what a page publishes, and it is current
+        expect(h.ui.report().rows.map((r) => `[${r.kind}] ${r.text}`))
+            .toEqual(rowsOf(h, 'editSetReportOut'));
+    });
+
+    /**
+     * ⛓ CLOSE ALREADY FIRED AFTER ITS RENDER and still fires exactly ONCE —
+     * the ordering rule did not turn one press into two notifications. ⛔ And
+     * the callback sees `#editRoomClose` ALREADY disabled, which is the mount
+     * state a page would publish as *"no room open"*.
+     */
+    it('CLOSE fires once, with `why: \'close\'`, after the button went disabled', () => {
+        const h = recordingHarness();
+        h.openRoom(1);
+        h.ui.render();
+        h.seen.length = 0;
+        click(h, 'editRoomClose');
+        const close = h.seen.filter((c) => c.why === 'close');
+        expect(close.length).toBe(1);
+        expect(close[0].closeDisabled).toBe(true);
+        expect(close[0].identity).toMatch(/no room open/);
+    });
+
+    /**
+     * ⛓⛓ **`select` FIRES ON A MOVE AND ONLY ON A MOVE**, and never at mount.
+     * ⛔ The mount ends with `selectRoom(0)` while `selected` is already 0; an
+     * unguarded notification there would reach a page whose own `setUi` handle
+     * is still unassigned — the mount-time call that hits the TDZ.
+     */
+    it('`select` fires only when `selected` actually moves, and never during mount', () => {
+        const h = recordingHarness();
+        expect(h.seen).toEqual([]);
+        h.ui.selectRoom(3);
+        expect(h.seen.map((c) => c.why)).toEqual(['select']);
+        h.ui.selectRoom(3);
+        expect(h.seen.map((c) => c.why)).toEqual(['select']);
+        h.ui.selectRoom(99);
+        expect(h.seen.map((c) => c.why)).toEqual(['select']);
+        h.ui.selectRoom(1);
+        expect(h.seen.map((c) => c.why)).toEqual(['select', 'select']);
+    });
+
+    /**
+     * ⛓⛓⛓ **THE RENUMBERING PATH RENDERS AGAIN BEFORE IT NOTIFIES.**
+     * `view.apply` fires `onChange` INSIDE the op — before the decision
+     * discards the open room session — so the first notification's
+     * `#editRoomClose` still reads "a room is open". ⛔ The SECOND one, after
+     * the decision, is the one a page can trust, and E3a is what puts a
+     * `render()` in front of it. MUTANT: drop that `render()` — the last
+     * callback still reports the discarded room session as open.
+     */
+    it('a renumbering that DISCARDS the open room notifies with the mount already current', () => {
+        const h = recordingHarness();
+        h.openRoom(2);
+        h.ui.render();
+        h.seen.length = 0;
+        click(h, 'editSetRowUp_3');
+        expect(h.seen.length).toBe(2);
+        expect(h.seen.every((c) => c.why === 'op')).toBe(true);
+        expect(h.seen[0].closeDisabled).toBe(false);
+        expect(h.seen.at(-1).closeDisabled).toBe(true);
+        expect(h.seen.at(-1).identity).toMatch(/no room open/);
+        expect(h.seen.at(-1).note).toMatch(/DISCARDED/);
+    });
+
+    /**
+     * ⛓ EVERY DOWNLOAD PRESS IN THE FAMILY NOTIFIES, and says `download`. ⛔ The
+     * SET press already did and the rules press did not — one family, two
+     * behaviours, which is the asymmetry item 1 exists to end.
+     */
+    it('the SET download and the rules download BOTH notify with `why: \'download\'`', () => {
+        const h = recordingHarness();
+        click(h, 'editSetReport');
+        h.seen.length = 0;
+        click(h, 'editDownloadSet');
+        expect(h.seen.map((c) => c.why)).toEqual(['download']);
+        const rulesBtn = $(h, 'editDownloadRules');
+        if (!rulesBtn.disabled) {
+            h.seen.length = 0;
+            click(h, 'editDownloadRules');
+            expect(h.seen.map((c) => c.why)).toEqual(['download']);
+        }
+        expect(h.downloads.length).toBeGreaterThan(0);
     });
 });
 

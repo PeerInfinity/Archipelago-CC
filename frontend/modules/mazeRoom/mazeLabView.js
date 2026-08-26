@@ -1992,43 +1992,64 @@ export function main() {
                 mounted: Boolean(setUi),
                 selected: setUi ? setUi.selected : null,
                 /**
-                 * ⛔⛔ **THERE IS NO `strip`, `note` OR `identity` FIELD HERE,
-                 * AND IT IS THE SAME SEAM THE REPORT HIT** — one press over, and
-                 * MEASURED rather than reasoned about.
+                 * ⛓⛓⛓ **EDITOR v3 E3a — THE FOUR FIELDS E2c HAD TO DROP ARE
+                 * BACK, AND THE SEAM IS WHY THEY CAN BE.**
                  *
-                 * `mountSetEditor`'s view calls `onSetChange` **BEFORE** its own
-                 * `render()` (`onChange: ({result}) => { if (applied) {
-                 * stills.clear(); onSetChange?.(); } render(); }`), so the PAGE's
-                 * render — which is where this snapshot is written — runs while
-                 * the mount's `rows`, its rooms table, its note and its identity
-                 * line are still the PREVIOUS op's. MEASURED on the two-click
-                 * gesture: `links` read 1 (off the SESSION's record, live) while
-                 * a `strip` field read `linkedFrom: [0,0,0,0]`, one op behind.
+                 * §30.7/§30.8: `mountSetEditor` called `onSetChange` BEFORE its
+                 * own `render()` on the applied-op path and NOT AT ALL on the
+                 * REPORT path, so this snapshot — written by the PAGE's
+                 * `render`, which `onSetChange` is what triggers — was written
+                 * while the mount's rows, note, identity line and report box
+                 * were still the PREVIOUS press's. MEASURED on the two-click
+                 * CONNECT: `links` read 1 off the SESSION while a `strip` field
+                 * read `linkedFrom: [0,0,0,0]`, one op behind. Four fields were
+                 * therefore published NOWHERE rather than published stale.
                  *
-                 * ⇒ everything above IS live because it comes from
-                 * `setSession.record()` and page-local state; anything derived
-                 * from the MOUNT is not, and is published NOWHERE. The browser
-                 * row reads the rooms table, the note and the identity line off
-                 * the DOM — which has caught up by the time it looks — exactly
-                 * as `check-seedling-editor-arm` does. E3 owns the seam (§30.7).
+                 * ⛔ E3a gave the mount ONE ordering rule — its own `render()`
+                 * first, then `onSetChange({why})`, on every path — so what is
+                 * derived from the MOUNT is current here too. ⇒ §30.7's rule
+                 * (*"a page may publish what it derives from the SESSION, and
+                 * nothing it derives from the MOUNT"*) is RETIRED BY NAME: it
+                 * was a rule about a broken seam, not about readouts.
+                 *
+                 * ⛓ `check-maze-lab` keeps ONE DOM read per field beside these,
+                 * because THAT is the claim: the readout and the mount's own DOM
+                 * must AGREE. A readout that lagged would disagree with the box
+                 * on screen, which is exactly what the mutant (the `render()`
+                 * put back after the notification) reproduces.
                  */
+                strip: setUi ? {
+                    rooms: setUi.rows().length,
+                    names: setUi.rows().map((r) => r.name),
+                    exits: setUi.rows().map((r) => r.exits),
+                    linkedFrom: setUi.rows().map((r) => r.linkedFrom),
+                    locations: setUi.rows().map((r) => r.locations),
+                    rules: setUi.rows().map((r) => r.rules),
+                } : null,
                 /**
-                 * ⛔⛔ **THERE IS NO `report` FIELD HERE, AND THAT IS DELIBERATE
-                 * — A SEAM, NAMED RATHER THAN FAKED.** `mountSetEditor`'s REPORT
-                 * button runs `runReport()` and then the MOUNT's own render; it
-                 * does NOT call `onSetChange`, so a page has no way to learn
-                 * that a report happened. A `report:` field here would therefore
-                 * carry the verdict AS OF THE LAST PAGE RENDER — the previous
-                 * one, or `null` — while `#editSetReportOut` on screen showed
-                 * the current one. That is the stale-readout defect this repo
-                 * keeps recording, and a readout that lies is worse than none.
-                 *
-                 * ⛓ The REPORT's verdict is read where `check-seedling-editor-arm`
-                 * reads it: off the DOM — `#editSetReportOut`'s rows (each
-                 * `[kind] text`), `#editSetReportNote` and `#editDownloadRules`'s
-                 * disabled state. Seedling never needed the seam for the same
-                 * reason. E3 owns it if a page ever does (§30).
+                 * ⛓ THE NOTE AND THE IDENTITY LINE ARE THE MOUNT'S OWN BOXES —
+                 * it writes them and exposes no accessor, so the page reads them
+                 * where the mount put them. ⛔ That is NOT a vacuous
+                 * cross-check: what the gate compares is a value read AT PAGE
+                 * RENDER TIME against the same box read later, and a page that
+                 * rendered BEFORE the mount would hold the previous press's
+                 * sentence while the box on screen held the current one.
                  */
+                note: setUi ? ($('editSetNote')?.textContent ?? '') : null,
+                identity: setUi ? ($('editSetIdentity')?.textContent ?? '') : null,
+                /**
+                 * ⛓⛓ **AND THE REPORT'S VERDICT, OFF `setUi.report()`** — the
+                 * mount's own `lastReport`, not a re-run: a readout that ran the
+                 * report itself would be a second authority whose atlas derive
+                 * cost lands on every page render. `null` until the REPORT
+                 * button has been pressed, which is a state a row can assert.
+                 */
+                report: setUi?.report() ? {
+                    rows: setUi.report().rows.map((r) => `[${r.kind}] ${r.text}`),
+                    errors: setUi.report().rows.filter((r) => r.severity === 'error').length,
+                    rulesAllowed: setUi.report().download.rules.allowed,
+                    rulesWhy: setUi.report().download.rules.why ?? null,
+                } : null,
                 /**
                  * ⛓⛓ THE OPEN ROOM, AS THE PAGE HOLDS IT. ⛔ `openRoomOps` is a
                  * COUNT and `openRoomOpList` is the list, for the reason the

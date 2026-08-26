@@ -101,6 +101,33 @@ export const ADAPTER_FNS = Object.freeze([
 ]);
 
 /**
+ * ⛓⛓⛓ **EVERY REASON THIS MOUNT NOTIFIES ITS PAGE, IN ONE FROZEN LIST**
+ * (EDITOR v3 E3a, §31.1 #1). ⛔ It is EXPORTED because it is a CONTRACT and not
+ * a detail: a page that switches on `why` has to be able to ask what the
+ * vocabulary is, and a roster that lived only in the call sites would grow a
+ * sixth value nobody's handler had heard of.
+ *
+ * ⛓⛓ **TWO OF THE SIX ARE NOT IN THE PLAN'S FOUR** (§31.1 lists
+ * `op · report · close · select`), and both were found by applying the rule
+ * rather than by reading it:
+ *
+ * ⛓ `download` — the SET download press ALREADY called `onSetChange` before
+ * this slice while the rules and bundle presses, which write the same class of
+ * readout global and the same note, did not. Three presses in one family with
+ * two behaviours is the very asymmetry item 1 exists to end.
+ *
+ * ⛓ `room` — the rooms table's OPEN button runs `selectRoom` · the PAGE's
+ * `openRoomAt` · this mount's `render()`, IN THAT ORDER. The page's own render
+ * therefore happens BEFORE the mount's, so a readout written from it says
+ * *"no room open"* while `#editSetIdentity` beside it already says
+ * *"ROOM n open with k edit(s)"* — the same stale-readout shape one control
+ * over, and the CLOSE half was the only one that had a notification.
+ */
+export const SET_CHANGE_WHY = Object.freeze([
+    'op', 'report', 'close', 'select', 'room', 'download',
+]);
+
+/**
  * ⛔⛔ **A SHIPPED DEFECT, CARRIED ACROSS THE LIFT ON PURPOSE.** See the call
  * site in `paintStrip`: the strip's `⛔embed` label has been drawn under EVERY
  * room since E1b, because its condition read an undeclared `xml`. §27.3 #7 says
@@ -150,7 +177,11 @@ const el = (doc, tag, className, text) => {
  * @param {Function} o.openRoomAt  `(index) => boolean`
  * @param {Function} o.discardRoom `() => void`
  * @param {Function} o.download    `(name, text, type) => void`
- * @param {Function} [o.onSetChange] the page re-renders its own readouts
+ * @param {Function} [o.onSetChange] `({why}) => void` — the page re-renders its
+ *   own readouts. ⛔ **ONE ORDERING RULE, AND IT IS THE CONTRACT** (EDITOR v3
+ *   E3a): this mount's OWN `render()` has already run when it is called, on
+ *   every path, so a page may publish what it derives from the MOUNT and not
+ *   only what it derives from the SESSION. `why` is one of `SET_CHANGE_WHY`
  * @param {Function} [o.loadZip]   `() => Promise<JSZip>`
  * @param {object}  [o.doc]        the DOM the `edit*` ids live in
  */
@@ -516,7 +547,7 @@ export function mountSetEditor({
                 stills.clear();
                 say(`UNDO — ${n - 1} SET edit(s) remain`);
                 render();
-                onSetChange?.();
+                onSetChange?.({ why: 'op' });
             },
         }],
         /**
@@ -542,9 +573,20 @@ export function mountSetEditor({
                  * no longer has — and the commit would be refused for a list the
                  * page itself had gone stale on. Measured: it was.
                  */
-                onSetChange?.();
             }
             render();
+            /**
+             * ⛓⛓⛓ **AFTER `render()`, NOT BEFORE — EDITOR v3 E3a, §31.1 #1.**
+             * ⛔ It used to fire INSIDE the `applied` branch above, i.e. while
+             * this mount's `rows`, its rooms table, its note and its identity
+             * line were still the PREVIOUS op's. MEASURED on the two-click
+             * CONNECT (§30.8): a page's `set.links` read **1** off the SESSION
+             * while anything it read off the MOUNT read `linkedFrom: [0,0,0,0]`,
+             * one op behind — so `mazeLabView` published no `strip`, `note` or
+             * `identity` at all rather than publish a lie. This line is why it
+             * can publish them again.
+             */
+            if (result?.applied) onSetChange?.({ why: 'op' });
         },
         lifetime: mine,
     });
@@ -606,8 +648,17 @@ export function mountSetEditor({
              * only there would still be reporting the discarded room as open.
              * C2 met the same shape from the other side ("a page's readout only
              * learns what its `render` writes").
+             *
+             * ⛓⛓ **AND THE MOUNT RENDERS AGAIN FIRST** (EDITOR v3 E3a). The
+             * `render()` inside `onChange` above ran BEFORE the decision, so at
+             * this point `#editRoomClose`'s disabled state and the identity
+             * line's `ROOM n open with k edit(s)` are still describing a room
+             * session this decision has just discarded. ⛔ The ordering rule is
+             * not *"a render happened at some point"*, it is *"the mount is
+             * current when the page is told"*.
              */
-            onSetChange?.();
+            render();
+            onSetChange?.({ why: 'op' });
         }
         return res;
     };
@@ -623,10 +674,23 @@ export function mountSetEditor({
 
     function selectRoom(index) {
         if (!Number.isInteger(index) || index < 0 || index >= roomCount()) return;
+        /**
+         * ⛓⛓ **THE `select` NOTIFICATION IS GUARDED ON AN ACTUAL MOVE**
+         * (EDITOR v3 E3a, §31.1 #1). A page DOES read this — `mazeLabView`
+         * publishes `window.__mazeLab.set.selected` off `setUi.selected`, and
+         * before this it went stale on every strip click that only selected.
+         * ⛔ Guarded rather than unconditional for TWO measured reasons: a
+         * re-click on the room already selected changes nothing a page could
+         * publish, and the mount's own `selectRoom(0)` at the end of mount
+         * would otherwise fire `onSetChange` INTO A PAGE WHOSE `setUi` HAS NOT
+         * BEEN ASSIGNED YET — the mount-time call that hits the TDZ.
+         */
+        const moved = selected !== index;
         selected = index;
         const sel = $('editSetRoom');
         if (sel) sel.value = String(index);
         render();
+        if (moved) onSetChange?.({ why: 'select' });
     }
 
     /* ── THE ROOMS LIST ────────────────────────────────────────────── */
@@ -664,6 +728,15 @@ export function mountSetEditor({
                 selectRoom(row.index);
                 openRoomAt(row.index);
                 render();
+                /**
+                 * ⛓⛓ **EDITOR v3 E3a — AND THE PAGE IS TOLD AFTER THE MOUNT
+                 * RENDERS.** `openRoomAt` is the PAGE's and it re-renders the
+                 * page itself, so without this the identity line and
+                 * `#editRoomClose` a readout published were the ones from
+                 * BEFORE the room opened. ⛔ CLOSE has always had its
+                 * notification; OPEN never did.
+                 */
+                onSetChange?.({ why: 'room' });
             }, !row.openable);
             button('editSetRowUp', '▲', () => {
                 const order = moveOrder(roomCount(), row.index, -1);
@@ -1054,7 +1127,15 @@ export function mountSetEditor({
         });
     });
 
-    on('editSetReport', () => { runReport(); render(); });
+    /**
+     * ⛓⛓⛓ **THE REPORT PATH NOTIFIES — THE SEAM'S OTHER FACE** (EDITOR v3 E3a,
+     * §31.1 #1; the defect is §30.7's). It ran the report and re-rendered the
+     * mount and told the page NOTHING, so no page could publish a REPORT
+     * verdict without carrying the one from the previous render — which is why
+     * `mazeLabView` published no `report` field at all and its gate read the
+     * verdict off `#editSetReportOut`.
+     */
+    on('editSetReport', () => { runReport(); render(); onSetChange?.({ why: 'report' }); });
 
     /**
      * ⛓ ARMING THE GESTURE IS THE COMMAND TABLE'S OWN ROW — `view.setTool` —
@@ -1080,7 +1161,7 @@ export function mountSetEditor({
         say(`the room session on room ${open.room} was CLOSED into the ${NOUN} — ${open.ops} room `
             + 'edit(s) became ONE `replace-room`');
         render();
-        onSetChange?.();
+        onSetChange?.({ why: 'close' });
     });
 
     /**
@@ -1153,7 +1234,7 @@ export function mountSetEditor({
          * put where a driver can read them (C2's own reason for `__editorSetOut`).
          */
         render();
-        onSetChange?.();
+        onSetChange?.({ why: 'download' });
     });
 
     /**
@@ -1185,6 +1266,16 @@ export function mountSetEditor({
         globalThis.__editorSetRulesBytes = text;
         setNote(`DOWNLOADED rules.json — ${rep.report.ap_regions} AP region(s), `
             + `${rep.report.exits} exit(s), ${rep.report.locations} location(s)`);
+        /**
+         * ⛓ EDITOR v3 E3a — THE SAME FAMILY, THE SAME RULE. This press writes
+         * two readout globals and a note and told the page nothing; the SET
+         * download beside it always did. ⛔ `render()` here is what makes the
+         * notification honest and NOT a second report run: `render` does not
+         * touch `#editSetReportOut`, `#editSetReportNote` or the rules button's
+         * disabled state — those are `runReport`'s alone.
+         */
+        render();
+        onSetChange?.({ why: 'download' });
     });
 
     /**
@@ -1283,6 +1374,7 @@ export function mountSetEditor({
             + `(${members.map((m) => m.kind).join(', ')}), ${bytes.length} bytes at indent `
             + `${indent}${indent === 0 ? ' (MINIFIED)' : ''} · ${notes.join(' | ')}`);
         render();
+        onSetChange?.({ why: 'download' });
     });
 
     mine.on($('editSetRuleJson') ?? doc.createElement('textarea'), 'input', checkRuleJson);
