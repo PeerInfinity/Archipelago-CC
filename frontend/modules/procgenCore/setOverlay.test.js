@@ -162,6 +162,19 @@ describe('⛓⛓ the shape check is the toolkit\'s, the ADDRESS is the substrate
      * scope parameter were ignored.
      */
     it('⛓⛓ the default scope is the SET — a cross-room duplicate refuses', () => {
+        // ⛔⛔ THE DEFAULT, ON A BINDING THAT DECLARES NOTHING. `WIDGET` passes no
+        //    `locationNameScope` either, but a future substrate must not be able
+        //    to inherit `'room'` by accident, so the bare binding is driven here
+        //    with the two rooms whose verdict separates the two scopes.
+        const BARE = createSetOverlay({
+            moduleName: 'bareProbe', locationFields: [...BASE_LOCATION_FIELDS],
+        });
+        const bare = BARE.overlayErrors(ok({
+            0: { locations: [{ name: 'dup', vanilla_item: 'Coin' }] },
+            1: { locations: [{ name: 'dup', vanilla_item: 'Coin' }] },
+        }));
+        expect(bare).toHaveLength(1);
+        expect(bare[0]).toMatch(/unique across the SET/);
         const across = WIDGET.overlayErrors(ok({
             0: { locations: [loc({ name: 'dup' })] },
             1: { locations: [loc({ name: 'dup' })] },
