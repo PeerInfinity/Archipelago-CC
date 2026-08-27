@@ -691,6 +691,21 @@
         <button id="editSetUndo" disabled>UNDO the last LIBRARY edit</button>
         <button id="editDownloadSet" disabled>Download the LIBRARY · OVERLAY</button>
         <button id="editDownloadRules" disabled>Download rules.json</button>
+        <!-- ⛓⛓⛓ EDITOR INTEGRATION W4 — **M2, THE PLAYABLE ONE, TODAY.**
+             The button beside this one writes the world's own `rules.json`,
+             whose Seedling regions carry `flash_seedling` sidecars — and a
+             MIXED world does not PLAY in the app yet: a door OUT of a Seedling
+             room is the game's own synchronous level change and the host has no
+             seam to intercept it (⚖ plan §2.3, Q2 measured; M1 is an AS3 slice).
+             This one compiles EVERY region through the maze projection — which
+             the player and the bots already walk — so a mixed world authored
+             here is playable now. ⛔ A COMPILE-TIME projection: nothing is
+             written back, and the world, both parts and every region's authored
+             `substrate` are untouched.
+             ⛔ Only a WORLD has one; under a plain region library every region
+             is already `maze` and a second identical download would be a second
+             answer to one question. -->
+        <button id="labDownloadAllMaze" hidden>Download rules.json (ALL-MAZE — the playable one)</button>
         <!--
           ⛓⛓ EDITOR v3 E2c — ONE PRESS, ONE `.zip`. The members are the library,
           the overlay, the compiled `rules.json` and the derived region atlas.

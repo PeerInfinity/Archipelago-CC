@@ -17,11 +17,21 @@ import { describe, expect, it } from 'vitest';
 import {
     LAB_SUBSTRATE, SEEDLING_ATLAS_GAME, bindWorldParts, makeDrawRoomStill, mazeLibraryRows,
     mazeSetBindings, roomBaseTag, sniffSetDocument, worldDoorDisconnectOp, worldDoorOp,
-    worldDoorPreview, worldDoorRows, worldDownloadMembers, worldPartDescriptors, worldSetBindings,
+    worldAllMazeRulesJson, worldDoorPreview, worldDoorRows, worldDownloadMembers,
+    worldPartDescriptors, worldSetBindings,
 } from './mazeSetLab.js';
-import { deriveWorldAtlasOf } from '../procgenCore/worldDerivation.js';
+import { deriveWorldAtlasOf, partOfRegion } from '../procgenCore/worldDerivation.js';
+import { reportOver, roomRowsOf } from '../procgenCore/setEditorCore.js';
+import { rulesJsonSchemaErrors } from '../procgenCore/jsonSchemaCheck.js';
+import { loadAtlasSchema, loadRulesSchema } from '../procgenCore/jsonSchemaFiles.js';
+import { reachableRegions, regionsOf } from '../procgenCore/rulesGraph.js';
+import { compileRegionAtlas } from '../procgenPipeline/regionAtlasCompiler.js';
+import { validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js';
+import { projectRegionToMaze } from '../procgenPipeline/regionAtlasMazeProjection.js';
+import { seedlingMazeProjectionDeps } from '../flashPanel/seedlingAtlasAnalysis.js';
+import { roomsOfSet } from '../seedlingDemo/seedlingSetAdapter.js';
+import { MAZE_CONDITION_DEPS, emptyMazeOverlay, mazeGridFor } from './mazeAtlasDerivation.js';
 import { createEditSession } from '../procgenCore/editCore.js';
-import { roomRowsOf } from '../procgenCore/setEditorCore.js';
 import { ADAPTER_FNS } from '../procgenCore/setEditorView.js';
 import { createWorldSetAdapter, worldRecord } from '../procgenCore/worldSetAdapter.js';
 import { mazeEditAdapter } from './mazeEditAdapter.js';
@@ -35,7 +45,6 @@ import { TILE_SIZE } from '../seedlingDemo/levelWorld.js';
 import { emptyLevel } from '../seedlingDemo/procgenLevel.js';
 import { parseOelLevel } from '../seedlingDemo/procgenLevelOel.js';
 import { emptyOverlay as emptySeedlingOverlay } from '../seedlingDemo/seedlingSetOverlay.js';
-import { emptyMazeOverlay } from './mazeAtlasDerivation.js';
 import { ADAPTER_FNS } from '../procgenCore/setEditorView.js';
 import { OVERVIEW } from '../procgenCore/setEditorCore.js';
 import { emptyMazeOverlay, readSetCell, setRecord } from './mazeSetAdapter.js';
@@ -556,6 +565,22 @@ const w4Bindings = (h) => worldSetBindings({
     deps: h.deps,
     parseOel: parseOelLevel,
     drawMazeStill: makeDrawRoomStill(),
+    /**
+     * ⛓ THE MAZE ROW'S `gridFor`, BOUND TO THE MAZE PART — the page's own
+     * `worldCompileOptions()`, in node. ⛔ Namespaced ids, so the resolver has
+     * to split the part off first and a region of the OTHER part answers `null`
+     * (its sidecar is the flash builder's, not this row's).
+     */
+    compileOptions: {
+        mazeProjection: {
+            ...MAZE_CONDITION_DEPS,
+            gridFor: (region) => {
+                if (partOfRegion(region.region_id) !== 'mz') return null;
+                const entry = h.session.record().parts.mz.entries[region.map_ref];
+                return entry ? mazeGridFor(entry.payload) : null;
+            },
+        },
+    },
     gameName: 'W4 World',
 });
 
@@ -860,5 +885,170 @@ describe('⛓⛓⛓ W4 — the cross-part door', () => {
             expect(row.exits).toEqual([]);
             expect(row.why).toMatch(/the derivation kept NO region for this room/);
         }
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ W4 — THE ALL-MAZE PROJECTION (M2), AND THE PER-PART REPORT ROWS
+ * ══════════════════════════════════════════════════════════════════════ */
+
+const w4AllMazeProjection = (h) => {
+    const record = h.session.record();
+    const seedDeps = seedlingMazeProjectionDeps({
+        mapDoc: { levels: roomsOfSet(record.parts.seed, parseOelLevel) }, gameConfig: {},
+    });
+    return {
+        ...MAZE_CONDITION_DEPS,
+        ...seedDeps,
+        gridFor: (region) => {
+            if (partOfRegion(region.region_id) === 'mz') {
+                const entry = record.parts.mz.entries[region.map_ref];
+                return entry ? mazeGridFor(entry.payload) : null;
+            }
+            return seedDeps.gridFor(region);
+        },
+    };
+};
+
+describe('⛓⛓⛓ W4 — the ALL-MAZE projection (M2)', () => {
+    /**
+     * ⛔⛔ **THE BRIEF'S RECIPE THROWS, AND THIS ROW IS WHY THE SHIPPED ONE IS
+     * DIFFERENT.** W2 §8.7 proposed an injected `sidecarBuilders` row for
+     * `flash_seedling`; over a WIRED world it dies on `wiredExit is not a
+     * function`, because the maze row's context is built INSIDE
+     * `compileRegionAtlas` from that compile's own graph and an injected builder
+     * is handed `(region, substrateId)` and nothing else. ⛓ Pinned rather than
+     * remembered: the day the compiler hands its ctx to injected rows, this row
+     * goes red and the shipped recipe can be simplified.
+     */
+    it('an INJECTED `flash_seedling` builder cannot have the maze row\'s ctx', () => {
+        const h = w4Session({ crossing: true });
+        const derived = deriveWorldAtlasOf(h.session.record(), { parts: h.parts, deps: h.deps });
+        const proj = w4AllMazeProjection(h);
+        expect(() => compileRegionAtlas(derived.atlas, {
+            gameName: 'W4',
+            mazeProjection: proj,
+            sidecarBuilders: {
+                [substrateIdFor(SEEDLING_ATLAS_GAME)]: (region) => {
+                    const grid = proj.gridFor(region);
+                    if (!grid) return { sidecars: {}, bound: false };
+                    const p = projectRegionToMaze(region, grid, { ...proj });
+                    return { sidecars: p.sidecars, bound: true, notes: p.notes };
+                },
+            },
+        })).toThrow(/wiredExit is not a function/);
+    });
+
+    /**
+     * ⛓⛓ …and the shipped one: the region's own `substrate` is STRIPPED for this
+     * one compile so the compiler's BUILT-IN maze row — with its full ctx —
+     * projects every region.
+     */
+    it('the shipped recipe compiles EVERY region to `maze`, schema-clean', () => {
+        const h = w4Session({ crossing: true });
+        const out = worldAllMazeRulesJson(h.session, h.deps, {
+            parts: h.parts,
+            compileRegionAtlas,
+            mazeProjection: w4AllMazeProjection(h),
+            gameName: 'W4 all-maze',
+        });
+        // ⛔ THE HEADLINE — every one of the four rooms, on ONE substrate.
+        expect(out.report.substrates).toEqual({ maze: 4 });
+        expect(rulesJsonSchemaErrors(out.rules, loadRulesSchema())).toEqual([]);
+        const all = Object.keys(regionsOf(out.rules, '1'));
+        const reached = reachableRegions(out.rules, '1');
+        expect(all.filter((n) => !reached.has(n))).toEqual([]);
+        // ⛓ …and the FLASH-default compile of the same world still reports BOTH,
+        //   which is what makes the two downloads two answers and not one.
+        const b = w4Bindings(h);
+        const flash = b.adapterFns.rulesJsonOf(h.session, h.deps, { compileRegionAtlas });
+        expect(flash.report.substrates).toEqual({ flash_seedling: 2, maze: 2 });
+        /**
+         * ⛔ **NOTHING IS WRITTEN BACK.** The projection is a COMPILE-TIME one:
+         * the world, both parts and every region's authored `substrate` are
+         * untouched, which is what keeps the download beside it honest.
+         */
+        const after = deriveWorldAtlasOf(h.session.record(), { parts: h.parts, deps: h.deps });
+        expect(after.atlas.regions.map((r) => r.substrate))
+            .toEqual(['flash_seedling', 'flash_seedling', 'maze', 'maze']);
+        expect(out.atlas.regions.every((r) => r.substrate === undefined)).toBe(true);
+    });
+});
+
+describe('⛓⛓⛓ W4 — the REPORT rows a world can only answer PER PART', () => {
+    /**
+     * ⛔⛔ W2 §8.1 #4: both rows read `record.overlay.rooms` keyed by room INDEX
+     * and join a region by `map_ref`, which in a MERGED atlas is the PART's own
+     * local index. A world's record has no `overlay` at all, so `reportOver`
+     * prints NEITHER — and the mutant this catches is a world REPORT that says
+     * *"every authored rule gates something"* over an overlay it never looked at.
+     */
+    it('`reportOver` prints neither row for a world, and the binding adds both', () => {
+        const h = w4Session();
+        const b = w4Bindings(h);
+        const rep = reportOver({
+            session: h.session,
+            deps: h.deps,
+            adapterFns: b.adapterFns,
+            document: b.document,
+            ruleKeys: b.ruleKeys,
+            compileRegionAtlas,
+            validateRegionAtlas,
+            atlasSchema: loadAtlasSchema(),
+        });
+        // ⛔ the composite's own report is SILENT on the inert-rule scan
+        expect(rep.rows.filter((r) => r.kind === 'inert-rule')).toEqual([]);
+        /**
+         * ⛔⛔ **AND ITS `locations` ROW IS WORSE THAN SILENT — THIS ROW FOUND
+         * IT.** §8.10 called it *"structurally empty"*; it is printed either
+         * way, comparing `overlayLocationCount` (0 for a world — its parts'
+         * overlays live INSIDE the world document) against the COMPILED total,
+         * which counts every part's. So it reads a harmless 0/0 here…
+         */
+        expect(rep.rows.filter((r) => r.kind === 'locations').map((r) => r.text))
+            .toEqual(['0 location(s) in the OVERLAY, 0 compiled']);
+        // ⛓ …and the binding's rows name the PART in every one of them
+        const extra = b.reportRows(h.session.record(), rep);
+        const parted = extra.filter((r) => r.text.startsWith('part "'));
+        expect(parted.length).toBeGreaterThan(0);
+        expect(parted.every((r) => /^part "(seed|mz)": /.test(r.text))).toBe(true);
+        expect(parted.filter((r) => r.kind === 'locations').map((r) => r.text))
+            .toEqual(['part "seed": 0 location(s) in its own overlay',
+                'part "mz": 0 location(s) in its own overlay']);
+        // ⛓ …and the row that says the core's own one does not apply
+        expect(extra[0].text).toMatch(/does NOT apply to a world/);
+
+        /**
+         * ⛔⛔ **…AND IT FLIPS TO A FALSE `warn` AS SOON AS A PART HOLDS ONE.**
+         * One location in the maze part makes the compiled total 1 while the
+         * composite overlay's count stays 0, and the core's row then quotes a
+         * sentence about *"an overlay that did not travel with its set"* which
+         * is NOT what happened. This is the claim the extra row exists to
+         * defuse, and the per-part rows are what tell the truth.
+         */
+        const marked = h.session.apply({
+            op: 'mark-location', room: 2, item: 0, name: 'a coin', vanilla_item: 'Coin',
+        });
+        expect(marked.ok).toBe(true);
+        const rep2 = reportOver({
+            session: h.session,
+            deps: h.deps,
+            adapterFns: b.adapterFns,
+            document: b.document,
+            ruleKeys: b.ruleKeys,
+            compileRegionAtlas,
+            validateRegionAtlas,
+            atlasSchema: loadAtlasSchema(),
+        });
+        const core = rep2.rows.filter((r) => r.kind === 'locations');
+        expect(core).toHaveLength(1);
+        expect(core[0].severity).toBe('warn');
+        expect(core[0].text).toMatch(/0 location\(s\) in the OVERLAY, 1 compiled/);
+        expect(core[0].text).toMatch(/they DISAGREE/);
+        const after = b.reportRows(h.session.record(), rep2)
+            .filter((r) => r.kind === 'locations' && r.text.startsWith('part "'))
+            .map((r) => r.text);
+        expect(after).toEqual(['part "seed": 0 location(s) in its own overlay',
+            'part "mz": 1 location(s) in its own overlay']);
     });
 });

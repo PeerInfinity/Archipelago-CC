@@ -33,8 +33,14 @@
 
 import { classifyDocument } from '../presets/documentBundle.js';
 import { stampIdentity } from '../procgenCore/contentIdentity.js';
-import { OVERVIEW } from '../procgenCore/setEditorCore.js';
+import { OVERVIEW, inertRulesOf, overlayLocationCount } from '../procgenCore/setEditorCore.js';
 import { deriveWorldAtlasOf, worldRulesJsonOf } from '../procgenCore/worldDerivation.js';
+/**
+ * ⛓ THE MAZE FLAVOUR'S NAME, from the module that DEFINES it — never the
+ * literal `'maze'` typed here (W1 §7.1 #2's rule, one substrate over: a literal
+ * is a mutant nothing can see until the day the word moves).
+ */
+import { MAZE_SUBSTRATE } from '../procgenPipeline/regionAtlasMazeProjection.js';
 import {
     WORLD_FIELDS, exitsOfWorldRoom, isWorldSetRefusal, partAt, partRecordOf,
     validateWorldForDownload, worldAdapterFns,
@@ -907,6 +913,13 @@ export function worldSetBindings({
          * will play it without deriving anything.
          */
         cellSubstrate: (cell) => cell?.substrate ?? null,
+        /**
+         * ⛓⛓ **THE TWO ROWS A WORLD CANNOT ANSWER WHOLE, PER PART** — see
+         * `worldPartReportRows`. ⛔ Appended by the mount and never folded into
+         * the refusal: whether a `rules.json` may be exported is `reportOver`'s
+         * alone.
+         */
+        reportRows: (record) => worldPartReportRows(record, parts, deps),
         /** ⛓ …and the identity line names the parts, where a set names its overlay. */
         identityOf: (record) => `${parts.length} part(s): ${parts
             .map((p) => `${p.id} (${p.kind}, ${p.bounds(partRecordOf(record, p)).w} room(s))`)
@@ -1251,4 +1264,155 @@ export function worldDoorDisconnectOp(from) {
         ok: true,
         op: { op: 'disconnect', from: { part: from.part, room: from.room, exit: from.exit } },
     };
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ EDITOR INTEGRATION W4 — THE ALL-MAZE PROJECTION (M2), AND THE
+ *      PER-PART REPORT ROWS
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓⛓⛓ **AN ALL-MAZE `rules.json` FOR A MIXED WORLD — M2, ON THIS PAGE, TODAY.**
+ *
+ * ⛔⛔ **AND THE BRIEF'S RECIPE FOR IT DOES NOT WORK — MEASURED, NOT ARGUED.**
+ * W2 §8.7 proposed `sidecarBuilders: {flash_seedling: <projectRegionToMaze with
+ * a record-built grid>}` and measured it green on a Seedling-only atlas. Run
+ * over a WIRED world it throws **`wiredExit is not a function`**: the maze row's
+ * context (`mazeCtx` — `wiredExit`, and the partner-exit lookups it closes over)
+ * is built INSIDE `compileRegionAtlas` from that compile's own graph and is
+ * hoisted out of the per-region call. An INJECTED `sidecarBuilders` row is
+ * handed `(region, substrateId)` and nothing else, so it cannot have it, and no
+ * amount of `mazeProjection` gets it — that object is merged INTO the ctx, not
+ * out of it. ⇒ W2's probe was green because its atlas had no wired crossing for
+ * the projection to resolve.
+ *
+ * ⛓ **WHAT WORKS IS THE BUILT-IN MAZE ROW, FOR EVERY REGION.** The region's own
+ * `substrate` is STRIPPED for this one compile and `sidecarFlavor: 'maze'`
+ * becomes the default, so `regionSubstrateOf` answers `maze` everywhere and the
+ * compiler's own row — with its full `mazeCtx` — projects both parts. That is
+ * exactly what M2 says it is (*"every Seedling region compiles with the maze
+ * projection"*, §2.3), it needs no compiler change, and MEASURED on the chain's
+ * own world it gives `substrates {maze: 4}`, zero schema errors and every
+ * region reachable.
+ *
+ * ⛔ **THE STRIP IS A COMPILE-TIME PROJECTION AND NOTHING IS WRITTEN BACK.** The
+ * atlas this compiles is derived fresh; the WORLD document, both parts and
+ * every region's authored `substrate` are untouched, which is what keeps the
+ * flash-default download beside it honest.
+ *
+ * @param {object} session the world set session
+ * @param {object} deps    keyed by part id
+ * @param {object} o
+ * @param {Array<object>} o.parts
+ * @param {Function} o.compileRegionAtlas
+ * @param {object} o.mazeProjection  `{gridFor, conditionKey, resolveCondition}` —
+ *   `gridFor` must answer for EVERY part (the page composes the maze's own with
+ *   `seedlingMazeProjectionDeps`'), because the built-in row now sees them all
+ * @param {string} [o.gameName]
+ */
+export function worldAllMazeRulesJson(session, deps, {
+    parts = [], compileRegionAtlas, mazeProjection, gameName = 'World (all-maze)',
+} = {}) {
+    const record = typeof session?.record === 'function' ? session.record() : session;
+    const derived = deriveWorldAtlasOf(record, { parts, deps });
+    const projected = {
+        ...derived.atlas,
+        regions: (derived.atlas.regions ?? []).map(({ substrate: _dropped, ...region }) => region),
+    };
+    const { rules, report } = compileRegionAtlas(projected, {
+        gameName, sidecarFlavor: MAZE_SUBSTRATE, mazeProjection,
+    });
+    return {
+        rules, report, atlas: projected, notes: derived.notes, displaced: derived.displaced,
+    };
+}
+
+
+/**
+ * ⛓⛓⛓ **THE TWO REPORT ROWS A WORLD CANNOT ANSWER WHOLE, MADE PER PART.**
+ *
+ * W2 §8.1 #4 measured why: `inertRulesOf` and `overlayLocationCount` read
+ * `record.overlay.rooms` keyed by ROOM INDEX and join a region by
+ * `map_ref === room` — and in a MERGED atlas `map_ref` is the PART's own local
+ * index, so a composite overlay keyed by global index would match the wrong
+ * region and one keyed by local index would collide across parts. A world's
+ * record has no `overlay` at all, so `reportOver` prints neither row and a
+ * reader gets silence where a set gets a verdict.
+ *
+ * ⛔ **NO CORE HOOK WAS NEEDED.** Both functions are EXPORTED, both are pure,
+ * and both take a record and (for the first) that record's own atlas — so the
+ * answer is to run each PART's own row against the PART's own record and its
+ * OWN derived atlas, and to prefix the part. ⛓ Each part's atlas is the one its
+ * own derivation produced, NOT a slice of the merged one: the merge renamed
+ * every region and the local `map_ref` is what these two join on.
+ *
+ * @returns {Array<{severity, kind, text}>}
+ */
+export function worldPartReportRows(record, parts, deps, { ruleKeys } = {}) {
+    const rows = [];
+    /**
+     * ⛓⛓⛓ **AND A THIRD ROW, WHICH THIS SLICE'S OWN TEST FOUND.**
+     *
+     * §8.10 called the location row *"structurally empty"* for a world. It is
+     * worse than empty: `reportOver` prints it either way, and it compares
+     * `overlayLocationCount(record)` — which is **0** for a world, whose parts'
+     * overlays live INSIDE the world document — against the COMPILED count,
+     * which counts every part's locations. So it reads a harmless *"0 in the
+     * OVERLAY, 0 compiled"* on an empty world and flips to a **`warn` saying
+     * they DISAGREE** the moment any part holds one location, quoting a sentence
+     * about *"an overlay that did not travel with its set"* that is not what
+     * happened. ⛔ `reportOver` is `setEditorCore`'s and is not this slice's to
+     * change; what fixes the READER is saying so beside it, because a permanent
+     * unexplained warning teaches a reader to ignore the warning list (§21.8's
+     * own rule about the unstamped-atlas warning, one row over).
+     */
+    rows.push({
+        severity: 'ok',
+        kind: 'locations',
+        text: '⚠ the `locations` row above does NOT apply to a world: it compares a composite '
+            + 'overlay this record does not have (each part\'s overlay lives INSIDE the world '
+            + 'document, keyed by part, so the count is 0) against the COMPILED total, which '
+            + 'counts every part\'s. It therefore reads 0/0 on an empty world and DISAGREES the '
+            + 'moment any part holds a location. The per-part rows below are the answer.',
+    });
+    for (const part of parts) {
+        const partRecord = partRecordOf(record, part);
+        let atlas = null;
+        try {
+            atlas = part.deriveAtlasOf(partRecord, deps[part.id] ?? {}).atlas;
+        } catch (e) {
+            if (!(e instanceof Error)) throw e;
+            rows.push({
+                severity: 'warn',
+                kind: 'inert-rule',
+                text: `part "${part.id}": its own atlas does not derive, so its authored rules `
+                    + `cannot be scanned — ${e.message}`,
+            });
+            continue;
+        }
+        const inert = inertRulesOf(partRecord, atlas, { ruleKeys: ruleKeys ?? part.ruleKeys });
+        for (const r of inert) {
+            rows.push({
+                severity: 'error',
+                kind: 'inert-rule',
+                text: `part "${part.id}": the rule authored on exit "${r.exitId}" of room `
+                    + `${r.room} REACHES NOTHING — ${r.why}`,
+            });
+        }
+        if (inert.length === 0 && Object.keys(partRecord.overlay?.rooms ?? {}).length > 0) {
+            rows.push({
+                severity: 'ok',
+                kind: 'inert-rule',
+                text: `part "${part.id}": every authored exit rule sits on an endpoint the `
+                    + 'compiler builds an AP exit for',
+            });
+        }
+        rows.push({
+            severity: 'ok',
+            kind: 'locations',
+            text: `part "${part.id}": ${overlayLocationCount(partRecord)} location(s) in its own `
+                + 'overlay',
+        });
+    }
+    return rows;
 }

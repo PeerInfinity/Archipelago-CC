@@ -170,6 +170,10 @@ const el = (doc, tag, className, text) => {
  * @param {Function} [o.identityOf] `(record) => string` — one clause the
  *   substrate adds to the identity line, where a single-document set names its
  *   overlay and a WORLD has none to name
+ * @param {Function} [o.reportRows] `(record, report) => rows[]` — rows only the
+ *   substrate can answer, APPENDED to `reportOver`'s. A WORLD's two per-part
+ *   rows are the reason it exists; ⛔ they never move `download.rules.allowed`,
+ *   which stays `reportOver`'s alone
  * @param {Function} [o.addRoomOp] `(at) => op` — what an ADD ROOM press applies
  * @param {Function} o.say         the status line
  * @param {Function} o.roomSession `() => {room, ops, session}|null`
@@ -191,7 +195,7 @@ export function mountSetEditor({
     exits = null, locations = null,
     linkBound = null, isRefusal = null, rulesSchema = null,
     drawRoomStill = null, stillKey = null, sourceKind = null, addRoomOp = null,
-    cellSubstrate = () => null, identityOf = null,
+    cellSubstrate = () => null, identityOf = null, reportRows = null,
     say = () => {}, roomSession = () => null, openRoomAt = () => false,
     discardRoom = () => {}, download = () => {}, onSetChange = null,
     loadZip = null,
@@ -1075,6 +1079,30 @@ export function mountSetEditor({
             validateRegionAtlas,
             atlasSchema,
         });
+        /**
+         * ⛓⛓⛓ EDITOR INTEGRATION W4 — **ROWS ONLY THE SUBSTRATE CAN ANSWER,
+         * APPENDED.**
+         *
+         * ⛔ **AND THE CORE NEEDED NO HOOK** (which is what W4's brief said to
+         * STOP over). W2 §8.1 #4 measured that two of `reportOver`'s rows — the
+         * inert-rule scan and the location count — are structurally EMPTY for a
+         * composite record: both read `record.overlay.rooms` keyed by room index
+         * and join a region by `map_ref`, and in a merged atlas that index is
+         * the PART's. Both helpers are EXPORTED and pure, so the answer is for
+         * the binding to run each part's own row and prefix the part. ⛓ APPENDED
+         * rather than merged in: a row this mount cannot check the severity
+         * grammar of would otherwise change `download.rules.allowed`, and the
+         * refusal is `reportOver`'s alone (its own docblock: *"a page that
+         * disabled the button on its own condition would be a second answer"*).
+         */
+        if (typeof reportRows === 'function') {
+            const extra = reportRows(session.record(), lastReport) ?? [];
+            if (extra.length > 0) {
+                lastReport = Object.freeze({
+                    ...lastReport, rows: Object.freeze([...lastReport.rows, ...extra]),
+                });
+            }
+        }
         if (box) {
             box.innerHTML = '';
             const list = el(doc, 'ul', 'setReport');

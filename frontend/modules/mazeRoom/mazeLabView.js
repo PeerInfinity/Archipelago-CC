@@ -97,8 +97,8 @@ import { applyGlossaryTips } from '../procgenDocs/glossaryTips.js';
  */
 import {
     LAB_SUBSTRATE, bindWorldParts, makeDrawRoomStill, mazeLibraryRows, mazeSetBindings,
-    roomBaseTag, sniffSetDocument, worldDoorDisconnectOp, worldDoorOp, worldDoorPreview,
-    worldDoorRows, worldPartDescriptors, worldSetBindings,
+    roomBaseTag, sniffSetDocument, worldAllMazeRulesJson, worldDoorDisconnectOp, worldDoorOp,
+    worldDoorPreview, worldDoorRows, worldPartDescriptors, worldSetBindings,
 } from './mazeSetLab.js';
 import { createEditSession } from '../procgenCore/editCore.js';
 /**
@@ -151,6 +151,10 @@ import {
     createMazeSetAdapter, createSetSession, emptyMazeOverlay, setRecord,
 } from './mazeSetAdapter.js';
 import { readBundle } from '../presets/documentBundle.js';
+import { rulesJsonSchemaErrors } from '../procgenCore/jsonSchemaCheck.js';
+import { stringifyRulesJson } from '../shared/rulesJsonBuilder.js';
+import { seedlingMazeProjectionDeps } from '../flashPanel/seedlingAtlasAnalysis.js';
+import { roomsOfSet } from '../seedlingDemo/seedlingSetAdapter.js';
 import { loadJSZipBrowser } from '../presets/loadJSZipBrowser.js';
 
 // ⛓ ELEMENTS ARC 1 SLICE 3: the ONE area codec — the form, the identity line,
@@ -2420,6 +2424,81 @@ export function main() {
         renderDoorNote();
     };
 
+    /**
+     * ⛓⛓⛓ EDITOR INTEGRATION W4 — **THE ALL-MAZE `rules.json` (M2).**
+     *
+     * ⛔ The `mazeProjection` handed in must answer `gridFor` for EVERY region,
+     * because the compiler's built-in maze row now sees both parts: the maze
+     * part's grid is its entry's payload and the Seedling part's is built from
+     * its ROOM RECORDS through `seedlingMazeProjectionDeps` (W2 §8.7 measured
+     * that `roomsOfSet` produces exactly the shape a map document's `levels[]`
+     * carry, so no new function is needed). ⛓ The CONDITION vocabulary is the
+     * maze's for the maze regions and Seedling's analyzer options for the
+     * Seedling ones; they are merged with Seedling's LAST, because a Seedling
+     * region's conditions are the ones a maze condition key cannot answer.
+     */
+    const allMazeProjection = () => {
+        const seedPart = (worldParts ?? []).find((p) => p.kind === 'level-set');
+        const mzPart = (worldParts ?? []).find((p) => p.kind === 'region-library');
+        const record = setSession.record();
+        const seedDeps = seedPart
+            ? seedlingMazeProjectionDeps({
+                mapDoc: { levels: roomsOfSet(record.parts[seedPart.id], parseOelLevel) },
+                gameConfig: {},
+            })
+            : null;
+        const mzGridFor = (region) => {
+            const entry = record.parts?.[mzPart?.id]?.entries?.[region.map_ref];
+            return entry ? mazeGridFor(entry.payload) : null;
+        };
+        return {
+            ...MAZE_CONDITION_DEPS,
+            ...(seedDeps ?? {}),
+            gridFor: (region) => (partOfRegion(region.region_id) === mzPart?.id
+                ? mzGridFor(region)
+                : (seedDeps?.gridFor(region) ?? null)),
+        };
+    };
+
+    const downloadAllMazeRules = () => {
+        if (!heldWorld || !setSession) return;
+        let out;
+        try {
+            out = worldAllMazeRulesJson(setSession, worldDeps, {
+                parts: worldParts,
+                compileRegionAtlas,
+                mazeProjection: allMazeProjection(),
+                gameName: `${heldWorld.name ?? 'World'} (all-maze)`,
+            });
+        } catch (e) {
+            setNote(`⛔ NOT DOWNLOADED — the all-maze projection REFUSED: ${e.message}`, true);
+            render();
+            return;
+        }
+        const errors = rulesJsonSchemaErrors(out.rules, rulesSchema ?? undefined);
+        if (rulesSchema && errors.length > 0) {
+            setNote(`⛔ NOT DOWNLOADED — the all-maze \`rules.json\` does not validate `
+                + `(${errors.length} error(s)): ${errors.slice(0, 2).join(' · ')}`, true);
+            render();
+            return;
+        }
+        const text = stringifyRulesJson(out.rules, { indent: 2 });
+        setDownload('rules.json', text, 'application/json');
+        /** ⛓ …AND WHAT IT WROTE IS READABLE — the document AND the exact bytes,
+         *  so a row can ask node whether they are the writer's own. */
+        window.__editorWorldAllMazeOut = out.rules;
+        window.__editorWorldAllMazeBytes = text;
+        window.__editorWorldAllMazeReport = out.report;
+        setNote(`DOWNLOADED the ALL-MAZE rules.json — substrates `
+            + `${JSON.stringify(out.report.substrates)}, ${out.report.ap_regions} AP region(s), `
+            + `${out.report.exits} exit(s), ${out.report.locations} location(s). ⛓ This is the `
+            + 'PLAYABLE one: a mixed world does not play in the app yet (a door OUT of a '
+            + 'Seedling room is the game\'s own synchronous level change — M1 is an AS3 slice), '
+            + 'and every region here compiles through the maze projection the player and the '
+            + 'bots already walk.');
+        render();
+    };
+
     const applyDoorOp = (built) => {
         if (!built.ok) { say(built.why, true); renderDoorNote(); return; }
         const result = setSession.apply(built.op);
@@ -2459,6 +2538,11 @@ export function main() {
          *  exits (a displaced door's far endpoint becomes unwired). */
         const doorBox = $('labWorldDoorBox');
         if (doorBox) doorBox.hidden = !heldWorld;
+        /** ⛓ …and the ALL-MAZE download, for the same reason: under a plain
+         *  region library every region already IS `maze`, so a second identical
+         *  button would be a second answer to one question. */
+        const allMaze = $('labDownloadAllMaze');
+        if (allMaze) allMaze.hidden = !heldWorld;
     };
 
     /**
@@ -3089,6 +3173,7 @@ export function main() {
         lt.on($('labDoorDisconnect'), 'click', () => applyDoorOp(worldDoorDisconnectOp(
             doorEndpoint('labDoorFromRoom', 'labDoorFromExit'),
         )));
+        lt.on($('labDownloadAllMaze'), 'click', downloadAllMazeRules);
         lt.on($('labSetUpload'), 'change', (e) => {
             const file = e.target.files?.[0];
             if (!file) return;
