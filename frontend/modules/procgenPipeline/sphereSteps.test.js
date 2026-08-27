@@ -850,6 +850,43 @@ describe('sphereSteps — recorded layout edits', () => {
         expect(replayed.grow.grid.getRegion(edit.to)?.region_id).toBe(mover.region_id);
     });
 
+    it('procgen_metadata carries the recording — and omits it when unedited', async () => {
+        const clean = newEnvelope(bounceConfig());
+        await runToStep(clean, 'compile');
+        expect('edits' in clean.compile.rulesJson.procgen_metadata).toBe(false);
+
+        const env = await grownEnv();
+        const mover = env.grow.grid.allRegions()[1];
+        pushLayoutEdit(env, {
+            op: 'move-region', from: { ...mover.cell }, to: emptyCell(env.grow.grid),
+        }, SPHERE_EDIT_BINDING);
+        await runToStep(env, 'compile');
+        expect(env.compile.rulesJson.procgen_metadata.edits).toEqual(env.edits);
+    });
+
+    // The measured round-trip. Maze, because rebuildEnvelopeFromRulesJson
+    // refuses zone substrates (no path extractor). This is what the node-cell
+    // resync buys: compactSphereTree writes the node's cell, so before B-d an
+    // edited world rebuilt at its PRE-edit placement.
+    it('an edited world rebuilds from its rules.json at the EDITED placement', async () => {
+        const env = newEnvelope(makeConfig());
+        await runToStep(env, 'regions');
+        const mover = env.grow.grid.allRegions()[1];
+        const r = pushLayoutEdit(env, {
+            op: 'move-region', from: { ...mover.cell }, to: emptyCell(env.grow.grid),
+        }, SPHERE_EDIT_BINDING);
+        expect(r.ok).toBe(true);
+        await runToStep(env, 'compile');
+
+        const place = (g) => g.allRegions()
+            .map((x) => `${x.region_id}@${x.cell.gx},${x.cell.gy}`).sort().join(' ');
+        const rebuilt = rebuildEnvelopeFromRulesJson(env.compile.rulesJson, {
+            itemLib: DEFAULT_ITEMS,
+        });
+        expect(place(rebuilt.grow.grid)).toBe(place(env.grow.grid));
+        expect(place(env.grow.grid)).toMatch(new RegExp(`${mover.region_id}@\\d+,\\d+`));
+    });
+
     it('a refused edit leaves the grid untouched and records nothing', async () => {
         const env = await grownEnv();
         const [a, b] = env.grow.grid.allRegions();

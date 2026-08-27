@@ -16,7 +16,7 @@ import { topDownFromRulesJson, getRegionExits } from './procgenPipelineEngine.js
 import {
     TOPDOWN_STEPS, newTopDownEnvelope, runTopDownToStep, resumeTDEnvelope,
     serializeTDEnvelope, deserializeTDEnvelope,
-    TD_EDIT_BINDING, invalidateTDFrom, topDownUndoStep, topDownReRollCount,
+    TD_EDIT_BINDING, invalidateTDFrom, topDownUndoStep, topDownReRollCount, tdEditsBehind,
 } from './topDownSteps.js';
 import { pushLayoutEdit, popLayoutEdit, replayLayoutEdits } from './layoutEdits.js';
 
@@ -287,6 +287,33 @@ describe('topDownSteps — recorded layout edits', () => {
         expect(env.realise).toBeNull();
         expect(env.finalize).toBeNull();
         expect(env.completed).toBe(-1);
+    });
+
+    it('procgen_metadata carries the recording — and omits it when unedited', async () => {
+        const clean = makeEnv();
+        await runTopDownToStep(clean, 'compile');
+        expect('edits' in clean.compile.rulesJson.procgen_metadata).toBe(false);
+
+        const env = makeEnv();
+        env.edits = [{ op: 're-roll', region_id: 'East', n: 1 }];
+        await runTopDownToStep(env, 'compile');
+        expect(env.compile.rulesJson.procgen_metadata.edits).toEqual(env.edits);
+    });
+
+    // A resume that does not re-produce an edit's artifact must not re-apply it
+    // — otherwise a panel export, whose edits are already applied, would
+    // double-apply on every resume. The CLIs print this list so it isn't silent.
+    it('tdEditsBehind names the edits a resume point will NOT replay', async () => {
+        const env = makeEnv();
+        env.edits = [
+            { op: 're-roll', region_id: 'East', n: 1 },
+            { op: 'move-region', from: { gx: 0, gy: 0 }, to: { gx: 1, gy: 1 } },
+        ];
+        expect(tdEditsBehind(env, 'layout')).toEqual([]);
+        expect(tdEditsBehind(env, 'realise').map((e) => e.op)).toEqual(['re-roll']);
+        expect(tdEditsBehind(env, 'compile').map((e) => e.op))
+            .toEqual(['re-roll', 'move-region']);
+        expect(tdEditsBehind({ edits: [] }, 'compile')).toEqual([]);
     });
 
     it('the codec carries the recording across a serialise/deserialise boundary', async () => {

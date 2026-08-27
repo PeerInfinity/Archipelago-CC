@@ -53,7 +53,7 @@
 // the guards (sphereSteps.test.js, scripts/procgen/verify-*.mjs,
 // dump-*-byteidentity.mjs) hold the line.
 
-import { replayLayoutEdits } from './layoutEdits.js';
+import { replayLayoutEdits, layoutEditStage } from './layoutEdits.js';
 
 /**
  * Run a single named step over the envelope, mutating + returning it. Async
@@ -133,6 +133,27 @@ export function detectCompleted(env, desc) {
 export async function resumeEnvelope(env, toStep, opts, desc) {
     env.completed = detectCompleted(env, desc);
     return runToStep(env, toStep, opts, desc);
+}
+
+/**
+ * The recorded edits whose stage sits BEFORE `firstStep` — i.e. the ones a run
+ * starting there will NOT replay, because the step that would replay them is
+ * not going to run.
+ *
+ * This is the honest answer to "I added an edit to the envelope JSON by hand and
+ * nothing happened": an edit is applied exactly once per PRODUCTION of the
+ * artifact it mutates, so a resume that does not re-produce that artifact must
+ * not re-apply it (otherwise a panel export — whose edits are already applied —
+ * would double-apply on every resume). Re-run from the edit's own stage
+ * (`--from <stage>`) and it fires. The CLIs print this list so the no-op is
+ * never silent.
+ */
+export function editsBehindStep(env, firstStep, desc) {
+    const binding = desc.editBinding;
+    if (!binding || !Array.isArray(env?.edits) || env.edits.length === 0) return [];
+    const from = desc.steps.indexOf(firstStep);
+    if (from < 0) return [];
+    return env.edits.filter((e) => desc.steps.indexOf(layoutEditStage(e, binding)) < from);
 }
 
 /**

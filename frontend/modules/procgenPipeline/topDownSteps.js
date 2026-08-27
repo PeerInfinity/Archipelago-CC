@@ -49,6 +49,7 @@ import {
     serializeEnvelope as serializeEnvelopeGeneric,
     deserializeEnvelope as deserializeEnvelopeGeneric,
     invalidateFromStep as invalidateFromStepGeneric,
+    editsBehindStep as editsBehindStepGeneric,
 } from './steppedPipeline.js';
 // Recorded layout edits — the op vocabulary + replay. This module supplies the
 // TOP-DOWN binding (below); layoutEdits.js stays envelope-agnostic.
@@ -135,6 +136,9 @@ function stepCompile(env, { onProgress = null } = {}) {
             source_game: c.sourceGameName ?? null,
             source_counts: computeSourceCounts(env.source, '1'),
             stop_reason: stats.stopReason,
+            // Recorded hand edits, as PROVENANCE (see sphereSteps.js). Omitted
+            // when nothing was edited, so unedited metadata is byte-identical.
+            ...(env.edits?.length ? { edits: env.edits } : {}),
             ...(enriched ? { sphere_tree: sphereTree, sphere_plan: spherePlan } : {}),
         },
     });
@@ -413,6 +417,11 @@ const TD_DESCRIPTOR = {
  */
 export function invalidateTDFrom(env, stepName) {
     return invalidateFromStepGeneric(env, stepName, TD_DESCRIPTOR);
+}
+
+/** Recorded edits a run starting at `firstStep` will NOT replay (see the generic). */
+export function tdEditsBehind(env, firstStep) {
+    return editsBehindStepGeneric(env, firstStep, TD_DESCRIPTOR);
 }
 
 // --- public API (stable names/signatures; delegate to the shared harness) ---

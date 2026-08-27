@@ -21,6 +21,13 @@
  *   # FIRST step whose output is missing (presence = keep, absence = recompute):
  *   node scripts/procgen/sphere-step.js run -i partial.json -o rules.json
  *
+ *   # RECORDED LAYOUT EDITS (envelope `edits[]`, see layoutEdits.js) replay
+ *   # after the step each one addresses — layout ops and re-roll after
+ *   # `regions`, set-substrate after `items`. An edit hand-added to an envelope
+ *   # whose stage has ALREADY run does nothing until that step runs again, so:
+ *   node scripts/procgen/sphere-step.js run -i s3.json --from regions -o rules.json
+ *   # (the run names any edit it is skipping, so the no-op is never silent).
+ *
  *   # append a sphere to a FINISHED envelope (grow one wave further + recompile):
  *   #   --items id=N → the new sphere's content; the goal is relocated into it.
  *   #   --truncate-to-wave K → rewind to K leading waves before regrowing.
@@ -78,7 +85,7 @@ import '../../frontend/modules/bounceDemo/bounceDemoLibrary.js';
 import '../../frontend/modules/runnerDemo/runnerDemoLibrary.js';
 
 import {
-    SPHERE_STEPS, runStep, runToStep, resumeEnvelope, detectCompleted,
+    SPHERE_STEPS, runStep, runToStep, resumeEnvelope, detectCompleted, sphereEditsBehind,
     nextSphereStep, resolveSpheresPerBatch, appendSphere,
     serializeEnvelope, deserializeEnvelope, newEnvelope,
 } from '../../frontend/modules/procgenPipeline/sphereSteps.js';
@@ -271,6 +278,20 @@ function writeOut(path, obj, fallbackName) {
     return abs;
 }
 
+// Recorded layout edits (layoutEdits.js) replay after the step each one
+// addresses. Say so — and name the ones this run's START POINT is already past,
+// because those will NOT fire (the step that replays them is not going to run).
+// Re-run with --from <stage> to apply them.
+function announceEdits(env, firstStep) {
+    if (!env.edits?.length) return;
+    process.stderr.write(`[sphere-step] ${env.edits.length} recorded edit`
+        + `${env.edits.length === 1 ? '' : 's'} on the envelope\n`);
+    for (const e of sphereEditsBehind(env, firstStep)) {
+        process.stderr.write(`[sphere-step] \u26a0 '${e.op}' is staged before ${firstStep}`
+            + ' — NOT replayed on this run (re-run with --from <its stage>)\n');
+    }
+}
+
 // --- main ---
 
 async function main() {
@@ -328,6 +349,7 @@ async function main() {
         const to = args.to ?? 'compile';
         if (args.from) {
             // Explicit override: resume from the named step.
+            announceEdits(env, args.from);
             env.completed = SPHERE_STEPS.indexOf(args.from) - 1;
             await runToStep(env, to, { onProgress });
         } else {
@@ -339,6 +361,7 @@ async function main() {
             if (at < SPHERE_STEPS.length) {
                 process.stderr.write(`[sphere-step] auto-resume from ${SPHERE_STEPS[at]}\n`);
             }
+            announceEdits(env, SPHERE_STEPS[Math.min(at, SPHERE_STEPS.length - 1)]);
             await resumeEnvelope(env, to, { onProgress });
         }
     } else {

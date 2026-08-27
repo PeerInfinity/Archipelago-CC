@@ -77,6 +77,7 @@ import {
     serializeEnvelope as serializeEnvelopeGeneric,
     deserializeEnvelope as deserializeEnvelopeGeneric,
     invalidateFromStep as invalidateFromStepGeneric,
+    editsBehindStep as editsBehindStepGeneric,
 } from './steppedPipeline.js';
 // Recorded layout edits — the op vocabulary + replay. This module supplies the
 // SPHERE binding (below); layoutEdits.js stays envelope-agnostic.
@@ -490,6 +491,15 @@ function stepCompile(env) {
             driver: 'sphere-growth',
             stop_reason: stats.stopReason,
             sphere_plan: env.plan,
+            // The recorded hand edits, as PROVENANCE: without them a compiled
+            // world carries the edited grid and no record of WHY it differs
+            // from its seed. Omitted when nothing was edited, so every
+            // unedited world's metadata is byte-identical to before.
+            // ⚠ NOT re-armed by rebuildEnvelopeFromRulesJson: the rebuilt grid
+            // comes from preset_sidecars, which already carry every edit, and
+            // the placement round-trips through sphere_tree's (now resynced)
+            // node cells. Re-arming would double-apply on the next re-run.
+            ...(env.edits?.length ? { edits: env.edits } : {}),
             // Compact abstract tree (no grid) so a new sphere can be wired onto
             // this finished world straight from rules.json (Phase 4 append).
             ...(env.tree ? { sphere_tree: compactSphereTree(env.tree) } : {}),
@@ -833,6 +843,11 @@ const SPHERE_DESCRIPTOR = {
  */
 export function invalidateSphereFrom(env, stepName) {
     return invalidateFromStepGeneric(env, stepName, SPHERE_DESCRIPTOR);
+}
+
+/** Recorded edits a run starting at `firstStep` will NOT replay (see the generic). */
+export function sphereEditsBehind(env, firstStep) {
+    return editsBehindStepGeneric(env, firstStep, SPHERE_DESCRIPTOR);
 }
 
 /**
