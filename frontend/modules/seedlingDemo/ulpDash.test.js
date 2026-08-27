@@ -37,7 +37,7 @@
  * [[feedback_fixture_must_discriminate_two_builds]]
  */
 
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -324,35 +324,49 @@ describe('the two guards are the GAME\'s — `>=` on x and `>` on y', () => {
  * committed roster, which is inert across the change by a two-build stream
  * diff over 149 tapes.
  */
-describe('the eight recordings the game refused, reproduced EXACTLY', () => {
-    const REFUSED = [
-        'r8-d2', 'r8-d2-19', 'r8-d2-20', 'r8-solve-18',
-        'r8-solve-20', 'r9-solve-0', 'r9-solve-13', 'r9-solve-14',
-    ];
-    const levelSource = atlasLevelSource();
+const REFUSED = Object.freeze([
+    'r8-d2', 'r8-d2-19', 'r8-d2-20', 'r8-solve-18',
+    'r8-solve-20', 'r9-solve-0', 'r9-solve-13', 'r9-solve-14',
+]);
 
-    it.each(REFUSED)('⛓ %s — the model reproduces the recording tick for tick', (name) => {
-        const tape = parseTape(readFileSync(join(REFUTED, `${name}.tape.json`), 'utf8'));
-        const recorded = parseObservationStream(
-            readFileSync(join(REFUTED, `${name}.expectation.json`), 'utf8'));
-        expect(diffObservationStreams(recorded, runTapeToStream(tape, { levelSource })))
-            .toBeNull();
+describe('the eight recordings the game refused — RETIRED WITH THE SERIES', () => {
+    /**
+     * ⛓⛓⛓ R9 SLICE 12h — THE BANK IS SPENT, AND THE MEASUREMENT SAYS SO.
+     *
+     * These eight were banked because the recordings the game made were VALID
+     * and the model was refuted, while the walks themselves were parked on a
+     * branch. §38.8 said the run that landed the series would "either retire
+     * the bank or re-point the rows at the roster", and that re-pointing is
+     * the WEAKER choice — a pin reading a roster tape stops pinning the
+     * moment a later licence moves that tape.
+     *
+     * The series landed here. **Measured before the files were removed: all
+     * eight banked EXPECTATIONS were byte-identical to the roster's**, i.e.
+     * the recordings the game refused ARE the roster's recordings now, and
+     * the whole-roster replay asserts every tick of every one of them.
+     * Keeping a second copy would have pinned nothing the roster does not.
+     *
+     * ⛔⛔ AND THE ROW THAT WAS SUPPOSED TO NOTICE WENT GREEN FOR THE WRONG
+     * REASON. The retired guard asserted each banked tape DIFFERS from the
+     * roster tape of the same name, and its own comment said *"the day that
+     * stops being true is the day the fourth run lands the series"*. That day
+     * came — and the row still PASSED, because ⚖ ruling 57's `sound` pin
+     * landed in the same run and left the tapes differing by ONE FIELD that
+     * has nothing to do with what the row was asserting. A guard that
+     * survives on an unrelated difference is not a guard; it is a green row
+     * whose subject has quietly left. Six of the eight differed by `pins`
+     * alone, two by `pins`, `rng` and `tick0`.
+     */
+    it('⛔ the bank holds ONLY the R8 negative oracle, and the eight are gone', () => {
+        const left = readdirSync(REFUTED).filter((f) => f.endsWith('.json')).sort();
+        expect(left).toEqual(['r8-solve-5.expectation.json', 'r8-solve-5.tape.json']);
     });
 
-    it('⛔ the eight are NOT roster fixtures — the committed roster stays 149', () => {
-        // `fixtures/index.js` derives the roster from `fixtures/tapes/` only,
-        // so banking these spends no tape licence and the parked series still
-        // lands WHOLE in the re-record's fourth run.
-        expect(fixtureNames()).toHaveLength(149);
-        for (const name of REFUSED) {
-            // ⛓ AND THE SERIES REALLY HAS NOT LANDED: each name IS on the
-            // roster, and the roster's bytes are the OLD walk's, not these.
-            // The day that stops being true is the day the fourth run lands
-            // the series and this row can be retired with the bank.
-            expect(fixtureNames()).toContain(name);
-            expect(readFileSync(join(REFUTED, `${name}.tape.json`), 'utf8'))
-                .not.toBe(readFileSync(
-                    join(HERE, 'fixtures', 'tapes', `${name}.json`), 'utf8'));
-        }
+    it('⛓ …and the eight are on the ROSTER, which is what replaces the bank', () => {
+        // The claim the bank used to carry — "the model reproduces each of
+        // these recordings tick for tick" — is now the roster's own, asserted
+        // for all 149 tapes by `tapeRunner`'s rows. These eight are named
+        // here so a roster that LOST one is still a red in this file.
+        for (const name of REFUSED) expect(fixtureNames()).toContain(name);
     });
 });
