@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 17,
-        "headings": 764,
+        "headings": 765,
         "indexHeadings": 2,
-        "lines": 19728,
+        "lines": 19754,
         "pages": 4,
-        "words": 236864
+        "words": 237437
     },
     "descriptionRule": "the document's OWN first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence. ⛔ Never a hand-written summary — if an entry reads thin, the fix is a better opening paragraph in the document.",
     "dir": "docs/json/developer/procgen",
@@ -208,8 +208,8 @@ export const DOCS_INDEX = frz({
             "description": "Sphere growth, top-down, and shuffled-spiral can run as monolithic calls or as a sequence of discrete, inspectable, editable steps.",
             "file": "stepped-pipeline.md",
             "h1": "The Stepped Pipeline",
-            "headings": 11,
-            "lines": 63,
+            "headings": 12,
+            "lines": 89,
             "links": [
                 "architecture.md",
                 "bounce.md",
@@ -217,7 +217,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/stepped-pipeline.md",
-            "words": 1681
+            "words": 2254
         },
         {
             "description": "The text-adventure substrate (id `text_adventure`) renders a procgen region as prose: a textual description with compass-labelled clickable exits and clickable locations. Under the hood it is a *tile-grid world wearing a text skin* — its build-time hooks reuse the shared tile-grid adapter primitives verbatim, so its sidecar shape is identical to the maze's; only the panel differs.",

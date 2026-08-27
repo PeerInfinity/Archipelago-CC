@@ -8,11 +8,11 @@ Sphere growth, top-down, and shuffled-spiral can run as monolithic calls or as a
 
 ## The shared harness
 
-All three per-mode modules are thin clients of **one** generic engine, `frontend/modules/procgenPipeline/steppedPipeline.js`. Each mode supplies a **descriptor** — `{ steps, runners, present, codecs, nextStep }` — and the harness provides the driver/resume/serde skeleton (`runStep`, `runToStep`, `detectCompleted`, `resumeEnvelope`, `newEnvelope`, `serialize`/`deserializeEnvelope`) once. What genuinely differs per mode is the descriptor: the step list + runner functions, the presence probes, the non-plain artifact codecs, and the loop shape (`nextStep` — linear for top-down/spiral, batch-looping for sphere). The codecs are per-field `{ encode(value, env), decode(value, out, obj) }` applied in **declaration order**, so a field's decode can reconnect a cross-field alias off the already-decoded `out` (top-down's single Grid is aliased by layout/realise/finalize and is mutated in place, so decode reconnects the *same* object; sphere's `tree.nodes` re-aliases the decoded `nodes`). The harness only relocates the orchestration wrapper — the per-mode runner logic and rng draw order are what preserve byte-identity.
+All three per-mode modules are thin clients of **one** generic engine, `frontend/modules/procgenPipeline/steppedPipeline.js`. Each mode supplies a **descriptor** — `{ steps, runners, present, codecs, nextStep }`, plus the optional `editBinding` + `dropOutputs` that turn on recorded hand edits (below) — and the harness provides the driver/resume/serde skeleton (`runStep`, `runToStep`, `detectCompleted`, `resumeEnvelope`, `newEnvelope`, `serialize`/`deserializeEnvelope`, `invalidateFromStep`) once. What genuinely differs per mode is the descriptor: the step list + runner functions, the presence probes, the non-plain artifact codecs, and the loop shape (`nextStep` — linear for top-down/spiral, batch-looping for sphere). The codecs are per-field `{ encode(value, env), decode(value, out, obj) }` applied in **declaration order**, so a field's decode can reconnect a cross-field alias off the already-decoded `out` (top-down's single Grid is aliased by layout/realise/finalize and is mutated in place, so decode reconnects the *same* object; sphere's `tree.nodes` re-aliases the decoded `nodes`). The harness only relocates the orchestration wrapper — the per-mode runner logic and rng draw order are what preserve byte-identity.
 
 ## The envelope
 
-The unit of state is an **envelope** — a plain, serializable object that each step reads from and merges into. `serializeEnvelope`/`deserializeEnvelope` cross a process boundary losslessly, so the CLI can run every step in its own invocation with the envelope as a JSON file on disk, and you can hand-edit it between steps. Editing is intended at the step-output altitude — the plan, the allocation, the topology, the item assignment — not the grown grid, which crosses the boundary in a structural (tagged) form precisely so it isn't hand-edited.
+The unit of state is an **envelope** — a plain, serializable object that each step reads from and merges into. `serializeEnvelope`/`deserializeEnvelope` cross a process boundary losslessly, so the CLI can run every step in its own invocation with the envelope as a JSON file on disk, and you can hand-edit it between steps. Editing is intended at the step-output altitude — the plan, the allocation, the topology, the item assignment — not the grown grid, which crosses the boundary in a structural (tagged) form precisely so it isn't hand-edited. The grid IS editable, but through **recorded ops** rather than by hand (below).
 
 ## Sphere mode — six steps
 
@@ -32,7 +32,33 @@ The envelope carries the cross-batch state (accumulated nodes, substrate counts,
 
 ## The byte-identity contract
 
-Running the stepped pipeline — in-process or across serialized boundaries — reproduces the monolithic driver's output **byte-for-byte** at default batching. This is the invariant that makes the stepped form trustworthy: an edit changes exactly what you edited, nothing else. It holds because the rng is a single continuous stream consumed in the monolithic order; any added, removed, or reordered draw in the engine or a step runner breaks it silently. The guards are the step-runner test suites (`sphereSteps.test.js`) and the headless verifiers (`scripts/procgen/verify-*.mjs`, `dump-*-byteidentity.mjs`).
+Running the stepped pipeline — in-process or across serialized boundaries — reproduces the monolithic driver's output **byte-for-byte** at default batching. This is the invariant that makes the stepped form trustworthy: an edit changes exactly what you edited, nothing else. An envelope with no recorded layout edits takes no replay code path at all, so the contract is stated over the unedited world and the guards below measure it there. It holds because the rng is a single continuous stream consumed in the monolithic order; any added, removed, or reordered draw in the engine or a step runner breaks it silently. The guards are the step-runner test suites (`sphereSteps.test.js`) and the headless verifiers (`scripts/procgen/verify-*.mjs`, `dump-*-byteidentity.mjs`).
+
+## Hand edits are recorded
+
+The composite-grid **layout editor** (the panel's Move Region / Move Exits modes) and the two scalar per-region gestures (Re-roll 🎲, the substrate `<select>`) do not mutate-and-forget. Each one is an **op appended to `env.edits[]`** — `frontend/modules/procgenPipeline/layoutEdits.js` — so a hand-edited world is `config + seed + edits`, and the panel, the CLI and a re-run all reproduce the same world from that recording.
+
+The vocabulary is six ops, one spec table: `move-region {from, to}`, `swap-regions {a, b}`, `move-exit-side {cell, exitId, side}`, `swap-exit-sides {cell, exitA, exitB}`, `re-roll {region_id, n}`, `set-substrate {region_id, substrate}`. The four layout ops call the existing engine mutators; the two scalars go through the mode's binding.
+
+**Where each op replays.** The runner replays an edit immediately after the step that PRODUCES the artifact it mutates, and before the next step starts. The stages are not a convention — they are the panel's own write-back depths:
+
+| op | sphere | top-down |
+|---|---|---|
+| `move-region`, `swap-regions`, `move-exit-side`, `swap-exit-sides` | after ③ regions | after ③ finalize |
+| `re-roll` | after ③ regions | after ① layout |
+| `set-substrate` | after ②c items | after ① layout |
+
+Top-down's layout ops replay *after* ③ because `finalizeTopDown` derives back-exits through `layout.cellsByName`: run the move first and the moved region gets no back-exit at all. That is also the one place where the replay stage and the **undo** step diverge — the grid top-down moves regions on is built by ①, so undoing a top-down layout edit rewinds to ①, while sphere's ③ builds its own grid and the two coincide.
+
+**Undo is a pop.** Drop the last edit, `invalidateFromStep` the step it rewinds to, resume: determinism does the rest. The claim, pinned on both drivers, is *N edits → undo ×N → the never-edited world, byte for byte*.
+
+**Identity differs by mode.** Top-down regions keep their source names. Sphere edits name `#<node index>`, because the canonical `region_<gx>_<gy>` is derived from a cell that only exists after ③ while `set-substrate` must apply before ③. A `re-roll`'s `n` is derived from the recording (how many re-rolls of that region precede it), never from a session counter — which is what makes undo rewind the count.
+
+**No rng.** A replay draws nothing: the four mutators relabel and re-stitch, `set-substrate` writes a field, and a re-roll derives its seed from `(seed, region_id, n)`. With `edits` absent or empty the replay is not entered.
+
+**Export and reproduction.** `serializeEnvelope` carries the recording for free (it is plain JSON), so a CLI chain and a panel export both round-trip it; `procgen_metadata.edits` carries it into the compiled `rules.json` as **provenance** (additive — omitted when nothing was edited). ⚠ An edit applies exactly once per production of its artifact, so a `run -i env.json` that auto-resumes *past* an edit's stage will not re-apply it — which is correct (a panel export's edits are already applied), but means a hand-added edit needs `--from <its stage>`. Both CLIs print the recorded edits and name any their start point is already past.
+
+Guards: `layoutEdits.test.js`, the recorded-edit blocks in `sphereSteps.test.js` and `topDownSteps.test.js`.
 
 ## Region editors (③ Edit ▸)
 
