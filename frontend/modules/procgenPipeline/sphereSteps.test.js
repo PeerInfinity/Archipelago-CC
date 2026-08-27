@@ -926,6 +926,35 @@ describe('sphereSteps — recorded layout edits', () => {
         expect(place(env.grow.grid)).toMatch(new RegExp(`${mover.region_id}@\\d+,\\d+`));
     });
 
+    // A PRE-EXISTING hazard B-d must not make worse. After a layout edit the
+    // panel keeps the grown grid on screen (_invalidateFrom(4) drops only ④), so
+    // clicking "Run 3 Build regions" enters ③'s CARRY path — and that already
+    // threw before B-d, with no recording anywhere: the raw engine call
+    // `moveSphereRegion` + re-run ③ gives `Grid.replaceRegion: cell (3,2) is
+    // empty` (measured on a control that never touches layoutEdits). The panel's
+    // own message says "re-run from compile", not from ③.
+    //
+    // What B-d owes is that the failure mode is UNCHANGED — the engine's
+    // replaceRegion, never a replay refusal. ⚠ A narrower batch gate ("and that
+    // ③ actually ADVANCED the loop") was written for this and then DELETED: no
+    // test could discriminate it, because ③ throws inside the runner before any
+    // replay is reached. A guard no test can red is a guard that should not ship.
+    it('re-running ③ on the CARRY path fails the SAME way it did before B-d', async () => {
+        const config = bounceConfig();
+        const env = newEnvelope(config);
+        await runToStep(env, 'compile');
+        const mover = env.grow.grid.allRegions()[1];
+        expect(pushLayoutEdit(env, {
+            op: 'move-region', from: { ...mover.cell }, to: emptyCell(env.grow.grid),
+        }, SPHERE_EDIT_BINDING).ok).toBe(true);
+
+        env.completed = SPHERE_STEPS.indexOf('regions');
+        env.compile = null;
+        await expect(runStep('regions', env)).rejects.toThrow(/Grid\.replaceRegion: cell .* is empty/);
+        // The recording survives the failed step — nothing half-applied it.
+        expect(env.edits).toHaveLength(1);
+    });
+
     it('a refused edit leaves the grid untouched and records nothing', async () => {
         const env = await grownEnv();
         const [a, b] = env.grow.grid.allRegions();

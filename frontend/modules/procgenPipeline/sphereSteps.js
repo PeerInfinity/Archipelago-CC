@@ -794,6 +794,11 @@ export const SPHERE_EDIT_BINDING = {
         if (!total) return true;
         const batchStart = env.batchStart ?? 0;
         // ③ advances batchStart, so after the LAST ③ it has reached `total`.
+        // (A NARROWER gate — "and that ③ actually advanced the loop, rather than
+        // re-running a finished one" — was written, then DELETED: no test could
+        // discriminate it, because re-running ③ over an already-complete loop
+        // throws inside the runner BEFORE any replay is reached. See the
+        // "fails the SAME way it did before B-d" row.)
         if (stepName === 'regions') return batchStart >= total;
         // The pre-③ steps run BEFORE that advance, so the last pass is the one
         // whose batch reaches the end.
