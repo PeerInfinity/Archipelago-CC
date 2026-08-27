@@ -787,11 +787,24 @@ describe('AtlasSession over editCore — undo, edits, payload', () => {
         expect(s.certified).toBe(null);
     });
 
-    it('a REFUSED op throws the op module\'s own sentence and records nothing', () => {
+    /**
+     * ⛔ **EQUALS, NOT `toThrow(substring)`.** `expect(...).toThrow('…')` is a
+     * SUBSTRING match, so the row this replaces stayed green under a mutant
+     * that prefixed every refusal — which is the one thing the pin exists to
+     * catch, because the panel's status line and eleven rows above print the
+     * op module's sentence verbatim.
+     */
+    it('a REFUSED op throws the op module\'s own sentence VERBATIM, and records nothing', () => {
         const s = new AtlasSession(emptyAtlas());
         s.apply(PIN_OPS[0]);
-        expect(() => s.apply({ op: 'add-location', region: 'nope', name: 'X', tile: [1, 1] }))
-            .toThrow('no region "nope" in this atlas');
+        const op = { op: 'add-location', region: 'nope', name: 'X', tile: [1, 1] };
+        const direct = applyAtlasOp(s.atlas, op);
+        expect(direct.ok).toBe(false);
+        expect(direct.error).toBe('no region "nope" in this atlas');
+        let thrown = null;
+        try { s.apply(op); } catch (e) { thrown = e; }
+        expect(thrown).not.toBe(null);
+        expect(thrown.message).toBe(direct.error);
         expect(s.edits()).toHaveLength(1);
     });
 
