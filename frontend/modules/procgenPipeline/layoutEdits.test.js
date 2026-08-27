@@ -95,10 +95,19 @@ describe('layoutEdits — the vocabulary', () => {
     });
 
     it('describes every op', () => {
+        // Past tense + the panel's pre-B-d wording: these strings ARE the
+        // panel's confirmation messages, and three browser verifiers match on
+        // them (see the note on LAYOUT_EDIT_SPECS).
         expect(describeLayoutEdit({ op: 'move-region', from: { gx: 1, gy: 2 }, to: { gx: 3, gy: 0 } }))
-            .toBe('Move region (1,2) → (3,0)');
+            .toBe('Moved the region (1,2) → (3,0)');
         expect(describeLayoutEdit({ op: 'swap-regions', a: { gx: 0, gy: 0 }, b: { gx: 1, gy: 1 } }))
-            .toBe('Swap regions (0,0) ↔ (1,1)');
+            .toBe('Swapped the two regions (0,0) ↔ (1,1)');
+        expect(describeLayoutEdit({
+            op: 'move-exit-side', cell: { gx: 1, gy: 1 }, exitId: 'e1', side: 'S',
+        })).toBe('Moved exit e1 to side S at (1,1)');
+        expect(describeLayoutEdit({
+            op: 'swap-exit-sides', cell: { gx: 1, gy: 1 }, exitA: 'a', exitB: 'b',
+        })).toBe('Swapped exits a ↔ b at (1,1)');
         expect(describeLayoutEdit({ op: 're-roll', region_id: 'A', n: 2 })).toBe('Re-roll "A" (#2)');
         expect(describeLayoutEdit({ op: 'set-substrate', region_id: 'A', substrate: 'maze' }))
             .toBe('Substrate of "A" → maze');
@@ -122,7 +131,7 @@ describe('layoutEdits — apply', () => {
             op: 'move-region', from: { gx: 1, gy: 1 }, to: { gx: 3, gy: 3 },
         }, stubBinding());
         expect(r.ok).toBe(true);
-        expect(r.description).toBe('Move region (1,1) → (3,3)');
+        expect(r.description).toBe('Moved the region (1,1) → (3,3)');
         expect(cellOf(env.grid, 'A')).toEqual({ gx: 3, gy: 3 });
         expect(env.calls).toEqual(['afterLayout']);
     });
@@ -232,7 +241,7 @@ describe('layoutEdits — record, replay, undo', () => {
         const regions = replayLayoutEdits(env, 'regions', b);
         expect(regions.applied).toBe(2);
         expect(regions.descriptions)
-            .toEqual(['Move region (1,1) → (3,3)', 'Re-roll "A" (#1)']);
+            .toEqual(['Moved the region (1,1) → (3,3)', 'Re-roll "A" (#1)']);
         expect(cellOf(env.grid, 'A')).toEqual({ gx: 3, gy: 3 });
     });
 

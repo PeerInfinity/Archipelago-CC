@@ -82,31 +82,36 @@ const PARAM_KINDS = {
  * `kind: 'layout'` ops address the grid through the shared engine mutators;
  * `kind: 'scalar'` ops are per-region facts the mode's binding applies.
  */
+// ⚠ The `describe` strings are PAST TENSE and keep the panel's pre-B-d
+// wording ("Moved the region", "Swapped the two regions", "Moved exit X to side
+// Y", "Swapped exits A ↔ B"): they now ARE the panel's confirmation messages,
+// and three hand-run browser verifiers assert on that wording
+// (verify-topdown-steps-ui.mjs Phase D/E, verify-sphere-steps-ui.mjs F/J).
 export const LAYOUT_EDIT_SPECS = Object.freeze({
     'move-region': {
         kind: 'layout',
         params: { from: 'cell', to: 'cell' },
         apply: (grid, e) => moveSphereRegion(grid, e.from, e.to),
-        describe: (e) => `Move region ${cellStr(e.from)} → ${cellStr(e.to)}`,
+        describe: (e) => `Moved the region ${cellStr(e.from)} → ${cellStr(e.to)}`,
     },
     'swap-regions': {
         kind: 'layout',
         params: { a: 'cell', b: 'cell' },
         apply: (grid, e) => swapSphereRegions(grid, e.a, e.b),
-        describe: (e) => `Swap regions ${cellStr(e.a)} ↔ ${cellStr(e.b)}`,
+        describe: (e) => `Swapped the two regions ${cellStr(e.a)} ↔ ${cellStr(e.b)}`,
     },
     'move-exit-side': {
         kind: 'layout',
         params: { cell: 'cell', exitId: 'string', side: 'side' },
         apply: (grid, e, ctx) => moveSphereExitSide(grid, e.cell, e.exitId, e.side, ctx.regionSize),
-        describe: (e) => `Move exit ${e.exitId} at ${cellStr(e.cell)} → side ${e.side}`,
+        describe: (e) => `Moved exit ${e.exitId} to side ${e.side} at ${cellStr(e.cell)}`,
     },
     'swap-exit-sides': {
         kind: 'layout',
         params: { cell: 'cell', exitA: 'string', exitB: 'string' },
         apply: (grid, e, ctx) => swapSphereExitSides(
             grid, e.cell, e.exitA, e.exitB, ctx.regionSize),
-        describe: (e) => `Swap exits ${e.exitA} ↔ ${e.exitB} at ${cellStr(e.cell)}`,
+        describe: (e) => `Swapped exits ${e.exitA} ↔ ${e.exitB} at ${cellStr(e.cell)}`,
     },
     're-roll': {
         kind: 'scalar',

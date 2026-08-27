@@ -12,13 +12,8 @@ import {
     buildRulesJson,
     stringifyRulesJson,
     getRegionExits,
-    reRollSphereRegion,
     buildRegionContract,
     buildTopDownRegionContract,
-    moveSphereRegion,
-    swapSphereRegions,
-    moveSphereExitSide,
-    swapSphereExitSides,
     Grid,
 } from './procgenPipelineEngine.js';
 // The sphere-growth pipeline steps + envelope serde live in the shared
@@ -27,12 +22,23 @@ import {
     SPHERE_STEPS, runStep, nextSphereStep, growConfigFrom,
     serializeEnvelope, importSphereEnvelope, detectCompleted,
     resolveSpheresPerBatch, truncateSphereWorld, appendSphere,
+    SPHERE_EDIT_BINDING, sphereNodeKey, sphereUndoStep,
 } from './sphereSteps.js';
 // The top-down pipeline steps live in their own shared runner (same pattern as
 // sphereSteps): layout → realise (streamed) → finalize → compile.
 import {
     TOPDOWN_STEPS, runTopDownStep, nextTopDownStep, buildTopDownEnvelope,
+    TD_EDIT_BINDING, topDownUndoStep,
 } from './topDownSteps.js';
+// The layout editor's gestures are RECORDED OPS on the envelope, not in-place
+// mutations: the panel pushes an edit (which applies it) and the step runner
+// replays it after the step that produces the artifact it addresses, so the
+// same world comes back from `config + seed + edits` in the panel, the CLI and
+// a re-run — and undo is a pop. See layoutEdits.js.
+import {
+    pushLayoutEdit, popLayoutEdit, describeLayoutEdit, layoutEditStage,
+    reRollCountFor,
+} from './layoutEdits.js';
 // The shuffled-spiral pipeline steps live in their own shared runner too (same
 // harness as sphere/top-down): ① arrange → ② content [no-op] → ③ regions →
 // ④ compile. Running all four reproduces the monolithic arrangeShuffledSpiral +
@@ -3187,12 +3193,12 @@ export class ProcgenPipelineUI {
     // stitching — stays consistent (the reason maze isn't safe to re-roll alone).
     _changeRegionSubstrate(node, value) {
         if (!node || value === node.substrate) return;
-        node.substrate = value;
-        // _invalidateFrom clears this.message, so set it AFTER and re-render.
-        this._invalidateFrom(3);
-        this.message = `Region #${node.index} substrate → ${value}. `
-            + 'Re-run 3 Build regions to apply.';
-        this.render();
+        // A RECORDED op staged at ②c (the node it writes is ②b's, which is
+        // where an undo rewinds to). The old body — mutate + _invalidateFrom(3)
+        // — is exactly what the binding + the derived stage now do.
+        this._recordEdit({
+            op: 'set-substrate', region_id: sphereNodeKey(node), substrate: value,
+        });
     }
 
     // Look up the tree node backing a grid region (by region_id), so a launch
@@ -3273,42 +3279,21 @@ export class ProcgenPipelineUI {
     // backstop).
     _reRollRegion(region, node = null) {
         const st = this._stepState;
-        const grid = st?.grow?.grid;
-        const tree = st?.tree;
         const nd = node ?? this._nodeForRegion(region);
-        if (!grid || !tree || !nd) {
+        if (!st?.grow?.grid || !st.tree || !nd) {
             this.message = 'Re-roll unavailable — re-run from 3 first.';
             this.warning = '';
             this.render();
             return;
         }
-        const count = (this._rerollCounts ??= new Map());
-        const n = (count.get(nd.region_id) ?? 0) + 1;
-        count.set(nd.region_id, n);
-        const seed = ((st.cfg.seed * 7919) ^ this._hashStr(nd.region_id)) + n * 104729 | 0;
-        try {
-            reRollSphereRegion(grid, nd, tree, {
-                seed,
-                regionSize: st.growConfig.regionSize,
-                regionParams: st.growConfig.regionParams,
-                assumeBidirectional: st.growConfig.growthParams?.assumeBidirectional ?? true,
-            });
-            // _invalidateFrom clears this.message, so set it AFTER and re-render.
-            this._invalidateFrom(4);
-            this.message = `Re-rolled "${nd.region_id}" (seed ${seed}). `
-                + 'Re-run 4 Compile to recheck the oracle.';
-            this.render();
-        } catch (err) {
-            this.message = `Re-roll failed: ${err.message}`;
-            this.warning = '';
-            this.render();
-        }
-    }
-
-    _hashStr(s) {
-        let h = 0;
-        for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
-        return h;
+        // `n` comes from the RECORDING, not a session counter: that is what
+        // makes the re-roll reproducible from `config + seed + edits` and what
+        // makes undo rewind the count. The seed derivation itself was already
+        // pure in (seed, region_id, n) — only its location was this file.
+        const key = sphereNodeKey(nd);
+        this._recordEdit({
+            op: 're-roll', region_id: key, n: reRollCountFor(st.edits, key) + 1,
+        });
     }
 
     // Write-back from an editor save (pipeline mode): splice the edited region
@@ -3410,7 +3395,11 @@ export class ProcgenPipelineUI {
             // Live stepped grid: visible from 1 Layout onward (stubs fill in as 2
             // realises), before 4 Compile sets this.result.
             grid = td.layout.grid;
-            regionSize = td.regionSize ?? this.result?.regionSize;
+            // uniformSize is what layoutTopDown ACTUALLY placed — it widens the
+            // requested base to the per-axis max over all regions so shared
+            // walls line up. Drawing (and hit-testing exit squares) with the
+            // base would put every click in the wrong cell on a widened world.
+            regionSize = td.layout.uniformSize ?? td.regionSize ?? this.result?.regionSize;
         } else if (this.mode === 'shuffledSpiral' && this._spiralState?.regions?.grid) {
             // Live stepped grid: visible from 3 Regions onward, before 4 Compile
             // sets this.result. The pool/regionSize aren't on the envelope, so
@@ -3439,7 +3428,7 @@ export class ProcgenPipelineUI {
         const interactive = (this.mode === 'sphereGrowth' && this._stepState?.tree)
             || (this.mode === 'topDown' && (this._tdState?.completed ?? -1) >= 2);
         // Both modes now offer the full editor set (top-down Edit Region routes to
-        // _editRegionTD; Move Region / Move Exits to _applyGridEditTD).
+        // _editRegionTD; Move Region / Move Exits to the recorded-edit path).
         const modes = [['edit', 'Edit Region'], ['moveRegion', 'Move Region'], ['moveExit', 'Move Exits']];
         if (interactive && !modes.some(([v]) => v === this._mapMode)) {
             this._mapMode = modes[0][0];
@@ -3467,6 +3456,10 @@ export class ProcgenPipelineUI {
             canvas.addEventListener('click', (e) => this._onMapClick(canvas, grid, regionSize, e));
         }
         section.appendChild(canvas);
+        // The recorded-edit history + Undo. Shown whenever the map is editable
+        // (or an edit is already recorded), so the count is readable headless.
+        const st2 = this.mode === 'topDown' ? this._tdState : this._stepState;
+        if (interactive || st2?.edits?.length) section.appendChild(this._renderEditHistory());
         return section;
     }
 
@@ -3548,10 +3541,9 @@ export class ProcgenPipelineUI {
             this.render();
             return;
         }
-        this._applyGridEdit(
-            (g) => (here ? swapSphereRegions(g, from, cell) : moveSphereRegion(g, from, cell)),
-            here ? 'Swapped the two regions.' : 'Moved the region.',
-        );
+        this._recordEdit(here
+            ? { op: 'swap-regions', a: from, b: cell }
+            : { op: 'move-region', from, to: cell });
     }
 
     // Canvas-backing pixel under a click (null if the canvas isn't laid out).
@@ -3632,68 +3624,120 @@ export class ProcgenPipelineUI {
         const exits = getRegionExits(region);
         const list = exits instanceof Map ? [...exits.values()] : (exits ?? []);
         const occupant = list.find((e) => e.exit_id !== sel.exitId && e.side === newSide);
-        this._applyGridEdit(
-            (g) => (occupant
-                ? swapSphereExitSides(g, cell, sel.exitId, occupant.exit_id, regionSize)
-                : moveSphereExitSide(g, cell, sel.exitId, newSide, regionSize)),
-            occupant
-                ? `Swapped exits ${sel.exitId} ↔ ${occupant.exit_id}.`
-                : `Moved exit ${sel.exitId} to side ${newSide}.`,
-        );
+        this._recordEdit(occupant
+            ? {
+                op: 'swap-exit-sides', cell, exitA: sel.exitId, exitB: occupant.exit_id,
+            }
+            : { op: 'move-exit-side', cell, exitId: sel.exitId, side: newSide });
     }
 
-    // Run a grid-layout edit, then keep st.grow.startCell pointing at the start
-    // region (a move/swap may relocate it — the oracle reads from startCell),
-    // invalidate 4, and re-render. _invalidateFrom clears this.message, so the
-    // confirmation is set AFTER it.
-    _applyGridEdit(fn, okMsg) {
-        if (this.mode === 'topDown') { this._applyGridEditTD(fn, okMsg); return; }
-        const st = this._stepState;
-        const grid = st?.grow?.grid;
-        if (!grid) return;
-        const startId = grid.getRegion(st.grow.startCell)?.region_id;
+    // Record a layout edit and apply it. The gesture's effect is immediate
+    // (the map changes on the click); the RECORDING is what makes it survive a
+    // re-run, an export, the CLI and an undo — see layoutEdits.js.
+    //
+    // Everything downstream is DERIVED from the op's stage in the mode's
+    // binding, so this one method serves all six gestures and the four
+    // write-back depths the two modes used to spell out by hand:
+    // `_invalidateFrom(steps.indexOf(stage))` reproduces the old
+    // `_invalidateFrom(4)` / `_invalidateFromTD(2)` / `_invalidateFrom(3)` /
+    // `_invalidateFromTD(0)` exactly, because the stage tables ARE those depths.
+    //
+    // The binding also re-points the start cell (sphere: from the root tree
+    // node; top-down: from layout.actualStartName) and, on sphere, resyncs
+    // every tree node's `cell` — which the panel never did, so a re-roll after
+    // a move used to target the node's OLD cell.
+    _recordEdit(edit) {
+        const td = this.mode === 'topDown';
+        const st = td ? this._tdState : this._stepState;
+        const binding = td ? TD_EDIT_BINDING : SPHERE_EDIT_BINDING;
+        const steps = td ? TOPDOWN_STEPS : SPHERE_STEPS;
+        if (!st) return false;
+        let stage;
         try {
-            fn(grid);
-            if (startId) {
-                const sr = grid.allRegions().find((r) => r.region_id === startId);
-                if (sr) st.grow.startCell = sr.cell;
-            }
-            this._invalidateFrom(4);
-            this.message = `${okMsg} Re-run 4 Compile to recheck the oracle.`;
-            this.render();
+            stage = layoutEditStage(edit, binding);
         } catch (err) {
             this.message = `Edit failed: ${err.message}`;
+            this.warning = '';
             this.render();
+            return false;
         }
+        const r = pushLayoutEdit(st, edit, binding);
+        if (!r.ok) {
+            this.message = `Edit failed: ${r.error}`;
+            this.warning = '';
+            this.render();
+            return false;
+        }
+        const idx = steps.indexOf(stage);
+        // _invalidateFrom* clears this.message, so the confirmation is set AFTER.
+        if (td) this._invalidateFromTD(idx);
+        else this._invalidateFrom(idx);
+        const next = steps[idx + 1];
+        this.message = `${r.description}. Re-run from ${next ?? 'compile'} to apply.`;
+        this.render();
+        return true;
     }
 
-    // Top-down layout edit. Operates on the FINALIZED grid (st.finalize.grid ===
-    // st.layout.grid), which the move helper re-stitches via relayoutSphereGrid
-    // (rebuilding teleporters + re-deriving forward targets), then invalidates 4
-    // ONLY (_invalidateFromTD(2) → completed=2, compile dropped, finalize kept).
-    // We deliberately do NOT re-run 3: finalizeTopDown reads the now-stale
-    // cellsByName and would double-apply back-exits, whereas 4 Compile reads only
-    // the grid. The start region may relocate on a move/swap, so re-point
-    // finalize.startCell at it (buildRulesJson reads from startCell).
-    _applyGridEditTD(fn, okMsg) {
-        const st = this._tdState;
-        const grid = st?.finalize?.grid ?? st?.layout?.grid;
-        if (!grid) return;
-        const startCell = st.finalize?.startCell ?? st.layout?.startCell;
-        const startId = startCell ? grid.getRegion(startCell)?.region_id : null;
-        try {
-            fn(grid);
-            if (startId && st.finalize) {
-                const sr = grid.allRegions().find((r) => r.region_id === startId);
-                if (sr) st.finalize.startCell = sr.cell;
-            }
-            this._invalidateFromTD(2);
-            this.message = `${okMsg} Re-run 4 Compile to recompile.`;
+    // Undo = pop the last recorded edit and re-run from the step that PRODUCES
+    // the artifact it mutated (`sphereUndoStep` / `topDownUndoStep`). The edit
+    // is never inverted — determinism is the guarantee, so N edits followed by
+    // N undos reproduce the never-edited world byte for byte.
+    //
+    // The undo step is NOT always the replay stage: a top-down layout edit
+    // replays after ③ but the grid it moves regions on is built by ①, so it
+    // rewinds to ①. Sphere's ③ builds its own grid, so there the two coincide.
+    _undoLastEdit() {
+        const td = this.mode === 'topDown';
+        const st = td ? this._tdState : this._stepState;
+        const binding = td ? TD_EDIT_BINDING : SPHERE_EDIT_BINDING;
+        const steps = td ? TOPDOWN_STEPS : SPHERE_STEPS;
+        if (!st?.edits?.length) {
+            this.message = 'Nothing to undo.';
+            this.warning = '';
             this.render();
-        } catch (err) {
-            this.message = `Edit failed: ${err.message}`;
-            this.render();
+            return;
         }
+        const popped = popLayoutEdit(st, binding);
+        const from = (td ? topDownUndoStep : sphereUndoStep)(popped.edit);
+        if (td) this._invalidateFromTD(steps.indexOf(from) - 1);
+        else this._invalidateFrom(steps.indexOf(from) - 1);
+        this.message = `Undid: ${describeLayoutEdit(popped.edit)} — `
+            + `re-run from ${from} to apply (${st.edits.length} edit`
+            + `${st.edits.length === 1 ? '' : 's'} left).`;
+        this.render();
+    }
+
+    // The recorded-edit history, with UNDO. This is the layout editor's first
+    // visible memory: before B-d an edit existed only as a difference between
+    // the map and what the seed produces.
+    _renderEditHistory() {
+        const st = this.mode === 'topDown' ? this._tdState : this._stepState;
+        const edits = st?.edits ?? [];
+        const wrap = document.createElement('div');
+        wrap.className = 'procgen-pipeline-edit-history';
+        wrap.style.cssText = 'margin-top:6px;font-size:11px;';
+        const head = document.createElement('div');
+        head.style.cssText = 'display:flex;align-items:center;gap:8px;color:#999;';
+        const label = document.createElement('span');
+        label.className = 'procgen-pipeline-edit-count';
+        label.textContent = `Recorded edits: ${edits.length}`;
+        head.appendChild(label);
+        if (edits.length) {
+            const undo = this._btn('Undo ↶', () => this._undoLastEdit());
+            undo.className = `${undo.className ?? ''} procgen-pipeline-edit-undo`.trim();
+            undo.title = 'Drop the last recorded edit and re-run from its step';
+            head.appendChild(undo);
+        }
+        wrap.appendChild(head);
+        for (let i = 0; i < edits.length; i += 1) {
+            const row = document.createElement('div');
+            row.className = 'procgen-pipeline-edit-row';
+            row.dataset.index = String(i);
+            row.style.cssText = 'font-family:monospace;color:#bbb;padding:1px 0;';
+            row.textContent = `${i + 1}. ${describeLayoutEdit(edits[i])}`;
+            wrap.appendChild(row);
+        }
+        return wrap;
     }
 
     _drawGrid(canvas, grid, regionSize) {
@@ -5042,6 +5086,10 @@ export class ProcgenPipelineUI {
             totalNodes: st.totalNodes ?? null,
             dims: st.dims ?? null,
             startCell: st.startCell ?? null,
+            // The recorded layout edits — WHY this world differs from its seed.
+            // ⚠ This mapping ENUMERATES the envelope's fields, so a new one has
+            // to be added here or it silently never leaves the panel.
+            edits: st.edits ?? null,
         };
         return serializeEnvelope(env);
     }
@@ -5146,6 +5194,10 @@ export class ProcgenPipelineUI {
             totalNodes: env.totalNodes ?? null,
             dims: env.dims ?? null,
             startCell: env.startCell ?? null,
+            // Recorded layout edits ride back in (same enumeration caveat as
+            // _envelopeFromStepState): a loaded envelope keeps its history, so
+            // Undo works on a world this session did not edit.
+            edits: env.edits ?? null,
             seconds: 0,
         };
         // A complete envelope lights up the post-gen export buttons + views.
@@ -5403,10 +5455,9 @@ export class ProcgenPipelineUI {
             if (id === cur) opt.selected = true;
             sel.appendChild(opt);
         }
-        sel.addEventListener('change', () => {
-            layout.substrateByRegion[name] = sel.value;
-            this._invalidateFromTD(0);
-        });
+        sel.addEventListener('change', () => this._recordEdit({
+            op: 'set-substrate', region_id: name, substrate: sel.value,
+        }));
         row.appendChild(sel);
         return row;
     }
@@ -5479,16 +5530,11 @@ export class ProcgenPipelineUI {
             this.render();
             return;
         }
-        const counts = (this._tdRerollCounts ??= new Map());
-        const n = (counts.get(name) ?? 0) + 1;
-        counts.set(name, n);
-        layout.subSeedByRegion[name] = (layout.subSeedByRegion[name]
-            ^ (0x9e3779b9 + n * 0x55555555)) >>> 0;
-        // _invalidateFromTD clears this.message, so set it AFTER it.
-        this._invalidateFromTD(0);
-        this.message = `Re-rolled "${name}" (sub-seed bump #${n}). `
-            + 'Re-run from 2 Realise to apply — only this region + its descendants change.';
-        this.render();
+        // `n` from the RECORDING (see _reRollRegion). The bump itself is the
+        // same expression, now in layoutEdits.js so the replay shares it.
+        this._recordEdit({
+            op: 're-roll', region_id: name, n: reRollCountFor(this._tdState.edits, name) + 1,
+        });
     }
 
     // Edit ▸ (top-down) — open the per-region geometry editor for a bounce/zone
