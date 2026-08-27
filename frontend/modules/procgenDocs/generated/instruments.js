@@ -210,7 +210,7 @@ export const INSTRUMENTS = frz({
         "files": 257,
         "lineStyle": 19,
         "withDocblock": 257,
-        "withFlags": 158
+        "withFlags": 159
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -6948,14 +6948,25 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/verify-region-library-ui.mjs"
         },
         {
-            "argvHelpers": [],
+            "argvHelpers": [
+                "HOST"
+            ],
             "browser": true,
             "category": "verify",
             "citedBy": [],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "host"
+            ],
             "file": "verify-region-marking-tool.mjs",
-            "flags": [],
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "host"
+                }
+            ],
             "oneLiner": "In-app UI verification for the Region Marking Tool panel (region-atlas plan, Phase 2, Deliverable 2).",
             "path": "scripts/procgen/verify-region-marking-tool.mjs"
         },

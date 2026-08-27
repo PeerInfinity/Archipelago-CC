@@ -660,3 +660,44 @@ describe('B-a: apply-analysis — ONE op, because a group cannot say it', () => 
         expect(JSON.stringify(s.toDocument())).toBe(before);
     });
 });
+
+describe('B-a: the marking tool has no direct-mutation hatch left', () => {
+    /**
+     * ⛓ DERIVED FROM THE SOURCE, because the panel is a DOM class no bounded
+     * node run can mount — its live gate is `verify-region-marking-tool`'s
+     * Phase H, in a browser. This row is what keeps a REGRESSION cheap to
+     * catch: the six assignments are named one by one, so a new inspector
+     * field that writes straight into the document reds here rather than in a
+     * browser row somebody runs weekly.
+     *
+     * ⚠ `readFileSync`, never grep: this file carries NUL bytes and plain grep
+     * SKIPS it silently ([[feedback_grep_skips_nul_bearing_files]], trap 764).
+     */
+    it('the six inspector fields go through the session, not through the field', () => {
+        const src = readFileSync(new URL('../regionMarkingTool/regionMarkingToolUI.js', import.meta.url), 'utf8');
+        const GONE = [
+            'a.game = v',
+            'a.name = v',
+            'region.name = v',
+            'region.annotations = {',
+            'exit.access_rule = parsed',
+            'loc.vanilla_item = v',
+            'applySeedlingRegionAnalysis(this.session.atlas',
+            'this.session.atlas.tile_space',
+        ];
+        for (const pattern of GONE) {
+            expect(src.includes(pattern), `still writes the document directly: ${pattern}`).toBe(false);
+        }
+        const THROUGH = [
+            'this.session.setGame(', 'this.session.setName(', 'this.session.setRegionName(',
+            'this.session.setRulesSource(', 'this.session.setExitRule(',
+            'this.session.setLocationItem(', 'this.session.applyAnalysis(',
+        ];
+        for (const call of THROUGH) {
+            expect(src.includes(call), `no delegation for ${call}`).toBe(true);
+        }
+        // ⛓ And the undo the ops exist for is actually reachable.
+        expect(src.includes('this.session.undo()')).toBe(true);
+        expect(src.includes("textContent: 'Undo'")).toBe(true);
+    });
+});

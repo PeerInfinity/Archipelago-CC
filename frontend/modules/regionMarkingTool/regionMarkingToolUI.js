@@ -22,7 +22,7 @@ import { buildLevelView, indexLevels, levelLabel, entityMarkers } from './mapSou
 import { compactJsonFile } from '../procgenPipeline/compactJson.js';
 import { compileRegionAtlas, formatCompileReport } from '../procgenPipeline/regionAtlasCompiler.js';
 import { formatAnalysisReport, describeRule } from '../procgenPipeline/regionAtlasAnalyzer.js';
-import { analyzeSeedlingRegion, applySeedlingRegionAnalysis } from '../flashPanel/seedlingAtlasAnalysis.js';
+import { analyzeSeedlingRegion } from '../flashPanel/seedlingAtlasAnalysis.js';
 import { stringifyRulesJson } from '../shared/rulesJsonBuilder.js';
 
 // Per-game analyzers, the same registry shape the batch CLI carries
@@ -70,7 +70,7 @@ export class RegionMarkingToolUI {
         //   authors SEEDLING atlases (`MAP_DOCUMENT_URL` is `seedling-map.json`,
         //   and `make-seedling-starter-atlas.mjs`, which drives this same model
         //   headlessly, has always passed `game: 'seedling'` explicitly).
-        this.session = new AtlasSession(createEmptyAtlas({
+        this.session = this._newSession(createEmptyAtlas({
             game: 'seedling', mapSource: 'ogmo-extract',
         }));
         this.selectedRegionId = null;
@@ -104,7 +104,7 @@ export class RegionMarkingToolUI {
         const session = consumePendingSession();
         if (!session) return;
         if (session.atlas) {
-            this.session = new AtlasSession(session.atlas);
+            this.session = this._newSession(session.atlas);
             this.selectedRegionId = this.session.regions()[0]?.region_id ?? null;
             this.selectedExitId = null;
             this.analysis = null;
@@ -119,6 +119,8 @@ export class RegionMarkingToolUI {
 
     _destroy() {
         this.eventBus.unsubscribe(LOAD_EVENT, this._onLoadEvent);
+        // ⛓ A REMOUNTED panel would otherwise keep this mount's handler.
+        this.rootElement?.removeEventListener('keydown', this._onKeyDown);
         setActivePanelInstance(null);
         this.renderer = null;
     }
@@ -159,6 +161,10 @@ export class RegionMarkingToolUI {
             el('button', { class: 'rmt-btn', textContent: '−', title: 'zoom out', onClick: () => this.renderer.zoomOut() }),
             el('button', { class: 'rmt-btn', textContent: '+', title: 'zoom in', onClick: () => this.renderer.zoomIn() }),
             el('button', { class: 'rmt-btn', textContent: 'Fit', title: 'zoom so the level fills the canvas', onClick: () => this.fitLevel() }),
+            this.undoButton = el('button', {
+                class: 'rmt-btn', textContent: 'Undo', title: 'undo the last edit (Ctrl/Cmd+Z)',
+                onClick: () => this._undo(),
+            }),
             el('button', { class: 'rmt-btn', textContent: 'New', onClick: () => this._newAtlas() }),
             el('button', { class: 'rmt-btn', textContent: 'Load', onClick: () => this.loadFile.click() }),
             el('button', { class: 'rmt-btn', textContent: 'Validate', onClick: () => this._validate() }),
@@ -199,6 +205,27 @@ export class RegionMarkingToolUI {
             this.statusBar,
         );
 
+        /**
+         * ⛓⛓ **Ctrl/Cmd+Z ON THE PANEL ROOT, not on the document.** This page
+         * does not mount `editorView` — the marking tool keeps its own
+         * drag-first renderer — so the binding is here rather than inherited.
+         *
+         * ⛔ AND IT REFUSES INSIDE A TEXT FIELD. Every inspector field is an
+         * `<input>` or a `<textarea>` whose own undo stack is what a person
+         * pressing Ctrl+Z in it means; swallowing that to undo an ATLAS op
+         * would throw away a half-typed rule and look like the tool eating
+         * keystrokes.
+         */
+        this._onKeyDown = (e) => {
+            if (!(e.key === 'z' || e.key === 'Z') || !(e.ctrlKey || e.metaKey) || e.shiftKey) return;
+            const tag = e.target?.tagName;
+            if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || e.target?.isContentEditable) return;
+            e.preventDefault();
+            this._undo();
+        };
+        this.rootElement.tabIndex = -1;
+        this.rootElement.addEventListener('keydown', this._onKeyDown);
+
         this.renderer = new RegionMarkingRenderer(this.canvas, this.canvasWrap);
         this.renderer.onMarkRect = (bounds) => this._onRect(bounds);
         this.renderer.onMarkLine = (tiles, mode) => this._onLine(tiles, mode);
@@ -213,8 +240,28 @@ export class RegionMarkingToolUI {
         if (!response.ok) throw new Error(`HTTP ${response.status} for ${MAP_DOCUMENT_URL}`);
         this.mapDoc = await response.json();
         this.levelsById = indexLevels(this.mapDoc);
-        this.session.atlas.tile_space.tile_size = this.mapDoc.tile_size ?? 16;
-        this.session.atlas.tile_space.map_document = MAP_DOCUMENT_URL.split('/').pop();
+        /**
+         * ⛓ **THE EIGHTH HATCH, AND IT NEEDED NO OP.** These two lines used to
+         * write `tile_space` straight into the constructor's empty document —
+         * a mutation of the session's BASE, which is the one place an op list
+         * cannot see and the one place it does not have to: nothing has been
+         * edited yet. So the pristine session is REPLACED by one built on an
+         * atlas that carries the map's facts from the start.
+         * `createEmptyAtlas` writes `{tile_size, map_source, map_document}` in
+         * exactly the order the mutation produced, so the bytes are unmoved.
+         *
+         * ⛔ Guarded on the session being untouched: a hand-off (`LOAD_EVENT`)
+         * can land before the map document does, and that document has its own
+         * `tile_space`.
+         */
+        if (this.session.regions().length === 0 && this.session.edits().length === 0) {
+            this.session = this._newSession(createEmptyAtlas({
+                game: 'seedling',
+                mapSource: 'ogmo-extract',
+                mapDocument: MAP_DOCUMENT_URL.split('/').pop(),
+                tileSize: this.mapDoc.tile_size ?? 16,
+            }));
+        }
 
         this.levelSelect.replaceChildren(...this.mapDoc.levels.map(
             (lvl) => el('option', { value: String(lvl.level), textContent: levelLabel(lvl) }),
@@ -255,6 +302,39 @@ export class RegionMarkingToolUI {
         if (mode === MARK_MODES.ENTRANCE && !this.selectedExitId) {
             this._setStatus('select an exit first — Entrance mode retargets the selected exit\'s spawn tile', true);
         }
+    }
+
+    /**
+     * ⛓ **THE ONE PLACE A SESSION IS OPENED.** It carries the panel's level
+     * view into the adapter, which is what gives the atlas a cell space at all
+     * — `bounds`/`readCell` are level-local and this class is the only thing on
+     * the page that knows which level is showing.
+     */
+    _newSession(atlas) {
+        return new AtlasSession(atlas, {
+            levelView: () => this.levelsById.get(this.levelId) ?? null,
+        });
+    }
+
+    /**
+     * ⛓⛓ UNDO — the fold over a shorter list. ⛔ It says so when there is
+     * nothing to undo rather than silently doing nothing: a toolbar button that
+     * looks like it worked is a readout claiming an edit that did not happen.
+     */
+    _undo() {
+        if (!this.session.undo()) {
+            this._setStatus('nothing to undo — no edit has been applied to this atlas yet');
+            this.render();
+            return false;
+        }
+        this.selectedRegionId = this.session.regions()
+            .some((r) => r.region_id === this.selectedRegionId) ? this.selectedRegionId : null;
+        this.selectedExitId = null;
+        // A proposal is about the document that was just rolled back.
+        this.analysis = null;
+        this._setStatus(`undone — ${this.session.edits().length} edit(s) left`);
+        this.render();
+        return true;
     }
 
     _try(fn, success) {
@@ -388,7 +468,7 @@ export class RegionMarkingToolUI {
     _newAtlas() {
         // eslint-disable-next-line no-alert
         if (this.session.regions().length > 0 && !window.confirm('Discard the current atlas?')) return;
-        this.session = new AtlasSession(createEmptyAtlas({
+        this.session = this._newSession(createEmptyAtlas({
             game: 'seedling',
             mapSource: 'ogmo-extract',
             mapDocument: MAP_DOCUMENT_URL.split('/').pop(),
@@ -404,7 +484,7 @@ export class RegionMarkingToolUI {
     async _loadFromFile(file) {
         if (!file) return;
         try {
-            this.session = new AtlasSession(JSON.parse(await file.text()));
+            this.session = this._newSession(JSON.parse(await file.text()));
             this.selectedRegionId = this.session.regions()[0]?.region_id ?? null;
             this.selectedExitId = null;
             this.analysis = null;
@@ -589,10 +669,14 @@ export class RegionMarkingToolUI {
     _acceptAnalysis() {
         if (!this.analysis) return;
         try {
-            const result = applySeedlingRegionAnalysis(this.session.atlas, this.analysis, { stamp: false });
-            // The session owns identity: applying with stamp:false keeps
-            // toDocument() the single stamping path, exactly as every other
-            // mutation here does.
+            // ⛓⛓ ONE OP CARRYING THE PROPOSAL (B-a), not a mutation of the
+            //   live document: `applyRegionAnalysis` is a MERGE whose rules are
+            //   ruling 2 and cannot be spelled as a group of the vocabulary, so
+            //   `apply-analysis` carries the analysis itself — which is what
+            //   lets Undo take an accepted split back off.
+            //   The session still owns identity: the op applies with
+            //   stamp:false, so toDocument() stays the single stamping path.
+            const result = this.session.applyAnalysis(this.analysis);
             for (const p of result.problems) log('warn', `apply: ${p.message}`);
             const accepted = this.analysis;
             this.analysis = null;
@@ -667,6 +751,14 @@ export class RegionMarkingToolUI {
     // ── inspector ────────────────────────────────────────────────────────
     render() {
         this._refreshCanvas();
+        // ⛓ DERIVED FROM THE LIST, never from a flag this file would have to
+        //   keep in step with it.
+        if (this.undoButton) {
+            const n = this.session.edits().length;
+            this.undoButton.disabled = n === 0;
+            this.undoButton.title = n === 0
+                ? 'nothing to undo' : `undo the last of ${n} edit(s) (Ctrl/Cmd+Z)`;
+        }
         const region = this._currentRegion();
         this.sidebar.replaceChildren(...[
             this._atlasSection(),
@@ -698,8 +790,17 @@ export class RegionMarkingToolUI {
     _atlasSection() {
         const a = this.session.atlas;
         return this._section('Atlas', [
-            this._field('game', a.game, (v) => { a.game = v; this.session.baseId = v || 'atlas'; }),
-            this._field('name', a.name ?? '', (v) => { if (v) a.name = v; else delete a.name; }),
+            this._field('game', a.game, (v) => this._try(() => {
+                const set = this.session.setGame(v);
+                // ⛓ The session's `baseId` is NOT a document field — it is the
+                //   stem `toDocument()` appends the content hash to — so it
+                //   stays an assignment here rather than becoming part of the op.
+                this.session.baseId = v || 'atlas';
+                return set;
+            }, `game is "${v}"`)),
+            this._field('name', a.name ?? '', (v) => this._try(
+                () => this.session.setName(v), v ? `atlas name is "${v}"` : 'atlas name cleared',
+            )),
             el('div', { class: 'rmt-note', textContent: `map: ${a.tile_space.map_document ?? '(none)'} · ${a.tile_space.tile_size}px tiles · id ${this.session.baseId}-${this.session.contentHash()}` }),
         ]);
     }
@@ -736,10 +837,16 @@ export class RegionMarkingToolUI {
     _regionSection(region) {
         const b = region.bounds;
         return this._section(`Region "${region.region_id}"`, [
-            this._field('name', region.name ?? '', (v) => { if (v) region.name = v; else delete region.name; this.render(); }),
+            this._field('name', region.name ?? '', (v) => this._try(
+                () => this.session.setRegionName(region.region_id, v),
+                v ? `region name is "${v}"` : 'region name cleared',
+            )),
             el('div', { class: 'rmt-note', textContent: `bounds ${b.x},${b.y} ${b.w}×${b.h} · level ${region.map_ref ?? '(none)'}` }),
             this._select('rules_source', ['analyzer', 'manual', 'mixed'], region.annotations?.rules_source ?? 'manual',
-                (v) => { region.annotations = { ...region.annotations, rules_source: v }; }),
+                (v) => this._try(
+                    () => this.session.setRulesSource(region.region_id, v),
+                    `rules_source is "${v}"`,
+                )),
             el('button', {
                 class: 'rmt-btn', textContent: 'Set as start',
                 onClick: () => this._try(
@@ -851,8 +958,12 @@ export class RegionMarkingToolUI {
                 placeholder: 'access_rule JSON (optional)',
                 onChange: (e) => this._try(() => {
                     const parsed = this._parseRule(e.target.value);
-                    if (parsed === undefined) delete exit.access_rule; else exit.access_rule = parsed;
-                    return parsed;
+                    // ⛓ `undefined` from the parser means "the box is empty";
+                    //   the op spells that `null`, because `undefined` does not
+                    //   survive an edit list's JSON round trip.
+                    return this.session.setExitRule(
+                        region.region_id, exit.exit_id, parsed === undefined ? null : parsed,
+                    );
                 }, 'exit rule updated'),
             });
             list.append(el('div', { class: `rmt-row rmt-block${selected ? ' rmt-selected' : ''}` }, [
@@ -884,7 +995,10 @@ export class RegionMarkingToolUI {
                 el('span', { class: 'rmt-mono', textContent: `${loc.name} @ [${loc.tile}]` }),
                 el('input', {
                     class: 'rmt-input', type: 'text', value: loc.vanilla_item ?? '', placeholder: 'vanilla item',
-                    onChange: (e) => { const v = e.target.value.trim(); if (v) loc.vanilla_item = v; else delete loc.vanilla_item; },
+                    onChange: (e) => this._try(
+                        () => this.session.setLocationItem(region.region_id, loc.name, e.target.value.trim()),
+                        'vanilla item updated',
+                    ),
                 }),
                 this._subRegionPicker(region, loc.sub_region,
                     (v) => this._try(() => this.session.assignSubRegion(region.region_id, 'location', loc.name, v), 'location reassigned')),

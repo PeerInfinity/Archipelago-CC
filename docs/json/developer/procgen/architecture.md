@@ -86,7 +86,7 @@ Headless equivalents of everything the pages do live in `scripts/procgen/`. The 
 
 **257 instruments** live in `scripts/procgen/`, by prefix: `probe-` 60 (22 browser) · `verify-` 49 (30 browser) · `plan-` 36 (1 browser) · `check-` 30 (22 browser) · `census-` 12 · `solve-` 7 · `dump-` 6 · `make-` 6 · `sweep-` 6 · `recon-` 5 · `region-` 5 · `generate-` 4 · `extract-` 3 · no prefix 3 · `attribute-` 2 · `audit-` 2 · `export-` 2 (1 browser) · `batch-` 1 · `build-` 1 · `ci-` 1 · `derive-` 1 · `find-` 1 · `harvest-` 1 · `lint-` 1 · `measure-` 1 · `mine-` 1 · `prove-` 1 · `reach-` 1 · `record-` 1 · `rerecord-` 1 · `run-` 1 · `seedling-` 1 · `show-` 1 · `stamp-` 1 · `standing-` 1 · `survey-` 1.
 
-76 of them drive a real browser; 158 accept at least one `--flag`; 85 are cited by one of these documents; and 0 open with no comment at all.
+76 of them drive a real browser; 159 accept at least one `--flag`; 85 are cited by one of these documents; and 0 open with no comment at all.
 
 One row each — the one-liner from the file's own docblock, the flags it reads out of `argv`, whether it needs a browser, and which document cites it — is on the [reference page](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/reference.html#section-instruments), which can filter them.
 
@@ -278,7 +278,7 @@ substrate needed it — first its calculations, then its overlay, then its DOM.
 | `rulesGraph.js` | `regionsOf`, `startRegionsOf`, `walkRulesGraph`, `walkRuleTrees`, `walkRuleTree`, `reachableRegions` | no named walker existed; sixteen production sites each opened their own region loop, and `start_regions` was read five ways |
 | `apIdNamespaces.js` | the register of every AP id base, with provenance and pins, plus `allocateIdsBySortedName` | three id bases the inventory knew about and five it had missed |
 | `jsonSchemaCheck.js` | a draft-07 evaluator over the keyword subset this repo's two schemas use, plus `rulesJsonSchemaErrors` and `atlasSchemaErrors` | a 132-line evaluator that was TEST-ONLY BY ACCIDENT — its only disqualifications were a `node:fs` import and a home under `runnerDemo/` |
-| `atlasOps.js` | `applyAtlasOp(atlas, op)` over an 18-kind vocabulary, pure and copy-on-write | `AtlasSession`'s sixteen in-place mutating bodies, which no headless caller could reach |
+| `atlasOps.js` | `applyAtlasOp(atlas, op)` over a 25-kind vocabulary, pure and copy-on-write | `AtlasSession`'s sixteen in-place mutating bodies, which no headless caller could reach, plus the marking tool's seven inspector fields, which no OP LIST could reach |
 | `ruleTreeOps.js` | `getRuleAt` / `replaceRuleAt` / `removeRuleAt` / `wrapRuleAt`, path-addressed and copy-on-write | `ruleTreeEditor.js`'s per-node closures, which existed only while the DOM was rendering |
 | `setEditorCore.js` | the set editor's substrate-free half — `roomRowsOf`, `moveOrder` and the three renumbering mappings, `renumberDecision`, the `OVERVIEW` strip and `exitArrowShapes`, `gateabilityOf`, `inertRulesOf`, `freeEdgesOf`, and `reportOver` | `seedlingDemo/watchSetEditor.js`, where D2 built all of it; the page now RE-EXPORTS the moved names by the same function object |
 | `setOverlay.js` | `createSetOverlay(spec)` — the authored half's shape: the prefixed rule-target key, `overlayErrors`, `assertOverlay`, `exitRulesByRoom`, `renumberOverlay` and the two readers — plus **`applyOverlayRules(atlas, byRoom)`**, top-level because nothing in it is bound to a substrate | `seedlingDemo/seedlingSetOverlay.js`, measured at 10 of 11 exported functions substrate-free (90.9%) before the lift; `applyOverlayRules` came later, out of `seedlingAtlasDerivation.js`, where the MAZE derivation had been importing it across substrates |
@@ -418,6 +418,59 @@ colliding region id, and the reason is not cosmetic: the AP projection allocates
 ids by NAME with dedup, so two regions sharing an id do not collide, they
 COLLAPSE into one, and the second one's exits and locations attach quietly to
 the first.
+
+**And the atlas is an `editCore` ADAPTER now, so the marking tool has UNDO**
+(editor-integration slice B-a). `applyAtlasOp` had been `adapter.apply` in all
+but its return shape since the lift; `regionMarkingTool/atlasEditAdapter.js`
+supplies the other four members and `AtlasSession` became a wrapper over
+`createEditSession`, so its document is the FOLD over `base + edits` rather than
+a field and `undo()` is the fold over a shorter list. Three things the design
+brief said about those members, each overturned by a measurement:
+
+- **`equal` is a DEEP EQUALITY IN WHICH KEY ORDER IS CONTENT**, not the
+  validator's `computeAtlasContentHash`. `contentIdentity.stableStringify` (what
+  the hash hashes) and `editCore.canonicalJson` are the SAME algorithm — both
+  sort keys at every depth — and the identity module says so itself: *key order
+  in the document is not content*. The hash is strictly weaker still: it strips
+  `provenance` and `atlas_id` and folds to 32 bits. Either would tell the fold
+  that a key-order-only op moved nothing, on documents whose committed bytes are
+  gated WITH their key order. The deep walk is cheap anyway, because `a === b`
+  at every depth rides the ops' own structural sharing.
+- **A TILE HAS NO SUB-REGION.** `subgraph.sub_regions` is a flat list of ids and
+  nothing in the document maps a tile to one — membership is recomputed by the
+  analyzer from the terrain, deliberately not persisted. The cell descriptor is
+  `{region, exit, entrance, location}`, ids rather than objects, and a
+  `sub_region` rides inside the location where the format stores it.
+- **`bounds` needs the LEVEL, not just a size.** Region bounds are level-local
+  (every committed region starts at 0,0 on a different `map_ref`), so the
+  adapter takes a `levelView()` answering `{level, width, height}` and
+  `readCell` filters by `map_ref` exactly as a plain click does. A session
+  opened WITHOUT one — all nine headless callers — refuses the cell half by
+  name rather than answering a rectangle that does not exist.
+
+`writeOps` writes the two per-tile facts an atomic op can express: the LOCATION
+(`add-location`, whose global-name refusal is the existing op's) and the
+ENTRANCE (`set-entrance-tile`). It refuses by name a descriptor with no region,
+or one carrying a region or an exit as an OBJECT — the atlas's nouns are NAMED,
+and a cell cannot carry a rectangle's id or a run's derived `side` without
+inventing one. The tile's membership of `exit_tiles` has no op at all and gets
+none: re-creating the exit from one tile would re-derive its side from a bounds
+line that tile may not be on.
+
+**Six of the seven new ops are the inspector's own assignments**, key-order-exact
+with the `obj.k = v` / `delete obj.k` they replace (`set-game`, `set-name`,
+`set-region-name`, `set-rules-source`, `set-exit-rule`, `set-location-item`).
+The seventh, `apply-analysis`, is ONE op rather than a group, and that was
+measured: `applyRegionAnalysis` merges the analyzer's rows with the surviving
+hand-authored ones, remaps a preserved row's endpoints by a vote read off what
+each old sub-region held, remaps `start_sub_region`, re-derives `rules_source`
+and drops the subgraph wholesale when the region turns out not to split. None of
+that is expressible in the vocabulary, so the op carries the PROPOSAL — plain
+JSON, so it survives an edit list's round trip and replays deterministically,
+which is what makes an accepted split undoable. ⚠ `set-exit-rule` takes `null`
+to CLEAR and refuses an omitted `access_rule` by name, because `undefined` does
+not survive that round trip and a payload meaning *clear* would replay as
+*leave alone*.
 
 All nine are under the no-substrate law described above for the edit core, and
 that law was widened to `flashPanel/` when the first three landed: a toolkit

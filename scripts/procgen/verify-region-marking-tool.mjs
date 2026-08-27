@@ -30,8 +30,16 @@
  *     is byte-identical to a headless analyze+apply of the same edits, so the
  *     panel's analyzer path is the CLI's, not a second one.
  *
- * Prereq: dev server on :8000 (localhost -> unbundled ES modules, so source
- * edits are picked up). Run: node scripts/procgen/verify-region-marking-tool.mjs
+ *   Phase H (EDITOR INTEGRATION B-a) — UNDO. The six inspector fields that used
+ *     to write straight into the document are ops now, so a run of edits
+ *     through them followed by one undo each returns the SAVED BYTES of the
+ *     document before them. Byte identity is the claim: a hatch that still
+ *     mutated in place, or an undo built from inverse ops rather than the
+ *     fold, reproduces the content and not the bytes.
+ *
+ * Prereq: a dev server serving the repo root (`--host=`, default :8000;
+ * localhost -> unbundled ES modules, so source edits are picked up).
+ * Run: node scripts/procgen/verify-region-marking-tool.mjs [--host=URL]
  */
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -54,6 +62,10 @@ const { stringifyRulesJson } = await import(pathToFileURL(
     path.join(repoRoot, 'frontend/modules/shared/rulesJsonBuilder.js')));
 const { analyzeSeedlingRegion, applySeedlingRegionAnalysis } = await import(pathToFileURL(
     path.join(repoRoot, 'frontend/modules/flashPanel/seedlingAtlasAnalysis.js')));
+
+// ⛓ B-a — the host was hardcoded; the DEFAULT is unchanged, so every existing
+//   invocation still points at :8000 and a parallel worktree can serve its own.
+const HOST = (process.argv.find((a) => a.startsWith('--host=')) ?? '--host=http://localhost:8000').slice('--host='.length);
 
 const MAP_DOC = JSON.parse(fs.readFileSync(MAP_FILE, 'utf8'));
 const GAME_CONFIG = JSON.parse(fs.readFileSync(
@@ -125,7 +137,7 @@ page.on('pageerror', (e) => { console.log(`  page error: ${e.message}`); failure
 
 try {
     // ── Phase A — boot ────────────────────────────────────────────────────
-    await page.goto('http://localhost:8000/frontend/?mode=flash', { waitUntil: 'domcontentloaded' });
+    await page.goto(`${HOST}/frontend/?mode=flash`, { waitUntil: 'domcontentloaded' });
     await page.waitForSelector('.rmt-panel', { state: 'attached', timeout: 30000 });
     // The layout preset puts the tool in a component stack, so it mounts behind
     // whichever tab is active. Bring it forward the way a user would.
@@ -416,6 +428,89 @@ try {
         panelAfterAnalyze === expectedAfterAnalyze
             ? ''
             : `panel ${panelAfterAnalyze.length}B vs headless ${expectedAfterAnalyze.length}B`);
+    // ── Phase H (B-a) — UNDO, in BYTES ────────────────────────────────────
+    //
+    // ⛔ THE BASELINE IS THE SAVED BYTES, not the content: `serialize()` is the
+    // panel's own save path (stamped through the validator, laid out by the
+    // compact writer), and key order is part of what every gate above compares.
+    const beforeH = panelAfterAnalyze;
+    const editsBefore = await page.evaluate(
+        () => document.querySelector('.rmt-panel').__panel.session.edits().length,
+    );
+    check('Phase H: the session has an op list to undo from', editsBefore > 0, `${editsBefore} edit(s)`);
+
+    /** Set an inspector field inside the section whose <h4> starts with `title`. */
+    const setField = (title, label, value) => page.evaluate(({ title, label, value }) => {
+        const section = [...document.querySelectorAll('.rmt-panel .rmt-section')]
+            .find((sec) => sec.querySelector('h4')?.textContent.trim().startsWith(title));
+        if (!section) throw new Error(`no section starting "${title}"`);
+        const field = [...section.querySelectorAll('.rmt-field')]
+            .find((l) => l.querySelector('span')?.textContent.trim() === label);
+        if (!field) throw new Error(`no field "${label}" in "${title}"`);
+        const input = field.querySelector('input, select, textarea');
+        input.value = value;
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+    }, { title, label, value });
+
+    const setByPlaceholder = (placeholder, value) => page.evaluate(({ placeholder, value }) => {
+        const input = [...document.querySelectorAll('.rmt-panel [placeholder]')]
+            .find((n) => n.getAttribute('placeholder') === placeholder);
+        if (!input) throw new Error(`no field with placeholder "${placeholder}"`);
+        input.value = value;
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+    }, { placeholder, value });
+
+    // ⛓ ONE EDIT PER HATCH, each naming the field it used to assign.
+    await setField('Atlas', 'game', 'seedling_h');              // :701
+    await setField('Atlas', 'name', 'Phase H atlas');           // :702
+    await setField('Region', 'name', 'Phase H region');         // :739
+    await setField('Region', 'rules_source', 'mixed');          // :742
+    await setByPlaceholder('access_rule JSON (optional)',
+        JSON.stringify({ rule: 'Has', args: { item_name: 'Progressive Sword' } }));  // :854
+    await page.waitForTimeout(60);
+
+    const afterEdits = await page.evaluate(() => {
+        const panel = document.querySelector('.rmt-panel').__panel;
+        return {
+            edits: panel.session.edits().length,
+            kinds: panel.session.edits().map((o) => o.op),
+            text: panel.serialize(),
+        };
+    });
+    const HATCH_OPS = ['set-game', 'set-name', 'set-region-name', 'set-rules-source', 'set-exit-rule'];
+    check('Phase H: each inspector field recorded an OP (not an in-place write)',
+        afterEdits.edits === editsBefore + HATCH_OPS.length
+        && HATCH_OPS.every((k) => afterEdits.kinds.includes(k)),
+        `${afterEdits.edits} edit(s); last ${afterEdits.kinds.slice(-HATCH_OPS.length).join(', ')}`);
+    // Not vacuous: the document really moved.
+    check('Phase H: …and the document MOVED', afterEdits.text !== beforeH);
+
+    const undone = await page.evaluate((n) => {
+        const panel = document.querySelector('.rmt-panel').__panel;
+        for (let i = 0; i < n; i += 1) if (!panel._undo()) return { short: i };
+        return { edits: panel.session.edits().length, text: panel.serialize() };
+    }, HATCH_OPS.length);
+    check('Phase H: one undo per edit takes the list back to where it was',
+        undone.edits === editsBefore, JSON.stringify({ ...undone, text: undefined }));
+    check('Phase H: …and the SAVED BYTES are the ones from before the edits',
+        undone.text === beforeH,
+        undone.text === beforeH ? '' : `undone ${undone.text?.length}B vs before ${beforeH.length}B`);
+
+    // ⛔ THE KEY BINDING REFUSES INSIDE A TEXT FIELD, or a person typing a rule
+    //    loses it to an atlas undo.
+    const keyGuard = await page.evaluate(() => {
+        const panel = document.querySelector('.rmt-panel').__panel;
+        const before = panel.session.edits().length;
+        const input = document.querySelector('.rmt-panel .rmt-input');
+        input.focus();
+        input.dispatchEvent(new KeyboardEvent('keydown', { key: 'z', ctrlKey: true, bubbles: true }));
+        const afterInInput = panel.session.edits().length;
+        panel.rootElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'z', ctrlKey: true, bubbles: true }));
+        return { before, afterInInput, afterOnRoot: panel.session.edits().length };
+    });
+    check('Phase H: Ctrl+Z inside a text field does NOT undo, and on the root DOES',
+        keyGuard.afterInInput === keyGuard.before && keyGuard.afterOnRoot === keyGuard.before - 1,
+        JSON.stringify(keyGuard));
 } finally {
     await browser.close();
 }
