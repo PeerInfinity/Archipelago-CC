@@ -12094,7 +12094,7 @@ its byte-frozen free oracle is compared against.
 
 <!-- GENERATED:campaign-chain BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-`r9-campaign` — **16 segments**, custody, from `new Game(0,80,128)` with an empty save to the **L15** arrival, **3615 ticks**. Segments 1–4 are PROMOTED (their boots already ARE their predecessors' latches, so this chain gives them a RELATION rather than a rewrite); every later one boots its predecessor's MEASURED latch.
+`r9-campaign` — **16 segments**, custody, from `new Game(0,80,128)` with an empty save to the **L15** arrival, **3326 ticks**. Segments 1–4 are PROMOTED (their boots already ARE their predecessors' latches, so this chain gives them a RELATION rather than a rewrite); every later one boots its predecessor's MEASURED latch.
 
 | # | tape | rooms | ticks | earns |
 |---|---|---|---|---|
@@ -12107,13 +12107,13 @@ its byte-frozen free oracle is compared against.
 | 7 | `r8-solve-7` | L7 → L8 | 146 | — |
 | 8 | `r8-solve-8` | L8 → L9 | 827 | — |
 | 9 | `r8-solve-9` | L9 → L10 | 122 | — |
-| 10 | `r8-solve-10` | L10 → L11 | 90 | `sword@L10` |
-| 11 | `r9-solve-11` | L11 → L3 | 119 | `chest@L11` |
-| 12 | `r9-solve-3` | L3 → L2 | 226 | — |
-| 13 | `r9-solve-2` | L2 → L0 | 47 | — |
-| 14 | `r9-solve-0` | L0 → L13 | 237 | — |
-| 15 | `r9-solve-13` | L13 → L14 | 74 | — |
-| 16 | `r9-solve-14` | L14 → L15 | 145 | — |
+| 10 | `r8-solve-10` | L10 → L11 | 78 | `sword@L10` |
+| 11 | `r9-solve-11` | L11 → L3 | 97 | `chest@L11` |
+| 12 | `r9-solve-3` | L3 → L2 | 152 | — |
+| 13 | `r9-solve-2` | L2 → L0 | 23 | — |
+| 14 | `r9-solve-0` | L0 → L13 | 145 | — |
+| 15 | `r9-solve-13` | L13 → L14 | 36 | — |
+| 16 | `r9-solve-14` | L14 → L15 | 118 | — |
 
 **STOP — route step 17, L15.** The chain ends at the last step the survey SOLVES; the first one it refuses is the next work order: *VERB-APPLY — the 'shove' strategy IS registered and did not apply here*.
 
