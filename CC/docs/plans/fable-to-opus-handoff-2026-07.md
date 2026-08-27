@@ -5267,6 +5267,42 @@ user and the fifth run's `sound`-pin re-record: **18 of 18 chain boundaries have
 an UNPINNED predecessor**, so every `rng.seed` row in the new gate is a
 sample-vs-sample comparison until that lands.
 
+**⛓⛓⛓⛓ R9 SLICE 12h — THE FIFTH RUN LANDED, 2026-08-27. `main` @`fed091aa2`**
+(the whole series in ONE fast-forward `a05dbaf74..95c7500ad`, then the standing
+values, the two gate repairs and the docs; kickoff §47; ⚖ 57 + 49 + 51 (a) all
+SPENT AND DISCHARGED; ⚖ 40's checkpoint RE-BANKED).
+**THE `sound` PIN IS ROSTER-WIDE AND THE ARC'S OPEN QUESTION IS ANSWERED.**
+Census **76/32/4/37 → 76/69/4/0** — zero unpinned ladder tapes; the moved set is
+the sealed 37 element for element, and the whole `fixtures/` diff is 37 ×
+`+"sound",` plus four descriptions plus TWO other lines.
+⛓⛓⛓ **§42.5's "SPLICE OF TWO COHERENT CHAINS" IS SUPERSEDED, AND THE PROOF COST
+NO GPU:** the latch cache holds **two records under ONE key** — one
+byte-identical tape — carrying `1029458650` and `1196888758`, which are exactly
+§42.4's two numbers. The same key PINNED holds `514729325` twice. So it was one
+tape drawn twice, not two instruments disagreeing; the pinned count is **3298
+draws** on 12f's ruler, where the old committed value was 3299 and the
+producer's chain 3297.
+⛓ **THE PIN MOVED ZERO GAME STREAMS** — the ⚖ 40 full tier drove all 149 tapes
+and 149/149 report *"live game matches the committed oracle stream"* against
+expectations recorded on PRE-pin bytes — **and exactly TWO latches**
+(`r9-solve-0`'s and `r9-solve-13`'s exits), through them two boot `rng.seed` and
+two `tick0.rng.seed`. That is the exposure census ⚖ 57 asked for, measured by
+REFUSAL rather than by overwrite.
+⛔ **THE BRIEF'S ROOT PREMISE WAS FALSE FOR 25 OF THE 37.** `solve-seedling-r8-battery`
+reads its pin list out of its OWN committed output — a FIXED POINT one field
+over from trap 769 — so "edit the root literal" reached 12 tapes; ONE declared
+`[...PIN_NAMES]` at the battery moves 22 by inheritance; three `r7-act2-*` have
+no producer at all and are the roster's only hand-written pin literals.
+⛔ **AND THE FULL TIER — the first since p4c became the default — FOUND SIX
+PRE-EXISTING REDS ON `main`**: `r5Acceptance.js` asserts dead-frame totals that
+bake in the pre-swap frame p4c no longer spends. Repaired build-aware, verified
+p4c 162/0 AND p4b 162/0. ⇒ **p4b's scheduled retirement is CANCELLED** — it is
+the only tracked build WITHOUT the `arm` capability, and a capability-keyed
+correction is proved only by the arm that lacks it.
+⇒ NEXT: **P3b** with §47.11's four inputs (the S0 snapshot baseline · the
+`roster ∖ prove()` complement · a full tier owed at every game-facing change ·
+the tick-based tier estimator), and the R9 ladder's own next rung.
+
 **⛓⛓⛓ R9 SLICE 12g′ — CLOSED 2026-08-26 @`a3811e5ea`** (four outer commits: `e7858a880` the arm bound · `00f83c989` its own measurement refuting it · `a0b8f10c3` the default flip + gitlink · `a3811e5ea` the tracked doc; fork `~/CC/seedling` `bot @ d4f1f37`; submodule `7aaaa0a`; kickoff §46; ⚖ 58's (F)).
 **THE RACE IS REMOVED, NOT NARROWED, AND THE NUMBER IS 1.** `botStart` holds the
 constructed `Game` and `Bot.update` arms on the first frame where `FP.world`
