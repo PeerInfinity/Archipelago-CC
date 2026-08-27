@@ -168,7 +168,17 @@ const worldDocOf = (mzDocId) => emptyWorld([
     {
         id: 'mz',
         kind: 'region-library',
-        overlay: emptyMazeOverlay(),
+        /**
+         * ⛓⛓ **THE MAZE PART BRINGS ITS OWN RING, IN ITS OWN OVERLAY.** ⛔ Not
+         * a crossing: this is a door INSIDE one part, in that part's own array
+         * form, and it is here so the NEGATIVE claim has the shape §21.8 says a
+         * person actually produces — an ISLAND of two rooms that keep each
+         * other's doors, not a single cut-off room the derivation would simply
+         * DROP. ⛓ It rides inside the WORLD because a bundle carries one
+         * `overlay.json` member and two overlays cannot both ride it, which is
+         * itself a claim CLAIM 20 makes off `set.links`.
+         */
+        overlay: { ...emptyMazeOverlay(), links: [RING_LINKS[0]] },
         substrate: 'maze',
         doc_id: mzDocId,
     },
@@ -2916,6 +2926,11 @@ try {
         + 'parts\' rooms CONCATENATED in declaration order, and every count is the SESSION\'s '
         + 'record',
     `${world.set.world.world_id} · ${world.set.rooms} room(s)`);
+    check(world.set.links === 1 && world.set.world.crossings.length === 0,
+        '⛓⛓ …and the PARTS\' OVERLAYS TRAVELLED INSIDE THE WORLD: the maze part\'s own ring '
+        + 'is one link and the world\'s crossings are none, which is the difference between a '
+        + 'door INSIDE a part and one BETWEEN two',
+        `${world.set.links} link(s) · ${json(world.set.world.crossings)}`);
     check(json(world.set.substrates) === json(['flash_seedling', 'flash_seedling', 'maze', 'maze'])
         && json(world.set.parts) === json(['seed', 'seed', 'mz', 'mz']),
     '⛓⛓ …and every cell NAMES THE SUBSTRATE THAT PLAYS IT, read off `readCell().substrate` '
