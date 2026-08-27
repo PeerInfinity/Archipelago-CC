@@ -64,6 +64,7 @@
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 
+import { releaseBoxLock, takeBoxLock } from './boxLock.js';
 import { LOCAL_HOST, PAGES_ORIGIN, REPO, argvFor, gateRoster } from './gateRoster.js';
 
 const run = promisify(execFile);
@@ -75,6 +76,15 @@ const arg = (name, fallback) => (argv.find((a) => a.startsWith(`--${name}=`))
 const HOST = arg('host', LOCAL_HOST);
 const PAGES = arg('pages', PAGES_ORIGIN);
 const JSON_OUT = flag('json');
+/**
+ * ⛓⛓⛓ R9 P3b, ⚖ 54 (7) — **THE RUNNER TAKES THE BOX ONCE FOR ALL ITS GATES.**
+ * Twenty-three of the thirty are browser rows and four drive Windows; this
+ * file is the biggest single consumer of the machine there is. It exports the
+ * holder's token, so each gate's own preamble recognises itself as the
+ * holder's CHILD and passes through instead of deadlocking against its parent.
+ * `--wait-for-box=<sec>` queues rather than refusing.
+ */
+const WAIT_FOR_BOX = Number(arg('wait-for-box', '0')) || 0;
 const words = argv.filter((a) => !a.startsWith('--'));
 
 if (flag('help') || (words.length === 0 && !flag('list'))) {
@@ -216,6 +226,10 @@ const tally = (out) => ({
     skip: (out.match(/^SKIP:/gm) ?? []).length,
 });
 
+takeBoxLock({ name: `gates ${where}${MODE === 'reach' ? ' (reach)' : ''}`,
+    kind: PLAN.some((a) => a.gate.windows) ? 'windows' : 'browser',
+    repo: REPO, waitSec: WAIT_FOR_BOX });
+
 const ARMS_IN_PLAN = PLAN.filter((a) => a.label).length;
 console.log(`# gates ${where}${MODE === 'reach' ? ' (reach)' : ''} — `
     + `${PLAN.length - ARMS_IN_PLAN} gate(s)`
@@ -287,4 +301,5 @@ if (JSON_OUT) console.log(JSON.stringify({ where, host: HOST, results }, null, 2
 console.log(`\n${results.length - reds.length}/${results.length} gate(s) green`
     + `${reds.length ? ` — RED: ${reds.map((r) => `${r.file}${r.arm ? ` (${r.arm})` : ''}`)
         .join(', ')}` : ''}`);
+releaseBoxLock();
 process.exit(reds.length ? 1 : 0);

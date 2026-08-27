@@ -49,6 +49,48 @@ export const FILE = 'scripts/procgen/standing-values.json';
 /** ⛓ Under a minute is what a slice can afford to re-run on every check. */
 export const CHEAP_MS = 60000;
 
+/**
+ * ⛓⛓⛓ R9 P3b, ⚖ 54 (7)'s third item — **`cheap` IS A STATE WITH HYSTERESIS,
+ * NOT A THRESHOLD** (trap 735; §44.11).
+ *
+ * ⛔⛔ THE EVIDENCE, MEASURED. `gate: seedling-editor-arm` sits **2.5 % over**
+ * the band and has flapped across three writes — 57 502 -> 61 470 -> 56 475 ms
+ * — with its VALUE unchanged at `226/0` every time. `identity: generated set`
+ * went 62 298 -> 72 125. A row that close will cross for reasons that say
+ * NOTHING about the tree (another session's browser sweep, a cold page cache),
+ * and each crossing rewrites a field a reader takes as a fact about the gate.
+ *
+ * ⛓ SO: a row inside ±10 % of `CHEAP_MS` KEEPS the classification it already
+ * had; only leaving the band changes it. ⛔ NOT a hand list of "these ones
+ * flap" and NOT an `alwaysCheap` flag — both are the hand-kept list this file
+ * exists to refuse (⚖ 17). The band is derived from the one constant, and the
+ * rule is a pure function of `(ms, previousCheap)` so it can be rowed.
+ *
+ * ⛔ AND A FIRST MEASUREMENT HAS NO STATE TO KEEP. With `previousCheap`
+ * `undefined` the answer is the plain threshold — hysteresis is a memory, and
+ * a row nobody has measured has none.
+ */
+export const HYSTERESIS_FRACTION = 0.1;
+export const CHEAP_BAND = Object.freeze({
+    low: CHEAP_MS * (1 - HYSTERESIS_FRACTION),
+    high: CHEAP_MS * (1 + HYSTERESIS_FRACTION),
+});
+
+/**
+ * @param {number} ms                 what this run measured
+ * @param {boolean|undefined} previousCheap what the file already says, if anything
+ * @returns {{cheap: boolean, held: boolean}} `held` is true when hysteresis
+ *   kept an answer the bare threshold would have flipped — the caller PRINTS
+ *   it, because a held row must never be a silent one.
+ */
+export function cheapFor(ms, previousCheap) {
+    const bare = ms < CHEAP_MS;
+    if (ms < CHEAP_BAND.low) return { cheap: true, held: false };
+    if (ms > CHEAP_BAND.high) return { cheap: false, held: false };
+    if (typeof previousCheap !== 'boolean') return { cheap: bare, held: false };
+    return { cheap: previousCheap, held: previousCheap !== bare };
+}
+
 /** The head a measurement belongs to — a value without one cannot be reproduced. */
 export function head({ repo = REPO } = {}) {
     try {

@@ -32,8 +32,9 @@
 import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
+import { releaseBoxLock, takeBoxLock } from './boxLock.js';
 import { REPO } from './gateRoster.js';
-import { CHEAP_MS, FILE, head, readStandingValues, runRow } from './standingValues.js';
+import { CHEAP_MS, FILE, cheapFor, head, readStandingValues, runRow } from './standingValues.js';
 
 const argv = process.argv.slice(2);
 const arg = (name, fallback = null) => {
@@ -83,6 +84,14 @@ if (QUOTE !== null) {
     process.exit(0);
 }
 
+/**
+ * ⛓ R9 P3b — a `--from=` recording MEASURES, so it takes the box exactly as
+ * `standing-values --write` does. ⛔ The `--quote` path above does not and
+ * must not: it records a number measured somewhere else and runs nothing.
+ */
+const lock = takeBoxLock({ name: `record-standing-value --key=${KEY}`, kind: 'measure',
+    repo: REPO, waitSec: Number(arg('wait-for-box', '0')) || 0 });
+void lock;
 const shell = !/^\s*(?:node|npx)\b/.test(FROM);
 const r = await runRow({ kind: KIND, command: FROM, shell });
 const HEAD = head();
@@ -92,11 +101,15 @@ file.rows[KEY] = {
     kind: KIND,
     exit: r.exit,
     ms: r.ms,
-    cheap: r.ms < CHEAP_MS,
+    /** ⛓ R9 P3b — the same hysteresis `--write` uses, one spelling (trap 735). */
+    cheap: cheapFor(r.ms, file.rows[KEY]?.cheap).cheap,
     measuredAt: HEAD,
     ...(r.total ? { total: r.total } : {}),
 };
 writeFileSync(join(REPO, FILE), `${JSON.stringify(file, null, 2)}\n`);
 console.log(`${r.exit === 0 ? 'ok' : `EXIT ${r.exit}`}  ${KEY} = ${r.value}  `
-    + `(${(r.ms / 1000).toFixed(1)}s${r.ms < CHEAP_MS ? ', cheap' : ''})  @${HEAD}`);
+    + `(${(r.ms / 1000).toFixed(1)}s${file.rows[KEY].cheap ? ', cheap' : ''}`
+    + `${file.rows[KEY].cheap !== (r.ms < CHEAP_MS) ? ', HELD by hysteresis — trap 735' : ''})`
+    + `  @${HEAD}`);
+releaseBoxLock();
 process.exit(r.exit === 0 ? 0 : 1);

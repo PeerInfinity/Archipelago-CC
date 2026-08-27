@@ -2476,6 +2476,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "pages"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "wait-for-box"
                 }
             ],
             "oneLiner": "gates — **RUN THE GATES, IN ONE LINE, KEYED ON EXIT CODES** (R9 slice 12e, ⚖ ruling 38 item (6)).",
@@ -5540,6 +5546,12 @@ export const INSTRUMENTS = frz({
                     "how": [
                         "arg"
                     ],
+                    "name": "wait-for-box"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
                     "name": "why"
                 }
             ],
@@ -6186,6 +6198,12 @@ export const INSTRUMENTS = frz({
                         "flag"
                     ],
                     "name": "quote"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "wait-for-box"
                 },
                 {
                     "how": [
