@@ -32,6 +32,16 @@ beforeEach(async () => {
     ({ default: eventBus } = await import('../../app/core/eventBus.js'));
     mod = await import('./labRoomEditor.js');
     envelopeMod = await import('../procgenCore/labRoomEnvelope.js');
+    /**
+     * ⛓⛓ EDITOR INTEGRATION W4 — **THE APP REGISTERS ITS BUS, AND THESE ROWS
+     * STAND IN FOR THE APP.** `labRoomEditor.js` no longer IMPORTS
+     * `app/core/eventBus.js` (importing it printed `[centralRegistry]
+     * CentralRegistry initialized`, which `lab.html` must not pay for); the
+     * panel registers it at its own import instead. ⛔ Registered HERE rather
+     * than passing `bus` to every call, because what these rows exercise is
+     * the DEFAULT path — the one `regionEditors`' binding uses.
+     */
+    mod.registerAppEventBus(eventBus);
     mod.clearLabPanelInstances();
     // ⛓ The adapter registers `iframe_<id>` dynamically at publish time in the
     //   app; a test that skipped this would watch the bus DROP its own fixture
@@ -335,12 +345,26 @@ describe('labRoomEditor — what it is allowed to know', () => {
          * claim this row makes — no substrate, ever — is untouched, and the
          * loop below is what actually makes it.
          */
+        /**
+         * ⛓⛓⛓ EDITOR INTEGRATION W4 — **AND THE APP EDGE IS GONE, WHICH IS A
+         * STRICTER CLAIM THAN THE ONE THIS ROW STARTED WITH.** This module
+         * imported `app/core/eventBus.js` for ONE thing (the default `bus`), and
+         * W4 measured what that costs a page that is not the app: importing this
+         * file printed `[centralRegistry] CentralRegistry initialized`. `lab.html`
+         * is a standalone static page and now has a reason to import the
+         * contract. The APP registers its bus at `procgenLabPanelUI`'s import,
+         * the same inversion the instance registry already uses.
+         * ⛓ `shared/communicationProtocol.js` joined for `createPageLabTransport`,
+         * which speaks the wire format `AdapterClient` speaks — `shared/` is the
+         * submodule every side reads and is not a substrate. The claim the loop
+         * below makes — no substrate, ever — is untouched.
+         */
         expect(specs).toEqual([
-            '../../app/core/eventBus.js',
             '../procgenCore/labProtocol.js',
             '../procgenCore/labRoomEnvelope.js',
             '../shared/communicationProtocol.js',
         ]);
+        expect(specs.some((sp) => sp.includes('app/'))).toBe(false);
         /**
          * ⛔ THE SCAN IS OVER THE SPECIFIERS, NOT THE FILE. The docblock NAMES
          * `mazeRoom/` and `seedlingDemo/` on purpose — saying which two

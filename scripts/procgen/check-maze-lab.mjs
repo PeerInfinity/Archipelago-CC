@@ -90,7 +90,7 @@
 
 import { chromium } from '@playwright/test';
 import { execFileSync } from 'node:child_process';
-import { dirname, join, resolve } from 'node:path';
+import { dirname, join, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readFileSync } from 'node:fs';
 
@@ -205,6 +205,27 @@ const check = (ok, what, detail = '') => {
  * OFFENDING FILE instead. ⚠ The module COUNT is printed and asserted non-tiny:
  * a walk that resolved nothing would report zero `node:` edges and mean it.
  */
+/** ⛓ EDITOR INTEGRATION W4 — the same walk, answering WHICH files rather than
+ *  how many, so a second claim can be made about the same graph. */
+function walkGraphFiles(entry) {
+    const seen = new Set();
+    const stack = [resolve(entry)];
+    while (stack.length) {
+        const file = stack.pop();
+        if (seen.has(file)) continue;
+        seen.add(file);
+        let src;
+        try { src = readFileSync(file, 'utf8'); } catch { continue; }
+        const re = /(?:^|[\s;])(?:import|export)\s[^'"`]*?from\s*['"]([^'"]+)['"]|import\s*\(\s*['"]([^'"]+)['"]\s*\)/g;
+        let m;
+        while ((m = re.exec(src)) !== null) {
+            const spec = m[1] ?? m[2];
+            if (spec.startsWith('.')) stack.push(resolve(dirname(file), spec));
+        }
+    }
+    return [...seen];
+}
+
 function walkGraph(entry) {
     const seen = new Set();
     const nodeEdges = [];
@@ -244,6 +265,25 @@ console.log(`node: the lab page's import graph is ${graph.modules} module(s)`);
 check(graph.modules > 20,
     'the import graph WALK resolved a real graph (a walk that found nothing would report '
     + 'zero node: edges and mean it)', `${graph.modules} modules`);
+/**
+ * ⛓⛓⛓ EDITOR INTEGRATION W4 — **AND NOTHING UNDER `frontend/app/` EITHER.**
+ * `lab.html`'s own docblock says *"a standalone static page — no frontend, no GL
+ * panel, no eventBus"*, and W4 gave this page a reason to import
+ * `procgenLabPanel/labRoomEditor.js` (a world strip opening a Seedling room
+ * needs the room-editor contract). MEASURED at the time: importing that module
+ * printed `[centralRegistry] CentralRegistry initialized`, because it imported
+ * `app/core/eventBus.js` for one thing — the default `bus`. ⛔ The `node:`/BARE
+ * row above CANNOT see that: an app edge is a perfectly ordinary relative
+ * import. This is the row that can, and it is the reason the app registers its
+ * bus with the contract instead of the contract importing the app.
+ */
+const appEdges = walkGraphFiles(join(REPO, 'frontend/modules/mazeRoom/mazeLabView.js'))
+    .filter((f) => f.includes(`${sep}frontend${sep}app${sep}`));
+check(appEdges.length === 0,
+    '⛔⛔ ZERO modules under `frontend/app/` in the page\'s transitive import graph — a '
+    + 'standalone page that reached the app would boot its CentralRegistry behind one import '
+    + '(trap 829\'s family, one host over)',
+    appEdges.map((f) => f.replace(REPO, '')).join(' | '));
 check(graph.nodeEdges.length === 0,
     '⛓ ZERO node:/bare specifiers anywhere in the page\'s transitive import graph (trap 176 '
     + '— a node: edge is a page that cannot load at all)',

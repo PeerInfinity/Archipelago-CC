@@ -51,7 +51,6 @@
  * maze room is, and its own test asserts the import list.
  */
 
-import eventBus from '../../app/core/eventBus.js';
 import { LAB_EVENTS, SUBSTRATES, addressedTo } from '../procgenCore/labProtocol.js';
 import { openRoomOf } from '../procgenCore/labRoomEnvelope.js';
 /**
@@ -68,6 +67,42 @@ const MODULE_ID = 'procgenLabRoomEditor';
 /* ══════════════════════════════════════════════════════════════════════
  * THE LIVE PANEL INSTANCES
  * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓⛓⛓ EDITOR INTEGRATION W4 — **THE APP'S BUS IS REGISTERED, NOT IMPORTED, AND
+ * THAT IS A DEFECT W4 FOUND BY DRIVING ITS OWN CHANGE.**
+ *
+ * This module imported `app/core/eventBus.js` for ONE thing: the DEFAULT value
+ * of `openLabRoomEditor`'s `bus`. W4 gave `lab.html` a reason to import this
+ * module (a world strip opening a Seedling room needs the contract), and
+ * MEASURED what that costs a page whose own docblock says *"a standalone static
+ * page — no frontend, no GL panel, no eventBus"*: importing this file printed
+ * **`[centralRegistry] CentralRegistry initialized`**, and the edge is
+ * `app/core/eventBus.js` itself. That is trap 829's family exactly — a
+ * `loadable` module that drags the whole app graph in behind one import — one
+ * host over.
+ *
+ * ⛓ **THE CURE IS THE INVERSION THIS FILE ALREADY USES FOR PANELS.** The panel
+ * registers ITSELF on mount; now it registers the app's BUS the same way, at
+ * its own import, where `eventBus` is already in the graph. ⛔ Not a dynamic
+ * import: `openLabRoomEditor` is SYNCHRONOUS by contract (*"it refuses, it does
+ * not throw and it does not hang"*) and awaiting a module would make every
+ * refusal a promise. ⛓ And it cannot silently answer nothing: a caller with no
+ * bus and no registered one has no panel either (a panel can only be mounted if
+ * `procgenLabPanelUI` was imported, and importing it is what registers the
+ * bus), so `findLabPanel` refuses BY NAME first.
+ */
+let APP_BUS = null;
+
+/** Called by `procgenLabPanelUI.js` at ITS import — the app's own bus, once. */
+export function registerAppEventBus(bus) {
+    APP_BUS = bus;
+}
+
+/** ⛓ TEST-ONLY, and named so, beside `clearLabPanelInstances`. */
+export function appEventBus() {
+    return APP_BUS;
+}
 
 /** ⛓ Mounted `ProcgenLabPanelUI`s, newest last. See the docblock for why. */
 const instances = new Set();
@@ -131,7 +166,9 @@ const refuse = (why) => ({ ok: false, why, close() {} });
  * @param {number} opts.room       0-based index into the document's rooms
  * @param {object} opts.record     the SET document to hand in
  * @param {(record:object)=>void} opts.onSave  called ONCE, on the close
- * @param {object} [opts.bus]      the event bus (the app's, by default)
+ * @param {object} [opts.bus]      the event bus. Absent, the APP's registered one
+ *   (`registerAppEventBus`, called by `procgenLabPanelUI` at its import) — ⛔ this
+ *   module does not IMPORT it, see the registry docblock
  * @param {object} [opts.transport] a PANEL-SHAPED host (EDITOR INTEGRATION W4,
  *   §9.6 #1) — `{substrate, iframeId, load, navigate, raise?, _note?}`. Supplied,
  *   it REPLACES the mounted-panel lookup, which is what lets a lab PAGE be the
@@ -139,8 +176,9 @@ const refuse = (why) => ({ ok: false, why, close() {} });
  * @returns {{ok:boolean, why?:string, close:()=>void}}
  */
 export function openLabRoomEditor({
-    page, arm, room = 0, record, onSave, bus = eventBus, transport = null,
+    page, arm, room = 0, record, onSave, bus = null, transport = null,
 } = {}) {
+    const theBus = bus ?? APP_BUS;
     if (!SUBSTRATES.includes(page)) {
         return refuse(`labRoomEditor: page is ${JSON.stringify(page)}, not one of `
             + `[${SUBSTRATES.join(', ')}]. It names the LAB PAGE this substrate's rooms are `
@@ -251,10 +289,15 @@ export function openLabRoomEditor({
     };
 
     const off = () => {
-        bus.unsubscribe?.(LAB_EVENTS.levelChanged, handler, MODULE_ID);
+        theBus?.unsubscribe?.(LAB_EVENTS.levelChanged, handler, MODULE_ID);
     };
 
-    bus.subscribe(LAB_EVENTS.levelChanged, handler, MODULE_ID);
+    if (!theBus) {
+        return refuse('labRoomEditor: no event bus — the app registers its own at '
+            + '`procgenLabPanelUI`\'s import and a PAGE hands one in. ⛔ Said rather than '
+            + 'defaulted: a door whose close reached nobody would lose the edit silently.');
+    }
+    theBus.subscribe(LAB_EVENTS.levelChanged, handler, MODULE_ID);
 
     return {
         ok: true,

@@ -1668,7 +1668,15 @@ export function main() {
         box.hidden = false;
         const transport = createPageLabTransport({
             page: decl.page,
-            src: frontendUrl(`modules/${LAB_PAGE_DIRS[decl.page]}`),
+            /**
+             * ⛓ THE FRAME BOOTS ON THE ARM IT WILL BE ASKED FOR. `procgenLabPanel`
+             * gives its Seedling frame `?source=generate` because a panel is a
+             * general host; this one is opening ONE ROOM of ONE document, so it
+             * boots on that document's arm and the contract's `navigate` then
+             * only has to add the room. ⛔ The word is the registry ENTRY's
+             * (`decl.arm`), never spelled here.
+             */
+            src: `${frontendUrl(`modules/${LAB_PAGE_DIRS[decl.page]}`)}?source=${decl.arm}`,
             mount: box,
             listen: (target, event, handler) => lifetimes.current().on(target, event, handler),
             note: (text, bad) => say(text, bad),

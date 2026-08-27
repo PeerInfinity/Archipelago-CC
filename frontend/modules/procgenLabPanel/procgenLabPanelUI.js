@@ -45,7 +45,21 @@ import eventBus from '../../app/core/eventBus.js';
 import {
     LAB_EVENTS, SUBSTRATES, addressedTo, assertLoad, assertNavigate, assertRequestState,
 } from '../procgenCore/labProtocol.js';
-import { registerLabPanelInstance, unregisterLabPanelInstance } from './labRoomEditor.js';
+import {
+    registerAppEventBus, registerLabPanelInstance, unregisterLabPanelInstance,
+} from './labRoomEditor.js';
+
+/**
+ * ⛓⛓⛓ EDITOR INTEGRATION W4 — **THE APP'S BUS, REGISTERED WHERE IT IS ALREADY
+ * IN THE GRAPH.** `labRoomEditor.js` used to import it for one thing (the
+ * default `bus`), and W4 measured what that costs a page that is not the app:
+ * importing that module printed `[centralRegistry] CentralRegistry
+ * initialized`, because `app/core/eventBus.js` boots the registry. `lab.html`
+ * is *"a standalone static page — no frontend, no GL panel, no eventBus"* and
+ * now has a reason to import the contract. ⛓ Same inversion as the instance
+ * registry one line down: the APP tells the shared module, never the reverse.
+ */
+registerAppEventBus(eventBus);
 
 const MODULE_ID = 'procgenLabPanel';
 
