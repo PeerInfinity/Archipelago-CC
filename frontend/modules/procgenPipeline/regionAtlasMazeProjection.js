@@ -381,8 +381,49 @@ export function projectRegionToMaze(region, grid, ctx) {
                 });
                 return;
             }
-            const occupied = builder.exits.find((e) => e.x === entry.x && e.y === entry.y);
+            const occupiedAt = builder.exits.findIndex((e) => e.x === entry.x && e.y === entry.y);
+            const occupied = occupiedAt === -1 ? null : builder.exits[occupiedAt];
             if (occupied) {
+                /**
+                 * ⛓⛓⛓ **THE SURVIVOR IS THE ONE THAT ACTUALLY CROSSES** (EDITOR
+                 * INTEGRATION W6, M2; plan §11.1 A6 / §11.5 / §11.6 item 3).
+                 *
+                 * ⛔ **WHY THIS EXISTS.** `levelSetExits` lands each arrival ON
+                 * the destination's return door — which is what vanilla itself
+                 * does four times, and it is SAFE in the real engine because
+                 * `Game.update()`'s `!checked` latch fires one entity per entry.
+                 * A maze tile has no such latch: one tile is one crossing. So a
+                 * GENERATED, linked 2-room set put two exits on tile [8,8] of
+                 * every room, and first-wins kept whichever `region.exits`
+                 * happened to list first. MEASURED: `level_0` kept its outbound
+                 * and `level_1` kept its ARRIVAL — a ONE-WAY TRAP that AP
+                 * reachability cannot see (`connections: 2`,
+                 * `unwired_exits: []`, and the player is stuck).
+                 *
+                 * ⛓ An ARRIVAL-ONLY exit (`targetRegion: null`) is never the
+                 * better survivor: it is the far end of a `one_way` link, it
+                 * leads nowhere from here, and its whole job is to be a place to
+                 * ARRIVE — which the entrance tile already provides. So a real
+                 * crossing EVICTS one, in either arrival order.
+                 *
+                 * ⛔ **TWO REAL CROSSINGS STAY A NAMED COLLISION.** There is no
+                 * defensible choice between them and inventing one would be the
+                 * silent drop this note exists to prevent. Both branches NAME
+                 * the collision; only the survivor differs.
+                 */
+                const incomingCrosses = entry.targetRegion != null;
+                const occupiedCrosses = occupied.targetRegion != null;
+                if (incomingCrosses && !occupiedCrosses) {
+                    note({
+                        kind: 'exit_tile_collision',
+                        message: `exit "${id}" wants tile [${entry.x},${entry.y}], already taken by "${occupied.exit_id}" — "${occupied.exit_id}" is ARRIVAL-ONLY (it names no target region) and "${id}" is a real crossing, so "${occupied.exit_id}" is DROPPED (one tile can only cross one way)`,
+                    });
+                    builder.exits.splice(occupiedAt, 1);
+                    builder.exitIds.delete(occupied.exit_id);
+                    builder.exitIds.add(id);
+                    builder.exits.push({ exit_id: id, ...entry });
+                    return;
+                }
                 note({
                     kind: 'exit_tile_collision',
                     message: `exit "${id}" wants tile [${entry.x},${entry.y}], already taken by "${occupied.exit_id}" — DROPPED (one tile can only cross one way)`,

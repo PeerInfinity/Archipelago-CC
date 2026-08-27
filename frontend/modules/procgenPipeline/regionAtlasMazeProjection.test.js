@@ -17,10 +17,19 @@ import { describe, it, expect } from 'vitest';
 
 import {
     deserializeMazeWorld,
+    detectStepEvents,
     floorReachableSet,
+    step,
     TILE_FLOOR,
     TILE_WALL,
 } from '../mazeRoom/mazeRoomEngine.js';
+import { findPath, stepsToInputs } from '../mazeRoom/mazeAutopather.js';
+import { buildLevelSet } from '../seedlingDemo/levelSetExporter.js';
+import { emptyLevel } from '../seedlingDemo/procgenLevel.js';
+import { parseOelLevel } from '../seedlingDemo/procgenLevelOel.js';
+import * as seedSet from '../seedlingDemo/seedlingSetAdapter.js';
+import { emptyOverlay } from '../seedlingDemo/seedlingSetOverlay.js';
+import { tileTypeForPlacement } from '../flashPanel/seedlingSemantics.js';
 import { isObstacleCleared } from '../shared/procgen/library.js';
 import { stringifyRulesJson } from '../shared/rulesJsonBuilder.js';
 import { rulesJsonSchemaErrors } from '../procgenCore/jsonSchemaCheck.js';
@@ -546,6 +555,68 @@ describe('refusals and collisions', () => {
         expect(p.exits.map((e) => e.atlas_exit_id)).toEqual(['on_the_door']);
         expect(noteKinds(notes)).toContain('exit_tile_collision');
     });
+
+    /**
+     * ⛓⛓⛓ **THE SURVIVOR IS THE ONE THAT CROSSES** (EDITOR INTEGRATION W6, M2;
+     * plan §11.1 A6 / §11.5). The row above is the case where BOTH contenders
+     * name a target region — a real collision, first-wins, named. These two are
+     * the case that was silently wrong: one of the pair is ARRIVAL-ONLY
+     * (`targetRegion: null`, the far end of a `one_way` link), and first-wins
+     * kept whichever the exit order happened to list first.
+     */
+    it('an ARRIVAL-ONLY exit is EVICTED by a real crossing that wants its tile', () => {
+        const region = corridorRegion({
+            exits: [{
+                exit_id: 'arrival_only', kind: 'teleporter', exit_tiles: [[1, 1]], entrance_tile: [1, 1], sub_region: 'r1c0',
+            }],
+        });
+        // ⛓ exactly what the compiler's `wiredInfo` writes for the far end of a
+        // one_way connection: no AP exit name, no target region.
+        const { sidecars, notes } = project(region, CORRIDOR_ROWS, {
+            wiredExit: () => ({ apExitName: null, targetApRegion: null, targetExitId: 'back' }),
+            internalExitName: (regionId, from, to) => `${regionId}: ${from} -> ${to}`,
+        });
+        const p = sidecars.vault__r1c0.playable_payload;
+        // the boundary exit is planned FIRST and still loses the tile
+        expect(p.exits).toHaveLength(1);
+        expect(p.exits[0].targetRegion).toBe('vault__r1c2');
+        const collision = notes.find((n) => n.kind === 'exit_tile_collision');
+        expect(collision.message).toMatch(/"arrival_only" is ARRIVAL-ONLY/);
+        expect(collision.message).toMatch(/DROPPED/);
+    });
+
+    /**
+     * ⛔⛔ **AND THE OTHER ORDER IS THE CONTROL** — a real crossing already on
+     * the tile is NOT evicted by an arrival-only exit arriving after it. Without
+     * this row an "always replace" mutant is green.
+     */
+    it('…but an arrival-only exit does NOT evict a real crossing already there', () => {
+        const region = corridorRegion({
+            exits: [{
+                exit_id: 'arrival_only', kind: 'teleporter', exit_tiles: [[1, 1]], entrance_tile: [1, 1], sub_region: 'r1c0',
+            }],
+        });
+        // Reverse the plan order by making the BOUNDARY exit the crossing one
+        // and the internal crossing the arrival-only one is impossible (an
+        // internal crossing always names a target), so instead: two boundary
+        // exits on one tile, the real one first.
+        region.exits = [
+            { exit_id: 'real_door', kind: 'teleporter', exit_tiles: [[1, 1]], entrance_tile: [1, 1], sub_region: 'r1c0' },
+            { exit_id: 'arrival_only', kind: 'teleporter', exit_tiles: [[1, 1]], entrance_tile: [1, 1], sub_region: 'r1c0' },
+        ];
+        const { sidecars, notes } = project(region, CORRIDOR_ROWS, {
+            wiredExit: (regionId, exitId) => (exitId === 'real_door'
+                ? { apExitName: 'AP:real', targetApRegion: 'elsewhere', targetExitId: 'back' }
+                : { apExitName: null, targetApRegion: null, targetExitId: 'back' }),
+            internalExitName: () => null,
+        });
+        const p = sidecars.vault__r1c0.playable_payload;
+        const onTile = p.exits.filter((e) => e.x === 1 && e.y === 1);
+        expect(onTile).toHaveLength(1);
+        expect(onTile[0].atlas_exit_id).toBe('real_door');
+        // ⛓ still NAMED — the survivor rule never makes a drop silent.
+        expect(noteKinds(notes)).toContain('exit_tile_collision');
+    });
 });
 
 describe('whole-atlas projection', () => {
@@ -727,5 +798,119 @@ describe('the real Seedling starter atlas as a maze world', () => {
     it('refuses the maze flavour without the game\'s grid + condition vocabulary', () => {
         expect(() => compileRegionAtlas(clone(STARTER), { mapDoc: MAP_DOC, sidecarFlavor: 'maze' }))
             .toThrow(/needs options\.mazeProjection/);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ M2 — A GENERATED, LINKED 2-ROOM SEEDLING SET, PROJECTED AND WALKED
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * EDITOR INTEGRATION W6 (plan §11.1 A6, §11.5, §11.6 item 3).
+ *
+ * ⛔ **THE DEFECT THIS FIXES, AND WHY NOTHING ELSE SAW IT.** `levelSetExits`
+ * lands each arrival ON the destination's return door — which is what vanilla
+ * itself does four times, and safe in the real engine because `Game.update()`'s
+ * `!checked` latch fires one entity per entry (`Game.as:826-834`). A maze tile
+ * has no latch: one tile is one crossing. So the generated pair below put BOTH
+ * of each room's exits on tile [8,8], and first-wins kept whichever
+ * `region.exits` listed first — measured pre-fix as:
+ *
+ *     level_0 -> keeps "level_0 -> level_1"  (a real crossing)
+ *     level_1 -> keeps "in_L0_128_128"       (targetRegion NULL — a dead end)
+ *
+ * ⇒ a ONE-WAY TRAP. And AP could not see it: `report.connections: 2`,
+ * `unwired_exits: []` — reachability analysis says the world is fine and the
+ * player is stuck. The compiler NAMED both drops the whole time; nothing read
+ * the note.
+ *
+ * ⛓ Every document here is GENERATED, none typed: `buildLevelSet({link:true})`
+ * over two `emptyLevel` rooms, the exporter's own linker, the set adapter's own
+ * derivation, and the BUILT-IN maze row with the compiler's real ctx.
+ */
+describe('⛓⛓⛓ M2 — the generated 2-room ring survives its own tile collision', () => {
+    const RING = (() => {
+        const set = buildLevelSet(
+            [0, 1].map((level) => emptyLevel({ level })), { setId: 'w6-m2', link: true },
+        ).set;
+        const deps = {
+            parseOel: parseOelLevel,
+            tileSize: 16,
+            tileTypeForPlacement,
+            rulesSchema: loadRulesSchema(),
+            atlas: { game: 'seedling', mapDocument: 'w6-m2.json' },
+        };
+        const atlas = seedSet.deriveAtlasOf(seedSet.setRecord(set, emptyOverlay()), deps).atlas;
+        // ⛓ every region relabelled to the MAZE, so the BUILT-IN maze row runs
+        //   with the compiler's own (module-private) ctx rather than a hand-rolled one.
+        for (const r of atlas.regions) r.substrate = MAZE_SUBSTRATE;
+        const mapDoc = { levels: seedSet.roomsOfSet(set, parseOelLevel) };
+        return compileRegionAtlas(clone(atlas), {
+            mapDoc,
+            sidecarFlavor: 'maze',
+            mazeProjection: seedlingMazeProjectionDeps({ mapDoc, gameConfig: GAME_CONFIG }),
+        });
+    })();
+
+    const payload = (name) => RING.rules.preset_sidecars['1'][name].playable_payload;
+
+    it('the collision is REAL and still NAMED — both rooms, one tile, two doors', () => {
+        const collisions = (RING.report.maze_notes ?? []).filter((n) => n.kind === 'exit_tile_collision');
+        expect(collisions.map((n) => n.region_id).sort()).toEqual(['level_0', 'level_1']);
+        // ⛔ NOT VACUOUS — the two exits really do want the same tile.
+        for (const name of ['level_0', 'level_1']) {
+            expect(payload(name).exits).toHaveLength(1);
+            expect(payload(name).exits[0]).toMatchObject({ x: 8, y: 8 });
+        }
+    });
+
+    /**
+     * ⛔⛔ **THE RED ROW.** Pre-fix, `level_1`'s single surviving exit had
+     * `targetRegion: null`. The survivor predicate is what makes both rooms
+     * carry a real crossing.
+     */
+    it('BOTH rooms\' survivors carry a targetRegion — the trap is gone', () => {
+        expect(payload('level_0').exits[0].targetRegion).toBe('level_1');
+        expect(payload('level_1').exits[0].targetRegion).toBe('level_0');
+    });
+
+    /**
+     * ⛓ …and the ring WALKS BOTH WAYS through the real engine — the §11.5
+     * control number, `len 14` in each direction, with the last step firing the
+     * `exit_cross` the in-app crossing rides on (atlasMazeBot's own style of
+     * completion: an exit-tile step IS a crossing).
+     */
+    it('walks entrance -> exit in BOTH rooms, and each last step fires exit_cross', () => {
+        const lengths = [];
+        for (const [name, other] of [['level_0', 'level_1'], ['level_1', 'level_0']]) {
+            const p = payload(name);
+            const world = deserializeMazeWorld(p);
+            const exit = p.exits[0];
+            const plan = findPath(world, p.entrance, { kind: 'tile', x: exit.x, y: exit.y });
+            expect(plan, `${name}: no route from its entrance to its own exit`).toBeTruthy();
+            lengths.push(plan.length);   // MOVES, not tiles — §11.5's own number
+            const inputs = stepsToInputs(plan.steps);
+            let state = { player_pos: { ...p.entrance }, turn: 0, inventory: new Set() };
+            let crossed = null;
+            for (const input of inputs) {
+                // ⛓ detectStepEvents takes POSITIONS, not states — and `step`
+                //   may return the same object, so the before is copied.
+                const before = { ...state.player_pos };
+                state = step(world, state, input);
+                for (const ev of detectStepEvents(world, before, state.player_pos)) {
+                    if (ev.type === 'exit_cross') crossed = ev.exit_id;
+                }
+            }
+            expect(state.player_pos).toEqual({ x: exit.x, y: exit.y });
+            expect(crossed).toBe(exit.exit_id);
+            expect(exit.targetRegion).toBe(other);
+        }
+        // ⛓ the measured control: the geometry is the projection's, not the walk's.
+        expect(lengths).toEqual([14, 14]);
+    });
+
+    it('AP could not have seen it — the graph was complete either way', () => {
+        expect(RING.report.connections).toBe(2);
+        expect(RING.report.unwired_exits).toEqual([]);
+        expect(RING.report.substrates).toEqual({ [MAZE_SUBSTRATE]: 2 });
     });
 });
