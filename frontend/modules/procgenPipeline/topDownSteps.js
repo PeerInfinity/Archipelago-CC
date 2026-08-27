@@ -48,7 +48,11 @@ import {
     newEnvelope as newEnvelopeGeneric,
     serializeEnvelope as serializeEnvelopeGeneric,
     deserializeEnvelope as deserializeEnvelopeGeneric,
+    invalidateFromStep as invalidateFromStepGeneric,
 } from './steppedPipeline.js';
+// Recorded layout edits — the op vocabulary + replay. This module supplies the
+// TOP-DOWN binding (below); layoutEdits.js stays envelope-agnostic.
+import { bumpTopDownSubSeed, reRollCountFor } from './layoutEdits.js';
 
 /** Step names in run order; index === the `completed` value the step yields. */
 export const TOPDOWN_STEPS = Object.freeze(['layout', 'realise', 'finalize', 'compile']);
@@ -264,6 +268,124 @@ const TD_CODECS = {
     },
 };
 
+
+// --- recorded layout edits: the TOP-DOWN binding -----------------------
+//
+// WHICH STEP EACH EDIT REPLAYS AFTER — measured against the panel's own
+// write-back depths (procgenPipelineUI.js):
+//
+//   op                stage       panel's invalidation      why
+//   ---------------   ---------   -----------------------   --------------------
+//   move-region       finalize    _invalidateFromTD(2)      ③ must run on the
+//   swap-regions      finalize    _invalidateFromTD(2)      UNMOVED placement —
+//   move-exit-side    finalize    _invalidateFromTD(2)      finalizeTopDown reads
+//   swap-exit-sides   finalize    _invalidateFromTD(2)      layout.cellsByName and
+//                                                           would double-apply
+//                                                           back-exits. ④ reads
+//                                                           only the grid.
+//   re-roll           layout      _invalidateFromTD(0)      bumps a sub-seed on
+//   set-substrate     layout      _invalidateFromTD(0)      the layout; ②③④ re-run
+//
+// This is the one place where the replay stage and the UNDO step DIVERGE. A
+// top-down layout edit replays after ③, but the grid it moves regions on is
+// created by ① and filled by ②, so un-doing it means re-running from ① — there
+// is no cheaper clean slate. (Sphere's ③ builds its own grid, so there the two
+// coincide.) `layout.cellsByName` is deliberately left stale by the replay, for
+// exactly the reason the panel leaves it stale: it is ③'s input, and ③ has
+// already run.
+//
+// IDENTITY: top-down regions keep their SOURCE names throughout, so an edit
+// names them directly (sphere has no such name before ③ — see sphereSteps.js).
+
+const TD_EDIT_STAGES = Object.freeze({
+    'move-region': 'finalize',
+    'swap-regions': 'finalize',
+    'move-exit-side': 'finalize',
+    'swap-exit-sides': 'finalize',
+    're-roll': 'layout',
+    'set-substrate': 'layout',
+});
+
+// Steps to RE-RUN when an edit is undone. Every layout op rewinds to ①: see above.
+const TD_UNDO_FROM = Object.freeze({
+    'move-region': 'layout',
+    'swap-regions': 'layout',
+    'move-exit-side': 'layout',
+    'swap-exit-sides': 'layout',
+});
+
+// The size every region actually occupies. layoutTopDown widens the requested
+// base to the per-axis max over all regions (`uniformSize`) so shared walls line
+// up; the exit-side ops place a relabelled exit at its side's MIDPOINT tile, so
+// they need that size, not the base the user typed.
+function tdRegionSize(env) {
+    return env.layout?.uniformSize ?? env.regionSize ?? env.opts?.regionSizeBase;
+}
+
+function topDownAfterLayout(env, grid) {
+    const startName = env.layout?.actualStartName;
+    if (!startName || !env.finalize) return;
+    const sr = grid.allRegions().find((r) => r.region_id === startName);
+    if (sr) env.finalize.startCell = { gx: sr.cell.gx, gy: sr.cell.gy };
+}
+
+function topDownReRoll(env, edit) {
+    const byRegion = env.layout?.subSeedByRegion;
+    if (!byRegion || !(edit.region_id in byRegion)) {
+        throw new Error(`re-roll: no region '${edit.region_id}' in the layout `
+            + '(run 1 Layout first)');
+    }
+    // The panel's own bump, from the module that owns it. It XORs the CURRENT
+    // sub-seed, so two re-rolls of one region compose in list order — which a
+    // replay from a fresh ① reproduces exactly.
+    byRegion[edit.region_id] = bumpTopDownSubSeed(byRegion[edit.region_id], edit.n);
+    return `Re-rolled "${edit.region_id}" (sub-seed bump #${edit.n})`;
+}
+
+function topDownSetSubstrate(env, edit) {
+    const byRegion = env.layout?.substrateByRegion;
+    if (!byRegion || !(edit.region_id in byRegion)) {
+        throw new Error(`set-substrate: no region '${edit.region_id}' in the layout `
+            + '(menu / source-less regions do not realise)');
+    }
+    byRegion[edit.region_id] = edit.substrate;
+    return `Substrate of "${edit.region_id}" → ${edit.substrate}`;
+}
+
+/** The top-down edit binding (see layoutEdits.js). The walk is linear — no
+ *  batch loop — so there is no `replayReady` gate. */
+export const TD_EDIT_BINDING = {
+    mode: 'topDown',
+    stages: TD_EDIT_STAGES,
+    undoFrom: TD_UNDO_FROM,
+    grid: (env) => env.finalize?.grid ?? env.layout?.grid ?? null,
+    regionSize: tdRegionSize,
+    afterLayout: topDownAfterLayout,
+    reRoll: topDownReRoll,
+    setSubstrate: topDownSetSubstrate,
+};
+
+/** The step to re-run when `edit` is undone (its stage unless overridden). */
+export function topDownUndoStep(edit) {
+    return TD_UNDO_FROM[edit?.op] ?? TD_EDIT_STAGES[edit?.op] ?? null;
+}
+
+/** How many times this region has already been re-rolled in the recording. */
+export function topDownReRollCount(env, regionName) {
+    return reRollCountFor(env?.edits, regionName);
+}
+
+// Which envelope fields each step WRITES — the drop map invalidateFromStep uses
+// to roll a step (and everything after it) back so it re-runs from clean inputs.
+// ①'s entry drops the Grid that ②/③ alias, which is what an undone layout edit
+// needs.
+const TD_DROP_OUTPUTS = {
+    layout: (e) => { e.layout = null; e.rng = null; },
+    realise: (e) => { e.realise = null; },
+    finalize: (e) => { e.finalize = null; },
+    compile: (e) => { e.compile = null; },
+};
+
 // Whether each step's OUTPUT is present in an envelope — used to derive the
 // resume point from data presence (a hand-edited/partial envelope resumes from
 // the first step whose output is missing). presence = keep, absence = recompute.
@@ -281,7 +403,17 @@ const TD_DESCRIPTOR = {
     present: TD_STEP_OUTPUT_PRESENT,
     codecs: TD_CODECS,
     nextStep: nextTopDownStep,
+    editBinding: TD_EDIT_BINDING,
+    dropOutputs: TD_DROP_OUTPUTS,
 };
+
+/**
+ * Roll the envelope back so `stepName` (and everything after it) re-runs — the
+ * undo path: pop the edit, invalidate from `topDownUndoStep(edit)`, resume.
+ */
+export function invalidateTDFrom(env, stepName) {
+    return invalidateFromStepGeneric(env, stepName, TD_DESCRIPTOR);
+}
 
 // --- public API (stable names/signatures; delegate to the shared harness) ---
 

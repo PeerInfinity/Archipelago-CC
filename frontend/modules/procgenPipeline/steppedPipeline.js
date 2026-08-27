@@ -18,7 +18,19 @@
 //     present:  { name: (env) => bool }, // is this step's OUTPUT present?
 //     codecs:   { field: { encode(value, env), decode(value, out, obj) } },
 //     nextStep: (env) => name | null,    // the loop shape (linear or batched)
+//     editBinding?: <layoutEdits binding>, // optional; see below
+//     dropOutputs?: { name: (env) => void }, // optional; see invalidateFromStep
 //   }
+//
+// RECORDED LAYOUT EDITS (optional). A descriptor that supplies `editBinding`
+// gets the recorded-edit replay for free: after each step runs, every edit in
+// `env.edits` whose stage is THAT step is replayed, in list order, before the
+// next step starts. That is what makes `runToStep` / `resumeEnvelope` / the
+// headless CLIs reproduce a HAND-EDITED world from `config + seed + edits`.
+// See layoutEdits.js for the binding contract and the refusal/throw split.
+// Byte-identity is unaffected: with `edits` absent or empty the replay returns
+// immediately and touches no rng, so an unedited stepped run is still
+// byte-for-byte the monolithic driver's output.
 //
 // The codec surface — why encode/decode take context and run in ORDER:
 //   Most of an envelope is plain JSON and rides the `{ ...env }` spread. Only the
@@ -41,6 +53,8 @@
 // the guards (sphereSteps.test.js, scripts/procgen/verify-*.mjs,
 // dump-*-byteidentity.mjs) hold the line.
 
+import { replayLayoutEdits } from './layoutEdits.js';
+
 /**
  * Run a single named step over the envelope, mutating + returning it. Async
  * because some steps stream progress (pass opts.onProgress); all resolve to the
@@ -49,7 +63,32 @@
 export async function runStep(stepName, env, opts, desc) {
     const runner = desc.runners[stepName];
     if (!runner) throw new Error(`runStep: unknown step '${stepName}'`);
-    return runner(env, opts);
+    const out = await runner(env, opts);
+    replayEditsForStep(out, stepName, desc);
+    return out;
+}
+
+/**
+ * Replay the recorded edits this step is responsible for — called by runStep
+ * immediately after the step's own output lands, so the NEXT step (and the
+ * compile at the end) sees the hand-edited artifact. Exported for the tests and
+ * the CLI; no-op for a descriptor without an editBinding.
+ *
+ * `binding.replayReady(env, stepName)` is the batch gate: sphere loops its
+ * middle four phases per batch, and a layout edit must replay ONCE — after the
+ * loop has run that step for the LAST time — not after every batch (a second
+ * `move-region` would find its source cell empty and refuse). Modes with a
+ * linear walk (top-down) omit it.
+ */
+export function replayEditsForStep(env, stepName, desc) {
+    // Nothing recorded ⇒ nothing runs, not even the mode's gate. This is the
+    // byte-identity contract's narrowest statement: an unedited envelope pays
+    // one array check per step and takes no other code path.
+    if (!Array.isArray(env?.edits) || env.edits.length === 0) return null;
+    const binding = desc.editBinding;
+    if (!binding) return null;
+    if (binding.replayReady && !binding.replayReady(env, stepName)) return null;
+    return replayLayoutEdits(env, stepName, binding);
 }
 
 /**
@@ -94,6 +133,29 @@ export function detectCompleted(env, desc) {
 export async function resumeEnvelope(env, toStep, opts, desc) {
     env.completed = detectCompleted(env, desc);
     return runToStep(env, toStep, opts, desc);
+}
+
+/**
+ * Roll the envelope back so `stepName` — and every step after it — RE-RUNS.
+ * Drops each of those steps' outputs (via the descriptor's `dropOutputs`, one
+ * entry per step naming the fields that step writes) and rewinds `completed` to
+ * just before it, so `runToStep` / `resumeEnvelope` walk forward from there.
+ *
+ * This is the UNDO path: an edit is un-done not by inverting it but by dropping
+ * it from the list and re-running the step that PRODUCES the artifact it
+ * mutated — determinism is the guarantee, which is why the undo row's claim is
+ * "N edits → undo ×N → the never-edited grid, byte for byte".
+ *
+ * Dropping matters (it isn't enough to rewind `completed`): sphere's ③ takes a
+ * carry-forward path when it finds a grown grid still on the envelope, so a
+ * rewind alone would re-run ③ against the EDITED grid instead of a fresh one.
+ */
+export function invalidateFromStep(env, stepName, desc) {
+    const idx = desc.steps.indexOf(stepName);
+    if (idx < 0) throw new Error(`invalidateFromStep: unknown step '${stepName}'`);
+    for (let i = idx; i < desc.steps.length; i += 1) desc.dropOutputs?.[desc.steps[i]]?.(env);
+    env.completed = idx - 1;
+    return env;
 }
 
 /** A fresh envelope for the given initial fields; `completed: -1` = nothing run. */

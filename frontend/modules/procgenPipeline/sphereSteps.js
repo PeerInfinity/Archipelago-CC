@@ -55,6 +55,7 @@ import {
     stitchGrid,
     wallOffUnusedExits,
     rebuildEnvelopeFromRulesJson,
+    reRollSphereRegion,
 } from './procgenPipelineEngine.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import {
@@ -75,7 +76,11 @@ import {
     newEnvelope as newEnvelopeGeneric,
     serializeEnvelope as serializeEnvelopeGeneric,
     deserializeEnvelope as deserializeEnvelopeGeneric,
+    invalidateFromStep as invalidateFromStepGeneric,
 } from './steppedPipeline.js';
+// Recorded layout edits — the op vocabulary + replay. This module supplies the
+// SPHERE binding (below); layoutEdits.js stays envelope-agnostic.
+import { deriveSphereRerollSeed, reRollCountFor } from './layoutEdits.js';
 
 /** Step names in run order; index === the `completed` value the step yields. */
 export const SPHERE_STEPS = Object.freeze([
@@ -629,6 +634,167 @@ export function importSphereEnvelope(rawJson, opts = {}) {
     return { env, fromRulesJson };
 }
 
+
+// --- recorded layout edits: the SPHERE binding -------------------------
+//
+// WHICH STEP EACH EDIT REPLAYS AFTER — measured against the panel's own
+// write-back depths (procgenPipelineUI.js), which are the facts about which
+// pass reads stale data:
+//
+//   op                stage        panel's invalidation      why
+//   ---------------   ----------   -----------------------   -------------------
+//   move-region       regions      _invalidateFrom(4)        the grid is ③'s
+//   swap-regions      regions      _invalidateFrom(4)        output; ④ reads only
+//   move-exit-side    regions      _invalidateFrom(4)        the grid, so the edit
+//   swap-exit-sides   regions      _invalidateFrom(4)        lands between ③ and ④
+//   re-roll           regions      _invalidateFrom(4)        re-realises ONE region
+//                                                            in place, on the grid
+//   set-substrate     items        _invalidateFrom(3)        writes node.substrate,
+//                                                            then ③ re-realises ALL
+//
+// UNDO is a different question from replay: an edit is un-done by dropping it
+// and RE-RUNNING the step that PRODUCES the artifact it mutated. For five of the
+// six that is the same step it replays after (③ builds the grid from scratch
+// when `grow` is dropped). `set-substrate` is the exception: it replays after ②c
+// but ②c does not rebuild the node it wrote to — ②b does — so undoing it re-runs
+// from `topology`.
+//
+// IDENTITY. Sphere edits name their target `#<node index>`, not the
+// `region_<gx>_<gy>` id: the canonical id is derived from the CELL a node lands
+// on, which only exists after ③, whereas `set-substrate` must apply BEFORE ③.
+// The index is stable across a re-run (②b is deterministic from the seed) and is
+// exactly what the panel already shows the user ("Region #3"). The re-roll's SEED
+// still hashes the node's live `region_id` at apply time, so the seed a replay
+// derives is bit-for-bit the one the panel's own expression produced.
+// (Top-down names regions by their SOURCE name — see topDownSteps.js.)
+
+const SPHERE_EDIT_STAGES = Object.freeze({
+    'move-region': 'regions',
+    'swap-regions': 'regions',
+    'move-exit-side': 'regions',
+    'swap-exit-sides': 'regions',
+    're-roll': 'regions',
+    'set-substrate': 'items',
+});
+
+// Steps to RE-RUN when an edit is undone; defaults to the op's stage.
+const SPHERE_UNDO_FROM = Object.freeze({ 'set-substrate': 'topology' });
+
+/** The recorded identity of a sphere tree node. */
+export function sphereNodeKey(node) {
+    return `#${node.index}`;
+}
+
+function resolveSphereNode(env, key) {
+    const index = Number(String(key).replace(/^#/, ''));
+    const node = Number.isInteger(index) ? (env.nodes ?? [])[index] : null;
+    if (!node) throw new Error(`no tree node '${key}' (run 2b Topology first)`);
+    return node;
+}
+
+// Re-point the envelope's start cell and RESYNC every tree node's `cell` from
+// the grid after a placement change. The resync is load-bearing, not tidiness:
+// `node.cell` feeds buildNodeRealiserSpecs (so a re-roll after a move would
+// replace the region at the node's OLD cell — measured: after a swap it
+// overwrites the region that moved INTO that cell, duplicating one region_id and
+// losing another, silently) and compactSphereTree (so an edited world would
+// rebuild, via rebuildEnvelopeFromRulesJson, at its PRE-edit placement).
+function sphereAfterLayout(env, grid) {
+    const cellById = new Map(grid.allRegions()
+        .map((r) => [r.region_id, { gx: r.cell.gx, gy: r.cell.gy }]));
+    let rootCell = null;
+    for (const node of env.nodes ?? []) {
+        const cell = node.region_id ? cellById.get(node.region_id) : null;
+        if (!cell) continue;
+        node.cell = { ...cell };
+        if (node.parent == null) rootCell = cell;
+    }
+    if (env.grow && rootCell) env.grow.startCell = { ...rootCell };
+}
+
+function sphereReRoll(env, edit) {
+    const grid = env.grow?.grid;
+    if (!grid) throw new Error('re-roll: no grown grid (run 3 Build regions first)');
+    const node = resolveSphereNode(env, edit.region_id);
+    const growConfig = growConfigFrom(env.config, env.plan);
+    reRollSphereRegion(grid, node, env.tree, {
+        // The panel's own expression, from the module that owns it. `n` comes
+        // from the RECORDING (reRollCountFor at push time), so a replay of the
+        // same list derives the same seed and undo rewinds the count.
+        seed: deriveSphereRerollSeed(env.config.seed, node.region_id, edit.n),
+        regionSize: growConfig.regionSize,
+        regionParams: growConfig.regionParams,
+        assumeBidirectional: growConfig.growthParams?.assumeBidirectional ?? true,
+    });
+    return `Re-rolled "${node.region_id}" (#${edit.n})`;
+}
+
+function sphereSetSubstrate(env, edit) {
+    const node = resolveSphereNode(env, edit.region_id);
+    node.substrate = edit.substrate;
+    return `Region ${edit.region_id} substrate → ${edit.substrate}`;
+}
+
+/**
+ * The sphere edit binding (see layoutEdits.js). `replayReady` is the batch gate:
+ * sphere loops ②a→②b→②c→③ per batch, so without it a `move-region` would replay
+ * after EVERY batch's ③ and the second attempt would find its source cell empty.
+ * An edit replays once — on the pass that runs its step for the LAST time.
+ */
+export const SPHERE_EDIT_BINDING = {
+    mode: 'sphere',
+    stages: SPHERE_EDIT_STAGES,
+    undoFrom: SPHERE_UNDO_FROM,
+    grid: (env) => env.grow?.grid ?? null,
+    regionSize: (env) => growConfigFrom(env.config, env.plan).regionSize,
+    afterLayout: sphereAfterLayout,
+    reRoll: sphereReRoll,
+    setSubstrate: sphereSetSubstrate,
+    replayReady: (env, stepName) => {
+        const total = env.plan?.spheres?.length ?? 0;
+        if (!total) return true;
+        const batchStart = env.batchStart ?? 0;
+        // ③ advances batchStart, so after the LAST ③ it has reached `total`.
+        if (stepName === 'regions') return batchStart >= total;
+        // The pre-③ steps run BEFORE that advance, so the last pass is the one
+        // whose batch reaches the end.
+        return batchStart + resolveSpheresPerBatch(env.config?.spheresPerBatch, total) >= total;
+    },
+};
+
+/** The step to re-run when `edit` is undone (its stage unless overridden). */
+export function sphereUndoStep(edit) {
+    return SPHERE_UNDO_FROM[edit?.op] ?? SPHERE_EDIT_STAGES[edit?.op] ?? null;
+}
+
+/** How many times this node has already been re-rolled in the recording. */
+export function sphereReRollCount(env, node) {
+    return reRollCountFor(env?.edits, sphereNodeKey(node));
+}
+
+// Which envelope fields each step WRITES — the drop map the generic
+// invalidateFromStep uses to roll a step (and everything after it) back so it
+// re-runs from clean inputs. Mirrors each runner's own resets; ③'s entry is the
+// load-bearing one (it takes a carry-forward path whenever it finds a grid).
+const SPHERE_DROP_OUTPUTS = {
+    plan: (e) => { e.draft = null; },
+    allocate: (e) => {
+        e.plan = null; e.startingItems = null; e.opts = null;
+        e.allocation = null; e.rng = null;
+        e.totalNodes = null; e.dims = null; e.startCell = null;
+    },
+    topology: (e) => {
+        e.nodes = null; e.substrateCounts = null; e.quotaFallbacks = null;
+        e.regionsRng = null; e.topologyWarnings = [];
+    },
+    items: (e) => { e.tree = null; },
+    regions: (e) => {
+        e.grow = null; e.placed = null; e.librarySources = null;
+        e.batchStart = 0; e.prevCount = 0;
+    },
+    compile: (e) => { e.compile = null; },
+};
+
 /** A fresh, empty envelope for the given resolved config block. */
 export function newEnvelope(config) {
     return newEnvelopeGeneric({ config });
@@ -657,7 +823,17 @@ const SPHERE_DESCRIPTOR = {
     present: STEP_OUTPUT_PRESENT,
     codecs: SPHERE_CODECS,
     nextStep: nextSphereStep,
+    editBinding: SPHERE_EDIT_BINDING,
+    dropOutputs: SPHERE_DROP_OUTPUTS,
 };
+
+/**
+ * Roll the envelope back so `stepName` (and everything after it) re-runs — the
+ * undo path: pop the edit, invalidate from `sphereUndoStep(edit)`, resume.
+ */
+export function invalidateSphereFrom(env, stepName) {
+    return invalidateFromStepGeneric(env, stepName, SPHERE_DESCRIPTOR);
+}
 
 /**
  * Derive the `completed` index (last CONTIGUOUSLY-finished step) from which

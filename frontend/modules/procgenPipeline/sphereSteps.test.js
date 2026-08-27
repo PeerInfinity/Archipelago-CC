@@ -9,12 +9,15 @@ import {
 } from './procgenPipelineEngine.js';
 import { planSpheres } from './spherePlanner.js';
 import { DEFAULT_ITEMS } from '../shared/procgen/library.js';
+import { createHash } from 'node:crypto';
 import {
     SPHERE_STEPS, runStep, runToStep, nextSphereStep,
     serializeEnvelope, deserializeEnvelope, newEnvelope,
     detectCompleted, resumeEnvelope, resolveSpheresPerBatch,
     appendSphere, truncateSphereWorld, importSphereEnvelope,
+    SPHERE_EDIT_BINDING, invalidateSphereFrom, sphereUndoStep, sphereNodeKey,
 } from './sphereSteps.js';
+import { pushLayoutEdit, popLayoutEdit } from './layoutEdits.js';
 
 function makeConfig(overrides = {}) {
     return {
@@ -595,5 +598,267 @@ describe('appendSphere (envelope path)', () => {
             expect(n.wave).toBeLessThan(2);
             if (n.cell) expect(env.grow.grid.hasRegion(n.cell)).toBe(true);
         }
+    });
+});
+
+// --- recorded layout edits (B-d) ---------------------------------------
+//
+// The envelope gains `edits[]`: the composite-grid layout editor's four
+// mutators and the two scalar per-region gestures, RECORDED so that a
+// hand-edited world is `config + seed + edits` — replayed by the runner,
+// undone by popping, and carried by the codec. The rows below pin the three
+// claims that make that true: the replay lands at the right step, it consumes
+// no rng, and undo is byte-exact.
+describe('sphereSteps — recorded layout edits', () => {
+    // A small BOUNCE world: the re-roll and exit-side ops are zone-only (a maze
+    // region's exit tile positions feed adjacency stitching, so the engine
+    // refuses to re-roll one). One gated arrow keeps every region buildable.
+    const bounceConfig = () => makeConfig({
+        substrateQuotas: { bounce: 99 },
+        startSubstrate: 'bounce',
+        regionParams: { fallBehavior: 'current', physicsProfile: 'dj' },
+        itemPool: { 'Left arrow': 1, Victory: 1 },
+        sphereCount: 2,
+        victoryItem: 'Victory',
+        exclusiveSpheres: { 1: ['Left arrow'] },
+        maxItemsPerRegion: 2,
+        fillerCount: 1,
+    });
+
+    const gridSha = (grid) => createHash('sha256').update(JSON.stringify(
+        grid.allRegions()
+            .map((r) => [r.region_id, r.cell.gx, r.cell.gy,
+                JSON.stringify(r.extracted_rules), JSON.stringify(r.exits_placed)])
+            .sort((a, b) => (a[0] < b[0] ? -1 : 1)),
+    )).digest('hex');
+
+    async function grownEnv(config = bounceConfig()) {
+        const env = newEnvelope(config);
+        await runToStep(env, 'regions');
+        return env;
+    }
+
+    // An empty cell the layout editor could move a region into.
+    function emptyCell(grid) {
+        for (let gy = 0; gy < grid.height; gy += 1) {
+            for (let gx = 0; gx < grid.width; gx += 1) {
+                if (!grid.hasRegion({ gx, gy })) return { gx, gy };
+            }
+        }
+        return null;
+    }
+
+    it('an unedited envelope is untouched by the replay (byte-identity)', async () => {
+        const config = makeConfig();
+        const bare = newEnvelope(config);
+        await runToStep(bare, 'compile');
+        const withEmpty = newEnvelope(config);
+        withEmpty.edits = [];
+        await runToStep(withEmpty, 'compile');
+        expect(JSON.stringify(withEmpty.compile.rulesJson))
+            .toBe(JSON.stringify(bare.compile.rulesJson));
+        expect(JSON.stringify(bare.compile.rulesJson)).toBe(JSON.stringify(monolithic(config)));
+    });
+
+    it('a recorded move REPLAYS from config + seed + edits alone', async () => {
+        const config = bounceConfig();
+        const live = await grownEnv(config);
+        const mover = live.grow.grid.allRegions()[1];
+        const to = emptyCell(live.grow.grid);
+        const edit = { op: 'move-region', from: { ...mover.cell }, to };
+        expect(pushLayoutEdit(live, edit, SPHERE_EDIT_BINDING).ok).toBe(true);
+        await runToStep(live, 'compile');
+
+        // A FRESH envelope carrying only the recording reproduces it exactly.
+        const replayed = newEnvelope(config);
+        replayed.edits = [edit];
+        await runToStep(replayed, 'compile');
+        expect(gridSha(replayed.grow.grid)).toBe(gridSha(live.grow.grid));
+        expect(JSON.stringify(replayed.compile.rulesJson))
+            .toBe(JSON.stringify(live.compile.rulesJson));
+
+        // …and it is genuinely a different world from the unedited one.
+        const clean = newEnvelope(config);
+        await runToStep(clean, 'compile');
+        expect(gridSha(replayed.grow.grid)).not.toBe(gridSha(clean.grow.grid));
+    });
+
+    it('the replay consumes NO rng: the post-③ rng snapshot is unmoved', async () => {
+        const config = bounceConfig();
+        const clean = await grownEnv(config);
+        const edited = await grownEnv(config);
+        const mover = edited.grow.grid.allRegions()[1];
+        pushLayoutEdit(edited, {
+            op: 'move-region', from: { ...mover.cell }, to: emptyCell(edited.grow.grid),
+        }, SPHERE_EDIT_BINDING);
+        expect(edited.rng.s).toBe(clean.rng.s);
+        expect(edited.regionsRng.s).toBe(clean.regionsRng.s);
+
+        // Same claim on the REPLAY path (a fresh run that applies the recording).
+        const replayed = newEnvelope(config);
+        replayed.edits = [...edited.edits];
+        await runToStep(replayed, 'regions');
+        expect(replayed.rng.s).toBe(clean.rng.s);
+    });
+
+    it('N edits → undo ×N → the never-edited grid, byte for byte', async () => {
+        const config = bounceConfig();
+        const clean = newEnvelope(config);
+        await runToStep(clean, 'compile');
+        const cleanSha = gridSha(clean.grow.grid);
+
+        const env = await grownEnv(config);
+        // Each gesture reads the CURRENT grid, exactly as a second click would.
+        const secondId = env.grow.grid.allRegions()[1].region_id;
+        const liveCell = (id) => ({
+            ...env.grow.grid.allRegions().find((r) => r.region_id === id).cell,
+        });
+        pushLayoutEdit(env, {
+            op: 'move-region', from: liveCell(secondId), to: emptyCell(env.grow.grid),
+        }, SPHERE_EDIT_BINDING);
+        const thirdId = env.grow.grid.allRegions()
+            .find((r) => r.region_id !== secondId
+                && r.region_id !== env.grow.grid.getRegion(env.grow.startCell).region_id)
+            .region_id;
+        pushLayoutEdit(env, {
+            op: 'swap-regions', a: liveCell(thirdId), b: liveCell(secondId),
+        }, SPHERE_EDIT_BINDING);
+        await runToStep(env, 'compile');
+        expect(env.edits).toHaveLength(2);
+        expect(gridSha(env.grow.grid)).not.toBe(cleanSha);
+        expect(JSON.stringify(env.compile.rulesJson))
+            .not.toBe(JSON.stringify(clean.compile.rulesJson));
+
+        for (let i = 0; i < 2; i += 1) {
+            const popped = popLayoutEdit(env, SPHERE_EDIT_BINDING);
+            invalidateSphereFrom(env, sphereUndoStep(popped.edit));
+            // eslint-disable-next-line no-await-in-loop
+            await resumeEnvelope(env, 'compile');
+        }
+        expect(env.edits).toHaveLength(0);
+        expect(gridSha(env.grow.grid)).toBe(cleanSha);
+        // Not just the grid: the whole compiled world comes back.
+        expect(JSON.stringify(env.compile.rulesJson))
+            .toBe(JSON.stringify(clean.compile.rulesJson));
+        // `completed` must land back at the end of the pipeline — an undo that
+        // re-ran from step 0 would reproduce the grid and still leave this wrong.
+        expect(env.completed).toBe(SPHERE_STEPS.length - 1);
+    });
+
+    it('undo re-runs from the edit s OWN step, not from step 0', async () => {
+        const env = await grownEnv();
+        const mover = env.grow.grid.allRegions()[1];
+        pushLayoutEdit(env, {
+            op: 'move-region', from: { ...mover.cell }, to: emptyCell(env.grow.grid),
+        }, SPHERE_EDIT_BINDING);
+        const popped = popLayoutEdit(env, SPHERE_EDIT_BINDING);
+        expect(sphereUndoStep(popped.edit)).toBe('regions');
+        invalidateSphereFrom(env, 'regions');
+        // ①②a②b②c survive; only ③④ are gone.
+        expect(env.draft).toBeTruthy();
+        expect(env.tree).toBeTruthy();
+        expect(env.grow).toBeNull();
+        expect(env.completed).toBe(SPHERE_STEPS.indexOf('regions') - 1);
+    });
+
+    it('set-substrate replays at ②c and undoes from ②b (the node it wrote is ②b s)', async () => {
+        const config = bounceConfig();
+        const env = newEnvelope(config);
+        await runToStep(env, 'items');
+        const target = env.nodes[1];
+        const original = target.substrate;
+        const edit = { op: 'set-substrate', region_id: sphereNodeKey(target), substrate: 'maze' };
+        expect(pushLayoutEdit(env, edit, SPHERE_EDIT_BINDING).ok).toBe(true);
+        expect(env.nodes[1].substrate).toBe('maze');
+        await runToStep(env, 'compile');
+        expect(env.grow.grid.allRegions().some((r) => r.substrate === 'maze')).toBe(true);
+
+        // A fresh envelope carrying only the recording lands in the same place —
+        // the replay fires after ②c, before ③ realises anything.
+        const replayed = newEnvelope(config);
+        replayed.edits = [edit];
+        await runToStep(replayed, 'compile');
+        expect(gridSha(replayed.grow.grid)).toBe(gridSha(env.grow.grid));
+
+        // Undo rewinds to ②b, which is what re-derives the node's substrate.
+        expect(sphereUndoStep(edit)).toBe('topology');
+        popLayoutEdit(env, SPHERE_EDIT_BINDING);
+        invalidateSphereFrom(env, 'topology');
+        await resumeEnvelope(env, 'compile');
+        expect(env.nodes[1].substrate).toBe(original);
+    });
+
+    // The measured defect the recording fixes: node.cell fed
+    // buildNodeRealiserSpecs and compactSphereTree, and NOTHING updated it on a
+    // layout move. A re-roll after a swap replaced the region that had moved
+    // INTO the stale cell — duplicating one region_id and losing another,
+    // silently.
+    it('a layout move RESYNCS the tree node cells (and the start cell)', async () => {
+        const env = await grownEnv();
+        const grid = env.grow.grid;
+        const [first, second] = grid.allRegions();
+        pushLayoutEdit(env, {
+            op: 'swap-regions', a: { ...first.cell }, b: { ...second.cell },
+        }, SPHERE_EDIT_BINDING);
+        for (const node of env.nodes) {
+            if (!node.region_id) continue;
+            const live = grid.allRegions().find((r) => r.region_id === node.region_id);
+            expect([node.region_id, node.cell]).toEqual([node.region_id, {
+                gx: live.cell.gx, gy: live.cell.gy,
+            }]);
+        }
+        const root = env.nodes.find((n) => n.parent == null);
+        expect(env.grow.startCell).toEqual({ gx: root.cell.gx, gy: root.cell.gy });
+
+        // …so a re-roll AFTER the swap still targets its own region.
+        const rerolled = grid.allRegions().find((r) => r.region_id === first.region_id);
+        const node = env.nodes.find((n) => n.region_id === first.region_id);
+        const before = grid.allRegions().length;
+        const r = pushLayoutEdit(env, {
+            op: 're-roll', region_id: sphereNodeKey(node), n: 1,
+        }, SPHERE_EDIT_BINDING);
+        expect(r.ok).toBe(true);
+        expect(grid.allRegions()).toHaveLength(before);
+        expect(grid.allRegions().filter((x) => x.region_id === first.region_id)).toHaveLength(1);
+        expect(grid.getRegion(rerolled.cell).region_id).toBe(first.region_id);
+    });
+
+    it('the codec carries the recording across a serialise/deserialise boundary', async () => {
+        const env = await grownEnv();
+        const mover = env.grow.grid.allRegions()[1];
+        pushLayoutEdit(env, {
+            op: 'move-region', from: { ...mover.cell }, to: emptyCell(env.grow.grid),
+        }, SPHERE_EDIT_BINDING);
+        const round = deserializeEnvelope(JSON.parse(JSON.stringify(serializeEnvelope(env))));
+        expect(round.edits).toEqual(env.edits);
+        await runToStep(round, 'compile');
+        expect(gridSha(round.grow.grid)).toBe(gridSha(env.grow.grid));
+    });
+
+    it('the batch gate replays a layout edit ONCE in a sphere-major run', async () => {
+        const config = bounceConfig();
+        const perBatch = newEnvelope({ ...config, spheresPerBatch: 1 });
+        await runToStep(perBatch, 'compile');
+        const mover = perBatch.grow.grid.allRegions()[1];
+        const edit = { op: 'move-region', from: { ...mover.cell }, to: emptyCell(perBatch.grow.grid) };
+
+        const replayed = newEnvelope({ ...config, spheresPerBatch: 1 });
+        replayed.edits = [edit];
+        // Without the gate this throws: the second batch's ③ would find the
+        // source cell already empty and the replay refuses.
+        await expect(runToStep(replayed, 'compile')).resolves.toBeTruthy();
+        expect(replayed.grow.grid.getRegion(edit.to)?.region_id).toBe(mover.region_id);
+    });
+
+    it('a refused edit leaves the grid untouched and records nothing', async () => {
+        const env = await grownEnv();
+        const [a, b] = env.grow.grid.allRegions();
+        const before = gridSha(env.grow.grid);
+        const r = pushLayoutEdit(env, {
+            op: 'move-region', from: { ...a.cell }, to: { ...b.cell },
+        }, SPHERE_EDIT_BINDING);
+        expect(r.ok).toBe(false);
+        expect(env.edits ?? []).toHaveLength(0);
+        expect(gridSha(env.grow.grid)).toBe(before);
     });
 });
