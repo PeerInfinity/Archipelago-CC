@@ -551,14 +551,13 @@
       "total": "ALL PASS"
     },
     "suite: vitest (unfiltered)": {
-      "value": "384/11843",
-      "command": "node scripts/procgen/ci-vitest-summary.mjs --json",
-      "kind": "ci-suite",
-      "exit": 0,
-      "ms": 4866,
+      "value": "388/11970",
+      "command": null,
+      "kind": "suite",
       "cheap": false,
-      "measuredAt": "95c7500ad2498b489a4ada02f328297def5095ab",
-      "total": "success"
+      "quoted": true,
+      "why": "CI run 33049236295 at b9558593a (editor-integration W4 + B-a + B-d merged): 11962 passed | 8 skipped | 0 failed; slow battery 217/217",
+      "measuredAt": "b9558593a1bd9ef6d55e82d23bab7ef68fbb005c"
     },
     "roster: --win --tier=full": {
       "value": "149 tapes 3452/6/46",
