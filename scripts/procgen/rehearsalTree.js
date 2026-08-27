@@ -84,6 +84,12 @@ const fail = (m) => { throw new RehearsalTreeError(m); };
 
 /** ⛓ The file that says "this directory is a rehearsal" — one spelling. */
 export const REHEARSAL_MARKER = 'rehearsal.json';
+/**
+ * ⛓ R9 P3b — the ref a rehearsal's baseline is NAMED by. It is deliberately
+ * not SHA-shaped: a reader of a rehearsal's S3 output must not be able to
+ * mistake it for a commit in this repository.
+ */
+export const BASELINE_REF = 'rehearsal-tree@generated';
 
 /**
  * ⛓ THE CALM ARRIVAL, one value per invariant `seamLatchFindings` asserts.
@@ -369,9 +375,28 @@ export function buildRehearsalTree({ dir, repo, sourceTapes, deps, scenario = {}
     const moves = scenario.moves ?? {};
     const exits = scenario.exits ?? {};
     const latchOverrides = scenario.latchOverrides ?? {};
+    /**
+     * ⛓⛓⛓ R9 P3b, §47.6 — **A TAPE NO PRODUCER OWNS.** `{ <label>: <source> }`
+     * drops a copy of a committed tape into the roster with NO owner and no
+     * chain, which is the shape of every `plan-seedling-*`-authored tape:
+     * outside `solverRoster` by construction, and invisible until the
+     * complement is derived. ⛔ It is deliberately NOT a chain segment — a
+     * scenario that made it one would be rehearsing a different hole.
+     */
+    const orphanTapes = scenario.orphanTapes ?? {};
 
     rmSync(target, { recursive: true, force: true });
-    for (const sub of ['tapes', 'latches', 'producers', 'stubs', 'plans', 'expectations']) {
+    /**
+     * ⛓⛓⛓ R9 P3b, §47.5 — **`baseline/` IS THE TREE'S STAND-IN FOR A COMMIT.**
+     * The real pipeline reads S3's `before` at a SHA, because a commit cannot
+     * be moved by a stage that runs after it. A scratch tree has no history,
+     * so the generator writes the tapes TWICE — once as the roster the run
+     * will move, once here as the run's true before — and `rehearsalContext`
+     * projects `baseline/` instead of shelling `git show`. That is what makes
+     * a scenario able to mutate a tape BETWEEN S0 and S1 and still be seen.
+     */
+    for (const sub of ['tapes', 'baseline', 'latches', 'producers', 'stubs', 'plans',
+        'expectations']) {
         mkdirSync(join(target, sub), { recursive: true });
     }
 
@@ -392,9 +417,30 @@ export function buildRehearsalTree({ dir, repo, sourceTapes, deps, scenario = {}
         raw.name = label;
         raw.description = `REHEARSAL copy of ${source}. Authored by `
             + `scripts/procgen/${ownerOf.get(label)} for the P1b rehearsal.`;
-        writeFileSync(join(target, 'tapes', `${label}.json`),
-            `${JSON.stringify(raw, null, 4)}\n`);
+        const text = `${JSON.stringify(raw, null, 4)}\n`;
+        writeFileSync(join(target, 'tapes', `${label}.json`), text);
+        /** ⛓ …and the SAME BYTES as the run's before — one `text`, two files,
+         *  so the baseline cannot drift from the roster it is a baseline OF. */
+        writeFileSync(join(target, 'baseline', `${label}.json`), text);
         parsed.set(label, parseTape(raw));
+    }
+    /** ⛓ …and the ORPHANS, written to both the roster and the baseline for the
+     *  same reason the segments are. They own no chain and nominate nobody. */
+    for (const [label, source] of Object.entries(orphanTapes)) {
+        const from = join(target, 'tapes', `${source}.json`);
+        if (!existsSync(from)) {
+            fail(`⛔ the orphan ${label} names ${source}, which is not in this tree's own `
+                + `roster (${Object.keys(REHEARSAL_PLAN.sources).join(', ')}). An orphan is a `
+                + 'COPY of a generated tape, so the two can never disagree about format.');
+        }
+        const raw = JSON.parse(readFileSync(from, 'utf8'));
+        raw.name = label;
+        raw.description = `REHEARSAL orphan copied from ${source}. NO producer emits it — `
+            + 'it stands for a `plan-seedling-*`-authored tape, outside the solver roster '
+            + 'by construction (R9 P3b, §47.6).';
+        const text = `${JSON.stringify(raw, null, 4)}\n`;
+        writeFileSync(join(target, 'tapes', `${label}.json`), text);
+        writeFileSync(join(target, 'baseline', `${label}.json`), text);
     }
 
     // ── 2. the latches, DERIVED from each SUCCESSOR's own boot blocks ────
@@ -477,7 +523,9 @@ export function buildRehearsalTree({ dir, repo, sourceTapes, deps, scenario = {}
         owners: REHEARSAL_PLAN.owners,
         sources: REHEARSAL_PLAN.sources,
         instrumentRows,
-        scenario: { moves, exits, latchOverrides },
+        scenario: { moves, exits, latchOverrides, orphanTapes },
+        /** ⛓ R9 P3b — the pseudo-ref `rehearsalContext` resolves to `baseline/`. */
+        baselineRef: BASELINE_REF,
         latchProof,
     };
     writeFileSync(join(target, REHEARSAL_MARKER), `${JSON.stringify(marker, null, 2)}\n`);

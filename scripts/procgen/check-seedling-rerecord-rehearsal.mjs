@@ -157,9 +157,34 @@ claim('(control)', '⛓ THE CONTROL IS THE STRONG ONE — every boundary of an u
 claim('(control-empty)', '⛓ …and S3 records NOTHING and says so, ACROSS a real tick-0 '
     + 're-derivation of every tape (`tick0` is projected away — §35.4 item 3)');
 
+console.log('\n## R9 P3b — THE TWO THE FIFTH RUN PAID FOR (§47.5, §47.6)\n');
+claim('(p3b-a)', '⛓ §47.5 — S0 SEALS the run\'s TRUE BEFORE as a commit, and says which');
+claim('(p3b-a-seen)', '⛓⛓ §47.5 — …so a tape moved BETWEEN S0 and S1 IS in S3\'s diff. '
+    + 'Under the working-tree baseline this reads `0 moved`, which is what R9 slice 12h got '
+    + 'from its own pin commit: an ancestor of the head S1 ran at, invisible by construction');
+claim('(p3b-a-named)', '⛓ …and S3 PRINTS the baseline it diffed against, with WHY it is '
+    + 'that one — a record set is only as good as its `before`');
+claim('(p3b-a-stop)', '⛔ …and an unlicensed mover STOPS before the GPU naming the tape');
+claim('(p3b-b)', '⛓ §47.6 — `roster ∖ prove()` is DERIVED and NAMED, so a tape no producer '
+    + 'emits can never fall outside S4 unnoticed again (⚖ 32 E covered 22 of 25, then 28 of '
+    + '37, each time by ENUMERATION — this closes it by derivation)');
+claim('(p3b-b-cost)', '⛓ …with what driving it would COST, from the TICK SUM — never a tape '
+    + 'COUNT and never a per-tape rate off the short walks (§47.11 (3) (d))');
+claim('(p3b-b-refused)', '⛔ …and ⚖ 32 E\'s "S4 IS THE GATE RUN" is REFUSED BY NAME while '
+    + 'the complement is undriven. ⛔ The CLAIM fails, not the run: ⚖ 40 retired the '
+    + 'per-move full roster, so a red here would re-instate the tax the user removed');
+claim('(p3b-b-lint)', '⛓ …and no HAND witness duplicates the derivation (⚖ 17) — the two '
+    + 'hand lists are now checked against the data rather than trusted beside it');
+claim('(p3b-b-driven)', '⛓ …and `--full-roster` MAKES the claim: the pair is what keeps the '
+    + 'refusal meaningful, because a claim nothing can reach is not a refusal');
+claim('(p3b-b-driven-row)', '⛓ …under its own row name, so a failure names the complement '
+    + 'rather than being lost in a roster-wide sweep');
+
 console.log('\n## THE SCENARIOS, AND THE GENERATOR\'S OWN PROOF\n');
 const EXPECTED = ['control', 'walk-unlicensed', 'walk-licensed', 'resume', 'seeded-failure',
-    'prose-only', 'off-table'];
+    'prose-only', 'off-table',
+    /** ⛓ R9 P3b — §47.5's baseline and §47.6's complement, driven and undriven. */
+    'baseline-commit', 'roster-complement', 'roster-complement-driven'];
 const got = (report?.scenarios ?? []).map((s) => s.id);
 check(EXPECTED.every((id) => got.includes(id)),
     '⛓ every scenario the rehearsal owes is present, by name',

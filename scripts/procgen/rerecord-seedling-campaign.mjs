@@ -109,12 +109,13 @@ import {
     existsSync, mkdirSync, readdirSync, readFileSync, unlinkSync, writeFileSync,
 } from 'node:fs';
 import { execFileSync } from 'node:child_process';
-import { dirname, join } from 'node:path';
+import { dirname, join, relative } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import {
-    accountingUniverse, bootFromEnvelopeOnly, chainSubjects, mergePersistence,
-    movedProjections, projectionIndex, timedClearHazard,
+    DASH_WITNESSES, HAND_WITNESSES,
+    accountingUniverse, bootFromEnvelopeOnly, chainSubjects, duplicatedWitnesses,
+    mergePersistence, movedProjections, projectionIndex, rosterComplement, timedClearHazard,
 } from './rerecordCampaign.js';
 import {
     CHECK_FLAG, LICENSE_FLAG, applyLicence, cascadeFrom, licenceFrom, movedSegments,
@@ -127,6 +128,7 @@ import {
     certifyAgainstLatch, certificationCell, latchCacheCandidates, latchCell,
     renderTableMarkdown,
 } from './provisionalLatch.js';
+import { describeFullTierEstimate, tickSumOf } from './fullTierEstimate.js';
 import { buildInstruments } from './reference/instruments.mjs';
 import {
     REHEARSAL_PLAN, buildRehearsalTree, readRehearsalMarker,
@@ -220,6 +222,21 @@ const BRANCH = arg('branch', null);
  */
 const REHEARSE = process.argv.includes('--rehearse');
 const REHEARSE_TREE = arg('rehearse-tree', null);
+/**
+ * ⛓⛓⛓ R9 P3b, §47.5 — **THE RUN'S TRUE BEFORE IS A SHA.** `--baseline=<sha>`
+ * names the commit S3's record set is diffed against; without it the baseline
+ * is the head S0 was FIRST flushed at, which S0 records into its own state.
+ * See `measure()` and `record()` for why the working tree was the wrong
+ * answer. Spelled here for the reason `--license-walks` gives above.
+ */
+const BASELINE = arg('baseline', null);
+/**
+ * ⛓⛓⛓ R9 P3b, §47.6 — **S4 CLAIMS THE ROSTER ONLY WHEN IT DRIVES IT.**
+ * `prove()` DERIVES `roster ∖ prove()` and prints it either way; with
+ * `--full-roster` it also drives that complement, which is the only condition
+ * under which ⚖ 32 E's *"S4 IS the gate run"* is a true sentence.
+ */
+const FULL_ROSTER = process.argv.includes('--full-roster');
 for (const [literal, constant, where] of [
     ['--latch-provisional', PROVISIONAL_FLAG, 'PROVISIONAL_FLAG'],
     ['--table', TABLE_FLAG, 'TABLE_FLAG'],
@@ -382,6 +399,63 @@ async function buildContext(overrides = {}) {
         .map((f) => f.slice(0, -5)).sort();
     /** The bytes the GAME is handed — `driveLatch`'s own projection, one spelling. */
     ctx.gameVisibleTextOf = (label) => JSON.stringify(ctx.gameVisibleTape(ctx.tapeOf(label)));
+    /**
+     * ⛓⛓⛓ R9 P3b, §47.5 — **THE SAME PROJECTION, TAKEN AT A COMMIT.**
+     *
+     * ⛔⛔ WHY A SHA AND NOT THE WORKING TREE. S3's record set is the diff
+     * across the RUN, and a re-record run makes commits inside itself: R9
+     * slice 12h's pin commit `8c7196e83` was an ANCESTOR of the head S1 ran
+     * at, so every tape already carried its `pins` when a working-tree
+     * baseline was taken and the pin could NEVER appear as a move. S3 recorded
+     * nothing and the expectations on disk stayed on PRE-PIN bytes. A commit
+     * cannot be moved by a stage that runs after it, so a SHA baseline is
+     * ABOVE EVERY WRITE BY CONSTRUCTION rather than by where the call sits.
+     *
+     * ⛓ A LABEL WITH NO TAPE AT THE BASELINE IS OMITTED, NOT ZEROED — it is
+     * then `appeared` in `movedProjections`, which is the true statement about
+     * a tape this run created. And a label the baseline HAS that the tree no
+     * longer does becomes `vanished`, which S3 has always refused by name and
+     * which no working-tree baseline could ever produce.
+     */
+    /**
+     * ⛔⛔ ONE PROVIDER, ONE INDEXER (trap 865). The `before` and the `after`
+     * are compared field for field, so they MUST be the same KIND of value —
+     * `projectionIndex` stores an md5, and a first cut of this returned the
+     * raw projection text instead, which read as "every tape moved" in the
+     * control. A provider that answers only "the bytes at this ref" and one
+     * indexer both sides go through is what makes that unspellable.
+     */
+    ctx.gameVisibleTextAt = overrides.gameVisibleTextAt ?? ((ref, label) => {
+        const rel = relative(ctx.root, join(ctx.tapesDir, `${label}.json`));
+        let text;
+        try { text = gitShow(ctx, ref, rel); } catch { return null; }
+        return JSON.stringify(ctx.gameVisibleTape(ctx.parseTape(JSON.parse(text))));
+    });
+    ctx.projectionsAt = (ref) => {
+        const texts = new Map();
+        for (const label of ctx.allTapeLabels()) {
+            const t = ctx.gameVisibleTextAt(ref, label);
+            /** ⛓ absent at the baseline ⇒ omitted ⇒ `appeared`, which is the
+             *  true statement about a tape this run created. */
+            if (t !== null) texts.set(label, t);
+        }
+        return projectionIndex([...texts.keys()], (label) => texts.get(label));
+    };
+    /**
+     * ⛓ THE BASELINE THIS RUN IS ABOUT, and WHY it is that one. `--baseline=`
+     * is the caller's word; otherwise it is the head at the moment S0 first
+     * flushed, which is the run's own beginning.
+     */
+    ctx.resolveBaseline = overrides.resolveBaseline ?? ((explicit) => {
+        if (explicit) {
+            return { ref: ctx.exec('git', ['rev-parse', explicit],
+                { cwd: ctx.root, encoding: 'utf8' }).trim(),
+            asked: explicit, source: '--baseline' };
+        }
+        const ref = ctx.exec('git', ['rev-parse', 'HEAD'],
+            { cwd: ctx.root, encoding: 'utf8' }).trim();
+        return { ref, asked: 'HEAD', source: "the head S0 was first flushed at" };
+    });
     ctx.driveLatch = overrides.driveLatch
         ?? ((label, completeTape) => windowsDriveLatch(ctx, label, completeTape));
 
@@ -403,6 +477,9 @@ async function buildContext(overrides = {}) {
  */
 async function rehearsalContext(dir) {
     const marker = readRehearsalMarker(dir);
+    /** ⛓ The REAL projection, so a rehearsal's baseline is read exactly as a
+     *  commit's would be — `buildContext` takes the same module. */
+    const tape = await import(join(MODULE, 'tapeFormat.js'));
     return buildContext({
         tapesDir: join(dir, 'tapes'),
         cacheDir: join(dir, 'cache'),
@@ -417,6 +494,35 @@ async function rehearsalContext(dir) {
         tapeOwners: () => new Map(Object.entries(marker.owners)
             .flatMap(([file, segs]) => segs.map((seg) => [seg, file]))),
         rehearsal: dir,
+        /**
+         * ⛓⛓⛓ R9 P3b, §47.5 — **A REHEARSAL'S BASELINE IS ITS `baseline/`
+         * DIRECTORY, NOT A COMMIT.** The real tree reads the run's before at a
+         * SHA; a scratch tree has no history, so the generator wrote the same
+         * bytes twice and this reads the second copy. ⛔ A ref this context
+         * does not recognise is a REFUSAL rather than a silent fall-through to
+         * `git show`, which would answer about THIS repository while every
+         * other stage answered about the fake tree.
+         */
+        resolveBaseline: (explicit) => {
+            if (explicit && explicit !== marker.baselineRef) {
+                throw new Error(`⛔ a rehearsal cannot baseline against ${explicit}: the `
+                    + 'fake tree has no history, and reading a commit of THIS repository '
+                    + `would answer about the wrong roster. Its baseline is `
+                    + `\`${marker.baselineRef}\`, generated beside the tapes.`);
+            }
+            return { ref: marker.baselineRef, asked: explicit ?? marker.baselineRef,
+                source: "the fake tree's generated `baseline/` — a rehearsal has no commits" };
+        },
+        gameVisibleTextAt: (ref, label) => {
+            if (ref !== marker.baselineRef) {
+                throw new Error(`⛔ a rehearsal was asked to project at ${ref}; it can only `
+                    + `answer for \`${marker.baselineRef}\`.`);
+            }
+            const p = join(dir, 'baseline', `${label}.json`);
+            if (!existsSync(p)) return null;
+            return JSON.stringify(tape.gameVisibleTape(
+                tape.parseTape(JSON.parse(readFileSync(p, 'utf8')))));
+        },
         scriptPath: (file) => {
             for (const sub of ['producers', 'stubs']) {
                 const p = join(dir, sub, file);
@@ -804,10 +910,23 @@ async function predict(ctx) {
      * cannot drift apart again. `producerOrder` refuses an empty row set by
      * name as the second half of the same fix.
      */
+    /**
+     * ⛓⛓⛓ R9 P3b, §47.5 — **THE RUN'S TRUE BEFORE, SEALED HERE.** S3's record
+     * set is the projection diff across the RUN, so its `before` has to be the
+     * run's beginning and not the moment S1 happened to start. S0 is that
+     * beginning, and a SHA is the only spelling of it that a later stage —
+     * or a COMMIT MADE INSIDE THE RUN — cannot move underneath it.
+     */
+    const baseline = ctx.resolveBaseline(BASELINE);
+    console.log(`\n## THE BASELINE: \`${baseline.ref}\` (${baseline.source})`
+        + ' — S3\'s record set is the game-visible projection diff against THIS commit,'
+        + ' never against the working tree');
+
     const s0State = {
         licensed,
         tick0Set,
         table,
+        baseline,
         rulingBase: 'ruling 23',
         walk: {
             rows: walk.rows,
@@ -1032,16 +1151,33 @@ function measure(ctx, s0) {
     console.log('\n# S1 · MEASURE — the GAME, in chain order\n');
     /**
      * ⛓⛓⛓ R9 SLICE 12e′ RE-RUN — **THE RECORD SET'S `BEFORE`, TAKEN HERE AND
-     * NOWHERE ELSE.** It has to be above `spendWalkLicence`, because that is
-     * the line where the producers re-author the moved walks: a snapshot taken
-     * one line lower would compare the new bytes against themselves and find
-     * nothing moved, which is the same defect `walkReport.note`'s placement
-     * exists to avoid one level down.
+     * NOWHERE ELSE.** It is above `spendWalkLicence`, because that is the line
+     * where the producers re-author the moved walks: a snapshot taken one line
+     * lower would compare the new bytes against themselves and find nothing
+     * moved, which is the same defect `walkReport.note`'s placement exists to
+     * avoid one level down.
+     *
+     * ⛓⛓⛓ R9 P3b, §47.5 — **AND THE PLACEMENT IS NO LONGER WHAT MAKES IT
+     * TRUE.** The `before` is now read at S0's sealed BASELINE COMMIT, so it
+     * is above every write in this run BY CONSTRUCTION — including a commit
+     * the run itself makes, which is precisely what a working-tree snapshot
+     * could not see (12h's pin commit was an ANCESTOR of the head S1 ran at,
+     * so S3's record set came back EMPTY and the expectations on disk stayed
+     * on pre-pin bytes). The call stays here because the constraint the old
+     * docblock names is still a true thing to want; it is simply now belt as
+     * well as braces.
      */
-    const projectionsBefore = projectionIndex(ctx.allTapeLabels(), ctx.gameVisibleTextOf);
+    if (!s0?.baseline?.ref) {
+        throw new Error('⛔ S1 has no `baseline` from S0. The record set is the projection '
+            + 'diff against the run\'s TRUE before (R9 P3b, §47.5), so a S0 state written '
+            + 'before this field existed cannot answer it — re-enter at --from=S0, or name '
+            + 'the commit with --baseline=<sha>.');
+    }
+    const projectionsBefore = ctx.projectionsAt(s0.baseline.ref);
     console.log(`## the game-visible projection of ${Object.keys(projectionsBefore).length} `
-        + 'tape(s), snapshotted BEFORE the licence is spent — S3\'s record set is the '
-        + 'diff against this, never S2\'s boot writes');
+        + `tape(s) AT \`${s0.baseline.ref}\` (${s0.baseline.source}) — S3's record set is `
+        + 'the diff against THAT COMMIT, never against the working tree and never S2\'s '
+        + 'boot writes');
     const spent = spendWalkLicence(ctx, s0);
     let blockSetChecked = false;
     const chains = subjects(ctx);
@@ -1147,8 +1283,9 @@ function measure(ctx, s0) {
         }
     }
     flush(ctx, 'S1',
-        { boundaries, pending: measured, licenceSpent: spent.ran, projectionsBefore });
-    return { boundaries, measured, projectionsBefore };
+        { boundaries, pending: measured, licenceSpent: spent.ran, projectionsBefore,
+            baseline: s0.baseline });
+    return { boundaries, measured, projectionsBefore, baseline: s0.baseline };
 }
 
 // ── S2 · WRITE ────────────────────────────────────────────────────────
@@ -1300,6 +1437,24 @@ function record(ctx, s0, s1, s2) {
             + 'projection diff across the run, so a S1 state written before this was built '
             + 'cannot answer it — re-enter at --from=S1 rather than recording a guess.');
     }
+    /**
+     * ⛓⛓⛓ R9 P3b, §47.5 — **AND IT SAYS WHICH BASELINE IT DIFFED AGAINST.**
+     * A record set is only as good as its `before`, and the `before` this
+     * pipeline used to take was the WORKING TREE at S1's start — which a
+     * commit made inside the run silently defeats. So the baseline is a SHA,
+     * S0 seals it, and S3 PRINTS it with the reason it is that one. A S1 state
+     * written before the field existed is REFUSED here for the same reason a
+     * missing `projectionsBefore` is: the answer would be a guess wearing a
+     * measurement's clothes.
+     */
+    const baseline = s1?.baseline;
+    if (!baseline?.ref) {
+        throw new Error('⛔ S3 has no `baseline` from S1. The record set names the commit '
+            + 'it is a diff against (R9 P3b, §47.5); a S1 state written before that field '
+            + 'existed cannot say which `before` produced it — re-enter at --from=S0.');
+    }
+    console.log(`## the BASELINE is \`${baseline.ref}\` — ${baseline.source}`
+        + `${baseline.asked && baseline.asked !== 'HEAD' ? ` (asked as \`${baseline.asked}\`)` : ''}`);
     const after = projectionIndex(ctx.allTapeLabels(), ctx.gameVisibleTextOf);
     const { moved, appeared, vanished } = movedProjections(before, after);
     const set = [...moved, ...appeared];
@@ -1387,12 +1542,45 @@ function record(ctx, s0, s1, s2) {
  * are named as their OWN list with the reason, and `prove()` gives them a row.
  * A quiet union would have hidden which claim each half is making.
  */
-const DASH_WITNESSES = Object.freeze(
-    ['r9-l0-sword-dash', 'r9-l0-sword-dash-rest', 'r9-l6-sword-dash-hit']);
+/**
+ * ⛓ R9 P3b — **THE TWO LISTS NOW LIVE IN `rerecordCampaign.js`** and are
+ * imported at the top of this file, because the one claim that matters about
+ * them (⚖ 17: neither restates what `solverRosterFromData` already derives)
+ * was checkable only by spending a `--win` roster while they lived in a script
+ * that runs S0..S5 on import. `duplicatedWitnesses` and `rosterComplement` are
+ * the same two derivations `proveCoverage` spends below, so the bounded vitest
+ * and `prove()` cannot come apart.
+ */
 
-/** The four hand witnesses this gate has always carried as controls. */
-const HAND_WITNESSES = Object.freeze(
-    ['r8-hammer-arm', 'r8-hammer-control', 'r8-l18-spinner-press', 'r8-l6-bob-contact']);
+/**
+ * ⛓⛓⛓ R9 P3b, §47.6 — **THE ROSTER, WHAT S4 DRIVES, AND THE COMPLEMENT
+ * BETWEEN THEM — ALL THREE DERIVED.**
+ *
+ * ⛔⛔ WHY A COUNT WAS NOT ENOUGH. §42.7 (ii) found that ⚖ 32 E's *"S4 IS the
+ * gate run"* assumed a coverage it did not have, and P3 closed it by giving
+ * the three DASH witnesses their own row. **That added the instances someone
+ * noticed, not the CLASS**: `solverRoster` selects on a `solve-seedling-*`
+ * provenance, so every `plan-seedling-*`-authored tape is outside it BY
+ * CONSTRUCTION, and the hole reopened the moment nine more appeared (12h drove
+ * 28 of the 37 pinned tapes and said 37). A coverage hole closed by
+ * ENUMERATION reopens with the next instance; one closed by DERIVATION cannot.
+ *
+ * ⛓ SO THE HAND LISTS BECOME CHECKED AGAINST THE DERIVATION rather than
+ * trusted beside it: a witness `solverRosterFromData` already covers is a
+ * duplicate — prose restating data, ⚖ 17 — and is a finding by name.
+ */
+function proveCoverage(ctx) {
+    const solver = ctx.rehearsal
+        ? [...new Set([...ctx.tapeOwners().keys()])].sort()
+        : solverRosterFromData({ repo: ctx.root });
+    const roster = ctx.allTapeLabels();
+    return {
+        solver,
+        roster,
+        complement: rosterComplement({ roster, derived: solver }),
+        duplicates: duplicatedWitnesses(solver),
+    };
+}
 
 function solverRoster(ctx) {
     const derived = ctx.rehearsal
@@ -1448,7 +1636,62 @@ function prove(ctx) {
     rows.push(['the ⚖ 40 dash witnesses', shell(ctx, 'the ⚖ 40 dash witnesses', 'node',
         [ctx.scriptPath('verify-seedling-bot-differential.mjs'), '--win',
             `--only=${DASH_WITNESSES.join(',')}`]).ok]);
-    flush(ctx, 'S4', { rows });
+    /**
+     * ⛓⛓⛓ R9 P3b, §47.6 — **THE COMPLEMENT, DERIVED AND PRINTED, AND THE
+     * CLAIM REFUSED WHEN IT IS NOT DRIVEN.**
+     *
+     * ⛔⛔ WHY THE ROW IS NOT UNCONDITIONAL. Measured at this tree the
+     * complement is 120 tapes / 117,914 ticks — ninety per cent of a full
+     * tier. Driving it on every re-record would put a ~128-minute `--win`
+     * sweep behind every tape move, which is EXACTLY ruling 33's per-move tape
+     * tax that **⚖ 40 retired** on the user's word — and ⚖ 40 already says why
+     * it is unnecessary: replaying tape X never reads tape Y, so a tape move
+     * cannot change another tape's game-vs-model verdict; only CODE can, and
+     * code is what the reach instrument prices.
+     *
+     * ⛓ SO WHAT §47.6's HOLE REALLY WAS IS INVISIBILITY, AND THAT IS WHAT
+     * CLOSES HERE. The uncovered set is DERIVED and NAMED on every run, with
+     * what it would cost; ⚖ 32 E's *"S4 IS the gate run"* is printed only when
+     * S4 actually drove the roster — `--full-roster`, or an empty complement.
+     * A new `plan-seedling-*` tape can never fall outside again, because
+     * nothing enumerates the inside.
+     */
+    const { roster, complement, duplicates } = proveCoverage(ctx);
+    check('⛓ no hand witness duplicates the DERIVED roster (⚖ 17 — prose may not restate '
+        + 'data)', duplicates.length === 0,
+    duplicates.length
+        ? `⛔ ${duplicates.join(', ')} is already covered by the derivation; a hand list `
+            + 'that repeats it is a second spelling that goes stale on its own'
+        : `${HAND_WITNESSES.length + DASH_WITNESSES.length} witness(es), none of them `
+            + 'reachable from the producers\' own `--segments`');
+    const cost = complement.length
+        ? describeFullTierEstimate({ tapes: complement.length,
+            ticks: tickSumOf(complement, { tapesDir: ctx.tapesDir }) })
+        : null;
+    console.log(`## ROSTER ∖ S4 = ${complement.length} of ${roster.length} tape(s)`
+        + `${complement.length ? ` — ${cost}` : ''}`);
+    for (const label of complement) console.log(`   ${label}`);
+    if (complement.length === 0) {
+        console.log('## ⛓ ⚖ 32 E — **S4 IS THE GATE RUN**: the rows above drive every tape '
+            + 'on the roster, and the complement is EMPTY by derivation.');
+    } else if (FULL_ROSTER) {
+        console.log(`## ⛓ --full-roster — the ${complement.length} uncovered tape(s) get `
+            + 'their OWN differential row, so S4 covers the roster BY CONSTRUCTION');
+        rows.push([`the roster complement (${complement.length} tape(s))`,
+            shell(ctx, `the roster complement (${complement.length} tape(s))`, 'node',
+                [ctx.scriptPath('verify-seedling-bot-differential.mjs'), '--win',
+                    `--only=${complement.join(',')}`]).ok]);
+        console.log('## ⛓ ⚖ 32 E — **S4 IS THE GATE RUN**, over the whole roster.');
+    } else {
+        console.log('## ⛔ ⚖ 32 E\'s claim **"S4 IS THE GATE RUN" IS REFUSED HERE**: S4 drove '
+            + `${roster.length - complement.length} of ${roster.length} tape(s), and the `
+            + `${complement.length} named above were not driven. Pass \`--full-roster\` `
+            + `(${cost}) to make that claim — or read this run as what it is, the `
+            + 'reach-named set under ⚖ 40, which is a CHECKPOINT ruling and not a per-move '
+            + 'tax.');
+    }
+    flush(ctx, 'S4', { rows,
+        coverage: { roster: roster.length, complement, duplicates, fullRoster: FULL_ROSTER } });
     return rows;
 }
 
@@ -2437,6 +2680,105 @@ function rehearsalScenarios() {
                         && out.includes('write(s) named above are off the table'), 'S2'],
             ],
         },
+        /**
+         * ⛓⛓⛓ R9 P3b, §47.5 — **A COMMIT MADE INSIDE THE RUN.** This is the
+         * defect the fifth run paid for, rehearsed: S0 seals the baseline,
+         * something then edits a tape's game-visible bytes (12h's own pin
+         * commit was an ANCESTOR of the head S1 ran at), and S1 resumes. With
+         * the baseline taken at S0's COMMIT the edit is a mover and S3 names
+         * it; with the old working-tree snapshot at S1's start it is invisible
+         * and S3 records NOTHING — which is exactly what 12h got.
+         */
+        {
+            id: 'baseline-commit',
+            why: 'a tape moves BETWEEN S0 and S1 — the run\'s true before is S0\'s, not S1\'s',
+            tree: {},
+            argv: ['--to=S0'],
+            then: ['--from=S1', '--to=S3'],
+            exit: 1,
+            between: (dir) => {
+                const p = join(dir, 'tapes', 'rh-b.json');
+                const raw = JSON.parse(readFileSync(p, 'utf8'));
+                const before = [...(raw.pins ?? [])];
+                raw.pins = before.filter((x) => x !== 'sound');
+                if (raw.pins.length === before.length) {
+                    throw new Error('⛔ the baseline-commit scenario expected `rh-b` to carry '
+                        + `the \`sound\` pin; it carries ${JSON.stringify(before)}. A `
+                        + 'scenario that silently mutated nothing would be a green row about '
+                        + 'no change at all.');
+                }
+                writeFileSync(p, `${JSON.stringify(raw, null, 4)}\n`);
+                return `rh-b.pins ${JSON.stringify(before)} -> ${JSON.stringify(raw.pins)} `
+                    + '(a fake pin commit, the field ⚖ 57\'s real one moved)';
+            },
+            rows: (out, exit, thenOut) => [
+                ['⛓ (p3b-a) S0 SEALS the baseline as a commit and says which one',
+                    /## THE BASELINE: `rehearsal-tree@generated`/.test(out)
+                        && out.includes('never against the working tree'), 'S0'],
+                ['⛓⛓ (p3b-a-seen) §47.5 — a tape moved BETWEEN S0 and S1 IS in S3\'s diff. '
+                    + 'Under the old working-tree baseline this row reads `0 moved` and the '
+                    + 'run goes green having recorded nothing',
+                    /tape\(s\) projected; 1 moved/.test(thenOut) && thenOut.includes('rh-b'),
+                    'S3'],
+                ['⛓ (p3b-a-named) …and S3 PRINTS the baseline it diffed against, with WHY',
+                    /## the BASELINE is `rehearsal-tree@generated`/.test(thenOut)
+                        && thenOut.includes('a rehearsal has no commits'), 'S3'],
+                ['⛔ (p3b-a-stop) …and the mover carries no licence, so the run STOPS before '
+                    + 'the GPU naming the tape rather than recording a fourteenth',
+                    thenOut.includes('STOP before the GPU')
+                        && /licensed to move — rh-b/.test(thenOut), 'S3'],
+            ],
+        },
+        /**
+         * ⛓⛓⛓ R9 P3b, §47.6 — **A TAPE NO PRODUCER OWNS.** `solverRoster`
+         * selects on a `solve-seedling-*` provenance, so a `plan-seedling-*`
+         * tape is outside S4's set BY CONSTRUCTION and used to be invisible.
+         * Here one is dropped into the tree and the complement has to NAME it.
+         */
+        {
+            id: 'roster-complement',
+            why: 'a tape no producer owns is DERIVED into the complement and named',
+            tree: { orphanTapes: { 'rh-orphan': 'rh-e' } },
+            argv: [],
+            exit: 0,
+            rows: (out) => [
+                ['⛓ (p3b-b) the complement `roster ∖ prove()` is DERIVED and NAMES the '
+                    + 'unowned tape — §42.7 (ii) closed by derivation, not by enumeration',
+                    /## ROSTER ∖ S4 = 1 of 7 tape\(s\)/.test(out)
+                        && /^ {3}rh-orphan$/m.test(out), 'S4'],
+                ['⛓ (p3b-b-cost) …with what driving it would COST, from the TICK SUM and '
+                    + 'never a tape count (§47.11 (3) (d))',
+                    /ROSTER ∖ S4 = 1 of 7 tape\(s\) — ≈ \d+ min for 1 tape\(s\) \/ [\d,]+ tick\(s\)/
+                        .test(out), 'S4'],
+                ['⛔ (p3b-b-refused) …and ⚖ 32 E\'s "S4 IS THE GATE RUN" is REFUSED by name '
+                    + 'while the complement is undriven — the claim, not the run, is what '
+                    + 'fails (⚖ 40: a full roster is a CHECKPOINT, not a per-move tax)',
+                    out.includes('"S4 IS THE GATE RUN" IS REFUSED HERE')
+                        && out.includes('--full-roster'), 'S4'],
+                ['⛓ (p3b-b-lint) …and no hand witness duplicates the derivation (⚖ 17)',
+                    out.includes('PASS: ⛓ no hand witness duplicates the DERIVED roster'),
+                    'S4'],
+            ],
+        },
+        /**
+         * ⛓ …AND THE SAME TREE WITH THE FLAG, so the two rows are a PAIR: the
+         * refusal above is only meaningful if the claim is reachable at all.
+         */
+        {
+            id: 'roster-complement-driven',
+            why: '--full-roster drives the complement, and only then is S4 the gate run',
+            tree: { orphanTapes: { 'rh-orphan': 'rh-e' } },
+            argv: ['--full-roster'],
+            exit: 0,
+            rows: (out) => [
+                ['⛓ (p3b-b-driven) with `--full-roster` the complement gets its OWN '
+                    + 'differential row and the claim is MADE rather than refused',
+                    out.includes('--only=rh-orphan')
+                        && out.includes('**S4 IS THE GATE RUN**, over the whole roster'), 'S4'],
+                ['⛓ (p3b-b-driven-row) …and the row is in S4\'s table under its own name',
+                    /the roster complement \(1 tape\(s\)\)/.test(out), 'S4'],
+            ],
+        },
     ];
 }
 
@@ -2494,6 +2836,17 @@ async function rehearse() {
         };
         const first = run(sc.argv);
         writeFileSync(join(dir, 'stdout.log'), first.out);
+        /**
+         * ⛓⛓⛓ R9 P3b — **THE HOOK THAT MAKES §47.5 REHEARSABLE AT ALL.** The
+         * defect is a commit made INSIDE the run, between one stage and the
+         * next; nothing that only varies the tree BEFORE S0 can express it. So
+         * a scenario may mutate its own tree here, between the two child runs,
+         * which is the scratch-tree spelling of "a commit landed mid-run".
+         */
+        if (sc.between) {
+            const said = sc.between(dir);
+            console.log(`   ⛓ between the runs: ${said}`);
+        }
         const second = sc.then ? run(sc.then) : { out: '', exit: 0 };
         if (sc.then) writeFileSync(join(dir, 'stdout.then.log'), second.out);
         const judged = sc.then ? second : first;

@@ -5731,6 +5731,12 @@ export const INSTRUMENTS = frz({
                     "how": [
                         "arg"
                     ],
+                    "name": "baseline"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
                     "name": "branch"
                 },
                 {
@@ -5751,6 +5757,12 @@ export const INSTRUMENTS = frz({
                         "startsWith"
                     ],
                     "name": "from"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "full-roster"
                 },
                 {
                     "how": [

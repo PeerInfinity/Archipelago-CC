@@ -16,16 +16,25 @@ import { gameVisibleTape, parseTape } from '../../frontend/modules/seedlingDemo/
 import { cascadeFrom } from './walkMoves.js';
 import { producerScripts } from './standingValues.js';
 import {
+    DASH_WITNESSES,
+    HAND_WITNESSES,
     accountingUniverse,
     movedProjections,
     projectionIndex,
     bootFromEnvelopeOnly,
     chainSubjects,
+    duplicatedWitnesses,
     isTrueStart,
     latchCacheKey,
     mergePersistence,
+    rosterComplement,
     timedClearHazard,
 } from './rerecordCampaign.js';
+import { solverRosterFromData } from './producerSegments.js';
+import { rosterLabels } from './fullTierEstimate.js';
+
+/** ⛓ This repository — the derivations below ask the real producers. */
+const REPO = new URL('../../', import.meta.url).pathname;
 
 /** A stand-in `segmentBootFromLatch`: the four rows it takes pre-build. */
 const project = (env) => ({
@@ -536,5 +545,79 @@ describe('the pipeline is NOT a producer, and the row that keeps it that way', (
             expect(src.includes(literal)).toBe(false);
         }
         expect(src).toContain('CHECK_FLAG');
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ R9 P3b, §47.6 — S4's COVERAGE, DERIVED (⚖ 17)
+ * ══════════════════════════════════════════════════════════════════════ */
+describe('the S4 coverage derivation', () => {
+    const TAPES = new URL('../../frontend/modules/seedlingDemo/fixtures/tapes/',
+        import.meta.url).pathname;
+
+    /**
+     * ⛔⛔ THIS IS THE ⚖ 17 LINT, AND IT RUNS OFFLINE. Both witness lists are
+     * HAND lists; the one thing that must stay true of them is that neither
+     * restates a membership `solverRosterFromData` already derives. Two
+     * spellings of one fact disagree the first time either moves, and the hand
+     * one is the one that goes stale. While these constants lived in the
+     * pipeline script this claim could only be made by spending a `--win`
+     * roster inside `prove()`.
+     */
+    it('no hand witness duplicates what the producers themselves declare', () => {
+        const derived = solverRosterFromData({ repo: REPO });
+        expect(duplicatedWitnesses(derived)).toEqual([]);
+    });
+
+    /**
+     * ⛓⛓ THE PARTITION. `roster ∖ prove()` and what S4 drives must together be
+     * the roster and share nothing — the property that makes "covered" a
+     * complement rather than a second list somebody keeps.
+     */
+    it('partitions the roster: complement ∪ covered = roster, and they are disjoint', () => {
+        const roster = rosterLabels({ tapesDir: TAPES });
+        const derived = solverRosterFromData({ repo: REPO });
+        const complement = rosterComplement({ roster, derived });
+        const covered = new Set([...derived, ...HAND_WITNESSES, ...DASH_WITNESSES]);
+        for (const label of complement) expect(covered.has(label)).toBe(false);
+        const rebuilt = new Set([...complement, ...roster.filter((l) => covered.has(l))]);
+        expect([...rebuilt].sort()).toEqual(roster);
+    });
+
+    /**
+     * ⛓⛓⛓ THE POSITIVE CONTROL — §47.6's OWN NINE. R9 slice 12h named nine
+     * pinned tapes `prove()` never drove; a derivation that could not see them
+     * would be a complement in name only.
+     *
+     * ⚠ TWO OF THE NINE ARE NAMED WRONG IN §47.6 and are corrected here from
+     * the disk: `r9-l6-harmless-control` / `r9-l6-harmless-press`, not
+     * `r9-l6-bob-harmless-*` (the section's dash-continuation reads as a `-bob`
+     * prefix it does not have).
+     */
+    it('names §47.6\'s nine uncovered tapes, every one', () => {
+        const roster = rosterLabels({ tapesDir: TAPES });
+        const complement = new Set(rosterComplement(
+            { roster, derived: solverRosterFromData({ repo: REPO }) }));
+        for (const label of ['r7-act2-5', 'r7-act2-6', 'r7-act2-full',
+            'r7-ends-meet-1', 'r7-ends-meet-2', 'r7-ends-meet-full',
+            'r9-l6-bob-press', 'r9-l6-harmless-control', 'r9-l6-harmless-press']) {
+            expect({ label, onDisk: roster.includes(label) })
+                .toEqual({ label, onDisk: true });
+            expect({ label, uncovered: complement.has(label) })
+                .toEqual({ label, uncovered: true });
+        }
+    });
+
+    /**
+     * ⛔ AND THE COMPLEMENT IS NOT VACUOUSLY EVERYTHING. A `rosterComplement`
+     * that ignored `derived` would satisfy every row above; this one cannot.
+     */
+    it('excludes what the producers DO declare', () => {
+        const roster = rosterLabels({ tapesDir: TAPES });
+        const derived = solverRosterFromData({ repo: REPO });
+        expect(derived.length).toBeGreaterThan(0);
+        const complement = new Set(rosterComplement({ roster, derived }));
+        for (const label of derived) expect(complement.has(label)).toBe(false);
+        expect(complement.size).toBeLessThan(roster.length);
     });
 });

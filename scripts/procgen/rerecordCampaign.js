@@ -394,3 +394,59 @@ export function mergePersistence(measured, committed) {
     rows.sort((a, b) => a.level - b.level || a.tag - b.tag);
     return rows;
 }
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ R9 P3b, §47.6 — **THE TWO HAND WITNESS LISTS, WHERE A TEST CAN REACH
+ * THEM.**
+ * ══════════════════════════════════════════════════════════════════════ */
+/**
+ * ⛔⛔ WHY THEY MOVED HERE. They lived in `rerecord-seedling-campaign.mjs`,
+ * which RUNS S0..S5 the moment it is imported, so the one claim that matters
+ * about them — that neither list restates something `solverRosterFromData`
+ * already derives (⚖ 17) — could only be made by spending a `--win` roster
+ * inside `prove()`. A law that can only be checked by driving the GPU is a law
+ * nobody checks. Here it is a bounded vitest row and a rehearsal row.
+ *
+ * ⛓ THEY ARE STILL HAND LISTS, AND THAT IS DECLARED. Neither set is reachable
+ * from any producer's `--segments` — a `plan-seedling-*` tape is outside the
+ * solver roster BY CONSTRUCTION — so there is nothing to derive them FROM.
+ * What is derivable is the DISAGREEMENT, and that is what is checked.
+ */
+
+/**
+ * The three ⚖ 40 DASH witnesses — `plan-seedling-*`-authored, outside
+ * `solverRosterFromData` by construction, given their own `prove()` row by
+ * R9 slice P3 (C) after §42.7 (ii) found S4 covering 22 of 25 and saying 25.
+ */
+export const DASH_WITNESSES = Object.freeze(
+    ['r9-l0-sword-dash', 'r9-l0-sword-dash-rest', 'r9-l6-sword-dash-hit']);
+
+/** The four hand witnesses the solver-roster gate has always carried as controls. */
+export const HAND_WITNESSES = Object.freeze(
+    ['r8-hammer-arm', 'r8-hammer-control', 'r8-l18-spinner-press', 'r8-l6-bob-contact']);
+
+/**
+ * ⛔ A WITNESS THE DERIVATION ALREADY COVERS IS A FINDING, NOT A HARMLESS
+ * DUPLICATE. Two spellings of one membership disagree the first time either
+ * moves, and the hand one is the one that goes stale — ⚖ 17's whole subject.
+ *
+ * @param {string[]} derived what `solverRosterFromData` answers
+ * @returns {string[]} the witnesses that are already in `derived`
+ */
+export function duplicatedWitnesses(derived) {
+    const inDerivation = new Set(derived);
+    return [...HAND_WITNESSES, ...DASH_WITNESSES].filter((w) => inDerivation.has(w));
+}
+
+/**
+ * ⛓⛓⛓ `roster ∖ prove()` — the tapes S4 does NOT drive, DERIVED.
+ *
+ * ⛔ §42.7 (ii) was closed once by ENUMERATION (P3 added the three DASH
+ * witnesses it had noticed) and reopened at the next instance: 12h drove 28 of
+ * 37 pinned tapes and reported the roster. A complement computed from the
+ * three inputs cannot reopen, because nothing enumerates the inside.
+ */
+export function rosterComplement({ roster, derived }) {
+    const covered = new Set([...derived, ...HAND_WITNESSES, ...DASH_WITNESSES]);
+    return roster.filter((label) => !covered.has(label));
+}
