@@ -15,13 +15,30 @@
  *                 forwards up the chain so gameState follows
  *   warn       -> LOUD: console.warn AND the panel's own log
  *
+ * ⛓⛓ **AND IT SUBSCRIBES `procgen:activeSubstrateChanged`** (EDITOR INTEGRATION
+ * W6, H2; plan §11.1 A2 / §11.6 item 2). flashPanel is not procgen-only, so it
+ * deliberately has no `SubstrateInactiveOverlay` and the game keeps running
+ * while a maze region owns the player. That is fine for the PANEL and wrong for
+ * the BINDING: without this, a still-live game's level change resolved a
+ * crossing out of a region that was no longer current. The bounce bridge has
+ * had the same guard since it shipped (`flashSubstrate/bridge.js:204-207`).
+ *
+ * ⛔ THE SUBSCRIPTION IS THE PANEL'S ONLY STAKE, AND IT IS NOT THE PANEL'S. The
+ * park is a fact about what the binding may read, so it is wired here — the one
+ * place that already holds the event bus and the binding — and `flashPanelUI`
+ * is untouched.
+ *
  * It lives here rather than in flashSubstrate because it drives flashPanel's
  * `WasmBridgeAdapter`. Note that flashSubstrate's in-iframe bridge DROPS
  * `arrivedFrom` today; this consumes it host-side instead, which is what makes
  * "arrive at the exit you came through" work at all.
  */
 
+import { FLASH_SEEDLING_SUBSTRATE_ID } from './flashSeedlingLibrary.js';
 import { SeedlingRegionBinding } from './seedlingRegionBinding.js';
+
+/** procgenPlayer's own broadcast of "which substrate owns the player now". */
+export const ACTIVE_SUBSTRATE_EVENT = 'procgen:activeSubstrateChanged';
 
 export class SeedlingRegionGlue {
     /**
@@ -29,35 +46,48 @@ export class SeedlingRegionGlue {
      * @param {object} deps.eventBus         module event bus (subscribe/unsubscribe)
      * @param {function} deps.getDispatcher  resolves the module dispatcher lazily
      * @param {string} deps.loadRegionEvent  the substrate's loadRegion event name
+     * @param {string} [deps.substrateId]    which substrate id is OURS; defaults to
+     *   the registry entry's own constant, never a literal spelled here
      * @param {function} [deps.getPanel]     resolves the active flashPanel instance
      * @param {function} [deps.now]          injectable clock (tests)
      */
-    constructor({ eventBus, getDispatcher, loadRegionEvent, getPanel, now } = {}) {
+    constructor({ eventBus, getDispatcher, loadRegionEvent, substrateId, getPanel, now } = {}) {
         this.eventBus = eventBus ?? null;
         this.getDispatcher = getDispatcher ?? (() => null);
         this.loadRegionEvent = loadRegionEvent;
+        this.substrateId = substrateId ?? FLASH_SEEDLING_SUBSTRATE_ID;
         this.getPanel = getPanel ?? (() => null);
         this.binding = new SeedlingRegionBinding({ now });
         this.adapter = null;
-        this._unsub = null;
+        this._unsubs = [];
         this._handler = (payload) => this.handleLoadRegion(payload);
+        this._activeHandler = (payload) => this.handleActiveSubstrateChanged(payload);
         // Diagnostics — the verify script reads these rather than inferring
         // behaviour from console text.
-        this.stats = { loads: 0, teleports: 0, regionMoves: 0, warnings: 0 };
+        this.stats = { loads: 0, teleports: 0, regionMoves: 0, warnings: 0, parks: 0, resumes: 0 };
     }
 
     start() {
-        if (this._unsub || !this.eventBus?.subscribe) return;
-        this._unsub = this.eventBus.subscribe(this.loadRegionEvent, this._handler);
-        // eventBus.subscribe returns an unsubscribe fn in some hosts and
-        // nothing in others; fall back to the explicit call.
-        if (typeof this._unsub !== 'function') {
-            this._unsub = () => this.eventBus.unsubscribe?.(this.loadRegionEvent, this._handler);
-        }
+        if (this._unsubs.length > 0 || !this.eventBus?.subscribe) return;
+        /**
+         * ⛔ BOTH SUBSCRIPTIONS OR NEITHER. A glue that heard `loadRegion` but
+         * not the active-substrate broadcast is exactly the pre-W6 state, and it
+         * is the one shape that reads as "wired" while doing the wrong thing.
+         */
+        this._unsubs.push(this._subscribe(this.loadRegionEvent, this._handler));
+        this._unsubs.push(this._subscribe(ACTIVE_SUBSTRATE_EVENT, this._activeHandler));
+    }
+
+    /** eventBus.subscribe returns an unsubscribe fn in some hosts and nothing
+     *  in others; fall back to the explicit call. */
+    _subscribe(event, handler) {
+        const off = this.eventBus.subscribe(event, handler);
+        return typeof off === 'function' ? off : () => this.eventBus.unsubscribe?.(event, handler);
     }
 
     stop() {
-        if (this._unsub) { this._unsub(); this._unsub = null; }
+        for (const off of this._unsubs) off();
+        this._unsubs = [];
         this.detachAdapter();
     }
 
@@ -84,6 +114,23 @@ export class SeedlingRegionGlue {
     handleLoadRegion(payload) {
         this.stats.loads += 1;
         this.apply(this.binding.onLoadRegion(payload ?? {}));
+    }
+
+    /**
+     * ⛓ `payload` is `{substrate, componentType, label, regionId}` or **null**
+     * (procgenPlayer publishes null when nothing is active) — and null parks,
+     * which is the correct reading of "no substrate owns the player".
+     *
+     * ⛔ Compared on the SUBSTRATE id, not on `componentType`: `flashPanel` is
+     * the component type of every flash-family entry, so a bounce region in the
+     * same panel would read as ours.
+     */
+    handleActiveSubstrateChanged(payload) {
+        const mine = payload?.substrate === this.substrateId;
+        const was = this.binding.active;
+        const effects = this.binding.setActive(mine);
+        if (was !== this.binding.active) this.stats[mine ? 'resumes' : 'parks'] += 1;
+        this.apply(effects);
     }
 
     apply(effects) {

@@ -357,6 +357,100 @@ describe('unmapped levels — the atlas is partial by design', () => {
     });
 });
 
+/**
+ * ⛓⛓⛓ **THE PARK, OVER THE PURE STATE MACHINE** (EDITOR INTEGRATION W6, H2;
+ * plan §11.1 A2). The glue's own suite proves the SUBSCRIPTION; these prove the
+ * RULE, with no event bus in sight.
+ */
+describe('the park — another substrate owns the region', () => {
+    it('starts ACTIVE, so a preset that never says otherwise behaves as it always did', () => {
+        const b = binding();
+        expect(b.active).toBe(true);
+        load(b, OVERWORLD, null);
+        b.onStateReport('level', 0);   // baseline
+        expect(types(b.onStateReport('level', 2))).toEqual(['regionMove']);
+    });
+
+    it('swallows EVERY report while parked — no crossing, no warn, no remembered position', () => {
+        const b = binding();
+        load(b, OVERWORLD, null);
+        b.onStateReport('level', 0);   // baseline
+        b.setActive(false);
+        expect(b.onStateReport('level', 2)).toEqual([]);     // a MAPPED target
+        expect(b.onStateReport('level', 42)).toEqual([]);    // an UNMAPPED one
+        expect(b.onStateReport('playerPositionX', 999)).toEqual([]);
+        expect(b.lastSpawn.x).toBeNull();
+        // ⛔ NOT VACUOUS — the identical report moves the region once unparked.
+        b.setActive(true);
+        expect(types(b.onStateReport('level', 2))).toEqual(['regionMove']);
+    });
+
+    it('never ARMS an echo while parked, so the first real crossing after the return survives', () => {
+        const b = binding();
+        load(b, OVERWORLD, null);
+        b.onStateReport('level', 0);
+        b.setActive(false);
+        b.onStateReport('level', 2);
+        expect(b.pendingArrival).toBeNull();
+        expect(b.lastLevel).toBe(0);
+    });
+
+    /**
+     * ⛔ AND AN IN-FLIGHT ONE IS DROPPED WHEN PARKING. An armed echo left
+     * standing through the whole excursion would swallow the first genuine
+     * crossing after the return.
+     */
+    it('drops an in-flight arrival echo at the moment of parking', () => {
+        const b = binding();
+        load(b, OVERWORLD, null);
+        b.onStateReport('level', 0);      // baseline
+        load(b, HOUSE, { exit_id: 'door' });   // arms the echo for level 86
+        expect(b.pendingArrival).not.toBeNull();
+        b.setActive(false);
+        expect(b.pendingArrival).toBeNull();
+    });
+
+    it('queues an arrival that lands while parked and releases it ONCE on resume', () => {
+        const b = binding();
+        load(b, OVERWORLD, null);
+        b.onStateReport('level', 0);
+        b.setActive(false);
+        // procgenPlayer publishes loadRegion BEFORE activeSubstrateChanged.
+        expect(types(load(b, HOUSE, { exit_id: 'door' }))).toEqual(['info']);
+        expect(b.pendingSpawn).not.toBeNull();
+        const resumed = b.setActive(true);
+        expect(types(resumed)).toEqual(['info', 'teleport']);
+        expect(resumed.at(-1)).toMatchObject({ type: 'teleport', level: 86 });
+        expect(b.pendingSpawn).toBeNull();
+        // ⛔ ONCE. A repeat broadcast is not a transition, and a further
+        // park/resume round trip has nothing left to fire.
+        expect(b.setActive(true)).toEqual([]);
+        b.setActive(false);
+        expect(types(b.setActive(true))).toEqual(['info']);
+    });
+
+    it('un-parking with nothing queued teleports nobody', () => {
+        const b = binding();
+        load(b, OVERWORLD, null);
+        b.onStateReport('level', 0);
+        b.setActive(false);
+        expect(types(b.setActive(true))).toEqual(['info']);
+    });
+
+    it('a queued arrival on a game that has not BOOTED stays queued for the baseline', () => {
+        const b = binding();
+        b.setActive(false);
+        load(b, HOUSE, { exit_id: 'door' });
+        expect(b.pendingSpawn).not.toBeNull();
+        // resume first: the game is still silent, so nothing may be teleported
+        expect(types(b.setActive(true))).toEqual(['info']);
+        expect(b.pendingSpawn).not.toBeNull();
+        // …and the baseline releases it, exactly as it does with no park at all
+        expect(types(b.onStateReport('level', 0))).toEqual(['teleport']);
+        expect(b.pendingSpawn).toBeNull();
+    });
+});
+
 describe('a fresh adapter (preset switch / reload)', () => {
     it('re-arms the arrival for the region we are already in', () => {
         const b = binding();

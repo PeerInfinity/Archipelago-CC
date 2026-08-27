@@ -9,10 +9,11 @@ import { fileURLToPath } from 'node:url';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-import { SeedlingRegionGlue } from './seedlingRegionGlue.js';
+import { ACTIVE_SUBSTRATE_EVENT, SeedlingRegionGlue } from './seedlingRegionGlue.js';
 import {
     substrateRegistryEntry as seedlingEntry,
     FLASH_SEEDLING_LOAD_REGION_EVENT,
+    FLASH_SEEDLING_SUBSTRATE_ID,
 } from './flashSeedlingLibrary.js';
 
 const PRESET = JSON.parse(readFileSync(
@@ -49,6 +50,12 @@ function makeHarness() {
         panelLines,
         emitLoad: (payload) => subs.get(FLASH_SEEDLING_LOAD_REGION_EVENT)(payload),
         subscribed: () => subs.has(FLASH_SEEDLING_LOAD_REGION_EVENT),
+        // ⛓ procgenPlayer's own payload shape (`buildActiveSubstratePayload`).
+        emitActive: (substrate, regionId) => subs.get(ACTIVE_SUBSTRATE_EVENT)(
+            substrate === null ? null
+                : { substrate, componentType: 'flashPanel', label: substrate, regionId },
+        ),
+        activeSubscribed: () => subs.has(ACTIVE_SUBSTRATE_EVENT),
     };
 }
 
@@ -66,6 +73,24 @@ describe('wiring', () => {
         expect(h.subscribed()).toBe(true);
         h.glue.stop();
         expect(h.subscribed()).toBe(false);
+    });
+
+    /**
+     * ⛔ EDITOR INTEGRATION W6 (H2). MEASURED at W5: `flashPanel/` held ZERO
+     * occurrences of this event. Both subscriptions go up together and come
+     * down together — a glue that heard only `loadRegion` is exactly the
+     * pre-W6 state, and it is the shape that reads as wired while the game
+     * keeps publishing crossings out of a region that is no longer current.
+     */
+    it('ALSO subscribes procgen:activeSubstrateChanged, and drops it on stop', () => {
+        expect(h.activeSubscribed()).toBe(true);
+        h.glue.stop();
+        expect(h.activeSubscribed()).toBe(false);
+    });
+
+    it('takes its own substrate id from the registry entry, not a literal', () => {
+        expect(h.glue.substrateId).toBe(FLASH_SEEDLING_SUBSTRATE_ID);
+        expect(seedlingEntry.id).toBe(FLASH_SEEDLING_SUBSTRATE_ID);
     });
 
     it('installs its report hook on the adapter and removes it on detach', () => {
@@ -141,5 +166,97 @@ describe('crossing', () => {
         expect(h.published).toEqual([]);
         expect(h.glue.stats.warnings).toBe(1);
         expect(console.warn).toHaveBeenCalledWith(expect.stringContaining('no marked exit to'));
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ THE PARK — another substrate owns the region (W6, H2)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('the park', () => {
+    const boot = () => {
+        h.glue.attachAdapter(h.adapter);
+        loadRegion('overworld_start__r8c0', null);
+        h.adapter.onStateReport('level', 0);   // baseline
+        h.adapter.onStateReport('level', 0);   // the arrival teleport, same level
+        h.adapter.teleport.mockClear();
+    };
+
+    /**
+     * ⛔⛔ **THE DEFECT, AS A ROW.** Pre-W6 this published a `user:regionMove`
+     * out of `overworld_start__r8c0` — a region the player had already left,
+     * because a MAZE region never publishes `flashSeedling:loadRegion` and so
+     * never rewrote `this.region`.
+     */
+    it('a level report while ANOTHER substrate is active moves nothing and warns nothing', () => {
+        boot();
+        h.emitActive('maze', 'mz.mz_cross');
+        expect(h.glue.stats.parks).toBe(1);
+        h.adapter.onStateReport('level', 2);    // a real, mapped crossing target
+        h.adapter.onStateReport('level', 42);   // and an unmapped one
+        expect(h.published).toEqual([]);
+        expect(h.glue.stats.regionMoves).toBe(0);
+        expect(h.glue.stats.warnings).toBe(0);
+        // ⛔ NOT VACUOUS — the SAME report moves the region when unparked.
+        h.emitActive(FLASH_SEEDLING_SUBSTRATE_ID, 'overworld_start__r8c0');
+        h.adapter.onStateReport('level', 2);
+        expect(h.glue.stats.regionMoves).toBe(1);
+    });
+
+    /**
+     * ⛓ THE RETURN LEG, IN THE ORDER THE HOST REALLY SENDS IT: procgenPlayer
+     * publishes the target's `loadRegion` and THEN `activeSubstrateChanged`
+     * (`publishLoadRegion`), so the arrival lands one event early and is queued.
+     */
+    it('queues an arrival that lands while parked, and releases it on resume — ONCE', () => {
+        boot();   // ⚠ boot() itself teleports once (its own arrival)
+        const before = h.glue.stats.teleports;
+        h.emitActive('maze', 'mz.mz_cross');
+        loadRegion('owls_nest_entrance', { exit_id: 'stairs_up' });
+        expect(h.adapter.teleport).not.toHaveBeenCalled();   // parked: held
+        h.emitActive(FLASH_SEEDLING_SUBSTRATE_ID, 'owls_nest_entrance');
+        expect(h.adapter.teleport).toHaveBeenCalledWith({ level: 2, x: 48, y: 16 });
+        expect(h.glue.stats.teleports).toBe(before + 1);
+        expect(h.glue.stats.resumes).toBe(1);
+        // ⛔ RELEASED ONCE. A repeat of the same broadcast is not a transition,
+        // and even a park/resume round trip has nothing left queued.
+        h.emitActive(FLASH_SEEDLING_SUBSTRATE_ID, 'owls_nest_entrance');
+        h.emitActive('maze', 'mz.mz_cross');
+        h.emitActive(FLASH_SEEDLING_SUBSTRATE_ID, 'owls_nest_entrance');
+        expect(h.glue.stats.teleports).toBe(before + 1);
+    });
+
+    it('a NULL broadcast parks too — nothing owning the player is not us owning it', () => {
+        boot();
+        h.emitActive(null);
+        expect(h.glue.stats.parks).toBe(1);
+        h.adapter.onStateReport('level', 2);
+        expect(h.published).toEqual([]);
+    });
+
+    it('another flash-FAMILY substrate in the same panel still parks us', () => {
+        // ⛓ the discriminating case for "compare the substrate, not the
+        //   componentType": bounce renders in a flash panel too.
+        boot();
+        h.emitActive('bounce', 'bn.tower');
+        expect(h.glue.stats.parks).toBe(1);
+        h.adapter.onStateReport('level', 2);
+        expect(h.published).toEqual([]);
+    });
+
+    it('a preset that never broadcasts behaves exactly as it did — active by default', () => {
+        boot();
+        h.adapter.onStateReport('level', 2);
+        expect(h.glue.stats.regionMoves).toBe(1);
+        expect(h.glue.stats.parks).toBe(0);
+        expect(h.glue.stats.resumes).toBe(0);
+    });
+
+    it('re-broadcasting OUR OWN substrate is not a transition and counts nothing', () => {
+        boot();
+        h.emitActive(FLASH_SEEDLING_SUBSTRATE_ID, 'overworld_start__r8c0');
+        h.emitActive(FLASH_SEEDLING_SUBSTRATE_ID, 'overworld_start__r8c0');
+        expect(h.glue.stats.resumes).toBe(0);
+        expect(h.glue.stats.parks).toBe(0);
     });
 });

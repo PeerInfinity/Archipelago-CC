@@ -45,6 +45,28 @@
  * region by region. A level change to somewhere the current region has no exit
  * to therefore WARNS LOUDLY and does not move the AP region. Silently no-oping
  * would read as a complete map; crashing would make a partial atlas unusable.
+ *
+ * ## The PARK — another substrate owns the region (EDITOR INTEGRATION W6, H2)
+ *
+ * ⛔ flashPanel is NOT procgen-only, so it has deliberately never had a
+ * `SubstrateInactiveOverlay` (`flash.md`) — the game keeps running while a maze
+ * region is the active one. MEASURED at W5: `flashPanel/` contained ZERO
+ * occurrences of `procgen:activeSubstrateChanged`, and the consequence is
+ * concrete: `this.region` is only rewritten by `flashSeedling:loadRegion`, which
+ * a MAZE region never publishes, so the binding retained the STALE Seedling
+ * region and any further level change in the still-live panel resolved a
+ * crossing OUT OF A REGION THAT IS NO LONGER CURRENT.
+ *
+ * The bounce bridge has had exactly this guard since it shipped
+ * (`flashSubstrate/bridge.js:204-207`). This is its twin, and it lives HERE
+ * rather than in the panel because parking is a fact about the BINDING's
+ * subject — the panel is still visible, still running, still the flash panel;
+ * what stops is our reading of its reports as AP movement.
+ *
+ * While parked: every property report is dropped (no crossing, no warn, no echo
+ * armed, no remembered position), and an arrival that lands meanwhile is QUEUED
+ * on the same `pendingSpawn` slot the not-yet-booted case uses. Un-parking
+ * releases it ONCE. Un-parking with nothing queued does nothing at all.
  */
 
 /** How long an in-flight arrival teleport stays armed before it is written off. */
@@ -118,6 +140,13 @@ export class SeedlingRegionBinding {
         this.region = null;
         this.world = null;
         this.arrivedFrom = null;
+        /**
+         * ⛓ Is THIS substrate the one procgen currently has the player in?
+         * Defaults to TRUE: a host that never tells us is the status quo this
+         * binding shipped with, and a default of false would silently park a
+         * single-substrate preset that publishes nothing we recognise.
+         */
+        this.active = true;
         // Trap 2: the boot report is baseline, not a crossing.
         this.baselineSeen = false;
         this.lastLevel = null;
@@ -157,6 +186,21 @@ export class SeedlingRegionBinding {
                     + `which is not one of its marked exits — spawning at "${spawn.exitId}"`,
             });
         }
+        if (!this.active) {
+            // ⛔ ANOTHER SUBSTRATE OWNS THE REGION. procgenPlayer publishes the
+            // target's loadRegion BEFORE `procgen:activeSubstrateChanged`
+            // (`procgenPlayer/index.js`), so the arrival for a RETURN to this
+            // substrate legitimately lands here one event early. Queue it on the
+            // same slot the not-yet-booted case uses; `setActive(true)` releases
+            // it, and so does the baseline if the game has not booted yet.
+            this.pendingSpawn = spawn;
+            effects.push({
+                type: 'info',
+                message: `[region atlas] arrival in "${this.region}" queued — another substrate `
+                    + 'is currently active',
+            });
+            return effects;
+        }
         if (!this.baselineSeen) {
             // The game is not reporting yet (the wasm page waits on its own
             // ▶ Start user gesture, which can take minutes). Hold the arrival;
@@ -183,8 +227,50 @@ export class SeedlingRegionBinding {
         this.pendingSpawn = this.world ? resolveArrivalSpawn(this.world, this.arrivedFrom) : null;
     }
 
+    /**
+     * procgen moved the player into a region of ANOTHER substrate, or back into
+     * one of ours. Returns EFFECTS like every other input; only a TRANSITION
+     * does anything, so a host that re-publishes the same state is free.
+     */
+    setActive(active) {
+        const next = !!active;
+        if (next === this.active) return [];
+        this.active = next;
+        if (!next) {
+            /**
+             * ⛔ THE IN-FLIGHT ARRIVAL IS DROPPED, DELIBERATELY. Its echo mark
+             * would otherwise sit armed through the whole excursion and swallow
+             * the first REAL crossing after the return.
+             */
+            this.pendingArrival = null;
+            return [{
+                type: 'info',
+                message: `[region atlas] another substrate now owns the region — "${this.region}" `
+                    + 'is PARKED: the game keeps running, but its reports no longer move the AP region',
+            }];
+        }
+        const effects = [{
+            type: 'info',
+            message: `[region atlas] this substrate is active again ("${this.region}")`,
+        }];
+        // ⛔ ONLY a queued arrival is released, and only ONCE — `pendingSpawn` is
+        // cleared BEFORE `_beginArrival`, so a second `setActive(true)` (or a
+        // baseline report arriving afterwards) has nothing left to fire.
+        const spawn = this.pendingSpawn;
+        if (!spawn || !this.baselineSeen) return effects;
+        this.pendingSpawn = null;
+        return effects.concat(this._beginArrival(spawn));
+    }
+
     /** One BridgeGeneric property report, straight off the adapter. */
     onStateReport(property, value) {
+        /**
+         * ⛔⛔ THE PARK. The game is still running behind whatever substrate
+         * owns the region now; nothing it reports is AP movement. Dropped
+         * WHOLE — position included — so no stale coordinate survives the
+         * excursion to tie-break the first crossing after the return.
+         */
+        if (!this.active) return [];
         if (property === 'playerPositionX') { this.lastSpawn.x = Number(value); return []; }
         if (property === 'playerPositionY') { this.lastSpawn.y = Number(value); return []; }
         if (property !== 'level') return [];
