@@ -780,6 +780,48 @@ ARGUMENT, i.e. before `applySet`'s own catch, so a binding that refuses to mint
 threw straight out of the click listener. Invisible until a substrate whose
 `addRoomOp` can refuse existed — see `gotchas.md`.
 
+### …and the same arm edits a WORLD (`?world=<bundle>.zip`)
+
+**A WORLD is a bundle of a Seedling level set, a region library and the
+`world.json` that names them** (`architecture.md` § "The WORLD"), and this arm
+opens one over W2's COMPOSITE session — the same `mountSetEditor`, one row of
+BOTH parts' rooms. ⚖ `lab.html` is the world editor's page by ruling, because
+`watch.html` is R9's tree and its 226-row gate is a quoted standing row.
+
+⛔ **`?world=` names a `.zip`, never a JSON.** A world NAMES its parts and holds
+no rooms, so a bare `world.json` pasted here REFUSES BY NAME — it says which
+kind it is, lists the parts it names, and says the bundle is where the documents
+it names travel. `?library=`'s two failure modes hold unchanged one document up:
+a TRANSPORT failure is fatal by name, a CONTENT failure goes in the LOAD box.
+
+⛔ **A world and a library are ALTERNATIVES.** Loading a world drops a held
+library loudly and vice versa; an overlay under a world refuses, because a world
+IS the composite overlay and carries one per PART inside itself. Each part goes
+through its OWN validator first, and the world then binds them BY `doc_id` —
+never by position, naming which part disagreed and both ids.
+
+⛓ **Every cell carries a SUBSTRATE badge**, read off `readCell().substrate`.
+⚖ The one-renderer law: a maze cell goes to `makeDrawRoomStill` and a Seedling
+cell gets a CARD (the substrate, the room's name, its source kind), because this
+page may not import Seedling's painter.
+
+⛓ **A room opens in ITS substrate's editor.** A maze room opens on this page's
+canvas at the GLOBAL index; a Seedling room opens in `watch.html`'s EDIT arm,
+hosted in a frame here, through the room-editor contract. Two at once is not
+supported and the strip REFUSES the second by name before it opens — so three
+sessions can exist (the strip's, a maze room's, a Seedling room's in its own
+page) and the room note says which page owns the third one's `Ctrl+Z`.
+
+⛓ **A CROSS-PART door is authored from the DERIVED exit ids** — what a world
+link names — and not from either part's own vocabulary; `one_way` starts unset
+and refuses unset, quoting both substrates' conventions; the DISPLACEMENT is
+shown before the press, off the derivation itself.
+
+⛓ **The download is the four documents in one bundle, one stamp** (`world_id` is
+minted at the press), and beside it an **ALL-MAZE `rules.json`** — M2, the
+PLAYABLE one today, because a mixed world does not play in the app yet. It is a
+compile-time projection and nothing is written back.
+
 ## The action queue (`mazeRoomQueue.js`)
 
 A tile-level action queue with a Cavernous-2-style icon-row UI in the panel. Three verbs: `move` (N/E/S/W — block pushes ride the same verb via a content module's `onMove` hook), `wait` (one tick, spacebar), and `locationCheck` (explicit check at the current tile — used by saved/replayed queues and loops-delegation expansion; direct keypresses rarely emit it because checks fire as a side effect of stepping onto a location tile). Execution is synchronous, and the queue is what backs the maze's `customQueues: true` loop-mode capability.
