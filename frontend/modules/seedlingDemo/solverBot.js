@@ -1494,7 +1494,60 @@ function senseContacts(run) {
  * — §34.7, thirteen rows, every one the MODEL's word until S1 asks the game —
  * is what this state was measured to buy.
  */
-export const ALLOW_DASH_ROSTER_WIDE = true;
+/**
+ * ⛓⛓⛓ R9 SLICE 12i — **AND IT IS A THREE-STATE KNOB NOW, NOT A BOOLEAN**
+ * (user, 2026-08-27: *"Yes, I want to implement the dash settings. Next time
+ * we do a full record, I might want to change the default to no dashing, if
+ * it makes that much of a difference."*).
+ *
+ * `none` — the window pass is not asked at all and `allowDash` is `false`:
+ *   exactly the pre-flip roster, and the arm a `none` default would adopt.
+ * `full` — the pass considers ONE candidate, the whole `DASH_CHAIN_PATTERN`.
+ * `all`  — every prefix of it (⚖ ruling 45(b)), which is TODAY'S DEFAULT and
+ *   the state every committed tape was recorded under.
+ *
+ * ⛔⛔ **THE DEFAULT IS THE USER'S, AND IT IS `all` (⚖ ruling 42's PERMISSION,
+ * ⚖ ruling 40's "a re-record is a checkpoint event").** Moving it re-plans the
+ * 205 dashes on 16 tapes §42.7 counts, which is a re-record decision taken at
+ * a full record — never a side effect of a code change. What 12i adds is the
+ * ABILITY to ask, per run, at no cost to the recorded roster.
+ */
+export const DASH_MODES = Object.freeze(['none', 'full', 'all']);
+
+/** @see DASH_MODES — the roster's own state, and the one every tape carries. */
+export const DEFAULT_DASH_MODE = 'all';
+
+/**
+ * ⛔ A MODE OUTSIDE THE SET IS A `fail()` BY NAME, NEVER A FALLBACK. A fallback
+ * reinstates the defect it replaced: `--dash=nome` would silently plan under
+ * `all` and the header would say so, which is the exact shape of a run whose
+ * trace lies about what planned it.
+ */
+export function assertDashMode(mode, where = 'assertDashMode') {
+    if (!DASH_MODES.includes(mode)) {
+        fail(`${where}: \`${mode}\` is not a dash mode. The three states are `
+            + `${DASH_MODES.join(' | ')} — \`none\` does not ask the window pass at all, `
+            + '`full` asks it with the whole chain, `all` asks it with every prefix '
+            + '(⚖ ruling 45(b)). There is no fallback: a mode nobody spelled is a run '
+            + 'whose header would name a plan it did not make.');
+    }
+    return mode;
+}
+
+/**
+ * ⛓ KEPT AS A **DERIVED ALIAS**, and deprecated — @deprecated read
+ * `DEFAULT_DASH_MODE` (or the `dashMode` a `ctx` carries) instead.
+ *
+ * ⛔ IT IS NOT THE DASH PERMISSION ANY MORE, AND THAT MATTERS FOR EXACTLY ONE
+ * REASON: three of its five reads were never about dashing. ⚖ Ruling 54 (5)
+ * put ⚖ 46's collect stance and ⚖ 47's early walk BEHIND this constant as
+ * their release gate (§40.3), so `economies` DEFAULTS off it and would revert
+ * with it. Keeping the alias keeps that yoke exactly as ruled — and keeps
+ * `dashMode`, which is about dashing alone, from silently dragging four
+ * committed artifacts with it (`solveSegment`'s `economies` docblock names
+ * them).
+ */
+export const ALLOW_DASH_ROSTER_WIDE = DEFAULT_DASH_MODE !== 'none';
 
 /**
  * ⛓⛓⛓ R9 SLICE 12b — **THE ONE PLACE A STRIKE POLICY IS CONSTRUCTED.**
@@ -1512,7 +1565,9 @@ export const ALLOW_DASH_ROSTER_WIDE = true;
  * gate `stepChasersNow` opens with — trap 563), and without a sword `set
  * slashing`'s outer gate refuses every press anyway.
  */
-export function strikePolicyFor(run, { dashPlan = null } = {}) {
+export function strikePolicyFor(run, { dashPlan = null,
+    dashMode = DEFAULT_DASH_MODE } = {}) {
+    assertDashMode(dashMode, 'strikePolicyFor');
     const hasSword = run.inventory?.hasSword || run.inventory?.hasGhostSword || false;
     if (!hasSword) return null;
     /**
@@ -1527,7 +1582,13 @@ export function strikePolicyFor(run, { dashPlan = null } = {}) {
     if (!dashPlan && (run.strikeBodies ?? []).length === 0) return null;
     return createStrikePolicy({
         facingToward, facingKeys: FACING_KEYS, hasSword, dashPlan,
-        allowDash: dashPlan ? true : ALLOW_DASH_ROSTER_WIDE,
+        /**
+         * ⛓ R9 SLICE 12i — the boolean the policy enforces is now a QUESTION
+         * ABOUT THE MODE, asked in one place. A handed plan is still its own
+         * grant (`dashPlan ? true`), which is what lets an offline proof run
+         * at a `none` head.
+         */
+        allowDash: dashPlan ? true : dashMode !== 'none',
         /**
          * ⛓⛓⛓ R9 SLICE 12e‴ (⚖ RULING 53) — the talk circles, from the run,
          * at the ONE construction site so the preview and the drive refuse
@@ -2070,6 +2131,28 @@ export const DASH_CHAIN_PREFIXES = Object.freeze(
 );
 
 /**
+ * ⛓⛓⛓ R9 SLICE 12i — **THE CANDIDATE SET IS DERIVED FROM THE MODE, AND IT IS
+ * THE ONLY PLACE A MODE BECOMES A SET.**
+ *
+ * ⛔ NOTHING HERE IS TYPED (⚖ ruling 17). `full` is the pattern the two
+ * `combatVerbs` constants decide; `all` is every prefix of that pattern; a
+ * chain that gains or loses a dash tomorrow moves BOTH arms with it. `none`
+ * returns the empty set — but the empty set is not how `none` is spent: the
+ * call site does not ASK the pass at all, because asking it with `[]` is a
+ * scan that reports `scanned` start ticks and no candidates, which reads like
+ * a planner that found nothing rather than one that was never consulted.
+ *
+ * ⛔ A MODE OUTSIDE THE SET FAILS BY NAME HERE TOO, so a set can never be
+ * silently smaller than the mode a header printed.
+ */
+export function dashPrefixesFor(mode) {
+    assertDashMode(mode, 'dashPrefixesFor');
+    if (mode === 'none') return Object.freeze([]);
+    if (mode === 'full') return Object.freeze([DASH_CHAIN_PATTERN]);
+    return DASH_CHAIN_PREFIXES;
+}
+
+/**
  * ⛓⛓⛓ R9 SLICE 12c′, ⚖ RULING 35 — **`planSwordDash`: A PRESS TAKEN AS A
  * MOVE.**
  *
@@ -2133,11 +2216,32 @@ export const DASH_CHAIN_PREFIXES = Object.freeze(
  * @returns {{plan: ?object, ticks: ?number, saved: ?number, baseline: number,
  *   legs: ?number[], candidates: object[], why: ?string}}
  */
-export function planSwordDash(run, wps, { tolerance = 0, certify = null } = {}) {
+export function planSwordDash(run, wps, { tolerance = 0, certify = null,
+    dashMode = DEFAULT_DASH_MODE } = {}) {
+    /**
+     * ⛓⛓⛓ R9 SLICE 12i — **THE PASS READS ITS CANDIDATE SET, NEVER THE
+     * CONSTANT**, and the set is the mode's own derivation.
+     *
+     * ⛔ `none` IS REFUSED HERE RATHER THAN SCANNED EMPTY. The call site is
+     * meant to skip this function entirely at `none`; a caller that forgot
+     * would otherwise run the whole sweep, ask nothing at each tick, and hand
+     * back a refusal whose `scanned` counts start ticks — a bounded sweep that
+     * names the wrong bound. Loud beats plausible.
+     */
+    assertDashMode(dashMode, 'planSwordDash');
+    if (dashMode === 'none') {
+        fail('planSwordDash was asked under `dashMode: none`, which is the state that '
+            + 'means "do not ask". The permission is spent at the call site — `walkTo` '
+            + 'does not build a plan at all — so reaching here is a threading defect, '
+            + 'not an empty candidate set.');
+    }
+    const prefixes = dashPrefixesFor(dashMode);
     const startTick = run.ticksCompleted;
     const candidates = [];
     const refuse = (why) => ({ plan: null, ticks: null, saved: null, baseline: null,
-        legs: null, windows: null, scanned: candidates.length, candidates, why });
+        legs: null, windows: null, scanned: candidates.length, candidates, why,
+        // ⛓ 12i: a report says which mode planned it and how wide its set was.
+        mode: dashMode, prefixes: prefixes.length });
     /**
      * ⛔ NO SWORD, NO DASH — REFUSED FIRST AND BY NAME. `set slashing`'s outer
      * gate needs `hasSword || hasGhostSword`, so a press in a pre-sword room
@@ -2169,7 +2273,7 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null } = {}) 
         return [...legs].map((n) => n ?? 0);
     };
     const previewFor = (dashPlan) => {
-        const strike = strikePolicyFor(run, { dashPlan });
+        const strike = strikePolicyFor(run, { dashPlan, dashMode });
         return { walk: previewWalk(run, wps, tolerance, { strike }), strike };
     };
     /**
@@ -2239,11 +2343,15 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null } = {}) 
      * the pass keeps the SHORTEST CERTIFIED WALK at each start tick, ties broken
      * by FEWER PRESSES.
      *
-     * ⛔ THE COST IS NAMED RATHER THAN ABSORBED: this is `DASH_CHAIN_PREFIXES.length`
+     * ⛔ THE COST IS NAMED RATHER THAN ABSORBED: this is `prefixes.length`
      * previews per start tick where 12c′ took one, and `scanned` counts every
      * one of them — so a reader can tell a scan that asked four questions per
      * tick from one that asked one. The candidate rows carry `prefix` and
      * `presses` for the same reason.
+     *
+     * ⛓ R9 SLICE 12i: `prefixes` is `dashPrefixesFor(dashMode)` — FOUR at
+     * `all` (the roster's state and every committed tape's), ONE at `full`.
+     * `none` never reaches this loop.
      *
      * ⛓ THE TIE-BREAK IS NOT COSMETIC. A shorter prefix that walks the same
      * number of ticks has spent fewer presses, and every press is a key the
@@ -2367,7 +2475,7 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null } = {}) 
     };
     while (at < startTick + current) {
         let best = null;
-        for (const pattern of DASH_CHAIN_PREFIXES) {
+        for (const pattern of prefixes) {
             const got = evaluateAt(at, pattern);
             candidates.push(got.row);
             if (!got.row.certified) continue;
@@ -2386,6 +2494,20 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null } = {}) 
         }
     }
     if (!windows.length) {
+        /**
+         * ⛔⛔ R9 SLICE 12i — **THIS SENTENCE IS NOT FREE, AND IT IS NOT
+         * TOUCHED.** It reaches the trace as `swordDash.why`, and a trace byte
+         * is a producer `--check` md5 (§40.5: "prose is not free to a
+         * producer"). The mode rides in `mode`/`prefixes`, which the walk row
+         * emits only when the mode is NOT the default — so every committed
+         * sidecar stays byte-identical.
+         *
+         * ⚠ RESIDUE, NAMED NOT FIXED: `${candidates.length} start tick(s)` has
+         * counted PREVIEWS since 12c‴ gave each start tick four of them. The
+         * wording is wrong by a factor of `prefixes.length` and correcting it
+         * would move all seven md5s, so it is 12i's residue rather than 12i's
+         * edit.
+         */
         return { ...refuse(`no dash window certified faster than the undashed ${baseline} `
             + `tick(s) — ${candidates.length} start tick(s) scanned, each with its own `
             + 'reason'), baseline };
@@ -2404,6 +2526,11 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null } = {}) 
         scanned: candidates.length,
         candidates,
         why: null,
+        // ⛓ R9 slice 12i: the mode and the width of the set it was asked with.
+        // A row that reads the DEFAULT is a landmine under a flipped default
+        // (kickoff §40.6), so a report names the build it ran under.
+        mode: dashMode,
+        prefixes: prefixes.length,
     };
 }
 
@@ -6774,7 +6901,15 @@ const KILL_BY_CEILING_BOUND = ARROW_KILL_FLOOR * 3 + HOLD_SLACK;
  * carried so the trace can answer "why there".
  */
 export function deriveKillByChaser(run, body, contacts,
-    { aim = null, allowTeleporter = null, tolerance = 0 } = {}) {
+    /**
+     * ⛓ R9 slice 12i — `dashMode` rides down here for the same reason ⚖ 46's
+     * `economies` rides down to `deriveStance`: this is the one derivation
+     * outside `solveSegment`'s closure that builds a strike policy, and a
+     * policy built at the roster's default inside a segment granted a
+     * different one is two builds pretending to be one.
+     */
+    { aim = null, allowTeleporter = null, tolerance = 0,
+        dashMode = DEFAULT_DASH_MODE } = {}) {
     if (!(run.strikeBodies ?? []).some((b) => b.id === body.id)) {
         return { stance: null, why: `${body.id} is not a body this run steps — the chaser `
             + 'arm needs a live position, and a static census body has none' };
@@ -6880,7 +7015,7 @@ export function deriveKillByChaser(run, body, contacts,
     const pitch = DEFAULT_LATTICE;
     const here = nodeAt(run.state.x, run.state.y, pitch);
     const planOpts = solverPlanOpts(run, contacts);
-    const strikeFor = () => strikePolicyFor(run);
+    const strikeFor = () => strikePolicyFor(run, { dashMode });
 
     /**
      * ⛔ CONDITION 4 IS ASKED ONLY WHERE IT CAN DISCRIMINATE. An `aim` may be
@@ -7191,7 +7326,30 @@ export function solveSegment({
      * is the same shape, and the reason this is one name and not two).
      */
     economies = ALLOW_DASH_ROSTER_WIDE,
+    /**
+     * ⛓⛓⛓ R9 SLICE 12i — **THE DASH PERMISSION, AND IT IS A FOURTH NAME
+     * BESIDE `economies` RATHER THAN A RENAME OF IT.**
+     *
+     * ⛔ THE THREE `economies` READS ABOVE WERE NEVER DASH SITES. ⚖ Ruling
+     * 54 (5) put ⚖ 46's collect stance and ⚖ 47's early walk BEHIND
+     * `ALLOW_DASH_ROSTER_WIDE` as their RELEASE GATE (§40.3) — they merely
+     * DEFAULT off it. Spelling them `dashMode` would make `--dash=none`
+     * revert them too, which moves four committed artifacts (`r8-solve-10`
+     * 90 → 89 · `r8-solve-20` 365 → 332 · `r8-d2-19` 864 → 807 · `r8-d2-20`
+     * 781 → 756, the `economies` docblock's own census) that have nothing to
+     * do with dashing — and a table measuring "what does dashing cost" would
+     * have been measuring two changes.
+     *
+     * ⛓ SO THE TWO MEASURE DIFFERENT THINGS ON PURPOSE. A `--dash=` grant
+     * moves THIS option and leaves the constant alone, so it prices the
+     * window pass ALONE. Flipping `DEFAULT_DASH_MODE` to `none` drags the
+     * derived alias false WITH it, so it prices the pass ∪ the economies —
+     * which is the honest number for a default change, and the reason that
+     * decision is the user's.
+     */
+    dashMode = DEFAULT_DASH_MODE,
 }) {
+    assertDashMode(dashMode, 'solveSegment');
     if (!run || typeof run.advance !== 'function') fail('solveSegment needs a live run');
     if (!Array.isArray(goals) || goals.length === 0) {
         fail('solveSegment: goals must be a non-empty ordered list — the macro layer '
@@ -7718,7 +7876,8 @@ export function solveSegment({
          * the same held-set sequence — which `solverBot.test.js` asserts
          * directly rather than leaving to inspection.
          */
-        const walk = previewWalk(run, wps, tolerance, { strike: strikePolicyFor(run) });
+        const walk = previewWalk(run, wps, tolerance,
+            { strike: strikePolicyFor(run, { dashMode }) });
         const hit = probeSamples(walk.samples, except);
         if (hit) return { ...hit, eta: hit.tick - walk.startTick };
         /**
@@ -8160,11 +8319,11 @@ export function solveSegment({
              */
             const hunted = interceptOrder(removable, hit)[0] ?? target;
             const hunt = deriveKillByChaser(run, hunted, contacts,
-                { aim, allowTeleporter, tolerance });
+                { aim, allowTeleporter, tolerance, dashMode });
             if (hunt.stance) {
                 rowFor('kill', refused, { arm: 'chaser', target: hunted.id,
                     stance: hunt.stance, runnersUp: hunt.runnersUp });
-                const strike = strikePolicyFor(run);
+                const strike = strikePolicyFor(run, { dashMode });
                 if (!strike) {
                     killWhy = `${hunt.why} — but this run holds no sword, so `
                         + '`set slashing`\'s outer gate refuses every press.';
@@ -8472,9 +8631,14 @@ export function solveSegment({
              * ⛓⛓⛓ R9 SLICE 12c′, ⚖ RULING 35 — **THE PLANNER IS ASKED ONCE
              * PER CORRIDOR, ABOVE THE ONE POLICY THE WHOLE WALK SHARES.**
              *
-             * ⛔ AT `ALLOW_DASH_ROSTER_WIDE === false` IT IS NOT ASKED AT ALL,
-             * so no committed corridor can reach a plan and the flip is one
-             * line. When it is asked, its candidates are certified through
+             * ⛔ AT `dashMode === 'none'` IT IS NOT ASKED AT ALL, so no
+             * committed corridor can reach a plan and the mode is one line.
+             * ⛓ R9 slice 12i: NOT asked with an empty candidate set — an
+             * empty scan reports start ticks it never previewed, which reads
+             * like a planner that found nothing rather than one nobody
+             * consulted. `dash` stays `null` and the walk row carries no
+             * `swordDash` key at all, exactly as it did before ⚖ 41's flip.
+             * When it is asked, its candidates are certified through
              * `probeSamples` — this rung's OWN danger predicate, not a second
              * reading of it (trap 567) — and the plan is handed to
              * `strikePolicyFor`, the single construction site, so the preview
@@ -8487,10 +8651,10 @@ export function solveSegment({
              * walk row's `verb` and `path`. Measured: the first cut did
              * exactly that and every campaign trace lost its waypoint list.
              */
-            const dash = ALLOW_DASH_ROSTER_WIDE
-                ? planSwordDash(run, wps, { tolerance,
-                    certify: (samples) => probeSamples(samples, except) })
-                : null;
+            const dash = dashMode === 'none'
+                ? null
+                : planSwordDash(run, wps, { tolerance, dashMode,
+                    certify: (samples) => probeSamples(samples, except) });
             seeRow({
                 tick: perTick.length,
                 saw: saw(),
@@ -8498,10 +8662,24 @@ export function solveSegment({
                 strategy: {
                     verb: 'walk',
                     waypoints: wps.length,
+                    /**
+                     * ⛓⛓ R9 SLICE 12i — **THE MODE IS ON THE ROW, AND ONLY
+                     * WHEN IT IS NOT THE ROSTER'S.** A trace that did not say
+                     * which mode planned it would be a walk nobody can
+                     * attribute; a trace that said `all` on every committed
+                     * sidecar would move seven `--check` md5s for a word every
+                     * one of them already implies. So the two keys are ABSENT
+                     * at `DEFAULT_DASH_MODE` — the same shape ⚖ 47's
+                     * `earlyWalk` key uses (§40.3), and for the same reason.
+                     * At `none` there is no `dash` object at all.
+                     */
                     ...(dash ? { swordDash: { planned: Boolean(dash.plan),
                         ticks: dash.ticks, baseline: dash.baseline, saved: dash.saved,
                         windows: dash.windows ?? null, legs: dash.legs ?? null,
-                        scanned: dash.scanned, why: dash.why } } : {}),
+                        scanned: dash.scanned, why: dash.why,
+                        ...(dashMode === DEFAULT_DASH_MODE
+                            ? {}
+                            : { mode: dash.mode, prefixes: dash.prefixes }) } } : {}),
                 },
                 path: wps.map((w) => ({ x: w.x, y: w.y })),
                 rejected: [
@@ -8535,7 +8713,7 @@ export function solveSegment({
              * without one and the corridor is walked exactly as it was before
              * this existed.
              */
-            const strike = strikePolicyFor(run, { dashPlan: dash?.plan ?? null });
+            const strike = strikePolicyFor(run, { dashPlan: dash?.plan ?? null, dashMode });
             try {
                 for (let wi = 0; wi < wps.length; wi += 1) {
                     const last = wi === wps.length - 1;

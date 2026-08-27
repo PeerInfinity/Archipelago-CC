@@ -64,6 +64,7 @@ import {
     deriveKillByChaser, interceptOrder,
     previewWalk, resolveKillStrategy, solveSegment, strikePolicyFor,
     ALLOW_DASH_ROSTER_WIDE, DASH_CHAIN_PATTERN, DASH_CHAIN_PREFIXES,
+    DASH_MODES, DEFAULT_DASH_MODE, dashPrefixesFor,
     PREVIEW_AGREEMENT_BOUND, planSwordDash,
 } from './solverBot.js';
 // ⛓ R9 slice 12b — ⚖ ruling 30(c)'s equality is between these two exact
@@ -2743,14 +2744,27 @@ describe('R9 slice 12c′: the PLANNER dashes toward the exit', () => {
         const wps = planWaypoints(run.world, run.state,
             { x: tele.rect.x + 8, y: tele.rect.y + 8 },
             (run.world.teleporters ?? []).indexOf(tele), {});
-        const r = planSwordDash(run, wps, { tolerance: 0 });
+        /**
+         * ⛓⛓ R9 SLICE 12i — **THE BUILD IS NAMED, NOT DEFAULTED.** This row
+         * read the roster's default until 12i, which made it a landmine under
+         * a flipped default (kickoff §40.6): at `--dash=full` the multiple is
+         * 1 and the `% 4` would have gone red on a change that broke nothing.
+         * It now runs under an EXPLICIT `all` and asks the derivation for its
+         * own divisor; `full` gets its own row below.
+         */
+        const mode = 'all';
+        const set = dashPrefixesFor(mode);
+        const r = planSwordDash(run, wps, { tolerance: 0, dashMode: mode });
         expect(DASH_CHAIN_PREFIXES.map((p) => [...p]))
             .toEqual([[0], [0, 2], [0, 2, 8], [0, 2, 8, 14]]);
-        expect(r.scanned % DASH_CHAIN_PREFIXES.length).toBe(0);
+        expect(set).toBe(DASH_CHAIN_PREFIXES);
+        expect(r.mode).toBe(mode);
+        expect(r.prefixes).toBe(set.length);
+        expect(r.scanned % set.length).toBe(0);
         const byLength = new Map();
         for (const c of r.candidates) byLength.set(c.presses, (byLength.get(c.presses) ?? 0) + 1);
         expect([...byLength.keys()].sort((a, b) => a - b))
-            .toEqual(DASH_CHAIN_PREFIXES.map((p) => p.length));
+            .toEqual(set.map((p) => p.length));
         // …and every prefix was asked the SAME number of times, which is what
         // makes the multiple above a partition rather than a coincidence.
         expect(new Set(byLength.values()).size).toBe(1);
@@ -2983,6 +2997,119 @@ describe('R9 slice 12c′: the PLANNER dashes toward the exit', () => {
      */
     it('⛓ the roster-wide dash permission is ON at this head', () => {
         expect(ALLOW_DASH_ROSTER_WIDE).toBe(true);
+        // ⛓ R9 slice 12i: and it is DERIVED now — the boolean is a reading of
+        // the knob, so the two can never disagree about the roster's state.
+        expect(ALLOW_DASH_ROSTER_WIDE).toBe(DEFAULT_DASH_MODE !== 'none');
+    });
+
+    /**
+     * ⛓⛓⛓ R9 SLICE 12i — **THE THREE-STATE KNOB, AND THE DEFAULT IS THE
+     * USER'S** (user, 2026-08-27: *"Next time we do a full record, I might
+     * want to change the default to no dashing, if it makes that much of a
+     * difference."*).
+     *
+     * ⛔ THIS ROW PINS THE DEFAULT ON PURPOSE, and it is meant to red when the
+     * default moves. ⚖ Ruling 42 makes the roster default a PERMISSION the
+     * user owns and ⚖ ruling 40 makes moving it a re-record event: a default
+     * that could drift without a red is a re-record nobody licensed. When the
+     * user does move it, this row moves in the same commit as the tapes.
+     */
+    it('⛓⛓⛓ R9 slice 12i: `DEFAULT_DASH_MODE` is `all`, and the set is DERIVED '
+        + 'from the pattern in all three states', () => {
+        expect(DASH_MODES).toEqual(['none', 'full', 'all']);
+        expect(Object.isFrozen(DASH_MODES)).toBe(true);
+        expect(DEFAULT_DASH_MODE).toBe('all');
+        expect(DASH_MODES).toContain(DEFAULT_DASH_MODE);
+
+        // ⛔ MUTANT (m1)'s ROW. `dashPrefixesFor('all')` returning the single
+        // full pattern would make `all` and `full` the same build, and the
+        // `% set.length` row above would still pass (4 % 1 === 0). The
+        // DERIVATION is what is asserted: `all` IS every prefix, `full` is the
+        // one whole chain, and neither is typed.
+        expect(dashPrefixesFor('all').map((p) => [...p]))
+            .toEqual(DASH_CHAIN_PREFIXES.map((p) => [...p]));
+        expect(dashPrefixesFor('all').length).toBe(DASH_CHAIN_PATTERN.length);
+        expect(dashPrefixesFor('full').map((p) => [...p])).toEqual([[...DASH_CHAIN_PATTERN]]);
+        expect(dashPrefixesFor('full').length).toBe(1);
+        expect(dashPrefixesFor('none')).toEqual([]);
+        // …and the two non-empty arms agree on their LAST candidate, which is
+        // what makes `full` a restriction of `all` rather than a second table.
+        expect([...dashPrefixesFor('full')[0]])
+            .toEqual([...dashPrefixesFor('all')[dashPrefixesFor('all').length - 1]]);
+    });
+
+    /**
+     * ⛔ MUTANT (m5)'s ROW — a mode outside the set is a `fail()` BY NAME, at
+     * the derivation, never a fallback. A fallback reinstates the defect it
+     * replaced: `--dash=nome` would plan under `all` while a header said
+     * otherwise, which is a trace that lies about its own build.
+     */
+    it('⛓⛓ R9 slice 12i: a mode outside the set FAILS BY NAME, in every reader', () => {
+        for (const bad of ['nome', 'ALL', '', null, undefined, 0]) {
+            expect(() => dashPrefixesFor(bad)).toThrow(/is not a dash mode/);
+        }
+        /**
+         * ⛔ `undefined` IS DELIBERATELY NOT IN THIS SECOND LIST, and the
+         * asymmetry is the point: an option bag's `{ dashMode = DEFAULT }`
+         * treats `undefined` as ABSENT, so a caller forwarding an unset
+         * parameter reaches the roster's default rather than a refusal —
+         * which is exactly what `watchSolve`'s `maxTicksPerTarget` pass-through
+         * relies on. `null` and `0` are NOT absent and must still fail.
+         */
+        for (const bad of ['nome', 'ALL', '', null, 0]) {
+            expect(() => strikePolicyFor({ inventory: { hasSword: true }, strikeBodies: [] },
+                { dashMode: bad })).toThrow(/is not a dash mode/);
+        }
+        expect(strikePolicyFor({ inventory: { hasSword: false } },
+            { dashMode: undefined })).toBe(null);
+        // ⛓ and the message names the three states, so the fix is in the error.
+        expect(() => dashPrefixesFor('nome')).toThrow(/none \| full \| all/);
+    });
+
+    /**
+     * ⛔ MUTANT (m2)'s ROW — at `none` the pass is SKIPPED, never asked with an
+     * empty set. Asked with `[]` it would sweep every start tick, preview
+     * nothing, and hand back a refusal whose `scanned` counts ticks it never
+     * previewed. `planSwordDash` refuses to be that, loudly.
+     */
+    it('⛓⛓ R9 slice 12i: `planSwordDash` REFUSES `none` rather than scanning '
+        + 'an empty set', () => {
+        const run = runOf('r9-solve-2');
+        const tele = (run.world.teleporters ?? []).find((t) => t.to === 0);
+        const wps = planWaypoints(run.world, run.state,
+            { x: tele.rect.x + 8, y: tele.rect.y + 8 },
+            (run.world.teleporters ?? []).indexOf(tele), {});
+        expect(() => planSwordDash(run, wps, { tolerance: 0, dashMode: 'none' }))
+            .toThrow(/dashMode: none/);
+    });
+
+    /**
+     * ⛓⛓ R9 SLICE 12i — **`full` IS ONE CANDIDATE PER START TICK, AND THE
+     * ROWS SAY WHICH.** This is the arm ⚖ 45(b) replaced, kept askable so the
+     * user's next-full-record decision has three points and not two.
+     */
+    it('⛓⛓ R9 slice 12i: at `--dash=full` every candidate is the WHOLE chain '
+        + 'and `scanned` counts one per start tick', () => {
+        const run = runOf('r9-solve-2');
+        const tele = (run.world.teleporters ?? []).find((t) => t.to === 0);
+        const wps = planWaypoints(run.world, run.state,
+            { x: tele.rect.x + 8, y: tele.rect.y + 8 },
+            (run.world.teleporters ?? []).indexOf(tele), {});
+        const r = planSwordDash(run, wps, { tolerance: 0, dashMode: 'full' });
+        expect(r.mode).toBe('full');
+        expect(r.prefixes).toBe(1);
+        expect(r.scanned).toBeGreaterThan(0);
+        for (const c of r.candidates) {
+            expect(c.presses).toBe(DASH_CHAIN_PATTERN.length);
+            expect(c.prefix).toEqual([...DASH_CHAIN_PATTERN]);
+        }
+        // ⛓ THE COST IS THE POINT: `all` asks four questions where `full` asks
+        // one, on the SAME room, so the 4× the standing bulk rows paid at ⚖
+        // 41's flip is visible here rather than only in a wall clock.
+        const four = planSwordDash(run, wps, { tolerance: 0, dashMode: 'all' });
+        expect(four.prefixes).toBe(4);
+        expect(new Set(four.candidates.map((c) => c.presses)).size).toBe(4);
+        expect(new Set(r.candidates.map((c) => c.presses)).size).toBe(1);
     });
 });
 
@@ -3482,6 +3609,58 @@ describe('R9 slice P2: ⚖ 54 (5) — the economies are behind the roster-wide p
             .toBe(on.kill.earlyWalk.removedAt + opensOnTick(RESPONDERS.lock.fade));
         // ⛓ THE ECONOMY IS AN ECONOMY, both builds measured here.
         expect(off.ticks).toBeGreaterThan(on.ticks);
+    });
+
+    /**
+     * ⛓⛓⛓ R9 SLICE 12i — **THE MODE END TO END, ON A ROOM THAT ACTUALLY
+     * DASHES** (`r8-solve-18` carries 10 of §42.7's 205).
+     *
+     * ⛔ MUTANT (m2)'s ROW. At `none` the pass is not asked, so the walk rows
+     * carry NO `swordDash` key at all — not a key whose `scanned` reads 0. A
+     * call site that "skipped" by handing the pass an empty set would put the
+     * key back with a refusal in it, and this row is what tells the two apart.
+     *
+     * ⛔ MUTANT (m3)'s ROW, in the same breath. A producer that PARSES
+     * `--dash` and forgets to THREAD it would run the roster's `all` while its
+     * header said otherwise; the trace's own `mode` is the second reading that
+     * disagrees. The key is ABSENT at the default and PRESENT at every other
+     * mode, so "which build walked this" is answerable from the artifact.
+     */
+    it('⛓⛓⛓ R9 slice 12i: `none` emits no `swordDash` key, `full` names itself, '
+        + '`all` says nothing because it is the default', () => {
+        const solveL18 = (over) => {
+            const { run, committed } = runFromCommitted('r8-solve-18');
+            const exit = (levelSource(18).entities ?? []).find(
+                (e) => Number(e.attrs?.to) === 19);
+            const out = solveSegment({
+                run, goals: [{ kind: 'reach-exit', exit: { x: exit.x, y: exit.y } }],
+                name: 'r8-solve-18', boot: committed.boot, ...over,
+            });
+            return { json: JSON.stringify(out.trace), ticks: out.perTick.length };
+        };
+        const none = solveL18({ dashMode: 'none' });
+        const all = solveL18({ dashMode: 'all' });
+        const full = solveL18({ dashMode: 'full' });
+
+        expect(none.json).not.toContain('swordDash');
+        expect(all.json).toContain('swordDash');
+        expect(full.json).toContain('swordDash');
+
+        // ⛓ the DEFAULT says nothing — that is what keeps every committed
+        // sidecar byte-identical through this slice.
+        expect(all.json).not.toContain('"mode":"all"');
+        expect(full.json).toContain('"mode":"full"');
+        expect(full.json).toContain('"prefixes":1');
+
+        /**
+         * ⛓ AND THE KNOB IS NOT COSMETIC: the mode the roster records under
+         * is the fastest of the three on this room, which is the shape the
+         * user's next-full-record question is asked in. Measured here, both
+         * builds, rather than either number typed.
+         */
+        expect(all.ticks).toBeLessThan(none.ticks);
+        expect(full.ticks).toBeLessThanOrEqual(none.ticks);
+        expect(all.ticks).toBeLessThanOrEqual(full.ticks);
     });
 
     /**

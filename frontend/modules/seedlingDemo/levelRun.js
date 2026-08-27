@@ -11900,10 +11900,20 @@ export function createLevelRun({
              * on every invocation and the stance scan previews up to 289
              * corridors of hundreds of ticks each.
              *
-             * ⛓ THE NON-DASH ARM PASSES THE SAME OBJECT IT ALWAYS DID. Every
-             * committed corridor emits no dash at all (the roster-wide default
-             * is `allowDash: false`, ⚖ ruling 42), so this costs the roster
-             * nothing and the reach report can predict zero movers.
+             * ⛓ THE NON-DASH ARM PASSES THE SAME OBJECT IT ALWAYS DID, so a
+             * tick that spends no impulse is field for field the tick 12b
+             * stepped.
+             *
+             * ⚠⚠ R9 SLICE 12i — **THIS PARAGRAPH USED TO SAY "the roster-wide
+             * default is `allowDash: false`, ⚖ ruling 42", AND THAT WENT FALSE
+             * AT ⚖ 41's FLIP** (12e′'s fourth run) without anything here
+             * moving. ⇒ it does not quote a state any more: the roster's dash
+             * permission is `solverBot.DEFAULT_DASH_MODE`, today `all`, and
+             * §42.7 counts 205 dashes on 16 committed tapes under it — so the
+             * dash arm below is LIVE on the roster and predicting "zero
+             * movers" from here would be exactly backwards. A comment that
+             * names a value instead of the name that holds it is a landmine
+             * under the next flip (kickoff §40.6).
              */
             return (st, held, { dashImpulse = null } = {}) => (
                 dashImpulse
