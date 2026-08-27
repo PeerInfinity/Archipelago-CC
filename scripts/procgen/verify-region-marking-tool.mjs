@@ -505,6 +505,15 @@ try {
         const before = panel.session.edits().length;
         // ⛔ FIRST: a press on the canvas must leave focus INSIDE the panel, or
         //    the key binding is unreachable for anyone who marks with the mouse.
+        //
+        // ⚠ THE BLUR IS THE WHOLE ROW. Playwright's `selectOption` FOCUSES the
+        //    level picker back in Phase G, and that picker is inside the panel
+        //    — so "is focus in the panel after the press" was true no matter
+        //    what the press did, and the mutant that never attaches the
+        //    listener passed 27/27. Focus is cleared first and its ABSENCE
+        //    asserted, so the row measures the handler rather than the harness.
+        document.activeElement?.blur?.();
+        const focusedBefore = panel.rootElement.contains(document.activeElement);
         panel.canvas.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
         const focusedAfterCanvas = panel.rootElement.contains(document.activeElement);
         const input = document.querySelector('.rmt-panel .rmt-input');
@@ -513,11 +522,13 @@ try {
         const afterInInput = panel.session.edits().length;
         panel.rootElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'z', ctrlKey: true, bubbles: true }));
         return {
-            before, afterInInput, focusedAfterCanvas, afterOnRoot: panel.session.edits().length,
+            before, afterInInput, focusedBefore, focusedAfterCanvas,
+            afterOnRoot: panel.session.edits().length,
         };
     });
     check('Phase H: a canvas press leaves focus inside the panel (the binding is reachable)',
-        keyGuard.focusedAfterCanvas === true, JSON.stringify(keyGuard));
+        keyGuard.focusedBefore === false && keyGuard.focusedAfterCanvas === true,
+        JSON.stringify(keyGuard));
     check('Phase H: Ctrl+Z inside a text field does NOT undo, and on the root DOES',
         keyGuard.afterInInput === keyGuard.before && keyGuard.afterOnRoot === keyGuard.before - 1,
         JSON.stringify(keyGuard));
