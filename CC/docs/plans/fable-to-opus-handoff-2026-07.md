@@ -5553,6 +5553,16 @@ face decided · (e) the BOX LOCK that freezes the TREE · (f) `cheap` hysteresis
 (g) headless gates quoted from CI by SHA (⚖ 54 (6)+(7) proper). Editor-integration
 merge series (`editor-int-w4`/`-ba`/`-bd`) takes windows between P3b's stages.
 
+**⇒ SESSION 9 STOPPED (user, 2026-08-27) after P3b's W1 push `75366148f`.** W1 =
+(a) the pipeline's BEFORE is a commit SHA + (b) `roster ∖ prove()` derived, named
+and priced (120 tapes ≈ 128 min; the "S4 IS the gate run" claim refused without
+`--full-roster`); `--rehearse` 18/0 → 28/0 (standing row NOT yet written).
+Rulings taken: (g) a DERIVED CI-sourcing rule (headless ∧ not cheap; population
+23/4/3, zero flip today); (d) = (d2) `--structure` face. P3b PARKED: worktree
+`-wt-p3b`, branch `p3b/box-lock-and-baselines`, W2 as a named WIP; W3 + §48
+outstanding. The editor-integration merge series still waits for a window.
+NEXT: resume P3b (rebase first) → W2 → W3 (+ the `--write` under the lock) → §48 → P4 → L15.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
