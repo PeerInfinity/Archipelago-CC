@@ -551,15 +551,13 @@
       "total": "ALL PASS"
     },
     "suite: vitest (unfiltered)": {
-      "value": "384/11819",
-      "command": "node scripts/procgen/ci-vitest-summary.mjs --json",
-      "kind": "ci-suite",
-      "exit": 0,
-      "ms": 3602,
+      "value": "384/11849",
+      "command": null,
+      "kind": "suite",
       "cheap": false,
-      "measuredAt": "2cd622513b91f34f39e06e499b2b91c1e5b22b69",
-      "total": "success",
-      "why": "not re-read at d40acfe3c5653c35db899490cef945d540c95033: `node scripts/procgen/ci-vitest-summary.mjs --json` exited 3 (no CI run for this SHA, or it has not concluded) — ⚖ ruling 52"
+      "quoted": true,
+      "why": "CI run 33031726406 at d40acfe3c (editor-integration W6 merged): 11841 passed | 8 skipped | 0 failed; corrects 4241e645e, which committed a KEEP",
+      "measuredAt": "d40acfe3c5653c35db899490cef945d540c95033"
     },
     "roster: --win --tier=full": {
       "value": "145 tapes 3378/0/46",
