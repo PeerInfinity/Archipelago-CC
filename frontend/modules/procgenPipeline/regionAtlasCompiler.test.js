@@ -670,6 +670,106 @@ describe('per-region substrate dispatch (EDITOR INTEGRATION W1)', () => {
     });
 });
 
+/**
+ * ⛓⛓⛓ **THE CROSS-SUBSTRATE DOOR** (EDITOR INTEGRATION W6, plan §11.1 A3 /
+ * §11.3 / §11.6 item 1).
+ *
+ * ⛔ **THIS IS A CORRECTNESS FIX, NOT M1 PREPARATION.** Before it, a flash exit
+ * whose target region is played by ANOTHER substrate copied that region's
+ * `map_ref` into `target_level` — and a maze region's `map_ref` is its LIBRARY
+ * ENTRY INDEX, an integer from a different numbering entirely. MEASURED on W2's
+ * chain world: `seed.level_1` carried TWO exits claiming `target_level: 0`, and
+ * `resolveCrossingExit`'s two-candidate tie-break sent a crossing back to
+ * Seedling level 0 through the MAZE door whenever the reported spawn was nearer
+ * the maze entrance. `worldChain.test.js` holds that row over the real world.
+ *
+ * The fixture here is the same starter atlas the rest of this file reads, cut to
+ * the ONE pair the committed document actually wires across
+ * (`overworld_start/house_door` -> `starting_house/door`) with the house moved
+ * to the maze — so the crossing is derived from the committed connection list,
+ * never authored for the row.
+ */
+describe('cross-substrate exits — `external` (EDITOR INTEGRATION W6, H1)', () => {
+    /**
+     * `overworld_start` (6 sub-regions, flash) wired to `starting_house`. With
+     * `substrateOfHouse` set the door crosses a boundary; with it left undefined
+     * the SAME atlas is single-substrate, which is this row's own control.
+     */
+    const crossingAtlas = (substrateOfHouse) => {
+        const atlas = clone(STARTER);
+        atlas.regions = atlas.regions.filter(
+            (r) => r.region_id === 'overworld_start' || r.region_id === 'starting_house',
+        );
+        const kept = new Set(atlas.regions.map((r) => r.region_id));
+        atlas.vanilla_layout.connections = atlas.vanilla_layout.connections
+            .filter((c) => kept.has(c.from[0]) && kept.has(c.to[0]));
+        if (substrateOfHouse !== undefined) atlasRegion(atlas, 'starting_house').substrate = substrateOfHouse;
+        stampAtlasIdentity(atlas, 'seedling');
+        return atlas;
+    };
+    const compileCrossing = (substrateOfHouse) => compileRegionAtlas(crossingAtlas(substrateOfHouse), {
+        mapDoc: MAP_DOC, mazeProjection: mazeDeps(),
+    });
+    /** The one AP region of `overworld_start` the house door belongs to. */
+    const HOUSE_SIDE = 'overworld_start__r8c0';
+    const houseDoor = (rules) => rules.preset_sidecars['1'][HOUSE_SIDE]
+        .playable_payload.exits.find((e) => e.exit_id === 'house_door');
+
+    it('marks the door EXTERNAL, names the far substrate, and NULLS both level fields', () => {
+        const { rules, report } = compileCrossing(MAZE_SUBSTRATE);
+        const door = houseDoor(rules);
+        expect(door.external).toBe(true);
+        expect(door.target_substrate).toBe(MAZE_SUBSTRATE);
+        // ⛔ THE LIE, GONE. `starting_house`'s map_ref is a Seedling level id
+        // here, so the pre-fix value was a well-formed integer — which is
+        // exactly why nothing caught it.
+        expect(door.target_level).toBeNull();
+        expect(door.target_spawn).toBeNull();
+        // …and the graph half is untouched: the AP exit still crosses.
+        expect(door.targetRegion).toBe('starting_house');
+        expect(report.external_exits).toBe(1);
+    });
+
+    /**
+     * ⛔⛔ **THE CONTROL, AND IT IS WHAT MAKES THE ROW ABOVE A DIFFERENCE.**
+     * The same atlas with the house left on the compile default: the SAME door,
+     * a real `target_level`, and NO `external` key at all.
+     */
+    it('the same door inside ONE substrate keeps its real target_level and gains NO field', () => {
+        const { rules, report } = compileCrossing(undefined);
+        const door = houseDoor(rules);
+        expect(door.target_level).toBe(atlasRegion(STARTER, 'starting_house').map_ref);
+        expect(Number.isInteger(door.target_level)).toBe(true);
+        expect(door.target_spawn).toEqual(expect.objectContaining({ x: expect.any(Number) }));
+        expect('external' in door).toBe(false);
+        expect('target_substrate' in door).toBe(false);
+        expect(report.external_exits).toBe(0);
+    });
+
+    /**
+     * ⛔⛔ **PRESENT-OR-ABSENT IS THE BYTE PIN** (§11.3). A boolean written on
+     * every exit would move every committed flash sidecar — the §7.4 md5s. This
+     * row is that pin's shape, asserted over the WHOLE committed starter
+     * compile rather than over one exit.
+     */
+    it('NO exit of the committed single-substrate compile carries the key AT ALL', () => {
+        const { rules, report } = compileStarter();
+        const all = Object.values(rules.preset_sidecars['1'])
+            .flatMap((sc) => sc.playable_payload.exits ?? []);
+        expect(all.length).toBeGreaterThan(0);
+        expect(all.filter((e) => 'external' in e || 'target_substrate' in e)).toEqual([]);
+        expect(report.external_exits).toBe(0);
+    });
+
+    /** ⛓ and the count is a REPORT line only when there is something to say. */
+    it('formatCompileReport names the crossings, and says nothing when there are none', () => {
+        const mixed = formatCompileReport(compileCrossing(MAZE_SUBSTRATE).report).join('\n');
+        expect(mixed).toMatch(/1 exit\(s\) CROSS a substrate boundary/);
+        expect(formatCompileReport(compileCrossing(undefined).report).join('\n'))
+            .not.toMatch(/CROSS a substrate boundary/);
+    });
+});
+
 describe('schema conformance', () => {
     it('the fixture compiles to a schema-valid rules.json', () => {
         expect(rulesJsonSchemaErrors(compileFixture().rules, loadRulesSchema())).toEqual([]);

@@ -192,7 +192,7 @@ function apBindingsFor(region) {
  * atlas at all — it is already omitted from the graph, and a payload entry for
  * it could only mis-resolve a crossing.
  */
-function buildFlashRegionSidecars(atlas, region, wiredInfo, substrate) {
+function buildFlashRegionSidecars(atlas, region, wiredInfo, substrate, options) {
     const tileSize = atlas.tile_space?.tile_size ?? 1;
     const sidecars = {};
     if (!Number.isInteger(region.map_ref)) return { sidecars, bound: false };
@@ -202,6 +202,36 @@ function buildFlashRegionSidecars(atlas, region, wiredInfo, substrate) {
             if (region.subgraph && exit.sub_region !== sub) continue;
             const info = wiredInfo.get(endpointKey(region.region_id, exit.exit_id));
             if (!info) continue; // unwired — omitted from the graph too
+            /**
+             * ⛓⛓ **A CROSS-SUBSTRATE DOOR** (EDITOR INTEGRATION §11.1 A3,
+             * §11.3). The target region is played by ANOTHER substrate, so
+             * there is no Seedling level on the far side at all — and the
+             * `map_ref` that used to be copied into `target_level` was a
+             * different substrate's own index. MEASURED on W2's chain world:
+             * a maze region's `map_ref` is its LIBRARY ENTRY INDEX, so
+             * `seed.level_1` carried TWO exits claiming `target_level: 0` and
+             * `resolveCrossingExit`'s tie-break could send an ordinary
+             * crossing back to Seedling level 0 through the MAZE door.
+             *
+             * ⛔ **PRESENT-OR-ABSENT, NEVER `external: false`.** The committed
+             * flash sidecars are byte-pinned (§7.4); a field written on every
+             * exit would move every one of them. No committed atlas has two
+             * substrates, so written only here it moves nothing.
+             *
+             * ⛓ **AND IT IS DERIVED, NEVER A LITERAL** — `regionSubstrateOf`
+             * on both ends, the same reader the dispatch itself uses, so an
+             * atlas that says nothing behaves exactly as it did.
+             */
+            const targetSubstrate = regionSubstrateOf(info.target.region, atlas, options);
+            const external = targetSubstrate !== substrate;
+            /**
+             * ⛓ ONE predicate for BOTH nulls — the branch that was already
+             * here for a target with no `map_ref`, widened by one term rather
+             * than spelled a second time. `resolveCrossingExit`'s candidate
+             * filter is `e.target_level === level`, so `null !== 0` skips an
+             * external exit with no edit on the host side.
+             */
+            const carriesLevel = !external && Number.isInteger(info.target.region.map_ref);
             exits.push({
                 exit_id: exit.exit_id,
                 kind: exit.kind,
@@ -212,10 +242,9 @@ function buildFlashRegionSidecars(atlas, region, wiredInfo, substrate) {
                 exitName: info.apExitName,
                 targetRegion: info.targetApRegion,
                 targetExitId: info.target.exit.exit_id,
-                target_level: Number.isInteger(info.target.region.map_ref)
-                    ? info.target.region.map_ref : null,
-                target_spawn: Number.isInteger(info.target.region.map_ref)
-                    ? toPixels(info.target.exit.entrance_tile, tileSize) : null,
+                target_level: carriesLevel ? info.target.region.map_ref : null,
+                target_spawn: carriesLevel ? toPixels(info.target.exit.entrance_tile, tileSize) : null,
+                ...(external ? { external: true, target_substrate: targetSubstrate } : {}),
             });
         }
         sidecars[apName] = {
@@ -582,9 +611,9 @@ export function compileRegionAtlas(atlas, options = {}) {
     // payload) would legitimately want.
     const flashSubstrate = substrateIdFor(atlas.game);
     const builtInBuilders = {
-        [flashSubstrate]: (region, id) => buildFlashRegionSidecars(atlas, region, wiredInfo, id),
+        [flashSubstrate]: (region, id) => buildFlashRegionSidecars(atlas, region, wiredInfo, id, options),
         ...(substrate === flashSubstrate || substrate === MAZE_SUBSTRATE ? {} : {
-            [substrate]: (region, id) => buildFlashRegionSidecars(atlas, region, wiredInfo, id),
+            [substrate]: (region, id) => buildFlashRegionSidecars(atlas, region, wiredInfo, id, options),
         }),
         [MAZE_SUBSTRATE]: (region) => {
             if (!options.mazeProjection?.gridFor) {
@@ -645,8 +674,13 @@ export function compileRegionAtlas(atlas, options = {}) {
     // physical binding and therefore no substrate playing it; a region with a
     // subgraph emits one sidecar PER SUB-REGION. Reading the emitted entries is
     // the only count that agrees with the file.
+    let externalExits = 0;
     for (const entry of Object.values(sidecars)) {
         substrateCounts[entry.substrate] = (substrateCounts[entry.substrate] ?? 0) + 1;
+        // ⛓ …and the cross-substrate doors, counted off the SAME emitted
+        // entries for the same reason `substrates` is: a count read off the
+        // atlas would include exits no sidecar carries.
+        for (const e of entry.playable_payload?.exits ?? []) if (e.external === true) externalExits += 1;
     }
     const mazeNotes = anyMaze ? notes : null;
     const sidecarRegions = Object.keys(sidecars);
@@ -689,6 +723,10 @@ export function compileRegionAtlas(atlas, options = {}) {
         // answer the moment a region could override it, and a report that named
         // only the default would read as "all of them" for a mixed preset.
         substrates: substrateCounts,
+        // ⛓ How many emitted exits CROSS a substrate boundary — the host reads
+        // `external` to know the far side is not its own engine's, and a mixed
+        // world with none is a world nobody can leave (§11.3).
+        external_exits: externalExits,
         sidecar_flavor: mazeFlavor ? MAZE_SUBSTRATE : 'flash',
         sidecar_regions: sidecarRegions,
         flash_panel: rules.flash_panel ?? null,
@@ -728,6 +766,10 @@ export function formatCompileReport(report) {
             + `${report.substrate}${report.flash_panel ? ` (flash_panel: ${report.flash_panel.config})` : ''}`);
     } else {
         lines.push('projection 3: no region names a map_ref — graph-only, no preset_sidecars');
+    }
+    if (report.external_exits > 0) {
+        lines.push(`${report.external_exits} exit(s) CROSS a substrate boundary — `
+            + 'host-driven: no target_level on this engine\'s side');
     }
     if (report.maze_notes?.length > 0) {
         lines.push(...formatMazeProjectionNotes(report.maze_notes));

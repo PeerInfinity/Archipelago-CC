@@ -238,6 +238,81 @@ describe('tie-break — two exits of one region reaching the same level', () => 
     });
 });
 
+/**
+ * ⛓⛓ **AN EXTERNAL EXIT IS NOT A CANDIDATE** (EDITOR INTEGRATION W6, H1; plan
+ * §11.1 A3 / §11.3).
+ *
+ * The compiler marks a door whose far side is played by ANOTHER substrate and
+ * NULLS its `target_level` — because the value it used to copy there was the
+ * far substrate's own index, not a Seedling level. This filter needed no edit
+ * for that to work (`null !== 0`), and that is the claim: the row below is what
+ * turns "no edit was needed" from an assertion into a measurement.
+ *
+ * ⛔ Written with the pre-fix value beside the post-fix one, so the mutant that
+ * leaves `target_level` non-null on an external exit reds HERE rather than only
+ * in the compiler.
+ */
+describe('external exits — the far side is another substrate', () => {
+    /** One real door back to level 0, one host-driven door into a maze. */
+    const mixedRoom = {
+        level: 1,
+        exits: [
+            {
+                exit_id: 'in_L0_128_128',
+                exitName: null,
+                targetRegion: null,
+                target_level: 0,
+                target_spawn: { x: 128, y: 128 },
+                entrance_spawn: { x: 128, y: 128 },
+            },
+            {
+                exit_id: 'out_teleporter_128_128',
+                exitName: 'seed.level_1 -> mz.mz_cross',
+                targetRegion: 'mz.mz_cross',
+                external: true,
+                target_substrate: 'maze',
+                target_level: null,
+                target_spawn: null,
+                entrance_spawn: { x: 128, y: 128 },
+            },
+        ],
+    };
+
+    it('a `level` report never resolves to it, from ANY reported spawn', () => {
+        // Both spawns: beside the real entrance, and on top of where the maze
+        // door's junk `target_spawn` used to be. Pre-fix the second one picked
+        // the maze door.
+        for (const spawn of [{ x: 128, y: 128 }, { x: 0, y: 96 }]) {
+            expect(resolveCrossingExit(mixedRoom, 0, spawn).exit_id).toBe('in_L0_128_128');
+        }
+        // ⛔ NOT VACUOUS: the external exit really is in the list, and it is the
+        // ONE that names a target region.
+        expect(exitList(mixedRoom)).toHaveLength(2);
+        expect(exitList(mixedRoom).filter((e) => e.targetRegion !== null)).toHaveLength(1);
+    });
+
+    /**
+     * ⛔ THE MUTANT'S OWN ROW. Put the pre-fix integer back on the external exit
+     * and the two-candidate tie-break returns, sending a walk to level 0 through
+     * the maze door — the exact defect §11.1 A3 measured.
+     */
+    it('and with the pre-fix `target_level` back, the tie-break mis-resolves', () => {
+        const lying = {
+            ...mixedRoom,
+            exits: [mixedRoom.exits[0], { ...mixedRoom.exits[1], target_level: 0, target_spawn: { x: 0, y: 96 } }],
+        };
+        expect(resolveCrossingExit(lying, 0, { x: 0, y: 96 }).exit_id).toBe('out_teleporter_128_128');
+    });
+
+    it('a report to the level the external exit\'s SUBSTRATE numbers is still unmapped', () => {
+        const b = binding();
+        b.onLoadRegion({ region_id: 'seed.level_1', world: mixedRoom, arrivedFrom: null });
+        b.onStateReport('level', 1);   // baseline
+        // level 7 is nobody's target here — the warn path, not a silent no-op.
+        expect(types(b.onStateReport('level', 7))).toEqual(['warn']);
+    });
+});
+
 describe('unmapped levels — the atlas is partial by design', () => {
     it('WARNS and does not move the AP region', () => {
         const b = binding();

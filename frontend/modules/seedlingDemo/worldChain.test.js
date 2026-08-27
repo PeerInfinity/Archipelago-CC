@@ -46,6 +46,7 @@ import { compileRegionAtlas, substrateIdFor } from '../procgenPipeline/regionAtl
 import { validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js';
 import { buildWarehouse } from '../procgenPlayer/procgenPlayerEngine.js';
 import { substrateRegistryEntry as FLASH_SEEDLING_ENTRY } from '../flashPanel/flashSeedlingLibrary.js';
+import { resolveCrossingExit } from '../flashPanel/seedlingRegionBinding.js';
 import { tileTypeForPlacement } from '../flashPanel/seedlingSemantics.js';
 import { tileGridDeserializer } from '../shared/procgen/adapterPrimitives.js';
 import {
@@ -326,6 +327,74 @@ describe('⛓⛓⛓ THE CHAIN — derive, validate, compile, reach, warehouse', 
         //   substrates route to DIFFERENT load events.
         for (const key of warehouse.keys()) expect(warehouse.get(key).world).toBeTruthy();
         expect(new Set(warehouse.keys().map((k) => warehouse.get(k).loadRegionEvent)).size).toBe(2);
+    });
+
+    /**
+     * ⛓⛓⛓ **THE CROSS-PART DOOR IS MARKED, AND THAT IS WHAT UN-COLLIDES THE
+     * TWO EXITS OF `seed.level_1`** (EDITOR INTEGRATION W6 / plan §11.1 A3).
+     *
+     * ⛔ **THE PRE-FIX MEASUREMENT, WHICH IS WHAT THIS ROW IS FOR.** This exact
+     * world used to compile `seed.level_1` with TWO exits both claiming
+     * `target_level: 0`:
+     *
+     *   in_L0_128_128          target_level 0   target_spawn {128,128}  (real: seed.level_0)
+     *   out_teleporter_128_128 target_level 0   target_spawn {0,96}     (a LIE: mz.mz_cross's
+     *                                                                   map_ref is a LIBRARY
+     *                                                                   ENTRY INDEX)
+     *
+     * so `resolveCrossingExit(world, 0, spawn)` took its two-candidate branch and
+     * tie-broke on distance — and a player who walked back to Seedling level 0
+     * landing anywhere nearer `{0,96}` resolved to the MAZE door. Both halves are
+     * asserted below: the compiled field, and the resolution it fixes.
+     *
+     * ⚠ `target_spawn` was junk on that exit for a second reason worth naming —
+     * the maze entrance tile times the START part's `tile_size` 16, on a part
+     * whose own `tile_size` is 1 (§8.6). It is null now for both reasons at once.
+     */
+    it('the cross-part exit is EXTERNAL, and the same-part one still carries a real level', () => {
+        const { s } = session();
+        const { rules, report } = rulesOf(s);
+        const exits = rules.preset_sidecars['1']['seed.level_1'].playable_payload.exits;
+        const crossing = exits.find((e) => e.exit_id === 'out_teleporter_128_128');
+        const samePart = exits.find((e) => e.exit_id === 'in_L0_128_128');
+
+        expect(crossing.targetRegion).toBe('mz.mz_cross');
+        expect(crossing.external).toBe(true);
+        expect(crossing.target_substrate).toBe('maze');
+        expect(crossing.target_level).toBeNull();
+        expect(crossing.target_spawn).toBeNull();
+
+        // ⛔ THE CONTROL, in the SAME payload: the part-internal door is
+        // untouched, so this is not "the compiler nulled everything".
+        expect(samePart.target_level).toBe(0);
+        expect(samePart.target_spawn).toEqual({ x: 128, y: 128 });
+        expect('external' in samePart).toBe(false);
+
+        // ⛓ …and the SOURCE room's own outbound door, one region over, is
+        // ordinary too — one exit in this whole world crosses.
+        const level0 = rules.preset_sidecars['1']['seed.level_0'].playable_payload.exits;
+        expect(level0.every((e) => !('external' in e))).toBe(true);
+        expect(report.external_exits).toBe(1);
+    });
+
+    /**
+     * ⛔⛔ **THE DEFECT ITSELF, THROUGH THE REAL HOST FILTER.** `resolveCrossingExit`
+     * filters on `e.target_level === level`; `null !== 0` drops the external exit
+     * by construction, with no edit to the binding. Both spawns now resolve to
+     * the ONE real candidate — pre-fix the second resolved to the maze door.
+     */
+    it('`resolveCrossingExit` no longer mis-resolves a return to level 0', () => {
+        const { s } = session();
+        const { rules } = rulesOf(s);
+        const world = { exits: rules.preset_sidecars['1']['seed.level_1'].playable_payload.exits };
+        // the spawn beside the SEEDLING entrance, and the one beside the MAZE's
+        for (const spawn of [{ x: 128, y: 128 }, { x: 0, y: 96 }]) {
+            expect(resolveCrossingExit(world, 0, spawn).exit_id).toBe('in_L0_128_128');
+        }
+        // ⛓ NOT VACUOUS — there really are two exits, and one really does reach
+        // a region; the filter is what excludes it, not an empty list.
+        expect(world.exits).toHaveLength(2);
+        expect(world.exits.filter((e) => e.targetRegion !== null)).toHaveLength(1);
     });
 
     it('undo ×N and the world equals its base — the whole session unwinds', () => {
