@@ -315,6 +315,12 @@
   #editSetOverviewWrap { position: relative; overflow-x: auto; max-width: 100%; }
   #labSetPalette, #labSetTools { display: flex; gap: 4px; flex-wrap: wrap; margin: 4px 0; }
   #labSetRoomBox { flex-direction: column; align-items: flex-start; }
+  /* ⛓ EDITOR INTEGRATION W4 — the hosted editor's frame. Sized big enough that
+     the other page's own strip and canvas are both usable; a hidden Golden
+     Layout tab's zero rect is the failure this avoids by not being one
+     (trap 828, one host over). */
+  #labSetForeignFrame { flex-direction: column; align-items: stretch; }
+  #labSetForeignFrame iframe { width: 100%; height: 640px; border: 1px solid #444; }
   #editSetRoomForm, #editSetManifest { font-size: 11px; }
   #editSetRoomForm .line, #editSetManifest .line { margin-bottom: 2px; }
   [hidden] { display: none !important; }
@@ -565,6 +571,18 @@
         <div id="labSetPalette"></div>
         <div id="labSetTools"></div>
       </div>
+      <!-- ⛓⛓⛓ EDITOR INTEGRATION W4 — THE OTHER SUBSTRATE'S EDITOR, HOSTED.
+           A WORLD's strip holds rooms of both substrates. A maze room opens on
+           the canvas above; a SEEDLING room opens in `watch.html`'s EDIT arm,
+           in this frame, through the room-editor contract W3 built — ⚖ the
+           one-editor law: a second Seedling room editor written on this page is
+           the thing this arc exists to refuse. The frame is EMPTY and HIDDEN
+           until a foreign room is opened, and it is torn down on the close, so
+           a page that never opens one costs nothing.
+           ⛔ ONE frame: §9.6 #3 — two rooms of two substrates open at once is
+           not supported and the strip REFUSES the second BY NAME, rather than
+           letting the reader discover it in the other page's own note. -->
+      <div id="labSetForeignFrame" class="line" hidden></div>
       <div class="line">
         <span id="editSetIdentity" class="note"></span>
       </div>

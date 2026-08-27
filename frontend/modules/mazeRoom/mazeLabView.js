@@ -96,9 +96,39 @@ import { applyGlossaryTips } from '../procgenDocs/glossaryTips.js';
  * second one written here.
  */
 import {
-    makeDrawRoomStill, mazeLibraryRows, mazeSetBindings, roomBaseTag, sniffSetDocument,
+    bindWorldParts, makeDrawRoomStill, mazeLibraryRows, mazeSetBindings, roomBaseTag,
+    sniffSetDocument, worldPartDescriptors, worldSetBindings,
 } from './mazeSetLab.js';
 import { createEditSession } from '../procgenCore/editCore.js';
+/**
+ * ⛓⛓⛓ EDITOR INTEGRATION W4 — **THE WORLD HALF.** W2's three modules take
+ * every substrate half INJECTED (`procgenCore/` may import neither adapter), and
+ * `mazeSetLab.js` is where this page plugs them in; what the PAGE reaches for
+ * directly is the composite adapter, the record constructor and the two
+ * readers a merged atlas needs.
+ */
+import { partOfRegion } from '../procgenCore/worldDerivation.js';
+import { createWorldSetAdapter, partAt, worldRecord } from '../procgenCore/worldSetAdapter.js';
+/**
+ * ⛓⛓⛓ EDITOR INTEGRATION W4 (§9.6 #1) — **THE ROOM-EDITOR CONTRACT'S HOST
+ * HALF, WITH A PAGE FOR A HOST.** `openLabRoomEditor` resolves a mounted
+ * `procgenLabPanel` INSTANCE by default and there is none inside `lab.html`;
+ * `createPageLabTransport` is the panel-shaped object that replaces it.
+ */
+import { createPageLabTransport, openLabRoomEditor } from '../procgenLabPanel/labRoomEditor.js';
+/**
+ * ⛓ …and the DECLARATIONS come off the substrate entries themselves — `page`
+ * and `arm` are the registry's words (W3 §9.2) and this file must not be the
+ * second place either is spelled. ⛔ Read off the ENTRY rather than through
+ * `substrateRegistry.get`, because a standalone page runs no app bootstrap and
+ * nothing has registered anything.
+ */
+import { substrateRegistryEntry as FLASH_SEEDLING_ENTRY } from '../flashPanel/flashSeedlingLibrary.js';
+import { MAZE_CONDITION_DEPS, mazeGridFor } from './mazeAtlasDerivation.js';
+import { tileTypeForPlacement } from '../flashPanel/seedlingSemantics.js';
+import { TILE_SIZE } from '../seedlingDemo/levelWorld.js';
+import { validateLevelSet } from '../seedlingDemo/levelSetValidator.js';
+import { parseOelLevel } from '../seedlingDemo/procgenLevelOel.js';
 import { deserializeMazeWorld } from './mazeRoomEngine.js';
 /**
  * ⛓⛓⛓ **THE SHARED SET EDITOR, MOUNTED — THE SAME FUNCTION `watch.html` BINDS
@@ -111,7 +141,7 @@ import { deserializeMazeWorld } from './mazeRoomEngine.js';
  * for itself.
  */
 import { mountSetEditor } from '../procgenCore/setEditorView.js';
-import { compileRegionAtlas } from '../procgenPipeline/regionAtlasCompiler.js';
+import { compileRegionAtlas, substrateIdFor } from '../procgenPipeline/regionAtlasCompiler.js';
 import { validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js';
 import {
     loadServedIndex, loadServedLibrary, parseRegionLibrary,
@@ -135,6 +165,29 @@ import {
 } from '../procgenCore/elementSpec.js';
 
 const $ = (id) => document.getElementById(id);
+
+/**
+ * ⛓⛓⛓ EDITOR INTEGRATION W4 — **WHICH LAB PAGE EDITS A ROOM OF WHICH
+ * SUBSTRATE, READ OFF THE SUBSTRATE ENTRIES.**
+ *
+ * ⛔ Keyed by SUBSTRATE ID because that is what a world's cell carries; the
+ * `{kind, page, arm}` inside is the entry's own declaration, verbatim. A table
+ * of pages and arms typed here would be the second place W3 §9.2's three field
+ * names live, and `arm` is deliberately not the same word on the two pages.
+ */
+const ROOM_EDITOR_DECLARATIONS = Object.freeze({
+    [FLASH_SEEDLING_ENTRY.id]: FLASH_SEEDLING_ENTRY.roomEditor,
+});
+
+/**
+ * ⛓ …and where each lab page's HTML is, relative to `frontend/`. ⛔ Not
+ * `procgenLabPanel.LAB_PAGES`, whose paths are relative to `index.html` and
+ * whose import would pull the Golden Layout panel into a standalone page.
+ */
+const LAB_PAGE_DIRS = Object.freeze({
+    seedling: 'seedlingDemo/watch.html',
+    maze: 'mazeRoom/lab.html',
+});
 const el = (tag, cls, text) => {
     const n = document.createElement(tag);
     if (cls) n.className = cls;
@@ -315,6 +368,31 @@ export function main() {
     let heldLibrary = null;
     let heldOverlay = null;
     let setSource = null;
+    /**
+     * ⛓⛓⛓ EDITOR INTEGRATION W4 — **THE WORLD, BESIDE THE LIBRARY.** A world
+     * is held INSTEAD of a library, never as well: its parts ARE the documents,
+     * and a library loaded under a world would be a third document the world's
+     * manifest does not name. ⛔ `heldWorld !== null` is the ONE test the arm
+     * branches on, so there is no second way to ask which document is open.
+     */
+    let heldWorld = null;
+    let heldWorldDocs = null;
+    /**
+     * ⛓⛓ EDITOR INTEGRATION W4 — **THE ROOM OPEN IN THE OTHER SUBSTRATE'S
+     * PAGE**, or `null`. ⛔ A THIRD session beside the strip's and the maze
+     * room's (§21.5 grew a row): it lives in ITS page, its `Ctrl+Z` is that
+     * page's, and what this page holds is the door and the frame.
+     */
+    let foreignRoom = null;
+    /** ⛓ …and which substrate the LAST foreign room was, so the sentence the
+     *  fold prints can name it after the session has already been dropped.
+     *  ⛔ DECLARED HERE and not beside its writer: a `let` declared below an
+     *  arrow function that reads it is in its temporal dead zone if anything
+     *  calls that function during mount ([[feedback_mount_time_call_hits_tdz]]). */
+    let foreignSubstrateWas = null;
+    let worldParts = null;
+    let worldDeps = null;
+    let worldNotes = [];
     /** The LOAD box's own note — separate from `say`, which is the page's. */
     let setLoadNote = '';
     let setLoadBad = false;
@@ -1372,6 +1450,36 @@ export function main() {
      * against whatever happens to be in hand.
      */
     const openSetSession = () => {
+        /**
+         * ⛓⛓⛓ EDITOR INTEGRATION W4 — **A WORLD OPENS OVER W2's COMPOSITE.**
+         * The descriptors are built PER LOAD because two of their halves are
+         * facts about the document in hand (the Seedling part's
+         * `atlas.mapDocument` names the WORLD; both adapters take the fetched
+         * schema), and the ids are the WORLD's own.
+         */
+        if (heldWorld) {
+            const built = worldPartDescriptors({
+                world: heldWorld,
+                rulesSchema,
+                mapDocument: heldWorld.world_id ?? 'world.json',
+                tileSize: TILE_SIZE,
+                parseOel: parseOelLevel,
+                tileTypeForPlacement,
+                substrateIdFor,
+            });
+            if (built.errors.length > 0) {
+                throw new Error(`this world's parts cannot be opened — ${built.errors.join(' | ')}`);
+            }
+            worldParts = built.parts;
+            worldDeps = built.deps;
+            setAdapter = createWorldSetAdapter({ parts: worldParts });
+            const base = { kind: 'world', world_id: heldWorld.world_id ?? null };
+            setSession = createSetSession(
+                setAdapter, worldRecord(heldWorld, heldWorldDocs), { base });
+            return;
+        }
+        worldParts = null;
+        worldDeps = null;
         setAdapter = createMazeSetAdapter({
             rulesSchema,
             librarySource: (id) => (heldLibrary?.library_id === id ? heldLibrary : null),
@@ -1390,17 +1498,37 @@ export function main() {
      * BEFORE the mount, because `mountSetEditor` ends with `selectRoom(0)` and
      * a `value = '0'` on an empty `<select>` sets nothing.
      */
+    /**
+     * ⛓⛓ EDITOR INTEGRATION W4 — **ONE ROOM COUNT AND ONE OPTION LIST FOR BOTH
+     * DOCUMENTS.** ⛔ Off the ADAPTER's `bounds`/`readCell` rather than off
+     * `record().library.entries`: a world's record has no `library` half at all,
+     * and every reader of "how many rooms" that reached into one document would
+     * be a second place to teach the next one.
+     */
+    const setRoomCount = () => (setSession ? setAdapter.bounds(setSession.record()).w : 0);
+
+    const setRoomOptions = () => {
+        if (!setSession) return [];
+        const record = setSession.record();
+        return Array.from({ length: setRoomCount() }, (_, i) => {
+            const cell = setAdapter.readCell(record, i, 0);
+            return {
+                value: String(i),
+                label: `${i}${cell.room?.name ? ` · ${cell.room.name}` : ''}`
+                    + (cell.part ? ` [${cell.part}]` : ''),
+            };
+        });
+    };
+
     const fillSetRoomSelect = () => {
         const sel = $('editSetRoom');
         if (!sel) return;
         const keep = sel.value;
         sel.innerHTML = '';
-        const entries = setSession?.record().library.entries ?? [];
-        for (const [i, e] of entries.entries()) {
-            sel.appendChild(new Option(`${i}${e.name ? ` · ${e.name}` : ''}`, String(i)));
-        }
-        if (keep !== '' && Number(keep) < entries.length) sel.value = keep;
-        sel.disabled = entries.length === 0;
+        const options = setRoomOptions();
+        for (const o of options) sel.appendChild(new Option(o.label, o.value));
+        if (keep !== '' && Number(keep) < options.length) sel.value = keep;
+        sel.disabled = options.length === 0;
     };
 
     /**
@@ -1427,7 +1555,7 @@ export function main() {
     ]);
 
     const enableSetControls = () => {
-        const has = Boolean(setSession) && setSession.record().library.entries.length > 0;
+        const has = Boolean(setSession) && setRoomCount() > 0;
         for (const id of SET_CONTROLS) { if ($(id)) $(id).disabled = !has; }
     };
 
@@ -1474,6 +1602,138 @@ export function main() {
     };
 
     /**
+     * ⛓ EDITOR INTEGRATION W4 — **(the maze library, the entry, the LOCAL index)
+     * for a global room**, whichever document is held. ⛔ ONE function, because
+     * the base tag names a `library_id` and a room INDEX and both are the
+     * PART's under a world.
+     */
+    const mazeEntryAt = (record, index) => {
+        if (!heldWorld) {
+            return { library: record.library, entry: record.library.entries[index], local: index };
+        }
+        const at = partAt(record, index, worldParts, 'openSetRoomAt');
+        const library = record.parts[at.part.id];
+        return { library, entry: library.entries?.[at.local], local: at.local };
+    };
+
+    /**
+     * ⛓⛓⛓ EDITOR INTEGRATION W4 — **A ROOM OF THE OTHER SUBSTRATE OPENS IN ITS
+     * OWN PAGE, THROUGH W3's ROOM-EDITOR CONTRACT.**
+     *
+     * ⚖ THE ONE-EDITOR LAW, one document up from the one-renderer law: a
+     * Seedling room is edited by `watch.html`'s EDIT arm, and a second Seedling
+     * room editor written here would be the thing this whole arc exists to
+     * refuse. ⛔ The `page` and the `arm` come off the SUBSTRATE REGISTRY ENTRY
+     * (W3 §9.2), never spelled here — `arm` is not the same word on the two
+     * pages and this file must not be the second place either is written.
+     *
+     * ⛔ **THE RETURN IS ONE `replace-room` ADDRESSED GLOBALLY** (§9.6 #2). The
+     * envelope hands back the whole SET RECORD the other page is holding; what
+     * this world wants is room `local` OF it, re-issued at the GLOBAL index —
+     * a `replace-room` for a `record` room and a `replace-room-xml` for a
+     * legacy `xml` one, because an edit may never convert a room's KIND (§22.8).
+     */
+    const openForeignRoomAt = (index, cell) => {
+        if (foreignRoom !== null) {
+            if (foreignRoom.index === index) return true;
+            say(`⛔ room ${foreignRoom.index} is already open in the ${foreignRoom.substrate} `
+                + 'editor — CLOSE it there first.', true);
+            return false;
+        }
+        if (setRoomIndex !== null && setRoomSess?.ops().length > 0) {
+            say(`⛔ room ${setRoomIndex} is open HERE with ${setRoomSess.ops().length} unwritten `
+                + 'edit(s). CLOSE it into the world first (that is ONE `replace-room`).', true);
+            return false;
+        }
+        const decl = ROOM_EDITOR_DECLARATIONS[cell.substrate] ?? null;
+        if (!decl || decl.kind !== 'lab') {
+            say(`⛔ room ${index} plays on \`${cell.substrate}\`, and this page knows no LAB `
+                + `editor for it. The substrates it can open are `
+                + `${Object.keys(ROOM_EDITOR_DECLARATIONS).join(', ')}.`, true);
+            return false;
+        }
+        const at = partAt(setSession.record(), index, worldParts, 'openSetRoomAt');
+        const doc = setSession.record().parts[at.part.id];
+        const box = $('labSetForeignFrame');
+        if (!box) {
+            say('⛔ this page has no frame to host the other editor in (`#labSetForeignFrame`)',
+                true);
+            return false;
+        }
+        box.hidden = false;
+        const transport = createPageLabTransport({
+            page: decl.page,
+            src: frontendUrl(`modules/${LAB_PAGE_DIRS[decl.page]}`),
+            mount: box,
+            listen: (target, event, handler) => lifetimes.current().on(target, event, handler),
+            note: (text, bad) => say(text, bad),
+        });
+        const door = openLabRoomEditor({
+            page: decl.page,
+            arm: decl.arm,
+            room: at.local,
+            record: doc,
+            bus: transport.bus,
+            transport,
+            onSave: (returned) => foldForeignRoom(index, at, returned),
+        });
+        if (!door.ok) {
+            transport.dispose();
+            box.hidden = true;
+            say(`⛔ ${door.why}`, true);
+            return false;
+        }
+        foreignRoom = {
+            index, part: at.part.id, local: at.local, substrate: cell.substrate,
+            page: decl.page, arm: decl.arm, transport, door,
+        };
+        say(`OPENED room ${index} ("${cell.room?.name ?? ''}") in the ${decl.page} editor below `
+            + '— edit it there and press its CLOSE; the folded room comes back as ONE '
+            + '`replace-room` on this world.');
+        setUi?.render();
+        render();
+        return true;
+    };
+
+    /** ⛓ …and the return leg: room `local` OF the returned document, at the GLOBAL index. */
+    const foldForeignRoom = (index, at, returned) => {
+        const room = returned?.set?.rooms?.[at.local] ?? returned?.rooms?.[at.local] ?? null;
+        const source = room?.source ?? null;
+        let result;
+        if (source?.record) {
+            result = setSession.apply({ op: 'replace-room', room: index, record: source.record });
+        } else if (typeof source?.xml === 'string') {
+            result = setSession.apply({ op: 'replace-room-xml', room: index, xml: source.xml });
+        } else {
+            result = { ok: false, description: `the ${at.part.id} editor handed back a room `
+                + `whose source is neither a \`record\` nor an \`xml\` (${JSON.stringify(source)}) `
+                + '— an `embed` room cannot be re-written from another page' };
+        }
+        closeForeignRoom();
+        if (!result.ok) say(`⛔ the room came back and was REFUSED — ${result.description}`, true);
+        else if (result.applied === false) {
+            say(`room ${index} came back UNCHANGED — the reader closed it with no edit, so no `
+                + '`replace-room` was minted (an op that changes nothing is not an edit)');
+        } else {
+            say(`room ${index} came back from the ${foreignSubstrateWas ?? 'other'} editor as `
+                + 'ONE `replace-room`');
+        }
+        setUi?.render();
+        render();
+    };
+
+    /** ⛓ Drop the foreign session and its frame — the DISCARD half, §21.5's. */
+    const closeForeignRoom = () => {
+        if (foreignRoom === null) return;
+        foreignSubstrateWas = foreignRoom.substrate;
+        foreignRoom.door?.close?.();
+        foreignRoom.transport?.dispose?.();
+        foreignRoom = null;
+        const box = $('labSetForeignFrame');
+        if (box) box.hidden = true;
+    };
+
+    /**
      * ⛓⛓⛓ **OPEN ONE ENTRY OF THE LIBRARY, AND IT IS THE ONLY BRIDGE.**
      *
      * ⛔ **A ROOM SESSION ALREADY OPEN IS NOT SILENTLY REPLACED**, in the words
@@ -1489,6 +1749,39 @@ export function main() {
      */
     const openSetRoomAt = (index) => {
         if (!setSession) return false;
+        /**
+         * ⛓⛓⛓ EDITOR INTEGRATION W4 — **WHICH EDITOR A ROOM OPENS IN IS THE
+         * CELL'S OWN SUBSTRATE**, and this is the one place that decides. A
+         * maze room opens IN THIS PAGE exactly as it always has; a Seedling
+         * room opens in `watch.html` through W3's room-editor contract, with
+         * this page as the HOST (§9.6 #1).
+         *
+         * ⛔ **THE SUBSTRATE, NOT THE PART.** A world could hold two maze parts
+         * one day, and a dispatch on the part id would then have to be told
+         * about the second one; a dispatch on `readCell().substrate` is told by
+         * the document.
+         */
+        const openCell = (() => {
+            try { return setAdapter.readCell(setSession.record(), index, 0); } catch { return null; }
+        })();
+        if (heldWorld && openCell && openCell.substrate !== LAB_SUBSTRATE) {
+            return openForeignRoomAt(index, openCell);
+        }
+        /**
+         * ⛔⛔ §9.6 #3 — **A SEEDLING ROOM OPEN IN THE OTHER PAGE BLOCKS THIS
+         * ONE, AND THE STRIP SAYS SO BEFORE IT OPENS.** Each page refuses a
+         * second room session while one holds unwritten edits, and a strip that
+         * discovered that in the other page's note would be telling the reader
+         * about a refusal they cannot see.
+         */
+        if (foreignRoom !== null && foreignRoom.index !== index) {
+            say(`⛔ room ${foreignRoom.index} is open in the ${foreignRoom.substrate} editor `
+                + `(${foreignRoom.page}.html, in the frame below). CLOSE it there first — its `
+                + 'edits reach this world through that page\'s own close, as ONE '
+                + '`replace-room`, and opening a second room would leave them with nowhere '
+                + 'to go.', true);
+            return false;
+        }
         if (setRoomIndex !== null && setRoomIndex !== index
             && setRoomSess.ops().length > 0) {
             say(`⛔ room ${setRoomIndex} is open with ${setRoomSess.ops().length} unwritten `
@@ -1499,8 +1792,15 @@ export function main() {
         }
         if (setRoomIndex === index) return true;
         const record = setSession.record();
-        const cell = setAdapter.readCell(record, index, 0);
-        const entry = record.library.entries[index];
+        const cell = openCell ?? setAdapter.readCell(record, index, 0);
+        /**
+         * ⛓ EDITOR INTEGRATION W4 — the ENTRY comes out of the cell's own PART
+         * under a world, and out of the library when one is held. ⛔ Not
+         * `record.library.entries[index]`: a world's record has no `library`
+         * half, and its rooms are the parts' CONCATENATED, so the index would be
+         * wrong even if there were one.
+         */
+        const { library, entry, local } = mazeEntryAt(record, index);
         let world;
         try {
             world = deserializeMazeWorld(cell.payload);
@@ -1511,7 +1811,7 @@ export function main() {
         discardSetRoom();
         setRoomIndex = index;
         setRoomSess = createEditSession(mazeEditAdapter, world, {
-            base: roomBaseTag(record.library, index, entry),
+            base: roomBaseTag(library, local, entry),
         });
         /**
          * ⛓ THE PALETTE IS THE ROOM'S OWN. ⛔ Not `ensureEditor()`: that one is
@@ -1581,6 +1881,32 @@ export function main() {
     };
 
     /**
+     * ⛓⛓⛓ EDITOR INTEGRATION W4 — **THE MAZE ROW'S `gridFor`, BOUND TO THE
+     * WORLD'S MAZE PART.**
+     *
+     * ⛔ `compileRegionAtlas`'s maze row projects a region through the LIBRARY
+     * ENTRY its `map_ref` indexes, and in a merged atlas the region ids are
+     * NAMESPACED — so the resolver has to split the part off before it can
+     * index anything, and a region belonging to the OTHER part answers `null`
+     * (its sidecar is the flash builder's, not this row's). It is the same
+     * recipe `seedlingDemo/worldChain.test.js` binds for node.
+     */
+    const worldCompileOptions = () => {
+        const mz = (worldParts ?? []).find((p) => p.kind === 'region-library');
+        if (!mz) return {};
+        return {
+            mazeProjection: {
+                ...MAZE_CONDITION_DEPS,
+                gridFor: (region) => {
+                    if (partOfRegion(region.region_id) !== mz.id) return null;
+                    const entry = setSession?.record().parts?.[mz.id]?.entries?.[region.map_ref];
+                    return entry ? mazeGridFor(entry.payload) : null;
+                },
+            },
+        };
+    };
+
+    /**
      * ⛓⛓⛓ **THE LIFTED MOUNT, OVER THE MAZE'S BINDINGS.** ⛔ Destroy-then-create,
      * and the reason is the one `setEditorView.js`'s own docblock records: a new
      * document REMOUNTS this panel, and a dead mount's listeners survive the
@@ -1593,8 +1919,12 @@ export function main() {
         setUi = null;
         /** ⛔ A NEW DOCUMENT TAKES THE OPEN ROOM WITH IT: the entry a room
          *  session was opened FROM does not survive a different library, and a
-         *  session left standing would close into rooms it never came from. */
+         *  session left standing would close into rooms it never came from.
+         *  ⛓ EDITOR INTEGRATION W4 — and the FOREIGN one goes with it for the
+         *  same reason, frame and all: its door would otherwise fold a room of
+         *  the previous document into this one at whatever index it was told. */
         discardSetRoom();
+        closeForeignRoom();
         if (!setSession || !setArmLt?.alive()) return;
         fillSetRoomSelect();
         setUi = mountSetEditor({
@@ -1620,14 +1950,30 @@ export function main() {
              * `#editSetNote` prints (ONE authority; the `min="2"` on the inputs
              * is a hint to a person, not a check).
              */
-            ...mazeSetBindings({
-                rulesSchema,
-                drawRoomStill: makeDrawRoomStill(),
-                blankSize: () => ({
-                    width: Number($('editSetNewW').value),
-                    height: Number($('editSetNewH').value),
-                }),
-            }),
+            /**
+             * ⛓⛓⛓ EDITOR INTEGRATION W4 — **THE WORLD'S BINDINGS, OR THE
+             * MAZE'S.** ⛔ ONE branch, on the ONE test (`heldWorld`), and both
+             * objects come out of `mazeSetLab.js` — the page chooses which
+             * document it is editing and knows nothing else about either.
+             */
+            ...(heldWorld
+                ? worldSetBindings({
+                    parts: worldParts,
+                    deps: worldDeps,
+                    rulesSchema,
+                    parseOel: parseOelLevel,
+                    drawMazeStill: makeDrawRoomStill(),
+                    compileOptions: worldCompileOptions(),
+                    gameName: heldWorld.name ?? 'World',
+                })
+                : mazeSetBindings({
+                    rulesSchema,
+                    drawRoomStill: makeDrawRoomStill(),
+                    blankSize: () => ({
+                        width: Number($('editSetNewW').value),
+                        height: Number($('editSetNewH').value),
+                    }),
+                })),
             say,
             /**
              * ⛓⛓ §21.5's THREE RULES ARRIVE THROUGH THE MOUNT: it computes the
@@ -1669,6 +2015,15 @@ export function main() {
             setNote(`⛔ REFUSED — \`validateRegionLibrary\` says: ${res.errors.join(' · ')}`, true);
             return false;
         }
+        /**
+         * ⛓ EDITOR INTEGRATION W4 — **A LIBRARY REPLACES A HELD WORLD, and the
+         * note says so.** The two are alternatives, never both: a world's parts
+         * ARE its documents.
+         */
+        const droppedWorld = heldWorld;
+        heldWorld = null;
+        heldWorldDocs = null;
+        worldNotes = [];
         heldLibrary = res.library;
         setSource = how;
         try {
@@ -1691,6 +2046,10 @@ export function main() {
         }
         remountSetEditor();
         setNote(`LOADED ${heldLibrary.library_id} (${how}) — `
+            + (droppedWorld
+                ? '⚠ the WORLD held before it was DROPPED (a world\'s parts ARE its documents, '
+                  + 'so a library beside one would be a third document nothing names) · '
+                : '')
             + `${heldLibrary.entries.length} room(s)`
             + (heldOverlay
                 ? `, overlay ${heldOverlay.overlay_id ?? '(unstamped)'}`
@@ -1702,8 +2061,114 @@ export function main() {
         return true;
     };
 
+    /**
+     * ⛓⛓⛓ EDITOR INTEGRATION W4 — **HOLD A WORLD: ITS PARTS FIRST, THEN THE
+     * DOCUMENT THAT BINDS THEM.**
+     *
+     * ⛔ **EACH PART GOES THROUGH ITS OWN VALIDATOR BEFORE THE WORLD IS ASKED
+     * ANYTHING** — the level set through Seedling's, the region library through
+     * the maze's — because a world that bound a malformed part would report the
+     * failure as a WORLD problem, which is a true sentence about the wrong
+     * subject. The world then binds them BY `doc_id` (`bindWorldParts`).
+     *
+     * ⛔ **A WORLD REPLACES THE HELD LIBRARY, LOUDLY.** Its parts ARE the
+     * documents; a library left standing beside one would be a third document
+     * the manifest does not name, and the strip would have no way to say which
+     * of the two it was showing.
+     */
+    const holdWorld = ({ world, members, how }) => {
+        const built = worldPartDescriptors({
+            world,
+            rulesSchema,
+            mapDocument: world.world_id ?? 'world.json',
+            tileSize: TILE_SIZE,
+            parseOel: parseOelLevel,
+            tileTypeForPlacement,
+            substrateIdFor,
+        });
+        if (built.errors.length > 0) {
+            setNote(`⛔ NOT LOADED — ${built.errors.join(' · ')}`, true);
+            return false;
+        }
+        /** ⛓ EACH PART'S OWN DOOR, in the world's own declaration order. */
+        const validated = [];
+        for (const part of built.parts) {
+            const member = members.find((m) => m.kind === part.kind);
+            if (member === undefined) { validated.push(member); continue; }
+            if (part.kind === 'region-library') {
+                const res = parseRegionLibrary(JSON.stringify(member.doc));
+                if (!res.ok) {
+                    setNote(`⛔ NOT LOADED — part "${part.id}" is a REGION LIBRARY and `
+                        + `\`validateRegionLibrary\` refuses it: ${res.errors.join(' · ')}`, true);
+                    return false;
+                }
+                validated.push({ kind: part.kind, doc: res.library });
+            } else {
+                const res = validateLevelSet(member.doc);
+                if (!res.ok) {
+                    setNote(`⛔ NOT LOADED — part "${part.id}" is a LEVEL SET and `
+                        + `\`validateLevelSet\` refuses it: ${res.errors.join(' · ')}`, true);
+                    return false;
+                }
+                validated.push({ kind: part.kind, doc: member.doc });
+            }
+        }
+        const bound = bindWorldParts({
+            world,
+            parts: built.parts,
+            members: [...validated.filter(Boolean), ...members.filter((m) => m.kind === 'world')],
+        });
+        if (!bound.ok) {
+            setNote(`⛔ NOT LOADED — ${bound.errors.join(' · ')}`, true);
+            return false;
+        }
+        const previous = { heldWorld, heldWorldDocs, heldLibrary, heldOverlay };
+        heldWorld = world;
+        heldWorldDocs = bound.docs;
+        heldLibrary = null;
+        heldOverlay = null;
+        worldNotes = bound.notes;
+        setSource = how;
+        try {
+            openSetSession();
+        } catch (e) {
+            /** ⛔ EVERY HELD DOCUMENT GOES BACK, not just the world: a refusal
+             *  must leave the arm exactly as it found it, and the LIBRARY it was
+             *  showing is part of that. */
+            ({ heldWorld, heldWorldDocs, heldLibrary, heldOverlay } = previous);
+            openSetSession();
+            remountSetEditor();
+            setNote(`⛔ NOT LOADED — this world does not open: ${e.message}`, true);
+            return false;
+        }
+        remountSetEditor();
+        const rooms = setRoomCount();
+        setNote(`LOADED the world ${world.world_id ?? '(unstamped)'} (${how}) — `
+            + `${built.parts.length} part(s) `
+            + `${built.parts.map((p) => `"${p.id}" (${p.kind})`).join(' + ')}, `
+            + `${rooms} room(s), ${(world.links ?? []).length} crossing(s)`
+            + (previous.heldLibrary
+                ? ' ⚠ the LIBRARY held before it was DROPPED: a world\'s parts ARE its documents'
+                : '')
+            + (bound.notes.length ? ` ⚠ ${bound.notes.join(' | ')}` : ''));
+        return true;
+    };
+
     /** ⛓ HOLD AN OVERLAY over the library already held. */
     const holdOverlay = (overlay, how) => {
+        /**
+         * ⛔ EDITOR INTEGRATION W4 — an overlay has NOTHING TO BE AN OVERLAY OF
+         * under a world: a world IS the composite overlay and holds one per
+         * PART, keyed by part, inside the world document itself.
+         */
+        if (heldWorld) {
+            setNote('⛔ NOT LOADED — a WORLD is held, and a world IS the composite overlay: it '
+                + 'carries ONE overlay per PART, keyed by part, inside the world document. A '
+                + 'loose overlay names no part and there is nothing here for it to be an '
+                + 'overlay OF. Load its BUNDLE, or load the region library on its own first.',
+            true);
+            return false;
+        }
         if (!heldLibrary) {
             setNote('⛔ NOT LOADED — this is an OVERLAY and no LIBRARY is held. An overlay is '
                 + 'keyed by ROOM INDEX into a library, so there is nothing for it to be an '
@@ -1758,6 +2223,15 @@ export function main() {
             jszip: await loadJSZipBrowser({ src: frontendUrl('libs/jszip/jszip.min.js') }),
         });
         const byKind = new Map(members.map((m) => [m.kind, m.doc]));
+        /**
+         * ⛓⛓⛓ EDITOR INTEGRATION W4 — **A BUNDLE CARRYING A `world` MEMBER IS
+         * A WORLD, AND THE WORLD DECIDES.** ⛔ It is checked FIRST and not
+         * merged with the library path: a world NAMES its parts, so which
+         * documents this bundle's members are is the world's answer and not the
+         * archive's — and a bundle carrying a world AND a stray overlay would
+         * otherwise load the overlay over a library the world never declared.
+         */
+        if (byKind.has('world')) return holdWorld({ world: byKind.get('world'), members, how });
         const skipped = members.map((m) => m.kind)
             .filter((k) => k !== 'region-library' && k !== 'overlay');
         if (!byKind.has('region-library') && !byKind.has('overlay')) {
@@ -1839,7 +2313,30 @@ export function main() {
     const renderSetRoomBox = () => {
         const box = $('labSetRoomBox');
         if (!box) return;
-        box.hidden = setRoomSess === null;
+        box.hidden = setRoomSess === null && foreignRoom === null;
+        /**
+         * ⛓⛓⛓ EDITOR INTEGRATION W4 — **§21.5's LAW GAINS ONE ROW: THREE
+         * SESSIONS CAN EXIST, AND THE THIRD'S KEYS ARE IN ANOTHER PAGE.**
+         *
+         * The strip's `Ctrl+Z` binds to the strip canvas, a maze room's to this
+         * document, and a Seedling room's lives inside `watch.html` — where
+         * this page's keydown never reaches and where that page's own identity
+         * line already says which of ITS two sessions a press hits. ⛔ Said
+         * here rather than left to the reader to work out from the fact that a
+         * frame has focus: §21.5's whole rule is that the page NAMES which
+         * session an undo will reach, and a page that went quiet the moment a
+         * third one existed would be keeping the rule only while it was easy.
+         */
+        if (setRoomSess === null && foreignRoom !== null) {
+            $('labSetPalette').textContent = '';
+            $('labSetTools').textContent = '';
+            $('labSetRoomNote').textContent = `room ${foreignRoom.index} (part `
+                + `"${foreignRoom.part}", room ${foreignRoom.local} of it) is open in the `
+                + `${foreignRoom.page} editor in the frame below — its palette, its tools and `
+                + 'its `Ctrl+Z` are ITS page\'s, and its CLOSE is what folds the room back here '
+                + 'as ONE `replace-room`. ⛔ A second room cannot be opened until it is closed.';
+            return;
+        }
         if (setRoomSess === null) return;
         const pal = $('labSetPalette');
         pal.textContent = '';
@@ -1992,12 +2489,60 @@ export function main() {
              */
             set: setSession ? {
                 source: setSource,
-                library_id: setSession.record().library.library_id ?? null,
-                overlay_id: setSession.record().overlay.overlay_id ?? null,
-                rooms: setSession.record().library.entries.length,
-                links: (setSession.record().overlay.links ?? []).length,
-                locations: Object.values(setSession.record().overlay.rooms ?? {})
-                    .reduce((n, r) => n + (r.locations ?? []).length, 0),
+                /**
+                 * ⛓⛓⛓ EDITOR INTEGRATION W4 — **THE WORLD, AND THE THREE
+                 * FIELDS THAT EXIST ONLY WHEN ONE IS HELD.** ⛔ `null` under a
+                 * library rather than absent: a row that could not tell "no
+                 * world" from "this field has not landed yet" would read a page
+                 * editing a library exactly like one that failed to open a
+                 * world. The counts are the SESSION's, like every other field
+                 * here — `heldWorld` is the document AS LOADED.
+                 */
+                world: heldWorld ? {
+                    world_id: setSession.record().world.world_id ?? null,
+                    name: setSession.record().world.name ?? null,
+                    /** ⛓ Per part: what it IS and how many rooms it brought. */
+                    parts: worldParts.map((p) => ({
+                        id: p.id,
+                        kind: p.kind,
+                        rooms: p.bounds(p.recordOf(
+                            setSession.record().parts[p.id],
+                            setSession.record().world.overlays[p.id],
+                        )).w,
+                        doc_id: p.idOf(setSession.record().parts[p.id]),
+                    })),
+                    /** ⛓ The CROSSINGS — `world.links`, which is a different
+                     *  list from either part's own overlay links. */
+                    crossings: (setSession.record().world.links ?? []).map((l) => ({
+                        from: l.from, to: l.to, one_way: l.one_way,
+                    })),
+                    notes: worldNotes,
+                } : null,
+                /** ⛓ WHICH SUBSTRATE PLAYS EACH ROOM, in strip order, off the
+                 *  descriptor — the same read the badge makes. */
+                substrates: setSession
+                    ? Array.from({ length: setRoomCount() },
+                        (_, i) => setAdapter.readCell(setSession.record(), i, 0).substrate ?? null)
+                    : null,
+                /** ⛓ …and which PART each room belongs to, `null` under a library. */
+                parts: setSession
+                    ? Array.from({ length: setRoomCount() },
+                        (_, i) => setAdapter.readCell(setSession.record(), i, 0).part ?? null)
+                    : null,
+                library_id: setSession.record().library?.library_id ?? null,
+                overlay_id: setSession.record().overlay?.overlay_id ?? null,
+                rooms: setRoomCount(),
+                links: heldWorld
+                    ? (setSession.record().world.links ?? []).length
+                        + Object.values(setSession.record().world.overlays ?? {})
+                            .reduce((n, o) => n + (o?.links ?? []).length, 0)
+                    : (setSession.record().overlay.links ?? []).length,
+                locations: heldWorld
+                    ? Object.values(setSession.record().world.overlays ?? {})
+                        .flatMap((o) => Object.values(o?.rooms ?? {}))
+                        .reduce((n, r) => n + (r.locations ?? []).length, 0)
+                    : Object.values(setSession.record().overlay.rooms ?? {})
+                        .reduce((n, r) => n + (r.locations ?? []).length, 0),
                 ops: setSession.ops().length,
                 opList: setSession.ops().map((o) => o.op),
                 loadNote: $('labSetLoadNote')?.textContent ?? '',
@@ -2060,6 +2605,17 @@ export function main() {
                      * cannot see the glyph at all).
                      */
                     badges: setUi.badges(),
+                    /**
+                     * ⛓⛓ EDITOR INTEGRATION W4 — **WHICH SUBSTRATE THE PAINTER
+                     * STAMPED ON EACH CELL.** ⛔ `setUi.substrates()`, the
+                     * PAINTER's own decision, not a second read of the record —
+                     * `badges()`' reason exactly (trap 722): a readout that
+                     * derived its own would agree with the record while the
+                     * strip disagreed with both. On a LIBRARY it is
+                     * `[null × rooms]`, which is the claim its gate makes
+                     * rather than a silence.
+                     */
+                    substrates: setUi.substrates(),
                 } : null,
                 /**
                  * ⛓ THE NOTE AND THE IDENTITY LINE ARE THE MOUNT'S OWN BOXES —
@@ -2093,6 +2649,17 @@ export function main() {
                  * presses.
                  */
                 openRoom: setRoomIndex,
+                /**
+                 * ⛓⛓ EDITOR INTEGRATION W4 — **AND WHICH PART THAT ROOM IS IN.**
+                 * The strip's index is GLOBAL and a part's own is not; a row
+                 * that had only the global index could not tell which document
+                 * an edit is about to land in, which is the one thing the two
+                 * openers differ over.
+                 */
+                openRoomPart: setRoomIndex === null || !heldWorld ? null
+                    : setAdapter.readCell(setSession.record(), setRoomIndex, 0).part,
+                openRoomSubstrate: setRoomIndex === null ? null
+                    : setAdapter.readCell(setSession.record(), setRoomIndex, 0).substrate ?? null,
                 openRoomOps: setRoomSess ? setRoomSess.ops().length : 0,
                 openRoomOpList: setRoomSess
                     ? setRoomSess.ops().map((o) => (o.op === 'group'
@@ -2103,6 +2670,28 @@ export function main() {
                  *  core carries a base (it never interprets one). */
                 openRoomBase: setRoomSess ? setRoomSess.payload().base : null,
                 openRoomTool: setRoomTool?.tool ?? null,
+                /**
+                 * ⛓⛓⛓ EDITOR INTEGRATION W4 — **THE THIRD SESSION.** A world
+                 * strip can have a maze room open HERE and a Seedling room open
+                 * in `watch.html` — never both (§9.6 #3), which is what makes
+                 * this a single object and not a list. ⛔ `null` is a real state
+                 * and not a hole: a row that could not tell "no foreign room"
+                 * from "the frame is up but nothing is in it" would read a
+                 * refused open exactly like a successful one.
+                 */
+                foreignRoom: foreignRoom ? {
+                    index: foreignRoom.index,
+                    part: foreignRoom.part,
+                    local: foreignRoom.local,
+                    substrate: foreignRoom.substrate,
+                    page: foreignRoom.page,
+                    arm: foreignRoom.arm,
+                    iframeId: foreignRoom.transport.iframeId,
+                    /** ⛓ Whether the other page has ANSWERED yet — the flush
+                     *  point, and the one fact that separates "the frame is
+                     *  loading" from "the document is in it". */
+                    connected: foreignRoom.transport.ready(),
+                } : null,
             } : null,
             directives: (state.directives ?? []).map((d) => ({
                 instance: d.instance, outcome: d.outcome, keptKind: d.keptKind, at: d.at,
@@ -2669,7 +3258,7 @@ export function main() {
                         + 'served pack, or `?library=`), or send one over `procgenLab:load`.',
                     true);
                     render();
-                } else if (params.room >= setSession.record().library.entries.length) {
+                } else if (params.room >= setRoomCount()) {
                     /**
                      * ⛔ THE BOUND IS CHECKED HERE AND NOT INSIDE `openSetRoomAt`:
                      * that function's callers are the strip's own presses, which
@@ -2677,9 +3266,11 @@ export function main() {
                      * and `setAdapter.readCell` would throw on an index the
                      * library does not have — a page-killing answer to a typo.
                      */
-                    say(`⛔ ?room=${params.room} — the held library "`
-                        + `${setSession.record().library.library_id ?? '(unstamped)'}" has `
-                        + `${setSession.record().library.entries.length} room(s), numbered from `
+                    say(`⛔ ?room=${params.room} — the held `
+                        + (heldWorld
+                            ? `world "${setSession.record().world.world_id ?? '(unstamped)'}"`
+                            : `library "${setSession.record().library.library_id ?? '(unstamped)'}"`)
+                        + ` has ${setRoomCount()} room(s), numbered from `
                         + '0. No room was opened.', true);
                     render();
                 } else if (!openSetRoomAt(params.room)) {
@@ -2792,13 +3383,54 @@ export function main() {
         holdLibrary(parseRegionLibrary(await res.text()), `?library=${url}`);
     };
 
+    /**
+     * ⛓⛓⛓ EDITOR INTEGRATION W4 — **`?world=` FETCHES A BUNDLE.** ⛔ Bytes and
+     * not text: a world names its parts and travels with them, so the address
+     * is a `.zip`. The law is `?library=`'s, said in the same words — a
+     * TRANSPORT failure is FATAL BY NAME (the address promised a world and the
+     * page has none), and a CONTENT failure goes in the arm's own LOAD box
+     * through `takeSetBundle`, which leaves the rest of the page working.
+     */
+    const bootWorld = async (url) => {
+        let res;
+        try {
+            res = await fetch(url);
+        } catch (e) {
+            throw new Error(`?world=${url} — the fetch FAILED (${e.message}). ⛔ REFUSED `
+                + 'rather than opened on nothing: the address names a WORLD BUNDLE, and an arm '
+                + 'with no world under a link that names one would be a page saying something '
+                + 'the address does not.');
+        }
+        if (!res.ok) {
+            throw new Error(`?world=${url} — HTTP ${res.status}. ⛔ REFUSED rather than opened `
+                + 'on nothing: the address names a WORLD BUNDLE, and an arm with no world '
+                + 'under a link that names one would be a page saying something the address '
+                + 'does not.');
+        }
+        await takeSetBundle(new Uint8Array(await res.arrayBuffer()), `?world=${url}`);
+    };
+
     const boot = async () => {
         /**
          * ⛓ FIRST, because it is independent of the ladder: `?library=` fills
          * the SET arm and `?seed=`/`?gen=` fill the other three, and a URL is
          * allowed to carry both.
+         *
+         * ⛓⛓ EDITOR INTEGRATION W4 — **AND `?world=` WINS OVER `?library=`.** A
+         * world's parts ARE its documents, so the two cannot both be held; the
+         * WORLD is the larger document and the arm SAYS which one it took
+         * rather than loading one over the other in whichever order the reader
+         * happened to type them.
          */
-        if (params.library) {
+        if (params.world) {
+            await ensureSetSchemas();
+            await bootWorld(params.world);
+            if (params.library) {
+                setNote(`${setLoadNote} · ⚠ \`?library=${params.library}\` was IGNORED — a WORLD `
+                    + 'is held and its parts ARE its documents, so a library beside one would '
+                    + 'be a third document the world\'s manifest does not name', setLoadBad);
+            }
+        } else if (params.library) {
             await ensureSetSchemas();
             await bootLibrary(params.library);
         }
@@ -3030,7 +3662,22 @@ export function main() {
              * fold a `replace-room` back into a count. The same law the readout
              * itself states — *"the counts are read off the SESSION's record"*.
              */
-            setArm: () => (setSession
+            /**
+             * ⛔⛔ EDITOR INTEGRATION W4 — **A WORLD DOES NOT RIDE THIS
+             * ENVELOPE, AND THE REFUSAL IS THE ENVELOPE'S OWN SENTENCE.**
+             * `makeSetRecordEnvelope`'s `substrate` says *what a reader may
+             * assume about `record`'s SHAPE — a region library on the maze, a
+             * level set on Seedling* — and a WORLD record (`{world, parts}`) is
+             * neither. Publishing one under `substrate: 'maze'` would be a true
+             * address on a document of the wrong kind, which is the one thing
+             * that envelope exists to prevent. ⇒ while a world is held the
+             * bridge falls back to the LADDER payload, exactly as it does with
+             * nothing loaded, and `window.__mazeLab.set.world` is where a
+             * reader learns what this page is editing. A world-shaped envelope
+             * is a PROTOCOL addition and belongs to whichever slice gives a
+             * host a reason to drive one.
+             */
+            setArm: () => (setSession && !heldWorld
                 ? { room: setRoomIndex, record: setSession.record() }
                 : null),
         });

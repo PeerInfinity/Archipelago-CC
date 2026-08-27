@@ -54,6 +54,14 @@
 import eventBus from '../../app/core/eventBus.js';
 import { LAB_EVENTS, SUBSTRATES, addressedTo } from '../procgenCore/labProtocol.js';
 import { openRoomOf } from '../procgenCore/labRoomEnvelope.js';
+/**
+ * ⛓ EDITOR INTEGRATION W4 — **THE WIRE FORMAT, FROM THE ONE PLACE IT LIVES.**
+ * `shared/communicationProtocol.js` is what `AdapterClient` speaks, so a
+ * transport that minted its own message names would be the second spelling of a
+ * handshake the client alone decides. ⛔ `shared/` is a SUBMODULE and is READ,
+ * never edited.
+ */
+import { MessageTypes, createMessage } from '../shared/communicationProtocol.js';
 
 const MODULE_ID = 'procgenLabRoomEditor';
 
@@ -124,10 +132,14 @@ const refuse = (why) => ({ ok: false, why, close() {} });
  * @param {object} opts.record     the SET document to hand in
  * @param {(record:object)=>void} opts.onSave  called ONCE, on the close
  * @param {object} [opts.bus]      the event bus (the app's, by default)
+ * @param {object} [opts.transport] a PANEL-SHAPED host (EDITOR INTEGRATION W4,
+ *   §9.6 #1) — `{substrate, iframeId, load, navigate, raise?, _note?}`. Supplied,
+ *   it REPLACES the mounted-panel lookup, which is what lets a lab PAGE be the
+ *   host. See `createPageLabTransport`.
  * @returns {{ok:boolean, why?:string, close:()=>void}}
  */
 export function openLabRoomEditor({
-    page, arm, room = 0, record, onSave, bus = eventBus,
+    page, arm, room = 0, record, onSave, bus = eventBus, transport = null,
 } = {}) {
     if (!SUBSTRATES.includes(page)) {
         return refuse(`labRoomEditor: page is ${JSON.stringify(page)}, not one of `
@@ -156,7 +168,18 @@ export function openLabRoomEditor({
             + 'silently.');
     }
 
-    const panel = findLabPanel(page);
+    /**
+     * ⛓⛓⛓ EDITOR INTEGRATION W4 (§9.6 #1) — **A TRANSPORT WHOSE HOST IS A
+     * PAGE.** `findLabPanel` resolves a mounted `procgenLabPanel` INSTANCE,
+     * which exists in the app and does NOT exist inside `lab.html` — and ⚖ Q4
+     * ruled `lab.html` is the world editor's page, so a world strip opening a
+     * Seedling room has no panel to find. An injected transport is a
+     * PANEL-SHAPED object (`substrate`, `iframeId`, `load`, `navigate`,
+     * `raise?`, `_note?`) and everything below is unchanged: the three phases,
+     * the ONE navigate, the close-as-a-TRANSITION. ⛔ The `bus` is already a
+     * parameter, which is the other half — a page hands in its own.
+     */
+    const panel = transport ?? findLabPanel(page);
     if (!panel) {
         return refuse(`labRoomEditor: no Procgen Lab panel is mounted for ${JSON.stringify(page)}. `
             + 'Open "Procgen Lab — ' + page + '" first. ⛔ Said rather than opened: this '
@@ -251,4 +274,190 @@ export function openLabRoomEditor({
  */
 export function bindLabRoomEditor({ page, arm }) {
     return (session = {}) => openLabRoomEditor({ ...session, page, arm });
+}
+
+/**
+ * ⛓ …and the SECOND binding of the same kind: the host is a PAGE, so the
+ * transport and its bus come from the caller and the panel registry is never
+ * consulted. ⛔ A separate binder rather than an optional argument on the first
+ * one, because *"which host"* is a fact about the CALLER and not about the
+ * substrate — `regionEditors` resolves the registry entry and gets the panel
+ * form; `lab.html` builds its own and gets this one.
+ */
+export function bindPageLabRoomEditor({ page, arm, transport, bus }) {
+    return (session = {}) => openLabRoomEditor({ ...session, page, arm, transport, bus });
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ EDITOR INTEGRATION W4 — A TRANSPORT WHOSE HOST IS A PAGE (§9.6 #1)
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⛔⛔ **WHY `procgenLabPanelUI`'s HOST HALF COULD NOT BE REUSED — MEASURED.**
+ * That class takes a Golden Layout `container`, publishes on the APP's
+ * `eventBus` singleton, and moves every message through
+ * `window.iframeAdapterCore` — whose constructor takes the app's bus, its
+ * dispatcher and its dynamic-publisher registrar and which imports
+ * `gameState/singleton.js`. None of those exist inside `lab.html`, and standing
+ * one up there would import the app into a standalone page. ⇒ the transport is
+ * the alternative, and it is the SMALLEST thing that can be one: the child page
+ * already speaks `AdapterClient` (it installs its bridge under `?iframeId=`), so
+ * what is missing is the four wire messages that client waits for.
+ *
+ * ⛓ **NOTHING ABOUT THE CONTRACT MOVES.** `openLabRoomEditor`'s three phases,
+ * its ONE navigate and its close-as-a-TRANSITION are unchanged; this supplies
+ * the same four members a panel does (`substrate`, `iframeId`, `load`,
+ * `navigate`) and a bus for the fifth.
+ */
+
+/**
+ * ⛓ A bus for ONE page — `subscribe`/`unsubscribe`/`publish`, the three members
+ * `openLabRoomEditor` uses. ⛔ Not the app's: `lab.html` has no app, and a
+ * module-level singleton would leak one page's frames into the next mount.
+ */
+export function createPageLabBus() {
+    const byEvent = new Map();
+    return {
+        subscribe(event, handler) {
+            if (!byEvent.has(event)) byEvent.set(event, new Set());
+            byEvent.get(event).add(handler);
+        },
+        unsubscribe(event, handler) {
+            byEvent.get(event)?.delete(handler);
+        },
+        publish(event, data) {
+            for (const handler of [...(byEvent.get(event) ?? [])]) handler(data);
+        },
+        /** ⛓ TEST-ONLY, and named so — how many listeners a close left behind. */
+        count: (event) => (byEvent.get(event)?.size ?? 0),
+    };
+}
+
+/**
+ * ⛓⛓⛓ **THE FOUR WIRE MESSAGES AN `AdapterClient` WAITS FOR**, and what each
+ * one is for. ⛔ The names are `shared/communicationProtocol.js`'s own — this
+ * file spells no message string of its own, for `labProtocol`'s reason.
+ *
+ *   `IFRAME_READY`     → answer `ADAPTER_READY`, which RESOLVES the child's
+ *                        `connect()` promise. Without it the client retries for
+ *                        10 s and then rejects, and the page comes up with no
+ *                        bridge at all (a working standalone page, silently).
+ *   `SUBSCRIBE_EVENT_BUS` → the child says which events it wants. Recorded, so
+ *                        a `load` sent before the subscription can be re-sent.
+ *   `IFRAME_APP_READY` → the child has subscribed AND drawn. This is the flush
+ *                        point, and it is the SECOND catch-up
+ *                        `feedback_iframe_adapter_gotchas` names: a publish
+ *                        before this reaches nobody and is not even queued.
+ *   `PUBLISH_EVENT_BUS` → everything the page says, `levelChanged` included.
+ *
+ * ⚠ `HEARTBEAT` is answered because the client starts one on connect; nothing
+ * here depends on it, and an unanswered beat is not fatal to the client either.
+ *
+ * @param {object} o
+ * @param {'maze'|'seedling'} o.page   which lab page this frame is
+ * @param {string} o.src               the page's URL, WITHOUT `iframeId`/`hostOrigin`
+ * @param {HTMLElement} o.mount        where the iframe goes
+ * @param {object} [o.bus]             `createPageLabBus()`'s, by default
+ * @param {Function} [o.listen]        `(target, event, handler) => void` — the
+ *   page's own lifetime holder, so the `message` listener is retired with the
+ *   arm. Defaults to `addEventListener`, which is what a node row hands a stub for
+ * @param {Function} [o.note]          `(text, bad) => void` — the page's box
+ * @param {object} [o.win]             the window (`globalThis`, by default)
+ * @param {object} [o.doc]             the document (`win.document`, by default)
+ * @returns {{substrate, iframeId, bus, iframe, load, navigate, raise, _note, dispose}}
+ */
+export function createPageLabTransport({
+    page, src, mount, bus = createPageLabBus(), listen = null, note = () => {},
+    win = globalThis, doc = null,
+} = {}) {
+    const document_ = doc ?? win.document;
+    const iframeId = `pagelab-${page}-${(win.__labTransportSeq = (win.__labTransportSeq ?? 0) + 1)}`;
+    const origin = win.location?.origin ?? '';
+    const iframe = document_.createElement('iframe');
+    iframe.className = 'labRoomFrame';
+    iframe.dataset.iframeId = iframeId;
+    /**
+     * ⛔ **THE ADDRESS IS SET BEFORE THE FRAME IS IN THE DOM.** `?iframeId=` is
+     * how the child knows to install its bridge at all (both pages check it and
+     * return early without it), and `&hostOrigin=` is what lets it target its
+     * sends at us instead of falling back to `'*'`.
+     */
+    const join = src.includes('?') ? '&' : '?';
+    iframe.src = `${src}${join}iframeId=${encodeURIComponent(iframeId)}`
+        + `&hostOrigin=${encodeURIComponent(origin)}`;
+    mount.appendChild(iframe);
+
+    let ready = false;
+    let disposed = false;
+    const queued = new Map();
+
+    const post = (type, data) => {
+        const target = iframe.contentWindow;
+        if (!target || disposed) return false;
+        target.postMessage(createMessage(type, iframeId, data), origin || '*');
+        return true;
+    };
+
+    const sendEvent = (eventName, eventData) => post(
+        MessageTypes.EVENT_BUS_MESSAGE, { eventName, eventData },
+    );
+
+    /**
+     * ⛓ ONE-DEEP PER VERB AND THE LAST SEND WINS — the panel's own queue rule
+     * (a queue that replayed every press would make SEND mean *"this document,
+     * eventually, after those other ones"*).
+     */
+    const flush = () => {
+        for (const [eventName, eventData] of [...queued]) {
+            queued.delete(eventName);
+            sendEvent(eventName, eventData);
+        }
+    };
+
+    const onMessage = (event) => {
+        const message = event?.data;
+        if (disposed || !message || typeof message !== 'object') return;
+        const id = message.clientId || message.iframeId || message.windowId;
+        if (id !== iframeId) return;
+        const T = MessageTypes;
+        if (message.type === T.IFRAME_READY) {
+            post(T.ADAPTER_READY, { capabilities: ['eventBus'] });
+        } else if (message.type === T.IFRAME_APP_READY) {
+            ready = true;
+            flush();
+        } else if (message.type === T.PUBLISH_EVENT_BUS) {
+            bus.publish(message.data?.eventName, message.data?.eventData);
+        } else if (message.type === T.HEARTBEAT) {
+            post(T.HEARTBEAT_RESPONSE, {});
+        }
+    };
+
+    if (listen) listen(win, 'message', onMessage);
+    else win.addEventListener('message', onMessage);
+
+    const address = () => ({ substrate: page, iframeId });
+
+    const send = (eventName, payload) => {
+        if (!ready) { queued.set(eventName, payload); return false; }
+        return sendEvent(eventName, payload);
+    };
+
+    return {
+        substrate: page,
+        iframeId,
+        bus,
+        iframe,
+        load: (payload) => send(LAB_EVENTS.load, { ...address(), payload }),
+        navigate: (search) => send(LAB_EVENTS.navigate, { ...address(), search }),
+        /** ⛓ The frame is ON the page and there is no stack to raise it out of —
+         *  a no-op that SAYS it is one rather than an absent member the opener
+         *  would have to feature-detect. */
+        raise: () => false,
+        _note: (text, bad) => note(text, bad),
+        ready: () => ready,
+        dispose() {
+            disposed = true;
+            queued.clear();
+            iframe.remove?.();
+        },
+    };
 }

@@ -326,10 +326,20 @@ describe('labRoomEditor — what it is allowed to know', () => {
         const src = readFileSync(
             fileURLToPath(new URL('./labRoomEditor.js', import.meta.url)), 'utf8');
         const specs = [...src.matchAll(/^import[^'"]*['"]([^'"]+)['"]/gm)].map((m) => m[1]);
+        /**
+         * ⛓ EDITOR INTEGRATION W4 — **`shared/communicationProtocol.js` JOINED
+         * THE LIST, AND IT IS NOT A SUBSTRATE.** `createPageLabTransport` speaks
+         * the wire format `AdapterClient` speaks, and minting its own message
+         * names would be a second spelling of a handshake the client alone
+         * decides. `shared/` is the submodule every side of the app reads; the
+         * claim this row makes — no substrate, ever — is untouched, and the
+         * loop below is what actually makes it.
+         */
         expect(specs).toEqual([
             '../../app/core/eventBus.js',
             '../procgenCore/labProtocol.js',
             '../procgenCore/labRoomEnvelope.js',
+            '../shared/communicationProtocol.js',
         ]);
         /**
          * ⛔ THE SCAN IS OVER THE SPECIFIERS, NOT THE FILE. The docblock NAMES
