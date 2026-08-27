@@ -801,6 +801,7 @@ const PIN = Object.freeze({
             "runReport",
             "selectRoom",
             "selected",
+            "substrates",
             "view"
         ],
         "said": [
@@ -1054,16 +1055,17 @@ describe('⛔⛔ EDITOR v3 E2b — the lift is BYTE-INERT on Seedling, and it is
         })).toThrow(/`document` is required/);
         expect(runScript(seedlingHarness()).surface).toEqual(PIN.surface);
         /**
-         * ⛔⛔ **AND THE PIN'S SURFACE MOVED ONCE, ON PURPOSE** (EDITOR v3 E6b).
-         * `badges` is an ADDITION — every accessor the pre-lift capture had is
-         * still here, in the same spelling — so what the pin still catches is a
+         * ⛔⛔ **AND THE PIN'S SURFACE HAS MOVED TWICE, BOTH ON PURPOSE**
+         * (EDITOR v3 E6b's `badges`; EDITOR INTEGRATION W4's `substrates`).
+         * Both are ADDITIONS — every accessor the pre-lift capture had is still
+         * here, in the same spelling — so what the pin still catches is a
          * REMOVAL or a RENAME, which is what it was captured to catch. ⛓ Said
          * here rather than silently re-captured: a pin edited without a
          * sentence is a pin that stopped being a control.
          */
         expect(PIN.surface).toEqual([
             'applySet', 'armedExit', 'badges', 'destroy', 'render', 'report', 'rows',
-            'runReport', 'selectRoom', 'selected', 'view',
+            'runReport', 'selectRoom', 'selected', 'substrates', 'view',
         ]);
     });
 });

@@ -16,8 +16,14 @@ import { describe, expect, it } from 'vitest';
 
 import {
     LAB_SUBSTRATE, SEEDLING_ATLAS_GAME, bindWorldParts, makeDrawRoomStill, mazeLibraryRows,
-    mazeSetBindings, roomBaseTag, sniffSetDocument, worldPartDescriptors,
+    mazeSetBindings, roomBaseTag, sniffSetDocument, worldDownloadMembers, worldPartDescriptors,
+    worldSetBindings,
 } from './mazeSetLab.js';
+import { createEditSession } from '../procgenCore/editCore.js';
+import { roomRowsOf } from '../procgenCore/setEditorCore.js';
+import { ADAPTER_FNS } from '../procgenCore/setEditorView.js';
+import { createWorldSetAdapter, worldRecord } from '../procgenCore/worldSetAdapter.js';
+import { mazeEditAdapter } from './mazeEditAdapter.js';
 import { classifyDocument } from '../presets/documentBundle.js';
 import { emptyWorld } from '../procgenCore/worldDocument.js';
 import { substrateIdFor } from '../procgenPipeline/regionAtlasCompiler.js';
@@ -513,5 +519,219 @@ describe('⛓⛓⛓ W4 — a WORLD arriving at the maze lab', () => {
         const mz = parts.find((p) => p.kind === 'region-library');
         expect(mz.idOf(lib)).toBe(mazeSetBindings().document.idOf(lib));
         expect(mz.idOf(lib)).toBe(lib.library_id);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ W4 — THE WORLD'S BINDINGS, OVER BOTH REAL ADAPTERS
+ * ══════════════════════════════════════════════════════════════════════ */
+
+const w4Session = ({ crossing = false } = {}) => {
+    const set = w4LevelSet();
+    const lib = w4Library();
+    const world = w4World({ set, library: lib });
+    const { parts, deps } = worldPartDescriptors({ world, ...w4Deps() });
+    const adapter = createWorldSetAdapter({ parts });
+    const session = createEditSession(adapter, worldRecord(world, { seed: set, mz: lib }));
+    const go = (op) => {
+        const r = session.apply(op);
+        if (!r.ok) throw new Error(`the fixture's own op was refused: ${r.description}`);
+        return r;
+    };
+    go({ op: 'connect', from: [2, 'exit_1'], to: [3, 'exit_3'] });
+    if (crossing) {
+        go({
+            op: 'connect',
+            from: { part: 'seed', room: 1, exit: 'out_teleporter_128_128' },
+            to: { part: 'mz', room: 0, exit: 'exit_3' },
+            one_way: true,
+        });
+    }
+    return { session, parts, deps, adapter, set, lib, world, go };
+};
+
+const w4Bindings = (h) => worldSetBindings({
+    parts: h.parts,
+    deps: h.deps,
+    parseOel: parseOelLevel,
+    drawMazeStill: makeDrawRoomStill(),
+    gameName: 'W4 World',
+});
+
+describe('⛓⛓⛓ W4 — `worldSetBindings` over a Seedling set and a maze library', () => {
+    /**
+     * ⛔ The mount refuses a missing binding BY NAME at mount time rather than
+     * at the first render — so the claim here is that every name it `need()`s
+     * is supplied, asked of `ADAPTER_FNS` itself and not of a list typed twice.
+     */
+    it('supplies every binding `mountSetEditor` requires, by the mount\'s own roster', () => {
+        const b = w4Bindings(w4Session());
+        for (const name of ADAPTER_FNS) expect(typeof b.adapterFns[name]).toBe('function');
+        for (const name of ['idOf', 'docOf']) expect(typeof b.document[name]).toBe('function');
+        for (const name of ['exit', 'location']) expect(typeof b.ruleKeys[name]).toBe('function');
+        for (const name of ['manifestRows', 'roomRows']) expect(typeof b.forms[name]).toBe('function');
+        for (const name of ['valueOf', 'labelOf', 'addressOf', 'targetOptions', 'disconnectOp']) {
+            expect(typeof b.exits[name]).toBe('function');
+        }
+        for (const name of ['options', 'targetOf']) expect(typeof b.locations[name]).toBe('function');
+        for (const name of ['linkBound', 'isRefusal', 'stillKey', 'sourceKind']) {
+            expect(typeof b[name]).toBe('function');
+        }
+        expect(b.document).toMatchObject({ kind: 'world', noun: 'world', validator: 'worldErrors' });
+        /**
+         * ⛔ **NO `addRoomOp`, AND IT IS `null` RATHER THAN A GUESS** — a
+         * world's `add-room` is PART-addressed and the mount's press says only
+         * WHERE, so the press keeps the mount's own sentence.
+         */
+        expect(b.addRoomOp).toBeNull();
+    });
+
+    /**
+     * ⛓ BOTH parts' overlays are built by `procgenCore/setOverlay.js`, so the
+     * world does not CHOOSE a rule-key spelling — asserted as the same function
+     * object rather than as two strings that happen to match today.
+     */
+    it('the rule keys are ONE function object, shared by both parts', () => {
+        const h = w4Session();
+        const b = w4Bindings(h);
+        const [seed, mz] = h.parts;
+        expect(b.ruleKeys.exit).toBe(seed.ruleKeys.exit);
+        expect(b.ruleKeys.exit).toBe(mz.ruleKeys.exit);
+        expect(b.ruleKeys.location).toBe(seed.ruleKeys.location);
+        expect(b.ruleKeys.location).toBe(mz.ruleKeys.location);
+    });
+
+    it('the strip reads the SUBSTRATE off the cell, and the card names it', () => {
+        const h = w4Session();
+        const b = w4Bindings(h);
+        const rows = roomRowsOf(h.session.record(), b.adapterFns);
+        expect(rows).toHaveLength(4);
+        const cells = [0, 1, 2, 3].map((i) => b.adapterFns.readSetCell(h.session.record(), i, 0));
+        expect(cells.map((c) => b.cellSubstrate(c)))
+            .toEqual(['flash_seedling', 'flash_seedling', 'maze', 'maze']);
+        expect(cells.map((c) => c.part)).toEqual(['seed', 'seed', 'mz', 'mz']);
+        /**
+         * ⛔ MUTANT: the badge DERIVED (`deriveWorldAtlasOf(...).atlas.regions[i]
+         * .substrate`). It agrees here — and it costs an atlas MERGE per paint,
+         * and it answers for a region the derivation may have DROPPED. The
+         * claim is that it comes off the descriptor, which is why this reads
+         * `cellSubstrate(cell)` and not the atlas.
+         */
+        expect(b.cellSubstrate({})).toBeNull();
+        /**
+         * ⛓⛓ ⚖ THE ONE-RENDERER LAW — a maze cell goes to the maze's own
+         * painter and a Seedling cell gets a CARD, and the two are told apart by
+         * the number of draw calls: a real still lays down one mark per tile.
+         */
+        const mazeCalls = [];
+        expect(b.drawRoomStill(fakeCanvas(mazeCalls), cells[2], 2)).toBeNull();
+        const seedCalls = [];
+        expect(b.drawRoomStill(fakeCanvas(seedCalls), cells[0], 0)).toBeNull();
+        expect(mazeCalls.length).toBeGreaterThan(50);
+        expect(seedCalls.filter((c) => c.startsWith('fillText'))).toHaveLength(3);
+        expect(seedCalls.join(' ')).toContain('flash_seedling');
+    });
+
+    /**
+     * ⛔⛔ **THE ENDPOINT VALUE CARRIES ITS PART, AND THE CLAIM IS SCORED
+     * AGAINST THE LAW.** Not "the two bindings agree" — the address this
+     * produces is handed to the WORLD ADAPTER and the claim is that the op is
+     * ACCEPTED. A binding that dropped the part tag would hand a maze `exit_id`
+     * to Seedling's ordinal reader, which coerces to 0 and wires a door nobody
+     * drew.
+     */
+    it('a parted exit value round trips and the ADAPTER accepts the address', () => {
+        const h = w4Session();
+        const b = w4Bindings(h);
+        const record = h.session.record();
+        const seedExits = b.adapterFns.exitsOfRoom(record, 1);
+        const mzExits = b.adapterFns.exitsOfRoom(record, 2);
+        expect(seedExits.every((e) => e.part === 'seed')).toBe(true);
+        expect(mzExits.every((e) => e.part === 'mz')).toBe(true);
+        const seedValue = b.exits.valueOf(seedExits[0]);
+        const mzValue = b.exits.valueOf(mzExits[0]);
+        expect(seedValue).toMatch(/^seed\//);
+        expect(mzValue).toMatch(/^mz\//);
+        // ⛓ the ADDRESS is the part's own kind: an ORDINAL vs an exit id
+        expect(typeof b.exits.addressOf(seedValue)).toBe('number');
+        expect(typeof b.exits.addressOf(mzValue)).toBe('string');
+        // ⛔ AND THE ADAPTER TAKES IT — a maze door inside the maze part
+        const ring = h.session.apply({
+            op: 'connect',
+            from: [2, b.exits.addressOf(mzValue)],
+            to: [3, b.exits.addressOf(b.exits.valueOf(b.adapterFns.exitsOfRoom(record, 3)[0]))],
+        });
+        expect(ring.ok || /already/.test(ring.description)).toBe(true);
+        // ⛓ …and a `disconnect` built from a parted value is the PART's own op
+        expect(b.exits.disconnectOp(2, mzValue))
+            .toEqual({ op: 'disconnect', room: 2, exit_id: mzExits[0].exit_id });
+        expect(b.exits.disconnectOp(1, seedValue))
+            .toEqual({ op: 'disconnect', room: 1, exitIndex: seedExits[0].index });
+    });
+
+    /**
+     * ⛓⛓⛓ **A ROOM CLOSES INTO ITS OWN PART AND THE OP IS ADDRESSED GLOBALLY.**
+     * ⛔ MUTANT: the close addressed by the LOCAL index. Room 2 of the world is
+     * room 0 of the maze part, so a local address would `replace-room` the
+     * SEEDLING part's room 0 — a picture of one document written into another.
+     */
+    it('`closeRoomSession` folds ONE `replace-room` at the GLOBAL index', () => {
+        const h = w4Session();
+        const b = w4Bindings(h);
+        const before = h.session.ops().length;
+        const cell = b.adapterFns.readSetCell(h.session.record(), 2, 0);
+        const world = deserializeMazeWorld(cell.payload);
+        const roomSession = createEditSession(mazeEditAdapter, world);
+        /**
+         * ⛔⛔ **THE ROOM SESSION HAS TO CARRY AN EDIT, AND THAT IS THE ROW'S
+         * OWN FINDING.** `editCore` drops a no-op: a close that re-serialised
+         * an untouched room came back `{ok: true, applied: false}` and moved no
+         * op at all, so a row over a ZERO-edit session would have passed under a
+         * `closeRoomSession` that did nothing (trap 599's family — the close is
+         * a TRANSITION, and its evidence here is the op, not the call).
+         */
+        const painted = roomSession.apply({ op: 'setTile', x: 2, y: 2, tile: 'wall' });
+        expect(painted).toMatchObject({ ok: true, applied: true });
+        expect(roomSession.ops()).toHaveLength(1);
+        b.adapterFns.closeRoomSession(h.session, roomSession, 2);
+        const ops = h.session.ops();
+        expect(ops).toHaveLength(before + 1);
+        expect(ops[ops.length - 1]).toMatchObject({ op: 'replace-room', room: 2 });
+        // ⛔ …and the SEEDLING half is byte-untouched by a maze room's close
+        expect(JSON.stringify(h.session.record().parts.seed)).toBe(JSON.stringify(h.set));
+    });
+
+    /**
+     * ⛓⛓⛓ **THE DOWNLOAD IS THE WORLD PLUS BOTH PARTS, STAMPED ONCE.**
+     */
+    it('`worldDownloadMembers` emits the world, both parts and the companion', () => {
+        const h = w4Session({ crossing: true });
+        const out = worldDownloadMembers(h.session, h.parts);
+        expect(out.members.map((m) => m.kind))
+            .toEqual(['world', 'level-set', 'ap-mapping', 'region-library']);
+        const world = out.members[0].doc;
+        expect(world.world_id).toMatch(/^world-[0-9a-f]+$/);
+        expect(out.report.world_id).toBe(world.world_id);
+        expect(out.report.parts).toEqual(['seed', 'mz']);
+        expect(out.report.rooms).toBe(4);
+        expect(out.report.links).toBe(1);
+        /**
+         * ⛔ **THE PARTS' OVERLAYS RIDE INSIDE THE WORLD AND NOWHERE ELSE** — a
+         * bundle carries ONE `overlay.json` member, so two overlays cannot both
+         * ride it and a world that emitted them separately would write a member
+         * kind the reader would hand back as somebody else's.
+         */
+        expect(Object.keys(world.overlays).sort()).toEqual(['mz', 'seed']);
+        expect(world.overlays.mz.links).toHaveLength(1);
+        expect(out.members.map((m) => m.kind).filter((k) => k === 'overlay')).toEqual([]);
+        // ⛓ ONE STAMP PER PRESS — two presses over the same edits are one id
+        expect(worldDownloadMembers(h.session, h.parts).members[0].doc.world_id)
+            .toBe(world.world_id);
+        // ⛓ …and an edit MOVES it
+        h.go({ op: 'set-field', path: 'name', value: 'a world with a name' });
+        expect(worldDownloadMembers(h.session, h.parts).members[0].doc.world_id)
+            .not.toBe(world.world_id);
+        // ⛓ the maze's `apMappingWhy` travels as a note, not as an empty companion
+        expect(out.apMappingWhy).toMatch(/a region library has no VANILLA mapping/);
     });
 });

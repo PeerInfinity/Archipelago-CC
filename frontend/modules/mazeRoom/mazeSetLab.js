@@ -32,7 +32,13 @@
  */
 
 import { classifyDocument } from '../presets/documentBundle.js';
+import { stampIdentity } from '../procgenCore/contentIdentity.js';
 import { OVERVIEW } from '../procgenCore/setEditorCore.js';
+import { deriveWorldAtlasOf, worldRulesJsonOf } from '../procgenCore/worldDerivation.js';
+import {
+    WORLD_FIELDS, exitsOfWorldRoom, isWorldSetRefusal, partAt, partRecordOf,
+    validateWorldForDownload, worldAdapterFns,
+} from '../procgenCore/worldSetAdapter.js';
 import { deserializeMazeWorld } from './mazeRoomEngine.js';
 import { drawWorld, plainView } from './mazeRoomRender.js';
 import { emptyMazeOverlay } from './mazeAtlasDerivation.js';
@@ -58,9 +64,22 @@ import {
     whatLinksHere as seedlingWhatLinksHere,
 } from '../seedlingDemo/seedlingSetAdapter.js';
 import {
+    ROOM_FIELDS as SEEDLING_ROOM_FIELDS,
+} from '../seedlingDemo/seedlingSetAdapter.js';
+import {
     SeedlingSetOverlayError, emptyOverlay as emptySeedlingOverlay,
     exitRuleKey as seedlingExitRuleKey, locationRuleKey as seedlingLocationRuleKey,
 } from '../seedlingDemo/seedlingSetOverlay.js';
+import { roomRecordOf, roomSourceKind } from '../seedlingDemo/levelSetValidator.js';
+/**
+ * ⛓⛓ **THE SEEDLING LINK-SCAN BOUND IS IMPORTED, NOT RE-DERIVED.** `LINK_SCAN`
+ * and `linkScanCost` are facts about the SEEDLING substrate — measured over the
+ * vanilla 116 — and they live where they were measured. ⛔ Nothing in
+ * `watchSetEditor.js` is EDITED by this slice (its 226-row gate is a QUOTED
+ * standing row); this reads ONE exported function, which is the alternative to
+ * a second cost model that would part company on the first re-measurement.
+ */
+import { linkScanBound as seedlingLinkScanBound } from '../seedlingDemo/watchSetEditor.js';
 
 /**
  * ⛓ THE SUBSTRATE THIS ARM CAN OPEN. ⛔ Read off the library index's own
@@ -630,4 +649,422 @@ export function bindWorldParts({ world, members = [], parts = [] } = {}) {
             + 'its manifest names, and this one is not among them');
     }
     return { ok: errors.length === 0, docs, errors, notes };
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ EDITOR INTEGRATION W4 — THE WORLD'S BINDINGS FOR `mountSetEditor`
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓⛓ **AN ENDPOINT VALUE CARRIES THE PART THAT SPELLED IT.**
+ *
+ * ⛔⛔ The two substrates address an exit DIFFERENTLY — Seedling by the
+ * ORDINAL its `exitsOfRoom` numbers the row with, the maze by `exit_id` — and
+ * the strip's two `<select>`s hold ONE string each for the whole world. A
+ * binding that guessed from the string's SHAPE (`"0"` is an ordinal, `"exit_3"`
+ * is an id) would be a second authority on what an exit IS, and it would guess
+ * wrong the day a maze pack names an entry `"0"`. So the VALUE is
+ * `<part>/<the part's own value>`, built and read back by the same pair of
+ * functions, and `addressOf` hands the part's own `addressOf` its own half.
+ *
+ * ⛓ `/` is safe: `worldDocument.PART_ID_RE` is `[A-Za-z0-9_-]+`, so a part id
+ * cannot contain one and the FIRST `/` is always the separator.
+ */
+const partedValue = (part, value) => `${part}/${value}`;
+const splitPartedValue = (value) => {
+    const at = String(value ?? '').indexOf('/');
+    return at < 0 ? { part: null, value: String(value ?? '') }
+        : { part: String(value).slice(0, at), value: String(value).slice(at + 1) };
+};
+
+/**
+ * ⛓⛓⛓ **SEEDLING'S EXIT AND LOCATION BINDINGS, SPELLED HERE.**
+ *
+ * ⛔ **THIS IS A SECOND SPELLING OF `watchSetEditor.js`'s `SET_EXITS` /
+ * `setLocations`, AND IT IS SAID RATHER THAN HIDDEN.** Those two are `const`s
+ * private to that page's mount, `watchSetEditor.js` is outside this slice's
+ * scope, and exporting them would be an edit to the most-gated file in the
+ * Seedling arm (its 226-row gate is a QUOTED standing row). ⇒ the second
+ * spelling exists, and what keeps it honest is that its rows are scored
+ * against the **LAW** and not against the other spelling: the address this
+ * produces is handed to Seedling's own `connect` / `disconnect` / `mark-location`
+ * and the claim is that the ADAPTER accepts it (⚖ *"score a discriminator
+ * against the LAW"*). A row that compared two bindings would pass whatever both
+ * happened to say.
+ */
+const SEEDLING_EXITS = Object.freeze({
+    valueOf: (ex) => String(ex.index),
+    labelOf: (ex) => `#${ex.index} ${ex.element} → room ${ex.to} `
+        + `@(${ex.playerx ?? '·'},${ex.playery ?? '·'})`,
+    addressOf: (value) => {
+        const n = Number(value);
+        return Number.isInteger(n) ? n : 0;
+    },
+    optionsOf: (rows) => {
+        const most = rows.reduce((n, r) => Math.max(n, r.exitList.length), 0);
+        return Array.from({ length: Math.max(1, most) },
+            (_, i) => ({ value: String(i), label: `#${i}` }));
+    },
+    disconnectOp: (room, value) => ({ op: 'disconnect', room, exitIndex: Number(value) }),
+});
+
+const SEEDLING_LOCATIONS = (parseOel) => Object.freeze({
+    options: (cell) => {
+        let entities = [];
+        try {
+            entities = roomRecordOf(cell.room, { parseOel }).entities ?? [];
+        } catch (e) {
+            if (!(e instanceof Error)) throw e;
+            entities = [];
+        }
+        return entities.map((ent) => ({
+            value: JSON.stringify({ type: ent.type, x: ent.x, y: ent.y }),
+            label: `${ent.type} @(${ent.x},${ent.y})`,
+        }));
+    },
+    targetOf: (value) => ({ entity: JSON.parse(value) }),
+});
+
+/** ⛓ …and the maze's, taken from `mazeSetBindings` — the ONE authority there. */
+const MAZE_UI = (rulesSchema) => {
+    const b = mazeSetBindings({ rulesSchema });
+    return Object.freeze({
+        exits: Object.freeze({
+            valueOf: b.exits.valueOf,
+            labelOf: b.exits.labelOf,
+            addressOf: b.exits.addressOf,
+            optionsOf: (rows) => b.exits.targetOptions(rows),
+            disconnectOp: b.exits.disconnectOp,
+        }),
+        locations: Object.freeze({ options: b.locations.options, targetOf: b.locations.targetOf }),
+        sourceKind: b.sourceKind,
+        stillKey: b.stillKey,
+        roomFields: ROOM_FIELDS,
+        linkBound: b.linkBound,
+    });
+};
+
+/** ⛓ The UI half for one part descriptor, by its KIND. */
+function partUi(part, { rulesSchema, parseOel }) {
+    if (part.kind === 'region-library') return MAZE_UI(rulesSchema);
+    return Object.freeze({
+        exits: SEEDLING_EXITS,
+        locations: SEEDLING_LOCATIONS(parseOel),
+        sourceKind: (cell) => roomSourceKind(cell.room?.source),
+        stillKey: (cell) => cell.room?.source ?? null,
+        roomFields: SEEDLING_ROOM_FIELDS,
+        linkBound: (record) => seedlingLinkScanBound(record),
+    });
+}
+
+/**
+ * ⛓⛓⛓ **THE WORLD'S BINDINGS — the same object `mazeSetBindings` is, over
+ * `worldSetAdapter`'s composite instead of one substrate.**
+ *
+ * Every per-room binding DISPATCHES on the cell's own `part` (which W2's
+ * `readWorldCell` adds), and every per-record one is the world module's. ⛔ The
+ * mount is unchanged apart from the two seams W4 added — the SUBSTRATE badge
+ * and the optional overlay clause — because everything else it presses was
+ * already a parameter.
+ *
+ * @param {object} o
+ * @param {Array<object>} o.parts  `worldPartDescriptors`' output
+ * @param {object} o.deps          its `deps`, keyed by part id
+ * @param {object} [o.rulesSchema]
+ * @param {Function} [o.drawMazeStill] `makeDrawRoomStill()` — the maze's painter
+ * @param {Function} o.parseOel
+ * @param {object} [o.compileOptions] the maze row's `gridFor` and any injected
+ *   `sidecarBuilders` (W2 §8.5) — the page builds it, this file threads it
+ * @param {string} [o.gameName]
+ */
+export function worldSetBindings({
+    parts = [], deps = {}, rulesSchema = null, drawMazeStill = null, parseOel = null,
+    compileOptions = {}, gameName = 'World',
+} = {}) {
+    const byId = new Map(parts.map((p) => [p.id, p]));
+    const ui = new Map(parts.map((p) => [p.id, partUi(p, { rulesSchema, parseOel })]));
+    const uiOf = (id) => ui.get(id) ?? null;
+    const partOfCell = (cell) => byId.get(cell?.part) ?? null;
+
+    return {
+        adapterFns: {
+            ...worldAdapterFns(parts),
+            /**
+             * ⛓ EVERY EXIT ROW IS TAGGED WITH ITS PART, so the two `<select>`s
+             * can build a value that survives the round trip. ⛔ The part's own
+             * rows are otherwise VERBATIM — a binding that rebuilt them would
+             * drop whatever field the row carries that this file does not
+             * enumerate (trap 823's shape).
+             */
+            exitsOfRoom: (record, room) => exitsOfWorldRoom(record, room, parts)
+                .map((ex) => ({ ...ex, part: partAt(record, room, parts).part.id })),
+            validateForDownload: (session) => validateWorldForDownload(session, parts),
+            deriveAtlasOf: (record, d) => deriveWorldAtlasOf(record, { parts, deps: d ?? deps }),
+            rulesJsonOf: (session, d, { compileRegionAtlas } = {}) => worldRulesJsonOf(
+                session, d ?? deps,
+                { compileRegionAtlas, parts, gameName, compileOptions },
+            ),
+            /**
+             * ⛓⛓⛓ **A ROOM CLOSES INTO ITS OWN PART, THROUGH THE PART'S OWN
+             * FUNCTION, AGAINST A SESSION SHIM.** ⛔ Not re-implemented here:
+             * the maze's close runs the CAPTURE path (`serialize`+`extract`) and
+             * Seedling's hands the room record straight over, and a world that
+             * spelled either a second time would be the page deciding what a
+             * saved room IS. The shim gives the part its OWN record and
+             * re-globalises the `room` of whatever op it applies, so the op the
+             * SESSION stores is addressed the way every other world op is.
+             */
+            closeRoomSession: (setSession, roomSession, room) => {
+                const at = partAt(setSession.record(), room, parts, '`closeRoomSession`');
+                return at.part.closeRoomSession(
+                    partSessionShim(setSession, at), roomSession, at.local,
+                );
+            },
+            download: (session) => worldDownloadMembers(session, parts),
+        },
+        document: {
+            kind: 'world',
+            noun: 'world',
+            validator: 'worldErrors',
+            idOf: (w) => w?.world_id ?? null,
+            docOf: (record) => record.world,
+        },
+        /**
+         * ⛓ BOTH PARTS' RULE KEYS ARE THE SAME FUNCTION OBJECT —
+         * `procgenCore/setOverlay.js` builds both overlays, so this is not a
+         * choice between two spellings, and a row asserts the identity rather
+         * than letting the page pick a side.
+         */
+        ruleKeys: { exit: exitRuleKey, location: locationRuleKey },
+        forms: {
+            /** ⛓ The WORLD's own two fields — a PART's field needs `{part, path}`,
+             *  which this form has no control for, and `set-field` says so. */
+            manifestRows: () => WORLD_FIELDS.map(
+                (field) => ({ field, control: 'text', label: field })),
+            /**
+             * ⛓ …and the room form is the UNION of the parts' room fields, in
+             * part order. ⛔ A field the cell's part does not have is REFUSED BY
+             * NAME by that part (`set-room-field` is forwarded), which is one
+             * authority; a form that filtered by the selection would be a second.
+             */
+            roomRows: () => parts.flatMap((p) => uiOf(p.id).roomFields.map(
+                (field) => ({ field, control: 'text', label: `${field} (${p.id})` }),
+            )),
+        },
+        exits: {
+            valueOf: (ex) => partedValue(ex.part, uiOf(ex.part).exits.valueOf(ex)),
+            labelOf: (ex) => `${ex.part} · ${uiOf(ex.part).exits.labelOf(ex)}`,
+            addressOf: (value) => {
+                const { part, value: inner } = splitPartedValue(value);
+                return uiOf(part) ? uiOf(part).exits.addressOf(inner) : inner;
+            },
+            targetOptions: (rows) => parts.flatMap((p) => {
+                const mine = rows.filter((r) => (r.exitList[0]?.part ?? null) === p.id);
+                if (mine.length === 0) return [];
+                return uiOf(p.id).exits.optionsOf(mine).map((o) => ({
+                    value: partedValue(p.id, o.value), label: `${p.id} · ${o.label}`,
+                }));
+            }),
+            disconnectOp: (room, value) => {
+                const { part, value: inner } = splitPartedValue(value);
+                return uiOf(part)
+                    ? uiOf(part).exits.disconnectOp(room, inner)
+                    : { op: 'disconnect', room };
+            },
+        },
+        locations: {
+            options: (cell) => (uiOf(cell?.part)?.locations.options(cell) ?? []).map((o) => ({
+                value: partedValue(cell.part, o.value), label: o.label,
+            })),
+            emptyWhy: '⛔ pick a SLOT or an ENTITY first — a world\'s `mark-location` is its '
+                + 'PART\'s (an `items[]` ORDINAL in a maze room, a body at exact pixels in a '
+                + 'Seedling one), and this room offers none',
+            targetOf: (value) => {
+                const { part, value: inner } = splitPartedValue(value);
+                return uiOf(part) ? uiOf(part).locations.targetOf(inner) : { item: Number(inner) };
+            },
+        },
+        /**
+         * ⛓ THE BOUND IS EVERY PART'S, AND THE FIRST REFUSAL WINS — a world's
+         * link column is scanned part by part, so a Seedling half too big to
+         * scan bounds the whole strip and SAYS WHICH PART did.
+         */
+        linkBound: (record) => {
+            for (const part of parts) {
+                const inner = uiOf(part.id).linkBound(partRecordOf(record, part));
+                if (!inner.ok) return { ok: false, why: `part "${part.id}": ${inner.why}` };
+            }
+            return { ok: true, why: null };
+        },
+        isRefusal: (e) => isWorldSetRefusal(e) || parts.some((p) => p.isRefusal(e)),
+        rulesSchema,
+        stillKey: (cell) => uiOf(cell?.part)?.stillKey(cell) ?? null,
+        sourceKind: (cell) => uiOf(cell?.part)?.sourceKind(cell) ?? null,
+        /**
+         * ⛓⛓⛓ **THE SUBSTRATE BADGE — READ OFF THE CELL, NOT DERIVED.** W2's
+         * `readWorldCell` puts `substrate` on every descriptor from the PART's
+         * own reader, so the strip labels each room with the substrate that
+         * will play it without deriving anything.
+         */
+        cellSubstrate: (cell) => cell?.substrate ?? null,
+        /** ⛓ …and the identity line names the parts, where a set names its overlay. */
+        identityOf: (record) => `${parts.length} part(s): ${parts
+            .map((p) => `${p.id} (${p.kind}, ${p.bounds(partRecordOf(record, p)).w} room(s))`)
+            .join(', ')}`,
+        /**
+         * ⛓⛓ **THE STILL DISPATCHES BY SUBSTRATE, AND FOR A SEEDLING ROOM THIS
+         * PAGE HAS NO PAINTER.** ⚖ The one-renderer law: a Seedling room is
+         * drawn by `watch.html`, and importing its painter here would put two
+         * renderers for one substrate in the tree. ⇒ a Seedling cell gets a
+         * CARD — the substrate, the room's name and what its source IS — which
+         * is the honest picture this page can draw of a room it does not render.
+         */
+        drawRoomStill: (canvas, cell, index) => {
+            const part = partOfCell(cell);
+            if (part?.kind === 'region-library' && drawMazeStill) {
+                return drawMazeStill(canvas, cell, index);
+            }
+            return drawRoomCard(canvas, cell, index);
+        },
+        /**
+         * ⛔ **NO `addRoomOp`, AND THE REASON IS THE OP'S OWN SHAPE.** A world's
+         * `add-room` is PART-ADDRESSED (`{op:'add-room', part, at}`) because a
+         * room belongs to a document, and the mount's press says only WHERE
+         * (`at = roomCount()`). A world strip therefore needs a control that
+         * names the part, and W4 does not add one — the press keeps the mount's
+         * own sentence (*"no `addRoomOp` was injected"*) rather than this file
+         * guessing a part for it.
+         */
+        addRoomOp: null,
+    };
+}
+
+/**
+ * ⛓⛓ **A SESSION SHIM FOR ONE PART** — `record()` is that part's, and `apply`
+ * re-globalises the op's `room` before handing it to the WORLD session. ⛔ The
+ * part's own `closeRoomSession` reads the record (the maze's resolves the entry
+ * to name it in its refusal) and applies exactly one op; both halves have to be
+ * in the part's coordinates on the way in and the world's on the way out.
+ */
+function partSessionShim(setSession, at) {
+    return {
+        record: () => at.record,
+        apply: (op) => setSession.apply(
+            Number.isInteger(op?.room) ? { ...op, room: at.offset + op.room } : op,
+        ),
+    };
+}
+
+/**
+ * ⛓ **THE CARD A ROOM THIS PAGE CANNOT RENDER GETS.** ⛔ It is not a picture of
+ * the room and does not pretend to be one: the substrate, the name and the
+ * source kind, on a plain field — everything the strip can say truthfully about
+ * a Seedling room without a Seedling renderer.
+ */
+export function drawRoomCard(canvas, cell, index) {
+    canvas.width = OVERVIEW.cellPx;
+    canvas.height = OVERVIEW.cellPx;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return 'this canvas has no 2D context, so the room has no card';
+    ctx.fillStyle = '#1b2430';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#8fd7a0';
+    ctx.font = '9px monospace';
+    ctx.fillText(String(cell?.substrate ?? '?'), 4, 30);
+    ctx.fillStyle = '#e0e0e0';
+    ctx.fillText(String(cell?.room?.name ?? `room ${index}`).slice(0, 12), 4, 44);
+    ctx.fillStyle = '#9aa';
+    ctx.fillText(`(${roomSourceKind(cell?.room?.source) ?? 'no source'})`, 4, 58);
+    return null;
+}
+
+/**
+ * ⛓⛓⛓ **A WORLD'S DOWNLOAD — THE FOUR DOCUMENTS, ONE STAMP, ONE PRESS.**
+ *
+ * Each part's own `download` runs against its own SESSION SHIM, so the level
+ * set is stamped by `downloadSet` and the region library by `downloadLibrary` —
+ * their sentences, their validators, their `apMapping` companion (or the maze's
+ * `why` for not having one). ⛔ The WORLD is stamped HERE and only here: W2
+ * left `world_id` unstamped on purpose because stamping belongs to the download
+ * the page owns (§8.10 residue), and `stampIdentity` is the same function both
+ * substrates stamp with — one hash function for every document in the tree.
+ *
+ * ⛔ **THE PARTS' OVERLAYS ARE NOT SEPARATE MEMBERS.** A world IS the composite
+ * overlay (W2 §8.2: `BUNDLE_ENTRY_NAMES` derives one `overlay.json` per bundle
+ * and two overlays cannot both ride it), so each part's stamped overlay is
+ * written back INTO the world document before it is stamped — which is what
+ * makes the world's own hash cover both halves. The parts' overlays therefore
+ * travel, exactly once, inside the member that names them.
+ *
+ * ⛓ The `rules.json` and the derived `region-atlas` are the MOUNT's to add:
+ * they ride on the REPORT's verdict (§21.8's law — the export refuses while the
+ * graph does not close), and this function is what says which documents the
+ * press produces regardless of it.
+ */
+export function worldDownloadMembers(session, parts) {
+    const record = session.record();
+    const members = [];
+    const notes = [];
+    const overlays = {};
+    let edits = 0;
+    const warnings = [];
+    for (const part of parts) {
+        const at = { record: partRecordOf(record, part), offset: 0 };
+        const out = part.download({ record: () => at.record, ops: () => session.ops() });
+        const doc = out.set ?? out.library;
+        overlays[part.id] = out.overlay;
+        members.push({
+            kind: part.kind,
+            doc,
+            name: `${part.idOf(doc)}.json`,
+            label: `${part.id}: ${part.idOf(doc)}`,
+            readout: null,
+        });
+        if (out.apMapping) {
+            members.push({
+                kind: 'ap-mapping',
+                doc: out.apMapping,
+                name: `${part.idOf(doc)}.ap-invalidation.json`,
+                label: `${part.id}: the apMapping companion`,
+                whyNotMember: 'it is DERIVED from the set on demand and travels beside the '
+                    + 'bundle, never inside it',
+                readout: null,
+            });
+        }
+        if (out.apMappingWhy) notes.push(`part "${part.id}": ${out.apMappingWhy}`);
+        edits = session.ops().length;
+        for (const w of out.report?.warnings ?? []) warnings.push(`part "${part.id}": ${w}`);
+    }
+    /**
+     * ⛔ A COPY, AND THE `world_id` IS STRIPPED OF ITS OLD HASH BY
+     * `stampIdentity` ITSELF — the same rule both substrates' downloads follow,
+     * so two presses over the same edits produce the same id.
+     */
+    const world = stampIdentity(
+        {
+            ...record.world,
+            overlays,
+            provenance: { ...(record.world.provenance ?? {}) },
+        },
+        { idKey: 'world_id', defaultBase: 'world' },
+    );
+    members.unshift({
+        kind: 'world',
+        doc: world,
+        name: `${world.world_id}.json`,
+        label: `world ${world.world_id}`,
+        readout: '__editorWorldOut',
+    });
+    return {
+        members,
+        report: {
+            world_id: world.world_id,
+            parts: parts.map((p) => p.id),
+            rooms: worldAdapterFns(parts).bounds(record).w,
+            links: (record.world.links ?? []).length,
+            edits,
+            warnings,
+        },
+        apMappingWhy: notes.join(' | ') || null,
+    };
 }

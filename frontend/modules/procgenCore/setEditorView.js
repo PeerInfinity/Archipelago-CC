@@ -164,6 +164,12 @@ const el = (doc, tag, className, text) => {
  * @param {Function} o.sourceKind  `(cell) => string|null` — WHERE the room's
  *   contents live, in the substrate's own vocabulary. The strip's `⛔embed`
  *   badge is the one reader: it draws iff this answers `'embed'`
+ * @param {Function} [o.cellSubstrate] `(cell) => string|null` — WHICH SUBSTRATE
+ *   plays this room (EDITOR INTEGRATION W4). `null` draws no badge, which is
+ *   the single-substrate answer; a WORLD reads it off `readCell().substrate`
+ * @param {Function} [o.identityOf] `(record) => string` — one clause the
+ *   substrate adds to the identity line, where a single-document set names its
+ *   overlay and a WORLD has none to name
  * @param {Function} [o.addRoomOp] `(at) => op` — what an ADD ROOM press applies
  * @param {Function} o.say         the status line
  * @param {Function} o.roomSession `() => {room, ops, session}|null`
@@ -185,6 +191,7 @@ export function mountSetEditor({
     exits = null, locations = null,
     linkBound = null, isRefusal = null, rulesSchema = null,
     drawRoomStill = null, stillKey = null, sourceKind = null, addRoomOp = null,
+    cellSubstrate = () => null, identityOf = null,
     say = () => {}, roomSession = () => null, openRoomAt = () => false,
     discardRoom = () => {}, download = () => {}, onSetChange = null,
     loadZip = null,
@@ -329,6 +336,9 @@ export function mountSetEditor({
      * recorded where it is made.
      */
     let badgeFlags = [];
+    /** ⛓ EDITOR INTEGRATION W4 — the SUBSTRATE badge's own witness, per cell,
+     *  written by `paintStrip` and by nothing else, for `badgeFlags`' reason. */
+    let substrateFlags = [];
 
     const layoutNow = () => overviewLayout(roomCount(),
         overview?.parentNode?.clientWidth ?? OVERVIEW.cellPx * roomCount());
@@ -341,6 +351,7 @@ export function mountSetEditor({
          * and says so with an empty array.
          */
         badgeFlags = [];
+        substrateFlags = [];
         if (!overview) return;
         const layout = layoutNow();
         overview.width = layout.width;
@@ -420,6 +431,26 @@ export function mountSetEditor({
             const isEmbed = sourceKind(cell) === 'embed';
             badgeFlags.push(isEmbed);
             if (isEmbed) ctx.fillText('⛔embed', x + 4, top + 24);
+            /**
+             * ⛓⛓⛓ EDITOR INTEGRATION W4 — **WHICH SUBSTRATE PLAYS THIS ROOM,
+             * AS A BADGE.** ⛔ Read off the CELL (`readCell().substrate`, which
+             * W2's composite adds per part) and never derived here: a strip
+             * that ran a derivation to label a thumbnail would pay an atlas
+             * merge per paint, and the descriptor already carries the answer.
+             *
+             * ⛔ **`null` IS THE SINGLE-SUBSTRATE ANSWER AND IT DRAWS NOTHING.**
+             * A page whose rooms are all one substrate would otherwise stamp
+             * the same word on every cell — noise that says nothing — so the
+             * binding answers `null` there and the flag list records that, which
+             * is a claim its gate makes rather than a silence (§32.6: neither
+             * gate's ink probe can see a glyph on the strip at all).
+             */
+            const substrate = cellSubstrate(cell);
+            substrateFlags.push(substrate ?? null);
+            if (substrate) {
+                ctx.fillStyle = '#8fd7a0';
+                ctx.fillText(substrate, x + 4, top + (isEmbed ? 36 : 24));
+            }
             ctx.restore();
         }
     };
@@ -1075,8 +1106,21 @@ export function mountSetEditor({
         if (!line) return;
         const open = roomSession();
         const focusInSet = doc.activeElement === overview;
+        /**
+         * ⛓⛓ EDITOR INTEGRATION W4 — **THE OVERLAY CLAUSE IS OPTIONAL, BECAUSE
+         * A WORLD'S RECORD HAS NO `overlay` HALF.** Its parts' overlays live
+         * INSIDE the world document, keyed by part (W2 §8.2), so `record()` is
+         * `{world, parts}` and this line died on `.overlay_id` — the same
+         * unguarded read `reportOver` had, one function over. ⛔ Not defaulted
+         * to `'(unstamped)'`: a world HAS no single overlay and saying it is
+         * unstamped would be a true-looking sentence about a document that does
+         * not exist. What replaces it is the substrate's own `identityOf`.
+         */
+        const overlay = record().overlay;
         line.textContent = `${NOUN} ${document.idOf(document.docOf(record())) ?? '(unstamped)'}`
-            + ` · overlay ${record().overlay.overlay_id ?? '(unstamped)'} · ${view.describe()}`
+            + (overlay === undefined ? '' : ` · overlay ${overlay?.overlay_id ?? '(unstamped)'}`)
+            + (identityOf ? ` · ${identityOf(record())}` : '')
+            + ` · ${view.describe()}`
             + (open ? ` · ROOM ${open.room} open with ${open.ops} edit(s)` : ' · no room open')
             + ` · ⌨ Ctrl+Z here hits the ${focusInSet ? NOUN : 'ROOM'} session `
             + `(the strip owns its keys; focus it to undo the ${NOUN})`;
@@ -1556,6 +1600,13 @@ export function mountSetEditor({
          * painter's own array would be a second author of the picture.
          */
         badges: () => [...badgeFlags],
+        /**
+         * ⛓⛓ EDITOR INTEGRATION W4 — **WHICH SUBSTRATE THE LAST PAINT STAMPED
+         * ON EACH CELL**, in strip order, `null` where it stamped none. A COPY,
+         * and the PAINTER's own decision rather than a re-derivation from the
+         * record — `badges()`' reason, one binding over (trap 722).
+         */
+        substrates: () => [...substrateFlags],
         applySet,
         selectRoom,
         report: () => lastReport,
