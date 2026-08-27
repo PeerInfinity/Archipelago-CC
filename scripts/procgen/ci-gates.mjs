@@ -100,6 +100,19 @@ for (const gate of headless) {
     rows.push({ key, file: gate.file, argv, value, exit, total, ms: Date.now() - t0,
         face: gate.ciFace?.prefix ?? null });
     console.log(`${CI_GATE_MARK} ${key} | ${value} | exit=${exit} | ${total ?? '(no total)'}`);
+    /**
+     * ⛔⛔ **A RED LINE WITH NO EVIDENCE IS A RED NOBODY CAN ACT ON.** The
+     * first CI run of this step printed `gate: seedling-full-tier-owed | 0/1`
+     * and nothing else, and the reason — a depth-1 clone with no baseline
+     * commit — was nowhere in the log. `gates.mjs` has echoed a failing gate's
+     * own `FAIL:` lines since it existed; this owes the same.
+     */
+    if (exit !== 0 || value.includes('/0/')) {
+        for (const line of out.split('\n')
+            .filter((l) => l.startsWith('FAIL:') || l.startsWith('SKIP:')).slice(0, 8)) {
+            console.log(`      ${line}`);
+        }
+    }
 }
 
 console.log('');

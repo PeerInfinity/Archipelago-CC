@@ -88,6 +88,27 @@ const check = (ok, name, detail) => {
     if (!ok) failed += 1;
     console.log(`${ok ? 'PASS' : 'FAIL'}: ${name}${detail ? ` — ${detail}` : ''}`);
 };
+/**
+ * ⛔⛔ **"CANNOT BE ASKED" IS NOT "OWED" — LEARNED FROM CI, ON THIS GATE'S OWN
+ * FIRST RUN THERE.** `actions/checkout` clones at depth 1, so the baseline
+ * commit is not in CI's clone at all; the first build of this gate answered
+ * `git rev-parse` failed → `1 CHECK(S) FAILED` → **`0/1`**, which reads
+ * exactly like "a full tier is owed" and would have had a reader scheduling
+ * 143 minutes of GPU for a shallow clone. That is the same defect (d) exists
+ * to prevent, in a gate written in the same slice.
+ *
+ * ⛓ So an unresolvable baseline is a REFUSAL: `SKIP:`, exit 0, and a verdict
+ * line that says so. It is the boundaries gate's own doctrine — absence of
+ * evidence is not evidence of a defect — and the counts differ (`0/0/1`
+ * against `N/1`), so the two answers cannot be read as each other.
+ */
+const refuse = (name, detail) => {
+    console.log(`SKIP: ${name}${detail ? ` — ${detail}` : ''}`);
+    console.log(`\nALL PASS — REFUSED: this tree cannot be asked (0 population(s) compared, `
+        + 'NONE claimed green). ⛔ This is NOT "a full tier is owed"; it is "the question '
+        + 'could not be put".');
+    process.exit(0);
+};
 
 const git = (...args) => execFileSync('git', args,
     { cwd: REPO, encoding: 'utf8', maxBuffer: 1 << 27 }).trim();
@@ -104,11 +125,12 @@ if (!standing?.rows?.[ROSTER_KEY]) {
 }
 const row = standing.rows[ROSTER_KEY];
 let BASE;
-try { BASE = git('rev-parse', row.measuredAt); } catch {
-    console.log(`FAIL: the ${JSON.stringify(ROSTER_KEY)} row names `
-        + `\`${row.measuredAt}\`, which is not a commit in this repository.`);
-    console.log('1 CHECK(S) FAILED');
-    process.exit(1);
+try { BASE = git('rev-parse', `${row.measuredAt}^{commit}`); } catch {
+    refuse(`the baseline \`${row.measuredAt}\` is not in this clone`,
+        'every verdict here is a diff against that commit, and a clone that does not carry '
+        + 'it can make none of them. ⛓ This is the normal state in CI, where '
+        + '`actions/checkout` clones at depth 1 — measured on this gate\'s first CI run, '
+        + 'which read `0/1` and looked exactly like an owed tier');
 }
 const HEAD = git('rev-parse', 'HEAD');
 
