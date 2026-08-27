@@ -1263,7 +1263,10 @@ export function featherFindings(replayed) {
         name: 'R5 feather: the fade frames add up to the two pinned constants',
         ok: df === featherTotal,
         detail: df === featherTotal
-            ? `${df} = ${FEATHER_DEAD_FRAMES.boot} (boot) + ${FEATHER_DEAD_FRAMES.doors} x `
+            ? `${df} = ${FEATHER_DEAD_FRAMES.boot - preSwapCorrection(walk)} (boot`
+                + `${preSwapCorrection(walk) ? `, ${FEATHER_DEAD_FRAMES.boot} minus the `
+                    + 'pre-swap frame this build does not spend' : ''}) + `
+                + `${FEATHER_DEAD_FRAMES.doors} x `
                 + `${FEATHER_DEAD_FRAMES.perDoor} (doors) + ${FEATHER_DEAD_FRAMES.ceremony} `
                 + '(`Pickup.specialTimer`) — the frames the MIXER steps on and the tape '
                 + 'does not, which is what `swimSoundClock.LOAD_DEAD_FRAMES` and '
