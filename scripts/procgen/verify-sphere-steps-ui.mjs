@@ -547,8 +547,17 @@ console.log('PHASE J OK: per-region substrate override (bounce→maze) re-realis
 // Every gesture above is now an OP on the envelope, not a mutate-and-forget.
 // The panel renders the list with a count and an Undo, and undoing everything
 // must return the world the seed produces — determinism is the guarantee.
-await clickBtn('Reset');
-await page.waitForTimeout(300);
+// ⚠ Phase J ends on "Run all (finish)", after which the panel's buttons stay
+// disabled while the run drains. Wait for Reset to come back rather than
+// assuming a fixed sleep is enough.
+for (let i = 0; i < 40; i += 1) {
+    // eslint-disable-next-line no-await-in-loop
+    const ready = await page.evaluate(() => [...document.querySelectorAll('.procgen-pipeline-panel button')]
+        .some((el) => el.textContent.trim() === 'Reset' && !el.disabled));
+    if (ready) break;
+    // eslint-disable-next-line no-await-in-loop
+    await page.waitForTimeout(500);
+}
 await stepToCompiled();
 
 const history = () => page.evaluate(() => ({
