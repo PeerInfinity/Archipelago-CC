@@ -847,6 +847,37 @@ kind rather than merely mis-label it. The derived atlas's `game` is the
 LIBRARY (its name, else its `library_id`), never the entries' substrate: `game`
 says what the document is of, and what plays a room is the region's field.
 
+### Fidelity fences — what the projection loses, and what it must not
+
+The projection is an approximation and says so: every departure is a NAMED note
+on the compile report (`maze_notes`), never a silent drop. `walled_unlabelled`
+(nothing classifies a cell, so it is walled), `carved` / `carved_through_manual`
+(a corridor cut to reach an exit), `opened_solid` (a solid exit tile opened),
+`single_route` (a multi-route crossing realises one of them), `one_way_arrival`,
+`sink_walled` — the analyzed vanilla map produces 7 of these and loses **no
+doors**.
+
+**`exit_tile_collision` is the fence with teeth, because one maze tile can only
+be one crossing.** The real engine has no such limit: Seedling's linker lands
+each arrival *on* the destination's return door — what vanilla itself does four
+times — and it is safe there because `Game.update()` runs each entity's `check()`
+behind a per-world `!checked` latch. Project that and two doors want one tile.
+
+Which one survives is a **rule**, not an accident of exit order: the survivor is
+the exit that HAS a `targetRegion`; an arrival-only one (`targetRegion: null` —
+the far end of a `one_way` link) is evicted, in either arrival order, because it
+leads nowhere and the entrance tile already provides a place to arrive. **Two
+real crossings stay a named collision** — there is no defensible choice between
+them, and inventing one would be exactly the silent drop these notes exist to
+prevent. Every collision is named either way, survivor included.
+
+⛔ The rule is not cosmetic. Before it, a *generated*, linked 2-room set
+projected to a **one-way trap**: `level_0` kept its outbound door, `level_1`
+kept its arrival, and AP could not see it — `connections: 2`,
+`unwired_exits: []`, reachability green, player stuck. The analyzed vanilla map
+has **zero** exit-tile collisions, so the committed `seedling_atlas_maze` preset
+is unaffected either way; a generated set is where this bites.
+
 Two payload facts are load-bearing for **any** hand-built or projected maze
 sidecar, not just that one:
 
