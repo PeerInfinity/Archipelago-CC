@@ -15323,3 +15323,52 @@ that invariance is the claim that the race is gone, stated in the game's own
 units. On recordings that declare no time of day, the original comparison holds
 and also reads one. A number in "the game's own units" can have its zero moved by
 the very call being measured.
+
+### R9 slice 12h: THE FIFTH RUN LANDS — the sound pin goes roster-wide, and the disagreement two runs had stopped on turns out to be one tape drawn twice
+
+Four earlier attempts at this re-record stopped, and the fourth stopped on a
+single number: one segment's recorded random-number state read `1029458650`
+where the next segment's boot declared `1196888758`. It looked like two
+instruments disagreeing about one fact.
+
+It was not. A recorded state is a *draw counter*, and the counter was being
+moved by something nobody had declared: the game's sound mixer, which runs on
+the wall clock unless a tape pins it. The previous slice proved that with a
+knob. This slice found the proof already sitting on disk — the cache that
+stores a measurement keyed on the exact bytes it measured holds **two records
+under one key**, with those two historical numbers in them. Same tape, same
+bytes, two drives, two answers. Under the pin the same key holds one value
+twice.
+
+So the roster now declares the pin, and the sentence "whose number does the
+record carry?" stops having two candidate answers. It carries the deterministic
+one: **3298 draws**, which is neither of the two the arc had been arguing about.
+
+**What the pin cost, measured rather than assumed.** Every one of the 149 tapes
+was driven through the real game and compared against the recording it already
+had: **149 of 149 match, tick for tick.** The pin moved no gameplay at all. What
+it moved is two *seams* — the exact state two segments hand to their successors —
+and through them four fields on two tapes. That is the whole blast radius, and
+it is the answer to a question the arc could not price before: which walks
+actually reach the mixer.
+
+**Where the pin had to be declared, and why "edit the root" was not enough.** A
+tape inherits its pins from whatever produced it, so the intent was to change a
+few literals and re-emit. Two thirds of the roster turned out to have no literal
+to change: the producer that authors them reads their pin list *out of its own
+previous output*, so whatever the files said, it said again. Nothing was wrong
+with the files — but nothing could ever change them either, because the producer
+and the artifact were each other's authority. Three more tapes had no producer
+at all: the script that made them was retired a rung ago, and they are now the
+only three tapes in the roster whose pin is written by hand, each saying so in
+its own description.
+
+**A full sweep that had not run since the game rebuilt.** Landing this needed
+the first complete pass over the roster since the previous slice changed *when*
+the bot starts recording. It found six checks that had quietly been wrong ever
+since — all of them counting one frame that the rebuilt game no longer spends,
+and all of them written as fixed numbers rather than derived. They are repaired
+by asking the build what it does rather than assuming; the older build is kept,
+deliberately, because it is the only one left that can prove the "does not"
+half of that question.
+
