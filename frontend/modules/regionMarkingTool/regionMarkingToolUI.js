@@ -322,11 +322,19 @@ export class RegionMarkingToolUI {
      * looks like it worked is a readout claiming an edit that did not happen.
      */
     _undo() {
+        // ⛓ `baseId` is the ONE thing an op cannot carry: it is the save id's
+        //   STEM, not a document field, and `set-game` deliberately does not
+        //   move `atlas_id` (the committed starter has `game: "seedling"` under
+        //   the stem `seedling-fixture`). So an undo OF THAT OP re-reads the
+        //   stem the document itself now says — which is what the field held
+        //   before the edit.
+        const last = this.session.edits().at(-1);
         if (!this.session.undo()) {
             this._setStatus('nothing to undo — no edit has been applied to this atlas yet');
             this.render();
             return false;
         }
+        if (last?.op === 'set-game') this.session.baseId = this.session.deriveBaseId();
         this.selectedRegionId = this.session.regions()
             .some((r) => r.region_id === this.selectedRegionId) ? this.selectedRegionId : null;
         this.selectedExitId = null;

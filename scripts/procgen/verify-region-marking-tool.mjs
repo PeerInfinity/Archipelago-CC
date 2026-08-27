@@ -443,6 +443,8 @@ try {
     const setField = (title, label, value) => page.evaluate(({ title, label, value }) => {
         const section = [...document.querySelectorAll('.rmt-panel .rmt-section')]
             .find((sec) => sec.querySelector('h4')?.textContent.trim().startsWith(title));
+        // ⛔ `Regions (2)` ALSO starts with "Region" and comes FIRST in the
+        //    sidebar — the region inspector's title is `Region "<id>"`.
         if (!section) throw new Error(`no section starting "${title}"`);
         const field = [...section.querySelectorAll('.rmt-field')]
             .find((l) => l.querySelector('span')?.textContent.trim() === label);
@@ -463,8 +465,8 @@ try {
     // ⛓ ONE EDIT PER HATCH, each naming the field it used to assign.
     await setField('Atlas', 'game', 'seedling_h');              // :701
     await setField('Atlas', 'name', 'Phase H atlas');           // :702
-    await setField('Region', 'name', 'Phase H region');         // :739
-    await setField('Region', 'rules_source', 'mixed');          // :742
+    await setField('Region "', 'name', 'Phase H region');       // :739
+    await setField('Region "', 'rules_source', 'mixed');        // :742
     await setByPlaceholder('access_rule JSON (optional)',
         JSON.stringify({ rule: 'Has', args: { item_name: 'Progressive Sword' } }));  // :854
     await page.waitForTimeout(60);

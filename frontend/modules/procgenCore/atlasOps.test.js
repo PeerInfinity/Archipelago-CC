@@ -63,7 +63,7 @@ describe('the op vocabulary', () => {
         const declared = [...src.matchAll(/^\s{4}(\w+)\(/gm)].map((m) => m[1])
             .filter((n) => !n.startsWith('_'));
         const LOOKUPS = ['constructor', 'apply', 'regions', 'region', 'exit', 'subRegions',
-            'unwiredExits', 'toDocument', 'validate', 'contentHash'];
+            'unwiredExits', 'toDocument', 'validate', 'contentHash', 'deriveBaseId'];
         /**
          * ⛓ EDITOR INTEGRATION B-a — THE SESSION CONTROLS, which move the
          * document without naming an op BY CONSTRUCTION. `undo` is the fold

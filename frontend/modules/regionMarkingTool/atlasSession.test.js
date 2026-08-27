@@ -808,6 +808,29 @@ describe('AtlasSession over editCore — undo, edits, payload', () => {
         expect(s.edits()).toHaveLength(1);
     });
 
+    /**
+     * ⛓ `baseId` is the SAVE ID'S STEM, not a document field: the committed
+     * `seedling-fixture.json` carries `game: "seedling"` under the stem
+     * `seedling-fixture`, so a `set-game` that moved `atlas_id` too would
+     * RENAME the starter atlas. It stays a field a page may move, and
+     * `deriveBaseId()` re-reads what the document now says — which is what a
+     * page calls after undoing that op.
+     */
+    it('deriveBaseId() re-reads the CURRENT document, and set-game does not move atlas_id', () => {
+        const s = new AtlasSession(emptyAtlas());
+        expect(s.deriveBaseId()).toBe('seedling');
+        s.setGame('maze');
+        expect(s.atlas.game).toBe('maze');
+        expect(s.atlas.atlas_id).toBe('seedling');       // ⛔ unmoved, by measurement
+        s.baseId = 'maze';                                // what the panel does
+        expect(compactJsonFile(s.toDocument())).toMatch(/"atlas_id": "maze-/);
+        s.undo();
+        s.baseId = s.deriveBaseId();                      // what the panel does on undo
+        expect(s.baseId).toBe('seedling');
+        expect(compactJsonFile(s.toDocument()))
+            .toBe(compactJsonFile(new AtlasSession(emptyAtlas()).toDocument()));
+    });
+
     it('the DOCUMENT is the fold — there is no setter', () => {
         const s = new AtlasSession(emptyAtlas());
         expect(() => { s.atlas = emptyAtlas(); }).toThrow();

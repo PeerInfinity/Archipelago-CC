@@ -157,10 +157,6 @@ export class AtlasSession {
                 + '"seedling"). Pass a document, or `new AtlasSession(createEmptyAtlas({game}))`.');
         }
         this.baseAtlas = atlas;
-        // The id the content hash is appended to. Taken from the loaded
-        // document with any prior hash stripped, so a save never grows a chain
-        // of stale suffixes.
-        this.baseId = this._deriveBaseId();
         /**
          * ⛓⛓ **A LEVEL VIEW IS OPTIONAL, AND THE DEFAULT REFUSES BY NAME.**
          *
@@ -185,6 +181,7 @@ export class AtlasSession {
             base: base ?? { kind: 'atlas', atlas_id: atlas.atlas_id ?? null },
             certified,
         });
+        this.baseId = this.deriveBaseId();
     }
 
     /**
@@ -206,9 +203,23 @@ export class AtlasSession {
      */
     get atlas() { return this._session.record(); }
 
-    _deriveBaseId() {
-        const id = this.baseAtlas.atlas_id ?? this.baseAtlas.game ?? 'atlas';
-        const prior = this.baseAtlas.provenance?.content_hash;
+    /**
+     * The id the content hash is appended to, read off the CURRENT document
+     * with any prior hash stripped, so a save never grows a chain of stale
+     * suffixes.
+     *
+     * ⛓ **PUBLIC SINCE B-a, AND IT IS NOT DERIVED FROM `game`.** Measured: the
+     * committed `seedling-fixture.json` has `game: "seedling"` and an
+     * `atlas_id` stem of `seedling-fixture`, so a `set-game` that also moved
+     * `atlas_id` would RENAME the starter atlas. `baseId` therefore stays a
+     * FIELD a page may move (the marking tool does, when the author retypes
+     * `game` on a document whose id came from it) — and a page that moved it
+     * re-reads this after undoing that op, because the document is back to
+     * saying what its stem is.
+     */
+    deriveBaseId() {
+        const id = this.atlas.atlas_id ?? this.atlas.game ?? 'atlas';
+        const prior = this.atlas.provenance?.content_hash;
         return typeof prior === 'string' && id.endsWith(`-${prior}`)
             ? id.slice(0, -(prior.length + 1))
             : id;
