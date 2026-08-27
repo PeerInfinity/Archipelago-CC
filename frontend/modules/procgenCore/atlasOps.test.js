@@ -474,3 +474,189 @@ describe('applyAtlasOps', () => {
         expect(r.atlas).toBe(atlas);
     });
 });
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ EDITOR INTEGRATION B-a — THE SEVEN ESCAPE HATCHES
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⛔ EVERY ROW IS SCORED AGAINST THE ASSIGNMENT IT REPLACES, in BYTES: the
+ * reference is `JSON.stringify` of a document produced by doing to a deep clone
+ * exactly what `regionMarkingToolUI.js` did in place. Key order is part of the
+ * atlas's committed bytes, so "the same content" is not the claim.
+ */
+
+const clone = (v) => JSON.parse(JSON.stringify(v));
+/** What the panel's inspector field did, on a clone — the reference path. */
+const byHand = (atlas, mutate) => { const c = clone(atlas); mutate(c); return JSON.stringify(c); };
+const regionOf = (atlas, id) => atlas.regions.find((r) => r.region_id === id);
+
+describe('B-a: the hatches, byte-for-byte with the assignment they replace', () => {
+    it('set-game — `a.game = v` (:701)', () => {
+        const a = fixture();
+        const r = ok(a, { op: 'set-game', game: 'seedling' });
+        expect(JSON.stringify(r.atlas)).toBe(byHand(a, (c) => { c.game = 'seedling'; }));
+        expect(applyAtlasOp(a, { op: 'set-game', game: '' }).error).toMatch(/non-empty string/);
+    });
+
+    it('set-name — `if (v) a.name = v; else delete a.name` (:702)', () => {
+        const a = fixture();
+        const named = ok(a, { op: 'set-name', name: 'My atlas' });
+        expect(JSON.stringify(named.atlas)).toBe(byHand(a, (c) => { c.name = 'My atlas'; }));
+        // ⛓ THE KEY APPENDS, exactly as the assignment did — the fixture has no
+        //   `name`, so a spread that re-ordered would move the committed bytes.
+        expect(Object.keys(named.atlas).at(-1)).toBe('name');
+        const cleared = ok(named.atlas, { op: 'set-name', name: '' });
+        expect(JSON.stringify(cleared.atlas))
+            .toBe(byHand(named.atlas, (c) => { delete c.name; }));
+        expect(JSON.stringify(cleared.atlas)).toBe(JSON.stringify(a));
+    });
+
+    it('set-region-name — `region.name = v` / delete (:739)', () => {
+        const a = fixture();
+        const r = ok(a, { op: 'set-region-name', region: 'cave', name: 'The Cave' });
+        expect(JSON.stringify(r.atlas))
+            .toBe(byHand(a, (c) => { regionOf(c, 'cave').name = 'The Cave'; }));
+        const back = ok(r.atlas, { op: 'set-region-name', region: 'cave', name: '' });
+        expect(JSON.stringify(back.atlas)).toBe(JSON.stringify(a));
+        // ⛓ `hall` ALREADY has a name — the key keeps its position.
+        const kept = ok(a, { op: 'set-region-name', region: 'hall', name: 'Great Hall' });
+        expect(Object.keys(regionOf(kept.atlas, 'hall')))
+            .toEqual(Object.keys(regionOf(a, 'hall')));
+    });
+
+    it('set-rules-source — `region.annotations = {...annotations, rules_source}` (:742)', () => {
+        const a = fixture();
+        const r = ok(a, { op: 'set-rules-source', region: 'hall', rules_source: 'analyzer' });
+        expect(JSON.stringify(r.atlas)).toBe(byHand(a, (c) => {
+            const region = regionOf(c, 'hall');
+            region.annotations = { ...region.annotations, rules_source: 'analyzer' };
+        }));
+        const again = ok(r.atlas, { op: 'set-rules-source', region: 'hall', rules_source: 'mixed' });
+        expect(regionOf(again.atlas, 'hall').annotations).toEqual({ rules_source: 'mixed' });
+        expect(applyAtlasOp(a, { op: 'set-rules-source', region: 'hall', rules_source: null }).error)
+            .toMatch(/non-empty string/);
+    });
+
+    it('set-exit-rule — parse, then set or delete (:854)', () => {
+        const a = fixture();
+        const rule = { rule: 'Has', args: { item_name: 'Progressive Swim' } };
+        const set = ok(a, { op: 'set-exit-rule', region: 'hall', exit: 'east', access_rule: rule });
+        expect(JSON.stringify(set.atlas)).toBe(byHand(a, (c) => {
+            regionOf(c, 'hall').exits.find((e) => e.exit_id === 'east').access_rule = rule;
+        }));
+        const cleared = ok(set.atlas, { op: 'set-exit-rule', region: 'hall', exit: 'east', access_rule: null });
+        expect(JSON.stringify(cleared.atlas)).toBe(JSON.stringify(a));
+        // ⛓ OMITTING the key is refused BY NAME — `undefined` does not survive
+        //   the JSON round trip an edit list makes, so it cannot mean "clear".
+        expect(applyAtlasOp(a, { op: 'set-exit-rule', region: 'hall', exit: 'east' }).error)
+            .toMatch(/does not survive the JSON round trip/);
+        expect(applyAtlasOp(a, { op: 'set-exit-rule', region: 'hall', exit: 'nope', access_rule: null }).error)
+            .toBe('region "hall" has no exit "nope"');
+    });
+
+    it('set-location-item — `if (v) loc.vanilla_item = v; else delete` (:887)', () => {
+        const a = fixture();
+        const set = ok(a, { op: 'set-location-item', region: 'cave', name: 'Cave Chest', vanilla_item: 'Conch' });
+        expect(JSON.stringify(set.atlas)).toBe(byHand(a, (c) => {
+            regionOf(c, 'cave').locations.find((l) => l.name === 'Cave Chest').vanilla_item = 'Conch';
+        }));
+        const cleared = ok(set.atlas, { op: 'set-location-item', region: 'cave', name: 'Cave Chest', vanilla_item: '' });
+        expect(JSON.stringify(cleared.atlas)).toBe(JSON.stringify(a));
+        expect(applyAtlasOp(a, { op: 'set-location-item', region: 'cave', name: 'nope', vanilla_item: 'x' }).error)
+            .toBe('region "cave" has no location "nope"');
+    });
+
+    it('every hatch op is PURE — a frozen document survives all six', () => {
+        const a = deepFreeze(fixture());
+        for (const op of [
+            { op: 'set-game', game: 'x' },
+            { op: 'set-name', name: 'x' },
+            { op: 'set-region-name', region: 'hall', name: 'x' },
+            { op: 'set-rules-source', region: 'hall', rules_source: 'analyzer' },
+            { op: 'set-exit-rule', region: 'hall', exit: 'east', access_rule: null },
+            { op: 'set-location-item', region: 'hall', name: 'Hall Chest', vanilla_item: 'x' },
+        ]) expect(applyAtlasOp(a, op).ok, op.op).toBe(true);
+    });
+
+    it('the vocabulary GREW by seven and stayed well-formed', () => {
+        for (const kind of ['set-game', 'set-name', 'set-region-name', 'set-rules-source',
+            'set-exit-rule', 'set-location-item', 'apply-analysis']) {
+            expect(ATLAS_OP_KINDS, kind).toContain(kind);
+        }
+        expect(applyAtlasOp(fixture(), { op: 'set-colour' }).error)
+            .toContain(ATLAS_OP_KINDS.join(', '));
+    });
+});
+
+/**
+ * ⛓ A THREE-TILE ROOM WITH A GATED MIDDLE — the analyzer's own toy vocabulary
+ * (`regionAtlasAnalyzer.test.js`'s `gridOf`/`OPTIONS`), so this fixture proves
+ * the op is game-agnostic the same way the analyzer's rows do. The ATLAS is
+ * built through the session, so its key order is the one the panel produces.
+ */
+const SPLIT_OPTIONS = {
+    conditionKey: (c) => String(c),
+    resolveCondition: (c) => ({ rule: 'Has', args: { item_name: c } }),
+};
+const SPLIT_GRID = {
+    width: 3,
+    height: 1,
+    origin: { x: 0, y: 0 },
+    unclassified: [],
+    review: [],
+    sinks: [],
+    cells: ['open', 'gated', 'open'].map((kind) => ({
+        kind, conditions: kind === 'gated' ? ['a'] : [], faces: {}, dirs: {}, manual: [], labels: [],
+    })),
+};
+
+function splitFixture() {
+    const s = new AtlasSession(createEmptyAtlas({ game: 'toy', tileSize: 16 }));
+    s.addRegion({ region_id: 'room', bounds: { x: 0, y: 0, w: 3, h: 1 }, map_ref: 0 });
+    s.addExit('room', { exit_id: 'w', tiles: [[0, 0]] });
+    s.addExit('room', { exit_id: 'e', tiles: [[2, 0]] });
+    s.addLocation('room', { name: 'Room - Chest', tile: [2, 0], vanilla_item: 'Thing' });
+    s.setStart('room');
+    return s.atlas;
+}
+
+describe('B-a: apply-analysis — ONE op, because a group cannot say it', () => {
+    /**
+     * ⛔ The proposal is the analyzer's own, run on the SAME atlas — so this
+     * row asks whether the OP reproduces what the panel produced by mutating in
+     * place, in bytes, and not whether the analyzer is right (that is
+     * `regionAtlasAnalyzer.test.js`'s 60 rows).
+     */
+    it('reproduces applyRegionAnalysis-in-place, byte for byte', async () => {
+        const { analyzeRegion, applyRegionAnalysis } = await import('../procgenPipeline/regionAtlasAnalyzer.js');
+        const a = splitFixture();
+        const analysis = analyzeRegion(regionOf(a, 'room'), SPLIT_GRID, SPLIT_OPTIONS);
+        expect(analysis.split).toBe(true);
+        const byOp = ok(a, { op: 'apply-analysis', analysis });
+        expect(JSON.stringify(byOp.atlas)).toBe(byHand(a, (c) => {
+            applyRegionAnalysis(c, analysis, { stamp: false });
+        }));
+        // ⛓ And it is COPY-ON-WRITE, which the in-place function is not.
+        expect(JSON.stringify(a)).toBe(JSON.stringify(splitFixture()));
+        expect(byOp.value.sub_regions).toEqual(analysis.components.map((c) => c.id));
+    });
+
+    it('refuses a skipped proposal with the panel\'s own sentence', () => {
+        expect(applyAtlasOp(fixture(), { op: 'apply-analysis', analysis: { skipped: 'no map_ref' } }).error)
+            .toBe('nothing to apply: no map_ref');
+        expect(applyAtlasOp(fixture(), { op: 'apply-analysis', analysis: null }).error)
+            .toMatch(/needs the analyzer's proposal/);
+    });
+
+    it('is UNDOABLE through the session — the fold, not an inverse', async () => {
+        const { analyzeRegion } = await import('../procgenPipeline/regionAtlasAnalyzer.js');
+        const s = new AtlasSession(splitFixture());
+        const before = JSON.stringify(s.toDocument());
+        const analysis = analyzeRegion(regionOf(s.atlas, 'room'), SPLIT_GRID, SPLIT_OPTIONS);
+        s.applyAnalysis(analysis);
+        expect(s.atlas.regions[0].subgraph).toBeTruthy();
+        expect(s.edits()).toHaveLength(1);
+        expect(s.undo()).toBe(true);
+        expect(JSON.stringify(s.toDocument())).toBe(before);
+    });
+});

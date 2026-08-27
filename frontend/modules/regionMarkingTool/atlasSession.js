@@ -251,6 +251,36 @@ export class AtlasSession {
 
     setCertified(v) { return this._session.setCertified(v); }
 
+    /* ⛓⛓ B-a — THE SEVEN THAT USED TO BE INSPECTOR FIELDS WRITING STRAIGHT
+     * INTO THE DOCUMENT. Same one-line delegation shape as the other sixteen;
+     * what they buy is that undo can see them. */
+
+    setGame(game) { return this.apply({ op: 'set-game', game }); }
+
+    setName(name) { return this.apply({ op: 'set-name', name }); }
+
+    setRegionName(regionId, name) {
+        return this.apply({ op: 'set-region-name', region: regionId, name });
+    }
+
+    setRulesSource(regionId, source) {
+        return this.apply({ op: 'set-rules-source', region: regionId, rules_source: source });
+    }
+
+    /** ⛓ `null` CLEARS the rule; omitting it is refused (see the op). */
+    setExitRule(regionId, exitId, accessRule) {
+        return this.apply({
+            op: 'set-exit-rule', region: regionId, exit: exitId, access_rule: accessRule,
+        });
+    }
+
+    setLocationItem(regionId, name, item) {
+        return this.apply({ op: 'set-location-item', region: regionId, name, vanilla_item: item });
+    }
+
+    /** ⛓ The analyzer's proposal, committed as ONE op — see `applyAnalysis`. */
+    applyAnalysis(analysis) { return this.apply({ op: 'apply-analysis', analysis }); }
+
     // --- lookup ---
     regions() { return this.atlas.regions; }
 

@@ -75,6 +75,7 @@ import {
     VALID_EXIT_SOURCES,
     derivedRulesSource,
 } from '../procgenPipeline/regionAtlasValidator.js';
+import { applyRegionAnalysis } from '../procgenPipeline/regionAtlasAnalyzer.js';
 
 // ── shared predicates (the session's own, unchanged) ──────────────────────
 
@@ -725,6 +726,175 @@ function unwire(atlas, { region: regionId, exit: exitId }) {
 
 // ── the vocabulary ────────────────────────────────────────────────────────
 
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ EDITOR INTEGRATION B-a — THE SEVEN ESCAPE HATCHES, AS OPS
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⛔ THEY WERE NOT MISSING BY OVERSIGHT. Each of these is a field an inspector
+ * WIDGET wrote straight into the live document (`regionMarkingToolUI.js:701,
+ * 702, 739, 742, 854, 887` and `_acceptAnalysis:592`) — correct while the
+ * session had no op list, and invisible to UNDO the moment it got one. A
+ * document the fold cannot reconstruct is a document whose payload lies about
+ * what produced it.
+ *
+ * ⚠ EVERY ONE OF THEM IS KEY-ORDER-EXACT WITH THE ASSIGNMENT IT REPLACES.
+ * `withKey` is `{...obj, [k]: v}` — an EXISTING key keeps its position and a
+ * NEW one appends, which is what `obj.k = v` did; its delete branch is a rest
+ * destructure, which is what `delete obj.k` did. The atlas is byte-gated and
+ * key order is part of those bytes.
+ */
+
+/** The atlas-level `game`. ⛔ The session's `baseId` is the PANEL's to move. */
+function setGame(atlas, { game }) {
+    if (typeof game !== 'string' || game === '') {
+        throw new Error(`game must be a non-empty string naming the substrate, got ${JSON.stringify(game)}`);
+    }
+    return {
+        atlas: withKey(atlas, 'game', game),
+        value: game,
+        description: `set game to "${game}"`,
+    };
+}
+
+/** The atlas-level `name`. An empty one DROPS the key, as the field did. */
+function setName(atlas, { name }) {
+    if (name !== null && name !== undefined && typeof name !== 'string') {
+        throw new Error(`atlas name must be a string or null, got ${JSON.stringify(name)}`);
+    }
+    return {
+        atlas: withKey(atlas, 'name', name || undefined),
+        value: name || null,
+        description: name ? `set atlas name to "${name}"` : 'clear the atlas name',
+    };
+}
+
+/** A region's display `name`. An empty one DROPS the key. */
+function setRegionName(atlas, { region: regionId, name }) {
+    if (name !== null && name !== undefined && typeof name !== 'string') {
+        throw new Error(`region name must be a string or null, got ${JSON.stringify(name)}`);
+    }
+    const i = findRegion(atlas, regionId);
+    const next = withKey(atlas.regions[i], 'name', name || undefined);
+    return {
+        atlas: withRegionAt(atlas, i, next),
+        value: next,
+        description: name
+            ? `set name of region "${regionId}" to "${name}"`
+            : `clear the name of region "${regionId}"`,
+    };
+}
+
+/**
+ * `annotations.rules_source`.
+ *
+ * ⚠ THE ENUM IS THE VALIDATOR'S, NOT THIS OP'S. `VALID_RULES_SOURCES` is not
+ * exported and the schema owns the roster; a second spelling here would be a
+ * copy that drifts. What this refuses is a non-string, which is one class
+ * stricter than the `<select>` it replaces.
+ */
+function setRulesSource(atlas, { region: regionId, rules_source: source }) {
+    if (typeof source !== 'string' || source === '') {
+        throw new Error(`rules_source must be a non-empty string, got ${JSON.stringify(source)}`);
+    }
+    const i = findRegion(atlas, regionId);
+    const region = atlas.regions[i];
+    const next = { ...region, annotations: { ...(region.annotations ?? {}), rules_source: source } };
+    return {
+        atlas: withRegionAt(atlas, i, next),
+        value: next,
+        description: `set rules_source of region "${regionId}" to "${source}"`,
+    };
+}
+
+/**
+ * An exit's `access_rule`.
+ *
+ * ⛓ `null` CLEARS, a value SETS, and OMITTING the key is refused by name —
+ * `set-internal-exit-rule`'s convention, and the one an op list can carry:
+ * `{access_rule: undefined}` does not survive a JSON round trip, so a payload
+ * that meant "clear" would replay as "leave alone".
+ */
+function setExitRule(atlas, { region: regionId, exit: exitId, access_rule: rule }) {
+    if (rule === undefined) {
+        throw new Error('set-exit-rule needs an `access_rule` — `null` CLEARS the rule and a '
+            + 'value sets it. Omitting the key cannot mean either, because `undefined` does not '
+            + 'survive the JSON round trip an edit list makes.');
+    }
+    const i = findRegion(atlas, regionId);
+    const region = atlas.regions[i];
+    const ei = region.exits.findIndex((e) => e.exit_id === exitId);
+    if (ei < 0) throw new Error(`region "${regionId}" has no exit "${exitId}"`);
+    const nextExit = withKey(region.exits[ei], 'access_rule', rule === null ? undefined : rule);
+    const next = { ...region, exits: region.exits.map((e, x) => (x === ei ? nextExit : e)) };
+    return {
+        atlas: withRegionAt(atlas, i, next),
+        value: nextExit,
+        description: rule === null
+            ? `clear the access rule of exit "${exitId}" in region "${regionId}"`
+            : `set the access rule of exit "${exitId}" in region "${regionId}"`,
+    };
+}
+
+/** A location's `vanilla_item`. An empty one DROPS the key, as the field did. */
+function setLocationItem(atlas, { region: regionId, name, vanilla_item: item }) {
+    if (item !== null && item !== undefined && typeof item !== 'string') {
+        throw new Error(`vanilla_item must be a string or null, got ${JSON.stringify(item)}`);
+    }
+    const i = findRegion(atlas, regionId);
+    const region = atlas.regions[i];
+    const li = region.locations.findIndex((l) => l.name === name);
+    if (li < 0) throw new Error(`region "${regionId}" has no location "${name}"`);
+    const nextLoc = withKey(region.locations[li], 'vanilla_item', item || undefined);
+    const next = { ...region, locations: region.locations.map((l, x) => (x === li ? nextLoc : l)) };
+    return {
+        atlas: withRegionAt(atlas, i, next),
+        value: nextLoc,
+        description: item
+            ? `set the vanilla item of "${name}" to "${item}"`
+            : `clear the vanilla item of "${name}"`,
+    };
+}
+
+/**
+ * ⛓⛓⛓ **THE ANALYZER'S PROPOSAL, COMMITTED — ONE OP, NOT A GROUP.**
+ *
+ * ⛔ MEASURED, and it is the one hatch that could not become a group of the
+ * existing eighteen. `applyRegionAnalysis` is not "set the sub-regions, then
+ * assign each exit": it MERGES the analyzer's rows with the hand-authored ones
+ * that survive (`fresh` + `kept`, with a round-trip dedupe), REMAPS a preserved
+ * row's endpoints by a vote read off what each old sub-region actually held,
+ * remaps `vanilla_layout.start_sub_region`, re-derives `annotations.rules_source`,
+ * DROPS the subgraph wholesale when the region turns out not to split, and
+ * reports `problems` the panel logs. None of that is expressible in the
+ * vocabulary, and spelling it as a group would be a second implementation of a
+ * merge whose rules are ruling 2.
+ *
+ * ⛓ SO THE OP CARRIES THE PROPOSAL. The analysis is plain JSON, so the op
+ * survives an edit list's round trip and replays deterministically from the
+ * same base — which is the property that makes undo work on it.
+ *
+ * ⛔ COPY-ON-WRITE BY A DEEP CLONE, deliberately: `applyRegionAnalysis` writes
+ * THROUGH the atlas it is handed (that is its contract and eleven callers rely
+ * on it), and a JSON round trip is the only clone that keeps key order exactly
+ * — which is what makes the accepted document byte-identical to the one the
+ * panel produced by mutating in place.
+ */
+function applyAnalysis(atlas, { analysis }) {
+    if (analysis == null || typeof analysis !== 'object') {
+        throw new Error(`apply-analysis needs the analyzer's proposal, got ${JSON.stringify(analysis)}`);
+    }
+    if (analysis.skipped) throw new Error(`nothing to apply: ${analysis.skipped}`);
+    const next = JSON.parse(JSON.stringify(atlas));
+    const result = applyRegionAnalysis(next, analysis, { stamp: false });
+    return {
+        atlas: next,
+        value: result,
+        description: `apply the analysis of region "${analysis.region_id}" `
+            + `(${result.sub_regions.length} sub-region(s), `
+            + `${result.internal_exits.length} internal exit(s))`,
+    };
+}
+
 const OPS = Object.freeze({
     'add-region': addRegion,
     'remove-region': removeRegion,
@@ -744,6 +914,14 @@ const OPS = Object.freeze({
     connect,
     disconnect,
     unwire,
+    // ⛓ B-a — the marking tool's seven escape hatches.
+    'set-game': setGame,
+    'set-name': setName,
+    'set-region-name': setRegionName,
+    'set-rules-source': setRulesSource,
+    'set-exit-rule': setExitRule,
+    'set-location-item': setLocationItem,
+    'apply-analysis': applyAnalysis,
 });
 
 /** Every op kind this module understands, sorted. The refusals read this. */
