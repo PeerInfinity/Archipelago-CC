@@ -3157,6 +3157,26 @@ try {
         + '⛔ A COMPILE-TIME projection: the world, both parts and every authored `substrate` '
         + 'are untouched, which is what makes the two buttons two answers and not one',
         json(allMazeReport.substrates));
+    /**
+     * ⛓⛓⛓ **AND THE PROJECTION'S OWN NOTES ARE READ, NOT JUST ITS COUNTS**
+     * ([[reference_seedling_arc_traps]] 844). A maze tile IS a crossing, so one
+     * tile can only be ONE door, and a generated Seedling set lands each arrival
+     * ON the destination's return door — safe in the real engine, an
+     * `exit_tile_collision` here. ⛔ The AP graph stays VALID when that happens,
+     * so `substrates {maze: N}` and "every region reachable" are both true while
+     * the player is stuck. This row asserts the notes reached a reader.
+     */
+    const allMazeNotes = await page.evaluate(() => globalThis.__editorWorldAllMazeNotes ?? null);
+    const allMazeNote = await page.textContent('#labSetLoadNote');
+    check(Array.isArray(allMazeNotes)
+        && (allMazeNotes.length === 0
+            ? /the projection reported NO notes/.test(allMazeNote ?? '')
+            : /the PROJECTION reported \d+ note\(s\)/.test(allMazeNote ?? '')),
+    '⛓⛓⛓ …and the PROJECTION\'S OWN NOTES reach the reader beside the counts — an '
+        + '`exit_tile_collision` leaves the AP graph valid, so a download that reported only '
+        + '`substrates` and reachability would be a true sentence about the wrong subject',
+    `${json(allMazeNotes)} · ${allMazeNote}`);
+
     const afterAllMaze = await read();
     check(json(afterAllMaze.set.substrates) === json(strip.substrates),
         '⛓ …and the STRIP still names both substrates after the press — nothing was written '

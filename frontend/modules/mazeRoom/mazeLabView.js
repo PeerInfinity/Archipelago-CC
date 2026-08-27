@@ -2489,9 +2489,28 @@ export function main() {
         window.__editorWorldAllMazeOut = out.rules;
         window.__editorWorldAllMazeBytes = text;
         window.__editorWorldAllMazeReport = out.report;
+        /**
+         * ⛓⛓⛓ **AND THE PROJECTION'S OWN NOTES ARE PRINTED, NOT JUST ITS
+         * COUNTS** ([[reference_seedling_arc_traps]] 844, W5's recon). A maze
+         * tile IS a crossing, so one tile can only be ONE door — and a
+         * generated Seedling set lands each arrival ON the destination's
+         * return door, which is safe in the real engine and an
+         * `exit_tile_collision` here. ⛔ The AP graph is untouched when that
+         * happens, so `substrates {maze: N}` and *"every region reachable"* are
+         * both TRUE while the player is stuck: a download that reported only
+         * the counts would be a true sentence about the wrong subject.
+         */
+        const mazeNotes = out.report.maze_notes ?? [];
+        window.__editorWorldAllMazeNotes = mazeNotes;
         setNote(`DOWNLOADED the ALL-MAZE rules.json — substrates `
             + `${JSON.stringify(out.report.substrates)}, ${out.report.ap_regions} AP region(s), `
-            + `${out.report.exits} exit(s), ${out.report.locations} location(s). ⛓ This is the `
+            + `${out.report.exits} exit(s), ${out.report.locations} location(s)`
+            + (mazeNotes.length
+                ? ` · ⚠ the PROJECTION reported ${mazeNotes.length} note(s), and they are `
+                  + 'where an `exit_tile_collision` shows up — the AP graph stays valid when '
+                  + `one happens: ${mazeNotes.slice(0, 3).map((n) => n.kind ?? String(n)).join(', ')}`
+                : ' · the projection reported NO notes')
+            + `. ⛓ This is the `
             + 'PLAYABLE one: a mixed world does not play in the app yet (a door OUT of a '
             + 'Seedling room is the game\'s own synchronous level change — M1 is an AS3 slice), '
             + 'and every region here compiles through the maze projection the player and the '
