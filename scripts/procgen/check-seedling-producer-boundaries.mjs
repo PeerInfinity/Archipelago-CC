@@ -115,6 +115,49 @@ import { latchCacheCandidates } from './provisionalLatch.js';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
 const MODULE = join(REPO, 'frontend', 'modules', 'seedlingDemo');
+/**
+ * ⛓⛓⛓ R9 P3b (d), §44.9 item 2 — **THE CI FACE, AND IT IS A DIFFERENT CLAIM.**
+ *
+ * ⛔⛔ THE PROBLEM (d) HAD TO SOLVE. The latch cache is MACHINE-GLOBAL and
+ * exists on exactly one box, so on a fresh checkout this gate is `0 VERIFIED /
+ * 0 DISAGREES / 18 REFUSED` and exits 0 — *a row that gates nothing*. Two
+ * honest shapes were on the table: keep it a box row with a quoted face, or
+ * run it in CI as a STRUCTURE check whose VALUE row is still the box's. This
+ * is the second, and what makes it honest is that the two verdicts are
+ * DIFFERENT SENTENCES that cannot be read as each other.
+ *
+ * ⛓ THE FACE IS DECLARED HERE, where `@standing-variant` would be, and read
+ * by `gateRoster.ciFaceIn`. The prefix REPLACES `gate:` for the CI row, so a
+ * structure number and a value number are different KEYS rather than two
+ * readings of one:
+ *
+ * @ci-face structure: --structure
+ *
+ * `--structure` asserts only what a fresh checkout can answer:
+ *   · every declared chain segment has a committed tape that PARSES;
+ *   · every boundary COMPUTES at least one well-formed cache key from the
+ *     predecessor's own bytes — i.e. `latchCacheCandidates` still answers for
+ *     this roster;
+ *   · nothing throws on the way.
+ * ⛔ IT READS NO LATCH AND VERIFIES NO VALUE, EVER. ⛓ MEASURED, not argued:
+ * `findLatch` builds its `looked` list from `latchCacheCandidates` BEFORE it
+ * touches the filesystem, so the structure verdict is cache-independent by
+ * construction — pointed at directories that do not exist it still reads
+ * `18 resolved to a key, 0 could not`. A broken chain declaration, an
+ * unparseable tape or a moved key format are real regressions this catches in
+ * CI, where today nothing catches them at all.
+ *
+ * ⛔⛔ AND THE QUOTING PATH IS CLOSED AT THE OTHER END. `ALL PASS …` is one of
+ * the five verdict forms `gates.mjs` and `standingValues.headlineOf` parse, so
+ * a `--structure` run produces a `pass/fail` headline that on THIS box reads
+ * `18/0` — identical to the VALUE row. That is trap 806's shape: a green face
+ * a parser reads as the number it is not. Making the total unparseable would
+ * be worse (a runner reads "no total line" as a CRASH), so the protection is
+ * elsewhere and is asserted rather than intended: no `@standing-variant`
+ * declares this arm, so nothing derives a `--structure` command into a
+ * standing row, and `ci-summary.mjs` REFUSES this gate's key by name.
+ */
+const STRUCTURE = process.argv.includes('--structure');
 const TAPES = join(MODULE, 'fixtures', 'tapes');
 
 const { parseTape, gameVisibleTape } = await import(join(MODULE, 'tapeFormat.js'));
@@ -252,6 +295,30 @@ for (const chain of chains) {
         if (!pinned) unpinned += 1;
 
         const hit = findLatch(prevName, prev);
+        /**
+         * ⛓⛓⛓ R9 P3b (d) — **THE STRUCTURE VERDICT, WHICH NEVER TOUCHES A
+         * VALUE.** What a fresh checkout CAN answer is that this boundary
+         * resolved to at least one well-formed cache key from the
+         * predecessor's own bytes. `hit.looked` is computed from
+         * `latchCacheCandidates` and is independent of whether any file
+         * exists, which is what makes this claim the same everywhere.
+         */
+        if (STRUCTURE) {
+            const wellFormed = hit.looked.length > 0
+                && hit.looked.every((l) => /^latch-.+-[0-9a-f]{6,}\.json \[/
+                    .test(l.split('/').pop()));
+            if (wellFormed) {
+                P(`${at}: STRUCTURE — resolved to ${hit.looked.length} well-formed cache `
+                    + 'key(s) from the predecessor\'s own bytes',
+                '⛔ NO VALUE VERIFIED — `--structure` does not read a latch, here or anywhere');
+            } else {
+                F(`${at}: STRUCTURE — the boundary produced NO well-formed cache key`,
+                    `${hit.looked.length} candidate(s): ${hit.looked.join(' ; ')}. Either the `
+                    + 'chain declares a segment `latchCacheCandidates` cannot key, or the key '
+                    + 'format moved — a defect a fresh checkout CAN see');
+            }
+            continue;
+        }
         if (!hit.record) {
             S(`${at}: REFUSED — no latch for ${prevName}'s own bytes on this machine`,
                 `looked for ${hit.looked.length} key(s): ${hit.looked.join(' ; ')}. This `
@@ -307,8 +374,13 @@ for (const chain of chains) {
 }
 
 // ── the numbers this gate owes the record ────────────────────────────
-console.log(`## ${boundaries} boundary(ies) over ${chains.length} multi-segment chain(s): `
-    + `${pass} VERIFIED, ${fail} DISAGREES, ${skip} REFUSED-UNVERIFIED`);
+console.log(STRUCTURE
+    ? `## ${boundaries} boundary(ies) over ${chains.length} multi-segment chain(s), `
+        + `STRUCTURE ONLY: ${pass} resolved to a key, ${fail} could not. ⛔ 0 VALUES `
+        + 'VERIFIED — this face exists so CI can catch a broken chain declaration or a '
+        + 'moved key format; the VALUE row is measured on the box that holds the cache.'
+    : `## ${boundaries} boundary(ies) over ${chains.length} multi-segment chain(s): `
+        + `${pass} VERIFIED, ${fail} DISAGREES, ${skip} REFUSED-UNVERIFIED`);
 /**
  * ⛓ R9 SLICE 12h — THE SENTENCE BRANCHES ON THE COUNT, because at `unpinned === 0`
  * every clause of the old one is FALSE: there is no sample-vs-sample row left to
@@ -335,7 +407,12 @@ if (skip) {
 console.log('');
 
 if (fail === 0) {
-    console.log(`ALL PASS — ${pass} VERIFIED, ${skip} REFUSED-UNVERIFIED (not claimed green)`);
+    console.log(STRUCTURE
+        ? `ALL PASS — STRUCTURE ONLY: ${pass} boundary(ies) resolved to a cache key; `
+            + '0 VALUES VERIFIED (the latch cache is MACHINE-GLOBAL and this run did not '
+            + 'read it). ⛔ This number is NOT the gate\'s standing value and must never be '
+            + 'quoted as one — that row is measured on the box.'
+        : `ALL PASS — ${pass} VERIFIED, ${skip} REFUSED-UNVERIFIED (not claimed green)`);
     process.exit(0);
 }
 console.log(`${fail} CHECK(S) FAILED`);

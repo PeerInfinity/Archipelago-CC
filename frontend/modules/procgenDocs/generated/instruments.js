@@ -54,7 +54,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 1,
+            "count": 3,
             "id": "ci"
         },
         {
@@ -204,13 +204,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 239,
+        "blockStyle": 241,
         "browser": 76,
         "cited": 85,
-        "files": 258,
+        "files": 260,
         "lineStyle": 19,
-        "withDocblock": 258,
-        "withFlags": 161
+        "withDocblock": 260,
+        "withFlags": 164
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -1678,7 +1678,14 @@ export const INSTRUMENTS = frz({
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "check-seedling-producer-boundaries.mjs",
-            "flags": [],
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "structure"
+                }
+            ],
             "oneLiner": "check-seedling-producer-boundaries — **A CHAIN BOUNDARY IS CHECKED FROM THE PREDECESSOR, OR IT IS REFUSED BY NAME.** R9 slice P3, ⚖ ruling 54 (6), §42.5 / §42.10's fourth item.",
             "path": "scripts/procgen/check-seedling-producer-boundaries.mjs"
         },
@@ -1911,22 +1918,69 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [],
-            "file": "ci-vitest-summary.mjs",
+            "file": "ci-gates.mjs",
             "flags": [
                 {
                     "how": [
                         "includes"
                     ],
                     "name": "json"
+                }
+            ],
+            "oneLiner": "ci-gates — **THE HEADLESS GATES, RUN IN CI, ONE PARSEABLE LINE EACH** (R9 slice P3b (g), ⚖ ruling 54 (6); ⚖ 52 generalised).",
+            "path": "scripts/procgen/ci-gates.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "flag"
+            ],
+            "browser": false,
+            "category": "ci",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "ci-summary.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "gate"
                 },
                 {
                     "how": [
-                        "includes"
+                        "flag"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "flag"
                     ],
                     "name": "wait"
                 }
             ],
-            "oneLiner": "ci-vitest-summary.mjs — read a pushed head's UNFILTERED vitest result from CI instead of re-running it locally (⚖ R9 ruling 52).",
+            "oneLiner": "ci-summary — **A PUSHED HEAD'S CI ANSWER, BY SHA — THE SUITE OR ONE GATE** (R9 slice P3b (g), ⚖ ruling 54 (6); ⚖ 52 generalised).",
+            "path": "scripts/procgen/ci-summary.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "ci",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "ci-vitest-summary.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "gate"
+                }
+            ],
+            "oneLiner": "ci-vitest-summary.mjs — **A SHIM.",
             "path": "scripts/procgen/ci-vitest-summary.mjs"
         },
         {

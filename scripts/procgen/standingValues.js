@@ -115,6 +115,43 @@ export function producerScripts({ repo = REPO } = {}) {
         });
 }
 
+/**
+ * ⛓⛓⛓ R9 P3b (g), ⚖ 54 (7)'s sibling ruling ⚖ 54 (6) — **WHEN A ROW'S ANSWER
+ * SHOULD COME FROM CI INSTEAD OF THE BOX.**
+ *
+ * ⛔⛔ THE RULING'S PREMISE, MEASURED. ⚖ 54 (6) reads *"more standing rows
+ * quoted from CI by SHA (every headless gate; only Windows/GPU rows stay
+ * local)"*, and the economy it reaches for is ⚖ 52's: stop spending the box on
+ * something CI already ran. Measured against `gateRoster` at this tree the
+ * headless population is **FOUR of thirty-one** (23 browser, 4 windows), and
+ * their local cost is 0.4 s, 2 s, 7 s and 15 s — all far under the band. So
+ * quoting them from CI would buy PROVENANCE, not economy, and would cost a
+ * network call plus a red on every unpushed head.
+ *
+ * ⇒ THE RULE IS DERIVED FROM THE SAME TWO FACTS THE FILE ALREADY CARRIES:
+ * **a gate row is CI-sourced exactly when it is HEADLESS and NOT `cheap`** —
+ * i.e. when it is both answerable by CI and expensive enough that the box
+ * should stop paying for it. That is ⚖ 52's own criterion (the unfiltered
+ * suite is CI's because it costs ~8 minutes), generalised rather than narrowed.
+ *
+ * ⛓ AT THIS HEAD IT SELECTS ZERO ROWS, AND `--write` SAYS SO OUT LOUD —
+ * "CI-sourced: 0 row(s)" is a STATED zero, not a silence. The mechanism is
+ * armed for the day a headless gate crosses the band, which is the day the
+ * ruling's economy becomes real.
+ *
+ * ⛔ NOT a hand list of "these ones come from CI" — that is the same defect as
+ * a hand-kept value (⚖ 17), and this file exists to refuse it.
+ *
+ * @param {{headless: boolean, cheap: boolean|undefined}} o
+ */
+export function ciSourced({ headless, cheap }) {
+    return Boolean(headless) && cheap === false;
+}
+
+/** ⛓ The command that reads one gate's answer out of CI, one spelling. */
+export const ciGateCommand = (key) =>
+    `node scripts/procgen/ci-summary.mjs --gate=${JSON.stringify(key)} --json`;
+
 /* ══════════════════════════════════════════════════════════════════════
  * THE ROWS
  * ══════════════════════════════════════════════════════════════════════ */
@@ -253,6 +290,17 @@ export function headlineOf(kind, out) {
         const files = (/Test Files\s+.*?\((\d+)\)/.exec(body) ?? [])[1];
         const tests = (/\bTests\s+.*?\((\d+)\)/.exec(body) ?? [])[1];
         return { value: files && tests ? `${files}/${tests}` : null, total: null };
+    }
+    /**
+     * ⛓ R9 P3b (g) — a gate row whose answer came from CI. `ci-summary
+     * --gate= --json` already read the line; this takes its `value` rather
+     * than re-deriving a headline from prose, exactly as `ci-suite` does.
+     */
+    if (kind === 'ci-gate') {
+        try {
+            const j = JSON.parse(plain(out));
+            return { value: j.value ?? null, total: j.total ?? null };
+        } catch { return { value: null, total: null }; }
     }
     if (kind === 'ci-suite') {
         /**

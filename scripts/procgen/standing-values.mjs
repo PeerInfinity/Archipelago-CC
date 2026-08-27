@@ -55,9 +55,10 @@ import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { assertTreeUnmoved, releaseBoxLock, takeBoxLock } from './boxLock.js';
-import { LOCAL_HOST, REPO } from './gateRoster.js';
+import { LOCAL_HOST, REPO, gateRoster } from './gateRoster.js';
 import {
-    CHEAP_MS, FILE, cheapFor, head, missingScript, readStandingValues, runRow, standingRows,
+    CHEAP_MS, FILE, ciGateCommand, ciSourced, cheapFor, head, missingScript,
+    readStandingValues, runRow, standingRows,
 } from './standingValues.js';
 
 const argv = process.argv.slice(2);
@@ -146,6 +147,14 @@ if (flag('write')) {
     out.rows = out.rows ?? {};
     console.log(`# standing-values --write — ${ROWS.length} row(s) at ${HEAD}\n`);
     const held = [];
+    const ciRows = [];
+    /**
+     * ⛓ R9 P3b (g) — which gate FILES are headless, derived once. A standing
+     * row is matched to its gate by the command naming the file, which is the
+     * same join `missingScript` makes.
+     */
+    const headlessFiles = new Set(gateRoster({ repo: REPO })
+        .filter((g) => !g.browser && !g.windows).map((g) => g.path));
     for (const row of ROWS) {
         /**
          * ⛔ AT EVERY ROW, NOT ONCE AT THE TOP. R9 slice P3's tracked-doc edit
@@ -160,7 +169,21 @@ if (flag('write')) {
             delete out.rows[row.key];
             continue;
         }
-        const r = await runRow(row);
+        const prev = out.rows[row.key];
+        /**
+         * ⛓⛓⛓ ⚖ 54 (6) — **A HEADLESS ROW THE BOX SHOULD STOP PAYING FOR IS
+         * READ FROM CI INSTEAD.** The rule is `ciSourced` and it is derived
+         * from what the file already knows: headless (from `gateRoster`) and
+         * not `cheap` (from the last measurement). At this head it selects
+         * ZERO rows and the summary line says so — a stated zero.
+         */
+        const headless = row.kind === 'gate'
+            && [...headlessFiles].some((f) => row.command.includes(f));
+        const fromCI = ciSourced({ headless, cheap: prev?.cheap });
+        const r = fromCI
+            ? await runRow({ ...row, kind: 'ci-gate', command: ciGateCommand(row.key) })
+            : await runRow(row);
+        if (fromCI) ciRows.push(row.key);
         /**
          * ⚖ R9 RULING 52. A row whose value can only come from a PUSHED head
          * (the CI-read suite row) answers `null` on an unpushed one — the
@@ -170,8 +193,7 @@ if (flag('write')) {
          * and ITS head are KEPT and the reason is recorded beside them. Nothing
          * is invented: the row still carries the head it was measured at.
          */
-        const prev = out.rows[row.key];
-        if (r.value === null && row.alwaysQuoted && prev) {
+        if (r.value === null && (row.alwaysQuoted || fromCI) && prev) {
             out.rows[row.key] = {
                 ...prev,
                 cheap: false,
@@ -187,7 +209,7 @@ if (flag('write')) {
         if (band.held && !row.alwaysQuoted) held.push({ key: row.key, ms: r.ms, ...band });
         out.rows[row.key] = {
             value: r.value,
-            command: row.command,
+            command: fromCI ? ciGateCommand(row.key) : row.command,
             kind: row.kind,
             exit: r.exit,
             ms: r.ms,
@@ -195,7 +217,8 @@ if (flag('write')) {
             // how long it took. The CI read is fast and would otherwise be
             // classified cheap, which would put a network call — and a red on
             // every unpushed head — inside every `--check`.
-            cheap: row.alwaysQuoted ? false : band.cheap,
+            cheap: (row.alwaysQuoted || fromCI) ? false : band.cheap,
+            ...(fromCI ? { ciSourced: true } : {}),
             measuredAt: HEAD,
             ...(row.browser ? { browser: true } : {}),
             ...(row.windows ? { windows: true } : {}),
@@ -210,6 +233,14 @@ if (flag('write')) {
      * second, invisible source of truth about a field readers take as measured
      * — the same defect as a hand-kept "this one is fast" list, hidden better.
      */
+    /**
+     * ⛔ A STATED ZERO. ⚖ 54 (6) asked for more rows read from CI; the honest
+     * discharge is the RULE plus the number it selects, printed either way, so
+     * "none today" is a measurement rather than a silence.
+     */
+    console.log(`CI-sourced: ${ciRows.length} row(s)`
+        + `${ciRows.length ? ` — ${ciRows.join(', ')}` : ' (headless AND not cheap; at this '
+            + 'head every headless gate is cheap, so the box still answers them)'}`);
     for (const h of held) {
         console.log(`HELD by hysteresis: ${h.key.padEnd(46)} ${(h.ms / 1000).toFixed(1)}s is `
             + `inside the ±${Math.round(0.1 * 100)} % band around ${CHEAP_MS / 1000}s, so it `

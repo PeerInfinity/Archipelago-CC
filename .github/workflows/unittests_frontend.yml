@@ -104,3 +104,24 @@ jobs:
       # don't flake under parallel CPU contention. See vitest.slow.config.js.
       - name: Run slow Vitest tests
         run: npm run test:unit:slow
+
+      # ⛓⛓⛓ R9 slice P3b (g), ⚖ ruling 54 (6) — THE HEADLESS PROCGEN GATES.
+      #
+      # ⛔ Until now NO `check-*.mjs` gate ran in CI at all: one that went red
+      # stayed red until somebody spent the box. Four of the thirty-one are
+      # headless and can run here; `ci-gates.mjs` derives that set from
+      # `gateRoster` and prints one parseable `## CI-GATE | …` line each, with
+      # the other twenty-seven SKIPPED BY NAME so nothing reads as green that
+      # was never run.
+      #
+      # ⛔⛔ `continue-on-error` IS DELIBERATE, AND IT IS NOT HIDING A RED.
+      # This step is a STANDING-VALUE READER, not a merge gate:
+      # `check-seedling-full-tier-owed` is red whenever a full-tier
+      # measurement is OWED, which is a scheduling fact and must not block
+      # every push. R9 slice 12g′ learned that `continue-on-error` hides a red
+      # at the JOB level — so nothing reads the job conclusion:
+      # `ci-summary.mjs --gate=<key> <sha>` reads the printed LINE and exits on
+      # the gate's own code.
+      - name: Run headless procgen gates
+        continue-on-error: true
+        run: node scripts/procgen/ci-gates.mjs

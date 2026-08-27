@@ -98,6 +98,26 @@ const VARIANT_LINE_RE = /^[ \t]*\*[ \t]*@standing-variant\b(.*)$/gm;
 const VARIANT_BODY_RE = /^[ \t]+([^:]+?)[ \t]*:[ \t]*(\S.*?)[ \t]*$/;
 
 /**
+ * ⛓⛓⛓ R9 P3b (g) — **A GATE WHOSE VALUE CI CANNOT ANSWER SAYS SO ITSELF.**
+ *
+ *     * @ci-face <key prefix>: <argv | (none)>
+ *
+ * ⛔⛔ WHY IT IS DECLARED AND NOT DETECTED. The first cut asked whether a
+ * gate's source holds a `/mnt/c/` path, and got trap 566 for the second time
+ * in this slice: `check-seedling-rerecord-rehearsal.mjs` names that directory
+ * ONLY IN ORDER TO MEASURE THAT IT NEVER TOUCHES IT (it fingerprints the
+ * listing around its child and handles `ABSENT` explicitly), so a
+ * mention-detector filed a gate whose value is perfectly CI-answerable under
+ * a structure key. **Whether a value survives a fresh checkout is a fact only
+ * the gate knows**, and the gate is where `@standing-variant` already lives.
+ *
+ * The `<key prefix>` REPLACES `gate:` for the CI row, which is what keeps a
+ * structure number from ever being read as the value: they are different
+ * keys, not two readings of one.
+ */
+const CI_FACE_LINE_RE = /^[ \t]*\*[ \t]*@ci-face\b(.*)$/gm;
+
+/**
  * The variants a gate's docblock declares, refusing a malformed line BY NAME —
  * ⛔ never skipping it. A declaration nobody parsed is a standing row that
  * silently does not exist, which is the failure this whole mechanism is for.
@@ -122,6 +142,35 @@ export function variantsIn(text, { file = '(text)' } = {}) {
         out.push({ label, argv });
     }
     return out;
+}
+
+/**
+ * The CI face a gate declares, or `null`. ⛔ A malformed line is a refusal BY
+ * NAME for the same reason `variantsIn` refuses one: a declaration nobody
+ * parsed is a CI row that silently does not exist.
+ */
+export function ciFaceIn(text, { file = '(text)' } = {}) {
+    const hits = [...text.matchAll(CI_FACE_LINE_RE)];
+    if (!hits.length) return null;
+    if (hits.length > 1) {
+        throw new Error(`gateRoster: ${file} declares ${hits.length} @ci-face lines — a gate `
+            + 'has one CI face or none; two would be two keys for one run');
+    }
+    const body = VARIANT_BODY_RE.exec(hits[0][1]);
+    if (!body) {
+        throw new Error(`gateRoster: ${file} has a malformed @ci-face line — expected `
+            + '`@ci-face <key prefix>: <argv | (none)>`, got '
+            + `${JSON.stringify(hits[0][0].trim())}`);
+    }
+    const [, prefix, rhs] = body;
+    const argv = rhs === '(none)' ? [] : rhs.split(/\s+/);
+    const bad = argv.find((a) => !a.startsWith('--'));
+    if (bad) {
+        throw new Error(`gateRoster: ${file} declares a @ci-face with ${JSON.stringify(bad)}, `
+            + 'which is not a flag — the argv is the LITERAL extra flags that face is run '
+            + 'with, or `(none)`');
+    }
+    return { prefix, argv };
 }
 
 /**
@@ -154,6 +203,8 @@ export function gateRoster({ repo = REPO } = {}) {
             /** ⛓ …and the SECOND ARMS this gate declares — `[]` for every gate
              *  that declares none, which is all of them but one. */
             variants: variantsIn(text, { file }),
+            /** ⛓ …and the CI face it declares, or `null` (R9 P3b (g)). */
+            ciFace: ciFaceIn(text, { file }),
             /** ⛓ …and by which sibling, when it is not by itself. */
             browserVia: PLAYWRIGHT_RE.test(text)
                 ? null

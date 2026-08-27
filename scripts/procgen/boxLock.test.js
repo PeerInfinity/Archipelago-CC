@@ -16,7 +16,7 @@ import { fileURLToPath } from 'node:url';
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import { CHEAP_BAND, CHEAP_MS, cheapFor } from './standingValues.js';
+import { CHEAP_BAND, CHEAP_MS, cheapFor, ciGateCommand, ciSourced } from './standingValues.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
@@ -310,5 +310,87 @@ try {
         /* ⛓ …and not one of the gate's own rows ran. */
         expect(r.out).not.toMatch(/^PASS:/m);
         expect(r.out).not.toContain('ALL CHECKS PASSED');
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ (g) WHICH ROWS COME FROM CI — ⚖ 54 (6), DERIVED
+ * ══════════════════════════════════════════════════════════════════════ */
+describe('ciSourced', () => {
+    it('selects a HEADLESS row only once it stops being cheap', () => {
+        expect(ciSourced({ headless: true, cheap: false })).toBe(true);
+        expect(ciSourced({ headless: true, cheap: true })).toBe(false);
+    });
+
+    /**
+     * ⛔ A BROWSER OR WINDOWS ROW IS NEVER CI-SOURCED, however expensive. CI
+     * runs neither, so "quote it from CI" would be quoting an answer that does
+     * not exist — the 0/0 the refusal in `ci-summary.mjs` exists to prevent.
+     */
+    it('never selects a row CI cannot answer, at any cost', () => {
+        expect(ciSourced({ headless: false, cheap: false })).toBe(false);
+        expect(ciSourced({ headless: false, cheap: true })).toBe(false);
+    });
+
+    /** ⛓ A row nothing has measured has no `cheap` yet, and is not selected —
+     *  the first measurement is the box's, and it is what decides. */
+    it('does not select a row nothing has measured', () => {
+        expect(ciSourced({ headless: true, cheap: undefined })).toBe(false);
+    });
+
+    /**
+     * ⛓⛓ AND THE RULE SELECTS NOTHING AT THIS HEAD — measured over the real
+     * roster and the committed file, so "CI-sourced: 0 row(s)" is a stated
+     * measurement rather than a claim. ⛔ THE SAME ROW IS THE NON-VACUITY
+     * PROOF: it also asserts the population it ranged over is non-empty, so a
+     * `gateRoster` that stopped answering could not make this pass.
+     */
+    it('selects ZERO rows at this head, over a non-empty headless population', async () => {
+        const { gateRoster } = await import('./gateRoster.js');
+        const { readStandingValues } = await import('./standingValues.js');
+        const headless = gateRoster({ repo: REPO }).filter((g) => !g.browser && !g.windows);
+        expect(headless.length).toBeGreaterThan(0);
+        const file = readStandingValues({ repo: REPO });
+        const selected = headless
+            .map((g) => `gate: ${g.file.replace(/^check-/, '').replace(/\.mjs$/, '')}`)
+            .filter((key) => ciSourced({ headless: true, cheap: file?.rows?.[key]?.cheap }));
+        expect(selected).toEqual([]);
+    });
+
+    it('builds a command the CI reader actually accepts', () => {
+        expect(ciGateCommand('gate: seedling-wasm-pins'))
+            .toBe('node scripts/procgen/ci-summary.mjs --gate="gate: seedling-wasm-pins" --json');
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ (d)/(g) THE STRUCTURE FACE CANNOT BE QUOTED AS A VALUE
+ * ══════════════════════════════════════════════════════════════════════ */
+describe('the CI face', () => {
+    /**
+     * ⛔⛔ TRAP 806's SHAPE, CLOSED AT BOTH ENDS. `ALL PASS …` is a parseable
+     * verdict, so a `--structure` run yields a `pass/fail` headline that on the
+     * box reads `18/0` — identical to the VALUE row. The protection is that
+     * nothing DERIVES a `--structure` command into a standing row.
+     */
+    it('never derives a --structure command into a standing row', async () => {
+        const { standingRows } = await import('./standingValues.js');
+        const rows = standingRows({ repo: REPO });
+        expect(rows.filter((r) => r.command.includes('--structure'))).toEqual([]);
+        expect(rows.length).toBeGreaterThan(50);
+    });
+
+    /** ⛓ …and exactly one gate declares a face, read from the gate itself. */
+    it('is DECLARED by the gate, not detected from its text', async () => {
+        const { gateRoster, ciFaceIn } = await import('./gateRoster.js');
+        const declaring = gateRoster({ repo: REPO }).filter((g) => g.ciFace);
+        expect(declaring.map((g) => g.file))
+            .toEqual(['check-seedling-producer-boundaries.mjs']);
+        expect(declaring[0].ciFace).toEqual({ prefix: 'structure', argv: ['--structure'] });
+        /* ⛔ a malformed declaration is a refusal BY NAME, never a skip. */
+        expect(() => ciFaceIn(' * @ci-face nonsense-with-no-colon\n', { file: 'x.mjs' }))
+            .toThrow(/malformed @ci-face line/);
+        expect(() => ciFaceIn(' * @ci-face a: b\n * @ci-face c: d\n', { file: 'x.mjs' }))
+            .toThrow(/declares 2 @ci-face lines/);
     });
 });
