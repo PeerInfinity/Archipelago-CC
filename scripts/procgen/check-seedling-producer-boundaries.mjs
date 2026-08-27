@@ -309,10 +309,24 @@ for (const chain of chains) {
 // ── the numbers this gate owes the record ────────────────────────────
 console.log(`## ${boundaries} boundary(ies) over ${chains.length} multi-segment chain(s): `
     + `${pass} VERIFIED, ${fail} DISAGREES, ${skip} REFUSED-UNVERIFIED`);
-console.log(`## ${unpinned} of ${boundaries} boundary(ies) have an UNPINNED predecessor `
-    + `(no "${RNG_PIN}" in its \`pins\`), so their \`rng.seed\` row compares ONE SAMPLE of a `
-    + 'random variable against another — 12f §43. ⛔ Adding the pin is a RE-RECORD (⚖ 49) '
-    + 'and belongs to the fifth run, not to this gate.');
+/**
+ * ⛓ R9 SLICE 12h — THE SENTENCE BRANCHES ON THE COUNT, because at `unpinned === 0`
+ * every clause of the old one is FALSE: there is no sample-vs-sample row left to
+ * warn about, and "belongs to the fifth run" is a forecast the fifth run spent.
+ * A caveat that keeps printing after its subject is gone is ⚖ ruling 39's
+ * decaying class — a true-sounding sentence about a world that has moved.
+ */
+console.log(unpinned === 0
+    ? `## ${unpinned} of ${boundaries} boundary(ies) have an UNPINNED predecessor `
+        + `(no "${RNG_PIN}" in its \`pins\`) — so EVERY \`rng.seed\` row below compares two `
+        + 'readings of a DETERMINISTIC draw count, not two samples of a random variable. '
+        + '⚖ ruling 57 pinned the roster and R9 slice 12h re-recorded it; 12f §43 is the '
+        + 'measurement that made the ambiguity visible, and this line is its discharge.'
+    : `## ${unpinned} of ${boundaries} boundary(ies) have an UNPINNED predecessor `
+        + `(no "${RNG_PIN}" in its \`pins\`), so their \`rng.seed\` row compares ONE SAMPLE of a `
+        + 'random variable against another — 12f §43. ⛔ That is a RE-RECORD to cure '
+        + '(⚖ 49/57), never a softer gate — and a tape that LOST the pin is the shape to '
+        + 'suspect first, since the roster carried it whole at slice 12h.');
 if (skip) {
     console.log(`## ⛔ the ${skip} REFUSED boundary(ies) above are NOT green. This gate's exit `
         + 'code is 0 for them because the latch cache is MACHINE-GLOBAL (⚖ 47b (5)) and its '
