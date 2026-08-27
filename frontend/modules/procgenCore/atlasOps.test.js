@@ -699,5 +699,10 @@ describe('B-a: the marking tool has no direct-mutation hatch left', () => {
         // ⛓ And the undo the ops exist for is actually reachable.
         expect(src.includes('this.session.undo()')).toBe(true);
         expect(src.includes("textContent: 'Undo'")).toBe(true);
+        // ⛓ …and the ONE thing an op cannot carry follows it back. The live
+        //   gate for this is the verifier's Phase H, in a browser; this row is
+        //   what makes the omission cheap to catch in a bounded node run.
+        expect(src.includes("last?.op === 'set-game'")).toBe(true);
+        expect(src.includes('this.session.deriveBaseId()')).toBe(true);
     });
 });

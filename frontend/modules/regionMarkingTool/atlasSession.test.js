@@ -831,6 +831,25 @@ describe('AtlasSession over editCore — undo, edits, payload', () => {
             .toBe(compactJsonFile(new AtlasSession(emptyAtlas()).toDocument()));
     });
 
+    /**
+     * ⛔ THE DISCRIMINATING INSTANCE IS COMMITTED, not invented: without a
+     * document whose stem DIFFERS from its `game`, a `deriveBaseId` that read
+     * `game` first would agree on every row above and the mutant would be
+     * vacuous.
+     */
+    it('the STARTER atlas is the case that separates the stem from the game', () => {
+        const starter = JSON.parse(readFileSync(new URL(
+            '../flashPanel/atlases/seedling-fixture.json', import.meta.url,
+        ), 'utf8'));
+        expect(starter.game).toBe('seedling');
+        expect(starter.atlas_id).toMatch(/^seedling-fixture-/);
+        const s = new AtlasSession(starter);
+        expect(s.baseId).toBe('seedling-fixture');
+        expect(s.deriveBaseId()).toBe('seedling-fixture');
+        // ⛓ …and a save does NOT grow a second hash suffix.
+        expect(s.toDocument().atlas_id).toBe(starter.atlas_id);
+    });
+
     it('the DOCUMENT is the fold — there is no setter', () => {
         const s = new AtlasSession(emptyAtlas());
         expect(() => { s.atlas = emptyAtlas(); }).toThrow();
