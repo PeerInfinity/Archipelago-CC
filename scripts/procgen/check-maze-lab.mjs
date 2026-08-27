@@ -3089,6 +3089,25 @@ try {
     '⛓⛓ …in EXACTLY ONE frame, addressed the way the child page needs to install its bridge '
         + 'at all (`?iframeId=` is what both pages check before they connect, and '
         + '`&hostOrigin=` is what lets the child target its sends at us)', json(frames));
+    /**
+     * ⛔⛔ **AND ONE MUTANT THIS ROW CANNOT SEE, NAMED WITH THE BOX IT IS
+     * VACUOUS IN.** `foldForeignRoom` re-issues the returned room at the GLOBAL
+     * index; a mutant that used the PART-LOCAL one instead is GREEN here — and
+     * measurably so, not by luck: the SEEDLING part is part 0, so its offset is
+     * 0 and `global === local` for every room it holds, and the foreign (iframe)
+     * opener only ever opens Seedling rooms. ⇒ the instance that mutant needs is
+     * a foreign part at a NON-ZERO offset, which a seed-first world does not
+     * have (trap 777: a mutant over a corpus with no instance is vacuous — name
+     * the instance AND the box). ⛓ The arithmetic it would break is
+     * `worldSetAdapter.globalIndexOf`'s, and THAT has an instance and a row:
+     * `worldSetAdapter.test.js` asserts the round trip for part "b", whose local
+     * indices are not its global ones.
+     */
+    check(foreign.set.foreignRoom.local === foreign.set.foreignRoom.index,
+        '⛓ …and for THIS world the foreign room\'s local index EQUALS its global one (the '
+        + 'Seedling part is part 0, offset 0) — recorded because it is what makes a '
+        + 'global-vs-local mutant on the fold vacuous here',
+        `local ${foreign.set.foreignRoom.local} === global ${foreign.set.foreignRoom.index}`);
     const roomNote = await page.textContent('#labSetRoomNote');
     check(/is open in the seedling editor/.test(roomNote ?? '')
         && /`Ctrl\+Z` are ITS page/.test(roomNote ?? ''),
@@ -3204,6 +3223,30 @@ try {
     check(island.set.world.crossings.length === 0,
         '⛓ …and the world it refused over really had no crossing (a fresh load, not the '
         + 'edited one)', json(island.set.world.crossings));
+    /**
+     * ⛓⛓⛓ **AND THE BUNDLE PRESS OMITS THE `rules` MEMBER HERE — WHICH IS THE
+     * INSTANCE THAT MUTANT NEEDED.** ⛔ Added because the mutant that offers the
+     * member unconditionally (`if (rep.rules)` instead of
+     * `if (rep.download.rules.allowed && rep.rules)`) came back GREEN: every
+     * other bundle press in this file happens AFTER a REPORT that allows the
+     * export, so the guard had no case to decide (trap 777 — a mutant over a
+     * corpus with no instance is vacuous). This is that case: an ISLAND world,
+     * pressed anyway, and the zip has to come back WITHOUT `rules` and WITHOUT
+     * the derived atlas that travels with it, saying why.
+     */
+    await pressDownload('#editDownloadBundle', '__editorSetBundlePresses',
+        { settleOn: '__editorSetBundleOut' });
+    const islandKinds = await page.evaluate(() => globalThis.__editorSetBundleKinds ?? null);
+    const islandNote = await page.textContent('#editSetNote');
+    check(Array.isArray(islandKinds) && !islandKinds.includes('rules')
+        && !islandKinds.includes('region-atlas')
+        && /no `rules.json` member/.test(islandNote ?? '')
+        && /cannot be reached from the start/.test(islandNote ?? ''),
+    '⛓⛓⛓ …and the BUNDLE PRESSED ON THE ISLAND CARRIES NO `rules` MEMBER, and says why — '
+        + 'the export refusal is `reportOver`\'s alone and the bundle READS it. ⛔ The derived '
+        + 'ATLAS travels with the rules or not at all: both are the compile\'s output, and an '
+        + 'atlas beside no `rules.json` would be half an answer with nothing to say so',
+    `${json(islandKinds)} · ${(islandNote ?? '').slice(0, 160)}`);
 
     /* ── CLAIM 21g: the DOWNLOAD, read back, and the two rules.json ──── */
     await setDoor(1, CROSS_EXIT, 2, 'exit_3', '1');
