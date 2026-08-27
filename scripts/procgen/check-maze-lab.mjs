@@ -152,11 +152,42 @@ const { buildLevelSet } = await import(
     join(REPO, 'frontend/modules/seedlingDemo/levelSetExporter.js'));
 const { emptyLevel } = await import(join(REPO, 'frontend/modules/seedlingDemo/procgenLevel.js'));
 
+const { stampIdentity } = await import(
+    join(REPO, 'frontend/modules/procgenCore/contentIdentity.js'));
+
 const JSZIP = loadJSZipNode();
 const WORLD_SET = buildLevelSet(
     [0, 1].map((level) => emptyLevel({ level })), { setId: 'w4-lab-world', link: true },
 ).set;
-const WORLD_LIB = { ...MAZE_PACK, entries: MAZE_PACK.entries.slice(0, 2) };
+/**
+ * ⛓⛓⛓ **THE TWO-ENTRY SLICE IS RE-STAMPED, AND THAT IS A FINDING THIS ROW MADE
+ * BY RUNNING.**
+ *
+ * ⛔ A committed region library carries `provenance.content_hash` and a
+ * `library_id` ENDING in it, and `validateRegionLibrary` checks the pair against
+ * the content. **Slicing `entries` changes the content and NOT the stamp**, so
+ * the first spelling of this fixture handed the page a library whose hash said
+ * `3dd25239` over content hashing to `2ec3c9ef` — and the page REFUSED it by
+ * name, naming the part: *"part "mz" is a REGION LIBRARY and
+ * `validateRegionLibrary` refuses it … edited without --restamp?"*. That is the
+ * intake doing exactly what it is for.
+ *
+ * ⚠ `seedlingDemo/worldChain.test.js` slices the same pack the same way and is
+ * GREEN — because the node chain never runs `validateRegionLibrary` on it. The
+ * PAGE does (each part goes through its OWN validator before the world binds
+ * them), so a fixture that is fine in node is refused on the page. ⇒ re-stamped
+ * through `contentIdentity.stampIdentity`, the ONE stamper both substrates use,
+ * and the world's `doc_id` follows from the stamped id rather than being typed.
+ * ⛔ The LEVEL SET needs none: `buildLevelSet` stamps what it builds.
+ */
+const WORLD_LIB = stampIdentity(
+    {
+        ...MAZE_PACK,
+        entries: MAZE_PACK.entries.slice(0, 2),
+        provenance: { ...(MAZE_PACK.provenance ?? {}) },
+    },
+    { idKey: 'library_id', defaultBase: 'demo-maze-pack' },
+);
 const worldDocOf = (mzDocId) => emptyWorld([
     {
         id: 'seed',
@@ -2905,7 +2936,7 @@ try {
         + 'the ladder the link is not naming');
 
     /* ══════════════════════════════════════════════════════════════════
-     * ⛓⛓⛓ CLAIM 20 — THE WORLD (EDITOR INTEGRATION W4)
+     * ⛓⛓⛓ CLAIM 21 — THE WORLD (EDITOR INTEGRATION W4)
      * ══════════════════════════════════════════════════════════════════
      *
      * ⛔ **THE WORLD IS BUILT AT RUN TIME AND SERVED THROUGH PLAYWRIGHT'S OWN
@@ -2922,7 +2953,7 @@ try {
         && json(world.set.world.parts.map((p) => `${p.id}:${p.kind}:${p.rooms}`))
             === json(['seed:level-set:2', 'mz:region-library:2'])
         && world.set.rooms === 4,
-    '⛓⛓⛓ **CLAIM 20 — `?world=` OPENS ONE STRIP OVER BOTH PARTS.** The rooms are the '
+    '⛓⛓⛓ **CLAIM 21 — `?world=` OPENS ONE STRIP OVER BOTH PARTS.** The rooms are the '
         + 'parts\' rooms CONCATENATED in declaration order, and every count is the SESSION\'s '
         + 'record',
     `${world.set.world.world_id} · ${world.set.rooms} room(s)`);
@@ -2953,7 +2984,7 @@ try {
         + 'names its overlay — ⛔ NOT "overlay (unstamped)", which would be a true-looking '
         + 'sentence about a document that does not exist', worldIdentity);
 
-    /* ── CLAIM 20b: the world's REFUSALS ──────────────────────────────── */
+    /* ── CLAIM 21b: the world's REFUSALS ──────────────────────────────── */
     const bareWorld = await pasteSet(WORLD_DOC,
         () => /this is a WORLD document/.test(
             document.getElementById('labSetLoadNote')?.textContent ?? ''),
@@ -2961,7 +2992,7 @@ try {
     check(/NAMES its parts/.test(bareWorld.set.loadNote)
         && /`seed`, `mz`/.test(bareWorld.set.loadNote)
         && /Load the\s+BUNDLE/.test(bareWorld.set.loadNote),
-    '⛓⛓ **CLAIM 20b — A WORLD PASTED AS BARE JSON REFUSES BY NAME**, naming the kind and '
+    '⛓⛓ **CLAIM 21b — A WORLD PASTED AS BARE JSON REFUSES BY NAME**, naming the kind and '
         + 'its parts, and saying where the document it names actually travels. ⛔ Never '
         + '"not a region library", which is a true sentence about the wrong subject',
     bareWorld.set.loadNote);
@@ -2984,15 +3015,27 @@ try {
         document.getElementById('labSetLoadNote')?.textContent ?? ''),
     'the refusal of a world whose `doc_id` does not match');
     const mismatch = await read();
-    check(/part "mz" names `somebody-elses-pack`/.test(mismatch.set?.loadNote ?? '')
-        && new RegExp(MAZE_PACK.library_id).test(mismatch.set?.loadNote ?? '')
-        && !mismatch.fatal,
+    /**
+     * ⛔⛔ **THE REFUSAL IS READ OFF THE DOM, BECAUSE `set` IS `null` WHEN
+     * NOTHING IS HELD** — and that is the whole point of the claim. The
+     * readout's `set` block exists only once a SESSION does, so a row that
+     * looked for this refusal on `set.loadNote` would be reading a field that
+     * CANNOT exist in the state it is asserting about, and would go green for a
+     * page that refused for some other reason — or that silently held nothing.
+     * ⚠ And the id compared is `WORLD_LIB`'s, not `MAZE_PACK`'s: the fixture is
+     * the RE-STAMPED two-entry slice, so the committed pack's own id belongs to
+     * a different document.
+     */
+    const mismatchNote = await page.textContent('#labSetLoadNote');
+    check(/part "mz" names `somebody-elses-pack`/.test(mismatchNote ?? '')
+        && new RegExp(WORLD_LIB.library_id).test(mismatchNote ?? '')
+        && mismatch.set === null && !mismatch.fatal,
     '⛓⛓ …and a part whose `doc_id` disagrees with the held document REFUSES, naming WHICH '
         + 'part and BOTH ids — ⛔ bound by `doc_id`, never by position: both documents are of '
         + 'the kind their part declares, so a positional binder would load happily and every '
-        + 'crossing would land on a door nobody drew', mismatch.set?.loadNote ?? '');
+        + 'crossing would land on a door nobody drew', mismatchNote ?? '(the box was empty)');
 
-    /* ── CLAIM 20c: a MAZE room opens IN PAGE, at the GLOBAL index ────── */
+    /* ── CLAIM 21c: a MAZE room opens IN PAGE, at the GLOBAL index ────── */
     await load(worldUrl, () => window.__mazeLab?.set?.world != null,
         'the world to re-open for the room claims');
     await page.click('#editSetRowOpen_2');
@@ -3003,7 +3046,7 @@ try {
         && mazeOpen.set.openRoomSubstrate === 'maze' && mazeOpen.set.foreignRoom === null
         && mazeOpen.set.openRoomBase?.kind === 'library-room'
         && mazeOpen.set.openRoomBase?.room === 0,
-    '⛓⛓⛓ **CLAIM 20c — A MAZE ROOM OPENS IN THIS PAGE, AND ITS BASE TAG IS THE PART\'S.** '
+    '⛓⛓⛓ **CLAIM 21c — A MAZE ROOM OPENS IN THIS PAGE, AND ITS BASE TAG IS THE PART\'S.** '
         + 'The strip\'s index is GLOBAL (2) and the base names the room INSIDE its part (0) '
         + 'against that part\'s own `library_id` — ⛔ a base built from the global index would '
         + 'name a room of a library these edits were never edits OF',
@@ -3023,7 +3066,7 @@ try {
         + '⛔ addressed GLOBALLY, through the part\'s OWN `closeRoomSession` against a session '
         + 'shim, never re-implemented here', json(mazeClosed.set.opList));
 
-    /* ── CLAIM 20d: a SEEDLING room opens in `watch.html`, in a frame ─── */
+    /* ── CLAIM 21d: a SEEDLING room opens in `watch.html`, in a frame ─── */
     await page.click('#editSetRowOpen_0');
     await settled(() => window.__mazeLab?.set?.foreignRoom?.connected === true,
         'the SEEDLING room to open in the hosted `watch.html` frame');
@@ -3033,7 +3076,7 @@ try {
         && foreign.set.foreignRoom.page === 'seedling'
         && foreign.set.foreignRoom.arm === 'edit'
         && foreign.set.openRoom === null,
-    '⛓⛓⛓ **CLAIM 20d — A SEEDLING ROOM OPENS IN ITS OWN PAGE, THROUGH W3\'S CONTRACT.** '
+    '⛓⛓⛓ **CLAIM 21d — A SEEDLING ROOM OPENS IN ITS OWN PAGE, THROUGH W3\'S CONTRACT.** '
         + '⚖ The one-editor law: `watch.html`\'s EDIT arm is the Seedling room editor and a '
         + 'second one written here is what this arc exists to refuse. The `page` and the `arm` '
         + 'are the SUBSTRATE ENTRY\'s own words, and `connected` says the transport\'s flush '
@@ -3064,7 +3107,7 @@ try {
     check(stillOne.set.foreignRoom?.index === 0 && stillOne.set.openRoom === null,
         '⛓ …and NOTHING opened: the world still holds exactly the one foreign room');
 
-    /* ── CLAIM 20e: the CROSS-PART DOOR ──────────────────────────────── */
+    /* ── CLAIM 21e: the CROSS-PART DOOR ──────────────────────────────── */
     const fresh = await load(worldUrl, () => window.__mazeLab?.set?.worldDoor != null,
         'the world to re-open for the DOOR claims');
     const doorExits = fresh.set.worldDoor.exits;
@@ -3072,7 +3115,7 @@ try {
         === json(['seed.level_0', 'seed.level_1', 'mz.mz_cross', 'mz.mz_hub'])
         && doorExits[1].exits.some((e) => /^out_teleporter_\d+_\d+$/.test(e))
         && doorExits[2].exits.includes('exit_3'),
-    '⛓⛓⛓ **CLAIM 20e — THE DOOR CONTROL OFFERS THE *DERIVED* EXIT IDS** (§8.10 #4). A world '
+    '⛓⛓⛓ **CLAIM 21e — THE DOOR CONTROL OFFERS THE *DERIVED* EXIT IDS** (§8.10 #4). A world '
         + 'link names the exit id the MERGED ATLAS carries: `out_<type>_<x>_<y>` on the '
         + 'Seedling side and the entry\'s `exit_id` on the maze one. ⛔ NOT the part\'s own '
         + 'vocabulary — Seedling addresses an exit by an ORDINAL there, and a control built '
@@ -3145,7 +3188,7 @@ try {
         + 'teaches a reader to ignore the warning list',
     json(withDoor.set.report.rows.filter((r) => r.startsWith('[locations]'))));
 
-    /* ── CLAIM 20f: the NEGATIVE — no door, no export ─────────────────── */
+    /* ── CLAIM 21f: the NEGATIVE — no door, no export ─────────────────── */
     const island = await load(worldUrl, () => window.__mazeLab?.set?.world != null,
         'a world with NO crossing, for the negative');
     await page.click('#editSetReport');
@@ -3154,7 +3197,7 @@ try {
     check(noDoor.set.report.rulesAllowed === false
         && /cannot be reached from the start/.test(noDoor.set.report.rulesWhy ?? '')
         && noDoor.set.report.rows.some((r) => /^\[reach\] region "mz\./.test(r)),
-    '⛓⛓⛓ **CLAIM 20f — THE NEGATIVE: WITH NO CROSSING THE MAZE PART IS AN ISLAND**, the '
+    '⛓⛓⛓ **CLAIM 21f — THE NEGATIVE: WITH NO CROSSING THE MAZE PART IS AN ISLAND**, the '
         + 'REPORT names every unreachable region, and the `rules.json` download REFUSES BY '
         + 'NAME. ⛔ This is the row that says the crossing above did something',
     noDoor.set.report.rulesWhy);
@@ -3162,7 +3205,7 @@ try {
         '⛓ …and the world it refused over really had no crossing (a fresh load, not the '
         + 'edited one)', json(island.set.world.crossings));
 
-    /* ── CLAIM 20g: the DOWNLOAD, read back, and the two rules.json ──── */
+    /* ── CLAIM 21g: the DOWNLOAD, read back, and the two rules.json ──── */
     await setDoor(1, CROSS_EXIT, 2, 'exit_3', '1');
     await page.click('#labDoorConnect');
     await settled(() => (window.__mazeLab?.set?.world?.crossings ?? []).length === 1,
@@ -3177,7 +3220,7 @@ try {
     check(json(back.members.map((m) => m.kind))
         === json(BUNDLE_KINDS.filter((k) => ['rules', 'level-set', 'region-atlas',
             'region-library', 'world'].includes(k))),
-    '⛓⛓⛓ **CLAIM 20g — THE PRESS WRITES THE FOUR DOCUMENTS AND THE COMPILE\'S TWO**, and '
+    '⛓⛓⛓ **CLAIM 21g — THE PRESS WRITES THE FOUR DOCUMENTS AND THE COMPILE\'S TWO**, and '
         + 'the zip reads back through `documentBundle`\'s OWN reader. ⛔ The kinds are '
         + 'filtered out of `BUNDLE_KINDS` rather than typed, so the ORDER claim is the '
         + 'reader\'s own order', json(back.members.map((m) => m.kind)));

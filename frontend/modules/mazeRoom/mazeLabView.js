@@ -1951,7 +1951,22 @@ export function main() {
             lifetime: setArmLt,
             session: setSession,
             adapter: setAdapter,
-            deps: {},
+            /**
+             * ⛓⛓⛓ EDITOR INTEGRATION W4 — **THE DEPS ARE THE WORLD'S, KEYED BY
+             * PART, AND `{}` IS NOT AN EMPTY DEFAULT HERE.**
+             *
+             * ⛔ The maze needs NOTHING injected to derive (its payloads carry
+             * their own worlds), so this was `{}` and had been correct for two
+             * slices. A WORLD's Seedling part needs `parseOel`, `tileSize`,
+             * `tileTypeForPlacement` and its `atlas.game` — and `reportOver`
+             * passes THIS object straight to `deriveAtlasOf`, so `{}` reached
+             * `worldPartDescriptors`' carefully-built deps and outvoted them
+             * (`d ?? deps` keeps `{}`, which is not nullish). The symptom was
+             * the whole REPORT answering *"the atlas does not derive, so there
+             * is nothing to compile"* — a page-only failure, because the node
+             * rows hand the deps in directly and never go through the mount.
+             */
+            deps: heldWorld ? worldDeps : {},
             compileRegionAtlas,
             validateRegionAtlas,
             atlasSchema: atlasSchema ?? undefined,
