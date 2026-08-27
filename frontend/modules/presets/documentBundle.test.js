@@ -229,7 +229,9 @@ describe('BUNDLE_KINDS — `world` is APPENDED, and the order is bytes', () => {
      * and it is absent). What CAN be pinned is the position: the five kinds
      * that existed before W2 keep their indices, and `world` is last.
      */
-    it('the five older kinds keep their indices and `world` is LAST', () => {
+    // ⛓ the count is INTERPOLATED from the roster, never typed: `world` is the
+    //   newest kind, so "the ones before it" is `length - 1` by construction.
+    it(`the ${BUNDLE_KINDS.length - 1} older kinds keep their indices and \`world\` is LAST`, () => {
         expect(BUNDLE_KINDS).toEqual([
             'rules', 'level-set', 'overlay', 'region-atlas', 'region-library', 'world',
         ]);
@@ -237,7 +239,7 @@ describe('BUNDLE_KINDS — `world` is APPENDED, and the order is bytes', () => {
         expect(BUNDLE_ENTRY_NAMES.world).toBe('world.json');
     });
 
-    it('a bundle of the five older kinds writes them in their historical order', async () => {
+    it(`a bundle of the ${BUNDLE_KINDS.length - 1} older kinds writes them in their historical order`, async () => {
         const bytes = await writeBundle(BEFORE_W2, { jszip });
         const { members } = await readBundle(bytes, { jszip });
         expect(members.map((m) => m.kind))
