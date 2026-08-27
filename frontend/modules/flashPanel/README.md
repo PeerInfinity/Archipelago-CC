@@ -121,7 +121,7 @@ four independent views.
 | build | named by |
 |---|---|
 | `seedling_bot_ap_p4c` | **every default**: `seedlingDemo/watchWasm.js` (`WASM_PAGE`) and `watchEditor.js`, the three seedling presets' `flash_panel.wasm`, `procgenPipeline/regionAtlasCompiler.js`, `check-seedling-wasm-pages.mjs`'s `BUILD` literal, the `SEEDLING_PAGE` **default** of `verify-seedling-bot-differential.mjs`, of `check-seedling-{generated-set,save-stamp,vanilla-manifest}.mjs`, of `probe-seedling-level-set-transport.mjs` and of ~35 more `scripts/procgen/{probe,plan,solve,run,derive,rerecord}-seedling-*.mjs`, three verify rows, and the two TESTS that assert the name (`watchWasm.test.js`, `regionAtlasCompiler.test.js`). **53 tracked files, 69 lines** — derived with `git grep -ln <name> -- ':!*.md'`, never typed |
-| `seedling_bot_ap_p4b` | ⛔ **nothing names it as a DEFAULT any more, and this table cell is the only thing holding its pin: `wasm/seedling_bot_ap_p4b/game.html`.** That path is written here DELIBERATELY, and saying so is the point — see below |
+| `seedling_bot_ap_p4b` | ⛔ **nothing names it as a DEFAULT any more, and this table cell is the only thing holding its pin: `wasm/seedling_bot_ap_p4b/game.html`.** That path is written here DELIBERATELY, and saying so is the point — see below. ⛓ **R9 slice 12h: it is no longer a mere placeholder — p4b is the ONLY tracked build WITHOUT the `arm` capability, and two live corrections key on its absence** |
 
 ⛔⛔ **p4b's PIN IS HELD BY ONE LINE OF PROSE, ON PURPOSE, AND IT IS THE ONLY
 MANUFACTURED REFERENCE IN THIS REPOSITORY.** When slice 12g′ flipped the
@@ -135,13 +135,28 @@ retire p4b immediately or to write a path the gate can see. The path above is
 that second choice, taken with its cost named: **~34 MB of tracked artifact
 held by one table cell.**
 
-⇒ **RETIRE IT AT SLICE 12h's CLOSE** by deleting this cell's path, the
-`.gitignore` whitelist line and the `builds.json` entry. The directory may stay
-on a developer's disk and remains reachable as
-`SEEDLING_PAGE=seedling_bot_ap_p4b` — which is what the whitelist is for, and
-why retiring costs nothing locally. ⚠ Do not "tidy" the path out of this cell
-before then: the gate will red on the next commit, correctly, saying p4b is
-tracked and unnamed.
+⛔⛔⛔ **THE SCHEDULED RETIREMENT IS CANCELLED, AND THE REASON IS MEASURED.**
+This cell used to read *"RETIRE IT AT SLICE 12h's CLOSE"*. Slice 12h looked and
+found that **p4b is the ONLY tracked build without the `arm` capability** — the
+whitelist admits exactly two directories, `p4b` and `p4c`, so on a fresh
+checkout there is no third build to stand in for it. Two live corrections are
+keyed on that capability's ABSENCE and are therefore proved only by p4b:
+
+- `check-seedling-wasm-ship.mjs`'s CLAIM 6 — `armsAfterSwap ? 0 :
+  BOOT_PRESWAP_FRAMES` (R9 12g′, `12934b870`);
+- `r5Acceptance.js`'s `preSwapCorrection` — the six R5 dead-frame rows the
+  first `--tier=full` run since the flip caught (R9 12h).
+
+A capability-keyed correction is proved only by the arm that LACKS the
+capability. Retiring p4b would delete the negative control for both of them on
+the same day the second one was written, and would also make 12g′'s own
+discriminator — *"p4b refused at arm frame 31 and p4c passed at arm frame 31"* —
+unreproducible. **So p4b stays pinned, and its ~34 MB is no longer the price of
+a placeholder: it is the price of a control.**
+
+⇒ The pin retires when the LAST consumer of `arm == null` does, not on a date.
+⚠ Do not "tidy" the path out of this cell: the gate will red on the next commit,
+correctly, saying p4b is tracked and unnamed.
 
 ⛓ **p4b → p4c ON 2026-08-26 (R9 slice 12g′, ⚖ ruling 58's (F)).** One
 behavioural difference and it is an ARM TIME, not a game rule: `botStart` used
