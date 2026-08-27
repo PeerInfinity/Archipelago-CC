@@ -53,6 +53,15 @@ beforeAll(async () => {
     }
     mod = await import('./regionEditors.js');
     labRoomEditor = await import('../procgenLabPanel/labRoomEditor.js');
+    /**
+     * ⛓⛓ EDITOR INTEGRATION W4 — **THE APP REGISTERS ITS BUS, AND THIS ROW
+     * STANDS IN FOR THE APP.** `labRoomEditor.js` no longer IMPORTS
+     * `app/core/eventBus.js` (importing it booted the CentralRegistry, which
+     * `lab.html` must not pay for); `procgenLabPanelUI` registers it at its own
+     * import. ⛔ Registered here rather than passed per call, because what
+     * `getRegionEditor`'s binding uses is the DEFAULT path.
+     */
+    labRoomEditor.registerAppEventBus(eventBus);
     realEntries = substrateRegistry.getAll();
     eventBus.registerPublisher('procgenLab:levelChanged', 'testFrame');
 /**
