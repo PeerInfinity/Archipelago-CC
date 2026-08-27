@@ -49,7 +49,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 22,
-            "count": 30,
+            "count": 31,
             "id": "check"
         },
         {
@@ -204,12 +204,12 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 238,
+        "blockStyle": 239,
         "browser": 76,
         "cited": 85,
-        "files": 257,
+        "files": 258,
         "lineStyle": 19,
-        "withDocblock": 257,
+        "withDocblock": 258,
         "withFlags": 161
     },
     "dir": "scripts/procgen",
@@ -1628,6 +1628,18 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "check-seedling-editor-world — THE EDITOR ARC SLICE 9 ACCEPTANCE ROW.",
             "path": "scripts/procgen/check-seedling-editor-world.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-seedling-full-tier-owed.mjs",
+            "flags": [],
+            "oneLiner": "check-seedling-full-tier-owed — **A MEASUREMENT OWED IS A RED ROW, NOT A MEMORY** (R9 slice P3b, §47.11 (3) (c)/(d)).",
+            "path": "scripts/procgen/check-seedling-full-tier-owed.mjs"
         },
         {
             "argvHelpers": [
