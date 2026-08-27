@@ -33,6 +33,7 @@
  */
 
 import { chromium } from '@playwright/test';
+import { readFileSync } from 'node:fs';
 
 const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
     ?? `--${name}=${fallback}`).slice(`--${name}=`.length);
@@ -94,9 +95,38 @@ console.log('\n## the default boot — no ?boot=, nothing typed');
     check(JSON.stringify(block.boot) === JSON.stringify({ level: 0, x: 80, y: 128 }),
         '⛓ the page boots at THE TRUE GAME START, not the atlas door convention',
         JSON.stringify(block.boot));
-    check(JSON.stringify(block.pins) === JSON.stringify(['dead_frames']) && block.rng !== null,
+    /**
+     * ⛓⛓⛓ R9 SLICE 12h — THE PIN SET IS READ OFF THE SOURCE TAPE, NEVER TYPED.
+     *
+     * This row asserted `pins === ['dead_frames']` and went RED when ⚖ ruling
+     * 57 pinned the roster and `r8-solve-1` — the tape the page derives its
+     * TRUE-START block from, and the one the title names — began declaring
+     * `["sound","dead_frames"]`. The claim is *"the page carries fields a
+     * hand-typed default could not know"*, which is about PROVENANCE, so it is
+     * asserted against the tape the page says it came from. Typing the new
+     * answer instead would have re-armed the same landmine for the next pin.
+     * ⚠ This is the THIRD row of this shape in one run — `watchSolve.test.js`
+     * had two — and §40.6's `rejected` literal was the first of the family.
+     *
+     * ⛔⛔ WHAT EACH ARM ACTUALLY CATCHES, MEASURED RATHER THAN IMPLIED. The
+     * page derives its true-start block FROM this same tape, so the EQUALITY
+     * arm is a FIXED POINT with respect to the TAPE: patching `r8-solve-1`'s
+     * `pins` to `[]` makes both sides read `[]` and the equality still holds —
+     * measured, and the row then reds on `length > 0` ALONE. So:
+     *   · the EQUALITY arm catches a PAGE that stops deriving (one that
+     *     hard-codes any pin set of its own) — a real defect class, and the
+     *     one this row was written for;
+     *   · the `length > 0` arm catches the degenerate agreement where both
+     *     sides are empty, which is the only thing the equality cannot see.
+     * Both are load-bearing and neither is the whole claim.
+     */
+    const sourcePins = JSON.parse(
+        readFileSync(`${TAPES}/r8-solve-1.json`, 'utf8')).pins;
+    check(JSON.stringify(block.pins) === JSON.stringify(sourcePins)
+        && block.pins.length > 0 && block.rng !== null,
         '⛓ …with the fields a hand-typed default could not know — pins and rng',
-        `pins ${JSON.stringify(block.pins)}, rng.seed ${block.rng?.seed}`);
+        `pins ${JSON.stringify(block.pins)} against r8-solve-1's `
+            + `${JSON.stringify(sourcePins)}, rng.seed ${block.rng?.seed}`);
     check(block.noclip === false && block.noDamage === false
         && JSON.stringify(block.persistence) === '[]',
         'an HONEST start: collision on, damage on, nothing cleared');

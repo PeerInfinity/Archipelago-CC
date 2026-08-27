@@ -53,7 +53,7 @@
 
 /** ⚠ `@playwright/test`, not `playwright` — slice 1's note. */
 import { chromium } from '@playwright/test';
-import { mkdirSync } from 'node:fs';
+import { mkdirSync, readFileSync } from 'node:fs';
 
 const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
     ?? `--${name}=${fallback}`).slice(`--${name}=`.length);
@@ -182,9 +182,24 @@ console.log('\n## L11 (the survey\'s step 11) — the corridor-blocking chest is
     check(r.solve.status === 'ok',
         '⛓⛓⛓ the crossing the survey recorded as REFUSED now SOLVES',
         `status=${r.solve.status}, ${r.solve.tickCount ?? '?'} ticks`);
-    check(r.solve.tickCount === 119,
-        '⛓⛓ …in the SAME 119 ticks the goal-directed collect takes — one walk, two errands',
-        `${r.solve.tickCount} ticks`);
+    /**
+     * ⛓⛓⛓ R9 SLICE 12h — THE NUMBER IS READ OFF THE TAPE, NEVER TYPED.
+     *
+     * This row asserted `=== 119` and went RED when ⚖ ruling 49's series
+     * re-recorded `r9-solve-11` at **97**. The claim is *"the page's own solve
+     * takes the same ticks the committed goal-directed collect does"* — a
+     * RELATION between two artifacts — and a relation written with one side as
+     * a literal decays the moment that side is re-recorded. That is §42.2's
+     * seventh surface (a `check-*.mjs` GATE carrying a number derived from a
+     * tape) and the same repair `check-seedling-editor-sequence`'s CLAIM 8 took
+     * at `73bf6d724`: ask the tape.
+     */
+    const collectTicks = JSON.parse(
+        readFileSync(`${TAPES}/r9-solve-11.json`, 'utf8')).tick_count;
+    check(r.solve.tickCount === collectTicks,
+        `⛓⛓ …in the SAME ${collectTicks} ticks the goal-directed collect takes `
+            + '(`r9-solve-11.tick_count`, read off the tape) — one walk, two errands',
+        `${r.solve.tickCount} ticks against the tape's ${collectTicks}`);
     const trace = await r.page.evaluate(() => (window.__editorTrace?.rows ?? []).map((row) => ({
         tick: row.tick,
         obstacle: row.obstacle ? `${row.obstacle.kind}:${row.obstacle.id}` : null,
