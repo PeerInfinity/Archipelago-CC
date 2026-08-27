@@ -291,9 +291,13 @@ try {
             + `${chain.segments.length} segments have something to be tick-for-tick `
             + 'IDENTICAL to. Inputs are `transition-west-return`\'s, unchanged since R1, '
             + `truncated at the second ARRIVAL (t=${chain.endsAt}) so that the LAST `
-            + 'segment also ends at one. `pins: ["dead_frames"]` makes `save.time` '
-            + 'update-determined (it counts dead frames, which are per-RENDER in '
-            + 'vanilla); `rng.fp` is declared because FlashPunk seeds its LCG once per '
+            + `segment also ends at one. \`pins: ${JSON.stringify(base.pins)}\` makes `
+            + '`save.time` update-determined (it counts dead frames, which are '
+            + 'per-RENDER in vanilla) and, under ⚖ ruling 57, the sound mixer\'s '
+            + 'draw count deterministic too (R9 §43: an unpinned mixer makes '
+            + '`Rng.gameplay` a function of the WALL CLOCK). ⛓ The list is READ OFF '
+            + 'the tape this call is building, so it can never decay away from it. '
+            + '`rng.fp` is declared because FlashPunk seeds its LCG once per '
             + 'PAGE from `Math.random()` and a committed chain cannot inherit a random '
             + 'number. Authored by scripts/procgen/plan-seedling-r7-ends-meet.mjs.'));
 

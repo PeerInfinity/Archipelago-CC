@@ -50,7 +50,7 @@ const TAPES = join(MODULE, 'fixtures', 'tapes');
 
 const CHECK = process.argv.includes('--check');
 
-const { parseTape } = await import(join(MODULE, 'tapeFormat.js'));
+const { parseTape, PIN_NAMES } = await import(join(MODULE, 'tapeFormat.js'));
 const { createLevelRun } = await import(join(MODULE, 'levelRun.js'));
 const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
 const { buildTape } = await import(join(MODULE, 'botDriverV1.js'));
@@ -86,7 +86,7 @@ const run = createLevelRun({
     persistence: [],
     despawn: [],
     equips: [],
-    pins: ['dead_frames'],
+    pins: [...PIN_NAMES],
     save: { totem_parts: [], keys: [], seal_parts: [] },
     rng: null,
     // A sword is what a press needs; the rest of the campaign is irrelevant.
@@ -190,7 +190,7 @@ const tape = {
     grants: [],
     persistence: [],
     equips: [],
-    pins: ['dead_frames'],
+    pins: [...PIN_NAMES],
     // ⚠ A v6 `save` BLOCK IS REQUIRED ONCE A SEAM IS DECLARED, and a v7 `rng`
     // one for the same reason — a null would be the format's "inherit", which
     // a tape carrying a seam may not say (trap 130).

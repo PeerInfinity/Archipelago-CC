@@ -106,22 +106,20 @@ describe('R9 P3 (C): the LINT — prose may not disagree with data', () => {
         const rows = proseOwnerDisagreements(allTapes(), { repo: REPO, tapesDir: TAPES });
         const missing = rows.filter((r) => r.kind === 'names-a-missing-file');
         /**
-         * ⛔⛔ THE THREE ARE PINNED, NOT TOLERATED. They are the residue R9 P3
-         * FOUND and may not repair: rewriting a committed tape's `description`
-         * is a TAPE MOVE and this slice holds no licence for one (⚖ 49). So the
-         * finding is recorded here BY NAME — a FOURTH one reds, and the day the
-         * three descriptions are repaired (a re-record's own commit) this list
-         * becomes empty and the row says so.
+         * ⛓⛓⛓ **AND THE DAY CAME: THE LIST IS EMPTY.** P3 recorded the three
+         * `r7-act2-*` findings BY NAME because repairing a committed tape's
+         * `description` is a TAPE MOVE and P3 held no licence for one. R9 slice
+         * 12h holds one (⚖ ruling 57's roster-wide re-record), repaired all
+         * three in the pin commit, and this row is now the assertion P3 said it
+         * would become: **no committed description names a producer that is not
+         * in the tree.** A new one reds here by name.
+         *
+         * ⛔ THE ROW IS NOT VACUOUS NOW THAT IT IS EMPTY, and (m3) is why: the
+         * mutant below writes a missing producer into a description and this
+         * lint names it. An empty list that no mutant can fill would be a row
+         * asserting that the lint never runs.
          */
-        expect(missing.map((r) => `${r.tape} -> ${r.said}`).sort()).toEqual([
-            'r7-act2-5 -> plan-seedling-r7-act2.mjs',
-            'r7-act2-6 -> plan-seedling-r7-act2.mjs',
-            'r7-act2-full -> plan-seedling-r7-act2.mjs',
-        ]);
-        for (const r of missing) {
-            expect(existsSync(join(PROCGEN, r.said)), `${r.said} unexpectedly exists`)
-                .toBe(false);
-        }
+        expect(missing.map((r) => `${r.tape} -> ${r.said}`).sort()).toEqual([]);
         // the lint's own reach: it looked at every committed tape
         expect(allTapes().length).toBeGreaterThan(100);
     });

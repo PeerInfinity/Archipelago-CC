@@ -84,7 +84,7 @@ const TAPES = join(MODULE, 'fixtures', 'tapes');
 
 const CHECK = process.argv.includes('--check');
 
-const { parseTape } = await import(join(MODULE, 'tapeFormat.js'));
+const { parseTape, PIN_NAMES } = await import(join(MODULE, 'tapeFormat.js'));
 const { createLevelRun } = await import(join(MODULE, 'levelRun.js'));
 const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
 const { buildTape } = await import(join(MODULE, 'botDriverV1.js'));
@@ -129,7 +129,7 @@ const run = createLevelRun({
     persistence: [],
     despawn: [],
     equips: [],
-    pins: ['dead_frames'],
+    pins: [...PIN_NAMES],
     save: { totem_parts: [], keys: [], seal_parts: [] },
     rng: null,
     // A sword is what a press needs; the rest of the campaign is irrelevant.
@@ -297,7 +297,7 @@ const tape = {
     grants: [],
     persistence: [],
     equips: [],
-    pins: ['dead_frames'],
+    pins: [...PIN_NAMES],
     save: { totem_parts: [], keys: [], seal_parts: [] },
     rng: { seed: 1, split: false },
     seam: { items: { hasSword: true } },
@@ -420,7 +420,7 @@ const restRun = createLevelRun({
     persistence: [],
     despawn: [],
     equips: [],
-    pins: ['dead_frames'],
+    pins: [...PIN_NAMES],
     save: { totem_parts: [], keys: [], seal_parts: [] },
     rng: null,
     seam: { items: { hasSword: true } },
@@ -577,7 +577,7 @@ const restTape = {
     grants: [],
     persistence: [],
     equips: [],
-    pins: ['dead_frames'],
+    pins: [...PIN_NAMES],
     save: { totem_parts: [], keys: [], seal_parts: [] },
     rng: { seed: 1, split: false },
     seam: { items: { hasSword: true } },

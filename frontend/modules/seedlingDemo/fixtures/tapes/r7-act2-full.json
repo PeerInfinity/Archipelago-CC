@@ -2,7 +2,7 @@
     "tape_version": 10,
     "game": "seedling",
     "name": "r7-act2-full",
-    "description": "⛓ THE HEADLINE of chain \"act2-the-sword\" — the game's own opening in ONE run, so the 11 segments have something to be tick-for-tick IDENTICAL to. From `new Game(0, 80, 128)` with an empty save, no grants, no persistence clears and collision ON, through L2, L3, L4, L5 and L6 to the L7 arrival. L4 is the room slice 6b could not plan: its column 2 is walled at every row but the cell `pushableblock@32,64` stands in, so the walk holds `button@16,64` until the two arrowtraps kill `bob@64,64` (measured: hits 0->1->2->3, gone by t~158 of that segment) and then LEANS the block from (2,4) to (4,4). Then L5: the arrow-bait fight opens `lock@48,112 {5,0}` with NO WEAPON and the walk crosses the cell the lock was standing on. Then L6: the room has no crossing at all while its two bobs stand in the two detour cells, and the ROOM removes one — a stance in row 1 column 3 sends `bob@112,48` across the water to drown while `sandtrap@64,16` walls the other off — and the walk weaves row 2 / row 3 / row 2 to the stairs. `pins: [\"dead_frames\"]` makes `save.time` update-determined; `rng.fp` is declared because FlashPunk seeds its LCG once per PAGE. Authored by scripts/procgen/plan-seedling-r7-act2.mjs.",
+    "description": "⛓ THE HEADLINE of chain \"act2-the-sword\" — the game's own opening in ONE run, so the 11 segments have something to be tick-for-tick IDENTICAL to. From `new Game(0, 80, 128)` with an empty save, no grants, no persistence clears and collision ON, through L2, L3, L4, L5 and L6 to the L7 arrival. L4 is the room slice 6b could not plan: its column 2 is walled at every row but the cell `pushableblock@32,64` stands in, so the walk holds `button@16,64` until the two arrowtraps kill `bob@64,64` (measured: hits 0->1->2->3, gone by t~158 of that segment) and then LEANS the block from (2,4) to (4,4). Then L5: the arrow-bait fight opens `lock@48,112 {5,0}` with NO WEAPON and the walk crosses the cell the lock was standing on. Then L6: the room has no crossing at all while its two bobs stand in the two detour cells, and the ROOM removes one — a stance in row 1 column 3 sends `bob@112,48` across the water to drown while `sandtrap@64,16` walls the other off — and the walk weaves row 2 / row 3 / row 2 to the stairs. `pins: [\"sound\",\"dead_frames\"]` makes `save.time` update-determined and, under ⚖ ruling 57, the sound mixer’s draw count deterministic too; `rng.fp` is declared because FlashPunk seeds its LCG once per PAGE. ⛓ R9 SLICE 12h — THIS TAPE IS AN ARCHIVE THAT NOTHING RE-EMITS: its producer was RETIRED by ⚖ ruling 14 and is not in the tree, so the prose no longer nominates one (P3's lint reads a producer path out of this field, and silence is not a finding — prose is not required, only required to be TRUE). Its `pins` are therefore the only hand-written pin literal in the roster: ⚖ ruling 57 pins roster-wide and no producer exists to derive this one, so it is typed here and re-recorded against the game like every other pinned tape. A producer for this chain — or its retirement — closes that.",
     "boot": {
         "level": 0,
         "x": 80,
@@ -42,6 +42,7 @@
     ],
     "equips": [],
     "pins": [
+        "sound",
         "dead_frames"
     ],
     "save": {

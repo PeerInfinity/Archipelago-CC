@@ -16,6 +16,7 @@
     "despawn": [],
     "equips": [],
     "pins": [
+        "sound",
         "dead_frames"
     ],
     "save": {

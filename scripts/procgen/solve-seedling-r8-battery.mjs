@@ -119,7 +119,7 @@ const WALK_REPORT = createWalkReport({
 
 const CHECK = process.argv.includes('--check');
 
-const { parseTape, requiredTapeVersion } =
+const { parseTape, requiredTapeVersion, PIN_NAMES } =
     await import(join(REPO, 'frontend/modules/seedlingDemo/tapeFormat.js'));
 const { collectGoal, reachGoal } = await import(join(REPO, 'scripts/procgen/seedling-atlas-goals.mjs'));
 const { atlasLevelSource } =
@@ -319,7 +319,30 @@ const PROBE_ROWS = [];
  * ROLES`, it declares an honest run and gets the replay's census because
  * they are the same line of code.
  */
-const stagingOf = (committed) => solveStaging(stagingFromTape(committed));
+/**
+ * ⛓⛓⛓ R9 SLICE 12h — THE PIN IS DECLARED HERE, AND UNTIL THIS RUN IT WAS A
+ * FIXED POINT.
+ *
+ * `stagingFromTape(t).pins` is `t.pins` and `buildStagedTape` writes
+ * `staging.pins` straight back out, so this producer was pins-TRANSPARENT —
+ * and its input is `committedFor(segNo)`, which reads `r8-solve-${segNo}.json`,
+ * i.e. ITS OWN COMMITTED OUTPUT. The field therefore had no root anywhere:
+ * whatever the tapes on disk already said, the producer re-said. Measured at
+ * W0 rather than argued: with `r8-solve-1.json`'s `pins` hand-patched to
+ * `["sound","dead_frames"]`, `--check` was GREEN. That is trap 769's fixed
+ * point one field over, and it is why "edit the root literal" reached 12 of
+ * the roster's 37 ladder tapes and not the other 25.
+ *
+ * These five tapes are the ladder's TRUE START — `r8-solve-1` is the campaign
+ * chain's HEAD and `r8-solve-11` is the LATCH that `solve-seedling-r8-l18`,
+ * `-r8-d2` and `-r8-d2-chain` all boot from — so nothing upstream can hand
+ * them a pin set. A root DECLARES, and per ⚖ ruling 17 it declares
+ * `[...PIN_NAMES]`, every pin the format knows, never a second typed list
+ * that could drift from `tapeFormat.js`'s. ⚖ ruling 57: pin roster-wide.
+ */
+const stagingOf = (committed) => solveStaging({
+    ...stagingFromTape(committed), pins: [...PIN_NAMES],
+});
 
 /** `tapeJson` — the plan scripts' convention: serialize FROM a parsed tape. */
 function tapeJson(obj, description) {

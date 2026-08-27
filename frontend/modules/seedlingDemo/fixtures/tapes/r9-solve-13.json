@@ -47,6 +47,7 @@
     "despawn": [],
     "equips": [],
     "pins": [
+        "sound",
         "dead_frames"
     ],
     "save": {
@@ -57,7 +58,7 @@
         ]
     },
     "rng": {
-        "seed": 1196888758,
+        "seed": 514729325,
         "split": false,
         "cosmetic": 0,
         "fp": 1786538712

@@ -81,8 +81,9 @@ const TAPES = join(MODULE, 'fixtures', 'tapes');
 
 const CHECK = process.argv.includes('--check');
 
-const { parseTape, requiredTapeVersion, assertTapeWithinRuntimeBudget } =
-    await import(join(MODULE, 'tapeFormat.js'));
+const {
+    parseTape, requiredTapeVersion, assertTapeWithinRuntimeBudget, PIN_NAMES,
+} = await import(join(MODULE, 'tapeFormat.js'));
 const { createLevelRun } = await import(join(MODULE, 'levelRun.js'));
 const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
 const { buildTape } = await import(join(MODULE, 'botDriverV1.js'));
@@ -141,7 +142,7 @@ const mk = (time) => createLevelRun({
     persistence: [],
     despawn: [],
     equips: [],
-    pins: ['dead_frames'],
+    pins: [...PIN_NAMES],
     save: { totem_parts: [], keys: [], seal_parts: [] },
     rng: null,
     seam: {
@@ -299,7 +300,7 @@ function tapeFor(name, time) {
         grants: [],
         persistence: [],
         equips: [],
-        pins: ['dead_frames'],
+        pins: [...PIN_NAMES],
         save: { totem_parts: [], keys: [], seal_parts: [] },
         rng: { seed: 1, split: false },
         seam: {

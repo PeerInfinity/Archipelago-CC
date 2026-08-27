@@ -45,6 +45,7 @@
  */
 
 import { fixtureNames, loadTape } from './fixtures/index.js';
+import { PIN_NAMES } from './tapeFormat.js';
 /**
  * ⛔ THE CAMPAIGN CHAIN'S ONE DECLARATION (⚖ ruling 38 (1), R9 slice 12d).
  * `r9-campaign`'s `segments` below is DERIVED from it, not typed here — the
@@ -796,9 +797,9 @@ export function chainPolicy(chain) {
  * `freeOracle` names a COMMITTED, FROZEN fixture whose observation stream
  * the headline should reproduce. `transition-west-return` has been in the
  * roster since R1 and is byte-frozen; the toy headline is the same inputs
- * with `pins: ["dead_frames"]` added, so if the two streams agree, the pin
- * is observation-inert and the chain costs the roster nothing to believe.
- * If they DISAGREE that is a finding about the pin, reported by name — not
+ * with the walk's `pins` added, so if the two streams agree, the pins are
+ * observation-inert and the chain costs the roster nothing to believe.
+ * If they DISAGREE that is a finding about a pin, reported by name — not
  * a failure of the chain.
  */
 const CHAIN_DECLARATIONS = Object.freeze([
@@ -838,11 +839,19 @@ const CHAIN_DECLARATIONS = Object.freeze([
          * two spans that have been in the roster since R1. What is added is
          * declared here rather than typed into a tape:
          *
-         *  · `pins: ["dead_frames"]` — `save.time` is a `pinned-equality`
-         *    signature row (`Game.as:832`'s `time += timeRate` counts DEAD
-         *    frames, which are per-RENDER in vanilla and ±2-banded per
-         *    load). A committed chain whose seam carries an unpinned `time`
-         *    would go red on the sweep for a render count, not a defect.
+         *  · `pins` — `[...PIN_NAMES]`, every pin the format knows, and
+         *    ⚖ ruling 17's own form: a second typed list here could drift
+         *    from `tapeFormat.js`'s and nothing would say so.
+         *    `"dead_frames"` makes `save.time` a `pinned-equality` signature
+         *    row (`Game.as:832`'s `time += timeRate` counts DEAD frames,
+         *    which are per-RENDER in vanilla and ±2-banded per load); a
+         *    committed chain whose seam carries an unpinned `time` would go
+         *    red on the sweep for a render count, not a defect.
+         *    ⛓ R9 slice 12h added `"sound"` under ⚖ ruling 57 — §43 measured
+         *    an unpinned mixer making `Rng.gameplay` a function of the WALL
+         *    CLOCK (3296..3299 draws for ONE tape, observation stream 0/146
+         *    differing), so every boundary's `rng.seed` row was a comparison
+         *    of two samples until the roster carried it.
          *  · `fpSeed` — the chain declares FlashPunk's LCG rather than
          *    inheriting it. ⚠ NOT because the page's own seed is random:
          *    `Engine.as:50` seeds it from one `Math.random()`, and in this
@@ -860,7 +869,7 @@ const CHAIN_DECLARATIONS = Object.freeze([
                 Object.freeze({ key: 'left', from: 0, to: 72 }),
                 Object.freeze({ key: 'right', from: 88, to: 140 }),
             ]),
-            pins: Object.freeze(['dead_frames']),
+            pins: Object.freeze([...PIN_NAMES]),
             fpSeed: 987286273,
         }),
     }),

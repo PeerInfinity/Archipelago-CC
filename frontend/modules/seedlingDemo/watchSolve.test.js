@@ -18,7 +18,9 @@ import {
     harvestPresets, itemFlagsOf, ITEM_FORM_FIELDS, parseGoalsParam, readSolveParams,
     solveForPage, stagingFromJson, TRUE_START_CHAIN, TRUE_START_SEGMENT, withItemFlag,
 } from './watchSolve.js';
-import { parseTape, requiredTapeVersion, SEAM_BOOT_SPEC } from './tapeFormat.js';
+import {
+    parseTape, requiredTapeVersion, SEAM_BOOT_SPEC, PIN_NAMES,
+} from './tapeFormat.js';
 import {
     createRunForStaging, createTapeStepper, solveStaging, stagingFromTape,
 } from './tapeRunner.js';
@@ -200,7 +202,18 @@ describe('the PRESETS harvest', () => {
         // retype — nothing here could be typed by hand.
         expect(presets[0].staging.rng.seed).toBe(2057886025);
         expect(presets[0].staging.seam.time).toBe(5334);
-        expect(presets[0].staging.pins).toEqual(['dead_frames']);
+        /**
+         * ⛓ R9 SLICE 12h — THIS ROW WAS `toEqual(['dead_frames'])` AND ⚖ RULING
+         * 57 FALSIFIED IT. That is the SECOND time a row pinned to a pin-set
+         * LITERAL became a landmine under a roster-wide change (§40.6 was the
+         * first, on `rejected`). The claim this row makes is *"the harvest
+         * carried a field no hand-typed default could know"* — which is about
+         * PROVENANCE, not about which pins are fashionable — so it is derived
+         * from the tape and bounded by the format instead of retyped.
+         */
+        expect(presets[0].staging.pins).toEqual(parseTape(tape).pins);
+        expect(presets[0].staging.pins.length).toBeGreaterThan(0);
+        expect(presets[0].staging.pins.every((n) => PIN_NAMES.includes(n))).toBe(true);
     });
 
     it('REPORTS a tape it cannot parse instead of shrinking the list', () => {
@@ -360,8 +373,12 @@ describe('⛓⛓⛓ THE DEFAULT BOOT IS THE TRUE GAME START (slice 5)', () => {
         const staging = stagingFromJson(readTape(TRUE_START_SEGMENT));
         expect(staging.boot).toEqual({ level: 0, x: 80, y: 128 });
         expect(staging.boot).not.toEqual({ level: 0, x: 16, y: 16 });
-        // ⚠ …and the fields a hand-typed default had no way to know:
-        expect(staging.pins).toEqual(['dead_frames']);
+        // ⚠ …and the fields a hand-typed default had no way to know.
+        // ⛓ R9 slice 12h: DERIVED, for the reason given on the presets row —
+        // a literal pin set here is a landmine under the next ⚖ 57.
+        expect(staging.pins).toEqual(parseTape(readTape(TRUE_START_SEGMENT)).pins);
+        expect(staging.pins.length).toBeGreaterThan(0);
+        expect(staging.pins.every((n) => PIN_NAMES.includes(n))).toBe(true);
         expect(staging.rng).not.toBeNull();
         expect(staging.noclip).toBe(false);
         expect(staging.noDamage).toBe(false);
