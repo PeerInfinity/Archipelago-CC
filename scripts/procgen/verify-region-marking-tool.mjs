@@ -503,13 +503,21 @@ try {
     const keyGuard = await page.evaluate(() => {
         const panel = document.querySelector('.rmt-panel').__panel;
         const before = panel.session.edits().length;
+        // ⛔ FIRST: a press on the canvas must leave focus INSIDE the panel, or
+        //    the key binding is unreachable for anyone who marks with the mouse.
+        panel.canvas.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+        const focusedAfterCanvas = panel.rootElement.contains(document.activeElement);
         const input = document.querySelector('.rmt-panel .rmt-input');
         input.focus();
         input.dispatchEvent(new KeyboardEvent('keydown', { key: 'z', ctrlKey: true, bubbles: true }));
         const afterInInput = panel.session.edits().length;
         panel.rootElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'z', ctrlKey: true, bubbles: true }));
-        return { before, afterInInput, afterOnRoot: panel.session.edits().length };
+        return {
+            before, afterInInput, focusedAfterCanvas, afterOnRoot: panel.session.edits().length,
+        };
     });
+    check('Phase H: a canvas press leaves focus inside the panel (the binding is reachable)',
+        keyGuard.focusedAfterCanvas === true, JSON.stringify(keyGuard));
     check('Phase H: Ctrl+Z inside a text field does NOT undo, and on the root DOES',
         keyGuard.afterInInput === keyGuard.before && keyGuard.afterOnRoot === keyGuard.before - 1,
         JSON.stringify(keyGuard));

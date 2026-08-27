@@ -121,6 +121,7 @@ export class RegionMarkingToolUI {
         this.eventBus.unsubscribe(LOAD_EVENT, this._onLoadEvent);
         // ⛓ A REMOUNTED panel would otherwise keep this mount's handler.
         this.rootElement?.removeEventListener('keydown', this._onKeyDown);
+        this.rootElement?.removeEventListener('mousedown', this._onMouseDown);
         setActivePanelInstance(null);
         this.renderer = null;
     }
@@ -225,6 +226,22 @@ export class RegionMarkingToolUI {
         };
         this.rootElement.tabIndex = -1;
         this.rootElement.addEventListener('keydown', this._onKeyDown);
+        /**
+         * ⛔ AND THE ROOT HAS TO HOLD FOCUS, or the binding above is
+         * unreachable: a `<canvas>` with no tabindex is not focusable, so a
+         * person who marks a region and presses Ctrl+Z sends the key to
+         * `<body>` and the panel never sees it. Focus moves to the root on a
+         * press ANYWHERE that is not itself a control — an input, a select or
+         * a button keeps the focus the browser is about to give it, because
+         * this listener runs BEFORE mousedown's default focus action.
+         */
+        this._onMouseDown = (e) => {
+            const tag = e.target?.tagName;
+            if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || tag === 'BUTTON'
+                || tag === 'OPTION' || e.target?.isContentEditable) return;
+            this.rootElement.focus({ preventScroll: true });
+        };
+        this.rootElement.addEventListener('mousedown', this._onMouseDown);
 
         this.renderer = new RegionMarkingRenderer(this.canvas, this.canvasWrap);
         this.renderer.onMarkRect = (bounds) => this._onRect(bounds);
