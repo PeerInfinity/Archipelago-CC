@@ -64,7 +64,17 @@ describe('the op vocabulary', () => {
             .filter((n) => !n.startsWith('_'));
         const LOOKUPS = ['constructor', 'apply', 'regions', 'region', 'exit', 'subRegions',
             'unwiredExits', 'toDocument', 'validate', 'contentHash'];
-        const mutators = declared.filter((n) => !LOOKUPS.includes(n));
+        /**
+         * ⛓ EDITOR INTEGRATION B-a — THE SESSION CONTROLS, which move the
+         * document without naming an op BY CONSTRUCTION. `undo` is the fold
+         * over a SHORTER LIST (the core's law (a)), and folding through
+         * `this.apply` is exactly what it must not do; the other three read the
+         * session's own state. ⛔ Listed one by one rather than matched by a
+         * prefix, so a seventeenth MUTATION still has to be an op to get past
+         * this row — which is the whole point of it.
+         */
+        const SESSION_CONTROLS = ['undo', 'edits', 'payload', 'setCertified'];
+        const mutators = declared.filter((n) => !LOOKUPS.includes(n) && !SESSION_CONTROLS.includes(n));
         expect(mutators.length).toBeGreaterThanOrEqual(16);
         for (const name of mutators) {
             expect(src, `AtlasSession.${name} must delegate through this.apply({op: ...})`)

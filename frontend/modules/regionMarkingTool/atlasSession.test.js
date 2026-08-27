@@ -14,7 +14,11 @@ import { describe, it, expect } from 'vitest';
 import {
     AtlasSession, createEmptyAtlas, deriveEdgeSide, lineTiles, rectBounds, boundsContains,
 } from './atlasSession.js';
-import { computeAtlasContentHash } from '../procgenPipeline/regionAtlasValidator.js';
+import {
+    computeAtlasContentHash, stampAtlasIdentity,
+} from '../procgenPipeline/regionAtlasValidator.js';
+import { applyAtlasOp } from '../procgenCore/atlasOps.js';
+import { compactJsonFile } from '../procgenPipeline/compactJson.js';
 
 const BOUNDS = { x: 0, y: 0, w: 10, h: 8 };
 const RULE = { rule: 'Has', args: { item_name: 'Progressive Swim' } };
@@ -647,5 +651,166 @@ describe('⛔⛔ `createEmptyAtlas` REFUSES a nameless `game`, and the repo has 
         // ⛓ …and it is a HANDFUL, not the corpus — so "grep is unreliable here"
         //   is a named exception rather than a reason to distrust every scan.
         expect(nulBearing.length).toBeLessThan(20);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ EDITOR INTEGRATION B-a — THE SESSION UNDERNEATH
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓⛓ **THE REFERENCE PATH — the class as it was BEFORE B-a**, kept here and
+ * nowhere else. It is the fixture the byte pin is scored against: the sixteen
+ * delegations used to be `this.atlas = applyAtlasOp(this.atlas, op).atlas` and
+ * `toDocument()` a stamped clone of that field. If the core's session ever
+ * reconstructs a different document from the same op list, this row says so in
+ * BYTES rather than in a hash.
+ *
+ * ⛔ It is deliberately NOT imported from anywhere: a reference path that
+ * shared code with the path under test would agree with it by construction.
+ */
+function legacyToDocument(baseAtlas, ops) {
+    let atlas = baseAtlas;
+    for (const op of ops) {
+        const r = applyAtlasOp(atlas, op);
+        if (!r.ok) throw new Error(r.error);
+        atlas = r.atlas;
+    }
+    const id = baseAtlas.atlas_id ?? baseAtlas.game ?? 'atlas';
+    const prior = baseAtlas.provenance?.content_hash;
+    const baseId = typeof prior === 'string' && id.endsWith(`-${prior}`)
+        ? id.slice(0, -(prior.length + 1)) : id;
+    return stampAtlasIdentity(JSON.parse(JSON.stringify(atlas)), baseId);
+}
+
+/** The nine ops the byte pin replays — one per shape the panel can produce. */
+const PIN_OPS = [
+    { op: 'add-region', region_id: 'hall', name: 'Hall', bounds: BOUNDS, map_ref: 0 },
+    { op: 'add-exit', region: 'hall', exit_id: 'north', tiles: [[3, 0], [4, 0], [5, 0]] },
+    { op: 'add-exit', region: 'hall', exit_id: 'east', tiles: [[9, 3]] },
+    { op: 'set-entrance-tile', region: 'hall', exit: 'north', tile: [5, 0] },
+    { op: 'add-location', region: 'hall', name: 'Hall - Chest', tile: [2, 2], vanilla_item: 'Conch' },
+    { op: 'add-region', region_id: 'cave', bounds: { x: 0, y: 0, w: 4, h: 4 }, map_ref: 1 },
+    { op: 'add-exit', region: 'cave', exit_id: 'up', tiles: [[1, 0]] },
+    { op: 'connect', from: ['hall', 'north'], to: ['cave', 'up'] },
+    { op: 'set-start', region: 'hall' },
+];
+
+const emptyAtlas = () => createEmptyAtlas({ game: 'seedling', mapDocument: 'seedling-map.json' });
+
+describe('AtlasSession over editCore — the byte pin', () => {
+    /**
+     * ⛔ **THE HEADLINE OF THIS SLICE.** `verify-region-marking-tool` Phases
+     * D/E/G compare the panel's SAVED BYTES against this class plus the compact
+     * writer, and `atlasOps` says key ORDER is part of them. So the claim is
+     * byte identity, not equality of content.
+     */
+    it('N ops through the session produce the OLD path\'s bytes, exactly', () => {
+        const base = emptyAtlas();
+        const s = new AtlasSession(emptyAtlas());
+        for (const op of PIN_OPS) s.apply(op);
+        expect(compactJsonFile(s.toDocument()))
+            .toBe(compactJsonFile(legacyToDocument(base, PIN_OPS)));
+    });
+
+    it('…and so does the SAME list reached through the sixteen delegations', () => {
+        const s = new AtlasSession(emptyAtlas());
+        s.addRegion({ region_id: 'hall', name: 'Hall', bounds: BOUNDS, map_ref: 0 });
+        s.addExit('hall', { exit_id: 'north', tiles: [[3, 0], [4, 0], [5, 0]] });
+        s.addExit('hall', { exit_id: 'east', tiles: [[9, 3]] });
+        s.setEntranceTile('hall', 'north', [5, 0]);
+        s.addLocation('hall', { name: 'Hall - Chest', tile: [2, 2], vanilla_item: 'Conch' });
+        s.addRegion({ region_id: 'cave', bounds: { x: 0, y: 0, w: 4, h: 4 }, map_ref: 1 });
+        s.addExit('cave', { exit_id: 'up', tiles: [[1, 0]] });
+        s.connect(['hall', 'north'], ['cave', 'up']);
+        s.setStart('hall');
+        expect(compactJsonFile(s.toDocument()))
+            .toBe(compactJsonFile(legacyToDocument(emptyAtlas(), PIN_OPS)));
+    });
+
+    /**
+     * ⛔ THE RECORD IS NEVER STAMPED — the D-arc law. A `toDocument()` that
+     * stamped in place would make the fold's base carry a `content_hash`
+     * suffix, so the NEXT save would stamp a document that already claimed an
+     * identity, and an undo would replay from a base that is not the one the
+     * session opened.
+     */
+    it('toDocument() stamps a CLONE — twice in a row gives the same bytes', () => {
+        const s = new AtlasSession(emptyAtlas());
+        for (const op of PIN_OPS) s.apply(op);
+        const first = compactJsonFile(s.toDocument());
+        expect(compactJsonFile(s.toDocument())).toBe(first);
+        expect(s.atlas.provenance.content_hash).toBeUndefined();
+        expect(s.atlas.atlas_id).toBe('seedling');
+        expect(s.baseId).toBe('seedling');
+    });
+});
+
+describe('AtlasSession over editCore — undo, edits, payload', () => {
+    it('records one edit per applied op, and undo is the fold over a shorter list', () => {
+        const base = emptyAtlas();
+        const s = new AtlasSession(emptyAtlas());
+        for (const op of PIN_OPS) s.apply(op);
+        expect(s.edits()).toHaveLength(PIN_OPS.length);
+
+        const afterEight = compactJsonFile(legacyToDocument(base, PIN_OPS.slice(0, -1)));
+        expect(s.undo()).toBe(true);
+        expect(s.edits()).toHaveLength(PIN_OPS.length - 1);
+        // MUTANT: undo by an INVERSE op instead of the shorter fold — an atlas
+        // whose `set-start` is undone by `set-start ''` differs in BYTES from
+        // one that never had it.
+        expect(compactJsonFile(s.toDocument())).toBe(afterEight);
+    });
+
+    it('undo to ZERO returns the document the session OPENED, byte for byte', () => {
+        const s = new AtlasSession(emptyAtlas());
+        const opened = compactJsonFile(s.toDocument());
+        for (const op of PIN_OPS) s.apply(op);
+        for (let i = 0; i < PIN_OPS.length; i += 1) expect(s.undo()).toBe(true);
+        expect(s.undo()).toBe(false);          // and it says so rather than throwing
+        expect(s.edits()).toHaveLength(0);
+        expect(compactJsonFile(s.toDocument())).toBe(opened);
+    });
+
+    it('payload() names the document it opened', () => {
+        const doc = emptyAtlas();
+        const s = new AtlasSession(doc);
+        s.apply(PIN_OPS[0]);
+        const p = s.payload();
+        expect(p.base).toEqual({ kind: 'atlas', atlas_id: doc.atlas_id });
+        expect(p.edits).toEqual(s.edits());
+        expect(p.certified).toBe(null);
+        s.setCertified(true);
+        expect(s.payload().certified).toBe(true);
+        // ⛓ An edit puts certification back to "nobody has asked".
+        s.apply(PIN_OPS[1]);
+        expect(s.certified).toBe(null);
+    });
+
+    it('a REFUSED op throws the op module\'s own sentence and records nothing', () => {
+        const s = new AtlasSession(emptyAtlas());
+        s.apply(PIN_OPS[0]);
+        expect(() => s.apply({ op: 'add-location', region: 'nope', name: 'X', tile: [1, 1] }))
+            .toThrow('no region "nope" in this atlas');
+        expect(s.edits()).toHaveLength(1);
+    });
+
+    it('the DOCUMENT is the fold — there is no setter', () => {
+        const s = new AtlasSession(emptyAtlas());
+        expect(() => { s.atlas = emptyAtlas(); }).toThrow();
+    });
+
+    /**
+     * ⛓ The nine headless callers open a session with no level. `bounds` and
+     * `readCell` are the only members that need one, and they refuse BY NAME
+     * rather than answering a rectangle that does not exist.
+     */
+    it('a session opened with no levelView refuses the CELL half by name', () => {
+        const s = new AtlasSession(emptyAtlas());
+        expect(() => s.adapter.bounds(s.atlas)).toThrow(/map document is not loaded yet/);
+        const withLevel = new AtlasSession(emptyAtlas(), {
+            levelView: () => ({ level: 0, width: 20, height: 20 }),
+        });
+        expect(withLevel.adapter.bounds(withLevel.atlas)).toEqual({ w: 20, h: 20 });
     });
 });

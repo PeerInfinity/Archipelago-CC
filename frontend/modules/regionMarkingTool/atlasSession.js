@@ -42,6 +42,19 @@
 // "pure" means and it is why an op layer can have undo at all; the methods
 // still return the live node they created or touched, so the marking tool's own
 // `const r = session.addRegion(...)` shape is unchanged.
+//
+// ⛓⛓⛓ EDITOR INTEGRATION slice B-a — AND NOW THE UNDO D0b MADE POSSIBLE EXISTS.
+// This class is a wrapper over `editCore.createEditSession` on
+// `atlasEditAdapter`: `apply` is the core's, the document is `record()` over
+// `base + edits` rather than a field, and `undo()` / `edits()` / `payload()`
+// come with it. Not one authoring rule moved and not one refusal sentence
+// moved — the adapter forwards `atlasOps`' own text unprefixed, so every string
+// this class throws is still the string it threw in Phase 2.
+//
+// ⛔ AND `toDocument()` IS STILL THE ONLY STAMPING PATH, on a CLONE. The record
+// the fold holds is NEVER stamped: `undo()` refolds from the base, and a base
+// that had grown a `content_hash` suffix would reconstruct a different document
+// every time it was replayed.
 
 import {
     validateRegionAtlas,
@@ -50,11 +63,12 @@ import {
     REGION_ATLAS_SCHEMA_VERSION,
 } from '../procgenPipeline/regionAtlasValidator.js';
 import {
-    applyAtlasOp,
     boundsContains,
     deriveEdgeSide,
     unwiredExits,
 } from '../procgenCore/atlasOps.js';
+import { createEditSession } from '../procgenCore/editCore.js';
+import { createAtlasEditAdapter } from './atlasEditAdapter.js';
 
 // Re-exported: both were DEFINED here and the marking tool's renderer, its UI
 // and `atlasSession.test.js` have imported them from here since Phase 2. Their
@@ -136,22 +150,65 @@ export class AtlasSession {
      * actually has to reach for, because the alternative — a default here —
      * would be the same landmine one layer up.
      */
-    constructor(atlas) {
+    constructor(atlas, { levelView = null, base = null, certified = null } = {}) {
         if (atlas === undefined || atlas === null) {
             throw new Error('AtlasSession: no atlas was given, and an EMPTY one cannot be built '
                 + 'without naming its `game` (E3b — `createEmptyAtlas` no longer defaults it to '
                 + '"seedling"). Pass a document, or `new AtlasSession(createEmptyAtlas({game}))`.');
         }
-        this.atlas = atlas;
+        this.baseAtlas = atlas;
         // The id the content hash is appended to. Taken from the loaded
         // document with any prior hash stripped, so a save never grows a chain
         // of stale suffixes.
         this.baseId = this._deriveBaseId();
+        /**
+         * ⛓⛓ **A LEVEL VIEW IS OPTIONAL, AND THE DEFAULT REFUSES BY NAME.**
+         *
+         * ⛔ Not a stub. `bounds`/`readCell` are the CELL half of the adapter
+         * contract, and the atlas's cell space belongs to the MAP document, not
+         * to this class — every one of the nine callers that opens a session
+         * headlessly (both derivations, the starter, the playthrough, the
+         * verifier) has no level and asks nothing about cells. Handing them a
+         * `bounds` of `{w: 0, h: 0}` would answer a question they never ask
+         * with a rectangle that does not exist; the panel, which HAS a level
+         * picker, passes its own.
+         */
+        this.adapter = createAtlasEditAdapter({
+            levelView: levelView ?? (() => null),
+        });
+        this._session = createEditSession(this.adapter, atlas, {
+            /**
+             * ⛓ §3.2's TAG for the document this session OPENED — the atlas's
+             * own id, so a payload names what its edits are relative to. The
+             * core carries it opaquely and never reads it.
+             */
+            base: base ?? { kind: 'atlas', atlas_id: atlas.atlas_id ?? null },
+            certified,
+        });
     }
 
+    /**
+     * ⛓⛓⛓ **THE DOCUMENT IS THE FOLD, NOT A FIELD.** It was `this.atlas =
+     * result.atlas` after every op; it is now `record()` over `base + edits`,
+     * which is what makes `undo()` the fold over a shorter list rather than a
+     * stack pop. Every reader is unchanged — `session.atlas.regions`,
+     * `session.atlas.vanilla_layout`, `session.atlas.game` all still answer the
+     * live document.
+     *
+     * ⚠ **A CALLER MAY STILL MUTATE IT IN PLACE, AND FIVE DO** — the playthrough
+     * producer's analysis pass, the starter's, the verifier's Phase G reference
+     * (`applySeedlingRegionAnalysis(session.atlas, …)`). Those writes land on
+     * the record the fold is currently holding, so `toDocument()` sees them and
+     * the bytes are unmoved; what they are INVISIBLE to is `undo()`, which
+     * refolds from the base. That is exactly why the panel's seven escape
+     * hatches become ops — see §13. There is no setter: reassigning the
+     * document would give the fold a second writer.
+     */
+    get atlas() { return this._session.record(); }
+
     _deriveBaseId() {
-        const id = this.atlas.atlas_id ?? this.atlas.game ?? 'atlas';
-        const prior = this.atlas.provenance?.content_hash;
+        const id = this.baseAtlas.atlas_id ?? this.baseAtlas.game ?? 'atlas';
+        const prior = this.baseAtlas.provenance?.content_hash;
         return typeof prior === 'string' && id.endsWith(`-${prior}`)
             ? id.slice(0, -(prior.length + 1))
             : id;
@@ -164,12 +221,35 @@ export class AtlasSession {
      * `atlasSession.test.js` and by the tool's own error copy.
      */
     apply(op) {
-        const result = applyAtlasOp(this.atlas, op);
-        if (!result.ok) throw new Error(result.error);
-        this.atlas = result.atlas;
+        const result = this._session.apply(op);
+        // ⛔ THE REFUSAL IS THE OP MODULE'S OWN SENTENCE, unchanged: the adapter
+        //   forwards it unprefixed and the core hands it back verbatim for an
+        //   atomic op, which is what keeps the strings this class throws the
+        //   ones `atlasSession.test.js` and the tool's error copy pin.
+        if (!result.ok) throw new Error(result.description);
         this.lastDescription = result.description;
-        return result.value;
+        // ⛓ The node the op created or touched — see `takeLastValue` in the
+        //   adapter for why the core's session cannot carry it.
+        return this.adapter.takeLastValue();
     }
+
+    /**
+     * ⛓⛓ **UNDO IS THE FOLD OVER A SHORTER LIST**, the core's law (a): the
+     * document after an undo is the one a session that never had that op would
+     * hold, byte for byte. Returns `false` at zero edits and changes nothing,
+     * so a toolbar button can call it unconditionally.
+     */
+    undo() { return this._session.undo(); }
+
+    /** ⛓ The op list, oldest first — what `payload().edits` carries. */
+    edits() { return this._session.ops(); }
+
+    /** ⛓ §3.2's IDENTITY, as data: `{base, edits, certified}`. */
+    payload() { return this._session.payload(); }
+
+    get certified() { return this._session.certified; }
+
+    setCertified(v) { return this._session.setCertified(v); }
 
     // --- lookup ---
     regions() { return this.atlas.regions; }
