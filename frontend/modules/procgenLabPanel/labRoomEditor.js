@@ -404,13 +404,16 @@ export function createPageLabBus() {
  *   page's own lifetime holder, so the `message` listener is retired with the
  *   arm. Defaults to `addEventListener`, which is what a node row hands a stub for
  * @param {Function} [o.note]          `(text, bad) => void` — the page's box
+ * @param {Function} [o.onEvent]      `(what) => void` — called when the child
+ *   becomes READY and on every event it publishes, so the host page can
+ *   re-render its own readout. See the `IFRAME_APP_READY` branch for why
  * @param {object} [o.win]             the window (`globalThis`, by default)
  * @param {object} [o.doc]             the document (`win.document`, by default)
  * @returns {{substrate, iframeId, bus, iframe, load, navigate, raise, _note, dispose}}
  */
 export function createPageLabTransport({
     page, src, mount, bus = createPageLabBus(), listen = null, note = () => {},
-    win = globalThis, doc = null,
+    win = globalThis, doc = null, onEvent = () => {},
 } = {}) {
     const document_ = doc ?? win.document;
     const iframeId = `pagelab-${page}-${(win.__labTransportSeq = (win.__labTransportSeq ?? 0) + 1)}`;
@@ -467,8 +470,20 @@ export function createPageLabTransport({
         } else if (message.type === T.IFRAME_APP_READY) {
             ready = true;
             flush();
+            /**
+             * ⛓⛓⛓ **THE HOST IS TOLD, AND THAT IS NOT A CONVENIENCE.** `ready`
+             * is the FLUSH POINT — the one fact that separates *"the frame is
+             * loading"* from *"the document is in it"* — and a host page
+             * publishes its readout from its own `render()`. Without this the
+             * flip would be invisible until something else happened to
+             * re-render, and a browser row waiting on it would read a STUCK
+             * that was really a page nobody asked to repaint (traps 246/258's
+             * family: a wait on a readout that no writer moves).
+             */
+            onEvent('ready');
         } else if (message.type === T.PUBLISH_EVENT_BUS) {
             bus.publish(message.data?.eventName, message.data?.eventData);
+            onEvent(message.data?.eventName);
         } else if (message.type === T.HEARTBEAT) {
             post(T.HEARTBEAT_RESPONSE, {});
         }

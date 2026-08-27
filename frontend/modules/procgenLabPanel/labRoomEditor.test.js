@@ -380,3 +380,148 @@ describe('labRoomEditor — what it is allowed to know', () => {
         expect(src).not.toMatch(/\bimport\s*\(/);
     });
 });
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ EDITOR INTEGRATION W4 — THE PAGE TRANSPORT (§9.6 #1)
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⛔ **DRIVEN AGAINST STUBS, BECAUSE THE CLAIM IS THE WIRE PROTOCOL.** What
+ * `createPageLabTransport` has to get right is the FOUR messages an
+ * `AdapterClient` waits for and the ORDER they matter in — a claim about
+ * `postMessage` frames, not about a browser. The child's own half is
+ * `shared/adapterClient.js` and is not re-implemented here.
+ */
+const stubWorld = () => {
+    const posted = [];
+    const listeners = [];
+    const iframe = {
+        dataset: {},
+        src: '',
+        contentWindow: { postMessage: (m) => posted.push(m) },
+        remove() { iframe.removed = true; },
+        removed: false,
+    };
+    const doc = { createElement: () => iframe };
+    const mount = { appendChild: (n) => { mount.child = n; } };
+    const win = {
+        location: { origin: 'http://localhost:8126' },
+        addEventListener: (type, handler) => listeners.push({ type, handler }),
+    };
+    const deliver = (message) => listeners.filter((l) => l.type === 'message')
+        .forEach((l) => l.handler({ data: message }));
+    return { posted, iframe, doc, mount, win, deliver };
+};
+
+describe('⛓⛓⛓ createPageLabTransport — a HOST that is a page', () => {
+    it('answers the four wire messages, and QUEUES until the flush point', async () => {
+        const w = stubWorld();
+        const protocol = await import('../shared/communicationProtocol.js');
+        const { MessageTypes, createMessage } = protocol;
+        const t = mod.createPageLabTransport({
+            page: 'seedling',
+            src: '/frontend/modules/seedlingDemo/watch.html?source=edit',
+            mount: w.mount,
+            win: w.win,
+            doc: w.doc,
+        });
+        /**
+         * ⛔ **THE ADDRESS IS SET BEFORE THE FRAME IS IN THE DOM**, and both
+         * halves of it are load-bearing: `?iframeId=` is what the child checks
+         * before it installs its bridge AT ALL (no parameter, no bridge, and
+         * the page is a perfectly working standalone document that never
+         * answers), and `&hostOrigin=` is what lets it target its sends at us
+         * instead of falling back to `'*'`.
+         */
+        expect(w.mount.child).toBe(w.iframe);
+        expect(w.iframe.src).toMatch(/watch\.html\?source=edit&iframeId=/);
+        expect(w.iframe.src).toContain(`hostOrigin=${encodeURIComponent('http://localhost:8126')}`);
+        expect(t.iframeId).toBe(w.iframe.dataset.iframeId);
+        expect(t.ready()).toBe(false);
+
+        /** ⛓ 1. `IFRAME_READY` → `ADAPTER_READY`, which RESOLVES the child's
+         *  `connect()`. Without it the client retries for 10 s and rejects. */
+        w.deliver(createMessage(MessageTypes.IFRAME_READY, t.iframeId, {}));
+        expect(w.posted.map((m) => m.type)).toEqual([MessageTypes.ADAPTER_READY]);
+
+        /**
+         * ⛔⛔ 2. A `load` BEFORE the flush point is QUEUED, not sent. The
+         * `eventBus` an iframe adapter fronts has NO REPLAY and publishes to
+         * nobody when nothing is subscribed — so a document sent before
+         * `IFRAME_APP_READY` is not merely late, it is GONE
+         * ([[feedback_iframe_adapter_gotchas]]).
+         */
+        /** ⛓ `load` takes the DOCUMENT and ADDRESSES it, exactly as the panel's
+         *  own does — the address is the transport's, never the caller's. */
+        expect(t.load({ rooms: [] })).toBe(false);
+        expect(w.posted).toHaveLength(1);
+
+        /** ⛓ 3. `IFRAME_APP_READY` is the flush point. */
+        w.deliver(createMessage(MessageTypes.IFRAME_APP_READY, t.iframeId, {}));
+        expect(t.ready()).toBe(true);
+        const flushed = w.posted[w.posted.length - 1];
+        expect(flushed.type).toBe(MessageTypes.EVENT_BUS_MESSAGE);
+        expect(flushed.data.eventName).toBe('procgenLab:load');
+        expect(flushed.data.eventData).toEqual({
+            substrate: 'seedling', iframeId: t.iframeId, payload: { rooms: [] },
+        });
+        // …and after it, a send goes straight out
+        expect(t.navigate('?source=edit&room=2')).toBe(true);
+        expect(w.posted[w.posted.length - 1].data.eventName).toBe('procgenLab:navigate');
+        expect(w.posted[w.posted.length - 1].data.eventData.search).toBe('?source=edit&room=2');
+
+        /** ⛓ 4. Everything the page SAYS reaches the page-local bus. */
+        const heard = [];
+        t.bus.subscribe('procgenLab:levelChanged', (d) => heard.push(d));
+        w.deliver(createMessage(MessageTypes.PUBLISH_EVENT_BUS, t.iframeId, {
+            eventName: 'procgenLab:levelChanged', eventData: { room: 2 },
+        }));
+        expect(heard).toEqual([{ room: 2 }]);
+    });
+
+    it('IGNORES a message addressed to a different frame, and DISPOSE stops it', async () => {
+        const w = stubWorld();
+        const { MessageTypes, createMessage } = await import('../shared/communicationProtocol.js');
+        const t = mod.createPageLabTransport({
+            page: 'seedling', src: '/x.html', mount: w.mount, win: w.win, doc: w.doc,
+        });
+        /**
+         * ⛔ **THE ROUTING PREDICATE IS THE CLIENT ID**, exactly as
+         * `labProtocol.addressedTo` is one layer up: a page may host more than
+         * one frame over its life, and a transport that answered another
+         * frame's `IFRAME_READY` would hand it OUR document.
+         */
+        w.deliver(createMessage(MessageTypes.IFRAME_READY, 'somebody-elses-frame', {}));
+        expect(w.posted).toEqual([]);
+        w.deliver(createMessage(MessageTypes.IFRAME_READY, t.iframeId, {}));
+        expect(w.posted).toHaveLength(1);
+        // ⛓ …and a disposed transport posts nothing more and takes its frame with it
+        t.dispose();
+        expect(w.iframe.removed).toBe(true);
+        w.deliver(createMessage(MessageTypes.IFRAME_READY, t.iframeId, {}));
+        expect(w.posted).toHaveLength(1);
+    });
+
+    it('`onEvent` fires at the FLUSH POINT — the fact a host readout needs', async () => {
+        const w = stubWorld();
+        const { MessageTypes, createMessage } = await import('../shared/communicationProtocol.js');
+        const seen = [];
+        const t = mod.createPageLabTransport({
+            page: 'maze', src: '/x.html', mount: w.mount, win: w.win, doc: w.doc,
+            onEvent: (what) => seen.push(what),
+        });
+        w.deliver(createMessage(MessageTypes.IFRAME_READY, t.iframeId, {}));
+        /**
+         * ⛔ NOTHING YET: `IFRAME_READY` says the frame's SCRIPT is up, and
+         * `ready` — the flush point — is what separates that from *"the
+         * document is in it"*. A host that repainted on the first is showing a
+         * connection it does not have.
+         */
+        expect(seen).toEqual([]);
+        w.deliver(createMessage(MessageTypes.IFRAME_APP_READY, t.iframeId, {}));
+        expect(seen).toEqual(['ready']);
+        w.deliver(createMessage(MessageTypes.PUBLISH_EVENT_BUS, t.iframeId, {
+            eventName: 'procgenLab:ready', eventData: {},
+        }));
+        expect(seen).toEqual(['ready', 'procgenLab:ready']);
+    });
+});

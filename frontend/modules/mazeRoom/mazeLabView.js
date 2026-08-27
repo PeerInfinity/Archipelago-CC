@@ -1680,6 +1680,13 @@ export function main() {
             mount: box,
             listen: (target, event, handler) => lifetimes.current().on(target, event, handler),
             note: (text, bad) => say(text, bad),
+            /**
+             * ⛓ THE READOUT IS THE PAGE'S AND ONLY A RENDER WRITES IT. The
+             * transport's `ready` is the flush point — *"the frame is loading"*
+             * vs *"the document is in it"* — and nothing else on this page
+             * repaints when it flips.
+             */
+            onEvent: () => { render(); },
         });
         const door = openLabRoomEditor({
             page: decl.page,
