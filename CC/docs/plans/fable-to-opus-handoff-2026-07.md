@@ -5544,6 +5544,15 @@ a full tier owed at every game-facing change · the boundaries gate in CI ·
 the TREE-freezing BOX LOCK · `cheap` hysteresis · CI-quoted rows) → P4 →
 L15**. Open for the user: the 76 v3/v4 tapes' format upgrade; `-5` retirement.
 
+**⇒ CAMPAIGN ORCHESTRATION SESSION 9 OPENED (2026-08-26, `6d8b572a0`).** P3b
+LAUNCHED (Opus, own worktree `-wt-p3b`, as-built §48; brief
+`NewDocs/plans/seedling-bot-r9-sliceP3b-prompt.md`): (a) S0's baseline as a SHA ·
+(b) `roster ∖ prove()` derived, printed, given its own `prove()` row · (c) the
+owed full tier as a gate + the tick-sum estimator · (d) the boundaries gate's CI
+face decided · (e) the BOX LOCK that freezes the TREE · (f) `cheap` hysteresis ·
+(g) headless gates quoted from CI by SHA (⚖ 54 (6)+(7) proper). Editor-integration
+merge series (`editor-int-w4`/`-ba`/`-bd`) takes windows between P3b's stages.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
