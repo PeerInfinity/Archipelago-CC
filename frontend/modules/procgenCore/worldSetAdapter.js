@@ -151,6 +151,38 @@ export function partAt(record, x, parts, where = 'this op') {
     return { ...span, local: x - span.offset, global: x };
 }
 
+/**
+ * ⛓⛓⛓ **THE INVERSE OF `partAt` — (part, LOCAL index) → the GLOBAL one.**
+ *
+ * EDITOR INTEGRATION W4 (§9.6 #2). `partAt` answers the direction every op
+ * needs; the PAGE needs the other one, because a room editor is opened for
+ * *room 2 of the level set* and the composite's `replace-room` is addressed by
+ * the GLOBAL index. ⛔ It was already spelled ONCE, inline, inside
+ * `whatLinksHereInWorld`'s `globalOf` — and a second spelling on the page is
+ * exactly the pair that parts company at the part seam (the mutant is an
+ * off-by-one there, and it is invisible inside part 0 because part 0's local
+ * indices ARE its global ones). ⇒ one exported function, and `globalOf` is it.
+ *
+ * ⛔ **IT REFUSES AN OUT-OF-RANGE LOCAL INDEX BY NAME** rather than returning a
+ * number outside the world: `partAt(record, that number)` would then answer the
+ * NEXT part, so a silent answer would address a different document.
+ *
+ * @param {object} record the world record
+ * @param {string} partId
+ * @param {number} local  the index inside that part
+ * @param {Array<object>} parts
+ * @param {string} [where] what to call the caller in the refusal
+ * @returns {number} the index into the concatenated one-row grid
+ */
+export function globalIndexOf(record, partId, local, parts, where = 'this op') {
+    const span = partNamed(record, partId, parts, where);
+    if (!Number.isInteger(local) || local < 0 || local >= span.count) {
+        fail(`${where} names room ${JSON.stringify(local)} of part "${partId}", which holds `
+            + `${span.count} room(s) (0..${span.count - 1})`);
+    }
+    return span.offset + local;
+}
+
 /** ⛓ …and by NAME, for the part-addressed ops. */
 export function partNamed(record, id, parts, where = 'this op') {
     const span = partSpans(record, parts).find((s) => s.part.id === id);
@@ -225,10 +257,19 @@ export function whatLinksHereInWorld(record, room, parts) {
         from: Number.isInteger(l.from) ? l.from + offset : l.from,
         part: part.id,
     }));
-    const spans = partSpans(record, parts);
+    /**
+     * ⛓ EDITOR INTEGRATION W4 — through the EXPORTED mapping, so the page and
+     * this reader cannot disagree about where a part's room sits. ⛔ `null` on a
+     * refusal, because a crossing whose far endpoint is out of range is still a
+     * crossing INTO this room and the row must not die describing it.
+     */
     const globalOf = (e) => {
-        const span = spans.find((s) => s.part.id === e.part);
-        return span === undefined ? null : span.offset + e.room;
+        try {
+            return globalIndexOf(record, e?.part, e?.room, parts, 'whatLinksHere');
+        } catch (err) {
+            if (!isWorldSetRefusal(err)) throw err;
+            return null;
+        }
     };
     (record?.world?.links ?? []).forEach((link, index) => {
         const twoWay = link.one_way === false;

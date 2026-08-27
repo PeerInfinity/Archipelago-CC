@@ -1092,7 +1092,8 @@ export const URL_GRAMMAR = frz({
                     "kind": "empty"
                 },
                 "source": "generate",
-                "width": 11
+                "width": 11,
+                "world": null
             },
             "id": "lab",
             "page": "/frontend/modules/mazeRoom/lab.html",
@@ -1678,13 +1679,35 @@ export const URL_GRAMMAR = frz({
                             "role": "write"
                         }
                     ]
+                },
+                {
+                    "absentMeans": null,
+                    "atDefault": "not written by this page",
+                    "codec": "a path to a WORLD BUNDLE `.zip` (a level set + a region library + the `world.json` that names them)",
+                    "defaultField": "world",
+                    "defaultIsUndefined": false,
+                    "defaultValue": null,
+                    "name": "world",
+                    "retired": false,
+                    "terms": [
+                        "content-source",
+                        "region"
+                    ],
+                    "via": [
+                        {
+                            "file": "frontend/modules/mazeRoom/mazeLab.js",
+                            "fn": "readLabParams",
+                            "how": "get",
+                            "role": "read"
+                        }
+                    ]
                 }
             ],
             "readers": [
                 {
                     "file": "frontend/modules/mazeRoom/mazeLab.js",
                     "fn": "readLabParams",
-                    "line": 271,
+                    "line": 276,
                     "role": "read"
                 }
             ],
@@ -1693,7 +1716,7 @@ export const URL_GRAMMAR = frz({
                 {
                     "file": "frontend/modules/mazeRoom/mazeLab.js",
                     "fn": "writeLabParams",
-                    "line": 363,
+                    "line": 384,
                     "role": "write"
                 }
             ],

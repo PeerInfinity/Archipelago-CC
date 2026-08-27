@@ -132,6 +132,16 @@
              TRANSPORT failure (the fetch threw, or `!res.ok`) is FATAL BY NAME;
              a CONTENT failure goes in the arm's own LOAD box and the rest of
              the page still works.
+  ?world=PATH  a WORLD BUNDLE (`.zip`) the SET arm fetches and holds — a level
+             set, a region library and the `world.json` that NAMES them, opened
+             as ONE strip over both parts (EDITOR INTEGRATION W4). ⛔ Not a
+             JSON: a world names its parts and holds no rooms of its own, so a
+             bare `world.json` REFUSES by name and says to load the bundle. Each
+             part goes through its OWN validator first and the world then binds
+             them BY `doc_id`, refusing by name and naming which part disagreed.
+             ⚠ With `?library=` also present the WORLD wins and the arm says so.
+             Same law as `?library=`: a TRANSPORT failure is FATAL by name, a
+             CONTENT failure goes in the arm's own LOAD box.
   ?room=N    WHICH ENTRY of the held region library the SET arm opens a room
              session on — `?library=`'s sibling, and a NAVIGATION parameter
              rather than a load channel. It goes through the page's own
@@ -146,6 +156,10 @@
              ⛓ EDITOR INTEGRATION W3: this is how a host asks for ONE room over
              `procgenLab:navigate`, after handing the document over
              `procgenLab:load`.
+             ⛓ EDITOR INTEGRATION W4: under `?world=` the index is into the
+             WORLD's rooms — its parts' rooms CONCATENATED in declaration order
+             — and the strip opens a maze room in this page and a Seedling room
+             in `watch.html` through the room-editor contract.
 
   ?expansions=N  the BFS NODE CAP. ⚠ Seedling's budget is `?tickbudget=` and is
              denominated in solver TICKS; these are different quantities and one

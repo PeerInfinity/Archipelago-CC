@@ -15,9 +15,20 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import {
-    LAB_SUBSTRATE, makeDrawRoomStill, mazeLibraryRows, mazeSetBindings, roomBaseTag,
-    sniffSetDocument,
+    LAB_SUBSTRATE, SEEDLING_ATLAS_GAME, bindWorldParts, makeDrawRoomStill, mazeLibraryRows,
+    mazeSetBindings, roomBaseTag, sniffSetDocument, worldPartDescriptors,
 } from './mazeSetLab.js';
+import { classifyDocument } from '../presets/documentBundle.js';
+import { emptyWorld } from '../procgenCore/worldDocument.js';
+import { substrateIdFor } from '../procgenPipeline/regionAtlasCompiler.js';
+import { substrateRegistryEntry as FLASH_SEEDLING_ENTRY } from '../flashPanel/flashSeedlingLibrary.js';
+import { tileTypeForPlacement } from '../flashPanel/seedlingSemantics.js';
+import { buildLevelSet } from '../seedlingDemo/levelSetExporter.js';
+import { TILE_SIZE } from '../seedlingDemo/levelWorld.js';
+import { emptyLevel } from '../seedlingDemo/procgenLevel.js';
+import { parseOelLevel } from '../seedlingDemo/procgenLevelOel.js';
+import { emptyOverlay as emptySeedlingOverlay } from '../seedlingDemo/seedlingSetOverlay.js';
+import { emptyMazeOverlay } from './mazeAtlasDerivation.js';
 import { ADAPTER_FNS } from '../procgenCore/setEditorView.js';
 import { OVERVIEW } from '../procgenCore/setEditorCore.js';
 import { emptyMazeOverlay, readSetCell, setRecord } from './mazeSetAdapter.js';
@@ -316,5 +327,191 @@ describe('mazeSetLab — the base tag and the binding list', () => {
         expect(b.stillKey(cell)).toBe(cell.payload);
         expect(b.stillKey(cellOf(2))).toBe(b.stillKey(cellOf(2)));
         expect(b.stillKey(cellOf(0))).not.toBe(b.stillKey(cellOf(1)));
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ EDITOR INTEGRATION W4 — THE WORLD: ITS PARTS, ITS BINDING
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⛓ EVERY DOCUMENT IS GENERATED OR COMMITTED, none typed — the same recipe
+ * `seedlingDemo/worldChain.test.js` uses: `buildLevelSet({link: true})` over two
+ * `emptyLevel` rooms, and the first two entries of the committed
+ * `frontend/region-libraries/demo-maze-pack.json`.
+ */
+
+const W4_WORLD_PARTS = { seed: 'level-set', mz: 'region-library' };
+
+const w4Deps = () => ({
+    tileSize: TILE_SIZE,
+    parseOel: parseOelLevel,
+    tileTypeForPlacement,
+    substrateIdFor,
+});
+
+const w4LevelSet = () => buildLevelSet(
+    [0, 1].map((level) => emptyLevel({ level })), { setId: 'w4-world', link: true },
+).set;
+
+const w4Library = () => {
+    const pack = readJson('frontend/region-libraries/demo-maze-pack.json');
+    return { ...pack, entries: pack.entries.slice(0, 2) };
+};
+
+const w4World = (overrides = {}) => {
+    const set = overrides.set ?? w4LevelSet();
+    const lib = overrides.library ?? w4Library();
+    return emptyWorld([
+        {
+            id: 'seed',
+            kind: 'level-set',
+            overlay: emptySeedlingOverlay(),
+            substrate: 'flash_seedling',
+            ...(overrides.seedDocId === null ? {} : { doc_id: overrides.seedDocId ?? set.set_id }),
+        },
+        {
+            id: 'mz',
+            kind: 'region-library',
+            overlay: emptyMazeOverlay(),
+            substrate: 'maze',
+            doc_id: overrides.mzDocId ?? lib.library_id,
+        },
+    ]);
+};
+
+const w4Members = (set, lib, world) => [
+    { kind: 'level-set', doc: set }, { kind: 'overlay', doc: {} },
+    { kind: 'region-library', doc: lib }, { kind: 'world', doc: world },
+].filter((m) => m.doc !== undefined && m.kind !== 'overlay');
+
+describe('⛓⛓⛓ W4 — a WORLD arriving at the maze lab', () => {
+    /**
+     * ⛔ MUTANT: the world sniffed as a LIBRARY (or as nothing at all). The
+     * sentence has to NAME the kind — a world pasted here is a perfectly
+     * well-formed document that belongs to a BUNDLE, and *"not a region
+     * library"* would be a true sentence about the wrong subject.
+     */
+    it('a world pasted as bare JSON REFUSES BY NAME and says to load the bundle', () => {
+        const world = w4World();
+        expect(classifyDocument(world)).toBe('world');
+        const sniff = sniffSetDocument(world);
+        expect(sniff.kind).toBeNull();
+        expect(sniff.why).toMatch(/this is a WORLD document/);
+        expect(sniff.why).toMatch(/`seed`, `mz`/);
+        expect(sniff.why).toMatch(/Load the\s+BUNDLE/);
+        // ⛓ …and the four kinds this arm already knew still answer as they did.
+        expect(sniffSetDocument(w4Library()).kind).toBe('library');
+        expect(sniffSetDocument({ overlay_id: 'x' }).kind).toBe('overlay');
+        expect(sniffSetDocument(w4LevelSet()).kind).toBeNull();
+    });
+
+    it('the part descriptors take the WORLD\'s own ids, in DECLARATION order', () => {
+        const world = w4World();
+        const { parts, deps, errors } = worldPartDescriptors({ world, ...w4Deps() });
+        expect(errors).toEqual([]);
+        expect(parts.map((p) => p.id)).toEqual(['seed', 'mz']);
+        expect(parts.map((p) => p.kind)).toEqual(['level-set', 'region-library']);
+        /**
+         * ⛔ MUTANT: ids minted here (`seed`/`mz` as literals). A world whose
+         * author called its parts something else would have every op refused,
+         * because every op is addressed BY PART ID.
+         */
+        const renamed = {
+            ...world,
+            parts: { alpha: world.parts.seed, beta: world.parts.mz },
+            overlays: { alpha: world.overlays.seed, beta: world.overlays.mz },
+        };
+        expect(worldPartDescriptors({ world: renamed, ...w4Deps() }).parts.map((p) => p.id))
+            .toEqual(['alpha', 'beta']);
+        // ⛓ each part carries its own deps, keyed by ITS id
+        expect(Object.keys(deps)).toEqual(['seed', 'mz']);
+        expect(deps.seed.atlas).toEqual({ game: SEEDLING_ATLAS_GAME, mapDocument: 'world.json' });
+    });
+
+    /**
+     * ⛓⛓ **THE GAME IS A CONSTANT WITH ITS AUTHORITY UNDER IT.**
+     * `substrateIdFor` is a slug function and cannot be inverted, so the value
+     * is PINNED against `flashSeedlingLibrary`'s own registry id rather than
+     * derived. ⚠ And `watch.html`'s own word is measured to be a DIFFERENT
+     * substrate, which is why this page does not copy it.
+     */
+    it('`SEEDLING_ATLAS_GAME` slugs to the substrate the player actually holds', () => {
+        expect(substrateIdFor(SEEDLING_ATLAS_GAME)).toBe(FLASH_SEEDLING_ENTRY.id);
+        expect(substrateIdFor('seedling-watch-edit')).not.toBe(FLASH_SEEDLING_ENTRY.id);
+        const { parts } = worldPartDescriptors({ world: w4World(), ...w4Deps() });
+        expect(parts[0].substrateOfRoom()).toBe(FLASH_SEEDLING_ENTRY.id);
+    });
+
+    it('a SECOND part of one kind, and an unknown kind, each refuse by name', () => {
+        const two = emptyWorld([
+            { id: 'a', kind: 'level-set', overlay: emptySeedlingOverlay() },
+            { id: 'b', kind: 'level-set', overlay: emptySeedlingOverlay() },
+        ]);
+        const { parts, errors } = worldPartDescriptors({ world: two, ...w4Deps() });
+        expect(parts.map((p) => p.id)).toEqual(['a']);
+        expect(errors.join(' ')).toMatch(/declares a SECOND `level-set` part \("b"\)/);
+        // ⛓ an unknown kind never reaches `emptyWorld`, so it is built by hand
+        const odd = { ...two, parts: { a: { kind: 'region-atlas' } }, overlays: { a: {} } };
+        expect(worldPartDescriptors({ world: odd, ...w4Deps() }).errors.join(' '))
+            .toMatch(/part "a" declares kind "region-atlas"/);
+    });
+
+    /**
+     * ⛔⛔ MUTANT: parts bound BY POSITION rather than by `doc_id`. Both
+     * documents are of the kind their part declares, so a positional binder
+     * loads happily — and the world's links then name room indices into a
+     * document nobody authored them over.
+     */
+    it('a part whose `doc_id` disagrees with the held document REFUSES, naming both', () => {
+        const set = w4LevelSet();
+        const lib = w4Library();
+        const world = w4World({ set, library: lib });
+        const parts = worldPartDescriptors({ world, ...w4Deps() }).parts;
+        const good = bindWorldParts({ world, members: w4Members(set, lib, world), parts });
+        expect(good.errors).toEqual([]);
+        expect(good.ok).toBe(true);
+        expect(Object.keys(good.docs)).toEqual(['seed', 'mz']);
+        expect(good.docs.seed).toBe(set);
+        expect(good.docs.mz).toBe(lib);
+
+        const wrong = w4World({ set, library: lib, mzDocId: 'somebody-elses-pack' });
+        const bad = bindWorldParts({ world: wrong, members: w4Members(set, lib, wrong), parts });
+        expect(bad.ok).toBe(false);
+        expect(bad.errors).toHaveLength(1);
+        expect(bad.errors[0]).toMatch(/part "mz" names `somebody-elses-pack`/);
+        expect(bad.errors[0]).toContain(lib.library_id);
+        expect(bad.errors[0]).toMatch(/not the same\s+document/);
+    });
+
+    it('an ABSENT `doc_id` binds by kind and SAYS SO; a MISSING member refuses', () => {
+        const set = w4LevelSet();
+        const lib = w4Library();
+        const world = w4World({ set, library: lib, seedDocId: null });
+        const parts = worldPartDescriptors({ world, ...w4Deps() }).parts;
+        const bound = bindWorldParts({ world, members: w4Members(set, lib, world), parts });
+        expect(bound.ok).toBe(true);
+        expect(bound.notes.join(' ')).toMatch(/part "seed" declares no `doc_id`/);
+        expect(bound.notes.join(' ')).toContain(set.set_id);
+
+        // ⛔ the level-set member simply is not in the zip
+        const short = bindWorldParts({
+            world, parts, members: [{ kind: 'region-library', doc: lib }, { kind: 'world', doc: world }],
+        });
+        expect(short.ok).toBe(false);
+        expect(short.errors.join(' ')).toMatch(/part "seed" is a `level-set` and this bundle carries none/);
+        expect(short.errors.join(' ')).toMatch(/`region-library`, `world`/);
+    });
+
+    /**
+     * ⛓ `idOf` on the descriptor and `document.idOf` on the mount's bindings are
+     * the SAME field — asserted rather than assumed, because two readers of one
+     * stamp is the pair that parts company.
+     */
+    it('the maze descriptor\'s `idOf` is the one `mazeSetBindings` hands the mount', () => {
+        const lib = w4Library();
+        const { parts } = worldPartDescriptors({ world: w4World({ library: lib }), ...w4Deps() });
+        const mz = parts.find((p) => p.kind === 'region-library');
+        expect(mz.idOf(lib)).toBe(mazeSetBindings().document.idOf(lib));
+        expect(mz.idOf(lib)).toBe(lib.library_id);
     });
 });

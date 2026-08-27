@@ -25,7 +25,7 @@ import { roomRowsOf } from './setEditorCore.js';
 import { emptyWorld } from './worldDocument.js';
 import {
     PART_ADDRESSED_OP_KINDS, WORLD_FIELDS, WORLD_ONLY_OP_KINDS, createWorldSetAdapter,
-    isWorldSetRefusal, partAt, partSpans, validateWorldForDownload, worldAdapterFns,
+    globalIndexOf, isWorldSetRefusal, partAt, partSpans, validateWorldForDownload, worldAdapterFns,
     worldRecord,
 } from './worldSetAdapter.js';
 
@@ -254,6 +254,44 @@ describe('⛓⛓⛓ `editCore`\'s seven contract laws hold over a TWO-PART world
         expect(partAt(record, 3, PARTS()).local).toBe(0);
         expect(() => partAt(record, 5, PARTS())).toThrow(/"a" 0\.\.2, "b" 3\.\.4/);
         expect(() => adapter().readCell(record, 0, 1)).toThrow(/ONE-ROW grid/);
+    });
+
+    /**
+     * ⛓⛓⛓ EDITOR INTEGRATION W4 — **AND BACK: (part, LOCAL) → the GLOBAL
+     * index.** The page opens *room 1 of part "b"* and has to issue the
+     * composite's op by the GLOBAL index, so the inverse is a function and not
+     * a page-side sum.
+     *
+     * ⛔⛔ **THE OFF-BY-ONE AT THE PART SEAM IS INVISIBLE INSIDE PART 0.** A
+     * mutant that returns `local` unchanged (or `offset + local - 1`) is GREEN
+     * for every room of the FIRST part, whose local indices ARE its global
+     * ones — which is the same blindness the undo row below records. Every
+     * assertion here is therefore about part "b" as well as part "a".
+     */
+    it('`globalIndexOf` is `partAt`\'s inverse, and it round trips at the SEAM', () => {
+        const record = RECORD();
+        expect(globalIndexOf(record, 'a', 0, PARTS())).toBe(0);
+        expect(globalIndexOf(record, 'a', 2, PARTS())).toBe(2);
+        expect(globalIndexOf(record, 'b', 0, PARTS())).toBe(3);
+        expect(globalIndexOf(record, 'b', 1, PARTS())).toBe(4);
+        // ⛓ the round trip, over EVERY room of the world
+        for (let g = 0; g < adapter().bounds(record).w; g += 1) {
+            const at = partAt(record, g, PARTS());
+            expect(globalIndexOf(record, at.part.id, at.local, PARTS())).toBe(g);
+        }
+        /**
+         * ⛔ AN OUT-OF-RANGE LOCAL INDEX REFUSES rather than answering a number
+         * outside its part: `globalIndexOf(record, 'a', 3)` would be 3, which
+         * `partAt` resolves to part "b" room 0 — a silent answer addressing a
+         * DIFFERENT DOCUMENT.
+         */
+        expect(() => globalIndexOf(record, 'a', 3, PARTS()))
+            .toThrow(/names room 3 of part "a", which holds 3 room\(s\) \(0\.\.2\)/);
+        expect(() => globalIndexOf(record, 'b', -1, PARTS())).toThrow(/names room -1 of part "b"/);
+        expect(() => globalIndexOf(record, 'nope', 0, PARTS())).toThrow(/names part "nope"/);
+        expect(isWorldSetRefusal(
+            (() => { try { globalIndexOf(record, 'a', 9, PARTS()); return null; } catch (e) { return e; } })(),
+        )).toBe(true);
     });
 
     /**

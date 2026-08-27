@@ -216,6 +216,11 @@ export const DIRECTED_ANCHOR_TRIES = 12;
  *                        and is denominated in solver TICKS; these are two
  *                        different quantities and one word for both would be
  *                        the two-spellings failure at its most expensive.
+ *   ?world=              ⛓⛓⛓ EDITOR INTEGRATION W4 — a WORLD BUNDLE (`.zip`)
+ *                        the SET arm fetches and holds: a level set, a region
+ *                        library and the `world.json` that names them, opened
+ *                        as ONE strip over W2's composite session. ⛔ Not a
+ *                        JSON: a world names its parts and holds no rooms.
  *   ?library=            ⛓⛓ EDITOR v3 E2c — `?gen=`'s SIBLING, and it is a
  *                        LOAD channel rather than a run parameter: it names a
  *                        REGION LIBRARY the SET arm fetches and holds. ⛔ It is
@@ -335,9 +340,25 @@ export function readLabParams(search) {
          */
         library: q.get('library'),
         /**
+         * ⛓⛓⛓ EDITOR INTEGRATION W4 — **A WORLD BUNDLE TO FETCH AND HOLD**,
+         * `?library=`'s own sibling one document up. ⛔ It names a `.zip`, not a
+         * JSON: a world NAMES its parts and holds no rooms, so the only arrival
+         * that can carry a world AND the documents it names is the BUNDLE — and
+         * `sniffSetDocument` refuses a bare one by name for the same reason.
+         * ⛓ Same law as `?library=`: a TRANSPORT failure (the fetch threw, or
+         * `!res.ok`) is FATAL by name and a CONTENT failure goes in the arm's
+         * own LOAD box, so a world whose parts do not bind still leaves a
+         * working page. ⚠ Both may be present; the WORLD wins and the page says
+         * so, because a library loaded under a world would be a third document
+         * the manifest does not name.
+         */
+        world: q.get('world'),
+        /**
          * ⛓⛓ EDITOR INTEGRATION W3 — **WHICH ENTRY OF THE HELD LIBRARY TO
          * OPEN**, `?library=`'s own sibling. `null` is *"open no room"* and is
-         * not the same as `0`. See `readRoomParam`.
+         * not the same as `0`. ⛓ W4: under `?world=` it is an index into the
+         * WORLD's concatenated rooms, which is the same sentence — the held
+         * document's rooms — one document up. See `readRoomParam`.
          */
         room: readRoomParam(q.get('room')),
         /** RUN-ALL on load. `?run=1` is also how the step encoding is read. */

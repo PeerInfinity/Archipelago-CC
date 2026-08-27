@@ -180,6 +180,15 @@ const PARAM_NOTES = {
      * can write by hand. It is how a HOST asks for one room over
      * `procgenLab:navigate`, after handing the document over `procgenLab:load`.
      */
+    /**
+     * ⛓⛓⛓ EDITOR INTEGRATION W4 — `?library=`'s SIBLING ONE DOCUMENT UP: a
+     * WORLD BUNDLE, whose members are a level set, a region library and the
+     * `world.json` that names them. ⛔ A `.zip` and not a JSON, because a world
+     * NAMES its parts and holds no rooms — a bare world document refuses by
+     * name and says to load the bundle. ⚠ Lab-only: `watch.html`'s SET arm is
+     * Seedling's own and stays what it is (⚖ Q4 put the world editor here).
+     */
+    world: { field: { watch: null, lab: 'world' }, codec: 'a path to a WORLD BUNDLE `.zip` (a level set + a region library + the `world.json` that names them)', terms: ['content-source', 'region'] },
     room: { field: { watch: 'room', lab: 'room' }, codec: 'a non-negative integer INDEX into the held document\'s rooms — `urlParams.readRoomParam`, shared by both pages', terms: ['region'] },
     tickbudget: { field: { watch: 'budget.maxTicksPerTarget', lab: null }, codec: 'intParam', terms: ['tick-budget', 'solver'] },
     expansions: { field: { watch: null, lab: 'budget.maxExpansions' }, codec: 'intParam', terms: ['bfs-oracle', 'certification'] },
