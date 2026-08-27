@@ -116,7 +116,7 @@ export const LAYOUT_EDIT_SPECS = Object.freeze({
     're-roll': {
         kind: 'scalar',
         params: { region_id: 'string', n: 'posint' },
-        describe: (e) => `Re-roll "${e.region_id}" (#${e.n})`,
+        describe: (e) => `Re-rolled "${e.region_id}" (#${e.n})`,
     },
     'set-substrate': {
         kind: 'scalar',

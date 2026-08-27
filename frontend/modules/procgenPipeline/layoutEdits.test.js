@@ -108,7 +108,7 @@ describe('layoutEdits — the vocabulary', () => {
         expect(describeLayoutEdit({
             op: 'swap-exit-sides', cell: { gx: 1, gy: 1 }, exitA: 'a', exitB: 'b',
         })).toBe('Swapped exits a ↔ b at (1,1)');
-        expect(describeLayoutEdit({ op: 're-roll', region_id: 'A', n: 2 })).toBe('Re-roll "A" (#2)');
+        expect(describeLayoutEdit({ op: 're-roll', region_id: 'A', n: 2 })).toBe('Re-rolled "A" (#2)');
         expect(describeLayoutEdit({ op: 'set-substrate', region_id: 'A', substrate: 'maze' }))
             .toBe('Substrate of "A" → maze');
         expect(describeLayoutEdit({ op: 'bogus' })).toMatch(/Unknown edit/);
@@ -183,7 +183,7 @@ describe('layoutEdits — apply', () => {
         const env = makeGridEnv();
         const b = stubBinding();
         expect(applyLayoutEdit(env, { op: 're-roll', region_id: 'A', n: 1 }, b))
-            .toEqual({ ok: true, description: 'Re-roll "A" (#1)' }); // binding returned null
+            .toEqual({ ok: true, description: 'Re-rolled "A" (#1)' }); // binding returned null
         expect(applyLayoutEdit(env, { op: 'set-substrate', region_id: 'A', substrate: 'maze' }, b))
             .toEqual({ ok: true, description: 'custom description for A' });
         expect(env.calls).toEqual(['reRoll:A:1', 'setSubstrate:A:maze']);
@@ -241,7 +241,7 @@ describe('layoutEdits — record, replay, undo', () => {
         const regions = replayLayoutEdits(env, 'regions', b);
         expect(regions.applied).toBe(2);
         expect(regions.descriptions)
-            .toEqual(['Moved the region (1,1) → (3,3)', 'Re-roll "A" (#1)']);
+            .toEqual(['Moved the region (1,1) → (3,3)', 'Re-rolled "A" (#1)']);
         expect(cellOf(env.grid, 'A')).toEqual({ gx: 3, gy: 3 });
     });
 

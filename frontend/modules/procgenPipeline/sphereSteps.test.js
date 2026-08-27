@@ -5,7 +5,7 @@ import '../mazeRoom/mazeRoomLibrary.js';
 import '../bounceDemo/bounceDemoLibrary.js';
 import {
     growSpheres, growSpheresBatchedGen, buildRulesJson, compactSphereTree,
-    rebuildEnvelopeFromRulesJson, growMaze, topDownFromRulesJson,
+    rebuildEnvelopeFromRulesJson, growMaze, topDownFromRulesJson, getRegionExits,
 } from './procgenPipelineEngine.js';
 import { planSpheres } from './spherePlanner.js';
 import { DEFAULT_ITEMS } from '../shared/procgen/library.js';
@@ -821,6 +821,45 @@ describe('sphereSteps — recorded layout edits', () => {
         expect(grid.allRegions()).toHaveLength(before);
         expect(grid.allRegions().filter((x) => x.region_id === first.region_id)).toHaveLength(1);
         expect(grid.getRegion(rerolled.cell).region_id).toBe(first.region_id);
+    });
+
+    // The second half of the resync, measured the same way: `node.side` is the
+    // side of the PARENT's exit that leads to this node, and an exit-side edit
+    // moved the grid's exit while leaving the tree's `side` behind. A later
+    // re-roll then rebuilt the region at the TREE's sides and silently REVERTED
+    // the edit (invisible while the pair is adjacent; after a swap they are
+    // teleporter-linked and keyed by SIDE, so the forward link dies and the
+    // oracle reports "sphere count mismatch").
+    it('an exit-side edit RESYNCS the tree node sides', async () => {
+        const env = await grownEnv();
+        const grid = env.grow.grid;
+        const exitsOf = (cell) => [...getRegionExits(grid.getRegion(cell)).values()];
+        // Any parent that still has a free side: move its forward exit there.
+        let target = null;
+        for (const child of env.nodes) {
+            if (child.parent == null || !child.region_id) continue;
+            const parentCell = env.nodes[child.parent]?.cell;
+            if (!parentCell || !grid.getRegion(parentCell)) continue;
+            const list = exitsOf(parentCell);
+            const fwd = list.find((e) => !e.isBackExit && e.targetRegion === child.region_id);
+            const used = new Set(list.map((e) => e.side));
+            const free = ['N', 'S', 'E', 'W'].find((x) => !used.has(x));
+            if (fwd && free) { target = { child, parentCell, fwd, free }; break; }
+        }
+        expect(target, 'need a parent with a forward exit and a free side').toBeTruthy();
+        const { child, parentCell, fwd, free } = target;
+        expect(child.side).not.toBe(free); // the row is not vacuous
+
+        const r = pushLayoutEdit(env, {
+            op: 'move-exit-side', cell: { ...parentCell }, exitId: fwd.exit_id, side: free,
+        }, SPHERE_EDIT_BINDING);
+        expect(r.ok).toBe(true);
+        expect(child.side).toBe(free);
+        // …and the tree can still resolve the parent exit it names, which is the
+        // lookup buildNodeRealiserSpecs throws on when it misses.
+        expect(grid.getRegion(child.cell)).toBeTruthy();
+        expect(grid.getRegion(env.nodes[child.parent].cell).exits_placed
+            .some((e) => e.side === child.side)).toBe(true);
     });
 
     it('the codec carries the recording across a serialise/deserialise boundary', async () => {

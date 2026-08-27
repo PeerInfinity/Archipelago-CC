@@ -56,6 +56,7 @@ import {
     wallOffUnusedExits,
     rebuildEnvelopeFromRulesJson,
     reRollSphereRegion,
+    getRegionExits,
 } from './procgenPipelineEngine.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import {
@@ -702,22 +703,50 @@ function resolveSphereNode(env, key) {
     return node;
 }
 
-// Re-point the envelope's start cell and RESYNC every tree node's `cell` from
-// the grid after a placement change. The resync is load-bearing, not tidiness:
-// `node.cell` feeds buildNodeRealiserSpecs (so a re-roll after a move would
-// replace the region at the node's OLD cell — measured: after a swap it
-// overwrites the region that moved INTO that cell, duplicating one region_id and
-// losing another, silently) and compactSphereTree (so an edited world would
-// rebuild, via rebuildEnvelopeFromRulesJson, at its PRE-edit placement).
+// Re-point the envelope's start cell and RESYNC the tree from the grid after a
+// layout change. Both halves are load-bearing, and both were MEASURED against a
+// silent corruption the panel could produce before B-d.
+//
+//  • `node.cell` feeds buildNodeRealiserSpecs and compactSphereTree, and nothing
+//    updated it on a move. A re-roll after a MOVE threw "Grid.replaceRegion:
+//    cell (2,3) is empty"; after a SWAP it replaced the region that had moved
+//    INTO the stale cell — duplicating one region_id and losing another, with
+//    no error. And compactSphereTree wrote the stale cell, so an edited world
+//    rebuilt (rebuildEnvelopeFromRulesJson) at its PRE-edit placement.
+//
+//  • `node.side` is the side of the PARENT's exit that leads to this node, and
+//    buildNodeRealiserSpecs reads it BOTH ways: as each child's exit side when
+//    it re-realises a region, and as `parentRegion.exits_placed.find(e => e.side
+//    === node.side)` — which throws when it misses. An exit-side edit moved the
+//    grid's exit and left the tree's `side` behind, so a later re-roll rebuilt
+//    the region at the TREE's sides and silently REVERTED the edit. Measured:
+//    invisible while parent and child are geographically adjacent (stitchGrid
+//    re-resolves by adjacency), but after a swap they are teleporter-linked and
+//    the teleporter is keyed by SIDE — the forward link dies and the sphere
+//    oracle reports "sphere count mismatch: computed 1, planned 3".
+//
+// The side is recovered from the parent's forward exit whose `targetRegion` is
+// this node — the link relayoutSphereGrid has just re-derived — rather than from
+// the exit's id, which encodes the side it was BORN on.
 function sphereAfterLayout(env, grid) {
     const cellById = new Map(grid.allRegions()
         .map((r) => [r.region_id, { gx: r.cell.gx, gy: r.cell.gy }]));
     let rootCell = null;
-    for (const node of env.nodes ?? []) {
+    const nodes = env.nodes ?? [];
+    for (const node of nodes) {
         const cell = node.region_id ? cellById.get(node.region_id) : null;
         if (!cell) continue;
         node.cell = { ...cell };
         if (node.parent == null) rootCell = cell;
+    }
+    for (const node of nodes) {
+        if (node.parent == null || !node.region_id) continue;
+        const parentRegion = grid.getRegion(nodes[node.parent]?.cell ?? {});
+        if (!parentRegion) continue;
+        const exits = getRegionExits(parentRegion);
+        const list = exits instanceof Map ? [...exits.values()] : (exits ?? []);
+        const fwd = list.find((e) => !e.isBackExit && e.targetRegion === node.region_id);
+        if (fwd?.side) node.side = fwd.side;
     }
     if (env.grow && rootCell) env.grow.startCell = { ...rootCell };
 }
