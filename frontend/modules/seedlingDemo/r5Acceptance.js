@@ -70,11 +70,26 @@ import { BOOT_PRESWAP_FRAMES } from './r7Acceptance.js';
  * not see — the THIRD instance of trap 827, and the one only a `--tier=full`
  * run can reach.
  *
+ * ⛔⛔ THE DIRECTION IS THE WHOLE THING, AND THE FIRST VERSION OF THIS FUNCTION
+ * HAD IT INVERTED — caught by its own mutant, which went GREEN because "always
+ * subtract one" is accidentally correct on p4c. Written out so it cannot be
+ * mis-read again:
+ *
+ *     the constant is a p4b MEASUREMENT           231
+ *     p4b  game 231  ⇒ correction 0   (`arm == null`)
+ *     p4c  game 230  ⇒ correction 1   (`arm != null`)
+ *     expected = CONST − correction
+ *
+ * So the correction is the frame the p4b-measured constant INCLUDES and this
+ * build does not spend — it is subtracted exactly when the build DOES arm
+ * after the swap, which is the opposite of "the frames this build spends".
+ *
  * @param {object} walk a replayed walk record
- * @returns {number} the pre-swap frames THIS build spends: 0 after the fix, 1 before
+ * @returns {number} frames to SUBTRACT from a p4b-measured constant: 1 on a
+ *   build that arms after the swap, 0 on one that does not
  */
-export function preSwapFramesSpent(walk) {
-    return walk?.status?.arm != null ? 0 : BOOT_PRESWAP_FRAMES;
+export function preSwapCorrection(walk) {
+    return walk?.status?.arm != null ? BOOT_PRESWAP_FRAMES : 0;
 }
 
 export const L60_KILL = 'r5-l60-kill';
@@ -1243,7 +1258,7 @@ export function featherFindings(replayed) {
 
     // ⛓⛓ THE PIN'S OWN ARITHMETIC, from the game's dead-frame counter.
     const df = st?.dead_frames;
-    const featherTotal = FEATHER_DEAD_FRAMES.total - preSwapFramesSpent(walk);
+    const featherTotal = FEATHER_DEAD_FRAMES.total - preSwapCorrection(walk);
     found.push({
         name: 'R5 feather: the fade frames add up to the two pinned constants',
         ok: df === featherTotal,
@@ -1398,8 +1413,8 @@ export function totemEntranceFindings(replayed) {
     const boot = replayed?.get('r5-l38-fade-boot');
     const door = replayed?.get('r5-l38-fade-door');
     for (const [label, arm] of [['press', press], ['control', control]]) {
-        const armTotal = TOTEM_ENTRANCE_WALK.deadFrames - preSwapFramesSpent(arm);
-        const armLoad = TOTEM_ENTRANCE_WALK.load.total - preSwapFramesSpent(arm);
+        const armTotal = TOTEM_ENTRANCE_WALK.deadFrames - preSwapCorrection(arm);
+        const armLoad = TOTEM_ENTRANCE_WALK.load.total - preSwapCorrection(arm);
         found.push({
             name: `R5 totem entrance: the ${label} arm reports ${armTotal} dead frames`,
             ok: arm.status?.dead_frames === armTotal,
@@ -1417,8 +1432,8 @@ export function totemEntranceFindings(replayed) {
         const d = door.status?.dead_frames;
         // ⛓ R9 slice 12h: ONE per run, at the boot — so the DOOR's own cost
         // (`d - b`, 19) is invariant across builds and only the boot term moves.
-        const wantBoot = TOTEM_ENTRANCE_WALK.load.boot - preSwapFramesSpent(boot);
-        const wantTotal = TOTEM_ENTRANCE_WALK.load.total - preSwapFramesSpent(door);
+        const wantBoot = TOTEM_ENTRANCE_WALK.load.boot - preSwapCorrection(boot);
+        const wantTotal = TOTEM_ENTRANCE_WALK.load.total - preSwapCorrection(door);
         found.push({
             name: '⛓⛓ R5 totem entrance: the load cost is MEASURED, not inherited',
             ok: b === wantBoot && d === wantTotal,
@@ -1828,7 +1843,7 @@ export function shaftFindings(replayed) {
      * 150 are in it. The part itself is NOT observable (`Bot.itemReadout`
      * has no `hasTotemPart` field, §20.8), so this is the claim.
      */
-    const shaftDead = SHAFT_WALK.deadFrames - preSwapFramesSpent(walk);
+    const shaftDead = SHAFT_WALK.deadFrames - preSwapCorrection(walk);
     found.push({
         name: '⛓⛓⛓ R5 shaft: the FIRST COLLECT CEREMONY is in the game\'s dead-frame count',
         ok: (walk.status?.dead_frames ?? 0) - SHAFT_WALK.ceremonyFrames >= 0
