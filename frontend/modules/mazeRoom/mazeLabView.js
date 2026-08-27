@@ -96,8 +96,9 @@ import { applyGlossaryTips } from '../procgenDocs/glossaryTips.js';
  * second one written here.
  */
 import {
-    bindWorldParts, makeDrawRoomStill, mazeLibraryRows, mazeSetBindings, roomBaseTag,
-    sniffSetDocument, worldPartDescriptors, worldSetBindings,
+    LAB_SUBSTRATE, bindWorldParts, makeDrawRoomStill, mazeLibraryRows, mazeSetBindings,
+    roomBaseTag, sniffSetDocument, worldDoorDisconnectOp, worldDoorOp, worldDoorPreview,
+    worldDoorRows, worldPartDescriptors, worldSetBindings,
 } from './mazeSetLab.js';
 import { createEditSession } from '../procgenCore/editCore.js';
 /**
@@ -1992,10 +1993,21 @@ export function main() {
              * itself on every applied op, and what this has to refresh is the
              * PAGE — `window.__mazeLab.set`, the canvas and the LOAD note.
              */
-            onSetChange: () => { enableSetControls(); render(); },
+            /**
+             * ⛔ THE PAGE'S OWN `render`, NOT THE MOUNT'S — and W4 adds the
+             * DOOR's four `<select>`s to it, because a `connect` the strip's own
+             * gesture landed moves the DERIVED exits (a displaced door's far
+             * endpoint becomes unwired). ⛓ Here and not in `render()`: this
+             * fires once per applied op, and `render()` fires on every hover.
+             */
+            onSetChange: () => { enableSetControls(); fillDoorSelects(); render(); },
             doc: document,
         });
         enableSetControls();
+        /** ⛓ EDITOR INTEGRATION W4 — the door's four `<select>`s are the PAGE's,
+         *  filled after the mount for `fillSetRoomSelect`'s reason one control
+         *  over: a `value` set on an empty `<select>` sets nothing. */
+        fillDoorSelects();
         /**
          * ⛔ AND THE PAGE'S READOUT IS REDRAWN AFTER THE MOUNT, not only before
          * it: `window.__mazeLab.set.mounted` and `selected` are facts about a
@@ -2286,6 +2298,146 @@ export function main() {
         sel.disabled = (servedRows ?? []).length === 0;
     };
 
+    /* ══════════════════════════════════════════════════════════════════
+     * ⛓⛓⛓ EDITOR INTEGRATION W4 — THE CROSS-PART DOOR
+     * ══════════════════════════════════════════════════════════════════ */
+
+    /**
+     * ⛓⛓ **THE DERIVED EXITS, CACHED ON THE RECORD OBJECT.**
+     *
+     * ⛔ A `WeakMap` KEYED ON THE RECORD, which is `linksIndexOf`'s trick and is
+     * safe for its reason: every op rebuilds the record (copy-on-write, so a
+     * refusal leaves the caller's untouched), so an edited world is a DIFFERENT
+     * object and misses the cache. There is no invalidation to get wrong.
+     * ⛔ AND IT IS WHY THIS IS NOT DONE IN `render()`: deriving a merged atlas
+     * is two derivations plus a merge, and `render` runs on every HOVER.
+     */
+    const doorRowsCache = new WeakMap();
+    /**
+     * ⛓⛓⛓ **THE PREVIEW THE NOTE IS SHOWING, HELD — NOT RE-DERIVED FOR THE
+     * READOUT.** ⛔ Two reasons, and the second is the one that matters: a
+     * preview is a full merged-atlas derivation and `render()` runs on every
+     * HOVER, so deriving it there would put two derivations on the mouse path;
+     * and a readout that ran its OWN would be a second authority whose answer
+     * could differ from the sentence on screen. This is written where the note
+     * is written, and read where the readout is read.
+     */
+    let doorPreview = null;
+    const doorRows = () => {
+        if (!heldWorld || !setSession) return null;
+        const record = setSession.record();
+        if (!doorRowsCache.has(record)) {
+            doorRowsCache.set(record, worldDoorRows(record, worldParts, worldDeps));
+        }
+        return doorRowsCache.get(record);
+    };
+
+    /** ⛓ The endpoint a pair of `<select>`s names, in the WORLD's own words. */
+    const doorEndpoint = (roomId, exitId) => {
+        const rows = doorRows();
+        if (!rows?.ok) return null;
+        const room = rows.rows[Number($(roomId)?.value)];
+        const exit = $(exitId)?.value ?? '';
+        if (!room || exit === '') return null;
+        return { part: room.part, room: room.local, exit, global: room.index };
+    };
+
+    const doorOneWay = () => {
+        const v = $('labDoorOneWay')?.value ?? '';
+        return v === '' ? null : v === '1';
+    };
+
+    /**
+     * ⛓⛓ **THE PREVIEW IS THE DERIVATION'S OWN ANSWER**, not a second model of
+     * the displacement rule — W2 shipped that rule's first spelling with a
+     * defect precisely because *"only connections whose two endpoints are in the
+     * SAME part"* is easy to miss. The sentence a reader gets before the press
+     * is the sentence they get after it.
+     */
+    const renderDoorNote = () => {
+        const note = $('labDoorNote');
+        if (!note) return;
+        const rows = doorRows();
+        if (!rows) { note.textContent = ''; return; }
+        if (!rows.ok) { note.textContent = `⛔ ${rows.why}`; note.className = 'note bad'; return; }
+        const from = doorEndpoint('labDoorFromRoom', 'labDoorFromExit');
+        const to = doorEndpoint('labDoorToRoom', 'labDoorToExit');
+        const built = worldDoorOp(from, to, doorOneWay());
+        doorPreview = { from, to, one_way: doorOneWay(), ...built, displaced: null };
+        if (!built.ok) {
+            note.textContent = built.why;
+            note.className = 'note bad';
+            return;
+        }
+        const preview = worldDoorPreview(setSession.record(), worldParts, worldDeps, built.op);
+        doorPreview = { ...doorPreview, displaced: preview.displaced ?? null, previewWhy: preview.why ?? null };
+        if (!preview.ok) {
+            note.textContent = `⛔ this crossing would be REFUSED — ${preview.why}`;
+            note.className = 'note bad';
+            return;
+        }
+        note.textContent = `a CROSSING (object endpoints, `
+            + `${built.op.one_way ? 'ONE-WAY' : 'TWO-WAY'}): `
+            + `${from.part}/${from.room}/${from.exit} → ${to.part}/${to.room}/${to.exit}`
+            + (preview.displaced.length
+                ? ` · ⚠ it would DISPLACE ${preview.displaced.length} part-internal `
+                  + `connection(s): ${preview.displaced.map((d) => `${d.region}/${d.exit} `
+                      + `(was → ${d.was.join('/')})`).join(', ')} — a generated Seedling set has `
+                  + 'NO spare exit, so a crossing takes over a door that already leads somewhere '
+                  + 'and the far endpoint becomes UNWIRED'
+                : ' · it displaces nothing');
+        note.className = 'note';
+    };
+
+    const fillDoorSelects = () => {
+        const rows = doorRows();
+        const box = $('labWorldDoorBox');
+        if (box) box.hidden = !heldWorld;
+        if (!rows?.ok) return;
+        for (const [roomId, exitId] of [
+            ['labDoorFromRoom', 'labDoorFromExit'], ['labDoorToRoom', 'labDoorToExit'],
+        ]) {
+            const roomSel = $(roomId);
+            const exitSel = $(exitId);
+            if (!roomSel || !exitSel) continue;
+            const keepRoom = roomSel.value;
+            roomSel.innerHTML = '';
+            for (const row of rows.rows) {
+                roomSel.appendChild(new Option(
+                    `${row.index} [${row.part}] ${row.name || ''}`.trim(), String(row.index),
+                ));
+            }
+            if (keepRoom !== '' && Number(keepRoom) < rows.rows.length) roomSel.value = keepRoom;
+            const row = rows.rows[Number(roomSel.value)] ?? rows.rows[0];
+            const keepExit = exitSel.value;
+            exitSel.innerHTML = '';
+            for (const exit of row?.exits ?? []) exitSel.appendChild(new Option(exit, exit));
+            /** ⛓ A room the derivation DROPPED says so, rather than offering an
+             *  empty list that reads as "this room has no doors". */
+            exitSel.disabled = (row?.exits ?? []).length === 0;
+            if (keepExit !== '' && (row?.exits ?? []).includes(keepExit)) exitSel.value = keepExit;
+        }
+        renderDoorNote();
+    };
+
+    const applyDoorOp = (built) => {
+        if (!built.ok) { say(built.why, true); renderDoorNote(); return; }
+        const result = setSession.apply(built.op);
+        if (!result.ok) {
+            say(`⛔ REFUSED — ${result.description}`, true);
+        } else {
+            /**
+             * ⛓ AND THE DISPLACEMENT IS NAMED AFTER, off the derivation that
+             * actually ran — the same reader, the same sentence, one press later.
+             */
+            const after = worldDoorRows(setSession.record(), worldParts, worldDeps);
+            say(`${result.description}${after.ok ? '' : ` ⚠ ${after.why}`}`);
+        }
+        setUi?.render();
+        fillDoorSelects();
+        render();
+    };
+
     /**
      * ⛓ THE SET ARM'S OWN PANE — the LOAD box's note and the served picker.
      * ⛔ It does NOT drive the set editor's own render: that mount owns its
@@ -2302,6 +2454,11 @@ export function main() {
         fillLibraryPick();
         enableSetControls();
         renderSetRoomBox();
+        /** ⛓ EDITOR INTEGRATION W4 — the door box exists only under a WORLD, and
+         *  its selects are refilled here because a `connect` moves the derived
+         *  exits (a displaced door's far endpoint becomes unwired). */
+        const doorBox = $('labWorldDoorBox');
+        if (doorBox) doorBox.hidden = !heldWorld;
     };
 
     /**
@@ -2679,6 +2836,42 @@ export function main() {
                  * from "the frame is up but nothing is in it" would read a
                  * refused open exactly like a successful one.
                  */
+                /**
+                 * ⛓⛓⛓ EDITOR INTEGRATION W4 — **THE CROSS-PART DOOR CONTROL, AS
+                 * A CHANNEL A ROW CAN READ.** ⛔ `null` under a library: the box
+                 * does not exist there, and a field that read `{}` would make a
+                 * page with no world look like one whose control had emptied.
+                 * ⛓ `shape` is the CLAIM — `world` for a crossing (object
+                 * endpoints) and `part` for a door the gesture refused as
+                 * belonging to one part's own `connect` (array endpoints). A
+                 * mutant that always wrote object endpoints reads `world` here
+                 * on a same-part pair, which is exactly what the strip's own
+                 * gesture is for.
+                 */
+                worldDoor: heldWorld ? (() => {
+                    const rows = doorRows();
+                    if (!rows?.ok) return { ok: false, why: rows?.why ?? null, exits: null };
+                    return {
+                        ok: doorPreview?.ok ?? false,
+                        why: doorPreview?.why ?? null,
+                        shape: doorPreview?.shape ?? null,
+                        from: doorPreview?.from ?? null,
+                        to: doorPreview?.to ?? null,
+                        one_way: doorPreview?.one_way ?? null,
+                        /** ⛓ WHAT EACH ROOM MAY BE CROSSED FROM — the DERIVED
+                         *  atlas's exit ids, which is what a world link names
+                         *  and is NOT the part's own exit vocabulary. Off the
+                         *  record-keyed cache, so a hover costs nothing. */
+                        exits: rows.rows.map((r) => ({
+                            index: r.index, part: r.part, region_id: r.region_id, exits: r.exits,
+                        })),
+                        /** ⛓ …and the DISPLACEMENT the press would cause, as the
+                         *  PREVIEW computed it — the same answer the note on
+                         *  screen is showing, never a second derivation. */
+                        displaced: doorPreview?.displaced ?? null,
+                        note: $('labDoorNote')?.textContent ?? '',
+                    };
+                })() : null,
                 foreignRoom: foreignRoom ? {
                     index: foreignRoom.index,
                     part: foreignRoom.part,
@@ -2876,6 +3069,26 @@ export function main() {
         // ⛓ A library held at BOOT (`?library=`) predates this arm — mount over it now.
         remountSetEditor();
         lt.on($('labSetLoad'), 'click', loadSetFromBox);
+        /**
+         * ⛓⛓ EDITOR INTEGRATION W4 — the CROSS-PART door's five controls. ⛔ The
+         * two room `<select>`s refill their exit list on change, because a
+         * world's exits are the DERIVED atlas's and belong to the region, not to
+         * the strip's selection.
+         */
+        for (const id of ['labDoorFromRoom', 'labDoorToRoom']) {
+            lt.on($(id), 'change', () => { fillDoorSelects(); });
+        }
+        for (const id of ['labDoorFromExit', 'labDoorToExit', 'labDoorOneWay']) {
+            lt.on($(id), 'change', () => { renderDoorNote(); render(); });
+        }
+        lt.on($('labDoorConnect'), 'click', () => applyDoorOp(worldDoorOp(
+            doorEndpoint('labDoorFromRoom', 'labDoorFromExit'),
+            doorEndpoint('labDoorToRoom', 'labDoorToExit'),
+            doorOneWay(),
+        )));
+        lt.on($('labDoorDisconnect'), 'click', () => applyDoorOp(worldDoorDisconnectOp(
+            doorEndpoint('labDoorFromRoom', 'labDoorFromExit'),
+        )));
         lt.on($('labSetUpload'), 'change', (e) => {
             const file = e.target.files?.[0];
             if (!file) return;

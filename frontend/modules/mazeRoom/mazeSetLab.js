@@ -1068,3 +1068,187 @@ export function worldDownloadMembers(session, parts) {
         apMappingWhy: notes.join(' | ') || null,
     };
 }
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ EDITOR INTEGRATION W4 — CROSS-PART DOORS
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓⛓⛓ **WHAT A CROSS-PART DOOR MAY BE ATTACHED TO, PER ROOM — THE DERIVED
+ * ATLAS'S OWN EXIT IDS.**
+ *
+ * ⛔⛔ **NOT THE PART'S OWN EXIT VOCABULARY** (§8.10 #4). A `world.links`
+ * endpoint names the exit id the MERGED ATLAS carries, and neither part spells
+ * its exits that way on the authoring side: Seedling's set adapter addresses an
+ * exit by an ORDINAL and its derivation emits `out_<type>_<x>_<y>`; the maze's
+ * `exit_id` happens to survive the derivation and its SIDE does not. A gesture
+ * built from `exitsOfRoom` would therefore offer a Seedling ordinal where the
+ * link wants a derived id — and `deriveWorldAtlas` would refuse it by name,
+ * listing exits nobody could have picked from the strip.
+ *
+ * ⛓ The rooms are resolved to regions BY `map_ref`, which is what both
+ * derivations write it as and what `deriveWorldAtlas` itself resolves endpoints
+ * with — one answer, not two. ⚠ A room the derivation DROPPED (Seedling drops a
+ * region no link reaches that holds nothing) has NO region and says so, rather
+ * than offering an empty list that reads as *"this room has no doors"*.
+ *
+ * @param {object} record the world record
+ * @param {Array<object>} parts
+ * @param {object} deps    keyed by part id
+ * @returns {{ok: boolean, why?: string, rows?: Array<object>}}
+ */
+export function worldDoorRows(record, parts, deps) {
+    let derived;
+    try {
+        derived = deriveWorldAtlasOf(record, { parts, deps });
+    } catch (e) {
+        if (!(e instanceof Error)) throw e;
+        return { ok: false, why: `the world's atlas does not derive, so there are no exits to `
+            + `offer — ${e.message}` };
+    }
+    const byPart = new Map();
+    for (const region of derived.atlas.regions ?? []) {
+        const split = String(region.region_id).split('.');
+        const part = split.length > 1 ? split[0] : null;
+        if (!byPart.has(part)) byPart.set(part, new Map());
+        byPart.get(part).set(region.map_ref, region);
+    }
+    const rows = [];
+    let offset = 0;
+    for (const part of parts) {
+        const partRecord = partRecordOf(record, part);
+        const count = part.bounds(partRecord).w;
+        for (let local = 0; local < count; local += 1) {
+            const region = byPart.get(part.id)?.get(local) ?? null;
+            rows.push({
+                index: offset + local,
+                part: part.id,
+                local,
+                name: part.readSetCell(partRecord, local, 0).room?.name ?? '',
+                region_id: region?.region_id ?? null,
+                exits: region ? (region.exits ?? []).map((ex) => ex.exit_id) : [],
+                why: region ? null : 'the derivation kept NO region for this room — no link in '
+                    + 'its own part reaches it and it holds nothing, so there is no exit for a '
+                    + 'crossing to leave by until it has one',
+            });
+        }
+        offset += count;
+    }
+    return { ok: true, rows, atlas: derived.atlas };
+}
+
+/**
+ * ⛓⛓⛓ **THE PRESS'S OWN CONSEQUENCE, SHOWN BEFORE IT** — the DISPLACEMENT
+ * (§8.3) and any refusal, read off the DERIVATION ITSELF rather than predicted.
+ *
+ * ⛔⛔ A preview that reasoned about displacement on its own would be a SECOND
+ * model of a rule whose whole point is that it is subtle: a world link unwires
+ * the part-internal connection on its `from` endpoint, but only one whose two
+ * endpoints are in the SAME part — and W2 shipped that rule's first spelling
+ * with a defect precisely because the second condition is easy to miss. ⇒ the
+ * preview appends the candidate link to a COPY of the record, derives, and
+ * reports what the merge SAID. One authority, and the sentence the reader sees
+ * before the press is the sentence they get after it.
+ *
+ * @returns {{ok: boolean, why?: string, displaced?: Array<object>, notes?: Array<string>}}
+ */
+export function worldDoorPreview(record, parts, deps, link) {
+    /**
+     * ⛔⛔ **THE OP IS PROJECTED ONTO A LINK, FIELD BY NAME.** A `connect` op and
+     * a `world.links[]` entry share three fields and the op carries a fourth
+     * (`op`), and `worldErrors` refuses an undeclared field on a link BY NAME —
+     * which is how this row found the first spelling, where the whole op went
+     * in and the preview came back *"world.links[0].op is not a declared
+     * field"* on a perfectly good door. ⛓ Named rather than spread: the world
+     * document's link shape is `worldDocument`'s and this must not quietly
+     * carry whatever an op grows next.
+     */
+    const entry = { from: link?.from, to: link?.to, one_way: link?.one_way };
+    const probe = Object.freeze({
+        ...record,
+        world: { ...record.world, links: [...(record.world.links ?? []), entry] },
+    });
+    try {
+        const derived = deriveWorldAtlasOf(probe, { parts, deps });
+        return {
+            ok: true,
+            displaced: derived.displaced ?? [],
+            notes: derived.notes ?? [],
+        };
+    } catch (e) {
+        if (!(e instanceof Error)) throw e;
+        return { ok: false, why: e.message };
+    }
+}
+
+/**
+ * ⛓⛓⛓ **THE OP THE GESTURE PRODUCES, AND ITS SHAPE COMES FROM THE TWO CELLS'
+ * PARTS** (W2 §8.4).
+ *
+ * ⛔⛔ **A CROSS-PART DOOR IS A DIFFERENT OP SHAPE, NOT A DIFFERENT ARGUMENT.**
+ * The OBJECT pair is the world's and names DERIVED ATLAS exit ids; the ARRAY
+ * pair is a part's own and names that part's own exits. A gesture that always
+ * wrote object endpoints would send a same-part door to `world.links`, where it
+ * would be refused by name — and one that always wrote array endpoints would
+ * silently address a part-internal `connect` with an exit id belonging to
+ * whatever room shared the index.
+ *
+ * ⛔ **`one_way` IS REQUIRED AND HAS NO DEFAULT HERE.** The two substrates
+ * disagree about it (Seedling's derivation writes `one_way: true` on every
+ * connection it makes; the maze's `LINK_ONE_WAY_DEFAULT` is `false`), so a
+ * crossing between them is in neither convention and a default would impose one
+ * substrate's law on a door that is not in it (W2 §8.2). The CONTROL therefore
+ * starts unset and this refuses an unset one by name rather than picking.
+ *
+ * @param {{part, room, exit}} from  the SOURCE endpoint, in GLOBAL room terms
+ * @param {{part, room, exit}} to    the TARGET endpoint
+ * @param {boolean|null} oneWay
+ * @returns {{ok: boolean, why?: string, op?: object, shape?: 'world'|'part'}}
+ */
+export function worldDoorOp(from, to, oneWay) {
+    if (!from || !to) {
+        return { ok: false, why: 'a door needs BOTH endpoints — pick a source room and its exit, '
+            + 'then a target room and its exit' };
+    }
+    if (from.part === to.part) {
+        return {
+            ok: false,
+            why: `both endpoints are in part "${from.part}", so this is that part's OWN door and `
+                + 'not a crossing. ⛓ Draw it with the strip\'s own CONNECT gesture, which writes '
+                + 'the ARRAY form that part\'s `connect` takes — a world link is for a door '
+                + 'BETWEEN two documents, and one inside a part would be refused by name.',
+            shape: 'part',
+        };
+    }
+    if (oneWay !== true && oneWay !== false) {
+        return {
+            ok: false,
+            why: '⛔ pick ONE-WAY or TWO-WAY first. The two substrates disagree about the '
+                + 'default — Seedling\'s derivation writes `one_way: true` on every connection '
+                + 'it makes (its one transition primitive is a one-way jump) and the maze\'s '
+                + '`LINK_ONE_WAY_DEFAULT` is `false` (a crossing is a tile you walk back off) — '
+                + 'so a crossing between them is in NEITHER convention and defaulting would '
+                + 'impose one substrate\'s law on a door that is not in it.',
+        };
+    }
+    return {
+        ok: true,
+        shape: 'world',
+        op: {
+            op: 'connect',
+            from: { part: from.part, room: from.room, exit: from.exit },
+            to: { part: to.part, room: to.room, exit: to.exit },
+            one_way: oneWay,
+        },
+    };
+}
+
+/** ⛓ …and the symmetric one. ⛔ ONE endpoint: `worldDisconnect` finds the link
+ *  from either side and names the crossings there are when none joins it. */
+export function worldDoorDisconnectOp(from) {
+    if (!from) return { ok: false, why: 'pick the crossing\'s SOURCE endpoint first' };
+    return {
+        ok: true,
+        op: { op: 'disconnect', from: { part: from.part, room: from.room, exit: from.exit } },
+    };
+}

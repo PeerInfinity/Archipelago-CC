@@ -16,9 +16,10 @@ import { describe, expect, it } from 'vitest';
 
 import {
     LAB_SUBSTRATE, SEEDLING_ATLAS_GAME, bindWorldParts, makeDrawRoomStill, mazeLibraryRows,
-    mazeSetBindings, roomBaseTag, sniffSetDocument, worldDownloadMembers, worldPartDescriptors,
-    worldSetBindings,
+    mazeSetBindings, roomBaseTag, sniffSetDocument, worldDoorDisconnectOp, worldDoorOp,
+    worldDoorPreview, worldDoorRows, worldDownloadMembers, worldPartDescriptors, worldSetBindings,
 } from './mazeSetLab.js';
+import { deriveWorldAtlasOf } from '../procgenCore/worldDerivation.js';
 import { createEditSession } from '../procgenCore/editCore.js';
 import { roomRowsOf } from '../procgenCore/setEditorCore.js';
 import { ADAPTER_FNS } from '../procgenCore/setEditorView.js';
@@ -733,5 +734,131 @@ describe('⛓⛓⛓ W4 — `worldSetBindings` over a Seedling set and a maze lib
             .not.toBe(world.world_id);
         // ⛓ the maze's `apMappingWhy` travels as a note, not as an empty companion
         expect(out.apMappingWhy).toMatch(/a region library has no VANILLA mapping/);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ W4 — CROSS-PART DOORS
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('⛓⛓⛓ W4 — the cross-part door', () => {
+    /**
+     * ⛔⛔ **THE EXITS ARE THE DERIVED ATLAS'S AND NOT THE PART'S** (§8.10 #4).
+     * The claim is scored against the LAW: what the control offers is fed to
+     * the world adapter's `connect`, and the row asserts it is ACCEPTED — and
+     * that what the PART's own `exitsOfRoom` offers for the same room is a
+     * different vocabulary that `deriveWorldAtlas` refuses by name.
+     */
+    it('offers the DERIVED exit ids, which are not the part\'s own', () => {
+        const h = w4Session();
+        const rows = worldDoorRows(h.session.record(), h.parts, h.deps);
+        expect(rows.ok).toBe(true);
+        expect(rows.rows.map((r) => r.index)).toEqual([0, 1, 2, 3]);
+        expect(rows.rows.map((r) => r.part)).toEqual(['seed', 'seed', 'mz', 'mz']);
+        expect(rows.rows.map((r) => r.local)).toEqual([0, 1, 0, 1]);
+        expect(rows.rows.map((r) => r.region_id))
+            .toEqual(['seed.level_0', 'seed.level_1', 'mz.mz_cross', 'mz.mz_hub']);
+        // ⛓ a Seedling room's derived exits are `out_<type>_<x>_<y>`…
+        expect(rows.rows[1].exits.some((e) => /^out_teleporter_\d+_\d+$/.test(e))).toBe(true);
+        // ⛔ …and its PART's own `exitsOfRoom` offers ORDINALS instead
+        const b = w4Bindings(h);
+        const partExits = b.adapterFns.exitsOfRoom(h.session.record(), 1);
+        expect(partExits.every((e) => Number.isInteger(e.index))).toBe(true);
+        expect(partExits.some((e) => rows.rows[1].exits.includes(String(e.index)))).toBe(false);
+    });
+
+    /**
+     * ⛔⛔ MUTANT: the gesture writes ARRAY endpoints for a cross-part door. The
+     * shape is picked from the two cells' PARTS, and the two cases refuse each
+     * other by name.
+     */
+    it('the SHAPE comes from the two parts — same part refuses the world form', () => {
+        const from = { part: 'seed', room: 1, exit: 'out_teleporter_128_128' };
+        const to = { part: 'mz', room: 0, exit: 'exit_3' };
+        const cross = worldDoorOp(from, to, true);
+        expect(cross.ok).toBe(true);
+        expect(cross.shape).toBe('world');
+        expect(cross.op).toEqual({ op: 'connect', from, to, one_way: true });
+        // ⛔ both in ONE part is that part's own door, and it says which gesture draws it
+        const same = worldDoorOp(from, { part: 'seed', room: 0, exit: 'x' }, true);
+        expect(same.ok).toBe(false);
+        expect(same.shape).toBe('part');
+        expect(same.why).toMatch(/both endpoints are in part "seed"/);
+        expect(same.why).toMatch(/ARRAY form/);
+    });
+
+    /**
+     * ⛔⛔ MUTANT: `one_way` DEFAULTED. The refusal quotes BOTH substrates'
+     * conventions, because the whole reason there is no default is that they
+     * disagree and a crossing is in neither.
+     */
+    it('`one_way` is REQUIRED and the refusal quotes both conventions', () => {
+        const from = { part: 'seed', room: 1, exit: 'out_teleporter_128_128' };
+        const to = { part: 'mz', room: 0, exit: 'exit_3' };
+        const unset = worldDoorOp(from, to, null);
+        expect(unset.ok).toBe(false);
+        expect(unset.why).toMatch(/one_way: true/);
+        expect(unset.why).toMatch(/LINK_ONE_WAY_DEFAULT/);
+        expect(worldDoorOp(from, to, false).op.one_way).toBe(false);
+        expect(worldDoorOp(from, to, true).op.one_way).toBe(true);
+        // ⛓ …and the world ADAPTER refuses an op with no `one_way`, which is the LAW
+        const h = w4Session();
+        const bad = h.session.apply({ op: 'connect', from, to });
+        expect(bad.ok).toBe(false);
+        expect(bad.description).toMatch(/one_way/);
+    });
+
+    /**
+     * ⛓⛓⛓ **THE PREVIEW IS THE DERIVATION'S OWN ANSWER.** ⛔ MUTANT: the
+     * displacement not shown (or predicted by a second model). A generated
+     * Seedling set has NO spare exit — measured in W2 §8.3 — so a crossing out
+     * of one ALWAYS displaces, and the row asserts the preview says the same
+     * thing the applied op then says.
+     */
+    it('the DISPLACEMENT is previewed, and the press then reports the same one', () => {
+        const h = w4Session();
+        const built = worldDoorOp(
+            { part: 'seed', room: 1, exit: 'out_teleporter_128_128' },
+            { part: 'mz', room: 0, exit: 'exit_3' },
+            true,
+        );
+        const preview = worldDoorPreview(h.session.record(), h.parts, h.deps, built.op);
+        expect(preview.ok).toBe(true);
+        expect(preview.displaced).toEqual([{
+            link: 0, region: 'seed.level_1', exit: 'out_teleporter_128_128',
+            was: ['seed.level_0', 'in_L1_128_128'],
+        }]);
+        expect(preview.notes.join(' ')).toMatch(/DISPLACED the part-internal connection/);
+        // ⛔ …and the PRESS produces exactly that, off a derivation that really ran
+        expect(h.session.apply(built.op).ok).toBe(true);
+        const after = deriveWorldAtlasOf(h.session.record(), { parts: h.parts, deps: h.deps });
+        expect(after.displaced).toEqual(preview.displaced);
+        // ⛓ the SYMMETRIC op takes ONE endpoint and the adapter finds the link from either side
+        const off = worldDoorDisconnectOp(built.op.to);
+        expect(off.ok).toBe(true);
+        const gone = h.session.apply(off.op);
+        expect(gone.ok).toBe(true);
+        expect(h.session.record().world.links).toEqual([]);
+    });
+
+    /**
+     * ⛓ A ROOM THE DERIVATION DROPPED HAS NO REGION AND SAYS SO — an empty exit
+     * list alone reads as *"this room has no doors"*, which is a different fact.
+     */
+    it('a room with no region is NAMED, not offered as an empty list', () => {
+        const set = buildLevelSet(
+            [0, 1, 2].map((level) => emptyLevel({ level })), { setId: 'w4-drop', link: false },
+        ).set;
+        const lib = w4Library();
+        const world = w4World({ set, library: lib });
+        const { parts, deps } = worldPartDescriptors({ world, ...w4Deps() });
+        const rows = worldDoorRows(worldRecord(world, { seed: set, mz: lib }), parts, deps);
+        expect(rows.ok).toBe(true);
+        const dropped = rows.rows.filter((r) => r.region_id === null);
+        expect(dropped.length).toBeGreaterThan(0);
+        for (const row of dropped) {
+            expect(row.exits).toEqual([]);
+            expect(row.why).toMatch(/the derivation kept NO region for this room/);
+        }
     });
 });
