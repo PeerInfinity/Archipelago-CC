@@ -54,6 +54,16 @@ import { EXIT, readPngHeader } from './exportSeedlingView.js';
  */
 import { defaultLayerSet, OVERLAY_LAYERS } from
     '../../frontend/modules/seedlingDemo/watchOverlays.js';
+import { takeBoxLockOrExit } from './boxLock.js';
+
+/**
+ * ⛓ R9 P3b, ⚖ 54 (7) — **THE BOX LOCK.** This gate drives the machine (browser),
+ * so it takes the box before it starts and refuses BY NAME if another
+ * instrument holds it — replacing a hand-relayed "BOX BUSY". A gate run
+ * UNDER `gates.mjs` recognises the holder's token and passes through.
+ * `--wait-for-box=<sec>` queues instead of refusing.
+ */
+takeBoxLockOrExit({ name: 'check-seedling-editor-export.mjs', kind: 'browser' });
 
 /** The set the exporter prints, in the roster's own order. */
 const DEFAULT_ON = OVERLAY_LAYERS.filter((l) => defaultLayerSet().has(l.id)).map((l) => l.id);

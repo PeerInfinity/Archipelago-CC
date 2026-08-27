@@ -99,6 +99,16 @@ import {
 } from '../../frontend/modules/procgenDocs/demos.js';
 import { AREAS, TERMS, termById } from '../../frontend/modules/procgenDocs/glossary.js';
 import { closeServer, serveRepoRoot } from './serveRepoRoot.js';
+import { takeBoxLockOrExit } from './boxLock.js';
+
+/**
+ * ⛓ R9 P3b, ⚖ 54 (7) — **THE BOX LOCK.** This gate drives the machine (browser),
+ * so it takes the box before it starts and refuses BY NAME if another
+ * instrument holds it — replacing a hand-relayed "BOX BUSY". A gate run
+ * UNDER `gates.mjs` recognises the holder's token and passes through.
+ * `--wait-for-box=<sec>` queues instead of refusing.
+ */
+takeBoxLockOrExit({ name: 'check-procgen-demos.mjs', kind: 'browser' });
 
 /** ⛓ The catalogue PAGE — the module's other reader, gated below. */
 const DEMOS_PAGE = '/frontend/modules/procgenDocs/demos.html';

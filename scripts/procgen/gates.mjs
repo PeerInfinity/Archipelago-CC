@@ -226,9 +226,23 @@ const tally = (out) => ({
     skip: (out.match(/^SKIP:/gm) ?? []).length,
 });
 
-takeBoxLock({ name: `gates ${where}${MODE === 'reach' ? ' (reach)' : ''}`,
-    kind: PLAN.some((a) => a.gate.windows) ? 'windows' : 'browser',
+/**
+ * ⛔ AND ONLY WHEN THE PLAN ACTUALLY SPENDS THE MACHINE. `gates.mjs local
+ * wasm-pins` selects a HEADLESS gate; taking the box for it would serialise a
+ * two-second row behind a forty-minute one for nothing, which is the same law
+ * that keeps the headless gates out of `boxLockTakers`. The plan's own
+ * classification decides, so this cannot drift from that population.
+ */
+const SPENDS_BOX = PLAN.filter((a) => a.gate.browser || a.gate.windows);
+if (SPENDS_BOX.length) {
+    takeBoxLock({ name: `gates ${where}${MODE === 'reach' ? ' (reach)' : ''} — `
+        + `${SPENDS_BOX.length} of ${PLAN.length} arm(s) spend the machine`,
+    kind: SPENDS_BOX.some((a) => a.gate.windows) ? 'windows' : 'browser',
     repo: REPO, waitSec: WAIT_FOR_BOX });
+} else {
+    console.log(`# box lock: NOT TAKEN — none of ${PLAN.length} selected arm(s) is a browser `
+        + 'or windows row, so this run does not contend for the machine');
+}
 
 const ARMS_IN_PLAN = PLAN.filter((a) => a.label).length;
 console.log(`# gates ${where}${MODE === 'reach' ? ' (reach)' : ''} — `

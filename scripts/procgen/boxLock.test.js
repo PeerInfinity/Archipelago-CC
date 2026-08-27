@@ -228,3 +228,87 @@ describe('cheapFor', () => {
         expect(CHEAP_BAND.high).toBe(CHEAP_MS * 1.1);
     });
 });
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ THE TAKER POPULATION — DERIVED, AND READ BOTH WAYS (⚖ 17)
+ * ══════════════════════════════════════════════════════════════════════ */
+describe('who takes the box', () => {
+    /**
+     * ⛔⛔ THE LINT IS TWO-DIRECTIONAL ON PURPOSE. "Every browser gate has the
+     * preamble" alone is satisfied by putting it in ALL of them, and a headless
+     * gate that took the box would queue a 0.4-second row behind a forty-minute
+     * one — which is exactly how a lock earns the reputation that gets it
+     * switched off. The set has to be EXACT, so the complement is asserted too.
+     */
+    it('is exactly the browser/windows gates — every one carries the preamble', async () => {
+        const { boxLockTakers, BOX_LOCK_PREAMBLE_MARK } = await import('./boxLock.js');
+        const { expected } = await boxLockTakers({ repo: REPO });
+        const missing = expected.filter(({ file }) =>
+            !readFileSync(join(HERE, file), 'utf8').includes(BOX_LOCK_PREAMBLE_MARK));
+        expect(missing.map((m) => m.file)).toEqual([]);
+        expect(expected.length).toBeGreaterThan(20);
+    });
+
+    it('and NO headless gate carries it', async () => {
+        const { boxLockTakers, BOX_LOCK_PREAMBLE_MARK } = await import('./boxLock.js');
+        const { gateRoster } = await import('./gateRoster.js');
+        const headless = gateRoster({ repo: REPO }).filter((g) => !g.browser && !g.windows);
+        expect(headless.length).toBeGreaterThan(0);
+        const wrong = headless.filter((g) =>
+            readFileSync(join(HERE, g.file), 'utf8').includes(BOX_LOCK_PREAMBLE_MARK));
+        expect(wrong.map((g) => g.file)).toEqual([]);
+    });
+
+    /**
+     * ⛓ THE THREE RUNNERS ARE NAMED RATHER THAN DERIVED — no derivation over
+     * `check-*.mjs` can reach a file that is not one. What makes the naming
+     * honest is that the name is CHECKED: a runner listed here without a lock
+     * would be a finding, not documentation.
+     */
+    it('and each named runner really does take the lock', async () => {
+        const { boxLockTakers } = await import('./boxLock.js');
+        const { runners } = await boxLockTakers({ repo: REPO });
+        for (const file of runners) {
+            const src = readFileSync(join(HERE, file), 'utf8');
+            expect({ file, takes: /takeBoxLock\(/.test(src) }).toEqual({ file, takes: true });
+        }
+    });
+
+    /**
+     * ⛓⛓⛓ **AND THE PREAMBLE IS DRIVEN, NOT ONLY GREPPED** (trap 869: a fix
+     * whose subject is a live instrument must be RUN before its mutant). A
+     * REAL gate is spawned while another process holds the box, with the
+     * holder's token cleared so it is a genuine second taker.
+     *
+     * ⛔ IT ALSO PROVES THE PREAMBLE RUNS *BEFORE* THE MACHINE IS SPENT: the
+     * gate must refuse without printing a single one of its own rows. A lock
+     * taken after the browser launched would serialise nothing.
+     */
+    it('makes a REAL browser gate refuse before it spends anything', () => {
+        const gate = join(HERE, 'check-seedling-editor-arm.mjs');
+        const r = child(`
+import { takeBoxLock } from '${join(HERE, 'boxLock.js')}';
+import { execFileSync } from 'node:child_process';
+takeBoxLock({ name: 'the-holder', kind: 'measure', repo: ${JSON.stringify(REPO)} });
+try {
+  execFileSync(process.execPath, [${JSON.stringify(gate)}], {
+    encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'],
+    env: { ...process.env, SEEDLING_BOX_LOCK_TOKEN: '' },
+  });
+  console.log('⛔ THE GATE DID NOT REFUSE');
+} catch (e) {
+  console.log(\`GATE-EXIT=\${e.status}\`);
+  console.log(\`\${e.stdout ?? ''}\${e.stderr ?? ''}\`);
+}
+`);
+        expect(r.out).toContain('GATE-EXIT=1');
+        expect(r.out).toContain('⛔ THE BOX IS TAKEN');
+        expect(r.out).toContain('check-seedling-editor-arm.mjs (browser) refuses');
+        /* ⛓ …a printed sentence, NOT a stack trace: `gates.mjs` reserves
+         *  "exit 1 with no total line" for a gate that CRASHED. */
+        expect(r.out).not.toContain('at takeBoxLock');
+        /* ⛓ …and not one of the gate's own rows ran. */
+        expect(r.out).not.toMatch(/^PASS:/m);
+        expect(r.out).not.toContain('ALL CHECKS PASSED');
+    });
+});

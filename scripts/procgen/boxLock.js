@@ -58,7 +58,18 @@ import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { homedir, hostname } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+/**
+ * ⛓ THIS TREE, resolved the way `gateRoster.js` resolves it — from this file's
+ * own location. ⛔ It is NOT imported from there: every one of the twenty-seven
+ * gate preambles imports THIS module, and making it pull in a module that
+ * `readdirSync`s the whole instrument directory would put that scan on the
+ * startup path of every gate for a value it already knows.
+ */
+const HERE = dirname(fileURLToPath(import.meta.url));
+export const BOX_LOCK_REPO = join(HERE, '..', '..');
 
 /** ⛓ Per-user, per-machine — the true scope of the box being contended. */
 export const BOX_LOCK_DIR = join(process.env.XDG_CACHE_HOME || join(homedir(), '.cache'),
@@ -146,7 +157,8 @@ export function releaseBoxLock() { release(); }
  * @param {boolean} [o.quiet]   suppress the "took" line (a child pass-through)
  * @returns {{token: string, frozen: object, passthrough: boolean}}
  */
-export function takeBoxLock({ name, kind, repo, waitSec = 0, quiet = false }) {
+export function takeBoxLock({ name, kind, repo = BOX_LOCK_REPO, waitSec = 0,
+    quiet = false }) {
     if (!name) throw new Error('boxLock: takeBoxLock needs a `name` — a refusal that cannot '
         + 'say WHO is holding the box is the hand-relayed protocol with extra steps');
     if (!BOX_LOCK_KINDS.includes(kind)) {
@@ -253,4 +265,71 @@ export function boxLockHolder() {
 process.on('exit', release);
 for (const sig of ['SIGINT', 'SIGTERM', 'SIGHUP']) {
     process.on(sig, () => { release(); process.exit(130); });
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * THE PREAMBLE THE INSTRUMENTS CARRY, AND WHO IS SUPPOSED TO CARRY IT
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓⛓⛓ THE ONE LINE A GATE ADDS — and the reason it is a helper rather than a
+ * `try`/`catch` copied twenty-seven times.
+ *
+ * ⛔ A REFUSAL IS A PRINTED SENTENCE AND AN EXIT CODE, NEVER A STACK TRACE.
+ * `gates.mjs` reads a child's exit code and its total line; an uncaught throw
+ * would reach it as *"exit 1, NO TOTAL LINE"* — which that file's own docblock
+ * reserves for a gate that CRASHED. "The box was busy" and "the gate threw"
+ * must not print the same thing, which is the same law the refusal/verdict
+ * split in `check-seedling-producer-boundaries` is built on.
+ *
+ * ⛓ `--wait-for-box=<sec>` is read from the caller's own argv here, so a gate
+ * gains the queuing form without parsing anything itself.
+ */
+export function takeBoxLockOrExit({ name, kind, repo = BOX_LOCK_REPO, argv = process.argv }) {
+    const hit = argv.find((a) => a.startsWith('--wait-for-box='));
+    const waitSec = hit ? Number(hit.slice('--wait-for-box='.length)) || 0 : 0;
+    try {
+        return takeBoxLock({ name, kind, repo, waitSec });
+    } catch (e) {
+        console.log(e.message);
+        process.exit(1);
+    }
+    /* c8 ignore next */
+    return null;
+}
+
+/** ⛓ The literal a taker's preamble is recognised BY — one spelling, and the
+ *  lint below and the gates themselves are the two readers of it. */
+export const BOX_LOCK_PREAMBLE_MARK = 'takeBoxLockOrExit(';
+
+/**
+ * ⛓⛓⛓ **WHO TAKES THE BOX, DERIVED** (⚖ 17: read out of the gates, never a
+ * typed list). A gate contends for the machine exactly when `gateRoster`
+ * classifies it `browser` or `windows` — the same classification `gates.mjs`
+ * and `standingValues` already spend — so that IS the population, and a gate
+ * added tomorrow joins it by being what it is.
+ *
+ * ⛔ AND THE COMPLEMENT MATTERS AS MUCH AS THE SET. A HEADLESS gate that took
+ * the box would serialise a 0.4-second row behind a forty-minute one for
+ * nothing, which is how a lock earns the reputation that gets it switched off.
+ * `expected` is therefore the exact set — the lint below reads it BOTH ways.
+ *
+ * ⛓ The import is LAZY for the reason `BOX_LOCK_REPO` is computed locally: the
+ * gate preambles must not pay for a directory scan they never use.
+ *
+ * @returns {Promise<{expected: object[], runners: string[]}>}
+ */
+export async function boxLockTakers({ repo = BOX_LOCK_REPO } = {}) {
+    const { gateRoster } = await import('./gateRoster.js');
+    const expected = gateRoster({ repo })
+        .filter((g) => g.browser || g.windows)
+        .map((g) => ({ file: g.file, kind: g.windows ? 'windows' : 'browser' }));
+    /**
+     * ⛔ THE RUNNERS ARE NAMED, AND THAT IS NOT A HAND LIST SNEAKING BACK IN.
+     * They are not `check-*.mjs`, so no derivation over the gate roster can
+     * reach them; what makes the naming honest is that each one is asserted to
+     * actually carry a `takeBoxLock` by the same lint that checks the gates.
+     * A name here that had no lock would be a finding, not documentation.
+     */
+    return { expected, runners: ['gates.mjs', 'standing-values.mjs', 'record-standing-value.mjs'] };
 }
