@@ -210,7 +210,7 @@ export const INSTRUMENTS = frz({
         "files": 257,
         "lineStyle": 19,
         "withDocblock": 257,
-        "withFlags": 159
+        "withFlags": 161
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -7189,14 +7189,23 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/verify-sphere-growth-ui.mjs"
         },
         {
-            "argvHelpers": [],
+            "argvHelpers": [
+                "HOST"
+            ],
             "browser": true,
             "category": "verify",
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "verify-sphere-steps-ui.mjs",
-            "flags": [],
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "host"
+                }
+            ],
             "oneLiner": "In-app smoke test for the STEPPED sphere-growth pipeline + plan editor.",
             "path": "scripts/procgen/verify-sphere-steps-ui.mjs"
         },
@@ -7225,14 +7234,23 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/verify-ta-mana-leg.mjs"
         },
         {
-            "argvHelpers": [],
+            "argvHelpers": [
+                "HOST"
+            ],
             "browser": true,
             "category": "verify",
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "verify-topdown-steps-ui.mjs",
-            "flags": [],
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "host"
+                }
+            ],
             "oneLiner": "In-app smoke test for the STEPPED top-down pipeline (Phase 2).",
             "path": "scripts/procgen/verify-topdown-steps-ui.mjs"
         },

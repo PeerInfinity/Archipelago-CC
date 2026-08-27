@@ -12,10 +12,24 @@
  *     invalidated (4 feedback gone), re-run, and assert the realised substrate
  *     mix reflects the edit + 4 recompiles.
  *
- * Prereq: dev server on :8000. Run: node scripts/procgen/verify-topdown-steps-ui.mjs
+ *   Phase G — RECORDED EDITS (editor-integration B-d): the map gestures and the
+ *     re-roll are ops on the envelope, so the panel shows a history with a count
+ *     and an Undo. Asserts the count grows per gesture, that Undo shrinks it and
+ *     names what it undid, and that undoing everything returns the map the seed
+ *     produces.
+ *
+ * Prereq: a dev server serving THIS worktree. Defaults to :8000; point it
+ * elsewhere with PROCGEN_UI_HOST (e.g. PROCGEN_UI_HOST=http://localhost:8129)
+ * or --host=<url>, so a session that does not own :8000 can run it.
+ * Run: node scripts/procgen/verify-topdown-steps-ui.mjs
  */
 import { chromium } from 'playwright';
 import { writeFileSync } from 'node:fs';
+
+// Derived host: --host=<url> wins, then PROCGEN_UI_HOST, then the :8000 default.
+const HOST = (process.argv.find((a) => a.startsWith('--host='))?.slice(7)
+    ?? process.env.PROCGEN_UI_HOST
+    ?? 'http://localhost:8000').replace(/\/$/, '');
 
 const SRC_PATH = '/tmp/td-verify-source.json';
 // A small cyclic source: Menu → Hub → {RoomA ⇄ RoomB}. Every NON-Menu region has
@@ -59,7 +73,7 @@ await page.addInitScript(() => {
     }));
 });
 
-await page.goto('http://localhost:8000/frontend/');
+await page.goto(`${HOST}/frontend/`);
 await page.waitForTimeout(8000);
 
 const activated = await page.evaluate(() => {
@@ -350,6 +364,64 @@ assert(await clickPrimary(), 'Phase F: re-run 34 after the edit');
 await page.waitForTimeout(6000);
 const afterEdit = await panelText();
 assert(/driver top-down/.test(afterEdit), 'Phase F: 4 recompiled after the region edit');
+
+// ── Phase G: the recorded edit history + Undo (editor-integration B-d) ──────
+// The map gestures and the re-roll are ops on the envelope now. The panel
+// renders the list with a count and an Undo; undoing everything must return the
+// map the seed produces (top-down layout edits rewind to ① — the grid they move
+// regions on is built there).
+{
+    const history = () => page.evaluate(() => ({
+        count: Number((document.querySelector('.procgen-pipeline-edit-count')?.textContent ?? '')
+            .replace(/\D+/g, '') || 0),
+        rows: [...document.querySelectorAll('.procgen-pipeline-edit-row')].map((r) => r.textContent),
+        hasUndo: !!document.querySelector('.procgen-pipeline-edit-undo'),
+    }));
+    const mapSig = () => page.evaluate(() => {
+        const c = document.querySelector('.procgen-pipeline-canvas');
+        if (!c) return null;
+        const url = c.toDataURL();
+        let h = 0;
+        for (let i = 0; i < url.length; i += 1) h = (h * 31 + url.charCodeAt(i)) | 0;
+        return `${url.length}:${h}`;
+    });
+
+    // A clean run to start from.
+    assert(await clickPrimary(), 'Phase G: regenerated for a clean history');
+    await page.waitForTimeout(6000);
+    const g0 = await history();
+    assert(g0.count === 0, `Phase G: history starts empty (got ${g0.count})`);
+    const sigClean = await mapSig();
+
+    // One re-roll through the panel's own button.
+    const rolled = await page.evaluate(() => {
+        const b = [...document.querySelectorAll('button')]
+            .find((x) => x.textContent.includes('Re-roll'));
+        if (!b) return false;
+        b.click();
+        return true;
+    });
+    assert(rolled, 'Phase G: clicked a Re-roll button');
+    await page.waitForTimeout(600);
+    const g1 = await history();
+    assert(g1.count === 1, `Phase G: the re-roll was RECORDED (count ${g1.count})`);
+    assert(g1.hasUndo, 'Phase G: an Undo control appeared');
+    assert(/Re-rolled/.test(g1.rows[0] ?? ''), `Phase G: history row reads "${g1.rows[0]}"`);
+
+    // Undo it, re-run, and the map must come back.
+    await page.evaluate(() => { document.querySelector('.procgen-pipeline-edit-undo')?.click(); });
+    await page.waitForTimeout(400);
+    assert(/^Undid:/.test(await panelText().then((t) => t.match(/Undid:[^.]*/)?.[0] ?? '')),
+        'Phase G: the undo message named what it undid');
+    const g2 = await history();
+    assert(g2.count === 0, `Phase G: history shrank on undo (count ${g2.count})`);
+    assert(await clickPrimary(), 'Phase G: re-ran after the undo');
+    await page.waitForTimeout(6000);
+    const sigBack = await mapSig();
+    assert(!sigClean || !sigBack || sigClean === sigBack,
+        'Phase G: undo returned the never-edited map');
+}
+
 
 const pageErrors = logs.filter((l) => l.startsWith('[pageerror]'));
 assert(pageErrors.length === 0, `no page errors (${pageErrors.length})`);

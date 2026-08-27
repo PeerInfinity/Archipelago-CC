@@ -9,9 +9,23 @@
  *     sphere (▼), assert the editor reflects the move and the pipeline
  *     reset to step 1, then Run all and assert a terminal result.
  *
- * Prereq: dev server on :8000. Run: node scripts/procgen/verify-sphere-steps-ui.mjs
+ *   Phase K — RECORDED EDITS (editor-integration B-d): the gestures above are
+ *     ops on the envelope, so the panel shows a history with a count and an
+ *     Undo. Asserts the count grows by one per gesture, that Undo shrinks it
+ *     and names what it undid, and that undoing everything returns the world
+ *     the seed produces (the map's region signature) with the oracle clean.
+ *
+ * Prereq: a dev server serving THIS worktree. Defaults to :8000; point it
+ * elsewhere with PROCGEN_UI_HOST (e.g. PROCGEN_UI_HOST=http://localhost:8129)
+ * or --host=<url>, so a session that does not own :8000 can run it.
+ * Run: node scripts/procgen/verify-sphere-steps-ui.mjs
  */
 import { chromium } from 'playwright';
+
+// Derived host: --host=<url> wins, then PROCGEN_UI_HOST, then the :8000 default.
+const HOST = (process.argv.find((a) => a.startsWith('--host='))?.slice(7)
+    ?? process.env.PROCGEN_UI_HOST
+    ?? 'http://localhost:8000').replace(/\/$/, '');
 
 const SEED = 1;
 const ITEM_POOL = {
@@ -37,7 +51,7 @@ await page.addInitScript(({ params, items }) => {
     }));
 }, { params: PANEL_PARAMS, items: ITEM_POOL });
 
-await page.goto('http://localhost:8000/frontend/');
+await page.goto(`${HOST}/frontend/`);
 await page.waitForTimeout(8000);
 
 const activated = await page.evaluate(() => {
@@ -528,6 +542,70 @@ if (!jMsg.includes('Sphere plan realised')) {
     throw new Error(`J: oracle failed after substrate override + re-run: ${jMsg}`);
 }
 console.log('PHASE J OK: per-region substrate override (bounce→maze) re-realised + kept the oracle');
+
+// ── Phase K: the recorded edit history + Undo (editor-integration B-d) ──────
+// Every gesture above is now an OP on the envelope, not a mutate-and-forget.
+// The panel renders the list with a count and an Undo, and undoing everything
+// must return the world the seed produces — determinism is the guarantee.
+await clickBtn('Reset');
+await page.waitForTimeout(300);
+await stepToCompiled();
+
+const history = () => page.evaluate(() => ({
+    count: Number((document.querySelector('.procgen-pipeline-edit-count')?.textContent ?? '')
+        .replace(/\D+/g, '') || 0),
+    rows: [...document.querySelectorAll('.procgen-pipeline-edit-row')].map((r) => r.textContent),
+    hasUndo: !!document.querySelector('.procgen-pipeline-edit-undo'),
+}));
+// The map's signature, read the only way the page offers one: a hash of the
+// composite canvas the panel just drew. It moves for a placement change AND for
+// a re-rolled interior, and needs no new instrumentation on the panel.
+const mapSig = () => page.evaluate(() => {
+    const c = document.querySelector('.procgen-pipeline-canvas');
+    if (!c) return null;
+    const url = c.toDataURL();
+    let h = 0;
+    for (let i = 0; i < url.length; i += 1) h = (h * 31 + url.charCodeAt(i)) | 0;
+    return `${url.length}:${h}`;
+});
+
+const k0 = await history();
+if (k0.count !== 0) throw new Error(`K: expected an empty history, got ${k0.count}`);
+const sigClean = await mapSig();
+
+// One re-roll, through the panel's own button.
+await page.evaluate(() => {
+    const b = [...document.querySelectorAll('button')].find((x) => x.textContent.includes('Re-roll'));
+    b?.click();
+});
+await page.waitForTimeout(500);
+const k1 = await history();
+if (k1.count !== 1) throw new Error(`K: history did not record the re-roll (count ${k1.count})`);
+if (!k1.hasUndo) throw new Error('K: no Undo control after the first edit');
+if (!/Re-rolled/.test(k1.rows[0] ?? '')) throw new Error(`K: history row reads "${k1.rows[0]}"`);
+console.log(`PHASE K: the re-roll RECORDED — "${k1.rows[0]}"`);
+
+// Undo it and re-run: the map must come back to what the seed produces.
+await page.evaluate(() => {
+    document.querySelector('.procgen-pipeline-edit-undo')?.click();
+});
+await page.waitForTimeout(400);
+const kUndoMsg = await message();
+if (!kUndoMsg.startsWith('Undid:')) throw new Error(`K: undo message reads "${kUndoMsg}"`);
+const k2 = await history();
+if (k2.count !== 0) throw new Error(`K: history did not shrink on undo (count ${k2.count})`);
+await clickBtn('Run all (finish)');
+await page.waitForTimeout(2500);
+const kMsg = await message();
+if (!kMsg.includes('Sphere plan realised')) {
+    throw new Error(`K: oracle failed after undo + re-run: ${kMsg}`);
+}
+const sigBack = await mapSig();
+if (sigClean && sigBack && sigClean !== sigBack) {
+    throw new Error('K: undo did not return the never-edited map');
+}
+console.log('PHASE K OK: record → undo → re-run returns the never-edited world, oracle clean');
+
 
 const errors = logs.filter((l) => l.startsWith('[pageerror]'));
 if (errors.length > 0) {
