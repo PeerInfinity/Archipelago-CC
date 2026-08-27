@@ -12,7 +12,7 @@ import { createHash } from 'node:crypto';
 // Side-effect: register the substrates the steps dispatch through.
 import '../mazeRoom/mazeRoomLibrary.js';
 import '../bounceDemo/bounceDemoLibrary.js';
-import { topDownFromRulesJson } from './procgenPipelineEngine.js';
+import { topDownFromRulesJson, getRegionExits } from './procgenPipelineEngine.js';
 import {
     TOPDOWN_STEPS, newTopDownEnvelope, runTopDownToStep, resumeTDEnvelope,
     serializeTDEnvelope, deserializeTDEnvelope,
@@ -96,6 +96,15 @@ function emptyCell(grid) {
 
 const liveCell = (grid, id) => ({ ...grid.allRegions().find((r) => r.region_id === id).cell });
 
+// Per-region BACK-exit signature. finalizeTopDown derives back-exits from
+// layout.cellsByName, so this is what a replay run at the wrong step destroys.
+const backExits = (env) => Object.fromEntries(env.finalize.grid.allRegions().map((r) => {
+    const ex = getRegionExits(r);
+    const list = ex instanceof Map ? [...ex.values()] : (ex ?? []);
+    return [r.region_id, list.filter((e) => e.isBackExit)
+        .map((e) => `${e.exit_id}|${e.side}|${e.targetRegion}`).sort().join(',')];
+}));
+
 describe('topDownSteps — recorded layout edits', () => {
     it('an unedited envelope still reproduces the monolith (byte-identity)', async () => {
         const opts = OPTS();
@@ -132,17 +141,19 @@ describe('topDownSteps — recorded layout edits', () => {
     });
 
     // §1's load-bearing measurement: ③ must see the UNMOVED placement.
-    it('a layout edit replays AFTER ③, so finalize s own output is untouched', async () => {
+    // MEASURED (and a correction to the brief, which predicted DOUBLE-applied
+    // back-exits): replaying the move before ③ makes finalizeTopDown attach no
+    // back-exit at all for the moved region — it looks the region up through
+    // layout.cellsByName, which still names the cell the region just left. The
+    // clean run gives East `Hub|S|Hub|B`; the wrong-step run gives it nothing.
+    // `finalize.stats` does NOT move, so it is not the discriminator.
+    it('a layout edit replays AFTER ③, so ③ s back-exit pass sees the old cells', async () => {
         const clean = makeEnv();
         await runTopDownToStep(clean, 'compile');
 
-        const edited = makeEnv();
-        edited.edits = [{
-            op: 'move-region', from: { gx: 0, gy: 0 }, to: { gx: 0, gy: 0 },
-        }];
-        // Resolve the edit against the real placement, then run it end to end.
         const probe = makeEnv();
         await runTopDownToStep(probe, 'finalize');
+        const edited = makeEnv();
         edited.edits = [{
             op: 'move-region',
             from: liveCell(probe.finalize.grid, 'East'),
@@ -150,11 +161,8 @@ describe('topDownSteps — recorded layout edits', () => {
         }];
         await runTopDownToStep(edited, 'compile');
 
-        // finalize's stats + teleporter edges are computed from cellsByName,
-        // which the move deliberately leaves alone: they must MATCH the clean
-        // run. An edit applied before ③ would move them.
-        expect(JSON.stringify(edited.finalize.stats))
-            .toBe(JSON.stringify(clean.finalize.stats));
+        expect(backExits(edited)).toEqual(backExits(clean));
+        expect(backExits(clean).East).toMatch(/Hub/); // the row is not vacuous
         // …while the compiled world, which reads only the grid, differs.
         expect(JSON.stringify(edited.compile.rulesJson))
             .not.toBe(JSON.stringify(clean.compile.rulesJson));
