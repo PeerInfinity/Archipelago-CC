@@ -39,6 +39,43 @@ import { SHAFT_PAIR } from './r5Shaft.js';
 // the drive takes the exit teleporter and the control never leaves the room —
 // so the ceremony's subtraction carries a fade term and needs its band.
 import { describeFadeBand, fadeBand } from './deadFrameBand.js';
+// ⛓ R9 slice 12h: the pre-swap frame, from the one place that spells it.
+import { BOOT_PRESWAP_FRAMES } from './r7Acceptance.js';
+
+/**
+ * ⛓⛓⛓ R9 SLICE 12h — THE DEAD-FRAME CONSTANTS BELOW WERE MEASURED ON A BUILD
+ * THAT SPENT THE PRE-SWAP FRAME, AND THE BUILD IS NOW ASKED RATHER THAN
+ * ASSUMED.
+ *
+ * `botStart` used to arm with the world swap still pending, so the frame that
+ * elapsed before it landed was COUNTED as a dead one. `seedling_bot_ap_p4c`
+ * arms on the first frame where `FP.world` IS the world it constructed
+ * (⚖ ruling 58's (F)), so that frame is no longer counted — every DECLARED
+ * boot pays exactly ONE FEWER dead frame than it did on `p4b` and earlier.
+ * The constants in this file are `p4b` measurements and are KEPT as such;
+ * what moves is the expectation derived from them.
+ *
+ * ⛔ IT IS ONE PER RUN, NOT ONE PER LOAD — measured, not reasoned: the two
+ * L38 fade probes read `boot 19` and `boot+door 38` on p4c against `20` and
+ * `39` on p4b, so the DOOR's own cost (19) is unmoved and only the boot term
+ * shifts. A per-load correction would have moved the door too and gone red.
+ *
+ * ⛔⛔ THE BUILD ANNOUNCES ITSELF, and keying on a build NAME would break at
+ * the next rebuild. `status.arm` is `botStatus.arm`, surfaced by
+ * `watchWasm.js` and present exactly on builds that arm after the swap.
+ * Measured across three runs of `r5-feather`: p4c payload
+ * `dead_frames 230, arm {armed_at, pending}`; p4b and pre-p4c payloads
+ * `dead_frames 231, arm null`. This is `check-seedling-wasm-ship`'s CLAIM 6
+ * correction (`12934b870`) applied to the population that gate's sweep could
+ * not see — the THIRD instance of trap 827, and the one only a `--tier=full`
+ * run can reach.
+ *
+ * @param {object} walk a replayed walk record
+ * @returns {number} the pre-swap frames THIS build spends: 0 after the fix, 1 before
+ */
+export function preSwapFramesSpent(walk) {
+    return walk?.status?.arm != null ? 0 : BOOT_PRESWAP_FRAMES;
+}
 
 export const L60_KILL = 'r5-l60-kill';
 export const L60_CONTROL = 'r5-l60-kill-control';
@@ -1206,10 +1243,11 @@ export function featherFindings(replayed) {
 
     // ⛓⛓ THE PIN'S OWN ARITHMETIC, from the game's dead-frame counter.
     const df = st?.dead_frames;
+    const featherTotal = FEATHER_DEAD_FRAMES.total - preSwapFramesSpent(walk);
     found.push({
         name: 'R5 feather: the fade frames add up to the two pinned constants',
-        ok: df === FEATHER_DEAD_FRAMES.total,
-        detail: df === FEATHER_DEAD_FRAMES.total
+        ok: df === featherTotal,
+        detail: df === featherTotal
             ? `${df} = ${FEATHER_DEAD_FRAMES.boot} (boot) + ${FEATHER_DEAD_FRAMES.doors} x `
                 + `${FEATHER_DEAD_FRAMES.perDoor} (doors) + ${FEATHER_DEAD_FRAMES.ceremony} `
                 + '(`Pickup.specialTimer`) — the frames the MIXER steps on and the tape '
@@ -1217,7 +1255,7 @@ export function featherFindings(replayed) {
                 + '`CEREMONY_FREEZE_FRAMES` are for. The first recording of this tape, '
                 + 'whose ceremony never fired, reported 81: the same sum minus the freeze.'
             : `the game reports ${df} fade frame(s) and the two constants predict `
-                + `${FEATHER_DEAD_FRAMES.total}. The swim channel advances on every one of `
+                + `${featherTotal}. The swim channel advances on every one of `
                 + 'them, so a mismatch here is the model and the mixer drifting apart.',
     });
 
@@ -1360,11 +1398,13 @@ export function totemEntranceFindings(replayed) {
     const boot = replayed?.get('r5-l38-fade-boot');
     const door = replayed?.get('r5-l38-fade-door');
     for (const [label, arm] of [['press', press], ['control', control]]) {
+        const armTotal = TOTEM_ENTRANCE_WALK.deadFrames - preSwapFramesSpent(arm);
+        const armLoad = TOTEM_ENTRANCE_WALK.load.total - preSwapFramesSpent(arm);
         found.push({
-            name: `R5 totem entrance: the ${label} arm reports ${TOTEM_ENTRANCE_WALK.deadFrames} dead frames`,
-            ok: arm.status?.dead_frames === TOTEM_ENTRANCE_WALK.deadFrames,
-            detail: arm.status?.dead_frames === TOTEM_ENTRANCE_WALK.deadFrames
-                ? `${TOTEM_ENTRANCE_WALK.deadFrames} = ${TOTEM_ENTRANCE_WALK.load.total} `
+            name: `R5 totem entrance: the ${label} arm reports ${armTotal} dead frames`,
+            ok: arm.status?.dead_frames === armTotal,
+            detail: arm.status?.dead_frames === armTotal
+                ? `${armTotal} = ${armLoad} `
                     + `(a boot and a door, MEASURED) + ${TOTEM_ENTRANCE_WALK.ceremony} `
                     + '(the ceremony) — and the ceremony is 150 of `Pickup.specialTimer` '
                     + 'plus 181 of a `SealController`, which was derived from its own '
@@ -1375,18 +1415,22 @@ export function totemEntranceFindings(replayed) {
     if (boot && door) {
         const b = boot.status?.dead_frames;
         const d = door.status?.dead_frames;
+        // ⛓ R9 slice 12h: ONE per run, at the boot — so the DOOR's own cost
+        // (`d - b`, 19) is invariant across builds and only the boot term moves.
+        const wantBoot = TOTEM_ENTRANCE_WALK.load.boot - preSwapFramesSpent(boot);
+        const wantTotal = TOTEM_ENTRANCE_WALK.load.total - preSwapFramesSpent(door);
         found.push({
             name: '⛓⛓ R5 totem entrance: the load cost is MEASURED, not inherited',
-            ok: b === TOTEM_ENTRANCE_WALK.load.boot && d === TOTEM_ENTRANCE_WALK.load.total,
-            detail: b === TOTEM_ENTRANCE_WALK.load.boot && d === TOTEM_ENTRANCE_WALK.load.total
+            ok: b === wantBoot && d === wantTotal,
+            detail: b === wantBoot && d === wantTotal
                 ? `boot ${b}, boot+door ${d} ⇒ this door costs ${d - b}. ⚠ NEITHER matches `
                     + "`r5-feather`'s 21 and 20, so a load's dead-frame cost is NOT a "
                     + 'constant — `blackCover` and the frame `Bot.update` samples it on are '
                     + `two clocks. Without these two probes the ceremony would have looked `
                     + `like ${TOTEM_ENTRANCE_WALK.deadFrames - 41} and `
                     + '`sealControllerTicks()` would have been "corrected" from 181 to 179.'
-                : `boot ${b} (expected ${TOTEM_ENTRANCE_WALK.load.boot}), boot+door ${d} `
-                    + `(expected ${TOTEM_ENTRANCE_WALK.load.total})`,
+                : `boot ${b} (expected ${wantBoot}), boot+door ${d} `
+                    + `(expected ${wantTotal})`,
         });
     } else {
         found.push({
@@ -1784,19 +1828,20 @@ export function shaftFindings(replayed) {
      * 150 are in it. The part itself is NOT observable (`Bot.itemReadout`
      * has no `hasTotemPart` field, §20.8), so this is the claim.
      */
+    const shaftDead = SHAFT_WALK.deadFrames - preSwapFramesSpent(walk);
     found.push({
         name: '⛓⛓⛓ R5 shaft: the FIRST COLLECT CEREMONY is in the game\'s dead-frame count',
         ok: (walk.status?.dead_frames ?? 0) - SHAFT_WALK.ceremonyFrames >= 0
-            && walk.status?.dead_frames === SHAFT_WALK.deadFrames,
+            && walk.status?.dead_frames === shaftDead,
         detail: `${walk.status?.dead_frames} dead frames against `
-            + `${SHAFT_WALK.deadFrames}, of which ${SHAFT_WALK.ceremonyFrames} are `
+            + `${shaftDead}, of which ${SHAFT_WALK.ceremonyFrames} are `
             + '`totempart 2`\'s freeze — ONE of the five this rung stops at. ⛔ §24.9: '
             + '"NO CEREMONY WAS OBSERVED … part 2 is behind the shaft whose walk is '
             + 'blocked at (12,5)". That block is unwedged.',
     });
     found.push({
         name: '⛓ R5 shaft: the dead frames are the rock, the ceremony and one fade',
-        ok: walk.status?.dead_frames === SHAFT_WALK.deadFrames,
+        ok: walk.status?.dead_frames === shaftDead,
         detail: `${walk.status?.dead_frames} = ${SHAFT_WALK.modelledDeadFrames} modelled `
             + `(197 for the rope's rock — 60 wait + 46 fall + 90 camera + 1 release, `
             + `transcribed as the LOOP, since the closed form gives 45 — plus `
