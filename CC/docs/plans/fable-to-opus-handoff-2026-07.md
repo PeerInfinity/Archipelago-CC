@@ -5526,6 +5526,24 @@ flips named. p4b stays pinned by one labelled README line until 12h retires it
 (README line + whitelist + manifest + the CLAIM 6 branch, together). NEXT: 12h
 (§47), the FIFTH run on p4c.
 
+**⇒ CAMPAIGN ORCHESTRATION SESSION 8 → 9 (2026-08-26, `8e01d1400`).** Session 8
+ran six slices to close (12f §43 · P3 §44 · 12g §45 · 12g′ §46 · 12h §47) and
+opened four editor-integration windows; ⚖ 56–60 ruled and executed. **THE FIFTH
+RUN LANDED** on `seedling_bot_ap_p4c` with the roster-wide `sound` pin: 149/149
+streams match the pre-pin recordings, the pin moved exactly two latches
+(`r9-solve-0`/`-13` exits), the boundaries gate reads 18/0 "0 of 18 UNPINNED",
+the full-tier checkpoint is banked as measured (`3452/6/46`, the six = p4c's
+removed pre-swap frame asserted as literals in `r5Acceptance.js`, repaired and
+driven on both builds, `3458/0/46` PREDICTED), the bank retired to `r8-solve-5`,
+`-6`/`-4` deleted. p4b stays pinned as the negative control for every
+`arm == null` correction. Standing 63 rows / 47 cheap; suite 384/11843
+@95c7500ad; traps 787–872. Successor prompt
+`NewDocs/plans/seedling-bot-r9-campaign9-planning-prompt.md`; sequence **P3b
+(§48: S0 baseline at the run's true before · `roster ∖ prove()` derived ·
+a full tier owed at every game-facing change · the boundaries gate in CI ·
+the TREE-freezing BOX LOCK · `cheap` hysteresis · CI-quoted rows) → P4 →
+L15**. Open for the user: the 76 v3/v4 tapes' format upgrade; `-5` retirement.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
