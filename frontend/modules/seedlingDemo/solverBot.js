@@ -1563,8 +1563,13 @@ export function assertDashMode(mode, where = 'assertDashMode') {
  * INDEPENDENTLY: `--dash=` and `DEFAULT_DASH_MODE` price the window pass
  * ALONE, and this constant prices the economies alone.
  *
- * ⛔ IT IS `true`, AND MOVING IT IS THE USER'S (⚖ 42) — it is a re-record,
- * not a code change.
+ * ⛔ IT WAS `true`, AND MOVING IT WAS THE USER'S (⚖ 42) — a re-record, not a
+ * code change. ⛓⛓⛓ **THE USER MOVED IT** (⚖ 63 (c), 2026-08-28: *"I think I
+ * would prefer to change it to off next time we do a re-record"*, executed
+ * whole at ⚖ 64): it is `false` from R9 slice RR, landed inside the run that
+ * re-recorded the artifacts below. ⇒ ⚖ 46's collect-stance scoring and ⚖ 47's
+ * early walk are OFF roster-wide, and the committed corridors are the ones the
+ * first-fit order produces.
  *
  * ⛓⛓ AND THE CENSUS IS RE-MEASURED HERE, BECAUSE THE OLD ONE IS ABOUT A
  * ROSTER THAT NO LONGER EXISTS. `solveSegment`'s `economies` docblock counts
@@ -1579,11 +1584,26 @@ export function assertDashMode(mode, where = 'assertDashMode') {
  *                                   campaign chain 3326 → 3331 with it)
  *   · `r8-solve-18`    410 → 485   (`solve-seedling-r8-l18`)
  *   · `r8-solve-20`    229 → 257   (`solve-seedling-r8-d2`)
+ *   · `r8-d2-19`       721 → 746   (`solve-seedling-r8-d2-chain`)
+ *   · `r8-d2-20`       554 → 560   (`solve-seedling-r8-d2-chain`)
  *   · the `r8-d2` headline 1685 → 1791, and its
  *     *"the headline's first 410 ticks ARE r8-solve-18's walk"* row parts at
  *     tick 292 — the tick the fade used to be stood through
  *   ⇒ FIVE of the seven producer `--check` md5s move; `r8-tail` and
  *     `r9-l3` do not, which is the same pair §49.5 finds unmoved by the dash.
+ *
+ * ⛔⛔ **AND THIS CENSUS SAID FOUR UNTIL R9 SLICE RR, WHICH IS THE SLICE THAT
+ * SPENT IT.** `r8-d2-19` and `r8-d2-20` were missing from it, from §50.2 and
+ * from ⚖ 61 (ii)'s list — every surface that quoted the number quoted FOUR.
+ * They are the d2 chain's own SEGMENTS, and a census assembled per PRODUCER
+ * rather than per ARTIFACT drops them, because the chain producer's headline
+ * is the row a reader's eye lands on. The list above is now the `DRIFT` lines
+ * of the seven producers' own `--check` at the flipped constant, which is a
+ * derivation rather than a reading: SIX artifacts, twelve files (each tape and
+ * its trace sidecar). ⛓ The chain re-coheres at the record — 485 + 746 + 560 =
+ * 1791 — and the pre-record `sum(segment ticks)` refusal naming 1716 is the
+ * committed lengths disagreeing with the solver, which is exactly what a
+ * re-record is for.
  *
  * ⛔ THE SIGN IS THE OTHER WAY ROUND FROM THE OLD CENSUS AND THAT IS NOT A
  * CONTRADICTION: an economy SAVES ticks, so turning it off adds them. The old
@@ -1593,7 +1613,7 @@ export function assertDashMode(mode, where = 'assertDashMode') {
  * ⛓ RETIRES `ALLOW_DASH_ROSTER_WIDE` (12j). That name carried five reads and
  * only two of them were ever about the dash; §49.2's census is what split it.
  */
-export const ECONOMIES_ROSTER_WIDE = true;
+export const ECONOMIES_ROSTER_WIDE = false;
 
 /**
  * ⛓⛓⛓ R9 SLICE 12b — **THE ONE PLACE A STRIKE POLICY IS CONSTRUCTED.**
@@ -2541,22 +2561,37 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null,
     }
     if (!windows.length) {
         /**
-         * ⛔⛔ R9 SLICE 12i — **THIS SENTENCE IS NOT FREE, AND IT IS NOT
-         * TOUCHED.** It reaches the trace as `swordDash.why`, and a trace byte
-         * is a producer `--check` md5 (§40.5: "prose is not free to a
-         * producer"). The mode rides in `mode`/`prefixes`, which the walk row
-         * emits only when the mode is NOT the default — so every committed
-         * sidecar stays byte-identical.
+         * ⛓⛓⛓ R9 SLICE RR, ⚖ 64 (iv) — **THE SENTENCE SAYS WHAT IT COUNTS,
+         * AND THIS IS THE SLICE THAT TOUCHES IT.**
          *
-         * ⚠ RESIDUE, NAMED NOT FIXED: `${candidates.length} start tick(s)` has
-         * counted PREVIEWS since 12c‴ gave each start tick four of them. The
-         * wording is wrong by a factor of `prefixes.length` and correcting it
-         * would move all seven md5s, so it is 12i's residue rather than 12i's
-         * edit.
+         * 12i left this as residue with its reason stated: the string reaches
+         * the trace as `swordDash.why`, a trace byte IS a producer `--check`
+         * md5 (§40.5, *"prose is not free to a producer"*), and 12i was a
+         * tape-inert slice. ⚖ 64 bundles the correction into a run that is
+         * already moving those bytes, so the sentence is free HERE and only
+         * here.
+         *
+         * ⛔ WHAT WAS WRONG: `${candidates.length} start tick(s)` counted
+         * PREVIEWS, not start ticks — 12c‴ gave every start tick one candidate
+         * row per prefix, so the number was over by a factor of
+         * `prefixes.length` and had been since. ⚖ 17: BOTH numbers are now
+         * derived from the rows themselves (`row.at` is the start tick, so the
+         * distinct-`at` count IS the scan width) rather than from a literal or
+         * from an assumed shape — a sentence that multiplies two things must
+         * be able to name both of them.
+         *
+         * ⛓ MEASURED REACH (slice RR W0, `grep -a` over the committed
+         * sidecars): `swordDash` is a KEY in 20 of the 23 trace files, but
+         * this sentence occurs in FOUR of them — `r8-solve-11`, `r9-solve-11`,
+         * `r8-d2` and `r8-d2-19`, six occurrences — and it moves THREE of the
+         * seven one-method producer md5s (battery, d2-chain, campaign) and NO
+         * TAPE BYTE at all. The brief's "20 sidecars" is the key census, not
+         * this string's.
          */
+        const startsScanned = new Set(candidates.map((c) => c.at)).size;
         return { ...refuse(`no dash window certified faster than the undashed ${baseline} `
-            + `tick(s) — ${candidates.length} start tick(s) scanned, each with its own `
-            + 'reason'), baseline };
+            + `tick(s) — ${startsScanned} start tick(s) x ${prefixes.length} preview(s) = `
+            + `${candidates.length} scanned, each with its own reason`), baseline };
     }
     const plan = scheduleFor(windows);
     return {

@@ -37,7 +37,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
@@ -107,6 +107,9 @@ const DEATH_ANIM_TICKS = deathTicks('bob');
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const TAPES = join(HERE, 'fixtures', 'tapes');
+/** ⛓ R9 slice RR: the committed trace sidecars, which are where the dash-mode
+ *  row derives its vehicle from rather than naming a room. */
+const TRACES = join(HERE, 'fixtures', 'traces');
 const levelSource = atlasLevelSource();
 
 /**
@@ -3008,8 +3011,19 @@ describe('R9 slice 12c′: the PLANNER dashes toward the exit', () => {
      * (§49.5's column C against column D: five producers of seven). The
      * economies constant is a literal now, so no dash mode can read it.
      */
-    it('⛓ both roster-wide permissions are ON at this head, and neither reads the other', () => {
-        expect(ECONOMIES_ROSTER_WIDE).toBe(true);
+    it('⛓ the two roster-wide permissions are SEPARATELY SET at this head, and neither '
+        + 'reads the other', () => {
+        /**
+         * ⛓⛓⛓ R9 SLICE RR, ⚖ 63 (c) / ⚖ 64 — **THE TWO STATES HAVE COME
+         * APART, WHICH IS THE POINT OF THE CUT.** 12j asserted both `true` and
+         * said so in its own name; the user then took the economies to `false`
+         * and left the dash default at `all` (⚖ 61 (i) closed as-is). A row
+         * that had asserted "both ON" would have been a row about the
+         * COINCIDENCE rather than about the permissions, and this is the head
+         * at which the difference shows up as a value. The independence claim
+         * below is unchanged and is still made on the SOURCE.
+         */
+        expect(ECONOMIES_ROSTER_WIDE).toBe(false);
         expect(DEFAULT_DASH_MODE).not.toBe('none');
         /**
          * ⛔ THE INDEPENDENCE IS ASSERTED ON THE SOURCE, not on the values —
@@ -3575,10 +3589,16 @@ describe('R9 slice P2: ⚖ 54 (5) — the economies are behind the roster-wide p
      *
      * ⛔ A ROW THAT READ THE DEFAULT WOULD BE A LANDMINE UNDER THE FLIP. The
      * first cut of this asserted the committed answer at the DEFAULT and the
-     * solve against `committed.tick_count` — true at this head and FALSE for
-     * ever after `ECONOMIES_ROSTER_WIDE` goes `true` and the roster is
-     * re-recorded, which is a red the re-record could not repair by
-     * re-authoring anything. The gate is a claim about TWO BUILDS
+     * solve against `committed.tick_count` — true at that head and FALSE for
+     * ever after `ECONOMIES_ROSTER_WIDE` moves and the roster is re-recorded,
+     * which is a red the re-record could not repair by re-authoring anything.
+     * ⛓ R9 slice RR is that head: the constant went `true` → `false` on ⚖ 63
+     * (c)'s word and six artifacts were re-recorded under it. These rows did
+     * not move, because they name their build. The paragraph above keeps its
+     * PRE-RE-RECORD numbers (§31.6's (E₀) column, measured before ⚖ 41's flip)
+     * as history — they are not this head's, and the head's census lives in
+     * `ECONOMIES_ROSTER_WIDE`'s own docblock. The gate is a claim about TWO
+     * BUILDS
      * ([[feedback_fixture_must_discriminate_two_builds]]), so it is spelled
      * as two builds; the flag's own state is pinned once, above, and the
      * committed lengths are the producers' `--check` to gate, not this file's.
@@ -3676,19 +3696,92 @@ describe('R9 slice P2: ⚖ 54 (5) — the economies are behind the roster-wide p
      */
     it('⛓⛓⛓ R9 slice 12i: `none` emits no `swordDash` key, `full` names itself, '
         + '`all` says nothing because it is the default', () => {
-        const solveL18 = (over) => {
-            const { run, committed } = runFromCommitted('r8-solve-18');
-            const exit = (levelSource(18).entities ?? []).find(
-                (e) => Number(e.attrs?.to) === 19);
+        /**
+         * ⛔⛔⛔ R9 SLICE RR — **THE VEHICLE IS DERIVED NOW, BECAUSE THE NAMED
+         * ONE STOPPED CARRYING THE CLAIM AND THE ROW WENT RED FOR A REASON
+         * THAT HAS NOTHING TO DO WITH THE MODE.** 12i wrote this against
+         * `r8-solve-18` — *"a room that actually dashes"*, ten of §42.7's 205.
+         * At `ECONOMIES_ROSTER_WIDE = false` (⚖ 63 (c), slice RR) that room's
+         * corridor climbs to the AVOID rung, and `rowFor`'s row is MERGED with
+         * the walk row on the same tick: the merged strategy is the rung's, so
+         * the walk's `strategy.swordDash` is dropped while the dash pass's own
+         * `sword-dash window:` rejections survive in `rejected`. The pass ran;
+         * the artifact just stopped saying which build ran it.
+         *
+         * ⚠ NAMED, NOT FIXED — a residue for the merge, not for this row: the
+         * (m3) attribution is ABSENT on a merged row, so a trace can carry a
+         * dash refusal with no `mode`. Repairing the merge would move sidecars
+         * outside slice RR's sealed set, which is a wider record than the
+         * licence covers.
+         *
+         * ⇒ ⚖ 17: the room is CHOSEN by measurement, cheapest first, out of
+         * the committed sidecars that declare a plain `reach-exit` walk with a
+         * `swordDash` key — and the aim comes off that same sidecar rather
+         * than out of a level literal. If NO candidate still carries the key
+         * the row FAILS BY NAME: a claim about the knob must never be able to
+         * pass by finding nothing to make it about.
+         */
+        const candidates = readdirSync(TRACES)
+            .filter((f) => f.endsWith('.trace.json'))
+            .map((f) => {
+                const tape = f.replace(/\.trace\.json$/, '');
+                const path = join(TAPES, `${tape}.json`);
+                if (!existsSync(path)) return null;
+                const trace = JSON.parse(readFileSync(join(TRACES, f), 'utf8'));
+                const row = (trace.rows ?? []).find(
+                    (r) => r.goal?.kind === 'reach-exit' && r.strategy?.swordDash);
+                if (!row) return null;
+                /**
+                 * ⛔ THE SIDECAR RECORDS THE **AIM**, WHICH IS NOT THE EXIT.
+                 * `solveSegment` takes the exit ENTITY and derives the aim
+                 * itself, so handing the aim back as the exit asks for a goal
+                 * one derivation deeper than the room has — every candidate
+                 * refuses and the row would read "nothing carries the claim"
+                 * for a reason that is entirely this test's. The exits come
+                 * off the ATLAS instead, every entity in the boot level that
+                 * declares a `to`.
+                 */
+                const exits = (levelSource(trace.boot.level).entities ?? [])
+                    .filter((e) => Number.isFinite(Number(e.attrs?.to)));
+                if (!exits.length) return null;
+                return { tape, exits, ticks: trace.tick_count ?? Infinity };
+            })
+            .filter(Boolean)
+            .sort((a, b) => a.ticks - b.ticks);
+        expect(candidates.length).toBeGreaterThan(0);
+
+        const solveWith = (c, over) => {
+            const { run, committed } = runFromCommitted(c.tape);
             const out = solveSegment({
-                run, goals: [{ kind: 'reach-exit', exit: { x: exit.x, y: exit.y } }],
-                name: 'r8-solve-18', boot: committed.boot, ...over,
+                run, goals: [{ kind: 'reach-exit', exit: { x: c.exit.x, y: c.exit.y } }],
+                name: c.tape, boot: committed.boot, ...over,
             });
             return { json: JSON.stringify(out.trace), ticks: out.perTick.length };
         };
-        const none = solveL18({ dashMode: 'none' });
-        const all = solveL18({ dashMode: 'all' });
-        const full = solveL18({ dashMode: 'full' });
+        let room = null;
+        let all = null;
+        /**
+         * ⛓ CHEAPEST FIRST AND STOP AT THE FIRST HIT — the ordering is the
+         * budget. A candidate whose bare `reach-exit` solve refuses (some
+         * segments only reach their exit after a collect goal the sidecar
+         * records and this row does not replay) is SKIPPED, not failed: the
+         * question is which room can carry the claim, and a room that cannot
+         * be solved from this shape is not an answer either way.
+         */
+        for (const c of candidates) {
+            for (const exit of c.exits) {
+                const here = { tape: c.tape, exit };
+                let got;
+                try { got = solveWith(here, { dashMode: 'all' }); } catch { continue; }
+                if (got.json.includes('swordDash')) { room = here; all = got; break; }
+            }
+            if (room) break;
+        }
+        expect(room, 'no committed sidecar\'s room still emits a `swordDash` key at the '
+            + 'default — this row cannot be about the knob if nothing carries it').not
+            .toBeNull();
+        const none = solveWith(room, { dashMode: 'none' });
+        const full = solveWith(room, { dashMode: 'full' });
 
         expect(none.json).not.toContain('swordDash');
         expect(all.json).toContain('swordDash');
