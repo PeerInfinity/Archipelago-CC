@@ -99,6 +99,18 @@ describe('R9 slice 12i: the --dash flag', () => {
                  * claim that the name is used.
                  */
                 expect(src, f).toMatch(/\bdashMode(?:Argv)?[:(]\s*DASH_MODE\b/);
+                /**
+                 * ⛔ AND THE NOTE GOES TO **STDERR**, IN EVERY PARTICIPANT.
+                 * `batch-seedling-acceptance` parses
+                 * `generate-seedling-level --json`'s STDOUT in a sub-process
+                 * to check determinism; one `console.log` of the note there
+                 * turns valid JSON into a parse error, and the batch would
+                 * report it as ⛔ DRIFT — the false alarm that file's own
+                 * comment warns about. Asserted over the DERIVED set, so a
+                 * twelfth participant inherits the rule.
+                 */
+                expect(src, f).toContain('console.error(DASH_NOTE)');
+                expect(src, f).not.toContain('console.log(DASH_NOTE)');
             }
             // ⛓ the set as measured today — a COUNT, so a participant added or
             // dropped without a word about it reds. The names are the reach's,
