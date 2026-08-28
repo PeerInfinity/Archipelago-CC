@@ -2627,10 +2627,25 @@ function dashRejectionSummary(dash) {
         if (!byKind.has(c.kind)) byKind.set(c.kind, { n: 0, first: c });
         byKind.get(c.kind).n += 1;
     }
+    /**
+     * ⛓⛓⛓ R9 SLICE RR — **THE SECOND SITE OF ⚖ 64 (iv)'s WRONG COUNT.**
+     * ⚖ 64 named `swordDash.why`; this row carried the same arithmetic in a
+     * different field and nobody had noticed, which is the shape ⚖ 64 exists
+     * to stop rather than an instance of it. `dash.scanned` is
+     * `candidates.length` — one row per (start tick x prefix) since 12c‴ — and
+     * `v.n` counts the same rows, so BOTH numbers here are PREVIEWS and the
+     * unit "start tick(s)" was over by `prefixes.length` at both ends.
+     * ⇒ the unit is named for what it counts. MEASURED reach (W2, ruled GO by
+     * the orchestrator, and the seal widened by that ruling rather than by
+     * drift): 13 committed sidecars carry this wording against the four that
+     * carry `swordDash.why`, and correcting it moves ONE further producer md5
+     * (`solve-seedling-r9-campaign`) and NO tape byte — the sidecars are model
+     * artifacts, so the widening costs no GPU.
+     */
     const rows = [...byKind.entries()].sort((a, b) => b[1].n - a[1].n)
         .map(([kind, v]) => ({
             option: `sword-dash window: ${kind}`,
-            why: `${v.n} of ${dash.scanned} scanned start tick(s) — first at walk-offset `
+            why: `${v.n} of ${dash.scanned} scanned preview(s) — first at walk-offset `
                 + `${v.first.at}: ${v.first.why}`,
         }));
     if (dash.why) rows.push({ option: 'sword-dash', why: dash.why });
