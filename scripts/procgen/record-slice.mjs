@@ -26,6 +26,14 @@
  *                       `<!-- r9-traps -->` markers, whose count is asserted
  *                       BEFORE the write.
  *   queue header        INSERTED above a hand-written body, ONLY if absent.
+ *
+ * ⛓⛓ **AND THE QUEUE HEADER IS WHY THE HEAD MUST BE DERIVED AFTER THE FOLD.**
+ * §50's hand-written queue header says `main` @`798eadd91` while its memory
+ * close line says `1c47fff54`: the queue entry is written INSIDE the commit it
+ * describes, so its head is one commit stale BY CONSTRUCTION, not by a typo.
+ * Two surfaces, two heads, one fold. Derived from git at the fold's real head,
+ * that cannot happen — which is the whole argument for this file.
+ *
  *   tracked heading     PRINTED ONLY. Its title is a re-voicing for an outside
  *                       reader (see `sliceRecords.js`) — a machine cannot
  *                       author it, and `--write` placing a heading over an
@@ -38,6 +46,10 @@
  *   node scripts/procgen/record-slice.mjs --kickoff=<path> --section=52 --session=<name> --write
  *   node scripts/procgen/record-slice.mjs --kickoff=<path> --section=52 --json
  *   node scripts/procgen/record-slice.mjs --kickoff=<path> --section=52 --memory=<dir>
+ *   node scripts/procgen/record-slice.mjs --trap=922
+ *   node scripts/procgen/record-slice.mjs --traps
+ *   node scripts/procgen/record-slice.mjs --trap --title=<t> --slice=<s> --family=<f> --body-file=<p>
+ *   node scripts/procgen/record-slice.mjs --freeze-ladder
  */
 
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
@@ -45,9 +57,13 @@ import { join } from 'node:path';
 
 import { argvHelp } from './argvHelp.js';
 import {
-    INDEX_FILE, QUEUE_DOC, R9_FILE, REPO, TRACKED_DOC,
-    deriveFromGit, factLines, memoryDir, parseSection,
+    INDEX_FILE, LADDER_FILE, LADDER_FROZEN_AT, QUEUE_DOC, R9_FILE, REPO,
+    TRACKED_DOC, TRAPS_DIR,
+    deriveFromGit, factLines, memoryDir, memoryTrapBullet, parseSection,
 } from './sliceRecords.js';
+import {
+    FREEZE_NOTICE, allocateTrap, declareFamily, families, readTrap, trapCensus,
+} from './sliceTraps.js';
 
 argvHelp(import.meta.url);
 
@@ -162,7 +178,97 @@ function calibrate(parsed, lines, memory) {
  * MAIN
  * ══════════════════════════════════════════════════════════════════════ */
 
+/* ══════════════════════════════════════════════════════════════════════
+ * (B) THE TRAPS — ONE FILE EACH, NAMING A FAMILY
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛔ The trap subcommands take NO kickoff and NO section: a trap is filed the
+ * moment it is understood, which is usually mid-slice and never at the fold.
+ * @returns {boolean} whether one of them handled this run
+ */
+function trapCommands(M) {
+    /* ── `--trap=NNN`: resolve a citation from EITHER place ───────────── */
+    const cite = arg('trap');
+    if (cite) {
+        const t = readTrap(cite, { memory: M });
+        if (!t.found) {
+            console.log(`⛔ trap ${t.number} is NOT in ${t.where} — `
+                + `${t.number > LADDER_FROZEN_AT ? 'above the freeze, so a `traps/` file should hold it'
+                    : 'at or below the freeze, so the ladder should hold it'}`);
+            process.exit(1);
+        }
+        console.log(`# trap ${t.number} — ${t.where}\n`);
+        console.log(t.text);
+        process.exit(0);
+    }
+
+    /* ── `--traps`: the census MEMORY.md's bullet is derived from ─────── */
+    if (flag('traps')) {
+        const c = trapCensus({ memory: M });
+        console.log(`# traps — ladder FROZEN at ${c.frozenAt}; ${c.files} file(s) in `
+            + `${TRAPS_DIR}/; next number ${c.next}`);
+        for (const r of c.recent) console.log(`  ${r.slice.padEnd(16)} ${r.range} (${r.n})`);
+        console.log(`\n── the derived MEMORY.md trap bullet ─────────────────`);
+        console.log(memoryTrapBullet(c));
+        if (c.findings.length) {
+            console.log(`\n${c.findings.length} FINDING(S):`);
+            for (const f of c.findings) console.log(`  ⛔ ${f}`);
+        }
+        process.exit(c.findings.length ? 1 : 0);
+    }
+
+    /* ── `--trap --title=… --slice=… --family=…`: ALLOCATE ────────────── */
+    if (flag('trap')) {
+        const family = arg('family');
+        const known = families({ memory: M });
+        if (family && !family.startsWith('new:') && !known.includes(family)) {
+            console.log(`⛔ ${JSON.stringify(family)} is not one of the ${known.length} families in `
+                + 'the families file. Use one of:\n  '
+                + `${known.join('\n  ')}\n…or declare a new one: --family='new:<name> — <definition>'`);
+            process.exit(1);
+        }
+        const bodyFile = arg('body-file');
+        const body = bodyFile ? readFileSync(bodyFile, 'utf8') : (arg('body') ?? '');
+        let name = family;
+        if (family?.startsWith('new:')) {
+            /**
+             * ⛔ A NEW FAMILY IS APPENDED TO THE FAMILIES FILE, never left as a
+             * string in one trap's frontmatter. A family only one entry names
+             * is not a family — it is a spelling, and the next slice invents a
+             * second spelling of it.
+             */
+            const d = declareFamily(family.slice(4), { memory: M });
+            name = d.name;
+            console.log(`${d.already ? 'SKIP  families already hold' : 'ok    families +='} `
+                + `${JSON.stringify(name)}`);
+        }
+        const t = allocateTrap({
+            title: arg('title'), slice: arg('slice'), family: name,
+            body, lesson: arg('lesson') ?? '', memory: M,
+        });
+        console.log(`ok    ${TRAPS_DIR}/${t.file} — trap ${t.number} (the FILESYSTEM allocated it)`);
+        process.exit(0);
+    }
+
+    /* ── `--freeze-ladder`: the ONE line the ladder ever gains again ──── */
+    if (flag('freeze-ladder')) {
+        const p = join(M, LADDER_FILE);
+        const text = readFileSync(p, 'utf8');
+        if (text.includes('THE LADDER IS FROZEN AT')) {
+            console.log(`SKIP  ${LADDER_FILE} already carries the freeze notice`);
+            process.exit(0);
+        }
+        writeFileSync(p, `${text.replace(/\n*$/, '')}\n${FREEZE_NOTICE()}`);
+        console.log(`ok    ${LADDER_FILE} += the freeze notice at ${LADDER_FROZEN_AT} `
+            + '(APPENDED — this tool never writes an entry there)');
+        process.exit(0);
+    }
+    return false;
+}
+
 export function main() {
+    if (trapCommands(arg('memory', memoryDir({ repo: REPO })))) return;
     const kickoff = arg('kickoff');
     const section = arg('section');
     if (!kickoff || !section) {
@@ -200,6 +306,14 @@ export function main() {
     console.log(lines.queueHeader);
     console.log('\n── the tracked-doc heading (PRINTED ONLY — its title is a re-voicing) ─');
     console.log(lines.trackedHeading);
+
+    if (parsed.rulings.length) {
+        console.log('\n── the rulings §N names ───────────────────────────────');
+        for (const r of parsed.rulings) {
+            console.log(`  ⚖ ${r.n}${r.item ? ` (${r.item})` : ''}: `
+                + `${r.verdict ?? `(no verdict in §${parsed.section})`}`);
+        }
+    }
 
     if (parsed.quotes.length) {
         console.log('\n── the user\'s own words, carried VERBATIM ────────────');

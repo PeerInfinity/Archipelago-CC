@@ -7032,22 +7032,53 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "body-file",
                 "calibrate",
+                "family",
+                "freeze-ladder",
                 "head",
                 "json",
                 "kickoff",
                 "memory",
                 "section",
                 "session",
+                "slice",
+                "title",
+                "trap",
+                "traps",
                 "write"
             ],
             "file": "record-slice.mjs",
             "flags": [
                 {
                     "how": [
+                        "arg"
+                    ],
+                    "name": "body"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "body-file"
+                },
+                {
+                    "how": [
                         "flag"
                     ],
                     "name": "calibrate"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "family"
+                },
+                {
+                    "how": [
+                        "flag"
+                    ],
+                    "name": "freeze-ladder"
                 },
                 {
                     "how": [
@@ -7071,6 +7102,12 @@ export const INSTRUMENTS = frz({
                     "how": [
                         "arg"
                     ],
+                    "name": "lesson"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
                     "name": "memory"
                 },
                 {
@@ -7084,6 +7121,31 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "session"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "slice"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "title"
+                },
+                {
+                    "how": [
+                        "arg",
+                        "flag"
+                    ],
+                    "name": "trap"
+                },
+                {
+                    "how": [
+                        "flag"
+                    ],
+                    "name": "traps"
                 },
                 {
                     "how": [
