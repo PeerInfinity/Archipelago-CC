@@ -15372,3 +15372,94 @@ by asking the build what it does rather than assuming; the older build is kept,
 deliberately, because it is the only one left that can prove the "does not"
 half of that question.
 
+### R9 slice P3b: THE PIPELINE STOPS TRUSTING ITS OWN WORKING TREE — a baseline becomes a commit, a coverage hole becomes a derived complement, and the box gets a lock that freezes the tree with it
+
+⚖ ruling 54 (6)+(7), plus the four pipeline items §47.11 (3) named. Six things
+landed and one of them found the others.
+
+**A BASELINE IS A COMMIT.** S3's record set is the game-visible projection diff
+across a re-record run, and its `before` used to be a snapshot of the WORKING
+TREE taken at S1's start. The fifth run's pin commit was an ancestor of the head
+S1 ran at, so every tape already carried its `pins` when the snapshot was taken:
+the pin could never appear as a move, S3 recorded nothing, and the expectations
+on disk stayed on pre-pin bytes. S0 now seals a SHA (`--baseline=<sha>`, else
+the head S0 first flushed at), S1 reads each tape at that commit through the
+same projection, and S3 prints which baseline it diffed against and why. A
+commit cannot be moved by a stage that runs after it, so the snapshot is above
+every write by construction rather than by where the call sits. Two guards come
+alive with it: a tape absent at the baseline is `appeared`, and one the baseline
+had that the tree does not is `vanished` — which no working-tree baseline could
+ever have produced.
+
+**A COVERAGE HOLE CLOSED BY ENUMERATION REOPENS AT THE NEXT INSTANCE.** S4's
+solver roster selects on a `solve-seedling-*` provenance, so every
+`plan-seedling-*`-authored tape is outside it by construction. That hole was
+closed once by naming the three witnesses somebody had noticed, and reopened:
+the fifth run drove 28 of 37 pinned tapes and reported the roster. `prove()` now
+DERIVES `roster ∖ prove()` and prints it by name — 120 tapes at this head — with
+what driving it would cost, from the TICK SUM and never a tape count. **And the
+price is what decided the design:** 117,914 ticks is ≈ 128 minutes, ninety per
+cent of a full tier, so driving it every run would re-instate the per-move tape
+tax that ruling 40 retired. What is refused without `--full-roster` is the
+CLAIM "S4 is the gate run", never the run. The hole was invisibility, and
+invisibility is what closes.
+
+**A MEASUREMENT OWED IS A RED ROW, NOT A SENTENCE IN A RESIDUE SECTION.** The
+full-tier roster value is a checkpoint a headless check can never re-run, and
+nothing noticed when the tree moved out from under it. A new gate compares four
+populations against the row's own head — the game build, the driver, the tapes,
+and the dead-frame accounting — and is RED, by name, when any of them moved. It
+is red today, naming the commit that inverted the pre-swap correction after the
+roster was driven.
+⛓ **Two of its four populations taught a lesson worth keeping.** The tapes are
+compared through the GAME-VISIBLE and MODEL-STAGING projections rather than as
+bytes, because two tapes had moved in a field neither side of the differential
+reads — a byte compare would have been born red, and the only thing that could
+say otherwise was prose. And the accounting population is derived by grepping
+for the constant, then narrowed twice: a bare grep pulled in three DOCUMENTS
+that merely mention it, and a file-level compare then counted an edit that
+provably cannot move the measurement. The verdict is now a diff whose CHANGED
+LINES touch the accounting, with the wider set still printed beside it, because
+one narrowing errs toward under-inclusion where the other errs toward over.
+
+**ONE BOX, ONE HOLDER, AND THE TREE FROZEN WITH IT.** Twelve hand-relayed "box
+busy" / "box free" messages in a single day is a protocol whose enforcement is a
+human retyping two words. A lock file outside every worktree and every
+scratchpad is taken by the 27 gates that drive a browser or a Windows GPU and by
+the three instruments that measure standing values; a second taker refuses BY
+NAME with the holder's pid and the exact flag that would have queued instead, a
+dead holder is reclaimed by `kill -0` with a printed notice, and a child of the
+holder passes through on a token so a runner cannot deadlock against its own
+gates. **It refuses rather than waits**, because a silent wait is
+indistinguishable from a stalled session. And it freezes the TREE as well as the
+box: "the box is busy" and "the tree is frozen" are two different claims, and a
+measurement pass needs both — the previous slice appended to a tracked document
+while its own measurement was running and the row whose job is to assert the
+docs match the generated regions came back red at row 22 of 62.
+
+**`cheap` IS A STATE WITH HYSTERESIS.** A row within ten per cent of the
+one-minute band keeps its previous classification; only leaving the band changes
+it. The evidence is a gate that read 57.5 s, then 61.5 s, then 56.5 s across
+three measurements with its value unchanged — three different published facts
+about a gate that did not change. Every held row is printed by name, because
+hysteresis nobody can see is a second invisible source of truth about a field
+readers take as measured.
+
+**AND THE GATES RUN IN CI FOR THE FIRST TIME.** Four of the thirty-one are
+headless; the other twenty-seven need a browser or a Windows GPU that CI does
+not have, so the economy of "read them from CI instead of the box" is not
+available here — and the honest discharge is a derived rule (a row is CI-sourced
+when it is headless AND no longer cheap) that selects zero today and says so out
+loud. What IS new is that those four now run on every push, with the other
+twenty-seven skipped BY NAME so nothing reads as green that was never run, and
+one line each that a later reader can quote by SHA. Its first yield was a
+cross-check nobody had ever made: a gate reading the same value in CI as on the
+box.
+⛓ **And its first run caught the slice's own worst mistake.** CI clones at
+depth one, so the baseline commit is not in the clone; the new "measurement
+owed" gate could not resolve it, printed a failure, and produced a line
+indistinguishable from "a full tier is owed" — a sentence that would have booked
+143 minutes of GPU because a checkout was shallow. That is precisely the defect
+the same slice had just built a mechanism to prevent, one commit earlier. It now
+refuses instead, and says the difference in words: *this is not "a full tier is
+owed", it is "the question could not be put".*
