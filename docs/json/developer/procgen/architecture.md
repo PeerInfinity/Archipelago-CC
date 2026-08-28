@@ -217,7 +217,11 @@ Nothing in the core adjudicates legality. Free means free; certification is the 
 
 **The toy-adapter rule.** `editCore.test.js` drives a toy substrate written in the test file and imports nothing from `mazeRoom/` or `seedlingDemo/` — asserted by reading its own source. A core proven only against one substrate is that substrate's editor with an extra indirection.
 
-**Adapters today.** Two. The maze's is `mazeRoom/mazeEditAdapter.js`, a wrapper over `mazeRoomEditor.applyEditOp`. Seedling's is `seedlingDemo/seedlingEditAdapter.js`, a wrapper over `watchEdit` — see the Seedling editor section below for what it resolves and what it bounds.
+**Adapters today.** The maze's is `mazeRoom/mazeEditAdapter.js`, a wrapper over `mazeRoomEditor.applyEditOp`. Seedling's is `seedlingDemo/seedlingEditAdapter.js`, a wrapper over `watchEdit` — see the Seedling editor section below for what it resolves and what it bounds. Then the SET adapters (`seedlingSetAdapter`, `mazeSetAdapter`, `worldSetAdapter`), the marking tool's `regionMarkingTool/atlasEditAdapter.js` (slice B-a), and **two that declare NO CELL SPACE**: `bounceRegionEditor/bounceEditAdapter.js` (B-b) and `apworldEditor/rulesEditAdapter.js` (B-c).
+
+**A CELL-LESS ADAPTER.** `bounds` / `readCell` / `writeOps` are the CELL-SPACE TRIO (`CELL_SPACE_MEMBERS`), and a substrate whose document is not a grid of cells declares all three ABSENT — a bounce level edits platforms at FLOAT pixel centres and `editorView.js` discards a non-integer cell by name; a `rules.json` has no canvas at all. `hasCellSpace` is `every`, never `some`, so a PARTIAL trio is a mis-typed adapter rather than a cell-less one and refuses in the same sentence shape a missing required member gets. `rectCopy`, `rectPasteOps`, `floodOps`, `descriptorFieldsOf` and `mountEditorView` then refuse BY NAME. ⛔ `assertAdapterBehaviour` asks such an adapter laws **2–5** and skips **three**, not one — law 1 IS `bounds`, law 6 IS `writeOps`, law 7 is the pair (`CELL_SPACE_LAWS` is that table, as data) — and it REFUSES unless the caller passes `say`, so a green cannot be a claim about laws nobody asked.
+
+**`procgenCore/deepEqualKeyOrder.js` — a deep equality in which KEY ORDER IS CONTENT**, shared by all three document adapters (atlas, bounce level, rules document) under their own names. ⛔ It is deliberately NOT `canonicalJson`, which sorts keys at every depth and ships that convention for CELL DESCRIPTORS on purpose: a descriptor assembled by a spread has whatever order its source had. A DOCUMENT is the opposite case — the atlas's key order is pinned by byte gates, the bounce level's by a person diffing an exported fixture, the rules document's by `cloneFullRulesDoc`'s round-trip contract — so a sorting `equal` would tell `foldEdits` a key-order-only op moved nothing and let the published bytes move underneath a record that says they did not. `a === b` first at every depth makes it exact instead of cheap, because every op module here is copy-on-write.
 
 ## The editor view (`procgenCore/editorView.js`)
 
@@ -449,6 +453,40 @@ brief said about those members, each overturned by a measurement:
   `readCell` filters by `map_ref` exactly as a plain click does. A session
   opened WITHOUT one — all nine headless callers — refuses the cell half by
   name rather than answering a rectangle that does not exist.
+
+**And the APWorld editor is a session too, so IT has undo** (slice B-c). The
+panel's `rulesDoc` was a FIELD that fourteen handlers and twenty-odd inline
+closures wrote in place; it is a GETTER over `session.record()` with no setter,
+`apworldEditor/rulesDocOps.js` is the vocabulary (19 kinds, copy-on-write, key
+order kept), and `rulesEditAdapter` is `{name, apply, equal}`. Four things worth
+knowing about it:
+
+- **Refusals are `validateRules`' OWN sentences, DERIVED.** The validator is a
+  report rather than a throw, so an op that would break a reference runs it over
+  the document it WOULD have produced and quotes the first error that document
+  did not already have. Nothing re-spells one, so nothing can drift from it — and
+  the cost is paid only when a cheap structural pre-check says there is a
+  reference to break. `delete-region` and `delete-item` are the two, each with a
+  `…Ops(doc, name)` builder whose flat list the caller wraps in one `group`.
+- **The three RENAME cascades are ONE op each, measured.** A `group` of the four
+  atomic sites folds to the SAME BYTES — the test builds it — but needs two ops
+  that would exist for no other reason and a member list recomputed from the
+  document first. The op clones through JSON because `renameRegionInRules` and
+  its two siblings write THROUGH the document.
+- **Reload is a session BOUNDARY; Clear is an OP.** A boundary is a document
+  that arrived from OUTSIDE (the app's publish, the marking tool's hand-off,
+  Reload), which no edit list can express. Clear invents no new base — it is a
+  function of the record — so it is undoable, where as a boundary it would have
+  been the one gesture in that panel that destroys work with no way back. Apply
+  publishes `session.record()` and does NOT reset the session.
+- ⛔ **An op's carried payload is COPIED at the door.** `set-rule-tree`,
+  `set-completion-condition` and `set-item-field` carry JSON a caller built, and
+  the rule-tree editor is a caller that goes on editing its own copy in place.
+  Storing the reference made the record and that object one object: the next
+  keystroke wrote THROUGH the record and the session reported a NO-OP for an
+  edit that had already happened invisibly. `applyRulesDocOp` copies the op
+  before reading it and returns the copy as the RESOLVED op (with every drawn
+  name spent), so the edit LIST — which is the identity — cannot alias it either.
 
 `writeOps` writes the two per-tile facts an atomic op can express: the LOCATION
 (`add-location`, whose global-name refusal is the existing op's) and the
