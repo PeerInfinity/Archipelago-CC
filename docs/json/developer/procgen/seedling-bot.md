@@ -11180,6 +11180,27 @@ option either — the verb drains.
 Phase 3b's manifest gate caught `new Array(45)` that way, a defect no tape and
 no unit test could see because both were reading the same wrong object.
 
+⛔⛔ **AND `"pending"` IS THE SUCCESS ANSWER FOR EVERY CHUNK BUT THE LAST.**
+`Bot.botLoadLevels`' own contract is three-valued — `"pending"` (accepted, more
+are owed, nothing is mounted), `"ok"` (this chunk COMPLETED the delivery and the
+set is mounted) and `"error:…"` (refused by name, and the whole staged delivery
+is dropped). `watchWasm.js:1169-1170` is `if (said !== 'ok') throw`, so it
+refuses the FIRST chunk of any delivery of more than one, with the message
+`botLoadLevels: pending`. It has never bitten because every set that page ships
+is ONE chunk; the vanilla 116 is **nine**, and the editor-integration H7/H8
+slice drove the first multi-chunk delivery anyone has run.
+`probe-seedling-level-set-transport.mjs` had it right all along — it asserts
+only that the LAST answer is `ok`. ⇒ a sender must expect `pending` up to the
+final chunk, and an early `ok` is itself a refusal: it says the receiver mounted
+a set the sender had not finished sending.
+
+⚠ **AND CONSECUTIVE BOOTS ON ONE PAGE ARE NOT INDEPENDENT OBSERVATIONS.**
+`botStart` reuses the world unless the next tape's boot names other
+construction args (`Bot.as:1722-1725`). Measured while building the placement
+arm: four subject rooms booted in turn on one page, and rooms 2 and 4 read the
+PREVIOUS room's roster — complete, well-formed, plausible and wrong, down to the
+`bosskey` position. One page, one boot, one claim.
+
 ⛓ **A ship is always a fresh iframe.** The wasm cannot rewind (`botReset`
 forgets the tape, not the world), so a second ship on a page that already ran
 one would start from wherever the first stopped and report it as data.

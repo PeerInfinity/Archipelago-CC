@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 17,
-        "headings": 771,
+        "headings": 772,
         "indexHeadings": 2,
-        "lines": 20211,
+        "lines": 20250,
         "pages": 4,
-        "words": 243122
+        "words": 244009
     },
     "descriptionRule": "the document's OWN first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence. ⛔ Never a hand-written summary — if an entry reads thin, the fix is a better opening paragraph in the document.",
     "dir": "docs/json/developer/procgen",
@@ -240,21 +240,21 @@ export const DOCS_INDEX = frz({
             "file": "seedling-bot.md",
             "h1": "The Seedling Real-Game Bot, and the tracked record of the procgen arcs on `watch.html`",
             "headings": 501,
-            "lines": 15769,
+            "lines": 15790,
             "links": [
                 "architecture.md",
                 "demos.md",
                 "maze.md"
             ],
             "path": "docs/json/developer/procgen/seedling-bot.md",
-            "words": 159419
+            "words": 159640
         },
         {
             "description": "The flash substrate (`frontend/modules/flashSubstrate/`, id `flash`) hosts recompiled Flash games — SWF → C → WASM via SWFRecomp-CC — in a same-origin iframe as procgen regions. The module ships a placeholder game page, so it is testable independently of any real recompiled game; its real significance is as the **shared iframe-substrate machinery** other substrates build on.",
             "file": "flash.md",
             "h1": "Flash Substrate",
-            "headings": 8,
-            "lines": 62,
+            "headings": 9,
+            "lines": 80,
             "links": [
                 "architecture.md",
                 "bounce.md",
@@ -262,7 +262,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/flash.md",
-            "words": 1466
+            "words": 2132
         },
         {
             "description": "The JtA substrate (`frontend/modules/jtaSubstrateWrapper/`, id `jta`) hosts the Journey to Ascension fork — an incremental/idle game in the `frontend/modules/journey-to-ascension/` submodule — in a same-origin iframe as a loop-mode substrate. It is the **reference zone-based substrate** (one AP region = one JtA zone, instantiated by ordinal), with host-side shared-mana brokering.",

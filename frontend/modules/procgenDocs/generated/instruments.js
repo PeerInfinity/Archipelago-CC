@@ -198,18 +198,18 @@ export const INSTRUMENTS = frz({
             "id": "sweep"
         },
         {
-            "browser": 30,
-            "count": 49,
+            "browser": 31,
+            "count": 50,
             "id": "verify"
         }
     ],
     "counts": {
-        "blockStyle": 245,
-        "browser": 76,
-        "cited": 85,
-        "files": 264,
+        "blockStyle": 246,
+        "browser": 77,
+        "cited": 87,
+        "files": 265,
         "lineStyle": 19,
-        "withDocblock": 264,
+        "withDocblock": 265,
         "withFlags": 168
     },
     "dir": "scripts/procgen",
@@ -5514,7 +5514,9 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "probe",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "probe-seedling-level-set-transport.mjs",
@@ -9320,6 +9322,30 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "verify-runner-smoke — **VERIFIES THAT A GENERATED RUNNER WORLD BOOTS, RENDERS AND IS PLAYED THROUGH BY ITS OWN SOLVER WITNESS IN THE REAL FRONTEND** (runner phase-7 gate, plan §5 row 7) — no manual play anywhere in it.",
             "path": "scripts/procgen/verify-runner-smoke.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "verify",
+            "citedBy": [
+                "docs/json/developer/procgen/flash.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "verify-seedling-ap-placement.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "verify-seedling-ap-placement — **AP'S PLACEMENT, DELIVERED INTO THE LIVE ARTIFACT, AND THE ROOM MEASURED** (EDITOR INTEGRATION slice H7/H8; plan §17.1.4, §17.2).",
+            "path": "scripts/procgen/verify-seedling-ap-placement.mjs"
         },
         {
             "argvHelpers": [],
