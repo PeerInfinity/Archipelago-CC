@@ -53,6 +53,7 @@ function rewritten() {
 function fakeBot(set, fail = null) {
     const calls = [];
     const mounted = { rooms: [], setId: null, start: null };
+    const seen = new Set();
     const bot = (name, arg) => {
         calls.push({ name, bytes: arg?.length ?? 0 });
         if (fail && fail.on === name && fail.at === calls.filter((c) => c.name === name).length) {
@@ -64,7 +65,12 @@ function fakeBot(set, fail = null) {
             mounted.setId = chunk.set_id;
             if (chunk.set) mounted.start = chunk.set.start;
             mounted.rooms.push(...chunk.rooms);
-            return 'ok';
+            seen.add(chunk.chunk_index);
+            // ⛔ THE RECEIVER'S REAL ANSWERS. `Bot.botLoadLevels` returns
+            // "pending" until the delivery is COMPLETE and "ok" on the chunk
+            // that completes it — measured against p4c, and the reason the
+            // first browser run of this slice refused chunk 1 of 9.
+            return seen.size < chunk.chunk_count ? 'pending' : 'ok';
         }
         if (name === 'botLevelSet') {
             return JSON.stringify({
@@ -173,9 +179,30 @@ describe('SeedlingLevelSetDelivery — the state machine', () => {
         const result = d.deliver();
         expect(result.ok).toBe(false);
         expect(d.state).toBe('refused');
-        expect(result.why).toMatch(/botLoadLevels refused chunk 3\/\d+: chunk too large/);
+        expect(result.why).toMatch(/botLoadLevels answered "chunk too large" to chunk 3\/\d+/);
         // ⛔ AND IT STOPPED: no readback is taken on a set that never landed.
         expect(bot.calls.filter((c) => c.name === 'botLevelSet')).toHaveLength(0);
+    });
+
+    it('⛔ REFUSES an EARLY `ok`: a receiver that mounted before the sender finished', () => {
+        // ⛓ `pending` is the SUCCESS answer for every chunk but the last, and
+        // `ok` means "the set is now mounted". An `ok` on chunk 1 of 9 says the
+        // receiver mounted eight rooms and called it the set.
+        const { set, invalidation } = rewritten();
+        const bot = fakeBot(set, { on: 'botLoadLevels', at: 1, say: 'ok' });
+        const result = deliveryFor({ bot }).arm(set, invalidation).deliver();
+        expect(result.ok).toBe(false);
+        expect(result.why).toMatch(/the non-final chunk of a delivery must answer "pending"/);
+        expect(result.why).toMatch(/an early `ok` means the receiver mounted a set/);
+    });
+
+    it('⛔ REFUSES a `pending` on the LAST chunk — the set never mounted', () => {
+        const { set, invalidation } = rewritten();
+        const n = planLevelSetChunks(set).chunks.length;
+        const bot = fakeBot(set, { on: 'botLoadLevels', at: n, say: 'pending' });
+        const result = deliveryFor({ bot }).arm(set, invalidation).deliver();
+        expect(result.ok).toBe(false);
+        expect(result.why).toMatch(new RegExp(`chunk ${n}/${n}, and the LAST chunk`));
     });
 
     it('REFUSES when the readback disagrees — the mounted set is not the sent set', () => {
@@ -253,17 +280,29 @@ describe('the ordering gate — the set goes in BEFORE the first region load', (
         const d = deliveryFor({ bot }).arm(set, invalidation);
         const glue = glueWith(d);
         expect(d.state).toBe('armed');
+        // ⛔⛔ THE ORDER IS THE CLAIM, AND IT IS OBSERVED ON ONE TIMELINE. A row
+        // that only checked "the set is delivered" passes on a glue that
+        // delivers AFTER the binding has already resolved the arrival.
+        const timeline = [];
+        const realBot = d.bot;
+        d.attachBot((name, arg) => { timeline.push(name); return realBot(name, arg); });
+        const realLoad = glue.binding.onLoadRegion.bind(glue.binding);
+        glue.binding.onLoadRegion = (p) => { timeline.push('onLoadRegion'); return realLoad(p); };
         glue.handleLoadRegion({ regionId: 'level_0' });
         expect(d.state).toBe('delivered');
         expect(glue.stats.setDeliveries).toBe(1);
-        // ⛔ AND THE ORDER IS THE CLAIM: every botLoadLevels precedes the load.
-        expect(bot.calls.at(-1).name).toBe('botLevelSet');
         expect(glue.stats.loads).toBe(1);
+        expect(timeline.at(-1)).toBe('onLoadRegion');
+        expect(timeline.at(-2)).toBe('botLevelSet');
+        expect(timeline.indexOf('onLoadRegion')).toBe(timeline.length - 1);
+        expect(timeline.filter((t) => t === 'botLoadLevels'))
+            .toHaveLength(planLevelSetChunks(set).chunks.length);
+        expect(bot.calls.at(-1).name).toBe('botLevelSet');
     });
 
     it('a REFUSED delivery does not let the region load REACH THE BINDING', () => {
         const { set, invalidation } = rewritten();
-        const bot = fakeBot(set, { on: 'botLoadLevels', at: 1, say: 'nope' });
+        const bot = fakeBot(set, { on: 'botLoadLevels', at: 1, say: 'error:nope' });
         const d = deliveryFor({ bot }).arm(set, invalidation);
         const glue = glueWith(d);
         // ⛔ The observation is DIRECT: count the calls into the state machine.

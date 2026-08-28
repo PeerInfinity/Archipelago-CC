@@ -189,15 +189,39 @@ export class SeedlingLevelSetDelivery {
             return this._refuse(`${oversized.length} room(s) exceed the proven chunk envelope: `
                 + oversized.map((o) => `${o.name ?? o.id} ${o.bytes}B`).join(', '));
         }
+        /**
+         * ⛔⛔ **`"pending"` IS THE SUCCESS ANSWER FOR EVERY CHUNK BUT THE LAST**
+         * — `Bot.botLoadLevels`' own contract: *"pending — accepted; more
+         * chunks are owed, nothing is mounted / ok — this chunk COMPLETED the
+         * delivery and the set is mounted / error:… — refused BY NAME, and the
+         * whole staged delivery is dropped"*.
+         *
+         * ⚠ MEASURED, ON THE FIRST BROWSER RUN OF THIS SLICE, AND IT IS A
+         * FINDING ABOUT THE MODULE THIS ONE FOLLOWS. `watchWasm.js:1169-1170`
+         * is `if (said !== 'ok') throw` — which refuses the FIRST chunk of any
+         * delivery of more than one, with the message `botLoadLevels: pending`.
+         * It has never bitten because every set that page ships is one chunk;
+         * the vanilla 116 is **nine**, and it is the first multi-chunk delivery
+         * anyone has driven. `probe-seedling-level-set-transport.mjs` had it
+         * right all along — it asserts only that the LAST answer is `ok`.
+         * ⇒ trap, and a one-line fix owed to `watchWasm` (not this slice's
+         * file to touch).
+         */
         for (let i = 0; i < chunks.length; i += 1) {
+            const last = i === chunks.length - 1;
             let said;
             try {
                 said = this.bot('botLoadLevels', JSON.stringify(chunks[i]));
             } catch (e) {
                 return this._refuse(`botLoadLevels threw on chunk ${i + 1}/${chunks.length}: ${e.message}`);
             }
-            if (said !== 'ok') {
-                return this._refuse(`botLoadLevels refused chunk ${i + 1}/${chunks.length}: ${said}`);
+            const want = last ? 'ok' : 'pending';
+            if (said !== want) {
+                return this._refuse(`botLoadLevels answered ${JSON.stringify(said)} to chunk `
+                    + `${i + 1}/${chunks.length}, and the ${last ? 'LAST' : 'non-final'} chunk of a `
+                    + `delivery must answer ${JSON.stringify(want)}`
+                    + `${!last && said === 'ok' ? ' — an early `ok` means the receiver mounted a '
+                        + 'set this sender has not finished sending' : ''}`);
             }
             this.stats.chunksSent += 1;
         }
