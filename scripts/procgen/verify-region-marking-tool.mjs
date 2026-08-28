@@ -547,6 +547,271 @@ try {
     check('Phase H: Ctrl+Z inside a text field does NOT undo, and on the root DOES',
         keyGuard.afterInInput === keyGuard.before && keyGuard.afterOnRoot === keyGuard.before - 1,
         JSON.stringify(keyGuard));
+
+    // ── Phase F′ (B-c) — THE APWORLD EDITOR ON A SESSION ──────────────────
+    //
+    // ⛔ Phase F proved the STASH; this proves the PANEL. It mounts the editor,
+    //   re-runs the hand-off so the mounted panel adopts it live, and asks the
+    //   four things a session is for: the ops are recorded, undo returns the
+    //   document BYTE FOR BYTE, Apply publishes those same bytes, and the key
+    //   binding refuses inside a field.
+    //
+    // ⛓ It runs LAST on purpose: Apply republishes `files:jsonLoaded`, which is
+    //   an app-wide rules reload, and nothing above it should be measured
+    //   downstream of that.
+    await page.evaluate(() => {
+        const tab = [...document.querySelectorAll('.lm_tab .lm_title')]
+            .find((t) => t.textContent.trim() === 'APWorld Editor');
+        if (!tab) throw new Error('no "APWorld Editor" tab in the layout');
+        tab.click();
+    });
+    await page.waitForSelector('.apworld-editor-panel', { state: 'visible', timeout: 15000 });
+
+    // Hand the compiled world over AGAIN, now that the panel is mounted: this is
+    // the live-adopt arm (`_adoptHandoffRules`), where Phase F took the stash.
+    await page.evaluate(() => {
+        const tab = [...document.querySelectorAll('.lm_tab .lm_title')]
+            .find((t) => t.textContent.trim() === 'Region Marking Tool');
+        tab.click();
+    });
+    await page.waitForSelector('.rmt-panel', { state: 'visible', timeout: 15000 });
+    await clickToolbar('Edit in APWorld Editor');
+    await page.waitForSelector('.apworld-editor-panel', { state: 'visible', timeout: 15000 });
+
+    const apState = () => page.evaluate(() => {
+        const panel = document.querySelector('.apworld-editor-panel').__panel;
+        return {
+            ops: panel.session ? panel.session.ops().length : null,
+            kinds: panel.session ? panel.session.ops().map((o) => o.op) : null,
+            base: panel.session ? panel.session.payload().base : null,
+            text: panel.session ? JSON.stringify(panel.session.record()) : null,
+            regions: Object.keys(panel.rulesDoc?.regions?.['1'] ?? {}),
+            undoLabel: panel.undoButton?.textContent ?? null,
+            bar: panel.validationBar.textContent.trim(),
+        };
+    });
+
+    const handoff = await apState();
+    // ⚠ NOT `EXPECTED_AP_REGIONS`: by now Phase G has added the split region, so
+    //   the compiled world is a SUPERSET of Phase F's. What this row asserts is
+    //   the session's identity and that the world really arrived.
+    check('Phase F′: the panel MOUNTED on a session over the handed-over world',
+        handoff.ops === 0 && handoff.base?.kind === 'rules' && handoff.base?.source === 'hand-off'
+        && handoff.regions.includes(REGION_ID) && handoff.regions.includes('Menu'),
+        JSON.stringify({ ops: handoff.ops, base: handoff.base, regions: handoff.regions }));
+
+    // ⛓ TWO OPS, through the panel's own controls — the "+ Add region" button
+    //   and the region-name field's `change`, which is the rename cascade.
+    const afterTwo = await page.evaluate(async () => {
+        const panel = document.querySelector('.apworld-editor-panel').__panel;
+        const add = [...panel.scrollContainer.querySelectorAll('button')]
+            .find((b) => b.textContent.trim() === '+ Add region');
+        if (!add) throw new Error('no "+ Add region" button');
+        add.click();
+        const input = [...panel.scrollContainer.querySelectorAll('input')]
+            .find((i) => i.value === 'New Region');
+        if (!input) throw new Error('the added region has no name field');
+        input.value = 'Phase F prime';
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+        return {
+            ops: panel.session.ops().length,
+            kinds: panel.session.ops().map((o) => o.op),
+            text: JSON.stringify(panel.session.record()),
+            undoLabel: panel.undoButton.textContent,
+        };
+    });
+    check('Phase F′: the button and the name field each recorded an OP (not an in-place write)',
+        afterTwo.ops === 2 && afterTwo.kinds.join(',') === 'add-region,rename-region',
+        JSON.stringify({ ops: afterTwo.ops, kinds: afterTwo.kinds, label: afterTwo.undoLabel }));
+    check('Phase F′: …and the document MOVED', afterTwo.text !== handoff.text);
+
+    const apUndone = await page.evaluate((n) => {
+        const panel = document.querySelector('.apworld-editor-panel').__panel;
+        for (let i = 0; i < n; i += 1) if (!panel._undo()) return { short: i };
+        return {
+            ops: panel.session.ops().length,
+            text: JSON.stringify(panel.session.record()),
+            bar: panel.validationBar.textContent.trim(),
+            undoLabel: panel.undoButton.textContent,
+            disabled: panel.undoButton.disabled,
+        };
+    }, 2);
+    check('Phase F′: one undo per edit takes the document back BYTE FOR BYTE',
+        apUndone.ops === 0 && apUndone.text === handoff.text,
+        apUndone.text === handoff.text ? '' : `undone ${apUndone.text?.length}B vs handoff ${handoff.text.length}B`);
+    // ⛔ THE READOUTS ARE RE-READ FROM THE RECORD, not left standing across the
+    //    undo — the derived-state row.
+    check('Phase F′: the validation bar and the Undo control agree with the UNDONE document',
+        apUndone.bar === handoff.bar && apUndone.disabled === true,
+        JSON.stringify({ bar: apUndone.bar, was: handoff.bar, label: apUndone.undoLabel }));
+
+    // ⛓ APPLY publishes `session.record()` and does NOT reset the session.
+    const applied = await page.evaluate(async () => {
+        const mod = await import('./modules/apworldEditor/index.js');
+        const bus = mod.getModuleEventBus();
+        let seen = null;
+        const grab = (ev) => { if (ev?.sourceName === 'apworldEditorApply') seen = ev.jsonData; };
+        bus.subscribe('files:jsonLoaded', grab);
+        const panel = document.querySelector('.apworld-editor-panel').__panel;
+        panel._handleApply();
+        bus.unsubscribe('files:jsonLoaded', grab);
+        return { published: seen === null ? null : JSON.stringify(seen) };
+    });
+    check('Phase F′: Apply publishes bytes EQUAL to the handed-over document',
+        applied.published === handoff.text,
+        applied.published === handoff.text ? '' : `published ${applied.published?.length}B vs handoff ${handoff.text.length}B`);
+
+    // ⛔ AND THE KEY BINDING REFUSES INSIDE A FIELD. This panel is ALL inputs, so
+    //    the guard is the important half: a browser's own undo in a half-typed
+    //    region name is what a person means by ⌘Z with their cursor in it.
+    const apKeys = await page.evaluate(() => {
+        const panel = document.querySelector('.apworld-editor-panel').__panel;
+        const add = [...panel.scrollContainer.querySelectorAll('button')]
+            .find((b) => b.textContent.trim() === '+ Add region');
+        add.click();                                        // one op to undo
+        const before = panel.session.ops().length;
+        document.activeElement?.blur?.();
+        const focusedBefore = panel.rootElement.contains(document.activeElement);
+        panel.scrollContainer.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+        const focusedAfterPress = panel.rootElement.contains(document.activeElement);
+        const input = panel.scrollContainer.querySelector('input');
+        input.focus();
+        input.dispatchEvent(new KeyboardEvent('keydown', { key: 'z', ctrlKey: true, bubbles: true }));
+        const afterInInput = panel.session.ops().length;
+        panel.rootElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'z', ctrlKey: true, bubbles: true }));
+        return {
+            before, afterInInput, focusedBefore, focusedAfterPress,
+            afterOnRoot: panel.session.ops().length,
+        };
+    });
+    check('Phase F′: a press on the panel leaves focus inside it (the binding is reachable)',
+        apKeys.focusedBefore === false && apKeys.focusedAfterPress === true,
+        JSON.stringify(apKeys));
+    check('Phase F′: Ctrl+Z inside a text field does NOT undo, and on the root DOES',
+        apKeys.afterInInput === apKeys.before && apKeys.afterOnRoot === apKeys.before - 1,
+        JSON.stringify(apKeys));
+
+    // ── Phase F″ (B-c) — THE RULE TREE'S HOLDER ───────────────────────────
+    //
+    // ⛔⛔ THE RISKIEST PIECE, AND ITS TWO ROWS. `RuleTreeEditor` has TWO write
+    //   paths: the four `ruleTreeOps` gestures (`_applyTreeOp`) AND about a
+    //   dozen FIELD editors that write into a node it is already holding, in
+    //   place and with no re-render. The panel hands it a HOLDER over a working
+    //   copy and commits `set-rule-tree` carrying the RESULT — on a gesture
+    //   (`onTree`) and on a captured, microtask-deferred `change`. If either
+    //   half is missing, the field edits reach the DOM and never the session.
+    const treeState = await page.evaluate(() => {
+        const panel = document.querySelector('.apworld-editor-panel').__panel;
+        const wraps = [...panel.scrollContainer.querySelectorAll('.apworld-rule')];
+        return { wraps: wraps.length, path: wraps[0]?.dataset.rulePath ?? null };
+    });
+    check('Phase F′: the Regions tab rendered rule-tree editors, each carrying its own commit path',
+        treeState.wraps > 0 && !!treeState.path, JSON.stringify(treeState));
+
+    /**
+     * ⛔ EVERY QUERY BELOW IS SCOPED TO ONE `.apworld-rule`. The first version of
+     * this row found "the item field" by walking the whole panel for an input
+     * whose parent text contained `item:` — and picked the `count:` input in the
+     * same field row, whose `parseInt` of a name is NaN, whose write is
+     * therefore a no-op, and whose commit the session correctly dropped. The row
+     * reported the HOLDER as broken when what was broken was the row.
+     */
+    const fieldEdit = await page.evaluate(async () => {
+        const panel = document.querySelector('.apworld-editor-panel').__panel;
+        const wait = () => new Promise((r) => setTimeout(r, 0));
+        const wrap = panel.scrollContainer.querySelector('.apworld-rule');
+        const typeSel = [...wrap.querySelectorAll('select')]
+            .find((s) => [...s.options].some((o) => o.value === 'Has'));
+        if (!typeSel) throw new Error('no rule-type select offering `Has`');
+        typeSel.value = 'Has';
+        typeSel.dispatchEvent(new Event('change', { bubbles: true }));
+        await wait();
+        const afterType = {
+            ops: panel.session.ops().length,
+            kinds: panel.session.ops().map((o) => o.op),
+            text: JSON.stringify(panel.session.record()),
+        };
+        // ⛓ `args.item_name = v` — one of the in-place field editors.
+        //
+        // ⛔ `input[type=text]`, and the type is the whole point: a `Has` row is
+        //   the item NAME (text, datalist-backed) beside a `count` (number), and
+        //   the first version of this row picked the count by walking label
+        //   text — whose `parseInt` of a name is NaN, whose write is therefore a
+        //   no-op, and whose commit the session correctly dropped. It reported
+        //   the HOLDER as broken when what was broken was the row.
+        //
+        // ⚠ NOT `input[list]`: the datalist is only attached when the document
+        //   HAS items, and this compiled world has none (the marking tool's
+        //   projection carries regions and locations, not an item pool).
+        const itemInput = wrap.querySelector('input[type=text]');
+        if (!itemInput) throw new Error('no item field after switching to Has');
+        itemInput.value = 'Phase F prime item';
+        itemInput.dispatchEvent(new Event('input', { bubbles: true }));
+        itemInput.dispatchEvent(new Event('change', { bubbles: true }));
+        await wait();
+        const afterField = {
+            ops: panel.session.ops().length,
+            kinds: panel.session.ops().map((o) => o.op),
+            text: JSON.stringify(panel.session.record()),
+        };
+        panel._undo();
+        return {
+            afterType, afterField, undone: JSON.stringify(panel.session.record()),
+            msg: panel._opMessage,
+        };
+    });
+    check('Phase F′ (a): an in-place FIELD edit inside the tree editor lands as exactly ONE `set-rule-tree`',
+        fieldEdit.afterField.ops === fieldEdit.afterType.ops + 1
+        && fieldEdit.afterField.kinds.at(-1) === 'set-rule-tree'
+        && fieldEdit.afterField.text.includes('Phase F prime item'),
+        JSON.stringify({ before: fieldEdit.afterType.ops, after: fieldEdit.afterField.ops, kinds: fieldEdit.afterField.kinds.slice(-3), msg: fieldEdit.msg }));
+    check('Phase F′ (a): …and ONE undo restores the previous tree BYTE FOR BYTE',
+        fieldEdit.undone === fieldEdit.afterType.text,
+        fieldEdit.undone === fieldEdit.afterType.text ? '' : `${fieldEdit.undone.length}B vs ${fieldEdit.afterType.text.length}B`);
+
+    const rawEdit = await page.evaluate(async () => {
+        const panel = document.querySelector('.apworld-editor-panel').__panel;
+        const wait = () => new Promise((r) => setTimeout(r, 0));
+        const wrap = panel.scrollContainer.querySelector('.apworld-rule');
+        const typeSel = [...wrap.querySelectorAll('select')]
+            .find((s) => [...s.options].some((o) => o.value === '__raw__'));
+        if (!typeSel) throw new Error('no rule-type select offering the raw view');
+        const beforeToggle = panel.session.ops().length;
+        typeSel.value = '__raw__';
+        typeSel.dispatchEvent(new Event('change', { bubbles: true }));
+        await wait();
+        const afterToggle = {
+            ops: panel.session.ops().length,
+            text: JSON.stringify(panel.session.record()),
+        };
+        const ta = wrap.querySelector('textarea');
+        if (!ta) throw new Error('the raw view rendered no textarea');
+        ta.value = JSON.stringify({ rule: 'CanReachRegion', args: { region_name: 'Phase F prime raw' } });
+        ta.dispatchEvent(new Event('input', { bubbles: true }));
+        ta.dispatchEvent(new Event('change', { bubbles: true }));
+        await wait();
+        const afterRaw = {
+            ops: panel.session.ops().length,
+            kinds: panel.session.ops().map((o) => o.op),
+            text: JSON.stringify(panel.session.record()),
+        };
+        panel._undo();
+        return { beforeToggle, afterToggle, afterRaw, undone: JSON.stringify(panel.session.record()) };
+    });
+    // ⛓ A VIEW TOGGLE IS NOT AN EDIT: switching to the raw view moves a WeakSet
+    //   and no bytes, so its `change` commits a NO-OP the session drops.
+    check('Phase F′ (b): switching to the RAW VIEW records nothing — a view toggle is not an edit',
+        rawEdit.afterToggle.ops === rawEdit.beforeToggle,
+        JSON.stringify({ before: rawEdit.beforeToggle, after: rawEdit.afterToggle.ops }));
+    check('Phase F′ (b): the raw-JSON `Object.assign` path lands as exactly ONE `set-rule-tree`',
+        rawEdit.afterRaw.ops === rawEdit.afterToggle.ops + 1
+        && rawEdit.afterRaw.kinds.at(-1) === 'set-rule-tree'
+        && rawEdit.afterRaw.text.includes('Phase F prime raw'),
+        JSON.stringify({ before: rawEdit.afterToggle.ops, after: rawEdit.afterRaw.ops, kinds: rawEdit.afterRaw.kinds.slice(-3) }));
+    check('Phase F′ (b): …and ONE undo restores the previous tree BYTE FOR BYTE',
+        rawEdit.undone === rawEdit.afterToggle.text,
+        rawEdit.undone === rawEdit.afterToggle.text ? '' : `${rawEdit.undone.length}B vs ${rawEdit.afterToggle.text.length}B`);
+
 } finally {
     await browser.close();
 }

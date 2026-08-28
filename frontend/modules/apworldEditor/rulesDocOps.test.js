@@ -13,7 +13,7 @@ import { dirname, join } from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { foldEdits, group } from '../procgenCore/editCore.js';
+import { createEditSession, foldEdits, group } from '../procgenCore/editCore.js';
 import {
     makeExit, makeHasRule, makeLocation, makeRegion, makeRulesJsonScaffold,
 } from '../shared/rulesJsonBuilder.js';
@@ -434,6 +434,107 @@ describe('meta, the start region, the victory condition and rule trees', () => {
         const once = foldEdits(rulesEditAdapter, doc, [op]).record;
         const twice = foldEdits(rulesEditAdapter, doc, [op, op]).record;
         expect(bytes(twice)).toBe(bytes(once));
+    });
+});
+
+/**
+ * ⛓⛓⛓ **THE PAYLOAD IS COPIED IN, NEVER ALIASED** — the defect the FIRST
+ * browser run found, turned into rows.
+ *
+ * ⛔ Three ops carry arbitrary JSON a caller built. Storing the reference makes
+ * the record and the caller's object one object; the APWorld panel's rule
+ * editor is a caller that goes on editing its own copy in place, so the next
+ * keystroke wrote THROUGH the record, `equal` then compared a document with
+ * itself, and the session reported a NO-OP for an edit that had already
+ * happened invisibly — with nothing for undo to remove.
+ */
+describe('a carried payload is COPIED into the record', () => {
+    const aliasRow = (op, read) => {
+        const doc = fixture();
+        const out = applied(doc, op).doc;
+        const before = bytes(out);
+        // The caller goes on editing the object it handed in — which is exactly
+        // what the panel's detached rule-tree holder does.
+        const payload = op.tree ?? op.condition ?? op.value;
+        payload.__mutatedAfterApply = true;
+        expect(bytes(out), 'the record moved when the caller touched its own payload').toBe(before);
+        expect(read(out).__mutatedAfterApply).toBeUndefined();
+    };
+
+    it('⛓⛓ set-rule-tree', () => {
+        aliasRow(
+            {
+                op: 'set-rule-tree', path: { region: 'Hall', kind: 'location', index: 0 },
+                tree: { rule: 'Has', args: { item_name: 'Key' } },
+            },
+            (d) => d.regions[P].Hall.locations[0].access_rule,
+        );
+    });
+
+    it('⛓ set-completion-condition', () => {
+        aliasRow(
+            { op: 'set-completion-condition', condition: { type: 'constant', value: true } },
+            (d) => d.game_info[P].completion_condition,
+        );
+    });
+
+    it('⛓ set-item-field with an object/array value', () => {
+        aliasRow(
+            { op: 'set-item-field', item: 'Key', field: 'groups', value: ['a', 'b'] },
+            (d) => d.items[P].Key.groups,
+        );
+    });
+
+    /**
+     * ⛓⛓⛓ **THE SESSION-SHAPED ROW** — the defect as the panel met it: apply,
+     * then edit the handed-in object in place (a keystroke in the rule editor),
+     * then apply again. The second apply must be a REAL edit, not the no-op an
+     * aliased record reports.
+     */
+    it('⛓⛓⛓ an aliased record would report the SECOND edit as a no-op — it does not', () => {
+        const doc = fixture();
+        const s = createEditSession(rulesEditAdapter, doc, { base: { kind: 'rules' } });
+        const holder = { rule: 'Has', args: { item_name: '' } };
+        const path = { region: 'Hall', kind: 'location', index: 0 };
+        expect(s.apply({ op: 'set-rule-tree', path, tree: holder }).applied).toBe(true);
+        holder.args.item_name = 'Key';                       // the in-place field editor
+        const second = s.apply({ op: 'set-rule-tree', path, tree: holder });
+        expect(second.applied).toBe(true);
+        expect(s.ops()).toHaveLength(2);
+        expect(s.record().regions[P].Hall.locations[0].access_rule.args.item_name).toBe('Key');
+        s.undo();
+        expect(s.record().regions[P].Hall.locations[0].access_rule.args.item_name).toBe('');
+    });
+
+    /**
+     * ⛓⛓ **AND THE EDIT LIST HOLDS THE COPY, NOT THE CALLER'S OBJECT.** Cloning
+     * only on the way into the record left the op in `session.ops()` aliasing
+     * the payload, so a re-fold reconstructed the LATER value — the undo above
+     * came back holding `Key`.
+     */
+    it('⛓⛓ the recorded op is a private COPY — a re-fold cannot see a later mutation', () => {
+        const doc = fixture();
+        const tree = { rule: 'Has', args: { item_name: 'Key' } };
+        const op = { op: 'set-rule-tree', path: { region: 'Hall', kind: 'location', index: 0 }, tree };
+        const res = applied(doc, op);
+        expect(res.op).not.toBe(op);
+        expect(res.op.tree).not.toBe(tree);
+        tree.args.item_name = 'MUTATED';
+        expect(bytes(foldEdits(rulesEditAdapter, doc, [res.op]).record)).not.toContain('MUTATED');
+    });
+
+    /**
+     * ⛓ THE RESOLVED OP SPENDS ITS DRAWN NAME (`editCore`'s contract for the op
+     * `apply` returns), so a reader of `payload().edits` sees what was created.
+     */
+    it('⛓ an `add-…` op comes back with the derived name spent', () => {
+        const doc = fixture();
+        expect(applied(doc, { op: 'add-region' }).op).toMatchObject({ op: 'add-region', name: 'New Region' });
+        expect(applied(doc, { op: 'add-item' }).op).toMatchObject({ op: 'add-item', name: 'New Item' });
+        expect(applied(doc, { op: 'add-exit', region: 'Vault' }).op)
+            .toMatchObject({ op: 'add-exit', region: 'Vault', name: 'Vault → ?' });
+        expect(applied(doc, { op: 'add-location', region: 'Vault' }).op)
+            .toMatchObject({ op: 'add-location', region: 'Vault', name: 'New Location' });
     });
 });
 

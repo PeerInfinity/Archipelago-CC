@@ -75,6 +75,12 @@ export const rulesEditAdapter = Object.freeze({
         if (!res.ok) return { ok: false, description: res.error };
         return {
             ok: true,
+            // ⛓ THE RESOLVED OP, forwarded: `rulesDocOps` returns a private copy
+            //   of the op with every drawn parameter spent, and `editCore`
+            //   records `res.op ?? op`. Dropping it here would put the CALLER's
+            //   mutable object in the edit list — the defect the first browser
+            //   run found.
+            op: res.op,
             description: res.description,
             record: res.doc,
             ...(res.value === undefined ? {} : { value: res.value }),

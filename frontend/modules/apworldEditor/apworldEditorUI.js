@@ -1629,6 +1629,11 @@ class ApworldEditorUI {
   _renderAccessRuleEditor(node, path) {
     const wrap = document.createElement('div');
     wrap.style.marginTop = '4px';
+    // ⛓ The commit seam, ADDRESSABLE. A gate that has to find "the rule editor
+    //   for this exit" by walking text is a gate that passes on the wrong node
+    //   the day a label moves — measured, in this slice's first browser run.
+    wrap.classList.add('apworld-rule');
+    wrap.dataset.rulePath = JSON.stringify(path);
 
     const label = document.createElement('div');
     label.textContent = 'access rule:';

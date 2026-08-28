@@ -156,9 +156,11 @@ export const RULE_TREE_KINDS = Object.freeze(['exit', 'location']);
 
 const refuse = (error) => ({ ok: false, error });
 
-const ok = (doc, description, value) => (value === undefined
-    ? { ok: true, doc, description }
-    : { ok: true, doc, description, value });
+const ok = (doc, description, value, op) => ({
+    ok: true, doc, description,
+    ...(value === undefined ? {} : { value }),
+    ...(op === undefined ? {} : { op }),
+});
 
 /* ── copy-on-write primitives ─────────────────────────────────────────── */
 
@@ -201,6 +203,30 @@ const withRegion = (doc, p, name, region) => withRegions(doc, p,
     withKey(regionsOf(doc, p), name, region));
 
 const playerOf = (op) => op?.player ?? DEFAULT_PLAYER_ID;
+
+/**
+ * ⛓⛓⛓ **A PAYLOAD AN OP CARRIES IS COPIED INTO THE RECORD, NEVER ALIASED.**
+ *
+ * ⛔ FOUND BY THE FIRST BROWSER RUN, and it is the sharpest defect this slice
+ * had. Three ops carry arbitrary JSON a CALLER built — `set-rule-tree`'s tree,
+ * `set-completion-condition`'s condition, `set-item-field`'s value. Storing the
+ * reference makes the record and the caller's object THE SAME OBJECT, and the
+ * APWorld panel's rule editor is a caller that keeps editing its copy in place:
+ * the next keystroke wrote THROUGH the record, `equal(record, next)` then saw
+ * two identical documents, and the session reported a NO-OP for an edit that
+ * had already happened invisibly. Undo could not see it either.
+ *
+ * ⚠ It also breaks the fold's own law transitively — `apply` does not mutate
+ * the record it is handed, but an op list re-folded after a caller touched its
+ * own payload would reconstruct a DIFFERENT document.
+ *
+ * ⇒ Everything a caller hands in is structurally cloned on the way in. JSON is
+ * the clone that keeps key order (trap 861), which is what this document's
+ * `equal` reads.
+ */
+const carried = (value) => (value === null || typeof value !== 'object'
+    ? value
+    : JSON.parse(JSON.stringify(value)));
 
 /**
  * ⛓ FIRST FREE `${stem}` / `${stem} N` — the panel's own naming rule, and it is
@@ -254,6 +280,22 @@ export function applyRulesDocOp(doc, op) {
     if (!doc || typeof doc !== 'object' || Array.isArray(doc)) {
         return refuse(`apworld: a rules document is an object, got ${JSON.stringify(doc)}.`);
     }
+    /**
+     * ⛓⛓⛓ **THE OP IS COPIED BEFORE IT IS READ, AND THE COPY IS WHAT GETS
+     * RECORDED.** ⛔ Cloning only on the way into the RECORD is not enough: the
+     * EDIT LIST is the identity, `editCore` records `res.op ?? op`, and an op
+     * whose payload the caller can still mutate makes the list reconstruct a
+     * document nobody edited on the next fold — which is exactly what the first
+     * browser run measured (the undo came back with the LATER value in it).
+     * From here on the caller's object and the record share nothing.
+     */
+    const resolved = carried(op);
+    const res = dispatchRulesDocOp(doc, resolved);
+    return res.ok ? { ...res, op: res.op ?? resolved } : res;
+}
+
+/** ⛓ The dispatch, over an op this module already owns a private copy of. */
+function dispatchRulesDocOp(doc, op) {
     switch (op?.op) {
         case 'add-region': return opAddRegion(doc, op);
         case 'delete-region': return opDeleteRegion(doc, op);
@@ -294,7 +336,11 @@ function opAddRegion(doc, op) {
         return refuse(`A region named "${name}" already exists.`);
     }
     const region = { name, exits: [], locations: [] };
-    return ok(withRegion(doc, p, name, region), `+ region ${name}`, region);
+    // ⛓ THE RESOLVED OP SPENDS THE DRAWN NAME — `editCore`'s contract for
+    //   `apply`'s returned op. The derivation is a function of the record, so
+    //   the fold would reach the same name anyway; recording it means a reader
+    //   of `payload().edits` sees what was created rather than a rule for it.
+    return ok(withRegion(doc, p, name, region), `+ region ${name}`, region, { ...op, name });
 }
 
 /** Every SURVIVING region's exits that point at `name`, as `{region, index}`. */
@@ -417,6 +463,7 @@ function opAddExit(doc, op) {
         withRegion(doc, p, op.region, withKey(region, 'exits', [...exits, exit])),
         `+ exit ${name} in ${op.region}`,
         exit,
+        { ...op, name },
     );
 }
 
@@ -480,6 +527,7 @@ function opAddLocation(doc, op) {
         withRegion(doc, p, op.region, withKey(region, 'locations', [...locations, location])),
         `+ location ${name} in ${op.region}`,
         location,
+        { ...op, name },
     );
 }
 
@@ -547,6 +595,7 @@ function opAddItem(doc, op) {
         withPool(withItem, p, withKey(poolOf(doc, p), name, 1)),
         `+ item ${name}`,
         item,
+        { ...op, name },
     );
 }
 
@@ -638,7 +687,7 @@ function opSetItemField(doc, op) {
         return ok(
             withPool(doc, p, op.value === undefined
                 ? withoutKey(poolOf(doc, p), op.item)
-                : withKey(poolOf(doc, p), op.item, op.value)),
+                : withKey(poolOf(doc, p), op.item, carried(op.value))),
             `item ${op.item}: pool count = ${shown}`,
         );
     }
@@ -646,7 +695,7 @@ function opSetItemField(doc, op) {
     return ok(
         withItems(doc, p, withKey(items, op.item, op.value === undefined
             ? withoutKey(item, op.field)
-            : withKey(item, op.field, op.value))),
+            : withKey(item, op.field, carried(op.value)))),
         `item ${op.item}: ${op.field} = ${shown}`,
     );
 }
@@ -709,7 +758,7 @@ function opSetCompletionCondition(doc, op) {
     if (!c || typeof c !== 'object' || Array.isArray(c)) {
         return refuse(`apworld: a completion condition is an object, got ${JSON.stringify(c)}.`);
     }
-    return ok(setPath(doc, ['game_info', p, 'completion_condition'], c),
+    return ok(setPath(doc, ['game_info', p, 'completion_condition'], carried(c)),
         `completion condition = ${c.type ?? '(untyped)'}`);
 }
 
@@ -747,7 +796,8 @@ function opSetRuleTree(doc, op) {
         return refuse('apworld: an access rule is a Rule Builder node — an object with a '
             + `\`rule\` string, got ${JSON.stringify(op.tree)}.`);
     }
-    const next = list.map((e, i) => (i === op.path.index ? withKey(e, 'access_rule', op.tree) : e));
+    const tree = carried(op.tree);
+    const next = list.map((e, i) => (i === op.path.index ? withKey(e, 'access_rule', tree) : e));
     return ok(
         withRegion(doc, p, path.region, withKey(region, listKey, next)),
         `access rule on ${path.kind} #${path.index} in ${path.region} = ${op.tree.rule}`,
