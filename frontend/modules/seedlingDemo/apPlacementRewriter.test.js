@@ -200,6 +200,35 @@ describe('buildPlacementTable — the address, the placement and the look', () =
             .entries.map((e) => e.look))).toEqual(new Set([AP_LOOK]));
     });
 
+    it('DRIFT: a 15th item tag in the ledger produces a 15th look, with no table edited here', () => {
+        // ⛔ THE ROW THAT KILLS A HAND-TYPED INVERSE. The look book is BUILT from
+        // the ledger's rows, so a new pickup tag is followed automatically. A
+        // literal `{ 'Progressive Sword': 'sword', … }` table would pass every
+        // other row in this file and go red HERE.
+        const invented = { type: 'flugelhorn', x: 240, y: 240, attrs: { tag: '29' } };
+        const rooms = MAP.levels.map((l) => (l.level !== 115 ? l
+            : { ...l, entities: [...l.entities, invented] }));
+        const ledger = [...R7_GOAL_LEDGER, {
+            id: 'flugelhorn@L115', kind: 'entity', level: 115, label: 'Flugelhorn',
+            entity: { type: invented.type, x: invented.x, y: invented.y },
+            vanilla_item: 'Brass Instrument',
+        }];
+        const placed = canonicalPlacement();
+        const { entries } = buildPlacementTable({
+            locationItemOf: (n) => (n === 'Level 115 - Flugelhorn'
+                ? { name: 'Brass Instrument', player: SELF } : placed.get(n) ?? null),
+            ledger, rooms, selfPlayer: SELF,
+        });
+        const row = entries.find((e) => e.ledgerId === 'flugelhorn@L115');
+        expect(row.look).toBe('flugelhorn');
+        // and the new item's graphic is now available to EVERY location
+        const everywhere = buildPlacementTable({
+            locationItemOf: () => ({ name: 'Brass Instrument', player: SELF }),
+            ledger, rooms, selfPlayer: SELF,
+        });
+        expect(new Set(everywhere.entries.map((e) => e.look))).toEqual(new Set(['flugelhorn']));
+    });
+
     it('REFUSES BY NAME when a location has no AP placement — never a silent skip', () => {
         const placed = canonicalPlacement();
         const missing = 'Level 010 - Sword';

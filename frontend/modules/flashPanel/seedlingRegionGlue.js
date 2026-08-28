@@ -59,12 +59,14 @@ export class SeedlingRegionGlue {
         this.getPanel = getPanel ?? (() => null);
         this.binding = new SeedlingRegionBinding({ now });
         this.adapter = null;
+        this.delivery = null;
         this._unsubs = [];
         this._handler = (payload) => this.handleLoadRegion(payload);
         this._activeHandler = (payload) => this.handleActiveSubstrateChanged(payload);
         // Diagnostics — the verify script reads these rather than inferring
         // behaviour from console text.
-        this.stats = { loads: 0, teleports: 0, regionMoves: 0, warnings: 0, parks: 0, resumes: 0 };
+        this.stats = { loads: 0, teleports: 0, regionMoves: 0, warnings: 0, parks: 0,
+            resumes: 0, setDeliveries: 0 };
     }
 
     start() {
@@ -111,8 +113,35 @@ export class SeedlingRegionGlue {
         this.adapter = null;
     }
 
+    /**
+     * ⛓⛓ **H8 — THE AP LEVEL SET GOES IN BEFORE THE FIRST REGION LOAD**
+     * (EDITOR INTEGRATION §17.1.4). A region load teleports the player into a
+     * room; delivering the rewritten rooms afterwards would replace the room
+     * under the player and hand them a different game than the one AP
+     * generated. So the gate runs FIRST, and a delivery that refuses is LOUD.
+     *
+     * ⛔ THE DELIVERY IS SET FROM OUTSIDE, NEVER CONSTRUCTED HERE. It needs
+     * `planLevelSetChunks`, and a static import of the level-set graph from
+     * this file would add 794 KB of source to the shipped bundle (measured —
+     * `seedlingLevelSetDelivery.js`'s header carries the four figures). The
+     * glue owns the ORDERING and nothing else.
+     */
+    setDelivery(delivery) {
+        this.delivery = delivery ?? null;
+        return this;
+    }
+
     handleLoadRegion(payload) {
         this.stats.loads += 1;
+        if (this.delivery) {
+            const gate = this.delivery.gateLoadRegion();
+            if (gate.sent) this.stats.setDeliveries += 1;
+            if (!gate.proceed) {
+                this._warn('[ap placement] the AP level set did NOT mount, so this region load '
+                    + `would run on the vanilla rooms — ${gate.why}`);
+                return;
+            }
+        }
         this.apply(this.binding.onLoadRegion(payload ?? {}));
     }
 
