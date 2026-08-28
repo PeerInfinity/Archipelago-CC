@@ -223,6 +223,16 @@ const playerOf = (op) => op?.player ?? DEFAULT_PLAYER_ID;
  * ⇒ Everything a caller hands in is structurally cloned on the way in. JSON is
  * the clone that keeps key order (trap 861), which is what this document's
  * `equal` reads.
+ *
+ * ⛓⛓ **THERE IS EXACTLY ONE CLONE SITE, AND THAT IS A MEASUREMENT.** The first
+ * fix cloned in TWO places — the op on the way in AND each payload on the way
+ * into the record — and the mutant that removed the second came back **GREEN**
+ * across the whole browser gate and the node rows. It had to: `applyRulesDocOp`
+ * copies the op BEFORE dispatch, so by the time a handler reads `op.tree` it is
+ * already reading this module's own object and a second clone is a second copy
+ * of a copy. The guard that cannot be shown to do anything is the guard that
+ * goes (traps 824/825); what is left is one clone at the door, which every
+ * handler is downstream of.
  */
 const carried = (value) => (value === null || typeof value !== 'object'
     ? value
@@ -687,7 +697,7 @@ function opSetItemField(doc, op) {
         return ok(
             withPool(doc, p, op.value === undefined
                 ? withoutKey(poolOf(doc, p), op.item)
-                : withKey(poolOf(doc, p), op.item, carried(op.value))),
+                : withKey(poolOf(doc, p), op.item, op.value)),
             `item ${op.item}: pool count = ${shown}`,
         );
     }
@@ -695,7 +705,7 @@ function opSetItemField(doc, op) {
     return ok(
         withItems(doc, p, withKey(items, op.item, op.value === undefined
             ? withoutKey(item, op.field)
-            : withKey(item, op.field, carried(op.value)))),
+            : withKey(item, op.field, op.value))),
         `item ${op.item}: ${op.field} = ${shown}`,
     );
 }
@@ -758,7 +768,7 @@ function opSetCompletionCondition(doc, op) {
     if (!c || typeof c !== 'object' || Array.isArray(c)) {
         return refuse(`apworld: a completion condition is an object, got ${JSON.stringify(c)}.`);
     }
-    return ok(setPath(doc, ['game_info', p, 'completion_condition'], carried(c)),
+    return ok(setPath(doc, ['game_info', p, 'completion_condition'], c),
         `completion condition = ${c.type ?? '(untyped)'}`);
 }
 
@@ -796,8 +806,7 @@ function opSetRuleTree(doc, op) {
         return refuse('apworld: an access rule is a Rule Builder node — an object with a '
             + `\`rule\` string, got ${JSON.stringify(op.tree)}.`);
     }
-    const tree = carried(op.tree);
-    const next = list.map((e, i) => (i === op.path.index ? withKey(e, 'access_rule', tree) : e));
+    const next = list.map((e, i) => (i === op.path.index ? withKey(e, 'access_rule', op.tree) : e));
     return ok(
         withRegion(doc, p, path.region, withKey(region, listKey, next)),
         `access rule on ${path.kind} #${path.index} in ${path.region} = ${op.tree.rule}`,

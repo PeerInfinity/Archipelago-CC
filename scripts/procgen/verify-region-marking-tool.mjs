@@ -691,6 +691,58 @@ try {
         apKeys.afterInInput === apKeys.before && apKeys.afterOnRoot === apKeys.before - 1,
         JSON.stringify(apKeys));
 
+    // ⛓⛓ THE VALIDATION BAR IS RE-READ FROM THE RECORD, and this row can SEE a
+    //   stale one: the edit makes the validator say something DIFFERENT, so a
+    //   bar left standing across the undo keeps the error.
+    const barRow = await page.evaluate(() => {
+        const panel = document.querySelector('.apworld-editor-panel').__panel;
+        const before = panel.validationBar.textContent.trim();
+        panel._applyOp({
+            op: 'set-completion-condition',
+            condition: { type: 'item_check', item: 'No Such Item' },
+            player: '1',
+        });
+        const during = panel.validationBar.textContent.trim();
+        panel._undo();
+        return { before, during, after: panel.validationBar.textContent.trim() };
+    });
+    check('Phase F′: the validation bar MOVES on an edit and comes BACK on the undo',
+        barRow.before !== barRow.during && barRow.after === barRow.before,
+        JSON.stringify(barRow));
+
+    // ⛓⛓ APPLY DOES NOT RESET THE SESSION, and RELOAD IS A BOUNDARY. The two
+    //   are the same measurement from opposite sides: an edit survives an Apply
+    //   (the person may keep editing), and does NOT survive a Reload (a
+    //   different document arrived, so an undo across it would reconstruct
+    //   bytes nobody ever saw).
+    const boundary = await page.evaluate(() => {
+        const panel = document.querySelector('.apworld-editor-panel').__panel;
+        panel._applyOp({ op: 'add-region', player: '1' });
+        const opsBeforeApply = panel.session.ops().length;
+        panel._handleApply();
+        const afterApply = {
+            ops: panel.session.ops().length,
+            undoable: !panel.undoButton.disabled,
+        };
+        panel._handleReload();                       // window.confirm is stubbed true
+        return {
+            opsBeforeApply,
+            afterApply,
+            afterReload: {
+                ops: panel.session.ops().length,
+                source: panel.session.payload().base?.source,
+                undid: panel._undo(),
+            },
+        };
+    });
+    check('Phase F′: Apply does NOT reset the session — an edit is still undoable after it',
+        boundary.opsBeforeApply === 1 && boundary.afterApply.ops === 1 && boundary.afterApply.undoable,
+        JSON.stringify(boundary));
+    check('Phase F′: Reload IS a boundary — a new base, no op list, and nothing to undo across it',
+        boundary.afterReload.ops === 0 && boundary.afterReload.source === 'reload'
+        && boundary.afterReload.undid === false,
+        JSON.stringify(boundary.afterReload));
+
     // ── Phase F″ (B-c) — THE RULE TREE'S HOLDER ───────────────────────────
     //
     // ⛔⛔ THE RISKIEST PIECE, AND ITS TWO ROWS. `RuleTreeEditor` has TWO write
