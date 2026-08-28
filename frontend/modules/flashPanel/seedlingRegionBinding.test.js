@@ -17,8 +17,12 @@ import {
     resolveArrivalSpawn,
     resolveCrossingExit,
     exitList,
+    outExitIdOf,
+    parsePendingExit,
+    PENDING_EXIT_FIELDS,
     ARRIVAL_ECHO_TIMEOUT_MS,
 } from './seedlingRegionBinding.js';
+import { LINK_TAGS, outExitId } from '../seedlingDemo/seedlingAtlasDerivation.js';
 
 const PRESET = JSON.parse(readFileSync(
     fileURLToPath(new URL('../../presets/seedling_atlas/AP_1/AP_1_rules.json', import.meta.url)), 'utf8'));
@@ -462,5 +466,181 @@ describe('a fresh adapter (preset switch / reload)', () => {
         expect(b.pendingArrival).toBeNull();
         expect(b.pendingSpawn).toMatchObject({ level: 86, x: 48, y: 64 });
         expect(types(b.onStateReport('level', 0))).toEqual(['teleport']);
+    });
+});
+
+/**
+ * ⛓⛓ **H3 — THE PRE-SWAP DOOR REPORT** (EDITOR INTEGRATION M1; plan §11.2).
+ *
+ * `Game.pendingExit` is written one frame before the world swaps, and it is
+ * the only thing that says WHICH door fired: `new Game(to,..)` sets
+ * `Main.level` in its own constructor, so the level report is already too
+ * late. It rides on p4d; every row here is pure and needs no artifact.
+ */
+describe('H3 — the pendingExit arm', () => {
+    /** A room with one same-substrate door and one external one. */
+    const doorRoom = () => ({
+        level: 19,
+        exits: [
+            {
+                exit_id: 'out_teleporter_104_72',
+                exitName: 'seed.level_19 -> seed.level_30',
+                targetRegion: 'seed.level_30',
+                target_level: 30,
+                target_spawn: { x: 8, y: 8 },
+                entrance_spawn: { x: 8, y: 8 },
+            },
+            {
+                exit_id: 'out_stairsup_8_8',
+                exitName: 'seed.level_19 -> mz.mz_cross',
+                targetRegion: 'mz.mz_cross',
+                external: true,
+                target_substrate: 'maze',
+                target_level: null,
+                target_spawn: null,
+                entrance_spawn: { x: 8, y: 8 },
+            },
+        ],
+    });
+    const armed = () => {
+        const b = binding();
+        b.onLoadRegion({ region_id: 'seed.level_19', world: doorRoom(), arrivedFrom: null });
+        b.onStateReport('level', 19); // baseline
+        return b;
+    };
+
+    describe('the payload', () => {
+        it('parses the six fields the AS3 writes, and STRIPS the seq', () => {
+            expect(parsePendingExit('7|19|stairsup|8|8|31')).toEqual({
+                seq: 7, fromLevel: 19, type: 'stairsup', x: 8, y: 8, to: 31,
+            });
+            expect(PENDING_EXIT_FIELDS).toBe(6);
+        });
+
+        it('refuses the EMPTY boot report and anything malformed — a value the game never wrote is not a door', () => {
+            // BridgeGeneric reports every declared property once at boot, so ""
+            // arrives on a build that has the seam and has fired no door.
+            // MEASURED on p4c at W5-0: the first burst carried the empty string.
+            // ⛓ `'1|19|stairsup|8|8|'` is in the list on purpose: `Number('')`
+            // is 0, so an unwritten last field would otherwise read as a door
+            // to level 0.
+            for (const bad of ['', null, undefined, 42, '1|19|stairsup|8|8', '1|19|stairsup|8|8|31|x',
+                'a|19|stairsup|8|8|31', '1|19||8|8|31', '1|19|stairsup|x|8|31',
+                '1|19|stairsup|8|8|', '|19|stairsup|8|8|31', '1|19|stairsup|8.5|8|31']) {
+                expect(parsePendingExit(bad)).toBeNull();
+            }
+        });
+
+        /**
+         * ⛔ THE DELIMITER IS ASSERTED FROM `LINK_TAGS`, NOT FROM THREE
+         * LITERALS. The claim is that no link tag can contain the separator; a
+         * row that spelled the three tags here would go on passing after a
+         * fourth was added.
+         */
+        it('`|` appears in no LINK_TAGS value, which is what makes the split safe', () => {
+            expect(LINK_TAGS.length).toBeGreaterThan(0);
+            for (const t of LINK_TAGS) expect(t).not.toContain('|');
+            // and an integer coordinate cannot produce one either
+            for (const n of [0, 8, -1, 104, 4096]) expect(String(n)).not.toContain('|');
+        });
+
+        /** ⛔ PINNED to the derivation's own formula, so the two cannot drift. */
+        it('rebuilds the exit id the ATLAS spells, per seedlingAtlasDerivation.outExitId', () => {
+            for (const type of LINK_TAGS) {
+                const e = { type, x: 104, y: 72 };
+                expect(outExitIdOf(e)).toBe(outExitId(e));
+            }
+        });
+    });
+
+    it('an EXTERNAL door publishes a regionMove, naming the exit it matched', () => {
+        const b = armed();
+        const out = b.onStateReport('pendingExit', '1|19|stairsup|8|8|31');
+        expect(types(out)).toEqual(['regionMove']);
+        expect(out[0]).toMatchObject({
+            sourceRegion: 'seed.level_19',
+            targetRegion: 'mz.mz_cross',
+            exitId: 'out_stairsup_8_8',
+            fromLevel: 19,
+            toLevel: 31,
+            external: true,
+        });
+    });
+
+    /**
+     * ⛔⛔ THE MUTANT'S OWN ROW. Drop the `external` test and a perfectly
+     * ordinary door inside this substrate emits a region move — which
+     * procgenPlayer would then act on, loading a region the player is already
+     * walking into by themselves.
+     */
+    it('a SAME-SUBSTRATE door emits nothing — the level arm resolves it, with the spawn tie-break', () => {
+        const b = armed();
+        expect(b.onStateReport('pendingExit', '1|19|teleporter|104|72|30')).toEqual([]);
+        // and the level arm still does its job
+        expect(types(b.onStateReport('level', 30))).toEqual(['regionMove']);
+    });
+
+    it('a door this region does not declare emits nothing — the atlas is partial by design', () => {
+        const b = armed();
+        expect(b.onStateReport('pendingExit', '1|19|teleporter|999|999|4')).toEqual([]);
+    });
+
+    /**
+     * ⛔⛔ THE DEPARTURE ECHO. The game swaps anyway (design (c)) into a real
+     * room of its own set, and that swap's `level` report is a move we already
+     * published. Without the mark it resolves against an external exit whose
+     * `target_level` is null, finds nothing, and WARNS about a crossing that
+     * worked.
+     */
+    it('the swap\'s own `level` report is SWALLOWED after an external departure', () => {
+        const b = armed();
+        b.onStateReport('pendingExit', '1|19|stairsup|8|8|31');
+        expect(b.onStateReport('level', 31)).toEqual([]);
+        expect(b.lastLevel).toBe(31);
+    });
+
+    it('and WITHOUT the mark that same report warns — the mutant, driven', () => {
+        const b = armed();
+        b.onStateReport('pendingExit', '1|19|stairsup|8|8|31');
+        b.pendingDeparture = null;                       // the mutant, in one line
+        expect(types(b.onStateReport('level', 31))).toEqual(['warn']);
+    });
+
+    it('the mark is spent ONCE — a second report to the same level is a real crossing', () => {
+        const b = armed();
+        b.onStateReport('pendingExit', '1|19|stairsup|8|8|31');
+        expect(b.onStateReport('level', 31)).toEqual([]);
+        expect(types(b.onStateReport('level', 30))).toEqual(['regionMove']);
+    });
+
+    it('the mark EXPIRES rather than swallowing a crossing minutes later', () => {
+        const b = armed();
+        b.onStateReport('pendingExit', '1|19|stairsup|8|8|31');
+        clock += ARRIVAL_ECHO_TIMEOUT_MS + 1;
+        // level 31 is nobody's target, so the written-off mark surfaces as the
+        // ordinary unmapped warn instead of a silent swallow.
+        expect(types(b.onStateReport('level', 31))).toEqual(['warn']);
+    });
+
+    it('the PARK drops the mark — left armed it would eat the first crossing after the return', () => {
+        const b = armed();
+        b.onStateReport('pendingExit', '1|19|stairsup|8|8|31');
+        b.setActive(false);
+        expect(b.pendingDeparture).toBeNull();
+        b.setActive(true);
+        expect(types(b.onStateReport('level', 30))).toEqual(['regionMove']);
+    });
+
+    it('a PARKED binding reads no door at all', () => {
+        const b = armed();
+        b.setActive(false);
+        expect(b.onStateReport('pendingExit', '1|19|stairsup|8|8|31')).toEqual([]);
+    });
+
+    it('a fresh adapter forgets the mark', () => {
+        const b = armed();
+        b.onStateReport('pendingExit', '1|19|stairsup|8|8|31');
+        b.onGameRestart();
+        expect(b.pendingDeparture).toBeNull();
     });
 });

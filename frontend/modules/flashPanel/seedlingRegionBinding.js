@@ -108,6 +108,49 @@ export function resolveArrivalSpawn(world, arrivedFrom) {
     };
 }
 
+/**
+ * ⛓⛓ **THE PRE-SWAP DOOR REPORT** (EDITOR INTEGRATION M1; plan §11.1 A1,
+ * §11.2). `Game.pendingExit` is `"<seq>|<fromLevel>|<type>|<x>|<y>|<to>"`,
+ * written by `Teleporter.update()` in the frame BEFORE `FP.world = new Game()`
+ * lands. It exists because the `level` report cannot say WHICH door fired:
+ * `new Game(to,..)` sets `Main.level` in its own constructor, so by the time
+ * the level moves the door is unrecoverable.
+ *
+ * ⛔ THE `<seq>` PREFIX IS NOT DECORATION AND IT IS NOT PART OF THE ADDRESS.
+ * BridgeGeneric reports a property only when its value CHANGED, so two fires
+ * of ONE door would produce the same string and the second would be silently
+ * dropped. MEASURED on p4c at W5-0: re-writing the same string produced no
+ * report at all. The counter is stripped here and never compared.
+ *
+ * ⛓ THE DELIMITER IS SAFE BY CONSTRUCTION, AND A ROW ASSERTS IT FROM
+ * `LINK_TAGS` rather than from three literals: `|` appears in no link tag and
+ * `String(int)` cannot produce one.
+ *
+ * @returns {{seq:number, fromLevel:number, type:string, x:number, y:number,
+ *            to:number}|null} null for the empty boot report and for anything
+ *   malformed — a value the game never wrote is not a door.
+ */
+export const PENDING_EXIT_FIELDS = 6;
+export function parsePendingExit(value) {
+    if (typeof value !== 'string' || value === '') return null;
+    const parts = value.split('|');
+    if (parts.length !== PENDING_EXIT_FIELDS) return null;
+    // ⛔ EMPTY IS NOT ZERO. `Number('')` is 0, so a payload with an unwritten
+    // field would otherwise parse as a door to level 0 at (0, 0).
+    if (parts.some((part) => part === '')) return null;
+    const [seq, fromLevel, type, x, y, to] = parts;
+    const nums = [seq, fromLevel, x, y, to].map(Number);
+    if (nums.some((n) => !Number.isInteger(n))) return null;
+    return { seq: nums[0], fromLevel: nums[1], type, x: nums[2], y: nums[3], to: nums[4] };
+}
+
+/**
+ * The atlas exit id a door report names. ⛔ NOT SPELLED HERE: it is
+ * `seedlingAtlasDerivation.outExitId`'s own formula, and the two must not
+ * drift, so the shape is stated once and a row pins it against the derivation.
+ */
+export const outExitIdOf = ({ type, x, y }) => `out_${type}_${x}_${y}`;
+
 const dist2 = (a, b) => {
     if (!a || !b || !Number.isFinite(a.x) || !Number.isFinite(a.y)) return Number.POSITIVE_INFINITY;
     return (a.x - b.x) ** 2 + (a.y - b.y) ** 2;
@@ -153,6 +196,17 @@ export class SeedlingRegionBinding {
         this.lastSpawn = { x: null, y: null };
         // Trap 1: our own arrival teleport, in flight.
         this.pendingArrival = null;
+        /**
+         * ⛓ TRAP 1 POINTED THE OTHER WAY (M1). An EXTERNAL door is reported
+         * one frame before the game swaps worlds — and it swaps anyway, into a
+         * real room of its own set (design (c): the game learns nothing about
+         * worlds). That swap's `level` report is the game telling us about a
+         * move we already published as a region crossing, so it is marked and
+         * swallowed. Without the mark it resolves against a region whose
+         * external exit carries `target_level: null`, finds nothing, and WARNS
+         * LOUDLY about a crossing that worked.
+         */
+        this.pendingDeparture = null;
         // An arrival asked for before the game was reporting; released on baseline.
         this.pendingSpawn = null;
         this.warnedLevels = new Set();
@@ -224,6 +278,7 @@ export class SeedlingRegionBinding {
         this.lastLevel = null;
         this.lastSpawn = { x: null, y: null };
         this.pendingArrival = null;
+        this.pendingDeparture = null;
         this.pendingSpawn = this.world ? resolveArrivalSpawn(this.world, this.arrivedFrom) : null;
     }
 
@@ -243,6 +298,10 @@ export class SeedlingRegionBinding {
              * the first REAL crossing after the return.
              */
             this.pendingArrival = null;
+            // ⛓ And the departure mark, for the same reason: left armed
+            // through the excursion it would swallow the first REAL crossing
+            // after the return.
+            this.pendingDeparture = null;
             return [{
                 type: 'info',
                 message: `[region atlas] another substrate now owns the region — "${this.region}" `
@@ -273,6 +332,15 @@ export class SeedlingRegionBinding {
         if (!this.active) return [];
         if (property === 'playerPositionX') { this.lastSpawn.x = Number(value); return []; }
         if (property === 'playerPositionY') { this.lastSpawn.y = Number(value); return []; }
+        /**
+         * ⛓⛓ **THE DEPARTURE, AND IT ARRIVES BEFORE THE LEVEL MOVE** — the
+         * whole reason `pendingExit` is declared above `level` in
+         * games/seedling.json. The game reports EVERY door it fires; deciding
+         * which one leaves this substrate is the HOST's job, and the exit it
+         * matches already CARRIES `external` (W6/H1), so it is a field read
+         * rather than a second substrate lookup.
+         */
+        if (property === 'pendingExit') return this._resolveDeparture(parsePendingExit(value));
         if (property !== 'level') return [];
         const level = Number(value);
 
@@ -282,6 +350,25 @@ export class SeedlingRegionBinding {
             const spawn = this.pendingSpawn;
             this.pendingSpawn = null;
             return spawn ? this._beginArrival(spawn) : [];
+        }
+
+        /**
+         * ⛔ THE DEPARTURE ECHO, SWALLOWED — and checked ABOVE the arrival echo
+         * because an external door fires while no arrival is in flight, and
+         * because the swap is the very next report after the one that armed it.
+         */
+        if (this.pendingDeparture) {
+            // ⛔ THE AGE IS CHECKED FIRST, AND DELIBERATELY. The mark matches
+            // ONE level, so testing equality first would make the timeout
+            // decorative: a mark left armed would still swallow the player's
+            // genuine return through that door however much later it came.
+            if (this._now() - this.pendingDeparture.at > ARRIVAL_ECHO_TIMEOUT_MS) {
+                this.pendingDeparture = null; // written off — treat this as real
+            } else if (this.pendingDeparture.level === level) {
+                this.pendingDeparture = null;
+                this.lastLevel = level;
+                return [];
+            }
         }
 
         if (this.pendingArrival) {
@@ -313,6 +400,44 @@ export class SeedlingRegionBinding {
             this.pendingArrival = { level: spawn.level, x: spawn.x, y: spawn.y, at: this._now() };
         }
         return [{ type: 'teleport', level: spawn.level, x: spawn.x, y: spawn.y, region: this.region }];
+    }
+
+    /**
+     * One door fire. Returns EFFECTS, like every other input.
+     *
+     * ⛔ SILENCE IS THE RIGHT ANSWER FOR THREE OF THE FOUR CASES, and each is
+     * silent for its own reason:
+     *   - a malformed or EMPTY payload — BridgeGeneric reports every declared
+     *     property once at boot, so `""` arrives on a build that has the seam
+     *     and has fired no door. It is not a door;
+     *   - a door this region does not declare as an exit — the atlas covers
+     *     part of the map by design, and the `level` arm below already WARNS
+     *     about the move it causes. Warning here too would double every one;
+     *   - a door that stays inside this substrate — that is an ordinary
+     *     crossing and the `level` arm resolves it, with the spawn tie-break
+     *     this report cannot do better than.
+     * Only an `external` exit is ours, and it is the one case the `level` arm
+     * cannot handle at all: an external exit carries `target_level: null`
+     * (H1/A3), so it can never be the answer to "which exit reached level N".
+     */
+    _resolveDeparture(door) {
+        if (!door) return [];
+        const exitId = outExitIdOf(door);
+        const exit = exitList(this.world).find((e) => e.exit_id === exitId);
+        if (!exit || !exit.external) return [];
+        // The game swaps anyway — design (c) — into a real room of its own
+        // set. Mark that swap so its `level` report is not read as a crossing.
+        this.pendingDeparture = { level: door.to, at: this._now() };
+        return [{
+            type: 'regionMove',
+            sourceRegion: this.region,
+            targetRegion: exit.targetRegion,
+            exitName: exit.exitName ?? exit.exit_id,
+            exitId: exit.exit_id,
+            fromLevel: door.fromLevel,
+            toLevel: door.to,
+            external: true,
+        }];
     }
 
     _resolveCrossing(level, fromLevel) {
