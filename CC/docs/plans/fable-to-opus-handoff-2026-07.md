@@ -5611,6 +5611,51 @@ lock with `assertTreeUnmoved` asserted at all 64 rows and never firing.
 NEXT: the orchestrator's full-tier drive (retires the red) → **P4** = ⚖ 54 (8)
 one record surface + 47b's remaining (1)(4)(6) → L15.
 
+**⇒ 12i CLOSED (2026-08-28, `main` @`ae16aa72b`, six commits in ONE fast-forward
+`394ced764..ae16aa72b`; as-built kickoff §49; ⚖ 61 OPENED, two questions
+PENDING for the user).** ⚖ The user, 2026-08-27: *"Yes, I want to implement the
+dash settings. Next time we do a full record, I might want to change the default
+to no dashing, if it makes that much of a difference."*
+**THE KNOB IS BUILT AND THE DEFAULT DID NOT MOVE.** `DASH_MODES =
+['none','full','all']`, `DEFAULT_DASH_MODE = 'all'`, the candidate set DERIVED
+by `dashPrefixesFor` from `DASH_CHAIN_PATTERN` (⚖ 17); a mode outside the set is
+a `fail()` by name in every reader, never a fallback. At `none` the window pass
+is SKIPPED, not asked with `[]`. `--dash=none|full|all` on **eleven**
+instruments, parsed ONCE in `scripts/procgen/dashMode.js`, threaded EIGHT hops
+(every one forwarding `undefined` so absence reaches the solver's own default);
+the mode rides the artifact only when it is NOT the default, so a trace that
+says nothing means the roster's build. ⚖ 22's reference regen in the same
+commit: **exactly eleven `dash` flag rows**, named by the index's own scan.
+⛔ **NO TAPE MOVED and ELEVEN standing rows are unmoved** — the seven producer
+`--check` md5s (measured three times: W1's head, W2's head, and after the rebase
+onto P3b's close), (D)'s two bulk identity md5s equal to their standing values,
+`gate: procgen-reference` 21/0 and the generator's own `--check` line. No
+`--write` owed.
+⛓⛓⛓ **THE BRIEF'S RENAME WAS REFUSED ON A CENSUS, AND THAT IS WHAT MADE THE
+FINDING VISIBLE.** Of `ALLOW_DASH_ROSTER_WIDE`'s five reads, only TWO are dash
+sites; the other three are ⚖ 46/47's `economies`, which ⚖ 54 (5) merely parked
+behind the same constant as a RELEASE GATE (§40.3). So `dashMode` is a FOURTH
+permission beside `economies` and the old name survives as a derived deprecated
+alias.
+⛓⛓⛓⛓ **AND THE 4× EVERY BULK ROW HAS BEEN PAYING IS ~80 % NOT THE DASH.**
+MEASURED on a quiet box, four arms, `batch-seedling-acceptance` ×3 + `empty
+pairs c3` ×1: `--dash=none` buys **1.18× / 1.19×**, `--dash=full` **1.06× /
+1.07×**, the CONSTANT flipped to `none` (dash + economies) **4.92× / 4.44×**.
+Dashing is **18.9 % / 20.5 %** of the saving; the rest is ⚖ 46's exhaustive
+collect-stance scoring, which a GENERATED room pays on nearly every goal and the
+committed roster hardly pays at all. **§47.9's attribution — "the dash planner's
+price on every certification solve" — is corrected: a flip that turned on two
+things priced them as one.** ⚠ No arm is both faster and inert: every
+non-default mode moves six of seven producers AND both bulk identity rows.
+⚠ **TWO OF THE SLICE'S OWN ERRORS ARE IN THE RECORD, both caught by DRIVING**:
+an (E) table built with two md5 methods (`$( )` strips trailing newlines) that
+read every row as "moved", including the one producer that moves under no mode —
+contradicting §40.7, which is what should have caught it; and a test written FOR
+mutant (m3) that ran GREEN under (m3), because it counted `DASH_MODE` and
+`DEFAULT_DASH_MODE` contains it.
+NEXT: unchanged — the orchestrator's full-tier drive → **P4** → L15. ⛔ ⚖ 61's
+two questions go to the user BEFORE the next full record, not before P4.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
