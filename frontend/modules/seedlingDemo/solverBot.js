@@ -1563,10 +1563,32 @@ export function assertDashMode(mode, where = 'assertDashMode') {
  * INDEPENDENTLY: `--dash=` and `DEFAULT_DASH_MODE` price the window pass
  * ALONE, and this constant prices the economies alone.
  *
- * ⛔ IT IS `true`, AND MOVING IT IS THE USER'S (⚖ 42). At `false` the four
- * committed artifacts `solveSegment`'s `economies` docblock censuses re-plan
- * — `r8-solve-10` 90 → 89 · `r8-solve-20` 365 → 332 · `r8-d2-19` 864 → 807 ·
- * `r8-d2-20` 781 → 756 — which is a re-record, not a code change.
+ * ⛔ IT IS `true`, AND MOVING IT IS THE USER'S (⚖ 42) — it is a re-record,
+ * not a code change.
+ *
+ * ⛓⛓ AND THE CENSUS IS RE-MEASURED HERE, BECAUSE THE OLD ONE IS ABOUT A
+ * ROSTER THAT NO LONGER EXISTS. `solveSegment`'s `economies` docblock counts
+ * `r8-solve-10` 90 → 89 · `r8-solve-20` 365 → 332 · `r8-d2-19` 864 → 807 ·
+ * `r8-d2-20` 781 → 756. Every one of those is a PRE-RE-RECORD number: they
+ * were measured on `main` before ⚖ 41's flip, with the dash OFF, and the
+ * roster was re-recorded at the flip. Cutting the yoke is exactly what makes
+ * the question askable at THIS head, so 12j asked it — one constant flipped,
+ * `DEFAULT_DASH_MODE` left at `all`, the same `2>&1 | md5sum` method:
+ *
+ *   · `r8-solve-10`     78 → 83    (`solve-seedling-r8-battery`, and the
+ *                                   campaign chain 3326 → 3331 with it)
+ *   · `r8-solve-18`    410 → 485   (`solve-seedling-r8-l18`)
+ *   · `r8-solve-20`    229 → 257   (`solve-seedling-r8-d2`)
+ *   · the `r8-d2` headline 1685 → 1791, and its
+ *     *"the headline's first 410 ticks ARE r8-solve-18's walk"* row parts at
+ *     tick 292 — the tick the fade used to be stood through
+ *   ⇒ FIVE of the seven producer `--check` md5s move; `r8-tail` and
+ *     `r9-l3` do not, which is the same pair §49.5 finds unmoved by the dash.
+ *
+ * ⛔ THE SIGN IS THE OTHER WAY ROUND FROM THE OLD CENSUS AND THAT IS NOT A
+ * CONTRADICTION: an economy SAVES ticks, so turning it off adds them. The old
+ * list reads "what landing them did"; this one reads "what removing them
+ * does", at a head where they have already landed.
  *
  * ⛓ RETIRES `ALLOW_DASH_ROSTER_WIDE` (12j). That name carried five reads and
  * only two of them were ever about the dash; §49.2's census is what split it.
@@ -3182,6 +3204,11 @@ function deriveStance(run, resolved, contacts,
      * `ALLOW_DASH_ROSTER_WIDE` until 12j cut ⚖ 54 (5)'s yoke — same state,
      * its own name now), this block moves FOUR committed
      * artifacts by name and five of seven producer `--check` md5s with them:
+     *
+     * ⛓ ⛔ THESE FOUR ARE PRE-RE-RECORD NUMBERS — measured on `main` before
+     * ⚖ 41's flip, with the dash OFF. The roster was re-recorded at the flip,
+     * so they no longer name today's artifacts; `ECONOMIES_ROSTER_WIDE`'s own
+     * docblock carries the census re-measured at THIS head (12j).
      *
      *   · `r8-solve-10`   90 → 89   (campaign segment 10; battery prints it)
      *   · `r8-solve-20`  365 → 332  (`solve-seedling-r8-d2-chain`)
