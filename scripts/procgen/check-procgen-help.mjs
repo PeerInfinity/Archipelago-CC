@@ -77,26 +77,35 @@
  *   · **BOUNDED CONCURRENCY.** Each child gets its own temp cache, so nothing
  *     they contend for is shared; only the two per-batch observers need the
  *     batch to be quiet, and they are taken outside it.
- *   · **TWO CEILINGS, AND BOTH ARE MEASURED.** Proving a file INERT means
- *     waiting long enough that "it finished and did nothing" is a real
- *     answer: the inert population's own import door is p50 271 ms, p90
- *     891 ms, MAX 1,410 ms, so the default ceiling is a ~3.5× margin over
- *     the slowest inert file rather than a number somebody liked.
- *     Re-confirming a file the baseline already NAMES as a module-scope
- *     worker is a different question — it only has to be shown still
- *     non-inert, which it demonstrates immediately — so it gets a shorter
- *     one. ⚠ THE BOUND THAT COSTS: a baselined file that has been FIXED but
- *     is slow to import could be killed at the short ceiling and read as
- *     still effectful. A slice retiring entries runs `--known-ceiling=` up
- *     at the full value; the flag exists for exactly that.
+ *   · **TWO CEILINGS — AND THE WALL CLOCK IS A KILL DEADLINE, NOT A
+ *     VERDICT.** ⛔⛔ THE FIRST CUT MADE IT A VERDICT AND CONCURRENCY BROKE
+ *     IT. The inert population was measured at p50 271 ms, p90 891 ms, MAX
+ *     1,410 ms — **serially** — and a 5,000 ms ceiling looked like a 3.5×
+ *     margin. Run six at a time, three files that the serial census clocked
+ *     at ~2 s were killed at 5,000 ms and filed as module-scope workers.
+ *     **The instrument added to make the gate cheap moved the very quantity
+ *     the threshold was calibrated on.** So the verdict is the OBSERVERS —
+ *     exit code, cache, porcelain, mtime, stderr, and the stdout identity —
+ *     and the clock only decides when to stop waiting, set far above where a
+ *     slow-but-inert import lands. A run that never finished is still a
+ *     finding, because at this deadline "did not finish" means it was doing
+ *     something.
+ *   · **AND THE SHORT CEILING IS THE *IMPORT* DOOR'S ALONE.** The baseline
+ *     names a file for what its IMPORT does; applying that ceiling to its
+ *     HELP door too reddened **32 gates** whose `--help` needs longer than it
+ *     just to load playwright. Proving `--help` inert is the property with no
+ *     list and no exceptions, so it always gets the full deadline.
  *
  * ── Run: ──────────────────────────────────────────────────────────────
  *
  *   node scripts/procgen/check-procgen-help.mjs
+ *   node scripts/procgen/check-procgen-help.mjs --doors=ci
  *   node scripts/procgen/check-procgen-help.mjs --only=solve-seedling-r9-campaign.mjs
  *   node scripts/procgen/check-procgen-help.mjs --json
  *   node scripts/procgen/check-procgen-help.mjs --write-baseline
  *   node scripts/procgen/check-procgen-help.mjs --ceiling=20000 --known-ceiling=20000 --jobs=1
+ *
+ * @ci-face gate-help-ci: --doors=ci
  */
 
 import { execFileSync, spawn } from 'node:child_process';
@@ -118,11 +127,41 @@ const JSON_OUT = argv.includes('--json');
 const WRITE_BASELINE = argv.includes('--write-baseline');
 const ONLY = arg('only', '');
 
-/** ⛓ ~3.5x the slowest INERT file measured over the whole directory (1,410 ms). */
-const CEILING_MS = Number(arg('ceiling', 5000));
-/** ⛓ …and a file the baseline already names only has to be shown non-inert. */
-const KNOWN_CEILING_MS = Number(arg('known-ceiling', 2000));
+/** ⛓ The KILL DEADLINE, set far above where a slow-but-inert import lands
+ *  under concurrency — not a threshold anything is judged against. */
+const CEILING_MS = Number(arg('ceiling', 15000));
+/** ⛓ …and the IMPORT door of a file the baseline already names only has to be
+ *  shown still non-inert, which it demonstrates at once. */
+const KNOWN_CEILING_MS = Number(arg('known-ceiling', 5000));
 const JOBS = Math.max(1, Number(arg('jobs', 6)));
+
+/**
+ * ⛓⛓⛓ **THE CI FACE IS A SMALLER QUESTION, AND IT SAYS SO WITH ITS OWN KEY.**
+ * `ci-gates.mjs` runs every headless gate on EVERY PUSH, and a push gate the
+ * user waits on is a real cost. The two doors are not equally cheap and not
+ * equally urgent:
+ *
+ *   `--doors=all`  (default) both doors for every instrument — the STANDING
+ *                  row's measurement, taken on the box.
+ *   `--doors=ci`   the HELP door for every instrument (fast: the inert
+ *                  population is p90 891 ms and they run six at a time) plus
+ *                  the IMPORT door only for the instruments the baseline does
+ *                  NOT already name. That is the half with news in it: a
+ *                  `--help` regression anywhere, and a NEW module-scope
+ *                  worker. ⛔ What it CANNOT see is a baselined entry that has
+ *                  been FIXED — that direction costs the 203 slow runs and is
+ *                  a local red, which is where retiring an entry happens
+ *                  anyway.
+ *   `--doors=help` the help door alone.
+ *
+ * `@ci-face` gives the CI run its own key prefix, so a bounded number can
+ * never be read as the standing one (⚖ P3b (g)).
+ */
+const DOORS = arg('doors', 'all');
+if (!['all', 'ci', 'help'].includes(DOORS)) {
+    console.log(`check-procgen-help: unknown --doors=${DOORS} — one of all, ci, help`);
+    process.exit(1);
+}
 
 /**
  * ⛓⛓⛓ THE IMPORT DOOR'S BASELINE — *"not approved, KNOWN"*, exactly as
@@ -334,14 +373,21 @@ function repairPorcelain(before, after, touched) {
         + `${left.length ? ` — ⛔ LEFT IN PLACE ${left.join(', ')}` : ''}`;
 }
 
-const ceilingFor = (file) => (KNOWN.has(file) ? KNOWN_CEILING_MS : CEILING_MS);
+/**
+ * ⛔ THE SHORT CEILING BELONGS TO THE IMPORT DOOR ONLY. The baseline names a
+ * file for what its IMPORT does; a `--help` that has to load playwright first
+ * is a different question with a different clock, and conflating them
+ * reddened 32 gates for their import cost.
+ */
+const ceilingFor = (file, kind) => (kind === 'import' && KNOWN.has(file)
+    ? KNOWN_CEILING_MS : CEILING_MS);
 
 /** One door, run and judged on its own observers; the disk pair is the caller's. */
 async function runDoor(task) {
     const cache = join(scratch, `${task.kind}-${task.file}`);
     rmSync(cache, { recursive: true, force: true });
     mkdirSync(cache, { recursive: true });
-    const ceiling = ceilingFor(task.file);
+    const ceiling = ceilingFor(task.file, task.kind);
     const r = await spawnChild(argsFor(task.kind, task.abs), cache, ceiling);
     const cacheFiles = readdirSync(cache, { recursive: true });
     rmSync(cache, { recursive: true, force: true });
@@ -398,7 +444,10 @@ async function runBatch(tasks) {
 const t0 = Date.now();
 const byDoor = new Map();
 for (const kind of ['import', 'help']) {
-    const doors = instruments.map((file) => ({
+    if (kind === 'import' && DOORS === 'help') continue;
+    const doors = instruments
+        .filter((file) => !(kind === 'import' && DOORS === 'ci' && KNOWN.has(file)))
+        .map((file) => ({
         file,
         kind,
         abs: join(DIR, file),
@@ -415,11 +464,16 @@ for (const kind of ['import', 'help']) {
 const WALL_MS = Date.now() - t0;
 rmSync(scratch, { recursive: true, force: true });
 
+const SKIPPED = { ms: 0, why: [], wrote: [], skipped: true };
 const rows = instruments.map((file) => {
-    const help = byDoor.get(`help:${file}`);
-    const imported = byDoor.get(`import:${file}`);
-    return { file, help: { ...help, ok: help.why.length === 0 },
-        import: { ...imported, ok: imported.why.length === 0 } };
+    const help = byDoor.get(`help:${file}`) ?? SKIPPED;
+    const imported = byDoor.get(`import:${file}`) ?? SKIPPED;
+    return {
+        file,
+        help: { ...help, ok: help.why.length === 0 },
+        /** ⛓ a door this face did not ask about is not a door that PASSED. */
+        import: { ...imported, ok: imported.why.length === 0, asked: !imported.skipped },
+    };
 });
 
 if (!JSON_OUT && !WRITE_BASELINE) {
@@ -440,9 +494,13 @@ if (!JSON_OUT && !WRITE_BASELINE) {
     }
 }
 
-const helpBad = rows.filter((r) => !r.help.ok);
-const importFresh = rows.filter((r) => !r.import.ok && !KNOWN.has(r.file));
-const importFixed = rows.filter((r) => r.import.ok && KNOWN.has(r.file));
+const helpBad = rows.filter((r) => !r.help.ok && r.help.asked !== false);
+const importFresh = rows.filter((r) => r.import.asked !== false && !r.import.ok
+    && !KNOWN.has(r.file));
+/** ⛔ only a face that ASKED the 203 can say one of them was fixed. */
+const importFixed = DOORS === 'all'
+    ? rows.filter((r) => r.import.ok && KNOWN.has(r.file))
+    : [];
 const bad = [...new Set([...helpBad, ...importFresh, ...importFixed])];
 
 if (WRITE_BASELINE) {
@@ -489,11 +547,11 @@ if (JSON_OUT) {
 const slowest = rows.slice().sort((a, b) => Math.max(b.help.ms, b.import.ms)
     - Math.max(a.help.ms, a.import.ms))[0];
 console.log('');
-console.log(`## ${rows.length} instrument(s), two doors each, ${JOBS} at a time in `
+console.log(`## ${rows.length} instrument(s), \`--doors=${DOORS}\`, ${JOBS} at a time in `
     + `${(WALL_MS / 1000).toFixed(1)} s; ${rows.filter((r) => KNOWN.has(r.file)).length} on the `
     + `import-door baseline. Slowest: ${slowest.file} `
-    + `(${Math.max(slowest.help.ms, slowest.import.ms)} ms; ceilings ${CEILING_MS} ms / `
-    + `${KNOWN_CEILING_MS} ms baselined).`);
+    + `(${Math.max(slowest.help.ms, slowest.import.ms)} ms; kill deadlines ${CEILING_MS} ms, `
+    + `${KNOWN_CEILING_MS} ms for a baselined IMPORT door).`);
 console.log('## ⛓ The ceiling is a PROXY — the assertions that decide a row are the porcelain, '
     + 'the mtime sweep, the child\'s own cache, its exit code, its stderr, and for the help '
     + 'door that stdout IS the derived help text.');
