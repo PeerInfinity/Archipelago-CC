@@ -134,10 +134,18 @@ export default class RuleTreeEditor {
    * ⛔ THE ONE SEAM. Adopt an op's tree, or THROW its refusal — a
    * path-addressed op that silently did nothing would leave the DOM showing an
    * edit the document never took.
+   *
+   * ⛓⛓ AND IT ANNOUNCES THE RESULT (EDITOR INTEGRATION B-c). `parentObj` is a
+   * HOLDER over a working copy when the APWorld panel builds this editor, not
+   * the live document, so a gesture has to TELL the panel what came out — which
+   * the panel records as one `set-rule-tree` carrying that tree. ⚠ `onTree`
+   * rides in `nameProviders`, which is spread, so a caller that does not supply
+   * one (the standalone use) is unmoved and this file's constructor is not.
    */
   _applyTreeOp(result) {
     if (!result.ok) throw new Error(result.error);
     this.parentObj[this.key] = result.tree;
+    if (typeof this.nameProviders.onTree === 'function') this.nameProviders.onTree(result.tree);
   }
 
   /** A render context for the node at `path`, with the ops wired to it. */

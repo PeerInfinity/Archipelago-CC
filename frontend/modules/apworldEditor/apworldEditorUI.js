@@ -2,26 +2,47 @@
  * APWorld Editor UI
  *
  * GUI CRUD over rules.json — regions, exits, locations, access rules.
- * Mutates an in-memory copy of the rules doc and publishes files:jsonLoaded
- * on Apply (same pathway the Editor module uses).
+ * Publishes files:jsonLoaded on Apply (same pathway the Editor module uses).
  *
  * v1: single-player only (slot "1"). Rules are authored in Rule Builder
- * format. Access rules are edited as raw JSON (placeholder until the
- * tree editor lands).
+ * format.
+ *
+ * ⛓⛓⛓ **IT IS AN `editCore` SESSION NOW, SO IT HAS UNDO** (EDITOR INTEGRATION
+ * slice B-c). `rulesDoc` used to be a FIELD that fourteen handlers and
+ * twenty-odd inline closures wrote IN PLACE; it is a GETTER over
+ * `session.record()` with NO SETTER, so an assignment throws in this module's
+ * strict mode and the only way into the document is `_applyOp`.
+ *
+ * ⛔ **THE THREE INTAKE PATHS ARE SESSION BOUNDARIES, NOT OPS**: the app's
+ * `stateManager:rawJsonDataLoaded`, the marking tool's `apworldEditor:loadRules`
+ * hand-off, and Reload. Each is a DIFFERENT document arriving from outside, and
+ * nothing in an edit list can express one — so each opens a NEW session with a
+ * new base, and undo does not cross a reload.
+ *
+ * ⛓ **CLEAR IS AN OP** and Apply does NOT reset the session — see `_handleClear`
+ * and `_handleApply`.
+ *
+ * ⛔ **AND THE ACCESSORS BELOW ARE PURE READS.** They used to lazily CREATE
+ * their container (`this.rulesDoc.regions || (this.rulesDoc.regions = {})`),
+ * which over a session is a write THROUGH the folded record — and at zero ops
+ * `record()` IS the base, so a render would have quietly modified the document
+ * the session reconstructs from.
  */
 
 import { getModuleEventBus, APWORLD_EDITOR_LOAD_RULES, consumePendingEditorRules } from './index.js';
 import { stateManagerProxySingleton as stateManager, getLastRawJsonData } from '../stateManager/index.js';
 import RuleTreeEditor from './ruleTreeEditor.js';
+import { validateRules, cloneFullRulesDoc } from './rulesUtils.js';
+import { createEditSession, describeOps, group } from '../procgenCore/editCore.js';
+import { rulesEditAdapter } from './rulesEditAdapter.js';
 import {
-  validateRules,
-  renameItemInRules,
-  renameRegionInRules,
-  renameLocationInRules,
-  cloneFullRulesDoc,
-} from './rulesUtils.js';
+  EXIT_FIELDS,
+  ITEM_FIELDS,
+  META_FIELDS,
+  deleteItemOps,
+  deleteRegionOps,
+} from './rulesDocOps.js';
 import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
-import { makeExit, makeTrueRule } from '../shared/rulesJsonBuilder.js';
 
 const RAW_JSON_LOADED = 'stateManager:rawJsonDataLoaded';
 const APP_READY = 'app:readyForUiDataLoad';
@@ -60,7 +81,19 @@ class ApworldEditorUI {
     this.container = container;
     this.componentState = componentState;
 
-    this.rulesDoc = null;
+    /**
+     * ⛓⛓⛓ **THE DOCUMENT IS THE SESSION'S RECORD, AND THERE IS NO SETTER.**
+     * `sess.rulesDoc = x` THROWS. That is not decoration: three intake paths
+     * and fourteen handlers used to assign this field, and a mutator that still
+     * did would be writing a record the next undo re-folds away — a defect with
+     * no visible cause until somebody presses ↶.
+     */
+    Object.defineProperty(this, 'rulesDoc', {
+      get: () => (this.session ? this.session.record() : null),
+      enumerable: true,
+      configurable: true,
+    });
+    this.session = null;
     this.isInitialized = false;
     this.rawJsonUnsubscribe = null;
     this.loadRulesUnsubscribe = null;
@@ -69,6 +102,9 @@ class ApworldEditorUI {
 
     this.rootElement = document.createElement('div');
     this.rootElement.classList.add('apworld-editor-panel');
+    // ⛓ The handle every browser verifier reaches the session through — the
+    //   marking tool's `.rmt-panel.__panel` precedent.
+    this.rootElement.__panel = this;
     Object.assign(this.rootElement.style, {
       width: '100%',
       height: '100%',
@@ -112,8 +148,9 @@ class ApworldEditorUI {
       }
       // Full-doc clone preserves non-standard top-level keys (procgen_metadata
       // etc.) the editor doesn't edit — see cloneFullRulesDoc's contract.
-      this.rulesDoc = cloneFullRulesDoc(eventData.rawJsonData);
-      this._render();
+      this._openSession(eventData.rawJsonData, {
+        kind: 'rules', source: eventData.source ?? 'app-load', player: PLAYER_ID,
+      });
     });
 
     // Direct hand-off channel (§2.2): procgen's "Edit in APWorld Editor" routes
@@ -130,11 +167,10 @@ class ApworldEditorUI {
     const pending = consumePendingEditorRules();
     if (pending) {
       this._adoptHandoffRules(pending);
-    } else if (!this.rulesDoc) {
+    } else if (!this.session) {
       const current = this._getCurrentAppRules();
       if (current) {
-        this.rulesDoc = cloneFullRulesDoc(current);
-        this._render();
+        this._openSession(current, { kind: 'rules', source: 'app-cache', player: PLAYER_ID });
       }
     }
 
@@ -145,11 +181,91 @@ class ApworldEditorUI {
   // Adopt a world handed directly to the editor (load-rules channel). Same
   // full-doc clone the global load path uses, so procgen_metadata is preserved.
   _adoptHandoffRules(jsonData) {
-    this.rulesDoc = cloneFullRulesDoc(jsonData);
+    this._openSession(jsonData, { kind: 'rules', source: 'hand-off', player: PLAYER_ID });
+  }
+
+  /**
+   * ⛓⛓⛓ **ONE PLACE OPENS A SESSION, AND IT IS THE ONLY BOUNDARY.** The base
+   * RECORD is a full-doc clone (so the app's object is never the one being
+   * edited, and `procgen_metadata` and friends round-trip); the base TAG is the
+   * opaque `{kind, …}` `editCore` carries verbatim and never interprets.
+   *
+   * ⛔ A NEW SESSION DISCARDS THE OP LIST, and that is what a boundary MEANS:
+   * the edits described a document that is no longer the one in front of the
+   * person, so an undo across it would reconstruct bytes nobody ever saw.
+   */
+  _openSession(jsonData, baseTag) {
+    this.session = createEditSession(rulesEditAdapter, cloneFullRulesDoc(jsonData),
+      { base: baseTag });
     this._render();
   }
 
+  /**
+   * ⛓⛓ ONE OP → the session → a re-render. ⛔ The THREE outcomes are told apart
+   * by NAME, exactly as `editCore` reports them: a refusal prints the
+   * substrate's own sentence (which, where the op broke a reference, is
+   * `validateRules`' own), a no-op says so rather than claiming an edit, and
+   * only an applied op moves the readout.
+   *
+   * ⚠ The validation bar and the status line are re-rendered from the RECORD on
+   * every outcome, so a bar read after an undo cannot be the one from before it.
+   */
+  _applyOp(op, { message = null, rerender = true } = {}) {
+    if (!this.session) {
+      alert('Load a rules.json first.');
+      return { ok: false, applied: false, description: 'no session' };
+    }
+    const res = this.session.apply(op);
+    if (!res.ok) {
+      this._opMessage = `Refused: ${res.description}`;
+      log('warn', `op refused: ${res.description}`);
+      alert(res.description);
+    } else if (!res.applied) {
+      this._opMessage = `No change (${res.description}).`;
+    } else {
+      this._opMessage = message ? message(res) : res.description;
+    }
+    if (rerender) this._render(); else this._renderChrome();
+    return res;
+  }
+
+  /** ⛓ UNDO — the fold over a shorter list, never a stack pop. */
+  _undo() {
+    if (!this.session || !this.session.undo()) {
+      this._opMessage = 'Nothing to undo.';
+      this._render();
+      return false;
+    }
+    this._opMessage = `Undone — ${describeOps(this.session.ops())} left.`;
+    this._render();
+    return true;
+  }
+
+  /**
+   * ⛓⛓ **Ctrl/Cmd+Z, AND IT REFUSES INSIDE AN INPUT.** ⛔ This panel is ALL
+   * inputs — every region name, every exit name, every item field, the raw-JSON
+   * textareas — so the guard is the important half of the binding: a browser's
+   * own undo inside a half-typed field is what a person means by ⌘Z while their
+   * cursor is in it, and stealing it would roll back a document edit they were
+   * not even looking at.
+   */
+  _onKeyDown(e) {
+    if (!(e.ctrlKey || e.metaKey) || e.altKey) return;
+    if ((e.key ?? '').toLowerCase() !== 'z') return;
+    const t = e.target;
+    if (t && typeof t.closest === 'function' && t.closest('input, select, textarea')) return;
+    if (t && t.isContentEditable) return;
+    e.preventDefault();
+    this._undo();
+  }
+
   onPanelDestroy() {
+    if (this._keyHandler) {
+      this.rootElement.removeEventListener('keydown', this._keyHandler);
+      this.rootElement.removeEventListener('mousedown', this._focusHandler);
+      this._keyHandler = null;
+      this._focusHandler = null;
+    }
     if (this.rawJsonUnsubscribe) {
       try { this.rawJsonUnsubscribe(); } catch (_) { /* noop */ }
       this.rawJsonUnsubscribe = null;
@@ -189,6 +305,16 @@ class ApworldEditorUI {
     this.reloadButton = this._makeButton('Reload', '#444', () => this._handleReload());
     this.reloadButton.title = 'Discard edits and reload the rules data the rest of the app currently has loaded';
     toolbar.appendChild(this.reloadButton);
+
+    /**
+     * ⛓⛓ UNDO — its label and its `disabled` are DERIVED from
+     * `describeOps(session.ops())` on every render, never from a flag this file
+     * keeps in step. A delete cascade of three ops is ONE group and therefore
+     * reads as ONE edit, which is what undo is a count of.
+     */
+    this.undoButton = this._makeButton('↶ Undo', '#444', () => this._undo());
+    this.undoButton.classList.add('apworld-undo');
+    toolbar.appendChild(this.undoButton);
 
     this.statusLabel = document.createElement('span');
     this.statusLabel.style.color = '#888';
@@ -243,6 +369,38 @@ class ApworldEditorUI {
       padding: '8px',
     });
     this.rootElement.appendChild(this.scrollContainer);
+
+    /**
+     * ⛔ **THE ROOT HAS TO HOLD FOCUS OR THE KEY BINDING IS UNREACHABLE** (trap
+     * 874, B-a's and B-b's): a `<div>` with no tabindex is not focusable, so a
+     * press on the panel's chrome would send ⌘Z to `<body>`. Focus moves to the
+     * root on a press anywhere that is NOT itself a control — a control keeps
+     * the focus the browser is about to give it, because this listener runs
+     * BEFORE mousedown's default focus action.
+     */
+    this.rootElement.tabIndex = -1;
+    this._focusHandler = (e) => {
+      const t = e.target;
+      if (t && typeof t.closest === 'function'
+        && t.closest('input, select, textarea, button, [contenteditable]')) return;
+      this.rootElement.focus({ preventScroll: true });
+    };
+    this._keyHandler = (e) => this._onKeyDown(e);
+    this.rootElement.addEventListener('mousedown', this._focusHandler);
+    this.rootElement.addEventListener('keydown', this._keyHandler);
+  }
+
+  /** ⛓ The Undo control, DERIVED from the op list on every render. */
+  _renderUndoButton() {
+    if (!this.undoButton) return;
+    const n = this.session ? this.session.ops().length : 0;
+    this.undoButton.disabled = n === 0;
+    this.undoButton.style.opacity = n === 0 ? '0.45' : '1';
+    this.undoButton.style.cursor = n === 0 ? 'default' : 'pointer';
+    this.undoButton.textContent = `↶ Undo (${describeOps(this.session ? this.session.ops() : [])})`;
+    this.undoButton.title = n === 0
+      ? 'Nothing to undo'
+      : 'Undo the last edit (Ctrl/Cmd+Z — refused inside a text field)';
   }
 
   _selectTab(tabId) {
@@ -291,12 +449,16 @@ class ApworldEditorUI {
     }, success ? 1000 : 2000);
   }
 
-  // ---------- Accessors on the in-memory doc ----------
+  // ---------- Accessors on the session's record ----------
+  //
+  // ⛔ PURE READS, every one. Each of these used to lazily CREATE its container
+  //   (`all[PLAYER_ID] || (all[PLAYER_ID] = {})`), which over a session is a
+  //   write THROUGH the folded record — and at zero ops `record()` IS the base,
+  //   so a render would have modified the document the fold starts from. The
+  //   ops create what they need, copy-on-write.
 
   _regions() {
-    if (!this.rulesDoc) return {};
-    const all = this.rulesDoc.regions || (this.rulesDoc.regions = {});
-    return all[PLAYER_ID] || (all[PLAYER_ID] = {});
+    return this.rulesDoc?.regions?.[PLAYER_ID] ?? {};
   }
 
   _regionNames() {
@@ -304,22 +466,16 @@ class ApworldEditorUI {
   }
 
   _items() {
-    if (!this.rulesDoc) return {};
-    const all = this.rulesDoc.items || (this.rulesDoc.items = {});
-    return all[PLAYER_ID] || (all[PLAYER_ID] = {});
+    return this.rulesDoc?.items?.[PLAYER_ID] ?? {};
   }
 
   _itemPoolCounts() {
-    if (!this.rulesDoc) return {};
-    const all = this.rulesDoc.itempool_counts || (this.rulesDoc.itempool_counts = {});
-    return all[PLAYER_ID] || (all[PLAYER_ID] = {});
+    return this.rulesDoc?.itempool_counts?.[PLAYER_ID] ?? {};
   }
 
   _startingItems() {
-    if (!this.rulesDoc) return [];
-    const all = this.rulesDoc.starting_items || (this.rulesDoc.starting_items = {});
-    if (!Array.isArray(all[PLAYER_ID])) all[PLAYER_ID] = [];
-    return all[PLAYER_ID];
+    const list = this.rulesDoc?.starting_items?.[PLAYER_ID];
+    return Array.isArray(list) ? list : [];
   }
 
   _startingCount(itemName) {
@@ -330,215 +486,80 @@ class ApworldEditorUI {
     return n;
   }
 
+  // ---------- Mutations — every one an OP through the session ----------
+
   _setStartingCount(itemName, count) {
-    const list = this._startingItems();
-    // Remove all existing entries for this item.
-    for (let i = list.length - 1; i >= 0; i--) {
-      if (list[i] === itemName) list.splice(i, 1);
-    }
-    // Add back `count` entries.
-    const c = Math.max(0, Math.floor(count) || 0);
-    for (let i = 0; i < c; i++) list.push(itemName);
+    this._applyOp({ op: 'set-starting-count', item: itemName, count, player: PLAYER_ID });
   }
 
-  // ---------- Mutations ----------
-
   _handleAddRegion() {
-    if (!this.rulesDoc) {
-      alert('Load a rules.json first.');
-      return;
-    }
-    const regions = this._regions();
-    let i = 1;
-    let name = 'New Region';
-    while (regions[name]) name = `New Region ${++i}`;
-    regions[name] = { name, exits: [], locations: [] };
-    this._render();
+    // ⛓ The name is DERIVED BY THE OP from the record, so `{op:'add-region'}`
+    //   with no name folds to the same name every time (bounceLevelOps.nextId's
+    //   rule) and undo reproduces the document byte for byte.
+    this._applyOp({ op: 'add-region', player: PLAYER_ID });
   }
 
   _handleDeleteRegion(oldName) {
     if (!confirm(`Delete region "${oldName}" and all its exits and locations?`)) return;
-    const regions = this._regions();
-    delete regions[oldName];
-    // Also clean up any exits pointing to this region (set to empty string so the
-    // user notices the dangling reference).
-    for (const r of Object.values(regions)) {
-      for (const ex of r.exits || []) {
-        if (ex.connected_region === oldName) ex.connected_region = '';
-      }
-    }
-    this._render();
+    // ⛓⛓ THE CASCADE IS A GROUP, so ONE undo restores the region AND the
+    //    destinations the delete blanked. The atomic `delete-region` REFUSES
+    //    while a surviving exit still points at it, which is what makes the
+    //    split enforceable rather than conventional.
+    const ops = deleteRegionOps(this.rulesDoc, oldName, PLAYER_ID);
+    this._applyOp(ops.length === 1 ? ops[0] : group(`delete region ${oldName}`, ops));
   }
 
   _handleRenameRegion(oldName, newName) {
-    newName = (newName || '').trim();
-    if (!newName || newName === oldName) return;
-    const regions = this._regions();
-    if (regions[newName]) {
-      alert(`A region named "${newName}" already exists.`);
-      this._render();
-      return;
-    }
-    // Rebuild dict preserving order.
-    const ordered = {};
-    for (const [k, v] of Object.entries(regions)) {
-      if (k === oldName) {
-        v.name = newName;
-        ordered[newName] = v;
-      } else {
-        ordered[k] = v;
-      }
-    }
-    this.rulesDoc.regions[PLAYER_ID] = ordered;
-    // Cascade: update exit destinations.
-    for (const r of Object.values(ordered)) {
-      for (const ex of r.exits || []) {
-        if (ex.connected_region === oldName) ex.connected_region = newName;
-      }
-    }
-    // Cascade: CanReachRegion references in access rules.
-    renameRegionInRules(this.rulesDoc, PLAYER_ID, oldName, newName);
-    // Cascade: start_regions.default entries.
-    const sr = this.rulesDoc.start_regions?.[PLAYER_ID];
-    if (sr && Array.isArray(sr.default)) {
-      sr.default = sr.default.map(n => n === oldName ? newName : n);
-    }
-    this._render();
+    this._applyOp({
+      op: 'rename-region', from: oldName, to: newName, player: PLAYER_ID,
+    });
   }
 
   _handleAddExit(regionName) {
-    const region = this._regions()[regionName];
-    if (!region) return;
-    if (!region.exits) region.exits = [];
-    const existingNames = new Set(region.exits.map(e => e.name));
-    let i = 1;
-    let name = `${regionName} → ?`;
-    while (existingNames.has(name)) name = `${regionName} → ? ${++i}`;
-    region.exits.push(makeExit(name, ''));
-    this._render();
+    this._applyOp({ op: 'add-exit', region: regionName, player: PLAYER_ID });
   }
 
   _handleDeleteExit(regionName, index) {
-    const region = this._regions()[regionName];
-    if (!region || !region.exits) return;
-    region.exits.splice(index, 1);
-    this._render();
+    this._applyOp({ op: 'delete-exit', region: regionName, index, player: PLAYER_ID });
   }
 
   _handleAddLocation(regionName) {
-    const region = this._regions()[regionName];
-    if (!region) return;
-    if (!region.locations) region.locations = [];
-    const existingNames = new Set(region.locations.map(l => l.name));
-    let i = 1;
-    let name = 'New Location';
-    while (existingNames.has(name)) name = `New Location ${++i}`;
-    region.locations.push({
-      name,
-      id: null,
-      access_rule: makeTrueRule(),
-    });
-    this._render();
+    this._applyOp({ op: 'add-location', region: regionName, player: PLAYER_ID });
   }
 
   _handleDeleteLocation(regionName, index) {
-    const region = this._regions()[regionName];
-    if (!region || !region.locations) return;
-    region.locations.splice(index, 1);
-    this._render();
+    this._applyOp({ op: 'delete-location', region: regionName, index, player: PLAYER_ID });
   }
 
   _handleRenameLocation(regionName, index, newName) {
-    newName = (newName || '').trim();
-    const region = this._regions()[regionName];
-    if (!region || !region.locations) return;
-    const loc = region.locations[index];
-    if (!loc) return;
-    const oldName = loc.name;
-    if (!newName || newName === oldName) return;
-    // Check for collision within the same region's locations.
-    if (region.locations.some((l, i) => i !== index && l && l.name === newName)) {
-      alert(`A location named "${newName}" already exists in this region.`);
-      this._render();
-      return;
-    }
-    loc.name = newName;
-    // Cascade: update CanReachLocation references in access rules.
-    renameLocationInRules(this.rulesDoc, PLAYER_ID, oldName, newName);
-    this._render();
+    this._applyOp({
+      op: 'rename-location', region: regionName, index, to: newName, player: PLAYER_ID,
+    });
   }
 
   _handleAddItem() {
-    if (!this.rulesDoc) {
-      alert('Load a rules.json first.');
-      return;
-    }
-    const items = this._items();
-    let i = 1;
-    let name = 'New Item';
-    while (items[name]) name = `New Item ${++i}`;
-    items[name] = {
-      name,
-      id: null,
-      groups: [],
-      classification: 'filler',
-      type: null,
-      max_count: 1,
-    };
-    this._itemPoolCounts()[name] = 1;
-    this._render();
+    this._applyOp({ op: 'add-item', player: PLAYER_ID });
   }
 
   _handleDeleteItem(name) {
     if (!confirm(`Delete item "${name}"?`)) return;
-    const items = this._items();
-    delete items[name];
-    const counts = this._itemPoolCounts();
-    delete counts[name];
-    this._setStartingCount(name, 0);
-    this._render();
+    // ⛓⛓ The same cascade shape: the pool count and the starting entries are
+    //    cleared FIRST — each is a validator ERROR on its own — then the item.
+    const ops = deleteItemOps(this.rulesDoc, name, PLAYER_ID);
+    this._applyOp(ops.length === 1 ? ops[0] : group(`delete item ${name}`, ops));
   }
 
   _handleRenameItem(oldName, newName) {
-    newName = (newName || '').trim();
-    if (!newName || newName === oldName) return;
-    const items = this._items();
-    if (items[newName]) {
-      alert(`An item named "${newName}" already exists.`);
-      this._render();
-      return;
-    }
-    // Rebuild dict preserving order.
-    const ordered = {};
-    for (const [k, v] of Object.entries(items)) {
-      if (k === oldName) {
-        v.name = newName;
-        ordered[newName] = v;
-      } else {
-        ordered[k] = v;
-      }
-    }
-    this.rulesDoc.items[PLAYER_ID] = ordered;
-    // Cascade into itempool_counts and starting_items.
-    const counts = this._itemPoolCounts();
-    if (oldName in counts) {
-      counts[newName] = counts[oldName];
-      delete counts[oldName];
-    }
-    const startList = this._startingItems();
-    for (let i = 0; i < startList.length; i++) {
-      if (startList[i] === oldName) startList[i] = newName;
-    }
-    // Cascade into access rules (Has / HasAll / HasAny / HasFromList / CountItem).
-    renameItemInRules(this.rulesDoc, PLAYER_ID, oldName, newName);
-    // Cascade into completion_condition if it's an item_check for this item.
-    const cc = this.rulesDoc.game_info?.[PLAYER_ID]?.completion_condition;
-    if (cc && cc.type === 'item_check' && cc.item === oldName) {
-      cc.item = newName;
-    }
-    this._render();
+    this._applyOp({ op: 'rename-item', from: oldName, to: newName, player: PLAYER_ID });
   }
 
+  /**
+   * ⛓⛓ **RELOAD IS A SESSION BOUNDARY, NOT AN OP.** The document it installs
+   * came from OUTSIDE — it is whatever the rest of the app currently holds —
+   * and no edit list can express that. So it opens a NEW session, the op list
+   * goes with the document it described, and undo does not cross it. That is
+   * also exactly what the button has always promised: *discard your edits*.
+   */
   _handleReload() {
     const current = this._getCurrentAppRules();
     if (!current) {
@@ -546,9 +567,9 @@ class ApworldEditorUI {
       return;
     }
     if (!confirm('Discard your edits and reload the rules data the rest of the app currently has loaded?')) return;
-    this.rulesDoc = cloneFullRulesDoc(current);
-    this._render();
-    log('info', 'Reloaded rules from window.G_combinedModeData.rulesConfig.');
+    this._opMessage = null;
+    this._openSession(current, { kind: 'rules', source: 'reload', player: PLAYER_ID });
+    log('info', 'Reloaded rules from the app\'s last published rules.json.');
   }
 
   _getCurrentAppRules() {
@@ -563,24 +584,31 @@ class ApworldEditorUI {
       && window.G_combinedModeData.rulesConfig) || null;
   }
 
+  /**
+   * ⛓⛓⛓ **CLEAR IS AN OP, AND THAT IS A DEPARTURE FROM THE BRIEF, MEASURED.**
+   * The kickoff grouped it with Reload as a session boundary. ⛔ The two are not
+   * the same kind of thing, and the difference is where the input comes from:
+   * Reload installs a document that arrived from OUTSIDE, which nothing in a
+   * record can express; CLEAR INVENTS NO NEW BASE — it is a function of the
+   * document being edited (empty the four per-slot containers, keep every other
+   * key, including `procgen_metadata`). So it is expressible, deterministic and
+   * therefore UNDOABLE, which is the whole point of the slice. As a boundary it
+   * would have been the one gesture in this panel that destroys work with no way
+   * back — behind a `confirm()` precisely because it had none.
+   */
   _handleClear() {
-    if (!this.rulesDoc) {
-      alert('Load a rules.json first.');
-      return;
-    }
     if (!confirm('Remove all regions, exits, locations, items, pool counts, and starting items? (Other rules.json metadata is kept.)')) return;
-    if (!this.rulesDoc.regions) this.rulesDoc.regions = {};
-    this.rulesDoc.regions[PLAYER_ID] = {};
-    if (!this.rulesDoc.items) this.rulesDoc.items = {};
-    this.rulesDoc.items[PLAYER_ID] = {};
-    if (!this.rulesDoc.itempool_counts) this.rulesDoc.itempool_counts = {};
-    this.rulesDoc.itempool_counts[PLAYER_ID] = {};
-    if (!this.rulesDoc.starting_items) this.rulesDoc.starting_items = {};
-    this.rulesDoc.starting_items[PLAYER_ID] = [];
-    this._render();
-    log('info', 'Cleared regions/items for player ' + PLAYER_ID + '.');
+    this._applyOp({ op: 'clear', player: PLAYER_ID });
   }
 
+  /**
+   * ⛓⛓ **APPLY DOES NOT RESET THE SESSION.** It publishes `session.record()`
+   * back to the app as a fresh rules reload and leaves the op list alone: the
+   * person may well keep editing, and an undo after an Apply must still work.
+   * ⛔ The echo of that publish is the one `RAW_JSON_LOADED` this panel ignores
+   * (`pendingApply` + `APPLY_SOURCE`), which is what stops its own Apply from
+   * opening a boundary that would discard the very edits it just published.
+   */
   _handleApply() {
     if (!this.rulesDoc) {
       this._flashButton(this.applyButton, false);
@@ -608,10 +636,9 @@ class ApworldEditorUI {
 
   _render() {
     this.scrollContainer.innerHTML = '';
-    this._renderValidationBar();
+    this._renderChrome();
 
     if (!this.rulesDoc) {
-      this.statusLabel.textContent = 'No rules loaded';
       const msg = document.createElement('div');
       msg.style.color = '#888';
       msg.style.padding = '12px';
@@ -620,21 +647,52 @@ class ApworldEditorUI {
       return;
     }
 
-    const gameName = this.rulesDoc.game_name || '(unnamed game)';
     if (this.activeTab === 'items') {
-      const items = this._items();
-      const count = Object.keys(items).length;
-      this.statusLabel.textContent = `${gameName} — ${count} item${count === 1 ? '' : 's'}`;
       this._renderItemsTab();
     } else if (this.activeTab === 'meta') {
-      this.statusLabel.textContent = `${gameName} — metadata`;
       this._renderMetaTab();
     } else {
       const regions = this._regions();
-      const names = Object.keys(regions);
-      this.statusLabel.textContent = `${gameName} — ${names.length} region${names.length === 1 ? '' : 's'}`;
-      this._renderRegionsTab(regions, names);
+      this._renderRegionsTab(regions, Object.keys(regions));
     }
+  }
+
+  /**
+   * ⛓⛓ **THE CHROME IS RE-READ FROM THE RECORD AFTER EVERY APPLY AND EVERY
+   * UNDO** — the validation bar, the Undo control's count and the status line.
+   * ⛔ A bar left standing across an undo would be a readout about a document
+   * that no longer exists, which is the derived-state defect this slice was
+   * asked to sweep for.
+   */
+  _renderChrome() {
+    this._renderValidationBar();
+    this._renderUndoButton();
+    if (!this.rulesDoc) {
+      this.statusLabel.textContent = this._opMessage ?? 'No rules loaded';
+      return;
+    }
+    const gameName = this.rulesDoc.game_name || '(unnamed game)';
+    let summary;
+    if (this.activeTab === 'items') {
+      const count = Object.keys(this._items()).length;
+      summary = `${gameName} — ${count} item${count === 1 ? '' : 's'}`;
+    } else if (this.activeTab === 'meta') {
+      summary = `${gameName} — metadata`;
+    } else {
+      const n = this._regionNames().length;
+      summary = `${gameName} — ${n} region${n === 1 ? '' : 's'}`;
+    }
+    this.statusLabel.textContent = this._status(summary);
+  }
+
+  /**
+   * ⛓ The status line is the DOCUMENT's summary, plus the last op's own
+   * sentence when there is one — a refusal, a `No change (…)`, or what the
+   * substrate called the edit. ⛔ The three outcomes read differently, so a
+   * click that changed nothing cannot look like one that did.
+   */
+  _status(summary) {
+    return this._opMessage ? `${summary} · ${this._opMessage}` : summary;
   }
 
   _renderValidationBar() {
@@ -793,70 +851,61 @@ class ApworldEditorUI {
 
   // ---------- Meta tab ----------
 
+  /**
+   * ⛓⛓ EVERY ROW NAMES A `META_FIELDS` KEY, and the op looks the PATH up in
+   * that same table (trap 823's cure): a new metadata row is one table entry
+   * rather than a ninth branch in the op, and `rulesDocOps.test.js` scans this
+   * file for the keys it hands `set-meta` and asserts the two sets are EQUAL.
+   */
   _renderMetaTab() {
     const doc = this.rulesDoc;
+    const num = (v) => {
+      const n = parseInt(v, 10);
+      // ⚠ `undefined` DELETES the key. The old closure assigned `undefined`,
+      //   which `JSON.stringify` then dropped — so the published bytes were
+      //   always those of a delete and the op does what the bytes did.
+      return Number.isFinite(n) ? n : undefined;
+    };
 
     this.scrollContainer.appendChild(this._makeSectionHeader('Game'));
     this.scrollContainer.appendChild(this._makeMetaRow(
-      'Game name',
-      doc.game_name || '',
-      (v) => { doc.game_name = v; },
+      'Game name', 'game_name', doc.game_name || '',
     ));
     this.scrollContainer.appendChild(this._makeMetaRow(
-      'Game directory',
-      doc.game_directory || '',
-      (v) => { doc.game_directory = v; },
-      'Folder name for the generated APWorld (e.g. "robotkitty")',
-    ));
-    this.scrollContainer.appendChild(this._makeMetaRow(
-      'World class name',
-      (doc.world && doc.world[PLAYER_ID] && doc.world[PLAYER_ID].world_class_name) || '',
-      (v) => {
-        if (!doc.world) doc.world = {};
-        if (!doc.world[PLAYER_ID]) doc.world[PLAYER_ID] = {};
-        doc.world[PLAYER_ID].world_class_name = v;
+      'Game directory', 'game_directory', doc.game_directory || '', {
+        description: 'Folder name for the generated APWorld (e.g. "robotkitty")',
       },
-      'Python class name for the generated World (e.g. "RobotKittyWorld")',
     ));
     this.scrollContainer.appendChild(this._makeMetaRow(
-      'Archipelago version',
-      doc.archipelago_version || '',
-      (v) => { doc.archipelago_version = v; },
-    ));
-    this.scrollContainer.appendChild(this._makeMetaRow(
-      'Schema version',
-      doc.schema_version == null ? '' : String(doc.schema_version),
-      (v) => {
-        const n = parseInt(v, 10);
-        doc.schema_version = Number.isFinite(n) ? n : undefined;
+      'World class name', 'world_class_name',
+      (doc.world && doc.world[PLAYER_ID] && doc.world[PLAYER_ID].world_class_name) || '', {
+        description: 'Python class name for the generated World (e.g. "RobotKittyWorld")',
       },
-      'rules.json schema version the exporter targets',
+    ));
+    this.scrollContainer.appendChild(this._makeMetaRow(
+      'Archipelago version', 'archipelago_version', doc.archipelago_version || '',
+    ));
+    this.scrollContainer.appendChild(this._makeMetaRow(
+      'Schema version', 'schema_version',
+      doc.schema_version == null ? '' : String(doc.schema_version), {
+        parse: num,
+        description: 'rules.json schema version the exporter targets',
+      },
     ));
 
     this.scrollContainer.appendChild(this._makeSectionHeader('Generation'));
     this.scrollContainer.appendChild(this._makeMetaRow(
-      'Seed',
-      doc.generation_seed == null ? '' : String(doc.generation_seed),
-      (v) => {
-        const n = parseInt(v, 10);
-        doc.generation_seed = Number.isFinite(n) ? n : undefined;
-      },
+      'Seed', 'generation_seed',
+      doc.generation_seed == null ? '' : String(doc.generation_seed), { parse: num },
     ));
     this.scrollContainer.appendChild(this._makeMetaRow(
-      'Seed name',
-      doc.seed_name || '',
-      (v) => { doc.seed_name = v; },
+      'Seed name', 'seed_name', doc.seed_name || '',
     ));
 
     this.scrollContainer.appendChild(this._makeSectionHeader('Player 1'));
-    const playerName = (doc.player_names && doc.player_names[PLAYER_ID]) || '';
     this.scrollContainer.appendChild(this._makeMetaRow(
-      'Player name',
-      playerName,
-      (v) => {
-        if (!doc.player_names) doc.player_names = {};
-        doc.player_names[PLAYER_ID] = v;
-      },
+      'Player name', 'player_name',
+      (doc.player_names && doc.player_names[PLAYER_ID]) || '',
     ));
     this.scrollContainer.appendChild(this._makeStartRegionRow());
 
@@ -878,7 +927,16 @@ class ApworldEditorUI {
     return h;
   }
 
-  _makeMetaRow(label, value, onChange, description) {
+  /**
+   * ⛓⛓ **`change`, NOT `input`** — and that is the one behaviour this slice
+   * deliberately moved. A per-keystroke listener over a session records one op
+   * PER CHARACTER, so `Vault` would be five edits and five undos; committing on
+   * blur/Enter is what makes an undo undo a THING the person did. The two
+   * rename fields in this panel already worked that way, so the rest now agree
+   * with them rather than with each other.
+   */
+  _makeMetaRow(label, key, value, { description = null, parse = null } = {}) {
+    if (!(key in META_FIELDS)) throw new Error(`apworldEditorUI: no META_FIELDS entry "${key}"`);
     const row = document.createElement('div');
     Object.assign(row.style, {
       display: 'grid',
@@ -896,17 +954,29 @@ class ApworldEditorUI {
 
     const input = this._makeTextInput(value, '100%');
     if (description) input.title = description;
-    input.addEventListener('input', (e) => onChange(e.target.value));
+    input.dataset.metaKey = key;
+    input.addEventListener('change', (e) => {
+      const raw = e.target.value;
+      this._applyOp({
+        op: 'set-meta', key, value: parse ? parse(raw) : raw, player: PLAYER_ID,
+      });
+    });
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
+    });
     row.appendChild(input);
     return row;
   }
 
+  /**
+   * ⛔ THE OLD BODY WROTE THE DOCUMENT WHILE RENDERING — it created
+   * `start_regions[PLAYER_ID]` and coerced `default` to an array before drawing
+   * anything. Over a session that is a write through the folded record; the
+   * reads here are pure and `set-start-region` creates what it needs.
+   */
   _makeStartRegionRow() {
-    const doc = this.rulesDoc;
-    if (!doc.start_regions) doc.start_regions = {};
-    if (!doc.start_regions[PLAYER_ID]) doc.start_regions[PLAYER_ID] = { default: [], available: [] };
-    const sr = doc.start_regions[PLAYER_ID];
-    if (!Array.isArray(sr.default)) sr.default = [];
+    const sr = this.rulesDoc?.start_regions?.[PLAYER_ID] ?? {};
+    const currentList = Array.isArray(sr.default) ? sr.default : [];
 
     const row = document.createElement('div');
     Object.assign(row.style, {
@@ -945,7 +1015,7 @@ class ApworldEditorUI {
 
     const regionNames = this._regionNames();
     const known = new Set(regionNames);
-    const current = sr.default[0] || '';
+    const current = currentList[0] || '';
     if (current && !known.has(current)) {
       const missing = document.createElement('option');
       missing.value = current;
@@ -961,16 +1031,15 @@ class ApworldEditorUI {
     }
     select.value = current;
     select.addEventListener('change', (e) => {
-      const v = e.target.value;
-      sr.default = v ? [v] : [];
+      this._applyOp({ op: 'set-start-region', region: e.target.value, player: PLAYER_ID });
     });
     wrap.appendChild(select);
 
-    if (sr.default.length > 1) {
+    if (currentList.length > 1) {
       const note = document.createElement('span');
       note.style.color = '#c80';
       note.style.fontSize = '11px';
-      note.textContent = `+${sr.default.length - 1} more (edit raw JSON to manage multiple starts)`;
+      note.textContent = `+${currentList.length - 1} more (edit raw JSON to manage multiple starts)`;
       wrap.appendChild(note);
     }
 
@@ -978,15 +1047,25 @@ class ApworldEditorUI {
     return row;
   }
 
+  /**
+   * ⛓⛓ `set-completion-condition` CARRIES THE PARSED TREE, never the text — the
+   * `replace-level` rule (§15.4): an op holding raw JSON would be a recipe whose
+   * parse could fail on the fold, and an edit list that cannot be re-folded is
+   * not a record.
+   *
+   * ⛔ AND THE RAW TEXTAREA SPLITS ITS TWO JOBS. `input` keeps the live PARSE
+   * FEEDBACK (the border and the tooltip) because that is DOM state and costs
+   * the document nothing; `change` is where the edit is recorded. A per-keystroke
+   * op here would put one edit in the list per character of a pasted condition.
+   *
+   * ⚠ The old body also CONSTRUCTED a default condition while rendering. That
+   * read is pure now; a document with no condition shows the raw view of `{}`
+   * and the first edit writes one.
+   */
   _makeCompletionConditionEditor() {
-    const doc = this.rulesDoc;
-    if (!doc.game_info) doc.game_info = {};
-    if (!doc.game_info[PLAYER_ID]) doc.game_info[PLAYER_ID] = {};
-    const gi = doc.game_info[PLAYER_ID];
-    if (!gi.completion_condition || typeof gi.completion_condition !== 'object') {
-      gi.completion_condition = { type: 'item_check', item: 'Victory' };
-    }
-    const cc = gi.completion_condition;
+    const cc = this.rulesDoc?.game_info?.[PLAYER_ID]?.completion_condition;
+    const isItemCheck = !!cc && cc.type === 'item_check';
+    const shown = (cc && typeof cc === 'object' && !Array.isArray(cc)) ? cc : {};
 
     const wrap = document.createElement('div');
     wrap.style.display = 'flex';
@@ -1027,22 +1106,17 @@ class ApworldEditorUI {
       opt.textContent = o.label;
       typeSelect.appendChild(opt);
     }
-    typeSelect.value = cc.type === 'item_check' ? 'item_check' : '__raw__';
+    typeSelect.value = isItemCheck ? 'item_check' : '__raw__';
     typeSelect.addEventListener('change', (e) => {
-      if (e.target.value === 'item_check') {
-        gi.completion_condition = { type: 'item_check', item: cc.item || 'Victory' };
-      } else {
-        // Keep existing shape if already non-item_check, else start from blank.
-        if (cc.type === 'item_check') {
-          gi.completion_condition = { type: 'constant', value: true };
-        }
-      }
-      this._render();
+      const condition = e.target.value === 'item_check'
+        ? { type: 'item_check', item: shown.item || 'Victory' }
+        : (isItemCheck ? { type: 'constant', value: true } : shown);
+      this._applyOp({ op: 'set-completion-condition', condition, player: PLAYER_ID });
     });
     typeRow.appendChild(typeSelect);
     wrap.appendChild(typeRow);
 
-    if (cc.type === 'item_check') {
+    if (isItemCheck) {
       const itemRow = document.createElement('div');
       Object.assign(itemRow.style, {
         display: 'grid',
@@ -1072,10 +1146,10 @@ class ApworldEditorUI {
       itemSelect.appendChild(placeholder);
       const itemNames = Object.keys(this._items());
       const known = new Set(itemNames);
-      if (cc.item && !known.has(cc.item)) {
+      if (shown.item && !known.has(shown.item)) {
         const missing = document.createElement('option');
-        missing.value = cc.item;
-        missing.textContent = `${cc.item} (missing)`;
+        missing.value = shown.item;
+        missing.textContent = `${shown.item} (missing)`;
         missing.style.color = '#c44';
         itemSelect.appendChild(missing);
       }
@@ -1085,9 +1159,13 @@ class ApworldEditorUI {
         o.textContent = n;
         itemSelect.appendChild(o);
       }
-      itemSelect.value = cc.item || '';
+      itemSelect.value = shown.item || '';
       itemSelect.addEventListener('change', (e) => {
-        cc.item = e.target.value;
+        this._applyOp({
+          op: 'set-completion-condition',
+          condition: { ...shown, item: e.target.value },
+          player: PLAYER_ID,
+        });
       });
       itemRow.appendChild(itemSelect);
       wrap.appendChild(itemRow);
@@ -1117,18 +1195,27 @@ class ApworldEditorUI {
         padding: '4px 6px',
         resize: 'vertical',
       });
-      ta.value = JSON.stringify(cc, null, 2);
-      ta.addEventListener('input', () => {
+      ta.value = JSON.stringify(shown, null, 2);
+      const parse = () => {
         try {
           const parsed = JSON.parse(ta.value);
-          if (!parsed || typeof parsed !== 'object') throw new Error('must be an object');
-          for (const k of Object.keys(cc)) delete cc[k];
-          Object.assign(cc, parsed);
+          if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+            throw new Error('must be an object');
+          }
           ta.style.borderColor = '#333';
           ta.title = '';
+          return parsed;
         } catch (e) {
           ta.style.borderColor = '#c44';
           ta.title = `Parse error: ${e.message}`;
+          return null;
+        }
+      };
+      ta.addEventListener('input', parse);                     // DOM feedback only
+      ta.addEventListener('change', () => {
+        const condition = parse();
+        if (condition) {
+          this._applyOp({ op: 'set-completion-condition', condition, player: PLAYER_ID });
         }
       });
       rawRow.appendChild(ta);
@@ -1138,6 +1225,13 @@ class ApworldEditorUI {
     return wrap;
   }
 
+  /**
+   * ⛓⛓ **EVERY FIELD HERE NAMES AN `ITEM_FIELDS` KEY**, and `set-item-field`
+   * accepts exactly that table (trap 823's cure — the row and the op read the
+   * SAME one, and a test scans this file to assert the two sets are equal in
+   * both directions). ⚠ The starting COUNT is not a field: it is a count of
+   * entries in `starting_items`, and `set-starting-count` rewrites the list.
+   */
   _renderItemRow(name, item) {
     const row = document.createElement('div');
     Object.assign(row.style, {
@@ -1149,6 +1243,22 @@ class ApworldEditorUI {
       borderBottom: '1px solid #2a2a2a',
       backgroundColor: '#1c1c1c',
     });
+
+    /** ⛓ ONE `set-item-field`, on `change` — never per keystroke. ⛔ The guard
+     *  is the row's half of trap 823: this file cannot write a field the op
+     *  would not accept, because both read `ITEM_FIELDS`. */
+    const setField = (field, value) => {
+      if (!(field in ITEM_FIELDS)) throw new Error(`apworldEditorUI: no ITEM_FIELDS entry "${field}"`);
+      return this._applyOp({
+        op: 'set-item-field', item: name, field, value, player: PLAYER_ID,
+      });
+    };
+    const onCommit = (input, handler) => {
+      input.addEventListener('change', (e) => handler(e.target.value.trim()));
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
+      });
+    };
 
     // Name
     const nameInput = this._makeTextInput(name, '100%');
@@ -1162,47 +1272,34 @@ class ApworldEditorUI {
     const idInput = this._makeTextInput(item.id == null ? '' : String(item.id), '100%');
     idInput.placeholder = 'null';
     idInput.title = 'Archipelago item id (leave blank for events / auto-assign)';
-    idInput.addEventListener('input', (e) => {
-      const v = e.target.value.trim();
-      if (v === '') {
-        item.id = null;
-      } else {
-        const n = parseInt(v, 10);
-        item.id = Number.isFinite(n) ? n : null;
-      }
+    onCommit(idInput, (v) => {
+      const n = parseInt(v, 10);
+      setField('id', v === '' || !Number.isFinite(n) ? null : n);
     });
     row.appendChild(idInput);
 
     // Classification — dropdown + fallback to raw text if unknown
-    row.appendChild(this._makeClassificationEditor(item));
+    row.appendChild(this._makeClassificationEditor(name, item));
 
-    // Max count
+    // Max count — a blank DELETES the key, as `delete item.max_count` did.
     const maxInput = this._makeTextInput(item.max_count == null ? '' : String(item.max_count), '100%');
     maxInput.placeholder = '—';
-    maxInput.addEventListener('input', (e) => {
-      const v = e.target.value.trim();
-      if (v === '') {
-        delete item.max_count;
-      } else {
-        const n = parseInt(v, 10);
-        if (Number.isFinite(n)) item.max_count = n;
-      }
+    onCommit(maxInput, (v) => {
+      if (v === '') { setField('max_count', undefined); return; }
+      const n = parseInt(v, 10);
+      if (Number.isFinite(n)) setField('max_count', n);
     });
     row.appendChild(maxInput);
 
-    // Itempool count
+    // Itempool count — a blank DELETES the entry.
     const counts = this._itemPoolCounts();
     const poolInput = this._makeTextInput(counts[name] == null ? '' : String(counts[name]), '100%');
     poolInput.placeholder = '0';
     poolInput.title = 'Number of this item placed in the item pool';
-    poolInput.addEventListener('input', (e) => {
-      const v = e.target.value.trim();
-      if (v === '') {
-        delete counts[name];
-      } else {
-        const n = parseInt(v, 10);
-        if (Number.isFinite(n) && n >= 0) counts[name] = n;
-      }
+    onCommit(poolInput, (v) => {
+      if (v === '') { setField('pool_count', undefined); return; }
+      const n = parseInt(v, 10);
+      if (Number.isFinite(n) && n >= 0) setField('pool_count', n);
     });
     row.appendChild(poolInput);
 
@@ -1212,12 +1309,10 @@ class ApworldEditorUI {
       '100%',
     );
     groupsInput.placeholder = 'comma-separated';
-    groupsInput.addEventListener('input', (e) => {
-      item.groups = e.target.value
-        .split(',')
-        .map(s => s.trim())
-        .filter(Boolean);
-    });
+    groupsInput.addEventListener('change', (e) => setField('groups', e.target.value
+      .split(',')
+      .map(s => s.trim())
+      .filter(Boolean)));
     row.appendChild(groupsInput);
 
     // Delete
@@ -1243,8 +1338,8 @@ class ApworldEditorUI {
     startLabel.appendChild(document.createTextNode('Start:'));
     const startInput = this._makeTextInput(String(this._startingCount(name)), '50px');
     startInput.title = 'How many of this item the player starts with';
-    startInput.addEventListener('input', (e) => {
-      const n = parseInt(e.target.value, 10);
+    onCommit(startInput, (v) => {
+      const n = parseInt(v, 10);
       this._setStartingCount(name, Number.isFinite(n) ? n : 0);
     });
     startLabel.appendChild(startInput);
@@ -1255,10 +1350,9 @@ class ApworldEditorUI {
     const eventCb = document.createElement('input');
     eventCb.type = 'checkbox';
     eventCb.checked = item.event === true;
-    eventCb.addEventListener('change', () => {
-      if (eventCb.checked) item.event = true;
-      else delete item.event;
-    });
+    // ⛓ A checkbox HAS no half-typed state, so its `change` is the commit.
+    //   `undefined` deletes the key, which is what `delete item.event` did.
+    eventCb.addEventListener('change', () => setField('event', eventCb.checked ? true : undefined));
     eventLabel.appendChild(eventCb);
     eventLabel.appendChild(document.createTextNode('event'));
     eventLabel.title = 'Event items are internal (not placed in the pool). Typically used for Victory.';
@@ -1270,7 +1364,10 @@ class ApworldEditorUI {
     return wrap;
   }
 
-  _makeClassificationEditor(item) {
+  _makeClassificationEditor(name, item) {
+    const setClassification = (value) => this._applyOp({
+      op: 'set-item-field', item: name, field: 'classification', value, player: PLAYER_ID,
+    });
     const current = item.classification || 'filler';
     if (ITEM_CLASSIFICATIONS.includes(current)) {
       const select = document.createElement('select');
@@ -1295,19 +1392,17 @@ class ApworldEditorUI {
       select.appendChild(otherOpt);
       select.value = current;
       select.addEventListener('change', (e) => {
-        if (e.target.value === '__other__') {
-          item.classification = 'custom';
-        } else {
-          item.classification = e.target.value;
-        }
-        this._render();
+        setClassification(e.target.value === '__other__' ? 'custom' : e.target.value);
       });
       return select;
     }
     // Unknown classification — show a text input so user can edit freely.
     const input = this._makeTextInput(current, '100%');
     input.title = 'Custom classification (switch to a standard one via the dropdown after refresh)';
-    input.addEventListener('input', (e) => { item.classification = e.target.value; });
+    input.addEventListener('change', (e) => setClassification(e.target.value));
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
+    });
     return input;
   }
 
@@ -1387,6 +1482,15 @@ class ApworldEditorUI {
   }
 
   _renderExitRow(regionName, index, exitData) {
+    /** ⛓ The exit row's half of trap 823 — same table, same guard. */
+    const setExitField = (field, value) => {
+      if (!EXIT_FIELDS.includes(field)) {
+        throw new Error(`apworldEditorUI: no EXIT_FIELDS entry "${field}"`);
+      }
+      return this._applyOp({
+        op: 'set-exit-field', region: regionName, index, field, value, player: PLAYER_ID,
+      });
+    };
     const row = document.createElement('div');
     Object.assign(row.style, {
       marginBottom: '4px',
@@ -1404,8 +1508,12 @@ class ApworldEditorUI {
     });
 
     const nameInput = this._makeTextInput(exitData.name || '', '220px');
-    nameInput.title = 'Exit name';
-    nameInput.addEventListener('input', (e) => { exitData.name = e.target.value; });
+    nameInput.title = 'Exit name (press Enter or blur to commit)';
+    // ⛓ `change`, not `input`: one op per NAME, not one per keystroke.
+    nameInput.addEventListener('change', (e) => setExitField('name', e.target.value));
+    nameInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); nameInput.blur(); }
+    });
     topLine.appendChild(nameInput);
 
     const arrow = document.createElement('span');
@@ -1414,7 +1522,7 @@ class ApworldEditorUI {
     topLine.appendChild(arrow);
 
     const destSelect = this._makeRegionSelect(exitData.connected_region || '');
-    destSelect.addEventListener('change', (e) => { exitData.connected_region = e.target.value; });
+    destSelect.addEventListener('change', (e) => setExitField('connected_region', e.target.value));
     topLine.appendChild(destSelect);
 
     const spacer = document.createElement('span');
@@ -1426,7 +1534,7 @@ class ApworldEditorUI {
     topLine.appendChild(delBtn);
 
     row.appendChild(topLine);
-    row.appendChild(this._renderAccessRuleEditor(exitData, 'access_rule'));
+    row.appendChild(this._renderAccessRuleEditor(exitData, { region: regionName, kind: 'exit', index }));
     return row;
   }
 
@@ -1487,11 +1595,38 @@ class ApworldEditorUI {
     topLine.appendChild(delBtn);
 
     row.appendChild(topLine);
-    row.appendChild(this._renderAccessRuleEditor(locData, 'access_rule'));
+    row.appendChild(this._renderAccessRuleEditor(locData, { region: regionName, kind: 'location', index }));
     return row;
   }
 
-  _renderAccessRuleEditor(parentObj, key) {
+  /**
+   * ⛓⛓⛓ **THE TREE EDITOR EDITS A DETACHED WORKING COPY, AND THE PANEL RECORDS
+   * WHAT COMES OUT.**
+   *
+   * ⛔ THE MEASUREMENT BEHIND THIS SHAPE. `RuleTreeEditor` has TWO write paths,
+   * not one: `_applyTreeOp` (the four `ruleTreeOps` gestures — replace, remove,
+   * wrap, add-child) AND about a dozen FIELD editors that write into a node it
+   * is already holding (`args.item_name = v`, `node.count = n`, the raw-JSON
+   * `Object.assign(node, parsed)`), deliberately in place and with no re-render
+   * so typing does not cost one. Handing it the LIVE node would mean every one
+   * of those bypassed the session — one op recorded for the gesture and nothing
+   * at all for the twelve.
+   *
+   * ⇒ It is handed a HOLDER over a clone. Both write paths land on the clone,
+   * and the panel commits `set-rule-tree` carrying the RESULT at the two moments
+   * a rule can have finished changing:
+   *
+   *   · `onTree` — a gesture, which the editor performs and then re-renders;
+   *   · a bubbling `change`, in CAPTURE with the commit deferred to a microtask,
+   *     so it runs AFTER the field editor's own handler has written the clone and
+   *     regardless of whether that handler re-rendered the target out of the DOM.
+   *
+   * ⚠ `rerender: false`: the tree editor owns its own DOM and has already
+   * redrawn it, so the panel refreshes only its CHROME. Rebuilding the whole
+   * scroll container under a person's cursor mid-rule would be a re-render they
+   * did not ask for — and it would drop the editor's per-node raw-view state.
+   */
+  _renderAccessRuleEditor(node, path) {
     const wrap = document.createElement('div');
     wrap.style.marginTop = '4px';
 
@@ -1502,12 +1637,21 @@ class ApworldEditorUI {
     label.style.marginBottom = '2px';
     wrap.appendChild(label);
 
-    const tree = new RuleTreeEditor(parentObj, key, {
+    const holder = {
+      access_rule: cloneFullRulesDoc(node.access_rule ?? { rule: 'True_' }),
+    };
+    const commit = () => this._applyOp({
+      op: 'set-rule-tree', path, tree: holder.access_rule, player: PLAYER_ID,
+    }, { rerender: false });
+
+    const tree = new RuleTreeEditor(holder, 'access_rule', {
       getItemNames: () => this._allItemNames(),
       getRegionNames: () => this._regionNames(),
       getLocationNames: () => this._allLocationNames(),
+      onTree: commit,
     });
     wrap.appendChild(tree.getRootElement());
+    wrap.addEventListener('change', () => queueMicrotask(commit), true);
     return wrap;
   }
 
