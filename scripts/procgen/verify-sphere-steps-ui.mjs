@@ -520,7 +520,39 @@ if (countsEdited === countsBefore) {
 }
 console.log(`PHASE G': 2 ops recorded — "${countsBefore}" → "${countsEdited}"`);
 
-for (const n of [1, 2]) {
+// ⛓⛓ **Ctrl+Z INSIDE A NUMBER INPUT IS NOT AN UNDO.** The sidebar is built
+// out of number fields, and a browser's own undo inside one is what a person
+// means by ⌘Z while their cursor is in it. The key handler lives on the panel
+// ROOT and the event bubbles, so the guard is the only thing between the two.
+const breKey = (where) => page.evaluate((w) => {
+    const root = document.querySelector('.bounce-region-editor-panel');
+    if (!root) return 'no panel';
+    const el = w === 'input'
+        ? root.querySelector('input[type="number"]')
+        : root;
+    if (!el) return 'no target';
+    if (w !== 'input') el.focus();
+    el.dispatchEvent(new KeyboardEvent('keydown', {
+        key: 'z', ctrlKey: true, bubbles: true, cancelable: true,
+    }));
+    return 'sent';
+}, where);
+
+if ((await breKey('input')) !== 'sent') throw new Error("G': no number input to type Ctrl+Z into");
+await page.waitForTimeout(250);
+const gpInInput = await breUndoLabel();
+if (!/^↶ Undo \(2 edit\(s\)\)$/.test(gpInInput)) {
+    throw new Error(`G': Ctrl+Z inside a number input UNDID a document edit — "${gpInInput}"`);
+}
+if ((await breKey('root')) !== 'sent') throw new Error("G': could not send Ctrl+Z to the root");
+await page.waitForTimeout(250);
+const gpAfterKey = await breUndoLabel();
+if (!/^↶ Undo \(1 edit\(s\)\)$/.test(gpAfterKey)) {
+    throw new Error(`G': Ctrl+Z on the focused panel root did not undo — "${gpAfterKey}"`);
+}
+console.log("PHASE G': Ctrl+Z is refused inside a number input and honoured on the root");
+
+for (const n of [1]) {
     // eslint-disable-next-line no-await-in-loop
     if (!(await breClick('↶ Undo'))) throw new Error(`G': undo #${n} did not click`);
     // eslint-disable-next-line no-await-in-loop
@@ -533,6 +565,21 @@ if (!/^↶ Undo \(0 edit\(s\)\) \[disabled\]$/.test(gpBack)) {
 const countsBack = await breCounts();
 if (countsBack !== countsBefore) {
     throw new Error(`G': undo ×2 did not restore the level — "${countsBefore}" vs "${countsBack}"`);
+}
+// ⛓⛓⛓ **THE DERIVED-STATE SWEEP'S ONE FINDING, GATED** (§14.10 #3). Each
+// `+ platform` SELECTS the platform it made (the `value` the session forwards),
+// so after undoing both, `_selectedId` names a platform that no longer exists.
+// It must be re-RESOLVED, not remembered — otherwise the sidebar reads
+// "selected: pN" for a platform the level does not hold.
+const breSelection = () => page.evaluate(() => [...document
+    .querySelectorAll('.bounce-region-editor-panel .bre-edit-block')]
+    .map((b) => b.textContent).join(' | '));
+const gpSel = await breSelection();
+if (/selected: /.test(gpSel)) {
+    throw new Error(`G': _selectedId survived the undo of its own add-platform — "${gpSel}"`);
+}
+if (!/Click a platform to edit it\./.test(gpSel)) {
+    throw new Error(`G': the platform block did not fall back to its hint — "${gpSel}"`);
 }
 
 if (!(await breClick('Save'))) throw new Error("G': no Save button in the editor");
