@@ -144,7 +144,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 1,
+            "count": 2,
             "id": "record"
         },
         {
@@ -204,13 +204,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 243,
+        "blockStyle": 244,
         "browser": 76,
         "cited": 85,
-        "files": 262,
+        "files": 263,
         "lineStyle": 19,
-        "withDocblock": 262,
-        "withFlags": 166
+        "withDocblock": 263,
+        "withFlags": 167
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -7021,6 +7021,85 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "recon-seedling-r7 — slice-0 instruments for THE HONEST PLAYTHROUGH.",
             "path": "scripts/procgen/recon-seedling-r7.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "flag"
+            ],
+            "browser": false,
+            "category": "record",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "calibrate",
+                "head",
+                "json",
+                "kickoff",
+                "memory",
+                "section",
+                "session",
+                "write"
+            ],
+            "file": "record-slice.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "flag"
+                    ],
+                    "name": "calibrate"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "head"
+                },
+                {
+                    "how": [
+                        "flag"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "kickoff"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "memory"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "section"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "session"
+                },
+                {
+                    "how": [
+                        "flag"
+                    ],
+                    "name": "write"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "record-slice — **ONE RECORD SURFACE: THE KICKOFF AS-BUILT §N, AND FOUR FACT LINES DERIVED FROM IT AND FROM GIT** (R9 slice P4b, ⚖ ruling 54 (8); user, 2026-08-28: *\"I would like to implement one recording surface if possible\"*).",
+            "path": "scripts/procgen/record-slice.mjs"
         },
         {
             "argvHelpers": [
