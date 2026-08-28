@@ -5859,6 +5859,8 @@ byte-identical at W0 and at the close. Standing rows **+1 derived**
 **TRAPS 922–928.** NEXT: L15 `shove` — a Fable design session, DISCUSSION FIRST
 (⚖ 63 (h)).
 
+**⇒ P4b's STANDING ROWS BANKED (session 10 orchestrator, 2026-08-28, on the records `fd4fe9ab6`).** `gate: slice-records` **65/0/29** cheap (21 s; its default IS the CI face, so no `@ci-face`). `gate: procgen-help` **264/0** `cheap: false` (544 s local). ⛔ THE FIRST READ WAS **263/1**: `check-slice-records.mjs — HELP ok · IMPORT SIDE EFFECT` — the gate's whole body was module scope, so a bare import ran the roster; P4b's REPORT BACK had sealed 264/0 on "both new instruments carry an entry-point guard", true of `record-slice.mjs` only. Fixed at `fd4fe9ab6` (a guarded `main()`; the shared `isEntryPoint` in both files; regen MATCH; 71 bounded tests green), the row re-measured AFTER the fix. Trap **930** — the first trap filed by an orchestrator through `record-slice --trap` (the filesystem allocated it). Branch `p4b/one-record-surface` deleted (⚖ 59). File 66 rows / 49 cheap.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
