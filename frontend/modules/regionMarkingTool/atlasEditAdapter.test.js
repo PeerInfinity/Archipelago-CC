@@ -121,6 +121,27 @@ describe('atlasEditAdapter.equal — KEY ORDER IS CONTENT', () => {
 
         expect(compactJsonFile(reordered)).not.toBe(compactJsonFile(a));   // the LAW
         expect(atlasesEqual(a, reordered)).toBe(false);                    // the discriminator
+
+        /**
+         * ⛔⛔ AND A PAIR THE VALUE COMPARISON CANNOT ANSWER — because the row
+         * above CANNOT SEE THE KEY-NAME CHECK, measured (EDITOR INTEGRATION
+         * B-c, trap 951). Delete `if (ka[i] !== kb[i]) return false;` from the
+         * predicate and the swap above still reads `false`: the walk lands
+         * `a[ka[i]]` against `b[kb[i]]`, finds two DIFFERENT VALUES, and answers
+         * for a reason that has nothing to do with key order. The fixture's
+         * first two keys hold different values, so it always will.
+         *
+         * ⇒ Two keys holding THE SAME VALUE, swapped. Only then does the value
+         * comparison agree at every position and the key-NAME check become the
+         * sole witness.
+         */
+        const same = { game: 'seedling', name: 'seedling' };
+        const sameSwapped = { name: 'seedling', game: 'seedling' };
+        expect(atlasesEqual(same, sameSwapped)).toBe(false);
+        expect(atlasesEqual(
+            { regions: { hall: { map_ref: 1, tile: 1 } } },
+            { regions: { hall: { tile: 1, map_ref: 1 } } },
+        )).toBe(false);                                                    // …and at DEPTH
         // MUTANT 1: equal = canonicalJson pair.
         expect(canonicalJson(a)).toBe(canonicalJson(reordered));
         // MUTANT 2: equal = computeAtlasContentHash pair.

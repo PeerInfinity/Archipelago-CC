@@ -101,6 +101,24 @@ describe('⛓⛓⛓ `equal` — a deep equality in which KEY ORDER IS CONTENT', 
         expect(JSON.stringify(Object.keys(a).sort())).toBe(JSON.stringify(Object.keys(b).sort()));
         const nested = { id: 'x', size: { height: 2, width: 1 }, platforms: [] };
         expect(levelsEqual(a, nested)).toBe(false);
+
+        /**
+         * ⛔⛔ AND A PAIR THE VALUE COMPARISON CANNOT ANSWER — because the three
+         * assertions above CANNOT SEE THE KEY-NAME CHECK, measured (EDITOR
+         * INTEGRATION B-c, trap 951). Delete `if (ka[i] !== kb[i]) return
+         * false;` from the predicate and every one of them still reads `false`:
+         * each swaps keys whose VALUES DIFFER, so the walk compares two
+         * different values and answers for a reason unrelated to key order.
+         *
+         * ⇒ Two keys holding THE SAME VALUE, swapped, at the top and at depth.
+         */
+        const same = { id: 'x', label: 'x', platforms: [] };
+        const sameSwapped = { label: 'x', id: 'x', platforms: [] };
+        expect(levelsEqual(same, sameSwapped)).toBe(false);
+        expect(levelsEqual(
+            { size: { width: 3, height: 3 } },
+            { size: { height: 3, width: 3 } },
+        )).toBe(false);
     });
 
     it('is a real equality otherwise — reflexive, deep, array-order-sensitive', () => {
