@@ -5563,6 +5563,54 @@ Rulings taken: (g) a DERIVED CI-sourcing rule (headless ∧ not cheap; populatio
 outstanding. The editor-integration merge series still waits for a window.
 NEXT: resume P3b (rebase first) → W2 → W3 (+ the `--write` under the lock) → §48 → P4 → L15.
 
+**⇒ P3b CLOSED (2026-08-27, `main` @`a3617d8e5`; as-built kickoff §48).** ⚖ 54
+**(6)+(7) DISCHARGED**, and the four pipeline items §47.11 (3) named with them.
+· **(a)** S3's record set is now the projection diff against a **COMMIT** — S0
+seals a SHA, S1 reads each tape there, S3 prints which one and why — so the
+fifth run's pin commit, an ancestor of the head S1 ran at, could no longer be
+invisible (§47.5). · **(b)** `roster ∖ prove()` is DERIVED, printed and priced:
+**120 tapes / 117,914 ticks ≈ 128 min**, ninety per cent of a full tier, so the
+row is `--full-roster`-gated and what is refused without it is ⚖ 32 E's
+*claim*, never the run — driving it per run would re-instate the per-move tape
+tax ⚖ 40 retired. · **(c)** `check-seedling-full-tier-owed.mjs`, four derived
+populations against the checkpoint row's own head; **RED at the close**, naming
+`da855f9d2` ("the pre-swap correction was INVERTED") — §47.11 (2) stops being
+prose. It is retired by the orchestrator's `--win` drive, sequenced after slice
+12i's cost table so the wall-clocks are taken on a quiet box. · **(d)** the
+boundaries gate declares `@ci-face structure: --structure`; CI runs a STRUCTURE
+face under a DIFFERENT KEY and the VALUE row stays the box's (the all-REFUSED
+CI reading was MEASURED, not assumed). · **(e)** the BOX LOCK at
+`~/.cache/seedling-box/lock.json` — one holder, refusal BY NAME with the
+`--wait-for-box=` retry, stale reclaim by `kill -0`, token re-entrancy, and it
+freezes the **TREE** as well as the box (§44.9 item 5). 27 derived takers
+(23 browser + 4 windows) + 3 runners; the lint reads the population BOTH ways.
+· **(f)** `cheap` gains HYSTERESIS, and **HELD its first live row** —
+`gate: maze-lab` at 62.0 s kept `cheap: true` while slice 12i's disclosed CPU
+load was on the box, which is trap 735/801's law enforced by the file instead
+of by a human noticing. · **(g)** ⛔ ⚖ 54 (6)'s premise is FALSE at this tree:
+the headless population is **four gates of thirty-one**, all cheap, and CI can
+run none of the other 27 — so the honest discharge is a DERIVED rule
+(`ciSourced` = headless ∧ not cheap) selecting a **stated zero**, plus the
+genuinely new thing: those four now RUN in CI, and the first yield is a
+cross-check nobody had made (`gate: seedling-rerecord-rehearsal` **28/0 in CI
+== 28/0 on the box**).
+⛓ **THE SLICE'S SHARPEST FINDING IS ABOUT ITS OWN WORK.** CI's first run of the
+new owed gate read `0/1` — not an owed tier, but a depth-1 clone with no
+baseline commit — a line that would have booked 143 minutes of GPU for a
+shallow checkout, in a gate written one commit after (d), whose whole subject
+is that "cannot be asked" and "is wrong" must not print the same thing. It
+refuses now. **Nothing on the box could have found it**; pushing the workflow to
+a BRANCH and reading the step's LINES did.
+STANDING VALUES @`eb3296a4a`: **64 rows / 48 cheap / 1 quoted**. TWO value
+movers, both predicted (`gate: seedling-rerecord-rehearsal` 18/0 → **28/0**;
+`suite: vitest (unfiltered)` 388/11970 → **389/11994**, now MEASURED from CI
+rather than hand-quoted), ONE new row (`gate: seedling-full-tier-owed` **3/1**,
+red), **ZERO `cheap` movers**, one HELD. The write ran 83 min under its own
+lock with `assertTreeUnmoved` asserted at all 64 rows and never firing.
+⛔ No tape moved; `fixtures/` byte-identical at the close.
+NEXT: the orchestrator's full-tier drive (retires the red) → **P4** = ⚖ 54 (8)
+one record surface + 47b's remaining (1)(4)(6) → L15.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
