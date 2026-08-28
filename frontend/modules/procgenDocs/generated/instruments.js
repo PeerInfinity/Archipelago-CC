@@ -7091,6 +7091,7 @@ export const INSTRUMENTS = frz({
                 "json",
                 "kickoff",
                 "memory",
+                "only",
                 "section",
                 "session",
                 "slice",
@@ -7160,6 +7161,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "memory"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
                 },
                 {
                     "how": [

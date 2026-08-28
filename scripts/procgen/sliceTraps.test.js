@@ -16,7 +16,7 @@ import { afterAll, describe, expect, it } from 'vitest';
 import { FAMILIES_FILE, LADDER_FILE, LADDER_FROZEN_AT, TRAPS_DIR } from './sliceRecords.js';
 import {
     FREEZE_NOTICE, allocateTrap, declareFamily, familiesIn, families, frontmatterIn, nextNumber,
-    readTrap, slugify, trapCensus, trapFiles,
+    readTrap, slugify, trapCensus, trapFiles, trapsCitedIn,
 } from './sliceTraps.js';
 
 /** ⛓ A memory directory with the two shapes the real ladder actually holds. */
@@ -210,6 +210,34 @@ describe('⛓⛓ the census is what MEMORY.md\'s trap bullet is DERIVED from', (
         writeFileSync(t.path, readFileSync(t.path, 'utf8').replace(/number: \d+/, 'number: 1'));
         expect(trapCensus({ memory: m }).findings.join('\n'))
             .toMatch(/disagrees with the FILENAME's/);
+    });
+});
+
+/**
+ * ⛓⛓⛓ **THE PLURAL IS THE FORM THAT GOT AWAY.** The first citation reader was
+ * `\btrap (\d{3,})\b` — and it missed FOUR of the five citations in the very
+ * commit that introduced it, because the tracked § spells them
+ * `(traps 922, 923, 925, 926)`.
+ */
+describe('⛓⛓ a citation is read in every form the tree actually spells', () => {
+    it('the singular', () => expect(trapsCitedIn('see trap 924 for this')).toEqual([924]));
+    it('⛔ the PLURAL with a comma list', () => {
+        expect(trapsCitedIn('(traps 922, 923, 925, 926)')).toEqual([922, 923, 925, 926]);
+    });
+    it('a RANGE is every number in it — that is what the citation means', () => {
+        expect(trapsCitedIn('TRAPS 903–907.')).toEqual([903, 904, 905, 906, 907]);
+        expect(trapsCitedIn('traps 908-910')).toEqual([908, 909, 910]);
+    });
+    it('`and` and `&` join a list too', () => {
+        expect(trapsCitedIn('traps 769 and 863')).toEqual([769, 863]);
+        expect(trapsCitedIn('traps 869 & 870')).toEqual([869, 870]);
+    });
+    it('⛔ a two-digit number is NOT a citation, and the bound is stated', () => {
+        expect(trapsCitedIn('trap 12 and the year 2026')).toEqual([]);
+    });
+    it('many citations in one text are one sorted set', () => {
+        expect(trapsCitedIn('trap 924 … traps 922, 924 … trap 901'))
+            .toEqual([901, 922, 924]);
     });
 });
 

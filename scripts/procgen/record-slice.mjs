@@ -34,6 +34,15 @@
  * Two surfaces, two heads, one fold. Derived from git at the fold's real head,
  * that cannot happen — which is the whole argument for this file.
  *
+ *
+ * ⛓⛓⛓ **AND THAT IS WHY `--write` HAS TWO PHASES — `--only=queue` THEN
+ * `--only=memory`.** No line inside commit N can name commit N. The queue is
+ * IN the repository, so its header names the head its own commit will sit on
+ * — the last work commit — and says so. Memory is OUTSIDE the repository, so
+ * it is written after everything has landed and names the TRUE final head.
+ * The irreducible one-commit gap is therefore pushed onto the ONE surface
+ * that cannot avoid it, and off the three that can.
+ *
  *   tracked heading     PRINTED ONLY. Its title is a re-voicing for an outside
  *                       reader (see `sliceRecords.js`) — a machine cannot
  *                       author it, and `--write` placing a heading over an
@@ -44,6 +53,8 @@
  *   node scripts/procgen/record-slice.mjs --kickoff=<path> --section=50 --head=1c47fff54
  *   node scripts/procgen/record-slice.mjs --kickoff=<path> --section=50 --calibrate
  *   node scripts/procgen/record-slice.mjs --kickoff=<path> --section=52 --session=<name> --write
+ *   node scripts/procgen/record-slice.mjs --kickoff=<path> --section=52 --write --only=queue
+ *   node scripts/procgen/record-slice.mjs --kickoff=<path> --section=52 --write --only=memory
  *   node scripts/procgen/record-slice.mjs --kickoff=<path> --section=52 --json
  *   node scripts/procgen/record-slice.mjs --kickoff=<path> --section=52 --memory=<dir>
  *   node scripts/procgen/record-slice.mjs --trap=922
@@ -340,28 +351,43 @@ export function main() {
     if (flag('write')) {
         console.log('\n══ --write ═════════════════════════════════════════════');
         const writes = [];
-        /* ⛓ the memory close line — APPENDED, never spliced. */
-        const r9 = join(M, R9_FILE);
-        const r9Text = readFileSync(r9, 'utf8');
-        if (r9Text.includes(`⇒ SLICE ${parsed.slice} CLOSED`)) {
-            console.log(`SKIP  ${R9_FILE} already carries a \`⇒ SLICE ${parsed.slice} CLOSED\` line`);
-        } else {
-            writeFileSync(`${r9}.p4b-backup`, r9Text);
-            writeFileSync(r9, `${r9Text.replace(/\n*$/, '')}\n\n${lines.memoryClose}\n`);
-            writes.push(R9_FILE);
-            console.log(`ok    ${R9_FILE} += the close line (backup \`${R9_FILE}.p4b-backup\`)`);
+        /**
+         * ⛓ `--only=` selects a PHASE. ⛔ Absent, both run, which is right for
+         * a fold whose queue entry is already in place.
+         */
+        const only = arg('only');
+        if (only && !['queue', 'memory'].includes(only)) {
+            console.log(`record-slice: --only=${only} — one of queue, memory`);
+            process.exit(1);
         }
-        /* ⛓ MEMORY.md — the marked region, count asserted by `replaceRegion`. */
-        const idx = join(M, INDEX_FILE);
-        const idxText = readFileSync(idx, 'utf8');
-        writeFileSync(`${idx}.p4b-backup`, idxText);
-        const next = replaceRegion(idxText, 'r9-status', lines.memoryIndexBullet);
-        writeFileSync(idx, next);
-        writes.push(INDEX_FILE);
-        console.log(`ok    ${INDEX_FILE} <r9-status> replaced `
-            + `(${idxText.length} B → ${next.length} B, backup \`${INDEX_FILE}.p4b-backup\`)`);
+        const doMemory = only !== 'queue';
+        const doQueue = only !== 'memory';
+        /* ⛓ the memory close line — APPENDED, never spliced. */
+        if (doMemory) {
+            const r9 = join(M, R9_FILE);
+            const r9Text = readFileSync(r9, 'utf8');
+            if (r9Text.includes(`⇒ SLICE ${parsed.slice} CLOSED`)) {
+                console.log(`SKIP  ${R9_FILE} already carries a \`⇒ SLICE ${parsed.slice} CLOSED\` line`);
+            } else {
+                writeFileSync(`${r9}.p4b-backup`, r9Text);
+                writeFileSync(r9, `${r9Text.replace(/\n*$/, '')}\n\n${lines.memoryClose}\n`);
+                writes.push(R9_FILE);
+                console.log(`ok    ${R9_FILE} += the close line (backup \`${R9_FILE}.p4b-backup\`)`);
+            }
+            /* ⛓ MEMORY.md — the marked region, count asserted by `replaceRegion`. */
+            const idx = join(M, INDEX_FILE);
+            const idxText = readFileSync(idx, 'utf8');
+            writeFileSync(`${idx}.p4b-backup`, idxText);
+            const next = replaceRegion(idxText, 'r9-status', lines.memoryIndexBullet);
+            writeFileSync(idx, next);
+            writes.push(INDEX_FILE);
+            console.log(`ok    ${INDEX_FILE} <r9-status> replaced `
+                + `(${idxText.length} B → ${next.length} B, backup \`${INDEX_FILE}.p4b-backup\`)`);
+        }
         /* ⛓ the queue header — inserted ONLY if absent; the body stays a human's. */
-        if (derived.queue.line) {
+        if (!doQueue) {
+            console.log('SKIP  the queue (--only=memory)');
+        } else if (derived.queue.line) {
             console.log(`SKIP  ${QUEUE_DOC} already has a block at :${derived.queue.line}`);
         } else {
             const q = join(REPO, QUEUE_DOC);

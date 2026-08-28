@@ -42,6 +42,36 @@ import {
     FAMILIES_FILE, LADDER_FILE, LADDER_FROZEN_AT, TRAPS_DIR, memoryDir,
 } from './sliceRecords.js';
 
+/**
+ * ⛓⛓⛓ **THE NUMBERS A TEXT CITES — AND THE PLURAL FORM IS THE ONE THAT GOT
+ * AWAY.** The first cut was `\btrap (\d{3,})\b`, which reads `trap 924` and
+ * MISSES `traps 922, 923, 925, 926` — four of the five citations in the very
+ * commit that introduced it, because the plural takes a comma list. A range
+ * (`traps 903–907`) is every number in it, since that is what the citation
+ * means.
+ *
+ * ⛔ The bound is stated: a number is 3+ digits, so `trap 12` is not a
+ * citation and neither is a year. Every trap ever allocated is ≥ 100.
+ */
+export const TRAP_CITE_RE = /\btraps?\s+(\d{3,}(?:\s*(?:,|and|&|[–-])\s*\d{3,})*)/gi;
+
+export function trapsCitedIn(text) {
+    const out = new Set();
+    for (const m of String(text).matchAll(TRAP_CITE_RE)) {
+        const list = m[1];
+        /* ⛓ a RANGE is every number in it; a comma list is its members. */
+        for (const part of list.split(/\s*(?:,|and|&)\s*/)) {
+            const range = /^(\d{3,})\s*[–-]\s*(\d{3,})$/.exec(part.trim());
+            if (range) {
+                const [a, b] = [Number(range[1]), Number(range[2])];
+                if (b >= a && b - a < 1000) for (let i = a; i <= b; i += 1) out.add(i);
+                else { out.add(a); out.add(b); }
+            } else if (/^\d{3,}$/.test(part.trim())) out.add(Number(part.trim()));
+        }
+    }
+    return [...out].sort((a, b) => a - b);
+}
+
 /** ⛓ `922-a-short-slug.md` — the number leads so `sort` is numeric order. */
 export const TRAP_FILE_RE = /^(\d{3,})-([a-z0-9-]+)\.md$/;
 

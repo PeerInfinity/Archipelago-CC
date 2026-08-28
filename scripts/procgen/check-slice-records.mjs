@@ -76,7 +76,7 @@ import {
     DOCS_INDEX, LADDER_FROZEN_AT, QUEUE_DOC, REPO, TRACKED_DOC,
     deriveFromGit, memoryDir, parseSection,
 } from './sliceRecords.js';
-import { trapFiles } from './sliceTraps.js';
+import { trapFiles, trapsCitedIn } from './sliceTraps.js';
 
 argvHelp(import.meta.url);
 
@@ -106,7 +106,7 @@ const HEADING_RE = /^### R9 slice (\S+?):/;
 const CLOSE_RE = /\b(CLOSED|SHIPPED)\b/;
 /** ⛓ The derived opener `record-slice` writes; anything else is a NOTE. */
 const DERIVED_OPENER = (id) => `**⇒ ${id} CLOSED (`;
-const TRAP_CITE_RE = /\btrap (\d{3,})\b/gi;
+
 
 const rows = [];
 const note = (m) => rows.push({ kind: 'NOTE', m });
@@ -219,8 +219,7 @@ for (const s of slices) {
 
     /* ── (3) every trap that commit cites resolves ───────────────────── */
     const diff = git(['show', '--format=', '--unified=0', sha]) ?? '';
-    const cited = new Set([...diff.matchAll(TRAP_CITE_RE)].map((m) => Number(m[1])));
-    for (const n of [...cited].sort((a, b) => a - b)) {
+    for (const n of trapsCitedIn(diff)) {
         if (n <= LADDER_FROZEN_AT) {
             pass(`${s.id}: trap ${n} ≤ the frozen ladder (${LADDER_FROZEN_AT}) — the ladder holds it`);
         } else if (localTraps === null) {
