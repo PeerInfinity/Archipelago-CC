@@ -15,6 +15,11 @@
  *     and names what it undid, and that undoing everything returns the world
  *     the seed produces (the map's region signature) with the oracle clean.
  *
+ * Phase H is a PIN rather than a variation row (editor-integration B-b):
+ * measured, `keep` mode's contract pins this region against all eight settings
+ * rungs the phase walks, so it asserts THAT and reds if one ever moves. The
+ * varying regenerate lives in verify-region-step-editing's Phase F.
+ *
  * Phase G′ (editor-integration B-b): the bounce editor's own UNDO — two ops in
  * the panel, two undos, a Save, and the region that reaches the grid is the
  * pre-edit one, with G's oracle still clean.
@@ -628,29 +633,92 @@ const expanded = await page.evaluate(() => {
 });
 if (!expanded) throw new Error('H: "Region generation" section header not found');
 await page.waitForTimeout(300);
-const seedSet = await page.evaluate(() => {
+/**
+ * ⛓⛓⛓ **WHAT THIS ROW ACTUALLY MEASURES** (editor-integration B-b).
+ *
+ * ⛔ **IT WAS VACUOUS.** It bumped the seed to one value and asserted the
+ * oracle survived the regenerate — over a regenerate that produced a level
+ * IDENTICAL to the one already loaded. Invisible for as long as the panel
+ * printed *"Regenerated"* unconditionally; the editor's session prints
+ * *"No change"* now (an op that moves no bytes is not an edit, through the
+ * adapter's own `equal`), which is what exposed it.
+ *
+ * ⛔⛔ **AND IT CANNOT BE FIXED BY PICKING A BETTER KNOB — MEASURED.** Eight
+ * rungs of the panel's own settings (five seeds, two decor chances, a jitter)
+ * ALL leave the level unchanged for this region. The reason is `keep` mode:
+ * the generator is handed the region's real `exitSpecs`/`locationSpecs`, whose
+ * requirements constrain `generateLevelFromSpecs`' proposal loop, and a
+ * contract this tight admits ONE proposal shape. So the browser row asserts
+ * what is true here — **the contract PINS the level against every knob the
+ * panel offers** — and names the ladder it walked, rather than asserting a
+ * variation it cannot produce.
+ *
+ * ⇒ THE VARYING REGENERATE IS `verify-region-step-editing.mjs`'s PHASE F,
+ * which regenerates a LESS constrained region and carries its own non-vacuity
+ * assertion (`platSig(after) !== sig0`). This row is the browser half: the
+ * panel's Regenerate ▸ Save path, end to end, with the oracle at the end of it.
+ */
+const setNumField = (label, value) => page.evaluate(({ l, v }) => {
     const row = [...document.querySelectorAll('.bounce-region-editor-panel .bre-field')]
-        .find((r) => r.querySelector('span')?.textContent === 'seed');
+        .find((r) => r.querySelector('span')?.textContent === l);
     const inp = row?.querySelector('input');
     if (!inp) return false;
-    inp.value = '24680';
+    inp.value = String(v);
     inp.dispatchEvent(new Event('change', { bubbles: true }));
     return true;
-});
-if (!seedSet) throw new Error('H: seed field not found in settings');
-const regen = await page.evaluate(() => {
-    const b = [...document.querySelectorAll('.bounce-region-editor-panel .bre-btn')]
-        .find((e) => e.textContent.trim().startsWith('Regenerate'));
-    if (!b) return false;
-    b.click();
-    return true;
-});
-if (!regen) throw new Error('H: no Regenerate button');
-await page.waitForTimeout(800);
-const regenMsg = await page.evaluate(() =>
-    document.querySelector('.bounce-region-editor-panel .bre-message')?.textContent ?? '');
-if (!regenMsg.includes('Regenerated')) throw new Error(`H: regenerate did not run: "${regenMsg}"`);
-console.log('PHASE H: regenerated geometry in the editor —', regenMsg);
+}, { l: label, v: value });
+
+const LADDER = [
+    ['seed', 24680], ['seed', 3], ['seed', 7], ['seed', 101], ['seed', 999983],
+    ['decor jetpack', 0.8], ['decor fork', 0.8], ['jitter', 80],
+];
+const hCountsBefore = await breCounts();
+let regenMsg = '';
+const hMoved = [];
+let hRan = 0;
+for (const [label, value] of LADDER) {
+    // eslint-disable-next-line no-await-in-loop
+    if (!(await setNumField(label, value))) throw new Error(`H: no "${label}" field in settings`);
+    // eslint-disable-next-line no-await-in-loop
+    const clicked = await page.evaluate(() => {
+        const b = [...document.querySelectorAll('.bounce-region-editor-panel .bre-btn')]
+            .find((e) => e.textContent.trim().startsWith('Regenerate'));
+        if (!b) return false;
+        b.click();
+        return true;
+    });
+    if (!clicked) throw new Error('H: no Regenerate button');
+    // eslint-disable-next-line no-await-in-loop
+    await page.waitForTimeout(800);
+    // eslint-disable-next-line no-await-in-loop
+    regenMsg = await page.evaluate(() =>
+        document.querySelector('.bounce-region-editor-panel .bre-message')?.textContent ?? '');
+    if (/^Regenerate failed/.test(regenMsg)) continue;
+    if (!regenMsg.includes('Regenerated')) throw new Error(`H: regenerate did not run: "${regenMsg}"`);
+    hRan += 1;
+    if (!/^No change/.test(regenMsg)) hMoved.push(`${label}=${value}`);
+}
+if (hRan === 0) throw new Error(`H: no rung of the ladder even RAN the generator — "${regenMsg}"`);
+/**
+ * ⛔ **THE PIN.** Every rung that ran reported a no-op, and that is the claim.
+ * The day one of them moves the level this row REDS — and it should: the
+ * contract will have stopped pinning the region, which is exactly when "the
+ * oracle survived the regenerate" starts meaning something and this row wants
+ * re-measuring with the rung that moved it.
+ */
+if (hMoved.length) {
+    throw new Error(`H: the contract no longer PINS this region — [${hMoved.join(', ')}] moved `
+        + 'the level, where B-b measured all 8 rungs as no-ops. Re-measure this row: use the '
+        + 'rung that moved it and assert the counts readout changes, the way '
+        + "verify-region-step-editing's Phase F does.");
+}
+const hCountsAfter = await breCounts();
+if (hCountsAfter !== hCountsBefore) {
+    throw new Error(`H: the session reported ${hRan} no-ops but the level READ differently — `
+        + `"${hCountsBefore}" → "${hCountsAfter}"`);
+}
+console.log(`PHASE H: the keep-mode contract PINS this region — ${hRan}/${LADDER.length} `
+    + `settings rungs all no-ops ("${hCountsAfter}")`);
 await page.evaluate(() => {
     [...document.querySelectorAll('.bounce-region-editor-panel .bre-btn')]
         .find((e) => e.textContent.trim() === 'Save')?.click();
@@ -664,7 +732,8 @@ const hMsg = await message();
 if (!hMsg.includes('Sphere plan realised')) {
     throw new Error(`H: oracle failed after regenerate + save + 4: ${hMsg}`);
 }
-console.log('PHASE H OK: editor Regenerate (keep) → save → 4 kept the oracle');
+console.log('PHASE H OK: editor Regenerate (keep) → save → 4 kept the oracle '
+    + '(the VARYING regenerate is verify-region-step-editing Phase F)');
 
 // ── Phase I: composite-map mode radio renders + switches without error ──
 // (The two-click canvas gestures can't be driven headless — the GL panel
