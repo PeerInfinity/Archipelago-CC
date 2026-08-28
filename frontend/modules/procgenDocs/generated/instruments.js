@@ -49,7 +49,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 22,
-            "count": 32,
+            "count": 33,
             "id": "check"
         },
         {
@@ -204,13 +204,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 244,
+        "blockStyle": 245,
         "browser": 76,
         "cited": 85,
-        "files": 263,
+        "files": 264,
         "lineStyle": 19,
-        "withDocblock": 263,
-        "withFlags": 167
+        "withDocblock": 264,
+        "withFlags": 168
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -2389,6 +2389,57 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "check-seedling-wasm-ship — **THE ONLY ARM THAT CAN SEE A REAL SOLVE'S VERDICT.**",
             "path": "scripts/procgen/check-seedling-wasm-ship.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "flag"
+            ],
+            "browser": false,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "json",
+                "kickoff",
+                "local",
+                "memory"
+            ],
+            "file": "check-slice-records.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "flag"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "kickoff"
+                },
+                {
+                    "how": [
+                        "flag"
+                    ],
+                    "name": "local"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "memory"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "check-slice-records — **A FOLD WHOSE SURFACES DISAGREE IS REFUSED** (R9 slice P4b, ⚖ ruling 54 (8)).",
+            "path": "scripts/procgen/check-slice-records.mjs"
         },
         {
             "argvHelpers": [],

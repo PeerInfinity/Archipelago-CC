@@ -142,9 +142,37 @@ export function producerScripts({ repo = REPO } = {}) {
  * ⛔ NOT a hand list of "these ones come from CI" — that is the same defect as
  * a hand-kept value (⚖ 17), and this file exists to refuse it.
  *
- * @param {{headless: boolean, cheap: boolean|undefined}} o
+ * ── ⛔⛔⛔ R9 P4b (D) — **A GATE THAT DECLARES A `@ci-face` IS MEASURED
+ *    LOCALLY, BECAUSE ITS CI FACE ANSWERS A DIFFERENT QUESTION** ────────
+ *
+ * ⚖ 54 (6) and P3b (g) are both right and they do not compose. Measured at
+ * `a61feaaec`, on the first row ever to select the CI path:
+ *
+ *   `gate: procgen-help` is HEADLESS and `cheap: false` (573 s), so this rule
+ *   selects it. Its command then becomes `ci-summary --gate="gate:
+ *   procgen-help"` — and `ci-summary` REFUSES BY NAME, because the gate
+ *   declares `@ci-face gate-help-ci` and CI publishes `gate-help-ci:
+ *   procgen-help` instead. The read returns `null`, `--write` KEEPS, and the
+ *   row is frozen at whatever it last measured **forever**: the CI path can
+ *   never answer it and the local path is never chosen again.
+ *
+ * ⛔ THE FACE IS NOT THE ROW. `@ci-face` exists precisely to say *"the number
+ * CI can produce for me is a DIFFERENT CLAIM"* — `--doors=ci` is a bounded
+ * subset of `--doors=all` — and it gives that claim its own key so the two can
+ * never be read as one. A rule that then routes the STANDING key down the CI
+ * path is asking for the value under the key its own declaration excluded.
+ *
+ * ⇒ **a gate with a declared ci-face is NEVER CI-sourced.** Its full pass is
+ * the standing value, measured on the box; the ci-face is CI's own bounded
+ * witness under its own key, and the row's `command` says which by naming the
+ * gate rather than `ci-summary`. Nothing is hand-listed: the gate declares the
+ * face, `gateRoster` reads it, and this rule consumes it.
+ *
+ * @param {{headless: boolean, cheap: boolean|undefined,
+ *          ciFace: {prefix: string}|null|undefined}} o
  */
-export function ciSourced({ headless, cheap }) {
+export function ciSourced({ headless, cheap, ciFace = null }) {
+    if (ciFace) return false;
     return Boolean(headless) && cheap === false;
 }
 

@@ -158,13 +158,19 @@ export const TRAPS_DIR = 'traps';
  * in one run; a parser that had defaulted the field would have emitted three
  * fact lines dated a day before the fold.
  *
+ * ⛔⛔ AND THE SECTION NUMBER IS NOT AN INTEGER. Three folds live at `21b.`,
+ * `23b.` and `23c.` — a fold inserted between two that were already written.
+ * The gate found them by REPORTING that three tracked-doc headings had no
+ * as-built section at all; they had one, numbered in a shape `\d+` could not
+ * see. ⇒ `section` is a STRING everywhere, never a number.
+ *
  * ⛔ The slice ID can carry a PRIME (`12e′`, U+2032) and the qualifier can be
  * absent, so neither is `\w+` and neither is optional-by-greed. A header this
  * does not match is a REFUSAL BY NAME — never a section parsed with empty
  * fields, which is how a fact line about nothing gets emitted.
  */
 export const HEADER_RE =
-    /^## (\d+)\. SLICE (\S+)(?: ([A-Z][A-Z -]*?))? AS-BUILT — (.*?) · ([^,]+), (\d{4}-\d{2}-\d{2}(?:\/\d{2})?)\s*$/;
+    /^## (\d+[a-z]?)\. SLICE (\S+)(?: ([A-Z][A-Z -]*?))? AS-BUILT — (.*?) · ([^,]+), (\d{4}-\d{2}-\d{2}(?:\/\d{2})?)\s*$/;
 
 /** ⛓ `⛓⛓⛓ **TITLE**` → `TITLE`. The decoration is the file's house style. */
 export const bareTitle = (s) => s.replace(/^[⛓⛔⚠\s]+/, '').replace(/^\*\*|\*\*$/g, '').trim();
@@ -262,7 +268,8 @@ export function parseSection(text, n) {
     }
 
     /* ── the subsections ─────────────────────────────────────────────── */
-    const subsections = lines.filter((l) => new RegExp(`^### ${section}\\.`).test(l)).length;
+    const subRe = new RegExp(`^### ${section.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\.`);
+    const subsections = lines.filter((l) => subRe.test(l)).length;
 
     /* ── the traps line ──────────────────────────────────────────────── */
     let traps = null;
@@ -273,7 +280,14 @@ export function parseSection(text, n) {
     if (!traps) findings.push(`§${section} carries no \`**TRAPS a–b.**\` line`);
 
     /* ── WHAT LANDED: the commit table, which is the SHA list git checks ── */
-    const landed = landedIn(lines, section);
+    /**
+     * ⛓ A `\* pre-rebase SHAs` footnote makes every `*`-marked row a
+     * DECLARED pre-rebase SHA. ⛔ Without the footnote a `*` means nothing and
+     * the row is checked like any other.
+     */
+    const preRebaseFootnote = /^\\?\*\s*pre-rebase/m.test(found.text);
+    const landed = landedIn(lines, section)
+        .map((r) => ({ ...r, preRebase: Boolean(r.starred && preRebaseFootnote) }));
     if (!landed.length) findings.push(`§${section} has no WHAT LANDED table with \`sha\` rows`);
 
     /* ── the rulings and the user's own words ────────────────────────── */
@@ -319,7 +333,8 @@ export function parseSection(text, n) {
     const claims = [...preamble.matchAll(/⛔\s*\*\*([^*]+)\*\*/g)].map((m) => m[1].trim());
 
     return {
-        section: Number(section),
+        /** ⛓ A STRING — three folds are numbered `21b`, `23b`, `23c`. */
+        section,
         line: found.line,
         slice,
         qualifier: qualifier ? qualifier.trim() : null,
@@ -332,6 +347,7 @@ export function parseSection(text, n) {
         ffRanges,
         traps,
         landed,
+        preRebaseFootnote,
         rulings,
         quotes,
         next,
@@ -351,7 +367,8 @@ export function parseSection(text, n) {
  * §51's table has ELEVEN rows and twelve commits landed.
  */
 export function landedIn(lines, section) {
-    const head = lines.findIndex((l) => new RegExp(`^### ${section}\\..*WHAT LANDED`, 'i').test(l));
+    const esc = String(section).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const head = lines.findIndex((l) => new RegExp(`^### ${esc}\\..*WHAT LANDED`, 'i').test(l));
     if (head < 0) return [];
     const rows = [];
     for (let i = head + 1; i < lines.length; i += 1) {
@@ -364,6 +381,20 @@ export function landedIn(lines, section) {
             rows.push({
                 sha: m[1],
                 what: cells.slice(2).filter(Boolean).join(' | ').replace(/\s+/g, ' '),
+                /**
+                 * ⛓⛓⛓ **THE ROW ALREADY DECLARES WHEN IT IS NOT THIS REPO'S
+                 * COMMIT, AND THE GATE MUST READ THAT RATHER THAN FAIL ON IT.**
+                 * Measured over the kickoff: §46.7 names `` `~/CC/seedling`
+                 * `d4f1f37` `` and `` submodule `7aaaa0a` `` — two commits in
+                 * two OTHER repositories, each labelled in its own cell — and
+                 * §49 marks five SHAs `*` under a footnote reading *"pre-rebase
+                 * SHAs; the rebase onto `394ced764` was clean"*. A gate that
+                 * failed on those would be reporting, as defects, two things
+                 * the record states plainly. `gateRoster`'s own law, one file
+                 * over: read the declaration.
+                 */
+                foreign: /(?:^|[\s`])(?:~\/|submodule\b|https?:)/.test(cells[1]) ? cells[1] : null,
+                starred: /\*/.test(cells[1].replace(/\*\*/g, '')),
             });
         }
     }
@@ -399,7 +430,7 @@ export function deriveFromGit(parsed, { repo = REPO, head = null } = {}) {
         ? git(repo, ['rev-parse', '--short=9', s]) : null);
 
     /* ── the landed SHAs: do they exist, and are they ON this head? ───── */
-    const commits = parsed.landed.map(({ sha, what }) => {
+    const commits = parsed.landed.map(({ sha, what, foreign, preRebase }) => {
         const type = git(repo, ['cat-file', '-t', sha]);
         const exists = ok(type) && type === 'commit';
         let onHead = false;
@@ -410,9 +441,14 @@ export function deriveFromGit(parsed, { repo = REPO, head = null } = {}) {
                 onHead = true;
             } catch { onHead = false; }
         }
-        return { sha, what, exists, onHead, subject: exists ? git(repo, ['log', '-1', '--format=%s', sha]) : null };
+        return {
+            sha, what, exists, onHead, foreign: foreign ?? null, preRebase: Boolean(preRebase),
+            subject: exists ? git(repo, ['log', '-1', '--format=%s', sha]) : null,
+        };
     });
-    const stranded = commits.filter((c) => !c.onHead);
+    /** ⛔ A row the record DECLARES foreign or pre-rebase is not stranded. */
+    const stranded = commits.filter((c) => !c.onHead && !c.foreign && !c.preRebase);
+    const declared = commits.filter((c) => !c.onHead && (c.foreign || c.preRebase));
     if (stranded.length) {
         findings.push(`§${parsed.section}'s WHAT LANDED names ${stranded.length} commit(s) that are `
             + `NOT ancestors of ${HEAD ?? 'HEAD'}: ${stranded.map((c) => c.sha).join(', ')}`
@@ -423,7 +459,7 @@ export function deriveFromGit(parsed, { repo = REPO, head = null } = {}) {
      * ⛓ THE RANGE BASE IS THE FIRST LANDED COMMIT'S PARENT, and the preamble's
      * own first fast-forward range is the CROSS-CHECK, not the source.
      */
-    const first = commits.find((c) => c.exists);
+    const first = commits.find((c) => c.exists && c.onHead);
     const base = first ? short(`${first.sha}^`) : null;
     const statedBase = parsed.ffRanges[0]?.from ? short(parsed.ffRanges[0].from) : null;
     if (base && statedBase && base !== statedBase) {
@@ -547,6 +583,8 @@ export function deriveFromGit(parsed, { repo = REPO, head = null } = {}) {
         headShort: short(HEAD),
         base,
         commits,
+        stranded,
+        declared,
         commitCount: commits.length,
         ffCount: parsed.ffRanges.length,
         fixtures,

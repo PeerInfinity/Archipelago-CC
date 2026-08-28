@@ -141,6 +141,43 @@ describe('⛓ §N is READ, and every field says where it came from', () => {
         expect(m?.[6]).toBe('2026-08-21/22');
     });
 
+    /**
+     * ⛔ A SECTION NUMBER IS A STRING. Three folds live at `21b.`, `23b.` and
+     * `23c.` — a fold inserted between two already written. The gate found
+     * them by reporting that three tracked-doc headings had NO as-built
+     * section; they had one, numbered in a shape `\d+` could not see.
+     */
+    it('⛔ a LETTERED section number parses, and stays a string', () => {
+        const t = FIXTURE.replace('## 99. SLICE X9', '## 99b. SLICE X9')
+            .replace(/^### 99\./gm, '### 99b.');
+        const p = parseSection(t, '99b');
+        expect(p.section).toBe('99b');
+        expect(p.subsections).toBe(2);
+        expect(p.landed.map((c) => c.sha)).toEqual([PREV_SHA, HEAD_SHA, GHOST]);
+    });
+
+    /**
+     * ⛔⛔ THE ROW DECLARES WHEN IT IS NOT THIS REPOSITORY'S COMMIT, and the
+     * gate reads that instead of failing on it — §46.7 names a commit in
+     * `~/CC/seedling` and one in a submodule; §49 marks five SHAs `*` under a
+     * `\* pre-rebase SHAs` footnote.
+     */
+    it('a FOREIGN row and a PRE-REBASE row are declared, not stranded', () => {
+        const t = FIXTURE
+            .replace(`| \`${GHOST}\` | a row about a commit that is not on this head |`,
+                [`| \`~/CC/elsewhere\` \`${GHOST}\` | in another repository |`,
+                    `| submodule \`${GHOST}\` | in a submodule |`,
+                    `| \`${GHOST}\`* | a pre-rebase sha |`,
+                    '', '\\* pre-rebase SHAs; the rebase was clean.'].join('\n'));
+        const pp = parseSection(t, 99);
+        expect(pp.preRebaseFootnote).toBe(true);
+        expect(pp.landed.filter((r) => r.foreign)).toHaveLength(2);
+        expect(pp.landed.filter((r) => r.preRebase)).toHaveLength(1);
+        const d = deriveFromGit(pp, { repo: REPO, head: HEAD_SHA });
+        expect(d.stranded).toEqual([]);
+        expect(d.declared).toHaveLength(3);
+    });
+
     it('the decoration comes off a title and nothing else does', () => {
         expect(bareTitle('⛓⛓⛓ **A TITLE — WITH AN EM DASH**')).toBe('A TITLE — WITH AN EM DASH');
     });

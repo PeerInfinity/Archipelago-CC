@@ -157,8 +157,15 @@ if (flag('write')) {
      * row is matched to its gate by the command naming the file, which is the
      * same join `missingScript` makes.
      */
-    const headlessFiles = new Set(gateRoster({ repo: REPO })
-        .filter((g) => !g.browser && !g.windows).map((g) => g.path));
+    const GATES = gateRoster({ repo: REPO });
+    const headlessFiles = new Set(GATES.filter((g) => !g.browser && !g.windows).map((g) => g.path));
+    /**
+     * ⛓ R9 P4b (D) — the gate a row's command names, so `ciSourced` can read
+     * that gate's `@ci-face` declaration. ⛔ Derived from the roster, never a
+     * list here: the declaration lives in the gate's own docblock and this is
+     * only the lookup.
+     */
+    const gateOf = (command) => GATES.find((g) => command.includes(g.path)) ?? null;
     for (const row of ROWS) {
         /**
          * ⛔ AT EVERY ROW, NOT ONCE AT THE TOP. R9 slice P3's tracked-doc edit
@@ -183,7 +190,9 @@ if (flag('write')) {
          */
         const headless = row.kind === 'gate'
             && [...headlessFiles].some((f) => row.command.includes(f));
-        const fromCI = ciSourced({ headless, cheap: prev?.cheap });
+        const fromCI = ciSourced({
+            headless, cheap: prev?.cheap, ciFace: gateOf(row.command)?.ciFace ?? null,
+        });
         const r = fromCI
             ? await runRow({ ...row, kind: 'ci-gate', command: ciGateCommand(row.key) })
             : await runRow(row);
