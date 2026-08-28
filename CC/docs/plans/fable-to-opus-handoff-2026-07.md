@@ -5809,6 +5809,8 @@ control clean (0 one-liners moved of 262). NEW standing row:
 `ci-gates.mjs` runs every headless gate on every push.
 NEXT: unchanged — **P4b** = ⚖ 54 (8) ONE RECORD SURFACE → L15.
 
+**⇒ P4a's STANDING ROWS BANKED (session 10 orchestrator, 2026-08-28, on the records `a61feaaec`).** `gate: procgen-help` **262/0**, `cheap: false`, measured LOCALLY under the box lock (573 s on this box; the slice's 347 s — the clock is a kill deadline, not a verdict, trap 916) — and CI's bounded face at the same head, `gate-help-ci: procgen-help`, reads **262/0** as well: the two faces AGREE on their first outing. `suite: vitest (unfiltered)` **392/12031** @a61feaaec from CI (+2 files / +24 tests over 390/12007). File 65 rows / 48 cheap. ⚠ MEASURED, for P4b: `ci-summary --gate="gate: procgen-help"` REFUSES BY NAME (the gate declares a ci-face), and `ciSourced(headless ∧ ¬cheap)` will select exactly this row on its next `--write` ⇒ that write can only KEEP — the two rulings do not compose (P4b brief (D)). ⚠ The gate's full pass leaves ten untracked artifacts in the tree by design (it reports, never deletes): five verifier `.rl-*/.atlas-*` scratch files and five `worlds/*_worldgen/` dirs — removed by mtime against the run's start. The slice's first-quoted row key (`seedling-procgen-help`) was not the derived one (`procgen-help`); `--key=` refused by name, as built. ⚖ 63 (a)–(i) are in kickoff §1.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
