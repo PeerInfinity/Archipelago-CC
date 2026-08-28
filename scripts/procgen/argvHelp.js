@@ -38,8 +38,8 @@
  * property instead of assuming it.
  */
 
-import { readFileSync } from 'node:fs';
-import { basename } from 'node:path';
+import { readFileSync, realpathSync } from 'node:fs';
+import { basename, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
@@ -111,15 +111,36 @@ export function helpText(file) {
 }
 
 /**
+ * ⛓⛓⛓ **ONLY THE FILE THAT WAS RUN ANSWERS — AND THE GATE CAUGHT THIS THE
+ * HARD WAY.** Every instrument in this directory carries the guard, and ESM
+ * imports are HOISTED, so when one instrument imports another the DEPENDENCY's
+ * body runs first. Measured: `check-preset-bundle-load.mjs --help` printed
+ * **`loadJSZipNode.mjs`'s** help text and exited 0 — a true help page about
+ * the wrong file, from a call that never reached the file the reader typed.
+ * Nothing but the gate's byte-exact *"stdout IS the derived help text FOR THIS
+ * FILE"* assertion could have seen it; every other observer was satisfied.
+ *
+ * ⇒ the guard fires only when this module IS the entry point. `realpathSync`
+ * on both sides because a worktree, a symlink and a relative `argv[1]` are all
+ * spellings of the same file.
+ */
+export function isEntryPoint(metaUrl, argv = process.argv) {
+    const real = (p) => { try { return realpathSync(p); } catch { return p; } };
+    if (!argv[1]) return false;
+    return real(fileURLToPath(metaUrl)) === real(resolve(argv[1]));
+}
+
+/**
  * ⛓ CALL THIS AS THE FIRST STATEMENT OF AN INSTRUMENT'S BODY. It prints and
- * exits when the argv asks for help, and returns `false` otherwise so the
- * caller reads as a guard rather than as a statement with a hidden exit.
+ * exits when the argv asks for help AND this file is the one that was run,
+ * and returns `false` otherwise so the caller reads as a guard rather than as
+ * a statement with a hidden exit.
  *
  * @param {string} metaUrl  the caller's `import.meta.url`
  * @returns {false}
  */
 export function argvHelp(metaUrl, { argv = process.argv } = {}) {
-    if (!wantsHelp(argv)) return false;
+    if (!wantsHelp(argv) || !isEntryPoint(metaUrl, argv)) return false;
     process.stdout.write(`${helpText(fileURLToPath(metaUrl))}\n`);
     process.exit(0);
     /* c8 ignore next */

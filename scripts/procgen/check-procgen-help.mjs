@@ -215,7 +215,7 @@ const argsFor = (kind, abs) => (kind === 'help'
     : ['--input-type=module', '-e', `await import(${JSON.stringify(`file://${abs}`)});`]);
 
 /** Everything a run can be judged on WITHOUT the two per-batch observers. */
-function localWhy(kind, abs, r, cacheFiles, ceiling) {
+function localWhy(kind, abs, r, cacheFiles, ceiling, importErr = null, importOut = null) {
     const why = [];
     if (r.timedOut) why.push(`ran past the ${ceiling} ms ceiling and was killed`);
     else if (r.code !== 0) why.push(`exit ${r.code}${r.signal ? ` (${r.signal})` : ''}`);
@@ -223,7 +223,35 @@ function localWhy(kind, abs, r, cacheFiles, ceiling) {
         why.push(`left ${cacheFiles.length} entry(ies) in its own cache: `
             + `${cacheFiles.slice(0, 3).join(', ')}`);
     }
-    if (r.err.trim()) why.push(`printed to stderr: ${r.err.trim().split('\n')[0].slice(0, 120)}`);
+    /**
+     * ⛓⛓ STDERR THE FILE'S OWN IMPORTS ALREADY PRODUCE IS NOT SOMETHING THE
+     * HELP PATH DID — and the gate has the evidence to say which. Ten
+     * instruments reach `stateManagerProxySingleton.js`, which constructs on
+     * import and warns *"Worker is not defined"* under node; imports are
+     * HOISTED, so no guard in the importer can preempt it and calling it a
+     * `--help` side effect would be filing a true sentence against the wrong
+     * subject (trap 566). The IMPORT door of the same file is the control: a
+     * help-door stderr that the bare import also produces is attributed to the
+     * imports and NAMED; anything MORE than that is the help path's own and is
+     * a finding.
+     */
+    const err = r.err.trim();
+    if (err) {
+        /**
+         * ⛓ LINE BY LINE, not whole-string: the control run is killed at its
+         * own ceiling, so its stderr can be a PREFIX of the help door's.
+         * ⛓ AND STACK FRAMES ARE NOT MESSAGES. `at async loadESM
+         * (node:internal/…)` differs between a `node x.mjs` launch and a
+         * `node -e "await import(…)"` one FOR THE SAME WARNING, so comparing
+         * them would report the launch method as a side effect. A frame
+         * belongs to the message above it; the messages are what a run wrote.
+         */
+        const messages = (t) => (t ?? '').split('\n').map((l) => l.trim())
+            .filter((l) => l && !/^at\s/.test(l));
+        const theirs = new Set(messages(importErr));
+        const extra = messages(err).filter((l) => !theirs.has(l));
+        if (extra.length) why.push(`printed to stderr: ${extra[0].slice(0, 120)}`);
+    }
     /**
      * ⛔⛔ THE DISCRIMINATOR, AND THE GATE'S FIRST CUT DID NOT HAVE IT.
      * Without this row `lint-gate-labels.mjs --help` PASSED — it scanned 514
@@ -234,10 +262,35 @@ function localWhy(kind, abs, r, cacheFiles, ceiling) {
      * file, byte for byte; nothing an instrument prints by accident can equal
      * it, and the assertion needs no list.
      */
-    if (kind === 'help' && !why.length && r.out !== `${helpText(abs)}\n`) {
-        why.push(r.out.trim()
-            ? 'stdout is NOT the derived help text — the instrument RAN instead of printing'
-            : 'printed NOTHING');
+    if (kind === 'help' && !why.length) {
+        /**
+         * ⛓⛓ …AND LINES A HOISTED IMPORT PRINTS ARE NOT LINES THE HELP PATH
+         * PRINTED. Ten instruments reach `centralRegistry`/`discoveryState`,
+         * which log `[centralRegistry] CentralRegistry initialized` at LOAD;
+         * imports hoist, so those two lines are above the help text and no
+         * guard in the importer can preempt them. The file's own bare import
+         * is the control for exactly this, as it is for stderr.
+         *
+         * ⛔ AND THE RULE STAYS SHARP: what REMAINS after removing the lines
+         * the import also prints must EQUAL the derived help text. An
+         * instrument that RAN under `--help` has its output stripped by the
+         * same rule and is left with nothing to match — still red.
+         */
+        /* ⛔ NEVER an empty line: the help text has blank lines of its own, and
+         *   a control whose stdout is `''` would otherwise strip every one. */
+        const theirs = new Set((importOut ?? '').split('\n')
+            .map((l) => l.trim()).filter(Boolean));
+        const mine = r.out.split('\n').filter((l, i, a) => !(i === a.length - 1 && l === ''));
+        const kept = mine.filter((l) => !(l.trim() && theirs.has(l.trim())));
+        const noise = mine.length - kept.length;
+        if (kept.join('\n') !== helpText(abs)) {
+            why.push(r.out.trim()
+                ? 'stdout is NOT the derived help text — the instrument RAN instead of printing'
+                : 'printed NOTHING');
+        } else if (noise) {
+            /* ⛓ a PASS that says what it forgave, so the residue is visible. */
+            r.noise = noise;
+        }
     }
     return why;
 }
@@ -292,7 +345,15 @@ async function runDoor(task) {
     const r = await spawnChild(argsFor(task.kind, task.abs), cache, ceiling);
     const cacheFiles = readdirSync(cache, { recursive: true });
     rmSync(cache, { recursive: true, force: true });
-    return { ms: r.ms, wrote: [], why: localWhy(task.kind, task.abs, r, cacheFiles, ceiling) };
+    return {
+        ms: r.ms,
+        wrote: [],
+        stderr: r.err,
+        stdout: r.out,
+        noise: r.noise ?? 0,
+        why: localWhy(task.kind, task.abs, r, cacheFiles, ceiling,
+            task.importErr ?? null, task.importOut ?? null),
+    };
 }
 
 /** ⛓ A BATCH, WITH ONE PAIR OF DISK OBSERVERS AROUND IT — and a serial re-run
@@ -313,20 +374,43 @@ async function runBatch(tasks) {
         if (after !== before) out[0].why.push(repairPorcelain(before, after, touched));
         return out;
     }
+    /**
+     * ⛔⛔ REPAIR THE BATCH'S OWN DIRT BEFORE THE SERIAL PASS, OR THE SERIAL
+     * PASS INHERITS IT AND LEAVES IT. Measured: the first cut fell straight
+     * through to the per-door re-run, whose `before` was taken AFTER the batch
+     * had already modified the file — so `wasPaths.has(path)` was true, the
+     * path was (correctly, by the never-touch-somebody-else's-work rule) left
+     * alone, and the run ENDED with two tracked files modified. The batch's
+     * observers know what the batch caused; use them, then re-run from a tree
+     * that is clean again.
+     */
+    repairPorcelain(before, after, touched);
     const serial = [];
     for (const t of tasks) serial.push(...await runBatch([t]));   /* eslint-disable-line */
     return serial;
 }
 
-const doors = instruments.flatMap((file) => ['help', 'import']
-    .map((kind) => ({ file, kind, abs: join(DIR, file) })));
+/**
+ * ⛓ THE IMPORT DOOR RUNS FIRST, FOR EVERY FILE, because it is the HELP door's
+ * control: a stderr line the bare import already produces cannot be something
+ * `--help` did (see `localWhy`). Two passes, each batched.
+ */
 const t0 = Date.now();
 const byDoor = new Map();
-for (let i = 0; i < doors.length; i += JOBS) {
-    const batch = doors.slice(i, i + JOBS);
-    /* eslint-disable-next-line no-await-in-loop */
-    const out = await runBatch(batch);
-    batch.forEach((t, k) => byDoor.set(`${t.kind}:${t.file}`, out[k]));
+for (const kind of ['import', 'help']) {
+    const doors = instruments.map((file) => ({
+        file,
+        kind,
+        abs: join(DIR, file),
+        importErr: kind === 'help' ? (byDoor.get(`import:${file}`)?.stderr ?? null) : null,
+        importOut: kind === 'help' ? (byDoor.get(`import:${file}`)?.stdout ?? null) : null,
+    }));
+    for (let i = 0; i < doors.length; i += JOBS) {
+        const batch = doors.slice(i, i + JOBS);
+        /* eslint-disable-next-line no-await-in-loop */
+        const out = await runBatch(batch);
+        batch.forEach((t, k) => byDoor.set(`${t.kind}:${t.file}`, out[k]));
+    }
 }
 const WALL_MS = Date.now() - t0;
 rmSync(scratch, { recursive: true, force: true });
