@@ -1,4 +1,5 @@
 import { chromium } from 'playwright';
+import { takeBoxLockOrExit } from './boxLock.js';
 
 // Runner phase-2 gate (plan §5 row 2) — standalone game page, all
 // synthesized input, no manual play:
@@ -12,6 +13,14 @@ import { chromium } from 'playwright';
 //
 // Requires the dev server on :8000 (playwright.config webServer /
 // long-running instance).
+
+// ⛓ R9 P3b, ⚖ 54 (7); ⚖ 62 at 12j — **THE BOX LOCK.** This instrument drives
+// the machine (browser), so it takes the box before it starts and refuses BY
+// NAME if another instrument holds it — replacing a hand-relayed "BOX BUSY".
+// A run UNDER a holder (`gates.mjs`, `standing-values`,
+// `rerecord-seedling-campaign`) recognises the holder's token and passes
+// through. `--wait-for-box=<sec>` queues instead of refusing.
+takeBoxLockOrExit({ name: 'verify-runner-game.mjs', kind: 'browser' });
 
 const BASE = 'http://localhost:8000/frontend/modules/runnerDemo/game/index.html';
 const browser = await chromium.launch();

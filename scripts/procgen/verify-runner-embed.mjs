@@ -27,6 +27,17 @@
  */
 import { chromium } from 'playwright';
 import { readFileSync } from 'node:fs';
+import { takeBoxLockOrExit } from './boxLock.js';
+
+/**
+ * ⛓ R9 P3b, ⚖ 54 (7); ⚖ 62 at 12j — **THE BOX LOCK.** This instrument drives
+ * the machine (browser), so it takes the box before it starts and refuses BY
+ * NAME if another instrument holds it — replacing a hand-relayed "BOX BUSY".
+ * A run UNDER a holder (`gates.mjs`, `standing-values`,
+ * `rerecord-seedling-campaign`) recognises the holder's token and passes
+ * through. `--wait-for-box=<sec>` queues instead of refusing.
+ */
+takeBoxLockOrExit({ name: 'verify-runner-embed.mjs', kind: 'browser' });
 
 const PRESET = 'frontend/presets/runner_sphere_worldgen/AP_14089154938208861744/'
     + 'AP_14089154938208861744_rules.json';

@@ -303,33 +303,72 @@ export function takeBoxLockOrExit({ name, kind, repo = BOX_LOCK_REPO, argv = pro
 export const BOX_LOCK_PREAMBLE_MARK = 'takeBoxLockOrExit(';
 
 /**
- * ⛓⛓⛓ **WHO TAKES THE BOX, DERIVED** (⚖ 17: read out of the gates, never a
- * typed list). A gate contends for the machine exactly when `gateRoster`
- * classifies it `browser` or `windows` — the same classification `gates.mjs`
- * and `standingValues` already spend — so that IS the population, and a gate
- * added tomorrow joins it by being what it is.
+ * ⛓⛓⛓ **WHO HOLDS THE BOX FOR A WHOLE RUN** — the runners that take the lock
+ * and then spawn instruments which pass through on the token (rule 3).
  *
- * ⛔ AND THE COMPLEMENT MATTERS AS MUCH AS THE SET. A HEADLESS gate that took
- * the box would serialise a 0.4-second row behind a forty-minute one for
- * nothing, which is how a lock earns the reputation that gets it switched off.
- * `expected` is therefore the exact set — the lint below reads it BOTH ways.
+ * ⛔ THEY ARE NAMED, AND THAT IS NOT A HAND LIST SNEAKING BACK IN. None of
+ * them drives the machine ITSELF — `gates.mjs` spawns gates,
+ * `standing-values.mjs` and `record-standing-value.mjs` spawn a row's own
+ * command, and `rerecord-seedling-campaign.mjs` (added at 12j) shells the
+ * producers AND the differential — so no derivation over what a file drives
+ * can reach them. What makes the naming honest is that each name is CHECKED:
+ * a runner listed here without a `takeBoxLock` is a finding, not
+ * documentation.
+ */
+export const BOX_LOCK_HOLDERS = Object.freeze([
+    'gates.mjs', 'standing-values.mjs', 'record-standing-value.mjs',
+    'rerecord-seedling-campaign.mjs',
+]);
+
+/**
+ * ⛓ AND THE ONE DRIVER THAT TAKES NOTHING, BY NAME.
+ * `seedling-bot-replay-win.py` is the Windows driver every `windows` taker
+ * shells out to — it is a CHILD of a taker in every run there is, so a lock
+ * of its own would be a second taker inside its own parent. It is not a
+ * `.mjs`, so `machineDrivers` cannot see it anyway; it is named here so that
+ * "why does the Python driver not take the box" has a written answer.
+ */
+export const BOX_LOCK_EXEMPT = Object.freeze(['seedling-bot-replay-win.py']);
+
+/**
+ * ⛓⛓⛓ **WHO TAKES THE BOX, DERIVED FROM WHAT DRIVES THE MACHINE** (⚖ 17:
+ * read out of the instruments, never a typed list; ⚖ 62, R9 slice 12j).
  *
- * ⛓ The import is LAZY for the reason `BOX_LOCK_REPO` is computed locally: the
- * gate preambles must not pay for a directory scan they never use.
+ * ⛔⛔ WHAT THIS FIXES, AND IT WAS MEASURED. P3b derived this population from
+ * `gateRoster` — i.e. from the files whose name begins `check-`. So the
+ * instruments that hold the GPU LONGEST took no lock at all: a **142-minute**
+ * `verify-seedling-bot-differential --win --tier=full` ran with NO
+ * `lock.json` on disk while three sessions worked beside it. **A lock whose
+ * population is a naming convention is not a lock over a box.** The
+ * population is now `machineDrivers` — every `scripts/procgen/*.mjs` that
+ * drives a browser or the Windows driver — which is 96 files where the gate
+ * roster reached 27.
  *
- * @returns {Promise<{expected: object[], runners: string[]}>}
+ * ⛔ AND THE COMPLEMENT STILL MATTERS AS MUCH AS THE SET. A HEADLESS
+ * instrument that took the box would serialise a 0.4-second row behind a
+ * forty-minute one for nothing, which is how a lock earns the reputation
+ * that gets it switched off. `expected` is the exact set and the lint reads
+ * it BOTH ways.
+ *
+ * ⛓ FOUR TAKERS TAKE CONDITIONALLY, and that is the same law, one level
+ * down: `solve-seedling-r8-tail` (`--game`), `solve-seedling-r8-d2-chain`,
+ * `solve-seedling-r9-campaign` and `derive-seedling-tick0` (`--check`) each
+ * CAN drive the machine and each has a headless arm that is a standing
+ * identity row. An unconditional take would have queued a 1.4-second `--check`
+ * behind the 142-minute drive this very change makes take the lock — the
+ * second-direction failure, arriving through the fix for the first. Their
+ * preamble sits behind the run's own argv predicate, which is why the lint
+ * asks for the MARK and not for a top-level statement.
+ *
+ * ⛓ The import is LAZY for the reason `BOX_LOCK_REPO` is computed locally:
+ * the preambles must not pay for a directory scan they never use.
+ *
+ * @returns {Promise<{expected: object[], runners: string[], exempt: string[]}>}
  */
 export async function boxLockTakers({ repo = BOX_LOCK_REPO } = {}) {
-    const { gateRoster } = await import('./gateRoster.js');
-    const expected = gateRoster({ repo })
-        .filter((g) => g.browser || g.windows)
-        .map((g) => ({ file: g.file, kind: g.windows ? 'windows' : 'browser' }));
-    /**
-     * ⛔ THE RUNNERS ARE NAMED, AND THAT IS NOT A HAND LIST SNEAKING BACK IN.
-     * They are not `check-*.mjs`, so no derivation over the gate roster can
-     * reach them; what makes the naming honest is that each one is asserted to
-     * actually carry a `takeBoxLock` by the same lint that checks the gates.
-     * A name here that had no lock would be a finding, not documentation.
-     */
-    return { expected, runners: ['gates.mjs', 'standing-values.mjs', 'record-standing-value.mjs'] };
+    const { machineDrivers } = await import('./gateRoster.js');
+    const expected = machineDrivers({ repo })
+        .filter((d) => !BOX_LOCK_HOLDERS.includes(d.file))
+        .map((d) => ({ file: d.file, kind: d.kind }));
+    return { expected, runners: [...BOX_LOCK_HOLDERS], exempt: [...BOX_LOCK_EXEMPT] };
 }

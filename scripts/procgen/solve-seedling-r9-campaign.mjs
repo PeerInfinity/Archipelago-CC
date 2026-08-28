@@ -132,6 +132,7 @@ if (DASH_NOTE) console.error(DASH_NOTE);
  */
 import { CAMPAIGN_SEGMENTS } from
     '../../frontend/modules/seedlingDemo/campaignChain.js';
+import { takeBoxLockOrExit } from './boxLock.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
@@ -164,6 +165,21 @@ const WALK_REPORT = createWalkReport({
 
 
 const CHECK = process.argv.includes('--check');
+
+/**
+ * ⛓ R9 P3b, ⚖ 54 (7); ⚖ 62 at 12j — **THE BOX LOCK, BEHIND THIS RUN'S OWN
+ * ARGV.** This instrument CAN drive the machine (windows), so it takes the box
+ * — but only on the arm that does.
+ *
+ * ⛔ AN UNCONDITIONAL TAKE HERE WOULD BE THE SECOND-DIRECTION FAILURE THE
+ * LINT EXISTS TO PREVENT, arriving through the fix for the first: `latchOf` — the only Windows drive here — is called from two sites, both
+ * behind this file's own `if (!CHECK …)`. `--check` is a standing identity
+ * row measured in 9 s.
+ *
+ * A run UNDER a holder passes through on its token; `--wait-for-box=<sec>`
+ * queues instead of refusing.
+ */
+if (!CHECK) takeBoxLockOrExit({ name: 'solve-seedling-r9-campaign.mjs', kind: 'windows' });
 
 const {
     parseTape, requiredTapeVersion, assertTapeWithinRuntimeBudget, gameVisibleTape,

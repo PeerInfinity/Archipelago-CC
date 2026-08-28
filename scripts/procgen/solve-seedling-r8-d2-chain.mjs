@@ -76,6 +76,7 @@ import { modelArrivalOf } from './provisionalLatch.js';
 import { emitSegments } from './producerSegments.js';
 
 import { parseDashMode, dashModeNote } from './dashMode.js';
+import { takeBoxLockOrExit } from './boxLock.js';
 
 /**
  * ⛓⛓⛓ R9 SLICE 12i — **`--dash=none|full|all`, AND THE TOKEN IS SPELLED
@@ -127,6 +128,21 @@ const WALK_REPORT = createWalkReport({
 
 
 const CHECK = process.argv.includes('--check');
+
+/**
+ * ⛓ R9 P3b, ⚖ 54 (7); ⚖ 62 at 12j — **THE BOX LOCK, BEHIND THIS RUN'S OWN
+ * ARGV.** This instrument CAN drive the machine (windows), so it takes the box
+ * — but only on the arm that does.
+ *
+ * ⛔ AN UNCONDITIONAL TAKE HERE WOULD BE THE SECOND-DIRECTION FAILURE THE
+ * LINT EXISTS TO PREVENT, arriving through the fix for the first: the two `latchOf` calls — the only ones that shell the Windows driver — are
+ * both behind this file's own `if (!CHECK)`. `--check` is a standing identity
+ * row measured in 18 s and must not queue behind a drive.
+ *
+ * A run UNDER a holder passes through on its token; `--wait-for-box=<sec>`
+ * queues instead of refusing.
+ */
+if (!CHECK) takeBoxLockOrExit({ name: 'solve-seedling-r8-d2-chain.mjs', kind: 'windows' });
 /**
  * ⛓ `--headline` — THE CHEAP FIRST ASK (⚖ R8 §18.6.3(b), one instrument over).
  *

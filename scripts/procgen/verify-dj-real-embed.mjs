@@ -23,6 +23,17 @@ import { chromium } from 'playwright';
 import { existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { takeBoxLockOrExit } from './boxLock.js';
+
+/**
+ * ⛓ R9 P3b, ⚖ 54 (7); ⚖ 62 at 12j — **THE BOX LOCK.** This instrument drives
+ * the machine (browser), so it takes the box before it starts and refuses BY
+ * NAME if another instrument holds it — replacing a hand-relayed "BOX BUSY".
+ * A run UNDER a holder (`gates.mjs`, `standing-values`,
+ * `rerecord-seedling-campaign`) recognises the holder's token and passes
+ * through. `--wait-for-box=<sec>` queues instead of refusing.
+ */
+takeBoxLockOrExit({ name: 'verify-dj-real-embed.mjs', kind: 'browser' });
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const DJREAL = join(HERE, '..', '..', 'frontend', 'modules', 'bounceDemo', 'djReal');

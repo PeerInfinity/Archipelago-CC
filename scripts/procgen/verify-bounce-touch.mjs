@@ -1,4 +1,5 @@
 import { chromium } from 'playwright';
+import { takeBoxLockOrExit } from './boxLock.js';
 
 // Bounce touch-controls retrofit gate (runner plan §6): standalone
 // bounce page in a hasTouch context — holding the RIGHT half-panel
@@ -6,6 +7,14 @@ import { chromium } from 'playwright';
 // bounce (abilities gate it: no drift before the Right arrow item).
 // Also covers the standalone-page TDZ regression (the dev harness
 // calls configure during module init; the page must survive it).
+
+// ⛓ R9 P3b, ⚖ 54 (7); ⚖ 62 at 12j — **THE BOX LOCK.** This instrument drives
+// the machine (browser), so it takes the box before it starts and refuses BY
+// NAME if another instrument holds it — replacing a hand-relayed "BOX BUSY".
+// A run UNDER a holder (`gates.mjs`, `standing-values`,
+// `rerecord-seedling-campaign`) recognises the holder's token and passes
+// through. `--wait-for-box=<sec>` queues instead of refusing.
+takeBoxLockOrExit({ name: 'verify-bounce-touch.mjs', kind: 'browser' });
 
 const URL = 'http://localhost:8000/frontend/modules/bounceDemo/game/index.html?touch=1';
 const browser = await chromium.launch();

@@ -5914,6 +5914,12 @@ export const INSTRUMENTS = frz({
                         "startsWith"
                     ],
                     "name": "to"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "wait-for-box"
                 }
             ],
             "oneLiner": "rerecord-seedling-campaign — **ONE COMMAND THAT RE-DERIVES EVERY BOOT OF EVERY MULTI-SEGMENT CHAIN FROM THE GAME, IN CHAIN ORDER, WRITES EXACTLY THE PREDICTED SET, RECORDS ONCE, AND PROVES THE CHAINS PLAY.** ⚖ Ruling 21 (user, 2026-08-21: *\"a way to streamline the process of re-recording the whole campaign chain fro…",

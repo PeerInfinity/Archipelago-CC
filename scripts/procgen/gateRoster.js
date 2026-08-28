@@ -61,8 +61,37 @@ const PLAYWRIGHT_RE = /from '(?:@playwright\/test|playwright)'/;
  * about the code (trap 566). A gate drives Windows when it HOLDS the path.
  */
 const WINDOWS_RE = /=\s*'\/mnt\/c\/Windows\/py\.exe'/;
-/** Any sibling instrument this file names — spawned, imported or quoted. */
-const SIBLING_RE = /(?:scripts\/procgen\/|\.\/)([a-z][a-zA-Z0-9-]*\.mjs)/g;
+/**
+ * ⛓⛓⛓ A SIBLING INSTRUMENT THIS FILE ACTUALLY REFERENCES — spelled as a
+ * MODULE PATH, which is the only spelling a spawn or an import can use.
+ *
+ * ⛔⛔ AND THAT NARROWNESS IS THE SAME LAW `WINDOWS_RE` STATES ONE COMMENT
+ * DOWN: **THE DETECTOR IS THE REFERENCE, NOT THE MENTION.** Until R9 slice
+ * 12j this matched `scripts/procgen/<name>.mjs` as well — the spelling a
+ * USAGE LINE uses. Over the 31 gates that cost nothing, because a gate that
+ * quotes a browser instrument in its header generally spawns it too. Over
+ * ALL 260 instruments in this directory (which is the population `boxLock`'s
+ * taker set is derived from since 12j) it was catastrophic: of the twenty
+ * files it pulled in transitively, exactly ONE reached a browser by a real
+ * reference and NINETEEN merely printed
+ * `node scripts/procgen/verify-seedling-bot-differential.mjs --win --record`
+ * in a docblock. Four of those nineteen are the headless `solve-seedling-*`
+ * producers, whose 2-second `--check` would have been made to queue behind a
+ * 142-minute drive — the exact failure `boxLock`'s two-directional lint
+ * exists to prevent, arriving through the front door.
+ *
+ * ⛓ AND IT HAS A THIRD COSTUME: comment-stripping is NOT enough. Two of the
+ * three survivors of that were `console.log`/template-literal strings that
+ * PRINT a suggested command line (`plan-seedling-r5-bobboss.mjs:160`,
+ * `probe-seedling-r5-spinner.mjs:262`) — a usage line living in code. What
+ * separates a reference from a mention is not where it sits, it is how it is
+ * SPELLED: `'./name.mjs'` resolves, `scripts/procgen/name.mjs` reads.
+ *
+ * ⛓ MEASURED BOTH WAYS AT 12j: over the gate roster `browser` is 23 before
+ * and 23 after — this narrowing moves NO gate, so `gates.mjs`, the standing
+ * rows and the 27 pre-12j takers are untouched by it.
+ */
+const SIBLING_RE = /['"`]\.\/([a-z][a-zA-Z0-9-]*\.mjs)['"`]/g;
 
 /** ⛓ How a flag is READ, in this directory's one spelling: `arg('host', …)`. */
 const readsFlag = (text, name) => new RegExp(`\\barg\\(\\s*'${name}'`).test(text);
@@ -177,9 +206,18 @@ export function ciFaceIn(text, { file = '(text)' } = {}) {
  * Every gate in `scripts/procgen/`, with the flags it reads and whether it
  * drives a browser — the gate's own text is the only source.
  */
-export function gateRoster({ repo = REPO } = {}) {
+/**
+ * ⛓⛓⛓ THE INSTRUMENT DIRECTORY, READ ONCE — and the ONE place a file is
+ * classified `browser` or `windows`.
+ *
+ * ⛔ THERE IS ONE CLASSIFIER BECAUSE THERE IS ONE QUESTION. `gateRoster`
+ * asks it of the 31 `check-*.mjs`; `machineDrivers` (R9 slice 12j, ⚖ ruling
+ * 62) asks it of all 260. A second copy of the two regexes would be a second
+ * answer to "does this thing drive the machine", and the box lock's whole
+ * correctness is that the answer is one.
+ */
+function instrumentDir(repo) {
     const dir = join(repo, SCRIPT_DIR);
-    const files = readdirSync(dir).filter(isGateFile).sort();
     const textOf = new Map();
     const read = (f) => {
         if (!textOf.has(f)) {
@@ -187,28 +225,74 @@ export function gateRoster({ repo = REPO } = {}) {
         }
         return textOf.get(f);
     };
+    /**
+     * ⛓ ONE HOP, AND THAT BOUND IS NAMED. `browser` is "this file, or a
+     * sibling it references". A full transitive closure was MEASURED at 12j
+     * over all 260 instruments and adds NOTHING at this head (77 either way),
+     * so the hop count is not currently load-bearing — but a chain of three
+     * would be invisible here, and this sentence is where the next reader
+     * finds that out instead of assuming.
+     */
+    const siblings = (f) => [...new Set([...read(f).matchAll(SIBLING_RE)].map((m) => m[1]))]
+        .filter((s) => s !== f);
+    const browserVia = (f) => (PLAYWRIGHT_RE.test(read(f))
+        ? null
+        : siblings(f).find((s) => PLAYWRIGHT_RE.test(read(s))) ?? null);
+    const browser = (f) => PLAYWRIGHT_RE.test(read(f)) || browserVia(f) !== null;
+    const windows = (f) => WINDOWS_RE.test(read(f));
+    const all = () => readdirSync(dir).filter((f) => /\.mjs$/.test(f)).sort();
+    return { read, all, browser, browserVia, windows };
+}
+
+/**
+ * ⛓⛓⛓ R9 SLICE 12j, ⚖ RULING 62 — **EVERY INSTRUMENT IN THIS DIRECTORY THAT
+ * DRIVES THE MACHINE, not only the ones whose name begins `check-`.**
+ *
+ * ⛔⛔ THE DEFECT THIS CLOSES, MEASURED. P3b derived the box lock's takers
+ * from `gateRoster`, i.e. from `check-*.mjs`. So the instruments that hold
+ * the GPU LONGEST took no lock at all: a 142-minute
+ * `verify-seedling-bot-differential --win --tier=full` ran with no
+ * `lock.json` on disk while three sessions worked beside it. A lock whose
+ * population is "the files somebody named `check-`" is a lock over a naming
+ * convention, not over a box.
+ *
+ * ⛓ `kind` is `windows` when the file holds the Windows driver path,
+ * `browser` otherwise — the same two-kind answer the gates have always
+ * carried, over the wider population.
+ *
+ * @returns {{file: string, path: string, kind: string, browserVia: string|null}[]}
+ */
+export function machineDrivers({ repo = REPO } = {}) {
+    const D = instrumentDir(repo);
+    return D.all()
+        .filter((f) => D.browser(f) || D.windows(f))
+        .map((f) => ({
+            file: f,
+            path: `${SCRIPT_DIR}/${f}`,
+            kind: D.windows(f) ? 'windows' : 'browser',
+            browserVia: D.browserVia(f),
+        }));
+}
+
+export function gateRoster({ repo = REPO } = {}) {
+    const D = instrumentDir(repo);
+    const files = D.all().filter(isGateFile);
     return files.map((file) => {
-        const text = read(file);
+        const text = D.read(file);
         const flags = ['host', 'root', 'pages'].filter((n) => readsFlag(text, n));
-        const siblings = [...new Set([...text.matchAll(SIBLING_RE)].map((m) => m[1]))]
-            .filter((s) => s !== file);
-        const browser = PLAYWRIGHT_RE.test(text)
-            || siblings.some((s) => PLAYWRIGHT_RE.test(read(s)));
         return {
             file,
             path: `${SCRIPT_DIR}/${file}`,
             flags,
-            browser,
-            windows: WINDOWS_RE.test(text),
+            browser: D.browser(file),
+            windows: D.windows(file),
             /** ⛓ …and the SECOND ARMS this gate declares — `[]` for every gate
              *  that declares none, which is all of them but one. */
             variants: variantsIn(text, { file }),
             /** ⛓ …and the CI face it declares, or `null` (R9 P3b (g)). */
             ciFace: ciFaceIn(text, { file }),
             /** ⛓ …and by which sibling, when it is not by itself. */
-            browserVia: PLAYWRIGHT_RE.test(text)
-                ? null
-                : siblings.find((s) => PLAYWRIGHT_RE.test(read(s))) ?? null,
+            browserVia: D.browserVia(file),
         };
     });
 }

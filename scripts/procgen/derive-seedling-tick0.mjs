@@ -85,6 +85,7 @@ import { dirname, join } from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { takeBoxLockOrExit } from './boxLock.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
@@ -93,6 +94,25 @@ const TAPES = join(MODULE, 'fixtures', 'tapes');
 
 const CHECK = process.argv.includes('--check');
 const LIST_ONLY = process.argv.includes('--list');
+
+/**
+ * ⛓ R9 P3b, ⚖ 54 (7); ⚖ 62 at 12j — **THE BOX LOCK, BEHIND THIS RUN'S OWN
+ * ARGV.** This instrument CAN drive the machine (windows), so it takes the box
+ * — but only on the arm that does.
+ *
+ * ⛔ AN UNCONDITIONAL TAKE HERE WOULD BE THE SECOND-DIRECTION FAILURE THE
+ * LINT EXISTS TO PREVENT, arriving through the fix for the first: the predicate is this file's OWN statement of "this run does real work"
+ * (line 495 reads `if (!CHECK && !LIST_ONLY)`). ⛓ AND IT DELIBERATELY DOES
+ * NOT EXCLUDE `--dry-run` OR A WARM CACHE: `driveZeroTick` returns a cached
+ * stream when one exists, so whether a given run spends the GPU is a
+ * property of the CACHE STATE, not of the argv
+ * ([[feedback_offline_is_a_cache_state_not_a_stage]]). A run that MIGHT
+ * drive takes the box; only the arms that provably cannot are exempt.
+ *
+ * A run UNDER a holder passes through on its token; `--wait-for-box=<sec>`
+ * queues instead of refusing.
+ */
+if (!CHECK && !LIST_ONLY) takeBoxLockOrExit({ name: 'derive-seedling-tick0.mjs', kind: 'windows' });
 const ONLY = (process.argv.find((a) => a.startsWith('--only=')) || '')
     .slice('--only='.length).split(',').filter(Boolean);
 /**

@@ -105,6 +105,17 @@ T="${1:-.}"
 cd "$T" || exit 1
 r () { printf '%-46s %s\n' "$1" "$2"; }
 m () { md5sum | cut -d' ' -f1; }
+# ⛓⛓ R9 slice 12j, ⚖ 62 — **THE BOX LOCK'S OWN LINES ARE PROVENANCE, NOT AN
+# ANSWER.** Since 12j every instrument that drives the machine takes the box,
+# and the notice it prints carries a PID and a frozen head — so any identity
+# md5'd over `2>&1` of such an instrument would be nondeterministic by
+# construction. `b` drops exactly those lines (all four of `boxLock.js`'s
+# `say()` calls begin `# box lock:`), which is byte-inert for every producer
+# that takes no lock and is what keeps `plan-seedling-r7-ends-meet --check` —
+# the one producer that drives a browser inside its own `--check` — a stable
+# digest. ⛔ It is a filter on PROVENANCE only: a refusal exits 1 and the row
+# goes red, which is the behaviour we want.
+b () { grep -v '^# box lock:'; }
 
 r "maze byte-identity"          "$(node scripts/procgen/dump-maze-byteidentity.mjs 2>/dev/null | m)"
 r "acceptance batch"            "$(node scripts/procgen/batch-seedling-acceptance.mjs 2>/dev/null | m)"
@@ -124,7 +135,7 @@ r "generated set"               "$(node scripts/procgen/check-seedling-generated
 echo "--- every producer's own --check (⚖ ruling 8's 2026-08-21 extension) ---"
 for p in solve-seedling-r8-battery solve-seedling-r8-d2-chain solve-seedling-r8-l18 \
          solve-seedling-r8-tail solve-seedling-r9-l3 solve-seedling-r9-campaign; do
-  d=$(node "scripts/procgen/$p.mjs" --check 2>&1 | m)
+  d=$(node "scripts/procgen/$p.mjs" --check 2>&1 | b | m)
   node "scripts/procgen/$p.mjs" --check >/dev/null 2>&1
   r "$p --check" "$d [exit $?]"
 done

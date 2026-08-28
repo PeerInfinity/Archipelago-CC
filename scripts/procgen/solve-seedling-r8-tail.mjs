@@ -49,6 +49,7 @@ import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 import { parseDashMode, dashModeNote } from './dashMode.js';
+import { takeBoxLockOrExit } from './boxLock.js';
 
 /**
  * ⛓⛓⛓ R9 SLICE 12i — **`--dash=none|full|all`, AND THE TOKEN IS SPELLED
@@ -76,6 +77,22 @@ const TRACES = join(REPO, 'frontend', 'modules', 'seedlingDemo', 'fixtures', 'tr
 
 const CHECK = process.argv.includes('--check');
 const USE_GAME = process.argv.includes('--game');
+
+/**
+ * ⛓ R9 P3b, ⚖ 54 (7); ⚖ 62 at 12j — **THE BOX LOCK, BEHIND THIS RUN'S OWN
+ * ARGV.** This instrument CAN drive the machine (windows), so it takes the box
+ * — but only on the arm that does.
+ *
+ * ⛔ AN UNCONDITIONAL TAKE HERE WOULD BE THE SECOND-DIRECTION FAILURE THE
+ * LINT EXISTS TO PREVENT, arriving through the fix for the first: `--game` is the ONLY arm that shells the Windows driver (`replayOnWindows`
+ * lives inside `makeGameOracle`, and line 412 builds that oracle only under
+ * `--game`). `--check` is a byte compare against the committed artifact and
+ * is a standing identity row measured in 1.4 s.
+ *
+ * A run UNDER a holder passes through on its token; `--wait-for-box=<sec>`
+ * queues instead of refusing.
+ */
+if (USE_GAME) takeBoxLockOrExit({ name: 'solve-seedling-r8-tail.mjs', kind: 'windows' });
 const ONLY = (process.argv.find((a) => a.startsWith('--only=')) ?? '--only=5,8')
     .slice(7).split(',').map(Number);
 

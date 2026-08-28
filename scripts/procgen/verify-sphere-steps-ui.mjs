@@ -21,6 +21,17 @@
  * Run: node scripts/procgen/verify-sphere-steps-ui.mjs
  */
 import { chromium } from 'playwright';
+import { takeBoxLockOrExit } from './boxLock.js';
+
+/**
+ * ⛓ R9 P3b, ⚖ 54 (7); ⚖ 62 at 12j — **THE BOX LOCK.** This instrument drives
+ * the machine (browser), so it takes the box before it starts and refuses BY
+ * NAME if another instrument holds it — replacing a hand-relayed "BOX BUSY".
+ * A run UNDER a holder (`gates.mjs`, `standing-values`,
+ * `rerecord-seedling-campaign`) recognises the holder's token and passes
+ * through. `--wait-for-box=<sec>` queues instead of refusing.
+ */
+takeBoxLockOrExit({ name: 'verify-sphere-steps-ui.mjs', kind: 'browser' });
 
 // Derived host: --host=<url> wins, then PROCGEN_UI_HOST, then the :8000 default.
 const HOST = (process.argv.find((a) => a.startsWith('--host='))?.slice(7)

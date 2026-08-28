@@ -57,6 +57,17 @@
  * because it takes no live ticks. Needs a dev server at the repo root on :8000.
  */
 import { chromium } from 'playwright';
+import { takeBoxLockOrExit } from './boxLock.js';
+
+/**
+ * ⛓ R9 P3b, ⚖ 54 (7); ⚖ 62 at 12j — **THE BOX LOCK.** This instrument drives
+ * the machine (browser), so it takes the box before it starts and refuses BY
+ * NAME if another instrument holds it — replacing a hand-relayed "BOX BUSY".
+ * A run UNDER a holder (`gates.mjs`, `standing-values`,
+ * `rerecord-seedling-campaign`) recognises the holder's token and passes
+ * through. `--wait-for-box=<sec>` queues instead of refusing.
+ */
+takeBoxLockOrExit({ name: 'probe-seedling-boot-reset.mjs', kind: 'browser' });
 
 const args = process.argv.slice(2);
 const arg = (n, d) => (args.find((a) => a.startsWith(`--${n}=`)) || `=${d}`).split('=').slice(1).join('=');

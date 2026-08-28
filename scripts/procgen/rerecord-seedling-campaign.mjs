@@ -133,6 +133,7 @@ import { buildInstruments } from './reference/instruments.mjs';
 import {
     REHEARSAL_PLAN, buildRehearsalTree, readRehearsalMarker,
 } from './rehearsalTree.js';
+import { takeBoxLock } from './boxLock.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..', '..');
@@ -3005,6 +3006,43 @@ if (GROW) {
     const g = await grow(CTX);
     console.log(failures ? `\n${failures} FAILURE(S)` : '\nall checks green');
     process.exit(failures || (g.ran ?? []).some((r) => !r.ok) ? 1 : 0);
+}
+
+/**
+ * ⛓⛓⛓ R9 SLICE 12j, ⚖ RULING 62 — **THE BOX, HELD FOR THE WHOLE PIPELINE.**
+ *
+ * This file drives nothing itself: it SHELLS the producers and the
+ * differential, and each of those is a taker in its own right since 12j. If
+ * it took no lock, a re-record would be a queue of a dozen separate takes
+ * with gaps between them that another session could win — the tree could
+ * move under S2's write while S1's measurement was still being believed,
+ * which is the exact failure `assertTreeUnmoved` exists for. So it is a
+ * HOLDER: it takes once, and every child recognises the token in its
+ * environment and passes through (rule 3 — the token is exported into
+ * `process.env`, and this file passes no `env:` option to any child, so the
+ * inheritance is by construction).
+ *
+ * ⛔ AND ONLY WHEN A STAGE PAST S0 RUNS, which is the same law `gates.mjs`
+ * applies to an all-headless plan. S0 (`predict`) is the offline verdict —
+ * `--dry-run` is exactly `--to=S0` — and a `--dry-run` that took the box
+ * would queue a ten-second read behind a two-hour drive. The predicate is
+ * derived from `wants`, so it cannot drift from what the run will do.
+ */
+const SPENDS_BOX = STAGES.slice(1).filter(wants);
+if (SPENDS_BOX.length) {
+    try {
+        takeBoxLock({ name: `rerecord-seedling-campaign ${FROM}..${TO} — `
+            + `${SPENDS_BOX.join(',')} spend the machine`,
+        kind: 'measure',
+        repo: ROOT,
+        waitSec: Number(arg('wait-for-box', '0')) || 0 });
+    } catch (e) {
+        console.log(e.message);
+        process.exit(1);
+    }
+} else {
+    console.log('# box lock: NOT TAKEN — only S0 runs, which is the OFFLINE verdict and '
+        + 'contends for nothing');
 }
 
 const s0 = wants('S0') ? await predict(CTX) : resume(CTX, 'S0');

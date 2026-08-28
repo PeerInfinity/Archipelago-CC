@@ -9,7 +9,7 @@
  * a test harness detail, it is the property the lock exists for.
  */
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -240,7 +240,7 @@ describe('who takes the box', () => {
      * one — which is exactly how a lock earns the reputation that gets it
      * switched off. The set has to be EXACT, so the complement is asserted too.
      */
-    it('is exactly the browser/windows gates — every one carries the preamble', async () => {
+    it('is exactly the machine drivers — every one carries the preamble', async () => {
         const { boxLockTakers, BOX_LOCK_PREAMBLE_MARK } = await import('./boxLock.js');
         const { expected } = await boxLockTakers({ repo: REPO });
         const missing = expected.filter(({ file }) =>
@@ -249,28 +249,89 @@ describe('who takes the box', () => {
         expect(expected.length).toBeGreaterThan(20);
     });
 
-    it('and NO headless gate carries it', async () => {
-        const { boxLockTakers, BOX_LOCK_PREAMBLE_MARK } = await import('./boxLock.js');
-        const { gateRoster } = await import('./gateRoster.js');
-        const headless = gateRoster({ repo: REPO }).filter((g) => !g.browser && !g.windows);
+    /**
+     * ⛓⛓⛓ …AND THE POPULATION IS THE WHOLE DIRECTORY, NOT THE `check-*` NAMES
+     * (R9 slice 12j, ⚖ 62). This row is the one that would have caught the
+     * defect: P3b derived the takers from `gateRoster`, so a 142-minute
+     * `--win` differential took no lock at all. It asserts that the taker set
+     * reaches instruments whose names are NOT `check-*`, which is the whole
+     * content of the fix.
+     */
+    it('reaches instruments that are not gates at all', async () => {
+        const { boxLockTakers } = await import('./boxLock.js');
+        const { expected } = await boxLockTakers({ repo: REPO });
+        const nonGates = expected.filter(({ file }) => !/^check-/.test(file));
+        expect(nonGates.length).toBeGreaterThan(0);
+        /* ⛓ the longest GPU row in the campaign, by name. */
+        expect(expected.map((e) => e.file))
+            .toContain('verify-seedling-bot-differential.mjs');
+    });
+
+    it('and NO headless instrument carries it', async () => {
+        const { boxLockTakers, BOX_LOCK_PREAMBLE_MARK, BOX_LOCK_HOLDERS } =
+            await import('./boxLock.js');
+        const { machineDrivers } = await import('./gateRoster.js');
+        const drivers = new Set(machineDrivers({ repo: REPO }).map((d) => d.file));
+        const headless = readdirSync(join(HERE))
+            .filter((f) => /\.mjs$/.test(f))
+            .filter((f) => !drivers.has(f) && !BOX_LOCK_HOLDERS.includes(f));
         expect(headless.length).toBeGreaterThan(0);
-        const wrong = headless.filter((g) =>
-            readFileSync(join(HERE, g.file), 'utf8').includes(BOX_LOCK_PREAMBLE_MARK));
-        expect(wrong.map((g) => g.file)).toEqual([]);
+        const wrong = headless.filter((f) =>
+            readFileSync(join(HERE, f), 'utf8').includes(BOX_LOCK_PREAMBLE_MARK));
+        expect(wrong).toEqual([]);
     });
 
     /**
-     * ⛓ THE THREE RUNNERS ARE NAMED RATHER THAN DERIVED — no derivation over
-     * `check-*.mjs` can reach a file that is not one. What makes the naming
-     * honest is that the name is CHECKED: a runner listed here without a lock
-     * would be a finding, not documentation.
+     * ⛓⛓⛓ AND THE FOUR CONDITIONAL TAKERS ARE DECLARED, NOT DISCOVERED. Each
+     * CAN drive the machine and each has a headless arm that is a standing
+     * identity row, so its preamble sits behind the run's own argv predicate.
+     * ⛔ The row exists because "carries the mark" cannot tell a top-level
+     * take from a guarded one, and a guard nobody declared is a taker that
+     * silently stopped taking.
      */
-    it('and each named runner really does take the lock', async () => {
+    it('takes conditionally exactly where a headless arm would have been queued', () => {
+        const guarded = ['derive-seedling-tick0.mjs', 'solve-seedling-r8-d2-chain.mjs',
+            'solve-seedling-r8-tail.mjs', 'solve-seedling-r9-campaign.mjs'];
+        const isGuarded = (f) =>
+            /^if \(.+\) takeBoxLockOrExit\(/m.test(readFileSync(join(HERE, f), 'utf8'));
+        expect(guarded.filter((f) => !isGuarded(f))).toEqual([]);
+        /* ⛔ …and nobody ELSE guards one, which is the second direction. */
+        const others = readdirSync(HERE)
+            .filter((f) => /\.mjs$/.test(f) && !guarded.includes(f))
+            .filter(isGuarded);
+        expect(others).toEqual([]);
+    });
+
+    /**
+     * ⛓ THE HOLDERS ARE NAMED RATHER THAN DERIVED — none of them drives the
+     * machine itself, so no derivation over what a file drives can reach one.
+     * What makes the naming honest is that the name is CHECKED: a holder
+     * listed without a lock would be a finding, not documentation.
+     */
+    it('and each named holder really does take the lock', async () => {
         const { boxLockTakers } = await import('./boxLock.js');
         const { runners } = await boxLockTakers({ repo: REPO });
         for (const file of runners) {
             const src = readFileSync(join(HERE, file), 'utf8');
             expect({ file, takes: /takeBoxLock\(/.test(src) }).toEqual({ file, takes: true });
+        }
+    });
+
+    /**
+     * ⛓ AND THE ONE DRIVER THAT TAKES NOTHING IS NAMED WITH ITS REASON.
+     * `seedling-bot-replay-win.py` is shelled by every `windows` taker, so it
+     * is a CHILD in every run there is; a lock of its own would be a second
+     * taker inside its own parent. ⛔ The row checks the exemption is REAL —
+     * the file exists and holds no lock — so the list cannot become prose
+     * about a file that has since grown one.
+     */
+    it('exempts the Windows driver BY NAME, and the exemption is checked', async () => {
+        const { boxLockTakers } = await import('./boxLock.js');
+        const { exempt } = await boxLockTakers({ repo: REPO });
+        expect(exempt).toEqual(['seedling-bot-replay-win.py']);
+        for (const file of exempt) {
+            const src = readFileSync(join(HERE, file), 'utf8');
+            expect({ file, takes: /takeBoxLock/.test(src) }).toEqual({ file, takes: false });
         }
     });
 

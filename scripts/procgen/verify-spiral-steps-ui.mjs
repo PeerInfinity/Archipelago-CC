@@ -25,6 +25,17 @@ import {
     arrangeShuffledSpiral, buildRulesJson,
 } from '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
 import { substrateRegistry } from '../../frontend/modules/shared/procgen/substrateRegistry.js';
+import { takeBoxLockOrExit } from './boxLock.js';
+
+/**
+ * ⛓ R9 P3b, ⚖ 54 (7); ⚖ 62 at 12j — **THE BOX LOCK.** This instrument drives
+ * the machine (browser), so it takes the box before it starts and refuses BY
+ * NAME if another instrument holds it — replacing a hand-relayed "BOX BUSY".
+ * A run UNDER a holder (`gates.mjs`, `standing-values`,
+ * `rerecord-seedling-campaign`) recognises the holder's token and passes
+ * through. `--wait-for-box=<sec>` queues instead of refusing.
+ */
+takeBoxLockOrExit({ name: 'verify-spiral-steps-ui.mjs', kind: 'browser' });
 
 // The panel seeds these params into localStorage; the headless monolith below
 // mirrors EXACTLY what _buildSpiralEnvelope builds from them, so the only
