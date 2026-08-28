@@ -5915,6 +5915,8 @@ of those were in a reach population printed on the same screen as the one I ran
 (the tests the import graph cannot see). All repaired in `d61ee802e`; the
 remaining 7 are P4b's `sliceRecords.test.js`, open before this slice.
 
+**⇒ RR VERIFIED and the CI red RETIRED (session 10 orchestrator, 2026-08-28).** RR closed at `be3734c79` (== origin; 10 commits; §53, 14 subsections; traps 931–940; branch deleted, ⚖ 59). CI at `d61ee802e` read **7 failed** — all `sliceRecords.test.js` (P4b), GREEN locally 34/34: the test took its two "real" commits off `git log -2` of THIS tree, and `actions/checkout` clones at depth 1, so the parent, `merge-base --is-ancestor` and the `fixtures/` numstat could not be asked (trap 896's shape). Fixed: the test BUILDS a throwaway repo with three commits and asks that. DRIVEN before belief: in a `--depth 1` clone the old file fails exactly **7 / 34** (CI's number) and the new one passes **34 / 34**. Trap 941. Suite row to be re-read from CI at this head.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:

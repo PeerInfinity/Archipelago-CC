@@ -12,9 +12,9 @@
  * cardinality in a test name reds the label lint by itself (trap 902).
  */
 
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { execFileSync } from 'node:child_process';
 
 import { afterAll, describe, expect, it } from 'vitest';
@@ -28,11 +28,35 @@ import { insertionPoint, replaceRegion } from './record-slice.mjs';
 const DIR = mkdtempSync(join(tmpdir(), 'slice-records-'));
 afterAll(() => rmSync(DIR, { recursive: true, force: true }));
 
-/** ⛓ Two REAL commits off this repository's own history, so the git-side
- *  derivation is exercised against something git can actually answer. */
-const realShas = execFileSync('git', ['log', '--format=%h', '-2'], { cwd: REPO, encoding: 'utf8' })
-    .trim().split('\n');
-const [HEAD_SHA, PREV_SHA] = realShas;
+/**
+ * ⛓⛓ A THROWAWAY REPOSITORY WITH THREE COMMITS, NOT THIS REPOSITORY'S LAST
+ * TWO. The first cut read `git log -2` off the real tree: green here, and
+ * **7 rows red in CI** at d61ee802e, because `actions/checkout` clones at
+ * depth 1 — the parent of HEAD, `merge-base --is-ancestor`, and the
+ * `fixtures/` numstat against the range base cannot be asked of a shallow
+ * clone (trap 896's shape: "cannot be asked" read as "is wrong"). A history
+ * the test BUILDS is one it can always ask; the real tree's history is not a
+ * fixture. `TREPO` answers the git rows; `REPO` still answers `memoryDir`.
+ */
+const TREPO = join(DIR, 'repo');
+const tgit = (...args) => execFileSync('git', args, {
+    cwd: TREPO, encoding: 'utf8', env: {
+        ...process.env, GIT_AUTHOR_NAME: 't', GIT_AUTHOR_EMAIL: 't@t',
+        GIT_COMMITTER_NAME: 't', GIT_COMMITTER_EMAIL: 't@t',
+    },
+}).trim();
+mkdirSync(TREPO);
+tgit('init', '-q', '-b', 'main');
+const tcommit = (rel, body, msg) => {
+    mkdirSync(join(TREPO, dirname(rel)), { recursive: true });
+    writeFileSync(join(TREPO, rel), body);
+    tgit('add', rel);
+    tgit('commit', '-q', '-m', msg);
+    return tgit('rev-parse', '--short=9', 'HEAD');
+};
+tcommit('README', 'base\n', 'the base');
+const PREV_SHA = tcommit('frontend/modules/seedlingDemo/fixtures/tapes/x.json', '1\n2\n', 'the first thing');
+const HEAD_SHA = tcommit('frontend/modules/seedlingDemo/fixtures/tapes/x.json', '1\n2\n3\n', 'the second thing');
 /** ⛓ …and one that is not a commit at all, for the "stranded SHA" row. */
 const GHOST = 'deadbee12';
 
@@ -70,7 +94,7 @@ const FIXTURE_PATH = join(DIR, 'fixture-kickoff.md');
 writeFileSync(FIXTURE_PATH, FIXTURE);
 
 const parsed = parseSection(FIXTURE, 99);
-const derived = deriveFromGit(parsed, { repo: REPO, head: HEAD_SHA });
+const derived = deriveFromGit(parsed, { repo: TREPO, head: HEAD_SHA });
 const lines = factLines(parsed, derived, { session: 'a-session-name' });
 
 describe('⛓ §N is READ, and every field says where it came from', () => {
@@ -173,7 +197,7 @@ describe('⛓ §N is READ, and every field says where it came from', () => {
         expect(pp.preRebaseFootnote).toBe(true);
         expect(pp.landed.filter((r) => r.foreign)).toHaveLength(2);
         expect(pp.landed.filter((r) => r.preRebase)).toHaveLength(1);
-        const d = deriveFromGit(pp, { repo: REPO, head: HEAD_SHA });
+        const d = deriveFromGit(pp, { repo: TREPO, head: HEAD_SHA });
         expect(d.stranded).toEqual([]);
         expect(d.declared).toHaveLength(3);
     });
@@ -201,8 +225,7 @@ describe('⛔ the WHAT LANDED table is the SHA list, and git is asked about it',
     });
 
     it('the range base is the first landed commit\'s PARENT, cross-checked against the preamble', () => {
-        const parent = execFileSync('git', ['rev-parse', '--short=9', `${PREV_SHA}^`],
-            { cwd: REPO, encoding: 'utf8' }).trim();
+        const parent = tgit('rev-parse', '--short=9', `${PREV_SHA}^`);
         expect(derived.base).toBe(parent);
     });
 
@@ -236,7 +259,7 @@ describe('⛓⛓ the four fact lines are ONE derivation, rendered four ways', ()
     });
 
     it('⛔ a --head that is not the working tree\'s head reports NO porcelain, and says why', () => {
-        const past = deriveFromGit(parsed, { repo: REPO, head: PREV_SHA });
+        const past = deriveFromGit(parsed, { repo: TREPO, head: PREV_SHA });
         expect(past.atTree).toBe(false);
         expect(past.porcelain).toBeNull();
         expect(past.findings.join('\n')).toMatch(/porcelain and the submodule pointers are NOT reported/);
