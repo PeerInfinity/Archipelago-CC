@@ -551,14 +551,13 @@
       "total": "ALL PASS"
     },
     "suite: vitest (unfiltered)": {
-      "value": "394/12096",
-      "command": "node scripts/procgen/ci-vitest-summary.mjs --json",
-      "kind": "ci-suite",
-      "exit": 0,
-      "ms": 4047,
+      "value": "396/12179",
+      "command": null,
+      "kind": "identity",
       "cheap": false,
-      "measuredAt": "8deb5a5c2a0facfc535cd23c3a7babcf5db6cbd9",
-      "total": "success"
+      "quoted": true,
+      "why": "QUOTED from CI run 33201327582 at a1073c582 (B-b merged, FF): 396/12179, 12171 passed | 8 skipped | 0 failed; +2 files/+83 rows vs 8deb5a5c2",
+      "measuredAt": "a1073c5829021618536a504783554a03a18bb2e1"
     },
     "roster: --win --tier=full": {
       "value": "149 tapes 3615/0/120",
