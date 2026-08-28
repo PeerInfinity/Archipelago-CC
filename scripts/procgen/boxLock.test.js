@@ -460,13 +460,26 @@ describe('the CI face', () => {
         expect(rows.length).toBeGreaterThan(50);
     });
 
-    /** ⛓ …and exactly one gate declares a face, read from the gate itself. */
+    /**
+     * ⛓ …and the gates that declare a face are named, read from the gates
+     * themselves. ⛓⛓ R9 slice P4a added the second: `check-procgen-help`
+     * asks two doors of 262 instruments and costs minutes, so it declares a
+     * BOUNDED face for `ci-gates.mjs`, which runs every headless gate on
+     * every push. Two faces, two DIFFERENT key prefixes — which is the whole
+     * point of `@ci-face`: a bounded number can never be read as the standing
+     * one.
+     */
     it('is DECLARED by the gate, not detected from its text', async () => {
         const { gateRoster, ciFaceIn } = await import('./gateRoster.js');
         const declaring = gateRoster({ repo: REPO }).filter((g) => g.ciFace);
-        expect(declaring.map((g) => g.file))
-            .toEqual(['check-seedling-producer-boundaries.mjs']);
-        expect(declaring[0].ciFace).toEqual({ prefix: 'structure', argv: ['--structure'] });
+        expect(declaring.map((g) => g.file).sort())
+            .toEqual(['check-procgen-help.mjs', 'check-seedling-producer-boundaries.mjs']);
+        expect(Object.fromEntries(declaring.map((g) => [g.file, g.ciFace]))).toEqual({
+            'check-seedling-producer-boundaries.mjs': { prefix: 'structure', argv: ['--structure'] },
+            'check-procgen-help.mjs': { prefix: 'gate-help-ci', argv: ['--doors=ci'] },
+        });
+        /* ⛓ …and no two gates share a prefix, which is what keeps the keys apart. */
+        expect(new Set(declaring.map((g) => g.ciFace.prefix)).size).toBe(declaring.length);
         /* ⛔ a malformed declaration is a refusal BY NAME, never a skip. */
         expect(() => ciFaceIn(' * @ci-face nonsense-with-no-colon\n', { file: 'x.mjs' }))
             .toThrow(/malformed @ci-face line/);

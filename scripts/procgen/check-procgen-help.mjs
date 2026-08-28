@@ -201,21 +201,29 @@ const BASELINE = (() => {
 })();
 const KNOWN = new Set(Object.keys(BASELINE.importDoorEffectful ?? {}));
 /**
- * ⛓⛓⛓ **LOAD-TIME CHATTER, DERIVED — because a bounded face has no control to
- * attribute with.** The help door tells "the instrument printed" from "a
- * module it imports printed at load" by comparing against the file's OWN bare
- * import. Under `--doors=ci` that import is not run for a baselined file, so
- * the control is gone and ten instruments reddened for
+ * ⛓⛓⛓ **THE INHERITED OUTPUT, RECORDED PER FILE — because a bounded face has
+ * no control to attribute with.** The help door tells "the instrument printed"
+ * from "a module it imports printed at LOAD" by comparing against the file's
+ * OWN bare import. Under `--doors=ci` that import is not run for a baselined
+ * file, so the control is gone and ten instruments reddened for
  * `[stateManagerProxy] … Worker is not defined` — a line no guard in the
  * importer can preempt.
  *
- * ⛔ SO THE KNOWLEDGE IS RECORDED, AND IT IS DERIVED RATHER THAN LISTED: a
- * line printed at import time by MORE THAN ONE instrument is a shared module's
- * load-time chatter, not any one file's output. `--write-baseline` computes
- * the set; nothing here is typed, and a line only one file prints stays that
- * file's own.
+ * ⛔ AND THE FIRST RECORDING OF IT WAS TOO BROAD. It derived a repo-wide set
+ * of "lines printed at import time by MORE THAN ONE instrument", which sounds
+ * like ambient logging and is not: 46 lines came back and among them were
+ * `## the claims`, `## the room` and `(dry run — pass --write to emit the
+ * tapes)` — REPORT lines that two sibling instruments happen to share. A
+ * cross-file rule cannot tell a shared MODULE's banner from a shared HOUSE
+ * STYLE.
+ *
+ * ⛓ The evidence is per-file, and the write run already has it: at
+ * `--write-baseline` BOTH doors run, so what the help door inherited from its
+ * imports is exactly the INTERSECTION of that file's two outputs. That set is
+ * stored in the file's own entry, and it cannot leak to a sibling.
  */
-const CHATTER = new Set(BASELINE.loadTimeChatter ?? []);
+const INHERITED = new Map(Object.entries(BASELINE.importDoorEffectful ?? {})
+    .map(([f, e]) => [f, new Set(e.inheritedOutput ?? [])]));
 
 const DIR = join(REPO, 'scripts/procgen');
 const instruments = readdirSync(DIR).filter((f) => f.endsWith('.mjs')).sort()
@@ -274,7 +282,8 @@ const argsFor = (kind, abs) => (kind === 'help'
     : ['--input-type=module', '-e', `await import(${JSON.stringify(`file://${abs}`)});`]);
 
 /** Everything a run can be judged on WITHOUT the two per-batch observers. */
-function localWhy(kind, abs, r, cacheFiles, ceiling, importErr = null, importOut = null) {
+function localWhy(kind, abs, r, cacheFiles, ceiling, importErr = null, importOut = null,
+    file = '') {
     const why = [];
     if (r.timedOut) why.push(`ran past the ${ceiling} ms ceiling and was killed`);
     else if (r.code !== 0) why.push(`exit ${r.code}${r.signal ? ` (${r.signal})` : ''}`);
@@ -307,7 +316,7 @@ function localWhy(kind, abs, r, cacheFiles, ceiling, importErr = null, importOut
          */
         const messages = (t) => (t ?? '').split('\n').map((l) => l.trim())
             .filter((l) => l && !/^at\s/.test(l));
-        const theirs = new Set([...messages(importErr), ...CHATTER]);
+        const theirs = new Set([...messages(importErr), ...(INHERITED.get(file) ?? [])]);
         const extra = messages(err).filter((l) => !theirs.has(l));
         if (extra.length) why.push(`printed to stderr: ${extra[0].slice(0, 120)}`);
     }
@@ -352,7 +361,7 @@ function localWhy(kind, abs, r, cacheFiles, ceiling, importErr = null, importOut
         /* ⛔ NEVER an empty line: the help text has blank lines of its own, and
          *   a control whose stdout is `''` would otherwise strip every one. */
         const theirs = new Set([...(importOut ?? '').split('\n')
-            .map((l) => l.trim()).filter(Boolean), ...CHATTER]);
+            .map((l) => l.trim()).filter(Boolean), ...(INHERITED.get(file) ?? [])]);
         const mine = r.out.split('\n').filter((l, i, a) => !(i === a.length - 1 && l === ''));
         const kept = mine.filter((l) => !(l.trim() && theirs.has(l.trim())));
         const noise = mine.length - kept.length;
@@ -432,7 +441,7 @@ async function runDoor(task) {
         stdout: r.out,
         noise: r.noise ?? 0,
         why: localWhy(task.kind, task.abs, r, cacheFiles, ceiling,
-            task.importErr ?? null, task.importOut ?? null),
+            task.importErr ?? null, task.importOut ?? null, task.file),
     };
 }
 
@@ -552,23 +561,25 @@ if (WRITE_BASELINE) {
      * what closing it has to preserve, instead of re-running the census.
      */
     /**
-     * ⛓ THE CHATTER SET, COUNTED OFF THE RUN: every stdout/stderr message a
-     * bare import produced, kept when MORE THAN ONE instrument produced it.
-     * ⛔ Stack frames are excluded for the same reason `localWhy` excludes
-     * them — a frame differs between launch methods for the same warning.
+     * ⛓ WHAT EACH FILE'S HELP DOOR INHERITED FROM ITS IMPORTS — the
+     * INTERSECTION of that file's two doors, computed here because this is the
+     * only run that has both. ⛔ Stack frames are excluded for the same reason
+     * `localWhy` excludes them: a frame differs between launch methods for the
+     * same warning.
      */
-    const seen = new Map();
-    for (const r of rows) {
-        const lines = new Set([...(r.import.stdout ?? '').split('\n'),
-            ...(r.import.stderr ?? '').split('\n')]
-            .map((l) => l.trim()).filter((l) => l && !/^at\s/.test(l)));
-        for (const l of lines) seen.set(l, (seen.get(l) ?? 0) + 1);
-    }
-    const chatter = [...seen].filter(([, n]) => n > 1).map(([l]) => l).sort();
+    const lines = (t) => new Set((t ?? '').split('\n').map((l) => l.trim())
+        .filter((l) => l && !/^at\s/.test(l)));
+    const inheritedOf = (r) => {
+        const imp = new Set([...lines(r.import.stdout), ...lines(r.import.stderr)]);
+        return [...new Set([...lines(r.help.stdout), ...lines(r.help.stderr)])]
+            .filter((l) => imp.has(l)).sort();
+    };
     const effectful = Object.fromEntries(rows.filter((r) => !r.import.ok)
         .sort((a, b) => a.file.localeCompare(b.file))
         .map((r) => [r.file, {
             why: r.import.why,
+            /** ⛓ the lines this file's `--help` could not avoid (see INHERITED). */
+            inheritedOutput: inheritedOf(r),
             wrote: r.import.wrote.slice().sort(),
             helpResidue: r.help.ok ? null : r.help.why,
             ms: r.import.ms,
@@ -587,8 +598,6 @@ if (WRITE_BASELINE) {
             importDoorEffectful: Object.keys(effectful).length,
             wroteIntoTheRepo: Object.values(effectful).filter((e) => e.wrote.length).length,
         },
-        /** ⛓ derived: a line more than one bare import printed (see CHATTER). */
-        loadTimeChatter: chatter,
         importDoorEffectful: effectful,
     }, null, 2)}\n`);
     console.log(`wrote ${BASELINE_FILE.split('/').pop()} — ${Object.keys(effectful).length} of `
