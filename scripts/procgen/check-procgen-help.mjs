@@ -96,14 +96,18 @@
  *     just to load playwright. Proving `--help` inert is the property with no
  *     list and no exceptions, so it always gets the full deadline.
  *
- * ── Run: ──────────────────────────────────────────────────────────────
+ * Run: node scripts/procgen/check-procgen-help.mjs
+ *      node scripts/procgen/check-procgen-help.mjs --doors=ci
+ *      node scripts/procgen/check-procgen-help.mjs --only=solve-seedling-r9-campaign.mjs
+ *      node scripts/procgen/check-procgen-help.mjs --json
+ *      node scripts/procgen/check-procgen-help.mjs --write-baseline
+ *      node scripts/procgen/check-procgen-help.mjs --ceiling=20000 --known-ceiling=20000 --jobs=1
  *
- *   node scripts/procgen/check-procgen-help.mjs
- *   node scripts/procgen/check-procgen-help.mjs --doors=ci
- *   node scripts/procgen/check-procgen-help.mjs --only=solve-seedling-r9-campaign.mjs
- *   node scripts/procgen/check-procgen-help.mjs --json
- *   node scripts/procgen/check-procgen-help.mjs --write-baseline
- *   node scripts/procgen/check-procgen-help.mjs --ceiling=20000 --known-ceiling=20000 --jobs=1
+ * ⛓ THE HEADING IS A PLAIN `Run:` AND NOT A `── Run: ──` RULE, because the
+ * instruments index reads `documentedFlags` off a line that STARTS with the
+ * word — this file's own help page listed all seven of its flags as
+ * `⚠ undocumented` until the rule characters came off. The gate that publishes
+ * what an instrument accepts should be able to read itself.
  *
  * @ci-face gate-help-ci: --doors=ci
  */
