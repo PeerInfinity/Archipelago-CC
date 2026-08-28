@@ -3014,8 +3014,13 @@ describe('R9 slice 12c′: the PLANNER dashes toward the exit', () => {
      * that could drift without a red is a re-record nobody licensed. When the
      * user does move it, this row moves in the same commit as the tapes.
      */
-    it('⛓⛓⛓ R9 slice 12i: `DEFAULT_DASH_MODE` is `all`, and the set is DERIVED '
-        + 'from the pattern in all three states', () => {
+    // ⛔ THE NAME INTERPOLATES ITS OWN CARDINALITY. It said "all three states"
+    // and `lint-gate-labels` was right to red it: a label that TYPES a count
+    // its own check DERIVES goes stale the day a fourth mode is added (⚖ 45(b)'s
+    // variable offsets are the named candidate). Interpolated, never
+    // allow-listed — memory `feedback_deriving_a_roster_arms_a_dormant_lint`.
+    it(`⛓⛓⛓ R9 slice 12i: \`DEFAULT_DASH_MODE\` is \`all\`, and the set is DERIVED `
+        + `from the pattern in all ${DASH_MODES.length} states`, () => {
         expect(DASH_MODES).toEqual(['none', 'full', 'all']);
         expect(Object.isFrozen(DASH_MODES)).toBe(true);
         expect(DEFAULT_DASH_MODE).toBe('all');
