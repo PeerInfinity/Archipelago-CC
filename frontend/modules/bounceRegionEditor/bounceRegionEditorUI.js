@@ -11,11 +11,36 @@
  * The edit surface is the same in both modes; only the data source/sink
  * differs. v1 is click/button driven (NO drag — consistent with the rest of
  * the procgen panel). Access rules are DERIVED for display, never stored.
+ *
+ * ── ⛓⛓⛓ THE DOCUMENT IS AN `editCore` SESSION (EDITOR INTEGRATION B-b) ──
+ *
+ * Every mutator here routes through `session.apply(op)` over
+ * `bounceEditAdapter`, so the level is `base + ops` and UNDO is the fold over
+ * a shorter list. `_session.level` is a GETTER over `session.record()` — every
+ * reader of it (`_renderCanvas`, `_hitTestPlatform`, `_exportLevel`,
+ * `_specsFromLevelPortals`, `_analyze`, `_renderSidebar`'s counts) is
+ * unchanged, and an assignment to it now THROWS, which is the guard that keeps
+ * a ninth mutator from writing the record in place where undo cannot see it.
+ *
+ * ⛔ **THE GENERATION SETTINGS ARE NOT DOCUMENT EDITS.** `sess.settings`
+ * (seed, physicsProfile, mode, freeArrow, braidWidth, jitter, platformRows,
+ * decor) and `sess.regenMode` stay on the PANEL: they are inputs to
+ * `buildEditedRegion` and to Regenerate — how the rules are DERIVED from a
+ * level, not what the level is. An undo does not touch them, and it should
+ * not: undoing a platform must not silently restore a physics profile the
+ * person changed on purpose.
+ *
+ * ⛔ **AND `editorView` IS NOT MOUNTED.** The canvas keeps its own click
+ * listener because a bounce level has no cell space at all — platforms live at
+ * FLOAT pixel centres and `editorView.js`'s cell reader discards a non-integer
+ * cell BY NAME. That refusal is the measured reason `editCore` gained its
+ * no-cell-space widening, and `mountEditorView` now refuses this adapter by
+ * name rather than mounting a view whose every tool would die on first press.
  */
 import rawEventBus from '../../app/core/eventBus.js';
 import { renderLevel } from './levelRenderer.js';
 import {
-    assembleBounceRegionFromLevel, generateZoneForSpecs, BOUNCE_LIBRARY_ITEMS,
+    generateZoneForSpecs, BOUNCE_LIBRARY_ITEMS,
 } from '../bounceDemo/bounceDemoLibrary.js';
 import { validateLevel, braidBlueInvariantErrors } from '../bounceDemo/level.js';
 import {
@@ -30,6 +55,10 @@ import { fillerClimb } from '../bounceDemo/fixtures/fillerClimb.js';
 import {
     getModuleApis, setPanelInstance, consumePendingSession, LOAD_EVENT,
 } from './index.js';
+import { createEditSession, describeOps, group } from '../procgenCore/editCore.js';
+import { bounceEditAdapter } from './bounceEditAdapter.js';
+import { deletePlatformOps, ENTITY_KINDS } from './bounceLevelOps.js';
+import { buildEditedRegion } from './buildEditedRegion.js';
 
 const FIXTURES = {
     bounceStack, easyTower, springGap, fork, fillerClimb,
@@ -42,6 +71,22 @@ function deepClone(obj) {
     return (typeof structuredClone === 'function')
         ? structuredClone(obj)
         : JSON.parse(JSON.stringify(obj));
+}
+
+/**
+ * ⛓ **THE PICKUP-ITEM BACKFILL IS PART OF THE BASE, NOT AN EDIT.** The level
+ * model does not store which item a location grants — it lives in
+ * `extracted_rules` and reaches the editor through the contract's
+ * `locationSpecs`. ⛔ Doing it as an op would put a fact the person never
+ * typed into `payload().edits`, and undoing back to zero would leave a level
+ * whose pickups grant nothing.
+ */
+function backfillPickupItems(level, contract) {
+    const itemById = new Map((contract.locationSpecs ?? []).map((l) => [l.id, l.item]));
+    for (const pk of level.pickups ?? []) {
+        if (pk.item == null && itemById.has(pk.id)) pk.item = itemById.get(pk.id);
+    }
+    return level;
 }
 
 export class BounceRegionEditorUI {
@@ -58,6 +103,16 @@ export class BounceRegionEditorUI {
 
         this.rootElement = document.createElement('div');
         this.rootElement.className = 'bounce-region-editor-panel';
+        /**
+         * ⛓⛓ **THE ROOT IS FOCUSABLE, AND SOMETHING HAS TO GIVE IT FOCUS**
+         * (B-a's precedent, trap 874). A key binding on a panel root is
+         * unreachable until the root is in the focus chain, and `tabIndex = -1`
+         * alone does not put it there — so the canvas click below takes focus
+         * as well as selecting, which is the gesture a person makes anyway
+         * before wanting to undo it.
+         */
+        this.rootElement.tabIndex = -1;
+        this.rootElement.addEventListener('keydown', (e) => this._onKeyDown(e));
         setPanelInstance(this);
 
         // Pick up a pending pipeline session if Edit ▸ opened us; otherwise
@@ -93,16 +148,14 @@ export class BounceRegionEditorUI {
     _loadSession({ region, contract, onSave }) {
         const level = deepClone(region?.playable_payload?.params?.bounceLevel ?? {});
         const c = contract ?? {};
-        this._session = {
+        backfillPickupItems(level, c);
+        this._openSession(level, {
             region: region ?? null, // the live region (write-back base in _buildEditedRegion)
-            level,
             contract: c,
             onSave: onSave ?? null,
             mode: onSave ? 'pipeline' : 'standalone',
             label: region?.region_id ?? 'region',
-        };
-        this._initSessionExtras(c);
-        this._selectedId = null;
+        }, { kind: 'bounce-level', region_id: region?.region_id ?? null });
         this._message = this._session.mode === 'pipeline'
             ? `Editing ${this._session.label} (pipeline — Save writes back to 3).`
             : `Viewing ${this._session.label} (standalone).`;
@@ -112,24 +165,121 @@ export class BounceRegionEditorUI {
         const fixture = FIXTURES[name];
         if (!fixture) return;
         const contract = { physicsProfile: 'experimental' };
-        this._session = {
-            level: deepClone(fixture),
+        const level = deepClone(fixture);
+        backfillPickupItems(level, contract);
+        this._openSession(level, {
+            region: null,
             contract,
             onSave: null,
             mode: 'standalone',
             label: name,
-        };
-        this._initSessionExtras(contract);
-        this._selectedId = null;
+        }, { kind: 'bounce-fixture', fixture: name });
         this._message = `Loaded fixture "${name}" (standalone).`;
+    }
+
+    /**
+     * ⛓⛓⛓ **ONE PLACE OPENS A SESSION.** The base record is `level`, already
+     * backfilled; the base TAG is the opaque `{kind, …}` the payload carries
+     * and `editCore` never interprets.
+     *
+     * ⛔ `level` is a GETTER with no setter, so `sess.level = x` THROWS in a
+     * module's strict mode. That is not decoration: `_regenerate` used to
+     * assign it, and a mutator that still did would be writing a record undo
+     * re-folds away — a bug with no visible cause until the first undo.
+     */
+    _openSession(level, spec, baseTag) {
+        this._edit = createEditSession(bounceEditAdapter, level, { base: baseTag });
+        const sess = { ...spec };
+        Object.defineProperty(sess, 'level', {
+            get: () => this._edit.record(),
+            enumerable: true,
+        });
+        this._session = sess;
+        this._initSessionExtras(spec.contract ?? {});
+        this._selectedId = null;
+    }
+
+    /**
+     * ⛓ ONE OP → the session → a re-render. ⛔ The THREE outcomes are told
+     * apart by name, exactly as `editCore` reports them: a refusal prints the
+     * substrate's own sentence, a no-op says so rather than claiming an edit,
+     * and only an applied op moves the readout.
+     */
+    _applyOp(op, { message = null, select = undefined } = {}) {
+        const res = this._edit.apply(op);
+        if (!res.ok) {
+            this._message = `Refused: ${res.description}`;
+        } else if (!res.applied) {
+            this._message = `No change (${res.description}).`;
+        } else {
+            this._message = message ? message(res) : res.description;
+            if (select !== undefined) {
+                this._selectedId = typeof select === 'function' ? select(res) : select;
+            }
+        }
+        this._resolveSelection();
+        this.render();
+        return res;
+    }
+
+    /**
+     * ⛓⛓⛓ **THE DERIVED-STATE SWEEP'S ONE FINDING** (§14.10 #3). `_selectedId`
+     * is the only panel state that POINTS BACK at the document: after undoing
+     * an `add-platform` it names a platform that no longer exists, and the
+     * sidebar would silently fall back to *"Click a platform to edit it."* —
+     * a readout that is right about the screen and wrong about why.
+     *
+     * ⛔ It is re-RESOLVED rather than remembered: if the id is still in the
+     * level the selection stands, otherwise it clears. Everything else the
+     * panel derives is rebuilt per render from `sess.level` (the counts, the
+     * rule lines, the toggles, the item and direction pickers) or by
+     * `buildEditedRegion` from the level on save (`sidePortals`,
+     * `exits_placed`, `extracted_rules`) — measured: no stale copy survives an
+     * undo, because none is kept.
+     */
+    _resolveSelection() {
+        if (this._selectedId == null) return;
+        const level = this._session?.level;
+        if (!(level?.platforms ?? []).some((p) => p.id === this._selectedId)) {
+            this._selectedId = null;
+        }
+    }
+
+    /**
+     * ⛓⛓ **Ctrl/Cmd+Z, AND IT REFUSES INSIDE AN INPUT.** ⛔ The sidebar is
+     * built out of number fields and selects, and a browser's own undo inside
+     * one of them is what a person means by ⌘Z while their cursor is in it.
+     * Stealing it would make a half-typed `width` un-retractable and would
+     * undo a document edit the person was not looking at.
+     */
+    _onKeyDown(e) {
+        if (!(e.ctrlKey || e.metaKey) || e.altKey) return;
+        if ((e.key ?? '').toLowerCase() !== 'z') return;
+        const t = e.target;
+        if (t && typeof t.closest === 'function' && t.closest('input, select, textarea')) return;
+        e.preventDefault();
+        this._undo();
+    }
+
+    /** ⛓ UNDO — the fold over a shorter list. `false` at zero ops, so the
+     *  button can be pressed and the readout cannot claim an undo that did not
+     *  happen. */
+    _undo() {
+        if (!this._edit || !this._edit.undo()) {
+            this._message = 'Nothing to undo.';
+        } else {
+            this._message = `Undone — ${describeOps(this._edit.ops())} left.`;
+        }
+        this._resolveSelection();
+        this.render();
     }
 
     // Derive the editor-only session extras from the contract: the world item
     // pool (per-pickup item picker), the generation-settings (seeded from the
     // region's actual params), and the default Regenerate mode (keep the
-    // exit/location contract in pipeline; free in standalone). Also backfill
-    // each level pickup's `item` from the contract's locationSpecs (the level
-    // model itself doesn't store the item — it lives in extracted_rules).
+    // exit/location contract in pipeline; free in standalone). The pickup-item
+    // backfill is NOT here: it is part of the base record, applied before the
+    // session opens (see `backfillPickupItems`).
     _initSessionExtras(contract) {
         const sess = this._session;
         sess.itemPool = (contract.itemPool && contract.itemPool.length)
@@ -143,12 +293,9 @@ export class BounceRegionEditorUI {
         sess.expectedItems = Array.isArray(contract.expectedItems)
             ? [...contract.expectedItems]
             : null;
+        // ⛔ NOT document edits — see the file header. An undo leaves them alone.
         sess.settings = this._settingsFromParams(contract.regionParams ?? {}, contract);
         sess.regenMode = (contract.exitSpecs && contract.exitSpecs.length) ? 'keep' : 'free';
-        const itemById = new Map((contract.locationSpecs ?? []).map((l) => [l.id, l.item]));
-        for (const pk of sess.level.pickups ?? []) {
-            if (pk.item == null && itemById.has(pk.id)) pk.item = itemById.get(pk.id);
-        }
     }
 
     // Map the bounce regionParams (panel vocabulary) into the editor's
@@ -253,6 +400,19 @@ export class BounceRegionEditorUI {
         });
         bar.appendChild(sel);
 
+        /**
+         * ⛓⛓⛓ **UNDO** — `describeOps` is the core's own readout, so the count
+         * is of TOP-LEVEL ops: a delete cascade of three reads as ONE edit,
+         * which is what undo is a count of.
+         */
+        const ops = this._edit ? this._edit.ops() : [];
+        const undo = this._btn(`↶ Undo (${describeOps(ops)})`, () => this._undo());
+        undo.className = 'bre-btn bre-undo';
+        undo.disabled = ops.length === 0;
+        undo.title = 'Undo the last edit (Ctrl/Cmd+Z) — the level is re-folded from '
+            + 'the base, so it is byte-identical to one that never had that edit';
+        bar.appendChild(undo);
+
         // Export the current level as JSON (both modes).
         bar.appendChild(this._btn('Export level JSON', () => this._exportLevel()));
 
@@ -287,6 +447,9 @@ export class BounceRegionEditorUI {
             const ly = (e.clientY - rect.top) * (canvas.height / rect.height) / scale;
             const hit = this._hitTestPlatform(level, lx, ly, constants);
             this._selectedId = hit ? hit.id : null;
+            // ⛓ trap 874 — the root must HOLD focus for its key binding to be
+            //   reachable; `tabIndex = -1` alone does not put it in the chain.
+            this.rootElement.focus({ preventScroll: true });
             this.render();
         });
         wrap.appendChild(canvas);
@@ -407,46 +570,21 @@ export class BounceRegionEditorUI {
         this._exportLevel();
     }
 
-    // Merge re-emitted rules from the edited level into a clone of the original
-    // region, preserving the grid-level wiring (exit ids/sides/targets,
-    // exits_placed, the back-exit, placed_items). Access rules live only in
-    // extracted_rules, so the structural exits Map is left untouched. Forward
-    // exits map to sides via exits_placed; the driver back-exit (not placed) is
-    // left alone. The EXITS keep the contract (their gates aren't editable
-    // here); the LOCATIONS come from the edited level's pickups so item picks +
-    // add/remove flow through (an off-plan item is the oracle's to flag).
+    /**
+     * ⛓⛓⛓ **THE SAVE MERGE IS AN IMPORT** (EDITOR INTEGRATION B-b). The body
+     * moved to `buildEditedRegion.js` because
+     * `scripts/procgen/verify-region-step-editing.mjs` held a COPY of it, and
+     * that verifier's byte-shaped Phases were pinning the copy rather than
+     * this file. Both callers import the one body now.
+     *
+     * ⚠ `settings` are handed in because they are the panel's, not the
+     * document's: they change how the rules are DERIVED, not what the level
+     * is, and the verifier (which has none) reproduces the contract's own
+     * values exactly.
+     */
     _buildEditedRegion() {
-        const { region, contract, level } = this._session;
-        const locationSpecs = (level.pickups ?? []).map((pk) => ({
-            id: pk.id, item: pk.item ?? null, requirement: [], counts: {},
-        }));
-        const s = this._session.settings ?? {};
-        const built = assembleBounceRegionFromLevel(level, {
-            region_id: region.region_id,
-            exitSpecs: contract.exitSpecs ?? [],
-            locationSpecs,
-            physicsProfile: s.physicsProfile ?? contract.physicsProfile ?? 'experimental',
-            mode: s.mode ?? contract.mode ?? 'column',
-            freeArrow: s.freeArrow ?? contract.freeArrow ?? 'right',
-        });
-        const next = deepClone(region);
-        next.playable_payload = built.payload;
-        next.obstacle_defs = built.obstacleDefs;
-
-        const sideByExitId = new Map(
-            (region.exits_placed ?? []).map((p) => [p.exit_id, p.side]));
-        for (const ex of next.extracted_rules?.exits ?? []) {
-            const side = sideByExitId.get(ex.id);
-            if (side && built.exitPaths[side]) {
-                ex.paths = built.exitPaths[side];
-                ex.access_rule = built.exitRules[side];
-            }
-        }
-        // built.locations is one-per-edited-pickup (id + chosen item + paths +
-        // access_rule) — replace the region's locations wholesale so item edits,
-        // additions and removals all take effect.
-        if (next.extracted_rules) next.extracted_rules.locations = built.locations;
-        return next;
+        const { region, contract, level, settings } = this._session;
+        return buildEditedRegion({ region, contract, level, settings });
     }
 
     _download(filename, text) {
@@ -584,9 +722,22 @@ export class BounceRegionEditorUI {
             for (const pk of level.pickups ?? []) {
                 if (itemById.has(pk.id)) pk.item = itemById.get(pk.id);
             }
-            sess.level = level;
-            this._selectedId = null;
-            this._message = `Regenerated (seed ${s.seed}, ${keep ? 'kept contract' : 'free'}).`;
+            /**
+             * ⛓⛓⛓ **ONE `replace-level` OP CARRYING THE RESULT.** The
+             * generator ran ONCE, here, with this seed; the op records the
+             * level that came out of it. ⛔ An op that carried the recipe and
+             * re-ran the generator on the fold would reconstruct a DIFFERENT
+             * level the day any input to `generateZoneForSpecs` moved — a
+             * recorded edit list that does not reproduce what the person saw
+             * (trap 787's family). ⇒ one undo restores the pre-regenerate
+             * level exactly, because the fold of the shorter list is it.
+             */
+            this._applyOp({
+                op: 'replace-level',
+                level,
+                why: `Regenerated (seed ${s.seed}, ${keep ? 'kept contract' : 'free'})`,
+            }, { select: null });
+            return;
         } catch (err) {
             this._message = `Regenerate failed: ${err.message}`;
         }
@@ -674,7 +825,7 @@ export class BounceRegionEditorUI {
         // entity toggles (host = this platform)
         const toggles = document.createElement('div');
         toggles.className = 'bre-toggles';
-        for (const kind of ['springs', 'jetpacks', 'pickups', 'portals', 'teleports']) {
+        for (const kind of ENTITY_KINDS) {
             const on = (level[kind] ?? []).some((e) => e.on === p.id);
             const b = this._btn(`${on ? '✓ ' : '+ '}${kind.replace(/s$/, '')}`,
                 () => this._toggleEntity(p.id, kind));
@@ -725,9 +876,13 @@ export class BounceRegionEditorUI {
             } else {
                 opts.forEach((it) => addOption(iSel, it));
             }
+            // ⛓ `set-pickup-item` — an op, so an item pick is undoable.
             iSel.addEventListener('change', () => {
-                pickup.item = iSel.value === '(none)' ? null : iSel.value;
-                this.render();
+                this._applyOp({
+                    op: 'set-pickup-item',
+                    id: pickup.id,
+                    item: iSel.value === '(none)' ? null : iSel.value,
+                });
             });
             iRow.appendChild(iSel);
             block.appendChild(iRow);
@@ -747,9 +902,11 @@ export class BounceRegionEditorUI {
                 if ((portal.direction ?? 'up') === d) o.selected = true;
                 dSel.appendChild(o);
             }
+            // ⛓ `set-portal-direction` — an op, so aiming an exit is undoable.
             dSel.addEventListener('change', () => {
-                portal.direction = dSel.value;
-                this.render();
+                this._applyOp({
+                    op: 'set-portal-direction', id: portal.id, direction: dSel.value,
+                });
             });
             dRow.appendChild(dSel);
             block.appendChild(dRow);
@@ -759,75 +916,64 @@ export class BounceRegionEditorUI {
         return block;
     }
 
-    // ── Edit operations (mutate this._session.level, then re-render — live
-    // validation re-runs in _renderSidebar) ────────────────────────────
+    // ── Edit operations — EVERY ONE IS AN OP ON THE SESSION ─────────────
+    //
+    // ⛓⛓⛓ There is no in-place write left in this file. Each mutator names
+    // its op and hands it to `_applyOp`, which folds it, prints the outcome
+    // (refused / no change / applied) and re-renders. ⛔ A mutator that wrote
+    // `this._session.level` instead would be editing a record the very next
+    // undo re-folds away — and it cannot, because `level` is a getter.
+
+    /** `resize {dim, value}` — the op does the rounding and the floor of 1, so
+     *  the list records the number APPLIED rather than the number typed. */
     _resizeLevel(dim, value) {
-        this._session.level.size[dim] = Math.max(1, Math.round(value));
-        this.render();
+        this._applyOp({ op: 'resize', dim, value });
     }
 
+    /** `add-platform` — `value` is the new platform, and it becomes the
+     *  selection. ⛓ trap 857: this is the field the session now forwards. */
     _addPlatform() {
-        const level = this._session.level;
-        level.platforms = level.platforms ?? [];
-        const id = this._nextId('p', level.platforms);
-        level.platforms.push({
-            id, type: 'green',
-            x: Math.round(level.size.width / 2),
-            y: Math.round(level.size.height / 2),
-        });
-        this._selectedId = id;
-        this.render();
+        this._applyOp({ op: 'add-platform' }, { select: (res) => res.value.id });
     }
 
+    /** `set-platform {id, patch}` — x, y and type from the sidebar. */
     _setPlatform(id, patch) {
-        const p = (this._session.level.platforms ?? []).find((x) => x.id === id);
-        if (!p) return;
-        Object.assign(p, patch);
-        this.render();
+        this._applyOp({ op: 'set-platform', id, patch });
     }
 
+    /**
+     * ⛓⛓ `delete-platform` AS A GROUP — one `remove-entity` per orphan, then
+     * the delete. ⛔ The cascade is in the OP LIST rather than inside the op,
+     * so one undo restores the platform AND everything that was hosted on it,
+     * and a reader of `payload().edits` can see what the delete took with it.
+     */
     _deletePlatform(id) {
-        const level = this._session.level;
-        level.platforms = (level.platforms ?? []).filter((p) => p.id !== id);
-        // Drop entities orphaned by the deletion (their host is gone).
-        for (const kind of ['springs', 'jetpacks', 'pickups', 'portals', 'teleports']) {
-            if (Array.isArray(level[kind])) {
-                level[kind] = level[kind].filter((e) => e.on !== id);
-            }
-        }
-        if (this._selectedId === id) this._selectedId = null;
-        this.render();
+        const ops = deletePlatformOps(this._session.level, id);
+        const orphans = ops.length - 1;
+        this._applyOp(group(`delete platform ${id}`, ops), {
+            select: null,
+            message: () => `Deleted ${id}${orphans
+                ? ` and ${orphans} entit${orphans === 1 ? 'y' : 'ies'} hosted on it` : ''}.`,
+        });
     }
 
-    // Add/remove an entity of `kind` hosted on platform `hostId`.
+    /**
+     * Add/remove an entity of `kind` hosted on platform `hostId` — the toggle
+     * is TWO ops, and which one it is depends on the level, so the panel picks.
+     *
+     * ⚠ A new pickup's default `item` is the PANEL's choice (the first entry of
+     * the world pool) and rides IN the op: the ops module cannot invent a fact
+     * about a world it has never seen.
+     */
     _toggleEntity(hostId, kind) {
         const level = this._session.level;
-        const host = (level.platforms ?? []).find((p) => p.id === hostId);
-        if (!host) return;
-        level[kind] = level[kind] ?? [];
-        const existing = level[kind].findIndex((e) => e.on === hostId);
-        if (existing >= 0) {
-            level[kind].splice(existing, 1);
-        } else {
-            const prefix = kind === 'pickups' ? 'loc' : kind.replace(/s$/, '');
-            const entity = {
-                id: this._nextId(prefix, level[kind]),
-                x: host.x, y: host.y, on: hostId,
-            };
-            if (kind === 'portals') entity.direction = 'up';
-            // A pickup grants an item: default to the first world-pool item so
-            // the location is meaningful (the user picks the exact item below).
-            if (kind === 'pickups') entity.item = (this._session.itemPool ?? [])[0] ?? null;
-            level[kind].push(entity);
+        const existing = (level[kind] ?? []).find((e) => e.on === hostId);
+        if (existing) {
+            this._applyOp({ op: 'remove-entity', kind, id: existing.id });
+            return;
         }
-        this.render();
-    }
-
-    // First free `${prefix}N` id not already used in `list`.
-    _nextId(prefix, list) {
-        const used = new Set((list ?? []).map((e) => e.id));
-        let n = 0;
-        while (used.has(`${prefix}${n}`) || used.has(`${prefix}_${n}`)) n++;
-        return prefix === 'loc' ? `loc_${n}` : `${prefix}${n}`;
+        const op = { op: 'add-entity', kind, on: hostId };
+        if (kind === 'pickups') op.item = (this._session.itemPool ?? [])[0] ?? null;
+        this._applyOp(op);
     }
 }
