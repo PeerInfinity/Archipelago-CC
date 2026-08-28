@@ -38,6 +38,32 @@ describe('the equality itself', () => {
         expect(canonicalJson(a)).toBe(canonicalJson(b));   // the mutant's answer
     });
 
+    /**
+     * ⛓⛓⛓ **THE ONLY ROW THAT CAN SEE THE KEY-NAME COMPARISON**, and it exists
+     * because the obvious one CANNOT.
+     *
+     * ⛔ MEASURED: delete `if (ka[i] !== kb[i]) return false;` and every
+     * key-order row in this repo — this file's, `atlasEditAdapter.test.js`'s
+     * *"the discriminator"* and `bounceEditAdapter.test.js`'s `swapped` — stays
+     * GREEN. Those fixtures swap keys whose VALUES DIFFER, so the walk compares
+     * `a[ka[i]]` against `b[kb[i]]`, finds two different values, and returns
+     * `false` for a reason that has nothing to do with key order. The mutant
+     * rides in under a row written for it.
+     *
+     * ⇒ The discriminating fixture swaps two keys holding the SAME VALUE. Then
+     * the value comparison agrees at every position and only the key-NAME check
+     * can tell the two documents apart.
+     */
+    it('⛓⛓⛓ two keys with the SAME VALUE, swapped — the row the key-NAME check is the only witness for', () => {
+        expect(deepEqualKeyOrder({ a: 1, b: 1 }, { b: 1, a: 1 })).toBe(false);
+        expect(deepEqualKeyOrder(
+            { regions: { hall: { x: 1, y: 1 } } },
+            { regions: { hall: { y: 1, x: 1 } } },
+        )).toBe(false);
+        // ⛔ NON-VACUITY: the same shapes in the SAME order are equal.
+        expect(deepEqualKeyOrder({ a: 1, b: 1 }, { a: 1, b: 1 })).toBe(true);
+    });
+
     it('⛓ key order is content at DEPTH, not only at the top', () => {
         const a = { regions: { 1: { hall: { name: 'hall', exits: [] } } } };
         const b = { regions: { 1: { hall: { exits: [], name: 'hall' } } } };
