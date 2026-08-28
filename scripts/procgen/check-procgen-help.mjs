@@ -59,12 +59,44 @@
  * children get a temp cache, so a lock any of them takes is isolated from the
  * real one — which is also how that lock becomes VISIBLE as a finding.
  *
+ * ── ⛓ WHAT IT COSTS, AND WHY THE RUNNER LOOKS LIKE THIS ─────────────
+ *
+ * `ci-gates.mjs` runs EVERY headless gate on every push, so a gate that takes
+ * half an hour is a gate somebody switches off. The first cut was serial with
+ * one `git status` + one repo-wide mtime sweep PER DOOR and a uniform
+ * 12-second ceiling: **10 rows in seven minutes**, i.e. hours for the roster.
+ *
+ * Three measured changes, in order of what they bought:
+ *
+ *   · **THE OBSERVERS ARE PER BATCH, NOT PER DOOR.** The porcelain and the
+ *     mtime sweep are the expensive pair and the interesting answer is almost
+ *     always *"nothing moved"*. So a batch runs, ONE pair of observers is
+ *     taken around it, and if the batch is clean every door in it is clean on
+ *     that observer — proved for all of them at once. A batch that DID move
+ *     is re-run SERIALLY, which is the only way to say WHICH door moved it.
+ *   · **BOUNDED CONCURRENCY.** Each child gets its own temp cache, so nothing
+ *     they contend for is shared; only the two per-batch observers need the
+ *     batch to be quiet, and they are taken outside it.
+ *   · **TWO CEILINGS, AND BOTH ARE MEASURED.** Proving a file INERT means
+ *     waiting long enough that "it finished and did nothing" is a real
+ *     answer: the inert population's own import door is p50 271 ms, p90
+ *     891 ms, MAX 1,410 ms, so the default ceiling is a ~3.5× margin over
+ *     the slowest inert file rather than a number somebody liked.
+ *     Re-confirming a file the baseline already NAMES as a module-scope
+ *     worker is a different question — it only has to be shown still
+ *     non-inert, which it demonstrates immediately — so it gets a shorter
+ *     one. ⚠ THE BOUND THAT COSTS: a baselined file that has been FIXED but
+ *     is slow to import could be killed at the short ceiling and read as
+ *     still effectful. A slice retiring entries runs `--known-ceiling=` up
+ *     at the full value; the flag exists for exactly that.
+ *
  * ── Run: ──────────────────────────────────────────────────────────────
  *
  *   node scripts/procgen/check-procgen-help.mjs
  *   node scripts/procgen/check-procgen-help.mjs --only=solve-seedling-r9-campaign.mjs
  *   node scripts/procgen/check-procgen-help.mjs --json
- *   node scripts/procgen/check-procgen-help.mjs --ceiling=20000
+ *   node scripts/procgen/check-procgen-help.mjs --write-baseline
+ *   node scripts/procgen/check-procgen-help.mjs --ceiling=20000 --known-ceiling=20000 --jobs=1
  */
 
 import { execFileSync, spawn } from 'node:child_process';
@@ -86,6 +118,12 @@ const JSON_OUT = argv.includes('--json');
 const WRITE_BASELINE = argv.includes('--write-baseline');
 const ONLY = arg('only', '');
 
+/** ⛓ ~3.5x the slowest INERT file measured over the whole directory (1,410 ms). */
+const CEILING_MS = Number(arg('ceiling', 5000));
+/** ⛓ …and a file the baseline already names only has to be shown non-inert. */
+const KNOWN_CEILING_MS = Number(arg('known-ceiling', 2000));
+const JOBS = Math.max(1, Number(arg('jobs', 6)));
+
 /**
  * ⛓⛓⛓ THE IMPORT DOOR'S BASELINE — *"not approved, KNOWN"*, exactly as
  * `lint-gate-labels.allow.json` is.
@@ -96,7 +134,7 @@ const ONLY = arg('only', '');
  * only THREE of the 260 instruments at `1097be9e6` had a `main()` guard at
  * all, so 182 of them do their work at module scope and closing that door is
  * 182 behaviour-preserving refactors, each of which can move a producer's
- * standing md5. That is not one slice.
+ * standing md5.  That is not one slice.
  *
  * ⛓ SO THE DEBT IS RECORDED RATHER THAN WAVED THROUGH, and the row reds BOTH
  * WAYS: a file that is not on the list must be inert on import (a NEW
@@ -104,30 +142,21 @@ const ONLY = arg('only', '');
  * inert reds too (it was fixed — take it off, or the same defect can come
  * back under a name nobody re-reads).
  *
- * ⛓ WHAT THE DOOR IS WORTH TODAY, measured rather than assumed: five
- * instruments are `import`ed by a test file (`loadJSZipNode`,
+ * ⛓ WHAT THE DOOR IS WORTH TODAY, measured rather than assumed: the
+ * instruments a test file reaches are `loadJSZipNode`,
  * `make-seedling-vanilla-overlay`, `make-seedling-starter-atlas`,
- * `make-seedling-playthrough-rules` and — by URL, i.e. spawned, not imported —
- * `export-seedling-level-set`), and every one that is genuinely imported is
- * INERT on import. So the CI exposure of this door is nil at this head, and
- * the baseline is what keeps it nil.
+ * `make-seedling-playthrough-rules` — every one INERT on import — and
+ * `export-seedling-level-set`, which is reached by `new URL(...)`, i.e.
+ * spawned. So the CI exposure of this door is nil at this head, and the
+ * baseline is what keeps it nil.
  */
 const BASELINE_FILE = join(HERE, 'check-procgen-help.baseline.json');
 const BASELINE = (() => {
     try { return JSON.parse(readFileSync(BASELINE_FILE, 'utf8')); } catch {
-        return { importDoorEffectful: [] };
+        return { importDoorEffectful: {} };
     }
 })();
 const KNOWN = new Set(Object.keys(BASELINE.importDoorEffectful ?? {}));
-
-/**
- * ⛓ THE CEILING, AND ITS REASON. An instrument that prints help still pays
- * for its own hoisted imports; the heaviest of those in this directory pull
- * the solver and the level generator. This is where DRIVING lives, not where
- * starting up does — and every row prints its own milliseconds so a reader
- * can see the distribution rather than trust the line.
- */
-const CEILING_MS = Number(arg('ceiling', 12000));
 
 const DIR = join(REPO, 'scripts/procgen');
 const instruments = readdirSync(DIR).filter((f) => f.endsWith('.mjs')).sort()
@@ -136,12 +165,14 @@ const instruments = readdirSync(DIR).filter((f) => f.endsWith('.mjs')).sort()
 const porcelain = () => execFileSync('git', ['status', '--porcelain'],
     { cwd: REPO, encoding: 'utf8', maxBuffer: 1 << 26 });
 
+/** ⛓ …and the gitignored writes the porcelain cannot see. */
 const newerThan = (marker) => {
     try {
         return execFileSync('find', [REPO, '-newer', marker, '-type', 'f',
             '-not', '-path', '*/.git/*', '-not', '-path', '*/node_modules/*'],
         { encoding: 'utf8', maxBuffer: 1 << 26 }).split('\n').filter(Boolean)
-            .map((p) => p.slice(REPO.length + 1));
+            .map((p) => p.slice(REPO.length + 1))
+            .filter((p) => !p.startsWith('scripts/procgen/'));
     } catch { return []; }
 };
 
@@ -154,7 +185,7 @@ const MARKER = join(scratch, 'marker');
  * signalled, and a stray chromium is exactly the side effect this gate is
  * about.
  */
-function run(args, cache) {
+function spawnChild(args, cache, ceiling) {
     return new Promise((resolve) => {
         const t0 = Date.now();
         const child = spawn(process.execPath, args, {
@@ -171,7 +202,7 @@ function run(args, cache) {
         const timer = setTimeout(() => {
             timedOut = true;
             try { process.kill(-child.pid, 'SIGKILL'); } catch { /* already gone */ }
-        }, CEILING_MS);
+        }, ceiling);
         child.on('close', (code, signal) => {
             clearTimeout(timer);
             resolve({ code, signal, timedOut, ms: Date.now() - t0, out, err });
@@ -179,81 +210,27 @@ function run(args, cache) {
     });
 }
 
-async function door(kind, file) {
-    const abs = join(DIR, file);
-    const cache = join(scratch, `${kind}-${file}`);
-    rmSync(cache, { recursive: true, force: true });
-    mkdirSync(cache, { recursive: true });
-    writeFileSync(MARKER, '');
-    const before = porcelain();
-    const args = kind === 'help'
-        ? [abs, '--help']
-        : ['--input-type=module', '-e', `await import(${JSON.stringify(`file://${abs}`)});`];
-    const r = await run(args, cache);
-    const touched = newerThan(MARKER).filter((p) => !p.startsWith('scripts/procgen/'));
-    const wrote = [];
-    const cacheFiles = readdirSync(cache, { recursive: true });
-    rmSync(cache, { recursive: true, force: true });
+const argsFor = (kind, abs) => (kind === 'help'
+    ? [abs, '--help']
+    : ['--input-type=module', '-e', `await import(${JSON.stringify(`file://${abs}`)});`]);
+
+/** Everything a run can be judged on WITHOUT the two per-batch observers. */
+function localWhy(kind, abs, r, cacheFiles, ceiling) {
     const why = [];
-    if (r.timedOut) why.push(`ran past the ${CEILING_MS} ms ceiling and was killed`);
+    if (r.timedOut) why.push(`ran past the ${ceiling} ms ceiling and was killed`);
     else if (r.code !== 0) why.push(`exit ${r.code}${r.signal ? ` (${r.signal})` : ''}`);
-    const after = porcelain();
-    if (after !== before) {
-        /**
-         * ⛔⛔ A GATE THAT LEAVES THE TREE DIRTY IS NOT A GATE, IT IS A SECOND
-         * INSTRUMENT. `extract-seedling-damage-sites.mjs` rewrites a TRACKED
-         * source file on import; without this the check would hand the next
-         * reader a modified worktree and a box lock whose `treeState` had
-         * moved under it.
-         *
-         * ⛔⛔⛔ AND IT NEVER DELETES — MEASURED, BY LOSING WORK. The first cut
-         * removed any path that was `??` in the AFTER porcelain and absent
-         * from the BEFORE one, on the theory that the child had just created
-         * it. A file written BY HAND in another window during the run matches
-         * that description exactly, and one was deleted mid-run. Restoring a
-         * tracked path is recoverable from git; deleting an untracked one is
-         * not, so the two are not the same act and only the recoverable one is
-         * automatic. An untracked creation is REPORTED by name.
-         *
-         * ⛓ AND A PATH IS ONLY THIS RUN'S IF BOTH OBSERVERS SAY SO — the
-         * porcelain delta AND the mtime sweep. Either alone can be somebody
-         * else's edit.
-         */
-        const lineSet = (t) => new Set(t.split('\n').filter((l) => l.trim()));
-        const was = lineSet(before);
-        const pathOf = (l) => l.slice(3).split(' -> ').pop();
-        const wasPaths = new Set([...was].map(pathOf));
-        const mine = new Set(touched);
-        const restored = [];
-        const left = [];
-        for (const line of [...lineSet(after)].filter((l) => !was.has(l))) {
-            const path = pathOf(line);
-            if (wasPaths.has(path) || !mine.has(path)) { left.push(path); continue; }
-            if (line.startsWith('??')) { left.push(`${path} (untracked — NOT deleted)`); continue; }
-            try {
-                execFileSync('git', ['checkout', '--', path], { cwd: REPO, encoding: 'utf8' });
-                restored.push(path);
-            } catch { left.push(`${path} (restore FAILED)`); }
-        }
-        why.push('the repo\'s `git status --porcelain` MOVED'
-            + `${restored.length ? ` — RESTORED ${restored.join(', ')}` : ''}`
-            + `${left.length ? ` — ⛔ LEFT IN PLACE ${left.join(', ')}` : ''}`);
+    if (cacheFiles.length) {
+        why.push(`left ${cacheFiles.length} entry(ies) in its own cache: `
+            + `${cacheFiles.slice(0, 3).join(', ')}`);
     }
-    if (touched.length) {
-        wrote.push(...touched);
-        why.push(`wrote ${touched.length} file(s) under the repo: `
-            + `${touched.slice(0, 3).join(', ')}${touched.length > 3 ? ' …' : ''}`);
-    }
-    if (cacheFiles.length) why.push(`left ${cacheFiles.length} entry(ies) in its cache: `
-        + `${cacheFiles.slice(0, 3).join(', ')}`);
     if (r.err.trim()) why.push(`printed to stderr: ${r.err.trim().split('\n')[0].slice(0, 120)}`);
     /**
      * ⛔⛔ THE DISCRIMINATOR, AND THE GATE'S FIRST CUT DID NOT HAVE IT.
      * Without this row `lint-gate-labels.mjs --help` PASSED — it scanned 514
      * files, printed a report, exited 0, wrote nothing and left no cache, so
-     * every observer above was satisfied by an instrument that had just done
-     * its whole job. "Had no side effect I could see" is not "printed help".
-     * So the help door asserts stdout IS the text `argvHelp` derives for that
+     * every observer was satisfied by an instrument that had just done its
+     * whole job. "Had no side effect I could see" is not "printed help". So
+     * the help door asserts stdout IS the text `argvHelp` derives for that
      * file, byte for byte; nothing an instrument prints by accident can equal
      * it, and the assertion needs no list.
      */
@@ -262,33 +239,127 @@ async function door(kind, file) {
             ? 'stdout is NOT the derived help text — the instrument RAN instead of printing'
             : 'printed NOTHING');
     }
-    return { ok: why.length === 0, ms: r.ms, why, wrote };
+    return why;
 }
 
-const rows = [];
-for (const file of instruments) {
-    /* eslint-disable no-await-in-loop */
-    const help = await door('help', file);
-    const imported = await door('import', file);
-    /* eslint-enable no-await-in-loop */
-    rows.push({ file, help, import: imported });
-    const known = KNOWN.has(file);
-    const ok = help.ok && (imported.ok ? !known : known);
-    if (!JSON_OUT) {
+/**
+ * ⛔⛔ A GATE THAT LEAVES THE TREE DIRTY IS NOT A GATE, IT IS A SECOND
+ * INSTRUMENT. `extract-seedling-damage-sites.mjs` rewrites a TRACKED source
+ * file on import; without this the check would hand the next reader a modified
+ * worktree and a box lock whose `treeState` had moved under it.
+ *
+ * ⛔⛔⛔ AND IT NEVER DELETES — MEASURED, BY LOSING WORK. The first cut removed
+ * any path that was `??` in the AFTER porcelain and absent from the BEFORE
+ * one, on the theory that the child had just created it. A file written BY
+ * HAND in another window during the run matches that description exactly, and
+ * one was deleted mid-run. **Restoring a tracked path is recoverable from git;
+ * deleting an untracked one is not**, so the two are not the same act and only
+ * the recoverable one is automatic. An untracked creation is REPORTED.
+ *
+ * ⛓ AND A PATH IS ONLY THIS RUN'S IF BOTH OBSERVERS SAY SO — the porcelain
+ * delta AND the mtime sweep. Either alone can be somebody else's edit.
+ */
+function repairPorcelain(before, after, touched) {
+    const lineSet = (t) => new Set(t.split('\n').filter((l) => l.trim()));
+    const was = lineSet(before);
+    const pathOf = (l) => l.slice(3).split(' -> ').pop();
+    const wasPaths = new Set([...was].map(pathOf));
+    const mine = new Set(touched);
+    const restored = [];
+    const left = [];
+    for (const line of [...lineSet(after)].filter((l) => !was.has(l))) {
+        const path = pathOf(line);
+        if (wasPaths.has(path) || !mine.has(path)) { left.push(path); continue; }
+        if (line.startsWith('??')) { left.push(`${path} (untracked — NOT deleted)`); continue; }
+        try {
+            execFileSync('git', ['checkout', '--', path], { cwd: REPO, encoding: 'utf8' });
+            restored.push(path);
+        } catch { left.push(`${path} (restore FAILED)`); }
+    }
+    return `the repo's \`git status --porcelain\` MOVED`
+        + `${restored.length ? ` — RESTORED ${restored.join(', ')}` : ''}`
+        + `${left.length ? ` — ⛔ LEFT IN PLACE ${left.join(', ')}` : ''}`;
+}
+
+const ceilingFor = (file) => (KNOWN.has(file) ? KNOWN_CEILING_MS : CEILING_MS);
+
+/** One door, run and judged on its own observers; the disk pair is the caller's. */
+async function runDoor(task) {
+    const cache = join(scratch, `${task.kind}-${task.file}`);
+    rmSync(cache, { recursive: true, force: true });
+    mkdirSync(cache, { recursive: true });
+    const ceiling = ceilingFor(task.file);
+    const r = await spawnChild(argsFor(task.kind, task.abs), cache, ceiling);
+    const cacheFiles = readdirSync(cache, { recursive: true });
+    rmSync(cache, { recursive: true, force: true });
+    return { ms: r.ms, wrote: [], why: localWhy(task.kind, task.abs, r, cacheFiles, ceiling) };
+}
+
+/** ⛓ A BATCH, WITH ONE PAIR OF DISK OBSERVERS AROUND IT — and a serial re-run
+ *  when, and only when, that pair says something moved. */
+async function runBatch(tasks) {
+    writeFileSync(MARKER, '');
+    const before = porcelain();
+    const out = await Promise.all(tasks.map(runDoor));
+    const touched = newerThan(MARKER);
+    const after = porcelain();
+    if (after === before && touched.length === 0) return out;
+    if (tasks.length === 1) {
+        if (touched.length) {
+            out[0].wrote = touched;
+            out[0].why.push(`wrote ${touched.length} file(s) under the repo: `
+                + `${touched.slice(0, 3).join(', ')}${touched.length > 3 ? ' …' : ''}`);
+        }
+        if (after !== before) out[0].why.push(repairPorcelain(before, after, touched));
+        return out;
+    }
+    const serial = [];
+    for (const t of tasks) serial.push(...await runBatch([t]));   /* eslint-disable-line */
+    return serial;
+}
+
+const doors = instruments.flatMap((file) => ['help', 'import']
+    .map((kind) => ({ file, kind, abs: join(DIR, file) })));
+const t0 = Date.now();
+const byDoor = new Map();
+for (let i = 0; i < doors.length; i += JOBS) {
+    const batch = doors.slice(i, i + JOBS);
+    /* eslint-disable-next-line no-await-in-loop */
+    const out = await runBatch(batch);
+    batch.forEach((t, k) => byDoor.set(`${t.kind}:${t.file}`, out[k]));
+}
+const WALL_MS = Date.now() - t0;
+rmSync(scratch, { recursive: true, force: true });
+
+const rows = instruments.map((file) => {
+    const help = byDoor.get(`help:${file}`);
+    const imported = byDoor.get(`import:${file}`);
+    return { file, help: { ...help, ok: help.why.length === 0 },
+        import: { ...imported, ok: imported.why.length === 0 } };
+});
+
+if (!JSON_OUT && !WRITE_BASELINE) {
+    for (const r of rows) {
+        const known = KNOWN.has(r.file);
+        const ok = r.help.ok && (r.import.ok ? !known : known);
         const mark = (d) => (d.ok ? 'ok' : 'SIDE EFFECT');
-        console.log(`${ok ? 'PASS' : 'FAIL'}: ${file} — `
-            + `HELP ${mark(help)} (${help.ms} ms) · IMPORT ${mark(imported)}`
-            + `${known ? ' (KNOWN)' : ''} (${imported.ms} ms)`);
-        for (const w of help.why) console.log(`    ⛔ HELP: ${w}`);
-        if (!imported.ok && !known) for (const w of imported.why) console.log(`    ⛔ IMPORT: ${w}`);
-        if (imported.ok && known) {
+        console.log(`${ok ? 'PASS' : 'FAIL'}: ${r.file} — `
+            + `HELP ${mark(r.help)} (${r.help.ms} ms) · IMPORT ${mark(r.import)}`
+            + `${known ? ' (KNOWN)' : ''} (${r.import.ms} ms)`);
+        for (const w of r.help.why) console.log(`    ⛔ HELP: ${w}`);
+        if (!r.import.ok && !known) for (const w of r.import.why) console.log(`    ⛔ IMPORT: ${w}`);
+        if (r.import.ok && known) {
             console.log('    ⛔ IMPORT: this file is on the baseline as a module-scope worker '
                 + 'and is now INERT — it was fixed; remove it from '
                 + '`check-procgen-help.baseline.json` (`--write-baseline`).');
         }
     }
 }
-rmSync(scratch, { recursive: true, force: true });
+
+const helpBad = rows.filter((r) => !r.help.ok);
+const importFresh = rows.filter((r) => !r.import.ok && !KNOWN.has(r.file));
+const importFixed = rows.filter((r) => r.import.ok && KNOWN.has(r.file));
+const bad = [...new Set([...helpBad, ...importFresh, ...importFixed])];
 
 if (WRITE_BASELINE) {
     const head = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: REPO, encoding: 'utf8' }).trim();
@@ -297,14 +368,14 @@ if (WRITE_BASELINE) {
      * PATHS IT WROTE — so a later slice can retire an entry BY NAME and know
      * what closing it has to preserve, instead of re-running the census.
      */
-    const effectful = Object.fromEntries(rows.filter((r) => !r.import.ok).sort(
-        (a, b) => a.file.localeCompare(b.file),
-    ).map((r) => [r.file, {
-        why: r.import.why,
-        wrote: r.import.wrote.sort(),
-        helpResidue: r.help.ok ? null : r.help.why,
-        ms: r.import.ms,
-    }]));
+    const effectful = Object.fromEntries(rows.filter((r) => !r.import.ok)
+        .sort((a, b) => a.file.localeCompare(b.file))
+        .map((r) => [r.file, {
+            why: r.import.why,
+            wrote: r.import.wrote.slice().sort(),
+            helpResidue: r.help.ok ? null : r.help.why,
+            ms: r.import.ms,
+        }]));
     writeFileSync(BASELINE_FILE, `${JSON.stringify({
         note: 'GENERATED by `node scripts/procgen/check-procgen-help.mjs --write-baseline` '
             + '(R9 slice P4a, ⚖ 47b (4)). The instruments whose MODULE SCOPE does work when '
@@ -321,9 +392,9 @@ if (WRITE_BASELINE) {
         },
         importDoorEffectful: effectful,
     }, null, 2)}\n`);
-    console.log(`wrote ${BASELINE_FILE.split('/').pop()} — ${Object.keys(effectful).length} `
-        + `of ${rows.length} `
-        + `instrument(s) do module-scope work on import, at ${head}`);
+    console.log(`wrote ${BASELINE_FILE.split('/').pop()} — ${Object.keys(effectful).length} of `
+        + `${rows.length} instrument(s) do module-scope work on import, at ${head} `
+        + `(${(WALL_MS / 1000).toFixed(1)} s)`);
     process.exit(0);
 }
 if (JSON_OUT) {
@@ -331,19 +402,17 @@ if (JSON_OUT) {
     process.exit(bad.length ? 1 : 0);
 }
 
-const helpBad = rows.filter((r) => !r.help.ok);
-const importFresh = rows.filter((r) => !r.import.ok && !KNOWN.has(r.file));
-const importFixed = rows.filter((r) => r.import.ok && KNOWN.has(r.file));
-const bad = [...new Set([...helpBad, ...importFresh, ...importFixed])];
 const slowest = rows.slice().sort((a, b) => Math.max(b.help.ms, b.import.ms)
     - Math.max(a.help.ms, a.import.ms))[0];
 console.log('');
-console.log(`## ${rows.length} instrument(s), two doors each; `
-    + `${rows.filter((r) => KNOWN.has(r.file)).length} on the import-door baseline. `
-    + `Slowest: ${slowest.file} `
-    + `(${Math.max(slowest.help.ms, slowest.import.ms)} ms against a ${CEILING_MS} ms ceiling).`);
+console.log(`## ${rows.length} instrument(s), two doors each, ${JOBS} at a time in `
+    + `${(WALL_MS / 1000).toFixed(1)} s; ${rows.filter((r) => KNOWN.has(r.file)).length} on the `
+    + `import-door baseline. Slowest: ${slowest.file} `
+    + `(${Math.max(slowest.help.ms, slowest.import.ms)} ms; ceilings ${CEILING_MS} ms / `
+    + `${KNOWN_CEILING_MS} ms baselined).`);
 console.log('## ⛓ The ceiling is a PROXY — the assertions that decide a row are the porcelain, '
-    + 'the mtime sweep, the child\'s own cache, its exit code and its stderr.');
+    + 'the mtime sweep, the child\'s own cache, its exit code, its stderr, and for the help '
+    + 'door that stdout IS the derived help text.');
 if (bad.length === 0) {
     console.log(`\nALL PASS — ${rows.length} instrument(s) answer \`--help\` with no side `
         + `effect this gate can observe; ${rows.filter((r) => KNOWN.has(r.file)).length} `
