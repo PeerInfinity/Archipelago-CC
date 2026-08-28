@@ -72,7 +72,11 @@ describe('the adapter\'s shape', () => {
     });
 });
 
-describe('the five cell-space refusals, and the three skipped laws', () => {
+// ⛓ The counts are INTERPOLATED from the core's own table, never typed: a
+//   widening that changed how many laws are cell-space laws must move these
+//   names rather than leave them asserting a number that is no longer true
+//   (the `lintGateLabels` gate).
+describe(`the cell-space refusals, and the ${CELL_SPACE_LAWS.length} skipped laws`, () => {
     it('rectCopy and floodOps refuse this adapter BY NAME', () => {
         expect(() => rectCopy(rulesEditAdapter, fixture(), { x: 0, y: 0, w: 1, h: 1 }))
             .toThrow(/apworld declares no cell space — rectCopy needs bounds\/readCell\/writeOps/);
@@ -90,7 +94,7 @@ describe('the five cell-space refusals, and the three skipped laws', () => {
      * `assertAdapterBehaviour` for a cell-less adapter, so this `true` is not a
      * claim about seven laws of which three were never asked.
      */
-    it('⛓⛓ assertAdapterBehaviour is GREEN, and SAYS which three laws it skipped', () => {
+    it(`⛓⛓ assertAdapterBehaviour is GREEN, and SAYS which ${CELL_SPACE_LAWS.length} laws it skipped`, () => {
         const said = [];
         expect(assertAdapterBehaviour(rulesEditAdapter, {
             record: fixture(),
