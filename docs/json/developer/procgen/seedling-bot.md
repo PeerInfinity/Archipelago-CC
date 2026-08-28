@@ -15682,3 +15682,54 @@ any argument was read. A two-second question could therefore queue behind a
 two-hour recording, which is the exact failure the lock's own documentation says
 its conditional takers exist to prevent. It also made a test file flaky under
 load, because that file asks several producers the same question in one run.
+
+### R9 slice P4b: FIVE PLACES RECORDED THE SAME FOLD BY HAND, AND TWO OF THEM ALREADY DISAGREED
+
+Closing a slice meant writing the same event down in five places: the design
+notebook's as-built section, this document, the cross-arc queue, two lines in a
+memory index, and an entry appended to a numbered list of pitfalls. Nothing
+compared any of them with any other, or with the repository they all describe.
+
+**THE NOTEBOOK IS THE RECORD; THE OTHER FOUR ARE DERIVED FROM IT AND FROM GIT.**
+A tool reads the as-built section — its title, its date, the branch, the table
+of commits it says landed, the words the user actually said, the claims it makes
+about what did not move — and then asks git the same questions at the fold's
+real head: are those commits on this branch, what is the range's base, did
+anything under the recorded-run directory change, is the entry in this document
+present and did the generated index get rebuilt in the same commit as it. It
+emits the sentence each of the other surfaces carries. It never edits what it
+reads: where the record and the repository disagree, it reports the
+disagreement.
+
+**AND THE FIRST RUN FOUND THAT TWO SURFACES NAME DIFFERENT COMMITS FOR THE SAME
+FOLD.** Not a typo — a property of the order the writing happens in. The queue
+entry is written inside the commit it describes, so at the moment its author
+types the commit's name, that commit does not exist yet. The notebook's line is
+written afterwards and names the real one. Both authors were careful and both
+were right; only a fact derived after the fold can be right twice (trap 924).
+
+**WHAT STAYS PROSE, SAID OUT LOUD.** This document and the queue are
+re-voicings for two different readers, and their bodies are written by a person.
+Measured on the previous slice, the notebook's title and this document's title
+for the same fold are not two spellings of one sentence — they are one fact told
+to two audiences. So the tool derives the heading a citation resolves against
+and offers the notebook's title as a draft, and a human writes the rest.
+
+**A GATE REFUSES A FOLD WHOSE SURFACES DISAGREE.** For every entry in this
+document it asks: does the queue carry a matching block; was the generated index
+rebuilt in the commit that introduced the entry; does every pitfall this commit
+cites by number actually resolve. Its first run re-derived, on its own, the exact
+commit that caused the "rebuild it in the same commit" rule to be written in the
+first place — a rule does not bind the commit that caused it, so that one is
+reported with its repair named rather than failed. What the gate cannot ask in
+continuous integration it says so about: the notebook and the memory notes are
+outside the repository, so those checks are local-only and an unanswerable
+question is never counted as an answered one.
+
+**AND THE PITFALL LIST STOPPED BEING A LIST.** It had grown to nine hundred
+entries in three weeks, and the way a number was claimed — read the end of the
+file, add one — had let two sessions claim the same number twice. Numbers are
+now claimed by creating a file, which cannot happen twice, and each pitfall is
+one file naming which family of mistakes it belongs to. The old list is frozen,
+not migrated: every citation in the tree is by number, and a lookup answers from
+whichever place holds that number (traps 922, 923, 925, 926).
