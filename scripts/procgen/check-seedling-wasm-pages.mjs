@@ -115,16 +115,19 @@ const NO_SHIP = process.argv.includes('--no-ship');
 if (!ROOT) { console.log('FAIL: --root=<siteRoot> is required'); process.exit(1); }
 
 /**
- * The build watch.html's WASM_PAGE names — and the DEFAULT is the pin
- * (`check-seedling-wasm-pins.mjs` spelling 3 reads the default, never the
- * environment). ⛓ The override exists so a CONTROL BUILD can be put through
- * this exact gate and compared against the shipped one: mxmlc is not
- * reproducible and SWFModernRuntime moves independently, so a behavioural move
- * on an edited build has nowhere to be attributed unless the same toolchain
- * run at UNCHANGED source has been through the same rows first (EDITOR
- * INTEGRATION M1-c; `flashPanel/README.md`, R9 slice 9b).
+ * The build watch.html's WASM_PAGE names.
+ *
+ * ⛔ NOT OVERRIDABLE, AND THAT WAS MEASURED (EDITOR INTEGRATION M1-c). A
+ * `process.env.SEEDLING_PAGE || …` was added here to put a CONTROL BUILD
+ * through this gate, and it does not do that: every SHIP arm below drives
+ * `watch.html`, whose iframe is pointed by `watchWasm.js`'s own `WASM_PAGE`
+ * constant — so an override moves the two "is served" rows and the iframe-src
+ * row and leaves all four ship arms running against p4c. A knob that appears
+ * to switch builds and switches three rows is worse than no knob. Driving
+ * another build is `verify-seedling-bot-differential.mjs`'s job; it honours
+ * `SEEDLING_PAGE` for real, because it opens the game page itself.
  */
-const BUILD = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4c';
+const BUILD = 'seedling_bot_ap_p4c';
 const GAME = `${ROOT}/modules/flashPanel/wasm/${BUILD}/game.html`;
 const WASM = `${ROOT}/modules/flashPanel/wasm/${BUILD}/${BUILD}.wasm`;
 const TAPE = 'frontend/modules/seedlingDemo/fixtures/tapes/pit-fall-chain-85.json';
