@@ -5665,6 +5665,87 @@ label or test name?"*, not *"did I touch a gate?"*.
 NEXT: unchanged — the orchestrator's full-tier drive → **P4** → L15. ⛔ ⚖ 61's
 two questions go to the user BEFORE the next full record, not before P4.
 
+**⇒ 12j CLOSED (2026-08-28, `main` @`798eadd91` + this docs commit; three
+commits, two fast-forwards; as-built kickoff §50; ⚖ 61 ANSWERED, ⚖ 62
+DISCHARGED).** ⚖ The user, 2026-08-28: *(i)* *"leave the dash default as it
+currently is"*; *(ii)* *"give economies its own constant"*; *"fix the issue we
+just found with the lock."*
+**(A) A CONSTANT PER PERMISSION.** `ECONOMIES_ROSTER_WIDE = true`, a LITERAL
+beside `DEFAULT_DASH_MODE`, read by the three ⚖ 46/47 sites;
+`ALLOW_DASH_ROSTER_WIDE` then had zero readers and is **DELETED** (⛓ it
+survives only as prose naming a retired constant — including four historical
+lines in this file, §5g's own narrative, which describe the state it named and
+are correct as history). The eighteen test references were CLASSIFIED, not
+renamed, the same 2/3 way the code split: the `['sword-dash']` row, both L18
+arrive-early/late build branches and `procgenPostSword`'s inequality read
+`DEFAULT_DASH_MODE !== 'none'`; `spell({ economies: … })` reads the new
+constant. The alias's own standing row became a row about the CUT, asserting
+the independence on the DECLARATION'S SOURCE — two `true`s that agree by
+coincidence are exactly what the yoke was.
+⛔ **NO TAPE MOVED, NO DEFAULT MOVED**: seven producer `--check` md5s
+byte-identical, one method, measured at every commit and again with all 69 lock
+preambles in place. **(m2)** `DEFAULT_DASH_MODE='none'` reproduces §49.5's
+column **D** (dash-only) digit for digit on all seven — before 12j it would
+have landed on column C (yoked). The cut, from the dash side, against a table
+sealed by another slice.
+⛓⛓⛓ **(m1) FOUND A THIRD SUPERSEDED CITATION.** `r8-solve-10` 90→89 ·
+`r8-solve-20` 365→332 · `r8-d2-19` 864→807 · `r8-d2-20` 781→756 — quoted
+through §40.3, §49.2, §49.9 and 12j's own brief — are PRE-RE-RECORD numbers,
+measured before ⚖ 41's flip with the dash OFF. Re-measured at this head:
+`r8-solve-10` 78→83 (campaign chain 3326→3331) · `r8-solve-18` 410→485 ·
+`r8-solve-20` 229→257 · `r8-d2` headline 1685→1791, its *"first 410 ticks ARE
+r8-solve-18's walk"* row parting at tick 292. Five of seven producers move;
+`r8-tail` and `r9-l3` do not — the exact COMPLEMENT of the dash's own movers.
+Both censuses are in the tree, each labelled with the roster it describes.
+**(B)+(C) THE LOCK COVERS THE THING IT WAS BUILT FOR.** P3b derived the takers
+from `gateRoster` — the `check-*.mjs` names — so a **142-minute** `--win`
+differential ran with NO `lock.json` while three sessions worked beside it.
+`machineDrivers()` now classifies every `scripts/procgen/*.mjs`: **96 takers**
+(75 browser + 21 windows) where the gate roster reached 27 — 23 gates · 29
+`verify-*` (runner/sphere/maze/omsi/topdown/bounce included: the lock is about
+the BOX) · 21 `probe-*` · 21 windows rows · 1 `plan-*` · 1 `export-*`. Four
+HOLDERS, `rerecord-seedling-campaign.mjs` newly among them (it shells the
+producers AND the differential, and takes only when a stage past S0 runs).
+⛔⛔ **AND THE BRIEF'S DERIVATION WOULD HAVE BROKEN THE THING IT FIXES.** Taken
+literally it yields **111** takers, not the predicted 45, because `SIBLING_RE`
+matched a sibling NAMED anywhere: of twenty files pulled in transitively, ONE
+reached a browser by a real reference and NINETEEN printed a usage line in a
+docblock — four of them headless producers whose 2-second `--check` would have
+queued behind the very drive being serialised. Comment-stripping is not the fix
+either (two survivors were `console.log` template literals printing the same
+command). **A reference is a relative module path; a mention is a repository
+path** — trap 566's law one level up. Measured inert: gate-roster `browser`
+23 → 23, so nothing that reads the roster moved.
+⛓⛓ **AN INSTRUMENT'S PROVENANCE LINE MAKES ITS IDENTITY NONDETERMINISTIC.** The
+lock notice carries a pid and a frozen head, and
+`producer: plan-seedling-r7-ends-meet --check` md5s `2>&1` of an instrument
+that drives a browser inside its own `--check`. `identity-block.sh` gains
+`b () { grep -v '^# box lock:'; }` in the SHARED producer template — byte-inert
+for every producer that takes no lock, measured. ⛓ FOUR takers take
+CONDITIONALLY behind their own argv (`solve-seedling-r8-tail --game`;
+`-r8-d2-chain`, `-r9-campaign`, `derive-seedling-tick0` on `!--check`), and
+`derive-seedling-tick0` deliberately does NOT exempt `--dry-run` or a warm
+cache, because whether that run spends the GPU is a property of the CACHE
+STATE, not the argv.
+**FIVE MUTANTS, in child processes under a temp `XDG_CACHE_HOME`**: a windows
+`probe-*` (the population that took nothing before) refuses BY NAME in 1 s ·
+`solve-seedling-r8-tail --check` under a live holder is NOT refused and prints
+no lock line at all · the differential under the holder's TOKEN passes through
+on its FIRST line, killed there by captured PID · a `kill -0`-stale holder
+reclaimed by a DRIVER, not a gate · and BOTH lint directions red, each naming
+its file.
+⚠ **AND THE ⚖ 22 REGEN CAUGHT A DEFECT NO TEST WOULD HAVE**: three `verify-*`
+files keep their header comment BELOW their imports, so a preamble inserted
+"after the last import" became their `oneLiner` in the instruments reference.
+Bulk insertion is a positional assumption; the generator was the only reader
+that could see it. ⛓ A second one: the tracked doc's own prose spelled a
+repository path in an example and the instruments index filed it as *"cited by
+a doc, NOWHERE in the tree"* — the reach reads PROSE, so an example path in a
+sentence is a citation.
+NEXT: unchanged — the orchestrator's full-tier drive → **P4** = ⚖ 54 (8) → L15.
+⛓ ⚖ 61 (i) leaves `DEFAULT_DASH_MODE = 'all'`; the *why is the economy
+expensive* question is NAMED-LATER (kickoff §50) with its measurement list.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:

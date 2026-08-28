@@ -15425,8 +15425,8 @@ one narrowing errs toward under-inclusion where the other errs toward over.
 **ONE BOX, ONE HOLDER, AND THE TREE FROZEN WITH IT.** Twelve hand-relayed "box
 busy" / "box free" messages in a single day is a protocol whose enforcement is a
 human retyping two words. A lock file outside every worktree and every
-scratchpad is taken by the 27 gates that drive a browser or a Windows GPU and by
-the three instruments that measure standing values; a second taker refuses BY
+scratchpad is taken by every instrument that drives a browser or a Windows GPU
+and by the instruments that measure standing values; a second taker refuses BY
 NAME with the holder's pid and the exact flag that would have queued instead, a
 dead holder is reclaimed by `kill -0` with a printed notice, and a child of the
 holder passes through on a token so a runner cannot deadlock against its own
@@ -15524,3 +15524,82 @@ test written specifically to catch "a tool reads the flag but never passes it on
 ran green under exactly that mutation, because it counted occurrences of a name
 that a longer name happens to contain. Neither would have surfaced from reading
 the code.
+
+
+### R9 slice 12j: TWO CONSTANTS WHERE THERE WAS ONE, AND A LOCK THAT NOW COVERS THE THING IT WAS BUILT FOR
+
+Two answers from the user and one repair. *"Leave the dash default as it
+currently is"* and *"give economies its own constant"* — and *"fix the issue we
+just found with the lock."*
+
+**A CONSTANT PER PERMISSION.** Two unrelated economies in the solver — a
+different choice of where to stand when collecting, and walking during a fade
+instead of standing through it — were shipped behind the *dash* flag, because
+that flag was the release gate the previous slice happened to be holding. They
+default off it and would revert with it, so switching the dash default to "no
+dashing" would have quietly reverted them too and re-planned four committed
+artifacts that have nothing to do with dashing. The economies now have their own
+literal, the dash knob no longer reads it, and each prices only itself. The
+measurement that proves the cut runs from both sides: with the economies turned
+off and the dash left on, five of seven producers move and the other two are
+exactly the pair the dash cannot move either; with the dash turned off and the
+economies left on, all seven reproduce, digit for digit, the "dash only" column
+of a table the previous slice sealed before this one existed.
+
+**A RE-QUOTED NUMBER OUTLIVES THE ROSTER IT WAS MEASURED ON.** The four artifact
+tick counts everyone cites for those economies — quoted through three plans, a
+docblock and this slice's own brief — were measured before the roster was
+re-recorded, on a build where the dash was off. They no longer describe anything
+in the tree. Re-measured at this head the movements are different numbers and
+the sign is inverted, because the old list says what *landing* the economies did
+and the new one says what *removing* them does. Both censuses are now in the
+code, each labelled with the roster it describes.
+
+**A LOCK WHOSE POPULATION IS A NAMING CONVENTION IS NOT A LOCK OVER A BOX.** The
+box lock took its taker set from the gate roster — the files whose names begin
+`check-`. So the instruments that hold the GPU longest took no lock at all: a
+142-minute Windows differential ran with no lock file on disk while three
+sessions worked beside it. The population is now every instrument in the
+directory that drives a browser or the Windows driver, which is 96 files where
+the gate roster reached 27. A `--win` row is a taker: it contends for the GPU
+and for the timing every measurement is taken against, and it no longer relies
+on anyone relaying "box busy" by hand. `--wait-for-box=<sec>` comes with the
+preamble.
+
+**A REFERENCE IS SPELLED AS A RELATIVE MODULE PATH; A MENTION IS SPELLED AS A
+REPOSITORY PATH.** Widening that population the obvious way — reuse
+the roster's existing "drives a browser, or names a sibling that does" rule —
+produced 111 takers instead of 96, and the extras were the dangerous kind: of
+twenty files pulled in transitively, one reached a browser by a real reference
+and nineteen merely printed a suggested command line in their usage block. Four
+of those nineteen are headless producers whose two-second checks would then have
+queued behind the forty-minute drive the fix exists to serialise — the failure
+the lock's own two-directional lint is written to prevent, arriving through the
+front door. Stripping comments does not fix it either: two of the three
+survivors were `console.log` calls printing the same suggested command. What
+separates a reference from a mention is not where it sits but how it is spelled:
+only a relative module path resolves, and only a spawn or an import writes one.
+Narrowing to that spelling moves no gate at all — the roster reads 23
+browser rows before and after — so the classification everything else depends on
+is untouched.
+
+**AN INSTRUMENT'S OWN PROVENANCE LINE CAN MAKE ITS IDENTITY NONDETERMINISTIC.**
+The lock announces itself with the holder's process id and the frozen head. One
+standing value is the checksum of a producer's entire output, and that producer
+drives a browser inside its own check — so the moment it became a taker its
+"identity" would have changed on every run. The shared producer recipe now drops
+the lock's own lines before the digest. Four instruments take the lock
+conditionally for the same reason: each can drive the machine and each has a
+headless arm that is a standing row, so the take sits behind the run's own
+argument. One of them deliberately does not exempt its dry run or a warm cache,
+because whether that run spends the GPU is a property of the cache, not of the
+flags.
+
+Two of the slice's own errors are worth recording. The bulk insertion of a
+preamble "after the last import" is a positional assumption, and three files of
+sixty-five keep their header comment *below* their imports — so their entry in
+the generated instruments reference started describing the box lock instead of
+the instrument. Nothing but re-running the generator could have seen it. And the
+brief's own two numbers for the lock were both wrong, one of them by more than
+double; measuring them first is what turned a mechanical edit into the finding
+above.
