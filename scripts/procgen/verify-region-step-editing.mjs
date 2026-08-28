@@ -15,6 +15,10 @@
  *      edits` alone on a FRESH envelope, the same grid AND a clean oracle.
  *   L. Undo ×N over that recording returns the never-edited grid, byte for
  *      byte, with the oracle still clean and `completed` back at the end.
+ *   N. The bounce EDIT SESSION (editor-integration B-b): N ops through
+ *      `createEditSession(bounceEditAdapter, level)` → undo ×N → the record is
+ *      the base byte for byte, and `buildEditedRegion` over the undone record
+ *      reproduces the UNEDITED save's region exactly.
  *
  * ⚠ NO BROWSER. This verifier is pure Node (unlike its two `*-steps-ui.mjs`
  * siblings), so it has no dev-server host to shift and runs under a busy box.
@@ -45,6 +49,10 @@ import {
 import {
     planSpheres, computeItemSpheres, compareSpheresToPlan,
 } from '../../frontend/modules/procgenPipeline/spherePlanner.js';
+import { createEditSession, group } from '../../frontend/modules/procgenCore/editCore.js';
+import { bounceEditAdapter } from '../../frontend/modules/bounceRegionEditor/bounceEditAdapter.js';
+import { deletePlatformOps } from '../../frontend/modules/bounceRegionEditor/bounceLevelOps.js';
+import { buildEditedRegion } from '../../frontend/modules/bounceRegionEditor/buildEditedRegion.js';
 
 
 import { argvHelp } from './argvHelp.js';
@@ -99,35 +107,21 @@ const platSig = (r) => JSON.stringify(
     (r.playable_payload.params.bounceLevel.platforms ?? []).map((p) => [p.x, p.y, p.type]));
 const exitKeys = (r) => [...getRegionExits(r).keys()].sort().join(',');
 
-// Editor save merge (mirrors bounceRegionEditorUI._buildEditedRegion): exits
-// keep the contract; locations come from the edited level's pickups (item picks
-// + add/remove flow through).
-function buildEdited(region, contract, level) {
-    const locationSpecs = (level.pickups ?? []).map((pk) => ({
-        id: pk.id, item: pk.item ?? null, requirement: [], counts: {},
-    }));
-    const built = assembleBounceRegionFromLevel(level, {
-        region_id: region.region_id,
-        exitSpecs: contract.exitSpecs ?? [],
-        locationSpecs,
-        physicsProfile: contract.physicsProfile ?? 'experimental',
-        mode: contract.mode ?? 'column',
-        freeArrow: contract.freeArrow ?? 'right',
-    });
-    const next = structuredClone(region);
-    next.playable_payload = built.payload;
-    next.obstacle_defs = built.obstacleDefs;
-    const sideByExitId = new Map((region.exits_placed ?? []).map((p) => [p.exit_id, p.side]));
-    for (const ex of next.extracted_rules?.exits ?? []) {
-        const side = sideByExitId.get(ex.id);
-        if (side && built.exitPaths[side]) {
-            ex.paths = built.exitPaths[side];
-            ex.access_rule = built.exitRules[side];
-        }
-    }
-    if (next.extracted_rules) next.extracted_rules.locations = built.locations;
-    return next;
-}
+// ⛓⛓⛓ THE EDITOR SAVE MERGE, **IMPORTED** (editor-integration B-b).
+//
+// ⛔ This was a COPY of `bounceRegionEditorUI._buildEditedRegion`, under a
+// comment saying it mirrored it — so Phases B/C/D/E/F, which are byte-shaped
+// pins on what a save produces, were pinning the COPY. A drift in the panel's
+// merge would have left this verifier green while the app wrote a different
+// region. The body now lives in `bounceRegionEditor/buildEditedRegion.js` and
+// both callers import it; `bounceEditAdapter.test.js` pins the export against
+// a transcription of the old panel body, byte for byte, over four settings
+// shapes.
+//
+// ⚠ The three-argument spelling stays so the five call sites below are
+// unmoved: this verifier passes no `settings`, which is exactly the arm that
+// reproduces the contract's own values.
+const buildEdited = (region, contract, level) => buildEditedRegion({ region, contract, level });
 
 // Backfill pickup.item from the contract (the level model doesn't store it).
 function withPickupItems(level, contract) {
@@ -491,6 +485,71 @@ function emptyCellOf(grid) {
         fail(`L: completed is ${env.completed}, expected ${SPHERE_STEPS.length - 1}`);
     }
     console.log(`L. undo ×${undone} → the never-edited grid, oracle clean, completed=${env.completed} — OK`);
+}
+
+// ── N. The bounce EDIT SESSION (editor-integration B-b) ────────────────
+//
+// ⛓⛓⛓ The panel's eight mutators are now ops on an `editCore` session, and
+// UNDO is the fold over a shorter list. This phase asks the two things the
+// panel's own gate cannot ask headlessly: that N ops undo to the BASE byte for
+// byte, and that a save built from the undone record is the save the unedited
+// region would have produced. ⛔ The second half is what makes undo a fact
+// about the REGION rather than about the level object: `buildEditedRegion` is
+// the only thing between the two.
+{
+    const { grid, tree, regionParams } = buildWorld();
+    const node = tree.nodes.find((n) => n.parent != null && n.substrate === 'bounce');
+    const region = grid.getRegion(node.cell);
+    const contract = buildRegionContract(
+        node.substrate, node, tree, grid, regionSize, regionParams);
+    const startLevel = withPickupItems(
+        structuredClone(region.playable_payload.params.bounceLevel), contract);
+    const startSig = JSON.stringify(startLevel);
+    const unedited = JSON.stringify(buildEditedRegion({
+        region, contract, level: structuredClone(startLevel),
+    }));
+
+    const sess = createEditSession(bounceEditAdapter, structuredClone(startLevel), {
+        base: { kind: 'bounce-level', region_id: region.region_id },
+    });
+    const push = (op) => {
+        const res = sess.apply(op);
+        if (!res.ok) fail(`N: op ${JSON.stringify(op.op ?? op.label)} was REFUSED — ${res.description}`);
+        if (!res.applied) fail(`N: op ${JSON.stringify(op.op ?? op.label)} moved nothing`);
+        return res;
+    };
+    push({ op: 'resize', dim: 'width', value: sess.record().size.width + 40 });
+    const added = push({ op: 'add-platform' });
+    push({ op: 'set-platform', id: sess.record().platforms[0].id, patch: { type: 'brown' } });
+    push({ op: 'add-entity', kind: 'pickups', on: added.value.id, item: 'Victory' });
+    // ⛓ THE CASCADE, built from the CURRENT record — `deletePlatformOps`
+    //   enumerates the orphans, so it must read the level the delete will run
+    //   against, not the one the session opened on.
+    const hosted = ['springs', 'jetpacks', 'pickups', 'portals', 'teleports'];
+    const target = sess.record().platforms.find(
+        (p) => hosted.some((k) => (sess.record()[k] ?? []).some((e) => e.on === p.id)));
+    if (!target) fail('N: no hosted platform to delete — the cascade arm would be vacuous');
+    const cascade = deletePlatformOps(sess.record(), target.id);
+    if (cascade.length < 2) fail(`N: the cascade for '${target.id}' has no remove-entity member`);
+    push(group(`delete platform ${target.id}`, cascade));
+    const applied = 5;
+    if (sess.ops().length !== applied) {
+        fail(`N: ${sess.ops().length} ops recorded, applied ${applied}`);
+    }
+    if (JSON.stringify(sess.record()) === startSig) fail('N: the ops moved nothing at all');
+
+    let undone = 0;
+    while (sess.undo()) undone += 1;
+    if (undone !== applied) fail(`N: undo ran ${undone} times for ${applied} ops`);
+    if (JSON.stringify(sess.record()) !== startSig) {
+        fail('N: undo ×N did not return the base level byte for byte');
+    }
+    const after = JSON.stringify(buildEditedRegion({
+        region, contract, level: sess.record(),
+    }));
+    if (after !== unedited) fail('N: a save from the undone record differs from the unedited save');
+    console.log(`N. ${applied} session ops → undo ×${undone} → the base level byte for byte, `
+        + 'and the save it builds equals the unedited save — OK');
 }
 
 console.log('VERIFY REGION-STEP EDITING: ALL OK');
