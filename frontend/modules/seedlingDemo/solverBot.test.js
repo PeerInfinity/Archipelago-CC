@@ -3672,6 +3672,20 @@ describe('R9 slice P2: ⚖ 54 (5) — the economies are behind the roster-wide p
         expect(full.json).toContain('"prefixes":1');
 
         /**
+         * ⛔⛔ AND THE EXTRA KEYS MUST NOT BREAK THE SIDECAR. `assertTraceRow`
+         * refuses unknown fields at ROW level ("an unlisted key in a record is
+         * a SILENCE, not an error"), so a new key is a schema question, not a
+         * cosmetic one. `mode`/`prefixes` go INSIDE `strategy.swordDash`,
+         * which the row contract does not enumerate — asserted here rather
+         * than reasoned about, because an emit at a non-default mode writes
+         * this object to disk and a producer that could not re-read its own
+         * trace would be a flag that breaks the pipeline it was added to help.
+         */
+        for (const t of [none, all, full]) {
+            expect(() => parseDecisionTrace(t.json, '12i')).not.toThrow();
+        }
+
+        /**
          * ⛓ AND THE KNOB IS NOT COSMETIC: the mode the roster records under
          * is the fastest of the three on this room, which is the shape the
          * user's next-full-record question is asked in. Measured here, both
