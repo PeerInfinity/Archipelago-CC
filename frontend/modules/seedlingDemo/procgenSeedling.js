@@ -3724,7 +3724,9 @@ export function seedlingModel({
  * step 3 says *"re-solve from scratch from the biome's boot"*. A staging
  * object reused across solves would carry whatever the last run left on it.
  */
-export function seedlingOracle({ model, items = null, budget = DEFAULT_BUDGET } = {}) {
+export function seedlingOracle({ model, items = null, budget = DEFAULT_BUDGET,
+    // ⛓ R9 slice 12i: forwarded undefined — the solver owns the default.
+    dashMode } = {}) {
     const b = assertBudget(budget);
     const boot = model.boot();
     return {
@@ -3738,7 +3740,7 @@ export function seedlingOracle({ model, items = null, budget = DEFAULT_BUDGET } 
             const pins = this.pinsFor(templates);
             const staging = bootStaging({ boot, items, pins });
             return solve(record, staging, model.goals, b,
-                { name: `procgen-l${record.level}` });
+                { name: `procgen-l${record.level}`, dashMode });
         },
     };
 }
@@ -3905,6 +3907,14 @@ export function defaultElementsFor(items) {
 export function seedlingSeam({
     seed, items = null, budget = DEFAULT_BUDGET, defaults, skeleton = DEFAULT_SKELETON,
     elements, areas = DEFAULT_AREAS, require, wrapOracle = (o) => o,
+    /**
+     * ⛓ R9 SLICE 12i — forwarded undefined to EVERY oracle this seam makes,
+     * and there are FOUR construction sites, not one: the ladder's, the
+     * re-build after a directive, and the two the certification arms make. A
+     * mode threaded to some of them would grade a level under a build that did
+     * not generate it.
+     */
+    dashMode,
 } = {}) {
     /**
      * ⛓⛓⛓ **THE DIRECTIVE IS RESOLVED FIRST, BECAUSE IT FORCES THE HEAD**
@@ -3931,7 +3941,7 @@ export function seedlingSeam({
      */
     if (elements === undefined) elements = defaultElementsFor(items);
     let model = seedlingModel({ seed, defaults, skeleton, elements, areas });
-    let oracle = wrapOracle(seedlingOracle({ model, items, budget }));
+    let oracle = wrapOracle(seedlingOracle({ model, items, budget, dashMode }));
     /**
      * ⛓⛓⛓ **THE CERTIFICATION SOLVE — PROCGEN ELEMENTS arc 3, slice 3 (D4), AND
      * IT IS WHERE THE ARC'S DEPENDENCY IS PUBLISHED RATHER THAN HIDDEN.**
@@ -4006,7 +4016,7 @@ export function seedlingSeam({
             needs: Object.freeze(needed),
         });
         model = seedlingModel({ seed, defaults, skeleton, elements, areas, dropElement: true });
-        oracle = wrapOracle(seedlingOracle({ model, items, budget }));
+        oracle = wrapOracle(seedlingOracle({ model, items, budget, dashMode }));
     } else if (model.elements.ran) {
         const cert = oracle.solve(model.skeleton(), { templates: [] });
         certTrace = cert.trace ?? null;
@@ -4033,7 +4043,7 @@ export function seedlingSeam({
         });
         if (!certification.certified) {
             model = seedlingModel({ seed, defaults, skeleton, elements, areas, dropElement: true });
-            oracle = wrapOracle(seedlingOracle({ model, items, budget }));
+            oracle = wrapOracle(seedlingOracle({ model, items, budget, dashMode }));
         }
     }
     /**
@@ -4100,7 +4110,7 @@ export function seedlingSeam({
             model = seedlingModel({ seed, defaults, skeleton, elements,
                 areas: { keys: 0 },
                 dropElement: certification !== null && !certification.certified });
-            oracle = wrapOracle(seedlingOracle({ model, items, budget }));
+            oracle = wrapOracle(seedlingOracle({ model, items, budget, dashMode }));
         }
     }
     /**
@@ -4412,11 +4422,13 @@ export function generateSeedlingLevel({
     seed, palette = PRE_SWORD_PALETTE, bounds, budget = DEFAULT_BUDGET, defaults,
     skeleton = DEFAULT_SKELETON, elements, areas = DEFAULT_AREAS, require,
     fill = FILL_DENSE,
+    // ⛓ R9 slice 12i: `--dash`'s last hop before the seam. Forwarded undefined.
+    dashMode,
 } = {}) {
     const { model, oracle, certification, areaCertification, require: dir,
         ledger: seamLedger } = seedlingSeam({
         seed, items: palette.items ?? null, budget, defaults, skeleton, elements, areas,
-        require,
+        require, dashMode,
     });
     const out = generateLevel({ rng: rngFor(seed), model, oracle, palette, bounds });
     /**

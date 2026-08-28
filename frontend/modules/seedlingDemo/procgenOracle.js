@@ -562,6 +562,14 @@ export function solve(levelRecord, staging, goals, budget = DEFAULT_BUDGET, {
     now = () => Date.now(),
     name = `procgen-l${levelRecord?.level}`,
     scratchPersistence = true,
+    /**
+     * ⛓ R9 SLICE 12i — forwarded undefined; see `solveForPage`'s own docblock.
+     * This is the hop that carries `--dash` from `generate-seedling-level` and
+     * the two bulk identity rows down to the window pass, which is where ⚖
+     * 41's 4x is actually spent (kickoff §47.9: "the dash planner reaches
+     * every procgen certification that SOLVES").
+     */
+    dashMode,
 } = {}) {
     const b = assertBudget(budget);
     if (!Array.isArray(goals) || goals.length === 0) {
@@ -586,6 +594,7 @@ export function solve(levelRecord, staging, goals, budget = DEFAULT_BUDGET, {
             // a bound nobody applies (measured: a 7-tick budget still solved
             // in 134 ticks before the pass-through existed).
             maxTicksPerTarget: b.maxTicksPerTarget,
+            dashMode,
             // ⛓⛓ Slice 4b: THIS is the one caller that turns the scratch
             // persistence layer on. See the docblock above `DEFAULT_BUDGET`'s
             // neighbour below and `levelRun`'s own.

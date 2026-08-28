@@ -93,6 +93,30 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { mkdirSync, writeFileSync } from 'node:fs';
 
+import { parseDashMode, dashModeNote, dashModeArgv } from './dashMode.js';
+
+/**
+ * ⛓⛓⛓ R9 SLICE 12i — **`--dash=none|full|all`, AND THIS BATCH IS ONE OF THE
+ * TWO ROWS THAT PAID ⚖ 41's 4x** (`identity: acceptance batch` 34 -> 148 s,
+ * kickoff §47.9). The token is spelled here so the instruments index's scan
+ * of this file's own `argv` finds it; `dashMode.js` owns the parse.
+ *
+ * ⛔ THE MODE MUST REACH **BOTH** ARMS OR THE DETERMINISM CHECK LIES. This
+ * script runs `generate-seedling-level.mjs` in two separate processes and
+ * compares them; its own comment beside that call already says why every bound
+ * is forwarded — *"a determinism red whose cause is a missing flag is the
+ * worst kind of false alarm this batch can raise"*. A `--dash` that moved only
+ * the in-process arm would be exactly that flag.
+ *
+ * ⛔ Unset reaches `solverBot.DEFAULT_DASH_MODE`, `dashModeArgv` is EMPTY
+ * there, and the sub-process command line is unchanged — so this row's
+ * standing md5 does not move.
+ */
+const DASH_MODE = parseDashMode(
+    process.argv.find((a) => a === '--dash' || a.startsWith('--dash=')));
+const DASH_NOTE = dashModeNote(DASH_MODE);
+if (DASH_NOTE) console.error(DASH_NOTE);
+
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(join(HERE, '..', '..'));
 const M = (p) => import(join(REPO, 'frontend/modules/seedlingDemo', p));
@@ -222,7 +246,7 @@ function attempt(fn) {
 function candidate(seed, biome) {
     const palette = GENERATE_BIOMES[biome];
     const built = attempt(() => generateStep({ seed, biome, step: BOUNDS.obstacleTarget,
-        bounds: BOUNDS, budget: BUDGET }));
+        bounds: BOUNDS, budget: BUDGET, dashMode: DASH_MODE }));
     if (!built.ok) {
         return { seed, biome, accepted: false, why: 'ABORTED', detail: built.error };
     }
@@ -247,7 +271,8 @@ function candidate(seed, biome) {
             items: palette.items ?? null,
             pins: state.summary.pins,
         }),
-        state.model.goals, BUDGET, { name: `batch-s${seed}-${biome}` }));
+        state.model.goals, BUDGET,
+        { name: `batch-s${seed}-${biome}`, dashMode: DASH_MODE }));
     if (!solved.ok) {
         return { seed, biome, accepted: false, why: 'FINAL SOLVE THREW', detail: solved.error };
     }
@@ -333,7 +358,15 @@ function twoProcessIdentity(seed, biome) {
          * is a missing flag is the worst kind of false alarm this batch can
          * raise (see §9.9's self-inflicted one).
          */
-        `--anchor-tries=${BOUNDS.anchorTriesPerCandidate}`, '--json',
+        `--anchor-tries=${BOUNDS.anchorTriesPerCandidate}`,
+        /**
+         * ⛓ R9 SLICE 12i — and `--dash` is a bound like any other. EMPTY at
+         * the roster's default, so this argv is byte-identical without the
+         * flag; present the moment the batch is asked for another mode, so the
+         * sub-process arm and the in-process arm are the same build.
+         */
+        ...dashModeArgv(DASH_MODE),
+        '--json',
     ], { cwd: REPO, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
     const a = run();
     const b = run();
@@ -375,7 +408,8 @@ for (const biome of Object.keys(GENERATE_BIOMES)) {
 
         const cert = certify(c.state, c.out);
         const det = twoProcessIdentity(seed, biome);
-        const req = requirementsFor(c.state, c.out, { budget: BUDGET });
+        const req = requirementsFor(c.state, c.out,
+            { budget: BUDGET, dashMode: DASH_MODE });
         const payload = {
             generator: 'scripts/procgen/batch-seedling-acceptance.mjs',
             seed,
@@ -549,7 +583,8 @@ if (CENSUS > 0) {
         for (let seed = 1; seed <= CENSUS; seed += 1) {
             note(`[stderr] census ${biome} seed ${seed}…`);
             const built = attempt(() => generateStep({ seed, biome,
-                step: BOUNDS.obstacleTarget, bounds: BOUNDS, budget: BUDGET }));
+                step: BOUNDS.obstacleTarget, bounds: BOUNDS, budget: BUDGET,
+                dashMode: DASH_MODE }));
             if (!built.ok) {
                 aborted += 1;
                 aborts.push({ seed, name: built.error.cause ?? built.error.name });

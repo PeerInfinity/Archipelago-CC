@@ -389,6 +389,12 @@ export const INSTRUMENTS = frz({
                 },
                 {
                     "how": [
+                        "startsWith"
+                    ],
+                    "name": "dash"
+                },
+                {
+                    "how": [
                         "has"
                     ],
                     "name": "json"
@@ -2113,6 +2119,12 @@ export const INSTRUMENTS = frz({
                 },
                 {
                     "how": [
+                        "startsWith"
+                    ],
+                    "name": "dash"
+                },
+                {
+                    "how": [
                         "arg"
                     ],
                     "name": "kinds"
@@ -2787,6 +2799,12 @@ export const INSTRUMENTS = frz({
                         "num"
                     ],
                     "name": "count"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "dash"
                 },
                 {
                     "how": [
@@ -6002,6 +6020,12 @@ export const INSTRUMENTS = frz({
                 },
                 {
                     "how": [
+                        "startsWith"
+                    ],
+                    "name": "dash"
+                },
+                {
+                    "how": [
                         "includes"
                     ],
                     "name": "segments"
@@ -6030,6 +6054,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "check"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "dash"
                 },
                 {
                     "how": [
@@ -6070,6 +6100,12 @@ export const INSTRUMENTS = frz({
                 },
                 {
                     "how": [
+                        "startsWith"
+                    ],
+                    "name": "dash"
+                },
+                {
+                    "how": [
                         "includes"
                     ],
                     "name": "segments"
@@ -6098,6 +6134,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "check"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "dash"
                 },
                 {
                     "how": [
@@ -6134,6 +6176,12 @@ export const INSTRUMENTS = frz({
                 },
                 {
                     "how": [
+                        "startsWith"
+                    ],
+                    "name": "dash"
+                },
+                {
+                    "how": [
                         "includes"
                     ],
                     "name": "game"
@@ -6167,6 +6215,12 @@ export const INSTRUMENTS = frz({
                 },
                 {
                     "how": [
+                        "startsWith"
+                    ],
+                    "name": "dash"
+                },
+                {
+                    "how": [
                         "includes"
                     ],
                     "name": "segments"
@@ -6197,6 +6251,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "check"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "dash"
                 }
             ],
             "oneLiner": "solve-seedling-r9-l3 — ⛓⛓⛓ **THE ROOM THE `break` VERB OPENED**, driven by the live solver.",
@@ -6298,6 +6358,12 @@ export const INSTRUMENTS = frz({
             ],
             "file": "survey-seedling-route.mjs",
             "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "dash"
+                },
                 {
                     "how": [
                         "includes"

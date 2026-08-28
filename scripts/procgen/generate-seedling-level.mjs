@@ -62,6 +62,27 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { writeFileSync } from 'node:fs';
 
+import { parseDashMode, dashModeNote } from './dashMode.js';
+
+/**
+ * ⛓⛓⛓ R9 SLICE 12i — **`--dash=none|full|all`, AND THE TOKEN IS SPELLED
+ * HERE.** The instruments index publishes "the flags it reads out of `argv`"
+ * by SCANNING each instrument's own text (⚖ ruling 38(6); `walkReport.js`'s
+ * header says the same about `--walk-report`), so a flag parsed one module
+ * away is a flag the reference table would omit. `dashMode.js` owns the
+ * PARSE — a bare `--dash` and an unknown mode are refused by name there, once,
+ * for every participant.
+ *
+ * ⛔ UNSET REACHES `solverBot.DEFAULT_DASH_MODE` AND NOTHING ELSE, so this
+ * script's stdout is byte-identical without the flag and its standing md5 does
+ * not move. The warning goes to STDERR: it is a fact about the RUN, not part
+ * of the artifact, and a machine-readable stdout must stay parseable.
+ */
+const DASH_MODE = parseDashMode(
+    process.argv.find((a) => a === '--dash' || a.startsWith('--dash=')));
+const DASH_NOTE = dashModeNote(DASH_MODE);
+if (DASH_NOTE) console.error(DASH_NOTE);
+
 const HERE = dirname(fileURLToPath(import.meta.url));
 const M = (p) => import(join(HERE, '..', '..', 'frontend/modules/seedlingDemo', p));
 // ⛓ The loop core left `seedlingDemo/` in CONSTRUCTIVE-MODE slice 2 (the maze
@@ -438,6 +459,7 @@ try {
         ? generateWithDirectives({
             seed: SEED, biome: BIOME, step: bounds.obstacleTarget, bounds, budget: BUDGET,
             roster: ROSTER, directed: DIRECTED, skeleton: SKELETON,
+            dashMode: DASH_MODE,
         })
         : generateSeedlingLevel({
             seed: SEED, palette: PALETTE, bounds, budget: BUDGET, skeleton: SKELETON,
@@ -448,6 +470,7 @@ try {
              *  `defaults` argument; the shell strip runs at the end of pass 2. */
             defaults: { width: SIZE.width, height: SIZE.height },
             fill: FILL,
+            dashMode: DASH_MODE,
         });
 } catch (e) {
     /**

@@ -439,11 +439,20 @@ export function censusWorld(levelSource, staging) {
 export function solveForPage({
     levelSource, staging, goals, name, now = () => Date.now(), maxTicksPerTarget,
     scratchPersistence = false,
+    /**
+     * ⛓⛓ R9 SLICE 12i — **THE SAME SHAPE `maxTicksPerTarget` HAS, AND FOR THE
+     * SAME REASON** (the docblock above says it): `undefined` is forwarded, so
+     * the parameter's ABSENCE reaches `solveSegment`'s own default rather than
+     * a second copy of the roster's state here. That is what makes the
+     * addition byte-inert for the page, the battery and the acceptance row.
+     */
+    dashMode,
 }) {
     const honest = solveStaging(staging);
     const t0 = now();
     const run = createRunForStaging(honest, levelSource, { scratchPersistence });
-    const out = solveSegment({ run, goals, name, boot: honest.boot, maxTicksPerTarget });
+    const out = solveSegment({ run, goals, name, boot: honest.boot, maxTicksPerTarget,
+        dashMode });
     const ms = now() - t0;
     const despawns = checkSolveDespawns(staging, run);
     return {

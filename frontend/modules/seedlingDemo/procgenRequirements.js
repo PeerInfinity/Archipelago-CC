@@ -105,7 +105,11 @@ function attempt(fn) {
  * report answers "none established" WITH THE REASON rather than printing
  * nothing (an empty layer owes a `why`).
  */
-export function requirementsFor(state, withOut, { budget = DEFAULT_BUDGET } = {}) {
+export function requirementsFor(state, withOut, { budget = DEFAULT_BUDGET,
+    // ⛓ R9 slice 12i: the with/without differential must run BOTH arms under
+    // the same build — a `without` solved at the roster's default against a
+    // `with` solved at another mode would be a differential of two things.
+    dashMode } = {}) {
     const items = state.palette.items ?? {};
     const candidates = Object.keys(items).filter((k) => items[k] === true);
     const boot = state.model.boot();
@@ -114,7 +118,8 @@ export function requirementsFor(state, withOut, { budget = DEFAULT_BUDGET } = {}
     for (const flag of candidates) {
         const without = attempt(() => solve(state.record,
             bootStaging({ boot, items: { ...items, [flag]: false }, pins }),
-            state.model.goals, budget, { name: `req-s${state.seed}-no-${flag}` }));
+            state.model.goals, budget,
+            { name: `req-s${state.seed}-no-${flag}`, dashMode }));
         const withoutVerdict = without.ok
             ? without.value.verdict
             // ⚠ A THROW IS NOT A REFUSAL and the row says which it was. It

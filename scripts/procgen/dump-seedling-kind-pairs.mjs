@@ -40,6 +40,27 @@ import crypto from 'node:crypto';
 import { pathToFileURL } from 'node:url';
 import path from 'node:path';
 
+import { parseDashMode, dashModeNote } from './dashMode.js';
+
+/**
+ * ⛓⛓⛓ R9 SLICE 12i — **`--dash=none|full|all`, AND THE TOKEN IS SPELLED
+ * HERE.** The instruments index publishes "the flags it reads out of `argv`"
+ * by SCANNING each instrument's own text (⚖ ruling 38(6); `walkReport.js`'s
+ * header says the same about `--walk-report`), so a flag parsed one module
+ * away is a flag the reference table would omit. `dashMode.js` owns the
+ * PARSE — a bare `--dash` and an unknown mode are refused by name there, once,
+ * for every participant.
+ *
+ * ⛔ UNSET REACHES `solverBot.DEFAULT_DASH_MODE` AND NOTHING ELSE, so this
+ * script's stdout is byte-identical without the flag and its standing md5 does
+ * not move. The warning goes to STDERR: it is a fact about the RUN, not part
+ * of the artifact, and a machine-readable stdout must stay parseable.
+ */
+const DASH_MODE = parseDashMode(
+    process.argv.find((a) => a === '--dash' || a.startsWith('--dash=')));
+const DASH_NOTE = dashModeNote(DASH_MODE);
+if (DASH_NOTE) console.error(DASH_NOTE);
+
 const ROOT = path.resolve(new URL('../..', import.meta.url).pathname);
 const mod = async (p) => import(pathToFileURL(path.join(ROOT, p)).href);
 
@@ -93,6 +114,7 @@ for (const kindSpec of KINDS) {
                     palette: paletteFor(biome),
                     bounds: { obstacleTarget: COUNT },
                     skeleton,
+                    dashMode: DASH_MODE,
                 });
                 const s = out.summary;
                 row = `level=${md5(JSON.stringify(out.record))} `

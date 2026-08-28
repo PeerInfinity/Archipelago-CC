@@ -103,6 +103,27 @@ import { committedTick0, tick0ParseFields, despawnField, tick0Field }
 import { createWalkReport } from './walkReport.js';
 import { modelArrivalOf } from './provisionalLatch.js';
 import { emitSegments } from './producerSegments.js';
+
+import { parseDashMode, dashModeNote } from './dashMode.js';
+
+/**
+ * ⛓⛓⛓ R9 SLICE 12i — **`--dash=none|full|all`, AND THE TOKEN IS SPELLED
+ * HERE.** The instruments index publishes "the flags it reads out of `argv`"
+ * by SCANNING each instrument's own text (⚖ ruling 38(6); `walkReport.js`'s
+ * header says the same about `--walk-report`), so a flag parsed one module
+ * away is a flag the reference table would omit. `dashMode.js` owns the
+ * PARSE — a bare `--dash` and an unknown mode are refused by name there, once,
+ * for every participant.
+ *
+ * ⛔ UNSET REACHES `solverBot.DEFAULT_DASH_MODE` AND NOTHING ELSE, so this
+ * script's stdout is byte-identical without the flag and its standing md5 does
+ * not move. The warning goes to STDERR: it is a fact about the RUN, not part
+ * of the artifact, and a machine-readable stdout must stay parseable.
+ */
+const DASH_MODE = parseDashMode(
+    process.argv.find((a) => a === '--dash' || a.startsWith('--dash=')));
+const DASH_NOTE = dashModeNote(DASH_MODE);
+if (DASH_NOTE) console.error(DASH_NOTE);
 /**
  * ⛔ THE ONE DECLARATION (⚖ ruling 38 (1), R9 slice 12d). A static import
  * rather than the dynamic `await import(MODULE, …)` the runtime modules below
@@ -572,6 +593,7 @@ for (let i = 0; i < SEGMENTS.length; i += 1) {
             goals: seg.goals,
             name: seg.name,
             boot,
+            dashMode: DASH_MODE,
             persistence: latchRows,
             gameTick: makeRebasedOracle(ownersFrom(SEGMENTS.map(() => 0))),
             log: (m) => console.log(m),
@@ -588,7 +610,8 @@ for (let i = 0; i < SEGMENTS.length; i += 1) {
         run = runFrom(boot, { ...state, persistence: solvedPersistence });
         for (const held of out.perTick) run.advance(held);
     } else {
-        out = solveSegment({ run, goals: seg.goals, name: seg.name, boot });
+        out = solveSegment({ run, goals: seg.goals, name: seg.name, boot,
+            dashMode: DASH_MODE });
     }
     claimArrival(seg.name, run, seg.to);
     results.push({ seg, run, out, boot, state: { ...state, persistence: solvedPersistence },

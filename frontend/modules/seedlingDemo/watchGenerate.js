@@ -759,6 +759,9 @@ const elementsBlockOf = (model, certification) => {
 export function generateStep({
     seed, biome, step, bounds, budget, roster = null, skeleton = DEFAULT_SKELETON,
     elements, areas = DEFAULT_AREAS, require = null,
+    // ⛓ R9 slice 12i: forwarded undefined to the seam — the solver owns the
+    // default, and this is the hop `batch-seedling-acceptance` reaches through.
+    dashMode,
     /**
      * ⛓⛓⛓ ARC 5, SLICE 1 — **THE ROOM CONTRACT REACHES THE SEAM AS
      * `defaults`**, which is the argument `seedlingModel` has taken since the
@@ -840,7 +843,7 @@ export function generateStep({
          */
         const seam = seedlingSeam({
             seed, items: palette.items ?? null, budget: b, skeleton: skelEffective,
-            elements, areas, require, defaults,
+            elements, areas, require, defaults, dashMode,
         });
         const { model } = seam;
         return Object.freeze({
@@ -1170,6 +1173,9 @@ export function applyDirective(state, spec, index) {
 export function generateWithDirectives({
     seed, biome, step, bounds, budget, roster = null, directed = null,
     skeleton = DEFAULT_SKELETON, edits = null, size = SEEDLING_DEFAULTS, fill = FILL_DENSE,
+    // ⛓ R9 slice 12i: forwarded undefined onto the LADDER it runs, so the CLI's
+    // `--dash` reaches the same build whichever of the two arms it takes.
+    dashMode,
 } = {}) {
     /**
      * ⛓⛓ ARC 5, SLICE 1 — the room contract rides the LADDER, and the
@@ -1179,7 +1185,8 @@ export function generateWithDirectives({
      * `carveCellRefusal`) rather than misreading them as terrain an earlier
      * template wrote.
      */
-    let state = generateStep({ seed, biome, step, bounds, budget, roster, skeleton, size, fill });
+    let state = generateStep({ seed, biome, step, bounds, budget, roster, skeleton, size, fill,
+        dashMode });
     (directed ?? []).forEach((spec, i) => { state = applyDirective(state, spec, i); });
     /**
      * ⛓⛓⛓ SLICE 11 — THE THIRD LEG, AND ITS ORDER IS THE RULE (see

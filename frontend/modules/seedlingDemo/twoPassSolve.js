@@ -128,6 +128,13 @@ function declare(rows, row) {
  */
 export async function twoPassSolve({
     makeRun, goals, name, boot, persistence = [], gameTick = null, log = () => {},
+    /**
+     * ⛓ R9 SLICE 12i — FORWARDED, NEVER DEFAULTED HERE. `undefined` reaches
+     * `solveSegment`'s own `DEFAULT_DASH_MODE` rather than a second copy of
+     * the roster's state in this file, which is what makes the option
+     * byte-inert for every producer that does not pass one.
+     */
+    dashMode,
 }) {
     if (typeof makeRun !== 'function') {
         fail('twoPassSolve needs `makeRun(persistence)` — a FRESH run per pass. Re-using '
@@ -164,7 +171,7 @@ export async function twoPassSolve({
         let out = null;
         let raised = null;
         try {
-            out = solveSegment({ run: makeRun(rows), goals, name, boot });
+            out = solveSegment({ run: makeRun(rows), goals, name, boot, dashMode });
         } catch (e) {
             /**
              * ⛓⛓⛓ THE DISCOVERY ARM. `levelRun` throws BY NAME when a chaser
