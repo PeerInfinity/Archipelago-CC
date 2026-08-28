@@ -3110,6 +3110,25 @@ describe('R9 slice 12c′: the PLANNER dashes toward the exit', () => {
         expect(four.prefixes).toBe(4);
         expect(new Set(four.candidates.map((c) => c.presses)).size).toBe(4);
         expect(new Set(r.candidates.map((c) => c.presses)).size).toBe(1);
+
+        /**
+         * ⛓⛓⛓ R9 SLICE 12i — **AND THE MEASURED SURPRISE, RECORDED AS A ROW
+         * RATHER THAN A CLAIM: ON THIS ROOM THE FOUR PREVIEWS BUY NOTHING.**
+         * `all` and `full` schedule the SAME walk here — 23 ticks, 24 saved,
+         * both arms — so ⚖ 45(b)'s partial windows cost 4x the previews and
+         * change no plan on `r9-solve-2`. Measured the same way on
+         * `r8-solve-18` (410 == 410, the end-to-end row below).
+         *
+         * ⛔ THIS IS NOT A MUTANT CATCHER and must not be read as one — it is
+         * GREEN under a `dashPrefixesFor('all')` that collapses to `full`. It
+         * is here because it is the fact the user's next-full-record question
+         * turns on: if `full` walks what `all` walks across the roster, `full`
+         * is the same tapes at a quarter of the planner's price, which is a
+         * different answer from "turn dashing off". The ROSTER-WIDE version of
+         * this claim is (D)'s table, not this row — two rooms are two rooms.
+         */
+        expect(four.ticks).toBe(r.ticks);
+        expect(four.saved).toBe(r.saved);
     });
 });
 
