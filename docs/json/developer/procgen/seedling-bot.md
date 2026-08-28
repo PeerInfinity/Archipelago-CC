@@ -1034,6 +1034,27 @@ that line** (`Player.as:1875`, `:1897`, `:1919`, `:1941`, `:1963`), for
 exactly this reason. It suppresses a UI tutorial and nothing else, and R3's
 real collection needs it too, so no later rung has to retire it.
 
+⛓ **M1 (2026-08-28) added `seedling_bot_ap_p4d`, BESIDE p4c and NOT the
+default.** It is the first build to carry anything the host reads beyond the
+vanilla item flags: `Pickups/APItem.as`, `Game.pendingExit`/`pendingCheck` and
+the `keyMask`/`totemCount` getters (`flash.md` has the design). Two ordering
+facts are worth carrying forward, because both are enforced by gates rather
+than by care:
+
+- **A CONTROL BUILD COMES FIRST.** mxmlc is not reproducible and
+  SWFModernRuntime moves independently, so an edited build's behavioural move
+  has nowhere to be attributed unless the same toolchain, run at UNCHANGED
+  source with `FRESH=1`, has been through the same rows first. The control is
+  installed as a throwaway directory and never committed.
+- **The tracked REFERENCE and the gitlink bump are ONE commit.**
+  `check-seedling-wasm-pins.mjs` demands four-way agreement, so a tracked file
+  naming a build the submodule does not yet carry reds it — and a build nothing
+  names is UNREFERENCED and cleared for retirement. ⚠ And the reference has to
+  be in one of the gate's four SPELLINGS: `join(REPO, 'frontend', 'modules',
+  'flashPanel', 'wasm', NAME)` with the name in its own `const` matches NONE of
+  them, which was measured here — the gate read the file and reported the build
+  unreferenced. Written as one literal path it is spelling 1.
+
 Traps, all real: the `.o` cache keys on mtime not flags, so `FRESH=1` after
 any define change — ⚠ **and R1 learned that an ABC change is enough**: the
 incremental build of its one-line batch produced a page that died with
@@ -11192,7 +11213,14 @@ slice drove the first multi-chunk delivery anyone has run.
 `probe-seedling-level-set-transport.mjs` had it right all along — it asserts
 only that the LAST answer is `ok`. ⇒ a sender must expect `pending` up to the
 final chunk, and an early `ok` is itself a refusal: it says the receiver mounted
-a set the sender had not finished sending.
+a set the sender had not finished sending. ⛓ **FIXED in M1** —
+`watchWasm.js` now computes `last ? 'ok' : 'pending'` per chunk and refuses
+either way round. The row that guards it is a SOURCE scan with its own
+non-vacuity mutant, for the reason the "parent never presses ▶ Start" law above
+it is: `shipToWasm` needs `fetch` and a live game frame, so there is no node
+moment at which the loop can be driven. ⚠ Comments are stripped before the scan
+— the fix's own docblock quotes the line it replaced, and the first run reported
+a false finding about the code.
 
 ⚠ **AND CONSECUTIVE BOOTS ON ONE PAGE ARE NOT INDEPENDENT OBSERVATIONS.**
 `botStart` reuses the world unless the next tape's boot names other
