@@ -431,9 +431,26 @@ describe('ciSourced', () => {
         const headless = gateRoster({ repo: REPO }).filter((g) => !g.browser && !g.windows);
         expect(headless.length).toBeGreaterThan(0);
         const file = readStandingValues({ repo: REPO });
+        /**
+         * ⛔⛔ R9 SLICE RR — **THIS CALLER HAD NOT LEARNED THE THIRD
+         * PARAMETER, AND IT RE-MANUFACTURED THE DEFECT THAT PARAMETER EXISTS
+         * TO PREVENT.** P4b gave `ciSourced` a `ciFace` argument and
+         * `standing-values.mjs` passes `g.ciFace` from the same roster row;
+         * this row was still calling it with two fields, so it answered a
+         * question the production caller no longer asks. It went RED the
+         * moment P4b banked `gate: procgen-help` — a HEADLESS row at
+         * `cheap: false`, which is exactly the worked example `standingValues
+         * .js`'s own `ciSourced` docblock uses to explain why a gate with a
+         * declared `@ci-face` is NEVER CI-sourced. ⇒ the face comes off the
+         * SAME roster row the key does, never from a hand list, so a gate that
+         * gains or drops a face moves this row with it.
+         */
         const selected = headless
-            .map((g) => `gate: ${g.file.replace(/^check-/, '').replace(/\.mjs$/, '')}`)
-            .filter((key) => ciSourced({ headless: true, cheap: file?.rows?.[key]?.cheap }));
+            .map((g) => ({ g, key: `gate: ${g.file.replace(/^check-/, '').replace(/\.mjs$/, '')}` }))
+            .filter(({ g, key }) => ciSourced({
+                headless: true, cheap: file?.rows?.[key]?.cheap, ciFace: g.ciFace,
+            }))
+            .map(({ key }) => key);
         expect(selected).toEqual([]);
     });
 
