@@ -1065,21 +1065,21 @@
     },
     {
       "file": "r8-d2-19.json",
-      "tickCount": 721,
+      "tickCount": 746,
       "bootLevel": 19,
       "tapeVersion": 11,
       "noHazards": []
     },
     {
       "file": "r8-d2-20.json",
-      "tickCount": 554,
+      "tickCount": 560,
       "bootLevel": 20,
       "tapeVersion": 11,
       "noHazards": []
     },
     {
       "file": "r8-d2.json",
-      "tickCount": 1685,
+      "tickCount": 1791,
       "bootLevel": 18,
       "tapeVersion": 9,
       "noHazards": []
@@ -1121,7 +1121,7 @@
     },
     {
       "file": "r8-solve-10.json",
-      "tickCount": 78,
+      "tickCount": 83,
       "bootLevel": 10,
       "tapeVersion": 11,
       "noHazards": []
@@ -1135,7 +1135,7 @@
     },
     {
       "file": "r8-solve-18.json",
-      "tickCount": 410,
+      "tickCount": 485,
       "bootLevel": 18,
       "tapeVersion": 11,
       "noHazards": []
@@ -1149,7 +1149,7 @@
     },
     {
       "file": "r8-solve-20.json",
-      "tickCount": 229,
+      "tickCount": 257,
       "bootLevel": 20,
       "tapeVersion": 8,
       "noHazards": []

@@ -2,7 +2,7 @@
     "tape_version": 11,
     "game": "seedling",
     "name": "r8-solve-18",
-    "description": "⛓⛓⛓ R8 SLICE 8 — **THE HONEST L18**. The live solver crosses D2's kill-lock room with `noDamage` RETIRED and takes NOTHING: zero hits, and zero spinner contacts on either arm — neither `Enemy.hitPlayer`'s 7x7 body at force 3 nor `Spinner.update`'s 13 px `collideLine` at force 4. ⚖ THE USER'S CORRECTION IS WHY THIS EXISTS: \"the hammer spins in a predictable pattern; opportunistic means waiting until the hammer isn't in the way, or standing where it won't be. Forbidding the whole disc the hammer passes through is wrong.\" R8 slice 7 built the strike schedule and REPORTED this room; what it was fighting was its own ingredient (trap 171). Three things changed and all three were defects: the ingredient (disc -> exact line, `gameClock` counting `Game.time`), `deriveStrike`'s 40-candidate bound (which under an accurate ingredient selected forty unreachable ticks and rejected itself), and the kill lock's MISSING WRITER — §16.3 named an arm of `stepActivators` that does not exist, so the spinner family now raises the same structured declaration the chaser family has raised since slice 4 and `execKillByPress` grew the `PendingDeclaration` tail every other kill arm already had. Both bodies die to three landed presses (6 of 19 hit TESTS — the receiver's own `hitsTimer` refuses the rest, traps 85/93), `{18,0}` is declared at 393 = the removal plus the `Lock`'s own 101-step fade, and the walk crosses to L19. Boot: r7-act2-11's committed v8 block at L18's own arrival from L16 (⚖ §16.3 ruling 1 — L13 has no edge to L18). Solver: 410 ticks, 3 decision(s), 0 re-plan(s). ⚠ `r8-l18-spinner-press` stays exactly where it is as the CONSERVATIVE ERA's mechanism witness — it declares `noDamage` and this tape does not. Authored by scripts/procgen/solve-seedling-r8-l18.mjs; trace sidecar in fixtures/traces/.",
+    "description": "⛓⛓⛓ R8 SLICE 8 — **THE HONEST L18**. The live solver crosses D2's kill-lock room with `noDamage` RETIRED and takes NOTHING: zero hits, and zero spinner contacts on either arm — neither `Enemy.hitPlayer`'s 7x7 body at force 3 nor `Spinner.update`'s 13 px `collideLine` at force 4. ⚖ THE USER'S CORRECTION IS WHY THIS EXISTS: \"the hammer spins in a predictable pattern; opportunistic means waiting until the hammer isn't in the way, or standing where it won't be. Forbidding the whole disc the hammer passes through is wrong.\" R8 slice 7 built the strike schedule and REPORTED this room; what it was fighting was its own ingredient (trap 171). Three things changed and all three were defects: the ingredient (disc -> exact line, `gameClock` counting `Game.time`), `deriveStrike`'s 40-candidate bound (which under an accurate ingredient selected forty unreachable ticks and rejected itself), and the kill lock's MISSING WRITER — §16.3 named an arm of `stepActivators` that does not exist, so the spinner family now raises the same structured declaration the chaser family has raised since slice 4 and `execKillByPress` grew the `PendingDeclaration` tail every other kill arm already had. Both bodies die to three landed presses (6 of 19 hit TESTS — the receiver's own `hitsTimer` refuses the rest, traps 85/93), `{18,0}` is declared at 393 = the removal plus the `Lock`'s own 101-step fade, and the walk crosses to L19. Boot: r7-act2-11's committed v8 block at L18's own arrival from L16 (⚖ §16.3 ruling 1 — L13 has no edge to L18). Solver: 485 ticks, 2 decision(s), 0 re-plan(s). ⚠ `r8-l18-spinner-press` stays exactly where it is as the CONSERVATIVE ERA's mechanism witness — it declares `noDamage` and this tape does not. Authored by scripts/procgen/solve-seedling-r8-l18.mjs; trace sidecar in fixtures/traces/.",
     "boot": {
         "level": 18,
         "x": 16,
@@ -105,7 +105,7 @@
             "time": 8607
         }
     },
-    "tick_count": 410,
+    "tick_count": 485,
     "inputs": [
         {
             "key": "down",
@@ -423,149 +423,9 @@
             "to": 292
         },
         {
-            "key": "primary",
-            "from": 292,
-            "to": 293
-        },
-        {
-            "key": "right",
-            "from": 292,
-            "to": 307
-        },
-        {
             "key": "down",
-            "from": 293,
-            "to": 297
-        },
-        {
-            "key": "up",
-            "from": 297,
-            "to": 298
-        },
-        {
-            "key": "down",
-            "from": 298,
-            "to": 299
-        },
-        {
-            "key": "up",
-            "from": 299,
-            "to": 300
-        },
-        {
-            "key": "down",
-            "from": 300,
-            "to": 301
-        },
-        {
-            "key": "primary",
-            "from": 300,
-            "to": 301
-        },
-        {
-            "key": "up",
-            "from": 305,
-            "to": 306
-        },
-        {
-            "key": "primary",
-            "from": 306,
-            "to": 307
-        },
-        {
-            "key": "left",
-            "from": 307,
-            "to": 308
-        },
-        {
-            "key": "right",
-            "from": 308,
-            "to": 313
-        },
-        {
-            "key": "down",
-            "from": 311,
-            "to": 312
-        },
-        {
-            "key": "primary",
-            "from": 312,
-            "to": 313
-        },
-        {
-            "key": "left",
-            "from": 313,
-            "to": 314
-        },
-        {
-            "key": "left",
-            "from": 315,
-            "to": 319
-        },
-        {
-            "key": "up",
-            "from": 316,
-            "to": 317
-        },
-        {
-            "key": "right",
-            "from": 319,
-            "to": 320
-        },
-        {
-            "key": "left",
-            "from": 320,
-            "to": 321
-        },
-        {
-            "key": "primary",
-            "from": 320,
-            "to": 321
-        },
-        {
-            "key": "down",
-            "from": 325,
-            "to": 353
-        },
-        {
-            "key": "primary",
-            "from": 326,
-            "to": 327
-        },
-        {
-            "key": "primary",
-            "from": 332,
-            "to": 333
-        },
-        {
-            "key": "primary",
-            "from": 340,
-            "to": 341
-        },
-        {
-            "key": "primary",
-            "from": 346,
-            "to": 347
-        },
-        {
-            "key": "primary",
-            "from": 352,
-            "to": 353
-        },
-        {
-            "key": "up",
-            "from": 353,
-            "to": 355
-        },
-        {
-            "key": "down",
-            "from": 355,
-            "to": 362
-        },
-        {
-            "key": "up",
-            "from": 363,
-            "to": 365
+            "from": 394,
+            "to": 395
         },
         {
             "key": "primary",
@@ -575,7 +435,7 @@
         {
             "key": "right",
             "from": 394,
-            "to": 409
+            "to": 403
         },
         {
             "key": "primary",
@@ -583,9 +443,29 @@
             "to": 397
         },
         {
+            "key": "up",
+            "from": 399,
+            "to": 400
+        },
+        {
             "key": "primary",
             "from": 402,
             "to": 403
+        },
+        {
+            "key": "left",
+            "from": 403,
+            "to": 405
+        },
+        {
+            "key": "right",
+            "from": 405,
+            "to": 409
+        },
+        {
+            "key": "down",
+            "from": 408,
+            "to": 409
         },
         {
             "key": "primary",
@@ -596,6 +476,116 @@
             "key": "left",
             "from": 409,
             "to": 410
+        },
+        {
+            "key": "up",
+            "from": 412,
+            "to": 413
+        },
+        {
+            "key": "left",
+            "from": 412,
+            "to": 415
+        },
+        {
+            "key": "right",
+            "from": 419,
+            "to": 420
+        },
+        {
+            "key": "primary",
+            "from": 421,
+            "to": 422
+        },
+        {
+            "key": "primary",
+            "from": 423,
+            "to": 424
+        },
+        {
+            "key": "down",
+            "from": 424,
+            "to": 450
+        },
+        {
+            "key": "primary",
+            "from": 429,
+            "to": 430
+        },
+        {
+            "key": "primary",
+            "from": 435,
+            "to": 436
+        },
+        {
+            "key": "primary",
+            "from": 441,
+            "to": 442
+        },
+        {
+            "key": "primary",
+            "from": 443,
+            "to": 444
+        },
+        {
+            "key": "primary",
+            "from": 449,
+            "to": 450
+        },
+        {
+            "key": "up",
+            "from": 450,
+            "to": 452
+        },
+        {
+            "key": "down",
+            "from": 452,
+            "to": 458
+        },
+        {
+            "key": "up",
+            "from": 458,
+            "to": 459
+        },
+        {
+            "key": "down",
+            "from": 459,
+            "to": 460
+        },
+        {
+            "key": "primary",
+            "from": 461,
+            "to": 462
+        },
+        {
+            "key": "primary",
+            "from": 463,
+            "to": 464
+        },
+        {
+            "key": "right",
+            "from": 464,
+            "to": 476
+        },
+        {
+            "key": "primary",
+            "from": 469,
+            "to": 470
+        },
+        {
+            "key": "primary",
+            "from": 475,
+            "to": 476
+        },
+        {
+            "key": "left",
+            "from": 476,
+            "to": 477
+        },
+        {
+            "key": "right",
+            "from": 477,
+            "to": 485
         }
     ]
 }

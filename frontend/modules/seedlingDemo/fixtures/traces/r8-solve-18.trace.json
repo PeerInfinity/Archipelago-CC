@@ -1,7 +1,7 @@
 {
     "trace_version": 1,
     "tape": "r8-solve-18",
-    "tick_count": 410,
+    "tick_count": 485,
     "boot": {
         "level": 18,
         "x": 16,
@@ -49,50 +49,11 @@
             ]
         },
         {
-            "tick": 292,
-            "saw": {
-                "level": 18,
-                "x": 104.84703555521152,
-                "y": 39.594747349557814,
-                "vx": -1.1260841626289912,
-                "vy": -0.5921927612108766,
-                "danger": []
-            },
-            "goal": {
-                "kind": "reach-exit",
-                "aim": {
-                    "x": 136,
-                    "y": 120
-                }
-            },
-            "obstacle": {
-                "kind": "danger",
-                "id": "spinner@112,48"
-            },
-            "strategy": {
-                "verb": "walk",
-                "rung": "avoid",
-                "climb": 1,
-                "waypoints": 2
-            },
-            "rejected": [
-                {
-                    "option": "sword-dash window: not-faster",
-                    "why": "7 of 16 scanned start tick(s) — first at walk-offset 0: 115 tick(s) against 112 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 1 of them dashes, and 0 were YIELDED"
-                }
-            ],
-            "keys": [
-                "primary",
-                "right"
-            ],
-            "note": "merged: walk decided on the same tick"
-        },
-        {
             "tick": 394,
             "saw": {
                 "level": 18,
-                "x": 135.4265612285056,
-                "y": 119.4360273340195,
+                "x": 102.55538558295619,
+                "y": 38.38959895138625,
                 "vx": 0,
                 "vy": 0,
                 "danger": []
@@ -104,38 +65,16 @@
                     "y": 120
                 }
             },
+            "obstacle": {
+                "kind": "danger",
+                "id": "spinner@112,48"
+            },
             "strategy": {
                 "verb": "walk",
-                "waypoints": 1,
-                "swordDash": {
-                    "planned": true,
-                    "ticks": 16,
-                    "baseline": 35,
-                    "saved": 19,
-                    "windows": [
-                        {
-                            "at": 0,
-                            "prefix": [
-                                0,
-                                2,
-                                8,
-                                14
-                            ]
-                        }
-                    ],
-                    "legs": [
-                        16
-                    ],
-                    "scanned": 4,
-                    "why": null
-                }
+                "rung": "avoid",
+                "climb": 1,
+                "waypoints": 3
             },
-            "path": [
-                {
-                    "x": 184,
-                    "y": 120
-                }
-            ],
             "rejected": [
                 {
                     "option": "keep-plan",
@@ -143,13 +82,15 @@
                 },
                 {
                     "option": "sword-dash window: not-faster",
-                    "why": "1 of 4 scanned start tick(s) — first at walk-offset 0: 35 tick(s) against 35 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
+                    "why": "50 of 60 scanned preview(s) — first at walk-offset 0: 147 tick(s) against 147 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
                 }
             ],
             "keys": [
+                "down",
                 "primary",
                 "right"
-            ]
+            ],
+            "note": "merged: walk decided on the same tick"
         }
     ]
 }

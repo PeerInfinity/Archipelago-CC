@@ -36,7 +36,7 @@
                     "windows": null,
                     "legs": null,
                     "scanned": 44,
-                    "why": "no dash window certified faster than the undashed 11 tick(s) — 44 start tick(s) scanned, each with its own reason"
+                    "why": "no dash window certified faster than the undashed 11 tick(s) — 11 start tick(s) x 4 preview(s) = 44 scanned, each with its own reason"
                 }
             },
             "path": [
@@ -48,11 +48,11 @@
             "rejected": [
                 {
                     "option": "sword-dash window: not-faster",
-                    "why": "44 of 44 scanned start tick(s) — first at walk-offset 0: 11 tick(s) against 11 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
+                    "why": "44 of 44 scanned preview(s) — first at walk-offset 0: 11 tick(s) against 11 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
                 },
                 {
                     "option": "sword-dash",
-                    "why": "no dash window certified faster than the undashed 11 tick(s) — 44 start tick(s) scanned, each with its own reason"
+                    "why": "no dash window certified faster than the undashed 11 tick(s) — 11 start tick(s) x 4 preview(s) = 44 scanned, each with its own reason"
                 }
             ],
             "keys": [
@@ -87,7 +87,7 @@
                     "windows": null,
                     "legs": null,
                     "scanned": 28,
-                    "why": "no dash window certified faster than the undashed 7 tick(s) — 28 start tick(s) scanned, each with its own reason"
+                    "why": "no dash window certified faster than the undashed 7 tick(s) — 7 start tick(s) x 4 preview(s) = 28 scanned, each with its own reason"
                 }
             },
             "path": [
@@ -103,11 +103,11 @@
                 },
                 {
                     "option": "sword-dash window: not-faster",
-                    "why": "28 of 28 scanned start tick(s) — first at walk-offset 0: 7 tick(s) against 7 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
+                    "why": "28 of 28 scanned preview(s) — first at walk-offset 0: 7 tick(s) against 7 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
                 },
                 {
                     "option": "sword-dash",
-                    "why": "no dash window certified faster than the undashed 7 tick(s) — 28 start tick(s) scanned, each with its own reason"
+                    "why": "no dash window certified faster than the undashed 7 tick(s) — 7 start tick(s) x 4 preview(s) = 28 scanned, each with its own reason"
                 }
             ],
             "keys": [
@@ -195,7 +195,7 @@
             "rejected": [
                 {
                     "option": "sword-dash window: not-faster",
-                    "why": "5 of 8 scanned start tick(s) — first at walk-offset 0: 43 tick(s) against 43 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
+                    "why": "5 of 8 scanned preview(s) — first at walk-offset 0: 43 tick(s) against 43 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
                 }
             ],
             "keys": [

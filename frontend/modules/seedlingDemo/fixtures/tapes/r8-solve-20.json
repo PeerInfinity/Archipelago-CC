@@ -2,7 +2,7 @@
     "tape_version": 8,
     "game": "seedling",
     "name": "r8-solve-20",
-    "description": "⛓⛓⛓ R8 SLICE 6 — THE RUNG'S BOUNDARY TARGET. The LIVE SOLVER crosses L20 from the L19 arrival and takes the shield: `hasShield` flips NOT-HELD -> HELD inside a DRIVEN SOLVER SEGMENT, with the `{20,2}` placement clear earned by the pickup itself. Boot: r7-act2-11's committed v8 block — the campaign's own post-sword latch — at L20's own arrival from L19 (stairsup@16,96 -> 192,64), staged per kickoff §3.5. GOALS: the placement and the exit ONLY; the stance, the corridor and the ceremony are the solver's. ⛔ REPORTED, NEVER CREDITED — the chain kind is `staged` and a staged boot skips the REACHING (§3.6). ⚠ `save.rockSet` is NOT witnessed here: `Shield.removed()` sets `Moonrock.beam` and the MOONROCK writes `rockSet` (trap 124), and the moonrock is in L0. ⛔ The three gates (`shieldlocknorm` -> `buttonroom` -> `lock@32,80`) are BEHIND the shield and open the way OUT to L13, which is not this errand. Solver: 229 ticks, 3 decision(s), 0 re-plan(s); there is NO hand answer for this room — it is the first NEW room the solver crosses, so the differential is the entire gate. Authored by scripts/procgen/solve-seedling-r8-d2.mjs; trace sidecar in fixtures/traces/.",
+    "description": "⛓⛓⛓ R8 SLICE 6 — THE RUNG'S BOUNDARY TARGET. The LIVE SOLVER crosses L20 from the L19 arrival and takes the shield: `hasShield` flips NOT-HELD -> HELD inside a DRIVEN SOLVER SEGMENT, with the `{20,2}` placement clear earned by the pickup itself. Boot: r7-act2-11's committed v8 block — the campaign's own post-sword latch — at L20's own arrival from L19 (stairsup@16,96 -> 192,64), staged per kickoff §3.5. GOALS: the placement and the exit ONLY; the stance, the corridor and the ceremony are the solver's. ⛔ REPORTED, NEVER CREDITED — the chain kind is `staged` and a staged boot skips the REACHING (§3.6). ⚠ `save.rockSet` is NOT witnessed here: `Shield.removed()` sets `Moonrock.beam` and the MOONROCK writes `rockSet` (trap 124), and the moonrock is in L0. ⛔ The three gates (`shieldlocknorm` -> `buttonroom` -> `lock@32,80`) are BEHIND the shield and open the way OUT to L13, which is not this errand. Solver: 257 ticks, 3 decision(s), 0 re-plan(s); there is NO hand answer for this room — it is the first NEW room the solver crosses, so the differential is the entire gate. Authored by scripts/procgen/solve-seedling-r8-d2.mjs; trace sidecar in fixtures/traces/.",
     "boot": {
         "level": 20,
         "x": 192,
@@ -87,7 +87,7 @@
             "index": 1
         }
     },
-    "tick_count": 229,
+    "tick_count": 257,
     "inputs": [
         {
             "key": "primary",
@@ -156,43 +156,43 @@
         },
         {
             "key": "primary",
-            "from": 40,
-            "to": 41
-        },
-        {
-            "key": "primary",
             "from": 42,
             "to": 43
         },
         {
             "key": "right",
             "from": 42,
-            "to": 47
-        },
-        {
-            "key": "left",
-            "from": 47,
-            "to": 48
+            "to": 43
         },
         {
             "key": "primary",
-            "from": 48,
-            "to": 49
+            "from": 44,
+            "to": 45
         },
         {
             "key": "up",
-            "from": 49,
-            "to": 69
+            "from": 45,
+            "to": 57
         },
         {
             "key": "primary",
-            "from": 54,
-            "to": 55
+            "from": 50,
+            "to": 51
         },
         {
             "key": "primary",
-            "from": 60,
-            "to": 61
+            "from": 56,
+            "to": 57
+        },
+        {
+            "key": "down",
+            "from": 57,
+            "to": 58
+        },
+        {
+            "key": "up",
+            "from": 58,
+            "to": 65
         },
         {
             "key": "primary",
@@ -201,28 +201,28 @@
         },
         {
             "key": "primary",
-            "from": 68,
-            "to": 69
+            "from": 64,
+            "to": 65
         },
         {
             "key": "down",
-            "from": 69,
-            "to": 72
+            "from": 65,
+            "to": 66
         },
         {
-            "key": "primary",
-            "from": 74,
-            "to": 75
+            "key": "up",
+            "from": 66,
+            "to": 71
+        },
+        {
+            "key": "down",
+            "from": 72,
+            "to": 74
         },
         {
             "key": "left",
-            "from": 74,
-            "to": 83
-        },
-        {
-            "key": "primary",
-            "from": 80,
-            "to": 81
+            "from": 78,
+            "to": 91
         },
         {
             "key": "primary",
@@ -230,192 +230,182 @@
             "to": 83
         },
         {
-            "key": "right",
-            "from": 83,
+            "key": "primary",
+            "from": 84,
             "to": 85
         },
         {
-            "key": "left",
-            "from": 85,
+            "key": "primary",
+            "from": 90,
             "to": 91
         },
         {
             "key": "right",
-            "from": 92,
-            "to": 94
-        },
-        {
-            "key": "up",
-            "from": 98,
-            "to": 99
+            "from": 91,
+            "to": 93
         },
         {
             "key": "left",
-            "from": 98,
-            "to": 108
+            "from": 93,
+            "to": 96
         },
         {
-            "key": "down",
-            "from": 99,
-            "to": 100
+            "key": "right",
+            "from": 96,
+            "to": 97
         },
         {
-            "key": "up",
-            "from": 100,
-            "to": 101
+            "key": "left",
+            "from": 97,
+            "to": 98
         },
         {
-            "key": "down",
-            "from": 101,
-            "to": 102
-        },
-        {
-            "key": "up",
+            "key": "primary",
             "from": 102,
             "to": 103
         },
         {
-            "key": "down",
-            "from": 103,
+            "key": "left",
+            "from": 102,
             "to": 105
         },
         {
             "key": "up",
+            "from": 102,
+            "to": 105
+        },
+        {
+            "key": "primary",
+            "from": 104,
+            "to": 105
+        },
+        {
+            "key": "down",
             "from": 105,
-            "to": 107
-        },
-        {
-            "key": "down",
-            "from": 107,
-            "to": 108
-        },
-        {
-            "key": "primary",
-            "from": 108,
-            "to": 109
-        },
-        {
-            "key": "primary",
-            "from": 117,
-            "to": 118
-        },
-        {
-            "key": "primary",
-            "from": 126,
-            "to": 127
-        },
-        {
-            "key": "primary",
-            "from": 135,
-            "to": 136
-        },
-        {
-            "key": "primary",
-            "from": 137,
-            "to": 138
-        },
-        {
-            "key": "down",
-            "from": 137,
-            "to": 140
+            "to": 106
         },
         {
             "key": "right",
-            "from": 137,
-            "to": 152
+            "from": 105,
+            "to": 106
         },
         {
-            "key": "primary",
-            "from": 139,
-            "to": 140
+            "key": "left",
+            "from": 106,
+            "to": 111
         },
         {
             "key": "up",
-            "from": 140,
-            "to": 141
+            "from": 106,
+            "to": 112
+        },
+        {
+            "key": "right",
+            "from": 111,
+            "to": 112
         },
         {
             "key": "down",
+            "from": 112,
+            "to": 113
+        },
+        {
+            "key": "left",
+            "from": 112,
+            "to": 113
+        },
+        {
+            "key": "up",
+            "from": 113,
+            "to": 114
+        },
+        {
+            "key": "down",
+            "from": 114,
+            "to": 115
+        },
+        {
+            "key": "up",
+            "from": 115,
+            "to": 116
+        },
+        {
+            "key": "right",
+            "from": 115,
+            "to": 117
+        },
+        {
+            "key": "down",
+            "from": 118,
+            "to": 119
+        },
+        {
+            "key": "left",
+            "from": 119,
+            "to": 120
+        },
+        {
+            "key": "left",
+            "from": 122,
+            "to": 123
+        },
+        {
+            "key": "down",
+            "from": 122,
+            "to": 132
+        },
+        {
+            "key": "right",
+            "from": 123,
+            "to": 124
+        },
+        {
+            "key": "left",
+            "from": 124,
+            "to": 125
+        },
+        {
+            "key": "right",
+            "from": 125,
+            "to": 127
+        },
+        {
+            "key": "left",
+            "from": 127,
+            "to": 129
+        },
+        {
+            "key": "right",
+            "from": 129,
+            "to": 130
+        },
+        {
+            "key": "left",
+            "from": 130,
+            "to": 131
+        },
+        {
+            "key": "right",
+            "from": 131,
+            "to": 132
+        },
+        {
+            "key": "primary",
+            "from": 132,
+            "to": 133
+        },
+        {
+            "key": "primary",
             "from": 141,
-            "to": 146
+            "to": 142
         },
         {
             "key": "primary",
-            "from": 145,
-            "to": 146
-        },
-        {
-            "key": "up",
-            "from": 146,
-            "to": 149
-        },
-        {
-            "key": "down",
-            "from": 149,
-            "to": 150
-        },
-        {
-            "key": "up",
             "from": 150,
             "to": 151
         },
         {
-            "key": "down",
-            "from": 151,
-            "to": 152
-        },
-        {
             "key": "primary",
-            "from": 151,
-            "to": 152
-        },
-        {
-            "key": "up",
-            "from": 152,
-            "to": 153
-        },
-        {
-            "key": "left",
-            "from": 152,
-            "to": 155
-        },
-        {
-            "key": "down",
-            "from": 153,
-            "to": 154
-        },
-        {
-            "key": "up",
-            "from": 154,
-            "to": 155
-        },
-        {
-            "key": "down",
-            "from": 155,
-            "to": 156
-        },
-        {
-            "key": "right",
-            "from": 155,
-            "to": 156
-        },
-        {
-            "key": "left",
-            "from": 156,
-            "to": 157
-        },
-        {
-            "key": "right",
-            "from": 157,
-            "to": 158
-        },
-        {
-            "key": "left",
-            "from": 158,
-            "to": 159
-        },
-        {
-            "key": "right",
             "from": 159,
             "to": 160
         },
@@ -425,14 +415,29 @@
             "to": 162
         },
         {
+            "key": "down",
+            "from": 161,
+            "to": 164
+        },
+        {
+            "key": "right",
+            "from": 161,
+            "to": 184
+        },
+        {
             "key": "primary",
             "from": 163,
             "to": 164
         },
         {
-            "key": "down",
+            "key": "up",
             "from": 164,
-            "to": 183
+            "to": 165
+        },
+        {
+            "key": "down",
+            "from": 165,
+            "to": 170
         },
         {
             "key": "primary",
@@ -440,89 +445,189 @@
             "to": 170
         },
         {
-            "key": "primary",
-            "from": 183,
-            "to": 184
+            "key": "up",
+            "from": 170,
+            "to": 172
+        },
+        {
+            "key": "down",
+            "from": 172,
+            "to": 173
         },
         {
             "key": "up",
+            "from": 173,
+            "to": 174
+        },
+        {
+            "key": "down",
+            "from": 174,
+            "to": 175
+        },
+        {
+            "key": "primary",
+            "from": 175,
+            "to": 176
+        },
+        {
+            "key": "up",
+            "from": 176,
+            "to": 180
+        },
+        {
+            "key": "down",
+            "from": 180,
+            "to": 181
+        },
+        {
+            "key": "primary",
+            "from": 181,
+            "to": 182
+        },
+        {
+            "key": "up",
+            "from": 181,
+            "to": 182
+        },
+        {
+            "key": "primary",
             "from": 183,
             "to": 184
         },
         {
-            "key": "primary",
+            "key": "left",
+            "from": 184,
+            "to": 185
+        },
+        {
+            "key": "down",
+            "from": 184,
+            "to": 188
+        },
+        {
+            "key": "right",
             "from": 185,
-            "to": 186
+            "to": 189
         },
         {
-            "key": "right",
-            "from": 186,
-            "to": 198
-        },
-        {
-            "key": "primary",
-            "from": 191,
-            "to": 192
-        },
-        {
-            "key": "primary",
-            "from": 197,
-            "to": 198
+            "key": "up",
+            "from": 188,
+            "to": 189
         },
         {
             "key": "left",
-            "from": 198,
-            "to": 201
+            "from": 189,
+            "to": 190
         },
         {
-            "key": "right",
-            "from": 201,
-            "to": 202
-        },
-        {
-            "key": "left",
-            "from": 202,
-            "to": 203
-        },
-        {
-            "key": "right",
-            "from": 203,
+            "key": "down",
+            "from": 193,
             "to": 204
         },
         {
             "key": "primary",
-            "from": 205,
-            "to": 206
+            "from": 201,
+            "to": 202
         },
         {
             "key": "primary",
-            "from": 207,
-            "to": 208
+            "from": 203,
+            "to": 204
         },
         {
             "key": "up",
-            "from": 208,
-            "to": 220
+            "from": 204,
+            "to": 205
+        },
+        {
+            "key": "down",
+            "from": 205,
+            "to": 210
         },
         {
             "key": "primary",
+            "from": 209,
+            "to": 210
+        },
+        {
+            "key": "up",
+            "from": 210,
+            "to": 213
+        },
+        {
+            "key": "down",
             "from": 213,
             "to": 214
         },
         {
-            "key": "primary",
-            "from": 219,
-            "to": 220
+            "key": "right",
+            "from": 218,
+            "to": 230
         },
         {
-            "key": "down",
-            "from": 220,
-            "to": 221
+            "key": "primary",
+            "from": 221,
+            "to": 222
+        },
+        {
+            "key": "primary",
+            "from": 223,
+            "to": 224
+        },
+        {
+            "key": "primary",
+            "from": 229,
+            "to": 230
+        },
+        {
+            "key": "left",
+            "from": 230,
+            "to": 232
+        },
+        {
+            "key": "right",
+            "from": 232,
+            "to": 235
         },
         {
             "key": "up",
-            "from": 221,
-            "to": 229
+            "from": 239,
+            "to": 250
+        },
+        {
+            "key": "primary",
+            "from": 241,
+            "to": 242
+        },
+        {
+            "key": "primary",
+            "from": 243,
+            "to": 244
+        },
+        {
+            "key": "primary",
+            "from": 249,
+            "to": 250
+        },
+        {
+            "key": "down",
+            "from": 250,
+            "to": 251
+        },
+        {
+            "key": "up",
+            "from": 251,
+            "to": 256
+        },
+        {
+            "key": "primary",
+            "from": 255,
+            "to": 256
+        },
+        {
+            "key": "down",
+            "from": 256,
+            "to": 257
         }
     ]
 }

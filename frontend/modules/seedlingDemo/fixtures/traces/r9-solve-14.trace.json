@@ -38,11 +38,11 @@
             "rejected": [
                 {
                     "option": "sword-dash window: not-faster",
-                    "why": "78 of 92 scanned start tick(s) — first at walk-offset 20: 131 tick(s) against 131 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
+                    "why": "78 of 92 scanned preview(s) — first at walk-offset 20: 131 tick(s) against 131 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
                 },
                 {
                     "option": "sword-dash window: danger",
-                    "why": "7 of 92 scanned start tick(s) — first at walk-offset 0: the dashed corridor probes DANGEROUS at (89.9,73.6) at tick 70"
+                    "why": "7 of 92 scanned preview(s) — first at walk-offset 0: the dashed corridor probes DANGEROUS at (89.9,73.6) at tick 70"
                 }
             ],
             "keys": [
