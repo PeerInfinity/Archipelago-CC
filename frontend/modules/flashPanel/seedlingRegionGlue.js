@@ -40,6 +40,14 @@ import { SeedlingRegionBinding } from './seedlingRegionBinding.js';
 /** procgenPlayer's own broadcast of "which substrate owns the player now". */
 export const ACTIVE_SUBSTRATE_EVENT = 'procgen:activeSubstrateChanged';
 
+/**
+ * ⛓ The panel readout M1 owes the user: *"found X for Player Y"*, the instant
+ * the check fires, off the host's own placement table rather than a round trip
+ * to the server. Published on the module event bus so the panel can render it
+ * without this file knowing what a panel is.
+ */
+export const AP_ITEM_FOUND_EVENT = 'flashSeedling:apItemFound';
+
 export class SeedlingRegionGlue {
     /**
      * @param {object} deps
@@ -60,13 +68,15 @@ export class SeedlingRegionGlue {
         this.binding = new SeedlingRegionBinding({ now });
         this.adapter = null;
         this.delivery = null;
+        /** H6 — the AP check binding. Set from outside, like the delivery. */
+        this.checkBinding = null;
         this._unsubs = [];
         this._handler = (payload) => this.handleLoadRegion(payload);
         this._activeHandler = (payload) => this.handleActiveSubstrateChanged(payload);
         // Diagnostics — the verify script reads these rather than inferring
         // behaviour from console text.
         this.stats = { loads: 0, teleports: 0, regionMoves: 0, warnings: 0, parks: 0,
-            resumes: 0, setDeliveries: 0 };
+            resumes: 0, setDeliveries: 0, locationChecks: 0, itemsFound: 0 };
     }
 
     start() {
@@ -103,9 +113,22 @@ export class SeedlingRegionGlue {
         this.detachAdapter();
         this.adapter = adapter;
         adapter.onStateReport = (property, value) => {
+            /**
+             * ⛔ BOTH BINDINGS SEE EVERY REPORT, AND THE ADAPTER HAS ONE HOOK.
+             * `onStateReport` is a single slot, so a second consumer that
+             * assigned it would silently REPLACE the first. Fanning out here
+             * keeps the two state machines pure and independent — neither
+             * knows the other exists, and each ignores every property but its
+             * own.
+             */
             this.apply(this.binding.onStateReport(property, value));
+            if (this.checkBinding) {
+                this.apply(this.checkBinding.onStateReport(property, value));
+            }
         };
+        this._standDownAdapter();
         this.binding.onGameRestart();
+        this.checkBinding?.onGameRestart();
     }
 
     detachAdapter() {
@@ -129,6 +152,43 @@ export class SeedlingRegionGlue {
     setDelivery(delivery) {
         this.delivery = delivery ?? null;
         return this;
+    }
+
+    /**
+     * ⛓⛓ **H6 — THE CHECK BINDING**, set from outside for the same reason the
+     * delivery is: it holds the PLACEMENT TABLE, and a static import of
+     * `apPlacementRewriter.js` from this file would add 87 files / 4,868,066 B
+     * to the shipped bundle. The glue owns the WIRING and nothing else.
+     */
+    setCheckBinding(checkBinding) {
+        this.checkBinding = checkBinding ?? null;
+        this._standDownAdapter();
+        return this;
+    }
+
+    /**
+     * ⛔⛔ **RETIRING THE UNDO QUEUE, FOR THE COVERED LOCATIONS ONLY.**
+     *
+     * The adapter's property path answers a location by watching a `Main.*`
+     * flag go true, then queues an UNDO that writes it back to false so AP's
+     * own item can arrive clean (`flashBridgeAdapter.js:466-476`). With AP
+     * placement in the room that path is not merely redundant, it is WRONG:
+     * an `APItem` grants nothing, so the only writer of those flags is the
+     * bridge itself, and an echo the suppression happens to miss would be read
+     * as a player pickup — dispatching the location a second time and taking
+     * the granted item straight back. The gate that catches it is *"the flag
+     * flips EXACTLY ONCE"*.
+     *
+     * ⛓ IT IS A SET, NOT A DELETE, and the difference is the two ENCOUNTER
+     * locations: `fire@L32` and `darksword@L12` are boss/special grants with no
+     * pickup entity, are not rewritten, and MUST stay on the property path. So
+     * the adapter is handed the names H6 owns and stands down on exactly those.
+     * With no check binding the set is empty and the adapter behaves as it
+     * always has.
+     */
+    _standDownAdapter() {
+        this.adapter?.setHostOwnedLocations?.(
+            this.checkBinding ? this.checkBinding.hostOwnedLocations() : new Set());
     }
 
     handleLoadRegion(payload) {
@@ -167,6 +227,8 @@ export class SeedlingRegionGlue {
             switch (effect.type) {
                 case 'teleport': this._teleport(effect); break;
                 case 'regionMove': this._regionMove(effect); break;
+                case 'locationCheck': this._locationCheck(effect); break;
+                case 'apItemFound': this._itemFound(effect); break;
                 case 'warn': this._warn(effect.message); break;
                 default: this._log(effect.message);
             }
@@ -199,6 +261,39 @@ export class SeedlingRegionGlue {
         this.stats.regionMoves += 1;
         this._log(`[region atlas] level ${fromLevel} -> ${toLevel}: crossing "${exitName}" `
             + `-> region "${targetRegion}"`);
+    }
+
+    /**
+     * ⛓ THE SAME EVENT AND THE SAME DIALECT the adapter's own location path
+     * publishes (`flashBridgeAdapter._dispatchLocationCheck`) — one AP
+     * vocabulary, not a second one for placements.
+     */
+    _locationCheck({ location, ledgerId }) {
+        const dispatcher = this.getDispatcher();
+        if (!dispatcher?.publish) {
+            this._warn(`[ap placement] no dispatcher — the check for "${location}" was detected `
+                + 'but not published');
+            return;
+        }
+        dispatcher.publish('user:locationCheck', {
+            locationName: location,
+            originator: 'FlashPanel',
+            originalDOMEvent: false,
+        }, { initialTarget: 'bottom' });
+        this.stats.locationChecks += 1;
+        this._log(`[ap placement] checked "${location}" (${ledgerId})`);
+    }
+
+    /** *"found X for Player Y"* — the panel readout, off the placement table. */
+    _itemFound({ location, item, player, forSelf }) {
+        this.stats.itemsFound += 1;
+        const who = forSelf ? 'you' : `Player ${player}`;
+        const line = `[ap placement] found ${item} for ${who} at "${location}"`;
+        this._log(line);
+        try {
+            this.eventBus?.publish?.(AP_ITEM_FOUND_EVENT,
+                { location, item, player, forSelf, message: line });
+        } catch { /* a bus that refuses an unknown event is not a check failure */ }
     }
 
     _warn(message) {

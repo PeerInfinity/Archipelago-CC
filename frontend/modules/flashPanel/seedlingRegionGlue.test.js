@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-import { ACTIVE_SUBSTRATE_EVENT, SeedlingRegionGlue } from './seedlingRegionGlue.js';
+import { ACTIVE_SUBSTRATE_EVENT, AP_ITEM_FOUND_EVENT, SeedlingRegionGlue } from './seedlingRegionGlue.js';
 import {
     substrateRegistryEntry as seedlingEntry,
     FLASH_SEEDLING_LOAD_REGION_EVENT,
@@ -23,12 +23,14 @@ const worldFor = (id) => seedlingEntry.deserializeWorld(PRESET.preset_sidecars['
 /** Minimal stand-ins for the two hosts the glue talks to. */
 function makeHarness() {
     const subs = new Map();
+    const busPublished = [];
     const eventBus = {
         subscribe: (name, fn) => {
             subs.set(name, fn);
             return () => subs.delete(name);
         },
         unsubscribe: (name) => subs.delete(name),
+        publish: (name, data) => busPublished.push({ name, data }),
     };
     const published = [];
     const dispatcher = { publish: (name, data, opts) => published.push({ name, data, opts }) };
@@ -47,6 +49,7 @@ function makeHarness() {
         glue,
         adapter,
         published,
+        busPublished,
         panelLines,
         emitLoad: (payload) => subs.get(FLASH_SEEDLING_LOAD_REGION_EVENT)(payload),
         subscribed: () => subs.has(FLASH_SEEDLING_LOAD_REGION_EVENT),
@@ -258,5 +261,131 @@ describe('the park', () => {
         h.emitActive(FLASH_SEEDLING_SUBSTRATE_ID, 'overworld_start__r8c0');
         expect(h.glue.stats.resumes).toBe(0);
         expect(h.glue.stats.parks).toBe(0);
+    });
+});
+
+
+/**
+ * ⛓⛓ **H6's WIRING** (EDITOR INTEGRATION M1). The check binding's own rules are
+ * pinned in `seedlingCheckBinding.test.js`; these cover what the glue does with
+ * them — that BOTH bindings see every report through the adapter's ONE hook,
+ * that a check reaches the dispatcher in the same dialect the adapter's own
+ * location path uses, that the readout is published, and that the adapter is
+ * told which locations to stand down on.
+ */
+describe('H6 — the check binding, wired', () => {
+    /** A stand-in that reports whatever it is asked to, in report order. */
+    const checkStub = (effects = []) => ({
+        seen: [],
+        restarts: 0,
+        owned: new Set(['Level 019 - Boss Key', 'Level 030 - Torch']),
+        onStateReport(property, value) {
+            this.seen.push([property, value]);
+            return property === 'pendingCheck' ? effects : [];
+        },
+        hostOwnedLocations() { return this.owned; },
+        onGameRestart() { this.restarts += 1; },
+    });
+
+    it('BOTH bindings see every report — the adapter has ONE hook, so the glue fans out', () => {
+        const h = makeHarness();
+        const check = checkStub();
+        h.glue.setCheckBinding(check);
+        h.glue.attachAdapter(h.adapter);
+        h.adapter.onStateReport('level', 3);
+        h.adapter.onStateReport('pendingCheck', '1|19|4|0');
+        expect(check.seen).toEqual([['level', 3], ['pendingCheck', '1|19|4|0']]);
+    });
+
+    /**
+     * ⛔ THE MUTANT THIS ROW IS FOR: a second consumer that ASSIGNED
+     * `adapter.onStateReport` instead of being fanned out would silently
+     * replace the region binding, and every crossing would stop working while
+     * every check kept working.
+     */
+    it('and the region binding still works with a check binding attached', () => {
+        const h = makeHarness();
+        h.glue.setCheckBinding(checkStub());
+        h.glue.attachAdapter(h.adapter);
+        h.emitLoad({ region_id: 'starting_house', world: worldFor('starting_house'), arrivedFrom: null });
+        h.adapter.onStateReport('level', 86);   // baseline releases the queued arrival
+        expect(h.adapter.teleport).toHaveBeenCalled();
+    });
+
+    it('a locationCheck reaches the dispatcher in the adapter\'s own dialect', () => {
+        const h = makeHarness();
+        h.glue.setCheckBinding(checkStub([
+            { type: 'locationCheck', location: 'Level 019 - Boss Key', ledgerId: 'bosskey0@L19' },
+        ]));
+        h.glue.attachAdapter(h.adapter);
+        h.adapter.onStateReport('pendingCheck', '1|19|4|0');
+        const check = h.published.find((p) => p.name === 'user:locationCheck');
+        expect(check).toBeTruthy();
+        expect(check.data).toMatchObject({ locationName: 'Level 019 - Boss Key', originator: 'FlashPanel' });
+        expect(check.opts).toEqual({ initialTarget: 'bottom' });
+        expect(h.glue.stats.locationChecks).toBe(1);
+    });
+
+    it('"found X for Player Y" reaches the panel AND the event bus', () => {
+        const h = makeHarness();
+        h.glue.setCheckBinding(checkStub([
+            { type: 'apItemFound', location: 'Level 019 - Boss Key', item: 'Hookshot',
+                player: 3, forSelf: false },
+        ]));
+        h.glue.attachAdapter(h.adapter);
+        h.adapter.onStateReport('pendingCheck', '1|19|4|0');
+        const line = h.panelLines.at(-1).m;
+        expect(line).toContain('Hookshot');
+        expect(line).toContain('Player 3');
+        const evt = h.busPublished.find((e) => e.name === AP_ITEM_FOUND_EVENT);
+        expect(evt.data).toMatchObject({ item: 'Hookshot', player: 3, forSelf: false });
+        expect(h.glue.stats.itemsFound).toBe(1);
+    });
+
+    it('an item for THIS slot says "you", not "Player <n>"', () => {
+        const h = makeHarness();
+        h.glue.setCheckBinding(checkStub([
+            { type: 'apItemFound', location: 'Level 030 - Torch', item: 'Light',
+                player: 1, forSelf: true },
+        ]));
+        h.glue.attachAdapter(h.adapter);
+        h.adapter.onStateReport('pendingCheck', '1|30|7|0');
+        expect(h.panelLines.at(-1).m).toContain('found Light for you');
+    });
+
+    it('hands the adapter the locations it must stand down on — and CLEARS them when unset', () => {
+        const h = makeHarness();
+        const adapter = { ...h.adapter, setHostOwnedLocations: vi.fn() };
+        const check = checkStub();
+        h.glue.setCheckBinding(check);
+        h.glue.attachAdapter(adapter);
+        expect(adapter.setHostOwnedLocations).toHaveBeenLastCalledWith(check.owned);
+        h.glue.setCheckBinding(null);
+        expect(adapter.setHostOwnedLocations).toHaveBeenLastCalledWith(new Set());
+    });
+
+    it('a glue with NO check binding drives the adapter exactly as it always has', () => {
+        const h = makeHarness();
+        const adapter = { ...h.adapter, setHostOwnedLocations: vi.fn() };
+        h.glue.attachAdapter(adapter);
+        expect(adapter.setHostOwnedLocations).toHaveBeenCalledWith(new Set());
+        h.adapter.onStateReport?.('pendingCheck', '1|19|4|0');
+        expect(h.published.filter((p) => p.name === 'user:locationCheck')).toHaveLength(0);
+        expect(h.glue.stats.locationChecks).toBe(0);
+    });
+
+    it('an adapter with no setHostOwnedLocations is not a crash — older adapters exist', () => {
+        const h = makeHarness();
+        expect(() => h.glue.setCheckBinding(checkStub())).not.toThrow();
+        expect(() => h.glue.attachAdapter(h.adapter)).not.toThrow();
+    });
+
+    it('a fresh adapter restarts BOTH bindings', () => {
+        const h = makeHarness();
+        const check = checkStub();
+        h.glue.setCheckBinding(check);
+        h.glue.attachAdapter(h.adapter);
+        h.glue.attachAdapter({ teleport: vi.fn(), onStateReport: null });
+        expect(check.restarts).toBe(2);
     });
 });

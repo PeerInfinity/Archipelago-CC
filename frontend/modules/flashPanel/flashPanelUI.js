@@ -3,6 +3,7 @@ import settingsManager from '../../app/core/settingsManager.js';
 import {
   getDispatcher, getModuleEventBus, setActivePanelInstance, getSeedlingRegionGlue,
 } from './index.js';
+import { AP_ITEM_FOUND_EVENT } from './seedlingRegionGlue.js';
 import { FlashBridgeAdapter } from './flashBridgeAdapter.js';
 import { WasmBridgeAdapter } from './wasmBridgeAdapter.js';
 
@@ -119,6 +120,21 @@ export class FlashPanelUI {
     // preset through the UI.
     this._rulesLoadedHandler = () => { this._onRulesLoaded(); };
     this.eventBus.subscribe('stateManager:rulesLoaded', this._rulesLoadedHandler);
+
+    /**
+     * ⛓ **"found X for Player Y"** (EDITOR INTEGRATION M1). When a room holds
+     * Archipelago's placement instead of Seedling's own item, the game reports
+     * only an address — the host's placement table is what knows the item and
+     * the receiving player, and it answers the instant the check fires rather
+     * than after the server's `PrintJSON` round trip. The glue publishes; the
+     * panel is the surface the person playing is actually looking at.
+     *
+     * ⛔ ITS OWN LIFETIME, PER MOUNT. A remounted panel that left this
+     * subscribed would keep the dead mount's handler alive and write into a
+     * detached log element.
+     */
+    this._apItemFoundHandler = ({ message }) => { this._panelLog(message, 'location'); };
+    this.eventBus.subscribe(AP_ITEM_FOUND_EVENT, this._apItemFoundHandler);
 
     // Fast path: if rules were already loaded before this panel
     // was constructed (e.g. created by a layout change after
@@ -676,6 +692,10 @@ export class FlashPanelUI {
     if (this._rulesLoadedHandler) {
       this.eventBus.unsubscribe('stateManager:rulesLoaded', this._rulesLoadedHandler);
       this._rulesLoadedHandler = null;
+    }
+    if (this._apItemFoundHandler) {
+      this.eventBus.unsubscribe(AP_ITEM_FOUND_EVENT, this._apItemFoundHandler);
+      this._apItemFoundHandler = null;
     }
     if (this.adapter) {
       this._detachRegionGlue();

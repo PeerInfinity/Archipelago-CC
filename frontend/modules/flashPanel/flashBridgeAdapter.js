@@ -132,6 +132,25 @@ export class FlashBridgeAdapter {
 
     this.unsubscribeHandles = [];
 
+    /**
+     * ⛓⛓ **AP LOCATIONS THE HOST OWNS** (EDITOR INTEGRATION M1, H6).
+     *
+     * When the room holds an `APItem` instead of a Seedling pickup, the
+     * location is answered by `seedlingCheckBinding` off the game's own
+     * `pendingCheck` report — and the `Main.*` flag for that item is then
+     * written by NOBODY but this bridge, on the AP server's `ReceivedItems`.
+     * The property path below must therefore stand down on those locations:
+     * left armed, an echo it happens to miss reads as a player pickup, checks
+     * the location a SECOND time and queues an undo that takes the granted
+     * item straight back.
+     *
+     * ⛔ A SET, NOT A DELETE. Two of the 41 locations (`fire@L32`,
+     * `darksword@L12`) are encounter grants with no pickup entity, are not
+     * rewritten, and MUST keep the property path. Empty by default: an adapter
+     * nobody told about a placement behaves exactly as it always has.
+     */
+    this.hostOwnedLocations = new Set();
+
     this._buildLookups(config);
     adapters.set(flashObjectId, this);
     ensureGlobalEntryPoints();
@@ -464,6 +483,13 @@ export class FlashBridgeAdapter {
       this.log(`stateChanged (player action): ${property} = ${value}`);
     }
     if (locFlash && value === true) {
+      // ⛔ H6 OWNS THIS ONE. The room holds an APItem that grants nothing, so
+      // this report cannot be a player pickup — it is our own write coming
+      // back. No undo (it would revoke the granted item) and no second check.
+      if (this._isHostOwned(locFlash)) {
+        this.log(`stateChanged for "${locFlash}" ignored — AP placement owns that location`);
+        return;
+      }
       // Undo: take the game-given item back so the AP item can arrive clean
       const propDef = this._findPropertyDef(property);
       if (propDef) {
@@ -477,6 +503,26 @@ export class FlashBridgeAdapter {
 
       this._dispatchLocationCheck(locFlash);
     }
+  }
+
+  /**
+   * H6 hands these in (through the glue). Names are AP location names — the
+   * same vocabulary `flashLocationToApName` produces — so the comparison is
+   * against what would actually be dispatched, not against a flash name that
+   * may or may not map.
+   */
+  setHostOwnedLocations(names) {
+    this.hostOwnedLocations = names instanceof Set ? names : new Set(names ?? []);
+    if (this.hostOwnedLocations.size > 0) {
+      this.log(`AP placement owns ${this.hostOwnedLocations.size} location(s) — `
+        + 'the property path stands down on those (no undo, no second check)');
+    }
+  }
+
+  /** Is this flash location answered by the host's placement table instead? */
+  _isHostOwned(flashName) {
+    const apName = this.flashLocationToApName[flashName];
+    return !!apName && this.hostOwnedLocations.has(apName);
   }
 
   _dispatchLocationCheck(flashName) {
