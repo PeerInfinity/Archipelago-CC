@@ -71,7 +71,7 @@ import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { argvHelp } from './argvHelp.js';
+import { argvHelp, isEntryPoint } from './argvHelp.js';
 import {
     DOCS_INDEX, LADDER_FROZEN_AT, QUEUE_DOC, REPO, TRACKED_DOC,
     deriveFromGit, memoryDir, parseSection,
@@ -80,6 +80,10 @@ import { trapFiles, trapsCitedIn } from './sliceTraps.js';
 
 argvHelp(import.meta.url);
 
+/* The gate is a MODULE-SCOPE worker unless guarded: `check-procgen-help`'s
+ * import door found it running the whole roster on a bare import (263/1 at
+ * 4d8eeb6fa). Body left unindented — it holds multi-line template literals. */
+async function main() {
 const argv = process.argv.slice(2);
 const arg = (n, fallback = null) => {
     const hit = argv.find((a) => a.startsWith(`--${n}=`));
@@ -309,3 +313,7 @@ if (n('FAIL') === 0) {
 }
 console.log(`${n('FAIL')} CHECK(S) FAILED`);
 process.exit(1);
+
+}
+
+if (isEntryPoint(import.meta.url)) await main();

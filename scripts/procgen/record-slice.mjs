@@ -66,7 +66,7 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { argvHelp } from './argvHelp.js';
+import { argvHelp, isEntryPoint } from './argvHelp.js';
 import {
     INDEX_FILE, LADDER_FILE, LADDER_FROZEN_AT, QUEUE_DOC, R9_FILE, REPO,
     TRACKED_DOC, TRAPS_DIR,
@@ -448,4 +448,4 @@ export function main() {
  * a bare `import` of this file must do NOTHING, so the unit rows can reach
  * `replaceRegion` and `calibrate` without running a CLI.
  */
-if (import.meta.url === `file://${process.argv[1]}`) main();
+if (isEntryPoint(import.meta.url)) main();
