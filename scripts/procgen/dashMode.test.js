@@ -81,8 +81,24 @@ describe('R9 slice 12i: the --dash flag', () => {
                 // the index scans for the literal token in the script's own text
                 expect(src, f).toContain("a === '--dash'");
                 expect(src, f).toContain("a.startsWith('--dash=')");
-                // …and the parsed mode is actually SPENT, not merely parsed
-                expect(src.split('DASH_MODE').length - 1, f).toBeGreaterThan(2);
+                /**
+                 * …and the parsed mode is actually SPENT, not merely parsed.
+                 *
+                 * ⛔ THE FIRST CUT OF THIS LINE WAS VACUOUS AND THE MUTANT SAID
+                 * SO. It counted occurrences of `DASH_MODE` and asked for more
+                 * than two — but the block's own docblock says
+                 * `solverBot.DEFAULT_DASH_MODE`, and `DEFAULT_DASH_MODE`
+                 * CONTAINS `DASH_MODE`. So a script that parsed the flag and
+                 * threaded it NOWHERE still counted three, and mutant (m3) —
+                 * `solve-seedling-r9-l3` with its one `dashMode: DASH_MODE`
+                 * deleted — ran GREEN while its `--check --dash=none` measured
+                 * `6cd35fe1…`, the DEFAULT, with a header saying `none`.
+                 *
+                 * ⇒ the row asks for the HANDOFF itself: the mode passed to an
+                 * option bag or to `dashModeArgv`. A count of a name is not a
+                 * claim that the name is used.
+                 */
+                expect(src, f).toMatch(/\bdashMode(?:Argv)?[:(]\s*DASH_MODE\b/);
             }
             // ⛓ the set as measured today — a COUNT, so a participant added or
             // dropped without a word about it reds. The names are the reach's,
