@@ -68,35 +68,26 @@
  */
 
 import { applyAtlasOp } from '../procgenCore/atlasOps.js';
+import { deepEqualKeyOrder } from '../procgenCore/deepEqualKeyOrder.js';
 
 /**
  * ⛓⛓⛓ **EQUALITY IN WHICH KEY ORDER IS CONTENT** — see overturn 1 above.
  *
- * ⛔ `a === b` FIRST, at every depth, is not a micro-optimisation: `atlasOps`
- * rebuilds only the spine from the root to what an op changed and SHARES every
- * untouched node, so the reference check makes a comparison of two documents
- * that differ by one region cost the depth of that spine rather than a walk of
- * a 271 KB playthrough atlas. It is what lets `equal` be exact instead of
- * cheap.
+ * ⛓ THE TWENTY LINES MOVED (EDITOR INTEGRATION B-c, plan §15.11): they are
+ * `procgenCore/deepEqualKeyOrder.js` now, shared with the bounce level's
+ * adapter and the rules document's — the third copy was the point at which the
+ * import stopped costing more than it saved. ⛔ THE NAME STAYS, so every row in
+ * this file's test and every reader of `adapter.equal` is unmoved; the hoist's
+ * own test asserts `atlasesEqual === deepEqualKeyOrder`, which is what makes it
+ * provably the same function rather than the same behaviour.
+ *
+ * ⚠ `a === b` FIRST, at every depth, is still the reason it is affordable here:
+ * `atlasOps` rebuilds only the spine from the root to what an op changed and
+ * SHARES every untouched node, so comparing two documents that differ by one
+ * region costs the depth of that spine rather than a walk of a 271 KB
+ * playthrough atlas.
  */
-export function atlasesEqual(a, b) {
-    if (a === b) return true;
-    if (a === null || b === null || typeof a !== 'object' || typeof b !== 'object') return false;
-    if (Array.isArray(a) !== Array.isArray(b)) return false;
-    if (Array.isArray(a)) {
-        if (a.length !== b.length) return false;
-        for (let i = 0; i < a.length; i += 1) if (!atlasesEqual(a[i], b[i])) return false;
-        return true;
-    }
-    const ka = Object.keys(a);
-    const kb = Object.keys(b);
-    if (ka.length !== kb.length) return false;
-    for (let i = 0; i < ka.length; i += 1) {
-        if (ka[i] !== kb[i]) return false;
-        if (!atlasesEqual(a[ka[i]], b[kb[i]])) return false;
-    }
-    return true;
-}
+export const atlasesEqual = deepEqualKeyOrder;
 
 const isTile = (t) => Array.isArray(t) && t.length === 2
     && Number.isInteger(t[0]) && Number.isInteger(t[1]);

@@ -49,33 +49,23 @@
  */
 
 import { applyBounceOp } from './bounceLevelOps.js';
+import { deepEqualKeyOrder } from '../procgenCore/deepEqualKeyOrder.js';
 
 /**
  * ⛓⛓⛓ **EQUALITY IN WHICH KEY ORDER IS CONTENT** — see the header.
  *
- * ⛔ `a === b` FIRST, at every depth: the ops share every untouched array, so
- * comparing two levels that differ by one platform costs the depth of the one
- * rebuilt spine rather than a walk of the whole level. It is what lets `equal`
- * be exact instead of cheap.
+ * ⛓ THE TWENTY LINES MOVED (EDITOR INTEGRATION B-c, plan §15.11): the header's
+ * *"if a third adapter wants it, that is the slice that moves it"* came due —
+ * the rules document is the third — and they are `procgenCore/deepEqualKeyOrder.js`
+ * now. ⛔ THE NAME STAYS, so this file's test rows and every reader of
+ * `adapter.equal` are unmoved; the hoist's own test asserts `levelsEqual ===
+ * deepEqualKeyOrder`.
+ *
+ * ⚠ `a === b` FIRST, at every depth, is still the reason it is exact instead of
+ * cheap: the ops share every untouched array, so comparing two levels that
+ * differ by one platform costs the depth of the one rebuilt spine.
  */
-export function levelsEqual(a, b) {
-    if (a === b) return true;
-    if (a === null || b === null || typeof a !== 'object' || typeof b !== 'object') return false;
-    if (Array.isArray(a) !== Array.isArray(b)) return false;
-    if (Array.isArray(a)) {
-        if (a.length !== b.length) return false;
-        for (let i = 0; i < a.length; i += 1) if (!levelsEqual(a[i], b[i])) return false;
-        return true;
-    }
-    const ka = Object.keys(a);
-    const kb = Object.keys(b);
-    if (ka.length !== kb.length) return false;
-    for (let i = 0; i < ka.length; i += 1) {
-        if (ka[i] !== kb[i]) return false;
-        if (!levelsEqual(a[ka[i]], b[kb[i]])) return false;
-    }
-    return true;
-}
+export const levelsEqual = deepEqualKeyOrder;
 
 /**
  * ⛓ THE ADAPTER. A frozen singleton rather than a factory: unlike B-a's, it
