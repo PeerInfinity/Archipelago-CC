@@ -551,13 +551,13 @@
       "total": "ALL PASS"
     },
     "suite: vitest (unfiltered)": {
-      "value": "396/12179",
+      "value": "399/12249",
       "command": null,
       "kind": "identity",
       "cheap": false,
       "quoted": true,
-      "why": "QUOTED from CI run 33201327582 at a1073c582 (B-b merged, FF): 396/12179, 12171 passed | 8 skipped | 0 failed; +2 files/+83 rows vs 8deb5a5c2",
-      "measuredAt": "a1073c5829021618536a504783554a03a18bb2e1"
+      "why": "QUOTED from CI run 33207657992 at 31384bfc6 (B-c merged, FF): 399/12249, 12241 passed | 8 skipped | 0 failed; identical at 9a90dbf11 (run 33207124798)",
+      "measuredAt": "31384bfc6f93dc79cb3d50d8836a3033de59ef0f"
     },
     "roster: --win --tier=full": {
       "value": "149 tapes 3615/0/120",
