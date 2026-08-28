@@ -124,8 +124,16 @@ describe('the scan can fire, and on what', () => {
  * itself are in `maskComments.test.js`.
  */
 describe('⛔⛔ a comment is not code (§30.8b)', () => {
+    /**
+     * ⛔ THE FIRST DESCRIBE'S NAME CARRIES A COUNT ON PURPOSE — otherwise this
+     * row cannot tell the two builds apart. Without the mask the apostrophe
+     * makes it swallow `PREFIXES.length` 1,900 lines (here, four) below and it
+     * is filed as `name-over-a-roster`; with the mask it ends where it is
+     * written and only the row that really derives the count is a finding. A
+     * fixture that reds under neither build gates nothing (⚖ the mutant law).
+     */
     const DEAD_ZONE = [
-        "describe('the strategy catalog seam', () => {",
+        "describe('the strategy catalog seam — all four strategies', () => {",
         "    // the gate's own row — one apostrophe opens a string that never closes",
         "    it('walks the catalog', () => { expect(walk()).toBe(true); });",
         '});',
