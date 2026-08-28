@@ -5861,6 +5861,60 @@ byte-identical at W0 and at the close. Standing rows **+1 derived**
 
 **⇒ P4b's STANDING ROWS BANKED (session 10 orchestrator, 2026-08-28, on the records `fd4fe9ab6`).** `gate: slice-records` **65/0/29** cheap (21 s; its default IS the CI face, so no `@ci-face`). `gate: procgen-help` **264/0** `cheap: false` (544 s local). ⛔ THE FIRST READ WAS **263/1**: `check-slice-records.mjs — HELP ok · IMPORT SIDE EFFECT` — the gate's whole body was module scope, so a bare import ran the roster; P4b's REPORT BACK had sealed 264/0 on "both new instruments carry an entry-point guard", true of `record-slice.mjs` only. Fixed at `fd4fe9ab6` (a guarded `main()`; the shared `isEntryPoint` in both files; regen MATCH; 71 bounded tests green), the row re-measured AFTER the fix. Trap **930** — the first trap filed by an orchestrator through `record-slice --trap` (the filesystem allocated it). Branch `p4b/one-record-surface` deleted (⚖ 59). File 66 rows / 49 cheap.
 
+**⇒ RR CLOSED (2026-08-28, `main` @`fd6b17826`; 8 commit(s), 3 fast-forward(s); as-built kickoff §53; ⚖ 40 ANSWERED, ⚖ 47b (2) DISCHARGED, ⚖ 63 (c) DISCHARGED, ⚖ 64 DISCHARGED).**
+⚖ The user, 2026-08-28: *"Please go ahead and do the full batch of changes, not
+just the small slice"* (⚖ 64), and on the economies: *"I think I would prefer to
+change it to off next time we do a re-record"* (⚖ 63 (c)).
+**(B) ⚖ 47b (2) — AND ITS PREMISE WAS FALSE.** The ruling asked for a driver
+change: the differential's terminal counters are read *"~8 frames past the
+tape's last observation, with the tape's last keys still held, because nothing
+dispatches a release"*. The second clause is written in THREE surfaces and
+measured in none. `Bot.update` releases every span whose `to == tick` at
+`tick == tickCount`, above the disarm, and says so; 149 of 149 committed tapes
+have `max(span.to) <= tick_count`, 74 end a span exactly there. What spends
+those frames is the WORLD. ⛓ And the fix was already on the wire since R7:
+`latchSeam` freezes `arrival.velocity = {vx, vy, hits, hits_timer}` at the
+disarm tick and the driver already ships it as `seam`. Ten lines in ONE file, no
+driver edit, no wasm rebuild, drift ZERO BY CONSTRUCTION — and `hits_timer` is
+an EQUALITY again. The first tier under it found FOUR tapes carrying a 1–7 frame
+drift the bound had been swallowing, model matching the FROZEN value on every
+one, including `r6-contact-pair-standing`, the tape the bound was invented for.
+**(A) THE ECONOMIES ARE OFF, AND THE CENSUS IS SIX.** `ECONOMIES_ROSTER_WIDE`
+`true → false`. Every surface — the constant's own docblock, §50.2, ⚖ 61 (ii) —
+said FOUR artifacts; the producers' own `--check` DRIFT lines say SIX:
+`r8-solve-10` 78→83 · `r8-solve-18` 410→485 · `r8-solve-20` 229→257 ·
+**`r8-d2-19` 721→746** · **`r8-d2-20` 554→560** · `r8-d2` 1685→1791. The two new
+ones are the d2 chain's own SEGMENTS, dropped because the census was assembled
+per PRODUCER while artifacts are per walk.
+**(D) THE WRONG COUNT HAD A SECOND SITE.** ⚖ 64 (iv) named `swordDash.why`;
+`dashRejectionSummary` writes the same arithmetic into `rejected[].why` and
+reaches THIRTEEN sidecars where the named one reaches four. Measured, put to the
+orchestrator with its numbers, ruled GO — so the sealed set widened BY RULING,
+8 → 13 sidecars, at zero GPU (a sidecar is a model artifact).
+**(C) THE FIVE ASKED, AT THE SHIPPED HEAD.** Driven AFTER S5 rather than before
+S3 as briefed, because three of the five have tapes (A) moves and a latch taken
+first certifies a walk that will not ship. All five GAME-CERTIFIED; the table
+closes at **23 GAME-CERTIFIED · 2 unasked · 0 REFUSED** (was 18 · 7 · 0), the
+two being `r7-ends-meet-2`/`-full`, whose producer drives a browser so S0 cannot
+measure them at all.
+**AND THE PIPELINE STOPPED BEFORE THE GPU, CORRECTLY.** S3 admitted a mover on
+the WALK licence or on `s2.wrote` — a MECHANISM standing in for a PERMISSION.
+⚖ 43 spends the licence at the top of S1, where the producers re-author their
+WHOLE segment set, so every `boot-only` cascade successor is written there and
+S2 writes nothing. Six successors arrived with a moved projection and no arm.
+The bound is S0's own licensed set now, and the offline rehearsal gained
+`cascade-without-an-s2-write`, which no existing scenario could produce.
+**THE ⚖ 40 CHECKPOINT**: S4 under `--full-roster` = **149 tapes 3615/0/120**
+(773/0/68 + 68/0/37 + 2774/0/15), `gate: seedling-full-tier-owed` 2/2 → **4/0**.
+18 standing movers, 16 predicted; the two misses are ⚖ 22's own regeneration.
+⛓ The economy's price also shows up as wall clock: `acceptance batch`
+158.8 s → **68.0 s**, `empty pairs c3` 239.9 s → **92.6 s** — §49.4's ~80 %,
+collected.
+⛔ CI came back 18 red against a `main` baseline of 8; ELEVEN were mine and TEN
+of those were in a reach population printed on the same screen as the one I ran
+(the tests the import graph cannot see). All repaired in `d61ee802e`; the
+remaining 7 are P4b's `sliceRecords.test.js`, open before this slice.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:
