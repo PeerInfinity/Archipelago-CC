@@ -43,7 +43,7 @@ import {
 import { DEFAULT_BUDGET, bootStaging, collectGoal, solve } from './procgenOracle.js';
 /** ⛓ R9 slice 12e′'s fourth run — the roster-wide dash flip. The row below
   * names this build rather than pinning one of its two answers. */
-import { ALLOW_DASH_ROSTER_WIDE } from './solverBot.js';
+import { DEFAULT_DASH_MODE } from './solverBot.js';
 /** ⛓ SLICE 4c: the sword gate moved from a ROSTER SPLIT to an element's `needs`. */
 import { ELEMENT_TABLE } from '../procgenCore/elementSpec.js';
 import {
@@ -331,14 +331,16 @@ describe('the post-sword biome is a BOOT, and its roster is the pre-sword one', 
         /**
          * ⛔⛔ THE TICK COUNT STOPPED BEING EQUAL AT THE FLIP, AND PINNING THE
          * EQUALITY WOULD HAVE PINNED THE FLIP AWAY (§40.6's landmine class).
-         * `ALLOW_DASH_ROSTER_WIDE` went `true` at R9 slice 12e′'s fourth run,
+         * The dash went on at R9 slice 12e′'s fourth run (behind
+         * `ALLOW_DASH_ROSTER_WIDE` then, `DEFAULT_DASH_MODE` since 12i and
+         * the ONLY reader of it since 12j retired that name),
          * so the post-sword inventory may spend a sword-dash the pre-sword walk
          * cannot even ASK for, and the same room gets FASTER under it. The
          * inequality holds in both builds — the sword can only ever help — and
          * the DIFFERENCE names the build, so neither state is silently green.
          */
         expect(post.ticks).toBeLessThanOrEqual(pre.ticks);
-        if (ALLOW_DASH_ROSTER_WIDE) expect(post.ticks).toBeLessThan(pre.ticks);
+        if (DEFAULT_DASH_MODE !== 'none') expect(post.ticks).toBeLessThan(pre.ticks);
         else expect(post.ticks).toBe(pre.ticks);
     });
 });

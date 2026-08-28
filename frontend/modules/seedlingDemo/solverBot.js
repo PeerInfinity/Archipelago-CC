@@ -1535,19 +1535,43 @@ export function assertDashMode(mode, where = 'assertDashMode') {
 }
 
 /**
- * ⛓ KEPT AS A **DERIVED ALIAS**, and deprecated — @deprecated read
- * `DEFAULT_DASH_MODE` (or the `dashMode` a `ctx` carries) instead.
+ * ⛓⛓⛓ R9 SLICE 12j, ⚖ RULING 61 (ii) — **THE ECONOMIES GET A CONSTANT OF
+ * THEIR OWN, BECAUSE THE YOKE THEY RODE IN ON WAS A RELEASE GATE AND NOT A
+ * STATEMENT ABOUT WHAT THEY ARE.**
  *
- * ⛔ IT IS NOT THE DASH PERMISSION ANY MORE, AND THAT MATTERS FOR EXACTLY ONE
- * REASON: three of its five reads were never about dashing. ⚖ Ruling 54 (5)
- * put ⚖ 46's collect stance and ⚖ 47's early walk BEHIND this constant as
- * their release gate (§40.3), so `economies` DEFAULTS off it and would revert
- * with it. Keeping the alias keeps that yoke exactly as ruled — and keeps
- * `dashMode`, which is about dashing alone, from silently dragging four
- * committed artifacts with it (`solveSegment`'s `economies` docblock names
- * them).
+ * ⚖ 46's collect stance (the `scored`/`nearest`/`tier` choice where the
+ * committed core short-circuits on `(d, y, x)`) and ⚖ 47's early walk
+ * (`remaining`, and an `earlyWalk` key that is ABSENT rather than `null`)
+ * are ONE permission — `economies`, threaded the §40.3 way to
+ * `solveSegment`'s three `ctx` construction sites and to `deriveStance`.
+ * What they are NOT, and never were, is dashing.
+ *
+ * ⛔ THE HISTORY, BECAUSE IT IS THE WHOLE ARGUMENT. ⚖ Ruling 54 (5) shipped
+ * both economies behind `ALLOW_DASH_ROSTER_WIDE` as their RELEASE GATE
+ * (§40.3): the flag was `false` on `main`, their rows ran by handing the
+ * permission directly, and ⚖ 41's flip released the dash and the economies
+ * in one commit. **That gate has done its job** — the flag went `true` and
+ * the whole roster is recorded under it. The yoke it left behind is inert
+ * only while the dash default stays non-`none`, and 12i measured what it
+ * costs when it is not: §49.5's column C (YOKED) and column D (DASH-ONLY)
+ * differ on FIVE of seven producers, and §49.4 found the yoke had already
+ * mis-attributed the two bulk rows' 4× to dashing when ~80 % of it is this
+ * constant's economy. ⛓ **A flip that turns on two things prices them as
+ * one**, and the attribution goes to whichever the commit message names.
+ *
+ * ⛓ SO THERE IS ONE CONSTANT PER PERMISSION NOW, AND THEY MOVE
+ * INDEPENDENTLY: `--dash=` and `DEFAULT_DASH_MODE` price the window pass
+ * ALONE, and this constant prices the economies alone.
+ *
+ * ⛔ IT IS `true`, AND MOVING IT IS THE USER'S (⚖ 42). At `false` the four
+ * committed artifacts `solveSegment`'s `economies` docblock censuses re-plan
+ * — `r8-solve-10` 90 → 89 · `r8-solve-20` 365 → 332 · `r8-d2-19` 864 → 807 ·
+ * `r8-d2-20` 781 → 756 — which is a re-record, not a code change.
+ *
+ * ⛓ RETIRES `ALLOW_DASH_ROSTER_WIDE` (12j). That name carried five reads and
+ * only two of them were ever about the dash; §49.2's census is what split it.
  */
-export const ALLOW_DASH_ROSTER_WIDE = DEFAULT_DASH_MODE !== 'none';
+export const ECONOMIES_ROSTER_WIDE = true;
 
 /**
  * ⛓⛓⛓ R9 SLICE 12b — **THE ONE PLACE A STRIKE POLICY IS CONSTRUCTED.**
@@ -2961,7 +2985,7 @@ function deriveShove(run, row, aim, allowTeleporter, contacts, blocked = []) {
  * defaulted on purpose.
  */
 function deriveStance(run, resolved, contacts,
-    { economies = ALLOW_DASH_ROSTER_WIDE } = {}) {
+    { economies = ECONOMIES_ROSTER_WIDE } = {}) {
     if (resolved.strategy === 'chest') {
         const band = chestStanceBand(resolved.target.x, resolved.target.y, HITBOX);
         /**
@@ -3154,7 +3178,9 @@ function deriveStance(run, resolved, contacts,
      * ⛔ IT IS NOT A DEFENSIVE GATE. P2's design says an economy is gated ONLY
      * if it is measured NOT to be naturally inert, and the gate's docblock
      * names the movers that forced it. Cherry-picked un-gated onto `main` at
-     * `ALLOW_DASH_ROSTER_WIDE === false`, this block moves FOUR committed
+     * `ECONOMIES_ROSTER_WIDE === false` (the constant was
+     * `ALLOW_DASH_ROSTER_WIDE` until 12j cut ⚖ 54 (5)'s yoke — same state,
+     * its own name now), this block moves FOUR committed
      * artifacts by name and five of seven producer `--check` md5s with them:
      *
      *   · `r8-solve-10`   90 → 89   (campaign segment 10; battery prints it)
@@ -5396,7 +5422,7 @@ function execKillByPress(run, perTick, resolved, ctx) {
      * dash; the fallback is the flag, so an executor reached through a `ctx`
      * this option has not been threaded onto still reads the roster's state.
      */
-    const economies = ctx.economies ?? ALLOW_DASH_ROSTER_WIDE;
+    const economies = ctx.economies ?? ECONOMIES_ROSTER_WIDE;
     const NO_KEYS = new Set();
     const PRESS = new Set(['primary']);
     const from = perTick.length;
@@ -5660,8 +5686,10 @@ function execKillByPress(run, perTick, resolved, ctx) {
     /**
      * ⛓⛓⛓ R9 SLICE P2, ⚖ RULING 54 (5) — **⚖ 47's ECONOMY IS BEHIND THE
      * ROSTER-WIDE PERMISSION, AND THE MEASUREMENT IS WHY.** Cherry-picked
-     * un-gated onto `main` at `ALLOW_DASH_ROSTER_WIDE === false`, this early
-     * walk moves ONE committed artifact by name and two producer `--check`
+     * un-gated onto `main` at `ECONOMIES_ROSTER_WIDE === false` (the constant
+     * was `ALLOW_DASH_ROSTER_WIDE` until 12j — same state, its own name now),
+     * this early walk moves ONE committed artifact by name and two producer
+     * `--check`
      * md5s with it:
      *
      *   · `r8-solve-18`  541 → 437  (`solve-seedling-r8-l18`)
@@ -7325,7 +7353,7 @@ export function solveSegment({
      * the preview/drive equality to cover (`strikePolicyFor`'s `dashPlan`
      * is the same shape, and the reason this is one name and not two).
      */
-    economies = ALLOW_DASH_ROSTER_WIDE,
+    economies = ECONOMIES_ROSTER_WIDE,
     /**
      * ⛓⛓⛓ R9 SLICE 12i — **THE DASH PERMISSION, AND IT IS A FOURTH NAME
      * BESIDE `economies` RATHER THAN A RENAME OF IT.**
@@ -7333,19 +7361,19 @@ export function solveSegment({
      * ⛔ THE THREE `economies` READS ABOVE WERE NEVER DASH SITES. ⚖ Ruling
      * 54 (5) put ⚖ 46's collect stance and ⚖ 47's early walk BEHIND
      * `ALLOW_DASH_ROSTER_WIDE` as their RELEASE GATE (§40.3) — they merely
-     * DEFAULT off it. Spelling them `dashMode` would make `--dash=none`
-     * revert them too, which moves four committed artifacts (`r8-solve-10`
-     * 90 → 89 · `r8-solve-20` 365 → 332 · `r8-d2-19` 864 → 807 · `r8-d2-20`
-     * 781 → 756, the `economies` docblock's own census) that have nothing to
-     * do with dashing — and a table measuring "what does dashing cost" would
-     * have been measuring two changes.
+     * DEFAULTED off it. Spelling them `dashMode` would have made
+     * `--dash=none` revert them too, moving four committed artifacts
+     * (`r8-solve-10` 90 → 89 · `r8-solve-20` 365 → 332 · `r8-d2-19`
+     * 864 → 807 · `r8-d2-20` 781 → 756, the `economies` docblock's own
+     * census) that have nothing to do with dashing.
      *
-     * ⛓ SO THE TWO MEASURE DIFFERENT THINGS ON PURPOSE. A `--dash=` grant
-     * moves THIS option and leaves the constant alone, so it prices the
-     * window pass ALONE. Flipping `DEFAULT_DASH_MODE` to `none` drags the
-     * derived alias false WITH it, so it prices the pass ∪ the economies —
-     * which is the honest number for a default change, and the reason that
-     * decision is the user's.
+     * ⛓⛓ AND AT 12j (⚖ RULING 61 (ii)) THE YOKE IS CUT AT THE OTHER END TOO.
+     * `ECONOMIES_ROSTER_WIDE` is its own constant, so `DEFAULT_DASH_MODE`
+     * no longer drags the economies with it: BOTH the `--dash=` grant and a
+     * constant flip now price the window pass ALONE. 12i had to say the
+     * opposite here — a `none` default dragged the derived alias false and
+     * priced pass ∪ economies — and §49.5's C vs D columns are the
+     * measurement of the difference, five producers of seven.
      */
     dashMode = DEFAULT_DASH_MODE,
 }) {

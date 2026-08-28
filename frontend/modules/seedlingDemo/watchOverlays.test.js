@@ -519,8 +519,10 @@ describe('⛔ kickoff §4 slice 2 acceptance — the overlays on committed tapes
          * reachable and the old numbering could never accept.
          *
          * ⛔⛔ AND THE ROW NOW READS THE LEDGER THAT CARRIES THAT FINDING, NOT
-         * THE WALK'S WHOLE PRESS LIST. `ALLOW_DASH_ROSTER_WIDE` went `true` at
-         * R9 slice 12e′'s fourth run and `r8-solve-18` was re-recorded 541 ->
+         * THE WALK'S WHOLE PRESS LIST. The dash went on at
+         * R9 slice 12e′'s fourth run (behind `ALLOW_DASH_ROSTER_WIDE`, a name
+         * retired at 12j — the dash is `DEFAULT_DASH_MODE` now) and
+         * `r8-solve-18` was re-recorded 541 ->
          * 410; the walk now spends FOURTEEN more sword presses, every one of
          * them AFTER the second Spinner dies, because a sword-dash is a press.
          * The STRIKE ledger — the presses that LAND — is unmoved by the flip in

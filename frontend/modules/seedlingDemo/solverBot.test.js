@@ -63,7 +63,7 @@ import {
     FACING_KEYS, facingToward,
     deriveKillByChaser, interceptOrder,
     previewWalk, resolveKillStrategy, solveSegment, strikePolicyFor,
-    ALLOW_DASH_ROSTER_WIDE, DASH_CHAIN_PATTERN, DASH_CHAIN_PREFIXES,
+    ECONOMIES_ROSTER_WIDE, DASH_CHAIN_PATTERN, DASH_CHAIN_PREFIXES,
     DASH_MODES, DEFAULT_DASH_MODE, dashPrefixesFor,
     PREVIEW_AGREEMENT_BOUND, planSwordDash,
 } from './solverBot.js';
@@ -523,8 +523,10 @@ describe('the refusal shapes — never a silent stall', () => {
          * ⛔⛔ THE CLAIM IS ABOUT THE LADDER, SO IT READS THE LADDER'S
          * MEMBERS. `rejected` is the acting rung's WHOLE refusal list and the
          * planner puts its own refused options on it too, which are not rungs:
-         * at `ALLOW_DASH_ROSTER_WIDE === true` (flipped at R9 slice 12e′'s
-         * fourth run) the list reads `['avoid', 'time', 'sword-dash']`. A row
+         * at a DASHING default (flipped at R9 slice 12e′'s fourth run; the
+         * predicate is `DEFAULT_DASH_MODE !== 'none'` since 12j retired
+         * `ALLOW_DASH_ROSTER_WIDE`) the list reads
+         * `['avoid', 'time', 'sword-dash']`. A row
          * that compared the raw list was asserting the flag's state through a
          * sentence about escalation — §40.6's landmine, one file over. The
          * build is NAMED below instead, so neither state is silently green.
@@ -537,7 +539,7 @@ describe('the refusal shapes — never a silent stall', () => {
         expect(whyOf('time')).toMatch(/MOVER_RANGE/);
         expect(bait.rejected.map((j) => j.option)
             .filter((o) => !ESCALATION_LADDER.includes(o)))
-            .toEqual(ALLOW_DASH_ROSTER_WIDE ? ['sword-dash'] : []);
+            .toEqual(DEFAULT_DASH_MODE !== 'none' ? ['sword-dash'] : []);
 
         // ⛓ AND THE ROOM DID THE KILLING. Both bodies drown — the baited one
         // reaching the player, the other following during the crossing —
@@ -2987,19 +2989,38 @@ describe('R9 slice 12c′: the PLANNER dashes toward the exit', () => {
     });
 
     /**
-     * ⛓⛓⛓ **THE ROSTER-WIDE DASH PERMISSION IS ON**, flipped at R9 slice 12e′'s
-     * re-run under ⚖ rulings 41 + 49 + 50. The row is RE-STATED rather than
-     * deleted: what it pins is that the flag has ONE state for the whole
-     * roster and that the state is a deliberate, dated decision — a row that
-     * vanished at the flip would leave the tree with no assertion about it at
-     * all, which is how a permission becomes a default nobody remembers
-     * granting.
+     * ⛓⛓⛓ **THE TWO ROSTER-WIDE PERMISSIONS ARE ON, AND THEY ARE TWO** (R9
+     * slice 12j, ⚖ ruling 61). Both were flipped on at R9 slice 12e′'s re-run
+     * under ⚖ rulings 41 + 49 + 50 — as ONE constant, because ⚖ 54 (5) used
+     * the dash flag as the economies' RELEASE GATE (§40.3).
+     *
+     * ⛔ THE ROW IS RE-STATED RATHER THAN DELETED, for the reason it was
+     * re-stated at the flip: what it pins is that each permission has ONE
+     * state for the whole roster and that the state is a deliberate, dated
+     * decision — a row that vanished would leave the tree with no assertion
+     * about it at all, which is how a permission becomes a default nobody
+     * remembers granting.
+     *
+     * ⛓⛓ AND THE SECOND HALF IS THE 12j CLAIM: the two states are
+     * INDEPENDENT. Until 12j `ALLOW_DASH_ROSTER_WIDE` was BOTH — a
+     * `DEFAULT_DASH_MODE` of `none` dragged ⚖ 46 and ⚖ 47 off with it and
+     * moved four committed artifacts that have nothing to do with dashing
+     * (§49.5's column C against column D: five producers of seven). The
+     * economies constant is a literal now, so no dash mode can read it.
      */
-    it('⛓ the roster-wide dash permission is ON at this head', () => {
-        expect(ALLOW_DASH_ROSTER_WIDE).toBe(true);
-        // ⛓ R9 slice 12i: and it is DERIVED now — the boolean is a reading of
-        // the knob, so the two can never disagree about the roster's state.
-        expect(ALLOW_DASH_ROSTER_WIDE).toBe(DEFAULT_DASH_MODE !== 'none');
+    it('⛓ both roster-wide permissions are ON at this head, and neither reads the other', () => {
+        expect(ECONOMIES_ROSTER_WIDE).toBe(true);
+        expect(DEFAULT_DASH_MODE).not.toBe('none');
+        /**
+         * ⛔ THE INDEPENDENCE IS ASSERTED ON THE SOURCE, not on the values —
+         * two `true`s agree by coincidence at this head, and the yoke this
+         * row exists to refuse WAS two agreeing values. What it refuses is
+         * the economies constant being DERIVED from anything dash-shaped.
+         */
+        const src = readFileSync(new URL('./solverBot.js', import.meta.url), 'utf8');
+        const decl = src.match(/^export const ECONOMIES_ROSTER_WIDE = .*$/m);
+        expect(decl).not.toBeNull();
+        expect(decl[0]).not.toMatch(/DASH/);
     });
 
     /**
@@ -3402,7 +3423,7 @@ describe('R9 slice 12d′: ⚖ 47 — the fade is spent walking, and the wait is
      * ⛓ THE ARRIVE-LATE ARM, IN THE WILD — AND THE FLIP MOVED IT TO THE OTHER
      * ARM, WHICH IS WHY THE ROW PINS THE ARITHMETIC.
      *
-     * At `ALLOW_DASH_ROSTER_WIDE === false` the walk to the tile before
+     * At a `none` dash default the walk to the tile before
      * `lock@144,112` OUTLASTS the fade, so the wait is zero and the whole fade
      * is spent travelling — `r8-solve-18`'s pre-flip 541-tick tape held no key
      * from t=292 to t=394, the fade standing still at the loiter cell,
@@ -3430,8 +3451,10 @@ describe('R9 slice 12d′: ⚖ 47 — the fade is spent walking, and the wait is
         /**
          * ⛓⛓ THE WAIT IS THE SUBTRACTION, NOT THE INSTANCE (§40.6's repair).
          * Whether L18 arrives before or after the clear is a property of the
-         * WALK'S SPEED, so it flips with `ALLOW_DASH_ROSTER_WIDE`: at `false`
-         * the walk outlasts the fade and the wait is 0; at `true` (flipped at
+         * WALK'S SPEED, so it flips with the DASH default
+         * (`DEFAULT_DASH_MODE !== 'none'`, `ALLOW_DASH_ROSTER_WIDE` until
+         * 12j): at `none` the walk outlasts the fade and the wait is 0;
+         * otherwise (flipped at
          * R9 slice 12e′'s fourth run) the dash gets there first — 369 against
          * a clear at 393 — and the wait is the remaining 24. Pinning either
          * instance pins a build; the SUBTRACTION holds in both, and it is the
@@ -3441,7 +3464,7 @@ describe('R9 slice 12d′: ⚖ 47 — the fade is spent walking, and the wait is
         expect(kill.earlyWalk.waits)
             .toBe(Math.max(0, kill.earlyWalk.clearTick - kill.earlyWalk.arrivedAt));
         // …and the BUILD is named, so neither flag state is silently green.
-        if (ALLOW_DASH_ROSTER_WIDE) {
+        if (DEFAULT_DASH_MODE !== 'none') {
             expect(kill.earlyWalk.arrivedAt).toBeLessThan(kill.earlyWalk.clearTick);
             expect(kill.earlyWalk.waits).toBeGreaterThan(0);
         } else {
@@ -3456,7 +3479,7 @@ describe('R9 slice 12d′: ⚖ 47 — the fade is spent walking, and the wait is
          * LANDMINE ONE LINE FURTHER DOWN THAN §40.6 LOOKED. It compared the
          * economy walk against the tape that stood through the fade — true
          * while `r8-solve-18` was 541. The re-record landed 410 at
-         * `ALLOW_DASH_ROSTER_WIDE === true`, and the comparison became the tape
+         * a DASHING default, and the comparison became the tape
          * against ITSELF: 410 < 410. §40.6 could not have caught it, because at
          * the head it swept the tape was still the old one.
          * ⇒ the row NAMES ITS BUILD and asserts the difference. Both numbers
@@ -3465,7 +3488,7 @@ describe('R9 slice 12d′: ⚖ 47 — the fade is spent walking, and the wait is
          * explicitly, so ⚖ 47 is on either way — solves it in 437, which is
          * ⚖ 54's CASE B column (541 → 437) to the digit.
          */
-        if (ALLOW_DASH_ROSTER_WIDE) expect(out.perTick.length).toBe(committed.tick_count);
+        if (DEFAULT_DASH_MODE !== 'none') expect(out.perTick.length).toBe(committed.tick_count);
         else expect(out.perTick.length).toBeGreaterThan(committed.tick_count);
     });
 
@@ -3532,7 +3555,8 @@ describe('R9 slice 12d′: ⚖ 47 — the fade is spent walking, and the wait is
  * the roster-wide flag so every solver change lives on `main` inert"*).
  *
  * ⛔ THE GATE IS NOT PRECAUTIONARY — IT WAS FORCED BY A MEASUREMENT. Landed
- * un-gated on `main` at `ALLOW_DASH_ROSTER_WIDE === false`, ⚖ 46 and ⚖ 47
+ * un-gated on `main` at `ECONOMIES_ROSTER_WIDE === false` (the constant was
+ * `ALLOW_DASH_ROSTER_WIDE` until 12j gave the economies their own), ⚖ 46 and ⚖ 47
  * move FIVE committed artifacts and five of the seven producer `--check`
  * md5s: `r8-solve-10` 90 → 89 · `r8-solve-18` 541 → 437 · `r8-solve-20`
  * 365 → 332 · `r8-d2-19` 864 → 807 · `r8-d2-20` 781 → 756, so the `r8-d2`
@@ -3552,7 +3576,7 @@ describe('R9 slice P2: ⚖ 54 (5) — the economies are behind the roster-wide p
      * ⛔ A ROW THAT READ THE DEFAULT WOULD BE A LANDMINE UNDER THE FLIP. The
      * first cut of this asserted the committed answer at the DEFAULT and the
      * solve against `committed.tick_count` — true at this head and FALSE for
-     * ever after `ALLOW_DASH_ROSTER_WIDE` goes `true` and the roster is
+     * ever after `ECONOMIES_ROSTER_WIDE` goes `true` and the roster is
      * re-recorded, which is a red the re-record could not repair by
      * re-authoring anything. The gate is a claim about TWO BUILDS
      * ([[feedback_fixture_must_discriminate_two_builds]]), so it is spelled
@@ -3620,8 +3644,8 @@ describe('R9 slice P2: ⚖ 54 (5) — the economies are behind the roster-wide p
         /**
          * ⛓ THE ARITHMETIC, NOT A NUMBER — and deliberately NOT `waits === 0`.
          * ⛔ Whether this room arrives before or after the clear is a property
-         * of the WALK'S SPEED, so it flips with `ALLOW_DASH_ROSTER_WIDE`: at
-         * `false` the walk outlasts the fade and `waits` is 0; at `true` the
+         * of the WALK'S SPEED, so it flips with the DASH default: at
+         * `none` the walk outlasts the fade and `waits` is 0; otherwise the
          * dash gets there first and it is 24. A row that pinned the 0 would be
          * a red no re-record could repair (the flip's own §40 finding). What
          * the mechanism actually promises is the SUBTRACTION, and that holds
@@ -3726,7 +3750,7 @@ describe('R9 slice P2: ⚖ 54 (5) — the economies are behind the roster-wide p
             return { ticks: out.perTick.length, keys: JSON.stringify(out.perTick) };
         };
         const implied = spell({});
-        const spelled = spell({ economies: ALLOW_DASH_ROSTER_WIDE });
+        const spelled = spell({ economies: ECONOMIES_ROSTER_WIDE });
         expect(spelled.ticks).toBe(implied.ticks);
         expect(spelled.keys).toBe(implied.keys);
     });
