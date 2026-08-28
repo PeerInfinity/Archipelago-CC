@@ -226,7 +226,15 @@ if (flag('write')) {
         };
         console.log(`${(r.exit === 0 ? 'ok  ' : `EXIT${r.exit}`)}  ${row.key.padEnd(46)} `
             + `${String(r.value).slice(0, 46).padEnd(46)} ${(r.ms / 1000).toFixed(1)}s`
-            + `${band.cheap ? ' cheap' : ''}${band.held ? ' HELD' : ''}`);
+            /**
+             * ⛔ THE STORED VALUE, NOT THE BAND'S. These came apart on the
+             * first real write: an `alwaysQuoted` row is written `cheap:
+             * false` regardless of how fast it ran, and this line printed the
+             * BAND's answer — so the CI-read suite row logged as "5.3s cheap"
+             * while the file recorded `cheap: false`. A log that disagrees
+             * with the artifact it is a log OF is the quietest kind of wrong.
+             */
+            + `${out.rows[row.key].cheap ? ' cheap' : ''}${band.held ? ' HELD' : ''}`);
     }
     /**
      * ⛔ EVERY HELD ROW IS NAMED. Hysteresis that nobody could see would be a
