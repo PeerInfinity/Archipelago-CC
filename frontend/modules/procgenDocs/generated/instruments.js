@@ -5315,6 +5315,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "write-oracle"
                 }
             ],
             "inheritedFlags": [

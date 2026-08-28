@@ -12094,7 +12094,7 @@ its byte-frozen free oracle is compared against.
 
 <!-- GENERATED:campaign-chain BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-`r9-campaign` — **16 segments**, custody, from `new Game(0,80,128)` with an empty save to the **L15** arrival, **3326 ticks**. Segments 1–4 are PROMOTED (their boots already ARE their predecessors' latches, so this chain gives them a RELATION rather than a rewrite); every later one boots its predecessor's MEASURED latch.
+`r9-campaign` — **16 segments**, custody, from `new Game(0,80,128)` with an empty save to the **L15** arrival, **3331 ticks**. Segments 1–4 are PROMOTED (their boots already ARE their predecessors' latches, so this chain gives them a RELATION rather than a rewrite); every later one boots its predecessor's MEASURED latch.
 
 | # | tape | rooms | ticks | earns |
 |---|---|---|---|---|
@@ -12107,7 +12107,7 @@ its byte-frozen free oracle is compared against.
 | 7 | `r8-solve-7` | L7 → L8 | 146 | — |
 | 8 | `r8-solve-8` | L8 → L9 | 827 | — |
 | 9 | `r8-solve-9` | L9 → L10 | 122 | — |
-| 10 | `r8-solve-10` | L10 → L11 | 78 | `sword@L10` |
+| 10 | `r8-solve-10` | L10 → L11 | 83 | `sword@L10` |
 | 11 | `r9-solve-11` | L11 → L3 | 97 | `chest@L11` |
 | 12 | `r9-solve-3` | L3 → L2 | 152 | — |
 | 13 | `r9-solve-2` | L2 → L0 | 23 | — |
@@ -15733,3 +15733,61 @@ now claimed by creating a file, which cannot happen twice, and each pitfall is
 one file naming which family of mistakes it belongs to. The old list is frozen,
 not migrated: every citation in the tree is by number, and a lookup answers from
 whichever place holds that number (traps 922, 923, 925, 926).
+
+### R9 slice RR: A SENTENCE ABOUT HELD KEYS WAS WRITTEN IN THREE PLACES AND MEASURED IN NONE — THE GAME HAD BEEN FREEZING THE RIGHT NUMBERS ALL ALONG
+
+When the bot finishes replaying a tape, the harness asks the game how much
+damage the player took and compares it with the model's answer. The question was
+being asked a fraction of a second late — the driver polls four times a second
+and the game runs thirty frames a second — so up to eight frames of play
+happened between the last thing the tape did and the reading. Enemies keep
+moving in those frames. A countdown keeps counting. Occasionally a hit lands,
+and if it is the one that kills the player the damage counter resets to zero, so
+the comparison fails in the direction that reads as *"the model over-counted"* —
+a true-sounding sentence about the wrong thing.
+
+**THE EXPLANATION EVERYONE HAD WRITTEN DOWN WAS WRONG.** Three separate
+documents said the reason was that the tape's last keys were still being held,
+because nothing released them. That was never measured. The game does release
+them: the replay loop lets go of every key on the tape's final tick, before it
+disarms, and says so in its own comment. Across all 149 recorded tapes, not one
+holds a key past its last tick, and seventy-four of them end a hold exactly
+there. What actually spends those frames is the world — bodies steering, timers
+draining, the player coasting to a stop.
+
+**AND THE FIX WAS ALREADY BUILT.** The game takes a snapshot at the instant the
+tape ends — the same snapshot the harness already uses to check that one segment
+of a playthrough starts where the previous one stopped — and that snapshot
+carries the damage counters. The driver was already carrying it back. Nothing
+had to be added to the game, the driver, or the browser; the comparison simply
+had to read the frozen numbers instead of the late ones. The drift is now zero
+because of where the reading is taken, not because of how fast anything polls,
+so a countdown can be compared for equality again rather than as an inequality
+that only ever proved the answer was not too high.
+
+**THE FIRST FULL SWEEP UNDER THE FIX MEASURED WHAT THE OLD READING HAD BEEN
+HIDING.** Of 149 tapes, four showed a gap between the frozen number and the
+polled one — between one and seven frames, always downward — and on every one
+the model matched the frozen number exactly. One of those four is the tape that
+caused the inequality to be introduced in the first place, several rungs ago,
+whose note read *"the model is not wrong"*. It was not.
+
+**IN THE SAME PASS, TWO PERMISSIONS FINALLY MOVED APART.** A previous slice split
+one switch into two — one for dashing, one for a pair of route economies — so
+that either could be answered on its own numbers. The route economies are now
+off, on the user's decision, which re-plans six recorded walks. Every published
+count of what that switch moves said four; running each producer's own check and
+reading the artifacts it reports produced six. The two missing ones are the
+interior segments of a chain, and they went missing because the count had been
+assembled per producer while the artifacts are per walk.
+
+**THE RE-RECORD ALSO CAUGHT THE PIPELINE ADMITTING WALKS FOR THE WRONG REASON.**
+Before writing anything, the pipeline checks that every artifact whose bytes
+moved was allowed to move. It was asking a different question — *"did the write
+step touch this file?"* — which happens to give the same answer right up until
+the moment a licensed change makes the producers rewrite their own downstream
+segments first, leaving the write step with nothing to do. That is exactly what
+this run did, so the pipeline stopped before spending any of the graphics
+budget, naming six files it had itself predicted would move. The check now reads
+the permission rather than the mechanism, and the offline rehearsal gained the
+scenario that reproduces it, which no existing scenario could.

@@ -53,7 +53,8 @@ import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from '
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { gameVisibleTape } from '../../frontend/modules/seedlingDemo/tapeFormat.js';
+import { gameVisibleTape, heldKeysAt, parseTape }
+    from '../../frontend/modules/seedlingDemo/tapeFormat.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 
 /**
@@ -85,6 +86,22 @@ const arg = (n, d) => {
     return f === undefined ? d : f.slice(n.length + 3);
 };
 const ONLY = arg('only', '');
+/**
+ * ⛓⛓⛓ R9 SLICE RR, ⚖ 17 — **`--write-oracle`: THE ORACLE ENTRY IS EMITTED,
+ * NOT TRANSCRIBED.** `r8-solve-10-help-frame-oracle.json` was hand-written
+ * from two runs of this probe, and its `walks` are keyed on the tape's
+ * `tick_count` because the three consumers refuse BY NAME when the committed
+ * tape is a length the game has never been driven at. That refusal fired for
+ * real at ⚖ 64's re-record — the walk went 78 → 83 and nine rows went red
+ * saying *"the game oracle [90,78] has never been driven at that length"*,
+ * which is the correct behaviour and an owed GPU row. Transcribing the answer
+ * by hand a third time would be the same trap a third time, so the probe
+ * writes it: drive the COMMITTED walk, derive the entry, refuse if the span
+ * shape is not the four this room has.
+ */
+const WRITE_ORACLE = process.argv.includes('--write-oracle');
+const ORACLE_PATH = join(REPO,
+    'frontend/modules/seedlingDemo/fixtures/r8-solve-10-help-frame-oracle.json');
 
 const TAPE_PATH = 'frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-10.json';
 const BRANCH = 'r9/re-record-attempt-3';
@@ -98,7 +115,17 @@ const BRANCH = 'r9/re-record-attempt-3';
  * so it is the only thing whose dead-frame ledger the question is about.
  */
 const WALKS = [
-    { label: 'old', why: 'the COMMITTED 90-tick walk — the game spent 192',
+    /**
+     * ⛓ R9 slice RR: the label is DERIVED. It used to read "the COMMITTED
+     * 90-tick walk — the game spent 192", and by ⚖ 64's re-record the
+     * committed walk was 83 and the game spent 190 — a sentence printed by an
+     * instrument that had gone false about its own subject.
+     */
+    { label: 'old',
+        get why() {
+            return 'the COMMITTED walk — '
+                + `${JSON.parse(readFileSync(join(REPO, TAPE_PATH), 'utf8')).tick_count} ticks`;
+        },
         bytes: () => JSON.stringify(gameVisibleTape(
             JSON.parse(readFileSync(join(REPO, TAPE_PATH), 'utf8')))) },
     { label: 'new', why: `the re-recorded 78-tick walk from ${BRANCH} — the game spent 191`,
@@ -191,4 +218,93 @@ if (results.old && results.new) {
             : '(none)'}  |  new ${q ? `t=${q.tick} L${q.level} ${q.frames}f` : '(none)'}`
             + `${same ? '' : '   ⛔ DIFFERS'}`);
     }
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⚖ 17 — `--write-oracle`: THE ENTRY THIS PROBE'S OWN CONSUMERS READ
+ * ══════════════════════════════════════════════════════════════════════ */
+/**
+ * ⛔ THE SPAN SHAPE IS THE REFUSAL. This room's dead-frame ledger is four
+ * spans — a level-10 load, the sword's pickup ceremony, the Help, and a
+ * level-11 load — and the HELP is the one that is neither a 20-frame load nor
+ * the longest. A walk whose curve does not have exactly that shape is not a
+ * walk this oracle can describe, and the probe says so rather than guessing
+ * which span is which. ⛓ The Help's TICKS are the curve rows that climbed
+ * inside that span, which is what the three consumers index by.
+ *
+ * ⛔⛔ AND `modelOwes` IS WRITTEN ONLY BESIDE A MEASURED GAME TOTAL. On its
+ * own it would be a FIXED POINT — the model's number checked against the
+ * model — so the entry carries the GAME's `dead_frames` from the same drive
+ * and the DIFFERENCE between them, which is the quantity §35.6 and slice
+ * 12e‴ spent two sessions on (every other boundary keeps game = model + 1;
+ * `r8-solve-10` is the one where it is 0). A reader can see which side each
+ * number came from, and the equality of two totals whose SPAN SHAPES differ
+ * is the content rather than a coincidence.
+ */
+if (WRITE_ORACLE) {
+    const got = results.old;
+    if (!got) throw new Error('⛔ --write-oracle needs the COMMITTED walk — drop --only=new');
+    const tape = parseTape(JSON.parse(readFileSync(join(REPO, TAPE_PATH), 'utf8')));
+    const curve = got.dead_curve ?? [];
+    const spans = spansOf(curve);
+    const loads = spans.filter((x) => x.frames === 20);
+    const longest = spans.reduce((a, b) => (b.frames > a.frames ? b : a), spans[0]);
+    const rest = spans.filter((x) => x.frames !== 20 && x !== longest);
+    if (spans.length !== 4 || loads.length !== 2 || rest.length !== 1) {
+        throw new Error('⛔ REFUSED: this walk\'s curve is '
+            + `${spans.map((x) => `t=${x.tick}/${x.frames}f`).join(' ')} — the oracle `
+            + 'describes a FOUR-span room (two 20-frame loads, the ceremony, the Help) '
+            + 'and this probe will not guess which span is the Help.');
+    }
+    const help = rest[0];
+    /**
+     * ⛔ `spansOf` RETURNS `{tick, level, frames, deadAfter}` — it MAPS away the
+     * `from`/`to` it builds with, and my first cut read `help.from`, got
+     * `undefined`, compared every climb against it and wrote an EMPTY
+     * `helpDeadTicks` without complaining. The bound is rebuilt from what the
+     * span DOES carry, and the guard below is the part that mattered: a
+     * derivation that produced nothing where the span says N frames is
+     * REFUSED, because an empty list is exactly what the three consumers
+     * would read as "this walk dismisses its own Help" — a true-sounding
+     * answer from a broken read.
+     */
+    const helpFrom = help.deadAfter - help.frames;
+    const helpDeadTicks = [];
+    for (let i = 1; i < curve.length; i += 1) {
+        if (curve[i].dead > curve[i - 1].dead && curve[i].tick === help.tick
+            && curve[i].dead > helpFrom && curve[i].dead <= help.deadAfter) {
+            helpDeadTicks.push(curve[i].tick + (curve[i].dead - helpFrom - 1));
+        }
+    }
+    if (helpDeadTicks.length !== help.frames) {
+        throw new Error(`⛔ REFUSED: the Help span at t=${help.tick} is ${help.frames} `
+            + `frame(s) and the curve yielded ${helpDeadTicks.length} tick(s) `
+            + `[${helpDeadTicks}] — the derivation and the span disagree, and an empty or `
+            + 'short list would read to the consumers as a Help this walk dismissed itself.');
+    }
+    const { runTape } = await import(join(REPO, 'frontend/modules/seedlingDemo/tapeRunner.js'));
+    const { atlasLevelSource } = await import(
+        join(REPO, 'frontend/modules/seedlingDemo/levelSource.js'));
+    const model = runTape(tape, { levelSource: atlasLevelSource() });
+    const oracle = JSON.parse(readFileSync(ORACLE_PATH, 'utf8'));
+    const key = `t${tape.tick_count}`;
+    oracle.walks[key] = {
+        which: `the COMMITTED ${tape.tick_count}-tick walk, driven by `
+            + 'probe-seedling-help-frame.mjs --only=old --write-oracle',
+        tick_count: tape.tick_count,
+        dead_frames: got.status.dead_frames,
+        modelOwes: model.deadFramesOwed,
+        gameMinusModel: got.status.dead_frames - model.deadFramesOwed,
+        heldAtHelpTick: [...heldKeysAt(tape, helpDeadTicks[0])],
+        helpDeadTicks,
+        held: Object.fromEntries(helpDeadTicks.map((t) => [String(t), [...heldKeysAt(tape, t)]])),
+        curve,
+    };
+    writeFileSync(ORACLE_PATH, `${JSON.stringify(oracle, null, 1)}\n`);
+    console.log(`\n══ ORACLE ══\n  wrote walks.${key}: tick_count ${tape.tick_count}, `
+        + `game ${got.status.dead_frames}, model ${model.deadFramesOwed}, `
+        + `game-model ${got.status.dead_frames - model.deadFramesOwed}, `
+        + `helpDeadTicks [${helpDeadTicks}], held ${JSON.stringify(
+            [...heldKeysAt(tape, helpDeadTicks[0])])}\n  ${ORACLE_PATH}`);
 }

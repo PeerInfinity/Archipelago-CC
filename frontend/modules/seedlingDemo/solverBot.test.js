@@ -3502,8 +3502,27 @@ describe('R9 slice 12d′: ⚖ 47 — the fade is spent walking, and the wait is
          * explicitly, so ⚖ 47 is on either way — solves it in 437, which is
          * ⚖ 54's CASE B column (541 → 437) to the digit.
          */
-        if (DEFAULT_DASH_MODE !== 'none') expect(out.perTick.length).toBe(committed.tick_count);
-        else expect(out.perTick.length).toBeGreaterThan(committed.tick_count);
+        /**
+         * ⛔⛔⛔ R9 SLICE RR — **AND THE REPAIR NAMED ONE BUILD OF TWO, SO THE
+         * LANDMINE RE-ARMED ITSELF ONE FLIP LATER.** The paragraph above names
+         * the DASH build, and at ⚖ 63 (c)'s flip it was the ECONOMY build that
+         * moved: this call passes `economies: true` EXPLICITLY, so it still
+         * solves L18 in **410**, while the committed tape is now the
+         * economy-OFF walk at **485**. `toBe(committed.tick_count)` went red
+         * on a row whose subject had not changed at all.
+         * ⇒ the row names BOTH permissions. At `ECONOMIES_ROSTER_WIDE === true`
+         * this solve IS the committed walk; at `false` the committed walk is
+         * the one WITHOUT ⚖ 46 and ⚖ 47, so an economy solve must be strictly
+         * SHORTER — and the gap (485 − 410 = 75) is the economies' own value
+         * on this room, measured here rather than typed anywhere.
+         */
+        if (DEFAULT_DASH_MODE === 'none') {
+            expect(out.perTick.length).toBeGreaterThan(committed.tick_count);
+        } else if (ECONOMIES_ROSTER_WIDE) {
+            expect(out.perTick.length).toBe(committed.tick_count);
+        } else {
+            expect(out.perTick.length).toBeLessThan(committed.tick_count);
+        }
     });
 
     /**
