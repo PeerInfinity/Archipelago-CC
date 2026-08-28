@@ -40,13 +40,20 @@
  * ```
  * {
  *   name:     'toy' | 'maze' | …,          // what a refusal calls the substrate
- *   apply:    (record, op) => {ok, op, description, record?, reason?},
+ *   apply:    (record, op) => {ok, op, description, record?, value?, reason?},
  *   equal:    (a, b) => boolean,
+ *   // ⛓ THE CELL-SPACE TRIO — ALL THREE OR NONE (EDITOR INTEGRATION B-b):
  *   bounds:   (record) => {w, h},
  *   readCell: (record, x, y) => descriptor,
  *   writeOps: (descriptor, x, y) => op[],
  * }
  * ```
+ *
+ *  · **THE TRIO IS OPTIONAL AS A UNIT.** A substrate whose document is not a
+ *    grid of cells — bounce edits platforms in FLOAT pixel space, the APWorld
+ *    editor has no canvas — declares `{name, apply, equal}` and nothing else,
+ *    and `rectCopy` / `rectPasteOps` / `floodOps` / `descriptorFieldsOf` /
+ *    `mountEditorView` then refuse it BY NAME. See `CELL_SPACE_MEMBERS`.
  *
  *  · **`apply`** applies ONE ATOMIC op and returns the RESOLVED op (every
  *    drawn parameter spent — the maze's `setButton index` law, and the same one
@@ -111,6 +118,78 @@ export const ADAPTER_MEMBERS = Object.freeze({
 });
 
 /**
+ * ⛓⛓⛓ **THE CELL-SPACE TRIO — ALL THREE OR NONE** (EDITOR INTEGRATION B-b,
+ * plan §3.1's widening).
+ *
+ * `bounds` / `readCell` / `writeOps` are the three members that only mean
+ * anything on a substrate whose document is a GRID OF CELLS. Two of the five
+ * editors §3.1 measured have no such grid at all: the bounce region editor's
+ * platforms live in FLOAT pixel space (`editorView.js` discards a non-integer
+ * cell by name) and the APWorld editor edits a `rules.json` with no canvas.
+ * Forcing them to declare the trio would mean three members whose whole body
+ * is an apology — the shape a reader mistakes for a mechanism.
+ *
+ * ⛔⛔ **THE TRIO IS ALL-OR-NOTHING, AND A PARTIAL ONE IS A MIS-TYPED ADAPTER
+ * RATHER THAN A CELL-LESS ONE.** An adapter with `bounds` and no `readCell`
+ * has a size for a space it cannot read, and every caller that branches on
+ * "does this substrate have cells" would answer differently depending on which
+ * member it happened to ask. `assertAdapter` refuses it BY NAME, in the same
+ * sentence shape a missing required member gets, so the existing
+ * `it.each(Object.keys(ADAPTER_MEMBERS))` row keeps biting on all six.
+ *
+ * ⚠ IT IS A LIST OVER `ADAPTER_MEMBERS`, NOT A SECOND TABLE. The types stay
+ * in the one map; this names which of its keys travel together. A trio member
+ * that vanished from `ADAPTER_MEMBERS` would be a name here with no type, and
+ * the assert below says so rather than skipping it.
+ */
+export const CELL_SPACE_MEMBERS = Object.freeze(['bounds', 'readCell', 'writeOps']);
+
+/**
+ * ⛓⛓ **WHICH OF `assertAdapterBehaviour`'s SEVEN LAWS ARE CELL-SPACE LAWS** —
+ * as data, because the skip lines and the guard that emits them must not be
+ * able to disagree about how many there are.
+ *
+ * ⛔ THREE, not one. §3.1's widening paragraph says *"runs laws 1–6 and skips
+ * 7"*, and the code overturns it: law 1 asks `bounds`, law 6 asks `writeOps`
+ * and law 7 asks the pair. What a cell-less adapter CAN be asked is laws 2–5,
+ * which are the four a session folds on.
+ */
+export const CELL_SPACE_LAWS = Object.freeze([
+    Object.freeze({ n: 1, member: 'bounds', what: 'positive integer {w, h}' }),
+    Object.freeze({ n: 6, member: 'writeOps', what: 'returns an ARRAY of ops' }),
+    Object.freeze({ n: 7, member: 'readCell', what: 'readCell → writeOps → readCell at another cell' }),
+]);
+
+/**
+ * ⛓ **DOES THIS ADAPTER DECLARE A CELL SPACE?** — the one predicate every
+ * cell-space caller in this file (and `editorView`'s mount) asks.
+ *
+ * ⛔ `every`, never `some`: a partial trio is refused by `assertAdapter`, and
+ * this predicate must agree with that refusal rather than answer "yes" for an
+ * adapter one of whose three members is missing. It is deliberately usable on
+ * an object `assertAdapter` has NOT seen, because that is how a caller asks
+ * the question before it has an adapter to trust.
+ */
+export function hasCellSpace(adapter) {
+    return CELL_SPACE_MEMBERS.every((m) => typeof adapter?.[m] === 'function');
+}
+
+/**
+ * ⛓ REFUSE A CELL-SPACE OPERATION ON A CELL-LESS ADAPTER, BY NAME — one
+ * sentence naming the adapter, the function and the members it needs.
+ */
+const requireCellSpace = (adapter, what) => {
+    if (!hasCellSpace(adapter)) {
+        fail(`editCore: ${adapter.name} declares no cell space — ${what} needs `
+            + `${CELL_SPACE_MEMBERS.join('/')}. ⛔ A substrate whose document is not a grid `
+            + 'of cells (bounce edits platforms in FLOAT pixel space; the APWorld editor has '
+            + 'no canvas at all) declares the trio ABSENT, and every rectangle, paste and '
+            + 'flood is meaningless on it — refused here rather than answered with an empty '
+            + 'clip a caller would read as "nothing was there".');
+    }
+};
+
+/**
  * ⛓⛓⛓ **THE OPTIONAL MEMBERS** — present or absent, but never MIS-TYPED.
  *
  * `bases` is §3.2's tagged union, arriving in slice B. ⛔ IT IS OPTIONAL AND NOT
@@ -142,12 +221,42 @@ export function assertAdapter(adapter) {
             + `the CALLER's — the core registers none and imports none, which is what keeps `
             + 'it substrate-agnostic.');
     }
+    /**
+     * ⛓⛓ THE CELL-SPACE TRIO IS ANSWERED FIRST, so that a cell-less adapter is
+     * told apart from a mis-typed one BEFORE the per-member walk reaches a trio
+     * member and calls its absence a missing required member.
+     */
+    const declared = CELL_SPACE_MEMBERS.filter((m) => adapter[m] !== undefined);
+    const cellSpace = declared.length > 0;
     for (const [member, type] of Object.entries(ADAPTER_MEMBERS)) {
+        const inTrio = CELL_SPACE_MEMBERS.includes(member);
+        if (inTrio && !cellSpace) continue;
         // eslint-disable-next-line valid-typeof
         if (typeof adapter[member] !== type) {
             fail(`editCore: adapter member \`${member}\` must be a ${type}, got `
-                + `${typeof adapter[member]}. The contract is `
-                + `{${Object.keys(ADAPTER_MEMBERS).join(', ')}}.`);
+                + `${typeof adapter[member]}.${inTrio
+                    ? ` ⛔ \`${CELL_SPACE_MEMBERS.join('`/`')}\` are the CELL-SPACE TRIO: an `
+                      + `adapter declares ALL THREE or NONE, and this one declares `
+                      + `[${declared.join(', ')}]. A PARTIAL trio is a mis-typed adapter `
+                      + 'rather than a cell-less one — a size for a space it cannot read — '
+                      + 'and every caller that asks "does this substrate have cells" would '
+                      + 'answer differently depending on which member it happened to ask.'
+                    : ` The contract is {${Object.keys(ADAPTER_MEMBERS)
+                        .filter((m) => !CELL_SPACE_MEMBERS.includes(m))
+                        .join(', ')}} plus the OPTIONAL cell-space trio `
+                      + `{${CELL_SPACE_MEMBERS.join(', ')}} (all three or none).`}`);
+        }
+    }
+    /**
+     * ⛔ A TRIO NAME WITH NO TYPE is a defect in this file rather than in the
+     * adapter, and it would silently un-check that member — `CELL_SPACE_MEMBERS`
+     * is a list OVER `ADAPTER_MEMBERS`, not a second table.
+     */
+    for (const m of CELL_SPACE_MEMBERS) {
+        if (!(m in ADAPTER_MEMBERS)) {
+            fail(`editCore: \`${m}\` is named in CELL_SPACE_MEMBERS and carries no type in `
+                + 'ADAPTER_MEMBERS — the trio is a LIST over the member table, and a name '
+                + 'with no type is a member nothing checks.');
         }
     }
     for (const [member, type] of Object.entries(ADAPTER_OPTIONAL_MEMBERS)) {
@@ -226,13 +335,50 @@ export function resolveBase(adapter, tag) {
  * @param {object} o.refused  an atomic op that substrate REFUSES
  * @param {{x:number,y:number}} [o.cell]  a cell to read/write (default 0,0)
  * @param {{x:number,y:number}} [o.other] a DIFFERENT cell (see law 5)
+ * @param {(line: string) => void} [o.say] REQUIRED for a CELL-LESS adapter — see below
  */
-export function assertAdapterBehaviour(adapter, { record, op, refused, cell, other } = {}) {
+/**
+ * ⛓⛓⛓ **AND FOR A CELL-LESS ADAPTER, THE SKIPPED LAWS ARE SAID OUT LOUD**
+ * (EDITOR INTEGRATION B-b).
+ *
+ * ⛔⛔ **THE BRIEF SAID "laws 1–6, skip 7" AND THE CODE SAYS OTHERWISE.** Three
+ * of the seven are cell-space laws, not one: law 1 IS `bounds`, law 6 IS
+ * `writeOps`, law 7 is the `readCell`→`writeOps`→`readCell` round trip. An
+ * adapter that declares no trio can be asked laws **2, 3, 4 and 5** — `apply`
+ * answers the contract, `apply` does not mutate, `equal` is an equality, a
+ * refusal carries a sentence — and those four are the ones a session actually
+ * folds on.
+ *
+ * ⛔ AND A SKIP IS NOT A PASS. `assertAdapterBehaviour` returns `true`, and a
+ * row reading `expect(assertAdapterBehaviour(bounce, …)).toBe(true)` would
+ * otherwise be a green claim about seven laws of which three were never asked
+ * (trap 806's family). So a cell-less adapter REFUSES BY NAME unless the caller
+ * passes `say`, and each skipped law is named through it. There is no way to
+ * get a silent green out of this function.
+ */
+export function assertAdapterBehaviour(adapter, {
+    record, op, refused, cell, other, say = null,
+} = {}) {
     assertAdapter(adapter);
     const law = (n, what) => fail(`editCore: the ${adapter.name} adapter fails contract law `
         + `${n} — ${what}`);
-    const b = adapter.bounds(record);
-    if (!b || !Number.isInteger(b.w) || !Number.isInteger(b.h) || b.w <= 0 || b.h <= 0) {
+    const cells = hasCellSpace(adapter);
+    if (!cells && typeof say !== 'function') {
+        fail(`editCore: the ${adapter.name} adapter declares no cell space, so contract laws `
+            + `${CELL_SPACE_LAWS.map((l) => l.n).join(', ')} CANNOT be asked of it — pass `
+            + '`say` (a function) to receive one line per SKIPPED law. ⛔ Returning `true` '
+            + 'without it would make a row asserting that return a green claim about seven '
+            + 'laws of which three were never asked.');
+    }
+    if (!cells) {
+        for (const { n, member, what } of CELL_SPACE_LAWS) {
+            say(`editCore: the ${adapter.name} adapter declares no cell space — contract law `
+                + `${n} (\`${member}\`: ${what}) SKIPPED.`);
+        }
+    }
+    const b = cells ? adapter.bounds(record) : null;
+    if (cells && (!b || !Number.isInteger(b.w) || !Number.isInteger(b.h)
+        || b.w <= 0 || b.h <= 0)) {
         law(1, `\`bounds\` returned ${JSON.stringify(b)}; it must be {w, h} of positive `
             + 'integers, because every clip, paste and flood is expressed over them.');
     }
@@ -259,6 +405,7 @@ export function assertAdapterBehaviour(adapter, { record, op, refused, cell, oth
         law(5, `a REFUSED op returned ${JSON.stringify(bad)}; a refusal is `
             + '`{ok:false, description}` with a sentence a person reads — the fold quotes it.');
     }
+    if (!cells) return true;
     const at = cell ?? { x: 0, y: 0 };
     const away = other ?? { x: b.w - 1, y: b.h - 1 };
     const desc = adapter.readCell(record, at.x, at.y);
@@ -559,13 +706,39 @@ export function createEditSession(adapter, baseRecord, { base = null, certified 
                     applied: false,
                     op: res.op ?? op,
                     description: res.description,
+                    ...(res.value === undefined ? {} : { value: res.value }),
                 });
             }
             record = res.record;
             ops = Object.freeze([...ops, res.op ?? op]);
             cert = null;
             return Object.freeze({
-                ok: true, applied: true, op: res.op ?? op, description: res.description,
+                ok: true,
+                applied: true,
+                op: res.op ?? op,
+                description: res.description,
+                /**
+                 * ⛓⛓⛓ **THE ADAPTER'S `value`, FORWARDED** — trap 857, closed
+                 * (EDITOR INTEGRATION B-b). `applyOne` returns the adapter's
+                 * result verbatim, so `value` survived one layer and DIED
+                 * here: this arm rebuilt its answer field by field and left it
+                 * out. An adapter whose `add-…` op answers the node it created
+                 * therefore had to record it in a side slot and have its own
+                 * session drain it one line later (B-a's `takeLastValue`),
+                 * which is a mechanism for a field the core already had in
+                 * hand.
+                 *
+                 * ⚠ IT RIDES ON BOTH `ok` ARMS AND ON NEITHER REFUSAL. A
+                 * refused op produced nothing to name; a NO-OP did run and may
+                 * name the node it found, and dropping it there would make the
+                 * field's presence depend on whether the op happened to move
+                 * bytes.
+                 *
+                 * ⚠ A GROUP CARRIES NONE: `applyOne` builds a group's own
+                 * result from its members and names no single node, which is
+                 * right — a stroke of twelve ops has no one value.
+                 */
+                ...(res.value === undefined ? {} : { value: res.value }),
             });
         },
 
@@ -635,6 +808,7 @@ const assertBounds = (adapter, record) => {
  */
 export function rectCopy(adapter, record, { x, y, w, h }) {
     assertAdapter(adapter);
+    requireCellSpace(adapter, 'rectCopy');
     const b = assertBounds(adapter, record);
     for (const [n, v] of [['w', w], ['h', h]]) {
         if (!Number.isInteger(v) || v <= 0) {
@@ -706,6 +880,7 @@ export const FILTER_ALIASES = Object.freeze({
  */
 export function descriptorFieldsOf(adapter, record, { tx = 0, ty = 0 } = {}) {
     assertAdapter(adapter);
+    requireCellSpace(adapter, 'descriptorFieldsOf');
     const desc = adapter.readCell(record, tx, ty);
     if (!desc || typeof desc !== 'object' || Array.isArray(desc)) {
         fail(`editCore: \`${adapter.name}\`'s readCell answered `
@@ -763,6 +938,7 @@ export function rectPasteOps(adapter, record, clip, x, y, {
     tilesOnly = false, entitiesOnly = false, only = null, label = null,
 } = {}) {
     assertAdapter(adapter);
+    requireCellSpace(adapter, 'rectPasteOps');
     const field = filterFieldOf({ tilesOnly, entitiesOnly, only });
     if (!clip || !Number.isInteger(clip.w) || !Number.isInteger(clip.h)
         || !Array.isArray(clip.cells)) {
@@ -846,6 +1022,7 @@ export function rectPasteOps(adapter, record, clip, x, y, {
  */
 export function floodOps(adapter, record, x, y, targetDescriptor, { label = null } = {}) {
     assertAdapter(adapter);
+    requireCellSpace(adapter, 'floodOps');
     const b = assertBounds(adapter, record);
     if (!Number.isInteger(x) || !Number.isInteger(y) || x < 0 || y < 0 || x >= b.w || y >= b.h) {
         fail(`editCore: floodOps seeds at (${x},${y}), which is off the ${b.w}x${b.h} `

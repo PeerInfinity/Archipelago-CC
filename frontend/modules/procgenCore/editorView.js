@@ -65,10 +65,12 @@
  */
 
 import {
+    CELL_SPACE_MEMBERS,
     EditCoreError,
     describeOps,
     floodOps,
     group,
+    hasCellSpace,
     rectCopy,
     rectPasteOps,
 } from './editCore.js';
@@ -270,6 +272,27 @@ export function mountEditorView({
                 + 'them is the PAGE\'s — this file owns the tool, never the geometry, the '
                 + 'palette or the substrate.');
         }
+    }
+    /**
+     * ⛓⛓⛓ **A CELL-LESS ADAPTER CANNOT BE MOUNTED, AND IT IS REFUSED HERE BY
+     * NAME** (EDITOR INTEGRATION B-b, plan §3.1's widening).
+     *
+     * ⛔ THE WHOLE FILE IS A CELL SPACE. `cellAt` turns a press into `{x, y}`,
+     * the four tools (`paint` / `copy` / `paste` / `flood`) are `rectCopy`,
+     * `rectPasteOps` and `floodOps` under a listener, and the geometry it owns
+     * is a grid's. An adapter with no `bounds`/`readCell`/`writeOps` has no
+     * such space at all — bounce's platforms live in FLOAT pixel coordinates,
+     * which `_cellOf` below discards by name, and the APWorld editor has no
+     * canvas. The mount would build a view whose every tool refused on first
+     * press, and the page would learn it one gesture at a time.
+     */
+    if (!hasCellSpace(adapter)) {
+        fail(`editorView: the ${adapter.name ?? '(unnamed)'} adapter declares no cell space `
+            + `(${CELL_SPACE_MEMBERS.join('/')} absent), so it cannot be MOUNTED — every `
+            + 'tool this file owns is a rectangle, a paste or a flood over a grid of cells. '
+            + '⛔ A substrate that edits in float pixel space (bounce) or has no canvas at '
+            + 'all (the APWorld editor) keeps its OWN listener and drives its session '
+            + 'directly; refused here rather than one tool at a time on first press.');
     }
     if (!isFn(session.apply) || !isFn(session.ops) || !isFn(session.record)) {
         fail('editorView: `session` must answer `apply` / `ops` / `record` — the shape '

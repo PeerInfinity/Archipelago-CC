@@ -609,6 +609,35 @@ describe('⛔ the mount refuses rather than skips', () => {
         },
     );
 
+    /**
+     * ⛓⛓⛓ **A CELL-LESS ADAPTER IS REFUSED AT THE MOUNT** (EDITOR INTEGRATION
+     * B-b). ⛓ MUTANT: drop the `hasCellSpace` guard — the mount then succeeds
+     * and every one of the four tools dies on its first press, inside the
+     * adapter, with `adapter.bounds is not a function`. The page would learn
+     * one gesture at a time that this substrate has no grid.
+     *
+     * ⛔ It is refused BEFORE the session shape check below, because "you
+     * handed me a substrate this file cannot host" is the more specific answer
+     * and the session here is a perfectly good one.
+     */
+    it('an adapter that declares NO CELL SPACE is refused BY NAME', () => {
+        const cellLess = Object.freeze({
+            name: 'ledger',
+            apply: () => ({ ok: false, description: 'ledger: nothing here.' }),
+            equal: (a, b) => a === b,
+        });
+        expect(() => mountEditorView({
+            ...bare(),
+            adapter: cellLess,
+            session: createEditSession(cellLess, { entries: [] }),
+        })).toThrow(/the ledger adapter declares no cell space \(bounds\/readCell\/writeOps absent\)/);
+        expect(() => mountEditorView({
+            ...bare(),
+            adapter: cellLess,
+            session: createEditSession(cellLess, { entries: [] }),
+        })).toThrow(/keeps its OWN listener and drives its session directly/);
+    });
+
     /** ⛓ MUTANT: a plain object is accepted as a session — the page then edits
      *  a record nobody folds and every count reads zero. */
     it('an object that is not an editCore session is refused', () => {

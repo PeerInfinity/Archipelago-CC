@@ -21,9 +21,12 @@ import { describe, expect, it } from 'vitest';
 
 import {
     ADAPTER_MEMBERS,
+    CELL_SPACE_LAWS,
+    CELL_SPACE_MEMBERS,
     EditCoreError,
     applyOne,
     assertAdapter,
+    assertAdapterBehaviour,
     canonicalJson,
     createEditSession,
     describeOps,
@@ -31,6 +34,7 @@ import {
     floodOps,
     foldEdits,
     group,
+    hasCellSpace,
     rectCopy,
     rectPasteOps,
 } from './editCore.js';
@@ -699,5 +703,248 @@ describe('⛔ the toy test imports nothing substrate-side', () => {
         expect(specifiers).toContain('node:fs');
         expect(BINDING.test('../mazeRoom/mazeRoomEngine.js')).toBe(true);
         expect(BINDING.test('../seedlingDemo/watchEdit.js')).toBe(true);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ THE NO-CELL-SPACE WIDENING (EDITOR INTEGRATION B-b, plan §3.1)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓ **A SECOND TOY, AND IT HAS NO GRID AT ALL** — a LEDGER of named entries.
+ *
+ * ⛔ It is a second toy rather than `toyAdapter` with three members deleted,
+ * because the point of the widening is a substrate whose document is *not* a
+ * cell space, and a crippled grid adapter would still have a grid's vocabulary
+ * in its ops. The bounce region editor and the APWorld editor are the two real
+ * ones (§3.1); this file imports neither, for the reason its own header gives.
+ */
+const ledger = (entries = []) => Object.freeze({ entries: Object.freeze([...entries]) });
+
+const ledgerAdapter = Object.freeze({
+    name: 'ledger',
+    apply(record, op) {
+        if (op?.op === 'add-entry') {
+            if (record.entries.some((e) => e.id === op.id)) {
+                return { ok: false, description: `ledger: '${op.id}' is already an entry.` };
+            }
+            const entry = Object.freeze({ id: op.id, note: op.note ?? '' });
+            return {
+                ok: true,
+                op: { op: 'add-entry', id: op.id, note: entry.note },
+                description: `added ${op.id}`,
+                record: ledger([...record.entries, entry]),
+                // ⛓ THE VALUE CHANNEL — the node this op created.
+                value: entry,
+            };
+        }
+        if (op?.op === 'set-note') {
+            const found = record.entries.find((e) => e.id === op.id);
+            if (!found) return { ok: false, description: `ledger: no entry '${op.id}'.` };
+            const next = Object.freeze({ id: found.id, note: op.note });
+            return {
+                ok: true,
+                op: { op: 'set-note', id: op.id, note: op.note },
+                description: `${op.id}.note → ${JSON.stringify(op.note)}`,
+                record: ledger(record.entries.map((e) => (e.id === op.id ? next : e))),
+                value: next,
+            };
+        }
+        return { ok: false, description: `ledger: unknown op ${JSON.stringify(op?.op)}.` };
+    },
+    equal: (a, b) => canonicalJson(a) === canonicalJson(b),
+});
+
+describe('⛓⛓⛓ the CELL-SPACE TRIO — all three or none', () => {
+    /** ⛓ MUTANT: `hasCellSpace` built on `some` instead of `every` — RED. */
+    it('`hasCellSpace` is `every`, so a PARTIAL trio is not a cell space', () => {
+        expect(hasCellSpace(toyAdapter)).toBe(true);
+        expect(hasCellSpace(ledgerAdapter)).toBe(false);
+        for (const missing of CELL_SPACE_MEMBERS) {
+            const partial = { ...toyAdapter };
+            delete partial[missing];
+            expect(hasCellSpace(partial), `missing ${missing}`).toBe(false);
+        }
+        expect(hasCellSpace(null)).toBe(false);
+    });
+
+    /** ⛓ MUTANT: drop the trio branch from `assertAdapter` — the cell-less
+     *  adapter is then refused for a "missing" `bounds` and this row goes RED. */
+    it('`assertAdapter` ACCEPTS a cell-less adapter — the row that proves the widening', () => {
+        expect(assertAdapter(ledgerAdapter)).toBe(ledgerAdapter);
+    });
+
+    /**
+     * ⛓ MUTANT: treat the trio as independently optional (`if (adapter[m] ===
+     * undefined) continue`) — a partial trio then sails through and this goes
+     * RED. ⛔ The message must ALSO still say "`bounds` must be a function", or
+     * the `it.each(Object.keys(ADAPTER_MEMBERS))` row above stops biting on
+     * three of its six members.
+     */
+    it.each(CELL_SPACE_MEMBERS)('refuses a PARTIAL trio missing `%s` BY NAME', (member) => {
+        const partial = { ...toyAdapter };
+        delete partial[member];
+        expect(() => assertAdapter(partial)).toThrow(new RegExp(`\`${member}\` must be a`));
+        expect(() => assertAdapter(partial)).toThrow(/CELL-SPACE TRIO/);
+        expect(() => assertAdapter(partial))
+            .toThrow(new RegExp(`declares \\[${CELL_SPACE_MEMBERS.filter((m) => m !== member)
+                .join(', ')}\\]`));
+    });
+
+    /** ⛓ MUTANT: a mis-TYPED trio member (present, not a function) reading as
+     *  "declared" is right — but it must still refuse on the type. */
+    it('a MIS-TYPED trio member is a declared trio and refuses on its TYPE', () => {
+        expect(() => assertAdapter({ ...toyAdapter, readCell: 'nope' }))
+            .toThrow(/`readCell` must be a function, got string/);
+    });
+
+    /** ⛓ MUTANT: name a member in `CELL_SPACE_MEMBERS` that `ADAPTER_MEMBERS`
+     *  has no type for — it would be un-checked for every adapter. */
+    it('every trio name carries a TYPE in the member table', () => {
+        for (const m of CELL_SPACE_MEMBERS) expect(ADAPTER_MEMBERS).toHaveProperty(m);
+    });
+});
+
+describe('⛔ the four cell-space callers refuse a cell-less adapter BY NAME', () => {
+    const rec = ledger([{ id: 'a', note: '' }]);
+    const clip = Object.freeze({ w: 1, h: 1, cells: Object.freeze([Object.freeze([{}])]) });
+
+    /**
+     * ⛓ MUTANT: drop `requireCellSpace` from any one of the four — that row
+     * dies inside the adapter with "adapter.bounds is not a function", a
+     * sentence about JavaScript rather than about the substrate.
+     */
+    it.each([
+        ['rectCopy', () => rectCopy(ledgerAdapter, rec, { x: 0, y: 0, w: 1, h: 1 })],
+        ['rectPasteOps', () => rectPasteOps(ledgerAdapter, rec, clip, 0, 0)],
+        ['floodOps', () => floodOps(ledgerAdapter, rec, 0, 0, {})],
+        ['descriptorFieldsOf', () => descriptorFieldsOf(ledgerAdapter, rec)],
+    ])('`%s` refuses, naming the adapter AND the members', (name, call) => {
+        expect(call).toThrow(EditCoreError);
+        expect(call).toThrow(new RegExp(
+            `ledger declares no cell space — ${name} needs ${CELL_SPACE_MEMBERS.join('/')}`));
+    });
+
+    /** ⛔ NON-VACUITY — the same four are perfectly happy on the grid toy. */
+    it('the same four run on the GRID toy, so the refusal is about the TRIO', () => {
+        const grid = toyWorld(3, 3);
+        expect(() => rectCopy(toyAdapter, grid, { x: 0, y: 0, w: 1, h: 1 })).not.toThrow();
+        expect(() => descriptorFieldsOf(toyAdapter, grid)).not.toThrow();
+    });
+});
+
+describe('⛓⛓⛓ assertAdapterBehaviour over a CELL-LESS adapter — laws 2–5, and the skips SAID', () => {
+    const rec = ledger([{ id: 'a', note: '' }]);
+    const op = { op: 'set-note', id: 'a', note: 'hello' };
+    const refused = { op: 'set-note', id: 'nope', note: 'x' };
+
+    /**
+     * ⛓⛓ THE BRIEF SAID "laws 1–6, skip 7"; the CODE says 1, 6 AND 7 are the
+     * cell-space laws. This row is that measurement.
+     */
+    it('names THREE skipped laws — 1 (`bounds`), 6 (`writeOps`) and 7 — not one', () => {
+        const said = [];
+        expect(assertAdapterBehaviour(ledgerAdapter, {
+            record: rec, op, refused, say: (line) => said.push(line),
+        })).toBe(true);
+        expect(said).toHaveLength(3);
+        expect(CELL_SPACE_LAWS.map((l) => l.n)).toEqual([1, 6, 7]);
+        for (const { n, member } of CELL_SPACE_LAWS) {
+            expect(said.some((l) => l.includes(`contract law ${n} (\`${member}\``)),
+                `law ${n} not said: ${said.join(' | ')}`).toBe(true);
+        }
+        for (const line of said) expect(line).toMatch(/ledger adapter declares no cell space/);
+    });
+
+    /**
+     * ⛓⛓⛓ MUTANT — **the whole point of the row above.** Let a cell-less
+     * adapter through without `say` (or emit nothing through it) and
+     * `assertAdapterBehaviour` returns a bare `true`: a green claim about
+     * seven laws of which three were never asked (trap 806's family).
+     */
+    it('⛔ REFUSES a cell-less adapter with NO `say` — a skip must not read as a pass', () => {
+        expect(() => assertAdapterBehaviour(ledgerAdapter, { record: rec, op, refused }))
+            .toThrow(/declares no cell space, so contract laws 1, 6, 7 CANNOT be asked/);
+        expect(() => assertAdapterBehaviour(ledgerAdapter, { record: rec, op, refused }))
+            .toThrow(/pass `say`/);
+    });
+
+    /** ⛓ The four laws it DOES ask still bite — one row per law, cell-less. */
+    it.each([
+        [2, { apply: () => ({ nope: true }) }, /fails contract law 2/],
+        [3, {
+            apply: (r, o) => {
+                r.mutated = true;
+                return ledgerAdapter.apply(r, o);
+            },
+        }, /fails contract law 3/],
+        [4, { equal: () => true }, /fails contract law 4/],
+        [5, { apply: (r, o) => (o === refused ? { ok: false } : ledgerAdapter.apply(r, o)) },
+            /fails contract law 5/],
+    ])('law %i goes RED against a wrapper that breaks it', (n, override, re) => {
+        expect(() => assertAdapterBehaviour({ ...ledgerAdapter, ...override }, {
+            record: { ...rec, entries: [...rec.entries] }, op, refused, say: () => {},
+        })).toThrow(re);
+    });
+
+    /** ⛓ And a CELL-FUL adapter is untouched: seven laws, no `say`, `true`. */
+    it('a cell-space adapter needs no `say` and still answers all seven', () => {
+        expect(assertAdapterBehaviour(toyAdapter, {
+            record: toyWorld(3, 3), op: tileOp(0, 0, 'b'), refused: { op: 'nope' },
+        })).toBe(true);
+    });
+});
+
+describe('⛓⛓⛓ the session FORWARDS the adapter\'s `value` — trap 857, closed', () => {
+    const rec = ledger([]);
+
+    /**
+     * ⛓⛓⛓ MUTANT — restore the field-by-field return in `createEditSession
+     * .apply` (drop the `...(res.value === undefined ? …)` spread) and this row
+     * goes RED. It is the defect B-a had to work around with a side slot on its
+     * own adapter.
+     */
+    it('an APPLIED op carries `value` — the node the adapter named', () => {
+        const sess = createEditSession(ledgerAdapter, rec);
+        const res = sess.apply({ op: 'add-entry', id: 'a', note: 'first' });
+        expect(res.applied).toBe(true);
+        expect(res.value).toEqual({ id: 'a', note: 'first' });
+    });
+
+    it('a NO-OP carries it too — presence must not depend on whether bytes moved', () => {
+        const sess = createEditSession(ledgerAdapter, ledger([{ id: 'a', note: 'x' }]));
+        const res = sess.apply({ op: 'set-note', id: 'a', note: 'x' });
+        expect(res.applied).toBe(false);
+        expect(res.value).toEqual({ id: 'a', note: 'x' });
+    });
+
+    it('a REFUSED op carries NONE, and an adapter that names none produces no key', () => {
+        const sess = createEditSession(ledgerAdapter, rec);
+        expect('value' in sess.apply({ op: 'set-note', id: 'ghost', note: 'x' })).toBe(false);
+        const quiet = createEditSession(toyAdapter, toyWorld(2, 2));
+        expect('value' in quiet.apply(tileOp(0, 0, 'b'))).toBe(false);
+    });
+
+    /** ⛓ A GROUP names no single node — `applyOne` builds its own result. */
+    it('a GROUP carries none — a stroke of many ops has no one value', () => {
+        const sess = createEditSession(ledgerAdapter, rec);
+        const res = sess.apply(group('two', [
+            { op: 'add-entry', id: 'a' }, { op: 'add-entry', id: 'b' },
+        ]));
+        expect(res.applied).toBe(true);
+        expect('value' in res).toBe(false);
+    });
+});
+
+describe('⛓ a cell-less session is a whole session — undo included', () => {
+    it('N ops → undo ×N → the base, byte for byte', () => {
+        const base = ledger([{ id: 'a', note: '' }]);
+        const sess = createEditSession(ledgerAdapter, base, { base: { kind: 'ledger' } });
+        sess.apply({ op: 'add-entry', id: 'b' });
+        sess.apply({ op: 'set-note', id: 'a', note: 'hi' });
+        expect(sess.ops()).toHaveLength(2);
+        while (sess.undo());
+        expect(canonicalJson(sess.record())).toBe(canonicalJson(base));
+        expect(sess.payload()).toEqual({ base: { kind: 'ledger' }, edits: [], certified: null });
     });
 });
