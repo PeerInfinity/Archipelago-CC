@@ -15603,3 +15603,82 @@ the instrument. Nothing but re-running the generator could have seen it. And the
 brief's own two numbers for the lock were both wrong, one of them by more than
 double; measuring them first is what turned a mechanical edit into the finding
 above.
+
+### R9 slice P4a: A LINT THAT READ COMMENTS, A `--help` THAT WROTE A FILE CALLED `--help` — AND A DIRECTORY WHERE DOING THE WORK ON IMPORT IS THE NORM, NOT THE EXCEPTION
+
+Three protocol repairs the user asked for, and a measurement that changed the
+shape of the third.
+
+**A LINT READS CODE, NEVER COMMENTS.** The scan that catches a gate label or a
+test name carrying a number the check itself computes walks brackets to find
+where a call ends, and it tracked quotes but not comments. So one apostrophe in
+a `//` line — *"the gate's own row"* — opened a string that never closed, and
+the enclosing test group swallowed the rest of the file. One file had carried a
+two-thousand-line blind spot for weeks, and a prose name nineteen hundred lines
+above a roster was being read as a count derived from it. Fixing it moves the
+report from a hundred findings to eighty-seven, and every one of the thirteen
+was accounted for rather than waved through: twelve were manufactured by the
+mis-parse, and the evidence is that each one's supposed call ran hundreds to
+thousands of lines past where it is written — five of them to the last line of
+the file. The thirteenth vanished for a different reason worth writing down. The
+two halves of the scan disagreed about whether zero and one are counts: the
+condition side had excluded them for months with a stated reason, the label side
+had not, so a label could only ever match them through the branch where nothing
+checks the number belongs to the roster. Two test groups whose names ended
+*"(R8 slice 0 track C)"* had been filed as cardinalities, and one of them had
+been formally accepted as a known finding on that misreading. They are slice
+numbers.
+
+**THE CONTROL FOUND A DEFECT IN THE FIX.** The comment mask has to preserve
+every character position, because the report names line numbers. The first cut
+built its character array with a function that iterates *code points* while
+every other index in the module counts *UTF-16 units* — so a single emoji
+outside the basic plane made the masked text one unit shorter than its source
+and every position after it was wrong. The way this was caught is the point: not
+by comparing finding counts, which looked plausible under both builds, but by
+masking all five hundred and fourteen files in the corpus and asking the
+JavaScript parser whether each result still parses. Four did not.
+
+**`--help` USED TO RUN THE PROGRAM.** Asked whether `--help` should behave as
+expected, the answer needed a census first, and the census is the strongest
+thing in this slice. Every instrument in the directory was spawned with
+`--help`, each in a child process with its own scratch cache and a
+before-and-after look at the repository: one of them wrote a 148-kilobyte file
+*named* `--help` into the top of the tree, because it read the first argument as
+an output path. Two rewrote a tracked source file. Two more rewrote committed
+data. About a hundred took the shared machine lock before parsing anything at
+all. Now a shared helper prints, from the file's own documentation and the flag
+scan the published table is built from, and exits — on every instrument, with no
+exceptions and no list — and a gate proves it by spawning all of them and
+watching the disk.
+
+**AND THE GATE'S FIRST VERSION PASSED A PROGRAM THAT HAD JUST DONE ITS WHOLE
+JOB.** It asserted the things a well-behaved `--help` does not do: fail, print to
+standard error, touch the repository, leave a cache. A lint that scanned five
+hundred files and printed a report satisfied every one of them. "It had no
+effect I could see" is not "it printed help", and a negative property is only as
+strong as the effects somebody thought to observe. The check now asserts the
+positive fact: what the program printed *is* the help text the helper derives
+for that file, byte for byte. Nothing printed by accident can equal it.
+
+**THE SECOND DOOR IS MEASURED, NOT CLOSED — AND THAT IS THE HONEST ANSWER.**
+`--help` is not the only way a program's start-up code runs; merely importing
+the file runs it too, which is what a test does. So the census asked that
+question separately, and the answer overturned the assumption the work was
+planned on. Only three of two hundred and sixty instruments guard their work
+behind a "was I run directly?" check at all. A hundred and eighty-two do their
+job on import. Closing that door is not a handful of producers, it is a hundred
+and eighty-two rewrites, each able to move a published fingerprint. So it is
+recorded instead: a committed list that fails in both directions — a new
+offender is named, and an entry somebody has since fixed is named too, so the
+list cannot become a graveyard. What that door is worth today was measured
+rather than assumed: of the instruments a test file actually imports, every one
+is already inert.
+
+**AND A QUESTION THAT PRINTS ONE LINE STOPPED TAKING THE MACHINE.** Asking a
+producer which recordings it emits drives nothing and takes under two seconds,
+yet on three of them it took the shared lock — on one, unconditionally, before
+any argument was read. A two-second question could therefore queue behind a
+two-hour recording, which is the exact failure the lock's own documentation says
+its conditional takers exist to prevent. It also made a test file flaky under
+load, because that file asks several producers the same question in one run.

@@ -5758,6 +5758,57 @@ Traps 893–907. Successor prompt
 DISCUSSION (user): P4's shape (P4a brief WRITTEN, not launched) · ⚖ 61 (i) at
 the next full record · the economies-cost investigation · 47b (2) · L15.
 
+**⇒ SLICE P4a SHIPPED 2026-08-28 — ⚖ 47b (1)+(4) DISCHARGED, and the brief's
+premise about (4) was wrong by two orders** (kickoff §51; traps 908–915).
+
+**(1) A LINT READS CODE, NEVER COMMENTS.** `lint-gate-labels`'s call scanner
+tracked quotes but not comments, so one apostrophe in a `//` line opened a
+string that never closed and the enclosing `describe(` swallowed the rest of
+the file — `solverBot.test.js` had carried a ~2,000-line dead zone since 12c″.
+Corpus **100 → 87**, thirteen movers, **every one triaged**: twelve were
+MANUFACTURED (each call span ran hundreds to thousands of lines past where it
+is written, five to end-of-file, and the roster each was "derived from" sat
+outside the true call), and the thirteenth vanished on a rule fix — the two
+halves of the scan disagreed about whether 0 and 1 are counts, so *"(R8 slice 0
+track C/D)"* had been read as a cardinality and one of them ALLOWLISTED on that
+misreading. Allowlist 99 → 86, **zero entries added**. ⛓ The masker's own
+positive control (`node --check` over all 514 corpus files) found a defect in
+the first cut: `Array.from` iterates code POINTS, so one astral character
+shifted every later offset by one.
+
+**(4) `--help` PRINTS AND EXITS ON ALL 262, AND A GATE SAYS SO.** The census
+that shaped it, at `1097be9e6`: one instrument WROTE A 148 KB FILE NAMED
+`--help` into the repository root (argv[2] as an output path), two rewrote a
+TRACKED source file, two rewrote committed data, **~99 took the box lock**
+before parsing anything, and 189 of 260 did work. ⛔⛔ **AND THE PREMISE IS
+OVERTURNED: only THREE of 260 have a main guard at all** — module-scope work is
+the DIRECTORY'S NORM, so closing the second door (a bare IMPORT, which is how a
+test reaches these files) is 182 refactors each able to move a ⚖ 8 md5, not "a
+handful of producers". Door 1 is closed with no list and no exceptions; door 2
+is a committed TWO-WAY baseline (203 of 262, 14 writers, each entry naming what
+it wrote), and its CI exposure was MEASURED at nil — the instruments a test
+truly imports are all inert.
+
+**THE HEADLINE FINDING ARRIVED AFTER THE COMMIT THAT "CLOSED" DOOR 1.** Imports
+hoist, so a guard in every file means a DEPENDENCY answers for its importer:
+`check-preset-bundle-load.mjs --help` printed **`loadJSZipNode.mjs`'s** help
+text and exited 0 — a true help page about the wrong file, with every observer
+satisfied. Only the byte-exact *"stdout IS the text derived FOR THIS FILE"*
+assertion could see it. The guard now tests that the module is the ENTRY POINT.
+
+**(C) THE INSTRUMENTS TABLE SAYS WHAT A FILE ACCEPTS, WITH THE PARSE SITE**
+(§48.13 item 2 / §50.11 item 2): `--wait-for-box` **96 ← boxLock.js** — §50.11's
+number to the file — `--help` 260 ← argvHelp.js, three more ← rehearsalTree.js.
+⛓ And `--segments` stopped taking the box on three producers (⚖ 62's rule one
+level in; it had made `rerecordCampaign.test.js` load-flaky).
+
+⛔ **ZERO STANDING VALUES MOVED** — all seven producer `--check` md5s
+byte-identical after a 260-file bulk insert; **0 tape lines**; trap 906's
+control clean (0 one-liners moved of 262). NEW standing row:
+`gate: seedling-procgen-help`, with a declared bounded `@ci-face` because
+`ci-gates.mjs` runs every headless gate on every push.
+NEXT: unchanged — **P4b** = ⚖ 54 (8) ONE RECORD SURFACE → L15.
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:

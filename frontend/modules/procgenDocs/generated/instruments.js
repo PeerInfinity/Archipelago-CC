@@ -1306,7 +1306,15 @@ export const INSTRUMENTS = frz({
             "category": "check",
             "citedBy": [],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "ceiling",
+                "doors",
+                "jobs",
+                "json",
+                "known-ceiling",
+                "only",
+                "write-baseline"
+            ],
             "file": "check-procgen-help.mjs",
             "flags": [
                 {
@@ -1317,9 +1325,27 @@ export const INSTRUMENTS = frz({
                 },
                 {
                     "how": [
+                        "arg"
+                    ],
+                    "name": "doors"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "jobs"
+                },
+                {
+                    "how": [
                         "includes"
                     ],
                     "name": "json"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "known-ceiling"
                 },
                 {
                     "how": [
