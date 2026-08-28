@@ -5919,9 +5919,10 @@ remaining 7 are P4b's `sliceRecords.test.js`, open before this slice.
 
 ## 5i. The EDITOR INTEGRATION arc — LIVE (arc opened 2026-08-26, post-dates this doc; entry written 2026-08-28 at main `2b0c1bc7c`)
 
-**Status: ⛓ W-front + B-a/B-d MERGED 2026-08-27 (main `bd89262c2`, suite
-388/11970 @b9558593a); B-b, B-c, M1 OPEN — owned by Fable session
-`editor-integration-planning-2` since 2026-08-28.** Plan doc *(NewDocs)*:
+**Status: ⛓ W-front + ALL FOUR B slices + M0 recon + H7/H8 MERGED 2026-08-28
+(main `52e3348a4`, suite 401/12287 @a3fe66f4a); ONLY M1 (the AS3 seams + the
+p4d build) OPEN — kickoff drafted, launch on the user's timing — owned by
+Fable session `editor-integration-planning-2`.** Plan doc *(NewDocs)*:
 `editor-integration.md` — §0 verdict, §1 recon of all NINE procgen editors,
 §2 question A (rooms on different substrates), §3 question B (integrating the
 editors; §3.2 the ROOM-EDITOR CONTRACT), §4 what the platformer inherits, §5
@@ -5962,6 +5963,44 @@ fixed — `node.cell` and `node.side` never followed a layout edit).
 procgen-lab-hosting` 47 → **66** · `-arm` 226 (quoted) · `-edit` 71 ·
 reference 21/0 · suite 372/11587 → 388/11970. Traps 823–884 (+ 856–862,
 873–882 interleaved with R9's).
+
+**⛓ UPDATE 2026-08-28 (same session, later):** B-b MERGED (`a1073c582`; §15;
+traps 946–949 — `editCore`'s no-cell-space widening: `CELL_SPACE_MEMBERS`, laws
+1/6/7 are the cell-space laws and skipped ones are NAMED; the bounce editor on a
+session with 8 ops incl. `replace-level` carrying the RESULT; `verify-region-
+step-editing` IMPORTS the merge; Phase H of `verify-sphere-steps-ui` was VACUOUS
+— now a measured PIN) · B-c MERGED (`31384bfc6`; §16; traps 950–953 — the
+APWorld editor on a session, 19 ops, Clear IS an op, renames ONE op each;
+`deepEqualKeyOrder` hoisted to `procgenCore/`; ⛔ an op storing a payload BY
+REFERENCE aliased the record — copied at the door; all three "key order is
+content" rows were vacuous, fixed) · **M0 RECON** (§17.0; traps 942–945): the
+injected-AS3 AP integration WAS ported (as p4c's build step + `flashPanel/`),
+the RANDOMIZATION never was (11/40 locations detectable in one preset) ·
+**⚖ RULED**: (c)+(e) — rewrite the ROOM + report the check from
+`Game.setPersistence`; items ride p4d WITH the door seam; EVERY randomized
+location is an `APItem` that grants nothing, sprite by `@look` (the Seedling
+graphic for the current player's own Seedling items, else the AP LOGO);
+foreign-world items + a host-side "found X for Player Y" readout; wasm-only
+(Ruffle via the step-2 injected SWF = low-priority residue) — design §17.1 ·
+**H7/H8 MERGED** (`a3fe66f4a`; §17.2; traps 954–959): `apPlacementRewriter`
+(placement table keyed `"<level>|<tag>"`, 21-name DERIVED look book = M1's AS3
+contract, 11 tags allocated for keys/totems/seed, byte-identical elsewhere) +
+`seedlingLevelSetDelivery` (chunked `botLoadLevels` before the first region
+load, every dep INJECTED — a static import costs the bundle 0.8–4.9 MB);
+browser arm on p4c: 5 AP locations ABSENT vs PRESENT. FOUND: `botLoadLevels`
+answers "pending" per non-final chunk and `watchWasm.js:1169` throws on it
+(nobody had delivered >1 chunk; vanilla = 9) — owed to M1. Suite 388/11970 →
+**401/12287**; standing rows unmoved. Also this session: the launcher
+`~/bin/wsl-launch-claude.sh` gained `-C <tree>` (the runner cds + asserts; a
+cd-less `-d` is refused).
+
+**STILL OPEN (as of this update):** **M1** — kickoff `editor-integration-sliceM1-prompt.md`
+(W5-0 de-risk → AS3 5 files + `Pickups/APItem.as` on `~/CC/seedling` branch
+`ap-m1` → H3–H6 + the watchWasm one-liner + the `levelSetDisagreement` hoist →
+control build → `seedling_bot_ap_p4d` BESIDE p4c → flags-off byte-inert → the
+randomization gate → ⚠ the USER's submodule push + gitlink bump); the
+Windows-driven `check-seedling-generated-set`/`-vanilla-manifest` (0-moved by
+reach, owed a real run on the Windows box); the engine residue below.
 
 **OPEN, in ⚖ (B′) order:** (1) **B-b** — `editCore`'s NO-CELL-SPACE widening
 (`bounds`/`readCell`/`writeOps` an optional trio; cell tools refuse by name;
