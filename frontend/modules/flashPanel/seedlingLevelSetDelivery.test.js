@@ -91,12 +91,22 @@ const deliveryFor = (extra = {}) => new SeedlingLevelSetDelivery({
     planChunks: planLevelSetChunks, ...extra,
 });
 
-describe('readbackDisagreement — pinned equal to the watch page\'s', () => {
-    it(`compares the same ${READBACK_FIELDS.length} fields as watchWasm.levelSetDisagreement`, () => {
-        // ⛔ THE PIN, not a restatement: `watchWasm` is imported HERE (a node
-        // test costs the bundle nothing) and the two are asked the same
-        // questions. A divergence reds this row instead of shipping two
-        // contracts for one readback.
+describe('readbackDisagreement — ONE implementation, hoisted (M1)', () => {
+    /**
+     * ⛔ THE PIN WAS RE-AIMED, NOT DELETED. H7/H8 restated the comparison here
+     * and pinned it equal to `watchWasm`'s over a battery of disagreeing pairs,
+     * because importing `watchWasm.js` costs the bundle 15 files / 1,054,916 B.
+     * M1 hoisted the function into `seedlingDemo/levelSetDisagreement.js`
+     * (closure: ONE file, 2,708 B) and BOTH sides now import it — so asking
+     * whether they agree is a FIXED POINT and cannot fail. What still has
+     * content is the IDENTITY, which is what would break if someone
+     * re-restated one of them, plus the behaviour of the one implementation.
+     */
+    it('IS `watchWasm.levelSetDisagreement` — the same function object, not a copy', () => {
+        expect(readbackDisagreement).toBe(levelSetDisagreement);
+    });
+
+    it(`compares ${READBACK_FIELDS.length} fields and names the one that disagrees`, () => {
         const sent = { set_id: 'seedling-ap-record-abcd1234', rooms: new Array(116),
             start: { level: 0 } };
         const cases = [
@@ -107,10 +117,13 @@ describe('readbackDisagreement — pinned equal to the watch page\'s', () => {
             { active: sent.set_id, table_levels: 116, start_level: 7 },
             { active: sent.set_id, table_levels: 116, start_level: 0 },
         ];
-        for (const back of cases) {
-            expect(readbackDisagreement(sent, back)).toBe(levelSetDisagreement(sent, back));
-        }
-        expect(readbackDisagreement(sent, cases.at(-1))).toBeNull();
+        const said = cases.map((back) => readbackDisagreement(sent, back));
+        expect(said[0]).toMatch(/answered nothing/);
+        expect(said[1]).toMatch(/level-set error/);
+        expect(said[2]).toMatch(/^active seedling-vanilla-record-1040ace1 ≠ /);
+        expect(said[3]).toBe('table_levels 0 ≠ 116');
+        expect(said[4]).toBe('start_level 7 ≠ 0');
+        expect(said[5]).toBeNull();
     });
 });
 

@@ -909,29 +909,16 @@ export function verdictBlock(v, note = null) {
 }
 
 /**
- * ⛓ THE READBACK COMPARISON — the proof a set MOUNTED rather than merely
- * arrived (`check-seedling-generated-set.mjs`'s own law).
+ * ⛓ THE READBACK COMPARISON — HOISTED (EDITOR INTEGRATION M1; plan §17.2.5).
  *
- * ⛔ IT NAMES THE FIELD. "the readback disagrees" is a sentence nobody can act
- * on; `active watch-oneroom-e5c2cdf3 ≠ watch-oneroom-4ac90eaa` says the set
- * that mounted is a different set, and `table_levels 0 ≠ 1` says the delivery
- * never landed. `set_id` carries the content hash (`stampLevelSetIdentity`), so
- * comparing it compares the bytes.
- *
- * @returns {string|null} the first disagreement, or null
+ * It was declared here, and `flashPanel/seedlingLevelSetDelivery.js` had to
+ * RESTATE it because importing this file costs that bundle 15 files and
+ * 1,054,916 B (measured at the hoist; `levelSetDisagreement.js`'s own closure
+ * is ONE file, 2,708 B). It now lives beside the level set and is re-exported
+ * here so every existing importer — `watchViewer.js`, `watchWasm.test.js` —
+ * keeps its spelling.
  */
-export function levelSetDisagreement(sent, back) {
-    if (!back) return 'botLevelSet answered nothing — the VM is dead or this build has no accessor';
-    if (back.error) return `the artifact recorded a level-set error: ${JSON.stringify(back.error)}`;
-    if (back.active !== sent.set_id) return `active ${back.active} ≠ ${sent.set_id}`;
-    if (back.table_levels !== sent.rooms.length) {
-        return `table_levels ${back.table_levels} ≠ ${sent.rooms.length}`;
-    }
-    if (back.start_level !== sent.start.level) {
-        return `start_level ${back.start_level} ≠ ${sent.start.level}`;
-    }
-    return null;
-}
+export { levelSetDisagreement } from './levelSetDisagreement.js';
 
 /**
  * ── ⛓⛓⛓ SHIP IT ──────────────────────────────────────────────────────
@@ -1165,9 +1152,34 @@ export async function shipToWasm(payload, host) {
     // ── levels ───────────────────────────────────────────────────────
     if (levelSet) {
         try {
-            for (const chunk of chunks ?? []) {
-                const said = bot('botLoadLevels', JSON.stringify(chunk));
-                if (said !== 'ok') throw new Error(`botLoadLevels: ${said}`);
+            /**
+             * ⛔⛔ `"pending"` IS THE SUCCESS ANSWER FOR EVERY CHUNK BUT THE
+             * LAST — `Bot.botLoadLevels`' own contract (`Bot.as:3358-3368`,
+             * `LevelSet.as:331`): *pending* = accepted, more chunks owed,
+             * nothing mounted; *ok* = this chunk COMPLETED the delivery.
+             *
+             * ⚠ THIS LINE READ `if (said !== 'ok') throw` FOR A YEAR, and it
+             * refuses the FIRST chunk of any delivery of more than one with
+             * the message `botLoadLevels: pending`. It never bit because every
+             * set THIS page ships is one chunk; the vanilla 116 is nine, and
+             * H7/H8's browser gate — the first multi-chunk delivery anyone
+             * drove — is what found it (plan §17.2.5, trap 954). One line owed
+             * to this file, paid here.
+             *
+             * ⛔ AND AN EARLY `ok` IS A REFUSAL TOO: it says the receiver
+             * mounted a set the sender had not finished sending, which is a
+             * PARTIAL set the game then runs happily on.
+             */
+            const list = chunks ?? [];
+            for (let i = 0; i < list.length; i += 1) {
+                const last = i === list.length - 1;
+                const want = last ? 'ok' : 'pending';
+                const said = bot('botLoadLevels', JSON.stringify(list[i]));
+                if (said !== want) {
+                    throw new Error(`botLoadLevels answered ${JSON.stringify(said)} to chunk `
+                        + `${i + 1}/${list.length}, and the ${last ? 'LAST' : 'non-final'} chunk `
+                        + `of a delivery must answer ${JSON.stringify(want)}`);
+                }
             }
         } catch (e) {
             return refuse('levels', e.message,

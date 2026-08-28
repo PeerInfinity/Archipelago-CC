@@ -908,3 +908,58 @@ describe('⛓⛓⛓ the continuation projection — the TICK-0 WRITE, AFTER the 
         expect(continuationTape(tape()).tape.tape_version).toBe(8);
     });
 });
+
+
+/**
+ * ⛓⛓ **THE `pending`/`ok` CONTRACT** (EDITOR INTEGRATION M1; plan §17.2.5,
+ * trap 954).
+ *
+ * `Bot.botLoadLevels` answers `"pending"` for every chunk but the last and
+ * `"ok"` only on the one that COMPLETES the delivery. This file's chunk loop
+ * read `if (said !== 'ok') throw` for a year — refusing the FIRST chunk of any
+ * multi-chunk delivery with the message `botLoadLevels: pending`. It never bit
+ * because every set THIS page ships is one chunk; the vanilla 116 is nine, and
+ * H7/H8's browser gate is what found it.
+ *
+ * ⛔ ASSERTED OVER THE SOURCE, for the same reason the ▶ Start law above is:
+ * `shipToWasm` needs `fetch` and a live game frame, so there is no node moment
+ * at which this loop can be driven. The BEHAVIOUR of the identical contract is
+ * driven at runtime by `seedlingLevelSetDelivery.test.js`, whose loop this one
+ * now matches, and in the browser by `check-seedling-generated-set.mjs`.
+ */
+describe('the chunk loop accepts `pending` for every chunk but the last', () => {
+    const CHUNK_LOOP = /botLoadLevels[\s\S]{0,400}?\n\s*\}/;
+
+    /** The old form, and the shape a regression would take. */
+    const REFUSES_PENDING = /said\s*!==\s*'ok'/;
+
+    /**
+     * ⛔ COMMENTS ARE STRIPPED FIRST, and a row caught me needing it: the fix's
+     * own docblock QUOTES the line it replaced, so a scan that could not tell
+     * code from prose reported a false finding about the code — trap 395's
+     * family, and the same discipline the ▶ Start law above uses.
+     */
+    const code = () => source('watchWasm.js').split('\n')
+        .filter((line) => !/^\s*(\*|\/\/|\/\*)/.test(line))
+        .join('\n');
+
+    it('no longer demands `ok` from every chunk', () => {
+        expect(REFUSES_PENDING.test(code())).toBe(false);
+    });
+
+    it('asks for `ok` on the LAST chunk and `pending` on the others', () => {
+        const body = code();
+        // The predicate is the expectation the loop computes, not the whole
+        // loop: `last ? 'ok' : 'pending'` is the entire contract in one line.
+        expect(body).toMatch(/last\s*\?\s*'ok'\s*:\s*'pending'/);
+        expect(CHUNK_LOOP.test(body)).toBe(true);
+    });
+
+    it('⚠ and the scan is NOT vacuous — it sees the old line when one is there', () => {
+        // The mutant, inline. Without this the row above passes on a file that
+        // no longer mentions botLoadLevels at all, or on a broken regex.
+        const mutant = "                if (said !== 'ok') throw new Error(`botLoadLevels: ${said}`);";
+        expect(REFUSES_PENDING.test(mutant)).toBe(true);
+        expect(/last\s*\?\s*'ok'\s*:\s*'pending'/.test(mutant)).toBe(false);
+    });
+});

@@ -37,16 +37,17 @@
  * knows nothing about how a room becomes OEL. A test injects the real
  * functions, so the rows are not testing a mock.
  *
- * ⚠ **AND THE READBACK COMPARISON IS DECLARED HERE, NOT IMPORTED — ON
- * PURPOSE, AND PINNED.** `watchWasm.levelSetDisagreement` is the same three
- * fields against the same `botLevelSet` contract, and importing it would cost
- * the 1.0 MB above for twelve lines. So it is restated, and
- * `seedlingLevelSetDelivery.test.js` imports `watchWasm`'s and asserts the two
- * AGREE over a battery of disagreeing pairs — the precedent is
- * `levelSetValidator.TILE_PX`, declared beside its consumer *"because this
- * module is deliberately dependency-light for the bundled browser graph"* and
- * pinned equal to `levelWorld.TILE_SIZE` by a row. A silent divergence is what
- * the pin exists to make impossible.
+ * ⚠ **THE READBACK COMPARISON WAS RESTATED HERE; M1 HOISTED IT INSTEAD.**
+ * `watchWasm.levelSetDisagreement` was the same three fields against the same
+ * `botLevelSet` contract, and importing `watchWasm.js` costs the 1.0 MB above
+ * for twelve lines — so H7/H8 restated it and pinned the two equal by a row.
+ * M1 moved the function to `seedlingDemo/levelSetDisagreement.js`, whose whole
+ * specification is that it imports NOTHING: **measured, its closure is ONE
+ * file / 2,708 B against `watchWasm.js`'s 16 / 1,057,624 B**, so this module
+ * can now import the real thing and there is only ever one implementation.
+ * ⛔ The pin row was RE-AIMED, not deleted: two consumers of one function
+ * agree by construction, so a battery asking whether they agree is a FIXED
+ * POINT. The test asserts the IDENTITY and keeps the battery.
  *
  * ── ⛓ HONOURING `apMappingInvalidation` IS A PRECONDITION, NOT A STEP ────
  *
@@ -63,32 +64,19 @@
  */
 
 /**
- * ⛓ The three fields `botLevelSet` answers that say WHICH set mounted.
- * `set_id` ends in the content hash (`stampLevelSetIdentity`), so comparing it
- * compares the bytes.
+ * ⛓ The three fields `botLevelSet` answers that say WHICH set mounted, and the
+ * comparison over them — ONE implementation, imported from the module M1
+ * hoisted it into. The re-export keeps this module's own spelling for its
+ * callers and its rows.
  */
-export const READBACK_FIELDS = Object.freeze(['active', 'table_levels', 'start_level']);
+import {
+    READBACK_FIELDS,
+    levelSetDisagreement as readbackDisagreement,
+} from '../seedlingDemo/levelSetDisagreement.js';
 
-/**
- * The first disagreement between what was sent and what the artifact says it
- * mounted, or null. ⛔ IT NAMES THE FIELD: "the readback disagrees" is a
- * sentence nobody can act on.
- *
- * ⛓ Byte-for-byte the contract of `watchWasm.levelSetDisagreement`, and
- * `seedlingLevelSetDelivery.test.js` pins the two equal.
- */
-export function readbackDisagreement(sent, back) {
-    if (!back) return 'botLevelSet answered nothing — the VM is dead or this build has no accessor';
-    if (back.error) return `the artifact recorded a level-set error: ${JSON.stringify(back.error)}`;
-    if (back.active !== sent.set_id) return `active ${back.active} ≠ ${sent.set_id}`;
-    if (back.table_levels !== sent.rooms.length) {
-        return `table_levels ${back.table_levels} ≠ ${sent.rooms.length}`;
-    }
-    if (back.start_level !== sent.start.level) {
-        return `start_level ${back.start_level} ≠ ${sent.start.level}`;
-    }
-    return null;
-}
+// ⛔ IMPORTED, then re-exported — not `export … from …`, which creates no local
+// binding and would leave `readbackDisagreement` undefined at its one call site.
+export { READBACK_FIELDS, readbackDisagreement };
 
 /** The states, in the order they are reached. */
 export const DELIVERY_STATES = Object.freeze(
