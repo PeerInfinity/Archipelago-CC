@@ -65,6 +65,8 @@ import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { maskComments } from './maskComments.js';
+
 const HERE = dirname(fileURLToPath(import.meta.url));
 const argv = process.argv.slice(2);
 const arg = (name, fallback) => (argv.find((a) => a.startsWith(`--${name}=`))
@@ -154,11 +156,38 @@ export function countsIn(label) {
     const found = new Set();
     for (const m of label.matchAll(/\b([a-z]+)\b/gi)) {
         const v = WORDS[m[1].toLowerCase()];
-        if (v !== undefined) found.add(v);
+        if (v === undefined) continue;
+        /**
+         * ⛔ A SPELLED NUMBER HYPHENATED TO A WORD IS AN ADJECTIVE, NOT A
+         * COUNT (R9 slice P4a). *"the set is TWO-SIDED"* says what shape the
+         * set has, the way *"a THREE-WAY join"* does; neither counts the
+         * roster beside it. Measured: exactly one label in this corpus owes
+         * its only count to this shape, and it is a false positive of
+         * precisely this kind. ⛓ `twenty-four` is NOT excluded — a number
+         * hyphenated to ANOTHER number is a spelled number, and the test is
+         * what is on the other side of the hyphen.
+         */
+        const before = label.slice(0, m.index);
+        const after = label.slice(m.index + m[0].length);
+        const joined = /-([a-zA-Z]+)/.exec(after)?.[1] ?? /([a-zA-Z]+)-$/.exec(before)?.[1];
+        if (joined !== undefined && WORDS[joined.toLowerCase()] === undefined
+            && (/^-[a-zA-Z]/.test(after) || /[a-zA-Z]-$/.test(before))) continue;
+        found.add(v);
     }
     for (const m of label.matchAll(/(?:^|\s|\bthe\s)(\d{1,4})\s+[a-z]/gi)) found.add(Number(m[1]));
     for (const m of label.matchAll(/\bthe\s+(\d{1,4})\b/gi)) found.add(Number(m[1]));
-    return [...found];
+    /**
+     * ⛔⛔ ZERO AND ONE ARE NOT COUNTS ON THIS SIDE EITHER, AND THE ASYMMETRY
+     * WAS THE DEFECT (R9 slice P4a). `typedCardinalities` has excluded them
+     * since 12e with a stated reason — *"`markers.length === 1` is a claim
+     * about a singleton, not about a growing set"* — while this side accepted
+     * them. So a label could only ever match them through the ROSTER branch,
+     * where nothing checks that the number is the roster's: *"(R8 slice 0
+     * track C)"* was read as a cardinality of `GAME_VISIBLE_DROPS` and *"(R8
+     * slice 0 track D)"* was ALLOWLISTED as a known finding on the same
+     * misreading. Both are slice numbers. One rule, both sides.
+     */
+    return [...found].filter((n) => n >= 2);
 }
 
 /**
@@ -291,13 +320,20 @@ function labelOf(fragment) {
 const lineOf = (text, index) => text.slice(0, index).split('\n').length;
 
 export function scanFile(rel, text) {
+    /**
+     * ⛓⛓⛓ **THE SCAN READS CODE, NEVER COMMENTS** (R9 slice P4a, ⚖ 47b (1)).
+     * Every comment character becomes a space and the LENGTH is unchanged, so
+     * `lineOf` below still counts the real file's newlines — see
+     * `maskComments.js` for why a mask and not a strip.
+     */
+    const code = maskComments(text);
     const findings = [];
     const add = (index, rule, label, detail) => findings.push({
         file: rel, line: lineOf(text, index), rule, label: label.slice(0, 90), detail,
     });
 
     /* ── gate labels: `check(<condition>, '<label>', …)` ───────────────── */
-    for (const c of callsIn(text, 'check')) {
+    for (const c of callsIn(code, 'check')) {
         const args = argsOf(c.body);
         const label = labelOf(args[1] ?? '');
         if (label === null) continue;
@@ -318,7 +354,7 @@ export function scanFile(rel, text) {
 
     /* ── test names: `it('<name>', …)` / `describe('<name>', …)` ───────── */
     for (const name of ['it', 'describe']) {
-        for (const c of callsIn(text, name)) {
+        for (const c of callsIn(code, name)) {
             const args = argsOf(c.body);
             const label = labelOf(args[0] ?? '');
             if (label === null) continue;
@@ -339,7 +375,7 @@ export function scanFile(rel, text) {
     }
 
     /* ── a cardinality pinned over a DECLARED ROSTER, with no label at all ── */
-    for (const m of text.matchAll(new RegExp(EXPECT_ROSTER_LEN_RE.source, 'g'))) {
+    for (const m of code.matchAll(new RegExp(EXPECT_ROSTER_LEN_RE.source, 'g'))) {
         add(m.index, 'roster-length-pinned', `${m[1]} → toHaveLength(${m[2]})`,
             `${m[1]} is a declared roster; its length is a property of the roster, not a pin`);
     }
