@@ -200,6 +200,22 @@ const BASELINE = (() => {
     }
 })();
 const KNOWN = new Set(Object.keys(BASELINE.importDoorEffectful ?? {}));
+/**
+ * ⛓⛓⛓ **LOAD-TIME CHATTER, DERIVED — because a bounded face has no control to
+ * attribute with.** The help door tells "the instrument printed" from "a
+ * module it imports printed at load" by comparing against the file's OWN bare
+ * import. Under `--doors=ci` that import is not run for a baselined file, so
+ * the control is gone and ten instruments reddened for
+ * `[stateManagerProxy] … Worker is not defined` — a line no guard in the
+ * importer can preempt.
+ *
+ * ⛔ SO THE KNOWLEDGE IS RECORDED, AND IT IS DERIVED RATHER THAN LISTED: a
+ * line printed at import time by MORE THAN ONE instrument is a shared module's
+ * load-time chatter, not any one file's output. `--write-baseline` computes
+ * the set; nothing here is typed, and a line only one file prints stays that
+ * file's own.
+ */
+const CHATTER = new Set(BASELINE.loadTimeChatter ?? []);
 
 const DIR = join(REPO, 'scripts/procgen');
 const instruments = readdirSync(DIR).filter((f) => f.endsWith('.mjs')).sort()
@@ -291,7 +307,7 @@ function localWhy(kind, abs, r, cacheFiles, ceiling, importErr = null, importOut
          */
         const messages = (t) => (t ?? '').split('\n').map((l) => l.trim())
             .filter((l) => l && !/^at\s/.test(l));
-        const theirs = new Set(messages(importErr));
+        const theirs = new Set([...messages(importErr), ...CHATTER]);
         const extra = messages(err).filter((l) => !theirs.has(l));
         if (extra.length) why.push(`printed to stderr: ${extra[0].slice(0, 120)}`);
     }
@@ -335,8 +351,8 @@ function localWhy(kind, abs, r, cacheFiles, ceiling, importErr = null, importOut
          */
         /* ⛔ NEVER an empty line: the help text has blank lines of its own, and
          *   a control whose stdout is `''` would otherwise strip every one. */
-        const theirs = new Set((importOut ?? '').split('\n')
-            .map((l) => l.trim()).filter(Boolean));
+        const theirs = new Set([...(importOut ?? '').split('\n')
+            .map((l) => l.trim()).filter(Boolean), ...CHATTER]);
         const mine = r.out.split('\n').filter((l, i, a) => !(i === a.length - 1 && l === ''));
         const kept = mine.filter((l) => !(l.trim() && theirs.has(l.trim())));
         const noise = mine.length - kept.length;
@@ -535,6 +551,20 @@ if (WRITE_BASELINE) {
      * PATHS IT WROTE — so a later slice can retire an entry BY NAME and know
      * what closing it has to preserve, instead of re-running the census.
      */
+    /**
+     * ⛓ THE CHATTER SET, COUNTED OFF THE RUN: every stdout/stderr message a
+     * bare import produced, kept when MORE THAN ONE instrument produced it.
+     * ⛔ Stack frames are excluded for the same reason `localWhy` excludes
+     * them — a frame differs between launch methods for the same warning.
+     */
+    const seen = new Map();
+    for (const r of rows) {
+        const lines = new Set([...(r.import.stdout ?? '').split('\n'),
+            ...(r.import.stderr ?? '').split('\n')]
+            .map((l) => l.trim()).filter((l) => l && !/^at\s/.test(l)));
+        for (const l of lines) seen.set(l, (seen.get(l) ?? 0) + 1);
+    }
+    const chatter = [...seen].filter(([, n]) => n > 1).map(([l]) => l).sort();
     const effectful = Object.fromEntries(rows.filter((r) => !r.import.ok)
         .sort((a, b) => a.file.localeCompare(b.file))
         .map((r) => [r.file, {
@@ -557,6 +587,8 @@ if (WRITE_BASELINE) {
             importDoorEffectful: Object.keys(effectful).length,
             wroteIntoTheRepo: Object.values(effectful).filter((e) => e.wrote.length).length,
         },
+        /** ⛓ derived: a line more than one bare import printed (see CHATTER). */
+        loadTimeChatter: chatter,
         importDoorEffectful: effectful,
     }, null, 2)}\n`);
     console.log(`wrote ${BASELINE_FILE.split('/').pop()} — ${Object.keys(effectful).length} of `
