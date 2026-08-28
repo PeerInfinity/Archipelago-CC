@@ -5653,6 +5653,15 @@ read every row as "moved", including the one producer that moves under no mode �
 contradicting §40.7, which is what should have caught it; and a test written FOR
 mutant (m3) that ran GREEN under (m3), because it counted `DASH_MODE` and
 `DEFAULT_DASH_MODE` contains it.
+⛔ **CI WAS RED AT `ae16aa72b` AND IT WAS 12i's OWN — repaired at `2084dab69`,
+which is the slice's true close head.** One finding, `lintGateLabels.test.js`:
+the test NAME *"the set is DERIVED from the pattern in all **three** states"*
+TYPED a cardinality its own check COMPUTES (`expect(DASH_MODES).toEqual([…])` is
+that row's first line). Fixed by INTERPOLATION, never `--write-allow`. ⛓ The
+bounded run was correct and blind — `lintGateLabels.test.js` scans a CORPUS
+while the edit lived in `solverBot.test.js`, which is ⚖ 52's own caveat word for
+word. Trap 902; the pre-push question is *"does this edit put a NUMBER in any
+label or test name?"*, not *"did I touch a gate?"*.
 NEXT: unchanged — the orchestrator's full-tier drive → **P4** → L15. ⛔ ⚖ 61's
 two questions go to the user BEFORE the next full record, not before P4.
 
