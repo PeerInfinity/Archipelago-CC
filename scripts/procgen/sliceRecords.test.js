@@ -23,7 +23,7 @@ import {
     HEADER_RE, LADDER_FROZEN_AT, bareTitle, deriveFromGit, factLines, landedIn, memoryDir,
     parseSection, rulingsIn, sectionText, REPO,
 } from './sliceRecords.js';
-import { replaceRegion } from './record-slice.mjs';
+import { insertionPoint, replaceRegion } from './record-slice.mjs';
 
 const DIR = mkdtempSync(join(tmpdir(), 'slice-records-'));
 afterAll(() => rmSync(DIR, { recursive: true, force: true }));
@@ -260,6 +260,38 @@ describe('⛔ a marked region is replaced only when its markers are UNIQUE', () 
     });
     it('a MISSING marker is refused BY NAME rather than appending', () => {
         expect(() => replaceRegion('A\nB', 'r9-status', 'x')).toThrow(/holds 0 /);
+    });
+});
+
+/**
+ * ⛔⛔ **THE END OF THE FILE IS NOT THE END OF THE LOG.** The first real
+ * `--only=queue` appended the header BELOW a closing code fence, at the bottom
+ * of an ASCII diagram, two sections past where every slice entry lives.
+ */
+describe('⛔ a new queue block goes after the LAST one, never at EOF', () => {
+    const doc = [
+        '# queue', '',
+        '**⇒ A CLOSED (…).**',
+        'the A body.',
+        'still the A body.', '',
+        '**⇒ B CLOSED (…).**',
+        'the B body.', '',
+        '## 6. An appendix',
+        'prose.', '',
+        '```',
+        'a diagram',
+        '```', '',
+    ];
+    it('the point is the end of the LAST block\'s paragraph, before the appendix', () => {
+        const at = insertionPoint(doc);
+        expect(doc[at - 1]).toBe('the B body.');
+        expect(doc[at + 1]).toBe('## 6. An appendix');
+    });
+    it('⛔ …and it is NOT the end of the file', () => {
+        expect(insertionPoint(doc)).toBeLessThan(doc.length - 1);
+    });
+    it('a document with no block at all falls back to EOF, and says so by its value', () => {
+        expect(insertionPoint(['# queue', 'prose'])).toBe(2);
     });
 });
 

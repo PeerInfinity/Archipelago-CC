@@ -5811,6 +5811,54 @@ NEXT: unchanged — **P4b** = ⚖ 54 (8) ONE RECORD SURFACE → L15.
 
 **⇒ P4a's STANDING ROWS BANKED (session 10 orchestrator, 2026-08-28, on the records `a61feaaec`).** `gate: procgen-help` **262/0**, `cheap: false`, measured LOCALLY under the box lock (573 s on this box; the slice's 347 s — the clock is a kill deadline, not a verdict, trap 916) — and CI's bounded face at the same head, `gate-help-ci: procgen-help`, reads **262/0** as well: the two faces AGREE on their first outing. `suite: vitest (unfiltered)` **392/12031** @a61feaaec from CI (+2 files / +24 tests over 390/12007). File 65 rows / 48 cheap. ⚠ MEASURED, for P4b: `ci-summary --gate="gate: procgen-help"` REFUSES BY NAME (the gate declares a ci-face), and `ciSourced(headless ∧ ¬cheap)` will select exactly this row on its next `--write` ⇒ that write can only KEEP — the two rulings do not compose (P4b brief (D)). ⚠ The gate's full pass leaves ten untracked artifacts in the tree by design (it reports, never deletes): five verifier `.rl-*/.atlas-*` scratch files and five `worlds/*_worldgen/` dirs — removed by mtime against the run's start. The slice's first-quoted row key (`seedling-procgen-help`) was not the derived one (`procgen-help`); `--key=` refused by name, as built. ⚖ 63 (a)–(i) are in kickoff §1.
 
+**⇒ P4b CLOSED (2026-08-28, `main` @`37925a6d1`; 5 commit(s), 5 fast-forward(s); as-built kickoff §52; ⚖ 54 (8) DISCHARGED, ⚖ 63 (e) ANSWERED).**
+⚖ The user, 2026-08-28: *"I would like to implement one recording surface if
+possible"*, and on the trap ladder: *"How did the trap list grow to 907 entries
+so quickly? Are there duplicates? Is it practical to refer to a list that
+long?"*
+**(A) THE KICKOFF §N IS THE RECORD.** `record-slice.mjs` reads an as-built §N —
+header, preamble, `### N.x` count, the WHAT LANDED SHA table, the user's words,
+the ⛔ claims — and derives from git at the fold's real head: each SHA's
+ancestry, the range base as the first landed commit's PARENT, the `fixtures/`
+and `standing-values.json` diff line counts, the tracked-doc heading's line and
+introducing commit, whether ⚖ 22's regen is IN that commit, and the queue
+block's line. It emits the four fact lines the other surfaces carry, each field
+carrying its provenance (`git` · `section` · `both` · `prose`). ⛔ It never edits
+what it reads and emits no timestamp: a disagreement is a FINDING.
+**AND THE CALIBRATION AGAINST §50 FOUND THAT TWO SURFACES NAME DIFFERENT HEADS
+FOR ONE FOLD.** The queue header says `main` @`798eadd91`; the memory close line
+says `1c47fff54`. Not a typo — the queue entry is written INSIDE the commit it
+describes, so its head is one commit stale by construction (trap 924). MEMORY.md
+carried no line naming 12j at all (its R9 bullet is a moving pointer). §50 names
+⚖ 61/62 and writes no verdict word, so ANSWERED/DISCHARGED lived only here.
+**(B) ONE FILE PER TRAP.** `<memory>/traps/<NNN>-<slug>.md`, frontmatter
+`number`/`slice`/`family`; the number is `max(THE FREEZE, THE HIGHEST FILE) + 1`
+and `existsSync` REFUSES, so the FILESYSTEM is the collision guard. The ladder is
+FROZEN at **921** and NOT migrated: 450 `trap NNN` citations live in the tree
+(367 `scripts/procgen` · 50 `docs/json` · 33 `CC/docs`), maximum cited **916**,
+all below the freeze, and `--trap=NNN` resolves from either place.
+**(C) A GATE REFUSES A FOLD WHOSE SURFACES DISAGREE.** `check-slice-records.mjs`
+(headless, no box): per tracked-doc heading, the queue has a block · ⚖ 22's regen
+is in the heading's introducing commit · every trap that commit cites resolves.
+⛓ **Its first run re-derived, unprompted, `c4f7b21e4`/`bb45d7eff` — the exact CI
+red ⚖ 22's own text was written from.** The CI face is those three; the kickoff
+and the memory directory are outside a CI checkout, so those checks are
+`--local` and an unanswerable question is never a pass.
+**(D) ⚖ 54 (6) AND P3b (g) DO NOT COMPOSE, FIXED.** `gate: procgen-help` is
+headless and not cheap, so `ciSourced` selected it — and `ci-summary` refuses it
+by name, because the gate declares `@ci-face gate-help-ci`. That row could only
+ever KEEP, forever. ⇒ a gate with a declared ci-face is NEVER CI-sourced: its
+full pass is the standing value, the face is CI's bounded witness under its own
+key, and the row's `command` says which.
+⛔ **NO TAPE, NO DEFAULT, NO BOX, ZERO STANDING VALUES MOVED.** `fixtures/` and
+`standing-values.json` 0 lines vs `86f7974d7`; the seven producer `--check` md5s
+byte-identical at W0 and at the close. Standing rows **+1 derived**
+(`gate: slice-records`); predicted for the orchestrator's window:
+`gate: procgen-help` 262/0 → **264/0** with its import-door baseline unchanged at
+**251**, instruments index 262 → **264**.
+**TRAPS 922–928.** NEXT: L15 `shove` — a Fable design session, DISCUSSION FIRST
+(⚖ 63 (h)).
+
 ## 6. Everything else (unchanged queues)
 
 Pre-existing next steps that predate this transition, in their topic files:

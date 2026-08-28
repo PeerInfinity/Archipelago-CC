@@ -137,15 +137,26 @@ const localTraps = LOCAL
     : null;
 
 /**
- * ⛓ The id, as a word — ⛔ escaped, and bounded on BOTH sides by "not an
- * id character", where a PRIME counts as one. Without the prime, `12g` matches
- * inside `12g′` and two folds share one block.
+ * ⛓⛓⛓ **THE ID IS MATCHED IN THE OPENER'S SUBJECT POSITION, NOT ANYWHERE ON
+ * THE LINE — and this gate destroyed itself on its own new entry to find out.**
+ *
+ * ⛔ MEASURED: the first block `record-slice` wrote reads `**⇒ P4b CLOSED (…;
+ * as-built kickoff §52; ⚖ 54 (8) DISCHARGED …)**`. A detector that looked for
+ * the id ANYWHERE on a `**⇒ ` line then found id `8` inside `⚖ 54 (8)` — so
+ * slice 8 acquired a queue block, the derived convention boundary collapsed to
+ * slice 8's commit date, and TWENTY-THREE folds that legitimately predate the
+ * convention went red at once. A one-character id is a substring of every
+ * parenthesised number a prose line carries.
+ *
+ * ⇒ the opener is `**⇒ ` then optionally `SLICE `, then the id AS A WORD —
+ * which is exactly the two spellings the queue holds and exactly where a block
+ * names its subject. ⛔ The prime is an id character (without it `12g` matches
+ * inside `12g′`); a close word may then appear anywhere on the line.
  */
 const idRe = (id) => new RegExp(
-    `(?:^|[^A-Za-z0-9′″‴])${id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![A-Za-z0-9′″‴])`);
+    `^\\*\\*⇒ (?:SLICE )?${id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![A-Za-z0-9′″‴])`);
 
-const queueAt = (id) => queueLines.findIndex((l) => l.startsWith('**⇒ ')
-    && idRe(id).test(l) && CLOSE_RE.test(l));
+const queueAt = (id) => queueLines.findIndex((l) => idRe(id).test(l) && CLOSE_RE.test(l));
 
 /** ⛓ The heading's introducing commit and ITS date, measured once per slice. */
 for (const s of slices) {

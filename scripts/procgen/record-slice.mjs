@@ -114,6 +114,35 @@ export function replaceRegion(text, name, body) {
     return `${text.slice(0, a)}\n${body}\n${text.slice(b)}`;
 }
 
+/**
+ * ⛓⛓⛓ **WHERE A NEW QUEUE BLOCK GOES — AFTER THE LAST ONE, NEVER AT EOF.**
+ *
+ * ⛔ MEASURED, on the first real `--write`: appending to the end of the queue
+ * put P4b's header BELOW a closing code fence, at the bottom of a "Dependency
+ * sketch" diagram, two sections past where every other slice entry lives.
+ * "The end of the file" and "the end of the log" are different places in a
+ * document that has an appendix.
+ *
+ * ⇒ the insertion point is the line after the LAST `**⇒ ` block's own
+ * paragraph run — i.e. walk forward from that opener to the first blank line
+ * that is followed by something which is not part of the block. A file with no
+ * `**⇒ ` block at all falls back to EOF, and says so by returning the length.
+ */
+export function insertionPoint(lines) {
+    let last = -1;
+    for (let i = 0; i < lines.length; i += 1) if (lines[i].startsWith('**⇒ ')) last = i;
+    if (last < 0) return lines.length;
+    let i = last + 1;
+    /* ⛓ the block is its opener plus every line up to the next blank line that
+     *  is followed by a heading, a rule, or another block. */
+    while (i < lines.length) {
+        if (lines[i].trim() === ''
+            && (i + 1 >= lines.length || /^(?:#|---|\*\*⇒ )/.test(lines[i + 1] ?? ''))) break;
+        i += 1;
+    }
+    return i;
+}
+
 /* ══════════════════════════════════════════════════════════════════════
  * CALIBRATION — THE HAND-WRITTEN LINES ARE THE CORRECTNESS WITNESS
  * ══════════════════════════════════════════════════════════════════════ */
@@ -391,10 +420,13 @@ export function main() {
             console.log(`SKIP  ${QUEUE_DOC} already has a block at :${derived.queue.line}`);
         } else {
             const q = join(REPO, QUEUE_DOC);
-            const qText = readFileSync(q, 'utf8');
-            writeFileSync(q, `${qText.replace(/\n*$/, '')}\n\n${lines.queueHeader}\n`);
+            const at = insertionPoint(readFileSync(q, 'utf8').split('\n'));
+            const qLines = readFileSync(q, 'utf8').split('\n');
+            qLines.splice(at, 0, '', lines.queueHeader);
+            writeFileSync(q, qLines.join('\n'));
             writes.push(QUEUE_DOC);
-            console.log(`ok    ${QUEUE_DOC} += the header line — ⛔ the BODY is yours to write`);
+            console.log(`ok    ${QUEUE_DOC}:${at + 2} += the header line, AFTER the last `
+                + '`**⇒ ` block — ⛔ the BODY is yours to write');
         }
         console.log(`\n⛔ NOT WRITTEN: the tracked-doc heading. Its title is a re-voicing for an `
             + 'outside reader; place it yourself, with its body, and re-run the ⚖ 22 regen in the '

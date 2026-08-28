@@ -330,7 +330,8 @@ export function parseSection(text, n) {
      * fact line re-voices and this module cannot derive (*"NO DEFAULT
      * MOVED"*): git has no notion of a default.
      */
-    const claims = [...preamble.matchAll(/⛔\s*\*\*([^*]+)\*\*/g)].map((m) => m[1].trim());
+    const claims = [...preamble.matchAll(/⛔\s*\*\*([^*]+)\*\*/g)]
+        .map((m) => m[1].replace(/\s+/g, ' ').trim());
 
     return {
         /** ⛓ A STRING — three folds are numbered `21b`, `23b`, `23c`. */
