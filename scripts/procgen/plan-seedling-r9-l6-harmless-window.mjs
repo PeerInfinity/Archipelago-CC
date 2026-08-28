@@ -62,14 +62,24 @@
  * `hits_timer` 18, and `r9-l6-harmless-control` came back `hits` **0** against
  * the model's 2. Every one of the 61 observations matched.
  *
- * ⛓ THE CAUSE IS NOT THE MODEL. `seedling-bot-replay-win.py:69` polls
+ * ⛓ THE CAUSE IS NOT THE MODEL. `seedling-bot-replay-win.py` polled
  * `botStatus` every `poll_sec = 0.25` and the game runs at
  * `FP.assignedFrameRate` 30 (this recording measured 29.93), so the status the
- * differential compares is read up to ~8 ENGINE FRAMES AFTER the tape's last
- * observation — with the tape's last keys still held, because nothing
- * dispatches a release. A tape that ends one tick from an event spends those
- * frames on it. At 60 the press arm's margin is exactly ZERO: its next hit is
- * the corridor's `sandtrap@160,48` on the very next tick.
+ * differential compared was read up to ~8 ENGINE FRAMES AFTER the tape's last
+ * observation. A tape that ends one tick from an event spends those frames on
+ * it. At 60 the press arm's margin is exactly ZERO: its next hit is the
+ * corridor's `sandtrap@160,48` on the very next tick.
+ *
+ * ⛔ TWO CORRECTIONS, R9 SLICE RR. (i) This paragraph used to end *"with the
+ * tape's last keys still held, because nothing dispatches a release"*, and
+ * that clause is FALSE and was never measured — `Bot.update` releases every
+ * span whose `to == tick` at `tick == tickCount`, above the disarm, and 149 of
+ * 149 committed tapes have `max(span.to) <= tick_count`. What spends those
+ * frames is the WORLD: bodies move, `hitUpdate()` counts down, and the player
+ * coasts out its friction. (ii) The differential no longer reads the poll for
+ * these counters at all — it reads `Bot.latchSeam`'s frozen
+ * `arrival.velocity`, so this whole failure mode is closed at its source and
+ * the pair below is its historical witness rather than a live hazard.
  *
  * ⛔⛔ AND THE CONTROL'S FAILURE IS THE INTERESTING ONE, BECAUSE IT IS
  * SILENT AND POINTS THE WRONG WAY. `verify-seedling-bot-differential`'s own
@@ -236,36 +246,56 @@ check('⛔ …and one tick SHORTER does not complete them, so the number is a bo
  * ⛓⛓⛓ THE POST-TAPE MARGIN, MEASURED ON BOTH ARMS — the thing the first
  * derivation had none of.
  *
- * `seedling-bot-replay-win.py:69` polls `botStatus` every `POLL_SEC` and the
- * engine runs at `FP.assignedFrameRate` (30 — `combatVerbs.animCompleteTicks`'s
- * own default, and the rate the recording of this very tape measured at 29.93
- * fps), so the status the differential compares against the model's terminal
- * counters is read up to `POLL_FRAMES` engine frames after the tape's last
- * observation, with the tape's last keys STILL HELD. The margin is how many of
- * those frames each arm can spend before its own `hits` moves.
+ * ⛔⛔⛔ R9 SLICE RR, ⚖ 47b (2) / ⚖ 64 — **THE POLLER'S WINDOW IS RETIRED AS A
+ * REQUIREMENT, AND THE TWO CONSTANTS THAT SPELLED IT ARE DELETED RATHER THAN
+ * DERIVED.** This row used to read *"each arm's `hits` is unmoved for at least
+ * twice `POLL_FRAMES`"*, with `POLL_FRAMES = ceil(0.25 s x 30 fps) = 8` typed
+ * here out of `seedling-bot-replay-win.py`'s `poll_sec`. Its premise — stated
+ * here, in `verify-seedling-bot-differential.mjs`, and in ⚖ 47b (2), and
+ * measured in none of the three — was that the differential compares a status
+ * *"read up to ~8 engine frames after the tape's last observation, with the
+ * tape's last keys STILL HELD because nothing dispatches a release"*.
+ *
+ * ⛓ The second half was FALSE: `Bot.update` releases every span whose
+ * `to == tick` at `tick == tickCount`, and 149 of 149 committed tapes have
+ * `max(span.to) <= tick_count`. And the first half is no longer true either:
+ * the differential now compares `Bot.latchSeam`'s FROZEN
+ * `arrival.velocity.{hits, hits_timer}`, taken at the disarm tick before that
+ * frame's `super.update()`. The drift it compares is ZERO BY CONSTRUCTION, so
+ * no tape's length has to clear a poll interval any more.
+ *
+ * ⇒ ⚖ 17 in its strongest form: a number that nothing needs is not re-derived,
+ * it is deleted. What SURVIVES is the claim the margin was always evidence for
+ * and which is about this tape rather than about the harness — **the sealed
+ * columns complete strictly before the next event on either arm**, which is
+ * what makes 42 the SHORTEST length rather than a lucky one. The margins are
+ * still measured and still printed; they are simply no longer scored against a
+ * driver constant. A scan bound of 32 is the old `4 x POLL_FRAMES` kept as a
+ * SEARCH ceiling only — it bounds the loop, it is not a requirement, and the
+ * row says so.
  */
-const POLL_SEC = 0.25;
-const ENGINE_FPS = 30;
-const POLL_FRAMES = Math.ceil(POLL_SEC * ENGINE_FPS);
+const MARGIN_SCAN = 32;
 const marginOf = (withPress) => {
     const run = newRun();
     const keys = keysFor(withPress);
     for (let t = 0; t < TICKS; t += 1) run.advance(keys(t));
     const at = run.playerHits.length;
     const last = keys(TICKS - 1);
-    for (let m = 0; m < 4 * POLL_FRAMES; m += 1) {
+    for (let m = 0; m < MARGIN_SCAN; m += 1) {
         run.advance(last);
         if (run.playerHits.length !== at) return m;
     }
-    return 4 * POLL_FRAMES;
+    return MARGIN_SCAN;
 };
 const MARGIN = { press: marginOf(true), control: marginOf(false) };
-check(`⛓⛓⛓ BOTH ARMS CLEAR THE POLLER'S OWN WINDOW — the status the differential `
-    + `reads lands up to ${POLL_FRAMES} frame(s) past the tape, and each arm's `
-    + `\`hits\` is unmoved for at least twice that`,
-    MARGIN.press >= 2 * POLL_FRAMES && MARGIN.control >= 2 * POLL_FRAMES,
-    `press ${MARGIN.press}, control ${MARGIN.control}, against ${POLL_FRAMES} `
-    + `(= ${POLL_SEC}s x ${ENGINE_FPS}fps) and a requirement of ${2 * POLL_FRAMES}`);
+check('⛓⛓⛓ THE SEALED COLUMNS COMPLETE STRICTLY BEFORE THE NEXT EVENT ON EITHER ARM '
+    + '— which is what makes this length the shortest one rather than a lucky one. '
+    + '(The old requirement, twice the Windows driver\'s ~8-frame poll window, RETIRED '
+    + 'at R9 slice RR: the differential compares the seam latch\'s frozen counters, so '
+    + 'the post-tape drift is zero by construction and no tape has to out-run a poll.)',
+    MARGIN.press > 0 && MARGIN.control > 0,
+    `press ${MARGIN.press}, control ${MARGIN.control} frame(s) of margin, scanned to `
+    + `${MARGIN_SCAN}`);
 
 const press = drive(true, TICKS);
 const control = drive(false, TICKS);

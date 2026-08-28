@@ -737,7 +737,7 @@ function withDerivedTransitions(name, drained) {
  * something and a freeze fired that nobody planned for. That is exactly the
  * failure the sticky counter exists to make visible rather than absorb.
  */
-function checkReadout(name, tape, status, stream) {
+function checkReadout(name, tape, status, stream, seam) {
     if (!status || typeof status !== 'object') {
         check(`${name}: botStatus is readable`, false, 'no status object');
         return null;
@@ -1261,76 +1261,109 @@ function checkReadout(name, tape, status, stream) {
     // ⚠ `hits` is a Number in the game (`WandShot` damage is 0.5), so this
     // compares numerically and not by identity of ints.
     if (status.hits !== undefined) {
+        /**
+         * ⛓⛓⛓ R9 SLICE RR, ⚖ 47b (2) / ⚖ 64 — **THE COMPARED COUNTERS COME
+         * OFF THE FROZEN LATCH, NOT OFF THE POLL.**
+         *
+         * ⛔⛔ WHAT THE THREE SURFACES SAID, AND WHAT IS TRUE. This block, and
+         * `plan-seedling-r9-l6-harmless-window.mjs`, and ⚖ 47b (2) itself all
+         * said the status was read *"up to ~8 engine frames after the tape's
+         * last observation, with the tape's last keys STILL HELD because
+         * nothing dispatches a release"*. The second half is FALSE and was
+         * never measured: `Bot.update` releases every span whose `to == tick`
+         * at `tick == tickCount`, above `recordEdges()` and above the disarm
+         * block, and its own comment says so — *"the final observation has
+         * been recorded and every hold released"*. Measured over the committed
+         * roster at this head: `max(span.to) <= tick_count` on 149 of 149
+         * tapes, and 74 of them end a span exactly AT `tick_count`. What
+         * actually spends those frames is the WORLD — bodies move,
+         * `hitUpdate()` counts down, and the player coasts out its friction —
+         * which is enough to produce every failure the sentence was written
+         * for.
+         *
+         * ⛓⛓⛓ AND THE FIX WAS ALREADY ON THE WIRE. `Bot.latchSeam` runs at
+         * the disarm tick, AFTER the final observation and BEFORE that frame's
+         * `super.update()`, and it carries `arrival.velocity =
+         * {vx, vy, hits, hits_timer}`. The Windows driver already drains it
+         * through `botSeam` and already writes it into `--out` as `seam`, on
+         * both the single-tape and the `--tapes` shapes. Nothing had to be
+         * built: this comparison simply had to READ it.
+         *
+         * ⇒ the drift is ZERO BY CONSTRUCTION rather than by timing, and it
+         * does not depend on `poll_sec`, on the frame rate, on machine load,
+         * or on a tape's post-tape margin. ⛔ SO `hits_timer` IS AN EQUALITY
+         * AGAIN (see below), and the quiet `die()`-to-zero failure this block
+         * used to warn about cannot happen: a hit taken after the latch moves
+         * nothing this compares.
+         *
+         * ⛔ NO FALLBACK. A missing or player-less latch REDS THE ROW BY NAME
+         * rather than dropping back to the poll — a fallback would silently
+         * reinstate exactly the defect it replaced, and the polled value is
+         * kept only in the DETAIL, where it is a free per-tape measurement of
+         * the post-tape drift instead of the hidden variable it used to be.
+         */
+        const frozen = seam && seam.seam ? seam.seam['arrival.velocity'] : null;
+        const drift = (a, b) => (typeof a === 'number' && typeof b === 'number'
+            ? `${a === b ? 'no' : `${a - b}`} post-tape drift` : 'polled value absent');
+        check(`${name}: the seam latch carries the frozen terminal counters`,
+            !!frozen && typeof frozen.hits === 'number'
+                && typeof frozen.hits_timer === 'number',
+            frozen
+                ? `hits ${frozen.hits}, hits_timer ${frozen.hits_timer}, latched at tick `
+                    + `${seam.seam['latch.tick']}`
+                : '⛔ no `arrival.velocity` on the latch — `latchSeam` takes it from '
+                    + '`findPlayer()`, so a null here is a disarm with no player in scope. '
+                    + 'The polled `botStatus` is NOT substituted: it is read up to a poll '
+                    + 'after the tape and the counters it carries are a different frame\'s.');
         check(`${name}: the game's own \`hits\` matches the damage model`,
-            status.hits === expected.damage.hits,
-            `game: ${status.hits}, model: ${expected.damage.hits}`
-            + `${expected.playerHits.length ? ` (${expected.playerHits.length} landed hit(s), `
-                + `${expected.playerDeaths.length} death(s) — a death RESETS \`hits\`, so a `
-                + 'mismatch here can be a death the model placed on the wrong tick)' : ''}`);
-        // ⛔⛔⛔ `hits_timer` IS **NOT** DRAIN-STABLE, AND THE NEW CHECK
-        // FOUND THAT ON ITS FIRST NON-ZERO TAPE.
-        //
-        // `r6-contact-pair-standing` ends mid-window: the model says 1 and
-        // the game said 0, with all 91 observations byte-identical. The
-        // model is not wrong — `hitUpdate()` runs in `Player.update`, which
-        // keeps running after the tape's last observation, and the drain
-        // happens some unbounded number of engine frames later. A countdown
-        // is exactly the quantity a few extra frames destroys, and no
-        // positional comparison could ever have shown it. ⇒ THE SOUND
-        // COMPARISON IS A BOUND, not an equality:
-        //
-        //   · the game's value may only be LOWER (more frames elapsed);
-        //   · a model that says the window is SHUT must find it shut, or
-        //     the model missed a hit entirely.
-        //
-        // ⚠ AND THE WEAK DIRECTION IS NAMED: a model that thought the
-        // window LONGER than it is passes this bound. What catches that is
-        // the position stream — the steering gap between two hits is the
-        // window, and it is compared tick for tick.
-        //
-        // ⛔⛔⛔ AND THE `hits` EQUALITY ABOVE IS **NOT** SAFE BY CONTRAST —
-        // THIS SENTENCE USED TO SAY IT WAS, AND R9 SLICE 12c‴ MEASURED IT
-        // FALSE. What it said: "nothing moves it after the tape stops except a
-        // further hit, and that would fail the equality loudly rather than
-        // quietly." A further hit moves it UP — loud, true. ⛔ A further hit
-        // that is the KILLING one moves it to **ZERO**, because `Player.hit`'s
-        // `hits >= hitsMax` arm calls `die()`. So the same post-tape frames
-        // that only ever LOWER the countdown can RESET the counter, and the
-        // failure then reads as "the model over-counted" — which is what the
-        // message above offers as its first explanation, a true sentence about
-        // the wrong subject.
-        //
-        // MEASURED: a two-tape pair whose control held 2 of `hitsMax` 3 took
-        // its third hit in those frames; the game reported `hits` 0 against the
-        // model's 2 with all 61 observations byte-identical.
-        //
-        // ⇒ THE SOUND STATEMENT IS THE SAME SHAPE AS THE COUNTDOWN'S: this
-        // equality holds only while the tape's own POST-TAPE MARGIN exceeds the
-        // window in which the status is read. That window is
-        // `seedling-bot-replay-win.py`'s `poll_sec` (0.25) at
-        // `FP.assignedFrameRate` (30) — about EIGHT engine frames, with the
-        // tape's last keys STILL HELD because nothing dispatches a release; the
-        // drain gap measured on a real recording is 5. A tape whose margin is
-        // inside that window is a latent flake in either direction, and the
-        // producer is where the margin belongs: derive the length as the
-        // SHORTEST walk that completes the tape's claim, then MEASURE how many
-        // frames each arm can spend before its counters move and assert that
-        // margin against the poller's window
-        // (`plan-seedling-r9-l6-harmless-window.mjs` is the worked example).
-        //
-        // ⚠ THE REAL FIX IS NOT HERE. The driver should read the status AT the
-        // tape's last observation rather than up to a poll later; that is a
-        // Windows-driver change and therefore game-facing, so it carries ⚖
-        // ruling 40's full-roster checkpoint and is QUEUED rather than taken
-        // in passing.
-        const timerOk = status.hits_timer <= expected.damage.hitsTimer
-            && (expected.damage.hitsTimer !== 0 || status.hits_timer === 0);
-        check(`${name}: the game's own \`hits_timer\` is inside the i-frame window`,
-            timerOk,
-            `game: ${status.hits_timer}, model: ${expected.damage.hitsTimer}`
-            + `${status.hits_timer < expected.damage.hitsTimer
-                ? ` (${expected.damage.hitsTimer - status.hits_timer} frame(s) of drain gap `
-                  + '— `hitUpdate` keeps running after the tape\'s last observation)' : ''}`);
+            !!frozen && frozen.hits === expected.damage.hits,
+            `game (frozen at the last observation): ${frozen ? frozen.hits : '—'}, `
+            + `model: ${expected.damage.hits}; polled ${status.hits} `
+            + `(${drift(status.hits, frozen ? frozen.hits : null)})`
+            + `${expected.playerHits.length ? ` — ${expected.playerHits.length} landed hit(s), `
+                + `${expected.playerDeaths.length} death(s); a death RESETS \`hits\`, so a `
+                + 'mismatch here can be a death the model placed on the wrong tick' : ''}`);
+        /**
+         * ⛓⛓⛓ R9 SLICE RR — **AND SO `hits_timer` IS AN EQUALITY AGAIN.**
+         *
+         * ⛔ THE HISTORY, KEPT BECAUSE IT IS WHY THE BOUND EXISTED. R6 turned
+         * this into a one-sided bound on its first non-zero tape:
+         * `r6-contact-pair-standing` ended mid-window with the model saying 1
+         * and the game saying 0, all 91 observations byte-identical.
+         * `hitUpdate()` runs in `Player.update`, which kept running after the
+         * tape's last observation, and the POLL read it some unbounded number
+         * of engine frames later — a countdown is exactly the quantity a few
+         * extra frames destroy. R9 slice 12c‴ then measured that the `hits`
+         * EQUALITY above was not safe by contrast either: a further hit that
+         * is the KILLING one moves `hits` to ZERO (`Player.hit`'s
+         * `hits >= hitsMax` arm calls `die()`), so the same frames that only
+         * ever LOWER the countdown can RESET the counter, and the diagnostic
+         * then reads *"the model over-counted"* — a true sentence about the
+         * wrong subject.
+         *
+         * ⛓ BOTH OF THOSE ARE ARTEFACTS OF READING A POLL. The latch is taken
+         * at the disarm tick, so the frozen counters are the tape's OWN
+         * terminal state and the model's terminal state is the same instant's.
+         * A bound would now be strictly weaker than the measurement supports —
+         * and its weak direction was NAMED here for two rungs: *"a model that
+         * thought the window LONGER than it is passes this bound"*. That gap
+         * closes with the equality, and what used to catch it (the position
+         * stream, tick for tick) becomes corroboration rather than the only
+         * witness.
+         *
+         * ⇒ the polled value stays on the DETAIL line as the drain gap it
+         * always was. Every tape in a roster run now reports its own post-tape
+         * drift, which is the census nobody could take while the drift was the
+         * thing being compared.
+         */
+        check(`${name}: the game's own \`hits_timer\` matches the damage model`,
+            !!frozen && frozen.hits_timer === expected.damage.hitsTimer,
+            `game (frozen at the last observation): ${frozen ? frozen.hits_timer : '—'}, `
+            + `model: ${expected.damage.hitsTimer}; polled ${status.hits_timer} `
+            + `(${drift(status.hits_timer, frozen ? frozen.hits_timer : null)}`
+            + `${frozen && status.hits_timer < frozen.hits_timer
+                ? ' — `hitUpdate` keeps running after the tape\'s last observation, which is'
+                  + ' what the poll used to be measuring' : ''})`);
     }
 
     // ── ⛓⛓⛓ R7 SLICE 1: `botStatus.save`, CONSUMED AT LAST (R6 debt 6) ─
@@ -2028,7 +2061,7 @@ try {
         // where the per-tape loop is, and it names the tape.
         let expectedRun;
         try {
-            expectedRun = checkReadout(name, tape, status, stream);
+            expectedRun = checkReadout(name, tape, status, stream, seam);
         } catch (e) {
             check(`${name}: the readout checks run`, false,
                 `${e.message} — this is a defect in the VERIFIER, not in the game or the `

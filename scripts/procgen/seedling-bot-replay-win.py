@@ -52,11 +52,23 @@ import time
 # ── R9 slice 12g: THE WORLD-SWAP GATE (⚖ 58) ─────────────────────────────────
 #
 # ⛔ IT LIVES IN THIS FILE, and that is a decision rather than an accident.
-# SEVENTEEN consumers COPY this single file into the Windows scratch directory
-# and run it from there (`verify-seedling-bot-differential.mjs:620` and the
-# rest). A sibling module would have to be copied by every one of them, and the
-# first consumer that forgot would not lose the GATE — it would lose the whole
-# driver to an ImportError. One file cannot be half-copied.
+# Every consumer that drives the game COPIES this single file into the Windows
+# scratch directory and runs it from there (`verify-seedling-bot-differential
+# .mjs`'s `replayOnWindows`, and the rest). A sibling module would have to be
+# copied by every one of them, and the first consumer that forgot would not
+# lose the GATE — it would lose the whole driver to an ImportError. One file
+# cannot be half-copied.
+#
+# ⛓ R9 slice RR, ⚖ 17: THE COUNT IS NOT WRITTEN HERE. This comment used to say
+# "SEVENTEEN consumers", which was stale (16 at that head) and which nothing
+# could have caught. The population is one grep away and is the only form of it
+# that cannot go stale:
+#
+#     grep -rl "seedling-bot-replay-win.py" --include=*.mjs scripts/procgen \
+#       | xargs grep -l "writeFileSync(.*'seedling-bot-replay-win.py'"
+#
+# (plus this script's own consumer in `verify-seedling-bot-differential.mjs`,
+# which stages it through a local `driverWsl` binding rather than inline.)
 #
 # ⛓⛓⛓ WHAT THE RACE IS (12f, §43.7). `Bot.botStart` ends with
 # `FP.world = new Game(bootLevel, bootX, bootY)` (`Bot.as:1731`), which only
