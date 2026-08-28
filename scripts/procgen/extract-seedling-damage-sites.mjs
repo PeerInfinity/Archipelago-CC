@@ -52,6 +52,10 @@ import { readFileSync, writeFileSync, existsSync, readdirSync, statSync } from '
 import { join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 const REPO_ROOT = resolve(fileURLToPath(new URL('../..', import.meta.url)));
 const DEFAULT_OUT = join(REPO_ROOT, 'frontend/modules/seedlingDemo/seedlingDamageSites.js');
 

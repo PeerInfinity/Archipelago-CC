@@ -52,6 +52,10 @@ import { promisify } from 'node:util';
 import { REPO, gateRoster } from './gateRoster.js';
 import { gateStandingRows, headlineOf } from './standingValues.js';
 
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 const run = promisify(execFile);
 const JSON_OUT = process.argv.includes('--json');
 

@@ -16,6 +16,10 @@ import { planSpheres } from '../../frontend/modules/procgenPipeline/spherePlanne
 
 // Serialize a grid's regions deterministically: region object minus the
 // runtime Map (exits), which we render as a sorted array.
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 function dumpGrid(grid) {
     const out = {};
     for (const region of grid.allRegions()) {

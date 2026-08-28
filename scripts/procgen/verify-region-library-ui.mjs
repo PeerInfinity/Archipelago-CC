@@ -43,6 +43,10 @@ import { takeBoxLockOrExit } from './boxLock.js';
  * `rerecord-seedling-campaign`) recognises the holder's token and passes
  * through. `--wait-for-box=<sec>` queues instead of refusing.
  */
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 takeBoxLockOrExit({ name: 'verify-region-library-ui.mjs', kind: 'browser' });
 
 const here = path.dirname(fileURLToPath(import.meta.url));

@@ -51,6 +51,10 @@ import { takeBoxLockOrExit } from './boxLock.js';
  * `rerecord-seedling-campaign`) recognises the holder's token and passes
  * through. `--wait-for-box=<sec>` queues instead of refusing.
  */
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 takeBoxLockOrExit({ name: 'verify-runner-smoke.mjs', kind: 'browser' });
 
 const PRESET = 'frontend/presets/runner_worldgen/AP_14089154938208861744/'

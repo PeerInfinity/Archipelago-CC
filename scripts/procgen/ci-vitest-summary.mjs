@@ -21,6 +21,10 @@ import { spawnSync } from 'node:child_process';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 const HERE = dirname(fileURLToPath(import.meta.url));
 /** ⛔ `--gate=` is NOT forwarded: this name means the suite, and always did. */
 const argv = process.argv.slice(2).filter((a) => !a.startsWith('--gate='));

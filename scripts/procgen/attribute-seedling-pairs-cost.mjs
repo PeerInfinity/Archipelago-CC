@@ -37,6 +37,10 @@ import { pathToFileURL } from 'node:url';
 import path from 'node:path';
 import { mkdirSync, writeFileSync } from 'node:fs';
 
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 const ROOT = path.resolve(new URL('../..', import.meta.url).pathname);
 const mod = async (p) => import(pathToFileURL(path.join(ROOT, p)).href);
 

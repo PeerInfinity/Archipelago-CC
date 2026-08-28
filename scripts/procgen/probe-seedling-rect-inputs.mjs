@@ -63,6 +63,10 @@ import { loadAtlas } from '../../frontend/modules/seedlingDemo/levelSource.js';
 //                `rectsOverlap`
 //   'FIXED'    — this slice added the guard
 
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 export const SITES = Object.freeze([
     Object.freeze({
         site: 'botDriverV2.js:406 grow(r, m)',

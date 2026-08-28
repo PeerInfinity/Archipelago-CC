@@ -290,10 +290,29 @@ describe('who takes the box', () => {
      * silently stopped taking.
      */
     it('takes conditionally exactly where a headless arm would have been queued', () => {
-        const guarded = ['derive-seedling-tick0.mjs', 'solve-seedling-r8-d2-chain.mjs',
-            'solve-seedling-r8-tail.mjs', 'solve-seedling-r9-campaign.mjs'];
-        const isGuarded = (f) =>
-            /^if \(.+\) takeBoxLockOrExit\(/m.test(readFileSync(join(HERE, f), 'utf8'));
+        /**
+         * ⛓⛓ R9 SLICE P4a — **`plan-seedling-r7-ends-meet.mjs` JOINS THEM, AND
+         * `--segments` IS WHY.** ⚖ 62's rule one level in: `--segments` prints
+         * one JSON line about which tapes a producer emits and drives nothing,
+         * yet it took the real box on three producers — so a 1.4-second
+         * metadata query could queue behind a 142-minute drive, which is the
+         * second-direction failure the conditional takers exist to prevent. It
+         * also made `rerecordCampaign.test.js` load-flaky, since that file
+         * spawns `--segments` on several producers in one run.
+         *
+         * ⛔ AND THE DETECTOR IS "NOT AT COLUMN ZERO", not a one-line shape.
+         * The first cut matched `^if \(.+\) takeBoxLockOrExit\(` and went red the
+         * moment a guard grew a brace block — a detector that reads a
+         * REFORMATTING as a defect. What makes a take unguarded is that it is a
+         * TOP-LEVEL statement, and that is what column zero means here.
+         */
+        const guarded = ['derive-seedling-tick0.mjs', 'plan-seedling-r7-ends-meet.mjs',
+            'solve-seedling-r8-d2-chain.mjs', 'solve-seedling-r8-tail.mjs',
+            'solve-seedling-r9-campaign.mjs'];
+        const isGuarded = (f) => {
+            const text = readFileSync(join(HERE, f), 'utf8');
+            return text.includes('takeBoxLockOrExit(') && !/^takeBoxLockOrExit\(/m.test(text);
+        };
         expect(guarded.filter((f) => !isGuarded(f))).toEqual([]);
         /* ⛔ …and nobody ELSE guards one, which is the second direction. */
         const others = readdirSync(HERE)

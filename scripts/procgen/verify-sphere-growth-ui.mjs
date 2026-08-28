@@ -32,6 +32,10 @@ import { growSpheres } from '../../frontend/modules/procgenPipeline/procgenPipel
 import { planSpheres } from '../../frontend/modules/procgenPipeline/spherePlanner.js';
 import { DEFAULT_ITEMS } from '../../frontend/modules/shared/procgen/library.js';
 
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 const SEED = 1;
 const ITEM_POOL = {
     'Right arrow': 1, 'Left arrow': 1, Springs: 1, Jetpacks: 1,

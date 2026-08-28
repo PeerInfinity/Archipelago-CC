@@ -62,6 +62,10 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { writeFileSync } from 'node:fs';
 
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(join(HERE, '..', '..'));
 const M = (p) => import(join(REPO, 'frontend/modules/seedlingDemo', p));

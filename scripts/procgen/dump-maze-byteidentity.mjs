@@ -30,6 +30,10 @@ import { BIOMES } from '../../frontend/modules/mazeRoom/mazeRoomBiomeLibrary.js'
 import { listBackends } from '../../frontend/modules/shared/procgen/mazeAlgorithms/registry.js';
 import { listPostProcessors } from '../../frontend/modules/shared/procgen/mazeAlgorithms/postProcessors.js';
 
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 const SEEDS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 const BIOME_IDS = Object.keys(BIOMES);
 const SIZES = [

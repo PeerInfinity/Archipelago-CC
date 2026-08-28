@@ -63,6 +63,10 @@ import { takeBoxLockOrExit } from './boxLock.js';
  * UNDER `gates.mjs` recognises the holder's token and passes through.
  * `--wait-for-box=<sec>` queues instead of refusing.
  */
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 takeBoxLockOrExit({ name: 'check-seedling-editor-export.mjs', kind: 'browser' });
 
 /** The set the exporter prints, in the roster's own order. */

@@ -34,6 +34,10 @@ import {
 } from '../../frontend/modules/procgenPipeline/regionAtlasPool.js';
 import { seedlingMazeProjectionDeps } from '../../frontend/modules/flashPanel/seedlingAtlasAnalysis.js';
 
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 
 // Which game's semantics tables build the maze projection's cell grids — the

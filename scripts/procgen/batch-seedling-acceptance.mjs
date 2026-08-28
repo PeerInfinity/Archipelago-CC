@@ -112,6 +112,10 @@ import { parseDashMode, dashModeNote, dashModeArgv } from './dashMode.js';
  * there, and the sub-process command line is unchanged — so this row's
  * standing md5 does not move.
  */
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 const DASH_MODE = parseDashMode(
     process.argv.find((a) => a === '--dash' || a.startsWith('--dash=')));
 const DASH_NOTE = dashModeNote(DASH_MODE);

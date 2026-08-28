@@ -56,6 +56,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const MAP = JSON.parse(fs.readFileSync(
     path.join(repoRoot, 'frontend/modules/flashPanel/atlases/seedling-map.json'), 'utf8'));

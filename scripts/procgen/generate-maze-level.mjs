@@ -55,6 +55,10 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { writeFileSync } from 'node:fs';
 
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 const HERE = dirname(fileURLToPath(import.meta.url));
 const SELF = fileURLToPath(import.meta.url);
 const CORE = (p) => import(join(HERE, '..', '..', 'frontend/modules/procgenCore', p));

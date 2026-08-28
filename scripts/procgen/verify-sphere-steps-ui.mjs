@@ -31,6 +31,10 @@ import { takeBoxLockOrExit } from './boxLock.js';
  * `rerecord-seedling-campaign`) recognises the holder's token and passes
  * through. `--wait-for-box=<sec>` queues instead of refusing.
  */
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 takeBoxLockOrExit({ name: 'verify-sphere-steps-ui.mjs', kind: 'browser' });
 
 // Derived host: --host=<url> wins, then PROCGEN_UI_HOST, then the :8000 default.

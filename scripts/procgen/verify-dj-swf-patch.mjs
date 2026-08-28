@@ -17,6 +17,10 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { injectSwf } from '../../frontend/modules/bounceDemo/djReal/swf_inject.mjs';
 
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
 const SWFRECOMP = process.env.SWFRECOMP_CC ?? join(process.env.HOME, 'CC', 'SWFRecomp-CC');

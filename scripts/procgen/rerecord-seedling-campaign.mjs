@@ -135,6 +135,10 @@ import {
 } from './rehearsalTree.js';
 import { takeBoxLock } from './boxLock.js';
 
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..', '..');
 /**

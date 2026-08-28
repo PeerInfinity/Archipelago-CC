@@ -61,6 +61,10 @@ import {
     readStandingValues, runRow, standingRows,
 } from './standingValues.js';
 
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 const argv = process.argv.slice(2);
 const flag = (name) => argv.includes(`--${name}`);
 const arg = (name, fallback) => (argv.find((a) => a.startsWith(`--${name}=`))

@@ -65,6 +65,10 @@ import { parseDashMode, dashModeNote } from './dashMode.js';
  * not move. The warning goes to STDERR: it is a fact about the RUN, not part
  * of the artifact, and a machine-readable stdout must stay parseable.
  */
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 const DASH_MODE = parseDashMode(
     process.argv.find((a) => a === '--dash' || a.startsWith('--dash=')));
 const DASH_NOTE = dashModeNote(DASH_MODE);

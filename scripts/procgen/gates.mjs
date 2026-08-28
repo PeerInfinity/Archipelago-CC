@@ -67,6 +67,10 @@ import { promisify } from 'node:util';
 import { releaseBoxLock, takeBoxLock } from './boxLock.js';
 import { LOCAL_HOST, PAGES_ORIGIN, REPO, argvFor, gateRoster } from './gateRoster.js';
 
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 const run = promisify(execFile);
 const argv = process.argv.slice(2);
 const flag = (name) => argv.includes(`--${name}`);

@@ -36,6 +36,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const ATLAS = path.join(repoRoot, 'frontend/modules/flashPanel/atlases/seedling-playthrough.json');
 const RULES = path.join(repoRoot, 'frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json');

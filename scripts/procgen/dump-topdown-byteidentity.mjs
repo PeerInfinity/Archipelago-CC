@@ -15,6 +15,10 @@ import {
 
 // Serialize a grid's regions deterministically (same shape as the sphere
 // harness): region object minus the runtime Map (exits), rendered as an array.
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 function dumpGrid(grid) {
     const out = {};
     for (const region of grid.allRegions()) {

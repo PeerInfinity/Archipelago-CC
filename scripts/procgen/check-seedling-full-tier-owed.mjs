@@ -73,6 +73,10 @@ import { fileURLToPath } from 'node:url';
 import { describeFullTierEstimate, rosterLabels, tickSumOf } from './fullTierEstimate.js';
 import { FILE, readStandingValues } from './standingValues.js';
 
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
 const TAPES_REL = 'frontend/modules/seedlingDemo/fixtures/tapes';

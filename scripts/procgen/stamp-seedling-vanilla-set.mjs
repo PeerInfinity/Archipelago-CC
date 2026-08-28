@@ -26,6 +26,10 @@ import { fileURLToPath } from 'node:url';
 import { stampLevelSetIdentity, validateLevelSet } from
     '../../frontend/modules/seedlingDemo/levelSetValidator.js';
 
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 const REPO = dirname(dirname(dirname(fileURLToPath(import.meta.url))));
 const PATH = join(REPO, 'frontend/modules/seedlingDemo/fixtures/seedling-vanilla-set.json');
 

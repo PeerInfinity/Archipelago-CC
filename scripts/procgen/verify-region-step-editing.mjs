@@ -46,6 +46,10 @@ import {
     planSpheres, computeItemSpheres, compareSpheresToPlan,
 } from '../../frontend/modules/procgenPipeline/spherePlanner.js';
 
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 function fail(msg) { console.error('FAIL:', msg); process.exit(1); }
 
 const itemPool = {

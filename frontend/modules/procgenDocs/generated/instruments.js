@@ -49,7 +49,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 22,
-            "count": 31,
+            "count": 32,
             "id": "check"
         },
         {
@@ -114,7 +114,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 3,
+            "count": 4,
             "id": "no prefix"
         },
         {
@@ -204,13 +204,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 241,
+        "blockStyle": 243,
         "browser": 76,
         "cited": 85,
-        "files": 260,
+        "files": 262,
         "lineStyle": 19,
-        "withDocblock": 260,
-        "withFlags": 164
+        "withDocblock": 262,
+        "withFlags": 166
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -266,6 +266,12 @@ export const INSTRUMENTS = frz({
                     "name": "verbose"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "⛔⛔⛔ **RETIRED — PROCGEN ELEMENTS arc 3, slice 4c (2026-08-17).** ⚖ The user retired the three door TEMPLATES into the room-aware ELEMENTS, and this instrument's SUBJECT went with them: it names WHICH ANCHORS THE DOOR LAW MOVED, per door-family instantiation — and there are no door TEMPLATES left to enumerate (arc-3 …",
             "path": "scripts/procgen/attribute-seedling-door-cut.mjs"
         },
@@ -317,6 +323,12 @@ export const INSTRUMENTS = frz({
                     "name": "seeds"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "attribute-seedling-pairs-cost — **WHERE THE CARVED-PAIRS DUMP'S WALL TIME GOES, PER SOLVE**, attributed to the CANDIDATE INSTANCE that asked for it.",
             "path": "scripts/procgen/attribute-seedling-pairs-cost.mjs"
         },
@@ -340,6 +352,12 @@ export const INSTRUMENTS = frz({
                     "name": "only"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "audit-seedling-r5-stances — the encounter STANCE audits slice 0 deferred, each a NAMED VERDICT.",
             "path": "scripts/procgen/audit-seedling-r5-stances.mjs"
         },
@@ -359,6 +377,12 @@ export const INSTRUMENTS = frz({
                         "startsWith"
                     ],
                     "name": "only"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "audit-seedling-r6-boss-rooms — R6 slice 0's geometry half: the three boss rooms priced with the SHIPPED planner geometry, before any window is planned.",
@@ -412,6 +436,12 @@ export const INSTRUMENTS = frz({
                     "name": "per-biome"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "batch-seedling-acceptance — THE ARC'S EXIT-CRITERIA BATCH AND THE PER-LEVEL REQUIREMENTS REPORT.",
             "path": "scripts/procgen/batch-seedling-acceptance.mjs"
         },
@@ -447,6 +477,12 @@ export const INSTRUMENTS = frz({
                         "opt"
                     ],
                     "name": "stage-width"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "build-dj-loader-swf.mjs — produce the loader-injected wide Doodle Jump SWF as a FILE, for consumers that need a URL instead of in-memory bytes: the real-DJ renderer's native-Flash tier (NPAPI plugins stream the movie by URL) and the SWFRecomp recompile input (flasharchive/Doodle_Jump_loader/test.swf).",
@@ -494,6 +530,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "steps"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "census-maze-keeps — **THE MAZE'S `solved-only` KEEP CLASS, COUNTED** — PROCGEN ELEMENTS arc 5, slice 5 (D5; ⚖ arc-5 ruling 4).",
@@ -558,6 +600,12 @@ export const INSTRUMENTS = frz({
                     "name": "sizes"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "census-seedling-areas — **THE AREA CENSUS**: how many AREAS a Seedling skeleton offers, per kind, per knob, per seed, per biome — and what a lock on every boundary cell would cost out of the 30 persistence tags.",
             "path": "scripts/procgen/census-seedling-areas.mjs"
         },
@@ -602,6 +650,12 @@ export const INSTRUMENTS = frz({
                     "name": "write-frontier"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "══ THE CAMPAIGN CENSUS — does the TRUE-START SOLVER CHAIN continue, pair by pair, and what does each break cost? ══════════════════════════════════",
             "path": "scripts/procgen/census-seedling-campaign.mjs"
         },
@@ -623,6 +677,12 @@ export const INSTRUMENTS = frz({
                         "startsWith"
                     ],
                     "name": "tag"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "census-seedling-committed-rooms — WHAT IS STANDING IN EVERY COMMITTED ROOM.",
@@ -721,6 +781,12 @@ export const INSTRUMENTS = frz({
                     "name": "sizes"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "census-seedling-density — **WHAT EACH POSITION OF THE DENSITY DIAL BUYS.**",
             "path": "scripts/procgen/census-seedling-density.mjs"
         },
@@ -764,6 +830,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "seeds"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "census-seedling-doors-elements — **DO THE TWO ROOM-AWARE DOOR ELEMENTS FIT A 10x10 SEEDLING ROOM, AND WHERE DO THEY REFUSE?** — PROCGEN ELEMENTS arc 3, slice 4a, D4's first arm.",
@@ -811,6 +883,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "seeds"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "census-seedling-doors — **THE DOOR CENSUS**: where on a Seedling skeleton is a wall-with-a-gap actually a CUT, per kind, per orientation, per span, per gap?",
@@ -867,6 +945,12 @@ export const INSTRUMENTS = frz({
                     "name": "sizes"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "census-seedling-elements — **DOES A REVERSE-PULL GADGET FIT A SEEDLING ROOM AT ALL, AND IN WHICH ORIENTATION?** — PROCGEN ELEMENTS arc 3 slice 3 D1(b), extended by arc 5 slice 2 (the oriented pick) and slice 1's SIZE axis.",
             "path": "scripts/procgen/census-seedling-elements.mjs"
         },
@@ -896,6 +980,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "json"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "census-seedling-enemies — **ONE ENEMY IN ONE CHAMBER, AND WHAT THE SOLVER DOES ABOUT IT** (PROCGEN ELEMENTS arc 3, slice 4d, D5; ⚖ design ruling 19).",
@@ -935,6 +1025,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "seeds"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "census-seedling-killgate-clears — **WHAT ACTUALLY OPENS THE KILL GATE'S LOCK**, and where the body was when it stopped being alive.",
@@ -984,6 +1080,12 @@ export const INSTRUMENTS = frz({
                     "name": "sizes"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "census-seedling-sites — **THE SITE CENSUS**: how many of each SITE class a Seedling skeleton offers, per kind, per knob, per seed.",
             "path": "scripts/procgen/census-seedling-sites.mjs"
         },
@@ -1025,6 +1127,12 @@ export const INSTRUMENTS = frz({
                     "name": "seeds"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "census-skeleton-kinds — **THE FIRST MEASUREMENT OF THE CONSTRUCTIVE MODE AS BUILT.**",
             "path": "scripts/procgen/census-skeleton-kinds.mjs"
         },
@@ -1050,6 +1158,16 @@ export const INSTRUMENTS = frz({
                     "name": "host"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "check-maze-lab — THE CONSTRUCTIVE-MODE SLICE 3 ACCEPTANCE ROW.",
             "path": "scripts/procgen/check-maze-lab.mjs"
         },
@@ -1071,6 +1189,16 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "host"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
                 }
             ],
             "oneLiner": "check-preset-bundle-load — **THE MAIN APP OPENS A BUNDLE AND A `.json.gz`.**",
@@ -1114,6 +1242,16 @@ export const INSTRUMENTS = frz({
                     "name": "pages"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "check-procgen-demos — **EVERY LINK IN THE DEMO CATALOGUE IS LOADED, AND EVERY ENTRY'S OWN NAMED CLAIM IS ASSERTED OFF THE PAGE'S READOUT** (PROCGEN ELEMENTS arc 3, slice 5b; rebuilt on the data module by PROCGEN DOCS P1).",
             "path": "scripts/procgen/check-procgen-demos.mjs"
         },
@@ -1147,8 +1285,63 @@ export const INSTRUMENTS = frz({
                     "name": "pages"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "check-procgen-docs — **THE SEVENTEEN TRACKED DOCUMENTS RENDER ON THE PAGE, WITH THE ANCHORS THEIR OWN LINKS POINT AT** (PROCGEN DOCS · P4, D4).",
             "path": "scripts/procgen/check-procgen-docs.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-procgen-help.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "ceiling"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "write-baseline"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "check-procgen-help — **`--help` PRINTS AND EXITS ON EVERY INSTRUMENT, AND SO DOES A BARE IMPORT** (R9 slice P4a, ⚖ ruling 47b (4); user, 2026-08-28: *\"check if there are other ways that these commands are called, other than with the help parameter, that we might want to add protection for\"*).",
+            "path": "scripts/procgen/check-procgen-help.mjs"
         },
         {
             "argvHelpers": [
@@ -1171,6 +1364,16 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "host"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
                 }
             ],
             "oneLiner": "check-procgen-lab-hosting — THE CONSTRUCTIVE-MODE SLICE 4 ACCEPTANCE ROW.",
@@ -1205,6 +1408,16 @@ export const INSTRUMENTS = frz({
                     "name": "pages"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "check-procgen-reference — **THE REFERENCE PAGE RENDERS WHAT THE GENERATED MODULES HOLD, AND THE MODULES ARE WHAT THE CODE SAYS** (PROCGEN DOCS · P3a, D5).",
             "path": "scripts/procgen/check-procgen-reference.mjs"
         },
@@ -1229,6 +1442,16 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "host"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
                 }
             ],
             "oneLiner": "check-seedling-editor-arm — **THE FIFTH SOURCE, `?source=edit`.**",
@@ -1256,6 +1479,16 @@ export const INSTRUMENTS = frz({
                     "name": "host"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "check-seedling-editor-boot — THE EDITOR ARC SLICE 5 ACCEPTANCE ROW.",
             "path": "scripts/procgen/check-seedling-editor-boot.mjs"
         },
@@ -1279,6 +1512,16 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "host"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
                 }
             ],
             "oneLiner": "check-seedling-editor-edit — THE CONSTRUCTIVE-MODE SLICE 11 ACCEPTANCE ROW: **free tile / object editing on watch.html, and its two laws.**",
@@ -1306,6 +1549,16 @@ export const INSTRUMENTS = frz({
                     "name": "keep"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "check-seedling-editor-export — THE EDITOR ARC SLICE 4 ACCEPTANCE ROW.",
             "path": "scripts/procgen/check-seedling-editor-export.mjs"
         },
@@ -1330,6 +1583,16 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "host"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
                 }
             ],
             "oneLiner": "check-seedling-editor-generate — THE PROCGEN PoC SLICE 5 ACCEPTANCE ROW.",
@@ -1360,6 +1623,16 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "shot"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
                 }
             ],
             "oneLiner": "check-seedling-editor-lanes — THE EDITOR ARC SLICE 8 ACCEPTANCE ROW.",
@@ -1394,6 +1667,16 @@ export const INSTRUMENTS = frz({
                     "name": "shot"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "check-seedling-editor-manual — THE EDITOR ARC SLICE 3 ACCEPTANCE ROW.",
             "path": "scripts/procgen/check-seedling-editor-manual.mjs"
         },
@@ -1424,6 +1707,16 @@ export const INSTRUMENTS = frz({
                     "name": "shot"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "check-seedling-editor-overlays — THE EDITOR ARC SLICE 2 ACCEPTANCE ROW.",
             "path": "scripts/procgen/check-seedling-editor-overlays.mjs"
         },
@@ -1445,6 +1738,16 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "host"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
                 }
             ],
             "oneLiner": "check-seedling-editor-phases — **THE GENERATION LADDER, THE OVERLAYS AND THE SELECTABLE INTERMEDIATE RESULTS, IN A BROWSER** (PROCGEN ELEMENTS arc 3, slice 5a — D3, D4, D4' and D5).",
@@ -1475,6 +1778,16 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "shot"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
                 }
             ],
             "oneLiner": "check-seedling-editor-refusal — THE EDITOR ARC SLICE 10 ACCEPTANCE ROW.",
@@ -1518,6 +1831,16 @@ export const INSTRUMENTS = frz({
                     "name": "r8-d2-20"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "check-seedling-editor-sequence — A SEQUENCE OF TAPES, ON ONE GAME STATE.",
             "path": "scripts/procgen/check-seedling-editor-sequence.mjs"
         },
@@ -1550,6 +1873,16 @@ export const INSTRUMENTS = frz({
                     "name": "shot"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "check-seedling-editor-shapes — THE EDITOR ARC SLICE 6 ACCEPTANCE ROW.",
             "path": "scripts/procgen/check-seedling-editor-shapes.mjs"
         },
@@ -1571,6 +1904,16 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "host"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
                 }
             ],
             "oneLiner": "check-seedling-editor-solve — THE EDITOR ARC SLICE 1 ACCEPTANCE ROW.",
@@ -1598,6 +1941,16 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "host"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
                 }
             ],
             "oneLiner": "check-seedling-editor-switch — THE IN-PLACE SOURCE SWITCH, AND ITS LEAKS.",
@@ -1632,6 +1985,16 @@ export const INSTRUMENTS = frz({
                     "name": "shot"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "check-seedling-editor-world — THE EDITOR ARC SLICE 9 ACCEPTANCE ROW.",
             "path": "scripts/procgen/check-seedling-editor-world.mjs"
         },
@@ -1644,6 +2007,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "check-seedling-full-tier-owed.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "check-seedling-full-tier-owed — **A MEASUREMENT OWED IS A RED ROW, NOT A MEMORY** (R9 slice P3b, §47.11 (3) (c)/(d)).",
             "path": "scripts/procgen/check-seedling-full-tier-owed.mjs"
         },
@@ -1673,6 +2042,16 @@ export const INSTRUMENTS = frz({
                     "name": "seeds"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "check-seedling-generated-set — THE PHASE 5 ROUND TRIP.",
             "path": "scripts/procgen/check-seedling-generated-set.mjs"
         },
@@ -1692,6 +2071,12 @@ export const INSTRUMENTS = frz({
                     "name": "structure"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "check-seedling-producer-boundaries — **A CHAIN BOUNDARY IS CHECKED FROM THE PREDECESSOR, OR IT IS REFUSED BY NAME.** R9 slice P3, ⚖ ruling 54 (6), §42.5 / §42.10's fourth item.",
             "path": "scripts/procgen/check-seedling-producer-boundaries.mjs"
         },
@@ -1706,6 +2091,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "check-seedling-rerecord-rehearsal.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "check-seedling-rerecord-rehearsal — **THE RE-RECORD PIPELINE IS REHEARSED BEFORE IT SPENDS A GPU, AND THIS GATE IS WHAT MAKES THAT A STANDING CLAIM.** R9 slice P1b, ⚖ ruling 54 (3).",
             "path": "scripts/procgen/check-seedling-rerecord-rehearsal.mjs"
         },
@@ -1718,6 +2109,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "check-seedling-save-stamp.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "check-seedling-save-stamp — the SAVE, read back out of the BUILT ARTIFACT, against the set that is mounted.",
             "path": "scripts/procgen/check-seedling-save-stamp.mjs"
         },
@@ -1730,6 +2131,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "check-seedling-vanilla-manifest.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "check-seedling-vanilla-manifest — the built-in `seedling-vanilla` manifest, read out of the BUILT ARTIFACT and compared with the committed JSON twin.",
             "path": "scripts/procgen/check-seedling-vanilla-manifest.mjs"
         },
@@ -1812,6 +2223,16 @@ export const INSTRUMENTS = frz({
                     "name": "width"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "check-seedling-wasm-element — **ONE GENERATED LEVEL CONTAINING A NAMED ELEMENT, SHIPPED TO THE REAL GAME AND VERDICTED PER TICK — HEADLESS.**",
             "path": "scripts/procgen/check-seedling-wasm-element.mjs"
         },
@@ -1868,6 +2289,16 @@ export const INSTRUMENTS = frz({
                     "name": "root"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "check-seedling-wasm-pages — is the Seedling wasm build actually SERVED at the site root, and does watch.html therefore stop saying it isn't?",
             "path": "scripts/procgen/check-seedling-wasm-pages.mjs"
         },
@@ -1887,6 +2318,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "self-test"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "check-seedling-wasm-pins — the gate on the seedling-wasm SUBMODULE's contents.",
@@ -1914,6 +2351,16 @@ export const INSTRUMENTS = frz({
                     "name": "host"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "check-seedling-wasm-ship — **THE ONLY ARM THAT CAN SEE A REAL SOLVE'S VERDICT.**",
             "path": "scripts/procgen/check-seedling-wasm-ship.mjs"
         },
@@ -1931,6 +2378,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "json"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "ci-gates — **THE HEADLESS GATES, RUN IN CI, ONE PARSEABLE LINE EACH** (R9 slice P3b (g), ⚖ ruling 54 (6); ⚖ 52 generalised).",
@@ -1967,6 +2420,12 @@ export const INSTRUMENTS = frz({
                     "name": "wait"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "ci-summary — **A PUSHED HEAD'S CI ANSWER, BY SHA — THE SUITE OR ONE GATE** (R9 slice P3b (g), ⚖ ruling 54 (6); ⚖ 52 generalised).",
             "path": "scripts/procgen/ci-summary.mjs"
         },
@@ -1984,6 +2443,12 @@ export const INSTRUMENTS = frz({
                         "startsWith"
                     ],
                     "name": "gate"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "ci-vitest-summary.mjs — **A SHIM.",
@@ -2033,6 +2498,16 @@ export const INSTRUMENTS = frz({
                     "name": "only"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "derive-seedling-tick0 — THE v11 TICK-0 LATCH, MEASURED ONCE PER CHAIN SEGMENT BY A ZERO-TICK FRESH-PAGE RUN.",
             "path": "scripts/procgen/derive-seedling-tick0.mjs"
         },
@@ -2070,6 +2545,12 @@ export const INSTRUMENTS = frz({
                     "name": "ticks"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "dump-dj-traces.mjs — expected-trace generator for the SWFRecomp-CC dj-loader exchange (the reusable version of the ad-hoc script that produced dj-loader-traces/region_4_4_expected.json).",
             "path": "scripts/procgen/dump-dj-traces.mjs"
         },
@@ -2082,6 +2563,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "dump-maze-byteidentity.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "Byte-identity harness for the maze wall-generation stack (docs/json/developer/procgen/maze.md, \"Biomes and wall backends\").",
             "path": "scripts/procgen/dump-maze-byteidentity.mjs"
         },
@@ -2136,6 +2623,12 @@ export const INSTRUMENTS = frz({
                     "name": "seeds"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "dump-seedling-kind-pairs — THE SEEDLING SEED->LEVEL PAIRS, AS ONE SORTED TEXT DUMP, so a slice can say \"byte-identical\" about them rather than about a suite that happens to pass.",
             "path": "scripts/procgen/dump-seedling-kind-pairs.mjs"
         },
@@ -2148,6 +2641,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "dump-sphere-byteidentity.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "Byte-identity harness for the sphere-growth -> generateRegion wiring (unify substrates, Phase 2c).",
             "path": "scripts/procgen/dump-sphere-byteidentity.mjs"
         },
@@ -2162,6 +2661,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "dump-spiral-byteidentity.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "Byte-identity guard for the stepped SHUFFLED-SPIRAL pipeline (spiralSteps.js).",
             "path": "scripts/procgen/dump-spiral-byteidentity.mjs"
         },
@@ -2174,6 +2679,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "dump-topdown-byteidentity.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "Byte-identity harness for the top-down stepped pipeline (docs/json/developer/procgen/stepped-pipeline.md).",
             "path": "scripts/procgen/dump-topdown-byteidentity.mjs"
         },
@@ -2279,6 +2790,12 @@ export const INSTRUMENTS = frz({
                     "name": "vanilla"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "export-seedling-level-set — Phase 5's CLI: seeds in, a mountable level set out.",
             "path": "scripts/procgen/export-seedling-level-set.mjs"
         },
@@ -2293,6 +2810,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "export-seedling-view.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "export-seedling-view — THE EDITOR ARC'S CLI: any view of `watch.html`, as a PNG, from a terminal, with no browser and no dev server of your own.",
             "path": "scripts/procgen/export-seedling-view.mjs"
         },
@@ -2327,6 +2854,12 @@ export const INSTRUMENTS = frz({
                         "optOf"
                     ],
                     "name": "source"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "Seedling damage-site extractor — every class in a Seedling source checkout that can damage, displace or kill the PLAYER, read off the call sites, into the ONE committed module `seedlingDemo/seedlingDamageSites.js`.",
@@ -2366,6 +2899,12 @@ export const INSTRUMENTS = frz({
                     "name": "source"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "Seedling map extractor — turns a Seedling source checkout into the ONE committed map-source document the region-marking tool renders from (CC/docs/plans/region-atlas-plan.md, Phase 2, Deliverable 1).",
             "path": "scripts/procgen/extract-seedling-map.mjs"
         },
@@ -2400,6 +2939,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "source"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "Seedling pixelmask extractor — turns the MIT mask PNGs in a Seedling source checkout into the ONE committed module `seedlingDemo/seedlingPixelMasks.js`.",
@@ -2502,6 +3047,12 @@ export const INSTRUMENTS = frz({
                     "name": "where"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "find-seedling-seeds — **THE SEED SEARCH BY NAMED PROPERTY** (PROCGEN ELEMENTS arc 3, slice 4d, D4).",
             "path": "scripts/procgen/find-seedling-seeds.mjs"
         },
@@ -2562,6 +3113,7 @@ export const INSTRUMENTS = frz({
                     "name": "wait-for-box"
                 }
             ],
+            "inheritedFlags": [],
             "oneLiner": "gates — **RUN THE GATES, IN ONE LINE, KEYED ON EXIT CODES** (R9 slice 12e, ⚖ ruling 38 item (6)).",
             "path": "scripts/procgen/gates.mjs"
         },
@@ -2697,6 +3249,12 @@ export const INSTRUMENTS = frz({
                     "name": "width"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "generate-maze-level — THE MAZE'S CLI TWIN of `generate-seedling-level.mjs`.",
             "path": "scripts/procgen/generate-maze-level.mjs"
         },
@@ -2733,6 +3291,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "out"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "generate-procgen-reference — **THE REFERENCE TABLES, GENERATED FROM THE CODE THEY DESCRIBE** (PROCGEN DOCS · P3a, extended by P3b).",
@@ -2906,6 +3470,12 @@ export const INSTRUMENTS = frz({
                     "name": "width"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "generate-seedling-level — THE PoC's CLI TWIN (kickoff §3.5, slice 2).",
             "path": "scripts/procgen/generate-seedling-level.mjs"
         },
@@ -2925,6 +3495,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "generate-tape-index — the committed tape roster, as a file a static host can serve.",
@@ -2959,8 +3535,39 @@ export const INSTRUMENTS = frz({
                     "name": "out"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "harvest-procgen-terms — **THE CANDIDATE SET FOR THE PROCGEN GLOSSARY, MEASURED RATHER THAN REMEMBERED** (PROCGEN DOCS slice P2, D1).",
             "path": "scripts/procgen/harvest-procgen-terms.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "no prefix",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "help.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "json"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "help — **THE DOOR FOR AN INSTRUMENT WHOSE MODULE SCOPE CANNOT BE PREEMPTED** (R9 slice P4a, ⚖ ruling 47b (4)).",
+            "path": "scripts/procgen/help.mjs"
         },
         {
             "argvHelpers": [
@@ -2995,6 +3602,12 @@ export const INSTRUMENTS = frz({
                     "name": "write-allow"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "lint-gate-labels — **A CHECK'S LABEL, OR A TEST'S NAME, THAT CARRIES A NUMBER THE SAME CHECK ALREADY COMPUTES** (R9 slice 12e, ⚖ ruling 38 item (4b); traps 572 and 573).",
             "path": "scripts/procgen/lint-gate-labels.mjs"
         },
@@ -3009,6 +3622,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "loadJSZipNode.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "⛓⛓ **THE VENDORED JSZip, IN NODE — ONE IMPLEMENTATION, TWO ENVIRONMENTS.**",
             "path": "scripts/procgen/loadJSZipNode.mjs"
         },
@@ -3021,6 +3640,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "make-demo-bounce-pack.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "Generate the committed demo BOUNCE region-library pack + register it in the region-libraries index (region-library F6a).",
             "path": "scripts/procgen/make-demo-bounce-pack.mjs"
         },
@@ -3033,6 +3658,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "make-demo-runner-pack.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "Generate the committed demo RUNNER region-library pack + register it in the region-libraries index (region-library F6c).",
             "path": "scripts/procgen/make-demo-runner-pack.mjs"
         },
@@ -3073,6 +3704,12 @@ export const INSTRUMENTS = frz({
                     "name": "quiet"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "RULES v1 — the honest playthrough's Archipelago logic, GENERATED (R7 kickoff §3.5, §4 slice 4; the firewall ruling §6.3).",
             "path": "scripts/procgen/make-seedling-playthrough-rules.mjs"
         },
@@ -3092,6 +3729,12 @@ export const INSTRUMENTS = frz({
                     "name": "check"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "THE SEGMENT CAMPAIGN'S MAP — AP's own collection order for the honest playthrough, read back out of the sphere log (R7 kickoff §3.5, slice 5).",
             "path": "scripts/procgen/make-seedling-sphere-order.mjs"
         },
@@ -3109,6 +3752,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "Author the Seedling STARTER atlas (region-atlas plan, Phase 2, Deliverable 5): the first real regions around the game start, which the user grows from here with the marking-tool panel.",
@@ -3141,6 +3790,12 @@ export const INSTRUMENTS = frz({
                     "name": "write"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "scripts/procgen/make-seedling-vanilla-overlay — **THE VANILLA AUTHORED OVERLAY** (EDITOR v3 slice E5; plan §27.6, §34).",
             "path": "scripts/procgen/make-seedling-vanilla-overlay.mjs"
         },
@@ -3169,6 +3824,12 @@ export const INSTRUMENTS = frz({
                     "name": "seed"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "⛔⛔⛔ **RETIRED — PROCGEN ELEMENTS arc 3, slice 4c (2026-08-17).** ⚖ The user retired the three door TEMPLATES into the room-aware ELEMENTS, and this instrument's SUBJECT went with them: it measures the BLAST RADIUS of the kill lock's literal `tag:'1'` — a literal that was converted to the per-placement slot in GENERA…",
             "path": "scripts/procgen/measure-seedling-killlock-tag.mjs"
         },
@@ -3192,6 +3853,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "json"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "mine-seedling-roster-history — the evidence half of R6 slice 0's roster trim (`note_roster_trim_evaluation`, kickoff §3.6).",
@@ -3233,6 +3900,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "write"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "plan-seedling-r1-route — compute the R1 full-walk route and write it to `frontend/modules/seedlingDemo/fixtures/r1-route.json`.",
@@ -3277,6 +3950,12 @@ export const INSTRUMENTS = frz({
                     "name": "write"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "plan-seedling-r2-route — compute the R2 full-walk route and write it to `frontend/modules/seedlingDemo/fixtures/r2-route.json`.",
             "path": "scripts/procgen/plan-seedling-r2-route.mjs"
         },
@@ -3314,6 +3993,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "write"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "plan-seedling-r3-route — compute the R3 full-walk route and write it to `frontend/modules/seedlingDemo/fixtures/r3-route.json`.",
@@ -3360,6 +4045,12 @@ export const INSTRUMENTS = frz({
                     "name": "write"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "plan-seedling-r4-route — compute the R4 full-walk route and write it to `frontend/modules/seedlingDemo/fixtures/r4-route.json`.",
             "path": "scripts/procgen/plan-seedling-r4-route.mjs"
         },
@@ -3388,6 +4079,12 @@ export const INSTRUMENTS = frz({
                     "name": "write"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "plan-seedling-r5-bobboss — the densest encounter script on the ladder.",
             "path": "scripts/procgen/plan-seedling-r5-bobboss.mjs"
         },
@@ -3407,6 +4104,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "write"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "plan-seedling-r5-bosskey — THE KEY LEG, and the shut-before control that makes it evidence.",
@@ -3430,6 +4133,12 @@ export const INSTRUMENTS = frz({
                     "name": "write"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "plan-seedling-r5-conch — THE D5 WALK, and the item that arms the water.",
             "path": "scripts/procgen/plan-seedling-r5-conch.mjs"
         },
@@ -3451,6 +4160,12 @@ export const INSTRUMENTS = frz({
                     "name": "write"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "plan-seedling-r5-feather — THE WALK THAT EARNS THE FEATHER.",
             "path": "scripts/procgen/plan-seedling-r5-feather.mjs"
         },
@@ -3470,6 +4185,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "write"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "plan-seedling-r5-karlore — THE RUNG'S HEADLINE PAIR.",
@@ -3496,6 +4217,12 @@ export const INSTRUMENTS = frz({
                     "name": "write"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "plan-seedling-r5-l37-burn — THE BURN'S FIRST DRIVE, AND ITS OWN 2x2.",
             "path": "scripts/procgen/plan-seedling-r5-l37-burn.mjs"
         },
@@ -3517,6 +4244,12 @@ export const INSTRUMENTS = frz({
                     "name": "write"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "plan-seedling-r5-l40-join — LINKS 1 AND 2, AND THEY ARE ONE GATE.",
             "path": "scripts/procgen/plan-seedling-r5-l40-join.mjs"
         },
@@ -3534,6 +4267,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "write"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "plan-seedling-r5-l40-part0 — THE THIRD COLLECT CEREMONY, AND IT IS LINK 11.",
@@ -3560,6 +4299,12 @@ export const INSTRUMENTS = frz({
                     "name": "write"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "plan-seedling-r5-l40-part1 — THE SECOND CEREMONY, AND IT IS FREE.",
             "path": "scripts/procgen/plan-seedling-r5-l40-part1.mjs"
         },
@@ -3577,6 +4322,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "write"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "plan-seedling-r5-l40-part5 — ⛓⛓⛓ THE FIRST KILL THIS MODEL PREDICTS, AND THE LINK IT OPENS.",
@@ -3610,6 +4361,12 @@ export const INSTRUMENTS = frz({
                     "name": "write"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "plan-seedling-r5-l41-part3 — THE CRUSHER'S FIRST LIVE DRIVE, AND THE FOURTH COLLECT CEREMONY.",
             "path": "scripts/procgen/plan-seedling-r5-l41-part3.mjs"
         },
@@ -3635,6 +4392,12 @@ export const INSTRUMENTS = frz({
                     "name": "write"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "plan-seedling-r5-l42-part4 — ⛓⛓⛓ THE ROUND TRIP, DRIVEN: THREE CHAINS, THE PART, AND THE EXIT TAKEN.",
             "path": "scripts/procgen/plan-seedling-r5-l42-part4.mjs"
         },
@@ -3652,6 +4415,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "write"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "plan-seedling-r5-l43-wand — ⛓⛓⛓ THE TERMINAL WAND WINDOW, AND THE CLEANEST SHUT-BEFORE CONTROL ON THE ARC.",
@@ -3675,6 +4444,12 @@ export const INSTRUMENTS = frz({
                     "name": "write"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "plan-seedling-r5-l60-kill — the rung's FIRST LIVE KILL, and its control.",
             "path": "scripts/procgen/plan-seedling-r5-l60-kill.mjs"
         },
@@ -3694,6 +4469,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "write"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "plan-seedling-r5-shaft — THE EIGHTEEN PRESSES MEET THE GAME.",
@@ -3717,6 +4498,12 @@ export const INSTRUMENTS = frz({
                     "name": "write"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "plan-seedling-r5-swim — ARMED WATER: the pair, and the swim term's stratum.",
             "path": "scripts/procgen/plan-seedling-r5-swim.mjs"
         },
@@ -3736,6 +4523,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "write"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "plan-seedling-r5-totem-entrance — THE PAIR THAT HAS BEEN DECLARED AND UNRECORDED SINCE §18.",
@@ -3759,6 +4552,12 @@ export const INSTRUMENTS = frz({
                     "name": "write"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "plan-seedling-r5-waterfall — `climbsArmedWaterfall`'s LIVE WITNESS.",
             "path": "scripts/procgen/plan-seedling-r5-waterfall.mjs"
         },
@@ -3776,6 +4575,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "write"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "plan-seedling-r6-shieldboss — ⛓⛓⛓ THE SHIELDSPIRE, THE LADDER'S SECOND BOSS KILL, AND THE FIRST KEY THAT WAS INSIDE THE BODY THAT HELD IT.",
@@ -3797,6 +4602,12 @@ export const INSTRUMENTS = frz({
                     "name": "write"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "plan-seedling-r6-wblood — ⛓⛓⛓ W-BLOOD: FOUR SWORD HITS, A PICKUP THAT SPAWNS ON THE PLAYER, AND A REBOOT THE TAPE DID NOT ORDER.",
             "path": "scripts/procgen/plan-seedling-r6-wblood.mjs"
         },
@@ -3814,6 +4625,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "write"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "plan-seedling-r6-wdoor — ⛓⛓⛓ W-DOOR: THE ENDING'S WALL, OPENED IN ONE APPROACH.",
@@ -3841,6 +4658,12 @@ export const INSTRUMENTS = frz({
                     "name": "write"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "plan-seedling-r6-wowl — ⛓⛓⛓ THE OWL, AND THE LADDER'S THIRD BOSS KILL IS ONE THE PLAYER NEVER DEALS.",
             "path": "scripts/procgen/plan-seedling-r6-wowl.mjs"
         },
@@ -3858,6 +4681,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "write"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "plan-seedling-r6-wseed — ⛓⛓⛓ W-SEED: THE BLOODLESS ENDING, TWO REBOOTS, AND THE LADDER'S FIRST \"THE GAME SAYS IT WAS BEATEN\".",
@@ -3879,6 +4708,12 @@ export const INSTRUMENTS = frz({
                     "name": "write"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "plan-seedling-r6-wtalk — ⛓⛓⛓ W-TALK: THE WATCHER'S DIALOGUE, AND THE FIRST LEDGER ROW A ROUTE CAN EARN BY WALKING AWAY.",
             "path": "scripts/procgen/plan-seedling-r6-wtalk.mjs"
         },
@@ -3898,6 +4733,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "plan-seedling-r7-attribution — the batch's predicted per-fixture classification, DERIVED, and committed BEFORE the batch runs.",
@@ -3927,6 +4768,16 @@ export const INSTRUMENTS = frz({
                     "name": "segments"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "plan-seedling-r7-ends-meet — AUTHOR the toy chain's tapes, from the walk and from the GAME's own latch.",
             "path": "scripts/procgen/plan-seedling-r7-ends-meet.mjs"
         },
@@ -3946,6 +4797,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "plan-seedling-r8-hammer-pair — ⚖ **THE DRIVEN PAIR THAT TURNS A PREDICTION INTO A CAPABILITY.** R8 slice 8, kickoff §16.8's fifth piece.",
@@ -3969,6 +4826,12 @@ export const INSTRUMENTS = frz({
                     "name": "check"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "plan-seedling-r8-l18-spinner — THE PRESS ARM'S DRIVEN PAIR.",
             "path": "scripts/procgen/plan-seedling-r8-l18-spinner.mjs"
         },
@@ -3988,6 +4851,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "⛓⛓⛓ R9 SLICE 12b — **THE SWORD DASH'S DRIVEN WITNESS.**",
@@ -4011,6 +4880,12 @@ export const INSTRUMENTS = frz({
                     "name": "check"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "⛓⛓⛓ R9 SLICE 12 — **THE PRESS ARM'S DRIVEN WITNESS AGAINST A CHASER.**",
             "path": "scripts/procgen/plan-seedling-r9-l6-bob-press.mjs"
         },
@@ -4030,6 +4905,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "⛓⛓⛓ R9 SLICE 12c‴, ⚖ RULING 44(b) — **THE HARMLESS WINDOW'S DRIVEN WITNESS PAIR, AND THE GAME'S OWN `hitsTimer` CLOCK.**",
@@ -4053,6 +4934,12 @@ export const INSTRUMENTS = frz({
                     "name": "check"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "⛓⛓⛓ R9 SLICE 12c — **THE SWORD DASH'S RECT, DRIVEN AGAINST A BODY.**",
             "path": "scripts/procgen/plan-seedling-r9-l6-sword-dash-hit.mjs"
         },
@@ -4065,6 +4952,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "probe-seedling-boot-clock.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "probe-seedling-boot-clock — does a BOOT reach `Game.begin()` at the clock it declared, or one frame past it?",
             "path": "scripts/procgen/probe-seedling-boot-clock.mjs"
         },
@@ -4100,6 +4997,16 @@ export const INSTRUMENTS = frz({
                     "name": "page"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "probe-seedling-boot-reset — **TWO WINDOWS ON ONE PAGE, AND WHAT THE SECOND ONE INHERITS.**",
             "path": "scripts/procgen/probe-seedling-boot-reset.mjs"
         },
@@ -4114,6 +5021,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "probe-seedling-bridge.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "probe-seedling-bridge — how many TICKS after ONE press does a bridge become walkable?",
             "path": "scripts/procgen/probe-seedling-bridge.mjs"
         },
@@ -4133,6 +5050,16 @@ export const INSTRUMENTS = frz({
                         "startsWith"
                     ],
                     "name": "levels"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
                 }
             ],
             "oneLiner": "probe-seedling-build-cost — what does ONE level build cost the gameplay stream, and how many dead frames does its fade take?",
@@ -4164,6 +5091,16 @@ export const INSTRUMENTS = frz({
                     "name": "x"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "probe-seedling-ceremony — walk the player onto a real pickup and watch what the game does. `Bot.autoAdvance`'s FIRST LIVE FIRE.",
             "path": "scripts/procgen/probe-seedling-ceremony.mjs"
         },
@@ -4183,6 +5120,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "all"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "probe-seedling-ctor-args — THE CONSTRUCTOR ARGUMENT-TABLE AUDIT.",
@@ -4213,6 +5156,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "payloads"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "probe-seedling-deadframe-band — what SHAPE should the dead-frame residue band have, and does the new shape still CATCH what the old one caught?",
@@ -4258,6 +5207,16 @@ export const INSTRUMENTS = frz({
                     "name": "tape"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "probe-seedling-deadframes — how much does the fade cost VARY, and does it care about wall-clock?",
             "path": "scripts/procgen/probe-seedling-deadframes.mjs"
         },
@@ -4281,6 +5240,16 @@ export const INSTRUMENTS = frz({
                     "name": "only"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "probe-seedling-help-frame — WHERE does `r8-solve-10` spend the dead frame the model does not know about?",
             "path": "scripts/procgen/probe-seedling-help-frame.mjs"
         },
@@ -4293,6 +5262,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "probe-seedling-inventory.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "probe-seedling-inventory — can a TAPE drive the real inventory UI?",
             "path": "scripts/procgen/probe-seedling-inventory.mjs"
         },
@@ -4347,6 +5326,12 @@ export const INSTRUMENTS = frz({
                     "name": "span"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "⛔⛔⛔ **RETIRED — PROCGEN ELEMENTS arc 3, slice 4c (2026-08-17).** ⚖ The user retired the three door TEMPLATES into the room-aware ELEMENTS, and this instrument's SUBJECT went with them: its subject is the span-1 corridor form of `wall-gap-spinner-killlock`, retired into the `killgate` ELEMENT (arc-3 §13.2) — which GR…",
             "path": "scripts/procgen/probe-seedling-killlock-span1.mjs"
         },
@@ -4359,6 +5344,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "probe-seedling-l59-l67.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "probe-seedling-l59-l67 — the gold-key room's three unknowns, live.",
             "path": "scripts/procgen/probe-seedling-l59-l67.mjs"
         },
@@ -4373,6 +5368,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "probe-seedling-l65-breach.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "probe-seedling-l65-breach — does the three-push chain the sweep found actually open L65's health corridor?",
             "path": "scripts/procgen/probe-seedling-l65-breach.mjs"
         },
@@ -4387,6 +5392,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "probe-seedling-l65.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "probe-seedling-l65 — does a spear press actually move L65's block, and which way?",
             "path": "scripts/procgen/probe-seedling-l65.mjs"
         },
@@ -4399,6 +5414,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "probe-seedling-l67-reach2.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "probe-seedling-l67-reach2 — does the spear push a block from TWO tiles away, across a pit?",
             "path": "scripts/procgen/probe-seedling-l67-reach2.mjs"
         },
@@ -4411,6 +5436,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "probe-seedling-level-set-transport.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "probe-seedling-level-set-transport — the RECEIVER's half of the level-set delivery, driven in the built artifact.",
             "path": "scripts/procgen/probe-seedling-level-set-transport.mjs"
         },
@@ -4423,6 +5458,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "probe-seedling-music-pair.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "probe-seedling-music-pair — the Music no-repeat pair, WITNESSED at last.",
             "path": "scripts/procgen/probe-seedling-music-pair.mjs"
         },
@@ -4444,6 +5489,12 @@ export const INSTRUMENTS = frz({
                     "name": "maps"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "probe-seedling-r5-feather — WHERE THE FEATHER'S ROUTE ACTUALLY IS.",
             "path": "scripts/procgen/probe-seedling-r5-feather.mjs"
         },
@@ -4456,6 +5507,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "probe-seedling-r5-l38-chain.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "probe-seedling-r5-l38-chain — THE FIVE-LINK CHAIN, DRIVEN.",
             "path": "scripts/procgen/probe-seedling-r5-l38-chain.mjs"
         },
@@ -4468,6 +5525,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "probe-seedling-r5-l38-entrance.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "probe-seedling-r5-l38-entrance — ⛔⛔ THE ENTRANCE LEG IS NOT A WALK.",
             "path": "scripts/procgen/probe-seedling-r5-l38-entrance.mjs"
         },
@@ -4480,6 +5543,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "probe-seedling-r5-l40-bumps.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "probe-seedling-r5-l40-bumps — ⛔⛔⛔ A FIRE PRESS IS **FIVE** BUMPS, AND THE MODEL THAT PRICED ONE PRICED THE WRONG THING.",
             "path": "scripts/procgen/probe-seedling-r5-l40-bumps.mjs"
         },
@@ -4492,6 +5561,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "probe-seedling-r5-l40-corpse.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "probe-seedling-r5-l40-corpse — ⛓⛓⛓ THE CORPSE IS A TWO-CYCLE, AND WHICH WAY A PRESS MOVES IT DEPENDS ON THE TICK.",
             "path": "scripts/procgen/probe-seedling-r5-l40-corpse.mjs"
         },
@@ -4504,6 +5579,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "probe-seedling-r5-l40-holder.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "probe-seedling-r5-l40-holder — ⛔⛔⛔ LINK 5 HAS NO HOLDER, ENUMERATED RATHER THAN ASSUMED — AND THE CORPSE CANNOT MAKE THE CROSSING EITHER.",
             "path": "scripts/procgen/probe-seedling-r5-l40-holder.mjs"
         },
@@ -4516,6 +5597,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "probe-seedling-r5-l40-kill.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "probe-seedling-r5-l40-kill — ⛓⛓⛓ THE BREAK AT LINK 4 IS REPAIRED, AND THE CHAIN NOW STOPS AT LINK 6 FOR A DIFFERENT REASON.",
             "path": "scripts/procgen/probe-seedling-r5-l40-kill.mjs"
         },
@@ -4530,6 +5617,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "probe-seedling-r5-l40-link4.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "probe-seedling-r5-l40-link4 — ⛔⛔⛔ LINK 4's CONSUMER IS THE REST OF THE CHAIN, SO THE CHAIN FROM THE L40 ARRIVAL IS BROKEN.",
             "path": "scripts/procgen/probe-seedling-r5-l40-link4.mjs"
         },
@@ -4542,6 +5635,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "probe-seedling-r5-l40.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "probe-seedling-r5-l40 — WHAT OPENS L40's NORTH HALF.",
             "path": "scripts/procgen/probe-seedling-r5-l40.mjs"
         },
@@ -4561,6 +5660,12 @@ export const INSTRUMENTS = frz({
                     "name": "search"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "probe-seedling-r5-l42-chain3 — ⛓⛓⛓ THE NOOK AS A WALL, AND THE CHAIN IS THERE.",
             "path": "scripts/procgen/probe-seedling-r5-l42-chain3.mjs"
         },
@@ -4578,6 +5683,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "arms"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "probe-seedling-r5-l42-escape — ⛓⛓⛓ THE ONE CHARGE, AND THE ESCAPE IS THERE.",
@@ -4611,6 +5722,12 @@ export const INSTRUMENTS = frz({
                     "name": "permissive"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "probe-seedling-r5-l42-solver — ⛓⛓⛓ L42 IS SOLVABLE, AND THE SIX-BAIT ORDERING SLICE 16 BANKED IS NOT THE SOLUTION.",
             "path": "scripts/procgen/probe-seedling-r5-l42-solver.mjs"
         },
@@ -4623,6 +5740,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "probe-seedling-r5-l42.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "probe-seedling-r5-l42 — THE PURE CASE, AND WHY IT IS NOT A TAPE.",
             "path": "scripts/procgen/probe-seedling-r5-l42.mjs"
         },
@@ -4637,6 +5760,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "probe-seedling-r5-l43-boss-wake.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "probe-seedling-r5-l43-boss-wake — ⛔⛔⛔ THE WAND ROOM IS A ONE-WAY TRAP, AND THE ESCAPE SOUTH DOES NOT EXIST.",
             "path": "scripts/procgen/probe-seedling-r5-l43-boss-wake.mjs"
         },
@@ -4658,6 +5787,16 @@ export const INSTRUMENTS = frz({
                     "name": "only"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "probe-seedling-r5-l43-replay — ⛓⛓ THE WAND PAIR, REPLAYED HEADLESS, BEFORE A `--win` RECORDING IS SPENT.",
             "path": "scripts/procgen/probe-seedling-r5-l43-replay.mjs"
         },
@@ -4670,6 +5809,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "probe-seedling-r5-l43-wand-window.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "probe-seedling-r5-l43-wand-window — ⛓⛓⛓ THE TERMINAL WAND WINDOW, DRIVEN IN THE MODEL BEFORE A RECORDING IS SPENT.",
             "path": "scripts/procgen/probe-seedling-r5-l43-wand-window.mjs"
         },
@@ -4682,6 +5827,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "probe-seedling-r5-mobiles.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "probe-seedling-r5-mobiles — ⛓⛓ THE SLICE-23 BATCH'S TWO NEW SURFACES, ASKED OF THE REAL GAME.",
             "path": "scripts/procgen/probe-seedling-r5-mobiles.mjs"
         },
@@ -4709,6 +5864,12 @@ export const INSTRUMENTS = frz({
                     "name": "write-probes"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "probe-seedling-r5-press-axes — WHICH PRESS DID THE GAME REFUSE, AND WHY?",
             "path": "scripts/procgen/probe-seedling-r5-press-axes.mjs"
         },
@@ -4728,6 +5889,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "plan-only"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "probe-seedling-r5-shaft-solver — ⛓⛓ THE SHAFT IS SOLVABLE, and §18.5's reading of WHY it is hard was wrong in the direction that matters.",
@@ -4754,6 +5921,12 @@ export const INSTRUMENTS = frz({
                     "name": "write"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "probe-seedling-r5-spinner — THE BILLIARD, AND THE TWO ARMS THAT COME BACK.",
             "path": "scripts/procgen/probe-seedling-r5-spinner.mjs"
         },
@@ -4766,6 +5939,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "probe-seedling-r5-totem-entrance.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "probe-seedling-r5-totem-entrance — HOW L39 OPENS, and it is not the spinners.",
             "path": "scripts/procgen/probe-seedling-r5-totem-entrance.mjs"
         },
@@ -4778,6 +5957,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "probe-seedling-r5-totem-shaft.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "probe-seedling-r5-totem-shaft — ⛔⛔ THE GATE BEHIND THE GATE, and the weapon this arc has never fired.",
             "path": "scripts/procgen/probe-seedling-r5-totem-shaft.mjs"
         },
@@ -4790,6 +5975,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "probe-seedling-r6-boss-rooms.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "probe-seedling-r6-boss-rooms — R6 slice 0, asked of the REAL GAME.",
             "path": "scripts/procgen/probe-seedling-r6-boss-rooms.mjs"
         },
@@ -4802,6 +5997,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "probe-seedling-r6-owl-prefix.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "probe-seedling-r6-owl-prefix — ⛔⛔⛔ ATTRIBUTE THE TICK-23 DIVERGENCE.",
             "path": "scripts/procgen/probe-seedling-r6-owl-prefix.mjs"
         },
@@ -4816,6 +6021,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "probe-seedling-r6-owl-rng.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "probe-seedling-r6-owl-rng — THE OWL ROOM'S DRAW SCHEDULE, FROM THE GAME.",
             "path": "scripts/procgen/probe-seedling-r6-owl-rng.mjs"
         },
@@ -4835,6 +6050,16 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "hold"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
                 }
             ],
             "oneLiner": "probe-seedling-r7-l4-block — THE BLOCK IS THE DOOR, AND THE BOB IS HOLDING IT SHUT.",
@@ -4858,6 +6083,12 @@ export const INSTRUMENTS = frz({
                     "name": "quick"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "probe-seedling-r7-l40-holder — ⛓⛓⛓ THE SECOND HOLDER IS A BLOCK, SIX TILES SOUTH OF THE BUTTON IT IS FOR, AND R5 REFUSED IT ON A MEASUREMENT ITS OWN INSTRUMENT GOT WRONG.",
             "path": "scripts/procgen/probe-seedling-r7-l40-holder.mjs"
         },
@@ -4879,6 +6110,16 @@ export const INSTRUMENTS = frz({
                     "name": "ticks"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "probe-seedling-r7-l5-arrows — CAN THE SWORD BE REACHED AT ALL?",
             "path": "scripts/procgen/probe-seedling-r7-l5-arrows.mjs"
         },
@@ -4891,6 +6132,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "probe-seedling-r7-l6-bait.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "probe-seedling-r7-l6-bait — CAN L6 BE CROSSED AT ALL, AND BY WHOM?",
             "path": "scripts/procgen/probe-seedling-r7-l6-bait.mjs"
         },
@@ -4903,6 +6154,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "probe-seedling-r7-l8-blocks.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "probe-seedling-r7-l8-blocks — L8: THE BLOCK IS THE DOOR, AND THE CEILING IS THE WEAPON.",
             "path": "scripts/procgen/probe-seedling-r7-l8-blocks.mjs"
         },
@@ -4915,6 +6176,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "probe-seedling-r7-map-triggers.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "THE MAP-MODIFYING TRIGGER CENSUS — what changes the map at RUN TIME, and which of those changes a rules row has to carry (R7 slice 4, ⚖ user).",
             "path": "scripts/procgen/probe-seedling-r7-map-triggers.mjs"
         },
@@ -4934,6 +6201,12 @@ export const INSTRUMENTS = frz({
                     "name": "verbose"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "THE FRONTIER REPORT — why rules v1 cannot reach something, reduced to the few doors that actually cause it (R7 slice 4).",
             "path": "scripts/procgen/probe-seedling-r7-rules-frontier.mjs"
         },
@@ -4946,6 +6219,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "probe-seedling-r9-bob-press-mobiles.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "⛓⛓⛓ R9 SLICE 12 — **THE ENEMY-SIDE WITNESS**, because the differential cannot be one.",
             "path": "scripts/procgen/probe-seedling-r9-bob-press-mobiles.mjs"
         },
@@ -4958,6 +6241,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "probe-seedling-r9-dash-rect-mobiles.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "⛓⛓⛓ R9 SLICE 12c — **THE DASH RECT'S ENEMY-SIDE WITNESS**, because the differential cannot be one.",
             "path": "scripts/procgen/probe-seedling-r9-dash-rect-mobiles.mjs"
         },
@@ -4970,6 +6263,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "probe-seedling-r9-harmless-window-mobiles.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "⛓⛓⛓ R9 SLICE 12c‴, ⚖ RULING 44(b) — **THE GAME'S OWN i-FRAME CLOCK, AND THE TICK THE HIT LANDS ON.**",
             "path": "scripts/procgen/probe-seedling-r9-harmless-window-mobiles.mjs"
         },
@@ -4991,6 +6294,12 @@ export const INSTRUMENTS = frz({
                     "name": "sites"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "probe-seedling-rect-inputs — THE BOUNDED RECT-INPUT SWEEP.",
             "path": "scripts/procgen/probe-seedling-rect-inputs.mjs"
         },
@@ -5005,6 +6314,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "probe-seedling-rng.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "probe-seedling-rng — take the generator's own stream FROM THE GAME.",
             "path": "scripts/procgen/probe-seedling-rng.mjs"
         },
@@ -5024,6 +6343,16 @@ export const INSTRUMENTS = frz({
                     "name": "arms"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "probe-seedling-seam-chain — ⚖ §6.2's MEASUREMENT.",
             "path": "scripts/procgen/probe-seedling-seam-chain.mjs"
         },
@@ -5038,6 +6367,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "probe-seedling-shortcut-grade.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "probe-seedling-shortcut-grade — ⛔⛔⛔ **WHY `SHORTENS` IS NOT REACHABLE ON SEEDLING, EVEN WITH THE `break` VERB REGISTERED.** R9 slice 4 (kickoff §3.5's generator half); the successor to arc 5 slice 5's `probe-rock.mjs`.",
             "path": "scripts/procgen/probe-seedling-shortcut-grade.mjs"
         },
@@ -5072,6 +6407,16 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "reuse"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
                 }
             ],
             "oneLiner": "probe-seedling-span-ceiling — how many input SPANS can `botLoadTape` actually take before the recompiled runtime runs out of heap?",
@@ -5115,6 +6460,16 @@ export const INSTRUMENTS = frz({
                     "name": "win"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "probe-seedling-swim-sound — is the swim speed a function of WALL CLOCK?",
             "path": "scripts/procgen/probe-seedling-swim-sound.mjs"
         },
@@ -5127,6 +6482,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "probe-seedling-v8-seam.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "probe-seedling-v8-seam — does the GAME honour a tape v8 `seam` block, and does its latch report back what the block declared?",
             "path": "scripts/procgen/probe-seedling-v8-seam.mjs"
         },
@@ -5166,6 +6531,16 @@ export const INSTRUMENTS = frz({
                     "name": "tape"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "probe-seedling-watch-page — does `watch.html` actually DRAW a tape, all the way through, without dying?",
             "path": "scripts/procgen/probe-seedling-watch-page.mjs"
         },
@@ -5201,6 +6576,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "seed"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "prove-seedling-procgen-seam — SLICE 1's PROOF, and it is CLI-first on purpose.",
@@ -5263,6 +6644,7 @@ export const INSTRUMENTS = frz({
                     "name": "symbol"
                 }
             ],
+            "inheritedFlags": [],
             "oneLiner": "reach-seedling-change — **WHAT CAN THIS CHANGE MOVE?** The transitive import closure from a set of changed files to the producers, gates, tests, pages, TAPES, chains and identity-block rows that reach them.",
             "path": "scripts/procgen/reach-seedling-change.mjs"
         },
@@ -5332,6 +6714,12 @@ export const INSTRUMENTS = frz({
                     "name": "pitch"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "recon-seedling-pushes — the MULTI-PUSH state search, with the oracle's rules rather than a hand grid's.",
             "path": "scripts/procgen/recon-seedling-pushes.mjs"
         },
@@ -5381,6 +6769,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "necessity"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "recon-seedling-r3 — which of R2's persistence clears are LOAD-BEARING, and what does the map look like once they start coming off?",
@@ -5439,6 +6833,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "tapes"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "recon-seedling-r4 — slice-0 instruments for the hazards rung.",
@@ -5532,6 +6932,12 @@ export const INSTRUMENTS = frz({
                     "name": "tapes"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "recon-seedling-r5 — slice-0 instruments for the ENEMIES rung.",
             "path": "scripts/procgen/recon-seedling-r5.mjs"
         },
@@ -5579,6 +6985,12 @@ export const INSTRUMENTS = frz({
                         "flag"
                     ],
                     "name": "volumes"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "recon-seedling-r7 — slice-0 instruments for THE HONEST PLAYTHROUGH.",
@@ -5639,6 +7051,12 @@ export const INSTRUMENTS = frz({
                     "name": "why"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "record-standing-value — **ONE STANDING VALUE, RECORDED BY THE COMMAND THAT MEASURES IT** (R9 slice 12e, ⚖ ruling 38 item (5)).",
             "path": "scripts/procgen/record-standing-value.mjs"
         },
@@ -5651,6 +7069,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "region-atlas-analyze.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "Region-atlas analyze CLI — the batch/regeneration gate for the mechanical sub-region split (CC/docs/plans/region-atlas-plan.md, Phase 5a, Deliverable 3).",
             "path": "scripts/procgen/region-atlas-analyze.mjs"
         },
@@ -5719,6 +7143,12 @@ export const INSTRUMENTS = frz({
                     "name": "seed"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "Region-atlas → vanilla rules.json compiler CLI (projections 1 and 3; CC/docs/plans/region-atlas-plan.md, Phases 3, 4 and 5b).",
             "path": "scripts/procgen/region-atlas-compile.mjs"
         },
@@ -5763,6 +7193,12 @@ export const INSTRUMENTS = frz({
                     "name": "quiet"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "Region-atlas → sphere-growth content pool CLI (CC/docs/plans/region-atlas-plan.md, Phase 6).",
             "path": "scripts/procgen/region-atlas-pool.mjs"
         },
@@ -5782,6 +7218,12 @@ export const INSTRUMENTS = frz({
                     "name": "restamp"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "Region-atlas validate/restamp CLI — the hand-authoring helper for the per-game map-partition format (CC/docs/plans/region-atlas-plan.md, Phase 1).",
             "path": "scripts/procgen/region-atlas-validate.mjs"
         },
@@ -5799,6 +7241,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "restamp"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "Region-library validate/restamp CLI — the hand-authoring helper (region-library-plan.md ruling 2, F1).",
@@ -5922,6 +7370,24 @@ export const INSTRUMENTS = frz({
                     "name": "wait-for-box"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "rehearsalTree.js",
+                    "name": "only"
+                },
+                {
+                    "from": "rehearsalTree.js",
+                    "name": "record"
+                },
+                {
+                    "from": "rehearsalTree.js",
+                    "name": "walk-report"
+                }
+            ],
             "oneLiner": "rerecord-seedling-campaign — **ONE COMMAND THAT RE-DERIVES EVERY BOOT OF EVERY MULTI-SEGMENT CHAIN FROM THE GAME, IN CHAIN ORDER, WRITES EXACTLY THE PREDICTED SET, RECORDS ONCE, AND PROVES THE CHAINS PLAY.** ⚖ Ruling 21 (user, 2026-08-21: *\"a way to streamline the process of re-recording the whole campaign chain fro…",
             "path": "scripts/procgen/rerecord-seedling-campaign.mjs"
         },
@@ -5965,6 +7431,16 @@ export const INSTRUMENTS = frz({
                     "name": "waterfall-schedule"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "run-seedling-director — drive N window tapes on ONE page, and assert the boundaries from the game's own drained reports.",
             "path": "scripts/procgen/run-seedling-director.mjs"
         },
@@ -5979,6 +7455,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "seedling-atlas-goals.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "seedling-atlas-goals — THE ONE PLACE A SEEDLING GOAL COORDINATE COMES FROM.",
             "path": "scripts/procgen/seedling-atlas-goals.mjs"
         },
@@ -5991,6 +7473,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "seedlingRouteGraph.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "seedlingRouteGraph — the `(level, component)` reachability graph the seedling route planners walk, with ONE implementation and two callers.",
             "path": "scripts/procgen/seedlingRouteGraph.mjs"
         },
@@ -6003,6 +7491,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "show-seedling-trace.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "show-seedling-trace — read a solver DECISION TRACE sidecar and print it.",
             "path": "scripts/procgen/show-seedling-trace.mjs"
         },
@@ -6041,6 +7535,12 @@ export const INSTRUMENTS = frz({
                         "startsWith"
                     ],
                     "name": "walk-report"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "solve-seedling-r8-battery — the LIVE SOLVER re-solves the leg-only act2 rooms from staged boots.",
@@ -6086,6 +7586,16 @@ export const INSTRUMENTS = frz({
                     "name": "walk-report"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "solve-seedling-r8-d2-chain — D2's LAST **THREE** ROOMS AS ONE STAGED MULTI-SEGMENT CHAIN, driven by the live solver.",
             "path": "scripts/procgen/solve-seedling-r8-d2-chain.mjs"
         },
@@ -6123,6 +7633,12 @@ export const INSTRUMENTS = frz({
                     "name": "walk-report"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "solve-seedling-r8-d2 — D2 AND THE SHIELD, driven by the LIVE SOLVER from a STAGED POST-SWORD BOOT.",
             "path": "scripts/procgen/solve-seedling-r8-d2.mjs"
         },
@@ -6158,6 +7674,12 @@ export const INSTRUMENTS = frz({
                         "startsWith"
                     ],
                     "name": "walk-report"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "solve-seedling-r8-l18 — ⛓⛓⛓ **THE HONEST L18**, driven by the live solver with `noDamage` RETIRED.",
@@ -6199,6 +7721,16 @@ export const INSTRUMENTS = frz({
                     "name": "only"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "solve-seedling-r8-tail — THE BATTERY'S TAIL, through the TWO-PASS AUTHORING LOOP.",
             "path": "scripts/procgen/solve-seedling-r8-tail.mjs"
         },
@@ -6238,6 +7770,16 @@ export const INSTRUMENTS = frz({
                     "name": "walk-report"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "solve-seedling-r9-campaign — **THE TRUE-START SOLVER CHAIN**: every room of Seedling's sphere order from `new Game(0,80,128)` to the arrival the chain currently ends at, driven by the live solver, each segment booting its predecessor's MEASURED LATCH.",
             "path": "scripts/procgen/solve-seedling-r9-campaign.mjs"
         },
@@ -6265,6 +7807,12 @@ export const INSTRUMENTS = frz({
                     "name": "dash"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "solve-seedling-r9-l3 — ⛓⛓⛓ **THE ROOM THE `break` VERB OPENED**, driven by the live solver.",
             "path": "scripts/procgen/solve-seedling-r9-l3.mjs"
         },
@@ -6277,6 +7825,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "stamp-seedling-vanilla-set.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "Stamp the extracted vanilla fixture with its content-hash identity.",
             "path": "scripts/procgen/stamp-seedling-vanilla-set.mjs"
         },
@@ -6344,6 +7898,12 @@ export const INSTRUMENTS = frz({
                     "name": "write"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "standing-values — **THE COMMITTED ARTIFACT THAT REPLACES TWENTY NUMBERS IN EVERY HANDSHAKE** (R9 slice 12e, ⚖ ruling 38 item (5)).",
             "path": "scripts/procgen/standing-values.mjs"
         },
@@ -6407,6 +7967,12 @@ export const INSTRUMENTS = frz({
                     "name": "views"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "survey-seedling-route — THE ROUTE-ONLY SOLVER COVERAGE SURVEY.",
             "path": "scripts/procgen/survey-seedling-route.mjs"
         },
@@ -6439,6 +8005,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "tries"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "⛔⛔⛔ **RETIRED — PROCGEN ELEMENTS arc 3, slice 4c (2026-08-17).** ⚖ The user retired the three door TEMPLATES into the room-aware ELEMENTS, and this instrument's SUBJECT went with them: its whole question is *does a WIDER anchor walk recover discharges the one-anchor bound was losing* — and `discharge` is a property …",
@@ -6492,6 +8064,12 @@ export const INSTRUMENTS = frz({
                     "name": "tries"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "⛔⛔⛔ **RETIRED — PROCGEN ELEMENTS arc 3, slice 4c (2026-08-17).** ⚖ The user retired the three door TEMPLATES into the room-aware ELEMENTS, and this instrument's SUBJECT went with them: it measures HOW FAR DOWN THE ANCHOR LIST the first DISCHARGING anchor is — a bound for `KEEP_POLICY.PREFER_DISCHARGE`, which Seedlin…",
             "path": "scripts/procgen/sweep-seedling-directed-bound.mjs"
         },
@@ -6513,6 +8091,12 @@ export const INSTRUMENTS = frz({
                         "startsWith"
                     ],
                     "name": "rows"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "sweep-seedling-killarm-inertness — DOES LIFTING A `KILL_ARM_POLICY` ROW MOVE ANY COMMITTED SOLVE?",
@@ -6572,6 +8156,12 @@ export const INSTRUMENTS = frz({
                     "name": "wall-ty"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "⛔⛔⛔ **RETIRED — PROCGEN ELEMENTS arc 3, slice 4c (2026-08-17).** ⚖ The user retired the three door TEMPLATES into the room-aware ELEMENTS, and this instrument's SUBJECT went with them: its subject is `wall-gap-spinner-killlock`, retired into the room-aware `killgate` ELEMENT (arc-3 §13.2).",
             "path": "scripts/procgen/sweep-seedling-killlock.mjs"
         },
@@ -6614,6 +8204,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "seeds"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
                 }
             ],
             "oneLiner": "sweep-seedling-wave1-domains — ⚖ RULING 4's LIGHT SWEEP, one table per parameterized family.",
@@ -6750,6 +8346,12 @@ export const INSTRUMENTS = frz({
                     "name": "tries"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "sweep-yield-table — **THE YIELD TABLE**: what pass 2 actually yields over a carved room, per skeleton kind, per room size, per seed, on BOTH substrates.",
             "path": "scripts/procgen/sweep-yield-table.mjs"
         },
@@ -6762,6 +8364,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-atlas-sphere-roundtrip.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "End-to-end round-trip gate for REGION-ATLAS placement in sphere growth (CC/docs/plans/region-atlas-plan.md, Phase 6 — the atlas analogue of verify-region-library-sphere-roundtrip.mjs).",
             "path": "scripts/procgen/verify-atlas-sphere-roundtrip.mjs"
         },
@@ -6774,6 +8382,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-bot-playthrough.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "In-app verify for the PLAYBACK BOT driving bounce regions (sphere- driven growth priority #4): the bot replays the committed preset's Python sphere log end-to-end through REAL physics — the host-side PlaybackProxy publishes controller commands, the in-iframe flash bridge translates AP names to game goals, and the ga…",
             "path": "scripts/procgen/verify-bot-playthrough.mjs"
         },
@@ -6790,6 +8408,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-bounce-embed.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "8b in-app playthrough — seed 1 canonical placement.",
             "path": "scripts/procgen/verify-bounce-embed.mjs"
         },
@@ -6802,6 +8430,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-bounce-touch.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "Bounce touch-controls retrofit gate (runner plan §6): standalone bounce page in a hasTouch context — holding the RIGHT half-panel touch zone sets keys.right and produces horizontal drift during the bounce (abilities gate it: no drift before the Right arrow item).",
             "path": "scripts/procgen/verify-bounce-touch.mjs"
         },
@@ -6814,6 +8452,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-cli-sphere-config.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "Phase-2 check: the headless CLIs build their sphere-growth config through the SAME substrate-hook assembly the panel uses (sphereConfigHooks), so the CLI's emitted regionParams / starting items / exclusive spheres match what the panel produces — no more inline arrow block + minimal {fallBehavior, physicsProfile} reg…",
             "path": "scripts/procgen/verify-cli-sphere-config.mjs"
         },
@@ -6826,6 +8470,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-dj-real-embed.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "In-app verify for the REAL-DJ renderer embed: with moduleSettings.bounceDemo.renderer = 'ruffle', bounce region loads route to the bounceDjRealPanel iframe (modules/bounceDemo/djReal/), whose page patches the user-supplied original Doodle Jump SWF in-browser (loader bytecode splice + 600px header RECT) and runs it u…",
             "path": "scripts/procgen/verify-dj-real-embed.mjs"
         },
@@ -6838,6 +8492,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-dj-swf-patch.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "verify-dj-swf-patch.mjs — assert the in-browser SWF patcher (frontend/modules/bounceDemo/djReal/swf_inject.mjs, vendored verbatim from SWFRecomp-CC tools/divergence/) produces output byte-identical to SWFRecomp-CC's reference tool: inject_tracer.py <original DJ swf> --bytecode loader_bytecode.bin --stage-width 600",
             "path": "scripts/procgen/verify-dj-swf-patch.mjs"
         },
@@ -6850,6 +8510,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-grid-growth-ui.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "In-app smoke test for gridGrowth mode's async generation + live progress.",
             "path": "scripts/procgen/verify-grid-growth-ui.mjs"
         },
@@ -6862,6 +8532,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-item-channels.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "In-app verify for the cross-substrate item channels (cross-game P1).",
             "path": "scripts/procgen/verify-item-channels.mjs"
         },
@@ -6876,6 +8556,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-jta-balance-pass.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "Phase 3d verification: run the Pass-B forward balancing pass against a REAL post-fill seed and report what it produced.",
             "path": "scripts/procgen/verify-jta-balance-pass.mjs"
         },
@@ -6890,6 +8576,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-jta-cost-hooks.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "Phase 3d-hooks verification: behavior probe for the two Tier-1 fork hooks added to frontend/modules/journey-to-ascension (branch `substrate`):",
             "path": "scripts/procgen/verify-jta-cost-hooks.mjs"
         },
@@ -6902,6 +8594,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-jta-dataset-load.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "Headless load smoke for the fork's synthetic game data boundary (`window.loadGameData`, Fork 1.7; jta-synthetic-data plan §3 / Phase 5b).",
             "path": "scripts/procgen/verify-jta-dataset-load.mjs"
         },
@@ -6916,6 +8614,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-jta-dataset-pipeline-preset.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "Stepped-spiral Part 3, Phase-B gate (c): a panel/pipeline-generated jta spiral world solves + plays in-app.",
             "path": "scripts/procgen/verify-jta-dataset-pipeline-preset.mjs"
         },
@@ -6928,6 +8632,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-jta-dataset-transfer.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "Verify the new-stack dataset import/export logic (synthetic-data rider D-b, jta-synthetic-post-v1-design.md §4.4) — the pure datasetTransfer.js half the wrapper panel's toolbar wraps.",
             "path": "scripts/procgen/verify-jta-dataset-transfer.mjs"
         },
@@ -6940,6 +8650,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-jta-dataset-url-boot.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "Verify the fork's standalone `?dataset=<url>` boot (synthetic-data rider D-a, jta-synthetic-post-v1-design.md §4.4).",
             "path": "scripts/procgen/verify-jta-dataset-url-boot.mjs"
         },
@@ -6952,6 +8668,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-jta-generated-dataset.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "Phase 5d guard: generated synthetic datasets are deterministic, valid, and PLAY on the committed fork build.",
             "path": "scripts/procgen/verify-jta-generated-dataset.mjs"
         },
@@ -6966,6 +8688,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-jta-locations-roundtrip.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "Phase 1 round-trip verification for the jta zone-locations channel (plan §2b enabler).",
             "path": "scripts/procgen/verify-jta-locations-roundtrip.mjs"
         },
@@ -6980,6 +8708,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-jta-managed-zone-skip.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "Regression probe: `skipFreeZones()` must terminate in MANAGED (substrate) mode.",
             "path": "scripts/procgen/verify-jta-managed-zone-skip.mjs"
         },
@@ -6992,6 +8726,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-maze-consumable-tiles.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "In-app verify for X1 maze consumable tiles (cross-game consumable pool).",
             "path": "scripts/procgen/verify-maze-consumable-tiles.mjs"
         },
@@ -7004,6 +8748,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-maze-loop-mana.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "In-app verify for the MAZE mana leg under LOOP MODE after its migration onto the shared resourceChannels helpers (cross-game R1 slice 3).",
             "path": "scripts/procgen/verify-maze-loop-mana.mjs"
         },
@@ -7016,6 +8770,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-omsi-mana-leg.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "In-app verify for the OMSI (Idle Loops) mana leg — cross-game R2 slice 2. The unit suite pins the registry entry / zone channel; the in-app substrate tests drive the bridge through the test controller; this script is the independent stratum: it drives the leg through the REAL app boot path — real preset load, real d…",
             "path": "scripts/procgen/verify-omsi-mana-leg.mjs"
         },
@@ -7028,6 +8792,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-preset-panel-click.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "The Presets-panel CLICK gate: open the panel the way a user does and click through to real presets.",
             "path": "scripts/procgen/verify-preset-panel-click.mjs"
         },
@@ -7040,6 +8814,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-procgen-presets.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "In-app smoke test for the Procgen Pipeline panel's preset drop-down (presetDefs.js + _renderPresetBar). verify-sphere-growth-ui.mjs is the template.",
             "path": "scripts/procgen/verify-procgen-presets.mjs"
         },
@@ -7052,6 +8836,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-region-library-roundtrip.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "End-to-end round-trip verification for the region-library content source (region-library-plan.md gate §5.3).",
             "path": "scripts/procgen/verify-region-library-roundtrip.mjs"
         },
@@ -7064,6 +8854,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-region-library-sphere-roundtrip-maze.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "End-to-end round-trip verification for the region-library content source in SPHERE-GROWTH mode with a MAZE library and the connection settings BOTH OFF (region-library F6c — the maze analogue of the bounce/runner sphere roundtrips).",
             "path": "scripts/procgen/verify-region-library-sphere-roundtrip-maze.mjs"
         },
@@ -7076,6 +8872,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-region-library-sphere-roundtrip-runner.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "End-to-end round-trip verification for the region-library content source in SPHERE-GROWTH mode with a RUNNER library (region-library F6c, the runner analogue of verify-region-library-sphere-roundtrip.mjs).",
             "path": "scripts/procgen/verify-region-library-sphere-roundtrip-runner.mjs"
         },
@@ -7088,6 +8890,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-region-library-sphere-roundtrip.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "End-to-end round-trip verification for the region-library content source in SPHERE-GROWTH mode (region-library F6a, the sphere analogue of verify-region-library-roundtrip.mjs).",
             "path": "scripts/procgen/verify-region-library-sphere-roundtrip.mjs"
         },
@@ -7100,6 +8908,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-region-library-ui.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "In-app UI verification for the region-library panel (region-library F3/F5).",
             "path": "scripts/procgen/verify-region-library-ui.mjs"
         },
@@ -7123,6 +8941,16 @@ export const INSTRUMENTS = frz({
                     "name": "host"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "In-app UI verification for the Region Marking Tool panel (region-atlas plan, Phase 2, Deliverable 2).",
             "path": "scripts/procgen/verify-region-marking-tool.mjs"
         },
@@ -7135,6 +8963,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-region-step-editing.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "Headless engine-level proofs for ③ region-step editing (re-roll + bounce editor save).",
             "path": "scripts/procgen/verify-region-step-editing.mjs"
         },
@@ -7147,6 +8981,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-rule-gated-portals.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "In-app smoke test for RULE-GATED PORTALS (sphere-driven growth priority #2): a bounce world where a non-ability item (key_red) gates a portal as an AUTHORED LOCK — no geometry; the host bridge evaluates the payload's gate_rules against live inventory and pushes booleans into the game (__swfBridge.setGateStates).",
             "path": "scripts/procgen/verify-rule-gated-portals.mjs"
         },
@@ -7161,6 +9005,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-runner-bot.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "Runner phase-8 gate (plan §4.8, phase table row 8) — the playback bot drives a runner_worldgen region in the REAL frontend, end to end through the phase-8 chain: the registry entry's getPlaybackController (the PlaybackProxy runnerDemo/index.js injects) publishes walkTo on runner:playbackControl → the in-iframe flash…",
             "path": "scripts/procgen/verify-runner-bot.mjs"
         },
@@ -7175,6 +9029,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-runner-embed.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "Runner phase-9 gate (plan §4.9, phase table row 9) — the full embed round-trip on a SPHERE-GROWN world, first check → Victory, driven end to end by the phase-8 playback bot (no sendLocation/sendExit shortcuts — every check and region move is the game playing itself). verify-bounce-embed.mjs is the template; verify-r…",
             "path": "scripts/procgen/verify-runner-embed.mjs"
         },
@@ -7189,6 +9053,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-runner-game.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "Runner phase-2 gate (plan §5 row 2) — standalone game page, all synthesized input, no manual play: A. keyboard: input tape traverses the gapJump fixture — the 3.2-unit gap needs a FULL-HOLD running jump — and the portal touch is observed (dev harness records sendExit).",
             "path": "scripts/procgen/verify-runner-game.mjs"
         },
@@ -7203,6 +9077,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-runner-smoke.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "verify-runner-smoke — **VERIFIES THAT A GENERATED RUNNER WORLD BOOTS, RENDERS AND IS PLAYED THROUGH BY ITS OWN SOLVER WITNESS IN THE REAL FRONTEND** (runner phase-7 gate, plan §5 row 7) — no manual play anywhere in it.",
             "path": "scripts/procgen/verify-runner-smoke.mjs"
         },
@@ -7222,6 +9106,12 @@ export const INSTRUMENTS = frz({
                     "name": "no-browser"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "Phase-5b gate for the region atlas (CC/docs/plans/region-atlas-plan.md): the atlas's analyzed tile map, projected into the MAZE substrate, is a payload the runtime can actually play — and the committed preset still IS that projection.",
             "path": "scripts/procgen/verify-seedling-atlas-maze.mjs"
         },
@@ -7236,6 +9126,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-seedling-atlas-play.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "Phase-4 milestone check for the region atlas (CC/docs/plans/region-atlas-plan.md): the REAL Seedling game plays inside the compiled atlas preset — walking through one of the game's own level transitions crosses the AP region boundary, and arriving in a region teleports the player to the marked entrance spawn.",
             "path": "scripts/procgen/verify-seedling-atlas-play.mjs"
         },
@@ -7248,6 +9148,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-seedling-atlas-preset.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "Phase-3 milestone check for the region atlas (CC/docs/plans/region-atlas-plan.md): the compiled Seedling atlas preset LOADS IN THE FRONTEND with the full region graph.",
             "path": "scripts/procgen/verify-seedling-atlas-preset.mjs"
         },
@@ -7293,6 +9203,16 @@ export const INSTRUMENTS = frz({
                     "name": "win"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "verify-seedling-bot-differential — replay every committed tape through the REAL recompiled Seedling and compare what the game did against the committed observation streams.",
             "path": "scripts/procgen/verify-seedling-bot-differential.mjs"
         },
@@ -7305,6 +9225,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-seedling-wasm-bridge.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "In-app verify for the flashPanel WASM transport (Seedling Stage 1): the SWFRecomp-recompiled Seedling page (same-origin iframe, __swfBridge contract) driven by WasmBridgeAdapter, against the seed-1 seedling preset (which wires flash_panel.wasm).",
             "path": "scripts/procgen/verify-seedling-wasm-bridge.mjs"
         },
@@ -7317,6 +9247,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-sphere-batch-stepping.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "In-app smoke test for SPHERE-MAJOR (batch < all) stepping in the Procgen Pipeline panel (Phase 2.8).",
             "path": "scripts/procgen/verify-sphere-batch-stepping.mjs"
         },
@@ -7329,6 +9269,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-sphere-envelope-resume.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "In-app verification of the sphere-growth ENVELOPE interop (export / load & auto-resume) in the Procgen Pipeline panel.",
             "path": "scripts/procgen/verify-sphere-envelope-resume.mjs"
         },
@@ -7341,6 +9291,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-sphere-growth-ui.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "In-app smoke test for the sphereGrowth pipeline mode (sphere-driven growth step 6).",
             "path": "scripts/procgen/verify-sphere-growth-ui.mjs"
         },
@@ -7362,6 +9322,16 @@ export const INSTRUMENTS = frz({
                     "name": "host"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "In-app smoke test for the STEPPED sphere-growth pipeline + plan editor.",
             "path": "scripts/procgen/verify-sphere-steps-ui.mjs"
         },
@@ -7374,6 +9344,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-spiral-steps-ui.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "In-app smoke test for the STEPPED shuffled-spiral pipeline (Part 2c).",
             "path": "scripts/procgen/verify-spiral-steps-ui.mjs"
         },
@@ -7386,6 +9366,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-ta-mana-leg.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "In-app verify for the TEXT-ADVENTURE mana leg after its migration onto the shared resourceChannels helpers (cross-game R1 slice 2).",
             "path": "scripts/procgen/verify-ta-mana-leg.mjs"
         },
@@ -7407,6 +9397,16 @@ export const INSTRUMENTS = frz({
                     "name": "host"
                 }
             ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "In-app smoke test for the STEPPED top-down pipeline (Phase 2).",
             "path": "scripts/procgen/verify-topdown-steps-ui.mjs"
         },
@@ -7421,6 +9421,12 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-topdown-steps.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "Verify the stepped TOP-DOWN runner (topDownSteps.js) reproduces the monolithic topDownFromRulesJson engine-phase output byte-for-byte, and that ④ compile yields a well-formed rules.json.",
             "path": "scripts/procgen/verify-topdown-steps.mjs"
         },
@@ -7433,6 +9439,16 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [],
             "file": "verify-world-persistence-reload.mjs",
             "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
             "oneLiner": "In-app end-to-end verify for \"World persistence across reloads\".",
             "path": "scripts/procgen/verify-world-persistence-reload.mjs"
         }

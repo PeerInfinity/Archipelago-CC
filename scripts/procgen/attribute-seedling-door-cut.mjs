@@ -13,6 +13,10 @@
  * made, and the day a comparable subject ships it is what a new instrument
  * should be written against.
  */
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 process.stderr.write(
     'attribute-seedling-door-cut: RETIRED in PROCGEN ELEMENTS arc 3 slice 4c — its subject '
     + 'retired with the three door TEMPLATES. See this file\'s header for where its '

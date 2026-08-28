@@ -63,6 +63,10 @@ import {
     buildGraph, movers, reachReport, symbolSeeds,
 } from './reachClosure.js';
 
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 const argv = process.argv.slice(2);
 const flag = (name) => argv.includes(`--${name}`);
 const arg = (name) => argv.filter((a) => a.startsWith(`--${name}=`))

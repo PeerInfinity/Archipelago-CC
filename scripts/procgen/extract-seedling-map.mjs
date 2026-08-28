@@ -25,6 +25,10 @@ import { fileURLToPath } from 'node:url';
 import { parseOelLevel, parseLevelTable, TILE_SIZE } from './seedlingOgmo.js';
 import { compactJsonFile } from '../../frontend/modules/procgenPipeline/compactJson.js';
 
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 export const SEEDLING_MAP_SCHEMA_VERSION = 1;
 
 const REPO_ROOT = resolve(fileURLToPath(new URL('../..', import.meta.url)));

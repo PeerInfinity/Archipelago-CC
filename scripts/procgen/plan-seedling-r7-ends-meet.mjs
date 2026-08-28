@@ -46,7 +46,7 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { committedTick0, tick0ParseFields, despawnField, tick0Field }
     from './tick0Carry.js';
-import { emitSegments } from './producerSegments.js';
+import { emitSegments, SEGMENTS_FLAG } from './producerSegments.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 
 /**
@@ -57,7 +57,23 @@ import { takeBoxLockOrExit } from './boxLock.js';
  * `rerecord-seedling-campaign`) recognises the holder's token and passes
  * through. `--wait-for-box=<sec>` queues instead of refusing.
  */
-takeBoxLockOrExit({ name: 'plan-seedling-r7-ends-meet.mjs', kind: 'browser' });
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
+/**
+ * ⛓⛓⛓ R9 SLICE P4a — **AND `--segments` DOES NOT TAKE IT EITHER** (⚖ 62's own
+ * rule, applied one level in). `--segments` prints one JSON line about which
+ * tapes this producer emits and drives NOTHING; `rerecordCampaign.test.js`
+ * spawns it on several producers in one vitest run. Measured at `1097be9e6`:
+ * it took the real box, so a 1.4-second metadata query could refuse — or queue
+ * behind a 142-minute drive — which is exactly the second-direction failure
+ * `boxLock`'s docblock says the conditional takers exist to prevent. It also
+ * made that test load-flaky (2 failed in a combined bounded run, 37/37 alone).
+ */
+if (!process.argv.includes(SEGMENTS_FLAG)) {
+    takeBoxLockOrExit({ name: 'plan-seedling-r7-ends-meet.mjs', kind: 'browser' });
+}
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');

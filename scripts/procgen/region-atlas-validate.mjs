@@ -28,6 +28,10 @@ import {
 } from '../../frontend/modules/procgenPipeline/regionAtlasValidator.js';
 import { compactJsonFile } from '../../frontend/modules/procgenPipeline/compactJson.js';
 
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 const argv = process.argv.slice(2);
 const restamp = argv.includes('--restamp');
 const file = argv.find((a) => !a.startsWith('--'));

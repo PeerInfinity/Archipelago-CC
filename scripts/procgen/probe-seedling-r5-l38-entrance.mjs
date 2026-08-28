@@ -88,6 +88,10 @@ import { ROPE_PULL } from '../../frontend/modules/seedlingDemo/r5Shaft.js';
 
 /* eslint-disable no-console */
 
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 const TILE = 16;
 const source = atlasLevelSource();
 const claims = [];

@@ -86,6 +86,10 @@ import {
     CAMPAIGN_DOC, buildCampaignChain, campaignChainMarkdown,
 } from './reference/campaignChain.mjs';
 
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 const REGISTRY = await buildRegistry();
 const INSTRUMENTS = buildInstruments();
 const DOCS_INDEX = buildDocsIndex();

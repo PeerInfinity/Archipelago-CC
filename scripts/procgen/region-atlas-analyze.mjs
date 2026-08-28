@@ -38,6 +38,10 @@ import {
 import { validateRegionAtlas } from '../../frontend/modules/procgenPipeline/regionAtlasValidator.js';
 import { analyzeSeedlingRegion } from '../../frontend/modules/flashPanel/seedlingAtlasAnalysis.js';
 
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 
 // Which analyzer a game's atlas goes through. One entry today; the shape is

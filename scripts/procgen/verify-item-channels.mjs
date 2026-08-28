@@ -53,6 +53,10 @@ import { takeBoxLockOrExit } from './boxLock.js';
  * `rerecord-seedling-campaign`) recognises the holder's token and passes
  * through. `--wait-for-box=<sec>` queues instead of refusing.
  */
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 takeBoxLockOrExit({ name: 'verify-item-channels.mjs', kind: 'browser' });
 
 const JTA_URL = 'http://localhost:8000/frontend/?game=jta_substrate_test&seed=1';

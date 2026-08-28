@@ -18,6 +18,10 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const wrapDir = path.join(repoRoot, "frontend/modules/jtaSubstrateWrapper");
 

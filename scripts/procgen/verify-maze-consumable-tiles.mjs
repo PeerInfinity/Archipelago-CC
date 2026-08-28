@@ -56,6 +56,10 @@ import { takeBoxLockOrExit } from './boxLock.js';
  * `rerecord-seedling-campaign`) recognises the holder's token and passes
  * through. `--wait-for-box=<sec>` queues instead of refusing.
  */
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 takeBoxLockOrExit({ name: 'verify-maze-consumable-tiles.mjs', kind: 'browser' });
 
 const RULES = 'frontend/presets/maze_consumable_test/AP_1/AP_1_rules.json';

@@ -47,6 +47,10 @@ import { compileRegionAtlas, formatCompileReport } from '../../frontend/modules/
 import { stringifyRulesJson } from '../../frontend/modules/shared/rulesJsonBuilder.js';
 import { seedlingMazeProjectionDeps } from '../../frontend/modules/flashPanel/seedlingAtlasAnalysis.js';
 
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 
 // Which game's semantics tables build the maze projection's cell grids. One

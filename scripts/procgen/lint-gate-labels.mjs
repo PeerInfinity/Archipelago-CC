@@ -67,6 +67,10 @@ import { fileURLToPath } from 'node:url';
 
 import { maskComments } from './maskComments.js';
 
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 const HERE = dirname(fileURLToPath(import.meta.url));
 const argv = process.argv.slice(2);
 const arg = (name, fallback) => (argv.find((a) => a.startsWith(`--${name}=`))

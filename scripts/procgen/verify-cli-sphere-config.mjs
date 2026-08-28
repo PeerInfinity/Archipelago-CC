@@ -34,6 +34,10 @@ import {
     collectSphereGrowthPrep, assembleRegionParams,
 } from '../../frontend/modules/procgenPipeline/sphereConfigHooks.js';
 
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 const here = dirname(fileURLToPath(import.meta.url));
 const tmp = mkdtempSync(join(tmpdir(), 'cli-sphere-config-'));
 function fail(msg) { console.error('FAIL:', msg); process.exit(1); }

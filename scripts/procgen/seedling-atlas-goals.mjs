@@ -24,6 +24,10 @@
  */
 
 /** A room's own placement, from the atlas — never a coordinate typed by hand. */
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 export function placementIn(levelSource, level, type) {
     const e = (levelSource(level).entities ?? []).find((x) => x.type === type);
     if (!e) throw new Error(`L${level} has no ${type}`);

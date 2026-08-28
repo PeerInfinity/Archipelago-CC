@@ -14,6 +14,10 @@ import {
     serializeTDEnvelope, deserializeTDEnvelope,
 } from '../../frontend/modules/procgenPipeline/topDownSteps.js';
 
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 function dumpGrid(grid) {
     const out = {};
     for (const region of grid.allRegions()) {

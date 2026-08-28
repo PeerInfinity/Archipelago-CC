@@ -33,6 +33,10 @@ import { execFileSync } from 'node:child_process';
 import { REPO, gateRoster } from './gateRoster.js';
 import { findRun, jobLog, parseGateLines, parseSummaries } from './ciSummary.js';
 
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 const args = process.argv.slice(2);
 const flag = (n) => args.includes(`--${n}`);
 const arg = (n) => (args.find((a) => a.startsWith(`--${n}=`)) ?? '').slice(n.length + 3) || null;

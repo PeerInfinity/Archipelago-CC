@@ -23,6 +23,10 @@ import {
     stampLibraryIdentity,
 } from '../../frontend/modules/procgenPipeline/regionLibraryValidator.js';
 
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 const argv = process.argv.slice(2);
 const restamp = argv.includes('--restamp');
 const file = argv.find((a) => !a.startsWith('--'));

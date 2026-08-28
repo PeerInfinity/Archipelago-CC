@@ -14,6 +14,10 @@ import { takeBoxLockOrExit } from './boxLock.js';
 // A run UNDER a holder (`gates.mjs`, `standing-values`,
 // `rerecord-seedling-campaign`) recognises the holder's token and passes
 // through. `--wait-for-box=<sec>` queues instead of refusing.
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 takeBoxLockOrExit({ name: 'verify-bounce-touch.mjs', kind: 'browser' });
 
 const URL = 'http://localhost:8000/frontend/modules/bounceDemo/game/index.html?touch=1';

@@ -73,7 +73,7 @@ import { committedTick0, tick0ParseFields, despawnField, tick0Field }
     from './tick0Carry.js';
 import { createWalkReport } from './walkReport.js';
 import { modelArrivalOf } from './provisionalLatch.js';
-import { emitSegments } from './producerSegments.js';
+import { emitSegments, SEGMENTS_FLAG } from './producerSegments.js';
 
 import { parseDashMode, dashModeNote } from './dashMode.js';
 import { takeBoxLockOrExit } from './boxLock.js';
@@ -92,6 +92,10 @@ import { takeBoxLockOrExit } from './boxLock.js';
  * not move. The warning goes to STDERR: it is a fact about the RUN, not part
  * of the artifact, and a machine-readable stdout must stay parseable.
  */
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 const DASH_MODE = parseDashMode(
     process.argv.find((a) => a === '--dash' || a.startsWith('--dash=')));
 const DASH_NOTE = dashModeNote(DASH_MODE);
@@ -142,7 +146,19 @@ const CHECK = process.argv.includes('--check');
  * A run UNDER a holder passes through on its token; `--wait-for-box=<sec>`
  * queues instead of refusing.
  */
-if (!CHECK) takeBoxLockOrExit({ name: 'solve-seedling-r8-d2-chain.mjs', kind: 'windows' });
+/**
+ * ⛓⛓⛓ R9 SLICE P4a — **AND `--segments` DOES NOT TAKE IT EITHER** (⚖ 62's own
+ * rule, applied one level in). `--segments` prints one JSON line about which
+ * tapes this producer emits and drives NOTHING; `rerecordCampaign.test.js`
+ * spawns it on several producers in one vitest run. Measured at `1097be9e6`:
+ * it took the real box, so a 1.4-second metadata query could refuse — or queue
+ * behind a 142-minute drive — which is exactly the second-direction failure
+ * `boxLock`'s docblock says the conditional takers exist to prevent. It also
+ * made that test load-flaky (2 failed in a combined bounded run, 37/37 alone).
+ */
+if (!CHECK && !process.argv.includes(SEGMENTS_FLAG)) {
+    takeBoxLockOrExit({ name: 'solve-seedling-r8-d2-chain.mjs', kind: 'windows' });
+}
 /**
  * ⛓ `--headline` — THE CHEAP FIRST ASK (⚖ R8 §18.6.3(b), one instrument over).
  *

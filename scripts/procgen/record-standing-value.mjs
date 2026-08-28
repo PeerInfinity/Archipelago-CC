@@ -36,6 +36,10 @@ import { releaseBoxLock, takeBoxLock } from './boxLock.js';
 import { REPO } from './gateRoster.js';
 import { CHEAP_MS, FILE, cheapFor, head, readStandingValues, runRow } from './standingValues.js';
 
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 const argv = process.argv.slice(2);
 const arg = (name, fallback = null) => {
     const hit = argv.find((a) => a.startsWith(`--${name}=`));

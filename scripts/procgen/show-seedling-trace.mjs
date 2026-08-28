@@ -40,6 +40,10 @@ import {
 } from '../../frontend/modules/seedlingDemo/decisionTrace.js';
 import { fixtureNames, loadTape } from '../../frontend/modules/seedlingDemo/fixtures/index.js';
 
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 const HERE = dirname(fileURLToPath(import.meta.url));
 const TRACES_DIR = resolve(HERE, '..', '..', 'frontend', 'modules', 'seedlingDemo',
     'fixtures', 'traces');

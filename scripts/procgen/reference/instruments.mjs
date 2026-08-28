@@ -33,9 +33,13 @@
  * fact this table gets to hide.
  */
 
-import { existsSync, readdirSync, readFileSync } from 'node:fs';
-import { dirname, join, resolve as resolvePath } from 'node:path';
+import { readdirSync } from 'node:fs';
+import { join } from 'node:path';
 
+import {
+    DOCUMENTED_FLAG_RE, FLAG_PATTERNS, HELPER_DECL_RE, HELPER_WINDOW, allOf2, argvHelpersIn,
+    docblockOf, documentedFlagsIn, flagsIn, headerOf, inheritedFlagsIn,
+} from '../argvScan.js';
 import { REPO, firstSentence, src } from './lib.mjs';
 import { M } from './sources.mjs';
 
@@ -46,170 +50,8 @@ const DOC_DIR = 'docs/json/developer/procgen';
  *  step-through and the instruments* points at the generated section now. */
 export const INSTRUMENTS_DOC = `${DOC_DIR}/architecture.md`;
 
-/**
- * ⛓⛓ THE FLAG PATTERNS — PUBLISHED, because a table of "what this accepts" is
- * only as good as the regex behind it. Each one is a script READING ARGV
- * DIRECTLY.
- */
-export const FLAG_PATTERNS = Object.freeze([
-    Object.freeze({ id: 'includes', re: /\bincludes\(\s*'--([a-zA-Z][a-zA-Z0-9-]*)'/g }),
-    Object.freeze({ id: 'startsWith', re: /startsWith\(\s*[`']--([a-zA-Z][a-zA-Z0-9-]*)=/g }),
-]);
 
-/**
- * ⛓⛓⛓ …AND THE HELPERS EACH FILE DEFINES FOR ITSELF, FOUND RATHER THAN
- * LISTED.
- *
- * ⛔ THE FIRST CUT LISTED THREE NAMES — `arg`, `flag`, `num` — and the
- * SPOT-CHECK killed it: `generate-seedling-level.mjs` also defines `has()` and
- * `list()`, so the table said it does not accept `--families=`, `--templates=`,
- * `--json` or `--cost`, four flags its own `Run:` block shows a reader typing.
- * A hand list of helper names is the same defect as a hand list of anything
- * else in this directory.
- *
- * So a helper is DISCOVERED: a top-level `const <name> = (<param>…) =>` whose
- * next few lines mention both `argv` and a `--${…}` template. Then every
- * `<name>('x')` call in the file is a flag.
- */
-export const HELPER_DECL_RE = /^\s*(?:export )?const ([a-zA-Z][a-zA-Z0-9]*) = (?:async\s+)?(?:function\b|\([^)]*\)\s*=>|[a-zA-Z_$][\w$]*\s*=>)/gm;
 
-/** ⛓ The local name a file gives `process.argv` — `args`, `argv`, … A helper
- *  written over one of these never mentions `argv` itself. */
-export const ARGV_ALIAS_RE = /const ([a-zA-Z][a-zA-Z0-9]*) = process\.argv\b/g;
-const HELPER_WINDOW = 400;
-
-/** ⛓ `import { arg, flag } from './reference/lib.mjs'` — a named import from a
- *  RELATIVE module. */
-const RELATIVE_IMPORT_RE = /import\s*\{([^}]*)\}\s*from\s*'(\.[^']*)'/g;
-
-export function argvHelpersIn(text, { file = null } = {}) {
-    const decls = allOf2(text, HELPER_DECL_RE)
-        .map((m) => ({ name: m[1], window: text.slice(m.index, m.index + HELPER_WINDOW) }));
-    const aliases = allOf2(text, ARGV_ALIAS_RE).map((m) => m[1]);
-    const readsArgv = new RegExp(`\\bargv\\b${aliases.map((a) => `|\\b${a}\\b`).join('')}`);
-    /** ⛓ …and LOOKS one up: a `--` literal, or one of the four ways this tree
-     *  searches an argument list. `const has = (flag) => argv.includes(flag);`
-     *  names no `--` at all — the caller supplies it. */
-    const looksUp = /--\$\{|--'|--"|\.includes\(|\.indexOf\(|\.find\(|startsWith\(/;
-    const found = new Set();
-    for (const d of decls) {
-        if (readsArgv.test(d.window) && looksUp.test(d.window)) found.add(d.name);
-    }
-    /**
-     * ⛓⛓⛓ …TO A FIXED POINT, which is P3a's projection lesson in this file's
-     * spelling. `const num = (name, fallback) => Number(arg(name, fallback));`
-     * never mentions `argv` — it delegates — so the first cut lost every
-     * numeric flag in the directory (`--count=`, `--seed=`, `--tries=`,
-     * `--k=`, `--cellbudget=`). A helper that CALLS a helper IS one.
-     */
-    /**
-     * ⛓⛓ …AND ONE LEVEL ACROSS FILES. `generate-procgen-reference.mjs` reads
-     * `--check` and `--out=` through `arg`/`flag` IMPORTED from
-     * `reference/lib.mjs`, so nothing in its own text declares a helper and
-     * the table said it takes no flags — about the very file that writes the
-     * table. A named import from a RELATIVE module counts as a helper when
-     * that module declares it as one. ⛔ One level, deliberately: a helper
-     * imported through two modules is not a shape this directory has.
-     */
-    if (file) {
-        for (const m of allOf2(text, RELATIVE_IMPORT_RE)) {
-            const target = resolvePath(dirname(file), m[2]);
-            if (!existsSync(target)) continue;
-            const theirs = new Set(argvHelpersIn(readFileSync(target, 'utf8')));
-            for (const name of m[1].split(',').map((x) => x.trim().split(/\s+as\s+/).pop())) {
-                if (theirs.has(name)) found.add(name);
-            }
-        }
-    }
-
-    let changed = true;
-    while (changed) {
-        changed = false;
-        for (const d of decls) {
-            if (found.has(d.name)) continue;
-            for (const h of found) {
-                if (!new RegExp(`\\b${h}\\(`).test(d.window)) continue;
-                found.add(d.name);
-                changed = true;
-                break;
-            }
-        }
-    }
-    return [...found].sort();
-}
-
-const allOf2 = (text, re) => {
-    const out = [];
-    const r = new RegExp(re.source, re.flags);
-    let m = r.exec(text);
-    while (m) { out.push(m); m = r.exec(text); }
-    return out;
-};
-
-/**
- * ⛓ What the file's own `Run:` / `Usage:` block SHOWS a reader typing.
- *
- * ⛔⛔ THE TRAILING DELIMITER IS A LOOKAHEAD, AND IT HAS TO BE (R9 slice 10).
- * It used to be a consuming `[=\s]`, which requires a character AFTER the flag
- * name — and the LAST flag in a usage block has none: the captured text ends
- * where the docblock does. ⇒ every instrument whose usage block's final line
- * ended in a bare flag reported that flag as UNDOCUMENTED, silently, in the
- * generated index. Measured by swapping two usage lines in
- * `census-seedling-campaign.mjs` and watching which of the two disappeared: the
- * one that moved to the end, both times. `(?=[=\s]|$)` consumes nothing and
- * accepts end-of-text, so a flag is documented wherever it is written.
- */
-const DOCUMENTED_FLAG_RE = /--([a-zA-Z][a-zA-Z0-9-]*)(?=[=\s]|$)/g;
-
-const allOf = (text, re) => {
-    const out = [];
-    const r = new RegExp(re.source, re.flags);
-    let m = r.exec(text);
-    while (m) { out.push(m[1]); m = r.exec(text); }
-    return out;
-};
-
-/* ══════════════════════════════════════════════════════════════════════
- * THE HEADER AND ITS DOCBLOCK
- * ══════════════════════════════════════════════════════════════════════ */
-
-/** Everything before the first EXECUTABLE line. */
-export function headerOf(text) {
-    const out = [];
-    let inBlock = false;
-    for (const line of text.split('\n')) {
-        const t = line.trim();
-        if (inBlock) { out.push(line); if (t.includes('*/')) inBlock = false; continue; }
-        if (t === '' || t.startsWith('#!') || t.startsWith('//')) { out.push(line); continue; }
-        if (t.startsWith('/*')) { out.push(line); if (!t.includes('*/')) inBlock = true; continue; }
-        if (/^(import|export)\b/.test(t) || /^[)}\]];?$/.test(t) || /^['"]/.test(t)) {
-            out.push(line);
-            continue;
-        }
-        break;
-    }
-    return out.join('\n');
-}
-
-/** The first comment block in a header, as plain text, with its style. */
-export function docblockOf(header) {
-    const block = /\/\*\*?([\s\S]*?)\*\//.exec(header);
-    if (block) {
-        return {
-            style: 'block',
-            text: block[1].split('\n').map((l) => l.replace(/^\s*\*ims?/, '')
-                .replace(/^\s*\*\s?/, '')).join('\n').trim(),
-        };
-    }
-    const line = /(?:^|\n)((?:[ \t]*\/\/[^\n]*\n)+)/.exec(header);
-    if (line) {
-        return {
-            style: 'line',
-            text: line[1].split('\n').map((l) => l.replace(/^\s*\/\/\s?/, '')).join('\n').trim(),
-        };
-    }
-    return null;
-}
 
 /* ══════════════════════════════════════════════════════════════════════
  * THE BUILDER
@@ -353,33 +195,11 @@ export function buildInstruments() {
                     + 'rather than an empty cell.',
             });
         }
-        const flags = new Set();
-        const how = new Map();
-        const helpers = argvHelpersIn(text, { file: join(REPO, SCRIPT_DIR, file) });
-        const patterns = [
-            ...FLAG_PATTERNS,
-            ...helpers.map((h) => ({
-                id: h,
-                /** ⛓ `--` OPTIONAL: `flag('source')` and `flag('--source')` are
-                 *  both this directory's spelling, and the second one is how
-                 *  every `indexOf(name)` helper is called. */
-                re: new RegExp(`\\b${h}\\(\\s*'(?:--)?([a-zA-Z][a-zA-Z0-9-]*)'`, 'g'),
-            })),
-        ];
-        for (const p of patterns) {
-            for (const name of allOf(text, p.re)) {
-                if (name === 'name' || name === 'n') continue;
-                flags.add(name);
-                if (!how.has(name)) how.set(name, []);
-                if (!how.get(name).includes(p.id)) how.get(name).push(p.id);
-            }
-        }
+        const abs = join(REPO, SCRIPT_DIR, file);
+        const helpers = argvHelpersIn(text, { file: abs });
+        const flags = flagsIn(text, { file: abs });
         /* ⛓ the `Run:` / `Usage:` block of the docblock — what the file SHOWS */
-        const runBlock = doc
-            ? (/(?:^|\n)\s*(?:Run|Usage|USAGE|RUN):([\s\S]*?)(?:\n\s*\n|$)/.exec(doc.text)
-                ?? [])[1] ?? ''
-            : '';
-        const documented = [...new Set(allOf(runBlock, DOCUMENTED_FLAG_RE))].sort();
+        const documented = documentedFlagsIn(doc ? doc.text : '');
         return {
             file,
             path: `${SCRIPT_DIR}/${file}`,
@@ -387,8 +207,13 @@ export function buildInstruments() {
             oneLiner: doc ? firstSentence(doc.text) : null,
             docblockStyle: doc?.style ?? null,
             argvHelpers: helpers,
-            flags: [...flags].sort().map((name) => ({ name, how: how.get(name).sort() })),
+            flags,
             documentedFlags: documented,
+            /** ⛓⛓ R9 slice P4a — the flags this file accepts because a module
+             *  it IMPORTS parses them (§48.13 item 2). `--wait-for-box=` lives
+             *  in `boxLock.js` and `--help` in `argvHelp.js`; the table names
+             *  both the acceptor and the parse site. */
+            inheritedFlags: inheritedFlagsIn(text, { file: abs }),
             /** ⛓ A BROWSER ROW — it drives a real page, so it costs a browser
              *  and cannot run where one is not installed. */
             browser: /from '(?:@playwright\/test|playwright)'/.test(text),
@@ -480,6 +305,20 @@ export function buildInstruments() {
  * filter it.
  */
 
+/** ⛓ The inherited flags, tallied off the rows — `[flag, parse site, count]`,
+ *  commonest first. Nothing here is typed. */
+function inheritedTally(v) {
+    const tally = new Map();
+    for (const r of v.rows) {
+        for (const f of r.inheritedFlags ?? []) {
+            const k = `${f.name}\u0000${f.from}`;
+            tally.set(k, (tally.get(k) ?? 0) + 1);
+        }
+    }
+    return [...tally].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+        .map(([k, n]) => [...k.split('\u0000'), n]);
+}
+
 export function instrumentsMarkdown(v) {
     const cats = v.categories.slice()
         .sort((a, b) => b.count - a.count || a.id.localeCompare(b.id))
@@ -489,10 +328,24 @@ export function instrumentsMarkdown(v) {
         `**${v.counts.files} instruments** live in \`${v.dir}/\`, by prefix: ${cats.join(' · ')}.`,
         '',
         `${v.counts.browser} of them drive a real browser; ${v.counts.withFlags} accept at `
-        + `least one \`--flag\`; ${v.counts.cited} are cited by one of these documents; and `
+        + `least one \`--flag\` OF THEIR OWN; ${v.counts.cited} are cited by one of these `
+        + 'documents; and '
         + `${v.counts.files - v.counts.withDocblock} `
         + `open${v.counts.files - v.counts.withDocblock === 1 ? 's' : ''} with no comment at `
         + 'all.',
+        '',
+        /**
+         * ⛓⛓ R9 SLICE P4a — **AND THE INHERITED FLAGS, WITH THEIR PARSE SITE**
+         * (§48.13 item 2 / §50.11 item 2). "Where a flag is parsed" and "what a
+         * file accepts" are two different true statements; the table used to
+         * carry only the first, so ninety-six instruments accepted
+         * `--wait-for-box=` and the index said none of them did. Every number
+         * in this sentence is counted off the rows.
+         */
+        `Each also accepts what a module it IMPORTS parses: ${inheritedTally(v)
+            .map(([flag, from, n]) => `\`--${flag}\` (${n}, in \`${from}\`)`).join(' · ')}. `
+        + 'Those are listed per row with the parse site named, so the table says what a file '
+        + 'ACCEPTS without losing where the parse lives.',
         '',
         'One row each — the one-liner from the file\'s own docblock, the flags it reads out '
         + 'of `argv`, whether it needs a browser, and which document cites it — is on the '
