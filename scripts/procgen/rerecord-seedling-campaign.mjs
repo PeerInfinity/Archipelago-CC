@@ -1466,20 +1466,57 @@ function record(ctx, s0, s1, s2) {
     const wrote = new Set((s2?.wrote ?? []).map((w) => w.label));
     console.log(`## ${Object.keys(after).length} tape(s) projected; ${moved.length} moved, `
         + `${appeared.length} appeared, ${vanished.length} vanished`);
-    for (const label of set) {
-        console.log(`   ${label.padEnd(18)} ${appeared.includes(label) ? 'APPEARED' : 'moved'}`
-            + `${wrote.has(label) ? '' : '   ⛓ NOT in S2\'s boot writes — the row `s2.wrote` '
-                + 'could not see'}`);
-    }
-    check('⛔ no tape VANISHED under this run', vanished.length === 0, vanished.join(', '));
     /**
      * ⛓ THE LICENCE IS THE BOUND, AND IT IS CHECKED HERE RATHER THAN TRUSTED.
-     * S0 sealed the segments ⚖ ruling 43's licence permits; a projection that
-     * moved outside that set is a tape this run had no permission to author.
+     * S0 sealed what each segment MAY move; a projection that moved outside
+     * that permission is a tape this run had no permission to author.
+     *
+     * ⛔⛔⛔ **R9 SLICE RR — AND THE OLD BOUND ASKED ABOUT THE MECHANISM
+     * INSTEAD OF THE PERMISSION, WHICH THE FIRST RUN THAT EVER SPENT A WALK
+     * LICENCE REFUSED SIX OF ITS OWN CASCADE SUCCESSORS FOR.** It read
+     * `s0.walk.licence.segments` — the WALK movers only — and admitted
+     * everything else through `s2.wrote`, S2's surgical boot writes. That
+     * disjunction is true exactly while nothing re-authors a tape ahead of S2,
+     * and ⚖ ruling 43's own design breaks it: the walk licence is SPENT AT THE
+     * TOP OF S1, where the moved segments' producers re-author them — and a
+     * producer emits its WHOLE segment set, so every `boot-only` cascade
+     * successor is written there, by the producer, with its new boot. S2 then
+     * correctly reports **"0 write(s), every one licensed"** — there is nothing
+     * left for it to write — and the successors arrive at S3 holding a moved
+     * projection, a sealed `boot-only` verdict, and no entry in either arm.
+     *
+     * ⛓ MEASURED, this run, before the fix: S1 spent a 6-segment licence, S2
+     * wrote 0 boots, 12 projections moved, and S3 STOPPED naming
+     * `r9-solve-0, -11, -13, -14, -2, -3` — the exact `boot-only` cascade S0
+     * had printed six lines earlier as *"the first move is r8-solve-10, so 6
+     * successor(s) become boot-only"*. Nothing was wrong with the run.
+     *
+     * ⇒ the bound is **S0's own licensed set** (`boot-only` ∪ `walk-moves`,
+     * which is the list S0 prints as THE LICENSED SET), unioned with the walk
+     * licence for the case where the two are written apart. `s2.wrote` stays
+     * as a third arm and is still PRINTED per label, because "who wrote this"
+     * is a useful thing to read — it is simply not the question the licence
+     * asks. It has never fired before because no earlier run both spent a walk
+     * licence and had a cascade: 12h moved no walk, and ⚖ 49's series stopped
+     * at S1 three times.
      */
-    const permitted = new Set((s0?.walk?.licence?.segments ?? []).map((p) => p.segment));
+    const permitted = new Set([
+        ...(s0?.licensed ?? []),
+        ...(s0?.walk?.licence?.segments ?? []).map((p) => p.segment),
+    ]);
+    const sealedVerdict = new Map((s0?.table ?? []).map((r) => [r.segment, r.verdict]));
+    for (const label of set) {
+        const how = permitted.has(label)
+            ? `sealed ${sealedVerdict.get(label) ?? 'licensed'}`
+            : (wrote.has(label) ? 'S2 boot write' : '⛔ NO PERMISSION');
+        console.log(`   ${label.padEnd(18)} ${appeared.includes(label) ? 'APPEARED' : 'moved'}`
+            + `   ${how}${wrote.has(label) ? '' : ', not an S2 boot write'
+                + `${permitted.has(label) ? ' (the producer re-authored it at S1)' : ''}`}`);
+    }
+    check('⛔ no tape VANISHED under this run', vanished.length === 0, vanished.join(', '));
     const unlicensed = set.filter((label) => !permitted.has(label) && !wrote.has(label));
-    check('⛓ every projection that moved is on the sealed licence, or is a boot S2 wrote',
+    check('⛓ every projection that moved is on S0\'s sealed licence (boot-only or '
+        + 'walk-moves), or is a boot S2 wrote',
         unlicensed.length === 0,
         unlicensed.length ? `⛔ ${unlicensed.join(', ')} moved and no licence covers it`
             : `${set.length} tape(s) inside the permission`);
@@ -2600,7 +2637,7 @@ function rehearsalScenarios() {
                 ['⛓ (c3) S3\'s RECORD SET IS THE PROJECTION DIFF, and it holds the FIRST '
                     + 'mover of each chain — the tape `s2.wrote` can never see (§33.4 '
                     + 'item 4)',
-                    /^\s+rh-a\s+moved\s+⛓ NOT in S2's boot writes/m.test(out)
+                    /^\s+rh-a\s+moved\s+sealed walk-moves, not an S2 boot write/m.test(out)
                         && /^\s+rh-c\s+moved/m.test(out), 'S3'],
                 ['⛓ …and S2 wrote exactly the boot the moved latch authored',
                     out.includes('wrote rh-b: rng'), 'S2'],
@@ -2650,6 +2687,71 @@ function rehearsalScenarios() {
                 ['⛓ (c2b) …and S2\'s sealed-table guard counts ITS OWN off-table writes '
                     + '(§37.3 (b))',
                     out.includes('PASS: ⛓ every write is on the sealed table'), 'S2'],
+            ],
+        },
+        /**
+         * ⛔⛔⛔ **R9 SLICE RR — THE DEFECT THE FIRST RUN THAT EVER SPENT A
+         * WALK LICENCE HIT, AND WHICH THIS FILE COULD NOT SEE.** S3 used to
+         * admit a moved projection on two arms — the WALK licence, or
+         * `s2.wrote` — and the second is a MECHANISM standing in for a
+         * PERMISSION. ⚖ ruling 43 spends the licence at the top of S1, where
+         * the moved segments' own producers re-author them, and a producer
+         * emits its WHOLE segment set: every `boot-only` cascade successor is
+         * written THERE. S2 then correctly writes nothing, and the successors
+         * reach S3 with a moved projection, a sealed `boot-only` verdict and
+         * no entry in either arm.
+         *
+         * ⛓ MEASURED in anger (slice RR's own run, before the fix): S1 spent
+         * a 6-segment licence, S2 reported *"0 write(s), every one licensed"*,
+         * 12 projections moved, and S3 STOPPED naming the six the cascade had
+         * printed six lines earlier.
+         *
+         * ⛔ AND THE OLD SCENARIOS COULD NOT CATCH IT, WHICH IS THE POINT OF
+         * ADDING ONE. `walk-licensed` moves a latch, so S2 DOES write
+         * (`wrote rh-b: rng`) and the second arm carries every successor. The
+         * rehearsal's fake producer only ever touched its own segment, so the
+         * one thing the real producers do — write their successors ahead of S2
+         * — had no scenario at all. This one has S2 write NOTHING and a
+         * cascade successor move anyway, which is the exact shape, and it
+         * asserts BOTH halves so it cannot pass by the successor simply not
+         * moving.
+         */
+        {
+            id: 'cascade-without-an-s2-write',
+            why: 'a boot-only cascade successor moves and S2 writes NOTHING — the licence '
+                + 'is the SEALED VERDICT, not "did S2 write it"',
+            /**
+             * ⛔ THE MOVER AND THE SUCCESSOR MUST SHARE A PRODUCER, and my
+             * first cut did not — `rh-a` is `solve-rh-first.mjs`'s and the
+             * successors are `solve-rh-chain.mjs`'s, so the licence spent one
+             * producer and the successor's re-emission never happened. That is
+             * precisely the real shape: `r8-solve-10`'s walk move and the six
+             * `r9-solve-*` successors are all `solve-seedling-r9-campaign
+             * .mjs`'s, so ONE spend re-authors all of them. The chain producer
+             * owns `rh-b`, `rh-c` and `rh-d`, so the mover is one of those —
+             * `rh-c`, because the fake `walk` move flips the first span's key
+             * and `rh-b`'s source tape refuses the result BY NAME (overlapping
+             * holds for `right`). `rh-c` is the mover `walk-licensed` already
+             * proves the tree admits.
+             */
+            tree: { moves: { 'rh-c': 'walk', 'rh-d': 'description' } },
+            argv: [`--license-walks=${REHEARSAL_RULING}`],
+            exit: 0,
+            rows: (out) => [
+                ['⛓ THE CASCADE makes rh-d boot-only, and it is on S0\'s LICENSED SET',
+                    out.includes('1 successor(s) become boot-only — rh-d')
+                        && /THE LICENSED SET \(boot writes\):[^\n]*rh-d/.test(out), 'S0'],
+                ['⛔ S2 writes NOTHING — the producer had already re-authored, which is what '
+                    + 'makes `s2.wrote` a mechanism rather than a permission',
+                    /PASS: ⛓ every write is on the sealed table — 0 write\(s\)/.test(out),
+                    'S2'],
+                ['⛓⛓⛓ …and S3 ADMITS rh-d ANYWAY, on its SEALED VERDICT — the arm that '
+                    + 'stopped slice RR\'s first run for six of its own cascade successors',
+                    /^\s+rh-d\s+moved\s+sealed boot-only, not an S2 boot write \(the producer re-authored it at S1\)/m
+                        .test(out)
+                        && !out.includes('STOP before the GPU'), 'S3'],
+                ['⛓ the run completes S0..S5 green with a mover no S2 write covers',
+                    out.includes('all checks green'), 'S5'],
             ],
         },
         {
