@@ -15463,3 +15463,64 @@ indistinguishable from "a full tier is owed" — a sentence that would have book
 the same slice had just built a mechanism to prevent, one commit earlier. It now
 refuses instead, and says the difference in words: *this is not "a full tier is
 owed", it is "the question could not be put".*
+
+### R9 slice 12i: THE DASH GETS A SETTING — and the 4× everybody has been paying for the dash turns out to be ~80% something else
+
+The solver's sword dash has been all-or-nothing since it was built, and since
+ruling 45(b) the planner has previewed every corridor once per *prefix* of the
+dash chain — four full previews per candidate start tick. That cost is real: the
+two bulk identity rows, which certify generated levels, went 34 s → 148 s and
+59 s → 228 s when the roster-wide dash was switched on. The user asked for a
+setting, with the next full record in mind: *"Next time we do a full record, I
+might want to change the default to no dashing, if it makes that much of a
+difference."*
+
+**So the flag became a knob with three states — `none`, `full`, `all` — and the
+candidate set is derived from the mode rather than read off a constant.** `none`
+does not ask the window pass at all; `full` asks it with the whole chain; `all`
+asks it with every prefix, which is where the roster is today and what every
+committed tape was recorded under. Nothing about that default moved: the whole
+point of the slice is to make the question *askable* without answering it, so a
+future record can flip it with a flag and a licensed re-record rather than a code
+change. Eleven instruments take `--dash=none|full|all`, parsed in one place, and
+the mode is named on the artifact only when it is *not* the default — so a trace
+that says nothing means the roster's own build, which is a claim a reader can
+check.
+
+**The brief for this slice asked for one thing that turned out to be wrong, and
+refusing it is what made the interesting finding visible.** It read three
+existing uses of the old flag as dash sites and asked for them to be renamed. A
+census said otherwise: of the flag's five uses, only two are about dashing. The
+other three are a different feature entirely — the solver's pickup-approach
+economy — which was merely parked *behind* the same constant as a release gate
+months ago. Renaming them would have made "turn dashing off" quietly also mean
+"turn the pickup economy off", moving four committed walks for a reason that has
+nothing to do with dashing. They stayed separate.
+
+**Which is how the measurement came out honest, and it inverts the premise.**
+Turning dashing off buys about **19%** on the bulk rows. Turning off the thing
+that rides the same constant buys **4.9×**. Roughly four fifths of the cost
+everyone had attributed to the dash planner belongs to the pickup economy — and
+the reason is a sentence that was already in the code: that economy scores every
+candidate cell instead of stopping at the first that fits, which the committed
+roster hardly pays for and a *generated* room pays on nearly every goal. A switch
+that turned on two things at once had been priced as if it turned on one, and the
+attribution went to whichever one the commit message named.
+
+There is no free option on the resulting table, and the write-up says so: every
+non-default mode moves six of the seven producers, so each one is a re-record,
+not a speed-up. What the slice hands the user is two separate questions where
+there had been one — what the dash default should be, worth ~19% and sixteen
+tapes, and whether the pickup economy should get a constant of its own before
+anybody flips the other one.
+
+Two of the slice's own errors are recorded beside its findings, because both were
+caught by *running* something rather than reading it. A comparison table was
+built with two different checksum methods — one of which silently drops a
+trailing newline — so every row read as "changed", including the one producer
+that changes under no setting at all; the giveaway was that the number
+contradicted something the project had already measured and written down. And a
+test written specifically to catch "a tool reads the flag but never passes it on"
+ran green under exactly that mutation, because it counted occurrences of a name
+that a longer name happens to contain. Neither would have surfaced from reading
+the code.
