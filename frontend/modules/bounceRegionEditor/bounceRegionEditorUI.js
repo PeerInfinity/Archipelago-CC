@@ -223,19 +223,31 @@ export class BounceRegionEditorUI {
     }
 
     /**
-     * ⛓⛓⛓ **THE DERIVED-STATE SWEEP'S ONE FINDING** (§14.10 #3). `_selectedId`
-     * is the only panel state that POINTS BACK at the document: after undoing
-     * an `add-platform` it names a platform that no longer exists, and the
-     * sidebar would silently fall back to *"Click a platform to edit it."* —
-     * a readout that is right about the screen and wrong about why.
+     * ⛓⛓⛓ **THE DERIVED-STATE SWEEP (§14.10 #3), AND WHAT IT ACTUALLY FOUND.**
      *
-     * ⛔ It is re-RESOLVED rather than remembered: if the id is still in the
-     * level the selection stands, otherwise it clears. Everything else the
-     * panel derives is rebuilt per render from `sess.level` (the counts, the
-     * rule lines, the toggles, the item and direction pickers) or by
-     * `buildEditedRegion` from the level on save (`sidePortals`,
-     * `exits_placed`, `extracted_rules`) — measured: no stale copy survives an
-     * undo, because none is kept.
+     * `_selectedId` is the ONLY panel state that points back at the document —
+     * after undoing an `add-platform` it names a platform that no longer
+     * exists. ⛔ **AND THAT STALE ID IS INVISIBLE, MEASURED.** Every reader of
+     * it resolves by `find(x => x.id === this._selectedId)`, so a stale id
+     * renders exactly as no selection: the sidebar falls back to *"Click a
+     * platform to edit it."* either way. The browser mutant that made this
+     * method a no-op came back **GREEN** for that reason, and the row it was
+     * meant to red is a row about the sidebar's fallback rather than about
+     * this guard.
+     *
+     * ⇒ THE SWEEP FOUND NO LIVE DEFECT, and this is a PROPHYLACTIC invariant
+     * rather than a fix: *`_selectedId` names a platform the level holds, or
+     * nothing.* It is worth keeping because the thing a stale id could still
+     * do is re-attach silently — `nextId` reissues a freed `pN`, so a stale
+     * `p10` would become a selection of a DIFFERENT platform the moment one is
+     * created with that id — and because the invariant is one line where every
+     * future reader of the selection would otherwise owe a `find`.
+     *
+     * ⚠ Everything else the panel derives is rebuilt per render from
+     * `sess.level` (the counts, the rule lines, the toggles, the item and
+     * direction pickers) or by `buildEditedRegion` from the level on save
+     * (`sidePortals`, `exits_placed`, `extracted_rules`). No stale copy
+     * survives an undo because none is kept.
      */
     _resolveSelection() {
         if (this._selectedId == null) return;

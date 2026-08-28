@@ -566,11 +566,15 @@ const countsBack = await breCounts();
 if (countsBack !== countsBefore) {
     throw new Error(`G': undo ×2 did not restore the level — "${countsBefore}" vs "${countsBack}"`);
 }
-// ⛓⛓⛓ **THE DERIVED-STATE SWEEP'S ONE FINDING, GATED** (§14.10 #3). Each
+// ⛓ **NO "selected: pN" FOR A PLATFORM THE LEVEL DOES NOT HOLD.** Each
 // `+ platform` SELECTS the platform it made (the `value` the session forwards),
-// so after undoing both, `_selectedId` names a platform that no longer exists.
-// It must be re-RESOLVED, not remembered — otherwise the sidebar reads
-// "selected: pN" for a platform the level does not hold.
+// so after undoing both, the sidebar must be back at its hint.
+//
+// ⚠ **THIS ROW DOES NOT GATE `_resolveSelection`, AND SAYING SO IS THE POINT.**
+// The mutant that made that method a no-op came back GREEN: every reader of
+// `_selectedId` resolves by `find`, so a stale id renders exactly as no
+// selection. What this row gates is the SIDEBAR's fallback; the guard itself is
+// prophylactic and the panel's own docblock says which hazard it removes.
 const breSelection = () => page.evaluate(() => [...document
     .querySelectorAll('.bounce-region-editor-panel .bre-edit-block')]
     .map((b) => b.textContent).join(' | '));
