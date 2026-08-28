@@ -305,6 +305,20 @@ function localWhy(kind, abs, r, cacheFiles, ceiling, importErr = null, importOut
      * file, byte for byte; nothing an instrument prints by accident can equal
      * it, and the assertion needs no list.
      */
+    /**
+     * ⛔⛔ AN IMPORT THAT PRINTS IS DOING WORK — AND THIS OBSERVER WAS MISSING.
+     * `help.mjs`'s bare import falls through to printing all 262 instruments
+     * and exits 0: no cache, no write, nothing on stderr, so every observer
+     * the import door had was satisfied by a module that had just rendered a
+     * page. It was only ever on the baseline because the WRITE run happened to
+     * kill it at the deadline — the entry was LOAD-LUCK, and the "it was
+     * fixed" direction went off the moment a quieter run let it finish. The
+     * deadline was never the right instrument for this; stdout is.
+     */
+    if (kind === 'import' && r.out.trim()) {
+        why.push(`printed ${r.out.trim().split('\n').length} line(s) to stdout on a bare `
+            + `import: ${r.out.trim().split('\n')[0].slice(0, 90)}`);
+    }
     if (kind === 'help' && !why.length) {
         /**
          * ⛓⛓ …AND LINES A HOISTED IMPORT PRINTS ARE NOT LINES THE HELP PATH
@@ -483,14 +497,21 @@ const rows = instruments.map((file) => {
 if (!JSON_OUT && !WRITE_BASELINE) {
     for (const r of rows) {
         const known = KNOWN.has(r.file);
-        const ok = r.help.ok && (r.import.ok ? !known : known);
-        const mark = (d) => (d.ok ? 'ok' : 'SIDE EFFECT');
+        /** ⛔ A DOOR THIS FACE DID NOT ASK ABOUT IS NOT A DOOR THAT PASSED —
+         *  under `--doors=ci` the 203 baselined import doors are SKIPPED, and
+         *  the first cut read their empty finding list as "it was fixed" and
+         *  printed the retirement notice for every one of them. */
+        const asked = r.import.asked !== false;
+        const ok = r.help.ok && (!asked || (r.import.ok ? !known : known));
+        const mark = (d, was) => (was ? (d.ok ? 'ok' : 'SIDE EFFECT') : 'not asked');
         console.log(`${ok ? 'PASS' : 'FAIL'}: ${r.file} — `
-            + `HELP ${mark(r.help)} (${r.help.ms} ms) · IMPORT ${mark(r.import)}`
-            + `${known ? ' (KNOWN)' : ''} (${r.import.ms} ms)`);
+            + `HELP ${mark(r.help, true)} (${r.help.ms} ms) · IMPORT ${mark(r.import, asked)}`
+            + `${known ? ' (KNOWN)' : ''}${asked ? ` (${r.import.ms} ms)` : ''}`);
         for (const w of r.help.why) console.log(`    ⛔ HELP: ${w}`);
-        if (!r.import.ok && !known) for (const w of r.import.why) console.log(`    ⛔ IMPORT: ${w}`);
-        if (r.import.ok && known) {
+        if (asked && !r.import.ok && !known) {
+            for (const w of r.import.why) console.log(`    ⛔ IMPORT: ${w}`);
+        }
+        if (asked && r.import.ok && known) {
             console.log('    ⛔ IMPORT: this file is on the baseline as a module-scope worker '
                 + 'and is now INERT — it was fixed; remove it from '
                 + '`check-procgen-help.baseline.json` (`--write-baseline`).');
