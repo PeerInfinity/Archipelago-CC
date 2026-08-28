@@ -35,6 +35,42 @@ describe('levelSetDisagreement — the hoist', () => {
         expect(readbackDisagreement).toBe(levelSetDisagreement);
     });
 
+    /**
+     * ⛔⛔ THE ROW THAT WOULD HAVE CAUGHT THE HOIST'S OWN DEFECT, and it is a
+     * source row because nothing in node can drive the call site.
+     *
+     * `watchWasm.js` was first written as a bare `export { levelSetDisagreement }
+     * from './levelSetDisagreement.js';` — which creates NO LOCAL BINDING. But
+     * `shipToWasm` CALLS the function itself. `node --check` was happy; every
+     * row in this file was happy, because they import the SYMBOL and the
+     * re-export resolves; and the page threw `levelSetDisagreement is not
+     * defined` the instant a level set mounted. Only
+     * `check-seedling-wasm-pages.mjs`'s GENERATE arm drives that path, and it
+     * cost four browser runs and a bisect to attribute.
+     *
+     * So: a module that CALLS a hoisted symbol must IMPORT it, not merely
+     * re-export it. The same trap was made and caught by reading in
+     * `flashPanel/seedlingLevelSetDelivery.js` an hour earlier.
+     */
+    it('every module that CALLS this function also IMPORTS it — a bare re-export has no local binding', () => {
+        const bare = /export\s*\{[^}]*\}\s*from\s*['"][^'"]*levelSetDisagreement\.js['"]/;
+        for (const rel of ['./watchWasm.js', '../flashPanel/seedlingLevelSetDelivery.js']) {
+            const src = readFileSync(join(HERE, rel), 'utf8');
+            const calls = /levelSetDisagreement\s*\(|readbackDisagreement\s*\(/.test(src);
+            if (!calls) continue;
+            expect(bare.test(src), `${rel} re-exports without importing, and it CALLS the function`)
+                .toBe(false);
+            expect(/^import\s*\{[\s\S]*?\}\s*from\s*['"][^'"]*levelSetDisagreement\.js['"]/m.test(src),
+                `${rel} must IMPORT the symbol it calls`).toBe(true);
+        }
+    });
+
+    it('⚠ and that scan is NOT vacuous — it sees the bare form when one is there', () => {
+        const bare = /export\s*\{[^}]*\}\s*from\s*['"][^'"]*levelSetDisagreement\.js['"]/;
+        expect(bare.test("export { levelSetDisagreement } from './levelSetDisagreement.js';")).toBe(true);
+        expect(bare.test("import { levelSetDisagreement } from './levelSetDisagreement.js';")).toBe(false);
+    });
+
     it('names the FIELD that disagrees, never just "the readback disagrees"', () => {
         const sent = { set_id: 'seedling-ap-record-abcd1234', rooms: new Array(116), start: { level: 0 } };
         expect(levelSetDisagreement(sent, null)).toMatch(/answered nothing/);

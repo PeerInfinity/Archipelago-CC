@@ -918,7 +918,17 @@ export function verdictBlock(v, note = null) {
  * here so every existing importer — `watchViewer.js`, `watchWasm.test.js` —
  * keeps its spelling.
  */
-export { levelSetDisagreement } from './levelSetDisagreement.js';
+// ⛔ IMPORTED, then re-exported — NOT `export … from …`, which creates no
+// LOCAL binding. `shipToWasm` calls this function itself (`the readback is the
+// point`), and the re-export-only form left that call site referencing a name
+// this module does not have: `node --check` is happy, every unit row that
+// imports the SYMBOL is happy (the re-export resolves fine), and the page
+// throws `levelSetDisagreement is not defined` the moment a set mounts. Found
+// by `check-seedling-wasm-pages.mjs`'s GENERATE arm, which is the only thing
+// in the repo that drives this path.
+import { levelSetDisagreement } from './levelSetDisagreement.js';
+
+export { levelSetDisagreement };
 
 /**
  * ── ⛓⛓⛓ SHIP IT ──────────────────────────────────────────────────────
