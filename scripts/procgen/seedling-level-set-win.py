@@ -38,7 +38,8 @@ Plan format:
           {"call": "botLoadLevels", "arg": "<json string>"},
           {"call": "botLevelSet"},
           {"sleep_ms": 2500},
-          {"press": "2"}
+          {"press": "2"},
+          {"eval": "async (a) => {...}", "arg": <json>, "label": "..."}
       ]}]}
 """
 
@@ -101,6 +102,22 @@ def run_arm(browser, url, arm, boot_deadline):
             if "press" in step:
                 page.keyboard.press(step["press"])
                 record["results"].append({"step": i, "press": step["press"]})
+                continue
+            if "eval" in step:
+                # ⛓ ADDITIVE, AND IT KEEPS THE SPLIT THIS FILE ARGUES FOR
+                # (EDITOR INTEGRATION M1b). `{"call": …}` can only reach the
+                # game's own bot verbs, and the AP placement rows also have to
+                # import a host module into the page, drive a delivery and poll
+                # `botStatus` to `finished`. The JS for all of that is AUTHORED
+                # ON THE LINUX SIDE and arrives here as a string: this driver
+                # still knows nothing about level sets, placements or verdicts,
+                # which is the property the docstring is defending. Playwright
+                # invokes a string expression that evaluates to a function with
+                # `arg`, exactly as the node side does, so ONE source serves
+                # both channels and they cannot drift.
+                value = page.evaluate(step["eval"], step.get("arg"))
+                record["results"].append(
+                    {"step": i, "eval": step.get("label", str(i)), "value": value})
                 continue
             value = evaluate_bot(page, step["call"], step.get("arg"))
             record["results"].append({"step": i, "call": step["call"], "value": value})

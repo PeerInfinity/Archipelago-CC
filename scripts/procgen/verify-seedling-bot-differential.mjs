@@ -466,7 +466,17 @@ const WIN_SCRATCH_WSL = '/mnt/c/playwright';
 const WIN_SCRATCH_DOS = 'C:\\playwright';
 const WIN_PY = '/mnt/c/Windows/py.exe';
 const WIN_DRIVER = join(HERE, 'seedling-bot-replay-win.py');
-const PAGE_URL = `http://localhost:8000/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
+/**
+ * ⛔ THE PORT IS OVERRIDABLE, AND A WORKTREE IS WHY (EDITOR INTEGRATION M1b).
+ * :8000 is the long-running dev server over the PRIMARY checkout, so a build
+ * that exists only in a worktree — which is what every unpushed submodule
+ * commit is — 404s there while the run looks like an ordinary boot timeout.
+ * `SEEDLING_PORT` names a repo-root static server over the tree being gated.
+ * ⚠ Windows Chrome reaches WSL through `localhost`, so the server must be bound
+ * where it can see it (`python3 -m http.server <port>` at the repo root).
+ */
+const PAGE_PORT = process.env.SEEDLING_PORT || '8000';
+const PAGE_URL = `http://localhost:${PAGE_PORT}/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
 
 let failures = 0;
 /**
