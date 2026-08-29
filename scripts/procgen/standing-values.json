@@ -556,8 +556,8 @@
       "kind": "identity",
       "cheap": false,
       "quoted": true,
-      "why": "QUOTED from CI run 33227836289 at 107e0e21e (M1b host rows merged, FF: --win arm for the placement gate driver, SEEDLING_PORT on the differential gate): 404/12345, 0 failed; identical to d5e9cce6a",
-      "measuredAt": "107e0e21ed9175a9657d186d6ba38eb93b7db3db"
+      "why": "QUOTED from CI run 33235044361 at 74ffc42c4 (M1 BLESSED: gitlink → seedling_bot_ap_p4d 6881786, the p4d literal, regenerated reference): 404/12345, 0 failed; unchanged from 107e0e21e",
+      "measuredAt": "74ffc42c46570d4245c250b155f59a24e43ab284"
     },
     "roster: --win --tier=full": {
       "value": "149 tapes 3615/0/120",
