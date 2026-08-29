@@ -556,8 +556,8 @@
       "kind": "identity",
       "cheap": false,
       "quoted": true,
-      "why": "QUOTED from CI run 33222610307 at d5e9cce6a (M1 host half merged, FF; gitlink unchanged, p4d not yet referenced): 404/12345, 0 failed; +3 files/+58 rows vs a3fe66f4a",
-      "measuredAt": "d5e9cce6a48ab3a3169a5d4986770d2c28201fcb"
+      "why": "QUOTED from CI run 33227836289 at 107e0e21e (M1b host rows merged, FF: --win arm for the placement gate driver, SEEDLING_PORT on the differential gate): 404/12345, 0 failed; identical to d5e9cce6a",
+      "measuredAt": "107e0e21ed9175a9657d186d6ba38eb93b7db3db"
     },
     "roster: --win --tier=full": {
       "value": "149 tapes 3615/0/120",
