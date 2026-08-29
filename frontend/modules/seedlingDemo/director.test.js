@@ -1225,6 +1225,29 @@ describe('⛓⛓⛓ TIER 2 — the boundary, and the ruled sentence field by fie
         expect(whats(refusalsOnly(fs))).toContain('the declared `rng` is not the live world\'s');
     });
 
+    /**
+     * ⛓⛓⛓ R9 SLICE L15 (⚖ 66) — `seam.music` IS UNASSERTED AT A BOUNDARY. The
+     * W4 STOP: `r9-solve-15`'s boot declared L14's fight music against a live
+     * world that had re-decided `Room` during the drain. The row is excused
+     * like the rng posture and REPORTED with both values; every other seam
+     * row still refuses — the mutant is the old assertion restored, which
+     * refused boundary 16/17 by name on the wasm ship gate.
+     */
+    it('⛓ ⚖ 66: a seam differing ONLY in `music` ADMITS, and the row is reported', () => {
+        const fs = continuationAdmission(tape({ seam: { ...LIVE.blocks.seam,
+            music: { set: 'Enemy Hop', index: 0 } } }), LIVE, {});
+        expect(refusalsOnly(fs)).toEqual([]);
+        const row = fs.find((f) => f.what.includes('`seam.music`'));
+        expect(row.informational).toBe(true);
+        expect(row.detail).toMatch(/Enemy Hop.*vs live/);
+    });
+
+    it('⛔ ⚖ 66 is the `music` row ONLY — `music` AND `time` differing still REFUSES', () => {
+        const fs = continuationAdmission(tape({ seam: { ...LIVE.blocks.seam, time: 999,
+            music: { set: 'Enemy Hop', index: 0 } } }), LIVE, {});
+        expect(whats(refusalsOnly(fs))).toContain('the declared `seam` is not the live world\'s');
+    });
+
     it('⛓ the gate is the `rng` row ONLY — a coupled room does not excuse `seam`', () => {
         // A posture is a statement about DRAWS. The clock, the save block and
         // the pins are not render-coupled in any room, so a render-coupled

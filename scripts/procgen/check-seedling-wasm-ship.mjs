@@ -1414,13 +1414,22 @@ function runChainArm(ARM, CHAIN_ID, WINDOWS, REFUSES_AT = null) {
                 + `${LOAD_FADE_FRAMES + BOOT_PRESWAP_FRAMES} here`,
             `declared ${declaredSeam?.time} vs live ${liveSeam?.time} `
                 + `(Δ ${liveSeam && declaredSeam ? declaredSeam.time - liveSeam.time : '—'})`);
+            /**
+             * ⛓ R9 SLICE L15 (⚖ 66): `music` is set aside — the latch freezes it
+             * at the disarm tick and the game re-decides it during the drain
+             * (L14 → L15 is the chain's first fight-music boundary). It is
+             * PRINTED beside the check, never silenced.
+             */
+            const sansMusic = (o) => { const { music, ...rest } = o ?? {}; return rest; };
             check(liveSeam !== null && declaredSeam !== null
-                && JSON.stringify(liveSeam) === JSON.stringify(declaredSeam),
+                && JSON.stringify(sansMusic(liveSeam)) === JSON.stringify(sansMusic(declaredSeam)),
             `${ARM}: ⛓ …and EVERY seam row at boundary ${k}/${N} is equal, `
-                + '`time` included', liveSeam && declaredSeam
-                ? (Object.keys(declaredSeam).filter(
+                + '`time` included and `music` set aside (⚖ 66)', liveSeam && declaredSeam
+                ? `${Object.keys(sansMusic(declaredSeam)).filter(
                     (x) => JSON.stringify(declaredSeam[x]) !== JSON.stringify(liveSeam[x]))
-                    .join(', ') || 'no differing row')
+                    .join(', ') || 'no differing row'}; music declared `
+                    + `${JSON.stringify(declaredSeam.music ?? null)} vs live `
+                    + `${JSON.stringify(liveSeam.music ?? null)} (unasserted)`
                 : 'no blocks on the record');
 
             /**
