@@ -5994,7 +5994,35 @@ answers "pending" per non-final chunk and `watchWasm.js:1169` throws on it
 `~/bin/wsl-launch-claude.sh` gained `-C <tree>` (the runner cds + asserts; a
 cd-less `-d` is refused).
 
-**STILL OPEN (as of this update):** **M1** — kickoff `editor-integration-sliceM1-prompt.md`
+**⛓⛓⛓ M1 BLESSED 2026-08-29 — main `74ffc42c4`; `PeerInfinity/seedling-wasm` main
+`6881786` = `seedling_bot_ap_p4d` BESIDE p4c (wasm md5 `5191141925d71b54662e8aa2ea4b6c63`;
+`check-seedling-wasm-pins` ALL PASS, 3 builds, four views).** Slices M1 (§17.3, traps
+960–969) + M1b (§17.4, traps 970–975). W5-0 confirmed a STRING property reports on the
+bridge (declaration order, change-only ⇒ the `<seq>|` prefix). AS3 on the fork's branch
+`ap-m1` @ `a0ec864` (5 files, +282: `pendingExit` pre-swap door report, 4-field
+`pendingCheck` from `Game.setPersistence` — CLEARED is `false`, not `true` —
+`keyMask`/`totemCount` getters, `Pickups/APItem.as` with 21 `@look` sprites incl. the
+AP logo from `data/icon.png`, MIT); host H3–H6 (`seedlingCheckBinding` keyed on the
+placement TABLE, the departure mark, the "found X for Player Y" readout), the
+`levelSetDisagreement` hoist (a static import cost the bundle 1 MB), the `botLoadLevels`
+`pending` contract. A CONTROL build priced mxmlc non-reproducibility (47 B at identical
+source). **Both runtime seams OBSERVED on real-GPU Windows Chrome (`--win`, gate 81/81
+×3)** — M1's first "unobserved" was headless SwiftShader at ~0.45 fps reading a 3-frame
+fade as a dead world (⚖ user: wasm gates run on Windows Chrome, NEVER headless —
+`seedling-bot.md` § Always pass `--win`); the byte-inert sweep = **149 tapes, 0 FAIL,
+2h07m** (129,211 recorded ticks unmoved). ⚠ The submodule push was first REJECTED
+("email privacy") — the worktree's submodule clone lacked the repo-local identity;
+amended (`65a0e0e6` → `6881786`, tree identical). Standing rows unmoved (231/66/226/21).
+
+**OPEN AFTER THE BLESS:** nothing in PRODUCTION wires the delivery or the check binding
+yet (the next slice's first question); p4d-as-DEFAULT (53 files/69 lines) is a separate
+⚖; the p4c ABSENT/PRESENT arms still run LOCAL (mechanical move to `--win`); Ruffle via
+the step-2 injected SWF (low); the Windows-driven `check-seedling-generated-set`/
+`-vanilla-manifest` owed a real run; `pendingArrival`'s latent age/level order; the
+bot's persistence declaration is a host-visible check; `verify-atlas-sphere-roundtrip
+--help` writes a file; AS3 `ap-m1` unpushed on the fork.
+
+**M1 AS IT WAS SCHEDULED:** kickoff `editor-integration-sliceM1-prompt.md`
 (W5-0 de-risk → AS3 5 files + `Pickups/APItem.as` on `~/CC/seedling` branch
 `ap-m1` → H3–H6 + the watchWasm one-liner + the `levelSetDisagreement` hoist →
 control build → `seedling_bot_ap_p4d` BESIDE p4c → flags-off byte-inert → the
