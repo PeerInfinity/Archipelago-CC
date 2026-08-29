@@ -140,6 +140,15 @@ export const CAMPAIGN_SEGMENTS = Object.freeze([
             + 'strike opens its window ahead of the walk, so the bobs are knocked back '
             + 'rather than killed and the crossing takes no hit',
     }),
+    Object.freeze({
+        name: 'r9-solve-15', level: 15, to: 16,
+        why: 'L15 — THE BLOCK IS THE DOOR, THE BUTTON IS THE KEY, AND THE ROCKS ARE '
+            + 'THE ONLY WAY BEHIND THE BLOCK (R9 slice L15, kickoff §54): the block is '
+            + 'shoved E2, the south rock is broken to lean it N2 (the north rock is its '
+            + 'stop), the north rock is broken from across the button to lean it E1 '
+            + 'onto the button, the lock fades while the block presses, and the walk '
+            + 'crosses — one block-route search, five orders, no hit',
+    }),
 ]);
 
 /** The chain's id — the thing `?tapes=` names and a page expands. */
