@@ -860,10 +860,18 @@ function resolveShoveStrategy(run, obstacle, contacts, aim, allowTeleporter, blo
     if (!derived || !derived.plan) return null;
     const { plan, rejected, alternatives, discharged } = derived;
     const step = SHOVE_STEP[plan.dir];
-    const stance = nodeCentre(
-        Math.floor(run.pushables.get(row.id).rect.x / TILE_SIZE) - step.dx,
-        Math.floor(run.pushables.get(row.id).rect.y / TILE_SIZE) - step.dy,
-        DEFAULT_LATTICE);
+    /**
+     * ⛓ R9 SLICE L15 — the stance the frontier walks to is the ROUTE's first
+     * step's, which is the lean's near-side cell exactly as before when the
+     * route starts with a lean, and the swing cell when it starts with a
+     * break. `execRoute` walks the rest.
+     */
+    const stance = derived.route
+        ? derived.route[0].stance
+        : nodeCentre(
+            Math.floor(run.pushables.get(row.id).rect.x / TILE_SIZE) - step.dx,
+            Math.floor(run.pushables.get(row.id).rect.y / TILE_SIZE) - step.dy,
+            DEFAULT_LATTICE);
     /**
      * ⛓ THE TRACE RECORDS `k`, AND THE TWO NEIGHBOURS IT REJECTED — ⚖ §11.8a
      * ruling 1(a)'s own words. `k-1` is in `rejected` because the scan
@@ -1145,7 +1153,9 @@ function resolveWeighStrategy(run, obstacle, contacts, blocked = []) {
     const { plan, rejected } = derived;
     const row = (run.world.pushables ?? []).find((p) => p.id === plan.blockId);
     const step = SHOVE_STEP[plan.dir];
-    const stance = nodeCentre(plan.from.tx - step.dx, plan.from.ty - step.dy, DEFAULT_LATTICE);
+    const stance = plan.route
+        ? plan.route[0].stance
+        : nodeCentre(plan.from.tx - step.dx, plan.from.ty - step.dy, DEFAULT_LATTICE);
     /**
      * ⛓ THE WAIT IS `deriveHold`'s, UNCHANGED. What the next plan needs is the
      * lock NOT SOLID, and that is the same fade for the same group whoever —
@@ -1317,9 +1327,10 @@ function deriveWeigh(run, onto, contacts, blocked = []) {
                     + `${r.steps[0].dir} k=${r.steps[0].k} where the one-lean arithmetic `
                     + `refused (${reason.why.slice(0, 80)}…) — the two have parted`);
             }
-            const first = r.steps[0];
-            found.push({ blockId: row.id, dir: first.dir, dirIndex: first.dirIndex,
-                k: first.k, from, route: r.steps });
+            const lean = r.steps.find((st) => st.verb === 'shove');
+            if (!lean) return; // a press route always leans — the block must ARRIVE
+            found.push({ blockId: row.id, dir: lean.dir, dirIndex: lean.dirIndex,
+                k: lean.k, from, route: r.steps });
         };
         if (!dir) {
             orRoute({
@@ -3578,7 +3589,7 @@ function deriveShove(run, row, aim, allowTeleporter, contacts, blocked = []) {
     found.sort((a, b) => (a.destroys ? 1 : 0) - (b.destroys ? 1 : 0)
         || a.k - b.k || a.dirIndex - b.dirIndex);
     const first = route.steps[0];
-    if (route.steps.length === 1) {
+    if (route.steps.length === 1 && first.verb === 'shove') {
         if (!found.length || found[0].dir !== first.dir || found[0].k !== first.k) {
             fail(`solverBot deriveShove(${row.id}): the search's one-step route `
                 + `${first.dir} k=${first.k} is not the scan's own first choice `
@@ -3587,9 +3598,26 @@ function deriveShove(run, row, aim, allowTeleporter, contacts, blocked = []) {
         }
         return { plan: found[0], rejected, alternatives: found.slice(1), discharged };
     }
+    /**
+     * ⛔ A ROUTE THAT NEVER LEANS IS NOT A SHOVE. The frontier named this
+     * BLOCK, but if the search's whole answer is "break a rock" the door was
+     * the rock, and a `shove` record with no lean in it would spell a verb
+     * the room does not need. Refused here by name (the frontier's obstacle
+     * order is out of this slice's scope, §54.10); the rejection says which
+     * rock to name instead.
+     */
+    const lean = route.steps.find((st) => st.verb === 'shove');
+    if (!lean) {
+        return { plan: null, discharged, rejected: [{
+            option: 'a route with no lean',
+            why: `the search's only answer moves no block: ${describeRoute(route.steps)}. `
+                + `${row.id} is not the door — the rock is — and a shove record cannot `
+                + 'carry a verb the room does not need; name the rock.',
+        }, ...rejected] };
+    }
     return {
-        plan: { dir: first.dir, dirIndex: first.dirIndex, k: first.k, to: { ...first.to },
-            destroys: first.destroys },
+        plan: { dir: lean.dir, dirIndex: lean.dirIndex, k: lean.k, to: { ...lean.to },
+            destroys: lean.destroys },
         route: route.steps, rejected, alternatives: [], discharged,
     };
 }
