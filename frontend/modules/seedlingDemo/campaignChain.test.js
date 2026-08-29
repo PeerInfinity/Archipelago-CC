@@ -115,7 +115,7 @@ describe('the campaign chain has ONE declaration (R9 slice 12d)', () => {
     });
 
     it('⛓ the boot levels are the declaration\'s own, deduplicated and sorted', () => {
-        expect(campaignBootLevels()).toEqual([0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14]);
+        expect(campaignBootLevels()).toEqual([0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15]);
     });
 });
 
@@ -150,10 +150,11 @@ describe('the campaign\'s bridged rooms all have a prediction row', () => {
     it('⛓ every campaign room touching a bridged body has a prediction row', () => {
         const out = campaignBridgeCoverageFindings(
             { segments: CAMPAIGN_SEGMENTS, bridgedLevels });
-        // ⛓ MEASURED: L4, L5, L6 and L14 are the campaign's bridged rooms.
+        // ⛓ MEASURED: L4, L5, L6, L14 and L16 are the campaign's bridged rooms
+        // — L16 joined at R9 slice L15, as the seventeenth segment's ARRIVAL.
         expect(out.touching).toEqual([
             'r8-solve-3', 'r8-solve-4', 'r8-solve-5', 'r8-solve-6',
-            'r9-solve-13', 'r9-solve-14',
+            'r9-solve-13', 'r9-solve-14', 'r9-solve-15',
         ]);
     });
 
@@ -164,11 +165,13 @@ describe('the campaign\'s bridged rooms all have a prediction row', () => {
      * declaration.
      */
     it('⛔ MUTATION: a grown bridged room with no prediction row is named', () => {
+        // ⛓ R9 slice L15 declared `r9-solve-15`, so the synthetic growth is
+        // the room after it: L16 → L18, whose boot room L16 holds seven bobs.
         const grown = [...CAMPAIGN_SEGMENTS,
-            { name: 'r9-solve-15', level: 15, to: 16, why: 'synthetic' }];
+            { name: 'r9-solve-16', level: 16, to: 18, why: 'synthetic' }];
         expect(() => campaignBridgeCoverageFindings(
             { segments: grown, bridgedLevels }))
-            .toThrow(/r9-solve-15 is a campaign segment/);
+            .toThrow(/r9-solve-16 is a campaign segment/);
     });
 
     it('⛔ MUTATION: a census that finds nothing bridged is a VACUOUS pass, refused', () => {

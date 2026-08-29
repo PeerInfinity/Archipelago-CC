@@ -18,7 +18,8 @@
     "r9-solve-2",
     "r9-solve-0",
     "r9-solve-13",
-    "r9-solve-14"
+    "r9-solve-14",
+    "r9-solve-15"
   ],
   "arrivals": [
     2,
@@ -36,18 +37,19 @@
     0,
     13,
     14,
-    15
+    15,
+    16
   ],
   "sources": {
     "frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json": "257488099d6c19951bf277a23c47e833",
     "frontend/modules/flashPanel/atlases/seedling-map.json": "647bd46a7ff6f1eacb0d956b81344a44",
     "frontend/modules/flashPanel/atlases/seedling-sphere-order.json": "03f215201a5a64c472fa5cc51c51ee98"
   },
-  "covered": 16,
+  "covered": 17,
   "lastArrival": {
-    "step": 16,
-    "level": 15,
-    "segment": "r9-solve-14"
+    "step": 17,
+    "level": 16,
+    "segment": "r9-solve-15"
   },
   "nextStep": {
     "step": 18,

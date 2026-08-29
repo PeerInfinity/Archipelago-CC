@@ -75,7 +75,7 @@ describe('R9 P3 (C): the producers answer for themselves', () => {
             return /Authored by scripts\/procgen\/solve-seedling|LIVE SOLVER/i.test(d);
         }).sort();
         expect(derived).toEqual(prose);
-        expect(derived.length).toBe(22);
+        expect(derived.length).toBe(23);
     });
 
     /**
@@ -90,7 +90,7 @@ describe('R9 P3 (C): the producers answer for themselves', () => {
             expect(existsSync(join(TAPES, `${w}.json`)), `${w} is not committed`).toBe(true);
             expect(derived.has(w), `${w} is unexpectedly inside the solver roster`).toBe(false);
         }
-        expect(derived.size + witnesses.length).toBe(25);
+        expect(derived.size + witnesses.length).toBe(26);
     });
 });
 
