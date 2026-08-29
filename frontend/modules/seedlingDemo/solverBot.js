@@ -3068,10 +3068,18 @@ const routeCost = (steps) => {
     return { orders: steps.length, sumK, destroys, seq };
 };
 const SHOVE_DIR_COUNT = Object.keys(SHOVE_STEP).length;
+/**
+ * ⛔ NON-DESTRUCTIVE BEFORE FEWER TILES. Kickoff §54.4 wrote the tuple as
+ * `(orders, Σk, destroys, …)`; that order would take a k=1 SINK over a k=3
+ * push that keeps the block, which is the opposite of ⚖ §11.8a ruling 1
+ * ("destruction is only ever an explicit LAST RESORT") and of `deriveShove`'s
+ * own sort — and a one-step route must be today's record. Measured on the
+ * witness room in `blockRoute.test.js` before the order was corrected.
+ */
 const compareCost = (a, b) => {
     if (a.orders !== b.orders) return a.orders - b.orders;
-    if (a.sumK !== b.sumK) return a.sumK - b.sumK;
     if (a.destroys !== b.destroys) return a.destroys - b.destroys;
+    if (a.sumK !== b.sumK) return a.sumK - b.sumK;
     const n = Math.min(a.seq.length, b.seq.length);
     for (let i = 0; i < n; i += 1) if (a.seq[i] !== b.seq[i]) return a.seq[i] - b.seq[i];
     return a.seq.length - b.seq.length;

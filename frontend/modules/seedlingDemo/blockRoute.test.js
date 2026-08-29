@@ -14,8 +14,14 @@
 import { describe, expect, it } from 'vitest';
 
 import { atlasLevelSource } from './levelSource.js';
+import { atlasOf, bootAtTile, emptyLevel, oelAtTile, withEntities, withTerrain } from './procgenLevel.js';
+import { levelSourceFromAtlas } from './atlasSource.js';
+import { bootStaging } from './procgenOracle.js';
+import { PRE_SWORD_ITEMS } from './procgenPalette.js';
+import { SEEDLING_DEFAULTS } from './procgenSeedling.js';
 import { stagedRun } from './shoveWeighParity.js';
 import { deriveBlockRoute, solveSegment } from './solverBot.js';
+import { createRunForStaging } from './tapeRunner.js';
 
 const levelSource = atlasLevelSource();
 /** The survey's step-17 boot: `r8-solve-11`'s latch re-pointed at L15@(48,64). */
@@ -115,6 +121,45 @@ describe('R9 slice L15 — the block is the door, the button is the key, the roc
      * wrong on the data: (16,6) and (16,3) are Stone, so the block cannot go
      * north first. The engine's answer is E1, a rock, then N2 onto the button.
      */
+    /**
+     * ⛓ THE COST ORDER HAS A WITNESS (§54.8 mutant 6). A16 cannot be it — it
+     * has no route at all — so this generated room is: the block is the one
+     * door in a wall row; leaning E sinks it into water at k=1 AND opens the
+     * corridor; leaning S opens the corridor at k=3 with the block kept.
+     * Non-destructive first is the ruling (§11.8a), so the answer is S k=3
+     * and the sink is the trace's "also plans, and is DESTRUCTIVE"
+     * alternative. Flip the first cost key and this row names E k=1.
+     */
+    it('non-destructive first: a k=1 sink loses to a k=3 push that keeps the block', () => {
+        const wall = (tx, ty) => ({ tx, ty, terrain: 'wall' });
+        let record = emptyLevel({ level: SEEDLING_DEFAULTS.level });
+        record = withTerrain(record, [
+            wall(1, 4), wall(2, 4), wall(6, 4), wall(7, 4), wall(8, 4),
+            wall(3, 5), wall(5, 5), { tx: 5, ty: 4, terrain: 'water' },
+        ]);
+        record = withEntities(record, [
+            { type: SEEDLING_DEFAULTS.goalClass, ...oelAtTile(4, 8),
+                attrs: { tag: SEEDLING_DEFAULTS.goalTag } },
+            { type: 'pushableblock', ...oelAtTile(4, 4) },
+        ]);
+        const staging = bootStaging({
+            boot: bootAtTile(record, SEEDLING_DEFAULTS.start.tx, SEEDLING_DEFAULTS.start.ty),
+            items: PRE_SWORD_ITEMS, pins: ['dead_frames'],
+        });
+        const run = createRunForStaging(staging, levelSourceFromAtlas(atlasOf(record)),
+            { scratchPersistence: true });
+        const row = run.world.pushables[0];
+        // The aim is a floor cell beside the pickup: a pickup's own cell is an
+        // avoid volume the planner refuses (⚖ 46's recovered why).
+        const r = deriveBlockRoute(run, row, { kind: 'clear-path', aim: { x: 3 * 16 + 8, y: 8 * 16 + 8 } },
+            new Set(), []);
+        expect(spell(r.steps ?? [])).toEqual(['shove S k=3 -> (4,7)']);
+        expect(r.steps[0].destroys).toBe(false);
+        // Both answers were FOUND; the order chose between them.
+        expect(r.found.map((f) => `${f.dir}${f.k}${f.destroys ? '!' : ''}`).sort())
+            .toEqual(['E1!', 'S3']);
+    });
+
     it('L16\'s weigh is a three-order press route: E1 · break the rock at (19,4) · N2', () => {
         const { run } = stagedRun(levelSource, 16, 32, 64);
         const row = run.world.pushables[0];
