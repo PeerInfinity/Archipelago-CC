@@ -210,7 +210,7 @@ export const INSTRUMENTS = frz({
         "files": 265,
         "lineStyle": 19,
         "withDocblock": 265,
-        "withFlags": 168
+        "withFlags": 169
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -9333,7 +9333,20 @@ export const INSTRUMENTS = frz({
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "verify-seedling-ap-placement.mjs",
-            "flags": [],
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "win"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "win-port"
+                }
+            ],
             "inheritedFlags": [
                 {
                     "from": "argvHelp.js",
