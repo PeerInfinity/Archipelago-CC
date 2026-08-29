@@ -59,10 +59,11 @@ function committedRun(levelSource, name, over = {}) {
  * The survey's staged construction (`survey-seedling-route.mjs solveOneStep`):
  * `STAGED_BASE`'s block re-pointed at the arrival, timed clears STRIPPED.
  */
-export function stagedRun(levelSource, level, x, y) {
+export function stagedRun(levelSource, level, x, y, over = {}) {
     const staging = solveStaging(stagingFromTape(readTape(STAGED_BASE)));
     staging.boot = { level, x, y };
     staging.persistence = (staging.persistence ?? []).filter((r) => r.at === undefined);
+    Object.assign(staging, over);
     return { run: createRunForStaging(staging, levelSource), boot: staging.boot };
 }
 

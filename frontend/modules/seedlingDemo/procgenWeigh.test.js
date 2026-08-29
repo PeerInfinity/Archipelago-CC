@@ -349,8 +349,15 @@ describe('⛓ THE FALLBACK — where no block can arrive, the PARENT\'s `hold` s
      * coordinate with the presser cannot reach it in one shove — L16's own
      * geometry, in a room this arc can generate — and the derivation says
      * which two cells it compared rather than reporting "no block".
+     *
+     * ⛓⛓⛓ R9 SLICE L15 RE-AIMED THIS ROW: the one-lean sentence is still in
+     * the record, and it is no longer the room's answer. `deriveBlockRoute`
+     * finds the two-order press route (E4, then S1 from above) and the
+     * executor drives it — this is exactly the L16 shape ⚖ 65 (c) made a
+     * unit customer. The FALLBACK this block describes now holds only where
+     * NO route exists (the next row walls the block in).
      */
-    it('a block sharing neither coordinate: `hold` stands, geometry named', () => {
+    it('a block sharing neither coordinate: the ROUTE takes it — two orders, geometry still named', () => {
         const out = solveRoom('C2-block-off-axis', {
             ...CANONICAL,
             entities: [
@@ -359,11 +366,39 @@ describe('⛓ THE FALLBACK — where no block can arrive, the PARENT\'s `hold` s
                 { type: 'pushableblock', tx: 2, ty: 2 },
             ],
         });
+        expect(out.verdict).toBe(VERDICT.SOLVED);
+        const row = rowFor(out, 'weigh');
+        expect(row.strategy).toMatchObject({ postCondition: 'press', route: 2 });
+        const why = row.rejected
+            .find((r) => r.option.startsWith('weigh with pushableblock')).why;
+        expect(why).toMatch(/it stands on \(2,2\) and the presser is on \(6,3\)/);
+        expect(why).toMatch(/ONE axis/);
+    });
+
+    /**
+     * ⛓ R9 SLICE L15 — THE FALLBACK'S OWN ROOM, NOW: the block is BOXED IN
+     * (walls on three sides, the button's side open), so no lean has a
+     * stance and no route exists. The parent's `hold` stands, and the search
+     * is what says so.
+     */
+    it('a block no lean can reach: `hold` stands, and the search found no route', () => {
+        // The block in the north-east corner: E stance is a wall, N stance is
+        // the border, S stance is a wall, and a W lean from (8,1) stops dead
+        // on the wall at (6,1) at k=1.
+        const out = solveRoom('C2-block-boxed', {
+            ...CANONICAL,
+            walls: [...wallAcross(5, 4), { tx: 6, ty: 1, terrain: 'wall' },
+                { tx: 7, ty: 2, terrain: 'wall' }],
+            entities: [
+                { type: 'lock', tx: 4, ty: 5, attrs: { tset: '0', tag: '0' } },
+                { type: 'button', tx: 6, ty: 3, attrs: { tset: '0' } },
+                { type: 'pushableblock', tx: 7, ty: 1 },
+            ],
+        });
         expect(out.verdict).toBe(VERDICT.BUDGET_EXHAUSTED);
         expect(verbsOf(out).has('weigh')).toBe(false);
         const why = holdRow(out).rejected
             .find((r) => r.option.startsWith('weigh with pushableblock')).why;
-        expect(why).toMatch(/it stands on \(2,2\) and the presser is on \(6,3\)/);
         expect(why).toMatch(/ONE axis/);
     });
 
@@ -373,14 +408,15 @@ describe('⛓ THE FALLBACK — where no block can arrive, the PARENT\'s `hold` s
      * that only checked the endpoint would order a lean that quietly does
      * nothing. (R8 slice 4's off-the-map guard is this defect one axis over.)
      */
-    it('a wall between the block and the button: `hold` stands, the cell named', () => {
+    it('a wall between the block and the button: the ROUTE goes round it — three orders, the cell still named', () => {
         const out = solveRoom('C2-block-path-blocked', {
             ...CANONICAL,
             walls: [...wallAcross(5, 4), { tx: 5, ty: 3, terrain: 'wall' }],
         });
-        expect(out.verdict).toBe(VERDICT.BUDGET_EXHAUSTED);
-        expect(verbsOf(out).has('weigh')).toBe(false);
-        const why = holdRow(out).rejected
+        expect(out.verdict).toBe(VERDICT.SOLVED);
+        const row = rowFor(out, 'weigh');
+        expect(row.strategy).toMatchObject({ postCondition: 'press', route: 3 });
+        const why = row.rejected
             .find((r) => r.option.startsWith('weigh E k=3')).why;
         expect(why).toMatch(/\(5,3\) is Solid to the block/);
     });
