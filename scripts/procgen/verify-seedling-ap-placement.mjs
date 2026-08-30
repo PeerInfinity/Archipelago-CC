@@ -529,7 +529,7 @@ async function runArmsLocal(arms) {
  * level-set probe uses, given an `eval` step so the JS above can be handed
  * to it verbatim. Every rule, every table and every verdict stays here.
  */
-function runArmsWin(arms) {
+function runArmsWin(arms, planUrl = WIN_URL) {
     mkdirSync(WIN_SCRATCH_WSL, { recursive: true });
     writeFileSync(join(WIN_SCRATCH_WSL, basename(WIN_DRIVER)), readFileSync(WIN_DRIVER));
     /**
@@ -660,6 +660,16 @@ const atOf = (roster, at) => roster.find((m) => m.at === at) ?? null;
 const H7_RAW = WIN ? runArmsWin(H7_ARMS, CONTROL_WIN_URL) : await runArmsLocal(H7_ARMS);
 const readings = new Map(H7_RAW.map((rec) => {
     const shaped = shapeArm(rec);
+    /**
+     * ⛓ THE PAGE LOGS OF A CRASHED ARM, PRINTED — `runReading` did this and a
+     * refactor that dropped it would leave the reader a one-line `error` for a
+     * failure whose cause is always in the console (a delivery refusal, a
+     * `pageerror` out of the glue, a boot that never reached `botStatus`).
+     */
+    if (shaped.error) {
+        console.log(`  PAGE LOGS (${rec.name}, last 25):\n`
+            + (shaped.logs ?? []).slice(-25).map((l) => `    ${l}`).join('\n'));
+    }
     return [rec.name, { ...shaped, ...H7_KEY.get(rec.name) }];
 }));
 console.log(`\n# H7 on ${PAGE_NAME} — ${H7_ARMS.length} arm(s), `

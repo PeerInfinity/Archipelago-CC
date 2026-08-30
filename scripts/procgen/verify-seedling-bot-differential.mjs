@@ -1909,6 +1909,27 @@ try {
     } else {
         console.log('MODE: real-GPU Windows Chrome (--win)');
     }
+    /**
+     * ⛓⛓ **THE RUN ANNOUNCES WHICH BUILD IT DROVE, AND THAT IS A GAP THIS
+     * SLICE FOUND BY NEEDING THE ANSWER** (EDITOR INTEGRATION P2). ⛔ THIRD
+     * OCCURRENCE of the same family — traps 820 and 827 were *a guard cannot
+     * see which BUILD it drives; make the artifact ANNOUNCE it*, and this is
+     * the one where the READER is the victim rather than a guard.
+     *
+     * `check-seedling-wasm-pins` reads a DEFAULT out of the SOURCE, which is a
+     * claim about the file, not about the run — so when
+     * slice P2 moved this default from p4c to p4d there was nothing in a
+     * green log that said which build the green was about. It printed the
+     * mode and the adapter and not the subject.
+     *
+     * ⛔ Off `PAGE_NAME` and `PAGE_URL`, the values actually used, never a
+     * literal — a banner spelling its own constant would agree with itself
+     * whatever `SEEDLING_PAGE` said. `payloadBase()` is printed beside it
+     * because a build's payload filename is NOT always its directory name.
+     */
+    console.log(`BUILD: ${PAGE_NAME}${process.env.SEEDLING_PAGE
+        ? ' (SEEDLING_PAGE override)' : ' (the DEFAULT)'} — payload `
+        + `${payloadBase()}.wasm — ${PAGE_URL}`);
 
     const allNames = fixtureNames();
     check('fixture roster is non-empty', allNames.length > 0, `${allNames.length} tapes`);
