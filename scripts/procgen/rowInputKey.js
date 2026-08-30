@@ -80,6 +80,10 @@
  *   bytes this repo does not hold. Such a row is UNKEYABLE, derived from its
  *   own command, and always re-runs. At this head that selects ZERO rows and
  *   the writer says so out loud.
+ * · A key is comparable only against a key taken in a tree with the SAME
+ *   SUBMODULE CHECKOUT STATE. A tree with no checkouts sees fewer CODE members
+ *   and can reach a submodule only by NAMING, so its key differs — which makes
+ *   the row RE-RUN, the conservative direction, never a quote.
  * · An UNTRACKED file is invisible: every population is derived from `git
  *   ls-files`, so a new instrument that has not been added yet moves no key.
  *   That is the right default (a key must be reproducible from a commit) and
