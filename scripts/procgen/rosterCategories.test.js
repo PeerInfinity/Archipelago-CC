@@ -16,6 +16,8 @@
  */
 
 import { execFileSync } from 'node:child_process';
+import { chmodSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
@@ -33,10 +35,14 @@ const REPO = join(HERE, '..', '..');
 const DIFFERENTIAL = join(HERE, 'verify-seedling-bot-differential.mjs');
 
 /** Run a script and hand back `{code, out}` rather than throwing on non-zero. */
-const run = (file, args) => {
+const run = (file, args, env) => {
     try {
         const out = execFileSync(process.execPath, [file, ...args],
-            { cwd: REPO, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], timeout: 120_000 });
+            { cwd: REPO,
+                encoding: 'utf8',
+                stdio: ['ignore', 'pipe', 'pipe'],
+                timeout: 120_000,
+                ...(env ? { env: { ...process.env, ...env } } : {}) });
         return { code: 0, out };
     } catch (e) {
         return { code: e.status ?? -1, out: `${e.stdout ?? ''}${e.stderr ?? ''}` };
@@ -180,17 +186,83 @@ describe('the owed gate, per category (⚖ 70 (d))', () => {
         // row lives in the gate rather than in `standing-values --check`.
         const r = run(OWED_GATE, []);
         expect(r.out).not.toMatch(/THE BOX IS TAKEN/);
+        // The row-shape guards run before any verdict, in BOTH arms.
+        expect(r.out).toMatch(/one part per DERIVED category/);
+        expect(r.out).toMatch(/are DERIVED from its parts, not typed/);
+        /**
+         * ⛔⛔ **AND THE REFUSAL IS AN ARM, NOT AN ERROR — MEASURED IN CI,
+         * WHICH IS WHERE IT HAPPENS.** `actions/checkout` clones at depth 1,
+         * so a part's baseline is not in that clone at all and the gate
+         * REFUSES by design (`SKIP:`, exit 0, *"the question could not be
+         * put"*). The first cut of this row asserted the per-category verdict
+         * lines unconditionally and went red on CI's first run of it — the
+         * same trap 896 shape the gate's own docblock is about, in a test
+         * written in the same slice. Reproduced locally in a `git clone
+         * --depth 1` of this repo: identical SKIP, identical exit 0.
+         */
+        if (/ALL PASS — REFUSED/.test(r.out)) {
+            expect(r.code, 'a refusal must NEVER read as a debt').toBe(0);
+            expect(r.out).toMatch(/baseline `[0-9a-f]+` is not in this clone/);
+            // ⛓ It names WHICH category could not be asked, and says the
+            // counts differ so the two answers cannot be read as each other.
+            expect(r.out).toMatch(
+                new RegExp(`the (?:${ROSTER_CATEGORIES.join('|')}) baseline`));
+            expect(r.out).toMatch(/This is NOT "a full tier is owed"/);
+            return;
+        }
         for (const c of ROSTER_CATEGORIES) {
             expect(r.out).toMatch(new RegExp(`the \`${c}\` category is still about THIS tree`));
         }
         expect(r.out).toMatch(/judged against its OWN head/);
-        // The row-shape guards run before any verdict.
-        expect(r.out).toMatch(/one part per DERIVED category/);
-        expect(r.out).toMatch(/are DERIVED from its parts, not typed/);
         // ⛔ Whatever the tree says, the gate never prices the whole roster as
         // the debt when only part of it is owed.
         if (/CHECK\(S\) FAILED/.test(r.out)) {
             expect(r.out).toMatch(/## WHAT IS ACTUALLY OWED HERE/);
+        }
+    });
+
+    /**
+     * ⛓⛓⛓ THE REFUSAL ARM, DRIVEN HERE RATHER THAN WAITED FOR. A branch a
+     * local run never takes is a branch that can be wrong for a whole
+     * campaign, and the real condition — a shallow clone — costs 13 s and
+     * 339 MB to build, which is not a unit-test row. So the ONE call that
+     * fails in a shallow clone is made to fail: a `git` shim earlier on
+     * `PATH` forwards everything to the real git EXCEPT `rev-parse
+     * <sha>^{commit}`, which is exactly what `actions/checkout` breaks.
+     *
+     * ⛔ AND THE SHIM IS FAITHFUL BY MEASUREMENT, not by argument: a real
+     * `git clone --depth 1 file://<repo>` of this tree produced the same
+     * `SKIP:` line, the same `ALL PASS — REFUSED` verdict and the same exit
+     * 0 before this row was written.
+     */
+    it('a baseline the clone does not carry is a REFUSAL, never a debt', () => {
+        const bin = mkdtempSync(join(tmpdir(), 'owed-gate-shim-'));
+        const shim = join(bin, 'git');
+        // ⛓ The real git is RESOLVED, never a literal path: CI's is not
+        // necessarily this machine's, and a shim that exec'd a path that does
+        // not exist would refuse for the wrong reason and still look green.
+        const realGit = execFileSync('sh', ['-c', 'command -v git'], { encoding: 'utf8' }).trim();
+        expect(realGit).toMatch(/git$/);
+        writeFileSync(shim, '#!/bin/sh\n'
+            + '# forward everything to the real git except the one call a\n'
+            + '# shallow clone cannot answer.\n'
+            + 'case "$1 $2" in\n'
+            + '  "rev-parse "*"^{commit}") exit 128 ;;\n'
+            + 'esac\n'
+            + `exec ${realGit} "$@"\n`);
+        chmodSync(shim, 0o755);
+        try {
+            const r = run(OWED_GATE, [], { PATH: `${bin}:${process.env.PATH}` });
+            expect(r.code, 'a refusal must NEVER read as a debt').toBe(0);
+            expect(r.out).toMatch(/is not in this clone/);
+            expect(r.out).toMatch(/ALL PASS — REFUSED/);
+            expect(r.out).toMatch(/This is NOT "a full tier is owed"/);
+            // ⛔ The counts differ from a green run's, so the two answers
+            // cannot be read as each other.
+            expect(r.out).toMatch(/0 population\(s\) compared/);
+            expect(r.out).not.toMatch(/CHECK\(S\) FAILED/);
+        } finally {
+            rmSync(bin, { recursive: true, force: true });
         }
     });
 });
