@@ -271,6 +271,9 @@ jobs:
         if: inputs.template_type == 'worldgen'
         run: |
           source .venv/bin/activate
+          # Players/Templates is gitignored: a fresh runner has none, and the
+          # generate-test-worlds phase reads its template list from there.
+          python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
           python scripts/test/test-world-generator.py \
             --seed ${{ inputs.start_seed }} \
             --phase generate-test-worlds \
