@@ -5917,6 +5917,10 @@ remaining 7 are P4b's `sliceRecords.test.js`, open before this slice.
 
 **⇒ RR VERIFIED and the CI red RETIRED (session 10 orchestrator, 2026-08-28).** RR closed at `be3734c79` (== origin; 10 commits; §53, 14 subsections; traps 931–940; branch deleted, ⚖ 59). CI at `d61ee802e` read **7 failed** — all `sliceRecords.test.js` (P4b), GREEN locally 34/34: the test took its two "real" commits off `git log -2` of THIS tree, and `actions/checkout` clones at depth 1, so the parent, `merge-base --is-ancestor` and the `fixtures/` numstat could not be asked (trap 896's shape). Fixed: the test BUILDS a throwaway repo with three commits and asks that. DRIVEN before belief: in a `--depth 1` clone the old file fails exactly **7 / 34** (CI's number) and the new one passes **34 / 34**. Trap 941. Suite row to be re-read from CI at this head.
 
+**⇒ L15 CLOSED (2026-08-30, `main` @`f8f72ec02`; 14 commit(s), 1 fast-forward(s); as-built kickoff §55; ⚖ 65 DISCHARGED, ⚖ 66 DISCHARGED, ⚖ 67 CLOSED, ⚖ 68 DISCHARGED, ⚖ 69 DISCHARGED).**
+
+L15 `shove` CLOSED: one block-route search (`deriveBlockRoute`) that `shove` and `weigh` resolve through; L15 recorded on the game (457 obs, 0 hits, seam {15,0}{15,2}{15,3}); chain 17 segments / 3787 t; full tier 150 tapes 3641/0/120. ⚖ 65 EXECUTED; ⚖ 66 (seam.music unasserted at a boundary) landed with its GPU mutant. Brief overturned: L16's route (E1·break·N2), the cost tuple, the frontier naming the block, the button crossing, m5/m6 vacuous. Driver readout moved once (runShove settle: a block at rest jitters 96↔96.5, PushableBlock.as:59-64) — 149/149 replay inert. NEXT: L16 (route step 18, BRIDGE+KILL_ARM) — the sword-press rope arm + arrow-trap deactivation + the seven-Bob roster; its weigh measured E1 · break rock@(19,4) · N2; the post-drain seam readout (⚖ 66 (i)) rides its full tier.
+
 ## 5i. The EDITOR INTEGRATION arc — LIVE (arc opened 2026-08-26, post-dates this doc; entry written 2026-08-28 at main `2b0c1bc7c`)
 
 **Status: ⛓ W-front + ALL FOUR B slices + M0 recon + H7/H8 MERGED 2026-08-28
