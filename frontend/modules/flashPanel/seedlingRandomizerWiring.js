@@ -306,6 +306,37 @@ export function resetTargetFor(set, bootPosition = null) {
      * wins whenever a set DOES carry a start), it simply is not asked to
      * invent a coordinate it does not have.
      */
+    /**
+     * ⛔⛔ **AND THE BORROWED POSITION IS ONLY VALID IN THE LEVEL IT WAS READ
+     * IN.** `(80, 128)` is a standable tile *of level 0*; a set whose start
+     * names some other level — a generated one that lost its `summary.
+     * startCell`, say — would have that coordinate applied to a room whose
+     * geometry nobody consulted. That is the same defect as the zeros, one
+     * step less obvious: not "an invented coordinate" but "a real coordinate
+     * from the wrong room". ⇒ REFUSED BY NAME. The rooms stay mounted, nothing
+     * is bound, and the player is left where they are.
+     *
+     * ⚠ ARMED ONLY WHEN THE GAME REPORTS A LEVEL. MEASURED, run 4:
+     * `botStatus.level` is **−1** before any bot run (its fields are the bot's,
+     * unset until `botStart`), so `bootPosition.level` is null in production
+     * today and this guard does not fire. It is pinned in node rather than
+     * left to be discovered, and the honest statement is that the host needs a
+     * real read of `Main.level` — a DECLARED bridge property it does not
+     * currently parse — before this can protect anyone.
+     */
+    if (bootPosition && bootPosition.level != null && bootPosition.level !== start.level) {
+        return {
+            mode: RESET_MODES.NEW_GAME_ARM,
+            level: -1,
+            x: null,
+            y: null,
+            expectLevel: start.level,
+            refused: true,
+            why: `the set starts in level ${start.level} and carries no position, but the only `
+                + `position the host has was read in level ${bootPosition.level} — a standable `
+                + 'tile of THAT room says nothing about this one',
+        };
+    }
     return {
         mode: RESET_MODES.NEW_GAME_ARM,
         level: -1,
@@ -443,7 +474,15 @@ export async function runSeedlingRandomizerLoad({
     const tileSize = Number(loaded.tileSize);
     const halfTile = Number.isFinite(tileSize) ? Math.floor(tileSize / 2) : 0;
     const bootPosition = before.player
-        ? { x: before.player.x - halfTile, y: before.player.y - halfTile }
+        ? {
+            x: before.player.x - halfTile,
+            y: before.player.y - halfTile,
+            // ⛓ The level the position BELONGS to, when the game reports one.
+            // `botStatus.level` is −1 before a bot run, and a negative level is
+            // the game's own "no game" sentinel, so it is carried as null
+            // rather than compared as a room number.
+            level: Number.isInteger(before.level) && before.level >= 0 ? before.level : null,
+        }
         : null;
 
     const target = resetTargetFor(loaded.set, bootPosition);
@@ -467,11 +506,13 @@ export async function runSeedlingRandomizerLoad({
         // ⛔ REFUSED RATHER THAN SENT AS ZEROS. Zeros are what put the player
         // inside `tree@0,0` in run 4; a reset with no position to send is a
         // reset that should not be made.
-        overlay.setText('the randomized rooms are loaded, but the game did not report a '
-            + 'position to start from — the player was NOT moved.', 'error');
-        log('[ap placement] no boot position to reset to; the rooms are mounted and the '
+        const why = target.refused ? target.why
+            : 'the game did not report a position to start from';
+        overlay.setText(`the randomized rooms are loaded, but ${why} — the player was `
+            + 'NOT moved.', 'error');
+        log(`[ap placement] no position to reset to — ${why}; the rooms are mounted and the `
             + 'player was left where they were', 'error');
-        step('reset-end', { landed: false, why: 'no position' });
+        step('reset-end', { landed: false, why: target.refused ? 'wrong room' : 'no position' });
         overlay.hide();
         return { ok: true, why: 'no position to reset to', reset: { ...target, landed: false },
             steps, delivered: result };

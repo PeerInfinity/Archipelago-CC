@@ -457,6 +457,34 @@ describe('the reset target is chosen by the SET, not by preference', () => {
         expect(t.y).toBeNull();
     });
 
+    /**
+     * ⛔⛔ **A BORROWED POSITION IS ONLY VALID IN THE ROOM IT WAS READ IN.**
+     * `(80, 128)` is a standable tile OF LEVEL 0. A set whose start names a
+     * different level — a generated one that lost its `summary.startCell` —
+     * would have that coordinate applied to a room whose geometry nobody
+     * consulted: not an invented coordinate, but a real one from the wrong
+     * room, which is the tree defect one step less obvious.
+     *
+     * ⚠ In production the guard is currently INERT and the row says so:
+     * `botStatus.level` is −1 before any bot run, so the level is carried as
+     * null and the comparison never fires. Pinned here rather than left to be
+     * discovered; arming it needs a real read of `Main.level`.
+     */
+    it('a level-only start in a DIFFERENT room refuses rather than borrowing the spawn', () => {
+        const t = resetTargetFor({ start: { level: 47 } }, { x: 80, y: 128, level: 0 });
+        expect(t.refused).toBe(true);
+        expect(t.x).toBeNull();
+        expect(t.y).toBeNull();
+        expect(t.why).toMatch(/says nothing about this one/);
+        // …and the SAME room is still served
+        const ok = resetTargetFor({ start: { level: 0 } }, { x: 80, y: 128, level: 0 });
+        expect(ok.refused).toBeUndefined();
+        expect(ok).toMatchObject({ x: 80, y: 128 });
+        // …and an UNREPORTED level (production today) does not refuse
+        const unknown = resetTargetFor({ start: { level: 47 } }, { x: 80, y: 128, level: null });
+        expect(unknown.refused).toBeUndefined();
+    });
+
     it('no start at all is REFUSED rather than guessed as level 0', () => {
         expect(resetTargetFor({})).toBeNull();
         expect(resetTargetFor({ start: { x: 1, y: 2 } })).toBeNull();
@@ -603,7 +631,12 @@ describe('the load sequence — overlay on, deliver, reset, overlay off', () => 
         // ⛓ A roster WITH a player (so a boot position exists and the reset is
         // actually issued) but a level that never becomes the expected one.
         const { r, glue, overlay } = await run({
-            bot: (n) => (n === 'botStatus' ? '{"level":99}'
+            // ⛓ `-1` is what the real game reports before a bot run, so the
+            // room guard stays quiet and the RESET is genuinely issued — the
+            // level then never becomes the expected one, which is the case
+            // this row is about. (A positive mismatch would be refused by the
+            // wrong-room guard and never reach the poll at all.)
+            bot: (n) => (n === 'botStatus' ? '{"level":-1}'
                 : '{"mobiles":[{"cls":"Player","x":88,"y":136}]}'),
         });
         expect(r.ok).toBe(true);
