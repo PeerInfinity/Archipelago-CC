@@ -12450,7 +12450,7 @@
           "NOTIFY.2": 19,
           "TASKS.3": 20
         },
-        "title": "Vibe Coding Simulator \u2014 TaskFlow App"
+        "title": "Vibe Coding Simulator — TaskFlow App"
       },
       "num_nodes": 20,
       "preset_label": "taskflow_example s20",
@@ -13052,7 +13052,7 @@
             "dependencies": [
               13
             ],
-            "full_text": "TASKS.2: State machine for task lifecycle: open \u2192 in_progress \u2192 review \u2192 done"
+            "full_text": "TASKS.2: State machine for task lifecycle: open → in_progress → review → done"
           },
           "18": {
             "label": "NOTIFY.1",
@@ -13081,7 +13081,7 @@
           }
         },
         "starting_nodes": [],
-        "title": "Vibe Coding Simulator \u2014 TaskFlow App",
+        "title": "Vibe Coding Simulator — TaskFlow App",
         "randomize_items": 1,
         "vanilla_placement": 0
       },

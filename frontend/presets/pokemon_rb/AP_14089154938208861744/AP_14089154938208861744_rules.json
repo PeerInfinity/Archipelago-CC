@@ -44611,7 +44611,7 @@
         false
       ],
       "pc_item": "Escape Rope",
-      "world_description": "Pok\u00e9mon Red and Pok\u00e9mon Blue are the original monster-collecting turn-based RPGs.  Explore the Kanto region with\nyour Pok\u00e9mon, catch more than 150 unique creatures, earn badges from the region's Gym Leaders, and challenge the\nElite Four to become the champion!",
+      "world_description": "Pokémon Red and Pokémon Blue are the original monster-collecting turn-based RPGs.  Explore the Kanto region with\nyour Pokémon, catch more than 150 unique creatures, earn badges from the region's Gym Leaders, and challenge the\nElite Four to become the champion!",
       "slot_data": {
         "second_fossil_check_condition": 3,
         "require_item_finder": 0,
@@ -45073,7 +45073,7 @@
         "tutorials": [
           {
             "name": "Multiworld Setup Guide",
-            "description": "A guide to playing Pok\u00e9mon Red and Blue with Archipelago.",
+            "description": "A guide to playing Pokémon Red and Blue with Archipelago.",
             "language": "English",
             "file_name": "setup_en.md",
             "link": "setup/en",
@@ -45083,8 +45083,8 @@
           },
           {
             "name": "Multiworld Setup Guide",
-            "description": "A guide to playing Pok\u00e9mon Red and Blue with Archipelago.",
-            "language": "Espa\u00f1ol",
+            "description": "A guide to playing Pokémon Red and Blue with Archipelago.",
+            "language": "Español",
             "file_name": "setup_es.md",
             "link": "setup/es",
             "authors": [
