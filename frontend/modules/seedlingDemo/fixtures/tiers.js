@@ -182,6 +182,14 @@ const ROUTE_SPECS = Object.freeze([
 
 /** The categories, in the order every readout prints them. */
 export const ROSTER_CATEGORIES = Object.freeze(['campaign', 'map-walk', 'mechanic']);
+/**
+ * ⛓ THE ONE CATEGORY THAT IS A REMAINDER, named once. Everything else CLAIMS
+ * its tapes from an artifact; this one takes what is left, which is what makes
+ * the scheme fail SAFE — a fixture nobody classified is driven, never skipped.
+ */
+export const REMAINDER_CATEGORY = 'mechanic';
+/** The categories that CLAIM names, derived from the two constants above. */
+const CLAIMING_CATEGORIES = ROSTER_CATEGORIES.filter((c) => c !== REMAINDER_CATEGORY);
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 
@@ -253,7 +261,7 @@ export function rosterCategories(rosterNames) {
     const claims = derivedCategoryClaims();
     const seen = new Map();
     const out = { campaign: [], 'map-walk': [], mechanic: [] };
-    for (const category of ['campaign', 'map-walk']) {
+    for (const category of CLAIMING_CATEGORIES) {
         for (const name of claims[category]) {
             if (!roster.has(name)) {
                 throw new TierError(
@@ -283,11 +291,11 @@ export function rosterCategories(rosterNames) {
      * the roster's, which a test caught the first time both were asked the
      * same question.
      */
-    for (const category of ['campaign', 'map-walk']) {
+    for (const category of CLAIMING_CATEGORIES) {
         const claimed = new Set(out[category]);
         out[category] = rosterNames.filter((n) => claimed.has(n));
     }
-    out.mechanic = rosterNames.filter((n) => !seen.has(n));
+    out[REMAINDER_CATEGORY] = rosterNames.filter((n) => !seen.has(n));
     const total = out.campaign.length + out['map-walk'].length + out.mechanic.length;
     if (total !== rosterNames.length) {
         throw new TierError('the categories do not partition the roster: '
@@ -297,7 +305,13 @@ export function rosterCategories(rosterNames) {
     return out;
 }
 
-/** The category one tape belongs to, or `null` if it is not in the roster. */
+/**
+ * The category one tape belongs to, or `null` if it is not in the roster.
+ *
+ * ⚠ IT RE-DERIVES EVERY TIME (the route fixtures are read off disk, ~25 ms).
+ * A caller asking about MANY names should call `rosterCategories` once and
+ * read the three lists, not loop over this.
+ */
 export function categoryOf(name, rosterNames) {
     const cats = rosterCategories(rosterNames);
     return ROSTER_CATEGORIES.find((c) => cats[c].includes(name)) ?? null;
