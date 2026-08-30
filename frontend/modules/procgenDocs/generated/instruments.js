@@ -7245,6 +7245,18 @@ export const INSTRUMENTS = frz({
                     "how": [
                         "arg"
                     ],
+                    "name": "category"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "covered-by"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
                     "name": "from"
                 },
                 {
@@ -7270,6 +7282,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "quote"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tapes"
                 },
                 {
                     "how": [
@@ -7515,6 +7533,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "branch"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "categories"
                 },
                 {
                     "how": [

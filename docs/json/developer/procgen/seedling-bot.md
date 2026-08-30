@@ -1394,8 +1394,17 @@ blocked list beside `fire`/`ghostsword`/`firewand`.
 - **The verify sweep has tiers**: `--tier=fast` (18 tapes, ~4 min) and
   `--tier=full` (the gate). ⛓ R6 slice 0 added two more —
   `--tier=gate` (90 tapes, the per-slice gate) and `--tier=legacy` (the 10
-  demoted ones, on demand). **`full` still means EVERYTHING**; the
-  pre-push gate was not narrowed. See `fixtures/tiers.js` for the measured
+  demoted ones, on demand). ⛓⛓ **R9 added three DERIVED CATEGORIES** —
+  `--tier=campaign` (26 tapes, every tape a CHAIN owns), `--tier=map-walk`
+  (21, every tape the R2–R4 route fixtures name) and `--tier=mechanic` (103,
+  the remainder) — and a comma list of them. They PARTITION the roster and
+  **no tape is named by hand**: `campaign` comes from `CAMPAIGN_SEGMENT_NAMES`
+  and `chainTapeNames`, `map-walk` from the same `rNTapeSpecs(route)` call
+  that writes those tapes, and `mechanic` is what is left, so a fixture added
+  tomorrow is DRIVEN rather than skipped. The point is scheduling: they cost
+  ≈11, ≈64 and ≈68 minutes, so a change that moves campaign tapes owes eleven
+  minutes of GPU and not a hundred and forty-three. **`full` still means
+  EVERYTHING**; the pre-push gate was not narrowed. See `fixtures/tiers.js` for the measured
   evidence, and note the one thing that keeps a NAMED list from rotting:
   `LEGACY_TAPES` is the only named set and every other tier is its
   COMPLEMENT over `fixtureNames()`, so a fixture added tomorrow joins the
@@ -15574,11 +15583,34 @@ invisibility is what closes.
 
 **A MEASUREMENT OWED IS A RED ROW, NOT A SENTENCE IN A RESIDUE SECTION.** The
 full-tier roster value is a checkpoint a headless check can never re-run, and
-nothing noticed when the tree moved out from under it. A new gate compares four
+nothing noticed when the tree moved out from under it. A gate compares four
 populations against the row's own head — the game build, the driver, the tapes,
-and the dead-frame accounting — and is RED, by name, when any of them moved. It
-is red today, naming the commit that inverted the pre-swap correction after the
-roster was driven.
+and the dead-frame accounting — and is RED, by name, when any of them moved.
+
+⛓⛓⛓ **AND THE DEBT IS PER CATEGORY (R9, ruling 70).** The rule ruling 40 set
+— *"the full roster runs at rung close, a wasm rebuild, a fork edit or a
+game-facing-file change"* — is AMENDED to: **a tape-moving change lands with
+the CATEGORIES ITS REACH NAMES re-driven at the head; the FULL tier is owed by
+a build/gitlink, driver-contract, tape-format or dead-frame change, or the
+user's word.** The checkpoint row is a COMPOSITE to match: one part per derived
+category, each carrying its own tape count, its own value and — the field the
+gate actually needs — its own `measuredAt`, so a category driven at the head
+clears its own debt while the others keep theirs. The row's `value` and `why`
+are DERIVED from the parts on every quote and the gate refuses a hand edit to
+either, which is what finally lets the row's own text be read: the previous
+shape carried a paragraph a human had to keep true, and the gate had to
+announce on every run that it would not read it.
+
+Three of the four populations are exactly *"what only the full tier can test"*
+— a different game, a different way of reaching it, or a different accounting
+of its dead frames is about EVERY tape — so a mover there owes every category;
+the fourth, the tapes, owes only the categories of the tapes that moved.
+Measured at the slice's own head: seventeen re-recorded chain tapes put the
+debt at `campaign` alone, ≈11 minutes, where the old whole-row verdict priced
+the same tree at ≈143. ⛔ And two failures the shape makes impossible are
+asserted rather than hoped for: a derived category with NO part (its tapes
+would be in no part, so nothing could ever be owed for them) and a typed
+`value`/`why`.
 ⛓ **Two of its four populations taught a lesson worth keeping.** The tapes are
 compared through the GAME-VISIBLE and MODEL-STAGING projections rather than as
 bytes, because two tapes had moved in a field neither side of the differential
