@@ -13750,6 +13750,124 @@ in prose says what it says and why, rather than being quietly corrected.
 written out, and it has been kept current rather than frozen since — it is now
 sixteen rows, and it carries a line saying that is what it is.
 
+### R9 slice L15: THE BLOCK-ROUTE SEARCH — seventeen rooms play, and the frontier moves to L16
+
+**`r9-solve-15` is on disk, the game reproduced the route to the tick, and the
+chain is seventeen segments** — `new Game(0,80,128)` with an empty save to the
+**L16 arrival**, 3787 ticks. Route step 17 (L15) had refused since slice 12b″
+with *"the 'shove' strategy IS registered and did not apply here"*, and the
+refusal was structurally right: `deriveShove` asked one question — at which
+`k` does a corridor appear — and in L15 the honest answer is none. The block
+at (4,4) is the only door out of the arrival pocket, the exit column is
+behind a lock whose one presser is a momentary `Button`, and the only way to
+a cell the next lean must be leaned FROM is through a rock no corridor
+planner ever names.
+
+| | before | after |
+|---|---|---|
+| chain segments | 16 | **17** |
+| chain ticks | 3331 | **3787** |
+| route survey | 24 / 29 | **25 / 29** |
+| frontier | step 17, L15, VERB-APPLY | **step 18, L16, BRIDGE+KILL_ARM** |
+| tape roster | 149 | **150** |
+| `roster: --win --tier=full` | 149 tapes 3615/0/120 | **150 tapes 3641/0/120** — measured whole at `36b71996d`; after the split re-record the roster + dash tiers re-measured (799/0/68 · 68/0/37) and the 120-tape complement QUOTED from that run (⚖ 69, two-build replay 150/150 as the proof) |
+| campaign `rng.split` | false | **true** on all seventeen (⚖ 68) |
+
+#### One search, two goal predicates
+
+`deriveBlockRoute(run, blockRow, goal, contacts, blocked)` (kickoff §54.4,
+⚖ 65 (a)) is a best-first search over `{block cell | DESTROYED, broken-rock
+set, player cell}` whose moves are the verbs the executors already run —
+`lean(dir, k)` and `break(rock)` — and whose goal is one of the two
+post-conditions ⚖ §11.8a named: `clear-path` (a corridor plans from the
+state's player cell to the aim; `resolveShoveStrategy`) or `press` (the block
+IS on the presser's tile; `resolveWeighStrategy`). Cost is `(orders,
+destroys, Σk, direction order)` — non-destructive first, as the ruling says
+and as `deriveShove` always sorted; the brief's tuple had Σk before
+`destroys` and a witness room in `blockRoute.test.js` shows the difference.
+Bounds `MAX_ROUTE_ORDERS` (8) and `MAX_ROUTE_EXPANSIONS` (2000) refuse by
+name.
+
+The rock logic is the transcription's, asked of a hypothetical bag (⚖ 65
+(b)): an unbroken rock stops the block because `blockBlockedAt` asks
+`collidesSolid` under a bag whose `brokenRocks` is the state's; a rock is
+breakable only under `rockBreaksUnder` with the plain sword in the primary
+slot; a broken rock is gone for the visit; and a block RESTING on a presser
+opens its group in the state bag because `Button.hitables` is
+`["Player","Enemy","Solid"]` and a `PushableBlock` is a `"Solid"`. No second
+physics anywhere.
+
+**A one-step route is today's record, byte for byte.** The search's start
+layer IS `deriveShove`'s old scan — asked of A\* in the same order, phrased in
+the same words — and `shoveWeighParity.test.js` diffs every committed
+one-step room (L4, L8, L8's sink arm, A16's refusal) against a control
+captured at `f5d7b43fc` before the search existed. Deeper layers answer
+reachability from a four-connected margin-0 flood (A\*'s own connectivity)
+and the chosen route is verified step by step with `planWaypoints` before it
+is returned.
+
+#### L15, as the search plays it
+
+`E2 · break breakablerock@96,80 · N2 · break breakablerock@96,16 · E1 · dwell
+· walk` — §54.3's six rows exactly, 456 ticks in the model. Two things the
+design did not know: the second rock is swung at from (7,1), whose only
+non-Stone neighbour is the BUTTON's own cell (a `proximity-hazard` the
+planner refuses; a momentary button is harmless to cross, so the search may
+exempt one past its start state and the exemption rides on the step into the
+executor's walk); and after the fifth order the frontier names the BLOCK
+again, nearer than the lock, so a block resting on a momentary presser whose
+group is still shut resolves to the weigh's own dwell — the key already
+turned.
+
+On `--win`: **457 observations, `primary ×25`, hits 0, `save.time` 9428
+against a model 9428, one transition into L16**, the seam latched calm at 456
+with persistence rows `{15,0}` (the lock), `{15,2}` and `{15,3}` (both rocks).
+The model reproduces the recording it just made.
+
+#### The seam's last row: sound draws, the split, and the seventeen rooms playing end to end
+
+The one-page continuation refused boundary 16/17 twice before it admitted.
+First on `seam.music` — the last SOUND set/index: `r9-solve-14`'s latch is
+frozen at the disarm tick with L14's fight sfx, and the stairs sfx into L15
+(`{Room, 2}`, downstairs) plays after it; ⚖ 66 excuses that row at the
+admission, reported with both values, never asserted. Then on the pre-build
+`rng` — and the ruling that followed was measured before it was built and
+WITHDRAWN (⚖ 67): with `rngRuler`'s own xorshift step the LIVE seed advanced
+by two draws equals the TAPE's, not the other way; `Music.playSound` draws
+its index from the one global LFSR only for `intInd = −1`, and a pinned mixer
+reset once per ▶ Start replays — and draws — fewer indices on a continuation
+than a fresh page does. ⚖ 68 (the user's original design): every campaign
+segment declares `split: true` and boots the latched `cosmetic` state, so
+those draws land on the cosmetic stream the admission carries and never
+asserts — one declaration (`CAMPAIGN_RNG_SPLIT`), applied by the two
+producers that emit chain rows, no driver change. The pipeline learned that
+a chain-wide declaration flip is a hazard at its first segment (its own
+rule-absent run stopped before the GPU naming five unlicensed tapes), the
+seventeen segments were re-recorded in 29 minutes with every expectation
+byte-identical, and the ship gate's campaign arm reads **17 windows, zero
+refusals, `r9-solve-15` agreeing per tick, CLAIM 7 at L16 (40, 72)**.
+
+#### A block at rest never settles
+
+`PushableBlock.as:59-64` keeps `tile` one cell ahead after the last contact
+and snaps `x = gridPos(x).x` only on a tick whose `v.x == 0`, so a landed
+block alternates 96 → 96.5 → 96 for ever — in the game, and in
+`pushables.js`, which transcribes it. Every committed push is one axis and
+`pushesSettled` reads true on every other tick; the first block ever pushed
+along a second axis (the generated weigh rooms) puts the two jitters out of
+phase and the flag is never true. `runShove`'s settle readout now also
+accepts a period-2 oscillation inside the destination tile — physics
+untouched — and the two-build replay of all 149 committed tapes measured it
+inert: 149 identical, 0 movers, 0 changed refusals.
+
+#### L16, measured but not recorded (⚖ 65 (c))
+
+The search's second customer: the brief's *N2 from (16,6) · E1* is refuted
+by the engine's grid ((16,6) and (16,3) are Stone); L16's weigh is `E1 from
+(15,5) · break breakablerock@304,64 from (18,3) · N2 from (17,6)`. Its tape,
+the sword-press rope arm that deactivates the arrow traps (⚖ 65 (d)) and the
+seven-Bob roster are that room's own slice — route step 18's work order.
+
 ### R9 slice 13: THE WATCH-PAGE FIVE — the ladder becomes a link, sand traps become visible, and seven typed numbers stop lying
 
 ⚖ Ruling 29's watch-page items, all five, tape-inert. `a535bdb13` … `fa547ddaf`.
