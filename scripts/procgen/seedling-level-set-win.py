@@ -150,6 +150,28 @@ def run_arm(browser, url, arm, boot_deadline):
                 continue
             if "frame_click" in step:
                 spec = step["frame_click"]
+                # ⛓ A REAL CLICK INSIDE THE FRAME. The wasm page consumes the
+                # user activation for WebGPU and the AudioContext, and an
+                # activation granted to the parent document does not travel
+                # into a child frame.
+                #
+                # ⛔⛔ PREFER `iframe`, A SELECTOR IN THE TOP DOCUMENT, over
+                # `contains`, a match on `page.frames`. The frame list is a
+                # SNAPSHOT of Playwright's bookkeeping: a host that mounts,
+                # tears down and remounts its iframe — which the flash panel
+                # does on every rules change — can leave a poll over that list
+                # never matching while the element is plainly there and the
+                # frame's own console lines are already in the log. A
+                # `frame_locator` resolves lazily at click time and auto-waits
+                # through re-attachment. `contains` stays for callers that have
+                # no stable selector, and its failure now NAMES every frame url
+                # it did see rather than only the one it wanted.
+                if spec.get("iframe"):
+                    page.frame_locator(spec["iframe"]).locator(
+                        spec["selector"]).click(timeout=spec.get("timeout_ms", 180000))
+                    record["results"].append({"step": i, "frame_click": spec["selector"],
+                                              "via": spec["iframe"]})
+                    continue
                 t0 = time.time()
                 fr = None
                 while fr is None:
@@ -157,12 +179,10 @@ def run_arm(browser, url, arm, boot_deadline):
                     if fr is not None:
                         break
                     if time.time() - t0 > spec.get("deadline_sec", 120):
-                        raise TimeoutError(f"no frame whose url contains {spec['contains']!r}")
+                        seen = [f.url for f in page.frames]
+                        raise TimeoutError(
+                            f"no frame whose url contains {spec['contains']!r}; saw {seen}")
                     time.sleep(0.25)
-                # ⛓ A REAL CLICK INSIDE THE FRAME. The wasm page consumes the
-                # user activation for WebGPU and the AudioContext, and an
-                # activation granted to the parent document does not travel
-                # into a child frame.
                 fr.click(spec["selector"], timeout=spec.get("timeout_ms", 120000))
                 record["results"].append({"step": i, "frame_click": spec["selector"],
                                           "frame_url": fr.url})

@@ -1163,10 +1163,38 @@ if (!existsSync(join(M1_ARTIFACT, 'game.html'))) {
          */
         const iExit = (d.reports ?? []).findIndex(
             (r) => r.name === 'pendingExit' && r.value !== '');
+        /**
+         * ⛔⛔ **SEARCHED AFTER THE EXIT, AND ASSERTED AS ADJACENCY — because
+         * "after" alone would be a TAUTOLOGY.** As first written this was
+         * `findIndex((r, n) => n > 0 && r.name === 'level' && Number(r.value)
+         * === door.to)`: a scan from the START for the destination level. For
+         * `door-teleporter` the destination is 18, which the game is never in
+         * before the move, so it could only ever find the right report. For
+         * `door-stairsup` the destination is **0 — the level the game BOOTS
+         * IN** — so whenever the boot's own baseline echo landed inside the
+         * captured window the row matched THAT and reported the level move
+         * before the exit that caused it. MEASURED, P1-e run 1:
+         * `pendingExit at 26, level=0 at 20`, with the sister door green at
+         * `26 -> 27` in the same run; M1b's green `23 -> 24` was the same code
+         * with the echo outside the window. A timing-sensitive ROW, not a game
+         * order defect.
+         *
+         * ⛓ AND THE REPAIR IS NOT "SEARCH AFTER `iExit`" ON ITS OWN: a search
+         * that starts after `iExit` and then asserts `> iExit` cannot fail, and
+         * a row that cannot fail is not a row (this slice already paid for one
+         * of those — see the ordering fixture in
+         * `seedlingRandomizerWiring.test.js`). §11.2's claim is ADJACENCY —
+         * `pendingExit` is declared immediately above `level` and BridgeGeneric
+         * reports in declaration order, so the level move the door caused is
+         * the VERY NEXT report. M1b measured exactly that twice (`23 -> 24`,
+         * `26 -> 27`) and called it `+1` in prose without asserting it.
+         */
         const iLevel = (d.reports ?? []).findIndex(
-            (r, n) => r.name === 'level' && n > 0 && Number(r.value) === door.to);
-        check(`M1 ${d.label}: the door report lands BEFORE the level move it caused`,
-            iExit >= 0 && iLevel > iExit, `pendingExit at ${iExit}, level=${door.to} at ${iLevel}`);
+            (r, n) => n > iExit && r.name === 'level' && Number(r.value) === door.to);
+        check(`M1 ${d.label}: the door report lands IMMEDIATELY BEFORE the level move it `
+            + 'caused — adjacent, because both are one burst in declaration order',
+        iExit >= 0 && iLevel === iExit + 1,
+        `pendingExit at ${iExit}, level=${door.to} at ${iLevel}`);
 
         /**
          * ⛓⛓⛓ AND THE HOST TAKES THE CROSSING — ON THE STRING THE GAME WROTE.
@@ -1439,8 +1467,18 @@ if (PANEL_ARMS_ENABLED) {
             // ⛔ THE ▶ IS A FRAME CLICK. The activation the parent document
             // holds does not travel into the child frame, and the wasm page
             // spends it on WebGPU and the AudioContext.
-            { frame_click: { contains: '/wasm/', selector: '#btn-start', deadline_sec: 180 },
-                label: 'start' },
+            /**
+             * ⛓ THE PANEL SAYS WHEN IT IS READY FOR THE CLICK, and waiting on
+             * ITS words rather than on a frame's existence is what makes this
+             * step diagnosable: the status is a top-document fact that
+             * survives the iframe being remounted.
+             */
+            { wait_js: `() => {
+                const st = document.querySelector('.flash-panel-status');
+                return Boolean(st) && /Start in the game/.test(st.textContent || '');
+            }`, deadline_sec: 240, label: 'awaiting-start' },
+            { frame_click: { iframe: '.flash-panel-swf iframe', contains: '/wasm/',
+                selector: '#btn-start', deadline_sec: 240 }, label: 'start' },
             // The load sequence ends when the panel says so — polled, never slept.
             /**
              * ⛔ "THE OVERLAY IS NOT UP" IS TRUE BEFORE THE SEQUENCE STARTS,
@@ -1473,8 +1511,22 @@ if (PANEL_ARMS_ENABLED) {
         return { name, url: APP_URL, boot, steps };
     };
 
+    /**
+     * ⛔⛔ **A ROSTER ROW MUST BE READ IN THE ROOM IT IS ABOUT.** The first
+     * shape of the control's *"the VANILLA pickup is PRESENT"* row read the
+     * roster of LEVEL 0 — where the game boots and where nothing is rewritten
+     * — and asked whether it held a pickup that lives in level 30. It could
+     * never pass, which is the same failure as a row that can never fail: the
+     * assertion is not about the thing it names. So both the eligible subject
+     * arm and the control WARP to the subject room's own vanilla debug spawn
+     * first, and then the two rosters are the discriminator the whole M1 block
+     * is built on — `APItem` at that tile on p4d, the vanilla pickup at the
+     * same tile on p4c.
+     */
+    const SUBJECT_ROOM = { level: M1_SUBJECT.level, x: SPAWN.x, y: SPAWN.y };
     const PANEL_PLAN = [
-        ...PRESETS.map((p) => panelArm(`panel-${p.id}`, p.src)),
+        panelArm(`panel-${PRESETS[0].id}`, PRESETS[0].src, { warp: SUBJECT_ROOM }),
+        ...PRESETS.slice(1).map((p) => panelArm(`panel-${p.id}`, p.src)),
         /**
          * ⛔ THE CONTROL, AND IT IS THE MUTANT'S OWN ARM. The SAME preset with
          * `flash_panel.wasm` moved back to the build that declares NO `apitem`:
@@ -1482,7 +1534,7 @@ if (PANEL_ARMS_ENABLED) {
          * every row below would move.
          */
         panelArm('panel-control-p4c', PRESETS[0].src,
-            { patch: { wasm: `${PAGE_NAME}/game.html` } }),
+            { patch: { wasm: `${PAGE_NAME}/game.html` }, warp: SUBJECT_ROOM }),
         /** The check leg: warp onto the placement, then a synthetic receive. */
         panelArm('panel-check', PRESETS[0].src, {
             warp: { level: M1_SUBJECT.level, x: M1_SUBJECT.entity.x, y: M1_SUBJECT.entity.y },
@@ -1571,6 +1623,13 @@ if (PANEL_ARMS_ENABLED) {
                 + `level=${resetStep?.detail?.level}, roster ${resetStep?.detail?.rosterSize}, `
                 + `player ${JSON.stringify(resetStep?.detail?.player)}, `
                 + `moved=${resetStep?.detail?.moved}`);
+            if (preset.id === PRESETS[0].id) {
+                check(`${tag}: an APItem stands at the rewritten tile in ${M1_SUBJECT.location}`,
+                    (obs.roster ?? []).some((m) => m.includes('APItem')
+                        && m.endsWith(`@${M1_SUBJECT.entity.x + TILE_HALF},`
+                            + `${M1_SUBJECT.entity.y + TILE_HALF}`)),
+                    JSON.stringify((obs.roster ?? []).slice(0, 10)));
+            }
             check(`${tag}: the step log is the ruled sequence, in order`,
                 JSON.stringify((obs.load?.steps ?? []).map((s) => s.name))
                     === JSON.stringify(['overlay-on', 'deliver-begin', 'deliver-end',
@@ -1581,8 +1640,9 @@ if (PANEL_ARMS_ENABLED) {
             console.log(`       ${tag} reset ceremony — before `
                 + `${JSON.stringify(beganStep?.detail?.world)} after `
                 + `{"level":${resetStep?.detail?.level},"rosterSize":`
-                + `${resetStep?.detail?.rosterSize},"player":`
-                + `${JSON.stringify(resetStep?.detail?.player)}}`);
+                + `${resetStep?.detail?.rosterSize},"time":${resetStep?.detail?.time},"player":`
+                + `${JSON.stringify(resetStep?.detail?.player)}}  moved=`
+                + `${resetStep?.detail?.moved}`);
         } else {
             // ⛓ THE DATA-INELIGIBLE ARM. Nothing was delivered, nothing bound,
             // and the panel SAID WHY rather than doing nothing quietly.
@@ -1609,7 +1669,8 @@ if (PANEL_ARMS_ENABLED) {
             check('P1-e CONTROL: and the refusal NAMES the capability check',
                 (obs.log ?? []).some((l) => /does not declare/.test(l)),
                 JSON.stringify((obs.log ?? []).filter((l) => /not applicable/.test(l))));
-            check('P1-e CONTROL: the VANILLA pickup is present at the subject tile',
+            check('P1-e CONTROL: the VANILLA pickup is present at the same tile — the '
+                + 'discriminator, read in the room it is about',
                 (obs.roster ?? []).some((m) => m.endsWith(
                     `@${M1_SUBJECT.entity.x + TILE_HALF},${M1_SUBJECT.entity.y + TILE_HALF}`)),
                 JSON.stringify((obs.roster ?? []).slice(0, 8)));

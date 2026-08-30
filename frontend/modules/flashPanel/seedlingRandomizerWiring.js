@@ -321,7 +321,20 @@ export function readWorld(bot) {
     const player = Array.isArray(roster)
         ? roster.find((m) => /(^|:)Player$/.test(String(m.cls ?? ''))) ?? null
         : null;
-    return { level: status?.level ?? null, rosterSize: roster?.length ?? null, player, status };
+    /**
+     * ⛓ `time` IS CARRIED because the game's own new-game arm
+     * (`Game.as:832-840`, `level < 0`) sets `time = dayLength / 2` — the one
+     * field that arm writes and an ordinary construction does not.
+     * `verify-seedling-bot-differential.mjs:2094` establishes that `botStatus`
+     * serves `Game.time` and that it ADVANCES while the page runs, so it can
+     * only ever be read as a lower bound. ⚠ And it may not discriminate at
+     * all: `procgenOracle.js:221` records that a stored `0` is APPLIED as
+     * `dayLength / 2` too, so an ordinary boot off an empty save may already
+     * be at that value. Carried and REPORTED for that reason — the measurement
+     * decides whether it is a witness.
+     */
+    return { level: status?.level ?? null, rosterSize: roster?.length ?? null, player,
+        time: status?.time ?? null, status };
 }
 
 const defaultWaitFrame = () => new Promise((r) => {
@@ -414,7 +427,7 @@ export async function runSeedlingRandomizerLoad({
     overlay.setText(`starting the randomized game (${target.mode})…`);
     step('reset-begin', { mode: target.mode, level: target.level,
         expectLevel: target.expectLevel,
-        world: { level: before.level, rosterSize: before.rosterSize,
+        world: { level: before.level, rosterSize: before.rosterSize, time: before.time,
             player: before.player ? { x: before.player.x, y: before.player.y } : null } });
     await waitFrame();
     teleport({ level: target.level, x: target.x, y: target.y });
@@ -432,13 +445,14 @@ export async function runSeedlingRandomizerLoad({
         await sleep(swapPollMs);
     }
     step('reset-end', { landed, waitedMs: now() - t0, level: world?.level ?? null,
-        rosterSize: world?.rosterSize ?? null,
+        rosterSize: world?.rosterSize ?? null, time: world?.time ?? null,
         player: world?.player ? { x: world.player.x, y: world.player.y } : null,
         // ⛓ The honest witness: did ANYTHING about the world move? Reported,
         // never asserted here — the gate owns the comparison.
         moved: before.rosterSize !== world?.rosterSize
             || before.player?.x !== world?.player?.x
-            || before.player?.y !== world?.player?.y });
+            || before.player?.y !== world?.player?.y
+            || before.time !== world?.time });
 
     if (!landed) {
         overlay.setText(`the randomized rooms are loaded, but the reset to level `
