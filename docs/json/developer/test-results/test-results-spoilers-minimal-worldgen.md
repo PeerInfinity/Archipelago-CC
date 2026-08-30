@@ -8,25 +8,25 @@
 
 [View Original Template Results](./test-results-spoilers-minimal.md)
 
-**Generated:** 2026-07-07 21:10:54 UTC
+**Generated:** 2026-08-30 18:43:38 UTC
 
-**Source Data Created:** 2026-06-27T22:24:23.374452+00:00
+**Source Data Created:** 2026-08-30T18:43:38.017250+00:00
 
-**Source Data Last Updated:** 2026-06-27T22:24:23.374460+00:00
+**Source Data Last Updated:** 2026-08-30T18:43:38.017261+00:00
 
 ## Summary
 
-- **Total Games:** 55
-- **Passed:** 52 (94.5%)
-- **Failed:** 3 (5.5%)
+- **Total Games:** 58
+- **Passed:** 55 (94.8%)
+- **Failed:** 3 (5.2%)
 - **Games with Intermittent Failures:** 0
 - **Total Intermittent Failures:** 0
 
 ### Generic Exporter/Logic Statistics
 
-- **Passing with Generic Exporter:** 52/52 (100.0% of passed)
-- **Passing with Generic Logic:** 52/52 (100.0% of passed)
-- **Passing with Both Generic:** 52/52 (100.0% of passed)
+- **Passing with Generic Exporter:** 55/55 (100.0% of passed)
+- **Passing with Generic Logic:** 55/55 (100.0% of passed)
+- **Passing with Both Generic:** 55/55 (100.0% of passed)
 
 ## Test Results
 
@@ -40,6 +40,7 @@
 | Adventure WorldGen | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
 | Aquaria WorldGen | ✅ Passed | 0 | 4.2 | 4.2 | 🟢 Complete | ✅ | ✅ |
 | Baking Adventure WorldGen | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
+| Bounce Demo WorldGen | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Bumper Stickers WorldGen | ✅ Passed | 0 | 8.2 | 8.2 | 🟢 Complete | ✅ | ✅ |
 | Castlevania - Circle of the Moon WorldGen | ✅ Passed | 0 | 4.4 | 4.4 | 🟢 Complete | ✅ | ✅ |
 | Castlevania 64 WorldGen | ✅ Passed | 0 | 4.5 | 4.5 | 🟢 Complete | ✅ | ✅ |
@@ -57,7 +58,6 @@
 | Hylics 2 WorldGen | ✅ Passed | 0 | 7.2 | 7.2 | 🟢 Complete | ✅ | ✅ |
 | Inscryption WorldGen | ✅ Passed | 0 | 9.2 | 9.2 | 🟢 Complete | ✅ | ✅ |
 | Landstalker - The Treasures of King Nole WorldGen | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
-| Links Awakening DX WorldGen | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | ✅ | ✅ |
 | Lufia II Ancient Cave WorldGen | ✅ Passed | 0 | 4.11 | 4.11 | 🟢 Complete | ✅ | ✅ |
 | Mario & Luigi Superstar Saga WorldGen | ✅ Passed | 0 | 7.3 | 7.3 | 🟢 Complete | ✅ | ✅ |
 | Mega Man 2 WorldGen | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
@@ -68,7 +68,10 @@
 | Old School Runescape WorldGen | ✅ Passed | 0 | 7.5 | 7.5 | 🟢 Complete | ✅ | ✅ |
 | Overcooked! 2 WorldGen | ✅ Passed | 0 | 18.2 | 18.2 | 🟢 Complete | ✅ | ✅ |
 | Risk of Rain 2 WorldGen | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
+| Runner Sphere WorldGen | ✅ Passed | 0 | 2.1 | 2.1 | 🟢 Complete | ✅ | ✅ |
+| Runner WorldGen | ✅ Passed | 0 | 2.3 | 2.3 | 🟢 Complete | ✅ | ✅ |
 | Saving Princess WorldGen | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ✅ |
+| Seedling Playthrough WorldGen | ✅ Passed | 0 | 9.2 | 9.2 | 🟢 Complete | ✅ | ✅ |
 | Shivers WorldGen | ✅ Passed | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
 | Sonic Adventure 2 Battle WorldGen | ✅ Passed | 0 | 7.11 | 7.11 | 🟢 Complete | ✅ | ✅ |
 | Subnautica WorldGen | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
