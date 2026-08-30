@@ -149,6 +149,27 @@ describe('trap 1 — the teleport echo', () => {
         expect(types(effects)).toEqual(['warn']);
     });
 
+    it('⛔ the STALE arrival mark does not swallow the genuine return to that level', () => {
+        // ⛓ trap 961's shape, on the ARRIVAL half (slice P2 residue). The mark
+        // matches ONE level — and the level a teleport TARGETS is exactly the
+        // level the player comes back to through that same door. So with the
+        // equality tested before the age, an arrival that never landed and was
+        // never written off ate that return however much later it came, and
+        // the timeout beside it was decorative on the only report it could
+        // ever have applied to.
+        const b = binding();
+        load(b, OVERWORLD, null);
+        b.onStateReport('level', 0);
+        load(b, HOUSE, { exit_id: 'door' });   // arms level 86
+        expect(b.pendingArrival).toMatchObject({ level: 86 });
+        clock += ARRIVAL_ECHO_TIMEOUT_MS + 1;
+        // ⛔ THE MUTANT THIS ROW IS FOR: put `pendingArrival.level === level`
+        // back above the age check and this is `[]` — a silent swallow that
+        // looks exactly like a correct echo suppression.
+        expect(types(b.onStateReport('level', 86))).toEqual(['warn']);
+        expect(b.pendingArrival).toBeNull();
+    });
+
     it('swallows unrelated reports while an arrival is still in flight', () => {
         const b = binding();
         load(b, OVERWORLD, null);

@@ -93,6 +93,28 @@ position/level reports this consumer needs).
 Architecture, traps and the ruling history: `docs/json/developer/procgen/flash.md`
 and `CC/docs/plans/region-atlas-plan.md`.
 
+### The reset's boot position — and why its `source` row exists
+
+`seedlingRandomizerWiring`'s reset prefers **`SeedlingRegionBinding.lastSpawn` /
+`lastLevel`**: `Main.playerPositionX/Y` and `level`, the constructor's OWN
+arguments, which the binding already consumes off every declared report
+(`seedlingRegionBinding.js:333-334`). Preferring them takes the half-tile
+correction off the happy path entirely, and `lastLevel` is what ARMS the
+wrong-room guard. ⛔ **Read, never written** — this wiring does not touch the
+binding's state, so the dependency is one-directional and a parked binding
+cannot be corrupted by a reset.
+
+⚠ **THE FALLBACK IS SILENT, WHICH IS WHY THE `source` ROW IS NOT DECORATION.**
+When the binding has seen nothing — it drops every report while PARKED, and a
+preset with no sidecars may never have gone active — the position is derived
+from the ROSTER instead, less the map document's own `tile_size / 2`. That is
+correct arithmetic on an entity position rather than the argument that produced
+it, and downstream the two answers are indistinguishable: same shape, same
+fields, no error. So the reset reports **which one answered** —
+*"the binding's last declared playerPosition"* or *"the roster, less the map's
+half-tile (N)"* — and that row is the only thing standing between a guard armed
+off a declared level and a guard armed off a computation nobody checked.
+
 ## Wasm artifacts — the `seedling-wasm` submodule
 
 `wasm/` **is** the git submodule
