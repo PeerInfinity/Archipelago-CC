@@ -561,19 +561,18 @@
       "total": "success"
     },
     "roster: --win --tier=full": {
-      "value": "150 tapes @36b71996d, not separately banked by category",
+      "value": "150 tapes: campaign 26 791/0/69 @fc87a177f + map-walk 21 + mechanic 103 @36b71996d, not separately banked",
       "command": null,
       "kind": "identity",
       "cheap": false,
       "quoted": true,
-      "why": "DERIVED from the parts (⚖ 70 (c)) — campaign 26 tape(s) @36b71996d, not separately banked · map-walk 21 tape(s) @36b71996d, not separately banked · mechanic 103 tape(s) @36b71996d, not separately banked. Each part carries its OWN head: a category is owed a drive when the tree moved under IT, not when the tree moved at all. ⛓ Carried by: the `--full-roster` tier at 36b71996d, whose composite total ⚖ 69 (a) banked as 150 tapes 3641/0/120 (its 120-tape complement 2774/0/15).",
+      "why": "DERIVED from the parts (⚖ 70 (c)) — campaign 26 tape(s) 791/0/69 MEASURED @fc87a177f · map-walk 21 tape(s) @36b71996d, not separately banked · mechanic 103 tape(s) @36b71996d, not separately banked. Each part carries its OWN head: a category is owed a drive when the tree moved under IT, not when the tree moved at all. ⛓ Carried by: the `--full-roster` tier at 36b71996d, whose composite total ⚖ 69 (a) banked as 150 tapes 3641/0/120 (its 120-tape complement 2774/0/15).",
       "measuredAt": "36b71996d",
       "categories": {
         "campaign": {
           "tapes": 26,
-          "value": null,
-          "measuredAt": "36b71996d",
-          "coveredBy": "the `--full-roster` tier at 36b71996d, whose composite total ⚖ 69 (a) banked as 150 tapes 3641/0/120 (its 120-tape complement 2774/0/15)"
+          "value": "791/0/69",
+          "measuredAt": "fc87a177f"
         },
         "map-walk": {
           "tapes": 21,
