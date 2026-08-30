@@ -261,6 +261,33 @@ jobs:
           path: scripts/data/world-mapping-unofficial.json
           retention-days: 7
 
+      # WorldGen mode: only the whitelisted worldgen worlds are committed
+      # (scripts/data/template-exclude-list.json worldgen_generation_whitelist,
+      # 2026-08-30). Every other game's worldgen variant is generated here
+      # TRANSIENTLY, once, and shipped to the test shards as an artifact; the
+      # exclude file's blacklists (permanent + main + worldgen) apply as they
+      # do for test-world-generator.py. Nothing here is committed.
+      - name: Generate worldgen worlds (transient)
+        if: inputs.template_type == 'worldgen'
+        run: |
+          source .venv/bin/activate
+          python scripts/test/test-world-generator.py \
+            --seed ${{ inputs.start_seed }} \
+            --phase generate-test-worlds \
+            --canonical-seed 1 \
+            --skip-cleanup \
+            --no-backup \
+            --output-file scripts/output/world-generator/transient-worldgen-generation.json
+          echo "worldgen worlds on disk: $(ls -d worlds/*_worldgen | wc -l)"
+
+      - name: Upload worldgen worlds artifact
+        if: inputs.template_type == 'worldgen'
+        uses: actions/upload-artifact@v7.0.0
+        with:
+          name: worldgen-worlds
+          path: worlds/*_worldgen/
+          retention-days: 1
+
   # Minimal Spoiler Tests (10 parallel jobs)
   test-minimal-spoiler:
     name: Test Minimal Spoiler Split ${{ matrix.split_num }} (${{ inputs.template_type }})
@@ -320,6 +347,13 @@ jobs:
         with:
           name: custom-worlds
           path: custom_worlds/
+
+      - name: Download worldgen worlds artifact (transient)
+        if: inputs.template_type == 'worldgen'
+        uses: actions/download-artifact@v8.0.1
+        with:
+          name: worldgen-worlds
+          path: worlds/
 
       - name: Generate template files
         run: |
@@ -677,6 +711,13 @@ jobs:
           name: custom-worlds
           path: custom_worlds/
 
+      - name: Download worldgen worlds artifact (transient)
+        if: inputs.template_type == 'worldgen'
+        uses: actions/download-artifact@v8.0.1
+        with:
+          name: worldgen-worlds
+          path: worlds/
+
       - name: Generate template files
         run: |
           source .venv/bin/activate
@@ -987,6 +1028,13 @@ jobs:
           name: custom-worlds
           path: custom_worlds/
 
+      - name: Download worldgen worlds artifact (transient)
+        if: inputs.template_type == 'worldgen'
+        uses: actions/download-artifact@v8.0.1
+        with:
+          name: worldgen-worlds
+          path: worlds/
+
       - name: Generate template files
         run: |
           source .venv/bin/activate
@@ -1237,6 +1285,13 @@ jobs:
           name: custom-worlds
           path: custom_worlds/
 
+      - name: Download worldgen worlds artifact (transient)
+        if: inputs.template_type == 'worldgen'
+        uses: actions/download-artifact@v8.0.1
+        with:
+          name: worldgen-worlds
+          path: worlds/
+
       - name: Generate template files
         run: |
           source .venv/bin/activate
@@ -1460,6 +1515,13 @@ jobs:
         with:
           name: custom-worlds
           path: custom_worlds/
+
+      - name: Download worldgen worlds artifact (transient)
+        if: inputs.template_type == 'worldgen'
+        uses: actions/download-artifact@v8.0.1
+        with:
+          name: worldgen-worlds
+          path: worlds/
 
       - name: Generate template files
         run: |
