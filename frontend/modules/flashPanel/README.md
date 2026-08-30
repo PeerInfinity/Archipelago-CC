@@ -51,6 +51,22 @@ robotkitty_tilemap) that a regeneration would drop; re-add it after
 regenerating. The `seedling_atlas` preset is the exception: its block is
 **compiled** by `regionAtlasCompiler`, so regenerating it preserves the wiring.
 
+⚠⚠ **AND THE SEED-1 `seedling` PRESET'S BLOCK IS PROVISIONAL, NOT SETTLED**
+(⚖ user, 2026-08-30, via R9 session 12). Nothing on the PYTHON side emits it:
+`Generate.py` and the world writers know nothing about `flash_panel`, so the
+block survives only because nobody has regenerated that preset since it was
+typed in — and the next regeneration silently drops it, taking the panel's
+whole wiring with it. ⇒ treat it as a placeholder for a producer that does not
+exist yet: **when the randomizer becomes official, the PRODUCING side declares
+this block**, the way `regionAtlasCompiler` already does for `seedling_atlas`.
+Until then a preset regeneration is a two-step, and the second step is manual.
+⛔ Do not build anything that assumes the block is durable.
+
+⛓ The ONE code path that emits a `flash_panel` block today is
+`procgenPipeline/regionAtlasCompiler.js:161` — `FLASH_PANEL_WIRING.seedling`,
+the compiler's own wiring table. It is the only CODE source of the presets'
+wiring; every other block in `frontend/presets/` was written by hand.
+
 The module is enabled in the default module config (as of the region-atlas
 Phase-4 work) as well as in `modules-flash.json`. It stays idle — status "no
 game configured" — until the loaded rules carry a `flash_panel` section, so
@@ -145,14 +161,14 @@ names the first one that is false (plan §17.1, §17.5).
 
 > **A build is in the submodule iff a TRACKED file of this repo names it.**
 
-**ONE qualifies today**, and the number is the gate's, not this table's — run
+**THREE qualify today**, and the number is the gate's, not this table's — run
 `node scripts/procgen/check-seedling-wasm-pins.mjs` and it prints the count off
 four independent views.
 
 | build | named by |
 |---|---|
-| `seedling_bot_ap_p4c` | **every remaining default**: `seedlingDemo/watchWasm.js` (`WASM_PAGE`) and `watchEditor.js`, `procgenPipeline/regionAtlasCompiler.js`, `check-seedling-wasm-pages.mjs`'s `BUILD` literal, the `SEEDLING_PAGE` **default** of `verify-seedling-bot-differential.mjs`, of `check-seedling-{generated-set,save-stamp,vanilla-manifest}.mjs`, of `probe-seedling-level-set-transport.mjs` and of ~35 more `scripts/procgen/{probe,plan,solve,run,derive,rerecord}-seedling-*.mjs`, three verify rows, and the two TESTS that assert the name (`watchWasm.test.js`, `regionAtlasCompiler.test.js`). ⛓ **NOT the three seedling presets any more** — slice P1 moved their `flash_panel.wasm` to p4d. **54 tracked files, 75 lines** (59 / 85 counting `.md`) — RE-MEASURED 2026-08-29 with `git grep -ln <name> -- ':!*.md'` and `git grep -n`, never typed. ⚠ The row said *53 / 69* for two slices and neither number was reproducible by the command beside them: at `f5d7b43fc`, before P1 moved anything, it was **57 / 78**. Say which POPULATION a count is over — `.md` included or not is a 2-file, 7-line difference here |
-| `seedling_bot_ap_p4d` | **the three seedling presets' `flash_panel.wasm`** (moved here by slice P1, because the panel's randomizer wiring detects eligibility from a build's own `capabilities` and p4c declares none), and `verify-seedling-ap-placement.mjs`'s M1 rows. **6 tracked files, 6 lines** (`:!*.md`), 2026-08-29. ⛓ The ONLY build declaring `apitem` |
+| `seedling_bot_ap_p4c` | ⛔ **nothing names it as a DEFAULT any more — EDITOR INTEGRATION slice P2 moved the last one (⚖ user, 2026-08-30: *"I want to make p4d the default"*) — and it is now pinned in p4b's shape: by what it is a CONTROL for.** ⛓ **p4c is the only tracked build declaring NO `apitem`**, and two live discriminators rest on that absence, both in `scripts/procgen/verify-seedling-ap-placement.mjs`: H7's ABSENT/PRESENT pair (`Game.as`'s XML loop ignores an unknown `<apitem>`, so the AP tile reads EMPTY — that emptiness IS the claim) and P1-e's `panel-control-p4c` arm (the same preset with `flash_panel.wasm` patched back to a build declaring nothing; a lookup that ignored `capabilities` would read *eligible* there). ⛔ **THE LOAD-BEARING SPELLING IS THAT FILE'S `SEEDLING_PAGE` DEFAULT, AND IT IS GATED** — `check-seedling-wasm-pins.mjs` row (f) requires the control file's default to name a manifest build whose `capabilities` LACK `apitem`. ⇒ **whoever retires p4c MOVES that default to another `apitem`-less build; deleting it reds the gate.** ⚠ The only OTHER tracked spelling is `seedlingRandomizerEligibility.test.js`'s `buildNameFromWasmPath` fixture, which is INCIDENTAL — any build name would satisfy what it asserts, and MEASURED, it alone keeps the four views in agreement while the control walks away (the mutant that moved the control to p4d read 0 problems before row (f) existed, which is why row (f) exists). **2 tracked files, 3 lines** (`:!*.md`); **14 / 23** counting `.md`, which is mostly as-built prose about readings taken ON p4c and is NOT rewritten. RE-MEASURED 2026-08-30 at `f72271c15` with `git grep -ln <name> -- ':!*.md'` and `git grep -n`, never typed |
+| `seedling_bot_ap_p4d` | **EVERY DEFAULT, since EDITOR INTEGRATION slice P2** (⚖ user, 2026-08-30). The three seedling presets' `flash_panel.wasm` (moved by slice P1, because the panel's randomizer wiring detects eligibility from a build's own `capabilities`); `seedlingDemo/watchWasm.js`'s `WASM_PAGE` and `check-seedling-wasm-pages.mjs`'s `BUILD` literal, which are ONE fact spelled twice on purpose (that gate asserts the watch iframe's src against its own literal — importing it would be a fixed point); the `SEEDLING_PAGE` **default** of `verify-seedling-bot-differential.mjs`, of `check-seedling-{generated-set,save-stamp,vanilla-manifest}.mjs`, of `probe-seedling-level-set-transport.mjs` and of ~35 more `scripts/procgen/{probe,plan,solve,run,derive,rerecord}-seedling-*.mjs`; the ARTIFACT and iframe-src literals of `verify-seedling-{wasm-bridge,atlas-play}.mjs`, which follow the PRESET rather than a default of their own; `verify-seedling-ap-placement.mjs`'s M1 rows; and the two TESTS that assert a name (`watchWasm.test.js`, `regionAtlasCompiler.test.js`). ⛓ **The only CODE source of the presets' wiring is `procgenPipeline/regionAtlasCompiler.js:161`** (`FLASH_PANEL_WIRING.seedling`) — every other preset block is hand-added, see the ⚠ below. **57 tracked files, 77 lines** (`:!*.md`); 61 / 85 counting `.md`. RE-MEASURED 2026-08-30 at `f72271c15`. ⛓ The ONLY build declaring `apitem` |
 | `seedling_bot_ap_p4b` | ⛔ **nothing names it as a DEFAULT any more, and this table cell is the only thing holding its pin: `wasm/seedling_bot_ap_p4b/game.html`.** That path is written here DELIBERATELY, and saying so is the point — see below. ⛓ **R9 slice 12h: it is no longer a mere placeholder — p4b is the ONLY tracked build WITHOUT the `arm` capability, and two live corrections key on its absence** |
 
 ⛔⛔ **p4b's PIN IS HELD BY ONE LINE OF PROSE, ON PURPOSE, AND IT IS THE ONLY
@@ -189,6 +205,43 @@ a placeholder: it is the price of a control.**
 ⇒ The pin retires when the LAST consumer of `arm == null` does, not on a date.
 ⚠ Do not "tidy" the path out of this cell: the gate will red on the next commit,
 correctly, saying p4b is tracked and unnamed.
+
+⛓⛓⛓ **p4c → p4d ON 2026-08-30 (EDITOR INTEGRATION slice P2, ⚖ user: *"I want
+to make p4d the default"*), AND A DEFAULT MOVE IS NOT A RETIREMENT.** Two
+builds now hold pins by CONTROL rather than by use, for two different absent
+capabilities, and each has its own enforcement:
+
+| control | keyed on | held by | enforced by |
+|---|---|---|---|
+| `p4b` | no `arm` | this table's `wasm/seedling_bot_ap_p4b/game.html` — one line of PROSE | nothing but the general four-way law; `builds.json` does not declare `arm`, so no row can check WHICH build the two corrections' negative arm uses |
+| `p4c` | no `apitem` | `verify-seedling-ap-placement.mjs`'s `SEEDLING_PAGE` default | `check-seedling-wasm-pins.mjs` **row (f)** — the control file's default must name a build whose `capabilities` LACK `apitem` |
+
+⛔ **THE FOUR-WAY LAW ALONE COULD NOT HAVE PROTECTED p4c, AND THAT IS MEASURED
+RATHER THAN FEARED.** Move the control's default to p4d and views (a)-(e) stay
+in AGREEMENT — 0 problems — because
+`seedlingRandomizerEligibility.test.js`'s parsing fixture still spells p4c
+somewhere. A name-keyed law says *"somebody names it"*; it cannot say *"the
+right somebody names it"*. Row (f) says the second thing, and it is keyed on
+the CAPABILITY so that retiring p4c is still allowed — by MOVING the control,
+not by deleting it. ⚠ Take the lesson to p4b's row too: its cell is the only
+thing pinning p4b, and nothing checks that the two `arm == null` corrections
+still USE it.
+
+⛓ **THE LICENCE FOR THE DEFAULTS TO MOVE IS A MEASUREMENT, AND IT IS NOT
+RE-RUN PER SLICE.** p4d is p4c plus `Pickups/APItem.as`, the two report seams
+and the two getters — additions the vanilla XML loop never reaches. The
+differential gate's ORACLE recordings were made on the p4b/p4c lineages, so the
+question a default move asks is *"does p4d still agree with them?"*. The
+150-tape byte-inert sweep answers it: **149 tapes, 3,607 rows, 0 FAIL on p4d,
+`--win`** (plan §17.4.6). ⇒ moving the pages, the probes and the solvers onto
+p4d moves not one recorded observation.
+
+⚠ **THE SUBMODULE'S `builds.json` `namedBy` PROSE IS STALE AS OF THIS SLICE**,
+and knowingly: p4c's list still names `watchWasm.js`, `regionAtlasCompiler.js`,
+the pages gate and ~30 probes, all of which moved to p4d here. The gate checks
+`namedBy` for NON-EMPTINESS only, so nothing reds. It lives in
+`PeerInfinity/seedling-wasm` and this slice makes no submodule commit — it
+rides the next gitlink bump.
 
 ⛓ **p4b → p4c ON 2026-08-26 (R9 slice 12g′, ⚖ ruling 58's (F)).** One
 behavioural difference and it is an ARM TIME, not a game rule: `botStart` used

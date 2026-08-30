@@ -9,9 +9,20 @@
  * H7 rewrites the vanilla 116 so every AP location's pickup entity becomes an
  * `<apitem>`; H8 delivers that set through `botLoadLevels`/`botLevelSet`.
  * ⛔ **`Game.as`'s XML loop enumerates KNOWN element names** (`:2211-2279`), so
- * on **p4c** — the build that ships today — an unknown `<apitem>` is IGNORED.
- * ⇒ a rewritten room shows **NO pickup at all** at an AP location, and the
- * `APItem` that will stand there lands in M1's p4d.
+ * on **p4c** — the build declaring no `apitem` — an unknown `<apitem>` is
+ * IGNORED. ⇒ a rewritten room shows **NO pickup at all** at an AP location,
+ * and the `APItem` that stands there instead is M1's p4d.
+ *
+ * ⛔⛔ **SO `PAGE_NAME` BELOW IS A CONTROL, NOT A DEFAULT, AND IT IS THE LAST
+ * ONE LEFT ON p4c.** EDITOR INTEGRATION slice P2 (⚖ user, 2026-08-30) moved
+ * every other default in this repository onto p4d; this file kept p4c because
+ * the ABSENT half of the pair — and P1-e's `panel-control-p4c` arm — are
+ * claims about a build that LACKS the capability. Point it at p4d and both
+ * arms agree, the rows go green, and nothing is being tested.
+ * ⛓ `check-seedling-wasm-pins.mjs` **row (f)** gates exactly that: this
+ * file's `SEEDLING_PAGE` default must name a manifest build whose
+ * `capabilities` do not include `apitem`. Retiring p4c means MOVING this
+ * default to another such build, not deleting it.
  *
  * That absence is only evidence next to its control, so this instrument runs
  * the SAME page twice:
