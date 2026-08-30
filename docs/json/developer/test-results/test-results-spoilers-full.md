@@ -10,11 +10,11 @@
 
 [View WorldGen Template Results](./test-results-spoilers-full-worldgen.md)
 
-**Generated:** 2026-07-07 21:10:54 UTC
+**Generated:** 2026-08-30 18:12:52 UTC
 
 **Source Data Created:** 2026-06-27T22:33:10.932995+00:00
 
-**Source Data Last Updated:** 2026-07-07T21:10:50.072877+00:00
+**Source Data Last Updated:** 2026-07-07T21:10:55.044659+00:00
 
 ## Summary
 
@@ -50,7 +50,7 @@
 | Aquaria WorldGen | ✅ Passed | 0 | 4.19 | 4.19 | 🟢 Complete | ✅ | ✅ |
 | Baking Adventure | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
 | Baking Adventure WorldGen | ✅ Passed | 0 | 10.1 | 10.1 | 🟢 Complete | ✅ | ✅ |
-| Bomb Rush Cyberfunk | ✅ Passed | 0 | 10.18 | 10.18 | 🟢 Complete | 1.4KB | 40.3KB |
+| Bomb Rush Cyberfunk | ✅ Passed | 0 | 10.18 | 10.18 | 🟢 Complete | 1.4KB | ✅ |
 | Bounce Demo WorldGen | ✅ Passed | 0 | 3.1 | 3.1 | 🟢 Complete | ✅ | ✅ |
 | Bumper Stickers | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
 | Bumper Stickers WorldGen | ✅ Passed | 0 | 9.1 | 9.1 | 🟢 Complete | ✅ | ✅ |
@@ -94,7 +94,7 @@
 | Kirby's Dream Land 3 | ✅ Passed | 0 | 11.3 | 11.3 | 🟢 Complete | 10.1KB | ✅ |
 | Landstalker - The Treasures of King Nole | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | 3.6KB | ✅ |
 | Landstalker - The Treasures of King Nole WorldGen | ✅ Passed | 0 | 11.1 | 11.1 | 🟢 Complete | ✅ | ✅ |
-| Lingo | ✅ Passed | 0 | 6.12 | 6.12 | 🟢 Complete | 38.2KB | 10.7KB |
+| Lingo | ✅ Passed | 0 | 6.12 | 6.12 | 🟢 Complete | 38.2KB | ✅ |
 | Links Awakening DX | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | 7.3KB | ✅ |
 | Links Awakening DX WorldGen | ✅ Passed | 0 | 15.1 | 15.1 | 🟢 Complete | ✅ | ✅ |
 | Lufia II Ancient Cave | ✅ Passed | 0 | 4.16 | 4.16 | 🟢 Complete | ✅ | ✅ |
@@ -126,13 +126,13 @@
 | Satisfactory | ✅ Passed | 0 | 24.1 | 24.1 | 🟢 Complete | 41.8KB | ✅ |
 | Saving Princess | ✅ Passed | 0 | 5.3 | 5.3 | 🟢 Complete | ✅ | ✅ |
 | Saving Princess WorldGen | ❌ Failed | 0 | 0.1 | 5.3 | 🟠 1.9% | ✅ | ✅ |
-| Secret of Evermore | ✅ Passed | 0 | 5.19 | 5.19 | 🟢 Complete | 5.6KB | 7.5KB |
+| Secret of Evermore | ✅ Passed | 0 | 5.19 | 5.19 | 🟢 Complete | 5.6KB | ✅ |
 | Seedling | ✅ Passed | 0 | 5.1 | 5.1 | 🟢 Complete | ✅ | ✅ |
 | Shivers | ✅ Passed | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
 | Shivers WorldGen | ✅ Passed | 0 | 17.1 | 17.1 | 🟢 Complete | ✅ | ✅ |
 | Sonic Adventure 2 Battle | ✅ Passed | 0 | 7.18 | 7.18 | 🟢 Complete | ✅ | ✅ |
 | Sonic Adventure 2 Battle WorldGen | ❌ Failed | 0 | 0.9 | 7.18 | 🟠 12.5% | ✅ | ✅ |
-| Starcraft 2 | ✅ Passed | 0 | 15.14 | 15.14 | 🟢 Complete | 29.3KB | 90.1KB |
+| Starcraft 2 | ✅ Passed | 0 | 15.14 | 15.14 | 🟢 Complete | 29.3KB | ✅ |
 | Subnautica | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | 2.2KB | ✅ |
 | Subnautica WorldGen | ✅ Passed | 0 | 6.1 | 6.1 | 🟢 Complete | ✅ | ✅ |
 | Super Mario 64 | ✅ Passed | 0 | 5.5 | 5.5 | 🟢 Complete | ✅ | ✅ |
@@ -141,7 +141,7 @@
 | Super Mario Land 2 WorldGen | ❌ Failed | 0 | 3.4 | 10.1 | 🟡 33.7% | ✅ | ✅ |
 | Super Mario World | ✅ Passed | 0 | 8.12 | 8.12 | 🟢 Complete | ✅ | ✅ |
 | Super Mario World WorldGen | ✅ Passed | 0 | 8.12 | 8.12 | 🟢 Complete | ✅ | ✅ |
-| Super Metroid | ✅ Passed | 0 | 7.3 | 7.3 | 🟢 Complete | 61.0KB | 119.4KB |
+| Super Metroid | ✅ Passed | 0 | 7.3 | 7.3 | 🟢 Complete | 61.0KB | ✅ |
 | TOEM original | ✅ Passed | 0 | 3.66 | 3.66 | 🟢 Complete | 0.6KB | ✅ |
 | TOEM original WorldGen | ✅ Passed | 0 | 3.66 | 3.66 | 🟢 Complete | ✅ | ✅ |
 | TOEM rule builder | ✅ Passed | 0 | 3.66 | 3.66 | 🟢 Complete | 0.5KB | ✅ |
