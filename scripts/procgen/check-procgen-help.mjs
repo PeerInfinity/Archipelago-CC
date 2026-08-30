@@ -120,6 +120,12 @@
  * `scripts/procgen/` paths a dirty primary tree is hiding from the run.
  * `--in-place` is the escape hatch and preserves the old behaviour exactly.
  *
+ * ⛓ THAT INCLUDES THIS GATE. Its own two doors are measured on the WORKTREE's
+ * copy, so an edit to `check-procgen-help.mjs` is not self-tested until it is
+ * committed — the uniform rule applied to the file it is written in, rather
+ * than a self-exception that would make a second population rule. The dirty
+ * warning names this file like any other instrument; `--in-place` measures it.
+ *
  * ⛓ THE SUBMODULES ARE NOT OPTIONAL AND THE INIT IS ASSERTED, not trusted.
  * A cold worktree has none, and several instruments guard on
  * `existsSync(<artifact>/game.html)`: without the submodule they print SKIP
@@ -363,6 +369,19 @@ if (!IN_PLACE) {
      * `node_modules` under `frontend/libs/` and `iframe_games/`) are NOT
      * linked: an instrument that needs gitignored CONTENT at import time is
      * doing work at import, which is the finding this gate exists to make.
+     *
+     * ⛔ TWO PROPERTIES OF THE LINK THAT ARE DELIBERATE, so the next reader
+     * does not "improve" them:
+     *   · `newerThan` runs `find` WITHOUT `-L`, so the mtime sweep does not
+     *     descend through this symlink. Adding `-L` would sweep the primary
+     *     tree's `node_modules` on every batch — slow, and it would report the
+     *     hole below as a finding on whichever row happened to be running.
+     *   · a child that WRITES through the link writes into the PRIMARY tree's
+     *     `node_modules`. That hole is pre-existing and has always been
+     *     unobserved (the path is out of the porcelain and out of the sweep),
+     *     but under a worktree it now CROSSES TREES, which is worth knowing
+     *     before someone reads "the droppings die with the worktree" as
+     *     covering every byte a child can write.
      */
     const modules = join(REPO, 'node_modules');
     if (existsSync(modules)) symlinkSync(modules, join(WORKTREE, 'node_modules'), 'dir');
