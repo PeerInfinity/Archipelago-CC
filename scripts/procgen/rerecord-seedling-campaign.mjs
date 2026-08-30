@@ -436,6 +436,20 @@ async function buildContext(overrides = {}) {
         try { text = gitShow(ctx, ref, rel); } catch { return null; }
         return JSON.stringify(ctx.gameVisibleTape(ctx.parseTape(JSON.parse(text))));
     });
+    /**
+     * ⛓ ⚖ 68 — a tape's `rng.split` AT A REF, or `null` when the ref has no such
+     * tape. S0 reads it to see a chain-wide rng DECLARATION flip, which moves
+     * every successor's boot from the head (the latch's gameplay seed and
+     * cosmetic state both change once the sound draws land on the cosmetic
+     * stream) — a mover neither the timed-clear hazard nor a walk cascade can
+     * see.
+     */
+    ctx.rngSplitAt = overrides.rngSplitAt ?? ((ref, label) => {
+        const rel = relative(ctx.root, join(ctx.tapesDir, `${label}.json`));
+        let text;
+        try { text = gitShow(ctx, ref, rel); } catch { return null; }
+        return Boolean(ctx.parseTape(JSON.parse(text)).rng?.split);
+    });
     ctx.projectionsAt = (ref) => {
         const texts = new Map();
         for (const label of ctx.allTapeLabels()) {
@@ -704,6 +718,18 @@ async function predict(ctx) {
             : ', walk-accounting only'})`).join(' · '));
 
     const table = [];
+    /**
+     * ⛓⛓⛓ ⚖ 68 (R9 slice L15) — A CHAIN-WIDE RNG DECLARATION FLIP IS A
+     * HAZARD AT ITS FIRST SEGMENT. When a segment's `rng.split` differs from
+     * the BASELINE's, the game's latch after it carries a different gameplay
+     * seed and cosmetic state (the sound-index draws changed stream), so every
+     * successor's boot moves and every tick-0 block from the flip on is
+     * re-derived — the four PROMOTED rows included, which sit before the first
+     * timed-clear hazard and used to read `none`. Measured: the B-narrow run
+     * at 14e7370f3 refused r8-solve-2..5 at S1 as "moved and predicted none"
+     * before this rule existed.
+     */
+    const baselineRef = ctx.resolveBaseline(BASELINE).ref;
     for (const chain of chains) {
         /**
          * ⛔⛔ THE PREDICTION RULE, AND IT IS A CONSEQUENCE OF ⚖ RULING 23
@@ -721,17 +747,28 @@ async function predict(ctx) {
          * STOP and a finding, not a licence.
          */
         let firstHazard = -1;
+        let firstFlip = -1;
         const rows = chain.segments.map((name, i) => {
             const t = ctx.tapeOf(name);
             const hazard = timedClearHazard(t, i);
             const ownTimed = hazard.ownRoom.length > 0;
             if (ownTimed && firstHazard === -1) firstHazard = i;
-            return { name, i, t, hazard, ownTimed };
+            const baseSplit = ctx.rngSplitAt(baselineRef, name);
+            const flipped = baseSplit !== null && Boolean(t.rng?.split) !== baseSplit;
+            if (flipped && firstFlip === -1) firstFlip = i;
+            return { name, i, t, hazard, ownTimed, flipped };
         });
+        if (firstFlip !== -1) {
+            console.log(`## ⚖ 68: \`rng.split\` flips at segment ${firstFlip + 1} `
+                + `(${chain.segments[firstFlip]}) against the baseline — every successor's `
+                + 'boot and every tick-0 block from there are re-derived');
+        }
         for (const r of rows) {
             const posture = ctx.rngPostureForBootLevel(r.t.boot.level, ctx.atlasLevelSource());
-            const bootMoves = firstHazard !== -1 && r.i > firstHazard;
-            const tick0Moves = bootMoves || r.ownTimed;
+            // ⛔ `>=`, not `>`: the flip row's OWN projection moved (its declaration).
+            const afterFlip = firstFlip !== -1 && r.i >= firstFlip;
+            const bootMoves = (firstHazard !== -1 && r.i > firstHazard) || afterFlip;
+            const tick0Moves = bootMoves || r.ownTimed || (firstFlip !== -1 && r.i >= firstFlip);
             table.push({
                 chain: chain.id,
                 segment: r.name,
@@ -749,7 +786,11 @@ async function predict(ctx) {
                 posture: { comparable: posture.comparable, verdict: posture.verdict },
                 verdict: bootMoves ? 'boot-only' : 'none',
                 tick0Rederived: tick0Moves,
-                why: bootMoves
+                why: afterFlip
+                    ? `${r.i === firstFlip ? 'at' : 'downstream of'} ${chain.segments[firstFlip]}, where \`rng.split\` flips `
+                        + 'against the baseline (⚖ 68) — the latch\'s gameplay seed and '
+                        + 'cosmetic state both move once the sound draws change stream'
+                    : bootMoves
                     ? `downstream of ${chain.segments[firstHazard]}, whose fresh-page exit `
                         + 'is re-measured under ⚖ ruling 23'
                     : r.ownTimed
