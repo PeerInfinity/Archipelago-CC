@@ -130,10 +130,48 @@ import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp } from './argvHelp.js';
 
 argvHelp(import.meta.url);
-takeBoxLockOrExit({ name: 'verify-seedling-bot-differential.mjs', kind: 'windows' });
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
+
+const {
+    LEGACY_ONLY_LEVELS, LEGACY_TAPES, ROSTER_CATEGORIES, TIERS, assertTiersComplete,
+    tapesInTier, tapesInTiers,
+} = await import(join(REPO, 'frontend/modules/seedlingDemo/fixtures/tiers.js'));
+
+/**
+ * ⛓⛓ R9 slice CAT — `--tier=` IS PARSED AND VALIDATED **BEFORE THE BOX LOCK**,
+ * and the reason is a measurement: with the box held by another session, a
+ * misspelled `--tier=mechnic` did not print its refusal at all — it printed
+ * ⛔ THE BOX IS TAKEN and exited 1, because the lock was taken twenty lines
+ * above the parse. An argument error must never queue for a GPU, and a
+ * refusal a reader cannot see is a refusal that teaches nothing.
+ *
+ * ⛓ R9 slice CAT (⚖ 69 (c) / ⚖ 70 (b)) — `--tier=` ALSO TAKES THE THREE
+ * DERIVED CATEGORIES, AND A COMMA LIST OF THEM. The user's direction is that
+ * the full tier runs only for what can be tested no other way; everything
+ * else re-drives the categories its reach names. That is a SELECTION, so it
+ * belongs on the flag the sweep already has rather than in a second one.
+ * `fast`, `gate`, `legacy` and `full` keep their meanings exactly.
+ *
+ * ⛔ AN UNKNOWN NAME IS REFUSED BY NAME. A comma list that quietly dropped a
+ * misspelling would run a SMALLER sweep and print the same green — the shape
+ * `--only`'s own unknown-name check exists for.
+ */
+const TIER_ARG = process.argv.filter((a) => a.startsWith('--tier='))
+    .map((a) => a.slice('--tier='.length).trim()).pop();
+const TIER = TIER_ARG ?? 'full';
+const TIER_LIST = TIER.split(',').map((t) => t.trim()).filter(Boolean);
+const CATEGORY_TIER = TIER_LIST.length > 0 && TIER_LIST.every((t) => ROSTER_CATEGORIES.includes(t));
+if (!CATEGORY_TIER && !Object.keys(TIERS).includes(TIER)) {
+    const unknown = TIER_LIST.filter((t) => !Object.keys(TIERS).includes(t));
+    console.error(`--tier must be one of ${Object.keys(TIERS).join(', ')} — or a comma list `
+        + `of the categories (${ROSTER_CATEGORIES.join(', ')}); got "${TIER}"`
+        + `${unknown.length ? ` (unknown: ${unknown.join(', ')})` : ''}`);
+    process.exit(1);
+}
+
+takeBoxLockOrExit({ name: 'verify-seedling-bot-differential.mjs', kind: 'windows' });
 
 // ⛓ OVERRIDABLE SINCE PHASE 3b of the external-level-sets plan, on the
 // precedent `probe-seedling-level-set-transport.mjs` set: a slice that changes
@@ -181,9 +219,8 @@ const {
 const {
     EXPECTATIONS_DIR, fixtureNames, loadExpectation, loadTape,
 } = await import(join(REPO, 'frontend/modules/seedlingDemo/fixtures/index.js'));
-const {
-    LEGACY_ONLY_LEVELS, LEGACY_TAPES, TIERS, assertTiersComplete, tapesInTier,
-} = await import(join(REPO, 'frontend/modules/seedlingDemo/fixtures/tiers.js'));
+// ⛓ `fixtures/tiers.js` is imported ABOVE the box lock — `--tier=` is
+// validated before anything queues for the GPU.
 // ⛓ R7 slice 1: the seam latch's consumer, DERIVED by mapping the signature
 // over the game's `botSeam()` envelope. The findings function lives beside
 // the signature it maps, so a row added there cannot go unreported here.
@@ -449,17 +486,7 @@ function readPayload(name) {
  * a fast tier that silently stops covering the thing you just wrote.
  * `feedback_coincidental_predicate_rots`, avoided by construction.
  */
-const TIER_ARG = process.argv.filter((a) => a.startsWith('--tier='))
-    .map((a) => a.slice('--tier='.length).trim()).pop();
-const TIER = TIER_ARG ?? 'full';
-// ⛓ R6 slice 0 added `gate` and `legacy` (the ruled roster trim). `full`
-// still means EVERYTHING — the pre-push gate was not narrowed, and the
-// demotion only leaves the per-slice `gate`. See `fixtures/tiers.js` for
-// the evidence the list rests on and the coverage it names as leaving.
-if (!Object.keys(TIERS).includes(TIER)) {
-    console.error(`--tier must be one of ${Object.keys(TIERS).join(', ')}, got "${TIER}"`);
-    process.exit(1);
-}
+// ⛓ `--tier=` is parsed and validated above the box lock (R9 slice CAT).
 /** A tape longer than this is FULL-tier only. The R1 segments start at 910. */
 const FAST_TIER_MAX_TICKS = 600;
 const WIN_SCRATCH_WSL = '/mnt/c/playwright';
@@ -1900,9 +1927,11 @@ try {
     // exactly like one that works, so the check must not be reachable only
     // from the tier that uses it. See `fixtures/tiers.js`.
     try {
-        assertTiersComplete(allNames);
+        const { categories } = assertTiersComplete(allNames);
         check('the tier assignment still names real fixtures',
-            true, `${LEGACY_TAPES.length} legacy, ${allNames.length - LEGACY_TAPES.length} gate`);
+            true, `${LEGACY_TAPES.length} legacy, ${allNames.length - LEGACY_TAPES.length} gate`
+            + `; the three DERIVED categories PARTITION the roster — `
+            + `${ROSTER_CATEGORIES.map((c) => `${categories[c].length} ${c}`).join(', ')}`);
     } catch (e) {
         check('the tier assignment still names real fixtures', false, e.message);
     }
@@ -1933,12 +1962,32 @@ try {
         // reporting green. Say what was not run and how to run it.
         console.log(`TIER fast: ${names.length} tape(s); DEFERRED to --tier=full `
             + `(> ${FAST_TIER_MAX_TICKS} ticks): ${deferred.join(', ')}`);
+    } else if (CATEGORY_TIER && ONLY.size === 0) {
+        /**
+         * ⛓ R9 slice CAT — a CATEGORY sweep. It names what it did NOT run,
+         * exactly as `gate` does: a tier that quietly dropped tapes reads as
+         * "everything passed", which is the same shape as a truncated roster
+         * reporting green.
+         */
+        names = tapesInTiers(TIER_LIST, allNames);
+        const cats = assertTiersComplete(allNames).categories;
+        const notRun = ROSTER_CATEGORIES.filter((c) => !TIER_LIST.includes(c));
+        console.log(`TIER ${TIER_LIST.join(' + ')}: ${names.length} tape(s) of `
+            + `${allNames.length}; NOT RUN HERE — `
+            + `${notRun.map((c) => `${c} (${cats[c].length})`).join(', ') || 'nothing'}`
+            + `. Run them with --tier=${notRun.join(',') || 'full'} or --tier=full.`);
     } else if ((TIER === 'gate' || TIER === 'legacy') && ONLY.size === 0) {
         names = tapesInTier(TIER, allNames);
         const skipped = allNames.filter((n) => !names.includes(n));
         console.log(`TIER ${TIER}: ${names.length} tape(s); NOT RUN HERE `
             + `(run them with --tier=${TIER === 'gate' ? 'legacy' : 'gate'} or `
             + `--tier=full): ${skipped.join(', ')}`);
+        if (TIER === 'legacy') {
+            // ⛓ R9 slice CAT — the alias survives one slice and announces it.
+            console.log('  ⚠ `--tier=legacy` is DEPRECATED: it is `LEGACY_TAPES` ∩ `map-walk`, '
+                + 'and `assertTiersComplete` proves that is `LEGACY_TAPES` itself. Ask for '
+                + '`--tier=map-walk` to drive the whole hand-walk category.');
+        }
         if (TIER === 'gate') {
             // ⚠ The coverage the demotion bounded, restated on every run that
             // benefits from it. A bounded sweep must name what it bounded,

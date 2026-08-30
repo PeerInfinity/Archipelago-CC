@@ -273,6 +273,20 @@ export function rosterCategories(rosterNames) {
             out[category].push(name);
         }
     }
+    /**
+     * ⛔ EVERY CATEGORY COMES BACK IN **ROSTER ORDER**, and it is not
+     * cosmetic: `--tier=full` sweeps `rosterNames` in that order, so a
+     * category returned in DERIVATION order would drive the same tapes in a
+     * different sequence from the run its numbers are compared against. It
+     * also made the two spellings of "the tapes in category C" disagree —
+     * `tapesInTier` handed back the derivation's order and `tapesInTiers`
+     * the roster's, which a test caught the first time both were asked the
+     * same question.
+     */
+    for (const category of ['campaign', 'map-walk']) {
+        const claimed = new Set(out[category]);
+        out[category] = rosterNames.filter((n) => claimed.has(n));
+    }
     out.mechanic = rosterNames.filter((n) => !seen.has(n));
     const total = out.campaign.length + out['map-walk'].length + out.mechanic.length;
     if (total !== rosterNames.length) {
