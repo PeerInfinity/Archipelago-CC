@@ -195,6 +195,32 @@ Run each **once**. If a code fix forces a re-run, just re-dispatch — the squas
 merge-back (next step) keeps `main` clean regardless of how many runs `generated-presets`
 accumulated.
 
+**What each mode is actually for — and when one `merge` run is enough.** A
+`merge` run on its own already lands *both* the additions and the deletions:
+it merges `origin/main` into the branch (so the branch tree *is* main's tree),
+`clean_existing` wipes `frontend/presets/` and `worlds/*_worldgen*` from that
+tree, the script regenerates the generation set, and the `Generate presets`
+commit stages the new files **and** the deletion of everything it did not
+regenerate. The squash merge-back copies the branch's tree, so `main` gets
+exactly that. `reset` exists for one specific problem: **zombie files** — files
+the branch still carries that `main` deleted long ago and that no step
+regenerates or removes (the "Remove files deleted on main" step only sees
+deletions newer than the merge base). Measure before spending a run:
+
+```bash
+git fetch origin generated-presets
+# Anything the branch has that main does not, outside the regenerated trees:
+git diff --name-status origin/main origin/generated-presets -- . \
+  ':(exclude)frontend/presets/' ':(exclude)worlds/' | grep '^A'
+git merge-base --is-ancestor origin/main origin/generated-presets && echo ancestor
+```
+
+Zero `A` lines and `ancestor` ⇒ a single `merge` run suffices (2026-08-30:
+0 zombies after the baseline run; only `world-mapping.json`,
+`scripts/output/world-generator/test-results.json` and
+`generated_commands.sh` differed, all regenerated). Any `A` line ⇒ run
+`reset` first.
+
 Review the merge run's logs for error floods (`gh run view --log-failed`).
 Known-clean release signatures: 0 "Failed to analyze or expand rule", no
 worldgen2 `KeyError`/`FillError`, no Pickle/Seedling errors.
