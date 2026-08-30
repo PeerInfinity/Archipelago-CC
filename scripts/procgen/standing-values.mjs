@@ -23,6 +23,14 @@
  *   node scripts/procgen/standing-values.mjs --quote        print the block a
  *                                                           handshake used to
  *                                                           re-type
+ *   node scripts/procgen/standing-values.mjs --keys         every keyed row's
+ *                                                           INPUT KEY and its
+ *                                                           four populations,
+ *                                                           against the bank
+ *                                                           (box-free)
+ *   node scripts/procgen/standing-values.mjs --write --rekey
+ *   node scripts/procgen/standing-values.mjs --write --force-row='gate: x'
+ *   node scripts/procgen/standing-values.mjs --write --redrive-unchanged
  *
  *   --host=<origin>   the repo-root dev server the gate rows are pointed at
  *   --only=<substr>   restrict to matching keys
@@ -49,16 +57,46 @@
  * out of the `JavaScript Unit Tests` job log for a pushed head, and the row is
  * `alwaysQuoted` so `--check` prints it rather than re-reading it. A local
  * vitest run is now BOUNDED to the files a slice touched.
+ *
+ * ⚖ **R9 RULING 71 (a) (user, 2026-08-30): A GATE ROW RE-RUNS AT `--write`
+ * ONLY WHEN ITS INPUT BYTES MOVED.** Four rows are 68 % of a 56.8-minute
+ * battery and a `--write` paid all four every time, whether or not anything
+ * they measure had changed. Each keyed row now carries an `inputKey` over its
+ * four enumerated input populations (`rowInputKey.js` — CODE / DATA / SPAWN /
+ * BUILD); a `--write` re-runs the row iff that key moved since the banked one,
+ * and an unchanged key CARRIES THE BANKED VALUE FORWARD SAYING SO — its own
+ * `measuredAt` kept, `quotedAtKey` naming the head at which the key was
+ * confirmed unmoved. This is ⚖ 70's pattern ("re-drive what the reach names,
+ * quote the rest, saying so") moved from tape categories to gate rows.
+ *
+ * ⛔⛔ **`cheap` AND THE KEY ARE NOT COUPLED, AND MUST NOT BE.** `cheap`
+ * governs `--check`: a cheap row re-runs on every check regardless of its key,
+ * because a check is how a slice notices its own tree moved under it. The KEY
+ * governs `--write`. They answer different questions ("can a slice afford to
+ * re-run this?" vs "is the banked answer still an answer about these bytes?")
+ * and one field doing both would silently drop the cheaper of the two duties.
+ *
+ * ⛔ **THE STALE-GREEN RISK IS REAL AND HAS THREE MITIGATIONS**, all built:
+ * the populations are PRINTED per row (counts + digests, so "what did this key
+ * cover" is answerable from the log); `--redrive-unchanged` re-runs at an
+ * unchanged key and a moved verdict is a NAMED nondeterminism finding that
+ * exits non-zero rather than a silent re-bank (trap 866); `--rekey` and
+ * `--force-row=` re-measure on the user's word. `rowInputKey.js`'s docblock
+ * carries the same three sentences beside the derivation they are about.
  */
 
-import { writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { assertTreeUnmoved, releaseBoxLock, takeBoxLock } from './boxLock.js';
 import { LOCAL_HOST, REPO, gateRoster } from './gateRoster.js';
 import {
+    bankedPopulations, keyContext, keyInputsIn, keyReportLines, nondeterminismFinding,
+    rowInputKey, rowRunDecision,
+} from './rowInputKey.js';
+import {
     CHEAP_MS, FILE, ciGateCommand, ciSourced, cheapFor, compositeValue, compositeWhy, head,
-    missingScript, readStandingValues, runRow, standingRows,
+    missingScript, readStandingValues, runRow, scriptIn, standingRows,
 } from './standingValues.js';
 
 
@@ -82,6 +120,21 @@ const JSON_OUT = flag('json');
  * queues instead of refusing.
  */
 const WAIT_FOR_BOX = Number(arg('wait-for-box', '0')) || 0;
+
+/**
+ * ⚖ 71 (a) — the three ways a keyed row is re-measured anyway.
+ *
+ * `--rekey`             every selected row re-runs and re-banks its key.
+ * `--force-row=<key>`   ONE row does, matched exactly, like `--key=`.
+ * `--redrive-unchanged` THE DETECTOR ARM: re-run rows whose key is UNCHANGED
+ *                       on purpose, so that a moved verdict at unmoved bytes
+ *                       becomes a NAMED finding (trap 866). It is spelled as
+ *                       its own flag because the finding is the POINT of the
+ *                       run, not a side effect of one.
+ */
+const REKEY = flag('rekey');
+const REDRIVE_UNCHANGED = flag('redrive-unchanged');
+const FORCE_ROW = arg('force-row', '');
 
 /** ⛓ The ONE selection rule, so `--check`'s row-list half cannot drift from
  *  the row list it is checking. `--key=` is exact; `--only=` is a substring. */
@@ -114,6 +167,78 @@ if (flag('list')) {
     process.exit(0);
 }
 
+/**
+ * ⛓ R9 P3b (g) — which gate FILES are headless, derived once. A standing
+ * row is matched to its gate by the command naming the file, which is the
+ * same join `missingScript` makes.
+ */
+const GATES = gateRoster({ repo: REPO });
+const headlessFiles = new Set(GATES.filter((g) => !g.browser && !g.windows).map((g) => g.path));
+/**
+ * ⛓ R9 P4b (D) — the gate a row's command names, so `ciSourced` can read
+ * that gate's `@ci-face` declaration. ⛔ Derived from the roster, never a
+ * list here: the declaration lives in the gate's own docblock and this is
+ * only the lookup.
+ */
+const gateOf = (command) => GATES.find((g) => command.includes(g.path)) ?? null;
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⚖ 71 (a) — THE INPUT KEY
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛔⛔ WHY A ROW MAY NOT BE KEYED — and every clause is DERIVED from what the
+ * row and its gate already say, never a list of exceptions here (⚖ 17).
+ *
+ * · a row that is not a GATE row. The identity and producer rows are md5s of
+ *   a producer's own `--check` and cost seconds; keying them would buy a
+ *   second failure mode for no time at all.
+ * · an `alwaysQuoted` or CI-SOURCED row. Its recipe already reads CI by SHA —
+ *   its "inputs" are a pushed head and a job log, which are not bytes in this
+ *   tree, and the writer's KEEP branch already owns that case.
+ * · a row whose command names a REMOTE ORIGIN (`--pages=`). Its subject is
+ *   the published site: a byte key over this checkout would be a key over the
+ *   wrong tree, which is the stale green wearing a derivation. ⛓ At this head
+ *   the local arms carry no `--pages=` and this selects ZERO rows — a STATED
+ *   zero, printed by `--keys`, armed for the day a live row is banked.
+ * · a gate that DECLARES itself unkeyable, with its reason.
+ */
+function unkeyableReason(row, { declared, fromCI }) {
+    if (row.kind !== 'gate') return `not a gate row (kind: ${row.kind})`;
+    if (row.alwaysQuoted || fromCI) return 'its recipe already reads CI by SHA';
+    if (/--pages=/.test(row.command)) {
+        return 'its command names a REMOTE ORIGIN (--pages=) — no byte of this tree is its '
+            + 'subject';
+    }
+    if (declared?.unkeyable) return `declared by the gate: ${declared.unkeyable}`;
+    if (!scriptIn(row.command)) return 'its command names no script in this directory';
+    return null;
+}
+
+/** ⛓ The graph, the tracked set and every digest cache — built ONCE for a
+ *  whole battery. Per row it is ~0.15 s; building it per row would pay the
+ *  2 s graph thirty-three times. */
+let KEY_CTX = null;
+const keyCtx = () => (KEY_CTX ??= keyContext({ repo: REPO }));
+
+/**
+ * One row's key report, or an unkeyable one carrying the reason.
+ *
+ * ⛓ The gate's `@key-inputs` declaration is read HERE and passed down, so
+ * `rowInputKey` stays a pure function of (entry, declaration, context) and a
+ * unit test can hand it a declaration no file on disk carries.
+ */
+function keyReportFor(row, { fromCI = false } = {}) {
+    const gate = gateOf(row.command);
+    let declared = null;
+    if (gate) {
+        declared = keyInputsIn(readFileSync(join(REPO, gate.path), 'utf8'), { file: gate.path });
+    }
+    const why = unkeyableReason(row, { declared, fromCI });
+    if (why) return { key: null, unkeyable: why, populations: [], entry: scriptIn(row.command) };
+    return rowInputKey({ entry: scriptIn(row.command), declared, ctx: keyCtx() });
+}
+
 const existing = readStandingValues();
 
 if (flag('quote')) {
@@ -124,6 +249,57 @@ if (flag('quote')) {
             + `${row.measuredAt !== existing.measuredAt ? `   @${row.measuredAt}` : ''}`
             + `${row.quoted ? '   ⛓ QUOTED' : ''}`);
     }
+    process.exit(0);
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * --keys — the INPUT KEY of every selected row, against the bank
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓⛓⛓ **MITIGATION 1, AS A COMMAND.** The three risks of a byte key are all
+ * "the key missed an input", and the only defence a reader can act on is being
+ * able to ASK what a key covered. This is that question, it takes NO BOX and
+ * it moves no file — which is also what makes it the instrument every ⚖ 71 (a)
+ * mutant is scored on: touch one member of one population, run this, and the
+ * key either moved or the population did not contain what you thought.
+ */
+if (flag('keys')) {
+    const report = [];
+    let unkeyable = 0;
+    for (const row of ROWS) {
+        const prev = existing?.rows?.[row.key];
+        const headless = row.kind === 'gate'
+            && [...headlessFiles].some((f) => row.command.includes(f));
+        const fromCI = ciSourced({
+            headless, cheap: prev?.cheap, ciFace: gateOf(row.command)?.ciFace ?? null,
+        });
+        const r = keyReportFor(row, { fromCI });
+        if (r.unkeyable) {
+            unkeyable += 1;
+            console.log(`UNKEYED  ${row.key.padEnd(46)} — ${r.unkeyable}`);
+            report.push({ key: row.key, inputKey: null, unkeyable: r.unkeyable });
+            continue;
+        }
+        const banked = prev?.inputKey ?? null;
+        const verdict = banked === null ? 'NO BANKED KEY' : (banked === r.key ? 'unmoved' : 'MOVED');
+        const label = { unmoved: 'same ', MOVED: 'MOVED', 'NO BANKED KEY': 'NEW  ' }[verdict];
+        console.log(`${label}    ${row.key.padEnd(46)} `
+            + `${r.key}${banked && banked !== r.key ? `   was ${banked}` : ''}`
+            + `${banked === null ? '   (nothing banked)' : ''}`);
+        console.log(keyReportLines(r).join('\n'));
+        report.push({ key: row.key,
+            inputKey: r.key,
+            banked,
+            verdict,
+            populations: bankedPopulations(r) });
+    }
+    const moved = report.filter((r) => r.verdict === 'MOVED').length;
+    const fresh = report.filter((r) => r.verdict === 'NO BANKED KEY').length;
+    console.log(`\n${ROWS.length} row(s) at ${HEAD ?? '(no head)'} — ${moved} MOVED, `
+        + `${report.length - moved - fresh - unkeyable} unmoved, ${fresh} with nothing banked, `
+        + `${unkeyable} unkeyable`);
+    if (JSON_OUT) console.log(JSON.stringify({ head: HEAD, rows: report }, null, 2));
     process.exit(0);
 }
 
@@ -152,20 +328,10 @@ if (flag('write')) {
     console.log(`# standing-values --write — ${ROWS.length} row(s) at ${HEAD}\n`);
     const held = [];
     const ciRows = [];
-    /**
-     * ⛓ R9 P3b (g) — which gate FILES are headless, derived once. A standing
-     * row is matched to its gate by the command naming the file, which is the
-     * same join `missingScript` makes.
-     */
-    const GATES = gateRoster({ repo: REPO });
-    const headlessFiles = new Set(GATES.filter((g) => !g.browser && !g.windows).map((g) => g.path));
-    /**
-     * ⛓ R9 P4b (D) — the gate a row's command names, so `ciSourced` can read
-     * that gate's `@ci-face` declaration. ⛔ Derived from the roster, never a
-     * list here: the declaration lives in the gate's own docblock and this is
-     * only the lookup.
-     */
-    const gateOf = (command) => GATES.find((g) => command.includes(g.path)) ?? null;
+    /** ⚖ 71 (a) — the three tallies the summary owes a reader. */
+    const carried = [];
+    const unkeyed = [];
+    const findings = [];
     for (const row of ROWS) {
         /**
          * ⛔ AT EVERY ROW, NOT ONCE AT THE TOP. R9 slice P3's tracked-doc edit
@@ -193,10 +359,80 @@ if (flag('write')) {
         const fromCI = ciSourced({
             headless, cheap: prev?.cheap, ciFace: gateOf(row.command)?.ciFace ?? null,
         });
+        /**
+         * ⛓⛓⛓ ⚖ 71 (a) — **THE INPUT KEY DECIDES WHETHER THIS ROW RUNS AT
+         * ALL**, and it is computed BEFORE the run for the obvious reason: a
+         * key taken after the fact would be a key over a tree the measurement
+         * itself may have moved.
+         *
+         * ⛔ THE FOUR WAYS A KEYED ROW STILL RUNS are each named in the log —
+         * a row that was skipped for a reason nobody can read is the stale
+         * green this mechanism was built to refuse.
+         */
+        const keyRep = keyReportFor(row, { fromCI });
+        const banked = prev?.inputKey ?? null;
+        const decision = rowRunDecision({ keyRep, banked,
+            forced: REKEY || FORCE_ROW === row.key, redriveUnchanged: REDRIVE_UNCHANGED });
+        const { unmoved } = decision;
+        if (keyRep.unkeyable) unkeyed.push(`${row.key} — ${keyRep.unkeyable}`);
+        if (keyRep.key) {
+            console.log(`key   ${row.key.padEnd(46)} ${keyRep.key}  ${decision.reason}`);
+            console.log(keyReportLines(keyRep).join('\n'));
+        }
+        /**
+         * ⛔ THE CARRY-FORWARD SAYS SO, IN THE ROW. The banked `value`, its own
+         * `measuredAt` and its own `ms` are kept verbatim — nothing is
+         * invented — and `quotedAtKey` names the head at which the key was
+         * confirmed unmoved, so a reader of the artifact can always tell a
+         * quote from a measurement WITHOUT reading this file (⚖ 70's shape).
+         */
+        if (!decision.run) {
+            out.rows[row.key] = {
+                ...prev,
+                keyPopulations: bankedPopulations(keyRep),
+                quotedAtKey: HEAD,
+                why: `NOT re-run at ${HEAD}: the input key \`${keyRep.key}\` is unmoved since `
+                    + `${prev.keyAt ?? prev.measuredAt} — ⚖ 71 (a). The banked value is an `
+                    + 'answer about these same bytes. `--rekey`, `--force-row=` or '
+                    + '`--redrive-unchanged` re-measure it.',
+            };
+            delete out.rows[row.key].nondeterminism;
+            carried.push({ key: row.key, at: prev.measuredAt });
+            console.log(`QUOTE ${row.key.padEnd(46)} ${String(prev.value).padEnd(46)} `
+                + `@${prev.measuredAt} (key unmoved)`);
+            continue;
+        }
         const r = fromCI
             ? await runRow({ ...row, kind: 'ci-gate', command: ciGateCommand(row.key) })
             : await runRow(row);
         if (fromCI) ciRows.push(row.key);
+        /**
+         * ⛓⛓⛓ **THE DETECTOR** (trap 866: a byte-keyed cache is a
+         * nondeterminism detector you already own). A re-run at an UNCHANGED
+         * key whose verdict moved says one of two things and both are
+         * findings: either the key missed an input, or the gate is not a
+         * function of its inputs. ⛔ It is NEVER a silent re-bank — the banked
+         * value stays, the finding is written into the row's own `why`, and
+         * the run exits non-zero so that nobody has to notice a log line.
+         */
+        const finding = nondeterminismFinding({ unmoved, prev, result: r, at: HEAD });
+        if (finding) {
+            out.rows[row.key] = {
+                ...prev,
+                keyPopulations: bankedPopulations(keyRep),
+                quotedAtKey: HEAD,
+                nondeterminism: finding,
+                why: `⛔ NONDETERMINISM at an UNCHANGED input key \`${keyRep.key}\`: a re-drive `
+                    + `at ${HEAD} read ${JSON.stringify(r.value)} where the bank says `
+                    + `${JSON.stringify(prev.value)} (measured @${prev.measuredAt}). Either the `
+                    + 'key MISSES an input or this gate is not a function of its inputs — ⚖ 71 '
+                    + '(a), trap 866. The banked value is KEPT; nothing was re-banked.',
+            };
+            findings.push({ key: row.key, was: prev.value, now: r.value });
+            console.log(`⛔ NONDETERMINISM  ${row.key.padEnd(46)} WAS ${prev.value} — `
+                + `NOW ${r.value} at an unmoved key`);
+            continue;
+        }
         /**
          * ⚖ R9 RULING 52. A row whose value can only come from a PUSHED head
          * (the CI-read suite row) answers `null` on an unpushed one — the
@@ -233,6 +469,11 @@ if (flag('write')) {
             cheap: (row.alwaysQuoted || fromCI) ? false : band.cheap,
             ...(fromCI ? { ciSourced: true } : {}),
             measuredAt: HEAD,
+            /** ⚖ 71 (a) — the key this value is an answer about, and the four
+             *  populations it was taken over, so the artifact carries its own
+             *  audit trail rather than only a hash. */
+            ...(keyRep.key ? { inputKey: keyRep.key, keyAt: HEAD,
+                keyPopulations: bankedPopulations(keyRep) } : {}),
             ...(row.browser ? { browser: true } : {}),
             ...(row.windows ? { windows: true } : {}),
             ...(r.total ? { total: r.total } : {}),
@@ -259,6 +500,16 @@ if (flag('write')) {
      * discharge is the RULE plus the number it selects, printed either way, so
      * "none today" is a measurement rather than a silence.
      */
+    /**
+     * ⛔ EVERY CARRIED ROW IS NAMED, and so is every UNKEYED one. A row that
+     * did not run is the whole economy of ⚖ 71 (a) and also its whole risk;
+     * a summary that reported only the rows that DID run would be a log about
+     * the cheap half of the decision.
+     */
+    console.log(`\nkey-carried: ${carried.length} row(s)`
+        + `${carried.length ? ` — ${carried.map((c) => `${c.key} @${c.at}`).join(', ')}` : ''}`);
+    console.log(`unkeyed: ${unkeyed.length} row(s)`
+        + `${unkeyed.length ? `\n  ${unkeyed.join('\n  ')}` : ' (every selected row is keyed)'}`);
     console.log(`CI-sourced: ${ciRows.length} row(s)`
         + `${ciRows.length ? ` — ${ciRows.join(', ')}` : ' (headless AND not cheap; at this '
             + 'head every headless gate is cheap, so the box still answers them)'}`);
@@ -273,8 +524,14 @@ if (flag('write')) {
     console.log(`\nwrote ${FILE} — ${Object.keys(out.rows).length} row(s), `
         + `${cheap} cheap (re-run by --check), ${Object.keys(out.rows).length - cheap} quoted`
         + `${held.length ? `, ${held.length} HELD by hysteresis` : ', 0 HELD by hysteresis'}`);
+    if (findings.length) {
+        console.log(`\n⛔ ${findings.length} NONDETERMINISM FINDING(S) — a verdict moved at an `
+            + 'UNCHANGED input key. Either the key misses an input or the gate is not a '
+            + 'function of its inputs (⚖ 71 (a), trap 866). Nothing was re-banked:');
+        for (const f of findings) console.log(`   ${f.key}: WAS ${f.was} — NOW ${f.now}`);
+    }
     releaseBoxLock();
-    process.exit(0);
+    process.exit(findings.length ? 1 : 0);
 }
 
 /* ══════════════════════════════════════════════════════════════════════

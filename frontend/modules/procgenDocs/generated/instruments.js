@@ -8118,6 +8118,12 @@ export const INSTRUMENTS = frz({
                     "how": [
                         "arg"
                     ],
+                    "name": "force-row"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
                     "name": "host"
                 },
                 {
@@ -8136,6 +8142,12 @@ export const INSTRUMENTS = frz({
                     "how": [
                         "flag"
                     ],
+                    "name": "keys"
+                },
+                {
+                    "how": [
+                        "flag"
+                    ],
                     "name": "list"
                 },
                 {
@@ -8149,6 +8161,18 @@ export const INSTRUMENTS = frz({
                         "flag"
                     ],
                     "name": "quote"
+                },
+                {
+                    "how": [
+                        "flag"
+                    ],
+                    "name": "redrive-unchanged"
+                },
+                {
+                    "how": [
+                        "flag"
+                    ],
+                    "name": "rekey"
                 },
                 {
                     "how": [

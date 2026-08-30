@@ -156,6 +156,17 @@
  * what an instrument accepts should be able to read itself.
  *
  * @ci-face gate-help-ci: --doors=ci --in-place
+ *
+ * ⛓⛓⛓ SG2, ⚖ 71 (a) — **THIS GATE'S CLOSURE IS SIX FILES AND ITS SUBJECT IS
+ * ALL 265 INSTRUMENTS**, so the byte key derived from an import closure alone
+ * would call the row unmoved while every file it actually opens two doors on
+ * had changed. That is the stale green `rowInputKey`'s docblock names, and it
+ * is the one thing derivation genuinely cannot see here: the population is
+ * `readdirSync(DIR)` at run time, not an import. So the gate DECLARES it, and
+ * the seeds carry their own closures with them.
+ *
+ * @key-inputs code: scripts/procgen/*.mjs
+ * @key-inputs data: scripts/procgen/check-procgen-help.baseline.json
  */
 
 import { execFileSync, spawn } from 'node:child_process';
