@@ -1213,12 +1213,12 @@ def scenario_worldgen(harness) -> CheckList:
         p.name for p in harness.custom_worlds.glob("*_worldgen.apworld"))
     checks.check(len(worldgen_apworlds) > 0,
                  f"worldgen apworlds packed ({len(worldgen_apworlds)} found)")
-    checks.check("dlcquest_worldgen.apworld" in worldgen_apworlds,
-                 "dlcquest_worldgen.apworld among them", str(worldgen_apworlds[:8]))
+    checks.check("alttp_worldgen.apworld" in worldgen_apworlds,
+                 "alttp_worldgen.apworld among them", str(worldgen_apworlds[:8]))
 
     gen2 = harness.run_generate(
         harness.stage_template_player_yamls(
-            ["DLCQuest WorldGen.yaml", "TOEM rule builder.yaml"], "worldgen"),
+            ["A Link to the Past WorldGen.yaml", "TOEM rule builder.yaml"], "worldgen"),
         "worldgen generation")
     checks.check(gen2.returncode == 0,
                  "worldgen + toem_rule_builder multiworld generates",

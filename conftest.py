@@ -101,21 +101,6 @@ KNOWN_FLAKY_WORLDS: frozenset[str] = frozenset({
     # chose not to develop it further (2026-07-17).
     "apcalc",
     "apcalc_worldgen",
-    # "Links Awakening DX WorldGen" — seed-dependent
-    # ``Fill.FillError: No more spots to place 270 items`` in
-    # test/general/test_items.py::test_item_links (CI run 31572464285,
-    # 2026-08-12; green on the next run with no change). NOT a parked
-    # prototype and NOT a defect in the generated world: item_links pools 270
-    # items and core fill paints itself into a corner on some seeds. The
-    # upstream "ladx" world is already excluded via UPSTREAM_WORLDS, so this
-    # only parks the generated variant. "Links Awakening DX.yaml" is also in
-    # template-exclude-list.json's worldgen_test_exclude_list, which is what
-    # keeps the directory from coming back — this entry only covers the
-    # window until a regeneration run deletes worlds/ladx_worldgen (compare
-    # Mega Man 3, excluded the same way, whose worlds/mm3_worldgen no longer
-    # exists and so needs no entry here). Roving fill is now on its FOURTH
-    # world (apcalc, runner, mm3, ladx): exclusion manages the symptom.
-    "ladx_worldgen",
 })
 
 # Everything dropped from AutoWorldRegister for the pytest session:
