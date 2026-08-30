@@ -1,0 +1,56 @@
+{
+  "tape_version": 7,
+  "game": "seedling",
+  "name": "r6-final-door-control",
+  "description": "R6 slice 6c: the unspoken-Watcher control — the same tape with `{114,0}` NOT declared. `FinalDoor.update`'s first line is `var talkedToWatcher:Boolean = !Game.checkPersistence(0, 114)`, the only cross-level persistence read in the game, and it is the second of the door's two conditions (the sixteen seals, which this tape still has, are the first). What the control shows is not \"nothing happens\": the walk is identical, the approach crosses the circle on the SAME tick, and the `SealController` fires anyway and costs the same 181 dead frames — it is unconditional, and it even carries a different string (\"Face the Watcher and return\" against \"Your path to redemption lies here\"). What never becomes reachable is the second arm. `{113,0}` stays SET, the 32x32 body stays in the solids list, and the player stands against it at y 34.5 for the rest of the tape. SAME LENGTH as the drive, not a prefix: the control is missing a flag, not a tail.",
+  "boot": {
+    "level": 113,
+    "x": 112,
+    "y": 80
+  },
+  "noclip": false,
+  "noDamage": false,
+  "noHazards": [],
+  "grants": [],
+  "persistence": [],
+  "equips": [],
+  "pins": [
+    "sound",
+    "dead_frames"
+  ],
+  "save": {
+    "totem_parts": [],
+    "keys": [],
+    "seal_parts": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ]
+  },
+  "rng": {
+    "seed": 0,
+    "split": false
+  },
+  "tick_count": 105,
+  "inputs": [
+    {
+      "key": "up",
+      "from": 0,
+      "to": 105
+    }
+  ]
+}
+

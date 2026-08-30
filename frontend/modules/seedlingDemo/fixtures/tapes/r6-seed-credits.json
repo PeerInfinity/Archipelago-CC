@@ -1,0 +1,87 @@
+{
+  "tape_version": 7,
+  "game": "seedling",
+  "name": "r6-seed-credits",
+  "description": "R6 slice 6d: W-SEED, the bloodless ending. Boots into L115 at (72,136) — the tile `teleporter@112,0` in L113 lands the player on, which is WATER — with the conch and the feather granted, and swims north. The moat has TWO gates and the second is a WATERFALL (`t = 25`, the whole row between the arrival and the island): with the conch alone the swim stalls at y 126.65000000000028 and never moves again, which the plan drives rather than asserts. Fourteen ticks of `right` place the stance over `seed@72,72`, and the ceremony starts on tick 129: 150 frozen frames of `Pickup.specialTimer`, then a 6-release three-page dialogue whose text is an `.oel` ATTRIBUTE (`Game.as:2185` passes `o.@text` as the fourth ctor argument — the third place a pickup ceremony can get its text from and the first that is level data), then `Seed.removeSelf`, which is an override that never reaches `removed()`: no item, no flag, and 200 FROZEN frames of cover before `FP.world = new Game(115, currentPlayerPosition)` with `Game.cutscene[2]` set. The reboot is what ARMS the tree — `Game.as:2185` passes `cutscene[2]` as `Seed`'s fifth ctor argument, so the same `.oel` object comes back as a growing one — and the 138 frames of `grow` and the 200 of the second cover fade are TAPE TICKS, not frozen frames: `cutscene[2]` sets `p.receiveInput = false`, which makes `canInventory()` false, which runs `inventory.open = false`, which IS `Game.freezeObjects = false`. What holds the player still is `p.active = false`. At tick 520 the cover reaches 1 and the game reboots a second time with `Game.menu = true`, `Game.cutscene[2] = false`, badge 14 and `menuIndex` 2 — THE CREDITS, which `botStatus.menu_state` reports directly. The tape ends on that tick and not one later: `Game.menuAndRestart()` freezes every frame from there, and `Input.released(Key.ANY)` would leave the menu and reboot the world again.",
+  "boot": {
+    "level": 115,
+    "x": 64,
+    "y": 128
+  },
+  "noclip": false,
+  "noDamage": false,
+  "noHazards": [],
+  "grants": [
+    {
+      "level": 115,
+      "items": [
+        "conch",
+        "feather"
+      ]
+    }
+  ],
+  "persistence": [],
+  "equips": [],
+  "pins": [
+    "sound",
+    "dead_frames"
+  ],
+  "save": {
+    "totem_parts": [],
+    "keys": [],
+    "seal_parts": []
+  },
+  "rng": {
+    "seed": 0,
+    "split": false
+  },
+  "tick_count": 520,
+  "inputs": [
+    {
+      "key": "up",
+      "from": 0,
+      "to": 95
+    },
+    {
+      "key": "right",
+      "from": 95,
+      "to": 109
+    },
+    {
+      "key": "up",
+      "from": 109,
+      "to": 145
+    },
+    {
+      "key": "primary",
+      "from": 140,
+      "to": 141
+    },
+    {
+      "key": "primary",
+      "from": 148,
+      "to": 149
+    },
+    {
+      "key": "primary",
+      "from": 156,
+      "to": 157
+    },
+    {
+      "key": "primary",
+      "from": 164,
+      "to": 165
+    },
+    {
+      "key": "primary",
+      "from": 172,
+      "to": 173
+    },
+    {
+      "key": "primary",
+      "from": 180,
+      "to": 181
+    }
+  ]
+}
+

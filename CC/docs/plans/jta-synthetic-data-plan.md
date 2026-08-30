@@ -1,0 +1,1272 @@
+# JtA Synthetic Game Data — Phase 5 Plan
+
+**Date:** 2026-07-10 ·
+**Status: RULED 2026-07-10 — all seven §7 questions answered same day
+(rulings recorded inline in §7). Q2's feasibility check is
+DONE: no `const enum` in the fork (and `isolatedModules: true` forbids them
+project-wide), compiled enums are mutable runtime objects — the count
+rewrite works as designed. Phase 5a DONE 2026-07-10 (`a09e2492f`);
+Phase 5b DONE 2026-07-10 (Fork 1.7, submodule `c6bb26d`);
+Phase 5c DONE 2026-07-10 (dataset parity mode, all layers PASS);
+Phase 5d DONE 2026-07-10 (Pass-A pipeline dataset synthesis — see §6;
+zero fork changes);
+Phase 5e DONE 2026-07-10 (Pass-B worker dataset load + §4.2 measurement
+pass — see §6; VERDICT: no balancing lever fires, xp_mult co-solve and
+economy scaling NOT built);
+Phase 5f DONE 2026-07-10 — **PASS under the refined progression gate**
+(user ruling same day: hard gate = Victory + every perk task within the
+run budget; total coverage reported, not gated). All six generated worlds
+play to victory + full perks at vanilla-comparable pacing; the residual
+1–3 stranded FILLER locations per world (the LEVEL-metric fragility class)
+are recorded informationally with the multiworld caveat and the known
+RESETS rescue — see §6 5f.
+Phase 5g DONE 2026-07-11 (raw-value economy mode, Fork 1.8, + the three
+riders: content-hash dataset identity, raw-aware C4, zones[].key) —
+**GATE GREEN: raw-vanilla ≡ formula-vanilla ≡ native TICK-FOR-TICK** (all
+lockstep scenarios at identical tick counts in all three parity modes;
+UI parity zero DOM diff both fixtures) — see §6 5g findings.
+NEXT: Phase 6 absorption audit / post-v1 phases (design doc).**
+Child plan of `jta-zone-randomization-plan.md` (its Phase 5, "the destination").
+Sibling precedent: `jta-balance-pass-plan.md` (Phase 3). Phases 0–4 of the
+parent are DONE; this plan builds on their machinery (Pass-B balance walk,
+`jtaBalance` worker, `jta-stats` harness, `jta-parity` harness) and does not
+re-open their rulings.
+
+Deliverables of this document, mapped to sections:
+
+1. **The versioned dataset schema** — §2.
+2. **The fork data boundary (`loadGameData`)** — §3.
+3. **The pipeline split (Pass A structure vs Pass B balance)** — §4.
+4. **The vanilla-dataset parity verification story** (`CC/scripts/jta-parity/`) — §5.
+
+---
+
+## 0. Requirements (user rulings, 2026-07-10)
+
+1. **Topology v1 = linear.** All zones completed in order, like vanilla.
+   Branching paths and designing data to fit the procgen grid layout come
+   LATER. (Consequence: v1 rides the existing fixed-ordered-zones substrate
+   path — `synthesizeZonePayload`/`extractZoneRules` under the spiral driver.
+   `generateZoneForSpecs`/sphere-growth is the post-v1 topology story, per
+   parent plan §1b.)
+2. **Task skeleton v1 = keep vanilla's balance.** The invariant to TRACK:
+   the player gets enough stat-level-earning opportunities for what later
+   zones demand (§4.1 constraint C4, §4.2 what-else-balances).
+3. **Effect systems v1 = as close to vanilla as possible.** A generalized
+   effect vocabulary is still wanted — code refers to items/artifacts by
+   WHAT THEY DO, not vanilla names — but magnitudes stay vanilla-like (§2.3).
+4. **Purpose (drives design, don't lose):** synthetic data exists so procgen
+   can generate games whose parts FIT each other — theme plus implied
+   narrative, eventually actual narrative content. Names/theming are not
+   cosmetic afterthoughts; **the schema carries theme hooks** (§2.5).
+5. **ALL data synthetic:** tasks and their stats, task NAMES, player-stat
+   (skill) NAMES and COUNT, zone COUNT, item NAMES. Eventually entirely new
+   item types. As much as possible SERIALIZABLE — the versioned dataset
+   schema is the spine of the whole deliverable.
+6. **Generation eventually lives IN the procgen pipeline**, likely split
+   across steps — structure early, balance post-fill — mirroring Pass A /
+   Pass B (§4). Cost balancing already exists (Phase 3 Pass B); the open
+   investigation is what ELSE needs generating + balancing: skill-XP economy,
+   effect magnitudes, energy economy, zone/task type structure
+   (Travel/Mandatory/Boss/unlocker patterns) (§4.2).
+7. **Known blocker:** the fork has NO data-injection hook (the old stack's
+   `jta:replaceGameData` drove the retired jta-remote copy only). Synthetic
+   data needs a new fork hook — that hook is §3.
+
+Standing rulings inherited from the parent plan and NOT re-opened: all tasks
+= AP locations / all perks = AP items; grants AP-authoritative; Pass B
+post-fill rebalance is the authoritative balancing point; `resetsPerStep = 5`;
+coverage is the hard verification gate with the `[0.4×, 3×]` pacing advisory;
+own-world perks re-grant on task re-completion, foreign perks re-grant after
+prestige.
+
+---
+
+## 1. Verified ground facts (explored 2026-07-10)
+
+Line references: submodule paths are TypeScript sources under
+`frontend/modules/journey-to-ascension/` (committed `build/*.js` mirrors them).
+
+### 1a. The fork's static-data surface — what a dataset must replace
+
+- **Skills** (`skills.ts`): `enum SkillType` with `Count = 12` (10 active +
+  2 dead `REMOVED` slots); `SKILLS` = the active list;
+  `SKILL_DEFINITIONS[12]` **positionally index-aligned to the enum**
+  (`{type, name, icon, xp_needed_mult}`), consumed as
+  `SKILL_DEFINITIONS[skill.type]` throughout rendering.
+- **Tasks/zones** (`zones.ts`): `TaskDefinition` fields = `id, name, type
+  (Normal/Travel/Mandatory/Prestige/Boss), cost_multiplier, skills[]
+  (numeric SkillType), xp_mult, item, use_item (ItemType), perk (PerkType),
+  prestige_layer, max_reps, hidden_by_default, unlocks_task, zone_id, free
+  (fork-added)`. `ZONES` = 30 `Zone {name, tasks[]}`; task ids hand-assigned
+  and sparse. **Zone count is already data-driven** (`ZONES.length`
+  everywhere, no constant).
+- **Perks** (`perks.ts`): `PerkType` 47 entries incl. one `DELETED` slot;
+  `PERKS[]` positional; `PerkDefinition = {enum, name, icon,
+  get_custom_tooltip, skill_modifiers}`.
+- **Items** (`items.ts`): `ItemType` ~46 entries; `ITEMS[]` positional;
+  `ItemDefinition = {enum, name, name_plural, icon, skill_modifiers,
+  on_consume(amount), tooltip/effect-text lambdas}`. Derived groups
+  `ARTIFACTS` (4 queued-effect items) and `NOTE_ITEMS` (5, for Compulsive
+  Notetaking). **Two latent enum typos** — `Cactus` carries
+  `enum: ItemType.BanditWeapons` and `Glasses` carries
+  `enum: ItemType.RitualSymbol` (`items.ts:223-229, 402-408`); positional
+  indexing hides it. Any exporter must derive `enum` from position, and the
+  loader must assert position ≡ enum.
+- **Prestige** (`prestige_upgrades.ts`): `PrestigeLayer` (4 + Count),
+  `PRESTIGE_UNLOCKABLES[16]`, `PRESTIGE_REPEATABLES[12]`, all
+  enum-positional, plus effect constants.
+- **Derived at module load** (`zones.ts:482-518`): `zone_id` stamping,
+  `TASK_LOOKUP` (id → def; holds REFERENCES, so field mutation stays
+  coherent), `PERKS_BY_ZONE`/`ITEMS_BY_ZONE` (copied VALUES, need rebuild —
+  `rebuildZoneDerivedMaps()` exists and is the Phase-1 rebuild hook).
+- **The effect vocabulary today is split in two layers:**
+  1. *Data-driven, generic:* flat per-skill speed multipliers via
+     `SkillModifierList.applyEffect()` (`modifiers.ts:98-102`) on both perks
+     and items; plus per-item `on_consume` lambdas (code, not data).
+  2. *Hardcoded on enum identity:* ~40 sites in `simulation.ts`/`rendering.ts`
+     branch on exact enum members. Perks: Amulet (gates automation, 6+ sites),
+     EnergeticMemory, EnergySpell (+50 max energy in `tryAddPerk`,
+     `simulation.ts:1960`), Minor/MajorTimeCompression, Writing,
+     UnderstandingTheReset (item keep), HighAltitudeClimbing, SupplyLines,
+     Attunement, Awakening/DefiedTheGods/Ascended (spark), and more. Items:
+     the 4 `ARTIFACTS` queue mechanics, auto-use special cases. Skills:
+     Ascension (half starting level), Travel (+GodlyTravel prestige mult),
+     `calcAttunementSkills()` = [Magic, Study] (+conditionals),
+     `getPowerSkills()` = [Combat, Fortitude], `getSpiteTheGodsSkills()` =
+     [Ascension, Charisma].
+- **Two absolute couplings** (the most brittle):
+  `unlockTask(17,28,88,158,209)` hardcoded in the SeeBeyondTheVeil prestige
+  unlock (`simulation.ts:3283-3288` — the ONLY hardcoded task-id list in the
+  engine), and the divine-spark scaling origin `15 - 1` (zone 14,
+  `simulation.ts:2979`, mirrored in `prestige_upgrades.ts:267-270`). The cost
+  backbone `pow(2.2 | 4, task.zone_id)` (`calcTaskCost`, `simulation.ts:305`)
+  and per-zone energy drain are zone-ordinal-driven but not zone-COUNT-coupled.
+- **Save-format coupling** (`simulation.ts:3478-3586`): the task numeric `id`
+  is THE save-load-bearing identifier — `saveGame` serializes each live task
+  to its id; `parseSave` revives via `TASK_LOOKUP.get(id)`, and an unknown id
+  revives to `undefined` → crash (that is exactly why synthetic/artifact task
+  ids are filtered at save). `PerkType`/`ItemType`/`SkillType` numeric values
+  and zone indices are stored throughout. **No version-gated save migration
+  exists**; `SAVE_VERSION` only drives the changelog popup.
+- **Boot order**: import-time table construction → `zones.ts` derived maps →
+  `window.*` hook registration + singletons → `GAMESTATE.start()` (load or
+  `initialize()`; `initializeSkills()` MUST precede `resetTasks()`).
+  `initializeHeadless()` (`game.ts:101-105`) builds state without the tick
+  loop or DOM.
+- **Existing hooks and their limits**: `applyTaskPatches` is field-level only
+  (`cost_multiplier, xp_mult, max_reps, hidden_by_default, unlocks_task,
+  perk, item`; `simulation.ts:4592-4644`) — cannot add/remove tasks or zones,
+  cannot touch `name/type/skills/zone_id/use_item/prestige_layer/free`,
+  cannot touch the skills/perks/items tables. `injectSyntheticTask` adds
+  one runtime task (ids ≥ 10000, not persisted, skipped by metrics/bridge).
+  **There is no serializer for the content tables anywhere — this feature
+  introduces the first one.**
+
+### 1b. Transport and application seams — already sufficient
+
+- **Sidecar transport has NO size limit.** `preset_sidecars` payloads are
+  plain JSON pass-throughs at every hop: pipeline `playable_payload` spread
+  (`procgenPipelineEngine.js:2533`) → `_worldgen_sidecars.json`
+  (`world_generator/generator.py:265-283`) → exporter
+  `_inject_worldgen_sidecars` (`exporter/games/base/handler.py:2060-2091`) →
+  rules.json → procgenPlayer warehouse → `jta:loadRegion` `payload.world` →
+  bridge. A several-hundred-KB dataset rides through un-truncated; the
+  constraints are practical (rules.json bloat, per-region duplication), not
+  enforced. **The blocker is runtime-side (no fork hook), not transport.**
+- **Bridge seam**: `_handleLoadRegion` (`bridge.js:383-480`) receives
+  `payload.world` and already applies `world.task_patches` via
+  `_applyTaskPatches()` (`bridge.js:701-713`) on every region load. A
+  `world.jta_dataset`/`world.jta_dataset_ref` field lands at the same seam.
+- **Pass-B worker** (`frontend/modules/jtaBalance/`): loads the fork build in
+  a module worker via the shared `headlessGameEnv.js` loader (same loader as
+  the Node harness — one copy of the load-bearing import order), solves at
+  `stateManager:rulesLoaded`, caches patches in localStorage by seed, merges
+  them into each region's `task_patches` in the warehouse. Its economy math
+  is the live fork build; identity constants come from the `zoneTaskData.js`
+  snapshot.
+- **Stats harness** (`CC/scripts/jta-stats/driver.mjs`): env-agnostic; builds
+  its metric universe from `zones.ZONES.slice(0, zoneLimit)`
+  (`driver.mjs:320-336`). Wholesale ZONES replacement without a fork hook
+  would desync the universe from the engine's internal maps — with the §3
+  hook, a `dataset` option is a small, localized addition (the `apRuntime`
+  precedent).
+- **`zoneTaskData.js`** is a regenerated identity snapshot (names/types/
+  perk/item/maxReps/hidden/unlocks — costs deliberately omitted) because the
+  DOM-coupled fork build can't be imported by the headless-safe pipeline
+  library. For synthetic worlds the dataset itself replaces this role (§4.1).
+
+### 1c. The parity harness — what exists to build the proof on
+
+`CC/scripts/jta-parity/` currently proves **two builds, one config, one
+dataset**: fork-at-defaults ≡ upstream fork point, via (a) sim lockstep —
+both engines in one process, exact `===` per field of an explicit
+gameplay-observable projection after EVERY tick across 4 scenarios / 36,629
+ticks, static-data value-compare, anti-vacuity floors (`minTicks`/
+`minResets`), and a `--selftest-perturb` comparator canary; (b) fresh-load UI
+parity — DOM structural diff (raw/clean/residual) + masked exact pixel diff
+with a measured noise floor and reproduce-on-retake discipline. The
+comparison contract (`project()` at `run-parity.mjs:228-303`,
+`compareStaticData` at `:388-453`) is dataset-agnostic. §5 re-aims it at
+**two datasets, one build**.
+
+---
+
+## 2. Deliverable 1 — the versioned dataset schema
+
+The schema is the arc's spine: a single self-contained JSON document that
+carries EVERYTHING the engine currently compiles in as content. One file =
+one game's worth of data. Everything the pipeline generates, the fork loads,
+the balancer patches, and the harnesses verify speaks this format.
+
+### 2.1 Envelope and versioning
+
+```jsonc
+{
+  "schema_version": 1,              // integer; bump on breaking shape change
+  "dataset_id": "vanilla-fork-1.6.2",  // unique, stable; stamped into saves (§3.4)
+  "provenance": {                   // who made it and from what
+    "generator": "export-vanilla-dataset | procgen-pipeline",
+    "fork_save_version": "Fork 1.6.2",   // engine the data was authored against
+    "seed": null,                   // pipeline seed for synthetic datasets
+    "params_hash": null
+  },
+  "theme": { ... },                 // §2.5
+  "skills": [ ... ],                // §2.2
+  "zones": [ ... ],                 // §2.2
+  "perks": [ ... ],                 // §2.3
+  "items": [ ... ],                 // §2.3
+  "prestige": { ... },              // §2.4
+  "roles": { ... },                 // §2.4
+  "economy": { ... }                // §2.4
+}
+```
+
+- A JSON Schema validator file lands beside the repo's existing
+  `frontend/schema/rules.schema.json` (e.g. `jta-dataset.schema.json`) so
+  generator output, hand edits, and the fork loader all validate against the
+  same document.
+- `schema_version` is checked by every consumer (`loadGameData`, the
+  pipeline step, the balancer, the harness option) — reject with a clear
+  error on mismatch, no silent best-effort.
+- `dataset_id` is the save-compatibility key (§3.4): numeric ids/indices are
+  save-load-bearing (§1a), so a save is only meaningful under the dataset
+  that produced it.
+
+### 2.2 Skills, zones, tasks
+
+```jsonc
+"skills": [
+  { "index": 0, "name": "Charisma", "icon": "🗣️", "xp_needed_mult": 1.0,
+    "theme": { "flavor": "..." } }
+  // COUNT IS FREE — the loader rebuilds SkillType/SKILLS/SKILL_DEFINITIONS.
+  // No REMOVED placeholders in the schema; the exporter compacts vanilla's
+  // dead slots out and records the compaction map in provenance (§5.1).
+],
+"zones": [
+  { "name": "The Village",
+    "theme": { "flavor": "...", "arc_beat": "..." },
+    "tasks": [
+      { "id": 10, "name": "Find Food", "type": "Normal",
+        "skills": [3],                 // indices into skills[]
+        "cost_multiplier": 1.0,        // PROVISIONAL in Pass-A output (§4)
+        "xp_mult": 1.0, "max_reps": 5,
+        "hidden_by_default": false, "unlocks_task": -1,
+        "perk": null,                  // index into perks[] or null
+        "item": 0, "use_item": null,   // indices into items[] or null
+        "prestige_layer": null,
+        "theme": { "flavor": "..." } }
+    ] }
+]
+```
+
+Design points:
+
+- **Task ids are dataset-scoped and explicit** (not positional): they are the
+  save-reviver key, the `applyTaskPatches`/balancer key, the `ap_locations`
+  key, and the automation-priority key. The generator assigns them; the
+  schema requires uniqueness. Synthetic ids stay below 10000 (the
+  synthetic-injection convention reserves ≥ 10000).
+- **`zone_id` is NOT in the schema** — it is derived (stamped by the loader
+  from array position, exactly as `zones.ts` does today). Same for the
+  enum-vs-position invariant everywhere: **array position is identity**;
+  the exporter derives, the loader asserts.
+- **"None" is `null`,** not the engine's `Count` sentinel — sentinel values
+  are an engine encoding detail the loader owns (§3.2), and vanilla's
+  `Count = 47/46/12` must not leak into a format whose whole point is that
+  counts are free.
+- `type` uses the string names (`Normal/Travel/Mandatory/Prestige/Boss`) —
+  `TaskType` is a fixed engine vocabulary, not content.
+
+### 2.3 Perks and items — the effect vocabulary
+
+Per ruling 3, v1 magnitudes and mechanics stay vanilla-like, but the schema
+names effects by WHAT THEY DO. Two effect classes, mirroring the engine's
+real split (§1a):
+
+```jsonc
+"perks": [
+  { "index": 0, "name": "Reading", "icon": "📖",
+    "tooltip": "...",
+    "effects": [ { "kind": "skill_speed", "skill": 1, "mult": 1.5 } ],
+    "behavior": null,
+    "theme": { "flavor": "..." } },
+  { "index": 12, "name": "Ancient Compass", "icon": "🧭",
+    "effects": [],
+    "behavior": "automation_unlock",   // occupies the Amulet engine slot
+    "theme": { ... } }
+],
+"items": [
+  { "index": 0, "name": "Trail Ration", "name_plural": "Trail Rations",
+    "icon": "🍞",
+    "effects": [ { "kind": "skill_speed", "skill": 2, "mult": 1.25 },
+                 { "kind": "energy_on_consume", "amount": 10 } ],
+    "behavior": null, "theme": { ... } }
+]
+```
+
+- **`effects[]` is the declarative layer** — things the engine already reads
+  from data or near-data: `skill_speed` (the `SkillModifierList` mechanism,
+  fully data-driven today) and `energy_on_consume` (vanilla's Food lambda,
+  trivially data-fiable). The vocabulary starts with exactly what v1 needs
+  and grows per-behavior over time.
+- **`behavior` is the hardcoded-slot layer**: a stable key naming an engine
+  behavior that is still compiled against a specific enum member
+  (`automation_unlock` = Amulet, `starting_energy_flat` = EnergySpell,
+  `starting_energy_growth` = EnergeticMemory, `time_compression_minor/major`,
+  `keep_items_on_reset` = UnderstandingTheReset, `artifact_haste` /
+  `artifact_lightning` / `artifact_ring` / `artifact_dreamcatcher` (the four
+  ARTIFACTS queue mechanics), `spark_awakening` / `spark_defiance` /
+  `spark_ascended`, etc. — the full key table is enumerated during 5a from
+  the §1a coupling list). **v1 mechanism: fixed behavior slots** — an entry
+  declaring a behavior is REQUIRED to sit at that behavior's vanilla enum
+  index; the schema validator enforces it, the loader asserts it. Entries
+  with `behavior: null` may occupy any other index; unused behavior slots are
+  filled by the loader with inert placeholders (the engine already tolerates
+  dead slots — `REMOVED`/`DELETED` are precedents). Rationale in §3.3;
+  alternatives in §7 Q1.
+- **The migration path is per-behavior, not big-bang**: each time a hardcoded
+  branch is rewritten to read an `effects[]` entry (e.g. `tryAddPerk`'s
+  EnergySpell `+50` becomes a generic `starting_energy_flat` effect read),
+  that key moves from the `behavior` column to the `effects` vocabulary and
+  its slot constraint dissolves. The schema shape does not change — only the
+  validator's slot-constraint table shrinks. This is how "eventually entirely
+  new item types" is reached without ever needing a flag-day engine refactor.
+
+### 2.4 Prestige, roles, economy
+
+```jsonc
+"prestige": {
+  // v1: vanilla-verbatim tables (layers, unlockables, repeatables), carried
+  // so a vanilla-equivalence dataset is COMPLETE and synthetic datasets can
+  // later vary them. Positional; behavior-slot rules as in §2.3.
+  "layers": [ ... ], "unlockables": [ ... ], "repeatables": [ ... ],
+  "spark_zone_origin": 14,        // replaces the hardcoded `15 - 1` (§3.3)
+  "sbtv_unlock_task_ids": []      // replaces unlockTask(17,28,88,158,209);
+                                  // empty for v1 synthetic datasets — the
+                                  // generator simply creates no unlocker-less
+                                  // tasks (parent plan's SBtV exclusion
+                                  // becomes vacuous by construction)
+},
+"roles": {
+  // The five skill-identity couplings (§1a), made data-driven with
+  // vanilla defaults. Indices into skills[].
+  "ascension_skill": 11,          // half starting level + spite pairing
+  "travel_skill": 7,              // GodlyTravel prestige mult target
+  "attunement_skills": [8, 1],    // + conditional extensions stay keyed to
+  "power_skills": [2, 9],         //   their behavior slots
+  "spite_skills": [11, 0]
+},
+"economy": {
+  // The global balance backbone, carried explicitly instead of compiled:
+  "base_task_cost": 10,
+  "zone_cost_exponent": 2.2, "boss_cost_exponent": 4,
+  "xp_base": 8, "xp_zone_mult": 1.25, "level_curve": 1.02
+  // v1 datasets carry vanilla values verbatim (ruling 2/3); they exist in
+  // the schema so Pass B gains levers later without a schema bump.
+}
+```
+
+### 2.5 Theme hooks (ruling 4)
+
+Theme is first-class, not decoration. Every named entity (dataset, zone,
+task, skill, perk, item) carries an optional `theme` object; v1 defines a
+minimal shape and reserves room:
+
+```jsonc
+"theme": {
+  "title": "The Long Road North",       // dataset-level
+  "setting": "...", "tone": ["melancholy", "hopeful"],
+  "namebanks": { ... }                   // generator input, kept for
+                                         // provenance/regeneration
+}
+// per-entity: { "flavor": "one-line narrative hook",
+//               "arc_beat": "setup|rising|climax|denouement" (zones) }
+```
+
+The generation contract (§4.1) is that names are DRAWN from the theme, so a
+zone's tasks, its perks, and its items read as belonging together — the
+"parts FIT each other" purpose. v1 populates `title/setting/flavor` from
+namebank-driven generation; actual narrative content (quest text, connected
+story beats) extends `theme` in a later schema version without touching the
+mechanical fields.
+
+---
+
+## 3. Deliverable 2 — the fork data boundary: `loadGameData`
+
+One new fork hook, the Tier-2 successor the parent plan deferred
+(`replaceZones` in parent Q2 — superseded by this design; Tier-1
+`applyTaskPatches` is unchanged and layers on top).
+
+### 3.1 Contract
+
+```ts
+window.loadGameData(dataset: JtaDataset): { ok: boolean, errors?: string[] }
+```
+
+- Validates `schema_version` + structural invariants (unique task ids,
+  behavior-slot placement, index ranges) — hard-fails with errors, applies
+  nothing on any failure (atomic: validate fully, then swap).
+- Rebuilds, in order: skill tables (`SKILLS`, `SKILL_DEFINITIONS`, the
+  runtime `SkillType` object incl. `Count`), perk tables (`PERKS`,
+  `PerkType` incl. `Count` — the grant-suppression sentinel the wrapper
+  knows as `JTA_PERK_COUNT` becomes dataset-dependent, see §4.1), item
+  tables (+ `ARTIFACTS`/`NOTE_ITEMS` derived from behavior keys), prestige
+  tables, role sets, economy constants, then `ZONES` → `zone_id` stamping →
+  `TASK_LOOKUP` → `rebuildZoneDerivedMaps()`.
+- Ends by **re-initializing the game against the dataset-keyed save slot**
+  (§3.4): load if a matching save exists, else fresh `initialize()`. A
+  dataset swap mid-game is a reset by definition — live `Task` objects,
+  `GAMESTATE.skills`, perks, items all reference the old tables.
+- Idempotent per `dataset_id`: calling again with the already-loaded dataset
+  is a no-op (the bridge calls it defensively on every region load).
+- **Dormant when never called** — standalone play must remain byte-identical
+  (§5 proves this at the same bar as the existing mods: the parity harness's
+  "hooks are no-ops unless registered" discipline).
+
+### 3.2 Timing and consumers
+
+Module-load table construction has already run before any caller exists
+(§1a boot order), so `loadGameData` always REPLACES — it never races
+construction. Per consumer:
+
+- **Headless (worker/harness/parity):** `loadJtaEnv()` → `loadGameData(ds)`
+  → `initializeHeadless()`. Clean — nothing has read the tables yet.
+- **Managed iframe:** the game boots and `GAMESTATE.start()` runs before the
+  bridge's first `loadRegion` arrives. The bridge therefore calls
+  `loadGameData` from `_handleLoadRegion` when `payload.world` carries a
+  dataset and its `dataset_id` differs from the loaded one — the hook's
+  ending re-init (against the dataset-keyed slot) makes the pre-dataset boot
+  state irrelevant. This sits immediately BEFORE the existing
+  `_applyTaskPatches()` call (`bridge.js:436`), so Pass-B cost patches and
+  grant-suppression patches apply to the dataset's tasks, unchanged.
+- **Standalone browser play of a synthetic dataset** (nice-to-have, not v1):
+  a `?dataset=<url>` boot param — deferred, noted in §7.
+
+### 3.3 The decoupling fork changes (small, enumerable)
+
+`loadGameData` alone is not enough — the §1a hardcoded couplings must become
+data-driven exactly where counts/identity are allowed to vary. The v1 list,
+each a small targeted change with vanilla behavior as the default when no
+dataset is loaded:
+
+| Site | Today | Change |
+|---|---|---|
+| `unlockTask(17,28,88,158,209)` (`simulation.ts:3283-3288`) | hardcoded id list | read `prestige.sbtv_unlock_task_ids` |
+| spark origin `15 - 1` (`simulation.ts:2979` + tooltip) | hardcoded | read `prestige.spark_zone_origin` |
+| `initializeSkills` Ascension half-level; Travel prestige mult; attunement/power/spite skill sets (5 sites) | hardcoded `SkillType.X` | read `roles.*` |
+| `calcTaskCost` exponents / `xp` bases / level curve | compiled constants | read `economy.*` |
+| skill/perk/item **counts** (`SkillType.Count` etc.) | enum literals (runtime property reads — TS non-const enums) | loader rewrites the runtime enum objects so `Count` tracks the dataset; **verify at implementation that no enum is `const enum`** (a const enum would inline literals and force a different mechanism) |
+| item `on_consume` lambdas | per-item code | `energy_on_consume` effect for Food-alikes; behavior-slot items keep their compiled lambdas |
+| item/perk `.enum` fields | 2 latent typos | loader sets `.enum` from position (fixes both) |
+
+Everything else — the ~40 behavior branches — is deliberately NOT touched in
+v1: the **fixed behavior slots** rule (§2.3) keeps every compiled
+`hasPerk(PerkType.Amulet)`-style branch correct because the dataset entry
+carrying that behavior sits at that index with its own name/icon/theme. This
+is what makes v1's fork surface small enough to parity-gate confidently.
+The alternative (rewriting all branches through a behavior-key indirection
+now) is bigger, riskier, and buys nothing v1 needs — it is the incremental
+migration path instead (§2.3), one behavior at a time, each step
+parity-gated.
+
+### 3.4 Save compatibility
+
+Numeric ids and indices are save-load-bearing (§1a), so:
+
+- `getSaveLocation()` gains a dataset dimension:
+  `incrementalGameSave_substrate__<dataset_id>` when a dataset is loaded
+  (vanilla managed play keeps `incrementalGameSave_substrate`; standalone
+  untouched). This also resolves the parent plan's open question 3 (shared
+  save × randomized seeds) for synthetic worlds: **different dataset =
+  different save**, so carried skills can never deflate a new synthetic
+  world's pacing. Worlds sharing one dataset still share a save (v1-
+  acceptable; per-seed keying remains a separate knob).
+- The save blob records `dataset_id` + `schema_version`; `loadGame` refuses
+  a blob whose stamp mismatches the loaded dataset (fresh init instead) —
+  belt-and-braces against key collisions and hand-copied saves.
+- No save MIGRATION machinery in v1 (none exists today either); a dataset
+  edit that changes ids orphans its saves by design — acceptable for
+  generated content, revisit if hand-authored datasets become a workflow.
+
+### 3.5 SAVE_VERSION / release discipline
+
+The hook + decoupling changes are additive and dormant (standalone
+byte-identical, proven by §5). Per the Fork 1.6.2 precedent, `SAVE_VERSION`
+reconciliation = changelog entry; no save-format bump is needed because the
+vanilla path's blob is unchanged. Ship as **Fork 1.7** with the parity
+results attached.
+
+---
+
+## 4. Deliverable 3 — the pipeline split: Pass A structure, Pass B balance
+
+Mirrors the parent's §2b two-pass flow exactly; the split line is the same
+one the user drew — **structure early, balance post-fill**.
+
+### 4.1 Pass A — dataset synthesis (procgen pipeline, structure only)
+
+A new pipeline step, `jta dataset synthesis`, running before/with zone
+arrangement (deterministic per (seed, params); in the stepped pipeline it is
+an EDITABLE step whose artifact is the dataset JSON itself — the schema is
+what makes that possible).
+
+What it generates (linear topology, ruling 1):
+
+1. **Skills**: count + names + roles, drawn from theme namebanks; skill-
+   introduction cadence shaped by the Phase-0 structural profile
+   (`results/vanilla-profile.json`: tasks/zone, type mix, skills-per-task,
+   introduction cadence, perk/item spacing).
+2. **Zone skeleton**: zone count + names + arc beats; tasks per zone with a
+   vanilla-profile-shaped type mix — every zone gets its Travel exit task
+   (linear: one, to the next zone), Mandatory/Boss placement per profile,
+   `unlocks_task` chains generated ONLY with in-game unlockers (no
+   SBtV-gated tasks — the parent's exclusion list becomes empty by
+   construction).
+3. **Perk/item roster**: behavior-slot entries first (automation unlock
+   early — vanilla's Amulet gates automation, so a synthetic dataset that
+   wants automation at all MUST place that slot's perk reachably early;
+   profile gives the vanilla position), then free `skill_speed`/
+   `energy_on_consume` entries; names/icons/flavor from theme.
+4. **Provisional costs**: vanilla-like `cost_multiplier`/`xp_mult` defaults.
+   NOT authoritative — Pass B owns them (unchanged parent ruling 9).
+
+Hard generation constraints (checked by a validator at generation time, not
+discovered at play time):
+
+- **C1**: every costed task has ≥ 1 skill — `estimateResetsToComplete`
+  returns 0 for skill-less tasks (balance-pass plan §1.1), so the balancer
+  cannot pace them. Skill-less tasks are only legal as `free` or Travel-type
+  per vanilla precedent.
+- **C2**: behavior-slot placement rules (§2.3) — validator-enforced.
+- **C3**: unique ids; `unlocks_task` targets exist; perk/item indices in
+  range; every zone reachable (linear: has a Travel task).
+- **C4 (ruling 2, the tracked invariant)**: for every zone Z and skill s
+  demanded by Z's tasks, cumulative XP-earning opportunity in zones < Z
+  (tasks training s, weighted by max_reps × xp_mult × zone XP scaling)
+  clears a profile-derived floor. This is the STATIC feasibility half of
+  "enough stat-level-earning opportunities for what later zones demand"; the
+  emergent half is Pass B / verification (§4.2, §6 5f). Emitted as a report,
+  asserted by the validator.
+
+How the dataset reaches AP and the app:
+
+- `extractZoneRules`/`synthesizeZonePayload` read the dataset instead of the
+  `zoneTaskData.js` snapshot when a dataset is active (the snapshot remains
+  the vanilla-data path); `zoneCount` comes from the dataset (retiring the
+  hand-synced `zoneCount: 30`); grant-suppression `task_patches` use the
+  DATASET's perk sentinel (dataset perk count), not the vanilla
+  `JTA_PERK_COUNT = 47`. Locations/items/access rules/Victory emit exactly
+  as v1 does today.
+- **Carriage: single-carrier + refs (recommended).** The dataset is one
+  world-level document; duplicating it per region multiplies rules.json by
+  zone count for nothing. The first jta region's `playable_payload` carries
+  `jta_dataset` (full document); every jta region carries
+  `jta_dataset_ref: {dataset_id, schema_version}`. The bridge resolves the
+  ref against its cache (regions load in arbitrary order, but
+  procgenPlayer's warehouse holds all payloads at rules load, so the host
+  side can hand the bridge the full dataset with any region — implementation
+  detail at the existing `payload.world` seam). Round-trip transport is
+  already proven size-unbounded (§1b); the roundtrip verifier gains dataset
+  assertions (§6 5d).
+
+### 4.2 Pass B — balance (in-app, post-fill, authoritative)
+
+The Phase-3 machinery extends rather than changes — this is the payoff of
+the parent's Q1 ruling (the engine is the simulator): the balance walk plays
+the REAL fork against whatever tables are loaded, so synthetic data needs no
+new solver.
+
+- `jtaBalance` worker: receives the dataset (structured-clone) with the
+  solve request; calls `loadGameData(dataset)` after `loadJtaEnv()`, before
+  the walk. Cache key gains `dataset_id` (localStorage, alongside seed).
+  Identity constants (`perkItemNames`, perk sentinel) come from the dataset
+  when present, from `zoneTaskData.js` otherwise.
+- The walk itself (sphere-log order, first-touch costing, estimator
+  inversion, `setCostedTaskIds` confinement, normal ticking) is unchanged.
+  `estimateResetsToComplete` is fork code reading live state + task defs —
+  it models the synthetic dataset for free.
+
+**The open investigation (ruling 6): what ELSE needs balancing.** Staged as
+measurements first, levers only when a measurement says so:
+
+| Economy | v1 stance | Lever if needed | Signal that it's needed |
+|---|---|---|---|
+| Task cost | Pass B solves `cost_multiplier` (exists) | — | — |
+| Skill-XP economy | C4 static floor at generation + vanilla-like `xp_mult` | Pass B co-solves `xp_mult` per task (the walk already replays; add xp to the inversion) | walk stalls where estimator inversion runs out of `cost_multiplier` range — i.e. no cost makes the task land in-band because the skill can't be trained |
+| Energy economy | vanilla `economy.*` constants; starting-energy behaviors at vanilla magnitudes | scale `economy` fields or behavior magnitudes at generation | Pass B convergence report: systematic saturation (every task at min cost) or starvation (max cost) per zone band |
+| Effect magnitudes | vanilla-like (ruling 3) | generator-side magnitude ranges per effect kind | Phase-4-style emergent sweep drifting out of the pacing band while coverage holds |
+| Type structure (Travel/Mandatory/Boss/unlockers) | profile-shaped at generation (Pass A) | generation params | structural — never a Pass-B concern |
+
+The Pass-B convergence report (stalls/saturated counters, already emitted)
+is the instrument: run it over a batch of generated datasets × seeds and let
+the failure MODES name the next lever, instead of building levers
+speculatively.
+
+---
+
+## 5. Deliverable 4 — vanilla-dataset parity verification
+
+The load-bearing claim before anything synthetic ships: **the fork with the
+vanilla dataset loaded through `loadGameData` is indistinguishable from the
+fork with its built-in data.** If that holds, every future difference in a
+synthetic world is attributable to the DATA, never to the loader. Secondary
+claim, same harness: with no dataset loaded, the fork remains ≡ its own
+pre-change behavior (the hook is inert).
+
+### 5.1 The vanilla dataset fixture
+
+New exporter `export-vanilla-dataset.mjs` (extends the
+`generate-zone-task-data.mjs` pattern: loads the committed build via the
+shared headless env) dumps the FULL schema document — the repo's first
+content-table serializer (§1a). Specifics:
+
+- Derives `enum` fields from position (neutralizing the two items.ts typos —
+  the exported dataset is CORRECT where the source is wrong; the loader's
+  position≡enum assert makes the fixture and the tables agree).
+- Dead slots (`REMOVED`×2, `DELETED`) — **RESOLVED at 5a implementation:
+  explicit `{placeholder: true}` entries**, so array position == engine enum
+  value everywhere and the loader needs no re-expansion map. (The compaction
+  alternative was dropped as pure extra machinery.)
+- Emits `dataset_id: "vanilla-fork-<version>"`; regenerated whenever the
+  fork's data changes (same regeneration discipline as `zoneTaskData.js`).
+
+### 5.2 Three verification layers on `CC/scripts/jta-parity/`
+
+The harness today compares two BUILDS under one dataset; this adds a mode
+comparing two DATASETS under one build — the same engines-in-lockstep
+machinery with the fork build loaded twice (`loadEngine` already supports
+two build dirs in one process; here both point at the fork, and one side
+gets `loadGameData(vanillaDataset)` before init).
+
+1. **Static-data compare** (cheapest, catches most): `compareStaticData`
+   (`run-parity.mjs:388-453`) already proves task/zone/skill/prestige
+   definitions value-identical — run it native-vs-dataset. Extended to also
+   sweep `PERKS`/`ITEMS` tables and the rebuilt enum objects. This is the
+   fast guard that belongs in the substrate test scripts as a headless
+   assertion, not just in parity runs.
+2. **Sim lockstep, `--dataset` mode**: all four scenarios (idle / scripted /
+   automation / forced-prestige — 36,629 ticks at current budgets), exact
+   `===` per projected field per tick, native engine vs dataset engine.
+   Everything transfers: the projection is dataset-agnostic, per-scenario
+   child processes, anti-vacuity floors, and the `--selftest-perturb` canary
+   (which must also fire in dataset mode — perturb the dataset engine and
+   demand detection, guarding against a vacuous pass where the dataset
+   silently failed to load and both sides ran native data).
+3. **Fresh-load UI parity**: `run-ui-parity.mjs` mode serving the fork twice,
+   one side booting with the vanilla dataset (needs the deferred
+   `?dataset=` boot param or a harness-injected boot script — whichever is
+   cheaper; this layer is the LOWEST priority of the three since layers 1+2
+   already pin names/icons/tooltips via table compare, and rendering reads
+   tables live). Expected result: zero DOM diff, zero exclusions.
+
+**The transitivity chain**, stated in the report: existing harness proves
+fork(defaults) ≡ upstream fork point; the new mode proves
+fork(defaults)+vanillaDataset ≡ fork(defaults); composition:
+**fork+vanillaDataset ≡ the upstream game.** Each new fork version re-runs
+both halves (the harness already re-extracts the committed HEAD per run).
+
+### 5.3 Byte-identity guards outside jta-parity
+
+- **jta-stats**: `driver.mjs` gains a `dataset` option (the `apRuntime`
+  precedent: absent ⇒ byte-identical). A vanilla-dataset run must reproduce
+  the committed baseline numbers byte-for-byte — this exercises the
+  loader under the FULL automation/mods surface that parity's
+  defaults-only scenarios deliberately exclude, closing that coverage gap.
+- **In-app**: one substrate test loading a dataset-carrying preset (5d) and
+  asserting play + location checks + perk grants behave as the existing
+  `jta_locations_test` flow does — the bridge-seam integration proof, since
+  neither parity layer exercises `bridge.js`.
+- **No-dataset inertness**: the existing standalone-baseline byte-identity
+  check (used for every fork change this arc) gates the fork changes
+  themselves.
+
+---
+
+## 6. Phasing (each separately land-able, committed as completed)
+
+- **5a — Schema + vanilla exporter + validator — DONE 2026-07-10.**
+  Shipped: `frontend/schema/jta-dataset.schema.json` (Draft-7, well-formed,
+  fixture validates via python jsonschema);
+  `frontend/modules/jtaSubstrateWrapper/datasetBehaviors.js` (the behavior-key
+  table — 17 perk + 4 item + 16 prestige-unlock + 12 repeatable slots, every
+  key verified at its engine site; Perky/Deenergized have definition+display
+  sites but no found application site — keyed by documented intent);
+  `datasetValidator.js` (authoritative structural checks + CLI, proven
+  non-vacuous by 5 perturbation tests incl. wrong-slot, silent slot takeover,
+  C1, dangling unlocks_task); `export-vanilla-dataset.mjs` (deterministic —
+  byte-identical regeneration verified; hard-fails on hand-table drift vs the
+  build and on unclassified `on_consume`); fixture
+  `datasets/vanilla.json` (`vanilla-fork-1.6.2`: 10 skills, 30 zones, 269
+  tasks, 46 perks, 46 items, 164 KB, 0 warnings).
+  Empirical rule adjustments recorded: `xp_mult >= 0` (vanilla has three
+  deliberate zero-XP tasks: Apotheosize, Defy the Gods, Prepare Final
+  Ritual); C1 and Travel-per-zone hold on vanilla unmodified.
+  §7 Q3 sub-decision RESOLVED: **explicit placeholders** (dead slots are
+  `{placeholder: true}` entries; array position == engine enum value
+  everywhere; the §5.1 compaction alternative is dropped). No fork changes;
+  no runtime behavior anywhere changes.
+- **5b — Fork: `loadGameData` + decoupling changes — DONE 2026-07-10,
+  shipped as Fork 1.7** (submodule `c6bb26d`; changelog entry =
+  `CHANGELOG[0]` = SAVE_VERSION per discipline).
+  Shipped: new fork module `game_data.ts` — TS-side structural validation
+  (essentials + behavior-slot asserts mirroring `datasetValidator.js`, which
+  stays the authoritative pre-flight) + atomic in-place table swap in §3.1's
+  order, ending with enum-`Count` rewrites (member values never move) —
+  plus `window.loadGameData` in `game.ts` (re-init against the dataset-keyed
+  slot; Rendering rebuilt only when a live page bootstrapped; idempotent per
+  `dataset_id`; rejects apply nothing). §3.3 decoupling landed as three
+  runtime objects in `simulation.ts` with vanilla defaults — `SKILL_ROLES`
+  (both Ascension half-level sites: `initializeSkills` AND the Transcendant
+  Aptitude purchase; travel incl. the rendering breakdown row; power UI text
+  now joins the role set), `ECONOMY`, `PRESTIGE_DATA` (SBtV ids; spark
+  origin incl. the Divine Lightning tooltip mirror). Save keying/stamp per
+  §3.4 exactly (`incrementalGameSave_substrate__<dataset_id>`; `loadGame`
+  refuses mismatched blobs BEFORE the task reviver runs — a foreign blob
+  would otherwise revive undefined task defs; vanilla blobs/keys unchanged).
+  Fixture regenerated → `vanilla-fork-1.7` (envelope-only diff, content
+  tables byte-identical).
+  **Verification:** new smoke `scripts/procgen/verify-jta-dataset-load.mjs`
+  (7 broken-dataset rejects leave tables untouched; vanilla dataset ≡ native
+  across every table incl. prestige/roles/economy/derived maps; save keying;
+  idempotency by GAMESTATE identity; 500-tick play with task completion,
+  energy drain, synthesized `energy_on_consume`); sim parity PASS (4
+  scenarios, 36,629 ticks, fork@defaults ≡ upstream fork point); UI parity
+  PASS (only the documented `#settings` exclusion); substrate suite green;
+  jta guards green.
+  **Implementation findings (recorded for 5c):**
+  - Behavior-slot entries keep their compiled tooltip/on_consume/effect-text
+    lambdas unless the dataset provides text; a dataset-provided tooltip is a
+    STATIC override, so the three state-dependent perk tooltips
+    (Reflections, Energetic Memory, Unified Theory) freeze at their captured
+    text in dataset mode — identical at fresh state (all gates pass), stale
+    mid-game. Cosmetic; same applies to captured prestige descriptions
+    (Divine Lightning). Revisit in 5c only if layer 1's tooltip sweep cares.
+  - `energy_on_consume` items always synthesize the FULL Food-pattern text,
+    so Fish/Calamari/Cave Insects gain the "Can take you above your Max
+    Energy / Right-click" lines their hand-written vanilla tooltips omit —
+    true statements, dataset-mode-only, asserted by containment in the smoke.
+  - Placeholder prestige-table entries keep their vanilla definitions (the
+    engine renders every slot; no dead-slot precedent exists there); v1
+    datasets always carry full prestige tables.
+  - Placeholder perk/item cosmetic names are "DELETED" (never rendered).
+  - Shrinking a table leaves stale reverse-map names above the new `Count`
+    on the enum objects; nothing reads them at runtime.
+- **5c — Parity: dataset mode — DONE 2026-07-10, ALL LAYERS PASS.** No fork
+  changes (outer harness work only).
+  **Layer 2 + 1 (`run-parity.mjs --dataset`):** the fork build loaded twice
+  in one process (second engine from an on-disk build copy —
+  `fork-head/build-dataset-copy/`; identical file URLs would share one
+  cached ES-module graph), dataset side gets `loadGameData(vanilla)`.
+  All 4 scenarios lockstep-PASS with tick/reset counts IDENTICAL to the
+  upstream-mode run (2000/2517/31304/808 ticks) ⇒ by transitivity
+  **fork+vanillaDataset ≡ the upstream game**. Layer 1 = the base static
+  sweep + a new `compareDatasetStaticData` (SKILL_DEFINITIONS/PERKS/ITEMS
+  incl. fresh-state tooltips, ARTIFACTS/NOTE_ITEMS, enum Counts,
+  SKILL_ROLES/ECONOMY/PRESTIGE_DATA, dataset-side enum≡position), both
+  gating the verdict, with the 5b cosmetic deltas carved out explicitly
+  (dead-slot names, energy-item synthesized text containment-checked, the
+  two fixed `.enum` typos). **Canary:** the parent `--dataset` run
+  auto-runs `--selftest-perturb-dataset` (doubles one cost_multiplier in
+  the DOCUMENT; must be caught by BOTH lockstep divergence and a static
+  sweep — verified: diverges at tick 29). The tick-level
+  `--selftest-perturb` also fires in dataset mode. Vacuity guards: FATAL
+  exit on loadGameData failure or unmarked `getLoadedDatasetId()`.
+  **Layer 3 (`run-ui-parity.mjs --dataset`, ruled in §7 Q6):** both sides
+  serve the same fork extraction; dataset side loads the fixture via a
+  harness-injected `loadGameData` (no fork boot param needed — the deferred
+  `?dataset=` stays deferred); vacuity probe = save lands under the
+  dataset-keyed localStorage slot. Result: **zero DOM diff with ZERO
+  exclusions on all 4 views** (raw=0), pixels at renderer noise floor.
+  **§5.3 jta-stats:** `driver.mjs` gained `options.dataset` (+ run-node
+  `--dataset FILE`), applied before init/universe-build; absent ⇒
+  byte-identical (verified: pre-edit driver ≡ post-edit no-dataset run).
+  Byte-identity under the FULL automation/mods surface: vanilla-dataset run
+  ≡ no-dataset run on `spark-off-z15-baseline` (130/130 @ 237 runs, 9173
+  ticks, whole result JSON identical modulo meta/wallMs).
+  **Finding (pre-existing, not 5b/5c — RESOLVED 2026-07-10):** the
+  COMMITTED `results/spark-off-z15-baseline-node.json` (2026-07-06, 261
+  runs) no longer reproduces — today's builds give 237/9173 (identical on
+  Fork 1.6.2 and Fork 1.7, also proving 1.7 inert under full mods beyond
+  defaults-only parity). Root cause: `baselineMods()` inherits the GAME's
+  `auto_prestige_stall_resets` default, which Fork 1.6.1 changed 40→20
+  later the same day the file was generated; the committed
+  `spark-off-z15-stall-20` variant is EXACTLY 237/9173. No engine or
+  harness drift. Filed in `CC/docs/cleanup-backlog.md` (regenerate vs
+  annotate is the only open decision).
+  Regression re-runs after the harness edits: upstream-mode sim parity
+  4/4 PASS and UI parity PASS unchanged. **Gate satisfied: 5d may start.**
+- **5d — Pass A: pipeline dataset synthesis — DONE 2026-07-10.** Zero fork
+  changes (Fork 1.7's `loadGameData` is the only fork surface used).
+  Shipped, one commit per step:
+  1. `frontend/modules/jtaSubstrateWrapper/generateDataset.js` +
+     `datasetNamebanks.js` (three themes): deterministic per (seed, params)
+     — byte-identical regeneration; CLI `--seed/--zones/--theme/--out`.
+     **v1 structure policy:** the skeleton mirrors the vanilla profile
+     entry-for-entry (per-zone type mix, skills-per-task, reps/xp, unlock
+     chains, perk/item placement positions, behavior slots, effect
+     magnitudes) while every IDENTITY is synthetic — theme-namebank names,
+     a seeded skill permutation (xp_needed_mult and the `roles` couplings
+     follow the skill), fresh task ids. So a generated world is
+     balance-ISOMORPHIC to vanilla under relabeling (rulings 2/3 taken
+     literally); seeds vary theme/names/permutation, not balance. The five
+     hidden-without-unlocker vanilla tasks are DROPPED (⇒ 264 tasks), so
+     `sbtv_unlock_task_ids: []` holds by construction. C1–C3 via the
+     authoritative validator; **C4 implemented generator-side**: cumulative
+     skill-XP opportunity per (zone, demanded skill), floors derived from
+     the vanilla profile keyed by depth-since-introduction, emitted as a
+     report and asserted.
+  2. Library dataset mode: `setJtaDataset(doc)` switches the zone-locations
+     channel to a normalized dataset view; registry `zoneCount` and
+     `libraryItems` became live getters (dataset zone count / perk names);
+     suppression sentinel = the ACTIVE source's perk count. Carriage per
+     ruling 4: every region payload gets `jta_dataset_ref`, zone 0 carries
+     the full `jta_dataset`. Vanilla path byte-identical (presets
+     regenerate identically).
+  3. Host + bridge: `buildWarehouse` resolves refs at rules load (hands the
+     bridge the full document with any region); bridge `_applyWorldDataset`
+     calls `window.loadGameData` when the dataset_id differs, REFUSES the
+     region load on failure/missing hook/unresolved ref (errors surfaced);
+     synthetic exit tasks take the travel skill from the dataset's roles.
+     `jtaBalance.detectJtaWorld` now SKIPS dataset worlds — Pass-B dataset
+     support is 5e; solving vanilla tables against dataset ids would be
+     garbage. Unit tests on all three seams.
+  4. Guards: new `scripts/procgen/verify-jta-generated-dataset.mjs`
+     (determinism ×3 cases, validator + C4 re-check, load+play on the fork
+     build incl. a dataset→dataset swap and the 12→10 skill-Count shrink;
+     31/31). `verify-jta-locations-roundtrip.mjs` gained `JTA_RT_DATASET=1`
+     (carriage asserted at Pass A / world_generator / Generate.py /
+     warehouse; document structurally identical at every hop; 38/38 — and
+     AP fill produced a non-degenerate sphere log over synthetic names).
+  5. In-app: `jta_dataset_test` preset (3 zones, dataset embedded;
+     generator script asserts the carriage) + substrate test
+     `jta-dataset-world-progression` (22nd test) — the bridge-seam proof:
+     the fork serves the DATASET's themed tasks after load, automation
+     walks zone 0→1 under normal ticking (the three hard-won test facts
+     honored), and the dataset perk's location check / AP item / in-game
+     grant all land with held == received. `resetJtaSaveAndReload` clears
+     save slots by prefix (dataset-keyed slots included).
+  **Findings:**
+  - **C4 floors must exclude the SBtV-gated tasks** from vanilla's
+    opportunity table: they are unreachable without the prestige unlock
+    (and one is the game's only 5-skill task), so raw floors are inflated —
+    the mirror-shaped dataset failed its own floors at zones 8+ until the
+    floor computation dropped them. With reachable-only floors the mirror
+    meets them at equality (tightest margin 1.00×), i.e. the assert is
+    exactly at vanilla's own bar.
+  - **Bridge placement deviates from §3.2's letter**: the dataset applies
+    at the TOP of `_handleLoadRegion`, not "immediately before
+    `_applyTaskPatches`" — `loadGameData` re-initializes GAMESTATE, so the
+    catch-up resets, energy sync, and `loadZone(jtaZone)` that sit between
+    must operate on the post-swap state (the ruled position would load the
+    OLD tables' zone and lose the energy sync). The binding constraint —
+    dataset before task patches — holds.
+  - The generated dataset's perk roster mirrors vanilla's 47 slots, so the
+    dataset sentinel VALUE equals vanilla's for now; the plumbing reads the
+    dataset's count everywhere (diverges the moment a generator varies
+    roster size).
+  - jta test files are deliberately absent from `init-bundled.js` (jta
+    suite is dev-mode-only precedent); the new test file follows suit.
+  **Gates (all green 2026-07-10):** generator determinism + validator CLI +
+  jsonschema + C4 report; generated-dataset guard 31/31; roundtrip 27/27
+  vanilla + 38/38 dataset; presets byte-identical; substrate suite 22/22
+  (solo run — a concurrent-load run flaked `jta-bot-walkto-exit`,
+  pre-existing test, unrelated); zone-skip + cost-hooks guards; procgen
+  presets 27/27; vitest 2580 green; 5c dataset sim parity re-run PASS
+  (see below).
+- **5e — Pass B extension — DONE 2026-07-10.** Zero fork changes (Fork
+  1.7's `loadGameData` is the only fork surface used). Shipped, one commit
+  per step:
+  1. Worker dataset load (`1fef51eb8`): `detectJtaWorld` no longer skips
+     dataset worlds (the 5d seam removed); `hostGlue.extractDataset`
+     resolves the single-carrier + refs carriage from the rules doc (a ref
+     with no resolvable carrier SKIPS the solve — the bridge refuses those
+     region loads too, and solving vanilla tables against dataset ids would
+     cache garbage); `datasetIdentity` derives the walk's identity constants
+     from the document (placed-perk names; sentinel = `perks.length`);
+     `cacheKey(seed, datasetId)` adds a dataset_id dimension (`__ds_<id>`
+     suffix; vanilla keys byte-unchanged — existing caches and the
+     `jta-balance-solve-at-rules-load` test key on them, and every Pass-A
+     test preset shares seed 1, so the dimension is what keeps a vanilla
+     cache entry from patching dataset task ids). The host posts the
+     dataset (structured clone) with the solve request; `balanceWorker`
+     calls `loadGameData(dataset)` after `loadJtaEnv()`, before the walk —
+     the walk itself is UNCHANGED (`estimateResetsToComplete` is fork code
+     reading live state, so it models the dataset for free; the
+     dataset-keyed save slot writes to the stubbed-localStorage black hole
+     like the vanilla slot). +5 hostGlue vitest cases.
+  2. Headless guard (`08f12a736`): `verify-jta-balance-pass.mjs`
+     auto-detects the carriage and mirrors the worker path (loadGameData +
+     dataset identity constants); ref-without-carrier fatal. Vanilla inputs
+     byte-identical to the pre-change script (verified against HEAD copy).
+     The `jta_dataset_test` preset solves 23/23, 0 stalls, 0.2 s; a z15
+     generated world exported through Generate.py solves 130/130 in 3.4 s.
+  3. §4.2 measurement driver (`031b8d3f4`) + results (`7afb56ecf`):
+     `CC/scripts/jta-stats/sweep-dataset-passb.mjs` = steps 1-2 of
+     sweep-ap-seeds only (roundtrip export → Pass-B convergence report —
+     the emergent replay is 5f), aggregating the §4.2 trigger signals;
+     `JTA_RT_DATASET_SEED` decouples dataset identity from fill seed so a
+     batch can cross them. **VERDICT — no lever fires** (6 worlds, datasets
+     1-4 × fill seeds, z15/130 locations): zero saturated solves, zero
+     milestone stalls, no zone band pinned at min cost, no starvation band
+     ⇒ xp_mult co-solve and economy scaling NOT built, per the
+     measurements-first staging. The 5/6 conservative-bar failures are
+     three already-known walk modes (full decomposition + per-task evidence
+     in `results/dataset-passb/SUMMARY.md`): threshold-drift unengagement
+     on perk-ITEM milestones sitting on non-native perk tasks (the
+     `setPerkCategoryTaskIds` override deliberately covers only native perk
+     tasks; same mode as vanilla Phase-4 seed 4, which plays to full
+     coverage emergently), one replay stall (vanilla seed 4 has 5), and a
+     boundary-fallback bookkeeping gap — a task completing within ONE run
+     of release (under the fallback's ≥2-run guard) keeps its Pass-A
+     provisional cost and reads as "never started" despite completing;
+     ≤1 task per affected world, coverage unaffected. Milestone pacing on
+     every pair sits inside the settled [0.4×, 3×] advisory band (gap means
+     2.5–6.2 vs resetsPerStep=5).
+  4. In-app: `jta-dataset-world-progression` now asserts the SOLVE instead
+     of the skip — cold solve at rules load (cleared dataset-keyed cache),
+     patches cached under `(seed, dataset_id)`, cache-hit re-merge on
+     reload, and the bridge applying a solved `cost_multiplier` to a live
+     dataset task def on region entry; the zone-0→1 walk then plays on
+     solved costs (modeled on `jta-randomized-balanced-progression`).
+  **Gates (all green 2026-07-10):** vitest 2585; substrate suite 22/22
+  (solo run); 3 jta guards (managed-zone-skip, cost-hooks, roundtrip 27/27
+  vanilla + 38/38 dataset); verify-jta-generated-dataset 31/31;
+  verify-jta-dataset-load; procgen presets 27/27; vanilla inertness —
+  vanilla cache keys unchanged, vanilla guard inputs byte-identical,
+  vanilla z15 baseline solve PASS.
+  **5e addendum (same day, user rulings on the measurement findings):**
+  1. **Forced perk-category set = native ∪ holders, single definition**
+     (ruled: perk task data stays synchronized everywhere). The union —
+     native perk tasks (suppression-patch ids) ∪ perk HOLDERS (tasks whose
+     own AP location holds a perk item) — is defined once in
+     `perkOrigin.js` (`activePerkItemNames` / `perkHolderTaskIds` /
+     `forcedPerkCategoryIds`) and every consumer derives through it: the
+     Pass-B solver (holder ids extracted host-side, shipped to the
+     worker), the bridge (`_syncPerkCategoryTaskIds` holder leg from the
+     staticData placements, lazily resolved), the measurement model
+     (`make-ap-config.mjs`), and the headless guard. This retires the
+     measurement pass's unengaged-milestone mode at its cause: a perk
+     placed on a non-perk task was judged by `other`'s cost-invariant
+     level metric. Post-change re-run of the §4.2 batch: see
+     `results/dataset-passb/SUMMARY.md`.
+  2. **Convergence-bar bookkeeping:** entries that COMPLETE before their
+     solve fires (inside the boundary fallback's ≥2-run guard) now count
+     as `completedUnsolved`, not `neverStarted`; the bar fails only on
+     genuinely-never-ran entries. The underlying gap (the task keeps its
+     provisional cost in the replay economy) is FILED in
+     `CC/docs/cleanup-backlog.md` with the candidate solve-at-completion
+     fix — not changed, because it invalidates patch caches and committed
+     measurement records and deserves its own step.
+  3. The headless guard now derives its walk seed via `computeSeedName`
+     (Pass-A presets carry an empty `seed_name`; the guard used to walk
+     them in a different shuffle order than the app solves them).
+- **5f — Emergent verification — DONE 2026-07-10, PASS under the refined
+  progression gate.** GATE RULING (user, same day, supersedes the initial
+  full-coverage bar): a world FAILS only if the Victory task or any
+  perk-holding task goes uncompleted within the run budget; total location
+  coverage is REPORTED, not gated (solo v1 filler does nothing; the
+  multiworld caveat — a filler location can hold another player's
+  progression item — rides with the report). **Under that gate all six
+  generated worlds PASS: victory at runs 55–89, last perk by run 53–79,
+  vanilla-comparable (anchor 63/53); pacing advisory in-band everywhere;
+  C4 zero-level check clean.** The remainder of this entry records the
+  initial full-coverage run and its diagnosis — kept because the fragility
+  it found is real (and gate-relevant if multiworld ever hardens it).
+  Shipped (`4ae824866`): `CC/scripts/jta-stats/sweep-dataset-emergent.mjs`
+  (vanilla anchor + datasets × fill seeds; free-automation play of
+  Pass-B-solved exports; hard coverage gate + `[0.4×, 3×]` advisory +
+  emergent C4 via a new opt-in `recordSkillLevels` driver trace —
+  conditionally serialized, committed baselines reproduce byte-identically);
+  `make-ap-config.mjs` dataset mode (perk names / zone limit / exclusions /
+  `options.dataset` from the carriage). UI-parity layer 3 was already built
+  in 5c as ruled.
+  **Results (`results/comparison-dataset-emergent.md`):** vanilla anchor
+  130/130 in 249 runs; **every dataset world strands 1–3 locations** at the
+  2000-run ceiling — task 256 (z12, the same mirrored structural slot) on
+  all six, i.e. vanilla's `thresholdFloored` fragility class made fatal.
+  Diagnosis: not cost (cm ≈ 0.1), not the model (perks/regrants clean; z12
+  replayed 1480×) — the `other` category's cost-invariant LEVEL metric
+  refuses the task and its zone never empties, so the all-skipped fallback
+  never fires; the balance-isomorphism argument covers structure, not the
+  emergent skill-level trajectory the metric keys on. Pacing advisory and
+  the C4 zero-level check pass on every world (the C4 anchor-ratio flags
+  are a completion-timing artifact, documented).
+  **Rescue experiments (existing knobs, measurements only):** End-Run
+  all-skipped does NOT rescue; **`threshold_other_metric = RESETS` rescues
+  fully** (ds1-f1 130/130 in 117 runs; worst world ds2-f2 130/130 in 194,
+  pacing in-band). That knob was SETTLED as LEVEL by Phase 4 on vanilla
+  evidence — re-opening it (globally, per-world-type, or another remedy)
+  is a user decision. RESOLVED by the gate ruling above: with progression
+  as the hard gate, `threshold_other_metric` stays LEVEL (no re-litigation
+  needed); the RESETS rescue stays recorded as the known remedy should
+  full coverage ever harden again (multiworld).
+
+- **5g — Raw-value economy mode (Fork 1.8) — DONE 2026-07-11 (all three
+  riders included). GATE GREEN: pre-multiplied raw-vanilla fixture ≡
+  formula-vanilla ≡ native, TICK-FOR-TICK** — all four lockstep scenarios
+  at the identical historical tick counts (2000/2517/31304/808) in all
+  three parity modes (upstream / dataset / dataset-raw), canaries detected
+  in both dataset modes (the raw canary perturbs `raw_cost`); UI parity
+  zero DOM diff on BOTH the formula and the raw fixture (every rendered
+  number is an effective value); roundtrip both modes; full battery
+  (findings below). Motivation (assessed
+  2026-07-10 after 5f): for linear v1 raw values add no new reachable
+  states (`cost_multiplier`/`xp_mult` already span the space — this is a
+  reparameterization), but they remove real solver pathologies (Pass B
+  fighting the zone-ordinal exponential produced multipliers up to
+  1.09e5 in the 5e batch, one saturation clamp from failure) and they are
+  REQUIRED for the post-v1 branching/grid topology, where zone ordinal
+  stops being the difficulty axis. Design:
+  - **Schema (additive, no version bump):** `economy.value_mode:
+    "zone_formula" | "raw"` (absent ⇒ `zone_formula`); in raw mode every
+    task carries `raw_cost` + `raw_xp` and every zone carries `raw_drain`
+    — **RULED Q8: all zone-keyed formulas go raw TOGETHER** (cost, XP,
+    energy drain; no partial mode). Validator enforces all-present under
+    raw. The Boss exponent dissolves into the values (raw is absolute);
+    `zone_cost_exponent`/`boss_cost_exponent`/`xp_base`/`xp_zone_mult`
+    become unused-but-carried in raw mode.
+  - **Fork (Fork 1.8):** the three zone-keyed sites already routed
+    through `ECONOMY` (5b §3.3) branch on the mode — `calcTaskCost` =
+    `raw_cost × cost_multiplier` in raw mode, XP and per-zone drain read
+    their raw values. Everything downstream (estimateResetsToComplete,
+    thresholds, Pass B, the stats driver) flows through those functions
+    unchanged. Dormant with no dataset / formula mode: vanilla
+    byte-identical, parity-gated like 5b.
+  - **Balancer:** UNCHANGED — `cost_multiplier` stays the Tier-1 patch
+    lever, now over the raw base; solved multipliers should sit near 1.
+  - **Generator:** emits raw BY DEFAULT for synthetic data — **RULED Q9**
+    — computing the raw values by evaluating the vanilla backbone at
+    generation (the mirror stays balance-isomorphic byte-for-byte in
+    effect); `value_mode: "zone_formula"` remains generatable for
+    comparison runs.
+  - **Verification (the 5c transitivity trick, re-aimed):** a raw-mode
+    vanilla fixture derived by PRE-MULTIPLYING the backbone into raw
+    values must play tick-identically to the formula-mode vanilla fixture
+    and to native — sim lockstep + static sweep + the smoke; then the
+    generated-dataset guard, roundtrip, and the 5f emergent sweep re-run
+    on raw-mode worlds (progression gate).
+  - **Riders (RULED 2026-07-11, post-v1 design session — do these WITH 5g,
+    which already touches schema + generator + validator + fixtures):**
+    (1) `computeC4Report`/`opportunityTable` hardcode `XP_ZONE_MULT = 1.25`
+    (`generateDataset.js:99-129`) — under raw mode the opportunity weight
+    must read `raw_xp`, else C4 silently mis-weights every raw dataset;
+    (2) content-hash the dataset identity — `provenance.content_hash` over
+    the canonical document minus provenance, short hash appended to
+    `dataset_id`, plus a `datasetValidator.js --restamp` CLI mode. Today
+    `dataset_id` is a pure function of (theme, seed, zoneCount), so an
+    edited document keeps its id and silently poisons the
+    `(seed, dataset_id)` Pass-B cache and the dataset-keyed save slot;
+    (3) optional `zones[].key` (unique stable string) — a
+    position-independent zone identity for post-v1 branching topology and
+    theme references. Full context and rationale:
+    `NewDocs/plans/jta/jta-synthetic-post-v1-design.md` §2.6 (gitignored;
+    the zone-randomization memory topic is the durable pointer).
+  - **5g FINDINGS (implemented 2026-07-11; fork `1f0b731`, outer
+    `74cafbc34`..; plan-contact corrections flagged in the commits):**
+    1. **The plan's "three zone-keyed sites already routed through ECONOMY"
+       was wrong for drain.** The drain backbone was still the compiled
+       constant `ZONE_SPEEDUP_BASE = 1.05` — and it has TWO engine sites
+       (task progress multiplier AND energy drain per tick; they cancel in
+       energy terms — the factor is a pure time compression). Fix shipped
+       with 5g: `economy.zone_speedup_base` is a 7th REQUIRED backbone
+       field (schema + validator + fork + exporter cross-check), and in raw
+       mode `raw_drain` replaces the factor at BOTH sites together —
+       replacing only the drain leg would have silently re-keyed task speed
+       on zone ordinal. Consequence: pre-5g dataset documents (6 economy
+       fields) no longer validate — regenerate them (fixtures, the
+       jta_dataset_test preset, and all /tmp experiment docs were).
+    2. **Bit-exact tick-for-tick equivalence required operation-order
+       discipline** (float multiplication is commutative but NOT
+       associative — the naive "raw_cost = 10 × 2.2^z, keep cm" design
+       mismatches ~37% of random triples by 1 ulp):
+       `raw_cost` is generated with calcTaskCost's exact operation order
+       ((base × cm) × exponent^zone) and **cost_multiplier folds to 1**
+       (multiplying the identical double by 1.0 is exact — and the folded
+       multiplier is precisely "solved multipliers sit near 1");
+       `raw_xp` = xp_base × xp_zone_mult^zone is applied by the fork at the
+       zone factor's exact chain position (AFTER the perk multiplications)
+       and **xp_mult is NOT folded** (it sits before them — folding it
+       would break bit-equality; C4 keeps reading it). The xp leg's
+       exactness rests on xp_base being a power of two (vanilla 8): a
+       non-pow2 xp_base still plays correctly, just not bit-identically to
+       its formula twin. `raw_drain` is the same double the formula
+       computes — exact unconditionally. Guards assert effective values
+       (cost/XP/drain/progress-mult) bit-exact: raw-vanilla ≡ native AND
+       every generated raw twin ≡ its formula twin.
+    3. **Rider 2 clarification: the content hash must also exclude
+       `dataset_id`** (§2.6 said only "minus provenance") — the id embeds
+       the hash, so hashing it would be circular. Hash = FNV-1a over
+       sorted-key canonical JSON minus `provenance` minus `dataset_id`;
+       validation errors on mismatch or missing id suffix (missing
+       content_hash entirely = legacy warning); `--restamp` proven
+       (tamper → reject → restamp → pass). The identity applies to ALL
+       stamped documents including the vanilla fixtures
+       (`vanilla-fork-1.8-e72f5c24`, `vanilla-fork-1.8-raw-ecaa2185`).
+       Old (seed, dataset_id) cache entries and dataset save slots are
+       orphaned, not migrated; `resetJtaSaveAndReload` needed no change
+       (prefix clearing covers suffixed ids).
+    4. **Rider 1 normalization:** the raw C4 opportunity weight is
+       `xp_mult × raw_xp / xp_base` — the ÷pow2 is exact, so raw and
+       formula twins report IDENTICAL C4 numbers (verified: tightest
+       margin 2.56× on both twins) and the profile-derived floors stay
+       untouched. Formula datasets now read `economy.xp_zone_mult` from
+       the document instead of the hardcoded 1.25 (identical for mirrors).
+    5. **Informational formula-equivalent multipliers (user follow-up
+       2026-07-11):** the cost fold erases strategy-relevant structure
+       from the DATA (post-v1 branching also makes it non-reconstructable
+       from raw values), so `premultiplyDataset` stamps
+       `formula_cost_multiplier` + `formula_xp_mult` on every raw task —
+       what the multipliers would be if the document weren't raw
+       (engine-blind; schema + validator type-check them; the
+       generated-dataset guard asserts they equal the formula twin's real
+       multipliers). Note the fork UI currently renders only EFFECTIVE
+       numbers (energy/ticks/XP) — surfacing these fields in tooltips
+       would be a small fork follow-up, not yet requested.
+    6. **Generator shape:** raw is the default via
+       `premultiplyDataset(formula doc)` — ONE raw-ification code path
+       shared by the generator, the exporter (which writes the committed
+       `datasets/vanilla-raw.json` twin), and any future tooling; the twin
+       property (raw ≡ formula, unpatched) therefore holds for every
+       generated world by construction, not just the vanilla fixture.
+       `--value-mode zone_formula` (CLI) / `params.valueMode` keep Q9's
+       comparison mode expressible. Runtime-synthesized tasks (host exit
+       tasks, artifact tasks) carry no raw values and fall back to the
+       formula backbone — which is why raw documents still carry the
+       formula fields (the plan's "unused-but-carried" is load-bearing).
+    7. **Verification battery (all green):** sim lockstep ×3 modes at
+       identical tick counts + both canaries; UI parity zero DOM diff on
+       formula AND raw fixtures; verify-jta-dataset-load (raw rejects,
+       raw ≡ native bit-exact, formula fallback, mode reset);
+       verify-jta-generated-dataset (twin bit-exactness, identity/key
+       asserts); roundtrip default + JTA_RT_DATASET=1 (the raw document
+       survives Generate.py fill + carriage + the Pass-B worker walk);
+       balance-pass vanilla path unchanged (the sweep's anchor
+       byte-reproduces Phase 4: 130/130 in 249 runs); presets: only
+       jta_dataset_test changed (now a raw world — the in-app test
+       exercises the raw path), regeneration deterministic; vitest
+       2591/2593 (the 2 fails = braidRegime2's documented
+       CPU-contention flake class under sweep load, 40/40 solo);
+       substrate suite 22/22 incl. jta-dataset-world-progression on the
+       raw preset through bridge + Pass-B worker; procgen presets 27/27
+       (its zone-demo Generate click measured 299.7 s under a sibling
+       session's 3-core load vs a 300 s budget — bumped to 450 s the
+       same day since multi-session load is the norm; re-verified
+       27/27); emergent sweep on raw worlds (next item).
+    8. **Emergent sweep on raw worlds — HARD PROGRESSION GATE PASS on all
+       six** (`results/comparison-dataset-emergent-raw.md`; artifacts
+       /tmp per convention; the vanilla anchor byte-reproduces Phase 4:
+       130/130 in 249 runs). Victory runs 89–143 (5f formula batch:
+       55–89), last perk 101–153, pacing inside the band everywhere,
+       C4 zero-levels clean (the sub-0.4× anchor-ratio flags are the same
+       completion-timing artifact 5f documented). Residual filler
+       stranding is the SAME LEVEL-metric class — task 256/z12 on 5 of 6
+       worlds (ds1-f1 reached FULL 130/130 in 202 runs; the two ds2
+       worlds strand 4–5 vs 5f's 1–3). **Pass B behaves differently on
+       the raw base, as intended but with texture:** solved multipliers
+       sit near 1 at the median (ds1-f1 p50 = 0.96) and the worst
+       saturation dropped an order of magnitude (max cm 1.1e4 vs the
+       formula batch's 1.09e5 — reduced, not eliminated), while the
+       walk's CONSERVATIVE bar now reports 2–12 stalled entries on 5/6
+       raw solves (formula round 2: 5/6 clean) — the cm floor/cap
+       geometry acts on a base that folds the profile multiplier, so the
+       reachable cost band differs. Phase 4's ruling stands: the
+       conservative bar records, emergent play gates — and the gate
+       passes everywhere.
+- **Phase 6 (parent plan) — absorption audit** → old-stack retirement
+  green-light; see jta-zone-randomization-plan.md §5/§6.
+
+Post-v1 — now DESIGNED + RULED (2026-07-11, all seven rulings accepted):
+`NewDocs/plans/jta/jta-synthetic-post-v1-design.md` sequences phases
+0(=5g)/A(structure policy v2)/B(pipeline step ②d)/C(branching)/D(effects
+migration ladder)/E(theme v2) with gates; supersedes the informal list that
+stood here (per-behavior effects migration, branching/grid-fit via
+`generateZoneForSpecs`, narrative `theme`, prestige-table variation,
+standalone `?dataset=` play — all absorbed into that document's phasing).
+
+---
+
+## 7. Rulings (all received 2026-07-10, same day as the proposal)
+
+1. **Behavior slots vs immediate indirection — RULED: start with slots.**
+   User follow-up: "would it make sense to migrate to indirection later?" —
+   Answer recorded: the migration target is the declarative `effects[]`
+   vocabulary (§2.3), not a permanent indirection layer. Sequence per
+   behavior: slot now → rewrite that one branch to read data → the slot
+   constraint dissolves for that key. A wholesale behavior-key indirection
+   layer as an intermediate stage would be double work; a per-behavior
+   indirection shim is only worth building if a concrete need for
+   count-freedom-with-behaviors arrives before the effects migration reaches
+   that behavior. So: indirection may appear transiently per behavior, but
+   declarative effects are the endpoint.
+2. **Runtime enum rewrite feasibility — VERIFIED 2026-07-10 (implementer
+   check, not a ruling):** zero `const enum` in the fork's TS sources, and
+   its tsconfig sets `isolatedModules: true`, which forbids const enums
+   project-wide (so this cannot silently regress). Compiled `build/*.js`
+   confirms standard mutable runtime enum objects. Count rewrite is
+   feasible for ALL tables. **The `*.Count` capture audit is DONE
+   (2026-07-10, pre-5b): zero module-scope captures.** Every `.Count` usage
+   in the fork is a class-field default (evaluated per construction) or an
+   in-function read — both track a mutated enum. Combined with fixed
+   behavior slots (member values like `PerkType.Amulet` never move), 5b
+   needs NO wholesale enum renumbering: the only enum mutation is setting
+   `SkillType.Count`/`PerkType.Count`/`ItemType.Count` to the dataset
+   lengths (keep reverse mappings consistent). One nuance: `new Gamestate()`
+   field initializers (e.g. `undo_item = [ItemType.Count, 0]`) bake the
+   Count value current at construction — moot because `loadGameData` ends
+   with a re-init. Also verified: `initializeSkills` loops
+   `skill < SkillType.Count` and creates Skill objects for placeholder
+   indices too, identical to vanilla's REMOVED handling — dataset
+   placeholders need no special-casing there.
+3. **Dead-slot handling — RULED: no user preference; implementer's call.**
+   Decided at 5a: explicit placeholders (see §5.1 and Phase 5a notes).
+4. **Dataset carriage — RULED: single-carrier + refs.**
+5. **Theme v1 depth — RULED: namebank-driven `title/setting/flavor` only;**
+   other ideas (arc beats etc.) may be tried later.
+6. **UI-parity layer 3 — RULED: run it** (it looks reasonably cheap);
+   drop only if implementation reveals it is not worth the effort.
+7. **Code homes — RULED as recommended:** dataset generator outer repo
+   (pipeline-side, next to the wrapper library); `loadGameData` +
+   decoupling changes in the submodule; schema/validator outer repo with
+   the vanilla fixture regenerated from the fork build.
+8. **Raw-value economy mode: scope — RULED 2026-07-10: ALL zone-keyed
+   formulas go raw together** (task cost, task XP, per-zone energy drain
+   — no partial/cost-only mode). See §6 5g.
+9. **Raw-value economy mode: generator default — RULED 2026-07-10: raw is
+   the DEFAULT for synthetic data**; the zone-formula mode remains
+   expressible in the schema (vanilla fixture; comparison runs).
+
+## 8. Traceability
+
+| User input (2026-07-10) | Where it landed |
+|---|---|
+| Topology v1 linear | §0.1, §4.1 (spiral path, Travel-exit-per-zone) |
+| Task skeleton = vanilla balance; track stat-opportunity invariant | §4.1 C4 (static), §4.2 xp row + §6 5f (emergent) |
+| Effects v1 vanilla-like + generalized vocabulary | §2.3 (effects[] + behavior slots + migration path) |
+| Theme/narrative purpose; schema carries theme hooks | §2.5, §4.1 |
+| ALL data synthetic incl. skill count, zone count, names | §2.2, §3.3 (count decoupling), §7 Q2 |
+| Serializable versioned schema as spine | §2 |
+| Generation in pipeline, split structure/balance | §4 |
+| No data-injection hook (blocker) | §3 |
+| What else needs balancing (open investigation) | §4.2 table |

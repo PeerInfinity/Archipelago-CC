@@ -1,0 +1,11 @@
+{
+  "name": "pin100-thresholds-off",
+  "options": {
+    "pinMaxEnergy": 100,
+    "maxRuns": 2000,
+    "zoneLimit": 15,
+    "modOverrides": {
+      "threshold_master": false
+    }
+  }
+}

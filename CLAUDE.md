@@ -13,9 +13,9 @@ source .venv/bin/activate
 | Test single game | `python scripts/test/test-all-templates.py --include-list "[GameName].yaml"` |
 | Spoiler test only | `npm test -- --mode=test-spoilers --game=[gamename] --seed=1` |
 | Regression test | `npm test --mode=test-regression` |
-| Check if dev server is running | `ss -ltn \| grep ":8000"` (or `pgrep -af "http.server"`) |
+| Check if dev server is running | `ss -ltn \| grep ":8000"` (or `pgrep -af "[h]ttp.server"` — note the brackets) |
 | Start dev server | `python -m http.server 8000` (only if not already running) |
-| Stop dev server | `pkill -f "http.server"` |
+| Stop dev server | `pkill -f "[h]ttp.server"` — brackets REQUIRED; the plain form SIGTERMs its own wrapper (measured: exit 144, the next command in the line never runs) |
 
 ## Important Gotchas
 - **Path in Generate.py**: Use `"Templates/[GameName].yaml"` NOT `"Players/Templates/[GameName].yaml"` - the latter will fail
@@ -23,8 +23,24 @@ source .venv/bin/activate
 - **Don't modify**: Original Archipelago code files or original world files in `worlds/`
 - **Commit directly to `main`**: This project commits directly to `main` — do NOT create a feature branch before committing (ignore any default "branch first" guidance). Commit each completed step/phase separately as you go; still only push when asked.
 - **Seed 1 always produces**: `AP_14089154938208861744`
-- **Dev server**: Check whether one is already running on port 8000 (`ss -ltn | grep ":8000"` or `pgrep -af "http.server"`) before starting a new instance — the user typically keeps a long-running server up, and starting a duplicate either fails to bind or strands an extra process
-- **Submodule paths**: `frontend/modules/shared/` and `frontend/modules/textAdventureEngine/` are git submodules. Edits to files under these paths land in the *submodule*, not the outer repo — the outer `git status` only flags them as "modified content." To verify which side a change lives on, run `git -C <path> status`. To land such a change: commit inside the submodule (using the outer repo's git identity), then bump the submodule pointer in a separate outer-repo commit.
+- **Dev server**: Check whether one is already running on port 8000 (`ss -ltn | grep ":8000"` or `pgrep -af "[h]ttp.server"`) before starting a new instance — the user typically keeps a long-running server up, and starting a duplicate either fails to bind or strands an extra process
+- **`pgrep -f` MATCHES ITS OWN SHELL — a finished job reads as still running.** Commands run here are wrapped in `/bin/bash -c '... eval "<your command>" ...'`, so *every pattern you type* is in the wrapper's own `/proc/<pid>/cmdline`. `pgrep -f "foo"` hits even when nothing called `foo` exists (measured: 2 — the wrapper plus the `$(...)` subshell). Always a *false positive*: it never says "done" when a job is live; it says "running" forever after it finished.
+  - **IN A WAIT LOOP, DO NOT USE `pgrep` AT ALL.** Capture the PID at launch (`nohup cmd & echo $!`) and poll `kill -0 <pid>`. This is the only form immune to the trap. A `pgrep` wait loop that self-matches spins until you kill it.
+  - **Anywhere else, bracket EVERY pattern on the line** — `[h]ttp.server`, not `http.server` (verified 0 hits vs 2). ⚠ **One unbracketed pattern anywhere re-arms the trap for the whole line**, including a *different* name in a second `pgrep`:
+    ```bash
+    # SPINS FOREVER — the 2nd pattern matches this very shell, so the loop never exits
+    until ! pgrep -f "[b]ench.mjs" && ! pgrep -f "checkout -q HEAD"; do sleep 10; done
+    ```
+    Checking "did I bracket it?" is not enough; the check is "did I bracket **all of them**?"
+  - **`pkill -f` is the same trap with teeth: it SIGTERMs the wrapper instead of miscounting it.** Measured on a stand-in process: plain form → exit **144** and the rest of the line never runs; bracketed + sole occurrence → exit 0, wrapper lives, target dies. ⚠ **So a restart one-liner kills itself even when the `pkill` half is bracketed**, because the start half puts the plain name back on the line:
+    ```bash
+    pkill -f "[h]ttp.server"; python -m http.server 8000   # dies at the pkill
+    ```
+    Restart in **two separate commands**, or `kill` the PID from `ss -ltnp`.
+  - For a listing, `ps -eo pid,cmd | grep -v eval` and read the output rather than counting it.
+- **Killing a wrapper does NOT kill its children.** `kill <wrapper-pid>` leaves the `sleep`/`node`/`npx` it spawned running (exit **143/144** = the wrapper died, not the job). After any kill, list the strays and kill those too — `pgrep -af "^sleep"`, or `ps -eo pid,ppid,cmd | awk '$2==<wrapper-pid>'`.
+
+- **Submodule paths**: `frontend/modules/shared/`, `frontend/modules/textAdventureEngine/` and `frontend/modules/flashPanel/wasm/` (the SWFRecomp Seedling builds, `PeerInfinity/seedling-wasm`) are git submodules. Edits to files under these paths land in the *submodule*, not the outer repo — the outer `git status` only flags them as "modified content." To verify which side a change lives on, run `git -C <path> status`. To land such a change: commit inside the submodule (using the outer repo's git identity), then bump the submodule pointer in a separate outer-repo commit.
 
 ---
 
@@ -139,7 +155,60 @@ python scripts/test/test-all-templates.py --include-list "Game1.yaml" "Game2.yam
 
 **Output:**
 - `playwright-report.json` (project root)
-- `test-results/in-app-tests/test-results-[TIMESTAMP].json`
+- `test-results/in-app-tests/test-results-[TIMESTAMP].json` — kept for the last
+  30 runs (Playwright's own cleanup is scoped to `test-results/playwright/`), so
+  runs can be compared against each other
+
+### Test batches
+The in-app runner races the whole roster against one wall-clock budget
+(`AUTO_START_TIMEOUT_MS`, 600s, in `frontend/modules/tests/testLogic.js`).
+`test-substrates` outgrew it: three real-time omsi bot walks are ~70% of its
+540s. Run it in batches instead:
+```
+npm test -- --mode=test-substrates --batch=fast        # 57 tests, ~2.5 min
+npm test -- --mode=test-substrates --batch=bot-walks   # 3 real-time bot legs, ~6.5 min
+```
+Batches select whole **categories** and live in `frontend/modules/tests/testBatches.js`.
+`fast` is the default batch: it absorbs every category no other batch claims, so
+a new test category still *runs* even if nobody classified it. Omitting `--batch`
+runs the whole roster — which for `test-substrates` currently exceeds the budget.
+
+A run that blows the budget no longer reports green: it prints
+`IN-APP RUN DID NOT FINISH ITS ROSTER`, naming the cause, the test cut off
+mid-flight, and the ones that never started, then fails. Results are stamped with
+their batch so `compare-runs.js` never diffs a `fast` run against a full one.
+
+### Reading a run
+Any `npm test` mode emits one line per in-app test as it finishes:
+```
+grep '^\[PROGRESS' <logfile>     # [PROGRESS 24/50] omsi-out-of-mana-loop-reset PASSED 1.5s
+```
+Use it to tell a run in flight from a stalled one. A red run prints an
+`IN-APP TEST(S) FAILED` block naming each failing test and the condition it died
+on, before Playwright's own output.
+
+A poll that times out reports why, so a red run does not need a rerun to
+attribute:
+- `STUCK` — the poll ran its expected iterations; the condition really never
+  became true. **This one is a real defect.**
+- `STARVED` — the page did not get scheduled (app work on the main thread, or
+  machine load). Re-run solo before believing it.
+- `CHECK-BOUND` — the condition function itself ate the poll budget; fix the
+  check, not the code under test.
+
+### Comparing two runs
+```
+node scripts/test/compare-runs.js            # newest two runs
+node scripts/test/compare-runs.js --list     # what is on disk
+node scripts/test/compare-runs.js <prev> <curr>
+```
+Prints new failures (with the condition), fixed tests, roster changes, and
+duration outliers; exits 1 when the current run has failures the previous did
+not. This is the fast answer to "is this red mine?" — it replaces stashing the
+change and running a control. The default baseline is the newest earlier run of
+the **same mode** (results carry the mode that produced them); comparing a
+substrates run against a regression one would report the whole roster as
+changed.
 
 ### Configure Spoiler Settings
 ```
@@ -170,6 +239,7 @@ python scripts/setup/update_host_settings.py full-spoilers
 | Exporter | [exporter/](exporter/README.md) |
 | World generator | [world_generator/](world_generator/README.md) |
 | Rule Builder | [rule_builder/](rule_builder/README.md) |
+| Procgen (pipeline, substrates, playback) | [docs/json/developer/procgen/](docs/json/developer/procgen/README.md) — start with architecture.md; gotchas.md preempts the common confusions |
 | Frontend | [frontend/](frontend/README.md) |
 | Claude Code | [CC/](CC/README.md) |
 | Planning docs | [CC/docs/plans/](CC/docs/plans/README.md) |

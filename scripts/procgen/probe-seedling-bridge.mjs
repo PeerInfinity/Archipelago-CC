@@ -1,0 +1,247 @@
+#!/usr/bin/env node
+/**
+ * probe-seedling-bridge — how many TICKS after ONE press does a bridge
+ * become walkable? A PAIR, differing only in whether the press exists.
+ *
+ * Region-atlas Phase 8, rung R4. Brief:
+ * `CC/docs/plans/seedling-bot-r4-opus-kickoff.md` §2.2/§3.3, and
+ * `frontend/modules/seedlingDemo/bridges.js`, whose answer this either
+ * confirms or corrects.
+ *
+ * ── THE QUESTION, AND WHY READING HARDER WOULD NOT SETTLE IT ──────────
+ *
+ * `bridges.js` transcribes the cycle exactly and derives `framesToOpen()`
+ * = 60 from it, on the premise stated in its own docblock: *"One thrust
+ * tips 60 to 59."* Wiring the model into `levelRun` turned that premise
+ * up as an assumption rather than a transcription, and the chain that
+ * decides it is four classes deep:
+ *
+ *   - `Player.update()` calls `spear()` BEFORE `super.update()`, so the
+ *     rect fires on the tick AFTER the one whose `input()` set `spearing`.
+ *   - `spearing` is cleared by `spearEnd`, the COMPLETE CALLBACK of
+ *     `sprSpear` — a `Spritemap(imgSpear, 36, 7, spearEnd)` playing an
+ *     8-frame animation at 45 fps against the engine's own frame rate.
+ *   - `spear()` re-fires whenever `spearDelay` (max **1**) has drained, so
+ *     it collides the rect every OTHER tick for as long as `spearing`
+ *     holds.
+ *   - and `genericHit`'s `e is Tile` arm has **no already-open guard**:
+ *     every firing decrements.
+ *
+ * So one X press is not one decrement — it is one decrement per rect
+ * firing, and the count depends on a sprite frame rate divided by an
+ * engine frame rate. That is arithmetic across two subsystems the model
+ * does not have, which is precisely the shape of thing this arc measures
+ * instead of deriving (the R3 lesson: the oracle corrected the update
+ * order; §11: the oracle corrected §8.5).
+ *
+ * ── THE MEASUREMENT ───────────────────────────────────────────────────
+ *
+ * L63's one bridge is tile (2,9), and it is a genuine seal: column 2 is
+ * the only north-south corridor in that half of the level, so the tile
+ * separates the L61/L62 arrivals above it from the L61 door at (0,208) and
+ * the L65 door at (32,304) below.
+ *
+ * Boot at tile (2,8), hold DOWN until the player pins against the bridge's
+ * north face, press once, then hold DOWN for the rest of the tape. The
+ * held key is already down when the type flips, so the tick the PIN BREAKS
+ * is the tick `collideTypes` stopped finding a wall.
+ *
+ *   press arm    the pin breaks at some tick T
+ *   control      never moves — pinned at the face for the whole tape
+ *
+ * ⚠ TWO READINGS, AND ONLY THE FIRST IS THE ANSWER. The probe also reports
+ * when `y` crosses 144 (the tile's own top edge), which is TWO FURTHER
+ * ticks of acceleration. Both are printed precisely so the two numbers do
+ * not get confused: `bridges.js` says 60, and this probe's raw crossing
+ * says 62, and they are consistent.
+ *
+ * `bridges.framesToOpen()` predicts 60 on-screen frames after the timer
+ * reaches 59, and the press is one tick before the hit. If the pin breaks
+ * 60 ticks after the press the premise holds and one press is one
+ * decrement; materially smaller and the rect fired more than once, so
+ * `bridges.js` would need the firing count rather than the press count.
+ *
+ * ⚠ The player stays 11 px from the tile centre for the whole window, so
+ * the 64 px on-screen policy is satisfied by construction and the
+ * measurement is of the timer alone.
+ *
+ * ── AS RUN (2026-08-02) ───────────────────────────────────────────────
+ *
+ *   press:   pinned at y=141; PIN BROKE at tick 85; crossed 144 at 87
+ *   control: pinned at y=141; never moved in 320 ticks
+ *
+ * 85 - 25 = **60**. One press is one decrement.
+ *
+ * Run: node scripts/procgen/probe-seedling-bridge.mjs
+ */
+
+import { existsSync, writeFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { chromium } from 'playwright';
+import { takeBoxLockOrExit } from './boxLock.js';
+
+/**
+ * ⛓ R9 P3b, ⚖ 54 (7); ⚖ 62 at 12j — **THE BOX LOCK.** This instrument drives
+ * the machine (browser), so it takes the box before it starts and refuses BY
+ * NAME if another instrument holds it — replacing a hand-relayed "BOX BUSY".
+ * A run UNDER a holder (`gates.mjs`, `standing-values`,
+ * `rerecord-seedling-campaign`) recognises the holder's token and passes
+ * through. `--wait-for-box=<sec>` queues instead of refusing.
+ */
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
+takeBoxLockOrExit({ name: 'probe-seedling-bridge.mjs', kind: 'browser' });
+
+const HERE = dirname(fileURLToPath(import.meta.url));
+const REPO = join(HERE, '..', '..');
+const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4c';
+const WASM_DIR = join(REPO, 'frontend', 'modules', 'flashPanel', 'wasm', PAGE_NAME);
+const PAGE_URL = `http://localhost:8000/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
+const OUT = process.env.PROBE_OUT ?? '/tmp';
+
+if (!existsSync(WASM_DIR)) {
+    console.log(`SKIP: no wasm artifact at ${WASM_DIR}`);
+    process.exit(0);
+}
+
+const TICKS = 320;
+const PRESS = 25;
+/** The bridge tile's own top edge, for the secondary reading. */
+const BRIDGE_TOP = 144;
+/** By this tick the first DOWN hold has pinned the player against the face. */
+const PIN_BY = 22;
+
+const tapeFor = (withPress) => ({
+    tape_version: 4,
+    game: 'seedling',
+    name: withPress ? 'probe-bridge-press' : 'probe-bridge-control',
+    description: 'Pin against L63\'s bridge, press once (or not), hold DOWN.',
+    boot: { level: 63, x: 32, y: 128 },
+    noclip: false,
+    noDamage: true,
+    noHazards: ['water', 'lava', 'ice', 'waterfall'],
+    grants: [{ level: 63, items: ['sword', 'spear'] }],
+    persistence: [],
+    equips: [{ t: 0, slot: 1 }],
+    tick_count: TICKS,
+    inputs: [
+        // Long by design: the bridge is the wall that stops it, and being
+        // pinned there is also what makes the facing DOWN.
+        { key: 'down', from: 5, to: 20 },
+        ...(withPress ? [{ key: 'primary', from: PRESS, to: PRESS + 1 }] : []),
+        // Held for the rest of the tape, so the tick the player moves IS
+        // the tick the tile stopped being Solid.
+        { key: 'down', from: 30, to: TICKS - 2 },
+    ],
+});
+
+const browser = await chromium.launch({
+    args: [
+        '--enable-unsafe-webgpu', '--enable-features=Vulkan',
+        '--use-angle=swiftshader', '--use-vulkan=swiftshader',
+        '--enable-features=WebAssemblyExperimentalJSPI',
+    ],
+});
+
+async function runTape(tape) {
+    const page = await browser.newPage();
+    const logs = [];
+    page.on('console', (m) => logs.push(`[${m.type()}] ${m.text()}`));
+    page.on('pageerror', (e) => logs.push(`[pageerror] ${e.message}`));
+    const bot = (name, a) => page.evaluate(
+        ([n, x]) => String(window.__swfBridge.game[n](x)), [name, a],
+    );
+    const botJson = async (name, a) => JSON.parse(await bot(name, a));
+    try {
+        await page.goto(PAGE_URL, { waitUntil: 'domcontentloaded' });
+        for (let i = 0; i < 480 && !(await page.evaluate(() => !!window.__runtimeReady)); i++) {
+            await page.waitForTimeout(250);
+        }
+        await page.click('#btn-start');
+        for (let i = 0; i < 480
+            && !(await page.evaluate(() => !!(window.__swfBridge?.game?.botStatus))); i++) {
+            await page.waitForTimeout(250);
+        }
+        const loaded = await bot('botLoadTape', JSON.stringify(tape));
+        if (loaded !== 'ok') throw new Error(`botLoadTape: ${loaded}`);
+        if (await bot('botStart') !== 'ok') throw new Error('botStart refused');
+
+        let last = null;
+        let stalledSince = null;
+        const DEADLINE = Date.now() + 30 * 60 * 1000;
+        for (;;) {
+            const st = await botJson('botStatus');
+            const line = `tick=${st.tick}/${st.tick_count} dead=${st.dead_frames} `
+                + `x=${Number(st.x).toFixed(2)} y=${Number(st.y).toFixed(2)} `
+                + `L${st.level} err=${st.error ?? ''}`;
+            if (line !== last) { console.log(`  ${line}`); last = line; }
+            if (st.finished) break;
+            if (st.tick === stalledSince?.tick && st.dead_frames > stalledSince.dead + 200) {
+                throw new Error(`tape stalled at tick ${st.tick}`);
+            }
+            if (st.tick !== stalledSince?.tick) {
+                stalledSince = { tick: st.tick, dead: st.dead_frames };
+            }
+            if (Date.now() > DEADLINE) throw new Error('deadline');
+            await page.waitForTimeout(1000);
+        }
+        const drained = await botJson('botDrain');
+        writeFileSync(join(OUT, `${tape.name}.drain.json`), JSON.stringify(drained));
+        const ticks = drained.ticks ?? [];
+        const crossed = ticks.find((o) => o.y >= BRIDGE_TOP);
+        // ⚠ TWO MEASUREMENTS, AND THE FIRST ONE IS THE ANSWER. Crossing
+        // y = 144 is the player's box entering the tile, which is two
+        // ticks of acceleration AFTER the tile stopped being Solid. The
+        // quantity the model wants is the tick the PIN BREAKS — the first
+        // tick the held DOWN produced any movement at all, because that is
+        // the tick `collideTypes` stopped finding a wall.
+        const pinned = ticks.find((o) => o.t >= PIN_BY)?.y;
+        const moved = ticks.find((o) => o.t >= PIN_BY && o.y > pinned + 0.01);
+        if (logs.length) console.log('  page console tail:', logs.slice(-6).join(' | '));
+        const finals = ticks.at(-1) ?? {};
+        return { crossed, moved, pinned, final: { x: finals.x, y: finals.y }, ticks };
+    } finally {
+        await page.close();
+    }
+}
+
+try {
+    console.log('bridge pair: PRESS arm');
+    const press = await runTape(tapeFor(true));
+    console.log('\nbridge pair: CONTROL arm');
+    const control = await runTape(tapeFor(false));
+
+    for (const [label, arm] of [['press  ', press], ['control', control]]) {
+        console.log(`\n  ${label}: pinned at y=${arm.pinned}; `
+            + `PIN BROKE at tick ${arm.moved ? arm.moved.t : 'NEVER'}; `
+            + `crossed y=${BRIDGE_TOP} at tick ${arm.crossed ? arm.crossed.t : 'NEVER'}; `
+            + `final (${arm.final.x}, ${arm.final.y})`);
+    }
+    if (press.moved && !control.moved) {
+        const elapsed = press.moved.t - PRESS;
+        console.log(`\n✅ THE BRIDGE OPENED. The pin broke ${elapsed} tick(s) after the press`);
+        console.log(`   tick (${PRESS}) — and THAT is the measurement. Crossing y=${BRIDGE_TOP} is`);
+        console.log('   two further ticks of acceleration and is reported only so the two');
+        console.log('   numbers never get confused for each other.');
+        console.log('   `bridges.framesToOpen()` predicts 60 on-screen frames from a SINGLE');
+        console.log('   decrement, and the press is one tick before the hit:');
+        console.log('     60      one press is one decrement — the docblock premise holds;');
+        console.log('     ~20-40  the rect fired more than once while `spearing` held, and');
+        console.log('             the model must count FIRINGS rather than presses.');
+    } else if (!press.moved && !control.moved) {
+        console.log('\n⛔ NEITHER ARM CROSSED — the press did not reach the tile, or 60 frames');
+        console.log('   is short of the truth. Check the press arm\'s y against 141 (the');
+        console.log('   pinned face) before blaming the timer.');
+    } else {
+        console.log('\n⚠ UNEXPECTED SHAPE — the control moved, so the tile was not Solid to');
+        console.log('   begin with. Diagnose the world, not the spear.');
+    }
+} catch (e) {
+    console.error(`\nPROBE FAILED: ${e.message}`);
+    process.exitCode = 1;
+} finally {
+    await browser.close();
+}

@@ -1,0 +1,299 @@
+name: Seedling wasm submodule
+
+# ⛓ The builds under frontend/modules/flashPanel/wasm/ are the submodule
+# PeerInfinity/seedling-wasm. This workflow answers three questions, and only
+# the first of them is allowed to stop a push.
+#
+#   1. GATING — do the four views of "which builds are pinned" agree?
+#      (tracked references / whitelist / what git tracks / builds.json)
+#      Cheap, deterministic, no browser: a real gate.
+#   2. NON-GATING — does the game actually BOOT on a runner? WebGPU on
+#      swiftshader, no GPU. Genuinely unknown until measured, which is why
+#      it is here and why it cannot fail the build.
+#   3. NON-GATING — can a runner READ DATA out of the wasm?
+#
+# ⛔ NOTHING THAT RUNS THE GAME GATES A PUSH (⚖ user, 2026-08-19: "reading
+# data only, not running the game — or try it and see how far we get
+# (non-gating)"). Steps 2 and 3 are continue-on-error and report what got how
+# far; a red X on them is information, not a broken main.
+#
+# ⚠ HOW TO READ THIS RUN. `continue-on-error` rewrites a step's CONCLUSION to
+# `success`, so the job listing (and `gh run view --json jobs`) shows every
+# step green even when steps 2 and 3 both failed — measured on run
+# 32257668821, where they did. The truth lives in two places only: the run's
+# ANNOTATIONS, and the step summary below, which is built from
+# `steps.<id>.outcome` (the pre-override result) precisely for this reason.
+# ⛔ Do not conclude "all green" from the job listing of this workflow.
+
+on:
+  push:
+    paths:
+      - 'frontend/modules/flashPanel/wasm'
+      - '.gitmodules'
+      - 'scripts/procgen/check-seedling-wasm-pins.mjs'
+      - '.github/workflows/seedling-wasm.yml'
+  pull_request:
+    paths:
+      - 'frontend/modules/flashPanel/wasm'
+      - '.gitmodules'
+      - 'scripts/procgen/check-seedling-wasm-pins.mjs'
+      - '.github/workflows/seedling-wasm.yml'
+  workflow_dispatch:
+    inputs:
+      with_deps:
+        description: >-
+          Pass --with-deps to `playwright install`? The arm is echoed into the
+          step log as MEASURED-ARM so a run can be attributed afterwards. On a
+          push event this input is empty and the default below applies.
+        type: boolean
+        default: false
+
+jobs:
+  seedling-wasm:
+    name: Pin gate (gating) + boot and read-data (non-gating)
+    runs-on: ubuntu-latest
+    # ⛔ WITHOUT THIS LINE THE GITHUB DEFAULT IS 360 MINUTES. Measured
+    # 2026-08-19: this job hung 38 min in `Install Chromium for Playwright`
+    # (an apt stall inside `--with-deps`) with the GATING pin gate already
+    # green at 1 s, and was killed BY HAND — nothing would have stopped it for
+    # six hours, and the step that stalls is `continue-on-error`, so it reports
+    # nothing anybody reads. 25 is chosen against the measurements, not a
+    # round number: a healthy whole job is 1 m 26 s – 2 m, and the slowest
+    # HONEST browser install ever seen here was 10 m 19 s.
+    timeout-minutes: 25
+
+    steps:
+      # ── the cost of the submodule, measured rather than guessed ──────
+      # ~127 MB of wasm now comes down on every checkout that asks for
+      # submodules. That price is worth publishing: it is the argument
+      # anyone will want when deciding whether a future workflow should
+      # pass `submodules: recursive` at all.
+      - name: Stamp the checkout start
+        run: echo "CHECKOUT_START=$(date +%s)" >> "$GITHUB_ENV"
+
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+        with:
+          submodules: recursive
+
+      - name: Measure the checkout cost
+        run: |
+          ELAPSED=$(( $(date +%s) - CHECKOUT_START ))
+          SUB=frontend/modules/flashPanel/wasm
+          SIZE=$(du -sh "$SUB" | cut -f1)
+          GITSIZE=$(du -sh .git/modules/frontend/modules/flashPanel/wasm 2>/dev/null | cut -f1 || echo n/a)
+          echo "CHECKOUT_ELAPSED=$ELAPSED" >> "$GITHUB_ENV"
+          # ⛔ Also to stdout. A measurement that exists only in the step
+          # summary cannot be quoted in a commit or a record — the summary is
+          # a rendered attachment, not something `gh run view --log` returns.
+          echo "MEASURED: checkout ${ELAPSED}s · working tree $SIZE · git dir $GITSIZE"
+          {
+            echo "## Checkout cost (submodules: recursive)"
+            echo ""
+            echo "| | |"
+            echo "|---|---|"
+            echo "| whole checkout, wall clock | ${ELAPSED}s |"
+            echo "| \`$SUB\` working tree | $SIZE |"
+            echo "| its git dir | $GITSIZE |"
+            echo ""
+            echo "Builds checked out:"
+            echo ""
+            echo '```'
+            ls -1 "$SUB"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # ── STEP 1 — GATING ─────────────────────────────────────────────
+      - name: 'STEP 1 (gating) — the pin gate'
+        id: pins
+        run: |
+          set -o pipefail
+          node scripts/procgen/check-seedling-wasm-pins.mjs 2>&1 | tee /tmp/pins.log
+        continue-on-error: false
+
+      - name: 'STEP 1 — summary'
+        if: always()
+        run: |
+          {
+            echo "## STEP 1 — pin gate (GATING) — \`${{ steps.pins.outcome }}\`"
+            echo ""
+            echo '```'
+            cat /tmp/pins.log 2>/dev/null || echo '(the step produced no output)'
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # ── STEP 2 — NON-GATING: does the game boot on a runner? ─────────
+      # ⛓ THE SPLIT THIS GUARDED IS CLOSED, AND THIS LINE STAYS ANYWAY.
+      # The lockfile used to carry TWO playwrights: top-level `playwright`
+      # 1.57.0 (browser build 1200) and, nested under `@playwright/test`
+      # 1.56.0, another at 1.56.0 (build 1194). `node_modules/.bin/playwright`
+      # is @playwright/test's CLI, so `npx` downloaded 1194 — while this
+      # repo's browser scripts do `import { chromium } from 'playwright'` and
+      # got 1.57.0, which then refused: "Executable doesn't exist at
+      # …chromium_headless_shell-1200". Measured in the first run of this
+      # workflow, and re-measured locally 2026-08-19 before the fix (`npm ci`
+      # on the old lock → 1.57.0 → exactly that refusal; `npx playwright
+      # install chromium` installed 1194 and never 1200).
+      # ⇒ `package.json` now pins `playwright` to EXACTLY 1.56.0, the version
+      # `@playwright/test` is pinned to (`9df8ca7b0`: the cloud environment's
+      # cached chromium-1194), so `npm ls playwright` shows ONE of them and
+      # `npx playwright install` would be correct here too.
+      # ⛔ NOT SWITCHED BACK TO `npx`, deliberately. `cli.js` is the CLI of the
+      # package the scripts import — it cannot disagree with them however the
+      # dependency graph moves. `npx` is correct only while the pin holds, and
+      # a step that fails fast reads exactly like one that passed fast. The
+      # nine `npx playwright install` call sites in .github/workflows/ drive
+      # @playwright/test suites, which want 1194 either way.
+      # ── the browser cache ───────────────────────────────────────────
+      # Keyed on the PINNED playwright version rather than on
+      # hashFiles('package-lock.json'): the browser build a version wants is
+      # a function of that version alone, so an unrelated lockfile edit must
+      # not throw the browser away. `package.json` pins `playwright` to
+      # exactly 1.56.0 (build 1194), so this key is stable until somebody
+      # moves the pin — at which point it SHOULD miss.
+      - name: Resolve the pinned Playwright version (the cache key)
+        id: pwver
+        if: always()
+        run: |
+          V=$(node -p "require('./package-lock.json').packages['node_modules/playwright'].version")
+          echo "version=$V" >> "$GITHUB_OUTPUT"
+          echo "MEASURED: playwright pin $V"
+
+      - name: Cache the Playwright browser
+        id: pwcache
+        if: always()
+        uses: actions/cache@v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: ms-playwright-${{ runner.os }}-${{ steps.pwver.outputs.version }}
+
+      # ⛔ A STEP THAT CAN HANG GETS ITS OWN CAP. The job cap above would
+      # eventually stop a stall, but it would stop it as a JOB timeout, which
+      # reports `cancelled` and names neither the step nor the cause. 12 min
+      # here fails the STEP by name, leaves the job's remaining budget to the
+      # steps after it, and still clears the 10 m 19 s honest install.
+      # ⛓ The install is left in place on a cache hit on purpose: it is the
+      # step that VERIFIES what the cache restored, and on a hit it is
+      # seconds. Its `MEASURED-ARM` line and `steps.pwcache.outputs.cache-hit`
+      # are what make a run attributable afterwards.
+      - name: Install Chromium for Playwright
+        if: always()
+        continue-on-error: true
+        timeout-minutes: 12
+        env:
+          # Empty on a `push` event (no inputs exist there), so the fallback
+          # below is the DEFAULT this workflow ships with — and it is now a
+          # MEASURED default. Four runs, 2026-08-19, cold cache each:
+          #   with    --with-deps  32304114969  178 s   boot ALL PASS
+          #   with    --with-deps  32304534114  311 s   boot ALL PASS
+          #   without --with-deps  32305088270    7 s   boot ALL PASS
+          #   without --with-deps  32305230891    8 s   boot ALL PASS
+          # The boot passes WITHOUT it, twice ⇒ the ubuntu-latest image
+          # already carries Chromium's shared libraries and `--with-deps`
+          # bought nothing but an apt round trip — which is the exact call
+          # that hung this job for 38 minutes. Dropped. The dispatch input
+          # above keeps the other arm reachable for a re-measurement.
+          WITH_DEPS: ${{ github.event.inputs.with_deps || 'false' }}
+        run: |
+          if [ "$WITH_DEPS" = "true" ]; then
+            echo "MEASURED-ARM: --with-deps"
+            node node_modules/playwright/cli.js install --with-deps chromium
+          else
+            echo "MEASURED-ARM: no --with-deps"
+            node node_modules/playwright/cli.js install chromium
+          fi
+          echo "MEASURED-CACHE: cache-hit=${{ steps.pwcache.outputs.cache-hit }}"
+
+      - name: 'STEP 2 (non-gating) — does the bridge come up headless?'
+        id: boot
+        if: always()
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          python3 -m http.server 8000 >/tmp/httpd.log 2>&1 &
+          echo $! > /tmp/httpd.pid
+          for i in $(seq 1 30); do
+            curl -sf -o /dev/null http://localhost:8000/frontend/index.html && break
+            sleep 1
+          done
+          # ⛔ `set -e` would abort AT the failing node, so RC=$? and the
+          # kill below were unreachable on exactly the path that needs them.
+          set +e
+          node scripts/procgen/verify-seedling-wasm-bridge.mjs 2>&1 | tee /tmp/boot.log
+          RC=$?
+          set -e
+          kill "$(cat /tmp/httpd.pid)" 2>/dev/null || true
+          exit $RC
+
+      - name: 'STEP 2 — summary'
+        if: always()
+        run: |
+          {
+            echo "## STEP 2 — headless boot (NON-GATING) — \`${{ steps.boot.outcome }}\`"
+            echo ""
+            echo "Does the SWFRecomp page come up on a runner with no GPU"
+            echo "(WebGPU via swiftshader)? Answer, verbatim:"
+            echo ""
+            echo '```'
+            tail -60 /tmp/boot.log 2>/dev/null || echo '(the step produced no output)'
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # ── STEP 3 — NON-GATING: can a runner read data out of the wasm? ─
+      # ⚠ EXPECTED TO REFUSE, and that refusal is the finding rather than a
+      # surprise: check-seedling-vanilla-manifest.mjs drives REAL-GPU WINDOWS
+      # CHROME through /mnt/c/Windows/py.exe (⚖ a standing user rule for that
+      # row, recorded in its own docblock). A Linux runner has no py.exe, so
+      # the row cannot complete here at all. It is run anyway, because "try it
+      # and see how far we get" was the instruction and an untried assumption
+      # is worth less than a logged outcome.
+      - name: 'STEP 3 (non-gating) — read data out of the wasm'
+        id: readdata
+        if: always()
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          python3 -m http.server 8000 >/tmp/httpd3.log 2>&1 &
+          echo $! > /tmp/httpd3.pid
+          for i in $(seq 1 30); do
+            curl -sf -o /dev/null http://localhost:8000/frontend/index.html && break
+            sleep 1
+          done
+          # ⛔ `set -e` would abort AT the failing node, so RC=$? and the
+          # kill below were unreachable on exactly the path that needs them.
+          set +e
+          node scripts/procgen/check-seedling-vanilla-manifest.mjs 2>&1 | tee /tmp/readdata.log
+          RC=$?
+          set -e
+          kill "$(cat /tmp/httpd3.pid)" 2>/dev/null || true
+          exit $RC
+
+      - name: 'STEP 3 — summary'
+        if: always()
+        run: |
+          {
+            echo "## STEP 3 — read data out of the wasm (NON-GATING) — \`${{ steps.readdata.outcome }}\`"
+            echo ""
+            echo "\`check-seedling-vanilla-manifest.mjs\` drives real-GPU Windows"
+            echo "Chrome via \`/mnt/c/Windows/py.exe\` by standing rule, so a Linux"
+            echo "runner is expected to refuse it. Logged rather than assumed:"
+            echo ""
+            echo '```'
+            tail -40 /tmp/readdata.log 2>/dev/null || echo '(the step produced no output)'
+            echo '```'
+            echo ""
+            echo "---"
+            echo ""
+            echo "**Outcomes** — step 1 \`${{ steps.pins.outcome }}\` (gating) ·"
+            echo "step 2 \`${{ steps.boot.outcome }}\` · step 3 \`${{ steps.readdata.outcome }}\`;"
+            echo "checkout ${{ env.CHECKOUT_ELAPSED }}s."
+          } >> "$GITHUB_STEP_SUMMARY"

@@ -1,6 +1,6 @@
 /**
- * mazeRoom — first consumer of the shared simulator-core interface.
- * See NewDocs/plans/procedural-generation/maze-room-generator.md.
+ * mazeRoom — the maze substrate
+ * (docs/json/developer/procgen/maze.md).
  *
  * Engine lives in mazeRoomEngine.js (headless, no DOM). The UI panel
  * lives in mazeRoomUI.js. This file wires the panel into the module
@@ -33,7 +33,8 @@ let unsubLoadRegion = null;
 
 // Buffer for a maze:loadRegion event that arrived before the panel
 // was mounted. MazeRoomUI's constructor drains it on mount via
-// consumePendingLoadRegion(). See procgen-player.md §"Event flow".
+// consumePendingLoadRegion(). See docs/json/developer/procgen/maze.md
+// §"Panel and runtime".
 let pendingLoadRegion = null;
 
 function handleLoadRegion(payload) {
@@ -98,6 +99,19 @@ export function register(registrationApi) {
     // autopath and signals back to the loops queue when done). Co-
     // register so the eventBus recognizes mazeRoom as a publisher too.
     registrationApi.registerEventBusPublisher('loops:substrateActionCompleted');
+
+    // X1: announces a consumed consumable / mana tile. These tiles fire
+    // no AP-level event (not locations, no region change), so this is
+    // the only signal a collect-detouring playback bot can wake on.
+    registrationApi.registerEventBusPublisher('maze:consumableCollected');
+
+    // X1: the panel clears collected consumable / mana tiles on every
+    // loop reset so they respawn (X1-R1). Declared here rather than
+    // relying on the incidental fromReset regionMove, which can skip
+    // entirely when no start region resolves.
+    if (typeof registrationApi.registerEventBusSubscriberIntent === 'function') {
+        registrationApi.registerEventBusSubscriberIntent('mazeRoom', 'gameState:loopReset');
+    }
 
     // The maze panel is the original source of these AP-level events
     // when the player triggers them by walking around in playback

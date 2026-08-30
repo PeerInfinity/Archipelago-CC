@@ -1,0 +1,29 @@
+{
+  "tape_version": 3,
+  "game": "seedling",
+  "name": "l71-hold-101-shut",
+  "description": "THE HOLD KNIFE-EDGE, shut half. Identical to l71-hold-102-open in every field but tick_count, which is 101 rather than 102. The boot drops the player on L71's button@112,176 and 'up' is held from tick 1, so they walk into lock@112,160 immediately and are PINNED on its south face at y = 178.5 — and go on pressing the button from there, because the box still overlaps it. Lock.activationStep decrements alpha by 0.01 per tick, tests `alpha > 0` BEFORE decrementing, and Image.alpha clamps at 0, so turnOff() fires at the end of the 101st tick and its effect is first visible on the 102nd. This tape stops one tick before that: the game must report 178.5. Its pair, l71-hold-102-open, is the same tape one tick longer and must report the player moving. Neither claim survives alone — the shut half is satisfied by a player who never pressed anything, and the open half by a lock that was never solid.",
+  "boot": {
+    "level": 71,
+    "x": 112,
+    "y": 176
+  },
+  "noclip": false,
+  "noDamage": true,
+  "noHazards": [
+    "water",
+    "lava",
+    "ice",
+    "waterfall"
+  ],
+  "grants": [],
+  "persistence": [],
+  "tick_count": 101,
+  "inputs": [
+    {
+      "key": "up",
+      "from": 1,
+      "to": 101
+    }
+  ]
+}

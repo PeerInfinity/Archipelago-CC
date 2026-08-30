@@ -17,7 +17,7 @@
  *     A caller realising a preserved-rule world can treat exact:false as
  *     "build open-enough geometry; the preserved access_rule still gates."
  *
- * See NewDocs/plans/procedural-generation/topdown-bounce-obstacle-refactor.md.
+ * See docs/json/developer/procgen/paths-and-obstacles.md.
  */
 
 function extractRec(rule) {

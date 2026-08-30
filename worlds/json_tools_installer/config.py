@@ -78,6 +78,7 @@ class ExportSettings:
     skip_required_files: bool = False
     save_rules_json: bool = False
     rules_json_format: str = "rule_builder"  # "rule_builder", "ast", "both"
+    rules_json_indent: int = 2  # EDITOR v3 E1c — 0 minifies; mirrors JSONToolsSettings
     skip_preset_copy_if_rules_identical: bool = False
     save_sphere_log: bool = False
     verbose_sphere_log: bool = False
@@ -172,6 +173,7 @@ class InstallerConfig:
             skip_required_files=export_settings.get("skip_required_files", False),
             save_rules_json=export_settings.get("save_rules_json", False),
             rules_json_format=export_settings.get("rules_json_format", "rule_builder"),
+            rules_json_indent=export_settings.get("rules_json_indent", 2),
             skip_preset_copy_if_rules_identical=export_settings.get("skip_preset_copy_if_rules_identical", False),
             save_sphere_log=export_settings.get("save_sphere_log", False),
             verbose_sphere_log=export_settings.get("verbose_sphere_log", False),
@@ -190,7 +192,7 @@ class InstallerConfig:
 
         return config
 
-    def get_source(self, version: str = None) -> SourceConfig:
+    def get_source(self, version: Optional[str] = None) -> SourceConfig:
         """Get the source configuration for the specified version."""
         if version is None:
             version = self.installation.version
@@ -380,25 +382,35 @@ def configure_export_settings(
 
     if host_yaml_path is None:
         if create_if_missing:
-            # Try to create host.yaml using Launcher.py --update_settings
+            # Try to create host.yaml using Launcher --update_settings
             # This creates a properly structured host.yaml with all standard settings
             try:
                 import sys
-                python_exe = sys.executable
-                # Find Launcher.py - it should be in the Archipelago root
-                launcher_locations = [
-                    Path.cwd() / "Launcher.py",
-                    Path(__file__).parent.parent.parent.parent / "Launcher.py",
-                ]
-                launcher_path = None
-                for loc in launcher_locations:
-                    if loc.exists():
-                        launcher_path = loc
-                        break
+                from Utils import is_frozen
 
-                if launcher_path:
+                if is_frozen():
+                    # sys.executable IS the launcher on compiled builds, and it
+                    # takes --update_settings itself; Launcher.py is not on disk.
+                    command = [sys.executable, "--update_settings"]
+                else:
+                    # Find Launcher.py - it should be in the Archipelago root
+                    launcher_locations = [
+                        Path.cwd() / "Launcher.py",
+                        Path(__file__).parent.parent.parent.parent / "Launcher.py",
+                    ]
+                    launcher_path = None
+                    for loc in launcher_locations:
+                        if loc.exists():
+                            launcher_path = loc
+                            break
+                    command = [sys.executable, str(launcher_path), "--update_settings"] \
+                        if launcher_path else None
+                    if command is None:
+                        print("Warning: Launcher.py not found; creating a minimal host.yaml")
+
+                if command:
                     result = subprocess.run(
-                        [python_exe, str(launcher_path), "--update_settings"],
+                        command,
                         capture_output=True,
                         text=True,
                         timeout=30,
@@ -406,8 +418,11 @@ def configure_export_settings(
                     if result.returncode == 0:
                         # Re-check for host.yaml after creation
                         host_yaml_path = get_host_yaml_path()
+                    else:
+                        print(f"Warning: {command[0]} --update_settings failed "
+                              f"(exit {result.returncode}): {result.stderr.strip()}")
             except (subprocess.TimeoutExpired, Exception) as e:
-                print(f"Warning: Failed to run Launcher.py --update_settings: {e}")
+                print(f"Warning: Failed to run Launcher --update_settings: {e}")
 
             # If Launcher.py didn't create it, fall back to minimal creation
             if host_yaml_path is None:

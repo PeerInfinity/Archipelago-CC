@@ -63,10 +63,10 @@ The text adventure mode configures the following settings:
 | Region discovery trigger | On enter | Regions discovered when player enters |
 | Auto-discover locations | Yes | Locations revealed when region entered |
 | Auto-discover exits | Yes | Exits revealed when region entered |
-| Auto-load custom data | `adventure` | Adventure flavor text loaded on startup |
+| Auto-load custom data | _(unset)_ | Adventure flavor text is auto-detected from the game name; no explicit setting needed |
 | Show region in panel | No | Clicking graph navigates instead of showing region panel |
 
 ## Further Reading
 
 - [User guide](../../user/modules/textAdventure.md)
-- [Technical reference](../../developer/modules/textAdventure.md)
+- [Technical reference](../../developer/procgen/text-adventure.md)

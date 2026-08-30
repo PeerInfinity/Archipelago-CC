@@ -1,0 +1,62 @@
+{
+  "tape_version": 7,
+  "game": "seedling",
+  "name": "r6-final-door",
+  "description": "R6 slice 6c: W-DOOR. Boots into L113 three tiles south of `finaldoor@112,0` with the STAGED save state the rung was ruled on — sixteen seal identities in `save.seal_parts` and `{114,0}` declared cleared, which is what `r6-watcher-talk` earns — and holds `up` for the whole tape. At tick 36 the walk crosses into the 32 px CIRCLE about the door's entity point (128,16), which fires a `SealController` unconditionally: its CONSTRUCTOR sets `Game.freezeObjects` and the class never touches `Game.talking`, so all 181 of its frames are DEAD — the tape's counter does not advance, `Bot.autoAdvance` refuses to dispatch into them, and no tape can supply the X release that would cut it short. One tick later the overlay's `removed()` has nulled `parent.mySealController` and the SAME approach reaches the second arm — §2.5's \"only on a LATER approach\" refuted — so `sprFinalDoor.play(\"open\")` runs at tick 37. `animEnd` fires on graphic update 57, which is 56 ticks later because the play frame IS update 1, and `removed()` writes the `{113,0}` CLEAR at tick 93 — the same tick the 32x32 body stops colliding. The held key then walks 14 px into the cell the door occupied. ⚠ The tape stops twelve ticks after the removal, four short of `teleporter@112,0`: L115's two arrival tiles are water, and this window is about the door.",
+  "boot": {
+    "level": 113,
+    "x": 112,
+    "y": 80
+  },
+  "noclip": false,
+  "noDamage": false,
+  "noHazards": [],
+  "grants": [],
+  "persistence": [
+    {
+      "level": 114,
+      "tag": 0,
+      "note": "the Watcher's dialogue — what `r6-watcher-talk` earns, declared here"
+    }
+  ],
+  "equips": [],
+  "pins": [
+    "sound",
+    "dead_frames"
+  ],
+  "save": {
+    "totem_parts": [],
+    "keys": [],
+    "seal_parts": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ]
+  },
+  "rng": {
+    "seed": 0,
+    "split": false
+  },
+  "tick_count": 105,
+  "inputs": [
+    {
+      "key": "up",
+      "from": 0,
+      "to": 105
+    }
+  ]
+}
+

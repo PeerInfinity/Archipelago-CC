@@ -348,18 +348,26 @@ intended files changed.
 
 ---
 
-## 9. Playwright wipes `test-results/` each run
+## 9. Playwright wipes `test-results/` each run — FIXED 2026-07-24
 
-**Symptom:** only the **last** spoiler test's `test-results/in-app-tests/*.json`
-survives; per-seed divergence detail from a batch run is gone.
+**Symptom (historical):** only the **last** spoiler test's
+`test-results/in-app-tests/*.json` survived; per-seed divergence detail from a
+batch run was gone.
 
-Playwright clears the output directory on each invocation, so when a harness runs
-many `npm test` subprocesses, only the final one's detailed results remain on disk.
+Playwright clears its output directory on each invocation, and `outputDir`
+defaulted to the bare `test-results/` — the same tree the in-app suite writes its
+per-run JSON into. So every run wiped its predecessors' results, and the
+timestamped filenames were an illusion of history.
 
-**Workaround:** to capture per-seed divergences, drive the tests yourself and read
-each run's stdout (the browser-log mismatch lines:
-`Sphere X: FAIL`, `Missing locations: ...`, `Extra locations: ...`) before the next
-run overwrites them — e.g. reproduce one seed at a time and grab the output.
+**Fix:** `playwright.config.js` now sets `outputDir: 'test-results/playwright'`,
+scoping the cleanup to a subdirectory. `test-results/in-app-tests/` survives
+across runs; `app.spec.js` prunes it to the newest 30 runs so it stays bounded.
+Verified by probe: a marker file placed in `test-results/in-app-tests/` was
+deleted by a run before the change and survived after it.
+
+Consequence for batch harnesses: per-seed results can now be read after the whole
+batch finishes, rather than having to be scraped from each run's stdout before the
+next one starts.
 
 ---
 

@@ -3,7 +3,7 @@
  * Headless sphere-driven growth driver — plan the spheres, run
  * growSpheres + buildRulesJson in Node, verify the sphere oracle, and
  * write everything to disk. Procgen-engine debugging without the
- * browser. See NewDocs/plans/procedural-generation/sphere-driven-growth.md.
+ * browser. See docs/json/developer/procgen/sphere-growth.md.
  *
  * Usage:
  *   node scripts/procgen/dump-sphere-growth.js \
@@ -26,7 +26,22 @@
  *   --victory id             pin item to the final sphere + use as the
  *                            completion-condition item (default: an
  *                            is_victory item from the pool, if any)
- *   --quota id=N             per-substrate region quota; repeat
+ *   --quota id=N             per-substrate region quota; repeat. A region
+ *                            library rides as `library:<id>` and a region-ATLAS
+ *                            pool as `atlas:<game>` (see --atlas)
+ *   --atlas PATH             load a region-atlas pool document (built by
+ *                            scripts/procgen/region-atlas-pool.mjs) and install
+ *                            it on substrateConfig['<game>'].atlasDoc, so
+ *                            `--quota atlas:<game>=N` can place N pieces of that
+ *                            game's real map. Repeat per game. Absent = no atlas
+ *                            code path is taken at all (byte-inert).
+ *   --atlas-placement MODE   how atlas regions reach the tree: 'sorter'
+ *                            (default) sorts each region into the wave its own
+ *                            entry requirement earns, scheduling that
+ *                            requirement's items into an earlier sphere;
+ *                            'quota' is the fallback, where the grower draws
+ *                            atlas regions like any substrate and gates them
+ *                            with a synthetic gate from the plan.
  *   --start id               start substrate
  *   --max-items-per-region N (default 2)
  *   --fillers N              filler regions, no items (default 0)
@@ -53,6 +68,17 @@
  *                            entries: 'cost' (default) | 'speed' | 'both'
  *                            | 'none'. Only meaningful with
  *                            --enable-loop-mode.
+ *   --consumable-tiles N     per-maze-region cross-game consumable tiles (X1).
+ *                            Default 0 = OFF: the content pass draws no rng and
+ *                            emits no sidecar key, so every existing preset
+ *                            regenerates byte-identically. The foreign pool is
+ *                            built from the OTHER quota'd substrates' registry
+ *                            sharing.items declarations; an empty pool places
+ *                            nothing.
+ *   --consumable-count N     grant count stamped per consumable tile (default 1)
+ *   --mana-tiles N           per-maze-region mana-refill tiles (default 0 = OFF)
+ *   --mana-tile-amount N     mana granted per refill tile (default 0; a refill
+ *                            tile is only placed when this is > 0)
  *   --rules-out PATH         additionally write the bare rules.json here
  *   -o, --out PATH           output JSON path (default ./sphere-growth-dump.json)
  *
@@ -66,14 +92,15 @@
  *   }
  */
 
-import { writeFileSync, mkdirSync } from 'node:fs';
+import { writeFileSync, mkdirSync, readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 // Substrate libraries register their adapters on import.
 import '../../frontend/modules/mazeRoom/mazeRoomLibrary.js';
-import '../../frontend/modules/textAdventureSubstrate/textAdventureSubstrateLibrary.js';
+import '../../frontend/modules/textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js';
 import '../../frontend/modules/bounceDemo/bounceDemoLibrary.js';
+import '../../frontend/modules/runnerDemo/runnerDemoLibrary.js';
 
 import { growSpheres, buildRulesJson, getRegionExits, compactSphereTree } from
     '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
@@ -81,11 +108,54 @@ import { planSpheres, computeItemSpheres, compareSpheresToPlan } from
     '../../frontend/modules/procgenPipeline/spherePlanner.js';
 import { DEFAULT_ITEMS } from
     '../../frontend/modules/shared/procgen/library.js';
+import { substrateRegistry } from
+    '../../frontend/modules/shared/procgen/substrateRegistry.js';
+import { validateAtlasPool } from
+    '../../frontend/modules/procgenPipeline/regionAtlasPool.js';
+import { sortAtlasRegionsIntoSpheres, formatAtlasSortReport } from
+    '../../frontend/modules/procgenPipeline/sphereAtlasSorter.js';
 import {
     defaultProcgenParams, activeSubstrateIds,
     collectSphereGrowthPrep, assembleRegionParams,
     mergeSubstrateItemLib, resolveVictoryItem,
 } from '../../frontend/modules/procgenPipeline/sphereConfigHooks.js';
+
+/**
+ * Build the X1 consumable-tile config, or null when byte-inert.
+ *
+ * Returning null (rather than an all-zero object) is the load-bearing
+ * half: the content-module pass is gated on the result being active, so
+ * at defaults it never runs, never draws rng, and never emits a sidecar
+ * key — the D3/S3 byte-inert requirement.
+ *
+ * The foreign pool is the union of the OTHER quota'd substrates'
+ * registry `sharing.items` declarations (D2), mirroring how
+ * spiral-step's buildOmsiSubstrateConfig assembles its pool. Maze is
+ * excluded — a maze tile granting a maze item would just be an item.
+ */
+function buildConsumableTileConfig(config) {
+    const consumableCount = Math.max(0, config.consumableTiles | 0);
+    const manaCount = Math.max(0, config.manaTiles | 0);
+    const manaAmount = Number(config.manaTileAmount) || 0;
+    if (consumableCount === 0 && !(manaCount > 0 && manaAmount > 0)) return null;
+
+    const pool = [];
+    for (const [id, n] of Object.entries(config.quotas)) {
+        if (!(n > 0) || id === 'maze') continue;
+        const decl = substrateRegistry.get(id)?.sharing?.items;
+        const types = decl?.types ?? decl?.getTypes?.() ?? null;
+        if (Array.isArray(types)) {
+            for (const t of types) pool.push({ substrate: id, type: t });
+        }
+    }
+    return {
+        consumableCount,
+        manaCount,
+        manaAmount,
+        countPerTile: Math.max(1, config.consumableCount | 0),
+        pool,
+    };
+}
 
 // --- CLI parser ---
 
@@ -113,6 +183,14 @@ function parseArgs(argv) {
         params: {},
         enableLoopMode: false,
         regionXpEffect: 'cost',
+        // X1 consumable tiles — byte-inert defaults (all zero ⇒ the
+        // content-module pass returns before touching the rng).
+        consumableTiles: 0,
+        consumableCount: 1,
+        manaTiles: 0,
+        manaTileAmount: 0,
+        atlasPools: [],
+        atlasPlacement: 'sorter',
         rulesOut: null,
         out: './sphere-growth-dump.json',
     };
@@ -161,6 +239,8 @@ function parseArgs(argv) {
                 out.quotas[id] = n;
                 break;
             }
+            case '--atlas': out.atlasPools.push(next()); break;
+            case '--atlas-placement': out.atlasPlacement = next(); break;
             case '--start': out.start = next(); break;
             case '--max-items-per-region':
                 out.maxItemsPerRegion = parseInt(next(), 10);
@@ -181,6 +261,10 @@ function parseArgs(argv) {
             }
             case '--enable-loop-mode': out.enableLoopMode = true; break;
             case '--region-xp-effect': out.regionXpEffect = next(); break;
+            case '--consumable-tiles': out.consumableTiles = parseInt(next(), 10); break;
+            case '--consumable-count': out.consumableCount = parseInt(next(), 10); break;
+            case '--mana-tiles': out.manaTiles = parseInt(next(), 10); break;
+            case '--mana-tile-amount': out.manaTileAmount = parseFloat(next()); break;
             case '--rules-out': out.rulesOut = next(); break;
             case '-o':
             case '--out': out.out = next(); break;
@@ -285,11 +369,43 @@ async function main() {
         seed: config.seed,
     });
 
+    const consumableTileOpts = buildConsumableTileConfig(config);
+
+    // Region-atlas pools (region-atlas Phase 6). Each rides on
+    // substrateConfig['<game>'].atlasDoc — the seam plan decision 5 fixed, keyed
+    // by the GAME, while its quota is keyed `atlas:<game>`. Empty unless --atlas
+    // is passed, so the growth config is byte-identical without it.
+    const substrateConfig = {};
+    const atlasAssignments = [];
+    for (const p of config.atlasPools) {
+        const pool = JSON.parse(readFileSync(resolve(process.cwd(), p), 'utf8'));
+        const vr = validateAtlasPool(pool);
+        if (!vr.ok) {
+            throw new Error(`atlas pool ${p} is invalid: ${vr.errors.join('; ')}`);
+        }
+        substrateConfig[pool.game] = { atlasDoc: pool };
+        console.log(`  atlas pool: ${pool.pool_id} (${pool.entries.length} regions) `
+            + `-> substrateConfig['${pool.game}'].atlasDoc`);
+        if (config.atlasPlacement === 'sorter') {
+            // MUTATES `plan` — the required items are scheduled into earlier
+            // spheres, and the plan is also the oracle, so this must happen
+            // before the plan reaches the driver AND the same object must be
+            // what the oracle compares against below.
+            const sorted = sortAtlasRegionsIntoSpheres(plan, pool, {
+                quota: config.quotas[`atlas:${pool.game}`],
+            });
+            atlasAssignments.push(...sorted.assignments);
+            for (const line of formatAtlasSortReport(sorted)) console.log(`  ${line}`);
+        }
+    }
+
     const { grid, stats, startCell, tree } = growSpheres({
         regionSize: config.region,
         itemLib,
         seed: config.seed,
         regionParams,
+        // null at defaults ⇒ the content pass never runs (byte-inert).
+        ...(consumableTileOpts ? { consumableTileOpts } : {}),
         growthParams: {
             spherePlan: plan,
             maxItemsPerRegion: config.maxItemsPerRegion,
@@ -300,6 +416,8 @@ async function main() {
             ...(Object.keys(config.quotas).length > 0
                 ? { substrateQuotas: config.quotas } : {}),
             ...(config.start ? { startSubstrate: config.start } : {}),
+            ...(Object.keys(substrateConfig).length > 0 ? { substrateConfig } : {}),
+            ...(atlasAssignments.length > 0 ? { atlasAssignments } : {}),
         },
     });
 

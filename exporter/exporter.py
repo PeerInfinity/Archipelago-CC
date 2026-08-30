@@ -9,7 +9,7 @@ import os
 import inspect
 import shutil
 from functools import lru_cache, partial
-from typing import Any, Dict, List, Set, Optional, Tuple
+from typing import Any, Dict, List, Set, Optional, Sequence, Tuple
 from collections import defaultdict
 
 import Utils
@@ -22,6 +22,11 @@ except (ImportError, AttributeError):
     # Converter requires the fork's extended rule_builder package.
     # When unavailable, rule_builder format is not supported — ast format still works.
     convert_rules_file_to_rule_builder = None  # type: ignore[assignment]
+from .foreign_rule_builder import (
+    ForeignRuleSerializationError,
+    is_foreign_resolved_rule,
+    serialize_foreign_resolved_rule,
+)
 from .constants import (
     MAX_RULE_SIZE_KB,
     MAX_INTERIM_EXPORT_SIZE_MB_BASE, MAX_INTERIM_EXPORT_SIZE_MB_PER_EXTRA_GAME,
@@ -37,9 +42,46 @@ auto_enable_from_env()
 logger = logging.getLogger(__name__)
 
 
+def _json_dumps_at_indent(data: Any, indent: int) -> str:
+    """json.dumps at `indent`, where indent 0 means MINIFIED.
+
+    EDITOR v3 E1c. ``json.dumps(obj, indent=0)`` is NOT minified in
+    Python: it still emits a newline before every element and a space
+    after every colon, so `{"a": [1, 2]}` becomes 7 lines. JavaScript's
+    ``JSON.stringify(obj, null, 0)`` IS minified (measured, both ways).
+    The two writers have to agree, so 0 maps to `separators` here.
+    """
+    if indent == 0:
+        return json.dumps(data, separators=(',', ':'), ensure_ascii=False)
+    return json.dumps(data, indent=indent, ensure_ascii=False)
+
+
+def _rules_json_indent() -> int:
+    """The `json_tools.rules_json_indent` setting, or its declared default.
+
+    EDITOR v3 E1c. Read HERE rather than threaded through six call frames,
+    and read from the settings Group so the default has exactly one home
+    (`worlds/json_tools_installer/json_tools_settings.py`) — an absent or
+    unreadable host.yaml falls back to that Group's own default, never to
+    a literal typed here.
+    """
+    try:
+        from worlds.json_tools_installer.json_tools_settings import (
+            JSONToolsSettings, get_json_tools_settings,
+        )
+        return int(getattr(get_json_tools_settings(), 'rules_json_indent',
+                           JSONToolsSettings.rules_json_indent))
+    except Exception:
+        return 2
+
+
 def _dump_with_compact_sidecar_tiles(data: Any, indent: int = 2) -> str:
     """Serialize a rules.json-shaped dict to a string with `indent`,
     but collapse each sidecar's `tiles` array onto a single line.
+
+    `indent=0` MINIFIES (see `_json_dumps_at_indent`) — the sidecar
+    splice is then a no-op in effect, since a compact tiles array is
+    already what a minified dump writes.
 
     Procgen output carries per-region playable_payload.tiles arrays
     of width*height integers; the default json.dump(indent=2) puts
@@ -49,14 +91,32 @@ def _dump_with_compact_sidecar_tiles(data: Any, indent: int = 2) -> str:
     the compact array back in.
 
     Mirrors stringifyRulesJson in
-    frontend/modules/procgenPipeline/procgenPipelineEngine.js so
-    files written here look the same as files downloaded from the
-    procgen panel.
+    frontend/modules/shared/rulesJsonBuilder.js so files written here
+    look the same as files downloaded from the procgen panel.
+    (`procgenPipeline/procgenPipelineEngine.js` only RE-EXPORTS it; the
+    body this mirrors lives in `shared/`.)
+
+    EDITOR v3 W1 — the mirror was FALSE OF THE BYTES until this slice, in
+    two places, both now fixed and pinned by
+    `test/test_rules_json_writer_agreement.py`:
+
+    * the splice below re-inserts `json.dumps(tiles, separators=(',', ':'))`;
+      the default separators put a SPACE after every tile integer and
+      `JSON.stringify(array)` does not.
+    * `_json_dumps_at_indent` passes `ensure_ascii=False`; `json.dumps`
+      escapes `§` to a six-character ``\\u00a7`` where
+      `JSON.stringify` writes the character itself — at indent 0 as much
+      as at indent 2. Safe because the
+      ONE production caller opens its file with `encoding='utf-8'`.
+
+    ⛓ The trailing newline is the WRITE SITE's, not the writer's — neither
+    function emits one (`scripts/utils/generate-procgen-rules.js` appends
+    ``text + '\\n'`` itself; the Python write site appends nothing).
 
     No-op for inputs without a `preset_sidecars` key.
     """
     if not isinstance(data, dict) or 'preset_sidecars' not in data:
-        return json.dumps(data, indent=indent)
+        return _json_dumps_at_indent(data, indent)
 
     import copy as _copy
     marker = '__PROCGEN_TILES_'
@@ -76,10 +136,10 @@ def _dump_with_compact_sidecar_tiles(data: Any, indent: int = 2) -> str:
                     captured.append(pp['tiles'])
                     pp['tiles'] = f'{marker}{idx}__'
 
-    text = json.dumps(patched, indent=indent)
+    text = _json_dumps_at_indent(patched, indent)
     for i, tiles in enumerate(captured):
         placeholder = f'"{marker}{i}__"'
-        compact = json.dumps(tiles)
+        compact = json.dumps(tiles, separators=(',', ':'))
         text = text.replace(placeholder, compact, 1)
     return text
 
@@ -1445,6 +1505,34 @@ def process_regions(multiworld, player: int, game_handler=None, location_name_to
                     logger.warning(f"Rule Builder to_dict() failed for {target_type} '{rule_target_name}': {e}")
                     # Fall through to AST analysis as fallback
 
+            # Rule Builder rules from a *foreign* (vendored upstream) rule_builder:
+            # same frozen-dataclass shape, but no fork-only to_dict(). AST analysis
+            # cannot read them at all (inspect.getfile() on a dataclass instance
+            # raises), so serialize them structurally instead.
+            elif is_foreign_resolved_rule(rule_func):
+                try:
+                    rb_dict = serialize_foreign_resolved_rule(rule_func)
+                    rb_dict = _make_rule_dict_serializable(rb_dict)
+                    if game_handler and hasattr(game_handler, 'expand_rule'):
+                        rb_dict = game_handler.expand_rule(rb_dict)
+                    _rule_analysis_cache[cache_key] = rb_dict
+                    logger.debug(
+                        f"Exported foreign Rule Builder format for {target_type} "
+                        f"'{rule_target_name}': {rb_dict.get('rule', 'unknown')}"
+                    )
+                    return rb_dict
+                except ForeignRuleSerializationError as e:
+                    logger.warning(
+                        f"Foreign Rule Builder serialization failed for {target_type} "
+                        f"'{rule_target_name}' ({type(rule_func).__qualname__}): {e}"
+                    )
+                    # Fall through to the normal analysis path
+                except Exception as e:
+                    logger.warning(
+                        f"Foreign Rule Builder serialization errored for {target_type} "
+                        f"'{rule_target_name}' ({type(rule_func).__qualname__}): {e}"
+                    )
+
             # Check if game handler has an override for rule analysis (e.g., Blasphemous, Terraria)
             if game_handler and hasattr(game_handler, 'override_rule_analysis'):
                 override_result = game_handler.override_rule_analysis(rule_func, rule_target_name)
@@ -2549,8 +2637,76 @@ def _get_cleaned_rules_data(multiworld) -> Dict[str, Any]:
         return {}
 
 
+# Suffixes of the artifacts JSON Tools writes into Archipelago's output directory.
+# They are deliberately kept out of Main's zip staging directory (see
+# worlds/json_tools_installer/monkey_patches/hooks.py), because a stock WebHost
+# rejects an upload whose archive contains them. The output directory is shared
+# by every seed, so the preset copy picks this generation's artifacts out BY
+# NAME (see _preset_artifact_names) instead of mirroring the whole folder the
+# way it can for a per-seed staging directory.
+PRESET_ARTIFACT_SUFFIXES = ("_rules.json", "_rules-ast.json", "_sphere_log.jsonl")
+
+
+def _preset_artifact_names(filename_base: str, player_ids: Sequence[int] = ()) -> List[str]:
+    """
+    The exact basenames this generation's export can have written into the
+    shared output directory: the combined rules (+AST), one per-player rules
+    (+AST) file per player when there is more than one, and the sphere log.
+
+    A prefix match on the seed name is NOT enough: seed names collide across
+    generations (a 4-player multiworld at --seed 1 and every single-player
+    --seed 1 preset all share AP_14089154938208861744), so a stale
+    AP_<seed>_P1_rules.json left by an earlier multiworld run would otherwise
+    be swept into every later single-player preset (2026-08-30, 148 dirs).
+    """
+    names = [f"{filename_base}_rules.json", f"{filename_base}_rules-ast.json"]
+    if len(player_ids) > 1:
+        for player in player_ids:
+            names.append(f"{filename_base}_P{player}_rules.json")
+            names.append(f"{filename_base}_P{player}_rules-ast.json")
+    names.append(f"{filename_base}_sphere_log.jsonl")
+    return names
+
+
+def _collect_preset_source_files(output_dir: str, staging_dir: Optional[str], filename_base: str,
+                                 player_ids: Sequence[int] = ()) -> List[str]:
+    """
+    Collect the files that should be mirrored into a preset directory.
+
+    Args:
+        output_dir: Archipelago's output directory — shared by all seeds AND by
+            earlier generations of the same seed name, so only the artifacts
+            this generation can have written (by exact name) are taken from it.
+        staging_dir: Main's per-seed zip staging directory, when the export runs
+            from the Spoiler.to_file hook. It only ever holds this seed's files
+            (multidata, spoiler, per-player game files), so all of them are taken.
+        filename_base: Base name for this seed's output files
+        player_ids: This multiworld's player ids; per-player artifacts are
+            expected only when there is more than one.
+
+    Returns:
+        Sorted list of absolute-or-relative source paths, one per basename.
+    """
+    sources: Dict[str, str] = {}
+
+    if (staging_dir and os.path.isdir(staging_dir)
+            and os.path.abspath(staging_dir) != os.path.abspath(output_dir)):
+        for name in os.listdir(staging_dir):
+            path = os.path.join(staging_dir, name)
+            if os.path.isfile(path):
+                sources[name] = path
+
+    if os.path.isdir(output_dir):
+        for name in _preset_artifact_names(filename_base, player_ids):
+            path = os.path.join(output_dir, name)
+            if os.path.isfile(path):
+                sources[name] = path
+
+    return [sources[name] for name in sorted(sources)]
+
+
 # --- Game Rules Export ---
-def export_game_rules(multiworld, output_dir: str, filename_base: str, save_presets: bool = False, skip_preset_copy_if_rules_identical: bool = False, rules_json_format: str = "rule_builder", cleanup_multiworld: bool = False, clear_game_presets: bool = False, clear_all_presets: bool = False) -> Dict[str, str]:
+def export_game_rules(multiworld, output_dir: str, filename_base: str, save_presets: bool = False, skip_preset_copy_if_rules_identical: bool = False, rules_json_format: str = "rule_builder", cleanup_multiworld: bool = False, clear_game_presets: bool = False, clear_all_presets: bool = False, staging_dir: Optional[str] = None) -> Dict[str, str]:
     """
     Exports game rules to JSON files for frontend consumption.
     Also saves a copy of rules to frontend/presets with game name as prefix if save_presets is True.
@@ -2566,6 +2722,8 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
             collection. Disabled by default as it invalidates the multiworld object.
         clear_game_presets: If True, delete all existing presets for the current game before generating
         clear_all_presets: If True, delete all existing presets for ALL games before generating
+        staging_dir: Optional per-seed staging directory (Main's zip staging folder) whose
+            files are mirrored into the preset directory alongside this seed's artifacts.
 
     Returns:
         Dict containing paths to generated files
@@ -2772,10 +2930,30 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
             # onto a single line — Python's default json.dump puts
             # every tile integer on its own line, which makes the
             # file ~10× larger than it needs to be. Mirrors
-            # stringifyRulesJson in
-            # frontend/modules/procgenPipeline/procgenPipelineEngine.js.
+            # stringifyRulesJson in frontend/modules/shared/rulesJsonBuilder.js
+            # (procgenPipelineEngine.js only re-exports it) — byte for byte
+            # since EDITOR v3 W1, pinned by test/test_rules_json_writer_agreement.py.
+            # EDITOR v3 E1c — the indent is a SETTING (`json_tools.rules_json_indent`,
+            # default 2, mirrored by the frontend's `rulesJson.indent`).
+            # ⛔ THE DEFAULT DOES NOT MOVE — but NOT for the reason this comment
+            # used to give. It claimed the committed presets were "byte-pinned at
+            # 2 (29 byte-identity dumps, test_schema_validation.py, every
+            # --check)". EDITOR v3 W1 opened all three and none of them pins a
+            # byte: scripts/procgen/dump-*-byteidentity.mjs (four of them) read
+            # frontend/presets/ ZERO times — they pin in-process generator
+            # determinism; test/general/test_schema_validation.py is json.load +
+            # jsonschema.validate, blind to formatting; and no workflow runs a
+            # --check over presets. The presets are committed DATA, regenerated
+            # only on demand by .github/workflows/generate-presets.yml
+            # (workflow_dispatch, onto a `generated-presets` branch).
+            # The default stays 2 because it is the frontend's default and the
+            # committed corpus is indented at 2; `indent=0` is only ever
+            # something a person asked for, per output.
+            # ⛓ encoding='utf-8' below is what makes `ensure_ascii=False` safe.
+            # ⛓ encoding='utf-8' below is what makes `ensure_ascii=False` safe.
             with open(filepath, 'w', encoding='utf-8') as f:
-                f.write(_dump_with_compact_sidecar_tiles(filtered_data, indent=2))
+                f.write(_dump_with_compact_sidecar_tiles(
+                    filtered_data, indent=_rules_json_indent()))
 
             # Check final file size against limit
             file_size_bytes = os.path.getsize(filepath)
@@ -2891,8 +3069,11 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
             clean_game_name = get_world_directory_name(game_name)
             logger.info(f"Detected single game world ({game_name}), using '{clean_game_name}' preset folder.")
 
-        # Determine preset directories
-        presets_dir = os.path.join(os.path.dirname(__file__), '..', 'frontend', 'presets')
+        # Determine preset directories. Resolve via local_path, not relative to
+        # this file: on compiled installs the exporter lives in lib/ while the
+        # frontend is extracted to the install root.
+        from Utils import local_path
+        presets_dir = local_path('frontend', 'presets')
         os.makedirs(presets_dir, exist_ok=True)
 
         # Clear all presets if requested (must be done before creating game directory)
@@ -2966,19 +3147,27 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
         # Create a folder for this specific preset
         preset_dir = os.path.join(game_dir, filename_base)
 
+        # The files that make up this preset: this seed's artifacts from the output
+        # directory plus everything Main staged for the ZIP.
+        preset_sources = _collect_preset_source_files(
+            output_dir, staging_dir, filename_base, list(multiworld.player_ids))
+        source_json_paths = {
+            os.path.basename(path): path for path in preset_sources if path.endswith('.json')
+        }
+
         # --- Check if preset update is needed ---
-        needs_update = True 
+        needs_update = True
         if os.path.exists(preset_dir):
             try:
-                # Compare files in output_dir and preset_dir
-                output_files = sorted([f for f in os.listdir(output_dir) if f.endswith('.json') and os.path.isfile(os.path.join(output_dir, f))])
+                # Compare the source files against those already in preset_dir
+                output_files = sorted(source_json_paths)
                 preset_files = sorted([f for f in os.listdir(preset_dir) if f.endswith('.json') and os.path.isfile(os.path.join(preset_dir, f))])
 
                 if set(output_files) == set(preset_files):
                     # Same files exist in both dirs, compare content
                     all_match = True
                     for filename in output_files:
-                        output_path = os.path.join(output_dir, filename)
+                        output_path = source_json_paths[filename]
                         preset_path = os.path.join(preset_dir, filename)
                         try:
                             with open(output_path, 'r', encoding='utf-8') as f_out, open(preset_path, 'r', encoding='utf-8') as f_pre:
@@ -3020,17 +3209,15 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
                     except Exception as e:
                         logger.error(f"Error removing item {item_path}: {e}")
 
-            # Copy files from output_dir to preset_dir
+            # Copy this preset's source files to preset_dir
             files_copied = 0
-            for file_name in os.listdir(output_dir):
-                src_file = os.path.join(output_dir, file_name)
-                if os.path.isfile(src_file):
-                    try:
-                        dst_file = os.path.join(preset_dir, file_name)
-                        shutil.copy2(src_file, dst_file)
-                        files_copied += 1
-                    except Exception as e:
-                        logger.error(f"Error copying file {src_file} to {preset_dir}: {e}")
+            for src_file in preset_sources:
+                try:
+                    dst_file = os.path.join(preset_dir, os.path.basename(src_file))
+                    shutil.copy2(src_file, dst_file)
+                    files_copied += 1
+                except Exception as e:
+                    logger.error(f"Error copying file {src_file} to {preset_dir}: {e}")
             
             logger.info(f"Copied {files_copied} files to preset directory {preset_dir}")
             
@@ -3091,9 +3278,7 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
             # Procgen data flag — true when the rules.json carries
             # preset_sidecars (i.e. the world was generated via the
             # procgen pipeline). Powers the Presets panel's "has
-            # procgen data" filter. Absent = false. See NewDocs/plans/
-            # presets-panel-overhaul.md §"Procgen detection at index
-            # time".
+            # procgen data" filter. Absent = false.
             preset_sidecars = cleaned_data.get('preset_sidecars')
             if preset_sidecars and len(preset_sidecars) > 0:
                 folder_entry["has_procgen_data"] = True

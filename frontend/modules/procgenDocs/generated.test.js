@@ -1,0 +1,864 @@
+/**
+ * procgenDocs/generated — **THE THREE GENERATED TABLES, GATED WITHOUT A
+ * BROWSER** (PROCGEN DOCS slice P3a, D5).
+ *
+ * ⛓ `check-procgen-reference.mjs` is the expensive gate: it LOADS
+ * `reference.html` and asserts the page renders what these modules hold. This
+ * file is the cheap one, and it asks the two questions a page cannot:
+ *
+ *  1. **IS WHAT IS CHECKED IN WHAT THE CODE SAYS?** — `generate-procgen-
+ *     reference.mjs --check` regenerates into memory and diffs. ⛔ This is the
+ *     whole point of a generated table: it is a recorded md5 in table form, and
+ *     it rots the instant the code moves without it.
+ *  2. **IS THE TABLE NON-VACUOUS?** — every `read*`/`write*` export of
+ *     `urlParams.js`, every `ELEMENT_TABLE` head, every palette row, every
+ *     excluded row, every skeleton kind and every name in a `*_REFUSALS`
+ *     constant must APPEAR. ⛔ A generator that silently stopped scanning would
+ *     otherwise emit a small, well-formed, empty-ish table and every shape
+ *     assertion would still pass.
+ *
+ * ⛔⛔ **THE NON-VACUITY HALF IS ASKED OF THE SOURCE MODULES, NOT OF THE
+ * GENERATOR.** Importing the generator and comparing its output to its output
+ * is a fixed point, and a fixed point tests self-consistency and never
+ * correctness (trap 250). So the expectations below are built from
+ * `procgenCore/urlParams.js`, `elementSpec.js`, `skeletonKinds.js`,
+ * `procgenPalette.js` and the two element modules DIRECTLY.
+ */
+
+import { execFileSync } from 'node:child_process';
+import { readFileSync, readdirSync } from 'node:fs';
+import { join } from 'node:path';
+
+import { beforeAll, describe, expect, it } from 'vitest';
+
+import * as urlParams from '../procgenCore/urlParams.js';
+import { URL_PARAM_REFUSALS } from '../procgenCore/urlParams.js';
+import {
+    ELEMENT_TABLE, ELEMENT_NAMES, formatElementSpec, parseElementSpec,
+} from '../procgenCore/elementSpec.js';
+import { KEEP_POLICY, KEPT_KIND, STOP, VERDICT, ATTEMPT } from '../procgenCore/levelGenerator.js';
+import { kindsOffered } from '../procgenCore/skeletonKinds.js';
+import { KILL_GATE_REFUSALS } from '../procgenCore/elements/killGate.js';
+import { BLOCK_POCKET_REFUSALS } from '../procgenCore/elements/blockPocket.js';
+import { SEEDLING_ELEMENT_REFUSALS } from '../seedlingDemo/procgenSeedlingElements.js';
+import {
+    EXCLUDED_TEMPLATES, POST_SWORD_EXCLUDED_TEMPLATES, POST_SWORD_PALETTE, PRE_SWORD_PALETTE,
+} from '../seedlingDemo/procgenPalette.js';
+import { MAZE_PALETTE } from '../mazeRoom/procgenMaze.js';
+
+import {
+    findMarkdownRegion, markdownMarkers, spliceMarkdownRegion,
+} from '../../../scripts/procgen/reference/lib.mjs';
+import { REGISTRY_LIBRARIES } from '../../../scripts/procgen/reference/registry.mjs';
+import { SCRIPT_DIR } from '../../../scripts/procgen/reference/instruments.mjs';
+import {
+    DOC_DIR, PAGE_DIR, README_ORDER,
+} from '../../../scripts/procgen/reference/docsIndex.mjs';
+
+import { termById } from './glossary.js';
+
+import { CATALOGUE } from './generated/catalogue.js';
+import { REFUSALS } from './generated/refusals.js';
+import { DOCS_INDEX } from './generated/docsIndex.js';
+import { INSTRUMENTS } from './generated/instruments.js';
+import { REGISTRY } from './generated/registry.js';
+import { URL_GRAMMAR } from './generated/urlGrammar.js';
+
+/** ⛓ Repo root from this file: `frontend/modules/procgenDocs/` → up three. */
+const ROOT = new URL('../../../', import.meta.url).pathname;
+const GENERATOR = join(ROOT, 'scripts/procgen/generate-procgen-reference.mjs');
+const GENERATED = join(ROOT, 'frontend/modules/procgenDocs/generated');
+
+const MODULES = [
+    { file: 'urlGrammar.js', value: URL_GRAMMAR },
+    { file: 'catalogue.js', value: CATALOGUE },
+    { file: 'refusals.js', value: REFUSALS },
+    { file: 'registry.js', value: REGISTRY },
+    { file: 'instruments.js', value: INSTRUMENTS },
+    { file: 'docsIndex.js', value: DOCS_INDEX },
+];
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ THE GATE — REGENERATE = NO DIFF
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('the generated modules ARE what the code says', () => {
+    it('⛓⛓ `--check` exits 0 — regenerating produces byte-identical files', () => {
+        let out = '';
+        let code = 0;
+        try {
+            out = execFileSync('node', [GENERATOR, '--check'], { encoding: 'utf8' });
+        } catch (e) {
+            code = e.status ?? 1;
+            out = `${e.stdout ?? ''}${e.stderr ?? ''}`;
+        }
+        expect(`${code}\n${out}`).toContain('GENERATED MODULES AND');
+        expect(`${code}\n${out}`).toContain('MATCH THE CODE');
+        expect(code).toBe(0);
+    });
+
+    it('⛔ carries the GENERATED header and NO timestamp — a stamp would make '
+        + 'every regeneration a diff and the gate unfailable', () => {
+        for (const m of MODULES) {
+            const text = readFileSync(join(GENERATED, m.file), 'utf8');
+            expect(text.split('\n')[0]).toBe('// GENERATED by scripts/procgen/'
+                + 'generate-procgen-reference.mjs — do not edit; regenerate.');
+            /* ⛔ no ISO date, no epoch-looking 10-digit run of digits */
+            expect(text).not.toMatch(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/);
+            expect(text).not.toMatch(/"generatedAt"|"timestamp"/);
+        }
+    });
+});
+
+describe('the generated modules are DEEP-frozen and SORTED', () => {
+    const walk = (v, path, visit) => {
+        visit(v, path);
+        if (Array.isArray(v)) v.forEach((x, i) => walk(x, `${path}[${i}]`, visit));
+        else if (v && typeof v === 'object') {
+            for (const k of Object.keys(v)) walk(v[k], `${path}.${k}`, visit);
+        }
+    };
+
+    it('⛔ every nested row is frozen — a reader cannot mutate the table it renders', () => {
+        const thawed = [];
+        for (const m of MODULES) {
+            walk(m.value, m.file, (v, path) => {
+                if (v && typeof v === 'object' && !Object.isFrozen(v)) thawed.push(path);
+            });
+        }
+        expect(thawed).toEqual([]);
+    });
+
+    it('⛔ every object\'s keys are SORTED — the diff of a regeneration is the '
+        + 'diff of the CODE, never of a key order nobody chose', () => {
+        const unsorted = [];
+        for (const m of MODULES) {
+            walk(m.value, m.file, (v, path) => {
+                if (!v || typeof v !== 'object' || Array.isArray(v)) return;
+                const keys = Object.keys(v);
+                if (keys.join(',') !== [...keys].sort().join(',')) unsorted.push(path);
+            });
+        }
+        expect(unsorted).toEqual([]);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ NON-VACUITY — asked of the SOURCE modules
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('urlGrammar names every reader/writer and every parameter they own', () => {
+    /** ⛓ The exports that ARE the URL grammar — asked of the module, not of the
+     *  table. A new `readFoo` lands here the moment it exists. */
+    const readersAndWriters = Object.keys(urlParams)
+        .filter((k) => typeof urlParams[k] === 'function' && /^(read|write)/.test(k))
+        .sort();
+
+    /**
+     * ⛔⛔ **EVERY PARAMETER NAMES A GLOSSARY TERM** (PROCGEN DOCS · P5). Seven
+     * rows carried `terms: []` and rendered a blank cell, which is the shape a
+     * complete-looking table takes when it is not: a reader who follows 30
+     * links and finds 7 blanks concludes those 7 have no definition, and until
+     * P5 they did not. ⛓ Asked of the SOURCE glossary, not of the table: a
+     * declared term that no entry defines reds here as well as in the
+     * generator's own guard.
+     */
+    it('⛓⛓ every URL parameter names at least one glossary term, and every '
+        + 'term it names EXISTS', () => {
+        const blank = [];
+        const missing = [];
+        for (const page of URL_GRAMMAR.pages) {
+            for (const row of page.params) {
+                if (!row.terms.length) blank.push(`${page.id}:${row.name}`);
+                for (const id of row.terms) {
+                    if (!termById(id)) missing.push(`${page.id}:${row.name} → ${id}`);
+                }
+            }
+        }
+        expect(blank).toEqual([]);
+        expect(missing).toEqual([]);
+    });
+
+    it(`⛓⛓ every read*/write* export of urlParams.js is named `
+        + `(${readersAndWriters.length} of them)`, () => {
+        const named = new Set(URL_GRAMMAR.sharedReaders.map((r) => r.fn));
+        expect(readersAndWriters.filter((fn) => !named.has(fn))).toEqual([]);
+    });
+
+    it('⛓⛓ every parameter one of them touches appears on at least one PAGE', () => {
+        const onAPage = new Set(URL_GRAMMAR.pages.flatMap((p) => p.params.map((q) => q.name)));
+        const owned = new Set(URL_GRAMMAR.sharedReaders
+            .filter((r) => readersAndWriters.includes(r.fn))
+            .flatMap((r) => r.params));
+        expect([...owned].filter((name) => !onAPage.has(name)).sort()).toEqual([]);
+        expect(owned.size).toBeGreaterThan(8);
+    });
+
+    it('⛔ every parameter carries a codec, a provenance and a default field or '
+        + 'an explicit `null` — never a blank row', () => {
+        for (const page of URL_GRAMMAR.pages) {
+            for (const q of page.params) {
+                expect(typeof q.name, `${page.id} ?${q.name}=`).toBe('string');
+                expect(q.codec, `${page.id} ?${q.name}= has no codec`).toBeTruthy();
+                expect(q.via.length, `${page.id} ?${q.name}= names no reader`)
+                    .toBeGreaterThan(0);
+                expect(['written at the default', 'DELETED at the default',
+                    'not written by this page']).toContain(q.atDefault);
+            }
+        }
+    });
+
+    it('⛓ the RETIRED parameters carry the refusal the code ITSELF produced', () => {
+        const directed = URL_GRAMMAR.retired.find((r) => r.name === 'directed');
+        expect(directed).toBeTruthy();
+        expect(directed.wayIn).toBe(urlParams.DIRECTED_RETIRED);
+        for (const r of directed.refusals) {
+            expect(r.text).toContain('?directed= is no longer a URL parameter');
+        }
+        const letter = URL_GRAMMAR.retired.find((r) => r.name.includes('d|s'));
+        expect(letter.refusals[0].text).toContain('KEEP-POLICY letter');
+    });
+
+    it('⛔ the two pages\' DEFAULTS are the readers\' own answers, not a copy', () => {
+        const watch = URL_GRAMMAR.pages.find((p) => p.id === 'watch');
+        const lab = URL_GRAMMAR.pages.find((p) => p.id === 'lab');
+        /** ⛓ `?elements=` is the one row whose absence is NOT the codec default:
+         *  the Seedling reader answers `undefined` — *nobody said* — and the seam
+         *  turns that into the BIOME default. */
+        const elements = watch.params.find((q) => q.name === 'elements');
+        expect(elements.defaultIsUndefined).toBe(true);
+        expect(elements.absentMeans).toContain('ABSENT IS NOT `none` HERE');
+        expect(lab.params.find((q) => q.name === 'elements').defaultValue)
+            .toEqual({ name: 'none' });
+        /** ⛓ …and `chambers` is the one the PAGE spells explicitly. */
+        const winding = CATALOGUE.biomes.find((b) => b.id === 'pre-sword')
+            .skeletonKinds.find((k) => k.kind === 'winding');
+        expect(winding.spelledExplicitlyInTheUrl).toContain('chambers');
+        expect(winding.effectiveDefaults.chambers).toBe(1);
+        expect(winding.codecDefaults.chambers).toBe(0);
+    });
+});
+
+describe('catalogue names every template, element head and skeleton kind', () => {
+    it('⛓⛓ every PALETTE row of both Seedling biomes and of the maze', () => {
+        const rows = (id) => CATALOGUE.biomes.find((b) => b.id === id).templates.map((t) => t.name);
+        expect(rows('pre-sword')).toEqual(PRE_SWORD_PALETTE.templates.map((t) => t.name));
+        expect(rows('post-sword')).toEqual(POST_SWORD_PALETTE.templates.map((t) => t.name));
+        expect(rows('maze-v1')).toEqual(MAZE_PALETTE.templates.map((t) => t.name));
+    });
+
+    it('⛓⛓ every EXCLUDED row, with its cause and its measurement', () => {
+        const pre = CATALOGUE.biomes.find((b) => b.id === 'pre-sword').excluded;
+        expect(pre.map((t) => t.name)).toEqual(EXCLUDED_TEMPLATES.map((t) => t.name));
+        const post = CATALOGUE.biomes.find((b) => b.id === 'post-sword').excluded;
+        expect(post.map((t) => t.name)).toEqual(
+            [...EXCLUDED_TEMPLATES, ...POST_SWORD_EXCLUDED_TEMPLATES].map((t) => t.name),
+        );
+        for (const row of [...pre, ...post]) {
+            expect(row.cause, `${row.name} has no cause`).toBeTruthy();
+            expect(row.measured, `${row.name} has no measurement`).toBeTruthy();
+            expect(row.wouldNeed, `${row.name} says nothing about what it would need`)
+                .toBeTruthy();
+        }
+    });
+
+    it('⛓⛓ every ELEMENT_TABLE head, with its `needs` and its parameter schema', () => {
+        expect(CATALOGUE.elements.map((e) => e.head)).toEqual(Object.keys(ELEMENT_TABLE));
+        expect(CATALOGUE.elementNames).toEqual([...ELEMENT_NAMES]);
+        const killgate = CATALOGUE.elements.find((e) => e.head === 'killgate');
+        expect(killgate.needs).toEqual(['hasSword']);
+        const guard = CATALOGUE.elements.find((e) => e.head === 'guard');
+        expect(guard.params.map((p) => p.key)).toContain('binds');
+        /**
+         * ⛓⛓ R9 slice 1 (D1) — **THE TWO SEPARATORS ARE THE GRAMMAR THE
+         * CATALOGUE STATES**, and both are pinned as literals here: `+` chooses
+         * between heads (ONE `pick`), `|` narrows a parameter's domain (ONE
+         * `pick` over the members). A catalogue that named neither would leave
+         * the page's only grammar reference to prose.
+         */
+        expect(CATALOGUE.elementListSeparator).toBe('+');
+        expect(CATALOGUE.elementSubsetSeparator).toBe('|');
+        expect(formatElementSpec(parseElementSpec(
+            `guard;len=2${CATALOGUE.elementSubsetSeparator}3`,
+        ))).toBe('guard;len=2|3');
+    });
+
+    it('⛓⛓ every SKELETON KIND, per substrate, with `offered` telling the two apart', () => {
+        for (const biome of CATALOGUE.biomes) {
+            const simulator = biome.substrate === 'maze';
+            const offered = biome.skeletonKinds.filter((k) => k.offered).map((k) => k.kind);
+            expect(offered, biome.id).toEqual(kindsOffered({ simulator }));
+            /** ⛔ A kind this substrate cannot run is LISTED with its reason,
+             *  never hidden — the catalogue answers "why can't I pick that?" */
+            for (const k of biome.skeletonKinds.filter((x) => !x.offered)) {
+                expect(k.needs, `${biome.id}/${k.kind}`).toBeTruthy();
+            }
+        }
+        const seedling = CATALOGUE.biomes.find((b) => b.id === 'pre-sword');
+        expect(seedling.skeletonKinds.filter((k) => !k.offered).map((k) => k.kind))
+            .toEqual(['classic', 'corridor']);
+    });
+
+    it('⛓ the biome DEFAULT element spec, and the two biomes differ by exactly '
+        + 'the sword-gated head', () => {
+        const pre = CATALOGUE.biomes.find((b) => b.id === 'pre-sword').defaultElements;
+        const post = CATALOGUE.biomes.find((b) => b.id === 'post-sword').defaultElements;
+        expect(pre).not.toContain('killgate');
+        expect(post).toContain('killgate');
+        expect(CATALOGUE.biomes.find((b) => b.id === 'maze-v1').defaultElements).toBe('none');
+    });
+
+    it('⛔ KILL_LOCK_TEMPLATES is EMPTY, and the table SAYS SO rather than '
+        + 'omitting the row', () => {
+        expect(CATALOGUE.killLockTemplates.count).toBe(0);
+        expect(CATALOGUE.killLockTemplates.note).toContain('EMPTY by design');
+    });
+});
+
+describe('refusals names every constant, and its scan is the non-vacuity witness', () => {
+    const names = new Set(REFUSALS.rows.map((r) => r.name));
+
+    it('⛓⛓ every name in KILL_GATE_REFUSALS / BLOCK_POCKET_REFUSALS / '
+        + 'SEEDLING_ELEMENT_REFUSALS', () => {
+        for (const n of [...KILL_GATE_REFUSALS, ...BLOCK_POCKET_REFUSALS,
+            ...SEEDLING_ELEMENT_REFUSALS]) {
+            expect(names.has(n), `${n} is missing from the refusal table`).toBe(true);
+        }
+    });
+
+    it('⛓⛓ every loop-core ENUM value — VERDICT, ATTEMPT, KEEP_POLICY, '
+        + 'KEPT_KIND, STOP', () => {
+        for (const [id, table] of Object.entries({
+            VERDICT, ATTEMPT, KEEP_POLICY, KEPT_KIND, STOP,
+        })) {
+            const row = REFUSALS.enums.find((e) => e.id === id);
+            expect(row, `${id} is not in the table`).toBeTruthy();
+            expect(row.values.map((v) => v.value)).toEqual(Object.values(table));
+        }
+    });
+
+    it('⛔ every row says WHICH kind of source it came from, and a constant row '
+        + 'says whether the SCAN found it firing', () => {
+        for (const row of REFUSALS.rows) {
+            expect(['constant', 'literal-scan']).toContain(row.kind);
+            expect(row.channel, `${row.name} names no channel`).toBeTruthy();
+            expect(row.where, `${row.name} names nowhere`).toBeTruthy();
+            if (row.kind === 'constant') expect(typeof row.inTheConstant).toBe('boolean');
+        }
+    });
+
+    it('⛓⛓⛓ the SCAN is not empty for any source — an empty scan would make '
+        + 'every coverage claim vacuous', () => {
+        for (const s of REFUSALS.sources) {
+            expect(s.scannedCount, `${s.id} scanned nothing`).toBeGreaterThan(0);
+            expect(s.patterns.length, `${s.id} declares no pattern`).toBeGreaterThan(0);
+        }
+    });
+
+    /**
+     * ⛔⛔ **THE FINDINGS ARE ASSERTED, NOT TOLERATED.** A disagreement between a
+     * hand-kept list and the code is what this table exists to surface; pinning
+     * the ones P3a found means a LATER slice that fixes one has to come here and
+     * say so, and a NEW one reds instead of joining a list nobody reads.
+     */
+    it('⛓⛓ the P3a findings, pinned — FOUR OF FIVE FIXED by P5', () => {
+        /**
+         * ⛔⛔ P3a pinned FIVE. P5 fixed four of them, in two different ways:
+         *
+         *  - `the-tunnel-shortens-the-way-to-the-goal` was the DEFECT — it
+         *    fires in `procgenSeedlingElements.js` and the constant's own
+         *    docblock claimed to name *every* refusal that path can produce. It
+         *    is in the list now, and `procgenCore/refusalCensus.test.js` is the
+         *    gate that keeps the word *every* checked.
+         *  - the three "reaches ACROSS a module" rows were never defects: they
+         *    said, correctly and permanently, that this list's axis is the
+         *    element PATH rather than one file. A finding that can only ever be
+         *    re-reported is not a finding, so the source DECLARES `spansModules`
+         *    and they are published as `REFUSALS.spans` instead.
+         *
+         * ⛓ What is LEFT is `urlParams`, until its 26 refusals have names.
+         */
+        const bySource = REFUSALS.findings.map((f) => `${f.source}/${f.name}`).sort();
+        expect(bySource).toEqual([]);
+        /** ⛓⛓ AND THE LAST ONE WENT IN ITEM 5: every refusal on this page is
+         *  addressable by a slug a census can count. ⛔ This is the row that
+         *  would red if `urlParams`' names were ever taken away again. */
+        expect(REFUSALS.rows.filter((r) => !r.named)).toEqual([]);
+        /**
+         * ⛓ **33 — EDITOR INTEGRATION W3 adds ONE**: `not-a-room-index`, the
+         * `?room=` reader BOTH lab pages share. It lives here rather than on
+         * either page because both spell the parameter the same way and refuse
+         * the same values, and two copies of *"is this a room index"* would be
+         * two answers.
+         * ⛓ **32 — arc 5, slice 1 added FOUR**: the room contract's reader and
+         * writer each refuse a size and a fill by name (`room-size-refused`,
+         * `cannot-write-a-room-size`, `fill-mode-refused`,
+         * `cannot-write-a-fill-mode`). ⛔ The number is PINNED rather than
+         * bounded for the reason P5 pinned it: a slice that adds a refusal
+         * should have to come here and say so.
+         */
+        expect(URL_PARAM_REFUSALS.length).toBe(33);
+        for (const r of REFUSALS.rows.filter((x) => x.source === 'url-params')) {
+            expect(URL_PARAM_REFUSALS, r.name).toContain(r.name);
+            expect(r.where, r.name).toMatch(/^urlParams\./);
+        }
+        /** ⛓ The fix is asked of the CONSTANT, not of the table that reported
+         *  it — the table agreeing with itself would prove nothing (trap 250). */
+        expect(SEEDLING_ELEMENT_REFUSALS).toContain('the-tunnel-shortens-the-way-to-the-goal');
+        /** ⛓⛓ AND THE SPANS ARE PINNED TOO, with where each one fires: a span
+         *  that quietly became "fires nowhere" would otherwise be invisible,
+         *  which is the hole `spansModules` could have opened. */
+        expect(REFUSALS.spans.map((s) => `${s.name} → ${s.firesIn.join(',')}`)).toEqual([
+            /**
+             * ⛓⛓ ARC 5, SLICE 5 ADDED THE FIRST TWO, and they are a DIFFERENT
+             * constant's — `KILL_GATE_REFUSALS`. `pocketFor` (*where the opener
+             * stands*) moved into `roomDoor.js` when the SHORTCUT element
+             * needed the same search, so the kill gate declares two names it no
+             * longer raises in its own file. ⛔ The flag is licensed by that
+             * constant's own docblock, and `room-door` has a census key of its
+             * own, which is what keeps this a SPAN rather than a finding.
+             */
+            'no-pocket → room-door,block-pocket',
+            'no-site-fits-this-room → seedling-area-binding,maze-area-binding',
+            'pocket-not-legal → room-door,block-pocket',
+            'the-chain-is-arc-4 → seedling-area-binding',
+            'the-skeleton-does-not-solve-with-the-element → seedling-area-binding',
+        ]);
+        expect([...new Set(REFUSALS.spans.map((s) => s.constant))].sort())
+            .toEqual(['KILL_GATE_REFUSALS', 'SEEDLING_ELEMENT_REFUSALS']);
+    });
+
+    /**
+     * ⛓⛓⛓ **THE "WANTS A CONSTANT" RESIDUE, AS A ROW.** P3a's split named four
+     * sources that had no list at all; P5 gave three of them one and exported
+     * the fourth. What is still scanned rather than declared is exactly two
+     * sources, and both are named in the record with their reason —
+     * `urlParams` (item 5's subject) and `budgetKindFor` (⛔ NOT fixable
+     * without an artifact re-record: `budgetKind` reaches the trace whose sha
+     * is a determinism payload, arc-3 §9d).
+     */
+    it('⛓⛓ exactly ONE refusal source is still a literal scan, and it is the '
+        + 'one the record names as DELIBERATELY not fixed', () => {
+        /**
+         * ⛔⛔ `budgetKindFor` composes one of its two answers into a SENTENCE
+         * with the bound's own number in it — `strike-schedule bound (N driven
+         * ticks)` — and it is ⛔ NOT fixable here: `budgetKind` REACHES THE
+         * TRACE whose sha is a determinism payload (arc-3 §9d), so naming it
+         * would re-record a committed artifact. NAMED, not made.
+         */
+        expect(REFUSALS.sources.filter((s) => s.kind === 'literal-scan').map((s) => s.id))
+            .toEqual(['oracle-budget']);
+        expect(REFUSALS.rows.filter((r) => r.source === 'oracle-budget').map((r) => r.name))
+            .toEqual(['per-target-ticks', 'strike-schedule bound (… driven ticks)']);
+        /* ⛓ …and every OTHER source names the constant it was given. */
+        for (const s of REFUSALS.sources.filter((x) => x.kind === 'constant')) {
+            expect(s.constant, s.id).toBeTruthy();
+            expect(s.declaredCount, s.id).toBeGreaterThan(0);
+        }
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓ THE MARKDOWN GENERATED REGION (P3b, D1) — ON A FIXTURE
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⛔ ASKED OF A FIXTURE, NOT OF THE REAL DOCS. The real files are gated by
+ * `--check` (regenerate = no diff); what this block gates is the WRITER'S OWN
+ * CONTRACT — that prose outside the markers survives byte-for-byte, that
+ * writing twice is the same file, and that a malformed marker pair REFUSES BY
+ * NAME rather than being skipped or rewritten. A test that used the real
+ * README could not exhibit a missing marker without breaking the README.
+ */
+
+describe('the markdown GENERATED REGION writer', () => {
+    const TABLE = 'fixture-table';
+    const { begin, end } = markdownMarkers(TABLE);
+    const doc = [
+        '# A document somebody wrote',
+        '',
+        'A paragraph the generator must never touch.',
+        '',
+        begin,
+        '',
+        '| old | table |',
+        '|---|---|',
+        '| a | b |',
+        '',
+        end,
+        '',
+        'The prose AFTER the region, also untouched.',
+        '',
+    ].join('\n');
+
+    it('⛓⛓ replaces ONLY the text between the markers — the prose survives '
+        + 'byte-for-byte', () => {
+        const out = spliceMarkdownRegion(doc, TABLE, '| new |\n|---|\n| rows |');
+        expect(out.startsWith('# A document somebody wrote\n\n'
+            + 'A paragraph the generator must never touch.\n')).toBe(true);
+        expect(out).toContain('The prose AFTER the region, also untouched.');
+        expect(out).not.toContain('| old | table |');
+        expect(out).toContain('| new |');
+        expect(out.endsWith('\n')).toBe(true);
+    });
+
+    it('⛔ is IDEMPOTENT — writing the same body twice is the same file, which '
+        + 'is what makes `--check` = regenerate-no-diff meaningful', () => {
+        const once = spliceMarkdownRegion(doc, TABLE, 'BODY');
+        const twice = spliceMarkdownRegion(once, TABLE, 'BODY');
+        expect(twice).toBe(once);
+        expect(findMarkdownRegion(once, TABLE).body).toBe('BODY');
+    });
+
+    it('⛔ REFUSES BY NAME when the BEGIN marker is missing', () => {
+        expect(() => findMarkdownRegion('# nothing here\n', TABLE, { what: 'fixture.md' }))
+            .toThrow(/markdown region fixture\.md: the BEGIN marker is MISSING/);
+    });
+
+    it('⛔ REFUSES BY NAME when the END marker is missing', () => {
+        expect(() => findMarkdownRegion(`# x\n${begin}\nbody\n`, TABLE, { what: 'fixture.md' }))
+            .toThrow(/markdown region fixture\.md: the END marker is MISSING/);
+    });
+
+    it('⛔ REFUSES BY NAME when a marker is DUPLICATED — two regions for one '
+        + 'table is a file where half the table rots unwatched', () => {
+        expect(() => findMarkdownRegion(`${doc}\n${begin}\n${end}\n`, TABLE,
+            { what: 'fixture.md' })).toThrow(/the BEGIN marker appears 2 TIMES/);
+    });
+
+    it('⛔ REFUSES BY NAME when the markers are INVERTED', () => {
+        expect(() => findMarkdownRegion(`# x\n${end}\n${begin}\n`, TABLE,
+            { what: 'fixture.md' })).toThrow(/comes BEFORE the/);
+    });
+
+    it('⛔ the markers name the GENERATOR, so a reader who finds one knows what '
+        + 'rewrites it', () => {
+        expect(begin).toContain('scripts/procgen/generate-procgen-reference.mjs');
+        expect(begin).toContain('do not edit; regenerate');
+        expect(begin).toContain(`GENERATED:${TABLE} BEGIN`);
+        expect(end).toBe(`<!-- GENERATED:${TABLE} END -->`);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ NON-VACUITY — THE REGISTRY MATRIX, ASKED OF THE REGISTRY (P3b)
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⛔ THE SUBJECT IS `substrateRegistry.getAll()`, NOT `registry.js`. The
+ * modules import the eight libraries the same way the generator does — a
+ * side effect of importing a `*Library.js` — and then ask the registry what it
+ * holds. A test that compared the module to itself would be the fixed point
+ * trap 250 names: self-consistent and never correct.
+ */
+
+describe('the registry matrix is one column per ENTRY and one row per FIELD', () => {
+    let entries = null;
+    let substrateRegistry = null;
+
+    beforeAll(async () => {
+        for (const rel of REGISTRY_LIBRARIES) {
+            // eslint-disable-next-line no-await-in-loop
+            await import(join(ROOT, rel));
+        }
+        ({ substrateRegistry } = await import('../shared/procgen/substrateRegistry.js'));
+        entries = substrateRegistry.getAll();
+    });
+
+    it('⛓⛓ every entry the REGISTRY returns is a column, in the same order', () => {
+        expect(REGISTRY.columns.map((c) => c.id)).toEqual(entries.map((e) => e.id));
+        expect(entries.length).toBeGreaterThan(6);
+    });
+
+    it('⛓⛓ every FIELD on every entry is a row — the union of `Object.keys`, '
+        + 'so a substrate that grows a field lands here without an edit', () => {
+        const rows = new Set(REGISTRY.rows.map((r) => r.name));
+        const missing = [];
+        for (const e of entries) {
+            for (const k of Object.keys(e)) if (!rows.has(k)) missing.push(`${e.id}.${k}`);
+        }
+        expect(missing).toEqual([]);
+    });
+
+    it('⛓⛓ every `loopSupport.*` flag any entry declares is its OWN row — the '
+        + 'expandable parents are derived from the doc, never listed', () => {
+        const rows = new Set(REGISTRY.rows.map((r) => r.name));
+        const missing = [];
+        for (const e of entries) {
+            for (const k of Object.keys(e.loopSupport ?? {})) {
+                if (!rows.has(`loopSupport.${k}`)) missing.push(`${e.id}.loopSupport.${k}`);
+            }
+        }
+        expect(missing).toEqual([]);
+        expect(rows.has('loopSupport.requiresLoopMode')).toBe(true);
+        expect(rows.has('loopSupport.executeVia')).toBe(true);
+    });
+
+    it('⛔ a cell says PRESENT exactly when the entry carries the field', () => {
+        const wrong = [];
+        for (const row of REGISTRY.rows) {
+            for (const cell of row.cells) {
+                const e = entries.find((x) => x.id === cell.id);
+                let v = e;
+                for (const k of row.name.split('.')) {
+                    v = (v && typeof v === 'object' && k in v) ? v[k] : undefined;
+                }
+                if ((v !== undefined) !== cell.present) wrong.push(`${cell.id}.${row.name}`);
+            }
+        }
+        expect(wrong).toEqual([]);
+    });
+
+    it('⛔ every library the generator imports LOADED headless — and a failure '
+        + 'would be NAMED rather than a quietly missing column', () => {
+        expect(REGISTRY.libraries.map((l) => l.file)).toEqual([...REGISTRY_LIBRARIES]);
+        expect(REGISTRY.libraries.filter((l) => !l.loadable).map((l) => l.file)).toEqual([]);
+        /* ⛓ every registered id is claimed by exactly one library */
+        const claimed = REGISTRY.libraries.flatMap((l) => l.registered).sort();
+        expect(claimed).toEqual(REGISTRY.columns.map((c) => c.id).sort());
+    });
+
+    it('⛔ every row is in a GROUP, and the groups partition the rows', () => {
+        const inAGroup = REGISTRY.groups.flatMap((g) => g.rows).sort();
+        expect(inAGroup).toEqual(REGISTRY.rows.map((r) => r.name).sort());
+        expect(new Set(inAGroup).size).toBe(inAGroup.length);
+    });
+
+    /**
+     * ⛔⛔ **THE P3b REGISTRY FINDINGS, PINNED** — the same discipline as the
+     * refusal findings: a slice that documents one of these has to come here
+     * and say so, and a NEW disagreement reds instead of joining a list nobody
+     * reads.
+     */
+    it('⛓⛓ the P3b registry findings, pinned — ALL EIGHT FIXED by P5', () => {
+        /**
+         * ⛔⛔ P3b pinned EIGHT: `captureLibraryEntry`, `getSpiralContent`,
+         * `instantiateAtlasEntryForSpecs`, `instantiateLibraryEntry`,
+         * `instantiateLibraryEntryForSpecs` and `validateLibraryEntry` were
+         * carried by an entry and named by NO procgen doc at all;
+         * `applyPipelineConfig` and `onContentEdit` were documented one door
+         * down, in `stepped-pipeline.md`. P5 wrote all eight into
+         * `substrate-registry.md` § *Entry contract* — the six under a new
+         * *Build-time — region library entries* heading, the other two as
+         * pointer rows in the content-sources table. ⛓ The list is EMPTY now
+         * and stays asserted: a NEW disagreement reds here rather than joining
+         * a list nobody reads.
+         */
+        expect(REGISTRY.findings.map((f) => f.name).sort()).toEqual([]);
+        /* ⛓ NON-VACUITY: the six really are in a real group, not in the
+         * UNDOCUMENTED catch-all — which is the only way the list could go
+         * empty by accident. */
+        const grouped = new Map();
+        for (const g of REGISTRY.groups) for (const r of g.rows) grouped.set(r, g.title);
+        for (const f of ['captureLibraryEntry', 'instantiateLibraryEntry',
+            'instantiateLibraryEntryForSpecs', 'validateLibraryEntry',
+            'instantiateAtlasEntryForSpecs']) {
+            expect(grouped.get(f), f).toBe(
+                'Build-time — region library entries (capture / instantiate / validate)',
+            );
+        }
+        for (const f of ['getSpiralContent', 'applyPipelineConfig', 'onContentEdit']) {
+            expect(grouped.get(f), f)
+                .toBe('Build-time — content sources (zone-based substrates)');
+        }
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ NON-VACUITY — THE INSTRUMENTS INDEX, ASKED OF THE DIRECTORY (P3b)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('the instruments index is one row per file in scripts/procgen', () => {
+    const onDisk = readdirSync(join(ROOT, SCRIPT_DIR)).filter((f) => f.endsWith('.mjs')).sort();
+
+    it('⛓⛓ the DIRECTORY LISTING is the source — every `.mjs` on disk is a row, '
+        + `in order (${onDisk.length} of them)`, () => {
+        expect(INSTRUMENTS.rows.map((r) => r.file)).toEqual(onDisk);
+    });
+
+    it('⛔ every row carries a category, a path and a docblock STYLE or an '
+        + 'explicit null — never a blank row', () => {
+        for (const r of INSTRUMENTS.rows) {
+            expect(r.category, `${r.file} has no category`).toBeTruthy();
+            expect(r.path).toBe(`${SCRIPT_DIR}/${r.file}`);
+            expect(r.oneLiner === null ? r.docblockStyle : typeof r.oneLiner)
+                .toBe(r.oneLiner === null ? null : 'string');
+            expect(typeof r.browser).toBe('boolean');
+        }
+    });
+
+    it('⛓⛓ a BROWSER row is exactly a file that imports playwright — asked of '
+        + 'the files, not of the table', () => {
+        const wrong = [];
+        for (const r of INSTRUMENTS.rows) {
+            const text = readFileSync(join(ROOT, SCRIPT_DIR, r.file), 'utf8');
+            const imports = /from '(?:@playwright\/test|playwright)'/.test(text);
+            if (imports !== r.browser) wrong.push(r.file);
+        }
+        expect(wrong).toEqual([]);
+        expect(INSTRUMENTS.counts.browser).toBeGreaterThan(20);
+    });
+
+    it('⛓ the categories partition the rows, and the counts add up', () => {
+        const sum = INSTRUMENTS.categories.reduce((a, c) => a + c.count, 0);
+        expect(sum).toBe(INSTRUMENTS.rows.length);
+        for (const c of INSTRUMENTS.categories) {
+            expect(INSTRUMENTS.rows.filter((r) => r.category === c.id).length).toBe(c.count);
+        }
+    });
+
+    /**
+     * ⛔⛔ **THE FLAG SCAN IS SPOT-CHECKED HERE TOO**, on the file whose flags
+     * this repository's own instructions name. The scan reads argv through the
+     * helpers a file DEFINES FOR ITSELF, and its first three cuts each missed
+     * a shape: `has()`/`list()` (a hand list of helper names), `num()` (a
+     * helper that DELEGATES to a helper — the projection trap), and
+     * `arg`/`flag` IMPORTED from a sibling module.
+     */
+    it('⛓⛓ the flags of `generate-seedling-level.mjs`, by hand', () => {
+        const row = INSTRUMENTS.rows.find((r) => r.file === 'generate-seedling-level.mjs');
+        const names = row.flags.map((f) => f.name);
+        for (const flag of ['seed', 'count', 'biome', 'skeleton', 'elements', 'areas',
+            'require', 'families', 'templates', 'json', 'cost', 'out', 'tries', 'k']) {
+            expect(names, `--${flag}= is missing`).toContain(flag);
+        }
+        /* ⛓ …and every flag its own `Run:` block shows a reader typing */
+        expect(row.documentedFlags.filter((d) => !names.includes(d))).toEqual([]);
+    });
+
+    it('⛓⛓ the P3b instrument findings, pinned — ALL SIX FIXED by P5', () => {
+        /**
+         * ⛔⛔ P3b pinned SIX. P5 fixed every one: the four bare citations got
+         * their paths (`CC/scripts/jta-stats/driver.mjs`,
+         * `frontend/modules/jtaSubstrateWrapper/export-vanilla-dataset.mjs`,
+         * `CC/scripts/jta-stats/make-ap-config.mjs`,
+         * `frontend/modules/seedlingDemo/fixtures/regenerate-r4-tapes.mjs`),
+         * `verify-runner-smoke.mjs` got a leading docblock, and
+         * `plan-seedling-segment.mjs` — a driver that was PLANNED and never
+         * written — is now MARKED `(never written)` in the row that names it,
+         * which this scan reads.
+         */
+        expect(INSTRUMENTS.findings.map((f) => `${f.severity}: ${f.name}`).sort()).toEqual([]);
+    });
+
+    /**
+     * ⛓⛓⛓ THE MARKER IS NOT A SILENCER. A marker that could drop a citation
+     * without saying so would let the next author retire a real dead citation by
+     * typing three words, so the marked set is PUBLISHED and pinned here — and
+     * the row it names is asked of the DOC, not of the table.
+     *
+     * ⛓ R9 SLICE 13 widened it from `(never written)` to that OR `(retired)`,
+     * and renamed the field from `neverWritten` to `unresolvedByDesign` — a
+     * field of the old name holding a file that WAS written would be the
+     * true-sentence-about-the-wrong-subject failure (traps 566, 573). The two
+     * members are the two tenses: a plan superseded before anybody wrote it,
+     * and an instrument written, used and then deleted.
+     */
+    it('⛓⛓ a citation MARKED `(never written)` or `(retired)` is dropped, and the '
+        + 'marked set is published', () => {
+        expect(INSTRUMENTS.unresolvedByDesign.map((n) => n.name)).toEqual([
+            'plan-seedling-r7-act2.mjs',
+            'plan-seedling-segment.mjs',
+        ]);
+        for (const row of INSTRUMENTS.unresolvedByDesign) {
+            expect(row.citedBy).toEqual(['docs/json/developer/procgen/seedling-bot.md']);
+        }
+        /* ⛓ asked of the DOCUMENT: each row really does carry both the name and
+         * a marker, on one line, within the declared window. */
+        const doc = readFileSync(join(ROOT, DOC_DIR, 'seedling-bot.md'), 'utf8');
+        for (const [name, marker] of [
+            ['plan-seedling-segment.mjs', '(never written)'],
+            ['plan-seedling-r7-act2.mjs', '(retired)'],
+        ]) {
+            const row = doc.split('\n').find((l) => l.includes(name));
+            expect(row).toBeTruthy();
+            expect(row).toContain(marker);
+        }
+        /* ⛓ …and NO OTHER doc in the directory carries EITHER marker, so the
+         * published set is the whole of it. */
+        const marked = readdirSync(join(ROOT, DOC_DIR)).filter((f) => f.endsWith('.md'))
+            .filter((f) => /\((?:never written|retired)\)/
+                .test(readFileSync(join(ROOT, DOC_DIR, f), 'utf8')));
+        expect(marked).toEqual(['seedling-bot.md']);
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ NON-VACUITY — THE DOCS INDEX, ASKED OF THE DOCS DIRECTORY (P3b)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('the docs index is one row per .md in the procgen docs directory', () => {
+    const mdOnDisk = readdirSync(join(ROOT, DOC_DIR))
+        .filter((f) => f.endsWith('.md') && f !== 'README.md').sort();
+    const htmlOnDisk = readdirSync(join(ROOT, PAGE_DIR))
+        .filter((f) => f.endsWith('.html')).sort();
+
+    it(`⛓⛓ every \`.md\` on disk is a row, README excepted (${mdOnDisk.length})`, () => {
+        expect(DOCS_INDEX.docs.map((d) => d.file).sort()).toEqual(mdOnDisk);
+        expect(DOCS_INDEX.docs.map((d) => d.file)).not.toContain('README.md');
+    });
+
+    it('⛓⛓ …in the DECLARED reading order, not alphabetically — and the '
+        + 'declaration covers the directory exactly, so a new document cannot '
+        + 'arrive unindexed', () => {
+        expect(DOCS_INDEX.docs.map((d) => d.file)).toEqual([...README_ORDER]);
+        expect([...README_ORDER].sort()).toEqual(mdOnDisk);
+    });
+
+    it('⛓⛓ every PAGE is a row too — three of README\'s entries point at a '
+        + 'page rather than a `.md`, and dropping them would be a table that '
+        + 'stopped covering its subject', () => {
+        expect(DOCS_INDEX.pages.map((p) => p.file)).toEqual(htmlOnDisk);
+        for (const p of DOCS_INDEX.pages) {
+            expect(p.title, `${p.file} has no <title>`).toBeTruthy();
+            expect(p.description, `${p.file} has no description`).toBeTruthy();
+            expect(p.url).toContain('/modules/procgenDocs/');
+        }
+    });
+
+    it('⛔ every row carries the document\'s OWN H1 and its OWN first '
+        + 'paragraph — read out of the file, never a summary kept here', () => {
+        for (const d of DOCS_INDEX.docs) {
+            const text = readFileSync(join(ROOT, DOC_DIR, d.file), 'utf8');
+            expect(text.split('\n')[0]).toBe(`# ${d.h1}`);
+            expect(d.description.length, `${d.file} has an empty description`)
+                .toBeGreaterThan(40);
+            /* ⛓ the description is a PREFIX of what the document actually says */
+            const head = text.replace(/\s+/g, ' ');
+            const opening = d.description.replace(/…$/, '');
+            expect(head, `${d.file}'s description is not its own text`).toContain(opening);
+            expect(d.words).toBeGreaterThan(100);
+        }
+    });
+
+    it('⛓ the word count is the file\'s own, and the totals add up', () => {
+        const sum = DOCS_INDEX.docs.reduce((a, d) => a + d.words, 0);
+        expect(DOCS_INDEX.counts.words).toBe(sum);
+        expect(DOCS_INDEX.counts.docs).toBe(DOCS_INDEX.docs.length);
+        expect(DOCS_INDEX.counts.pages).toBe(DOCS_INDEX.pages.length);
+    });
+
+    /**
+     * ⛓⛓ THE HEADING COUNTS — the field `docsRender.test.js`'s two pins now
+     * READ (R9 slice 12e, ⚖ ruling 38 item (4a)).
+     *
+     * ⛔ This row does NOT check the numbers against the documents — that is
+     * exactly what `docsRender.test.js` does, with the page's own renderer, and
+     * duplicating it here would be the second reader that makes neither
+     * trustworthy. What is checked here is the SHAPE the pins depend on: every
+     * row has one, they are positive, and the corpus total is the rows PLUS the
+     * index file — because `counts.docs` (17) and `counts.headings` (18 files)
+     * do not share a denominator, and a reader who assumed they did would build
+     * a pin that is quietly short by README's headings.
+     */
+    it('⛓ every row carries a heading count, and the corpus total is the rows '
+        + 'PLUS the index file — two different denominators, said out loud', () => {
+        for (const d of DOCS_INDEX.docs) {
+            expect(d.headings, `${d.file} has no heading count`).toBeGreaterThan(0);
+            expect(Number.isInteger(d.headings), `${d.file}'s count is not an integer`).toBe(true);
+        }
+        const rows = DOCS_INDEX.docs.reduce((a, d) => a + d.headings, 0);
+        expect(DOCS_INDEX.counts.indexHeadings).toBeGreaterThan(0);
+        expect(DOCS_INDEX.counts.headings).toBe(rows + DOCS_INDEX.counts.indexHeadings);
+        /* ⛓ …and the index file really is the one document with no row. */
+        expect(DOCS_INDEX.docs.map((d) => d.file)).not.toContain('README.md');
+    });
+});

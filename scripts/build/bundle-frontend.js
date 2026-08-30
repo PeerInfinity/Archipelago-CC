@@ -65,6 +65,13 @@ const buildOptions = {
   // Keep dynamic imports for code splitting potential
   splitting: false,
 
+  // Node built-ins referenced only behind runtime env branches (e.g. the
+  // omsi unlockPool loader's `await import('node:fs')` on its non-browser
+  // path). esbuild resolves even dynamic literal specifiers at build time;
+  // marking them external leaves the import in place, where the browser
+  // path never executes it.
+  external: ['node:fs'],
+
   // Log level
   logLevel: 'info',
 
@@ -89,12 +96,17 @@ const filesToCopy = [
     src: path.join(frontendDir, 'modules/stateManager/stateManagerWorker.js'),
     dest: path.join(distDir, 'stateManagerWorker.js'),
   },
+  {
+    src: path.join(frontendDir, 'modules/jtaBalance/balanceWorker.js'),
+    dest: path.join(distDir, 'modules/jtaBalance/balanceWorker.js'),
+  },
 ];
 
 // Copy required files to dist
 function copyFilesToDist() {
   for (const { src, dest } of filesToCopy) {
     if (fs.existsSync(src)) {
+      fs.mkdirSync(path.dirname(dest), { recursive: true });
       fs.copyFileSync(src, dest);
       console.log(`   Copied: ${path.basename(src)}`);
     } else {

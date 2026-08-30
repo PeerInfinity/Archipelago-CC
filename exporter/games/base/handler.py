@@ -16,6 +16,7 @@ import json
 import logging
 import os
 
+from exporter.foreign_rule_builder import is_foreign_resolved_rule, serialize_foreign_resolved_rule
 from exporter.games.base.rule_expansion import RuleExpansionMixin
 from exporter.games.base.world_data import WorldDataMixin
 from exporter.games.base.helper_discovery import HelperDiscoveryMixin
@@ -1889,6 +1890,16 @@ class BaseGameExportHandler(
                         if hasattr(self, 'expand_rule'):
                             rb_dict = self.expand_rule(rb_dict)
                         game_info['completion_condition'] = rb_dict
+                    elif is_foreign_resolved_rule(completion_func):
+                        # Rule Builder rule from a vendored (upstream) rule_builder:
+                        # no fork-only to_dict(), and AST analysis cannot read it.
+                        from exporter.exporter import _make_rule_dict_serializable
+                        rb_dict = _make_rule_dict_serializable(
+                            serialize_foreign_resolved_rule(completion_func)
+                        )
+                        if hasattr(self, 'expand_rule'):
+                            rb_dict = self.expand_rule(rb_dict)
+                        game_info['completion_condition'] = rb_dict
                     else:
                         from exporter.analyzer import analyze_rule
                         from exporter.games.base.utilities import extract_closure_vars
@@ -2068,8 +2079,8 @@ class BaseGameExportHandler(
         through, so multiworld rules.json reaches every player's frontend with
         the data needed to render their procgen regions.
 
-        See NewDocs/plans/procedural-generation/substrate-pipeline-architecture.md
-        §"Preset sidecars through the multiworld bridge".
+        See docs/json/developer/procgen/architecture.md §"The Python
+        round-trip".
         """
         try:
             world_module = type(world).__module__

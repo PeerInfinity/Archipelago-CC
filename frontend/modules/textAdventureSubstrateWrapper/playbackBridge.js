@@ -124,6 +124,13 @@ export class PlaybackBridge {
         this._target = target;
     }
 
+    // M3b: the recorded-visit replay half (replayActions / _replayTick /
+    // _replayOne / _issueDeparture) was removed. The text adventure is a
+    // coarse-only substrate — a Playback block's interior is executed by
+    // the loops generic executor host-side, which dispatches the same
+    // events with fromLoop:true. Only the walkTo/play/step bot half
+    // below remains (the playback bot rides it).
+
     _performAction(target) {
         if (!target || typeof target !== 'object') return;
         const world = this._getWorld();

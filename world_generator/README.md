@@ -16,6 +16,7 @@ The tracker's [hybrid mode](../worlds/tracker/docs/hybrid-mode.md) automatically
 
 - **Testing and validation** — Generate a worldgen copy of any game and compare its behavior against the original to verify the export pipeline.
 - **Bootstrapping new worlds** — Start from an exported rules file and customize the generated code, rather than writing everything from scratch.
+- **Procedurally generated worlds** — The frontend's [procgen pipeline](../docs/json/developer/procgen/architecture.md) compiles generated worlds to `rules.json`; the world generator turns those into real APWorlds. Procgen-specific top-level keys (`preset_sidecars`, `procgen_metadata`, `loop_costs`) are preserved into package-local `_worldgen_*.json` files and re-injected by the exporter at export time, so the round-trip keeps generated worlds playable in the frontend (see [The Python round-trip](../docs/json/developer/procgen/architecture.md#the-python-round-trip)).
 
 Generated worlds use the `_worldgen` suffix by convention (e.g., `tunic_worldgen`) to avoid conflicts with the original world.
 
@@ -58,7 +59,9 @@ world_generator/
 ├── rule_codegen.py       # Rule → Python code generation
 ├── templates.py          # File template generation
 ├── json_world_builder.py # Live world instantiation from JSON
-└── constants.py          # Configuration constants
+├── constants.py          # Configuration constants
+└── ext_template/         # Vendored rule_builder compat package (copied
+                          # into each generated world as _ext/)
 ```
 
 ## Generated Output
@@ -75,8 +78,20 @@ worlds/{game_directory}/
 ├── Options.py            # Game-specific options
 ├── archipelago.json      # APWorld manifest
 ├── _worldgen_options.json # Options for canonical seed
+├── _ext/                 # Vendored rule_builder compatibility package
+│                         # (fork rule_builder when present, else vanilla
+│                         # rule_builder.rules + vendored extras/mixin)
 └── docs/en/setup.md      # Setup guide
 ```
+
+Generated worlds are **self-contained**: all rule-builder names are imported
+from the world's own `_ext/` package, which prefers the fork's extended
+`rule_builder` and falls back to vanilla Archipelago's `rule_builder.rules`
+plus vendored copies of the fork-only rule types and `RuleWorldMixin`
+(registered under the world's game name via vanilla's per-game
+`CustomRuleRegister`). A generated world therefore runs unchanged on this
+fork, on unmodified vanilla Archipelago source (0.6.7+), and on compiled
+(frozen) installs when packed as an `.apworld`.
 
 ## Python API
 

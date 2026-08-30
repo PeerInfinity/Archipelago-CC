@@ -10,6 +10,18 @@
  *   C. A contract-PRESERVING geometry edit (nudge a platform) keeps the oracle.
  *   D. A contract-BREAKING edit (delete a forward portal) surfaces as an oracle
  *      mismatch (warn-but-allow — the oracle is the backstop).
+ *   K. The RECORDED path (editor-integration B-d): the four layout ops plus a
+ *      re-roll pushed onto a stepped envelope reproduce, from `config + seed +
+ *      edits` alone on a FRESH envelope, the same grid AND a clean oracle.
+ *   L. Undo ×N over that recording returns the never-edited grid, byte for
+ *      byte, with the oracle still clean and `completed` back at the end.
+ *   N. The bounce EDIT SESSION (editor-integration B-b): N ops through
+ *      `createEditSession(bounceEditAdapter, level)` → undo ×N → the record is
+ *      the base byte for byte, and `buildEditedRegion` over the undone record
+ *      reproduces the UNEDITED save's region exactly.
+ *
+ * ⚠ NO BROWSER. This verifier is pure Node (unlike its two `*-steps-ui.mjs`
+ * siblings), so it has no dev-server host to shift and runs under a busy box.
  *
  * Run: node scripts/procgen/verify-region-step-editing.mjs
  */
@@ -22,6 +34,14 @@ import {
     prepareBounceSphereGrowth, buildBounceRegionParams, DEFAULT_BOUNCE_PROCGEN_PARAMS,
 } from '../../frontend/modules/bounceDemo/bounceProcgenParams.js';
 import {
+    newEnvelope as newSphereEnvelope, runToStep as runSphereToStep,
+    resumeEnvelope as resumeSphereEnvelope, SPHERE_STEPS,
+    SPHERE_EDIT_BINDING, sphereNodeKey, sphereUndoStep, invalidateSphereFrom,
+} from '../../frontend/modules/procgenPipeline/sphereSteps.js';
+import {
+    pushLayoutEdit, popLayoutEdit, describeLayoutEdit,
+} from '../../frontend/modules/procgenPipeline/layoutEdits.js';
+import {
     growSpheres, reRollSphereRegion, buildRulesJson, buildRegionContract,
     getRegionExits, moveSphereRegion, swapSphereRegions,
     moveSphereExitSide, swapSphereExitSides,
@@ -29,7 +49,15 @@ import {
 import {
     planSpheres, computeItemSpheres, compareSpheresToPlan,
 } from '../../frontend/modules/procgenPipeline/spherePlanner.js';
+import { createEditSession, group } from '../../frontend/modules/procgenCore/editCore.js';
+import { bounceEditAdapter } from '../../frontend/modules/bounceRegionEditor/bounceEditAdapter.js';
+import { deletePlatformOps } from '../../frontend/modules/bounceRegionEditor/bounceLevelOps.js';
+import { buildEditedRegion } from '../../frontend/modules/bounceRegionEditor/buildEditedRegion.js';
 
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 function fail(msg) { console.error('FAIL:', msg); process.exit(1); }
 
 const itemPool = {
@@ -79,35 +107,21 @@ const platSig = (r) => JSON.stringify(
     (r.playable_payload.params.bounceLevel.platforms ?? []).map((p) => [p.x, p.y, p.type]));
 const exitKeys = (r) => [...getRegionExits(r).keys()].sort().join(',');
 
-// Editor save merge (mirrors bounceRegionEditorUI._buildEditedRegion): exits
-// keep the contract; locations come from the edited level's pickups (item picks
-// + add/remove flow through).
-function buildEdited(region, contract, level) {
-    const locationSpecs = (level.pickups ?? []).map((pk) => ({
-        id: pk.id, item: pk.item ?? null, requirement: [], counts: {},
-    }));
-    const built = assembleBounceRegionFromLevel(level, {
-        region_id: region.region_id,
-        exitSpecs: contract.exitSpecs ?? [],
-        locationSpecs,
-        physicsProfile: contract.physicsProfile ?? 'experimental',
-        mode: contract.mode ?? 'column',
-        freeArrow: contract.freeArrow ?? 'right',
-    });
-    const next = structuredClone(region);
-    next.playable_payload = built.payload;
-    next.obstacle_defs = built.obstacleDefs;
-    const sideByExitId = new Map((region.exits_placed ?? []).map((p) => [p.exit_id, p.side]));
-    for (const ex of next.extracted_rules?.exits ?? []) {
-        const side = sideByExitId.get(ex.id);
-        if (side && built.exitPaths[side]) {
-            ex.paths = built.exitPaths[side];
-            ex.access_rule = built.exitRules[side];
-        }
-    }
-    if (next.extracted_rules) next.extracted_rules.locations = built.locations;
-    return next;
-}
+// ⛓⛓⛓ THE EDITOR SAVE MERGE, **IMPORTED** (editor-integration B-b).
+//
+// ⛔ This was a COPY of `bounceRegionEditorUI._buildEditedRegion`, under a
+// comment saying it mirrored it — so Phases B/C/D/E/F, which are byte-shaped
+// pins on what a save produces, were pinning the COPY. A drift in the panel's
+// merge would have left this verifier green while the app wrote a different
+// region. The body now lives in `bounceRegionEditor/buildEditedRegion.js` and
+// both callers import it; `bounceEditAdapter.test.js` pins the export against
+// a transcription of the old panel body, byte for byte, over four settings
+// shapes.
+//
+// ⚠ The three-argument spelling stays so the five call sites below are
+// unmoved: this verifier passes no `settings`, which is exactly the arm that
+// reproduces the contract's own values.
+const buildEdited = (region, contract, level) => buildEditedRegion({ region, contract, level });
 
 // Backfill pickup.item from the contract (the level model doesn't store it).
 function withPickupItems(level, contract) {
@@ -306,6 +320,236 @@ function withPickupItems(level, contract) {
         if (errs.length) fail(`J: oracle after swap-exit-sides: ${errs[0]}`);
         console.log('J. swap exit sides keeps oracle — OK');
     }
+}
+
+// ── K/L. The RECORDED path (editor-integration B-d). Everything above drives
+// the engine mutators DIRECTLY; these two drive them through the recorded edit
+// list on a stepped envelope, which is what the panel and the CLI now do. The
+// value here over the vitest rows is the sphere ORACLE: a replayed world must
+// not just match a hash, it must still be solvable to plan.
+
+// The same bounce world buildWorld() grows, as a stepped ENVELOPE.
+function buildEnvConfig() {
+    const prep = prepareBounceSphereGrowth({ itemPool, seed, params: DEFAULT_BOUNCE_PROCGEN_PARAMS });
+    return {
+        seed,
+        regionSize,
+        itemLib: prep.itemLib,
+        regionParams: {
+            ...buildBounceRegionParams({ params: DEFAULT_BOUNCE_PROCGEN_PARAMS, mode: 'sphere' }),
+            ...(prep.regionParams ?? {}),
+        },
+        maxItemsPerRegion: 2,
+        fillerCount: 0,
+        revisitRatio: 0.25,
+        substrateQuotas: { bounce: 99 },
+        startSubstrate: 'bounce',
+        sphereCount: 3,
+        victoryItem: 'Victory',
+        exclusiveSpheres: prep.exclusiveSpheres ?? {},
+        startingItems: prep.startingItems ?? [],
+        lockedCanonicalItems: [],
+        enableLoopMode: false,
+        regionXpEffect: 'cost',
+        itemPool: prep.itemPool ?? itemPool,
+    };
+}
+
+const gridSig = (grid) => JSON.stringify(grid.allRegions()
+    .map((r) => [r.region_id, r.cell.gx, r.cell.gy, platSig(r), exitKeys(r)])
+    .sort((a, b) => (a[0] < b[0] ? -1 : 1)));
+
+function emptyCellOf(grid) {
+    for (let gy = 0; gy < grid.height; gy += 1) {
+        for (let gx = 0; gx < grid.width; gx += 1) {
+            if (!grid.hasRegion({ gx, gy })) return { gx, gy };
+        }
+    }
+    return null;
+}
+
+{
+    const config = buildEnvConfig();
+
+    // The never-edited reference.
+    const clean = newSphereEnvelope({ ...config });
+    await runSphereToStep(clean, 'compile');
+    if (clean.compile.oracleErrors.length) fail(`K: baseline oracle: ${clean.compile.oracleErrors[0]}`);
+    const cleanSig = gridSig(clean.grow.grid);
+
+    // Push the four layout ops plus a re-roll, each resolved against the LIVE
+    // grid the way a second click would be.
+    const env = newSphereEnvelope({ ...config });
+    await runSphereToStep(env, 'regions');
+    const live = (id) => ({ ...env.grow.grid.allRegions().find((r) => r.region_id === id).cell });
+    const ids = env.grow.grid.allRegions().map((r) => r.region_id);
+    const startId = env.grow.grid.getRegion(env.grow.startCell).region_id;
+    const moverId = ids.find((i) => i !== startId) ?? fail('K: need a non-start region');
+    const swapId = ids.find((i) => i !== startId && i !== moverId) ?? startId;
+
+    const push = (edit, label) => {
+        const r = pushLayoutEdit(env, edit, SPHERE_EDIT_BINDING);
+        if (!r.ok) fail(`K: ${label} refused: ${r.error}`);
+        return r;
+    };
+    push({ op: 'move-region', from: live(moverId), to: emptyCellOf(env.grow.grid) }, 'move-region');
+    push({ op: 'swap-regions', a: live(swapId), b: live(moverId) }, 'swap-regions');
+
+    // A region with a forward exit AND a back-exit carries sidePortals, so the
+    // exit-side ops apply there.
+    const exitHost = env.grow.grid.allRegions().find((r) => {
+        const l = [...getRegionExits(r).values()];
+        return l.some((e) => e.isBackExit) && l.some((e) => !e.isBackExit);
+    }) ?? fail('K: no region with both a forward exit and a back-exit');
+    const hostExits = () => [...getRegionExits(env.grow.grid.getRegion(live(exitHost.region_id))).values()];
+    const fwd = hostExits().find((e) => !e.isBackExit);
+    const used = new Set(hostExits().map((e) => e.side));
+    const freeSide = ['N', 'S', 'E', 'W'].find((x) => !used.has(x)) ?? fail('K: no empty side');
+    push({
+        op: 'move-exit-side', cell: live(exitHost.region_id), exitId: fwd.exit_id, side: freeSide,
+    }, 'move-exit-side');
+    const rerollNode = env.nodes.find((n) => n.region_id === moverId);
+    push({ op: 're-roll', region_id: sphereNodeKey(rerollNode), n: 1 }, 're-roll');
+
+    // M. swap-exit-sides + a LATER re-roll on the same branch: the swap can put
+    // the grid into a state the TREE cannot represent, because a region's
+    // entrance side is DERIVED (OPPOSITE_SIDE[node.side]) rather than stored, so
+    // moving a BACK-exit has no home in the tree. The contract's promise is that
+    // this REFUSES loudly and leaves the grid untouched — which is what this
+    // asserts. (Making it representable needs a stored entrance side on the
+    // node: an engine change, outside B-d.)
+    {
+        const before = gridSig(env.grow.grid);
+        const editCount = env.edits.length;
+        const h = env.grow.grid.allRegions().find((r) => {
+            const l = [...getRegionExits(r).values()];
+            return l.some((e) => e.isBackExit) && l.some((e) => !e.isBackExit);
+        });
+        if (h) {
+            const [ea, eb] = [...getRegionExits(h).values()];
+            const sw = pushLayoutEdit(env, {
+                op: 'swap-exit-sides', cell: { ...h.cell }, exitA: ea.exit_id, exitB: eb.exit_id,
+            }, SPHERE_EDIT_BINDING);
+            if (!sw.ok) fail(`M: swap-exit-sides itself refused: ${sw.error}`);
+            const again = pushLayoutEdit(env, {
+                op: 're-roll', region_id: sphereNodeKey(rerollNode), n: 2,
+            }, SPHERE_EDIT_BINDING);
+            if (again.ok) {
+                console.log('M. swap-exit-sides then re-roll: ACCEPTED (representable here) — OK');
+            } else {
+                console.log(`M. swap-exit-sides then re-roll REFUSES loudly (${again.error}) `
+                    + 'and records nothing — OK');
+                if (env.edits.length !== editCount + 1) {
+                    fail(`M: refusal recorded an edit (${env.edits.length} vs ${editCount + 1})`);
+                }
+            }
+            // Either way, roll the probe back so K/L measure the 4-edit list.
+            while (env.edits.length > editCount) popLayoutEdit(env, SPHERE_EDIT_BINDING);
+            invalidateSphereFrom(env, 'regions');
+            await resumeSphereEnvelope(env, 'regions');
+            if (gridSig(env.grow.grid) !== before) {
+                fail('M: rolling the probe back did not restore the 4-edit grid');
+            }
+        }
+    }
+
+    await runSphereToStep(env, 'compile');
+    if (env.compile.oracleErrors.length) fail(`K: oracle after 4 edits: ${env.compile.oracleErrors[0]}`);
+    if (gridSig(env.grow.grid) === cleanSig) fail('K: 4 edits changed nothing (the row would be vacuous)');
+
+    // …and the recording alone reproduces it on a FRESH envelope.
+    const replayed = newSphereEnvelope({ ...config });
+    replayed.edits = env.edits.map((e) => ({ ...e }));
+    await runSphereToStep(replayed, 'compile');
+    if (gridSig(replayed.grow.grid) !== gridSig(env.grow.grid)) {
+        fail('K: replay from config + seed + edits did not reproduce the edited grid');
+    }
+    if (replayed.compile.oracleErrors.length) {
+        fail(`K: replayed oracle: ${replayed.compile.oracleErrors[0]}`);
+    }
+    console.log(`K. ${env.edits.length} recorded edits replay from config + seed + edits `
+        + `(oracle clean) — ${env.edits.map(describeLayoutEdit).join(' · ')} — OK`);
+
+    // L. Undo them all.
+    let undone = 0;
+    while (env.edits.length) {
+        const popped = popLayoutEdit(env, SPHERE_EDIT_BINDING);
+        invalidateSphereFrom(env, sphereUndoStep(popped.edit));
+        // eslint-disable-next-line no-await-in-loop
+        await resumeSphereEnvelope(env, 'compile');
+        undone += 1;
+    }
+    if (gridSig(env.grow.grid) !== cleanSig) fail('L: undo ×N did not restore the never-edited grid');
+    if (env.compile.oracleErrors.length) fail(`L: oracle after undo: ${env.compile.oracleErrors[0]}`);
+    if (env.completed !== SPHERE_STEPS.length - 1) {
+        fail(`L: completed is ${env.completed}, expected ${SPHERE_STEPS.length - 1}`);
+    }
+    console.log(`L. undo ×${undone} → the never-edited grid, oracle clean, completed=${env.completed} — OK`);
+}
+
+// ── N. The bounce EDIT SESSION (editor-integration B-b) ────────────────
+//
+// ⛓⛓⛓ The panel's eight mutators are now ops on an `editCore` session, and
+// UNDO is the fold over a shorter list. This phase asks the two things the
+// panel's own gate cannot ask headlessly: that N ops undo to the BASE byte for
+// byte, and that a save built from the undone record is the save the unedited
+// region would have produced. ⛔ The second half is what makes undo a fact
+// about the REGION rather than about the level object: `buildEditedRegion` is
+// the only thing between the two.
+{
+    const { grid, tree, regionParams } = buildWorld();
+    const node = tree.nodes.find((n) => n.parent != null && n.substrate === 'bounce');
+    const region = grid.getRegion(node.cell);
+    const contract = buildRegionContract(
+        node.substrate, node, tree, grid, regionSize, regionParams);
+    const startLevel = withPickupItems(
+        structuredClone(region.playable_payload.params.bounceLevel), contract);
+    const startSig = JSON.stringify(startLevel);
+    const unedited = JSON.stringify(buildEditedRegion({
+        region, contract, level: structuredClone(startLevel),
+    }));
+
+    const sess = createEditSession(bounceEditAdapter, structuredClone(startLevel), {
+        base: { kind: 'bounce-level', region_id: region.region_id },
+    });
+    const push = (op) => {
+        const res = sess.apply(op);
+        if (!res.ok) fail(`N: op ${JSON.stringify(op.op ?? op.label)} was REFUSED — ${res.description}`);
+        if (!res.applied) fail(`N: op ${JSON.stringify(op.op ?? op.label)} moved nothing`);
+        return res;
+    };
+    push({ op: 'resize', dim: 'width', value: sess.record().size.width + 40 });
+    const added = push({ op: 'add-platform' });
+    push({ op: 'set-platform', id: sess.record().platforms[0].id, patch: { type: 'brown' } });
+    push({ op: 'add-entity', kind: 'pickups', on: added.value.id, item: 'Victory' });
+    // ⛓ THE CASCADE, built from the CURRENT record — `deletePlatformOps`
+    //   enumerates the orphans, so it must read the level the delete will run
+    //   against, not the one the session opened on.
+    const hosted = ['springs', 'jetpacks', 'pickups', 'portals', 'teleports'];
+    const target = sess.record().platforms.find(
+        (p) => hosted.some((k) => (sess.record()[k] ?? []).some((e) => e.on === p.id)));
+    if (!target) fail('N: no hosted platform to delete — the cascade arm would be vacuous');
+    const cascade = deletePlatformOps(sess.record(), target.id);
+    if (cascade.length < 2) fail(`N: the cascade for '${target.id}' has no remove-entity member`);
+    push(group(`delete platform ${target.id}`, cascade));
+    const applied = 5;
+    if (sess.ops().length !== applied) {
+        fail(`N: ${sess.ops().length} ops recorded, applied ${applied}`);
+    }
+    if (JSON.stringify(sess.record()) === startSig) fail('N: the ops moved nothing at all');
+
+    let undone = 0;
+    while (sess.undo()) undone += 1;
+    if (undone !== applied) fail(`N: undo ran ${undone} times for ${applied} ops`);
+    if (JSON.stringify(sess.record()) !== startSig) {
+        fail('N: undo ×N did not return the base level byte for byte');
+    }
+    const after = JSON.stringify(buildEditedRegion({
+        region, contract, level: sess.record(),
+    }));
+    if (after !== unedited) fail('N: a save from the undone record differs from the unedited save');
+    console.log(`N. ${applied} session ops → undo ×${undone} → the base level byte for byte, `
+        + 'and the save it builds equals the unedited save — OK');
 }
 
 console.log('VERIFY REGION-STEP EDITING: ALL OK');

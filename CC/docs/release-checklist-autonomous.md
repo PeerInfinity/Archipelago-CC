@@ -153,7 +153,7 @@ the branch itself before you merge.
 ### 2.1 Exclusions (verify before generating)
 
 Some games are intentionally excluded from generation (see
-`scripts/test/template-exclude-list.json`, wired into
+`scripts/data/template-exclude-list.json`, wired into
 `scripts/utils/generate_all_templates.sh`):
 
 - **`generation_exclude_list`** — OoT (string-compiled rules the exporter can't
@@ -162,6 +162,15 @@ Some games are intentionally excluded from generation (see
 - **UT Pickle Mode** → permanent `exclude_list` (it is a tracker mode, not a game).
 - **Seedling** → `worldgen_test_exclude_list` (its worldgen variant generates
   broken; the base preset is kept).
+
+- **`worldgen_generation_whitelist`** (2026-08-30) — a *whitelist*, not an
+  exclude list: the ONLY base templates whose worldgen world
+  (`worlds/<x>_worldgen`) and preset are generated and committed. Applied by
+  `list-template-files.py --include` after the exclude lists. Every other
+  game's worldgen variant is transient — `test-world-generator.py` builds and
+  deletes it. Today: A Link to the Past, APCalc, Baking Adventure, Coding
+  Adventure, DepGraph, Metamath, TOEM original, TOEM rule builder.
+  `generate_worldgen2` now defaults to **false**.
 
 If Phase 1 added or removed games, reconcile these lists first.
 
@@ -185,6 +194,32 @@ lingering from the upstream merge); the `merge` run produces the final regen.
 Run each **once**. If a code fix forces a re-run, just re-dispatch — the squash
 merge-back (next step) keeps `main` clean regardless of how many runs `generated-presets`
 accumulated.
+
+**What each mode is actually for — and when one `merge` run is enough.** A
+`merge` run on its own already lands *both* the additions and the deletions:
+it merges `origin/main` into the branch (so the branch tree *is* main's tree),
+`clean_existing` wipes `frontend/presets/` and `worlds/*_worldgen*` from that
+tree, the script regenerates the generation set, and the `Generate presets`
+commit stages the new files **and** the deletion of everything it did not
+regenerate. The squash merge-back copies the branch's tree, so `main` gets
+exactly that. `reset` exists for one specific problem: **zombie files** — files
+the branch still carries that `main` deleted long ago and that no step
+regenerates or removes (the "Remove files deleted on main" step only sees
+deletions newer than the merge base). Measure before spending a run:
+
+```bash
+git fetch origin generated-presets
+# Anything the branch has that main does not, outside the regenerated trees:
+git diff --name-status origin/main origin/generated-presets -- . \
+  ':(exclude)frontend/presets/' ':(exclude)worlds/' | grep '^A'
+git merge-base --is-ancestor origin/main origin/generated-presets && echo ancestor
+```
+
+Zero `A` lines and `ancestor` ⇒ a single `merge` run suffices (2026-08-30:
+0 zombies after the baseline run; only `world-mapping.json`,
+`scripts/output/world-generator/test-results.json` and
+`generated_commands.sh` differed, all regenerated). Any `A` line ⇒ run
+`reset` first.
 
 Review the merge run's logs for error floods (`gh run view --log-failed`).
 Known-clean release signatures: 0 "Failed to analyze or expand rule", no
@@ -283,10 +318,16 @@ It:
    `scripts/release/preserved-dev-presets.txt` from the ref and merges their
    `preset_files.json` entries back, so the dev index = canonical + preserved.
 
-The preserved set is **only** the genuine dev/demo presets
-(`jta_mixed_test`, `jta_substrate_test`, `procgen_maze`, `robotkitty_tilemap`).
-Worldgen worlds (`worlds/*_worldgen`) and `*_worldgen` preset dirs are
-**intentionally not preserved** — do not add them to the list.
+The preserved set is every preset dir on `main` that the workflow does not
+produce: the dev/demo/test presets (`jta_*_test`, `omsi_*_test`, `procgen_maze`,
+`robotkitty_tilemap`, `seedling_atlas*`, `seedling_playthrough`) **and** the
+hand-maintained worldgen demos (`bounce_worldgen`, `runner_worldgen`,
+`runner_sphere_worldgen`), whose `worlds/<id>` package the script restores as
+well (2026-08-30). *Workflow-produced* worldgen worlds and their preset dirs —
+the `worldgen_generation_whitelist` set — are **not** preserved: the workflow
+regenerates them; do not add those. Before each release, diff
+`git ls-tree -d --name-only origin/main frontend/presets/` against the
+`generated-presets` branch and add any new hand-made dir to the list.
 
 ### 2.6 Verify before pushing
 
@@ -828,11 +869,18 @@ for g in metamath depgraph jta bakingadventure codingadventure; do
 done
 ```
 
-The pack scripts produce **deterministic** zips, so only APWorlds whose *source*
-changed since the last pack show up in `git status` — the rest repack
-byte-identical. Commit only the changed `apworlds/*.apworld` (they're tracked
-release artifacts). (2026-06-27: `json_tools_installer`, `depgraph`, `metamath`
-changed; `jta`/`bakingadventure`/`codingadventure` byte-identical.)
+The pack scripts are **content-deterministic but not byte-deterministic**:
+zip entries embed filesystem mtimes, so a repack of unchanged sources can
+still show as modified in `git status` (2026-07-07 finding — the earlier
+"byte-identical" claim here was wrong). Don't use `git status` churn to decide
+what changed; the unit test
+`worlds/json_tools_installer/test/test_packed_apworld_freshness.py` compares
+tracked apworlds against fresh packs **by content** and fails on real
+staleness — run it (or the whole installer suite) and commit every
+`apworlds/*.apworld` it flags. Note the tracked artifacts are what the
+download links and the `--dev` installer serve: **an unrepacked apworld ships
+stale code even when the repo source is current** (this bit twice in 2026-07;
+the freshness test now guards it).
 
 ### 7.2 Dev installer test
 
@@ -894,12 +942,67 @@ Final result (run with `--upstream-fixes`): **all four variants exit 0, spoiler
 PASS, and UT-fuzz 10/10 success / 0 failures** (both Adventure and ALttP). See
 memory `project_romless_installer_alttp`.
 
-### 7.3 Manual GUI installer test (human-run, not autonomous)
+Two further opt-in variants exist since 2026-07-07 (not part of the standard
+four-variant loop; run them when the release touched dependency handling or the
+uninstall path):
+
+```bash
+python scripts/install_json_tools.py --dev --fresh --skip-setup --skip-tests \
+    --test-apworld-deps --test-uninstall --target-dir /tmp/jt-test
+```
+
+`--test-apworld-deps` seeds the clone with `metamath.apworld` before installing
+and asserts the installer auto-installed its requirements (metamathpy imports,
+MetaMath generates). `--test-uninstall` snapshots the clone pre-install and
+asserts the uninstall path restores it exactly (this is the check that caught
+uninstall deleting vanilla world files via `upstream_fixes` presence-detection).
+
+### 7.2b Frozen (compiled) install test
+
+The frozen counterpart of 7.2: verifies the installer works inside a compiled
+Windows Archipelago install (frozen_dest/`lib\` routing, apworld packing,
+in-process pip, world_source, export into the output zip). Same push-first
+caveat as 7.2: `--source dev` downloads from `main`, so push the release
+content first (or use `--source repo` to test the local HEAD offline).
+
+**Local bench** (WSL, against a compiled AP install — the location is input,
+never assumed):
+
+```bash
+python scripts/test/test-frozen-install.py \
+    --install-dir /mnt/c/ProgramData/Archipelago \
+    --scenario baseline pip-guard reinstall uninstall worldgen export-parity
+```
+
+Scenarios always reset the install first and reset again on success; failures
+leave it dirty for inspection (`--keep-state` to skip the success-reset). If
+WSL interop is broken after a WSL restart, the harness detects it and prints
+the re-registration command. 2026-07-07: all six scenarios green on the
+0.6.7 bench (87 checks).
+
+**CI variant** (windows-latest, ~30-45 min, ~250 MB of downloads):
+
+```bash
+gh workflow run test-frozen-install.yml --repo PeerInfinity/Archipelago-CC
+gh run watch --repo PeerInfinity/Archipelago-CC <run-id>
+```
+
+Installs the latest released AP Setup exe silently (runners execute elevated —
+locally this same install is the one manual UAC-consent step of bench setup)
+and runs the full scenario set. Inputs: `ap_version` (default = latest
+ArchipelagoMW release), `scenarios`, `source` (dev/stable/repo).
+
+### 7.3 Manual GUI installer test (human-run, visual checks only)
 
 `release-checklist.md` §7.3 — download `json_tools_installer.apworld` from `main`
 into a fresh vanilla Archipelago, run `Launcher.py`, and click through the JSON
-Tools Installer GUI. This is **interactive (a GUI)** and cannot be driven
-headlessly — flag it for the human to run; it isn't part of the autonomous flow.
+Tools Installer GUI. **The functional substance of this test is now covered
+autonomously**: the unit suite guards the GUI checkbox/property invariant, and
+7.2b's baseline scenario drives the same install flow (same functions, same
+component selection, single pip run, export config) inside the real frozen exe.
+The human click-through remains for **visual/interaction checks only** (layout,
+popups readable and not auto-dismissed, progress feedback) — flag it for the
+human, but it no longer gates functional correctness.
 
 ---
 

@@ -26,6 +26,23 @@ Step-by-step guides for common development tasks:
 | [Format Converter](./guides/format-converter.md) | Rule format conversion |
 | [Testing Pipeline](./guides/testing-pipeline.md) | How validation works |
 
+### [Procedural Generation](./procgen/)
+
+The in-browser world-generation pipeline, its substrates, and the runtime that plays generated worlds:
+
+| Document | Description |
+|----------|-------------|
+| [Architecture](./procgen/architecture.md) | Orientation: pipeline drivers, substrates, rules.json extensions, runtime, Python round-trip |
+| [Substrate Registry Reference](./procgen/substrate-registry.md) | The registry entry contract and substrate capability matrix |
+| [Gotchas and Disambiguations](./procgen/gotchas.md) | Naming overlaps and invariants that mislead newcomers |
+| [Bounce Substrate](./procgen/bounce.md) | Physics-verified platformer substrate: solver, verifier, generators, renderers |
+| [Playback and Debugging Tools](./procgen/playback-and-debugging.md) | Playback bot, controller proxies, forward simulator, simulator core |
+| [Maze Substrate](./procgen/maze.md) | Tile-grid substrate: engine, biomes, content modules, autopather |
+| [Sphere-Driven Growth](./procgen/sphere-growth.md) | Plan-first driver: sphere plan as oracle, stratification, gating |
+| [Paths and Obstacles](./procgen/paths-and-obstacles.md) | The access-rule intermediate representation and its compiler |
+| [The Stepped Pipeline](./procgen/stepped-pipeline.md) | Editable step-by-step generation: envelopes, byte identity, editors |
+| [Text Adventure](./procgen/text-adventure.md) · [Flash](./procgen/flash.md) · [JtA](./procgen/jta.md) | The remaining substrate pages |
+
 ### [Reference](./reference/)
 
 Technical references and specifications:

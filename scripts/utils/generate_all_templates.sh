@@ -426,12 +426,14 @@ for t in "${ALL_BASE_TEMPLATES[@]}"; do
 done
 unset _EXTRA_SEED_SET
 
-# WorldGen-eligible templates (also excludes main_test + worldgen_test + generation lists)
+# WorldGen-eligible templates (excludes main_test + worldgen_test + generation lists,
+# then restricted to worldgen_generation_whitelist -- only the kept worldgen worlds are generated)
 mapfile -t WORLDGEN_TEMPLATES < <(
   python scripts/utils/list-template-files.py \
     --exclude main_test_exclude_list \
     --exclude worldgen_test_exclude_list \
     --exclude generation_exclude_list \
+    --include worldgen_generation_whitelist \
   | sed 's/\.yaml$//'
 )
 

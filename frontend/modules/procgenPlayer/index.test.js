@@ -155,6 +155,10 @@ describe('procgenPlayer index', () => {
             sourceRegion: 'Menu',
             targetRegion: 'region_0_0',
             exitName: 'GameStart',
+            // M3b: marks the synthesized placement as a planning source —
+            // exempt from the strict action gate and from the loop-mode
+            // path-append retirement.
+            source: 'procgenPlayer-start',
         });
     });
 

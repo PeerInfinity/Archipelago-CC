@@ -2,9 +2,9 @@
 
 Directories in this fork that do not exist in upstream commit `e6e0bc30`.
 
-## Project Directories (31)
+## Project Directories (32)
 
-- **`CC/`** (90 files)
+- **`CC/`** (360 files)
 
   Claude Code scripts, plans, and utilities for AI-assisted development.
 
@@ -14,7 +14,7 @@ Directories in this fork that do not exist in upstream commit `e6e0bc30`.
 
   Pre-built APWorld packages (.apworld files) for distribution.
 
-- **`docs/json/`** (288 files)
+- **`docs/json/`** (312 files)
 
   Documentation portal for the JSON Export Tools project: user guides, developer docs, architecture, and test results.
 
@@ -26,7 +26,7 @@ Directories in this fork that do not exist in upstream commit `e6e0bc30`.
 
   [Exporter README](../../../../../exporter/README.md)
 
-- **`frontend/`** (1550 files)
+- **`frontend/`** (1703 files)
 
   Web client application for browsing exported game data, viewing rules, and running spoiler tests.
 
@@ -44,7 +44,7 @@ Directories in this fork that do not exist in upstream commit `e6e0bc30`.
 
   Versioned patches for ROM-less generation and other core file modifications, organized by Archipelago version.
 
-- **`scripts/`** (262 files)
+- **`scripts/`** (307 files)
 
   Build, test, setup, and documentation generation scripts.
 
@@ -54,25 +54,25 @@ Directories in this fork that do not exist in upstream commit `e6e0bc30`.
 
   Test suite for fork-specific modules: exporter, rule builder, world generator, and E2E spoiler tests.
 
-- **`world_generator/`** (23 files)
+- **`world_generator/`** (26 files)
 
   Converts JSON rules files back into functional Archipelago world packages (Python code).
 
   [World Generator README](../../../../../world_generator/README.md) | [World Generator Guide](../../guides/world-generator.md)
 
-- **`worlds/adventure_worldgen2/`** (11 files)
+- **`worlds/adventure_worldgen2/`** (15 files)
 
   Second-generation world: generated from a worldgen world to test cross-generation compatibility.
 
-- **`worlds/ahit_worldgen2/`** (10 files)
+- **`worlds/ahit_worldgen2/`** (14 files)
 
   Second-generation world: generated from a worldgen world to test cross-generation compatibility.
 
-- **`worlds/alttp_vanilla_worldgen2/`** (19 files)
+- **`worlds/alttp_vanilla_worldgen2/`** (23 files)
 
   Second-generation world: generated from a worldgen world to test cross-generation compatibility.
 
-- **`worlds/alttp_worldgen2/`** (19 files)
+- **`worlds/alttp_worldgen2/`** (23 files)
 
   Second-generation world: generated from a worldgen world to test cross-generation compatibility.
 
@@ -90,7 +90,7 @@ Directories in this fork that do not exist in upstream commit `e6e0bc30`.
 
   Original demo world: a baking-themed game with progression-based locations.
 
-- **`worlds/bakingadventure_vanilla_worldgen2/`** (10 files)
+- **`worlds/bakingadventure_vanilla_worldgen2/`** (14 files)
 
   Second-generation world: generated from a worldgen world to test cross-generation compatibility.
 
@@ -98,7 +98,7 @@ Directories in this fork that do not exist in upstream commit `e6e0bc30`.
 
   Original demo world: an educational web development game with progression items.
 
-- **`worlds/codingadventure_vanilla_worldgen2/`** (10 files)
+- **`worlds/codingadventure_vanilla_worldgen2/`** (14 files)
 
   Second-generation world: generated from a worldgen world to test cross-generation compatibility.
 
@@ -106,13 +106,13 @@ Directories in this fork that do not exist in upstream commit `e6e0bc30`.
 
   Original world that turns any directed acyclic graph (DAG) into a playable Archipelago world.
 
-- **`worlds/json_tools_installer/`** (25 files)
+- **`worlds/json_tools_installer/`** (42 files)
 
   Utility APWorld (hidden) that downloads and installs JSON Tools components on vanilla Archipelago.
 
   [Installer README](../../../../../worlds/json_tools_installer/README.md)
 
-- **`worlds/jta/`** (10 files)
+- **`worlds/jta/`** (11 files)
 
   Journey to Ascension: a demo world with cost-based progression and planner integration.
 
@@ -120,19 +120,23 @@ Directories in this fork that do not exist in upstream commit `e6e0bc30`.
 
   Original demo world that turns MetaMath formal proofs into playable Archipelago worlds.
 
+- **`worlds/rulebuilder_test/`** (5 files)
+
+  Tiny hidden world that exercises the rule_builder feature surface end-to-end (Python generation → exporter → frontend evaluation), including a game-specific custom Rule subclass, FieldResolver counts, and dynamic Has.count forms.
+
 - **`worlds/seedling/`** (10 files)
 
   Seedling fork game world.
 
-- **`worlds/shorthike_worldgen2/`** (10 files)
+- **`worlds/shorthike_worldgen2/`** (14 files)
 
   Second-generation world: generated from a worldgen world to test cross-generation compatibility.
 
-- **`worlds/toem_original/`** (10 files)
+- **`worlds/toem_original/`** (11 files)
 
   Original TOEM world implementation (non-Rule Builder version, used as a comparison benchmark).
 
-- **`worlds/toem_rule_builder/`** (10 files)
+- **`worlds/toem_rule_builder/`** (15 files)
 
   TOEM world implemented using Rule Builder syntax (benchmark for comparing against the original implementation).
 
@@ -146,74 +150,77 @@ Directories in this fork that do not exist in upstream commit `e6e0bc30`.
 
   Universal Tracker 'UT Pickle Mode' variant providing pickle-based deferred tracking.
 
-## Auto-Generated World Directories (58)
+## Auto-Generated World Directories (61)
 
 These directories are generated by the World Generator from JSON rules files.
 
 <details>
-<summary>Show 58 worldgen directories</summary>
+<summary>Show 61 worldgen directories</summary>
 
-- `worlds/adventure_worldgen/` (11 files)
-- `worlds/ahit_worldgen/` (10 files)
-- `worlds/alttp_vanilla_worldgen/` (19 files)
-- `worlds/alttp_worldgen/` (19 files)
-- `worlds/apcalc_worldgen/` (10 files)
-- `worlds/apquest_worldgen/` (11 files)
-- `worlds/aquaria_worldgen/` (11 files)
-- `worlds/bakingadventure_vanilla_worldgen/` (10 files)
-- `worlds/bakingadventure_worldgen/` (10 files)
-- `worlds/bumpstik_worldgen/` (10 files)
-- `worlds/cccharles_worldgen/` (11 files)
-- `worlds/celeste64_worldgen/` (11 files)
-- `worlds/checksfinder_worldgen/` (10 files)
-- `worlds/civ_6_worldgen/` (10 files)
-- `worlds/codingadventure_vanilla_worldgen/` (10 files)
-- `worlds/codingadventure_worldgen/` (10 files)
-- `worlds/cv64_worldgen/` (10 files)
-- `worlds/cvcotm_worldgen/` (10 files)
-- `worlds/depgraph_worldgen/` (10 files)
-- `worlds/dlcquest_worldgen/` (11 files)
-- `worlds/earthbound_worldgen/` (10 files)
-- `worlds/factorio_worldgen/` (10 files)
-- `worlds/faxanadu_worldgen/` (10 files)
-- `worlds/ffmq_worldgen/` (11 files)
-- `worlds/hylics2_worldgen/` (10 files)
-- `worlds/inscryption_worldgen/` (11 files)
-- `worlds/ladx_worldgen/` (10 files)
-- `worlds/landstalker_worldgen/` (11 files)
-- `worlds/lufia2ac_worldgen/` (10 files)
-- `worlds/marioland2_worldgen/` (10 files)
-- `worlds/meritous_worldgen/` (10 files)
-- `worlds/messenger_worldgen/` (11 files)
-- `worlds/metamath_worldgen/` (10 files)
-- `worlds/mlss_worldgen/` (11 files)
-- `worlds/mm2_worldgen/` (10 files)
-- `worlds/mmbn3_worldgen/` (10 files)
-- `worlds/noita_worldgen/` (10 files)
-- `worlds/osrs_worldgen/` (10 files)
-- `worlds/overcooked2_worldgen/` (10 files)
-- `worlds/ror2_worldgen/` (10 files)
-- `worlds/sa2b_worldgen/` (10 files)
-- `worlds/saving_princess_worldgen/` (10 files)
-- `worlds/shapez_worldgen/` (13 files)
-- `worlds/shivers_worldgen/` (10 files)
-- `worlds/shorthike_worldgen/` (10 files)
-- `worlds/sm64ex_worldgen/` (10 files)
-- `worlds/smw_worldgen/` (10 files)
-- `worlds/subnautica_worldgen/` (10 files)
-- `worlds/terraria_worldgen/` (10 files)
-- `worlds/timespinner_worldgen/` (11 files)
-- `worlds/tloz_worldgen/` (11 files)
-- `worlds/toem_original_worldgen/` (10 files)
-- `worlds/toem_rule_builder_worldgen/` (10 files)
-- `worlds/tww_worldgen/` (11 files)
-- `worlds/undertale_worldgen/` (10 files)
-- `worlds/v6_worldgen/` (10 files)
-- `worlds/wargroove_worldgen/` (11 files)
-- `worlds/yoshisisland_worldgen/` (10 files)
+- `worlds/adventure_worldgen/` (15 files)
+- `worlds/ahit_worldgen/` (14 files)
+- `worlds/alttp_vanilla_worldgen/` (23 files)
+- `worlds/alttp_worldgen/` (23 files)
+- `worlds/apcalc_worldgen/` (14 files)
+- `worlds/apquest_worldgen/` (15 files)
+- `worlds/aquaria_worldgen/` (15 files)
+- `worlds/bakingadventure_vanilla_worldgen/` (14 files)
+- `worlds/bakingadventure_worldgen/` (14 files)
+- `worlds/bounce_worldgen/` (15 files)
+- `worlds/bumpstik_worldgen/` (14 files)
+- `worlds/cccharles_worldgen/` (15 files)
+- `worlds/celeste64_worldgen/` (15 files)
+- `worlds/checksfinder_worldgen/` (14 files)
+- `worlds/civ_6_worldgen/` (14 files)
+- `worlds/codingadventure_vanilla_worldgen/` (14 files)
+- `worlds/codingadventure_worldgen/` (14 files)
+- `worlds/cv64_worldgen/` (14 files)
+- `worlds/cvcotm_worldgen/` (14 files)
+- `worlds/depgraph_worldgen/` (14 files)
+- `worlds/dlcquest_worldgen/` (15 files)
+- `worlds/earthbound_worldgen/` (14 files)
+- `worlds/factorio_worldgen/` (14 files)
+- `worlds/faxanadu_worldgen/` (14 files)
+- `worlds/ffmq_worldgen/` (15 files)
+- `worlds/hylics2_worldgen/` (14 files)
+- `worlds/inscryption_worldgen/` (15 files)
+- `worlds/ladx_worldgen/` (14 files)
+- `worlds/landstalker_worldgen/` (15 files)
+- `worlds/lufia2ac_worldgen/` (14 files)
+- `worlds/marioland2_worldgen/` (14 files)
+- `worlds/meritous_worldgen/` (14 files)
+- `worlds/messenger_worldgen/` (15 files)
+- `worlds/metamath_worldgen/` (14 files)
+- `worlds/mlss_worldgen/` (15 files)
+- `worlds/mm2_worldgen/` (14 files)
+- `worlds/mmbn3_worldgen/` (14 files)
+- `worlds/noita_worldgen/` (14 files)
+- `worlds/osrs_worldgen/` (14 files)
+- `worlds/overcooked2_worldgen/` (14 files)
+- `worlds/ror2_worldgen/` (14 files)
+- `worlds/runner_sphere_worldgen/` (16 files)
+- `worlds/runner_worldgen/` (15 files)
+- `worlds/sa2b_worldgen/` (14 files)
+- `worlds/saving_princess_worldgen/` (14 files)
+- `worlds/shapez_worldgen/` (17 files)
+- `worlds/shivers_worldgen/` (14 files)
+- `worlds/shorthike_worldgen/` (14 files)
+- `worlds/sm64ex_worldgen/` (14 files)
+- `worlds/smw_worldgen/` (14 files)
+- `worlds/subnautica_worldgen/` (14 files)
+- `worlds/terraria_worldgen/` (14 files)
+- `worlds/timespinner_worldgen/` (15 files)
+- `worlds/tloz_worldgen/` (15 files)
+- `worlds/toem_original_worldgen/` (14 files)
+- `worlds/toem_rule_builder_worldgen/` (14 files)
+- `worlds/tww_worldgen/` (15 files)
+- `worlds/undertale_worldgen/` (14 files)
+- `worlds/v6_worldgen/` (14 files)
+- `worlds/wargroove_worldgen/` (15 files)
+- `worlds/yoshisisland_worldgen/` (14 files)
 
 </details>
 
 ---
 
-**Total:** 89 new directories containing 3286 files
+**Total:** 93 new directories containing 4116 files

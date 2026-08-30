@@ -1,6 +1,6 @@
 /**
- * Bounce Demo level generator — build-order step 7, the first shipped
- * milestone (NewDocs/plans/procedural-generation/dj-metroidvania-v2.md).
+ * Bounce Demo level generator
+ * (docs/json/developer/procgen/bounce.md).
  *
  * Generate-and-test (Cloudberry-style): `generateLevel` PROPOSES a
  * platform arrangement for a target requirement ("this level needs
@@ -240,8 +240,7 @@ function sameSets(minimalSets, want) {
 
 // ── Obstacle primitives ─────────────────────────────────────────────
 //
-// One GEOMETRY TEMPLATE per ability gap (topdown-bounce-obstacle-refactor
-// .md Phase 3). Each primitive is keyed by its ability and carries the
+// One GEOMETRY TEMPLATE per ability gap. Each primitive is keyed by its ability and carries the
 // shared obstacle id (BOUNCE_OBSTACLE_ID_BY_ABILITY) so the obstacle id is
 // the single through-line: this template's geometry is what the verifier
 // proves gates the ability, and what the emitter records as the path's
@@ -477,8 +476,7 @@ export function generateZoneSet({ count = 7, seed = 1, jitter = 0 } = {}) {
 // ── Multi-target generation (sphere-driven growth, step 2) ──────────
 //
 // generateLevelFromSpecs targets SEVERAL goals with DIFFERENT
-// requirements in one level — the prefix-graded chain from
-// NewDocs/plans/procedural-generation/sphere-driven-growth.md: the
+// requirements in one level — the prefix-graded chain: the
 // climb realises the nested requirement chain as gate segments, each
 // goal attaches at its rung, and a goal's derived rule is the prefix
 // of gates below it (plus its own drift arrow, for branch exits).

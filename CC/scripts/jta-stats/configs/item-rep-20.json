@@ -1,0 +1,8 @@
+{
+  "name": "item-rep-20",
+  "options": {
+    "modOverrides": {
+      "threshold_item_pct": 20
+    }
+  }
+}

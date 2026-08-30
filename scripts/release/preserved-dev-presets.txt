@@ -10,10 +10,33 @@
 # One preset game-id (frontend/presets/<id>) per line. Blank lines and
 # lines starting with '#' are ignored.
 #
-# NOTE: worldgen worlds (worlds/*_worldgen) and *_worldgen preset dirs are
-# intentionally NOT preserved — do not add them here.
+# NOTE: WORKFLOW-PRODUCED worldgen worlds (worlds/*_worldgen) and their
+# *_worldgen preset dirs are intentionally NOT preserved — the workflow
+# regenerates them; do not add those here. Hand-maintained demo worldgen
+# presets the workflow does NOT generate (e.g. bounce_worldgen, the
+# verify-bounce-embed fixture) ARE preserved like the other dev presets.
+# Their worlds/<id> package lives on main and is restored by the script too; regen
+# recipe: historical rules.json -> world_generator --canonical-seed 1 ->
+# generate_yaml_templates -> Generate.py --seed 1.
 
+bounce_worldgen
+runner_worldgen
+runner_sphere_worldgen
 jta_mixed_test
 jta_substrate_test
 procgen_maze
 robotkitty_tilemap
+jta_dataset_test
+jta_locations_test
+jta_prestige_test
+jta_randomized_test
+jta_schedule_test
+omsi_randomized_test
+omsi_region_split_test
+omsi_scaled_test
+omsi_schedule_test
+omsi_substrate_test
+seedling_atlas
+seedling_atlas_maze
+seedling_atlas_sphere
+seedling_playthrough

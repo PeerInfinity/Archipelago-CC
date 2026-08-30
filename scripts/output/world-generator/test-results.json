@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "timestamp": "2026-06-30T04:01:24.201394+00:00",
+    "timestamp": "2026-08-30T17:03:42.617728+00:00",
     "seed": 1,
     "phase": "generate-test-worlds",
     "canonical_seed": 1,
@@ -15,19 +15,19 @@
     "cross_validation_failed": 0
   },
   "results": {
-    "shapez": {
-      "template": "shapez.yaml",
-      "game_name": "shapez",
-      "timestamp": "2026-06-30T04:01:27.445119+00:00",
+    "TOEM rule builder": {
+      "template": "TOEM rule builder.yaml",
+      "game_name": "TOEM rule builder",
+      "timestamp": "2026-08-30T17:03:45.703738+00:00",
       "original": {
         "generation": {
           "success": true,
           "seed_id": "AP_14089154938208861744",
-          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shapez/AP_14089154938208861744/AP_14089154938208861744_rules.json",
-          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shapez/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
-          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/shapez/AP_14089154938208861744",
+          "rules_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/toem_rule_builder/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+          "sphere_log_path": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/toem_rule_builder/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
+          "preset_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/frontend/presets/toem_rule_builder/AP_14089154938208861744",
           "error": null,
-          "processing_time_seconds": 4.52
+          "processing_time_seconds": 3.21
         },
         "spoiler_test": {
           "success": false,
@@ -38,9 +38,9 @@
       "test_world": {
         "world_generation": {
           "success": true,
-          "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/shapez_worldgen",
+          "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/toem_rule_builder_worldgen",
           "error": null,
-          "processing_time_seconds": 0.57
+          "processing_time_seconds": 0.55
         },
         "seed_generation": {
           "success": false
@@ -57,9 +57,9 @@
           "success": false,
           "pass_fail": "unknown"
         },
-        "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/shapez_worldgen",
-        "test_game_name": "shapez WorldGen",
-        "test_template_name": "shapez WorldGen.yaml"
+        "world_dir": "/home/runner/work/Archipelago-CC/Archipelago-CC/worlds/toem_rule_builder_worldgen",
+        "test_game_name": "TOEM rule builder WorldGen",
+        "test_template_name": "TOEM rule builder WorldGen.yaml"
       },
       "errors": {
         "generation": [],

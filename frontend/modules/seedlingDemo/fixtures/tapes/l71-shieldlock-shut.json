@@ -1,0 +1,34 @@
+{
+  "tape_version": 3,
+  "game": "seedling",
+  "name": "l71-shieldlock-shut",
+  "description": "THE POSITIVE CONTROL for l71-shieldlock-open, and the reason that fixture is evidence rather than a description. It is the SAME TAPE with ONE FIELD CHANGED: grants is empty, so Player.hasDarkShield is false and ShieldLock.update's condition ((hasDarkShield && shieldType == 1) || (hasShield && shieldType == 0)) is simply false — not slower, false. The lock is then an ordinary 16x16 Solid, and the game answers by pinning the player against its west face at x 285.95 for all 140 ticks, at y 264 rather than 263 because nothing ever snapped them, in level 71 rather than 76 because nothing ever opened. Without this, 'the player got through' is satisfied by a lock that was never there — the same vacuity l71-lock-shut closes for R2's button hold. The 100-tick gap in the input spans is inert here and kept deliberately: two tapes that differ in exactly one field are a claim about that field, and a shorter control would have been a claim about two.",
+  "boot": {
+    "level": 71,
+    "x": 256,
+    "y": 256
+  },
+  "noclip": false,
+  "noDamage": true,
+  "noHazards": [
+    "water",
+    "lava",
+    "ice",
+    "waterfall"
+  ],
+  "grants": [],
+  "persistence": [],
+  "tick_count": 140,
+  "inputs": [
+    {
+      "key": "right",
+      "from": 0,
+      "to": 19
+    },
+    {
+      "key": "right",
+      "from": 119,
+      "to": 140
+    }
+  ]
+}

@@ -1,0 +1,459 @@
+/**
+ * procgen/walkMoves — **WHICH COMMITTED WALKS TODAY'S SOLVER RE-SOLVES
+ * DIFFERENTLY, MEASURED; AND THE LICENCE THAT MAY PERMIT THEM.**
+ *
+ * R9 slice 12c′, ⚖ ruling 43 (user, 2026-08-23: *"I want the pipeline to be
+ * able to handle changes to existing tapes, not just adding new tapes. I
+ * expect this won't be the only time…"*).
+ *
+ * ── ⛔ THE LAW THIS MODULE EXISTS TO KEEP ─────────────────────────────
+ *
+ * `rerecord-seedling-campaign.mjs`'s sealed table has always been a
+ * PERMISSION, not a forecast (§18.4), and `walk-moves` was a STOP by design —
+ * *"a walk move is the user's licence, never this pipeline's"*. That STOP was
+ * enforced against a verdict **nothing measured**: S0 asserted no segment was
+ * PREDICTED to move its walk, which is true of a prediction nobody made.
+ *
+ * ⇒ this measures it instead, and ⚖ ruling 17 says to measure it out of the
+ * PRODUCERS: a producer's own `--check` re-solves every segment it owns from
+ * that segment's committed boot, and `walkReport.js` makes it say so field by
+ * field. **A walk move is an `inputs` move**, never a byte move — see that
+ * module for why the distinction is the whole point.
+ *
+ * ── ⛔⛔ THREE FILTERS, AND EVERY ONE OF THEM IS NEGATIVE ──────────────
+ *
+ * "which producer owns this segment", "which producer may participate" and
+ * "which segment moved" are all filters that answer by EXCLUDING, and a
+ * negative filter that looks like precision is the shape traps 579/580 name.
+ * So each one is calibrated against a KNOWN POSITIVE, in
+ * `walkMoves.test.js`:
+ *
+ * 1. **OWNERSHIP IS THE PRODUCER'S OWN CLAIM.** The candidate set is
+ *    NOMINATED by the segment tapes' `description` (which names its author),
+ *    but the ANSWER is each producer's own walk report — the segments it
+ *    actually emitted. ⛔ A description is what a tape SAYS ABOUT ITSELF:
+ *    `r7-ends-meet-1` names no producer at all and yet
+ *    `plan-seedling-r7-ends-meet.mjs:274` emits it. Trap 576 — ask what the
+ *    derivation is a derivation OF.
+ * 2. **PARTICIPATION IS THE PRODUCER'S OWN ARGV**, read out of the
+ *    instruments scan the procgen reference already publishes rather than
+ *    re-spelled here (⚖ ruling 38 (6)'s law, one directory over). A candidate
+ *    that does not accept `--walk-report` cannot be measured — and when the
+ *    same scan says it DRIVES A BROWSER, that mechanism is the reason
+ *    printed, because S0 is offline by contract and §26.6's law says a scratch
+ *    tree cannot run a browser stage at all.
+ * 3. **EVERY CHAIN SEGMENT MUST BE ACCOUNTED FOR — in exactly one report, or
+ *    in the named `unmeasured` list.** In neither is a STOP by name; in TWO is
+ *    a STOP by name (trap 578: a producer owning N segments must yield N
+ *    rows, and fewer is a STOP, never a zero).
+ *
+ * ── THE LICENCE ───────────────────────────────────────────────────────
+ *
+ * `--license-walks=<ruling-id>` turns the measured STOP into a permission for
+ * EXACTLY the measured set. It is refused BY NAME without an id, it can never
+ * WIDEN the set (the set IS the measurement, and a licence is checked against
+ * it rather than consulted for it), and every successor of a moved walk
+ * becomes `boot-only` automatically — its boot is its predecessor's latch and
+ * the predecessor's walk just changed.
+ */
+
+
+export class WalkMovesError extends Error {
+    constructor(message) { super(message); this.name = 'WalkMovesError'; }
+}
+const fail = (m) => { throw new WalkMovesError(m); };
+
+export const LICENSE_FLAG = '--license-walks';
+
+/**
+ * ⛔⛔ **THE PRODUCER'S OWN CHECK FLAG, AS A CONSTANT — AND THE REASON IS A
+ * DEFECT THIS SLICE SHIPPED AND THEN CAUGHT.**
+ *
+ * `standingValues.producerScripts` decides what is "a producer with a
+ * `--check`" by scanning every `solve-`/`plan-`/`rerecord-*.mjs` for the
+ * LITERAL `'--check'` **anywhere in its text**. S0's walk measurement SHELLS
+ * OUT to producers with that flag, so the moment the literal appeared inside
+ * `rerecord-seedling-campaign.mjs` the standing-values row list grew a
+ * `producer: rerecord-seedling-campaign --check` row — and that pipeline
+ * IGNORES unknown flags, so the "check" ran **the whole S0..S5 pipeline**,
+ * drove Windows Chrome, and would have baked a twenty-minute GPU row into the
+ * baseline every slice re-measures.
+ *
+ * ⇒ the flag is named HERE, in a `.js` the producer regex does not match, and
+ * the pipeline REFUSES `--check` by name (see its argv block) so the landmine
+ * is loud rather than silent if anything re-arms it.
+ *
+ * ⚠ The deeper fix belongs to the instrument: "contains the string" is not
+ * "reads it out of argv", and the instruments scan already answers the second
+ * question correctly. Not changed here — it would move the row LIST, which is
+ * the baseline ⚖ ruling 32 A makes the next slice's BEFORE.
+ */
+export const CHECK_FLAG = '--check';
+/** The one verdict a licence covers. */
+export const LICENSABLE = 'walk-moves';
+
+/**
+ * The producers a chain's segments NOMINATE — **DERIVED FROM THE PRODUCERS
+ * THEMSELVES**, never from the tapes' English.
+ *
+ * ── ⛔⛔⛔ WHAT THIS USED TO BE, AND WHY IT WAS WRONG ─────────────────
+ *
+ * It regexed `/scripts\/procgen\/([A-Za-z0-9._-]+\.mjs)/g` out of each
+ * committed tape's `description` — a sentence a human typed, standing in for a
+ * fact the producer already knows. ⚖ Ruling 17's opposite, and it had already
+ * decayed: `plan-seedling-r7-act2.mjs` is RETIRED (⚖ ruling 14) and three
+ * committed descriptions still name it, so the map contained a producer that
+ * is not in the tree. R9 slice P3 (C), trap 773.
+ *
+ * ⛓ THE OWNER OF A TAPE IS THE PRODUCER THAT EMITS IT, and each one now says
+ * so under `--segments` (`producerSegments.js`). The prose survives in exactly
+ * one place — `proseOwnerDisagreements`, the lint that requires it to AGREE.
+ *
+ * ⛔ THE MAP IS INJECTED, NOT LOOKED UP HERE, and that is what keeps the
+ * REHEARSAL honest: `--rehearse` runs the real pipeline against a FAKE tree
+ * whose producers are generated, and a function that reached into
+ * `scripts/procgen/` would answer about THIS repository while every other
+ * stage answered about the scratch one. The caller supplies the tree's own
+ * ownership; `rerecord-seedling-campaign.mjs` derives it from the producers
+ * and the rehearsal context reads it off its marker.
+ *
+ * @param {object[]} chains `[{segments, headline?}]`
+ * @param {object} opts
+ * @param {Map<string, string>} opts.owners tape name -> producer file
+ * @returns {Map<string, string[]>} producer file name -> the segments it owns
+ *   here, in chain order.
+ */
+export function nominateOwners(chains, { owners } = {}) {
+    if (!(owners instanceof Map)) {
+        fail('nominateOwners: `owners` must be a Map of tape -> producer file. It used to '
+            + "read the tapes' `description` prose; ownership is now DERIVED from the "
+            + 'producers themselves (`producerSegments.ownersByEmit`), and the map is passed '
+            + 'in so a REHEARSAL answers about its own tree.');
+    }
+    const out = new Map();
+    for (const chain of chains) {
+        // ⛓ R9 12e′ RE-RUN: a chain's HEADLINE is a tape a producer authors
+        //   too, so it nominates exactly the way a segment does. Derived from
+        //   the accounting universe's own row rather than re-read from
+        //   `PLAYTHROUGH_CHAINS`, so the two lists cannot drift apart.
+        for (const segment of [...chain.segments, ...(chain.headline ? [chain.headline] : [])]) {
+            const producer = owners.get(segment);
+            /**
+             * ⛔ A SEGMENT NOBODY CLAIMS TO EMIT IS SILENT HERE, not guessed.
+             * `reportRows` already says "no producer IT NOMINATED was blocked"
+             * for such a segment (trap 576's own shape), and inventing an owner
+             * would be the prose regex wearing a new coat.
+             */
+            if (!producer) continue;
+            if (!out.has(producer)) out.set(producer, []);
+            if (!out.get(producer).includes(segment)) out.get(producer).push(segment);
+        }
+    }
+    return out;
+}
+
+/**
+ * May a nominated producer be MEASURED, and if not, why — in the producer's
+ * own terms.
+ *
+ * @param {string[]} files nominated producer file names
+ * @param {object[]} instrumentRows `buildInstruments().rows` — the scan the
+ *   procgen reference publishes, not a second spelling of it.
+ */
+export function participationOf(files, { instrumentRows } = {}) {
+    if (!Array.isArray(instrumentRows)) {
+        fail('participationOf: needs `buildInstruments().rows` — the participation '
+            + 'predicate is the instruments scan\'s own reading of each producer\'s argv, '
+            + 'and a second spelling of it would decay separately');
+    }
+    const byFile = new Map(instrumentRows.map((r) => [r.file, r]));
+    return files.map((file) => {
+        const row = byFile.get(file) ?? null;
+        const participates = (row?.flags ?? []).some((f) => f.name === 'walk-report');
+        let why = null;
+        if (!row) {
+            why = `${file} is not in the instruments index at all, so nothing can be `
+                + 'derived about the flags it reads';
+        } else if (!participates) {
+            why = row.browser
+                ? `${file} DRIVES A BROWSER (the instruments scan reads a playwright `
+                    + 'import in its own source), and S0 is offline by contract — §26.6\'s '
+                    + 'law is that a scratch tree cannot run a browser stage at all, so a '
+                    + 'measurement taken there would be about the wrong tree. It does not '
+                    + `accept \`--walk-report\` and its segments cannot be licensed here`
+                : `${file} does not accept \`--walk-report\`, so it cannot report which of `
+                    + 'its walks moved';
+        }
+        return { file, participates, browser: row?.browser ?? null, why };
+    });
+}
+
+/**
+ * The per-segment rows, and the accounting that must balance.
+ *
+ * @param {object[]} reports each producer's own walk report (`walkReport.js`'s
+ *   `{producer, segments}`)
+ * @param {object[]} chains `[{id, segments}]`
+ * @param {object[]} unmeasurable `participationOf` rows that cannot participate
+ * @param {Map<string, string[]>} [nominations] `nominateOwners`' map, producer
+ *   -> the segments that nominated it. ⛔ R9 12e′: WITHOUT it an unmeasured
+ *   segment's `why` was every blocked producer's reason joined together, which
+ *   is a TRUE sentence about the WRONG SUBJECT — `r8-solve-20` was told it was
+ *   unmeasured because a producer it never nominated imports playwright. With
+ *   it, a segment names only the producers IT nominated, and a segment that
+ *   nominated nobody says that instead.
+ * @returns {{rows, unmeasured, stops}}
+ */
+export function reportRows(reports, chains, unmeasurable = [], nominations = null) {
+    const owner = new Map();
+    const stops = [];
+    for (const report of reports) {
+        for (const s of report.segments ?? []) {
+            if (owner.has(s.segment)) {
+                stops.push(`${s.segment} is reported by TWO producers — `
+                    + `${owner.get(s.segment).producer} and ${report.producer}. Ownership is `
+                    + 'the producer\'s own claim, so two claims is a defect in the tree, not '
+                    + 'a row to average');
+                continue;
+            }
+            owner.set(s.segment, { ...s, producer: report.producer });
+        }
+    }
+    const blocked = new Map();
+    for (const u of unmeasurable) blocked.set(u.file, u.why);
+    const rows = [];
+    const unmeasured = [];
+    /**
+     * ⛓⛓⛓ R9 12e′ RE-RUN — **THE HEADLINE IS ACCOUNTED FOR AS A ROW OF ITS
+     * OWN, AND IT CARRIES `role` SO NOTHING DOWNSTREAM HAS TO GUESS.** A
+     * headline is authored by the chain's own producer and reported by it, but
+     * it is NOT at an index in the walk: it has no successor to cascade to and
+     * no boot for S2 to write. So it gets `role: 'headline'` and an `index` one
+     * past the last segment — a position that reads in the table and that
+     * `cascadeFrom` refuses to take a `firstMove` from.
+     */
+    const accountOne = (chain, index, segment, role) => {
+        const hit = owner.get(segment);
+        if (hit) {
+            rows.push({ chain: chain.id, index, segment, role, ...hit });
+            return;
+        }
+        const mine = nominations
+            ? [...nominations.entries()]
+                .filter(([file, segs]) => segs.includes(segment) && blocked.has(file))
+                .map(([file]) => blocked.get(file))
+            : [...blocked.values()];
+        const why = mine.length
+            ? `no participating producer reported it — ${mine.join('; ')}`
+            : 'no producer reported it, and no producer IT NOMINATED was blocked — so '
+                + 'nothing in this tree claims to author it';
+        unmeasured.push({ chain: chain.id, index, segment, role, why });
+    };
+    for (const chain of chains) {
+        for (const [index, segment] of chain.segments.entries()) {
+            accountOne(chain, index, segment, 'segment');
+        }
+        if (chain.headline) {
+            accountOne(chain, chain.segments.length, chain.headline, 'headline');
+        }
+    }
+    return { rows, unmeasured, stops };
+}
+
+/**
+ * The segments a licence must cover: every `walk-moves` row, in chain order.
+ */
+export function movedSegments(rows) {
+    return rows.filter((r) => r.verdict === LICENSABLE)
+        .map((r) => ({ chain: r.chain, index: r.index, segment: r.segment,
+            role: r.role ?? 'segment',
+            producer: r.producer, before: r.committedTicks, after: r.solvedTicks }));
+}
+
+/**
+ * ⛓⛓ **THE CASCADE.** A moved walk ends somewhere new, so every SUCCESSOR in
+ * its chain boots from a latch that has changed — `boot-only`, automatically
+ * and without anybody typing a name.
+ *
+ * ⛔ IT IS THE FIRST MOVE THAT DECIDES, not each move: once segment `k` moves,
+ * everything after it is downstream whether or not it moved too.
+ *
+ * @returns {Map<chainId, {firstMove: number, successors: string[]}>}
+ */
+export function cascadeFrom(chains, moved) {
+    const first = new Map();
+    for (const m of moved) {
+        /**
+         * ⛔ A HEADLINE NEVER OPENS A CASCADE. It is the whole chain driven in
+         * one run, so it has no successor whose boot is its latch — and it
+         * sits at `index === segments.length`, which a naive `min` would
+         * simply never pick anyway. That is the accident, not the rule: a
+         * headline is excluded because of WHAT IT IS, so the row keeps
+         * meaning what it says if the index ever moves.
+         */
+        if ((m.role ?? 'segment') === 'headline') continue;
+        const at = first.get(m.chain);
+        if (at === undefined || m.index < at) first.set(m.chain, m.index);
+    }
+    const out = new Map();
+    for (const chain of chains) {
+        const at = first.get(chain.id);
+        if (at === undefined) continue;
+        out.set(chain.id, {
+            firstMove: at,
+            firstMoveSegment: chain.segments[at],
+            successors: chain.segments.slice(at + 1),
+        });
+    }
+    return out;
+}
+
+/**
+ * ⛓⛓⛓ R9 SLICE 12e′ RE-RUN — **THE ORDER THE LICENSED PRODUCERS MUST RUN IN,
+ * AND IT IS A DERIVATION FROM THE CHAINS RATHER THAN A LIST.**
+ *
+ * ⛔ THE DEFECT THIS EXISTS FOR, MEASURED. `spendWalkLicence` ran the licensed
+ * producers in SORTED FILE ORDER. `r8-solve-18` is the FIRST segment of the
+ * `r8-d2` chain and is owned by `solve-seedling-r8-l18.mjs`; the rest of that
+ * chain is owned by `solve-seedling-r8-d2-chain.mjs` — which sorts EARLIER. So
+ * the chain producer ran first, drove the game for the latch of the tape the
+ * series was about to replace (the committed 541-tick `r8-solve-18`, observed
+ * as `REPLAY_OK ticks=542`), and solved `r8-d2-19` from a predecessor that no
+ * longer exists. It then reported that the headline's first 541 ticks were not
+ * its segment's walk — a true statement about a stale artifact.
+ *
+ * ⛓ THE RULE IS THE CHAIN'S OWN SHAPE. A producer solves segment k from
+ * segment k−1's MEASURED LATCH, so every producer owning a segment EARLIER in
+ * a chain must finish before a producer owning a later one. Nothing about
+ * "promotion" is named here: a promoted segment is simply one whose owner is a
+ * different producer, and the edge falls out of the indices.
+ *
+ * ⛔ EDGES ARE DROPPED, NEVER INVENTED, FOR A PRODUCER THAT IS NOT RUNNING. A
+ * predecessor whose walk did not move is not re-authored, so its tape is
+ * already final and it constrains nothing.
+ *
+ * ⛔ A CYCLE REFUSES BY NAME. Two chains that order the same pair of producers
+ * oppositely cannot both be satisfied, and picking one silently would make the
+ * run's answer depend on which chain was declared first.
+ *
+ * ⛔⛔ AND AN EMPTY `rows` WITH MORE THAN ONE PRODUCER REFUSES BY NAME TOO — a
+ * defect this function shipped with and R9 slice 12e′ (third run) caught. With
+ * no rows there are no edges, every producer is ready in wave one, and the tie
+ * break hands back `[...set].sort()`: **the file system's order, which is the
+ * exact thing this function was written to replace.** The caller cannot have
+ * measured an empty chain set and still have a licence to spend, so an empty
+ * `rows` here always means the rows were LOST between S0 and S1 — and a lost
+ * guarantee that degrades silently into the behaviour it guards against is
+ * worse than no guarantee at all. One producer needs no order, so that case
+ * still answers.
+ *
+ * @param {object[]} rows `reportRows`' rows — every chain segment with its
+ *   owner, in chain order (NOT just the movers).
+ * @param {string[]} running the producer files the licence will actually run
+ * @returns {string[]} the same set, in an order every chain agrees with; ties
+ *   broken by name so the run is reproducible.
+ */
+export function producerOrder(rows, running) {
+    const set = new Set(running);
+    if (!rows.length && set.size > 1) {
+        fail(`producerOrder: asked to order ${set.size} producers `
+            + `(${[...set].sort().join(', ')}) from ZERO report rows. With no rows there `
+            + 'are no edges and the answer degrades to `[...running].sort()` — the FILE '
+            + 'SYSTEM\'S order, which is the defect this function replaced (R9 12e′ §35.4). '
+            + 'A licence with segments in it always has rows behind it, so this means the '
+            + 'caller lost `walk.rows` between S0 and S1, not that the chains are empty.');
+    }
+    const before = new Map([...set].map((f) => [f, new Set()]));
+    const byChain = new Map();
+    for (const r of rows) {
+        if (!r.producer || !set.has(r.producer)) continue;
+        if (!byChain.has(r.chain)) byChain.set(r.chain, []);
+        byChain.get(r.chain).push(r);
+    }
+    for (const chainRows of byChain.values()) {
+        const ordered = [...chainRows].sort((a, b) => a.index - b.index);
+        for (let i = 0; i < ordered.length; i += 1) {
+            for (let j = i + 1; j < ordered.length; j += 1) {
+                const earlier = ordered[i].producer;
+                const later = ordered[j].producer;
+                if (earlier !== later) before.get(later).add(earlier);
+            }
+        }
+    }
+    const out = [];
+    const done = new Set();
+    while (out.length < set.size) {
+        const ready = [...set].filter((f) => !done.has(f)
+            && [...before.get(f)].every((d) => done.has(d))).sort();
+        if (!ready.length) {
+            const stuck = [...set].filter((f) => !done.has(f)).sort();
+            fail('producerOrder: the chains order these producers in a CYCLE — '
+                + `${stuck.map((f) => `${f} after [${[...before.get(f)].sort().join(', ')}]`)
+                    .join('; ')}. A producer solves each segment from its predecessor's `
+                + 'latch, so a cycle means two chains disagree about which tape is final '
+                + 'first, and picking one would make the run depend on declaration order.');
+        }
+        for (const f of ready) { out.push(f); done.add(f); }
+    }
+    return out;
+}
+
+/**
+ * The licence, read off argv.
+ *
+ * ⛔ REFUSED BY NAME WITHOUT A RULING ID. The whole value of the flag is that
+ * the sealed table can say WHOSE permission this was; a bare `--license-walks`
+ * would write tapes under nobody's authority.
+ *
+ * @returns {?{ruling: string}} `null` when the flag is absent.
+ */
+export function licenceFrom(argv = process.argv) {
+    const token = argv.find((a) => a === LICENSE_FLAG || a.startsWith(`${LICENSE_FLAG}=`));
+    if (token === undefined) return null;
+    const ruling = token === LICENSE_FLAG ? '' : token.slice(LICENSE_FLAG.length + 1).trim();
+    if (ruling === '') {
+        fail(`${LICENSE_FLAG} is REFUSED without a ruling id — \`${LICENSE_FLAG}=<ruling-id>\`. `
+            + 'A walk move is the user\'s licence, never this pipeline\'s, so the table has '
+            + 'to be able to say whose permission it was. Nothing is written.');
+    }
+    return { ruling };
+}
+
+/**
+ * ⛓ THE LICENCE IS CHECKED AGAINST THE MEASUREMENT, NEVER CONSULTED FOR IT.
+ * It can only ever say *"the measured set is permitted"* — it has no way to
+ * name a segment, so it has no way to widen.
+ *
+ * @returns {{permitted: object[], stops: string[], sealed: ?object}}
+ */
+export function applyLicence(moved, licence) {
+    if (moved.length === 0) {
+        return {
+            permitted: [],
+            stops: [],
+            sealed: licence
+                ? { ruling: licence.ruling, segments: [], note: 'the licence was offered and '
+                    + 'the measured set is EMPTY — nothing moved, so nothing was permitted' }
+                : null,
+        };
+    }
+    if (!licence) {
+        return {
+            permitted: [],
+            sealed: null,
+            stops: moved.map((m) => `${m.segment} RE-SOLVES DIFFERENTLY (${m.before} t `
+                + `committed against ${m.after} t today) and no licence was given. A walk `
+                + `move is the user's licence, never this pipeline's — re-run with `
+                + `\`${LICENSE_FLAG}=<ruling-id>\` if it is permitted`),
+        };
+    }
+    return {
+        permitted: moved.slice(),
+        stops: [],
+        sealed: {
+            ruling: licence.ruling,
+            segments: moved.map((m) => ({ segment: m.segment, chain: m.chain,
+                producer: m.producer, before: m.before, after: m.after })),
+        },
+    };
+}

@@ -1,0 +1,58 @@
+{
+  "name": "buy-tiers-v1",
+  "options": {
+    "modOverrides": {},
+    "maxRuns": 1000,
+    "purchasePolicy": {
+      "kind": "tiers",
+      "list": [
+        {
+          "unlock": "Divine Inspiration"
+        },
+        {
+          "repeatable": "Divine Knowledge",
+          "count": 4
+        },
+        {
+          "repeatable": "Gotta Go Fast",
+          "count": 3
+        },
+        {
+          "unlock": "Look in the Mirror"
+        },
+        {
+          "unlock": "Transcendant Memory"
+        },
+        {
+          "repeatable": "Transcendant Aptitude",
+          "count": 3
+        },
+        {
+          "unlock": "Fully Attuned"
+        },
+        {
+          "repeatable": "Divine Appetite",
+          "count": 2
+        },
+        {
+          "unlock": "Mastery of Time"
+        },
+        {
+          "unlock": "See Beyond the Veil"
+        },
+        {
+          "unlock": "Perky"
+        },
+        {
+          "unlock": "Permanent Automation"
+        },
+        {
+          "unlock": "Compulsive Notetaking"
+        },
+        {
+          "unlock": "Crafting Breakthrough"
+        }
+      ]
+    }
+  }
+}

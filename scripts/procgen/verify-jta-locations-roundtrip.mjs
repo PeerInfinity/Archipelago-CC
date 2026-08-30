@@ -1,0 +1,421 @@
+#!/usr/bin/env node
+/**
+ * Phase 1 round-trip verification for the jta zone-locations channel
+ * (plan §2b enabler). Proves that jta task locations + their sidecar
+ * payload fields (ap_locations, jtaZone) + the sphere log survive the
+ * whole toolchain:
+ *
+ *   JS pipeline (extractZoneRules → buildRulesJson)
+ *     → world_generator            (Locations.py, _worldgen_sidecars.json)
+ *     → Generate.py                (exported rules.json + sphere log + spoiler)
+ *
+ * These are Pass B's inputs: the in-app rebalance (a later phase) reads
+ * the exported rules.json's preset_sidecars (ap_locations) and the
+ * sphere log at rules-load time. If anything drops here, the pass-through
+ * is a Phase 1 fix — so this asserts each survives.
+ *
+ * Runs entirely in a throwaway world/preset (jta_loctest_roundtrip*) and
+ * cleans up after itself (world dir, preset dir, preset_files.json).
+ * Requires the repo Python env (world_generator + Generate.py). Run:
+ *   node scripts/procgen/verify-jta-locations-roundtrip.mjs
+ *
+ * Phase 3a additionally asserts the loose count-based access rules
+ * (HasFromListUnique) survive the toolchain AND actually do their job:
+ * the exported sphere log must be NON-DEGENERATE (more than one sphere,
+ * with Victory out of logic in sphere 0). Before those rules existed every
+ * location was `True_`, the whole game collapsed into sphere 0, and the
+ * §2b balancing pass had no progression order to walk.
+ *
+ * Phase 5d: JTA_RT_DATASET=1 runs the same round trip on a GENERATED
+ * synthetic dataset (seed=SEED — or JTA_RT_DATASET_SEED to decouple the
+ * dataset from the fill seed, so a batch can cross datasets × fill seeds
+ * (Phase 5e §4.2 measurement pass) — zoneCount=QUOTA) and additionally asserts
+ * the dataset carriage (single-carrier + refs) survives every hop intact:
+ * exactly one Pass-A sidecar carries the full `jta_dataset` document and
+ * all of them carry `jta_dataset_ref`; world_generator and Generate.py
+ * preserve both; and procgenPlayer's buildWarehouse resolves the refs so
+ * every jta region's world holds the full, structurally identical
+ * document. Default (unset) stays the vanilla-data round trip.
+ */
+
+import { execFileSync } from 'node:child_process';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
+const here = path.dirname(fileURLToPath(import.meta.url));
+const repoRoot = path.resolve(here, '../..');
+const WORLD_DIR = path.join(repoRoot, 'worlds/jta_loctest_roundtrip_worldgen');
+const GAME_NAME = 'JtA LocTest Roundtrip';
+const PRESET_DIR = path.join(repoRoot, 'frontend/presets/jta_loctest_roundtrip_worldgen');
+const PRESET_FILES_JSON = path.join(repoRoot, 'frontend/presets/preset_files.json');
+const OUTPUT_DIR = path.join(repoRoot, 'output');
+// Drives BOTH the pipeline's perk shuffle and Generate.py's fill, so a
+// different seed is a genuinely different world (different perk placements,
+// different sphere log). JTA_RT_SEED lets Phase 4 check that emergent location
+// coverage holds across seeds rather than on the one seed the balance pass was
+// developed against. Default 1 keeps the canonical AP_14089154938208861744.
+const SEED = Number(process.env.JTA_RT_SEED || 1);
+// Zone count. 3 keeps the round trip fast; JTA_RT_QUOTA=15 exercises the real
+// v1 scope (zones 0–14), where zone 14 demands 14 perks out of a 21-perk pool
+// — the configuration where the count-based gates are most likely to strand
+// fill.
+const QUOTA = Number(process.env.JTA_RT_QUOTA || 3);
+const tmpRules = path.join(repoRoot, 'scripts/procgen/.jta-roundtrip-rules.json');
+const tmpTemplates = path.join(repoRoot, 'scripts/procgen/.jta-roundtrip-templates');
+
+const py = fs.existsSync(path.join(repoRoot, '.venv/bin/python'))
+    ? path.join(repoRoot, '.venv/bin/python')
+    : 'python3';
+
+let failures = 0;
+const ok = (cond, msg) => {
+    console.log(`${cond ? 'PASS' : 'FAIL'}: ${msg}`);
+    if (!cond) failures++;
+};
+const run = (cmd, args, opts = {}) =>
+    execFileSync(cmd, args, { cwd: repoRoot, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], ...opts });
+
+// Snapshot preset_files.json so Generate.py's mutation can be reverted.
+const presetFilesBefore = fs.existsSync(PRESET_FILES_JSON)
+    ? fs.readFileSync(PRESET_FILES_JSON, 'utf8') : null;
+
+function cleanup() {
+    // The generator's scaffolding — world_generator's input and the yaml
+    // templates Generate.py reads. Nobody inspects these, so they go even under
+    // JTA_RT_KEEP; left behind, they are untracked litter a `git add -A` during
+    // a sweep will happily commit.
+    fs.rmSync(tmpTemplates, { recursive: true, force: true });
+    fs.rmSync(tmpRules, { force: true });
+
+    // JTA_RT_KEEP=1 leaves the generated world/preset in place for inspection
+    // (the exported sphere log is Pass B's input — handy to eyeball), and
+    // sweep-ap-seeds.mjs relies on it to hand the export to the driver.
+    if (process.env.JTA_RT_KEEP) {
+        console.log(`\n[kept] world=${WORLD_DIR}\n[kept] preset=${PRESET_DIR}`);
+        if (presetFilesBefore !== null) fs.writeFileSync(PRESET_FILES_JSON, presetFilesBefore);
+        return;
+    }
+    for (const p of [WORLD_DIR, PRESET_DIR]) {
+        fs.rmSync(p, { recursive: true, force: true });
+    }
+    // Seed id is a hash of SEED, so remove whichever export zip this run made.
+    if (fs.existsSync(OUTPUT_DIR)) {
+        for (const f of fs.readdirSync(OUTPUT_DIR)) {
+            if (/^AP_\d+\.zip$/.test(f)) fs.rmSync(path.join(OUTPUT_DIR, f), { force: true });
+        }
+    }
+    if (presetFilesBefore !== null) fs.writeFileSync(PRESET_FILES_JSON, presetFilesBefore);
+}
+
+try {
+    // A previous JTA_RT_KEEP=1 run leaves its export behind, and the seed id is
+    // a hash of SEED — so without this a re-run at a new seed would find two
+    // AP_* dirs and could not tell which one it just generated.
+    fs.rmSync(PRESET_DIR, { recursive: true, force: true });
+    fs.rmSync(WORLD_DIR, { recursive: true, force: true });
+
+    // --- Pass A: JS pipeline ------------------------------------------
+    // Substrate libraries register on import.
+    await import(pathToFileURL(path.join(repoRoot, 'frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js')));
+    const jtaLib = await import(pathToFileURL(path.join(repoRoot, 'frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js')));
+    const engine = await import(pathToFileURL(path.join(repoRoot, 'frontend/modules/procgenPipeline/procgenPipelineEngine.js')));
+    const { substrateRegistry } = await import(pathToFileURL(path.join(repoRoot, 'frontend/modules/shared/procgen/substrateRegistry.js')));
+
+    // Phase 5d: synthetic-dataset mode. The generated document becomes the
+    // world's game data; the library switches its zone/perk source to it.
+    let dataset = null;
+    if (process.env.JTA_RT_DATASET) {
+        const { generateJtaDataset } = await import(pathToFileURL(
+            path.join(repoRoot, 'frontend/modules/jtaSubstrateWrapper/generateDataset.js')));
+        const profile = JSON.parse(fs.readFileSync(
+            path.join(repoRoot, 'CC/scripts/jta-stats/results/vanilla-profile.json'), 'utf8')).static;
+        const vanillaFixture = JSON.parse(fs.readFileSync(path.join(repoRoot,
+            'frontend/modules/jtaSubstrateWrapper/datasets/vanilla.json'), 'utf8'));
+        // JTA_RT_DATASET_SEED decouples the dataset identity from the fill
+        // seed (default: coupled, the 5d behavior).
+        // JTA_RT_DATASET_FILE bypasses generation entirely and uses the given
+        // document verbatim (hand-edited / departure experiments). The file
+        // skips generateJtaDataset's validator+C4 gates by design; the fork's
+        // loadGameData validation still applies downstream.
+        if (process.env.JTA_RT_DATASET_FILE) {
+            dataset = JSON.parse(fs.readFileSync(process.env.JTA_RT_DATASET_FILE, 'utf8'));
+        } else {
+            const datasetSeed = Number(process.env.JTA_RT_DATASET_SEED || SEED);
+            dataset = generateJtaDataset({
+                seed: datasetSeed, profile, vanilla: vanillaFixture, params: { zoneCount: QUOTA },
+            }).dataset;
+        }
+        jtaLib.setJtaDataset(dataset);
+        console.log(`[dataset mode] ${dataset.dataset_id}`);
+    }
+
+    // Phase 2: the library emits a real 'Victory'-bearing location in the
+    // goal zone (setJtaGoalZone) and can shuffle perk placement in-pipeline
+    // (setJtaPerkShuffleSeed) — no scaffolding. arrangeShuffledSpiral maps
+    // the Nth jta region to zone N, so the deepest emitted zone is QUOTA-1.
+    //
+    // JTA_RT_PIPELINE (stepped-spiral Part 3 gate b): produce the grid via the
+    // stepped spiral pipeline + the ② content config seam (a "pipeline-initiated
+    // dataset") instead of the setJta* globals + monolithic arrangeShuffledSpiral.
+    // The two are byte-identical (dump-spiral-byteidentity), so this proves the
+    // config-seam path — not just the global-install path — survives the whole
+    // world_generator + Generate.py toolchain. Compile stays the guard's own
+    // buildRulesJson below (it pins Victory via lockedCanonicalItems, which the
+    // stepped ④ compile doesn't); only grid production (the dataset carriage) is
+    // under test here.
+    let grid, startCell;
+    if (process.env.JTA_RT_PIPELINE) {
+        const spiral = await import(pathToFileURL(
+            path.join(repoRoot, 'frontend/modules/procgenPipeline/spiralSteps.js')));
+        const jtaCfg = {
+            ...(dataset ? { datasetDoc: dataset } : {}),
+            emitZoneLocations: true, goalZone: QUOTA - 1, perkShuffleSeed: SEED,
+        };
+        const env = await spiral.runSpiralToStep(spiral.newSpiralEnvelope({
+            config: {
+                regionSize: { width: 8, height: 6 }, itemPool: {}, obstaclePool: {}, seed: SEED,
+                growthParams: {
+                    substrateQuotas: { jta: QUOTA }, assumeBidirectional: true,
+                    startSubstrate: 'jta', substrateConfig: { jta: jtaCfg },
+                },
+            },
+            compileIn: { seed: SEED },
+        }), 'regions');
+        ({ grid, startCell } = env.regions);
+        console.log('[pipeline mode] grid via stepped spiral + ② content config seam');
+    } else {
+        jtaLib.setJtaEmitZoneLocations(true);
+        jtaLib.setJtaGoalZone(QUOTA - 1);
+        jtaLib.setJtaPerkShuffleSeed(SEED);
+        ({ grid, startCell } = engine.arrangeShuffledSpiral({
+            regionSize: { width: 8, height: 6 }, itemPool: {}, obstaclePool: {}, seed: SEED,
+            growthParams: { substrateQuotas: { jta: QUOTA }, assumeBidirectional: true, startSubstrate: 'jta' },
+        }));
+    }
+
+    // Confirm exactly one Victory item landed in the pool (the goal item),
+    // emitted by the library rather than injected by the test.
+    const victoryName = substrateRegistry.get('jta').victoryItem;
+    let victoryLocs = 0;
+    for (const [, region] of grid.cells) {
+        for (const l of (region.extracted_rules?.locations ?? [])) {
+            if (l.item === victoryName) victoryLocs++;
+        }
+    }
+    ok(victoryLocs === 1, `Pass A: library emitted exactly one 'Victory' location (${victoryLocs})`);
+
+    const rules = engine.buildRulesJson(grid, {
+        startCell, seed: SEED,
+        completionConditionItem: victoryName,
+        // Pin Victory to the goal-zone slot the library chose. Without this
+        // AP fill treats it as an ordinary progression item and can shuffle
+        // it into free zone 0, making the seed winnable at sphere 0 — the
+        // zone gates then order everything except the goal.
+        //
+        // Both options are required: lockedCanonicalItems stamps locked:true
+        // on the compiled location, and procgen_metadata is what makes
+        // world_generator set honor_locked_placements (extractors.py:1367) so
+        // a non-event locked item survives into LOCKED_PLACEMENTS rather than
+        // being treated as a mere canonical placement and re-randomized.
+        lockedCanonicalItems: [victoryName],
+        procgenMetadata: { driver: 'top-down' },
+    });
+
+    const allRegions = Object.values(rules.regions).flatMap((byName) => Object.values(byName));
+    const locCount = allRegions.reduce((a, r) => a + (r.locations?.length ?? 0), 0);
+    ok(locCount > 0, `Pass A: rules.json carries ${locCount} jta task locations`);
+
+    const sidecars = Object.values(rules.preset_sidecars ?? {}).flatMap((byName) => Object.values(byName));
+    const withAp = sidecars.filter((s) => (s.playable_payload ?? s).ap_locations);
+    ok(withAp.length === QUOTA, `Pass A: all ${QUOTA} sidecars carry ap_locations (${withAp.length})`);
+    ok(sidecars.every((s) => typeof (s.playable_payload ?? s).jtaZone === 'number'),
+        'Pass A: every sidecar carries jtaZone');
+    ok(sidecars.every((s) => Array.isArray((s.playable_payload ?? s).task_patches)),
+        'Pass A: every sidecar carries task_patches (grant-suppression delivery seam)');
+    const totalPatches = sidecars.reduce(
+        (a, s) => a + ((s.playable_payload ?? s).task_patches?.length ?? 0), 0);
+    ok(totalPatches > 0, `Pass A: task_patches emitted (${totalPatches} perk-task suppressions)`);
+    ok(Array.isArray(rules.sphere_log) && rules.sphere_log.length > 0,
+        `Pass A: sphere_log emitted (${rules.sphere_log?.length} entries)`);
+
+    // Phase 3a: loose count-based zone gating. arrangeShuffledSpiral maps the
+    // Nth jta region to zone N, and free_zones=1 ⇒ zone Z needs Z perks.
+    const byZoneIdx = new Map();
+    for (const [, region] of grid.cells) {
+        const zoneIdx = (region.playable_payload ?? {}).jtaZone;
+        if (typeof zoneIdx === 'number') byZoneIdx.set(zoneIdx, region);
+    }
+    ok(byZoneIdx.size === QUOTA, `Pass A: ${QUOTA} zones mapped by jtaZone`);
+    const zone0Locs = byZoneIdx.get(0).extracted_rules.locations;
+    ok(zone0Locs.every((l) => !l.access_rule),
+        'Pass A: free zone 0 carries no access_rule (True_ default)');
+    for (let z = 1; z < QUOTA; z++) {
+        const locs = byZoneIdx.get(z).extracted_rules.locations;
+        const gated = locs.filter((l) => l.access_rule?.rule === 'HasFromListUnique'
+            && l.access_rule.args.count === z);
+        ok(gated.length === locs.length,
+            `Pass A: all ${locs.length} zone-${z} locations gated on ${z} perk(s)`);
+    }
+    // The placeable perk names of the ACTIVE source — the dataset's when
+    // one is loaded, vanilla's otherwise.
+    const activePerkNames = dataset
+        ? dataset.zones.flatMap((z) => z.tasks
+            .filter((t) => t.perk != null)
+            .map((t) => dataset.perks[t.perk].name))
+        : jtaLib.JTA_PERK_ITEM_NAMES;
+    const universe = zone0Locs.length && byZoneIdx.get(1).extracted_rules.locations[0]
+        .access_rule.args.item_names;
+    ok(Array.isArray(universe) && universe.length >= QUOTA - 1
+        && universe.every((n) => activePerkNames.includes(n)),
+        `Pass A: access-rule item_names are ${universe.length} real perk names`);
+
+    // Phase 5d dataset carriage: exactly one carrier + a ref on every region.
+    const canonical = (o) => JSON.stringify(o, (k, v) => (
+        v && typeof v === 'object' && !Array.isArray(v)
+            ? Object.fromEntries(Object.entries(v).sort(([a], [b]) => (a < b ? -1 : 1)))
+            : v));
+    // Region payloads inside an arbitrarily nested sidecar container
+    // (player-keyed, region-keyed, or bare) — a jta payload is any object
+    // with a numeric jtaZone.
+    const collectJtaPayloads = (node, out = []) => {
+        if (!node || typeof node !== 'object') return out;
+        if (typeof node.jtaZone === 'number') { out.push(node); return out; }
+        for (const v of Object.values(node)) collectJtaPayloads(v, out);
+        return out;
+    };
+    const assertCarriage = (label, payloads) => {
+        const carriers = payloads.filter((p) => p.jta_dataset);
+        const refs = payloads.filter((p) => p.jta_dataset_ref);
+        ok(carriers.length === 1, `${label}: exactly one sidecar carries jta_dataset (${carriers.length})`);
+        ok(refs.length === QUOTA && refs.every((p) =>
+            p.jta_dataset_ref.dataset_id === dataset.dataset_id
+            && p.jta_dataset_ref.schema_version === dataset.schema_version),
+        `${label}: all ${QUOTA} sidecars carry a matching jta_dataset_ref`);
+        ok(carriers.length === 1 && canonical(carriers[0].jta_dataset) === canonical(dataset),
+            `${label}: carried jta_dataset is structurally identical to the generated document`);
+    };
+    if (dataset) {
+        assertCarriage('Pass A', sidecars.map((s) => s.playable_payload ?? s));
+    }
+
+    fs.writeFileSync(tmpRules, JSON.stringify(rules, null, 2));
+
+    // --- world_generator ---------------------------------------------
+    run(py, ['-m', 'world_generator', tmpRules, '-o', WORLD_DIR,
+        '--game-name', GAME_NAME, '--force']);
+    const locationsPy = fs.readFileSync(path.join(WORLD_DIR, 'Locations.py'), 'utf8');
+    const wgLocs = new Set(locationsPy.match(/region_\d+_\d+__\d+/g) ?? []).size;
+    ok(wgLocs === locCount, `world_generator: Locations.py has all ${locCount} jta locations (${wgLocs})`);
+    const wgSidecars = JSON.parse(fs.readFileSync(path.join(WORLD_DIR, '_worldgen_sidecars.json'), 'utf8'));
+    const wgStr = JSON.stringify(wgSidecars);
+    ok((wgStr.match(/ap_locations/g) ?? []).length === QUOTA,
+        `world_generator: _worldgen_sidecars.json keeps ap_locations for all ${QUOTA} zones`);
+    ok((wgStr.match(/jtaZone/g) ?? []).length === QUOTA,
+        `world_generator: _worldgen_sidecars.json keeps jtaZone for all ${QUOTA} zones`);
+    ok((wgStr.match(/task_patches/g) ?? []).length === QUOTA,
+        `world_generator: _worldgen_sidecars.json keeps task_patches for all ${QUOTA} zones`);
+    const rulesPy = fs.readFileSync(path.join(WORLD_DIR, 'Rules.py'), 'utf8');
+    ok(rulesPy.includes('HasFromListUnique'),
+        'world_generator: Rules.py emits HasFromListUnique zone gates');
+    if (dataset) {
+        assertCarriage('world_generator', collectJtaPayloads(wgSidecars));
+    }
+
+    // --- Generate.py --------------------------------------------------
+    run(py, ['-c', `from Options import generate_yaml_templates; generate_yaml_templates(${JSON.stringify(tmpTemplates)})`]);
+    run(py, ['Generate.py', '--weights_file_path', path.join(tmpTemplates, `${GAME_NAME}.yaml`),
+        '--multi', '1', '--seed', String(SEED)]);
+
+    // Discover the export dir rather than hardcoding seed 1's id — the seed id
+    // is a hash of SEED, so JTA_RT_SEED changes it. PRESET_DIR is wiped before
+    // Pass A, so exactly one AP_* dir exists here.
+    const apDirs = fs.readdirSync(PRESET_DIR).filter((n) => n.startsWith('AP_'));
+    if (apDirs.length !== 1) {
+        throw new Error(`expected exactly one AP_* export in ${PRESET_DIR}, found ${apDirs.length}: ${apDirs}`);
+    }
+    const seedId = apDirs[0];
+    const apDir = path.join(PRESET_DIR, seedId);
+    const exportedRules = JSON.parse(fs.readFileSync(path.join(apDir, `${seedId}_rules.json`), 'utf8'));
+    const exStr = JSON.stringify(exportedRules.preset_sidecars ?? {});
+    ok('preset_sidecars' in exportedRules, 'Generate.py: exported rules.json keeps preset_sidecars');
+    ok((exStr.match(/ap_locations/g) ?? []).length === QUOTA,
+        `Generate.py: exported sidecars keep ap_locations for all ${QUOTA} zones`);
+    ok((exStr.match(/jtaZone/g) ?? []).length === QUOTA,
+        `Generate.py: exported sidecars keep jtaZone for all ${QUOTA} zones`);
+    ok((exStr.match(/task_patches/g) ?? []).length === QUOTA,
+        `Generate.py: exported sidecars keep task_patches for all ${QUOTA} zones`);
+    const exLocs = Object.values(exportedRules.regions ?? {})
+        .flatMap((byName) => Object.values(byName))
+        .reduce((a, r) => a + (r.locations ?? []).filter((l) => (l.name ?? '').includes('__')).length, 0);
+    ok(exLocs === locCount, `Generate.py: exported rules.json keeps all ${locCount} jta locations (${exLocs})`);
+    if (dataset) {
+        assertCarriage('Generate.py', collectJtaPayloads(exportedRules.preset_sidecars ?? {}));
+
+        // Warehouse resolution: the REAL registry adapter + buildWarehouse
+        // hand every jta region the full document (single-carrier refs
+        // resolved host-side) — this is exactly what the bridge receives.
+        const { buildWarehouse } = await import(pathToFileURL(
+            path.join(repoRoot, 'frontend/modules/procgenPlayer/procgenPlayerEngine.js')));
+        const playerId = Object.keys(exportedRules.preset_sidecars)[0];
+        const warehouse = buildWarehouse(exportedRules, playerId, substrateRegistry,
+            { logger: { warn: (m) => console.log(`  [warehouse] ${m}`) } });
+        const jtaWorlds = warehouse.keys()
+            .map((r) => warehouse.get(r))
+            .filter((e) => e.substrate === 'jta')
+            .map((e) => e.world);
+        ok(jtaWorlds.length === QUOTA
+            && jtaWorlds.every((w) => canonical(w.jta_dataset) === canonical(dataset)),
+        `warehouse: all ${QUOTA} jta regions resolved to the full dataset document`);
+    }
+
+    const sphereLines = fs.readFileSync(path.join(apDir, `${seedId}_sphere_log.jsonl`), 'utf8')
+        .split('\n').filter(Boolean).map((l) => JSON.parse(l));
+    const sphereLocs = new Set();
+    for (const e of sphereLines) {
+        for (const pd of Object.values(e.player_data ?? {})) {
+            for (const l of (pd.new_accessible_locations ?? [])) sphereLocs.add(l);
+            for (const l of (pd.checked_locations ?? [])) sphereLocs.add(l);
+        }
+    }
+    const jtaInSphere = [...sphereLocs].filter((l) => l.includes('__')).length;
+    ok(jtaInSphere === locCount, `Generate.py: sphere log references all ${locCount} jta locations (${jtaInSphere})`);
+
+    // Phase 3a: the sphere log must be NON-DEGENERATE — the whole point of the
+    // access rules. Integer sphere indices are real progression steps;
+    // fractional ones ("0.1") are AP collecting already-reachable progression
+    // items within a sphere. Before the rules existed there was exactly one
+    // integer sphere and Victory sat in logic at sphere 0.
+    const updates = sphereLines.filter((e) => e.type === 'state_update');
+    const intSpheres = new Set(updates
+        .map((e) => Math.floor(Number(e.sphere_index)))
+        .filter((n) => Number.isFinite(n)));
+    ok(intSpheres.size > 1,
+        `Generate.py: sphere log is non-degenerate (${intSpheres.size} progression spheres)`);
+
+    const victoryLocName = Object.values(exportedRules.regions ?? {})
+        .flatMap((byName) => Object.values(byName))
+        .flatMap((r) => r.locations ?? [])
+        .find((l) => l.item?.name === victoryName)?.name;
+    ok(!!victoryLocName, `Generate.py: Victory placed on a location (${victoryLocName})`);
+    const sphere0 = updates.find((e) => String(e.sphere_index) === '0');
+    const sphere0Accessible = Object.values(sphere0?.player_data ?? {})
+        .flatMap((pd) => pd.new_accessible_locations ?? []);
+    ok(!sphere0Accessible.includes(victoryLocName),
+        'Generate.py: Victory is NOT in logic at sphere 0 (zone gates hold)');
+
+    const spoiler = fs.readFileSync(path.join(apDir, `${seedId}_Spoiler.txt`), 'utf8');
+    const spoilerLocs = new Set(spoiler.match(/region_\d+_\d+__\d+/g) ?? []).size;
+    ok(spoilerLocs === locCount, `Generate.py: spoiler lists all ${locCount} jta locations (${spoilerLocs})`);
+} finally {
+    cleanup();
+}
+
+console.log(failures === 0
+    ? '\nAll round-trip assertions passed.'
+    : `\n${failures} assertion(s) FAILED.`);
+process.exit(failures === 0 ? 0 : 1);

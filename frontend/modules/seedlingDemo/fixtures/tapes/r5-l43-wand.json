@@ -1,0 +1,81 @@
+{
+  "tape_version": 6,
+  "game": "seedling",
+  "name": "r5-l43-wand",
+  "description": "R5 slice 23: the TERMINAL wand window. Boots into L43 with all five totem parts PRESENTED through the v6 save block, takes the wand, and is caught by BossTotem's clamp (p.y := 212, an ASSIGNMENT) at A+216 on the way north.",
+  "boot": {
+    "level": 43,
+    "x": 144,
+    "y": 208
+  },
+  "noclip": false,
+  "noDamage": true,
+  "noHazards": [
+    "water",
+    "pit",
+    "lava",
+    "ice",
+    "waterfall"
+  ],
+  "grants": [
+    {
+      "level": 43,
+      "items": [
+        "conch",
+        "feather",
+        "fire",
+        "sword"
+      ]
+    }
+  ],
+  "persistence": [],
+  "equips": [],
+  "pins": [
+    "sound",
+    "dead_frames"
+  ],
+  "save": {
+    "totem_parts": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "keys": [],
+    "seal_parts": []
+  },
+  "tick_count": 200,
+  "inputs": [
+    {
+      "key": "down",
+      "from": 0,
+      "to": 10
+    },
+    {
+      "key": "primary",
+      "from": 14,
+      "to": 15
+    },
+    {
+      "key": "primary",
+      "from": 45,
+      "to": 46
+    },
+    {
+      "key": "primary",
+      "from": 76,
+      "to": 77
+    },
+    {
+      "key": "primary",
+      "from": 107,
+      "to": 108
+    },
+    {
+      "key": "up",
+      "from": 112,
+      "to": 144
+    }
+  ]
+}

@@ -1,0 +1,364 @@
+{
+  "tape_version": 5,
+  "game": "seedling",
+  "name": "r5-d5-conch",
+  "description": "THE D5 WALK — five doors and a pit from L44 to the conch, with the solids on, lava and ice ARMED, and `fire` banked at the boot. ⛔ It cannot be planned without the item: L48's arrival is (120,296) and `karlore@112,272` is the tile directly north of it, the one-tile corridor out (2 reachable tiles with the plug, 138 without) — so this is where `fire` is SPENT and `r5-karlore-fire` is only where it was measured. The conch is taken with the R3 `collect` verb, standing on it and paging its two-page ceremony, and `Conch.removed()` writes `canSwim` and clears {49,0}. ⚠ Two knobs moved for ICE and both had ground-friction derivations: `tolerance` 1.0 -> 2.25 (a SEED, not a margin — the sweep is non-monotone) and the window coast 8 -> 32 (a PICKUP_CEREMONY freezes the player without zeroing `v`). ⛓ The walk comes to rest on a WATER tile, (2,6) — coerced here, armed in the next window with the conch already banked, which is the handoff the swim leg starts from.",
+  "boot": {
+    "level": 44,
+    "x": 16,
+    "y": 80
+  },
+  "noclip": false,
+  "noDamage": true,
+  "noHazards": [
+    "water",
+    "waterfall"
+  ],
+  "grants": [
+    {
+      "level": 44,
+      "items": [
+        "fire"
+      ]
+    }
+  ],
+  "persistence": [],
+  "equips": [],
+  "pins": [
+    "sound",
+    "dead_frames"
+  ],
+  "tick_count": 1677,
+  "inputs": [
+    {
+      "key": "right",
+      "from": 0,
+      "to": 11
+    },
+    {
+      "key": "left",
+      "from": 11,
+      "to": 12
+    },
+    {
+      "key": "right",
+      "from": 12,
+      "to": 13
+    },
+    {
+      "key": "up",
+      "from": 17,
+      "to": 57
+    },
+    {
+      "key": "right",
+      "from": 63,
+      "to": 90
+    },
+    {
+      "key": "left",
+      "from": 94,
+      "to": 95
+    },
+    {
+      "key": "up",
+      "from": 97,
+      "to": 703
+    },
+    {
+      "key": "left",
+      "from": 347,
+      "to": 371
+    },
+    {
+      "key": "right",
+      "from": 371,
+      "to": 372
+    },
+    {
+      "key": "left",
+      "from": 372,
+      "to": 373
+    },
+    {
+      "key": "right",
+      "from": 380,
+      "to": 381
+    },
+    {
+      "key": "down",
+      "from": 708,
+      "to": 709
+    },
+    {
+      "key": "left",
+      "from": 713,
+      "to": 733
+    },
+    {
+      "key": "up",
+      "from": 733,
+      "to": 955
+    },
+    {
+      "key": "left",
+      "from": 961,
+      "to": 972
+    },
+    {
+      "key": "right",
+      "from": 972,
+      "to": 973
+    },
+    {
+      "key": "left",
+      "from": 973,
+      "to": 974
+    },
+    {
+      "key": "left",
+      "from": 978,
+      "to": 984
+    },
+    {
+      "key": "up",
+      "from": 978,
+      "to": 1164
+    },
+    {
+      "key": "right",
+      "from": 988,
+      "to": 990
+    },
+    {
+      "key": "down",
+      "from": 1164,
+      "to": 1165
+    },
+    {
+      "key": "up",
+      "from": 1165,
+      "to": 1166
+    },
+    {
+      "key": "down",
+      "from": 1166,
+      "to": 1167
+    },
+    {
+      "key": "down",
+      "from": 1173,
+      "to": 1174
+    },
+    {
+      "key": "right",
+      "from": 1190,
+      "to": 1265
+    },
+    {
+      "key": "left",
+      "from": 1265,
+      "to": 1266
+    },
+    {
+      "key": "right",
+      "from": 1266,
+      "to": 1267
+    },
+    {
+      "key": "left",
+      "from": 1270,
+      "to": 1273
+    },
+    {
+      "key": "right",
+      "from": 1277,
+      "to": 1280
+    },
+    {
+      "key": "left",
+      "from": 1283,
+      "to": 1286
+    },
+    {
+      "key": "right",
+      "from": 1286,
+      "to": 1287
+    },
+    {
+      "key": "left",
+      "from": 1287,
+      "to": 1288
+    },
+    {
+      "key": "right",
+      "from": 1291,
+      "to": 1294
+    },
+    {
+      "key": "left",
+      "from": 1296,
+      "to": 1299
+    },
+    {
+      "key": "right",
+      "from": 1303,
+      "to": 1306
+    },
+    {
+      "key": "left",
+      "from": 1308,
+      "to": 1311
+    },
+    {
+      "key": "right",
+      "from": 1311,
+      "to": 1312
+    },
+    {
+      "key": "up",
+      "from": 1319,
+      "to": 1364
+    },
+    {
+      "key": "down",
+      "from": 1368,
+      "to": 1371
+    },
+    {
+      "key": "up",
+      "from": 1374,
+      "to": 1377
+    },
+    {
+      "key": "down",
+      "from": 1377,
+      "to": 1378
+    },
+    {
+      "key": "left",
+      "from": 1393,
+      "to": 1426
+    },
+    {
+      "key": "left",
+      "from": 1525,
+      "to": 1527
+    },
+    {
+      "key": "down",
+      "from": 1525,
+      "to": 1543
+    },
+    {
+      "key": "right",
+      "from": 1529,
+      "to": 1532
+    },
+    {
+      "key": "left",
+      "from": 1532,
+      "to": 1533
+    },
+    {
+      "key": "right",
+      "from": 1533,
+      "to": 1534
+    },
+    {
+      "key": "left",
+      "from": 1538,
+      "to": 1540
+    },
+    {
+      "key": "up",
+      "from": 1543,
+      "to": 1544
+    },
+    {
+      "key": "down",
+      "from": 1544,
+      "to": 1545
+    },
+    {
+      "key": "right",
+      "from": 1544,
+      "to": 1545
+    },
+    {
+      "key": "up",
+      "from": 1549,
+      "to": 1552
+    },
+    {
+      "key": "down",
+      "from": 1555,
+      "to": 1557
+    },
+    {
+      "key": "up",
+      "from": 1567,
+      "to": 1568
+    },
+    {
+      "key": "down",
+      "from": 1576,
+      "to": 1577
+    },
+    {
+      "key": "up",
+      "from": 1588,
+      "to": 1589
+    },
+    {
+      "key": "down",
+      "from": 1595,
+      "to": 1596
+    },
+    {
+      "key": "down",
+      "from": 1612,
+      "to": 1614
+    },
+    {
+      "key": "right",
+      "from": 1612,
+      "to": 1614
+    },
+    {
+      "key": "up",
+      "from": 1614,
+      "to": 1615
+    },
+    {
+      "key": "left",
+      "from": 1614,
+      "to": 1616
+    },
+    {
+      "key": "down",
+      "from": 1615,
+      "to": 1616
+    },
+    {
+      "key": "primary",
+      "from": 1616,
+      "to": 1617
+    },
+    {
+      "key": "primary",
+      "from": 1625,
+      "to": 1626
+    },
+    {
+      "key": "primary",
+      "from": 1634,
+      "to": 1635
+    },
+    {
+      "key": "primary",
+      "from": 1643,
+      "to": 1644
+    }
+  ]
+}

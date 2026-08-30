@@ -1,0 +1,6 @@
+# Cloned upstream repo (meneth/journey-to-ascension) + its build output
+upstream/
+# Fork build extracted from the submodule's committed HEAD (git archive)
+fork-head/
+# Run outputs
+results/

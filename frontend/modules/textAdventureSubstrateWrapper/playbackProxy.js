@@ -15,8 +15,8 @@
  * what's async is the postMessage delivery to the iframe, which the
  * bot doesn't need to wait for.
  *
- * See NewDocs/plans/procedural-generation/async-playback-bot.md for
- * the broader design.
+ * See docs/json/developer/procgen/playback-and-debugging.md for the
+ * broader design.
  */
 
 const CONTROL_EVENT = 'textAdventureSubstrateWrapper:control';
@@ -42,10 +42,21 @@ export class PlaybackProxy {
     play(rateHz)    { this._send('play', [rateHz]); }
     stop()          { this._send('stop', []); }
     step()          { this._send('step', []); }
-    instant()       { this._send('instant', []); }
+    // `on` is forwarded so a substrate whose instant is a persistent MODE
+    // (jta's setInstantMode) can be turned back off — a per-block pacing
+    // choice must not leak into the next block. Substrates whose instant is
+    // a one-shot action (the text adventure drains its pending target)
+    // ignore the argument, and the no-arg call keeps its old meaning.
+    instant(on = true)  { this._send('instant', [on]); }
     reset()         { this._send('reset', []); }
     setRate(rateHz) { this._send('setRate', [rateHz]); }
     walkTo(target)  { this._send('walkTo', [target]); }
+
+    // M3b: no replayActions. The text adventure is a coarse-only
+    // substrate — loops runs a Playback block's own interior through the
+    // generic executor host-side, so nothing crosses the iframe for
+    // replay. The absence of replayActions here is also what routes
+    // loopState's fine-grained replay path away from this substrate.
 
     _send(method, args) {
         this._eventBus.publish(this._controlEvent, { method, args });

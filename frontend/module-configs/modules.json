@@ -100,6 +100,10 @@
       "path": "./modules/gameState/index.js",
       "enabled": true
     },
+    "resourceChannels": {
+      "path": "./modules/resourceChannels/index.js",
+      "enabled": true
+    },
     "gameStatePanel": {
       "path": "./modules/gameStatePanel/index.js",
       "enabled": true
@@ -154,10 +158,14 @@
     },
     "flashPanel": {
       "path": "./modules/flashPanel/index.js",
-      "enabled": false
+      "enabled": true
     },
     "tileMapAnalyzer": {
       "path": "./modules/tileMapAnalyzer/index.js",
+      "enabled": false
+    },
+    "regionMarkingTool": {
+      "path": "./modules/regionMarkingTool/index.js",
       "enabled": false
     },
     "iframeAdapter": {
@@ -210,7 +218,7 @@
     },
     "jtaQueueEngine": {
       "path": "./modules/jtaQueueEngine/index.js",
-      "enabled": false
+      "enabled": true
     },
     "jtaActionQueue": {
       "path": "./modules/jtaActionQueue/index.js",
@@ -236,9 +244,9 @@
       "path": "./modules/mazeRoom/index.js",
       "enabled": true
     },
-    "textAdventureSubstrate": {
-      "path": "./modules/textAdventureSubstrate/index.js",
-      "enabled": false
+    "procgenLabPanel": {
+      "path": "./modules/procgenLabPanel/index.js",
+      "enabled": true
     },
     "textAdventureSubstrateWrapper": {
       "path": "./modules/textAdventureSubstrateWrapper/index.js",
@@ -248,12 +256,24 @@
       "path": "./modules/jtaSubstrateWrapper/index.js",
       "enabled": true
     },
+    "omsiSubstrateWrapper": {
+      "path": "./modules/omsiSubstrateWrapper/index.js",
+      "enabled": true
+    },
+    "jtaBalance": {
+      "path": "./modules/jtaBalance/index.js",
+      "enabled": true
+    },
     "flashSubstrate": {
       "path": "./modules/flashSubstrate/index.js",
       "enabled": true
     },
     "bounceDemo": {
       "path": "./modules/bounceDemo/index.js",
+      "enabled": true
+    },
+    "runnerDemo": {
+      "path": "./modules/runnerDemo/index.js",
       "enabled": true
     },
     "procgenPipeline": {
@@ -299,6 +319,7 @@
     "discovery",
     "discoveryPanel",
     "gameState",
+    "resourceChannels",
     "gameStatePanel",
     "loops",
     "loopStats",
@@ -314,6 +335,7 @@
     "metaGamePanel",
     "flashPanel",
     "tileMapAnalyzer",
+    "regionMarkingTool",
     "iframeAdapter",
     "iframePanel",
     "iframeManagerPanel",
@@ -333,14 +355,17 @@
     "apcalc",
     "apworldEditor",
     "mazeRoom",
-    "textAdventureSubstrate",
+    "procgenLabPanel",
     "textAdventureSubstrateWrapper",
     "jtaSubstrateWrapper",
+    "omsiSubstrateWrapper",
     "flashSubstrate",
     "bounceDemo",
+    "runnerDemo",
     "procgenPipeline",
     "bounceRegionEditor",
     "procgenPlayer",
+    "jtaBalance",
     "playbackBot"
   ]
 }

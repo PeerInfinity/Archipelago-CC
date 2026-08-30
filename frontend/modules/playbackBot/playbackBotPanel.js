@@ -12,8 +12,7 @@
  *     (panel mounted before a preset is picked, or preset has no
  *     sphere log).
  *
- * Plan reference:
- * NewDocs/plans/procedural-generation/playback-bot-refactor.md (Phase 1)
+ * See docs/json/developer/procgen/playback-and-debugging.md.
  */
 
 import { PlaybackBotUI } from './playbackBotUI.js';

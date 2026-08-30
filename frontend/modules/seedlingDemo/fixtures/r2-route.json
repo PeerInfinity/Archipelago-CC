@@ -1,0 +1,1058 @@
+{
+  "generated_by": "scripts/procgen/plan-seedling-r2-route.mjs",
+  "description": "The R2 walk: every item room still reachable with the SOLIDS BACK, over the (level, component) graph of the POST-CLEAR geometry, with pits as a modelled transport and one HOLD on L71's button. Legs carry no targets except where a hold needs them — entering an item room IS collection at this rung.",
+  "boot": {
+    "level": 0,
+    "x": 80,
+    "y": 128
+  },
+  "noHazards": [
+    "water",
+    "lava",
+    "ice",
+    "waterfall"
+  ],
+  "item_order": [
+    "sword(L10)",
+    "shield(L20)",
+    "feather(L89)",
+    "darksword(L12)",
+    "torch(L30)",
+    "spear(L64)",
+    "darkshield(L74)",
+    "darksuit(L79)"
+  ],
+  "start_node": "0:0",
+  "grants": [
+    {
+      "level": 10,
+      "items": [
+        "sword"
+      ]
+    },
+    {
+      "level": 20,
+      "items": [
+        "shield"
+      ]
+    },
+    {
+      "level": 89,
+      "items": [
+        "feather"
+      ]
+    },
+    {
+      "level": 12,
+      "items": [
+        "darksword"
+      ]
+    },
+    {
+      "level": 30,
+      "items": [
+        "torch"
+      ]
+    },
+    {
+      "level": 64,
+      "items": [
+        "spear"
+      ]
+    },
+    {
+      "level": 74,
+      "items": [
+        "darkshield"
+      ]
+    },
+    {
+      "level": 79,
+      "items": [
+        "darksuit"
+      ]
+    }
+  ],
+  "persistence": [
+    {
+      "level": 0,
+      "tag": 1,
+      "note": "breakablerock@288,176"
+    },
+    {
+      "level": 0,
+      "tag": 3,
+      "note": "breakablerock@192,32"
+    },
+    {
+      "level": 0,
+      "tag": 4,
+      "note": "breakablerock@80,112"
+    },
+    {
+      "level": 3,
+      "tag": 0,
+      "note": "breakablerock@96,112"
+    },
+    {
+      "level": 3,
+      "tag": 1,
+      "note": "breakablerockghost@0,64"
+    },
+    {
+      "level": 11,
+      "tag": 0,
+      "note": "chest@32,48"
+    },
+    {
+      "level": 12,
+      "tag": 2,
+      "note": "burnabletree@480,640"
+    },
+    {
+      "level": 12,
+      "tag": 3,
+      "note": "bosslock@80,656"
+    },
+    {
+      "level": 12,
+      "tag": 4,
+      "note": "bosslock@416,240"
+    },
+    {
+      "level": 12,
+      "tag": 5,
+      "note": "bosslock@432,240"
+    },
+    {
+      "level": 12,
+      "tag": 7,
+      "note": "magicallock@32,864"
+    },
+    {
+      "level": 12,
+      "tag": 9,
+      "note": "chest@320,816"
+    },
+    {
+      "level": 12,
+      "tag": 10,
+      "note": "shieldlocknorm@288,704"
+    },
+    {
+      "level": 12,
+      "tag": 11,
+      "note": "bosslock@112,192"
+    },
+    {
+      "level": 12,
+      "tag": 12,
+      "note": "bosslock@32,864"
+    },
+    {
+      "level": 20,
+      "tag": 0,
+      "note": "shieldlocknorm@176,16"
+    },
+    {
+      "level": 24,
+      "tag": 0,
+      "note": "burnabletree@32,128"
+    },
+    {
+      "level": 30,
+      "tag": 0,
+      "note": "bosslock@64,32"
+    },
+    {
+      "level": 30,
+      "tag": 1,
+      "note": "breakablerock@48,224"
+    },
+    {
+      "level": 30,
+      "tag": 2,
+      "note": "bosslock@224,208"
+    },
+    {
+      "level": 60,
+      "tag": 0,
+      "note": "lock@128,80"
+    },
+    {
+      "level": 71,
+      "tag": 0,
+      "note": "lock@112,192"
+    },
+    {
+      "level": 71,
+      "tag": 1,
+      "note": "chest@160,256"
+    },
+    {
+      "level": 71,
+      "tag": 2,
+      "note": "shieldlock@288,256"
+    },
+    {
+      "level": 78,
+      "tag": 0,
+      "note": "lock@32,32"
+    }
+  ],
+  "persistence_refused": [
+    {
+      "level": 0,
+      "tag": 0,
+      "why": "moonrock@240,256 is it WRITES persistence(0, false, 2) across levels (Moonrock.as:135) — the endgame namespace is untouchable"
+    },
+    {
+      "level": 0,
+      "tag": 2,
+      "why": "introchar has no declared persistence response"
+    },
+    {
+      "level": 10,
+      "tag": 0,
+      "why": "sword@48,48 is a pickup — the game's item, not a blocker"
+    },
+    {
+      "level": 12,
+      "tag": 0,
+      "why": "witch has no declared persistence response"
+    },
+    {
+      "level": 12,
+      "tag": 8,
+      "why": "introchar has no declared persistence response"
+    },
+    {
+      "level": 20,
+      "tag": 2,
+      "why": "shield@112,48 is a pickup — the game's item, not a blocker"
+    },
+    {
+      "level": 20,
+      "tag": 4,
+      "why": "buttonroom@192,16 — a cleared tag boots it ALREADY PRESSED, so its whole Activators group starts fading from frame one — which `activators.js` does not model"
+    },
+    {
+      "level": 30,
+      "tag": 4,
+      "why": "torchpickup@64,64 is a pickup — the game's item, not a blocker"
+    },
+    {
+      "level": 61,
+      "tag": 1,
+      "why": "buttonroom@176,40 — a cleared tag boots it ALREADY PRESSED, so its whole Activators group starts fading from frame one — which `activators.js` does not model"
+    },
+    {
+      "level": 62,
+      "tag": 1,
+      "why": "darktrap has no declared persistence response"
+    },
+    {
+      "level": 64,
+      "tag": 0,
+      "why": "sensei has no declared persistence response"
+    },
+    {
+      "level": 64,
+      "tag": 1,
+      "why": "ghostspear@72,24 is a pickup — the game's item, not a blocker"
+    },
+    {
+      "level": 74,
+      "tag": 0,
+      "why": "darkshield@48,32 is a pickup — the game's item, not a blocker"
+    },
+    {
+      "level": 74,
+      "tag": 2,
+      "why": "fallrock@288,144 — clearing it does not remove it — it BUILDS IT FALLEN, Solid and live, and its update writes the player's y"
+    },
+    {
+      "level": 79,
+      "tag": 0,
+      "why": "darksuit@40,152 is a pickup — the game's item, not a blocker"
+    },
+    {
+      "level": 82,
+      "tag": 0,
+      "why": "lavaboss@112,48 is an ENEMY (and a Solid) — despawning one is R5, not a blocker crutch"
+    },
+    {
+      "level": 82,
+      "tag": 1,
+      "why": "fallrocklarge@128,224 — clearing it does not remove it — it BUILDS IT FALLEN, Solid and live, and its update writes the player's y"
+    },
+    {
+      "level": 89,
+      "tag": 0,
+      "why": "feather@160,96 is a pickup — the game's item, not a blocker"
+    },
+    {
+      "level": 89,
+      "tag": 2,
+      "why": "forestchar has no declared persistence response"
+    }
+  ],
+  "holds": [
+    {
+      "leg": 41,
+      "level": 71,
+      "presser": "button@112,176",
+      "ticks": 101,
+      "opens": [
+        "lock@112,160"
+      ]
+    }
+  ],
+  "segment_boundaries": [
+    12,
+    14,
+    25,
+    37,
+    45
+  ],
+  "leg_boots": [
+    {
+      "level": 0,
+      "x": 80,
+      "y": 128
+    },
+    {
+      "level": 2,
+      "x": 48,
+      "y": 32
+    },
+    {
+      "level": 3,
+      "x": 64,
+      "y": 16
+    },
+    {
+      "level": 11,
+      "x": 32,
+      "y": 16
+    },
+    {
+      "level": 10,
+      "x": 48,
+      "y": 32
+    },
+    {
+      "level": 11,
+      "x": 32,
+      "y": 64
+    },
+    {
+      "level": 3,
+      "x": 96,
+      "y": 128
+    },
+    {
+      "level": 2,
+      "x": 48,
+      "y": 80
+    },
+    {
+      "level": 0,
+      "x": 256,
+      "y": 256
+    },
+    {
+      "level": 13,
+      "x": 64,
+      "y": 128
+    },
+    {
+      "level": 20,
+      "x": 32,
+      "y": 48
+    },
+    {
+      "level": 13,
+      "x": 96,
+      "y": 48
+    },
+    {
+      "level": 0,
+      "x": 48,
+      "y": 192
+    },
+    {
+      "level": 89,
+      "x": 160,
+      "y": 288
+    },
+    {
+      "level": 0,
+      "x": 240,
+      "y": 16
+    },
+    {
+      "level": 12,
+      "x": 16,
+      "y": 80
+    },
+    {
+      "level": 24,
+      "x": 48,
+      "y": 128
+    },
+    {
+      "level": 23,
+      "x": 48,
+      "y": 32
+    },
+    {
+      "level": 21,
+      "x": 16,
+      "y": 80
+    },
+    {
+      "level": 22,
+      "x": 96,
+      "y": 16
+    },
+    {
+      "level": 30,
+      "x": 64,
+      "y": 16
+    },
+    {
+      "level": 22,
+      "x": 96,
+      "y": 176
+    },
+    {
+      "level": 21,
+      "x": 80,
+      "y": 144
+    },
+    {
+      "level": 23,
+      "x": 64,
+      "y": 32
+    },
+    {
+      "level": 24,
+      "x": 96,
+      "y": 80
+    },
+    {
+      "level": 12,
+      "x": 40,
+      "y": 704
+    },
+    {
+      "level": 95,
+      "x": 608,
+      "y": 64
+    },
+    {
+      "level": 59,
+      "x": 144,
+      "y": 288
+    },
+    {
+      "level": 60,
+      "x": 16,
+      "y": 80
+    },
+    {
+      "level": 61,
+      "x": 16,
+      "y": 160
+    },
+    {
+      "level": 62,
+      "x": 48,
+      "y": 288
+    },
+    {
+      "level": 64,
+      "x": 32,
+      "y": 80
+    },
+    {
+      "level": 62,
+      "x": 112,
+      "y": 80
+    },
+    {
+      "level": 61,
+      "x": 112,
+      "y": 16
+    },
+    {
+      "level": 60,
+      "x": 144,
+      "y": 80
+    },
+    {
+      "level": 59,
+      "x": 288,
+      "y": 128
+    },
+    {
+      "level": 95,
+      "x": 32,
+      "y": 16
+    },
+    {
+      "level": 12,
+      "x": 16,
+      "y": 352
+    },
+    {
+      "level": 83,
+      "x": 32,
+      "y": 48
+    },
+    {
+      "level": 84,
+      "x": 32,
+      "y": 32
+    },
+    {
+      "level": 85,
+      "x": 48,
+      "y": 64
+    },
+    {
+      "level": 71,
+      "x": 16,
+      "y": 288
+    },
+    {
+      "level": 75,
+      "x": 64,
+      "y": 208
+    },
+    {
+      "level": 74,
+      "x": 16,
+      "y": 128
+    },
+    {
+      "level": 75,
+      "x": 64,
+      "y": 16
+    },
+    {
+      "level": 71,
+      "x": 96,
+      "y": 16
+    },
+    {
+      "level": 76,
+      "x": 16,
+      "y": 80
+    },
+    {
+      "level": 77,
+      "x": 16,
+      "y": 32
+    },
+    {
+      "level": 78,
+      "x": 256,
+      "y": 16
+    },
+    {
+      "level": 79,
+      "x": 64,
+      "y": 208
+    },
+    {
+      "level": 78,
+      "x": 32,
+      "y": 16
+    },
+    {
+      "level": 77,
+      "x": 96,
+      "y": 288
+    },
+    {
+      "level": 76,
+      "x": 288,
+      "y": 112
+    },
+    {
+      "level": 71,
+      "x": 288,
+      "y": 256
+    },
+    {
+      "level": 82,
+      "x": 160,
+      "y": 272
+    }
+  ],
+  "legs": [
+    {
+      "level": 0,
+      "targets": [],
+      "exit": {
+        "x": 256,
+        "y": 272
+      }
+    },
+    {
+      "level": 2,
+      "targets": [],
+      "exit": {
+        "x": 48,
+        "y": 96
+      }
+    },
+    {
+      "level": 3,
+      "targets": [],
+      "exit": {
+        "x": 96,
+        "y": 128
+      }
+    },
+    {
+      "level": 11,
+      "targets": [],
+      "exit": {
+        "x": 32,
+        "y": 80
+      }
+    },
+    {
+      "level": 10,
+      "targets": [],
+      "exit": {
+        "x": 48,
+        "y": 16
+      }
+    },
+    {
+      "level": 11,
+      "targets": [],
+      "exit": {
+        "x": 32,
+        "y": 0
+      }
+    },
+    {
+      "level": 3,
+      "targets": [],
+      "exit": {
+        "x": 64,
+        "y": 0
+      },
+      "contacts": [
+        "teleporter:-1@96,128"
+      ]
+    },
+    {
+      "level": 2,
+      "targets": [],
+      "exit": {
+        "x": 48,
+        "y": 16
+      }
+    },
+    {
+      "level": 0,
+      "targets": [],
+      "exit": {
+        "x": 32,
+        "y": 192
+      }
+    },
+    {
+      "level": 13,
+      "targets": [],
+      "exit": {
+        "x": 96,
+        "y": 32
+      }
+    },
+    {
+      "level": 20,
+      "targets": [],
+      "exit": {
+        "x": 16,
+        "y": 48
+      }
+    },
+    {
+      "level": 13,
+      "targets": [],
+      "exit": {
+        "x": 64,
+        "y": 144
+      }
+    },
+    {
+      "level": 0,
+      "targets": [],
+      "exit": {
+        "x": 240,
+        "y": 0
+      }
+    },
+    {
+      "level": 89,
+      "targets": [],
+      "exit": {
+        "x": 160,
+        "y": 304
+      }
+    },
+    {
+      "level": 0,
+      "targets": [],
+      "exit": {
+        "x": 304,
+        "y": 176
+      }
+    },
+    {
+      "level": 12,
+      "targets": [],
+      "exit": {
+        "x": 40,
+        "y": 688
+      }
+    },
+    {
+      "level": 24,
+      "targets": [],
+      "exit": {
+        "x": 96,
+        "y": 96
+      }
+    },
+    {
+      "level": 23,
+      "targets": [],
+      "exit": {
+        "x": 80,
+        "y": 32
+      }
+    },
+    {
+      "level": 21,
+      "targets": [],
+      "exit": {
+        "x": 80,
+        "y": 160
+      }
+    },
+    {
+      "level": 22,
+      "targets": [],
+      "exit": {
+        "x": 96,
+        "y": 192
+      }
+    },
+    {
+      "level": 30,
+      "targets": [],
+      "exit": {
+        "x": 64,
+        "y": 0
+      }
+    },
+    {
+      "level": 22,
+      "targets": [],
+      "exit": {
+        "x": 96,
+        "y": 0
+      }
+    },
+    {
+      "level": 21,
+      "targets": [],
+      "exit": {
+        "x": 0,
+        "y": 80
+      }
+    },
+    {
+      "level": 23,
+      "targets": [],
+      "exit": {
+        "x": 32,
+        "y": 32
+      }
+    },
+    {
+      "level": 24,
+      "targets": [],
+      "exit": {
+        "x": 32,
+        "y": 144
+      }
+    },
+    {
+      "level": 12,
+      "targets": [],
+      "exit": {
+        "x": 0,
+        "y": 352
+      }
+    },
+    {
+      "level": 95,
+      "targets": [],
+      "exit": {
+        "x": 32,
+        "y": 0
+      }
+    },
+    {
+      "level": 59,
+      "targets": [],
+      "exit": {
+        "x": 304,
+        "y": 128
+      }
+    },
+    {
+      "level": 60,
+      "targets": [],
+      "exit": {
+        "x": 160,
+        "y": 80
+      }
+    },
+    {
+      "level": 61,
+      "targets": [],
+      "exit": {
+        "x": 112,
+        "y": 0
+      }
+    },
+    {
+      "level": 62,
+      "targets": [],
+      "exit": {
+        "x": 112,
+        "y": 64
+      }
+    },
+    {
+      "level": 64,
+      "targets": [],
+      "exit": {
+        "x": 32,
+        "y": 96
+      }
+    },
+    {
+      "level": 62,
+      "targets": [],
+      "exit": {
+        "x": 48,
+        "y": 304
+      }
+    },
+    {
+      "level": 61,
+      "targets": [],
+      "exit": {
+        "x": 0,
+        "y": 160
+      }
+    },
+    {
+      "level": 60,
+      "targets": [],
+      "exit": {
+        "x": 0,
+        "y": 80
+      }
+    },
+    {
+      "level": 59,
+      "targets": [],
+      "exit": {
+        "x": 144,
+        "y": 304
+      }
+    },
+    {
+      "level": 95,
+      "targets": [],
+      "exit": {
+        "x": 624,
+        "y": 64
+      }
+    },
+    {
+      "level": 12,
+      "targets": [],
+      "exit": {
+        "x": 32,
+        "y": 848
+      }
+    },
+    {
+      "level": 83,
+      "targets": [],
+      "exit": {
+        "pit": {
+          "tx": 2,
+          "ty": 1
+        }
+      }
+    },
+    {
+      "level": 84,
+      "targets": [],
+      "exit": {
+        "pit": {
+          "tx": 2,
+          "ty": 2
+        }
+      }
+    },
+    {
+      "level": 85,
+      "targets": [],
+      "exit": {
+        "x": 80,
+        "y": 0
+      }
+    },
+    {
+      "level": 71,
+      "targets": [
+        {
+          "x": 120,
+          "y": 184,
+          "hold": {
+            "ticks": 101,
+            "presser": {
+              "x": 112,
+              "y": 176
+            }
+          }
+        },
+        {
+          "x": 116,
+          "y": 156
+        }
+      ],
+      "exit": {
+        "x": 96,
+        "y": 0
+      }
+    },
+    {
+      "level": 75,
+      "targets": [],
+      "exit": {
+        "x": 64,
+        "y": 0
+      }
+    },
+    {
+      "level": 74,
+      "targets": [],
+      "exit": {
+        "x": 16,
+        "y": 144
+      }
+    },
+    {
+      "level": 75,
+      "targets": [],
+      "exit": {
+        "x": 64,
+        "y": 224
+      }
+    },
+    {
+      "level": 71,
+      "targets": [],
+      "exit": {
+        "x": 304,
+        "y": 256
+      }
+    },
+    {
+      "level": 76,
+      "targets": [],
+      "exit": {
+        "x": 304,
+        "y": 112
+      }
+    },
+    {
+      "level": 77,
+      "targets": [],
+      "exit": {
+        "x": 96,
+        "y": 304
+      }
+    },
+    {
+      "level": 78,
+      "targets": [],
+      "exit": {
+        "x": 32,
+        "y": 0
+      }
+    },
+    {
+      "level": 79,
+      "targets": [],
+      "exit": {
+        "x": 64,
+        "y": 224
+      }
+    },
+    {
+      "level": 78,
+      "targets": [],
+      "exit": {
+        "x": 256,
+        "y": 0
+      }
+    },
+    {
+      "level": 77,
+      "targets": [],
+      "exit": {
+        "x": 0,
+        "y": 32
+      }
+    },
+    {
+      "level": 76,
+      "targets": [],
+      "exit": {
+        "x": 0,
+        "y": 80
+      }
+    },
+    {
+      "level": 71,
+      "targets": [],
+      "exit": {
+        "pit": {
+          "tx": 12,
+          "ty": 13
+        }
+      }
+    },
+    {
+      "level": 82,
+      "targets": []
+    }
+  ]
+}

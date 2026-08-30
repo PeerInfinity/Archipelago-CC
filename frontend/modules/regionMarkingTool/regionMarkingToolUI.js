@@ -1,0 +1,1075 @@
+// regionMarkingToolUI — the Golden Layout panel that authors a region atlas
+// over a real game's map (CC/docs/plans/region-atlas-plan.md, Phase 2).
+//
+// Left: the level, drawn by RegionMarkingRenderer (the tile map analyzer's
+// renderer plus rectangle/line drags and a region overlay). Right: the
+// inspector for whatever is selected.
+//
+// All editing goes through AtlasSession, which enforces the format's authoring
+// rules by throwing (no '__' in ids, entrance_tile ∈ exit_tiles, sub_region
+// present iff the region has a subgraph, explicit `bidirectional`). This file
+// turns those throws into a status line; it never re-implements a rule, and it
+// never re-implements the content hash — saving stamps through the validator's
+// own stampAtlasIdentity.
+
+import {
+    getModuleEventBus, setActivePanelInstance, consumePendingSession,
+    LOAD_EVENT, MAP_DOCUMENT_URL,
+} from './index.js';
+import { AtlasSession, createEmptyAtlas, rectBounds } from './atlasSession.js';
+import { RegionMarkingRenderer, MARK_MODES } from './markingRenderer.js';
+import { buildLevelView, indexLevels, levelLabel, entityMarkers } from './mapSource.js';
+import { compactJsonFile } from '../procgenPipeline/compactJson.js';
+import { compileRegionAtlas, formatCompileReport } from '../procgenPipeline/regionAtlasCompiler.js';
+import { formatAnalysisReport, describeRule } from '../procgenPipeline/regionAtlasAnalyzer.js';
+import { analyzeSeedlingRegion } from '../flashPanel/seedlingAtlasAnalysis.js';
+import { stringifyRulesJson } from '../shared/rulesJsonBuilder.js';
+
+// Per-game analyzers, the same registry shape the batch CLI carries
+// (scripts/procgen/region-atlas-analyze.mjs). One entry today; Phase 7 adds RWK.
+const ANALYZERS = { seedling: analyzeSeedlingRegion };
+const GAME_CONFIG_URL = (game) => `modules/flashPanel/games/${game}.json`;
+
+function log(level, message, ...data) {
+    if (typeof window !== 'undefined' && window.logger) window.logger[level]('regionMarkingToolUI', message, ...data);
+    else (console[level === 'info' ? 'log' : level] || console.log)(`[regionMarkingToolUI] ${message}`, ...data);
+}
+
+// Entities worth showing by default: the pickups a location is usually placed
+// on, and the links between levels. Everything else is scenery and would bury
+// the map in labels.
+const DEFAULT_MARKER_TYPES = new Set([
+    'chest', 'sword', 'shield', 'darkshield', 'ghostsword', 'ghostspear', 'wand', 'firewand',
+    'feather', 'conch', 'health', 'darksuit', 'torchpickup', 'seed', 'totem', 'totempart',
+    'bosskey', 'moonrock', 'moonrockpile', 'teleporter', 'stairsdown', 'stairsup',
+]);
+
+const el = (tag, props = {}, children = []) => {
+    const node = document.createElement(tag);
+    for (const [k, v] of Object.entries(props)) {
+        if (k === 'style') node.style.cssText = v;
+        else if (k === 'class') node.className = v;
+        else if (k.startsWith('on')) node.addEventListener(k.slice(2).toLowerCase(), v);
+        else if (v !== null && v !== undefined) node[k] = v;
+    }
+    for (const c of [].concat(children)) if (c) node.append(c);
+    return node;
+};
+
+export class RegionMarkingToolUI {
+    constructor(container, componentState) {
+        this.container = container;
+        this.componentState = componentState || {};
+        Object.defineProperty(this, 'eventBus', { get: () => getModuleEventBus(), configurable: true });
+
+        this.mapDoc = null;
+        this.levelsById = new Map();
+        this.levelId = null;
+        // ⛓ `game` is SPELLED (EDITOR v3 E3b): `createEmptyAtlas` no longer
+        //   defaults it — and `atlas_id` with it — to 'seedling'. This panel
+        //   authors SEEDLING atlases (`MAP_DOCUMENT_URL` is `seedling-map.json`,
+        //   and `make-seedling-starter-atlas.mjs`, which drives this same model
+        //   headlessly, has always passed `game: 'seedling'` explicitly).
+        this.session = this._newSession(createEmptyAtlas({
+            game: 'seedling', mapSource: 'ogmo-extract',
+        }));
+        this.selectedRegionId = null;
+        this.selectedExitId = null;
+        this.pendingExitKind = null;
+        // A pending analyzer proposal, session-local until accepted.
+        this.analysis = null;
+        this._gameConfigCache = null;
+        this.showEntities = true;
+        this.status = 'loading map…';
+
+        this._buildDom();
+        setActivePanelInstance(this);
+
+        // A caller may have stashed a session before this panel existed, or may
+        // stash one while it is already mounted — both paths land here.
+        this._onLoadEvent = () => this._consumeSession();
+        this.eventBus.subscribe(LOAD_EVENT, this._onLoadEvent);
+        this.container.on('destroy', () => this._destroy());
+
+        this._loadMapDocument()
+            .then(() => this._consumeSession())
+            .catch((e) => {
+                log('error', 'map load failed', e);
+                this._setStatus(`map load failed: ${e.message}`, true);
+            });
+    }
+
+    /** Adopt a stashed hand-off session, if there is one. */
+    _consumeSession() {
+        const session = consumePendingSession();
+        if (!session) return;
+        if (session.atlas) {
+            this.session = this._newSession(session.atlas);
+            this.selectedRegionId = this.session.regions()[0]?.region_id ?? null;
+            this.selectedExitId = null;
+            this.analysis = null;
+        }
+        const level = session.levelId
+            ?? this.session.regions().find((r) => r.map_ref !== undefined)?.map_ref;
+        if (level !== undefined && level !== null) this._selectLevel(level);
+        this._validate();
+    }
+
+    getRootElement() { return this.rootElement; }
+
+    _destroy() {
+        this.eventBus.unsubscribe(LOAD_EVENT, this._onLoadEvent);
+        // ⛓ A REMOUNTED panel would otherwise keep this mount's handler.
+        this.rootElement?.removeEventListener('keydown', this._onKeyDown);
+        this.rootElement?.removeEventListener('mousedown', this._onMouseDown);
+        setActivePanelInstance(null);
+        this.renderer = null;
+    }
+
+    // ── DOM ──────────────────────────────────────────────────────────────
+    _buildDom() {
+        this.rootElement = el('div', { class: 'rmt-panel panel-container' });
+        // A handle on the root element rather than a global: the UI verifier
+        // (scripts/procgen/verify-region-marking-tool.mjs) drives real canvas
+        // drags, which needs the renderer's current pan/zoom to aim at a tile.
+        this.rootElement.__panel = this;
+
+        this.levelSelect = el('select', { class: 'rmt-select', onChange: () => this._selectLevel(Number(this.levelSelect.value)) });
+        this.modeButtons = new Map();
+        const modeBar = el('div', { class: 'rmt-modes' });
+        const modes = [
+            [MARK_MODES.NONE, 'Pan', 'drag to pan; shift-drag always pans'],
+            [MARK_MODES.REGION, 'Region', 'drag a rectangle to define a region'],
+            [MARK_MODES.EDGE, 'Edge exit', 'drag along a bounds line — the side is derived'],
+            [MARK_MODES.TELEPORTER, 'Teleporter', 'drag or click the tiles of a teleporter exit'],
+            [MARK_MODES.ENTRANCE, 'Entrance', 'click a tile of the selected exit to make it the spawn'],
+            [MARK_MODES.LOCATION, 'Location', 'click the tile a location sits on'],
+        ];
+        for (const [mode, label, title] of modes) {
+            const b = el('button', { class: 'rmt-btn', textContent: label, title, onClick: () => this._setMode(mode) });
+            this.modeButtons.set(mode, b);
+            modeBar.append(b);
+        }
+
+        const toolbar = el('div', { class: 'rmt-toolbar' }, [
+            el('label', { class: 'rmt-label' }, ['Level ']), this.levelSelect,
+            modeBar,
+            el('span', { class: 'rmt-spacer' }),
+            el('label', { class: 'rmt-check', title: 'show pickups, chests and level links as reference markers' }, [
+                this.entityToggle = el('input', { type: 'checkbox', checked: true, onChange: () => { this.showEntities = this.entityToggle.checked; this._refreshCanvas(); } }),
+                document.createTextNode(' entities'),
+            ]),
+            el('button', { class: 'rmt-btn', textContent: '−', title: 'zoom out', onClick: () => this.renderer.zoomOut() }),
+            el('button', { class: 'rmt-btn', textContent: '+', title: 'zoom in', onClick: () => this.renderer.zoomIn() }),
+            el('button', { class: 'rmt-btn', textContent: 'Fit', title: 'zoom so the level fills the canvas', onClick: () => this.fitLevel() }),
+            this.undoButton = el('button', {
+                class: 'rmt-btn', textContent: 'Undo', title: 'undo the last edit (Ctrl/Cmd+Z)',
+                onClick: () => this._undo(),
+            }),
+            el('button', { class: 'rmt-btn', textContent: 'New', onClick: () => this._newAtlas() }),
+            el('button', { class: 'rmt-btn', textContent: 'Load', onClick: () => this.loadFile.click() }),
+            el('button', { class: 'rmt-btn', textContent: 'Validate', onClick: () => this._validate() }),
+            el('button', { class: 'rmt-btn rmt-primary', textContent: 'Save', onClick: () => this._save() }),
+            el('button', {
+                class: 'rmt-btn', textContent: 'Export rules.json',
+                title: 'compile this atlas into the vanilla AP rules.json (projection 1) and download it',
+                onClick: () => this._exportRules(),
+            }),
+            el('button', {
+                class: 'rmt-btn', textContent: 'Edit in APWorld Editor',
+                title: 'compile and hand the rules.json straight to the APWorld Editor for detail-filling',
+                onClick: () => this._editInApworldEditor(),
+            }),
+            el('button', {
+                class: 'rmt-btn', textContent: 'Analyze region',
+                title: 'compute the selected region\'s sub-region split from the tile map, and propose the rules that cross between the pieces',
+                onClick: () => this._analyzeRegion(),
+            }),
+        ]);
+
+        this.loadFile = el('input', {
+            type: 'file', accept: '.json', style: 'display:none',
+            onChange: (e) => this._loadFromFile(e.target.files?.[0]),
+        });
+
+        this.canvasWrap = el('div', { class: 'rmt-canvas-wrap' });
+        this.canvas = el('canvas', { class: 'rmt-canvas' });
+        this.canvasWrap.append(this.canvas);
+
+        this.sidebar = el('div', { class: 'rmt-sidebar' });
+        this.statusBar = el('div', { class: 'rmt-status' });
+
+        this.rootElement.append(
+            toolbar,
+            this.loadFile,
+            el('div', { class: 'rmt-body' }, [this.canvasWrap, this.sidebar]),
+            this.statusBar,
+        );
+
+        /**
+         * ⛓⛓ **Ctrl/Cmd+Z ON THE PANEL ROOT, not on the document.** This page
+         * does not mount `editorView` — the marking tool keeps its own
+         * drag-first renderer — so the binding is here rather than inherited.
+         *
+         * ⛔ AND IT REFUSES INSIDE A TEXT FIELD. Every inspector field is an
+         * `<input>` or a `<textarea>` whose own undo stack is what a person
+         * pressing Ctrl+Z in it means; swallowing that to undo an ATLAS op
+         * would throw away a half-typed rule and look like the tool eating
+         * keystrokes.
+         */
+        this._onKeyDown = (e) => {
+            if (!(e.key === 'z' || e.key === 'Z') || !(e.ctrlKey || e.metaKey) || e.shiftKey) return;
+            const tag = e.target?.tagName;
+            if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || e.target?.isContentEditable) return;
+            e.preventDefault();
+            this._undo();
+        };
+        this.rootElement.tabIndex = -1;
+        this.rootElement.addEventListener('keydown', this._onKeyDown);
+        /**
+         * ⛔ AND THE ROOT HAS TO HOLD FOCUS, or the binding above is
+         * unreachable: a `<canvas>` with no tabindex is not focusable, so a
+         * person who marks a region and presses Ctrl+Z sends the key to
+         * `<body>` and the panel never sees it. Focus moves to the root on a
+         * press ANYWHERE that is not itself a control — an input, a select or
+         * a button keeps the focus the browser is about to give it, because
+         * this listener runs BEFORE mousedown's default focus action.
+         */
+        this._onMouseDown = (e) => {
+            const tag = e.target?.tagName;
+            if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || tag === 'BUTTON'
+                || tag === 'OPTION' || e.target?.isContentEditable) return;
+            this.rootElement.focus({ preventScroll: true });
+        };
+        this.rootElement.addEventListener('mousedown', this._onMouseDown);
+
+        this.renderer = new RegionMarkingRenderer(this.canvas, this.canvasWrap);
+        this.renderer.onMarkRect = (bounds) => this._onRect(bounds);
+        this.renderer.onMarkLine = (tiles, mode) => this._onLine(tiles, mode);
+        this.renderer.onMarkTile = (tile, mode) => this._onTile(tile, mode);
+        this.renderer.onTileSelected = (x, y) => this._onPlainClick([x, y]);
+        this._setMode(MARK_MODES.NONE);
+    }
+
+    // ── map loading ──────────────────────────────────────────────────────
+    async _loadMapDocument() {
+        const response = await fetch(MAP_DOCUMENT_URL);
+        if (!response.ok) throw new Error(`HTTP ${response.status} for ${MAP_DOCUMENT_URL}`);
+        this.mapDoc = await response.json();
+        this.levelsById = indexLevels(this.mapDoc);
+        /**
+         * ⛓ **THE EIGHTH HATCH, AND IT NEEDED NO OP.** These two lines used to
+         * write `tile_space` straight into the constructor's empty document —
+         * a mutation of the session's BASE, which is the one place an op list
+         * cannot see and the one place it does not have to: nothing has been
+         * edited yet. So the pristine session is REPLACED by one built on an
+         * atlas that carries the map's facts from the start.
+         * `createEmptyAtlas` writes `{tile_size, map_source, map_document}` in
+         * exactly the order the mutation produced, so the bytes are unmoved.
+         *
+         * ⛔ Guarded on the session being untouched: a hand-off (`LOAD_EVENT`)
+         * can land before the map document does, and that document has its own
+         * `tile_space`.
+         */
+        if (this.session.regions().length === 0 && this.session.edits().length === 0) {
+            this.session = this._newSession(createEmptyAtlas({
+                game: 'seedling',
+                mapSource: 'ogmo-extract',
+                mapDocument: MAP_DOCUMENT_URL.split('/').pop(),
+                tileSize: this.mapDoc.tile_size ?? 16,
+            }));
+        }
+
+        this.levelSelect.replaceChildren(...this.mapDoc.levels.map(
+            (lvl) => el('option', { value: String(lvl.level), textContent: levelLabel(lvl) }),
+        ));
+        this._selectLevel(this.mapDoc.levels[0]?.level ?? 0);
+        this._setStatus(`${this.mapDoc.levels.length} levels loaded — drag a rectangle in Region mode to begin`);
+    }
+
+    _selectLevel(levelId) {
+        const level = this.levelsById.get(levelId);
+        if (!level) return;
+        this.levelId = levelId;
+        this.levelSelect.value = String(levelId);
+        const view = buildLevelView(level);
+        this.renderer.setData(view.tilemap, view.categoryGrid, view.config);
+        this.fitLevel();
+        this._refreshCanvas();
+        this.render();
+    }
+
+    /** Zoom to the largest step that keeps the whole level on screen. */
+    fitLevel() {
+        const level = this.levelsById.get(this.levelId);
+        if (!level || !this.canvas.width || !this.canvas.height) return;
+        const fit = Math.min(this.canvas.width / level.width, this.canvas.height / level.height);
+        const steps = [1, 2, 3, 4, 6, 8, 12, 16, 24];
+        const size = [...steps].reverse().find((s) => s <= fit) ?? steps[0];
+        this.renderer.panX = 0;
+        this.renderer.panY = 0;
+        this.renderer.setTilePixelSize(size);
+    }
+
+    // ── marking ──────────────────────────────────────────────────────────
+    _setMode(mode) {
+        this.mode = mode;
+        this.renderer.setMarkMode(mode);
+        for (const [m, btn] of this.modeButtons) btn.classList.toggle('rmt-active', m === mode);
+        if (mode === MARK_MODES.ENTRANCE && !this.selectedExitId) {
+            this._setStatus('select an exit first — Entrance mode retargets the selected exit\'s spawn tile', true);
+        }
+    }
+
+    /**
+     * ⛓ **THE ONE PLACE A SESSION IS OPENED.** It carries the panel's level
+     * view into the adapter, which is what gives the atlas a cell space at all
+     * — `bounds`/`readCell` are level-local and this class is the only thing on
+     * the page that knows which level is showing.
+     */
+    _newSession(atlas) {
+        return new AtlasSession(atlas, {
+            levelView: () => this.levelsById.get(this.levelId) ?? null,
+        });
+    }
+
+    /**
+     * ⛓⛓ UNDO — the fold over a shorter list. ⛔ It says so when there is
+     * nothing to undo rather than silently doing nothing: a toolbar button that
+     * looks like it worked is a readout claiming an edit that did not happen.
+     */
+    _undo() {
+        // ⛓ `baseId` is the ONE thing an op cannot carry: it is the save id's
+        //   STEM, not a document field, and `set-game` deliberately does not
+        //   move `atlas_id` (the committed starter has `game: "seedling"` under
+        //   the stem `seedling-fixture`). So an undo OF THAT OP re-reads the
+        //   stem the document itself now says — which is what the field held
+        //   before the edit.
+        const last = this.session.edits().at(-1);
+        if (!this.session.undo()) {
+            this._setStatus('nothing to undo — no edit has been applied to this atlas yet');
+            this.render();
+            return false;
+        }
+        if (last?.op === 'set-game') this.session.baseId = this.session.deriveBaseId();
+        this.selectedRegionId = this.session.regions()
+            .some((r) => r.region_id === this.selectedRegionId) ? this.selectedRegionId : null;
+        this.selectedExitId = null;
+        // A proposal is about the document that was just rolled back.
+        this.analysis = null;
+        this._setStatus(`undone — ${this.session.edits().length} edit(s) left`);
+        this.render();
+        return true;
+    }
+
+    _try(fn, success) {
+        try {
+            const result = fn();
+            if (success) this._setStatus(typeof success === 'function' ? success(result) : success);
+            this.render();
+            return result;
+        } catch (e) {
+            this._setStatus(e.message, true);
+            this.render();
+            return null;
+        }
+    }
+
+    _onRect(bounds) {
+        const suggested = `region_${this.session.regions().length + 1}`;
+        // eslint-disable-next-line no-alert
+        const id = window.prompt(`Region id for ${bounds.w}×${bounds.h} at ${bounds.x},${bounds.y} (no "__"):`, suggested);
+        if (!id) return;
+        const region = this._try(
+            () => this.session.addRegion({ region_id: id.trim(), bounds, map_ref: this.levelId }),
+            `added region "${id.trim()}"`,
+        );
+        if (region) { this.selectedRegionId = region.region_id; this.selectedExitId = null; this.render(); }
+    }
+
+    _onLine(tiles, mode) {
+        const region = this._currentRegion();
+        if (!region) { this._setStatus('select a region first', true); return; }
+        const suggested = mode === MARK_MODES.EDGE
+            ? `exit_${region.exits.length + 1}`
+            : `warp_${region.exits.length + 1}`;
+        // eslint-disable-next-line no-alert
+        const id = window.prompt(`Exit id for ${tiles.length} tile(s):`, suggested);
+        if (!id) return;
+        const exit = this._try(() => this.session.addExit(region.region_id, {
+            exit_id: id.trim(),
+            tiles,
+            kind: mode === MARK_MODES.EDGE ? 'edge' : 'teleporter',
+            sub_region: this.session.subRegions(region.region_id)?.[0],
+        }), (e) => `added ${e.kind} exit "${e.exit_id}"${e.side ? ` on side ${e.side}` : ''}`);
+        if (exit) this.selectedExitId = exit.exit_id;
+    }
+
+    _onTile(tile, mode) {
+        const region = this._currentRegion();
+        if (!region) { this._setStatus('select a region first', true); return; }
+        if (mode === MARK_MODES.ENTRANCE) {
+            if (!this.selectedExitId) { this._setStatus('select an exit first', true); return; }
+            this._try(() => this.session.setEntranceTile(region.region_id, this.selectedExitId, tile),
+                `entrance of "${this.selectedExitId}" is now [${tile}]`);
+            return;
+        }
+        if (mode === MARK_MODES.LOCATION) {
+            const near = this._entityAt(tile);
+            const suggested = `${region.name ?? region.region_id} - ${near ? near.type : 'Chest'}`;
+            // eslint-disable-next-line no-alert
+            const name = window.prompt('Location name (globally unique):', suggested);
+            if (!name) return;
+            this._try(() => this.session.addLocation(region.region_id, {
+                name: name.trim(),
+                tile,
+                sub_region: this.session.subRegions(region.region_id)?.[0],
+            }), `added location "${name.trim()}" — set its vanilla item in the inspector`);
+            return;
+        }
+        if (mode === MARK_MODES.TELEPORTER) this._onLine([tile], mode);
+    }
+
+    // A plain click with no mode armed selects whatever is under it: the
+    // smallest region containing the tile, and an exit if one covers it.
+    _onPlainClick(tile) {
+        const hit = this.session.regions()
+            .filter((r) => r.map_ref === this.levelId
+                && tile[0] >= r.bounds.x && tile[0] < r.bounds.x + r.bounds.w
+                && tile[1] >= r.bounds.y && tile[1] < r.bounds.y + r.bounds.h)
+            .sort((a, b) => a.bounds.w * a.bounds.h - b.bounds.w * b.bounds.h)[0];
+        if (!hit) return;
+        this.selectedRegionId = hit.region_id;
+        const exit = hit.exits.find((e) => e.exit_tiles.some((t) => t[0] === tile[0] && t[1] === tile[1]));
+        this.selectedExitId = exit?.exit_id ?? null;
+        this.render();
+    }
+
+    _entityAt(tile) {
+        const size = this.mapDoc?.tile_size ?? 16;
+        return (this.levelsById.get(this.levelId)?.entities ?? []).find(
+            (e) => Math.floor(e.x / size) === tile[0] && Math.floor(e.y / size) === tile[1],
+        );
+    }
+
+    _currentRegion() {
+        return this.session.regions().find((r) => r.region_id === this.selectedRegionId) ?? null;
+    }
+
+    _refreshCanvas() {
+        if (!this.renderer) return;
+        const level = this.levelsById.get(this.levelId);
+        this.renderer.setRegionOverlays(this.session.regions()
+            .filter((r) => r.map_ref === this.levelId)
+            .map((r) => ({ ...r, selected: r.region_id === this.selectedRegionId })));
+        this.renderer.setPartitionOverlay(this._partitionOverlay());
+        this.renderer.setMarkers(this.showEntities && level
+            ? entityMarkers(level, this.mapDoc.tile_size ?? 16, { types: DEFAULT_MARKER_TYPES })
+            : []);
+    }
+
+    /**
+     * The proposed partition in LEVEL coordinates. The analyzer works in
+     * region-local ones (its grid starts at the region's bounds), so this is
+     * where the translation happens — once, at the point of drawing.
+     */
+    _partitionOverlay() {
+        const a = this.analysis;
+        if (!a || a.region_id !== this.selectedRegionId) return null;
+        const region = this._currentRegion();
+        if (!region || region.map_ref !== this.levelId) return null;
+        const { x: ox, y: oy } = region.bounds;
+        return {
+            components: a.components.map((c) => ({
+                id: c.id, tiles: c.tiles.map(([x, y]) => [x + ox, y + oy]),
+            })),
+            // Crossing tiles are already in atlas coordinates (findCrossings
+            // translates them), so they pass through.
+            crossings: a.crossings.map((c) => ({ tiles: c.tiles })),
+        };
+    }
+
+    // ── save / load ──────────────────────────────────────────────────────
+    _newAtlas() {
+        // eslint-disable-next-line no-alert
+        if (this.session.regions().length > 0 && !window.confirm('Discard the current atlas?')) return;
+        this.session = this._newSession(createEmptyAtlas({
+            game: 'seedling',
+            mapSource: 'ogmo-extract',
+            mapDocument: MAP_DOCUMENT_URL.split('/').pop(),
+            tileSize: this.mapDoc?.tile_size ?? 16,
+        }));
+        this.selectedRegionId = null;
+        this.selectedExitId = null;
+        this.analysis = null;
+        this._setStatus('new atlas');
+        this.render();
+    }
+
+    async _loadFromFile(file) {
+        if (!file) return;
+        try {
+            this.session = this._newSession(JSON.parse(await file.text()));
+            this.selectedRegionId = this.session.regions()[0]?.region_id ?? null;
+            this.selectedExitId = null;
+            this.analysis = null;
+            const first = this.session.regions().find((r) => r.map_ref !== undefined);
+            if (first) this._selectLevel(first.map_ref);
+            this._validate();
+        } catch (e) {
+            this._setStatus(`load failed: ${e.message}`, true);
+        }
+        this.render();
+    }
+
+    _validate() {
+        const result = this.session.validate(this.mapDoc ? { mapDoc: this.mapDoc } : {});
+        this.lastResult = result;
+        const unwired = this.session.unwiredExits().length;
+        this._setStatus(
+            result.ok
+                ? `valid — ${result.stats.regions} regions, ${result.stats.exits} exits, ${result.stats.locations} locations, `
+                  + `${result.warnings.length} warning(s)${unwired ? `, ${unwired} exit(s) unwired` : ''}`
+                : `${result.errors.length} error(s): ${result.errors[0]}`,
+            !result.ok,
+        );
+        this.render();
+        return result;
+    }
+
+    // Save follows bounceRegionEditor's standalone precedent: serialize and
+    // download. The document is stamped through the validator's own
+    // stampAtlasIdentity (never a re-implemented hash) and written with the
+    // compact writer, so what lands on disk is byte-identical to what
+    // `region-atlas-validate.mjs --restamp` would produce.
+    _save() {
+        const result = this._validate();
+        if (!result.ok) {
+            // eslint-disable-next-line no-alert
+            if (!window.confirm(`This atlas has ${result.errors.length} validation error(s). Save anyway?`)) return;
+        }
+        const doc = this.session.toDocument();
+        const text = compactJsonFile(doc);
+        const blob = new Blob([text], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = el('a', { href: url, download: `${this.session.baseId}.json` });
+        document.body.append(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        this._setStatus(`saved ${doc.atlas_id}${result.ok ? '' : ' (with errors)'}`);
+    }
+
+    /** The exact bytes Save would download — the seam the UI verifier reads. */
+    serialize() { return compactJsonFile(this.session.toDocument()); }
+
+    // ── projection 1: the vanilla rules.json ─────────────────────────────
+    //
+    // The compiler is the same module the CLI runs
+    // (scripts/procgen/region-atlas-compile.mjs), fed the same stamped document
+    // Save writes — so what the panel exports is what the command line would
+    // produce for the saved atlas, not a second implementation of the
+    // projection. Phase 3 is GRAPH ONLY: no preset_sidecars ride along.
+
+    _compileRules({ allowInvalid = false } = {}) {
+        return compileRegionAtlas(this.session.toDocument(), {
+            ...(this.mapDoc ? { mapDoc: this.mapDoc } : {}),
+            allowInvalid,
+        });
+    }
+
+    /** The exact bytes "Export rules.json" would download — the verifier's seam. */
+    serializeRules({ allowInvalid = false } = {}) {
+        return `${stringifyRulesJson(this._compileRules({ allowInvalid }).rules)}\n`;
+    }
+
+    // Shared front half of both hand-off buttons: validate, let the author
+    // decide about errors, compile. Returns null when they backed out or the
+    // compile itself refused (a region colliding with the reserved Menu name).
+    _compileForHandoff() {
+        const result = this._validate();
+        if (!result.ok) {
+            // eslint-disable-next-line no-alert
+            if (!window.confirm(`This atlas has ${result.errors.length} validation error(s). Compile anyway?`)) return null;
+        }
+        try {
+            return this._compileRules({ allowInvalid: true });
+        } catch (e) {
+            this._setStatus(`compile failed: ${e.message}`, true);
+            return null;
+        }
+    }
+
+    // The report is surfaced, not swallowed: unwired boundary exits are OMITTED
+    // from the graph, and an author who cannot see that reads a partial atlas
+    // as a complete one.
+    _reportStatus(report, prefix) {
+        const unwired = report.unwired_exits.length;
+        this._setStatus(
+            `${prefix} — ${report.ap_regions_incl_menu} AP regions, ${report.exits} exits, `
+            + `${report.locations} locations`
+            + (unwired ? `; ${unwired} unwired boundary exit(s) OMITTED: ${report.unwired_exits.map((e) => `${e.region_id}/${e.exit_id}`).join(', ')}` : ''),
+        );
+        for (const line of formatCompileReport(report)) log('info', line);
+    }
+
+    _exportRules() {
+        const compiled = this._compileForHandoff();
+        if (!compiled) return;
+        const blob = new Blob([this.serializeRules({ allowInvalid: true })], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = el('a', { href: url, download: `${this.session.baseId}_rules.json` });
+        document.body.append(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        this._reportStatus(compiled.report, `exported ${this.session.baseId}_rules.json`);
+    }
+
+    // Hand-off copied from procgenPipelineUI's §2.2 button: the dedicated
+    // apworldEditor:loadRules channel routes the world to the editor only. NOT
+    // files:jsonLoaded — a full app load makes the substrate panels
+    // self-activate and steal focus from the editor.
+    _editInApworldEditor() {
+        const compiled = this._compileForHandoff();
+        if (!compiled) return;
+        this.eventBus.publish('apworldEditor:loadRules', { jsonData: compiled.rules });
+        this.eventBus.publish('ui:activatePanel', { panelId: 'apworldEditorPanel' });
+        this._reportStatus(compiled.report, 'opened in the APWorld Editor');
+    }
+
+    // ── Phase 5a: the analyzer ───────────────────────────────────────────
+    //
+    // Propose -> review -> accept. Analyze computes a partition and a set of
+    // internal exits and shows them (coloured overlay + a list); nothing touches
+    // the document until Accept, which applies through the SESSION so every
+    // authoring rule still runs and the identity is restamped once.
+    //
+    // The tile partition itself is session-local and never persisted: it
+    // recomputes deterministically from the map document, so storing it would
+    // only give the schema a second copy of the terrain to drift from.
+
+    /** The per-game config that maps engine flags to AP items, fetched once. */
+    async _gameConfig() {
+        const game = this.session.atlas.game;
+        if (this._gameConfigCache?.game === game) return this._gameConfigCache.config;
+        const response = await fetch(GAME_CONFIG_URL(game));
+        if (!response.ok) throw new Error(`HTTP ${response.status} for ${GAME_CONFIG_URL(game)}`);
+        const config = await response.json();
+        this._gameConfigCache = { game, config };
+        return config;
+    }
+
+    async _analyzeRegion() {
+        const region = this._currentRegion();
+        if (!region) { this._setStatus('select a region first', true); return; }
+        const analyze = ANALYZERS[this.session.atlas.game];
+        if (!analyze) {
+            this._setStatus(`no analyzer for game "${this.session.atlas.game}" — its tile semantics have not been transcribed`, true);
+            return;
+        }
+        if (!this.mapDoc) { this._setStatus('the map document is not loaded yet', true); return; }
+        try {
+            const gameConfig = await this._gameConfig();
+            // Analyze a CLONE: the proposal must not touch the live document
+            // before the author accepts it.
+            const snapshot = JSON.parse(JSON.stringify(this.session.atlas));
+            const analysis = analyze(snapshot, region.region_id, { mapDoc: this.mapDoc, gameConfig });
+            if (analysis.skipped) { this._setStatus(`cannot analyze "${region.region_id}": ${analysis.skipped}`, true); return; }
+            this.analysis = analysis;
+            for (const line of formatAnalysisReport(analysis)) log('info', line);
+            this._setStatus(
+                `${region.region_id}: ${analysis.components.length} component(s), `
+                + `${analysis.internal_exits.length} proposed internal exit(s)`
+                + (analysis.needs_authoring.length ? `, ${analysis.needs_authoring.length} needing a hand-written rule` : '')
+                + ' — review below, then Accept',
+            );
+        } catch (e) {
+            log('error', 'analyze failed', e);
+            this._setStatus(`analyze failed: ${e.message}`, true);
+        }
+        this.render();
+    }
+
+    _acceptAnalysis() {
+        if (!this.analysis) return;
+        try {
+            // ⛓⛓ ONE OP CARRYING THE PROPOSAL (B-a), not a mutation of the
+            //   live document: `applyRegionAnalysis` is a MERGE whose rules are
+            //   ruling 2 and cannot be spelled as a group of the vocabulary, so
+            //   `apply-analysis` carries the analysis itself — which is what
+            //   lets Undo take an accepted split back off.
+            //   The session still owns identity: the op applies with
+            //   stamp:false, so toDocument() stays the single stamping path.
+            const result = this.session.applyAnalysis(this.analysis);
+            for (const p of result.problems) log('warn', `apply: ${p.message}`);
+            const accepted = this.analysis;
+            this.analysis = null;
+            this._validate();
+            this._setStatus(
+                `applied ${accepted.internal_exits.length} internal exit(s) to "${accepted.region_id}"`
+                + (result.problems.length ? ` — ${result.problems.length} problem(s), see the log` : '')
+                + `; ${this.status}`,
+            );
+        } catch (e) {
+            this._setStatus(`accept failed: ${e.message}`, true);
+        }
+        this.render();
+    }
+
+    _discardAnalysis() {
+        this.analysis = null;
+        this._setStatus('analysis discarded — the atlas is unchanged');
+        this.render();
+    }
+
+    _analysisSection(region) {
+        const a = this.analysis;
+        if (!a || a.region_id !== region.region_id) return null;
+        const children = [
+            el('div', { class: 'rmt-note', textContent: a.split
+                ? `${a.components.length} zero-item components — accepting splits this region into them`
+                : 'one walkable piece — accepting REMOVES any subgraph (a region with no obstacle carries no boilerplate)' }),
+        ];
+
+        const list = el('div', { class: 'rmt-list' });
+        for (const row of a.internal_exits) {
+            const rule = row.access_rule
+                ? describeRule(row.access_rule)
+                : (row.source === 'analyzer' ? 'free' : 'NEEDS A RULE');
+            list.append(el('div', { class: `rmt-row${row.source === 'analyzer' ? '' : ' rmt-warn'}` }, [
+                el('span', { class: 'rmt-mono', textContent: `${row.from} ${row.bidirectional ? '↔' : '→'} ${row.to}` }),
+                el('span', { class: 'rmt-note', textContent: `[${row.source}] ${rule}` }),
+            ]));
+        }
+        if (a.internal_exits.length > 0) children.push(list);
+
+        for (const n of a.needs_authoring) {
+            children.push(el('div', { class: 'rmt-note rmt-warn', textContent: `hand-authoring needed: ${n.from} → ${n.to} — ${n.reasons.join('; ') || 'no derivable rule'}` }));
+        }
+        for (const b of a.boundary_candidates) {
+            children.push(el('div', { class: 'rmt-note', textContent: `one-way drop out of the region at [${b.tile}] — a boundary exit candidate, not an internal crossing` }));
+        }
+        for (const p of a.bindings.filter((x) => x.component && !x.exact)) {
+            children.push(el('div', { class: 'rmt-note', textContent: `${p.kind} "${p.id}" is not on a walkable tile — it would bind to ${p.component.id} by proximity` }));
+        }
+        for (const r of a.review) {
+            children.push(el('div', { class: 'rmt-note rmt-warn', textContent: `review [${r.tile}]: ${r.reason}` }));
+        }
+        for (const u of a.unclassified) {
+            children.push(el('div', { class: 'rmt-note rmt-warn', textContent: `UNCLASSIFIED [${u.tile}]: ${u.what}` }));
+        }
+
+        children.push(el('div', { class: 'rmt-addrow' }, [
+            el('button', { class: 'rmt-btn rmt-primary', textContent: 'Accept', onClick: () => this._acceptAnalysis() }),
+            el('button', { class: 'rmt-btn', textContent: 'Discard', onClick: () => this._discardAnalysis() }),
+        ]));
+        return this._section('Proposed split', children);
+    }
+
+    _setStatus(message, isError = false) {
+        this.status = message;
+        this.statusBar.textContent = message;
+        this.statusBar.classList.toggle('rmt-error', Boolean(isError));
+    }
+
+    // ── inspector ────────────────────────────────────────────────────────
+    render() {
+        this._refreshCanvas();
+        // ⛓ DERIVED FROM THE LIST, never from a flag this file would have to
+        //   keep in step with it.
+        if (this.undoButton) {
+            const n = this.session.edits().length;
+            this.undoButton.disabled = n === 0;
+            this.undoButton.title = n === 0
+                ? 'nothing to undo' : `undo the last of ${n} edit(s) (Ctrl/Cmd+Z)`;
+        }
+        const region = this._currentRegion();
+        this.sidebar.replaceChildren(...[
+            this._atlasSection(),
+            this._regionListSection(),
+            ...(region ? [
+                this._regionSection(region),
+                // Null unless there is a proposal for THIS region.
+                this._analysisSection(region),
+                this._subgraphSection(region),
+                this._exitsSection(region),
+                this._locationsSection(region),
+            ] : []),
+            this._layoutSection(),
+        ].filter(Boolean));
+    }
+
+    _section(title, children) {
+        return el('div', { class: 'rmt-section' }, [el('h4', { textContent: title }), ...[].concat(children)]);
+    }
+
+    _field(label, value, onChange, { placeholder = '' } = {}) {
+        const input = el('input', {
+            class: 'rmt-input', type: 'text', value: value ?? '', placeholder,
+            onChange: (e) => onChange(e.target.value),
+        });
+        return el('label', { class: 'rmt-field' }, [el('span', { textContent: label }), input]);
+    }
+
+    _atlasSection() {
+        const a = this.session.atlas;
+        return this._section('Atlas', [
+            this._field('game', a.game, (v) => this._try(() => {
+                const set = this.session.setGame(v);
+                // ⛓ The session's `baseId` is NOT a document field — it is the
+                //   stem `toDocument()` appends the content hash to — so it
+                //   stays an assignment here rather than becoming part of the op.
+                this.session.baseId = v || 'atlas';
+                return set;
+            }, `game is "${v}"`)),
+            this._field('name', a.name ?? '', (v) => this._try(
+                () => this.session.setName(v), v ? `atlas name is "${v}"` : 'atlas name cleared',
+            )),
+            el('div', { class: 'rmt-note', textContent: `map: ${a.tile_space.map_document ?? '(none)'} · ${a.tile_space.tile_size}px tiles · id ${this.session.baseId}-${this.session.contentHash()}` }),
+        ]);
+    }
+
+    _regionListSection() {
+        const list = el('div', { class: 'rmt-list' });
+        for (const r of this.session.regions()) {
+            const row = el('div', { class: `rmt-row${r.region_id === this.selectedRegionId ? ' rmt-selected' : ''}` }, [
+                el('button', {
+                    class: 'rmt-link',
+                    textContent: `${r.region_id}${r.map_ref !== undefined ? ` @${r.map_ref}` : ''}`,
+                    title: `${r.exits.length} exits, ${r.locations.length} locations`,
+                    onClick: () => {
+                        this.selectedRegionId = r.region_id;
+                        this.selectedExitId = null;
+                        if (r.map_ref !== undefined && r.map_ref !== this.levelId) this._selectLevel(r.map_ref);
+                        else this.render();
+                    },
+                }),
+                el('button', { class: 'rmt-x', textContent: '×', title: 'remove region', onClick: () => {
+                    this._try(() => this.session.removeRegion(r.region_id), `removed "${r.region_id}"`);
+                    if (this.selectedRegionId === r.region_id) this.selectedRegionId = null;
+                    this.render();
+                } }),
+            ]);
+            list.append(row);
+        }
+        if (this.session.regions().length === 0) {
+            list.append(el('div', { class: 'rmt-note', textContent: 'no regions yet — pick Region mode and drag' }));
+        }
+        return this._section(`Regions (${this.session.regions().length})`, list);
+    }
+
+    _regionSection(region) {
+        const b = region.bounds;
+        return this._section(`Region "${region.region_id}"`, [
+            this._field('name', region.name ?? '', (v) => this._try(
+                () => this.session.setRegionName(region.region_id, v),
+                v ? `region name is "${v}"` : 'region name cleared',
+            )),
+            el('div', { class: 'rmt-note', textContent: `bounds ${b.x},${b.y} ${b.w}×${b.h} · level ${region.map_ref ?? '(none)'}` }),
+            this._select('rules_source', ['analyzer', 'manual', 'mixed'], region.annotations?.rules_source ?? 'manual',
+                (v) => this._try(
+                    () => this.session.setRulesSource(region.region_id, v),
+                    `rules_source is "${v}"`,
+                )),
+            el('button', {
+                class: 'rmt-btn', textContent: 'Set as start',
+                onClick: () => this._try(
+                    () => this.session.setStart(region.region_id, this.session.subRegions(region.region_id)?.[0] ?? null),
+                    `start region is "${region.region_id}"`,
+                ),
+            }),
+        ]);
+    }
+
+    _select(label, options, value, onChange) {
+        const sel = el('select', { class: 'rmt-select', onChange: (e) => { onChange(e.target.value); this.render(); } },
+            options.map((o) => el('option', { value: o, textContent: o, selected: o === value })));
+        return el('label', { class: 'rmt-field' }, [el('span', { textContent: label }), sel]);
+    }
+
+    _subgraphSection(region) {
+        const subs = region.subgraph?.sub_regions ?? [];
+        const children = [
+            this._field('sub-regions (comma-separated; empty = none)', subs.join(', '),
+                (v) => this._try(() => this.session.setSubRegions(
+                    region.region_id, v.split(',').map((s) => s.trim()).filter(Boolean),
+                ), 'sub-regions updated')),
+        ];
+        if (subs.length > 0) {
+            const list = el('div', { class: 'rmt-list' });
+            (region.subgraph.internal_exits ?? []).forEach((ie, i) => {
+                const source = ie.source ?? 'manual';
+                // Editing a row in place is the other half of the analyzer
+                // workflow: an analyzer proposal the author disagrees with gets
+                // its rule rewritten and its provenance taken over, which is
+                // what keeps the next re-analysis from overwriting the decision.
+                const rule = el('textarea', {
+                    class: 'rmt-rule', rows: 1,
+                    placeholder: 'access_rule JSON — empty clears it',
+                    value: ie.access_rule ? JSON.stringify(ie.access_rule) : '',
+                });
+                list.append(el('div', { class: `rmt-row${source === 'analyzer' ? '' : ' rmt-warn'}` }, [
+                    el('span', {
+                        class: 'rmt-mono',
+                        textContent: `${ie.from} ${ie.bidirectional ? '↔' : '→'} ${ie.to} [${source}]`,
+                        title: ie.access_rule ? describeRule(ie.access_rule) : 'no rule — this crossing is free',
+                    }),
+                    rule,
+                    el('button', {
+                        class: 'rmt-btn', textContent: 'Set rule',
+                        title: 'rewrite this crossing\'s rule by hand and take the row over from the analyzer',
+                        onClick: () => this._try(() => this.session.setInternalExitRule(region.region_id, i, {
+                            access_rule: this._parseRule(rule.value) ?? null,
+                            source: 'manual',
+                        }), 'internal exit rule set by hand'),
+                    }),
+                    el('button', { class: 'rmt-x', textContent: '×', onClick: () => this._try(
+                        () => this.session.removeInternalExit(region.region_id, i), 'internal exit removed',
+                    ) }),
+                ]));
+            });
+            const from = el('select', { class: 'rmt-select' }, subs.map((s) => el('option', { value: s, textContent: s })));
+            const to = el('select', { class: 'rmt-select' }, subs.map((s) => el('option', { value: s, textContent: s })));
+            const bidi = el('input', { type: 'checkbox', checked: true });
+            const rule = el('textarea', { class: 'rmt-rule', rows: 2, placeholder: 'access_rule JSON, e.g. { "rule": "Has", "args": { "item_name": "Fire" } }' });
+            list.append(el('div', { class: 'rmt-addrow' }, [
+                from, to,
+                el('label', { class: 'rmt-check' }, [bidi, document.createTextNode(' both ways')]),
+                rule,
+                el('button', { class: 'rmt-btn', textContent: 'Add internal exit', onClick: () => this._try(() => {
+                    const access_rule = this._parseRule(rule.value);
+                    return this.session.addInternalExit(region.region_id, {
+                        from: from.value, to: to.value, bidirectional: bidi.checked, access_rule,
+                    });
+                }, 'internal exit added') }),
+            ]));
+            children.push(list);
+        }
+        return this._section('Subgraph', children);
+    }
+
+    // A raw rule field kept honest: empty means "no rule", anything else must
+    // parse AND look like a Rule Builder node, so a typo cannot reach the
+    // document as a string.
+    _parseRule(text) {
+        const trimmed = (text ?? '').trim();
+        if (!trimmed) return undefined;
+        let parsed;
+        try {
+            parsed = JSON.parse(trimmed);
+        } catch (e) {
+            throw new Error(`access_rule is not valid JSON: ${e.message}`);
+        }
+        if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed) || typeof parsed.rule !== 'string') {
+            throw new Error('access_rule must be a Rule Builder object, e.g. { "rule": "Has", "args": { "item_name": "Fire" } }');
+        }
+        return parsed;
+    }
+
+    _subRegionPicker(region, current, onChange) {
+        const subs = region.subgraph?.sub_regions ?? null;
+        if (!subs) return null;
+        return el('select', { class: 'rmt-select rmt-sub', onChange: (e) => { onChange(e.target.value); this.render(); } },
+            subs.map((s) => el('option', { value: s, textContent: s, selected: s === current })));
+    }
+
+    _exitsSection(region) {
+        const list = el('div', { class: 'rmt-list' });
+        for (const exit of region.exits) {
+            const selected = exit.exit_id === this.selectedExitId;
+            const rule = el('textarea', {
+                class: 'rmt-rule', rows: 1, value: exit.access_rule ? JSON.stringify(exit.access_rule) : '',
+                placeholder: 'access_rule JSON (optional)',
+                onChange: (e) => this._try(() => {
+                    const parsed = this._parseRule(e.target.value);
+                    // ⛓ `undefined` from the parser means "the box is empty";
+                    //   the op spells that `null`, because `undefined` does not
+                    //   survive an edit list's JSON round trip.
+                    return this.session.setExitRule(
+                        region.region_id, exit.exit_id, parsed === undefined ? null : parsed,
+                    );
+                }, 'exit rule updated'),
+            });
+            list.append(el('div', { class: `rmt-row rmt-block${selected ? ' rmt-selected' : ''}` }, [
+                el('button', {
+                    class: 'rmt-link',
+                    textContent: `${exit.exit_id} · ${exit.kind}${exit.side ? ` ${exit.side}` : ''} · ${exit.exit_tiles.length} tile(s) · spawn [${exit.entrance_tile}]`,
+                    onClick: () => { this.selectedExitId = selected ? null : exit.exit_id; this.render(); },
+                }),
+                this._subRegionPicker(region, exit.sub_region,
+                    (v) => this._try(() => this.session.assignSubRegion(region.region_id, 'exit', exit.exit_id, v), 'exit reassigned')),
+                rule,
+                el('button', { class: 'rmt-x', textContent: '×', onClick: () => {
+                    this._try(() => this.session.removeExit(region.region_id, exit.exit_id), `removed exit "${exit.exit_id}"`);
+                    if (selected) this.selectedExitId = null;
+                    this.render();
+                } }),
+            ]));
+        }
+        if (region.exits.length === 0) {
+            list.append(el('div', { class: 'rmt-note', textContent: 'no exits — use Edge exit / Teleporter mode' }));
+        }
+        return this._section(`Exits (${region.exits.length})`, list);
+    }
+
+    _locationsSection(region) {
+        const list = el('div', { class: 'rmt-list' });
+        for (const loc of region.locations) {
+            list.append(el('div', { class: 'rmt-row rmt-block' }, [
+                el('span', { class: 'rmt-mono', textContent: `${loc.name} @ [${loc.tile}]` }),
+                el('input', {
+                    class: 'rmt-input', type: 'text', value: loc.vanilla_item ?? '', placeholder: 'vanilla item',
+                    onChange: (e) => this._try(
+                        () => this.session.setLocationItem(region.region_id, loc.name, e.target.value.trim()),
+                        'vanilla item updated',
+                    ),
+                }),
+                this._subRegionPicker(region, loc.sub_region,
+                    (v) => this._try(() => this.session.assignSubRegion(region.region_id, 'location', loc.name, v), 'location reassigned')),
+                el('button', { class: 'rmt-x', textContent: '×', onClick: () => {
+                    this._try(() => this.session.removeLocation(region.region_id, loc.name), `removed "${loc.name}"`);
+                } }),
+            ]));
+        }
+        if (region.locations.length === 0) {
+            list.append(el('div', { class: 'rmt-note', textContent: 'no locations — use Location mode; pickups show as yellow markers' }));
+        }
+        return this._section(`Locations (${region.locations.length})`, list);
+    }
+
+    _layoutSection() {
+        const layout = this.session.atlas.vanilla_layout;
+        const list = el('div', { class: 'rmt-list' });
+        layout.connections.forEach((c, i) => {
+            list.append(el('div', { class: 'rmt-row' }, [
+                el('span', { class: 'rmt-mono', textContent: `${c.from[0]}/${c.from[1]} ↔ ${c.to[0]}/${c.to[1]}` }),
+                el('button', { class: 'rmt-x', textContent: '×', onClick: () => this._try(() => this.session.disconnect(i), 'disconnected') }),
+            ]));
+        });
+
+        const endpoints = this.session.regions().flatMap(
+            (r) => r.exits.map((e) => ({ value: `${r.region_id} ${e.exit_id}`, label: `${r.region_id}/${e.exit_id}` })),
+        );
+        const mkPicker = () => el('select', { class: 'rmt-select' },
+            endpoints.map((o) => el('option', { value: o.value, textContent: o.label })));
+        const from = mkPicker();
+        const to = mkPicker();
+        list.append(el('div', { class: 'rmt-addrow' }, [
+            from, to,
+            el('button', { class: 'rmt-btn', textContent: 'Connect', onClick: () => this._try(
+                () => this.session.connect(from.value.split(' '), to.value.split(' ')), 'connected',
+            ) }),
+        ]));
+
+        const startSubs = this.session.regions().find((r) => r.region_id === layout.start_region)?.subgraph?.sub_regions;
+        return this._section('Vanilla layout', [
+            el('div', { class: 'rmt-note', textContent: `start: ${layout.start_region || '(unset)'}${layout.start_sub_region ? ` / ${layout.start_sub_region}` : ''}` }),
+            startSubs ? this._select('start sub-region', startSubs, layout.start_sub_region ?? startSubs[0],
+                (v) => this._try(() => this.session.setStart(layout.start_region, v), 'start sub-region set')) : null,
+            list,
+        ]);
+    }
+}
+
+export { rectBounds };

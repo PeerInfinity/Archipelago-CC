@@ -1,8 +1,6 @@
 /**
  * bounceDemo — host module for the Bounce Demo (DJ-Metroidvania)
- * substrate's embed phase
- * (NewDocs/plans/procedural-generation/dj-metroidvania-v2.md §"App
- * integration").
+ * substrate (docs/json/developer/procgen/bounce.md).
  *
  * Bounce rides flashSubstrate's machinery as shared CODE, not shared
  * instances: the panel class comes from flashSubstratePanel.js's

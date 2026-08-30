@@ -569,8 +569,7 @@
 }
 
 /* Maze action queue (Cavernous-2-style icon row). Sits under the
- * Playback controls section in the panel. See
- * NewDocs/plans/procedural-generation/maze-content-modules.md Phase 1.
+ * Playback controls section in the panel.
  */
 .maze-room-queue {
     padding: 6px 8px;

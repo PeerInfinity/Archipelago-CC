@@ -1,0 +1,417 @@
+{
+  "tape_version": 5,
+  "game": "seedling",
+  "name": "r5-bobboss-fire-control",
+  "description": "THE BOBBOSS CHAIN, arm 2 of 2 — the sword WITHHELD. Identical to `r5-bobboss-fire` in every field but `grants`. The presses still page all fourteen dialogue pages, because paging is what a press does while `Game.freezeObjects` is up; what they cannot do is hit anything, because `useItem` reads `Inventory.getItem(Main.primary)` off an EMPTY slot array. So form 0 never dies, forms 1 and 2 never exist, `Fire` is never spawned, and the ledger keeps only {32,1} — the rock, which the walk armed with its feet. Without this arm, \"the walk ended holding fire\" is not evidence that the sword did anything.",
+  "boot": {
+    "level": 32,
+    "x": 72,
+    "y": 120
+  },
+  "noclip": false,
+  "noDamage": true,
+  "noHazards": [
+    "water",
+    "waterfall"
+  ],
+  "grants": [],
+  "persistence": [],
+  "equips": [],
+  "pins": [
+    "sound",
+    "dead_frames"
+  ],
+  "tick_count": 2500,
+  "inputs": [
+    {
+      "key": "up",
+      "from": 4,
+      "to": 18
+    },
+    {
+      "key": "primary",
+      "from": 26,
+      "to": 28
+    },
+    {
+      "key": "primary",
+      "from": 57,
+      "to": 59
+    },
+    {
+      "key": "primary",
+      "from": 88,
+      "to": 90
+    },
+    {
+      "key": "primary",
+      "from": 119,
+      "to": 121
+    },
+    {
+      "key": "primary",
+      "from": 150,
+      "to": 152
+    },
+    {
+      "key": "primary",
+      "from": 181,
+      "to": 183
+    },
+    {
+      "key": "primary",
+      "from": 212,
+      "to": 214
+    },
+    {
+      "key": "primary",
+      "from": 243,
+      "to": 245
+    },
+    {
+      "key": "primary",
+      "from": 274,
+      "to": 276
+    },
+    {
+      "key": "primary",
+      "from": 305,
+      "to": 307
+    },
+    {
+      "key": "primary",
+      "from": 336,
+      "to": 338
+    },
+    {
+      "key": "primary",
+      "from": 367,
+      "to": 369
+    },
+    {
+      "key": "primary",
+      "from": 398,
+      "to": 400
+    },
+    {
+      "key": "primary",
+      "from": 429,
+      "to": 431
+    },
+    {
+      "key": "primary",
+      "from": 460,
+      "to": 462
+    },
+    {
+      "key": "primary",
+      "from": 491,
+      "to": 493
+    },
+    {
+      "key": "primary",
+      "from": 522,
+      "to": 524
+    },
+    {
+      "key": "primary",
+      "from": 553,
+      "to": 555
+    },
+    {
+      "key": "primary",
+      "from": 584,
+      "to": 586
+    },
+    {
+      "key": "primary",
+      "from": 615,
+      "to": 617
+    },
+    {
+      "key": "primary",
+      "from": 646,
+      "to": 648
+    },
+    {
+      "key": "primary",
+      "from": 677,
+      "to": 679
+    },
+    {
+      "key": "primary",
+      "from": 708,
+      "to": 710
+    },
+    {
+      "key": "primary",
+      "from": 739,
+      "to": 741
+    },
+    {
+      "key": "primary",
+      "from": 770,
+      "to": 772
+    },
+    {
+      "key": "primary",
+      "from": 801,
+      "to": 803
+    },
+    {
+      "key": "primary",
+      "from": 832,
+      "to": 834
+    },
+    {
+      "key": "primary",
+      "from": 863,
+      "to": 865
+    },
+    {
+      "key": "primary",
+      "from": 894,
+      "to": 896
+    },
+    {
+      "key": "primary",
+      "from": 925,
+      "to": 927
+    },
+    {
+      "key": "primary",
+      "from": 956,
+      "to": 958
+    },
+    {
+      "key": "primary",
+      "from": 987,
+      "to": 989
+    },
+    {
+      "key": "primary",
+      "from": 1018,
+      "to": 1020
+    },
+    {
+      "key": "primary",
+      "from": 1049,
+      "to": 1051
+    },
+    {
+      "key": "primary",
+      "from": 1080,
+      "to": 1082
+    },
+    {
+      "key": "primary",
+      "from": 1111,
+      "to": 1113
+    },
+    {
+      "key": "primary",
+      "from": 1142,
+      "to": 1144
+    },
+    {
+      "key": "primary",
+      "from": 1173,
+      "to": 1175
+    },
+    {
+      "key": "primary",
+      "from": 1204,
+      "to": 1206
+    },
+    {
+      "key": "primary",
+      "from": 1235,
+      "to": 1237
+    },
+    {
+      "key": "primary",
+      "from": 1266,
+      "to": 1268
+    },
+    {
+      "key": "primary",
+      "from": 1297,
+      "to": 1299
+    },
+    {
+      "key": "primary",
+      "from": 1328,
+      "to": 1330
+    },
+    {
+      "key": "primary",
+      "from": 1359,
+      "to": 1361
+    },
+    {
+      "key": "primary",
+      "from": 1390,
+      "to": 1392
+    },
+    {
+      "key": "primary",
+      "from": 1421,
+      "to": 1423
+    },
+    {
+      "key": "primary",
+      "from": 1452,
+      "to": 1454
+    },
+    {
+      "key": "primary",
+      "from": 1483,
+      "to": 1485
+    },
+    {
+      "key": "primary",
+      "from": 1514,
+      "to": 1516
+    },
+    {
+      "key": "primary",
+      "from": 1545,
+      "to": 1547
+    },
+    {
+      "key": "primary",
+      "from": 1576,
+      "to": 1578
+    },
+    {
+      "key": "primary",
+      "from": 1607,
+      "to": 1609
+    },
+    {
+      "key": "primary",
+      "from": 1638,
+      "to": 1640
+    },
+    {
+      "key": "primary",
+      "from": 1669,
+      "to": 1671
+    },
+    {
+      "key": "primary",
+      "from": 1700,
+      "to": 1702
+    },
+    {
+      "key": "primary",
+      "from": 1731,
+      "to": 1733
+    },
+    {
+      "key": "primary",
+      "from": 1762,
+      "to": 1764
+    },
+    {
+      "key": "primary",
+      "from": 1793,
+      "to": 1795
+    },
+    {
+      "key": "up",
+      "from": 1800,
+      "to": 1880
+    },
+    {
+      "key": "primary",
+      "from": 1824,
+      "to": 1826
+    },
+    {
+      "key": "primary",
+      "from": 1855,
+      "to": 1857
+    },
+    {
+      "key": "primary",
+      "from": 1886,
+      "to": 1888
+    },
+    {
+      "key": "primary",
+      "from": 1917,
+      "to": 1919
+    },
+    {
+      "key": "primary",
+      "from": 1948,
+      "to": 1950
+    },
+    {
+      "key": "primary",
+      "from": 1979,
+      "to": 1981
+    },
+    {
+      "key": "primary",
+      "from": 2010,
+      "to": 2012
+    },
+    {
+      "key": "primary",
+      "from": 2041,
+      "to": 2043
+    },
+    {
+      "key": "primary",
+      "from": 2072,
+      "to": 2074
+    },
+    {
+      "key": "primary",
+      "from": 2103,
+      "to": 2105
+    },
+    {
+      "key": "primary",
+      "from": 2134,
+      "to": 2136
+    },
+    {
+      "key": "primary",
+      "from": 2165,
+      "to": 2167
+    },
+    {
+      "key": "primary",
+      "from": 2196,
+      "to": 2198
+    },
+    {
+      "key": "primary",
+      "from": 2227,
+      "to": 2229
+    },
+    {
+      "key": "primary",
+      "from": 2258,
+      "to": 2260
+    },
+    {
+      "key": "primary",
+      "from": 2289,
+      "to": 2291
+    },
+    {
+      "key": "primary",
+      "from": 2320,
+      "to": 2322
+    },
+    {
+      "key": "primary",
+      "from": 2351,
+      "to": 2353
+    }
+  ]
+}

@@ -7,7 +7,7 @@ import logging
 import sys
 from typing import Any, Dict, List, Set, Tuple, Optional
 
-from rule_builder import BOOLEAN_RULE_TYPES
+from .constants import BOOLEAN_RULE_TYPES
 
 from ._codegen_utils import (
     is_placement_lookup,

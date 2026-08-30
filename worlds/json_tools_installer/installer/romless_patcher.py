@@ -386,6 +386,21 @@ def apply_romless_patches(
         version = detect_ap_version()
 
     result = RomlessPatchResult(success=True)
+
+    # Frozen (compiled) installs run their worlds from lib/worlds/*.apworld
+    # and lib/library.zip — file patches written to the root worlds/
+    # directory would never be loaded. Fail honestly instead of reporting
+    # success while changing nothing.
+    from Utils import is_frozen
+    if is_frozen():
+        result.success = False
+        result.errors.append(
+            "ROM-less patches are not supported on compiled Archipelago "
+            "installs: the bundled worlds run from lib/worlds/*.apworld, "
+            "which file patches cannot reach."
+        )
+        return result
+
     root = Path(local_path())
 
     # Find downloaded patches for this version

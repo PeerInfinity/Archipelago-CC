@@ -189,7 +189,6 @@ Modified world implementations to support generation without ROM files:
 - Yoshi's Island (yoshisisland)
 
 ### Test Files
-- **test/general/test_implemented.py** - Added "The Messenger" and "Overcooked! 2" to `excluded_games` in `test_slot_data` to prevent flaky fill failures. These original worlds have tight access rules that cause `FillError` with certain random seeds when the fill algorithm's item ordering creates an unresolvable deadlock.
 - **test/general/test_items.py** - Added `DLCQuest` coins to item exclusion dict; added logic to propagate exclusions from base games to WorldGen variants (e.g., "A Link to the Past WorldGen" inherits "A Link to the Past" exclusions)
 - **test/general/test_reachability.py** - Added `shapez` "Achievements needing a MAM" to unreachable regions; added same WorldGen variant propagation logic
 - **test/general/test_rule_builder.py** - Added ~600 lines of evaluation tests for fork-only Rule Builder rule types: CountItem, CountFromList, Compare, Arithmetic, MinValue, MaxValue, WeightedSum, and more
