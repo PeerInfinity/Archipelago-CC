@@ -161,6 +161,22 @@ describe('spawnTargetsIn — a reference, never a usage line', () => {
             .toEqual([]);
     });
 
+    /** ⛔⛔ THE THREE COSTUMES A SPELLING-ONLY RULE WORE, each measured on
+     *  this repo: a NAME LIST in a frozen array (`BOX_LOCK_HOLDERS`), a lock
+     *  LABEL, and a markdown backtick pair inside a prose string, which a
+     *  lexer reads as a template literal that is exactly a path. */
+    it('does NOT take a filename from a NAME LIST', () => {
+        expect(of("export const HOLDERS = Object.freeze(['gen.mjs', 'drive.py']);")).toEqual([]);
+    });
+
+    it('does NOT take a filename used as a LABEL', () => {
+        expect(of("takeBoxLockOrExit({ name: 'gen.mjs', kind: 'browser' });")).toEqual([]);
+    });
+
+    it('does NOT take a backticked filename inside a prose string', () => {
+        expect(of("const s = 'the gate `gen.mjs` imports the same module';")).toEqual([]);
+    });
+
     /** ⛔ An import is population 1's business; counting it here would make
      *  SPAWN a superset of CODE and the two digests could never disagree. */
     it('does NOT take a `./` import specifier', () => {
@@ -189,7 +205,7 @@ describe('digestOf — the PATH is in the digest, not only the content', () => {
 
 const WORLD = {
     files: {
-        'scripts/procgen/check-x.mjs': "import './dep.js';\nconst D = 'scripts/procgen/drive.py';"
+        'scripts/procgen/check-x.mjs': "import './dep.js';\nconst D = join(HERE, 'drive.py');"
             + "\nconst T = 'r9-tape-1';\n",
         'scripts/procgen/dep.js': 'export const a = 1;\n',
         'scripts/procgen/drive.py': 'print(1)\n',

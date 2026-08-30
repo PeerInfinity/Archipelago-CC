@@ -80,6 +80,10 @@
  *   bytes this repo does not hold. Such a row is UNKEYABLE, derived from its
  *   own command, and always re-runs. At this head that selects ZERO rows and
  *   the writer says so out loud.
+ * · An UNTRACKED file is invisible: every population is derived from `git
+ *   ls-files`, so a new instrument that has not been added yet moves no key.
+ *   That is the right default (a key must be reproducible from a commit) and
+ *   it is why a slice banks its rows AFTER committing, not before.
  * · Wall-clock, machine load and a GPU driver are not bytes. The key is about
  *   INPUTS; the detector arm is about everything else.
  */
@@ -217,6 +221,36 @@ const PATH_LITERAL_RE =
 const STRING_LITERAL_RE = /(['"`])((?:\\.|(?!\1)[^\\])*?)\1/g;
 
 /**
+ * ⛓⛓ THE CALLS THAT TURN A STRING INTO A PATH. A bare filename in a source is
+ * a path only when something USES it as one; everywhere else it is a name.
+ */
+const PATH_CALL_RE =
+    /\b(?:join|resolve|execFile|execFileSync|spawn|spawnSync|execSync|exec|import)\s*\(/g;
+
+/** Read a balanced `(…)` argument list starting at `open` (the `(`), quotes
+ *  respected — the same scan `reachClosure.balancedArgs` makes, and for the
+ *  same reason: `[^)]*` stops at the first `)` and `join(REPO, f(x))` has two. */
+function balancedArgs(text, open) {
+    let depth = 0;
+    let quote = null;
+    for (let i = open; i < text.length; i += 1) {
+        const ch = text[i];
+        if (quote) {
+            if (ch === '\\') { i += 1; continue; }
+            if (ch === quote) quote = null;
+            continue;
+        }
+        if (ch === '"' || ch === "'" || ch === '`') { quote = ch; continue; }
+        if (ch === '(') depth += 1;
+        else if (ch === ')') {
+            depth -= 1;
+            if (depth === 0) return text.slice(open + 1, i);
+        }
+    }
+    return null;
+}
+
+/**
  * ⛓⛓⛓ **THE MENTION, STRIPPED — the law `gateRoster.js` states for
  * `SIBLING_RE` and R9 slice 12j paid for twice.** `CLI_TARGET_RE` reads a
  * command line, and a docblock in this directory is FULL of command lines:
@@ -263,35 +297,67 @@ const isSpawnable = (rel) =>
  *
  * ⇒ two spellings count, and both are how a spawn is actually written here:
  *
- *   · the literal IS the path — `join(REPO, 'scripts/procgen/x.mjs')`,
- *     `execFileSync('node', [GENERATOR, …])`, `join(HERE, 'driver.py')`;
+ *   · the literal IS USED AS A PATH — it sits inside a `join`/`resolve`/
+ *     `execFile*`/`spawn*`/`import` call: `join(HERE, 'driver.py')`,
+ *     `join(REPO, 'scripts/procgen/x.mjs')`, `execFileSync('node',
+ *     [join(HERE, 'rerecord-seedling-campaign.mjs'), …])`;
  *   · the literal IS a command line for it — `'node scripts/procgen/x.mjs
  *     --seed=2'`, which is exactly the shape of the demo catalogue's `cli`
  *     fields, parsed by SG1's own `cliTargetsIn` rather than a second reader.
+ *
+ * ⛔⛔ **THE CALL CONTEXT IS THE TEST, AND SPELLING ALONE WAS NOT ENOUGH —
+ * MEASURED, ON THIS SLICE'S OWN FIRST CUT.** `check-seedling-wasm-element`
+ * spawns NOTHING (playwright, in-process) and came back with 253 spawn
+ * members. The bare-filename rule had picked up three costumes none of which
+ * is a spawn: `boxLock.js`'s `BOX_LOCK_HOLDERS`/`BOX_LOCK_EXEMPT` — a NAME
+ * LIST in a frozen array, which is data ABOUT instruments; the gate's own lock
+ * label `takeBoxLockOrExit({ name: 'check-seedling-wasm-element.mjs' })`; and
+ * `glossary.js`'s prose, where a markdown backtick pair inside a single-quoted
+ * sentence reads to a lexer as a TEMPLATE LITERAL that happens to be exactly a
+ * path. A bare filename in a source is a path only when something USES it as
+ * one.
  *
  * ⛔ A `./`-PREFIXED LITERAL IS AN IMPORT AND IS EXCLUDED. `'./boxLock.js'`
  * is population 1's business; counting it here would make SPAWN a superset of
  * CODE and the two digests would stop being able to disagree.
  *
- * ⚠ WHAT IT STILL OVER-COUNTS, stated: a `console.log` that PRINTS a bare
- * command line beginning with `node ` (12j's third costume). That is the safe
- * direction — a spurious re-measure — and the printed population is where a
- * reader sees it.
+ * ⚠ WHAT IT STILL OVER-COUNTS, stated rather than implied: a closure that
+ * merely IMPORTS the demo catalogue inherits the `cli` targets of every row in
+ * it, because "this module imports the catalogue" and "this gate runs the
+ * catalogue's command lines" are not separable from the outside. That is the
+ * conservative direction — a spurious re-measure, never a stale green — and
+ * the printed population is where a reader sees it.
  */
 export function spawnTargetsIn(text, { tracked, fromFile }) {
     const out = new Set();
     const code = stripComments(text);
     const add = (rel) => { if (tracked.has(rel) && isSpawnable(rel)) out.add(rel); };
     const dir = fromFile.split('/').slice(0, -1).join('/');
+    /* ⛓ (1) a literal USED AS A PATH — only inside a path-shaped call. */
+    PATH_CALL_RE.lastIndex = 0;
+    let call = PATH_CALL_RE.exec(code);
+    while (call !== null) {
+        const args = balancedArgs(code, call.index + call[0].length - 1);
+        if (args) {
+            STRING_LITERAL_RE.lastIndex = 0;
+            let a = STRING_LITERAL_RE.exec(args);
+            while (a !== null) {
+                const lit = a[2];
+                if (!lit.startsWith('.') && /^[A-Za-z0-9_./-]+\.(?:mjs|js|py|sh)$/.test(lit)) {
+                    add(lit);
+                    if (dir) add(`${dir}/${lit}`);
+                }
+                a = STRING_LITERAL_RE.exec(args);
+            }
+        }
+        call = PATH_CALL_RE.exec(code);
+    }
+    /* ⛓ (2) a literal that IS a command line — the catalogue's `cli` shape. */
     STRING_LITERAL_RE.lastIndex = 0;
     let m = STRING_LITERAL_RE.exec(code);
     while (m !== null) {
-        const lit = m[2];
-        if (!lit.startsWith('.') && /^[A-Za-z0-9_./-]+\.(?:mjs|js|py|sh)$/.test(lit)) {
-            add(lit);
-            if (dir) add(`${dir}/${lit}`);
-        } else if (/^\s*node\s/.test(lit)) {
-            for (const f of cliTargetsIn(lit)) add(`${SCRIPT_DIR}/${f}`);
+        if (/^\s*node\s/.test(m[2])) {
+            for (const f of cliTargetsIn(m[2])) add(`${SCRIPT_DIR}/${f}`);
         }
         m = STRING_LITERAL_RE.exec(code);
     }
