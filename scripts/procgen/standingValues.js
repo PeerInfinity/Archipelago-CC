@@ -91,6 +91,164 @@ export function cheapFor(ms, previousCheap) {
     return { cheap: previousCheap, held: previousCheap !== bare };
 }
 
+/**
+ * ── ⛓⛓⛓ THE COMPOSITE CHECKPOINT ROW (R9 slice CAT, ⚖ 69 (c) / ⚖ 70 (c)) ──
+ *
+ * `roster: --win --tier=full` is the one row no headless session can ever
+ * re-run: 150 tapes driven through the real game on a Windows GPU. ⚖ 69 (a)
+ * made it a COMPOSITE for the first time — part measured at L15's head, the
+ * 120-tape complement quoted from an earlier same-build run — and stated that
+ * composition in PROSE, in the row's own `why`. ⚖ 17 forbids reading prose as
+ * data, and the owed gate says so on every run ("the row's own `why` is PROSE
+ * and is NOT read here"), so the composition had nowhere to live that anything
+ * could act on.
+ *
+ * ⇒ **The parts become DATA.** `row.categories` carries one entry per derived
+ * category (`fixtures/tiers.js`), each with its own tape count, its own
+ * measured value and — the field the owed gate actually needs — its own
+ * `measuredAt`. The row's `value` and `why` are then DERIVED FROM THE PARTS on
+ * every write and re-derived on every read, so a hand edit to either cannot
+ * survive: the file says what the parts say or the check refuses BY NAME.
+ *
+ * ── ⛔ A PART MAY BE INHERITED, AND IT SAYS SO ────────────────────────
+ *
+ * A part whose category has never been driven ALONE has no separable value:
+ * ⚖ 69 (a) banked the complement as ONE number over 120 tapes, and splitting
+ * it by category after the fact would be inventing a measurement. So a part
+ * may carry `value: null` with `coveredBy` naming the run that covers it. Such
+ * a part still carries a true `measuredAt` — the head at which every tape in
+ * the category was driven — which is all the debt question needs. The derived
+ * value names those tapes rather than summing them, and the row becomes a pure
+ * sum the first time each category is driven on its own.
+ */
+
+/** The one key the checkpoint row lives under, spelled once. */
+export const ROSTER_ROW_KEY = 'roster: --win --tier=full';
+
+/** `P/F/S` (skips optional), the form every differential value is quoted in. */
+const COUNTS_RE = /^(\d+)\/(\d+)(?:\/(\d+))?$/;
+
+/**
+ * The parts of a composite row, in the categories' own order.
+ *
+ * ⛓ A row with no `categories` is NOT a composite and this returns `[]` —
+ * every reader branches on that rather than on the row's key, so an ordinary
+ * quoted row keeps working unchanged.
+ */
+export function compositeParts(row, categories) {
+    if (!row?.categories) return [];
+    const order = categories ?? Object.keys(row.categories);
+    return order
+        .filter((c) => row.categories[c])
+        .map((c) => ({ category: c, ...row.categories[c] }));
+}
+
+/**
+ * The row's `value`, DERIVED from its parts — never typed, never kept.
+ *
+ * Every part separable  ⇒ `150 tapes 3702/0/40`, a pure sum.
+ * Any part inherited    ⇒ the sum of what is separable, then the inherited
+ *                         tapes named with the head that covers them, so a
+ *                         reader can never mistake the total for a number
+ *                         somebody measured over the whole roster.
+ */
+export function compositeValue(row, categories) {
+    const parts = compositeParts(row, categories);
+    if (!parts.length) return row?.value ?? null;
+    const tapes = parts.reduce((n, p) => n + (p.tapes ?? 0), 0);
+    const separable = parts.filter((p) => COUNTS_RE.test(p.value ?? ''));
+    const inherited = parts.filter((p) => !COUNTS_RE.test(p.value ?? ''));
+    const sum = [0, 0, 0];
+    for (const p of separable) {
+        const m = COUNTS_RE.exec(p.value);
+        sum[0] += Number(m[1]); sum[1] += Number(m[2]); sum[2] += Number(m[3] ?? 0);
+    }
+    const heads = [...new Set(inherited.map((p) => p.measuredAt))].join(' / ');
+    if (!inherited.length) return `${tapes} tapes ${sum[0]}/${sum[1]}/${sum[2]}`;
+    const carried = `${inherited.map((p) => `${p.category} ${p.tapes}`).join(' + ')} `
+        + `@${heads}, not separately banked`;
+    if (!separable.length) return `${tapes} tapes @${heads}, not separately banked by category`;
+    return `${tapes} tapes: ${separable.map((p) => `${p.category} ${p.tapes} ${p.value} `
+        + `@${p.measuredAt}`).join(' + ')} + ${carried}`;
+}
+
+/**
+ * The row's `why`, DERIVED from its parts — ⚖ 17's whole point.
+ *
+ * ⛔ IT OVERWRITES A HAND EDIT. The previous shape of this row carried a
+ * paragraph a human wrote and a human had to keep true; the owed gate then had
+ * to say, on every run, that it refuses to read it. One line per part,
+ * generated, is a `why` that cannot go stale — and a check that re-derives it
+ * makes an edit to the file a NAMED failure instead of a quiet fiction.
+ *
+ * ⛓ A `coveredBy` shared by several parts is stated ONCE. Three copies of the
+ * same sentence is how a reader learns to stop reading the field.
+ */
+export function compositeWhy(row, categories) {
+    const parts = compositeParts(row, categories);
+    if (!parts.length) return row?.why ?? null;
+    const lines = parts.map((p) => (COUNTS_RE.test(p.value ?? '')
+        ? `${p.category} ${p.tapes} tape(s) ${p.value} MEASURED @${p.measuredAt}`
+        : `${p.category} ${p.tapes} tape(s) @${p.measuredAt}, not separately banked`));
+    const covers = [...new Set(parts.map((p) => p.coveredBy).filter(Boolean))];
+    return `DERIVED from the parts (⚖ 70 (c)) — ${lines.join(' · ')}. Each part carries its `
+        + 'OWN head: a category is owed a drive when the tree moved under IT, not when the '
+        + `tree moved at all.${covers.length
+            ? ` ⛓ Carried by: ${covers.join(' ; ')}.` : ''}`;
+}
+
+/**
+ * A composite row with one category's part replaced — the `--quote` path.
+ *
+ * ⛓ The row's `value` and `why` are re-derived here, so quoting a category
+ * is the ONLY way either of them can change and neither can disagree with the
+ * parts.
+ */
+export function withCategoryQuote(row, { category, tapes, value, measuredAt, coveredBy },
+    { categories, isAncestor } = {}) {
+    if (!category) throw new Error('withCategoryQuote: --category= is required');
+    const next = {
+        ...row,
+        categories: {
+            ...(row?.categories ?? {}),
+            [category]: {
+                tapes,
+                value: value ?? null,
+                measuredAt,
+                ...(coveredBy ? { coveredBy } : {}),
+            },
+        },
+    };
+    next.value = compositeValue(next, categories);
+    next.why = compositeWhy(next, categories);
+    next.quoted = true;
+    next.measuredAt = oldestPartHead(next, { categories, isAncestor }) ?? next.measuredAt;
+    return next;
+}
+
+/**
+ * ⛔ THE ROW'S OWN `measuredAt` IS THE OLDEST PART'S, and it has to be: a
+ * consumer that knows nothing about categories — and there are several —
+ * reads that field as "the head this value is about", and answering with the
+ * NEWEST part would tell it the row is fresher than its oldest measurement.
+ * The direction of error is the owed gate's own: a spurious re-measure over a
+ * missed one.
+ *
+ * ⛓ ANCESTRY IS INJECTED, never guessed. Commit hashes do not order, so
+ * "oldest" is `git merge-base --is-ancestor` and this module does not shell
+ * out; the caller that has a repo passes the predicate, and a test passes a
+ * stub. With no predicate the FIRST part's head is kept and nothing is
+ * invented.
+ */
+export function oldestPartHead(row, { categories, isAncestor } = {}) {
+    const heads = compositeParts(row, categories).map((p) => p.measuredAt).filter(Boolean);
+    if (!heads.length) return null;
+    if (!isAncestor) return heads[0];
+    let oldest = heads[0];
+    for (const h of heads.slice(1)) if (h !== oldest && isAncestor(h, oldest)) oldest = h;
+    return oldest;
+}
+
 /** The head a measurement belongs to — a value without one cannot be reproduced. */
 export function head({ repo = REPO } = {}) {
     try {

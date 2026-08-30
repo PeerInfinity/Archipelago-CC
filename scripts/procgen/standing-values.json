@@ -561,13 +561,33 @@
       "total": "success"
     },
     "roster: --win --tier=full": {
-      "value": "150 tapes 3641/0/120",
+      "value": "150 tapes @36b71996d, not separately banked by category",
       "command": null,
       "kind": "identity",
       "cheap": false,
       "quoted": true,
-      "why": "⚖ 69 B-NARROW, R9 slice L15 (2026-08-30). COMPOSITE: solver roster + dash witnesses MEASURED by S4 at this head after the ⚖ 68 split:true re-record of the 17 campaign segments (r9-solve-15 first recorded at 36b71996d, 457 obs, 0 hits); the 120-tape COMPLEMENT (2774/0/15) QUOTED from the --full-roster tier at 36b71996d (same wasm 68817865, same driver, same complement bytes) — proof: two builds in one process at 14e7370f3, 150/150 streams identical, 0 movers; the flip touched two producers and the 17 chain tapes’ `split` lines only (`git diff --name-only`), and no complement tape is a chain segment. `check-seedling-full-tier-owed` reads the 17 chain tapes as moved since 36b71996d and stays RED BY NAME on purpose (⚖ 69 (c): a roster-CATEGORY slice is the next work order).",
-      "measuredAt": "36b71996d"
+      "why": "DERIVED from the parts (⚖ 70 (c)) — campaign 26 tape(s) @36b71996d, not separately banked · map-walk 21 tape(s) @36b71996d, not separately banked · mechanic 103 tape(s) @36b71996d, not separately banked. Each part carries its OWN head: a category is owed a drive when the tree moved under IT, not when the tree moved at all. ⛓ Carried by: the `--full-roster` tier at 36b71996d, whose composite total ⚖ 69 (a) banked as 150 tapes 3641/0/120 (its 120-tape complement 2774/0/15).",
+      "measuredAt": "36b71996d",
+      "categories": {
+        "campaign": {
+          "tapes": 26,
+          "value": null,
+          "measuredAt": "36b71996d",
+          "coveredBy": "the `--full-roster` tier at 36b71996d, whose composite total ⚖ 69 (a) banked as 150 tapes 3641/0/120 (its 120-tape complement 2774/0/15)"
+        },
+        "map-walk": {
+          "tapes": 21,
+          "value": null,
+          "measuredAt": "36b71996d",
+          "coveredBy": "the `--full-roster` tier at 36b71996d, whose composite total ⚖ 69 (a) banked as 150 tapes 3641/0/120 (its 120-tape complement 2774/0/15)"
+        },
+        "mechanic": {
+          "tapes": 103,
+          "value": null,
+          "measuredAt": "36b71996d",
+          "coveredBy": "the `--full-roster` tier at 36b71996d, whose composite total ⚖ 69 (a) banked as 150 tapes 3641/0/120 (its 120-tape complement 2774/0/15)"
+        }
+      }
     },
     "producer: plan-seedling-r9-l6-sword-dash-hit --check": {
       "value": "70fc55c6321c4d97ea582f5aea58c0e5",
