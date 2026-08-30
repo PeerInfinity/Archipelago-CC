@@ -906,6 +906,36 @@ describe('TIER 1 — admission at queue time', () => {
      * recording from tick 0, and surfaces as somebody else's `rng` refusal
      * several boundaries later (§16.8's `boundary 5/15`).
      */
+    /**
+     * ⛓⛓⛓ ⚖ 68 (R9 slice L15) — THE CAMPAIGN DECLARES `split: true` ON EVERY
+     * WINDOW, AND THE SEQUENCE ADMISSION IS WHAT REFUSES A CHAIN THAT DOES
+     * NOT. Read off the committed chain (all seventeen), then one window
+     * flipped back: the refusal names the window and the static it would
+     * re-route (mutant (a) of the offline half).
+     */
+    it('⛓ ⚖ 68: all seventeen campaign windows declare `split: true`, and the queue admits', async () => {
+        const { CAMPAIGN_SEGMENT_NAMES, CAMPAIGN_RNG_SPLIT } = await import('./campaignChain.js');
+        expect(CAMPAIGN_RNG_SPLIT).toBe(true);
+        const chain = CAMPAIGN_SEGMENT_NAMES.map((n) => loadTape(n));
+        for (const t of chain) {
+            expect(t.rng.split, t.name).toBe(true);
+            expect(t.tick0?.rng?.split, `${t.name} tick0`).toBe(true);
+        }
+        const fs = sequenceAdmission(chain);
+        expect(fs.filter((f) => /rng\.split/.test(f.what))).toEqual([]);
+    });
+
+    it('⛔ ⚖ 68 MUTANT: one window declaring `split: false` is refused by name', async () => {
+        const { CAMPAIGN_SEGMENT_NAMES } = await import('./campaignChain.js');
+        const chain = CAMPAIGN_SEGMENT_NAMES.map((n) => loadTape(n));
+        const mutated = chain.map((t, i) => (i === 9
+            ? { ...t, rng: { ...t.rng, split: false } } : t));
+        const fs = sequenceAdmission(mutated);
+        const row = fs.find((f) => f.what === 'a later window declares a different `rng.split`');
+        expect(row, JSON.stringify(fs.map((f) => f.what))).toBeTruthy();
+        expect(row.where).toContain(CAMPAIGN_SEGMENT_NAMES[9]);
+    });
+
     it('⛔ a later window with NO tick-0 latch is refused, with the command', () => {
         const fs = sequenceAdmission([tape(), tape({ name: 'r8-solve-6', tick0: undefined })]);
         const row = fs.find((f) => f.what === 'a later window declares no tick-0 latch');

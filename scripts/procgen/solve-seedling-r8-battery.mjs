@@ -82,6 +82,8 @@ import {
     existsSync, mkdirSync, readFileSync, writeFileSync,
 } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { CAMPAIGN_RNG_SPLIT, CAMPAIGN_SEGMENT_NAMES }
+    from '../../frontend/modules/seedlingDemo/campaignChain.js';
 import { committedTick0, tick0ParseFields, despawnField, tick0Field }
     from './tick0Carry.js';
 import { createWalkReport } from './walkReport.js';
@@ -376,7 +378,16 @@ function tapeJson(obj, description) {
     // that dropped it would report DRIFT on a tape nothing drifted in, and
     // "fixing" that by re-running would DELETE the game's measurement.
     const tick0 = committedTick0(TAPES, obj.name);
-    const parsed = parseTape({ ...obj, ...tick0ParseFields(tick0, obj) });
+    /**
+     * ⛓⛓⛓ ⚖ 68 — the four PROMOTED campaign rows this producer emits
+     * (`r8-solve-1..4`) carry the chain's one `split` declaration, on the boot
+     * rng and the carried tick-0 rng, exactly as the campaign producer does for
+     * the rows it owns; a battery room that is not a chain segment is untouched.
+     */
+    const onChain = CAMPAIGN_SEGMENT_NAMES.includes(obj.name);
+    const splitRng = (rng) => (onChain && rng ? { ...rng, split: CAMPAIGN_RNG_SPLIT } : rng);
+    const tick0Split = onChain && tick0 && tick0.rng ? { ...tick0, rng: splitRng(tick0.rng) } : tick0;
+    const parsed = parseTape({ ...obj, rng: splitRng(obj.rng), ...tick0ParseFields(tick0Split, obj) });
     return `${JSON.stringify({
         tape_version: requiredTapeVersion(parsed),
         game: 'seedling',

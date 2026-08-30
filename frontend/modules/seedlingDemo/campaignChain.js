@@ -155,6 +155,27 @@ export const CAMPAIGN_SEGMENTS = Object.freeze([
 export const CAMPAIGN_CHAIN_ID = 'r9-campaign';
 
 /**
+ * ⛓⛓⛓ ⚖ 68 (user, 2026-08-29: "I choose B now") — EVERY CAMPAIGN SEGMENT
+ * DECLARES `rng.split: true` AND BOOTS THE LATCHED `cosmetic` STATE.
+ *
+ * The chain's boundary 16/17 refused on the pre-build `rng`: `Music.playSound`
+ * draws its sound INDEX from the one global LFSR, a pinned mixer whose
+ * channels are reset once per ▶ Start replays (and draws) fewer indices on a
+ * continuation than a fresh page does, and the live seed at the boundary was
+ * the tape's TWO draws behind (measured with `rngRuler`). With the split ON,
+ * `Rng.cos()` — sound indices, tile and grass ctors, chest coin counts, the
+ * moonrock beams — lands on the COSMETIC stream, which the admission carries
+ * and never asserts, and the gameplay stream is what gameplay draws.
+ * `Rng.split` is a STATIC `botStart` assigns on every load, so a chain must
+ * declare it on every window or none (`director.sequenceAdmission` refuses
+ * a later window that differs) — hence one declaration here, applied by the
+ * producer to every segment it emits. `segmentBootFromLatch` already authors
+ * `split` and `cosmetic` from the latch; the re-record measures the cosmetic
+ * states. The r8-d2 staged chain is untouched.
+ */
+export const CAMPAIGN_RNG_SPLIT = true;
+
+/**
  * The segment tape NAMES, in order. This is what `PAGE_CHAINS` and
  * `PLAYTHROUGH_CHAINS[].segments` are: the same list, one derivation.
  */

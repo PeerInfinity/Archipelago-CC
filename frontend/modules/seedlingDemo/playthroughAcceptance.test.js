@@ -946,7 +946,7 @@ describe('chainGoalFindings — EARNED is measured, and the set is two-sided', (
      * the crossing, so exactly one segment BOOTS L14 now and the tail's own
      * stream ends one room further on.
      */
-    it('⛓⛓ every campaign segment ARRIVES where its successor BOOTS, and the tail reaches L15', () => {
+    it('⛓⛓ every campaign segment ARRIVES where its successor BOOTS, and the tail reaches L16', () => {
         const chain = PLAYTHROUGH_CHAINS.find((c) => c.id === 'r9-campaign');
         const arrivalOf = (n) => loadExpectation(n).stream.ticks.at(-1).level;
         const seams = chain.segments.slice(0, -1).map((n, i) => ({
@@ -959,7 +959,8 @@ describe('chainGoalFindings — EARNED is measured, and the set is two-sided', (
         // ⛓ THE TAIL — the sixteenth room is L14 and the walk CROSSES it
         expect(chain.segments.filter((n) => loadTape(n).boot.level === 14))
             .toEqual(['r9-solve-14']);
-        expect(arrivalOf(chain.segments.at(-1))).toBe(15);
+        // ⛓ R9 slice L15: the tail is `r9-solve-15` and it arrives in L16.
+        expect(arrivalOf(chain.segments.at(-1))).toBe(16);
     });
 
     /**

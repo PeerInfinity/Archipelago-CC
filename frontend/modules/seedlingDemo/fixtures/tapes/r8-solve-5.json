@@ -33,7 +33,7 @@
     },
     "rng": {
         "seed": 1726967612,
-        "split": false,
+        "split": true,
         "cosmetic": 0,
         "fp": 750204808
     },
@@ -77,7 +77,7 @@
     "tick0": {
         "rng": {
             "seed": 1525057075,
-            "split": false,
+            "split": true,
             "cosmetic": 0,
             "fp": 341033166
         },

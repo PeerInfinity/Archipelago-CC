@@ -51,7 +51,8 @@ describe('the campaign chain has ONE declaration (R9 slice 12d)', () => {
     it('⛔ the producer declares no segment list of its own — it imports this one', () => {
         const src = readFileSync(
             join(REPO, 'scripts/procgen/solve-seedling-r9-campaign.mjs'), 'utf8');
-        expect(src).toMatch(/import \{ CAMPAIGN_SEGMENTS \} from/);
+        // ⚖ 68: the same import also carries the chain's `split` declaration.
+        expect(src).toMatch(/import \{ CAMPAIGN_SEGMENTS(?:, CAMPAIGN_RNG_SPLIT)? \} from/);
         expect(src).toMatch(/const SEGMENTS = CAMPAIGN_SEGMENTS\.map\(/);
         // non-vacuity: the scan really is reading the producer
         expect(src).toMatch(/solve-seedling-r9-campaign/);
