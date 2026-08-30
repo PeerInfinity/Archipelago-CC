@@ -27,7 +27,8 @@
  * cannot — a silent watcher would make Phase E vacuous.
  *
  * Prereqs:
- *   - dev server on :8000 (python -m http.server 8000 at repo root)
+ *   - a repo-root dev server (`python -m http.server 8000`); `--host=` names
+ *     another one, e.g. a worktree's own port
  *   - the wasm build, which since `0aa7878e8` is the SUBMODULE
  *     PeerInfinity/seedling-wasm at frontend/modules/flashPanel/wasm/, so a
  *     `--recurse-submodules` checkout has it. SKIPs (exit 0) when absent.
@@ -39,7 +40,7 @@
  * Headless: WebGPU comes up on swiftshader, same flags as
  * verify-seedling-wasm-bridge.mjs.
  *
- * Run: node scripts/procgen/verify-seedling-atlas-play.mjs
+ * Run: node scripts/procgen/verify-seedling-atlas-play.mjs [--host=http://localhost:8000]
  */
 import { chromium } from 'playwright';
 import { existsSync, readFileSync } from 'node:fs';
@@ -94,7 +95,22 @@ const TO_NEST = exitOf(START_REGION, 'owls_nest_stairs');
 const FROM_NEST = exitOf('owls_nest_entrance', 'stairs_up');
 const TO_HOUSE = exitOf(START_REGION, 'house_door');
 
-const URL = 'http://localhost:8000/frontend/?game=seedling_atlas&seed=1';
+/**
+ * ⛓ `--host=` — WHICH SERVER, AND WHY IT IS A FLAG NOW. The default is
+ * unchanged (`http://localhost:8000`), so every existing caller and CI step
+ * behaves exactly as before. ⛔ BUT :8000 SERVES THE PRIMARY WORKTREE (trap
+ * 1003), so a slice working in its own tree could not run this row against
+ * ITS OWN code at all — which is precisely how this file sat broken through
+ * slice P1 (it waited for a p4c iframe the preset had stopped naming) with
+ * nothing to catch it: its one automated caller is `seedling-wasm.yml` STEP 2,
+ * `continue-on-error: true`. A gate nobody can point at their own tree is a
+ * gate nobody runs.
+ *
+ *   node scripts/procgen/verify-seedling-atlas-play.mjs --host=http://localhost:8129
+ */
+const HOST = (process.argv.find((a) => a.startsWith('--host=')) ?? '--host=http://localhost:8000')
+    .slice('--host='.length).replace(/\/+$/, '');
+const URL = `${HOST}/frontend/?game=seedling_atlas&seed=1`;
 
 const browser = await chromium.launch({
     args: [
