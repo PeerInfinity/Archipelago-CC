@@ -153,7 +153,7 @@ the branch itself before you merge.
 ### 2.1 Exclusions (verify before generating)
 
 Some games are intentionally excluded from generation (see
-`scripts/test/template-exclude-list.json`, wired into
+`scripts/data/template-exclude-list.json`, wired into
 `scripts/utils/generate_all_templates.sh`):
 
 - **`generation_exclude_list`** — OoT (string-compiled rules the exporter can't
@@ -162,6 +162,15 @@ Some games are intentionally excluded from generation (see
 - **UT Pickle Mode** → permanent `exclude_list` (it is a tracker mode, not a game).
 - **Seedling** → `worldgen_test_exclude_list` (its worldgen variant generates
   broken; the base preset is kept).
+
+- **`worldgen_generation_whitelist`** (2026-08-30) — a *whitelist*, not an
+  exclude list: the ONLY base templates whose worldgen world
+  (`worlds/<x>_worldgen`) and preset are generated and committed. Applied by
+  `list-template-files.py --include` after the exclude lists. Every other
+  game's worldgen variant is transient — `test-world-generator.py` builds and
+  deletes it. Today: A Link to the Past, APCalc, Baking Adventure, Coding
+  Adventure, DepGraph, Metamath, TOEM original, TOEM rule builder.
+  `generate_worldgen2` now defaults to **false**.
 
 If Phase 1 added or removed games, reconcile these lists first.
 
@@ -185,6 +194,32 @@ lingering from the upstream merge); the `merge` run produces the final regen.
 Run each **once**. If a code fix forces a re-run, just re-dispatch — the squash
 merge-back (next step) keeps `main` clean regardless of how many runs `generated-presets`
 accumulated.
+
+**What each mode is actually for — and when one `merge` run is enough.** A
+`merge` run on its own already lands *both* the additions and the deletions:
+it merges `origin/main` into the branch (so the branch tree *is* main's tree),
+`clean_existing` wipes `frontend/presets/` and `worlds/*_worldgen*` from that
+tree, the script regenerates the generation set, and the `Generate presets`
+commit stages the new files **and** the deletion of everything it did not
+regenerate. The squash merge-back copies the branch's tree, so `main` gets
+exactly that. `reset` exists for one specific problem: **zombie files** — files
+the branch still carries that `main` deleted long ago and that no step
+regenerates or removes (the "Remove files deleted on main" step only sees
+deletions newer than the merge base). Measure before spending a run:
+
+```bash
+git fetch origin generated-presets
+# Anything the branch has that main does not, outside the regenerated trees:
+git diff --name-status origin/main origin/generated-presets -- . \
+  ':(exclude)frontend/presets/' ':(exclude)worlds/' | grep '^A'
+git merge-base --is-ancestor origin/main origin/generated-presets && echo ancestor
+```
+
+Zero `A` lines and `ancestor` ⇒ a single `merge` run suffices (2026-08-30:
+0 zombies after the baseline run; only `world-mapping.json`,
+`scripts/output/world-generator/test-results.json` and
+`generated_commands.sh` differed, all regenerated). Any `A` line ⇒ run
+`reset` first.
 
 Review the merge run's logs for error floods (`gh run view --log-failed`).
 Known-clean release signatures: 0 "Failed to analyze or expand rule", no
@@ -283,10 +318,16 @@ It:
    `scripts/release/preserved-dev-presets.txt` from the ref and merges their
    `preset_files.json` entries back, so the dev index = canonical + preserved.
 
-The preserved set is **only** the genuine dev/demo presets
-(`jta_mixed_test`, `jta_substrate_test`, `procgen_maze`, `robotkitty_tilemap`).
-Worldgen worlds (`worlds/*_worldgen`) and `*_worldgen` preset dirs are
-**intentionally not preserved** — do not add them to the list.
+The preserved set is every preset dir on `main` that the workflow does not
+produce: the dev/demo/test presets (`jta_*_test`, `omsi_*_test`, `procgen_maze`,
+`robotkitty_tilemap`, `seedling_atlas*`, `seedling_playthrough`) **and** the
+hand-maintained worldgen demos (`bounce_worldgen`, `runner_worldgen`,
+`runner_sphere_worldgen`), whose `worlds/<id>` package the script restores as
+well (2026-08-30). *Workflow-produced* worldgen worlds and their preset dirs —
+the `worldgen_generation_whitelist` set — are **not** preserved: the workflow
+regenerates them; do not add those. Before each release, diff
+`git ls-tree -d --name-only origin/main frontend/presets/` against the
+`generated-presets` branch and add any new hand-made dir to the list.
 
 ### 2.6 Verify before pushing
 

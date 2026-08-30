@@ -2633,7 +2633,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "AlphaArmΩ V",
+              "name": "AlphaArm\u03a9 V",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6577,8 +6577,8 @@
         "type": null,
         "max_count": 1
       },
-      "AlphaArmΩ V": {
-        "name": "AlphaArmΩ V",
+      "AlphaArm\u03a9 V": {
+        "name": "AlphaArm\u03a9 V",
         "id": 11735171,
         "groups": [
           "BattleChips",
@@ -7693,7 +7693,7 @@
       "AirShoes *": 1,
       "AirShot3 *": 1,
       "Airshoes": 1,
-      "AlphaArmΩ V": 1,
+      "AlphaArm\u03a9 V": 1,
       "AntiNavi M": 1,
       "AntiRecv B": 1,
       "AntiSword Y": 1,

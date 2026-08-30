@@ -131,7 +131,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Sädekivi",
+              "name": "S\u00e4dekivi",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2597,8 +2597,8 @@
         "type": null,
         "max_count": 1
       },
-      "Sädekivi": {
-        "name": "Sädekivi",
+      "S\u00e4dekivi": {
+        "name": "S\u00e4dekivi",
         "id": 110030,
         "groups": [
           "Everything",
@@ -2750,7 +2750,7 @@
       "Refreshing Gourd": 1,
       "Secret Potion": 4,
       "Spell Refresher": 6,
-      "Sädekivi": 1,
+      "S\u00e4dekivi": 1,
       "Tinker with Wands Everywhere Perk": 1,
       "Toxic Immunity Perk": 1,
       "Trap": 10,
@@ -2806,7 +2806,7 @@
       "Underground Jungle Chest 1": "Wand (Tier 3)",
       "Coal Pits Pedestal 2": "Wand (Tier 1)",
       "Temple of the Art Chest 3": "Wand (Tier 1)",
-      "Coal Pits Pedestal 3": "Sädekivi",
+      "Coal Pits Pedestal 3": "S\u00e4dekivi",
       "Coal Pits Pedestal 4": "Trap",
       "Hiisi Base Holy Mountain Shop Item 3": "Trap",
       "Hiisi Base Holy Mountain Shop Item 5": "Trap",

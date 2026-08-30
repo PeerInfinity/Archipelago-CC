@@ -10,6 +10,7 @@ Usage:
     python scripts/utils/list-template-files.py
     python scripts/utils/list-template-files.py --exclude main_test_exclude_list
     python scripts/utils/list-template-files.py --exclude main_test_exclude_list --exclude worldgen_test_exclude_list
+    python scripts/utils/list-template-files.py --exclude worldgen_test_exclude_list --include worldgen_generation_whitelist
 """
 
 import argparse
@@ -31,6 +32,13 @@ def main():
         help='Additional exclude list(s) to apply from template-exclude-list.json '
              '(e.g. main_test_exclude_list, worldgen_test_exclude_list). '
              'Can be specified multiple times. Exclusions are cumulative.'
+    )
+    parser.add_argument(
+        '--include', action='append', default=[], metavar='LIST_NAME',
+        help='Restrict output to templates named in these list(s) from '
+             'template-exclude-list.json (e.g. worldgen_generation_whitelist). '
+             'Applied after exclusions; can be specified multiple times (union). '
+             'Without --include the output is unrestricted (default behaviour).'
     )
     parser.add_argument(
         '--world-mapping',
@@ -55,8 +63,8 @@ def main():
     # Always apply the permanent exclude_list
     lists_to_apply = ['exclude_list'] + args.exclude
 
-    # Validate requested exclude lists exist
-    for list_name in lists_to_apply:
+    # Validate requested exclude/include lists exist
+    for list_name in lists_to_apply + args.include:
         if list_name not in exclude_data:
             print(f"Error: '{list_name}' not found in {args.exclude_file}", file=sys.stderr)
             print(f"Available lists: {[k for k in exclude_data if k != 'comment']}", file=sys.stderr)
@@ -67,6 +75,14 @@ def main():
     for list_name in lists_to_apply:
         for entry in exclude_data[list_name]:
             excluded_files.add(entry['name'])
+
+    # Build the optional whitelist (None = unrestricted)
+    included_files = None
+    if args.include:
+        included_files = set()
+        for list_name in args.include:
+            for entry in exclude_data[list_name]:
+                included_files.add(entry['name'])
 
     # Filter world mapping entries
     for game_name in sorted(world_mapping):
@@ -83,6 +99,10 @@ def main():
 
         # Skip excluded templates
         if template_file in excluded_files:
+            continue
+
+        # Skip templates outside the whitelist (when one was given)
+        if included_files is not None and template_file not in included_files:
             continue
 
         print(template_file)

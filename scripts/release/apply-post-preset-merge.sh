@@ -19,8 +19,10 @@
 #      dev index (preset_files.json) = canonical (live) + preserved dev presets.
 #
 # The set of preserved presets is read from preserved-dev-presets.txt (one
-# game-id per line). Worldgen worlds (worlds/*_worldgen) and *_worldgen preset
-# dirs are intentionally NOT restored.
+# game-id per line). Workflow-produced worldgen worlds (worlds/*_worldgen) and *_worldgen preset
+# dirs are intentionally NOT restored; hand-maintained worldgen presets that ARE
+# listed (bounce/runner/runner_sphere) get both their preset dir and their
+# worlds/<id> package restored.
 #
 # Idempotent: re-running recomputes the canonical index by stripping the
 # preserved ids from the current preset_files.json, so it is stable no matter
@@ -132,6 +134,13 @@ for id in "${PRESERVED[@]}"; do
     [ "$DRY_RUN" = "1" ] || git checkout "$FROM_REF" -- "$path"
   else
     echo "  WARNING: $path absent from $FROM_REF — skipped" >&2
+  fi
+  # A hand-maintained worldgen preset has a worlds/<id> package on main that the
+  # workflow's clean_existing also deletes and never regenerates — restore it too.
+  wpath="worlds/$id"
+  if [ -n "$(git ls-tree -r --name-only "$FROM_REF" -- "$wpath")" ]; then
+    echo "  restore $wpath"
+    [ "$DRY_RUN" = "1" ] || git checkout "$FROM_REF" -- "$wpath"
   fi
 done
 

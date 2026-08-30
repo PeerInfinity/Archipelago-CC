@@ -69,7 +69,7 @@
                   "Quad Cutter",
                   "Quad Painter",
                   "Rotator",
-                  "Rotator (180°)",
+                  "Rotator (180\u00b0)",
                   "Rotator (CCW)",
                   "Stacker",
                   "Storage",
@@ -1776,7 +1776,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Rotator (180°)",
+              "name": "Rotator (180\u00b0)",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -3384,8 +3384,8 @@
         "type": null,
         "max_count": 1
       },
-      "Rotator (180°)": {
-        "name": "Rotator (180°)",
+      "Rotator (180\u00b0)": {
+        "name": "Rotator (180\u00b0)",
         "id": 20010711,
         "groups": [
           "Everything",
@@ -4182,7 +4182,7 @@
       "Quad Cutter": 1,
       "Quad Painter": 1,
       "Rotator": 1,
-      "Rotator (180°)": 1,
+      "Rotator (180\u00b0)": 1,
       "Rotator (CCW)": 1,
       "Small Belt Upgrade": 13,
       "Small Miner Upgrade": 13,
@@ -5464,7 +5464,7 @@
               },
               {
                 "type": "constant",
-                "value": "Rotator (180°)"
+                "value": "Rotator (180\u00b0)"
               }
             ]
           }

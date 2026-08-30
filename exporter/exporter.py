@@ -9,7 +9,7 @@ import os
 import inspect
 import shutil
 from functools import lru_cache, partial
-from typing import Any, Dict, List, Set, Optional, Tuple
+from typing import Any, Dict, List, Set, Optional, Sequence, Tuple
 from collections import defaultdict
 
 import Utils
@@ -2641,22 +2641,48 @@ def _get_cleaned_rules_data(multiworld) -> Dict[str, Any]:
 # They are deliberately kept out of Main's zip staging directory (see
 # worlds/json_tools_installer/monkey_patches/hooks.py), because a stock WebHost
 # rejects an upload whose archive contains them. The output directory is shared
-# by every seed, so the preset copy has to pick these out by name instead of
-# mirroring the whole folder the way it can for a per-seed staging directory.
+# by every seed, so the preset copy picks this generation's artifacts out BY
+# NAME (see _preset_artifact_names) instead of mirroring the whole folder the
+# way it can for a per-seed staging directory.
 PRESET_ARTIFACT_SUFFIXES = ("_rules.json", "_rules-ast.json", "_sphere_log.jsonl")
 
 
-def _collect_preset_source_files(output_dir: str, staging_dir: Optional[str], filename_base: str) -> List[str]:
+def _preset_artifact_names(filename_base: str, player_ids: Sequence[int] = ()) -> List[str]:
+    """
+    The exact basenames this generation's export can have written into the
+    shared output directory: the combined rules (+AST), one per-player rules
+    (+AST) file per player when there is more than one, and the sphere log.
+
+    A prefix match on the seed name is NOT enough: seed names collide across
+    generations (a 4-player multiworld at --seed 1 and every single-player
+    --seed 1 preset all share AP_14089154938208861744), so a stale
+    AP_<seed>_P1_rules.json left by an earlier multiworld run would otherwise
+    be swept into every later single-player preset (2026-08-30, 148 dirs).
+    """
+    names = [f"{filename_base}_rules.json", f"{filename_base}_rules-ast.json"]
+    if len(player_ids) > 1:
+        for player in player_ids:
+            names.append(f"{filename_base}_P{player}_rules.json")
+            names.append(f"{filename_base}_P{player}_rules-ast.json")
+    names.append(f"{filename_base}_sphere_log.jsonl")
+    return names
+
+
+def _collect_preset_source_files(output_dir: str, staging_dir: Optional[str], filename_base: str,
+                                 player_ids: Sequence[int] = ()) -> List[str]:
     """
     Collect the files that should be mirrored into a preset directory.
 
     Args:
-        output_dir: Archipelago's output directory — shared by all seeds, so only
-            this seed's JSON Tools artifacts are taken from it.
+        output_dir: Archipelago's output directory — shared by all seeds AND by
+            earlier generations of the same seed name, so only the artifacts
+            this generation can have written (by exact name) are taken from it.
         staging_dir: Main's per-seed zip staging directory, when the export runs
             from the Spoiler.to_file hook. It only ever holds this seed's files
             (multidata, spoiler, per-player game files), so all of them are taken.
         filename_base: Base name for this seed's output files
+        player_ids: This multiworld's player ids; per-player artifacts are
+            expected only when there is more than one.
 
     Returns:
         Sorted list of absolute-or-relative source paths, one per basename.
@@ -2671,9 +2697,7 @@ def _collect_preset_source_files(output_dir: str, staging_dir: Optional[str], fi
                 sources[name] = path
 
     if os.path.isdir(output_dir):
-        for name in os.listdir(output_dir):
-            if not name.startswith(filename_base) or not name.endswith(PRESET_ARTIFACT_SUFFIXES):
-                continue
+        for name in _preset_artifact_names(filename_base, player_ids):
             path = os.path.join(output_dir, name)
             if os.path.isfile(path):
                 sources[name] = path
@@ -3125,7 +3149,8 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
 
         # The files that make up this preset: this seed's artifacts from the output
         # directory plus everything Main staged for the ZIP.
-        preset_sources = _collect_preset_source_files(output_dir, staging_dir, filename_base)
+        preset_sources = _collect_preset_source_files(
+            output_dir, staging_dir, filename_base, list(multiworld.player_ids))
         source_json_paths = {
             os.path.basename(path): path for path in preset_sources if path.endswith('.json')
         }

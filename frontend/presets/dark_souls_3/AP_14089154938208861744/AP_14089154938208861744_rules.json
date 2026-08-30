@@ -2004,12 +2004,12 @@
             "progress_type": "EXCLUDED"
           },
           {
-            "name": "FSBT: Armor of the Sun - crow for Siegbräu",
+            "name": "FSBT: Armor of the Sun - crow for Siegbr\u00e4u",
             "id": 100124,
             "access_rule": {
               "rule": "Has",
               "args": {
-                "item_name": "Siegbräu"
+                "item_name": "Siegbr\u00e4u"
               }
             },
             "item": {
@@ -4437,7 +4437,7 @@
             "progress_type": "EXCLUDED"
           },
           {
-            "name": "US: Siegbräu - Siegward",
+            "name": "US: Siegbr\u00e4u - Siegward",
             "id": 100285,
             "access_rule": {
               "rule": "True_"
@@ -5549,7 +5549,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Siegbräu",
+              "name": "Siegbr\u00e4u",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -7344,7 +7344,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Siegbräu",
+              "name": "Siegbr\u00e4u",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -10766,7 +10766,7 @@
               ]
             },
             "item": {
-              "name": "Siegbräu",
+              "name": "Siegbr\u00e4u",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -11637,7 +11637,7 @@
             "progress_type": "EXCLUDED"
           },
           {
-            "name": "IBV: Siegbräu - Siegward",
+            "name": "IBV: Siegbr\u00e4u - Siegward",
             "id": 100746,
             "access_rule": {
               "rule": "True_"
@@ -13356,7 +13356,7 @@
             "progress_type": "EXCLUDED"
           },
           {
-            "name": "PC: Siegbräu - Siegward after killing boss",
+            "name": "PC: Siegbr\u00e4u - Siegward after killing boss",
             "id": 100849,
             "access_rule": {
               "rule": "And",
@@ -29635,8 +29635,8 @@
         "type": null,
         "max_count": 4
       },
-      "Siegbräu": {
-        "name": "Siegbräu",
+      "Siegbr\u00e4u": {
+        "name": "Siegbr\u00e4u",
         "id": 100846,
         "groups": [
           "Everything",
@@ -34350,7 +34350,7 @@
       "Shield of Want": 1,
       "Shotel": 1,
       "Shriving Stone": 6,
-      "Siegbräu": 3,
+      "Siegbr\u00e4u": 3,
       "Silver Eagle Kite Shield": 1,
       "Silver Mask": 1,
       "Silvercat Ring": 1,
@@ -34730,7 +34730,7 @@
           "DH: Purple Moss Clump - swamp shack",
           "DH: Rusted Coin - behind fountain after church",
           "DH: Rusted Gold Coin - shop",
-          "DH: Siegbräu - Lapp",
+          "DH: Siegbr\u00e4u - Lapp",
           "DH: Soul of a Crestfallen Knight - church, altar",
           "DH: Soul of a Weary Warrior - castle overhang",
           "DH: Titanite Chunk - castle, up stairs",
@@ -34992,7 +34992,7 @@
           "IBV: Rusted Gold Coin - Distant Manor, drop after stairs",
           "IBV: Rusted Gold Coin - descent, side path",
           "IBV: Shriving Stone - descent, dark room rafters",
-          "IBV: Siegbräu - Siegward",
+          "IBV: Siegbr\u00e4u - Siegward",
           "IBV: Soul of a Weary Warrior - ascent, by final staircase",
           "IBV: Soul of a Weary Warrior - central, by first fountain",
           "IBV: Soul of a Weary Warrior - central, railing by first fountain",
@@ -35101,7 +35101,7 @@
           "PC: Rusted Gold Coin - halls above swamp",
           "PC: Rusted Gold Coin - palace, mimic in far room",
           "PC: Shriving Stone - swamp, by chapel door",
-          "PC: Siegbräu - Siegward after killing boss",
+          "PC: Siegbr\u00e4u - Siegward after killing boss",
           "PC: Twinkling Titanite - halls above swamp, lizard #1",
           "PC: Twinkling Titanite - halls above swamp, lizard #2",
           "PW1: Black Firebomb - snowfield lower, path to bonfire",
@@ -35204,7 +35204,7 @@
           "RC: Shira's Gloves - Shira's room after killing ashes NPC",
           "RC: Shira's Trousers - Shira's room after killing ashes NPC",
           "RC: Shriving Stone - wall tower, bottom floor center",
-          "RC: Siegbräu - Lapp",
+          "RC: Siegbr\u00e4u - Lapp",
           "RC: Simple Gem - grave, up stairs after first drop",
           "RC: Soul of a Crestfallen Knight - swamp far, behind crystal",
           "RC: Soul of a Crestfallen Knight - swamp near left, nook",
@@ -35340,7 +35340,7 @@
           "US: Repair Powder - first building, balcony",
           "US: Rusted Coin - awning above Dilapidated Bridge",
           "US: Sharp Gem - lizard by Dilapidated Bridge",
-          "US: Siegbräu - Siegward",
+          "US: Siegbr\u00e4u - Siegward",
           "US: Soul of a Nameless Soldier - top of tower",
           "US: Soul of an Unknown Traveler - back alley, past crates",
           "US: Soul of an Unknown Traveler - chasm crypt",
@@ -35940,7 +35940,7 @@
         "Fire Gem",
         "Sharp Gem",
         "Heavy Gem",
-        "Siegbräu",
+        "Siegbr\u00e4u",
         "Heavy Gem",
         "Heavy Soul Arrow",
         "Magic Weapon",
@@ -36359,7 +36359,7 @@
         "Twinkling Titanite",
         "Twinkling Titanite",
         "Large Titanite Shard",
-        "Siegbräu",
+        "Siegbr\u00e4u",
         "Emit Force",
         "Sneering Mask",
         "Pale Shade Robe",
@@ -36455,7 +36455,7 @@
         "Greatshield of Glory",
         "Twinkling Titanite",
         "Twinkling Titanite",
-        "Siegbräu",
+        "Siegbr\u00e4u",
         "Pierce Shield",
         "Soul of Aldrich",
         "Cinders of a Lord - Aldrich",

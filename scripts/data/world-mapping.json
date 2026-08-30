@@ -307,6 +307,17 @@
     "template_file": "Bomb Rush Cyberfunk.yaml",
     "world_directory": "bomb_rush_cyberfunk"
   },
+  "Bounce Demo WorldGen": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "Bounce Demo WorldGen",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "Bounce Demo WorldGen.yaml",
+    "world_directory": "bounce_worldgen"
+  },
   "Bumper Stickers": {
     "exporter_path": null,
     "exporter_size": 0,
@@ -868,6 +879,17 @@
     "template_file": "Links Awakening DX.yaml",
     "world_directory": "ladx"
   },
+  "Links Awakening DX WorldGen": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "Links Awakening DX WorldGen",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "Links Awakening DX WorldGen.yaml",
+    "world_directory": "ladx_worldgen"
+  },
   "Lufia II Ancient Cave": {
     "exporter_path": null,
     "exporter_size": 0,
@@ -1176,6 +1198,28 @@
     "template_file": "Rule Builder Test.yaml",
     "world_directory": "rulebuilder_test"
   },
+  "Runner Sphere WorldGen": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "Runner Sphere WorldGen",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "Runner Sphere WorldGen.yaml",
+    "world_directory": "runner_sphere_worldgen"
+  },
+  "Runner WorldGen": {
+    "exporter_path": null,
+    "exporter_size": 0,
+    "game_logic_path": null,
+    "game_logic_size": 0,
+    "game_name": "Runner WorldGen",
+    "has_custom_exporter": false,
+    "has_custom_game_logic": false,
+    "template_file": "Runner WorldGen.yaml",
+    "world_directory": "runner_worldgen"
+  },
   "SMZ3": {
     "exporter_path": "exporter/games/official/smz3.py",
     "exporter_size": 55486,
@@ -1241,17 +1285,6 @@
     "has_custom_game_logic": false,
     "template_file": "Seedling.yaml",
     "world_directory": "seedling"
-  },
-  "Seedling Playthrough": {
-    "exporter_path": null,
-    "exporter_size": 0,
-    "game_logic_path": null,
-    "game_logic_size": 0,
-    "game_name": "Seedling Playthrough",
-    "has_custom_exporter": false,
-    "has_custom_game_logic": false,
-    "template_file": "Seedling Playthrough.yaml",
-    "world_directory": "seedling_playthrough"
   },
   "Shivers": {
     "exporter_path": null,

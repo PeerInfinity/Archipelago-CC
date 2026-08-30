@@ -32,7 +32,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Fjällbjörn hat",
+              "name": "Fj\u00e4llbj\u00f6rn hat",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -439,7 +439,7 @@
             "locked": false
           },
           {
-            "name": "Item - Fjällbjörn hat",
+            "name": "Item - Fj\u00e4llbj\u00f6rn hat",
             "id": 48,
             "access_rule": {
               "rule": "True_"
@@ -585,7 +585,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Fräs photo",
+              "name": "Fr\u00e4s photo",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -827,7 +827,7 @@
             "locked": false
           },
           {
-            "name": "Compendium - Fräs",
+            "name": "Compendium - Fr\u00e4s",
             "id": 79,
             "access_rule": {
               "rule": "True_"
@@ -1927,7 +1927,7 @@
             "locked": false
           },
           {
-            "name": "Compendium - Mikée",
+            "name": "Compendium - Mik\u00e9e",
             "id": 164,
             "access_rule": {
               "rule": "True_"
@@ -2202,7 +2202,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Mikée photo",
+              "name": "Mik\u00e9e photo",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -2652,8 +2652,8 @@
         "type": null,
         "max_count": 1
       },
-      "Fräs photo": {
-        "name": "Fräs photo",
+      "Fr\u00e4s photo": {
+        "name": "Fr\u00e4s photo",
         "id": 28,
         "groups": [
           "Everything",
@@ -2904,8 +2904,8 @@
         "type": null,
         "max_count": 1
       },
-      "Mikée photo": {
-        "name": "Mikée photo",
+      "Mik\u00e9e photo": {
+        "name": "Mik\u00e9e photo",
         "id": 49,
         "groups": [
           "Everything",
@@ -3372,8 +3372,8 @@
         "type": null,
         "max_count": 1
       },
-      "Fjällbjörn hat": {
-        "name": "Fjällbjörn hat",
+      "Fj\u00e4llbj\u00f6rn hat": {
+        "name": "Fj\u00e4llbj\u00f6rn hat",
         "id": 88,
         "groups": [
           "Everything",
@@ -4023,14 +4023,14 @@
       "Fia photo": 1,
       "Fisherman's whisle": 1,
       "Fishing hat": 1,
-      "Fjällbjörn hat": 1,
+      "Fj\u00e4llbj\u00f6rn hat": 1,
       "Flies photo": 1,
       "Fluff ball photo": 1,
       "Foam finger": 1,
       "Forest bird photo": 1,
       "Frames & filters": 1,
       "Frisbee": 1,
-      "Fräs photo": 1,
+      "Fr\u00e4s photo": 1,
       "Ghost glasses": 1,
       "Happy carp photo": 1,
       "Hard hat": 1,
@@ -4048,7 +4048,7 @@
       "Logcity stamp": 18,
       "Lost sock": 1,
       "Meteopal photo": 1,
-      "Mikée photo": 1,
+      "Mik\u00e9e photo": 1,
       "Monster mask": 1,
       "Mountain goat photo": 1,
       "Mouse photo": 1,
