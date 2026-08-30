@@ -168,7 +168,7 @@ jobs:
           fi
 
       - name: Cache Python virtual environment for setup
-        if: inputs.template_type == 'apworld'
+        if: inputs.template_type == 'apworld' || inputs.template_type == 'worldgen'
         uses: actions/cache@v6.1.0
         id: cache-venv-setup
         with:
@@ -176,7 +176,7 @@ jobs:
           key: venv-${{ runner.os }}-py3.12-${{ hashFiles('requirements.txt') }}
 
       - name: Create virtual environment and install dependencies for setup
-        if: inputs.template_type == 'apworld' && steps.cache-venv-setup.outputs.cache-hit != 'true'
+        if: (inputs.template_type == 'apworld' || inputs.template_type == 'worldgen') && steps.cache-venv-setup.outputs.cache-hit != 'true'
         run: |
           python -m venv .venv
           source .venv/bin/activate
@@ -184,7 +184,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run ModuleUpdate for setup
-        if: inputs.template_type == 'apworld'
+        if: inputs.template_type == 'apworld' || inputs.template_type == 'worldgen'
         run: |
           source .venv/bin/activate
           python ModuleUpdate.py --yes
