@@ -35,7 +35,7 @@
         "rng": {
             "seed": 2258182,
             "split": true,
-            "cosmetic": 0,
+            "cosmetic": 1486967168,
             "fp": 987286273
         },
         "seam": {

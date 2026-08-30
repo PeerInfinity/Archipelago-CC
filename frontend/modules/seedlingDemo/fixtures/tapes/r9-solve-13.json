@@ -54,13 +54,13 @@
         "totem_parts": [],
         "keys": [],
         "seal_parts": [
-            2
+            0
         ]
     },
     "rng": {
-        "seed": 514729325,
+        "seed": 105042932,
         "split": true,
-        "cosmetic": 0,
+        "cosmetic": 1950516653,
         "fp": 1786538712
     },
     "seam": {
@@ -87,7 +87,7 @@
         "time": 8737,
         "primary": 0,
         "secondary": 0,
-        "grass_cut": 197,
+        "grass_cut": 192,
         "cutscene": [
             false,
             false,
@@ -102,9 +102,9 @@
     },
     "tick0": {
         "rng": {
-            "seed": 976949197,
+            "seed": 105042932,
             "split": true,
-            "cosmetic": 0,
+            "cosmetic": 1511092484,
             "fp": 239780230
         },
         "seam": {
