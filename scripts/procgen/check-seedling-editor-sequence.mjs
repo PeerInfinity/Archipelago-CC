@@ -35,9 +35,14 @@
  *     `boundaryFindings` both empty over the model's own samples, and window
  *     2's declared LATCH was admitted because it MATCHES (six persistence
  *     rows, exactly the live cleared set).
- *  5. **A NON-CONTINUABLE PAIR IS REFUSED BY NAME** — `r8-d2-19,r8-solve-4`:
- *     L4 is not where the world is, the refusal says so, and it names the
- *     nearest chain the roster has.
+ *  5. **A NON-CONTINUABLE PAIR IS REFUSED BY NAME** — `r8-solve-1,r8-solve-4`:
+ *     L4 is not where the world is (r8-solve-1 arrives in L2), the refusal
+ *     says so, and it names the nearest chain the roster has. ⛓ ⚖ 68 (R9
+ *     slice L15): the pair used to be `r8-d2-19,r8-solve-4`, and once the
+ *     campaign declared `split: true` that pair is refused ONE TIER EARLIER —
+ *     "a later window declares a different `rng.split`" — which is a true
+ *     refusal about a different claim. Both windows of the pair now share
+ *     the campaign's split, so the level-mismatch refusal is the one asked.
  *  6. **A LATER WINDOW'S GRANTS ARE REFUSED AT QUEUE TIME** — before anything
  *     plays at all.
  *  7. **`?tapes=` ROUND-TRIPS** through the queue control's own writer, and
@@ -280,7 +285,7 @@ check(got.scrubMax === String(oracle.ticks.length - 1),
     `scrub max ${got.scrubMax}`);
 
 // ══ 5. A NON-CONTINUABLE PAIR ═══════════════════════════════════════════
-const bad = await land('tapes=r8-d2-19,r8-solve-4&side=js');
+const bad = await land('tapes=r8-solve-1,r8-solve-4&side=js');
 check(bad.cls === 'bad' && /cannot continue/.test(bad.status)
     && /the boot names a level the live world is not in/.test(bad.detail),
 '⛓⛓ CLAIM 5 — A PAIR THAT CANNOT CONTINUE IS REFUSED BY NAME, never silently rebuilt',
@@ -554,7 +559,7 @@ check(JSON.stringify(ship.reached) === JSON.stringify(['probe', 'runtime'])
 '⛔ …and it STOPS at ▶ Start — the page never presses it, once per page, by law',
 `reached ${JSON.stringify(ship.reached)}`);
 
-const badWasm = await page.goto(`${origin}${PAGE_PATH}?tapes=r8-d2-19,r8-solve-4&side=wasm`)
+const badWasm = await page.goto(`${origin}${PAGE_PATH}?tapes=r8-solve-1,r8-solve-4&side=wasm`)
     .then(() => page.waitForFunction(
         () => window.__editorSequence?.refusal
             || (window.__editorWasm && window.__editorWasm.reached?.includes('runtime')),

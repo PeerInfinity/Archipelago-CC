@@ -1160,6 +1160,13 @@ const sortedKeys = (s) => [...s].sort();
  *   the roster DOES have, so a refusal carries its own next work order
  * @returns {object[]} findings; `informational: true` marks an UNASSERTED row
  */
+/** A seam block with its `music` row set aside — ⚖ 66's comparison. */
+const seamSansMusic = (seam) => {
+    if (!seam || typeof seam !== 'object') return seam;
+    const { music, ...rest } = seam;
+    return rest;
+};
+
 export function continuationAdmission(tape, live,
     { index = 1, label = '', nearest = null, rngPosture = null } = {}) {
     const where = `admission ${index}${label ? ` ("${label}")` : ''}`;
@@ -1292,8 +1299,38 @@ export function continuationAdmission(tape, live,
                     || 'the caller produced no latched block for it', true);
             continue;
         }
-        const a = JSON.stringify(tape[field]);
-        const b = JSON.stringify(live.blocks[field]);
+        /**
+         * ⛓⛓⛓ R9 SLICE L15 (⚖ 66) — `seam.music` IS UNASSERTED AT A BOUNDARY,
+         * AND SAID OUT LOUD.
+         *
+         * The latch is frozen at the DISARM tick; the game decides the next
+         * room's music during the drain AFTER it. Sixteen boundaries never
+         * noticed because both rooms played `Room`; L14 is the chain's first
+         * fight-music room, and `r9-solve-15`'s boot — authored honestly from
+         * `r9-solve-14`'s latch — declared `{Enemy Hop, 0}` against a live
+         * `{Room, 2}`. Music moves no physics (the fresh recording under the
+         * declared music reproduces per tick), a fresh boot APPLIES whatever
+         * is declared, and no sidecar carries a post-drain readout to author
+         * the right value from — that readout is a filed work order (the
+         * `bootCost` analogue for music). So the row is excused the way the
+         * `rng` posture is: compared with `music` set aside, and the mismatch
+         * REPORTED as informational carrying both values, never silenced
+         * (trap 119). The tape keeps declaring what it actually booted
+         * (⚖ 11 (b): no hand-patched field).
+         */
+        const compared = field === 'seam' ? seamSansMusic(tape[field]) : tape[field];
+        const liveCompared = field === 'seam' ? seamSansMusic(live.blocks[field]) : live.blocks[field];
+        if (field === 'seam' && JSON.stringify(tape[field]?.music ?? null)
+            !== JSON.stringify(live.blocks[field]?.music ?? null)) {
+            add('unasserted — `seam.music` is cosmetic at a boundary (⚖ 66)',
+                `tape ${JSON.stringify(tape[field]?.music ?? null)} vs live `
+                + `${JSON.stringify(live.blocks[field]?.music ?? null)}. The latch freezes `
+                + 'music at the disarm tick and the game re-decides it during the drain; '
+                + 'it moves no physics and a fresh boot applies whatever is declared, so '
+                + `the row is excused, not compared.${say}`, true);
+        }
+        const a = JSON.stringify(compared);
+        const b = JSON.stringify(liveCompared);
         if (a !== b) {
             /**
              * ⛓⛓⛓ R9 SLICE 8 (⚖ ruling 20) — THE `rng` ROW IS POSTURE-GATED.

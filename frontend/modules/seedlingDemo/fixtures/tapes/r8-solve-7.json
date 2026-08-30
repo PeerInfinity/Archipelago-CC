@@ -31,9 +31,9 @@
         "seal_parts": []
     },
     "rng": {
-        "seed": 946359795,
-        "split": false,
-        "cosmetic": 0,
+        "seed": 618137757,
+        "split": true,
+        "cosmetic": 2072075140,
         "fp": 882360526
     },
     "seam": {
@@ -75,9 +75,9 @@
     },
     "tick0": {
         "rng": {
-            "seed": 1592305816,
-            "split": false,
-            "cosmetic": 0,
+            "seed": 618137757,
+            "split": true,
+            "cosmetic": 1678937722,
             "fp": 1458777947
         },
         "seam": {

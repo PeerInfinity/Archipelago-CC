@@ -129,6 +129,8 @@ import {
     renderTableMarkdown,
 } from './provisionalLatch.js';
 import { describeFullTierEstimate, tickSumOf } from './fullTierEstimate.js';
+import { ROSTER_CATEGORIES, rosterCategories } from
+    '../../frontend/modules/seedlingDemo/fixtures/tiers.js';
 import { buildInstruments } from './reference/instruments.mjs';
 import {
     REHEARSAL_PLAN, buildRehearsalTree, readRehearsalMarker,
@@ -242,6 +244,29 @@ const BASELINE = arg('baseline', null);
  * under which ⚖ 32 E's *"S4 IS the gate run"* is a true sentence.
  */
 const FULL_ROSTER = process.argv.includes('--full-roster');
+/**
+ * ⛓⛓⛓ R9 slice CAT (⚖ 70 (e)) — **`--categories=a,b` DRIVES THE NAMED
+ * CATEGORIES, AND NOTHING ELSE CHANGES.**
+ *
+ * ⚖ 69 (c): the full tier runs only for what can be tested no other way; a
+ * tape-moving change re-drives the categories its reach names and quotes the
+ * rest. This is the flag that spends that ruling — one differential row per
+ * category, so a failure names the category rather than being lost inside a
+ * 150-tape sweep, and `--full-roster` keeps its meaning exactly.
+ *
+ * ⛔ AN UNKNOWN NAME IS REFUSED BY NAME, before any stage runs. A misspelling
+ * that selected nothing would print the same green as a run that drove
+ * everything asked for.
+ */
+const CATEGORIES = (arg('categories', '') || '').split(',').map((c) => c.trim()).filter(Boolean);
+{
+    const unknown = CATEGORIES.filter((c) => !ROSTER_CATEGORIES.includes(c));
+    if (unknown.length) {
+        console.log(`FAIL: --categories=${CATEGORIES.join(',')} names ${unknown.join(', ')}, `
+            + `which is not a derived category (${ROSTER_CATEGORIES.join(', ')}).`);
+        process.exit(1);
+    }
+}
 for (const [literal, constant, where] of [
     ['--latch-provisional', PROVISIONAL_FLAG, 'PROVISIONAL_FLAG'],
     ['--table', TABLE_FLAG, 'TABLE_FLAG'],
@@ -435,6 +460,20 @@ async function buildContext(overrides = {}) {
         let text;
         try { text = gitShow(ctx, ref, rel); } catch { return null; }
         return JSON.stringify(ctx.gameVisibleTape(ctx.parseTape(JSON.parse(text))));
+    });
+    /**
+     * ⛓ ⚖ 68 — a tape's `rng.split` AT A REF, or `null` when the ref has no such
+     * tape. S0 reads it to see a chain-wide rng DECLARATION flip, which moves
+     * every successor's boot from the head (the latch's gameplay seed and
+     * cosmetic state both change once the sound draws land on the cosmetic
+     * stream) — a mover neither the timed-clear hazard nor a walk cascade can
+     * see.
+     */
+    ctx.rngSplitAt = overrides.rngSplitAt ?? ((ref, label) => {
+        const rel = relative(ctx.root, join(ctx.tapesDir, `${label}.json`));
+        let text;
+        try { text = gitShow(ctx, ref, rel); } catch { return null; }
+        return Boolean(ctx.parseTape(JSON.parse(text)).rng?.split);
     });
     ctx.projectionsAt = (ref) => {
         const texts = new Map();
@@ -704,6 +743,18 @@ async function predict(ctx) {
             : ', walk-accounting only'})`).join(' · '));
 
     const table = [];
+    /**
+     * ⛓⛓⛓ ⚖ 68 (R9 slice L15) — A CHAIN-WIDE RNG DECLARATION FLIP IS A
+     * HAZARD AT ITS FIRST SEGMENT. When a segment's `rng.split` differs from
+     * the BASELINE's, the game's latch after it carries a different gameplay
+     * seed and cosmetic state (the sound-index draws changed stream), so every
+     * successor's boot moves and every tick-0 block from the flip on is
+     * re-derived — the four PROMOTED rows included, which sit before the first
+     * timed-clear hazard and used to read `none`. Measured: the B-narrow run
+     * at 14e7370f3 refused r8-solve-2..5 at S1 as "moved and predicted none"
+     * before this rule existed.
+     */
+    const baselineRef = ctx.resolveBaseline(BASELINE).ref;
     for (const chain of chains) {
         /**
          * ⛔⛔ THE PREDICTION RULE, AND IT IS A CONSEQUENCE OF ⚖ RULING 23
@@ -721,17 +772,28 @@ async function predict(ctx) {
          * STOP and a finding, not a licence.
          */
         let firstHazard = -1;
+        let firstFlip = -1;
         const rows = chain.segments.map((name, i) => {
             const t = ctx.tapeOf(name);
             const hazard = timedClearHazard(t, i);
             const ownTimed = hazard.ownRoom.length > 0;
             if (ownTimed && firstHazard === -1) firstHazard = i;
-            return { name, i, t, hazard, ownTimed };
+            const baseSplit = ctx.rngSplitAt(baselineRef, name);
+            const flipped = baseSplit !== null && Boolean(t.rng?.split) !== baseSplit;
+            if (flipped && firstFlip === -1) firstFlip = i;
+            return { name, i, t, hazard, ownTimed, flipped };
         });
+        if (firstFlip !== -1) {
+            console.log(`## ⚖ 68: \`rng.split\` flips at segment ${firstFlip + 1} `
+                + `(${chain.segments[firstFlip]}) against the baseline — every successor's `
+                + 'boot and every tick-0 block from there are re-derived');
+        }
         for (const r of rows) {
             const posture = ctx.rngPostureForBootLevel(r.t.boot.level, ctx.atlasLevelSource());
-            const bootMoves = firstHazard !== -1 && r.i > firstHazard;
-            const tick0Moves = bootMoves || r.ownTimed;
+            // ⛔ `>=`, not `>`: the flip row's OWN projection moved (its declaration).
+            const afterFlip = firstFlip !== -1 && r.i >= firstFlip;
+            const bootMoves = (firstHazard !== -1 && r.i > firstHazard) || afterFlip;
+            const tick0Moves = bootMoves || r.ownTimed || (firstFlip !== -1 && r.i >= firstFlip);
             table.push({
                 chain: chain.id,
                 segment: r.name,
@@ -749,7 +811,11 @@ async function predict(ctx) {
                 posture: { comparable: posture.comparable, verdict: posture.verdict },
                 verdict: bootMoves ? 'boot-only' : 'none',
                 tick0Rederived: tick0Moves,
-                why: bootMoves
+                why: afterFlip
+                    ? `${r.i === firstFlip ? 'at' : 'downstream of'} ${chain.segments[firstFlip]}, where \`rng.split\` flips `
+                        + 'against the baseline (⚖ 68) — the latch\'s gameplay seed and '
+                        + 'cosmetic state both move once the sound draws change stream'
+                    : bootMoves
                     ? `downstream of ${chain.segments[firstHazard]}, whose fresh-page exit `
                         + 'is re-measured under ⚖ ruling 23'
                     : r.ownTimed
@@ -1611,6 +1677,19 @@ function record(ctx, s0, s1, s2) {
  * trusted beside it: a witness `solverRosterFromData` already covers is a
  * duplicate — prose restating data, ⚖ 17 — and is a finding by name.
  */
+/**
+ * ⛓ The three derived categories over THIS tree's roster — or `null` in a
+ * REHEARSAL.
+ *
+ * ⛔ NAMED, NOT CAUGHT. The categories are derived from the real chains and
+ * the real route fixtures, and a rehearsal's tree is GENERATED: asking for
+ * them there is asking about tapes that tree does not have, which
+ * `rosterCategories` refuses BY NAME — correctly. Branching on
+ * `ctx.rehearsal` says that out loud; a `try/catch` here would also swallow
+ * the real tree's rot, which is the one thing the refusal exists for.
+ */
+const categoriesOf = (ctx) => (ctx.rehearsal ? null : rosterCategories(ctx.allTapeLabels()));
+
 function proveCoverage(ctx) {
     const solver = ctx.rehearsal
         ? [...new Set([...ctx.tapeOwners().keys()])].sort()
@@ -1698,6 +1777,23 @@ function prove(ctx) {
      * A new `plan-seedling-*` tape can never fall outside again, because
      * nothing enumerates the inside.
      */
+    /**
+     * ⛓⛓⛓ R9 slice CAT (⚖ 70 (e)) — **THE NAMED CATEGORIES GET THEIR OWN
+     * ROWS**, one per category, above the complement report. A category is a
+     * scheduling unit, so a run that drove `campaign` must be able to say so
+     * by itself — and a failure has to name which category failed.
+     */
+    for (const category of CATEGORIES) {
+        const tapes = categoriesOf(ctx)?.[category];
+        console.log(`## ⛓ --categories — the \`${category}\` category: ${tapes
+            ? `${tapes.length} tape(s), ${describeFullTierEstimate({ tapes: tapes.length,
+                ticks: tickSumOf(tapes, { tapesDir: ctx.tapesDir }) })}`
+            : 'size not derived in a rehearsal (see below)'}`);
+        rows.push([`the \`${category}\` category${tapes ? ` (${tapes.length} tape(s))` : ''}`,
+            shell(ctx, `the \`${category}\` category`, 'node',
+                [ctx.scriptPath('verify-seedling-bot-differential.mjs'), '--win',
+                    `--tier=${category}`]).ok]);
+    }
     const { roster, complement, duplicates } = proveCoverage(ctx);
     check('⛓ no hand witness duplicates the DERIVED roster (⚖ 17 — prose may not restate '
         + 'data)', duplicates.length === 0,
@@ -1712,7 +1808,30 @@ function prove(ctx) {
         : null;
     console.log(`## ROSTER ∖ S4 = ${complement.length} of ${roster.length} tape(s)`
         + `${complement.length ? ` — ${cost}` : ''}`);
-    for (const label of complement) console.log(`   ${label}`);
+    /**
+     * ⛓⛓⛓ R9 slice CAT (⚖ 70 (e)) — **THE COMPLEMENT IS REPORTED BY
+     * CATEGORY.** A flat list of 120 names says how much is uncovered; the
+     * split says WHICH SCHEDULING UNITS are, which is the thing a reader has
+     * to act on — and it is the same derivation the owed gate charges the
+     * debt against, so the two readouts cannot disagree.
+     */
+    const byCategory = categoriesOf(ctx);
+    const uncovered = new Set(complement);
+    if (byCategory) {
+        console.log(`##   by category: ${ROSTER_CATEGORIES.map((c) => {
+            const left = byCategory[c].filter((n) => uncovered.has(n));
+            return `${c} ${left.length}/${byCategory[c].length}`;
+        }).join(' · ')}`);
+        for (const c of ROSTER_CATEGORIES) {
+            const left = byCategory[c].filter((n) => uncovered.has(n));
+            if (left.length) console.log(`   [${c}] ${left.join(', ')}`);
+        }
+    } else {
+        console.log('##   by category: NOT DERIVED HERE — the categories come from the REAL '
+            + 'chains and route fixtures, and a rehearsal drives a GENERATED tree that names '
+            + 'none of them. The flat list below is the whole answer this tree can give.');
+        for (const label of complement) console.log(`   ${label}`);
+    }
     if (complement.length === 0) {
         console.log('## ⛓ ⚖ 32 E — **S4 IS THE GATE RUN**: the rows above drive every tape '
             + 'on the roster, and the complement is EMPTY by derivation.');
@@ -2871,6 +2990,45 @@ function rehearsalScenarios() {
          * ⛓ …AND THE SAME TREE WITH THE FLAG, so the two rows are a PAIR: the
          * refusal above is only meaningful if the claim is reachable at all.
          */
+        /**
+         * ⛓⛓⛓ R9 slice CAT (⚖ 70 (e)) — `--categories=` DRIVES THE NAMED ONES.
+         * The rehearsal proves the WIRING (one row per category, under its own
+         * name, with `--tier=` and not `--only=`); the selection itself is
+         * proved against the derivation in `fixtures/tiers.test.js`.
+         */
+        {
+            id: 'categories-driven',
+            why: '--categories drives one differential row per named category',
+            tree: { orphanTapes: { 'rh-orphan': 'rh-e' } },
+            argv: ['--categories=campaign,map-walk'],
+            exit: 0,
+            rows: (out) => [
+                ['⛓ (cat-rows) each named category gets its OWN `--tier=` row',
+                    out.includes('--tier=campaign') && out.includes('--tier=map-walk'), 'S4'],
+                ['⛓ (cat-named) …and the row is in S4\'s table under the category\'s name',
+                    /the `campaign` category/.test(out) && /the `map-walk` category/.test(out),
+                    'S4'],
+                ['⛓ (cat-rehearsal) the by-category split says why it cannot be derived '
+                    + 'against a GENERATED tree, rather than crashing or reading empty',
+                    out.includes('by category: NOT DERIVED HERE'), 'S4'],
+            ],
+        },
+        /**
+         * ⛔ AND THE MISSPELLING IS REFUSED BEFORE ANY STAGE RUNS — a category
+         * list that selected nothing would print the same green as one that
+         * drove everything asked for.
+         */
+        {
+            id: 'categories-unknown-refused',
+            why: '--categories= refuses an unknown name BY NAME, before S0',
+            tree: {},
+            argv: ['--categories=campaign,mechnic'],
+            exit: 1,
+            rows: (out) => [
+                ['⛓ (cat-refused) the unknown category is named and nothing runs',
+                    out.includes('mechnic') && out.includes('not a derived category'), 'S0'],
+            ],
+        },
         {
             id: 'roster-complement-driven',
             why: '--full-roster drives the complement, and only then is S4 the gate run',
@@ -3133,8 +3291,24 @@ if (GROW) {
  * `--dry-run` is exactly `--to=S0` — and a `--dry-run` that took the box
  * would queue a ten-second read behind a two-hour drive. The predicate is
  * derived from `wants`, so it cannot drift from what the run will do.
+ *
+ * ⛔⛔ **AND NEVER IN A REHEARSAL — MEASURED, R9 slice CAT.** A rehearsal
+ * *"never opened a browser, never spent a GPU frame and never read the
+ * machine-global latch cache"*; its own closing line says so. It still took
+ * the box, because the predicate read the STAGES and a rehearsal runs S0..S5
+ * of a FAKE tree. With the box held by another session, every scenario past
+ * S0 exited 1 with ⛔ THE BOX IS TAKEN and the whole rehearsal read as 43
+ * failures — so the one instrument that is supposed to be runnable beside a
+ * live measurement was the one that could not run. `ctx.exec` is stubbed in a
+ * rehearsal, so nothing it does can perturb a drive.
+ *
+ * ⛓ THE PREDICATE READS BOTH SPELLINGS, and the first cut read only one: the
+ * driver runs `--rehearse`, but each SCENARIO is a CHILD run given
+ * `--rehearse-tree=<dir>`, so exempting `--rehearse` alone left every child
+ * still queueing. Measured — the scenarios stayed red until this line named
+ * both.
  */
-const SPENDS_BOX = STAGES.slice(1).filter(wants);
+const SPENDS_BOX = (REHEARSE || REHEARSE_TREE) ? [] : STAGES.slice(1).filter(wants);
 if (SPENDS_BOX.length) {
     try {
         takeBoxLock({ name: `rerecord-seedling-campaign ${FROM}..${TO} — `
@@ -3147,8 +3321,10 @@ if (SPENDS_BOX.length) {
         process.exit(1);
     }
 } else {
-    console.log('# box lock: NOT TAKEN — only S0 runs, which is the OFFLINE verdict and '
-        + 'contends for nothing');
+    console.log(`# box lock: NOT TAKEN — ${REHEARSE || REHEARSE_TREE
+        ? 'a REHEARSAL drives a generated tree with a stubbed `exec`: no browser, no GPU, no '
+            + 'latch cache'
+        : 'only S0 runs, which is the OFFLINE verdict'} — it contends for nothing`);
 }
 
 const s0 = wants('S0') ? await predict(CTX) : resume(CTX, 'S0');

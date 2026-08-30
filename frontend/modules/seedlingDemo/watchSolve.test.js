@@ -124,7 +124,8 @@ describe('the staging block, from whatever JSON the caller has', () => {
     it('extracts a committed TAPE\'s block and drops its inputs', () => {
         const staging = stagingFromJson(readTape('r8-solve-4'));
         expect(staging.boot).toEqual({ level: 4, x: 16, y: 16 });
-        expect(staging.rng.seed).toBe(2057886025);
+        // ⛓ R9 slice L15: the seed is the TAPE's own (⚖ 68 re-recorded it), never typed.
+        expect(staging.rng.seed).toBe(readTape('r8-solve-4').rng.seed);
         expect(staging).not.toHaveProperty('inputs');
         expect(staging).not.toHaveProperty('tick_count');
     });
@@ -200,7 +201,7 @@ describe('the PRESETS harvest', () => {
         expect(presets[0].staging).toEqual(stagingFromTape(parseTape(tape)));
         // The fields that make the seam a MEASURED equality rather than a
         // retype — nothing here could be typed by hand.
-        expect(presets[0].staging.rng.seed).toBe(2057886025);
+        expect(presets[0].staging.rng.seed).toBe(readTape('r8-solve-4').rng.seed);
         expect(presets[0].staging.seam.time).toBe(5334);
         /**
          * ⛓ R9 SLICE 12h — THIS ROW WAS `toEqual(['dead_frames'])` AND ⚖ RULING

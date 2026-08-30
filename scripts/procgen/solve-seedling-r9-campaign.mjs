@@ -134,7 +134,7 @@ if (DASH_NOTE) console.error(DASH_NOTE);
  * use: this one is inert data with no imports of its own, so it needs no path
  * computed at load and reads like what it is.
  */
-import { CAMPAIGN_SEGMENTS } from
+import { CAMPAIGN_SEGMENTS, CAMPAIGN_RNG_SPLIT } from
     '../../frontend/modules/seedlingDemo/campaignChain.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 
@@ -823,8 +823,19 @@ function tapeJson(obj, description, label) {
     // v11 is refused BY DEFINITION, so a producer that carried the block and
     // not the version would refuse its own committed tape.
     const tick0 = committedTick0(TAPES, label);
+    /**
+     * ⛓⛓⛓ ⚖ 68 — THE CHAIN'S ONE `split` DECLARATION, APPLIED HERE TO EVERY
+     * SEGMENT THIS PRODUCER EMITS (promoted rows, solved rows, the head), on
+     * the boot rng AND the carried tick-0 rng — `Rng.split` is a static the
+     * page assigns on every load, so the two blocks cannot disagree. The
+     * `cosmetic` state itself is never typed here: it is what the latch
+     * carries (`segmentBootFromLatch`), 0 until the game has been asked.
+     */
+    const splitRng = (rng) => (rng ? { ...rng, split: CAMPAIGN_RNG_SPLIT } : rng);
+    const tick0Split = tick0 && tick0.rng ? { ...tick0, rng: splitRng(tick0.rng) } : tick0;
     const parsed = parseTape({
-        ...obj, tape_version: declaredVersion, ...tick0ParseFields(tick0, obj),
+        ...obj, rng: splitRng(obj.rng), tape_version: declaredVersion,
+        ...tick0ParseFields(tick0Split, obj),
     });
     const budget = assertTapeWithinRuntimeBudget({ ...obj, tape_version: declaredVersion },
         label);

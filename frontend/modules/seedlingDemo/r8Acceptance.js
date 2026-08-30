@@ -707,6 +707,24 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + 'arrival and L15 holds no `bob`, so the second room is not bridged.',
         }),
         /**
+         * ⛓⛓⛓ R9 SLICE L15 — the seventeenth room, and the guard named it by
+         * name on the first reach-bounded run after the growth (trap 89, the
+         * seventh slice running). L15 holds no `bob`; the leg ends at the L16
+         * ARRIVAL, and L16 holds SEVEN — so this is the parked-arrival shape
+         * `r9-solve-13` has (levels [16], the room entered on the last tick and
+         * never walked), sealed before the game was asked.
+         */
+        Object.freeze({
+            name: 'r9-solve-15', levels: Object.freeze([16]), bobs: 7, ticks: 456,
+            addedBy: 'R9 slice L15 (the block-route search; the L15 crossing)',
+            why: '⛔ THE EXPOSURE IS THE ARRIVAL, NOT THE WALK. The leg is L15 → L16 '
+                + 'and L15 holds nothing bridged — its whole story is a block, two '
+                + 'rocks and a button — so it is the L16 ARRIVAL, the last tick, that '
+                + 'enters a bridged room, the same shape `r9-solve-13` has at L14. The '
+                + 'LEVELS are [16], not [15, 16]. L16\'s seven bobs are that room\'s '
+                + 'own slice (⚖ 65 (c)/(d)).',
+        }),
+        /**
          * ⛓⛓⛓ R9 SLICE 12c — **THE SEVENTH SLICE RUNNING** (trap 89). The guard
          * named it by name on the first unfiltered run after the tape landed, and
          * it is the SECOND thing this slice learned from a check it did not write.

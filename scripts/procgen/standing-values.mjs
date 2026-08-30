@@ -57,8 +57,8 @@ import { join } from 'node:path';
 import { assertTreeUnmoved, releaseBoxLock, takeBoxLock } from './boxLock.js';
 import { LOCAL_HOST, REPO, gateRoster } from './gateRoster.js';
 import {
-    CHEAP_MS, FILE, ciGateCommand, ciSourced, cheapFor, head, missingScript,
-    readStandingValues, runRow, standingRows,
+    CHEAP_MS, FILE, ciGateCommand, ciSourced, cheapFor, compositeValue, compositeWhy, head,
+    missingScript, readStandingValues, runRow, standingRows,
 } from './standingValues.js';
 
 
@@ -328,6 +328,31 @@ for (const key of known) {
      */
     if (existing.rows[key]?.quoted) {
         const q = existing.rows[key];
+        /**
+         * ⛓⛓⛓ R9 slice CAT (⚖ 70 (c)) — **A COMPOSITE ROW'S `value` AND `why`
+         * ARE RE-DERIVED HERE, AND A DISAGREEMENT IS A NAMED FAILURE.**
+         *
+         * ⛔ This is ⚖ 17 with teeth. The parts are the measurement; the two
+         * text fields are a rendering of them. Without this row a hand edit to
+         * either — the exact thing the old prose `why` invited — would sit in
+         * the file looking authoritative until somebody happened to re-quote a
+         * category. It costs a string compare and it is the only thing that
+         * makes "derived" true rather than intended.
+         */
+        if (q.categories) {
+            const v = compositeValue(q);
+            const w = compositeWhy(q);
+            say(q.value === v && q.why === w,
+                `${key} is a COMPOSITE row and its \`value\`/\`why\` are DERIVED from its parts`,
+                q.value === v && q.why === w
+                    ? `${Object.keys(q.categories).length} part(s), each with its own head`
+                    : `⛔ the file has been EDITED BY HAND. value: ${JSON.stringify(q.value)} `
+                        + `vs derived ${JSON.stringify(v)}${q.why === w ? ''
+                            : `; why: ${JSON.stringify(String(q.why).slice(0, 60))}… vs derived `
+                                + `${JSON.stringify(String(w).slice(0, 60))}…`}. Re-quote the `
+                        + 'part with `record-standing-value.mjs --category=` — ⚖ 17: the parts '
+                        + 'are the measurement, these two fields are a rendering of them');
+        }
         console.log(`QUOTED: ${key.padEnd(46)} ${q.value}   @${q.measuredAt}`
             + `${q.why ? `\n        ⛓ ${q.why}` : ''}`);
         continue;

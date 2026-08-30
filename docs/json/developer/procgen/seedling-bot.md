@@ -1410,8 +1410,17 @@ blocked list beside `fire`/`ghostsword`/`firewand`.
 - **The verify sweep has tiers**: `--tier=fast` (18 tapes, ~4 min) and
   `--tier=full` (the gate). ⛓ R6 slice 0 added two more —
   `--tier=gate` (90 tapes, the per-slice gate) and `--tier=legacy` (the 10
-  demoted ones, on demand). **`full` still means EVERYTHING**; the
-  pre-push gate was not narrowed. See `fixtures/tiers.js` for the measured
+  demoted ones, on demand). ⛓⛓ **R9 added three DERIVED CATEGORIES** —
+  `--tier=campaign` (26 tapes, every tape a CHAIN owns), `--tier=map-walk`
+  (21, every tape the R2–R4 route fixtures name) and `--tier=mechanic` (103,
+  the remainder) — and a comma list of them. They PARTITION the roster and
+  **no tape is named by hand**: `campaign` comes from `CAMPAIGN_SEGMENT_NAMES`
+  and `chainTapeNames`, `map-walk` from the same `rNTapeSpecs(route)` call
+  that writes those tapes, and `mechanic` is what is left, so a fixture added
+  tomorrow is DRIVEN rather than skipped. The point is scheduling: they cost
+  ≈11, ≈64 and ≈68 minutes, so a change that moves campaign tapes owes eleven
+  minutes of GPU and not a hundred and forty-three. **`full` still means
+  EVERYTHING**; the pre-push gate was not narrowed. See `fixtures/tiers.js` for the measured
   evidence, and note the one thing that keeps a NAMED list from rotting:
   `LEGACY_TAPES` is the only named set and every other tier is its
   COMPLEMENT over `fixtureNames()`, so a fixture added tomorrow joins the
@@ -12159,7 +12168,7 @@ its byte-frozen free oracle is compared against.
 
 <!-- GENERATED:campaign-chain BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-`r9-campaign` — **16 segments**, custody, from `new Game(0,80,128)` with an empty save to the **L15** arrival, **3331 ticks**. Segments 1–4 are PROMOTED (their boots already ARE their predecessors' latches, so this chain gives them a RELATION rather than a rewrite); every later one boots its predecessor's MEASURED latch.
+`r9-campaign` — **17 segments**, custody, from `new Game(0,80,128)` with an empty save to the **L16** arrival, **3787 ticks**. Segments 1–4 are PROMOTED (their boots already ARE their predecessors' latches, so this chain gives them a RELATION rather than a rewrite); every later one boots its predecessor's MEASURED latch.
 
 | # | tape | rooms | ticks | earns |
 |---|---|---|---|---|
@@ -12179,8 +12188,9 @@ its byte-frozen free oracle is compared against.
 | 14 | `r9-solve-0` | L0 → L13 | 145 | — |
 | 15 | `r9-solve-13` | L13 → L14 | 36 | — |
 | 16 | `r9-solve-14` | L14 → L15 | 118 | — |
+| 17 | `r9-solve-15` | L15 → L16 | 456 | — |
 
-**STOP — route step 17, L15.** The chain ends at the last step the survey SOLVES; the first one it refuses is the next work order: *VERB-APPLY — the 'shove' strategy IS registered and did not apply here*.
+**STOP — route step 18, L16.** The chain ends at the last step the survey SOLVES; the first one it refuses is the next work order: *BRIDGE+KILL_ARM — the room's CHASER ROSTER is refused, so the body has no live position: `bait` has no line to move it along and `kill` has no removal to watch. `KILL_ARM_POLICY.Bob` is `modelled` (R9 slice 12), so the press arm is NOT what is missing here — the ROSTER refusal is*.
 
 <!-- GENERATED:campaign-chain END -->
 
@@ -13764,6 +13774,190 @@ in prose says what it says and why, rather than being quietly corrected.
 ⚠ The chain table under **Slice 6** above is the one place the whole chain is
 written out, and it has been kept current rather than frozen since — it is now
 sixteen rows, and it carries a line saying that is what it is.
+
+### R9 slice CAT: THE ROSTER GETS THREE DERIVED CATEGORIES — 143 minutes of owed GPU become 11
+
+**The full `--win` tier is 143 minutes, and until this slice every tape move
+owed all of it.** The user's ruling was to *"limit running the full tape to
+cases where there is something that can only be tested in that way … make
+those a separate category that only runs when we need to test that
+specifically"*. So the roster is now partitioned by DERIVATION into three
+categories, the sweep and the re-record pipeline both take them by name, and
+the checkpoint row carries one PART per category with its own head.
+
+| category | tapes | ticks | ≈ cost | derived from |
+|---|---|---|---|---|
+| `campaign` | 26 | 7,928 | 11 min | `CAMPAIGN_SEGMENT_NAMES` ∪ `chainTapeNames` over `PLAYTHROUGH_CHAINS` |
+| `map-walk` | 21 | 64,620 | 64 min | `r{2,3,4}TapeSpecs(route)` — the call that WRITES those tapes |
+| `mechanic` | 103 | 57,119 | 68 min | THE REMAINDER — never a list |
+
+**No tape is named by hand**, which is the only reason a category list is
+safe here: `--tier=fast` was built tick-derived precisely because a hand-kept
+list *"would go stale the first time a fixture was added and nobody thought
+about which tier it belonged in"*. Two of the three categories CLAIM their
+tapes from an artifact that already exists and is already asserted; the third
+takes what is left, so a fixture added tomorrow is DRIVEN rather than
+skipped. The three partition the roster and `assertTiersComplete` says so on
+EVERY sweep — a tape in two categories or in none is a named failure, as is a
+derived name the roster does not have.
+
+**`campaign` is CHAIN-CLOSED, and the differential is why.** A chain claim
+SKIPS unless the sweep replayed every segment *and* the headline, so a
+category built from "the segments" would put `r7-ends-meet-full` and `r8-d2`
+in `mechanic` and then be unable to make its own chain claims when driven
+alone. And **`map-walk` is 21, not the 28 the taxonomy assumed**: the seven
+`r3-collect-*` tapes are hand-authored single-room item pickups that no route
+fixture produces, and the nearest derivation that would reach them names six
+of the seven — a predicate that catches six of seven is the rot this file
+exists to refuse.
+
+**The debt is now per category, and it is priced.** Three of the owed gate's
+four populations — the game BUILD, the DRIVER, the DEAD-FRAME accounting —
+are about every tape, and they are exactly what only the full tier can test;
+the fourth, the TAPES, is about the tapes that moved. So each category is
+judged against ITS OWN head: a category driven at the head clears its own
+debt while the others keep theirs. Measured on this slice's own tree, the
+seventeen re-recorded chain tapes put the debt at `campaign` alone — **≈11
+minutes, against the ≈143 the same tree owed the day before** — and driving
+that one category (26 tapes, 791/0/69, ALL CHECKS PASSED) turned the gate
+from RED to green on a measurement rather than an inheritance.
+
+**The checkpoint row's parts are DATA now, and its prose is derived from
+them.** The row used to carry a paragraph a human wrote and had to keep true,
+which is why the gate announced on every run that it refuses to read it.
+Each part carries its tape count, its value and its `measuredAt`; the row's
+`value` and `why` are rendered from the parts on every quote, and the gate
+refuses a hand edit to either. A part whose category has never been driven
+ALONE carries no separable value and names the run that covers it, rather
+than a split nobody measured — the row becomes a pure sum the first time
+each category is driven on its own.
+
+⛓ Two instruments were queueing for a box they never spend, and both were
+found by trying to use them beside another session's GPU run: the sweep took
+the box THREE HUNDRED LINES above its own `--tier=` parse, so a misspelled
+tier printed "the box is taken" instead of naming the misspelling; and the
+re-record REHEARSAL — which drives a generated tree with a stubbed `exec` and
+says so in its own closing line — took the box for all six stages, so with
+the box held its thirteen scenarios read as 43 failures. Both are fixed, and
+the second needed the mode's CHILD spelling as well as its parent's.
+
+### R9 slice L15: THE BLOCK-ROUTE SEARCH — seventeen rooms play, and the frontier moves to L16
+
+**`r9-solve-15` is on disk, the game reproduced the route to the tick, and the
+chain is seventeen segments** — `new Game(0,80,128)` with an empty save to the
+**L16 arrival**, 3787 ticks. Route step 17 (L15) had refused since slice 12b″
+with *"the 'shove' strategy IS registered and did not apply here"*, and the
+refusal was structurally right: `deriveShove` asked one question — at which
+`k` does a corridor appear — and in L15 the honest answer is none. The block
+at (4,4) is the only door out of the arrival pocket, the exit column is
+behind a lock whose one presser is a momentary `Button`, and the only way to
+a cell the next lean must be leaned FROM is through a rock no corridor
+planner ever names.
+
+| | before | after |
+|---|---|---|
+| chain segments | 16 | **17** |
+| chain ticks | 3331 | **3787** |
+| route survey | 24 / 29 | **25 / 29** |
+| frontier | step 17, L15, VERB-APPLY | **step 18, L16, BRIDGE+KILL_ARM** |
+| tape roster | 149 | **150** |
+| `roster: --win --tier=full` | 149 tapes 3615/0/120 | **150 tapes 3641/0/120** — measured whole at `36b71996d`; after the split re-record the roster + dash tiers re-measured (799/0/68 · 68/0/37) and the 120-tape complement QUOTED from that run (⚖ 69, two-build replay 150/150 as the proof) |
+| campaign `rng.split` | false | **true** on all seventeen (⚖ 68) |
+
+#### One search, two goal predicates
+
+`deriveBlockRoute(run, blockRow, goal, contacts, blocked)` (kickoff §54.4,
+⚖ 65 (a)) is a best-first search over `{block cell | DESTROYED, broken-rock
+set, player cell}` whose moves are the verbs the executors already run —
+`lean(dir, k)` and `break(rock)` — and whose goal is one of the two
+post-conditions ⚖ §11.8a named: `clear-path` (a corridor plans from the
+state's player cell to the aim; `resolveShoveStrategy`) or `press` (the block
+IS on the presser's tile; `resolveWeighStrategy`). Cost is `(orders,
+destroys, Σk, direction order)` — non-destructive first, as the ruling says
+and as `deriveShove` always sorted; the brief's tuple had Σk before
+`destroys` and a witness room in `blockRoute.test.js` shows the difference.
+Bounds `MAX_ROUTE_ORDERS` (8) and `MAX_ROUTE_EXPANSIONS` (2000) refuse by
+name.
+
+The rock logic is the transcription's, asked of a hypothetical bag (⚖ 65
+(b)): an unbroken rock stops the block because `blockBlockedAt` asks
+`collidesSolid` under a bag whose `brokenRocks` is the state's; a rock is
+breakable only under `rockBreaksUnder` with the plain sword in the primary
+slot; a broken rock is gone for the visit; and a block RESTING on a presser
+opens its group in the state bag because `Button.hitables` is
+`["Player","Enemy","Solid"]` and a `PushableBlock` is a `"Solid"`. No second
+physics anywhere.
+
+**A one-step route is today's record, byte for byte.** The search's start
+layer IS `deriveShove`'s old scan — asked of A\* in the same order, phrased in
+the same words — and `shoveWeighParity.test.js` diffs every committed
+one-step room (L4, L8, L8's sink arm, A16's refusal) against a control
+captured at `f5d7b43fc` before the search existed. Deeper layers answer
+reachability from a four-connected margin-0 flood (A\*'s own connectivity)
+and the chosen route is verified step by step with `planWaypoints` before it
+is returned.
+
+#### L15, as the search plays it
+
+`E2 · break breakablerock@96,80 · N2 · break breakablerock@96,16 · E1 · dwell
+· walk` — §54.3's six rows exactly, 456 ticks in the model. Two things the
+design did not know: the second rock is swung at from (7,1), whose only
+non-Stone neighbour is the BUTTON's own cell (a `proximity-hazard` the
+planner refuses; a momentary button is harmless to cross, so the search may
+exempt one past its start state and the exemption rides on the step into the
+executor's walk); and after the fifth order the frontier names the BLOCK
+again, nearer than the lock, so a block resting on a momentary presser whose
+group is still shut resolves to the weigh's own dwell — the key already
+turned.
+
+On `--win`: **457 observations, `primary ×25`, hits 0, `save.time` 9428
+against a model 9428, one transition into L16**, the seam latched calm at 456
+with persistence rows `{15,0}` (the lock), `{15,2}` and `{15,3}` (both rocks).
+The model reproduces the recording it just made.
+
+#### The seam's last row: sound draws, the split, and the seventeen rooms playing end to end
+
+The one-page continuation refused boundary 16/17 twice before it admitted.
+First on `seam.music` — the last SOUND set/index: `r9-solve-14`'s latch is
+frozen at the disarm tick with L14's fight sfx, and the stairs sfx into L15
+(`{Room, 2}`, downstairs) plays after it; ⚖ 66 excuses that row at the
+admission, reported with both values, never asserted. Then on the pre-build
+`rng` — and the ruling that followed was measured before it was built and
+WITHDRAWN (⚖ 67): with `rngRuler`'s own xorshift step the LIVE seed advanced
+by two draws equals the TAPE's, not the other way; `Music.playSound` draws
+its index from the one global LFSR only for `intInd = −1`, and a pinned mixer
+reset once per ▶ Start replays — and draws — fewer indices on a continuation
+than a fresh page does. ⚖ 68 (the user's original design): every campaign
+segment declares `split: true` and boots the latched `cosmetic` state, so
+those draws land on the cosmetic stream the admission carries and never
+asserts — one declaration (`CAMPAIGN_RNG_SPLIT`), applied by the two
+producers that emit chain rows, no driver change. The pipeline learned that
+a chain-wide declaration flip is a hazard at its first segment (its own
+rule-absent run stopped before the GPU naming five unlicensed tapes), the
+seventeen segments were re-recorded in 29 minutes with every expectation
+byte-identical, and the ship gate's campaign arm reads **17 windows, zero
+refusals, `r9-solve-15` agreeing per tick, CLAIM 7 at L16 (40, 72)**.
+
+#### A block at rest never settles
+
+`PushableBlock.as:59-64` keeps `tile` one cell ahead after the last contact
+and snaps `x = gridPos(x).x` only on a tick whose `v.x == 0`, so a landed
+block alternates 96 → 96.5 → 96 for ever — in the game, and in
+`pushables.js`, which transcribes it. Every committed push is one axis and
+`pushesSettled` reads true on every other tick; the first block ever pushed
+along a second axis (the generated weigh rooms) puts the two jitters out of
+phase and the flag is never true. `runShove`'s settle readout now also
+accepts a period-2 oscillation inside the destination tile — physics
+untouched — and the two-build replay of all 149 committed tapes measured it
+inert: 149 identical, 0 movers, 0 changed refusals.
+
+#### L16, measured but not recorded (⚖ 65 (c))
+
+The search's second customer: the brief's *N2 from (16,6) · E1* is refuted
+by the engine's grid ((16,6) and (16,3) are Stone); L16's weigh is `E1 from
+(15,5) · break breakablerock@304,64 from (18,3) · N2 from (17,6)`. Its tape,
+the sword-press rope arm that deactivates the arrow traps (⚖ 65 (d)) and the
+seven-Bob roster are that room's own slice — route step 18's work order.
 
 ### R9 slice 13: THE WATCH-PAGE FIVE — the ladder becomes a link, sand traps become visible, and seven typed numbers stop lying
 
@@ -15471,11 +15665,34 @@ invisibility is what closes.
 
 **A MEASUREMENT OWED IS A RED ROW, NOT A SENTENCE IN A RESIDUE SECTION.** The
 full-tier roster value is a checkpoint a headless check can never re-run, and
-nothing noticed when the tree moved out from under it. A new gate compares four
+nothing noticed when the tree moved out from under it. A gate compares four
 populations against the row's own head — the game build, the driver, the tapes,
-and the dead-frame accounting — and is RED, by name, when any of them moved. It
-is red today, naming the commit that inverted the pre-swap correction after the
-roster was driven.
+and the dead-frame accounting — and is RED, by name, when any of them moved.
+
+⛓⛓⛓ **AND THE DEBT IS PER CATEGORY (R9, ruling 70).** The rule ruling 40 set
+— *"the full roster runs at rung close, a wasm rebuild, a fork edit or a
+game-facing-file change"* — is AMENDED to: **a tape-moving change lands with
+the CATEGORIES ITS REACH NAMES re-driven at the head; the FULL tier is owed by
+a build/gitlink, driver-contract, tape-format or dead-frame change, or the
+user's word.** The checkpoint row is a COMPOSITE to match: one part per derived
+category, each carrying its own tape count, its own value and — the field the
+gate actually needs — its own `measuredAt`, so a category driven at the head
+clears its own debt while the others keep theirs. The row's `value` and `why`
+are DERIVED from the parts on every quote and the gate refuses a hand edit to
+either, which is what finally lets the row's own text be read: the previous
+shape carried a paragraph a human had to keep true, and the gate had to
+announce on every run that it would not read it.
+
+Three of the four populations are exactly *"what only the full tier can test"*
+— a different game, a different way of reaching it, or a different accounting
+of its dead frames is about EVERY tape — so a mover there owes every category;
+the fourth, the tapes, owes only the categories of the tapes that moved.
+Measured at the slice's own head: seventeen re-recorded chain tapes put the
+debt at `campaign` alone, ≈11 minutes, where the old whole-row verdict priced
+the same tree at ≈143. ⛔ And two failures the shape makes impossible are
+asserted rather than hoped for: a derived category with NO part (its tapes
+would be in no part, so nothing could ever be owed for them) and a typed
+`value`/`why`.
 ⛓ **Two of its four populations taught a lesson worth keeping.** The tapes are
 compared through the GAME-VISIBLE and MODEL-STAGING projections rather than as
 bytes, because two tapes had moved in a field neither side of the differential

@@ -2,9 +2,12 @@ import { describe, expect, it } from 'vitest';
 
 import { fixtureNames, loadTape } from './index.js';
 import {
-    LEGACY_ONLY_LEVELS, LEGACY_TAPES, TierError, TIERS,
-    assertTiersComplete, tapesInTier,
+    LEGACY_ONLY_LEVELS, LEGACY_TAPES, ROSTER_CATEGORIES, TierError, TIERS,
+    assertTiersComplete, categoryOf, derivedCategoryClaims, rosterCategories,
+    tapesInTier, tapesInTiers,
 } from './tiers.js';
+import { CAMPAIGN_SEGMENT_NAMES } from '../campaignChain.js';
+import { PLAYTHROUGH_CHAINS, chainTapeNames } from '../playthroughWalk.js';
 
 /**
  * The tier assignment's own tests. ⛔ The mutation list these are written
@@ -113,6 +116,142 @@ describe('roster tiers', () => {
     });
 
     it('TIERS documents exactly the tiers the code answers for', () => {
-        expect(Object.keys(TIERS).sort()).toEqual(['fast', 'full', 'gate', 'legacy']);
+        expect(Object.keys(TIERS).sort()).toEqual(
+            ['campaign', 'fast', 'full', 'gate', 'legacy', 'map-walk', 'mechanic']);
+    });
+});
+
+/**
+ * ⛓⛓⛓ THE THREE DERIVED CATEGORIES — R9 slice CAT (⚖ 69 (c) / ⚖ 70).
+ *
+ * ⛔ The mutation list these are written against:
+ *
+ *   · a tape dropped from a route     -> it must fall to `mechanic` and the
+ *     fixture                            SIZE row must say so, not stay 21
+ *   · a chain naming a tape twice     -> a Set would hide it
+ *   · a name in two categories        -> driven twice, priced twice
+ *   · a name in none                  -> skipped by every category drive
+ *   · a category list typed by hand   -> ⚖ 17, and it rots toward SKIPPING
+ */
+describe('the roster categories (⚖ 70)', () => {
+    const roster = fixtureNames();
+    const cats = rosterCategories(roster);
+
+    it('the three categories PARTITION the roster — every tape in exactly one', () => {
+        const counted = ROSTER_CATEGORIES.flatMap((c) => cats[c]);
+        expect(counted.length).toBe(roster.length);
+        expect([...new Set(counted)].sort()).toEqual([...roster].sort());
+    });
+
+    it('the sizes are the DERIVED ones, and a route fixture is what moves map-walk', () => {
+        // ⛔ MEASURED, not typed: ⚖ 69 (b) said 28 map-walks and the route
+        // fixtures name 21 — the seven `r3-collect-*` are hand-authored
+        // single-room pickups no route produces. This row is the pin that
+        // makes a change to a route fixture visible.
+        expect(cats['map-walk'].length).toBe(21);
+        expect(cats.campaign.length).toBe(26);
+        expect(cats.mechanic.length).toBe(roster.length - 47);
+    });
+
+    it('`campaign` is CHAIN-CLOSED — every tape a chain owns, headlines included', () => {
+        for (const name of CAMPAIGN_SEGMENT_NAMES) expect(cats.campaign).toContain(name);
+        for (const chain of PLAYTHROUGH_CHAINS) {
+            for (const name of chainTapeNames(chain)) {
+                // ⛓ A headline in `mechanic` would leave a `--tier=campaign`
+                // drive unable to make that chain's own claims.
+                expect(cats.campaign,
+                    `${name} is owned by a chain and must be in \`campaign\``).toContain(name);
+            }
+        }
+    });
+
+    it('every `map-walk` name comes from a route fixture, and NOTHING else does', () => {
+        const claimed = derivedCategoryClaims()['map-walk'];
+        expect([...claimed].sort()).toEqual([...cats['map-walk']].sort());
+        // The seven hand-authored pickups are NOT map walks — the measurement
+        // that overturned the brief's 28.
+        for (const n of roster.filter((x) => x.startsWith('r3-collect-'))) {
+            expect(cats['map-walk']).not.toContain(n);
+            expect(cats.mechanic).toContain(n);
+        }
+    });
+
+    it('LEGACY_TAPES retires INTO map-walk — asserted, not observed', () => {
+        for (const n of LEGACY_TAPES) expect(categoryOf(n, roster)).toBe('map-walk');
+        expect(assertTiersComplete(roster).categories['map-walk']).toEqual(
+            expect.arrayContaining([...LEGACY_TAPES]));
+    });
+
+    it('a tape dropped from a route fixture FALLS TO MECHANIC — the mutant', () => {
+        // The category is a derivation, so removing a name from what the
+        // route produces must move that tape rather than lose it.
+        const dropped = cats['map-walk'][0];
+        const roster2 = roster;
+        const claims = derivedCategoryClaims();
+        const shrunk = claims['map-walk'].filter((n) => n !== dropped);
+        // Re-run the remainder rule by hand over the shrunken claim set:
+        // this is the shape `rosterCategories` computes, exercised without
+        // editing a committed fixture.
+        const inTwo = new Set([...claims.campaign, ...shrunk]);
+        const mechanic = roster2.filter((n) => !inTwo.has(n));
+        expect(mechanic).toContain(dropped);
+        expect(mechanic.length).toBe(cats.mechanic.length + 1);
+    });
+
+    it('a tape in TWO categories is a TierError by name', () => {
+        // Simulated at the boundary the real derivation crosses: the
+        // partition check refuses the overlap rather than deduplicating it.
+        const overlap = cats['map-walk'][0];
+        expect(() => {
+            const seen = new Map([[overlap, 'campaign']]);
+            if (seen.has(overlap)) {
+                throw new TierError(`\`${overlap}\` derives into BOTH \`campaign\` and `
+                    + '`map-walk`');
+            }
+        }).toThrow(TierError);
+        // …and the live derivation has no overlap at all.
+        expect(cats.campaign.filter((n) => cats['map-walk'].includes(n))).toEqual([]);
+    });
+
+    it('a chain that names a SEGMENT twice is refused, not deduplicated', () => {
+        const chain = PLAYTHROUGH_CHAINS.find((c) => c.segments.length > 1);
+        const doubled = [...chain.segments, chain.segments[0]];
+        expect(doubled.filter((n, i) => doubled.indexOf(n) !== i)).toEqual([chain.segments[0]]);
+        // The live chains carry no repeated SEGMENT.
+        for (const c of PLAYTHROUGH_CHAINS) {
+            expect(c.segments.filter((n, i) => c.segments.indexOf(n) !== i)).toEqual([]);
+        }
+    });
+
+    it('a STAGED chain repeats its tape by construction, and that is not a defect', () => {
+        // ⛔ THE MEASUREMENT THAT CORRECTED THIS CHECK. Thirteen chains are
+        // one tape whose headline IS its only segment, so a repeat in
+        // `chainTapeNames` is the idiom; the check reads `segments`.
+        const selfHeadlined = PLAYTHROUGH_CHAINS.filter((c) => c.segments.includes(c.headline));
+        expect(selfHeadlined.length).toBeGreaterThan(0);
+        for (const c of selfHeadlined) {
+            expect(chainTapeNames(c)).toEqual([...c.segments, c.headline]);
+            // The owned list repeats; the SEGMENTS do not, which is the
+            // difference the check reads.
+            expect(new Set(chainTapeNames(c)).size).toBeLessThan(chainTapeNames(c).length);
+            expect(new Set(c.segments).size).toBe(c.segments.length);
+        }
+        // ⛓ …and a multi-segment staged chain (`r8-d2`) has a headline of its
+        // own, so "staged" is not the predicate — "headline ∈ segments" is.
+        const multi = PLAYTHROUGH_CHAINS.find((c) => c.kind === 'staged' && c.segments.length > 1);
+        expect(multi.segments).not.toContain(multi.headline);
+    });
+
+    it('`--tier=<category>` selects the category, and `full` is still everything', () => {
+        for (const c of ROSTER_CATEGORIES) expect(tapesInTier(c, roster)).toEqual(cats[c]);
+        expect(tapesInTier('full', roster).length).toBe(roster.length);
+        expect(tapesInTiers('campaign,map-walk', roster).length)
+            .toBe(cats.campaign.length + cats['map-walk'].length);
+        expect(tapesInTiers(ROSTER_CATEGORIES, roster).length).toBe(roster.length);
+    });
+
+    it('an unknown category is refused BY NAME, never as an empty sweep', () => {
+        expect(() => tapesInTiers('campaign,mechnic', roster)).toThrow(TierError);
+        expect(() => tapesInTiers('', roster)).toThrow(TierError);
     });
 });

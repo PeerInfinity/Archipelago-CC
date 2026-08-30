@@ -402,7 +402,7 @@ describe('R9 12e′ RE-RUN: the record set is the game-visible projection diff',
         // The ⚖ ruling 49 + extension licence, in chain order.
         const LICENSED = ['r8-solve-18', 'r8-d2-19', 'r8-d2-20', 'r8-d2', 'r8-solve-20',
             'r8-solve-11', 'r8-solve-10', 'r9-solve-11', 'r9-solve-3', 'r9-solve-2',
-            'r9-solve-0', 'r9-solve-13', 'r9-solve-14'];
+            'r9-solve-0', 'r9-solve-13', 'r9-solve-14', 'r9-solve-15'];
         // Two tapes the run does not touch, so the diff has something to be
         // silent about — an all-movers fixture could not tell a selector from
         // a constant.

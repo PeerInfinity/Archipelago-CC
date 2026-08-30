@@ -830,14 +830,48 @@ function resolveShoveStrategy(run, obstacle, contacts, aim, allowTeleporter, blo
          */
         return null;
     }
+    /**
+     * ⛓⛓⛓ R9 SLICE L15 — A BLOCK ALREADY RESTING ON A MOMENTARY PRESSER IS
+     * THE KEY ALREADY TURNED. After L15's route parks the block on (7,2) the
+     * lock is still Solid for its 101-tick fade, and the frontier names the
+     * nearest actionable obstacle — the BLOCK, one cell nearer than the lock
+     * — so a resolver that leaned on it again would either shove the key off
+     * the door or refuse the room it just solved. The honest resolution is
+     * the weigh's own dwell arm (`resolveWeighStrategy`, "block already
+     * home") for the group the block is pressing: same verb the room is
+     * about, same mechanism (`Button.hitables` ∋ "Solid"), no new arm.
+     * ⚠ Only a MOMENTARY presser (`localPublish` null) and only while some
+     * activator of its group is still shut — a latched group is `hold`'s
+     * and an open one is not an obstacle.
+     */
+    const liveBlock = run.pushables.get(row.id);
+    const pressed = liveBlock && !liveBlock.removed ? (run.world.pressers ?? []).find(
+        (p) => localPublish(p) === null && rectsOverlapLocal(liveBlock.rect, p.rect)) : null;
+    if (pressed) {
+        const shut = (run.world.activators ?? []).find(
+            (a) => a.t === pressed.t && !run.openActivators.has(a.id));
+        if (shut) {
+            const dwell = resolveWeighStrategy(run, { kind: 'solid', tag: shut.tag, id: shut.id },
+                contacts, blocked);
+            if (dwell && dwell.dwellOnly) return dwell;
+        }
+    }
     const derived = deriveShove(run, row, aim, allowTeleporter, contacts, blocked);
     if (!derived || !derived.plan) return null;
     const { plan, rejected, alternatives, discharged } = derived;
     const step = SHOVE_STEP[plan.dir];
-    const stance = nodeCentre(
-        Math.floor(run.pushables.get(row.id).rect.x / TILE_SIZE) - step.dx,
-        Math.floor(run.pushables.get(row.id).rect.y / TILE_SIZE) - step.dy,
-        DEFAULT_LATTICE);
+    /**
+     * ⛓ R9 SLICE L15 — the stance the frontier walks to is the ROUTE's first
+     * step's, which is the lean's near-side cell exactly as before when the
+     * route starts with a lean, and the swing cell when it starts with a
+     * break. `execRoute` walks the rest.
+     */
+    const stance = derived.route
+        ? derived.route[0].stance
+        : nodeCentre(
+            Math.floor(run.pushables.get(row.id).rect.x / TILE_SIZE) - step.dx,
+            Math.floor(run.pushables.get(row.id).rect.y / TILE_SIZE) - step.dy,
+            DEFAULT_LATTICE);
     /**
      * ⛓ THE TRACE RECORDS `k`, AND THE TWO NEIGHBOURS IT REJECTED — ⚖ §11.8a
      * ruling 1(a)'s own words. `k-1` is in `rejected` because the scan
@@ -847,7 +881,20 @@ function resolveShoveStrategy(run, obstacle, contacts, aim, allowTeleporter, blo
      */
     const next = { tx: plan.to.tx + step.dx, ty: plan.to.ty + step.dy };
     const nextSinks = plan.destroys ? null : blockSinksOn(run.world, next);
-    const rejections = [
+    const rejections = derived.route ? [{
+        /**
+         * ⛓ R9 SLICE L15 — a route's first lean does NOT plan the corridor
+         * by itself, so the one-step vocabulary ("k+1 is UNNEEDED") would be
+         * a false sentence here. The scan's own rejections stand — they are
+         * the reason a route was needed — and the route is spelled out.
+         */
+        option: 'a ONE-order route',
+        why: `NONE — no (dir, k) yields the corridor by itself. This is a `
+            + `${derived.route.length}-order route: ${describeRoute(derived.route)} `
+            + '(kickoff §54.4 — one search over the block, the broken rocks and the '
+            + 'player; the executor asserts each step\'s post-condition against the '
+            + 'live run).',
+    }, ...rejected] : [
         ...rejected.filter((r) => r.option.startsWith(`shove ${plan.dir} k=${plan.k - 1}`)),
         {
             option: `shove ${plan.dir} k=${plan.k + 1} -> (${next.tx},${next.ty})`,
@@ -913,9 +960,32 @@ function resolveShoveStrategy(run, obstacle, contacts, aim, allowTeleporter, blo
         },
         k: plan.k,
         stance,
+        ...(derived.route ? { route: derived.route } : {}),
         rejected: rejections,
     };
 }
+
+/**
+ * The block-route search's own rejections for a `shove` the resolver refused
+ * — the frontier's `considered` row quotes them. Re-runs the search (tens of
+ * expansions on any committed room) rather than threading a side channel
+ * through a resolver that answers `null` by contract.
+ */
+function shoveRefusalDetail(run, obstacle, contacts, aim, allowTeleporter, blocked) {
+    const row = (run.world.pushables ?? []).find((p) => p.id === obstacle.id);
+    if (!row || row.family !== 'walk' || run.pushables === null) return null;
+    const derived = deriveShove(run, row, aim, allowTeleporter, contacts, blocked);
+    if (!derived || derived.plan) return null;
+    const rows = derived.rejected ?? [];
+    if (!rows.length) return null;
+    return rows.map((r) => `[${r.option} — ${r.why}]`).join(' ');
+}
+
+/** One line per step — the trace's spelling of a multi-order route. */
+const describeRoute = (route) => route.map((st, i) => (st.verb === 'shove'
+    ? `${i + 1}. shove ${st.dir} k=${st.k} -> (${st.to.tx},${st.to.ty})${st.destroys
+        ? ' (DESTROYED there)' : ''}`
+    : `${i + 1}. break ${st.rock} (wait ${st.wait})`)).join(' · ');
 
 /**
  * ⛓⛓⛓ PROCGEN PoC SLICE 3b — RESOLVE a `weigh` work order: ⚖ §11.8a's
@@ -989,6 +1059,10 @@ function resolveWeighStrategy(run, obstacle, contacts, blocked = []) {
     if (!derived.plan && derived.parked) {
         const resolvedPresser = resolvePresser(run.world, { x: presser.x, y: presser.y },
             `solverBot weigh/dwell (${obstacle.id})`);
+        const parkedRow = (run.world.pushables ?? []).find((p) => p.id === derived.parked.blockId);
+        const parkedByRecord = Boolean(parkedRow)
+            && Math.floor(parkedRow.x / TILE_SIZE) === derived.parked.from.tx
+            && Math.floor(parkedRow.y / TILE_SIZE) === derived.parked.from.ty;
         const hold = deriveHold(run, resolvedPresser, opener);
         return {
             strategy: 'weigh',
@@ -1006,13 +1080,22 @@ function resolveWeighStrategy(run, obstacle, contacts, blocked = []) {
                 block: derived.parked.blockId,
                 tile: { ...onto },
                 from: { ...derived.parked.from },
-                sinceTick: 0,
+                /**
+                 * ⛓ R9 SLICE L15 — `0` ONLY WHEN THE LEVEL RECORD PUT IT THERE.
+                 * A block a route of THIS run parked on the presser (L15's) is
+                 * reported `null`: the run does not carry the tick a block came
+                 * to rest, and a `0` would say "never moved" about a block the
+                 * trace shows being shoved three times.
+                 */
+                sinceTick: parkedByRecord ? 0 : null,
             },
             dwell: {
                 ticks: hold.ticks,
                 until: hold.until,
-                why: `${derived.parked.blockId} was parked on `
-                    + `${presser.tag}@${presser.x},${presser.y} before the first tick and is `
+                why: `${derived.parked.blockId} ${parkedByRecord ? 'was parked on' : 'was '
+                    + 'SHOVED this visit onto'} `
+                    + `${presser.tag}@${presser.x},${presser.y}${parkedByRecord
+                        ? ' before the first tick' : ' by this run\'s own route'} and is `
                     + 'not going to walk off it — `Button.update` re-collides '
                     + '`["Player","Enemy","Solid"]` EVERY tick (`Button.as:27-39`) and a '
                     + '`PushableBlock` is a `"Solid"` (`PushableBlock.as:27`). There is no '
@@ -1070,7 +1153,9 @@ function resolveWeighStrategy(run, obstacle, contacts, blocked = []) {
     const { plan, rejected } = derived;
     const row = (run.world.pushables ?? []).find((p) => p.id === plan.blockId);
     const step = SHOVE_STEP[plan.dir];
-    const stance = nodeCentre(plan.from.tx - step.dx, plan.from.ty - step.dy, DEFAULT_LATTICE);
+    const stance = plan.route
+        ? plan.route[0].stance
+        : nodeCentre(plan.from.tx - step.dx, plan.from.ty - step.dy, DEFAULT_LATTICE);
     /**
      * ⛓ THE WAIT IS `deriveHold`'s, UNCHANGED. What the next plan needs is the
      * lock NOT SOLID, and that is the same fade for the same group whoever —
@@ -1089,10 +1174,11 @@ function resolveWeighStrategy(run, obstacle, contacts, blocked = []) {
         shove: {
             block: { x: row.x, y: row.y },
             dir: plan.dir,
-            to: { ...onto },
+            to: plan.route ? { ...plan.route[0].to } : { ...onto },
         },
         k: plan.k,
         stance,
+        ...(plan.route ? { route: plan.route } : {}),
         dwell: {
             ticks: hold.ticks,
             until: hold.until,
@@ -1213,8 +1299,41 @@ function deriveWeigh(run, onto, contacts, blocked = []) {
             if (s.dx !== 0) return from.ty === onto.ty && Math.sign(onto.tx - from.tx) === s.dx;
             return from.tx === onto.tx && Math.sign(onto.ty - from.ty) === s.dy;
         });
+        /**
+         * ⛓⛓⛓ R9 SLICE L15 — WHERE ONE LEAN CANNOT, THE ROUTE SEARCH IS ASKED
+         * (§54.4, ⚖ 65 (a)). The one-lean arithmetic below is kept as the
+         * RECORD's vocabulary — every committed `weigh` is a one-lean room and
+         * its rows are the bytes they were — and each of its three refusals
+         * (off-axis, stance, blocked cell) now hands the block to
+         * `deriveBlockRoute` with the `press` goal before giving up. The
+         * refusal row STAYS (it is a true sentence about one shove); the plan
+         * carries the route. L16 is the room this was measured on: E1, a rock,
+         * then N2 — three orders, none of them a single lean.
+         */
+        const orRoute = (reason) => {
+            rejected.push(reason);
+            const r = deriveBlockRoute(run, row, { kind: 'press', onto }, contacts, blocked);
+            if (!r.steps) {
+                if (r.refused?.bound) {
+                    throw new SolverRefusal(`solverBot: the block-route search for ${row.id} `
+                        + `onto (${onto.tx},${onto.ty}) in level ${run.level} hit `
+                        + `\`${r.refused.bound}\` — ${r.refused.why}`,
+                    { obstacle: { kind: 'solid', id: row.id } });
+                }
+                return;
+            }
+            if (r.steps.length === 1) {
+                fail(`solverBot deriveWeigh(${row.id}): the search found a ONE-lean route `
+                    + `${r.steps[0].dir} k=${r.steps[0].k} where the one-lean arithmetic `
+                    + `refused (${reason.why.slice(0, 80)}…) — the two have parted`);
+            }
+            const lean = r.steps.find((st) => st.verb === 'shove');
+            if (!lean) return; // a press route always leans — the block must ARRIVE
+            found.push({ blockId: row.id, dir: lean.dir, dirIndex: lean.dirIndex,
+                k: lean.k, from, route: r.steps });
+        };
         if (!dir) {
-            rejected.push({
+            orRoute({
                 option: `weigh with ${row.id}`,
                 why: `it stands on (${from.tx},${from.ty}) and the presser is on `
                     + `(${onto.tx},${onto.ty}) — a lean moves a block along ONE axis, so a `
@@ -1226,7 +1345,7 @@ function deriveWeigh(run, onto, contacts, blocked = []) {
         const k = step.dx !== 0 ? Math.abs(onto.tx - from.tx) : Math.abs(onto.ty - from.ty);
         const stance = nodeCentre(from.tx - step.dx, from.ty - step.dy, DEFAULT_LATTICE);
         if (!corridorPlans(run.world, run.state, stance, null, planOpts)) {
-            rejected.push({
+            orRoute({
                 option: `weigh ${dir} with ${row.id}`,
                 why: `the near-side stance (${stance.x},${stance.y}) does not plan a `
                     + 'corridor from the live position — a lean needs the player box on '
@@ -1250,7 +1369,7 @@ function deriveWeigh(run, onto, contacts, blocked = []) {
             }
         }
         if (blockedAt) {
-            rejected.push({ option: `weigh ${dir} k=${k} with ${row.id}`, why: blockedAt });
+            orRoute({ option: `weigh ${dir} k=${k} with ${row.id}`, why: blockedAt });
             continue;
         }
         found.push({ blockId: row.id, dir, dirIndex: dirs.indexOf(dir), k, from });
@@ -1282,7 +1401,10 @@ function deriveWeigh(run, onto, contacts, blocked = []) {
      * broken by nothing (`deriveShove`'s own sort, one key shorter — there is
      * no destructive arm here because a destroyed block cannot press).
      */
-    found.sort((a, b) => a.k - b.k || a.dirIndex - b.dirIndex
+    // ⛓ R9 slice L15: a one-lean answer outranks any route; among routes,
+    // the search's own cost already chose, so fewer orders first.
+    found.sort((a, b) => (a.route?.length ?? 1) - (b.route?.length ?? 1)
+        || a.k - b.k || a.dirIndex - b.dirIndex
         || (a.blockId < b.blockId ? -1 : 1));
     const [plan, ...alternatives] = found;
     return {
@@ -2855,6 +2977,517 @@ function corridorPlans(world, from, aim, allowTeleporter, opts) {
 }
 
 /**
+ * ⛓⛓⛓ R9 SLICE L15 — THE BLOCK-ROUTE SEARCH (kickoff §54.4, ⚖ 65 (a)).
+ *
+ * `deriveShove` asked ONE question — *at which k does a corridor appear?* —
+ * and L15's honest answer was none: the block is the only door out of the
+ * arrival pocket, the exit is behind a lock whose one presser is a momentary
+ * `Button`, and the only way to a cell the next lean must be leaned FROM is
+ * through a rock that no corridor planner ever names. So the question is
+ * widened, once, for both callers: **what SEQUENCE of the verbs the executors
+ * already run puts the block where the post-condition needs it?**
+ *
+ * A best-first search over `{ block cell | DESTROYED, broken-rock set, player
+ * cell }`, whose moves are `lean(dir, k)` and `break(rock)` and whose two goal
+ * predicates are the two post-conditions ⚖ §11.8a already named:
+ *   `clear-path` — a corridor plans from the state's player cell to the aim
+ *                  (`resolveShoveStrategy`);
+ *   `press`      — the block IS on the presser's tile (`resolveWeighStrategy`).
+ * One search, two goal predicates — that is the whole of ⚖ 65 (a).
+ *
+ * ⛔ **THE ROCK LOGIC IS THE TRANSCRIPTION'S, ASKED OF A HYPOTHETICAL BAG
+ * (§54.5, ⚖ 65 (b)) — no second physics.** An unbroken rock STOPS the block
+ * because `blockBlockedAt` asks `collidesSolid` under a bag whose
+ * `brokenRocks` is the state's; a rock is breakable only if `rockBreaksUnder`
+ * and the primary slot fires the plain sword — the same two guards
+ * `resolveBreakStrategy` applies live; a broken rock is gone for the VISIT, so
+ * the set is monotone per state; and a block RESTING on a presser publishes
+ * the group because `Button.hitables` is `["Player","Enemy","Solid"]` and a
+ * `PushableBlock` is a `"Solid"` — so the state bag's `openActivators` gains
+ * every group whose EVERY presser is covered by a Solid in the state, and a
+ * corridor test can see THROUGH a lock the route has opened. ⛔ The player
+ * never counts as a presser here (momentary), and a `localPublish` presser
+ * stays `hold`'s. Each of these is one row of §54.5 and each has a mutant.
+ *
+ * ⛔⛔ **A ONE-STEP ROUTE IS TODAY'S RECORD, FIELD FOR FIELD** — measured by
+ * `shoveWeighParity.test.js`, not argued. The START state's leans are scanned
+ * in `deriveShove`'s own order and their rejections are phrased by the
+ * CALLER (`phrase`), so the trace rows of every committed one-step room are
+ * the bytes they were; the search only adds what a room like L15 needs.
+ * Two bags per state, because today's code uses two: the stance test and the
+ * block-stop test ask the world AS IT IS plus the state (other pushables are
+ * WALLS to the block — guard (i) never discharged them for that question),
+ * and only the corridor-to-aim test carries the guard-(i) hypothesis.
+ *
+ * ⛔ **BOUNDS, NAMED IN THE REFUSAL.** `MAX_ROUTE_ORDERS` and
+ * `MAX_ROUTE_EXPANSIONS`; the other pushables stay guard-(i) hypotheses —
+ * multi-block routing is out of scope and says so (§54.10). Cost is
+ * lexicographic and total — `(orders, Σk, destroys, direction-order
+ * sequence)` — so an emitted tape is an artifact and never a tie broken by
+ * iteration order.
+ *
+ * @param {object} run
+ * @param {object} row       the block's `world.pushables` row (the ROUTED block)
+ * @param {{kind:'clear-path', aim:object, allowTeleporter?:*}|{kind:'press', onto:{tx,ty}}} goal
+ * @param {Set|Iterable} contacts
+ * @param {string[]} blocked  guard (ii) walls
+ * @param {{discharged?: string[], phrase?: object}} [opts]
+ * @returns {{steps: ?object[], rejected: object[], found: object[], expansions: number,
+ *   refused: ?{bound: string, why: string}}}
+ */
+export const MAX_ROUTE_ORDERS = 8;
+export const MAX_ROUTE_EXPANSIONS = 2000;
+
+/** `deriveShove`'s own words for the START state's lean rejections. */
+const SHOVE_PHRASE = Object.freeze({
+    stance: (dir, stance) => ({
+        option: `shove ${dir}`,
+        why: `the near-side stance (${stance.x},${stance.y}) for a ${dir} lean does `
+            + 'not plan a corridor from the live position — a lean needs the player '
+            + 'box on the block\'s +-1 px probe with velocity INTO it, so a '
+            + 'direction whose stance is in another component is not a direction',
+    }),
+    offMap: (dir, k, cell, run) => ({
+        option: `shove ${dir} k=${k}`,
+        why: `(${cell.tx},${cell.ty}) is OFF THE MAP — level ${run.level} is `
+            + `${run.world.width}x${run.world.height} TILES. A block cannot rest `
+            + 'outside the room, and a hypothesis that puts it there is asking '
+            + 'whether a corridor exists once the block stops existing.',
+    }),
+    solid: (dir, k, cell) => ({
+        option: `shove ${dir} k=${k}`,
+        why: `(${cell.tx},${cell.ty}) is Solid to the block, which stops dead `
+            + 'against one — so no k at or beyond this is reachable',
+    }),
+    noGoal: (dir, k, cell, destroys, goal) => ({
+        option: `shove ${dir} k=${k}`,
+        why: goal.kind === 'press'
+            ? `(${cell.tx},${cell.ty}) is not the presser's tile (${goal.onto.tx},${goal.onto.ty})`
+                + `${destroys ? ' — and the block is DESTROYED there' : ''}`
+            : `no corridor to (${goal.aim.x},${goal.aim.y}) with the block hypothesised at `
+                + `(${cell.tx},${cell.ty})${destroys ? ' (destroyed there)' : ''}`,
+    }),
+    rock: (rockId, why) => ({ option: `break ${rockId}`, why }),
+});
+
+const routeCost = (steps) => {
+    let sumK = 0; let destroys = 0; const seq = [];
+    for (const s of steps) {
+        if (s.verb === 'shove') { sumK += s.k; if (s.destroys) destroys += 1; seq.push(s.dirIndex); }
+        else seq.push(SHOVE_DIR_COUNT);
+    }
+    return { orders: steps.length, sumK, destroys, seq };
+};
+const SHOVE_DIR_COUNT = Object.keys(SHOVE_STEP).length;
+/**
+ * ⛔ NON-DESTRUCTIVE BEFORE FEWER TILES. Kickoff §54.4 wrote the tuple as
+ * `(orders, Σk, destroys, …)`; that order would take a k=1 SINK over a k=3
+ * push that keeps the block, which is the opposite of ⚖ §11.8a ruling 1
+ * ("destruction is only ever an explicit LAST RESORT") and of `deriveShove`'s
+ * own sort — and a one-step route must be today's record. Measured on the
+ * witness room in `blockRoute.test.js` before the order was corrected.
+ */
+const compareCost = (a, b) => {
+    if (a.orders !== b.orders) return a.orders - b.orders;
+    if (a.destroys !== b.destroys) return a.destroys - b.destroys;
+    if (a.sumK !== b.sumK) return a.sumK - b.sumK;
+    const n = Math.min(a.seq.length, b.seq.length);
+    for (let i = 0; i < n; i += 1) if (a.seq[i] !== b.seq[i]) return a.seq[i] - b.seq[i];
+    return a.seq.length - b.seq.length;
+};
+const stateKey = (s) => `${s.block ? `${s.block.tx},${s.block.ty}` : 'X'}|`
+    + `${[...s.rocks].sort().join(',')}|${Math.floor(s.player.x / DEFAULT_LATTICE)},`
+    + `${Math.floor(s.player.y / DEFAULT_LATTICE)}`;
+
+/**
+ * The groups a state's Solids hold OPEN — §54.5 row 5. Every presser of the
+ * group must be covered by a non-removed pushable rect in the bag; a group
+ * with a `localPublish` presser is `hold`'s and is never opened here.
+ */
+function groupsHeldOpenBySolids(run, bag) {
+    const opened = new Set();
+    const solids = [...(bag.pushables?.values() ?? [])].filter((p) => p.rect && !p.removed);
+    if (!solids.length) return opened;
+    const groups = new Map();
+    for (const p of (run.world.pressers ?? [])) {
+        if (!groups.has(p.t)) groups.set(p.t, []);
+        groups.get(p.t).push(p);
+    }
+    for (const [t, pressers] of groups) {
+        if (pressers.some((p) => localPublish(p) !== null)) continue;
+        if (!pressers.every((p) => solids.some((s) => rectsOverlapLocal(s.rect, p.rect)))) continue;
+        for (const a of (run.world.activators ?? [])) {
+            if (a.t === t && !(bag.openActivators?.has(a.id))) opened.add(a.id);
+        }
+    }
+    return opened;
+}
+
+export function deriveBlockRoute(run, row, goal, contacts, blocked = [],
+    { discharged = [], phrase = SHOVE_PHRASE } = {}) {
+    const live = run.pushables?.get(row.id);
+    if (!live || live.removed) return { steps: null, rejected: [], found: [], expansions: 0, refused: null };
+    const base = run.liveGeometryOpts();
+    const liveRocks = base.brokenRocks ?? new Set();
+    const start = {
+        block: { tx: Math.floor(live.rect.x / TILE_SIZE), ty: Math.floor(live.rect.y / TILE_SIZE) },
+        rocks: new Set(), player: { x: run.state.x, y: run.state.y }, steps: [],
+    };
+    const dirs = Object.keys(SHOVE_STEP);
+    const rocks = (run.world.solids ?? []).filter((s) => s.rockId && !liveRocks.has(s.rockId));
+
+    /**
+     * ⛓⛓⛓ THE PRESSERS A ROUTE MAY WALK OVER. L15's fourth order is a swing
+     * from (7,1), whose only neighbour that is not Stone or the rock is the
+     * BUTTON's own cell — a `proximity-hazard` the planner refuses. The game
+     * does not: `Button.update` republishes from whoever stands there and
+     * shuts the group the tick they leave, and a `Lock`'s fade is 101 ticks,
+     * so a walk ACROSS a momentary button changes nothing the route cares
+     * about. `hold` already crosses one by exemption (`resolved.exempt`); the
+     * search does the same, in the same order `stanceReaches` uses — the
+     * world as it IS first, and only then with the crossable pressers exempt
+     * — and ONLY for states past the start, so a one-step room's questions
+     * are today's by construction (§54.4's parity law) rather than by luck.
+     * ⛔ Crossable = momentary (`localPublish` null) AND no arrow trap shares
+     * the group: a press that arms a lane is a danger this search does not
+     * price, and the honest answer there is the refusal it always was.
+     */
+    const armedGroups = new Set((run.world.arrowTraps ?? []).map((t) => t.t));
+    const crossable = (run.world.pressers ?? []).filter((p) => localPublish(p) === null
+        && !armedGroups.has(p.t))
+        .map((p) => `proximity-hazard:${p.tag}@${p.x},${p.y}`);
+    /**
+     * ⛓ A CONSERVATIVE FLOOD BEFORE EVERY A\*. L16's search asked ~16,000
+     * corridor plans (161 states × four rocks × up to 24 stance candidates)
+     * and took 84 s; almost all of them were "no" for a cell on the far side
+     * of a wall. So each (bag, exempt, from) gets ONE 8-neighbour flood over
+     * the planner's own per-tile predicate (`plannerObstacleAt` at the cell
+     * centre, no margin), and a target outside it is refused without an A\*.
+     * ⛔ THE FLOOD IS A FILTER, NEVER THE ANSWER: it over-approximates
+     * (eight neighbours, no box margin), so every "reachable" is still put
+     * to `planWaypoints` — the instrument the walk then follows — and only
+     * a cell the flood cannot reach at all is skipped. A yes the flood gives
+     * and A\* refuses falls through to the next candidate as before.
+     */
+    const floods = new Map();
+    /** One per-tile answer per (bag, exempt) — shared by every state that asks. */
+    const tileAnswers = new Map();
+    const bagKeyOf = (bag, exempt) => [...(bag.pushables?.values() ?? [])]
+        .map((p) => `${p.rect?.x},${p.rect?.y},${p.removed ? 'x' : ''}`).join(';')
+        + `|${[...(bag.brokenRocks ?? [])].sort().join(',')}`
+        + `|${[...(bag.openActivators ?? [])].sort().join(',')}|${[...exempt].sort().join(',')}`;
+    const floodFrom = (from, bag, exempt) => {
+        const bagKey = bagKeyOf(bag, exempt);
+        const key = `${bagKey}|${Math.floor(from.x / TILE_SIZE)},${Math.floor(from.y / TILE_SIZE)}`;
+        if (floods.has(key)) return floods.get(key);
+        if (!tileAnswers.has(bagKey)) tileAnswers.set(bagKey, new Map());
+        const answers = tileAnswers.get(bagKey);
+        const opts = solverPlanOpts(run, exempt, { liveBag: bag, nodeMargin: 0, triggerMargin: 0 });
+        const blockedAt = (k, n) => {
+            if (!answers.has(k)) {
+                const centre = nodeCentre(n.tx, n.ty, DEFAULT_LATTICE);
+                answers.set(k, Boolean(plannerObstacleAt(run.world, centre.x, centre.y, null, opts)));
+            }
+            return answers.get(k);
+        };
+        const seenCells = new Set();
+        const start = { tx: Math.floor(from.x / TILE_SIZE), ty: Math.floor(from.y / TILE_SIZE) };
+        const stack = [start];
+        seenCells.add(`${start.tx},${start.ty}`);
+        // ⛓ FOUR-CONNECTED, LIKE `planTilePath` — the flood is A\*'s own
+        // connectivity at its margin-0 fallback; what it still ignores (the
+        // trigger margin, the waterfall's directed edge) only ever makes it
+        // say yes where A\* says no, which `verifyRoute` then catches.
+        while (stack.length) {
+            const c = stack.pop();
+            for (const [dx, dy] of [[0, -1], [1, 0], [0, 1], [-1, 0]]) {
+                const n = { tx: c.tx + dx, ty: c.ty + dy };
+                if (n.tx < 0 || n.ty < 0 || n.tx >= run.world.width || n.ty >= run.world.height) continue;
+                const k = `${n.tx},${n.ty}`;
+                if (seenCells.has(k)) continue;
+                if (blockedAt(k, n)) continue;
+                seenCells.add(k);
+                stack.push(n);
+            }
+        }
+        floods.set(key, seenCells);
+        return seenCells;
+    };
+    /**
+     * ⚠ THE TARGET ITSELF MAY BE A CELL THE FLOOD REFUSES AND A\* ACCEPTS — a
+     * stairs exit is a teleporter volume, a stance may sit in a trigger the
+     * goal allows (A\* exempts its GOAL from the margins) — so a target
+     * counts as flood-reached when it or one of its four neighbours is.
+     */
+    const floodReaches = (from, to, bag, exempt) => {
+        const cells = floodFrom(from, bag, exempt);
+        const tx = Math.floor(to.x / TILE_SIZE);
+        const ty = Math.floor(to.y / TILE_SIZE);
+        return cells.has(`${tx},${ty}`) || cells.has(`${tx + 1},${ty}`) || cells.has(`${tx - 1},${ty}`)
+            || cells.has(`${tx},${ty + 1}`) || cells.has(`${tx},${ty - 1}`);
+    };
+    /**
+     * ⛓⛓⛓ LAZY VERIFICATION. The START state's questions are `deriveShove`'s
+     * own and are asked of A\* exactly as it asked them (the parity law).
+     * Every DEEPER state answers reachability from the flood — which
+     * over-approximates — and the route the search returns is then VERIFIED
+     * step by step with `planWaypoints` under each prefix's own bag
+     * (`verifyRoute`). A step A\* refuses blacklists that one transition
+     * and the search resumes; so the instrument the walk follows is still
+     * the one that decides, and the ~1,300 plans L16's search spent on
+     * states it never used become the handful its answer needs.
+     */
+    const plansOrCrosses = (state, from, to, allowTeleporter, bag, exempt) => {
+        if (state.steps.length === 0) {
+            return corridorPlans(run.world, from, to, allowTeleporter,
+                solverPlanOpts(run, exempt, { liveBag: bag })) ? exempt : null;
+        }
+        if (floodReaches(from, to, bag, exempt)) return exempt;
+        if (!crossable.length) return null;
+        const wider = new Set([...exempt, ...crossable]);
+        return floodReaches(from, to, bag, wider) ? wider : null;
+    };
+    const plansExactly = (from, to, allowTeleporter, bag, exempt) => corridorPlans(
+        run.world, from, to, allowTeleporter, solverPlanOpts(run, exempt, { liveBag: bag }));
+    /** The two bags of a state (see the docblock), and the contacts they imply. */
+    const bagsOf = (state) => {
+        const at = state.block ?? { tx: -1, ty: -1 };
+        let solid = bagWithBlockAt(base, row.id, at, state.block === null);
+        if (state.rocks.size) solid = { ...solid, brokenRocks: new Set([...liveRocks, ...state.rocks]) };
+        const opened = groupsHeldOpenBySolids(run, solid);
+        if (opened.size) {
+            solid = { ...solid, openActivators: new Set([...(base.openActivators ?? []), ...opened]) };
+        }
+        const exempt = opened.size
+            ? new Set([...contacts, ...[...opened].map((id) => `proximity-hazard:${id}`)])
+            : contacts;
+        const corridor = discharged.length
+            ? bagWithBlockAt(solid, row.id, at, state.block === null, discharged) : solid;
+        return { solid, corridor, exempt };
+    };
+    const goalMet = (state, bags) => {
+        if (goal.kind === 'press') {
+            return Boolean(state.block) && state.block.tx === goal.onto.tx
+                && state.block.ty === goal.onto.ty;
+        }
+        if (state.steps.length === 1) {
+            // ⛓ THE ONE-STEP QUESTION IS `deriveShove`'s OWN, asked of A\* with
+            // the guard-(i) bag and today's contacts — never the flood.
+            return plansExactly(state.player, goal.aim, goal.allowTeleporter ?? null,
+                bags.corridor, bags.exempt);
+        }
+        if (refusedMoves.has(`${stateKey(state)}|goal`)) return false;
+        return Boolean(plansOrCrosses(state, state.player, goal.aim,
+            goal.allowTeleporter ?? null, bags.corridor, bags.exempt));
+    };
+
+    const rejected = [];
+    const found = [];
+    const moveSig = (st) => (st.verb === 'shove' ? `shove:${st.dir}:${st.k}` : `break:${st.rock}`);
+    /**
+     * Replay a candidate route's prefixes and ask A\* every question the
+     * flood answered for it. Returns `null` when every step plans, else the
+     * `${stateKey}|${moveSig}` of the first transition A\* refuses.
+     */
+    const verifyRoute = (steps) => {
+        let state = start;
+        for (let i = 0; i < steps.length; i += 1) {
+            const st = steps[i];
+            const bags = bagsOf(state);
+            const exempt = st.exempt ? new Set([...bags.exempt, ...st.exempt]) : bags.exempt;
+            if (i > 0 && st.stance
+                && !plansExactly(state.player, st.stance, null, bags.solid, exempt)) {
+                return `${stateKey(state)}|${moveSig(st)}`;
+            }
+            state = st.verb === 'shove'
+                ? { block: st.destroys ? null : st.to, rocks: state.rocks,
+                    player: nodeCentre(st.to.tx - SHOVE_STEP[st.dir].dx,
+                        st.to.ty - SHOVE_STEP[st.dir].dy, DEFAULT_LATTICE),
+                    steps: steps.slice(0, i + 1) }
+                : { block: state.block, rocks: new Set([...state.rocks, st.rock]),
+                    player: st.stance ?? state.player, steps: steps.slice(0, i + 1) };
+        }
+        if (goal.kind === 'clear-path' && steps.length > 1) {
+            const bags = bagsOf(state);
+            const last = steps[steps.length - 1];
+            const exempt = last.exempt ? new Set([...bags.exempt, ...last.exempt]) : bags.exempt;
+            const wider = crossable.length ? new Set([...exempt, ...crossable]) : exempt;
+            if (!plansExactly(state.player, goal.aim, goal.allowTeleporter ?? null,
+                bags.corridor, exempt)
+                && !plansExactly(state.player, goal.aim, goal.allowTeleporter ?? null,
+                    bags.corridor, wider)) {
+                return `${stateKey(state)}|goal`;
+            }
+        }
+        return null;
+    };
+    const refusedMoves = new Set();
+    let expansions = 0;
+    let ordersBound = false;
+    for (;;) {
+    const queue = [];
+    const push = (s) => {
+        s.cost = routeCost(s.steps);
+        let i = queue.length;
+        while (i > 0 && compareCost(queue[i - 1].cost, s.cost) > 0) i -= 1;
+        queue.splice(i, 0, s);
+    };
+    push(start);
+    const seen = new Set();
+    let restart = false;
+    rejected.length = 0;
+    found.length = 0;
+    while (queue.length) {
+        const state = queue.shift();
+        const key = stateKey(state);
+        if (seen.has(key)) continue;
+        seen.add(key);
+        const bags = bagsOf(state);
+        if (state.steps.length > 0 && goalMet(state, bags)) {
+            const bad = verifyRoute(state.steps);
+            if (bad === null) {
+                return { steps: state.steps, rejected, found, expansions, refused: null };
+            }
+            refusedMoves.add(bad);
+            restart = true;
+            break;
+        }
+        if (state.steps.length >= MAX_ROUTE_ORDERS) { ordersBound = true; continue; }
+        expansions += 1;
+        if (expansions > MAX_ROUTE_EXPANSIONS) {
+            return { steps: null, rejected, found, expansions, refused: {
+                bound: 'MAX_ROUTE_EXPANSIONS',
+                why: `the block-route search expanded ${MAX_ROUTE_EXPANSIONS} states `
+                    + `(\`MAX_ROUTE_EXPANSIONS\`) without meeting the \`${goal.kind}\` `
+                    + 'post-condition — a route this long is a derivation that has lost its '
+                    + 'room, not a long puzzle',
+            } };
+        }
+        const atStart = state.steps.length === 0;
+        if (state.block) {
+            dirs.forEach((dir, dirIndex) => {
+                const step = SHOVE_STEP[dir];
+                const from = state.block;
+                const stanceCell = { tx: from.tx - step.dx, ty: from.ty - step.dy };
+                const stance = nodeCentre(stanceCell.tx, stanceCell.ty, DEFAULT_LATTICE);
+                const exempt = plansOrCrosses(state, state.player, stance, null, bags.solid,
+                    bags.exempt);
+                if (!exempt) {
+                    if (atStart) rejected.push(phrase.stance(dir, stance));
+                    return;
+                }
+                const crossed = exempt === bags.exempt ? [] : [...exempt].filter(
+                    (c) => !bags.exempt.has(c));
+                for (let k = 1; k <= MAX_SHOVE_TILES; k += 1) {
+                    const cell = { tx: from.tx + step.dx * k, ty: from.ty + step.dy * k };
+                    if (cell.tx < 0 || cell.ty < 0
+                        || cell.tx >= run.world.width || cell.ty >= run.world.height) {
+                        if (atStart) rejected.push(phrase.offMap(dir, k, cell, run));
+                        break;
+                    }
+                    const destroys = blockSinksOn(run.world, cell);
+                    if (!destroys && blockBlockedAt(run, bags.solid, row.id, cell)) {
+                        if (atStart) rejected.push(phrase.solid(dir, k, cell));
+                        break;
+                    }
+                    if (refusedMoves.has(`${key}|shove:${dir}:${k}`)) {
+                        if (destroys) break;
+                        continue;
+                    }
+                    const next = {
+                        block: destroys ? null : cell, rocks: state.rocks,
+                        player: nodeCentre(cell.tx - step.dx, cell.ty - step.dy, DEFAULT_LATTICE),
+                        steps: [...state.steps, { verb: 'shove', dir, dirIndex, k,
+                            from: { ...from }, to: { ...cell }, destroys, stance,
+                            ...(crossed.length ? { exempt: crossed } : {}) }],
+                    };
+                    if (atStart) {
+                        /**
+                         * ⛓ THE START STATE IS SCANNED EXACTLY AS `deriveShove` SCANNED
+                         * IT: the goal is asked per k, a hit ends the direction (there is
+                         * no k+1 once k plans), and every miss is a rejection in the
+                         * caller's words. That is what keeps a one-step record byte-equal.
+                         */
+                        if (goalMet(next, bagsOf(next))) {
+                            found.push({ dir, dirIndex, k, to: { ...cell }, destroys });
+                            push(next);
+                            break;
+                        }
+                        rejected.push(phrase.noGoal(dir, k, cell, destroys, goal));
+                    }
+                    push(next);
+                    if (destroys) break;
+                }
+            });
+        }
+        for (const rock of rocks) {
+            if (state.rocks.has(rock.rockId)) continue;
+            if (refusedMoves.has(`${key}|break:${rock.rockId}`)) continue;
+            const weapon = run.primaryWeapon;
+            if (weapon !== 'sword') {
+                if (atStart) {
+                    rejected.push(phrase.rock(rock.rockId, weapon === null
+                        ? 'the run\'s `primary` slot holds NOTHING, so a swing is a SILENT '
+                            + 'no-op (`weaponForPress` returns null) — the rock is a WALL to '
+                            + 'this route and the sword is the work order'
+                        : `the run's \`primary\` slot fires \`${weapon}\`, and only the plain `
+                            + 'SWORD breaks a rock in this model — the rock is a WALL to this '
+                            + 'route'));
+                }
+                continue;
+            }
+            if (!rockBreaksUnder(rock.rockType, run.inventory)) {
+                if (atStart) {
+                    rejected.push(phrase.rock(rock.rockId, `\`BreakableRock.hit(_t)\` is `
+                        + `\`rockType <= _t\` with \`_t = hasGhostSword ? 1 : 0\`; this rock is `
+                        + `rockType ${rock.rockType ?? 0} and the run holds NO ghost sword — `
+                        + 'the swing would land and do nothing, so the rock is a WALL to this '
+                        + 'route and the GHOST SWORD is the work order'));
+                }
+                continue;
+            }
+            let stance = breakStanceUnder(run, rock, bags.exempt, state.player, bags.solid,
+                { live: atStart, reaches: atStart ? null : floodReaches, verify: atStart });
+            let crossed = [];
+            if (stance === undefined && !atStart && crossable.length) {
+                const wider = new Set([...bags.exempt, ...crossable]);
+                stance = breakStanceUnder(run, rock, wider, state.player, bags.solid,
+                    { live: false, reaches: floodReaches, verify: false });
+                if (stance !== undefined) crossed = crossable;
+            }
+            if (stance === undefined) {
+                if (atStart) {
+                    rejected.push(phrase.rock(rock.rockId, 'no cell within SLASH_REACH of it '
+                        + 'both puts the slash rect on the rock and plans a corridor from '
+                        + 'here — it is not reachable at this point of the route'));
+                }
+                continue;
+            }
+            push({
+                block: state.block, rocks: new Set([...state.rocks, rock.rockId]),
+                player: stance ?? state.player,
+                steps: [...state.steps, { verb: 'break', rock: rock.rockId,
+                    rockType: rock.rockType ?? 0, target: { ...rock.rect }, stance,
+                    wait: WAIT_AFTER_PRESS_TICKS,
+                    ...(crossed.length ? { exempt: crossed } : {}) }],
+            });
+        }
+    }
+    if (restart) continue;
+    break;
+    }
+    return { steps: null, rejected, found, expansions, refused: ordersBound ? {
+        bound: 'MAX_ROUTE_ORDERS',
+        why: `every route the search could reach was cut at ${MAX_ROUTE_ORDERS} orders `
+            + `(\`MAX_ROUTE_ORDERS\`) without meeting the \`${goal.kind}\` post-condition`,
+    } : {
+        bound: null,
+        why: `the block-route search exhausted ${expansions} state(s) — no sequence of `
+            + `leans and breaks meets the \`${goal.kind}\` post-condition`,
+    } };
+}
+
+/**
  * ⛓⛓⛓ R8 SLICE 3b — `push-until-path`, ⚖ §11.8a RULING 1(a).
  *
  * Slice 3 stopped here (§11.8) because `runShove` requires `dir` AND `to`
@@ -2922,101 +3555,31 @@ function deriveShove(run, row, aim, allowTeleporter, contacts, blocked = []) {
         if (!OBSTACLE_STRATEGIES[`solid:${other.tag}`]) continue;
         discharged.push(other.id);
     }
-    const from = {
-        tx: Math.floor(live.rect.x / TILE_SIZE), ty: Math.floor(live.rect.y / TILE_SIZE),
-    };
-    const bag = run.liveGeometryOpts();
-    const planOpts = solverPlanOpts(run, contacts);
-    const found = [];
-    const rejected = [];
-    const dirs = Object.keys(SHOVE_STEP);
-    dirs.forEach((dir, dirIndex) => {
-        const step = SHOVE_STEP[dir];
-        const stanceCell = { tx: from.tx - step.dx, ty: from.ty - step.dy };
-        const stance = nodeCentre(stanceCell.tx, stanceCell.ty, DEFAULT_LATTICE);
-        /**
-         * ⛓ THE DIRECTION IS DERIVED BY REACHABILITY, which is the honest
-         * reading of "the player is on one side of a cut vertex and the aim on
-         * the other": a lean is a HELD KEY, so the only directions available
-         * are the ones whose NEAR-SIDE cell the player can actually stand in.
-         * `planWaypoints` is the probe, the same instrument the walk then
-         * follows (§10.4 note 3's law, one verb over).
-         */
-        if (!corridorPlans(run.world, run.state, stance, null, planOpts)) {
-            rejected.push({
-                option: `shove ${dir}`,
-                why: `the near-side stance (${stance.x},${stance.y}) for a ${dir} lean does `
-                    + 'not plan a corridor from the live position — a lean needs the player '
-                    + 'box on the block\'s +-1 px probe with velocity INTO it, so a '
-                    + 'direction whose stance is in another component is not a direction',
-            });
-            return;
-        }
-        for (let k = 1; k <= MAX_SHOVE_TILES; k += 1) {
-            const cell = { tx: from.tx + step.dx * k, ty: from.ty + step.dy * k };
+    /**
+     * ⛓⛓⛓ R9 SLICE L15 — THE SCAN IS THE SEARCH'S START LAYER (§54.4). The
+     * per-(dir, k) questions above are asked by `deriveBlockRoute` in exactly
+     * this order and phrased in this function's own words, so a room that
+     * answers in ONE lean returns the record it always did (`shoveWeighParity
+     * .test.js` measures that); a room that needs breaks and further leans
+     * — L15 — returns step 1 in the same fields plus `route`.
+     */
+    const route = deriveBlockRoute(run, row, { kind: 'clear-path', aim, allowTeleporter },
+        contacts, blocked, { discharged });
+    const { rejected, found } = route;
+    if (!route.steps) {
+        if (route.refused?.bound) {
             /**
-             * ⛔⛔⛔ R8 SLICE 4 — THE OFF-THE-MAP GUARD WAS COMPARING TILES
-             * AGAINST PIXELS, AND HAD BEEN VACUOUS SINCE THE DAY IT WAS
-             * WRITTEN.
-             *
-             * `world.width`/`world.height` are TILES (12 x 13 in L8);
-             * `world.world.width`/`world.world.height` are the same room in
-             * PIXELS (192 x 208). The guard read the second and compared it
-             * to a tile index, so no `k` inside a 12-tile room could ever
-             * trip it — and L8 is the first room where that mattered:
-             * push-until-path scanned column 6 south, found every in-room
-             * cell still blocking, reached the cell BELOW THE FLOOR, found
-             * that a block outside the level blocks nothing, and returned
-             * `k = 6` — a destination the block physically cannot reach. The
-             * shove then leaned for 240 ticks and reported the block had
-             * never left its cell.
-             *
-             * ⛓ The fix makes the LAST RESORT reachable, which is the whole
-             * point: with the map bounded, no NON-destructive cell in any
-             * direction yields a corridor, so ⚖ ruling 1(a)'s explicit last
-             * resort applies and the block goes into the water — which is
-             * what the hand answer does, arrived at by exhausting the
-             * alternatives rather than by preferring the pit.
-             * [[feedback_units_must_survive_the_round_trip]]
+             * ⛔ A CUT SEARCH IS NOT "NO ROUTE". Exhausting the space returns
+             * `null` (today's refusal shape); hitting a bound refuses BY NAME,
+             * because "I could not decide" and "there is none" are different
+             * claims and only the second is the frontier's to report.
              */
-            if (cell.tx < 0 || cell.ty < 0
-                || cell.tx >= run.world.width || cell.ty >= run.world.height) {
-                rejected.push({
-                    option: `shove ${dir} k=${k}`,
-                    why: `(${cell.tx},${cell.ty}) is OFF THE MAP — level ${run.level} is `
-                        + `${run.world.width}x${run.world.height} TILES. A block cannot rest `
-                        + 'outside the room, and a hypothesis that puts it there is asking '
-                        + 'whether a corridor exists once the block stops existing.',
-                });
-                break;
-            }
-            const destroys = blockSinksOn(run.world, cell);
-            if (!destroys && blockBlockedAt(run, bag, row.id, cell)) {
-                rejected.push({
-                    option: `shove ${dir} k=${k}`,
-                    why: `(${cell.tx},${cell.ty}) is Solid to the block, which stops dead `
-                        + 'against one — so no k at or beyond this is reachable',
-                });
-                break;
-            }
-            const after = nodeCentre(cell.tx - step.dx, cell.ty - step.dy, DEFAULT_LATTICE);
-            const ok = corridorPlans(run.world, after, aim, allowTeleporter, {
-                ...planOpts,
-                liveBag: bagWithBlockAt(bag, row.id, cell, destroys, discharged),
-            });
-            if (ok) {
-                found.push({ dir, dirIndex, k, to: { tx: cell.tx, ty: cell.ty }, destroys });
-                break;
-            }
-            rejected.push({
-                option: `shove ${dir} k=${k}`,
-                why: `no corridor to (${aim.x},${aim.y}) with the block hypothesised at `
-                    + `(${cell.tx},${cell.ty})${destroys ? ' (destroyed there)' : ''}`,
-            });
-            if (destroys) break;
+            throw new SolverRefusal(`solverBot: the block-route search for ${row.id} in `
+                + `level ${run.level} hit \`${route.refused.bound}\` — ${route.refused.why}`,
+            { obstacle: { kind: 'solid', id: row.id } });
         }
-    });
-    if (found.length === 0) return { plan: null, rejected, discharged };
+        return { plan: null, rejected, discharged, refused: route.refused };
+    }
     /**
      * ⛔ NON-DESTRUCTIVE FIRST, THEN SMALLEST `k`, THEN THE TABLE'S OWN
      * DIRECTION ORDER. The first key is the ruling; the second is the ruling's
@@ -3025,7 +3588,38 @@ function deriveShove(run, row, aim, allowTeleporter, contacts, blocked = []) {
      */
     found.sort((a, b) => (a.destroys ? 1 : 0) - (b.destroys ? 1 : 0)
         || a.k - b.k || a.dirIndex - b.dirIndex);
-    return { plan: found[0], rejected, alternatives: found.slice(1), discharged };
+    const first = route.steps[0];
+    if (route.steps.length === 1 && first.verb === 'shove') {
+        if (!found.length || found[0].dir !== first.dir || found[0].k !== first.k) {
+            fail(`solverBot deriveShove(${row.id}): the search's one-step route `
+                + `${first.dir} k=${first.k} is not the scan's own first choice `
+                + `${found[0] ? `${found[0].dir} k=${found[0].k}` : 'NONE'} — the two `
+                + 'orderings have parted, and a one-step record must be today\'s');
+        }
+        return { plan: found[0], rejected, alternatives: found.slice(1), discharged };
+    }
+    /**
+     * ⛔ A ROUTE THAT NEVER LEANS IS NOT A SHOVE. The frontier named this
+     * BLOCK, but if the search's whole answer is "break a rock" the door was
+     * the rock, and a `shove` record with no lean in it would spell a verb
+     * the room does not need. Refused here by name (the frontier's obstacle
+     * order is out of this slice's scope, §54.10); the rejection says which
+     * rock to name instead.
+     */
+    const lean = route.steps.find((st) => st.verb === 'shove');
+    if (!lean) {
+        return { plan: null, discharged, rejected: [{
+            option: 'a route with no lean',
+            why: `the search's only answer moves no block: ${describeRoute(route.steps)}. `
+                + `${row.id} is not the door — the rock is — and a shove record cannot `
+                + 'carry a verb the room does not need; name the rock.',
+        }, ...rejected] };
+    }
+    return {
+        plan: { dir: lean.dir, dirIndex: lean.dirIndex, k: lean.k, to: { ...lean.to },
+            destroys: lean.destroys },
+        route: route.steps, rejected, alternatives: [], discharged,
+    };
 }
 
 /**
@@ -3936,7 +4530,89 @@ function execHold(run, perTick, resolved, ctx) {
  * (trap 154) beyond the one the verb already takes.
  */
 function execShove(run, perTick, resolved, ctx) {
-    return runShove(run, perTick, resolved.shove, ctx.what);
+    return execRoute(run, perTick, resolved, ctx, ctx.what);
+}
+
+/**
+ * ⛓⛓⛓ R9 SLICE L15 — THE ROUTE, EXECUTED STEP BY STEP (§54.4).
+ *
+ * `resolved.route ?? [step 1]` is walked in order: a lean is `runShove`
+ * (trap 146's closed form, the verb's own), a break is `execBreak`'s body —
+ * ONE function, called here and from the strategy table — and between a
+ * break and the next lean the executor waits the break's `wait`, which is
+ * `execBreak`'s own exit condition (`pressedAt + wait`), because the rock is
+ * Solid for its whole animation. ⛔ AFTER EVERY STEP THE POST-CONDITION IS
+ * ASSERTED AGAINST THE LIVE RUN — the block's tile is `to` (`run.pushables`)
+ * or gone when the step destroys; the rock is in `run.brokenRocks` — and a
+ * step that leaves the world elsewhere refuses BY NAME with its index. The
+ * walk between steps is the loop's own `walkTo`, no new driver verb.
+ *
+ * ⚠ A ONE-STEP ROUTE RETURNS `runShove`'s RECORD UNCHANGED — the trace
+ * sidecars are byte-compared, so `steps` rides only when there are two or
+ * more.
+ */
+function execRoute(run, perTick, resolved, ctx, what) {
+    const route = resolved.route ?? [{ verb: 'shove', ...resolved.shove }];
+    const refuse = (why) => {
+        throw new SolverRefusal(why, { obstacle: { kind: 'solid', id: resolved.target?.id
+            ?? `pushableblock@${resolved.shove.block.x},${resolved.shove.block.y}` } });
+    };
+    const tileOf = (l) => ({
+        tx: Math.floor(l.rect.x / TILE_SIZE), ty: Math.floor(l.rect.y / TILE_SIZE),
+    });
+    const blockRow = () => resolveWalkPushableId(run, resolved.shove.block);
+    const steps = [];
+    let last = null;
+    route.forEach((step, i) => {
+        const label = `${what}${route.length > 1 ? ` (route step ${i + 1}/${route.length}: `
+            + `${step.verb})` : ''}`;
+        if (i > 0 && step.stance) {
+            ctx.walkTo(ctx.goal, step.stance, { what: `${label} stance`,
+                ...(step.exempt ? { contactsOverride: step.exempt } : {}) });
+        }
+        const from = perTick.length;
+        if (step.verb === 'shove') {
+            last = runShove(run, perTick, {
+                block: resolved.shove.block, dir: step.dir, to: step.to,
+                ...(step.destroys ? { destroys: true } : {}),
+            }, label);
+            const live = run.pushables.get(blockRow());
+            if (step.destroys ? !live?.removed
+                : (!live || live.removed || tileOf(live).tx !== step.to.tx
+                    || tileOf(live).ty !== step.to.ty)) {
+                refuse(`${label}: after the lean the block is ${!live || live.removed
+                    ? 'GONE' : `on (${tileOf(live).tx},${tileOf(live).ty})`}, not `
+                    + `${step.destroys ? 'destroyed' : `on (${step.to.tx},${step.to.ty})`} `
+                    + `as route step ${i + 1} requires. The search priced the world one way `
+                    + 'and the run answered another — a rock, a Solid or a sink the '
+                    + 'transcription does not know about.');
+            }
+        } else if (step.verb === 'break') {
+            const rec = execBreak(run, perTick, {
+                held: true, rock: step.rock, target: step.target, stance: step.stance,
+                wait: step.wait, rejected: [],
+            }, { ...ctx, what: label });
+            if (!(run.brokenRocks ?? new Set()).has(step.rock)) {
+                refuse(`${label}: ${step.rock} is not in the run's \`brokenRocks\` after `
+                    + `route step ${i + 1}'s swing returned. The verb's own wait covers the `
+                    + 'animation, so a rock still standing is a disagreement, not a budget.');
+            }
+            steps.push({ verb: 'break', ticks: rec.ticks, from, rock: step.rock });
+            return;
+        } else {
+            refuse(`${label}: route step ${i + 1} has verb \`${step.verb}\`, which this `
+                + 'executor does not run');
+        }
+        steps.push({ verb: 'shove', ticks: last.ticks, from, to: step.to });
+    });
+    if (route.length === 1) return last;
+    return { ...last, steps, ticks: steps.reduce((n, st) => n + st.ticks, 0) };
+}
+
+/** The live id of the routed block, from the record coordinates the leg names. */
+function resolveWalkPushableId(run, block) {
+    const row = (run.world.pushables ?? []).find((p) => p.x === block.x && p.y === block.y);
+    return row ? row.id : null;
 }
 
 /**
@@ -3984,7 +4660,7 @@ function execWeigh(run, perTick, resolved, ctx) {
             ticks: only.ticks ?? 0,
         };
     }
-    const shove = runShove(run, perTick, resolved.shove, `${ctx.what} (park the block)`);
+    const shove = execRoute(run, perTick, resolved, ctx, `${ctx.what} (park the block)`);
     const dwell = runDwell(run, perTick, resolved.dwell, `${ctx.what} (fade)`);
     return {
         kind: 'weigh',
@@ -3992,6 +4668,7 @@ function execWeigh(run, perTick, resolved, ctx) {
         presser: { ...resolved.target },
         shove,
         dwell,
+        ...(shove.steps ? { steps: shove.steps } : {}),
         ticks: (shove.ticks ?? 0) + (dwell.ticks ?? 0),
     };
 }
@@ -6647,6 +7324,73 @@ function resolveBreakStrategy(run, obstacle, contacts, blocked = []) {
  * reach can be satisfied from and is the same window `deriveTouchStance` and
  * `deriveKeylockStance` walk.
  */
+/** Is a swing from `at` on the rock? — `execBreak`'s own in-reach test. */
+const swingReaches = (at, rock) => distanceRectPoint(at.x, at.y, rock.rect) <= SLASH_REACH
+    && rectsOverlapLocal(slashRectToward(at, rock.rect), rock.rect);
+
+/**
+ * The candidate cells for a swing at `rock`, in `deriveBreakStance`'s own
+ * order — ONE builder for the live derivation and for the route search, so
+ * the cell the search plans to swing from is the cell the executor would
+ * have derived on arrival. `opts` decides which world the candidate is
+ * tested in (the live bag, or a route state's).
+ */
+function breakStanceCandidates(run, rock, opts) {
+    const pitch = DEFAULT_LATTICE;
+    const cell = nodeAt((rock.rect.x + rock.rect.right) / 2,
+        (rock.rect.y + rock.rect.bottom) / 2, pitch);
+    const candidates = [];
+    let outOfReach = 0;
+    let noRect = 0;
+    for (let dy = -2; dy <= 2; dy += 1) {
+        for (let dx = -2; dx <= 2; dx += 1) {
+            if (dx === 0 && dy === 0) continue;
+            const c = nodeCentre(cell.tx + dx, cell.ty + dy, pitch);
+            if (plannerObstacleAt(run.world, c.x, c.y, null, opts)) continue;
+            if (distanceRectPoint(c.x, c.y, rock.rect) > SLASH_REACH) { outOfReach += 1; continue; }
+            if (!rectsOverlapLocal(slashRectToward(c, rock.rect), rock.rect)) {
+                noRect += 1;
+                continue;
+            }
+            candidates.push({ d: Math.hypot(c.x - rock.rect.x, c.y - rock.rect.y), ...c });
+        }
+    }
+    candidates.sort((a, b) => a.d - b.d || a.y - b.y || a.x - b.x);
+    return { candidates, outOfReach, noRect };
+}
+
+/**
+ * ⛓ R9 SLICE L15 — the break stance for a ROUTE STATE: from `from` under
+ * `bag`, no guard-(i) hypothesis (the route's other pushables are walls to
+ * this question exactly as they are to the block-stop test).
+ * @returns `null` when the swing already reaches from `from`, a `{x, y}`
+ *   stance when one plans, `undefined` when none does.
+ */
+function breakStanceUnder(run, rock, contacts, from, bag,
+    { live = true, reaches = null, verify = true } = {}) {
+    /**
+     * ⛔ "ALREADY IN REACH" IS A CLAIM ABOUT A REAL POINT. Past the start
+     * state the search's player point is a CELL CENTRE the walk approximates
+     * — after a lean the player is a tile BEHIND the block's rest cell
+     * (`runShove` releases at the commit tick and the block glides its last
+     * tile alone; measured (79.7,72) against a modelled (88,72) on L15's
+     * first order) — so the arm is asked only of the LIVE position, and every
+     * deeper break gets a stance cell the executor walks to before
+     * `execBreak` re-asks the question where the player actually stands.
+     */
+    if (live && swingReaches(from, rock)) return null;
+    const { candidates } = breakStanceCandidates(run, rock,
+        solverPlanOpts(run, contacts, { nodeMargin: 0, triggerMargin: 0, liveBag: bag }));
+    const reachOpts = solverPlanOpts(run, contacts, { liveBag: bag });
+    for (const c of candidates) {
+        if (reaches && !reaches(from, { x: c.x, y: c.y }, bag, contacts)) continue;
+        if (!verify || corridorPlans(run.world, from, { x: c.x, y: c.y }, null, reachOpts)) {
+            return { x: c.x, y: c.y };
+        }
+    }
+    return undefined;
+}
+
 function deriveBreakStance(run, rock, contacts, blocked = []) {
     /**
      * ⛓⛓⛓ **THE CHEAPEST STANCE IS THE ONE THE WALK IS ALREADY STANDING IN,
@@ -6672,31 +7416,11 @@ function deriveBreakStance(run, rock, contacts, blocked = []) {
      * the one case where it is safe is the case where the run is demonstrably
      * already in it and has not transitioned.
      */
-    if (distanceRectPoint(run.state.x, run.state.y, rock.rect) <= SLASH_REACH
-        && rectsOverlapLocal(slashRectToward(run.state, rock.rect), rock.rect)) {
+    if (swingReaches(run.state, rock)) {
         return { stance: null, discharged: [] };
     }
-    const pitch = DEFAULT_LATTICE;
-    const opts = solverPlanOpts(run, contacts, { nodeMargin: 0, triggerMargin: 0 });
-    const cell = nodeAt((rock.rect.x + rock.rect.right) / 2,
-        (rock.rect.y + rock.rect.bottom) / 2, pitch);
-    const candidates = [];
-    let outOfReach = 0;
-    let noRect = 0;
-    for (let dy = -2; dy <= 2; dy += 1) {
-        for (let dx = -2; dx <= 2; dx += 1) {
-            if (dx === 0 && dy === 0) continue;
-            const c = nodeCentre(cell.tx + dx, cell.ty + dy, pitch);
-            if (plannerObstacleAt(run.world, c.x, c.y, null, opts)) continue;
-            if (distanceRectPoint(c.x, c.y, rock.rect) > SLASH_REACH) { outOfReach += 1; continue; }
-            if (!rectsOverlapLocal(slashRectToward(c, rock.rect), rock.rect)) {
-                noRect += 1;
-                continue;
-            }
-            candidates.push({ d: Math.hypot(c.x - rock.rect.x, c.y - rock.rect.y), ...c });
-        }
-    }
-    candidates.sort((a, b) => a.d - b.d || a.y - b.y || a.x - b.x);
+    const { candidates, outOfReach, noRect } = breakStanceCandidates(run, rock,
+        solverPlanOpts(run, contacts, { nodeMargin: 0, triggerMargin: 0 }));
     const hypothesis = stanceHypothesis(run, blocked, contacts);
     for (const c of candidates) {
         const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis);
@@ -7824,11 +8548,23 @@ export function solveSegment({
                     });
                 }
             }
+            /**
+             * ⛓ R9 SLICE L15 — a refused `shove` names WHAT the block-route
+             * search refused (the item that gates a rock, the stance no lean
+             * has, the bound it hit), so a refusal reads as a work order
+             * rather than a shrug. The MESSAGE is unchanged — the survey and
+             * every committed refusal text are the bytes they were; this is
+             * the `considered` row on the refusal object.
+             */
+            const detail = strategy === 'shove'
+                ? shoveRefusalDetail(run, obstacle, contacts, aim, allowTeleporter,
+                    [...refusedOrders]) : null;
             considered.push({
                 option: strategy,
                 why: `selected for ${key} and REGISTERED, but the obstacle could not be `
                     + 'resolved against live state — the census row the frontier named '
-                    + 'is not one this executor can bind',
+                    + 'is not one this executor can bind'
+                    + (detail ? `. The block-route search refused: ${detail}` : ''),
             });
         }
         if (strategy && !STRATEGY_EXECUTORS[strategy]) {
@@ -8624,6 +9360,9 @@ export function solveSegment({
                         ...(plan.resolved.shove
                             ? { to: plan.resolved.shove.to, dir: plan.resolved.shove.dir,
                                 destroys: Boolean(plan.resolved.shove.destroys) } : {}),
+                        // ⛓ R9 slice L15 — only when the route has more than one order.
+                        ...(plan.resolved.route?.length > 1
+                            ? { route: plan.resolved.route.length } : {}),
                     },
                     rejected: plan.resolved.rejected ?? [],
                     keys: [],

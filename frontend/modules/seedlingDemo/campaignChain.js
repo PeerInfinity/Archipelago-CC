@@ -140,10 +140,40 @@ export const CAMPAIGN_SEGMENTS = Object.freeze([
             + 'strike opens its window ahead of the walk, so the bobs are knocked back '
             + 'rather than killed and the crossing takes no hit',
     }),
+    Object.freeze({
+        name: 'r9-solve-15', level: 15, to: 16,
+        why: 'L15 — THE BLOCK IS THE DOOR, THE BUTTON IS THE KEY, AND THE ROCKS ARE '
+            + 'THE ONLY WAY BEHIND THE BLOCK (R9 slice L15, kickoff §54): the block is '
+            + 'shoved E2, the south rock is broken to lean it N2 (the north rock is its '
+            + 'stop), the north rock is broken from across the button to lean it E1 '
+            + 'onto the button, the lock fades while the block presses, and the walk '
+            + 'crosses — one block-route search, five orders, no hit',
+    }),
 ]);
 
 /** The chain's id — the thing `?tapes=` names and a page expands. */
 export const CAMPAIGN_CHAIN_ID = 'r9-campaign';
+
+/**
+ * ⛓⛓⛓ ⚖ 68 (user, 2026-08-29: "I choose B now") — EVERY CAMPAIGN SEGMENT
+ * DECLARES `rng.split: true` AND BOOTS THE LATCHED `cosmetic` STATE.
+ *
+ * The chain's boundary 16/17 refused on the pre-build `rng`: `Music.playSound`
+ * draws its sound INDEX from the one global LFSR, a pinned mixer whose
+ * channels are reset once per ▶ Start replays (and draws) fewer indices on a
+ * continuation than a fresh page does, and the live seed at the boundary was
+ * the tape's TWO draws behind (measured with `rngRuler`). With the split ON,
+ * `Rng.cos()` — sound indices, tile and grass ctors, chest coin counts, the
+ * moonrock beams — lands on the COSMETIC stream, which the admission carries
+ * and never asserts, and the gameplay stream is what gameplay draws.
+ * `Rng.split` is a STATIC `botStart` assigns on every load, so a chain must
+ * declare it on every window or none (`director.sequenceAdmission` refuses
+ * a later window that differs) — hence one declaration here, applied by the
+ * producer to every segment it emits. `segmentBootFromLatch` already authors
+ * `split` and `cosmetic` from the latch; the re-record measures the cosmetic
+ * states. The r8-d2 staged chain is untouched.
+ */
+export const CAMPAIGN_RNG_SPLIT = true;
 
 /**
  * The segment tape NAMES, in order. This is what `PAGE_CHAINS` and

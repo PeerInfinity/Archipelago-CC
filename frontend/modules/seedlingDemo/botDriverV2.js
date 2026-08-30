@@ -3438,6 +3438,38 @@ function runShove(run, perTick, shove, what) {
     // that was on the pit and "STILL THERE". Same shape as `runSpear`'s
     // `PUSH_SINK_TICKS`, and separate from it for the same reason.
     const settleWindow = destroys ? SHOVE_SINK_TICKS : SHOVE_SETTLE_TICKS;
+    /**
+     * ⛓⛓⛓ R9 SLICE L15 — A BLOCK AT REST JITTERS, AND ON TWO AXES IT NEVER
+     * "SETTLES". `PushableBlock.input()` (transcribed in `pushables.js`)
+     * keeps `tile` one cell AHEAD after the last contact and snaps `x =
+     * gridPos(x).x` only on a tick whose `v.x == 0`, so a block that has
+     * landed alternates 96 → 96.5 → 96 for ever — in the GAME as in the
+     * model (`PushableBlock.as:59-64`). A one-axis push still reads
+     * `pushesSettled` on every other tick and this loop broke on the first
+     * of them. The first block ever pushed along a SECOND axis (the route
+     * search's rooms; L15 is E·N·E) puts the two jitters out of phase, and
+     * `pushesSettled` is then never true: the lean reported "STILL MOVING
+     * 40 tick(s) after the release" about a block whose TILE had not moved.
+     *
+     * ⇒ rest is ALSO a period-2 oscillation inside the destination tile:
+     * the rect at tick i equals the rect at tick i−2 and differs from
+     * i−1. For a one-axis push the first reversal IS the snap tick — the
+     * same tick `pushesSettled` first reads true — so no committed lean's
+     * release moves (the two-build roster replay is the measurement, not
+     * this sentence). A glide never repeats a position, so it cannot fire
+     * early. Physics is untouched: the readout learned what rest looks like.
+     */
+    const recent = [];
+    const jitteringAtRest = (l) => {
+        recent.push({ x: l.rect.x, y: l.rect.y });
+        if (recent.length > 3) recent.shift();
+        if (recent.length < 3) return false;
+        const [a, b, c] = recent;
+        const same = (p, q) => p.x === q.x && p.y === q.y;
+        const t = tileOf(l);
+        return same(a, c) && !same(b, c) && t.tx === to.tx && t.ty === to.ty;
+    };
+    let rested = false;
     for (let i = 1; i <= settleWindow; i += 1) {
         perTick.push(NO_HELD);
         const { transition } = run.advance(NO_HELD);
@@ -3462,9 +3494,10 @@ function runShove(run, perTick, shove, what) {
                 + 'water, lava or a pit is an opener the route did not plan for, and a '
                 + 'block a later leg walks around will not be there.');
         }
-        if (run.pushesSettled && (!destroys || live.removed)) break;
+        const jitter = !destroys && !live.removed && jitteringAtRest(live);
+        if ((run.pushesSettled || jitter) && (!destroys || live.removed)) { rested = true; break; }
     }
-    if (!run.pushesSettled) {
+    if (!run.pushesSettled && !rested) {
         fail(`${what}: ${row.id} is STILL MOVING ${settleWindow} tick(s) after the `
             + 'release. A block is 16 px of solid at a straddling rect until it stops — '
             + 'walking now would meet it mid-glide.');
