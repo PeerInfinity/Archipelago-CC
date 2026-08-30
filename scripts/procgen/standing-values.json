@@ -551,14 +551,13 @@
       "total": "ALL PASS"
     },
     "suite: vitest (unfiltered)": {
-      "value": "407/12388",
-      "command": "node scripts/procgen/ci-vitest-summary.mjs --json",
-      "kind": "ci-suite",
-      "exit": 0,
-      "ms": 5112,
+      "value": "411/12461",
+      "command": null,
+      "kind": "identity",
       "cheap": false,
-      "measuredAt": "f7c0583650b200803b637adde5aa8b0e891f94dc",
-      "total": "success"
+      "quoted": true,
+      "why": "CI run 33315825754 at b7c770915 (P1 merged onto main): 12453 passed | 8 skipped | 0 failed; +4 files/+73 tests over 407/12388 = the P1 slice files (eligibility, wiring, readout, moduleRegistration)",
+      "measuredAt": "b7c7709156f7dc636a21d29e13828f7656d9956d"
     },
     "roster: --win --tier=full": {
       "value": "150 tapes: campaign 26 791/0/69 @fc87a177f + map-walk 21 + mechanic 103 @36b71996d, not separately banked",
