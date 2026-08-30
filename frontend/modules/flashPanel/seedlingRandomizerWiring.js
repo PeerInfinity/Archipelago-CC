@@ -239,6 +239,205 @@ export function resolveMapPath(rawRules) {
         : { path: AP_ASSET_PATHS.defaultMap, source: 'the atlases default' };
 }
 
+/**
+ * ⛓⛓ **THE RESET TARGET, CHOSEN BY THE DATA** (⚖ user, 2026-08-29: *"when the
+ * load finishes it RESETS THE PLAYER TO THE START OF THE NEWLY LOADED SET"*).
+ *
+ * The game has exactly two ways to put the player at a set's start, and which
+ * one applies is a fact about the SET, not a preference:
+ *
+ *  - **explicit start** — `teleport({level, x, y})`, i.e. the `new_instance
+ *    Game($level,$x,$y)` recipe in `games/seedling.json`, the same constructor
+ *    `Teleporter.update()` uses and the one the glue's arrival warp already
+ *    rides. Available only when the set's `start` carries a POSITION.
+ *  - **the game's own new-game arm** — `level < 0` (`Game.as:832-840`), which
+ *    is the only path that runs `LevelSet.applyStart` (`LevelSet.as:451-458`).
+ *
+ * ⛔ **AND THE VANILLA-DERIVED SET CARRIES NO POSITION.** MEASURED:
+ * `vanillaRecordSet(...).set.start` is `{"level": 0}` — level only.
+ * `levelSetExporter.js:225` says why in its own words: *"no
+ * summary.startCell on entries[0], so the arrival position falls to the Game
+ * constructor's own (80, 128)"*. So for every set this slice delivers, the
+ * host does NOT know the spawn and the game does. Typing `80, 128` here would
+ * hardcode a constant that belongs to `Main.as:51`, and `region_coords` has no
+ * level-0 row to derive it from (measured: 9 entries, levels 1,2,19,30,56,…).
+ *
+ * ⇒ the mode is DERIVED: a start with a position gets the explicit teleport, a
+ * start without one gets the arm that can answer. Both are implemented; P1-e
+ * measures which reads as *"a new game started"* on the real page and the
+ * answer is reported rather than silently chosen.
+ */
+export const RESET_MODES = Object.freeze({
+    EXPLICIT_START: 'explicit-start',
+    NEW_GAME_ARM: 'new-game-arm',
+});
+
+export function resetTargetFor(set) {
+    const start = set?.start ?? null;
+    if (!start || !Number.isInteger(start.level)) return null;
+    if (Number.isInteger(start.x) && Number.isInteger(start.y)) {
+        return {
+            mode: RESET_MODES.EXPLICIT_START,
+            level: start.level,
+            x: start.x,
+            y: start.y,
+            expectLevel: start.level,
+            why: `the set names its own start — level ${start.level} at (${start.x}, ${start.y})`,
+        };
+    }
+    return {
+        mode: RESET_MODES.NEW_GAME_ARM,
+        level: -1,
+        x: 0,
+        y: 0,
+        expectLevel: start.level,
+        why: `the set's start names level ${start.level} and NO position, so the game's own `
+            + 'new-game arm (level < 0 -> LevelSet.applyStart) is the only thing that knows '
+            + 'the spawn',
+    };
+}
+
+/**
+ * ⛔⛔ **WHAT THE HOST CAN AND CANNOT SEE OF A WORLD SWAP — trap 972.**
+ * `FP.world = x` writes `FP._goto` only; the swap lands in
+ * `Engine.checkWorld()` at the END of the next `Engine.update()`. `Game`'s
+ * constructor has ALREADY written `Main.level` and `Main.playerPositionX/Y`
+ * by then (they are setters onto statics), so a poll on either of those
+ * declared bridge properties proves CONSTRUCTION, never the swap — which is
+ * exactly the row M1b found could not fail.
+ *
+ * `botMobiles()` is different: it enumerates the roster of whatever `FP.world`
+ * IS at the moment of the call. So the confirmation is *"the level is the one
+ * we asked for AND a roster exists for it"* — read off the world rather than
+ * off a static. ⚠ It is still not object identity, and P1-e measures what the
+ * live page actually reports; a sleep is never the answer either way.
+ */
+export function readWorld(bot) {
+    let status = null;
+    let mobiles = null;
+    try { status = JSON.parse(bot('botStatus')); } catch { status = null; }
+    try { mobiles = JSON.parse(bot('botMobiles')); } catch { mobiles = null; }
+    const roster = mobiles?.mobiles ?? null;
+    const player = Array.isArray(roster)
+        ? roster.find((m) => /(^|:)Player$/.test(String(m.cls ?? ''))) ?? null
+        : null;
+    return { level: status?.level ?? null, rosterSize: roster?.length ?? null, player, status };
+}
+
+const defaultWaitFrame = () => new Promise((r) => {
+    if (typeof requestAnimationFrame === 'function') requestAnimationFrame(() => r());
+    else setTimeout(r, 0);
+});
+
+/**
+ * ⛓⛓ **THE LOAD SEQUENCE, AS RULED** — overlay on, deliver, reset, overlay
+ * off — with every dependency injected so the whole thing runs in node.
+ *
+ * ⚠ **PROGRESS IS BY PHASE, NOT BY CHUNK, AND THAT IS MEASURED RATHER THAN
+ * CHOSEN.** `SeedlingLevelSetDelivery.deliver()` is SYNCHRONOUS: it sends all
+ * nine chunks in one loop with no per-chunk hook. A browser cannot paint
+ * inside a synchronous loop, so a *"rooms k/N"* readout would be a number
+ * nobody ever sees — and adding an `onChunk` callback means editing a module
+ * this slice may not touch. So each PHASE sets the overlay text and then
+ * awaits a frame, which is the granularity the display can actually show.
+ *
+ * ⛔ A REFUSAL DOES NOT RESET AND DOES NOT BIND. The game stays vanilla, and a
+ * vanilla room must keep the adapter's property path — so `setCheckBinding` is
+ * never called, and `hostOwnedLocations()` therefore never stands the adapter
+ * down.
+ */
+export async function runSeedlingRandomizerLoad({
+    loaded,
+    glue,
+    teleport,
+    bot,
+    overlay,
+    log = () => {},
+    waitFrame = defaultWaitFrame,
+    now = () => Date.now(),
+    sleep = (ms) => new Promise((r) => setTimeout(r, ms)),
+    swapTimeoutMs = 30000,
+    swapPollMs = 100,
+} = {}) {
+    const steps = [];
+    const step = (name, detail) => { steps.push({ name, detail }); };
+
+    overlay.show();
+    overlay.setText('preparing randomized rooms…');
+    step('overlay-on');
+    await waitFrame();
+
+    const rooms = loaded.set?.rooms?.length ?? 0;
+    glue.setDelivery(loaded.delivery);
+    loaded.delivery.attachBot(bot);
+    overlay.setText(`delivering ${rooms} randomized room(s)…`);
+    step('deliver-begin', { rooms });
+    await waitFrame();
+
+    const result = loaded.delivery.deliver();
+    step('deliver-end', { ok: result.ok, chunks: result.chunks, why: result.why });
+    if (!result.ok) {
+        overlay.setText(`the randomized rooms did NOT load — ${result.why}. The game is `
+            + 'running the vanilla rooms.', 'error');
+        log(`[ap placement] DELIVERY REFUSED — ${result.why}`, 'error');
+        return { ok: false, why: result.why, reset: null, steps, delivered: result };
+    }
+
+    const target = resetTargetFor(loaded.set);
+    if (!target) {
+        // ⛓ REFUSED RATHER THAN GUESSED. A set with no `start.level` has no
+        // start to reset to, and picking level 0 would invent one.
+        overlay.setText('the randomized rooms are loaded, but the set names no start — '
+            + 'the player was NOT moved.', 'error');
+        log('[ap placement] the delivered set has no `start.level`, so no reset was made', 'error');
+        overlay.hide();
+        return { ok: true, why: null, reset: null, steps, delivered: result };
+    }
+
+    overlay.setText(`starting the randomized game (${target.mode})…`);
+    step('reset-begin', { mode: target.mode, level: target.level, expectLevel: target.expectLevel });
+    await waitFrame();
+    teleport({ level: target.level, x: target.x, y: target.y });
+
+    // ⛔ POLLED, NEVER SLEPT (trap 972 / trap 970: a wall-clock settle in a
+    // browser is a FRAME budget in disguise, and this page's frame rate is a
+    // property of the GPU it drew on).
+    const t0 = now();
+    let world = null;
+    let landed = false;
+    for (;;) {
+        world = readWorld(bot);
+        if (world.level === target.expectLevel && world.player) { landed = true; break; }
+        if (now() - t0 > swapTimeoutMs) break;
+        await sleep(swapPollMs);
+    }
+    step('reset-end', { landed, waitedMs: now() - t0, level: world?.level ?? null,
+        player: world?.player ? { x: world.player.x, y: world.player.y } : null });
+
+    if (!landed) {
+        overlay.setText(`the randomized rooms are loaded, but the reset to level `
+            + `${target.expectLevel} was not observed within ${swapTimeoutMs} ms.`, 'error');
+        log(`[ap placement] the reset was not observed — the world still reports level `
+            + `${world?.level ?? 'nothing'}`, 'error');
+        overlay.hide();
+        return { ok: true, why: 'reset not observed', reset: { ...target, landed }, steps,
+            delivered: result };
+    }
+
+    // ⛔ THE BINDING ATTACHES AFTER THE RESET LANDS, and with it the adapter's
+    // stand-down: until the rewritten rooms are the ones being played, the
+    // property path is still the right owner of every location.
+    glue.setCheckBinding(loaded.checkBinding);
+    step('bind');
+    overlay.hide();
+    step('overlay-off');
+    log(`[ap placement] ${rooms} randomized room(s) mounted in ${result.chunks} chunk(s); `
+        + `${loaded.replaced} location(s) replaced; started at level ${target.expectLevel} `
+        + `(${target.mode})`);
+    return { ok: true, why: null, reset: { ...target, landed: true, observed: world }, steps,
+        delivered: result };
+}
+
 const defaultFetchJson = async (url) => {
     const res = await fetch(url);
     if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);

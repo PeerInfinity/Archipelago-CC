@@ -29,8 +29,12 @@ import {
     LEDGER_FLASH_NAME_REMAINDER,
     buildLocationResolver,
     flashNameForLedgerRow,
+    RESET_MODES,
     loadSeedlingRandomizer,
+    readWorld,
+    resetTargetFor,
     resolveMapPath,
+    runSeedlingRandomizerLoad,
     selfPlayerOf,
 } from './seedlingRandomizerWiring.js';
 
@@ -408,5 +412,201 @@ describe('the whole construction, driven in node', () => {
         for (const p of Object.values(AP_MODULE_PATHS)) {
             expect(seen.some((u) => u.endsWith(p)), p).toBe(true);
         }
+    });
+});
+
+/**
+ * P1-c — THE LOAD SEQUENCE, driven with fakes so every step is an assertion
+ * rather than a screenshot. The browser adds exactly two things these rows
+ * cannot have: a real DOM element and a real world swap, and P1-e measures
+ * both on `--win`.
+ */
+describe('the reset target is chosen by the SET, not by preference', () => {
+    it('a start with a POSITION takes the explicit teleport', () => {
+        const t = resetTargetFor({ start: { level: 7, x: 32, y: 64 } });
+        expect(t).toMatchObject({ mode: RESET_MODES.EXPLICIT_START, level: 7, x: 32, y: 64,
+            expectLevel: 7 });
+    });
+
+    /**
+     * ⛔ THE VANILLA-DERIVED SET IS THIS CASE, MEASURED: its `start` is
+     * `{"level": 0}` and nothing else. `levelSetExporter.js:225` says the
+     * arrival position "falls to the Game constructor's own (80, 128)" — a
+     * constant that belongs to `Main.as`, not to the host, and `region_coords`
+     * has no level-0 row to derive it from. So the game's own arm answers.
+     */
+    it('a start with only a LEVEL takes the game\'s new-game arm, and keeps the level', () => {
+        const t = resetTargetFor({ start: { level: 0 } });
+        expect(t).toMatchObject({ mode: RESET_MODES.NEW_GAME_ARM, level: -1, expectLevel: 0 });
+        expect(t.why).toMatch(/applyStart/);
+    });
+
+    it('no start at all is REFUSED rather than guessed as level 0', () => {
+        expect(resetTargetFor({})).toBeNull();
+        expect(resetTargetFor({ start: { x: 1, y: 2 } })).toBeNull();
+    });
+});
+
+describe('readWorld reads the WORLD, and survives a game that answers nothing', () => {
+    it('finds the Player in the roster whatever its qualified name', () => {
+        const bot = (n) => (n === 'botStatus' ? '{"level":3}'
+            : '{"mobiles":[{"cls":"Enemies::Bob","x":1,"y":2},{"cls":"Player","x":88,"y":136}]}');
+        expect(readWorld(bot)).toMatchObject({ level: 3, rosterSize: 2 });
+        expect(readWorld(bot).player).toMatchObject({ x: 88, y: 136 });
+    });
+
+    it('answers nulls rather than throwing when the game is not up', () => {
+        const bot = () => { throw new Error('no bridge'); };
+        expect(readWorld(bot)).toMatchObject({ level: null, rosterSize: null, player: null });
+    });
+});
+
+describe('the load sequence — overlay on, deliver, reset, overlay off', () => {
+    const fakeOverlay = () => {
+        const o = { calls: [], shown: false, text: null, cls: null, sticky: false };
+        o.show = () => { o.shown = true; o.calls.push('show'); };
+        o.setText = (t, c) => { o.text = t; o.cls = c ?? null; if (c === 'error') o.sticky = true; o.calls.push(`text:${c ?? 'info'}`); };
+        o.hide = () => { o.shown = false; o.sticky = false; o.calls.push('hide'); };
+        o.remove = () => { o.shown = false; o.calls.push('remove'); };
+        return o;
+    };
+    /**
+     * ⛔⛔ ONE ORDER LOG, SHARED BY THE GLUE AND THE DELIVERY — and it is the
+     * SECOND shape of this row, because the first was VACUOUS. Asserting
+     * `glue.order[0] === 'setDelivery'` passes under the mutant that moves
+     * `setDelivery` to AFTER `deliver()`, since the glue still only ever sees
+     * the two calls in that relative order. The claim is not "the glue was
+     * told first", it is **"the glue was told BEFORE THE SET WAS SENT"** — a
+     * region load arriving in that gap runs on the vanilla rooms — so the SEND
+     * has to appear in the same sequence. Measured: the repaired row reds
+     * under that mutant and the original did not.
+     */
+    const fakeGlue = (order) => {
+        const g = { order, delivery: null, checkBinding: null };
+        g.setDelivery = (d) => { g.delivery = d; order.push('setDelivery'); return g; };
+        g.setCheckBinding = (b) => { g.checkBinding = b; order.push('setCheckBinding'); return g; };
+        return g;
+    };
+    const fakeDelivery = (result, order) => {
+        const d = { state: 'armed', bot: null, attached: 0 };
+        d.attachBot = (b) => { d.bot = b; d.attached += 1; return d; };
+        d.deliver = () => { d.delivered = true; order.push('deliver'); return result; };
+        return d;
+    };
+    const loadedFor = (result, start = { level: 0 }, order = []) => ({
+        set: { rooms: new Array(116), start },
+        delivery: fakeDelivery(result, order),
+        checkBinding: { id: 'the-binding' },
+        replaced: 39,
+    });
+
+    const run = (over = {}) => {
+        const order = over.order ?? [];
+        const overlay = over.overlay ?? fakeOverlay();
+        const glue = over.glue ?? fakeGlue(order);
+        const teleports = [];
+        let polls = 0;
+        return runSeedlingRandomizerLoad({
+            loaded: over.loaded ?? loadedFor({ ok: true, chunks: 9, why: null }, undefined, order),
+            glue,
+            overlay,
+            teleport: over.teleport ?? ((t) => teleports.push(t)),
+            bot: over.bot ?? ((n) => {
+                polls += 1;
+                return n === 'botStatus' ? '{"level":0}' : '{"mobiles":[{"cls":"Player","x":88,"y":136}]}';
+            }),
+            waitFrame: async () => {},
+            sleep: async () => {},
+            now: (() => { let t = 0; return () => { t += 10; return t; }; })(),
+            ...over.opts,
+        }).then((r) => ({ r, overlay, glue, teleports, order, polls: () => polls }));
+    };
+
+    it('the happy path: on → deliver → reset → bind → off, IN THAT ORDER', async () => {
+        const { r, overlay, glue, teleports } = await run();
+        expect(r.ok).toBe(true);
+        expect(r.steps.map((s) => s.name)).toEqual(
+            ['overlay-on', 'deliver-begin', 'deliver-end', 'reset-begin', 'reset-end',
+                'bind', 'overlay-off']);
+        expect(glue.order).toEqual(['setDelivery', 'deliver', 'setCheckBinding']);
+        expect(teleports).toEqual([{ level: -1, x: 0, y: 0 }]);
+        expect(overlay.shown).toBe(false);
+        expect(overlay.calls[0]).toBe('show');
+        expect(overlay.calls.at(-1)).toBe('hide');
+    });
+
+    /**
+     * ⛔⛔ THE ORDERING CLAIM, AS A ROW. `setDelivery` reaches the glue BEFORE
+     * `deliver()` runs, so a `loadRegion` arriving mid-load meets an armed
+     * delivery and is GATED (H8's `gateLoadRegion`) rather than running on the
+     * vanilla rooms. And `setCheckBinding` is last: until the rewritten rooms
+     * are the ones being played, the property path is still the right owner.
+     */
+    it('the delivery reaches the glue BEFORE it is SENT, and the binding AFTER the reset', async () => {
+        const { r, order } = await run();
+        expect(order).toEqual(['setDelivery', 'deliver', 'setCheckBinding']);
+        const names = r.steps.map((s) => s.name);
+        expect(names.indexOf('bind')).toBeGreaterThan(names.indexOf('reset-end'));
+    });
+
+    it('A REFUSED delivery does NOT reset and does NOT bind, and the overlay STICKS', async () => {
+        const ORDER_A = [];
+        const { r, overlay, glue, teleports } = await run({
+            order: ORDER_A,
+            loaded: loadedFor({ ok: false, chunks: 0, why: 'botLoadLevels answered "error:x"' }, undefined, ORDER_A),
+        });
+        expect(r.ok).toBe(false);
+        expect(teleports).toEqual([]);
+        expect(glue.order).toEqual(['setDelivery', 'deliver']);
+        expect(glue.checkBinding).toBeNull();
+        expect(overlay.cls).toBe('error');
+        expect(overlay.sticky).toBe(true);
+        expect(overlay.calls).not.toContain('hide');
+        expect(overlay.text).toMatch(/vanilla rooms/);
+    });
+
+    it('a set with a POSITIONED start teleports there instead', async () => {
+        const { teleports, r } = await run({
+            loaded: loadedFor({ ok: true, chunks: 1, why: null }, { level: 12, x: 48, y: 64 }),
+            bot: (n) => (n === 'botStatus' ? '{"level":12}'
+                : '{"mobiles":[{"cls":"Player","x":56,"y":72}]}'),
+        });
+        expect(teleports).toEqual([{ level: 12, x: 48, y: 64 }]);
+        expect(r.reset.mode).toBe(RESET_MODES.EXPLICIT_START);
+    });
+
+    /**
+     * ⛔ POLLED, NEVER SLEPT. A world that never reports the expected level
+     * must time OUT and say so — and must still leave the rooms mounted,
+     * because they are.
+     */
+    it('a reset that is never observed times out, says so, and does NOT bind', async () => {
+        const { r, glue, overlay } = await run({
+            bot: (n) => (n === 'botStatus' ? '{"level":99}' : '{"mobiles":[]}'),
+        });
+        expect(r.ok).toBe(true);
+        expect(r.why).toBe('reset not observed');
+        expect(glue.order).toEqual(['setDelivery', 'deliver']);
+        expect(overlay.cls).toBe('error');
+    });
+
+    it('a delivered set with NO start is refused rather than reset to level 0', async () => {
+        const { r, teleports } = await run({
+            loaded: loadedFor({ ok: true, chunks: 1, why: null }, null),
+        });
+        expect(r.reset).toBeNull();
+        expect(teleports).toEqual([]);
+    });
+
+    it('the bot handle the delivery is given is the one it sends through', async () => {
+        const seen = [];
+        const { r } = await run({
+            bot: (n) => { seen.push(n); return n === 'botStatus' ? '{"level":0}'
+                : '{"mobiles":[{"cls":"Player","x":88,"y":136}]}'; },
+        });
+        expect(r.ok).toBe(true);
+        // the poll asks the world; the delivery was handed the same callable
+        expect(seen).toContain('botStatus');
+        expect(seen).toContain('botMobiles');
     });
 });
