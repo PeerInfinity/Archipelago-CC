@@ -153,7 +153,7 @@ the branch itself before you merge.
 ### 2.1 Exclusions (verify before generating)
 
 Some games are intentionally excluded from generation (see
-`scripts/test/template-exclude-list.json`, wired into
+`scripts/data/template-exclude-list.json`, wired into
 `scripts/utils/generate_all_templates.sh`):
 
 - **`generation_exclude_list`** — OoT (string-compiled rules the exporter can't
@@ -162,6 +162,15 @@ Some games are intentionally excluded from generation (see
 - **UT Pickle Mode** → permanent `exclude_list` (it is a tracker mode, not a game).
 - **Seedling** → `worldgen_test_exclude_list` (its worldgen variant generates
   broken; the base preset is kept).
+
+- **`worldgen_generation_whitelist`** (2026-08-30) — a *whitelist*, not an
+  exclude list: the ONLY base templates whose worldgen world
+  (`worlds/<x>_worldgen`) and preset are generated and committed. Applied by
+  `list-template-files.py --include` after the exclude lists. Every other
+  game's worldgen variant is transient — `test-world-generator.py` builds and
+  deletes it. Today: A Link to the Past, APCalc, Baking Adventure, Coding
+  Adventure, DepGraph, Metamath, TOEM original, TOEM rule builder.
+  `generate_worldgen2` now defaults to **false**.
 
 If Phase 1 added or removed games, reconcile these lists first.
 
@@ -283,10 +292,16 @@ It:
    `scripts/release/preserved-dev-presets.txt` from the ref and merges their
    `preset_files.json` entries back, so the dev index = canonical + preserved.
 
-The preserved set is **only** the genuine dev/demo presets
-(`jta_mixed_test`, `jta_substrate_test`, `procgen_maze`, `robotkitty_tilemap`).
-Worldgen worlds (`worlds/*_worldgen`) and `*_worldgen` preset dirs are
-**intentionally not preserved** — do not add them to the list.
+The preserved set is every preset dir on `main` that the workflow does not
+produce: the dev/demo/test presets (`jta_*_test`, `omsi_*_test`, `procgen_maze`,
+`robotkitty_tilemap`, `seedling_atlas*`, `seedling_playthrough`) **and** the
+hand-maintained worldgen demos (`bounce_worldgen`, `runner_worldgen`,
+`runner_sphere_worldgen`), whose `worlds/<id>` package the script restores as
+well (2026-08-30). *Workflow-produced* worldgen worlds and their preset dirs —
+the `worldgen_generation_whitelist` set — are **not** preserved: the workflow
+regenerates them; do not add those. Before each release, diff
+`git ls-tree -d --name-only origin/main frontend/presets/` against the
+`generated-presets` branch and add any new hand-made dir to the list.
 
 ### 2.6 Verify before pushing
 
