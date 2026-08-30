@@ -467,6 +467,21 @@ The Rule Builder format was created by drtchops in [Archipelago PR #5048](https:
 }
 ```
 
+**`AtLeast`** - At least `count` children must be true (the Rule Builder twin of
+the AST-format `count_true`). `count` lives at the rule root, alongside `children`.
+```json
+{
+  "rule": "AtLeast",
+  "options": [],
+  "count": 2,
+  "children": [
+    {"rule": "Has", "args": {"item_name": "Sword"}},
+    {"rule": "Has", "args": {"item_name": "Shield"}},
+    {"rule": "CanReachRegion", "args": {"region_name": "Castle"}}
+  ]
+}
+```
+
 #### Reachability Rules
 
 **`CanReachRegion`** - Check if region is reachable

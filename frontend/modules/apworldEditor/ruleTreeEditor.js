@@ -12,12 +12,38 @@
  * v1 supported rule types: True_, False_, Has, HasAll, HasAny, And, Or,
  * CanReachRegion, CanReachLocation, CountItem, Compare, OptionValue.
  * Any other rule type is preserved as an opaque "(raw)" node editable as JSON.
+ *
+ * ⛓⛓ EDITOR v3 slice D0b — THE TREE-SHAPE MUTATIONS ARE `procgenCore/ruleTreeOps`
+ * NOW, AND EVERY DOM LINE STAYS. Replace, delete, wrap-in-And/Or and add-a-child
+ * were per-node CLOSURES built while rendering (`ctx.replace` / `ctx.remove`),
+ * which made them inseparable from the DOM: nothing headless could ask for "the
+ * node at this path", and D1's `set-access-rule` would have had to write a
+ * second implementation. Each render context now carries its PATH from the root
+ * and the four gestures go through the ops, which are copy-on-write.
+ *
+ * ⚠ WHAT COPY-ON-WRITE COSTS HERE, MEASURED RATHER THAN ASSUMED. `_rawViewNodes`
+ * is a WeakSet keyed on node IDENTITY, and an op rebuilds the SPINE from the
+ * root down to what it changed — so a spine node's raw-view flag would be lost.
+ * It cannot happen: a raw-view node renders `_renderRawBlock` and no children,
+ * so no editable node is ever underneath one, and every spine node is therefore
+ * a KNOWN container type that is never in the set. Nodes off the spine keep
+ * their identity (structural sharing), so their flags survive.
+ *
+ * ⚠ AND WHAT STAYED IN PLACE, on purpose. `_changeRuleType` and the field
+ * editors write into a node the editor is already holding: they change what a
+ * rule SAYS, not where it SITS, so a path-addressed op would buy nothing and
+ * cost a re-render per keystroke. The Compare operand slots are the one seam
+ * between the two — see the note there.
  */
+
+import {
+  removeRuleAt, replaceRuleAt, wrapRuleAt,
+} from '../procgenCore/ruleTreeOps.js';
 
 const KNOWN_TYPES = [
   'True_', 'False_',
   'Has', 'HasAll', 'HasAny',
-  'And', 'Or',
+  'And', 'Or', 'AtLeast',
   'CanReachRegion', 'CanReachLocation',
   'CountItem',
   'Compare',
@@ -44,6 +70,10 @@ function defaultShape(ruleName) {
     case 'And':
     case 'Or':
       node.children = [];
+      break;
+    case 'AtLeast':
+      node.children = [];
+      node.count = 1;
       break;
     case 'CanReachRegion':
       node.args = { region_name: '' };
@@ -97,16 +127,47 @@ export default class RuleTreeEditor {
     return this.rootElement;
   }
 
+  /** The tree this editor edits. It is REPLACED by every op, never mutated. */
+  _tree() { return this.parentObj[this.key]; }
+
+  /**
+   * ⛔ THE ONE SEAM. Adopt an op's tree, or THROW its refusal — a
+   * path-addressed op that silently did nothing would leave the DOM showing an
+   * edit the document never took.
+   *
+   * ⛓⛓ AND IT ANNOUNCES THE RESULT (EDITOR INTEGRATION B-c). `parentObj` is a
+   * HOLDER over a working copy when the APWorld panel builds this editor, not
+   * the live document, so a gesture has to TELL the panel what came out — which
+   * the panel records as one `set-rule-tree` carrying that tree. ⚠ `onTree`
+   * rides in `nameProviders`, which is spread, so a caller that does not supply
+   * one (the standalone use) is unmoved and this file's constructor is not.
+   */
+  _applyTreeOp(result) {
+    if (!result.ok) throw new Error(result.error);
+    this.parentObj[this.key] = result.tree;
+    if (typeof this.nameProviders.onTree === 'function') this.nameProviders.onTree(result.tree);
+  }
+
+  /** A render context for the node at `path`, with the ops wired to it. */
+  _ctxFor(path, isRoot = false) {
+    return {
+      isRoot,
+      path,
+      replace: (newNode) => this._applyTreeOp(replaceRuleAt(this._tree(), path, newNode)),
+      // The ROOT is not removable — an access rule is never absent, it is
+      // `True_`, which is exactly what the "reset" button has always meant.
+      remove: () => this._applyTreeOp(isRoot
+        ? replaceRuleAt(this._tree(), [], { rule: 'True_' })
+        : removeRuleAt(this._tree(), path)),
+    };
+  }
+
   _render() {
     this.rootElement.innerHTML = '';
     if (this.parentObj[this.key] == null) {
       this.parentObj[this.key] = { rule: 'True_' };
     }
-    this.rootElement.appendChild(this._renderNode(this.parentObj[this.key], {
-      isRoot: true,
-      replace: (newNode) => { this.parentObj[this.key] = newNode; },
-      remove: () => { this.parentObj[this.key] = { rule: 'True_' }; },
-    }));
+    this.rootElement.appendChild(this._renderNode(this.parentObj[this.key], this._ctxFor([], true)));
   }
 
   _renderNode(node, ctx) {
@@ -145,7 +206,7 @@ export default class RuleTreeEditor {
     header.appendChild(typeSelect);
 
     if (!inRawView) {
-      const fields = this._renderFields(node);
+      const fields = this._renderFields(node, ctx);
       if (fields) header.appendChild(fields);
     }
 
@@ -153,22 +214,21 @@ export default class RuleTreeEditor {
     spacer.style.flex = '1 1 auto';
     header.appendChild(spacer);
 
-    if (!inRawView && (node.rule === 'And' || node.rule === 'Or')) {
+    if (!inRawView && (node.rule === 'And' || node.rule === 'Or' || node.rule === 'AtLeast')) {
       header.appendChild(this._makeButton('+ child', '#3a3a3a', () => {
-        if (!node.children) node.children = [];
-        node.children.push({ rule: 'True_' });
+        this._applyTreeOp(replaceRuleAt(this._tree(), ctx.path, {
+          ...node, children: [...(node.children ?? []), { rule: 'True_' }],
+        }));
         this._render();
       }));
     }
 
-    header.appendChild(this._makeButton('⇪ And', '#2f4858', () => {
-      ctx.replace({ rule: 'And', children: [node] });
-      this._render();
-    }, 'Wrap this node in an And'));
-    header.appendChild(this._makeButton('⇪ Or', '#2f4858', () => {
-      ctx.replace({ rule: 'Or', children: [node] });
-      this._render();
-    }, 'Wrap this node in an Or'));
+    for (const kind of ['And', 'Or']) {
+      header.appendChild(this._makeButton(`⇪ ${kind}`, '#2f4858', () => {
+        this._applyTreeOp(wrapRuleAt(this._tree(), ctx.path, kind));
+        this._render();
+      }, `Wrap this node in an ${kind}`));
+    }
 
     if (ctx.isRoot) {
       header.appendChild(this._makeButton('reset', '#8a2a2a', () => {
@@ -186,17 +246,12 @@ export default class RuleTreeEditor {
 
     if (inRawView) {
       block.appendChild(this._renderRawBlock(node));
-    } else if (node.rule === 'And' || node.rule === 'Or') {
+    } else if (node.rule === 'And' || node.rule === 'Or' || node.rule === 'AtLeast') {
       const childrenWrap = document.createElement('div');
       childrenWrap.style.marginLeft = '16px';
       const children = node.children || (node.children = []);
       children.forEach((child, idx) => {
-        const childCtx = {
-          isRoot: false,
-          replace: (newNode) => { children[idx] = newNode; },
-          remove: () => { children.splice(idx, 1); },
-        };
-        childrenWrap.appendChild(this._renderNode(child, childCtx));
+        childrenWrap.appendChild(this._renderNode(child, this._ctxFor([...ctx.path, idx])));
       });
       block.appendChild(childrenWrap);
     }
@@ -207,13 +262,17 @@ export default class RuleTreeEditor {
   _changeRuleType(node, newType) {
     delete node.args;
     delete node.children;
+    delete node.count;
     const shape = defaultShape(newType);
     node.rule = newType;
     if (shape.args) node.args = shape.args;
     if (shape.children) node.children = shape.children;
+    if (shape.count !== undefined) node.count = shape.count;
   }
 
-  _renderFields(node) {
+  // ⛓ `ctx` is threaded only for `_compareFields`, whose two operand slots are
+  //   nested rule trees and therefore need this node's PATH (D0b).
+  _renderFields(node, ctx) {
     switch (node.rule) {
       case 'True_':
       case 'False_':
@@ -221,6 +280,8 @@ export default class RuleTreeEditor {
       case 'And':
       case 'Or':
         return this._label(`(${(node.children || []).length} children)`);
+      case 'AtLeast':
+        return this._atLeastFields(node);
       case 'Has':
         return this._hasFields(node);
       case 'HasAll':
@@ -233,7 +294,7 @@ export default class RuleTreeEditor {
       case 'CountItem':
         return this._countItemFields(node);
       case 'Compare':
-        return this._compareFields(node);
+        return this._compareFields(node, ctx);
       case 'OptionValue':
         return this._optionField(node);
       default:
@@ -243,6 +304,21 @@ export default class RuleTreeEditor {
   }
 
   // ---------- Field renderers ----------
+
+  _atLeastFields(node) {
+    if (typeof node.count !== 'number') node.count = 1;
+    if (!Array.isArray(node.children)) node.children = [];
+    const wrap = this._fieldRow();
+    wrap.appendChild(this._label('at least:'));
+    const countInput = this._makeNumberInput(node.count, '60px');
+    countInput.addEventListener('input', (e) => {
+      const v = parseInt(e.target.value, 10);
+      node.count = Number.isFinite(v) ? v : 1;
+    });
+    wrap.appendChild(countInput);
+    wrap.appendChild(this._label(`of ${node.children.length} children`));
+    return wrap;
+  }
 
   _hasFields(node) {
     const args = node.args || (node.args = { item_name: '', count: 1 });
@@ -336,7 +412,7 @@ export default class RuleTreeEditor {
     return wrap;
   }
 
-  _compareFields(node) {
+  _compareFields(node, ctx) {
     const args = node.args || (node.args = {
       left: { rule: 'CountItem', args: { item_name: '' } },
       op: '>=',
@@ -360,10 +436,19 @@ export default class RuleTreeEditor {
     leftRow.appendChild(this._label('left:'));
     const leftHost = document.createElement('div');
     leftHost.style.flex = '1 1 auto';
+    /**
+     * ⛓ THE ONE SEAM BETWEEN THE OPS AND THE FIELD EDITORS. A Compare operand
+     * slot is never EMPTY, so `removeRuleAt` refuses it by name (D0b) and the
+     * "×" here has always meant RESET-TO-DEFAULT rather than delete. `replace`
+     * is the op; `remove` is a replace with the default, spelled as one.
+     */
     const leftCtx = {
-      isRoot: false,
-      replace: (newNode) => { args.left = newNode; },
-      remove: () => { args.left = { rule: 'CountItem', args: { item_name: '' } }; this._render(); },
+      ...this._ctxFor([...ctx.path, 'args.left']),
+      remove: () => {
+        this._applyTreeOp(replaceRuleAt(this._tree(), [...ctx.path, 'args.left'],
+          { rule: 'CountItem', args: { item_name: '' } }));
+        this._render();
+      },
     };
     leftHost.appendChild(this._renderNode(args.left, leftCtx));
     leftRow.appendChild(leftHost);
@@ -425,8 +510,10 @@ export default class RuleTreeEditor {
       const rightWrap = document.createElement('div');
       rightWrap.style.marginLeft = '16px';
       rightWrap.appendChild(this._renderNode(args.right, {
-        isRoot: false,
-        replace: (newNode) => { args.right = newNode; },
+        ...this._ctxFor([...ctx.path, 'args.right']),
+        // ⚠ `1` is a NUMBER, not a rule node, so this one cannot be an op:
+        //   `replaceRuleAt` writes rule OBJECTS and refuses anything else. The
+        //   right operand is the only slot in the dialect that holds either.
         remove: () => { args.right = 1; this._render(); },
       }));
       outer.appendChild(rightWrap);

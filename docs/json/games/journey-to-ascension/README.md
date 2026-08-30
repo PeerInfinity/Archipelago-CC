@@ -39,3 +39,5 @@ The randomized perk order breaks the original game's difficulty curve. Three met
 
 - [Full game documentation](../../../../worlds/jta/docs/en_Journey%20to%20Ascension.md)
 - [Setup guide](../../../../worlds/jta/docs/setup_en.md)
+- [Cost adjustment & auto-queue algorithms](./cost-adjustment-algorithm.md) — developer reference for the seed-time cost adjuster and the host-side auto queue
+- [JtA as a procgen substrate](../../developer/procgen/jta.md) — the separate loop-mode substrate integration

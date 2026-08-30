@@ -10,6 +10,7 @@ import {
     _testOnly_clearAll as _resetSavedQueueStore,
 } from '../loops/savedQueueStore.js';
 import { hashRulesData, clearRulesHashCache } from '../shared/rulesHash.js';
+import { centralRegistry } from '../../app/core/centralRegistry.js';
 
 // Vitest runs under the 'node' environment (no DOM). The panel's
 // constructor guards document access for exactly this reason — these
@@ -344,6 +345,140 @@ describe('MazeRoomUI — playback controller adapter', () => {
             ['setRate', 12],
             ['walkToTile', { x: 1, y: 1, name: null }],
         ]);
+    });
+});
+
+describe('MazeRoomUI — M2 Playback departure crossing', () => {
+    let published;
+    beforeEach(() => {
+        _testOnly_resetModuleState();
+        resetDiscoverySingleton();
+        published = [];
+        MazeRoomUI.setModuleApis({
+            dispatcher: {
+                publish: (topic, payload, options) => published.push({ topic, payload, options }),
+            },
+            eventBus: { publish: () => {}, subscribe: () => {}, unsubscribe: () => {} },
+        });
+    });
+
+    // Region A with a single east exit at (7,3); player enters at (4,3).
+    function panelAtExitRegion() {
+        const panel = new MazeRoomUI(null, {});
+        panel.applyLoadedRegion({
+            region_id: 'A',
+            world: makeWorld({
+                entrance: { x: 4, y: 3 },
+                exits: [
+                    { exit_id: 'east_id', x: 7, y: 3, side: 'E', exitName: 'east_to_b', targetRegion: 'B' },
+                ],
+            }),
+            arrivedFrom: null,
+        });
+        // The departure ISSUES a regionMove directly (mirroring TA) rather
+        // than driving the visualizer — the interior replay already advanced
+        // the panel engine state to the exit. Re-walking via the visualizer
+        // would double-walk from its stale entrance position. Spy walkToTile
+        // to prove we DON'T touch it.
+        panel._visualizer.walkToTile = vi.fn();
+        return panel;
+    }
+
+    it('empty-interior recording issues the departure regionMove directly', () => {
+        const panel = panelAtExitRegion();
+        const started = panel._replaySavedActions([], { departureExitId: 'east_id' });
+        expect(started).toBe(true);
+        // Issued the region transition straight from the engine state — with
+        // fromLoop:true so the parked block's queued regionMove isn't
+        // duplicated — and did NOT re-walk the visualizer.
+        const move = published.find((p) => p.topic === 'user:regionMove');
+        expect(move).toBeTruthy();
+        expect(move.payload).toMatchObject({
+            sourceRegion: 'A', targetRegion: 'B', exitName: 'east_to_b', fromLoop: true,
+        });
+        expect(panel._visualizer.walkToTile).not.toHaveBeenCalled();
+    });
+
+    it('resolves the exit by exitName as well as exit_id', () => {
+        const panel = panelAtExitRegion();
+        panel._crossRecordedDeparture('east_to_b');
+        const move = published.find((p) => p.topic === 'user:regionMove');
+        expect(move?.payload).toMatchObject({ targetRegion: 'B', fromLoop: true });
+    });
+
+    it('returns false when there is nothing to replay and no departure', () => {
+        const panel = panelAtExitRegion();
+        expect(panel._replaySavedActions([], {})).toBe(false);
+        expect(published.find((p) => p.topic === 'user:regionMove')).toBeFalsy();
+    });
+
+    it('drops a departure with an unresolvable exit id without dispatching', () => {
+        const panel = panelAtExitRegion();
+        expect(panel._crossRecordedDeparture('no_such_exit')).toBe(false);
+        expect(published.find((p) => p.topic === 'user:regionMove')).toBeFalsy();
+    });
+
+    it('crosses the departure only AFTER the interior replay drains', () => {
+        vi.useFakeTimers();
+        try {
+            const panel = panelAtExitRegion();
+            const order = [];
+            let remaining = 2;
+            panel._replayTickMs = 1;
+            // Inject a fake queue so we drive the replay driver deterministically
+            // without executing real move side effects.
+            panel._mazeQueue = {
+                appendAll: () => {},
+                isIdle: () => remaining <= 0,
+                stepOne: () => { remaining -= 1; order.push('step'); },
+                drainPending: () => {},
+            };
+            panel._crossRecordedDeparture = vi.fn(() => { order.push('cross'); return true; });
+
+            const started = panel._replaySavedActions(
+                [{ type: 'move', dir: 'E' }, { type: 'move', dir: 'E' }],
+                { departureExitId: 'east_id' },
+            );
+            expect(started).toBe(true);
+            // Interior still draining — departure not issued yet.
+            expect(panel._crossRecordedDeparture).not.toHaveBeenCalled();
+
+            vi.advanceTimersByTime(10);
+            expect(panel._crossRecordedDeparture).toHaveBeenCalledTimes(1);
+            expect(panel._crossRecordedDeparture).toHaveBeenCalledWith('east_id');
+            // Departure crossed strictly after both interior steps ran.
+            expect(order).toEqual(['step', 'step', 'cross']);
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+
+    it('instant drains the interior + crosses the departure synchronously (M3, no clock)', () => {
+        const panel = panelAtExitRegion();
+        const order = [];
+        let remaining = 2;
+        // Fake queue: stepOne runs the executor (advances position); length
+        // bounds the instant drain guard.
+        panel._mazeQueue = {
+            appendAll: () => {},
+            isIdle: () => remaining <= 0,
+            stepOne: () => { remaining -= 1; order.push('step'); },
+            drainPending: () => {},
+            length: 2,
+        };
+        // Guard against a stray animation clock ever starting.
+        panel._startReplayDriver = vi.fn(() => order.push('driver'));
+        panel._crossRecordedDeparture = vi.fn(() => { order.push('cross'); return true; });
+
+        const started = panel._replaySavedActions(
+            [{ type: 'move', dir: 'E' }, { type: 'move', dir: 'E' }],
+            { departureExitId: 'east_id', instant: true },
+        );
+        expect(started).toBe(true);
+        // Everything already ran, in order, with NO animation driver.
+        expect(order).toEqual(['step', 'step', 'cross']);
+        expect(panel._startReplayDriver).not.toHaveBeenCalled();
+        expect(panel._crossRecordedDeparture).toHaveBeenCalledWith('east_id');
     });
 });
 
@@ -863,16 +998,19 @@ describe('MazeRoomUI — loop-mode mana hooks (Phase 3)', () => {
         const rulesData = { regions: { 1: ['Forest'] } };
         const rulesHash = hashRulesData(rulesData);
         // exit_a: cheap (10 mana cost). exit_b: expensive (50 mana cost).
+        // Distinct ordinals so both recordings coexist under the M2 tag
+        // model (same arrival collapses by tag otherwise); _pickBestExit
+        // still compares them by departure.
         saveQueue(rulesHash, {
             regionName: 'Forest', substrate: 'maze',
-            arrivalExitId: 'south', departureExitId: 'exit_a',
+            arrivalExitId: 'south', ordinal: 0, departureExitId: 'exit_a',
             actions: [{ type: 'move', dir: 'E' }],
             manaAtEntry: 100, manaAtExit: 90, manaMin: 90,
             locationsChecked: [], itemsPickedUp: [], recordedAt: 1,
         });
         saveQueue(rulesHash, {
             regionName: 'Forest', substrate: 'maze',
-            arrivalExitId: 'south', departureExitId: 'exit_b',
+            arrivalExitId: 'south', ordinal: 1, departureExitId: 'exit_b',
             actions: [{ type: 'move', dir: 'S' }],
             manaAtEntry: 100, manaAtExit: 50, manaMin: 50,
             locationsChecked: [], itemsPickedUp: [], recordedAt: 2,
@@ -999,7 +1137,9 @@ describe('MazeRoomUI — loop-mode mana hooks (Phase 3)', () => {
         expect(panel._shouldDeductMazeMana()).toBe(true);
     });
 
-    it('_finalizeVisitOnExit persists a SavedQueue with action slice + mana fields', () => {
+    it('_finalizeVisitOnExit stashes a SavedQueue with action slice + mana fields', () => {
+        // M2: the recorder no longer persists directly — it stashes the
+        // finalized capture for loops to pull via _takeLastRecording().
         _resetSavedQueueStore();
         clearRulesHashCache();
         createGameStateSingleton(null); // gameState.getCurrentMana fallback
@@ -1025,9 +1165,11 @@ describe('MazeRoomUI — loop-mode mana hooks (Phase 3)', () => {
         panel._updateVisitMinMana(); // min stays at 60
         // Cross an exit to depart.
         panel._finalizeVisitOnExit('north_door');
-        const queues = getSavedQueues(rulesHash, 'Forest', 'maze');
-        expect(queues).toHaveLength(1);
-        expect(queues[0]).toMatchObject({
+        // Nothing persisted directly to the store.
+        expect(getSavedQueues(rulesHash, 'Forest', 'maze')).toEqual([]);
+        // The stash carries the capture; pull-and-clear it.
+        const rec = panel._takeLastRecording();
+        expect(rec).toMatchObject({
             regionName: 'Forest',
             substrate: 'maze',
             arrivalExitId: 'south_door',
@@ -1038,21 +1180,26 @@ describe('MazeRoomUI — loop-mode mana hooks (Phase 3)', () => {
             ],
             manaMin: 60,
         });
+        // Second pull is empty — the stash is cleared on read.
+        expect(panel._takeLastRecording()).toBeNull();
     });
 
-    it('_finalizeVisitOnExit silently skips persistence when no rules are cached', () => {
+    it('_finalizeVisitOnExit stashes regardless of cached rules (loops owns the rules-hash)', () => {
         _resetSavedQueueStore();
         clearRulesHashCache();
         const panel = new MazeRoomUI(null, {});
-        // _cachedRulesData stays null
+        // _cachedRulesData stays null — no longer gates the stash.
         panel.currentRegionId = 'Forest';
         panel._startVisitRecording({
             region_id: 'Forest',
             arrivedFrom: { exit_id: 'south' },
         });
         panel._finalizeVisitOnExit('north');
-        const rulesHash = hashRulesData({ any: true });
-        expect(getSavedQueues(rulesHash, 'Forest', 'maze')).toEqual([]);
+        expect(panel._takeLastRecording()).toMatchObject({
+            regionName: 'Forest',
+            arrivalExitId: 'south',
+            departureExitId: 'north',
+        });
     });
 
     it('_finalizeVisitOnExit extracts locationCheck actions into locationsChecked', () => {
@@ -1060,7 +1207,6 @@ describe('MazeRoomUI — loop-mode mana hooks (Phase 3)', () => {
         clearRulesHashCache();
         createGameStateSingleton(null);
         const rulesData = { regions: { 1: ['Forest'] } };
-        const rulesHash = hashRulesData(rulesData);
         const panel = new MazeRoomUI(null, {});
         panel._cachedRulesData = rulesData;
         panel.currentRegionId = 'Forest';
@@ -1072,8 +1218,7 @@ describe('MazeRoomUI — loop-mode mana hooks (Phase 3)', () => {
         panel._mazeQueue.handleInput({ type: ACTION_MOVE, dir: 'E' });
         panel._mazeQueue.handleInput({ type: ACTION_LOCATION_CHECK, locationName: 'Slay Yorgle' });
         panel._finalizeVisitOnExit('north');
-        const [q] = getSavedQueues(rulesHash, 'Forest', 'maze');
-        expect(q.locationsChecked).toEqual(['Slay Yorgle']);
+        expect(panel._takeLastRecording().locationsChecked).toEqual(['Slay Yorgle']);
     });
 
     it('_deductMazeStepMana with freshLocationCheck override charges location cost', () => {
@@ -1317,11 +1462,13 @@ describe('MazeRoomUI — saved queue replay', () => {
 
     it('_getReplayableTargets returns saved queues for matching (region, arrival)', () => {
         const rulesHash = hashRulesData(RULES_DATA);
-        // Matching queue, departs via 'exit_a'.
+        // Matching queue, departs via 'exit_a'. Distinct ordinals keep the
+        // two same-arrival recordings from collapsing under the M2 tag model.
         saveQueue(rulesHash, {
             regionName: 'Forest',
             substrate: 'maze',
             arrivalExitId: 'south',
+            ordinal: 0,
             departureExitId: 'exit_a',
             actions: [{ type: 'move', dir: 'N' }],
             manaAtEntry: 100,
@@ -1364,6 +1511,7 @@ describe('MazeRoomUI — saved queue replay', () => {
             regionName: 'Forest',
             substrate: 'maze',
             arrivalExitId: 'south',
+            ordinal: 1,
             departureExitId: 'exit_b',
             actions: [{ type: 'move', dir: 'E' }],
             manaAtEntry: 100,
@@ -1883,5 +2031,67 @@ describe('MazeRoomUI — hazard runtime integration (Phase 2e)', () => {
         // Loops walks the visualizer; the queue-executor path
         // doesn't tick — _onVisualizerChange does.
         expect(haz.phase).toBe(0);
+    });
+});
+
+// --- M3b: native live-play drain gate ---------------------------------
+
+describe('MazeRoomUI — _shouldDeductMazeMana (M3b parked live-play drain)', () => {
+    let panel;
+    let livePlayRegionValue;
+
+    function setLivePlayRegionFn(fn) {
+        try { centralRegistry.publicFunctions.get('loops')?.delete('livePlayRegion'); } catch { /* ignore */ }
+        if (fn) centralRegistry.registerPublicFunction('loops', 'livePlayRegion', fn);
+    }
+
+    beforeEach(() => {
+        _testOnly_resetModuleState();
+        panel = new MazeRoomUI(null, {});
+        panel.world = makeWorld();
+        panel.world.manaEnabled = true;
+        panel.currentRegionId = 'region_A';
+        panel._isLoopModeActive = false;
+        panel._loopsDrivenAction = null;
+        livePlayRegionValue = null;
+        setLivePlayRegionFn(() => livePlayRegionValue);
+    });
+
+    it('no manaEnabled → never drains', () => {
+        panel.world.manaEnabled = false;
+        expect(panel._shouldDeductMazeMana()).toBe(false);
+    });
+
+    it('loop mode off → drains (the out-of-loop economy)', () => {
+        expect(panel._shouldDeductMazeMana()).toBe(true);
+    });
+
+    it('loops-driven walks always drain, regardless of parking', () => {
+        panel._isLoopModeActive = true;
+        panel._loopsDrivenAction = { type: 'regionMove' };
+        expect(panel._shouldDeductMazeMana()).toBe(true);
+    });
+
+    it('loop mode on, nothing parked → free (blocked-anyway hand play must not bleed mana)', () => {
+        panel._isLoopModeActive = true;
+        expect(panel._shouldDeductMazeMana()).toBe(false);
+    });
+
+    it('loop mode on, parked live play in THIS region → drains (rule 2: Manual/Record drain)', () => {
+        panel._isLoopModeActive = true;
+        livePlayRegionValue = 'region_A';
+        expect(panel._shouldDeductMazeMana()).toBe(true);
+    });
+
+    it('loop mode on, parked live play in a DIFFERENT region → free', () => {
+        panel._isLoopModeActive = true;
+        livePlayRegionValue = 'region_B';
+        expect(panel._shouldDeductMazeMana()).toBe(false);
+    });
+
+    it('loops livePlayRegion unavailable (loops disabled / test env) → free, no throw', () => {
+        panel._isLoopModeActive = true;
+        setLivePlayRegionFn(null);
+        expect(panel._shouldDeductMazeMana()).toBe(false);
     });
 });

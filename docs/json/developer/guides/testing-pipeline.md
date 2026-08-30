@@ -247,7 +247,7 @@ The chart generation script (`scripts/docs/generate-test-chart.py`) creates comp
 - **Max Spheres**: Total logical spheres available in the game
 - **Progress**: Visual progress indicators with percentages
 
-**📊 [View Current Test Results](test-results.md)** - Live status of all template tests
+**📊 [View Current Test Results](../test-results/test-results-summary.md)** - Live status of all template tests
 
 The generated chart includes summary statistics, color-coded progress indicators, and detailed notes explaining each metric. This provides an at-a-glance overview of the health of all game templates and helps identify which games may need attention.
 

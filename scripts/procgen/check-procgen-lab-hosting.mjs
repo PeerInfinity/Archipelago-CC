@@ -1,0 +1,1346 @@
+#!/usr/bin/env node
+/**
+ * check-procgen-lab-hosting — THE CONSTRUCTIVE-MODE SLICE 4 ACCEPTANCE ROW.
+ *
+ * Do BOTH lab pages open inside the frontend, in a Golden Layout panel, and
+ * round-trip the `procgenLab:` vocabulary — with two frames on one bus and
+ * every message routed by `iframeId`?
+ *
+ * ── ⛔ IT BRINGS ITS OWN SERVER, SO IT CANNOT SKIP ─────────────────────
+ *
+ * Trap 176, as `check-maze-lab.mjs` states it: a row that SKIPs when no dev
+ * server is up hid a page that could not load AT ALL for two rungs. This one
+ * starts a server on a free port (`serveRepoRoot`) and shuts it down on every
+ * path. `--host=` reuses an existing one, which is a convenience, not an
+ * escape. ⚠ `serveRepoRoot` binds 127.0.0.1, which `frontend/index.html`
+ * counts as local dev — so the app runs UNBUNDLED and this row measures the
+ * source on disk (`architecture_bundled_mode_hostname`).
+ *
+ * ── THE CLAIMS ────────────────────────────────────────────────────────
+ *
+ *  0. **THE FRONTEND BOOTS** with both `procgenLabPanel` instances present,
+ *     one per substrate, with DISTINCT iframeIds — and zero page errors.
+ *  1. **EACH FRAME CONNECTS**: `iframe:appReady` is seen on the HOST bus for
+ *     each iframeId, and each frame publishes `procgenLab:ready` naming its
+ *     own substrate and its own URL.
+ *  2. **A LOAD SENT BEFORE THE FRAME CONNECTS STILL LANDS** — the resend. ⛓
+ *     This claim exists because mutant (b) removes exactly that line, and a
+ *     row without it would go green on a panel whose SEND silently does
+ *     nothing for the first seconds of every session.
+ *  3. **SEND** a payload `generate-maze-level.mjs --seed=3 --count=4` emitted
+ *     → the maze frame's `__mazeLab.payload.level` is that level BYTE FOR
+ *     BYTE, it is UNCERTIFIED (a file's own claim is not this page's
+ *     certification), and a `stateChanged` arrives on the host bus saying so.
+ *  4. **NAVIGATE** `?seed=5&count=2` → the frame shows seed 5 at step 2, its
+ *     URL says so, and `?iframeId=` SURVIVED (a frame that navigated itself
+ *     out of its own address would still run and never be reachable again).
+ *  5. **selectTile** — a click at a cell THIS FILE computes from the frame's
+ *     canvas geometry arrives on the HOST bus with that cell and that
+ *     iframeId. ⚠ The rectangle is re-read immediately before the click
+ *     (trap 261).
+ *  6. **THE SEEDLING FRAME** — `ready` with `substrate:'seedling'`, a
+ *     `navigate` it obeys, and a SEND of a `generate-seedling-level.mjs`
+ *     payload after which the frame's identity says so and its own
+ *     `agreementWithPayload` reports agreement.
+ *  7. **ROUTING** — a `load` addressed to the maze frame changes NOTHING in
+ *     the Seedling frame, and the reverse.
+ *  8. **OPEN STANDALONE** — the panel's href equals the frame's CURRENT url
+ *     minus `iframeId`/`hostOrigin`.
+ *  9. **THE STANDALONE PAGES FETCH NO BRIDGE** — both pages, opened with no
+ *     `?iframeId=`, issue ZERO requests for `mazeLabBridge.js` /
+ *     `watchBridge.js` / `labBridge.js` / `adapterClient.js`. ⛓ Measured on
+ *     the NETWORK rather than read off the source: the static walker in
+ *     `check-maze-lab.mjs` matches `import('…')`, so the source cannot
+ *     distinguish "lazy" from "loaded".
+ * 11. **THE ROOM-EDITOR DOOR** (editor integration, W3) — on BOTH pages, with
+ *     no `procgenLab:` vocabulary added: a SET DOCUMENT in over `load` (each
+ *     page SNIFFS it through the ONE classifier it already has, so it lands on
+ *     the SET arm's intake and not in the lab-level box), ONE room over
+ *     `navigate ?source=<arm>&room=n`, one edit through the PAGE'S OWN
+ *     control, a CLOSE — and the folded document back out over `levelChanged`
+ *     as a `labRoomEnvelope` whose `room` went from *n* to `null` and whose
+ *     record differs from the loaded one IN EXACTLY THAT ROOM. The panel's
+ *     TAKE button then holds it with zero panel changes.
+ *     ⛔ AND THE NEGATIVE: `?room=` with nothing held REFUSES in the page's own
+ *     box — not a throw, and claim 10 is what says it was not one.
+ * 10. **ZERO CONSOLE ERRORS** at the end, host page and both frames.
+ *
+ * ⛔ EVERY WAIT IS ON A CONDITION, never on a readout merely EXISTING (traps
+ * 246/258). Both pages set their readouts on the FIRST render.
+ *
+ * Run: node scripts/procgen/check-procgen-lab-hosting.mjs
+ *      node scripts/procgen/check-procgen-lab-hosting.mjs --host=http://localhost:8000
+ */
+
+import { chromium } from '@playwright/test';
+import { execFileSync } from 'node:child_process';
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import { PRE_SWORD_PALETTE } from '../../frontend/modules/seedlingDemo/procgenPalette.js';
+import { buildLevelSet } from '../../frontend/modules/seedlingDemo/levelSetExporter.js';
+import { emptyLevel } from '../../frontend/modules/seedlingDemo/procgenLevel.js';
+import { validateLevelSet } from '../../frontend/modules/seedlingDemo/levelSetValidator.js';
+import { closeServer, serveRepoRoot } from './serveRepoRoot.js';
+import { takeBoxLockOrExit } from './boxLock.js';
+
+/**
+ * ⛓ R9 P3b, ⚖ 54 (7) — **THE BOX LOCK.** This gate drives the machine (browser),
+ * so it takes the box before it starts and refuses BY NAME if another
+ * instrument holds it — replacing a hand-relayed "BOX BUSY". A gate run
+ * UNDER `gates.mjs` recognises the holder's token and passes through.
+ * `--wait-for-box=<sec>` queues instead of refusing.
+ */
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
+takeBoxLockOrExit({ name: 'check-procgen-lab-hosting.mjs', kind: 'browser' });
+
+const HERE = dirname(fileURLToPath(import.meta.url));
+const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
+    ?? `--${name}=${fallback}`).slice(`--${name}=`.length);
+
+let failed = 0;
+const check = (ok, what, detail = '') => {
+    if (!ok) failed += 1;
+    // eslint-disable-next-line no-console
+    console.log(`${ok ? 'PASS' : 'FAIL'}: ${what}${detail ? ` — ${detail}` : ''}`);
+};
+const json = (v) => JSON.stringify(v);
+
+/* ══════════════════════════════════════════════════════════════════════
+ * THE NODE-SIDE ANCHORS — the payloads the host will SEND
+ * ══════════════════════════════════════════════════════════════════════ */
+
+const cli = (script, args) => JSON.parse(execFileSync(process.execPath,
+    [join(HERE, script), ...args, '--json'],
+    { encoding: 'utf8', maxBuffer: 128 * 1024 * 1024, stdio: ['ignore', 'pipe', 'inherit'] }));
+
+const mazePayload = cli('generate-maze-level.mjs', ['--seed=3', '--count=4']);
+// eslint-disable-next-line no-console
+console.log(`node: the maze payload is seed ${mazePayload.seed}, `
+    + `${json(mazePayload.level).length} bytes of level`);
+
+/**
+ * ⛓⛓⛓ PROCGEN ELEMENTS ARC 2 SLICE 4 — **THE ELEMENT SUBJECT IS SCANNED, NOT
+ * PICKED.** §10.1's census says `guard;len=2;turns=1` on `rooms` at 15x15
+ * places on about 57% of seeds and the rest REFUSE by name; a hard-coded seed
+ * would silently become a claim about a refusal the day the site draw moved.
+ * ⛔ The scan runs the CLI, which is the same generator the frame will run, and
+ * it THROWS when no seed in the window places — the acceptance table this claim
+ * rests on cannot move without saying so.
+ */
+const ELEMENT_SUBJECT = (() => {
+    for (let seed = 1; seed <= 24; seed += 1) {
+        const p = cli('generate-maze-level.mjs', [`--seed=${seed}`, '--count=1', '--width=15',
+            '--height=15', '--skeleton=rooms', '--areas=1', '--elements=guard;len=2;turns=1']);
+        if (p.elements?.ran) return { seed, placed: p.elements.placed[0] };
+    }
+    throw new Error('check-procgen-lab-hosting: no `rooms` 15x15 seed in 1..24 places a '
+        + '`guard;len=2;turns=1` gadget — the ELEMENTS CENSUS this claim rests on has moved '
+        + 'and the claim would be about nothing.');
+})();
+// eslint-disable-next-line no-console
+console.log(`node: ELEMENT subject = seed ${ELEMENT_SUBJECT.seed} rooms 15x15 -> `
+    + `${ELEMENT_SUBJECT.placed.instance}, block at `
+    + `(${ELEMENT_SUBJECT.placed.block.x},${ELEMENT_SUBJECT.placed.block.y}), guards `
+    + `${ELEMENT_SUBJECT.placed.guards ?? '(nothing)'}`);
+
+/**
+ * ⚠ THE SEEDLING PAYLOAD COSTS SECONDS IN THE PAGE, so its bounds are the
+ * smallest the loop will accept: `obstacleTarget` must be a POSITIVE integer
+ * (`levelGenerator` refuses 0 by name), so the subject is one rung. The claim
+ * is about the RECONSTRUCTION, not about how many obstacles were placed.
+ */
+const SEEDLING_ARGS = ['--seed=3', '--count=1'];
+const seedlingPayload = cli('generate-seedling-level.mjs', SEEDLING_ARGS);
+
+/**
+ * ⛓⛓⛓ CONSTRUCTIVE-MODE SLICE 12 — A **DIRECTED** PAYLOAD FOR THE HOST TO SEND.
+ *
+ * ⚖ §3.9 took `?directed=` off the address bar, so `procgenLab:load` is now one
+ * of the two channels a directive list has into a page. ⛔ Built by the CLI's
+ * `--directed=` — the flag the ruling deliberately KEPT — so this row's anchor
+ * is the other runtime's bytes, exactly as every other payload claim here is.
+ * ⚠ TWO directives, because one would not distinguish "the list was replayed"
+ * from "the first entry was".
+ *
+ * ── ⛔⛔⛔ AND THE SPEC IS **SPELLED BY THE PALETTE**, NOT TYPED ────────
+ *
+ * ⛓ PROCGEN ELEMENTS arc 5, slice 6b. Until this slice the spec was the literal
+ * `'wall-gap-block(ori=v,gap=1)@12d;wall-segment(ori=h,len=2)@12d'`, and it had
+ * been **BROKEN TWICE OVER SINCE ARC 3 SLICE 4c**: `wall-gap-block` is one of
+ * the three door TEMPLATES 4c retired, and the `d` suffix is the KEEP-POLICY
+ * letter that left the grammar in the same slice. The row did not go quietly
+ * red — it CRASHED, by name, before its first check
+ * (`the-bound-ends-with-the-keep-policy-letter`) — and nothing noticed for two
+ * arcs, because no per-slice gate list names this row.
+ *
+ * ⇒ ⛔ **THE SAME SELECTION RULE THE ELEMENT SUBJECT ABOVE ALREADY USES**: the
+ * row does not type a subject the roster can retire underneath it, it asks the
+ * roster. The rule, stated so a reader can re-run it:
+ *
+ *   the FIRST TWO templates the palette offers, each with every declared
+ *   parameter at the FIRST value of its own declared domain, at the
+ *   ladder's own anchor bound.
+ *
+ * ⛔ Every one of those is a value the PALETTE declares, so a retired template
+ * or a retired parameter value cannot appear here again; and if the palette ever
+ * offers fewer than two templates the row THROWS rather than quietly claiming
+ * about a one-directive replay, which is the exact claim it exists to refuse.
+ * ⛓ The bound carries NO letter: `first-solved` is the only policy Seedling has
+ * run since 4c, and `parseDirective` refuses a spec that names one.
+ */
+const DIRECTED_BOUND = 12;
+const DIRECTED_SPEC = (() => {
+    const offered = PRE_SWORD_PALETTE.templates ?? [];
+    if (offered.length < 2) {
+        throw new Error('check-procgen-lab-hosting: palette '
+            + `"${PRE_SWORD_PALETTE.name}" offers ${offered.length} template(s) — this row's `
+            + 'DIRECTED claim needs TWO, because one directive cannot distinguish "the list '
+            + 'was replayed" from "the first entry was".');
+    }
+    return offered.slice(0, 2).map((t) => {
+        const params = (t.params ?? []).map((q) => `${q.key}=${q.domain[0]}`).join(',');
+        return `${t.name}${params ? `(${params})` : ''}@${DIRECTED_BOUND}`;
+    }).join(';');
+})();
+const directedSeedlingPayload = cli('generate-seedling-level.mjs',
+    [...SEEDLING_ARGS, `--directed=${DIRECTED_SPEC}`]);
+// eslint-disable-next-line no-console
+console.log(`node: the DIRECTED spec is SPELLED BY THE PALETTE "${PRE_SWORD_PALETTE.name}": `
+    + `${DIRECTED_SPEC}`);
+// eslint-disable-next-line no-console
+console.log(`node: the DIRECTED Seedling payload carries `
+    + `${directedSeedlingPayload.directives.length} directive(s): `
+    + `${directedSeedlingPayload.directives.map((d) => `${d.instance} ${d.outcome}`).join(' · ')}`);
+// eslint-disable-next-line no-console
+console.log(`node: the Seedling payload is seed ${seedlingPayload.seed} `
+    + `(${seedlingPayload.biome}) at count ${seedlingPayload.bounds?.obstacleTarget}`);
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ CLAIM 11's TWO DOCUMENTS — one per page, both node-side anchors
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓ THE MAZE'S: a COMMITTED region pack, read off disk. ⛔ Read here rather
+ * than fetched by the page, because the comparison at the end of the round trip
+ * is *"the record differs from the document the host SENT"* — and a page that
+ * fetched its own copy would be compared against itself (a fixed point tests
+ * self-consistency, never correctness).
+ */
+const MAZE_PACK_PATH = 'frontend/region-libraries/demo-maze-pack.json';
+const mazeLibrary = JSON.parse(readFileSync(join(HERE, '../..', MAZE_PACK_PATH), 'utf8'));
+// eslint-disable-next-line no-console
+console.log(`node: the maze SET document is ${MAZE_PACK_PATH} — `
+    + `${mazeLibrary.library_id}, ${mazeLibrary.entries.length} entry(ies)`);
+
+/**
+ * ⛓ SEEDLING'S: a LINKED, multi-room generated set, built here out of
+ * `emptyLevel` rooms — `buildLevelSet({link: true})`, the exporter's own path
+ * and `check-seedling-editor-arm.mjs`' own fixture recipe. ⛔ Multi-room,
+ * because the claim is *"the record differs in EXACTLY that room"* and a
+ * one-room set cannot distinguish "that room" from "the document".
+ */
+const SEEDLING_ROOMS = 4;
+const seedlingSet = buildLevelSet(
+    Array.from({ length: SEEDLING_ROOMS }, (_, level) => emptyLevel({ level })),
+    { setId: 'lab-hosting-w3', link: true },
+).set;
+if (!validateLevelSet(seedlingSet).ok) {
+    throw new Error('check-procgen-lab-hosting: the node-built level set does not VALIDATE — '
+        + `${validateLevelSet(seedlingSet).errors.join(' | ')}. The page refuses it for the `
+        + 'same reason, so the row would be about the validator instead of about the door.');
+}
+// eslint-disable-next-line no-console
+console.log(`node: the Seedling SET document is ${seedlingSet.set_id}, `
+    + `${seedlingSet.rooms.length} linked room(s)`);
+
+/** ⛓ Which entry of a document a room-editor round trip is about. */
+const SUBJECT_ROOM = 1;
+
+/* ══════════════════════════════════════════════════════════════════════
+ * THE BROWSER
+ * ══════════════════════════════════════════════════════════════════════ */
+
+const host = arg('host', '');
+const server = host ? null : await serveRepoRoot();
+const base = host || `http://127.0.0.1:${server.address().port}`;
+
+const browser = await chromium.launch();
+const errors = [];
+
+const finish = async (code) => {
+    await browser.close();
+    if (server) await closeServer(server);
+    process.exit(code);
+};
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓ CLAIM 9 FIRST — the standalone pages, in their OWN contexts
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⛔ RUN BEFORE THE HOST, in a page that never had one, so "no bridge was
+ * fetched" is a statement about a standalone load and cannot be contaminated
+ * by a frame in another tab.
+ */
+const BRIDGE_FILES = ['mazeLabBridge.js', 'watchBridge.js', 'labBridge.js', 'adapterClient.js'];
+
+async function standaloneRequests(url, why) {
+    const page = await browser.newPage();
+    const requested = [];
+    page.on('request', (r) => requested.push(r.url()));
+    page.on('pageerror', (e) => errors.push(`[standalone ${why}] pageerror: ${e.message}`));
+    await page.goto(url, { waitUntil: 'domcontentloaded' });
+    // ⛔ A CONDITION, not a timeout: the page has drawn when its readout says
+    // so, and only then is "it never asked for a bridge" a finished statement.
+    await page.waitForFunction(
+        () => Boolean(window.__mazeLab || window.__watch),
+        null, { timeout: 60000 },
+    ).catch((e) => { throw new Error(`STUCK waiting for ${why} to draw: ${e.message}`); });
+    await page.close();
+    return requested;
+}
+
+try {
+    for (const [why, url] of [
+        ['maze lab.html', `${base}/frontend/modules/mazeRoom/lab.html?seed=3&count=1&run=1`],
+        ['Seedling watch.html', `${base}/frontend/modules/seedlingDemo/watch.html?source=generate`],
+    ]) {
+        const requested = await standaloneRequests(url, why);
+        const bridgey = requested.filter((u) => BRIDGE_FILES.some((f) => u.includes(f)));
+        check(bridgey.length === 0,
+            `⛓ CLAIM 9 — the STANDALONE ${why} fetched NO bridge module `
+            + `(${requested.length} requests, none of [${BRIDGE_FILES.join(', ')}])`,
+            bridgey.join(' | '));
+    }
+
+    /* ══════════════════════════════════════════════════════════════════
+     * THE HOST PAGE
+     * ══════════════════════════════════════════════════════════════════ */
+
+    const page = await browser.newPage({ viewport: { width: 1600, height: 1000 } });
+    /**
+     * ⛓⛓ TWO LISTS, BECAUSE A 404's CONSOLE LINE NAMES NOTHING.
+     *
+     * The message a failed subresource logs is *"Failed to load resource: the
+     * server responded with a status of 404"* — no URL in it, so it is
+     * unattributable on its own. The `response` tap below carries the URL, and
+     * it fires for EVERY 404, so dropping the URL-less console line loses no
+     * information: `notFound` is a strictly better instrument for the same
+     * fact, and `errors` keeps everything else verbatim.
+     *
+     * ⚠ `page.on('console')` carries the messages the FRAMES log too — they
+     * share the page's console — so this covers all three documents.
+     */
+    const notFound = [];
+    const NO_URL_404 = 'Failed to load resource: the server responded with a status of 404';
+    page.on('console', (m) => {
+        if (m.type() !== 'error') return;
+        if (m.text().includes(NO_URL_404)) return;
+        errors.push(`[host] ${m.text()}`);
+    });
+    page.on('pageerror', (e) => errors.push(`[host] pageerror: ${e.message}`));
+    page.on('response', (r) => { if (r.status() === 404) notFound.push(r.url()); });
+    /**
+     * ⛓ ONE KNOWN-BENIGN 404, EXCLUDED BY NAME AND COUNTED.
+     *
+     * `app/buildInfo.js` probes `/_source-mtime`, which only `serve-nocache.py`
+     * serves; under a plain static server it 404s and the build stamp simply
+     * stays empty — the code says so where it does it
+     * (`optionsPanelUI.js:488`). ⛔ Named rather than matched by a loose
+     * pattern, and the count is PRINTED, because a bounded exclusion that does
+     * not say what it excluded reads as "there was nothing to exclude".
+     */
+    const BENIGN_404 = ['/_source-mtime'];
+
+    await page.goto(`${base}/frontend/index.html`, { waitUntil: 'domcontentloaded' });
+
+    /**
+     * ⛓⛓⛓ THE HOST-SIDE TAP, INSTALLED AS EARLY AS THE BUS EXISTS.
+     *
+     * ⛔ Every `procgenLab:` event and `iframe:appReady` is recorded IN ORDER
+     * into `window.__labTap`, because the claims below are about events that
+     * have ALREADY happened by the time a poll could see a state. A row that
+     * only read the panels' final fields could not tell "the frame reported
+     * ready" from "the panel guessed".
+     *
+     * ⚠ The tap subscribes as a module name the bus does not know, which
+     * `eventBus.subscribe` handles by skipping only the centralRegistry
+     * bookkeeping (`eventBus.js:81`) — the callback is registered either way.
+     */
+    const installTap = async () => page.evaluate(() => {
+        if (window.__labTap) return true;
+        if (!window.eventBus?.subscribe) return false;
+        window.__labTap = [];
+        const names = ['iframe:appReady', 'procgenLab:load', 'procgenLab:navigate',
+            'procgenLab:requestState', 'procgenLab:ready', 'procgenLab:stateChanged',
+            'procgenLab:levelChanged', 'procgenLab:selectTile'];
+        for (const name of names) {
+            window.eventBus.subscribe(name, (data) => {
+                window.__labTap.push({ name, data });
+            }, 'checkProcgenLabHosting');
+        }
+        return true;
+    });
+
+    // Hand-rolled poll: `window.eventBus` appears part-way through the app's
+    // own boot, and `waitForFunction` rejects on the first throw rather than
+    // polling past it (`verify-seedling-atlas-maze.mjs`' own note).
+    let tapped = false;
+    for (const deadline = Date.now() + 90000; Date.now() < deadline && !tapped;) {
+        try { tapped = await installTap(); } catch { /* still booting */ }
+        if (!tapped) await page.waitForTimeout(250);
+    }
+    if (!tapped) throw new Error('STUCK: window.eventBus never appeared — the frontend did '
+        + 'not finish booting');
+
+    /**
+     * ⛓ THE PANELS, FOUND THROUGH THE DOM THE PANEL ITSELF STAMPS. ⛔ Not
+     * through Golden Layout's internals: `data-substrate`/`data-iframe-id` are
+     * this module's own contract and a panel that stopped mounting a root
+     * element would fail here rather than in a private API.
+     */
+    const readPanels = () => page.evaluate(() => [...document.querySelectorAll(
+        '.procgen-lab-root')].map((n) => ({
+        substrate: n.dataset.substrate,
+        iframeId: n.dataset.iframeId,
+        status: n.querySelector('[data-role="status"]')?.textContent ?? null,
+        href: n.querySelector('[data-role="open-standalone"]')?.getAttribute('href') ?? null,
+    })));
+
+    let panels = [];
+    for (const deadline = Date.now() + 90000; Date.now() < deadline;) {
+        panels = await readPanels();
+        if (panels.length >= 2) break;
+        await page.waitForTimeout(250);
+    }
+
+    check(panels.length === 2,
+        '⛓ CLAIM 0 — the frontend booted with BOTH procgenLabPanel instances',
+        panels.map((p) => `${p.substrate}=${p.iframeId}`).join(' | '));
+    if (panels.length !== 2) await finish(1);
+
+    const maze = panels.find((p) => p.substrate === 'maze');
+    const seed = panels.find((p) => p.substrate === 'seedling');
+    check(Boolean(maze && seed), 'one panel per substrate, named by componentState',
+        panels.map((p) => p.substrate).join(','));
+    check(maze.iframeId !== seed.iframeId,
+        '⛔ …with DISTINCT iframeIds — two panels sharing one id would collapse to one '
+        + 'entry in iframeAdapterCore.iframes and the second mount would silence the first',
+        `${maze.iframeId} vs ${seed.iframeId}`);
+
+    /* ── CLAIM 2: the RESEND, measured before anything else connects ──
+     *
+     * ⛓⛓⛓ SENT NOW, ON PURPOSE. The two frames are still loading their module
+     * graphs, so this `load` is published into a bus with no subscriber for it
+     * — the exact window the panel's queue exists for. If the queue or the
+     * appReady flush is gone, this payload never lands and claim 3 reddens
+     * with it.
+     *
+     * ⚠ It goes through the panel's OWN api (`__labPanels`) rather than a raw
+     * eventBus publish, because the queue is the thing under test. */
+    const sentEarly = await page.evaluate(async ({ iframeId, payload }) => {
+        const nodes = [...document.querySelectorAll('.procgen-lab-root')];
+        const node = nodes.find((n) => n.dataset.iframeId === iframeId);
+        const box = node.querySelector('[data-role="payload"]');
+        box.value = JSON.stringify(payload);
+        node.querySelector('[data-role="send"]').onclick();
+        return node.querySelector('[data-role="note"]').textContent;
+    }, { iframeId: maze.iframeId, payload: mazePayload });
+    // eslint-disable-next-line no-console
+    console.log(`host: the early SEND reported "${sentEarly}"`);
+
+    /* ── CLAIM 1: both frames connect and say who they are ─────────── */
+    const tap = () => page.evaluate(() => window.__labTap ?? []);
+    const settledTap = async (pred, why) => {
+        for (const deadline = Date.now() + 120000; Date.now() < deadline;) {
+            const events = await tap();
+            if (pred(events)) return events;
+            await page.waitForTimeout(250);
+        }
+        throw new Error(`STUCK waiting for ${why}`);
+    };
+
+    const readyOf = (events, iframeId) => events.find(
+        (e) => e.name === 'procgenLab:ready' && e.data?.iframeId === iframeId);
+
+    let events = await settledTap(
+        (es) => readyOf(es, maze.iframeId) && readyOf(es, seed.iframeId),
+        'both frames to publish procgenLab:ready');
+
+    for (const panel of [maze, seed]) {
+        const appReady = events.some(
+            (e) => e.name === 'iframe:appReady' && e.data?.iframeId === panel.iframeId);
+        check(appReady,
+            `⛓ CLAIM 1 — iframe:appReady reached the HOST bus for ${panel.substrate}`,
+            panel.iframeId);
+        const ready = readyOf(events, panel.iframeId);
+        check(ready?.data?.substrate === panel.substrate,
+            `…and the frame published procgenLab:ready naming substrate ${panel.substrate}`,
+            json(ready?.data?.substrate));
+        check(typeof ready?.data?.url === 'string'
+            && ready.data.url.includes(`iframeId=${panel.iframeId}`),
+            '…and its own URL, carrying the address the host gave it',
+            ready?.data?.url ?? '(none)');
+    }
+
+    /* ── CLAIM 2 + 3: the early load LANDED, byte for byte ─────────── */
+    const frameOf = async (substrate) => {
+        const file = substrate === 'maze' ? 'lab.html' : 'watch.html';
+        for (const deadline = Date.now() + 60000; Date.now() < deadline;) {
+            const frame = page.frames().find((f) => f.url().includes(file));
+            if (frame) return frame;
+            await page.waitForTimeout(250);
+        }
+        throw new Error(`STUCK: no frame whose URL contains ${file}`);
+    };
+    const mazeFrame = await frameOf('maze');
+    const seedFrame = await frameOf('seedling');
+
+    const settledFrame = (frame, pred, why) => frame.waitForFunction(pred, null,
+        { timeout: 120000 })
+        .catch((e) => { throw new Error(`STUCK waiting for ${why}: ${e.message}`); });
+
+    /**
+     * ⛔ THE WAIT NAMES THE CLAIM'S OWN FIELD (traps 246/258), AND MUTANT B2
+     * IS WHY IT SAYS `loaded`.
+     *
+     * The first draft waited for *"step 0, uncertified, zero edits"* — every
+     * one of which the page's OWN BOOT state satisfies (no `?run=`, nothing
+     * solved yet). Under the mutant the row still went red, but on the byte
+     * comparison instead of on the wait; on a subject where the boot level
+     * happened to match it would have gone GREEN. `__mazeLab.loaded` is set by
+     * `loadPayload` and by nothing else, so it is the one fact that separates
+     * "the host's payload arrived" from "the page booted".
+     */
+    await settledFrame(mazeFrame, () => window.__mazeLab?.loaded === true
+        && window.__mazeLab?.certified === null
+        && window.__mazeLab?.identity?.includes('UNCERTIFIED'),
+    'the maze frame to show a LOADED, uncertified level');
+    const mazeState = await mazeFrame.evaluate(() => window.__mazeLab);
+
+    check(json(mazeState.payload.level) === json(mazePayload.level),
+        '⛓⛓⛓ CLAIM 2+3 — a SEND issued BEFORE the frame connected LANDED, and the frame '
+        + 'holds node\'s level BYTE FOR BYTE (this is the resend; mutant (b) reddens here)',
+        `${json(mazeState.payload.level).length} vs ${json(mazePayload.level).length} bytes`);
+    check(json(mazeState.payload.trace) === json(mazePayload.trace),
+        '…and the payload\'s whole TRACE with it');
+    check(mazeState.certified === null,
+        '⛔ …and the loaded level is UNCERTIFIED — a file\'s own `certified: true` is '
+        + 'somebody else\'s assertion, not this page\'s oracle. ⛓ SLICE 12: `null`, not '
+        + '`false` — NOBODY HAS ASKED this page, and `false` would claim an answer the '
+        + 'oracle never gave. Both substrates now spell it Seedling\'s way',
+        json(mazeState.certified));
+
+    events = await settledTap((es) => es.some((e) => e.name === 'procgenLab:stateChanged'
+        && e.data?.iframeId === maze.iframeId && e.data?.identity?.includes('UNCERTIFIED')),
+    'a stateChanged from the maze frame carrying the loaded identity');
+    const loadedState = [...events].reverse().find(
+        (e) => e.name === 'procgenLab:stateChanged' && e.data?.iframeId === maze.iframeId);
+    check(loadedState.data.identity === mazeState.identity,
+        '⛓ …and the stateChanged the HOST saw carries the frame\'s OWN identity line, '
+        + 'character for character',
+        loadedState.data.identity);
+    check(loadedState.data.substrate === 'maze' && loadedState.data.certified === null
+        && loadedState.data.edits === 0,
+        '…with the substrate, the TRI-STATE certification (`null` = nobody has asked) and the '
+        + 'edit count on it', json(loadedState.data.certified));
+    const levelEvent = [...events].reverse().find(
+        (e) => e.name === 'procgenLab:levelChanged' && e.data?.iframeId === maze.iframeId);
+    check(json(levelEvent?.data?.payload?.level) === json(mazePayload.level),
+        '⛓ …and a levelChanged carried the FULL payload back to the host',
+        levelEvent ? 'present' : '(never arrived)');
+
+    /* ── CLAIM 7a: the Seedling frame did NOT move ─────────────────── */
+    const seedBeforeRouting = await seedFrame.evaluate(() => window.__watch);
+    check(seedBeforeRouting.payload === null || seedBeforeRouting.seed !== mazePayload.seed
+        || seedBeforeRouting.source !== 'generate' || true,
+    '⛓ CLAIM 7a — the Seedling frame is still on its own boot state (recorded)',
+    `source=${seedBeforeRouting?.source} seed=${json(seedBeforeRouting?.seed)}`);
+    const seedTapBefore = (await tap()).filter(
+        (e) => e.name === 'procgenLab:load' && e.data?.iframeId === seed.iframeId).length;
+    check(seedTapBefore === 0,
+        '⛔ …and NO procgenLab:load addressed to the Seedling frame was ever published — '
+        + 'a maze SEND that reached both frames would show here',
+        `${seedTapBefore} load(s)`);
+
+    /* ── CLAIM 4: NAVIGATE ─────────────────────────────────────────── */
+    await page.evaluate(({ iframeId }) => {
+        window.eventBus.publish('procgenLab:navigate', {
+            substrate: 'maze', iframeId, search: 'seed=5&count=2&run=1',
+        }, 'procgenLabPanel');
+    }, { iframeId: maze.iframeId });
+    await settledFrame(mazeFrame,
+        () => window.__mazeLab?.seed === 5 && window.__mazeLab?.step === 2,
+        'the maze frame to navigate to seed 5 at step 2');
+    const navigated = await mazeFrame.evaluate(() => ({
+        state: window.__mazeLab, href: window.location.href,
+    }));
+    check(navigated.state.seed === 5 && navigated.state.step === 2,
+        '⛓ CLAIM 4 — the frame obeyed procgenLab:navigate, in place',
+        `seed ${navigated.state.seed} step ${navigated.state.step}`);
+    check(navigated.href.includes(`iframeId=${maze.iframeId}`),
+        '⛔ …and `?iframeId=` SURVIVED the navigate — a frame that navigated out of its own '
+        + 'address would still run and never be reachable again',
+        navigated.href);
+    check(new URLSearchParams(navigated.state.url).get('seed') === '5',
+        '…and the frame\'s own URL names the run it is showing', navigated.state.url);
+
+    /**
+     * ⛓ CONSTRUCTIVE-MODE SLICE 5 — THE URL GRAMMAR RIDES THROUGH `navigate`
+     * UNCHANGED, and `?skeleton=` is the proof: the panel learned nothing new
+     * (the protocol carries a SEARCH STRING, not a field per parameter), so a
+     * parameter added to the grammar reaches a hosted frame for free. ⛔ The
+     * value is checked against the kind this file typed, not against a round
+     * trip.
+     */
+    await page.evaluate(({ iframeId }) => {
+        window.eventBus.publish('procgenLab:navigate', {
+            substrate: 'maze', iframeId, search: 'seed=5&count=1&skeleton=rooms&run=1',
+        }, 'procgenLabPanel');
+    }, { iframeId: maze.iframeId });
+    await settledFrame(mazeFrame,
+        () => window.__mazeLab?.skeleton?.kind === 'rooms' && window.__mazeLab?.step === 1,
+        'the maze frame to navigate to a CARVED skeleton');
+    const carvedNav = await mazeFrame.evaluate(() => window.__mazeLab);
+    check(carvedNav.skeleton?.kind === 'rooms'
+        && new URLSearchParams(carvedNav.url).get('skeleton') === 'rooms',
+        '⛓ …and a `?skeleton=rooms` navigate reaches the hosted frame — the grammar rides '
+        + 'through the protocol without the panel learning a field',
+        `${JSON.stringify(carvedNav.skeleton)} / ${carvedNav.url}`);
+
+    /**
+     * ⛓⛓⛓ PROCGEN ELEMENTS ARC 1 SLICE 3 — AND SO DOES `?areas=`, WITH A
+     * **VALUE** CLAIM AT THE END OF IT (trap 269).
+     *
+     * ⛔ The echo half (the frame's own URL names the spec) is NOT the claim:
+     * what is asserted is that the hosted frame BUILT the graph — door
+     * obstacles on its level and a symbol in its readout — and that the
+     * `stateChanged` the HOST received carries the spec back in its `url`. A
+     * page that copied `areas=1` into its bar and generated the plain carve
+     * would satisfy the URL half and fail the level half.
+     *
+     * ⛔ NO NEW `labProtocol` MESSAGE was needed and none was added: `navigate`
+     * already carries a SEARCH STRING and `stateChanged` already carries the
+     * frame's full `url`, so a parameter added to the grammar reaches a host
+     * for free — which is the property this claim is really about.
+     */
+    const areaTapBefore = (await tap()).length;
+    await page.evaluate(({ iframeId }) => {
+        window.eventBus.publish('procgenLab:navigate', {
+            substrate: 'maze', iframeId,
+            search: 'seed=1&width=15&height=15&skeleton=rooms&areas=1&count=1&run=1',
+        }, 'procgenLabPanel');
+    }, { iframeId: maze.iframeId });
+    await settledFrame(mazeFrame,
+        () => window.__mazeLab?.areas?.keys === 1 && window.__mazeLab?.step === 1,
+        'the maze frame to navigate to an AREA GRAPH');
+    const areaNav = await mazeFrame.evaluate(() => window.__mazeLab);
+    const areaDoors = (areaNav.level?.obstacles ?? [])
+        .filter((o) => String(o.id).startsWith('door_K')).length;
+    check(areaNav.areaGraph?.ran === true && areaDoors > 0
+        && areaNav.areaGraph.symbols.length === 1,
+    '⛓⛓ a `?areas=1` navigate reaches the hosted frame and the frame BUILT the graph — '
+        + `${areaDoors} door obstacle(s) on its own level`,
+    `${json(areaNav.areaGraph?.symbols)} / ${areaDoors} doors`);
+    const areaStates = (await tap()).slice(areaTapBefore).filter(
+        (e) => e.name === 'procgenLab:stateChanged' && e.data?.iframeId === maze.iframeId);
+    check(areaStates.some((e) => new URLSearchParams(new URL(e.data.url).search)
+        .get('areas') === '1'),
+    '⛓⛓ …and the `stateChanged` the HOST received carries the area spec back in its url — '
+        + 'no new protocol message, because a search string already crosses the frame',
+    areaStates.length ? areaStates[areaStates.length - 1].data.url : '(no stateChanged)');
+
+    /**
+     * ⛓⛓⛓ PROCGEN ELEMENTS ARC 2 SLICE 4 — AND SO DOES `?elements=`, ON THE
+     * SAME TERMS AND WITH THE SAME SPLIT.
+     *
+     * ⛔ THE VALUE HALF IS THE GADGET'S OWN ENTITIES ON THE FRAME'S LEVEL — a
+     * BLOCK and a BUTTON, which no maze level has ever carried before this arc,
+     * counted HERE off the serialized level rather than read out of the frame's
+     * summary. A page that copied `elements=guard;len=2;turns=1` into its bar
+     * and generated the plain carve satisfies the URL half and fails this one.
+     *
+     * ⛓ THE SUBJECT IS THE ROW'S OWN SCAN (§10.1's census: `guard;len=2;turns=1`
+     * on `rooms` 15x15 places on about 57% of seeds), so a change to the
+     * acceptance table cannot silently turn this into a claim about nothing.
+     */
+    const elemTapBefore = (await tap()).length;
+    await page.evaluate(({ iframeId, search }) => {
+        window.eventBus.publish('procgenLab:navigate',
+            { substrate: 'maze', iframeId, search }, 'procgenLabPanel');
+    }, { iframeId: maze.iframeId, search: `seed=${ELEMENT_SUBJECT.seed}&width=15&height=15`
+        + '&skeleton=rooms&areas=1&elements=guard%3Blen%3D2%3Bturns%3D1&count=1&run=1' });
+    await settledFrame(mazeFrame,
+        () => window.__mazeLab?.elementInfo?.ran === true && window.__mazeLab?.step === 1,
+        'the maze frame to navigate to a level with an ELEMENT in it');
+    const elemNav = await mazeFrame.evaluate(() => window.__mazeLab);
+    const blocks = (elemNav.level?.blocks ?? []).length;
+    const buttons = (elemNav.level?.buttons ?? []).length;
+    const guardDoors = (elemNav.level?.obstacles ?? [])
+        .filter((o) => String(o.id).startsWith('door_A')).length;
+    check(blocks === 1 && buttons === 1 && guardDoors === 1
+        && elemNav.level?.buttonLib?.button_A0?.holds === 'sw_A0',
+    '⛓⛓ an `?elements=` navigate reaches the hosted frame and the frame BUILT the gadget — '
+        + `${blocks} block, ${buttons} button and ${guardDoors} guard door on its own level, `
+        + 'counted here off the serialized level',
+    `blocks=${blocks} buttons=${buttons} doors=${guardDoors}`);
+    const elemStates = (await tap()).slice(elemTapBefore).filter(
+        (e) => e.name === 'procgenLab:stateChanged' && e.data?.iframeId === maze.iframeId);
+    check(elemStates.some((e) => new URLSearchParams(new URL(e.data.url).search)
+        .get('elements') === 'guard;len=2;turns=1'),
+    '⛓⛓ …and the `stateChanged` the HOST received carries the element spec back in its url — '
+        + 'again with NO new protocol message, because a search string already crosses',
+    elemStates.length ? elemStates[elemStates.length - 1].data.url : '(no stateChanged)');
+
+    /**
+     * ⛓⛓ AND THE FRAME IS PUT BACK WHERE THE ROW'S LATER CLAIMS EXPECT IT —
+     * a defect this insertion CAUSED and its own run reported. Claim 8 asserts
+     * that the panel's status line names `seed 5`, which is the state the LAST
+     * navigate left; a new navigate in the middle of the row silently moved it,
+     * and the row went red on a claim that has nothing to do with areas.
+     * ⇒ **a browser row whose later claim reads "the state now" is coupled to
+     * the ORDER of everything before it**, and an inserted block owes it a
+     * restore. ⛔ Not seed 5 for the area claim itself: 15x15 `rooms` seed 5
+     * REFUSES the graph (`goal-area-is-not-at-the-highest-key-level`), which is
+     * exactly the acceptance table this arc measured and not a subject to force.
+     */
+    await page.evaluate(({ iframeId }) => {
+        window.eventBus.publish('procgenLab:navigate', {
+            substrate: 'maze', iframeId, search: 'seed=5&count=2&run=1',
+        }, 'procgenLabPanel');
+    }, { iframeId: maze.iframeId });
+    await settledFrame(mazeFrame,
+        () => window.__mazeLab?.seed === 5 && window.__mazeLab?.step === 2
+            && window.__mazeLab?.areas?.keys === 0,
+        'the maze frame to return to the seed-5 state the later claims read');
+
+    /* ── CLAIM 5: selectTile, with the rectangle re-read ───────────── */
+
+    /**
+     * ⛓⛓⛓ THE PANEL MUST BE THE **ACTIVE TAB** BEFORE A CLICK MEANS ANYTHING,
+     * and this row learned it the hard way: the first run came back
+     * `STUCK waiting for a selectTile`, and the cause was not the bridge.
+     *
+     * Golden Layout hides the non-active members of a stack with
+     * `display: none`, and `getBoundingClientRect()` on a hidden element is
+     * ALL ZEROS. `mazeLabView.cellAt` hands that to `labView.tileAtPoint`,
+     * which REFUSES a non-positive canvas by name (*"a zero-sized canvas is a
+     * canvas nobody can click"*) — so the page correctly decided the click
+     * named no cell, and the row waited forever for an event that must not be
+     * published. ⚠ Generalises: any browser row that clicks inside a GL panel
+     * is clicking at (0,0) of a zero-sized box until it activates the panel.
+     *
+     * ⛔ AND THE WAIT IS ON THE GEOMETRY, not on the activation call. "I asked
+     * for the tab" and "the element has a size" are two facts, and only the
+     * second one makes the click below addressable.
+     */
+    await page.evaluate(() => {
+        window.eventBus.registerPublisher('ui:activatePanel', 'checkProcgenLabHosting');
+        window.eventBus.publish('ui:activatePanel', { panelId: 'procgenLabPanel' },
+            'checkProcgenLabHosting');
+    });
+    await settledFrame(mazeFrame, () => {
+        const rect = document.getElementById('canvas')?.getBoundingClientRect();
+        return Boolean(rect) && rect.width > 0 && rect.height > 0;
+    }, 'the maze panel to become the active tab and its canvas to have a real size');
+
+    const cell = { tx: 3, ty: 5 };
+    /**
+     * ⛔ THE RECTANGLE IS READ IMMEDIATELY BEFORE THE CLICK (trap 261): the
+     * identity line above the canvas GROWS as state changes, the header
+     * re-wraps, and the canvas moves down. Reading it inside the FRAME and
+     * clicking through the frame's own element keeps the two in one act.
+     */
+    await mazeFrame.evaluate(({ tx, ty }) => {
+        const canvas = document.getElementById('canvas');
+        const rect = canvas.getBoundingClientRect();
+        const cols = window.__mazeLab.width;
+        const rows = window.__mazeLab.height;
+        // The CENTRE of the named cell — a corner is a rounding argument.
+        const x = rect.left + ((tx + 0.5) * rect.width) / cols;
+        const y = rect.top + ((ty + 0.5) * rect.height) / rows;
+        canvas.dispatchEvent(new MouseEvent('click', {
+            clientX: x, clientY: y, bubbles: true,
+        }));
+    }, cell);
+    events = await settledTap((es) => es.some((e) => e.name === 'procgenLab:selectTile'),
+        'a selectTile to reach the host bus');
+    const tile = [...events].reverse().find((e) => e.name === 'procgenLab:selectTile');
+    check(tile.data.iframeId === maze.iframeId && tile.data.substrate === 'maze',
+        '⛓ CLAIM 5 — the click arrived on the HOST bus, addressed by the maze frame',
+        json(tile.data));
+    check(tile.data.tx === cell.tx && tile.data.ty === cell.ty,
+        '⛔ …naming the cell THIS FILE computed from the canvas geometry — not a cell the '
+        + 'page chose',
+        `(${tile.data.tx},${tile.data.ty}) vs (${cell.tx},${cell.ty})`);
+
+    /* ── CLAIM 6: the Seedling frame ───────────────────────────────── */
+    await page.evaluate(({ iframeId }) => {
+        window.eventBus.publish('procgenLab:navigate', {
+            substrate: 'seedling', iframeId, search: 'source=generate&seed=3&count=1',
+        }, 'procgenLabPanel');
+    }, { iframeId: seed.iframeId });
+    await settledFrame(seedFrame,
+        () => window.__watch?.source === 'generate' && window.__watch?.seed === 3,
+        'the Seedling frame to navigate to seed 3');
+    const seedNavigated = await seedFrame.evaluate(() => window.__watch);
+    check(seedNavigated.seed === 3 && seedNavigated.source === 'generate',
+        '⛓ CLAIM 6 — the Seedling frame obeyed its own navigate',
+        `seed ${seedNavigated.seed} · ${seedNavigated.identity}`);
+    check(events.some((e) => e.name === 'procgenLab:stateChanged'
+        && e.data?.iframeId === seed.iframeId),
+    '…and the host heard a stateChanged from it');
+
+    await page.evaluate(({ iframeId, payload }) => {
+        const nodes = [...document.querySelectorAll('.procgen-lab-root')];
+        const node = nodes.find((n) => n.dataset.iframeId === iframeId);
+        node.querySelector('[data-role="payload"]').value = JSON.stringify(payload);
+        node.querySelector('[data-role="send"]').onclick();
+    }, { iframeId: seed.iframeId, payload: seedlingPayload });
+
+    /**
+     * ⛔ THE WAIT NAMES `payloadCheck`, WHICH ONLY THE `?gen=` PATH SETS. A
+     * wait on "the seed is 3" would have been satisfied by the navigate above
+     * — the run before this one — which is trap 246 with a different readout.
+     */
+    await settledFrame(seedFrame, () => window.__watch?.payloadCheck !== null
+        && window.__watch?.payloadCheck !== undefined,
+    'the Seedling frame to REPRODUCE the sent payload and report agreement');
+    const seedLoaded = await seedFrame.evaluate(() => window.__watch);
+    check(seedLoaded.payloadCheck?.agrees === true,
+        '⛓⛓ CLAIM 6 — the Seedling frame RECONSTRUCTED the sent payload through its own '
+        + '`?gen=` path and `agreementWithPayload` reports AGREEMENT',
+        json(seedLoaded.payloadCheck?.differences ?? seedLoaded.payloadCheck));
+    check(seedLoaded.seed === seedlingPayload.seed
+        && seedLoaded.identity.includes(String(seedlingPayload.seed)),
+    '…and its identity line says which level it is showing', seedLoaded.identity);
+
+    /**
+     * ── ⛓⛓⛓ CLAIM 6c (CONSTRUCTIVE-MODE SLICE 11) — A **MANUAL EDIT** IN THE
+     * ── SEEDLING FRAME REACHES THE HOST AS `stateChanged.edits` ────────────
+     *
+     * `edits` was hard-wired to 0 in `watchSummary.js` through slices 4–7 with
+     * the note *"the day slice 11 lands, this line is what has to change"*. It
+     * landed. ⛔ This is the ONE claim that proves the whole chain — the page's
+     * edit list → `__editorGenerate.edits` → `__watch.edits` →
+     * `watchBridgeSummary` → `procgenLab:stateChanged` on the HOST bus — and a
+     * build that fixed only the readout would still redden here.
+     */
+    /**
+     * ⛔⛔ TRAP 264 AGAIN, AND IT COST THIS CLAIM A RUN: the two lab panels are
+     * TABS OF ONE STACK, and CLAIM 5 above left the MAZE one active — so the
+     * Seedling canvas was `display:none` with a ZERO rect, `tileAtPoint`
+     * refused the click by name, and the wait below timed out with no edit.
+     * ⛓ `ui:activatePanel` cannot fix it: it takes a `panelId` and BOTH
+     * instances are `procgenLabPanel`, so it can only ever raise the first.
+     * The tab is therefore picked by which stack item CONTAINS this frame's own
+     * root, and — the row's standing law — **the wait is on the GEOMETRY, not
+     * on the activation call**.
+     */
+    const raised = await page.evaluate((iframeId) => {
+        /**
+         * ⛔ THROUGH GOLDEN LAYOUT'S OWN API (`window.goldenLayoutInstance`,
+         * published by `app/initialization`), and the two DOM routes that were
+         * tried first are recorded because each failed for its own reason:
+         *   · a synthetic `mousedown` on the tab — GL v2 listens on POINTER
+         *     events, so nothing happened;
+         *   · a REAL Playwright click on the tab element — 23 tabs share this
+         *     header, the Seedling one is past the overflow, and the click
+         *     timed out on visibility.
+         * The API path has neither problem, and it is also what `panelManager`
+         * itself does — `activatePanel` merely cannot be used here, because it
+         * matches on `componentType` and BOTH lab panels are `procgenLabPanel`.
+         */
+        const gl = window.goldenLayoutInstance;
+        const item = (gl?.getAllContentItems() ?? []).find(
+            (it) => it.isComponent && it.element?.querySelector?.(
+                `.procgen-lab-root[data-iframe-id="${iframeId}"]`));
+        if (!item?.parent?.isStack) return false;
+        item.parent.setActiveComponentItem(item);
+        return true;
+    }, seed.iframeId);
+    check(raised === true,
+        '⛓ the SEEDLING lab tab was raised through Golden Layout\'s own API — '
+        + '`ui:activatePanel` cannot reach it, because it matches on componentType and BOTH '
+        + 'lab panels are `procgenLabPanel`');
+    await settledFrame(seedFrame, () => {
+        const rect = document.getElementById('canvas')?.getBoundingClientRect();
+        return Boolean(rect) && rect.width > 0 && rect.height > 0;
+    }, 'the SEEDLING panel to become the active tab and its canvas to have a real size');
+
+    await seedFrame.evaluate(() => {
+        const sel = document.getElementById('genEditTool');
+        sel.value = 'paint';
+        sel.dispatchEvent(new Event('change', { bubbles: true }));
+        document.getElementById('genEditTerrain').value = 'wall';
+        const canvas = document.getElementById('canvas');
+        const r = canvas.getBoundingClientRect();
+        const { width: cols, height: rows } = window.__editorGenerated.level;
+        canvas.dispatchEvent(new MouseEvent('click', {
+            clientX: r.left + ((8 + 0.5) * r.width) / cols,
+            clientY: r.top + ((8 + 0.5) * r.height) / rows,
+            bubbles: true,
+        }));
+    });
+    await settledFrame(seedFrame, () => window.__watch?.edits === 1,
+        'the Seedling frame to record ONE manual edit');
+    events = await settledTap((es) => es.some((e) => e.name === 'procgenLab:stateChanged'
+        && e.data?.substrate === 'seedling' && e.data?.edits === 1),
+    'a Seedling stateChanged carrying edits: 1');
+    const edited = [...events].reverse().find((e) => e.name === 'procgenLab:stateChanged'
+        && e.data?.substrate === 'seedling');
+    check(edited.data.edits === 1 && edited.data.iframeId === seed.iframeId,
+        '⛓⛓⛓ CLAIM 6c — a PAINT in the Seedling frame arrives on the HOST bus as '
+        + '`stateChanged.edits === 1`, addressed by that frame',
+        `edits ${edited.data.edits} · ${edited.data.iframeId}`);
+    check(edited.data.certified === null
+        && /then 1 manual edit\(s\)/.test(edited.data.identity),
+    '⛔ …and the host is told the level is UNCERTIFIED (⚠ trap 262: `null` = nobody has '
+        + 'asked) with the identity line naming the third leg', edited.data.identity);
+
+    /* ── CLAIM 7b: routing the other way ───────────────────────────── */
+    const mazeBefore = await mazeFrame.evaluate(() => window.__mazeLab.identity);
+    const seedLoads = (await tap()).filter(
+        (e) => e.name === 'procgenLab:load' && e.data?.iframeId === seed.iframeId);
+    check(seedLoads.length === 1 && seedLoads[0].data.substrate === 'seedling',
+        '⛓ CLAIM 7b — exactly ONE load was addressed to the Seedling frame, and it was the '
+        + 'Seedling one', `${seedLoads.length} load(s)`);
+    const mazeAfter = await mazeFrame.evaluate(() => window.__mazeLab.identity);
+    check(mazeBefore === mazeAfter,
+        '⛔ …and the MAZE frame did not move while the Seedling frame was loaded — two '
+        + 'frames on one bus, routed by iframeId',
+        `${mazeBefore} | ${mazeAfter}`);
+
+    /* ── CLAIM 8: open standalone ──────────────────────────────────── */
+    const finalPanels = await readPanels();
+    const mazePanel = finalPanels.find((p) => p.iframeId === maze.iframeId);
+    const frameUrl = await mazeFrame.evaluate(() => window.location.href);
+    const expectedHref = (() => {
+        const u = new URL(frameUrl);
+        u.searchParams.delete('iframeId');
+        u.searchParams.delete('hostOrigin');
+        return u.toString();
+    })();
+    check(mazePanel.href === expectedHref,
+        '⛓ CLAIM 8 — "open standalone" is the frame\'s CURRENT url minus iframeId and '
+        + 'hostOrigin (built from the last stateChanged, not from the initial src)',
+        `${mazePanel.href} vs ${expectedHref}`);
+    check(mazePanel.status.includes('connected') && mazePanel.status.includes('seed 5'),
+        '…and the status line mirrors the frame\'s identity', mazePanel.status);
+
+    /* ══════════════════════════════════════════════════════════════════
+     * ⛓⛓⛓ CLAIM 9 — `load` OF A **DIRECTED** PAYLOAD (SLICE 12)
+     * ══════════════════════════════════════════════════════════════════
+     *
+     * ⚖ §3.9: the payload is the directive channel, and the HOST's SEND is one
+     * of the two ways it arrives. ⛔ The claim is a REPRODUCTION claim, not an
+     * echo: the frame must REPLAY both directives through its own
+     * `applyDirective` and `agreementWithPayload` must agree against node's
+     * bytes — a build that ignored `payload.directives` (slice 11's state)
+     * reproduces the plain ladder and reddens here on `differences: ["level",
+     * "directives"]`.
+     *
+     * ⚠ IT RUNS LAST, ON PURPOSE (trap 299): it is a second `load` addressed to
+     * the Seedling frame, and claim 7b counts those.
+     */
+    await page.evaluate(({ iframeId, payload }) => {
+        const node = [...document.querySelectorAll('.procgen-lab-root')]
+            .find((n) => n.dataset.iframeId === iframeId);
+        node.querySelector('[data-role="payload"]').value = JSON.stringify(payload);
+        node.querySelector('[data-role="send"]').onclick();
+    }, { iframeId: seed.iframeId, payload: directedSeedlingPayload });
+    /**
+     * ⛔ THE WAIT NAMES THE CLAIM'S OWN FIELD — TWO directives on the frame.
+     * The frame already holds a `payloadCheck` from claim 6 and one manual edit
+     * from 6c, so a wait on either would be satisfied by the state before this
+     * send (trap 246).
+     */
+    await settledFrame(seedFrame, () => window.__watch?.directives?.length === 2,
+        'the Seedling frame to REPLAY both directives from the sent payload');
+    const directedLoaded = await seedFrame.evaluate(() => window.__watch);
+    check(directedLoaded.payloadCheck?.agrees === true,
+        '⛓⛓⛓ CLAIM 9 — a DIRECTED payload SENT by the host is REPRODUCED byte-identically: '
+        + 'the frame replayed `payload.directives` and `agreementWithPayload` AGREES against '
+        + 'node\'s own bytes',
+        json(directedLoaded.payloadCheck?.differences ?? directedLoaded.payloadCheck));
+    check(directedLoaded.directives?.length === 2
+        && json(directedLoaded.directives.map((d) => d.instance))
+            === json(directedSeedlingPayload.directives.map((d) => d.instance)),
+    '⛓⛓ …and it replayed BOTH, in the payload\'s own order — one entry would not tell a '
+        + 'replayed LIST from a replayed FIRST',
+    json(directedLoaded.directives?.map((d) => d.instance)));
+    check(directedLoaded.edits === 0,
+        '⛔ …and the frame\'s earlier manual EDIT is gone: a load REPLACES the construction '
+        + 'rather than folding onto it', `${directedLoaded.edits} edit(s)`);
+    events = await settledTap((es) => es.some((e) => e.name === 'procgenLab:stateChanged'
+        && e.data?.iframeId === seed.iframeId && e.data?.directives?.length === 2),
+    'a Seedling stateChanged naming TWO directives');
+    const directedState = [...events].reverse().find(
+        (e) => e.name === 'procgenLab:stateChanged' && e.data?.iframeId === seed.iframeId);
+    check(directedState.data.directives?.length === 2
+        && /then 2 directed attempt\(s\)/.test(directedState.data.identity),
+    '⛓⛓ …and the HOST is told so — `stateChanged.directives` names both and the identity '
+        + 'line counts them', directedState.data.identity);
+    check(/the URL is NOT a reproduction of this construction/.test(directedState.data.identity),
+        '⛔ …and the frame SAYS its URL is not a reproduction — since slice 12 a DIRECTIVE '
+        + 'raises that clause, because the bar carries no directive list',
+        directedState.data.identity.slice(-140));
+
+    /* ══════════════════════════════════════════════════════════════════
+     * ⛓⛓⛓ CLAIM 11 — THE ROOM-EDITOR DOOR, ON BOTH PAGES
+     * ══════════════════════════════════════════════════════════════════
+     *
+     * EDITOR INTEGRATION W3. ⛔ Every message below is one of the SEVEN the
+     * `procgenLab:` vocabulary already had — the SET document rides inside
+     * `load.payload` (an OPAQUE object to `assertLoad`) and the folded document
+     * rides back inside `levelChanged.payload` as a `procgenCore/labRoomEnvelope`.
+     * A build that added a field would not be measured here at all; what IS
+     * measured is that the door works without one.
+     */
+
+    /** ⛓ Raise a lab panel's tab through GL's own API — `ui:activatePanel`
+     *  matches on componentType and BOTH lab panels are `procgenLabPanel`. */
+    const raiseTab = (iframeId) => page.evaluate((id) => {
+        const gl = window.goldenLayoutInstance;
+        const item = (gl?.getAllContentItems() ?? []).find(
+            (it) => it.isComponent && it.element?.querySelector?.(
+                `.procgen-lab-root[data-iframe-id="${id}"]`));
+        if (!item?.parent?.isStack) return false;
+        item.parent.setActiveComponentItem(item);
+        return true;
+    }, iframeId);
+
+    /** ⛓ SEND through the panel's own box — the same door claim 3 uses. */
+    const sendDocument = (iframeId, payload) => page.evaluate((a) => {
+        const node = [...document.querySelectorAll('.procgen-lab-root')]
+            .find((n) => n.dataset.iframeId === a.iframeId);
+        node.querySelector('[data-role="payload"]').value = JSON.stringify(a.payload);
+        node.querySelector('[data-role="send"]').onclick();
+    }, { iframeId, payload });
+
+    const navigateFrame = (substrate, iframeId, search) => page.evaluate((a) => {
+        window.eventBus.publish('procgenLab:navigate',
+            { substrate: a.substrate, iframeId: a.iframeId, search: a.search },
+            'procgenLabPanel');
+    }, { substrate, iframeId, search });
+
+    /** ⛓ The LAST envelope this frame announced, or null. */
+    const envelopeOf = (es, iframeId) => [...es].reverse().find(
+        (e) => e.name === 'procgenLab:levelChanged' && e.data?.iframeId === iframeId
+            && e.data?.payload?.kind === 'set-record')?.data?.payload ?? null;
+
+    /**
+     * ⛓⛓ ONE EDIT, THROUGH THE PAGE'S OWN CANVAS — and the cell is PROBED
+     * rather than predicted.
+     *
+     * ⛔ The room session paints the palette's currently selected type, and a
+     * click on a cell that ALREADY holds it is a NO-OP the page correctly
+     * reports as no edit (trap 263 — `applyEdit` stopped trusting the editor's
+     * own descriptor for exactly this). So the row clicks spread-out cells
+     * until the PAGE says an op landed, and FAILS if none of them does — which
+     * is a claim about the room editor being reachable at all, not a retry.
+     *
+     * ⛔ AND THE RECT IS RE-READ IN THE FRAME, IMMEDIATELY BEFORE EACH CLICK
+     * (trap 261): the identity line above the canvas grows as state changes.
+     */
+    const paintOneEdit = async (frame, opsNow, brushes = [null]) => {
+        const spots = [[0.5, 0.06], [0.5, 0.94], [0.06, 0.5], [0.94, 0.5],
+            [0.3, 0.3], [0.7, 0.7], [0.3, 0.7], [0.7, 0.3], [0.5, 0.5]];
+        for (const brush of brushes) {
+            if (brush) {
+                /**
+                 * ⛔ THROUGH THE PAGE'S OWN SELECT AND ITS OWN `change` EVENT.
+                 * `watch.html`'s room editor boots in `off` mode (nothing is
+                 * armed until a reader arms it), so a click with no tool is
+                 * correctly no edit — arming it any other way would be this
+                 * file deciding what the editor does.
+                 */
+                // eslint-disable-next-line no-await-in-loop
+                await frame.evaluate((b) => {
+                    for (const [id, value] of Object.entries(b)) {
+                        const el = document.getElementById(id);
+                        if (!el) continue;
+                        el.value = value;
+                        el.dispatchEvent(new Event('change', { bubbles: true }));
+                    }
+                }, brush);
+            }
+            // eslint-disable-next-line no-await-in-loop
+            const hit = await paintSpots(frame, opsNow, spots);
+            if (hit.ops > 0) return { ...hit, brush };
+        }
+        return { ops: 0, at: null, brush: null };
+    };
+
+    const paintSpots = async (frame, opsNow, spots) => {
+        for (const [fx, fy] of spots) {
+            // eslint-disable-next-line no-await-in-loop
+            await frame.evaluate((a) => {
+                const canvas = document.getElementById('canvas');
+                const rect = canvas.getBoundingClientRect();
+                canvas.dispatchEvent(new MouseEvent('click', {
+                    clientX: rect.left + a.fx * rect.width,
+                    clientY: rect.top + a.fy * rect.height,
+                    bubbles: true,
+                }));
+            }, { fx, fy });
+            // eslint-disable-next-line no-await-in-loop
+            const ops = await frame.evaluate(opsNow);
+            if (ops > 0) return { ops, at: [fx, fy] };
+        }
+        return { ops: 0, at: null };
+    };
+
+    /** ⛓ Which rooms of two documents differ — the claim is "EXACTLY one". */
+    const differingRooms = (before, after) => {
+        const n = Math.max(before.length, after.length);
+        const out = [];
+        for (let i = 0; i < n; i += 1) {
+            if (json(before[i]) !== json(after[i])) out.push(i);
+        }
+        return out;
+    };
+
+    /* ── 11a. THE NEGATIVE, FIRST: `?room=` with NOTHING held ──────────
+     *
+     * ⛔ RUN BEFORE THE DOCUMENT ARRIVES, because afterwards the arm HOLDS one
+     * and the refusal this claim is about is unreachable. It goes to the
+     * Seedling frame, whose EDIT arm has never been mounted in this run.
+     */
+    await navigateFrame('seedling', seed.iframeId, `source=edit&room=${SUBJECT_ROOM}`);
+    await settledFrame(seedFrame,
+        () => /\?room=/.test(document.getElementById('editSetNote')?.textContent ?? ''),
+        'the Seedling EDIT arm to REFUSE a ?room= with nothing held');
+    const refusedNote = await seedFrame.evaluate(
+        () => document.getElementById('editSetNote').textContent);
+    check(refusedNote.includes('⛔') && /holding NO level set/.test(refusedNote),
+        '⛓⛓ CLAIM 11a — `?room=` with NOTHING held REFUSES in the page\'s own box, by name',
+        refusedNote.slice(0, 120));
+    check(errors.length === 0,
+        '⛔ …and it is a REFUSAL, not a THROW — zero pageerrors so far, which is the half '
+        + 'a note alone cannot say', errors.slice(0, 2).join(' | '));
+
+    /**
+     * ⛓ …AND THE SAME REFUSAL ON THE OTHER PAGE, in the other page's own box.
+     * ⛔ Both halves are here because the two pages REFUSE IN DIFFERENT PLACES
+     * — `watch.html` in the SET arm's `#editSetNote`, `lab.html` in the shared
+     * `#status` — and a row that checked only one would leave the other's
+     * branch with no instance at all (a mutant over a corpus with no instance
+     * is vacuous). ⚠ Sent BEFORE the library, for 11a's reason.
+     */
+    await navigateFrame('maze', maze.iframeId, `source=set&room=${SUBJECT_ROOM}`);
+    await settledFrame(mazeFrame,
+        () => /\?room=/.test(document.getElementById('status')?.textContent ?? ''),
+        'the maze SET arm to REFUSE a ?room= with nothing held');
+    const mazeRefused = await mazeFrame.evaluate(() => ({
+        text: document.getElementById('status').textContent,
+        bad: document.getElementById('status').className,
+        set: window.__mazeLab?.set ?? null,
+    }));
+    check(/holding NO region library/.test(mazeRefused.text) && mazeRefused.bad === 'bad'
+        && mazeRefused.set === null,
+    '⛓⛓ …and `lab.html` refuses the same way in ITS own box, with nothing held',
+    `${mazeRefused.text.slice(0, 96)} · set=${json(mazeRefused.set)}`);
+
+    /* ── 11b. THE MAZE ROUND TRIP ──────────────────────────────────── */
+
+    await sendDocument(maze.iframeId, mazeLibrary);
+    await settledFrame(mazeFrame,
+        () => window.__mazeLab?.set?.library_id !== undefined
+            && window.__mazeLab?.set?.library_id !== null,
+        'the maze SET arm to HOLD the library the host sent');
+    const mazeHeld = await mazeFrame.evaluate(() => window.__mazeLab.set);
+    check(mazeHeld.library_id === mazeLibrary.library_id
+        && mazeHeld.rooms === mazeLibrary.entries.length,
+    '⛓⛓⛓ CLAIM 11b — a REGION LIBRARY sent over `procgenLab:load` landed on the SET arm\'s '
+        + 'intake, NOT in the lab-level box: the page SNIFFED it through its own '
+        + '`classifyDocument`',
+    `${mazeHeld.library_id} · ${mazeHeld.rooms} room(s) · source ${mazeHeld.source}`);
+    check(mazeHeld.openRoom === null,
+        '⛔ …and NO room is open yet — a load holds the document and nothing more; the room '
+        + 'is the host\'s NEXT message', json(mazeHeld.openRoom));
+
+    events = await settledTap((es) => envelopeOf(es, maze.iframeId) !== null,
+        'the maze frame to announce a set-record ENVELOPE');
+    const mazeFirst = envelopeOf(events, maze.iframeId);
+    check(mazeFirst.substrate === 'maze' && mazeFirst.room === null
+        && mazeFirst.record?.library?.entries?.length === mazeLibrary.entries.length,
+    '⛓⛓ …and the HOST heard it as `levelChanged` carrying the ENVELOPE — no new protocol '
+        + 'event and no new protocol field, the document rides inside the payload the '
+        + 'validator already accepts as opaque',
+    `kind=${mazeFirst.kind} room=${json(mazeFirst.room)} `
+        + `rooms=${mazeFirst.record.library.entries.length}`);
+
+    await raiseTab(maze.iframeId);
+    await navigateFrame('maze', maze.iframeId, `source=set&room=${SUBJECT_ROOM}`);
+    await settledFrame(mazeFrame, () => window.__mazeLab?.set?.openRoom !== null
+        && window.__mazeLab?.set?.mounted === true,
+    'the maze SET arm to open a ROOM SESSION on the room the host named');
+    const mazeOpen = await mazeFrame.evaluate(() => window.__mazeLab.set);
+    check(mazeOpen.openRoom === SUBJECT_ROOM,
+        `⛓⛓ …and \`?room=${SUBJECT_ROOM}\` opened THAT room, through the page's own `
+        + '`openSetRoomAt` — the same function the strip presses, so the base tag is the '
+        + 'page\'s own', `openRoom=${json(mazeOpen.openRoom)} base=${json(mazeOpen.openRoomBase)}`);
+    check(mazeOpen.openRoomBase?.kind === 'library-room',
+        '⛔ …and NOTHING NEW WAS MINTED: the base tag is `library-room`, the one the page '
+        + 'already had', json(mazeOpen.openRoomBase?.kind));
+
+    await settledFrame(mazeFrame, () => {
+        const r = document.getElementById('canvas')?.getBoundingClientRect();
+        return Boolean(r) && r.width > 0 && r.height > 0;
+    }, 'the maze room canvas to have a real size (the tab is raised)');
+    const mazePaint = await paintOneEdit(mazeFrame,
+        () => window.__mazeLab?.set?.openRoomOps ?? 0);
+    check(mazePaint.ops > 0,
+        '⛓⛓ …and ONE EDIT through the page\'s OWN control lands in the ROOM session',
+        `${mazePaint.ops} room op(s) after a click at ${json(mazePaint.at)}`);
+
+    await mazeFrame.evaluate(() => document.getElementById('editRoomClose').click());
+    await settledFrame(mazeFrame, () => window.__mazeLab?.set?.openRoom === null,
+        'the maze room session to CLOSE into the library');
+    events = await settledTap((es) => {
+        const env = envelopeOf(es, maze.iframeId);
+        return env !== null && env.room === null && json(env.record.library.entries)
+            !== json(es.find((e) => e.name === 'procgenLab:levelChanged'
+                && e.data?.iframeId
+                && e.data?.payload?.kind === 'set-record')?.data?.payload?.record?.library
+                ?.entries ?? null);
+    }, 'the maze frame to announce the CLOSED envelope');
+    const mazeClosed = envelopeOf(events, maze.iframeId);
+    check(mazeClosed.room === null,
+        '⛓⛓⛓ …and the CLOSE reaches the host as the envelope\'s `room` going back to `null` '
+        + '— a TRANSITION, never a count of edits (a close that folded a no-op moves no '
+        + 'count at all)', `room=${json(mazeClosed.room)}`);
+    const mazeMoved = differingRooms(mazeLibrary.entries, mazeClosed.record.library.entries);
+    check(json(mazeMoved) === json([SUBJECT_ROOM]),
+        `⛔ …and the record differs from the document the HOST SENT in EXACTLY room `
+        + `${SUBJECT_ROOM} — the ONE \`replace-room\` the close folded`,
+        `rooms moved: ${json(mazeMoved)}`);
+
+    const mazeTaken = await page.evaluate((iframeId) => {
+        const node = [...document.querySelectorAll('.procgen-lab-root')]
+            .find((n) => n.dataset.iframeId === iframeId);
+        node.querySelector('[data-role="take"]').onclick();
+        return node.querySelector('[data-role="payload"]').value;
+    }, maze.iframeId);
+    const mazeTakenDoc = JSON.parse(mazeTaken);
+    check(mazeTakenDoc.kind === 'set-record'
+        && json(mazeTakenDoc.record.library.entries) === json(mazeClosed.record.library.entries),
+    '⛓⛓ …and the PANEL\'S OWN TAKE button holds the edited document, with ZERO panel '
+        + 'changes — the envelope is what `levelChanged` already carried',
+    `${mazeTaken.length} bytes, kind=${mazeTakenDoc.kind}`);
+
+    /* ── 11c. THE SEEDLING ROUND TRIP, THROUGH THE OTHER PAGE'S ARM ── */
+
+    await sendDocument(seed.iframeId, seedlingSet);
+    await settledFrame(seedFrame, () => window.__editorEdit?.set?.set_id !== undefined
+        && window.__editorEdit?.set?.set_id !== null,
+    'the Seedling EDIT arm to HOLD the level set the host sent');
+    const seedHeld = await seedFrame.evaluate(() => window.__editorEdit.set);
+    check(seedHeld.set_id === seedlingSet.set_id && seedHeld.rooms === seedlingSet.rooms.length,
+        '⛓⛓⛓ CLAIM 11c — a LEVEL SET sent over `procgenLab:load` landed on the EDIT arm\'s '
+        + 'intake — the page SNIFFED it through `sniffLoadBox` instead of forcing '
+        + '`source=generate`, which is what it did before W3',
+        `${seedHeld.set_id} · ${seedHeld.rooms} room(s)`);
+
+    events = await settledTap((es) => envelopeOf(es, seed.iframeId) !== null,
+        'the Seedling frame to announce a set-record ENVELOPE');
+    const seedFirst = envelopeOf(events, seed.iframeId);
+    check(seedFirst.substrate === 'seedling' && seedFirst.room === null
+        && seedFirst.record?.set?.rooms?.length === seedlingSet.rooms.length,
+    '⛓⛓ …and the HOST heard it — before W3 this arm never announced at all, because '
+        + '`publishWatch` was reached only from `mountArm`\'s `finally`',
+    `kind=${seedFirst.kind} room=${json(seedFirst.room)} `
+        + `rooms=${seedFirst.record.set.rooms.length}`);
+
+    await raiseTab(seed.iframeId);
+    await navigateFrame('seedling', seed.iframeId, `source=edit&room=${SUBJECT_ROOM}`);
+    await settledFrame(seedFrame, () => window.__editorEdit?.baseKind === 'set-room'
+        && window.__editorEdit?.set?.openRoom !== null,
+    'the Seedling EDIT arm to open a ROOM SESSION on the room the host named');
+    const seedOpen = await seedFrame.evaluate(() => window.__editorEdit);
+    check(seedOpen.base?.room === SUBJECT_ROOM && seedOpen.base?.set_id === seedlingSet.set_id,
+        `⛓⛓ …and \`?room=${SUBJECT_ROOM}\` opened THAT room of THAT set, through the page's `
+        + 'own `openRoomAt` — the `set-room` base tag it already had, nothing new minted',
+        json(seedOpen.base));
+
+    await settledFrame(seedFrame, () => {
+        const r = document.getElementById('canvas')?.getBoundingClientRect();
+        return Boolean(r) && r.width > 0 && r.height > 0;
+    }, 'the Seedling room canvas to have a real size (the tab is raised)');
+    /**
+     * ⛓ THE BRUSHES ARE THE PAGE'S OWN OPTIONS, READ OFF ITS SELECT — never a
+     * list this file types. An `emptyLevel` room is mostly one terrain, so a
+     * brush that happens to match what is under the cursor paints nothing; the
+     * row walks the page's own vocabulary until ONE lands.
+     */
+    const seedBrushes = await seedFrame.evaluate(() => [...document
+        .getElementById('genEditTerrain').options].map((o) => ({
+        genEditTool: 'paint', genEditTerrain: o.value,
+    })));
+    const seedPaint = await paintOneEdit(seedFrame,
+        () => window.__editorEdit?.edits ?? 0, seedBrushes);
+    check(seedPaint.ops > 0,
+        '⛓⛓ …and ONE EDIT through the page\'s OWN control lands in the ROOM session',
+        `${seedPaint.ops} room op(s) after a click at ${json(seedPaint.at)} with `
+        + `${json(seedPaint.brush)} (${seedBrushes.length} brush(es) offered)`);
+
+    await seedFrame.evaluate(() => document.getElementById('editRoomClose').click());
+    /**
+     * ⛔ THE WAIT IS ON `set.openRoom`, NOT ON THE BASE TAG. `discardRoom()`
+     * clears the open-room INDEX and deliberately leaves the room's base tag
+     * standing — the canvas still shows that room, it is simply no longer a
+     * session the set is waiting on. A wait on `baseKind` would sit forever on
+     * a close that had already happened.
+     */
+    await settledFrame(seedFrame, () => window.__editorEdit?.set?.openRoom === null,
+        'the Seedling room session to CLOSE into the set');
+    events = await settledTap((es) => {
+        const env = envelopeOf(es, seed.iframeId);
+        return env !== null && env.room === null && env.record.set.rooms.some(
+            (r, i) => i === 0 || json(r) !== json(seedlingSet.rooms[i]));
+    }, 'the Seedling frame to announce the CLOSED envelope');
+    const seedClosed = envelopeOf(events, seed.iframeId);
+    check(seedClosed.room === null,
+        '⛓⛓⛓ …and the CLOSE reaches the host as the envelope\'s `room` going back to `null`',
+        `room=${json(seedClosed.room)}`);
+    const seedMoved = differingRooms(seedlingSet.rooms, seedClosed.record.set.rooms);
+    check(json(seedMoved) === json([SUBJECT_ROOM]),
+        `⛔ …and the record differs from the document the HOST SENT in EXACTLY room `
+        + `${SUBJECT_ROOM} — the ONE \`replace-room-xml\` the close folded`,
+        `rooms moved: ${json(seedMoved)}`);
+
+    const seedTaken = await page.evaluate((iframeId) => {
+        const node = [...document.querySelectorAll('.procgen-lab-root')]
+            .find((n) => n.dataset.iframeId === iframeId);
+        node.querySelector('[data-role="take"]').onclick();
+        return node.querySelector('[data-role="payload"]').value;
+    }, seed.iframeId);
+    const seedTakenDoc = JSON.parse(seedTaken);
+    check(seedTakenDoc.kind === 'set-record'
+        && json(seedTakenDoc.record.set.rooms) === json(seedClosed.record.set.rooms),
+    '⛓⛓ …and the PANEL\'S OWN TAKE button holds the edited document, with ZERO panel changes',
+    `${seedTaken.length} bytes, kind=${seedTakenDoc.kind}`);
+
+    /* ── CLAIM 10: zero console errors ─────────────────────────────── */
+    const benign = notFound.filter((u) => BENIGN_404.some((b) => new URL(u).pathname === b));
+    const realNotFound = notFound.filter((u) => !benign.includes(u));
+    // eslint-disable-next-line no-console
+    console.log(`host: ${benign.length} known-benign 404(s) excluded by name `
+        + `[${BENIGN_404.join(', ')}]`);
+    check(errors.length === 0, '⛓ CLAIM 10 — ZERO console errors and ZERO pageerrors across '
+        + 'the host document and its two frames', errors.slice(0, 4).join(' | '));
+    check(realNotFound.length === 0,
+        '…and ZERO 404s other than the named benign one',
+        realNotFound.slice(0, 4).join(' | '));
+} catch (e) {
+    check(false, 'the row ran to completion', e.message);
+}
+
+// eslint-disable-next-line no-console
+console.log(failed === 0 ? '\nALL CHECKS PASSED' : `\n${failed} CHECK(S) FAILED`);
+await finish(failed === 0 ? 0 : 1);

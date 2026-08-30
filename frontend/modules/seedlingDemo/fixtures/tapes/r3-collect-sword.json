@@ -1,0 +1,54 @@
+{
+  "tape_version": 3,
+  "game": "seedling",
+  "name": "r3-collect-sword",
+  "description": "HAND-AUTHORED, and the first tape on the ladder that COLLECTS AN ITEM FOR REAL. Boots into level 10 south of sword@48,48, walks north onto it, and then presses X five times to talk the pickup's dialogue through. grants is EMPTY: hasSword becomes true because the game's own Sword.removed() ran, not because a property was written. What it pins is the CEREMONY's shape, which no earlier fixture could see: contact freezes the game for the 150-frame specialTimer during which the tick counter does NOT advance (Pickup is the only writer of the freeze flag, so the dead-frame gate holds), and then the tick counter DOES advance while the player still cannot move — Game.freezeObjects has several writers and no per-frame reset, so it reads true inside Mobile.mobileUpdate and false again at the next frame's gate. That is why the tape can supply the X releases at all: NPC.talk() reads Input.released from the NPC's own update, outside the frozen block. The releases are spaced EIGHT ticks apart on purpose — the sword's own dialogue says 'double tap to dash', slashTimer is 20, and a press that lands after the ceremony is over goes to useItem(Main.primary): one stray press is a swing, two within twenty ticks is a DASH that moves the player. Driver-synthesized is not an option here, because every planner on this ladder treats a pickup as an avoid volume and refuses to walk into one.",
+  "boot": {
+    "level": 10,
+    "x": 48,
+    "y": 80
+  },
+  "noclip": false,
+  "noDamage": true,
+  "noHazards": [
+    "water",
+    "lava",
+    "ice",
+    "waterfall"
+  ],
+  "grants": [],
+  "persistence": [],
+  "tick_count": 75,
+  "inputs": [
+    {
+      "key": "up",
+      "from": 0,
+      "to": 30
+    },
+    {
+      "key": "primary",
+      "from": 32,
+      "to": 33
+    },
+    {
+      "key": "primary",
+      "from": 40,
+      "to": 41
+    },
+    {
+      "key": "primary",
+      "from": 48,
+      "to": 49
+    },
+    {
+      "key": "primary",
+      "from": 56,
+      "to": 57
+    },
+    {
+      "key": "primary",
+      "from": 64,
+      "to": 65
+    }
+  ]
+}

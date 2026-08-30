@@ -70,6 +70,55 @@ export function buildActionCatalog(zones, itemData) {
 }
 
 /**
+ * Build the catalog from a live all-zones actions report (substrate path).
+ * Unlike buildActionCatalog (from a static gameDefs snapshot), this reflects
+ * the fork's live ZONES table (via window.getAllZoneActions), so it stays
+ * correct under synthetic data, which replaces the zone tables wholesale. Every
+ * zone's tasks are offered, grouped by zone name — re-built when the dataset
+ * (re)loads.
+ *
+ * Task entries are uniformly clickTask (a "travel" is just a clickTask on a
+ * travel task, so the report needs no per-task action-type). Prestige is
+ * dropped on the substrate (no window.doPrestige hook). Items carry their real
+ * names and are split into "Artifacts" / "Items" by the report's isArtifact
+ * flag (the fork's getAllItems supplies both).
+ *
+ * @param {{ zones: {zone:number, name:string, tasks:object[]}[], items: {type:number, name:string, isArtifact:boolean}[] }|null} report
+ * @returns {{ tasks: object[], items: object[], prestige: object[] }}
+ */
+export function buildCatalogFromReport(report) {
+    const tasks = [];
+    const items = [];
+    if (report && Array.isArray(report.zones)) {
+        for (const z of report.zones) {
+            const zoneId = z.zone ?? 0;
+            const group = z.name || `Zone ${zoneId + 1}`;
+            for (const t of (z.tasks || [])) {
+                tasks.push({
+                    actionType: JTAActionType.CLICK_TASK,
+                    actionId: t.id,
+                    label: t.name,
+                    group,
+                    zoneId,
+                    maxReps: t.maxReps,
+                });
+            }
+        }
+    }
+    if (report && Array.isArray(report.items)) {
+        for (const it of report.items) {
+            items.push({
+                actionType: JTAActionType.USE_ITEM,
+                actionId: it.type,
+                label: it.name || `Item ${it.type}`,
+                group: it.isArtifact ? 'Artifacts' : 'Items',
+            });
+        }
+    }
+    return { tasks, items, prestige: [] };
+}
+
+/**
  * Create a QueueEntry from a catalog action definition
  * @param {object} catalogEntry - Entry from buildActionCatalog()
  * @param {number} [loops=1] - Number of times to repeat

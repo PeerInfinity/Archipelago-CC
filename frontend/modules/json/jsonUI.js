@@ -1,6 +1,7 @@
 import { getModuleEventBus } from './index.js';
 // Corrected import for settingsManager (default import)
 import settingsManager from '../../app/core/settingsManager.js';
+import { LAST_WORLD_KEY } from '../stateManager/worldPersistence.js';
 // import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js'; // If needed later
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { applyLoadedData, transformLayoutConfigSizes, extractDirectLayoutConfig } from '../../utils/dataApplicator.js';
@@ -958,7 +959,16 @@ export class JsonUI {
       try {
         localStorage.removeItem('archipelagoToolSuite_lastActiveMode');
         localStorage.removeItem('archipelagoToolSuite_modeData_default');
-        log('info', 
+        // Also drop the persisted last-loaded world (sessionStorage) — this
+        // navigates in the same tab, so it would otherwise survive the reset.
+        try {
+          if (typeof sessionStorage !== 'undefined') {
+            sessionStorage.removeItem(LAST_WORLD_KEY);
+          }
+        } catch {
+          /* ignore */
+        }
+        log('info',
           '[JsonUI] Defaults reset: Cleared last active mode and "default" mode data from LocalStorage.'
         );
         // Reload the page to the base URL, removing any query parameters like ?mode=

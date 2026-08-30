@@ -10,7 +10,7 @@ import logging
 import sys
 from typing import Any, Dict, List, Set, Tuple, Optional
 
-from rule_builder import BOOLEAN_RULE_TYPES
+from .constants import BOOLEAN_RULE_TYPES
 from ._codegen_utils import (
     ANALYZER_BOOL_TYPES,
     ANALYZER_RUNTIME_TYPES,
@@ -563,6 +563,7 @@ class RuleCodeGenerator(
                 rb_to_type = {
                     'And': 'and',
                     'Or': 'or',
+                    'AtLeast': 'atleast',
                     'Not': 'not',
                     'Has': 'item_check',
                     'HasAll': 'group_check',

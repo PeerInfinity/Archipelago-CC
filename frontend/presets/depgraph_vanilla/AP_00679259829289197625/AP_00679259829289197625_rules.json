@@ -33736,7 +33736,7 @@
           "EXTERNAL_INTERFACE.3": 355,
           "EXTERNAL_INTERFACE.4": 356
         },
-        "title": "SWFRecomp AVM1 \u2014 Vibe Coding Simulator"
+        "title": "SWFRecomp AVM1 — Vibe Coding Simulator"
       },
       "num_nodes": 356,
       "is_vanilla": true,
@@ -33797,8 +33797,8 @@
           "Completed Node 26": "Event: Call Semantics: Frame label lookup",
           "Node 27": "Call Semantics: Target path resolution",
           "Completed Node 27": "Event: Call Semantics: Target path resolution",
-          "Node 28": "Array Methods: array_prototyping \u2014 addProperty Numeric Ke...",
-          "Completed Node 28": "Event: Array Methods: array_prototyping \u2014 addProperty ...",
+          "Node 28": "Array Methods: array_prototyping — addProperty Numeric Ke...",
+          "Completed Node 28": "Event: Array Methods: array_prototyping — addProperty ...",
           "Node 29": "Color Object: AVM1 Color Object",
           "Completed Node 29": "Event: Color Object: AVM1 Color Object",
           "Node 30": "Color Object: flash.geom.ColorTransform",
@@ -33907,22 +33907,22 @@
           "Completed Node 81": "Event: Hit Testing: hitTest(x, y, shapeFlag=true)",
           "Node 82": "Hit Testing: Morph input hit testing",
           "Completed Node 82": "Event: Hit Testing: Morph input hit testing",
-          "Node 83": "Loadmovie: Child SWF compilation (verify_output.py) \u2014",
+          "Node 83": "Loadmovie: Child SWF compilation (verify_output.py) —",
           "Completed Node 83": "Event: Loadmovie: Child SWF compilation (verify_output...",
-          "Node 84": "Loadmovie: _level management (runtime) \u2014",
-          "Completed Node 84": "Event: Loadmovie: _level management (runtime) \u2014",
-          "Node 85": "Loadmovie: Core loadMovie (runtime) \u2014 PARTIAL \u2705",
-          "Completed Node 85": "Event: Loadmovie: Core loadMovie (runtime) \u2014 PARTIAL \u2705",
-          "Node 86": "Loadmovie: actionGetURL2 routing \u2014",
-          "Completed Node 86": "Event: Loadmovie: actionGetURL2 routing \u2014",
-          "Node 87": "Loadmovie: MovieClipLoader class \u2014",
-          "Completed Node 87": "Event: Loadmovie: MovieClipLoader class \u2014",
-          "Node 88": "Loadmovie: unloadMovie \u2014",
-          "Completed Node 88": "Event: Loadmovie: unloadMovie \u2014",
+          "Node 84": "Loadmovie: _level management (runtime) —",
+          "Completed Node 84": "Event: Loadmovie: _level management (runtime) —",
+          "Node 85": "Loadmovie: Core loadMovie (runtime) — PARTIAL ✅",
+          "Completed Node 85": "Event: Loadmovie: Core loadMovie (runtime) — PARTIAL ✅",
+          "Node 86": "Loadmovie: actionGetURL2 routing —",
+          "Completed Node 86": "Event: Loadmovie: actionGetURL2 routing —",
+          "Node 87": "Loadmovie: MovieClipLoader class —",
+          "Completed Node 87": "Event: Loadmovie: MovieClipLoader class —",
+          "Node 88": "Loadmovie: unloadMovie —",
+          "Completed Node 88": "Event: Loadmovie: unloadMovie —",
           "Node 89": "Loadmovie: Cross-version global isolation",
           "Completed Node 89": "Event: Loadmovie: Cross-version global isolation",
-          "Node 90": "Loadmovie: loadVariables \u2014",
-          "Completed Node 90": "Event: Loadmovie: loadVariables \u2014",
+          "Node 90": "Loadmovie: loadVariables —",
+          "Completed Node 90": "Event: Loadmovie: loadVariables —",
           "Node 91": "Cross Movie Export Isolation: Character Dictionary (`dict...",
           "Completed Node 91": "Event: Cross Movie Export Isolation: Character Diction...",
           "Node 92": "Cross Movie Export Isolation: Export Symbol Registry (`ng...",
@@ -33965,10 +33965,10 @@
           "Completed Node 110": "Event: Loadmovie Remaining: Per-MC byte_size tracking",
           "Node 111": "Loadmovie Remaining: SWF_URL test name inclusion",
           "Completed Node 111": "Event: Loadmovie Remaining: SWF_URL test name inclusion",
-          "Node 112": "Loadvariables: Build Pipeline \u2014 Pre-bundle Data Files",
-          "Completed Node 112": "Event: Loadvariables: Build Pipeline \u2014 Pre-bundle Data...",
-          "Node 113": "Loadvariables: Runtime \u2014 Parse and Set Variables",
-          "Completed Node 113": "Event: Loadvariables: Runtime \u2014 Parse and Set Variables",
+          "Node 112": "Loadvariables: Build Pipeline — Pre-bundle Data Files",
+          "Completed Node 112": "Event: Loadvariables: Build Pipeline — Pre-bundle Data...",
+          "Node 113": "Loadvariables: Runtime — Parse and Set Variables",
+          "Completed Node 113": "Event: Loadvariables: Runtime — Parse and Set Variables",
           "Node 114": "Loadvariables: actionGetURL Routing",
           "Completed Node 114": "Event: Loadvariables: actionGetURL Routing",
           "Node 115": "Loadvariables: MC.loadVariables() Method",
@@ -33981,8 +33981,8 @@
           "Completed Node 118": "Event: Localconnection: Multi-SWF child loading",
           "Node 119": "Localconnection: Advanced features (allowDomain, AMF, isP...",
           "Completed Node 119": "Event: Localconnection: Advanced features (allowDomain...",
-          "Node 120": "Lockroot: Path resolution \u2014 NOT NEEDED for this test",
-          "Completed Node 120": "Event: Lockroot: Path resolution \u2014 NOT NEEDED for this...",
+          "Node 120": "Lockroot: Path resolution — NOT NEEDED for this test",
+          "Completed Node 120": "Event: Lockroot: Path resolution — NOT NEEDED for this...",
           "Node 121": "Math: Core Math object (2026-02-15)",
           "Completed Node 121": "Event: Math: Core Math object (2026-02-15)",
           "Node 122": "Math: ASnative(200, index) dispatch (2026-02-20)",
@@ -34025,12 +34025,12 @@
           "Completed Node 140": "Event: Mouse Events Advanced: Highlight Bounds for Tab...",
           "Node 141": "Mouse Events Advanced: TextField onChanged Callback (butt...",
           "Completed Node 141": "Event: Mouse Events Advanced: TextField onChanged Call...",
-          "Node 142": "Movieclip: AS-Level Event Dispatch + Ordering \u2014",
-          "Completed Node 142": "Event: Movieclip: AS-Level Event Dispatch + Ordering \u2014",
-          "Node 143": "Clone Duplicate: Core Clone/Duplicate \u2014",
-          "Completed Node 143": "Event: Clone Duplicate: Core Clone/Duplicate \u2014",
-          "Node 144": "Clone Duplicate: EditText Clones \u2014 SUBSTANTIALLY",
-          "Completed Node 144": "Event: Clone Duplicate: EditText Clones \u2014 SUBSTANTIALLY",
+          "Node 142": "Movieclip: AS-Level Event Dispatch + Ordering —",
+          "Completed Node 142": "Event: Movieclip: AS-Level Event Dispatch + Ordering —",
+          "Node 143": "Clone Duplicate: Core Clone/Duplicate —",
+          "Completed Node 143": "Event: Clone Duplicate: Core Clone/Duplicate —",
+          "Node 144": "Clone Duplicate: EditText Clones — SUBSTANTIALLY",
+          "Completed Node 144": "Event: Clone Duplicate: EditText Clones — SUBSTANTIALLY",
           "Node 145": "Mc Removal Lifecycle: base_clip Removal Detection (",
           "Completed Node 145": "Event: Mc Removal Lifecycle: base_clip Removal Detecti...",
           "Node 146": "Mc Removal Lifecycle: _parent Resolution on Removed MCs (...",
@@ -34041,8 +34041,8 @@
           "Completed Node 148": "Event: Mc Removal Lifecycle: SetTarget with Removed MC...",
           "Node 149": "Mc Removal Lifecycle: Unload Handler Timing (",
           "Completed Node 149": "Event: Mc Removal Lifecycle: Unload Handler Timing (",
-          "Node 150": "Moviecliploader: MCL constructor \u2014 auto-add self as listener",
-          "Completed Node 150": "Event: Moviecliploader: MCL constructor \u2014 auto-add sel...",
+          "Node 150": "Moviecliploader: MCL constructor — auto-add self as listener",
+          "Completed Node 150": "Event: Moviecliploader: MCL constructor — auto-add sel...",
           "Node 151": "Moviecliploader: Register MCL methods on prototype",
           "Completed Node 151": "Event: Moviecliploader: Register MCL methods on prototype",
           "Node 152": "Moviecliploader: Implement getProgress()",
@@ -34099,14 +34099,14 @@
           "Completed Node 177": "Event: Morph Interpolation: Interpolated bounds lookup",
           "Node 178": "Morph Interpolation: Interpolated shape hit testing",
           "Completed Node 178": "Event: Morph Interpolation: Interpolated shape hit tes...",
-          "Node 179": "Plan 03 Drawing Api: Solid Fill Polygons \u2014 **",
-          "Completed Node 179": "Event: Plan 03 Drawing Api: Solid Fill Polygons \u2014 **",
-          "Node 180": "Plan 03 Drawing Api: Curve Segments \u2014 **",
-          "Completed Node 180": "Event: Plan 03 Drawing Api: Curve Segments \u2014 **",
-          "Node 181": "Plan 03 Drawing Api: Gradient Fills \u2014 **",
-          "Completed Node 181": "Event: Plan 03 Drawing Api: Gradient Fills \u2014 **",
-          "Node 182": "Plan 03 Drawing Api: Line Styles \u2014 **",
-          "Completed Node 182": "Event: Plan 03 Drawing Api: Line Styles \u2014 **",
+          "Node 179": "Plan 03 Drawing Api: Solid Fill Polygons — **",
+          "Completed Node 179": "Event: Plan 03 Drawing Api: Solid Fill Polygons — **",
+          "Node 180": "Plan 03 Drawing Api: Curve Segments — **",
+          "Completed Node 180": "Event: Plan 03 Drawing Api: Curve Segments — **",
+          "Node 181": "Plan 03 Drawing Api: Gradient Fills — **",
+          "Completed Node 181": "Event: Plan 03 Drawing Api: Gradient Fills — **",
+          "Node 182": "Plan 03 Drawing Api: Line Styles — **",
+          "Completed Node 182": "Event: Plan 03 Drawing Api: Line Styles — **",
           "Node 183": "Plan 04 Focus Rect",
           "Completed Node 183": "Event: Plan 04 Focus Rect",
           "Node 184": "Plan 05 Bitmap And Media: fillRect Only",
@@ -34195,8 +34195,8 @@
           "Completed Node 225": "Event: Stage: Fix Build (Prerequisite)",
           "Node 226": "Stage: Stage Global Object",
           "Completed Node 226": "Event: Stage: Stage Global Object",
-          "Node 227": "Stage: MovieClip Property Precision and Width\u2194Scale Inter...",
-          "Completed Node 227": "Event: Stage: MovieClip Property Precision and Width\u2194S...",
+          "Node 227": "Stage: MovieClip Property Precision and Width↔Scale Inter...",
+          "Completed Node 227": "Event: Stage: MovieClip Property Precision and Width↔S...",
           "Node 228": "Stage: Value Representation and Scale/Rotation Ranges",
           "Completed Node 228": "Event: Stage: Value Representation and Scale/Rotation ...",
           "Node 229": "Stage: _level Addressing and Child Clip Resolution",
@@ -34221,11 +34221,11 @@
           "Completed Node 238": "Event: Stage Frame Props: Stage children enumeration",
           "Node 239": "String: Fix Buffer Limits + Argument Coercion + Missing M...",
           "Completed Node 239": "Event: String: Fix Buffer Limits + Argument Coercion +...",
-          "Node 240": "String: Switch to UTF-16 Internal String Storage \u2705",
-          "Completed Node 240": "Event: String: Switch to UTF-16 Internal String Storage \u2705",
-          "Node 241": "String: SWF4/6 String Operations (string_ops_swf6) \u2705",
+          "Node 240": "String: Switch to UTF-16 Internal String Storage ✅",
+          "Completed Node 240": "Event: String: Switch to UTF-16 Internal String Storage ✅",
+          "Node 241": "String: SWF4/6 String Operations (string_ops_swf6) ✅",
           "Completed Node 241": "Event: String: SWF4/6 String Operations (string_ops_sw...",
-          "Node 242": "String: Unicode Case Mapping (toUpperCase/toLowerCase) \u2705",
+          "Node 242": "String: Unicode Case Mapping (toUpperCase/toLowerCase) ✅",
           "Completed Node 242": "Event: String: Unicode Case Mapping (toUpperCase/toLow...",
           "Node 243": "String: String Paths (Deferred)",
           "Completed Node 243": "Event: String: String Paths (Deferred)",
@@ -34245,9 +34245,9 @@
           "Completed Node 250": "Event: Swf Version Semantics: SWF4 Operator Coercion O...",
           "Node 251": "Swf Version Semantics: Cross-Version Function Calls (",
           "Completed Node 251": "Event: Swf Version Semantics: Cross-Version Function C...",
-          "Node 252": "Cross Version Isolation: Child SWF Version Restoration \u2014",
+          "Node 252": "Cross Version Isolation: Child SWF Version Restoration —",
           "Completed Node 252": "Event: Cross Version Isolation: Child SWF Version Rest...",
-          "Node 253": "Cross Version Isolation: Per-Version Global Object \u2014",
+          "Node 253": "Cross Version Isolation: Per-Version Global Object —",
           "Completed Node 253": "Event: Cross Version Isolation: Per-Version Global Obj...",
           "Node 254": "Cross Version Isolation: Per-Function SWF Version Trackin...",
           "Completed Node 254": "Event: Cross Version Isolation: Per-Function SWF Versi...",
@@ -34255,7 +34255,7 @@
           "Completed Node 255": "Event: Cross Version Isolation: DoInitAction Context f...",
           "Node 256": "Cross Version Isolation: RegisterClass in Child SWFs (Small)",
           "Completed Node 256": "Event: Cross Version Isolation: RegisterClass in Child...",
-          "Node 257": "Cross Version Isolation: Variable Clearing on Reload \u2014",
+          "Node 257": "Cross Version Isolation: Variable Clearing on Reload —",
           "Completed Node 257": "Event: Cross Version Isolation: Variable Clearing on R...",
           "Node 258": "Tab Ordering",
           "Completed Node 258": "Event: Tab Ordering",
@@ -34271,20 +34271,20 @@
           "Completed Node 263": "Event: Telltarget: g_base_clip tracking + actionSetTar...",
           "Node 264": "Telltarget: ActionSetTarget2 UNDEFINED handling + slash-p...",
           "Completed Node 264": "Event: Telltarget: ActionSetTarget2 UNDEFINED handling...",
-          "Node 265": "Textfield: Tests \u2014 TextField Prototype + Core Properties ...",
-          "Completed Node 265": "Event: Textfield: Tests \u2014 TextField Prototype + Core P...",
-          "Node 266": "Textfield: Tests \u2014 TextFormat Class (~8 tests)",
-          "Completed Node 266": "Event: Textfield: Tests \u2014 TextFormat Class (~8 tests)",
-          "Node 267": "Textfield: Tests \u2014 Variable Binding + Geometry (~8 tests)",
-          "Completed Node 267": "Event: Textfield: Tests \u2014 Variable Binding + Geometry ...",
-          "Node 268": "Textfield: Tests \u2014 Scroll Properties (~3 tests)",
-          "Completed Node 268": "Event: Textfield: Tests \u2014 Scroll Properties (~3 tests)",
-          "Node 269": "Textfield: Tests \u2014 HTML Text (~11 tests)",
-          "Completed Node 269": "Event: Textfield: Tests \u2014 HTML Text (~11 tests)",
-          "Node 270": "Textfield: Tests \u2014 Text Layout Properties (~10 tests)",
-          "Completed Node 270": "Event: Textfield: Tests \u2014 Text Layout Properties (~10 ...",
-          "Node 271": "Textfield: Tests \u2014 StyleSheet + TextSnapshot (~9 tests)",
-          "Completed Node 271": "Event: Textfield: Tests \u2014 StyleSheet + TextSnapshot (~...",
+          "Node 265": "Textfield: Tests — TextField Prototype + Core Properties ...",
+          "Completed Node 265": "Event: Textfield: Tests — TextField Prototype + Core P...",
+          "Node 266": "Textfield: Tests — TextFormat Class (~8 tests)",
+          "Completed Node 266": "Event: Textfield: Tests — TextFormat Class (~8 tests)",
+          "Node 267": "Textfield: Tests — Variable Binding + Geometry (~8 tests)",
+          "Completed Node 267": "Event: Textfield: Tests — Variable Binding + Geometry ...",
+          "Node 268": "Textfield: Tests — Scroll Properties (~3 tests)",
+          "Completed Node 268": "Event: Textfield: Tests — Scroll Properties (~3 tests)",
+          "Node 269": "Textfield: Tests — HTML Text (~11 tests)",
+          "Completed Node 269": "Event: Textfield: Tests — HTML Text (~11 tests)",
+          "Node 270": "Textfield: Tests — Text Layout Properties (~10 tests)",
+          "Completed Node 270": "Event: Textfield: Tests — Text Layout Properties (~10 ...",
+          "Node 271": "Textfield: Tests — StyleSheet + TextSnapshot (~9 tests)",
+          "Completed Node 271": "Event: Textfield: Tests — StyleSheet + TextSnapshot (~...",
           "Node 272": "Edittext Restrict: Pattern Tokenizer",
           "Completed Node 272": "Event: Edittext Restrict: Pattern Tokenizer",
           "Node 273": "Edittext Restrict: Pattern Parser",
@@ -34309,10 +34309,10 @@
           "Completed Node 282": "Event: Edittext Drag Select",
           "Node 283": "Stylesheet",
           "Completed Node 283": "Event: Stylesheet",
-          "Node 284": "Textsnapshot: Recompiler \u2014 Emit Character Codes",
-          "Completed Node 284": "Event: Textsnapshot: Recompiler \u2014 Emit Character Codes",
-          "Node 285": "Textsnapshot: Runtime \u2014 TextSnapshot Content Capture",
-          "Completed Node 285": "Event: Textsnapshot: Runtime \u2014 TextSnapshot Content Ca...",
+          "Node 284": "Textsnapshot: Recompiler — Emit Character Codes",
+          "Completed Node 284": "Event: Textsnapshot: Recompiler — Emit Character Codes",
+          "Node 285": "Textsnapshot: Runtime — TextSnapshot Content Capture",
+          "Completed Node 285": "Event: Textsnapshot: Runtime — TextSnapshot Content Ca...",
           "Node 286": "Textsnapshot: Core Methods",
           "Completed Node 286": "Event: Textsnapshot: Core Methods",
           "Node 287": "Textsnapshot: Dynamic Text (duplicateMovieClip",
@@ -34375,27 +34375,27 @@
           "Completed Node 315": "Event: Enumeration: Null Terminator (Minor)",
           "Node 316": "Native Introspection: Fix Zero-Output Crash in native_obj...",
           "Completed Node 316": "Event: Native Introspection: Fix Zero-Output Crash in ...",
-          "Node 317": "Native Introspection: Register Missing Stub Constructors \u2014",
+          "Node 317": "Native Introspection: Register Missing Stub Constructors —",
           "Completed Node 317": "Event: Native Introspection: Register Missing Stub Con...",
           "Node 318": "Native Introspection: Native Backing + __initializeNative...",
           "Completed Node 318": "Event: Native Introspection: Native Backing + __initia...",
-          "Node 319": "Native Introspection: super() Call Mechanism \u2014 **",
-          "Completed Node 319": "Event: Native Introspection: super() Call Mechanism \u2014 **",
-          "Node 320": "Native Introspection: Double-Construct Protection \u2014 **",
+          "Node 319": "Native Introspection: super() Call Mechanism — **",
+          "Completed Node 319": "Event: Native Introspection: super() Call Mechanism — **",
+          "Node 320": "Native Introspection: Double-Construct Protection — **",
           "Completed Node 320": "Event: Native Introspection: Double-Construct Protecti...",
           "Node 321": "Native Introspection: Class-Specific Constructor Properti...",
           "Completed Node 321": "Event: Native Introspection: Class-Specific Constructo...",
-          "Node 322": "Registerclass: VM Register Fixes \u2014",
-          "Completed Node 322": "Event: Registerclass: VM Register Fixes \u2014",
-          "Node 323": "Registerclass: ExportAssets Parsing \u2014",
-          "Completed Node 323": "Event: Registerclass: ExportAssets Parsing \u2014",
-          "Node 324": "Registerclass: attachMovie Implementation \u2014",
-          "Completed Node 324": "Event: Registerclass: attachMovie Implementation \u2014",
-          "Node 325": "Registerclass: Object.registerClass \u2014",
-          "Completed Node 325": "Event: Registerclass: Object.registerClass \u2014",
-          "Node 326": "Registerclass: Constructor Invocation \u2014",
-          "Completed Node 326": "Event: Registerclass: Constructor Invocation \u2014",
-          "Node 327": "Registerclass: DoInitAction Ordering + on(construct) \u2014",
+          "Node 322": "Registerclass: VM Register Fixes —",
+          "Completed Node 322": "Event: Registerclass: VM Register Fixes —",
+          "Node 323": "Registerclass: ExportAssets Parsing —",
+          "Completed Node 323": "Event: Registerclass: ExportAssets Parsing —",
+          "Node 324": "Registerclass: attachMovie Implementation —",
+          "Completed Node 324": "Event: Registerclass: attachMovie Implementation —",
+          "Node 325": "Registerclass: Object.registerClass —",
+          "Completed Node 325": "Event: Registerclass: Object.registerClass —",
+          "Node 326": "Registerclass: Constructor Invocation —",
+          "Completed Node 326": "Event: Registerclass: Constructor Invocation —",
+          "Node 327": "Registerclass: DoInitAction Ordering + on(construct) —",
           "Completed Node 327": "Event: Registerclass: DoInitAction Ordering + on(const...",
           "Node 328": "Timer: Timer Data Structures and Registration",
           "Completed Node 328": "Event: Timer: Timer Data Structures and Registration",
@@ -34435,12 +34435,12 @@
           "Completed Node 345": "Event: With Scope: ```",
           "Node 346": "Xml: XML/XMLNode Constructors + Core Properties + Parser",
           "Completed Node 346": "Event: Xml: XML/XMLNode Constructors + Core Properties...",
-          "Node 347": "Xml: Tree Manipulation \u2014 appendChild, removeNode, insertB...",
-          "Completed Node 347": "Event: Xml: Tree Manipulation \u2014 appendChild, removeNod...",
+          "Node 347": "Xml: Tree Manipulation — appendChild, removeNode, insertB...",
+          "Completed Node 347": "Event: Xml: Tree Manipulation — appendChild, removeNod...",
           "Node 348": "Xml: toString Serialization",
           "Completed Node 348": "Event: Xml: toString Serialization",
-          "Node 349": "Xml: Parser Features \u2014 CDATA, Comments, DOCTYPE, xmlDecl,...",
-          "Completed Node 349": "Event: Xml: Parser Features \u2014 CDATA, Comments, DOCTYPE...",
+          "Node 349": "Xml: Parser Features — CDATA, Comments, DOCTYPE, xmlDecl,...",
+          "Completed Node 349": "Event: Xml: Parser Features — CDATA, Comments, DOCTYPE...",
           "Node 350": "Xml: Attributes + cloneNode",
           "Completed Node 350": "Event: Xml: Attributes + cloneNode",
           "Node 351": "Xml: idMap + XMLNode Prototype Chain",
@@ -34453,7 +34453,7 @@
           "Completed Node 354": "Event: External Interface: Value-to-XML Serialization ...",
           "Node 355": "External Interface: XML-to-Value Deserialization (1 test,...",
           "Completed Node 355": "Event: External Interface: XML-to-Value Deserializatio...",
-          "Node 356": "External Interface: Bridge Methods (1 test, 84 lines) \u2014",
+          "Node 356": "External Interface: Bridge Methods (1 test, 84 lines) —",
           "Completed Node 356": "Event: External Interface: Bridge Methods (1 test, 84 ..."
         },
         "locations": {
@@ -34484,7 +34484,7 @@
           "Complete Node 25": "Bitmap Filters: Gradient array synchronization",
           "Complete Node 26": "Call Semantics: Frame label lookup",
           "Complete Node 27": "Call Semantics: Target path resolution",
-          "Complete Node 28": "Array Methods: array_prototyping \u2014 addProperty ...",
+          "Complete Node 28": "Array Methods: array_prototyping — addProperty ...",
           "Complete Node 29": "Color Object: AVM1 Color Object",
           "Complete Node 30": "Color Object: flash.geom.ColorTransform",
           "Complete Node 31": "Color Object: flash.geom.Matrix (toString impro...",
@@ -34540,13 +34540,13 @@
           "Complete Node 81": "Hit Testing: hitTest(x, y, shapeFlag=true)",
           "Complete Node 82": "Hit Testing: Morph input hit testing",
           "Complete Node 83": "Loadmovie: Child SWF compilation (verify_output...",
-          "Complete Node 84": "Loadmovie: _level management (runtime) \u2014",
-          "Complete Node 85": "Loadmovie: Core loadMovie (runtime) \u2014 PARTIAL \u2705",
-          "Complete Node 86": "Loadmovie: actionGetURL2 routing \u2014",
-          "Complete Node 87": "Loadmovie: MovieClipLoader class \u2014",
-          "Complete Node 88": "Loadmovie: unloadMovie \u2014",
+          "Complete Node 84": "Loadmovie: _level management (runtime) —",
+          "Complete Node 85": "Loadmovie: Core loadMovie (runtime) — PARTIAL ✅",
+          "Complete Node 86": "Loadmovie: actionGetURL2 routing —",
+          "Complete Node 87": "Loadmovie: MovieClipLoader class —",
+          "Complete Node 88": "Loadmovie: unloadMovie —",
           "Complete Node 89": "Loadmovie: Cross-version global isolation",
-          "Complete Node 90": "Loadmovie: loadVariables \u2014",
+          "Complete Node 90": "Loadmovie: loadVariables —",
           "Complete Node 91": "Cross Movie Export Isolation: Character Diction...",
           "Complete Node 92": "Cross Movie Export Isolation: Export Symbol Reg...",
           "Complete Node 93": "Loadmovie Multi Swf: Child SWF discovery and co...",
@@ -34568,15 +34568,15 @@
           "Complete Node 109": "Loadmovie Remaining: Deferred unloadMovie state",
           "Complete Node 110": "Loadmovie Remaining: Per-MC byte_size tracking",
           "Complete Node 111": "Loadmovie Remaining: SWF_URL test name inclusion",
-          "Complete Node 112": "Loadvariables: Build Pipeline \u2014 Pre-bundle Data...",
-          "Complete Node 113": "Loadvariables: Runtime \u2014 Parse and Set Variables",
+          "Complete Node 112": "Loadvariables: Build Pipeline — Pre-bundle Data...",
+          "Complete Node 113": "Loadvariables: Runtime — Parse and Set Variables",
           "Complete Node 114": "Loadvariables: actionGetURL Routing",
           "Complete Node 115": "Loadvariables: MC.loadVariables() Method",
           "Complete Node 116": "Localconnection: Core LocalConnection protocol",
           "Complete Node 117": "Localconnection: Message dispatch",
           "Complete Node 118": "Localconnection: Multi-SWF child loading",
           "Complete Node 119": "Localconnection: Advanced features (allowDomain...",
-          "Complete Node 120": "Lockroot: Path resolution \u2014 NOT NEEDED for this...",
+          "Complete Node 120": "Lockroot: Path resolution — NOT NEEDED for this...",
           "Complete Node 121": "Math: Core Math object (2026-02-15)",
           "Complete Node 122": "Math: ASnative(200, index) dispatch (2026-02-20)",
           "Complete Node 123": "Mouse Events: _xmouse/_ymouse)",
@@ -34598,15 +34598,15 @@
           "Complete Node 139": "Mouse Events Advanced: Named Shape Scriptabilit...",
           "Complete Node 140": "Mouse Events Advanced: Highlight Bounds for Tab...",
           "Complete Node 141": "Mouse Events Advanced: TextField onChanged Call...",
-          "Complete Node 142": "Movieclip: AS-Level Event Dispatch + Ordering \u2014",
-          "Complete Node 143": "Clone Duplicate: Core Clone/Duplicate \u2014",
-          "Complete Node 144": "Clone Duplicate: EditText Clones \u2014 SUBSTANTIALLY",
+          "Complete Node 142": "Movieclip: AS-Level Event Dispatch + Ordering —",
+          "Complete Node 143": "Clone Duplicate: Core Clone/Duplicate —",
+          "Complete Node 144": "Clone Duplicate: EditText Clones — SUBSTANTIALLY",
           "Complete Node 145": "Mc Removal Lifecycle: base_clip Removal Detecti...",
           "Complete Node 146": "Mc Removal Lifecycle: _parent Resolution on Rem...",
           "Complete Node 147": "Mc Removal Lifecycle: Path Resolution with Remo...",
           "Complete Node 148": "Mc Removal Lifecycle: SetTarget with Removed MC...",
           "Complete Node 149": "Mc Removal Lifecycle: Unload Handler Timing (",
-          "Complete Node 150": "Moviecliploader: MCL constructor \u2014 auto-add sel...",
+          "Complete Node 150": "Moviecliploader: MCL constructor — auto-add sel...",
           "Complete Node 151": "Moviecliploader: Register MCL methods on prototype",
           "Complete Node 152": "Moviecliploader: Implement getProgress()",
           "Complete Node 153": "Moviecliploader: Implement loadClip()",
@@ -34635,10 +34635,10 @@
           "Complete Node 176": "Morph Interpolation: End bounds extraction (rec...",
           "Complete Node 177": "Morph Interpolation: Interpolated bounds lookup",
           "Complete Node 178": "Morph Interpolation: Interpolated shape hit tes...",
-          "Complete Node 179": "Plan 03 Drawing Api: Solid Fill Polygons \u2014 **",
-          "Complete Node 180": "Plan 03 Drawing Api: Curve Segments \u2014 **",
-          "Complete Node 181": "Plan 03 Drawing Api: Gradient Fills \u2014 **",
-          "Complete Node 182": "Plan 03 Drawing Api: Line Styles \u2014 **",
+          "Complete Node 179": "Plan 03 Drawing Api: Solid Fill Polygons — **",
+          "Complete Node 180": "Plan 03 Drawing Api: Curve Segments — **",
+          "Complete Node 181": "Plan 03 Drawing Api: Gradient Fills — **",
+          "Complete Node 182": "Plan 03 Drawing Api: Line Styles — **",
           "Complete Node 183": "Plan 04 Focus Rect",
           "Complete Node 184": "Plan 05 Bitmap And Media: fillRect Only",
           "Complete Node 185": "Plan 05 Bitmap And Media: copyPixels + colorTra...",
@@ -34683,7 +34683,7 @@
           "Complete Node 224": "Sound Loading: Integrate with frame loop",
           "Complete Node 225": "Stage: Fix Build (Prerequisite)",
           "Complete Node 226": "Stage: Stage Global Object",
-          "Complete Node 227": "Stage: MovieClip Property Precision and Width\u2194S...",
+          "Complete Node 227": "Stage: MovieClip Property Precision and Width↔S...",
           "Complete Node 228": "Stage: Value Representation and Scale/Rotation ...",
           "Complete Node 229": "Stage: _level Addressing and Child Clip Resolution",
           "Complete Node 230": "Stage: Child Clip Enumeration in for-in",
@@ -34696,7 +34696,7 @@
           "Complete Node 237": "Stage Frame Props: `_visible` returns boolean n...",
           "Complete Node 238": "Stage Frame Props: Stage children enumeration",
           "Complete Node 239": "String: Fix Buffer Limits + Argument Coercion +...",
-          "Complete Node 240": "String: Switch to UTF-16 Internal String Storage \u2705",
+          "Complete Node 240": "String: Switch to UTF-16 Internal String Storage ✅",
           "Complete Node 241": "String: SWF4/6 String Operations (string_ops_sw...",
           "Complete Node 242": "String: Unicode Case Mapping (toUpperCase/toLow...",
           "Complete Node 243": "String: String Paths (Deferred)",
@@ -34721,13 +34721,13 @@
           "Complete Node 262": "Tab Ordering Properties: Button `tabIndex` defa...",
           "Complete Node 263": "Telltarget: g_base_clip tracking + actionSetTar...",
           "Complete Node 264": "Telltarget: ActionSetTarget2 UNDEFINED handling...",
-          "Complete Node 265": "Textfield: Tests \u2014 TextField Prototype + Core P...",
-          "Complete Node 266": "Textfield: Tests \u2014 TextFormat Class (~8 tests)",
-          "Complete Node 267": "Textfield: Tests \u2014 Variable Binding + Geometry ...",
-          "Complete Node 268": "Textfield: Tests \u2014 Scroll Properties (~3 tests)",
-          "Complete Node 269": "Textfield: Tests \u2014 HTML Text (~11 tests)",
-          "Complete Node 270": "Textfield: Tests \u2014 Text Layout Properties (~10 ...",
-          "Complete Node 271": "Textfield: Tests \u2014 StyleSheet + TextSnapshot (~...",
+          "Complete Node 265": "Textfield: Tests — TextField Prototype + Core P...",
+          "Complete Node 266": "Textfield: Tests — TextFormat Class (~8 tests)",
+          "Complete Node 267": "Textfield: Tests — Variable Binding + Geometry ...",
+          "Complete Node 268": "Textfield: Tests — Scroll Properties (~3 tests)",
+          "Complete Node 269": "Textfield: Tests — HTML Text (~11 tests)",
+          "Complete Node 270": "Textfield: Tests — Text Layout Properties (~10 ...",
+          "Complete Node 271": "Textfield: Tests — StyleSheet + TextSnapshot (~...",
           "Complete Node 272": "Edittext Restrict: Pattern Tokenizer",
           "Complete Node 273": "Edittext Restrict: Pattern Parser",
           "Complete Node 274": "Edittext Restrict: Character Filter",
@@ -34740,8 +34740,8 @@
           "Complete Node 281": "Selection: replaceSel on TextField",
           "Complete Node 282": "Edittext Drag Select",
           "Complete Node 283": "Stylesheet",
-          "Complete Node 284": "Textsnapshot: Recompiler \u2014 Emit Character Codes",
-          "Complete Node 285": "Textsnapshot: Runtime \u2014 TextSnapshot Content Ca...",
+          "Complete Node 284": "Textsnapshot: Recompiler — Emit Character Codes",
+          "Complete Node 285": "Textsnapshot: Runtime — TextSnapshot Content Ca...",
           "Complete Node 286": "Textsnapshot: Core Methods",
           "Complete Node 287": "Textsnapshot: Dynamic Text (duplicateMovieClip",
           "Complete Node 288": "This Binding: Set `this` on type 1 function loc...",
@@ -34775,14 +34775,14 @@
           "Complete Node 316": "Native Introspection: Fix Zero-Output Crash in ...",
           "Complete Node 317": "Native Introspection: Register Missing Stub Con...",
           "Complete Node 318": "Native Introspection: Native Backing + __initia...",
-          "Complete Node 319": "Native Introspection: super() Call Mechanism \u2014 **",
+          "Complete Node 319": "Native Introspection: super() Call Mechanism — **",
           "Complete Node 320": "Native Introspection: Double-Construct Protecti...",
           "Complete Node 321": "Native Introspection: Class-Specific Constructo...",
-          "Complete Node 322": "Registerclass: VM Register Fixes \u2014",
-          "Complete Node 323": "Registerclass: ExportAssets Parsing \u2014",
-          "Complete Node 324": "Registerclass: attachMovie Implementation \u2014",
-          "Complete Node 325": "Registerclass: Object.registerClass \u2014",
-          "Complete Node 326": "Registerclass: Constructor Invocation \u2014",
+          "Complete Node 322": "Registerclass: VM Register Fixes —",
+          "Complete Node 323": "Registerclass: ExportAssets Parsing —",
+          "Complete Node 324": "Registerclass: attachMovie Implementation —",
+          "Complete Node 325": "Registerclass: Object.registerClass —",
+          "Complete Node 326": "Registerclass: Constructor Invocation —",
           "Complete Node 327": "Registerclass: DoInitAction Ordering + on(const...",
           "Complete Node 328": "Timer: Timer Data Structures and Registration",
           "Complete Node 329": "Timer: Timer Execution Engine",
@@ -34803,9 +34803,9 @@
           "Complete Node 344": "With Scope: Primitive wrapping (string/number/b...",
           "Complete Node 345": "With Scope: ```",
           "Complete Node 346": "Xml: XML/XMLNode Constructors + Core Properties...",
-          "Complete Node 347": "Xml: Tree Manipulation \u2014 appendChild, removeNod...",
+          "Complete Node 347": "Xml: Tree Manipulation — appendChild, removeNod...",
           "Complete Node 348": "Xml: toString Serialization",
-          "Complete Node 349": "Xml: Parser Features \u2014 CDATA, Comments, DOCTYPE...",
+          "Complete Node 349": "Xml: Parser Features — CDATA, Comments, DOCTYPE...",
           "Complete Node 350": "Xml: Attributes + cloneNode",
           "Complete Node 351": "Xml: idMap + XMLNode Prototype Chain",
           "Complete Node 352": "Xml: Namespace Support",
@@ -34842,7 +34842,7 @@
           "Complete Node 25": "Bitmap Filters: Gradient array synchronization",
           "Complete Node 26": "Call Semantics: Frame label lookup",
           "Complete Node 27": "Call Semantics: Target path resolution",
-          "Complete Node 28": "Array Methods: array_prototyping \u2014 addProperty ...",
+          "Complete Node 28": "Array Methods: array_prototyping — addProperty ...",
           "Complete Node 29": "Color Object: AVM1 Color Object",
           "Complete Node 30": "Color Object: flash.geom.ColorTransform",
           "Complete Node 31": "Color Object: flash.geom.Matrix (toString impro...",
@@ -34898,13 +34898,13 @@
           "Complete Node 81": "Hit Testing: hitTest(x, y, shapeFlag=true)",
           "Complete Node 82": "Hit Testing: Morph input hit testing",
           "Complete Node 83": "Loadmovie: Child SWF compilation (verify_output...",
-          "Complete Node 84": "Loadmovie: _level management (runtime) \u2014",
-          "Complete Node 85": "Loadmovie: Core loadMovie (runtime) \u2014 PARTIAL \u2705",
-          "Complete Node 86": "Loadmovie: actionGetURL2 routing \u2014",
-          "Complete Node 87": "Loadmovie: MovieClipLoader class \u2014",
-          "Complete Node 88": "Loadmovie: unloadMovie \u2014",
+          "Complete Node 84": "Loadmovie: _level management (runtime) —",
+          "Complete Node 85": "Loadmovie: Core loadMovie (runtime) — PARTIAL ✅",
+          "Complete Node 86": "Loadmovie: actionGetURL2 routing —",
+          "Complete Node 87": "Loadmovie: MovieClipLoader class —",
+          "Complete Node 88": "Loadmovie: unloadMovie —",
           "Complete Node 89": "Loadmovie: Cross-version global isolation",
-          "Complete Node 90": "Loadmovie: loadVariables \u2014",
+          "Complete Node 90": "Loadmovie: loadVariables —",
           "Complete Node 91": "Cross Movie Export Isolation: Character Diction...",
           "Complete Node 92": "Cross Movie Export Isolation: Export Symbol Reg...",
           "Complete Node 93": "Loadmovie Multi Swf: Child SWF discovery and co...",
@@ -34926,15 +34926,15 @@
           "Complete Node 109": "Loadmovie Remaining: Deferred unloadMovie state",
           "Complete Node 110": "Loadmovie Remaining: Per-MC byte_size tracking",
           "Complete Node 111": "Loadmovie Remaining: SWF_URL test name inclusion",
-          "Complete Node 112": "Loadvariables: Build Pipeline \u2014 Pre-bundle Data...",
-          "Complete Node 113": "Loadvariables: Runtime \u2014 Parse and Set Variables",
+          "Complete Node 112": "Loadvariables: Build Pipeline — Pre-bundle Data...",
+          "Complete Node 113": "Loadvariables: Runtime — Parse and Set Variables",
           "Complete Node 114": "Loadvariables: actionGetURL Routing",
           "Complete Node 115": "Loadvariables: MC.loadVariables() Method",
           "Complete Node 116": "Localconnection: Core LocalConnection protocol",
           "Complete Node 117": "Localconnection: Message dispatch",
           "Complete Node 118": "Localconnection: Multi-SWF child loading",
           "Complete Node 119": "Localconnection: Advanced features (allowDomain...",
-          "Complete Node 120": "Lockroot: Path resolution \u2014 NOT NEEDED for this...",
+          "Complete Node 120": "Lockroot: Path resolution — NOT NEEDED for this...",
           "Complete Node 121": "Math: Core Math object (2026-02-15)",
           "Complete Node 122": "Math: ASnative(200, index) dispatch (2026-02-20)",
           "Complete Node 123": "Mouse Events: _xmouse/_ymouse)",
@@ -34956,15 +34956,15 @@
           "Complete Node 139": "Mouse Events Advanced: Named Shape Scriptabilit...",
           "Complete Node 140": "Mouse Events Advanced: Highlight Bounds for Tab...",
           "Complete Node 141": "Mouse Events Advanced: TextField onChanged Call...",
-          "Complete Node 142": "Movieclip: AS-Level Event Dispatch + Ordering \u2014",
-          "Complete Node 143": "Clone Duplicate: Core Clone/Duplicate \u2014",
-          "Complete Node 144": "Clone Duplicate: EditText Clones \u2014 SUBSTANTIALLY",
+          "Complete Node 142": "Movieclip: AS-Level Event Dispatch + Ordering —",
+          "Complete Node 143": "Clone Duplicate: Core Clone/Duplicate —",
+          "Complete Node 144": "Clone Duplicate: EditText Clones — SUBSTANTIALLY",
           "Complete Node 145": "Mc Removal Lifecycle: base_clip Removal Detecti...",
           "Complete Node 146": "Mc Removal Lifecycle: _parent Resolution on Rem...",
           "Complete Node 147": "Mc Removal Lifecycle: Path Resolution with Remo...",
           "Complete Node 148": "Mc Removal Lifecycle: SetTarget with Removed MC...",
           "Complete Node 149": "Mc Removal Lifecycle: Unload Handler Timing (",
-          "Complete Node 150": "Moviecliploader: MCL constructor \u2014 auto-add sel...",
+          "Complete Node 150": "Moviecliploader: MCL constructor — auto-add sel...",
           "Complete Node 151": "Moviecliploader: Register MCL methods on prototype",
           "Complete Node 152": "Moviecliploader: Implement getProgress()",
           "Complete Node 153": "Moviecliploader: Implement loadClip()",
@@ -34993,10 +34993,10 @@
           "Complete Node 176": "Morph Interpolation: End bounds extraction (rec...",
           "Complete Node 177": "Morph Interpolation: Interpolated bounds lookup",
           "Complete Node 178": "Morph Interpolation: Interpolated shape hit tes...",
-          "Complete Node 179": "Plan 03 Drawing Api: Solid Fill Polygons \u2014 **",
-          "Complete Node 180": "Plan 03 Drawing Api: Curve Segments \u2014 **",
-          "Complete Node 181": "Plan 03 Drawing Api: Gradient Fills \u2014 **",
-          "Complete Node 182": "Plan 03 Drawing Api: Line Styles \u2014 **",
+          "Complete Node 179": "Plan 03 Drawing Api: Solid Fill Polygons — **",
+          "Complete Node 180": "Plan 03 Drawing Api: Curve Segments — **",
+          "Complete Node 181": "Plan 03 Drawing Api: Gradient Fills — **",
+          "Complete Node 182": "Plan 03 Drawing Api: Line Styles — **",
           "Complete Node 183": "Plan 04 Focus Rect",
           "Complete Node 184": "Plan 05 Bitmap And Media: fillRect Only",
           "Complete Node 185": "Plan 05 Bitmap And Media: copyPixels + colorTra...",
@@ -35041,7 +35041,7 @@
           "Complete Node 224": "Sound Loading: Integrate with frame loop",
           "Complete Node 225": "Stage: Fix Build (Prerequisite)",
           "Complete Node 226": "Stage: Stage Global Object",
-          "Complete Node 227": "Stage: MovieClip Property Precision and Width\u2194S...",
+          "Complete Node 227": "Stage: MovieClip Property Precision and Width↔S...",
           "Complete Node 228": "Stage: Value Representation and Scale/Rotation ...",
           "Complete Node 229": "Stage: _level Addressing and Child Clip Resolution",
           "Complete Node 230": "Stage: Child Clip Enumeration in for-in",
@@ -35054,7 +35054,7 @@
           "Complete Node 237": "Stage Frame Props: `_visible` returns boolean n...",
           "Complete Node 238": "Stage Frame Props: Stage children enumeration",
           "Complete Node 239": "String: Fix Buffer Limits + Argument Coercion +...",
-          "Complete Node 240": "String: Switch to UTF-16 Internal String Storage \u2705",
+          "Complete Node 240": "String: Switch to UTF-16 Internal String Storage ✅",
           "Complete Node 241": "String: SWF4/6 String Operations (string_ops_sw...",
           "Complete Node 242": "String: Unicode Case Mapping (toUpperCase/toLow...",
           "Complete Node 243": "String: String Paths (Deferred)",
@@ -35079,13 +35079,13 @@
           "Complete Node 262": "Tab Ordering Properties: Button `tabIndex` defa...",
           "Complete Node 263": "Telltarget: g_base_clip tracking + actionSetTar...",
           "Complete Node 264": "Telltarget: ActionSetTarget2 UNDEFINED handling...",
-          "Complete Node 265": "Textfield: Tests \u2014 TextField Prototype + Core P...",
-          "Complete Node 266": "Textfield: Tests \u2014 TextFormat Class (~8 tests)",
-          "Complete Node 267": "Textfield: Tests \u2014 Variable Binding + Geometry ...",
-          "Complete Node 268": "Textfield: Tests \u2014 Scroll Properties (~3 tests)",
-          "Complete Node 269": "Textfield: Tests \u2014 HTML Text (~11 tests)",
-          "Complete Node 270": "Textfield: Tests \u2014 Text Layout Properties (~10 ...",
-          "Complete Node 271": "Textfield: Tests \u2014 StyleSheet + TextSnapshot (~...",
+          "Complete Node 265": "Textfield: Tests — TextField Prototype + Core P...",
+          "Complete Node 266": "Textfield: Tests — TextFormat Class (~8 tests)",
+          "Complete Node 267": "Textfield: Tests — Variable Binding + Geometry ...",
+          "Complete Node 268": "Textfield: Tests — Scroll Properties (~3 tests)",
+          "Complete Node 269": "Textfield: Tests — HTML Text (~11 tests)",
+          "Complete Node 270": "Textfield: Tests — Text Layout Properties (~10 ...",
+          "Complete Node 271": "Textfield: Tests — StyleSheet + TextSnapshot (~...",
           "Complete Node 272": "Edittext Restrict: Pattern Tokenizer",
           "Complete Node 273": "Edittext Restrict: Pattern Parser",
           "Complete Node 274": "Edittext Restrict: Character Filter",
@@ -35098,8 +35098,8 @@
           "Complete Node 281": "Selection: replaceSel on TextField",
           "Complete Node 282": "Edittext Drag Select",
           "Complete Node 283": "Stylesheet",
-          "Complete Node 284": "Textsnapshot: Recompiler \u2014 Emit Character Codes",
-          "Complete Node 285": "Textsnapshot: Runtime \u2014 TextSnapshot Content Ca...",
+          "Complete Node 284": "Textsnapshot: Recompiler — Emit Character Codes",
+          "Complete Node 285": "Textsnapshot: Runtime — TextSnapshot Content Ca...",
           "Complete Node 286": "Textsnapshot: Core Methods",
           "Complete Node 287": "Textsnapshot: Dynamic Text (duplicateMovieClip",
           "Complete Node 288": "This Binding: Set `this` on type 1 function loc...",
@@ -35133,14 +35133,14 @@
           "Complete Node 316": "Native Introspection: Fix Zero-Output Crash in ...",
           "Complete Node 317": "Native Introspection: Register Missing Stub Con...",
           "Complete Node 318": "Native Introspection: Native Backing + __initia...",
-          "Complete Node 319": "Native Introspection: super() Call Mechanism \u2014 **",
+          "Complete Node 319": "Native Introspection: super() Call Mechanism — **",
           "Complete Node 320": "Native Introspection: Double-Construct Protecti...",
           "Complete Node 321": "Native Introspection: Class-Specific Constructo...",
-          "Complete Node 322": "Registerclass: VM Register Fixes \u2014",
-          "Complete Node 323": "Registerclass: ExportAssets Parsing \u2014",
-          "Complete Node 324": "Registerclass: attachMovie Implementation \u2014",
-          "Complete Node 325": "Registerclass: Object.registerClass \u2014",
-          "Complete Node 326": "Registerclass: Constructor Invocation \u2014",
+          "Complete Node 322": "Registerclass: VM Register Fixes —",
+          "Complete Node 323": "Registerclass: ExportAssets Parsing —",
+          "Complete Node 324": "Registerclass: attachMovie Implementation —",
+          "Complete Node 325": "Registerclass: Object.registerClass —",
+          "Complete Node 326": "Registerclass: Constructor Invocation —",
           "Complete Node 327": "Registerclass: DoInitAction Ordering + on(const...",
           "Complete Node 328": "Timer: Timer Data Structures and Registration",
           "Complete Node 329": "Timer: Timer Execution Engine",
@@ -35161,9 +35161,9 @@
           "Complete Node 344": "With Scope: Primitive wrapping (string/number/b...",
           "Complete Node 345": "With Scope: ```",
           "Complete Node 346": "Xml: XML/XMLNode Constructors + Core Properties...",
-          "Complete Node 347": "Xml: Tree Manipulation \u2014 appendChild, removeNod...",
+          "Complete Node 347": "Xml: Tree Manipulation — appendChild, removeNod...",
           "Complete Node 348": "Xml: toString Serialization",
-          "Complete Node 349": "Xml: Parser Features \u2014 CDATA, Comments, DOCTYPE...",
+          "Complete Node 349": "Xml: Parser Features — CDATA, Comments, DOCTYPE...",
           "Complete Node 350": "Xml: Attributes + cloneNode",
           "Complete Node 351": "Xml: idMap + XMLNode Prototype Chain",
           "Complete Node 352": "Xml: Namespace Support",
@@ -40953,7 +40953,7 @@
           },
           "28": {
             "label": "ARRAY_METHODS.4",
-            "expression": "Array Methods: array_prototyping \u2014 addProperty Numeric Ke...",
+            "expression": "Array Methods: array_prototyping — addProperty Numeric Ke...",
             "dependencies": [
               27
             ],
@@ -41371,13 +41371,13 @@
           },
           "83": {
             "label": "LOADMOVIE.0",
-            "expression": "Loadmovie: Child SWF compilation (verify_output.py) \u2014",
+            "expression": "Loadmovie: Child SWF compilation (verify_output.py) —",
             "dependencies": [],
             "full_text": "LOADMOVIE.0: Status: DONE"
           },
           "84": {
             "label": "LOADMOVIE.1",
-            "expression": "Loadmovie: _level management (runtime) \u2014",
+            "expression": "Loadmovie: _level management (runtime) —",
             "dependencies": [
               83
             ],
@@ -41385,7 +41385,7 @@
           },
           "85": {
             "label": "LOADMOVIE.2",
-            "expression": "Loadmovie: Core loadMovie (runtime) \u2014 PARTIAL \u2705",
+            "expression": "Loadmovie: Core loadMovie (runtime) — PARTIAL ✅",
             "dependencies": [
               84
             ],
@@ -41393,7 +41393,7 @@
           },
           "86": {
             "label": "LOADMOVIE.3",
-            "expression": "Loadmovie: actionGetURL2 routing \u2014",
+            "expression": "Loadmovie: actionGetURL2 routing —",
             "dependencies": [
               85
             ],
@@ -41401,7 +41401,7 @@
           },
           "87": {
             "label": "LOADMOVIE.4",
-            "expression": "Loadmovie: MovieClipLoader class \u2014",
+            "expression": "Loadmovie: MovieClipLoader class —",
             "dependencies": [
               86
             ],
@@ -41409,7 +41409,7 @@
           },
           "88": {
             "label": "LOADMOVIE.5",
-            "expression": "Loadmovie: unloadMovie \u2014",
+            "expression": "Loadmovie: unloadMovie —",
             "dependencies": [
               87
             ],
@@ -41425,7 +41425,7 @@
           },
           "90": {
             "label": "LOADMOVIE.7",
-            "expression": "Loadmovie: loadVariables \u2014",
+            "expression": "Loadmovie: loadVariables —",
             "dependencies": [
               89
             ],
@@ -41597,7 +41597,7 @@
           },
           "112": {
             "label": "LOADVARIABLES.1",
-            "expression": "Loadvariables: Build Pipeline \u2014 Pre-bundle Data Files",
+            "expression": "Loadvariables: Build Pipeline — Pre-bundle Data Files",
             "dependencies": [
               90
             ],
@@ -41605,7 +41605,7 @@
           },
           "113": {
             "label": "LOADVARIABLES.2",
-            "expression": "Loadvariables: Runtime \u2014 Parse and Set Variables",
+            "expression": "Loadvariables: Runtime — Parse and Set Variables",
             "dependencies": [
               112
             ],
@@ -41659,7 +41659,7 @@
           },
           "120": {
             "label": "LOCKROOT.2",
-            "expression": "Lockroot: Path resolution \u2014 NOT NEEDED for this test",
+            "expression": "Lockroot: Path resolution — NOT NEEDED for this test",
             "dependencies": [
               90
             ],
@@ -41831,13 +41831,13 @@
           },
           "142": {
             "label": "MOVIECLIP.10",
-            "expression": "Movieclip: AS-Level Event Dispatch + Ordering \u2014",
+            "expression": "Movieclip: AS-Level Event Dispatch + Ordering —",
             "dependencies": [],
             "full_text": "MOVIECLIP.10: Status: DONE | Tests: movieclip_default_state, movieclip_blend_mode_property, movieclip_focusenabled, movieclip_lockroot, movieclip_depth_methods, movieclip_get_instance_at_depth, create_empty_movie_clip, default_names, place_and_lookup, placeobject_occupied_depth, attach_movie, attach_movie_stop, export_assets, movieclip_init_object, empty_movieclip_can_attach_movies, duplicate_movie_clip, clone_sprite_types, remove_movie_clip, rewind_depth, clip_events, clip_event_propagation_order, on_construct, clip_constructors, do_init_action_child, execution_order4, movieclip_getbounds, movieclip_invalid_get_bounds_1, movieclip_invalid_get_bounds_2, movieclip_invalid_get_bounds_3, movieclip_invalid_get_bounds_4, movieclip_invalid_get_bounds_5, movieclip_invalid_get_bounds_6, movieclip_invalid_get_bounds_7, movieclip_invalid_get_bounds_8, movieclip_hittest, movieclip_hittest_shapeflag, local_to_global, custom_clip_methods, movieclip_state_values, movieclip_library_state_values, movieclip_methods_with_loaded_image, movieclip_create_text_field, movieclip_gettextsnapshot, movieclip_setmask, clone_sprite_edittext, clone_sprite_edittext_dynamic, duplicate_movie_clip_drawing, unload, unload_clip_event, unload_nested_child, removed_base_clip_tell_target, removed_clip_halts_script, removed_target_clip_scope, stage_object_children, swf7_case_sensitive, movieclip_name_from_timeline, register_class, register_and_init_order"
           },
           "143": {
             "label": "CLONE_DUPLICATE.1",
-            "expression": "Clone Duplicate: Core Clone/Duplicate \u2014",
+            "expression": "Clone Duplicate: Core Clone/Duplicate —",
             "dependencies": [
               142
             ],
@@ -41845,7 +41845,7 @@
           },
           "144": {
             "label": "CLONE_DUPLICATE.2",
-            "expression": "Clone Duplicate: EditText Clones \u2014 SUBSTANTIALLY",
+            "expression": "Clone Duplicate: EditText Clones — SUBSTANTIALLY",
             "dependencies": [
               143
             ],
@@ -41893,7 +41893,7 @@
           },
           "150": {
             "label": "MOVIECLIPLOADER.1",
-            "expression": "Moviecliploader: MCL constructor \u2014 auto-add self as listener",
+            "expression": "Moviecliploader: MCL constructor — auto-add self as listener",
             "dependencies": [
               90
             ],
@@ -42117,7 +42117,7 @@
           },
           "179": {
             "label": "PLAN_03_DRAWING_API.1",
-            "expression": "Plan 03 Drawing Api: Solid Fill Polygons \u2014 **",
+            "expression": "Plan 03 Drawing Api: Solid Fill Polygons — **",
             "dependencies": [
               175
             ],
@@ -42125,7 +42125,7 @@
           },
           "180": {
             "label": "PLAN_03_DRAWING_API.2",
-            "expression": "Plan 03 Drawing Api: Curve Segments \u2014 **",
+            "expression": "Plan 03 Drawing Api: Curve Segments — **",
             "dependencies": [
               179
             ],
@@ -42133,7 +42133,7 @@
           },
           "181": {
             "label": "PLAN_03_DRAWING_API.3",
-            "expression": "Plan 03 Drawing Api: Gradient Fills \u2014 **",
+            "expression": "Plan 03 Drawing Api: Gradient Fills — **",
             "dependencies": [
               180
             ],
@@ -42141,7 +42141,7 @@
           },
           "182": {
             "label": "PLAN_03_DRAWING_API.4",
-            "expression": "Plan 03 Drawing Api: Line Styles \u2014 **",
+            "expression": "Plan 03 Drawing Api: Line Styles — **",
             "dependencies": [
               181
             ],
@@ -42497,7 +42497,7 @@
           },
           "227": {
             "label": "STAGE.2",
-            "expression": "Stage: MovieClip Property Precision and Width\u2194Scale Inter...",
+            "expression": "Stage: MovieClip Property Precision and Width↔Scale Inter...",
             "dependencies": [
               226
             ],
@@ -42597,7 +42597,7 @@
           },
           "240": {
             "label": "STRING.2",
-            "expression": "String: Switch to UTF-16 Internal String Storage \u2705",
+            "expression": "String: Switch to UTF-16 Internal String Storage ✅",
             "dependencies": [
               239
             ],
@@ -42605,7 +42605,7 @@
           },
           "241": {
             "label": "STRING.3",
-            "expression": "String: SWF4/6 String Operations (string_ops_swf6) \u2705",
+            "expression": "String: SWF4/6 String Operations (string_ops_swf6) ✅",
             "dependencies": [
               240
             ],
@@ -42613,7 +42613,7 @@
           },
           "242": {
             "label": "STRING.4",
-            "expression": "String: Unicode Case Mapping (toUpperCase/toLowerCase) \u2705",
+            "expression": "String: Unicode Case Mapping (toUpperCase/toLowerCase) ✅",
             "dependencies": [
               241
             ],
@@ -42691,7 +42691,7 @@
           },
           "252": {
             "label": "CROSS_VERSION_ISOLATION.1",
-            "expression": "Cross Version Isolation: Child SWF Version Restoration \u2014",
+            "expression": "Cross Version Isolation: Child SWF Version Restoration —",
             "dependencies": [
               251
             ],
@@ -42699,7 +42699,7 @@
           },
           "253": {
             "label": "CROSS_VERSION_ISOLATION.2",
-            "expression": "Cross Version Isolation: Per-Version Global Object \u2014",
+            "expression": "Cross Version Isolation: Per-Version Global Object —",
             "dependencies": [
               252
             ],
@@ -42731,7 +42731,7 @@
           },
           "257": {
             "label": "CROSS_VERSION_ISOLATION.6",
-            "expression": "Cross Version Isolation: Variable Clearing on Reload \u2014",
+            "expression": "Cross Version Isolation: Variable Clearing on Reload —",
             "dependencies": [
               256
             ],
@@ -42793,13 +42793,13 @@
           },
           "265": {
             "label": "TEXTFIELD.1",
-            "expression": "Textfield: Tests \u2014 TextField Prototype + Core Properties ...",
+            "expression": "Textfield: Tests — TextField Prototype + Core Properties ...",
             "dependencies": [],
             "full_text": "TEXTFIELD.1: Status: DONE"
           },
           "266": {
             "label": "TEXTFIELD.2",
-            "expression": "Textfield: Tests \u2014 TextFormat Class (~8 tests)",
+            "expression": "Textfield: Tests — TextFormat Class (~8 tests)",
             "dependencies": [
               265
             ],
@@ -42807,7 +42807,7 @@
           },
           "267": {
             "label": "TEXTFIELD.3",
-            "expression": "Textfield: Tests \u2014 Variable Binding + Geometry (~8 tests)",
+            "expression": "Textfield: Tests — Variable Binding + Geometry (~8 tests)",
             "dependencies": [
               266
             ],
@@ -42815,7 +42815,7 @@
           },
           "268": {
             "label": "TEXTFIELD.4",
-            "expression": "Textfield: Tests \u2014 Scroll Properties (~3 tests)",
+            "expression": "Textfield: Tests — Scroll Properties (~3 tests)",
             "dependencies": [
               267
             ],
@@ -42823,7 +42823,7 @@
           },
           "269": {
             "label": "TEXTFIELD.5",
-            "expression": "Textfield: Tests \u2014 HTML Text (~11 tests)",
+            "expression": "Textfield: Tests — HTML Text (~11 tests)",
             "dependencies": [
               268
             ],
@@ -42831,7 +42831,7 @@
           },
           "270": {
             "label": "TEXTFIELD.6",
-            "expression": "Textfield: Tests \u2014 Text Layout Properties (~10 tests)",
+            "expression": "Textfield: Tests — Text Layout Properties (~10 tests)",
             "dependencies": [
               269
             ],
@@ -42839,7 +42839,7 @@
           },
           "271": {
             "label": "TEXTFIELD.7",
-            "expression": "Textfield: Tests \u2014 StyleSheet + TextSnapshot (~9 tests)",
+            "expression": "Textfield: Tests — StyleSheet + TextSnapshot (~9 tests)",
             "dependencies": [
               270
             ],
@@ -42944,7 +42944,7 @@
           },
           "284": {
             "label": "TEXTSNAPSHOT.0",
-            "expression": "Textsnapshot: Recompiler \u2014 Emit Character Codes",
+            "expression": "Textsnapshot: Recompiler — Emit Character Codes",
             "dependencies": [
               271
             ],
@@ -42952,7 +42952,7 @@
           },
           "285": {
             "label": "TEXTSNAPSHOT.1",
-            "expression": "Textsnapshot: Runtime \u2014 TextSnapshot Content Capture",
+            "expression": "Textsnapshot: Runtime — TextSnapshot Content Capture",
             "dependencies": [
               284
             ],
@@ -43207,7 +43207,7 @@
           },
           "317": {
             "label": "NATIVE_INTROSPECTION.1",
-            "expression": "Native Introspection: Register Missing Stub Constructors \u2014",
+            "expression": "Native Introspection: Register Missing Stub Constructors —",
             "dependencies": [
               316
             ],
@@ -43223,7 +43223,7 @@
           },
           "319": {
             "label": "NATIVE_INTROSPECTION.3",
-            "expression": "Native Introspection: super() Call Mechanism \u2014 **",
+            "expression": "Native Introspection: super() Call Mechanism — **",
             "dependencies": [
               318
             ],
@@ -43231,7 +43231,7 @@
           },
           "320": {
             "label": "NATIVE_INTROSPECTION.4",
-            "expression": "Native Introspection: Double-Construct Protection \u2014 **",
+            "expression": "Native Introspection: Double-Construct Protection — **",
             "dependencies": [
               319
             ],
@@ -43247,7 +43247,7 @@
           },
           "322": {
             "label": "REGISTERCLASS.0",
-            "expression": "Registerclass: VM Register Fixes \u2014",
+            "expression": "Registerclass: VM Register Fixes —",
             "dependencies": [
               293
             ],
@@ -43255,7 +43255,7 @@
           },
           "323": {
             "label": "REGISTERCLASS.1",
-            "expression": "Registerclass: ExportAssets Parsing \u2014",
+            "expression": "Registerclass: ExportAssets Parsing —",
             "dependencies": [
               322
             ],
@@ -43263,7 +43263,7 @@
           },
           "324": {
             "label": "REGISTERCLASS.2",
-            "expression": "Registerclass: attachMovie Implementation \u2014",
+            "expression": "Registerclass: attachMovie Implementation —",
             "dependencies": [
               323
             ],
@@ -43271,7 +43271,7 @@
           },
           "325": {
             "label": "REGISTERCLASS.3",
-            "expression": "Registerclass: Object.registerClass \u2014",
+            "expression": "Registerclass: Object.registerClass —",
             "dependencies": [
               324
             ],
@@ -43279,7 +43279,7 @@
           },
           "326": {
             "label": "REGISTERCLASS.4",
-            "expression": "Registerclass: Constructor Invocation \u2014",
+            "expression": "Registerclass: Constructor Invocation —",
             "dependencies": [
               325
             ],
@@ -43287,7 +43287,7 @@
           },
           "327": {
             "label": "REGISTERCLASS.5",
-            "expression": "Registerclass: DoInitAction Ordering + on(construct) \u2014",
+            "expression": "Registerclass: DoInitAction Ordering + on(construct) —",
             "dependencies": [
               326
             ],
@@ -43441,7 +43441,7 @@
           },
           "347": {
             "label": "XML.2",
-            "expression": "Xml: Tree Manipulation \u2014 appendChild, removeNode, insertB...",
+            "expression": "Xml: Tree Manipulation — appendChild, removeNode, insertB...",
             "dependencies": [
               346
             ],
@@ -43457,7 +43457,7 @@
           },
           "349": {
             "label": "XML.4",
-            "expression": "Xml: Parser Features \u2014 CDATA, Comments, DOCTYPE, xmlDecl,...",
+            "expression": "Xml: Parser Features — CDATA, Comments, DOCTYPE, xmlDecl,...",
             "dependencies": [
               348
             ],
@@ -43513,7 +43513,7 @@
           },
           "356": {
             "label": "EXTERNAL_INTERFACE.4",
-            "expression": "External Interface: Bridge Methods (1 test, 84 lines) \u2014",
+            "expression": "External Interface: Bridge Methods (1 test, 84 lines) —",
             "dependencies": [
               355
             ],
@@ -43521,7 +43521,7 @@
           }
         },
         "starting_nodes": [],
-        "title": "SWFRecomp AVM1 \u2014 Vibe Coding Simulator",
+        "title": "SWFRecomp AVM1 — Vibe Coding Simulator",
         "randomize_items": false,
         "vanilla_placement": 1
       },

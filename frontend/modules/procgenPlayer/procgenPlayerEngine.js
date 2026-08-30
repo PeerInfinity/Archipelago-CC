@@ -3,9 +3,11 @@
  * Headless: no DOM, no eventBus, no module wiring. The thin
  * subscribe-and-route layer lives in index.js.
  *
- * See NewDocs/plans/procedural-generation/procgen-player.md for the
- * architecture this implements.
+ * See docs/json/developer/procgen/architecture.md §"Runtime: playing
+ * a generated world" for the architecture this implements.
  */
+
+import { startRegionsOf } from '../procgenCore/rulesGraph.js';
 
 /**
  * In-memory store of deserialized regions for the currently-loaded
@@ -46,6 +48,19 @@ export function buildWarehouse(rulesJson, playerId, registry, opts = {}) {
     const sidecars = rulesJson?.preset_sidecars?.[playerId];
     if (!sidecars || typeof sidecars !== 'object') return null;
 
+    // Dataset carriage resolution (jta-synthetic-data-plan §4.1, ruling 4:
+    // single-carrier + refs). One region's payload carries the full
+    // `jta_dataset` document; every dataset region carries a
+    // `jta_dataset_ref {dataset_id, schema_version}`. Regions load in
+    // arbitrary order, but the warehouse holds every payload at rules
+    // load — so resolve refs here and hand the bridge the full document
+    // with ANY region's world.
+    const datasetsById = new Map();
+    for (const entry of Object.values(sidecars)) {
+        const doc = entry?.playable_payload?.jta_dataset;
+        if (doc?.dataset_id) datasetsById.set(doc.dataset_id, doc);
+    }
+
     const warehouse = new WorldWarehouse();
     warehouse.playerId = playerId;
     for (const [regionId, entry] of Object.entries(sidecars)) {
@@ -58,9 +73,20 @@ export function buildWarehouse(rulesJson, playerId, registry, opts = {}) {
             logger.warn?.(`procgenPlayer: substrate '${entry.substrate}' has no deserializeWorld; skipping ${regionId}`);
             continue;
         }
+        let payload = entry.playable_payload;
+        const ref = payload?.jta_dataset_ref;
+        if (ref && !payload.jta_dataset) {
+            const doc = datasetsById.get(ref.dataset_id);
+            if (doc) {
+                payload = { ...payload, jta_dataset: doc };
+            } else {
+                logger.warn?.(`procgenPlayer: region ${regionId} references dataset `
+                    + `'${ref.dataset_id}' but no sidecar carries it`);
+            }
+        }
         warehouse.regions.set(regionId, {
             substrate: entry.substrate,
-            world: adapter.deserializeWorld(entry.playable_payload),
+            world: adapter.deserializeWorld(payload),
             loadRegionEvent: adapter.loadRegionEvent,
         });
     }
@@ -91,13 +117,8 @@ export function buildWarehouse(rulesJson, playerId, registry, opts = {}) {
  * declared start.
  */
 export function findStartRegion(rulesJson, playerId, warehouse) {
-    const startRegions = rulesJson?.start_regions?.[playerId];
-    let startName = null;
-    if (Array.isArray(startRegions?.default)) {
-        startName = startRegions.default[0];
-    } else if (Array.isArray(startRegions)) {
-        startName = startRegions[0];
-    }
+    // ⛓ Both start_regions shapes, through the ONE reader (procgenCore/rulesGraph).
+    const [startName] = startRegionsOf(rulesJson, playerId).default;
     if (!startName) return null;
     if (warehouse.has(startName)) {
         return { region: startName, sourceRegion: null, exitName: null };

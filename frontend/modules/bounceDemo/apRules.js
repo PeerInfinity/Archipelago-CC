@@ -1,6 +1,6 @@
 /**
- * Ability ↔ AP item mapping and Rule Builder conversion — build-order
- * step 5 (NewDocs/plans/procedural-generation/dj-metroidvania-v2.md).
+ * Ability ↔ AP item mapping and Rule Builder conversion
+ * (docs/json/developer/procgen/bounce.md).
  *
  * The verifier (deriveRules.js) speaks ability names; rules.json
  * speaks AP item names and Rule Builder JSON. This is the only place
@@ -21,7 +21,7 @@ export const ABILITY_ITEM_NAMES = Object.freeze({
 export const VICTORY_ITEM_NAME = 'Victory';
 
 // ability id -> stable physics-obstacle id (the obstacles-along-paths
-// vocabulary, topdown-bounce-obstacle-refactor.md Phase 3). The geometry
+// vocabulary). The geometry
 // defs (presentation colors) live in bounceDemoLibrary's
 // BOUNCE_LIBRARY_OBSTACLES; this id is the THROUGH-LINE that ties the
 // obstacle primitive's geometry, the verifier, and the emitted path
@@ -40,7 +40,7 @@ function authoredObstacleId({ item, count }) {
 
 /**
  * Emit a goal's access in the shared paths-and-obstacles vocabulary
- * (topdown-bounce-obstacle-refactor.md Phase 3) — the obstacle-reasoning
+ * — the obstacle-reasoning
  * counterpart of composeAuthoredRule. The physics-derived minimal ability
  * sets become OR-of-paths of physics obstacle ids, and authored terms
  * (foreign items, count > 1) become per-term `logic_gate` obstacles ANDed

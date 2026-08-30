@@ -315,16 +315,10 @@ async function main() {
         if (templated) {
             engine.displayMessage(templated, 'normal', { html: true });
         }
+        // M3b: no substrate-side recording signal — the text adventure is
+        // a coarse-only substrate, so loops observes and captures the
+        // performed actions host-side (loop-recording.md capture contract).
         client.publishEventDispatcher('user:regionMove', {
-            sourceRegion: fromRoomId,
-            targetRegion: targetRoomId,
-            exitName: exitId,
-        });
-        // Substrate-internal recording signal. Bypasses the dispatcher
-        // chain (so loops intercepts can't swallow it) and carries the
-        // exact action shape the saved-queue recorder will persist.
-        client.publishEventBus('textAdventure:commandRecorded', {
-            type: 'regionMove',
             sourceRegion: fromRoomId,
             targetRegion: targetRoomId,
             exitName: exitId,
@@ -366,11 +360,6 @@ async function main() {
             locationName: itemId,
             regionName: roomId,
             originator: 'textAdventureSubstrateWrapper',
-        });
-        client.publishEventBus('textAdventure:commandRecorded', {
-            type: 'locationCheck',
-            locationName: itemId,
-            regionName: roomId,
         });
     });
 
@@ -414,10 +403,6 @@ async function main() {
         // location or exit and reveals it; the discovery events fire
         // back through our existing subscriptions.
         client.publishEventDispatcher('loop:exploreCompleted', {
-            regionName: roomId,
-        });
-        client.publishEventBus('textAdventure:commandRecorded', {
-            type: 'explore',
             regionName: roomId,
         });
     });

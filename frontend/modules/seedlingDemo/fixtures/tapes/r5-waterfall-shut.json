@@ -1,0 +1,36 @@
+{
+  "tape_version": 5,
+  "game": "seedling",
+  "name": "r5-waterfall-shut",
+  "description": "⛓ `climbsArmedWaterfall`'s REFUSAL ARM — the half without which the rule and NO rule look the same. Holds UP for 178 ticks under L0's `waterfall@208,112`. It swims the 24 px of water below, reaches the waterfall's bottom edge and STALLS there, oscillating on the face with `onWaterfall` true: `Player.input()`'s last act is `v.y += 0.8` and the exemption is `!hasFeather || v.y >= 0`. ⛔ `noHazards` is EMPTY — no coercion anywhere, the first tape on the arc like that — because the tiles above and below the waterfall are WATER and coercing them would have coerced the thing being stood on. The conch is in BOTH arms for that reason; the feather is the one field apart. ⚠ And the swim term is LIVE here: `inWater` is `eff == 1 || eff == 25`, so this arm gets the +0.25 boost on the waterfall itself and still cannot climb it.",
+  "boot": {
+    "level": 0,
+    "x": 208,
+    "y": 144
+  },
+  "noclip": false,
+  "noDamage": true,
+  "noHazards": [],
+  "grants": [
+    {
+      "level": 0,
+      "items": [
+        "conch"
+      ]
+    }
+  ],
+  "persistence": [],
+  "equips": [],
+  "pins": [
+    "sound",
+    "dead_frames"
+  ],
+  "tick_count": 200,
+  "inputs": [
+    {
+      "key": "up",
+      "from": 2,
+      "to": 180
+    }
+  ]
+}

@@ -1,0 +1,323 @@
+#!/usr/bin/env node
+/**
+ * gates — **RUN THE GATES, IN ONE LINE, KEYED ON EXIT CODES** (R9 slice 12e,
+ * ⚖ ruling 38 item (6)).
+ *
+ * ── WHY ───────────────────────────────────────────────────────────────
+ *
+ * There are twenty-six `check-*.mjs` gates and three different flags for
+ * pointing them at a world. Every slice rebuilt that command line by hand,
+ * and the cost was not typing:
+ *
+ *   · slice 12b″ had to REDISCOVER that `--root=` wants a Pages-SHAPED root
+ *     (`<dev server>/frontend`) while `--host=` wants the repo root — two
+ *     origins for one local server, and getting it wrong is a gate that
+ *     passes against the wrong tree rather than one that fails;
+ *   · `check-seedling-editor-phases.mjs` went UNRUN from slice 11 (which
+ *     flipped the subject it had frozen) until slice 13 found it CRASHING —
+ *     it was in the reach closure of three slices and nobody ran the list;
+ *   · and that crash is the reason for this file's one hard rule below.
+ *
+ * ⛔⛔ **THE VERDICT IS THE EXIT CODE, NEVER A PRINTED TOTAL.** The phases
+ * gate THREW mid-run: it printed neither `ALL CHECKS PASSED` nor `N CHECK(S)
+ * FAILED`, so a runner grepping for a total reads it as *nothing* — not as a
+ * failure. Here a gate fails when it exits non-zero, AND a gate that exits 0
+ * without printing a total line is reported as a FAIL BY NAME, because a gate
+ * with nothing to say did not check anything.
+ *
+ * ── Run ───────────────────────────────────────────────────────────────
+ *
+ *   node scripts/procgen/gates.mjs local                  every gate, local
+ *   node scripts/procgen/gates.mjs live                   every gate a remote
+ *                                                         origin can answer
+ *   node scripts/procgen/gates.mjs local editor-overlays phases   by substring
+ *   node scripts/procgen/gates.mjs reach <base>..HEAD [local|live]
+ *   node scripts/procgen/gates.mjs --list                 the roster, derived
+ *                                                         (arms under their gate)
+ *
+ *   --host=<origin>    default http://localhost:8000 (a REPO-ROOT server)
+ *   --pages=<origin>   default the published site
+ *   --no-windows       skip the gates that drive the Windows Python driver
+ *   --json             the same verdicts, machine-readable
+ *
+ * ⛓ `bash scripts/procgen/gates.sh …` is the same thing — the shim exists so
+ * the one-liner reads like the other shell instrument in this directory.
+ *
+ * ⛓⛓⛓ A GATE CAN BE TWO ARMS, AND `local` RUNS BOTH (editor v3 · Q6). A gate
+ * whose docblock declares an `@standing-variant` is a SECOND standing row —
+ * `check-seedling-editor-generate.mjs` reads 224/0 under `--host=` and 230/0
+ * on its own server, because six rows have no vehicle when the caller supplies
+ * the server (⚖ §26.7a). This file exists so nobody rebuilds the list by hand,
+ * and a row that is not in the list is a row somebody types; so the arms are
+ * IN the `local` run and in the `reach` selection with the gate they belong
+ * to. ⛔ NOT in `live`: an arm's argv is a LITERAL, and `argvFor(…, 'live')`
+ * is the authority on what a published origin can be asked — an arm carrying
+ * `--host=` flags cannot be re-pointed at one.
+ *
+ * ⛓⛓ THE `reach` MODE is ⚖ ruling 32 A's other half. "Re-measure only what the
+ * reach names" leaves a hole exactly when the list is LONG: the solver slices
+ * 12b/12b′/12b″ named 23 gates in their closure and re-measured a few. This
+ * runs every BROWSER gate `reach-seedling-change.mjs --range=` names for the
+ * change, and publishes the count it ran.
+ */
+
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
+
+import { releaseBoxLock, takeBoxLock } from './boxLock.js';
+import { LOCAL_HOST, PAGES_ORIGIN, REPO, argvFor, gateRoster } from './gateRoster.js';
+
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
+const run = promisify(execFile);
+const argv = process.argv.slice(2);
+const flag = (name) => argv.includes(`--${name}`);
+const arg = (name, fallback) => (argv.find((a) => a.startsWith(`--${name}=`))
+    ?? `--${name}=${fallback}`).slice(name.length + 3);
+
+const HOST = arg('host', LOCAL_HOST);
+const PAGES = arg('pages', PAGES_ORIGIN);
+const JSON_OUT = flag('json');
+/**
+ * ⛓⛓⛓ R9 P3b, ⚖ 54 (7) — **THE RUNNER TAKES THE BOX ONCE FOR ALL ITS GATES.**
+ * Twenty-three of the thirty are browser rows and four drive Windows; this
+ * file is the biggest single consumer of the machine there is. It exports the
+ * holder's token, so each gate's own preamble recognises itself as the
+ * holder's CHILD and passes through instead of deadlocking against its parent.
+ * `--wait-for-box=<sec>` queues rather than refusing.
+ */
+const WAIT_FOR_BOX = Number(arg('wait-for-box', '0')) || 0;
+const words = argv.filter((a) => !a.startsWith('--'));
+
+if (flag('help') || (words.length === 0 && !flag('list'))) {
+    console.log(`
+gates — run the gates in one line, keyed on exit codes.
+
+  node scripts/procgen/gates.mjs local [gate …]
+  node scripts/procgen/gates.mjs live  [gate …]
+  node scripts/procgen/gates.mjs reach <base>..HEAD [local|live]
+  node scripts/procgen/gates.mjs --list
+
+  --host=   repo-root server   (default ${LOCAL_HOST})
+  --pages=  published site     (default ${PAGES_ORIGIN})
+  --no-windows                 skip the Windows-driver gates
+  --json                       machine-readable verdicts
+`.trim());
+    process.exit(0);
+}
+
+/* ── the roster, derived ─────────────────────────────────────────────── */
+
+const ROSTER = gateRoster();
+const VARIANTS = ROSTER.flatMap((g) => g.variants.map((v) => ({ gate: g, ...v })));
+
+/**
+ * ⛓ THE ARMS a world can answer, in roster order, each arm right after the
+ * gate it belongs to. The BASE arm is `argvFor`'s answer; a DECLARED arm
+ * carries its own literal argv and belongs to `local` only.
+ */
+const armsIn = (where, gates = ROSTER) => gates.flatMap((g) => {
+    const base = argvFor(g, where, { host: HOST, pages: PAGES });
+    const out = base === null ? [] : [{ gate: g, argv: base, label: null }];
+    if (where === 'local') {
+        for (const v of g.variants) out.push({ gate: g, argv: v.argv, label: v.label });
+    }
+    return out;
+});
+/**
+ * ⛓ How an arm is NAMED, everywhere — the gate, then the arm it is.
+ *
+ * ⛓ A `function`, not a `const` arrow: the instruments table DISCOVERS a
+ * file's argv helpers as top-level arrow consts whose next few lines mention
+ * `argv` and a `--` lookup, and an arrow here sits close enough to the
+ * `--list` block to be harvested as one. The table would then publish
+ * `nameOf` as a way this file reads a flag, which it is not.
+ */
+function nameOf(arm) {
+    return `${arm.gate.file}${arm.label ? ` (${arm.label})` : ''}`;
+}
+
+if (flag('list') || words[0] === 'list') {
+    const flagsOf = (argvList) => argvList
+        .map((a) => a.replace(/^--/, '').split('=')[0]).join(',') || '-';
+    for (const g of ROSTER) {
+        const kinds = [g.browser ? 'browser' : null, g.windows ? 'windows' : null]
+            .filter(Boolean).join('+') || 'node';
+        console.log(`${g.file.padEnd(40)} [${g.flags.join(',') || '-'}] ${kinds}`
+            + `${g.browserVia ? ` (via ${g.browserVia})` : ''}`);
+        /** ⛓ …and its declared arms, under it — a second STANDING ROW, run
+         *  in `local` beside the gate it is an arm of. */
+        for (const v of g.variants) {
+            console.log(`  └ (${v.label})`.padEnd(40)
+                + ` [${flagsOf(v.argv)}] ${kinds}`);
+        }
+    }
+    console.log(`\n${ROSTER.length} gate(s)`
+        + `${VARIANTS.length ? ` + ${VARIANTS.length} declared arm(s)` : ''}; `
+        + `${ROSTER.filter((g) => g.browser).length} browser, `
+        + `${ROSTER.filter((g) => g.windows).length} windows. `
+        + `local ${armsIn('local').length}, live ${armsIn('live').length}`);
+    process.exit(0);
+}
+
+/* ── which gates this invocation runs ────────────────────────────────── */
+
+const MODE = words[0];
+let where = MODE === 'reach' ? (words[2] ?? 'local') : MODE;
+let selection = ROSTER;
+let reachNote = null;
+
+if (MODE === 'reach') {
+    const range = words[1];
+    if (!range) { console.log('FAIL: reach needs a range — gates.mjs reach <base>..HEAD'); process.exit(1); }
+    /**
+     * ⛓ The reach instrument is the authority on what a change can move; this
+     * file does not re-derive it. `--json` is its machine-readable form, and
+     * `gates` is the partition we want.
+     */
+    const { stdout } = await run('node', ['scripts/procgen/reach-seedling-change.mjs',
+        `--range=${range}`, '--json'], { cwd: REPO, maxBuffer: 1 << 26 });
+    const report = JSON.parse(stdout);
+    const named = new Set((report.gates ?? []).map((p) => p.split('/').pop()));
+    selection = ROSTER.filter((g) => named.has(g.file) && g.browser);
+    reachNote = `${range}: the reach names ${named.size} gate(s); `
+        + `${selection.length} of them are browser gates and are run here`;
+} else if (where !== 'local' && where !== 'live') {
+    console.log(`FAIL: unknown world ${JSON.stringify(MODE)} — local, live or reach`);
+    process.exit(1);
+} else if (words.length > 1) {
+    const picks = words.slice(1);
+    selection = ROSTER.filter((g) => picks.some((p) => g.file.includes(p)));
+    const missed = picks.filter((p) => !ROSTER.some((g) => g.file.includes(p)));
+    if (missed.length) {
+        console.log(`FAIL: no gate matches ${missed.join(', ')}`);
+        process.exit(1);
+    }
+}
+
+if (flag('no-windows')) selection = selection.filter((g) => !g.windows);
+
+const PLAN = armsIn(where, selection);
+/** ⛓ …and the ones this world CANNOT answer are named, not dropped in silence. */
+const UNRUNNABLE = selection.filter((g) => argvFor(g, where, { host: HOST, pages: PAGES }) === null);
+
+/* ── the run ─────────────────────────────────────────────────────────── */
+
+/**
+ * ⛓⛓ A gate's own summary line — the vocabulary READ OUT OF THE GATES, not
+ * guessed. `grep` over every `console.log` that prints a verdict in
+ * `scripts/procgen/check-*.mjs` gives exactly FIVE forms:
+ *
+ *     ALL CHECKS PASSED          `${failed} CHECK(S) FAILED`
+ *     ALL PASS — <a tail>        `${failed} FAILURE(S)`
+ *     OK
+ *
+ * ⛔ THE FIRST CUT HAD FOUR OF THEM and reported
+ * `check-seedling-wasm-pins.mjs` — which prints `ALL PASS — 1 pinned build,
+ * four views in agreement` and exits 0 — as *"NO TOTAL LINE"*. A verdict
+ * reader whose vocabulary is guessed rather than read turns a green gate into
+ * a red one, which is the same defect as the totals-grep it replaces, pointing
+ * the other way.
+ */
+const TOTAL_RE = /^(?:ALL CHECKS PASSED|ALL PASS\b.*|OK|\d+ (?:CHECK\(S\) FAILED|FAILURE\(S\)))$/;
+const totalOf = (out) => out.split('\n').map((l) => l.trim()).reverse()
+    .find((l) => TOTAL_RE.test(l)) ?? null;
+const tally = (out) => ({
+    pass: (out.match(/^PASS:/gm) ?? []).length,
+    fail: (out.match(/^FAIL:/gm) ?? []).length,
+    skip: (out.match(/^SKIP:/gm) ?? []).length,
+});
+
+/**
+ * ⛔ AND ONLY WHEN THE PLAN ACTUALLY SPENDS THE MACHINE. `gates.mjs local
+ * wasm-pins` selects a HEADLESS gate; taking the box for it would serialise a
+ * two-second row behind a forty-minute one for nothing, which is the same law
+ * that keeps the headless gates out of `boxLockTakers`. The plan's own
+ * classification decides, so this cannot drift from that population.
+ */
+const SPENDS_BOX = PLAN.filter((a) => a.gate.browser || a.gate.windows);
+if (SPENDS_BOX.length) {
+    takeBoxLock({ name: `gates ${where}${MODE === 'reach' ? ' (reach)' : ''} — `
+        + `${SPENDS_BOX.length} of ${PLAN.length} arm(s) spend the machine`,
+    kind: SPENDS_BOX.some((a) => a.gate.windows) ? 'windows' : 'browser',
+    repo: REPO, waitSec: WAIT_FOR_BOX });
+} else {
+    console.log(`# box lock: NOT TAKEN — none of ${PLAN.length} selected arm(s) is a browser `
+        + 'or windows row, so this run does not contend for the machine');
+}
+
+const ARMS_IN_PLAN = PLAN.filter((a) => a.label).length;
+console.log(`# gates ${where}${MODE === 'reach' ? ' (reach)' : ''} — `
+    + `${PLAN.length - ARMS_IN_PLAN} gate(s)`
+    + `${ARMS_IN_PLAN ? ` + ${ARMS_IN_PLAN} declared arm(s)` : ''}`
+    + `, host ${HOST}${where === 'live' ? `, pages ${PAGES}` : ''}`);
+if (reachNote) console.log(`  ⛓ ${reachNote}`);
+if (UNRUNNABLE.length) {
+    console.log(`  ⚠ ${UNRUNNABLE.length} gate(s) cannot address the ${where} world and are NOT `
+        + `run: ${UNRUNNABLE.map((g) => g.file).join(', ')}`);
+    if (where === 'live') {
+        console.log('    (they build their URLs as `${HOST}/frontend/…` — a REPO-ROOT shape, '
+            + 'which the published site does not have.)');
+    }
+}
+console.log('');
+
+const results = [];
+for (const arm of PLAN) {
+    const { gate, argv: gargv } = arm;
+    const t0 = process.hrtime.bigint();
+    let out = '';
+    let code = 0;
+    try {
+        const r = await run('node', [gate.path, ...gargv], { cwd: REPO, maxBuffer: 1 << 26 });
+        out = `${r.stdout}${r.stderr}`;
+    } catch (e) {
+        code = typeof e.code === 'number' ? e.code : 1;
+        out = `${e.stdout ?? ''}${e.stderr ?? ''}`;
+        if (!out.trim()) out = String(e.message ?? e);
+    }
+    const ms = Number((process.hrtime.bigint() - t0) / 1000000n);
+    const total = totalOf(out);
+    const counts = tally(out);
+    /**
+     * ⛔⛔ THE TWO WAYS A GATE FAILS, AND THE SECOND ONE IS WHY THIS EXISTS.
+     * A non-zero exit is a failure. So is a ZERO exit with NO total line: the
+     * gate threw before it could summarise, or it never checked anything, and
+     * a runner that reads totals sees neither.
+     */
+    const red = code !== 0 || total === null;
+    /**
+     * ⛓ …and WHICH kind of nothing. A gate that printed `SKIP:` and no verdict
+     * politely declined (no dev server, no Windows session); a gate that
+     * printed neither THREW. Both are red — you asked for the gates and did
+     * not get them — but they are different facts and the line says which.
+     */
+    const skipped = total === null && counts.skip > 0 && counts.pass === 0;
+    results.push({
+        file: gate.file, ...(arm.label ? { arm: arm.label } : {}), code, ms, total,
+        ...counts, skipped, red,
+    });
+    const verdict = red ? 'FAIL' : 'PASS';
+    const why = code !== 0
+        ? `exit ${code}`
+        : (skipped
+            ? 'SKIPPED — it declined and checked nothing, which is not a pass'
+            : (total === null ? 'NO TOTAL LINE — it printed no verdict at all' : total));
+    console.log(`${verdict}  ${nameOf(arm).padEnd(40)} ${String(counts.pass)}/${counts.fail}`
+        + `${counts.skip ? `/${counts.skip} skipped` : ''}  ${(ms / 1000).toFixed(1)}s  — ${why}`);
+    if (red) {
+        for (const line of out.split('\n').filter((l) => l.startsWith('FAIL:')).slice(0, 6)) {
+            console.log(`        ${line}`);
+        }
+    }
+}
+
+const reds = results.filter((r) => r.red);
+if (JSON_OUT) console.log(JSON.stringify({ where, host: HOST, results }, null, 2));
+console.log(`\n${results.length - reds.length}/${results.length} gate(s) green`
+    + `${reds.length ? ` — RED: ${reds.map((r) => `${r.file}${r.arm ? ` (${r.arm})` : ''}`)
+        .join(', ')}` : ''}`);
+releaseBoxLock();
+process.exit(reds.length ? 1 : 0);

@@ -35,6 +35,8 @@ export class CostDebuggerUI {
     this.isVerifying = false;
     this.verificationResults = [];
     this._verifyCancelled = false;
+    // Set when the sphere-log slice or the rules changed under a loaded plan.
+    this._isStale = false;
 
     this.rootElement = this._createRootElement();
     this.container.element.appendChild(this.rootElement);
@@ -67,7 +69,10 @@ export class CostDebuggerUI {
         <button class="cd-btn-plan-all" disabled title="Plan all remaining steps">Plan All</button>
         <button class="cd-btn-reset" disabled title="Reset to initial state">Reset</button>
       </div>
-      <div class="cd-status-bar"><span class="cd-status">No sphere log loaded</span></div>
+      <div class="cd-status-bar">
+        <span class="cd-status">No sphere log loaded</span>
+        <div class="cd-status-warn" style="display: none;"></div>
+      </div>
       <div class="cd-step-list-container">
         <div class="cd-step-list">
           <div class="cd-step-list-empty">Click "Load" to load sphere log data, then "Plan Step" to begin.</div>
@@ -149,6 +154,20 @@ export class CostDebuggerUI {
     subscribe('loopsCostDebugger:stepPlanned', this._handleStepPlannedEvent);
     subscribe('loopsCostDebugger:allPlanned', this._handleAllPlannedEvent);
     subscribe('loopsCostDebugger:reset', this._handleResetEvent);
+
+    // A player switch re-slices the sphere log and a rules reload replaces the
+    // world; either makes an already-loaded plan describe data that is gone.
+    // Marking stale rather than auto-reloading: a reload here would discard
+    // the user's planned steps without being asked.
+    subscribe('sphereState:dataLoaded', this._handleDataChangedEvent);
+    subscribe('stateManager:rulesLoaded', this._handleDataChangedEvent);
+  }
+
+  _handleDataChangedEvent() {
+    const planner = getCostPlanner();
+    if (!planner?.isLoaded()) return;
+    this._isStale = true;
+    this._updateStatus();
   }
 
   _handleStepPlannedEvent(data) {
@@ -195,8 +214,14 @@ export class CostDebuggerUI {
     }
 
     const result = planner.loadSphereLog(sphereLog);
-    log('info', `Loaded sphere log: ${result.entryCount} entries, start region: ${result.startRegion}`);
+    log('info',
+      `Loaded sphere log: ${result.entryCount} entries for player ${result.playerId}, ` +
+      `start region: ${result.startRegion}`);
+    if (result.entryCount === 0) {
+      log('error', planner.getPlanRejectionReason() || 'Sphere log produced no entries');
+    }
 
+    this._isStale = false;
     this.verificationResults = [];
     this.selectedStepIndex = -1;
     this._refreshStepList();
@@ -512,27 +537,125 @@ export class CostDebuggerUI {
     if (statusEl) statusEl.textContent = text;
   }
 
+  /**
+   * Render the warning lines below the status. Empty array hides the block.
+   * @param {Array<{text: string, severity: 'warn'|'error'}>} warnings
+   */
+  _setWarnings(warnings) {
+    const el = this.rootElement.querySelector('.cd-status-warn');
+    if (!el) return;
+    if (!warnings || warnings.length === 0) {
+      el.style.display = 'none';
+      el.innerHTML = '';
+      return;
+    }
+    el.style.display = '';
+    el.innerHTML = warnings.map(w =>
+      `<div class="cd-status-${w.severity === 'error' ? 'error' : 'warning'}">${escapeHtml(w.text)}</div>`
+    ).join('');
+  }
+
+  /**
+   * "Player 2 (Player2 — A Link to the Past)" for the player the plan is for.
+   * `player_names` and `world` are keyed by player id (the unsliced maps), so
+   * they still name the right player after a switch.
+   */
+  _playerLabel(planner) {
+    const playerId = planner?.getPlayerId()
+      || centralRegistry.getPublicFunction('sphereState', 'getCurrentPlayerId')?.()
+      || null;
+    if (!playerId) return 'Player ?';
+
+    const staticData = stateManagerProxySingleton?.getStaticData?.();
+    const name = staticData?.player_names?.[playerId] || null;
+    // game_name describes the LOADED world only — claiming it for some other
+    // player is exactly the confusion this label exists to prevent.
+    const isLoadedPlayer = String(playerId) === String(staticData?.playerId);
+    const game = staticData?.world?.[playerId]?.game
+      || (isLoadedPlayer ? staticData?.game_name : null)
+      || null;
+
+    const detail = [name, game].filter(Boolean).join(' — ');
+    return detail ? `Player ${playerId} (${detail})` : `Player ${playerId}`;
+  }
+
+  _collectWarnings(planner) {
+    const warnings = [];
+
+    if (this._isStale) {
+      warnings.push({
+        severity: 'warn',
+        text: 'Data changed (player switch or rules reload) — press Load to re-plan.',
+      });
+    }
+
+    const diag = planner.getLogDiagnostics();
+    if (diag?.error) {
+      warnings.push({ severity: 'error', text: diag.error });
+      return warnings;
+    }
+
+    if (planner.getTotalEntries() === 0 && diag && diag.stateUpdateCount > 0) {
+      warnings.push({
+        severity: 'error',
+        text: `Sphere log has no data for player ${diag.playerId} — available players: ` +
+          `[${diag.availablePlayers.join(', ') || 'none'}]. The loaded rules and the ` +
+          `sphere log disagree about which player this is.`,
+      });
+    }
+
+    const foreign = planner.getSkippedForeignEntries();
+    const locationEntries = planner.getLocationEntryCount();
+    if (foreign > 0) {
+      const all = foreign >= locationEntries;
+      warnings.push({
+        severity: all ? 'error' : 'warn',
+        text: all
+          ? `ALL ${foreign} of ${locationEntries} sphere-log locations are not in this ` +
+            `player's world — wrong player or wrong seed. The generated costs are ` +
+            `defaults only; do not use them.`
+          : `${foreign} of ${locationEntries} sphere-log locations are not in this ` +
+            `player's world — wrong player or wrong seed?`,
+      });
+    }
+
+    const truncation = planner.getTruncation();
+    if (truncation) {
+      warnings.push({
+        severity: 'error',
+        text: `Planning hit the ${truncation.limit}-step guard and stopped early — ` +
+          `the plan is INCOMPLETE.`,
+      });
+    }
+
+    return warnings;
+  }
+
   _updateStatus() {
     if (this.isVerifying) return; // Status managed by verify loop
     const planner = getCostPlanner();
     if (!planner || !planner.isLoaded()) {
       this._setStatus('No sphere log loaded');
+      this._setWarnings([]);
       return;
     }
     const steps = planner.getPlannedSteps().length;
     const entries = planner.getTotalEntries() - (planner.getSkippedEventEntries() || 0);
+    const who = this._playerLabel(planner);
 
     if (this.verificationResults.length > 0) {
       const tolerance = 5;
       const matched = this.verificationResults.filter(r =>
         Math.abs(r.actual.manaConsumed - r.predicted.manaConsumed) <= tolerance
       ).length;
-      this._setStatus(`Verified: ${this.verificationResults.length} steps, ${matched}/${this.verificationResults.length} within tolerance`);
+      this._setStatus(`${who} · Verified: ${this.verificationResults.length} steps, ${matched}/${this.verificationResults.length} within tolerance`);
     } else if (planner.isComplete()) {
-      this._setStatus(`Complete: ${steps} loops, ${entries} entries`);
+      this._setStatus(`${who} · Complete: ${steps} loops, ${entries} entries`);
     } else {
-      this._setStatus(`${steps} loops planned`);
+      this._setStatus(`${who} · ${steps} loops planned`);
     }
+
+    this._setWarnings(this._collectWarnings(planner));
   }
 
   _updateButtons() {

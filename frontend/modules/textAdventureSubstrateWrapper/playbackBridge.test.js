@@ -214,6 +214,47 @@ describe('PlaybackBridge — clock', () => {
     });
 });
 
+// M3b: the recorded-visit replay half (replayActions & friends) was removed
+// from the bridge — the text adventure is coarse-only, so a Playback block's
+// interior runs through the loops generic executor host-side. Only the
+// walkTo/play/step bot half remains (covered above); the bridge must now
+// treat replayActions control events as unknown and stay flag-free on live
+// walkTos.
+describe('PlaybackBridge — replay machinery removed (M3b)', () => {
+    beforeEach(() => { vi.useFakeTimers(); });
+    afterEach(() => { vi.useRealTimers(); });
+
+    it('has no replayActions method', () => {
+        const { bridge } = makeBridge();
+        expect(bridge.replayActions).toBeUndefined();
+    });
+
+    it('a replayActions control event is ignored (unknown method, no dispatch)', () => {
+        const { client } = makeBridge();
+        client._fire('textAdventureSubstrateWrapper:control', {
+            method: 'replayActions',
+            args: [[{ type: 'locationCheck', locationName: 'Coin' }], { departureExitId: 'NorthDoor' }],
+        });
+        vi.advanceTimersByTime(1000);
+        expect(client._dispatched()).toEqual([]);
+    });
+
+    it('live walkTo publishes stay flag-free (genuine live actions carry no fromLoop)', () => {
+        // The bot/manual walkTo path (_performAction) is a genuine live action
+        // — it must NOT carry fromLoop (the strict gate and gameState handle
+        // it as performed play).
+        const { bridge, client } = makeBridge();
+        bridge.walkTo({ kind: 'location', name: 'Coin' });
+        bridge.step();
+        bridge.walkTo({ kind: 'exit', name: 'NorthDoor' });
+        bridge.step();
+        expect(client._dispatched().length).toBeGreaterThan(0);
+        for (const d of client._dispatched()) {
+            expect(d.data.fromLoop).toBeUndefined();
+        }
+    });
+});
+
 describe('PlaybackBridge — control event routing', () => {
     it('dispatches walkTo + step + play through the control event', () => {
         const { client } = makeBridge();

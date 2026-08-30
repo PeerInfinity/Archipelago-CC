@@ -8,7 +8,6 @@ frontend/modules/tests/README.md (testController.dumpSnapshot).
 Dumps land in test_dumps/ (gitignored).
 """
 import http.server
-import socketserver
 import re
 from datetime import datetime
 import os
@@ -98,9 +97,22 @@ class NoCacheHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 def main():
     PORT = 8000
 
-    # Change to the project root directory
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    project_root = os.path.dirname(script_dir)
+    # Change to the project root directory. Located by walking up to the
+    # directory holding package.json rather than counting levels: this file
+    # started life in scripts/ and moved to scripts/utils/, and the hardcoded
+    # single dirname() came along unchanged — so the server quietly served
+    # scripts/ and every app URL 404'd. Anchoring on a marker makes the next
+    # move a no-op, and a missing marker fails loudly instead of serving the
+    # wrong tree.
+    project_root = os.path.dirname(os.path.abspath(__file__))
+    while not os.path.exists(os.path.join(project_root, "package.json")):
+        parent = os.path.dirname(project_root)
+        if parent == project_root:
+            raise SystemExit(
+                "could not locate the project root: no package.json in any "
+                f"directory above {os.path.abspath(__file__)}"
+            )
+        project_root = parent
     os.chdir(project_root)
 
     print(f"Starting development server at http://localhost:{PORT}/")
@@ -109,7 +121,12 @@ def main():
     print("Press Ctrl+C to stop")
     print("-" * 50)
 
-    with socketserver.TCPServer(("", PORT), NoCacheHTTPRequestHandler) as httpd:
+    # ThreadingHTTPServer, not a bare TCPServer: the app loads game modules as
+    # iframes alongside workers and wasm, so a single-threaded server
+    # head-of-line blocks — one slow transfer stalls every other request until
+    # it finishes. It also inherits HTTPServer's allow_reuse_address, so a
+    # restart doesn't trip "Address already in use" during TIME_WAIT.
+    with http.server.ThreadingHTTPServer(("", PORT), NoCacheHTTPRequestHandler) as httpd:
         try:
             httpd.serve_forever()
         except KeyboardInterrupt:

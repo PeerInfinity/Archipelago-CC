@@ -1844,6 +1844,59 @@
           "note": "Empty list is vacuously true for all()"
         }
       ]
+    },
+    "AtLeast": {
+      "description": "AtLeast (N-of-M) rule tests",
+      "tests": [
+        {
+          "name": "atleast_2_of_3_satisfied",
+          "rule": {"rule": "AtLeast", "count": 2, "children": [{"type": "constant", "value": true}, {"type": "constant", "value": false}, {"type": "constant", "value": true}]},
+          "expected": true,
+          "note": "2 of 3 true, need 2"
+        },
+        {
+          "name": "atleast_boundary_one_short",
+          "rule": {"rule": "AtLeast", "count": 3, "children": [{"type": "constant", "value": true}, {"type": "constant", "value": false}, {"type": "constant", "value": true}]},
+          "expected": false,
+          "note": "2 of 3 true, need 3 (count-1 boundary)"
+        },
+        {
+          "name": "atleast_all_required_met",
+          "rule": {"rule": "AtLeast", "count": 3, "children": [{"type": "constant", "value": true}, {"type": "constant", "value": true}, {"type": "constant", "value": true}]},
+          "expected": true,
+          "note": "count == len: behaves like And"
+        },
+        {
+          "name": "atleast_all_required_unmet",
+          "rule": {"rule": "AtLeast", "count": 3, "children": [{"type": "constant", "value": true}, {"type": "constant", "value": true}, {"type": "constant", "value": false}]},
+          "expected": false,
+          "note": "count == len with one false fails"
+        },
+        {
+          "name": "atleast_one_required_or",
+          "rule": {"rule": "AtLeast", "count": 1, "children": [{"type": "constant", "value": false}, {"type": "constant", "value": false}, {"type": "constant", "value": true}]},
+          "expected": true,
+          "note": "count == 1 behaves like Or"
+        },
+        {
+          "name": "atleast_one_required_none",
+          "rule": {"rule": "AtLeast", "count": 1, "children": [{"type": "constant", "value": false}, {"type": "constant", "value": false}, {"type": "constant", "value": false}]},
+          "expected": false,
+          "note": "count == 1 with no true fails"
+        },
+        {
+          "name": "atleast_zero_required",
+          "rule": {"rule": "AtLeast", "count": 0, "children": [{"type": "constant", "value": false}, {"type": "constant", "value": false}]},
+          "expected": true,
+          "note": "count <= 0 is trivially satisfied"
+        },
+        {
+          "name": "atleast_count_exceeds_children",
+          "rule": {"rule": "AtLeast", "count": 4, "children": [{"type": "constant", "value": true}, {"type": "constant", "value": true}, {"type": "constant", "value": true}]},
+          "expected": false,
+          "note": "count > len can never be satisfied"
+        }
+      ]
     }
   }
 }

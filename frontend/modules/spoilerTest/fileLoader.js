@@ -28,6 +28,91 @@ import { createUniversalLogger } from '../../app/core/universalLogger.js';
 const logger = createUniversalLogger('testSpoilerUI:FileLoader');
 
 /**
+ * ⛓⛓ **DERIVE THE SPHERE-LOG SIDECAR FROM THE RULESET PATH** — extracted from
+ * `attemptAutoLoad` (EDITOR v3 E1c) so the derivation can be ASKED a question
+ * without a network. It was already the only thing in that method that could be
+ * wrong on its own; a `.json.gz` ruleset name proved it, by deriving
+ * `…_rules.json_sphere_log.jsonl` and logging about an extension.
+ *
+ * @param {string} rulesetPath e.g. `presets/alttp/AP_1/AP_1_rules.json`
+ * @returns {string|null} the `_sphere_log.jsonl` beside it, or null
+ */
+export function deriveSphereLogPath(rulesetPath) {
+  if (!rulesetPath) return null;
+  let logPath;
+  // Remove leading "./" if present to avoid fetch issues
+  const cleanedRulesetPath = rulesetPath.startsWith('./')
+    ? rulesetPath.substring(2)
+    : rulesetPath;
+
+  const lastSlashIndex = cleanedRulesetPath.lastIndexOf('/');
+  const directoryPath =
+    lastSlashIndex === -1
+      ? ''
+      : cleanedRulesetPath.substring(0, lastSlashIndex);
+  const rulesFilename =
+    lastSlashIndex === -1
+      ? cleanedRulesetPath
+      : cleanedRulesetPath.substring(lastSlashIndex + 1);
+
+  /**
+   * ⛓ EDITOR v3 E1c — **A `.gz` IS STRIPPED BEFORE THE SUFFIX TEST**, and
+   * that is the MINIMAL change the measurement asked for. Without it,
+   * `AP_1_rules.json.gz` misses the `_rules.json` branch, falls through the
+   * `.json` branch (which does not match either) to the ERROR branch, and
+   * derives `AP_1_rules.json_sphere_log.jsonl` — a sidecar path that cannot
+   * exist, produced with a log line about an extension rather than about the
+   * sidecar. ⛔ The sidecar is NOT gzipped by this: only the ruleset name
+   * loses its `.gz`, because the two files are compressed independently.
+   */
+  const rulesBaseName = rulesFilename.endsWith('.gz')
+    ? rulesFilename.slice(0, -'.gz'.length)
+    : rulesFilename;
+  let baseNameForLog;
+  if (rulesBaseName.endsWith('_rules.json')) {
+    baseNameForLog = rulesBaseName.substring(
+      0,
+      rulesBaseName.length - '_rules.json'.length
+    );
+
+    // Check if this is a multiworld player-specific rules file (contains _P{number})
+    // For example: "AP_14089154938208861744_P1_rules.json" should become "AP_14089154938208861744"
+    // Pattern: _P followed by digits
+    const multiworldPlayerPattern = /_P\d+$/;
+    if (multiworldPlayerPattern.test(baseNameForLog)) {
+      baseNameForLog = baseNameForLog.replace(multiworldPlayerPattern, '');
+      logger.info(
+        `Detected multiworld player-specific rules file. Base name for log: "${baseNameForLog}"`
+      );
+    }
+  } else if (rulesBaseName.endsWith('.json')) {
+    baseNameForLog = rulesBaseName.substring(
+      0,
+      rulesBaseName.length - '.json'.length
+    );
+    logger.warn(
+      `Ruleset filename "${rulesFilename}" from path "${rulesetPath}" did not end with "_rules.json". Using "${baseNameForLog}" as base for log file (by removing .json).`
+    );
+  } else {
+    // If no .json extension, this is unexpected for a rules file path
+    baseNameForLog = rulesBaseName;
+    logger.error(
+      `Ruleset filename "${rulesFilename}" from path "${rulesetPath}" did not have a .json extension. This might lead to an incorrect log path. Using "${baseNameForLog}" as base.`
+    );
+  }
+
+  if (directoryPath) {
+    // If rulesetPath was "presets/foo/bar_rules.json", logPath becomes "presets/foo/bar_sphere_log.jsonl"
+    logPath = `${directoryPath}/${baseNameForLog}_sphere_log.jsonl`;
+  } else {
+    // If rulesetPath was "bar_rules.json", logPath becomes "./bar_sphere_log.jsonl"
+    logPath = `./${baseNameForLog}_sphere_log.jsonl`;
+  }
+  logger.info(`Derived logPath: "${logPath}" from rulesetPath: "${rulesetPath}"`);
+  return logPath;
+}
+
+/**
  * Handles loading and parsing of spoiler log files from various sources.
  *
  * Supports both auto-loading from derived URLs and manual file selection.
@@ -80,62 +165,7 @@ export class FileLoader {
     // Derive log path from ruleset path
     let logPath;
     if (rulesetPath) {
-      // Remove leading "./" if present to avoid fetch issues
-      const cleanedRulesetPath = rulesetPath.startsWith('./')
-        ? rulesetPath.substring(2)
-        : rulesetPath;
-
-      const lastSlashIndex = cleanedRulesetPath.lastIndexOf('/');
-      const directoryPath =
-        lastSlashIndex === -1
-          ? ''
-          : cleanedRulesetPath.substring(0, lastSlashIndex);
-      const rulesFilename =
-        lastSlashIndex === -1
-          ? cleanedRulesetPath
-          : cleanedRulesetPath.substring(lastSlashIndex + 1);
-
-      let baseNameForLog;
-      if (rulesFilename.endsWith('_rules.json')) {
-        baseNameForLog = rulesFilename.substring(
-          0,
-          rulesFilename.length - '_rules.json'.length
-        );
-
-        // Check if this is a multiworld player-specific rules file (contains _P{number})
-        // For example: "AP_14089154938208861744_P1_rules.json" should become "AP_14089154938208861744"
-        // Pattern: _P followed by digits
-        const multiworldPlayerPattern = /_P\d+$/;
-        if (multiworldPlayerPattern.test(baseNameForLog)) {
-          baseNameForLog = baseNameForLog.replace(multiworldPlayerPattern, '');
-          logger.info(
-            `Detected multiworld player-specific rules file. Base name for log: "${baseNameForLog}"`
-          );
-        }
-      } else if (rulesFilename.endsWith('.json')) {
-        baseNameForLog = rulesFilename.substring(
-          0,
-          rulesFilename.length - '.json'.length
-        );
-        logger.warn(
-          `Ruleset filename "${rulesFilename}" from path "${rulesetPath}" did not end with "_rules.json". Using "${baseNameForLog}" as base for log file (by removing .json).`
-        );
-      } else {
-        // If no .json extension, this is unexpected for a rules file path
-        baseNameForLog = rulesFilename;
-        logger.error(
-          `Ruleset filename "${rulesFilename}" from path "${rulesetPath}" did not have a .json extension. This might lead to an incorrect log path. Using "${baseNameForLog}" as base.`
-        );
-      }
-
-      if (directoryPath) {
-        // If rulesetPath was "presets/foo/bar_rules.json", logPath becomes "presets/foo/bar_sphere_log.jsonl"
-        logPath = `${directoryPath}/${baseNameForLog}_sphere_log.jsonl`;
-      } else {
-        // If rulesetPath was "bar_rules.json", logPath becomes "./bar_sphere_log.jsonl"
-        logPath = `./${baseNameForLog}_sphere_log.jsonl`;
-      }
-      logger.info(`Derived logPath: "${logPath}" from rulesetPath: "${rulesetPath}"`);
+      logPath = deriveSphereLogPath(rulesetPath);
     } else {
       logger.warn(
         'Cannot attempt auto-load: rulesetPath is undefined or invalid for logPath generation.'

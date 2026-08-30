@@ -1,6 +1,15 @@
-import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
-import { getDispatcher, getModuleEventBus, setActivePanelInstance } from './index.js';
+import {
+  stateManagerProxySingleton as stateManager, getLastRawJsonData,
+} from '../stateManager/index.js';
+import settingsManager from '../../app/core/settingsManager.js';
+import {
+  getDispatcher, getModuleEventBus, setActivePanelInstance, getSeedlingRegionGlue,
+} from './index.js';
+import { AP_ITEM_FOUND_EVENT } from './seedlingRegionGlue.js';
+import { seedlingRandomizerEligibility } from './seedlingRandomizerEligibility.js';
+import { createApFoundReadout } from './seedlingRandomizerReadout.js';
 import { FlashBridgeAdapter } from './flashBridgeAdapter.js';
+import { WasmBridgeAdapter } from './wasmBridgeAdapter.js';
 
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
@@ -13,7 +22,15 @@ function log(level, message, ...data) {
 
 const GAMES_DIR = './modules/flashPanel/games/';
 const SWF_DIR = './modules/flashPanel/swf/';
+// SWFRecomp-recompiled game pages (__swfBridge contract). The built
+// artifacts are NOT committed (23.8 MB wasm) — see this module's
+// README.md for the copy command that stages them locally.
+const WASM_DIR = './modules/flashPanel/wasm/';
 const RUFFLE_CDN = 'https://unpkg.com/@ruffle-rs/ruffle';
+// Transport selection, mirroring moduleSettings.bounceDemo.renderer:
+// 'auto' (default) uses the wasm page when the game wiring provides
+// one, real Flash otherwise; 'flash'/'wasm' force a transport.
+const RUNTIME_SETTING_KEY = 'moduleSettings.flashPanel.runtime';
 
 let instanceCounter = 0;
 let rufflePromise = null;
@@ -73,6 +90,7 @@ export class FlashPanelUI {
     // be populated yet when the component is constructed.
     this.configPath = this.componentState.configPath || null;
     this.swfPath = this.componentState.swfPath || null;
+    this.wasmPath = this.componentState.wasmPath || null;
 
     this.rootElement = null;
     this.swfContainer = null;
@@ -97,12 +115,41 @@ export class FlashPanelUI {
     // Wait for rules to actually finish loading before picking the
     // config. `stateManager:rulesLoaded` fires after the worker
     // confirms rules + snapshot are ready, which is when
-    // `staticData.flash_panel` becomes authoritative.
-    const readyHandler = async () => {
-      this.eventBus.unsubscribe('stateManager:rulesLoaded', readyHandler);
-      await this._initializeAdapter();
+    // `staticData.flash_panel` becomes authoritative. The
+    // subscription is PERMANENT: rulesLoaded fires again on every
+    // preset switch (and staticDataCache is replaced before it
+    // publishes), so the panel can re-initialize when the newly
+    // loaded rules wire a different flash game — e.g. the app boots
+    // on the fallback preset and the user then loads a flash-game
+    // preset through the UI.
+    this._rulesLoadedHandler = () => { this._onRulesLoaded(); };
+    this.eventBus.subscribe('stateManager:rulesLoaded', this._rulesLoadedHandler);
+
+    /**
+     * ⛓ **"found X for Player Y"** (EDITOR INTEGRATION M1). When a room holds
+     * Archipelago's placement instead of Seedling's own item, the game reports
+     * only an address — the host's placement table is what knows the item and
+     * the receiving player, and it answers the instant the check fires rather
+     * than after the server's `PrintJSON` round trip. The glue publishes; the
+     * panel is the surface the person playing is actually looking at.
+     *
+     * ⛔ ITS OWN LIFETIME, PER MOUNT. A remounted panel that left this
+     * subscribed would keep the dead mount's handler alive and write into a
+     * detached log element.
+     */
+    /**
+     * ⛓ P1-d — the transcript AND the state. `_panelLog` keeps the line; the
+     * readout is the count and the last few, which is the question a person
+     * playing actually asks. ⛔ IT SHARES THIS HANDLER'S LIFETIME EXACTLY —
+     * built here, dropped in `destroy()` with the subscription — because a
+     * remounted panel that kept either would write into a detached element.
+     */
+    this._apFoundReadout = createApFoundReadout();
+    this._apItemFoundHandler = (payload) => {
+      if (typeof payload?.message === 'string') this._panelLog(payload.message, 'location');
+      if (this._apFoundReadout.record(payload)) this._renderApFound();
     };
-    this.eventBus.subscribe('stateManager:rulesLoaded', readyHandler);
+    this.eventBus.subscribe(AP_ITEM_FOUND_EVENT, this._apItemFoundHandler);
 
     // Fast path: if rules were already loaded before this panel
     // was constructed (e.g. created by a layout change after
@@ -110,13 +157,58 @@ export class FlashPanelUI {
     // game_name is populated in staticDataCache alongside
     // flash_panel, so it's a reliable "rules ready" signal.
     if (stateManager.getStaticData?.()?.game_name) {
-      this.eventBus.unsubscribe('stateManager:rulesLoaded', readyHandler);
-      this._initializeAdapter();
+      this._onRulesLoaded();
     }
   }
 
   getRootElement() {
     return this.rootElement;
+  }
+
+  /**
+   * Runs on every stateManager:rulesLoaded (and once at construction
+   * when rules were already loaded). The first call initializes;
+   * later calls handle preset switches: when the loaded rules'
+   * flash_panel wiring differs from the one this panel initialized
+   * against, tear the embed down and re-initialize. Panels pinned via
+   * componentState paths ignore preset switches.
+   */
+  _onRulesLoaded() {
+    const fp = stateManager.getStaticData?.()?.flash_panel ?? null;
+    const key = JSON.stringify(fp);
+    if (!this.isInitialized) {
+      this._lastFlashPanelKey = key;
+      this._initializeAdapter();
+      return;
+    }
+    if (this.componentState.configPath || this.componentState.swfPath
+        || this.componentState.wasmPath) {
+      return;
+    }
+    if (key === this._lastFlashPanelKey) return;
+    this._lastFlashPanelKey = key;
+    this._panelLog('rules changed — reinitializing');
+    this._teardownForReinit();
+    this._initializeAdapter();
+  }
+
+  _teardownForReinit() {
+    if (this.adapter) {
+      this._detachRegionGlue();
+      this.adapter.detach();
+      this.adapter = null;
+    }
+    if (this._teleportUnsub) {
+      this._teleportUnsub();
+      this._teleportUnsub = null;
+    }
+    this.swfContainer.innerHTML = '';
+    this.teleportRow.style.display = 'none';
+    this.gameConfig = null;
+    this.configPath = this.componentState.configPath || null;
+    this.swfPath = this.componentState.swfPath || null;
+    this.wasmPath = this.componentState.wasmPath || null;
+    this.isInitialized = false;
   }
 
   _createBaseUI() {
@@ -139,7 +231,7 @@ export class FlashPanelUI {
         <span style="color: #e94560;">Flash Game</span>
         <span class="flash-panel-status" style="margin-left: 12px; color: #aaa; font-size: 12px;">initializing…</span>
       </div>
-      <div class="flash-panel-swf" style="flex-shrink: 0;"></div>
+      <div class="flash-panel-swf" style="flex-shrink: 0; position: relative;"></div>
       <div class="flash-panel-controls" style="flex-shrink: 0; margin-top: 6px; font-size: 12px;">
         <button class="flash-panel-wirecheck" style="background:#e94560;color:#fff;border:none;padding:4px 10px;border-radius:3px;cursor:pointer;margin-right:4px;">Wire Check</button>
         <button class="flash-panel-readstate" style="background:#e94560;color:#fff;border:none;padding:4px 10px;border-radius:3px;cursor:pointer;margin-right:4px;">Read State</button>
@@ -161,9 +253,13 @@ export class FlashPanelUI {
         <button class="flash-panel-tp-location-go" style="background:#e94560;color:#fff;border:none;padding:4px 10px;border-radius:3px;cursor:pointer;margin-left:4px;">Go</button>
         <label style="margin-left:10px;color:#aaa;"><input class="flash-panel-tp-on-click" type="checkbox" /> TP on UI click</label>
       </div>
+      <div class="flash-panel-ap-found" style="flex-shrink: 0; margin-top: 6px; font-size: 11px; background:#111; border:1px solid #333; border-radius:4px; padding:6px; display:none;"><div class="flash-panel-ap-found-headline" style="color:#e94560;"></div><div class="flash-panel-ap-found-rows" style="color:#aaa; white-space:pre-wrap;"></div></div>
       <div class="flash-panel-log" style="flex-grow: 1; margin-top: 6px; background: #111; border: 1px solid #333; border-radius: 4px; padding: 6px; font-size: 11px; overflow-y: auto; min-height: 60px; white-space: pre-wrap;"></div>
     `;
 
+    this.apFoundElement = this.rootElement.querySelector('.flash-panel-ap-found');
+    this.apFoundHeadline = this.rootElement.querySelector('.flash-panel-ap-found-headline');
+    this.apFoundRows = this.rootElement.querySelector('.flash-panel-ap-found-rows');
     this.swfContainer = this.rootElement.querySelector('.flash-panel-swf');
     this.statusElement = this.rootElement.querySelector('.flash-panel-status');
     this.logElement = this.rootElement.querySelector('.flash-panel-log');
@@ -306,6 +402,276 @@ export class FlashPanelUI {
     `;
   }
 
+  _embedWasmIframe(width, height) {
+    this.swfContainer.innerHTML = `
+      <iframe id="${this.flashObjectId}" src="${this.wasmPath}"
+          width="${width}" height="${height}"
+          style="border:0;background:#000;display:block;"
+          allow="autoplay"></iframe>
+    `;
+  }
+
+  /**
+   * Init flow for the wasm-iframe transport (SWFRecomp-recompiled
+   * game page exposing __swfBridge). Differs from the real-Flash flow
+   * in lifecycle, not semantics: the page loads immediately, but the
+   * game — and with it the bridge callbacks — only starts on the
+   * page's own ▶ Start button (a user gesture inside the iframe;
+   * WebGPU/audio init consume the activation). So we wait for the
+   * shim, tell the user to press Start, then wait as long as it takes
+   * for the callbacks before configuring. None of the real-Flash
+   * workarounds (Ruffle load, Clean Flash configure delay, host-shim
+   * poll counters) apply here.
+   */
+  async _initializeWasm() {
+    this._setStatus('loading config…');
+    this.gameConfig = await this._loadConfig(this.configPath);
+    this._panelLog(`config loaded: ${this.gameConfig.game} (wasm transport)`);
+    this._setupTeleportUI();
+
+    const [w, h] = this.gameConfig.stage_size || [480, 480];
+    this._embedWasmIframe(w, h);
+
+    // Local handle so the awaits below can detect a teardown/reinit
+    // (preset switch) racing this flow — a stale flow must not touch
+    // the panel or the replacement adapter.
+    const adapter = new WasmBridgeAdapter({
+      config: this.gameConfig,
+      flashObjectId: this.flashObjectId,
+      stateManager,
+      dispatcher: getDispatcher(),
+      eventBus: this.eventBus,
+      log: (msg, cls) => this._panelLog(msg, cls),
+    });
+    this.adapter = adapter;
+    this._attachRegionGlue(adapter);
+
+    try {
+      this._setStatus('loading wasm page…');
+      await adapter.waitForShim(30000);
+      if (this.adapter !== adapter) return;
+      this._setStatus('click ▶ Start in the game');
+      this._panelLog('wasm page loaded — click ▶ Start in the game to boot it');
+      // Callbacks appear only after the user starts the game; wait
+      // generously rather than timing out under them.
+      await adapter.waitForBridge(10 * 60 * 1000);
+      if (this.adapter !== adapter) return;
+      this._panelLog('bridge callbacks ready');
+    } catch (err) {
+      if (this.adapter !== adapter) return;
+      this._panelLog(`bridge not ready: ${err.message}`, 'error');
+      this._setStatus('bridge timeout');
+      return;
+    }
+
+    // Hook state reports before configure so the baseline reads that
+    // follow it are seen (and suppressed) by the adapter.
+    adapter.installStateHook();
+    const result = adapter.configureBridge();
+    this._panelLog(`configure: ${result}`);
+    this._setStatus('configured');
+    adapter.attach();
+    setTimeout(() => {
+      if (this.adapter === adapter) this._verifyWasmBridgeConfigured();
+    }, 1000);
+
+    // ⛓ BRIDGE-READY IS THE HOST'S FIRST MOMENT OF CONTROL, and it is where
+    // the Seedling randomizer decides — from DATA — whether it applies.
+    this._startSeedlingRandomizer(adapter);
+  }
+
+  /**
+   * ⛓⛓ **THE SEEDLING RANDOMIZER, DETECTED RATHER THAN SWITCHED ON**
+   * (EDITOR INTEGRATION slice P1; plan §17.1, §17.5). ⚖ USER, 2026-08-29:
+   * *every frontend feature detects from the loaded preset's DATA whether it
+   * applies — no opt-in flag*.
+   *
+   * ⛔ THE TWO CHEAP CHECKS RUN HERE, AND NOTHING ELSE DOES. The predicate is
+   * a 0-dependency module that is already in the bundle; the manifest is a
+   * small JSON beside the build. Only if those pass is the HEAVY half reached,
+   * and it is reached through a specifier the bundler cannot evaluate —
+   * measured, a literal one inlines 87 files and 897 KB into `dist/bundle.js`
+   * (see `seedlingRandomizerWiring.js`'s header for the four-build table).
+   *
+   * ⛔ `document.baseURI`, NOT `import.meta.url`: in the bundled build this
+   * module IS `frontend/dist/bundle.js`, and a module-relative resolve would
+   * look in `dist/`. The document is `frontend/index.html` either way — the
+   * same base `GAMES_DIR` and friends already fetch against.
+   */
+  async _startSeedlingRandomizer(adapter) {
+    const staticData = stateManager.getStaticData?.() ?? null;
+    const flashPanel = staticData?.flash_panel ?? null;
+    let manifest = null;
+    try {
+      manifest = await this._loadConfig(`${WASM_DIR}builds.json`);
+    } catch (err) {
+      this._panelLog(`ap placement: the wasm manifest could not be read — ${err.message}`, 'error');
+    }
+    if (this.adapter !== adapter) return;
+
+    const cheap = seedlingRandomizerEligibility({ flashPanel, transport: 'wasm', manifest });
+    if (cheap.verdict === 'ineligible') {
+      // ⛓ ONE LINE, AND IT NAMES THE CHECK. "Nothing happened" with no reason
+      // is the shape a data-driven feature fails in.
+      this._panelLog(`ap placement: not applicable — ${cheap.why}`);
+      return;
+    }
+
+    const overlay = this._seedlingOverlay();
+    try {
+      const wiringUrl = new URL(
+        'modules/flashPanel/seedlingRandomizerWiring.js', document.baseURI).href;
+      const wiring = await import(/* @vite-ignore */ wiringUrl);
+      if (this.adapter !== adapter) { overlay.remove(); return; }
+
+      /**
+       * ⛔ `region_atlas` IS NOT IN THE STATIC-DATA SURFACE.
+       * `statePersistence.js:974-1000` enumerates the keys the worker posts and
+       * it is not among them, so the map document a preset NAMES is read from
+       * the raw payload — the documented catch-up path for raw-rules-only
+       * fields (`stateManager/index.js:131-137`, which names `preset_sidecars`
+       * for the same reason). ⛓ IMPORTED STATICALLY, beside the proxy it comes
+       * from: reached through a computed URL it would be a SECOND instance of
+       * that module in the bundled build, whose `lastRawJsonPayload` is null.
+       */
+      const loaded = await wiring.loadSeedlingRandomizer({
+        flashPanel,
+        manifest,
+        rawRules: getLastRawJsonData?.() ?? null,
+        locations: staticData?.locations,
+        playerId: staticData?.playerId,
+        gameConfig: this.gameConfig,
+        baseUrl: document.baseURI,
+        log: (msg, cls) => this._panelLog(msg, cls),
+      });
+      if (this.adapter !== adapter) { overlay.remove(); return; }
+      if (!loaded.eligibility?.eligible) {
+        this._panelLog(`ap placement: not applicable — ${loaded.why}`);
+        overlay.remove();
+        return;
+      }
+
+      const glue = getSeedlingRegionGlue();
+      if (!glue) {
+        this._panelLog('ap placement: no region glue to hand the delivery to', 'error');
+        overlay.remove();
+        return;
+      }
+      const g = adapter._getFlash();
+      // ⛓ Stashed so a gate can read the whole step log — the reset's
+      // before/after world, its wait in ms, the delivery's chunk count. A
+      // browser row that could only see the END state cannot tell a reset that
+      // landed from a world that was already there.
+      this._apLoadResult = await wiring.runSeedlingRandomizerLoad({
+        loaded,
+        glue,
+        teleport: (t) => adapter.teleport(t),
+        bot: (name, arg) => (arg === undefined ? g[name]() : g[name](arg)),
+        overlay,
+        log: (msg, cls) => this._panelLog(msg, cls),
+      });
+    } catch (err) {
+      this._panelLog(`ap placement: ${err.message}`, 'error');
+      overlay.setText(`the randomized rooms could not be prepared — ${err.message}`, 'error');
+      log('error', '[flashPanelUI] seedling randomizer load failed', err);
+    } finally {
+      // ⛓ THE SAFETY NET, NOT THE MECHANISM. `runSeedlingRandomizerLoad` hides
+      // the overlay on every path it owns; this catches the paths it does not
+      // reach at all (a throw, a teardown mid-flight), because an overlay left
+      // up covers the game forever.
+      overlay.detachSafetyNet();
+    }
+  }
+
+  /** Paint the readout. Hidden until the first find, so a preset with no
+   *  Archipelago placement shows no empty box. */
+  _renderApFound() {
+    if (!this.apFoundElement) return;
+    this.apFoundElement.style.display = this._apFoundReadout.found > 0 ? 'block' : 'none';
+    this.apFoundHeadline.textContent = this._apFoundReadout.headline();
+    this.apFoundRows.textContent = this._apFoundReadout.lines().join('\n');
+  }
+
+  /**
+   * The loading overlay, over the game and inside the embed — so
+   * `_teardown`'s `swfContainer.innerHTML = ''` takes it with the iframe and a
+   * REMOUNTED panel cannot inherit the old mount's element.
+   *
+   * ⚠ `pointer-events: none` ON THE IFRAME is what keeps the mouse out of the
+   * game while it is up; the KEYBOARD is a different question and is measured
+   * on the real page in P1-e rather than assumed here (a focused iframe keeps
+   * receiving key events whatever the parent document does with pointers).
+   */
+  _seedlingOverlay() {
+    const el = document.createElement('div');
+    el.className = 'flash-panel-ap-overlay';
+    el.style.cssText = `
+      position: absolute; inset: 0; display: none; z-index: 5;
+      align-items: center; justify-content: center; text-align: center;
+      background: rgba(10,10,10,0.88); color: #e0e0e0;
+      font-family: monospace; font-size: 12px; padding: 12px; box-sizing: border-box;
+    `;
+    this.swfContainer.appendChild(el);
+    const iframe = () => document.getElementById(this.flashObjectId);
+    const release = () => {
+      const f = iframe();
+      if (!f) return;
+      f.style.pointerEvents = '';
+      try { f.focus({ preventScroll: true }); } catch { /* focus is best-effort */ }
+    };
+    /**
+     * ⛓ STICKY IS A STATE, NOT A TIMER. A refusal leaves the message up
+     * because the player is now playing a DIFFERENT game than the one AP
+     * generated and needs to be told; hiding it after N seconds would be a
+     * sleep pretending to be a decision. `hide()` clears it, so a later
+     * success takes the overlay down normally.
+     */
+    let sticky = false;
+    return {
+      element: el,
+      get sticky() { return sticky; },
+      show: () => {
+        el.style.display = 'flex';
+        const f = iframe();
+        if (f) f.style.pointerEvents = 'none';
+        el.setAttribute('tabindex', '-1');
+        try { el.focus({ preventScroll: true }); } catch { /* focus is best-effort */ }
+      },
+      setText: (text, cls) => {
+        el.textContent = text;
+        el.style.color = cls === 'error' ? '#e94560' : '#e0e0e0';
+        if (cls === 'error') sticky = true;
+      },
+      hide: () => { sticky = false; el.style.display = 'none'; release(); },
+      remove: () => { sticky = false; el.remove(); release(); },
+      /**
+       * ⛔ THE SAFETY NET, NOT THE MECHANISM. The sequence hides the overlay on
+       * every path it owns; this catches the ones it never reaches — a throw,
+       * a teardown mid-flight — because an overlay left up covers the game
+       * forever. It never removes a refusal the sequence deliberately left.
+       */
+      detachSafetyNet: () => { if (!sticky) { el.remove(); release(); } },
+    };
+  }
+
+  _verifyWasmBridgeConfigured() {
+    if (!this.adapter) return;
+    const raw = this.adapter.readState();
+    if (typeof raw === 'string' && raw.indexOf('not configured') !== -1) {
+      this._panelLog('bridge not configured — retrying');
+      this.adapter.configureBridge();
+      setTimeout(() => this._verifyWasmBridgeConfigured(), 1000);
+      return;
+    }
+    if (typeof raw === 'string' && raw.indexOf('classes not resolved') !== -1) {
+      this._panelLog('bridge waiting for classes to resolve…');
+      setTimeout(() => this._verifyWasmBridgeConfigured(), 1000);
+      return;
+    }
+    this._panelLog(`bridge verified: ${raw?.substring ? raw.substring(0, 80) : raw}`);
+    this._setStatus('ready');
+  }
+
   async _initializeAdapter() {
     if (this.isInitialized) return;
     this.isInitialized = true;
@@ -315,17 +681,34 @@ export class FlashPanelUI {
       // rules.json `flash_panel` section, which is threaded through
       // stateManager.getStaticData(). componentState overrides win;
       // if neither source specifies a game, the panel stays idle.
-      if (!this.configPath || !this.swfPath) {
+      if (!this.configPath || !this.swfPath || !this.wasmPath) {
         const fp = stateManager.getStaticData?.()?.flash_panel;
-        if (fp && (fp.config || fp.swf)) {
+        if (fp && (fp.config || fp.swf || fp.wasm)) {
           if (!this.configPath && fp.config) {
             this.configPath = GAMES_DIR + fp.config;
           }
           if (!this.swfPath && fp.swf) {
             this.swfPath = SWF_DIR + fp.swf;
           }
-          this._panelLog(`rules.json flash_panel: config=${fp.config} swf=${fp.swf}`);
+          if (!this.wasmPath && fp.wasm) {
+            this.wasmPath = WASM_DIR + fp.wasm;
+          }
+          this._panelLog(`rules.json flash_panel: config=${fp.config} swf=${fp.swf} wasm=${fp.wasm}`);
         }
+      }
+
+      // Transport selection: 'auto' takes the wasm page whenever the
+      // wiring provides one (it runs in any browser; real Flash needs
+      // a plugin-capable one), 'flash'/'wasm' force their transport.
+      // A forced transport with no matching path falls through to the
+      // "not configured" messages below.
+      let runtime = 'auto';
+      try {
+        runtime = await settingsManager.getSetting(RUNTIME_SETTING_KEY, 'auto');
+      } catch { /* keep 'auto' */ }
+      if (this.configPath && this.wasmPath && runtime !== 'flash') {
+        await this._initializeWasm();
+        return;
       }
 
       if (!this.configPath || !this.swfPath) {
@@ -358,6 +741,7 @@ export class FlashPanelUI {
         eventBus: this.eventBus,
         log: (msg, cls) => this._panelLog(msg, cls),
       });
+      this._attachRegionGlue(this.adapter);
 
       try {
         await this.adapter.waitForBridge(15000);
@@ -386,6 +770,26 @@ export class FlashPanelUI {
       this._panelLog(`init failed: ${err.message}`, 'error');
       this._setStatus('error');
     }
+  }
+
+  /**
+   * Hand a freshly-built adapter to the region-atlas glue, which installs its
+   * raw-report hook and restarts its view of the game (region-atlas Phase 4).
+   * Both transports go through here; the glue is inert unless a preset's
+   * sidecars actually name the flash_seedling substrate.
+   */
+  _attachRegionGlue(adapter) {
+    try {
+      getSeedlingRegionGlue()?.attachAdapter(adapter);
+    } catch (err) {
+      this._panelLog(`region-atlas glue attach failed: ${err.message}`, 'error');
+    }
+  }
+
+  _detachRegionGlue() {
+    try {
+      getSeedlingRegionGlue()?.detachAdapter();
+    } catch { /* module torn down */ }
   }
 
   async _loadConfig(path) {
@@ -482,7 +886,19 @@ export class FlashPanelUI {
 
   destroy() {
     log('info', '[FlashPanelUI] Destroying');
+    if (this._rulesLoadedHandler) {
+      this.eventBus.unsubscribe('stateManager:rulesLoaded', this._rulesLoadedHandler);
+      this._rulesLoadedHandler = null;
+    }
+    if (this._apItemFoundHandler) {
+      this.eventBus.unsubscribe(AP_ITEM_FOUND_EVENT, this._apItemFoundHandler);
+      this._apItemFoundHandler = null;
+      // ⛓ The readout goes with the handler that feeds it — same lifetime,
+      // same reason (a detached element counted into is worse than none).
+      this._apFoundReadout = null;
+    }
     if (this.adapter) {
+      this._detachRegionGlue();
       this.adapter.detach();
       this.adapter = null;
     }

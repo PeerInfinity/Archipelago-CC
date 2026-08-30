@@ -1,0 +1,63 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 0,
+        "x": 176,
+        "y": 208
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": {
+        "items": {
+            "hasSword": true
+        }
+    },
+    "tick0": null,
+    "tick_count": 28,
+    "inputs": [
+        {
+            "key": "primary",
+            "from": 0,
+            "to": 1
+        },
+        {
+            "key": "primary",
+            "from": 2,
+            "to": 3
+        },
+        {
+            "key": "right",
+            "from": 2,
+            "to": 3
+        },
+        {
+            "key": "primary",
+            "from": 14,
+            "to": 15
+        }
+    ],
+    "name": "r9-l0-sword-dash-rest",
+    "description": "⛓⛓⛓ R9 SLICE 12e″ — THE DASH FROM A STANDSTILL, which `r9-l0-sword-dash` is deliberately blind to: that tape holds `right` for its whole run so every press lands on a MOVING player. R9 slice 12e′ measured what the blind spot cost — on `r9-solve-3`'s 151-tick re-solve the GAME bought 2.80 px on t=114 where the model bought 0.80, and 37 ticks later the two were in different rooms. The mechanism is a WITHIN-TICK ORDERING: `useItem(Main.primary)` is `Player.input()`'s LAST act, BELOW the movement arms that have already written `v`, so `set slashing`'s `knockback(2, Point(x - v.x, y - v.y))` points along the POST-key velocity. This tape asks the game two questions one key apart, from a dead stop with the sword: an ordinary swing at k = 0, a DASH at k = 2 with the direction key STARTING that same tick (the claim: the tick moves WALK_SPEED + SLASH_DASH_FORCE = 2.8 px, then decays by exactly 0.25/tick with the key released), and — after a DERIVED coast back to a dead stop — a second DASH at k = 14 with NO direction key, which must move the player by NOTHING because `v` really is (0,0) when `useItem` reads it and `point_normalize` no-ops at zero length. A model reading the PRE-key velocity pays nothing for both; a model that has broken the zero-length no-op pays for both; only the game separates them. Same DERIVED L0 corridor as `r9-l0-sword-dash`. Authored by scripts/procgen/plan-seedling-r9-l0-sword-dash.mjs.",
+    "note": ""
+}

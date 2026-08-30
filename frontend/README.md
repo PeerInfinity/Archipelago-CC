@@ -29,6 +29,8 @@ Beyond standard tracking, the frontend supports alternate game modes activated v
 | **[Maze Metagame](../docs/json/features/maze-metagame.md)** | `?metagame=mazegame` | Solve mazes before checking locations or moving regions |
 | **Text Adventure** | *(via module config)* | Play the randomizer as a text-based adventure |
 
+The frontend also includes a **procedural-generation pipeline**: the Procgen Pipeline panel generates complete multi-region worlds whose regions are rendered by pluggable substrates (maze, platformer, text adventure, Flash, idle game), compiled to standard `rules.json` and playable in place. See the [procgen developer docs](../docs/json/developer/procgen/README.md).
+
 ## Getting Started
 
 ### Try the live demo
@@ -77,7 +79,7 @@ frontend/
 │   ├── loggerService.js    # Structured logging
 │   └── universalLogger.js  # Cross-context logging
 │
-├── modules/                # Feature modules (48 modules)
+├── modules/                # Feature modules (~79 directories, incl. submodules)
 │   ├── stateManager/       # Core state management (Web Worker)
 │   ├── client/             # Archipelago server connection
 │   ├── locations/          # Location tracking UI
@@ -203,6 +205,9 @@ npm run test:headed
 | `regions` | Region navigation |
 | `regionGraph` | Visual region graph |
 | `spoilerTest` | Logic validation testing |
+| `procgenPipeline` | Procedural world generation ([docs](../docs/json/developer/procgen/architecture.md)) |
+| `procgenPlayer` | Plays generated worlds by routing regions to substrate panels |
+| `loops` | Loop mode (incremental-game layer) |
 
 ## Related Documentation
 
@@ -212,6 +217,7 @@ npm run test:headed
 - **[Module Reference](../docs/json/modules/)** - Detailed module documentation
 - **[Developer Guides](../docs/json/developer/guides/)** - Development guides
 - **[Architecture](../docs/json/developer/architecture.md)** - System design overview
+- **[Procedural Generation](../docs/json/developer/procgen/README.md)** - The procgen pipeline, substrates, and playback tooling
 - **[Event System](../docs/json/developer/guides/event-system.md)** - EventBus and EventDispatcher
 - **[State Management](../docs/json/developer/guides/state-management.md)** - StateManager details
 - **[JSON Schema](schema/README.md)** - Schema documentation for rules files

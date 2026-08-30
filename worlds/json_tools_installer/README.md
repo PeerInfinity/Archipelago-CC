@@ -6,6 +6,8 @@ An APWorld package that provides tools for installing, updating, and managing JS
 
 This installer allows vanilla Archipelago users to easily install the JSON Tools suite (exporter, rule builder, world generator, frontend) without needing to clone or manage the full development repository.
 
+**AI disclosure:** The code and documentation in this package are predominantly AI-generated, written with [Claude Code](https://claude.ai/code), as part of the [Archipelago-CC](https://github.com/PeerInfinity/Archipelago-CC) project.
+
 ## Features
 
 - **Download Tools**: Fetch JSON Tools from GitHub (stable or development versions)
@@ -126,6 +128,67 @@ The installer can install these components:
 | `tracker` | PopTracker integration world for auto-tracking | No |
 | `testing` | Test config files (package.json, playwright, vitest) | No |
 | `worldgen_worlds` | Auto-generated world packages from JSON rules (~15MB) | No |
+| `world_source` | Original world source for full rule export on compiled installs (~15MB, downloaded from the matching upstream Archipelago release) | No |
+
+### Submodule content
+
+The fork keeps every frontend substrate in a git submodule under
+`frontend/modules/` — and a GitHub branch archive contains **no** submodule
+content (git records a submodule as a gitlink, and the archive omits it). So
+whenever a selected component's destination contains a submodule (today:
+`frontend`), the installer downloads that submodule separately and extracts
+it into its path; without it the served site cannot resolve its core imports
+and dies with "Failed to fetch dynamically imported module: init.js".
+
+The version fetched is the commit the source repository **pins**, resolved
+through the GitHub contents API. If that lookup fails (offline, rate limited)
+the `.gitmodules` branch — or the submodule repository's default branch — is
+used instead, with a warning that the content may differ from the version the
+source was built with. A failed fetch leaves whatever is already installed in
+place rather than deleting it.
+
+Those files are recorded in the install manifest under the component that
+owns the destination, so upgrades prune them like any other installed file.
+The Stable source predates the submodule split and has no `.gitmodules`, in
+which case this step does nothing.
+
+### APWorld dependencies
+
+The install step also scans every apworld in `custom_worlds/` for a
+`requirements.txt` and installs any missing packages. Nothing else does this:
+vanilla Archipelago's module installer only scans `worlds/` directories on
+source installs, and compiled releases can't run pip at all. This is how e.g.
+MetaMath's `metamath-py` dependency gets installed on compiled installs.
+Restart the Launcher afterwards so affected worlds load with their
+dependencies present.
+
+### Compiled (frozen) Archipelago installs
+
+On the compiled Windows release, importable components (`exporter`,
+`world_generator`) are installed into `lib/` (the install root is not on the
+frozen interpreter's module path), and Python dependencies are installed with
+the bundled pip.
+
+World-shaped components (`demo_worlds`, `tracker`) are installed as
+source-bearing `.apworld` files into `custom_worlds/` — the root `worlds/`
+directory they normally extract to is never loaded by compiled installs.
+Restart the Launcher after installing so the new worlds load. Their Python
+dependencies are covered by the apworld-requirements scan described above.
+
+Components that cannot work there are skipped with a warning:
+
+- `rule_builder` — vanilla's copy inside `lib/library.zip` takes module-path
+  precedence and cannot be replaced; rule exports fall back to `ast` format.
+- `romless_patches` and `upstream_fixes` — compiled installs run their worlds
+  from `lib/worlds/*.apworld`, which file patches cannot reach.
+- `worldgen_worlds`, and the `toem_rule_builder` demo world — they require the
+  extended Rule Builder, which cannot load on compiled installs.
+
+The bundled worlds ship without source code, so the `ast` rule analysis needs
+the `world_source` component: it downloads the `.py` files from the upstream
+release tag matching the installed Archipelago version into
+`json_tools_world_source/<version>/` — a folder Archipelago itself never
+reads, and which cannot be imported (the root is not on the module path).
 
 ## Version Sources
 
@@ -137,6 +200,26 @@ Configure custom sources:
 python -m worlds.json_tools_installer config --stable-repo owner/repo --stable-branch branch
 python -m worlds.json_tools_installer config --dev-repo owner/repo --dev-branch branch
 ```
+
+### Switching sources (e.g. Stable → Development)
+
+Re-running the installer with a different source overwrites the installed
+components in place; no manual uninstall is needed. Each extraction records
+the files it wrote in `json_tools_install_manifest.json`, and the next
+install of the same component removes what it recorded but no longer ships —
+without that, files deleted upstream stay behind and keep running (exporter
+game handlers, for instance, are discovered by scanning their directory).
+
+An install made before the manifest existed has no record to prune from, so
+each selected component's own destination is cleared before the new files are
+extracted over it, and the record is written as usual — later upgrades then
+use the precise per-file path.
+
+Nothing outside a component's own destination is ever touched: components you
+did not select, files another component owns (`frontend/presets` survives a
+Frontend reinstall), and the presets directory itself — generation runs write
+their own presets there, and the installer will not delete what it cannot
+prove it shipped.
 
 ## Patching Methods
 
@@ -286,6 +369,34 @@ python -m worlds.json_tools_installer install --revert-patches
 python scripts/build/pack_json_tools_installer.py
 ```
 
+### Testing
+
+Three layers, from cheapest to most end-to-end:
+
+**Unit tests** — `worlds/json_tools_installer/test/` (plain pytest, part of
+the repo's normal `pytest` run):
+
+```bash
+python -m pytest worlds/json_tools_installer/test/
+```
+
+Covers extractor routing (frozen_dest / frozen_apworld / unsupported_frozen),
+overwrite/detection/removal, dependency scanning and the single-pip-call +
+frozen re-invocation guards, world_source filtering and the exporter's source
+fallbacks, a manifest-validity sweep over every tracked apworld, and the GUI
+checkbox/property invariant. No test touches a real install; expected paths
+are imported from the production modules.
+
+**Source-install integration** — `scripts/install_json_tools.py` clones
+vanilla AP and installs for real (release checklist §7.2). The
+`--test-apworld-deps` and `--test-uninstall` flags add apworld-requirements
+and uninstall-round-trip verification.
+
+**Frozen-install harness** — `scripts/test/test-frozen-install.py` drives the
+installer inside a real compiled Archipelago install via a probe apworld
+(release checklist §7.2b); `.github/workflows/test-frozen-install.yml` runs
+it on a Windows runner via manual dispatch.
+
 ### Testing Imports
 
 ```python
@@ -306,6 +417,7 @@ worlds/json_tools_installer/
 ├── components.py         # Launcher components
 ├── requirements.txt      # Python dependencies for this module
 ├── README.md             # This file
+├── test/                 # Unit tests (plain pytest; see Testing above)
 ├── installer/
 │   ├── __init__.py
 │   ├── version_detector.py  # AP version detection

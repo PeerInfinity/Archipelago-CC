@@ -20,6 +20,12 @@ An overview of the major features in the Archipelago JSON Export Tools project.
 | **Rule Builder Extensions** | 15 new rule types, AST format support, explain support, and pathfinding — extending upstream PR #5048 | [rule_builder/README.md](../../../rule_builder/README.md) |
 | **Fuzzer Improvements** | Reproducible seeded fuzzing, option exclusion, early termination — enabling comprehensive cross-game validation | [fuzzer.md](fuzzer.md) |
 
+## Procedural Generation
+
+| Feature | Description | Overview |
+|---------|-------------|----------|
+| **Procgen Pipeline** | Generates complete playable randomizer worlds in the browser — mixed-substrate regions (maze, platformer, text adventure, Flash, idle game) with physics-verified access rules, compiled to standard `rules.json` | [procgen.md](procgen.md) |
+
 ## New Games & Modes
 
 See the **[Playable Games Index](../games/README.md)** for all games and game modes, including DepGraph, Loops, MetaMath, Journey to Ascension, Maze Metagame, Text Adventure, and Vibe Coding Simulator.

@@ -1,9 +1,26 @@
 // modeManager.js - Mode determination and management
 // Extracted from init.js lines 484-590
 
+import { LAST_WORLD_KEY } from '../../modules/stateManager/worldPersistence.js';
+
 // Constants for localStorage keys
 const LOCAL_STORAGE_MODE_PREFIX = 'archipelagoToolSuite_modeData_';
 const LOCAL_STORAGE_LAST_ACTIVE_MODE_KEY = 'archipelagoToolSuite_lastActiveMode';
+
+/**
+ * Drop the persisted last-loaded world so an explicit reset boots the default
+ * preset, not the previously-restored world. Best-effort — sessionStorage may
+ * be unavailable (e.g. sandboxed iframe).
+ */
+function clearLastWorld() {
+  try {
+    if (typeof sessionStorage !== 'undefined') {
+      sessionStorage.removeItem(LAST_WORLD_KEY);
+    }
+  } catch {
+    /* ignore */
+  }
+}
 
 /**
  * Reads the autoLoadMode and autoSaveMode settings.
@@ -101,6 +118,7 @@ export async function determineActiveMode(logger) {
     try {
       localStorage.removeItem(LOCAL_STORAGE_LAST_ACTIVE_MODE_KEY);
       localStorage.removeItem(LOCAL_STORAGE_MODE_PREFIX + 'default'); // Clear default mode's saved data specifically
+      clearLastWorld();
       logger.info(
         'init',
         'Cleared last active mode and "default" mode data from localStorage for mode=reset.'
@@ -126,6 +144,7 @@ export async function determineActiveMode(logger) {
       localStorage.removeItem(LOCAL_STORAGE_LAST_ACTIVE_MODE_KEY);
       // Clear data for the specific mode being reset TO
       localStorage.removeItem(LOCAL_STORAGE_MODE_PREFIX + modeToLoadDefaultsFor);
+      clearLastWorld();
       logger.info(
         'init',
         `Cleared last active mode and "${modeToLoadDefaultsFor}" mode data from localStorage for reset=true.`

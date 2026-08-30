@@ -22,7 +22,18 @@ Both layers must support a rule type for it to work end-to-end.
 | `not` | Logical negation | `condition` or `operand` | `{"type": "not", "condition": {...}}` |
 | `conditional` | Ternary if-then-else | `test`, `if_true`, `if_false` | `{"type": "conditional", "test": {...}, "if_true": {...}, "if_false": {...}}` |
 | `count_true` | True if N conditions pass | `conditions: []`, `count` | `{"type": "count_true", "conditions": [...], "count": 3}` |
+| `AtLeast` | True if at least N child rules pass (Rule Builder twin of `count_true`) | `children: []`, `count` | `{"rule": "AtLeast", "children": [...], "count": 3}` |
 | `weighted_count_true` | True if weighted sum of conditions >= threshold | `conditions: []`, `weights: []`, `threshold` | `{"type": "weighted_count_true", ...}` |
+
+**`AtLeast` notes.** `AtLeast` is the Rule Builder–format expression of "N of M"
+gating; the AST-format `count_true` is its exact twin and the two convert into each
+other losslessly. `AtLeast` is **boolean** (it does not produce a count) and its
+resolution collapses the degenerate cases: `count <= 0` → always true, `count == 1`
+→ `Or`, `count == len(children)` → `And`, `count > len(children)` → always false. A
+genuine `{"rule": "AtLeast"}` therefore only appears for the strict middle band
+`2 <= count <= len(children) - 1`. See
+[rule-type-dispatch-inventory.md](rule-type-dispatch-inventory.md) for every site
+that must handle it.
 
 ### Item & Inventory Checks
 

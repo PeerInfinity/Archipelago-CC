@@ -2184,6 +2184,27 @@ class CommonUI {
         break;
       }
 
+      // Composite: AtLeast — at least N of the children
+      case 'AtLeast': {
+        const required = rule.count ?? args.count ?? 0;
+        root.appendChild(
+          document.createTextNode(` (at least ${required} of ${children.length})`)
+        );
+        const conditionsContainer = document.createElement('div');
+        conditionsContainer.classList.add('logic-conditions');
+        conditionsContainer.style.marginLeft = '10px';
+        children.forEach((childRule, index) => {
+          const conditionLabel = document.createElement('div');
+          conditionLabel.textContent = `Option #${index + 1}:`;
+          conditionsContainer.appendChild(conditionLabel);
+          conditionsContainer.appendChild(
+            this.renderLogicTree(childRule, useColorblind, stateSnapshotInterface)
+          );
+        });
+        root.appendChild(conditionsContainer);
+        break;
+      }
+
       // Wrapper: Not
       case 'Not': {
         root.appendChild(document.createTextNode(' (negation)'));

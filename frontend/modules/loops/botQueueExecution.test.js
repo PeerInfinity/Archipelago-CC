@@ -1,12 +1,18 @@
 /**
- * Tests for bot-backed queue execution in loopState (loops-mode
- * rework Phase 4).
+ * Tests for the walkTo SOLVER path in loopState (loops-mode rework
+ * Phase 4; re-homed onto the Bot radio in M6).
  *
- * Substrates whose loopSupport declares executeVia: 'playbackBot'
- * (bounce) get their regionMove / locationCheck queue actions
- * executed by the playback bot: the queue parks, walkTo is
- * dispatched, and the resulting locationCheck / regionChanged event
- * completes the action and charges its loops-fallback mana cost.
+ * Substrates whose loopSupport declares executeVia: 'solver' (bounce)
+ * get their regionMove / locationCheck queue actions executed by the
+ * substrate's playback bot: the queue parks, walkTo is dispatched, and
+ * the resulting locationCheck / regionChanged event completes the action.
+ *
+ * M6: the ONE trigger is a block set to 'bot' — hence the explicit
+ * setBlockMode in the fixture. Before M6 these actions ran from an
+ * unconditional fall-through at the end of the frame dispatch, which is
+ * why the suite used to pin defaultBlockMode instead. The Bot-branch
+ * dispatch matrix and the mode plumbing live in blockModes.test.js;
+ * this suite covers the walkTo mechanics themselves.
  */
 import {
     describe,
@@ -58,7 +64,7 @@ function makeFunctionalBus() {
     };
 }
 
-describe('Bot-backed queue execution (loopSupport.executeVia = playbackBot)', () => {
+describe('Bot-backed queue execution (loopSupport.executeVia = solver)', () => {
     let loopState, gs, bus;
     let tick;
     let dispatcherPublishes;
@@ -99,6 +105,9 @@ describe('Bot-backed queue execution (loopSupport.executeVia = playbackBot)', ()
         });
         gs.setStartRegions(['Menu']);
         gs.setCurrentRegion('Menu');
+        // Blocks outside the one under test resolve from the default; keep
+        // it off Record so no unrelated block parks for hand-play.
+        loopState.defaultBlockMode = 'playback';
         tick = makeTicker();
         walkToCalls.length = 0;
         stopCalls.length = 0;
@@ -116,7 +125,7 @@ describe('Bot-backed queue execution (loopSupport.executeVia = playbackBot)', ()
             getPlaybackController: () => controller,
             loopSupport: {
                 queueActions: ['regionMove', 'locationCheck'],
-                executeVia: 'playbackBot',
+                executeVia: 'solver',
                 manual: true,
                 customQueues: false,
             },
@@ -140,10 +149,15 @@ describe('Bot-backed queue execution (loopSupport.executeVia = playbackBot)', ()
 
     // Queue: regionMove(Menu→bounceRegion) [0], locationCheck 'Coin' [1],
     // regionMove(bounceRegion→after) [2]. Park the cursor on entry 1.
-    function setupBounceQueue(cursorIndex = 1) {
+    // Entries 1 and 2 are the bounceRegion#1 block (the leaving move is
+    // rendered inside its SOURCE block), which M6 needs set to 'bot' for
+    // the solver to be dispatched at all. Pass mode=null to leave the
+    // block on whatever the default/legacy state resolves to.
+    function setupBounceQueue(cursorIndex = 1, mode = 'bot') {
         gs.updatePath('bounceRegion', 'go', 'Menu');
         gs.addLocationCheck('Coin', 'bounceRegion');
         gs.updatePath('after', 'bounceRegion__east', 'bounceRegion');
+        if (mode) loopState.setBlockMode('bounceRegion', 1, mode);
         loopState.currentActionIndex = cursorIndex;
         loopState.currentAction = loopState.getActionQueue()[cursorIndex];
         loopState.isProcessing = true;
@@ -169,12 +183,18 @@ describe('Bot-backed queue execution (loopSupport.executeVia = playbackBot)', ()
         setupBounceQueue(1);
         tick(loopState);
         const manaBefore = gs.getCurrentMana();
+        const xpBefore = loopState.getRegionXP('bounceRegion').xp;
 
         loopState._handleBotWake_locationCheck('Coin');
 
         expect(loopState._botExecutedAction).toBeNull();
         expect(loopState.actionQueueManager.isCompleted(1)).toBe(true);
         expect(gs.getCurrentMana()).toBe(manaBefore - 20);
+        // M6: the spend routes through _chargeLiveAction, so it awards region
+        // XP 1:1 like every other spend. The direct deductMana it replaced
+        // awarded none — a bot could grind a region forever without it
+        // getting any cheaper.
+        expect(loopState.getRegionXP('bounceRegion').xp).toBe(xpBefore + 20);
         // Cursor advanced to the leaving regionMove.
         expect(loopState.currentActionIndex).toBe(2);
     });
@@ -226,6 +246,60 @@ describe('Bot-backed queue execution (loopSupport.executeVia = playbackBot)', ()
         expect(loopState.actionQueueManager.isCompleted(2)).toBe(false);
     });
 
+    it('a loop-reset teleport releases the bot park WITHOUT pausing, and resumes the loop', () => {
+        // M6 5d: the fix for the fromReset/bot-wake gap. A fork-propagated loop
+        // reset teleports the player to the start region mid-walk; that is the
+        // reset flow owning queue state, NOT a wrong exit. The park is released
+        // and the frame loop resumes so the queue re-drives (the generic
+        // queue-restart retry) — without this the bot hard-paused on every
+        // reset that teleported off the region it was walking.
+        setupBounceQueue(2);
+        tick(loopState);
+        expect(loopState._botExecutedAction).not.toBeNull();
+        const paused = [];
+        bus.subscribe('loopState:queuePausedUntilReset', (d) => paused.push(d));
+
+        bus.publish('gameState:regionChanged', { newRegion: 'Menu', fromReset: true });
+
+        // Released cleanly: the bot stopped, no hard pause, no unexpected-region event.
+        expect(stopCalls).toEqual(['stop']);
+        expect(loopState._botExecutedAction).toBeNull();
+        expect(loopState._queuePausedUntilReset).toBe(false);
+        expect(paused).toEqual([]);
+        // The dormant frame loop (a bot park leaves _animationFrameId null, and
+        // the fork-propagated reset schedules nothing) was resumed...
+        expect(loopState._animationFrameId).not.toBeNull();
+        // ...so the next frame re-parks the bot and re-dispatches walkTo.
+        tick(loopState);
+        expect(walkToCalls).toHaveLength(2);
+        expect(loopState._botExecutedAction).not.toBeNull();
+    });
+
+    it('a reset teleport onto the destination still retries, never falsely completes', () => {
+        // fromReset is checked BEFORE the destination-match, so a reset that
+        // happens to target the walk's destination retries the interrupted
+        // walk rather than reading as a successful arrival.
+        setupBounceQueue(2); // destinationRegion is 'after'
+        tick(loopState);
+        const manaBefore = gs.getCurrentMana();
+
+        bus.publish('gameState:regionChanged', { newRegion: 'after', fromReset: true });
+
+        expect(loopState._botExecutedAction).toBeNull();       // released
+        expect(stopCalls).toEqual(['stop']);
+        expect(loopState.actionQueueManager.isCompleted(2)).toBe(false); // NOT completed
+        expect(gs.getCurrentMana()).toBe(manaBefore);          // and not charged
+    });
+
+    it('a NON-reset unexpected region still hard-pauses (the guard is intact)', () => {
+        // The fromReset exemption must not soften the real wrong-exit guard.
+        setupBounceQueue(2);
+        tick(loopState);
+        bus.publish('gameState:regionChanged', { newRegion: 'somewhereElse' });
+        expect(loopState._queuePausedUntilReset).toBe(true);
+        expect(loopState._botExecutedAction).toBeNull();
+    });
+
     it('stopProcessing stops an in-flight bot walk; resume re-dispatches walkTo', () => {
         setupBounceQueue(1);
         tick(loopState);
@@ -266,7 +340,9 @@ describe('Bot-backed queue execution (loopSupport.executeVia = playbackBot)', ()
     });
 
     it('the manual checkbox wins over bot execution', () => {
-        setupBounceQueue(1);
+        // No explicit block mode: the legacy region checkbox resolves the
+        // block to Manual, and Manual parks before the Bot branch is reached.
+        setupBounceQueue(1, null);
         loopState.setManualRegion('bounceRegion', true);
         const entered = [];
         bus.subscribe('loopState:manualEntered', (data) => entered.push(data));
@@ -275,5 +351,30 @@ describe('Bot-backed queue execution (loopSupport.executeVia = playbackBot)', ()
         expect(walkToCalls).toEqual([]);
         expect(entered).toHaveLength(1);
         expect(loopState._manualRegionName).toBe('bounceRegion');
+    });
+
+    it('a non-Bot block never reaches the solver (M6: Bot is the only trigger)', () => {
+        // Playback on a substrate with no bound recording is the pre-M6
+        // fall-through that used to hand the block to walkTo. It parks now.
+        setupBounceQueue(1, 'playback');
+        tick(loopState);
+        expect(walkToCalls).toEqual([]);
+        expect(loopState._botExecutedAction).toBeNull();
+    });
+
+    it('a Bot block whose controller is gone parks for live play instead of the timer', () => {
+        // Ruling 2: never a silent generic-timer teleport through content the
+        // solver was meant to play. The block parks (and warns) instead.
+        controller = null;
+        setupBounceQueue(1);
+        const entered = [];
+        bus.subscribe('loopState:manualEntered', (data) => entered.push(data));
+        tick(loopState);
+        expect(walkToCalls).toEqual([]);
+        expect(loopState._botExecutedAction).toBeNull();
+        expect(entered).toHaveLength(1);
+        expect(loopState._manualRegionName).toBe('bounceRegion');
+        // The queue did NOT tick the action forward on the generic timer.
+        expect(loopState.actionQueueManager.isCompleted(1)).toBe(false);
     });
 });

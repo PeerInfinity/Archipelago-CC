@@ -16,8 +16,7 @@
  *     getActivePanel so dispatcher receivers can reach the bot
  *     without a circular import
  *
- * Plan reference:
- * NewDocs/plans/procedural-generation/playback-bot-refactor.md (Phase 1)
+ * See docs/json/developer/procgen/playback-and-debugging.md.
  */
 
 import { PlaybackBotPanel } from './playbackBotPanel.js';
@@ -184,7 +183,21 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
         dispatcher: _moduleDispatcher,
     });
 
+    // X1: consumable / mana tiles fire neither user:locationCheck nor
+    // user:regionMove, so a bot on a collect detour has no other signal
+    // that the tile was reached. Only meaningful under the opt-in
+    // 'always' policy; the handler no-ops otherwise.
+    const onConsumable = () => {
+        try {
+            getActivePanel()?.getBot()?.onConsumableCollected?.();
+        } catch (e) {
+            log('warn', 'playbackBot: bot.onConsumableCollected threw', e);
+        }
+    };
+    _moduleEventBus?.subscribe?.('maze:consumableCollected', onConsumable, 'playbackBot');
+
     return () => {
+        _moduleEventBus?.unsubscribe?.('maze:consumableCollected', onConsumable, 'playbackBot');
         _moduleEventBus = null;
         _moduleDispatcher = null;
     };

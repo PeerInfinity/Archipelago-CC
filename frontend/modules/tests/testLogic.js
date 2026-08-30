@@ -6,9 +6,134 @@ import {
   discoverTests,
   getDiscoveredTests,
   getDiscoveredCategories,
-  getDiscoveredTestFunctions,
+  getDiscoveredTestFunctionById,
   isDiscoveryComplete,
 } from './testDiscovery.js';
+import { categoryInBatch, listBatchNames } from './testBatches.js';
+
+// Wall-clock budget for a whole auto-started run. When it expires the run is
+// abandoned mid-roster, so this is a CAP ON THE SUITE, not a per-test timeout:
+// tests after the cut never start and never appear in testDetails at all. The
+// completion flags are still published (Playwright would otherwise hang), which
+// is exactly why the roster accounting below has to travel with them — a
+// truncated run is green in every other respect.
+export const AUTO_START_TIMEOUT_MS = 600000;
+
+/** Thrown when AUTO_START_TIMEOUT_MS expires, so the budget case is typed
+ *  rather than matched on message text. */
+export class AutoStartTimeoutError extends Error {
+  constructor(timeoutMs) {
+    super(`Auto-start timeout after ${Math.round(timeoutMs / 1000)} seconds`);
+    this.name = 'AutoStartTimeoutError';
+    this.timeoutMs = timeoutMs;
+  }
+}
+
+// A test that reached one of these is done; anything else was still pending or
+// mid-flight when results were published.
+const TERMINAL_TEST_STATUSES = new Set(['passed', 'failed']);
+
+/**
+ * Narrow an already-merged roster to the batch named by `?testBatch=`.
+ * No parameter means no filtering, so every existing mode keeps running its
+ * whole roster and this is inert until a caller asks for a batch.
+ *
+ * Mutates `tests` in place (it is the array about to become TestState's).
+ * An unknown batch name THROWS rather than falling back to "run everything":
+ * a typo'd batch that silently ran the full suite would blow the very budget
+ * batching exists to stay inside, and a typo'd batch that silently ran nothing
+ * would report a green empty run.
+ */
+function applyTestBatchFilter(tests) {
+  if (typeof window === 'undefined' || !window.location) return;
+  const batchName = new URLSearchParams(window.location.search).get('testBatch');
+  if (!batchName) return;
+
+  if (!listBatchNames().includes(batchName)) {
+    throw new Error(
+      `[TestLogic] Unknown testBatch '${batchName}'. Known batches: ${listBatchNames().join(', ')}`
+    );
+  }
+
+  let excluded = 0;
+  for (const test of tests) {
+    if (!test.enabled) continue;
+    if (!categoryInBatch(test.category, batchName)) {
+      test.enabled = false;
+      excluded += 1;
+    }
+  }
+  const remaining = tests.filter((t) => t.enabled).length;
+  log(
+    'info',
+    `[TestLogic] testBatch '${batchName}': running ${remaining} test(s), `
+    + `${excluded} excluded as out-of-batch`
+  );
+}
+
+/**
+ * Narrow an already-merged roster to the comma-separated ids in `?testIds=`.
+ * No parameter means no filtering, so every existing mode is unaffected.
+ *
+ * WHY ids here when batches are deliberately category-only: a batch is a
+ * standing division of the roster that CI runs, and an id list would drift away
+ * from a renamed test. This is the other thing — running ONE test, over and
+ * over, to decide whether a red is a real defect or load. That protocol
+ * ("run it alone 8x and count") had no way to express itself, so a flake
+ * investigation had to run 60 neighbours each time and could never separate
+ * "fails alone" from "fails in company", which is the whole question.
+ *
+ * Like the batch filter it only ever narrows: an id the mode's config disabled
+ * stays disabled. Both failure modes throw rather than run something else —
+ * an unknown id (a typo that would otherwise run the wrong thing, or nothing)
+ * and a selection that leaves the roster empty (which would report green
+ * having tested nothing at all).
+ */
+function applyTestIdFilter(tests) {
+  if (typeof window === 'undefined' || !window.location) return;
+  const raw = new URLSearchParams(window.location.search).get('testIds');
+  if (raw === null) return;
+
+  const wanted = raw.split(',').map((s) => s.trim()).filter(Boolean);
+  if (wanted.length === 0) {
+    throw new Error(
+      '[TestLogic] ?testIds= was given with no ids. Name at least one test id, '
+      + 'or drop the parameter to run the whole roster.'
+    );
+  }
+
+  const known = new Set(tests.map((t) => t.id));
+  const unknown = wanted.filter((id) => !known.has(id));
+  if (unknown.length > 0) {
+    throw new Error(
+      `[TestLogic] Unknown testIds: ${unknown.join(', ')}. `
+      + 'Ids are the `id` field of a registerTest() call.'
+    );
+  }
+
+  const keep = new Set(wanted);
+  let excluded = 0;
+  for (const test of tests) {
+    if (!test.enabled) continue;
+    if (!keep.has(test.id)) {
+      test.enabled = false;
+      excluded += 1;
+    }
+  }
+
+  const remaining = tests.filter((t) => t.enabled).length;
+  if (remaining === 0) {
+    throw new Error(
+      `[TestLogic] ?testIds= named ${wanted.join(', ')}, but none of them are `
+      + 'enabled in this mode (or batch). A run of nothing would report green.'
+    );
+  }
+  log(
+    'info',
+    `[TestLogic] testIds: running ${remaining} test(s), `
+    + `${excluded} excluded as unselected`
+  );
+}
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -35,6 +160,28 @@ function setLoadedStateApplied(value) {
   );
   //console.trace('[TestLogic] Call stack for loadedStateApplied change:');
   loadedStateApplied = value;
+}
+
+/**
+ * Per-case progress heartbeat for a full run.
+ *
+ * Deliberately `console.log` rather than the universal logger: the
+ * logger's level filtering drops these in the Playwright modes, which
+ * is exactly where they are needed — with no per-case line in the
+ * output, a run in flight is indistinguishable from a hung one, and the
+ * only other per-case signal ("Test completion signal: PASSED") carries
+ * neither the test id nor a duration. app.spec.js relays the
+ * `[PROGRESS ` prefix verbatim.
+ */
+function logTestProgress(index, total, testId) {
+  const finished = TestState.getTests().find((t) => t.id === testId);
+  const status = (finished?.status || 'unknown').toUpperCase();
+  let elapsed = '';
+  if (finished?.startTime && finished?.endTime) {
+    const ms = new Date(finished.endTime) - new Date(finished.startTime);
+    elapsed = ` ${(ms / 1000).toFixed(1)}s`;
+  }
+  console.log(`[PROGRESS ${index}/${total}] ${testId} ${status}${elapsed}`);
 }
 
 // Initialize test discovery
@@ -438,6 +585,16 @@ export const testLogic = {
       if (test.status === undefined) test.status = 'pending';
     });
 
+    // Batch selection (?testBatch=). Applied HERE, at the single point where
+    // the roster reaches TestState, so it lands after the config's enabled
+    // states have been merged — a batch narrows what an already-enabled roster
+    // runs, it never enables something the config disabled.
+    applyTestBatchFilter(currentTests);
+    // After the batch, so `?testIds=` names a test the batch already kept —
+    // a contradictory pair leaves nothing enabled and throws rather than
+    // quietly running the id the batch had excluded.
+    applyTestIdFilter(currentTests);
+
     TestState.testLogicState.tests = currentTests;
     TestState.testLogicState.fromDiscovery = true;
 
@@ -508,7 +665,10 @@ export const testLogic = {
           await Promise.race([
             this.runAllEnabledTests(),
             new Promise((_, reject) => {
-              setTimeout(() => reject(new Error('Auto-start timeout after 600 seconds')), 600000);
+              setTimeout(
+                () => reject(new AutoStartTimeoutError(AUTO_START_TIMEOUT_MS)),
+                AUTO_START_TIMEOUT_MS
+              );
             })
           ]);
         } catch (error) {
@@ -532,7 +692,13 @@ export const testLogic = {
             passedCount: passedTests.length,
             failedCount: failedTests.length,
             failedConditionsCount: failedConditions,
-            error: error.message
+            error: error.message,
+            // Distinguishes "the suite ran out of wall clock" from any other
+            // auto-start failure. Without it the two are one opaque string,
+            // and the budget is the case that needs its own answer (split the
+            // roster / raise the budget), not a debugging session.
+            timedOut: error instanceof AutoStartTimeoutError,
+            timeoutMs: error instanceof AutoStartTimeoutError ? AUTO_START_TIMEOUT_MS : undefined,
           };
           this._setPlaywrightCompletionFlags(summary, tests);
         }
@@ -765,14 +931,17 @@ export const testLogic = {
       return;
     }
 
-    // Get the test function from discovered functions
-    const testFunctions = getDiscoveredTestFunctions();
-    const testFunction = testFunctions[test.functionName];
+    // Resolve the test function BY ID via the registry. Resolving
+    // through the functionName-keyed map let same-named functions in
+    // different test files shadow each other — three tests silently ran
+    // the wrong file's body for weeks (the "jta-out-of-mana cold-start
+    // flake" was the omsi test running under the jta id).
+    const testFunction = getDiscoveredTestFunctionById(testId);
 
     if (!testFunction) {
       log(
         'error',
-        `[TestLogic] Test function '${test.functionName}' not found for test '${testId}'.`
+        `[TestLogic] Test function not found for test '${testId}'.`
       );
       return;
     }
@@ -868,7 +1037,9 @@ export const testLogic = {
         testCount: enabledTests.length,
       });
 
+    let progressIndex = 0;
     for (const test of enabledTests) {
+      progressIndex += 1;
       log('info', `[TestLogic] Starting test: ${test.name} (${test.id})`);
 
       // Set up completion listener BEFORE starting the test to avoid race condition
@@ -892,6 +1063,7 @@ export const testLogic = {
       await testCompletionPromise;
 
       log('info', `[TestLogic] Completed test: ${test.name} (${test.id})`);
+      logTestProgress(progressIndex, enabledTests.length, test.id);
     }
 
     // Emit summary event
@@ -971,8 +1143,24 @@ export const testLogic = {
           };
         });
 
+      // Roster accounting, attached on EVERY completion path rather than only
+      // the timeout one — a run can be cut short by any thrown error, and the
+      // tests it never reached are invisible to every other signal here (they
+      // are absent from testDetails, so counting what IS there can never
+      // reveal them). Comparing against the enabled set is the only way to see
+      // the gap from inside the payload.
+      const enabledTests = allTests.filter((test) => test.enabled);
+      const notRun = enabledTests.filter(
+        (test) => !TERMINAL_TEST_STATUSES.has(test.status)
+      );
+      const roster = {
+        enabledCount: enabledTests.length,
+        notRunCount: notRun.length,
+        notRunIds: notRun.map((test) => test.id),
+      };
+
       const playwrightResults = {
-        summary,
+        summary: { ...summary, ...roster },
         testDetails,
         completedAt: new Date().toISOString(),
       };

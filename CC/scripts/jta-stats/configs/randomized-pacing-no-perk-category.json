@@ -1,0 +1,653 @@
+{
+  "name": "randomized-pacing-no-perk-category",
+  "_source": {
+    "rules": "frontend/presets/jta_loctest_roundtrip_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json",
+    "report": "../../../../tmp/claude-1000/-home-robert-CC-Archipelago-CC/59c1c152-428f-4784-972a-7410a206dbab/scratchpad/bp.json",
+    "seed": "14089154938208861744",
+    "playerId": "1"
+  },
+  "options": {
+    "zoneLimit": 15,
+    "excludeTaskIds": [
+      17,
+      28,
+      88,
+      158
+    ],
+    "maxRuns": 2000,
+    "gameDataPatch": [
+      {
+        "id": 16,
+        "cost_multiplier": 0.4983968405993143
+      },
+      {
+        "id": 15,
+        "cost_multiplier": 0.6481176883003203
+      },
+      {
+        "id": 13,
+        "cost_multiplier": 13.94857546475959
+      },
+      {
+        "id": 14,
+        "cost_multiplier": 0.16988242673501341
+      },
+      {
+        "id": 12,
+        "cost_multiplier": 0.46432893228912414
+      },
+      {
+        "id": 11,
+        "cost_multiplier": 2.1200329705149197
+      },
+      {
+        "id": 10,
+        "cost_multiplier": 1.7990510787385798
+      },
+      {
+        "id": 23,
+        "cost_multiplier": 0.6534597320535871
+      },
+      {
+        "id": 26,
+        "cost_multiplier": 5.700981696540758
+      },
+      {
+        "id": 27,
+        "cost_multiplier": 2.9591756455852765
+      },
+      {
+        "id": 25,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 22,
+        "cost_multiplier": 1.1267848497776771
+      },
+      {
+        "id": 24,
+        "cost_multiplier": 0.6481176883003203
+      },
+      {
+        "id": 21,
+        "cost_multiplier": 2.768429791111952
+      },
+      {
+        "id": 20,
+        "cost_multiplier": 1.2955233708274125
+      },
+      {
+        "id": 32,
+        "cost_multiplier": 0.06265799136368777
+      },
+      {
+        "id": 36,
+        "cost_multiplier": 1.9450931471961554
+      },
+      {
+        "id": 37,
+        "cost_multiplier": 0.3199393467812742
+      },
+      {
+        "id": 35,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 31,
+        "cost_multiplier": 30.926487217284688
+      },
+      {
+        "id": 34,
+        "cost_multiplier": 0.15158514830929717
+      },
+      {
+        "id": 33,
+        "cost_multiplier": 0.2361371296128246
+      },
+      {
+        "id": 30,
+        "cost_multiplier": 0.27912482904970737
+      },
+      {
+        "id": 42,
+        "cost_multiplier": 0.23981514711582133
+      },
+      {
+        "id": 45,
+        "cost_multiplier": 0.2186431861320317
+      },
+      {
+        "id": 47,
+        "cost_multiplier": 1.2962353766006407
+      },
+      {
+        "id": 48,
+        "cost_multiplier": 0.1407900776686364
+      },
+      {
+        "id": 46,
+        "cost_multiplier": 0.16988242673501341
+      },
+      {
+        "id": 44,
+        "cost_multiplier": 0.6323521596634001
+      },
+      {
+        "id": 41,
+        "cost_multiplier": 0.5166187616175225
+      },
+      {
+        "id": 43,
+        "cost_multiplier": 5.0195293804497
+      },
+      {
+        "id": 40,
+        "cost_multiplier": 2.41758588797223
+      },
+      {
+        "id": 54,
+        "cost_multiplier": 0.16727695937193157
+      },
+      {
+        "id": 57,
+        "cost_multiplier": 0.5341566214092436
+      },
+      {
+        "id": 58,
+        "cost_multiplier": 5.256754167745386
+      },
+      {
+        "id": 52,
+        "cost_multiplier": 0.15712726329683188
+      },
+      {
+        "id": 55,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 53,
+        "cost_multiplier": 0.0799079668714873
+      },
+      {
+        "id": 56,
+        "cost_multiplier": 0.6271826706517688
+      },
+      {
+        "id": 51,
+        "cost_multiplier": 0.6447984539181006
+      },
+      {
+        "id": 50,
+        "cost_multiplier": 0.13116637409292345
+      },
+      {
+        "id": 62,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 61,
+        "cost_multiplier": 0.06317444344854667
+      },
+      {
+        "id": 64,
+        "cost_multiplier": 0.05087653177060972
+      },
+      {
+        "id": 67,
+        "cost_multiplier": 0.2237604231789773
+      },
+      {
+        "id": 66,
+        "cost_multiplier": 0.606923880441315
+      },
+      {
+        "id": 65,
+        "cost_multiplier": 0.12969477736846183
+      },
+      {
+        "id": 63,
+        "cost_multiplier": 0.051205503264899595
+      },
+      {
+        "id": 60,
+        "cost_multiplier": 0.0921572279744318
+      },
+      {
+        "id": 77,
+        "cost_multiplier": 0.10826633983991173
+      },
+      {
+        "id": 74,
+        "cost_multiplier": 1.5080882844458003
+      },
+      {
+        "id": 72,
+        "cost_multiplier": 5.360220421788402
+      },
+      {
+        "id": 69,
+        "cost_multiplier": 0.9532499886290479
+      },
+      {
+        "id": 75,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 68,
+        "cost_multiplier": 0.28549591531084717
+      },
+      {
+        "id": 76,
+        "cost_multiplier": 30.422905007286214
+      },
+      {
+        "id": 73,
+        "cost_multiplier": 0.24004584436457635
+      },
+      {
+        "id": 71,
+        "cost_multiplier": 0.44201398368949296
+      },
+      {
+        "id": 70,
+        "cost_multiplier": 1.2486271586199278
+      },
+      {
+        "id": 83,
+        "cost_multiplier": 0.2782680860250817
+      },
+      {
+        "id": 82,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 84,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 86,
+        "cost_multiplier": 1740.700344664374
+      },
+      {
+        "id": 85,
+        "cost_multiplier": 24.802437369411997
+      },
+      {
+        "id": 81,
+        "cost_multiplier": 11.03821329048973
+      },
+      {
+        "id": 80,
+        "cost_multiplier": 1.539250591063218
+      },
+      {
+        "id": 95,
+        "cost_multiplier": 3.3017236435416244
+      },
+      {
+        "id": 96,
+        "cost_multiplier": 8.67321249712343
+      },
+      {
+        "id": 98,
+        "cost_multiplier": 1.741896264644882
+      },
+      {
+        "id": 93,
+        "cost_multiplier": 0.5192781643279988
+      },
+      {
+        "id": 87,
+        "cost_multiplier": 48.79714858899754
+      },
+      {
+        "id": 89,
+        "cost_multiplier": 72.69484326570239
+      },
+      {
+        "id": 91,
+        "cost_multiplier": 215.48293024950354
+      },
+      {
+        "id": 94,
+        "cost_multiplier": 97.68818088852764
+      },
+      {
+        "id": 99,
+        "cost_multiplier": 0.763019107692957
+      },
+      {
+        "id": 97,
+        "cost_multiplier": 5.659815473776904
+      },
+      {
+        "id": 92,
+        "cost_multiplier": 0.1423875684954663
+      },
+      {
+        "id": 90,
+        "cost_multiplier": 2042.729360263028
+      },
+      {
+        "id": 102,
+        "cost_multiplier": 2.734363528521053
+      },
+      {
+        "id": 106,
+        "cost_multiplier": 9.261890353837579
+      },
+      {
+        "id": 101,
+        "cost_multiplier": 1.099375693790275
+      },
+      {
+        "id": 100,
+        "cost_multiplier": 7.233248275960324
+      },
+      {
+        "id": 117,
+        "cost_multiplier": 4.55116044249894
+      },
+      {
+        "id": 116,
+        "cost_multiplier": 117.02295367703037
+      },
+      {
+        "id": 118,
+        "cost_multiplier": 369.28775122639314
+      },
+      {
+        "id": 104,
+        "cost_multiplier": 4515.194873329015
+      },
+      {
+        "id": 107,
+        "cost_multiplier": 712.1334523124514
+      },
+      {
+        "id": 112,
+        "cost_multiplier": 26.786380600969835
+      },
+      {
+        "id": 111,
+        "cost_multiplier": 522.9114196994605
+      },
+      {
+        "id": 105,
+        "cost_multiplier": 206.18308013892397
+      },
+      {
+        "id": 115,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 114,
+        "cost_multiplier": 52.780113337955704
+      },
+      {
+        "id": 113,
+        "cost_multiplier": 0.1632079303346418
+      },
+      {
+        "id": 110,
+        "cost_multiplier": 19.608560176483877
+      },
+      {
+        "id": 122,
+        "cost_multiplier": 0.1637104215037699
+      },
+      {
+        "id": 127,
+        "cost_multiplier": 6.477616854137063
+      },
+      {
+        "id": 126,
+        "cost_multiplier": 1489.3262709735016
+      },
+      {
+        "id": 121,
+        "cost_multiplier": 46.42651566417424
+      },
+      {
+        "id": 120,
+        "cost_multiplier": 0.5382635288529559
+      },
+      {
+        "id": 134,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 136,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 135,
+        "cost_multiplier": 798.8601763686879
+      },
+      {
+        "id": 133,
+        "cost_multiplier": 0.15793610862136667
+      },
+      {
+        "id": 131,
+        "cost_multiplier": 1762.1449196601434
+      },
+      {
+        "id": 125,
+        "cost_multiplier": 2.188631411932392
+      },
+      {
+        "id": 123,
+        "cost_multiplier": 5.0453684537305215
+      },
+      {
+        "id": 128,
+        "cost_multiplier": 16.1851469518749
+      },
+      {
+        "id": 124,
+        "cost_multiplier": 8495.288165834092
+      },
+      {
+        "id": 132,
+        "cost_multiplier": 0.2571277263360457
+      },
+      {
+        "id": 130,
+        "cost_multiplier": 3.3297773743341157
+      },
+      {
+        "id": 146,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 147,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 144,
+        "cost_multiplier": 8.46223572166142
+      },
+      {
+        "id": 142,
+        "cost_multiplier": 6.36864037983154
+      },
+      {
+        "id": 141,
+        "cost_multiplier": 85.22614384572188
+      },
+      {
+        "id": 140,
+        "cost_multiplier": 43.1202714721516
+      },
+      {
+        "id": 145,
+        "cost_multiplier": 58.24381196279543
+      },
+      {
+        "id": 137,
+        "cost_multiplier": 0.44590216718545506
+      },
+      {
+        "id": 138,
+        "cost_multiplier": 12190.91157888549
+      },
+      {
+        "id": 103,
+        "cost_multiplier": 2.63537694711384
+      },
+      {
+        "id": 143,
+        "cost_multiplier": 0.5410343525123603
+      },
+      {
+        "id": 148,
+        "cost_multiplier": 75.98867823021065
+      },
+      {
+        "id": 157,
+        "cost_multiplier": 337.4041238466168
+      },
+      {
+        "id": 152,
+        "cost_multiplier": 1223.0125259447989
+      },
+      {
+        "id": 151,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 153,
+        "cost_multiplier": 0.05
+      },
+      {
+        "id": 155,
+        "cost_multiplier": 30.20322423100633
+      },
+      {
+        "id": 150,
+        "cost_multiplier": 153.90391747673527
+      },
+      {
+        "id": 154,
+        "cost_multiplier": 155.97123731490632
+      },
+      {
+        "id": 156,
+        "cost_multiplier": 480.2235972336198
+      },
+      {
+        "id": 13,
+        "perk": 47
+      },
+      {
+        "id": 27,
+        "perk": 47
+      },
+      {
+        "id": 34,
+        "perk": 47
+      },
+      {
+        "id": 37,
+        "perk": 47
+      },
+      {
+        "id": 43,
+        "perk": 47
+      },
+      {
+        "id": 54,
+        "perk": 47
+      },
+      {
+        "id": 58,
+        "perk": 47
+      },
+      {
+        "id": 64,
+        "perk": 47
+      },
+      {
+        "id": 69,
+        "perk": 47
+      },
+      {
+        "id": 74,
+        "perk": 47
+      },
+      {
+        "id": 84,
+        "perk": 47
+      },
+      {
+        "id": 89,
+        "perk": 47
+      },
+      {
+        "id": 90,
+        "perk": 47
+      },
+      {
+        "id": 104,
+        "perk": 47
+      },
+      {
+        "id": 114,
+        "perk": 47
+      },
+      {
+        "id": 118,
+        "perk": 47
+      },
+      {
+        "id": 124,
+        "perk": 47
+      },
+      {
+        "id": 134,
+        "perk": 47
+      },
+      {
+        "id": 138,
+        "perk": 47
+      },
+      {
+        "id": 144,
+        "perk": 47
+      },
+      {
+        "id": 155,
+        "perk": 47
+      }
+    ],
+    "apRuntime": {
+      "perkTaskIds": [],
+      "grants": {
+        "13": "Sunken Treasure",
+        "14": "Village Hero",
+        "21": "Reflections on the Journey",
+        "26": "Minor Time Compression",
+        "31": "Energetic Memory",
+        "36": "High Altitude Climbing",
+        "42": "Deep Sea Diving",
+        "45": "Mysterious Amulet",
+        "46": "Found Lost Temple",
+        "63": "Villager Gratitude",
+        "70": "Understanding of the Reset",
+        "74": "Purged Bureaucracy",
+        "76": "How to Write",
+        "86": "Experienced Traveler",
+        "95": "The Worm",
+        "99": "Walk Without Rhythm",
+        "100": "Attunement",
+        "125": "Energetic Spell",
+        "126": "Goblin Scourge",
+        "148": "How to Read",
+        "152": "Underground Connection"
+      },
+      "foreignPerks": [],
+      "regrantOnEveryCompletion": true
+    }
+  }
+}

@@ -5,6 +5,34 @@ on:
     paths:
       - 'frontend/**/*.js'
       - 'frontend/**/*.test.js'
+      # ⛓ ⚖ RULING 34 (user, 2026-08-22) — `vitest.config.js` collects
+      # `scripts/procgen/*.test.js` too, so a `scripts/**`-only commit owes this
+      # suite a run. R9 slice 11b's red survived a push because it did not get
+      # one: the trigger watched `frontend/**` and the change was under
+      # `scripts/**`. A path list that is narrower than what the config COLLECTS
+      # is a gate that reports green on tests it never ran.
+      - 'scripts/**/*.js'
+      - 'scripts/**/*.mjs'
+      - 'scripts/**/*.test.js'
+      # ⛓ R9 slice 12g — THE SAME HOLE A FOURTH TIME, by the same criterion
+      # (what the suite READS, not only what `include` collects).
+      # `seedlingSwapGate.test.js` loads `seedling-bot-replay-win.py` and
+      # asserts the world-swap gate's verdicts, so a `.py`-only change to that
+      # driver could leave the gate broken and report green on a row it never
+      # ran.
+      - 'scripts/**/*.py'
+      # ⚠ THE SAME HOLE, ONE DIRECTORY OVER — named by the same criterion
+      # rather than left for the next slice to rediscover: `include` also
+      # collects `test_json/unit/**/*.test.js`.
+      - 'test_json/unit/**/*.test.js'
+      # ⛓ ⚖ TRAP 721 CLOSED (user, 2026-08-26) — the SAME hole a THIRD time:
+      # `frontend/modules/procgenDocs/*.test.js` pin the link census, heading
+      # counts and the reference generator's `--check` over
+      # `docs/json/developer/procgen/*.md`. Their SUBJECT lives under `docs/`,
+      # so a docs-only push could leave those pins stale and report green on
+      # tests it never ran. The criterion is what the suite READS, not only
+      # what `include` collects.
+      - 'docs/**'
       - 'vitest.config.js'
       - 'vitest.slow.config.js'
       - 'package.json'
@@ -14,6 +42,34 @@ on:
     paths:
       - 'frontend/**/*.js'
       - 'frontend/**/*.test.js'
+      # ⛓ ⚖ RULING 34 (user, 2026-08-22) — `vitest.config.js` collects
+      # `scripts/procgen/*.test.js` too, so a `scripts/**`-only commit owes this
+      # suite a run. R9 slice 11b's red survived a push because it did not get
+      # one: the trigger watched `frontend/**` and the change was under
+      # `scripts/**`. A path list that is narrower than what the config COLLECTS
+      # is a gate that reports green on tests it never ran.
+      - 'scripts/**/*.js'
+      - 'scripts/**/*.mjs'
+      - 'scripts/**/*.test.js'
+      # ⛓ R9 slice 12g — THE SAME HOLE A FOURTH TIME, by the same criterion
+      # (what the suite READS, not only what `include` collects).
+      # `seedlingSwapGate.test.js` loads `seedling-bot-replay-win.py` and
+      # asserts the world-swap gate's verdicts, so a `.py`-only change to that
+      # driver could leave the gate broken and report green on a row it never
+      # ran.
+      - 'scripts/**/*.py'
+      # ⚠ THE SAME HOLE, ONE DIRECTORY OVER — named by the same criterion
+      # rather than left for the next slice to rediscover: `include` also
+      # collects `test_json/unit/**/*.test.js`.
+      - 'test_json/unit/**/*.test.js'
+      # ⛓ ⚖ TRAP 721 CLOSED (user, 2026-08-26) — the SAME hole a THIRD time:
+      # `frontend/modules/procgenDocs/*.test.js` pin the link census, heading
+      # counts and the reference generator's `--check` over
+      # `docs/json/developer/procgen/*.md`. Their SUBJECT lives under `docs/`,
+      # so a docs-only push could leave those pins stale and report green on
+      # tests it never ran. The criterion is what the suite READS, not only
+      # what `include` collects.
+      - 'docs/**'
       - 'vitest.config.js'
       - 'vitest.slow.config.js'
       - 'package.json'
@@ -28,12 +84,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           submodules: recursive
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6.4.0
         with:
           node-version: '22'
           cache: 'npm'
@@ -48,3 +104,24 @@ jobs:
       # don't flake under parallel CPU contention. See vitest.slow.config.js.
       - name: Run slow Vitest tests
         run: npm run test:unit:slow
+
+      # ⛓⛓⛓ R9 slice P3b (g), ⚖ ruling 54 (6) — THE HEADLESS PROCGEN GATES.
+      #
+      # ⛔ Until now NO `check-*.mjs` gate ran in CI at all: one that went red
+      # stayed red until somebody spent the box. Four of the thirty-one are
+      # headless and can run here; `ci-gates.mjs` derives that set from
+      # `gateRoster` and prints one parseable `## CI-GATE | …` line each, with
+      # the other twenty-seven SKIPPED BY NAME so nothing reads as green that
+      # was never run.
+      #
+      # ⛔⛔ `continue-on-error` IS DELIBERATE, AND IT IS NOT HIDING A RED.
+      # This step is a STANDING-VALUE READER, not a merge gate:
+      # `check-seedling-full-tier-owed` is red whenever a full-tier
+      # measurement is OWED, which is a scheduling fact and must not block
+      # every push. R9 slice 12g′ learned that `continue-on-error` hides a red
+      # at the JOB level — so nothing reads the job conclusion:
+      # `ci-summary.mjs --gate=<key> <sha>` reads the printed LINE and exits on
+      # the gate's own code.
+      - name: Run headless procgen gates
+        continue-on-error: true
+        run: node scripts/procgen/ci-gates.mjs

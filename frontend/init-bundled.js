@@ -100,6 +100,7 @@ import * as metaGameModule from './modules/metaGame/index.js';
 import * as metaGamePanelModule from './modules/metaGamePanel/index.js';
 import * as flashPanelModule from './modules/flashPanel/index.js';
 import * as tileMapAnalyzerModule from './modules/tileMapAnalyzer/index.js';
+import * as regionMarkingToolModule from './modules/regionMarkingTool/index.js';
 import * as iframeAdapterModule from './modules/iframeAdapter/index.js';
 import * as iframePanelModule from './modules/iframePanel/index.js';
 import * as iframeManagerPanelModule from './modules/iframeManagerPanel/index.js';
@@ -120,12 +121,17 @@ import * as apcalcModule from './modules/apcalc/index.js';
 import * as apcalcGeneratorModule from './modules/apcalcGenerator/index.js';
 import * as apworldEditorModule from './modules/apworldEditor/index.js';
 import * as mazeRoomModule from './modules/mazeRoom/index.js';
+import * as procgenLabPanelModule from './modules/procgenLabPanel/index.js';
 import * as procgenPipelineModule from './modules/procgenPipeline/index.js';
 import * as procgenPlayerModule from './modules/procgenPlayer/index.js';
+import * as resourceChannelsModule from './modules/resourceChannels/index.js';
 import * as textAdventureSubstrateWrapperModule from './modules/textAdventureSubstrateWrapper/index.js';
 import * as jtaSubstrateWrapperModule from './modules/jtaSubstrateWrapper/index.js';
+import * as omsiSubstrateWrapperModule from './modules/omsiSubstrateWrapper/index.js';
+import * as jtaBalanceModule from './modules/jtaBalance/index.js';
 import * as flashSubstrateModule from './modules/flashSubstrate/index.js';
 import * as bounceDemoModule from './modules/bounceDemo/index.js';
+import * as runnerDemoModule from './modules/runnerDemo/index.js';
 import * as bounceRegionEditorModule from './modules/bounceRegionEditor/index.js';
 import * as playbackBotModule from './modules/playbackBot/index.js';
 
@@ -152,6 +158,7 @@ import './modules/tests/testCases/spoilerTestPanelTests.js';
 import './modules/tests/testCases/playbackBotTests.js';
 import './modules/tests/testCases/textAdventureWrapperTests.js';
 import './modules/tests/testCases/flashSubstrateTests.js';
+import './modules/tests/testCases/runnerDemoTests.js';
 
 // Signal that test cases have been pre-imported
 window.__BUNDLED_TEST_CASES__ = true;
@@ -197,6 +204,7 @@ const BUNDLED_MODULES = {
   metaGamePanel: metaGamePanelModule,
   flashPanel: flashPanelModule,
   tileMapAnalyzer: tileMapAnalyzerModule,
+  regionMarkingTool: regionMarkingToolModule,
   iframeAdapter: iframeAdapterModule,
   iframePanel: iframePanelModule,
   iframeManagerPanel: iframeManagerPanelModule,
@@ -217,12 +225,17 @@ const BUNDLED_MODULES = {
   apcalcGenerator: apcalcGeneratorModule,
   apworldEditor: apworldEditorModule,
   mazeRoom: mazeRoomModule,
+  procgenLabPanel: procgenLabPanelModule,
   procgenPipeline: procgenPipelineModule,
   procgenPlayer: procgenPlayerModule,
+  resourceChannels: resourceChannelsModule,
   textAdventureSubstrateWrapper: textAdventureSubstrateWrapperModule,
   jtaSubstrateWrapper: jtaSubstrateWrapperModule,
+  omsiSubstrateWrapper: omsiSubstrateWrapperModule,
+  jtaBalance: jtaBalanceModule,
   flashSubstrate: flashSubstrateModule,
   bounceDemo: bounceDemoModule,
+  runnerDemo: runnerDemoModule,
   bounceRegionEditor: bounceRegionEditorModule,
   playbackBot: playbackBotModule,
 };

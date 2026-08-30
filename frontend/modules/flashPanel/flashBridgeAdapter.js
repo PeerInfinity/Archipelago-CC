@@ -71,6 +71,10 @@ export class FlashBridgeAdapter {
     this.attached = false;
     this.bridgeConfigured = false;
 
+    // Optional `(property, value) => void` installed by a host-side consumer
+    // of raw BridgeGeneric reports (see _onStateChanged).
+    this.onStateReport = null;
+
     // Lookup maps built from the game config
     this.apItemIdToFlash = {};
     this.locationFlashToApId = {};
@@ -127,6 +131,25 @@ export class FlashBridgeAdapter {
     // throw #1009 until the game instance is fully initialized).
 
     this.unsubscribeHandles = [];
+
+    /**
+     * ⛓⛓ **AP LOCATIONS THE HOST OWNS** (EDITOR INTEGRATION M1, H6).
+     *
+     * When the room holds an `APItem` instead of a Seedling pickup, the
+     * location is answered by `seedlingCheckBinding` off the game's own
+     * `pendingCheck` report — and the `Main.*` flag for that item is then
+     * written by NOBODY but this bridge, on the AP server's `ReceivedItems`.
+     * The property path below must therefore stand down on those locations:
+     * left armed, an echo it happens to miss reads as a player pickup, checks
+     * the location a SECOND time and queues an undo that takes the granted
+     * item straight back.
+     *
+     * ⛔ A SET, NOT A DELETE. Two of the 41 locations (`fire@L32`,
+     * `darksword@L12`) are encounter grants with no pickup entity, are not
+     * rewritten, and MUST keep the property path. Empty by default: an adapter
+     * nobody told about a placement behaves exactly as it always has.
+     */
+    this.hostOwnedLocations = new Set();
 
     this._buildLookups(config);
     adapters.set(flashObjectId, this);
@@ -223,6 +246,26 @@ export class FlashBridgeAdapter {
   /**
    * Queue a teleport based on the game config's `teleport` block
    * and the given parameter values.
+   *
+   * ⛔ DE-SCOPED FOR STATIC EXIT LAYOUT (Seedling, plan §4.6, Phase 5b).
+   * A randomized set's exits are DATA in the set's own rooms; this call
+   * must not be used to redirect a transition after the fact. Two
+   * reasons, the second structural:
+   *
+   *   · Seedling's recipe is `new Game($level,$x,$y)` assigned to
+   *     `FP.world` — the same constructor and the same assignment
+   *     `Teleporter.update()` has already performed, so a corrected exit
+   *     builds two worlds;
+   *   · `Teleporter.update()` sets the STATIC `Game.sign` on the line
+   *     after its own `new Game`, and this recipe does not touch it. So
+   *     a replacement world announces the region of the room the player
+   *     did NOT go to, and there is nowhere in this capability to fix
+   *     that. Exits-as-data is not merely cheaper; it is the only
+   *     mechanism that can get the sign right.
+   *
+   * Still in scope: the debug region/location jump UI, the region
+   * atlas's arrival warp, and DYNAMIC re-linking mid-run (an AP item
+   * that re-wires exits), which no static bundle can express.
    *
    * Two teleport invocation modes are supported:
    *
@@ -374,6 +417,21 @@ export class FlashBridgeAdapter {
   _onStateChanged(property, value) {
     this.gameState[property] = value;
 
+    // Raw report hook for host-side consumers that are not about AP
+    // locations — today the region-atlas glue, which reads level /
+    // playerPositionX / playerPositionY. Deliberately at the TOP: the echo
+    // and first-read suppressions below exist for location detection and
+    // would swallow reports this consumer must see (it does its own
+    // baseline and echo handling, on its own terms). Never let a consumer
+    // throw into the bridge's report path.
+    if (this.onStateReport) {
+      try {
+        this.onStateReport(property, value);
+      } catch (e) {
+        this.log(`onStateReport handler threw: ${e.message}`, 'error');
+      }
+    }
+
     // Any stateChanged at all proves the bridge is successfully
     // reading Main.* properties, which only happens after
     // SAVE_FILE is initialized. Flip the write gate the first
@@ -425,6 +483,13 @@ export class FlashBridgeAdapter {
       this.log(`stateChanged (player action): ${property} = ${value}`);
     }
     if (locFlash && value === true) {
+      // ⛔ H6 OWNS THIS ONE. The room holds an APItem that grants nothing, so
+      // this report cannot be a player pickup — it is our own write coming
+      // back. No undo (it would revoke the granted item) and no second check.
+      if (this._isHostOwned(locFlash)) {
+        this.log(`stateChanged for "${locFlash}" ignored — AP placement owns that location`);
+        return;
+      }
       // Undo: take the game-given item back so the AP item can arrive clean
       const propDef = this._findPropertyDef(property);
       if (propDef) {
@@ -438,6 +503,26 @@ export class FlashBridgeAdapter {
 
       this._dispatchLocationCheck(locFlash);
     }
+  }
+
+  /**
+   * H6 hands these in (through the glue). Names are AP location names — the
+   * same vocabulary `flashLocationToApName` produces — so the comparison is
+   * against what would actually be dispatched, not against a flash name that
+   * may or may not map.
+   */
+  setHostOwnedLocations(names) {
+    this.hostOwnedLocations = names instanceof Set ? names : new Set(names ?? []);
+    if (this.hostOwnedLocations.size > 0) {
+      this.log(`AP placement owns ${this.hostOwnedLocations.size} location(s) — `
+        + 'the property path stands down on those (no undo, no second check)');
+    }
+  }
+
+  /** Is this flash location answered by the host's placement table instead? */
+  _isHostOwned(flashName) {
+    const apName = this.flashLocationToApName[flashName];
+    return !!apName && this.hostOwnedLocations.has(apName);
   }
 
   _dispatchLocationCheck(flashName) {

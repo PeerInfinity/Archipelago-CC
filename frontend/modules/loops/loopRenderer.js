@@ -5,6 +5,8 @@ import { stateManagerProxySingleton as stateManager } from '../stateManager/inde
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { analyzeQueue } from '../shared/queueAnalysis.js';
 import { getCostDataManager } from './index.js';
+import { resolveQueueBlocks } from './blockIdentity.js';
+import loopStateSingleton from './loopStateSingleton.js';
 
 const logger = createUniversalLogger('loopUI:Renderer');
 
@@ -182,48 +184,9 @@ export class LoopRenderer {
    *   { pathEntry, index, instanceNumber } objects in path order.
    */
   groupActionsByVisit(actionQueue) {
-    const visits = [];
-    const visitIndex = new Map(); // 'name#instance' → index in visits
-
-    function ensureVisit(name, instance) {
-      const key = `${name}#${instance}`;
-      const existing = visitIndex.get(key);
-      if (existing !== undefined) return visits[existing];
-      const visit = { key, name, instance, actions: [] };
-      visitIndex.set(key, visits.length);
-      visits.push(visit);
-      return visit;
-    }
-
-    // current.name + current.instance describe where the path "is"
-    // after processing entries so far. null until we encounter an
-    // action that anchors it.
-    let current = null;
-
-    actionQueue.forEach((pathEntry, index) => {
-      const entryInstance = pathEntry.instanceNumber || 1;
-      if (pathEntry.type === 'regionMove') {
-        // Source visit: the block we're currently in.
-        const sourceInstance =
-          (current && current.name === pathEntry.sourceRegion)
-            ? current.instance
-            : 1;
-        const sourceVisit = ensureVisit(pathEntry.sourceRegion, sourceInstance);
-        sourceVisit.actions.push({ pathEntry, index, instanceNumber: entryInstance });
-        // After this move, we're at the destination. Ensure its block
-        // exists so it renders even if no actions are queued there.
-        ensureVisit(pathEntry.destinationRegion, entryInstance);
-        current = { name: pathEntry.destinationRegion, instance: entryInstance };
-      } else {
-        // customAction / locationCheck — entry carries its own
-        // sourceRegion+instanceNumber. Trust them.
-        const visit = ensureVisit(pathEntry.sourceRegion, entryInstance);
-        visit.actions.push({ pathEntry, index, instanceNumber: entryInstance });
-        current = { name: pathEntry.sourceRegion, instance: entryInstance };
-      }
-    });
-
-    return visits;
+    // Delegates to the shared resolver so loopState's per-block mode
+    // resolution and this renderer agree on which block owns each entry.
+    return resolveQueueBlocks(actionQueue).visits;
   }
 
   /**
@@ -535,12 +498,18 @@ export class LoopRenderer {
     // Use the block builder to create entries (reuses same format as region view)
     const blockBuilder = this.loopUI?.loopBlockBuilder;
     if (blockBuilder) {
+      // Resolve each entry's owning block so the "expected" (manual) label
+      // matches the per-block mode, same as the grouped view.
+      const { indexToBlock } = resolveQueueBlocks(actionQueue);
       for (const entry of analysis.entries) {
         // Find the original pathEntry from actionQueue
         const pathEntry = actionQueue[entry.index] || actionQueue.find(a => a.pathIndex === entry.pathIndex);
         if (!pathEntry) continue;
 
-        const actionEl = blockBuilder.createActionEntry(pathEntry, entry.index, entry);
+        const block = indexToBlock.get(entry.index);
+        const isManualExpected = !!block &&
+          loopStateSingleton.getBlockMode(block.region, block.instance) === 'manual';
+        const actionEl = blockBuilder.createActionEntry(pathEntry, entry.index, entry, isManualExpected);
         if (actionEl) {
           table.appendChild(actionEl);
         }

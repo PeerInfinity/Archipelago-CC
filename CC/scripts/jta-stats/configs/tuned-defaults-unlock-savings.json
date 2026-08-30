@@ -1,0 +1,9 @@
+{
+  "name": "tuned-defaults-unlock-savings",
+  "options": {
+    "modOverrides": {
+      "auto_buy_budget_enabled": true
+    },
+    "maxRuns": 1000
+  }
+}

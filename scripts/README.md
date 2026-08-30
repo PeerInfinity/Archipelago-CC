@@ -171,6 +171,16 @@ See [World Generator Test Guide](../docs/json/developer/tests/test-world-generat
   python scripts/test/test_ast_format_parsing.py
   ```
 
+- **`test/generate-jta-substrate-test-preset.py`** - Generate the `jta_substrate_test` dev preset (linear JtA-substrate test world)
+  ```bash
+  python scripts/test/generate-jta-substrate-test-preset.py
+  ```
+
+- **`test/generate-jta-mixed-test-preset.py`** - Generate the `jta_mixed_test` dev preset (cross-substrate JtA test world)
+  ```bash
+  python scripts/test/generate-jta-mixed-test-preset.py
+  ```
+
 #### Supporting Test Modules (scripts/lib/)
 
 These modules are imported by `test-all-templates.py` and are not meant to be run directly:
@@ -206,6 +216,22 @@ These files are located in the `scripts/lib/` subdirectory to clearly separate l
   python scripts/build/pack_json_tools_installer.py            # Create installer apworld
   python scripts/build/pack_json_tools_installer.py --dry-run  # Preview what would be packaged
   ```
+
+- **`build/generate_romless_patches.py`** - Snapshot the repo's already-patched romless worlds + infrastructure into `json_tools_patches/<version>/romless/` for the installer
+  ```bash
+  python scripts/build/generate_romless_patches.py
+  ```
+
+### Data Scripts (scripts/data/)
+
+- **`data/extract_metamath_symbols.py`** - Extract MetaMath symbol definitions used to build the MetaMath world
+  ```bash
+  python scripts/data/extract_metamath_symbols.py
+  ```
+
+### Procgen Scripts (scripts/procgen/)
+
+Headless CLI drivers and verification harnesses for the procedural-generation substrates. See **[scripts/procgen/README.md](./procgen/README.md)** for full usage.
 
 ### Documentation and Reporting Scripts (scripts/docs/)
 
@@ -332,6 +358,12 @@ These files are located in the `scripts/lib/` subdirectory to clearly separate l
   bash scripts/release/sync-to-stable.sh /path/to/stable/Archipelago
   ```
 
+- **`release/apply-post-preset-merge.sh`** - Apply post-merge preset fix-ups after a preset regen: snapshot the canonical `preset_files.live.json` and restore the preserved dev/demo presets so the dev index = canonical + preserved (see the release checklist Phase 2.5)
+  ```bash
+  scripts/release/apply-post-preset-merge.sh --dry-run   # preview
+  scripts/release/apply-post-preset-merge.sh             # apply
+  ```
+
 ### Utility Scripts (scripts/utils/)
 
 - **`utils/cleanup-output-directories.py`** - Clean up test output directories
@@ -404,6 +436,26 @@ These files are located in the `scripts/lib/` subdirectory to clearly separate l
   ```
 
 - **`utils/generated_commands.sh`** - Auto-generated script output from `generate_all_templates.sh --script`. Not intended to be run directly; produced for CI workflow use.
+
+- **`utils/generate-procgen-rules.js`** - Generate a procgen substrate `rules.json` from CLI flags
+  ```bash
+  node scripts/utils/generate-procgen-rules.js
+  ```
+
+- **`utils/generate-topdown-preset.js`** - Generate a top-down procgen preset
+  ```bash
+  node scripts/utils/generate-topdown-preset.js
+  ```
+
+- **`utils/register-preset.py`** - Register a generated preset directory in `frontend/presets/preset_files.json`
+  ```bash
+  python scripts/utils/register-preset.py
+  ```
+
+- **`utils/sync-module-config.py`** - Sync the frontend module configuration (`modules.json` / bundled-module registration)
+  ```bash
+  python scripts/utils/sync-module-config.py
+  ```
 
 ### Configuration Scripts (scripts/setup/)
 
@@ -575,6 +627,30 @@ Tools for placing items in their vanilla (original game) locations in A Link to 
     -g path/to/gamedata.json \
     -s path/to/sphere_log.jsonl \
     --port 8000
+  ```
+
+### Vibe Coding Simulator Scripts (scripts/vibe-coding-simulator/)
+
+Tooling for the Vibe Coding Simulator game (a DepGraph-backed world). See **[balance.md](vibe-coding-simulator/balance.md)** for the balance variables that tune a playthrough.
+
+- **`vibe-coding-simulator/engine.py`** - Core simulation engine (task execution, review, rewind)
+  ```bash
+  python scripts/vibe-coding-simulator/engine.py
+  ```
+
+- **`vibe-coding-simulator/game.py`** - Playable command-line front end over the simulation engine
+  ```bash
+  python scripts/vibe-coding-simulator/game.py
+  ```
+
+- **`vibe-coding-simulator/extract_depgraph.py`** - Extract a DepGraph from a simulated project for use as the world backend
+  ```bash
+  python scripts/vibe-coding-simulator/extract_depgraph.py
+  ```
+
+- **`vibe-coding-simulator/add_plan_meta_to_completed.py`** - Annotate completed-task records with plan metadata
+  ```bash
+  python scripts/vibe-coding-simulator/add_plan_meta_to_completed.py
   ```
 
 ## Test Output Directories

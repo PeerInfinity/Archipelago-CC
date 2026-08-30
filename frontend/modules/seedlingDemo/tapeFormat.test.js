@@ -1,0 +1,1702 @@
+/**
+ * tapeFormat — the contract both consumers must agree on.
+ *
+ * The tape is the ONE assumption the JS side and the recompiled game
+ * still share after slice 3 (the observation streams come from the game;
+ * the tape does not). So these tests are less about "does the parser
+ * work" and more about "is every way two implementations could disagree
+ * either forbidden or pinned".
+ */
+
+import { describe, expect, it } from 'vitest';
+
+import {
+    BUILD_SPAWN,
+    deriveTransitions,
+    diffObservationStreams,
+    FORBIDDEN_KEYS,
+    GAME_VISIBLE_DROPS,
+    gameStreamFromDrain,
+    gameVisibleTape,
+    heldKeysAt,
+    KEY_CODES,
+    keyEdgesAt,
+    COERCED_TERRAIN_STATE,
+    coerceTerrainState,
+    HAZARD_STATES,
+    INVENTORY_ITEM_IDS,
+    inventorySlotsFor,
+    ITEM_NAMES,
+    ITEM_PROPERTIES,
+    parseObservationStream,
+    parseTape,
+    serializeTape,
+    SUPPORTED_TAPE_VERSIONS,
+    TAPE_BUDGET,
+    TAPE_VERSION,
+    TapeFormatError,
+    assertTapeWithinRuntimeBudget,
+    SAVE_SLOTS,
+    emptySaveBlock,
+    saveBlockDeclaresAnything,
+    emptyRngBlock,
+    rngBlockDeclaresAnything,
+    RNG_SEED_MAX,
+    requiredTapeVersion,
+} from './tapeFormat.js';
+import { stagingFromTape } from './tapeRunner.js';
+import { TILE_TYPE_NAMES } from '../flashPanel/seedlingSemantics.js';
+
+const base = {
+    tape_version: 1,
+    game: 'seedling',
+    boot: { level: 0, x: 80, y: 128 },
+    noclip: true,
+    inputs: [{ key: 'right', from: 0, to: 5 }],
+};
+const withInputs = (inputs, extra = {}) => ({ ...base, ...extra, inputs });
+
+/** The R0 shape: same tape, plus the three relaxations, all explicit. */
+const v2Base = {
+    ...base,
+    tape_version: 2,
+    noDamage: true,
+    noHazards: ['water', 'pit', 'lava', 'ice', 'waterfall'],
+    grants: [],
+};
+const v2With = (extra) => ({ ...v2Base, ...extra });
+
+describe('the key table', () => {
+    it('matches Player.as:59 exactly', () => {
+        // keys = [RIGHT, UP, LEFT, DOWN, X, C, X, V, I] with Key.as codes.
+        // Asserted here so a drift in either consumer is a test failure
+        // rather than a silent mis-drive of the game.
+        expect(KEY_CODES).toEqual({
+            right: 39, up: 38, left: 37, down: 40,
+            primary: 88, secondary: 67, inventory: 86, inventory2: 73,
+        });
+    });
+
+    it('excludes every key that corrupts a run, with a reason', () => {
+        const codes = new Set(Object.values(KEY_CODES));
+        for (const [name, { code, why }] of Object.entries(FORBIDDEN_KEYS)) {
+            expect(codes.has(code), `${name} must not be in the vocabulary`).toBe(false);
+            expect(why.length).toBeGreaterThan(10);
+        }
+    });
+});
+
+describe('validation is loud, never defaulting', () => {
+    it('rejects a version outside the supported set', () => {
+        // ⚠ This case used to be `tape_version: 2`, which R0 made legal.
+        // Left as-is it would still have PASSED — a v2 tape without the
+        // relaxation fields throws too — while testing something else
+        // entirely. A test that keeps passing for a new reason is worse
+        // than one that goes red.
+        expect(() => parseTape({ ...base, tape_version: 0 })).toThrow(TapeFormatError);
+        expect(() => parseTape({ ...base, tape_version: 3 })).toThrow(TapeFormatError);
+    });
+
+    it('rejects a non-seedling game', () => {
+        expect(() => parseTape({ ...base, game: 'rwk' })).toThrow(/game must be/);
+    });
+
+    it('refuses to default noclip', () => {
+        const { noclip, ...noNoclip } = base;
+        // A defaulted noclip would mean the JS side and the game could run
+        // different experiments and the differential would blame physics.
+        expect(() => parseTape(noNoclip)).toThrow(/noclip must be a boolean/);
+    });
+
+    it('rejects an unknown key name instead of skipping the input', () => {
+        expect(() => parseTape(withInputs([{ key: 'jump', from: 0, to: 1 }])))
+            .toThrow(/not a known key name/);
+    });
+
+    it('names the forbidden keys specifically', () => {
+        expect(() => parseTape(withInputs([{ key: 'r', from: 0, to: 1 }])))
+            .toThrow(/FORBIDDEN.*rebuilds the world/s);
+        expect(() => parseTape(withInputs([{ key: 'w', from: 0, to: 1 }])))
+            .toThrow(/FORBIDDEN.*external URL/s);
+    });
+
+    it('rejects a zero-length span', () => {
+        // [from, from) yields neither a press nor a release edge, so it
+        // would silently do nothing on both sides.
+        expect(() => parseTape(withInputs([{ key: 'right', from: 3, to: 3 }])))
+            .toThrow(/must be > from/);
+    });
+
+    it('rejects overlapping spans for the same key', () => {
+        // FlashPunk's _key guard makes the second KEY_DOWN a no-op and the
+        // first KEY_UP clears the hold, so overlapping holds do not compose.
+        expect(() => parseTape(withInputs([
+            { key: 'right', from: 0, to: 10 },
+            { key: 'right', from: 5, to: 15 },
+        ]))).toThrow(/overlapping spans/);
+    });
+
+    it('allows overlapping spans for DIFFERENT keys', () => {
+        expect(() => parseTape(withInputs([
+            { key: 'right', from: 0, to: 10 },
+            { key: 'down', from: 5, to: 15 },
+        ]))).not.toThrow();
+    });
+
+    it('rejects a span running past tick_count', () => {
+        expect(() => parseTape(withInputs([{ key: 'right', from: 0, to: 10 }],
+            { tick_count: 5 }))).toThrow(/runs past tick_count/);
+    });
+
+    it('infers tick_count from the last span when absent', () => {
+        expect(parseTape(withInputs([
+            { key: 'right', from: 0, to: 5 },
+            { key: 'down', from: 2, to: 12 },
+        ])).tick_count).toBe(12);
+    });
+});
+
+describe('the boot block is a CLAIM about the build, and is checked', () => {
+    // v2 slice 0 found that `Bot.as` assigns `bootLevel = int(t.boot.level)`
+    // and never reads it, and never looks at boot.x/boot.y at all: the spawn
+    // is baked into the SWF at `Main.as:51` as `new Game(0, 80, 128)`. So a
+    // tape declaring anything else is HONOURED by the JS engine and IGNORED
+    // by the game, and the differential blames the physics for what is
+    // entirely bookkeeping. Slice 4 made it a named error — the format's own
+    // rule ("never a silent default") applied to the one field that was
+    // exempt from it.
+    //
+    // ⚠ R0 makes the check VERSION-SCOPED rather than retiring it. The R0
+    // AS3 batch gives the build a parameterised boot, so a v2 tape may name
+    // any level — but a v1 tape is still a claim about the v1-era build,
+    // which could not be told, and the eleven committed fixtures are v1.
+    // Retiring the check outright would have quietly re-opened the trap for
+    // exactly the tapes that were authored under it.
+
+    it('declares the build spawn as a constant, not a magic number', () => {
+        expect(BUILD_SPAWN).toEqual({ level: 0, x: 80, y: 128 });
+    });
+
+    it('accepts the build spawn', () => {
+        expect(parseTape(base).boot).toEqual(BUILD_SPAWN);
+    });
+
+    it('refuses a different level, x, or y on a VERSION 1 tape — each by name', () => {
+        for (const boot of [
+            { level: 7, x: 80, y: 128 },
+            { level: 0, x: 96, y: 128 },
+            { level: 0, x: 80, y: 144 },
+        ]) {
+            expect(() => parseTape({ ...base, boot }))
+                .toThrow(/tape_version 1 tape must declare .*Main\.as:51/s);
+        }
+    });
+
+    it('HONOURS the same boots on a version 2 tape — the R0 build takes them', () => {
+        // The batch's parameterised boot is what unblocks the v2 vacuity
+        // witnesses (the level-83 stickiness hole, the four arrival-on-a-
+        // trigger latch pairs), all of which need to start somewhere other
+        // than level 0. Accepting them here is only half of it: the game has
+        // to honour them too, which is why (d) is in the batch.
+        for (const boot of [
+            { level: 83, x: 32, y: 32 },
+            { level: 0, x: 96, y: 128 },
+        ]) {
+            expect(parseTape({ ...v2Base, boot }).boot).toEqual(boot);
+        }
+    });
+
+    it('still type-checks the fields before comparing them', () => {
+        // The build check must not swallow the shape check: "boot.x must be
+        // a finite number" is a better error than "it is not 80".
+        expect(() => parseTape({ ...base, boot: { level: 0, x: 'eighty', y: 128 } }))
+            .toThrow(/boot\.x must be a finite number/);
+        expect(() => parseTape({ ...base, boot: { level: 0.5, x: 80, y: 128 } }))
+            .toThrow(/boot\.level must be an integer/);
+    });
+
+    it('points at the way OUT, because there is one', () => {
+        // The error has to say what to do instead, or the next person
+        // reaches for a default. At v1 the answer was "walk there"; now the
+        // answer is "bump the version", which is strictly better and is the
+        // reason the message changed rather than the check being deleted.
+        let message = '';
+        try { parseTape({ ...base, boot: { level: 94, x: 80, y: 128 } }); }
+        catch (e) { message = e.message; }
+        expect(message).toMatch(/Bump to tape_version 2/);
+        expect(message).toMatch(/Main\.as:51/);
+    });
+});
+
+describe('held keys and key edges', () => {
+    const tape = parseTape(withInputs([
+        { key: 'right', from: 0, to: 3 },
+        { key: 'down', from: 2, to: 4 },
+    ]));
+
+    it('treats spans as [from, to)', () => {
+        expect([...heldKeysAt(tape, 0)]).toEqual(['right']);
+        expect([...heldKeysAt(tape, 2)].sort()).toEqual(['down', 'right']);
+        expect([...heldKeysAt(tape, 3)]).toEqual(['down']);   // right released
+        expect([...heldKeysAt(tape, 4)]).toEqual([]);         // down released
+    });
+
+    it('emits a down edge at from and an up edge at to', () => {
+        expect(keyEdgesAt(tape, 0)).toEqual({ down: [KEY_CODES.right], up: [] });
+        expect(keyEdgesAt(tape, 2)).toEqual({ down: [KEY_CODES.down], up: [] });
+        expect(keyEdgesAt(tape, 3)).toEqual({ down: [], up: [KEY_CODES.right] });
+        expect(keyEdgesAt(tape, 4)).toEqual({ down: [], up: [KEY_CODES.down] });
+    });
+
+    it('gives a length-1 span both a press and a release edge', () => {
+        // This is what lets one tape vocabulary serve Input.check,
+        // Input.pressed AND Input.released (dialogue needs down-then-up).
+        const tap = parseTape(withInputs([{ key: 'primary', from: 7, to: 8 }]));
+        expect(keyEdgesAt(tap, 7).down).toEqual([KEY_CODES.primary]);
+        expect(keyEdgesAt(tap, 8).up).toEqual([KEY_CODES.primary]);
+    });
+});
+
+describe('serialization', () => {
+    it('round-trips through canonical JSON', () => {
+        const tape = parseTape(withInputs([
+            { key: 'down', from: 5, to: 9 },
+            { key: 'right', from: 0, to: 5 },
+        ]));
+        const reparsed = parseTape(serializeTape(tape));
+        expect(reparsed).toEqual(tape);
+    });
+
+    it('is stable — serializing twice gives the same bytes', () => {
+        const once = serializeTape(base);
+        expect(serializeTape(parseTape(once))).toBe(once);
+    });
+
+    it('orders spans canonically regardless of authoring order', () => {
+        const a = serializeTape(withInputs([
+            { key: 'down', from: 5, to: 9 }, { key: 'right', from: 0, to: 5 }]));
+        const b = serializeTape(withInputs([
+            { key: 'right', from: 0, to: 5 }, { key: 'down', from: 5, to: 9 }]));
+        expect(a).toBe(b);
+    });
+
+    it('keeps each tape at ITS OWN version, not the newest one', () => {
+        // The load-bearing half: bumping TAPE_VERSION must not rewrite the
+        // eleven committed v1 fixtures. `parseTape` normalises the three v2
+        // fields onto a v1 tape so no engine carries a version branch, and
+        // `serializeTape` must then NOT write them back — otherwise every
+        // fixture file changes for no change in meaning.
+        expect(JSON.parse(serializeTape(base)).tape_version).toBe(1);
+        expect(JSON.parse(serializeTape(v2Base)).tape_version).toBe(2);
+        expect(TAPE_VERSION).toBe(11);
+    });
+
+    it('writes NO persistence field into a v1 or v2 tape either', () => {
+        // The same claim one version on, and the one that decides whether
+        // the R2 batch is byte-inert: all 23 committed fixtures are v1 or
+        // v2, `parseTape` normalises `persistence: []` onto every one of
+        // them, and `serializeTape` must not write it back.
+        for (const t of [base, v2Base]) {
+            expect(parseTape(t).persistence).toEqual([]);
+            expect(JSON.parse(serializeTape(t))).not.toHaveProperty('persistence');
+        }
+    });
+
+    it('a v3 tape round-trips its clears, sorted and with notes kept', () => {
+        const v3 = {
+            ...v2Base,
+            tape_version: 3,
+            persistence: [
+                { level: 71, tag: 2, note: 'shieldlock@288,256' },
+                { level: 12, tag: 3, note: 'bosslock@80,656' },
+            ],
+        };
+        const written = JSON.parse(serializeTape(v3));
+        expect(written.tape_version).toBe(3);
+        // sorted by (level, tag), so a re-derivation that changed order is
+        // not a diff
+        expect(written.persistence).toEqual([
+            { level: 12, tag: 3, note: 'bosslock@80,656' },
+            { level: 71, tag: 2, note: 'shieldlock@288,256' },
+        ]);
+        // ...and re-parsing what was written is a fixed point
+        expect(serializeTape(written)).toBe(serializeTape(v3));
+    });
+
+    it('rejects a clear that could not despawn anything', () => {
+        const withClear = (persistence) => () => parseTape({
+            ...v2Base, tape_version: 3, persistence,
+        });
+        // -1 is "untagged", and every persistence reader guards on tag >= 0
+        expect(withClear([{ level: 0, tag: -1 }])).toThrow(/is not "untagged" here/);
+        expect(withClear([{ level: 0, tag: 30 }])).toThrow(/out of range 0\.\.29/);
+        expect(withClear([{ level: 116, tag: 0 }])).toThrow(/is not a level/);
+        expect(withClear([{ level: 5, tag: 1 }, { level: 5, tag: 1 }]))
+            .toThrow(/duplicates level 5 tag 1/);
+        expect(withClear([{ level: 5, tag: 1, note: 7 }])).toThrow(/note must be a string/);
+    });
+
+    it('writes NO equips field into a v1, v2 or v3 tape', () => {
+        // The same claim one version further on, and the one that decides
+        // whether the R4 batch is byte-inert: all 50 committed fixtures are
+        // v1, v2 or v3, `parseTape` normalises `equips: []` onto every one
+        // of them, and `serializeTape` must not write it back.
+        const v3Base = { ...v2Base, tape_version: 3, persistence: [] };
+        for (const t of [base, v2Base, v3Base]) {
+            expect(parseTape(t).equips).toEqual([]);
+            expect(JSON.parse(serializeTape(t))).not.toHaveProperty('equips');
+        }
+    });
+
+    it('a v4 tape round-trips its equips, sorted by tick', () => {
+        const v4 = {
+            ...v2Base,
+            tape_version: 4,
+            persistence: [],
+            equips: [{ t: 900, slot: 0 }, { t: 12, slot: 1 }],
+        };
+        const written = JSON.parse(serializeTape(v4));
+        expect(written.tape_version).toBe(4);
+        expect(written.equips).toEqual([{ t: 12, slot: 1 }, { t: 900, slot: 0 }]);
+        expect(serializeTape(written)).toBe(serializeTape(v4));
+    });
+
+    it('rejects an equip that could not select anything', () => {
+        const withEquip = (equips) => () => parseTape({
+            ...v2Base, tape_version: 4, persistence: [], equips,
+        });
+        // ⚠ A NEGATIVE SLOT IS NOT "no selection": `Inventory.getItem(-1)`
+        // is `undefined`, `useItem`'s int coercion makes it 0, and the press
+        // silently becomes a sword slash — the exact failure the directive
+        // exists to prevent.
+        expect(withEquip([{ t: 0, slot: -1 }])).toThrow(/slot must be >= 0/);
+        expect(withEquip([{ t: -1, slot: 0 }])).toThrow(/t must be >= 0/);
+        expect(withEquip([{ t: 5, slot: 0 }, { t: 5, slot: 1 }]))
+            .toThrow(/duplicates tick 5/);
+        expect(withEquip('nope')).toThrow(/equips must be an array/);
+    });
+
+    it('a v1, v2 or v3 tape may CARRY equips: [] but not an equip', () => {
+        const v3Base = { ...v2Base, tape_version: 3, persistence: [] };
+        expect(() => parseTape({ ...v3Base, equips: [] })).not.toThrow();
+        expect(() => parseTape({ ...v3Base, equips: [{ t: 0, slot: 1 }] }))
+            .toThrow(/versions below 4 mean equips: \[\] BY DEFINITION/);
+    });
+
+    it('writes NO pins field into a v1..v4 tape', () => {
+        // The claim the R5 batch's byte-inertness gate rests on: all 57
+        // frozen fixtures are v1..v4, `parseTape` normalises `pins: []` onto
+        // every one, and `serializeTape` must not write it back.
+        const v3Base = { ...v2Base, tape_version: 3, persistence: [] };
+        const v4Base = { ...v3Base, tape_version: 4, equips: [] };
+        for (const t of [base, v2Base, v3Base, v4Base]) {
+            expect(parseTape(t).pins).toEqual([]);
+            expect(JSON.parse(serializeTape(t))).not.toHaveProperty('pins');
+        }
+    });
+
+    it('a v5 tape round-trips its pins, in PIN_NAMES order', () => {
+        const v5 = {
+            ...v2Base,
+            tape_version: 5,
+            persistence: [],
+            equips: [],
+            pins: ['dead_frames', 'sound'],
+        };
+        const written = JSON.parse(serializeTape(v5));
+        expect(written.tape_version).toBe(5);
+        expect(written.pins).toEqual(['sound', 'dead_frames']);
+        expect(serializeTape(written)).toBe(serializeTape(v5));
+    });
+
+    it('rejects a pin name neither consumer knows, and a repeat', () => {
+        const withPins = (pins) => () => parseTape({
+            ...v2Base, tape_version: 5, persistence: [], equips: [], pins,
+        });
+        expect(withPins(['rng'])).toThrow(/not a pin name/);
+        expect(withPins(['sound', 'sound'])).toThrow(/names "sound" more than once/);
+        expect(withPins('sound')).toThrow(/pins must be an array/);
+        expect(withPins([])).not.toThrow();
+    });
+
+    it('a v1..v4 tape may CARRY pins: [] but not a pin', () => {
+        const v4Base = {
+            ...v2Base, tape_version: 4, persistence: [], equips: [],
+        };
+        expect(() => parseTape({ ...v4Base, pins: [] })).not.toThrow();
+        expect(() => parseTape({ ...v4Base, pins: ['sound'] }))
+            .toThrow(/versions below 5 mean pins: \[\] BY DEFINITION/);
+        // v1's own arm names the field too, or a v1 tape could pin silently.
+        expect(() => parseTape({ ...base, pins: ['sound'] }))
+            .toThrow(/version 1 means pins: \[\] BY DEFINITION/);
+    });
+
+    it('a v5 tape still carries its v3 clears and its v4 equips', () => {
+        // The bug `parsePersistence` had once, checked one version on: a
+        // field gated on `version === N` is silently dropped the moment a
+        // tape becomes N+1, and a dropped equip is a press that becomes a
+        // sword slash thousands of ticks later rather than an error.
+        const v5 = {
+            ...v2Base,
+            tape_version: 5,
+            persistence: [{ level: 3, tag: 0, note: 'breakablerock@96,112' }],
+            equips: [{ t: 0, slot: 1 }],
+            pins: ['sound'],
+        };
+        const parsed = parseTape(v5);
+        expect(parsed.persistence).toEqual([
+            { level: 3, tag: 0, note: 'breakablerock@96,112' },
+        ]);
+        expect(parsed.equips).toEqual([{ t: 0, slot: 1 }]);
+        expect(parsed.pins).toEqual(['sound']);
+    });
+
+    it('a v4 tape still carries its v3 clears', () => {
+        // `parsePersistence` used to be gated on `version === 3`, which
+        // would have silently dropped every clear the moment a tape became
+        // v4 — and a dropped clear is a blocker that is suddenly there, i.e.
+        // a routing failure thousands of ticks later rather than an error.
+        const v4 = {
+            ...v2Base,
+            tape_version: 4,
+            persistence: [{ level: 3, tag: 0, note: 'breakablerock@96,112' }],
+            equips: [{ t: 0, slot: 1 }],
+        };
+        expect(parseTape(v4).persistence).toEqual([
+            { level: 3, tag: 0, note: 'breakablerock@96,112' },
+        ]);
+    });
+
+    it('a v1 or v2 tape may CARRY persistence: [] but not a clear', () => {
+        // The value-not-presence rule, one version on. `parseTape` is
+        // idempotent, so a parsed v2 tape carries `persistence: []` and has
+        // to survive being parsed again.
+        expect(() => parseTape({ ...v2Base, persistence: [] })).not.toThrow();
+        expect(() => parseTape({ ...v2Base, persistence: [{ level: 1, tag: 1 }] }))
+            .toThrow(/versions below 3 mean persistence: \[\] BY DEFINITION/);
+    });
+
+    it('writes NO v2 fields into a v1 tape, even though parseTape adds them', () => {
+        const parsed = parseTape(base);
+        expect(parsed.noDamage).toBe(false);
+        expect(parsed.noHazards).toEqual([]);
+        expect(parsed.grants).toEqual([]);
+        const written = JSON.parse(serializeTape(base));
+        expect(written).not.toHaveProperty('noDamage');
+        expect(written).not.toHaveProperty('noHazards');
+        expect(written).not.toHaveProperty('grants');
+    });
+
+    it('writes all three v2 fields into a v2 tape', () => {
+        const written = JSON.parse(serializeTape({
+            ...v2Base,
+            noHazards: ['pit', 'water'],
+            grants: [{ level: 10, items: ['sword'] }],
+        }));
+        expect(written.noDamage).toBe(true);
+        // Sorted by tile-type value, not by authoring order.
+        expect(written.noHazards).toEqual(['water', 'pit']);
+        expect(written.grants).toEqual([{ level: 10, items: ['sword'] }]);
+    });
+});
+
+describe('observation streams', () => {
+    const stream = {
+        ticks: [
+            { t: 0, x: 80, y: 128, level: 0 },
+            { t: 1, x: 80.8, y: 128, level: 0 },
+        ],
+        transitions: [],
+    };
+
+    it('requires dense, in-order tick indices', () => {
+        expect(() => parseObservationStream({
+            ticks: [{ t: 0, x: 1, y: 1, level: 0 }, { t: 5, x: 1, y: 1, level: 0 }],
+            transitions: [],
+        })).toThrow(/must equal its index/);
+    });
+
+    it('requires the transitions field even on a stream that has none', () => {
+        expect(() => parseObservationStream({ ticks: [] }))
+            .toThrow(/transitions must be an array/);
+    });
+
+    it('reports no diff for identical streams', () => {
+        expect(diffObservationStreams(stream, stream)).toBeNull();
+    });
+
+    it('is EXACT — a one-ulp difference is a diff, not a tolerance', () => {
+        // AS3 Number, JS number and the recompiled runtime are all IEEE-754
+        // doubles, so a mismatch is a transcription defect to investigate.
+        const nudged = structuredClone(stream);
+        nudged.ticks[1].x = 80.8 + Number.EPSILON * 64;
+        expect(diffObservationStreams(stream, nudged)).toMatch(/tick 1 differs/);
+    });
+
+    it('reports a length mismatch distinctly', () => {
+        expect(diffObservationStreams(stream, { ticks: stream.ticks.slice(0, 1), transitions: [] }))
+            .toMatch(/tick count differs/);
+    });
+});
+
+/**
+ * The `transitions` record (v2 slice 3, §1 ruling 2).
+ *
+ * Two consumers again, and an asymmetry to be careful about: the GAME's
+ * side is derived from the tick stream by `deriveTransitions` (because
+ * `Bot.as` hardcodes `[]`), while the JS engine's comes from its own world
+ * swap. The differ therefore has to be element-wise and exact — a
+ * count-only comparison, which is what v1 shipped, passes a run that
+ * crossed the right NUMBER of times in the wrong places.
+ */
+describe('transition records', () => {
+    const crossing = {
+        ticks: [
+            { t: 0, x: 88, y: 136, level: 0 },
+            { t: 1, x: 87, y: 136, level: 0 },
+            { t: 2, x: 296, y: 168, level: 94 },
+            { t: 3, x: 295, y: 168, level: 94 },
+        ],
+        transitions: [{ t: 2, from_level: 0, to_level: 94 }],
+    };
+
+    it('derives the game\'s side from where the level field CHANGES', () => {
+        expect(deriveTransitions(crossing.ticks))
+            .toEqual([{ t: 2, from_level: 0, to_level: 94 }]);
+    });
+
+    it('derives one entry per crossing on a round trip, in order', () => {
+        const back = crossing.ticks.concat([
+            { t: 4, x: 24, y: 136, level: 0 },
+            { t: 5, x: 25, y: 136, level: 0 },
+        ]);
+        expect(deriveTransitions(back)).toEqual([
+            { t: 2, from_level: 0, to_level: 94 },
+            { t: 4, from_level: 94, to_level: 0 },
+        ]);
+    });
+
+    it('derives nothing from a stream that never leaves its level', () => {
+        expect(deriveTransitions(crossing.ticks.slice(0, 2))).toEqual([]);
+        expect(deriveTransitions([])).toEqual([]);
+    });
+
+    it('validates the element shape rather than accepting any array', () => {
+        const withTransitions = (transitions) => () =>
+            parseObservationStream({ ...crossing, transitions });
+        expect(withTransitions([{ t: 2, from_level: 0 }])).toThrow(/to_level must be an integer/);
+        expect(withTransitions([{ t: 2.5, from_level: 0, to_level: 94 }]))
+            .toThrow(/t must be an integer/);
+        expect(withTransitions([94])).toThrow(/must be an object/);
+    });
+
+    it('refuses a t that no observation could carry', () => {
+        // t is the first observation IN THE NEW LEVEL, so 0 is impossible
+        // (observation 0 is the boot level by definition) and anything past
+        // the end of the stream is a bookkeeping defect.
+        expect(() => parseObservationStream({
+            ...crossing, transitions: [{ t: 0, from_level: 0, to_level: 94 }],
+        })).toThrow(/must be >= 1/);
+        expect(() => parseObservationStream({
+            ...crossing, transitions: [{ t: 9, from_level: 0, to_level: 94 }],
+        })).toThrow(/past the end of the stream/);
+    });
+
+    it('refuses out-of-order records and same-level teleports', () => {
+        expect(() => parseObservationStream({
+            ...crossing,
+            transitions: [
+                { t: 3, from_level: 0, to_level: 94 },
+                { t: 2, from_level: 94, to_level: 0 },
+            ],
+        })).toThrow(/strictly greater/);
+        expect(() => parseObservationStream({
+            ...crossing, transitions: [{ t: 2, from_level: 7, to_level: 7 }],
+        })).toThrow(/to itself/);
+    });
+
+    it('DIFFS ELEMENT-WISE: a wrong t is a diff, not a matching count', () => {
+        // The mutation this leg exists for. Both streams cross once, from
+        // and to the same levels — only the tick differs, which is exactly
+        // what an off-by-one in the swap's end-of-tick placement produces.
+        const late = structuredClone(crossing);
+        late.transitions[0].t = 3;
+        expect(diffObservationStreams(crossing, late))
+            .toMatch(/transition 0 differs: expected \{t:2, 0->94\}, got \{t:3, 0->94\}/);
+    });
+
+    it('diffs the levels too, and reports both lists on a count mismatch', () => {
+        const elsewhere = structuredClone(crossing);
+        elsewhere.transitions[0].to_level = 12;
+        expect(diffObservationStreams(crossing, elsewhere)).toMatch(/0->12/);
+        expect(diffObservationStreams(crossing, { ...crossing, transitions: [] }))
+            .toMatch(/transition count differs: expected 1 \[\{t:2, 0->94\}\], got 0 \[\]/);
+    });
+});
+
+/**
+ * ⛓⛓⛓ THE WRAP AROUND THE DERIVATION — the whole of the GAME's side, in ONE
+ * place, because three callers now need it (the node differential, the
+ * director, and `watch.html`'s per-tick verdict).
+ *
+ * ⛔ THESE ARE THE ROWS THAT MAKE `gameStreamFromDrain` A CONTRACT rather than
+ * a convenience: a caller that assembled the stream itself would agree with
+ * this until somebody edited one of them.
+ */
+describe('the game\'s stream, out of botDrain', () => {
+    const drained = {
+        ticks: [
+            { t: 0, x: 88, y: 136, level: 0 },
+            { t: 1, x: 87, y: 136, level: 0 },
+            { t: 2, x: 296, y: 168, level: 94 },
+        ],
+        // ⛓ WHAT `Bot.as` REALLY SENDS. The field is hardcoded empty on every
+        // build that exists; the entries below are DERIVED.
+        transitions: [],
+    };
+
+    it('derives the transitions the game does not send, and keeps the ticks', () => {
+        const g = gameStreamFromDrain(drained);
+        expect(g.stream.ticks).toBe(drained.ticks);
+        expect(g.stream.transitions).toEqual([{ t: 2, from_level: 0, to_level: 94 }]);
+        expect(g.stream.transitions).toEqual(deriveTransitions(drained.ticks));
+    });
+
+    it('⛓⛓ M-transitions: WITHOUT the wrap a crossing diverges SPURIOUSLY', () => {
+        // The mutant, kept as a row rather than run once and thrown away: hand
+        // the comparator what `botDrain` literally returns and the transitions
+        // leg reports a difference that is not about the run at all. This is
+        // why the wrap is load-bearing for every tape with a level change, and
+        // why a page that forgot it would go red on real agreement.
+        const model = { ticks: drained.ticks, transitions: [{ t: 2, from_level: 0, to_level: 94 }] };
+        expect(diffObservationStreams(model, drained))
+            .toMatch(/transition count differs: expected 1 \[\{t:2, 0->94\}\], got 0 \[\]/);
+        expect(diffObservationStreams(model, gameStreamFromDrain(drained).stream)).toBeNull();
+    });
+
+    it('⛔ REFUSES a drain it cannot read rather than returning an empty stream', () => {
+        // `{ticks: [], transitions: []}` would diff as "tick count differs:
+        // expected N, got 0" — a confident sentence about a comparison that
+        // never happened. The CALLER decides what a missing drain means.
+        expect(() => gameStreamFromDrain(null)).toThrow(/did not hand over a stream/);
+        expect(() => gameStreamFromDrain({})).toThrow(/did not hand over a stream/);
+        expect(() => gameStreamFromDrain({ ticks: 'nope' })).toThrow(/did not hand over a stream/);
+    });
+
+    it('REPORTS a build that fills the field in — it never overwrites it', () => {
+        const agreeing = { ...drained, transitions: [{ t: 2, from_level: 0, to_level: 94 }] };
+        expect(gameStreamFromDrain(agreeing).agrees).toBe(true);
+        const wrong = { ...drained, transitions: [{ t: 1, from_level: 0, to_level: 94 }] };
+        const g = gameStreamFromDrain(wrong);
+        expect(g.agrees).toBe(false);
+        expect(g.reported).toEqual([{ t: 1, from_level: 0, to_level: 94 }]);
+        // ⛓ And the DERIVATION still wins in the stream: a caller that ignored
+        // `agrees` would compare the derivation, which is the old behaviour.
+        expect(g.stream.transitions).toEqual([{ t: 2, from_level: 0, to_level: 94 }]);
+        expect(g.detail).toMatch(/needs revisiting/);
+    });
+});
+
+// ─────────────────────────────────────────────────────────────────────────
+// R0: the subtractive ladder's three relaxation fields.
+//
+// The reason these are as fussy as the key table: each one selects WHICH
+// EXPERIMENT both consumers run. A tape that omits `noHazards` and a game
+// that defaults it differently from the JS engine is not a bug in either
+// side — it is two sides running different games and a differential that
+// reports the difference as physics.
+// ─────────────────────────────────────────────────────────────────────────
+
+describe('version 2: what a v1 tape may and may not say', () => {
+    it('still parses every v1 tape', () => {
+        expect(parseTape(base).tape_version).toBe(1);
+        expect(SUPPORTED_TAPE_VERSIONS).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+    });
+
+    it('normalises v1 to version 1 SEMANTICS so no engine branches on version', () => {
+        const parsed = parseTape(base);
+        expect(parsed).toMatchObject({ noDamage: false, noHazards: [], grants: [] });
+    });
+
+    it('refuses a v1 tape that RELAXES anything', () => {
+        expect(() => parseTape({ ...base, noDamage: true }))
+            .toThrow(/tape_version 1 declares noDamage: true/);
+        expect(() => parseTape({ ...base, noHazards: ['water'] }))
+            .toThrow(/tape_version 1 declares noHazards/);
+        expect(() => parseTape({ ...base, grants: [{ level: 10, items: ['sword'] }] }))
+            .toThrow(/tape_version 1 declares grants/);
+    });
+
+    it('lets a PARSED v1 tape be parsed again — parseTape is idempotent', () => {
+        // Every consumer re-validates (`runTape`, `serializeTape`, the
+        // driver), so a normalised tape has to survive a second pass. The
+        // v1 rejection is therefore on the VALUE, not on presence; getting
+        // that backwards turned 37 tests red on the first attempt.
+        const once = parseTape(base);
+        expect(parseTape(once)).toEqual(once);
+        expect(parseTape(parseTape(once))).toEqual(once);
+    });
+
+    it('rejects an unknown version by name', () => {
+        // ⚠ The number here is ONE PAST the newest supported version and has
+        // to move with it. It was a literal 6 until slice 23 shipped version
+        // 6, at which point this test started asserting that a LEGAL version
+        // is rejected — and it failed with "noDamage must be a boolean",
+        // i.e. it had quietly become a test of the v2 arm rather than of the
+        // version gate. [[feedback_coincidental_predicate_rots]]
+        const unknown = Math.max(...SUPPORTED_TAPE_VERSIONS) + 1;
+        expect(() => parseTape({ ...base, tape_version: unknown }))
+            .toThrow(/tape_version must be one of/);
+        expect(() => parseTape({ ...base, tape_version: 0 }))
+            .toThrow(/tape_version must be one of/);
+    });
+});
+
+describe('version 2: noDamage and noHazards', () => {
+    it('requires all three fields — a partial relaxation is a named error', () => {
+        for (const missing of ['noDamage', 'noHazards', 'grants']) {
+            const tape = { ...v2Base, grants: [] };
+            delete tape[missing];
+            expect(() => parseTape(tape)).toThrow(new RegExp(missing));
+        }
+    });
+
+    it('refuses a BOOLEAN noHazards, and says why it is a set', () => {
+        // The R4 rung re-arms hazards one at a time; a boolean cannot
+        // express a single rung of it, and shipping one would have cost a
+        // second ~10-minute AS3 pipeline run to change its type.
+        expect(() => parseTape(v2With({ noHazards: true })))
+            .toThrow(/must be an ARRAY of hazard names.*one at a time/s);
+    });
+
+    it('names the five hazard states and nothing else', () => {
+        expect(HAZARD_STATES).toEqual({ water: 1, pit: 6, lava: 17, ice: 22, waterfall: 25 });
+        expect(() => parseTape(v2With({ noHazards: ['stairs'] })))
+            .toThrow(/not a hazard name/);
+        expect(() => parseTape(v2With({ noHazards: ['bridge'] })))
+            .toThrow(/not a hazard name/);
+    });
+
+    it('matches flashPanel/seedlingSemantics — the table is transcribed, not invented', () => {
+        // Same guard shape as the key table: this module stays
+        // dependency-free (browser-usable), so the semantics are
+        // transcribed here and cross-asserted there.
+        for (const [name, t] of Object.entries(HAZARD_STATES)) {
+            expect(TILE_TYPE_NAMES[t].toLowerCase()).toContain(name);
+        }
+        // And the coerced target really is Ground, not "whatever 0 means".
+        expect(TILE_TYPE_NAMES[COERCED_TERRAIN_STATE]).toBe('Ground');
+    });
+
+    it('rejects a repeated hazard and sorts by tile type', () => {
+        expect(() => parseTape(v2With({ noHazards: ['water', 'water'] })))
+            .toThrow(/names "water" more than once/);
+        expect(parseTape(v2With({ noHazards: ['ice', 'water', 'lava'] })).noHazards)
+            .toEqual(['water', 'lava', 'ice']);
+    });
+
+    it('accepts [] — "no hazard disabled" is a legal, explicit choice', () => {
+        expect(parseTape(v2With({ noHazards: [] })).noHazards).toEqual([]);
+    });
+});
+
+describe('version 2: coerceTerrainState', () => {
+    const ALL = ['water', 'pit', 'lava', 'ice', 'waterfall'];
+
+    it('flattens exactly the named hazards to Ground', () => {
+        for (const [name, t] of Object.entries(HAZARD_STATES)) {
+            expect(coerceTerrainState(t, ALL)).toBe(0);
+            expect(coerceTerrainState(t, [name])).toBe(0);
+        }
+    });
+
+    it('leaves a hazard NOT named alone — this is what makes R4 possible', () => {
+        expect(coerceTerrainState(HAZARD_STATES.water, ['pit'])).toBe(HAZARD_STATES.water);
+        expect(coerceTerrainState(HAZARD_STATES.pit, ['water'])).toBe(HAZARD_STATES.pit);
+        expect(coerceTerrainState(HAZARD_STATES.lava, [])).toBe(HAZARD_STATES.lava);
+    });
+
+    it('leaves every NON-hazard terrain alone, including the slow ones', () => {
+        // Stairs (10) and Ghost Step (30) are slower but harmless, and
+        // flattening them would erase real physics rather than a hazard.
+        for (const t of [0, 3, 8, 9, 10, 30, 29]) {
+            expect(coerceTerrainState(t, ALL)).toBe(t);
+        }
+    });
+});
+
+describe('version 2: grants', () => {
+    it('accepts the item vocabulary and rejects anything else', () => {
+        expect(parseTape(v2With({ grants: [{ level: 10, items: ['sword'] }] })).grants)
+            .toEqual([{ level: 10, items: ['sword'] }]);
+        expect(() => parseTape(v2With({ grants: [{ level: 10, items: ['excalibur'] }] })))
+            .toThrow(/not an item name/);
+    });
+
+    it('names all fourteen items, health included', () => {
+        expect(ITEM_NAMES).toHaveLength(14);
+        expect(ITEM_NAMES).toContain('health');
+        // ⚠ Thirteen booleans and ONE int. An "all items true" assertion
+        // that forgets this is asserting the wrong thing about hitsMax.
+        expect(ITEM_PROPERTIES.health).toEqual({
+            property: 'hitsMax', kind: 'add', base: 3, value: 1,
+        });
+        expect(ITEM_NAMES.filter((n) => ITEM_PROPERTIES[n].kind === 'boolean'))
+            .toHaveLength(13);
+    });
+
+    it('refuses a duplicate level, because a grant fires on FIRST entry', () => {
+        expect(() => parseTape(v2With({
+            grants: [{ level: 10, items: ['sword'] }, { level: 10, items: ['shield'] }],
+        }))).toThrow(/declares level 10 twice/);
+    });
+
+    it('refuses an empty items list — an unchecked route claim', () => {
+        expect(() => parseTape(v2With({ grants: [{ level: 10, items: [] }] })))
+            .toThrow(/non-empty array of item names/);
+    });
+
+    it('refuses a repeated item within one grant', () => {
+        expect(() => parseTape(v2With({
+            grants: [{ level: 10, items: ['sword', 'sword'] }],
+        }))).toThrow(/names "sword" more than once/);
+    });
+
+    it('sorts grants by level and items by name, so two tapes agree', () => {
+        expect(parseTape(v2With({
+            grants: [
+                { level: 43, items: ['wand'] },
+                { level: 10, items: ['shield', 'sword'] },
+            ],
+        })).grants).toEqual([
+            { level: 10, items: ['shield', 'sword'] },
+            { level: 43, items: ['wand'] },
+        ]);
+    });
+});
+
+describe("the runtime's tape budget (R3)", () => {
+    /** `n` non-overlapping one-tick spans on one key. */
+    const spans = (n) => Array.from({ length: n }, (_, i) => ({
+        key: 'right', from: i * 2, to: i * 2 + 1,
+    }));
+    const tapeOf = (n, extra = {}) => ({
+        ...base, ...extra, tick_count: n * 2 + 1, inputs: spans(n),
+    });
+
+    it('lets R2\'s committed headline through, with room to spare', () => {
+        // 853 spans / 63 KB is the biggest tape that has ever been recorded,
+        // and the guard exists to permit it. A limit that rejected the
+        // known-good walk would be measuring the guard, not the runtime.
+        const { spans: n, bytes } = assertTapeWithinRuntimeBudget(tapeOf(853), 'r2');
+        expect(n).toBe(853);
+        expect(bytes).toBeLessThan(TAPE_BUDGET.bytes);
+    });
+
+    it('THROWS on a span count past the budget, and names both ceilings', () => {
+        // ⚠ CAPPED, and the cap is not caution — it is what keeps a MUTATION
+        // fast. Building `TAPE_BUDGET.spans + 1` spans is fine at 1800 and
+        // catastrophic at the first mutation anyone reaches for (raise the
+        // limit): the first run of this suite against `spans: 999999` spent
+        // twenty minutes constructing a million-span tape and had to be
+        // killed. Capped, that mutation fails this test in milliseconds
+        // instead — which is the point of a mutation, not a side effect.
+        const over = Math.min(TAPE_BUDGET.spans + 1, 3000);
+        expect(() => assertTapeWithinRuntimeBudget(tapeOf(over), 'huge'))
+            .toThrow(/huge is past the recompiled runtime's tape budget/);
+        expect(() => assertTapeWithinRuntimeBudget(tapeOf(over)))
+            .toThrow(/dead run, not a slow one/);
+    });
+
+    it('THROWS on BYTES even when the span count is fine', () => {
+        // ⚠ The two ceilings are INDEPENDENT — measured, not assumed: a
+        // 853-span tape padded with an inert field still dies. A guard that
+        // only counted spans would pass exactly the tape that taught us the
+        // difference.
+        const padded = tapeOf(10, { description: 'x'.repeat(TAPE_BUDGET.bytes) });
+        expect(() => assertTapeWithinRuntimeBudget(padded, 'padded'))
+            .toThrow(/padded is past the recompiled runtime's tape budget/);
+    });
+
+    it('stays inside the MEASURED band rather than sitting on it', () => {
+        // The measurement is of one build on one machine, and what it guards
+        // against costs a whole recording deadline. Both limits must be
+        // strictly below the smallest figure the probe saw fail (2132 spans,
+        // 95 KB survived / 159 KB died).
+        expect(TAPE_BUDGET.spans).toBeLessThan(2078);
+        expect(TAPE_BUDGET.bytes).toBeLessThan(95 * 1024);
+    });
+});
+
+// ─────────────────────────────────────────────────────────────────────────
+// R4: THE INVENTORY SLOT MODEL
+//
+// `Main.primary` is an INDEX into `Inventory.items`, and `Player.useItem`
+// switches on whatever `Inventory.getItem(index)` returns — so "which slot
+// holds the spear" is the whole of whether an X press is a thrust or a
+// slash. These cases are hand-derived from `Inventory.addItemsFromSave`
+// (`Inventory.as:277-318`) rather than from running anything, which is what
+// makes them a second stratum beside the game's own scanned readout.
+// ─────────────────────────────────────────────────────────────────────────
+
+describe('R4: the inventory slot model', () => {
+    const held = (...names) => {
+        const o = {
+            hasSword: false, hasFire: false, hasWand: false, hasSpear: false,
+            hasGhostSword: false, hasFireWand: false,
+        };
+        for (const n of names) o[n] = true;
+        return o;
+    };
+
+    it('is the PUSH order, not the id order', () => {
+        // sword, fire, wand, spear — `addItemsFromSave`'s three blocks in
+        // the order it runs them.
+        expect(inventorySlotsFor(held('hasSword', 'hasFire', 'hasWand', 'hasSpear')))
+            .toEqual([0, 1, 2, 3]);
+        expect(inventorySlotsFor(held('hasWand', 'hasSword'))).toEqual([0, 2]);
+    });
+
+    it("puts the spear in SLOT 1 under R4's own item set", () => {
+        // The whole reason one equip covers the R4 walk.
+        expect(inventorySlotsFor(held('hasSword', 'hasSpear'))).toEqual([0, 3]);
+        expect(inventorySlotsFor(held('hasSword', 'hasSpear'))[1])
+            .toBe(INVENTORY_ITEM_IDS.spear);
+    });
+
+    it('is EMPTY before the first item, which is why the check is lazy', () => {
+        expect(inventorySlotsFor(held())).toEqual([]);
+    });
+
+    it('splices the fusions rather than appending them (R5, transcribed now)', () => {
+        // ⚠ `ghostsword` is an ELSE of the sword arm AND of the spear arm,
+        // so it suppresses both — an implementation that added it beside
+        // them would put the spear back in the array and shift every later
+        // slot by one.
+        expect(inventorySlotsFor(held('hasSword', 'hasSpear', 'hasGhostSword')))
+            .toEqual([INVENTORY_ITEM_IDS.ghostsword]);
+        expect(inventorySlotsFor(held('hasFire', 'hasWand', 'hasFireWand')))
+            .toEqual([INVENTORY_ITEM_IDS.firewand]);
+        expect(inventorySlotsFor(held('hasSword', 'hasFire', 'hasWand', 'hasFireWand')))
+            .toEqual([INVENTORY_ITEM_IDS.sword, INVENTORY_ITEM_IDS.firewand]);
+    });
+});
+
+// ─────────────────────────────────────────────────────────────────────────
+// VERSION 6 — the SAVE-ARRAY BOOT BLOCK (R5 slice 23).
+//
+// The wall slice 22 hit as an INSTANCE (`hasTotemPart[]`, the wand gate)
+// and the audit found to be a FAMILY. The tests that matter are about the
+// SHAPE of `seal_parts`, which is the one field here that can be wrong and
+// still read right: it is an ordered collection LOG whose empty value is
+// -1, not a per-index boolean array.
+// ─────────────────────────────────────────────────────────────────────────
+
+const v6Base = {
+    ...v2Base,
+    tape_version: 6,
+    persistence: [],
+    equips: [],
+    pins: [],
+    save: { totem_parts: [], keys: [], seal_parts: [] },
+};
+const v6With = (save) => ({ ...v6Base, save: { ...v6Base.save, ...save } });
+
+describe('version 6: the save-array boot block', () => {
+    it('normalises an EMPTY block onto every earlier version', () => {
+        for (const t of [base, v2Base]) {
+            expect(parseTape(t).save)
+                .toEqual({ totem_parts: [], keys: [], seal_parts: [] });
+        }
+    });
+
+    it('writes NO save field into a v1..v5 tape, so every fixture round-trips', () => {
+        for (const t of [base, v2Base]) {
+            expect(JSON.parse(serializeTape(t))).not.toHaveProperty('save');
+        }
+        expect(JSON.parse(serializeTape(v6Base))).toHaveProperty('save');
+    });
+
+    it('rejects a v1..v5 tape that PRESENTS anything, by VALUE not presence', () => {
+        // The value-not-presence rule, the fifth time. A parsed v5 tape
+        // carries an empty block; rejecting on presence would reject every
+        // committed fixture, which is what the first build of the R0 batch
+        // did with `noDamage`.
+        const v5 = { ...v2Base, tape_version: 5, persistence: [], equips: [], pins: [] };
+        expect(() => parseTape({ ...v5, save: { totem_parts: [], keys: [], seal_parts: [] } }))
+            .not.toThrow();
+        expect(() => parseTape({ ...v5, save: { totem_parts: [0], keys: [], seal_parts: [] } }))
+            .toThrow(/versions below 6 mean an EMPTY save block/);
+        expect(() => parseTape({ ...base, save: { totem_parts: [0] } }))
+            .toThrow(/version 1 means an EMPTY save block/);
+    });
+
+    it('is idempotent — a parsed v6 tape survives a second pass', () => {
+        const once = parseTape(v6With({ totem_parts: [0, 1, 2, 3, 4], seal_parts: [7, 3] }));
+        expect(parseTape(once)).toEqual(once);
+        expect(parseTape(serializeTape(once))).toEqual(once);
+    });
+
+    it('SORTS totem_parts and keys but NEVER seal_parts', () => {
+        // ⛔ The whole shape of the field. `totem_parts` and `keys` index
+        // into boolean arrays, so their order carries nothing and a
+        // re-derivation that changed order must not read as a diff.
+        // `seal_parts` order IS the slot each identity lands in
+        // (SealController.getSealPart fills the first -1), so sorting it
+        // would silently rewrite the save.
+        const p = parseTape(v6With({
+            totem_parts: [3, 0, 1], keys: [4, 2], seal_parts: [9, 2, 15],
+        }));
+        expect(p.save.totem_parts).toEqual([0, 1, 3]);
+        expect(p.save.keys).toEqual([2, 4]);
+        expect(p.save.seal_parts).toEqual([9, 2, 15]);
+    });
+
+    it('bounds each array by ITS OWN slot count, not by a shared one', () => {
+        expect(SAVE_SLOTS).toEqual({ totem_parts: 5, keys: 5, seal_parts: 16 });
+        expect(() => parseTape(v6With({ totem_parts: [5] })))
+            .toThrow(/save\.totem_parts\[0\] is 5, out of range 0\.\.4/);
+        expect(() => parseTape(v6With({ keys: [5] })))
+            .toThrow(/save\.keys\[0\] is 5, out of range 0\.\.4/);
+        expect(() => parseTape(v6With({ seal_parts: [16] })))
+            .toThrow(/save\.seal_parts\[0\] is 16, out of range 0\.\.15/);
+        // A seal identity of 15 is LEGAL and is the one that completes the
+        // gate only when it lands in the LAST SLOT — the bound is on the
+        // identity, the completeness is about the ordinal.
+        expect(parseTape(v6With({ seal_parts: [15] })).save.seal_parts).toEqual([15]);
+    });
+
+    it('refuses -1 by name, because -1 is hasSealPart\'s own EMPTY value', () => {
+        expect(() => parseTape(v6With({ seal_parts: [-1] })))
+            .toThrow(/A negative index is not "none" here/);
+        expect(() => parseTape(v6With({ totem_parts: [-1] })))
+            .toThrow(/out of range 0\.\.4/);
+    });
+
+    it('refuses a repeat in any of the three, and says why', () => {
+        expect(() => parseTape(v6With({ totem_parts: [1, 1] })))
+            .toThrow(/duplicates index 1/);
+        expect(() => parseTape(v6With({ seal_parts: [4, 9, 4] })))
+            .toThrow(/a state the game cannot reach/);
+    });
+
+    it('refuses more entries than slots', () => {
+        expect(() => parseTape(v6With({ totem_parts: [0, 1, 2, 3, 4] }))).not.toThrow();
+        expect(() => parseTape({
+            ...v6Base,
+            save: { totem_parts: [0, 1, 2, 3, 4, 4], keys: [], seal_parts: [] },
+        })).toThrow(/save\.totem_parts has 6 entries but only 5 slots exist/);
+        expect(() => parseTape(v6With({
+            seal_parts: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+        }))).not.toThrow();
+    });
+
+    it('refuses an unknown key inside the block rather than ignoring it', () => {
+        // A silently-ignored `save.badges: [...]` would be a directive one
+        // consumer honoured and the other dropped — the whole reason this
+        // format validates loudly.
+        expect(() => parseTape({ ...v6Base, save: { ...v6Base.save, badges: [] } }))
+            .toThrow(/save\.badges is not a save array/);
+    });
+
+    it('refuses a block that is not an object', () => {
+        expect(() => parseTape({ ...v6Base, save: [] })).toThrow(/save must be an object/);
+        expect(() => parseTape({ ...v6Base, save: null })).toThrow(/save must be an object/);
+        expect(() => parseTape({ ...v6Base, save: { totem_parts: 3 } }))
+            .toThrow(/save\.totem_parts must be an array/);
+    });
+
+    it('lets an author OMIT a key they do not use', () => {
+        const p = parseTape({ ...v6Base, save: { totem_parts: [0] } });
+        expect(p.save).toEqual({ totem_parts: [0], keys: [], seal_parts: [] });
+    });
+
+    it('serializes the block in a stable order', () => {
+        const written = JSON.parse(serializeTape(v6With({
+            totem_parts: [4, 0], seal_parts: [11, 1],
+        })));
+        expect(Object.keys(written.save)).toEqual(['totem_parts', 'keys', 'seal_parts']);
+        expect(written.save.seal_parts).toEqual([11, 1]);
+    });
+
+    it('saveBlockDeclaresAnything is the emptiness test, and it is over the ARRAYS', () => {
+        expect(saveBlockDeclaresAnything(undefined)).toBe(false);
+        expect(saveBlockDeclaresAnything(emptySaveBlock())).toBe(false);
+        expect(saveBlockDeclaresAnything({ seal_parts: [0] })).toBe(true);
+    });
+});
+
+// ─────────────────────────────────────────────────────────────────────────
+// VERSION 7 — the RNG STATE, R6 slice 6a.
+//
+// The first field whose reason is that the game is not deterministic ENOUGH
+// from outside. `Math.random()` is one global LFSR, so a page reproduces
+// exactly and predicts nothing: what the Owl reads when he decides whether
+// to drop a rock is a function of how many draws the page has made since it
+// loaded. `rng.seed` declares the origin; `rng.split` takes the cosmetic
+// draws off the gameplay stream so they stop moving it.
+// ─────────────────────────────────────────────────────────────────────────
+
+const v7Base = {
+    ...v6Base,
+    tape_version: 7,
+    rng: { seed: 0, split: false },
+};
+const v7With = (rng) => ({ ...v7Base, rng: { ...v7Base.rng, ...rng } });
+
+describe('version 7: the RNG state', () => {
+    it('normalises an EMPTY block onto every earlier version', () => {
+        // ⚠ FOUR FIELDS SINCE R7: `cosmetic` and `fp` are the OTHER TWO
+        // GENERATORS (trap 96, extended at slice 0), and 0 is their
+        // "declares nothing" value exactly as it is for `seed`.
+        for (const t of [base, v2Base, v6Base]) {
+            expect(parseTape(t).rng)
+                .toEqual({ seed: 0, split: false, cosmetic: 0, fp: 0 });
+        }
+    });
+
+    it('writes NO rng field into a v1..v6 tape, so all 108 fixtures round-trip', () => {
+        for (const t of [base, v2Base, v6Base]) {
+            expect(JSON.parse(serializeTape(t))).not.toHaveProperty('rng');
+        }
+        expect(JSON.parse(serializeTape(v7Base))).toHaveProperty('rng');
+    });
+
+    it('rejects a v1..v6 tape that DECLARES anything, by VALUE not presence', () => {
+        // The value-not-presence rule, the SIXTH time. A parsed v6 tape
+        // carries `{seed: 0, split: false}`; rejecting on presence would
+        // reject every committed fixture, which is what the first build of
+        // the R0 batch did with `noDamage`.
+        expect(() => parseTape({ ...v6Base, rng: { seed: 0, split: false } }))
+            .not.toThrow();
+        expect(() => parseTape({ ...v6Base, rng: { seed: 12345, split: false } }))
+            .toThrow(/versions below 7 mean rng: \{seed: 0, split: false\}/);
+        expect(() => parseTape({ ...v6Base, rng: { seed: 0, split: true } }))
+            .toThrow(/versions below 7 mean rng: \{seed: 0, split: false\}/);
+        expect(() => parseTape({ ...base, rng: { seed: 1 } }))
+            .toThrow(/version 1 means an EMPTY rng block/);
+    });
+
+    it('is idempotent — a parsed v7 tape survives a second pass', () => {
+        const once = parseTape(v7With({ seed: 1486967168, split: true }));
+        expect(parseTape(once)).toEqual(once);
+        expect(parseTape(serializeTape(once))).toEqual(once);
+    });
+
+    it('bounds the seed to the ORBIT, for two independent reasons', () => {
+        // ⛔ 2^31 - 1, not 2^32 - 1, and both halves of the reason are real:
+        // the n=31 tap is 0x48000000 (bit 31 clear), so the generator's
+        // orbit is [1, 2^31) and nothing above it is a state the game can
+        // be in — AND the recompiled runtime's JSON.parse coerces a larger
+        // integer to int32, so 2147483648 arrives in Bot.as as
+        // -2147483648. Measured on the first probe run; a field the two
+        // consumers read differently is what this format exists to stop.
+        expect(RNG_SEED_MAX).toBe(2147483647);
+        expect(parseTape(v7With({ seed: 0 })).rng.seed).toBe(0);
+        expect(parseTape(v7With({ seed: RNG_SEED_MAX })).rng.seed).toBe(RNG_SEED_MAX);
+        expect(() => parseTape(v7With({ seed: 2147483648 })))
+            .toThrow(/out of range 0\.\.2147483647/);
+        expect(() => parseTape(v7With({ seed: -1 })))
+            .toThrow(/out of range 0\.\.2147483647/);
+        expect(() => parseTape(v7With({ seed: 1.5 }))).toThrow(/rng\.seed/);
+    });
+
+    it('refuses a non-boolean split rather than coercing it', () => {
+        // A truthy string honoured by one consumer and dropped by the other
+        // is the divergence this format exists to prevent — and here it
+        // would be a divergence about WHICH STREAM the run is on.
+        expect(() => parseTape(v7With({ split: 'yes' })))
+            .toThrow(/rng\.split must be a boolean/);
+        expect(() => parseTape(v7With({ split: 1 })))
+            .toThrow(/rng\.split must be a boolean/);
+    });
+
+    it('refuses an unknown key inside the block rather than ignoring it', () => {
+        expect(() => parseTape({ ...v7Base, rng: { ...v7Base.rng, cosmetic_seed: 3 } }))
+            .toThrow(/rng\.cosmetic_seed is not an rng field/);
+    });
+
+    it('refuses a block that is not an object', () => {
+        expect(() => parseTape({ ...v7Base, rng: [] })).toThrow(/rng must be an object/);
+        expect(() => parseTape({ ...v7Base, rng: null })).toThrow(/rng must be an object/);
+    });
+
+    it('lets an author OMIT a field they do not use', () => {
+        expect(parseTape({ ...v7Base, rng: { seed: 7 } }).rng)
+            .toEqual({ seed: 7, split: false, cosmetic: 0, fp: 0 });
+        expect(parseTape({ ...v7Base, rng: {} }).rng)
+            .toEqual({ seed: 0, split: false, cosmetic: 0, fp: 0 });
+    });
+
+    it('serializes the block in a stable order', () => {
+        // ⛔ A v7 TAPE STILL WRITES EXACTLY TWO. All 118 frozen fixtures are
+        // v<=7, so a v7 block that gained R7's `cosmetic`/`fp` pair the
+        // moment anything re-serialized them would be the roster-wide
+        // re-record this batch exists to NOT take.
+        const written = JSON.parse(serializeTape(v7With({ seed: 99, split: true })));
+        expect(Object.keys(written.rng)).toEqual(['seed', 'split']);
+    });
+
+    it('rngBlockDeclaresAnything is the emptiness test, over BOTH fields', () => {
+        expect(rngBlockDeclaresAnything(undefined)).toBe(false);
+        expect(rngBlockDeclaresAnything(emptyRngBlock())).toBe(false);
+        expect(rngBlockDeclaresAnything({ seed: 1 })).toBe(true);
+        expect(rngBlockDeclaresAnything({ split: true })).toBe(true);
+        expect(rngBlockDeclaresAnything({ seed: 0, split: false })).toBe(false);
+    });
+
+    it('TAPE_VERSION and SUPPORTED_TAPE_VERSIONS carry the bump', () => {
+        expect(TAPE_VERSION).toBe(11);
+        expect(SUPPORTED_TAPE_VERSIONS).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+    });
+});
+
+/**
+ * ── ⛓⛓⛓ VERSION 9: THE WITNESSED MID-RUN CLEAR, AND ITS PROJECTION ───
+ *
+ * `at` says the RUN's own play cleared a flag at tick T; the model applies it
+ * there instead of at boot. Every test here is one of the two fences that
+ * keep it from becoming a staged grant: the format refuses it BOTH ways, and
+ * the game never sees it.
+ */
+describe('version 9: the witnessed mid-run clear', () => {
+    const v9 = (over = {}) => ({
+        tape_version: 9,
+        game: 'seedling',
+        boot: { level: 5, x: 80, y: 32 },
+        noclip: false,
+        noDamage: false,
+        noHazards: [],
+        grants: [],
+        equips: [],
+        pins: [],
+        save: { totem_parts: [], keys: [], seal_parts: [] },
+        rng: { seed: 0, split: false },
+        seam: null,
+        tick_count: 100,
+        inputs: [],
+        persistence: [{ level: 5, tag: 0, at: 40 }],
+        ...over,
+    });
+
+    it('parses `at` and carries it through serialization', () => {
+        const t = parseTape(v9());
+        expect(t.persistence[0].at).toBe(40);
+        expect(JSON.parse(serializeTape(t)).persistence[0].at).toBe(40);
+    });
+
+    it('⛔ MUTATION: a tape BELOW v9 may not carry `at` at all', () => {
+        expect(() => parseTape(v9({ tape_version: 8 })))
+            .toThrow(/has no mid-run clear/);
+    });
+
+    it('⛔ MUTATION: `at` must be a tick this tape actually has', () => {
+        expect(() => parseTape(v9({ persistence: [{ level: 5, tag: 0, at: 101 }] })))
+            .toThrow(/outside this tape's \[0, 100\]/);
+        expect(() => parseTape(v9({ persistence: [{ level: 5, tag: 0, at: -1 }] })))
+            .toThrow(/outside this tape's \[0, 100\]/);
+        expect(() => parseTape(v9({ persistence: [{ level: 5, tag: 0, at: 1.5 }] })))
+            .toThrow(/must be an integer/);
+    });
+
+    it('a boot clear is untouched — no `at`, no field', () => {
+        const t = parseTape(v9({ persistence: [{ level: 5, tag: 0 }] }));
+        expect(t.persistence[0].at).toBeUndefined();
+        expect(JSON.parse(serializeTape(t)).persistence[0]).not.toHaveProperty('at');
+    });
+
+    /**
+     * ⛔⛔ THE PIN THAT ENFORCES "MODEL-ONLY FEATURES NEVER CROSS TO THE
+     * GAME". It asserts the projection differs in EXACTLY the version and
+     * the `at` field — so a future v9+ field fails here until someone
+     * classifies it as game-visible (AS3 + batch discipline) or model-only
+     * (rides the projection free). That classification is now part of
+     * adding any tape field.
+     */
+    it('⛓ the GAME-VISIBLE PROJECTION differs in exactly the CLASSIFIED fields', () => {
+        const t = parseTape(v9());
+        const g = gameVisibleTape(t);
+        expect(g.tape_version).toBe(8);
+        // ⛔⛔ ⚖ RULING 23 (user, 2026-08-21): the TIMED ROW LEAVES ENTIRELY.
+        // This used to assert the row survived with its `at` stripped, which
+        // handed the game a boot clear for something the walk had not done —
+        // and `Bot.as:1587` applies clears BEFORE the world is built, so the
+        // gated body never spawned on a fresh page and stood on a continuation.
+        // MEASURED on `r8-solve-5`: 514746467 with the row, 1196897329
+        // without, everything else identical.
+        expect(g.persistence).toEqual([]);
+        const differing = Object.keys(t).filter(
+            (k) => JSON.stringify(t[k]) !== JSON.stringify(g[k]));
+        // ⛓ R7 slice 6e: `despawn` joins the list, and it is dropped from a
+        // v9 tape too — EMPTY OR NOT. A projection whose SHAPE depended on
+        // whether a model-only field had entries would hand the game a key
+        // it does not know on exactly the tapes nobody tested.
+        // ⛓ R9 slice 8: `tick0` joins the classified list. It differs even on
+        // a tape that declares none — `parseTape` normalises the field to
+        // `null` and the projection DELETES the key — which is the same
+        // shape-not-content rule `despawn` follows two lines up.
+        expect(differing.sort()).toEqual(
+            ['despawn', 'persistence', 'tape_version', 'tick0']);
+        // …and the projection is a real v8 tape, which is the whole claim:
+        // "declaring it v8 is a true statement about its contents".
+        expect(() => parseTape(g)).not.toThrow();
+    });
+
+    /**
+     * ⛔ A v9 TAPE PROJECTS WHETHER OR NOT IT USES `at`, and a tape below v9
+     * is returned IDENTICALLY. The game's loader gates on the version LIST,
+     * so a v9 tape with no mid-run clear is refused for a NUMBER rather than
+     * for a feature — and it is, in content, exactly a v8 tape.
+     *
+     * ⚠ Identity for the lower versions, not equality: a projection that
+     * copied every tape would make the 121 committed fixtures allocate for
+     * nothing and would hide a copy that diverged.
+     */
+    it('projects EVERY v9 tape, and a lower version KEEPS ITS NUMBER', () => {
+        const v9NoAt = parseTape(v9({ persistence: [], tape_version: 9 }));
+        expect(v9NoAt.tape_version).toBe(9);
+        expect(gameVisibleTape(v9NoAt).tape_version).toBe(8);
+        const v8 = parseTape(v9({ persistence: [], tape_version: 8 }));
+        // ⛔ A PROJECTION NEVER RAISES A VERSION. v9+ is, in content, a v8
+        // tape; v1..v8 already are one and keep the number they were written
+        // at, so the 121 committed fixtures are not re-versioned by being
+        // handed to the game.
+        expect(gameVisibleTape(v8).tape_version).toBe(8);
+        expect(GAME_VISIBLE_DROPS).toEqual(
+            ['persistence[] with at', 'despawn', 'tick0']);
+    });
+
+    /**
+     * ⛔⛔⛔ R9 SLICE 9 — **THE PROJECTION LEAKED ON EVERY TAPE BELOW v9, AND
+     * THE PIN ABOVE COULD NOT SEE IT** because it only ever projected a v9
+     * tape.
+     *
+     * `gameVisibleTape` returned a sub-v9 tape BY IDENTITY (`return t`) as a
+     * deliberate no-copy optimisation — correct when it was written, because
+     * a v8 tape had no classified field to lose. It stopped being correct the
+     * moment `parseTape` began NORMALISING the newer fields onto every tape it
+     * parses: a parsed v8 tape carries `despawn: []` and `tick0: null`, and
+     * the identity return handed both to the game.
+     *
+     * ⛓ WHAT IT COST, MEASURED (R9 slice 9 W0): the latch cache in
+     * `solve-seedling-r9-campaign.mjs` keys on the md5 of exactly these bytes,
+     * so every sub-v9 tape's key MOVED at the v9, v10 and v11 bumps even
+     * though nothing game-visible changed — reproduced on the slice-6 cache,
+     * where the two v9 segments' filenames still reproduce byte for byte
+     * (`r8-solve-5` bc706c7ba3e3, `r8-solve-8` e66574ebe41d) and every v8 one
+     * no longer does. A silent extra GPU run per bump, never a wrong answer.
+     *
+     * ⛔ AND THE REAL RISK IS THE NEXT FIELD, NOT THESE TWO. `despawn: []` and
+     * `tick0: null` are inert to the fork (measured: a v8 payload drives
+     * byte-identically with and without them). A v12 field whose normalised
+     * value is NOT inert would have reached the game on every tape below v9,
+     * on exactly the path no test covered.
+     */
+    it('⛔ the projection drops the classified fields on a tape BELOW v9 too', () => {
+        const v8 = parseTape(v9({ persistence: [], tape_version: 8 }));
+        expect(v8).toHaveProperty('despawn');
+        expect(v8).toHaveProperty('tick0');
+        const g = gameVisibleTape(v8);
+        expect(g).not.toHaveProperty('despawn');
+        expect(g).not.toHaveProperty('tick0');
+        // the SAME set of differing keys as the v9 pin, minus the version —
+        // which a sub-v9 projection does not move.
+        const differing = Object.keys(v8).filter(
+            (k) => JSON.stringify(v8[k]) !== JSON.stringify(g[k]));
+        expect(differing.sort()).toEqual(['despawn', 'tick0']);
+        expect(() => parseTape(g)).not.toThrow();
+    });
+
+    /**
+     * ⛔⛔⛔ ⚖ RULING 23 (user, 2026-08-21): *"a level run separately must play
+     * identically to the same level reached from the start"*.
+     *
+     * The row this replaces asserted the OPPOSITE — that a timed clear reached
+     * the game with only its tick removed. That is the shape R9 slice 9
+     * measured as the cause of the campaign chain's `boundary 5/15` refusal:
+     * `Bot.as:1587` applies a tape's clears BEFORE the world is built, so the
+     * SAME row means "this body never existed" on a fresh page and "this body
+     * is standing and the flag is already set" on a continuation.
+     *
+     * ⛓ The model keeps the row — `createLevelRun` takes timed clears at
+     * construction and the walk depends on them. Only the GAME's copy loses it.
+     */
+    it('⛔ a TIMED clear never reaches the game, and an UNTIMED one always does', () => {
+        const timedOnly = parseTape(v9({ persistence: [{ level: 5, tag: 0, at: 3 }] }));
+        expect(timedOnly.persistence).toHaveLength(1);
+        expect(gameVisibleTape(timedOnly).persistence).toEqual([]);
+
+        const both = parseTape(v9({
+            persistence: [{ level: 5, tag: 0 }, { level: 8, tag: 1, at: 3 }],
+        }));
+        expect(gameVisibleTape(both).persistence)
+            .toEqual([{ level: 5, tag: 0, note: '' }]);
+
+        // …and a tape with no timed row is untouched in this respect, which is
+        // what keeps the change scoped to the seven tapes that carry one.
+        const untimed = parseTape(v9({ persistence: [{ level: 5, tag: 0 }] }));
+        expect(gameVisibleTape(untimed).persistence)
+            .toEqual([{ level: 5, tag: 0, note: '' }]);
+    });
+});
+
+/**
+ * ── ⛓⛓⛓ VERSION 10: THE WITNESSED MID-RUN ENEMY REMOVAL ──────────────
+ *
+ * v9's shape a second time, so these are v9's tests a second time — the two
+ * fences that keep a model-only field from becoming a staged relaxation: the
+ * format refuses it BOTH ways, and the GAME never sees it.
+ *
+ * ⛔ Plus one fence v9 did not need. A clear's `at` is OPTIONAL because a
+ * boot clear is a state the game really can be in; a despawn with no `at`
+ * would be a body deleted before the first tick, which is a level the game
+ * never builds. The format refuses that rather than leaving it to a
+ * convention nobody can grep for.
+ */
+describe('version 10: the witnessed mid-run enemy removal', () => {
+    const v10 = (over = {}) => ({
+        tape_version: 10,
+        game: 'seedling',
+        boot: { level: 6, x: 32, y: 16 },
+        noclip: false,
+        noDamage: false,
+        noHazards: [],
+        grants: [],
+        persistence: [],
+        equips: [],
+        pins: [],
+        save: { totem_parts: [], keys: [], seal_parts: [] },
+        rng: { seed: 0, split: false },
+        seam: null,
+        tick_count: 346,
+        inputs: [],
+        despawn: [{ level: 6, id: 'bob@112,48', at: 120, note: 'drowned' }],
+        ...over,
+    });
+
+    it('parses a removal and carries it through serialization', () => {
+        const t = parseTape(v10());
+        expect(t.despawn).toEqual([{ level: 6, id: 'bob@112,48', at: 120, note: 'drowned' }]);
+        expect(JSON.parse(serializeTape(t)).despawn[0])
+            .toEqual({ level: 6, id: 'bob@112,48', at: 120, note: 'drowned' });
+    });
+
+    it('⛔ MUTATION: a tape BELOW v10 may not carry a removal at all', () => {
+        expect(() => parseTape(v10({ tape_version: 9 })))
+            .toThrow(/versions below 10 mean despawn: \[\] BY DEFINITION/);
+    });
+
+    it('⛔ MUTATION: `at` is REQUIRED — a boot-time deletion is not a removal', () => {
+        expect(() => parseTape(v10({ despawn: [{ level: 6, id: 'bob@112,48' }] })))
+            .toThrow(/declares no at/);
+    });
+
+    it('⛔ MUTATION: `at` must be a tick this tape actually has', () => {
+        expect(() => parseTape(v10({ despawn: [{ level: 6, id: 'bob@1,1', at: 347 }] })))
+            .toThrow(/outside this tape's \[0, 346\]/);
+        expect(() => parseTape(v10({ despawn: [{ level: 6, id: 'bob@1,1', at: -1 }] })))
+            .toThrow(/outside this tape's \[0, 346\]/);
+    });
+
+    /**
+     * ⛔⛔ THE ID IS A PLACEMENT, NOT AN INDEX — the trap the shape exists to
+     * dodge. The atlas is a REGENERATED artifact, so an entity's position in
+     * `entities` is a property of the extract; `type@x,y` is the `.oel`
+     * placement, which is what the level IS.
+     */
+    it('⛔ MUTATION: an id that is not a level record placement is refused', () => {
+        for (const id of [3, '3', 'bob', 'bob@112', 'Bob@112,48', 'bob@112,48 ']) {
+            expect(() => parseTape(v10({ despawn: [{ level: 6, id, at: 10 }] })))
+                .toThrow(/must be a level record placement/);
+        }
+    });
+
+    it('⛔ MUTATION: the same body removed twice is a bookkeeping error', () => {
+        expect(() => parseTape(v10({
+            despawn: [{ level: 6, id: 'bob@1,1', at: 10 }, { level: 6, id: 'bob@1,1', at: 20 }],
+        }))).toThrow(/duplicates bob@1,1/);
+    });
+
+    it('stamps 10 only for a tape that USES it, and 10 beats 9', () => {
+        expect(requiredTapeVersion(parseTape(v10()))).toBe(10);
+        expect(requiredTapeVersion(parseTape(v10({ despawn: [] })))).toBe(8);
+        // ⛔ Highest-first: a tape carrying BOTH features is a v10 tape, and
+        // an arm order that tested `at` first would stamp it 9 and lose the
+        // removal on the next parse.
+        expect(requiredTapeVersion(parseTape(v10({
+            persistence: [{ level: 6, tag: 0, at: 40 }],
+        })))).toBe(10);
+    });
+
+    /**
+     * ⛔⛔ THE PIN, EXTENDED FOR ITS SECOND CUSTOMER (§18.4's classification
+     * step, executed). The projection differs from a v10 tape in exactly the
+     * CLASSIFIED model-only fields, so a v11 field fails here until someone
+     * says which side of the line it is on.
+     */
+    it('⛓ the PROJECTION drops the removal too, and is a real v8 tape', () => {
+        const t = parseTape(v10({ persistence: [{ level: 6, tag: 0, at: 40 }] }));
+        const g = gameVisibleTape(t);
+        expect(g.tape_version).toBe(8);
+        expect(g).not.toHaveProperty('despawn');
+        // ⛔ ⚖ ruling 23: the TIMED row leaves entirely, so this tape's only
+        // clear is gone rather than stripped of its tick.
+        expect(g.persistence).toEqual([]);
+        const differing = Object.keys(t).filter(
+            (k) => JSON.stringify(t[k]) !== JSON.stringify(g[k]));
+        // ⛓ R9 slice 8: `tick0` joins the classified list. It differs even on
+        // a tape that declares none — `parseTape` normalises the field to
+        // `null` and the projection DELETES the key — which is the same
+        // shape-not-content rule `despawn` follows two lines up.
+        expect(differing.sort()).toEqual(
+            ['despawn', 'persistence', 'tape_version', 'tick0']);
+        expect(() => parseTape(g)).not.toThrow();
+    });
+
+    it('writes NO despawn field into anything below v10', () => {
+        // The rule every field has followed since version 2, and the one
+        // that decides whether this bump is byte-inert for 121 fixtures.
+        const v9NoDespawn = parseTape(v10({ tape_version: 9, despawn: [] }));
+        expect(v9NoDespawn.despawn).toEqual([]);
+        expect(JSON.parse(serializeTape(v9NoDespawn))).not.toHaveProperty('despawn');
+    });
+});
+
+/**
+ * ── ⛓⛓⛓ VERSION 11: THE TICK-0 LATCH (⚖ ruling 20) ───────────────────
+ *
+ * The field a CONTINUATION applies. `boot`/`rng`/`seam` say where a FRESH
+ * page starts BEFORE it builds the boot level and pays the load fade;
+ * `tick0` says where that same fresh run stood at TICK 0, one build and one
+ * fade later. A continuation pays neither cost, so before v11 the page could
+ * only zero the declaration (slice 5) or bump the clock by a derived constant
+ * (slice 6). This block is the measured state both of those were standing in
+ * for.
+ *
+ * ⛔ THE THREE CLAIMS THESE ROWS EXIST TO MAKE, and each has a mutant:
+ *   1. the field is GAME-INVISIBLE (`gameVisibleTape` drops it, the
+ *      projection is a real v8 tape);
+ *   2. the field is JS-STAGING-INVISIBLE (`stagingFromTape` never forwards
+ *      it — a field that reached `createRunForStaging` is a rebuild knob);
+ *   3. a tape carrying it below v11 is REFUSED, and a tape carrying it is
+ *      stamped 11 and round-trips byte-identically.
+ */
+describe('version 11 — the tick-0 latch', () => {
+    const TICK0 = {
+        rng: { seed: 1196897329, split: false, cosmetic: 0, fp: 341033166 },
+        seam: { time: 6208 },
+    };
+    const v11 = (over = {}) => ({
+        tape_version: 11,
+        game: 'seedling',
+        boot: { level: 6, x: 32, y: 16 },
+        noclip: false,
+        noDamage: false,
+        noHazards: [],
+        grants: [],
+        persistence: [],
+        equips: [],
+        pins: [],
+        save: { totem_parts: [], keys: [], seal_parts: [] },
+        rng: { seed: 514746467, split: false, cosmetic: 0, fp: 341033166 },
+        seam: { time: 6187 },
+        despawn: [],
+        tick0: TICK0,
+        tick_count: 294,
+        inputs: [],
+        ...over,
+    });
+
+    it('parses the block and keeps both readings, one build apart', () => {
+        const t = parseTape(v11());
+        expect(t.rng.seed).toBe(514746467);
+        expect(t.tick0.rng.seed).toBe(1196897329);
+        expect(t.seam.time).toBe(6187);
+        expect(t.tick0.seam.time).toBe(6208);
+        // ⛓ The (d′) identity, now a CHECK rather than a constant the page
+        // adds: 21 = LOAD_FADE_FRAMES (20) + BOOT_PRESWAP_FRAMES (1).
+        expect(t.tick0.seam.time - t.seam.time).toBe(21);
+    });
+
+    it('a tape that declares NO tick0 normalises to null, at any version', () => {
+        expect(parseTape(v11({ tick0: undefined })).tick0).toBeNull();
+        expect(parseTape(v11({ tape_version: 10, tick0: undefined })).tick0).toBeNull();
+        expect(parseTape(v11({ tape_version: 8, despawn: [], tick0: undefined })).tick0)
+            .toBeNull();
+    });
+
+    it('⛔ MUTATION: the block below v11 is REFUSED by name', () => {
+        for (const version of [8, 9, 10]) {
+            expect(() => parseTape(v11({ tape_version: version })))
+                .toThrow(/versions below 11 have no tick-0 latch/);
+        }
+    });
+
+    it('⛔ MUTATION: a stray channel is refused — the block is rng + seam', () => {
+        expect(() => parseTape(v11({ tick0: { ...TICK0, save: {} } })))
+            .toThrow(/not a tick-0 field/);
+        expect(() => parseTape(v11({ tick0: { ...TICK0, seam: { time: 6208, music: 1 } } })))
+            .toThrow(/not a tick-0 seam field/);
+    });
+
+    it('⛔ MUTATION: a zero seed is refused — 0 means "never measured"', () => {
+        expect(() => parseTape(v11({
+            tick0: { ...TICK0, rng: { ...TICK0.rng, seed: 0 } },
+        }))).toThrow(/never measured it/);
+    });
+
+    it('⛔ MUTATION: a zero or negative tick-0 clock is refused', () => {
+        // A fresh boot pays the fade BEFORE tick 0, so even a true start
+        // reads 21 — a 0 here is a reading nobody took.
+        for (const time of [0, -1]) {
+            expect(() => parseTape(v11({ tick0: { ...TICK0, seam: { time } } })))
+                .toThrow(/tick0\.seam\.time/);
+        }
+    });
+
+    it('stamps 11 only for a tape that USES it, and 11 beats 10 and 9', () => {
+        expect(requiredTapeVersion(parseTape(v11()))).toBe(11);
+        expect(requiredTapeVersion(parseTape(v11({ tick0: undefined })))).toBe(8);
+        // ⛔ Highest-first. A segment carrying a tick-0 latch AND a forward
+        // timed row AND a despawn is a v11 tape; an arm order that tested
+        // `despawn` first would stamp it 10 and the next parse would REFUSE
+        // the field the continuation page reads.
+        expect(requiredTapeVersion(parseTape(v11({
+            persistence: [{ level: 6, tag: 0, at: 40 }],
+            despawn: [{ level: 6, id: 'bob@112,48', at: 120 }],
+        })))).toBe(11);
+    });
+
+    it('round-trips byte-identically, and writes NO tick0 below v11', () => {
+        const t = parseTape(v11());
+        expect(parseTape(JSON.parse(serializeTape(t))).tick0).toEqual(t.tick0);
+        expect(serializeTape(parseTape(JSON.parse(serializeTape(t))))).toBe(serializeTape(t));
+        const v10NoTick0 = parseTape(v11({ tape_version: 10, tick0: undefined }));
+        expect(JSON.parse(serializeTape(v10NoTick0))).not.toHaveProperty('tick0');
+    });
+
+    it('⛓ CLAIM 1 — the GAME never sees it: the projection is a real v8 tape', () => {
+        const t = parseTape(v11());
+        const g = gameVisibleTape(t);
+        expect(g).not.toHaveProperty('tick0');
+        expect(g.tape_version).toBe(8);
+        // ⛔ AND THE DECLARATION IT DOES SEE IS THE PRE-BUILD ONE, UNMOVED.
+        // The whole design rests on the fork loading exactly the tape it
+        // always loaded; the tick-0 state reaches the game through
+        // `botStart`'s own writes, never through the loader.
+        expect(g.rng).toEqual(t.rng);
+        expect(g.seam.time).toBe(6187);
+        expect(() => parseTape(g)).not.toThrow();
+    });
+
+    it('⛓⛓ CLAIM 2 — the JS STAGING never sees it either (a rebuild knob)', () => {
+        const t = parseTape(v11());
+        const staging = stagingFromTape(t);
+        expect(staging).not.toHaveProperty('tick0');
+        // The model's own boot state is the PRE-build declaration, exactly as
+        // before the field existed — this is the row that reds if anyone adds
+        // `tick0` to `stagingFromTape`'s allowlist.
+        expect(staging.rng).toEqual(t.rng);
+        expect(staging.seam).toEqual(t.seam);
+    });
+});

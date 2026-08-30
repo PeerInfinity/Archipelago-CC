@@ -1755,6 +1755,13 @@ class OptionValue(Rule[TWorld], game="Archipelago"):
         option_name: str
         skip_cache: ClassVar[bool] = True
 
+        @override
+        def _get_args_dict(self) -> dict[str, Any]:
+            # Emit the option name so the resolved rule round-trips through the
+            # exporter to rules.json (the frontend reads args.option). Without
+            # this the resolved rule serialized to a bare {"rule": "OptionValue"}.
+            return {"option": self.option_name}
+
         def _get_option(self, state: CollectionState) -> Any:
             """Get the raw option object from the world."""
             world = state.multiworld.worlds[self.player]

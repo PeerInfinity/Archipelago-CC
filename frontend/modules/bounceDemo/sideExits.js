@@ -1,6 +1,5 @@
 /**
- * Side-exit transform — build-order step 5
- * (NewDocs/plans/procedural-generation/dj-metroidvania-v2.md).
+ * Side-exit transform.
  *
  * The procgen grid hands each region a set of exit sides (N/E/S/W,
  * wherever a neighbor exists). This transform attaches one exit

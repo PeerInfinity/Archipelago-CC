@@ -17,6 +17,8 @@
     }
   },
 
+  "$comment_m1_seams": "⛓ M1's two seams (`pendingExit`, `pendingCheck`) and the two getters that close the ten key/totem locations `pendingCheck` cannot see are all declared BEFORE `level`. BridgeGeneric builds `_properties` in declaration order and reports in it (BridgeGeneric.as:91-101, :192-216), so in the frame a door fires the host sees WHICH door before it sees the level move — the same trick playerPositionX/Y-before-level already uses for the crossing tie-break. MEASURED on p4c at W5-0 against an existing String static: 18 declared properties produced 18 first-burst reports, in declaration order. ⛔ The four need seedling_bot_ap_p4d; on p4c the reads throw and BridgeGeneric skips an unreadable property, so declaring them is inert on the older build. ⛔ THIS NOTE IS A TOP-LEVEL KEY, not an entry in the array: BridgeGeneric pushes EVERY array entry into _properties, so a `$comment` object would become a property with an undefined class alias.",
+
   "state_properties": [
     { "class": "main", "property": "hasSword",      "type": "boolean" },
     { "class": "main", "property": "hasDarkSword",   "type": "boolean" },
@@ -31,7 +33,16 @@
     { "class": "main", "property": "hasSpear",       "type": "boolean" },
     { "class": "main", "property": "hasDarkSuit",    "type": "boolean" },
     { "class": "main", "property": "hasTorch",       "type": "boolean" },
-    { "class": "main", "property": "hitsMax",        "type": "int" }
+    { "class": "main", "property": "hitsMax",        "type": "int" },
+    { "class": "main", "property": "playerPositionX", "type": "int" },
+    { "class": "main", "property": "playerPositionY", "type": "int" },
+
+    { "class": "game", "property": "pendingExit",     "type": "string" },
+    { "class": "game", "property": "pendingCheck",    "type": "string" },
+    { "class": "game", "property": "keyMask",         "type": "int" },
+    { "class": "game", "property": "totemCount",      "type": "int" },
+
+    { "class": "main", "property": "level",           "type": "int" }
   ],
 
   "ap_items": [
@@ -171,6 +182,7 @@
   },
 
   "teleport": {
+    "_note": "DE-SCOPED, plan §4.6 (Phase 5b, 2026-08-14): this is NOT the mechanism for a set's static exit layout. `new Game($level,$x,$y)` assigned to FP.world is the SAME constructor and the SAME assignment Teleporter.update() already performs, so using it to redirect an exit costs two world constructions and — structurally — cannot fix the sign: Teleporter writes the static Game.sign AFTER its own new Game, and this recipe does not touch it, so the destination announces the region of the room the player did not go to. A set's exits live in its room DATA (frontend/modules/seedlingDemo/levelSetExits.js). What remains in scope here: the debug region/location jump UI below, seedlingRegionGlue's arrival warp, and any DYNAMIC re-linking during a run (an AP item that re-wires exits), which no static bundle can express.",
     "params": ["level", "x", "y"],
     "preWrites": [
       { "class": "game", "property": "menu", "value": false }

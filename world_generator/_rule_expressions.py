@@ -215,6 +215,25 @@ class RuleExpressionMixin:
             self.required_imports.add('Or')
             return f'Or({", ".join(child_exprs)})'
 
+        if rb_rule == 'AtLeast':
+            # AtLeast(count, *children): true when at least `count` children pass.
+            # count lives at the rule root (mirroring And/Or children), with an
+            # args fallback for the AST-exporter shape.
+            count = rule.get('count', args.get('count') if isinstance(args, dict) else None)
+            if isinstance(count, dict):
+                count = self._convert_compare_operand(count)
+            # Trivial collapses mirror rule_builder's AtLeast.from_resolved.
+            if isinstance(count, int) and count <= 0:
+                return self._make_bool_constant(True)
+            if not children or (isinstance(count, int) and count > len(children)):
+                return self._make_bool_constant(False)
+            child_exprs = [self._convert_rule(child) for child in children]
+            # If any child returns None (needs lambda mode), propagate that signal.
+            if any(expr is None for expr in child_exprs):
+                return None
+            self.required_imports.add('AtLeast')
+            return f'AtLeast({count}, {", ".join(child_exprs)})'
+
         if rb_rule == 'Not':
             # Not can have child in children list or in args.condition
             if children:

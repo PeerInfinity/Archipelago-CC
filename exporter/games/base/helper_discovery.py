@@ -4,15 +4,45 @@ This module handles discovering, analyzing, and exporting helper functions
 used in game rules.
 """
 
+import ast
+import dataclasses
 import enum
 import importlib
 import inspect
 import logging
+import textwrap
 from typing import Any, Callable, Dict, List, Optional, Set, TYPE_CHECKING
 
 from exporter.constants import MAX_HELPER_DISCOVERY_ITERATIONS
 
 logger = logging.getLogger(__name__)
+
+# Dataclass fields on a Rule.Resolved that are infrastructure, not rule
+# parameters - excluded when deriving a custom rule's helper parameters/args.
+_CUSTOM_RULE_INFRA_FIELDS = frozenset({"player", "caching_enabled"})
+
+
+class _SelfAttrRewriter(ast.NodeTransformer):
+    """Rewrites ``self.<attr>`` references inside a custom rule's ``_evaluate``.
+
+    ``self.player`` becomes the bare name ``player`` and each ``self.<field>``
+    (a dataclass field of the resolved rule) becomes the bare parameter name so
+    the method body can be analyzed as an ordinary ``(state, player, *fields)``
+    helper. Any ``self.<other>`` is recorded in ``unmapped`` so the caller can
+    fall back to leaving the rule opaque rather than emit a wrong body.
+    """
+
+    def __init__(self, allowed: Set[str]):
+        self.allowed = allowed
+        self.unmapped: Set[str] = set()
+
+    def visit_Attribute(self, node: ast.Attribute) -> ast.AST:
+        self.generic_visit(node)
+        if isinstance(node.value, ast.Name) and node.value.id == "self":
+            if node.attr in self.allowed:
+                return ast.copy_location(ast.Name(id=node.attr, ctx=node.ctx), node)
+            self.unmapped.add(node.attr)
+        return node
 
 
 class HelperDiscoveryMixin:
@@ -135,6 +165,136 @@ class HelperDiscoveryMixin:
 
         return helper_definitions
 
+    def _build_custom_rule_helper_def(self, rule_cls, world) -> Optional[Dict[str, Any]]:
+        """Analyze a rule_builder custom Rule subclass's ``Resolved._evaluate``
+        into a frontend-evaluable helper definition.
+
+        Mirrors :meth:`_analyze_worldgen_helpers` but adapts the
+        ``_evaluate(self, state)`` method shape: ``self.player`` -> ``player``
+        and each ``self.<field>`` (resolved dataclass field) -> a helper
+        parameter. The resulting ``{params, body}`` is keyed (by the caller) on
+        the rule's qualname, which matches the ``"rule"`` value the exporter
+        emits for the rule node, so the frontend's generic helper machinery can
+        evaluate it.
+
+        Returns ``None`` when the rule can't be analyzed (no
+        ``Resolved._evaluate``, references ``self`` attributes that aren't
+        dataclass fields, unreadable source, or the analyzer errors). In that
+        case the rule node is simply left opaque - the pre-existing behaviour,
+        so there is no regression.
+        """
+        from exporter.analyzer import analyze_rule
+
+        resolved = getattr(rule_cls, "Resolved", None)
+        evaluate = getattr(resolved, "_evaluate", None)
+        if resolved is None or evaluate is None:
+            return None
+        try:
+            fields = dataclasses.fields(resolved)
+        except TypeError:
+            return None
+        params = [f.name for f in fields if f.name not in _CUSTOM_RULE_INFRA_FIELDS]
+
+        try:
+            source = textwrap.dedent(inspect.getsource(evaluate))
+            tree = ast.parse(source)
+        except (OSError, TypeError, SyntaxError) as e:
+            logger.debug(f"Custom rule '{rule_cls.__qualname__}': cannot read _evaluate source: {e}")
+            return None
+
+        fn = tree.body[0] if tree.body else None
+        if not isinstance(fn, ast.FunctionDef):
+            return None
+        # _evaluate(self, state[, ...]) - the second positional arg is the state object.
+        posargs = fn.args.args
+        if len(posargs) < 2 or posargs[0].arg != "self":
+            logger.debug(f"Custom rule '{rule_cls.__qualname__}': unexpected _evaluate signature")
+            return None
+        state_name = posargs[1].arg
+
+        rewriter = _SelfAttrRewriter(set(params) | {"player"})
+        new_body = [rewriter.visit(stmt) for stmt in fn.body]
+        if rewriter.unmapped:
+            logger.debug(
+                f"Custom rule '{rule_cls.__qualname__}': leaving opaque - "
+                f"unmappable self attrs {sorted(rewriter.unmapped)}"
+            )
+            return None
+
+        # Synthesize `def _custom_rule(state, player, *fields): <rewritten body>`
+        # as source text and re-parse it. The function name is irrelevant (the
+        # caller keys the result on the rule's qualname); analyze_rule reads the
+        # body from the node we hand it.
+        arg_list = ", ".join([state_name, "player"] + params)
+        body_src = textwrap.indent("\n".join(ast.unparse(stmt) for stmt in new_body), "    ")
+        try:
+            synth = ast.parse(f"def _custom_rule({arg_list}):\n{body_src}\n").body[0]
+        except SyntaxError as e:
+            logger.debug(f"Custom rule '{rule_cls.__qualname__}': could not re-parse synthesized helper: {e}")
+            return None
+
+        try:
+            rule = analyze_rule(
+                ast_node=synth,
+                game_handler=self,
+                player_context=world.player if hasattr(world, "player") else None,
+                preserve_parameter_names=True,
+            )
+        except Exception as e:
+            logger.debug(f"Custom rule '{rule_cls.__qualname__}': analyze_rule failed: {e}")
+            return None
+        if not rule or rule.get("type") == "error":
+            return None
+
+        rule = self._clean_helper_rule(rule, world)
+        if rule is not None and hasattr(self, "expand_rule") and callable(self.expand_rule):
+            rule = self.expand_rule(rule)
+
+        if not params:
+            return rule
+
+        helper_def: Dict[str, Any] = {"params": params, "body": rule}
+        defaults = {
+            f.name: f.default
+            for f in fields
+            if f.name in params and isinstance(f.default, (bool, int, float, str))
+        }
+        if defaults:
+            helper_def["defaults"] = defaults
+        return helper_def
+
+    def _analyze_custom_rules(self, world) -> Dict[str, Any]:
+        """Auto-extract helper definitions for a world's rule_builder custom Rule
+        subclasses (e.g. Baba Is You's ``HasBlossoms``).
+
+        Custom rules serialize to an opaque ``{"rule": "<Name>", "args": {...}}``
+        leaf the frontend can't evaluate on its own; this gives it a helper body
+        to evaluate against. Returns ``{}`` for non-rule_builder worlds or worlds
+        with no custom rules. Unanalyzable rules are skipped (left opaque).
+        """
+        game = getattr(world, "game", None)
+        if not game:
+            return {}
+        try:
+            from rule_builder.rules import CustomRuleRegister
+        except ImportError:
+            return {}
+        custom_rules = CustomRuleRegister.custom_rules.get(game, {})
+        if not custom_rules:
+            return {}
+
+        definitions: Dict[str, Any] = {}
+        for qualname, rule_cls in custom_rules.items():
+            try:
+                helper_def = self._build_custom_rule_helper_def(rule_cls, world)
+            except Exception as e:
+                logger.debug(f"Custom rule '{qualname}': extraction error: {e}")
+                helper_def = None
+            if helper_def is not None:
+                definitions[qualname] = helper_def
+                logger.debug(f"Extracted custom rule helper '{qualname}'")
+        return definitions
+
     def _strip_worldgen_prefixes_from_rules(self, helper_definitions: Dict[str, Any]) -> Dict[str, Any]:
         """
         Strip worldgen prefixes from all helper references within rule bodies.
@@ -187,6 +347,12 @@ class HelperDiscoveryMixin:
             A dictionary mapping helper names to their rule definitions.
             Example: {"can_cut_half": {"type": "item_check", "item": "Cutter"}}
         """
+        # Auto-extract helpers for rule_builder custom Rule subclasses (e.g. Baba
+        # Is You's HasBlossoms). Empty for non-rule_builder worlds. Seeded into
+        # the result so it survives every return path below; explicit helper
+        # analysis wins on a name collision (handled by the merges below).
+        custom_rule_helpers = self._analyze_custom_rules(world)
+
         # Check for worldgen worlds first - analyze helper functions from their Rules.py module
         try:
             if self.is_worldgen_world(world):
@@ -197,9 +363,12 @@ class HelperDiscoveryMixin:
                 try:
                     rules_module = importlib.import_module(rules_module_name)
                     worldgen_helpers = self._analyze_worldgen_helpers(rules_module, world)
+                    # custom Rule subclasses apply to worldgen worlds too;
+                    # explicit worldgen helpers win on a name collision.
+                    worldgen_helpers = {**custom_rule_helpers, **worldgen_helpers}
                     if worldgen_helpers:
                         logger.debug(f"Analyzed {len(worldgen_helpers)} helper definitions from worldgen Rules.py")
-                        return worldgen_helpers
+                        return dict(sorted(worldgen_helpers.items()))
                 except ImportError as e:
                     logger.debug(f"Could not import worldgen Rules module: {e}")
         except Exception as e:
@@ -208,7 +377,8 @@ class HelperDiscoveryMixin:
         # Import analyze_rule here to avoid circular imports
         from exporter.analyzer import analyze_rule
 
-        helper_definitions = {}
+        # Seed with custom rule helpers so they're included via every return path.
+        helper_definitions = dict(custom_rule_helpers)
 
         # Get helper configuration
         whitelist = self.get_helpers_to_export_whitelist()

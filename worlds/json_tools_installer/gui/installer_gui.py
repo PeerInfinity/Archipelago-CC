@@ -29,8 +29,19 @@ from kivy.properties import StringProperty, BooleanProperty, NumericProperty
 from ..config import load_config, save_config, InstallerConfig, configure_export_settings, EXPORT_PRESETS
 from ..installer.version_detector import detect_ap_version, get_version_support_status
 from ..installer.downloader import download_archive, get_latest_commit_hash, check_connectivity, check_installer_compatibility
-from ..installer.extractor import extract_tools, COMPONENTS, DEFAULT_COMPONENTS, list_installed_components
+from ..installer.extractor import (
+    extract_tools,
+    COMPONENTS,
+    DEFAULT_COMPONENTS,
+    list_installed_components,
+    resolve_components,
+)
 from ..installer.romless_patcher import apply_romless_patches, revert_romless_patches
+
+# Selection shown when the GUI opens. resolve_components adds what this install
+# target requires (world_source on frozen), so the checkboxes show the same
+# selection the install will actually use.
+DEFAULT_SELECTION = frozenset(resolve_components(sorted(DEFAULT_COMPONENTS)))
 
 
 class InstallerApp(App):
@@ -44,9 +55,10 @@ class InstallerApp(App):
     version_stable = BooleanProperty(True)
     version_dev = BooleanProperty(False)
 
-    # Component properties (defaults set from DEFAULT_COMPONENTS)
+    # Component properties — keep defaults in sync with DEFAULT_SELECTION
+    # (the checkbox build also syncs them, but stale defaults are confusing)
     comp_exporter = BooleanProperty(True)
-    comp_rule_builder = BooleanProperty(False)
+    comp_rule_builder = BooleanProperty(True)
     comp_world_generator = BooleanProperty(True)
     comp_frontend = BooleanProperty(True)
     comp_presets = BooleanProperty(False)
@@ -57,6 +69,7 @@ class InstallerApp(App):
     comp_tracker = BooleanProperty(True)
     comp_testing = BooleanProperty(True)
     comp_worldgen_worlds = BooleanProperty(False)
+    comp_world_source = BooleanProperty("world_source" in DEFAULT_SELECTION)
 
     # Patch options
     apply_monkey_patch = BooleanProperty(True)
@@ -171,13 +184,17 @@ class InstallerApp(App):
         for name, comp in COMPONENTS.items():
             row = BoxLayout(size_hint_y=None, height=row_height)
 
-            # Checkbox with fixed width, default based on DEFAULT_COMPONENTS
+            # Checkbox with fixed width, default based on DEFAULT_SELECTION.
+            # Bind BEFORE setting active so the comp_<name> property is synced
+            # with the displayed state — otherwise a comp_ property whose
+            # default disagrees with DEFAULT_SELECTION silently desyncs
+            # (rule_builder showed checked but was never installed).
             cb = CheckBox(
-                active=name in DEFAULT_COMPONENTS,
                 size_hint_x=None,
                 width=40,
             )
             cb.bind(active=lambda instance, value, n=name: self.on_component_toggle(n, value))
+            cb.active = name in DEFAULT_SELECTION
             self.component_checkboxes[name] = cb
             row.add_widget(cb)
 
@@ -475,7 +492,7 @@ class InstallerApp(App):
             prop_name = f'comp_{name}'
             if hasattr(self, prop_name) and getattr(self, prop_name):
                 components.append(name)
-        return components
+        return resolve_components(components)
 
     def get_selected_version(self) -> str:
         """Get selected version string."""
@@ -490,14 +507,17 @@ class InstallerApp(App):
         Clock.schedule_once(lambda dt: setattr(self.progress, 'value', value))
 
     def show_message(self, title: str, message: str):
-        """Show a popup message."""
+        """Show a popup message (explicit OK — clicking outside won't dismiss)."""
         def show(dt):
-            content = BoxLayout(orientation='vertical', padding=10)
-            content.add_widget(Label(text=message))
+            content = BoxLayout(orientation='vertical', padding=10, spacing=10)
+            label = Label(text=message, halign='left', valign='top')
+            label.bind(size=lambda inst, val: setattr(inst, 'text_size', val))
+            content.add_widget(label)
             btn = Button(text='OK', size_hint_y=None, height=40)
             content.add_widget(btn)
 
-            popup = Popup(title=title, content=content, size_hint=(0.8, 0.5))
+            popup = Popup(title=title, content=content, size_hint=(0.8, 0.6),
+                          auto_dismiss=False)
             btn.bind(on_press=popup.dismiss)
             popup.open()
 
@@ -654,19 +674,54 @@ For more information, see the README.md file."""
                         pct = 50 + (current * 30 // total)
                         self.update_progress(pct)
 
-                extract_result = extract_tools(archive_path, components, progress_callback=extract_cb)
+                def submodule_cb(path, current, total):
+                    # A separate archive per submodule: GitHub archives
+                    # carry no submodule content at all
+                    self.update_status(
+                        f"Fetching submodule content {current}/{total}: {path}")
+
+                extract_result = extract_tools(
+                    archive_path, components,
+                    progress_callback=extract_cb,
+                    source=source,
+                    submodule_progress=submodule_cb,
+                )
 
                 if not extract_result.success:
                     self.show_message("Error", f"Extraction failed: {extract_result.errors}")
                     return
 
+                # Collected and shown once in the completion popup — popups
+                # raised mid-install are easy to lose
+                install_warnings = list(extract_result.warnings)
+
                 # Install Python dependencies required by extracted components
                 self.update_status("Installing dependencies...")
                 self.update_progress(82)
-                from ..installer.dependencies import install_missing_dependencies
-                dep_ok, dep_msg = install_missing_dependencies()
+                # JSON Tools' own packages plus requirements declared by
+                # apworlds in custom_worlds/, in ONE combined pip run — on
+                # frozen installs a second in-process pip invocation deadlocks.
+                from ..installer.dependencies import install_all_dependencies
+                dep_ok, dep_msg = install_all_dependencies()
                 if not dep_ok:
-                    self.show_message("Warning", f"Some dependencies failed to install: {dep_msg}")
+                    install_warnings.append(f"Dependency install: {dep_msg}")
+
+                # Original world source is a separate upstream download,
+                # not part of the fork archive
+                if "world_source" in components:
+                    self.update_status("Downloading original world source...")
+
+                    def ws_progress_cb(downloaded, total):
+                        if total > 0:
+                            self.update_status(
+                                f"Downloading original world source... "
+                                f"{downloaded / 1024 / 1024:.1f} of {total / 1024 / 1024:.0f} MB"
+                            )
+
+                    from ..installer.world_source import install_world_source
+                    ws_ok, ws_msg = install_world_source(progress_callback=ws_progress_cb)
+                    if not ws_ok:
+                        install_warnings.append(f"World source download failed: {ws_msg}")
 
                 # Apply patches based on selected option
                 if self.apply_monkey_patch:
@@ -677,7 +732,7 @@ For more information, see the README.md file."""
                     hook_results = install_hooks()
                     success_count = sum(1 for v in hook_results.values() if v)
                     if success_count < len(hook_results):
-                        self.show_message("Warning", f"Only {success_count}/{len(hook_results)} hooks installed")
+                        install_warnings.append(f"Only {success_count}/{len(hook_results)} hooks installed")
                     self.installer_config.patches.method = "monkey"
 
                 else:
@@ -690,7 +745,7 @@ For more information, see the README.md file."""
                     self.update_progress(90)
                     romless_result = apply_romless_patches(self.installer_config)
                     if not romless_result.success:
-                        self.show_message("Warning", f"ROM-less patch issues: {romless_result.errors}")
+                        install_warnings.append(f"ROM-less patch issues: {romless_result.errors}")
 
                 # Configure export settings in host.yaml
                 if self.configure_export:
@@ -701,10 +756,9 @@ For more information, see the README.md file."""
                         if preset == "minimal-spoilers":
                             self.update_status("Export settings configured (JSON export enabled)")
                     else:
-                        self.show_message(
-                            "Warning",
-                            "Could not configure export settings in host.yaml.\n"
-                            "You may need to run:\n"
+                        install_warnings.append(
+                            "Could not configure export settings in host.yaml. "
+                            "You may need to run: "
                             "python scripts/setup/update_host_settings.py minimal-spoilers"
                         )
 
@@ -718,10 +772,11 @@ For more information, see the README.md file."""
                 from ..config import update_installation_info
                 update_installation_info(self.installer_config, version, components, commit_hash)
 
-                self.show_message(
-                    "Success",
-                    "JSON Tools installed successfully!\n\nComponents are ready to use."
-                )
+                summary = "JSON Tools installed successfully!\n\nComponents are ready to use."
+                if install_warnings:
+                    summary += "\n\nNotes:\n" + "\n\n".join(f"• {w}" for w in install_warnings)
+                summary += "\n\nRestart Archipelago so new worlds and dependencies load."
+                self.show_message("Success", summary)
 
         except Exception as e:
             self.show_message("Error", f"Installation failed: {str(e)}")

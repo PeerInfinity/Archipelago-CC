@@ -1,0 +1,1159 @@
+{
+  "generated_by": "scripts/procgen/plan-seedling-r1-route.mjs",
+  "description": "The R1 relaxed full walk: every reachable non-combat item room, over the (level, component) graph with pits as a modelled transport. Legs carry no targets — entering an item room IS collection at this rung, so a leg walks from its arrival straight to its named exit.",
+  "boot": {
+    "level": 0,
+    "x": 80,
+    "y": 128
+  },
+  "noHazards": [
+    "water",
+    "lava",
+    "ice",
+    "waterfall"
+  ],
+  "item_order": [
+    "sword(L10)",
+    "shield(L20)",
+    "feather(L89)",
+    "conch(L49)",
+    "wand(L43)",
+    "darksword(L12)",
+    "torch(L30)",
+    "spear(L64)",
+    "health(L68)",
+    "darkshield(L74)",
+    "darksuit(L79)"
+  ],
+  "grants": [
+    {
+      "level": 10,
+      "items": [
+        "sword"
+      ]
+    },
+    {
+      "level": 20,
+      "items": [
+        "shield"
+      ]
+    },
+    {
+      "level": 89,
+      "items": [
+        "feather"
+      ]
+    },
+    {
+      "level": 49,
+      "items": [
+        "conch"
+      ]
+    },
+    {
+      "level": 43,
+      "items": [
+        "wand"
+      ]
+    },
+    {
+      "level": 12,
+      "items": [
+        "darksword"
+      ]
+    },
+    {
+      "level": 30,
+      "items": [
+        "torch"
+      ]
+    },
+    {
+      "level": 64,
+      "items": [
+        "spear"
+      ]
+    },
+    {
+      "level": 68,
+      "items": [
+        "health"
+      ]
+    },
+    {
+      "level": 74,
+      "items": [
+        "darkshield"
+      ]
+    },
+    {
+      "level": 79,
+      "items": [
+        "darksuit"
+      ]
+    }
+  ],
+  "segment_boundaries": [
+    12,
+    28,
+    38,
+    48,
+    65
+  ],
+  "persistence_effects": [
+    {
+      "contact": "proximity-hazard:buttonroom@144,288",
+      "level": 37,
+      "fromLeg": 30,
+      "tag": "fallrock tag 4, built FALLEN",
+      "rect": {
+        "x": 288,
+        "y": 32,
+        "w": 16,
+        "h": 16
+      },
+      "why": "L38's arrival buttonroom wrote persistence(4) = false into L37, so L37's FallRock at (288,32) is now built already fallen and its update writes the player's y directly."
+    }
+  ],
+  "leg_boots": [
+    {
+      "level": 0,
+      "x": 80,
+      "y": 128
+    },
+    {
+      "level": 2,
+      "x": 48,
+      "y": 32
+    },
+    {
+      "level": 3,
+      "x": 64,
+      "y": 16
+    },
+    {
+      "level": 11,
+      "x": 32,
+      "y": 16
+    },
+    {
+      "level": 10,
+      "x": 48,
+      "y": 32
+    },
+    {
+      "level": 11,
+      "x": 32,
+      "y": 64
+    },
+    {
+      "level": 3,
+      "x": 96,
+      "y": 128
+    },
+    {
+      "level": 2,
+      "x": 48,
+      "y": 80
+    },
+    {
+      "level": 0,
+      "x": 256,
+      "y": 256
+    },
+    {
+      "level": 13,
+      "x": 64,
+      "y": 128
+    },
+    {
+      "level": 20,
+      "x": 32,
+      "y": 48
+    },
+    {
+      "level": 13,
+      "x": 96,
+      "y": 48
+    },
+    {
+      "level": 0,
+      "x": 48,
+      "y": 192
+    },
+    {
+      "level": 89,
+      "x": 160,
+      "y": 288
+    },
+    {
+      "level": 87,
+      "x": 16,
+      "y": 144
+    },
+    {
+      "level": 44,
+      "x": 16,
+      "y": 80
+    },
+    {
+      "level": 45,
+      "x": 112,
+      "y": 288
+    },
+    {
+      "level": 46,
+      "x": 240,
+      "y": 448
+    },
+    {
+      "level": 47,
+      "x": 240,
+      "y": 448
+    },
+    {
+      "level": 48,
+      "x": 112,
+      "y": 288
+    },
+    {
+      "level": 49,
+      "x": 32,
+      "y": 32
+    },
+    {
+      "level": 50,
+      "x": 32,
+      "y": 16
+    },
+    {
+      "level": 51,
+      "x": 144,
+      "y": 16
+    },
+    {
+      "level": 53,
+      "x": 48,
+      "y": 144
+    },
+    {
+      "level": 48,
+      "x": 16,
+      "y": 112
+    },
+    {
+      "level": 47,
+      "x": 216,
+      "y": 128
+    },
+    {
+      "level": 46,
+      "x": 176,
+      "y": 16
+    },
+    {
+      "level": 45,
+      "x": 112,
+      "y": 16
+    },
+    {
+      "level": 44,
+      "x": 64,
+      "y": 16
+    },
+    {
+      "level": 37,
+      "x": 16,
+      "y": 256
+    },
+    {
+      "level": 38,
+      "x": 144,
+      "y": 288
+    },
+    {
+      "level": 39,
+      "x": 144,
+      "y": 608
+    },
+    {
+      "level": 40,
+      "x": 480,
+      "y": 896
+    },
+    {
+      "level": 43,
+      "x": 176,
+      "y": 448
+    },
+    {
+      "level": 40,
+      "x": 320,
+      "y": 592
+    },
+    {
+      "level": 39,
+      "x": 144,
+      "y": 16
+    },
+    {
+      "level": 38,
+      "x": 144,
+      "y": 16
+    },
+    {
+      "level": 37,
+      "x": 288,
+      "y": 16
+    },
+    {
+      "level": 12,
+      "x": 592,
+      "y": 16
+    },
+    {
+      "level": 24,
+      "x": 48,
+      "y": 128
+    },
+    {
+      "level": 23,
+      "x": 48,
+      "y": 32
+    },
+    {
+      "level": 21,
+      "x": 16,
+      "y": 80
+    },
+    {
+      "level": 22,
+      "x": 96,
+      "y": 16
+    },
+    {
+      "level": 30,
+      "x": 64,
+      "y": 16
+    },
+    {
+      "level": 22,
+      "x": 96,
+      "y": 176
+    },
+    {
+      "level": 21,
+      "x": 80,
+      "y": 144
+    },
+    {
+      "level": 23,
+      "x": 64,
+      "y": 32
+    },
+    {
+      "level": 24,
+      "x": 96,
+      "y": 80
+    },
+    {
+      "level": 12,
+      "x": 40,
+      "y": 704
+    },
+    {
+      "level": 95,
+      "x": 608,
+      "y": 64
+    },
+    {
+      "level": 59,
+      "x": 144,
+      "y": 288
+    },
+    {
+      "level": 60,
+      "x": 16,
+      "y": 80
+    },
+    {
+      "level": 61,
+      "x": 16,
+      "y": 160
+    },
+    {
+      "level": 62,
+      "x": 48,
+      "y": 288
+    },
+    {
+      "level": 64,
+      "x": 32,
+      "y": 80
+    },
+    {
+      "level": 62,
+      "x": 112,
+      "y": 80
+    },
+    {
+      "level": 63,
+      "x": 64,
+      "y": 16
+    },
+    {
+      "level": 65,
+      "x": 128,
+      "y": 16
+    },
+    {
+      "level": 68,
+      "x": 16,
+      "y": 64
+    },
+    {
+      "level": 65,
+      "x": 185,
+      "y": 80
+    },
+    {
+      "level": 63,
+      "x": 128,
+      "y": 288
+    },
+    {
+      "level": 61,
+      "x": 208,
+      "y": 96
+    },
+    {
+      "level": 60,
+      "x": 144,
+      "y": 80
+    },
+    {
+      "level": 59,
+      "x": 288,
+      "y": 128
+    },
+    {
+      "level": 95,
+      "x": 32,
+      "y": 16
+    },
+    {
+      "level": 12,
+      "x": 16,
+      "y": 352
+    },
+    {
+      "level": 83,
+      "x": 32,
+      "y": 48
+    },
+    {
+      "level": 84,
+      "x": 32,
+      "y": 32
+    },
+    {
+      "level": 85,
+      "x": 48,
+      "y": 64
+    },
+    {
+      "level": 71,
+      "x": 16,
+      "y": 288
+    },
+    {
+      "level": 75,
+      "x": 64,
+      "y": 208
+    },
+    {
+      "level": 74,
+      "x": 16,
+      "y": 128
+    },
+    {
+      "level": 75,
+      "x": 64,
+      "y": 16
+    },
+    {
+      "level": 71,
+      "x": 96,
+      "y": 16
+    },
+    {
+      "level": 80,
+      "x": 32,
+      "y": 16
+    },
+    {
+      "level": 79,
+      "x": 64,
+      "y": 16
+    },
+    {
+      "level": 80,
+      "x": 40,
+      "y": 288
+    },
+    {
+      "level": 71,
+      "x": 224,
+      "y": 288
+    },
+    {
+      "level": 82,
+      "x": 160,
+      "y": 272
+    }
+  ],
+  "legs": [
+    {
+      "level": 0,
+      "targets": [],
+      "exit": {
+        "x": 256,
+        "y": 272
+      }
+    },
+    {
+      "level": 2,
+      "targets": [],
+      "exit": {
+        "x": 48,
+        "y": 96
+      }
+    },
+    {
+      "level": 3,
+      "targets": [],
+      "exit": {
+        "x": 96,
+        "y": 128
+      }
+    },
+    {
+      "level": 11,
+      "targets": [],
+      "exit": {
+        "x": 32,
+        "y": 80
+      }
+    },
+    {
+      "level": 10,
+      "targets": [],
+      "exit": {
+        "x": 48,
+        "y": 16
+      }
+    },
+    {
+      "level": 11,
+      "targets": [],
+      "exit": {
+        "x": 32,
+        "y": 0
+      }
+    },
+    {
+      "level": 3,
+      "targets": [],
+      "exit": {
+        "x": 64,
+        "y": 0
+      },
+      "contacts": [
+        "teleporter:-1@96,128"
+      ]
+    },
+    {
+      "level": 2,
+      "targets": [],
+      "exit": {
+        "x": 48,
+        "y": 16
+      }
+    },
+    {
+      "level": 0,
+      "targets": [],
+      "exit": {
+        "x": 32,
+        "y": 192
+      }
+    },
+    {
+      "level": 13,
+      "targets": [],
+      "exit": {
+        "x": 96,
+        "y": 32
+      }
+    },
+    {
+      "level": 20,
+      "targets": [],
+      "exit": {
+        "x": 16,
+        "y": 48
+      }
+    },
+    {
+      "level": 13,
+      "targets": [],
+      "exit": {
+        "x": 64,
+        "y": 144
+      }
+    },
+    {
+      "level": 0,
+      "targets": [],
+      "exit": {
+        "x": 240,
+        "y": 0
+      }
+    },
+    {
+      "level": 89,
+      "targets": [],
+      "exit": {
+        "x": 288,
+        "y": 240
+      }
+    },
+    {
+      "level": 87,
+      "targets": [],
+      "exit": {
+        "x": 464,
+        "y": 272
+      }
+    },
+    {
+      "level": 44,
+      "targets": [],
+      "exit": {
+        "x": 64,
+        "y": 0
+      }
+    },
+    {
+      "level": 45,
+      "targets": [],
+      "exit": {
+        "x": 112,
+        "y": 0
+      }
+    },
+    {
+      "level": 46,
+      "targets": [],
+      "exit": {
+        "x": 176,
+        "y": 0
+      }
+    },
+    {
+      "level": 47,
+      "targets": [],
+      "exit": {
+        "x": 216,
+        "y": 112
+      }
+    },
+    {
+      "level": 48,
+      "targets": [],
+      "exit": {
+        "pit": {
+          "tx": 11,
+          "ty": 3
+        }
+      }
+    },
+    {
+      "level": 49,
+      "targets": [],
+      "exit": {
+        "x": 32,
+        "y": 128
+      }
+    },
+    {
+      "level": 50,
+      "targets": [],
+      "exit": {
+        "x": 48,
+        "y": 304
+      }
+    },
+    {
+      "level": 51,
+      "targets": [],
+      "exit": {
+        "x": 176,
+        "y": 144
+      }
+    },
+    {
+      "level": 53,
+      "targets": [],
+      "exit": {
+        "x": 208,
+        "y": 64
+      }
+    },
+    {
+      "level": 48,
+      "targets": [],
+      "exit": {
+        "x": 112,
+        "y": 304
+      }
+    },
+    {
+      "level": 47,
+      "targets": [],
+      "exit": {
+        "x": 240,
+        "y": 464
+      }
+    },
+    {
+      "level": 46,
+      "targets": [],
+      "exit": {
+        "x": 240,
+        "y": 464
+      }
+    },
+    {
+      "level": 45,
+      "targets": [],
+      "exit": {
+        "x": 112,
+        "y": 304
+      }
+    },
+    {
+      "level": 44,
+      "targets": [],
+      "exit": {
+        "x": 144,
+        "y": 128
+      }
+    },
+    {
+      "level": 37,
+      "targets": [],
+      "exit": {
+        "x": 288,
+        "y": 0
+      }
+    },
+    {
+      "level": 38,
+      "targets": [],
+      "exit": {
+        "x": 144,
+        "y": 0
+      },
+      "contacts": [
+        "proximity-hazard:buttonroom@144,288"
+      ]
+    },
+    {
+      "level": 39,
+      "targets": [],
+      "exit": {
+        "x": 144,
+        "y": 0
+      }
+    },
+    {
+      "level": 40,
+      "targets": [],
+      "exit": {
+        "x": 320,
+        "y": 576
+      }
+    },
+    {
+      "level": 43,
+      "targets": [],
+      "exit": {
+        "x": 176,
+        "y": 464
+      }
+    },
+    {
+      "level": 40,
+      "targets": [],
+      "exit": {
+        "x": 480,
+        "y": 912
+      }
+    },
+    {
+      "level": 39,
+      "targets": [],
+      "exit": {
+        "x": 144,
+        "y": 624
+      }
+    },
+    {
+      "level": 38,
+      "targets": [],
+      "exit": {
+        "x": 144,
+        "y": 304
+      }
+    },
+    {
+      "level": 37,
+      "targets": [],
+      "exit": {
+        "x": 32,
+        "y": 304
+      }
+    },
+    {
+      "level": 12,
+      "targets": [],
+      "exit": {
+        "x": 40,
+        "y": 688
+      }
+    },
+    {
+      "level": 24,
+      "targets": [],
+      "exit": {
+        "x": 96,
+        "y": 96
+      }
+    },
+    {
+      "level": 23,
+      "targets": [],
+      "exit": {
+        "x": 80,
+        "y": 32
+      }
+    },
+    {
+      "level": 21,
+      "targets": [],
+      "exit": {
+        "x": 80,
+        "y": 160
+      }
+    },
+    {
+      "level": 22,
+      "targets": [],
+      "exit": {
+        "x": 96,
+        "y": 192
+      }
+    },
+    {
+      "level": 30,
+      "targets": [],
+      "exit": {
+        "x": 64,
+        "y": 0
+      }
+    },
+    {
+      "level": 22,
+      "targets": [],
+      "exit": {
+        "x": 96,
+        "y": 0
+      }
+    },
+    {
+      "level": 21,
+      "targets": [],
+      "exit": {
+        "x": 0,
+        "y": 80
+      }
+    },
+    {
+      "level": 23,
+      "targets": [],
+      "exit": {
+        "x": 32,
+        "y": 32
+      }
+    },
+    {
+      "level": 24,
+      "targets": [],
+      "exit": {
+        "x": 32,
+        "y": 144
+      }
+    },
+    {
+      "level": 12,
+      "targets": [],
+      "exit": {
+        "x": 0,
+        "y": 352
+      }
+    },
+    {
+      "level": 95,
+      "targets": [],
+      "exit": {
+        "x": 32,
+        "y": 0
+      }
+    },
+    {
+      "level": 59,
+      "targets": [],
+      "exit": {
+        "x": 304,
+        "y": 128
+      }
+    },
+    {
+      "level": 60,
+      "targets": [],
+      "exit": {
+        "x": 160,
+        "y": 80
+      }
+    },
+    {
+      "level": 61,
+      "targets": [],
+      "exit": {
+        "x": 112,
+        "y": 0
+      }
+    },
+    {
+      "level": 62,
+      "targets": [],
+      "exit": {
+        "x": 112,
+        "y": 64
+      }
+    },
+    {
+      "level": 64,
+      "targets": [],
+      "exit": {
+        "x": 32,
+        "y": 96
+      }
+    },
+    {
+      "level": 62,
+      "targets": [],
+      "exit": {
+        "x": 240,
+        "y": 304
+      }
+    },
+    {
+      "level": 63,
+      "targets": [],
+      "exit": {
+        "x": 128,
+        "y": 304
+      }
+    },
+    {
+      "level": 65,
+      "targets": [],
+      "exit": {
+        "x": 184,
+        "y": 64
+      }
+    },
+    {
+      "level": 68,
+      "targets": [],
+      "exit": {
+        "x": 16,
+        "y": 80
+      }
+    },
+    {
+      "level": 65,
+      "targets": [],
+      "exit": {
+        "x": 128,
+        "y": 0
+      }
+    },
+    {
+      "level": 63,
+      "targets": [],
+      "exit": {
+        "x": 0,
+        "y": 96
+      }
+    },
+    {
+      "level": 61,
+      "targets": [],
+      "exit": {
+        "x": 0,
+        "y": 160
+      }
+    },
+    {
+      "level": 60,
+      "targets": [],
+      "exit": {
+        "x": 0,
+        "y": 80
+      }
+    },
+    {
+      "level": 59,
+      "targets": [],
+      "exit": {
+        "x": 144,
+        "y": 304
+      }
+    },
+    {
+      "level": 95,
+      "targets": [],
+      "exit": {
+        "x": 624,
+        "y": 64
+      }
+    },
+    {
+      "level": 12,
+      "targets": [],
+      "exit": {
+        "x": 32,
+        "y": 848
+      }
+    },
+    {
+      "level": 83,
+      "targets": [],
+      "exit": {
+        "pit": {
+          "tx": 2,
+          "ty": 1
+        }
+      }
+    },
+    {
+      "level": 84,
+      "targets": [],
+      "exit": {
+        "pit": {
+          "tx": 2,
+          "ty": 2
+        }
+      }
+    },
+    {
+      "level": 85,
+      "targets": [],
+      "exit": {
+        "x": 80,
+        "y": 0
+      }
+    },
+    {
+      "level": 71,
+      "targets": [],
+      "exit": {
+        "x": 96,
+        "y": 0
+      }
+    },
+    {
+      "level": 75,
+      "targets": [],
+      "exit": {
+        "x": 64,
+        "y": 0
+      }
+    },
+    {
+      "level": 74,
+      "targets": [],
+      "exit": {
+        "x": 16,
+        "y": 144
+      }
+    },
+    {
+      "level": 75,
+      "targets": [],
+      "exit": {
+        "x": 64,
+        "y": 224
+      }
+    },
+    {
+      "level": 71,
+      "targets": [],
+      "exit": {
+        "x": 224,
+        "y": 304
+      }
+    },
+    {
+      "level": 80,
+      "targets": [],
+      "exit": {
+        "x": 32,
+        "y": 304
+      }
+    },
+    {
+      "level": 79,
+      "targets": [],
+      "exit": {
+        "x": 64,
+        "y": 0
+      }
+    },
+    {
+      "level": 80,
+      "targets": [],
+      "exit": {
+        "x": 32,
+        "y": 0
+      }
+    },
+    {
+      "level": 71,
+      "targets": [],
+      "exit": {
+        "pit": {
+          "tx": 12,
+          "ty": 13
+        }
+      }
+    },
+    {
+      "level": 82,
+      "targets": []
+    }
+  ]
+}

@@ -1,19 +1,20 @@
 /**
- * procgenPipeline engine — headless grid-growth pipeline logic plus
- * the top-down driver. See NewDocs/plans/procedural-generation/
- * grid-growth-pipeline.md and top-down-driver.md.
+ * procgenPipeline engine — headless driver logic for all four layout
+ * modes (docs/json/developer/procgen/architecture.md).
  *
- * This file hosts the scenario pool, grid model, growth loop,
- * incremental re-stitcher, full-world Boolean compile, and the
- * top-down driver that consumes an existing rules.json. Contents
- * grow per the v1 punch list in the plan docs.
+ * This file hosts the scenario pool, grid model, the grid-growth loop
+ * (deprecated), the sphere-driven growth driver, the shuffled-spiral
+ * layout, the top-down driver that consumes an existing rules.json,
+ * the incremental re-stitcher, and the full-world Boolean compile.
  */
 
 import { createRng } from '../shared/rng.js';
+import { regionsOf, startRegionsOf, walkRulesGraph } from '../procgenCore/rulesGraph.js';
+import { namespaceNamed } from '../procgenCore/apIdNamespaces.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
 import { ScenarioPool } from '../shared/procgen/scenarioPool.js';
-import { makeRulesJsonScaffold, makeHasRule, makeAndRule } from '../shared/rulesJsonBuilder.js';
+import { makeRulesJsonScaffold, makeHasRule, makeAndRule, makeExit } from '../shared/rulesJsonBuilder.js';
 import { validateSpherePlan } from './spherePlanner.js';
 import { generateSphereLog } from '../shared/procgen/forwardSimulator.js';
 import { generateLoopCosts } from '../shared/procgen/loopCostGenerator.js';
@@ -26,6 +27,7 @@ import {
 } from '../shared/procgen/spatialPrimitives.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { extractItemRequirementFromRule } from './ruleRequirements.js';
+import { isAtlasSourceId, atlasSourceGame, requirementDnf } from './regionAtlasPool.js';
 
 function getAdapter(substrateId) {
     const adapter = substrateRegistry.get(substrateId);
@@ -475,9 +477,7 @@ function findDisconnectedCellFromOccupied(occupiedKeys, dims, rng, minGap = 2) {
 // buildPresetSidecars re-attaches both onto the payload right before
 // serialize so the substrate serializeWorld signatures stay unchanged.
 // These accessors are the single seam through which all engine code
-// touches them. See
-// NewDocs/plans/procedural-generation/topdown-bounce-obstacle-refactor.md
-// (Phase 2a / 4c).
+// touches them.
 export function getRegionExits(region) {
     return region?.exits;
 }
@@ -493,12 +493,23 @@ export function setRegionEntrance(region, entrance) {
 
 export function stitchGrid(grid) {
     for (const region of grid.allRegions()) {
-        const exitsBySide = new Map();
+        // Keyed by exit ID, not by tile. Two exits CAN share a tile — a
+        // region-atlas region's driver back-exit is retargeted onto the
+        // projection's own entrance, which is regularly also a door (every
+        // point-gate crossing where both sides are one cell). Keyed by
+        // position, such a back-exit matched the door's row, lost its
+        // "the driver manages this one" exemption, and was re-stitched to the
+        // door's geographic neighbour: the region then had two exits into its
+        // CHILD and none back to its parent, which reads as a shortcut the
+        // sphere oracle never planned. Same answer as before for every exit
+        // whose id is in exits_placed, which is every exit the tile key ever
+        // resolved correctly.
+        const sideByExitId = new Map();
         for (const placed of region.exits_placed ?? []) {
-            exitsBySide.set(posKey(placed.tile_position), placed.side);
+            sideByExitId.set(placed.exit_id, placed.side);
         }
         for (const exit of region.extracted_rules?.exits ?? []) {
-            const side = exitsBySide.get(posKey(exit.position));
+            const side = sideByExitId.get(exit.id);
             if (!side) {
                 // Not in exits_placed — the driver manages this exit
                 // directly (e.g. a bidirectional back-exit pointing
@@ -563,8 +574,6 @@ function finalizeTopDownExits(grid, cellsByName) {
         }
     }
 }
-
-function posKey(p) { return `${p.x},${p.y}`; }
 
 // Union of placed items across all built regions. Valid as an
 // arrival_inventory approximation under v1's tree shape + local
@@ -807,6 +816,7 @@ function buildSubstrateRegion({
     params,
     biome = null,
     hazardOpts = null,
+    consumableTileOpts = null,
 }) {
     const adapter = getAdapter(substrate);
     if (typeof adapter.generateRegionCore !== 'function') {
@@ -839,7 +849,7 @@ function buildSubstrateRegion({
     // Content-module pass: stamp substrate-specific content (maze hazards)
     // onto the world after the base layout. No-op for substrates that don't
     // declare the hook — the engine names no substrate here.
-    adapter.applyContentModules?.(core.world, { hazardOpts }, rng);
+    adapter.applyContentModules?.(core.world, { hazardOpts, consumableTileOpts }, rng);
     return {
         substrate,
         region_id,
@@ -877,7 +887,69 @@ function buildSubstrateRegion({
 // Termination: when the scenario pool is exhausted OR the frontier is
 // empty OR the maxRegions cap (if set) is hit.
 
-export function growMaze(config) {
+/**
+ * Insert a synthetic back-exit on `region` pointing at its BFS/tree parent,
+ * and link the parent's forward exit back to it (targetExitId on both sides,
+ * so a forward traversal carries the right arrivedFrom.exit_id). The
+ * back-exit's access rule is copied from the forward exit at compile time
+ * (buildRulesJson's bidirectional post-pass), so the same gate guards both
+ * directions of traversal. See top-down-driver.md §2.
+ *
+ * Extracted from three previously byte-identical inline copies —
+ * grid-growth (growMaze), sphere-growth (applySphereBackExit) and top-down
+ * (layoutTopDown). The callers differ only in where the field values come
+ * from; top-down additionally opts into `skipIfReverseExists`.
+ *
+ * `skipIfReverseExists` (top-down): skip (and return false) when the region
+ * already has an exit keyed `backExitId`, or any exit already targeting
+ * `targetRegion` — i.e. an explicit reverse route already exists, so a
+ * synthetic one would just duplicate it. Returns true when a back-exit was
+ * inserted.
+ */
+function insertBackExit(grid, {
+    region,
+    parentRegion,
+    backExitId,
+    entranceTile,
+    entranceSide,
+    targetRegion,
+    targetExitId,
+    isTeleporter,
+    skipIfReverseExists = false,
+}) {
+    const regionExits = getRegionExits(region);
+    if (skipIfReverseExists) {
+        const hasExplicitReverse = [...regionExits.values()]
+            .some((e) => e.targetRegion === targetRegion);
+        if (regionExits.has(backExitId) || hasExplicitReverse) return false;
+    }
+    regionExits.set(backExitId, {
+        exit_id: backExitId,
+        x: entranceTile.x,
+        y: entranceTile.y,
+        side: entranceSide,
+        exitName: backExitId,
+        targetRegion,
+        targetExitId,
+        isBackExit: true,
+        isTeleporter,
+    });
+    // Mirror onto extracted_rules so the compiler emits the back-exit too.
+    // Path-and-obstacles for an entrance-to-entrance walk has zero obstacles
+    // → compiles to True_; buildRulesJson's post-pass overwrites this with
+    // the forward exit's rule for bidirectional pairs.
+    region.extracted_rules.exits.push({
+        id: backExitId,
+        position: { x: entranceTile.x, y: entranceTile.y },
+        target_region: targetRegion,
+        paths: [{ path_id: 'p1', obstacles: [] }],
+    });
+    const parentWorldExit = getRegionExits(parentRegion)?.get(targetExitId);
+    if (parentWorldExit) parentWorldExit.targetExitId = backExitId;
+    return true;
+}
+
+export function* growMazeGen(config) {
     const {
         gridDims,
         regionSize,
@@ -891,6 +963,7 @@ export function growMaze(config) {
         // Content-module options. Passed through to buildSubstrateRegion
         // — null disables. See mazeRoomLibrary's applyMazeContentModules for the option shape.
         hazardOpts = null,
+        consumableTileOpts = null,
     } = config;
 
     if (!gridDims || !gridDims.width || !gridDims.height) {
@@ -959,6 +1032,15 @@ export function growMaze(config) {
         substrateCounts,
     };
 
+    // Grid-growth's region count is EMERGENT — growth stops on
+    // frontier/pool/quota exhaustion or maxRegions, not a plan — so the total
+    // is genuinely unknown up front. Emit regions:null; the panel then shows
+    // "Building region N" with no denominator. Yields never touch the rng, so
+    // draining growMazeGen synchronously (growMaze) is byte-identical to the
+    // pre-generator implementation; the panel drains asynchronously
+    // (growMazeAsync) so the progress indicator repaints between regions.
+    yield { type: 'plan', regions: null };
+
     // --- Start region ---
     const startCell = {
         gx: Math.floor(gridDims.width / 2),
@@ -987,6 +1069,10 @@ export function growMaze(config) {
         }, rng);
     }
     substrateCounts[startSub] = (substrateCounts[startSub] || 0) + 1;
+    yield {
+        type: 'region', index: stats.regionsBuilt, total: null,
+        region_id: startRegionId, substrate: startSub, sphere: null, placements: 0,
+    };
     const startRegion = buildSubstrateRegion({
         substrate: startSub,
         region_id: startRegionId,
@@ -998,6 +1084,7 @@ export function growMaze(config) {
         obstacles_to_place: [],            // start region — no obstacles
         itemLib, obstacleLib, rng, params: regionParams,
         hazardOpts,
+        consumableTileOpts,
     });
     grid.placeRegion(startCell, startRegion);
     pool.markPlaced({
@@ -1006,6 +1093,10 @@ export function growMaze(config) {
     });
     stitchGrid(grid);
     stats.regionsBuilt += 1;
+    yield {
+        type: 'regionDone', index: stats.regionsBuilt - 1, total: null,
+        region_id: startRegionId,
+    };
 
     // --- Frontier init ---
     // Each frontier entry represents an unbuilt parent-side that
@@ -1090,6 +1181,11 @@ export function growMaze(config) {
             substrateCounts, substratePicker,
         }, rng);
         substrateCounts[childSub] = (substrateCounts[childSub] || 0) + 1;
+        yield {
+            type: 'region', index: stats.regionsBuilt, total: null,
+            region_id: childRegionId, substrate: childSub, sphere: null,
+            placements: plan.items_to_place.length,
+        };
         const region = buildSubstrateRegion({
             substrate: childSub,
             region_id: childRegionId,
@@ -1101,6 +1197,7 @@ export function growMaze(config) {
             obstacles_to_place: plan.obstacles_to_place,
             itemLib, obstacleLib, rng, params: regionParams,
             hazardOpts,
+            consumableTileOpts,
         });
 
         grid.placeRegion(childCell, region);
@@ -1109,39 +1206,20 @@ export function growMaze(config) {
             stats.teleportersPlaced += 1;
         }
         if (assumeBidirectional) {
-            // Add a back-exit on the child's entrance tile, pointing
-            // to the parent. Pair with parent's forward exit via
-            // targetExitId on both sides so the procgen player can
-            // resolve which entrance tile to spawn the player at on
-            // either direction of traversal.
-            const backExitId = parentRegion.region_id;
-            getRegionExits(region).set(backExitId, {
-                exit_id: backExitId,
-                x: entranceTile.x,
-                y: entranceTile.y,
-                side: entranceSide,
-                exitName: backExitId,
+            // Back-exit on the child's entrance tile pointing to the parent,
+            // paired via targetExitId on both sides so the procgen player can
+            // resolve which entrance tile to spawn at on either direction of
+            // traversal. Shared with sphere/top-down — see insertBackExit.
+            insertBackExit(grid, {
+                region,
+                parentRegion,
+                backExitId: parentRegion.region_id,
+                entranceTile,
+                entranceSide,
                 targetRegion: parentRegion.region_id,
                 targetExitId: parentExitPlaced.exit_id,
-                isBackExit: true,
                 isTeleporter,
             });
-            // Mirror onto extracted_rules so the compiler emits the
-            // back-exit too. Path-and-obstacles for an entrance-to-
-            // entrance walk has zero obstacles → compiles to True_;
-            // buildRulesJson's post-pass overwrites this with the
-            // forward exit's rule for bidirectional pairs.
-            region.extracted_rules.exits.push({
-                id: backExitId,
-                position: { x: entranceTile.x, y: entranceTile.y },
-                target_region: parentRegion.region_id,
-                paths: [{ path_id: 'p1', obstacles: [] }],
-            });
-            // Link parent's forward exit back to this child's
-            // back-exit, so a forward traversal carries the right
-            // arrivedFrom.exit_id.
-            const parentWorldExit = getRegionExits(parentRegion)?.get(parentExitPlaced.exit_id);
-            if (parentWorldExit) parentWorldExit.targetExitId = backExitId;
         }
         pool.markPlaced({
             placed_items: region.placed_items,
@@ -1149,6 +1227,10 @@ export function growMaze(config) {
         });
         stitchGrid(grid);
         stats.regionsBuilt += 1;
+        yield {
+            type: 'regionDone', index: stats.regionsBuilt - 1, total: null,
+            region_id: childRegionId,
+        };
 
         for (const placed of region.exits_placed) {
             // For teleporter children, every exit becomes a fresh
@@ -1163,6 +1245,8 @@ export function growMaze(config) {
         stats.stopReason = 'frontier_empty';
     }
 
+    yield { type: 'phase', name: 'finalizing' };
+
     // Cross-branch stitching can leave one-way exits. When the user
     // wants bidirectional traversal, reconcile asymmetric pairs
     // before walling off unused exits — 'remove' mode nulls the
@@ -1174,6 +1258,35 @@ export function growMaze(config) {
     wallOffUnusedExits(grid);
 
     return { grid, pool, stats, startCell };
+}
+
+/**
+ * Grid-growth (growMaze), synchronous: drains growMazeGen with no pauses —
+ * byte-identical to the pre-generator implementation (yields never touch the
+ * rng). All headless callers and tests use this.
+ */
+export function growMaze(config) {
+    const gen = growMazeGen(config);
+    let r = gen.next();
+    while (!r.done) r = gen.next();
+    return r.value;
+}
+
+/**
+ * Grid-growth, asynchronous: forwards each progress event to `onProgress` and
+ * yields to the event loop between events so the panel's Generate progress
+ * indicator can repaint. Identical output to growMaze.
+ */
+export async function growMazeAsync(config, onProgress = null) {
+    const gen = growMazeGen(config);
+    let r = gen.next();
+    while (!r.done) {
+        onProgress?.(r.value);
+        // eslint-disable-next-line no-await-in-loop
+        await new Promise((resolve) => { setTimeout(resolve, 0); });
+        r = gen.next();
+    }
+    return r.value;
 }
 
 // --- Top-down driver ---
@@ -1244,6 +1357,16 @@ function resolveTopDownStart(sourceRegions, declaredStart) {
     if (!declaredStart) return null;
     const region = sourceRegions[declaredStart];
     if (!region) return null;
+    /**
+     * ⛓ EDITOR v3 E2a — LEFT AS A HAND READ, and why: this asks for a region's
+     * FIRST exit. `walkRulesGraph` visits every exit of every region in
+     * document order and `reachableRegions` answers about the whole graph;
+     * neither can say "exit 0 of this one region", and adding an accessor to
+     * `procgenCore/rulesGraph.js` is out of this slice's scope. The DOCUMENT
+     * read that WAS a hand walk — `rulesJson.regions[playerId]` — now goes
+     * through `regionsOf` at both call sites, so what is left here is a read of
+     * a REGION object whose shape the format guarantees.
+     */
     if (/^menu$/i.test(declaredStart) && (region.exits ?? []).length > 0) {
         const firstExit = region.exits[0];
         if (firstExit?.connected_region && sourceRegions[firstExit.connected_region]) {
@@ -1266,15 +1389,16 @@ function resolveTopDownStart(sourceRegions, declaredStart) {
  * gate by the driver.
  *
  * Used to populate procgen_metadata.source_counts on the output
- * rules.json. See NewDocs/plans/presets-panel-overhaul.md §"Source
- * preservation".
+ * rules.json.
  */
 export function computeSourceCounts(rulesJson, playerId = '1') {
-    const sourceRegions = rulesJson?.regions?.[playerId] ?? {};
-    const startField = rulesJson?.start_regions?.[playerId];
-    let declaredStart = null;
-    if (Array.isArray(startField?.default)) declaredStart = startField.default[0];
-    else if (Array.isArray(startField)) declaredStart = startField[0];
+    // ⛓ EDITOR v3 E2a — the ONE reader of a rules.json's region map
+    //   (`procgenCore/rulesGraph.js`), which is the module §17 named and whose
+    //   own header says this file had sixteen such hand reads.
+    const sourceRegions = regionsOf(rulesJson, playerId);
+    // ⛓ Both start_regions shapes, through the ONE reader. These two sites were
+    // a VERBATIM four-line copy of each other (§16.1 #5).
+    const [declaredStart = null] = startRegionsOf(rulesJson, playerId).default;
     const resolved = resolveTopDownStart(sourceRegions, declaredStart);
     const menuName = resolved?.menuName ?? null;
 
@@ -1285,18 +1409,27 @@ export function computeSourceCounts(rulesJson, playerId = '1') {
     const isNonTrivial = (rule) =>
         rule != null && !(typeof rule === 'object' && rule.rule === 'True_');
 
-    for (const [name, region] of Object.entries(sourceRegions)) {
-        if (menuName && name === menuName) continue;
-        regionCount += 1;
-        for (const exit of region?.exits ?? []) {
+    /**
+     * ⛓ EDITOR v3 E2a — THE WALK, through `rulesGraph.walkRulesGraph`. It
+     * visits regions, exits and locations in DOCUMENT ORDER, which is the order
+     * the hand loop had, so the counts are byte-identical. ⛔ The Menu skip
+     * rides each visitor rather than the walker: the walker is structural and
+     * knows nothing about which region a driver considers synthetic.
+     */
+    const isMenu = (regionName) => Boolean(menuName) && regionName === menuName;
+    walkRulesGraph(rulesJson, playerId, {
+        region: (_region, { regionName }) => { if (!isMenu(regionName)) regionCount += 1; },
+        exit: (exit, { regionName }) => {
+            if (isMenu(regionName)) return;
             exitCount += 1;
             if (isNonTrivial(exit?.access_rule)) logicGateCount += 1;
-        }
-        for (const loc of region?.locations ?? []) {
+        },
+        location: (loc, { regionName }) => {
+            if (isMenu(regionName)) return;
             locationCount += 1;
             if (isNonTrivial(loc?.access_rule)) logicGateCount += 1;
-        }
-    }
+        },
+    });
     return {
         regions: regionCount,
         locations: locationCount,
@@ -1373,16 +1506,18 @@ export function layoutTopDown(rulesJson, opts, rng) {
         throw new Error('topDownFromRulesJson: rulesJson required');
     }
 
-    const sourceRegions = rulesJson?.regions?.[playerId] ?? {};
+    // ⛓ EDITOR v3 E2a — the ONE reader again; every `sourceRegions[...]` below
+    //   is a read of a REGION the format guarantees the shape of, not of the
+    //   document's own layout.
+    const sourceRegions = regionsOf(rulesJson, playerId);
     if (Object.keys(sourceRegions).length === 0) {
         throw new Error(`topDownFromRulesJson: no regions for player '${playerId}'`);
     }
 
     // Locate the declared start.
-    const startField = rulesJson?.start_regions?.[playerId];
-    let declaredStart = null;
-    if (Array.isArray(startField?.default)) declaredStart = startField.default[0];
-    else if (Array.isArray(startField)) declaredStart = startField[0];
+    // ⛓ Both start_regions shapes, through the ONE reader. These two sites were
+    // a VERBATIM four-line copy of each other (§16.1 #5).
+    const [declaredStart = null] = startRegionsOf(rulesJson, playerId).default;
     const resolved = resolveTopDownStart(sourceRegions, declaredStart);
     if (!resolved) {
         throw new Error(`topDownFromRulesJson: no usable start region for player '${playerId}'`);
@@ -1422,6 +1557,14 @@ export function layoutTopDown(rulesJson, opts, rng) {
     grid.placeRegion(startCell, { region_id: actualStartName });
 
     const bfsQueue = [actualStartName];
+    /**
+     * ⛓ EDITOR v3 E2a — LEFT AS A HAND BFS, and why: `rulesGraph.reachableRegions`
+     * is the same traversal and returns a SET OF NAMES. This one's PRODUCT is a
+     * grid placement — it consumes rng, assigns cells and records exit sides as
+     * it goes — so the walk and the placement are one loop, and replacing the
+     * walk half would mean running the traversal twice and keeping the two in
+     * step. The byte gates could not see the difference; the placement would.
+     */
     while (bfsQueue.length > 0) {
         const fromName = bfsQueue.shift();
         const fromCell = cellsByName.get(fromName);
@@ -1562,6 +1705,9 @@ function buildTopDownRegionSpec(layout, name, exitSidesByExit) {
     // adjacent (teleporter case), omit the side and the substrate clockwise-
     // assigns. The exit pointing back to the BFS parent gets pinned to the
     // entrance tile so the two regions' exit tiles line up across the shared wall.
+    // ⛓ EDITOR v3 E2a — LEFT: ONE region's exits, in a per-region realise.
+    //   `walkRulesGraph` walks the whole document; this is a read of the region
+    //   `regionsOf` already handed back.
     const exitSpecs = (sourceRegion.exits ?? []).map((srcExit) => {
         const targetName = srcExit.connected_region;
         const targetCell = targetName ? cellsByName.get(targetName) : null;
@@ -1619,6 +1765,7 @@ export function* realiseTopDownGen(layout, opts) {
         regionParams = { maxIterations: 0 },
         biomeByRegion,
         hazardOpts = null,
+        consumableTileOpts = null,
         freeItems = null,
     } = opts;
     const {
@@ -1693,6 +1840,7 @@ export function* realiseTopDownGen(layout, opts) {
             params: regionParams,
             biome: regionBiome,
             hazardOpts,
+            consumableTileOpts,
             useSourceLocationName: true,
             stampEntrance: true,
             freeItems,
@@ -1757,6 +1905,9 @@ export function finalizeTopDown(layout) {
     for (const tele of teleporterEdges) {
         const fromCell = cellsByName.get(tele.from_name);
         const exitInfo = exitSidesByExit.get(`${tele.from_name}:${tele.exit_id}`);
+        // ⛓ EDITOR v3 E2a — LEFT: a single exit LOOKUP BY NAME. `rulesGraph`
+        //   exports no `exitOf(doc, region, exitName)` and this slice may not
+        //   add one to it; the document read above it is `regionsOf`'s.
         const targetName = sourceRegions[tele.from_name]?.exits?.find(
             (e) => e.name === tele.exit_id,
         )?.connected_region;
@@ -1779,33 +1930,20 @@ export function finalizeTopDown(layout) {
             if (!parentRegion || !parentExit) continue;
             const entranceTile = getRegionEntrance(region);
             const entranceSide = OPPOSITE_SIDE[parentExit.side];
-            const backExitId = parent.name;
-            // Skip the synthetic back-exit when the source already
-            // declared a reverse exit pointing at the parent (under
-            // any name) — we'd just be duplicating an existing route.
-            const regionExits = getRegionExits(region);
-            const hasExplicitReverse = [...regionExits.values()]
-                .some((e) => e.targetRegion === parent.name);
-            if (regionExits.has(backExitId) || hasExplicitReverse) continue;
-            regionExits.set(backExitId, {
-                exit_id: backExitId,
-                x: entranceTile.x,
-                y: entranceTile.y,
-                side: entranceSide,
-                exitName: backExitId,
+            // Back-exit pointing at the BFS parent — skipped when the source
+            // already declared a reverse route pointing at the parent (under
+            // any name). Shared with grid-growth/sphere — see insertBackExit.
+            insertBackExit(grid, {
+                region,
+                parentRegion,
+                backExitId: parent.name,
+                entranceTile,
+                entranceSide,
                 targetRegion: parent.name,
                 targetExitId: parent.exit_id,
-                isBackExit: true,
                 isTeleporter: false,
+                skipIfReverseExists: true,
             });
-            region.extracted_rules.exits.push({
-                id: backExitId,
-                position: { x: entranceTile.x, y: entranceTile.y },
-                target_region: parent.name,
-                paths: [{ path_id: 'p1', obstacles: [] }],
-            });
-            const parentWorldExit = getRegionExits(parentRegion)?.get(parent.exit_id);
-            if (parentWorldExit) parentWorldExit.targetExitId = backExitId;
         }
     }
 
@@ -2081,8 +2219,13 @@ function linkReverseExits(grid) {
 // globally unique. Numeric location ids start at LOCATION_ID_BASE and
 // increment in deterministic region-iteration order.
 
-const LOCATION_ID_BASE = 1000;
-const ITEM_ID_BASE = 1;
+// ⛓ From procgenCore/apIdNamespaces.js — the one register (§15 D11). ⛔ The
+// ALLOCATION stays a running counter in region-iteration order: 29 preset
+// byte-identity dumps encode that order, so this row takes the BASE and nothing
+// else from the table.
+const PIPELINE_NAMESPACE = namespaceNamed('procgen-pipeline');
+const LOCATION_ID_BASE = PIPELINE_NAMESPACE.locationBase;
+const ITEM_ID_BASE = PIPELINE_NAMESPACE.itemBase;
 
 // Construct a location's globally unique name from its region name,
 // extracted location id, and position. Position is appended so that
@@ -2102,7 +2245,11 @@ export function makeLocationName(regionName, locId, position) {
 export function compileRegionGraph(grid, opts = {}) {
     const {
         obstacleLib = DEFAULT_OBSTACLES,
-        itemLib = DEFAULT_ITEMS,
+        // Merge the region-library slot filler classification so a library
+        // world's item pool balances 1:1 with its locations (a slot with no
+        // engine-assigned item carries LIBRARY_SLOT_FILLER_ITEM; without a
+        // 'filler' classification it would default to 'progression').
+        itemLib: rawItemLib = DEFAULT_ITEMS,
         startCell,
         playerId = 1,
         // Item names whose canonical placement must ALWAYS hold — the
@@ -2111,6 +2258,7 @@ export function compileRegionGraph(grid, opts = {}) {
         // the item there). Used for the bounce start-stack arrow.
         lockedItems = [],
     } = opts;
+    const itemLib = { [LIBRARY_SLOT_FILLER_ITEM]: { classification: 'filler' }, ...rawItemLib };
     const lockedItemSet = new Set(lockedItems);
     const numericPlayerId = Number.isFinite(Number(playerId)) ? Number(playerId) : 1;
 
@@ -2150,11 +2298,10 @@ export function compileRegionGraph(grid, opts = {}) {
             : obstacleLib;
         const compiled = compileRegion(region.extracted_rules, { obstacleLib: mergedLib });
 
-        const regionExits = compiled.exits.map((e) => ({
-            name: e.id,
-            connected_region: e.target_region,
-            access_rule: e.rule,
-        }));
+        // ⛓ `makeExit` (shared/rulesJsonBuilder) instead of a fourth inline twin.
+        // Byte-identical here: `compileAccessRule` never returns null, so
+        // makeExit's null→True_ rewrite cannot fire.
+        const regionExits = compiled.exits.map((e) => makeExit(e.id, e.target_region, e.rule));
 
         const regionLocations = compiled.locations.map((loc) => {
             const globalName = loc.global_name
@@ -2227,16 +2374,14 @@ export function compileRegionGraph(grid, opts = {}) {
 //   - compileRegionGraph output (regions, items, canonical_placements,
 //     itempool_counts — plugged into the scaffold's per-player slots)
 //   - preset_sidecars — per-region playable payloads, serialized into
-//     JSON-safe shapes (see
-//     NewDocs/plans/procedural-generation/substrate-pipeline-
-//     architecture.md §"Preset sidecars through the multiworld bridge"
-//     for the target shape).
+//     JSON-safe shapes (docs/json/developer/procgen/architecture.md
+//     §"rules.json extensions").
 //
 // Output: a single JSON-serialisable object the frontend can write to
-// disk as rules.json. World_generator currently ignores unknown
-// top-level keys, so preset_sidecars rides along untouched in v1;
-// step 8 teaches it to preserve the field through the multiworld
-// bridge.
+// disk as rules.json. world_generator preserves preset_sidecars into
+// the generated package and the exporter re-injects it, so the field
+// survives the full multiworld round-trip (architecture.md §"The
+// Python round-trip").
 
 // Serialize a maze world into the sidecar payload shape. Maps and
 // Int8Array aren't JSON-safe, so this flattens them. AP-canonical
@@ -2335,6 +2480,23 @@ export function serializeMazeWorld(world, extractedRules, baseObstacleLib = DEFA
         }))
         : null;
 
+    // Cross-game consumable tiles (X1). Both overlays serialize as
+    // position-keyed arrays and are OMITTED ENTIRELY when empty — the
+    // same conditional-spread discipline as hazards above, which is what
+    // keeps every pre-X1 preset sidecar byte-identical.
+    const consumableTilesOut = world.consumableTiles?.size > 0
+        ? [...world.consumableTiles].map(([key, g]) => {
+            const [x, y] = key.split(',').map(Number);
+            return { x, y, substrate: g.substrate, type: g.type, count: g.count };
+        })
+        : null;
+    const manaTilesOut = world.manaTiles?.size > 0
+        ? [...world.manaTiles].map(([key, amount]) => {
+            const [x, y] = key.split(',').map(Number);
+            return { x, y, amount };
+        })
+        : null;
+
     return {
         width: world.width,
         height: world.height,
@@ -2347,6 +2509,8 @@ export function serializeMazeWorld(world, extractedRules, baseObstacleLib = DEFA
         itemLib: itemLibExtras,
         longestShortestPath,
         ...(hazardsOut ? { hazards: hazardsOut } : {}),
+        ...(consumableTilesOut ? { consumableTiles: consumableTilesOut } : {}),
+        ...(manaTilesOut ? { manaTiles: manaTilesOut } : {}),
     };
 }
 
@@ -2435,8 +2599,9 @@ export function buildShuffledSubstrateSequence(quotas, startSubstrate, rng) {
 // Perimeter midpoint for a synthetic exit on the given side. Used
 // only for zone-based substrates where tile geometry is fictional
 // but the procgen pipeline still wants a tile_position. The values
-// satisfy stitchGrid's posKey lookup and procgenPlayer's entrance
-// tracking; the substrate runtime ignores them.
+// feed procgenPlayer's entrance tracking; the substrate runtime ignores
+// them. (stitchGrid matches on exit ID, not position, so it no longer
+// depends on this convention.)
 function perimeterMidpoint(side, size) {
     const w = size.width, h = size.height;
     if (side === 'N') return { x: Math.floor(w / 2), y: 0 };
@@ -2456,8 +2621,8 @@ function perimeterMidpoint(side, size) {
  * Optional adapter hook `extractZoneRules(zoneIdx, ctx)` lets a
  * zone-based substrate contribute AP locations and per-side exit
  * access rules (the "zone-locations channel" —
- * NewDocs/plans/procedural-generation/dj-metroidvania-v2.md §"Pipeline
- * integration"). ctx is { region_id, exitSides, regionSize }; the
+ * docs/json/developer/procgen/substrate-registry.md). ctx is
+ * { region_id, exitSides, regionSize }; the
  * return shape is:
  *
  *   { locations: [{ id, item, access_rule, position? }],  // AP locations
@@ -2477,11 +2642,11 @@ function synthesizeZoneRegion({
     const zoneRules = adapter.extractZoneRules
         ? adapter.extractZoneRules(zoneIdx, { region_id, exitSides, regionSize })
         : null;
-    const zonePayload = adapter.synthesizeZonePayload
-        ? adapter.synthesizeZonePayload(zoneIdx)
-        : {};
+    // Zone payload comes entirely from the extractZoneRules channel now
+    // (region-library C1): jta folds its `jtaZone` ordinal into that
+    // channel's payload, so no separate synthesizeZonePayload hook.
     return assembleZoneRegion({
-        substrate, region_id, regionSize, exitSides, zoneRules, zonePayload,
+        substrate, region_id, regionSize, exitSides, zoneRules, zonePayload: {},
     });
 }
 
@@ -2490,7 +2655,7 @@ function synthesizeZoneRegion({
 // conventions) plus the zone-locations channel result. Consumed by
 // both the spiral path (extractZoneRules) and the sphere-growth path
 // (generateZoneForSpecs).
-function assembleZoneRegion({
+export function assembleZoneRegion({
     substrate, region_id, regionSize, exitSides, zoneRules, zonePayload,
 }) {
     const exitsMap = new Map();
@@ -2574,7 +2739,7 @@ function assembleZoneRegion({
 //
 // spec = {
 //   substrate, region_id, size, rng, params, biome, itemLib, obstacleLib,
-//   hazardOpts,
+//   hazardOpts, consumableTileOpts,
 //   entrances: [{ side, tile }],                                  // 0 or 1
 //   exits:     [{ exit_id?, exitName?, side?, tile?, target_region?,
 //                 access_rule? }],
@@ -2720,7 +2885,10 @@ function generateRegionProcedural(spec) {
         if (exit_rules[ex.id]) ex.access_rule = exit_rules[ex.id];
     }
 
-    adapter.applyContentModules?.(core.world, { hazardOpts: spec.hazardOpts ?? null }, spec.rng);
+    adapter.applyContentModules?.(core.world, {
+        hazardOpts: spec.hazardOpts ?? null,
+        consumableTileOpts: spec.consumableTileOpts ?? null,
+    }, spec.rng);
 
     return {
         substrate: spec.substrate,
@@ -3016,36 +3184,52 @@ export function generateRegion(spec) {
     return r.value;
 }
 
-export function arrangeShuffledSpiral(config) {
+// Phase ① of shuffled-spiral (the "arrange" step): validate the config, build
+// the shuffled substrate sequence — the ONLY pre-loop rng consumption — and
+// auto-size the spiral grid. Returns a plain PLACEMENT PLAN (sequence + cells +
+// startCell + gridDims) plus the rng state AFTER the shuffle, so the region
+// realisation phase can continue the SAME continuous rng stream. Splitting here
+// (rather than inline in arrangeShuffledSpiral) lets spiralSteps.js drive the
+// stepped pipeline over the identical machinery; the monolith below just calls
+// this then realiseSpiralRegions in sequence, byte-for-byte unchanged.
+export function arrangeSpiralPlan(config) {
     const {
-        regionSize,
-        itemPool = {},
-        obstaclePool = {},
-        itemLib = DEFAULT_ITEMS,
-        obstacleLib = DEFAULT_OBSTACLES,
         seed = 1,
-        regionParams = {},
         growthParams = {},
-        hazardOpts = null,
     } = config;
+    const { regionSize } = config;
     if (!regionSize || !regionSize.width || !regionSize.height) {
         throw new Error('arrangeShuffledSpiral: regionSize.{width,height} required');
     }
-    const {
-        substrateQuotas,
-        startSubstrate = null,
-        maxItemsPerRegion = 2,
-        assumeBidirectional = true,
-    } = growthParams;
+    const { substrateQuotas, startSubstrate = null } = growthParams;
     if (!substrateQuotas || Object.keys(substrateQuotas).length === 0) {
         throw new Error('arrangeShuffledSpiral: growthParams.substrateQuotas required');
     }
-    // Upfront validation: every substrate must be registered with
-    // either a build-time generateRegionCore (procedural) or a
-    // zoneCount (zone-based). Zone-based substrates' quotas must
-    // also fit within their zoneCount.
+    // Upfront validation: every quota id must be either a registered substrate
+    // with a build-time generateRegionCore (procedural) or a zoneCount
+    // (zone-based content source), OR a `library:<id>` content source whose
+    // document rides the config. A content source's quota must fit within its
+    // pool size (zoneCount / library entry count).
     for (const [sub, count] of Object.entries(substrateQuotas)) {
         if (count <= 0) continue;
+        if (isLibrarySourceId(sub)) {
+            // A library quota MAY exceed its entry count — entries are a palette,
+            // not consumables, so repetition is allowed (§2c). Only require a
+            // non-empty document; the per-slot fit check is what can fail loudly.
+            const doc = growthParams.substrateConfig?.[sub]?.libraryDoc;
+            if (doc == null) {
+                throw new Error(
+                    `arrangeShuffledSpiral: library source '${sub}' has no libraryDoc `
+                    + 'in growthParams.substrateConfig',
+                );
+            }
+            if (!Array.isArray(doc.entries) || doc.entries.length === 0) {
+                throw new Error(
+                    `arrangeShuffledSpiral: library source '${sub}' has no entries`,
+                );
+            }
+            continue;
+        }
         const adapter = substrateRegistry.get(sub);
         if (!adapter) {
             throw new Error(
@@ -3094,19 +3278,186 @@ export function arrangeShuffledSpiral(config) {
     const cells = rawCells.map((c) => ({ gx: c.gx - minX, gy: c.gy - minY }));
     const startCell = cells[0];
 
+    return {
+        sequence, cells, startCell, gridDims, rngState: rng.getState(),
+    };
+}
+
+// --- Spiral content sources (region-library C2) ---
+//
+// A "content source" supplies pre-existing region descriptors to the spiral
+// driver BY ORDINAL — its Nth planned cell becomes its Nth entry — as opposed
+// to a procedural substrate, which GROWS a region's geometry from the rng
+// stream. The spiral loop resolves one per planned cell through this single
+// seam: a content source `instantiate`s (drawing NO rng — the byte-identity
+// discipline is that content slots consume none, procedural slots draw in the
+// exact monolithic order), and everything else falls through to the
+// rng-consuming procedural build path.
+//
+// Today the only content sources are zone-based substrates (jta), whose
+// registry adapter exposes `zoneCount` (pool size) + `extractZoneRules`
+// (the per-ordinal instantiate channel). The reframing is deliberately routed
+// through an id → source resolver rather than an inline
+// `typeof adapter.zoneCount === 'number'` test so that region-library F4 can
+// register further content sources under synthetic ids (`library:<id>`) whose
+// instantiated regions carry an ENTRY's own substrate at runtime. C3 names this
+// "content source" contract in the substrate registry.
+//
+// region-library F4 adds a SECOND kind of content source: a loaded region
+// library, keyed `library:<library_id>` in the quota, whose pool is the
+// library's entries and whose instantiated regions carry an ENTRY's own
+// substrate (a library maze region IS a maze region at runtime — nothing new to
+// render, and the compiled world is fully self-contained: the library is a
+// build-time source, absent from the sidecars). The library document rides
+// `substrateConfig['library:<id>'].libraryDoc` (the same "presets carry config"
+// convention as jta's datasetDoc), so a content source is built per generation
+// from config without any global registration to unwind.
+//
+// Returns { poolSize, instantiate({ region_id, ordinal, regionSize, exitSides }) }
+// or null for a procedural substrate (no zone pool).
+function resolveSpiralContentSource(id, config = {}) {
+    const adapter = substrateRegistry.get(id);
+    if (adapter && typeof adapter.zoneCount === 'number') {
+        return {
+            poolSize: adapter.zoneCount,
+            instantiate: ({ region_id, ordinal, regionSize, exitSides }) =>
+                synthesizeZoneRegion({
+                    substrate: id,
+                    region_id,
+                    zoneIdx: ordinal,
+                    regionSize,
+                    exitSides,
+                    adapter,
+                }),
+        };
+    }
+    if (isLibrarySourceId(id)) {
+        const doc = config?.growthParams?.substrateConfig?.[id]?.libraryDoc;
+        if (doc == null) {
+            throw new Error(
+                `spiral content source '${id}': no libraryDoc in `
+                + 'growthParams.substrateConfig — a selected library must ride the config');
+        }
+        return buildLibraryContentSource(id, doc);
+    }
+    return null;
+}
+
+// Synthetic content-source ids for loaded region libraries.
+const LIBRARY_SOURCE_PREFIX = 'library:';
+
+// Filler item stamped on a library slot the engine leaves un-itemed (v1 spiral:
+// entries are "pure geometry + slots", so the engine owns items — it assigns a
+// filler so the compiled world's item pool balances 1:1 with its locations, the
+// same shape a procedural maze region has). Classified 'filler' by
+// compileRegionGraph so it never inflates progression. Substrates whose entries
+// carry their own canonical items (bounce) keep those.
+export const LIBRARY_SLOT_FILLER_ITEM = 'Region Library Filler';
+export function isLibrarySourceId(id) {
+    return typeof id === 'string' && id.startsWith(LIBRARY_SOURCE_PREFIX);
+}
+export function librarySourceId(libraryId) {
+    return `${LIBRARY_SOURCE_PREFIX}${libraryId}`;
+}
+
+// Build a content source backed by a loaded region-library document. Fit-based
+// selection (§2c): an entry fits a slot iff the slot's required exitSides ⊆ the
+// entry's exit_sides (surplus sides are walled off by wallOffUnusedExits).
+// Prefer-least-used, tie-break by declaration order, repeat when the pool is
+// exhausted (entries are a palette, not consumables — region_id namespacing
+// makes repetition safe). Loud failure when no entry fits. The usage counter
+// lives in this closure, so build a source ONCE per generation (realiseSpiralRegions
+// memoizes). Instantiation draws no rng.
+function buildLibraryContentSource(sourceId, doc) {
+    const entries = Array.isArray(doc.entries) ? doc.entries : [];
+    const usage = new Map(); // entry_id -> times used
+    return {
+        poolSize: entries.length,
+        instantiate: ({ region_id, regionSize, exitSides }) => {
+            const need = new Set(exitSides);
+            const fitting = entries.filter((e) => {
+                const has = new Set(e.exit_sides ?? []);
+                for (const s of need) if (!has.has(s)) return false;
+                return true;
+            });
+            if (fitting.length === 0) {
+                throw new Error(
+                    `${sourceId}: no entry fits slot sides [${[...need].join(',')}] `
+                    + `for region '${region_id}' (library '${doc.name ?? doc.library_id}', `
+                    + `${entries.length} entries)`);
+            }
+            // Least-used-then-declaration-order.
+            let pick = fitting[0];
+            let best = usage.get(pick.entry_id) ?? 0;
+            for (const e of fitting) {
+                const u = usage.get(e.entry_id) ?? 0;
+                if (u < best) { best = u; pick = e; }
+            }
+            usage.set(pick.entry_id, (usage.get(pick.entry_id) ?? 0) + 1);
+            const sub = getAdapter(pick.substrate);
+            if (typeof sub.instantiateLibraryEntry !== 'function') {
+                throw new Error(
+                    `${sourceId}: substrate '${pick.substrate}' (entry '${pick.entry_id}') `
+                    + 'has no instantiateLibraryEntry hook');
+            }
+            const region = sub.instantiateLibraryEntry(pick, { region_id, exitSides, regionSize });
+            // The engine owns items on "pure geometry" slots: stamp a filler on
+            // any slot the substrate left un-itemed so the compiled pool balances
+            // 1:1 with locations (a slot with no item is an unfillable location).
+            for (const loc of region.extracted_rules?.locations ?? []) {
+                if (loc.item == null) loc.item = LIBRARY_SLOT_FILLER_ITEM;
+            }
+            return region;
+        },
+    };
+}
+
+// Phase ③ of shuffled-spiral (the "regions" step): realise each planned cell
+// into a region on a fresh grid, then run the whole-grid post-passes. Restores
+// the post-shuffle rng from the plan so procedural substrates draw in the exact
+// monolithic order (zone substrates draw none). Deterministic given the plan +
+// config; the empty grid + ScenarioPool are re-created from config here (no rng),
+// so the plan crosses a serialised boundary as plain data. Returns
+// { grid, pool, stats, startCell } — the same shape arrangeShuffledSpiral did.
+export function realiseSpiralRegions(plan, config) {
+    const {
+        itemPool = {},
+        obstaclePool = {},
+        itemLib = DEFAULT_ITEMS,
+        obstacleLib = DEFAULT_OBSTACLES,
+        regionParams = {},
+        growthParams = {},
+        hazardOpts = null,
+        consumableTileOpts = null,
+    } = config;
+    const { regionSize } = config;
+    const { maxItemsPerRegion = 2, assumeBidirectional = true } = growthParams;
+    const {
+        sequence, cells, startCell, gridDims,
+    } = plan;
+
+    const rng = createRng(0);
+    rng.setState(plan.rngState); // post-shuffle position (continuous stream)
+
     const grid = new Grid(gridDims);
     const pool = new ScenarioPool({
         items: itemPool, obstacles: obstaclePool, itemLib, obstacleLib,
     });
-    const zoneCounter = {};  // per-substrate "Nth zone" counter
+    // Per-content-source "Nth entry" counter, keyed by sequence id (a
+    // substrate id, or a `library:<id>` content-source id under F4). Advanced
+    // for every cell so a content source's ordinal is its running use count.
+    const ordinalCounter = {};
+    // Content sources are built ONCE per generation and reused across cells so a
+    // library source's usage counter (prefer-least-used) persists (jta sources
+    // are stateless; memoizing them is harmless).
+    const sourceCache = {};
     const occupied = new Set(cells.map((c) => cellKey(c)));
 
     for (let i = 0; i < cells.length; i++) {
         const cell = cells[i];
         const substrate = sequence[i];
-        const adapter = getAdapter(substrate);
-        const zoneIdx = zoneCounter[substrate] ?? 0;
-        zoneCounter[substrate] = zoneIdx + 1;
+        const ordinal = ordinalCounter[substrate] ?? 0;
+        ordinalCounter[substrate] = ordinal + 1;
 
         // Sides whose geographic neighbor is in-bounds AND will hold
         // a spiral region (occupied set is the universe of cells).
@@ -3117,32 +3468,31 @@ export function arrangeShuffledSpiral(config) {
             if (occupied.has(cellKey(neighbor))) exitSides.push(side);
         }
 
+        const region_id = regionIdForCell(cell);
+        const source = (sourceCache[substrate] ??= resolveSpiralContentSource(substrate, config) ?? null);
         let region;
-        if (typeof adapter.zoneCount === 'number') {
-            region = synthesizeZoneRegion({
-                substrate,
-                region_id: regionIdForCell(cell),
-                zoneIdx,
-                regionSize,
-                exitSides,
-                adapter,
-            });
+        if (source) {
+            // Content source: instantiate its Nth entry (draws no rng).
+            region = source.instantiate({ region_id, ordinal, regionSize, exitSides });
         } else {
+            // Procedural substrate: grow geometry from the rng stream.
+            getAdapter(substrate); // preserve the "unregistered id" throw
             const arrival = accumulatedInventory(grid);
-            const plan = pool.planPlacement({
+            const placementPlan = pool.planPlacement({
                 arrivalInventory: arrival, rng, maxItems: maxItemsPerRegion,
             });
             region = buildSubstrateRegion({
                 substrate,
-                region_id: regionIdForCell(cell),
+                region_id,
                 size: regionSize,
                 entrances: [],
                 exit_sides: exitSides,
                 arrival_inventory: arrival,
-                items_to_place: plan.items_to_place,
-                obstacles_to_place: plan.obstacles_to_place,
+                items_to_place: placementPlan.items_to_place,
+                obstacles_to_place: placementPlan.obstacles_to_place,
                 itemLib, obstacleLib, rng, params: regionParams,
                 hazardOpts,
+                consumableTileOpts,
             });
             pool.markPlaced({
                 placed_items: region.placed_items,
@@ -3153,9 +3503,8 @@ export function arrangeShuffledSpiral(config) {
     }
 
     // Resolve exit targets to neighbor region ids. Same pass the
-    // grid-growth driver uses; for zone-based regions our synthetic
-    // tile positions match the perimeter-midpoint convention so the
-    // posKey lookup inside stitchGrid hits.
+    // grid-growth driver uses; it matches exits_placed to extracted exits
+    // by ID, so zone regions' synthetic tile positions are irrelevant to it.
     stitchGrid(grid);
     if (assumeBidirectional) {
         reconcileBidirectionalExits(grid, regionSize, 'add');
@@ -3167,15 +3516,20 @@ export function arrangeShuffledSpiral(config) {
         regionsSkipped: 0,
         teleportersPlaced: 0,
         stopReason: 'spiral_complete',
-        substrateCounts: { ...zoneCounter },
+        substrateCounts: { ...ordinalCounter },
     };
     return { grid, pool, stats, startCell };
+}
+
+export function arrangeShuffledSpiral(config) {
+    const plan = arrangeSpiralPlan(config);
+    return realiseSpiralRegions(plan, config);
 }
 
 // --- Sphere-driven growth driver ---
 //
 // The sphere-plan-first wave grower
-// (NewDocs/plans/procedural-generation/sphere-driven-growth.md).
+// (docs/json/developer/procgen/sphere-growth.md).
 // Two phases:
 //
 //   buildSphereTree — pure bookkeeping: given the sphere plan, decide
@@ -3309,10 +3663,21 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
         // so the grower's gate accounting matches what the substrate
         // realises, without the engine naming any substrate.
         regionParams = {},
+        // Region-atlas Phase 6 (slice 2): pre-decided placements from the
+        // sorter, `[{ entry_id, wave, gate, sourceId }]`. Absent (the default,
+        // and every world with no atlas pool) ⇒ nothing below changes.
+        atlasAssignments = null,
     } = opts;
     const spheres = plan.spheres;
     const waves = spheres.length;
     const { regionsPerWave, fillerWaves } = allocation;
+    // With a sorter in play the atlas quota is the sorter's budget, not a draw:
+    // leaving the id in the pick pool would place the same regions twice, once
+    // at their honest wave and once wherever the shuffle put them.
+    const pickQuotas = atlasAssignments
+        ? Object.fromEntries(Object.entries(substrateQuotas ?? {})
+            .filter(([id]) => !isAtlasSourceId(id)))
+        : substrateQuotas;
 
     // Cumulative instance counts per sphere: cumCounts[k] maps item →
     // number of instances in spheres 1..k+1. A wave-w gate on item X
@@ -3345,13 +3710,13 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
     const pickSub = (preferred = null) => {
         let sub = null;
         if (preferred && preferred !== 'auto') {
-            const remaining = substrateQuotas
-                ? (substrateQuotas[preferred] ?? 0) - (substrateCounts[preferred] || 0)
+            const remaining = pickQuotas
+                ? (pickQuotas[preferred] ?? 0) - (substrateCounts[preferred] || 0)
                 : 1;
             if (remaining > 0) sub = preferred;
         }
-        if (!sub && substrateQuotas) {
-            sub = pickSubstrateWithQuota(substrateQuotas, substrateCounts, rng);
+        if (!sub && pickQuotas) {
+            sub = pickSubstrateWithQuota(pickQuotas, substrateCounts, rng);
             if (!sub) quotaFallbacks += 1;
         }
         if (!sub) sub = 'maze';
@@ -3360,7 +3725,10 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
     };
 
     const nodes = resume?.nodes ?? [];
-    const addNode = ({ wave, gate, gateCounts = {}, parent, substrate, isFiller = false }) => {
+    const addNode = ({
+        wave, gate, gateCounts = {}, parent, substrate, isFiller = false, atlasEntry = null,
+        gateRule = null, exitEnvelope = null,
+    }) => {
         const node = {
             index: nodes.length,
             wave,
@@ -3368,6 +3736,13 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
             gateCounts,       // item → required count (> 1 only for
                               // multi-instance items; emitted as
                               // Has(item, count) — the count gate)
+            // An AUTHORED entry gate (region-atlas): the real game's own rule
+            // for getting in, which the compiled world carries VERBATIM rather
+            // than re-synthesised from `gate`. Set only for atlas nodes, so
+            // every other world takes the sphereGateRule path unchanged — and
+            // it matters because a re-synthesis would narrow an OR to the one
+            // branch the sorter scheduled and kill the other.
+            ...(gateRule ? { gateRule } : {}),
             parent,           // parent node index (null for the root)
             side: null,       // side ON THE PARENT hosting this child
             substrate,
@@ -3375,6 +3750,13 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
             isFiller,
             childGates: [],
             usedSides: new Set(),
+            // Which atlas region the sorter pinned to this node; the realiser
+            // claims exactly that entry rather than fit-selecting one.
+            ...(atlasEntry ? { atlasEntry } : {}),
+            // The pinned entry's outbound exits, in the order the substrate hook
+            // hands them to child sides — so the planner knows which of the real
+            // map's doors each child will land behind, and what that door costs.
+            ...(exitEnvelope ? { exitEnvelope } : {}),
         };
         if (parent != null) {
             const host = nodes[parent];
@@ -3415,8 +3797,34 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
         return node;
     };
 
+    // How many children this host already has. Every non-root node pre-seeds the
+    // side it came IN through, so its child count is one less than its used
+    // sides — and that number is the index of the next envelope slot.
+    const childSlotIndex = (host) => host.usedSides.size - (host.parent == null ? 0 : 1);
+
     const canHost = (host, gateTerms) => {
         if (host.usedSides.size >= 4) return false;
+        // A library content source (region-library F6a) hosts ANY gate — the gate
+        // rides as an access_rule OVERLAY on the exit (logic-looser-than-physics),
+        // which no fixed geometry can veto. Bounded only by the 4-side budget
+        // above. (Physical enforcement / capability negotiation is F6b.)
+        if (isLibrarySourceId(host.substrate)) return true;
+        // An ATLAS region hosts children ON THE REAL MAP'S OWN DOORS. v1 declined
+        // outright, because the planner could not know which exit the
+        // fit-selector would hand a child. A SORTED node has no such gap: the
+        // sorter pins the entry, and the substrate hook assigns exits to child
+        // sides in payload order, so this host knows exactly which door the next
+        // child gets — that is what `exitEnvelope` is. The bound below is HARD
+        // rather than advisory: `reserve()` THROWS past `entry.exits.length`, so
+        // a tree built beyond the envelope would die at realisation.
+        //
+        // Which gate that door implies is decided in gateChoicesFor; the envelope
+        // is absent for an atlas node the QUOTA route placed (no pinned entry),
+        // so that route keeps the v1 leaf behaviour.
+        if (isAtlasSourceId(host.substrate)) {
+            const slot = host.exitEnvelope?.[childSlotIndex(host)];
+            return !!slot && slot.hostable !== false;
+        }
         const adapter = substrateRegistry.get(host.substrate);
         if (!adapter) return false;
         const gateable = adapter.gateableItems ?? null;
@@ -3452,15 +3860,60 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
     // bounce). The CHILD's substrate doesn't constrain the gate:
     // bounce realises any entry gate's back portal via authored
     // locks (anyone inside satisfies the entry gate by construction).
-    const pickHostAndGate = (wave, { gateWave = wave } = {}) => {
+    const pickHostAndGate = (wave, {
+        gateWave = wave, fixedGate = null, fixedCounts = null, fixedRule = null,
+    } = {}) => {
         // Required count for a gate item at this gate's sphere: the
         // cumulative instance count through sphere gateWave (1 for
-        // single-instance items — the common case).
+        // single-instance items — the common case). An atlas gate may ALSO
+        // demand a count of its own (`Has(x, 2)` in the map's own row); the
+        // stricter of the two is the one the accounting must see.
         const cum = gateWave > 0 ? cumCounts[gateWave - 1] : null;
-        const gateCount = (item) => cum?.get(item) ?? 1;
-        const gateChoices = gateWave === 0
-            ? [[]]
-            : rng.shuffle([...new Set(spheres[gateWave - 1].items)]).map((item) => [item]);
+        const gateCount = (item) => Math.max(cum?.get(item) ?? 1, fixedCounts?.[item] ?? 1);
+        // `fixedGate` (region-atlas Phase 6): the sorter already decided this
+        // node's gate — it IS the real game's requirement for getting in — so
+        // there is nothing to choose, only a host that can carry it. `fixedRule`
+        // is that requirement's AUTHORED form, which is what the compiled world
+        // ends up gating on; `gate` is the item-level view the accounting and
+        // the substrate vetoes see.
+        const gateChoices = fixedGate
+            ? [{ gate: fixedGate, rule: fixedRule }]
+            : (gateWave === 0
+                ? [{ gate: [], rule: null }]
+                : rng.shuffle([...new Set(spheres[gateWave - 1].items)])
+                    .map((item) => ({ gate: [item], rule: null })));
+        // Which gates a given HOST can offer. Every host but a sorted atlas
+        // region offers the drawn choices unchanged — so nothing about a
+        // non-atlas world moves, rng included (the shuffle above is still
+        // consumed exactly once per call, before any host is considered).
+        //
+        // A sorted atlas region offers what the real map's next door offers. The
+        // realised exit rule is that door's rule AND the child's gate, so the
+        // whole question is when the COMPOSITION opens — it must be exactly the
+        // child's own gate sphere, or the plan and the world disagree:
+        //   - a door another exit already shares a CELL with (`hostable: false`)
+        //     → refused. One cell leading two places is one dead connection.
+        //   - a door that opens LATER than this gate → refused. Composing would
+        //     drag the child past the wave the plan gave it.
+        //   - a door whose rule is out of VOCABULARY → refused. Its sphere is
+        //     unknowable, so nothing can be reasoned about a child behind it.
+        //   - a door that opens EXACTLY at this gate's sphere, for a child with
+        //     no gate of its own → the map's own charge for the crossing IS the
+        //     child's gate. Nothing synthetic is added to a real door.
+        //   - anything else (a FREE door, or one that opens earlier) → the usual
+        //     drawn gate, or an atlas child's own entry requirement, ANDed onto
+        //     whatever the door already charges. That is the composition path
+        //     Phase 6 could only drive directly; growth reaches it now.
+        const gateChoicesFor = (host) => {
+            if (!isAtlasSourceId(host.substrate)) return gateChoices;
+            const slot = host.exitEnvelope?.[childSlotIndex(host)];
+            if (!slot || slot.hostable === false) return [];
+            if (slot.wave == null || slot.wave > gateWave) return [];
+            if (!fixedGate && slot.access_rule != null && slot.wave === gateWave) {
+                return [{ gate: slot.gate, rule: slot.access_rule, counts: slot.gateCounts }];
+            }
+            return gateChoices;
+        };
         const eligible = nodes.filter((h) => h.usedSides.size < 4
             && (gateWave === 0 ? h.wave === 0 : true));
         const older = eligible.filter((h) => h.wave < wave - 1);
@@ -3469,16 +3922,19 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
         const pools = useOlder ? [older, frontier] : [frontier, older];
         for (const pool of pools) {
             for (const host of rng.shuffle([...pool])) {
-                for (const gate of gateChoices) {
-                    const gateTerms = gate.map((item) => ({
-                        item, count: gateCount(item),
+                for (const choice of gateChoicesFor(host)) {
+                    const countOf = (item) => Math.max(
+                        gateCount(item), choice.counts?.[item] ?? 1);
+                    const gateTerms = choice.gate.map((item) => ({
+                        item, count: countOf(item),
                     }));
                     if (canHost(host, gateTerms)) {
                         return {
                             host,
-                            gate,
+                            gate: choice.gate,
                             gateCounts: Object.fromEntries(
-                                gate.map((item) => [item, gateCount(item)])),
+                                choice.gate.map((item) => [item, countOf(item)])),
+                            gateRule: choice.rule ?? null,
                         };
                     }
                 }
@@ -3495,6 +3951,15 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
         const hints = [...new Set([...hintIds]
             .map((id) => substrateRegistry.get(id)?.gateHostingHint?.(regionParams))
             .filter(Boolean))];
+        // Atlas sources have no registry entry, so their (deliberate) refusal to
+        // host would otherwise be an unexplained wall.
+        if ([...hintIds].some(isAtlasSourceId)) {
+            hints.push('A region-atlas region hosts children only on the real map\'s own exits: '
+                + 'as many as the pinned entry has, and a GATED one only for a child whose gate '
+                + 'sphere is when that crossing opens (a region the QUOTA route placed pins no '
+                + 'entry at all and hosts nothing). Raise the non-atlas quota or fillerCount to '
+                + 'give the tree more to hang on.');
+        }
         throw new Error(`growSpheres: no host can realise a wave-${wave} entry gate.`
             + (hints.length ? ` ${hints.join(' ')}` : ''));
     };
@@ -3513,8 +3978,8 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
                 continue;
             }
             const substrate = pickSub();
-            const { host, gate, gateCounts } = pickHostAndGate(w);
-            addNode({ wave: w, gate, gateCounts, parent: host.index, substrate });
+            const { host, gate, gateCounts, gateRule } = pickHostAndGate(w);
+            addNode({ wave: w, gate, gateCounts, gateRule, parent: host.index, substrate });
         }
         // Fillers assigned to this wave attach like regular wave
         // regions but carry no items — so their gates are free to use
@@ -3522,10 +3987,34 @@ function createSphereWiringContext(plan, allocation, opts = {}, rng, resume = nu
         for (const fw of fillerWaves) {
             if (fw !== w) continue;
             const substrate = pickSub();
-            const { host, gate, gateCounts } = pickHostAndGate(w, {
+            const { host, gate, gateCounts, gateRule } = pickHostAndGate(w, {
                 gateWave: w === 0 && waves > 1 ? 1 : w,
             });
-            addNode({ wave: w, gate, gateCounts, parent: host.index, substrate, isFiller: true });
+            addNode({
+                wave: w, gate, gateCounts, gateRule, parent: host.index, substrate,
+                isFiller: true,
+            });
+        }
+        // Pre-built ATLAS regions the sorter assigned to this wave (region-atlas
+        // Phase 6). They come LAST so the draw order of everything above is
+        // untouched, they carry no items (a real map offers exactly the
+        // locations it was marked with, which the round-robin knows nothing
+        // about), and their gate is the map's own entry requirement rather than
+        // one drawn from the sphere.
+        for (const a of atlasAssignments ?? []) {
+            if (a.wave !== w) continue;
+            const { host, gate, gateCounts } = pickHostAndGate(w, {
+                gateWave: w,
+                fixedGate: a.gate,
+                fixedCounts: a.gateCounts ?? null,
+                fixedRule: a.gateRule ?? null,
+            });
+            substrateCounts[a.sourceId] = (substrateCounts[a.sourceId] || 0) + 1;
+            addNode({
+                wave: w, gate, gateCounts, parent: host.index, substrate: a.sourceId,
+                isFiller: true, atlasEntry: a.entry_id, gateRule: a.gateRule ?? null,
+                exitEnvelope: a.exitEnvelope ?? null,
+            });
         }
     };
 
@@ -3655,6 +4144,7 @@ export function rebuildEnvelopeFromRulesJson(rulesJson, opts = {}) {
         itemLib,
         regionParams: opts.regionParams ?? {},
         hazardOpts: opts.hazardOpts ?? undefined,
+        consumableTileOpts: opts.consumableTileOpts ?? undefined,
         maxItemsPerRegion,
         fillerCount: opts.fillerCount ?? 0,
         revisitRatio: opts.revisitRatio ?? 0.25,
@@ -3767,6 +4257,11 @@ export function compactSphereTree(tree) {
             substrate: n.substrate,
             gate: n.gate,
             gateCounts: n.gateCounts,
+            // The AUTHORED entry gate (region-atlas), when there is one — a
+            // rebuilt envelope that lost it would re-emit the scheduled
+            // disjunct and narrow an OR. Omitted otherwise, so every other
+            // world's compacted tree is byte-identical.
+            ...(n.gateRule ? { gateRule: n.gateRule } : {}),
             usedSides: [...(n.usedSides ?? [])],
             childGates: n.childGates,
             isFiller: n.isFiller,
@@ -3844,13 +4339,28 @@ export function rebuildSphereTopology(plan, nodes, opts = {}) {
         // The entry gate should contain an item INTRODUCED at the gate's
         // sphere (the stratification rule that makes the plan a sphere-log
         // oracle). Flag a gate item that isn't a sphere-gateWave item.
+        //
+        // An AUTHORED gate (region-atlas) may be DISJUNCTIVE, and then the rule
+        // is satisfied the moment ANY way through it is — so the check is per
+        // disjunct, and one disjunct meeting the sphere is enough. Flagging each
+        // item of an OR separately would report the branch the sorter did not
+        // schedule as a defect on every atlas world.
         const gw = gateWaveOf(nd);
         if (gw > 0 && (nd.gate ?? []).length) {
             const sphereSet = new Set(plan.spheres[gw - 1]?.items ?? []);
-            for (const it of nd.gate) {
-                if (!sphereSet.has(it)) {
-                    warnings.push(`#${nd.index}: gate item "${it}" isn't a sphere-${gw} `
-                        + 'item — the oracle will mismatch.');
+            const dnf = nd.gateRule ? requirementDnf(nd.gateRule) : null;
+            if (dnf) {
+                if (!dnf.some((conj) => conj.some((t) => sphereSet.has(t.item)))) {
+                    warnings.push(`#${nd.index}: no way through gate rule `
+                        + `[${nd.gate.join(',')}] holds a sphere-${gw} item — `
+                        + 'the oracle will mismatch.');
+                }
+            } else {
+                for (const it of nd.gate) {
+                    if (!sphereSet.has(it)) {
+                        warnings.push(`#${nd.index}: gate item "${it}" isn't a sphere-${gw} `
+                            + 'item — the oracle will mismatch.');
+                    }
                 }
             }
         }
@@ -3878,7 +4388,7 @@ export function rebuildSphereTopology(plan, nodes, opts = {}) {
 // is left to makeLocationName (sphere ids aren't AP-canonical names).
 function buildSphereProceduralRegion({
     substrate, region_id, size, entrances, exitPlans, locations,
-    itemLib, obstacleLib, rng, params, hazardOpts,
+    itemLib, obstacleLib, rng, params, hazardOpts, consumableTileOpts,
 }) {
     return generateRegion({
         substrate,
@@ -3890,6 +4400,7 @@ function buildSphereProceduralRegion({
         itemLib,
         obstacleLib,
         hazardOpts,
+        consumableTileOpts,
         entrances,
         exits: exitPlans.map((e) => ({
             side: e.side, ...(e.rule ? { access_rule: e.rule } : {}),
@@ -3916,6 +4427,24 @@ function buildSphereProceduralRegion({
 // forward gate's copy, matching the portal's derived rule exactly.
 // Routing never relies on falling; fall behavior is a per-world
 // bounce parameter (regionParams.fallBehavior).
+// How a ZONE substrate is told about one child's entry gate.
+//
+// Normally the driver's gate IS an item-name conjunction, so requirement/counts
+// say everything and the substrate's derived rules reproduce it exactly. An
+// AUTHORED gate (region-atlas) can say more than that — an OR, a count — and a
+// zone region has no way to derive such a rule back out of its geometry. So the
+// two halves are passed separately, which is what generateRegionZoneGen already
+// supports: `requirement` is the NECESSARY SUBSET (the items every way through
+// the rule needs — possibly none, i.e. open-enough geometry), and `access_rule`
+// is the true gate, stamped onto the extracted exit and preferred by
+// compileRegion. Building the geometry on the scheduled disjunct instead would
+// physically wall off the OR's other branch while the logic still promised it.
+function zoneExitGate(e) {
+    if (!e.authoredRule) return { requirement: e.gate, counts: e.gateCounts ?? {} };
+    const { requirement, counts } = extractItemRequirementFromRule(e.authoredRule);
+    return { requirement, counts, access_rule: e.authoredRule };
+}
+
 function* buildSphereZoneRegion({
     substrate, region_id, regionSize, exitPlans, locations,
     entranceSide, entryGate = [], entryGateCounts = {},
@@ -3938,9 +4467,7 @@ function* buildSphereZoneRegion({
         size: regionSize,
         params: regionParams,
         seed,
-        exits: exitPlans.map((e) => ({
-            side: e.side, requirement: e.gate, counts: e.gateCounts ?? {},
-        })),
+        exits: exitPlans.map((e) => ({ side: e.side, ...zoneExitGate(e) })),
         locations: locations.map((l) => ({ id: l.id, item: l.item, requirement: [] })),
         entrances: entranceSide
             ? [{ side: entranceSide, requirement: entryGate, counts: entryGateCounts }]
@@ -3955,6 +4482,448 @@ function sphereGateRule(gate, gateCounts = {}) {
     return gate.length === 0
         ? null
         : makeAndRule(gate.map((item) => makeHasRule(item, gateCounts[item] ?? 1)));
+}
+
+// --- Sphere-growth library content source (region-library F6a) ---
+//
+// The sphere analogue of buildLibraryContentSource (the spiral F4 source). A
+// sphere slot is HARDER than a spiral slot: it needs SPECIFIC sides (entrance
+// mirrored from the parent's placed exit + child sides) and carries per-exit
+// GATES. F6a is BOUNCE-ONLY: a bounce entry's sidePortals are re-keyable, so the
+// substrate hook (instantiateLibraryEntryForSpecs) relabels its portals onto the
+// requested sides; the GATE is realised here as an access_rule OVERLAY
+// (logic-looser-than-physics — the captured level is reused as pure geometry, the
+// AP LOGIC enforces the gate; physical enforcement where hostable is F6b).
+//
+// Selection is RNG-FREE (Q4 ruling): least-used-then-declaration-order among
+// fitting entries, mirroring the spiral source. A library node draws ZERO rng
+// (realiseOneSphereNode skips the per-node zone seed too), so library-absent
+// worlds are byte-identical.
+function buildSphereLibrarySource(sourceId, doc) {
+    const entries = Array.isArray(doc.entries) ? doc.entries : [];
+    const usage = new Map(); // entry_id -> times used
+    return {
+        poolSize: entries.length,
+        instantiate: (specs) => {
+            const {
+                region_id, regionSize, exitPlans, locations, entranceSide,
+                entryGate = [], entryGateCounts = {}, regionParams = {},
+            } = specs;
+            // Sides this region needs, ORDERED (entrance first so its portal
+            // assignment is stable, then children in exit-plan order). The
+            // substrate hook maps captured portals onto these by index.
+            const neededSides = [
+                ...(entranceSide ? [entranceSide] : []),
+                ...exitPlans.map((e) => e.side),
+            ];
+            const nLocs = locations.length;
+            // Fit (v1, bounce): enough re-keyable portals for every needed side
+            // AND enough location slots for the node's items. (No ⊆-by-side match
+            // — bounce relabels; count is the constraint.)
+            const fitting = entries.filter((e) =>
+                (e.exit_sides?.length ?? 0) >= neededSides.length
+                && (e.location_slots ?? 0) >= nLocs);
+            if (fitting.length === 0) {
+                throw new Error(
+                    `${sourceId}: no entry fits sphere slot (needs ${neededSides.length} `
+                    + `side(s) [${neededSides.join(',')}] + ${nLocs} location(s)) for region `
+                    + `'${region_id}' (library '${doc.name ?? doc.library_id}', `
+                    + `${entries.length} entries)`);
+            }
+            // Least-used-then-declaration-order — rng-free.
+            let pick = fitting[0];
+            let best = usage.get(pick.entry_id) ?? 0;
+            for (const e of fitting) {
+                const u = usage.get(e.entry_id) ?? 0;
+                if (u < best) { best = u; pick = e; }
+            }
+            usage.set(pick.entry_id, (usage.get(pick.entry_id) ?? 0) + 1);
+            return buildSphereLibraryRegion(sourceId, pick, {
+                region_id, regionSize, exitPlans, locations, entranceSide,
+                entryGate, entryGateCounts, regionParams, neededSides,
+            });
+        },
+    };
+}
+
+// Realise ONE sphere library node: call the entry's requirement-aware substrate
+// hook for geometry, OVERLAY each gate as an access_rule (the driver's gate,
+// composed engine-side), then assemble the descriptor via the shared
+// assembleZoneRegion tail. Draws no rng.
+function buildSphereLibraryRegion(sourceId, entry, {
+    region_id, regionSize, exitPlans, locations, entranceSide,
+    entryGate = [], entryGateCounts = {}, regionParams = {}, neededSides,
+}) {
+    const adapter = getAdapter(entry.substrate);
+    if (typeof adapter.instantiateLibraryEntryForSpecs !== 'function') {
+        throw new Error(
+            `${sourceId}: substrate '${entry.substrate}' (entry '${entry.entry_id}') has `
+            + 'no instantiateLibraryEntryForSpecs hook — sphere-growth library reuse needs '
+            + 'a zone substrate (bounce/runner) or a tile substrate wired for it (maze)');
+    }
+
+    // Region-shape branch (region-library F6c). A PROCEDURAL/tile substrate (maze —
+    // adapter.generateRegionCore) returns a FULL region descriptor (real exits on the
+    // needed sides at captured tiles); a ZONE substrate (bounce/runner) returns
+    // GEOMETRY-only zoneRules that assembleZoneRegion turns into synthetic-exit
+    // descriptors. Both overlay the DRIVER's per-child gate as an access_rule
+    // (logic-looser-than-physics) — the tile branch onto the extracted exits
+    // directly, the zone branch via the zoneRules → assembleZoneRegion attach.
+    if (typeof adapter.generateRegionCore === 'function') {
+        const region = adapter.instantiateLibraryEntryForSpecs(entry, {
+            region_id,
+            regionSize,
+            exitSides: neededSides,
+            locationSpecs: locations.map((l) => ({ item: l.item })),
+            fillerItem: LIBRARY_SLOT_FILLER_ITEM,
+            regionParams,
+        });
+        // Overlay each child exit's gate onto its extracted exit (matched by side via
+        // exits_placed). The ENTRANCE side has no forward exit in the tile branch —
+        // the driver's back-portal (applySphereBackExit) carries the return route,
+        // and buildRulesJson's post-pass copies the forward gate's rule onto it.
+        const sideToExitId = new Map((region.exits_placed ?? []).map((e) => [e.side, e.exit_id]));
+        const exitById = new Map((region.extracted_rules?.exits ?? []).map((e) => [e.id, e]));
+        for (const e of exitPlans) {
+            // The plan's own rule when it has one (an atlas child's AUTHORED
+            // gate); otherwise the item-name gate synthesised here as before.
+            const r = e.rule ?? sphereGateRule(e.gate, e.gateCounts ?? {});
+            if (!r) continue;
+            const ex = exitById.get(sideToExitId.get(e.side));
+            if (ex) ex.access_rule = r;
+        }
+        region.placed_logic_gates = region.placed_logic_gates ?? [];
+        return region;
+    }
+
+    // The substrate returns GEOMETRY-only zoneRules (relabelled portals + the
+    // node items mapped onto captured slots; engine filler on the surplus).
+    const zoneRules = adapter.instantiateLibraryEntryForSpecs(entry, {
+        region_id,
+        regionSize,
+        exitSides: neededSides,
+        locationSpecs: locations.map((l) => ({ item: l.item })),
+        fillerItem: LIBRARY_SLOT_FILLER_ITEM,
+        regionParams,
+    });
+
+    // Gate OVERLAY: each child exit carries its gate rule; the entrance side
+    // rides the back portal gated on the entry gate (unless the substrate ungates
+    // it — braid). No exitPaths are emitted, so assembleZoneRegion attaches the
+    // access_rule (which compileRegion prefers over the always-open path).
+    const exitRules = {};
+    for (const e of exitPlans) {
+        const r = e.rule ?? sphereGateRule(e.gate, e.gateCounts ?? {});
+        if (r) exitRules[e.side] = r;
+    }
+    if (entranceSide) {
+        const backGated = adapter.backPortalGated?.(regionParams) ?? true;
+        const r = backGated ? sphereGateRule(entryGate, entryGateCounts) : null;
+        if (r) exitRules[entranceSide] = r;
+    }
+    if (Object.keys(exitRules).length) zoneRules.exitRules = exitRules;
+
+    const region = assembleZoneRegion({
+        substrate: entry.substrate,
+        region_id,
+        regionSize,
+        exitSides: neededSides,
+        zoneRules,
+        zonePayload: {},
+    });
+    // Parity with generateRegionZoneGen: landing on the entrance side resolves to
+    // the driver's back-exit; fallBehavior is per-world.
+    if (region.playable_payload?.params && entranceSide) {
+        region.playable_payload.params.backExitSide = entranceSide;
+        if (regionParams.fallBehavior) {
+            region.playable_payload.params.fallBehavior = regionParams.fallBehavior;
+        }
+    }
+    // assembleZoneRegion omits this write-only field; sphere descriptors carry it.
+    region.placed_logic_gates = region.placed_logic_gates ?? [];
+    return region;
+}
+
+// Resolve the sphere library content sources named in substrateQuotas as
+// `library:<id>` ids (region-library F6a). Each rides its doc on
+// growthParams.substrateConfig[id].libraryDoc (mirroring the spiral source,
+// resolveSpiralContentSource). Built ONCE per grow so each source's usage counter
+// (prefer-least-used) persists across nodes. Also the arrange-time validation for
+// library ids (the upfront quota loop skips them — a library id has no registry
+// entry). Returns { id: source } (empty when no library quota is set).
+export function resolveSphereLibrarySources(substrateQuotas, config) {
+    const sources = {};
+    for (const [id, count] of Object.entries(substrateQuotas ?? {})) {
+        if (count <= 0 || !isLibrarySourceId(id)) continue;
+        const doc = config?.growthParams?.substrateConfig?.[id]?.libraryDoc;
+        if (doc == null) {
+            throw new Error(
+                `growSpheres: library content source '${id}' has no libraryDoc in `
+                + 'growthParams.substrateConfig — a selected library must ride the config');
+        }
+        const entries = Array.isArray(doc.entries) ? doc.entries : [];
+        // A sphere slot is realised via the entry substrate's requirement-aware
+        // instantiateLibraryEntryForSpecs hook (bounce F6a, runner F6c). Accept any
+        // library with at least one entry whose registered substrate provides it —
+        // registry-driven so a newly-wired substrate (maze) is picked up without
+        // touching this guard. Per-entry substrates lacking the hook still fail
+        // loudly at buildSphereLibraryRegion.
+        const hasRealisable = entries.some((e) =>
+            typeof substrateRegistry.get(e.substrate)?.instantiateLibraryEntryForSpecs === 'function');
+        if (!hasRealisable) {
+            throw new Error(
+                `growSpheres: library '${id}' has no entries whose substrate can realise a `
+                + 'sphere slot (no registered instantiateLibraryEntryForSpecs hook) — '
+                + 'sphere-growth library reuse needs a zone substrate (e.g. bounce or runner)');
+        }
+        sources[id] = buildSphereLibrarySource(id, doc);
+    }
+    return sources;
+}
+
+// --- Sphere-growth region-ATLAS content source (region-atlas Phase 6) --------
+//
+// The atlas analogue of buildSphereLibrarySource. Same seam, three differences,
+// all of them because an atlas entry is a piece of a REAL GAME MAP rather than
+// interchangeable synthetic content (see procgenPipeline/regionAtlasPool.js):
+//
+//   - **An entry is placed AT MOST ONCE.** Two copies of Seedling's starting
+//     house in one world would duplicate its location identity. Selection is
+//     therefore declaration order among the entries that still fit — rng-free,
+//     like the library source, but consuming rather than repeating.
+//   - **The region takes the atlas's NAME.** A placed region is
+//     `overworld_start__r8c0`, not `region_4_3`, so the compiled world, its
+//     spoiler and the sphere tree all say which piece of the map this is. That
+//     is why the entry is reserved BEFORE the realiser specs are built.
+//   - **Rules are AUTHORED and AND-COMPOSED.** The library path OVERWRITES an
+//     exit's rule with the driver's gate; here the exit already carries the
+//     atlas's own rule for that crossing, and the driver's gate is ANDed ONTO
+//     it. Overwriting would hand the player a route the real game charges for.
+//
+// v1 fence: an atlas node hosts NO children (see canHost). The reason is the
+// same tree-build-vs-realise-time split F6b names — the planner assigns a node's
+// child gates before the entry is fit-selected, so it cannot know whether the
+// eventual entry has an UNGATED exit to hand that child. A child behind an
+// intrinsically gated exit would need the intrinsic items scheduled before its
+// own wave, which is exactly the guarantee the sphere oracle checks; declining
+// to host is the conservative reading of plan decision 9 ("pre-built regions are
+// added BESIDE the skeleton, synthetic gates in front"). Widening it means
+// advertising a conservative per-pool ungated-exit envelope, F6b ruling (a).
+function buildSphereAtlasSource(sourceId, doc) {
+    const entries = Array.isArray(doc.entries) ? doc.entries : [];
+    const used = new Set(); // entry_id -> placed in this world
+    const byId = new Map(entries.map((e) => [e.entry_id, e]));
+
+    const fits = (entry, nLocs, nChildSides) =>
+        (entry.location_slots ?? 0) >= nLocs && (entry.exits?.length ?? 0) >= nChildSides;
+
+    return {
+        poolSize: entries.length,
+        doc,
+        /**
+         * Claim an entry for a node and return its id, which becomes the placed
+         * region's name. Idempotent per node (a re-realised host keeps its
+         * entry). Loud when nothing fits: a real map has the locations it has.
+         */
+        reserve: (node, { nLocs, nChildSides }) => {
+            // Already claimed by THIS source (a re-realised host) → keep it.
+            if (node.atlasEntry && used.has(node.atlasEntry)) return node.atlasEntry;
+            // A node the SORTER pinned (Phase-6 slice 2) names its own entry;
+            // an unpinned node takes the first unplaced entry that fits.
+            const pinned = node.atlasEntry ?? null;
+            // TIGHTEST fit, then declaration order: a node needing no location
+            // must not consume the one region the map marked a chest in, or the
+            // next node that does need one has nowhere to go. Deterministic and
+            // rng-free either way.
+            const pool = pinned
+                ? [byId.get(pinned)].filter(Boolean)
+                : entries.map((e, i) => ({ e, i }))
+                    .sort((a, b) => ((a.e.location_slots ?? 0) - (b.e.location_slots ?? 0))
+                        || (a.i - b.i))
+                    .map(({ e }) => e);
+            const pick = pool.find((e) => !used.has(e.entry_id) && fits(e, nLocs, nChildSides));
+            if (!pick) {
+                const free = entries.filter((e) => !used.has(e.entry_id)).length;
+                throw new Error(
+                    `${sourceId}: no unplaced atlas region fits this slot (needs ${nLocs} `
+                    + `location(s) + ${nChildSides} child side(s)`
+                    + (pinned ? `; the tree pinned '${pinned}'` : `; ${free} of ${entries.length} `
+                        + 'entries unplaced')
+                    + '). An atlas entry is a SPECIFIC place and is placed at most once — lower '
+                    + 'the quota, lower maxItemsPerRegion, raise fillerCount, or mark more of '
+                    + 'the map');
+            }
+            used.add(pick.entry_id);
+            node.atlasEntry = pick.entry_id;
+            return pick.entry_id;
+        },
+        instantiate: (specs) => {
+            const entry = byId.get(specs.atlasEntryId);
+            if (!entry) {
+                throw new Error(`${sourceId}: atlas entry '${specs.atlasEntryId}' is not in the `
+                    + `pool (${entries.length} entries) — the pool changed under the tree`);
+            }
+            // Sides this region needs, ORDERED: entrance first (served by the
+            // driver's back-portal, so it takes no atlas exit), then children in
+            // exit-plan order.
+            const neededSides = [
+                ...(specs.entranceSide ? [specs.entranceSide] : []),
+                ...specs.exitPlans.map((e) => e.side),
+            ];
+            return buildSphereAtlasRegion(sourceId, entry, { ...specs, neededSides });
+        },
+    };
+}
+
+// Structural equality for two Rule Builder trees — key order included, because
+// both sides of the one comparison below come from the same authored row.
+function rulesEqual(a, b) {
+    if (a === b) return true;
+    if (a == null || b == null || typeof a !== 'object' || typeof b !== 'object') return false;
+    return JSON.stringify(a) === JSON.stringify(b);
+}
+
+// AND-compose two rules, keeping both. null means "no constraint", so composing
+// with null is the identity — which is what makes the driver's gate safe to lay
+// on top of an atlas rule that may or may not exist.
+//
+// Composing a rule with ITSELF is the identity too, and that case is load-bearing
+// rather than cosmetic: under gated-exit child hosting (Phase-6 fence 2) a child
+// behind an atlas exit is gated on that exit's OWN authored rule, so the naive
+// compose would emit `And(R, R)`. For a disjunctive R the redundant copy is
+// harmless but noisy; for the general case it is exactly the narrowing this
+// function must not do.
+function andComposeRules(a, b) {
+    if (!a) return b ?? null;
+    if (!b) return a;
+    if (rulesEqual(a, b)) return a;
+    return makeAndRule([a, b]);
+}
+
+/**
+ * Realise ONE atlas node: hand the entry to the substrate's atlas hook for
+ * geometry + authored rules, then AND the driver's per-child gate onto each
+ * retained exit. Draws no rng. Returns { region, notes }.
+ */
+function buildSphereAtlasRegion(sourceId, entry, {
+    region_id, exitPlans, locations, neededSides,
+}) {
+    const adapter = getAdapter(entry.substrate);
+    if (typeof adapter.instantiateAtlasEntryForSpecs !== 'function') {
+        throw new Error(
+            `${sourceId}: substrate '${entry.substrate}' (atlas region '${entry.entry_id}') has `
+            + 'no instantiateAtlasEntryForSpecs hook — a projected atlas region needs a tile '
+            + 'substrate wired for it (maze)');
+    }
+    const exitRules = {};
+    for (const ex of entry.exits ?? []) {
+        if (ex.access_rule) exitRules[ex.exit_id] = ex.access_rule;
+    }
+    const { region, notes } = adapter.instantiateAtlasEntryForSpecs(entry, {
+        region_id,
+        exitSides: neededSides,
+        exitRules,
+        locationSpecs: locations.map((l) => ({ item: l.item })),
+        fillerItem: LIBRARY_SLOT_FILLER_ITEM,
+    });
+
+    // The driver's gate rides ON TOP of the atlas's own rule for that exit —
+    // never instead of it (the library path's overwrite would drop the real
+    // game's charge for the crossing).
+    const sideToExitId = new Map((region.exits_placed ?? []).map((e) => [e.side, e.exit_id]));
+    const exitById = new Map((region.extracted_rules?.exits ?? []).map((e) => [e.id, e]));
+
+    // The child→exit mapping the PLANNER assumed (region-atlas Phase 6, fence 2):
+    // the k-th child lands behind the k-th exit in payload order, which is how
+    // the substrate hook assigns them. The tree gated each child on THAT door's
+    // rule, so a divergence here would hang a child behind a door the sorter
+    // priced differently — logic saying one thing and the map another, with
+    // every compile and every oracle still green. Assert it instead.
+    exitPlans.forEach((e, i) => {
+        const expected = (entry.exits ?? [])[i]?.exit_id;
+        const actual = sideToExitId.get(e.side);
+        if (expected !== actual) {
+            throw new Error(
+                `${sourceId}: atlas region '${entry.entry_id}' put child ${i} (side ${e.side}) `
+                + `on exit '${actual}', but the tree planned it behind '${expected}' — the `
+                + 'exit envelope and the substrate hook disagree about payload order');
+        }
+    });
+
+    // No two exits may end up on ONE CELL. The driver's back-exit is retargeted
+    // onto this region's entrance tile, and a real map regularly puts a door
+    // there too — one cell leading two places is one connection the engine will
+    // never resolve, and it looks like nothing at all in the compiled world. The
+    // envelope refuses to host on such a door; this is the backstop that says so
+    // out loud if any other path ever reaches it.
+    const byTile = new Map();
+    for (const ex of [...getRegionExits(region).values(),
+        ...(entry.entrance_tile ? [{ exit_id: '<driver back-exit>', ...entry.entrance_tile }] : [])]) {
+        const key = `${ex.x},${ex.y}`;
+        if (byTile.has(key)) {
+            throw new Error(
+                `${sourceId}: atlas region '${entry.entry_id}' has two exits on tile ${key} `
+                + `('${byTile.get(key)}' and '${ex.exit_id}') — one cell cannot lead two places`);
+        }
+        byTile.set(key, ex.exit_id);
+    }
+
+    for (const e of exitPlans) {
+        const gate = e.rule ?? sphereGateRule(e.gate, e.gateCounts ?? {});
+        if (!gate) continue;
+        const ex = exitById.get(sideToExitId.get(e.side));
+        if (ex) ex.access_rule = andComposeRules(ex.access_rule ?? null, gate);
+    }
+    region.placed_logic_gates = region.placed_logic_gates ?? [];
+    return { region, notes: notes ?? [] };
+}
+
+/**
+ * Resolve the sphere ATLAS content sources named in substrateQuotas as
+ * `atlas:<game>` ids (region-atlas Phase 6). Mirrors resolveSphereLibrarySources,
+ * with ONE deliberate difference: an atlas pool rides on
+ * `growthParams.substrateConfig['<game>'].atlasDoc` — keyed by the GAME, not by
+ * the source id — because that is the install seam plan decision 5 fixed (the
+ * same one jta datasets use). Returns { id: source }, empty when no atlas quota
+ * is set, so an atlas-absent world takes no new code path at all.
+ *
+ * The sphere path has no applySubstrateConfig; this direct read is byte-inert by
+ * construction and deliberately mirrors the library route rather than inventing
+ * a second config mechanism.
+ */
+export function resolveSphereAtlasSources(substrateQuotas, config) {
+    const sources = {};
+    for (const [id, count] of Object.entries(substrateQuotas ?? {})) {
+        if (count <= 0 || !isAtlasSourceId(id)) continue;
+        const game = atlasSourceGame(id);
+        const doc = config?.growthParams?.substrateConfig?.[game]?.atlasDoc;
+        if (doc == null) {
+            throw new Error(
+                `growSpheres: atlas content source '${id}' has no atlasDoc in `
+                + `growthParams.substrateConfig['${game}'] — a selected atlas pool must ride `
+                + 'the config');
+        }
+        const entries = Array.isArray(doc.entries) ? doc.entries : [];
+        if (entries.length === 0) {
+            throw new Error(`growSpheres: atlas pool '${id}' has no entries`);
+        }
+        if (count > entries.length) {
+            throw new Error(
+                `growSpheres: atlas quota for '${id}' is ${count} but the pool has only `
+                + `${entries.length} region(s), and an atlas region is a SPECIFIC place that is `
+                + 'placed at most once per world — lower the quota or mark more of the map');
+        }
+        const unrealisable = entries.filter((e) =>
+            typeof substrateRegistry.get(e.substrate)?.instantiateAtlasEntryForSpecs !== 'function');
+        if (unrealisable.length === entries.length) {
+            throw new Error(
+                `growSpheres: atlas pool '${id}' has no entries whose substrate can realise a `
+                + 'sphere slot (no registered instantiateAtlasEntryForSpecs hook) — import the '
+                + "substrate's library module before growing");
+        }
+        sources[id] = buildSphereAtlasSource(id, doc);
+    }
+    return sources;
 }
 
 /**
@@ -3994,7 +4963,13 @@ function buildNodeRealiserSpecs(node, tree, grid, regionSize, deps = {}) {
         side: child.side,
         gate: child.gate,
         gateCounts: child.gateCounts,
-        rule: gateRule(child.gate, child.gateCounts),
+        // A child with an AUTHORED entry gate (region-atlas) contributes the
+        // real game's own rule for coming this way, verbatim. `gate` is still
+        // the item-level view the substrates gate their GEOMETRY on; the rule is
+        // what the compiled world says, so an OR keeps both ways in instead of
+        // collapsing to the one branch the sorter scheduled.
+        rule: child.gateRule ?? gateRule(child.gate, child.gateCounts),
+        ...(child.gateRule ? { authoredRule: child.gateRule } : {}),
     }));
 
     let entrances = [];
@@ -4033,26 +5008,16 @@ function buildNodeRealiserSpecs(node, tree, grid, regionSize, deps = {}) {
 function applySphereBackExit(grid, node, specs, region, { assumeBidirectional = true } = {}) {
     if (!assumeBidirectional || !specs.parentNode) return;
     const parentRegion = grid.getRegion(specs.parentNode.cell);
-    const backExitId = parentRegion.region_id;
-    getRegionExits(region).set(backExitId, {
-        exit_id: backExitId,
-        x: specs.entranceTile.x,
-        y: specs.entranceTile.y,
-        side: specs.entranceSide,
-        exitName: backExitId,
+    insertBackExit(grid, {
+        region,
+        parentRegion,
+        backExitId: parentRegion.region_id,
+        entranceTile: specs.entranceTile,
+        entranceSide: specs.entranceSide,
         targetRegion: parentRegion.region_id,
         targetExitId: specs.parentExitPlaced.exit_id,
-        isBackExit: true,
         isTeleporter: node.isTeleporter,
     });
-    region.extracted_rules.exits.push({
-        id: backExitId,
-        position: { x: specs.entranceTile.x, y: specs.entranceTile.y },
-        target_region: parentRegion.region_id,
-        paths: [{ path_id: 'p1', obstacles: [] }],
-    });
-    const parentWorldExit = getRegionExits(parentRegion)?.get(specs.parentExitPlaced.exit_id);
-    if (parentWorldExit) parentWorldExit.targetExitId = backExitId;
 }
 
 /**
@@ -4475,13 +5440,13 @@ function placeSphereTreeCells(grid, nodes, rng, {
  */
 function* realiseSphereNodes(grid, nodes, tree, rng, {
     fromIndex = 0, total = nodes.length,
-    regionSize, itemLib, obstacleLib, regionParams, hazardOpts,
-    assumeBidirectional, childrenByParent, stats,
+    regionSize, itemLib, obstacleLib, regionParams, hazardOpts, consumableTileOpts,
+    assumeBidirectional, childrenByParent, stats, librarySources = null,
 }) {
     for (let i = fromIndex; i < nodes.length; i++) {
         yield* realiseOneSphereNode(grid, nodes[i], tree, rng, {
-            total, regionSize, itemLib, obstacleLib, regionParams, hazardOpts,
-            assumeBidirectional, childrenByParent, stats,
+            total, regionSize, itemLib, obstacleLib, regionParams, hazardOpts, consumableTileOpts,
+            assumeBidirectional, childrenByParent, stats, librarySources,
         });
     }
 }
@@ -4498,12 +5463,29 @@ function* realiseSphereNodes(grid, nodes, tree, rng, {
  * replace=false this is byte-identical to the prior inline loop body.
  */
 function* realiseOneSphereNode(grid, node, tree, rng, {
-    total = 0, regionSize, itemLib, obstacleLib, regionParams, hazardOpts,
+    total = 0, regionSize, itemLib, obstacleLib, regionParams, hazardOpts, consumableTileOpts,
     assumeBidirectional, childrenByParent, stats, replace = false,
+    librarySources = null,
 }) {
     // Cell + side were resolved by the placement pre-pass
     // (occupancy-aware adjacency, remote only when fully surrounded).
     const isTeleporter = node.isTeleporter;
+    // An ATLAS node takes the atlas's own region NAME, so the entry is claimed
+    // BEFORE the specs are built (region_id is the first thing they compute).
+    let atlasSource = null;
+    if (isAtlasSourceId(node.substrate)) {
+        atlasSource = librarySources?.[node.substrate] ?? null;
+        if (!atlasSource) {
+            throw new Error(`growSpheres: atlas node '${node.index}' has no resolved content `
+                + `source for '${node.substrate}' — a selected atlas pool must ride `
+                + "growthParams.substrateConfig['<game>'].atlasDoc");
+        }
+        const kids = childrenByParent?.get(node.index)?.length
+            ?? tree.nodes.filter((n) => n.parent === node.index).length;
+        node.region_id = atlasSource.reserve(node, {
+            nLocs: node.items.length, nChildSides: kids,
+        });
+    }
     const specs = buildNodeRealiserSpecs(node, tree, grid, regionSize, { childrenByParent });
     const {
         region_id, cell, parentNode, exitPlans, entrances, entranceSide, locations,
@@ -4520,36 +5502,71 @@ function* realiseOneSphereNode(grid, node, tree, rng, {
         placements: locations.length,
     };
 
-    const adapter = getAdapter(node.substrate);
     let region;
-    if (typeof adapter.generateRegionCore === 'function') {
-        region = buildSphereProceduralRegion({
-            substrate: node.substrate,
-            region_id,
-            size: regionSize,
-            entrances,
-            exitPlans,
-            locations,
-            itemLib, obstacleLib, rng, params: regionParams, hazardOpts,
+    if (atlasSource) {
+        // Region-atlas content source (region-atlas Phase 6): place a projected
+        // piece of a real game map. Draws NO rng (selection is declaration
+        // order among unplaced entries), so atlas-absent worlds are byte-inert.
+        const placed = atlasSource.instantiate({
+            region_id, regionSize, exitPlans, locations, entranceSide,
+            entryGate: node.gate, entryGateCounts: node.gateCounts, regionParams,
+            atlasEntryId: node.atlasEntry,
         });
-    } else if (typeof adapter.generateZoneForSpecs === 'function'
-            || typeof adapter.generateZoneForSpecsGen === 'function') {
-        region = yield* buildSphereZoneRegion({
-            substrate: node.substrate,
-            region_id,
-            regionSize,
-            exitPlans,
-            locations,
-            entranceSide,
-            entryGate: node.gate,
-            entryGateCounts: node.gateCounts,
-            regionParams,
-            seed: (rng.next() * 0x7fffffff) | 0,
-            adapter,
+        region = placed.region;
+        if (stats && placed.notes.length > 0) {
+            stats.atlasNotes = [...(stats.atlasNotes ?? []), ...placed.notes];
+        }
+        // The driver's back-exit normally lands on the grid-MIRROR of the
+        // parent's exit tile, which for a real map is very likely a wall (and,
+        // since atlas regions are sized to their own bounds, may not even be in
+        // this region). Arrive where the projection spawns instead — the tile
+        // Phase 5b's in-app legs already prove is a valid, reachable spawn.
+        specs.entranceTile = { x: region.entrance.x, y: region.entrance.y };
+    } else if (isLibrarySourceId(node.substrate)) {
+        // Library content source (region-library F6a): place a pre-built entry
+        // against the node's specs. Draws NO rng (Q4 ruling — rng-free
+        // selection, no per-node seed) so library-absent worlds are byte-inert.
+        const source = librarySources?.[node.substrate];
+        if (!source) {
+            throw new Error(`growSpheres: library node '${region_id}' has no resolved `
+                + `content source for '${node.substrate}' — a selected library must ride `
+                + 'growthParams.substrateConfig');
+        }
+        region = source.instantiate({
+            region_id, regionSize, exitPlans, locations, entranceSide,
+            entryGate: node.gate, entryGateCounts: node.gateCounts, regionParams,
         });
     } else {
-        throw new Error(`growSpheres: substrate '${node.substrate}' has neither `
-            + 'generateRegionCore nor generateZoneForSpecs');
+        const adapter = getAdapter(node.substrate);
+        if (typeof adapter.generateRegionCore === 'function') {
+            region = buildSphereProceduralRegion({
+                substrate: node.substrate,
+                region_id,
+                size: regionSize,
+                entrances,
+                exitPlans,
+                locations,
+                itemLib, obstacleLib, rng, params: regionParams, hazardOpts, consumableTileOpts,
+            });
+        } else if (typeof adapter.generateZoneForSpecs === 'function'
+                || typeof adapter.generateZoneForSpecsGen === 'function') {
+            region = yield* buildSphereZoneRegion({
+                substrate: node.substrate,
+                region_id,
+                regionSize,
+                exitPlans,
+                locations,
+                entranceSide,
+                entryGate: node.gate,
+                entryGateCounts: node.gateCounts,
+                regionParams,
+                seed: (rng.next() * 0x7fffffff) | 0,
+                adapter,
+            });
+        } else {
+            throw new Error(`growSpheres: substrate '${node.substrate}' has neither `
+                + 'generateRegionCore nor generateZoneForSpecs');
+        }
     }
 
     if (replace) grid.replaceRegion(cell, region);
@@ -4597,6 +5614,7 @@ export function* growSpheresGen(config) {
         regionParams = {},
         growthParams = {},
         hazardOpts = null,
+        consumableTileOpts = null,
     } = config;
     if (!regionSize || !regionSize.width || !regionSize.height) {
         throw new Error('growSpheres: regionSize.{width,height} required');
@@ -4611,6 +5629,7 @@ export function* growSpheresGen(config) {
         gridDims = null,
         teleporterMinGap = 2,
         assumeBidirectional = true,
+        atlasAssignments = null,
     } = growthParams;
     if (!spherePlan) {
         throw new Error('growSpheres: growthParams.spherePlan required');
@@ -4622,9 +5641,11 @@ export function* growSpheresGen(config) {
     // Upfront quota validation (same contract as the spiral): every
     // substrate must be registered and realisable by this driver —
     // procedurally (generateRegionCore) or via the sphere hook
-    // (generateZoneForSpecs, landing with bounce in step 5).
+    // (generateZoneForSpecs, landing with bounce in step 5). Library content
+    // sources (`library:<id>`) have no registry entry; they are validated by
+    // resolveSphereLibrarySources below (F6a) and skipped here.
     for (const [sub, count] of Object.entries(substrateQuotas ?? {})) {
-        if (count <= 0) continue;
+        if (count <= 0 || isLibrarySourceId(sub) || isAtlasSourceId(sub)) continue;
         const adapter = substrateRegistry.get(sub);
         if (!adapter) {
             throw new Error(`growSpheres: substrate '${sub}' is not registered`);
@@ -4636,6 +5657,14 @@ export function* growSpheresGen(config) {
                 + 'realise requirement-targeted regions');
         }
     }
+    // Pre-built content sources, keyed by source id: region-library packs
+    // (`library:<id>`, F6a) and region-atlas pools (`atlas:<game>`, region-atlas
+    // Phase 6). Both empty unless such a quota is set — so a world with neither
+    // takes no new code path and stays byte-identical.
+    const librarySources = {
+        ...resolveSphereLibrarySources(substrateQuotas, config),
+        ...resolveSphereAtlasSources(substrateQuotas, config),
+    };
 
     // The tree-build and region-build can run as SEPARATE pipeline steps:
     // when a pre-built tree (and its live rng — see buildSphereGrowthTree)
@@ -4646,7 +5675,7 @@ export function* growSpheresGen(config) {
     const rng = prebuilt ? (growthParams.rng ?? createRng(seed)) : createRng(seed);
     const tree = prebuilt ?? buildSphereTree(spherePlan, {
         maxItemsPerRegion, fillerCount, revisitRatio, substrateQuotas, startSubstrate,
-        regionParams,
+        regionParams, atlasAssignments,
     }, rng);
     yield {
         type: 'plan',
@@ -4687,8 +5716,8 @@ export function* growSpheresGen(config) {
     // the prior inline loops.
     placeSphereTreeCells(grid, tree.nodes, rng, { startCell, teleporterMinGap, dims });
     yield* realiseSphereNodes(grid, tree.nodes, tree, rng, {
-        regionSize, itemLib, obstacleLib, regionParams, hazardOpts,
-        assumeBidirectional, childrenByParent, stats,
+        regionSize, itemLib, obstacleLib, regionParams, hazardOpts, consumableTileOpts,
+        assumeBidirectional, childrenByParent, stats, librarySources,
     });
 
     // Every exit was allocated to a specific child (or teleporter), so
@@ -4732,8 +5761,8 @@ function resolveBatchSize(spheresPerBatch, waves) {
  */
 export function* realiseSphereBatchGen(grid, nodes, tree, rng, {
     prevCount, placed, startCell, teleporterMinGap, dims,
-    total, regionSize, itemLib, obstacleLib, regionParams, hazardOpts,
-    assumeBidirectional, stats,
+    total, regionSize, itemLib, obstacleLib, regionParams, hazardOpts, consumableTileOpts,
+    assumeBidirectional, stats, librarySources = null,
 }) {
     // childrenByParent over ALL nodes, in index order (== stable exit-plan
     // order); touchedPriorHosts = earlier-batch hosts that gained a child now.
@@ -4752,8 +5781,8 @@ export function* realiseSphereBatchGen(grid, nodes, tree, rng, {
     let realiseStart = prevCount;
     for (const h of touchedPriorHosts) realiseStart = Math.min(realiseStart, h);
     const realiseOpts = {
-        total, regionSize, itemLib, obstacleLib, regionParams, hazardOpts,
-        assumeBidirectional, childrenByParent, stats,
+        total, regionSize, itemLib, obstacleLib, regionParams, hazardOpts, consumableTileOpts,
+        assumeBidirectional, childrenByParent, stats, librarySources,
     };
     for (let i = realiseStart; i < nodes.length; i++) {
         const node = nodes[i];
@@ -4794,6 +5823,7 @@ export function* growSpheresBatchedGen(config) {
         regionParams = {},
         growthParams = {},
         hazardOpts = null,
+        consumableTileOpts = null,
     } = config;
     if (!regionSize || !regionSize.width || !regionSize.height) {
         throw new Error('growSpheres: regionSize.{width,height} required');
@@ -4826,7 +5856,7 @@ export function* growSpheresBatchedGen(config) {
         throw new Error(`growSpheres: invalid sphere plan — ${planErrors[0]}`);
     }
     for (const [sub, count] of Object.entries(substrateQuotas ?? {})) {
-        if (count <= 0) continue;
+        if (count <= 0 || isLibrarySourceId(sub) || isAtlasSourceId(sub)) continue;
         const adapter = substrateRegistry.get(sub);
         if (!adapter) {
             throw new Error(`growSpheres: substrate '${sub}' is not registered`);
@@ -4838,6 +5868,12 @@ export function* growSpheresBatchedGen(config) {
                 + 'realise requirement-targeted regions');
         }
     }
+    // Pre-built content sources (library packs + atlas pools) — same as
+    // growSpheresGen.
+    const librarySources = {
+        ...resolveSphereLibrarySources(substrateQuotas, config),
+        ...resolveSphereAtlasSources(substrateQuotas, config),
+    };
 
     const opts = {
         maxItemsPerRegion, fillerCount, revisitRatio,
@@ -4894,7 +5930,7 @@ export function* growSpheresBatchedGen(config) {
         yield* realiseSphereBatchGen(grid, nodes, tree, rng, {
             prevCount, placed, startCell, teleporterMinGap, dims,
             total: totalNodes, regionSize, itemLib, obstacleLib, regionParams,
-            hazardOpts, assumeBidirectional, stats,
+            hazardOpts, consumableTileOpts, assumeBidirectional, stats, librarySources,
         });
     }
 
@@ -4968,6 +6004,7 @@ function sphereTreeSetup(config, label) {
         revisitRatio = 0.25,
         substrateQuotas = null,
         startSubstrate = null,
+        atlasAssignments = null,
     } = growthParams;
     if (!spherePlan) {
         throw new Error(`${label}: growthParams.spherePlan required`);
@@ -4978,7 +6015,7 @@ function sphereTreeSetup(config, label) {
     }
     const opts = {
         maxItemsPerRegion, fillerCount, revisitRatio, substrateQuotas, startSubstrate,
-        regionParams,
+        regionParams, atlasAssignments,
     };
     return { plan: spherePlan, opts };
 }
@@ -5124,14 +6161,12 @@ export function buildRulesJson(grid, opts = {}) {
         //     source_counts?: { regions, locations, exits, logic_gates },
         //     stop_reason?: string }
         // region_count and grid_dims are auto-derived from the grid.
-        // See NewDocs/plans/presets-panel-overhaul.md §"Driver
-        // metadata, added in this plan".
         procgenMetadata = null,
         // Embed a procgen-side sphere log at the top level of the
         // output rules.json. The forward simulator (Phase 1.4) walks
         // the freshly-built scaffold and produces JSONL-compatible
         // entries. Default true; callers (tests, debug harnesses) can
-        // disable. See debugging-tools.md Phase 4.
+        // disable.
         embedSphereLog = true,
         // An authoritative sphere log (array of JSONL entries) to embed
         // VERBATIM as `sphere_log` instead of the JS forward simulator's
@@ -5145,15 +6180,13 @@ export function buildRulesJson(grid, opts = {}) {
         // cost) at the top level of the output rules.json. Requires
         // embedSphereLog. The runtime loops module auto-loads this when
         // present. Default false (loop mode is opt-in).
-        // See NewDocs/plans/procedural-generation/
-        // loop-mode-substrate-integration.md (Phase 2).
         enableLoopMode = false,
         // Per-region XP effect mode stamped on every loop_costs region
         // entry: 'cost' (default — XP discounts mana cost), 'speed'
         // (reserved for v2 — XP discounts action time only), 'both'
         // (reserved for v2), or 'none' (XP has no effect on cost).
         // Threaded through to generateLoopCosts when enableLoopMode is
-        // true. See loop-mode-substrate-integration.md (Phase 7).
+        // true.
         regionXpEffect = 'cost',
         // Items granted to the player at game start (from the source
         // rules.json's `starting_items[playerId]`). Filtered to items
@@ -5208,17 +6241,17 @@ export function buildRulesJson(grid, opts = {}) {
     // Synthetic Menu region prefixed in front of compiled regions.
     // Object-literal insertion order is preserved in JSON output, so
     // Menu appears first.
+    // ⛓ makeExit's own null→True_ rewrite IS the `{rule:'True_'}` this used to
+    // spell inline — the third copy of that literal.
     const menuRegion = {
         name: 'Menu',
-        exits: [
-            {
-                name: 'GameStart',
-                connected_region: compiled.start_region_name,
-                access_rule: { rule: 'True_' },
-            },
-        ],
+        exits: [makeExit('GameStart', compiled.start_region_name)],
         locations: [],
     };
+    // ⛓ EDITOR v3 E2a — LEFT: this is a WRITE. `rulesGraph` is a reader with no
+    //   mutating door, by design (its header: "structural and knows no rule
+    //   logic"), and a writer added for one caller would be the second spelling
+    //   of the document shape it exists to make single.
     scaffold.regions[playerId] = { Menu: menuRegion, ...compiled.regions };
     scaffold.items[playerId] = compiled.items;
     scaffold.itempool_counts[playerId] = compiled.itempool_counts;
@@ -5268,14 +6301,18 @@ export function buildRulesJson(grid, opts = {}) {
         for (const region of grid.allRegions()) {
             regionsByName[region.region_id] = region;
         }
+        // ⛓ EDITOR v3 E2a — the SCAFFOLD is a rules.json document by now
+        //   (`scaffold.regions[playerId]` was written above), so its region map
+        //   is read through the ONE reader like any other.
+        const compiledRegions = regionsOf(scaffold, playerId);
         for (const region of grid.allRegions()) {
-            const compiledRegion = scaffold.regions[playerId][region.region_id];
+            const compiledRegion = compiledRegions[region.region_id];
             if (!compiledRegion) continue;
             for (const exit of compiledRegion.exits) {
                 const worldExit = getRegionExits(region)?.get(exit.name);
                 if (!worldExit?.isBackExit) continue;
                 const targetRegion = regionsByName[exit.connected_region];
-                const compiledTarget = scaffold.regions[playerId][exit.connected_region];
+                const compiledTarget = compiledRegions[exit.connected_region];
                 if (!targetRegion || !compiledTarget) continue;
                 const fwdExit = compiledTarget.exits.find(
                     (e) => e.name === worldExit.targetExitId,

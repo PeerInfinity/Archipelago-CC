@@ -1,0 +1,16 @@
+{
+  "name": "spark-off-z15-stall-15",
+  "options": {
+    "modOverrides": {
+      "auto_prestige_stall_resets": 15
+    },
+    "zoneLimit": 15,
+    "maxRuns": 500,
+    "excludeTaskIds": [
+      17,
+      28,
+      88,
+      158
+    ]
+  }
+}

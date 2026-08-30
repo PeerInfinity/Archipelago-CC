@@ -95,8 +95,8 @@ Each click replaces the current queue with a fresh path to the clicked target.
 | **Resume** | Continue from where you paused |
 | **Restart** | Reset the loop (refill mana) and start the queue from the beginning |
 | **Speed slider** | Adjust game speed (0.1x to 100x) |
-| **Instant mode** | Actions complete in one frame (disables speed slider) |
-| **Auto-restart** | Automatically restart the loop when mana runs out |
+| **Instant mode** | Global: timer actions complete in one frame (disables speed slider). Distinct from the per-block **Instant** checkbox described under [Block Modes](#playing-a-substrate-region-block-modes) |
+| **Auto-restart** | Keep the queue running instead of stopping when a loop reset interrupts it. Applies to resets **loops itself causes** — running the pool dry. A reset the underlying game causes (Journey to Ascension, Idle Loops) always continues, because the game has already restarted and stopping would only strand the queue behind it |
 | **Auto-resume** | Automatically resume processing when new actions are added after queue completion |
 | **Auto-remove** | Remove completed location checks and fully-explored explore actions from the queue |
 | **Clear queue** | Remove all queued actions |
@@ -117,6 +117,72 @@ The queue cycles through these states:
 ### Repeat Explore
 
 Explore actions can be set to repeat. When a repeating explore action completes, a new explore action is automatically appended to the queue for the same region. This is useful for grinding XP in a region without manually re-queuing.
+
+## Playing a Substrate Region: Block Modes
+
+Everything above describes a queue of *tracker* actions — moves, explores, location checks — executed by a timer. When a region is backed by a **substrate** (an actual game: a maze, a text adventure, Journey to Ascension, Idle Loops, a runner or bounce level), the queue can hand that region over to you, to a recording, or to the game's own automation.
+
+The unit of that choice is a **block**: one visit to one region, i.e. the run of queued entries between the move that brings you in and the move that takes you out. Visit the same region twice and you get two blocks, each with its own settings. Every block's header carries a row of radios:
+
+| Mode | What happens when the queue reaches the block |
+|------|-----------------------------------------------|
+| **Manual** | The queue **parks** and hands you the controls. You play the region yourself; your actions cost mana as you perform them. Leaving through the exit the queue expected resumes the queue at the next block. |
+| **Record** | Manual, plus the visit is remembered. On a successful exit the block's contents are rewritten to what you actually did, and (by default) the block flips itself to Playback so the next loop replays it. |
+| **Playback** | The saved recording is replayed for you. Depending on the game this is a faithful re-enactment of your inputs, or an instant application of the visit's net result. |
+| **Bot** | The game's own automation plays the block. Available only for regions whose game can drive itself to a queued target. |
+
+**Record is the default**, which gives loop mode its intended rhythm: the first time you reach a region you play it by hand, and every loop after that replays it while you push on to the next one.
+
+### What each mode costs
+
+All four cost the same. A region visit is priced by what happens in it, not by who performed it — playing a block by hand, recording it, replaying the recording, and letting the Bot do it all charge the same mana and earn the same XP. There is no cheaper way to do the same content, and no penalty for automating it.
+
+### Instant
+
+**Instant** is a separate checkbox next to the radios, not a fifth mode. It applies to Playback and Bot blocks: instead of animating, the block resolves in a single frame.
+
+Three things to know:
+
+- **It is per-block.** You choose which visits you watch and which ones just happen.
+- **It is a fast-forward, not a skip.** Instant changes how long you watch a block, not what the block does. The game underneath still runs — in Idle Loops, for instance, Instant runs exactly the same ticks in the same order and simply stops waiting between them, so the result is identical to having sat through it. And it is never the cheap route: a block costs the same mana and earns the same XP whether you watch it or not (see [What each mode costs](#what-each-mode-costs)).
+- **It is offered wherever it can mechanically exist** — the idle games included. On **Playback** you get the box in the maze, the text adventure, Journey to Ascension and Idle Loops. On **Bot** you get it wherever the automation itself honours it, which today means Journey to Ascension and Idle Loops. Where the box is missing it is missing for a reason you would agree with: the runner and bounce levels leave it out because their playback is *already* instantaneous — there would be nothing to switch off — and a game with no fast-forward to offer gets no box rather than a dead one.
+
+Idle games get the box too, and that is a deliberate choice rather than an oversight. Waiting really is part of how an idle game plays — the pacing is a cost you are meant to feel, which is why paced play stays the default and why **Record** starts every new block. But that argument is about the region you are *currently* playing. Once a region is solved and you are only re-walking it on the way to the frontier, the waiting has stopped being a decision and become a toll. Instant is how you stop paying it — one block at a time, on your own judgement.
+
+### The normal way to play
+
+The pattern the mode system is built around:
+
+> **Every region Instant except the frontier — and live play at the frontier.**
+
+Regions you have already solved are set to Playback + Instant, so a loop spends almost no real time replaying them. The one region you are actually working on stays Manual or Record, and that is where you spend the loop. As the frontier advances, yesterday's frontier becomes another instant replay.
+
+That is also why loops are expected to be *short* in wall-clock time and *long* in queue: the queue grows with everything you have solved, but only the tail of it is played at human speed.
+
+### Recordings
+
+Recordings persist. They are stored per world, per region, and per *arrival* — which exit you came in through — so a region you enter two different ways keeps a separate recording for each.
+
+- Re-recording a block **replaces** that block's recording rather than piling up duplicates.
+- Recordings **survive deleting the block**. Rebuild a matching visit later and its recording comes back automatically.
+- A per-block indicator (`● recorded` / `○ not recorded`) says whether one exists, and the **Playback** radio stays disabled until the block has something to play — so the mode you can pick is always a mode that will work.
+
+### Why the game sometimes ignores your clicks
+
+While loop mode is on, playing a substrate is only allowed **when the queue is parked on that region and is in Manual, Record, or a Bot block that fell back to live play**. Click into a game at any other time — the queue not started, paused, finished, empty, or parked somewhere else — and the action is refused with a `loops:clickIgnored` notice rather than silently taken.
+
+This is deliberate. Loop mode's whole economy rests on every action being charged and, where relevant, captured; an action performed outside a parked block would be free, unrecorded, and out of order. The rule of thumb: **if you want to play, make the queue park you there.**
+
+What is never blocked: the queue's own execution, the teleport that follows a loop reset, and the tracker's planning clicks (which author the queue rather than play the game).
+
+### Loop games inside loop mode
+
+Some substrates — Journey to Ascension and Idle Loops today — are *already* loop games: their own economy resets you to the start when a resource runs out. For those, a native reset **is** a loop-mode reset, and the two are wired together rather than kept apart. Consequences worth expecting:
+
+- Loop mode **cannot be turned off** while such a world is loaded. It is not an optional layer there; it is the game's own structure.
+- A recording, or a Bot walk, **routinely spans several loops**. One pool of mana is often not enough for one region visit, so the reset teleports you back and the queue re-drives from the start and returns. That is the intended behaviour, not a failure.
+
+For the full mechanics, see the developer page [Loop Recording and Block Modes](../developer/procgen/loop-recording.md).
 
 ## Cost Data System
 
@@ -387,7 +453,11 @@ The test suite (`frontend/modules/tests/testCases/loopsPanelTests.js`) covers:
 
 ## Current Status
 
-The core systems are implemented and working: mana, XP, action queues, loop reset, cost calculations, cost generation, and the Loop Stats panel with cost predictions.
+The core systems are implemented and working: mana, XP, action queues, loop reset, cost calculations, cost generation, the Loop Stats panel with cost predictions, and the per-block mode system described above (Manual / Record / Playback / Bot, the Instant toggle, persistent recordings and the strict action gate) — built in the M1–M6 arc (2026-07-21/24) and extended by the omsi arcs D1/D2 (2026-07-25) and the Instant-policy pass (2026-07-25/26).
+
+**Settled (2026-07-25/26):** **Instant** is a normal player-facing control, offered in every game where it can mechanically exist — idle games included. It is not a testing-only capability and not a per-game privilege. The earlier worry, that fast-forwarding an idle game removes a cost the game is built around, turned out to be an argument about the *frontier* rather than about the feature: it is why paced play stays the default and why Record starts every block, not a reason to withhold the checkbox from regions you have already solved. Idle Loops was the last gap and closed on 2026-07-25 (arcs D1/D2 plus the Instant-policy pass), on Playback and on Bot.
+
+The availability described under [Instant](#instant) is therefore the settled shape, not a snapshot. What can still move is the set of games that *can* offer it — a substrate gains the box by implementing a fast-forward, not by being granted permission.
 
 ### Planned Features
 

@@ -687,9 +687,9 @@ def call_generate(yaml_path, fuzz_args, output_path, generation_seed=None):
             "csv_output": False,
             "log_time": False,
             "spoiler_only": False,
-            "fractional_spheres": getattr(args, 'fractional_spheres', False),
-            "original_seeded": getattr(args, 'original_seeded', False),
-            "ut_version": getattr(args, 'ut_version', None),
+            "fractional_spheres": getattr(fuzz_args, 'fractional_spheres', False),
+            "original_seeded": getattr(fuzz_args, 'original_seeded', False),
+            "ut_version": getattr(fuzz_args, 'ut_version', None),
         }
     )
     for hook in MP_HOOKS:

@@ -223,6 +223,11 @@
             },
             {
               "type": "component",
+              "componentType": "regionMarkingTool",
+              "title": "Region Marking Tool"
+            },
+            {
+              "type": "component",
               "componentType": "apworldEditorPanel",
               "title": "APWorld Editor"
             },
@@ -233,8 +238,15 @@
             },
             {
               "type": "component",
-              "componentType": "textAdventureSubstratePanel",
-              "title": "Text Adventure"
+              "componentType": "procgenLabPanel",
+              "componentState": { "substrate": "maze" },
+              "title": "Procgen Lab \u2014 maze"
+            },
+            {
+              "type": "component",
+              "componentType": "procgenLabPanel",
+              "componentState": { "substrate": "seedling" },
+              "title": "Procgen Lab \u2014 Seedling"
             },
             {
               "type": "component",
@@ -248,6 +260,11 @@
             },
             {
               "type": "component",
+              "componentType": "omsiSubstrateWrapperPanel",
+              "title": "Idle Loops"
+            },
+            {
+              "type": "component",
               "componentType": "flashSubstratePanel",
               "title": "Flash"
             },
@@ -255,6 +272,11 @@
               "type": "component",
               "componentType": "bounceDemoPanel",
               "title": "Bounce Demo"
+            },
+            {
+              "type": "component",
+              "componentType": "runnerDemoPanel",
+              "title": "Runner Demo"
             },
             {
               "type": "component",
@@ -632,7 +654,7 @@
           "content": [
             {
               "type": "component",
-              "componentType": "textAdventureSubstratePanel",
+              "componentType": "textAdventureSubstrateWrapperPanel",
               "title": "Text Adventure"
             },
             {

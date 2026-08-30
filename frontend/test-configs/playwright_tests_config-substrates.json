@@ -1,54 +1,351 @@
 {
-  "autoStartTestsOnLoad": true,
-  "hideDisabledTests": true,
-  "randomizeOrder": false,
-  "defaultEnabledState": false,
-  "_comment": "Substrate in-app tests (text-adventure wrapper + flash). Runs under the full module config (modules.json) so the substrate runtimes register — unlike test-regression, which uses modules-nograph.json and therefore cannot load them. New substrate tests must be added here (they register enabled:false so they don't leak into other modes).",
-  "tests": [
-    {
-      "id": "tasw-location-check-direct-dispatch",
-      "enabled": true,
-      "category": "textAdventureSubstrateWrapper"
-    },
-    {
-      "id": "tasw-location-check-iframe-dispatch",
-      "enabled": true,
-      "category": "textAdventureSubstrateWrapper"
-    },
-    {
-      "id": "tasw-location-check-real-click",
-      "enabled": true,
-      "category": "textAdventureSubstrateWrapper"
-    },
-    {
-      "id": "tasw-location-check-fresh-procgen",
-      "enabled": true,
-      "category": "textAdventureSubstrateWrapper"
-    },
-    {
-      "id": "tasw-location-check-loop-mode-passthrough",
-      "enabled": true,
-      "category": "textAdventureSubstrateWrapper"
-    },
-    {
-      "id": "swf-location-check-direct-dispatch",
-      "enabled": true,
-      "category": "flashSubstrate"
-    },
-    {
-      "id": "swf-location-check-placeholder-click",
-      "enabled": true,
-      "category": "flashSubstrate"
-    },
-    {
-      "id": "flash-second-entry-shared-panel",
-      "enabled": true,
-      "category": "flashSubstrate"
-    },
-    {
-      "id": "flash-capability-gating",
-      "enabled": true,
-      "category": "flashSubstrate"
-    }
-  ]
+    "autoStartTestsOnLoad": true,
+    "hideDisabledTests": true,
+    "randomizeOrder": false,
+    "defaultEnabledState": false,
+    "_comment": "Substrate in-app tests (text-adventure wrapper + flash + runner + jta + omsi + maze consumable tiles). Runs under the full module config (modules.json) so the substrate runtimes register — unlike test-regression, which uses modules-nograph.json and therefore cannot load them. New substrate tests must be added here (they register enabled:false so they don't leak into other modes).",
+    "tests": [
+        {
+            "id": "tasw-location-check-direct-dispatch",
+            "enabled": true,
+            "category": "textAdventureSubstrateWrapper"
+        },
+        {
+            "id": "tasw-location-check-iframe-dispatch",
+            "enabled": true,
+            "category": "textAdventureSubstrateWrapper"
+        },
+        {
+            "id": "tasw-location-check-real-click",
+            "enabled": true,
+            "category": "textAdventureSubstrateWrapper"
+        },
+        {
+            "id": "tasw-location-check-fresh-procgen",
+            "enabled": true,
+            "category": "textAdventureSubstrateWrapper"
+        },
+        {
+            "id": "tasw-location-check-loop-mode-passthrough",
+            "enabled": true,
+            "category": "textAdventureSubstrateWrapper"
+        },
+        {
+            "id": "tasw-playback-no-double-append",
+            "enabled": true,
+            "category": "TA block modes"
+        },
+        {
+            "id": "tasw-playback-instant",
+            "enabled": true,
+            "category": "TA block modes"
+        },
+        {
+            "id": "tasw-record-coarse-autoswitch",
+            "enabled": true,
+            "category": "TA block modes"
+        },
+        {
+            "id": "tasw-queue-integrity-parked",
+            "enabled": true,
+            "_comment": "Former KNOWN-RED stray-append diagnostic — green since the M3b coarse-capture refactor retired loop-mode end-appends (CC/docs/plans/loops-coarse-capture-plan.md).",
+            "category": "TA block modes"
+        },
+        {
+            "id": "swf-location-check-direct-dispatch",
+            "enabled": true,
+            "category": "flashSubstrate"
+        },
+        {
+            "id": "swf-location-check-placeholder-click",
+            "enabled": true,
+            "category": "flashSubstrate"
+        },
+        {
+            "id": "flash-second-entry-shared-panel",
+            "enabled": true,
+            "category": "flashSubstrate"
+        },
+        {
+            "id": "flash-capability-gating",
+            "enabled": true,
+            "category": "flashSubstrate"
+        },
+        {
+            "id": "runner-location-check-real-physics",
+            "enabled": true,
+            "category": "runnerDemo"
+        },
+        {
+            "id": "runner-preset-sidecar-configured",
+            "enabled": true,
+            "category": "runnerDemo"
+        },
+        {
+            "id": "runner-summary-record-playback",
+            "enabled": true,
+            "category": "Runner block modes"
+        },
+        {
+            "id": "runner-bot-block-summary-economy",
+            "enabled": true,
+            "category": "Runner block modes",
+            "_comment": "M6 slice 5c: the summary Bot economy leg. Replaces the deleted scripts/procgen/verify-bounce-loop-mode.mjs (whose premise — auto walkTo with no mode system — is obsolete, and which rotted red for months because nothing gate-ran it). A Bot block hands the queued regionMove to the walkTo solver; the auto-runner plays the flat level on real physics and the pool falls by the per-second TIME drain, not per-action defaults."
+        },
+        {
+            "id": "jta-out-of-mana-loop-reset",
+            "enabled": true,
+            "category": "JtA substrate"
+        },
+        {
+            "id": "jta-game-reset-triggers-loop-reset",
+            "enabled": true,
+            "category": "JtA substrate"
+        },
+        {
+            "id": "jta-latched-run-end-not-masked-by-pin",
+            "enabled": true,
+            "_comment": "The deterministic leg for the reset-authority fix (2026-07-24): the energy pin DECLINES while the fork is latched, and the bridge reports the run end so the host — the sole reset authority — fires the loop reset. Builds the divergence directly (latched at 0 with mana still in the pool, so no drain can ever arrive) and folds setEnergy mutations rather than polling, because the reset erases the state within a beat. Its companion oracle is the bridge's 'breaking a latched energy reset' warning: with this fix that circuit breaker must never fire across a run batch.",
+            "category": "JtA substrate"
+        },
+        {
+            "id": "jta-pause-resume-on-region-switch",
+            "enabled": true,
+            "category": "JtA substrate"
+        },
+        {
+            "id": "jta-energy-mirrors-pool-both-ways",
+            "enabled": true,
+            "category": "JtA substrate"
+        },
+        {
+            "id": "jta-bot-walkto-exit",
+            "enabled": true,
+            "_comment": "M6: restructured onto the Bot radio and re-enabled. It no longer calls walkTo directly with a hand-rolled reset-retry loop — it parks a BOT block and lets the real queue machinery drive, so the gate exemption, the multi-reset walk, and the fine-substrate economy are under test rather than emulated. The former leg 2 (synthetic exit-task id stability) is now jta-synthetic-exit-task-id-stability.",
+            "category": "JtA substrate"
+        },
+        {
+            "id": "jta-synthetic-exit-task-id-stability",
+            "enabled": true,
+            "category": "JtA substrate",
+            "_comment": "RE-ENABLED 2026-07-25 (post-D2 cleanup). Its old KNOWN-RED note carried a diagnosis that was WRONG — kept here refuted rather than deleted. That note blamed loadRegion for calling _applyCatchUpResets() BEFORE reading `const completed = _completedThisLoop.has(regionId)`. The ordering is CORRECT: a loop reset genuinely un-plays the zone (doAnyReset rebuilds it) and loadZone({completed:true}) marks every task reps=max_reps FOR FREE, so honoring a pre-reset completion would grant back a zone the reset just took away. The prescribed reorder was also inert — the gameState:loopReset subscriber bumps _hostResetCount and CLEARS _completedThisLoop in the same handler, so a pending catch-up delta always arrives with an already-cleared set (bridge.js now carries a warn-level tripwire in case a refactor ever splits those two). The real defect was this test's own prep: it only pumped ticks, and managed zone play has NO automation unless something arms it (_armWalkAutomation, on a walk), so the zone never completed and the first assertion could never pass. The prep now plays zone 0 with explicit performTask calls, Travel LAST (the fork disables Travel while a Mandatory task is unfinished, and this zone's single exit is item-gated on a perk one of its own tasks awards). A final leg pins the reset semantics the old flake misread. Full ruling: docs/json/developer/procgen/jta.md."
+        },
+        {
+            "id": "jta-starting-energy-bonus-raises-pool",
+            "enabled": true,
+            "category": "JtA substrate",
+            "_comment": "RE-ENABLED in M6 slice 5 after an empirical check: this test contains NO walkTo at all. It enters the region with the synthetic-move-exempt moveToRegion helper and then makes pure settings/pool assertions, so the M3b strict gate was never in its way. Its old deferral note (\"drives zone 0 via PlaybackController.walkTo\") described a different test — it was swept into M4's bulk deferral of the four jta walkTo tests. Verified green at HEAD before any M6 slice-5 change touched it."
+        },
+        {
+            "id": "jta-location-check-and-perk-grant",
+            "enabled": true,
+            "category": "JtA substrate"
+        },
+        {
+            "id": "jta-balance-solve-at-rules-load",
+            "enabled": true,
+            "category": "JtA substrate"
+        },
+        {
+            "id": "jta-randomized-balanced-progression",
+            "enabled": false,
+            "category": "JtA substrate",
+            "_comment": "Randomized+balanced 4-zone progression. MECHANISM (as-written): drives cross-region zone progression with a direct unparked PlaybackController.walkTo (walkOneZone). Since M4 opted jta into the M3b strict action gate, the bridge's fromLoop-less walkTo departure is gate-blocked with no parked block, so the test is NOT runnable on demand in its current form. REVIVAL PATH: restructure each zone leg onto a Bot block (the M6 wake fix, slice 5d, removed the blocker that made this impossible — a fork-propagated reset teleport no longer hard-pauses a bot park; it releases and re-drives). WHY NOT IN-SUITE YET: the normal-ticking runtime wall. These are balance/dataset VALIDATION tests that must run at normal ticking — Instant is affordability-blind (completeTaskInstantly finishes tasks whatever the solved cost, so the test would pass on a wedged world; see jtaBalanceTests.js:173), so a full multi-zone playthrough compounding skills across resets exceeds a practical gate-run budget (240s/zone x multiple legs did not converge in-suite). STATUS: DEFERRED, tracked in the fable->opus handoff queue doc. jta-bot-walkto-exit is the real Bot in-app leg; this test's UNIQUE strata (shuffle non-vacuity, cold balance solve at rules load, AP-authoritative perk accounting) are what it exists for."
+        },
+        {
+            "id": "jta-prestige-perk-regrant",
+            "enabled": true,
+            "category": "JtA substrate"
+        },
+        {
+            "id": "jta-dataset-world-progression",
+            "enabled": false,
+            "category": "JtA substrate",
+            "_comment": "Synthetic-dataset single-leg progression (dataset detection + (seed,dataset_id) cache + loadGameData). MECHANISM (as-written): drives cross-region zone progression with a direct unparked PlaybackController.walkTo (walkOneZone). Since M4 opted jta into the M3b strict action gate, the bridge's fromLoop-less walkTo departure is gate-blocked with no parked block, so the test is NOT runnable on demand in its current form. REVIVAL PATH: restructure each zone leg onto a Bot block (the M6 wake fix, slice 5d, removed the blocker that made this impossible — a fork-propagated reset teleport no longer hard-pauses a bot park; it releases and re-drives). WHY NOT IN-SUITE YET: the normal-ticking runtime wall. These are balance/dataset VALIDATION tests that must run at normal ticking — Instant is affordability-blind (completeTaskInstantly finishes tasks whatever the solved cost, so the test would pass on a wedged world; see jtaBalanceTests.js:173), so a full multi-zone playthrough compounding skills across resets exceeds a practical gate-run budget (240s/zone x multiple legs did not converge in-suite). STATUS: DEFERRED, tracked in the fable->opus handoff queue doc. jta-bot-walkto-exit is the real Bot in-app leg; this test's UNIQUE strata (shuffle non-vacuity, cold balance solve at rules load, AP-authoritative perk accounting) are what it exists for."
+        },
+        {
+            "id": "jta-record-playback-crosses-zone-boundary",
+            "enabled": true,
+            "category": "JtA substrate",
+            "_comment": "M4 fine-grained record→playback round trip across a zone boundary — jta's in-app progression stratum while the four walkTo progression tests stay KNOWN-DEFERRED to M6. Also carries the folded-in energyBonusSync assertion from jta-starting-energy-bonus-raises-pool."
+        },
+        {
+            "id": "jta-cross-substrate-item-grant",
+            "enabled": true,
+            "category": "JtA substrate"
+        },
+        {
+            "id": "jta-cross-substrate-foreign-award",
+            "enabled": true,
+            "category": "JtA substrate"
+        },
+        {
+            "id": "omsi-out-of-mana-loop-reset",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-loop-exhaustion-single-reset",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-clock-runs-only-in-region",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-step-gate-parks-the-clock",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-budget-mirrors-pool-both-ways",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-native-budget-raises-pool",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-victory-start-journey",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-cross-substrate-item-grant",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-award-schedule",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-unlock-overlay-boot",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-unlock-seed-before-fanout",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-unlock-grant-raises-capacity",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-unlock-check-fires-once",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-unlock-survives-prestige",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-unlock-victory-town",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-unlock-scaled-world",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-region-split-round-trip",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-region-split-per-region-queues",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-record-playback-crosses-region",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-multi-run-replay-retry",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-bot-crosses-region",
+            "enabled": true,
+            "category": "Omsi bot walks"
+        },
+        {
+            "id": "omsi-bot-multi-reset-walk",
+            "enabled": true,
+            "category": "Omsi bot walks"
+        },
+        {
+            "id": "omsi-playback-instant",
+            "enabled": true,
+            "category": "Omsi substrate"
+        },
+        {
+            "id": "omsi-bot-instant-multi-reset-walk",
+            "enabled": true,
+            "category": "Omsi bot walks"
+        },
+        {
+            "id": "maze-consumable-tile-grants-foreign-item",
+            "enabled": true,
+            "category": "Maze consumable tiles"
+        },
+        {
+            "id": "maze-consumable-tile-one-shot-then-respawns",
+            "enabled": true,
+            "category": "Maze consumable tiles"
+        },
+        {
+            "id": "maze-mana-tile-refills-pool",
+            "enabled": true,
+            "category": "Maze consumable tiles"
+        },
+        {
+            "id": "maze-record-playback-crosses-exit",
+            "enabled": true,
+            "category": "Maze block modes"
+        },
+        {
+            "id": "maze-parked-live-drain",
+            "enabled": true,
+            "category": "Maze block modes"
+        },
+        {
+            "id": "seedling-atlas-maze-boundary-crossing",
+            "enabled": true,
+            "category": "Seedling atlas maze",
+            "_comment": "Region-atlas Phase 5b. The Phase-4 flash flavour of the same atlas can only be a SKIP-able standalone verifier (it needs a gitignored 31 MB wasm artifact); the maze projection of the same geometry runs from the committed repo, which is why these two legs can be enumerated here at all. No batch claims this category, so it rides the default `fast` batch."
+        },
+        {
+            "id": "seedling-atlas-maze-gated-crossing",
+            "enabled": true,
+            "category": "Seedling atlas maze"
+        },
+        {
+            "id": "seedling-atlas-sphere-placed-region",
+            "enabled": true,
+            "category": "Seedling atlas maze",
+            "_comment": "Region-atlas Phase 6. Same map, but walked in a world sphere growth GREW: the leg that catches an arrival landing inside a wall, which no compile or sphere oracle can."
+        },
+        {
+            "id": "seedling-atlas-sphere-bot-completion",
+            "enabled": true,
+            "category": "Seedling atlas maze",
+            "_comment": "Region-atlas Phase 8 slice B. The SHIPPED playback bot beats the grown world end to end; the headless witness (atlasMazeBot.slow.test.js) proves the same world beatable by walking tiles directly, so the two strata are independent."
+        }
+    ]
 }

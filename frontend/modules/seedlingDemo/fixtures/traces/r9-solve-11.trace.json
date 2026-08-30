@@ -1,0 +1,207 @@
+{
+    "trace_version": 1,
+    "tape": "r9-solve-11",
+    "tick_count": 97,
+    "boot": {
+        "level": 11,
+        "x": 32,
+        "y": 64
+    },
+    "rows": [
+        {
+            "tick": 0,
+            "saw": {
+                "level": 11,
+                "x": 40,
+                "y": 72,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "collect-placement",
+                "aim": {
+                    "x": 40,
+                    "y": 66
+                }
+            },
+            "strategy": {
+                "verb": "walk",
+                "waypoints": 1,
+                "swordDash": {
+                    "planned": false,
+                    "ticks": null,
+                    "baseline": 11,
+                    "saved": null,
+                    "windows": null,
+                    "legs": null,
+                    "scanned": 44,
+                    "why": "no dash window certified faster than the undashed 11 tick(s) — 11 start tick(s) x 4 preview(s) = 44 scanned, each with its own reason"
+                }
+            },
+            "path": [
+                {
+                    "x": 40,
+                    "y": 66
+                }
+            ],
+            "rejected": [
+                {
+                    "option": "sword-dash window: not-faster",
+                    "why": "44 of 44 scanned preview(s) — first at walk-offset 0: 11 tick(s) against 11 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
+                },
+                {
+                    "option": "sword-dash",
+                    "why": "no dash window certified faster than the undashed 11 tick(s) — 11 start tick(s) x 4 preview(s) = 44 scanned, each with its own reason"
+                }
+            ],
+            "keys": [
+                "up"
+            ]
+        },
+        {
+            "tick": 4,
+            "saw": {
+                "level": 11,
+                "x": 40,
+                "y": 67.90000000000002,
+                "vx": 0,
+                "vy": -0.8500000000000001,
+                "danger": []
+            },
+            "goal": {
+                "kind": "collect-placement",
+                "aim": {
+                    "x": 40,
+                    "y": 66
+                }
+            },
+            "strategy": {
+                "verb": "walk",
+                "waypoints": 1,
+                "swordDash": {
+                    "planned": false,
+                    "ticks": null,
+                    "baseline": 7,
+                    "saved": null,
+                    "windows": null,
+                    "legs": null,
+                    "scanned": 28,
+                    "why": "no dash window certified faster than the undashed 7 tick(s) — 7 start tick(s) x 4 preview(s) = 28 scanned, each with its own reason"
+                }
+            },
+            "path": [
+                {
+                    "x": 40,
+                    "y": 66
+                }
+            ],
+            "rejected": [
+                {
+                    "option": "keep-plan",
+                    "why": "the previous corridor was refuted by the world (a blocked sweep or a stall); re-planned from the live position"
+                },
+                {
+                    "option": "sword-dash window: not-faster",
+                    "why": "28 of 28 scanned preview(s) — first at walk-offset 0: 7 tick(s) against 7 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
+                },
+                {
+                    "option": "sword-dash",
+                    "why": "no dash window certified faster than the undashed 7 tick(s) — 7 start tick(s) x 4 preview(s) = 28 scanned, each with its own reason"
+                }
+            ],
+            "keys": [
+                "up"
+            ]
+        },
+        {
+            "tick": 13,
+            "saw": {
+                "level": 11,
+                "x": 40,
+                "y": 66.3,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "collect-placement",
+                "placement": {
+                    "x": 32,
+                    "y": 48
+                }
+            },
+            "strategy": {
+                "verb": "chest"
+            },
+            "obstacle": null,
+            "rejected": [
+                {
+                    "option": "collect",
+                    "why": "placement (32,48) resolves to chest@32,48 in `world.chests` — a chest is a Solid with a probe line, not a pickup volume, and `Chest.open()` is what spawns the thing to collect"
+                }
+            ],
+            "keys": []
+        },
+        {
+            "tick": 76,
+            "saw": {
+                "level": 11,
+                "x": 40,
+                "y": 66.3,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "reach-exit",
+                "aim": {
+                    "x": 40,
+                    "y": 8
+                }
+            },
+            "strategy": {
+                "verb": "walk",
+                "waypoints": 1,
+                "swordDash": {
+                    "planned": true,
+                    "ticks": 21,
+                    "baseline": 43,
+                    "saved": 22,
+                    "windows": [
+                        {
+                            "at": 0,
+                            "prefix": [
+                                0,
+                                2,
+                                8,
+                                14
+                            ]
+                        }
+                    ],
+                    "legs": [
+                        21
+                    ],
+                    "scanned": 8,
+                    "why": null
+                }
+            },
+            "path": [
+                {
+                    "x": 40,
+                    "y": 8
+                }
+            ],
+            "rejected": [
+                {
+                    "option": "sword-dash window: not-faster",
+                    "why": "5 of 8 scanned preview(s) — first at walk-offset 0: 43 tick(s) against 43 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
+                }
+            ],
+            "keys": [
+                "primary",
+                "up"
+            ]
+        }
+    ]
+}

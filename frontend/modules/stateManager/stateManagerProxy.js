@@ -49,6 +49,22 @@ function log(level, message, ...data) {
   }
 }
 
+/**
+ * ⛓ ONE LINE THAT SAYS WHAT BROKE AND WHERE — `message @ filename:lineno`.
+ *
+ * ⛔ EXPORTED AND PURE so it has a unit row. The site it is used at is a
+ * `Worker.onerror` handler inside a class constructor, which no test can reach
+ * without a real Worker — and the thing worth gating is the FORMAT, not the
+ * event plumbing. ⚠ `ErrorEvent` fields are all optional in practice (a
+ * cross-origin worker error arrives with an empty `message` and a `filename` of
+ * `""`), so every one of them has a stated fallback rather than printing
+ * `undefined:0`.
+ */
+export function describeWorkerError({ message, filename, lineno } = {}) {
+  const where = filename ? `${filename}:${lineno ?? 0}` : 'an unknown file';
+  return `${message || 'no message (a cross-origin worker error carries none)'} @ ${where}`;
+}
+
 export class StateManagerProxy {
   static COMMANDS = STATE_MANAGER_COMMANDS;
 
@@ -168,7 +184,21 @@ export class StateManagerProxy {
   }
 
   getGameName() {
-    // Primary source: game_name from static data
+    // Primary source: the loaded player's own entry in `world`. A combined
+    // multiworld rules.json carries the placeholder `game_name: "Multiworld"`
+    // at the top level while the real per-slot game lives in
+    // world[playerId].game — and callers (the AP Connect packet, data-package
+    // lookups) need the game the SERVER knows this slot by. For a
+    // single-player file the two agree, so this is a no-op there.
+    const playerId = this.staticDataCache?.playerId;
+    const playerGame =
+      playerId !== undefined && playerId !== null
+        ? this.staticDataCache?.world?.[String(playerId)]?.game
+        : null;
+    if (playerGame) {
+      return playerGame;
+    }
+    // Fallback: game_name from static data
     if (this.staticDataCache && this.staticDataCache.game_name) {
       return this.staticDataCache.game_name;
     }
@@ -226,7 +256,16 @@ export class StateManagerProxy {
           lineno: error.lineno || 0,
           colno: error.colno || 0,
         };
-        log('error', '[stateManagerProxy] Worker global error:', errorDetails);
+        // ⛓ THE MESSAGE AND ITS SITE GO IN THE LINE ITSELF, not only in the
+        // object beside it. A console that collapses objects — every console,
+        // by default — showed `[stateManagerProxy] Worker global error:` and a
+        // grey triangle: the one line a reader sees named neither what went
+        // wrong nor where, so a worker that failed to import a module and one
+        // that threw at runtime read identically until somebody expanded it.
+        // ⚠ The object STAYS as the second argument: `colno`, and the raw
+        // fields, are still there for anyone who does expand it.
+        log('error', `[stateManagerProxy] Worker global error: ${describeWorkerError(errorDetails)}`,
+          errorDetails);
         const errorMessage = `Worker error: ${errorDetails.message} at ${errorDetails.filename}:${errorDetails.lineno}:${errorDetails.colno}`;
 
         // Reject all pending queries with tracking

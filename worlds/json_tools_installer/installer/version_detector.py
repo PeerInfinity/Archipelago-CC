@@ -38,6 +38,7 @@ class VersionInfo:
 # Known version support levels
 # Key is version string, value is (support_level, notes)
 KNOWN_VERSIONS: Dict[str, Tuple[SupportLevel, str]] = {
+    "0.6.8": (SupportLevel.FULL, "Fully supported with pre-made patches"),
     "0.6.7": (SupportLevel.FULL, "Fully supported with pre-made patches"),
     "0.6.6": (SupportLevel.MONKEY, "Supported via monkey patching"),
     "0.6.5": (SupportLevel.MONKEY, "Supported via monkey patching"),

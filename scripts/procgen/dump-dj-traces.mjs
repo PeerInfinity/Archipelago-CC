@@ -19,6 +19,10 @@ import {
     spawnState, step, platformXAt, resolvePhysicsStamp,
 } from '../../frontend/modules/bounceDemo/physics.js';
 
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 const args = process.argv.slice(2);
 if (args.length < 2) {
     console.error('usage: dump-dj-traces.mjs <rules.json> <region_id> '

@@ -2,3 +2,29 @@ worlds/blasphemous/region_data.py linguist-generated=true
 worlds/yachtdice/YachtWeights.py linguist-generated=true
 .gitignore merge=ours
 README.md merge=ours
+
+# Packed-apworld sources: force LF in every working tree.
+#
+# scripts/build/pack_apworld.py (and pack_json_tools_installer.py) zip these
+# files with `zf.write(path, ...)` — raw bytes straight off the working tree.
+# The tracked apworlds/*.apworld artifacts were packed on Linux and are pure
+# LF, so on a CRLF checkout (Windows, core.autocrlf=true) a fresh pack differs
+# from the tracked artifact in EVERY text entry. That broke
+# worlds/json_tools_installer/test/test_packed_apworld_freshness.py on both
+# Windows CI jobs, and — worse — meant a Windows contributor running the pack
+# script would commit a CRLF artifact that then failed the same test for
+# everyone else.
+#
+# `text=auto` keeps git's binary autodetection (these dirs are all text today:
+# json/md/py/txt/csv/dot/yaml); `eol=lf` pins the checkout. The index is
+# already LF throughout, so this changes no content — only how CRLF platforms
+# materialize it.
+worlds/metamath/** text=auto eol=lf
+worlds/depgraph/** text=auto eol=lf
+worlds/jta/** text=auto eol=lf
+worlds/bakingadventure/** text=auto eol=lf
+worlds/codingadventure/** text=auto eol=lf
+worlds/json_tools_installer/** text=auto eol=lf
+
+# The packed artifacts themselves are zips — never touch them.
+apworlds/*.apworld binary

@@ -1,0 +1,68 @@
+{
+  "artifact_version": 1,
+  "generatedBy": "node scripts/procgen/census-seedling-campaign.mjs --write-frontier",
+  "chain": "r9-campaign",
+  "segments": [
+    "r8-solve-1",
+    "r8-solve-2",
+    "r8-solve-3",
+    "r8-solve-4",
+    "r8-solve-5",
+    "r8-solve-6",
+    "r8-solve-7",
+    "r8-solve-8",
+    "r8-solve-9",
+    "r8-solve-10",
+    "r9-solve-11",
+    "r9-solve-3",
+    "r9-solve-2",
+    "r9-solve-0",
+    "r9-solve-13",
+    "r9-solve-14",
+    "r9-solve-15"
+  ],
+  "arrivals": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    3,
+    2,
+    0,
+    13,
+    14,
+    15,
+    16
+  ],
+  "sources": {
+    "frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json": "257488099d6c19951bf277a23c47e833",
+    "frontend/modules/flashPanel/atlases/seedling-map.json": "647bd46a7ff6f1eacb0d956b81344a44",
+    "frontend/modules/flashPanel/atlases/seedling-sphere-order.json": "03f215201a5a64c472fa5cc51c51ee98"
+  },
+  "covered": 17,
+  "lastArrival": {
+    "step": 17,
+    "level": 16,
+    "segment": "r9-solve-15"
+  },
+  "nextStep": {
+    "step": 18,
+    "level": 16,
+    "visit": 1,
+    "crossesTo": 18,
+    "goals": [
+      "stairsup@352,80 → L18"
+    ]
+  },
+  "refusal": {
+    "family": "BRIDGE+KILL_ARM — the room's CHASER ROSTER is refused, so the body has no live position: `bait` has no line to move it along and `kill` has no removal to watch. `KILL_ARM_POLICY.Bob` is `modelled` (R9 slice 12), so the press arm is NOT what is missing here — the ROSTER refusal is",
+    "text": "solverBot(survey-step-18) reach-exit (352,80)->L18 -> weigh stance (lock@320,112): the combat ladder is EXHAUSTED. The corridor passes through danger at (54.3,97.9) — enemy:bob@48,96 (a static \"Enemy\" body at its PLACEMENT — this room's chaser roster is REFUSED, so the model has no live position for it, priced \"stepped\" by `contactPricing`) — and every rung of ⚖ §11.8a's order refused:\n  avoid: no admissible corridor with the danger map's 12 volume(s) forbidden — no walkable tile path in level 16 from tile (2,4) to (15,5). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by water,\n  time: the aim is 209 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff §3.1); it is not a room-crossing one, and the bound is named rather than widened.\n  bait: NO LIVE BODY's removal admits a corridor — the danger on this corridor is [enemy:bob@48,96] and this room's live roster is [empty]. A bait moves a body along its own straight line; a static census body, a hazard volume and an arrow lane do not have one, and a body whose removal changes no corridor is not what is in the way.\n  kill: the danger on this corridor is not a body this run can watch die — a kill needs a target whose removal the model OBSERVES, and ⛔ a static \"Enemy\" body's own arrow death is REFUSED by name (§11.4): its clear is the tape's DECLARED v9 `at` row, and a second writer of one persistence slot is two cost models."
+  },
+  "why": null
+}

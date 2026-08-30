@@ -2,6 +2,10 @@
 
 The Archipelago JSON Export Tools project provides an advanced tracker for [Archipelago](https://archipelago.gg/) multiworld randomizer games. Archipelago is an open-source framework that connects multiple single-player games into one cooperative multiplayer experience, where items from one game can be found in another player's game.
 
+**New to Archipelago itself?** Start with the **[Introduction to Archipelago](./introduction-to-archipelago.md)**.
+
+**Want to see the highlights first?** Take the **[Guided Tour](./guided-tour.md)** — ten minutes in the live demo, nothing to install.
+
 **Ready to get started?** See the **[Quick Start Guide](./quick-start.md)** for step-by-step instructions.
 
 **Try the Live Demo:** Either the **[Latest Stable Version](https://peerinfinity.github.io/Archipelago/)** or the **[Latest Development Version](https://peerinfinity.github.io/Archipelago-CC/)**
@@ -102,6 +106,10 @@ Beyond standard tracking, the frontend supports several alternate game modes:
 - **[Loops](../features/loops.md):** An incremental/idle game mode where you queue actions, spend mana, and earn XP across loops to optimize your way through the randomizer.
 - **[Maze Metagame](../features/maze-metagame.md):** Layers A-Mazing-Idle on top of tracking — solve mazes before you can check locations or move to new regions.
 - **Text Adventure:** Play through the randomizer as a text-based adventure game.
+
+## Procedural Generation
+
+The frontend can also **generate** randomizer worlds, not just track them. The [Procgen Pipeline](../features/procgen.md) builds complete multi-region worlds where each region is a small playable game — a grid maze, a Doodle-Jump-style platformer, a text adventure, and more, freely mixed — with access rules derived from the actual gameplay. Generated worlds use the same `rules.json` format as exported games, so they work with every tracking feature, can run in loop mode, and can even be converted into real Archipelago worlds for multiworld play.
 
 ## New APWorlds
 

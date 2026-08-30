@@ -1,0 +1,29 @@
+{
+  "tape_version": 3,
+  "game": "seedling",
+  "boot": {
+    "level": 8,
+    "x": 32,
+    "y": 128
+  },
+  "noclip": false,
+  "noHazards": [
+    "water",
+    "lava",
+    "ice",
+    "waterfall"
+  ],
+  "persistence": [],
+  "tick_count": 90,
+  "inputs": [
+    {
+      "key": "right",
+      "from": 1,
+      "to": 90
+    }
+  ],
+  "name": "r6-contact-pair-standing",
+  "noDamage": false,
+  "grants": [],
+  "description": "THE CONTACT PAIR v2, arm 4 of 4 \u2014 the LIVE arm's 90-tick PREFIX, and the only tape on the roster that ends MID-WINDOW. The other three all finish with `hits` back at 0 (two of them because the death reset it, one because it never took any), which makes the game's own `hits` / `hits_timer` readouts vacuous exactly where they are supposed to be evidence. This arm stops at tick 90: two hits taken (48 and 72), none healed, and the second one's i-frame window still draining \u2014 so the terminal readout is `hits: 2, hits_timer: 1` from the GAME's own statics, against a model that has to produce both numbers. Prefix-control shape: every byte is `r6-contact-pair-live`'s up to the tick count, so the two arms are the same walk stopped at different places, and the prefix's stream is the live arm's own first 91 observations."
+}

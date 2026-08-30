@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest';
 import {
   cloneFullRulesDoc,
   renameRegionInRules,
+  validateRules,
 } from './rulesUtils.js';
 
 // A minimal rules.json carrying the non-standard top-level keys the editor
@@ -86,5 +87,41 @@ describe('APWorld Editor round-trip preservation', () => {
     const metaBefore = structuredClone(doc.procgen_metadata);
     renameRegionInRules(doc, '1', 'A', 'Atrium');
     expect(doc.procgen_metadata).toEqual(metaBefore);
+  });
+});
+
+// EDITOR v3 slice D0a — the defect the rulesGraph adoption CURED, pinned.
+describe('validateRules reads BOTH start_regions shapes', () => {
+  const twoRegions = () => ({
+    regions: { 1: { Menu: { exits: [], locations: [] }, A: { exits: [], locations: [] } } },
+    items: { 1: {} },
+  });
+  const startWarning = (doc) => validateRules(doc, '1')
+    .filter((i) => i.message === 'No start region set.');
+
+  it('the OBJECT shape every committed rules.json uses — no warning', () => {
+    const doc = { ...twoRegions(), start_regions: { 1: { default: ['Menu'], available: [] } } };
+    expect(startWarning(doc)).toEqual([]);
+  });
+
+  it('⛓ the ARRAY shape — no warning EITHER (it used to false-warn)', () => {
+    // Before D0a this read `start_regions['1'].default` on an array, got
+    // undefined, and reported "No start region set." about a doc that names
+    // Menu as its start. The array shape lives in procgenPlayer/index.test.js:75.
+    const doc = { ...twoRegions(), start_regions: { 1: ['Menu'] } };
+    expect(startWarning(doc)).toEqual([]);
+  });
+
+  it('a start region that does not EXIST is still an error, in both shapes', () => {
+    for (const start of [{ default: ['Ghost'] }, ['Ghost']]) {
+      const issues = validateRules({ ...twoRegions(), start_regions: { 1: start } }, '1');
+      expect(issues).toContainEqual({
+        severity: 'error', tab: 'meta', message: 'Start region "Ghost" doesn\'t exist.',
+      });
+    }
+  });
+
+  it('genuinely absent → the warning still fires', () => {
+    expect(startWarning(twoRegions())).toHaveLength(1);
   });
 });

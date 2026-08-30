@@ -918,6 +918,20 @@ def evaluate_rule_python(rule, context):
                     total += context.countItem(item) * weight
             return total >= threshold
 
+        elif rule_name == 'AtLeast':
+            # AtLeast carries children + count at the rule root (like And/Or).
+            children = rule.get('children', [])
+            required = rule.get('count', 0)
+            if required <= 0:
+                return True
+            satisfied = 0
+            for child in children:
+                if evaluate_rule_python(child, context):
+                    satisfied += 1
+                    if satisfied >= required:
+                        return True
+            return False
+
         return None
 
     # Unknown rule type
@@ -1173,6 +1187,7 @@ def get_unsupported_rule_types(rule):
         'CountCheck', 'HasFromList', 'HasFromListUnique', 'HasAllCounts', 'HasAnyCount',
         'CountFromList', 'CountGroupUnique', 'UniqueCount', 'EntranceAccessRule',
         'AST_all_of', 'AST_any_of', 'AST_dict_lambda_lookup', 'weighted_sum', 'WeightedSum',
+        'AtLeast',
     }
 
     def check_rule(r):
@@ -1196,6 +1211,10 @@ def get_unsupported_rule_types(rule):
             elif isinstance(args, list):
                 for item in args:
                     check_rule(item)
+            # Nested rules also live at the root for composite rules (And/Or/
+            # AtLeast use a top-level 'children' list).
+            for child in r.get('children', []):
+                check_rule(child)
             return
 
         rule_type = r.get('type')

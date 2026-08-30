@@ -31720,37 +31720,37 @@
             },
             {
               "x": 13,
-              "y": 13,
+              "y": 9,
               "id": "logic_gate_3"
             },
             {
-              "x": 7,
+              "x": 13,
               "y": 19,
               "id": "logic_gate_4"
             },
             {
-              "x": 6,
-              "y": 13,
+              "x": 3,
+              "y": 6,
               "id": "logic_gate_5"
             },
             {
-              "x": 16,
+              "x": 15,
               "y": 0,
               "id": "logic_gate_6"
             },
             {
               "x": 16,
-              "y": 3,
+              "y": 1,
               "id": "logic_gate_7"
             },
             {
-              "x": 8,
-              "y": 6,
+              "x": 9,
+              "y": 4,
               "id": "logic_gate_8"
             },
             {
-              "x": 10,
-              "y": 18,
+              "x": 21,
+              "y": 15,
               "id": "logic_gate_9"
             }
           ],
@@ -31763,43 +31763,43 @@
             },
             {
               "x": 13,
-              "y": 13,
+              "y": 9,
               "id": "Big Key (Misery Mire)",
               "locationName": "Misery Mire - Map Chest"
             },
             {
-              "x": 7,
+              "x": 13,
               "y": 19,
               "id": "Small Key (Misery Mire)",
               "locationName": "Misery Mire - Main Lobby"
             },
             {
-              "x": 6,
-              "y": 13,
+              "x": 3,
+              "y": 6,
               "id": "Magic Powder",
               "locationName": "Misery Mire - Bridge Chest"
             },
             {
-              "x": 16,
+              "x": 15,
               "y": 0,
               "id": "Small Key (Misery Mire)",
               "locationName": "Misery Mire - Spike Chest"
             },
             {
               "x": 16,
-              "y": 3,
+              "y": 1,
               "id": "Small Key (Misery Mire)",
               "locationName": "Misery Mire - Spikes Pot Key"
             },
             {
-              "x": 8,
-              "y": 6,
+              "x": 9,
+              "y": 4,
               "id": "Small Key (Misery Mire)",
               "locationName": "Misery Mire - Fishbone Pot Key"
             },
             {
-              "x": 10,
-              "y": 18,
+              "x": 21,
+              "y": 15,
               "id": "Small Key (Misery Mire)",
               "locationName": "Misery Mire - Conveyor Crystal Key Drop"
             }
@@ -34059,8 +34059,8 @@
               "id": "logic_gate_4"
             },
             {
-              "x": 14,
-              "y": 9,
+              "x": 13,
+              "y": 15,
               "id": "logic_gate_5"
             }
           ],
@@ -34090,8 +34090,8 @@
               "locationName": "Thieves' Town - Spike Switch Pot Key"
             },
             {
-              "x": 14,
-              "y": 9,
+              "x": 13,
+              "y": 15,
               "id": "Rupees (20)",
               "locationName": "Thieves' Town - Blind's Cell"
             }
@@ -36933,8 +36933,8 @@
               "id": "logic_gate_3"
             },
             {
-              "x": 14,
-              "y": 0,
+              "x": 19,
+              "y": 3,
               "id": "logic_gate_4"
             }
           ],
@@ -36952,8 +36952,8 @@
               "locationName": "Palace of Darkness - Dark Basement - Left"
             },
             {
-              "x": 14,
-              "y": 0,
+              "x": 19,
+              "y": 3,
               "id": "Small Key (Palace of Darkness)",
               "locationName": "Palace of Darkness - Dark Basement - Right"
             }
@@ -38269,8 +38269,8 @@
               "id": "logic_gate_4"
             },
             {
-              "x": 18,
-              "y": 7,
+              "x": 10,
+              "y": 9,
               "id": "logic_gate_5"
             }
           ],
@@ -38294,8 +38294,8 @@
               "locationName": "Ice Palace - Big Chest"
             },
             {
-              "x": 18,
-              "y": 7,
+              "x": 10,
+              "y": 9,
               "id": "Rupees (20)",
               "locationName": "Ice Palace - Iced T Room"
             }
@@ -39635,8 +39635,8 @@
               "id": "logic_gate_4"
             },
             {
-              "x": 17,
-              "y": 7,
+              "x": 21,
+              "y": 15,
               "id": "logic_gate_5"
             }
           ],
@@ -39660,8 +39660,8 @@
               "locationName": "Swamp Palace - Hookshot Pot Key"
             },
             {
-              "x": 17,
-              "y": 7,
+              "x": 21,
+              "y": 15,
               "id": "Small Key (Swamp Palace)",
               "locationName": "Swamp Palace - Trench 2 Pot Key"
             }
@@ -41811,17 +41811,17 @@
               "id": "logic_gate_3"
             },
             {
-              "x": 7,
-              "y": 18,
+              "x": 12,
+              "y": 11,
               "id": "logic_gate_4"
             },
             {
-              "x": 20,
-              "y": 4,
+              "x": 0,
+              "y": 3,
               "id": "logic_gate_5"
             },
             {
-              "x": 17,
+              "x": 19,
               "y": 14,
               "id": "logic_gate_6"
             }
@@ -41834,19 +41834,19 @@
               "locationName": "Ganons Tower - Bob's Torch"
             },
             {
-              "x": 7,
-              "y": 18,
+              "x": 12,
+              "y": 11,
               "id": "Rupees (50)",
               "locationName": "Ganons Tower - Hope Room - Left"
             },
             {
-              "x": 20,
-              "y": 4,
+              "x": 0,
+              "y": 3,
               "id": "Small Key (Ganons Tower)",
               "locationName": "Ganons Tower - Hope Room - Right"
             },
             {
-              "x": 17,
+              "x": 19,
               "y": 14,
               "id": "Small Key (Ganons Tower)",
               "locationName": "Ganons Tower - Conveyor Cross Pot Key"
@@ -42068,18 +42068,18 @@
               "id": "logic_gate_2"
             },
             {
-              "x": 12,
+              "x": 6,
               "y": 7,
               "id": "logic_gate_3"
             },
             {
-              "x": 16,
-              "y": 13,
+              "x": 17,
+              "y": 9,
               "id": "logic_gate_4"
             },
             {
-              "x": 16,
-              "y": 10,
+              "x": 10,
+              "y": 3,
               "id": "logic_gate_5"
             }
           ],
@@ -42091,20 +42091,20 @@
               "locationName": "Hookshot Cave - Top Right"
             },
             {
-              "x": 12,
+              "x": 6,
               "y": 7,
               "id": "Piece of Heart",
               "locationName": "Hookshot Cave - Top Left"
             },
             {
-              "x": 16,
-              "y": 13,
+              "x": 17,
+              "y": 9,
               "id": "Bombos",
               "locationName": "Hookshot Cave - Bottom Right"
             },
             {
-              "x": 16,
-              "y": 10,
+              "x": 10,
+              "y": 3,
               "id": "Blue Boomerang",
               "locationName": "Hookshot Cave - Bottom Left"
             }
@@ -42606,23 +42606,23 @@
               "id": "logic_gate_2"
             },
             {
-              "x": 12,
-              "y": 17,
+              "x": 17,
+              "y": 13,
               "id": "logic_gate_3"
             },
             {
-              "x": 3,
-              "y": 3,
+              "x": 20,
+              "y": 18,
               "id": "logic_gate_4"
             },
             {
-              "x": 10,
-              "y": 15,
+              "x": 13,
+              "y": 12,
               "id": "logic_gate_5"
             },
             {
-              "x": 2,
-              "y": 4,
+              "x": 14,
+              "y": 8,
               "id": "logic_gate_6"
             }
           ],
@@ -42634,26 +42634,26 @@
               "locationName": "Ganons Tower - DMs Room - Top Left"
             },
             {
-              "x": 12,
-              "y": 17,
+              "x": 17,
+              "y": 13,
               "id": "Rupees (20)",
               "locationName": "Ganons Tower - DMs Room - Top Right"
             },
             {
-              "x": 3,
-              "y": 3,
+              "x": 20,
+              "y": 18,
               "id": "Small Key (Ganons Tower)",
               "locationName": "Ganons Tower - DMs Room - Bottom Left"
             },
             {
-              "x": 10,
-              "y": 15,
+              "x": 13,
+              "y": 12,
               "id": "Small Key (Ganons Tower)",
               "locationName": "Ganons Tower - DMs Room - Bottom Right"
             },
             {
-              "x": 2,
-              "y": 4,
+              "x": 14,
+              "y": 8,
               "id": "Progressive Sword",
               "locationName": "Ganons Tower - Double Switch Pot Key"
             }
@@ -43168,13 +43168,13 @@
               "id": "logic_gate_2"
             },
             {
-              "x": 16,
-              "y": 8,
+              "x": 11,
+              "y": 10,
               "id": "logic_gate_3"
             },
             {
-              "x": 13,
-              "y": 13,
+              "x": 14,
+              "y": 8,
               "id": "logic_gate_4"
             }
           ],
@@ -43186,14 +43186,14 @@
               "locationName": "Turtle Rock - Compass Chest"
             },
             {
-              "x": 16,
-              "y": 8,
+              "x": 11,
+              "y": 10,
               "id": "Small Key (Turtle Rock)",
               "locationName": "Turtle Rock - Roller Room - Left"
             },
             {
-              "x": 13,
-              "y": 13,
+              "x": 14,
+              "y": 8,
               "id": "Piece of Heart",
               "locationName": "Turtle Rock - Roller Room - Right"
             }
@@ -44874,18 +44874,18 @@
               "id": "logic_gate_1"
             },
             {
-              "x": 0,
+              "x": 17,
               "y": 16,
               "id": "logic_gate_2"
             },
             {
-              "x": 14,
-              "y": 9,
+              "x": 12,
+              "y": 10,
               "id": "logic_gate_3"
             },
             {
-              "x": 2,
-              "y": 14,
+              "x": 16,
+              "y": 13,
               "id": "logic_gate_4"
             }
           ],
@@ -44903,20 +44903,20 @@
               "locationName": "Ganons Tower - Big Chest"
             },
             {
-              "x": 0,
+              "x": 17,
               "y": 16,
               "id": "Compass (Ganons Tower)",
               "locationName": "Ganons Tower - Big Key Room - Left"
             },
             {
-              "x": 14,
-              "y": 9,
+              "x": 12,
+              "y": 10,
               "id": "Rupees (50)",
               "locationName": "Ganons Tower - Big Key Room - Right"
             },
             {
-              "x": 2,
-              "y": 14,
+              "x": 16,
+              "y": 13,
               "id": "Big Key (Ganons Tower)",
               "locationName": "Ganons Tower - Big Key Chest"
             }

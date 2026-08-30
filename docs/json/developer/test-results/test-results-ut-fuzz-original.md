@@ -6,17 +6,17 @@
 
 [📖 Learn about fuzz tests](../tests/test-fuzz.md)
 
-**Generated:** 2026-03-28 17:13:11 UTC
+**Generated:** 2026-06-28 17:05:16 UTC
 
-**Source Data Created:** 2026-03-24T03:06:02.279590+00:00
+**Source Data Created:** 2026-06-28T16:55:03.738231+00:00
 
-**Source Data Last Updated:** 2026-03-24T03:06:02.279600+00:00
+**Source Data Last Updated:** 2026-06-28T16:55:03.738242+00:00
 
 **Universal Tracker Version:** Original (FarisTheAncient)
 
 **Seed Mode:** Fixed (seed=1)
 
-**Runs Per Game:** 100
+**Runs Per Game:** 10
 
 **Parallel Jobs:** 4
 
@@ -24,20 +24,20 @@
 
 ## Summary
 
-- **Total Games:** 88
-- **Games with 100% Pass Rate:** 37 (42.0%)
-- **Games with Failures:** 51 (58.0%)
-- **Total Fuzz Runs:** 8800
-- **Successful Runs:** 5113 (58.1%)
-- **Failed Runs:** 3504
-- **Timed Out Runs:** 19
-- **Ignored Runs:** 164
+- **Total Games:** 89
+- **Games with 100% Pass Rate:** 46 (51.7%)
+- **Games with Failures:** 43 (48.3%)
+- **Total Fuzz Runs:** 890
+- **Successful Runs:** 524 (58.9%)
+- **Failed Runs:** 302
+- **Timed Out Runs:** 0
+- **Ignored Runs:** 64
 
 ### Expected vs Unexpected Results (based on tracking-mode-config.json)
 
-- **Expected Passes:** 37 (passes original mode per config)
+- **Expected Passes:** 46 (passes original mode per config)
 - **Unexpected Passes:** 0 (expected to fail but passed)
-- **Expected Failures:** 51 (doesn't pass original mode per config)
+- **Expected Failures:** 43 (doesn't pass original mode per config)
 - **Unexpected Failures (logic):** 0 (expected to pass but had logic mismatch)
 - **Unexpected Failures (timeout only):** 0 (expected to pass but timed out)
 
@@ -45,198 +45,200 @@
 
 | Game Name | Result | Total | Success | Failure | Timeout | Ignored | Success Rate |
 |-----------|:------:|:-----:|:-------:|:-------:|:-------:|:-------:|:------------:|
-| A Hat in Time | ❌ | 100 | 15 | 85 | 0 | 0 | ❌ 15.0% |
-| A Link to the Past | ❌ | 100 | 0 | 98 | 0 | 2 | ❌ 0.0% |
-| A Short Hike | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| APQuest | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Adventure | ❌ | 100 | 89 | 11 | 0 | 0 | ⚠️ 89.0% |
-| Aquaria | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Baking Adventure | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Blasphemous | ✅ | 100 | 56 | 0 | 0 | 44 | ⚠️ 56.0% |
-| *Bomb Rush Cyberfunk* | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Bumper Stickers | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Castlevania - Circle of the Moon | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Castlevania 64 | ❌ | 100 | 10 | 90 | 0 | 0 | ❌ 10.0% |
-| *Celeste (Open World)* | ❌ | 100 | 46 | 54 | 0 | 0 | ❌ 46.0% |
-| Celeste 64 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| ChecksFinder | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Choo-Choo Charles | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Civilization VI | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Coding Adventure | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| DLCQuest | ❌ | 100 | 92 | 8 | 0 | 0 | 92.0% |
-| *DOOM 1993* | ❌ | 100 | 99 | 1 | 0 | 0 | 99.0% |
-| *DOOM II* | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Dark Souls III | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| DepGraph | ❌ | 100 | 82 | 18 | 0 | 0 | ⚠️ 82.0% |
-| Donkey Kong Country 3 | ❌ | 100 | 52 | 48 | 0 | 0 | ⚠️ 52.0% |
-| EarthBound | ❌ | 100 | 30 | 70 | 0 | 0 | ❌ 30.0% |
-| Factorio | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% |
-| Faxanadu | ❌ | 100 | 16 | 84 | 0 | 0 | ❌ 16.0% |
-| Final Fantasy | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Final Fantasy Mystic Quest | ❌ | 100 | 89 | 11 | 0 | 0 | ⚠️ 89.0% |
-| *Heretic* | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Hollow Knight | ❌ | 100 | 9 | 91 | 0 | 0 | ❌ 9.0% |
-| Hylics 2 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Inscryption | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Jak and Daxter: The Precursor Legacy | ❌ | 100 | 62 | 38 | 0 | 0 | ⚠️ 62.0% |
-| *Journey to Ascension* | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% |
-| *Kingdom Hearts* | ❌ | 100 | 19 | 80 | 1 | 0 | ❌ 19.0% |
-| *Kingdom Hearts 2* | ❌ | 100 | 44 | 56 | 0 | 0 | ❌ 44.0% |
-| *Kirby's Dream Land 3* | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% |
-| Landstalker - The Treasures of King Nole | ❌ | 100 | 31 | 69 | 0 | 0 | ❌ 31.0% |
-| *Lingo* | ❌ | 100 | 20 | 25 | 0 | 55 | ❌ 20.0% |
-| Links Awakening DX | ❌ | 100 | 23 | 77 | 0 | 0 | ❌ 23.0% |
-| Lufia II Ancient Cave | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Mario & Luigi Superstar Saga | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Mega Man 2 | ❌ | 100 | 93 | 7 | 0 | 0 | 93.0% |
-| Mega Man 3 | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% |
-| MegaMan Battle Network 3 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Meritous | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Metamath | ❌ | 100 | 90 | 10 | 0 | 0 | 90.0% |
-| *Muse Dash* | ❌ | 100 | 0 | 99 | 0 | 1 | ❌ 0.0% |
-| Noita | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Ocarina of Time | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% |
-| Old School Runescape | ✅ | 100 | 91 | 0 | 0 | 9 | 91.0% |
-| Overcooked! 2 | ❌ | 100 | 9 | 91 | 0 | 0 | ❌ 9.0% |
-| *Paint* | ✅ | 100 | 98 | 0 | 0 | 2 | 98.0% |
-| Pokemon Emerald | ❌ | 100 | 55 | 37 | 0 | 8 | ⚠️ 55.0% |
-| Pokemon Red and Blue | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% |
-| *Raft* | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Risk of Rain 2 | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| SMZ3 | ❌ | 100 | 1 | 99 | 0 | 0 | ❌ 1.0% |
-| *Satisfactory* | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% |
-| Saving Princess | ❌ | 100 | 24 | 76 | 0 | 0 | ❌ 24.0% |
-| *Secret of Evermore* | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Shivers | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% |
-| Sonic Adventure 2 Battle | ❌ | 100 | 6 | 94 | 0 | 0 | ❌ 6.0% |
-| *Starcraft 2* | ❌ | 100 | 0 | 100 | 0 | 0 | ❌ 0.0% |
-| *Stardew Valley* | ❌ | 100 | 6 | 93 | 1 | 0 | ❌ 6.0% |
-| Subnautica | ❌ | 100 | 13 | 87 | 0 | 0 | ❌ 13.0% |
-| Super Mario 64 | ❌ | 100 | 28 | 72 | 0 | 0 | ❌ 28.0% |
-| Super Mario Land 2 | ❌ | 100 | 20 | 80 | 0 | 0 | ❌ 20.0% |
-| Super Mario World | ❌ | 100 | 55 | 45 | 0 | 0 | ⚠️ 55.0% |
-| *Super Metroid* | ❌ | 100 | 6 | 94 | 0 | 0 | ❌ 6.0% |
-| TOEM original | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| TOEM rule builder | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| *TUNIC* | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Terraria | ❌ | 100 | 98 | 2 | 0 | 0 | 98.0% |
-| The Legend of Zelda | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| The Messenger | ❌ | 100 | 7 | 93 | 0 | 0 | ❌ 7.0% |
-| The Wind Waker | ❌ | 100 | 4 | 53 | 0 | 43 | ❌ 4.0% |
-| *The Witness* | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| Timespinner | ❌ | 100 | 4 | 96 | 0 | 0 | ❌ 4.0% |
-| Undertale | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| VVVVVV | ❌ | 100 | 64 | 36 | 0 | 0 | ⚠️ 64.0% |
-| Wargroove | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
-| *Yacht Dice* | ❌ | 100 | 1 | 99 | 0 | 0 | ❌ 1.0% |
-| Yoshi's Island | ❌ | 100 | 22 | 78 | 0 | 0 | ❌ 22.0% |
-| Yu-Gi-Oh! 2006 | ❌ | 100 | 34 | 66 | 0 | 0 | ❌ 34.0% |
-| Zillion | ❌ | 100 | 0 | 83 | 17 | 0 | ❌ 0.0% |
-| shapez | ✅ | 100 | 100 | 0 | 0 | 0 | **100.0%** |
+| A Hat in Time | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% |
+| A Link to the Past | ❌ | 10 | 0 | 6 | 0 | 4 | ❌ 0.0% |
+| A Short Hike | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| APCalc | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| APQuest | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| Adventure | ❌ | 10 | 9 | 1 | 0 | 0 | 90.0% |
+| Aquaria | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| Baking Adventure | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| Blasphemous | ✅ | 10 | 4 | 0 | 0 | 6 | ❌ 40.0% |
+| *Bomb Rush Cyberfunk* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| Bumper Stickers | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| Castlevania - Circle of the Moon | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| Castlevania 64 | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% |
+| *Celeste (Open World)* | ❌ | 10 | 4 | 6 | 0 | 0 | ❌ 40.0% |
+| Celeste 64 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| ChecksFinder | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| Choo-Choo Charles | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| Civilization VI | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| Coding Adventure | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| DLCQuest | ❌ | 10 | 9 | 1 | 0 | 0 | 90.0% |
+| *DOOM 1993* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *DOOM II* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| Dark Souls III | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| DepGraph | ❌ | 10 | 9 | 1 | 0 | 0 | 90.0% |
+| EarthBound | ❌ | 10 | 5 | 5 | 0 | 0 | ⚠️ 50.0% |
+| Factorio | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| Faxanadu | ❌ | 10 | 2 | 8 | 0 | 0 | ❌ 20.0% |
+| Final Fantasy | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| Final Fantasy Mystic Quest | ✅ | 10 | 9 | 0 | 0 | 1 | 90.0% |
+| *Heretic* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| Hollow Knight | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| Hylics 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| Inscryption | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| Jak and Daxter: The Precursor Legacy | ❌ | 10 | 3 | 7 | 0 | 0 | ❌ 30.0% |
+| *Journey to Ascension* | ✅ | 10 | 0 | 0 | 0 | 10 | ❌ 0.0% |
+| *Kingdom Hearts* | ❌ | 10 | 4 | 6 | 0 | 0 | ❌ 40.0% |
+| *Kingdom Hearts 2* | ✅ | 10 | 7 | 0 | 0 | 3 | ⚠️ 70.0% |
+| *Kirby's Dream Land 3* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| Landstalker - The Treasures of King Nole | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% |
+| *Lingo* | ✅ | 10 | 3 | 0 | 0 | 7 | ❌ 30.0% |
+| Links Awakening DX | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% |
+| Lufia II Ancient Cave | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| Mario & Luigi Superstar Saga | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| Mega Man 2 | ❌ | 10 | 9 | 1 | 0 | 0 | 90.0% |
+| *Mega Man 3* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| MegaMan Battle Network 3 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| Meritous | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| Metamath | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *Muse Dash* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| Noita | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| Ocarina of Time | ❌ | 10 | 0 | 8 | 0 | 2 | ❌ 0.0% |
+| Old School Runescape | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| Overcooked! 2 | ❌ | 10 | 0 | 5 | 0 | 5 | ❌ 0.0% |
+| *Paint* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| Pokemon Emerald | ❌ | 10 | 5 | 2 | 0 | 3 | ⚠️ 50.0% |
+| Pokemon Red and Blue | ❌ | 10 | 0 | 8 | 0 | 2 | ❌ 0.0% |
+| *Raft* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| Risk of Rain 2 | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| SMZ3 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| *Satisfactory* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| Saving Princess | ❌ | 10 | 3 | 7 | 0 | 0 | ❌ 30.0% |
+| *Secret of Evermore* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *Seedling* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| Shivers | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| Sonic Adventure 2 Battle | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% |
+| *Starcraft 2* | ✅ | 10 | 0 | 0 | 0 | 10 | ❌ 0.0% |
+| *Stardew Valley* | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% |
+| Subnautica | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% |
+| Super Mario 64 | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| Super Mario Land 2 | ❌ | 10 | 9 | 1 | 0 | 0 | 90.0% |
+| Super Mario World | ❌ | 10 | 7 | 3 | 0 | 0 | ⚠️ 70.0% |
+| *Super Metroid* | ❌ | 10 | 0 | 5 | 0 | 5 | ❌ 0.0% |
+| TOEM original | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| TOEM rule builder | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *TUNIC* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| Terraria | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| The Legend of Zelda | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| The Messenger | ❌ | 10 | 1 | 9 | 0 | 0 | ❌ 10.0% |
+| The Wind Waker | ❌ | 10 | 0 | 5 | 0 | 5 | ❌ 0.0% |
+| *The Witness* | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| Timespinner | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| Undertale | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| VVVVVV | ❌ | 10 | 8 | 2 | 0 | 0 | ⚠️ 80.0% |
+| Wargroove | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
+| *Yacht Dice* | ❌ | 10 | 0 | 10 | 0 | 0 | ❌ 0.0% |
+| Yoshi's Island | ❌ | 10 | 2 | 8 | 0 | 0 | ❌ 20.0% |
+| Yu-Gi-Oh! 2006 | ❌ | 10 | 5 | 5 | 0 | 0 | ⚠️ 50.0% |
+| Zillion | ❌ | 10 | 0 | 9 | 0 | 1 | ❌ 0.0% |
+| shapez | ✅ | 10 | 10 | 0 | 0 | 0 | **100.0%** |
 
 ## Results Breakdown
 
-### Expected Passes (37)
+### Expected Passes (46)
 
 Games that pass original mode per tracking-mode-config.json and passed the test.
 
 | Game Name | Total | Success | Failure | Timeout | Success Rate |
 |-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
-| A Short Hike | 100 | 100 | 0 | 0 | 100.0% |
-| APQuest | 100 | 100 | 0 | 0 | 100.0% |
-| Aquaria | 100 | 100 | 0 | 0 | 100.0% |
-| Baking Adventure | 100 | 100 | 0 | 0 | 100.0% |
-| Blasphemous | 100 | 56 | 0 | 0 | 56.0% |
-| Bomb Rush Cyberfunk | 100 | 100 | 0 | 0 | 100.0% |
-| Bumper Stickers | 100 | 100 | 0 | 0 | 100.0% |
-| Castlevania - Circle of the Moon | 100 | 100 | 0 | 0 | 100.0% |
-| Celeste 64 | 100 | 100 | 0 | 0 | 100.0% |
-| ChecksFinder | 100 | 100 | 0 | 0 | 100.0% |
-| Choo-Choo Charles | 100 | 100 | 0 | 0 | 100.0% |
-| Civilization VI | 100 | 100 | 0 | 0 | 100.0% |
-| Coding Adventure | 100 | 100 | 0 | 0 | 100.0% |
-| DOOM II | 100 | 100 | 0 | 0 | 100.0% |
-| Dark Souls III | 100 | 100 | 0 | 0 | 100.0% |
-| Final Fantasy | 100 | 100 | 0 | 0 | 100.0% |
-| Heretic | 100 | 100 | 0 | 0 | 100.0% |
-| Hylics 2 | 100 | 100 | 0 | 0 | 100.0% |
-| Inscryption | 100 | 100 | 0 | 0 | 100.0% |
-| Lufia II Ancient Cave | 100 | 100 | 0 | 0 | 100.0% |
-| Mario & Luigi Superstar Saga | 100 | 100 | 0 | 0 | 100.0% |
-| MegaMan Battle Network 3 | 100 | 100 | 0 | 0 | 100.0% |
-| Meritous | 100 | 100 | 0 | 0 | 100.0% |
-| Noita | 100 | 100 | 0 | 0 | 100.0% |
-| Old School Runescape | 100 | 91 | 0 | 0 | 91.0% |
-| Paint | 100 | 98 | 0 | 0 | 98.0% |
-| Raft | 100 | 100 | 0 | 0 | 100.0% |
-| Risk of Rain 2 | 100 | 100 | 0 | 0 | 100.0% |
-| Secret of Evermore | 100 | 100 | 0 | 0 | 100.0% |
-| TOEM original | 100 | 100 | 0 | 0 | 100.0% |
-| TOEM rule builder | 100 | 100 | 0 | 0 | 100.0% |
-| TUNIC | 100 | 100 | 0 | 0 | 100.0% |
-| The Legend of Zelda | 100 | 100 | 0 | 0 | 100.0% |
-| The Witness | 100 | 100 | 0 | 0 | 100.0% |
-| Undertale | 100 | 100 | 0 | 0 | 100.0% |
-| Wargroove | 100 | 100 | 0 | 0 | 100.0% |
-| shapez | 100 | 100 | 0 | 0 | 100.0% |
+| A Short Hike | 10 | 10 | 0 | 0 | 100.0% |
+| APQuest | 10 | 10 | 0 | 0 | 100.0% |
+| Aquaria | 10 | 10 | 0 | 0 | 100.0% |
+| Baking Adventure | 10 | 10 | 0 | 0 | 100.0% |
+| Blasphemous | 10 | 4 | 0 | 0 | 40.0% |
+| Bomb Rush Cyberfunk | 10 | 10 | 0 | 0 | 100.0% |
+| Bumper Stickers | 10 | 10 | 0 | 0 | 100.0% |
+| Castlevania - Circle of the Moon | 10 | 10 | 0 | 0 | 100.0% |
+| Celeste 64 | 10 | 10 | 0 | 0 | 100.0% |
+| ChecksFinder | 10 | 10 | 0 | 0 | 100.0% |
+| Choo-Choo Charles | 10 | 10 | 0 | 0 | 100.0% |
+| Civilization VI | 10 | 10 | 0 | 0 | 100.0% |
+| Coding Adventure | 10 | 10 | 0 | 0 | 100.0% |
+| DOOM 1993 | 10 | 10 | 0 | 0 | 100.0% |
+| DOOM II | 10 | 10 | 0 | 0 | 100.0% |
+| Dark Souls III | 10 | 10 | 0 | 0 | 100.0% |
+| Final Fantasy | 10 | 10 | 0 | 0 | 100.0% |
+| Final Fantasy Mystic Quest | 10 | 9 | 0 | 0 | 90.0% |
+| Heretic | 10 | 10 | 0 | 0 | 100.0% |
+| Hylics 2 | 10 | 10 | 0 | 0 | 100.0% |
+| Inscryption | 10 | 10 | 0 | 0 | 100.0% |
+| Journey to Ascension | 10 | 0 | 0 | 0 | 0.0% |
+| Kingdom Hearts 2 | 10 | 7 | 0 | 0 | 70.0% |
+| Lingo | 10 | 3 | 0 | 0 | 30.0% |
+| Lufia II Ancient Cave | 10 | 10 | 0 | 0 | 100.0% |
+| Mario & Luigi Superstar Saga | 10 | 10 | 0 | 0 | 100.0% |
+| MegaMan Battle Network 3 | 10 | 10 | 0 | 0 | 100.0% |
+| Meritous | 10 | 10 | 0 | 0 | 100.0% |
+| Metamath | 10 | 10 | 0 | 0 | 100.0% |
+| Noita | 10 | 10 | 0 | 0 | 100.0% |
+| Old School Runescape | 10 | 10 | 0 | 0 | 100.0% |
+| Paint | 10 | 10 | 0 | 0 | 100.0% |
+| Raft | 10 | 10 | 0 | 0 | 100.0% |
+| Risk of Rain 2 | 10 | 10 | 0 | 0 | 100.0% |
+| Secret of Evermore | 10 | 10 | 0 | 0 | 100.0% |
+| Seedling | 10 | 10 | 0 | 0 | 100.0% |
+| Starcraft 2 | 10 | 0 | 0 | 0 | 0.0% |
+| TOEM original | 10 | 10 | 0 | 0 | 100.0% |
+| TOEM rule builder | 10 | 10 | 0 | 0 | 100.0% |
+| TUNIC | 10 | 10 | 0 | 0 | 100.0% |
+| Terraria | 10 | 10 | 0 | 0 | 100.0% |
+| The Legend of Zelda | 10 | 10 | 0 | 0 | 100.0% |
+| The Witness | 10 | 10 | 0 | 0 | 100.0% |
+| Undertale | 10 | 10 | 0 | 0 | 100.0% |
+| Wargroove | 10 | 10 | 0 | 0 | 100.0% |
+| shapez | 10 | 10 | 0 | 0 | 100.0% |
 
-### Expected Failures (51)
+### Expected Failures (43)
 
 Games NOT expected to pass original mode and failed as expected.
 
 | Game Name | Total | Success | Failure | Timeout | Success Rate |
 |-----------|:-----:|:-------:|:-------:|:-------:|:------------:|
-| A Hat in Time | 100 | 15 | 85 | 0 | 15.0% |
-| A Link to the Past | 100 | 0 | 98 | 0 | 0.0% |
-| Adventure | 100 | 89 | 11 | 0 | 89.0% |
-| Castlevania 64 | 100 | 10 | 90 | 0 | 10.0% |
-| Celeste (Open World) | 100 | 46 | 54 | 0 | 46.0% |
-| DLCQuest | 100 | 92 | 8 | 0 | 92.0% |
-| DOOM 1993 | 100 | 99 | 1 | 0 | 99.0% |
-| DepGraph | 100 | 82 | 18 | 0 | 82.0% |
-| Donkey Kong Country 3 | 100 | 52 | 48 | 0 | 52.0% |
-| EarthBound | 100 | 30 | 70 | 0 | 30.0% |
-| Factorio | 100 | 0 | 100 | 0 | 0.0% |
-| Faxanadu | 100 | 16 | 84 | 0 | 16.0% |
-| Final Fantasy Mystic Quest | 100 | 89 | 11 | 0 | 89.0% |
-| Hollow Knight | 100 | 9 | 91 | 0 | 9.0% |
-| Jak and Daxter: The Precursor Legacy | 100 | 62 | 38 | 0 | 62.0% |
-| Journey to Ascension | 100 | 0 | 100 | 0 | 0.0% |
-| Kingdom Hearts | 100 | 19 | 80 | 1 | 19.0% |
-| Kingdom Hearts 2 | 100 | 44 | 56 | 0 | 44.0% |
-| Kirby's Dream Land 3 | 100 | 0 | 100 | 0 | 0.0% |
-| Landstalker - The Treasures of King Nole | 100 | 31 | 69 | 0 | 31.0% |
-| Lingo | 100 | 20 | 25 | 0 | 20.0% |
-| Links Awakening DX | 100 | 23 | 77 | 0 | 23.0% |
-| Mega Man 2 | 100 | 93 | 7 | 0 | 93.0% |
-| Mega Man 3 | 100 | 0 | 100 | 0 | 0.0% |
-| Metamath | 100 | 90 | 10 | 0 | 90.0% |
-| Muse Dash | 100 | 0 | 99 | 0 | 0.0% |
-| Ocarina of Time | 100 | 0 | 100 | 0 | 0.0% |
-| Overcooked! 2 | 100 | 9 | 91 | 0 | 9.0% |
-| Pokemon Emerald | 100 | 55 | 37 | 0 | 55.0% |
-| Pokemon Red and Blue | 100 | 0 | 100 | 0 | 0.0% |
-| SMZ3 | 100 | 1 | 99 | 0 | 1.0% |
-| Satisfactory | 100 | 0 | 100 | 0 | 0.0% |
-| Saving Princess | 100 | 24 | 76 | 0 | 24.0% |
-| Shivers | 100 | 0 | 100 | 0 | 0.0% |
-| Sonic Adventure 2 Battle | 100 | 6 | 94 | 0 | 6.0% |
-| Starcraft 2 | 100 | 0 | 100 | 0 | 0.0% |
-| Stardew Valley | 100 | 6 | 93 | 1 | 6.0% |
-| Subnautica | 100 | 13 | 87 | 0 | 13.0% |
-| Super Mario 64 | 100 | 28 | 72 | 0 | 28.0% |
-| Super Mario Land 2 | 100 | 20 | 80 | 0 | 20.0% |
-| Super Mario World | 100 | 55 | 45 | 0 | 55.0% |
-| Super Metroid | 100 | 6 | 94 | 0 | 6.0% |
-| Terraria | 100 | 98 | 2 | 0 | 98.0% |
-| The Messenger | 100 | 7 | 93 | 0 | 7.0% |
-| The Wind Waker | 100 | 4 | 53 | 0 | 4.0% |
-| Timespinner | 100 | 4 | 96 | 0 | 4.0% |
-| VVVVVV | 100 | 64 | 36 | 0 | 64.0% |
-| Yacht Dice | 100 | 1 | 99 | 0 | 1.0% |
-| Yoshi's Island | 100 | 22 | 78 | 0 | 22.0% |
-| Yu-Gi-Oh! 2006 | 100 | 34 | 66 | 0 | 34.0% |
-| Zillion | 100 | 0 | 83 | 17 | 0.0% |
+| A Hat in Time | 10 | 1 | 9 | 0 | 10.0% |
+| A Link to the Past | 10 | 0 | 6 | 0 | 0.0% |
+| APCalc | 10 | 0 | 10 | 0 | 0.0% |
+| Adventure | 10 | 9 | 1 | 0 | 90.0% |
+| Castlevania 64 | 10 | 1 | 9 | 0 | 10.0% |
+| Celeste (Open World) | 10 | 4 | 6 | 0 | 40.0% |
+| DLCQuest | 10 | 9 | 1 | 0 | 90.0% |
+| DepGraph | 10 | 9 | 1 | 0 | 90.0% |
+| EarthBound | 10 | 5 | 5 | 0 | 50.0% |
+| Factorio | 10 | 0 | 10 | 0 | 0.0% |
+| Faxanadu | 10 | 2 | 8 | 0 | 20.0% |
+| Hollow Knight | 10 | 0 | 10 | 0 | 0.0% |
+| Jak and Daxter: The Precursor Legacy | 10 | 3 | 7 | 0 | 30.0% |
+| Kingdom Hearts | 10 | 4 | 6 | 0 | 40.0% |
+| Kirby's Dream Land 3 | 10 | 0 | 10 | 0 | 0.0% |
+| Landstalker - The Treasures of King Nole | 10 | 1 | 9 | 0 | 10.0% |
+| Links Awakening DX | 10 | 1 | 9 | 0 | 10.0% |
+| Mega Man 2 | 10 | 9 | 1 | 0 | 90.0% |
+| Mega Man 3 | 10 | 0 | 10 | 0 | 0.0% |
+| Muse Dash | 10 | 0 | 10 | 0 | 0.0% |
+| Ocarina of Time | 10 | 0 | 8 | 0 | 0.0% |
+| Overcooked! 2 | 10 | 0 | 5 | 0 | 0.0% |
+| Pokemon Emerald | 10 | 5 | 2 | 0 | 50.0% |
+| Pokemon Red and Blue | 10 | 0 | 8 | 0 | 0.0% |
+| SMZ3 | 10 | 0 | 10 | 0 | 0.0% |
+| Satisfactory | 10 | 0 | 10 | 0 | 0.0% |
+| Saving Princess | 10 | 3 | 7 | 0 | 30.0% |
+| Shivers | 10 | 0 | 10 | 0 | 0.0% |
+| Sonic Adventure 2 Battle | 10 | 1 | 9 | 0 | 10.0% |
+| Stardew Valley | 10 | 1 | 9 | 0 | 10.0% |
+| Subnautica | 10 | 1 | 9 | 0 | 10.0% |
+| Super Mario 64 | 10 | 0 | 10 | 0 | 0.0% |
+| Super Mario Land 2 | 10 | 9 | 1 | 0 | 90.0% |
+| Super Mario World | 10 | 7 | 3 | 0 | 70.0% |
+| Super Metroid | 10 | 0 | 5 | 0 | 0.0% |
+| The Messenger | 10 | 1 | 9 | 0 | 10.0% |
+| The Wind Waker | 10 | 0 | 5 | 0 | 0.0% |
+| Timespinner | 10 | 0 | 10 | 0 | 0.0% |
+| VVVVVV | 10 | 8 | 2 | 0 | 80.0% |
+| Yacht Dice | 10 | 0 | 10 | 0 | 0.0% |
+| Yoshi's Island | 10 | 2 | 8 | 0 | 20.0% |
+| Yu-Gi-Oh! 2006 | 10 | 5 | 5 | 0 | 50.0% |
+| Zillion | 10 | 0 | 9 | 0 | 0.0% |
 
 ## Notes
 
@@ -279,15 +281,18 @@ These templates are excluded from testing:
 | Kingdom Hearts.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Kirby's Dream Land 3.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Lingo.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
+| Mega Man 3.yaml | Temporarily excluded. WorldGen variant intermittently fails test_explicit_indirect_conditions_spheres with Fill.FillError on certain pytest seeds (e.g. 57516062135983689099). |
 | Muse Dash.yaml | Temporarily excluded. Block-bodied helper inlined into expression context causes SyntaxError. |
 | Paint.yaml | Temporarily excluded. Helper paint_percent_available not in JSON helpers dict causing NameError (calculate_paint_percent_available is present but referenced under wrong name). |
 | Raft.yaml | Temporarily excluded. The WorldGen spoiler test times out at 300 seconds. |
 | Satisfactory.yaml | Temporarily excluded. Calls self.state_logic.can_produce_all() which resolves to state.has_all() but is not exported, causing AttributeError. |
 | Secret of Evermore.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
+| Seedling.yaml | WorldGen variant generation produces a broken world (worlds/seedling_worldgen missing Items.py, causing ModuleNotFoundError on load). |
 | Starcraft 2.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Stardew Valley.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | Super Metroid.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | TUNIC.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
 | The Witness.yaml | Temporarily excluded. The WorldGen spoiler test takes 261 seconds. |
+| UT Pickle Mode.yaml | Not a game. Universal Tracker pickle-mode meta-template, not a playable world (its worldgen variant fails with AttributeError in ut_pickle_worldgen._place_original_items). |
 | Universal Tracker.yaml | Not a game. |
 | Yacht Dice.yaml | Temporarily excluded. Supporting this game through WorldGen might not be possible. |
