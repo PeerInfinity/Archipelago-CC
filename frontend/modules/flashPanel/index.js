@@ -6,7 +6,7 @@ import {
   substrateRegistryEntry as flashSeedlingEntry,
   FLASH_SEEDLING_LOAD_REGION_EVENT,
 } from './flashSeedlingLibrary.js';
-import { SeedlingRegionGlue } from './seedlingRegionGlue.js';
+import { AP_ITEM_FOUND_EVENT, SeedlingRegionGlue } from './seedlingRegionGlue.js';
 
 let moduleDispatcher = null;
 let _moduleEventBus = null;
@@ -89,6 +89,33 @@ export function register(registrationApi) {
   registrationApi.registerEventBusSubscriberIntent('stateManager:snapshotUpdated');
   registrationApi.registerEventBusSubscriberIntent('regionGraph:nodeSelected');
   registrationApi.registerEventBusSubscriberIntent(FLASH_SEEDLING_LOAD_REGION_EVENT);
+
+  /**
+   * ⛔⛔ **THE READOUT EVENT NEEDS A REGISTERED PUBLISHER, AND WITHOUT ONE THE
+   * PUBLISH IS SKIPPED WITH A `warn` AND NOTHING ELSE.** `eventBus.publish`
+   * (`app/core/eventBus.js:126-129`) checks the publisher registry and
+   * `return`s — it does not throw — so `seedlingRegionGlue._itemFound`'s own
+   * `try/catch` (written for *"a bus that refuses an unknown event"*) never
+   * fires, its `stats.itemsFound` still counts the find, and the panel's
+   * subscriber is simply never called.
+   *
+   * ⛓ MEASURED ON THE REAL PAGE (P1-e run 4, `panel-check`): the glue reported
+   * `locationChecks: 1, itemsFound: 1`, the panel log carried
+   * *"found Light for you at \"Level 030 - Torchpickup\""* — written by the
+   * glue's own `_log`, not by the subscriber — and the readout element was
+   * still `{display:"none", headline:"", rows:""}`. The console said exactly
+   * why:
+   *
+   *     [WARN] [eventBus] Publisher flashPanel not registered for event
+   *     flashSeedling:apItemFound. Call registerEventBusPublisher first.
+   *
+   * ⚠ This is an M1 defect, latent since the event was introduced: nothing in
+   * production wired the check binding until P1, so nothing ever published it.
+   * `flashPanelUI.test`-less code plus a counter incremented BEFORE the publish
+   * is what let a producer's view and a consumer's view disagree in silence.
+   */
+  registrationApi.registerEventBusPublisher(AP_ITEM_FOUND_EVENT);
+  registrationApi.registerEventBusSubscriberIntent(AP_ITEM_FOUND_EVENT);
 
   log('info', '[FlashPanel Module] Registration complete.');
 }

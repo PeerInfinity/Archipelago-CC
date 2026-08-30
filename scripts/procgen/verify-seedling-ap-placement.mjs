@@ -1586,9 +1586,22 @@ if (PANEL_ARMS_ENABLED) {
         const shown = (obs.overlay ?? []).filter((o) => o.state === 'shown');
         const hidden = (obs.overlay ?? []).filter((o) => o.state === 'hidden');
         if (eligible) {
+            /**
+             * ⛔ "OFF" IS `hidden` OR `absent`, AND THE SUCCESSFUL PATH IS
+             * `absent`. The sequence calls `overlay.hide()`, and then
+             * `flashPanelUI`'s `finally` runs `detachSafetyNet()`, which
+             * REMOVES a non-sticky element from the DOM — so a load that went
+             * perfectly ends with the element gone, not merely hidden.
+             * MEASURED (run 4): `…{"at":23389,"state":"shown"},
+             * {"at":24194,"state":"absent"}` on both eligible presets, i.e. the
+             * overlay behaved exactly as designed and the ROW was wrong about
+             * the design. Written as "hidden after shown" it asserted a state
+             * the happy path does not end in.
+             */
+            const off = (obs.overlay ?? []).filter(
+                (o) => o.state === 'hidden' || o.state === 'absent');
             check(`${tag}: the overlay was observed ON and then OFF`,
-                shown.length > 0 && hidden.length > 0
-                    && hidden.at(-1).at > shown[0].at,
+                shown.length > 0 && off.length > 0 && off.at(-1).at > shown[0].at,
                 JSON.stringify(obs.overlay));
             check(`${tag}: the delivery was SENT exactly once`,
                 obs.deliveryState === 'delivered' && obs.deliveryStats?.delivered === 1
@@ -1661,7 +1674,8 @@ if (PANEL_ARMS_ENABLED) {
     {
         const rec = panelOf('panel-control-p4c');
         const obs = valueOf(rec, 'observe');
-        check('P1-e CONTROL: the arm ran', Boolean(obs), rec?.error ?? 'no observation');
+        check('P1-e CONTROL: the arm ran', Boolean(obs),
+            rec?.error ?? `boot ${rec?.boot_sec ?? '?'}s, ${obs ? 'observed' : 'NO observation'}`);
         if (obs) {
             check('P1-e CONTROL: p4c declares no `apitem`, so NOTHING is delivered or bound',
                 obs.hasDelivery === false && obs.hasCheckBinding === false,
@@ -1682,7 +1696,8 @@ if (PANEL_ARMS_ENABLED) {
         const rec = panelOf('panel-check');
         const obs = valueOf(rec, 'observe');
         const granted = valueOf(rec, 'grant') ?? [];
-        check('P1-e check: the arm ran', Boolean(obs), rec?.error ?? 'no observation');
+        check('P1-e check: the arm ran', Boolean(obs),
+            rec?.error ?? `boot ${rec?.boot_sec ?? '?'}s, ${obs ? 'observed' : 'NO observation'}`);
         if (obs) {
             check('P1-e check: the glue dispatched exactly one location check',
                 obs.glueStats?.locationChecks === 1,
