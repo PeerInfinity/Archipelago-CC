@@ -34,7 +34,7 @@ A world's preset `rules.json` carries a `flash_panel` section:
 "flash_panel": {
   "config": "seedling.json",
   "swf": "seedling_injected.swf",
-  "wasm": "seedling_bot_ap_p4c/game.html"
+  "wasm": "seedling_bot_ap_p4d/game.html"
 }
 ```
 
@@ -110,6 +110,37 @@ was renamed, the build was not. The submodule's `builds.json` `js`/`wasm`
 fields are the authority. (`verify-seedling-bot-differential.mjs` already knew
 this; it keeps a separate `PAGE_BASE` for exactly that reason.)
 
+### Build capabilities — the BUILD-SIDE half of feature detection
+
+⚖ **USER, 2026-08-29: every frontend feature detects from the loaded preset's
+DATA whether it applies. There is no opt-in flag anywhere in this panel.** A
+feature that needs ActionScript the running build may or may not carry needs a
+second datum, and that one belongs to the build: each `builds.json` entry
+declares a `capabilities` array.
+
+```json
+{ "name": "seedling_bot_ap_p4d", "capabilities": ["apitem"], "js": … }
+```
+
+- **Mandatory, and `[]` is a real answer.** An entry with no `capabilities`
+  field says *nothing*; one with `[]` says *"measured, this build has none"*.
+  Collapsing them would make a manifest that predates the field look like a
+  build that lost a feature, and the panel would silently stop offering it.
+- **The vocabulary is declared ONCE, in the consumer** —
+  `seedlingRandomizerEligibility.js`'s `WASM_BUILD_CAPABILITIES`.
+  `check-seedling-wasm-pins.mjs` **imports** it rather than spelling a second
+  copy, and refuses any name outside it: a typo (`apitm`) is not a name the
+  consumer looks for, so it would mean exactly what absence means.
+- **Looked up by the DIRECTORY the preset names**, never by a literal here:
+  `flash_panel.wasm` is `"<build>/game.html"`, so the panel fetches
+  `wasm/builds.json` and finds the entry whose `name` is that directory.
+
+`apitem` is the only capability so far: the build carries `Pickups/APItem.as`
+and the `<apitem>` line in `Game.as`'s XML loop, so a delivered level set's AP
+placement becomes a real pickup instead of an element the XML loop ignores.
+`seedlingRandomizerEligibility.js` is the whole predicate — four facts, and it
+names the first one that is false (plan §17.1, §17.5).
+
 ### The pin policy
 
 > **A build is in the submodule iff a TRACKED file of this repo names it.**
@@ -120,7 +151,8 @@ four independent views.
 
 | build | named by |
 |---|---|
-| `seedling_bot_ap_p4c` | **every default**: `seedlingDemo/watchWasm.js` (`WASM_PAGE`) and `watchEditor.js`, the three seedling presets' `flash_panel.wasm`, `procgenPipeline/regionAtlasCompiler.js`, `check-seedling-wasm-pages.mjs`'s `BUILD` literal, the `SEEDLING_PAGE` **default** of `verify-seedling-bot-differential.mjs`, of `check-seedling-{generated-set,save-stamp,vanilla-manifest}.mjs`, of `probe-seedling-level-set-transport.mjs` and of ~35 more `scripts/procgen/{probe,plan,solve,run,derive,rerecord}-seedling-*.mjs`, three verify rows, and the two TESTS that assert the name (`watchWasm.test.js`, `regionAtlasCompiler.test.js`). **53 tracked files, 69 lines** — derived with `git grep -ln <name> -- ':!*.md'`, never typed |
+| `seedling_bot_ap_p4c` | **every remaining default**: `seedlingDemo/watchWasm.js` (`WASM_PAGE`) and `watchEditor.js`, `procgenPipeline/regionAtlasCompiler.js`, `check-seedling-wasm-pages.mjs`'s `BUILD` literal, the `SEEDLING_PAGE` **default** of `verify-seedling-bot-differential.mjs`, of `check-seedling-{generated-set,save-stamp,vanilla-manifest}.mjs`, of `probe-seedling-level-set-transport.mjs` and of ~35 more `scripts/procgen/{probe,plan,solve,run,derive,rerecord}-seedling-*.mjs`, three verify rows, and the two TESTS that assert the name (`watchWasm.test.js`, `regionAtlasCompiler.test.js`). ⛓ **NOT the three seedling presets any more** — slice P1 moved their `flash_panel.wasm` to p4d. **54 tracked files, 75 lines** (59 / 85 counting `.md`) — RE-MEASURED 2026-08-29 with `git grep -ln <name> -- ':!*.md'` and `git grep -n`, never typed. ⚠ The row said *53 / 69* for two slices and neither number was reproducible by the command beside them: at `f5d7b43fc`, before P1 moved anything, it was **57 / 78**. Say which POPULATION a count is over — `.md` included or not is a 2-file, 7-line difference here |
+| `seedling_bot_ap_p4d` | **the three seedling presets' `flash_panel.wasm`** (moved here by slice P1, because the panel's randomizer wiring detects eligibility from a build's own `capabilities` and p4c declares none), and `verify-seedling-ap-placement.mjs`'s M1 rows. **6 tracked files, 6 lines** (`:!*.md`), 2026-08-29. ⛓ The ONLY build declaring `apitem` |
 | `seedling_bot_ap_p4b` | ⛔ **nothing names it as a DEFAULT any more, and this table cell is the only thing holding its pin: `wasm/seedling_bot_ap_p4b/game.html`.** That path is written here DELIBERATELY, and saying so is the point — see below. ⛓ **R9 slice 12h: it is no longer a mere placeholder — p4b is the ONLY tracked build WITHOUT the `arm` capability, and two live corrections key on its absence** |
 
 ⛔⛔ **p4b's PIN IS HELD BY ONE LINE OF PROSE, ON PURPOSE, AND IT IS THE ONLY

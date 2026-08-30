@@ -16,6 +16,12 @@
  *   TRACKED     the directories git actually tracks in the submodule
  *   MANIFEST    the entries in the submodule's builds.json
  *
+ * ⛓ AND EACH MANIFEST ENTRY DECLARES ITS `capabilities` (slice P1-a): a
+ * mandatory array whose names are ⊆ the vocabulary the CONSUMER declares
+ * (`frontend/modules/flashPanel/seedlingRandomizerEligibility.js`), imported
+ * here rather than restated. See the row's own note for why absence and a
+ * typo are the same silent failure.
+ *
  * They are four views because each can rot on its own: a whitelist line
  * with no directory adds nothing, a directory with no whitelist line is
  * invisible, a manifest entry with neither is a lie, and a reference to
@@ -88,6 +94,14 @@ import { fileURLToPath } from 'node:url';
 
 
 import { argvHelp } from './argvHelp.js';
+/**
+ * ⛓ THE CAPABILITY VOCABULARY, IMPORTED FROM ITS ONE CONSUMER — never a
+ * second copy spelled here. A gate spelled differently from the code it
+ * gates tests itself; this file already learned that with `scannable()`,
+ * whose duplicate inside `--self-test` left a mutant green.
+ */
+import { WASM_BUILD_CAPABILITIES }
+    from '../../frontend/modules/flashPanel/seedlingRandomizerEligibility.js';
 
 argvHelp(import.meta.url);
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -346,7 +360,38 @@ for (const b of manifest.builds) {
         if (got !== n) fail(`${b.name}/${f}: ${got} bytes != manifest ${n}`);
     }
     if (!b.namedBy?.length) fail(`${b.name}: manifest entry names nobody in namedBy`);
-    console.log(`  ${b.name.padEnd(24)} ${line.join('')}`);
+
+    /**
+     * ── (e) ⚖ THE CAPABILITY DECLARATION (EDITOR INTEGRATION slice P1-a) ─
+     *
+     * ⚖ USER, 2026-08-29: a frontend feature detects from DATA whether it
+     * applies, and the BUILD's half of that datum is this list. Two ways it
+     * can rot, and both are silent at the consumer:
+     *
+     *   - a MISSING array reads as "this build has no capabilities", which is
+     *     indistinguishable from a manifest that simply predates the field.
+     *     The panel would quietly stop offering a feature a build really has,
+     *     with no error anywhere. ⇒ the array is MANDATORY, and `[]` is the
+     *     way a build says "measured, none".
+     *   - a TYPO (`apitm`) is not a name the consumer looks for, so it means
+     *     exactly what absence means. ⇒ every name must be in the vocabulary
+     *     the consumer itself declares.
+     */
+    if (!Array.isArray(b.capabilities)) {
+        fail(`${b.name}: no \`capabilities\` ARRAY — it is mandatory, and \`[]\` is how a `
+            + 'build says "measured, none". An absent field is indistinguishable from that '
+            + 'at the consumer, so the feature would vanish with no error');
+    } else {
+        for (const cap of b.capabilities.filter((c) => !WASM_BUILD_CAPABILITIES.includes(c))) {
+            fail(`${b.name}: capability ${JSON.stringify(cap)} is not in the declared `
+                + `vocabulary [${WASM_BUILD_CAPABILITIES.join(', ')}] — a name the consumer `
+                + 'does not look for means exactly what absence means');
+        }
+        const dupes = b.capabilities.filter((c, i) => b.capabilities.indexOf(c) !== i);
+        for (const d of new Set(dupes)) fail(`${b.name}: capability ${JSON.stringify(d)} twice`);
+    }
+    console.log(`  ${b.name.padEnd(24)} ${line.join('')}`
+        + `  capabilities=[${(b.capabilities ?? []).join(', ')}]`);
 }
 
 // ── (d) nothing else is tracked in the submodule ────────────────────

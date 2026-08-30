@@ -146,7 +146,19 @@ export const regionSubstrateOf = (region, atlas, options = {}) => (
 // the item/location maps, and now the position signals the crossing detector
 // reads. Games with no wiring here compile graph-only.
 export const FLASH_PANEL_WIRING = Object.freeze({
-    seedling: Object.freeze({ config: 'seedling.json', wasm: 'seedling_bot_ap_p4c/game.html' }),
+    /**
+     * ⛓ p4d SINCE EDITOR INTEGRATION SLICE P1, AND IT IS THE COMPILER'S
+     * WIRING DEFAULT MOVING — NOT a SEEDLING_PAGE default. p4d is the only
+     * build declaring the `apitem` capability (`wasm/builds.json`), which is
+     * the build-side half of the panel's data-driven feature detection
+     * (⚖ user, 2026-08-29; `flashPanel/seedlingRandomizerEligibility.js`), so
+     * a preset compiled at p4c gets the vanilla game and the randomizer
+     * refuses BY NAME. ⛔ `watchWasm.WASM_PAGE`, every script's
+     * `SEEDLING_PAGE` default and `check-seedling-wasm-pages`' BUILD literal
+     * still say p4c: making p4d THE default is a separate decision over 50-odd
+     * tracked files (plan §17.3.8).
+     */
+    seedling: Object.freeze({ config: 'seedling.json', wasm: 'seedling_bot_ap_p4d/game.html' }),
 });
 
 const endpointKey = (regionId, exitId) => `${regionId}/${exitId}`;

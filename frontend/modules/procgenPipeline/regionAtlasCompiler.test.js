@@ -352,7 +352,7 @@ describe('projection 3 — play-time sidecars (Phase 4)', () => {
 
     it('stamps the flashPanel wiring so a regeneration can no longer drop it', () => {
         expect(rules.flash_panel).toEqual({
-            config: 'seedling.json', wasm: 'seedling_bot_ap_p4c/game.html',
+            config: 'seedling.json', wasm: 'seedling_bot_ap_p4d/game.html',
         });
         // The flavour is named now that there are two of them (Phase 5b).
         expect(formatCompileReport(report).join('\n'))
@@ -496,7 +496,7 @@ describe('per-region substrate dispatch (EDITOR INTEGRATION W1)', () => {
         const mixed = compileRegionAtlas(twoRegionAtlas(MAZE_SUBSTRATE), {
             mapDoc: MAP_DOC, mazeProjection: mazeDeps(),
         });
-        expect(mixed.rules.flash_panel).toEqual({ config: 'seedling.json', wasm: 'seedling_bot_ap_p4c/game.html' });
+        expect(mixed.rules.flash_panel).toEqual({ config: 'seedling.json', wasm: 'seedling_bot_ap_p4d/game.html' });
 
         const allMaze = compileRegionAtlas(twoRegionAtlas(undefined), {
             mapDoc: MAP_DOC, sidecarFlavor: 'maze', mazeProjection: mazeDeps(),
@@ -516,7 +516,7 @@ describe('per-region substrate dispatch (EDITOR INTEGRATION W1)', () => {
             mapDoc: MAP_DOC, sidecarFlavor: 'maze', mazeProjection: mazeDeps(),
         });
         expect(reverse.report.substrates).toEqual({ flash_seedling: 1, [MAZE_SUBSTRATE]: 1 });
-        expect(reverse.rules.flash_panel).toEqual({ config: 'seedling.json', wasm: 'seedling_bot_ap_p4c/game.html' });
+        expect(reverse.rules.flash_panel).toEqual({ config: 'seedling.json', wasm: 'seedling_bot_ap_p4d/game.html' });
     });
 
     it('the SAME atlas compiled --maze yields two maze sidecars — the field agrees with the default', () => {
