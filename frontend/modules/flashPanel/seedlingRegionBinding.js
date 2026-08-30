@@ -371,19 +371,38 @@ export class SeedlingRegionBinding {
             }
         }
 
+        /**
+         * ⛔ THE AGE IS CHECKED FIRST HERE TOO — trap 961's shape, and the
+         * arrival mark was the half that still read the other way round
+         * (EDITOR INTEGRATION slice P2, ⚖ §17.4.8 residue).
+         *
+         * The mark matches ONE level, and the level a teleport targets is
+         * exactly the level the player will eventually come BACK to through
+         * that same door. So with the equality first, a mark that was never
+         * landed and never written off swallowed the genuine later return —
+         * however much later it came — and the timeout below it was decorative
+         * on the only report it could ever have applied to. Reordered, the
+         * write-off wins and that return is a real crossing.
+         *
+         * ⚠ The two other branches are UNCHANGED, and this is the whole
+         * behavioural delta: `age > TIMEOUT && level === mark.level`. Inside
+         * the window nothing moves — a matching level is still our own
+         * teleport, a differing one still pre-arrival noise with the mark left
+         * armed for the landing that has not come yet.
+         */
         if (this.pendingArrival) {
-            if (this.pendingArrival.level === level) {
+            if (this._now() - this.pendingArrival.at > ARRIVAL_ECHO_TIMEOUT_MS) {
+                this.pendingArrival = null; // written off — treat this as real
+            } else if (this.pendingArrival.level === level) {
                 this.pendingArrival = null;
                 this.lastLevel = level;
                 return []; // our own teleport, swallowed
-            }
-            if (this._now() - this.pendingArrival.at <= ARRIVAL_ECHO_TIMEOUT_MS) {
+            } else {
                 // The teleport has not landed yet; this report is pre-arrival
                 // noise, not a player crossing.
                 this.lastLevel = level;
                 return [];
             }
-            this.pendingArrival = null; // written off — treat this as real
         }
 
         if (level === this.lastLevel) return [];

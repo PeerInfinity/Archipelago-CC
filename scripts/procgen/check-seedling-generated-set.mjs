@@ -90,7 +90,7 @@ const { buildLevelSet, apMappingInvalidation } = await M('levelSetExporter.js');
 const { validateLevelSet, planLevelSetChunks } = await M('levelSetValidator.js');
 const { parseTape } = await M('tapeFormat.js');
 
-const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4c';
+const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4d';
 const PAGE_URL = `http://localhost:8000/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
 const WIN_WSL = '/mnt/c/playwright';
 const WIN_DOS = 'C:\\playwright';

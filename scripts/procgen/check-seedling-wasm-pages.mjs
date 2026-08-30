@@ -117,17 +117,25 @@ if (!ROOT) { console.log('FAIL: --root=<siteRoot> is required'); process.exit(1)
 /**
  * The build watch.html's WASM_PAGE names.
  *
+ * ⛓⛓ p4d SINCE EDITOR INTEGRATION SLICE P2 — MOVED IN THE SAME COMMIT AS
+ * `watchWasm.js`'s `WASM_PAGE`, because the two are one fact and this file
+ * asserts the iframe's src against it. ⛔ SPELLED, NOT IMPORTED: a `BUILD`
+ * read out of `watchWasm.js` would compare the page against its own source
+ * and pass for any value at all (a fixed point — trap 769). The duplication
+ * is the discriminator; the coupling is stated here so the pair moves together.
+ *
  * ⛔ NOT OVERRIDABLE, AND THAT WAS MEASURED (EDITOR INTEGRATION M1-c). A
  * `process.env.SEEDLING_PAGE || …` was added here to put a CONTROL BUILD
  * through this gate, and it does not do that: every SHIP arm below drives
  * `watch.html`, whose iframe is pointed by `watchWasm.js`'s own `WASM_PAGE`
  * constant — so an override moves the two "is served" rows and the iframe-src
- * row and leaves all four ship arms running against p4c. A knob that appears
+ * row and leaves all four ship arms running against whatever `WASM_PAGE`
+ * says. A knob that appears
  * to switch builds and switches three rows is worse than no knob. Driving
  * another build is `verify-seedling-bot-differential.mjs`'s job; it honours
  * `SEEDLING_PAGE` for real, because it opens the game page itself.
  */
-const BUILD = 'seedling_bot_ap_p4c';
+const BUILD = 'seedling_bot_ap_p4d';
 const GAME = `${ROOT}/modules/flashPanel/wasm/${BUILD}/game.html`;
 const WASM = `${ROOT}/modules/flashPanel/wasm/${BUILD}/${BUILD}.wasm`;
 const TAPE = 'frontend/modules/seedlingDemo/fixtures/tapes/pit-fall-chain-85.json';

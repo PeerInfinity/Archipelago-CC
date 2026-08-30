@@ -69,7 +69,7 @@ takeBoxLockOrExit({ name: 'probe-seedling-span-ceiling.mjs', kind: 'browser' });
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
-const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4c';
+const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4d';
 const WASM_DIR = join(REPO, 'frontend', 'modules', 'flashPanel', 'wasm', PAGE_NAME);
 const PAGE_URL = `http://localhost:8000/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
 

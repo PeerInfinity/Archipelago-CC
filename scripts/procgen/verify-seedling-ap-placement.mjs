@@ -9,9 +9,20 @@
  * H7 rewrites the vanilla 116 so every AP location's pickup entity becomes an
  * `<apitem>`; H8 delivers that set through `botLoadLevels`/`botLevelSet`.
  * ⛔ **`Game.as`'s XML loop enumerates KNOWN element names** (`:2211-2279`), so
- * on **p4c** — the build that ships today — an unknown `<apitem>` is IGNORED.
- * ⇒ a rewritten room shows **NO pickup at all** at an AP location, and the
- * `APItem` that will stand there lands in M1's p4d.
+ * on **p4c** — the build declaring no `apitem` — an unknown `<apitem>` is
+ * IGNORED. ⇒ a rewritten room shows **NO pickup at all** at an AP location,
+ * and the `APItem` that stands there instead is M1's p4d.
+ *
+ * ⛔⛔ **SO `PAGE_NAME` BELOW IS A CONTROL, NOT A DEFAULT, AND IT IS THE LAST
+ * ONE LEFT ON p4c.** EDITOR INTEGRATION slice P2 (⚖ user, 2026-08-30) moved
+ * every other default in this repository onto p4d; this file kept p4c because
+ * the ABSENT half of the pair — and P1-e's `panel-control-p4c` arm — are
+ * claims about a build that LACKS the capability. Point it at p4d and both
+ * arms agree, the rows go green, and nothing is being tested.
+ * ⛓ `check-seedling-wasm-pins.mjs` **row (f)** gates exactly that: this
+ * file's `SEEDLING_PAGE` default must name a manifest build whose
+ * `capabilities` do not include `apitem`. Retiring p4c means MOVING this
+ * default to another such build, not deleting it.
  *
  * That absence is only evidence next to its control, so this instrument runs
  * the SAME page twice:
@@ -62,9 +73,11 @@
  *   python3 -m http.server 8129            # repo root of THIS worktree
  *   node scripts/procgen/verify-seedling-ap-placement.mjs --win [--win-port=N]
  *
- * `--win` runs the M1 arms — the ones that need the world to TURN — through
+ * `--win` runs EVERY arm — H7's ABSENT/PRESENT roster pair on the control
+ * build, M1's on p4d, and P1-e's on the real app — through
  * `seedling-level-set-win.py` on real-GPU Windows Chrome (~24 fps) instead of
- * WSL's SwiftShader (~0.45 fps). `seedling-bot.md` says *"always pass
+ * WSL's SwiftShader (~0.45 fps). (The roster arms moved here at slice P2;
+ * before that they were the one batch still on the slow channel.) `seedling-bot.md` says *"always pass
  * `--win`"*; M1 did not, and read a three-frame observation window as a dead
  * world. `--win-port=` names the repo-root static server Windows can reach —
  * ⛔ NOT :8000, which serves the PRIMARY tree.
@@ -243,10 +256,20 @@ console.log(`  subject room(s): ${SUBJECTS.map((s) => `${s.region} L${s.level} `
  * room-load fade. The physics is identical either way; a deterministic tick
  * loop does not care what draws it.
  *
- * ⚠ THE ROSTER ARMS ABOVE STAY LOCAL AND THAT IS DELIBERATE: they read what
- * `Game`'s constructor BUILT and need no frames at all, so they cost the same
- * on either channel and keep working on a box with no Windows side. `--win`
- * covers the M1 arms, which are the ones that need a world that turns.
+ * ⛓⛓ AND SINCE SLICE P2 (EDITOR INTEGRATION P3, folded) `--win` COVERS THE
+ * ROSTER ARMS TOO. The old note here said they "stay local and that is
+ * deliberate", on the argument that they read what `Game`'s constructor BUILT
+ * and need no frames — true, and still true, but it was an argument for the
+ * arms being CHEAP on either channel, never for running them on the slow one.
+ * What it actually bought was a run that opened TWO browsers on two channels
+ * and spent ~2 s per arm on a landing poll that costs ~0.1 s at 24 fps. They
+ * are on `armPlan`/`runArmsWin` now — the same runner, the same step SOURCES,
+ * one browser — and the LOCAL channel stays reachable by simply not passing
+ * `--win`, so a box with no Windows side still runs every row.
+ *
+ * ⛔ THE ROSTER ARMS DRIVE A DIFFERENT BUILD FROM THE M1 ARMS, and that is the
+ * whole reason `armPlan` takes a `url`: `PAGE_NAME` (no `apitem`) for the
+ * ABSENT/PRESENT pair, `M1_PAGE` (p4d) for the rows that need the class.
  *
  * ⛔ AND THE PAGE MUST BE SERVED WHERE WINDOWS CAN SEE IT. `serveRepoRoot()`
  * binds 127.0.0.1 on a free port for THIS process; Windows Chrome reaches WSL
@@ -279,103 +302,335 @@ const browser = await chromium.launch({
 });
 
 /**
- * ONE READING: a FRESH page, the set delivered through the shipped delivery
- * module, then ONE boot and its `botMobiles()` roster.
- *
- * ⛔ A FRESH PAGE PER (ARM, ROOM), AND THE SECOND HALF OF THAT RULE WAS
- * MEASURED THE HARD WAY. A first cut booted all four subject rooms on one
- * page; rooms 1 and 3 read their own roster and rooms 2 and 4 read the
- * PREVIOUS room's, unchanged, down to the `bosskey` position — a stale reading
- * that looks exactly like a correct one, because the roster is well-formed and
- * plausible. `botStart` reuses the world unless the next tape's boot names
- * other construction args (`Bot.as:1722-1725`), so consecutive boots on one
- * page are not independent observations. One page, one boot, one claim.
+ * ⛔ THE PATH IS WRITTEN WHOLE AND THE NAME IS DERIVED FROM IT, and that is not
+ * a style choice. `check-seedling-wasm-pins.mjs` enumerates *"the builds this
+ * repo's tracked files actually spell"* through four spellings, and a name
+ * assembled by interpolation (`.../wasm/${M1_PAGE}/`) matches NONE of them —
+ * measured here: with the name in its own `const`, the gate read this file and
+ * reported p4d UNREFERENCED, which is how a build ships and then gets cleared
+ * for retirement while an instrument still loads it. Spelt as a literal path
+ * it is spelling 1, and the pin is real.
  */
-async function runReading(label, subject, set, invalidation) {
-    const page = await browser.newPage({ viewport: { width: 900, height: 700 } });
-    const logs = [];
-    page.on('console', (m) => logs.push(`[${m.type()}] ${m.text()}`));
-    page.on('pageerror', (e) => logs.push(`[pageerror] ${e.message}`));
-    const out = { label, level: subject.level, delivery: null, room: null, logs };
-    try {
-        await page.goto(PAGE_URL, { waitUntil: 'domcontentloaded' });
-        await page.waitForFunction(() => window.__runtimeReady === true, null, { timeout: 240000 });
-        // The page refuses to press ▶ itself (the renderer and the audio context
-        // consume the user activation); Playwright's click IS a user gesture.
-        await page.click('#btn-start', { timeout: 60000 });
-        await page.waitForFunction(
-            () => typeof window.__swfBridge?.game?.botStatus === 'function',
-            null, { timeout: 240000 });
+const M1_ARTIFACT = join(REPO, 'frontend/modules/flashPanel/wasm/seedling_bot_ap_p4d');
+const M1_PAGE = basename(M1_ARTIFACT);
+const M1_URL = `http://127.0.0.1:${PORT}/frontend/modules/flashPanel/wasm/${M1_PAGE}/game.html`;
+/** The same page, on the host+port Windows Chrome can reach. */
+const WIN_URL = `http://localhost:${WIN_PORT}/frontend/modules/flashPanel/wasm/${M1_PAGE}/game.html`;
 
-        // ── the delivery, running IN THE PAGE ────────────────────────────
-        out.delivery = await page.evaluate(async ([levelSet, companion]) => {
-            const { SeedlingLevelSetDelivery } = await import(
-                '/frontend/modules/flashPanel/seedlingLevelSetDelivery.js');
-            const { planLevelSetChunks } = await import(
-                '/frontend/modules/seedlingDemo/levelSetValidator.js');
-            const g = window.__swfBridge.game;
-            const d = new SeedlingLevelSetDelivery({
-                planChunks: planLevelSetChunks,
-                bot: (name, arg) => (arg === undefined ? g[name]() : g[name](arg)),
-            });
-            d.arm(levelSet, companion);
-            const result = d.deliver();
-            return { ...result, stats: d.stats, state: d.state };
-        }, [set, invalidation]);
+/**
+ * ⛓⛓ THE CONTROL PAGE ON THE `--win` HOST. `PAGE_URL` above is the same
+ * build on the ephemeral local server this process binds; slice P2 moved
+ * H7's roster arms onto the `--win` channel, and Windows Chrome reaches WSL
+ * through `localhost:<--win-port>` on a server that is ALREADY UP — never
+ * through a 127.0.0.1 port `serveRepoRoot()` chose inside this process.
+ */
+const CONTROL_WIN_URL = `http://localhost:${WIN_PORT}/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
 
-        /**
-         * ── the one boot, then the roster ────────────────────────────────
-         *
-         * ⛔⛔ **POLLED ON `armed`, NOT SLEPT — AND THE THREE-SECOND SLEEP THIS
-         * REPLACES WAS A COIN FLIP.** M1b ran this file twice on one tree and
-         * got two different answers: `Rostef L30`'s rewritten arm came back
-         * with LEVEL 0's roster (`IntroCharacter`, `Statue`, `Player@88,136`)
-         * on the second run, and `bosskey0@L19` moved from *observable* to
-         * *not observable* between them. At ~0.45 frames/sec (see `tapeFor`)
-         * three seconds is ONE OR TWO FRAMES, and whether the world swap has
-         * landed inside them is luck.
-         *
-         * ⛓ AND THE ROW BELOW COULD NOT CATCH IT, WHICH IS THE SHARPER HALF.
-         * *"botStatus says level N"* passes the instant `botStart` evaluates
-         * `new Game(level, …)`, because that constructor writes `Main.level` on
-         * its own second line while the swap is still only `FP._goto` — trap
-         * 112, and `Bot.update`'s own gate says so in a fifty-line comment. So
-         * a stale roster passed a level check and then differed from its
-         * control by three entities, which is exactly what a real placement
-         * defect looks like.
-         *
-         * ⛓ `armed` IS THE LANDING, and it is the only field that is. `Bot.update`
-         * sets it when `FP.world === pendingWorld` — an OBJECT IDENTITY test —
-         * and `Engine.checkWorld()` has already called `begin()` (and therefore
-         * `loadlevel`) by then, so an armed bot is a built room. It costs ONE
-         * frame rather than a fade, so this is also ~2 s instead of 3 s of
-         * hoping. `finished` is accepted beside it because a 0-tick tape
-         * disarms on its first live frame.
-         */
-        out.room = await page.evaluate(async ([t, deadline]) => {
-            const g = window.__swfBridge.game;
-            const loaded = g.botLoadTape(t);
-            const started = g.botStart();
-            const t0 = Date.now();
-            let status = null;
-            let landed = false;
+/**
+ * ⛓⛓⛓ THE STEP SOURCES ARE STRINGS, AND THAT IS WHAT MAKES ONE ARM RUN ON
+ * TWO CHANNELS. Playwright invokes a string expression that evaluates to a
+ * function with the argument it is handed — in node AND in Windows Python —
+ * so the SAME source drives the local page and the one
+ * `seedling-level-set-win.py` opens on real-GPU Windows Chrome. Written as
+ * closures they would be node-only, and the `--win` arm would be a second
+ * implementation of the delivery and the poll.
+ */
+const M1_STEPS = {
+    // ⛓ THE DECLARATIONS ARE THE SHIPPED ONES, spliced from
+    // games/seedling.json rather than written here — the ORDER is the
+    // guarantee under test and a list typed in the gate would prove
+    // nothing about the file the panel loads.
+    configure: `(cfg) => {
+        window.__swfBridge.stateLog.length = 0;
+        return window.__swfBridge.game.configure(JSON.stringify(cfg));
+    }`,
+    deliver: `async ([levelSet, companion]) => {
+        const { SeedlingLevelSetDelivery } = await import(
+            '/frontend/modules/flashPanel/seedlingLevelSetDelivery.js');
+        const { planLevelSetChunks } = await import(
+            '/frontend/modules/seedlingDemo/levelSetValidator.js');
+        const g = window.__swfBridge.game;
+        const d = new SeedlingLevelSetDelivery({
+            planChunks: planLevelSetChunks,
+            bot: (name, arg) => (arg === undefined ? g[name]() : g[name](arg)),
+        });
+        d.arm(levelSet, companion);
+        return { ...d.deliver(), state: d.state };
+    }`,
+    /**
+     * ⛓⛓ THREE LANDINGS, AND WHICH ONE IS ASKED FOR IS THE CALLER'S CLAIM.
+     *   'finished'  the bot's own terminal latch — a tape that RAN.
+     *   'armed'     `FP.world === pendingWorld`, the world SWAP. Slice P2
+     *               brought H7's roster arms onto this runner and this is the
+     *               landing they need: `botStatus.level` moves inside
+     *               `new Game`, one line into a constructor whose world has
+     *               not been swapped in yet (trap 112), so a LEVEL check
+     *               passes on a STALE roster. ⛔ The three-second sleep this
+     *               replaced was a coin flip — M1b ran the file twice on one
+     *               tree and got two different rosters out of it.
+     *   'settle'    a duration. The only one that is not a condition; kept for
+     *               arms whose claim is that the page did NOT move.
+     */
+    room: `async ([t, ms, landing, deadline]) => {
+        const g = window.__swfBridge.game;
+        const loaded = g.botLoadTape(t);
+        const started = g.botStart();
+        const t0 = Date.now();
+        let status = null;
+        const read = () => {
+            try { status = JSON.parse(g.botStatus()); } catch (e) { status = null; }
+            return status;
+        };
+        let landed = false;
+        if (landing === 'armed') {
+            // ⛔ POLLED ON \`armed\`, NOT SLEPT — the swap is an OBJECT IDENTITY
+            // test in \`Bot.update\`, and \`Engine.checkWorld()\` has already run
+            // \`begin()\` (and therefore \`loadlevel\`) by then, so an armed bot is
+            // a BUILT ROOM. \`finished\` counts too: a 0-tick tape disarms on its
+            // first live frame.
             for (;;) {
-                try { status = JSON.parse(g.botStatus()); } catch { status = null; }
-                if (status && (status.armed || status.finished)) { landed = true; break; }
+                const st = read();
+                if (st && (st.armed || st.finished)) { landed = true; break; }
                 if (Date.now() - t0 > deadline) break;
                 await new Promise((r) => setTimeout(r, 250));
             }
-            let mobiles = null;
-            try { mobiles = JSON.parse(g.botMobiles()); } catch { mobiles = null; }
-            return { loaded, started, mobiles, landed, waitedMs: Date.now() - t0,
-                level: status?.level ?? null };
-        }, [tapeFor(subject.level, subject.spawn), deadlineForTicks(0)]);
-    } catch (e) {
-        out.error = e.message.split('\n')[0];
-        console.log(`  PAGE LOGS (last 25):\n${logs.slice(-25).map((l) => `    ${l}`).join('\n')}`);
+        } else if (landing === 'finished') {
+            // ⛔ POLLED, NOT SLEPT — see \`tapeFor\`. \`finished\` is the bot's
+            // own terminal latch and the ONLY honest answer to "has this
+            // tape run"; a wall-clock number would have to encode a frame
+            // rate the CHANNEL decides, and the two channels differ by 50x.
+            for (;;) {
+                const st = read();
+                if (st && (st.finished || (st.error || '') !== '')) { landed = true; break; }
+                if (Date.now() - t0 > deadline) break;
+                await new Promise((r) => setTimeout(r, 250));
+            }
+        } else {
+            await new Promise((r) => setTimeout(r, ms));
+            read();
+        }
+        let mobiles = null;
+        try { mobiles = JSON.parse(g.botMobiles()); } catch (e) { mobiles = null; }
+        return { loaded, started, mobiles, landed,
+            level: status ? status.level : null,
+            status, waitedMs: Date.now() - t0,
+            reports: window.__swfBridge.stateLog.slice() };
+    }`,
+    // ⛓ A SYNTHETIC \`ReceivedItems\`: the one write the bridge makes on the
+    // AP server's say-so. ⚠ 6 s, not 3: measured at W5-0, a queued write can
+    // take >3 s to land and report on headless swiftshader — the poll is a
+    // game frame, and they are slow there.
+    grant: `async ([property, ms]) => {
+        const before = window.__swfBridge.stateLog.length;
+        window.__swfBridge.queueItems({ class: 'main', property, value: true });
+        await new Promise((r) => setTimeout(r, ms));
+        return window.__swfBridge.stateLog.slice(before);
+    }`,
+};
+
+/**
+ * ONE READING on the M1 build, as a PLAN: a fresh page, ▶ Start,
+ * `configure` with the shipped property declarations, an optional delivery,
+ * one boot, and then whatever the caller asked for. ⛔ One page, one boot,
+ * one claim — trap 955: `botStart` reuses the world, so consecutive boots
+ * on one page read the previous room's roster.
+ */
+const armPlan = (name, { set = null, boot, settleMs = 5000, grant = null, ticks = 0,
+    awaitFinish = false, landing = null, persistence = [], inputs = [], url = null,
+    configure = true }) => {
+    const steps = configure ? [{ label: 'configure', eval: M1_STEPS.configure,
+        arg: { classes: GAME_CONFIG.classes,
+            state_properties: GAME_CONFIG.state_properties } }] : [];
+    if (set) {
+        steps.push({ label: 'deliver', eval: M1_STEPS.deliver,
+            arg: [set, apMappingInvalidation(set)] });
     }
-    await page.close();
+    steps.push({ label: 'room', eval: M1_STEPS.room,
+        arg: [tapeFor(boot.level, { x: boot.x, y: boot.y }, ticks,
+            { persistence, inputs }), settleMs,
+        landing ?? (awaitFinish ? 'finished' : 'settle'), deadlineForTicks(ticks)] });
+    if (grant) steps.push({ label: 'grant', eval: M1_STEPS.grant, arg: [grant, 6000] });
+    return { name, steps, ticks, awaitFinish, ...(url ? { url } : {}) };
+};
+
+/** The local SwiftShader channel: one page per arm, in this process. */
+async function runArmsLocal(arms) {
+    const out = [];
+    for (const arm of arms) {
+        // eslint-disable-next-line no-await-in-loop
+        const page = await browser.newPage({ viewport: { width: 900, height: 700 } });
+        const rec = { name: arm.name, results: [], console: [], crashed: false };
+        page.on('console', (m) => rec.console.push(`[${m.type()}] ${m.text()}`));
+        page.on('pageerror', (e) => rec.console.push(`[pageerror] ${e.message}`));
+        try {
+            /* eslint-disable no-await-in-loop */
+            /**
+             * ⛓ THE ARM'S OWN PAGE, and it is not decoration: slice P2 moved
+             * H7's ABSENT/PRESENT roster arms onto this runner, and they drive
+             * the `apitem`-less CONTROL build while the M1 arms drive p4d.
+             * `runArmsWin` already forwarded a per-arm `url` (P1-e's panel
+             * arms); this side did not, so a hoisted arm would have run on the
+             * WRONG BUILD locally and agreed with itself on `--win`.
+             */
+            await page.goto(arm.url ?? M1_URL, { waitUntil: 'domcontentloaded' });
+            await page.waitForFunction(() => window.__runtimeReady === true,
+                null, { timeout: 240000 });
+            await page.click('#btn-start', { timeout: 60000 });
+            await page.waitForFunction(
+                () => typeof window.__swfBridge?.game?.botStatus === 'function',
+                null, { timeout: 240000 });
+            for (const step of arm.steps) {
+                /**
+                 * ⛔⛔ **THE TWO PLAYWRIGHT APIs DISAGREE ABOUT WHAT A
+                 * STRING MEANS, AND THE DEFAULT CHANNEL IS THE ONE THAT
+                 * LOSES.** Python's `page.evaluate(expr, arg)` *"if the
+                 * expression evaluates to a function, the function is
+                 * automatically invoked"*. Node's does NOT: it evaluates
+                 * the expression, gets a function OBJECT, fails to
+                 * serialise it and hands back `undefined` — **no throw, no
+                 * page error, every step recorded as `null`**. Measured:
+                 * the `--win` arm was green while this one produced
+                 * `configure=null` on all six arms and 31 red rows whose
+                 * shape said "the build is broken" rather than "the
+                 * harness returned nothing".
+                 *
+                 * ⛓ So the invocation is made EXPLICIT here rather than
+                 * relying on either API's convenience. The source stays a
+                 * string — one source, two channels, no drift — and this
+                 * side does the call the Python side does for free.
+                 */
+                const value = await page.evaluate(([src, a]) => {
+                    // eslint-disable-next-line no-eval
+                    const fn = (0, eval)(src);
+                    return fn(a);
+                }, [step.eval, step.arg]);
+                rec.results.push({ eval: step.label, value });
+            }
+            /* eslint-enable no-await-in-loop */
+        } catch (e) {
+            rec.crashed = true;
+            rec.error = e.message.split('\n')[0];
+        }
+        // eslint-disable-next-line no-await-in-loop
+        await page.close();
+        out.push(rec);
+    }
     return out;
+}
+
+/**
+ * ⛓⛓⛓ THE `--win` CHANNEL — real-GPU Windows Chrome, ~24 fps against
+ * SwiftShader's ~0.45, and `docs/json/developer/procgen/seedling-bot.md`
+ * has said *"always pass `--win`"* since R5. ⛔ IT IS NOT AN OPTIMISATION
+ * HERE: the two runtime rows need a world that TURNS, and at 2.5 s a frame
+ * a 100-tick approach walk is four minutes of box per door.
+ *
+ * The driver is `seedling-level-set-win.py` — the same dumb step runner the
+ * level-set probe uses, given an `eval` step so the JS above can be handed
+ * to it verbatim. Every rule, every table and every verdict stays here.
+ */
+function runArmsWin(arms, planUrl = WIN_URL) {
+    mkdirSync(WIN_SCRATCH_WSL, { recursive: true });
+    writeFileSync(join(WIN_SCRATCH_WSL, basename(WIN_DRIVER)), readFileSync(WIN_DRIVER));
+    /**
+     * ⛔⛔ **THE PLAN FORWARDS `url` AND `boot`, AND FORGETTING THEM COST
+     * A WHOLE WINDOWS RUN.** This line used to read
+     * `arms.map((a) => ({ name: a.name, steps: a.steps }))` — an
+     * ENUMERATION, so P1-e's per-arm `url` and `boot` were silently
+     * dropped and all five panel arms ran on the GAME page under the
+     * wasm-page boot. The symptom was three hops away from the cause:
+     * `arm` answered `{"tabs": []}` (no Golden Layout on the game page)
+     * and then `fetch('./presets/…')` resolved against
+     * `.../wasm/<build>/game.html`, 404'd, and the HTML error page threw
+     * `SyntaxError: Unexpected token '<'` out of `.json()`. A new field on
+     * a plan reaches nothing if the builder lists the old ones.
+     */
+    const plan = {
+        /**
+         * ⛓ THE PLAN'S URL IS THE DRIVER'S OWN ADAPTER PROBE PAGE, and the
+         * fallback for an arm that names none — so a batch whose arms ALL
+         * override it (slice P2's H7 roster arms, which drive the `apitem`-less
+         * CONTROL build) passes its own build in rather than making the probe
+         * open a page not one arm uses.
+         */
+        url: planUrl,
+        arms: arms.map((a) => ({ name: a.name, steps: a.steps,
+            ...(a.url ? { url: a.url } : {}), ...(a.boot ? { boot: a.boot } : {}) })),
+    };
+    writeFileSync(join(WIN_SCRATCH_WSL, 'ap-placement-plan.json'), JSON.stringify(plan));
+    const stdout = execFileSync(WIN_PY, [
+        '-3.12', `${WIN_SCRATCH_DOS}\\${basename(WIN_DRIVER)}`,
+        '--plan', `${WIN_SCRATCH_DOS}\\ap-placement-plan.json`,
+        '--out', `${WIN_SCRATCH_DOS}\\ap-placement-results.json`,
+    ], { cwd: WIN_SCRATCH_WSL, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+    for (const line of stdout.split('\n').filter((l) => l.trim())) console.log(`  win| ${line}`);
+    const results = JSON.parse(
+        readFileSync(join(WIN_SCRATCH_WSL, 'ap-placement-results.json'), 'utf8'));
+    return results.arms;
+}
+
+/** A driver record, back in the shape the rows below read. */
+const shapeArm = (rec) => {
+    const valueOf = (label) => rec.results?.find((r) => r.eval === label)?.value ?? null;
+    const room = valueOf('room');
+    return {
+        label: rec.name,
+        error: rec.crashed ? (rec.error ?? 'crashed') : null,
+        logs: rec.console ?? [],
+        configured: valueOf('configure'),
+        delivery: valueOf('deliver'),
+        room,
+        reports: room?.reports ?? [],
+        afterGrant: valueOf('grant') ?? [],
+    };
+};
+
+/**
+ * ⛓⛓⛓ ONE READING, AS A PLAN — H7's ABSENT/PRESENT ARMS RUN ON THE SAME
+ * RUNNER THE M1 ARMS DO (slice P2, folding P3's owed item).
+ *
+ * ⛔ THEY USED TO HAVE THEIR OWN `runReading`: goto, ▶, deliver, boot, poll,
+ * roster — a second implementation of the delivery and the landing poll, and
+ * NODE-ONLY, so these arms could never reach `--win` while the M1 arms could.
+ * `armPlan` builds the same steps as strings, so the SAME source drives both
+ * channels; that is the whole point of M1b's pattern and the reason there is
+ * nothing left here to drift.
+ *
+ * ⛔⛔ AND THE BUILD IS THE ARM'S, NOT THE CHANNEL'S. These arms drive
+ * `PAGE_NAME` — the build declaring no `apitem`, which is what makes ARM A's
+ * emptiness a claim — while M1's drive p4d. Slice P2 moved every other default
+ * onto p4d, so the two builds now genuinely differ in one run.
+ *
+ * ⛓ NO `configure` STEP: these arms read what `Game`'s constructor BUILT, not
+ * what the bridge reports, so the property declarations are not part of the
+ * claim and adding them would put a call in front of every reading for nothing.
+ *
+ * ⛓ `landing: 'armed'` IS THE ONE THAT WAS ALREADY HERE. `botStatus.level`
+ * moves inside `new Game` while the swap is still only `FP._goto` (trap 112),
+ * so the LEVEL is not the witness — the swap is. Carried over verbatim as the
+ * runner's third landing mode rather than re-argued.
+ *
+ * ⛔ ONE PAGE, ONE BOOT, ONE CLAIM — trap 955, and the runner enforces it by
+ * construction: `runArmsLocal` opens a fresh page per arm and the Windows
+ * driver does the same. A first cut of this file booted all four subject rooms
+ * on one page and rooms 2 and 4 read the PREVIOUS room's roster, unchanged,
+ * down to the `bosskey` position.
+ */
+const H7_ARMS = [];
+const H7_KEY = new Map();      // arm name -> { label, level }
+for (const s of SUBJECTS) {
+    for (const arm of [{ label: 'rewritten', set: REWRITTEN_SET },
+        { label: 'vanilla', set: VANILLA_SET }]) {
+        const name = `${arm.label}|${s.level}`;
+        H7_KEY.set(name, { label: arm.label, level: s.level });
+        H7_ARMS.push(armPlan(name, {
+            configure: false,
+            set: arm.set,
+            boot: { level: s.level, x: s.spawn.x, y: s.spawn.y },
+            landing: 'armed',
+            url: WIN ? CONTROL_WIN_URL : PAGE_URL,
+        }));
+    }
 }
 
 /**
@@ -393,18 +648,32 @@ const rosterOf = (room) => (room?.mobiles?.mobiles ?? [])
 const keysOf = (roster) => roster.map((m) => `${m.cls}@${m.at}`).sort();
 const atOf = (roster, at) => roster.find((m) => m.at === at) ?? null;
 
-const ARMS = [
-    { label: 'rewritten', set: REWRITTEN_SET },
-    { label: 'vanilla', set: VANILLA_SET },
-];
-const readings = new Map();
-for (const s of SUBJECTS) {
-    for (const arm of ARMS) {
-        // eslint-disable-next-line no-await-in-loop
-        readings.set(`${arm.label}|${s.level}`, await runReading(
-            arm.label, s, arm.set, apMappingInvalidation(arm.set)));
+/**
+ * ⛓⛓ THE CHANNEL, AND `--win` IS NOT AN OPTIMISATION HERE EITHER — it is what
+ * makes these arms cost the same as the M1 ones. They read what `Game`'s
+ * constructor BUILT and need no live frames, so they were left LOCAL when
+ * `--win` was built for M1; the cost of that was a run that opens TWO browsers
+ * on two channels and a poll that waits ~2 s per arm at 0.45 fps instead of
+ * ~0.1 s at 24. Headless stays reachable BY NAME (no flag), so a box with no
+ * Windows side still runs every row.
+ */
+const H7_RAW = WIN ? runArmsWin(H7_ARMS, CONTROL_WIN_URL) : await runArmsLocal(H7_ARMS);
+const readings = new Map(H7_RAW.map((rec) => {
+    const shaped = shapeArm(rec);
+    /**
+     * ⛓ THE PAGE LOGS OF A CRASHED ARM, PRINTED — `runReading` did this and a
+     * refactor that dropped it would leave the reader a one-line `error` for a
+     * failure whose cause is always in the console (a delivery refusal, a
+     * `pageerror` out of the glue, a boot that never reached `botStatus`).
+     */
+    if (shaped.error) {
+        console.log(`  PAGE LOGS (${rec.name}, last 25):\n`
+            + (shaped.logs ?? []).slice(-25).map((l) => `    ${l}`).join('\n'));
     }
-}
+    return [rec.name, { ...shaped, ...H7_KEY.get(rec.name) }];
+}));
+console.log(`\n# H7 on ${PAGE_NAME} — ${H7_ARMS.length} arm(s), `
+    + `${WIN ? `--win (real-GPU Windows Chrome, ${CONTROL_WIN_URL})` : `local SwiftShader (${PAGE_URL})`}`);
 
 // ── the claims ───────────────────────────────────────────────────────────────
 
@@ -518,22 +787,6 @@ notObservable.length > 0 ? `not observable: ${notObservable.join(', ')}` : '');
 // placement (another player's item ⇒ the logo). Nothing in the gate spells a
 // look; both come out of `buildPlacementTable`.
 
-/**
- * ⛔ THE PATH IS WRITTEN WHOLE AND THE NAME IS DERIVED FROM IT, and that is not
- * a style choice. `check-seedling-wasm-pins.mjs` enumerates *"the builds this
- * repo's tracked files actually spell"* through four spellings, and a name
- * assembled by interpolation (`.../wasm/${M1_PAGE}/`) matches NONE of them —
- * measured here: with the name in its own `const`, the gate read this file and
- * reported p4d UNREFERENCED, which is how a build ships and then gets cleared
- * for retirement while an instrument still loads it. Spelt as a literal path
- * it is spelling 1, and the pin is real.
- */
-const M1_ARTIFACT = join(REPO, 'frontend/modules/flashPanel/wasm/seedling_bot_ap_p4d');
-const M1_PAGE = basename(M1_ARTIFACT);
-const M1_URL = `http://127.0.0.1:${PORT}/frontend/modules/flashPanel/wasm/${M1_PAGE}/game.html`;
-/** The same page, on the host+port Windows Chrome can reach. */
-const WIN_URL = `http://localhost:${WIN_PORT}/frontend/modules/flashPanel/wasm/${M1_PAGE}/game.html`;
-
 /** The collection subject: a pickup the roster can see, in a warped room. */
 const M1_SUBJECT = [...table.values()].find((e) => e.ledgerId === 'torchpickup@L30');
 /** Its AP item's Seedling flag, DERIVED from the shipped config, never typed. */
@@ -633,219 +886,6 @@ if (!existsSync(join(M1_ARTIFACT, 'game.html'))) {
         .find((k) => FOREIGN_TABLE.get(k).ledgerId === M1_SUBJECT.ledgerId));
     const { set: FOREIGN_SET } = rewriteRecordSet(VANILLA_SET, FOREIGN_TABLE);
 
-    /**
-     * ⛓⛓⛓ THE STEP SOURCES ARE STRINGS, AND THAT IS WHAT MAKES ONE ARM RUN ON
-     * TWO CHANNELS. Playwright invokes a string expression that evaluates to a
-     * function with the argument it is handed — in node AND in Windows Python —
-     * so the SAME source drives the local page and the one
-     * `seedling-level-set-win.py` opens on real-GPU Windows Chrome. Written as
-     * closures they would be node-only, and the `--win` arm would be a second
-     * implementation of the delivery and the poll.
-     */
-    const M1_STEPS = {
-        // ⛓ THE DECLARATIONS ARE THE SHIPPED ONES, spliced from
-        // games/seedling.json rather than written here — the ORDER is the
-        // guarantee under test and a list typed in the gate would prove
-        // nothing about the file the panel loads.
-        configure: `(cfg) => {
-            window.__swfBridge.stateLog.length = 0;
-            return window.__swfBridge.game.configure(JSON.stringify(cfg));
-        }`,
-        deliver: `async ([levelSet, companion]) => {
-            const { SeedlingLevelSetDelivery } = await import(
-                '/frontend/modules/flashPanel/seedlingLevelSetDelivery.js');
-            const { planLevelSetChunks } = await import(
-                '/frontend/modules/seedlingDemo/levelSetValidator.js');
-            const g = window.__swfBridge.game;
-            const d = new SeedlingLevelSetDelivery({
-                planChunks: planLevelSetChunks,
-                bot: (name, arg) => (arg === undefined ? g[name]() : g[name](arg)),
-            });
-            d.arm(levelSet, companion);
-            return { ...d.deliver(), state: d.state };
-        }`,
-        room: `async ([t, ms, awaitFinish, deadline]) => {
-            const g = window.__swfBridge.game;
-            const loaded = g.botLoadTape(t);
-            const started = g.botStart();
-            const t0 = Date.now();
-            let status = null;
-            const read = () => {
-                try { status = JSON.parse(g.botStatus()); } catch (e) { status = null; }
-                return status;
-            };
-            if (awaitFinish) {
-                // ⛔ POLLED, NOT SLEPT — see \`tapeFor\`. \`finished\` is the bot's
-                // own terminal latch and the ONLY honest answer to "has this
-                // tape run"; a wall-clock number would have to encode a frame
-                // rate the CHANNEL decides, and the two channels differ by 50x.
-                for (;;) {
-                    const st = read();
-                    if (st && (st.finished || (st.error || '') !== '')) break;
-                    if (Date.now() - t0 > deadline) break;
-                    await new Promise((r) => setTimeout(r, 250));
-                }
-            } else {
-                await new Promise((r) => setTimeout(r, ms));
-                read();
-            }
-            let mobiles = null;
-            try { mobiles = JSON.parse(g.botMobiles()); } catch (e) { mobiles = null; }
-            return { loaded, started, mobiles, level: status ? status.level : null,
-                status, waitedMs: Date.now() - t0,
-                reports: window.__swfBridge.stateLog.slice() };
-        }`,
-        // ⛓ A SYNTHETIC \`ReceivedItems\`: the one write the bridge makes on the
-        // AP server's say-so. ⚠ 6 s, not 3: measured at W5-0, a queued write can
-        // take >3 s to land and report on headless swiftshader — the poll is a
-        // game frame, and they are slow there.
-        grant: `async ([property, ms]) => {
-            const before = window.__swfBridge.stateLog.length;
-            window.__swfBridge.queueItems({ class: 'main', property, value: true });
-            await new Promise((r) => setTimeout(r, ms));
-            return window.__swfBridge.stateLog.slice(before);
-        }`,
-    };
-
-    /**
-     * ONE READING on the M1 build, as a PLAN: a fresh page, ▶ Start,
-     * `configure` with the shipped property declarations, an optional delivery,
-     * one boot, and then whatever the caller asked for. ⛔ One page, one boot,
-     * one claim — trap 955: `botStart` reuses the world, so consecutive boots
-     * on one page read the previous room's roster.
-     */
-    const armPlan = (name, { set = null, boot, settleMs = 5000, grant = null, ticks = 0,
-        awaitFinish = false, persistence = [], inputs = [] }) => {
-        const steps = [{ label: 'configure', eval: M1_STEPS.configure,
-            arg: { classes: GAME_CONFIG.classes,
-                state_properties: GAME_CONFIG.state_properties } }];
-        if (set) {
-            steps.push({ label: 'deliver', eval: M1_STEPS.deliver,
-                arg: [set, apMappingInvalidation(set)] });
-        }
-        steps.push({ label: 'room', eval: M1_STEPS.room,
-            arg: [tapeFor(boot.level, { x: boot.x, y: boot.y }, ticks,
-                { persistence, inputs }), settleMs, awaitFinish, deadlineForTicks(ticks)] });
-        if (grant) steps.push({ label: 'grant', eval: M1_STEPS.grant, arg: [grant, 6000] });
-        return { name, steps, ticks, awaitFinish };
-    };
-
-    /** The local SwiftShader channel: one page per arm, in this process. */
-    async function runArmsLocal(arms) {
-        const out = [];
-        for (const arm of arms) {
-            // eslint-disable-next-line no-await-in-loop
-            const page = await browser.newPage({ viewport: { width: 900, height: 700 } });
-            const rec = { name: arm.name, results: [], console: [], crashed: false };
-            page.on('console', (m) => rec.console.push(`[${m.type()}] ${m.text()}`));
-            page.on('pageerror', (e) => rec.console.push(`[pageerror] ${e.message}`));
-            try {
-                /* eslint-disable no-await-in-loop */
-                await page.goto(M1_URL, { waitUntil: 'domcontentloaded' });
-                await page.waitForFunction(() => window.__runtimeReady === true,
-                    null, { timeout: 240000 });
-                await page.click('#btn-start', { timeout: 60000 });
-                await page.waitForFunction(
-                    () => typeof window.__swfBridge?.game?.botStatus === 'function',
-                    null, { timeout: 240000 });
-                for (const step of arm.steps) {
-                    /**
-                     * ⛔⛔ **THE TWO PLAYWRIGHT APIs DISAGREE ABOUT WHAT A
-                     * STRING MEANS, AND THE DEFAULT CHANNEL IS THE ONE THAT
-                     * LOSES.** Python's `page.evaluate(expr, arg)` *"if the
-                     * expression evaluates to a function, the function is
-                     * automatically invoked"*. Node's does NOT: it evaluates
-                     * the expression, gets a function OBJECT, fails to
-                     * serialise it and hands back `undefined` — **no throw, no
-                     * page error, every step recorded as `null`**. Measured:
-                     * the `--win` arm was green while this one produced
-                     * `configure=null` on all six arms and 31 red rows whose
-                     * shape said "the build is broken" rather than "the
-                     * harness returned nothing".
-                     *
-                     * ⛓ So the invocation is made EXPLICIT here rather than
-                     * relying on either API's convenience. The source stays a
-                     * string — one source, two channels, no drift — and this
-                     * side does the call the Python side does for free.
-                     */
-                    const value = await page.evaluate(([src, a]) => {
-                        // eslint-disable-next-line no-eval
-                        const fn = (0, eval)(src);
-                        return fn(a);
-                    }, [step.eval, step.arg]);
-                    rec.results.push({ eval: step.label, value });
-                }
-                /* eslint-enable no-await-in-loop */
-            } catch (e) {
-                rec.crashed = true;
-                rec.error = e.message.split('\n')[0];
-            }
-            // eslint-disable-next-line no-await-in-loop
-            await page.close();
-            out.push(rec);
-        }
-        return out;
-    }
-
-    /**
-     * ⛓⛓⛓ THE `--win` CHANNEL — real-GPU Windows Chrome, ~24 fps against
-     * SwiftShader's ~0.45, and `docs/json/developer/procgen/seedling-bot.md`
-     * has said *"always pass `--win`"* since R5. ⛔ IT IS NOT AN OPTIMISATION
-     * HERE: the two runtime rows need a world that TURNS, and at 2.5 s a frame
-     * a 100-tick approach walk is four minutes of box per door.
-     *
-     * The driver is `seedling-level-set-win.py` — the same dumb step runner the
-     * level-set probe uses, given an `eval` step so the JS above can be handed
-     * to it verbatim. Every rule, every table and every verdict stays here.
-     */
-    function runArmsWin(arms) {
-        mkdirSync(WIN_SCRATCH_WSL, { recursive: true });
-        writeFileSync(join(WIN_SCRATCH_WSL, basename(WIN_DRIVER)), readFileSync(WIN_DRIVER));
-        /**
-         * ⛔⛔ **THE PLAN FORWARDS `url` AND `boot`, AND FORGETTING THEM COST
-         * A WHOLE WINDOWS RUN.** This line used to read
-         * `arms.map((a) => ({ name: a.name, steps: a.steps }))` — an
-         * ENUMERATION, so P1-e's per-arm `url` and `boot` were silently
-         * dropped and all five panel arms ran on the GAME page under the
-         * wasm-page boot. The symptom was three hops away from the cause:
-         * `arm` answered `{"tabs": []}` (no Golden Layout on the game page)
-         * and then `fetch('./presets/…')` resolved against
-         * `.../wasm/<build>/game.html`, 404'd, and the HTML error page threw
-         * `SyntaxError: Unexpected token '<'` out of `.json()`. A new field on
-         * a plan reaches nothing if the builder lists the old ones.
-         */
-        const plan = {
-            url: WIN_URL,
-            arms: arms.map((a) => ({ name: a.name, steps: a.steps,
-                ...(a.url ? { url: a.url } : {}), ...(a.boot ? { boot: a.boot } : {}) })),
-        };
-        writeFileSync(join(WIN_SCRATCH_WSL, 'ap-placement-plan.json'), JSON.stringify(plan));
-        const stdout = execFileSync(WIN_PY, [
-            '-3.12', `${WIN_SCRATCH_DOS}\\${basename(WIN_DRIVER)}`,
-            '--plan', `${WIN_SCRATCH_DOS}\\ap-placement-plan.json`,
-            '--out', `${WIN_SCRATCH_DOS}\\ap-placement-results.json`,
-        ], { cwd: WIN_SCRATCH_WSL, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
-        for (const line of stdout.split('\n').filter((l) => l.trim())) console.log(`  win| ${line}`);
-        const results = JSON.parse(
-            readFileSync(join(WIN_SCRATCH_WSL, 'ap-placement-results.json'), 'utf8'));
-        return results.arms;
-    }
-
-    /** A driver record, back in the shape the rows below read. */
-    const shapeArm = (rec) => {
-        const valueOf = (label) => rec.results?.find((r) => r.eval === label)?.value ?? null;
-        const room = valueOf('room');
-        return {
-            label: rec.name,
-            error: rec.crashed ? (rec.error ?? 'crashed') : null,
-            logs: rec.console ?? [],
-            configured: valueOf('configure'),
-            delivery: valueOf('deliver'),
-            room,
-            reports: room?.reports ?? [],
-            afterGrant: valueOf('grant') ?? [],
-        };
-    };
 
     const reportsNamed = (r, name) => (r.reports ?? []).filter((x) => x.name === name);
     const atTile = (r, at) => (r.room?.mobiles?.mobiles ?? []).find((m) => `${m.x},${m.y}` === at) ?? null;

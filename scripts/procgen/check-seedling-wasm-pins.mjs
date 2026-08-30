@@ -100,7 +100,7 @@ import { argvHelp } from './argvHelp.js';
  * gates tests itself; this file already learned that with `scannable()`,
  * whose duplicate inside `--self-test` left a mutant green.
  */
-import { WASM_BUILD_CAPABILITIES }
+import { AP_ITEM_CAPABILITY, WASM_BUILD_CAPABILITIES }
     from '../../frontend/modules/flashPanel/seedlingRandomizerEligibility.js';
 
 argvHelp(import.meta.url);
@@ -392,6 +392,71 @@ for (const b of manifest.builds) {
     }
     console.log(`  ${b.name.padEnd(24)} ${line.join('')}`
         + `  capabilities=[${(b.capabilities ?? []).join(', ')}]`);
+}
+
+/**
+ * ── (f) ⚖ THE `apitem` CONTROL ARM MUST DRIVE A BUILD THAT LACKS `apitem` ──
+ *   (EDITOR INTEGRATION slice P2, ⚖ user 2026-08-30 — "make p4d the default")
+ *
+ * ⛔ A DEFAULT MOVE IS NOT A RETIREMENT, AND VIEW (a) CANNOT TELL THEM APART.
+ * P2 moved every remaining default onto the build that DECLARES `apitem`. The
+ * four views stay in agreement while that happens — some other tracked file
+ * still spells the older build somewhere — so nothing above notices when the
+ * one reference that MATTERS goes.
+ *
+ * And exactly one does matter. `verify-seedling-ap-placement.mjs` is built on
+ * a PAIR: `Game.as`'s XML loop enumerates known element names, so on a build
+ * with no `APItem` class an `<apitem>` element is IGNORED and the AP tile
+ * reads EMPTY — that absence is the H7 discriminator, and P1-e's
+ * `panel-control-p4c` arm is the same trick at the panel (the identical preset
+ * with `flash_panel.wasm` moved back to a build declaring nothing: a lookup
+ * that ignored `capabilities` would read *eligible* there and every row below
+ * it would move). ⇒ point that file's page at a build carrying `apitem` and
+ * both claims invert silently: every arm agrees, and the rows go green
+ * BECAUSE the control stopped being one.
+ *
+ * ⛓ SO THE LAW IS KEYED ON THE CAPABILITY, NOT ON A BUILD NAME. p4c satisfies
+ * it today; whoever retires p4c satisfies it by moving this default to another
+ * build that declares no `apitem`, and the row says so rather than pinning a
+ * name that would then have to be edited in two places. Same rule p4b's README
+ * cell states in prose for the `arm` capability, which `builds.json` does not
+ * declare and this gate therefore cannot check.
+ *
+ * ⚠ READ OFF THE TRACKED BLOB in the same spelling view (a) uses, so the
+ * `SEEDLING_PAGE` default is the subject and an `SEEDLING_PAGE=` override at
+ * run time is not — the default is the pin. Two independent sources: the
+ * verifier's SOURCE and the submodule's MANIFEST. Neither reads the other, so
+ * this is not a fixed point (trap 769).
+ */
+const CONTROL_FILE = 'scripts/procgen/verify-seedling-ap-placement.mjs';
+const CONTROL_SPELLING = /process\.env\.SEEDLING_PAGE\s*\|\|\s*'(seedling_[a-z0-9_]+)'/;
+{
+    let controlText = null;
+    try { controlText = scannable(readFileSync(join(REPO, CONTROL_FILE), 'utf8')); } catch { /* below */ }
+    const capsOf = (n) => manifest.builds.find((b) => b.name === n)?.capabilities ?? null;
+    const named = controlText?.match(CONTROL_SPELLING)?.[1] ?? null;
+    if (!trackedFiles.includes(CONTROL_FILE)) {
+        fail(`${CONTROL_FILE} is not tracked — it is the ${AP_ITEM_CAPABILITY} CONTROL, `
+            + 'and the H7 pair plus P1-e\'s panel control are the whole reason a build '
+            + `declaring no ${AP_ITEM_CAPABILITY} stays pinned`);
+    } else if (named === null) {
+        fail(`${CONTROL_FILE} names no build in the SEEDLING_PAGE-default spelling — `
+            + `the ${AP_ITEM_CAPABILITY} control arm has no subject, and its rows would go `
+            + 'green by agreeing with themselves');
+    } else if (capsOf(named) === null) {
+        fail(`${CONTROL_FILE} drives ${named}, which is not in the manifest`);
+    } else if (capsOf(named).includes(AP_ITEM_CAPABILITY)) {
+        fail(`${CONTROL_FILE} drives ${named}, which DECLARES ${AP_ITEM_CAPABILITY} — `
+            + `the control arm must drive a build that LACKS it (the H7 rows read the AP `
+            + 'tile EMPTY, and P1-e\'s panel control asserts INELIGIBLE). Retiring the '
+            + `build it used to drive means MOVING this default to another ${AP_ITEM_CAPABILITY}-less `
+            + 'build, not deleting it');
+    } else {
+        console.log(`\n# the ${AP_ITEM_CAPABILITY} control`);
+        console.log(`  ${CONTROL_FILE}`);
+        console.log(`  drives ${named}, capabilities=[${capsOf(named).join(', ')}] `
+            + `— no ${AP_ITEM_CAPABILITY}, so the ABSENT/PRESENT pair is still a pair`);
+    }
 }
 
 // ── (d) nothing else is tracked in the submodule ────────────────────

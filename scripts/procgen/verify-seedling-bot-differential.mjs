@@ -37,7 +37,12 @@
  * ── Prereqs ───────────────────────────────────────────────────────────
  *   - dev server on :8000 at the REPO ROOT (`python -m http.server 8000`)
  *   - the wasm artifact at
- *     frontend/modules/flashPanel/wasm/seedling_bot_ap_p4c/ — no longer
+ *     frontend/modules/flashPanel/wasm/seedling_bot_ap_p4d/ — the DEFAULT
+ *     since EDITOR INTEGRATION slice P2 (⚖ user, 2026-08-30); p4c is still
+ *     one `SEEDLING_PAGE=` away, and the 149-tape byte-inert sweep
+ *     (plan §17.4.6: 3,607 rows, 0 FAIL on p4d, `--win`) is what says the
+ *     oracle recordings below — made on the p4b/p4c lineages — still hold.
+ *     ⛓ No longer
  *     uncommitted: since `0aa7878e8` that directory is the submodule
  *     PeerInfinity/seedling-wasm, so a `--recurse-submodules` checkout has it.
  *     ⛓ AND THE DEFAULT MOVED OFF `seedling_bot_ap` at the wasm-hygiene
@@ -179,7 +184,7 @@ takeBoxLockOrExit({ name: 'verify-seedling-bot-differential.mjs', kind: 'windows
 // sweep against both, and swapping directories on disk to do that is how a
 // baseline gets lost. The artifact identity rides in the checkpoint
 // fingerprint below, so a resumed run can never reuse another build's verdict.
-const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4c';
+const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4d';
 const ARTIFACT = join(REPO, 'frontend', 'modules', 'flashPanel', 'wasm', PAGE_NAME);
 // ⚠ THE DIRECTORY IS NOT THE PAYLOAD NAME, IN EITHER DIRECTION.
 // `deploy_wasm_avm2.sh` names the payload after the BUILD, not the folder, so
@@ -1904,6 +1909,27 @@ try {
     } else {
         console.log('MODE: real-GPU Windows Chrome (--win)');
     }
+    /**
+     * ⛓⛓ **THE RUN ANNOUNCES WHICH BUILD IT DROVE, AND THAT IS A GAP THIS
+     * SLICE FOUND BY NEEDING THE ANSWER** (EDITOR INTEGRATION P2). ⛔ THIRD
+     * OCCURRENCE of the same family — traps 820 and 827 were *a guard cannot
+     * see which BUILD it drives; make the artifact ANNOUNCE it*, and this is
+     * the one where the READER is the victim rather than a guard.
+     *
+     * `check-seedling-wasm-pins` reads a DEFAULT out of the SOURCE, which is a
+     * claim about the file, not about the run — so when
+     * slice P2 moved this default from p4c to p4d there was nothing in a
+     * green log that said which build the green was about. It printed the
+     * mode and the adapter and not the subject.
+     *
+     * ⛔ Off `PAGE_NAME` and `PAGE_URL`, the values actually used, never a
+     * literal — a banner spelling its own constant would agree with itself
+     * whatever `SEEDLING_PAGE` said. `payloadBase()` is printed beside it
+     * because a build's payload filename is NOT always its directory name.
+     */
+    console.log(`BUILD: ${PAGE_NAME}${process.env.SEEDLING_PAGE
+        ? ' (SEEDLING_PAGE override)' : ' (the DEFAULT)'} — payload `
+        + `${payloadBase()}.wasm — ${PAGE_URL}`);
 
     const allNames = fixtureNames();
     check('fixture roster is non-empty', allNames.length > 0, `${allNames.length} tapes`);

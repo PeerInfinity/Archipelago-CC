@@ -1051,7 +1051,12 @@ exactly this reason. It suppresses a UI tutorial and nothing else, and R3's
 real collection needs it too, so no later rung has to retire it.
 
 ⛓ **M1 (2026-08-28) added `seedling_bot_ap_p4d`, BESIDE p4c and NOT the
-default.** It is the first build to carry anything the host reads beyond the
+default; EDITOR INTEGRATION slice P2 (2026-08-30, ⚖ user) made it THE
+default** — the watch page, `check-seedling-wasm-pages`' `BUILD` literal and
+every `SEEDLING_PAGE` default across 46 tracked files, on the licence of the
+150-tape byte-inert sweep (149 tapes, 3,607 rows, 0 FAIL on p4d, `--win`). p4c
+stays pinned as the `apitem` CONTROL — see `flashPanel/README.md`. It is the
+first build to carry anything the host reads beyond the
 vanilla item flags: `Pickups/APItem.as`, `Game.pendingExit`/`pendingCheck` and
 the `keyMask`/`totemCount` getters (`flash.md` has the design). Two ordering
 facts are worth carrying forward, because both are enforced by gates rather

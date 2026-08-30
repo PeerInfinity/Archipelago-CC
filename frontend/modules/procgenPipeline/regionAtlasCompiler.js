@@ -153,10 +153,18 @@ export const FLASH_PANEL_WIRING = Object.freeze({
      * the build-side half of the panel's data-driven feature detection
      * (⚖ user, 2026-08-29; `flashPanel/seedlingRandomizerEligibility.js`), so
      * a preset compiled at p4c gets the vanilla game and the randomizer
-     * refuses BY NAME. ⛔ `watchWasm.WASM_PAGE`, every script's
-     * `SEEDLING_PAGE` default and `check-seedling-wasm-pages`' BUILD literal
-     * still say p4c: making p4d THE default is a separate decision over 50-odd
-     * tracked files (plan §17.3.8).
+     * refuses BY NAME. ⛓ AND SINCE SLICE P2 (⚖ user, 2026-08-30) THIS IS NO
+     * LONGER THE ONLY DEFAULT ON p4d: `watchWasm.WASM_PAGE`,
+     * `check-seedling-wasm-pages`' `BUILD` literal and every script's
+     * `SEEDLING_PAGE` default moved with it over 46 tracked files. What stays
+     * on p4c is exactly the CONTROL — `verify-seedling-ap-placement.mjs`'s
+     * default, the only tracked build declaring no `apitem`, and
+     * `check-seedling-wasm-pins.mjs` row (f) is what keeps it there.
+     *
+     * ⛔ THIS TABLE IS THE ONLY CODE SOURCE OF A PRESET'S `flash_panel` BLOCK.
+     * Every other block in `frontend/presets/` was typed by hand and a
+     * regeneration drops it (`flashPanel/README.md` — the seed-1 `seedling`
+     * preset's block is PROVISIONAL until the producing side declares it).
      */
     seedling: Object.freeze({ config: 'seedling.json', wasm: 'seedling_bot_ap_p4d/game.html' }),
 });

@@ -210,7 +210,7 @@ export const INSTRUMENTS = frz({
         "files": 265,
         "lineStyle": 19,
         "withDocblock": 265,
-        "withFlags": 169
+        "withFlags": 171
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -9418,16 +9418,27 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/verify-seedling-atlas-maze.mjs"
         },
         {
-            "argvHelpers": [],
+            "argvHelpers": [
+                "HOST"
+            ],
             "browser": true,
             "category": "verify",
             "citedBy": [
                 "docs/json/developer/procgen/flash.md"
             ],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "host"
+            ],
             "file": "verify-seedling-atlas-play.mjs",
-            "flags": [],
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "host"
+                }
+            ],
             "inheritedFlags": [
                 {
                     "from": "argvHelp.js",
@@ -9519,14 +9530,25 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/verify-seedling-bot-differential.mjs"
         },
         {
-            "argvHelpers": [],
+            "argvHelpers": [
+                "HOST"
+            ],
             "browser": true,
             "category": "verify",
             "citedBy": [],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "host"
+            ],
             "file": "verify-seedling-wasm-bridge.mjs",
-            "flags": [],
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "host"
+                }
+            ],
             "inheritedFlags": [
                 {
                     "from": "argvHelp.js",

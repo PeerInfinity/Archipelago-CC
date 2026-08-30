@@ -18,9 +18,10 @@
  *      invocation and BridgeGeneric applies it in-game
  *
  * Prereqs:
- *   - dev server on :8000 (python -m http.server 8000 at repo root)
+ *   - a repo-root dev server (`python -m http.server 8000`); `--host=` names
+ *     another one, e.g. a worktree's own port
  *   - the wasm build at
- *     frontend/modules/flashPanel/wasm/seedling_bot_ap_p4c/, which since
+ *     frontend/modules/flashPanel/wasm/seedling_bot_ap_p4d/, which since
  *     2026-08-19 ships in the submodule PeerInfinity/seedling-wasm
  *     (`git submodule update --init frontend/modules/flashPanel/wasm`).
  *     ⛓ The script SKIPs (exit 0) when the SUBMODULE IS NOT CHECKED OUT.
@@ -44,7 +45,7 @@
  * a build that shows a title screen first arrives at the same place a little
  * later. ⇒ two pinned builds became one.
  *
- * Run: node scripts/procgen/verify-seedling-wasm-bridge.mjs
+ * Run: node scripts/procgen/verify-seedling-wasm-bridge.mjs [--host=http://localhost:8000]
  */
 import { chromium } from 'playwright';
 import { existsSync } from 'node:fs';
@@ -67,10 +68,21 @@ argvHelp(import.meta.url);
 takeBoxLockOrExit({ name: 'verify-seedling-wasm-bridge.mjs', kind: 'browser' });
 
 const HERE = dirname(fileURLToPath(import.meta.url));
+/**
+ * ⛔⛔ **THIS BUILD IS NOT A DEFAULT OF THIS SCRIPT — IT IS THE ONE THE PRESET
+ * WIRES, AND THE TWO WENT OUT OF STEP.** The row boots the app on the seed-1
+ * seedling preset and then waits for an iframe whose src it names here. EDITOR
+ * INTEGRATION slice P1 moved that preset's `flash_panel.wasm` to
+ * `seedling_bot_ap_p4d` and this file still said p4c, so `gameFrame()` could
+ * only ever throw `seedling wasm iframe not found`. It read as nothing because
+ * the only thing that runs this script is `seedling-wasm.yml`'s STEP 2, which
+ * is `continue-on-error: true`. ⇒ moved to p4d with the presets (slice P2).
+ * ⚠ Whoever moves `flash_panel.wasm` again moves these four lines with it.
+ */
 const ARTIFACT = join(HERE, '..', '..', 'frontend', 'modules', 'flashPanel',
-    'wasm', 'seedling_bot_ap_p4c');
+    'wasm', 'seedling_bot_ap_p4d');
 if (!existsSync(join(ARTIFACT, 'game.html'))
-    || !existsSync(join(ARTIFACT, 'seedling_bot_ap_p4c.wasm'))) {
+    || !existsSync(join(ARTIFACT, 'seedling_bot_ap_p4d.wasm'))) {
     console.log(`SKIP: the seedling-wasm submodule is not checked out at ${ARTIFACT}`
         + ' — run `git submodule update --init frontend/modules/flashPanel/wasm`');
     process.exit(0);
@@ -83,7 +95,22 @@ if (!existsSync(join(ARTIFACT, 'game.html'))
 // seedling preset afterwards, covering the panel's reinit-on-preset-
 // switch path (the flow a user takes when picking the preset in the
 // UI rather than the URL).
-const URL = 'http://localhost:8000/frontend/?mode=flash';
+/**
+ * ⛓ `--host=` — WHICH SERVER, AND WHY IT IS A FLAG NOW. The default is
+ * unchanged (`http://localhost:8000`), so every existing caller and CI step
+ * behaves exactly as before. ⛔ BUT :8000 SERVES THE PRIMARY WORKTREE (trap
+ * 1003), so a slice working in its own tree could not run this row against
+ * ITS OWN code at all — which is precisely how this file sat broken through
+ * slice P1 (it waited for a p4c iframe the preset had stopped naming) with
+ * nothing to catch it: its one automated caller is `seedling-wasm.yml` STEP 2,
+ * `continue-on-error: true`. A gate nobody can point at their own tree is a
+ * gate nobody runs.
+ *
+ *   node scripts/procgen/verify-seedling-wasm-bridge.mjs --host=http://localhost:8129
+ */
+const HOST = (process.argv.find((a) => a.startsWith('--host=')) ?? '--host=http://localhost:8000')
+    .slice('--host='.length).replace(/\/+$/, '');
+const URL = `${HOST}/frontend/?mode=flash`;
 const SEEDLING_RULES = './presets/seedling/AP_14089154938208861744/AP_14089154938208861744_rules.json';
 
 const browser = await chromium.launch({
@@ -120,7 +147,7 @@ async function waitFor(desc, fn, timeoutMs = 30000) {
 }
 
 function gameFrame() {
-    const f = page.frames().find((fr) => fr.url().includes('seedling_bot_ap_p4c/game.html'));
+    const f = page.frames().find((fr) => fr.url().includes('seedling_bot_ap_p4d/game.html'));
     if (!f) throw new Error('seedling wasm iframe not found');
     return f;
 }
@@ -219,7 +246,7 @@ await page.evaluate(async (src) => {
 
 // ── acceptance 2: handshake ─────────────────────────────────────────
 await waitFor('wasm iframe mounted', async () =>
-    page.frames().some((fr) => fr.url().includes('seedling_bot_ap_p4c/game.html')));
+    page.frames().some((fr) => fr.url().includes('seedling_bot_ap_p4d/game.html')));
 await waitFor('start button enabled', () =>
     gameFrame().evaluate(() => {
         const b = document.getElementById('btn-start');

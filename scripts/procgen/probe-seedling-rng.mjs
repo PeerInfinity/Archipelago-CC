@@ -60,7 +60,7 @@ takeBoxLockOrExit({ name: 'probe-seedling-rng.mjs', kind: 'browser' });
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
 const PAGE_URL = 'http://localhost:8000/frontend/modules/flashPanel/wasm/'
-    + `${process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4c'}/game.html`;
+    + `${process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4d'}/game.html`;
 
 const outArg = process.argv.indexOf('--out');
 const OUT = outArg >= 0

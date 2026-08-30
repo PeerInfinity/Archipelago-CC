@@ -85,7 +85,7 @@ const REPO = join(HERE, '..', '..');
 // Phase 3b", with nothing wrong in the tree. A standing red that nobody owns is
 // a gate people learn to ignore. The older builds are still reachable through
 // SEEDLING_PAGE.
-const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4c';
+const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4d';
 const ARTIFACT = join(REPO, 'frontend', 'modules', 'flashPanel', 'wasm', PAGE_NAME);
 const PAGE_URL = `http://localhost:8000/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
 
