@@ -113,7 +113,22 @@ export const BOOT_COST_FRAMES = LOAD_FADE_FRAMES + BOOT_PRESWAP_FRAMES;
 /**
  * The build `watch.html` ships to.
  *
- * ⛓ p4b, NOT `seedling_bot_ap`, SINCE THE WASM-HYGIENE SLICE. p4b's bridge
+ * ⛓⛓ p4d SINCE EDITOR INTEGRATION SLICE P2 (⚖ user, 2026-08-30: *"I want to
+ * make p4d the default"*), AND THE LICENCE IS A MEASUREMENT RATHER THAN A
+ * PREFERENCE. p4d is p4c plus `Pickups/APItem.as` and the two report seams;
+ * the differential gate's oracle recordings were made on the p4b/p4c lineages,
+ * and the 149-tape byte-inert sweep (plan §17.4.6 — 3,607 rows, 0 FAIL on p4d,
+ * `--win`) is exactly the proof that p4d still agrees with them. ⇒ moving this
+ * page onto p4d does not move a single recorded observation.
+ *
+ * ⛔ AND `check-seedling-wasm-pages.mjs`'s `BUILD` LITERAL MOVES WITH IT, in
+ * the same commit. That gate drives `watch.html` and asserts the iframe's src
+ * names its own `BUILD`; the two are one fact spelled twice, on purpose (a
+ * `BUILD` imported from here would read its own subject — a fixed point, trap
+ * 769 — and could never catch the page pointing somewhere else).
+ *
+ * ⛓ p4b, NOT `seedling_bot_ap`, SINCE THE WASM-HYGIENE SLICE — the move
+ * BEFORE last. p4b's bridge
  * surface is a strict SUPERSET (it adds botForgeSaveStamp, botLevelSet and
  * botLoadLevels — the last two are what makes the GENERATE ship possible at
  * all), and it was MEASURED to be the same game where it counts: the R8 tape
@@ -130,7 +145,7 @@ export const BOOT_COST_FRAMES = LOAD_FADE_FRAMES + BOOT_PRESWAP_FRAMES;
  * would be invisible to it and could clear the build for retirement while this
  * page still loaded it (§18.14.5, trap 411).
  */
-export const WASM_PAGE = '../flashPanel/wasm/seedling_bot_ap_p4c/game.html';
+export const WASM_PAGE = '../flashPanel/wasm/seedling_bot_ap_p4d/game.html';
 
 /** ⛓ The ordered stage vocabulary. The rows assert on these names. */
 export const WASM_STAGES = Object.freeze([
