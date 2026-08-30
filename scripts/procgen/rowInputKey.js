@@ -542,13 +542,32 @@ export function inputPopulations({ entry, declared = null, ctx }) {
     for (const f of ctx.forwardFrom([...spawnTargets])) spawn.add(f);
 
     /**
-     * ⛓ A SUBMODULE IS IN THE BUILD POPULATION WHEN THIS ROW REACHES INTO IT —
-     * derived by CONTAINMENT over the three populations above, so
-     * `check-procgen-demos` (which reaches no wasm file) does not re-measure
-     * on a wasm bump and every wasm row does.
+     * ⛓⛓⛓ A SUBMODULE IS IN THE BUILD POPULATION WHEN THIS ROW REACHES INTO
+     * IT — so `check-procgen-demos` (which reaches no wasm file) does not
+     * re-measure on a wasm bump and every wasm row does.
+     *
+     * ⛔⛔ AND REACH IS **CONTAINMENT *OR* NAMING**, WHICH THE BUILD MUTANT
+     * TAUGHT. Containment alone asks whether a population member's PATH lies
+     * under the submodule — and a submodule's files are only tracked-and-
+     * present when it has been CHECKED OUT. In a throwaway worktree (no
+     * `submodule update --init`) the wasm page is not a node, nothing is
+     * contained, the BUILD population is EMPTY, and a gitlink move moved
+     * **0 of 34 keys**: the mutant that was supposed to prove population 4
+     * proved instead that population 4 could vanish with a checkout state.
+     *
+     * ⇒ a submodule is ALSO reached when a file in the CODE population NAMES
+     * its path (`watchWasm.js` spells `frontend/modules/flashPanel/wasm`).
+     * That reading survives a tree the submodule is not checked out in, which
+     * is the only kind of tree where the question is hard.
      */
     const reached = [...code, ...data, ...spawn];
-    const build = ctx.submodules.filter((s) => reached.some((p) => p.startsWith(`${s}/`)));
+    /** ⛓ A PATH **INTO** IT, IN CODE — `${s}/`, not the bare directory name,
+     *  and comments stripped. "Loads a file from this submodule" is the claim;
+     *  a prose sentence about a sibling submodule is not it, and the loose
+     *  form measurably pulled `journey-to-ascension` into the wasm rows. */
+    const namesIt = (s) => [...code].some((f) => stripComments(ctx.read(f)).includes(`${s}/`));
+    const build = ctx.submodules.filter((s) =>
+        reached.some((p) => p.startsWith(`${s}/`)) || namesIt(s));
     for (const s of decl.build) if (!build.includes(s)) build.push(s);
 
     return {

@@ -276,6 +276,29 @@ describe('rowInputKey — every population moves the key, and nothing else does'
         expect(keyOf({ ...reach, gitlinks: { 'sub/mod': 'bbbb' } })).not.toBe(before);
     });
 
+    /** ⛔⛔ …AND A SUBMODULE REACHED BY NAME ALONE IS STILL AN INPUT — the
+     *  BUILD mutant's own lesson. In a tree where the submodule is NOT checked
+     *  out none of its files is tracked, so CONTAINMENT finds nothing and the
+     *  population is empty: the first run of that mutant moved 0 of 34 keys.
+     *  A file that spells a path INTO the submodule is the reading that
+     *  survives a checkout state. */
+    it('MOVES on a gitlink reached by NAME, with no file of it in any population', () => {
+        const named = { ...WORLD,
+            files: { ...WORLD.files,
+                'scripts/procgen/dep.js': "const P = 'sub/mod/game.html';\n" } };
+        expect(inputPopulations({ entry: ENTRY, ctx: stubCtx(named) }).code)
+            .not.toContain('sub/mod/thing.js');
+        expect(inputPopulations({ entry: ENTRY, ctx: stubCtx(named) }).build).toEqual(['sub/mod']);
+        expect(keyOf({ ...named, gitlinks: { 'sub/mod': 'bbbb' } })).not.toBe(keyOf(named));
+    });
+
+    /** ⛓ …but the BARE directory name in prose is not a reach. */
+    it('does NOT take a submodule named only in a comment', () => {
+        const mentioned = { ...WORLD,
+            files: { ...WORLD.files, 'scripts/procgen/dep.js': '// see sub/mod/notes\n' } };
+        expect(inputPopulations({ entry: ENTRY, ctx: stubCtx(mentioned) }).build).toEqual([]);
+    });
+
     /** ⛔ …and a submodule this row does NOT reach into is not its input. */
     it('does not carry the gitlink of a submodule it never reaches', () => {
         expect(inputPopulations({ entry: ENTRY, ctx: stubCtx(WORLD) }).build).toEqual([]);
