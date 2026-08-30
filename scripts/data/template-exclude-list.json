@@ -206,6 +206,41 @@
       "reason": "Temporarily excluded. Same mode as Mega Man 3: the WorldGen variant intermittently fails test/general/test_items.py::test_item_links with 'Fill.FillError: No more spots to place 270 items' on certain pytest seeds (CI run 31572464285, 2026-08-12; green on the next run with no change). worlds/ladx_worldgen is still committed, so ladx_worldgen is ALSO parked in conftest.py's KNOWN_FLAKY_WORLDS until a regeneration run removes the directory."
     }
   ],
+  "worldgen_generation_whitelist_comment": "WHITELIST (not an exclude list): the ONLY base templates for which scripts/utils/generate_all_templates.sh (run by generate-presets.yml) generates and commits a worlds/<x>_worldgen world and its frontend/presets/<x>_worldgen preset -- applied via list-template-files.py --include, AFTER the exclude lists. Everything else's worldgen variant is transient: test-world-generator.py builds and deletes it. bounce/runner/runner_sphere are hand-committed worldgen worlds, not produced by the script, and are preserved at release by scripts/release/preserved-dev-presets.txt.",
+  "worldgen_generation_whitelist": [
+    {
+      "name": "A Link to the Past.yaml",
+      "reason": "Kept worldgen world (user ruling 2026-08-30): a fork-original game with no upstream sibling, plus A Link to the Past. Only these base templates get a worldgen world + preset generated and committed by generate-presets.yml."
+    },
+    {
+      "name": "APCalc.yaml",
+      "reason": "Kept worldgen world (user ruling 2026-08-30): a fork-original game with no upstream sibling, plus A Link to the Past. Only these base templates get a worldgen world + preset generated and committed by generate-presets.yml."
+    },
+    {
+      "name": "Baking Adventure.yaml",
+      "reason": "Kept worldgen world (user ruling 2026-08-30): a fork-original game with no upstream sibling, plus A Link to the Past. Only these base templates get a worldgen world + preset generated and committed by generate-presets.yml."
+    },
+    {
+      "name": "Coding Adventure.yaml",
+      "reason": "Kept worldgen world (user ruling 2026-08-30): a fork-original game with no upstream sibling, plus A Link to the Past. Only these base templates get a worldgen world + preset generated and committed by generate-presets.yml."
+    },
+    {
+      "name": "DepGraph.yaml",
+      "reason": "Kept worldgen world (user ruling 2026-08-30): a fork-original game with no upstream sibling, plus A Link to the Past. Only these base templates get a worldgen world + preset generated and committed by generate-presets.yml."
+    },
+    {
+      "name": "Metamath.yaml",
+      "reason": "Kept worldgen world (user ruling 2026-08-30): a fork-original game with no upstream sibling, plus A Link to the Past. Only these base templates get a worldgen world + preset generated and committed by generate-presets.yml."
+    },
+    {
+      "name": "TOEM original.yaml",
+      "reason": "Kept worldgen world (user ruling 2026-08-30): a fork-original game with no upstream sibling, plus A Link to the Past. Only these base templates get a worldgen world + preset generated and committed by generate-presets.yml."
+    },
+    {
+      "name": "TOEM rule builder.yaml",
+      "reason": "Kept worldgen world (user ruling 2026-08-30): a fork-original game with no upstream sibling, plus A Link to the Past. Only these base templates get a worldgen world + preset generated and committed by generate-presets.yml."
+    }
+  ],
   "ut_fuzz_apworld_exclude_list_comment": "Excluded from UT fuzz tests for community apworlds (incompatible rule patterns or apworld bugs). APWorlds have no worldgen variants, so this list is not expanded.",
   "ut_fuzz_apworld_exclude_list": [
     {
