@@ -551,13 +551,13 @@
       "total": "ALL PASS"
     },
     "suite: vitest (unfiltered)": {
-      "value": "411/12461",
+      "value": "412/12479",
       "command": null,
       "kind": "identity",
       "cheap": false,
       "quoted": true,
-      "why": "CI run 33315825754 at b7c770915 (P1 merged onto main): 12453 passed | 8 skipped | 0 failed; +4 files/+73 tests over 407/12388 = the P1 slice files (eligibility, wiring, readout, moduleRegistration)",
-      "measuredAt": "b7c7709156f7dc636a21d29e13828f7656d9956d"
+      "why": "CI run 33333732071 at d91c147df (P2 p4d-default merge + reference regen; includes SG1 20984e872): 12471 passed | 8 skipped | 0 failed",
+      "measuredAt": "d91c147dfa221fbfa6d7b471339fda5abd40e466"
     },
     "roster: --win --tier=full": {
       "value": "150 tapes: campaign 26 791/0/69 @fc87a177f + map-walk 21 + mechanic 103 @36b71996d, not separately banked",
