@@ -13759,6 +13759,72 @@ in prose says what it says and why, rather than being quietly corrected.
 written out, and it has been kept current rather than frozen since — it is now
 sixteen rows, and it carries a line saying that is what it is.
 
+### R9 slice CAT: THE ROSTER GETS THREE DERIVED CATEGORIES — 143 minutes of owed GPU become 11
+
+**The full `--win` tier is 143 minutes, and until this slice every tape move
+owed all of it.** The user's ruling was to *"limit running the full tape to
+cases where there is something that can only be tested in that way … make
+those a separate category that only runs when we need to test that
+specifically"*. So the roster is now partitioned by DERIVATION into three
+categories, the sweep and the re-record pipeline both take them by name, and
+the checkpoint row carries one PART per category with its own head.
+
+| category | tapes | ticks | ≈ cost | derived from |
+|---|---|---|---|---|
+| `campaign` | 26 | 7,928 | 11 min | `CAMPAIGN_SEGMENT_NAMES` ∪ `chainTapeNames` over `PLAYTHROUGH_CHAINS` |
+| `map-walk` | 21 | 64,620 | 64 min | `r{2,3,4}TapeSpecs(route)` — the call that WRITES those tapes |
+| `mechanic` | 103 | 57,119 | 68 min | THE REMAINDER — never a list |
+
+**No tape is named by hand**, which is the only reason a category list is
+safe here: `--tier=fast` was built tick-derived precisely because a hand-kept
+list *"would go stale the first time a fixture was added and nobody thought
+about which tier it belonged in"*. Two of the three categories CLAIM their
+tapes from an artifact that already exists and is already asserted; the third
+takes what is left, so a fixture added tomorrow is DRIVEN rather than
+skipped. The three partition the roster and `assertTiersComplete` says so on
+EVERY sweep — a tape in two categories or in none is a named failure, as is a
+derived name the roster does not have.
+
+**`campaign` is CHAIN-CLOSED, and the differential is why.** A chain claim
+SKIPS unless the sweep replayed every segment *and* the headline, so a
+category built from "the segments" would put `r7-ends-meet-full` and `r8-d2`
+in `mechanic` and then be unable to make its own chain claims when driven
+alone. And **`map-walk` is 21, not the 28 the taxonomy assumed**: the seven
+`r3-collect-*` tapes are hand-authored single-room item pickups that no route
+fixture produces, and the nearest derivation that would reach them names six
+of the seven — a predicate that catches six of seven is the rot this file
+exists to refuse.
+
+**The debt is now per category, and it is priced.** Three of the owed gate's
+four populations — the game BUILD, the DRIVER, the DEAD-FRAME accounting —
+are about every tape, and they are exactly what only the full tier can test;
+the fourth, the TAPES, is about the tapes that moved. So each category is
+judged against ITS OWN head: a category driven at the head clears its own
+debt while the others keep theirs. Measured on this slice's own tree, the
+seventeen re-recorded chain tapes put the debt at `campaign` alone — **≈11
+minutes, against the ≈143 the same tree owed the day before** — and driving
+that one category (26 tapes, 791/0/69, ALL CHECKS PASSED) turned the gate
+from RED to green on a measurement rather than an inheritance.
+
+**The checkpoint row's parts are DATA now, and its prose is derived from
+them.** The row used to carry a paragraph a human wrote and had to keep true,
+which is why the gate announced on every run that it refuses to read it.
+Each part carries its tape count, its value and its `measuredAt`; the row's
+`value` and `why` are rendered from the parts on every quote, and the gate
+refuses a hand edit to either. A part whose category has never been driven
+ALONE carries no separable value and names the run that covers it, rather
+than a split nobody measured — the row becomes a pure sum the first time
+each category is driven on its own.
+
+⛓ Two instruments were queueing for a box they never spend, and both were
+found by trying to use them beside another session's GPU run: the sweep took
+the box THREE HUNDRED LINES above its own `--tier=` parse, so a misspelled
+tier printed "the box is taken" instead of naming the misspelling; and the
+re-record REHEARSAL — which drives a generated tree with a stubbed `exec` and
+says so in its own closing line — took the box for all six stages, so with
+the box held its thirteen scenarios read as 43 failures. Both are fixed, and
+the second needed the mode's CHILD spelling as well as its parent's.
+
 ### R9 slice L15: THE BLOCK-ROUTE SEARCH — seventeen rooms play, and the frontier moves to L16
 
 **`r9-solve-15` is on disk, the game reproduced the route to the tick, and the
