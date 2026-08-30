@@ -418,6 +418,16 @@ class ALTTPWorld(RuleWorldMixin, World):
         "Crystals": frozenset(["Crystal 2", "Crystal 4", "Crystal 3", "Crystal 5", "Crystal 6", "Crystal 7", "Crystal 1"]),
     }
 
+    # Progressive item mapping: progressive_item -> [component_items_in_order]
+    # When collecting a progressive item, it grants access to the next uncollected component
+    progression_mapping: ClassVar[Dict[str, list]] = {
+        "Progressive Bow": ["Bow", "Silver Bow"],
+        "Progressive Bow (Alt)": ["Bow", "Silver Bow"],
+        "Progressive Sword": ["Fighter Sword", "Master Sword", "Tempered Sword", "Golden Sword"],
+        "Progressive Glove": ["Power Glove", "Titans Mitts"],
+        "Progressive Shield": ["Blue Shield", "Red Shield", "Mirror Shield"],
+    }
+
     # Placements match the original non-randomized game
     is_vanilla: ClassVar[bool] = True
     # Placements are deterministically reproduced by world generator
@@ -1564,6 +1574,29 @@ class ALTTPWorld(RuleWorldMixin, World):
             item._hint_text = data.hint_text
         return item
 
+
+    def collect_item(self, state, item, remove=False):
+        """Handle progressive item collection.
+
+        When a progressive item is collected, this returns the name of the next
+        uncollected component item. This allows rules that check for component
+        items (e.g., state.has("steel-processing")) to work correctly when the
+        player has collected the progressive version (e.g., "progressive-processing").
+        """
+        if item.advancement and item.name in self.progression_mapping:
+            components = self.progression_mapping[item.name]
+            if remove:
+                # When removing, find the last component the player has
+                for component_name in reversed(components):
+                    if state.has(component_name, item.player):
+                        return component_name
+            else:
+                # When collecting, find the first component the player doesn't have
+                for component_name in components:
+                    if not state.has(component_name, item.player):
+                        return component_name
+
+        return super().collect_item(state, item, remove)
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""

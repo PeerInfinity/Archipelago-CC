@@ -2559,7 +2559,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "AlphaArm\u03a9 V",
+              "name": "AlphaArmΩ V",
               "player": 1,
               "advancement": false,
               "type": "None"
@@ -6498,8 +6498,8 @@
         "type": null,
         "max_count": 1
       },
-      "AlphaArm\u03a9 V": {
-        "name": "AlphaArm\u03a9 V",
+      "AlphaArmΩ V": {
+        "name": "AlphaArmΩ V",
         "id": 11735171,
         "groups": [
           "BattleChips",
@@ -7614,7 +7614,7 @@
       "AirShoes *": 1,
       "AirShot3 *": 1,
       "Airshoes": 1,
-      "AlphaArm\u03a9 V": 1,
+      "AlphaArmΩ V": 1,
       "AntiNavi M": 1,
       "AntiRecv B": 1,
       "AntiSword Y": 1,
@@ -7950,7 +7950,7 @@
       "Yoka FireSwrd P Trade": "Bass+ X",
       "Yoka Zoo Garbage": "PETCase",
       "Zoo 1 East BMD": "Hole *",
-      "Zoo 1 North BMD": "AlphaArm\u03a9 V",
+      "Zoo 1 North BMD": "AlphaArmΩ V",
       "Zoo 1 Central BMD": "AntiSword Y",
       "Secret 2 Upper BMD": "Charge+1 (Pink)",
       "Zoo 2 East BMD": "Charge+1 (Pink)",
