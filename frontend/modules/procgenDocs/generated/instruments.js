@@ -2333,6 +2333,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "check",
             "citedBy": [
+                "docs/json/developer/procgen/flash.md",
                 "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
@@ -9328,12 +9329,19 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "verify",
             "citedBy": [
-                "docs/json/developer/procgen/flash.md"
+                "docs/json/developer/procgen/flash.md",
+                "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "verify-seedling-ap-placement.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "no-panel"
+                },
                 {
                     "how": [
                         "includes"

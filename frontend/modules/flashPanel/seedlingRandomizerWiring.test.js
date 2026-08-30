@@ -144,7 +144,8 @@ describe('the ledger row → flash_name derivation', () => {
 });
 
 describe('the per-preset census — direct, via the AP id, unjoined', () => {
-    it('seedling_playthrough: 41 DIRECT, nothing joined by id, nothing dropped', () => {
+    it(`seedling_playthrough: all ${R7_GOAL_LEDGER.length} DIRECT, nothing joined by id, \
+        nothing dropped`, () => {
         const { census, ledgerUsed } = resolverFor('seedling_playthrough');
         expect(census).toMatchObject({ direct: 41, viaApId: 0, total: 41 });
         expect(census.unjoined).toEqual([]);

@@ -801,7 +801,24 @@ if (!existsSync(join(M1_ARTIFACT, 'game.html'))) {
     function runArmsWin(arms) {
         mkdirSync(WIN_SCRATCH_WSL, { recursive: true });
         writeFileSync(join(WIN_SCRATCH_WSL, basename(WIN_DRIVER)), readFileSync(WIN_DRIVER));
-        const plan = { url: WIN_URL, arms: arms.map((a) => ({ name: a.name, steps: a.steps })) };
+        /**
+         * ⛔⛔ **THE PLAN FORWARDS `url` AND `boot`, AND FORGETTING THEM COST
+         * A WHOLE WINDOWS RUN.** This line used to read
+         * `arms.map((a) => ({ name: a.name, steps: a.steps }))` — an
+         * ENUMERATION, so P1-e's per-arm `url` and `boot` were silently
+         * dropped and all five panel arms ran on the GAME page under the
+         * wasm-page boot. The symptom was three hops away from the cause:
+         * `arm` answered `{"tabs": []}` (no Golden Layout on the game page)
+         * and then `fetch('./presets/…')` resolved against
+         * `.../wasm/<build>/game.html`, 404'd, and the HTML error page threw
+         * `SyntaxError: Unexpected token '<'` out of `.json()`. A new field on
+         * a plan reaches nothing if the builder lists the old ones.
+         */
+        const plan = {
+            url: WIN_URL,
+            arms: arms.map((a) => ({ name: a.name, steps: a.steps,
+                ...(a.url ? { url: a.url } : {}), ...(a.boot ? { boot: a.boot } : {}) })),
+        };
         writeFileSync(join(WIN_SCRATCH_WSL, 'ap-placement-plan.json'), JSON.stringify(plan));
         const stdout = execFileSync(WIN_PY, [
             '-3.12', `${WIN_SCRATCH_DOS}\\${basename(WIN_DRIVER)}`,
@@ -1211,6 +1228,425 @@ if (!existsSync(join(M1_ARTIFACT, 'game.html'))) {
             `${JSON.stringify(swallowed)}, mark=${JSON.stringify(b.pendingDeparture)}`);
         }
     }
+
+/**
+ * ── ⛓⛓⛓ P1-e — THE PRESET-DRIVEN ROW THROUGH THE REAL PANEL ────────────────
+ *
+ * Every arm above drives the GAME PAGE directly and constructs the delivery
+ * itself. These arms drive `frontend/index.html` — the app a person actually
+ * opens — and assert that PRODUCTION does it: the panel detects eligibility
+ * from the loaded preset's data, shows its overlay, builds the placement table
+ * from the live `stateManager`, delivers, resets, binds, and reports a find.
+ *
+ * ⛔ NOTHING HERE CONSTRUCTS A DELIVERY. If a row passes, it passes because
+ * `flashPanelUI._startSeedlingRandomizer` ran.
+ *
+ * ⛓ THE PRESET IS SWITCHED THE WAY THE FLASH GATES SWITCH IT —
+ * `proxy.loadRules(rules, {playerId}, src)`, whose own precedent
+ * (`verify-seedling-wasm-bridge.mjs:80-86`) calls it *"the flow a user takes
+ * when picking the preset in the UI rather than the URL"*. That is also what
+ * makes the CONTROL arm possible at all: the same preset with ONE field moved.
+ *
+ * ⛔ `--win` ONLY. The app page mounts the wasm game in an iframe and then
+ * waits for a world to build; on SwiftShader that is ~0.45 fps and the whole
+ * sequence is a frame budget, not a wall clock (trap 970/971).
+ */
+const PANEL_ARMS_ENABLED = WIN && !process.argv.includes('--no-panel');
+
+const PANEL_JS = {
+    /**
+     * ⛓ THE WATCHER IS INSTALLED BEFORE THE PANEL CAN ACT. The overlay is up
+     * only while the load runs, and the delivery inside it is SYNCHRONOUS — so
+     * "was it ever shown?" cannot be answered by looking afterwards. A 50 ms
+     * sampler records TRANSITIONS, which is the shape the claim has.
+     */
+    arm: `() => {
+        window.__p1e = { overlay: [], t0: Date.now() };
+        const state = () => {
+            const el = document.querySelector('.flash-panel-ap-overlay');
+            if (!el) return 'absent';
+            return el.style.display === 'none' || el.style.display === '' ? 'hidden' : 'shown';
+        };
+        let last = null;
+        window.__p1eTimer = setInterval(() => {
+            const now = state();
+            const el = document.querySelector('.flash-panel-ap-overlay');
+            if (now !== last) {
+                window.__p1e.overlay.push({ at: Date.now() - window.__p1e.t0, state: now,
+                    text: el ? el.textContent : null });
+                last = now;
+            }
+        }, 50);
+        const tab = [...document.querySelectorAll('.lm_tab')].find((t) => t.title === 'Flash Game');
+        if (tab) tab.click();
+        return { tab: Boolean(tab), tabs: [...document.querySelectorAll('.lm_tab')]
+            .map((t) => t.title) };
+    }`,
+    /**
+     * Load a preset's rules, optionally with ONE field moved (the control).
+     *
+     * ⛔⛔ **THE APP BOOTS ON A FALLBACK PRESET, AND A SWITCH ISSUED BEFORE
+     * THAT BOOT SETTLES IS SILENTLY CLOBBERED.** MEASURED, P1-e run 2: with
+     * only a 6 s settle after the first Golden Layout tab appears,
+     * `proxy.loadRules(<seedling>)` RESOLVED and the next step read
+     * `{size: 25, sample: "Blue Labyrinth 0", flashPanelWasm: null}` — the
+     * `adventure` fallback, whose own `rulesLoadedConfirmation` arrived after
+     * ours and won. The panel had already mounted the seedling iframe and then
+     * TORE IT DOWN on the reinit-for-preset-switch path, so the symptom two
+     * steps later was `TimeoutError: no frame whose url contains '/wasm/'` —
+     * with the wasm runtime's own boot lines sitting in the console log,
+     * proving it had been there.
+     *
+     * ⇒ **wait for the fallback to LAND, then switch, then wait for the switch
+     * to be VISIBLE in the proxy's own static data.** Neither wait is a sleep:
+     * the first is "some rules are loaded", the second is "the rules I loaded
+     * are the ones answered". `verify-seedling-wasm-bridge.mjs` has the same
+     * fence spelled as an assertion (*"panel idle on the fallback preset"*).
+     */
+    loadPreset: `async ([src, patch]) => {
+        const { default: proxy } = await import(
+            '/frontend/modules/stateManager/stateManagerProxySingleton.js');
+        const settle = async (want, deadlineMs) => {
+            const t0 = Date.now();
+            for (;;) {
+                const sd = proxy.getStaticData();
+                if (want(sd)) return sd;
+                if (Date.now() - t0 > deadlineMs) return null;
+                await new Promise((r) => setTimeout(r, 200));
+            }
+        };
+        const fallback = await settle((sd) => Boolean(sd && sd.game_name), 120000);
+        const rules = await fetch(src).then((r) => r.json());
+        if (patch && patch.wasm) rules.flash_panel = { ...rules.flash_panel, wasm: patch.wasm };
+        const want = rules.flash_panel ? rules.flash_panel.wasm : null;
+        await proxy.loadRules(rules, { playerId: 1 }, src);
+        const after = await settle(
+            (sd) => Boolean(sd) && (sd.flash_panel ? sd.flash_panel.wasm : null) === want, 120000);
+        return {
+            wasm: want,
+            fallbackGame: fallback ? fallback.game_name : null,
+            settledGame: after ? after.game_name : null,
+            settled: Boolean(after),
+            locations: Object.keys(rules.regions || {}),
+        };
+    }`,
+    /**
+     * ⛔ THE PROXY'S OWN MAP, READ ON THE LIVE PAGE. In node the worker's
+     * `getStaticGameData()` answers a Map directly; the proxy receives it
+     * through a structured clone and converts it back
+     * (`stateManagerProxy.js:398-404`). That round trip exists ONLY here, and
+     * the AP-id join depends on the record still carrying its `id`.
+     */
+    staticShape: `async () => {
+        const { default: proxy } = await import(
+            '/frontend/modules/stateManager/stateManagerProxySingleton.js');
+        const sd = proxy.getStaticData();
+        const locs = sd && sd.locations;
+        const first = locs && typeof locs.values === 'function'
+            ? [...locs.values()][0] : null;
+        return {
+            isMap: locs instanceof Map,
+            size: locs && locs.size !== undefined ? locs.size : null,
+            playerId: sd ? sd.playerId : null,
+            playerIdType: sd ? typeof sd.playerId : null,
+            flashPanelWasm: sd && sd.flash_panel ? sd.flash_panel.wasm : null,
+            sample: first ? { name: first.name, id: first.id,
+                item: first.item ? { name: first.item.name, player: first.item.player } : null }
+                : null,
+        };
+    }`,
+    /** Everything the rows read, in one call. */
+    observe: `async () => {
+        const mod = await import('/frontend/modules/flashPanel/index.js');
+        const panel = mod.getActivePanelInstance();
+        const glue = mod.getSeedlingRegionGlue();
+        const frame = document.getElementById(panel && panel.flashObjectId);
+        const g = frame && frame.contentWindow && frame.contentWindow.__swfBridge
+            ? frame.contentWindow.__swfBridge.game : null;
+        const call = (n, a) => {
+            if (!g || typeof g[n] !== 'function') return null;
+            try { return a === undefined ? g[n]() : g[n](a); } catch (e) { return 'ERR:' + e.message; }
+        };
+        const parse = (v) => { try { return JSON.parse(v); } catch { return null; } };
+        const mobiles = parse(call('botMobiles'));
+        const found = document.querySelector('.flash-panel-ap-found');
+        return {
+            load: panel && panel._apLoadResult
+                ? { ok: panel._apLoadResult.ok, why: panel._apLoadResult.why,
+                    reset: panel._apLoadResult.reset, steps: panel._apLoadResult.steps }
+                : null,
+            status: (document.querySelector('.flash-panel-status') || {}).textContent || null,
+            log: [...document.querySelectorAll('.flash-panel-log > *')]
+                .map((n) => n.textContent).slice(-40),
+            overlay: window.__p1e ? window.__p1e.overlay : null,
+            glueStats: glue ? glue.stats : null,
+            hasDelivery: Boolean(glue && glue.delivery),
+            deliveryState: glue && glue.delivery ? glue.delivery.state : null,
+            deliveryStats: glue && glue.delivery ? glue.delivery.stats : null,
+            hasCheckBinding: Boolean(glue && glue.checkBinding),
+            hostOwned: glue && glue.checkBinding
+                ? glue.checkBinding.hostOwnedLocations().size : null,
+            levelSet: parse(call('botLevelSet')),
+            status_bot: parse(call('botStatus')),
+            roster: mobiles && mobiles.mobiles
+                ? mobiles.mobiles.map((m) => m.cls + '@' + m.x + ',' + m.y) : null,
+            readout: found ? { display: found.style.display,
+                headline: (found.querySelector('.flash-panel-ap-found-headline') || {}).textContent,
+                rows: (found.querySelector('.flash-panel-ap-found-rows') || {}).textContent } : null,
+        };
+    }`,
+    /** Warp the player onto a tile, through the panel's own adapter. */
+    warp: `async (to) => {
+        const mod = await import('/frontend/modules/flashPanel/index.js');
+        const panel = mod.getActivePanelInstance();
+        panel.adapter.teleport(to);
+        return to;
+    }`,
+    /** A synthetic ReceivedItems: the bridge's own item write, once. */
+    grant: `async ([property, ms]) => {
+        const mod = await import('/frontend/modules/flashPanel/index.js');
+        const panel = mod.getActivePanelInstance();
+        const frame = document.getElementById(panel.flashObjectId);
+        const before = frame.contentWindow.__swfBridge.stateLog.length;
+        frame.contentWindow.__swfBridge.queueItems({ class: 'main', property, value: true });
+        await new Promise((r) => setTimeout(r, ms));
+        return frame.contentWindow.__swfBridge.stateLog.slice(before);
+    }`,
+};
+
+if (PANEL_ARMS_ENABLED) {
+    const APP_URL = `http://localhost:${WIN_PORT}/frontend/?mode=flash`;
+    const PRESETS = [
+        { id: 'seedling_playthrough',
+            src: './presets/seedling_playthrough/AP_1/AP_1_rules.json', expect: 'eligible' },
+        { id: 'seedling',
+            src: './presets/seedling/AP_14089154938208861744/AP_14089154938208861744_rules.json',
+            expect: 'eligible' },
+        { id: 'seedling_atlas',
+            src: './presets/seedling_atlas/AP_1/AP_1_rules.json', expect: 'ineligible' },
+    ];
+    /**
+     * ⛓ THE BOOT WAITS ONLY FOR THE LAYOUT; the preset fence is inside
+     * `loadPreset`, where it can be a CONDITION rather than a duration.
+     */
+    const boot = { kind: 'app', ready_js: "() => !!document.querySelector('.lm_tab')",
+        deadline_sec: 180 };
+    const panelArm = (name, src, { patch = null, warp = null, grant = null } = {}) => {
+        const steps = [
+            { eval: PANEL_JS.arm, label: 'arm' },
+            { eval: PANEL_JS.loadPreset, arg: [src, patch], label: 'loadPreset' },
+            { eval: PANEL_JS.staticShape, label: 'staticShape' },
+            // ⛔ THE ▶ IS A FRAME CLICK. The activation the parent document
+            // holds does not travel into the child frame, and the wasm page
+            // spends it on WebGPU and the AudioContext.
+            { frame_click: { contains: '/wasm/', selector: '#btn-start', deadline_sec: 180 },
+                label: 'start' },
+            // The load sequence ends when the panel says so — polled, never slept.
+            /**
+             * ⛔ "THE OVERLAY IS NOT UP" IS TRUE BEFORE THE SEQUENCE STARTS,
+             * so waiting on it alone passes instantly and every row below
+             * reads a page that has not done anything yet. The wait is
+             * therefore over the SAMPLER's record — a transition to `shown`
+             * must have HAPPENED — or over the log line the ineligible path
+             * writes instead. Same shape as trap 806: a condition that cannot
+             * be false at the moment it is first asked is not a wait.
+             */
+            { wait_js: `() => {
+                const w = window.__p1e;
+                if (!w) return false;
+                const logs = [...document.querySelectorAll('.flash-panel-log > *')]
+                    .map((n) => n.textContent);
+                if (logs.some((l) => /not applicable/.test(l))) return true;
+                if (!w.overlay.some((o) => o.state === 'shown')) return false;
+                const el = document.querySelector('.flash-panel-ap-overlay');
+                if (!el) return true;
+                if (el.style.display === 'none') return true;
+                return el.style.color === 'rgb(233, 69, 96)';
+            }`, deadline_sec: 180, label: 'settled', soft: true },
+        ];
+        if (warp) {
+            steps.push({ eval: PANEL_JS.warp, arg: warp, label: 'warp' });
+            steps.push({ sleep_ms: 6000 });
+        }
+        if (grant) steps.push({ eval: PANEL_JS.grant, arg: [grant, 6000], label: 'grant' });
+        steps.push({ eval: PANEL_JS.observe, label: 'observe' });
+        return { name, url: APP_URL, boot, steps };
+    };
+
+    const PANEL_PLAN = [
+        ...PRESETS.map((p) => panelArm(`panel-${p.id}`, p.src)),
+        /**
+         * ⛔ THE CONTROL, AND IT IS THE MUTANT'S OWN ARM. The SAME preset with
+         * `flash_panel.wasm` moved back to the build that declares NO `apitem`:
+         * a lookup that ignored `capabilities` would read eligible here and
+         * every row below would move.
+         */
+        panelArm('panel-control-p4c', PRESETS[0].src,
+            { patch: { wasm: `${PAGE_NAME}/game.html` } }),
+        /** The check leg: warp onto the placement, then a synthetic receive. */
+        panelArm('panel-check', PRESETS[0].src, {
+            warp: { level: M1_SUBJECT.level, x: M1_SUBJECT.entity.x, y: M1_SUBJECT.entity.y },
+            grant: M1_FLAG,
+        }),
+    ];
+
+    console.log(`\n── P1-e — the real panel, ${PANEL_PLAN.length} arm(s) on ${APP_URL} ──`);
+    let PANEL = new Map();
+    try {
+        PANEL = new Map(runArmsWin(PANEL_PLAN).map((r) => [r.name, r]));
+    } catch (e) {
+        console.log(`  DRIVER FAILED: ${e.message.split('\n')[0]}`);
+    }
+    const valueOf = (rec, label) => rec?.results?.find((r) => r.eval === label)?.value ?? null;
+    const panelOf = (name) => PANEL.get(name) ?? null;
+
+    for (const preset of PRESETS) {
+        const rec = panelOf(`panel-${preset.id}`);
+        const obs = valueOf(rec, 'observe');
+        const shape = valueOf(rec, 'staticShape');
+        const eligible = preset.expect === 'eligible';
+        const tag = `P1-e ${preset.id}`;
+
+        check(`${tag}: the arm ran and the panel reached a settled state`,
+            Boolean(rec) && !rec.crashed && Boolean(obs),
+            rec?.error ?? `boot ${rec?.boot_sec ?? '?'}s, status=${obs?.status ?? 'none'}`);
+        if (!obs) continue;
+
+        /**
+         * ⛔ THE PROXY'S MAP SURVIVES THE STRUCTURED CLONE, WITH THE `id`. This
+         * is the one shape node cannot see, and the whole AP-id join rests on
+         * it (`stateManagerProxy.js:398-404`).
+         */
+        check(`${tag}: getStaticData().locations is a Map whose records carry an id and an item`,
+            shape?.isMap === true && Number.isInteger(shape?.sample?.id)
+                && typeof shape?.sample?.item?.name === 'string',
+        JSON.stringify(shape));
+        check(`${tag}: the slot is a STRING, so Number('') === 0 is a live risk and is guarded`,
+            shape?.playerIdType === 'string', `${shape?.playerIdType} ${JSON.stringify(shape?.playerId)}`);
+        const lp = valueOf(rec, 'loadPreset');
+        check(`${tag}: the preset switch SETTLED — the fallback landed first and did not `
+            + 'clobber it', lp?.settled === true,
+        `fallback=${JSON.stringify(lp?.fallbackGame)} -> settled=${JSON.stringify(lp?.settledGame)}`);
+        check(`${tag}: the panel loaded the p4d page the preset names`,
+            String(shape?.flashPanelWasm ?? '').startsWith(M1_PAGE),
+            String(shape?.flashPanelWasm));
+
+        const shown = (obs.overlay ?? []).filter((o) => o.state === 'shown');
+        const hidden = (obs.overlay ?? []).filter((o) => o.state === 'hidden');
+        if (eligible) {
+            check(`${tag}: the overlay was observed ON and then OFF`,
+                shown.length > 0 && hidden.length > 0
+                    && hidden.at(-1).at > shown[0].at,
+                JSON.stringify(obs.overlay));
+            check(`${tag}: the delivery was SENT exactly once`,
+                obs.deliveryState === 'delivered' && obs.deliveryStats?.delivered === 1
+                    && obs.deliveryStats?.attempts === 1,
+                JSON.stringify(obs.deliveryStats));
+            check(`${tag}: the mounted set is the REWRITTEN one, read back out of the game`,
+                typeof obs.levelSet?.active === 'string'
+                    && obs.levelSet.active.startsWith('seedling-ap-record'),
+                JSON.stringify(obs.levelSet));
+            check(`${tag}: the check binding is attached, and OWNS locations`,
+                obs.hasCheckBinding === true && obs.hostOwned > 0,
+                `hostOwned=${obs.hostOwned}`);
+            /**
+             * ⛔⛔ **THE RESET'S END STATE CANNOT BE THE WITNESS FOR THIS SET.**
+             * Every set this slice delivers has `start.level === 0`, which is
+             * the level the game BOOTS into — so *"the player stands at the
+             * set's start level"* is true before the reset is even issued and
+             * cannot fail. The falsifiable claims are the ones the sequence
+             * RECORDED: that a reset was issued at all, in the mode the DATA
+             * chose, and what the world read before and after it.
+             */
+            const resetStep = (obs.load?.steps ?? []).find((s) => s.name === 'reset-end');
+            const beganStep = (obs.load?.steps ?? []).find((s) => s.name === 'reset-begin');
+            check(`${tag}: a reset was ISSUED, in the mode the SET's own start chose`,
+                beganStep?.detail?.mode === 'new-game-arm'
+                    && beganStep?.detail?.level === -1
+                    && beganStep?.detail?.expectLevel === (REWRITTEN_SET.start?.level ?? 0),
+                JSON.stringify(beganStep?.detail));
+            check(`${tag}: the reset was OBSERVED, polled rather than slept`,
+                resetStep?.detail?.landed === true,
+                `waited ${((resetStep?.detail?.waitedMs ?? 0) / 1000).toFixed(2)} s, `
+                + `level=${resetStep?.detail?.level}, roster ${resetStep?.detail?.rosterSize}, `
+                + `player ${JSON.stringify(resetStep?.detail?.player)}, `
+                + `moved=${resetStep?.detail?.moved}`);
+            check(`${tag}: the step log is the ruled sequence, in order`,
+                JSON.stringify((obs.load?.steps ?? []).map((s) => s.name))
+                    === JSON.stringify(['overlay-on', 'deliver-begin', 'deliver-end',
+                        'reset-begin', 'reset-end', 'bind', 'overlay-off']),
+                JSON.stringify((obs.load?.steps ?? []).map((s) => s.name)));
+            // ⛓ REPORTED, never asserted: whether the new-game arm's ceremony
+            // moved the world at all is the thing nobody has measured yet.
+            console.log(`       ${tag} reset ceremony — before `
+                + `${JSON.stringify(beganStep?.detail?.world)} after `
+                + `{"level":${resetStep?.detail?.level},"rosterSize":`
+                + `${resetStep?.detail?.rosterSize},"player":`
+                + `${JSON.stringify(resetStep?.detail?.player)}}`);
+        } else {
+            // ⛓ THE DATA-INELIGIBLE ARM. Nothing was delivered, nothing bound,
+            // and the panel SAID WHY rather than doing nothing quietly.
+            check(`${tag}: no delivery and no binding — it is not a Seedling placement`,
+                obs.hasDelivery === false && obs.hasCheckBinding === false,
+                `delivery=${obs.hasDelivery} binding=${obs.hasCheckBinding}`);
+            check(`${tag}: the overlay never came up`, shown.length === 0,
+                JSON.stringify(obs.overlay));
+            check(`${tag}: the panel log NAMES the failing predicate`,
+                (obs.log ?? []).some((l) => /not applicable/.test(l) && /placement/.test(l)),
+                JSON.stringify((obs.log ?? []).filter((l) => /not applicable/.test(l))));
+        }
+    }
+
+    // ── the CONTROL: the same preset on the build that declares no apitem ────
+    {
+        const rec = panelOf('panel-control-p4c');
+        const obs = valueOf(rec, 'observe');
+        check('P1-e CONTROL: the arm ran', Boolean(obs), rec?.error ?? 'no observation');
+        if (obs) {
+            check('P1-e CONTROL: p4c declares no `apitem`, so NOTHING is delivered or bound',
+                obs.hasDelivery === false && obs.hasCheckBinding === false,
+                `delivery=${obs.hasDelivery} binding=${obs.hasCheckBinding}`);
+            check('P1-e CONTROL: and the refusal NAMES the capability check',
+                (obs.log ?? []).some((l) => /does not declare/.test(l)),
+                JSON.stringify((obs.log ?? []).filter((l) => /not applicable/.test(l))));
+            check('P1-e CONTROL: the VANILLA pickup is present at the subject tile',
+                (obs.roster ?? []).some((m) => m.endsWith(
+                    `@${M1_SUBJECT.entity.x + TILE_HALF},${M1_SUBJECT.entity.y + TILE_HALF}`)),
+                JSON.stringify((obs.roster ?? []).slice(0, 8)));
+        }
+    }
+
+    // ── the CHECK LEG, through production ────────────────────────────────────
+    {
+        const rec = panelOf('panel-check');
+        const obs = valueOf(rec, 'observe');
+        const granted = valueOf(rec, 'grant') ?? [];
+        check('P1-e check: the arm ran', Boolean(obs), rec?.error ?? 'no observation');
+        if (obs) {
+            check('P1-e check: the glue dispatched exactly one location check',
+                obs.glueStats?.locationChecks === 1,
+                JSON.stringify(obs.glueStats));
+            check(`P1-e check: and it reported the item the table placed there `
+                + `(${M1_SUBJECT.item} for player ${M1_SUBJECT.player})`,
+            obs.glueStats?.itemsFound === 1
+                && (obs.log ?? []).some((l) => l.includes(M1_SUBJECT.item)),
+            JSON.stringify((obs.log ?? []).filter((l) => /ap placement/.test(l)).slice(-4)));
+            check('P1-e check: the READOUT element shows the find',
+                obs.readout?.display === 'block'
+                    && /1 placement found/.test(obs.readout?.headline ?? '')
+                    && (obs.readout?.rows ?? '').includes(M1_SUBJECT.item),
+                JSON.stringify(obs.readout));
+            check(`P1-e check: a synthetic ReceivedItems flips ${M1_FLAG} ONCE`,
+                granted.filter((r) => r.name === M1_FLAG && String(r.value) === 'true').length === 1,
+                JSON.stringify(granted.map((r) => `${r.name}=${r.value}`)));
+        }
+    }
+} else if (!WIN) {
+    // ⛔ SKIPPED BY NAME. Headless SwiftShader is ~0.45 fps and this sequence
+    // waits for two world builds; a green run there would be a green run of
+    // something else.
+    console.log('\nSKIP: P1-e (the real panel) runs on --win only — real-GPU Windows Chrome');
+}
 }
 
 await browser.close();

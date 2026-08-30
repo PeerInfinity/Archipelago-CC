@@ -146,7 +146,7 @@ export class FlashPanelUI {
      */
     this._apFoundReadout = createApFoundReadout();
     this._apItemFoundHandler = (payload) => {
-      this._panelLog(payload?.message, 'location');
+      if (typeof payload?.message === 'string') this._panelLog(payload.message, 'location');
       if (this._apFoundReadout.record(payload)) this._renderApFound();
     };
     this.eventBus.subscribe(AP_ITEM_FOUND_EVENT, this._apItemFoundHandler);
@@ -558,7 +558,11 @@ export class FlashPanelUI {
         return;
       }
       const g = adapter._getFlash();
-      await wiring.runSeedlingRandomizerLoad({
+      // ⛓ Stashed so a gate can read the whole step log — the reset's
+      // before/after world, its wait in ms, the delivery's chunk count. A
+      // browser row that could only see the END state cannot tell a reset that
+      // landed from a world that was already there.
+      this._apLoadResult = await wiring.runSeedlingRandomizerLoad({
         loaded,
         glue,
         teleport: (t) => adapter.teleport(t),

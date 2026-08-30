@@ -1003,6 +1003,22 @@ rewind the *game* — the player stays where the last tape left them, so a
 second tape on the same page starts from the wrong position and records
 plausible garbage.
 
+⛓ **AND THE BOOT IS PER-ARM SINCE EDITOR INTEGRATION P1-e.**
+`seedling-level-set-win.py` used to hardcode the GAME page's boot —
+`__runtimeReady`, click `#btn-start`, wait for `game.botStatus`. None of those
+three exist in the top document of the APP page (`frontend/index.html`), where
+the game lives in an iframe the flash panel mounts. So an arm may declare
+`"boot": {"kind": "app", "ready_js": …}` beside the default
+`{"kind": "wasm-page"}`, and three dumb verbs came with it: `click`,
+`frame_click` and `wait_js`. ⛔ **`frame_click` is not a convenience.** The
+user activation the parent document holds does NOT travel into a child frame,
+and the wasm page spends it on WebGPU and the AudioContext — so ▶ has to be
+clicked *inside* the frame, and it is a STEP rather than part of the boot
+because when it happens is the caller's business. The extension is additive
+and defaulted; every existing caller is byte-identical, and
+`verify-seedling-ap-placement.mjs --win`'s own M1/M1b arms are the control that
+says so.
+
 ## Rebuilding the game after an AS3 change
 
 `~/CC/seedling_bot_build/build_bot.sh` builds the SWF; its header documents

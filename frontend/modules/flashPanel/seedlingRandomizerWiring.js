@@ -394,8 +394,28 @@ export async function runSeedlingRandomizerLoad({
         return { ok: true, why: null, reset: null, steps, delivered: result };
     }
 
+    /**
+     * ⛔⛔ **THE WORLD IS READ BEFORE THE RESET, AND THAT IS THE ONLY THING
+     * THAT MAKES THE RESET OBSERVABLE AT ALL FOR THIS SET.** The confirmation
+     * below waits for `level === expectLevel` — and for every set this slice
+     * delivers `expectLevel` is **0, the level the game already booted into**.
+     * So the wait is TRUE ON ITS FIRST ITERATION whether or not the reset
+     * landed: as a witness it is vacuous, in exactly the way this slice's
+     * ordering fixture was (trap 981) and the M1 door row was (trap 985).
+     *
+     * ⛓ What CAN move is the world itself. `new Game(-1,…)` is the game's own
+     * new-game arm and rebuilds the room, so the BEFORE/AFTER pair — roster
+     * size, the player's position, the whole `botStatus` block — is recorded
+     * and reported rather than reduced to a boolean here. The host cannot
+     * honestly assert *"the swap landed"* from a level number; it CAN hand the
+     * gate two readings and let a row compare them.
+     */
+    const before = readWorld(bot);
     overlay.setText(`starting the randomized game (${target.mode})…`);
-    step('reset-begin', { mode: target.mode, level: target.level, expectLevel: target.expectLevel });
+    step('reset-begin', { mode: target.mode, level: target.level,
+        expectLevel: target.expectLevel,
+        world: { level: before.level, rosterSize: before.rosterSize,
+            player: before.player ? { x: before.player.x, y: before.player.y } : null } });
     await waitFrame();
     teleport({ level: target.level, x: target.x, y: target.y });
 
@@ -412,7 +432,13 @@ export async function runSeedlingRandomizerLoad({
         await sleep(swapPollMs);
     }
     step('reset-end', { landed, waitedMs: now() - t0, level: world?.level ?? null,
-        player: world?.player ? { x: world.player.x, y: world.player.y } : null });
+        rosterSize: world?.rosterSize ?? null,
+        player: world?.player ? { x: world.player.x, y: world.player.y } : null,
+        // ⛓ The honest witness: did ANYTHING about the world move? Reported,
+        // never asserted here — the gate owns the comparison.
+        moved: before.rosterSize !== world?.rosterSize
+            || before.player?.x !== world?.player?.x
+            || before.player?.y !== world?.player?.y });
 
     if (!landed) {
         overlay.setText(`the randomized rooms are loaded, but the reset to level `

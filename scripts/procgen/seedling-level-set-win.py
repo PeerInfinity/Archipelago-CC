@@ -39,8 +39,31 @@ Plan format:
           {"call": "botLevelSet"},
           {"sleep_ms": 2500},
           {"press": "2"},
-          {"eval": "async (a) => {...}", "arg": <json>, "label": "..."}
+          {"eval": "async (a) => {...}", "arg": <json>, "label": "..."},
+          {"click": "<css selector in the TOP document>"},
+          {"frame_click": {"contains": "<substring of the frame url>",
+                           "selector": "#btn-start"}},
+          {"wait_js": "() => <boolean>", "deadline_sec": 60, "label": "...",
+           "soft": true}   # soft: record the timeout and CONTINUE
       ]}]}
+
+⛓⛓ **THE BOOT IS PER-ARM AND DECLARATIVE** (EDITOR INTEGRATION slice P1-e), and
+it is additive for the same reason the `eval` step was: every existing caller
+omits it and gets the behaviour this file always had.
+
+    "boot": {"kind": "wasm-page"}   the default — `__runtimeReady`, click
+                                    `#btn-start`, wait for `game.botStatus`
+    "boot": {"kind": "app", "ready_js": "() => <boolean>",
+             "settle_ms": 0}        just the page: poll `ready_js`, then run the
+                                    steps. ⛔ The APP page has no
+                                    `__runtimeReady` and no `#btn-start` of its
+                                    own — the game is in an IFRAME the panel
+                                    mounts, so pressing ▶ is a `frame_click`
+                                    STEP rather than part of the boot, and when
+                                    it happens is the caller's business.
+
+Every rule and every verdict still lives on the Linux side; this file gained
+four dumb verbs, not an opinion.
 """
 
 import argparse
@@ -74,24 +97,42 @@ def wait_for(desc, fn, deadline_sec, poll_sec=0.25):
         time.sleep(poll_sec)
 
 
+def frame_for(page, contains):
+    """The first frame whose url contains `contains`, or None."""
+    for fr in page.frames:
+        if contains in (fr.url or ""):
+            return fr
+    return None
+
+
 def run_arm(browser, url, arm, boot_deadline):
     """One arm on its own page. Returns the arm's record, never raises."""
     record = {"name": arm["name"], "results": [], "console": [], "crashed": False}
     page = browser.new_page()
     page.on("console", lambda m: record["console"].append(f"[{m.type}] {m.text}"))
     page.on("pageerror", lambda e: record["console"].append(f"[pageerror] {e}"))
+    boot = arm.get("boot") or {"kind": "wasm-page"}
     try:
         started = time.time()
-        page.goto(url, wait_until="domcontentloaded")
-        wait_for("runtime ready",
-                 lambda: page.evaluate("() => !!window.__runtimeReady"), boot_deadline)
-        # A real click supplies the user gesture the page requires (WebGPU init
-        # and the AudioContext both consume the activation).
-        page.click("#btn-start")
-        wait_for("bot callbacks",
-                 lambda: page.evaluate(
-                     "() => !!(window.__swfBridge && window.__swfBridge.game"
-                     " && window.__swfBridge.game.botStatus)"), boot_deadline)
+        page.goto(arm.get("url") or url, wait_until="domcontentloaded")
+        if boot.get("kind") == "app":
+            # ⛔ NO `#btn-start` HERE. On the app page the game lives in an
+            # iframe the panel mounts, so ▶ is a `frame_click` step and the
+            # caller decides when it happens.
+            wait_for("app ready", lambda: bool(page.evaluate(boot["ready_js"])),
+                     boot.get("deadline_sec", boot_deadline))
+            if boot.get("settle_ms"):
+                time.sleep(boot["settle_ms"] / 1000.0)
+        else:
+            wait_for("runtime ready",
+                     lambda: page.evaluate("() => !!window.__runtimeReady"), boot_deadline)
+            # A real click supplies the user gesture the page requires (WebGPU init
+            # and the AudioContext both consume the activation).
+            page.click("#btn-start")
+            wait_for("bot callbacks",
+                     lambda: page.evaluate(
+                         "() => !!(window.__swfBridge && window.__swfBridge.game"
+                         " && window.__swfBridge.game.botStatus)"), boot_deadline)
         record["boot_sec"] = round(time.time() - started, 2)
 
         for i, step in enumerate(arm["steps"]):
@@ -102,6 +143,49 @@ def run_arm(browser, url, arm, boot_deadline):
             if "press" in step:
                 page.keyboard.press(step["press"])
                 record["results"].append({"step": i, "press": step["press"]})
+                continue
+            if "click" in step:
+                page.click(step["click"], timeout=step.get("timeout_ms", 30000))
+                record["results"].append({"step": i, "click": step["click"]})
+                continue
+            if "frame_click" in step:
+                spec = step["frame_click"]
+                t0 = time.time()
+                fr = None
+                while fr is None:
+                    fr = frame_for(page, spec["contains"])
+                    if fr is not None:
+                        break
+                    if time.time() - t0 > spec.get("deadline_sec", 120):
+                        raise TimeoutError(f"no frame whose url contains {spec['contains']!r}")
+                    time.sleep(0.25)
+                # ⛓ A REAL CLICK INSIDE THE FRAME. The wasm page consumes the
+                # user activation for WebGPU and the AudioContext, and an
+                # activation granted to the parent document does not travel
+                # into a child frame.
+                fr.click(spec["selector"], timeout=spec.get("timeout_ms", 120000))
+                record["results"].append({"step": i, "frame_click": spec["selector"],
+                                          "frame_url": fr.url})
+                continue
+            if "wait_js" in step:
+                # ⛓ `soft` — a wait that times out RECORDS the timeout and lets
+                # the arm continue, so the observation step still runs and the
+                # rows read a real page instead of an exception. A hard wait
+                # that dies takes every later step's evidence with it, which is
+                # exactly the diagnosis you need when it dies.
+                t0 = time.time()
+                timed_out = False
+                try:
+                    wait_for(step.get("label", "wait_js"),
+                             lambda: bool(page.evaluate(step["wait_js"])),
+                             step.get("deadline_sec", 120))
+                except TimeoutError:
+                    if not step.get("soft"):
+                        raise
+                    timed_out = True
+                record["results"].append({"step": i, "eval": step.get("label", f"wait{i}"),
+                                          "value": {"waited_sec": round(time.time() - t0, 2),
+                                                    "timed_out": timed_out}})
                 continue
             if "eval" in step:
                 # ⛓ ADDITIVE, AND IT KEEPS THE SPLIT THIS FILE ARGUES FOR
