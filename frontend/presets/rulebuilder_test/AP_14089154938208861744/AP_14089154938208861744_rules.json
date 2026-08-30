@@ -29,7 +29,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Red Gem",
+              "name": "Star 11",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -43,7 +43,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Star 3",
+              "name": "Star 2",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -57,7 +57,7 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Coin",
+              "name": "Star 12",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -71,7 +71,21 @@
               "rule": "True_"
             },
             "item": {
-              "name": "Green Gem",
+              "name": "Star 9",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Source: Coin #4",
+            "id": 313800004,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Star 3",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -80,63 +94,7 @@
           },
           {
             "name": "Source: Red Gem #1",
-            "id": 313800004,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Key",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Source: Blue Gem #1",
             "id": 313800005,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Star 2",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Source: Green Gem #1",
-            "id": 313800006,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Star 4",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Source: Wallet #1",
-            "id": 313800007,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Star 8",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          },
-          {
-            "name": "Source: Wallet #2",
-            "id": 313800008,
             "access_rule": {
               "rule": "True_"
             },
@@ -149,13 +107,69 @@
             "locked": false
           },
           {
-            "name": "Source: Sword #1",
+            "name": "Source: Blue Gem #1",
+            "id": 313800006,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Coin",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Source: Green Gem #1",
+            "id": 313800007,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Key",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Source: Wallet #1",
+            "id": 313800008,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Star 1",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Source: Wallet #2",
             "id": 313800009,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Star 5",
+              "name": "Star 8",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Source: Sword #1",
+            "id": 313800010,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Token B",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -164,12 +178,26 @@
           },
           {
             "name": "Source: Token A #1",
-            "id": 313800010,
+            "id": 313800011,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Star 6",
+              "name": "Red Gem",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Source: Token A #2",
+            "id": 313800012,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Star 7",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -178,12 +206,26 @@
           },
           {
             "name": "Source: Token B #1",
-            "id": 313800011,
+            "id": 313800013,
             "access_rule": {
               "rule": "True_"
             },
             "item": {
-              "name": "Coin",
+              "name": "Sword",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          },
+          {
+            "name": "Source: Token B #2",
+            "id": 313800014,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Star 5",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -229,7 +271,7 @@
         "locations": [
           {
             "name": "Test: has",
-            "id": 313800012,
+            "id": 313800015,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -237,7 +279,7 @@
               }
             },
             "item": {
-              "name": "Sword",
+              "name": "Token A",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -246,7 +288,7 @@
           },
           {
             "name": "Test: has_all",
-            "id": 313800013,
+            "id": 313800016,
             "access_rule": {
               "rule": "HasAll",
               "args": {
@@ -258,7 +300,7 @@
               }
             },
             "item": {
-              "name": "Star 12",
+              "name": "Wallet",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -267,7 +309,7 @@
           },
           {
             "name": "Test: has_any",
-            "id": 313800014,
+            "id": 313800017,
             "access_rule": {
               "rule": "HasAny",
               "args": {
@@ -278,7 +320,7 @@
               }
             },
             "item": {
-              "name": "Star 7",
+              "name": "Coin",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -287,7 +329,7 @@
           },
           {
             "name": "Test: at_least",
-            "id": 313800015,
+            "id": 313800018,
             "access_rule": {
               "rule": "AtLeast",
               "children": [
@@ -320,7 +362,7 @@
               "count": 2
             },
             "item": {
-              "name": "Star 10",
+              "name": "Wallet",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -329,7 +371,7 @@
           },
           {
             "name": "Test: compare",
-            "id": 313800016,
+            "id": 313800019,
             "access_rule": {
               "rule": "Compare",
               "args": {
@@ -353,7 +395,7 @@
           },
           {
             "name": "Test: from_option",
-            "id": 313800017,
+            "id": 313800020,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -362,7 +404,7 @@
               }
             },
             "item": {
-              "name": "Wallet",
+              "name": "Coin",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -371,7 +413,7 @@
           },
           {
             "name": "Test: count_from_list",
-            "id": 313800018,
+            "id": 313800021,
             "access_rule": {
               "rule": "Compare",
               "args": {
@@ -390,7 +432,7 @@
               }
             },
             "item": {
-              "name": "Star 1",
+              "name": "Green Gem",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -399,7 +441,7 @@
           },
           {
             "name": "Test: has_group",
-            "id": 313800019,
+            "id": 313800022,
             "access_rule": {
               "rule": "HasGroup",
               "args": {
@@ -408,7 +450,7 @@
               }
             },
             "item": {
-              "name": "Wallet",
+              "name": "Coin",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -417,7 +459,7 @@
           },
           {
             "name": "Test: conditional",
-            "id": 313800020,
+            "id": 313800023,
             "access_rule": {
               "rule": "Conditional",
               "args": {
@@ -443,7 +485,7 @@
               }
             },
             "item": {
-              "name": "Star 11",
+              "name": "Star 4",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -452,7 +494,7 @@
           },
           {
             "name": "Test: min_value",
-            "id": 313800021,
+            "id": 313800024,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -486,7 +528,7 @@
           },
           {
             "name": "Test: arithmetic",
-            "id": 313800022,
+            "id": 313800025,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -494,7 +536,9 @@
                 "count": {
                   "rule": "Arithmetic",
                   "args": {
-                    "left": {
+                    "left": 4,
+                    "op": "-",
+                    "right": {
                       "rule": "MaxValue",
                       "args": {
                         "left": {
@@ -510,15 +554,13 @@
                           }
                         }
                       }
-                    },
-                    "op": "+",
-                    "right": 1
+                    }
                   }
                 }
               }
             },
             "item": {
-              "name": "Coin",
+              "name": "Star 10",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -527,7 +569,7 @@
           },
           {
             "name": "Test: custom",
-            "id": 313800023,
+            "id": 313800026,
             "access_rule": {
               "rule": "HasTreasure",
               "args": {
@@ -535,7 +577,7 @@
               }
             },
             "item": {
-              "name": "Star 9",
+              "name": "Star 6",
               "player": 1,
               "advancement": true,
               "type": "None"
@@ -574,7 +616,7 @@
         ],
         "classification": "progression",
         "type": null,
-        "max_count": 3
+        "max_count": 4
       },
       "Red Gem": {
         "name": "Red Gem",
@@ -637,7 +679,7 @@
         ],
         "classification": "progression",
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Token B": {
         "name": "Token B",
@@ -647,7 +689,7 @@
         ],
         "classification": "progression",
         "type": null,
-        "max_count": 1
+        "max_count": 2
       },
       "Star 1": {
         "name": "Star 1",
@@ -791,7 +833,7 @@
   "itempool_counts": {
     "1": {
       "Blue Gem": 1,
-      "Coin": 3,
+      "Coin": 4,
       "Green Gem": 1,
       "Key": 1,
       "Red Gem": 1,
@@ -808,8 +850,8 @@
       "Star 8": 1,
       "Star 9": 1,
       "Sword": 1,
-      "Token A": 1,
-      "Token B": 1,
+      "Token A": 2,
+      "Token B": 2,
       "Victory": 1,
       "Wallet": 2
     }
