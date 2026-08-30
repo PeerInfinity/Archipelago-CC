@@ -27,6 +27,13 @@
  *   # FIRST step whose output is missing (presence = keep, absence = recompute):
  *   node scripts/procgen/topdown-step.js run -i partial.json --rules-out rules.json
  *
+ *   # RECORDED LAYOUT EDITS (envelope `edits[]`, see layoutEdits.js) replay
+ *   # after the step each one addresses — layout ops after `finalize`, re-roll
+ *   # and set-substrate after `layout`. An edit hand-added to an envelope whose
+ *   # stage has ALREADY run does nothing until that step runs again, so:
+ *   node scripts/procgen/topdown-step.js run -i t1.json --from layout --rules-out rules.json
+ *   # (the run names any edit it is skipping, so the no-op is never silent).
+ *
  * World flags (layout / run when starting from --source):
  *   --source <rules.json>   source world to realise (required to start)
  *   --seed N                rng seed (default 1)
@@ -57,7 +64,7 @@ import '../../frontend/modules/mazeRoom/mazeRoomLibrary.js';
 import '../../frontend/modules/bounceDemo/bounceDemoLibrary.js';
 import {
     TOPDOWN_STEPS, runTopDownStep, runTopDownToStep, resumeTDEnvelope,
-    nextTopDownStep, detectTDCompleted, buildTopDownEnvelope,
+    nextTopDownStep, detectTDCompleted, buildTopDownEnvelope, tdEditsBehind,
     serializeTDEnvelope, deserializeTDEnvelope,
 } from '../../frontend/modules/procgenPipeline/topDownSteps.js';
 import {
@@ -211,9 +218,24 @@ async function main() {
         else if (ev?.type) process.stderr.write(`  · ${ev.type}\n`);
     };
 
+    // Recorded layout edits (layoutEdits.js) replay after the step each one
+    // addresses. Say so — and, crucially, name the ones this run's START POINT
+    // is already past, because those will NOT fire (the step that replays them
+    // is not going to run). Re-run with --from <stage> to apply them.
+    const announceEdits = (firstStep) => {
+        if (!env.edits?.length) return;
+        process.stderr.write(`[topdown-step] ${env.edits.length} recorded edit`
+            + `${env.edits.length === 1 ? '' : 's'} on the envelope\n`);
+        for (const e of tdEditsBehind(env, firstStep)) {
+            process.stderr.write(`[topdown-step] ⚠ '${e.op}' is staged before `
+                + `${firstStep} — NOT replayed on this run (re-run with --from <its stage>)\n`);
+        }
+    };
+
     if (sub === 'run') {
         const to = args.to ?? 'compile';
         if (args.from) {
+            announceEdits(args.from);
             env.completed = TOPDOWN_STEPS.indexOf(args.from) - 1;
             await runTopDownToStep(env, to, { onProgress });
         } else {
@@ -221,9 +243,11 @@ async function main() {
             if (at < TOPDOWN_STEPS.length) {
                 process.stderr.write(`[topdown-step] auto-resume from ${TOPDOWN_STEPS[at]}\n`);
             }
+            announceEdits(TOPDOWN_STEPS[Math.min(at, TOPDOWN_STEPS.length - 1)]);
             await resumeTDEnvelope(env, to, { onProgress });
         }
     } else {
+        announceEdits(sub);
         await runTopDownStep(sub, env, { onProgress });
     }
 

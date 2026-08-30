@@ -1,0 +1,92 @@
+{
+  "tape_version": 7,
+  "game": "seedling",
+  "name": "r6-watcher-blood",
+  "description": "R6 slice 6d: W-BLOOD. Boots into L114 at (80,96) — `r6-watcher-talk`'s own stance — with `{114,0}` DECLARED CLEARED (what that tape earns) and a sword granted, taps `up` for one tick to face `watcher@72,72`, and swings four times at a cadence of 26. The declaration is what makes the sword count: `Watcher.hit()` opens with `!Game.checkPersistence(tag)`, so the hits are refused until the dialogue has been read out — and the SAME flag gates `Watcher.update`'s `super.update()`, so a cleared boot cannot talk, cannot freeze and cannot hold out the live Seed that makes W-talk's stance a soft-lock risk. One press buys exactly one hit (`hitsTimer = 25` refuses four of every press's five hit tests), and the fourth lands the trigger `hits > dieFrames.length`: `Watcher.update` spawns a bloody `Seed` at `int(p.x - 8) + 8, int(p.y - 8) + 8` — ON the player — which `FP.world.add` QUEUES, so it first updates (and is collected by pure overlap, `_attract` being false) on the tick after. Then the Seed machinery: 150 frozen frames of `Pickup.specialTimer`, a 4-release two-page dialogue at the pickup family's own speed (6 frames/character, 32 columns), and `Seed.removeSelf` — which is an OVERRIDE that never reaches `removed()`, so the pickup grants nothing and writes no flag, and instead draws a cover for 200 FROZEN frames before `FP.world = new Game(1, 64, 96, false)` with `Game.cutscene[1]` set. The tape survives a world swap it did not order, lands in L1 at (72,104), and is walked north by `Game.as:955-960` at 0.75 px/tick (`v.y = -1` under friction 0.25) with `receiveInput = false` — no span of its own from there on. The walk's velocity clamp stops it at y 63.5, 23.5 px from `oracle@64,32`'s entity point and INSIDE its 24 px talk circle — which is safe only because `keyNeeded` is the NPC base's `true` (the Oracle never assigns it) and `Bot.autoAdvance` can only press into a dialogue that is already up.",
+  "boot": {
+    "level": 114,
+    "x": 72,
+    "y": 88
+  },
+  "noclip": false,
+  "noDamage": false,
+  "noHazards": [],
+  "grants": [
+    {
+      "level": 114,
+      "items": [
+        "sword"
+      ]
+    }
+  ],
+  "persistence": [
+    {
+      "level": 114,
+      "tag": 0,
+      "note": "the Watcher's dialogue — what `r6-watcher-talk` earns. `Watcher.hit()` gates on `!Game.checkPersistence(tag)`, so this is what makes the sword count at all; it also silences `talk()` and with it the live Seed."
+    }
+  ],
+  "equips": [],
+  "pins": [
+    "sound",
+    "dead_frames"
+  ],
+  "save": {
+    "totem_parts": [],
+    "keys": [],
+    "seal_parts": []
+  },
+  "rng": {
+    "seed": 0,
+    "split": false
+  },
+  "tick_count": 204,
+  "inputs": [
+    {
+      "key": "up",
+      "from": 0,
+      "to": 1
+    },
+    {
+      "key": "primary",
+      "from": 1,
+      "to": 2
+    },
+    {
+      "key": "primary",
+      "from": 27,
+      "to": 28
+    },
+    {
+      "key": "primary",
+      "from": 53,
+      "to": 54
+    },
+    {
+      "key": "primary",
+      "from": 79,
+      "to": 80
+    },
+    {
+      "key": "primary",
+      "from": 84,
+      "to": 85
+    },
+    {
+      "key": "primary",
+      "from": 92,
+      "to": 93
+    },
+    {
+      "key": "primary",
+      "from": 100,
+      "to": 101
+    },
+    {
+      "key": "primary",
+      "from": 108,
+      "to": 109
+    }
+  ]
+}
+

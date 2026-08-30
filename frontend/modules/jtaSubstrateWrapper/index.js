@@ -8,19 +8,24 @@
  *    publishes jta:loadRegion when the player enters a region tagged
  *    with this substrate.
  *  - Acts as the host-side broker for the in-iframe bridge: pushes
- *    initial pool / reset-count state to the bridge on iframe:appReady,
- *    and handles `jta:bridgeDeductMana` events from the bridge by
- *    deducting from gameState's shared mana pool (triggering a loop
- *    reset when the pool hits ≤ 0).
+ *    initial pool / reset-count state to the bridge on iframe:appReady
+ *    and re-pushes host settings on change. The energy↔mana mirroring
+ *    itself (drains/gains, out-of-mana → loop reset, game-initiated
+ *    reset answering) rides the generic resource-channel events
+ *    (substrate:resourceDelta/Bonus/Reset with substrateId 'jta'),
+ *    published by the bridge and handled by the resourceChannels
+ *    router — no jta-specific host handlers remain.
  *
- * See NewDocs/plans/jta/jta-substrate-v1-plan.md for the broader
- * design and how this fits with the maze and text-adventure substrates.
+ * See docs/json/developer/procgen/jta.md.
  */
 
 import { JtaSubstrateWrapperPanel } from './jtaSubstrateWrapperPanel.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
-import { substrateRegistryEntry } from './jtaSubstrateWrapperLibrary.js';
+import { substrateRegistryEntry, setPlaybackProxy, ingestVisitRecording } from './jtaSubstrateWrapperLibrary.js';
 import { getGameStateSingleton } from '../gameState/singleton.js';
+import { PlaybackProxy } from '../textAdventureSubstrateWrapper/playbackProxy.js';
+import { getEngine } from '../jtaQueueEngine/index.js';
+import settingsManager from '../../app/core/settingsManager.js';
 
 export const moduleInfo = {
     name: 'jtaSubstrateWrapper',
@@ -37,9 +42,102 @@ export const moduleInfo = {
 };
 
 const INITIAL_STATE_EVENT = 'jtaSubstrateWrapper:initialState';
-const BRIDGE_DEDUCT_MANA_EVENT = 'jta:bridgeDeductMana';
+const PLAYBACK_CONTROL_EVENT = 'jta:playbackControl';
 
-let _initApi = null;
+// How playback (walkTo / loops executeVia) completes a zone:
+//   'activate' — the bridge switches the game's automation engine on for
+//                the walk (auto-filling the zone's priorities only if the
+//                player configured none) and restores it after. Works out
+//                of the box.
+//   'respect'  — the walk only designates the exit; zone completion is
+//                entirely up to the player's own automation settings in
+//                the JtA page (all-off defaults ⇒ the walk waits forever).
+const PLAYBACK_AUTOMATION_SETTING = 'moduleSettings.jtaSubstrateWrapper.playbackAutomation';
+const PLAYBACK_AUTOMATION_DEFAULT = 'activate';
+let _playbackAutomation = PLAYBACK_AUTOMATION_DEFAULT;
+
+async function _loadPlaybackAutomationSetting() {
+    if (!settingsManager?.getSetting) return;
+    try {
+        const v = await settingsManager.getSetting(
+            PLAYBACK_AUTOMATION_SETTING,
+            PLAYBACK_AUTOMATION_DEFAULT,
+        );
+        _playbackAutomation = v === 'respect' ? 'respect' : 'activate';
+    } catch {
+        // Settings unavailable — keep current value.
+    }
+}
+
+// Whether JtA reports its own starting-energy bonuses (Energetic Memory,
+// EnergySpell perk, Divine Supremacy, Energized) up into the shared loop
+// starting-mana pool via setSubstrateMaxManaBonus. Default ON (user ruling
+// 2026-07-08, superseding the 2026-07-05 pinned default): JtA owns its
+// max_energy and its native starting-energy growth raises the shared
+// maxMana, so substrate play is natively standalone-paced — the pacing
+// target the zone-randomization balancer already anchors on. Turn OFF to
+// pin JtA's max_energy to the host pool (the older neutralized-growth mode,
+// kept for calibration/comparison).
+const ENERGY_BONUS_SYNC_SETTING = 'moduleSettings.jtaSubstrateWrapper.energyBonusSync';
+const ENERGY_BONUS_SYNC_DEFAULT = true;
+let _energyBonusSync = ENERGY_BONUS_SYNC_DEFAULT;
+
+/**
+ * Drive a loops fine-grained Playback replay (M4). Runs the recorded
+ * clickTask/useItem script through the jtaQueueEngine executor; on completion
+ * (or immediately, if the engine is somehow unavailable) crosses the recorded
+ * departure exit so the parked loops block advances. Instant blocks start the
+ * bridge's stepTick pump for the duration of the replay.
+ * @param {object} eventBus
+ * @param {object[]} recordedActions - actionQueue entries (clickTask / useItem)
+ * @param {{ onComplete?: Function, departureExitId?: string|null, instant?: boolean }} [opts]
+ */
+function _driveReplay(eventBus, recordedActions, opts = {}) {
+    const { onComplete, departureExitId = null, instant = false } = opts;
+    const sendControl = (method, args = []) =>
+        eventBus.publish(PLAYBACK_CONTROL_EVENT, { method, args });
+
+    const finish = () => {
+        if (instant) sendControl('stopInstantPump');
+        // Cross the recorded departure (stable exitName) — the substrate issues
+        // the closing user:regionMove; the parked block advances on the wake.
+        sendControl('crossExit', [departureExitId]);
+        try { onComplete?.(); } catch { /* isolate a bad completion cb */ }
+    };
+
+    const engine = getEngine();
+    if (!engine || typeof engine.replayRecording !== 'function') {
+        // No live engine — cross anyway so the parked block isn't stuck, but
+        // say so loudly: silently degrading a replay into a bare teleport is
+        // indistinguishable from a working Playback from the queue's side.
+        // jtaQueueEngine must be ENABLED in the module config wherever the jta
+        // substrate runs (it was off in modules.json until 2026-07-23, which
+        // is exactly this failure).
+        console.warn('[jtaSubstrateWrapper] Playback replay skipped: the '
+            + 'jtaQueueEngine module is not loaded; crossing the recorded exit '
+            + 'without replaying the recording.');
+        finish();
+        return;
+    }
+    // Instant: accelerate the replay with the bridge's stepTick pump. Non-
+    // instant: the game loop is already running (loadRegion resumed it) and the
+    // executor drives at the normal tick rate.
+    if (instant) sendControl('startInstantPump');
+    engine.replayRecording(recordedActions, { onComplete: finish });
+}
+
+async function _loadEnergyBonusSyncSetting() {
+    if (!settingsManager?.getSetting) return;
+    try {
+        const v = await settingsManager.getSetting(
+            ENERGY_BONUS_SYNC_SETTING,
+            ENERGY_BONUS_SYNC_DEFAULT,
+        );
+        _energyBonusSync = v === true || v === 'true';
+    } catch {
+        // Settings unavailable — keep current value.
+    }
+}
 
 export function register(registrationApi) {
     if (typeof document !== 'undefined') {
@@ -54,35 +152,91 @@ export function register(registrationApi) {
         JtaSubstrateWrapperPanel,
     );
 
-    // Sent up the dispatcher when the bridge runs out of pool mana
-    // and we trigger a loop reset (mirrors maze / textAdventure).
-    registrationApi.registerDispatcherSender('user:regionMove', 'bottom', 'first');
-
     // Events the bridge subscribes to. procgenPlayer publishes
     // jta:loadRegion on jta-region transitions; the bridge picks it
     // up via the iframeAdapter eventBus relay.
     registrationApi.registerEventBusPublisher('jta:loadRegion');
     registrationApi.registerEventBusPublisher(INITIAL_STATE_EVENT);
+    // PlaybackController commands published by the host-side proxy,
+    // executed by the in-iframe bridge (relayed via iframeAdapter).
+    registrationApi.registerEventBusPublisher(PLAYBACK_CONTROL_EVENT);
     // Published by this module on jta:loadRegion so Golden Layout
     // brings the jta panel forward when the player enters a jta region.
     registrationApi.registerEventBusPublisher('ui:activatePanel');
+    // Per-visit fine recording (M4): the in-iframe bridge publishes this,
+    // relayed host-side by the iframeAdapter — register the publisher so the
+    // relay isn't warned about an unregistered event (the jta:queueAction
+    // precedent), and this module subscribes to stash it for the loops pull.
+    registrationApi.registerEventBusPublisher('jta:visitRecording');
 
-    // Events the host module subscribes to.
+    // Events the host module subscribes to. The bridge's channel
+    // events (substrate:resourceDelta/Bonus/Reset) are handled by the
+    // resourceChannels router, not here.
     registrationApi.registerEventBusSubscriberIntent('iframe:appReady');
-    registrationApi.registerEventBusSubscriberIntent(BRIDGE_DEDUCT_MANA_EVENT);
     registrationApi.registerEventBusSubscriberIntent('jta:loadRegion');
+    registrationApi.registerEventBusSubscriberIntent('settings:changed');
+    registrationApi.registerEventBusSubscriberIntent('jta:visitRecording');
 
     // Guarded register so re-registration of the same id is harmless
     // (mirrors the textAdventureSubstrateWrapper pattern).
     if (!substrateRegistry.has(substrateRegistryEntry.id)) {
         substrateRegistry.register(substrateRegistryEntry);
     }
+
+    if (typeof registrationApi.registerSettingsSchema === 'function') {
+        registrationApi.registerSettingsSchema({
+            type: 'object',
+            properties: {
+                playbackAutomation: {
+                    type: 'string',
+                    default: PLAYBACK_AUTOMATION_DEFAULT,
+                    enum: ['activate', 'respect'],
+                    label: 'Playback zone completion',
+                    description:
+                        'How the playback bot completes a JtA zone for a queued '
+                        + 'region move: "activate" turns the game\'s automation '
+                        + 'engine on for the walk (default); "respect" leaves zone '
+                        + 'completion entirely to your own in-game automation '
+                        + 'settings.',
+                },
+                energyBonusSync: {
+                    type: 'boolean',
+                    default: ENERGY_BONUS_SYNC_DEFAULT,
+                    label: 'Sync JtA starting-energy bonuses to the pool',
+                    description:
+                        'When on (default), JtA\'s own starting-energy bonuses '
+                        + '(Energetic Memory, EnergySpell perk, Divine Supremacy, '
+                        + 'Energized) raise the shared loop starting-mana pool, and '
+                        + 'JtA owns its max energy — substrate play is standalone-'
+                        + 'paced. When off, JtA\'s max energy is pinned to the '
+                        + 'shared pool and its starting-energy growth is '
+                        + 'neutralized. Changing this affects energy balance.',
+                },
+            },
+        });
+    }
 }
 
 export function initialize(_moduleId, _priorityIndex, initializationApi) {
-    _initApi = initializationApi;
     const eventBus = initializationApi.getEventBus();
     if (!eventBus) return;
+
+    // Host-side PlaybackController proxy (same class the tasw wrapper
+    // uses, on jta's own control channel). Injected into the library
+    // so the registry entry's getPlaybackController can return it.
+    const playbackProxy = new PlaybackProxy({
+        eventBus,
+        controlEvent: PLAYBACK_CONTROL_EVENT,
+    });
+    // M4: attach fine-grained Playback replay to THIS proxy instance (not the
+    // shared PlaybackProxy class — the text adventure stays coarse-only). Its
+    // presence is what routes loopState's fine-grained replay path to jta.
+    // Runs the recorded clickTask/useItem script through the jtaQueueEngine
+    // executor; on exhaustion, crosses the recorded departure exit so the
+    // parked loops block advances on the resulting regionMove wake.
+    playbackProxy.replayActions = (recordedActions, opts) =>
+        _driveReplay(eventBus, recordedActions, opts);
+    setPlaybackProxy(playbackProxy);
 
     // On every iframe app-ready event (this fires for any iframe
     // module, not just ours — payload is small + idempotent so the
@@ -97,6 +251,30 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
             currentMana: gs.getCurrentMana(),
             maxMana: gs.getMaxMana(),
             loopResetCount: gs.getLoopResetCount(),
+            playbackAutomation: _playbackAutomation,
+            energyBonusSync: _energyBonusSync,
+        });
+    });
+
+    // Load the host settings now and re-push them to the bridge when
+    // settings change (small idempotent payload; the bridge ignores
+    // fields it already has).
+    _loadPlaybackAutomationSetting();
+    _loadEnergyBonusSyncSetting();
+    eventBus.subscribe('settings:changed', async () => {
+        await _loadPlaybackAutomationSetting();
+        await _loadEnergyBonusSyncSetting();
+        const gs = getGameStateSingleton();
+        if (!gs) return;
+        // With bonus-sync off, JtA must not contribute to the shared pool;
+        // clear any bonus it reported while the flag was on.
+        if (!_energyBonusSync) gs.setSubstrateMaxManaBonus('jta', 0);
+        eventBus.publish(INITIAL_STATE_EVENT, {
+            currentMana: gs.getCurrentMana(),
+            maxMana: gs.getMaxMana(),
+            loopResetCount: gs.getLoopResetCount(),
+            playbackAutomation: _playbackAutomation,
+            energyBonusSync: _energyBonusSync,
         });
     });
 
@@ -114,40 +292,18 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
         eventBus.publish('ui:activatePanel', { panelId: 'jtaSubstrateWrapperPanel' });
     });
 
-    // Bridge → host: mirror JtA's energy drain into the shared pool.
-    // If the pool depletes, trigger a loop reset + teleport to the
-    // resolved start region (the same pattern maze and textAdventure
-    // use directly, since they're host-side modules).
-    eventBus.subscribe(BRIDGE_DEDUCT_MANA_EVENT, (data) => {
-        const gs = getGameStateSingleton();
-        if (!gs) return;
-        const amount = Number(data?.amount) || 0;
-        if (amount <= 0) return;
-        gs.deductMana(amount);
-        if (gs.getCurrentMana() <= 0) {
-            _fireLoopReset(gs);
-        }
+    // Stash each per-visit fine recording the bridge slices, for the loops
+    // sole-persister pull (takeLastRecording). Delivered BEFORE the visit's
+    // departing user:regionMove (same postMessage channel), so the recording
+    // is in the slot when the loops Record-exit wake pulls it.
+    eventBus.subscribe('jta:visitRecording', (payload) => {
+        ingestVisitRecording(payload);
     });
-}
 
-function _fireLoopReset(gs) {
-    gs.triggerLoopReset();
-    const startRegion = _resolveStartRegion(gs);
-    if (!startRegion) {
-        console.warn('[jtaSubstrateWrapper] no resolvable start region; loop reset teleport skipped');
-        return;
-    }
-    const dispatcher = _initApi?.getDispatcher?.();
-    if (!dispatcher) return;
-    dispatcher.publish('user:regionMove', {
-        sourceRegion: gs.getCurrentRegion(),
-        targetRegion: startRegion,
-        fromReset: true,
-        updatePath: false,
-    }, { initialTarget: 'bottom' });
-}
-
-function _resolveStartRegion(gs) {
-    const fn = _initApi?.getModuleFunction?.('procgenPlayer', 'getResolvedStartRegion');
-    return fn?.() ?? gs.startRegions?.[0] ?? null;
+    // The bridge's energy↔mana mirroring (drains, gains, bonus
+    // reports, game-initiated resets) arrives as generic
+    // substrate:resourceDelta / resourceBonus / resourceReset events
+    // with substrateId 'jta' and is handled by the resourceChannels
+    // router — including the out-of-mana → loop-reset-teleport path
+    // and the reset-count race guard this module used to implement.
 }

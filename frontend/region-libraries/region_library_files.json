@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "libraries": [
+    {
+      "file": "demo-maze-pack.json",
+      "library_id": "demo-maze-pack-3dd25239",
+      "name": "Demo Maze Pack",
+      "description": "Four 11x11 maze rooms (all four exit sides, 2-3 slots each).",
+      "entry_count": 4,
+      "substrates": [
+        "maze"
+      ]
+    },
+    {
+      "file": "demo-bounce-pack.json",
+      "library_id": "demo-bounce-pack-0b3f5b39",
+      "name": "Demo Bounce Pack",
+      "description": "Two 8x6 bounce zone rooms (four re-keyable sides, 2 slots each).",
+      "entry_count": 2,
+      "substrates": [
+        "bounce"
+      ]
+    },
+    {
+      "file": "demo-runner-pack.json",
+      "library_id": "demo-runner-pack-ea1041cc",
+      "name": "Demo Runner Pack",
+      "description": "Two runner zone rooms (four re-keyable sides, 1 slot each).",
+      "entry_count": 2,
+      "substrates": [
+        "runner"
+      ]
+    }
+  ]
+}

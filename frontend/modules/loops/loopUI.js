@@ -150,6 +150,19 @@ export class LoopUI {
             const v = this.displaySettings.getSetting('keepFocused');
             if (v !== undefined) loopState.keepFocused = !!v;
           }
+          // Mirror defaultBlockMode so getBlockMode reflects changes made
+          // via the global settings panel (the inline select pushes
+          // through its own handler).
+          if (key === 'moduleSettings.loops.defaultBlockMode' || key === '*') {
+            const v = this.displaySettings.getSetting('defaultBlockMode');
+            if (v !== undefined) loopState.defaultBlockMode = v;
+          }
+          // Mirror autoSwitchToPlaybackAfterRecord onto loopState (the
+          // Record finalize path reads it directly).
+          if (key === 'moduleSettings.loops.autoSwitchToPlaybackAfterRecord' || key === '*') {
+            const v = this.displaySettings.getSetting('autoSwitchToPlaybackAfterRecord');
+            if (v !== undefined) loopState.autoSwitchToPlaybackAfterRecord = !!v;
+          }
           this.renderLoopPanel(); // Re-render panel when setting changes
         }
       }
@@ -227,6 +240,37 @@ export class LoopUI {
                   <option value="append">Append to queue</option>
                   <option value="rebuildPath">Rebuild path (advanced)</option>
                 </select></label>
+              </div>
+              <!--
+                Procgen-only group. Every control below drives the per-block
+                mode system (see docs/json/developer/procgen/loop-recording.md),
+                which only exists where a region has a substrate: an AP-native
+                region offers no mode row at all (loopBlockBuilder.getModeOffers),
+                so these are inert in a plain world. Kept contiguous under one
+                id so a later redesign can hide the whole group with one
+                predicate — do NOT move controls in or out without checking
+                that they're genuinely block-mode-only.
+              -->
+              <div id="loops-procgen-controls" class="loops-procgen-controls" style="display: flex; align-items: center; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; padding-top: 6px; border-top: 1px solid #555;">
+                <span class="procgen-controls-header" style="font-weight: bold; margin-right: 4px;" title="These controls apply to procgen worlds with block recording">Block recording (procgen worlds):</span>
+                <label class="default-block-mode-label" title="Mode given to a region block that has no mode set yet. Record parks it for hand-play and captures what you do (then auto-switches to Playback); Manual parks it without capturing; Playback runs it automatically. A substrate that can't record falls back to Manual.">Default block mode: <select id="loop-ui-default-block-mode">
+                  <option value="record">Record</option>
+                  <option value="playback">Playback</option>
+                  <option value="manual">Manual</option>
+                </select></label>
+                <label class="set-all-mode-label" title="Set every current block that supports it to this mode.">Set all blocks: <select id="loop-ui-set-all-mode">
+                  <option value="">—</option>
+                  <option value="manual">Manual</option>
+                  <option value="record">Record</option>
+                  <option value="playback">Playback</option>
+                  <option value="bot">Bot</option>
+                </select></label>
+                <label class="set-all-instant-label" title="Turn the Instant toggle on or off for every current block whose substrate supports it. Instant runs a Playback/Bot block headlessly in one frame.">Set all Instant: <select id="loop-ui-set-all-instant">
+                  <option value="">—</option>
+                  <option value="on">On</option>
+                  <option value="off">Off</option>
+                </select></label>
+                <label class="auto-switch-playback-label" title="After a block is recorded (exited through its expected exit), switch it to Playback so the next loop replays the fresh recording."><input type="checkbox" id="loop-ui-auto-switch-playback" /> Auto-switch to Playback after recording</label>
               </div>
               <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 4px; margin-bottom: 8px;">
                 <button id="loop-ui-save-state" class="button" title="Save the current game state to local storage">Save Game</button>
@@ -489,15 +533,41 @@ export class LoopUI {
     // doesn't match the loops queue's current end region.
     if (!this._clickIgnoredUnsubscribe) {
       const bannerEl = querySelector('#loop-feedback-banner');
-      const handler = ({ kind, regionName, expectedRegion }) => {
+      const handler = ({ kind, regionName, expectedRegion, reason }) => {
         if (!bannerEl) return;
-        const kindLabel = kind === 'exit' ? 'exit click' : 'location check';
-        const expectedText = expectedRegion
-          ? `the queue ends in ${expectedRegion}`
-          : 'the queue has no region yet';
-        bannerEl.textContent =
-          `Ignored ${kindLabel}: clicked in ${regionName}, but ${expectedText}. ` +
-          `Queue a regionMove to ${regionName} first, or set Click-to-queue to "Rebuild path" in Controls.`;
+        const kindLabel = {
+          exit: 'exit click',
+          location: 'location check',
+          move: 'region move',
+          explore: 'explore',
+        }[kind] ?? 'action';
+        let message;
+        if (reason && reason !== 'wrongRegion') {
+          // M3b strict action gate: performing is only possible while the
+          // queue is parked on a matching Manual/Record block. Hint at the
+          // authoring path (planning clicks) for the empty-queue bootstrap.
+          const reasonText = {
+            emptyQueue: 'the queue is empty',
+            notStarted: 'the queue is not running',
+            queueCompleted: 'the queue has completed',
+            paused: 'the queue is paused',
+            hardPause: 'the queue is paused until the next loop reset',
+          }[reason] ?? 'no Manual/Record block is parked here';
+          message =
+            `Blocked ${kindLabel} in ${regionName}: ${reasonText}. ` +
+            `In loop mode you can act only while parked on a Manual or Record block — ` +
+            `build the queue with planning clicks (region graph / Click-to-queue) and press Start.`;
+        } else {
+          const expectedText = expectedRegion
+            ? (reason === 'wrongRegion'
+              ? `the parked block is in ${expectedRegion}`
+              : `the queue ends in ${expectedRegion}`)
+            : 'the queue has no region yet';
+          message =
+            `Ignored ${kindLabel}: clicked in ${regionName}, but ${expectedText}. ` +
+            `Queue a regionMove to ${regionName} first, or set Click-to-queue to "Rebuild path" in Controls.`;
+        }
+        bannerEl.textContent = message;
         bannerEl.style.display = 'block';
         clearTimeout(this._clickIgnoredHideTimeout);
         this._clickIgnoredHideTimeout = setTimeout(() => {
@@ -623,6 +693,61 @@ export class LoopUI {
           input.disabled = enabled;
         }
         await this.displaySettings.setSetting('instantMode', enabled, true);
+      });
+    }
+
+    // Default-block-mode select — the mode a new block inherits when it
+    // has no stored mode. Mirrored into loopState so getBlockMode reads
+    // the fresh value; persisted through settingsManager.
+    const defaultBlockModeSelect = querySelector('#loop-ui-default-block-mode');
+    if (defaultBlockModeSelect) {
+      defaultBlockModeSelect.value = loopState.defaultBlockMode || 'record';
+      defaultBlockModeSelect.addEventListener('change', async () => {
+        const mode = defaultBlockModeSelect.value || 'record';
+        loopState.defaultBlockMode = mode;
+        await this.displaySettings.setSetting('defaultBlockMode', mode, true);
+        // Re-render so blocks relying on the default reflect it.
+        this.renderLoopPanel();
+      });
+    }
+
+    // Set-all-blocks select — applies a mode to every current block that
+    // supports it, then snaps back to the placeholder (it's an action,
+    // not a persisted choice).
+    const setAllModeSelect = querySelector('#loop-ui-set-all-mode');
+    if (setAllModeSelect) {
+      setAllModeSelect.addEventListener('change', () => {
+        const mode = setAllModeSelect.value;
+        setAllModeSelect.value = '';
+        if (!mode) return;
+        loopState.setAllBlockModes(mode);
+        this.renderLoopPanel();
+      });
+    }
+
+    // Set-all Instant (M3): one-shot action mirroring set-all-mode. Applies
+    // the flag to every current block whose substrate declares instant, then
+    // snaps back to the placeholder.
+    const setAllInstantSelect = querySelector('#loop-ui-set-all-instant');
+    if (setAllInstantSelect) {
+      setAllInstantSelect.addEventListener('change', () => {
+        const choice = setAllInstantSelect.value;
+        setAllInstantSelect.value = '';
+        if (!choice) return;
+        loopState.setAllBlockInstant(choice === 'on');
+        this.renderLoopPanel();
+      });
+    }
+
+    // Auto-switch-to-Playback-after-record checkbox (default ON). Mirrored
+    // into loopState (the Record finalize path reads it directly).
+    const autoSwitchCheckbox = querySelector('#loop-ui-auto-switch-playback');
+    if (autoSwitchCheckbox) {
+      autoSwitchCheckbox.checked = loopState.autoSwitchToPlaybackAfterRecord !== false;
+      autoSwitchCheckbox.addEventListener('change', async () => {
+        const on = !!autoSwitchCheckbox.checked;
+        loopState.autoSwitchToPlaybackAfterRecord = on;
+        await this.displaySettings.setSetting('autoSwitchToPlaybackAfterRecord', on, true);
       });
     }
 
@@ -757,6 +882,7 @@ export class LoopUI {
     const acceptBtn = this.rootElement.querySelector('#loop-ui-accept-defaults');
 
     if (progressContainer) progressContainer.style.display = 'block';
+    if (progressLabel) progressLabel.style.color = ''; // clear a previous refusal
     if (generateBtn) generateBtn.disabled = true;
     if (acceptBtn) acceptBtn.disabled = true;
 
@@ -764,7 +890,16 @@ export class LoopUI {
       // Load sphere log into planner
       costPlanner.reset();
       const loadResult = costPlanner.loadSphereLog(sphereLog);
-      log('info', `Loaded sphere log: ${loadResult.entryCount} entries`);
+      log('info', `Loaded sphere log: ${loadResult.entryCount} entries for player ${loadResult.playerId}`);
+
+      // A log with no slice for this player plans zero entries and still yields
+      // a full defaults-only cost set — indistinguishable from a real one once
+      // it is in the store. Refuse before planning rather than stamp it.
+      const earlyRejection = costPlanner.getPlanRejectionReason();
+      if (earlyRejection) {
+        this._reportCostGenerationRefusal(earlyRejection);
+        return;
+      }
 
       // Plan all steps, updating progress by sphere
       const totalEntries = costPlanner.getTotalEntries();
@@ -789,6 +924,14 @@ export class LoopUI {
         }
       }
 
+      // Re-check after planning: the foreign-location count is only known once
+      // the entries have been walked.
+      const rejection = costPlanner.getPlanRejectionReason();
+      if (rejection) {
+        this._reportCostGenerationRefusal(rejection);
+        return;
+      }
+
       // Get generated cost data and load it into costDataManager
       const costData = costPlanner.getCostData();
       if (costData) {
@@ -810,6 +953,37 @@ export class LoopUI {
       if (acceptBtn) acceptBtn.disabled = false;
       if (progressContainer) progressContainer.style.display = 'none';
     }
+  }
+
+  /**
+   * Refuse to stamp a cost set the planner says is a player/seed mismatch.
+   * Leaves the "no cost data" prompt usable (Accept Defaults still works) and
+   * says WHY instead of silently installing a defaults-only cost set.
+   * @param {string} reason - Human-readable cause from CostPlanner
+   */
+  _reportCostGenerationRefusal(reason) {
+    log('error', `Cost generation refused: ${reason}`);
+
+    // The auto-generate path (eventCoordinator, entering loop mode) can run
+    // before the prompt exists — render it so the refusal has somewhere to go.
+    if (!this.rootElement.querySelector('#loop-ui-cost-progress')) {
+      this.renderLoopPanel();
+    }
+
+    const progressContainer = this.rootElement.querySelector('#loop-ui-cost-progress');
+    const progressLabel = this.rootElement.querySelector('#loop-ui-cost-progress-label');
+    const progressBar = this.rootElement.querySelector('#loop-ui-cost-progress-bar');
+    const generateBtn = this.rootElement.querySelector('#loop-ui-generate-costs-inline');
+    const acceptBtn = this.rootElement.querySelector('#loop-ui-accept-defaults');
+
+    if (progressBar) progressBar.style.width = '0%';
+    if (progressLabel) {
+      progressLabel.textContent = `Cost generation refused: ${reason}`;
+      progressLabel.style.color = '#e06c6c';
+    }
+    if (progressContainer) progressContainer.style.display = 'block';
+    if (generateBtn) generateBtn.disabled = false;
+    if (acceptBtn) acceptBtn.disabled = false;
   }
 
   /**
@@ -931,6 +1105,14 @@ export class LoopUI {
     const keepFocused = this.displaySettings.getSetting('keepFocused');
     if (keepFocused !== undefined) {
       loopState.keepFocused = !!keepFocused;
+    }
+    const defaultBlockMode = this.displaySettings.getSetting('defaultBlockMode');
+    if (defaultBlockMode !== undefined) {
+      loopState.defaultBlockMode = defaultBlockMode;
+    }
+    const autoSwitch = this.displaySettings.getSetting('autoSwitchToPlaybackAfterRecord');
+    if (autoSwitch !== undefined) {
+      loopState.autoSwitchToPlaybackAfterRecord = !!autoSwitch;
     }
 
     // Get and set the gameState API
@@ -1470,7 +1652,17 @@ export class LoopUI {
           completed: 'Queue complete',
           waiting: 'Queue waiting for new actions',
         };
-        const msg = statusMessages[processingState];
+        let msg = statusMessages[processingState];
+        // A completion that came from the free-pass guard (auto-restart on,
+        // but the whole pass cost no mana) says so — otherwise "Queue
+        // complete" with the auto-restart box ticked reads as a bug.
+        if (
+          msg &&
+          (processingState === 'completed' || processingState === 'waiting') &&
+          loopState._queueCompletedReason === 'zeroCostPass'
+        ) {
+          msg = 'Queue complete — auto-restart paused: this path costs no mana';
+        }
         if (msg) {
           actionContainer.innerHTML = `<div class="no-action-message">${msg}</div>`;
         }

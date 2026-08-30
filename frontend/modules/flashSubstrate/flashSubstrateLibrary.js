@@ -2,8 +2,7 @@
  * Substrate registry entries for Flash games as a procgen substrate
  * (multi-runtime: SWFRecomp WASM / Ruffle / native Flash — the runtime is
  * chosen by the game page, not this module. See
- * NewDocs/plans/procedural-generation/flash-substrate-converged.md and
- * flash-substrate-unification.md).
+ * docs/json/developer/procgen/flash.md).
  *
  * Mode 1: opaque fixed minigame. A region = one Flash game instance; the
  * region's AP locations = the game's in-game objectives. The game's own
@@ -169,7 +168,7 @@ export const substrateRegistryEntry = createFlashSubstrateEntry({
 
 // Side-effect on import: register the default substrate so the procgen
 // pipeline can resolve it without booting the panel module. Same pattern
-// as mazeRoom / textAdventureSubstrate / jtaSubstrateWrapper libraries —
+// as mazeRoom / textAdventureSubstrateWrapper / jtaSubstrateWrapper libraries —
 // idempotent because index.js's host hook also calls register() in the
 // live app.
 if (!substrateRegistry.has(substrateRegistryEntry.id)) {

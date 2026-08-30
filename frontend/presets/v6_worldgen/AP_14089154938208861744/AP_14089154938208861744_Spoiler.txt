@@ -55,20 +55,30 @@ Playthrough:
 
 }
 1: {
+  It's a Secret to Nobody: Trinket 20
   Overworld (Left of Ship): Trinket 03
+  Overworld (Pipe-shaped Segment): Trinket 14
   Overworld (Sad Elephant): Trinket 01
   Overworld (Square Room): Trinket 08
   Trench Warfare: Trinket 02
 }
 2: {
   NPC Trinket: Trinket 07
+  Overworld (Outside Entanglement Generator): Trinket 16
   Purest Unobtainium: Trinket 10
   The Tantalizing Trinket: Trinket 09
   Young Man, It's Worth the Challenge: Trinket 04
 }
 3: {
   Clarion Call: Trinket 06
+  Doing things the hard way: Trinket 19
   One Way Room: Trinket 11
   Prize for the Reckless: Trinket 05
   You Just Keep Coming Back: Trinket 12
+}
+4: {
+  Edge Games: Trinket 13
+  The Tower 1: Trinket 18
+  The Tower 2: Trinket 15
+  V: Trinket 17
 }

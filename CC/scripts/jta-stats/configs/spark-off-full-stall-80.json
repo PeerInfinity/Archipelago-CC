@@ -1,0 +1,10 @@
+{
+  "name": "spark-off-full-stall-80",
+  "options": {
+    "modOverrides": {
+      "auto_prestige_stall_resets": 80
+    },
+    "zoneLimit": 30,
+    "maxRuns": 5000
+  }
+}

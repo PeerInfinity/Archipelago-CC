@@ -1,0 +1,12 @@
+{
+  "name": "spark-off-full-wealth-25",
+  "options": {
+    "modOverrides": {
+      "auto_prestige_stall_enabled": false,
+      "auto_prestige_wealth_enabled": true,
+      "auto_prestige_wealth_pct": 25
+    },
+    "zoneLimit": 30,
+    "maxRuns": 5000
+  }
+}

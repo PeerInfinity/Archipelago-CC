@@ -5,13 +5,14 @@ import { createRng } from '../shared/rng.js';
 // Driver tests below dispatch via substrateRegistry, which needs both
 // available for the mixed-substrate end-to-end checks at the bottom.
 import '../mazeRoom/mazeRoomLibrary.js';
-import '../textAdventureSubstrate/textAdventureSubstrateLibrary.js';
+import '../textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js';
 import '../jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import {
     ScenarioPool, SIDES, OPPOSITE_SIDE,
     Grid, cellKey,
     stitchGrid, accumulatedInventory,
-    wallOffUnusedExits, growMaze, compileRegionGraph,
+    wallOffUnusedExits, growMaze, growMazeGen, growMazeAsync, compileRegionGraph,
     buildPresetSidecars, buildRulesJson, stringifyRulesJson,
     findDisconnectedCell,
     topDownFromRulesJson, layoutTopDown, realiseTopDownGen,
@@ -291,12 +292,12 @@ describe('stitchGrid', () => {
         const a = makeRegionStub({
             region_id: 'A',
             exits: [{ id: 'exit', position: { x: 9, y: 3 } }],
-            exits_placed: [{ side: 'E', tile_position: { x: 9, y: 3 } }],
+            exits_placed: [{ exit_id: 'exit', side: 'E', tile_position: { x: 9, y: 3 } }],
         });
         const b = makeRegionStub({
             region_id: 'B',
             exits: [{ id: 'exit', position: { x: 0, y: 3 } }],
-            exits_placed: [{ side: 'W', tile_position: { x: 0, y: 3 } }],
+            exits_placed: [{ exit_id: 'exit', side: 'W', tile_position: { x: 0, y: 3 } }],
         });
         g.placeRegion({ gx: 1, gy: 1 }, a);
         g.placeRegion({ gx: 2, gy: 1 }, b);
@@ -310,7 +311,7 @@ describe('stitchGrid', () => {
         const a = makeRegionStub({
             region_id: 'A',
             exits: [{ id: 'exit', position: { x: 9, y: 3 } }],
-            exits_placed: [{ side: 'E', tile_position: { x: 9, y: 3 } }],
+            exits_placed: [{ exit_id: 'exit', side: 'E', tile_position: { x: 9, y: 3 } }],
         });
         g.placeRegion({ gx: 1, gy: 1 }, a);
         stitchGrid(g);
@@ -322,7 +323,7 @@ describe('stitchGrid', () => {
         const a = makeRegionStub({
             region_id: 'A',
             exits: [{ id: 'exit', position: { x: 9, y: 3 } }],
-            exits_placed: [{ side: 'E', tile_position: { x: 9, y: 3 } }],
+            exits_placed: [{ exit_id: 'exit', side: 'E', tile_position: { x: 9, y: 3 } }],
         });
         g.placeRegion({ gx: 1, gy: 1 }, a);
         stitchGrid(g);
@@ -376,8 +377,8 @@ describe('wallOffUnusedExits', () => {
                 { id: 'exit_b', position: { x: 1, y: 1 } },
             ],
             exits_placed: [
-                { side: 'E', tile_position: { x: 0, y: 0 } },
-                { side: 'S', tile_position: { x: 1, y: 1 } },
+                { exit_id: 'exit_a', side: 'E', tile_position: { x: 0, y: 0 } },
+                { exit_id: 'exit_b', side: 'S', tile_position: { x: 1, y: 1 } },
             ],
         }));
         // stitchGrid leaves both target_region null (no neighbors built).
@@ -391,7 +392,7 @@ describe('wallOffUnusedExits', () => {
         g.placeRegion({ gx: 0, gy: 0 }, makeRegionStub({
             region_id: 'A',
             exits: [{ id: 'exit', position: { x: 9, y: 3 } }],
-            exits_placed: [{ side: 'E', tile_position: { x: 9, y: 3 } }],
+            exits_placed: [{ exit_id: 'exit', side: 'E', tile_position: { x: 9, y: 3 } }],
         }));
         g.placeRegion({ gx: 1, gy: 0 }, makeRegionStub({ region_id: 'B' }));
         stitchGrid(g);
@@ -1032,6 +1033,75 @@ describe('growMaze', () => {
     });
 });
 
+describe('growMazeGen / growMaze / growMazeAsync (generator + drains)', () => {
+    const cfg = {
+        gridDims: { width: 4, height: 4 },
+        regionSize: { width: 8, height: 6 },
+        itemPool: { key_red: 6 },
+        obstaclePool: { door_red: 6 },
+        seed: 1,
+        regionParams: {},
+        growthParams: { maxRegions: 8, assumeBidirectional: true },
+    };
+
+    function drain(gen) {
+        const events = [];
+        let r = gen.next();
+        while (!r.done) { events.push(r.value); r = gen.next(); }
+        return { events, result: r.value };
+    }
+
+    it('yields a plan event first, region/regionDone pairs, then a phase event', () => {
+        const { events } = drain(growMazeGen(cfg));
+        expect(events[0]).toEqual({ type: 'plan', regions: null });
+        expect(events[events.length - 1]).toEqual({ type: 'phase', name: 'finalizing' });
+
+        const regionEvents = events.filter((e) => e.type === 'region');
+        const doneEvents = events.filter((e) => e.type === 'regionDone');
+        expect(regionEvents.length).toBe(doneEvents.length);
+        expect(regionEvents.length).toBeGreaterThanOrEqual(2);
+        // Contiguous indices from 0; emergent count (total null); no waves.
+        regionEvents.forEach((e, i) => {
+            expect(e.index).toBe(i);
+            expect(e.total).toBe(null);
+            expect(e.sphere).toBe(null);
+            expect(typeof e.region_id).toBe('string');
+            expect(typeof e.substrate).toBe('string');
+            expect(e.placements).toBeGreaterThanOrEqual(0);
+        });
+        doneEvents.forEach((e, i) => expect(e.index).toBe(i));
+    });
+
+    it('emits exactly one region event per built region', () => {
+        const { events, result } = drain(growMazeGen(cfg));
+        const regionEvents = events.filter((e) => e.type === 'region');
+        expect(regionEvents.length).toBe(result.stats.regionsBuilt);
+    });
+
+    it('growMaze (sync drain) returns the generator return value', () => {
+        const out = growMaze(cfg);
+        expect(out.stats.regionsBuilt).toBeGreaterThanOrEqual(1);
+        expect(out.grid.hasRegion({ gx: 2, gy: 2 })).toBe(true);
+    });
+
+    it('growMazeAsync output is identical to growMaze and forwards the full event stream', async () => {
+        const sync = growMaze(cfg);
+        const events = [];
+        const asyncOut = await growMazeAsync(cfg, (ev) => events.push(ev));
+
+        // Identical result (yields never touch the rng).
+        expect(asyncOut.stats.regionsBuilt).toBe(sync.stats.regionsBuilt);
+        expect(asyncOut.stats.stopReason).toBe(sync.stats.stopReason);
+        expect(asyncOut.stats.teleportersPlaced).toBe(sync.stats.teleportersPlaced);
+        const regionIds = (g) => [...g.allRegions()].map((r) => r.region_id).sort();
+        expect(regionIds(asyncOut.grid)).toEqual(regionIds(sync.grid));
+
+        // The forwarded stream equals what the generator yields.
+        const { events: genEvents } = drain(growMazeGen(cfg));
+        expect(events).toEqual(genEvents);
+    });
+});
+
 describe('compileRegionGraph', () => {
     function smallGridWithItems() {
         return growMaze({
@@ -1440,6 +1510,37 @@ describe('buildPresetSidecars', () => {
         const sidecar = Object.values(sidecars['1'])[0].playable_payload;
         const restored = deserializeMazeWorld(sidecar);
         expect(restored.hazards).toBeUndefined();
+    });
+
+    it('omits the X1 consumable keys entirely when the overlays are empty (byte-inert)', () => {
+        // The whole byte-inert-default proof rests on absence, not on a
+        // null/[] placeholder — a new key with ANY value would drift
+        // every existing preset sidecar.
+        const { grid } = smallGrid();
+        const sidecars = buildPresetSidecars(grid);
+        const payload = Object.values(sidecars['1'])[0].playable_payload;
+        expect('consumableTiles' in payload).toBe(false);
+        expect('manaTiles' in payload).toBe(false);
+    });
+
+    it('serializes the X1 overlays as position-keyed arrays and round-trips them', () => {
+        const { grid } = smallGrid();
+        const region = grid.allRegions()[0];
+        region.playable_payload.consumableTiles = new Map([
+            ['1,1', { substrate: 'omsi', type: 'gold', count: 2 }],
+        ]);
+        region.playable_payload.manaTiles = new Map([['2,1', 30]]);
+        const sidecars = buildPresetSidecars(grid);
+        const payload = sidecars['1'][region.region_id].playable_payload;
+        expect(payload.consumableTiles).toEqual([
+            { x: 1, y: 1, substrate: 'omsi', type: 'gold', count: 2 },
+        ]);
+        expect(payload.manaTiles).toEqual([{ x: 2, y: 1, amount: 30 }]);
+
+        const restored = deserializeMazeWorld(payload);
+        expect(restored.consumableTiles.get('1,1'))
+            .toEqual({ substrate: 'omsi', type: 'gold', count: 2 });
+        expect(restored.manaTiles.get('2,1')).toBe(30);
     });
 
     it('growMaze places hazards on regions when hazardOpts.enabled is true', () => {
@@ -3299,8 +3400,12 @@ describe('arrangeShuffledSpiral', () => {
     });
 
     it('throws when a quota exceeds the substrate zoneCount', () => {
+        // Derive the over-quota from the live zoneCount so this can't go
+        // stale when the substrate's zone count changes (it was hardcoded
+        // to 20, which stopped exceeding jta's zoneCount once it reached 30).
+        const jtaZoneCount = substrateRegistry.get('jta').zoneCount;
         expect(() => arrangeShuffledSpiral(defaultConfig({
-            growthParams: { substrateQuotas: { jta: 20 } },
+            growthParams: { substrateQuotas: { jta: jtaZoneCount + 1 } },
         }))).toThrow(/exceeds substrate zoneCount/);
     });
 

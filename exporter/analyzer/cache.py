@@ -6,7 +6,7 @@ and AST parsing during rule analysis.
 """
 
 import ast
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, Optional, Set, Tuple
 
 # Module-level caches
 file_content_cache: Dict[str, str] = {}  # Raw file content as strings
@@ -35,6 +35,13 @@ parameterless_func_cache: Dict[Tuple[str, int], Dict[str, Any]] = {}
 # entrance shuffle which creates deeply nested add_rule chains.
 closure_func_identity_cache: Dict[Any, Dict[str, Any]] = {}
 
+# Source files already reported as unreadable, so rule source failures are
+# logged once per file instead of once per rule (a source-free install fails
+# for every location, which buries the one actionable message).
+# FROZEN_WORLD_SOURCE_KEY is the sentinel for the install-wide diagnostic.
+FROZEN_WORLD_SOURCE_KEY = "<frozen install without world source>"
+source_unavailable_reported: Set[str] = set()
+
 
 def clear_caches():
     """
@@ -48,3 +55,4 @@ def clear_caches():
     unparsed_lambda_cache.clear()
     parameterless_func_cache.clear()
     closure_func_identity_cache.clear()
+    source_unavailable_reported.clear()

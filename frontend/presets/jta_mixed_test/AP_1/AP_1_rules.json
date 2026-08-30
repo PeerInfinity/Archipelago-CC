@@ -1,0 +1,203 @@
+{
+  "schema_version": 3,
+  "game_name": "JtA (mixed substrate test)",
+  "game_directory": "jta_mixed_test",
+  "archipelago_version": "0.0.0",
+  "generation_seed": 1,
+  "seed_name": "AP_1",
+  "player_names": {
+    "1": "Player1"
+  },
+  "regions": {
+    "1": {
+      "Menu": {
+        "name": "Menu",
+        "exits": [
+          {
+            "name": "GameStart",
+            "connected_region": "AdventureZone",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "AdventureZone": {
+        "name": "AdventureZone",
+        "exits": [
+          {
+            "name": "ToJtaZone1",
+            "connected_region": "JtaZone1",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "JtaZone1": {
+        "name": "JtaZone1",
+        "exits": [],
+        "locations": []
+      }
+    }
+  },
+  "start_regions": {
+    "1": {
+      "default": [
+        "Menu"
+      ],
+      "available": []
+    }
+  },
+  "items": {
+    "1": {
+      "victory": {
+        "name": "victory",
+        "id": 1,
+        "groups": [
+          "Everything"
+        ],
+        "classification": "progression",
+        "type": null,
+        "max_count": 1
+      }
+    }
+  },
+  "item_groups": {
+    "1": [
+      "Everything"
+    ]
+  },
+  "itempool_counts": {
+    "1": {
+      "victory": 1
+    }
+  },
+  "canonical_placements": {
+    "1": {}
+  },
+  "progression_mapping": {
+    "1": {}
+  },
+  "starting_items": {
+    "1": []
+  },
+  "preset_sidecars": {
+    "1": {
+      "AdventureZone": {
+        "substrate": "text_adventure",
+        "render_hint": "text_adventure",
+        "grid_cell": {
+          "gx": 0,
+          "gy": 0
+        },
+        "playable_payload": {
+          "width": 8,
+          "height": 6,
+          "tiles": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "entrance": {
+            "x": 4,
+            "y": 3
+          },
+          "exits": [
+            {
+              "exit_id": "ToJtaZone1",
+              "x": 7,
+              "y": 3,
+              "side": "E",
+              "exitName": "ToJtaZone1",
+              "targetRegion": "JtaZone1",
+              "targetExitId": "FromAdventure",
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ],
+          "obstacles": [],
+          "items": [],
+          "obstacleLib": {},
+          "itemLib": {},
+          "longestShortestPath": 1,
+          "fogEnabled": false,
+          "manaEnabled": true
+        }
+      },
+      "JtaZone1": {
+        "substrate": "jta",
+        "render_hint": "jta",
+        "grid_cell": {
+          "gx": 1,
+          "gy": 0
+        },
+        "playable_payload": {
+          "jtaZone": 1,
+          "manaEnabled": true
+        }
+      }
+    }
+  },
+  "loop_costs": {
+    "regions": {},
+    "locations": {},
+    "defaultRegionCost": 50,
+    "defaultLocationCost": 10
+  },
+  "world": {
+    "1": {
+      "game": "JtA (mixed substrate test)"
+    }
+  },
+  "exporter": {},
+  "game_info": {},
+  "helpers": {}
+}

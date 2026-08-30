@@ -16,6 +16,7 @@ import {
   formatTime,
 } from '../shared/queueAnalysis.js';
 import { applyRegionXpCostEffect } from './xpFormulas.js';
+import { formatAnnotations } from './blockAnnotations.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -94,7 +95,8 @@ export class LoopBlockBuilder {
       useColorblind,
       isExpanded,
       currentActionIndex,
-      analysisEntries
+      analysisEntries,
+      instanceNumber
     );
     regionBlock.appendChild(contentEl);
 
@@ -210,14 +212,21 @@ export class LoopBlockBuilder {
     useColorblind,
     isExpanded,
     currentActionIndex,
-    analysisEntries = null
+    analysisEntries = null,
+    instanceNumber = 1
   ) {
     const contentEl = document.createElement('div');
     contentEl.className = 'loop-region-content';
 
+    // Whether this block runs in manual mode — its pending actions
+    // display as EXPECTED outcomes of the player's hand-play rather than
+    // queue work. Resolved per (region, instance) block, not per region.
+    const isManualExpected = this.loopUI.isLoopModeActive &&
+      loopState.getBlockMode(regionName, instanceNumber) === 'manual';
+
     // Add actions container (always visible, even when collapsed)
     if (actions.length > 0) {
-      this.addActions(contentEl, actions, currentActionIndex, analysisEntries);
+      this.addActions(contentEl, actions, currentActionIndex, analysisEntries, isManualExpected);
     }
 
     // If expanded, add region details (exits, locations, explore button)
@@ -247,11 +256,16 @@ export class LoopBlockBuilder {
       // substrate) get neither — there's no panel to hand off to and
       // nothing to record.
       const loopSupport = this._getLoopSupport(regionName);
-      if (this.loopUI.isLoopModeActive && loopSupport?.manual) {
-        // Manual checkbox — when on, the queue parks here and the
-        // player drives the region by hand; the queued actions become
-        // the expected outcome of the manual play.
-        this.addManualCheckbox(detailsEl, regionName);
+      const offers = this.getModeOffers(regionName);
+      if (this.loopUI.isLoopModeActive && offers.hasRow) {
+        // Per-block mode radios (Manual / Record / Playback). Manual and
+        // Record park the block for hand-play; Playback runs it
+        // automatically — and is disabled until the block has something to
+        // play (M4). The recording-exists indicator rides in the same row,
+        // and the economy annotations sit under it.
+        const playable = this.getBlockPlayableContent(regionName, instanceNumber, actions);
+        this.addModeRadios(detailsEl, regionName, instanceNumber, offers, playable);
+        this.addAnnotationBadges(detailsEl, regionName, instanceNumber);
       }
       if (this.loopUI.isLoopModeActive && loopSupport?.customQueues) {
         // Custom Queue dropdown — lists previously-saved queues for
@@ -297,7 +311,7 @@ export class LoopBlockBuilder {
    * @param {Array} actions - Array of actions
    * @param {number} currentActionIndex - Index of current action
    */
-  addActions(contentEl, actions, currentActionIndex, analysisEntries = null) {
+  addActions(contentEl, actions, currentActionIndex, analysisEntries = null, isManualExpected = false) {
     const actionsContainer = document.createElement('div');
     actionsContainer.className = 'region-actions-container';
 
@@ -306,7 +320,7 @@ export class LoopBlockBuilder {
       const analysisEntry = analysisEntries
         ? analysisEntries.find(e => e.index === index || e.pathIndex === pathEntry.pathIndex)
         : null;
-      const actionEl = this.createActionEntry(pathEntry, index, analysisEntry);
+      const actionEl = this.createActionEntry(pathEntry, index, analysisEntry, isManualExpected);
       if (actionEl) {
         actionsContainer.appendChild(actionEl);
       }
@@ -372,47 +386,310 @@ export class LoopBlockBuilder {
   }
 
   /**
-   * Adds the Manual checkbox to the region block (replaces the old
-   * "Add Manual entry" button). When checked, the loops queue parks
-   * whenever its cursor reaches this region: the substrate panel
-   * auto-activates, the region's queued actions display as the
-   * EXPECTED outcome, and the player drives by hand. Exiting through
-   * the expected exit resumes the queue past the region's segment;
-   * any other exit pauses the queue until the next loop reset. The
-   * checkbox survives loop resets.
+   * Which mode radios a region can offer, from its substrate's
+   * loopSupport. Manual is offered where declared; Playback is offered
+   * for any substrate that auto-runs today (maze delegation / solver
+   * walkTo / generic timer — i.e. any real loopSupport declaration).
+   * AP-native (null) and NO_LOOP_SUPPORT (empty) regions offer nothing,
+   * so no mode row renders.
    */
-  addManualCheckbox(detailsEl, regionName) {
+  getModeOffers(regionName) {
+    const ls = this._getLoopSupport(regionName);
+    const offersManual = !!ls?.manual;
+    const offersPlayback = !!ls &&
+      (!!ls.manual || (ls.queueActions?.length > 0) || !!ls.executeVia);
+    // Record (M2) is offered only where the substrate DECLARES both a
+    // recorder and replay (record requires playback — a capture you can't
+    // play back is useless).
+    const offersRecord = !!ls?.record && !!ls?.playback;
+    // Bot (M6) is offered where the region has a SOLVER — either the walkTo
+    // path (executeVia) or maze-style delegation, which also needs the
+    // region's manaEnabled, so this asks loopState rather than reading
+    // loopSupport alone.
+    const offersBot = !!loopState.regionSolver?.(regionName);
+    // Instant (M3) is offered where the substrate DECLARES the capability;
+    // the checkbox itself is only shown for a Playback / Bot block, so
+    // it rides alongside offersPlayback in practice.
+    const offersInstant = !!ls?.instant;
+    return {
+      offersManual,
+      offersPlayback,
+      offersRecord,
+      offersBot,
+      offersInstant,
+      hasRow: offersManual || offersPlayback || offersRecord || offersBot,
+    };
+  }
+
+  /**
+   * Per-block mode radios (replaces the old per-region Manual checkbox).
+   * Mode is stored per (region, instanceNumber) VISIT so two visits to
+   * one region can differ. In M1 the choices are:
+   *   - Manual   — the queue parks on this block; the substrate panel
+   *                activates and the player drives by hand. The block's
+   *                queued actions display as the EXPECTED outcome; the
+   *                expected exit resumes past the segment, a wrong exit
+   *                pauses until the next loop reset.
+   *   - Record   — hand-play that also CAPTURES the visit (M2).
+   *   - Playback — the system replays the block's saved content (M2/M4/M5).
+   *   - Bot      — a solver plays the block live: the substrate's own bot
+   *                walks each queued target (walkTo), or the panel walks it
+   *                itself (maze delegation). M6; offered only where the
+   *                region actually has a solver.
+   */
+  /**
+   * Whether a block has PLAYABLE CONTENT — what the M4 recording-exists
+   * indicator reports and what the Playback radio is gated on.
+   *
+   * The three capture contracts answer this differently (loop-recording.md):
+   *   - FINE-GRAINED (maze, jta): the recording lives in savedQueueStore,
+   *     bound to the block by its (arrivalKey, ordinal) tag. An
+   *     annotations-only envelope does NOT count (hasPlayableRecording).
+   *   - SUMMARY (runner, bounce — M5): the recording is the visit's net
+   *     result, bound by the same tag but guarded on hasSummaryRecording.
+   *     The block interior is a readability projection, not the content.
+   *   - COARSE-ONLY (text adventure): the block's own INTERIOR is the
+   *     recording — the generic executor replays it and never consults the
+   *     store. So a non-empty interior IS the playable content.
+   *
+   * @param {Array} actions - the block's queued actions ({pathEntry, index})
+   */
+  getBlockPlayableContent(regionName, instanceNumber, actions = []) {
+    const shape = loopState.getRegionCaptureShape?.(regionName)
+      ?? (loopState.isFineGrainedRegion(regionName) ? 'fine' : 'coarse');
+    let hasContent;
+    if (shape === 'fine') {
+      hasContent = loopState.hasBoundRecording(regionName, instanceNumber);
+    } else if (shape === 'summary') {
+      hasContent = loopState.hasBoundSummary(regionName, instanceNumber);
+    } else {
+      hasContent = actions.some((a) => (a?.pathEntry?.type ?? a?.type) !== 'regionMove');
+    }
+    // `fineGrained` is retained for the indicator tooltips, which read
+    // "a saved recording is bound" vs "this block has queued actions" —
+    // a summary block answers like the former.
+    return { shape, fineGrained: shape !== 'coarse', hasContent };
+  }
+
+  addModeRadios(detailsEl, regionName, instanceNumber, offers = this.getModeOffers(regionName),
+    playable = { fineGrained: false, hasContent: true }) {
     const container = document.createElement('div');
-    container.className = 'region-manual-container';
+    container.className = 'region-mode-container';
     Object.assign(container.style, {
       display: 'flex',
       alignItems: 'center',
-      gap: '6px',
+      gap: '10px',
       marginTop: '4px',
     });
 
-    const label = document.createElement('label');
-    label.className = 'manual-region-label';
-    label.title =
-      'Play this region by hand when the queue reaches it. The queued actions become ' +
-      'the expected outcome; exiting through the expected exit resumes the queue, any ' +
-      'other exit pauses it until the next loop reset.';
+    const heading = document.createElement('span');
+    heading.className = 'region-mode-heading';
+    heading.textContent = 'Mode:';
+    heading.style.fontSize = '12px';
+    container.appendChild(heading);
 
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.className = 'manual-region-checkbox';
-    checkbox.checked = loopState.getManualRegion(regionName);
-    checkbox.addEventListener('change', () => {
-      loopState.setManualRegion(regionName, checkbox.checked);
-      // Re-render so the region's action entries flip between
-      // 'pending' and 'expected' display immediately.
-      this.loopUI.renderLoopPanel?.();
+    // Resolve the block's current mode and clamp the selection to a mode
+    // that's actually offered (e.g. a global default of Manual on a
+    // playback-only block shows Playback selected).
+    let selected = loopState.getBlockMode(regionName, instanceNumber);
+    if (selected === 'manual' && !offers.offersManual) selected = 'playback';
+    if (selected === 'record' && !offers.offersRecord) selected = 'playback';
+    if (selected === 'bot' && !offers.offersBot) selected = 'playback';
+    if (selected === 'playback' && !offers.offersPlayback) selected = 'manual';
+
+    // Radios in one block share a name so exactly one is checked. The
+    // name is per (region, instance) so different blocks are independent.
+    const groupName = `loop-mode--${regionName}--${instanceNumber}`;
+
+    const MODES = [
+      { value: 'manual', text: 'Manual', offered: offers.offersManual,
+        title: 'Play this block by hand when the queue reaches it. Its queued '
+          + 'actions become the expected outcome; exiting through the expected exit '
+          + 'resumes the queue, any other exit pauses it until the next loop reset.' },
+      { value: 'record', text: 'Record', offered: offers.offersRecord,
+        title: 'Play this block by hand AND capture what you do as a reusable '
+          + 'recording. Exiting through the expected exit saves the recording '
+          + '(and, by default, switches this block to Playback); any other exit '
+          + 'or running out of mana discards it.' },
+      { value: 'playback', text: 'Playback', offered: offers.offersPlayback,
+        title: 'The system runs this block automatically when the queue reaches '
+          + 'it — replaying a saved recording when one exists, else the default '
+          + 'auto behavior.' },
+      { value: 'bot', text: 'Bot', offered: offers.offersBot,
+        title: 'A solver plays this block for you, live: the substrate walks to '
+          + 'each queued target itself — on real physics where it has them — and '
+          + 'the queue parks until it arrives. Needs no recording, and costs what '
+          + 'playing the block by hand would cost. A wrong exit pauses the queue '
+          + 'until the next loop reset, same as Manual.' },
+    ];
+
+    // M4: Playback is DISABLED until the block has playable content. Its
+    // no-content behavior is Manual parking (loopState parks a fine-grained
+    // Playback block with no bound recording), so offering the radio would
+    // promise a replay the block can't do — the walkTo/delegation auto chain
+    // is unreachable from Playback until M6's Bot radio.
+    const playbackBlocked = !playable.hasContent;
+
+    for (const mode of MODES) {
+      if (!mode.offered) continue;
+      const disabled = mode.value === 'playback' && playbackBlocked;
+      const label = document.createElement('label');
+      label.className = `block-mode-label block-mode-${mode.value}`
+        + (disabled ? ' block-mode-disabled' : '');
+      label.title = disabled
+        ? 'No recording for this block yet — record it once (or queue actions '
+          + 'in it) and Playback becomes available. Until then this block '
+          + 'parks for hand-play.'
+        : mode.title;
+      Object.assign(label.style, { display: 'flex', alignItems: 'center', gap: '3px' });
+      if (disabled) label.style.opacity = '0.5';
+
+      const radio = document.createElement('input');
+      radio.type = 'radio';
+      radio.className = 'block-mode-radio';
+      radio.name = groupName;
+      radio.value = mode.value;
+      radio.checked = selected === mode.value;
+      radio.disabled = disabled;
+      radio.addEventListener('change', () => {
+        if (!radio.checked) return;
+        loopState.setBlockMode(regionName, instanceNumber, mode.value);
+        // Re-render so this block's action entries flip between
+        // 'pending' and 'expected' display immediately.
+        this.loopUI.renderLoopPanel?.();
+      });
+
+      label.appendChild(radio);
+      label.appendChild(document.createTextNode(` ${mode.text}`));
+      container.appendChild(label);
+    }
+
+    // Instant toggle (M3): a per-block checkbox offered only where the
+    // substrate DECLARES loopSupport.instant AND the block runs in an auto
+    // mode (Playback now; Bot in M6). Instant doesn't apply to Manual/Record
+    // (the player drives those by hand), so it's hidden for those selections.
+    // Toggling re-renders so a mode switch shows/hides it immediately.
+    //
+    // M5: hidden for SUMMARY blocks. Their Playback applies a recorded net
+    // result in one step — it is inherently instant and a paced variant
+    // does not exist, so the checkbox would be a control with no off state.
+    // `instant` stays DECLARED on those substrates for the focus-
+    // suppression seam (isFocusLocked while a block runs).
+    //
+    // M6: for a BOT block the checkbox appears only where the SOLVER honors
+    // it (loopState.regionBotHonorsInstant — v1: the walkTo solver on a fine
+    // substrate, i.e. jta). Summary bots play real-time physics with no
+    // instant variant, and maze delegation is deferred; offering the box
+    // there would be a control that does nothing.
+    const instantApplies = selected === 'bot'
+      ? !!loopState.regionBotHonorsInstant?.(regionName)
+      : (selected === 'playback' && playable.shape !== 'summary');
+    if (offers.offersInstant && instantApplies) {
+      const instLabel = document.createElement('label');
+      instLabel.className = 'block-instant-label';
+      instLabel.title =
+        'Run this block headlessly in a single frame instead of animating it — '
+        + 'no substrate panel activation while it runs. Applies to Playback and Bot.';
+      Object.assign(instLabel.style, {
+        display: 'flex', alignItems: 'center', gap: '3px', marginLeft: '6px',
+      });
+
+      const instBox = document.createElement('input');
+      instBox.type = 'checkbox';
+      instBox.className = 'block-instant-checkbox';
+      instBox.checked = loopState.getBlockInstant(regionName, instanceNumber);
+      instBox.addEventListener('change', () => {
+        loopState.setBlockInstant(regionName, instanceNumber, instBox.checked);
+        this.loopUI.renderLoopPanel?.();
+      });
+
+      instLabel.appendChild(instBox);
+      instLabel.appendChild(document.createTextNode(' Instant'));
+      container.appendChild(instLabel);
+    }
+
+    // M4 recording-exists indicator. Fine-grained blocks report their bound
+    // store recording; coarse blocks report a non-empty interior (which IS
+    // their recording); M5 summary blocks report their bound summary. The
+    // dot is the at-a-glance answer to "will Playback do anything here?".
+    const indicator = document.createElement('span');
+    indicator.className = 'block-recording-indicator'
+      + (playable.hasContent ? ' has-recording' : ' no-recording');
+    Object.assign(indicator.style, {
+      marginLeft: '6px',
+      fontSize: '11px',
+      color: playable.hasContent ? '#8c8' : '#888',
     });
+    indicator.textContent = playable.hasContent ? '● recorded' : '○ not recorded';
+    const TITLES = {
+      summary: {
+        yes: 'A recorded visit is bound to this block; Playback applies its '
+          + 'result — the checks and the exit — instantly, priced by how long '
+          + 'the recorded visit took.',
+        no: 'No recorded visit for this block yet — Record it once to enable Playback.',
+      },
+      fine: {
+        yes: 'A saved recording is bound to this block; Playback replays it.',
+        no: 'No saved recording for this block yet — Record it once to enable Playback.',
+      },
+      coarse: {
+        yes: 'This block has queued actions; Playback runs them.',
+        no: 'This block has no actions yet — queue some, or Record it, to enable Playback.',
+      },
+    };
+    const titles = TITLES[playable.shape] ?? (playable.fineGrained ? TITLES.fine : TITLES.coarse);
+    indicator.title = playable.hasContent ? titles.yes : titles.no;
+    container.appendChild(indicator);
 
-    label.appendChild(checkbox);
-    label.appendChild(document.createTextNode(' Manual'));
-    container.appendChild(label);
+    detailsEl.appendChild(container);
+  }
 
+  /**
+   * M4 annotation badges: what the block's recording DID to the economy,
+   * as deltas from block start.
+   *
+   * Display rule (user, 2026-07-23): show NET deltas whenever nonzero, and
+   * show a minimum ONLY when it went below zero — rendered as "needs ≥X at
+   * start", which is what a minimum is actually useful for. Full detail
+   * (including XP, which is tracked but not displayed as a badge) rides in
+   * the row's tooltip.
+   */
+  addAnnotationBadges(detailsEl, regionName, instanceNumber) {
+    const annotations = loopState.getBlockAnnotations?.(regionName, instanceNumber);
+    const { nets, needs, detail } = formatAnnotations(annotations);
+    if (nets.length === 0 && needs.length === 0) return;
+
+    const container = document.createElement('div');
+    container.className = 'region-annotations-container';
+    Object.assign(container.style, {
+      display: 'flex', alignItems: 'center', flexWrap: 'wrap',
+      gap: '6px', marginTop: '2px', fontSize: '11px',
+    });
+    container.title =
+      'What the recorded run of this block did to the shared economy, as '
+      + 'changes from the block\'s start.\n'
+      + detail
+      + '\n\nMinimums assume the worst ordering (every use before every gain), '
+      + 'so they can overstate but never understate what you need.';
+
+    for (const text of nets) {
+      const badge = document.createElement('span');
+      badge.className = 'block-annotation-badge annotation-net';
+      Object.assign(badge.style, {
+        padding: '1px 5px', borderRadius: '3px', background: '#2a2a2a', color: '#bbb',
+      });
+      badge.textContent = text;
+      container.appendChild(badge);
+    }
+    for (const text of needs) {
+      const badge = document.createElement('span');
+      badge.className = 'block-annotation-badge annotation-min';
+      Object.assign(badge.style, {
+        padding: '1px 5px', borderRadius: '3px', background: '#3a2a2a', color: '#d9a',
+      });
+      badge.textContent = text;
+      container.appendChild(badge);
+    }
     detailsEl.appendChild(container);
   }
 
@@ -757,7 +1034,7 @@ export class LoopBlockBuilder {
    * @param {Object|null} analysisEntry - Analysis data from shared queueAnalysis
    * @returns {HTMLElement} The action entry element
    */
-  createActionEntry(pathEntry, index, analysisEntry) {
+  createActionEntry(pathEntry, index, analysisEntry, isManualExpected = false) {
     const actionDiv = document.createElement('div');
     actionDiv.className = 'loop-action-entry';
     actionDiv.dataset.actionIndex = index;
@@ -810,13 +1087,12 @@ export class LoopBlockBuilder {
     // Display number (1-indexed)
     const displayIndex = index + 1;
 
-    // Per-region manual mode: pending actions in a manual-checked
-    // region are EXPECTED outcomes of the player's hand-play, not
-    // queue work. Same status styling, different label + a class
-    // hook for styling the whole entry.
-    const isManualRegion = loopState.getManualRegion?.(pathEntry.sourceRegion) || false;
-    if (isManualRegion) actionDiv.classList.add('manual-expected');
-    const statusLabel = status === 'pending' && isManualRegion ? 'expected' : status;
+    // Per-block manual mode: pending actions in a manual block are
+    // EXPECTED outcomes of the player's hand-play, not queue work. Same
+    // status styling, different label + a class hook for styling the
+    // whole entry. Resolved per (region, instance) block by the caller.
+    if (isManualExpected) actionDiv.classList.add('manual-expected');
+    const statusLabel = status === 'pending' && isManualExpected ? 'expected' : status;
 
     // Format cost
     const costStr = manaCost.toFixed(1);

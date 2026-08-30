@@ -1,0 +1,8 @@
+{
+  "name": "no-dreamcatcher",
+  "options": {
+    "modOverrides": {
+      "auto_dreamcatcher": false
+    }
+  }
+}

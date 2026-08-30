@@ -65,6 +65,16 @@ import { validateMove as validateMoveAgainstHazards } from '../shared/procgen/co
  *   clear are blocked.
  * @param {Object} [opts.obstacleLib] - obstacle library for inventory-
  *   aware clearance checks. Defaults to `world.obstacleLib`.
+ * @param {Object} [opts.clearanceOpts] - forwarded verbatim to
+ *   `isObstacleCleared`, so a `clear_set_type: 'rule'` obstacle can be
+ *   judged by the caller's own evaluator (the maze panel injects a
+ *   stateManager-backed Rule Builder evaluator here, which understands
+ *   CountItem / helpers / count_check — the procgen-local subset
+ *   evaluator does not). WITHOUT this, a planner and the `step()` that
+ *   executes its plan can disagree about whether a gate is open: the
+ *   walk is planned through a door the engine then refuses, or routed
+ *   around one that is actually open. Pass the SAME bag you pass to
+ *   `step`.
  * @param {boolean} [opts.excludeOtherExits] - when true, exit tiles
  *   other than the goal are blocked (prevents accidental teleports
  *   through off-route exits).
@@ -212,6 +222,7 @@ function _bfsToGoal(world, from, isGoal, opts = {}) {
     const obstacleLib = inventory
         ? (opts.obstacleLib ?? world.obstacleLib ?? null)
         : null;
+    const clearanceOpts = opts.clearanceOpts ?? undefined;
     const excludeOtherExits = opts.excludeOtherExits === true;
 
     // Time-expanded mode: when hazards are provided, the BFS tracks
@@ -244,7 +255,7 @@ function _bfsToGoal(world, from, isGoal, opts = {}) {
         if (excludeOtherExits && !isAlsoGoal && getExitAt(world, x, y)) return false;
         if (inventory && obstacleLib) {
             const obstacleId = getObstacle(world, x, y);
-            if (obstacleId && !isObstacleCleared(obstacleId, inventory, obstacleLib)) {
+            if (obstacleId && !isObstacleCleared(obstacleId, inventory, obstacleLib, clearanceOpts)) {
                 return false;
             }
         }

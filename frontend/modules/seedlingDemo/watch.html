@@ -1,0 +1,1464 @@
+<!DOCTYPE html>
+<!--
+  seedlingDemo/watch.html — watch a Seedling bot tape, replayed or SOLVED.
+
+  TOOLING ONLY: this page makes no claims and gates nothing. See
+  watchViewer.js's docblock, and docs/json/developer/procgen/seedling-bot.md
+  § "The editor arc" for what this page is and its named limits.
+
+  Serve from the REPO ROOT (paths resolve against the dev server's cwd):
+
+      ss -ltn | grep ":8000" || python3 -m http.server 8000
+
+  ── SOURCE = REPLAY (the original page, untouched) ──────────────────────
+
+      http://localhost:8000/frontend/modules/seedlingDemo/watch.html
+          ?tape=frontend/modules/seedlingDemo/fixtures/tapes/pit-fall-chain-85.json
+          &side=js
+
+  side=js    the JS engine, drawn on canvas. Works anywhere.
+  side=wasm  the real recompiled game in an iframe. The build ships in the
+             submodule PeerInfinity/seedling-wasm at
+             frontend/modules/flashPanel/wasm/, so this works on the live
+             Pages site too; a clone without `--recurse-submodules` gets a
+             named message rather than a blank frame.
+
+  ── SOURCE = SOLVE (editor arc slice 1) ─────────────────────────────────
+
+  Pick a level, declare the starting conditions (a tape v8 staging block,
+  either typed or preset from a committed tape's own boot), name the goals
+  in the solver's own vocabulary, and press SOLVE. The bot solves in the
+  page and the result is scrubbed by the SAME machinery REPLAY uses
+  (solve-then-scrub).
+
+      watch.html?boot=frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-4.json
+          &level=4&goals=exit:64,16&solve=1
+
+  ?level=N     the level to solve in (overrides the staging block's own)
+  ?boot=PATH   repo-relative JSON: a whole committed tape, or a bare block
+  ?goals=      `exit:X,Y` / `place:X,Y`, `;`-separated, in solve order
+  ?solve=1     solve on load (without ?goals=, the level's default — which
+               REFUSES rather than guessing when the level has two exits)
+  ?name=       the tape/trace name the solve is recorded under, in memory
+
+  ── OVERLAYS + THE TRACE PANE (editor arc slice 2) ──────────────────────
+
+  Every layer is an independently toggleable pass drawn from per-tick
+  SAMPLES taken inside the one loop — never a second simulation. The
+  checkboxes under the canvas are generated from the layer roster itself,
+  the legend names every glyph, and ?layers= selects the ON set:
+
+      &layers=player,enemies,action,damage
+
+  player · enemies (chasers + spinners) · pushables · arrows (OFF by
+  default, ⚖) · action (attack-key edges) · damage (hits + deaths) ·
+  events (grants + transitions) · volumes.
+
+  The pane on the right renders the decision trace: an in-page SOLVE's own
+  rows, or the fetched fixtures/traces/<name>.trace.json sidecar for a
+  committed solver tape. Rows at or before the scrub cursor are lit, and
+  clicking one seeks to its tick. A tape with no trace says so BY NAME.
+
+  ── SOURCE = MANUAL, AND TAPE I/O (editor arc slice 3) ──────────────────
+
+  Declare the same starting conditions, press START, and drive the player
+  yourself — arrow keys, X (attack) and C (item slot), at the page's own
+  pacing (the speed slider applies). Every tick is recorded and the live
+  overlays are the SAME per-tick sampling the replay uses. STOP folds the
+  session into a tape with the ONE fold, checks that the fold REPLAYS
+  frame-for-frame through the page's own REPLAY arm, and shows the tape in
+  the save box.
+
+      watch.html?source=manual&boot=…/tapes/r8-solve-4.json&level=4
+
+  ⚠ MANUAL is never inferred — `?level=`/`?boot=` are shared with SOLVE, so
+  it must be asked for by name.
+
+  SAVE / LOAD: the current tape — replayed, solved or hand-driven — is in
+  the textarea under the canvas, with a Download button beside it. Paste one
+  in and press Load, or Upload a file; both go through `parseTape`, so a
+  malformed tape refuses with the PARSER's own message.
+
+  ── SOURCE = GENERATE (PROCGEN PoC slice 5) ─────────────────────────────
+
+  A FOURTH way to get a level: GENERATE one. ⚖ Kickoff §3.5 and ruling §1.3
+  — seed + biome + obstacle-count target (+ budget) run the Cloudberry loop
+  IN THIS PAGE: start from an empty bordered room that solves, add one
+  template at a time, re-solve after each, keep it if the room still
+  completes and throw the candidate away if it does not.
+
+      watch.html?source=generate&seed=3&biome=post-sword&count=6
+
+  STEP places ONE template and re-solves. RUN-ALL runs to the target or to
+  SATURATION, and the display updates after EVERY placement: the current
+  level drawn, the LATEST SOLVE's path layers over it, and the verdict /
+  kept-or-reverted template / VERBATIM refusal in the generation pane on the
+  right. The finished level flows into the existing spine unchanged — it is
+  solvable, scrubable, manual-drivable, and its tape is in the save box.
+
+  ⛔ THE WHOLE LIST, AND IT IS `readGenerateParams`' OWN. Checked field by
+  field against that function at the arc's close; `?budgetms=` is GONE (it
+  warns and is ignored — the wall clock it set no longer exists) and the four
+  parameters slices 3–6 added are here. A map of a page that has grown past it
+  is worse than no map.
+
+  ?seed=N    the level's identity (⚖ kickoff §5: same seed, same level)
+  ?biome=    pre-sword | post-sword — the BOOT INVENTORY, and the whole
+             difference between the two palettes
+  ?count=N   obstacle target   ?tries=N per step   ?k=N saturation
+  ?anchortries=N  how many of the model's LEGAL anchors one candidate may be
+             SOLVED at before it is given up on (slice 3; 1 is the pre-search
+             behaviour). ⚠ Not `?anchors=` — that spelling is the domain
+             sweep's ENUMERATION MODE, not a count.
+  ?families= / ?templates=   the sub-roster a run may draw from (slice 4), a
+             comma list either way; ABSENT is the whole roster and an empty
+             value refuses. ⛔ BOTH present REFUSES — they are two spellings of
+             one setting and they do not compose.
+  ?directed= the DIRECTED ATTEMPTS, in order (slices 5–6):
+             `template(k=v,…)@<bound><d|s>[!tx,ty]`, `;`-separated, e.g.
+             `wall-gap-block(ori=v,gap=1)@12d;arrow-lane@4s`. The parenthesised
+             clause IS the instance label the pane prints; `d`/`s` is the keep
+             policy (prefer-discharge / first-solved); `!tx,ty` is a CLICKED
+             cell, and a directive that names one is a walk of ONE cell, so its
+             bound must be `1`. ⛔ Only the INPUTS are encoded — a URL is an
+             INSTRUCTION, a payload is a REPORT.
+  ?tickbudget=  the per-solve budget, named in the trace (⚠ `?tickbudget=`,
+             not `?ticks=` — `?tick=` is the scrub cursor). It has no control
+             on the form and is PRESERVED across every rewrite.
+  ?run=1     RUN-ALL on load (what the CLI uses to reach a finished level)
+  ?gen=PATH  a payload `generate-seedling-level.mjs` emitted: its seed,
+             biome, bounds, roster and directives REPLACE the ones above, the
+             page generates from them, and the result is COMPARED against the
+             payload's own level and trace. A difference is REPORTED and the
+             page keeps showing what IT generated — the export is then a
+             determinism check across node and the browser, not a picture of a
+             file.
+
+  ⛓ AND THE PANEL ROUND-TRIPS (slice 1): every control writes its value back
+  through the ONE writer at press time, so a copied address bar reproduces the
+  run — including the catalogue's ticks and the directives.
+
+  ⚠ STEP IS "obstacleTarget = k, RE-RUN", which costs O(N²) solves for a
+  RUN-ALL to N. The loop is synchronous and cannot be paused; the prefix
+  property (a run to k IS a run to k+1 truncated) is what makes the cheap
+  version sound, and it is asserted in `watchGenerate.test.js` rather than
+  assumed. The price is printed under the controls before you press.
+  ⛓ The payoff: the page's step-k level IS
+  `generate-seedling-level.mjs --seed=S --biome=B --count=k`, byte for byte.
+
+  ⛔ AND THE PAGE STILL NEVER WRITES fixtures/. A generated level lives in
+  the box, in the Download button and in your hands.
+
+  ── FREE TILE / OBJECT EDITING (constructive slice 11, ⚖ ruling 8) ──────
+
+  The EDIT section under the catalogue paints a tile, places, re-attributes or
+  deletes one entity, and undoes. FOUR recorded ops (`paint`/`place`/`attrs`/
+  `remove`, each addressing a CELL), ONE reconstruction
+  (`watchEdit.applyEdits`), TWO laws:
+
+  (a) IDENTITY — an edited level is *the ladder to step k, then the directed
+      attempts, then the manual edits*. ⛔ THE URL CARRIES NO EDITS (⚖ ruling
+      9) and the identity line SAYS so; the PAYLOAD is the reproduction, and
+      `?gen=` replays a payload's `edits` so an edited level round-trips
+      byte-identically across node and the browser. ⚠ Edits come AFTER all
+      directives — a directed ATTEMPT on an edited level is refused by name,
+      and STEP / RUN-ALL / CLEAR reset to the skeleton and say the edits go.
+
+  (b) CERTIFICATION — editing never bypasses the oracle. Any edit makes the
+      page visibly UNCERTIFIED and NO draw solves an edited record (it is
+      shown as a still frame); SOLVE runs the loop's own oracle over the
+      record on screen and reports its verdict — or, for a body the engine
+      cannot build, the `LevelWorldError` verbatim. ⛔ NOTHING in the tool
+      checks legality: free means free, and certification is the guard.
+
+  ── SWITCHING MODES (the switch arc) ────────────────────────────────────
+
+  The SOURCE selector does NOT reload the page. It rewrites the URL with
+  `replaceState` — so every view is still a link, and a copy of the address
+  bar opens the arm you are looking at — and swaps the arm in place. What
+  survives is the DOCUMENT: the starting-conditions block you edited, the
+  tape you pasted and the goals you picked are still there when you come
+  back.
+
+  ⛓ SOLVE and MANUAL share ONE boot panel, so the block you edit in either
+  is the block the other one runs. A box already holding a parseable block
+  BEATS `?boot=`, and the panel SAYS so — a view showing edits the link does
+  not carry must not look like a view of the link. On a fresh page the box
+  is empty and the URL wins, so every existing link opens what it always
+  opened. To go back to what a URL names, pick a preset or a tape: both
+  still navigate, which is what makes them win.
+
+  ⛓⛓ GENERATE can hand the level it is showing to SOLVE or MANUAL ("SOLVE
+  this level" / "DRIVE it by hand"). The record moves IN MEMORY — a
+  generated room is not in the atlas and not on disk — so THIS TAB holds it,
+  a reload loses it, and the link still describes the GENERATION rather than
+  the room. The receiving arm says all of that in its note, including that
+  the run uses the scratch-persistence fork because a generated room has no
+  tape to declare a kill-lock clear.
+
+  ⛓ SOLVE and MANUAL open with the level ALREADY DRAWN — no press needed —
+  and `◀ ▶` beside the level field step through the atlas's own level list.
+  The level field WRITES `boot.level` into the block below it. ⚠ Only 42 of
+  the atlas's 116 levels have a committed boot in the tape roster, so for the
+  rest the page CHOOSES a spawn (the nearest walkable non-pit cell where the
+  player box clears the solids) and says that it chose — a convenience for
+  looking around, never a position the game used, and nothing may rest on it.
+
+  ⛓ The goal list is pre-filled from `defaultGoalsFromCensus` — every
+  placement plus the single live exit — and left EMPTY, with the alternatives
+  named, when a level has more than one live exit. The page does not choose
+  between them: which one you mean is a fact about you.
+
+  ⛓ `engine` (REPLAY only) switches JS ↔ wasm in place. Leaving the wasm side
+  points its iframe at `about:blank`, which discards the runtime — the wasm
+  side cannot rewind the GAME, and that discard is the whole of what it needed
+  a page reload for.
+
+  ⚠ `window.__editorLifetime` is the page's account of what it tore down —
+  the live arm, the retired ones, the loops each stopped and the listeners
+  each dropped. `check-seedling-editor-switch.mjs` asserts on it BESIDE a
+  behavioural witness, never instead of one.
+
+  ── URL PARAMETERS, THE WHOLE SET ───────────────────────────────────────
+
+  ?tape=   ?side=js|wasm   ?speed=N   ?source=replay|solve|manual|generate
+  ?level=N   ?boot=PATH   ?goals=   ?solve=1   ?name=
+  ?layers=a,b,c   ?tick=N   ?shot=1
+  ?seed=N  ?biome=  ?count=N  ?tries=N  ?k=N  ?budgetms=  ?tickbudget=
+  ?run=1  ?gen=PATH   ?room=N
+
+  ?room=N   ⛓⛓ EDITOR INTEGRATION W3 — WHICH ROOM of the LEVEL SET the EDIT
+            arm is holding to open a room session on (`?source=edit&room=N`).
+            It goes through the page's own `openRoomAt`, the same function
+            `#editSetOpen` presses, so a host-driven room and a hand-picked one
+            are ONE session with one `set-room` base tag. ⛔ With NOTHING HELD
+            it REFUSES in the arm's own LOAD note — a link naming a room of a
+            set this page does not have is one a reader can write by hand, and
+            a page that died on it would lose the arm too; an index past the
+            last room refuses the same way, naming the count. ⚠ It is NOT
+            `?level=N`: that names a room of the COMMITTED atlas set (the
+            `atlas` base), and this names one of the document in hand.
+            ⛓ The parse is `urlParams.readRoomParam`, SHARED with `lab.html` —
+            both pages spell it the same way and refuse the same values.
+            ⛓ This is how a HOST asks for one room over `procgenLab:navigate`,
+            after handing the document over `procgenLab:load` (which this page
+            SNIFFS: a level set or an overlay lands on the EDIT arm's intake
+            instead of the `?gen=` reconstruction).
+
+  ?tick=N   the initial cursor. The page lands there PAUSED — landing and
+            then playing forward would make the parameter a flicker. Out of
+            range clamps AND says so in the detail bar.
+
+  ?shot=1   ⛓ THE CLI'S CONTRACT (slice 4's exporter waits on this):
+              1. nothing animates — the page starts paused, so the canvas
+                 holds the requested tick indefinitely;
+              2. the frame is DRAWN before the signal is raised — the seek
+                 runs the full draw path synchronously;
+              3. the signal is BOTH `document.body.dataset.shotReady === "1"`
+                 (so a headless waiter needs no page evaluation) AND
+                 `window.__editorShot = {ready, requested, tick, frames,
+                 label, why}` (so the caller can assert WHICH tick was drawn
+                 and why a request could not be honoured exactly).
+            `__editorShot` is set on every replay; the body attribute only
+            under `?shot=1`. A readout that existed only under the parameter
+            would make the parameter untestable from the other side.
+
+  ⛔ THE PAGE NEVER WRITES fixtures/tapes/ OR fixtures/traces/. That roster
+  is disk-derived, so a saved experiment would silently join the
+  differential. Solved and hand-driven tapes live in the page, in the save
+  box, in your downloads directory and in your hands.
+
+  ── THE CLI EXPORT (editor arc slice 4) ─────────────────────────────────
+
+  Any view above, as a PNG, with no browser and no dev server — built for
+  agent use, because an agent can Read a picture:
+
+      node scripts/procgen/export-seedling-view.mjs --out=view.png \
+          --tape=…/tapes/r8-solve-4.json --tick=171 --layers=player,arrows
+      node scripts/procgen/export-seedling-view.mjs --out=solve.png --trace \
+          --boot=…/tapes/r8-solve-4.json --level=4 --goals=exit:64,16 --solve=1
+
+  It starts its own static server on a free port, forwards the parameters
+  above verbatim, adds ?shot=1, and screenshots this page. ⛔ It draws
+  NOTHING itself, and a run this page REFUSES exits non-zero with the run's
+  own message and writes no file at all.
+
+  Deliberately NOT a GL panel: no __BUNDLED_MODULES__ entry, no substrate
+  registration. seedlingDemo is an engine-only module and a standalone
+  static page needs neither.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Seedling bot — watch</title>
+<style>
+  :root { color-scheme: dark; }
+  body {
+    margin: 0; background: #0b0b0e; color: #d8d8e0;
+    font: 13px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  header { padding: 8px 12px; border-bottom: 1px solid #24242c; }
+  h1 { font-size: 13px; margin: 0 0 4px; font-weight: 600; }
+  #title { color: #7fe0ff; font-weight: 400; }
+  #status { font-size: 12px; }
+  #status.ok { color: #7fd88f; }
+  #status.bad { color: #ff8080; }
+  /* ⛓ The source stamp's alarm state — the one reading on this page that is
+     about the PAGE rather than about a run, and the only one whose remedy is
+     a keystroke in the browser rather than a change to the code. */
+  #sourceStamp { font-size: 11px; color: #6a6a78; }
+  #sourceStamp.bad { color: #ff8080; }
+  /* ⛓ The wasm verdict reads like the status bar because it IS a verdict:
+     agrees is green, disagrees is red, and "not finished"/"no expectation"
+     are neither — an absence must not wear an answer's colour. */
+  #wasmVerdict { font-size: 11px; white-space: pre-wrap; margin: 2px 0; }
+  #wasmVerdict.ok { color: #7ee787; }
+  #wasmVerdict.bad { color: #ff8080; }
+  #wasmStages { font-family: ui-monospace, monospace; }
+  #detail { font-size: 11px; color: #8a8a98; white-space: pre-wrap; margin-top: 2px; }
+  main { display: flex; gap: 12px; padding: 12px; align-items: flex-start; }
+  #stage { flex: 1 1 auto; min-width: 0; }
+  canvas { display: block; image-rendering: pixelated; background: #101014; }
+  iframe { display: none; width: 100%; height: 560px; border: 1px solid #24242c; }
+  #panel { flex: 0 0 320px; }
+  .r { display: flex; justify-content: space-between; gap: 8px; padding: 2px 6px; border-bottom: 1px solid #1a1a20; }
+  .r span { color: #8a8a98; }
+  .r b { font-weight: 600; text-align: right; word-break: break-all; }
+  .r.coerced b { color: #ffd75f; }
+  .r.transport b { color: #ff9a6a; }
+  #controls { display: flex; gap: 8px; align-items: center; margin: 8px 0; flex-wrap: wrap; }
+  button { background: #1e1e26; color: #d8d8e0; border: 1px solid #34343e; padding: 4px 12px; cursor: pointer; }
+  button:disabled { opacity: .4; cursor: default; }
+  input[type=range] { flex: 1 1 120px; min-width: 80px; }
+  label { color: #8a8a98; display: flex; gap: 4px; align-items: center; }
+  #pick { display: flex; gap: 6px; align-items: center; margin: 4px 0; }
+  #pick label { color: #8a8a98; }
+  #queueBox { margin-left: 10px; }
+  #queueBox button { background: #262630; color: #d8d8e0; border: 1px solid #34343e; padding: 2px 6px; }
+  #queueBox button:disabled { opacity: .45; }
+  #queueList { margin-left: 6px; }
+  #tapes { background: #1e1e26; color: #d8d8e0; border: 1px solid #34343e; padding: 2px 6px; max-width: 60vw; }
+  #sidenote { color: #8a8a98; font-size: 11px; }
+  #progress { height: 4px; background: #1a1a20; margin-top: 6px; }
+  #bar { height: 100%; width: 0; background: #7fe0ff; }
+  select, textarea { background: #1e1e26; color: #d8d8e0; border: 1px solid #34343e;
+    padding: 2px 6px; font: inherit; }
+  /* ── ⛓ EVERY ARM'S PANEL, ONE RULE (switch slice 3). The three panels each
+     carried their own identical copy of this, so an arm added later looked
+     subtly unlike the others until somebody noticed and pasted the block a
+     fourth time. The `.note` and `.box` classes are the same story for the
+     note lines and the two full-width textareas. ── */
+  .armPanel { border-top: 1px solid #24242c; margin-top: 6px; padding-top: 6px; }
+  .armPanel .line { display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+    margin-bottom: 4px; }
+  .note { color: #8a8a98; font-size: 11px; }
+  .box { width: 100%; box-sizing: border-box; }
+  #solveGoalPick { max-width: 40vw; }
+  #solveGoals { color: #7fe0ff; }
+  #solveTime { color: #7fd88f; }
+  summary { color: #8a8a98; cursor: pointer; }
+  /* ⛓ THE GENERATE ARM'S SECTIONS ARE COLLAPSIBLE (user, 2026-08-18): every
+     section is a <details class="genSection">, open by default except the
+     CATALOGUE. A closed section keeps its DOM (the browser rows drive the
+     catalogue's rows by DOM click, never by visibility), it is a VIEW setting,
+     and it is not in the URL.
+
+     ⛔⛔ AND THAT SENTENCE IS TRUE OF `.genSection` AND FALSE OF THE PAGE — R9
+     slice 13 measured it while building item (i)'s collapse-all. The page holds
+     THIRTEEN `<details>`, not eleven: the boot block's and `#tapeIO`'s carry no
+     class, and BOTH are closed by default. So the page's real default is TEN
+     open and THREE closed (the boot block, the CATALOGUE, `#tapeIO`) — and a
+     collapse-all derived from `.genSection` would have left two sections open
+     while reporting that it had closed everything. Trap 566's shape, sitting in
+     a comment: a true sentence about the wrong subject. The control reads
+     `querySelectorAll('details')` and the gate asserts the 10/3 partition as
+     its own row. */
+  /* ⛓ ITEM (ii)'s flex, beside the markup that explains it: the slider is the
+     ONE item that may grow or shrink on this line, so every width change the
+     label makes is spent on the slider and the three buttons never move. */
+  #genPhaseLine #genPhase { flex: 1 1 6em; min-width: 6em; }
+  #genPhaseLine #genPhaseLabel { flex: 0 1 auto; }
+  details.genSection { margin: 0.4em 0; border-left: 2px solid #2a2a36; padding-left: 0.5em; }
+  details.genSection > summary { font-weight: bold; color: #c8c8d4; }
+  details.genSection > summary .note { font-weight: normal; }
+  #genTrace { max-height: 34vh; overflow-y: auto; border: 1px solid #1a1a20;
+    margin-bottom: 8px; }
+  #genTrace .tr { padding: 3px 6px; border-bottom: 1px solid #1a1a20; }
+  #genTrace .tr.kept { border-left: 2px solid #7fd88f; }
+  #genTrace .tr b { color: #7fe0ff; font-weight: 600; }
+  #genTrace .g { color: #7fd88f; }
+  #genTrace .o { color: #ff9a6a; }
+  #genTrace .s { color: #ffd75f; }
+  #genTrace .rj { color: #8a8a98; font-size: 11px; }
+  #genTrace .traceNone { padding: 6px; color: #8a8a98; font-size: 11px; }
+  /* ── ⛓ THE CATALOGUE (GENERATE-mode UI slice 4). Greyed rows are the
+     palette's EXCLUSIONS: they are in the list on purpose and carry their
+     measured cause verbatim, so `opacity` is the only thing that separates
+     them — a list of what can be generated that hid what cannot would be the
+     graceful-skip shape. ── */
+  #genRoster { max-height: 30vh; overflow-y: auto; border: 1px solid #1a1a20;
+    margin-bottom: 8px; }
+  #genRoster .catFamily { border-bottom: 1px solid #1a1a20; padding: 3px 6px; }
+  #genRoster .catHead { color: #ffd75f; font-size: 11px; }
+  #genRoster .catRow b { color: #7fe0ff; font-weight: 600; }
+  #genRoster .catRow.excluded { opacity: .55; }
+  #genRoster .catRow.excluded b { color: #ff9a6a; }
+  #genRoster .rj { color: #8a8a98; font-size: 11px; }
+  /* ⛓ VERB 2 (slice 5): the per-row parameter form and its ATTEMPT button. */
+  #genRoster .catForm { margin: 2px 0 2px 18px; }
+  #genRoster .catForm select { background: #0d0d12; color: #d8d8e0;
+    border: 1px solid #2a2a35; font-size: 11px; margin-right: 4px; }
+  #genRoster .catForm button { font-size: 11px; padding: 1px 6px; }
+  #genRoster .catForm .cost { color: #8a8a98; font-size: 11px; }
+  /* ⛓⛓⛓ SLICE 6 — THE ARMED STATE IS VISIBLE, on the button AND on the
+     canvas. A page waiting for a click it never asked for out loud is a page
+     whose next click means something the reader did not intend. */
+  #genRoster .catForm button.armed { background: #ffd75f; color: #101014; font-weight: 600; }
+  canvas.armed { cursor: crosshair; outline: 2px dashed #ffd75f; outline-offset: -2px; }
+  #genArmNote { color: #ffd75f; }
+  #genDirectives { max-height: 20vh; overflow-y: auto; border: 1px solid #1a1a20;
+    padding: 2px 0; }
+  #genDirectives .dRow { padding: 2px 6px; border-bottom: 1px solid #15151a; }
+  #genDirectives .dRow b { color: #7fe0ff; font-weight: 600; }
+  #genDirectives .dRow .g { color: #7fdc8f; }
+  #genDirectives .dRow .o { color: #ffb066; }
+  #genDirectives .dRow .rj { color: #8a8a98; font-size: 11px; }
+  /* ⛓ SLICE 11: the EDIT LOG has its own container for the reason
+     #genRoster and #genDirectives have theirs — acceptance rows ENUMERATE
+     #layers and #bootForm, and an edit row is neither a layer nor a boot flag. */
+  #genEdits { max-height: 20vh; overflow-y: auto; border: 1px solid #1a1a20;
+              border-radius: 4px; margin: 4px 0; }
+  #genEdits .eRow { padding: 2px 6px; border-bottom: 1px solid #15151a; }
+  #genEdits .eRow b { color: #7fe0ff; font-weight: 600; }
+  #genEdits .eRow .et { color: #ffd75f; }
+  #genEditCert.bad { color: #ff8f6a; }
+  #manualKeys { color: #7fe0ff; font-size: 11px; }
+  #tapeIO { margin-top: 8px; border-top: 1px solid #24242c; padding-top: 6px; }
+  #tapeIO .line { display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+    margin: 4px 0; }
+  #tapeName { color: #7fe0ff; }
+  #tapeText { width: 100%; box-sizing: border-box; }
+  #tapeNote { color: #8a8a98; font-size: 11px; white-space: pre-wrap; }
+  /* ── OVERLAYS + TRACE PANE (editor arc slice 2) ── */
+  #layers { display: flex; gap: 4px 14px; flex-wrap: wrap; margin: 4px 0; }
+  #viewknobs { display: flex; gap: 4px 14px; flex-wrap: wrap; margin: 4px 0;
+    font-size: 11px; color: #8a8a98; }
+  /* ⛓⛓⛓ GROUP B — the ceremony text. Monospace and pre-wrap because the
+     game's own wrap is `endlineText`, which rebuilds the string with real
+     break characters: a proportional font that re-wrapped it would show a
+     different shape from the one the page count is computed against. */
+  #dialogue { border: 1px solid #3a3a42; background: #16161c; padding: 6px 8px;
+    margin: 4px 0; font-size: 12px; }
+  #dialogue .txt { font-family: ui-monospace, Menlo, Consolas, monospace;
+    white-space: pre-wrap; color: #e0e0e8; }
+  #dialogue .rest { color: #4a4a56; }
+  #dialogue .meta { color: #8a8a98; font-size: 11px; margin-top: 4px; }
+  #dialogue .why { color: #8a8a98; font-size: 11px; }
+  #legend { display: flex; gap: 4px 12px; flex-wrap: wrap; font-size: 11px;
+    color: #8a8a98; margin-bottom: 6px; }
+  .sw { display: flex; gap: 4px; align-items: center; }
+  .sw i { width: 9px; height: 9px; display: inline-block; }
+  #panel h2 { font-size: 11px; color: #8a8a98; font-weight: 600; margin: 10px 0 2px;
+    text-transform: uppercase; letter-spacing: .06em; }
+  #trace { max-height: 46vh; overflow-y: auto; border: 1px solid #1a1a20; }
+  #trace .tr { padding: 3px 6px; border-bottom: 1px solid #1a1a20; cursor: pointer;
+    opacity: .45; }
+  #trace .tr:hover { background: #1a1a22; }
+  #trace .tr.past { opacity: 1; }
+  #trace .tr.now { background: #1e2a30; border-left: 2px solid #7fe0ff; }
+  #trace .tr b { color: #7fe0ff; font-weight: 600; }
+  #trace .g { color: #7fd88f; }
+  #trace .o { color: #ff9a6a; }
+  #trace .s { color: #ffd75f; }
+  #trace .rj { color: #8a8a98; font-size: 11px; }
+  #trace .rj.none { opacity: .55; }
+  #trace .traceNone { padding: 6px; color: #8a8a98; font-size: 11px; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Seedling bot — watch <span id="title"></span></h1>
+  <!-- ⛓ THE GLOSSARY / DEMO LINKS (PROCGEN DOCS P2). ⛔ RELATIVE, and that is
+       the whole reason they are static HTML: `../procgenDocs/…` is the same
+       string on the dev server (rooted at the repo) and on Pages (rooted at
+       `frontend/`), so neither needs the `repoUrl` resolver and neither can
+       404 on one host while working on the other. ⛔ They change no readout —
+       a link and a `title=` are the whole of this page's share of P2. -->
+  <div id="docLinks" class="note">
+    <a href="../procgenDocs/glossary.html">glossary</a> ·
+    <a href="../procgenDocs/demos.html">demos</a> ·
+    <a href="../procgenDocs/reference.html">reference</a>
+    <span class="note">— every term on this page is defined there, and every URL
+      parameter, template and refusal name is in the reference</span>
+  </div>
+  <!-- ⛓⛓⛓ ⚖ THE USER'S WATCH-PAGE ITEM (i), 2026-08-22: *"a Collapse All /
+       Expand All button"*.
+
+       ⛔ IT IS PAGE-WIDE CHROME, NOT AN ARM'S CONTROL. The collapsible
+       sections are spread across FOUR panels (`#bootPanel`, `#generatePanel`,
+       `#stage`, `#panel`) and the arms mount and unmount underneath them, so a
+       control living in any one panel would collapse a quarter of the page and
+       vanish on the next SOURCE switch. It sits here, above every panel, and
+       is wired once at the document's boot beside the SOURCE selector.
+
+       ⛔ AND IT OPERATES ON `document.querySelectorAll('details')`, NEVER ON A
+       TYPED ID LIST (⚖ ruling 17). There are THIRTEEN of them today — eleven
+       `.genSection` plus the boot block and `#tapeIO`, which carry no class —
+       and a typed list is a list that goes stale the day somebody adds the
+       fourteenth. That is the mutant this control's gate row is built for.
+
+       ⛔ IT IS A VIEW SETTING AND IS NOT IN THE URL, exactly like the sections
+       themselves (see `details.genSection`'s own rule below). It also does not
+       fight the two gates that force a section OPEN after load
+       (`check-seedling-editor-boot.mjs`, `-edit.mjs`): those run before any
+       user press, and a press after them is the reader's word, which is the
+       later one. -->
+  <div id="viewChrome" class="note">
+    <button id="collapseAll">collapse all</button>
+    <button id="expandAll">expand all</button>
+    <span class="note">— every collapsible section on this page, in every
+      panel. A VIEW setting: it is not written to the URL and a reload restores
+      the page's own defaults.</span>
+  </div>
+  <div id="pick">
+    <label for="source">source</label>
+    <select id="source">
+      <option value="replay">REPLAY — a committed tape</option>
+      <option value="solve">SOLVE — the bot, in this page</option>
+      <option value="manual">MANUAL — drive it yourself</option>
+      <option value="generate">GENERATE — the Cloudberry loop, in this page</option>
+      <option value="edit">EDIT — a room, on its own (atlas · OEL · a payload)</option>
+    </select>
+    <span id="replayPick">
+      <label for="tapes">tape</label>
+      <select id="tapes" disabled><option>loading…</option></select>
+      <!-- ⛓ WHICH SOURCE THE ROSTER CAME FROM. Two mechanisms fill the picker
+           — the generated fixtures/tapes/index.json and, where there is none,
+           the server's own directory listing — and they are meant to agree. A
+           reader who cannot tell them apart cannot tell a working manifest
+           from a silent fall-back to a listing that works here and not on
+           Pages, which is the exact failure this whole item exists to fix. -->
+      <span id="tapesrc"></span>
+      <!-- ⛓ THE ENGINE, AS A CONTROL (group A, item 11). Replay-only: the
+           other three arms build JS worlds, and the wasm side drives the
+           recompiled game instead of building any. -->
+      <label for="side">engine</label>
+      <select id="side">
+        <option value="js">JS — drawn on canvas, works anywhere</option>
+        <option value="wasm">wasm — the real recompiled game</option>
+      </select>
+      <span id="sidenote"></span>
+      <!-- ⛓⛓⛓ R9 SLICE 2 — THE QUEUE (⚖ ruling 10). An ORDERED add-to-queue
+           control beside the single-tape picker, not instead of it: picking a
+           tape stays a navigation (see `loadTapeIndex`'s note, whose FIRST
+           half — the JS side has no teardown — is spent and whose second, the
+           wasm REWIND, continuation does not need either; the reason that
+           stands is that it is an explicit "load something else"). ⛔ The
+           queue writes `?tapes=`, so a sequence is a LINK exactly as every
+           other view on this page is. -->
+      <span id="queueBox">
+        <button id="queueAdd">+ queue</button>
+        <button id="queueRun" disabled>&#9654; run sequence</button>
+        <button id="queueClear" disabled>clear</button>
+        <!-- ⛓⛓⛓ R9 SLICE 10 — ▶ campaign (⚖ ruling 19, the user's): *"a way for
+             the watch page to play the full sequence of campaign tapes that we
+             have solved so far"*. ONE CLICK, and it holds NO chain id: it asks
+             `director.campaignChoice` for the custody chain that boots a true
+             start and whose every segment the solver recorded, then writes that
+             id through the QUEUE'S OWN WRITER — so the campaign is the same
+             `?tapes=` LINK every other sequence is and the existing arm plays
+             it. ⛔ No second player. -->
+        <button id="campaignRun">&#9654; campaign</button>
+        <span id="queueList" class="note"></span>
+      </span>
+    </span>
+    <!-- ⛓⛓⛓ ▶ LOAD IN WASM (⚖ user, 2026-08-19) — a SEPARATE BUTTON, not a
+         fifth SOURCE and not a sixth engine. SOLVE, MANUAL and GENERATE each
+         hold something the real recompiled game could run; REPLAY already has
+         the ENGINE selector for exactly that, so the button is hidden there
+         rather than being a second way to do one thing.
+         ⛔ NO `?`-PARAMETER OPENS IT. A URL that auto-shipped would have to
+         auto-press ▶ Start, and the frame's own law is that the parent may
+         never do that — so this is a GESTURE, and the demo catalogue says
+         "press ▶ load in wasm, then ▶ Start". -->
+    <span id="wasmShip">
+      <button id="loadWasm" disabled>&#9654; load in wasm</button>
+      <span id="loadWasmNote" class="note"></span>
+    </span>
+  </div>
+  <!-- ⛓⛓⛓ ONE BOOT PANEL, SHARED BY SOLVE AND MANUAL (switch slice 3).
+       Both arms start from a staging block, and until now each had its own
+       level field, its own preset picker, its own item form, its own textarea
+       and its own note — the same panel twice, drifting apart in small ways
+       (MANUAL's level input was `disabled` and SOLVE's was not, for no stated
+       reason). ⛔ AND TWO BOXES CANNOT SHARE A BLOCK: the whole ask that
+       started this arc is that the level you are looking at follows you
+       between modes, which a second textarea makes impossible however
+       carefully the two are kept in step. One box, one block, one truth. -->
+  <div id="bootPanel" class="armPanel" hidden>
+    <div class="line">
+      <!-- ⛓ THE LEVEL IS A CONTROL AGAIN, and this time it WRITES: it edits
+           `boot.level` in the block below, through the block, exactly as the
+           item checkboxes do. It was `readonly` for one slice because both
+           arms wrote it and neither read it. -->
+      <label>level <input id="bootLevel" type="number" min="0" step="1" style="width:5em"></label>
+      <button id="bootPrev" title="the previous level in the atlas">◀</button>
+      <button id="bootNext" title="the next level in the atlas">▶</button>
+      <label for="bootPreset">boot like</label>
+      <select id="bootPreset"><option value="">— loading presets… —</option></select>
+    </div>
+    <!--
+      ⛓⛓⛓ WHERE THE PLAYER STARTS — ⚖ the user's item, and it is TWO controls
+      because it is two questions.
+
+      `#bootStart` says WHERE THE NUMBER CAME FROM: an ENTRANCE (a teleporter
+      somewhere in the atlas whose `to` is this level — the game's own answer,
+      available for 112 of 116 rooms), the level's COMMITTED BOOT (a position a
+      real tape used, 42 rooms), or a cell THIS PAGE CHOSE (the old fallback,
+      now needed only where nothing leads in). Three degrees of trust, and the
+      note under the block says which is in force in words.
+
+      `#bootX`/`#bootY` are the coordinates THEMSELVES, always editable. ⚠ They
+      are the `Game` CONSTRUCTOR'S ARGS, not the player's position — the ctor
+      re-centres onto the tile, so the player is observed at (x+8, y+8) and the
+      note prints both. Typing in them switches the selector to "custom",
+      because a number nobody can attribute is exactly what this item was about.
+    -->
+    <div class="line">
+      <label for="bootStart">start at</label>
+      <select id="bootStart" style="max-width:34em"></select>
+      <label>x <input id="bootX" type="number" step="1" style="width:6em"></label>
+      <label>y <input id="bootY" type="number" step="1" style="width:6em"></label>
+      <!-- The arm-specific actions, side by side against the shared block. -->
+      <span id="solveActions">
+        <button id="solveGo">SOLVE</button>
+        <span id="solveTime"></span>
+      </span>
+      <span id="manualActions">
+        <button id="manualStart">START</button>
+        <button id="manualStop" disabled>STOP &amp; fold</button>
+        <span id="manualKeys"></span>
+      </span>
+    </div>
+    <div class="line" id="solveGoalLine">
+      <label for="solveGoalPick">goal</label>
+      <select id="solveGoalPick"><option value="">— no level loaded —</option></select>
+      <button id="solveGoalAdd">add</button>
+      <button id="solveGoalClear">clear</button>
+      <span id="solveGoals">—</span>
+    </div>
+    <!-- ⛓ THE FORM SITS ABOVE THE `<details>`, NOT INSIDE IT (slice 5). Its
+         first cut was inside, where the whole point of it — reaching the two
+         flags WITHOUT opening the raw editor — is undone by having to open
+         the raw editor. Caught by the acceptance row's visibility check, not
+         by looking at it. -->
+    <div class="line" id="bootForm"><span>boot items:</span></div>
+    <details>
+      <summary data-term="boot-items">starting conditions — the tape v8 staging block, raw</summary>
+      <textarea id="bootBox" class="box" rows="12" spellcheck="false"></textarea>
+      <div id="bootNote" class="note"></div>
+    </details>
+  </div>
+  <!-- ⛓ SOURCE = GENERATE (PROCGEN PoC slice 5, ⚖ kickoff §3.5 / ruling §1.3).
+       Every control here is a BOUND the loop runs under, and every one of them
+       is echoed into the trace and the readout — a knob whose value nobody
+       could reproduce would be a bound nobody named (⚖ kickoff §5). -->
+  <div id="generatePanel" class="armPanel" hidden>
+    <details class="genSection" open>
+    <summary data-term="seed">run — seed, biome, skeleton, bounds, STEP / RUN-ALL / RESET</summary>
+    <div class="line">
+      <label>seed <input id="genSeed" type="number" step="1" style="width:6em"></label>
+      <label for="genBiome">biome</label>
+      <select id="genBiome"></select>
+      <!-- ⛓⛓ THE SKELETON KIND (constructive-mode slice 5). ⚖ Ruling 2: the
+           kinds ARE the maze biome names, one vocabulary across both
+           substrates. The two that need the maze SIMULATOR are listed
+           DISABLED with their reason rather than hidden. ⛔ Changing it RESETS
+           the ladder to the skeleton and says so — the room a ladder is built
+           in is part of the level's identity, exactly as the seed is. It is
+           `?skeleton=` and NEVER `?biome=`: that one selects the BOOT
+           INVENTORY here and the PALETTE on the maze page. -->
+      <label for="genSkeleton">skeleton</label>
+      <select id="genSkeleton"></select>
+      <!-- ⛓⛓ ITS PARAMETERS (slice 7), mounted from the CATALOGUE's own schema
+           so this page keeps no second list of what a kind takes. Empty for a
+           kind with no knobs; re-mounted at their DEFAULTS whenever the kind
+           changes, because `rooms;minRoom=2` is not a setting `winding` has.
+           Read at the PRESS like every other control, and a change RESETS the
+           ladder exactly as a kind change does. -->
+      <span id="genSkeletonParams"></span>
+      <label>obstacles <input id="genCount" type="number" min="1" step="1" style="width:4em"></label>
+      <label>tries/step <input id="genTries" type="number" min="1" step="1" style="width:4em"></label>
+      <label>saturation K <input id="genK" type="number" min="1" step="1" style="width:4em"></label>
+      <!-- ⛓ THE ANCHOR SEARCH (slice 3 track B, ⚖ ruling 7 "look for a viable
+           place to put the template"): how many of the model's legal anchors
+           one candidate may be SOLVED at before it is given up on. 1 is the
+           pre-search behaviour and costs what the ladder has always cost;
+           raising it multiplies the ceiling `#genNote` prints. -->
+      <label>anchor tries <input id="genAnchorTries" type="number" min="1" step="1" style="width:4em"></label>
+    </div>
+    <!-- ⛓⛓⛓ SEEDLING BOT R9, SLICE 0 — **THE SIX URL-ONLY PARAMETERS GET
+         CONTROLS** (⚖ the user's standing form-controls item, arc-3 §16.9(9) /
+         arc-5 D5). Until this slice `?elements=` `?areas=` `?require=`
+         `?width=` `?height=` `?fill=` were reachable only by typing the
+         address bar; the reader and the ONE writer already owned all six, so
+         this adds controls and NOT a parameter — the writer does not change.
+
+         ⛔ EVERY OPTION HERE COMES FROM THE CODEC'S OWN DOMAIN
+         (`FILL_MODES`, `KEYS_DOMAIN`, `AREA_PARAM_SCHEMA`, `ELEMENT_NAMES`,
+         `paramSchemaFor`, `assertRoomSize`'s 3..60). A hand-typed list here
+         would be a second vocabulary and the reader would meet whichever one
+         drifted — the maze lab's law, one substrate over.
+
+         ⛔ READ AT THE **PRESS** by `readForm()`, never cached, and a changed
+         one RESETS the ladder to step 0 with the reason said in the status
+         line: every one of the six is run-defining (the room, the graph, the
+         directive and the element are all built BEFORE pass 2 runs), so step 3
+         under one spelling followed by step 4 under another is a display no
+         single run ever produced. -->
+    <div class="line">
+      <label>w <input id="genWidth" type="number" min="3" max="60" step="1" style="width:4em"></label>
+      <label>h <input id="genHeight" type="number" min="3" max="60" step="1" style="width:4em"></label>
+      <label for="genFill">fill</label>
+      <select id="genFill"></select>
+      <label for="genAreas">areas (keys)</label>
+      <select id="genAreas"></select>
+      <span id="genAreaParams"></span>
+      <label>requires <input id="genRequire" type="text" placeholder="hasSword"
+        style="width:8em" spellcheck="false"></label>
+    </div>
+    <!-- ⛓⛓⛓ THE ELEMENT, AND IT IS THE ONE CONTROL WITH **THREE** KINDS OF
+         STATE rather than two (the maze's has two, because the maze's default
+         IS `none`):
+
+           `(biome default)`  ≡ `undefined` — *nobody said*, so `seedlingSeam`
+                              applies `defaultElementsFor(items)`. ⛔ A control
+                              that spelled this `none` would silently turn the
+                              biome default off on EVERY load, and the two
+                              default-stream identities would move.
+           `none`             a CHOICE the seam honours — no element at all.
+           a head + params    an override; a parameter left at `any (draw it)`
+                              is DRAWN and a named one spends NO draw.
+
+         ⚠ A `+` LIST IS NOT SPELLED BY A `<select>` (the maze has the same
+         limit): when the URL carries one the control shows it READ-ONLY and a
+         press that leaves it alone KEEPS it. -->
+    <div class="line">
+      <label for="genElements">element</label>
+      <select id="genElements"></select>
+      <span id="genElementParams"></span>
+    </div>
+    <div class="line">
+      <button id="genStep">STEP — one template</button>
+      <button id="genRunAll">RUN-ALL</button>
+      <button id="genReset">RESET to the skeleton</button>
+      <button id="genDownload">Download level JSON + trace</button>
+      <!-- ⛓ EDITOR v3 C1 (plan §3.5): hands the CURRENT record to the EDIT arm
+           as `base: {kind:'generate', …}` so the identity line survives — no
+           reload, the in-place lifetime switch. ⛔ The ladder does NOT follow:
+           the edit arm never runs a directive, which is what keeps the ordering
+           law (edits after all directives) true on both sides. -->
+      <button id="genOpenEditor">open in editor →</button>
+    </div>
+    </details>
+    <!--
+      ⛓⛓⛓ THE PHASE LADDER + THE OVERLAYS (PROCGEN ELEMENTS arc 3, slice 5a,
+      D4/D4'/D5) — ⚖ the user's own requirement on the 2026-08-17 generation
+      review: *"a step-through of the WHOLE generation — a button per step and a
+      report at each"*.
+
+      ⛔ IT IS A **VIEW** SETTING, NOT A RUN. It reveals a phase from the LEDGER
+      the model recorded at construction; it re-DRAWS and never regenerates, and
+      it does not touch the ladder. Today's STEP (obstacleTarget = k, re-run) is
+      pass 2's and is unchanged — this ladder sits in FRONT of it and hands over
+      at the last pass-1 row.
+
+      ⛓⛓⛓ **AND IT IS WRITTEN TO THE URL — ⚖ THE USER, 2026-08-22, item (iii):**
+      *"a URL parameter for the PHASE so demo links deep-link to a phase"*. This
+      paragraph used to say *"it is not written to the URL"*; R9 slice 13
+      reversed that, here and at `goToPhase`. `?phase=<name>` names the ROW, not
+      its index — a name is what the label prints and what the demo prose says,
+      and it is stable across seeds where an index renumbers the day a pass-1
+      row is inserted. FINISHED is spelled by ABSENCE, so the default leaves the
+      bar exactly as clean as it has always been, and a name this ladder does
+      not have is REFUSED BY NAME rather than clamped to the nearest row.
+
+      ⛔ AND THE PHASE CONTROLS ARE IN THEIR OWN BOX. `#layers` holds one input
+      per `OVERLAY_LAYERS` row and three acceptance rows ENUMERATE it (the
+      group-B lesson); a phase control dropped in there would count as a layer.
+    -->
+    <details class="genSection" open>
+    <summary data-term="ledger">generation phases <span class="note">— the ledger's step-through; tick a fact line to draw it</span></summary>
+    <!-- ⛓⛓ ⚖ THE USER'S WATCH-PAGE ITEM (ii), 2026-08-22: *"the three phase
+         buttons move to the LEFT so a changing text width changes only the
+         slider's width"*. The label swings from `no generation yet` to ~60
+         characters as the ladder is walked, and in the old order (prev ·
+         SLIDER · next · END · label) that swing pushed `PHASE ▶` and `the
+         FINISHED level` sideways on every press — the reader's pointer had to
+         chase the button it had just pressed.
+
+         ⛔ THE ORDER IS THE FIX AND THE FLEX IS THE OTHER HALF. The three
+         buttons come FIRST, so nothing that changes width is ever to their
+         left; the slider is the ONE flexible item and ABSORBS the label's
+         swing (`flex: 1 1 6em`, replacing the rigid inline `width:14em`);
+         the label is rigid at its natural width. A reorder alone would already
+         hold the buttons' x — the row that gates the FLEX is the one asserting
+         the SLIDER's own width changes. Both are measured, not eyeballed. -->
+    <div class="line" id="genPhaseLine">
+      <button id="genPhasePrev">◀ PHASE</button>
+      <button id="genPhaseNext">PHASE ▶</button>
+      <button id="genPhaseEnd">the FINISHED level</button>
+      <input id="genPhase" type="range" min="0" max="0" step="1">
+      <span id="genPhaseLabel" class="note"></span>
+    </div>
+    <!-- ⛓⛓ THE ROW'S OWN SENTENCE, its counts and its refusal BY NAME, plus one
+         SELECTABLE line per intermediate result. ⚖ The user's ruling of
+         2026-08-18: *"only display the visual representation when the
+         corresponding TEXT DESCRIPTION is selected"* — so the picture is
+         selection-driven and one hue plus an outlined pick is enough. -->
+    <div id="genPhaseNote" class="note"></div>
+    <div id="genPhaseFacts"></div>
+    </details>
+    <!-- ⛓⛓ THE THREE OVERLAYS, cumulative, as ONE stepper — the maze lab's own
+         control (`labAreaLayer`), one substrate over. A VIEW setting: it
+         re-draws, never resets, and is not in the URL. -->
+    <details class="genSection" open>
+    <summary data-term="overlay-layer">overlay <span class="note">— sites / elements / areas on the finished level, and its legend</span></summary>
+    <div class="line">
+      <label for="genLayer">overlay</label>
+      <select id="genLayer">
+        <option value="off">off — the level as the renderer left it</option>
+        <option value="sites">sites — every site class, hue-coded</option>
+        <option value="elements">+ elements — the gadget's own geometry</option>
+        <option value="areas">+ areas — the partition, its locks and its flags</option>
+        <option value="all">all</option>
+      </select>
+      <button id="genLayerNext">next layer</button>
+      <span id="genLayerNote" class="note"></span>
+    </div>
+    <!-- ⛔ NO TEXT ON THE CANVAS (arc-1's rule): the symbols are named ONCE
+         each here and the picture carries only colour. -->
+    <div id="genLegend"></div>
+    </details>
+    <!-- ⛓⛓⛓ THE BRIDGE (switch slice 4): hand the level you are looking at
+         to the arms that take one. In memory and in place — a generated room
+         is not in the atlas and not on disk, so the alternative was a
+         download and a re-import, or regenerating it from the seed in a
+         second code path. -->
+    <details class="genSection" open>
+    <summary data-term="arm">hand this level to another arm</summary>
+    <div class="line">
+      <button id="genToSolve" disabled>SOLVE this level</button>
+      <button id="genToManual" disabled>DRIVE it by hand</button>
+      <span id="genBridgeNote" class="note"></span>
+    </div>
+    </details>
+    <!--
+      ⛓⛓⛓ THE CATALOGUE + VERB 1 (slice 4, ⚖ ruling 1: *"a list of things
+      that can be generated"* + *"choose the sub-roster a run may draw from"*).
+
+      ⛔ THE CHECKBOXES LIVE IN THEIR OWN BOX, AND THAT IS THE POINT OF THE
+      CONTAINER. `#layers` holds exactly one input per `OVERLAY_LAYERS` row and
+      three acceptance rows ENUMERATE it; the group-B lesson (a knob dropped
+      into that box counted as a layer and reddened `world`/`lanes`/`shapes` at
+      once) applies to every enumerated container, and `#bootForm` is another.
+      A catalogue checkbox is not a layer, not a boot flag, and not a trace
+      row, so it is in none of their boxes.
+    -->
+    <!-- ⛓ COLLAPSED BY DEFAULT (user, 2026-08-18): the roster is the longest
+         block on the panel and a reader stepping through a demo rarely needs
+         it open. ⛔ Its buttons live INSIDE the details, not in the summary —
+         a control inside a <summary> would toggle the section on every press. -->
+    <details class="genSection" id="genCatalogueSection">
+    <summary data-term="roster">catalogue <span class="note">— what this biome can generate, by family;
+        untick to RESTRICT the roster this run may draw from</span></summary>
+    <div class="line">
+      <button id="genRosterAll">select ALL — the whole roster</button>
+      <span id="genRosterNote" class="note"></span>
+    </div>
+    <div id="genRoster"></div>
+    </details>
+    <!--
+      ⛓⛓⛓ VERB 2 — THE DIRECTED ATTEMPTS (slice 5, ⚖ ruling 1: *"a button to
+      make the generator attempt to generate that specific thing"*).
+
+      The list of directives applied to the level on screen, in order, each
+      with WHICH KIND OF KEEP it was — ⚖ the user's ruling: *discharged* and
+      *solved-only* are two facts and are never blurred, and a template with
+      no verb to discharge says so BY NAME instead of reporting a shortfall
+      that could not exist.
+
+      ⛔ ITS OWN CONTAINER, for the same reason `#genRoster` has one: `#layers`
+      and `#bootForm` are ENUMERATED by acceptance rows, and a directive's
+      controls are neither a layer nor a boot flag.
+    -->
+    <details class="genSection" open>
+    <summary data-term="directed-attempt">directed attempts <span class="note">— press ATTEMPT on a catalogue row
+        to place THAT template on the level below, or AT… and then click a tile</span></summary>
+    <div class="line">
+      <button id="genDirectivesClear">CLEAR the directives</button>
+      <span id="genDirectivesNote" class="note"></span>
+    </div>
+    <!--
+      ⛓⛓⛓ CLICK-TO-ANCHOR (slice 6, ⚖ ruling 6: *manual editing splits at the
+      TILE boundary* — template-at-clicked-anchor is IN this arc, free tile and
+      object editing is its own later one).
+
+      ⛔ THE UNIT IS STILL THE TEMPLATE. Nothing here writes a bare tile or
+      edits an entity attribute; AT… arms a canvas click, and the clicked TILE
+      becomes the explicit anchor of ONE directed attempt at exactly that cell.
+      `legalAt` adjudicates it FIRST, so an illegal cell refuses BY NAME with
+      the model's own sentence and spends no solve.
+    -->
+    <div class="line">
+      <span id="genArmNote" class="note"></span>
+    </div>
+    <div id="genDirectives"></div>
+    </details>
+    <div id="genNote" class="note"></div>
+  </div>
+  <!--
+    ⛓⛓⛓ **THE EDIT PANEL — ONE BLOCK, TWO HOSTS** (EDITOR v3 slice C1, plan
+    §3.1). It was a `<details>` nested INSIDE `#generatePanel`, so free editing
+    was a feature of the GENERATE arm and nothing else could reach it. It is its
+    own panel now and `PANELS` shows it for BOTH `generate` and `edit` — the
+    same DOM, the same ids, the same handlers, mounted over a different HOST.
+
+    ⛔⛔ **THE ID RULE, AND IT IS NOW A RULE RATHER THAN AN ACCIDENT** (EDITOR
+    v3 C2, closing §12.10's third "what C1 made hard"):
+
+      ·  `genEdit*` — a control BOTH ARMS mount. The `gen` prefix is a fact
+         about their HISTORY (free editing was a `<details>` inside
+         `#generatePanel` and every one of these ids predates the split);
+         `check-seedling-editor-edit.mjs` drives eleven claims through them, so
+         renaming would have made a 71-check row's diff indistinguishable from
+         a behaviour change. C2's own shared controls take the prefix too, so
+         the rule reads the same in both directions.
+      ·  `edit*` — a control ONLY THE EDIT ARM has, i.e. one inside `#editOnly`
+         below: the base identity line, the LOAD box, the downloads, the
+         level-set room picker.
+
+    ⛓ C1 left three SHARED controls with `edit*` names (`editTools`,
+    `editPasteOnly`, `editClipNote`) — the rule's other direction, and the ids
+    are `genEditGestures` / `genEditPasteOnly` / `genEditClipNote` now.
+    ⛔ `check-seedling-editor-arm.mjs` asserts the rule over the LIVE DOM rather
+    than against a list here: every `edit*` id is inside `#editOnly` and every
+    `genEdit*` id is inside `#editPanel` and outside it. A comment nothing reads
+    is a claim nothing keeps.
+
+    ⛓ `#editOnly` below is the half the GENERATE arm has no use for — the base
+    identity line, the LOAD box and the OEL download — and `PANELS` hides it
+    there. Free editing itself is identical in both arms.
+  -->
+  <div id="editPanel" class="armPanel" hidden>
+    <!--
+      ⛓ EDIT-ARM ONLY: where this room CAME FROM (`base`), how to load another
+      one, and how to take it away. ⚖ Plan §3.2 — a level with no ladder still
+      has an identity, and it is `base, then edits`.
+    -->
+    <div id="editOnly" hidden>
+    <details class="genSection" open>
+    <summary data-term="payload">the room's IDENTITY — <span class="note">`base`, then the edits</span></summary>
+    <div class="line">
+      <span id="editBase" class="note"></span>
+    </div>
+    <div class="line">
+      <label for="editLoad">LOAD</label>
+      <textarea id="editLoad" rows="3" style="width:44em"
+        placeholder="paste a payload JSON (with its `base`), a LEVEL SET JSON (schema v1, with `rooms`), or a raw OEL &lt;level&gt;…&lt;/level&gt; — sniffed by SHAPE, refused BY NAME"></textarea>
+    </div>
+    <div class="line">
+      <button id="editLoadGo">LOAD what is in the box</button>
+      <!--
+        ⛓⛓ EDITOR v3 E1 — **THE VANILLA 116 AS `xml`, WITH NOTHING TO PASTE.**
+        The committed vanilla set is 116 EMBED-sourced rooms and an `embed` is a
+        path into a SWF's [Embed] table, so none of them can be OPENED here
+        (§13.5) and every Tier-B feature of the set editor below had to be
+        demonstrated on GENERATED rooms. This button builds the same 116 as an
+        `xml`-sourced set out of the two documents THIS PAGE ALREADY HOLDS — the
+        map extract and the committed manifest — and hands it down the same
+        intake a pasted set takes. ⛔ It fetches nothing: both inputs are in
+        scope, and the `-arm` row counts requests across the click.
+
+        ⚠ TWO IDS, ONE GAME'S ROOMS, and the note beside the rooms list says
+        which is held: this set is `seedling-vanilla-xml-<hash>` with
+        `provenance.derived_from` naming ⚖ ruling 2's `seedling-vanilla-<hash>`,
+        which stays the ATLAS base's (`?source=edit&level=N`), the AS3 fork's
+        `VanillaSet.SET_ID` and every save stamp's.
+      -->
+      <button id="editLoadVanilla">LOAD the VANILLA 116 as `xml`</button>
+      <button id="editDownload">Download the PAYLOAD (base + edits)</button>
+      <button id="editDownloadOel">Download the ROOM as OEL</button>
+      <span id="editLoadNote" class="note"></span>
+    </div>
+    <!--
+      ⛓⛓⛓ EDITOR v3 E1c — **LOAD A FILE, INCLUDING A BUNDLE** (§25; ⚖ plan
+      §22.8). The box above takes text somebody pasted; this takes the file
+      itself, which is the only way a `.zip` or a `.json.gz` can arrive at all.
+
+      ⛔ THE KIND IS SNIFFED FROM THE **BYTES**, not the extension: `PK` is
+      a zip and `1f 8b` is gzip, and both are unambiguous on their own first two
+      bytes. The `accept` list is a FILE PICKER HINT and nothing more — a
+      renamed file still loads, and a `.zip` full of something else is refused
+      by what it holds rather than by what it is called.
+
+      ⛔ AND EVERY MEMBER GOES THROUGH THE SAME INTAKE `LOAD what is in the box`
+      USES. A second door into the session would be a second chance to disagree
+      about what a set is.
+
+      ⚠ THE `rules.json` MEMBER OF A BUNDLE IS **NOT** LOADED: this page DERIVES
+      one from the set and the overlay (the REPORT compiles it, the button
+      writes it), so loading one back would be loading the page's own output as
+      its input. The note names it rather than dropping it in silence.
+    -->
+    <div class="line">
+      <label for="editLoadFile">LOAD a FILE</label>
+      <input type="file" id="editLoadFile" accept=".json,.json.gz,.zip">
+      <span id="editLoadFileNote" class="note"></span>
+    </div>
+    <!--
+      ⛓⛓⛓ EDITOR v3 C2 — **`set-room`: THE FOURTH BASE BECOMES LAUNCHABLE**
+      (plan §3.2). A level-set document loaded into the box above is HELD on the
+      page and its rooms are offered here; picking one resolves that room's
+      `source.xml` through the `oel` path, so one adapter arm serves both.
+
+      ⛔ AN `embed`-SOURCED ROOM IS REFUSED BY NAME — the page has no embeds
+      (an `embed` is a path into a SWF's `[Embed]` table, a fact about a source
+      tree). ⚠ THAT IS THE WHOLE VANILLA SET: all 116 of its rooms are
+      `embed`-sourced, so `seedling-vanilla-set.json` cannot be opened this way,
+      and `?source=edit&level=N` — the ATLAS base — is that DOCUMENT's door.
+      ⛓ EDITOR v3 E1: the LOAD-the-VANILLA-116-as-`xml` button above builds those 116
+      rooms as an xml-sourced set (a different `set_id`, `derived_from` naming
+      this one), and every room of THAT set opens here.
+
+      ⛓ DOWNLOAD gives the SET back with this room's XML replaced and the
+      identity RE-STAMPED (`stampLevelSetIdentity`), which is the first WRITE
+      path for Tier B. ⛔ No exits editing and no manifest form: slice D's.
+    -->
+    <div class="line">
+      <label for="editSetRoom">the LOADED SET's rooms</label>
+      <select id="editSetRoom" disabled></select>
+      <button id="editSetOpen" disabled>OPEN that room</button>
+      <button id="editRoomClose" disabled>CLOSE the open room INTO the set</button>
+      <button id="editSetAddRoom" disabled>ADD ROOM</button>
+      <button id="editDownloadSet" disabled>Download the SET · OVERLAY · apMapping</button>
+      <!--
+        ⛓⛓⛓ EDITOR v3 E1c — **ONE PRESS, ONE `.zip`.** The members are the FOUR
+        documents (§24.12): the set, the overlay, the compiled `rules.json` and
+        the derived region atlas. ⛔ The `apMapping` companion is NOT one — it is
+        a DERIVED table `apMappingInvalidation` regenerates from the set, which
+        is the same reason `.chunks.json` (DELIVERY) is refused as a member.
+        ⛓ It goes through the SAME `downloadSet(session)`, so §21.9's law holds:
+        the ids inside the zip are the ids the three separate presses write.
+      -->
+      <button id="editDownloadBundle" disabled>Download the BUNDLE (.zip)</button>
+      <!--
+        ⛓⛓ MINIFY is `stringifyRulesJson`'s `indent`, which has been plumbed and
+        never passed since it was written. In the APP it is the `rulesJson.indent`
+        settingsManager scope; this page has no settingsManager, so the BOX is
+        the read — and unchecked IS the schema's default (2). ⛔ Nothing here
+        ever writes `fixtures/` or `presets/`, so no committed byte moves.
+      -->
+      <label for="editMinify" title="0-space output — about 45% of the indented bytes">
+        <input type="checkbox" id="editMinify"> MINIFY what this panel writes
+      </label>
+    </div>
+    <div class="line">
+      <span id="editSetNote" class="note"></span>
+    </div>
+    </details>
+
+    <!--
+      ⛓⛓⛓ EDITOR v3 D2 — **THE SET SESSION ON THE PAGE** (plan §16.4, §21).
+      C2 HELD a level set and offered its rooms; D1 made the set an `editCore`
+      substrate with twelve ops, a derived atlas and `rules.json` as its output.
+      This section is that session's DOM.
+
+      ⛔ THE OVERVIEW IS A **STRIP**, one cell per room, because `bounds` is
+      `{w: rooms.length, h: 1}` — a set IS a positionally addressed LIST and a
+      square grid would have been a second coordinate system to keep in step
+      with the adapter's. It carries its own `editorView`: the arrows are
+      POLYLINE shapes contributed through that file's new `shapes()` door, and
+      the two-click CONNECT gesture is a page TOOL in the same one `armed`.
+
+      ⛔ AND THE STRIP OWNS ITS KEYS (`tabindex`, plus a keydown stopper): the
+      room canvas's view binds Ctrl+Z to the ROOM session and this one binds it
+      to the SET session, so which session an undo hits is the DOM's own focus
+      and not a router somebody has to keep true.
+    -->
+    <details class="genSection" open id="editSetPanel">
+    <summary data-term="payload">the LEVEL SET — rooms, exits, manifest, rules, REPORT</summary>
+    <div class="line">
+      <span id="editSetIdentity" class="note"></span>
+    </div>
+    <div id="editSetRooms"></div>
+    <div class="line" id="editSetOverviewWrap"
+         style="position:relative;overflow-x:auto;max-width:100%">
+      <canvas id="editSetOverview" tabindex="0" width="1" height="1"></canvas>
+    </div>
+    <div class="line">
+      <button id="editSetGesture" disabled>CONNECT — click the SOURCE room, then the TARGET</button>
+      <label for="editSetExitList">the selected room's exits</label>
+      <select id="editSetExitList" disabled></select>
+      <!--
+        ⛓ `connect` lands on the DESTINATION's RETURN DOOR (D1 §20.4), so it
+        needs an ordinal IN THE TARGET ROOM — and the target is whichever room
+        the second click lands on, which is not known until it happens. ⇒ this
+        is the ORDINAL, and a target that has no such exit is refused BY NAME by
+        the adapter with its real count in the sentence.
+      -->
+      <label for="editSetTargetExit">return door (ordinal in the TARGET)</label>
+      <select id="editSetTargetExit" disabled></select>
+      <label for="editSetOneWay">one_way</label>
+      <input type="checkbox" id="editSetOneWay">
+      <button id="editSetDisconnect" disabled>DISCONNECT the selected exit</button>
+    </div>
+    <!--
+      ⛓ THE MANIFEST FORM is generated from `SET_FIELDS` and the level-set
+      schema; `named_rooms`' six keys come from `levelSetValidator.NAMED_ROOMS`,
+      because the schema itself says that file is the authority for them.
+    -->
+    <div id="editSetManifest"></div>
+    <div id="editSetRoomForm"></div>
+    <div class="line">
+      <label for="editSetRuleTarget">access rule on</label>
+      <select id="editSetRuleTarget" disabled></select>
+      <button id="editSetRuleCommit" disabled>COMMIT the access rule</button>
+    </div>
+    <div class="line">
+      <textarea id="editSetRuleJson" rows="3" style="width:40em"
+        placeholder='a Rule Builder tree, e.g. {"rule":"Has","args":{"item":"Sword"}}'>{"rule":"True_"}</textarea>
+    </div>
+    <div class="line"><span id="editSetRuleErrors" class="note"></span></div>
+    <div class="line"><span id="editSetRuleNote" class="note"></span></div>
+    <div class="line">
+      <label for="editSetLocEntity">mark a LOCATION</label>
+      <select id="editSetLocEntity" disabled></select>
+      <input id="editSetLocName" placeholder="location name (unique within the ROOM)">
+      <input id="editSetLocItem" placeholder="vanilla_item">
+      <button id="editSetMarkLocation" disabled>MARK</button>
+    </div>
+    <div class="line">
+      <button id="editSetReport" disabled>REPORT — validate, compile, and say what is FREE</button>
+      <button id="editSetUndo" disabled>UNDO the last SET edit</button>
+      <button id="editDownloadRules" disabled>Download rules.json</button>
+      <span id="editSetReportNote" class="note"></span>
+    </div>
+    <div id="editSetReportOut"></div>
+    </details>
+    </div>
+    <!--
+      ⛓⛓⛓ FREE TILE / OBJECT EDITING (constructive-mode slice 11, ⚖ ruling 8
+      + §3.8). The other side of ruling 6's tile boundary: click-to-anchor
+      places a TEMPLATE, and this paints a bare tile and places, edits or
+      deletes a single entity.
+
+      ⛔ TWO LAWS, BOTH VISIBLE ON THIS PANEL:
+        (a) IDENTITY — the URL does NOT carry the edits (⚖ ruling 9), so once
+            there is one the identity line says the URL has stopped being a
+            reproduction and the PAYLOAD (Download level JSON + trace) is.
+        (b) CERTIFICATION — editing never bypasses the oracle. Any edit drops
+            the certification to UNCERTIFIED and only SOLVE below can put it
+            back. NOTHING here checks legality: paint a wall across the only
+            corridor and the ORACLE says so, in its own words.
+
+      ⛔ ONE CANVAS CLICK LISTENER, TWO STATES. The tool selector and the
+      catalogue's AT… buttons are two views of ONE `armed` variable, so arming
+      either disarms the other and Escape clears whichever is live. A tool
+      STAYS armed across clicks (a brush); AT… does not (it spends a solve).
+    -->
+    <details class="genSection" open>
+    <summary data-term="payload">free editing <span class="note">— paint a tile, place / edit / remove an entity; SOLVE re-certifies</span></summary>
+    <!--
+      ⛓⛓⛓ EDITOR v3 C1 — **THE GESTURE ROW.** `editorView` owns four gestures
+      (BRUSH · RECT copy · PASTE · FLOOD) plus the page's own AT… template arm,
+      and they are ONE armed value with ONE canvas listener. The `tool` select
+      below is the BRUSH's MODE — what a brush stroke writes — which is what it
+      has always been; these buttons are which GESTURE is armed.
+
+      ⛔ THE THREE-WAY PASTE FILTER is `editCore`'s `only: 'tile' | 'cliff' |
+      'entities'` (slice B generalised it from the maze's two checkboxes). A
+      Seedling cell has TWO tile layers plus bodies, so a boolean pair could not
+      spell it.
+    -->
+    <div class="line">
+      <span id="genEditGestures"></span>
+      <label for="genEditPasteOnly">paste</label>
+      <!-- ⛓⛓ EDITOR v3 C2 — **THE OPTIONS ARE DERIVED AND THIS ELEMENT IS
+           EMPTY.** They were a typed list of three (`tile` / `cliff` /
+           `entities`), which was the last typed roster on this panel: the core
+           takes a descriptor FIELD name, so the offer is
+           `Object.keys(adapter.readCell(...))` and a fourth field arrives as an
+           option with no edit here (`editCore.descriptorFieldsOf`). -->
+      <select id="genEditPasteOnly"></select>
+      <span id="genEditClipNote" class="note"></span>
+    </div>
+    <div class="line">
+      <label for="genEditTool">tool</label>
+      <select id="genEditTool">
+        <option value="off">off — clicks do nothing</option>
+        <option value="paint">PAINT terrain</option>
+        <option value="place">PLACE entity</option>
+        <option value="attrs">EDIT attrs</option>
+        <option value="remove">REMOVE entity</option>
+      </select>
+      <!-- ⛓⛓⛓ EDITOR v3 C2 — **THE LAYER, AND THE 45-COLUMN PICKER.** A
+           Seedling room has TWO tile layers and `paint {layer, column}` has
+           reached both since slice B; what was missing was the control.
+           ⛔ THE FOUR TERRAIN NAMES ARE STILL THE FIRST GROUP and still spell
+           themselves (`value="ground"`), because that is the op the generator
+           writes and every committed payload carries — the 41 other columns
+           spell `column:N`, which is the op `Game.as`'s own 45-case switch
+           reads. Picking `cliffsides` REFILLS the picker with that layer's
+           pixelmasks; a terrain NAME there is refused by `columnOfSpec`. -->
+      <label for="genEditLayer">layer</label>
+      <select id="genEditLayer"></select>
+      <label for="genEditTerrain">terrain</label>
+      <select id="genEditTerrain"></select>
+      <!-- ⛔ A free INPUT with a datalist and NOT a select: the WORLD is the
+           adjudicator (`buildLevelWorld` refuses an untranscribed tag by name
+           with its construction site), so a type nobody offered must be
+           typeable. ⛓ EDITOR v3 C1: the list is now the whole vocabulary
+           `Shrum.oep` declares (`entityRosterFrom(schema)`), and the FOLDER box
+           narrows the SUGGESTIONS only — never what can be typed. -->
+      <label for="genEditFolder">folder</label>
+      <select id="genEditFolder"></select>
+      <label>type <input id="genEditType" list="genEditTypes" style="width:11em"></label>
+      <datalist id="genEditTypes"></datalist>
+      <label>attrs <input id="genEditAttrs" style="width:15em"></label>
+      <button id="genEditUndo" disabled>UNDO the last edit</button>
+      <button id="genEditSolve" disabled>SOLVE — certify what is on screen</button>
+    </div>
+    <!-- ⛓ THE TYPED ATTRIBUTE FORM — one input per value the `.oep` declares
+         for the selected type, carrying that declaration's own min/max. It
+         WRITES the JSON box above and re-reads it; the box stays the ONE value
+         the op is built from, so a type the schema does not declare still has
+         somewhere to be spelled. ⛔ EMPTY MEANS OMITTED (`fillDefaults` is
+         OFF — plan §11.5 item 2). -->
+    <div class="line" id="genEditAttrForm"></div>
+    <div class="line">
+      <span id="genEditRoster" class="note"></span>
+    </div>
+    <div class="line">
+      <span id="genEditNote" class="note"></span>
+    </div>
+    <!-- ⛓⛓ EDITOR v3 C2 — **WHAT A CELL IS.** `adapter.readCell` has answered
+         `{tile, cliff, entities}` since slice B and nothing on the page ever
+         showed it. Hovering the level prints the hovered cell's column, its
+         tile TYPE (`TILE_COLUMN_TO_TYPE`'s own name), its cliffside and its
+         bodies — the first time this page says what is under the cursor. -->
+    <div class="line">
+      <span id="genEditCellNote" class="note"></span>
+    </div>
+    <div class="line">
+      <span id="genEditCert" class="note"></span>
+    </div>
+    <!-- ⚖ RULING 3's BOUND, DISPLAYED: the JS model transcribes a SUBSET of the
+         144 declared types. A room holding one of the others still edits and
+         still ships; what it cannot get here is a JS certification. -->
+    <div class="line">
+      <span id="genEditTranscribe" class="note" hidden></span>
+    </div>
+    <div id="genEdits"></div>
+    </details>
+    <!--
+      ⛓⛓⛓ EDITOR v3 C2 — **THE ROOM FLAGS** (plan §3.3 Tier A's last row).
+      `lightalpha`, `daynight`, `snow`, `blur`, `blur2`, `droplet` and
+      `<control>` are ENTITIES in the OEL and LEVEL PROPERTIES in the game:
+      `Game.loadLevelXML` reads them off `xml.objects[0]` and never constructs
+      anything (`Game.as:1963-1985, 2134-2151`). So they need no new op — a
+      presence flag is a `place`/`remove` and an attribute flag a `place` +
+      `attrs`, on slice B's own vocabulary — and this form is what was missing.
+
+      ⛔ THE ROSTER IS DERIVED, and from the classification that already exists:
+      `seedlingSemantics.LEVEL_PROPERTY_TAGS`, keyed off `Game.as` line by line.
+      The typed inputs come from `Shrum.oep`'s own declaration for each tag.
+
+      ⛔⛔ AND THE EDIT ARM HAS NO JS ORACLE FOR THESE. The readout below says
+      which of them the JS model can see AT ALL, MEASURED on the room on screen
+      (build the world with the flag and without it, and compare) — not read off
+      the class table, which answers CONSTRUCTION and would report all seven as
+      ignored when `<control>`'s fallthrough demonstrably reaches the model.
+    -->
+    <!-- ⛓ OPEN, like every other section but the three the page closes on
+         purpose (`check-seedling-editor-generate.mjs` pins that set BY NAME: the
+         boot block, the CATALOGUE and the tape I/O). ⛔ A new section that
+         arrived CLOSED would move that pin — measured, it went red — and the
+         fresh-load default is a fact somebody deliberately fixed. -->
+    <details class="genSection" open id="genEditFlagsSection">
+    <summary data-term="payload">the room's FLAGS <span class="note">— level properties, not bodies: `lightalpha`, `daynight`, `snow`, `blur`, `blur2`, `droplet`, `&lt;control&gt;`</span></summary>
+    <div id="genEditFlags"></div>
+    <div class="line">
+      <span id="genEditFlagNote" class="note"></span>
+    </div>
+    <div class="line">
+      <span id="genEditFlagReach" class="note"></span>
+    </div>
+    </details>
+    <!--
+      ⛓⛓⛓ EDITOR v3 C2 — **THE ROOM'S SIZE**, ⚖ ruling 5. `resize {width,
+      height, anchor}` shipped in slice B with `resizeWarnings` beside it; this
+      is the control, and ruling 5's whole content is that the boss warning is
+      DISPLAYED rather than the edit refused.
+
+      ⛔ THE WARNING IS SHOWN BEFORE THE OP IS APPLIED — a preview line, no
+      confirm — and again after, off `foldEdits().steps`. A crop that would drop
+      a tile or a body is refused by the op itself and the refusal is printed
+      VERBATIM: `procgenLevel` names what would be lost, and a page that
+      paraphrased it would be a second opinion about which cells are in danger.
+    -->
+    <!-- ⛓ OPEN, like every other section but the three the page closes on
+         purpose (`check-seedling-editor-generate.mjs` pins that set BY NAME: the
+         boot block, the CATALOGUE and the tape I/O). ⛔ A new section that
+         arrived CLOSED would move that pin — measured, it went red — and the
+         fresh-load default is a fact somebody deliberately fixed. -->
+    <details class="genSection" open id="genEditResizeSection">
+    <summary data-term="payload">the room's SIZE <span class="note">— grow or crop; ⚖ ruling 5's compiled-in boss geometry is a WARNING, never a refusal</span></summary>
+    <div class="line">
+      <label>width <input id="genEditResizeW" type="number" style="width:5em"></label>
+      <label>height <input id="genEditResizeH" type="number" style="width:5em"></label>
+      <label for="genEditResizeAnchor">anchor</label>
+      <select id="genEditResizeAnchor"></select>
+      <button id="genEditResizeGo">RESIZE the room</button>
+    </div>
+    <div class="line">
+      <span id="genEditResizeNote" class="note"></span>
+    </div>
+    </details>
+    <!-- ⛓ EDITOR v3 C2 — RENAMED from `editNote`. It sits in `#editPanel` and
+         OUTSIDE `#editOnly`, so by the id rule above it is a SHARED control and
+         its name has to say so. ⚠ Nothing writes it today (measured: no reader
+         in the tree); it is the panel's own note slot, kept and renamed rather
+         than deleted, because the rule is about what a name PROMISES. -->
+    <div id="genEditPanelNote" class="note"></div>
+  </div>
+  <!--
+    ⛓⛓⛓ IS THIS PAGE RUNNING THE CODE THAT IS ON DISK?
+
+    ⚖ The question that cost a round trip: a change landed, the page still
+    behaved the old way, and there was no way to tell "the fix is wrong" from
+    "your browser did not fetch it". The dev server here is a plain
+    `python -m http.server`, which sends `Last-Modified` and NO
+    `Cache-Control` at all — so a browser is free to apply heuristic freshness
+    and serve `watchViewer.js` from cache without asking. There was nothing on
+    the page that could distinguish the two, which made every report about
+    behaviour ambiguous.
+
+    ⛔ THIS IS A DIAGNOSTIC, NOT A FIX. It cannot make the browser re-fetch;
+    it can only say, out loud, which copy is running — and a hard reload
+    (Ctrl+Shift+R) is what changes the answer. The main frontend has carried a
+    stamp for exactly this reason since the "phone shows old UI" diagnosis;
+    this page had none.
+  -->
+  <div id="sourceStamp" class="note"></div>
+  <div id="status">loading…</div>
+  <div id="detail"></div>
+  <!-- ⛓⛓⛓ R9 SLICE 10 — THE CAMPAIGN READOUT (⚖ ruling 19). Where the
+       playthrough STANDS: rooms crossed, which goal-ledger rows the run
+       CREDITED, where it stopped and — from the census's committed frontier
+       artifact — the refusal that is the next work order. ⛔ Every number in it
+       is derived from the run and from committed artifacts; the gate re-derives
+       each one rather than echoing this element (trap 269). Hidden until a
+       sequence has something to say. -->
+  <div id="campaignReadout" hidden></div>
+  <div id="progress"><div id="bar"></div></div>
+</header>
+<main>
+  <div id="stage">
+    <canvas id="canvas" width="320" height="320"></canvas>
+    <iframe id="frame" title="recompiled Seedling"></iframe>
+    <div id="controls">
+      <button id="play">Pause</button>
+      <input id="scrub" type="range" min="0" max="0" value="0">
+      <label>speed <input id="speed" type="range" min="0.1" max="8" step="0.1" value="1"><span id="speedv">1x</span></label>
+    </div>
+    <!-- ⛓ COLLAPSIBLE (user, 2026-08-18): the view checkboxes + knobs are one
+         section, the legend another, each its own <details>. ⛔ The wrapper is
+         NOT the contract — `#layers` still holds exactly one input per
+         `OVERLAY_LAYERS` row and nothing else; the details merely encloses the
+         two boxes. Open by default. -->
+    <details class="genSection" id="viewSection" open>
+    <summary data-term="overlay-layer">view <span class="note">— which layers are drawn, and the view knobs</span></summary>
+    <div id="layers"></div>
+    <!--
+      ⛓⛓⛓ GROUP B — THE VIEW KNOBS, AND THEY ARE A SEPARATE BOX ON PURPOSE.
+
+      `#layers` holds exactly one input per `OVERLAY_LAYERS` row, and three
+      acceptance rows enumerate it (`[...document.querySelectorAll('#layers
+      input')]`) to assert that the toggles and the roster agree on how many
+      layers there are. A knob that is NOT a layer must therefore not live in
+      that box: dropping the attack-hold field in there made the roster count
+      16 against a roster of 15 and reddened `world`, `lanes` and `shapes` at
+      once. ⚠ The container is the contract — see `mountLayerControls`.
+    -->
+    <div id="viewknobs"></div>
+    </details>
+    <!--
+      ⛓⛓⛓ GROUP B — THE CEREMONY TEXT BOX.
+
+      A pickup ceremony freezes the player, spawns an NPC and types its text out
+      one character per `framesPerCharacter` render frames, paging on X
+      RELEASES. Every part of that has been modelled since R3 and NONE of it was
+      on screen: a driver who walked onto a pickup got a frozen picture and no
+      indication that a dialogue was running at all. This is where it goes, and
+      it is fed by `sampleMovers`' own per-tick channel, so it works while
+      DRIVING and while SCRUBBING a replay from one derivation.
+    -->
+    <div id="dialogue" hidden></div>
+    <details class="genSection" id="legendSection" open>
+    <summary data-term="legend">legend</summary>
+    <div id="legend"></div>
+    </details>
+    <details id="tapeIO">
+      <summary data-term="tape">save / load — the tape in your hands (this page NEVER writes fixtures/)</summary>
+      <div class="line">
+        <span id="tapeName"></span>
+        <button id="tapeDownload">Download</button>
+        <button id="tapeLoad">Load from box</button>
+        <label>Upload <input id="tapeUpload" type="file" accept=".json,application/json"></label>
+      </div>
+      <textarea id="tapeText" rows="10" spellcheck="false"></textarea>
+      <div id="tapeNote"></div>
+    </details>
+  </div>
+  <div id="panel">
+    <div id="hud"></div>
+    <!-- ⛓⛓ THE SHIP'S OWN READOUT — its own block, BESIDE the JS run's, never
+         over it. `#status` and `#hud` hold the solve's tick count, the scrub
+         HUD and the generator's identity line; ⚖ D3 prints the wasm verdict
+         beside the JS certification, and a ship that painted over them would
+         delete the thing the verdict is compared with.
+         ⛔ EVERY STAGE IS LISTED, reached or not, so a ship that stopped is
+         visibly a ship that stopped AT A NAMED PLACE rather than a readout
+         that simply says nothing (trap 403). -->
+    <div id="wasmPanel" hidden>
+      <h2>THE REAL GAME</h2>
+      <div id="wasmStage" class="note"></div>
+      <div id="wasmStages" class="note"></div>
+      <div id="wasmVerdict"></div>
+      <div id="wasmHud"></div>
+    </div>
+    <!-- ⛔ TWO PANES BECAUSE THERE ARE TWO TRACES. The decision trace is the
+         SOLVER's, one row per obstacle it reasoned about, indexed by TICK and
+         clickable. A generation row is an ATTEMPT — template, anchor, verdict
+         class, verbatim refusal — with no tick and nothing to seek to. See
+         `mountGenerationPane`. -->
+    <div id="genTraceSection" hidden>
+      <details class="genSection" open>
+      <summary><h2 style="display:inline">generation trace</h2></summary>
+      <div id="genTrace"></div>
+      </details>
+    </div>
+    <details class="genSection" open>
+    <summary><h2 style="display:inline">decision trace</h2></summary>
+    <div id="trace"></div>
+    </details>
+  </div>
+</main>
+<script type="module">
+  import { main } from './watchViewer.js';
+  main();
+</script>
+</body>
+</html>

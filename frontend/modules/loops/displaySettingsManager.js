@@ -42,6 +42,17 @@ const DEFAULTS = {
   // modal. (Replaced an earlier boolean autoBuildPathOnClick setting,
   // now fully removed — no migration retained.)
   clickToQueue: 'off',
+
+  // Mode applied to a region block that has no stored per-block mode.
+  // 'playback' (default) preserves today's behavior — the system runs
+  // new blocks automatically; 'manual' parks each new block for
+  // hand-play where its substrate supports manual.
+  defaultBlockMode: 'playback',
+
+  // After a successful Record segment (exited through the expected exit),
+  // flip the block to Playback so the next loop replays the fresh recording.
+  // Default ON per the M2 ruling.
+  autoSwitchToPlaybackAfterRecord: true,
 };
 
 const CLICK_TO_QUEUE_MODES = ['off', 'append', 'rebuildPath'];
@@ -127,6 +138,10 @@ export class DisplaySettingsManager extends DisplaySettingsBase {
     // Click-to-queue mode select
     const clickToQueueSelect = this.rootElement.querySelector('#loop-ui-click-to-queue');
     if (clickToQueueSelect) clickToQueueSelect.value = this.settings.clickToQueue;
+
+    // Default-block-mode select
+    const defaultBlockModeSelect = this.rootElement.querySelector('#loop-ui-default-block-mode');
+    if (defaultBlockModeSelect) defaultBlockModeSelect.value = this.settings.defaultBlockMode;
 
     logger.debug('Settings synced to UI');
   }

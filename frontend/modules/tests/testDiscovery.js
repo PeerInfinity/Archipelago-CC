@@ -7,6 +7,7 @@ import {
   getAllRegisteredTests,
   getAllRegisteredCategories,
   getAllTestFunctions,
+  getTestFunction,
   getRegistryStats,
 } from './testRegistry.js';
 
@@ -44,6 +45,20 @@ const TEST_CASE_FILES = [
   './testCases/playbackBotTests.js',
   './testCases/textAdventureWrapperTests.js',
   './testCases/flashSubstrateTests.js',
+  './testCases/runnerDemoTests.js',
+  './testCases/runnerBlockModeTests.js',
+  './testCases/jtaSubstrateWrapperTests.js',
+  './testCases/omsiSubstrateWrapperTests.js',
+  './testCases/jtaBalanceTests.js',
+  './testCases/jtaDatasetTests.js',
+  './testCases/jtaScheduleTests.js',
+  './testCases/omsiScheduleTests.js',
+  './testCases/omsiUnlockTests.js',
+  './testCases/omsiRegionSplitTests.js',
+  './testCases/mazeConsumableTileTests.js',
+  './testCases/mazeBlockModeTests.js',
+  './testCases/seedlingAtlasMazeTests.js',
+  './testCases/taswBlockModeTests.js',
   //'./testCases/manualTests.js',
 ];
 
@@ -139,6 +154,10 @@ export function getDiscoveredCategories() {
 /**
  * Get all test functions (after discovery is complete)
  * @returns {Object} Object with functionName as key and function as value
+ *
+ * ⚠ Keyed by JS FUNCTION NAME — two test files defining same-named
+ * functions collide in this map (the later registration wins both
+ * slots). Prefer getDiscoveredTestFunctionById for running a test.
  */
 export function getDiscoveredTestFunctions() {
   if (!discoveryComplete) {
@@ -150,6 +169,22 @@ export function getDiscoveredTestFunctions() {
   }
 
   return getAllTestFunctions();
+}
+
+/**
+ * Get one test's function by its registered id — the collision-proof
+ * resolution path the runner uses. Returns null when the id is unknown
+ * (or discovery hasn't run).
+ */
+export function getDiscoveredTestFunctionById(testId) {
+  if (!discoveryComplete) {
+    log(
+      'warn',
+      '[TestDiscovery] Tests not yet discovered. Call discoverTests() first.'
+    );
+    return null;
+  }
+  return getTestFunction(testId);
 }
 
 /**

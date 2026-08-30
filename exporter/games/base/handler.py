@@ -16,6 +16,7 @@ import json
 import logging
 import os
 
+from exporter.foreign_rule_builder import is_foreign_resolved_rule, serialize_foreign_resolved_rule
 from exporter.games.base.rule_expansion import RuleExpansionMixin
 from exporter.games.base.world_data import WorldDataMixin
 from exporter.games.base.helper_discovery import HelperDiscoveryMixin
@@ -1428,7 +1429,60 @@ class BaseGameExportHandler(
                 mapping[prog_name] = data
                 logger.debug(f"Added {prog_name} from module data (not found via probing)")
 
+        # Finally, fall back to a baked ``progression_mapping`` ClassVar on the world.
+        # world_generator emits this on every generated ``_worldgen`` world, so this
+        # carries progressive/alias resolution across the worldgen round-trip even
+        # for games whose original world resolves progression in a bespoke way the
+        # probe can't see (e.g. a custom ``collect`` override).
+        classvar_mapping = self._find_world_classvar_progression_data(world)
+        for prog_name, data in classvar_mapping.items():
+            if prog_name not in mapping:
+                mapping[prog_name] = data
+                logger.debug(f"Added {prog_name} from world.progression_mapping ClassVar")
+
         return mapping
+
+    def _find_world_classvar_progression_data(self, world) -> Dict[str, Any]:
+        """Read a ``progression_mapping`` ClassVar baked onto the world.
+
+        ``world_generator`` emits ``progression_mapping: ClassVar[Dict[str, list]]``
+        on generated ``_worldgen`` worlds, shaped ``{progressive_name:
+        [component_in_order, ...]}`` where the Nth component (1-indexed) is the
+        symbol granted by the Nth copy of the progressive item.
+
+        Note this is the *world class* attribute, distinct from the ``Items.py``
+        module-level ``progression_mapping`` (``{concrete: (progressive, level)}``)
+        read by ``_try_progression_mapping_pattern``. We only accept the list-shaped
+        ClassVar and ignore anything else, so an unrelated attribute of the same
+        name can't be misread.
+        """
+        raw = getattr(type(world), "progression_mapping", None)
+        if not isinstance(raw, dict) or not raw:
+            return {}
+
+        mapping_data: Dict[str, Any] = {}
+        for prog_name, components in raw.items():
+            # Guard the shape: a {name: [str, ...]} entry only.
+            if not isinstance(prog_name, str):
+                continue
+            if not isinstance(components, (list, tuple)) or not components:
+                continue
+            if not all(isinstance(c, str) for c in components):
+                continue
+            mapping_data[prog_name] = {
+                "base_item": prog_name,
+                "items": [
+                    {"name": concrete_name, "level": level}
+                    for level, concrete_name in enumerate(components, start=1)
+                ],
+            }
+
+        if mapping_data:
+            logger.debug(
+                f"Found {len(mapping_data)} progressive items via "
+                f"world.progression_mapping ClassVar"
+            )
+        return mapping_data
 
     def _find_module_progression_data(self, world) -> Dict[str, Any]:
         """Find progression mapping from module-level data structures.
@@ -1836,6 +1890,16 @@ class BaseGameExportHandler(
                         if hasattr(self, 'expand_rule'):
                             rb_dict = self.expand_rule(rb_dict)
                         game_info['completion_condition'] = rb_dict
+                    elif is_foreign_resolved_rule(completion_func):
+                        # Rule Builder rule from a vendored (upstream) rule_builder:
+                        # no fork-only to_dict(), and AST analysis cannot read it.
+                        from exporter.exporter import _make_rule_dict_serializable
+                        rb_dict = _make_rule_dict_serializable(
+                            serialize_foreign_resolved_rule(completion_func)
+                        )
+                        if hasattr(self, 'expand_rule'):
+                            rb_dict = self.expand_rule(rb_dict)
+                        game_info['completion_condition'] = rb_dict
                     else:
                         from exporter.analyzer import analyze_rule
                         from exporter.games.base.utilities import extract_closure_vars
@@ -2015,8 +2079,8 @@ class BaseGameExportHandler(
         through, so multiworld rules.json reaches every player's frontend with
         the data needed to render their procgen regions.
 
-        See NewDocs/plans/procedural-generation/substrate-pipeline-architecture.md
-        §"Preset sidecars through the multiworld bridge".
+        See docs/json/developer/procgen/architecture.md §"The Python
+        round-trip".
         """
         try:
             world_module = type(world).__module__

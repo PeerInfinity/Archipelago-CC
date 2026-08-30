@@ -1,6 +1,5 @@
 /**
- * Per-obstacle gating verifier — topdown-bounce-obstacle-refactor.md
- * Phase 3.
+ * Per-obstacle gating verifier.
  *
  * The generate-and-test loop (generator.js + deriveRules.js) already
  * proves, by exhaustive conservative subset simulation, that each goal's

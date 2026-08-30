@@ -4,7 +4,7 @@ A suite of tools for exporting, visualizing, and tracking Archipelago game logic
 
 This project exports all the multiworld data from an Archipelago seed generation — access rules, regions, locations, items, helper functions — to a JSON file. A JavaScript frontend reads this JSON, connects to an Archipelago server, and works as a logic-aware tracker. The project also includes an enhanced Universal Tracker, several new APWorlds, and alternate game modes.
 
-Most of the code for this project was written by Claude.
+**AI disclosure:** The code and documentation in this repository are predominantly AI-generated, written with [Claude Code](https://claude.ai/code). This applies to the Archipelago-CC project's own work; bundled upstream projects (see Credits) remain the work of their original authors.
 
 **Live Demos:** [Latest Stable Version](https://peerinfinity.github.io/Archipelago/) | [Latest Development Version](https://peerinfinity.github.io/Archipelago-CC/)
 
@@ -56,15 +56,26 @@ For a detailed walkthrough, see the [User Quick Start Guide](./docs/json/user/qu
 
 **Text Adventure** — Play through any Archipelago world as a text adventure. Originally built for testing, but works as a standalone interface for any game.
 
+## Procedural Generation
+
+The frontend can also **generate** game worlds, not just track them. The procgen pipeline builds complete multi-region worlds — regions, entrances, items, and physics-verified access rules — where each region is rendered by a pluggable **substrate**: a grid maze, a Doodle-Jump-style platformer, a text adventure, a recompiled Flash game, or an idle game, freely mixed within one world. The flagship driver plans the item-progression spheres first and grows a world guaranteed to realise them, with the plan doubling as a verification oracle.
+
+Generated worlds compile to the same `rules.json` format as exported games, so everything above applies to them: they play in the browser, convert to Python APWorlds via the world generator, and run through real Archipelago multiworld generation. Loop mode integrates directly — a generated world can ship with loop costs baked in. A playback bot can auto-play any generated world from its sphere log, driving each substrate's actual gameplay.
+
+See the [procgen developer documentation](./docs/json/developer/procgen/README.md) for the architecture and per-substrate details.
+
 ## Documentation
 
 This project contains a full documentation suite for both users and developers.
 
+- **[Guided Tour](./docs/json/user/guided-tour.md)** — See the highlights in ten minutes, directly in the live demo
+- **[Introduction to Archipelago](./docs/json/user/introduction-to-archipelago.md)** — For readers new to Archipelago and randomizers
 - **[Documentation Portal](./docs/json/README.md)** — Main documentation index
 - **[Features Overview](./docs/json/features/README.md)** — All major features with links to detailed docs
 - **[User Overview](./docs/json/user/overview.md)** — What this project does and how to use it
 - **[Developer Getting Started](./docs/json/developer/getting-started.md)** — Set up a development environment
 - **[System Architecture](./docs/json/developer/architecture.md)** — High-level design overview
+- **[Procedural Generation](./docs/json/developer/procgen/README.md)** — The procgen pipeline, substrates, and playback tooling
 - **[Project Roadmap](./docs/json/project-roadmap.md)** — Status, known issues, and future plans
 
 ## About This Repository

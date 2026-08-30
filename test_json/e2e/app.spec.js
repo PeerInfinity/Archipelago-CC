@@ -1,6 +1,19 @@
 import { test, expect } from '@playwright/test';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as os from 'os';
+
+/**
+ * Machine load, sampled at run start and again when a test fails.
+ * Several in-app legs are long polls against a live game, and under
+ * contention they time out without being broken — the poll-level
+ * evidence in testController tells STARVED from STUCK per condition,
+ * and this gives the run-level context for that reading.
+ */
+function loadSnapshot() {
+  const [oneMin] = os.loadavg();
+  return `load ${oneMin.toFixed(2)} across ${os.cpus().length} cpus`;
+}
 
 test.describe('Application End-to-End Tests', () => {
   const testMode = process.env.TEST_MODE || 'test'; // Default to 'test' if not specified
@@ -11,6 +24,8 @@ test.describe('Application End-to-End Tests', () => {
   const testLayout = process.env.TEST_LAYOUT; // Optional layout parameter (mobile/desktop)
   const testOrderSeed = process.env.TEST_ORDER_SEED; // Optional test order seed for reproducible randomization
   const testProfiling = process.env.TEST_PROFILING; // Optional profiling flag (1 to enable)
+  const testBatch = process.env.TEST_BATCH; // Optional roster subset (see modules/tests/testBatches.js)
+  const testIds = process.env.TEST_IDS; // Optional explicit id list (--test=), for solo flake triage
 
   // Build URL with all optional parameters
   let APP_URL = `http://localhost:8000/frontend/?mode=${testMode}`;
@@ -35,19 +50,35 @@ test.describe('Application End-to-End Tests', () => {
   if (testProfiling) {
     APP_URL += `&profiling=${encodeURIComponent(testProfiling)}`;
   }
+  if (testBatch) {
+    APP_URL += `&testBatch=${encodeURIComponent(testBatch)}`;
+  }
+  if (testIds) {
+    APP_URL += `&testIds=${encodeURIComponent(testIds)}`;
+  }
 
   test('run in-app tests and check results', async ({ page }) => {
     // Listen for console logs from the page and relay them to Playwright's output
     page.on('console', (msg) => {
+      const text = msg.text();
+      // The in-app runner's per-case heartbeat (testLogic.js). Relayed
+      // bare, so a run in flight can be read at a glance — without it
+      // the only per-case signal in the log is buried in thousands of
+      // browser lines, and a finished run looks exactly like a hung one.
+      if (text.startsWith('[PROGRESS ')) {
+        console.log(text);
+        return;
+      }
       // Filter out less relevant DevTools message if needed, but for now, log most things
       // if (msg.type() !== 'verbose') { // Example: ignore 'verbose' if too noisy
       //     console.log(`BROWSER LOG (${msg.type()}): ${msg.text()}`);
       // }
       // For debugging, let's log everything from the browser console
-      console.log(`BROWSER LOG (${msg.type()}): ${msg.text()}`);
+      console.log(`BROWSER LOG (${msg.type()}): ${text}`);
     });
 
     console.log(`PW DEBUG: Navigating to application with parameters:`);
+    console.log(`  - machine: ${loadSnapshot()}`);
     console.log(`  - mode: ${testMode}`);
     if (testGame) {
       console.log(`  - game: ${testGame}`);
@@ -71,9 +102,15 @@ test.describe('Application End-to-End Tests', () => {
       console.log(`  - profiling: ${testProfiling}`);
     }
     console.log(`PW DEBUG: URL: ${APP_URL}`);
-    // Wait until network activity has ceased, giving SPA more time to initialize
-    await page.goto(APP_URL, { waitUntil: 'networkidle', timeout: 60000 });
-    console.log('PW DEBUG: Page navigation complete (network idle).');
+    // waitUntil 'load', not 'networkidle': modes that auto-start their
+    // tests on load (test-substrates) generate continuous network from
+    // the moment the app boots, so a 500ms network gap may never occur
+    // and the networkidle gate times out while the in-app suite passes
+    // (observed 4x). Phase 1 below already polls the
+    // __playwrightTestsStarted__ flag, which is the real readiness
+    // signal.
+    await page.goto(APP_URL, { waitUntil: 'load', timeout: 60000 });
+    console.log('PW DEBUG: Page navigation complete (load).');
 
     // Phase 1: Wait for tests to START (short timeout - fail fast if page doesn't load)
     console.log(
@@ -153,7 +190,7 @@ test.describe('Application End-to-End Tests', () => {
         return flag === true;
       },
       null,
-      { timeout: parseInt(process.env.TEST_TIMEOUT) || 300000, polling: 500 }
+      { timeout: parseInt(process.env.TEST_TIMEOUT) || 900000, polling: 500 }
     ); // Poll every 500ms. Timeout can be overridden via TEST_TIMEOUT env var.
 
     console.log(
@@ -184,14 +221,136 @@ test.describe('Application End-to-End Tests', () => {
       const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
       const outputFile = path.join(outputDir, `test-results-${timestamp}.json`);
 
-      fs.writeFileSync(outputFile, JSON.stringify(results, null, 2));
+      // Stamp the mode: without it, comparing "the last two runs" can
+      // silently pit a substrates run against a regression one and
+      // report the entire roster as changed. The batch is stamped for
+      // exactly the same reason — a `fast` batch and a full run of the
+      // same mode have deliberately different rosters, so comparing
+      // across them would report every quarantined test as REMOVED. An
+      // explicit id list is stamped for the third time for the same reason,
+      // and it is the sharpest case: a one-test solo run left unstamped would
+      // become the baseline for the next full run and report sixty tests as
+      // ADDED — and the solo run itself as sixty REMOVED.
+      fs.writeFileSync(
+        outputFile,
+        JSON.stringify(
+          {
+            mode: testMode,
+            batch: testBatch || null,
+            testIds: testIds || null,
+            ...results,
+          },
+          null,
+          2
+        )
+      );
       console.log(`PW DEBUG: Test results saved to: ${outputFile}`);
+
+      // These files now survive across runs (see outputDir in
+      // playwright.config.js), so keep the directory bounded.
+      const KEEP_RUNS = 30;
+      const stale = fs.readdirSync(outputDir)
+        .filter((f) => f.startsWith('test-results-') && f.endsWith('.json'))
+        .sort()                      // ISO timestamps sort chronologically
+        .slice(0, -KEEP_RUNS);
+      for (const f of stale) fs.unlinkSync(path.join(outputDir, f));
+      if (stale.length > 0) {
+        console.log(`PW DEBUG: Pruned ${stale.length} result file(s) older than the last ${KEEP_RUNS} runs.`);
+      }
     } catch (error) {
       console.error('PW DEBUG: Failed to save test results to file:', error);
     }
 
+    // Failure summary. Printed BEFORE the assertions below, which throw
+    // on the first failure: without this, a red run reports only
+    // Playwright's own "1 failed" and the actual in-app leg — and the
+    // condition it died on — is visible only by digging through the
+    // saved JSON.
+    const failedTests = (results.testDetails || []).filter((t) => t.status === 'failed');
+    if (failedTests.length > 0) {
+      console.log(`\nPW DEBUG: ===== ${failedTests.length} IN-APP TEST(S) FAILED =====`);
+      console.log(`  machine at failure: ${loadSnapshot()}`);
+      for (const t of failedTests) {
+        const secs = t.durationMs != null ? ` after ${(t.durationMs / 1000).toFixed(1)}s` : '';
+        console.log(`  FAILED: ${t.id}${secs}`);
+        const failedConditions = (t.conditions || []).filter((c) => c.status === 'failed');
+        for (const c of failedConditions) {
+          console.log(`    condition: ${c.description}`);
+        }
+        if (failedConditions.length === 0) {
+          console.log('    (no failed condition recorded — the test died before asserting)');
+        }
+      }
+      console.log('PW DEBUG: =========================================\n');
+    }
+
+    // Truncation guard. The in-app runner races the whole suite against a
+    // wall-clock budget (testLogic.js AUTO_START_TIMEOUT_MS); when it expires
+    // the catch path still publishes completion flags, so a run that never
+    // reached the end of its roster used to satisfy every assertion below and
+    // print "All Playwright assertions passed". Silence is not success: assert
+    // the roster was FINISHED, not merely that what ran was green.
+    //
+    // Three independent signals, because each can appear alone: summary.error
+    // (the runner recorded why it stopped), a test left in 'running' (cut off
+    // mid-test), and notRunCount (enabled tests the runner never reached —
+    // these are absent from testDetails entirely, so they are invisible to
+    // every other check here).
+    const stillRunning = (results.testDetails || []).filter((t) => t.status === 'running');
+    const notRunCount = results.summary.notRunCount ?? null;
+    const truncated =
+      !!results.summary.error || stillRunning.length > 0 || (notRunCount ?? 0) > 0;
+
+    if (truncated) {
+      console.log('\nPW DEBUG: ===== IN-APP RUN DID NOT FINISH ITS ROSTER =====');
+      if (results.summary.error) {
+        console.log(`  runner stopped because: ${results.summary.error}`);
+      }
+      if (results.summary.timedOut) {
+        console.log(
+          `  cause: the suite's wall-clock budget (${results.summary.timeoutMs / 1000}s) expired`
+          + ' — split the roster or raise AUTO_START_TIMEOUT_MS in testLogic.js'
+        );
+      }
+      if (results.summary.enabledCount != null) {
+        console.log(
+          `  roster: ${results.summary.totalRun}/${results.summary.enabledCount} enabled tests completed`
+          + (notRunCount ? ` — ${notRunCount} did not` : '')
+        );
+      }
+      for (const t of stillRunning) {
+        const secs = t.durationMs != null ? ` (${(t.durationMs / 1000).toFixed(1)}s in)` : '';
+        console.log(`  CUT OFF MID-TEST: ${t.id}${secs}`);
+      }
+      const neverStarted = (results.summary.notRunIds || [])
+        .filter((id) => !stillRunning.some((t) => t.id === id));
+      if (neverStarted.length > 0) {
+        console.log(`  NEVER STARTED (${neverStarted.length}): ${neverStarted.join(', ')}`);
+      }
+      console.log(`  machine at truncation: ${loadSnapshot()}`);
+      console.log('  NOTE: the tests that did run may all be green — that is not a pass.');
+      console.log('PW DEBUG: ================================================\n');
+    }
+
     // The test system should complete successfully regardless of whether tests run
     expect(results.summary.failedCount).toBe(0);
+
+    // Fail the run when the roster was not finished. Kept after failedCount so
+    // a genuinely-failing test still reports as a test failure first.
+    expect(
+      results.summary.error ?? null,
+      'in-app runner stopped early (see "DID NOT FINISH ITS ROSTER" above)'
+    ).toBeNull();
+    expect(
+      stillRunning.map((t) => t.id),
+      'in-app run was cut off mid-test'
+    ).toEqual([]);
+    if (notRunCount != null) {
+      expect(
+        results.summary.notRunIds ?? [],
+        'enabled tests that did not complete'
+      ).toEqual([]);
+    }
     
     // If tests actually ran, they should pass
     if (results.summary.totalRun > 0) {

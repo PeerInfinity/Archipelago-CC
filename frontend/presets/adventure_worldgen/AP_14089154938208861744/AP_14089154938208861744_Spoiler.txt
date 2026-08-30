@@ -69,17 +69,33 @@ Playthrough:
 
 }
 1: {
+  Adjacent to Catacombs: Slow Grundle
   Black Castle Gate: Black Key
+  Blue Labyrinth 0: Left Difficulty Switch
+  Blue Labyrinth 1: Slow Yorgle
   Catacombs: Sword
+  Northeast of Catacombs: Freeincarnate
+  Southeast of Catacombs: Freeincarnate
+  Southwest of Catacombs: Freeincarnate
+  White Castle Gate: Freeincarnate
+  Yellow Castle Gate: Freeincarnate
 }
 2: {
   Black Castle Foyer: Bridge
+  Dungeon0: Freeincarnate
   Dungeon1: Right Difficulty Switch
 }
 3: {
+  Credits Left Side: Freeincarnate
   Dungeon Vault: White Key
+  Slay Rhindle: Slow Rhindle
+  Slay Yorgle: Freeincarnate
 }
 4: {
+  Red Maze Vault: Freeincarnate
+  Red Maze Vault Entrance: Freeincarnate
+  RedMaze0: Freeincarnate
+  RedMaze1: Freeincarnate
   Slay Grundle: Yellow Key
 }
 5: {

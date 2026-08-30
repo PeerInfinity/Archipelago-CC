@@ -1,0 +1,37 @@
+{
+  "tape_version": 5,
+  "game": "seedling",
+  "name": "r5-waterfall-climb",
+  "description": "⛓ `climbsArmedWaterfall`'s EXEMPTING ARM — `hasFeather` held, and NOTHING else changed. The same 178 ticks that stall `r5-waterfall-shut` on the face carry this arm 116 px up, through `waterfall@208,112` and out onto the ground above it. `Player.input()` skips the `v.y += 0.8` for upward motion when the feather is held, which is the whole of the planner's one DIRECTED edge rule — a rule that until now had no live witness at all: R3 stood on this tile with it COERCED and R4 armed it while the swim term was hard-coded to zero.",
+  "boot": {
+    "level": 0,
+    "x": 208,
+    "y": 144
+  },
+  "noclip": false,
+  "noDamage": true,
+  "noHazards": [],
+  "grants": [
+    {
+      "level": 0,
+      "items": [
+        "conch",
+        "feather"
+      ]
+    }
+  ],
+  "persistence": [],
+  "equips": [],
+  "pins": [
+    "sound",
+    "dead_frames"
+  ],
+  "tick_count": 200,
+  "inputs": [
+    {
+      "key": "up",
+      "from": 2,
+      "to": 180
+    }
+  ]
+}

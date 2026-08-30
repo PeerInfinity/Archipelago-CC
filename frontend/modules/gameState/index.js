@@ -1,5 +1,7 @@
 import { createGameStateSingleton, getGameStateSingleton } from './singleton.js';
 import { stateManagerProxySingleton } from '../stateManager/index.js';
+import settingsManager from '../../app/core/settingsManager.js';
+import { isLoopModePlanningSource } from '../loops/loopModeExemptions.js';
 
 // --- Module Info ---
 export const moduleInfo = {
@@ -22,6 +24,26 @@ function log(level, message, ...data) {
 // Store module-level references
 let moduleDispatcher = null;
 let moduleId = 'gameState';
+
+// Whether the AP-item count contributes to maxMana (the loop starting
+// mana). Default on. Off excludes the per-item term so a substrate's own
+// progression (e.g. JtA energy via energyBonusSync) can be the sole driver
+// of the pool. Drives gameState.setIncludePerItemMaxMana, which recomputes.
+const INCLUDE_PER_ITEM_MAX_MANA_SETTING = 'moduleSettings.gameState.includePerItemMaxMana';
+const INCLUDE_PER_ITEM_MAX_MANA_DEFAULT = true;
+
+async function _applyIncludePerItemMaxManaSetting() {
+    if (!settingsManager?.getSetting) return;
+    try {
+        const v = await settingsManager.getSetting(
+            INCLUDE_PER_ITEM_MAX_MANA_SETTING,
+            INCLUDE_PER_ITEM_MAX_MANA_DEFAULT,
+        );
+        getGameStateSingleton()?.setIncludePerItemMaxMana(v === true || v === 'true');
+    } catch {
+        // Settings unavailable — keep current value.
+    }
+}
 
 export async function register(registrationApi) {
     // Register dispatcher receivers for events
@@ -197,6 +219,9 @@ export async function register(registrationApi) {
     registrationApi.registerPublicFunction(moduleId, 'deductMana', (amount) => {
         return getGameStateSingleton().deductMana(amount);
     });
+    registrationApi.registerPublicFunction(moduleId, 'gainMana', (amount) => {
+        return getGameStateSingleton().gainMana(amount);
+    });
     registrationApi.registerPublicFunction(moduleId, 'refillMana', () => {
         return getGameStateSingleton().refillMana();
     });
@@ -230,6 +255,26 @@ export async function register(registrationApi) {
     registrationApi.registerPublicFunction(moduleId, 'setIncludePerItemMaxMana', (enabled) => {
         return getGameStateSingleton().setIncludePerItemMaxMana(enabled);
     });
+
+    if (typeof registrationApi.registerSettingsSchema === 'function') {
+        registrationApi.registerSettingsSchema({
+            type: 'object',
+            properties: {
+                includePerItemMaxMana: {
+                    type: 'boolean',
+                    default: INCLUDE_PER_ITEM_MAX_MANA_DEFAULT,
+                    label: 'Count AP items toward max mana',
+                    description:
+                        'When on (default), each AP item raises the loop starting '
+                        + 'mana (maxMana) by the per-item amount, on top of the '
+                        + 'shared default and any substrate bonuses. Turn off to '
+                        + 'exclude the per-item term — e.g. when a substrate\'s own '
+                        + 'progression (such as JtA energy) is the intended driver '
+                        + 'of the pool.',
+                },
+            },
+        });
+    }
     // Note: recordBestPath / getBestPath / clearBestPaths were removed
     // when saved queues moved to loops/savedQueueStore.js. New consumers
     // should import that module directly.
@@ -258,6 +303,12 @@ export async function initialize(mId, priorityIndex, initializationApi) {
 
         // Subscribe to snapshotUpdated to recalculate maxMana from inventory
         eventBus.subscribe('stateManager:snapshotUpdated', handleSnapshotUpdated);
+
+        // Apply the per-item max-mana setting now and whenever it changes.
+        _applyIncludePerItemMaxManaSetting();
+        eventBus.subscribe('settings:changed', () => {
+            _applyIncludePerItemMaxManaSetting();
+        });
     }
 
     log('info', `[${moduleId} Module] Initialization complete.`);
@@ -330,7 +381,15 @@ function handleRegionMove(data, propagationOptions) {
         //  - fromLoop:true (the loops queue or substrate-driven Phase 6
         //    walking is dispatching this; the path entry is already in
         //    the queue from when the action was originally enqueued)
-        const shouldUpdatePath = data.updatePath !== false && !data.fromLoop;
+        //  - loop mode is active (M3b, session-66b ruling 1: performed
+        //    play never end-appends in loop mode — capture is Record-
+        //    gated and inserts at the block). Planning/authoring
+        //    surfaces (region graph, cost generator, procgenPlayer's
+        //    synthesized start hop) mark their events with a `source`
+        //    tag and keep appending; non-loop-mode path tracking is
+        //    unchanged.
+        const shouldUpdatePath = data.updatePath !== false && !data.fromLoop
+            && (!gameState.isLoopModeActive || isLoopModePlanningSource(data.source));
         log('info', `[${moduleId} Module] Path update enabled: ${shouldUpdatePath}`);
 
         if (shouldUpdatePath) {
@@ -403,8 +462,11 @@ function handleLocationCheck(data, eventName = 'user:locationCheck') {
     if (data && data.locationName) {
         // Skip adding to path when the event comes from the loops module's
         // action queue completion — the path entry was already added when
-        // the loop queue was initially built.
-        if (!data.fromLoop) {
+        // the loop queue was initially built. Also skipped whenever loop
+        // mode is active (M3b ruling 1): performed checks never end-append
+        // in loop mode; Record-mode capture inserts at the block instead,
+        // and authoring surfaces call addLocationCheck directly.
+        if (!data.fromLoop && !gameState.isLoopModeActive) {
             const staticData = stateManagerProxySingleton.getStaticData();
             gameState.addLocationCheck(data.locationName, data.regionName, staticData);
         }

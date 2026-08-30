@@ -45,6 +45,4 @@ contains no game content.
 | `swf_inject.mjs` | `SWFRecomp-CC/tools/divergence/swf_inject.mjs` — the canonical browser injector (replaced our provisional `swfPatch.js`) | verbatim copy; byte-identity vs `inject_tracer.py` pinned by `scripts/procgen/verify-dj-swf-patch.mjs` |
 | `runtime/` | SWFRecomp browser-WASM build artifacts (gitignored) | see `runtime/README.md` |
 
-Spec + increment coordination:
-`NewDocs/plans/procedural-generation/dj-loader-integration-spec.md` and the
-addendum next to it.
+Renderer overview: `docs/json/developer/procgen/bounce.md` ("Runtime: panel, renderers, playback").

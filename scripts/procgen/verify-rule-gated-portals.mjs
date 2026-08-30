@@ -35,6 +35,21 @@ import { growSpheres } from '../../frontend/modules/procgenPipeline/procgenPipel
 import { planSpheres } from '../../frontend/modules/procgenPipeline/spherePlanner.js';
 import { DEFAULT_ITEMS } from '../../frontend/modules/shared/procgen/library.js';
 import { createRng } from '../../frontend/modules/shared/rng.js';
+import { takeBoxLockOrExit } from './boxLock.js';
+
+/**
+ * ⛓ R9 P3b, ⚖ 54 (7); ⚖ 62 at 12j — **THE BOX LOCK.** This instrument drives
+ * the machine (browser), so it takes the box before it starts and refuses BY
+ * NAME if another instrument holds it — replacing a hand-relayed "BOX BUSY".
+ * A run UNDER a holder (`gates.mjs`, `standing-values`,
+ * `rerecord-seedling-campaign`) recognises the holder's token and passes
+ * through. `--wait-for-box=<sec>` queues instead of refusing.
+ */
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
+takeBoxLockOrExit({ name: 'verify-rule-gated-portals.mjs', kind: 'browser' });
 
 const ITEM_POOL = { 'Right arrow': 1, key_red: 1, victory: 1 };
 const ITEM_LIB = { ...DEFAULT_ITEMS, ...BOUNCE_LIBRARY_ITEMS };

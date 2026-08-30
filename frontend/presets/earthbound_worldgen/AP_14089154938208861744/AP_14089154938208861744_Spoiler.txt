@@ -360,84 +360,290 @@ Playthrough:
 }
 1: {
   Any ATM: ATM Access
+  Onett - Arcade Trashcan: Cold Remedy
   Onett - Burger Shop Trashcan: Tendakraut
   Onett - Buzz Buzz: Mining Permit
   Onett - Hilltop Present: Meteorite Piece
+  Onett - Hotel Trashcan: Cold Remedy
   Onett - Library Bookshelf: Tenda Village Teleport
   Onett - Library Counter: Summers Teleport
   Onett - Mani Mani Statue: Franklin Badge
+  Onett - Mayor Pirkle: Defense Ribbon
   Onett - Meteor Item: Police Badge
+  Onett - Tracy Gift: Goddess Band
+  Onett - Tracy's Room Present: Cookie
+  Onett - Treehouse Guy: Hand-Aid
 }
 2: {
+  Onett - South Road Present: Viper
+  Scaraba - Snake Bag Salesman: Brain Stone
   Summers - Magic Cake: Winters Teleport
+  Tenda Village - Trashcan: Cloak of Kings
+  Twoson - Antique Shop: Cup of Coffee
+  Twoson - Apple Kid Invention: Stun Gun
+  Twoson - Apple Kid Trashcan: Pair of Dirty Socks
   Twoson - Apple Kid's Mouse: Key to the Cabin
+  Twoson - Bike Shop Rental: Chicken
+  Twoson - Orange Kid Donation: Sugar Packet
+  Twoson - Paula's Room Present: Picture Postcard
+  Twoson - South of Town Present: Suporma
 }
 3: {
   Winters - Drugstore Saleswoman: Fourside Teleport
 }
 4: {
+  Dusty Dunes - Black Sesame Present: Red Ribbon
   Dusty Dunes - East Peninsula Present: Letter For Tony
   Dusty Dunes - Mine Reward: Pencil Eraser
+  Dusty Dunes - North Central Present: Handbag Strap
+  Dusty Dunes - Northeast Corner Present: Magic Pudding
+  Dusty Dunes - Northwest Corner Present: Plain Roll
+  Dusty Dunes - Oasis Present: Toothbrush
+  Dusty Dunes - Shining Spot: Ribbon
+  Dusty Dunes - South Side Present: Photograph
+  Dusty Dunes - Surrounding Rocks Present: Death Ray
+  Fourside - Post-Moonside Delivery: Croissant
+  Gold Mine - B1F Isolated Present: Photograph
+  Gold Mine - B1F Junction Mole Present: Photograph
+  Gold Mine - B1F Junction Present: Diamond Band
+  Gold Mine - B1F Lonely Mole Present: Sand Lot Bat
+  Gold Mine - Mouse Crossroad Present #1: Viper
+  Gold Mine - Mouse Crossroad Present #2: Magic Pudding
+  Gold Mine - North Crossroad Detour Present: Toothbrush
+  Gold Mine - North Mole Present: Calorie Stick
+  Gold Mine - South Corner Present: HP-Sucker
   Gold Mine - South Hall Present: Deep Darkness Teleport
+  Gold Mine - South Mole Present #1: Insecticide Spray
+  Gold Mine - South Mole Present #2: Broken Gadget
+  Gold Mine - West Crossroad Detour Present: Progressive Poo PSI
   Gold Mine - West Mole Present: Hieroglyph Copy
+  Moonside - Businessman Present: Pasta di Summers
   Moonside - East Island Present: Piggy Nose
+  Moonside - Hospital Present: Popsicle
+  Moonside - Two Trees Present: Yo-yo
+  Moonside - West Island Present: Picnic Lunch
 }
 5: {
   Carpainter Defeated: Valley Bridge Repair
+  Deep Darkness - Crest of Darkness Present: Photograph
   Deep Darkness - Teleporting Monkey: Key to the Tower
+  Happy-Happy Village - Defeat Carpainter: Cookie
   Happy-Happy Village - Donation Lady: Happy-Happy Village Teleport
+  Happy-Happy Village - Left HQ Present: Molokheiya Soup
+  Happy-Happy Village - Prisoner: Super Plush Bear
   Happy-Happy Village - Prisoner Item: Threed Teleport
+  Happy-Happy Village - Right HQ Present: Diamond Band
+  Lilliput Steps - East Cliff Present: Deluxe Fry Pan
+  Lilliput Steps - North Stream Present: Protein Drink
+  Lilliput Steps - Southwest Pool Present: Photograph
   Lilliput Steps Sanctuary: Melody
+  Peaceful Rest Valley - Dead End Present: Photograph
+  Peaceful Rest Valley - Hill Nook Present: T-Rex's Bat
   Peaceful Rest Valley - North Side Present: Dusty Dunes Teleport
+  Peaceful Rest Valley - River Overlook Present: Photograph
+  Peaceful Rest Valley - South of Bridge Present: Platinum Band
+  Peaceful Rest Valley - Split Hill Present: Croissant
+  Pyramid - Anteroom Sarcophagus: Snake Bag
+  Pyramid - Hallway Sarcophagus #1: Neutralizer
+  Pyramid - Hallway Sarcophagus #2: Photograph
   Pyramid - Northwest Door Sarcophagus: Dalaam Teleport
+  Pyramid - Pedestal Item: Molokheiya Soup
+  Pyramid - Switch Room Sarcophagus: Magic Tart
+  Pyramid - Way Out Sarcophagus: Progressive Poo PSI
+  Scaraba - Key Holder: Luxury Jerky
+  Scaraba - Star Master: Cookie
   Snow Wood - Bedroom: Paula
   Snow Wood - Many Present Room Present #1: Carrot Key
+  Snow Wood - Many Present Room Present #2: Plain Yogurt
+  Snow Wood - Many Present Room Present #3: Tee Ball Bat
+  Snow Wood - Many Present Room Present #4: Pizza
   Snow Wood - Many Present Room Present #5: UFO Engine
   Snow Wood - Many Present Room Present #6: Bad Key Machine
+  Snow Wood - Many Present Room Present #7: Molokheiya Soup
+  Snow Wood - Maxwell Item: Broken Gadget
 }
 6: {
+  Andonuts Lab - Mouse: Vial of Serum
+  Andonuts Lab - Present: Pizza
+  Brick Road Maze - Alcove Present: Pop Gun
+  Brick Road Maze - Guarded Present: Bracer of Kings
+  Brick Road Maze - Near Exit Present: Saturn Ribbon
+  Brick Road Maze - Out of the Way Present: Kabob
+  Brick Road Maze - Top Path Present: Moon Beam Gun
+  Dalaam - Do Do Guy's House Chest: Cheap Bracelet
   Dalaam - Restaurant Chest #1: Contact Lens
+  Dalaam - Restaurant Chest #2: Broken Machine
   Dalaam - Throne Character: Poo
+  Dalaam - Throne Room Chest #1: Lucky Sandwich
+  Dalaam - Throne Room Chest #2: Mr. Saturn Coin
+  Dalaam - Throne Room Chest #3: Broken Tube
+  Dalaam - Upper House Chest: Magic Pudding
   Dungeon Man - 1F Dead End Present: Tiny Ruby
+  Dungeon Man - 1F Disappointing Present: Refreshing Herb
   Dungeon Man - 1F Exit Ledge Present: Diamond
   Dungeon Man - 1F Long Walk Present: Insignificant Item
   Dungeon Man - 1F No Sign Present: Shyness Book
+  Dungeon Man - 1F Opinion Present: Salt Packet
+  Dungeon Man - 2F Dungeon Exploration Present: Rain Pendant
+  Dungeon Man - 2F Hole Present: Cracked Bat
+  Dungeon Man - 2F North Alcove Present: Jar of Hot Sauce
+  Dungeon Man - 2F South Ledge Present: Broken Laser
+  Dungeon Man - 2F Unnecessary Billboard Present: Pixie's Bracelet
+  Dungeon Man - 3F Present: Bottle Rocket
   Dungeon Man Submarine: Submarine to Deep Darkness
   Pink Cloud - Ground Floor Present: Jar of Fly Honey
+  Pink Cloud - Left Hole Present: Photograph
+  Pink Cloud - Three Holes Present: Red Ribbon
   Pink Cloud Sanctuary: Melody
+  Rainy Circle - East Cliff Present: PSI Caramel
+  Rainy Circle - Isolated Present: Deluxe Fry Pan
+  Rainy Circle - Near Ropes Present: Trout Yogurt
   Rainy Circle Sanctuary: Melody
+  Threed - Cemetery Trashcan: Sprig of Parsley
+  Threed - Downtown Trashcan: Tee Ball Bat
+  Threed - East Side Trashcan: Sprig of Parsley
+  Threed - Hospital Drawer: Monkey's Love
+  Threed - Northeast Shack Trashcan: Souvenir Coin
   Threed - Zombie Prisoner: Jeff
+  Twoson - Everdred Meeting: Photograph
+  Twoson - Paula's Mother: Pharaoh's Curse
 }
 7: {
+  Dalaam - Trial of Mu: Royal Iced Tea
+  Fire Spring - 1st Cave Present: Great Charm
+  Fire Spring - East Corner Present: Photograph
   Fire Spring - Lone Cave Present: Key to the Shack
+  Fire Spring - Upper Volcano Present: Chicken
+  Fire Spring - Volcano Present: Photograph
   Fire Spring Sanctuary: Melody
   Fourside - Bakery 2F Gift: King Banana
+  Fourside - Department Store Blackout: Magic Pudding
+  Fourside - Venus Gift: Charm Coin
   Lost Underworld - East Present: Yogurt Dispenser
+  Lost Underworld - Evacuation Present: Ketchup Packet
+  Lost Underworld - Northeast Present: Photograph
+  Lost Underworld - Northeast of Tenda Tribe Present: Yo-yo
+  Lost Underworld - Southwest of Tenda Tribe Present: Trick Yo-yo
   Lost Underworld - Talking Rock: Eraser Eraser
+  Lumine Hall - 1F Above Belly Button Present: Coin of Defense
+  Lumine Hall - 1F Dead End Present: Cheap Bracelet
   Lumine Hall - 1F Near Exit Present: Hawk Eye
+  Lumine Hall - 1F North Path Present: Insecticide Spray
+  Lumine Hall - B1F Belly Button Present: Yo-yo
+  Lumine Hall - B1F Non-Talkative Rock Present: Cherub's Band
+  Lumine Hall - B1F Thankful Rock Corner Present: Broken Air Gun
+  Lumine Hall - B1F Thankful Rock Junction Present: Calorie Stick
+  Lumine Hall - B1F West Alcove Present: Picture Postcard
   Lumine Hall Sanctuary: Melody
+  Poo - Starting Item: Rust Promoter
+  Summers - Museum Item: Broken Cannon
+  Tenda Village - Tenda Gift: Coin of Defense
+  Tenda Village - Tenda Gift #2: Royal Iced Tea
+  Tenda Village - Tenda Tea: Bean Croquette
   Threed - Boogey Tent Trashcan: Scaraba Teleport
+  Twoson - Insignificant Location: Travel Charm
 }
 8: {
+  Deep Darkness - Alcove Present: Pasta di Summers
+  Deep Darkness - Barf Character: Teddy Bear
+  Deep Darkness - Corner Present: Kraken Soup
+  Deep Darkness - Entrance Truffle: Vial of Serum
   Deep Darkness - Helicopter Present: Signed Banana
+  Deep Darkness - Near Land Truffle: Coin of Defense
+  Deep Darkness - North Alcove Truffle: Gelato de Resort
+  Deep Darkness - Present Truffle: Diamond Band
+  Deep Darkness - Swamp Present: Jar of Delisauce
+  Deep Darkness - Village Truffle: Broken Harmonica
+  Deep Darkness - Yellow Bird Present: Talisman Ribbon
+  Giant Step - First Cave Present: Photograph
+  Giant Step - Floor 2 Cave Present: Brain Food Lunch
+  Giant Step - Floor 3 Present: Diadem of Kings
   Giant Step Sanctuary: Melody
+  Monkey Caves - 1F Left Chest: Snake Bag
+  Monkey Caves - 1F Right Chest: Minor League Bat
+  Monkey Caves - Bow Monkey Gift: Broken Trumpet
+  Monkey Caves - East 2F Left Chest: Chick
+  Monkey Caves - East 2F Right Chest: Wet Towel
+  Monkey Caves - East End Chest: Broken Spray Can
+  Monkey Caves - East End Trashcan: Cold Remedy
+  Monkey Caves - East West 3F Right Chest #1: For Sale Sign
   Monkey Caves - East West 3F Right Chest #2: Key to the Locker
+  Monkey Caves - Monkey Power: Broken Spray Can
+  Monkey Caves - Talah Rama Chest #1: Cold Remedy
+  Monkey Caves - Talah Rama Chest #2: Cookie
   Monkey Caves - Talah Rama Gift: Wad of Bills
+  Monkey Caves - West 2F Left Chest: Magicant Bat
+  Monkey Caves - West 2F Right Chest #1: Travel Charm
+  Monkey Caves - West 2F Right Chest #2: PSI Caramel
+  Monkey Caves - West End Chest: Sprig of Parsley
+  Monkey Caves - West End Trashcan: Photograph
+  Monotoli Building - Electra Gift: Cracked Bat
+  Monotoli Building - Monotoli Character: Flying Man
+  Monotoli Building - Monotoli Gift: Lucky Sandwich
+  Monotoli Building - One Table Present: Night Pendant
+  Monotoli Building - Two Table Present: Photograph
+  Onett - Traveling Entertainer: Photograph
   Sanctuary Goal: Power of the Earth
+  Stonehenge - Bridge Room East Balcony Present: Vital Capsule
+  Stonehenge - Bridge Room Lower Present: Broken Iron
+  Stonehenge - Dead End Present: Insecticide Spray
+  Stonehenge - Flashing Room Center Present: Night Pendant
+  Stonehenge - Flashing Room Right Path Present: Croissant
+  Stonehenge - Flashing Room Upper Present: Broken Pipe
+  Stonehenge - Kidnapped Mr. Saturn: Cold Remedy
+  Stonehenge - Near End of the Maze Present: Double Burger
+  Stonehenge - Purple Maze Present: Copper Bracelet
+  Stonehenge - Tony Item: Wet Towel
 }
 9: {
+  Fourside - Magnet Hill Chest: Handbag Strap
   Magnet Hill - Final Room Door Trashcan: Zombie Paper
+  Magnet Hill - First Room Barrel Door Trashcan: Broken Bazooka
+  Magnet Hill - First Room Free Door Trashcan: Protein Drink
   Magnet Hill - Second Room Dead End Trashcan: Pak of Bubble Gum
+  Magnet Hill - West Entrance Trashcan: Minor League Bat
   Magnet Hill Sanctuary: Melody
+  Snow Wood - Bottom Left Locker: Chef's Fry Pan
+  Snow Wood - Bottom Right Locker: Photograph
+  Snow Wood - Upper Left Locker: Meteotite
+  Snow Wood - Upper Right Locker: Broken Iron
 }
 10: {
   Belch Defeated: Threed Tunnels Clear
+  Belch's Factory - Balcony Room Trashcan #1: Photograph
+  Belch's Factory - Balcony Room Trashcan #2: Photograph
+  Belch's Factory - Balcony Room Trashcan #3: Legendary Bat
+  Belch's Factory - Pit Room Trashcan #1: Cookie
+  Belch's Factory - Pit Room Trashcan #2: Thick Fry Pan
+  Belch's Factory - Top Right Room Trashcan: Piggy Jelly
+  Cave of the Past - Present: Bicycle
+  Cave of the Present - Broken Phase Distorter: Meteornium
   Cave of the Present - Star Master: Twoson Teleport
   Giygas: Saved Earth
+  Grapefruit Falls - North Present: Protein Drink
+  Grapefruit Falls - Saturn Cave Present: PSI Caramel
+  Grapefruit Falls - South Present: Rabbit's Foot
   Saturn Valley - Ladder Present: Saturn Valley Teleport
+  Saturn Valley - Trashcan #1: Bowl of Rice Gruel
+  Saturn Valley - Trashcan #2: Ketchup Packet
+  Saturn Valley - Trashcan #3: Jar of Hot Sauce
+  Threed Underground - Left Coffin: Sea Pendant
+  Threed Underground - Right Coffin: Salt Packet
 }
 11: {
+  Milky Well - Cavern Present: Lucky Sandwich
   Milky Well Sanctuary: Melody
+  Saturn Valley - Post Belch Gift #1: Coin of Slumber
+  Saturn Valley - Post Belch Gift #2: Cookie
   Saturn Valley - Post Belch Gift #3: Lost Underworld Teleport
   Saturn Valley - Saturn Coffee: Magicant Teleport
+}
+12: {
+  Magicant - Hills Present: Night Pendant
+  Magicant - Lonely Present: Mr. Baseball Cap
+  Magicant - Ness's Gift: Kabob
+  Magicant - Ness's Nightmare: Broken Iron
+  Magicant - North Present: Cup of Noodles
+  Magicant - Present Near Ness: Flame Pendant
+  Magicant - Town Present: Popsicle
 }

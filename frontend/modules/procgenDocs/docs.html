@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<!--
+  procgenDocs/docs.html — **THE PROCGEN NARRATIVE DOCUMENTS, ON PAGES.** One
+  viewer for the seventeen tracked `.md` files under
+  `docs/json/developer/procgen/` plus the README that indexes them: GitHub's
+  heading anchors, a nav in README's declared reading order, a table of
+  contents off the render, and every relative link resolving to somewhere a
+  reader can actually click.
+
+  ⚖ The user, 2026-08-19, item B of the arc-3 close: the narrative `.md` docs
+  belong on Pages beside the three generated pages.
+
+  ⛔⛔ THE DOCUMENTS ARE NOT COPIED INTO THIS DIRECTORY AND NOTHING IS
+  PRE-RENDERED. The page FETCHES the tracked file at run time from
+  `<siteRoot>/docs/json/developer/procgen/<file>`. Locally that resolves
+  because the dev server serves the REPO ROOT; on Pages it resolves because
+  `deploy-gh-pages.yml` copies the directory into `frontend/docs/…` before
+  uploading the artifact, so the SAME site-root-relative path holds on both
+  hosts. `frontend/docs/` is gitignored — a local copy can never be committed.
+
+  ⛔ Checked-in rendered HTML was rejected: a 700 KB `seedling-bot.html` diff
+  on every prose edit, and a regenerate-no-diff gate that reds on every commit
+  that touches a document.
+
+  ⛓ THE RENDERER IS `marked` 4.3.0, vendored at `frontend/libs/marked/`, and it
+  is configured in exactly ONE place — `./docsRender.js`, which this page and
+  `docsRender.test.js` both import. See that module's docblock for why this
+  directory has TWO markdown renderers and why `markdownLite.js` is not this
+  one.
+
+  Serve from the REPO ROOT, or read it on Pages:
+
+      ss -ltn | grep ":8000" || python3 -m http.server 8000
+      http://localhost:8000/frontend/modules/procgenDocs/docs.html
+      http://localhost:8000/frontend/modules/procgenDocs/docs.html?doc=maze.md
+      https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/docs.html
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Procgen documents — the tracked records, rendered</title>
+<style>
+  :root { color-scheme: dark; }
+  body {
+    margin: 0; background: #0b0b0e; color: #d8d8e0;
+    font: 13px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  header { padding: 10px 14px; border-bottom: 1px solid #24242c; }
+  header h1 { font-size: 14px; margin: 0 0 3px; font-weight: 600; }
+  header h1 span { color: #7fe0ff; font-weight: 400; }
+  .note { color: #8a8a98; font-size: 11px; }
+  a { color: #7fe0ff; }
+  #layout { display: flex; align-items: flex-start; gap: 0; }
+  #nav {
+    flex: 0 0 30ch; position: sticky; top: 0; max-height: 100vh; overflow-y: auto;
+    padding: 10px 10px 40px 14px; border-right: 1px solid #24242c; font-size: 11px;
+  }
+  #nav .lbl, .lbl {
+    color: #8a8a98; text-transform: uppercase; letter-spacing: .06em;
+    font-size: 10px; display: block; margin: 10px 0 3px;
+  }
+  #nav a { display: block; padding: 1px 0; text-decoration: none; }
+  #nav a:hover { text-decoration: underline; }
+  #nav a.here { color: #ffd75f; font-weight: 600; }
+  #nav .w { color: #56566a; }
+  #toc { margin-top: 6px; }
+  #toc summary { cursor: pointer; color: #8a8a98; }
+  #toc a { color: #9aa; display: block; text-decoration: none; }
+  #toc a:hover { color: #7fe0ff; text-decoration: underline; }
+  #toc a.l3 { padding-left: 10px; color: #77778a; }
+  main { flex: 1 1 auto; min-width: 0; padding: 10px 18px 60px; max-width: 110ch; }
+  article h1 { font-size: 17px; margin: 4px 0 10px; color: #e8e8f0; }
+  article h2 {
+    font-size: 14px; margin: 22px 0 6px; color: #7fe0ff;
+    border-top: 1px solid #24242c; padding-top: 10px;
+  }
+  article h3 { font-size: 13px; margin: 16px 0 4px; color: #9fff9f; }
+  article h4, article h5, article h6 { font-size: 12px; margin: 12px 0 4px; color: #c8c8d4; }
+  article a.anchor {
+    color: #3a3a48; text-decoration: none; margin-left: -1.5ch;
+    padding-right: .5ch; font-weight: 400;
+  }
+  article a.anchor:hover { color: #7fe0ff; }
+  article code { color: #ffd75f; }
+  article pre {
+    background: #101014; border: 1px solid #1e1e26; padding: 6px 10px;
+    overflow-x: auto; margin: 8px 0;
+  }
+  article pre code { color: #d8d8e0; }
+  article blockquote {
+    margin: 8px 0; padding: 2px 0 2px 10px; border-left: 2px solid #2a4a3a;
+    color: #b8b8c8;
+  }
+  article table { border-collapse: collapse; margin: 8px 0; display: block; overflow-x: auto; }
+  article th, article td {
+    border: 1px solid #24242c; padding: 3px 7px; text-align: left; vertical-align: top;
+  }
+  article th { background: #14141a; color: #c8c8d4; }
+  article img { max-width: 100%; }
+  article hr { border: 0; border-top: 1px solid #24242c; margin: 18px 0; }
+  article li { margin: 2px 0; }
+  :target { scroll-margin-top: 10px; }
+  #status { padding: 20px 0; }
+  #status.bad { color: #ff8a8a; }
+  #status .k { color: #ffd75f; }
+  footer { padding: 10px 14px; border-top: 1px solid #24242c; color: #6a6a78; font-size: 11px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Procgen documents — <span>the tracked records, rendered</span></h1>
+  <div id="docLinks" class="note"></div>
+  <div id="where" class="note"></div>
+</header>
+
+<div id="layout">
+  <nav id="nav">
+    <span class="lbl">the documents</span>
+    <div id="navList"></div>
+    <details id="toc" open>
+      <summary class="lbl" style="display:block">on this page</summary>
+      <div id="tocList"></div>
+    </details>
+  </nav>
+  <main>
+    <div id="status" class="note">loading…</div>
+    <article id="article"></article>
+  </main>
+</div>
+
+<footer id="foot"></footer>
+
+<script type="module">
+import { PAGES_BASE, pagesUrl, siteRoot } from './demos.js';
+import { DOCS_INDEX } from './generated/docsIndex.js';
+import { DOC_DIR, DOC_FILES, DOC_NOT_IN_INDEX, INDEX_FILE, docFileFor } from './docLinks.js';
+import { renderDoc } from './docsRender.js';
+
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;',
+}[c]));
+
+const $ = (id) => document.getElementById(id);
+
+/** ⛓⛓ WHERE THE SITE ROOT IS — the INVERSE of the one Pages mapping, from
+ *  `demos.js`. Everything this page fetches or links hangs off it, and it is
+ *  the reason one string works on the dev server AND on Pages. */
+const ROOT = siteRoot(location.pathname, { page: '/frontend/modules/procgenDocs/docs.html' });
+/** ⛓ The document asked for, through the ALLOW LIST — the generated index. */
+const asked = new URLSearchParams(location.search).get('doc');
+const doc = docFileFor(asked);
+
+/* ── THE HEADER ──────────────────────────────────────────────────────── */
+
+$('docLinks').innerHTML = 'the words on this page are defined in '
+    + '<a href="glossary.html">the procgen glossary</a>'
+    + ' · every generated table is in <a href="reference.html">the reference</a>'
+    + ' · every demonstrable feature is in <a href="demos.html">the demo catalogue</a>';
+
+$('where').innerHTML = `the source of every document below is <code>${esc(DOC_DIR)}/</code>`
+    + ' in the repo — this page FETCHES the tracked file and renders it; it is not a copy'
+    + ` · always at <a href="${esc(pagesUrl('/frontend/modules/procgenDocs/docs.html'))}">`
+    + `${esc(pagesUrl('/frontend/modules/procgenDocs/docs.html'))}</a>`;
+
+/* ── THE NAV — README'S DECLARED READING ORDER ───────────────────────── */
+
+/** ⛓ README first (it is the index and the default), then the seventeen in
+ *  `README_ORDER`. ⛔ Built from `DOCS_INDEX`, never typed: a document added to
+ *  the reading order and regenerated appears here with no edit to this page. */
+const NAV = [
+    { file: INDEX_FILE, h1: 'The procgen documentation index', words: null },
+    ...DOCS_INDEX.docs.map((d) => ({ file: d.file, h1: d.h1 ?? d.file, words: d.words })),
+];
+
+$('navList').innerHTML = NAV.map((n) => `<a href="docs.html?doc=${encodeURIComponent(n.file)}"`
+    + `${n.file === doc ? ' class="here"' : ''} title="${esc(n.file)}">${esc(n.h1)}`
+    + `${n.words ? ` <span class="w">${n.words}w</span>` : ''}</a>`).join('');
+
+/* ── THE ARTICLE ─────────────────────────────────────────────────────── */
+
+const status = $('status');
+const article = $('article');
+
+/** ⛓ THE READOUT. Every claim a row makes is read OFF THE DOM; this object
+ *  carries only what the DOM cannot say for itself (which document, how long
+ *  the render took, which refusal). ⛔ Never a count echoed from an import —
+ *  a readout that would hold with the render deleted is not a readout. */
+const readout = {
+    ready: false, doc, asked, siteRoot: ROOT, refusal: null, detail: null,
+    headings: 0, renderMs: null, navCount: NAV.length, source: null,
+};
+window.__procgenDocsPage = readout;
+
+/** ⛔ A REFUSAL READS DIFFERENTLY FROM AN EMPTY DOCUMENT (trap 403): an empty
+ *  article and a refused one must not look the same, so the refusal NAME goes
+ *  on the page in words and the article stays empty. */
+function refuse(name, detail) {
+    readout.refusal = name;
+    readout.detail = detail;
+    readout.ready = true;
+    status.className = 'bad';
+    status.innerHTML = `<b>REFUSED: <span class="k">${esc(name)}</span></b><br>${esc(detail)}`;
+    article.innerHTML = '';
+    document.title = `REFUSED: ${name} — procgen documents`;
+}
+
+if (!doc) {
+    refuse(DOC_NOT_IN_INDEX,
+        `?doc=${JSON.stringify(asked)} is not one of the ${DOC_FILES.length} documents the `
+        + 'generated index lists. This page can only open a document the index knows about, '
+        + `so it cannot be pointed at an arbitrary path. The list: ${DOC_FILES.join(', ')}.`);
+} else {
+    const url = `${ROOT}/${DOC_DIR}/${doc}`;
+    readout.source = url;
+    try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const text = await res.text();
+
+        const t0 = performance.now();
+        const rendered = renderDoc(text, { doc, siteRoot: ROOT });
+        readout.renderMs = Math.round(performance.now() - t0);
+
+        if (rendered.refusal) {
+            refuse(rendered.refusal, rendered.detail);
+        } else {
+            article.innerHTML = rendered.html;
+            readout.headings = rendered.headings.length;
+
+            /** ⛓ THE TOC COMES OFF THE RENDER, not off a second pass over the
+             *  source — so it cannot list a heading the article does not have.
+             *  h2/h3 only: `seedling-bot.md` has 387 headings and a flat list
+             *  of all of them is not a table of contents. */
+            const toc = rendered.headings.filter((h) => h.level === 2 || h.level === 3);
+            /** ⛔ `h.raw`, NOT `h.text`: the rendered text of a heading can
+             *  itself contain an `<a>` — one `seedling-bot.md` heading holds
+             *  `[maze.md](./maze.md)` — and putting that inside the contents'
+             *  own link nests two anchors, which a browser silently unnests.
+             *  Measured: the contents listed 369 links for 368 headings. */
+            $('tocList').innerHTML = toc.map((h) => `<a href="#${esc(h.slug)}"`
+                + `${h.level === 3 ? ' class="l3"' : ''}>${esc(h.raw)}</a>`).join('');
+            $('toc').open = toc.length <= 40;
+
+            const h1 = rendered.headings.find((h) => h.level === 1);
+            document.title = `${(h1?.raw ?? doc)} — procgen documents`;
+            status.className = 'note';
+            status.innerHTML = `<code>${esc(DOC_DIR)}/${esc(doc)}</code> — `
+                + `${rendered.headings.length} headings, ${toc.length} in the contents, `
+                + `rendered in ${readout.renderMs}ms`;
+
+            /** ⛔ THE FRAGMENT IS SCROLLED TO AFTER THE RENDER. The browser
+             *  already gave up on it: the element did not exist when the page
+             *  loaded, so `#a-heading` in the URL did nothing. */
+            const frag = decodeURIComponent(location.hash.slice(1));
+            if (frag) {
+                const el = document.getElementById(frag);
+                if (el) el.scrollIntoView();
+                readout.fragment = frag;
+                readout.fragmentFound = Boolean(el);
+            }
+            readout.ready = true;
+        }
+    } catch (e) {
+        refuse('doc-fetch-failed',
+            `${url} — ${e.message}. Serve the REPO ROOT (not frontend/) locally; on Pages this `
+            + 'path is written by the copy step in .github/workflows/deploy-gh-pages.yml.');
+    }
+}
+
+$('foot').innerHTML = `${NAV.length} documents · sources in `
+    + `<code>${esc(DOC_DIR)}/</code> · rendered by marked 4.3.0, vendored at `
+    + '<code>frontend/libs/marked/</code> · anchors are GitHub\'s rule, from '
+    + '<code>ghSlug.js</code> · links are resolved by <code>docLinks.js</code>';
+</script>
+</body>
+</html>

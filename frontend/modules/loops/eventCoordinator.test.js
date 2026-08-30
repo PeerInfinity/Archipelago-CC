@@ -12,7 +12,7 @@
  *  - The `window.requestAnimationFrame` branch in _handleProgressUpdated
  *    (DOM-ish; we cover the data-routing parts only).
  */
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { EventCoordinator } from './eventCoordinator.js';
 
 function makeBus() {
@@ -465,5 +465,142 @@ describe('EventCoordinator — loop-state lifecycle events', () => {
     new EventCoordinator(bus, loopUI).subscribeToEvents();
     bus.publish('loopState:autoRestartChanged', { autoRestart: true });
     expect(checkbox.checked).toBe(true);
+  });
+});
+
+describe('EventCoordinator — render coalescing', () => {
+  // renderLoopPanel wipes and rebuilds the whole panel, and location rows
+  // get fresh listeners each rebuild — at frame rate that put mousedown and
+  // mouseup on different elements and swallowed the user's clicks. The
+  // render sites on the hot path therefore schedule one render per frame.
+  //
+  // In node there is no `window`, so _scheduleRender renders synchronously
+  // (which is what every other test in this file relies on). These tests
+  // install a fake window so the COALESCING branch is actually exercised.
+  let frames;
+  function installFakeRaf() {
+    frames = [];
+    globalThis.window = {
+      requestAnimationFrame(cb) {
+        frames.push(cb);
+        return frames.length; // 1-based id, never 0
+      },
+      cancelAnimationFrame(id) {
+        frames[id - 1] = null;
+      },
+    };
+  }
+  function runFrame() {
+    const pending = frames;
+    frames = [];
+    globalThis.window.requestAnimationFrame = (cb) => {
+      frames.push(cb);
+      return frames.length;
+    };
+    pending.forEach(cb => cb && cb());
+  }
+  beforeEach(installFakeRaf);
+  afterEach(() => { delete globalThis.window; });
+
+  it('a burst of actionCompleted events produces ONE render, on the next frame', () => {
+    const bus = makeBus();
+    const loopUI = makeStubLoopUI();
+    new EventCoordinator(bus, loopUI).subscribeToEvents();
+
+    for (let i = 0; i < 5; i++) bus.publish('loopState:actionCompleted', { action: { id: `a${i}` } });
+    // Nothing rendered yet — the render is queued, not run.
+    expect(loopUI.calls.filter(c => c.method === 'renderLoopPanel').length).toBe(0);
+    // …but the per-event work that is NOT a render still happened 5x.
+    expect(loopUI.calls.filter(c => c.method === '_updateLoopStats').length).toBe(5);
+
+    runFrame();
+    expect(loopUI.calls.filter(c => c.method === 'renderLoopPanel').length).toBe(1);
+  });
+
+  it('the next burst schedules a fresh render (the flag is not sticky)', () => {
+    const bus = makeBus();
+    const loopUI = makeStubLoopUI();
+    new EventCoordinator(bus, loopUI).subscribeToEvents();
+
+    bus.publish('loopState:actionCompleted', { action: { id: 'a' } });
+    runFrame();
+    bus.publish('loopState:actionCompleted', { action: { id: 'b' } });
+    runFrame();
+    expect(loopUI.calls.filter(c => c.method === 'renderLoopPanel').length).toBe(2);
+  });
+
+  it('the coalesced render refreshes the control buttons after rendering', () => {
+    // renderLoopPanel rewrites the status line from the current action, so
+    // the button/status refresh that used to follow these renders inline
+    // has to run AFTER the render, not before it.
+    const bus = makeBus();
+    const loopUI = makeStubLoopUI();
+    new EventCoordinator(bus, loopUI).subscribeToEvents();
+
+    bus.publish('gameState:pathUpdated', {});
+    runFrame();
+    const order = loopUI.calls.map(c => c.method);
+    expect(order.indexOf('renderLoopPanel')).toBeGreaterThanOrEqual(0);
+    expect(order.indexOf('_updatePauseButtonState')).toBeGreaterThan(order.indexOf('renderLoopPanel'));
+  });
+
+  it('a render scheduled right before teardown does not fire on the dead panel', () => {
+    const bus = makeBus();
+    const loopUI = makeStubLoopUI();
+    const coord = new EventCoordinator(bus, loopUI);
+    coord.subscribeToEvents();
+
+    bus.publish('loopState:actionCompleted', { action: { id: 'a' } });
+    coord.unsubscribeAll();
+    runFrame();
+    expect(loopUI.calls.find(c => c.method === 'renderLoopPanel')).toBeUndefined();
+    expect(coord._renderFrameId).toBe(null);
+  });
+});
+
+describe('EventCoordinator — requiresLoopMode disable guard rail (M4)', () => {
+  // The guard refuses a USER-initiated loop-mode disable while a world
+  // containing a requiresLoopMode substrate (jta) is loaded. It reads
+  // _worldRequiresLoopMode(), which enumerates the procgen warehouse; we
+  // override it on the instance to isolate the guard from that lookup.
+  function setup(isLoopModeActive, worldRequires) {
+    const bus = makeBus();
+    const loopUI = makeStubLoopUI({ isLoopModeActive });
+    const coord = new EventCoordinator(bus, loopUI);
+    coord._worldRequiresLoopMode = () => worldRequires;
+    coord.subscribeToEvents();
+    return { bus, loopUI, coord };
+  }
+
+  it('refuses a manual TOGGLE that would disable while a requiresLoopMode world is loaded', () => {
+    const { bus, loopUI } = setup(true, true);
+    bus.publish('loops:setLoopMode', { action: 'toggle' });
+    expect(loopUI.calls.find(c => c.method === 'toggleLoopMode')).toBeUndefined();
+  });
+
+  it('refuses an explicit DISABLE while a requiresLoopMode world is loaded', () => {
+    const { bus, loopUI } = setup(true, true);
+    bus.publish('loops:setLoopMode', { action: 'disable' });
+    expect(loopUI.calls.find(c => c.method === 'toggleLoopMode')).toBeUndefined();
+  });
+
+  it('EXEMPTS the system auto-disable (auto:true) even in a requiresLoopMode world', () => {
+    const { bus, loopUI } = setup(true, true);
+    bus.publish('loops:setLoopMode', { action: 'disable', auto: true });
+    expect(loopUI.calls.find(c => c.method === 'toggleLoopMode')).toBeDefined();
+  });
+
+  it('allows a manual toggle-disable when the loaded world does NOT require loop mode', () => {
+    const { bus, loopUI } = setup(true, false);
+    bus.publish('loops:setLoopMode', { action: 'toggle' });
+    expect(loopUI.calls.find(c => c.method === 'toggleLoopMode')).toBeDefined();
+  });
+
+  it('does not block a toggle that would ENABLE (loop mode currently off)', () => {
+    // Loop mode off → a toggle enables; the guard only fires on disables.
+    // With cost data absent the enable path routes through toggleLoopMode.
+    const { bus, loopUI } = setup(false, true);
+    bus.publish('loops:setLoopMode', { action: 'toggle' });
+    expect(loopUI.calls.find(c => c.method === 'toggleLoopMode')).toBeDefined();
   });
 });

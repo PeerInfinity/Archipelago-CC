@@ -51,7 +51,7 @@ const DEFAULTS = {
 // libraries land.
 const SUBSTRATE_LOADERS = {
     maze: 'frontend/modules/mazeRoom/mazeRoomLibrary.js',
-    text_adventure: 'frontend/modules/textAdventureSubstrate/textAdventureSubstrateLibrary.js',
+    text_adventure: 'frontend/modules/textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js',
 };
 
 /**

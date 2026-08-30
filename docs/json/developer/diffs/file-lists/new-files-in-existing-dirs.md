@@ -2,7 +2,7 @@
 
 Files added to directories that already existed in upstream commit `e6e0bc30`.
 
-## Root Directory (13 files)
+## Root Directory (14 files)
 
 ```
 .flake8
@@ -16,17 +16,19 @@ json_tools_installer_requirements.json
 package-lock.json
 package.json
 playwright.config.js
+vitest.calib.config.js
 vitest.config.js
 vitest.slow.config.js
 ```
 
-## `.github/workflows/` (13 files)
+## `.github/workflows/` (14 files)
 
 ```
 .github/workflows/README.md
 .github/workflows/deploy-gh-pages.yml
 .github/workflows/generate-presets.yml
 .github/workflows/test-all-sequential.yml
+.github/workflows/test-frozen-install.yml
 .github/workflows/test-multiworld-ut-fuzz.yml
 .github/workflows/test-spoiler-fuzz-single-game.yml
 .github/workflows/test-spoiler-fuzz.yml
@@ -70,4 +72,4 @@ worlds/RomlessUtils.py
 
 ---
 
-**Total:** 36 new files in existing directories
+**Total:** 38 new files in existing directories

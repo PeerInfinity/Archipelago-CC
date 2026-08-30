@@ -50,6 +50,7 @@ from ..installer.extractor import (
     list_component_backups,
     COMPONENTS,
     DEFAULT_COMPONENTS,
+    resolve_components,
 )
 from ..installer.romless_patcher import (
     apply_romless_patches,
@@ -84,6 +85,13 @@ def progress_callback(current: int, total: int) -> None:
     else:
         approx_mb = APPROXIMATE_ARCHIVE_SIZE / (1024 * 1024)
         print(f"\r  Downloading: {current_mb:.1f} of about {approx_mb:.0f} MB", end="", flush=True)
+
+
+def submodule_progress_callback(path: str, current: int, total: int) -> None:
+    """Print submodule download progress (a separate archive per submodule —
+    GitHub archives carry no submodule content)."""
+    print(f"\n  Fetching submodule content {current}/{total}: {path}",
+          end="", flush=True)
 
 
 def extract_progress_callback(filename: str, current: int, total: int) -> None:
@@ -123,6 +131,7 @@ def do_install(
     Returns:
         True if successful.
     """
+    components = resolve_components(components)
     source = config.get_source(version)
 
     print_header(f"Installing JSON Tools ({version})")
@@ -199,6 +208,8 @@ def do_install(
             archive_path,
             components,
             progress_callback=extract_progress_callback,
+            source=source,
+            submodule_progress=submodule_progress_callback,
         )
         print()  # New line after progress
 
@@ -210,17 +221,44 @@ def do_install(
 
         print(f"  [OK] Extracted {len(extract_result.extracted_files)} files")
 
+        for submodule in extract_result.submodules:
+            print(f"  [OK] Submodule {submodule}")
+
         if extract_result.skipped_files:
             print(f"  [INFO] Skipped {len(extract_result.skipped_files)} existing files")
 
-        # Install Python dependencies
+        if extract_result.removed_files:
+            print(f"  [INFO] Removed {len(extract_result.removed_files)} files "
+                  f"the previous install left behind (no longer shipped)")
+
+        for warning in extract_result.warnings:
+            print(f"  [WARN] {warning}")
+
+        # Install Python dependencies — JSON Tools' own plus requirements
+        # declared by apworlds in custom_worlds/ (nothing else reads those;
+        # compiled installs can't pip at all). One combined pip run: on
+        # frozen installs a second in-process pip invocation deadlocks.
         print("\n  Installing dependencies...")
-        from ..installer.dependencies import install_missing_dependencies
-        dep_ok, dep_msg = install_missing_dependencies()
+        from ..installer.dependencies import install_all_dependencies
+        dep_ok, dep_msg = install_all_dependencies()
         if dep_ok:
             print(f"  [OK] {dep_msg}")
         else:
             print(f"  [WARN] {dep_msg}")
+
+        # Download original world source (separate upstream download, not
+        # part of the fork archive)
+        if "world_source" in components:
+            print("\n  Downloading original world source...")
+            from ..installer.world_source import install_world_source
+            ws_ok, ws_msg = install_world_source(
+                progress_callback=progress_callback,
+            )
+            print()  # New line after progress bar
+            if ws_ok:
+                print(f"  [OK] {ws_msg}")
+            else:
+                print(f"  [WARN] {ws_msg}")
 
         # Apply patches based on selected mode
         if patch_mode == "monkey":
@@ -302,7 +340,20 @@ def do_uninstall(config: InstallerConfig, dry_run: bool = False) -> bool:
             for error in romless_result.errors:
                 print(f"    - {error}")
 
-    # Remove installed components
+    # Remove installed components. Overlay components (upstream_fixes) are
+    # excluded: their files replace vanilla files, so "removing" them would
+    # delete vanilla content — restoring those requires a fresh checkout.
+    from ..installer.extractor import COMPONENTS
+    overlay_installed = [
+        c for c in config.installation.components
+        if c in COMPONENTS and COMPONENTS[c].overlay
+    ]
+    if overlay_installed:
+        print(f"  [WARN] Overlay components cannot be auto-removed: "
+              f"{', '.join(overlay_installed)}")
+        print("         They replaced vanilla files; restore them from a "
+              "fresh Archipelago checkout if needed.")
+
     installed = list_installed_components()
     print(f"\n  Removing components: {', '.join(installed)}")
 
@@ -318,6 +369,14 @@ def do_uninstall(config: InstallerConfig, dry_run: bool = False) -> bool:
             print("    - Uninstalled monkey patch hooks")
         except Exception as e:
             print(f"  [WARN] Could not uninstall hooks: {e}")
+
+        # Drop the ownership record too — the files it names are gone, and a
+        # later install must not try to prune them.
+        try:
+            from ..installer.extractor import clear_install_manifest
+            clear_install_manifest()
+        except Exception as e:
+            print(f"  [WARN] Could not clear the install manifest: {e}")
 
         clear_installation(config)
 
@@ -361,6 +420,12 @@ def main(args=None):
         "--world-generator",
         action="store_true",
         help="Install world generator module (default component)",
+    )
+    parser.add_argument(
+        "--world-source",
+        action="store_true",
+        help="Download original world source from the matching Archipelago "
+             "release (compiled installs only; enables full rule export)",
     )
     parser.add_argument(
         "--scripts",
@@ -558,6 +623,7 @@ def main(args=None):
             "worldgen_worlds": "worldgen_worlds",
             "tracker": "tracker",
             "testing": "testing",
+            "world_source": "world_source",
         }
         for flag, comp_name in flag_to_component.items():
             if getattr(parsed, flag, False):

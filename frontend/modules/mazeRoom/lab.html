@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<!--
+  mazeRoom/lab.html — the MAZE substrate's standalone lab page: GENERATE the
+  Cloudberry loop over the maze bindings, EDIT tiles and entities by hand,
+  SOLVE with the exact BFS oracle, and (editor v3 E2c) edit a REGION LIBRARY in
+  the SET arm.
+
+  CONSTRUCTIVE-MODE arc, slice 3 (NewDocs/plans/seedling-constructive-mode-
+  kickoff.md §3.5, ⚖ rulings 6/7/8/9). TOOLING ONLY: this page makes no claims
+  and gates nothing. Its sibling is seedlingDemo/watch.html, whose GENERATE arm
+  it mirrors; what the two SHARE is in frontend/modules/procgenCore/.
+
+  Serve from the REPO ROOT (paths resolve against the dev server's cwd):
+
+      ss -ltn | grep ":8000" || python3 -m http.server 8000
+      http://localhost:8000/frontend/modules/mazeRoom/lab.html?seed=3&count=4
+
+  ── THE FOUR MODES ──────────────────────────────────────────────────────
+
+  GENERATE  seed + palette + room + bounds run the loop IN THIS PAGE: start
+            from an open room that solves, add one template at a time, re-solve
+            after each, keep it if the goal is still reachable and throw the
+            candidate away if it is not. STEP places one; RUN-ALL runs to the
+            target or to SATURATION. The generation pane shows every attempt
+            with its outcome word (KEPT / REVERTED / NO_ANCHOR /
+            ILLEGAL_PLACEMENT) and the oracle's VERBATIM refusal.
+
+            ⛓ A step-k level IS `generate-maze-level.mjs --seed=S --count=k`,
+            byte for byte, because it is the same call. That is what
+            `scripts/procgen/check-maze-lab.mjs` asserts across the two
+            runtimes.
+
+            The CATALOGUE lists what this palette can generate, by family;
+            unticking a family RESTRICTS the roster the run may draw from, and
+            ATTEMPT on a row runs ONE directed attempt for that template.
+
+  EDIT      `mazeRoomEditor.js`'s palette — floor / wall / entrance / item /
+            obstacle / erase — applied to the clicked tile. ⚖ Ruling 8. Each
+            edit lands on a CLONE, so UNDO is a pop and the level the page says
+            it generated is never rewritten under it.
+
+  SOLVE     the ORACLE on the world now on screen: the same `mazeOracle` the
+            loop uses, certified by REPLAY through the engine's own `step`. The
+            plan is drawn over the room. SOLVED / REFUSED / BUDGET_EXHAUSTED,
+            with the reason verbatim.
+
+  SET       a REGION LIBRARY — a positionally addressed LIST of interchangeable
+            maze rooms — through `procgenCore/setEditorView.mountSetEditor`, the
+            SAME mount `seedlingDemo/watch.html` binds to Seedling. ⛔ Nothing
+            about the strip, the two-click CONNECT gesture, the rooms table, the
+            forms, the rule box, the REPORT or the four downloads is written
+            here: this page supplies the maze's BINDINGS (`mazeSetLab.js`) and
+            the two pipeline functions the mount refuses to import for itself.
+            A room opens INSIDE this arm — never by switching to `edit`, which
+            would retire the arm and take the library session with it.
+
+  ── ⚖ RULING 9 — WHAT THE URL IS FOR, AND WHAT IT IS NOT ────────────────
+
+  A URL is a RUN somebody could type. It is not a reproduction of an arbitrary
+  construction — that is the PAYLOAD's job, and it does it byte-exactly. So
+  MANUAL EDITS ARE NOT IN THE URL, and the identity line says so out loud the
+  moment there are any:
+
+      "seed 3 · maze-v1 · 11x11 · step 4, then 2 manual edit(s) · … ·
+       UNCERTIFIED · ⚠ the URL is NOT a reproduction after edits — the PAYLOAD is"
+
+  ⚖ §3.8's other half: EDITING NEVER BYPASSES THE ORACLE. Any edit that
+  changes the world drops the certification, and the readout says UNCERTIFIED
+  until SOLVE puts a verdict back.
+
+  ── URL PARAMETERS, THE WHOLE SET ───────────────────────────────────────
+
+  Shared with watch.html (procgenCore/urlParams.js — one grammar, two pages):
+
+  ?source=   generate | edit | solve | set. ⚠ Defaults to GENERATE, where
+             watch.html refuses to infer it: a Seedling solve costs SECONDS and
+             an arm that waits for a press must not be the one a stale URL lands
+             in; a maze solve is milliseconds. ⛔ A value outside the four
+             REFUSES BY NAME, listing all of them — the fourth arm JOINED the
+             enum rather than being reached around it.
+  ?seed=N    the level's identity (⚖ kickoff §5: same seed, same level)
+  ?biome=    the PALETTE — `maze-v1` today. ⚠ The same KEY watch.html uses for
+             its boot inventory, because one grammar across two pages is worth
+             more than a second word for "which set of templates". ⛔ The maze's
+             own biome vocabulary (the wall backends) arrives as `?skeleton=` in
+             slice 5, NOT here.
+  ?count=N   obstacle target   ?tries=N per step   ?k=N saturation
+  ?anchortries=N  how many of the model's LEGAL anchors one candidate may be
+             SOLVED at before it is given up on. ⚠ Not `?anchors=`.
+  ?families= / ?templates=   the sub-roster a run may draw from, a comma list
+             either way; ABSENT is the whole roster and an empty value refuses.
+             ⛔ BOTH present REFUSES — two spellings of one setting.
+  ?directed= ⛔ RETIRED by constructive-mode slice 12 (⚖ its §3.9) and REFUSED
+             BY NAME: a URL names the LAUNCH parameters a person types, and a
+             directive list is a CONSTRUCTION. Press ATTEMPT, or hand the page a
+             payload (`?gen=` / the host's SEND) — its `directives` are replayed
+             in order. The CLI keeps `--directed=`.
+  ?areas=N[;k=v]…  the AREA GRAPH — lock-and-key over the partition (PROCGEN
+             ELEMENTS arc 1). ABSENT is `0`, at which the binding does not
+             partition, does not call the module and spends no draw.
+  ?require=K0,K1   the RULE DIRECTIVE: the run is REFUSED unless the graph
+             placed those symbols and each is a CUT. ⛔ No bound is widened.
+  ?elements=<name>[;k=v]…  the ELEMENT (PROCGEN ELEMENTS arc 2), e.g.
+             `guard;len=2;turns=1`. ABSENT is `none`, at which no site is drawn,
+             nothing is constructed and no draw is spent — so a link without it
+             produces byte-for-byte the level this page produced before elements
+             existed. ⚠ A parameter NAMED is an override spending no draw; one
+             omitted is DRAWN, so `guard` and `guard;len=3` are different runs.
+             ⚠ MOST SEEDS REFUSE at 11x11 and the page says why; 15x15 with
+             `guard;len=2;turns=1` places on about 57% of them.
+  ?run=1     RUN-ALL on load
+  ?gen=PATH  a payload `generate-maze-level.mjs --json` emitted: its seed,
+             bounds and room REPLACE the ones above, the page GENERATES from
+             them, and the result is COMPARED against the payload's own level
+             and trace. A difference is REPORTED and the page keeps showing what
+             IT generated — the export is then a determinism check across node
+             and the browser, not a picture of a file.
+
+  MAZE-ONLY, each with the line that forced it:
+
+  ?width=N / ?height=N   the ROOM. ⛓ Slice 2 §9.6 measured that the v1 palette
+             on the default 11x11 room reverts NOTHING over seeds 1..12 (240
+             kept, 0 reverted, 0 saturated). Reverts appear at 5x5/target 12 and
+             saturation at 4x4 — so without this parameter the REVERTED and
+             SATURATED panes would be unreachable and a reader would conclude
+             the palette never refuses anything. Try:
+             `?width=5&height=5&count=12&run=1`.
+  ?library=PATH  a REGION LIBRARY the SET arm fetches and holds — `?gen=`'s
+             sibling, and NOT `?gen=`: a library is not reproducible from a
+             seed, so there is nothing to compare it against and the page takes
+             it AS IT STANDS (`validateRegionLibrary` is what refuses one). A
+             TRANSPORT failure (the fetch threw, or `!res.ok`) is FATAL BY NAME;
+             a CONTENT failure goes in the arm's own LOAD box and the rest of
+             the page still works.
+  ?world=PATH  a WORLD BUNDLE (`.zip`) the SET arm fetches and holds — a level
+             set, a region library and the `world.json` that NAMES them, opened
+             as ONE strip over both parts (EDITOR INTEGRATION W4). ⛔ Not a
+             JSON: a world names its parts and holds no rooms of its own, so a
+             bare `world.json` REFUSES by name and says to load the bundle. Each
+             part goes through its OWN validator first and the world then binds
+             them BY `doc_id`, refusing by name and naming which part disagreed.
+             ⚠ With `?library=` also present the WORLD wins and the arm says so.
+             Same law as `?library=`: a TRANSPORT failure is FATAL by name, a
+             CONTENT failure goes in the arm's own LOAD box.
+  ?room=N    WHICH ENTRY of the held region library the SET arm opens a room
+             session on — `?library=`'s sibling, and a NAVIGATION parameter
+             rather than a load channel. It goes through the page's own
+             `openSetRoomAt`, so a host-driven room and a hand-clicked one are
+             the SAME session with the same `library-room` base tag. ⛔ With
+             NOTHING HELD it REFUSES in the arm's own box (a link naming a room
+             of a library this page does not have is one a reader can write by
+             hand, and a page that died on it would lose the arm too); an index
+             past the last entry refuses the same way, naming the count. ⚠ It is
+             COPIED FORWARD by the URL writer like `?library=`, so a reload
+             re-opens the room — what is ACTUALLY open is in the SET readout.
+             ⛓ EDITOR INTEGRATION W3: this is how a host asks for ONE room over
+             `procgenLab:navigate`, after handing the document over
+             `procgenLab:load`.
+             ⛓ EDITOR INTEGRATION W4: under `?world=` the index is into the
+             WORLD's rooms — its parts' rooms CONCATENATED in declaration order
+             — and the strip opens a maze room in this page and a Seedling room
+             in `watch.html` through the room-editor contract.
+
+  ?expansions=N  the BFS NODE CAP. ⚠ Seedling's budget is `?tickbudget=` and is
+             denominated in solver TICKS; these are different quantities and one
+             word for both would be the two-spellings failure at its most
+             expensive. The default (20000) never binds on a v1 level — the
+             whole state space is `cells x 2^items` = 242 — so it is a guard
+             against a later palette with many items, and
+             `?expansions=1` is how BUDGET_EXHAUSTED is reached on purpose.
+
+  ⛔ THERE IS NO `?skeleton=` YET. Slice 5 lands it in BOTH pages together.
+
+  ── SAVE / LOAD ─────────────────────────────────────────────────────────
+
+  The payload is in the textarea below the canvas: the level, the trace, the
+  bounds, the directives, the edits and whether it is certified. Download it,
+  paste one in and press Load, or Upload a file. ⛔ THE PAGE NEVER WRITES
+  fixtures/ OR ANY REPO PATH — a saved experiment would silently join a
+  committed differential.
+
+  ⚠ `?gen=` REPRODUCES and LOAD TAKES AS IT STANDS, and the difference matters:
+  a payload carrying manual EDITS cannot be reproduced from its seed (that is
+  ruling 9), so the reproduction check says so BY NAME and points at LOAD.
+
+  ── WHAT IS NOT HERE YET ────────────────────────────────────────────────
+
+  · IFRAME HOSTING — slice 4 registers this page as an `iframePanel` instance
+    with an eventBus contract. ⛔ Nothing here assumes a host: no
+    `window.parent`, no global the embedder must set. It is a document.
+  · `?skeleton=` and the carved skeleton kinds — slice 5.
+  · the yield table and the connectivity pre-check — slice 6.
+  · the cut-vertex rule (a door the walk walks around is a KEPT candidate that
+    happens to be decoration today) — slice 10.
+
+  Deliberately NOT a GL panel: no __BUNDLED_MODULES__ entry, no substrate
+  registration. `mazeRoomUI.js` is the panel; this is a static page that shares
+  ONE renderer with it (`mazeRoomRender.drawWorld`, pixel-gated).
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Maze — lab</title>
+<style>
+  :root { color-scheme: dark; }
+  body {
+    margin: 0; background: #0b0b0e; color: #d8d8e0;
+    font: 13px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  header { padding: 8px 12px; border-bottom: 1px solid #24242c; }
+  h1 { font-size: 13px; margin: 0 0 4px; font-weight: 600; }
+  h1 span { color: #7fe0ff; font-weight: 400; }
+  #sourceStamp { font-size: 11px; color: #6a6a78; }
+  #identity { font-size: 12px; color: #7fe0ff; margin-top: 2px; }
+  #status { font-size: 12px; }
+  #status.ok { color: #7fd88f; }
+  #status.bad { color: #ff8080; }
+  #detail { font-size: 11px; color: #8a8a98; white-space: pre-wrap; margin-top: 2px; }
+  main { display: flex; gap: 12px; padding: 12px; align-items: flex-start; }
+  /* ⛓ SLICE A2 — `procgenCore/editorView` inserts its selection overlay as a
+     SIBLING of the canvas, absolutely positioned; the stage is what it is
+     positioned against. ⛔ Without `relative` the overlay would be placed
+     against the viewport and the rectangle would be drawn somewhere else. */
+  #stage { flex: 1 1 auto; min-width: 0; position: relative; }
+  .editorViewOverlay { position: absolute; pointer-events: none; }
+  #panel { flex: 0 0 340px; }
+  canvas { display: block; image-rendering: pixelated; background: #101014; }
+  canvas.editing { cursor: crosshair; outline: 2px dashed #ffd75f; outline-offset: -2px; }
+  button { background: #1e1e26; color: #d8d8e0; border: 1px solid #34343e;
+    padding: 4px 12px; cursor: pointer; font: inherit; }
+  button:disabled { opacity: .4; cursor: default; }
+  button.armed { background: #ffd75f; color: #101014; font-weight: 600; }
+  select, textarea, input { background: #1e1e26; color: #d8d8e0; border: 1px solid #34343e;
+    padding: 2px 6px; font: inherit; }
+  label { color: #8a8a98; display: inline-flex; gap: 4px; align-items: center; }
+  .armPanel { border-top: 1px solid #24242c; margin-top: 6px; padding-top: 6px; }
+  .armPanel .line { display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+    margin-bottom: 4px; }
+  .note { color: #8a8a98; font-size: 11px; }
+  .box { width: 100%; box-sizing: border-box; }
+  .g { color: #7fd88f; } .o { color: #ff9a6a; } .s { color: #ffd75f; }
+  .rj { color: #8a8a98; font-size: 11px; }
+  #panel h2 { font-size: 11px; color: #8a8a98; font-weight: 600; margin: 10px 0 2px;
+    text-transform: uppercase; letter-spacing: .06em; }
+  #labTrace { max-height: 46vh; overflow-y: auto; border: 1px solid #1a1a20; }
+  #labTrace .tr { padding: 3px 6px; border-bottom: 1px solid #1a1a20; }
+  #labTrace .tr.kept { border-left: 2px solid #7fd88f; }
+  #labTrace .tr b { color: #7fe0ff; font-weight: 600; }
+  #labTrace .traceNone { padding: 6px; color: #8a8a98; font-size: 11px; }
+  /* ⛓ THE CATALOGUE'S OWN BOX. `#labPalette` is ENUMERATED by the browser
+     row (one button per PALETTE_ENTRIES row), and the group-B lesson — a knob
+     dropped into an enumerated container counts as a member and reds three
+     claims at once — applies to every one of them. A catalogue checkbox is not
+     a palette button and lives in neither's box. */
+  #labRoster { max-height: 30vh; overflow-y: auto; border: 1px solid #1a1a20;
+    margin-bottom: 8px; }
+  #labRoster .catFamily { border-bottom: 1px solid #1a1a20; padding: 3px 6px; }
+  #labRoster .catHead { color: #ffd75f; font-size: 11px; }
+  #labRoster .catRow b { color: #7fe0ff; font-weight: 600; }
+  #labRoster .catRow.excluded { opacity: .55; }
+  #labRoster .catRow.excluded b { color: #ff9a6a; }
+  #labRoster .catForm { margin: 2px 0 2px 18px; }
+  #labRoster .catForm select { background: #0d0d12; border: 1px solid #2a2a35;
+    font-size: 11px; margin-right: 4px; }
+  #labRoster .catForm button { font-size: 11px; padding: 1px 6px; }
+  #labRoster .catForm .cost { color: #8a8a98; font-size: 11px; }
+  #labDirectives { max-height: 20vh; overflow-y: auto; border: 1px solid #1a1a20;
+    padding: 2px 0; }
+  #labDirectives .dRow { padding: 2px 6px; border-bottom: 1px solid #15151a; }
+  #labDirectives .dRow b { color: #7fe0ff; font-weight: 600; }
+  #labPalette { display: flex; gap: 4px; flex-wrap: wrap; margin: 4px 0; }
+  #labIO { margin-top: 8px; border-top: 1px solid #24242c; padding-top: 6px; }
+  #labAreaNote { margin: 4px 0; padding: 6px 8px; border-radius: 4px; font-size: 12px;
+    line-height: 1.45; display: none; }
+  #labAreaNote.refused { display: block; background: #2a1414; border: 1px solid #6d2a2a;
+    color: #ffb0b0; }
+  #labAreaNote.ran { display: block; background: #14201a; border: 1px solid #2a5d43;
+    color: #a8e6c4; }
+  #labAreaLegend { display: flex; gap: 8px; flex-wrap: wrap; margin: 4px 0; font-size: 12px; }
+  #labAreaLegend .lg { display: flex; align-items: center; gap: 5px; padding: 2px 7px;
+    border: 1px solid #24242c; border-radius: 3px; }
+  #labAreaLegend .sw { width: 11px; height: 11px; border-radius: 2px; display: inline-block; }
+  #labAreaLegend b { color: #ffd75f; }
+  /* ⛓ THE ELEMENT'S BOX — the same two shapes as the area pane's, because they
+     answer the same two questions (what ran / what it produced) and a reader
+     should not have to learn a second layout for the second layer. */
+  #labElementNote { margin: 4px 0; padding: 6px 8px; border-radius: 4px; font-size: 12px;
+    line-height: 1.45; display: none; }
+  #labElementNote.refused { display: block; background: #2a1414; border: 1px solid #6d2a2a;
+    color: #ffb0b0; }
+  #labElementNote.ran { display: block; background: #1a1424; border: 1px solid #4a3a6d;
+    color: #d0bcf0; }
+  #labElementLegend { display: flex; gap: 8px; flex-wrap: wrap; margin: 4px 0; font-size: 12px; }
+  #labElementLegend .lg { display: flex; align-items: center; gap: 5px; padding: 2px 7px;
+    border: 1px solid #24242c; border-radius: 3px; }
+  #labElementLegend .sw { width: 11px; height: 11px; border-radius: 2px; display: inline-block; }
+  #labElementLegend b { color: #ff8fd0; }
+  /* ⛓⛓ EDITOR v3 E2c — THE SET ARM's boxes. ⛔ The class names are
+     `procgenCore/setEditorView.js`'s own (`setRooms`, `setReport`, `note bad`),
+     copied from watch.html's stylesheet rather than invented here: the mount
+     writes those classes and a page that styled different ones would show an
+     unstyled table while every readout said it was fine. */
+  .note.bad { color: #ff8080; }
+  #setPanel table.setRooms { border-collapse: collapse; font-size: 11px; width: 100%; }
+  #setPanel table.setRooms th { color: #8a8a98; text-align: left; font-weight: 600;
+    border-bottom: 1px solid #24242c; padding: 2px 6px; }
+  #setPanel table.setRooms td { padding: 2px 6px; border-bottom: 1px solid #15151a; }
+  #setPanel table.setRooms tr.sel td { background: #16222a; }
+  #setPanel table.setRooms button { font-size: 11px; padding: 0 5px; margin-right: 2px; }
+  #setPanel ul.setReport { margin: 4px 0; padding-left: 18px; font-size: 11px; }
+  #setPanel ul.setReport li.bad { color: #ff8080; }
+  /* ⛔ The strip is positioned so `editorView`'s overlay — which it appends to
+     the TARGET'S PARENT and sizes FROM the target — lands on top of it and not
+     against the viewport (§23.11 #5 cost two runs to learn on the other page). */
+  #editSetOverviewWrap { position: relative; overflow-x: auto; max-width: 100%; }
+  #labSetPalette, #labSetTools { display: flex; gap: 4px; flex-wrap: wrap; margin: 4px 0; }
+  #labSetRoomBox { flex-direction: column; align-items: flex-start; }
+  /* ⛓ EDITOR INTEGRATION W4 — the hosted editor's frame. Sized big enough that
+     the other page's own strip and canvas are both usable; a hidden Golden
+     Layout tab's zero rect is the failure this avoids by not being one
+     (trap 828, one host over). */
+  #labSetForeignFrame { flex-direction: column; align-items: stretch; }
+  #labWorldDoorBox { flex-wrap: wrap; }
+  #labSetForeignFrame iframe { width: 100%; height: 640px; border: 1px solid #444; }
+  #editSetRoomForm, #editSetManifest { font-size: 11px; }
+  #editSetRoomForm .line, #editSetManifest .line { margin-bottom: 2px; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Maze — lab <span>generate · edit · solve</span></h1>
+  <!-- ⛓ THE GLOSSARY / DEMO LINKS (PROCGEN DOCS P2). ⛔ RELATIVE, and that is
+       the whole reason they are static HTML: `../procgenDocs/…` is the same
+       string on the dev server (rooted at the repo) and on Pages (rooted at
+       `frontend/`), so neither needs the `repoUrl` resolver and neither can
+       404 on one host while working on the other. ⛔ They change no readout —
+       a link and a `title=` are the whole of this page's share of P2. -->
+  <div id="docLinks" class="note">
+    <a href="../procgenDocs/glossary.html">glossary</a> ·
+    <a href="../procgenDocs/demos.html">demos</a> ·
+    <a href="../procgenDocs/reference.html">reference</a>
+    <span class="note">— every term on this page is defined there, and every URL
+      parameter, template and refusal name is in the reference</span>
+  </div>
+  <div>
+    <label for="source">source</label>
+    <select id="source">
+      <option value="generate">GENERATE — the Cloudberry loop, in this page</option>
+      <option value="edit">EDIT — tiles and entities by hand</option>
+      <option value="solve">SOLVE — the exact BFS oracle</option>
+      <!--
+        ⛓⛓⛓ EDITOR v3 E2c — THE FOURTH ARM. It edits a REGION LIBRARY (a
+        positionally addressed LIST of interchangeable maze rooms) through the
+        SAME `procgenCore/setEditorView.mountSetEditor` watch.html binds to
+        Seedling — one toolkit, two substrates. ⛔ The value joins
+        `mazeLab.SOURCES`, so `?source=` refuses a typo naming all four.
+      -->
+      <option value="set">SET — a REGION LIBRARY: rooms, links, rules, REPORT</option>
+    </select>
+  </div>
+  <!-- ⛓ IS THIS PAGE RUNNING THE CODE THAT IS ON DISK? See mazeLabView.stamp. -->
+  <div id="sourceStamp" class="note"></div>
+  <div id="identity"></div>
+  <div id="status">loading…</div>
+  <div id="detail"></div>
+</header>
+<main>
+  <div id="stage">
+    <canvas id="canvas" width="220" height="220"></canvas>
+    <!-- ⛓⛓⛓ WHERE THE LEVEL WOULD BE. A refused area graph — or a refused
+         `requires` directive — prints the module's OWN reason here, VERBATIM,
+         and a refused DIRECTIVE draws no level at all: a run that did not
+         produce what was asked for must not be shown as if it had. -->
+    <div id="labAreaNote"></div>
+    <!-- ⚠ ONE ROW PER **SYMBOL**, never a label per cell: door counts are not
+         small (up to 50 over eight 15x15 cells — the yield table). -->
+    <div id="labAreaLegend" data-term="area-graph"></div>
+    <!-- ⛓⛓ THE GADGET'S OWN BOX — what it PLACED, or the binding's VERBATIM
+         REFUSAL. ⚠ Most seeds refuse (§10.11.5) and the refusal is what this
+         page has to say on them; ⛔ no bound is widened to make it prettier. -->
+    <div id="labElementNote"></div>
+    <div id="labElementLegend" data-term="element"></div>
+
+    <!-- ⛓ EVERY CONTROL HERE IS A BOUND THE LOOP RUNS UNDER, and every one of
+         them is echoed into the trace and the readout — a knob whose value
+         nobody could reproduce would be a bound nobody named (⚖ kickoff §5). -->
+    <div id="generatePanel" class="armPanel">
+      <div class="line">
+        <label>seed <input id="labSeed" type="number" step="1" style="width:6em"></label>
+        <label for="labBiome">biome</label>
+        <select id="labBiome"></select>
+        <label>w <input id="labWidth" type="number" min="2" step="1" style="width:4em"></label>
+        <label>h <input id="labHeight" type="number" min="2" step="1" style="width:4em"></label>
+        <!-- ⛓⛓ THE SKELETON KIND (constructive-mode slice 5). ⚖ Ruling 2: the
+             kinds ARE the maze biome names, one vocabulary across both
+             substrates. ⛔ Changing it RESETS the ladder to the skeleton and
+             says so — the room a ladder is built in is part of the level's
+             identity, exactly as the seed is. It is `?skeleton=` and NEVER
+             `?biome=`: that one selects the PALETTE on both pages. -->
+        <label for="labSkeleton">skeleton</label>
+        <select id="labSkeleton"></select>
+        <!-- ⛓⛓ ITS PARAMETERS (slice 7) — mounted from the catalogue's schema,
+             re-mounted at their defaults on a kind change, read at the press. -->
+        <span id="labSkeletonParams"></span>
+      </div>
+      <!-- ⛓⛓⛓ THE AREA GRAPH (PROCGEN ELEMENTS arc 1). `keys` is the HEAD of
+           the one area spec; `requires` is the RULE-DIRECTED directive, whose
+           proof is the BFS differential (remove the key, keep the doors). ⛔ A
+           change to either RESETS the ladder, because a different graph is a
+           different level — the same law a kind change follows. ⚠ THE LAYER is
+           a VIEW setting and is NOT in the URL (⚖ constructive ruling 9): it
+           says which layer of the graph is drawn, not what was built. -->
+      <div class="line">
+        <label for="labAreas">areas (keys)</label>
+        <select id="labAreas"></select>
+        <span id="labAreaParams"></span>
+        <label>requires <input id="labRequire" type="text" placeholder="K0,K1"
+          style="width:7em" spellcheck="false"></label>
+        <label for="labAreaLayer">layer</label>
+        <select id="labAreaLayer"></select>
+        <button id="labAreaLayerNext">LAYER ▶</button>
+      </div>
+      <!-- ⛓⛓⛓ THE ELEMENT (PROCGEN ELEMENTS arc 2). `guard` is the reverse-pull
+           block gadget: a block pulled backwards off its button, whose door is
+           held open only while the block sits there, and the area graph's key
+           lives BEHIND that door. ⛔ A change RESETS the ladder — an element is
+           stamped into the room BEFORE the carve, so it moves the whole room
+           stream. ⚠ A parameter left at "any (draw it)" is DRAWN and one that
+           is named is an OVERRIDE that spends no draw: the two are different
+           runs even when the value comes out the same. ⚠ MOST SEEDS REFUSE at
+           11x11 — that is the honest state, and 15x15 with `guard;len=2;turns=1`
+           is the friendliest demo (57% placed). -->
+      <div class="line">
+        <label for="labElements">element</label>
+        <select id="labElements"></select>
+        <span id="labElementParams"></span>
+      </div>
+      <div class="line">
+        <label>obstacles <input id="labCount" type="number" min="0" step="1" style="width:4em"></label>
+        <label>tries/step <input id="labTries" type="number" min="1" step="1" style="width:4em"></label>
+        <label>saturation K <input id="labK" type="number" min="1" step="1" style="width:4em"></label>
+        <label>anchor tries <input id="labAnchorTries" type="number" min="1" step="1" style="width:4em"></label>
+        <label>expansions <input id="labExpansions" type="number" min="1" step="1" style="width:7em"></label>
+      </div>
+      <div class="line">
+        <button id="labStep">STEP — one template</button>
+        <button id="labRunAll">RUN-ALL</button>
+        <button id="labReset">RESET to the skeleton</button>
+      </div>
+      <div class="line">
+        <b>catalogue</b> <span class="note">— what this palette can generate, by family;
+          untick to RESTRICT the roster this run may draw from</span>
+        <button id="labRosterAll">select ALL — the whole roster</button>
+        <span id="labRosterNote" class="note"></span>
+      </div>
+      <div id="labRoster"></div>
+      <div class="line">
+        <b>directed attempts</b> <span class="note">— press ATTEMPT on a catalogue row to
+          place THAT template on the level below</span>
+        <button id="labDirectivesClear">CLEAR the directives</button>
+        <span id="labDirectivesNote" class="note"></span>
+      </div>
+      <div id="labDirectives"></div>
+      <div id="labNote" class="note"></div>
+    </div>
+
+    <!-- ⚖ RULING 8: free tile / object editing. ⛔ Every edit lands on a CLONE
+         and drops the certification — §3.8: editing never bypasses the oracle. -->
+    <div id="editPanel" class="armPanel" hidden>
+      <div class="line">
+        <b>palette</b> <span class="note">— pick one, then click a tile (or DRAG: one stroke is ONE undo)</span>
+        <button id="labUndo">UNDO one edit</button>
+      </div>
+      <div id="labPalette"></div>
+      <!-- ⛓⛓ EDITOR v3 SLICE A2 — the tools `procgenCore/editCore` proved in A1,
+           given a control. ⛔ THEY ARE NOT IN `#labPalette`: the browser row
+           ENUMERATES that box (one button per PALETTE_ENTRIES row) and a knob
+           dropped into an enumerated container counts as a member. The buttons
+           are rendered from `editorView`'s own COMMAND TABLE, so the label and
+           the key here cannot drift from the key that actually fires. -->
+      <div class="line">
+        <b>tool</b> <span class="note">— Escape clears it; Ctrl/Cmd+Z undoes</span>
+      </div>
+      <div id="labTools"></div>
+      <div class="line">
+        <label><input id="labPasteTiles" type="checkbox"> paste tiles only</label>
+        <label><input id="labPasteEntities" type="checkbox"> paste entities only</label>
+      </div>
+      <div id="clipNote" class="note"></div>
+      <div id="editNote" class="note"></div>
+    </div>
+
+    <div id="solvePanel" class="armPanel" hidden>
+      <div class="line">
+        <button id="labSolve">SOLVE the world on screen</button>
+        <span class="note">— the plan is drawn over the room</span>
+      </div>
+      <!-- ⛓⛓⛓ THE STEP-THROUGH (⚖ design ruling 6 fn. 3: "step-through
+           visualisation is non-negotiable"). The plan LINE says where the
+           player walked; only the replay says that the walk PUSHED something,
+           and a pushed block is what this whole arc is about. The frames come
+           from `mazeLab.planFrames`, which replays through the ENGINE's own
+           `step` — a page-side movement model would get the vacated cell wrong
+           on the first push. ⚠ PLAY is a wall clock and is allowed to be one:
+           it paces an animation and decides nothing. -->
+      <div class="line">
+        <button id="labPlayReset">⏮ frame 0</button>
+        <button id="labPlayPrev">◀ STEP</button>
+        <button id="labPlayNext">STEP ▶</button>
+        <button id="labPlay">▶ PLAY the plan</button>
+        <span id="playNote" class="note"></span>
+      </div>
+      <div id="solveNote"></div>
+    </div>
+
+    <!--
+      ⛓⛓⛓ EDITOR v3 E2c — **THE SET ARM.** ⛔ Every `edit*` id below is the id
+      `procgenCore/setEditorView.js` looks up on the `doc` it is handed, and
+      they are the SAME ids `watch.html` carries (§27.3 #3) — which is why there
+      is no id map anywhere to go stale. The DOM SHAPES are copied from
+      watch.html's `#editOnly` block, not just the names: a `<select>` where the
+      mount fills options, a `<canvas tabindex="0">` for the strip (it OWNS its
+      keys — §21.5), a `<textarea>` for the rule tree.
+
+      ⛔ THE LOAD BOX IS THIS ARM'S OWN (`#labSetText` / `#labSetLoad` /
+      `#labSetUpload`) AND THAT IS A MEASUREMENT, not a preference: `render()`
+      calls `refreshSaveBox()` on EVERY render, which overwrites `#labText` with
+      `labPayload(state)` — the maze LEVEL's payload. A library pasted into the
+      shared box would be replaced by a level payload before the reader could
+      press Load. One intake path per document KIND, and two boxes because there
+      are two documents.
+    -->
+    <div id="setPanel" class="armPanel" hidden>
+      <div class="line">
+        <b>load a REGION LIBRARY</b>
+        <span class="note">— paste one, upload one, pick a served pack, or
+          <code>?library=&lt;url&gt;</code>. An OVERLAY (links · locations ·
+          rules) goes in the same box; a <code>.zip</code> BUNDLE carries
+          both.</span>
+      </div>
+      <div class="line">
+        <!-- ⛓ FILLED FROM `regionLibraryLoader.loadServedIndex`, FILTERED to the
+             packs whose `substrates` include `maze`. ⛔ The other two committed
+             packs (bounce, runner) are NOT offered: their payloads are not maze
+             worlds and every press on one would refuse. -->
+        <label for="labLibraryPick">served packs</label>
+        <select id="labLibraryPick"></select>
+        <button id="labLibraryLoad">LOAD that pack</button>
+        <button id="labSetLoad">Load from the box</button>
+        <label>Upload <input id="labSetUpload" type="file"
+          accept=".json,.zip,application/json,application/zip"></label>
+      </div>
+      <textarea id="labSetText" class="box" rows="6" spellcheck="false"
+        placeholder="paste a region library, an overlay, or press a served pack above"></textarea>
+      <div id="labSetLoadNote" class="note"></div>
+
+      <!--
+        ⛓⛓⛓ EDITOR v3 E2c — **THE OPEN ROOM'S OWN PALETTE.** ⛔ It is NOT
+        `#labPalette`: that box is the EDIT arm's, bound to the LAB LEVEL's
+        editor, and its UNDO hits the LAB session. A room opened from the
+        library is a different document with its own `itemLib`/`obstacleLib`, so
+        it gets its own palette built from those — offering the ladder's items on
+        somebody else's room would let a press place a body the entry cannot
+        hold. ⚠ Two enumerated containers, never one: the browser row counts
+        `#labPalette`'s buttons, and a second palette dropped into it would count
+        as a member (the group-B lesson).
+      -->
+      <div id="labSetRoomBox" class="line" hidden>
+        <b>open room</b>
+        <span id="labSetRoomNote" class="note"></span>
+        <div id="labSetPalette"></div>
+        <div id="labSetTools"></div>
+      </div>
+      <!-- ⛓⛓⛓ EDITOR INTEGRATION W4 — THE OTHER SUBSTRATE'S EDITOR, HOSTED.
+           A WORLD's strip holds rooms of both substrates. A maze room opens on
+           the canvas above; a SEEDLING room opens in `watch.html`'s EDIT arm,
+           in this frame, through the room-editor contract W3 built — ⚖ the
+           one-editor law: a second Seedling room editor written on this page is
+           the thing this arc exists to refuse. The frame is EMPTY and HIDDEN
+           until a foreign room is opened, and it is torn down on the close, so
+           a page that never opens one costs nothing.
+           ⛔ ONE frame: §9.6 #3 — two rooms of two substrates open at once is
+           not supported and the strip REFUSES the second BY NAME, rather than
+           letting the reader discover it in the other page's own note. -->
+      <div id="labSetForeignFrame" class="line" hidden></div>
+      <!-- ⛓⛓⛓ EDITOR INTEGRATION W4 — A CROSS-PART DOOR.
+           The strip's own CONNECT gesture writes a PART's door (the ARRAY form,
+           in that part's own exit vocabulary). A CROSSING is a different op
+           SHAPE, not a different argument: OBJECT endpoints naming the DERIVED
+           ATLAS's exit ids, and an explicit `one_way`.
+           ⛔ THE EXITS ARE THE DERIVED ONES AND NOT THE PART'S. A Seedling exit
+           is an ORDINAL on the authoring side and `out_<type>_<x>_<y>` in the
+           atlas, and a world link names the second — a control built from the
+           first would offer choices `deriveWorldAtlas` refuses by name.
+           ⛔ `one_way` STARTS UNSET. The two substrates disagree about the
+           default, so a crossing between them is in neither convention and a
+           default would impose one substrate's law on a door that is not in it.
+           ⛓ THE DISPLACEMENT IS SHOWN BEFORE THE PRESS, read off the DERIVATION
+           itself rather than predicted: a generated Seedling set has no spare
+           exit, so a crossing DISPLACES the part-internal connection it lands
+           on, and the preview is that merge's own sentence. -->
+      <div id="labWorldDoorBox" class="line" hidden>
+        <b>a CROSS-PART door</b>
+        <label for="labDoorFromRoom">from room</label>
+        <select id="labDoorFromRoom"></select>
+        <select id="labDoorFromExit"></select>
+        <label for="labDoorToRoom">to room</label>
+        <select id="labDoorToRoom"></select>
+        <select id="labDoorToExit"></select>
+        <label for="labDoorOneWay">direction</label>
+        <select id="labDoorOneWay">
+          <option value="">— pick one —</option>
+          <option value="1">ONE-WAY (from → to)</option>
+          <option value="0">TWO-WAY (walk back)</option>
+        </select>
+        <button id="labDoorConnect">CONNECT the two parts</button>
+        <button id="labDoorDisconnect">DISCONNECT this crossing</button>
+        <span id="labDoorNote" class="note"></span>
+      </div>
+      <div class="line">
+        <span id="editSetIdentity" class="note"></span>
+      </div>
+      <div id="editSetRooms"></div>
+      <div class="line" id="editSetOverviewWrap">
+        <canvas id="editSetOverview" tabindex="0" width="1" height="1"></canvas>
+      </div>
+      <div class="line">
+        <button id="editSetGesture" disabled>CONNECT — click the SOURCE room, then the TARGET</button>
+        <label for="editSetExitList">the selected room's exits</label>
+        <select id="editSetExitList" disabled></select>
+        <!-- ⛔ A MAZE EXIT IS NOT POSITIONAL, so this is the target's `exit_id`
+             and not an ordinal: the DISTINCT set of exit ids the library holds,
+             because which room the second click lands on is not known until it
+             happens. A target whose entry has no such exit is refused BY NAME by
+             `connect`, listing what it does have. -->
+        <label for="editSetTargetExit">return door (`exit_id` in the TARGET)</label>
+        <select id="editSetTargetExit" disabled></select>
+        <label for="editSetOneWay">one_way</label>
+        <input type="checkbox" id="editSetOneWay">
+        <button id="editSetDisconnect" disabled>DISCONNECT the selected exit</button>
+      </div>
+      <!-- ⛓ The manifest form is `LIBRARY_FIELDS` and the room form is
+           `ROOM_FIELDS` — the adapter's own, derived once at mount. -->
+      <div id="editSetManifest"></div>
+      <div id="editSetRoomForm"></div>
+      <div class="line">
+        <label for="editSetRoom">the LOADED LIBRARY's rooms</label>
+        <select id="editSetRoom" disabled></select>
+        <button id="editRoomClose" disabled>CLOSE the open room INTO the library</button>
+        <!-- ⛓⛓ EDITOR v3 E6b — **ADD ROOM IS OFFERED**, and the blank room's
+             SIZE is the PAGE's. E3b landed `blankMazeRoomPayload({width, height})`
+             — the maze's own blank-world vocabulary — so the arm that had no
+             blank room to mint now has one. ⛔ `mazeSetLab.js` is DOM-FREE by
+             its own law, so the two inputs below are read by `mazeLabView.js`
+             and handed to the binding as a THUNK; their defaults are written
+             from `MAZE_DEFAULTS`, the same constant `#labWidth`/`#labHeight`
+             fall back to, rather than typed here.
+             ⛔ `min` IS A HINT, NOT A CHECK. `createWorld` refuses anything
+             below 2 with its own sentence and it is the ONE authority; a page
+             that pre-checked would be a second one, and the two would drift. -->
+        <label for="editSetNewW">blank room w</label>
+        <input id="editSetNewW" type="number" min="2" step="1" style="width:4em">
+        <label for="editSetNewH">h</label>
+        <input id="editSetNewH" type="number" min="2" step="1" style="width:4em">
+        <button id="editSetAddRoom" disabled>ADD ROOM</button>
+      </div>
+      <div class="line">
+        <label for="editSetRuleTarget">access rule on</label>
+        <select id="editSetRuleTarget" disabled></select>
+        <button id="editSetRuleCommit" disabled>COMMIT the access rule</button>
+      </div>
+      <div class="line">
+        <textarea id="editSetRuleJson" rows="2" class="box"
+          placeholder='a Rule Builder tree, e.g. {"rule":"Has","args":{"item":"Sword"}}'>{"rule":"True_"}</textarea>
+      </div>
+      <div class="line"><span id="editSetRuleErrors" class="note"></span></div>
+      <div class="line"><span id="editSetRuleNote" class="note"></span></div>
+      <div class="line">
+        <!-- ⛓ A MAZE LOCATION IS AN `items[]` ORDINAL — a captured slot POSITION
+             (§26.4) — never an entity at pixels. The picker lists the entry's
+             own slots. -->
+        <label for="editSetLocEntity">mark a LOCATION</label>
+        <select id="editSetLocEntity" disabled></select>
+        <input id="editSetLocName" placeholder="location name (unique across the LIBRARY)">
+        <input id="editSetLocItem" placeholder="vanilla_item">
+        <button id="editSetMarkLocation" disabled>MARK</button>
+      </div>
+      <div class="line">
+        <button id="editSetReport" disabled>REPORT — validate, compile, and say what is FREE</button>
+        <button id="editSetUndo" disabled>UNDO the last LIBRARY edit</button>
+        <button id="editDownloadSet" disabled>Download the LIBRARY · OVERLAY</button>
+        <button id="editDownloadRules" disabled>Download rules.json</button>
+        <!-- ⛓⛓⛓ EDITOR INTEGRATION W4 — **M2, THE PLAYABLE ONE, TODAY.**
+             The button beside this one writes the world's own `rules.json`,
+             whose Seedling regions carry `flash_seedling` sidecars — and a
+             MIXED world does not PLAY in the app yet: a door OUT of a Seedling
+             room is the game's own synchronous level change and the host has no
+             seam to intercept it (⚖ plan §2.3, Q2 measured; M1 is an AS3 slice).
+             This one compiles EVERY region through the maze projection — which
+             the player and the bots already walk — so a mixed world authored
+             here is playable now. ⛔ A COMPILE-TIME projection: nothing is
+             written back, and the world, both parts and every region's authored
+             `substrate` are untouched.
+             ⛔ Only a WORLD has one; under a plain region library every region
+             is already `maze` and a second identical download would be a second
+             answer to one question. -->
+        <button id="labDownloadAllMaze" hidden>Download rules.json (ALL-MAZE — the playable one)</button>
+        <!--
+          ⛓⛓ EDITOR v3 E2c — ONE PRESS, ONE `.zip`. The members are the library,
+          the overlay, the compiled `rules.json` and the derived region atlas.
+          ⛔ `region-library` became `documentBundle`'s FIFTH kind in this
+          slice's first commit; before it, this button refused the maze's own
+          primary document by name.
+        -->
+        <button id="editDownloadBundle" disabled>Download the BUNDLE (.zip)</button>
+        <!-- ⛓ MINIFY is `stringifyRulesJson`'s `indent`. This page has no
+             settingsManager, so the BOX is the read and unchecked IS the
+             schema's default (2). ⛔ Nothing here ever writes a repo path. -->
+        <label for="editMinify" title="0-space output — about 45% of the indented bytes">
+          <input type="checkbox" id="editMinify"> MINIFY what this arm writes
+        </label>
+        <span id="editSetReportNote" class="note"></span>
+      </div>
+      <div class="line"><span id="editSetNote" class="note"></span></div>
+      <div id="editSetReportOut"></div>
+    </div>
+
+    <!-- ⛔ THE PAGE NEVER WRITES fixtures/ OR ANY REPO PATH. -->
+    <details id="labIO" open>
+      <summary data-term="payload">save / load — the payload in your hands (this page NEVER writes fixtures/)</summary>
+      <div class="line">
+        <button id="labDownload">Download</button>
+        <button id="labLoad">Load from box</button>
+        <label>Upload <input id="labUpload" type="file" accept=".json,application/json"></label>
+      </div>
+      <textarea id="labText" class="box" rows="10" spellcheck="false"></textarea>
+    </details>
+  </div>
+  <div id="panel">
+    <h2>generation trace</h2>
+    <div id="labTrace"></div>
+  </div>
+</main>
+<script type="module">
+  import { main } from './mazeLabView.js';
+  main();
+</script>
+</body>
+</html>

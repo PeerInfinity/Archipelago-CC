@@ -14,6 +14,21 @@
  * Prereq: dev server on :8000. Run: node scripts/procgen/verify-sphere-batch-stepping.mjs
  */
 import { chromium } from 'playwright';
+import { takeBoxLockOrExit } from './boxLock.js';
+
+/**
+ * ⛓ R9 P3b, ⚖ 54 (7); ⚖ 62 at 12j — **THE BOX LOCK.** This instrument drives
+ * the machine (browser), so it takes the box before it starts and refuses BY
+ * NAME if another instrument holds it — replacing a hand-relayed "BOX BUSY".
+ * A run UNDER a holder (`gates.mjs`, `standing-values`,
+ * `rerecord-seedling-campaign`) recognises the holder's token and passes
+ * through. `--wait-for-box=<sec>` queues instead of refusing.
+ */
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
+takeBoxLockOrExit({ name: 'verify-sphere-batch-stepping.mjs', kind: 'browser' });
 
 const SEED = 1;
 const ITEM_POOL = { key_red: 1, key_blue: 1, key_green: 1, key_yellow: 1, victory: 1 };

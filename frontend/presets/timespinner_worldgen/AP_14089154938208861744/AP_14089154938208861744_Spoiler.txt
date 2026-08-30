@@ -289,49 +289,203 @@ Playthrough:
 
 }
 1: {
+  Lake Desolation (Lower): Timespinner Wheel room: Bleak Ring
   Lake Desolation: Starter chest 1: Celestial Sash
+  Lake Desolation: Starter chest 2: Max Aura
+  Lake Desolation: Starter chest 3: Demon
+  Tutorial: Yo Momma 1: Ice Orb
   Tutorial: Yo Momma 2: Infernal Flames
 }
 2: {
+  Lake Desolation (Lower): Chicken chest: Captain's Cap
+  Lake Desolation (Lower): Not so secret room: Umbra Orb
+  Lake Desolation (Upper): Tank chest: Max Sand
+  Lake Desolation: Kitty Boss: Forbidden Tome
+  Library: Backer room chest 1: Merchant Crow
+  Library: Backer room chest 2: Nether Orb
+  Library: Backer room chest 3: Max Sand
   Library: Backer room chest 4: Security Keycard A
+  Library: Backer room chest 5: Metal Wristband
+  Library: Basement: Wind Orb
+  Library: Librarian: Herb
+  Library: Reading nook chest: Blue Orb
+  Library: Warp gate: Wyrm Brooch
+  Sealed Caves (Xarion): Skeleton: Max Aura
 }
 3: {
+  Library: Storage room chest 1: Potion
+  Library: Storage room chest 2: Scythe Ring
+  Library: Storage room chest 3: Jerky
+  Sealed Caves (Xarion): Below Jacksquat room: Radiant Orb
+  Sealed Caves (Xarion): Bottom left room: Warp Shard
+  Sealed Caves (Xarion): Double shroom room: Plasma Crystal
   Sealed Caves (Xarion): Jacksquat room: Elevator Keycard
+  Sealed Caves (Xarion): Last chance before Xarion: Max HP
+  Sealed Caves (Xarion): Secret room: Gun Orb
+  Sealed Caves (Xarion): Shroom jump room: Ether
   Sealed Caves (Xarion): Xarion: Lightwall
+  Varndagroth Towers (Left): Air vents secret: Alchemy Tools
+  Varndagroth Towers (Left): Bottom floor: Eternal Coat
+  Varndagroth Towers (Left): Elevator Key not required: Plasma IV Bag
+  Varndagroth Towers (Left): Ye olde Timespinner: Soul Scanner
   Varndagroth Towers (Right): Air vents left chest: Plasma Orb
+  Varndagroth Towers (Right): Air vents right chest: Max Sand
+  Varndagroth Towers (Right): Bottom floor: Hi-Ether
+  Varndagroth Towers (Right): Elevator card chest: Max HP
   Varndagroth Towers: Bridge: Pyro Ring
 }
 4: {
+  Sealed Caves (Sirens): Cave after sirens chest 1: Chaos Rose
+  Sealed Caves (Sirens): Cave after sirens chest 2: Kobo
+  Varndagroth Towers (Left): Elevator chest: Oculus Ring
+  Varndagroth Towers (Right): Elevator chest: Colossal Hammer
   Varndagroth Towers (Right): Spider Hell: Twin Pyramid Key
+  Varndagroth Towers (Right): Varndagroth: Sanguine Ring
 }
 5: {
+  Castle Basement: Clean the castle basement: Filigree Tea
   Castle Basement: Giantess guarded chest: Security Keycard C
+  Castle Basement: Just an egg: Greed Brooch
+  Castle Basement: Omelette chest: Hi-Potion
+  Castle Basement: Secret pedestal: Economizer Ring
+  Castle Keep: Advisor jump: Lab Coat
+  Castle Keep: Royal guard tiny room: Max Sand
+  Castle Keep: Twins: Dusk Ring
+  Castle Keep: Under the twins: Max Sand
+  Castle Keep: Yas queen room: Max HP
+  Castle Ramparts: Bomber chest: Berry Pick-Mi-Up+
+  Castle Ramparts: Freeze the engineer: Empress Robe
   Castle Ramparts: Giantess guarded room: Timespinner Spindle
+  Castle Ramparts: In the moat: Blood Orb
   Castle Ramparts: Knight and archer guarded room: Timespinner Wheel
   Castle Ramparts: Pedestal: Gas Mask
+  Caves of Banishment (Sirens): Siren room above water chest: Arm Cannon
+  Caves of Banishment (Sirens): Wyvern room: Hope Ring
+  Forest: Bat jump ledge: Buckle Hat
+  Forest: Batcave: Max Aura
+  Forest: Before Serene single bat cave: Shield Ring
+  Forest: Green platform secret: Tailwind Ring
+  Forest: Rats guarded chest: Max HP
+  Forest: Refugee camp roof: Max Aura
   Killed Aelana: Killed Aelana
   Killed Twins: Killed Twins
+  Lake Desolation (Upper): Crash site pedestal: Sunglasses
+  Lake Desolation (Upper): Double jump cave floor: Berry Pick-Mi-Up
   Lake Desolation (Upper): Double jump cave platform: Plasma Geyser
+  Lake Desolation (Upper): Oxygen recovery room: Iron Orb
   Lake Desolation (Upper): Secret room: Water Mask
+  Lake Desolation (Upper): Sparrow chest: Max Sand
+  Lake Desolation: Forget me not chest: Potion
+  Lake Serene (Upper): Cave secret: Traveler's Cloak
+  Lake Serene (Upper): Chicken ledge: Sun Ring
+  Lake Serene (Upper): Double jump cave floor: Shadow Seal
+  Lake Serene (Upper): Double jump cave platform: Berry Pick-Mi-Up+
+  Lake Serene (Upper): Rat nest: Crimson Vortex
+  Lake Serene: Before Big Bird: Max Aura
   Lake Serene: Behind the vines: Talaria Attachment
+  Lake Serene: Pyramid keys room: Captain's Uniform
+  Refugee Camp: Neliste's Bra: Eye Orb
+  Refugee Camp: Storage chest 1: Max Sand
+  Refugee Camp: Storage chest 2: Pointy Hat
+  Refugee Camp: Storage chest 3: Max HP
+  Royal Towers: Aelana's attic: Max HP
+  Royal Towers: Aelana's chest: Selen's Bangle
+  Royal Towers: Aelana's pedestal: Max HP
   Royal Towers: Before Aelana: Succubus Hairpin
+  Royal Towers: Bottom struggle juggle: Max Aura
+  Royal Towers: Floor secret: Meteor Sparrow Trap
+  Royal Towers: Left tower royal guard: Midnight Cloak
+  Royal Towers: Left tower small balcony: Max HP
+  Royal Towers: Long balcony: Max HP
+  Royal Towers: No struggle required: Eternal Crown
+  Royal Towers: Past bottom struggle juggle: Eternal Brooch
+  Royal Towers: Pre-climb gap: Max Aura
+  Royal Towers: Right tower freebie: Max Aura
+  Royal Towers: Top struggle juggle: Max Aura
 }
 6: {
+  Caves of Banishment (Maw): Bottom left room: Spaghetti
+  Caves of Banishment (Maw): Jackpot room chest 1: Hi-Potion
+  Caves of Banishment (Maw): Jackpot room chest 2: Galaxy Stone
+  Caves of Banishment (Maw): Jackpot room chest 3: Max HP
+  Caves of Banishment (Maw): Jackpot room chest 4: Pendulum
   Caves of Banishment (Maw): Last chance before Maw: Timespinner Gear 1
+  Caves of Banishment (Maw): Mineshaft: Princess Dress
+  Caves of Banishment (Maw): Pedestal: Chaos Blades
+  Caves of Banishment (Maw): Plasma Crystal: Max Aura
+  Caves of Banishment (Maw): Secret room: Ether
+  Caves of Banishment (Maw): Shroom jump room: Max Aura
+  Caves of Banishment (Maw): Single shroom room: Griffin
   Caves of Banishment (Sirens): Siren room underwater left chest: Tablet
+  Caves of Banishment (Sirens): Siren room underwater right chest: Lab Glasses
+  Caves of Banishment (Sirens): Siren room underwater right ground: Max Sand
+  Caves of Banishment (Sirens): Water hook: Mind Refresh
   Forest: Waterfall chest 1: Timespinner Gear 3
+  Forest: Waterfall chest 2: Sprite
   Killed Maw: Killed Maw
+  Lake Serene (Lower): Deep dive: Ether
+  Lake Serene (Lower): Past the eels: Hi-Potion
+  Lake Serene (Lower): T chest: Max Sand
+  Lake Serene (Lower): Under the eels: Storm Eye
+  Lake Serene (Lower): Underwater pedestal: Aura Blast
+  Lake Serene (Lower): Underwater secret: Corruption
+  Lake Serene (Lower): Water spikes room: Blade Orb
+  Sealed Caves (Sirens): Siren room underwater left: Gilded Egg
+  Sealed Caves (Sirens): Siren room underwater right: Shattered Orb
   Sealed Caves (Sirens): Water hook: Timespinner Gear 2
 }
 7: {
+  Ancient Pyramid: Conviction guarded room: Food Synthesizer
   Ancient Pyramid: Nightmare Door chest: Fire Orb
+  Ancient Pyramid: Pit secret room: Sand Bottle
   Ancient Pyramid: Regret chest: Security Keycard D
   Ancient Pyramid: Why not it's right there: Djinn Inferno
+  Emperor's Tower: Bottom right tower: Max Sand
+  Emperor's Tower: Courtyard bottom chest: Librarian Hat
+  Emperor's Tower: Courtyard floor secret: Colossal Blade
+  Emperor's Tower: Courtyard upper chest: Empire Crown
+  Emperor's Tower: Emperor's Chambers chest: Glass Pumpkin
+  Emperor's Tower: Emperor's Chambers pedestal: Sand Bottle
+  Emperor's Tower: Galactic sage room: Librarian Robe
+  Emperor's Tower: Left tower balcony: Sand Bottle
+  Emperor's Tower: Wayyyy up there: Filigree Clasp
   Killed Emperor: Killed Emperor
   Killed Nightmare: Killed Nightmare
+  Lab: Below lab entrance: Sand Vial
+  Lab: Coffee break: Aura Serpent
+  Lab: Download and chest room chest: Max HP
+  Lab: Download and chest room terminal (Experiment #13): Max HP
+  Lab: Dynamo Works: Meyef
+  Lab: Experiment #13: Trendy Jacket
+  Lab: Experiment 13 terminal (W.R.E.C Farewell): Star of Lachiem
+  Lab: Genza (Blob Mom): Chaos Trap
+  Lab: Lab secret: Viletian Crown
   Lab: Left terminal (Biotechnology): Royal Ring
+  Lab: Lower trash left: Shiny Rock
+  Lab: Lower trash right: Old Coat
+  Lab: Middle terminal (Amadeus Laboratory Map): Hi-Ether
+  Lab: Right terminal (Experiment #11): Max Sand
+  Lab: Sentry platform terminal (Origins): Silence Ring
+  Lab: Spider Hell: Goddess Brooch
+  Lab: Trash jump room: Max Sand
   Lake Desolation (Upper): Crash site chest 1: Library Keycard V
+  Lake Desolation (Upper): Crash site chest 2: Max Aura
+  Library: Backer room terminal (Vandagray Metropolis Map): Max Sand
+  Library: Terminal 1 (Windaria): Galaxy Earrings
+  Library: Terminal 2 (Lachiem): Ancient Coin
+  Library: Terminal 3 (Emperor Nuvius): Chaos Rose
+  Military Fortress: B door chest 1: Bombardment
+  Military Fortress: B door chest 2: Icicle Ring
+  Military Fortress: Bomber chest: Empire Orb
+  Military Fortress: Close combat room: Bird Statue
+  Military Fortress: Giantess bridge: Ether
+  Military Fortress: Giantess room: Chaos Rose
+  Military Fortress: Pedestal: Dark Flames
+  Military Fortress: Soldiers bridge: Max Aura
+  Varndagroth Towers (Right): Medbay terminal (Bleakness Research): Max Sand
 }
 8: {
+  Library: V terminal 1 (War of the Sisters): Frozen Spires
   Library: V terminal 2 (Lake Desolation Map): Security Keycard B
+  Library: V terminal 3 (Vilete): Jewelry Box
 }

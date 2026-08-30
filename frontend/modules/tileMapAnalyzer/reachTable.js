@@ -10,8 +10,6 @@
 // (in reachabilityAnalyzer.js) validates each candidate against the
 // actual map. The table only defines the CANDIDATE set; the BFS
 // still has to prove each candidate with a per-map trajectory sim.
-//
-// See NewDocs/plans/tile-map-analyzer-physics-model.md.
 
 import {
   DEFAULT_PHYSICS,

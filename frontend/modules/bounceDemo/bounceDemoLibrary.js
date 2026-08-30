@@ -1,7 +1,6 @@
 /**
- * Substrate registry entry for the Bounce Demo (DJ-Metroidvania) —
- * build-order step 5 + the embed phase
- * (NewDocs/plans/procedural-generation/dj-metroidvania-v2.md).
+ * Substrate registry entry for the Bounce Demo (DJ-Metroidvania)
+ * (docs/json/developer/procgen/bounce.md).
  *
  * The entry is a MERGE: flash runtime plumbing (de/serializeWorld,
  * playback stub — via createFlashSubstrateEntry) + bounce's own panel
@@ -42,6 +41,12 @@ import {
     DEFAULT_BOUNCE_PROCGEN_PARAMS, prepareBounceSphereGrowth,
     buildBounceRegionParams, renderBounceProcgenParams,
 } from './bounceProcgenParams.js';
+import {
+    captureBounceLibraryEntry,
+    instantiateBounceLibraryEntry,
+    instantiateLibraryEntryForSpecs,
+    validateBounceLibraryEntry,
+} from './bounceLibraryEntry.js';
 
 // Canonical assignment constraints (checked by the e2e winnability
 // test): the spiral chain hops E,S,W,W with derived side rules, so
@@ -180,7 +185,7 @@ function makeExtractZoneRules(zones, { portalPlacement = 'directional' } = {}) {
 //    rule-gated portals/pickups extension, priority #2) ───────────────
 //
 // Requirement-targeted region realization for the sphere grower
-// (NewDocs/plans/procedural-generation/sphere-driven-growth.md): the
+// (docs/json/developer/procgen/bounce.md §"Sphere-growth integration"): the
 // driver specifies per-exit and per-location target requirements in AP
 // item names (plus optional per-item counts). Bounce SPLITS each
 // requirement at this boundary:
@@ -261,9 +266,7 @@ export const BOUNCE_LIBRARY_ITEMS = Object.freeze(Object.fromEntries([
 
 /**
  * Registry-declared OBSTACLE library — the bounce side of the
- * obstacles-along-paths refactor
- * (NewDocs/plans/procedural-generation/topdown-bounce-obstacle-refactor.md,
- * Phase 1). One obstacle per ability: "this path crosses the
+ * obstacles-along-paths vocabulary. One obstacle per ability: "this path crosses the
  * blue-platform gap" compiles (via shared/procgen/pathsAndObstaclesCompiler.js)
  * to has("Blue platforms"). Declared here (NOT in the shared submodule)
  * alongside BOUNCE_LIBRARY_ITEMS; merged with DEFAULT_OBSTACLES by the
@@ -821,6 +824,34 @@ export function createBounceSubstrateEntry({
         loadRegionEvent: BOUNCE_LOAD_REGION_EVENT,
         iframeId: BOUNCE_IFRAME_ID,
 
+        /**
+         * ⛓⛓⛓ EDITOR INTEGRATION W3 — **THE ROOM-EDITOR DECLARATION**
+         * (`NewDocs/plans/editor-integration.md` §3.2). `procgenPipeline/
+         * regionEditors.getRegionEditor('bounce')` resolves Edit ▸ through
+         * THIS field; `bounceRegionEditor/index.js` no longer registers
+         * itself, so the panel knows bounce has an editor whether or not that
+         * module has run — the property the maze and Seedling LAB PAGES need,
+         * since a page never calls `initialize()`.
+         *
+         * ⛔ **THE IMPORT IS DYNAMIC AND THAT IS A MEASUREMENT, NOT A STYLE.**
+         * A static `import` of `../bounceRegionEditor/index.js` here would put
+         * the whole Golden-Layout panel graph into every HEADLESS consumer of
+         * this library — the capability-matrix generator loads all eight
+         * libraries, and ~30 `check-*.mjs` gates load this one. Measured on
+         * `1eed5988a`: this file alone imports silently; this file plus that
+         * module prints `[centralRegistry] CentralRegistry initialized`. The
+         * declaration therefore stays DATA, and the door opens on first use.
+         *
+         * ⚠ `open` returns a PROMISE where the maze/Seedling `lab` kind
+         * returns synchronously; no caller reads the return value (the ONE
+         * return path is `onSave`), and `_editRegion` ignores it.
+         */
+        roomEditor: Object.freeze({
+            kind: 'panel',
+            open: (session) => import('../bounceRegionEditor/index.js')
+                .then((m) => m.openBounceRegionEditor(session)),
+        }),
+
         // Playback bot: overrides the flash entry's `() => null` stub.
         // The proxy publishes controller commands on
         // BOUNCE_PLAYBACK_CONTROL_EVENT; the in-iframe flash bridge
@@ -831,16 +862,32 @@ export function createBounceSubstrateEntry({
         // Loop-mode capabilities: regionMove + locationCheck queue
         // actions map to the playback bot's implementations (walkTo an
         // exit portal / a location on real physics) via
-        // executeVia: 'playbackBot' — the loops queue parks and the
-        // bot plays; loops charges the loop_costs value on completion
-        // (bounce tracks no mana natively, v1). NO explore action
-        // exists for bounce. Manual play yes; custom queues judged not
-        // worthwhile (user decision, 2026-06-12).
+        // executeVia: 'solver' — the loops queue parks and the bot
+        // plays. `executeVia` stays declared for M6's Bot radio, which
+        // re-homes that path; it is NOT reachable from Playback (see
+        // below). NO explore action exists for bounce. Manual play yes;
+        // custom queues judged not worthwhile (user decision 2026-06-12).
+        //
+        // M5 (2026-07-23): bounce is a SUMMARY-recording substrate — the
+        // third capture category beside coarse-only (text adventure) and
+        // fine-grained (maze, jta). Record captures the NET RESULT of the
+        // visit (duration in drain seconds, performed checks, departure
+        // exit) rather than a replayable action stream; Playback applies
+        // that envelope instantly. Hence `summaryRecording: true` as the
+        // discriminator (fine-grained is discriminated by the registry
+        // entry supplying `takeLastRecording`, which bounce does not).
+        // `instant: true` is declared for the focus-suppression seam —
+        // summary playback is inherently instant, so no per-block Instant
+        // checkbox is offered. See docs loop-recording.md.
         loopSupport: Object.freeze({
             queueActions: Object.freeze(['regionMove', 'locationCheck']),
-            executeVia: 'playbackBot',
+            executeVia: 'solver',
             manual: true,
             customQueues: false,
+            record: true,
+            playback: true,
+            instant: true,
+            summaryRecording: true,
         }),
 
         // The substrate's zone table places this item itself (fork's
@@ -857,6 +904,21 @@ export function createBounceSubstrateEntry({
         // All payload content comes from extractZoneRules (which knows
         // the exit sides); no separate synthesizeZonePayload needed.
         extractZoneRules: makeExtractZoneRules(zones, { portalPlacement }),
+
+        // --- Region-library content-source hooks (region-library F2) ---
+        // bounce is the CONTENT (zone) library substrate: an entry carries its
+        // emitted rules verbatim (geometry not re-derivable) + the level payload;
+        // instantiate re-assembles the synthetic-exit region via assembleZoneRegion
+        // for the slot's sides (⊆ the entry's captured sides). See bounceLibraryEntry.js.
+        captureLibraryEntry: captureBounceLibraryEntry,
+        instantiateLibraryEntry: (entry, ctx) => instantiateBounceLibraryEntry(entry, ctx, { buildZonePayload }),
+        // Requirement-aware sphere placement (region-library F6a): relabels the
+        // captured portals onto the slot's specific sides + reassigns the node's
+        // items; the engine overlays each gate as an access_rule. See
+        // bounceLibraryEntry.js / buildSphereLibraryRegion.
+        instantiateLibraryEntryForSpecs: (entry, ctx) =>
+            instantiateLibraryEntryForSpecs(entry, ctx, { buildZonePayload }),
+        validateLibraryEntry: validateBounceLibraryEntry,
 
         // Sphere-driven growth: requirement-targeted generation + the
         // structural veto for gate combinations + the panel-facing

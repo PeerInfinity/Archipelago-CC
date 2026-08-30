@@ -9,7 +9,13 @@ body.mobile-layout-active .lm_goldenlayout {
 body.mobile-layout-active .mobile-layout-container {
   display: flex !important;
   flex-direction: column;
+  /* dvh tracks the visible viewport as mobile Chrome's URL bar
+     collapses/expands; plain 100vh is the URL-bar-hidden height, so the
+     container bottom (and anything sized from it) sits below the screen
+     while the bar is showing. vh line kept as a fallback for browsers
+     without dvh support. */
   height: 100vh;
+  height: 100dvh;
   width: 100%;
   background-color: #2d2d2d;
   color: #cecece;
@@ -85,10 +91,15 @@ body.mobile-layout-active .mobile-nav-right {
   border-left: 1px solid #444;
 }
 
-/* Panel instance styling when mobile is active */
+/* Panel instance styling when mobile is active. Height stops above the
+   fixed bottom bar (60px portrait / 50px landscape — keep in sync with
+   .mobile-bottom-bar): the wrapper is absolutely positioned, so the
+   content area's padding-bottom does NOT keep it out from under the
+   bar — without the calc, the bottom strip of every panel (e.g. the
+   options panel's build-stamp footer) renders behind the tab bar. */
 body.mobile-layout-active .mobile-panel-instance {
   width: 100%;
-  height: 100%;
+  height: calc(100% - 60px);
   position: absolute;
   top: 0;
   left: 0;
@@ -379,10 +390,29 @@ body.mobile-layout-active .mobile-tab-bar::-webkit-scrollbar-thumb:hover {
   body.mobile-layout-active .mobile-panel-content {
     padding-bottom: 50px;
   }
+
+  body.mobile-layout-active .mobile-panel-instance {
+    height: calc(100% - 50px);
+  }
 }
 
 /* Tablet adjustments (larger touch devices) */
 @media (min-width: 769px) and (pointer: coarse) {
+  /* The bar, the content reservation, and the panel-instance clamp must
+     all track the 70px tab bar — a taller tab bar inside a 60px fixed
+     bar overflows UPWARD over the bottom strip of every panel. */
+  body.mobile-layout-active .mobile-bottom-bar {
+    height: 70px;
+  }
+
+  body.mobile-layout-active .mobile-panel-content {
+    padding-bottom: 70px;
+  }
+
+  body.mobile-layout-active .mobile-panel-instance {
+    height: calc(100% - 70px);
+  }
+
   body.mobile-layout-active .mobile-tab-bar {
     height: 70px;
   }

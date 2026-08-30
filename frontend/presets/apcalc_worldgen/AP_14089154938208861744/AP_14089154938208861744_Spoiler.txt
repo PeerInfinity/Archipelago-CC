@@ -224,7 +224,9 @@ Playthrough:
   Checked 14: Checked 14
   Checked 6: Checked 6
   Checked 7: Checked 7
+  Reach 196 L1: Junk
   Reach 7 L1: Button: 0
+  Reach 7704 L1: Junk
   Reach 96 L1: Button: /
   Reach 9809 L2: Button: 4
 }
@@ -236,6 +238,8 @@ Playthrough:
   Checked 16: Checked 16
   Checked 5: Checked 5
   Checked 8: Checked 8
+  Reach 145 L1: Junk
+  Reach 18 L1: Junk
   Reach 9375 L1: Button: 1
 }
 6: {
@@ -257,12 +261,21 @@ Playthrough:
   Checked 45: Checked 45
   Checked 9: Checked 9
   Reach -18030 L3: Button: 6
+  Reach -23 L2: Junk
+  Reach -3820 L2: Junk
+  Reach -6010 L2: Junk
+  Reach -760293 L2: Junk
   Reach -87 L1: Button: 9
+  Reach 21 L2: Junk
+  Reach 6396 L3: Junk
+  Reach 9364 L2: Junk
 }
 9: {
   Checked 22: Checked 22
   Checked 23: Checked 23
   Checked 47: Checked 47
+  Reach 2 L2: Junk
+  Reach 9513 L2: Junk
   Reach 9790 L3: Button: 7
 }
 10: {
@@ -273,6 +286,8 @@ Playthrough:
   Checked 35: Checked 35
   Checked 36: Checked 36
   Checked 53: Checked 53
+  Reach -108180 L4: Junk
+  Reach 614016 L4: Junk
   Reach 614724 L5: Button: 1
 }
 12: {
@@ -281,12 +296,17 @@ Playthrough:
   Checked 59: Checked 59
   Checked 64: Checked 64
   Reach -1167 L2: Button: 4
+  Reach 112 L3: Junk
+  Reach 754728 L4: Junk
+  Reach 7840 L4: Junk
 }
 13: {
   Checked 54: Checked 54
   Checked 60: Checked 60
   Checked 76: Checked 76
+  Reach -10262598 L3: Junk
   Reach -103396 L5: Button: 9
+  Reach -170430 L3: Junk
 }
 14: {
   Checked 46: Checked 46
@@ -297,7 +317,13 @@ Playthrough:
   Checked 70: Checked 70
   Checked 71: Checked 71
   Checked 72: Checked 72
+  Reach 12279424 L5: Junk
+  Reach 266944 L4: Junk
+  Reach 3104 L3: Junk
   Reach 38650920 L4: Button: *
+  Reach 4634 L4: Junk
+  Reach 4698 L3: Junk
+  Reach 509740 L5: Junk
   Reach 614025 L5: Button: 3
 }
 15: {
@@ -334,6 +360,39 @@ Playthrough:
   Checked 78: Checked 78
   Checked 79: Checked 79
   Checked 80: Checked 80
+  Reach -10236204 L6: Junk
+  Reach -13773180771 L6: Junk
+  Reach -1530353419 L5: Junk
+  Reach -170399 L4: Junk
+  Reach -1967597253 L7: Junk
+  Reach -297 L4: Junk
+  Reach 1013260 L5: Junk
+  Reach 1013376 L4: Junk
+  Reach 15324638 L5: Junk
+  Reach 15324638 L6: Junk
+  Reach 15324638 L7: Junk
+  Reach 168571018 L6: Junk
+  Reach 171782380 L6: Junk
+  Reach 1842075 L6: Junk
+  Reach 1842079 L7: Junk
+  Reach 2521644 L7: Junk
+  Reach 30534206864 L6: Junk
+  Reach 380504 L4: Junk
+  Reach 380520 L3: Junk
+  Reach 380662144 L6: Junk
+  Reach 4335532 L3: Junk
+  Reach 4641277028 L6: Junk
+  Reach 623327 L5: Junk
+  Reach 630411 L6: Junk
+  Reach 6509104 L5: Junk
+  Reach 762631 L5: Junk
+  Reach 764122 L5: Junk
+  Reach 7792871 L7: Junk
+  Reach 7792960 L5: Junk
+  Reach 7792967 L6: Junk
+  Reach 929872 L4: Junk
+  Reach 968576 L4: Junk
+  Reach 9977571220 L6: Junk
 }
 16: {
   Victory: Victory

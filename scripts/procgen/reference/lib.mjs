@@ -1,0 +1,233 @@
+/**
+ * reference/lib — **THE SHARED MACHINERY OF THE GENERATED REFERENCE TABLES.**
+ *
+ * ⛓ P3a built one 1162-line generator with three builders in it; P3b adds three
+ * more tables and would have pushed it past 1900, so the builders live in
+ * `scripts/procgen/reference/*.mjs` now and this file holds what all six share:
+ * the repo paths, the argv helpers, the REGION rule, the STRING RUN reader, the
+ * deterministic serialiser, the module emitter, and the MARKDOWN GENERATED
+ * REGION writer (P3b).
+ *
+ * ⛔ Nothing here decides what a table SAYS. A builder answers that; this file
+ * only reads source text and writes deterministic output.
+ */
+
+import { readFileSync } from 'node:fs';
+import { dirname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+export const HERE = dirname(fileURLToPath(import.meta.url));
+export const REPO = resolve(HERE, '../../..');
+export const DEFAULT_OUT = join(REPO, 'frontend/modules/procgenDocs/generated');
+
+export const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
+    ?? `--${name}=${fallback}`).slice(`--${name}=`.length);
+export const flag = (name) => process.argv.includes(`--${name}`);
+
+export const src = (rel) => readFileSync(join(REPO, rel), 'utf8');
+
+/* ══════════════════════════════════════════════════════════════════════
+ * THE SCAN — one region rule, one string-run reader
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * The source of ONE top-level region. `opener` is a regex matched against a
+ * LINE; the region ends at the first later line that closes at column 0.
+ *
+ * ⛔ It THROWS when the opener matches nothing: a scan whose subject moved is a
+ * scan that would otherwise report an empty set as a finding about the code.
+ */
+export function regionOf(source, opener, { what = String(opener) } = {}) {
+    const lines = source.split('\n');
+    const start = lines.findIndex((l) => opener.test(l));
+    if (start < 0) throw new Error(`generate-procgen-reference: no region matches ${what}`);
+    for (let i = start + 1; i < lines.length; i += 1) {
+        if (/^[)}\]];?$/.test(lines[i])) {
+            return { text: lines.slice(start, i + 1).join('\n'), fromLine: start + 1, toLine: i + 1 };
+        }
+    }
+    throw new Error(`generate-procgen-reference: region ${what} never closes at column 0`);
+}
+
+export function allMatches(text, re) {
+    const out = [];
+    const r = new RegExp(re.source, re.flags);
+    let m = r.exec(text);
+    while (m) { out.push(m); m = r.exec(text); }
+    return out;
+}
+
+
+/**
+ * ⛓ THE STRING RUN after an index — a `'a' + 'b'` concatenation or one template
+ * literal, read as text. `${…}` placeholders become `…`, because the value is a
+ * run-time fact and this table is a static one.
+ */
+export function stringRunAt(text, from) {
+    let i = from;
+    const parts = [];
+    const skip = () => { while (i < text.length && /[\s+]/.test(text[i])) i += 1; };
+    skip();
+    while (i < text.length && (text[i] === "'" || text[i] === '"' || text[i] === '`')) {
+        const quote = text[i];
+        i += 1;
+        let buf = '';
+        let depth = 0;
+        while (i < text.length) {
+            const c = text[i];
+            if (c === '\\') { buf += text[i + 1] === 'n' ? ' ' : text[i + 1]; i += 2; continue; }
+            if (quote === '`' && c === '$' && text[i + 1] === '{') { depth += 1; i += 2; buf += '…'; continue; }
+            if (depth > 0) {
+                if (c === '{') depth += 1;
+                else if (c === '}') depth -= 1;
+                i += 1;
+                continue;
+            }
+            if (c === quote) { i += 1; break; }
+            buf += c;
+            i += 1;
+        }
+        parts.push(buf);
+        const before = i;
+        skip();
+        if (i === before && !/[\s+]/.test(text[before] ?? '')) break;
+    }
+    return parts.join('').replace(/\s+/g, ' ').trim();
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * THE EMIT — deterministic, no timestamp
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/** ⛔ SORTED OBJECT KEYS; array order is the source's. */
+export function stableJson(value, indent = 0) {
+    const pad = ' '.repeat(indent);
+    const inner = ' '.repeat(indent + 4);
+    if (value === null || value === undefined) return 'null';
+    if (Array.isArray(value)) {
+        if (value.length === 0) return '[]';
+        return `[\n${value.map((v) => inner + stableJson(v, indent + 4)).join(',\n')}\n${pad}]`;
+    }
+    if (typeof value === 'object') {
+        const keys = Object.keys(value).sort();
+        if (keys.length === 0) return '{}';
+        return `{\n${keys.map((k) => `${inner}${JSON.stringify(k)}: `
+            + `${stableJson(value[k], indent + 4)}`).join(',\n')}\n${pad}}`;
+    }
+    return JSON.stringify(value);
+}
+
+export const HEADER = '// GENERATED by scripts/procgen/generate-procgen-reference.mjs — do not edit; '
+    + 'regenerate.';
+
+export function moduleText({ file, exportName, doc, value }) {
+    return `${HEADER}\n`
+        + `/**\n * procgenDocs/generated/${file} — ${doc}\n *\n`
+        + ' * ⛔⛔ **THIS FILE IS OUTPUT.** Editing it is how the gate FAILS:\n'
+        + ' * `node scripts/procgen/generate-procgen-reference.mjs --check` regenerates into\n'
+        + ' * memory and refuses if what is on disk differs. To change what it says, change\n'
+        + ' * the CODE it reads, then regenerate:\n *\n'
+        + ' *     node scripts/procgen/generate-procgen-reference.mjs\n *\n'
+        + ' * ⛔ There is no timestamp in here, deliberately: one would make every\n'
+        + ' * regeneration a diff and the gate unfailable.\n'
+        + ' */\n\n'
+        + '/** ⛓ DEEP-frozen: every nested row too, so a reader cannot mutate the table it\n'
+        + ' *  is rendering and a shape gate can assert one word. */\n'
+        + 'const frz = (v) => {\n'
+        + '    if (v && typeof v === \'object\') Object.values(v).forEach(frz);\n'
+        + '    return Object.isFrozen(v) ? v : Object.freeze(v);\n'
+        + '};\n\n'
+        + `export const ${exportName} = frz(${stableJson(value, 0)});\n\n`
+        + `export default ${exportName};\n`;
+}
+
+/**
+ * ⛓ THE ONE-LINER — the first SENTENCE of the first paragraph, where a
+ * sentence ends at `.`/`?`/`!` followed by a space and a capital, or at the end
+ * of the paragraph. ⛔ A `.` inside `e.g.` / `i.e.` / a file name / a decimal
+ * does not end one, because those are how this tree writes.
+ */
+export function firstSentence(text, { limit = 320 } = {}) {
+    const para = text.split(/\n\s*\n/)[0].replace(/\s+/g, ' ').trim();
+    const re = /(?<!\be\.g|\bi\.e|\bcf|\bvs|\b[A-Z]|\d)[.?!](?=\s+[A-Z⛓⛔⚠⚖]|$)/;
+    const at = re.exec(para);
+    const cut = at ? para.slice(0, at.index + 1) : para;
+    return cut.length > limit ? `${cut.slice(0, limit - 3)}…` : cut;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓ THE MARKDOWN GENERATED REGION (P3b, D1)
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * Two of P3b's three tables belong in files people read ON GITHUB — the
+ * capability matrix inside `substrate-registry.md`, the index inside
+ * `README.md` — and only `frontend/` is published to Pages, so a page alone
+ * would not reach those readers. A `.md` therefore stays a `.md`: its prose is
+ * untouched and only the text BETWEEN TWO MARKERS is written.
+ *
+ * ⛔ THE MARKERS ARE THE CONTRACT, and a file that does not carry exactly one
+ * pair REFUSES BY NAME rather than being rewritten or skipped. Skipping would
+ * silently un-gate a table (the region would rot with nobody watching);
+ * rewriting would let the generator decide where a doc's own prose goes.
+ *
+ * ⛔ AND THE ANNOTATIONS STAY OUTSIDE. A matrix row the code does not carry —
+ * "host proxy → in-game bot driver", "arc D", "the recording is a plan" — is a
+ * human's reading of the code, not the code's answer, and it lives in a
+ * hand-kept paragraph BELOW the region where a regeneration cannot eat it.
+ */
+
+/** The exact marker pair for one table. ⛔ Spelled ONCE: a marker written by
+ *  the generator and matched by a different string is a region nothing gates. */
+export function markdownMarkers(table) {
+    return {
+        begin: `<!-- GENERATED:${table} BEGIN — by scripts/procgen/`
+            + 'generate-procgen-reference.mjs; do not edit; regenerate -->',
+        end: `<!-- GENERATED:${table} END -->`,
+    };
+}
+
+/**
+ * Find the ONE region a table owns. ⛔ Missing, duplicated or inverted markers
+ * are each a NAMED failure — the caller prints the name, and no file is
+ * written.
+ */
+export function findMarkdownRegion(source, table, { what = table } = {}) {
+    const { begin, end } = markdownMarkers(table);
+    const lines = source.split('\n');
+    const begins = [];
+    const ends = [];
+    lines.forEach((l, i) => {
+        if (l.trim() === begin) begins.push(i);
+        if (l.trim() === end) ends.push(i);
+    });
+    const fail = (why) => { throw new Error(`markdown region ${what}: ${why}`); };
+    if (begins.length === 0) fail(`the BEGIN marker is MISSING — the file must carry\n  ${begin}`);
+    if (ends.length === 0) fail(`the END marker is MISSING — the file must carry\n  ${end}`);
+    if (begins.length > 1) fail(`the BEGIN marker appears ${begins.length} TIMES `
+        + `(lines ${begins.map((i) => i + 1).join(', ')}) — exactly one region per table`);
+    if (ends.length > 1) fail(`the END marker appears ${ends.length} TIMES `
+        + `(lines ${ends.map((i) => i + 1).join(', ')}) — exactly one region per table`);
+    if (ends[0] < begins[0]) fail(`the END marker (line ${ends[0] + 1}) comes BEFORE the `
+        + `BEGIN marker (line ${begins[0] + 1})`);
+    return {
+        beginLine: begins[0] + 1,
+        endLine: ends[0] + 1,
+        /** The body BETWEEN the markers, with the blank lines the markers'
+         *  own formatting adds stripped from both ends. */
+        body: lines.slice(begins[0] + 1, ends[0]).join('\n').replace(/^\n+|\n+$/g, ''),
+    };
+}
+
+/** The whole file with `body` standing between the markers. Everything outside
+ *  them is returned byte-for-byte. */
+export function spliceMarkdownRegion(source, table, body, { what = table } = {}) {
+    const region = findMarkdownRegion(source, table, { what });
+    const lines = source.split('\n');
+    return [
+        ...lines.slice(0, region.beginLine),
+        '',
+        ...String(body).replace(/^\n+|\n+$/g, '').split('\n'),
+        '',
+        ...lines.slice(region.endLine - 1),
+    ].join('\n');
+}

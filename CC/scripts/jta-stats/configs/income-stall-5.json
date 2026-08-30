@@ -1,0 +1,11 @@
+{
+  "name": "income-stall-5",
+  "options": {
+    "modOverrides": {
+      "auto_prestige_stall_resets": 5
+    },
+    "maxRuns": 1000,
+    "runToBudget": true,
+    "checkpointEvery": 50
+  }
+}

@@ -5,9 +5,18 @@ export default defineConfig({
   testDir: './test_json/e2e',
 
   // Timeout for each test (in milliseconds)
-  // Default is 300s (5 minutes) to accommodate games with many events (e.g., Yu-Gi-Oh! 2006).
+  // Default is 900s (15 minutes) to accommodate games with many events (e.g.,
+  // Yu-Gi-Oh! 2006) and, since arc D2, in-app legs that drive a substrate's
+  // game loop in REAL TIME. The omsi bridge steps its fork at 50 ticks/s of
+  // wall clock, so a single ~350-mana fork loop is ~7 seconds and a bot walk
+  // is a chain of them separated by host loop resets — `omsi-bot-*` costs
+  // minutes by construction, not because anything is stalling.
+  //
+  // This is a CEILING, not a cost: a suite that finishes in 90s still
+  // finishes in 90s. It was raised from 300s when the whole test-substrates
+  // run (one Playwright test wrapping every in-app leg) began to exceed it.
   // Use TEST_TIMEOUT env var to override, or pass --timeout flag to playwright.
-  timeout: parseInt(process.env.TEST_TIMEOUT) || 300000,
+  timeout: parseInt(process.env.TEST_TIMEOUT) || 900000,
 
   // Expectations timeout (how long to wait for expect() conditions to be met)
   expect: {
@@ -73,8 +82,16 @@ export default defineConfig({
   //   },
   // ],
 
-  /* Folder for test artifacts such as screenshots, videos, traces, etc. */
-  // outputDir: 'test-results/',
+  /* Folder for test artifacts such as screenshots, videos, traces, etc.
+   * Playwright CLEARS this directory at the start of every run. It must
+   * therefore NOT be the bare `test-results/`, because the in-app suite
+   * writes its per-run JSON to `test-results/in-app-tests/` — with the
+   * default, every run wiped the previous runs' results and left only
+   * the newest, so run-to-run comparison was impossible (documented as
+   * known issue #9 in CC/cloud-environment-issues.md). Scoping the
+   * cleanup to a subdirectory keeps Playwright's own artifact hygiene
+   * while leaving sibling directories alone. */
+  outputDir: 'test-results/playwright',
 
   /* Run your local dev server before starting the tests */
   webServer: {

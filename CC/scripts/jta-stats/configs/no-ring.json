@@ -1,0 +1,8 @@
+{
+  "name": "no-ring",
+  "options": {
+    "modOverrides": {
+      "auto_ring": false
+    }
+  }
+}

@@ -54,11 +54,26 @@ vi.mock('./index.js', () => ({
 
 // loopStateSingleton.clearQueue is called by the legacy rebuild branch
 // but isn't the unit under test here. Stub it so we can observe whether
-// it ran without booting the real loop state machinery.
+// it ran without booting the real loop state machinery. The M3b strict
+// gate (evaluateActionGate) is stubbed with a settable verdict; its own
+// decision matrix is unit-tested in loopGate.test.js against the real
+// LoopState — here we test how the handlers ROUTE on each verdict class.
 const loopStateCalls = [];
+const gateCalls = [];
+const observeCalls = [];
+// Default: gate out of scope (AP-native region) — the legacy clickToQueue
+// contract applies unchanged.
+let mockGateVerdict = { allowed: true, reason: 'apNative' };
 vi.mock('./loopStateSingleton.js', () => ({
   default: {
     clearQueue: () => loopStateCalls.push('clearQueue'),
+    evaluateActionGate: (args) => {
+      gateCalls.push(args);
+      return mockGateVerdict;
+    },
+    observeParkedLiveAction: (action) => observeCalls.push(action),
+    noteLocationChecked: () => {},
+    _handleBotWake_locationCheck: () => {},
   },
 }));
 
@@ -80,6 +95,7 @@ const {
   initializeLoopEvents,
   handleUserExitClickedForLoops,
   handleUserLocationCheckForLoops,
+  handleLoopExploreCompletedForLoops,
   _testOnly_resetLoopEvents,
 } = await import('./loopEvents.js');
 
@@ -117,15 +133,19 @@ beforeEach(() => {
   dispatcherCalls.length = 0;
   gameStateCalls.length = 0;
   loopStateCalls.length = 0;
+  gateCalls.length = 0;
+  observeCalls.length = 0;
+  mockGateVerdict = { allowed: true, reason: 'apNative' };
   stateManagerStaticData.regions.clear();
   pathFinderResults.value = null;
   pathState = [];
   currentRegionValue = null;
   bus = makeEventBus();
   initializeLoopEvents(bus);
-  // Default for the test bed: loop mode on, clickToQueue 'off' (the
-  // default — clicks pass through). Describe blocks below opt into
-  // 'append' / 'rebuildPath' as needed.
+  // Default for the test bed: loop mode on, clickToQueue 'off', gate
+  // out of scope (AP-native) — clicks pass through, the legacy
+  // contract. Describe blocks below opt into 'append' / 'rebuildPath'
+  // and gate verdicts as needed.
   mockLoopModeActive = true;
 });
 
@@ -425,6 +445,168 @@ describe('loopEvents — rebuild path (clickToQueue rebuildPath, advanced legacy
       );
       expect(propagations).toHaveLength(1);
       expect(propagations[0].opts).toEqual({ direction: 'up' });
+    });
+  });
+});
+
+describe('loopEvents — M3b strict action gate routing', () => {
+  function propagationsOf(eventName) {
+    return dispatcherCalls.filter(
+      (c) => c.method === 'publishToNextModule' && c.eventName === eventName,
+    );
+  }
+  function ignoredEvents() {
+    return bus.published.filter((p) => p.name === 'loops:clickIgnored');
+  }
+
+  it('blocked verdict + clickToQueue off → locationCheck is swallowed with feedback', () => {
+    mockGateVerdict = { allowed: false, reason: 'emptyQueue', expectedRegion: null };
+
+    handleUserLocationCheckForLoops({
+      locationName: 'My Location',
+      regionName: 'region_0_0',
+    });
+
+    expect(propagationsOf('user:locationCheck')).toHaveLength(0);
+    expect(gameStateCalls).toEqual([]);
+    const ignored = ignoredEvents();
+    expect(ignored).toHaveLength(1);
+    expect(ignored[0].data).toMatchObject({
+      kind: 'location',
+      regionName: 'region_0_0',
+      reason: 'emptyQueue',
+    });
+  });
+
+  it('blocked verdict + clickToQueue append → the click still AUTHORS (planning is never gated)', () => {
+    bus.publish('loopUI:clickToQueueChanged', { mode: 'append' });
+    mockGateVerdict = { allowed: false, reason: 'notStarted', expectedRegion: null };
+    setQueueEndRegion('region_0_0');
+
+    handleUserLocationCheckForLoops({
+      locationName: 'My Location',
+      regionName: 'region_0_0',
+    });
+
+    expect(gameStateCalls).toEqual([
+      { method: 'addLocationCheck', loc: 'My Location', region: 'region_0_0' },
+    ]);
+    expect(propagationsOf('user:locationCheck')).toHaveLength(0);
+  });
+
+  it('parkedLivePlay verdict → observes the action (charge/capture) and passes it through', () => {
+    mockGateVerdict = { allowed: true, reason: 'parkedLivePlay' };
+
+    handleUserLocationCheckForLoops({
+      locationName: 'My Location',
+      regionName: 'region_0_0',
+    });
+
+    expect(observeCalls).toEqual([
+      { type: 'locationCheck', locationName: 'My Location', regionName: 'region_0_0' },
+    ]);
+    expect(propagationsOf('user:locationCheck')).toHaveLength(1);
+    expect(ignoredEvents()).toEqual([]);
+  });
+
+  it('exempt verdict (planningSource / queueExecution) → passes through without observation', () => {
+    mockGateVerdict = { allowed: true, reason: 'queueExecution' };
+
+    handleUserLocationCheckForLoops({
+      locationName: 'My Location',
+      regionName: 'region_0_0',
+    });
+
+    expect(observeCalls).toEqual([]);
+    expect(propagationsOf('user:locationCheck')).toHaveLength(1);
+  });
+
+  it('fromLoop events never reach the gate at all', () => {
+    mockGateVerdict = { allowed: false, reason: 'emptyQueue' };
+
+    handleUserLocationCheckForLoops({
+      locationName: 'My Location',
+      regionName: 'region_0_0',
+      fromLoop: true,
+    });
+
+    expect(gateCalls).toEqual([]);
+    expect(propagationsOf('user:locationCheck')).toHaveLength(1);
+  });
+
+  it('blocked verdict + clickToQueue off → exitClicked is swallowed with feedback', () => {
+    mockGateVerdict = { allowed: false, reason: 'hardPause', expectedRegion: 'region_A' };
+
+    handleUserExitClickedForLoops({
+      exitName: 'east',
+      sourceRegion: 'region_0_0',
+      destinationRegion: 'region_1_0',
+      isDiscovered: true,
+    });
+
+    expect(propagationsOf('user:exitClicked')).toHaveLength(0);
+    const ignored = ignoredEvents();
+    expect(ignored).toHaveLength(1);
+    expect(ignored[0].data).toMatchObject({
+      kind: 'exit',
+      regionName: 'region_0_0',
+      reason: 'hardPause',
+      expectedRegion: 'region_A',
+    });
+  });
+
+  it('parkedLivePlay verdict → exitClicked passes through (the move performs)', () => {
+    mockGateVerdict = { allowed: true, reason: 'parkedLivePlay' };
+
+    handleUserExitClickedForLoops({
+      exitName: 'east',
+      sourceRegion: 'region_0_0',
+      destinationRegion: 'region_1_0',
+      isDiscovered: true,
+    });
+
+    expect(propagationsOf('user:exitClicked')).toHaveLength(1);
+  });
+
+  describe('handleLoopExploreCompletedForLoops (new explore receiver)', () => {
+    it('loop mode off → propagates to discovery untouched', () => {
+      mockLoopModeActive = false;
+      handleLoopExploreCompletedForLoops({ regionName: 'region_0_0' });
+      expect(gateCalls).toEqual([]);
+      expect(propagationsOf('loop:exploreCompleted')).toHaveLength(1);
+    });
+
+    it('fromLoop (queue execution) → propagates without gating or observation', () => {
+      mockGateVerdict = { allowed: false, reason: 'emptyQueue' };
+      handleLoopExploreCompletedForLoops({ regionName: 'region_0_0', fromLoop: true });
+      expect(gateCalls).toEqual([]);
+      expect(observeCalls).toEqual([]);
+      expect(propagationsOf('loop:exploreCompleted')).toHaveLength(1);
+    });
+
+    it('parkedLivePlay → observes (charge + capture) and propagates to discovery', () => {
+      mockGateVerdict = { allowed: true, reason: 'parkedLivePlay' };
+      handleLoopExploreCompletedForLoops({ regionName: 'region_0_0' });
+      expect(observeCalls).toEqual([
+        { type: 'explore', regionName: 'region_0_0' },
+      ]);
+      expect(propagationsOf('loop:exploreCompleted')).toHaveLength(1);
+    });
+
+    it('blocked → swallowed with feedback; discovery never reveals anything', () => {
+      mockGateVerdict = { allowed: false, reason: 'notStarted', expectedRegion: null };
+      handleLoopExploreCompletedForLoops({ regionName: 'region_0_0' });
+      expect(propagationsOf('loop:exploreCompleted')).toHaveLength(0);
+      const ignored = ignoredEvents();
+      expect(ignored).toHaveLength(1);
+      expect(ignored[0].data).toMatchObject({ kind: 'explore', reason: 'notStarted' });
+    });
+
+    it('out-of-scope substrate (not mode-integrated) → propagates untouched', () => {
+      mockGateVerdict = { allowed: true, reason: 'substrateNotGated' };
+      handleLoopExploreCompletedForLoops({ regionName: 'jta_zone_1' });
+      expect(observeCalls).toEqual([]);
+      expect(propagationsOf('loop:exploreCompleted')).toHaveLength(1);
     });
   });
 });

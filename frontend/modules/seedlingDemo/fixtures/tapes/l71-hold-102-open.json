@@ -1,0 +1,29 @@
+{
+  "tape_version": 3,
+  "game": "seedling",
+  "name": "l71-hold-102-open",
+  "description": "THE HOLD KNIFE-EDGE, open half. Identical to l71-hold-101-shut in every field but tick_count, which is 102 rather than 101. The player is pinned on lock@112,160's south face at y = 178.5 for the whole of the first 101 ticks while their box goes on pressing button@112,176 below them; the 101st tick is the one on which Lock.turnOff() runs, and the 102nd is the first on which the player can move into where the lock stood. The game must report a y BELOW 178.5. One tick of tape is the whole difference between the two recordings, which is what makes them a statement about the 101-tick fade rather than about the geometry.",
+  "boot": {
+    "level": 71,
+    "x": 112,
+    "y": 176
+  },
+  "noclip": false,
+  "noDamage": true,
+  "noHazards": [
+    "water",
+    "lava",
+    "ice",
+    "waterfall"
+  ],
+  "grants": [],
+  "persistence": [],
+  "tick_count": 102,
+  "inputs": [
+    {
+      "key": "up",
+      "from": 1,
+      "to": 102
+    }
+  ]
+}

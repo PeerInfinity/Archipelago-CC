@@ -39,12 +39,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           submodules: recursive
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6.2.0
         with:
           python-version: '~3.12.7'
           check-latest: true
@@ -104,24 +104,19 @@ jobs:
 
     steps:
       - name: Checkout results branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           ref: ${{ inputs.test_mode == 'canonical' && 'test-results-world-generator-canonical' || inputs.test_mode == 'random' && 'test-results-world-generator-random' || 'test-results-world-generator' }}
           submodules: recursive
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6.2.0
         with:
           python-version: '~3.12.7'
           check-latest: true
 
-      - name: Install system dependencies
-        run: |
-          sudo apt update
-          sudo apt -y install python3-gi libgirepository1.0-dev
-
       - name: Cache Python virtual environment
-        uses: actions/cache@v4
+        uses: actions/cache@v6.1.0
         id: cache-venv
         with:
           path: .venv
@@ -153,7 +148,7 @@ jobs:
           python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
 
       - name: Cache Node.js dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v6.1.0
         id: cache-node
         with:
           path: node_modules
@@ -164,7 +159,7 @@ jobs:
         run: npm install
 
       - name: Cache Playwright browsers
-        uses: actions/cache@v4
+        uses: actions/cache@v6.1.0
         id: cache-playwright
         with:
           path: ~/.cache/ms-playwright
@@ -199,7 +194,7 @@ jobs:
 
       - name: Upload test results
         if: ${{ !cancelled() && (!inputs.debug_mode || matrix.split_num == 1) }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.0
         with:
           name: canonical-results-split-${{ matrix.split_num }}
           path: scripts/output/world-generator/test-results-canonical-split-${{ matrix.split_num }}.json
@@ -224,24 +219,19 @@ jobs:
 
     steps:
       - name: Checkout results branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           ref: ${{ inputs.test_mode == 'canonical' && 'test-results-world-generator-canonical' || inputs.test_mode == 'random' && 'test-results-world-generator-random' || 'test-results-world-generator' }}
           submodules: recursive
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6.2.0
         with:
           python-version: '~3.12.7'
           check-latest: true
 
-      - name: Install system dependencies
-        run: |
-          sudo apt update
-          sudo apt -y install python3-gi libgirepository1.0-dev
-
       - name: Cache Python virtual environment
-        uses: actions/cache@v4
+        uses: actions/cache@v6.1.0
         id: cache-venv
         with:
           path: .venv
@@ -273,7 +263,7 @@ jobs:
           python -c "from Options import generate_yaml_templates; generate_yaml_templates('Players/Templates')"
 
       - name: Cache Node.js dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v6.1.0
         id: cache-node
         with:
           path: node_modules
@@ -284,7 +274,7 @@ jobs:
         run: npm install
 
       - name: Cache Playwright browsers
-        uses: actions/cache@v4
+        uses: actions/cache@v6.1.0
         id: cache-playwright
         with:
           path: ~/.cache/ms-playwright
@@ -318,7 +308,7 @@ jobs:
 
       - name: Upload test results
         if: ${{ !cancelled() && (!inputs.debug_mode || matrix.split_num == 1) }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.0
         with:
           name: random-results-split-${{ matrix.split_num }}
           path: scripts/output/world-generator/test-results-random-split-${{ matrix.split_num }}.json
@@ -333,12 +323,12 @@ jobs:
 
     steps:
       - name: Checkout results branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           ref: ${{ inputs.test_mode == 'canonical' && 'test-results-world-generator-canonical' || inputs.test_mode == 'random' && 'test-results-world-generator-random' || 'test-results-world-generator' }}
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6.2.0
         with:
           python-version: '~3.12.7'
           check-latest: true
@@ -349,7 +339,7 @@ jobs:
           pip install pyyaml
 
       - name: Download all test result artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8.0.1
         with:
           path: artifacts
 
@@ -420,23 +410,18 @@ jobs:
 
     steps:
       - name: Checkout results branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           ref: ${{ inputs.test_mode == 'canonical' && 'test-results-world-generator-canonical' || inputs.test_mode == 'random' && 'test-results-world-generator-random' || 'test-results-world-generator' }}
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6.2.0
         with:
           python-version: '~3.12.7'
           check-latest: true
 
-      - name: Install system dependencies
-        run: |
-          sudo apt update
-          sudo apt -y install python3-gi libgirepository1.0-dev
-
       - name: Cache Python virtual environment
-        uses: actions/cache@v4
+        uses: actions/cache@v6.1.0
         id: cache-venv
         with:
           path: .venv

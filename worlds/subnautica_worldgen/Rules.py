@@ -9,7 +9,7 @@ import math
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, CanReachLocation, Compare, Has, HasAll, HelperCall
+from ._ext import True_, False_, And, CanReachLocation, Compare, Has, HasAll, HelperCall
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState

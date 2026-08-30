@@ -9,9 +9,47 @@
  *     sphere (▼), assert the editor reflects the move and the pipeline
  *     reset to step 1, then Run all and assert a terminal result.
  *
- * Prereq: dev server on :8000. Run: node scripts/procgen/verify-sphere-steps-ui.mjs
+ *   Phase K — RECORDED EDITS (editor-integration B-d): the gestures above are
+ *     ops on the envelope, so the panel shows a history with a count and an
+ *     Undo. Asserts the count grows by one per gesture, that Undo shrinks it
+ *     and names what it undid, and that undoing everything returns the world
+ *     the seed produces (the map's region signature) with the oracle clean.
+ *
+ * Phase H is a PIN rather than a variation row (editor-integration B-b):
+ * measured, `keep` mode's contract pins this region against all eight settings
+ * rungs the phase walks, so it asserts THAT and reds if one ever moves. The
+ * varying regenerate lives in verify-region-step-editing's Phase F.
+ *
+ * Phase G′ (editor-integration B-b): the bounce editor's own UNDO — two ops in
+ * the panel, two undos, a Save, and the region that reaches the grid is the
+ * pre-edit one, with G's oracle still clean.
+ *
+ * Prereq: a dev server serving THIS worktree. Defaults to :8000; point it
+ * elsewhere with PROCGEN_UI_HOST (e.g. PROCGEN_UI_HOST=http://localhost:8129)
+ * or --host=<url>, so a session that does not own :8000 can run it.
+ * Run: node scripts/procgen/verify-sphere-steps-ui.mjs
  */
 import { chromium } from 'playwright';
+import { takeBoxLockOrExit } from './boxLock.js';
+
+/**
+ * ⛓ R9 P3b, ⚖ 54 (7); ⚖ 62 at 12j — **THE BOX LOCK.** This instrument drives
+ * the machine (browser), so it takes the box before it starts and refuses BY
+ * NAME if another instrument holds it — replacing a hand-relayed "BOX BUSY".
+ * A run UNDER a holder (`gates.mjs`, `standing-values`,
+ * `rerecord-seedling-campaign`) recognises the holder's token and passes
+ * through. `--wait-for-box=<sec>` queues instead of refusing.
+ */
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
+takeBoxLockOrExit({ name: 'verify-sphere-steps-ui.mjs', kind: 'browser' });
+
+// Derived host: --host=<url> wins, then PROCGEN_UI_HOST, then the :8000 default.
+const HOST = (process.argv.find((a) => a.startsWith('--host='))?.slice(7)
+    ?? process.env.PROCGEN_UI_HOST
+    ?? 'http://localhost:8000').replace(/\/$/, '');
 
 const SEED = 1;
 const ITEM_POOL = {
@@ -37,7 +75,7 @@ await page.addInitScript(({ params, items }) => {
     }));
 }, { params: PANEL_PARAMS, items: ITEM_POOL });
 
-await page.goto('http://localhost:8000/frontend/');
+await page.goto(`${HOST}/frontend/`);
 await page.waitForTimeout(8000);
 
 const activated = await page.evaluate(() => {
@@ -333,6 +371,20 @@ if (!terminalE) throw new Error(`2b edit Run all produced no terminal result: ${
 console.log('PHASE E OK: 2b topology edit flowed through to a terminal result');
 
 // ── helpers for the 3 editing phases ────────────────────────────────
+// The map's signature, read the only way the page offers one: a hash of the
+// composite canvas the panel just drew. It moves for a placement change AND for
+// a re-rolled interior, and needs no new instrumentation on the panel.
+// ⚠ Phases G′ and K both read it, so it lives with the helpers rather than in
+// the phase that happened to need it first.
+const mapSig = () => page.evaluate(() => {
+    const c = document.querySelector('.procgen-pipeline-canvas');
+    if (!c) return null;
+    const url = c.toDataURL();
+    let h = 0;
+    for (let i = 0; i < url.length; i += 1) h = (h * 31 + url.charCodeAt(i)) | 0;
+    return `${url.length}:${h}`;
+});
+
 function goTab(title) {
     return page.evaluate((t) => {
         const x = [...document.querySelectorAll('.lm_tab')].find((e) => e.title === t);
@@ -415,6 +467,152 @@ if (!gMsg.includes('Sphere plan realised')) {
 }
 console.log('PHASE G OK: Edit ▸ → pipeline save → 4 kept the oracle');
 
+// ── Phase G′: the editor's own UNDO (editor-integration B-b) ────────────
+//
+// ⛓⛓⛓ The bounce editor's eight mutators are ops on an `editCore` session
+// now, so UNDO is the fold over a shorter list. This phase asks the whole
+// chain in the REAL panel: two edits, two undos, then a Save — and the region
+// that reaches the grid must be the one that was there before Edit ▸.
+//
+// ⛔ The map signature alone would be a vacuous row (nothing moved, so of
+// course it came back). The editor's own counts readout is the positive
+// control: it must MOVE on the two ops and RETURN on the two undos, inside the
+// panel, before the Save is worth anything.
+const breCounts = () => page.evaluate(() =>
+    document.querySelector('.bounce-region-editor-panel .bre-counts')?.textContent ?? '');
+const breUndoLabel = () => page.evaluate(() => {
+    const b = document.querySelector('.bounce-region-editor-panel .bre-undo');
+    return b ? `${b.textContent.trim()}${b.disabled ? ' [disabled]' : ''}` : '(absent)';
+});
+const breClick = (label) => page.evaluate((t) => {
+    const b = [...document.querySelectorAll('.bounce-region-editor-panel .bre-btn')]
+        .find((e) => e.textContent.trim().startsWith(t));
+    if (!b || b.disabled) return false;
+    b.click();
+    return true;
+}, label);
+
+const sigBeforeEdit = await mapSig();
+const openedGp = await page.evaluate(() => {
+    const b = [...document.querySelectorAll('.procgen-pipeline-panel button')]
+        .find((e) => e.textContent.trim() === 'Edit ▸');
+    if (!b) return false;
+    b.click();
+    return true;
+});
+if (!openedGp) throw new Error("G': no Edit ▸ button found");
+await page.waitForTimeout(1200);
+
+const gpZero = await breUndoLabel();
+if (!/^↶ Undo \(0 edit\(s\)\) \[disabled\]$/.test(gpZero)) {
+    throw new Error(`G': a fresh session should offer a DISABLED undo of 0, got "${gpZero}"`);
+}
+const countsBefore = await breCounts();
+
+for (const n of [1, 2]) {
+    // eslint-disable-next-line no-await-in-loop
+    if (!(await breClick('+ platform'))) throw new Error(`G': + platform #${n} did not click`);
+    // eslint-disable-next-line no-await-in-loop
+    await page.waitForTimeout(250);
+}
+const gpTwo = await breUndoLabel();
+if (!/^↶ Undo \(2 edit\(s\)\)$/.test(gpTwo)) {
+    throw new Error(`G': two ops should read as 2 edits on an ENABLED undo, got "${gpTwo}"`);
+}
+const countsEdited = await breCounts();
+if (countsEdited === countsBefore) {
+    throw new Error(`G': the two ops moved NOTHING — the row would be vacuous ("${countsBefore}")`);
+}
+console.log(`PHASE G': 2 ops recorded — "${countsBefore}" → "${countsEdited}"`);
+
+// ⛓⛓ **Ctrl+Z INSIDE A NUMBER INPUT IS NOT AN UNDO.** The sidebar is built
+// out of number fields, and a browser's own undo inside one is what a person
+// means by ⌘Z while their cursor is in it. The key handler lives on the panel
+// ROOT and the event bubbles, so the guard is the only thing between the two.
+const breKey = (where) => page.evaluate((w) => {
+    const root = document.querySelector('.bounce-region-editor-panel');
+    if (!root) return 'no panel';
+    const el = w === 'input'
+        ? root.querySelector('input[type="number"]')
+        : root;
+    if (!el) return 'no target';
+    if (w !== 'input') el.focus();
+    el.dispatchEvent(new KeyboardEvent('keydown', {
+        key: 'z', ctrlKey: true, bubbles: true, cancelable: true,
+    }));
+    return 'sent';
+}, where);
+
+if ((await breKey('input')) !== 'sent') throw new Error("G': no number input to type Ctrl+Z into");
+await page.waitForTimeout(250);
+const gpInInput = await breUndoLabel();
+if (!/^↶ Undo \(2 edit\(s\)\)$/.test(gpInInput)) {
+    throw new Error(`G': Ctrl+Z inside a number input UNDID a document edit — "${gpInInput}"`);
+}
+if ((await breKey('root')) !== 'sent') throw new Error("G': could not send Ctrl+Z to the root");
+await page.waitForTimeout(250);
+const gpAfterKey = await breUndoLabel();
+if (!/^↶ Undo \(1 edit\(s\)\)$/.test(gpAfterKey)) {
+    throw new Error(`G': Ctrl+Z on the focused panel root did not undo — "${gpAfterKey}"`);
+}
+console.log("PHASE G': Ctrl+Z is refused inside a number input and honoured on the root");
+
+for (const n of [1]) {
+    // eslint-disable-next-line no-await-in-loop
+    if (!(await breClick('↶ Undo'))) throw new Error(`G': undo #${n} did not click`);
+    // eslint-disable-next-line no-await-in-loop
+    await page.waitForTimeout(250);
+}
+const gpBack = await breUndoLabel();
+if (!/^↶ Undo \(0 edit\(s\)\) \[disabled\]$/.test(gpBack)) {
+    throw new Error(`G': undo ×2 should empty the list, got "${gpBack}"`);
+}
+const countsBack = await breCounts();
+if (countsBack !== countsBefore) {
+    throw new Error(`G': undo ×2 did not restore the level — "${countsBefore}" vs "${countsBack}"`);
+}
+// ⛓ **NO "selected: pN" FOR A PLATFORM THE LEVEL DOES NOT HOLD.** Each
+// `+ platform` SELECTS the platform it made (the `value` the session forwards),
+// so after undoing both, the sidebar must be back at its hint.
+//
+// ⚠ **THIS ROW DOES NOT GATE `_resolveSelection`, AND SAYING SO IS THE POINT.**
+// The mutant that made that method a no-op came back GREEN: every reader of
+// `_selectedId` resolves by `find`, so a stale id renders exactly as no
+// selection. What this row gates is the SIDEBAR's fallback; the guard itself is
+// prophylactic and the panel's own docblock says which hazard it removes.
+const breSelection = () => page.evaluate(() => [...document
+    .querySelectorAll('.bounce-region-editor-panel .bre-edit-block')]
+    .map((b) => b.textContent).join(' | '));
+const gpSel = await breSelection();
+if (/selected: /.test(gpSel)) {
+    throw new Error(`G': _selectedId survived the undo of its own add-platform — "${gpSel}"`);
+}
+if (!/Click a platform to edit it\./.test(gpSel)) {
+    throw new Error(`G': the platform block did not fall back to its hint — "${gpSel}"`);
+}
+
+if (!(await breClick('Save'))) throw new Error("G': no Save button in the editor");
+await page.waitForTimeout(700);
+const gpSaveMsg = await page.evaluate(() =>
+    document.querySelector('.bounce-region-editor-panel .bre-message')?.textContent ?? '');
+if (!gpSaveMsg.includes('back to the pipeline')) {
+    throw new Error(`G': editor save did not write back: "${gpSaveMsg}"`);
+}
+await goTab('Procgen Pipeline');
+await page.waitForTimeout(800);
+await clickBtn('Run 4 Compile');
+await page.waitForTimeout(2000);
+const gpMsg = await message();
+if (!gpMsg.includes('Sphere plan realised')) {
+    throw new Error(`G': oracle failed after undo ×2 + save + 4: ${gpMsg}`);
+}
+const sigAfterUndo = await mapSig();
+if (sigBeforeEdit && sigAfterUndo && sigBeforeEdit !== sigAfterUndo) {
+    throw new Error("G': the region that reached the grid is NOT the pre-edit region");
+}
+console.log("PHASE G' OK: 2 ops → undo ×2 → save → the pre-edit region reached the grid, "
+    + 'oracle clean');
+
 // ── Phase H: 3 Edit ▸ → editor Regenerate (keep) → Save → 4 (oracle holds) ─
 const openedH = await page.evaluate(() => {
     const b = [...document.querySelectorAll('.procgen-pipeline-panel button')]
@@ -435,29 +633,92 @@ const expanded = await page.evaluate(() => {
 });
 if (!expanded) throw new Error('H: "Region generation" section header not found');
 await page.waitForTimeout(300);
-const seedSet = await page.evaluate(() => {
+/**
+ * ⛓⛓⛓ **WHAT THIS ROW ACTUALLY MEASURES** (editor-integration B-b).
+ *
+ * ⛔ **IT WAS VACUOUS.** It bumped the seed to one value and asserted the
+ * oracle survived the regenerate — over a regenerate that produced a level
+ * IDENTICAL to the one already loaded. Invisible for as long as the panel
+ * printed *"Regenerated"* unconditionally; the editor's session prints
+ * *"No change"* now (an op that moves no bytes is not an edit, through the
+ * adapter's own `equal`), which is what exposed it.
+ *
+ * ⛔⛔ **AND IT CANNOT BE FIXED BY PICKING A BETTER KNOB — MEASURED.** Eight
+ * rungs of the panel's own settings (five seeds, two decor chances, a jitter)
+ * ALL leave the level unchanged for this region. The reason is `keep` mode:
+ * the generator is handed the region's real `exitSpecs`/`locationSpecs`, whose
+ * requirements constrain `generateLevelFromSpecs`' proposal loop, and a
+ * contract this tight admits ONE proposal shape. So the browser row asserts
+ * what is true here — **the contract PINS the level against every knob the
+ * panel offers** — and names the ladder it walked, rather than asserting a
+ * variation it cannot produce.
+ *
+ * ⇒ THE VARYING REGENERATE IS `verify-region-step-editing.mjs`'s PHASE F,
+ * which regenerates a LESS constrained region and carries its own non-vacuity
+ * assertion (`platSig(after) !== sig0`). This row is the browser half: the
+ * panel's Regenerate ▸ Save path, end to end, with the oracle at the end of it.
+ */
+const setNumField = (label, value) => page.evaluate(({ l, v }) => {
     const row = [...document.querySelectorAll('.bounce-region-editor-panel .bre-field')]
-        .find((r) => r.querySelector('span')?.textContent === 'seed');
+        .find((r) => r.querySelector('span')?.textContent === l);
     const inp = row?.querySelector('input');
     if (!inp) return false;
-    inp.value = '24680';
+    inp.value = String(v);
     inp.dispatchEvent(new Event('change', { bubbles: true }));
     return true;
-});
-if (!seedSet) throw new Error('H: seed field not found in settings');
-const regen = await page.evaluate(() => {
-    const b = [...document.querySelectorAll('.bounce-region-editor-panel .bre-btn')]
-        .find((e) => e.textContent.trim().startsWith('Regenerate'));
-    if (!b) return false;
-    b.click();
-    return true;
-});
-if (!regen) throw new Error('H: no Regenerate button');
-await page.waitForTimeout(800);
-const regenMsg = await page.evaluate(() =>
-    document.querySelector('.bounce-region-editor-panel .bre-message')?.textContent ?? '');
-if (!regenMsg.includes('Regenerated')) throw new Error(`H: regenerate did not run: "${regenMsg}"`);
-console.log('PHASE H: regenerated geometry in the editor —', regenMsg);
+}, { l: label, v: value });
+
+const LADDER = [
+    ['seed', 24680], ['seed', 3], ['seed', 7], ['seed', 101], ['seed', 999983],
+    ['decor jetpack', 0.8], ['decor fork', 0.8], ['jitter', 80],
+];
+const hCountsBefore = await breCounts();
+let regenMsg = '';
+const hMoved = [];
+let hRan = 0;
+for (const [label, value] of LADDER) {
+    // eslint-disable-next-line no-await-in-loop
+    if (!(await setNumField(label, value))) throw new Error(`H: no "${label}" field in settings`);
+    // eslint-disable-next-line no-await-in-loop
+    const clicked = await page.evaluate(() => {
+        const b = [...document.querySelectorAll('.bounce-region-editor-panel .bre-btn')]
+            .find((e) => e.textContent.trim().startsWith('Regenerate'));
+        if (!b) return false;
+        b.click();
+        return true;
+    });
+    if (!clicked) throw new Error('H: no Regenerate button');
+    // eslint-disable-next-line no-await-in-loop
+    await page.waitForTimeout(800);
+    // eslint-disable-next-line no-await-in-loop
+    regenMsg = await page.evaluate(() =>
+        document.querySelector('.bounce-region-editor-panel .bre-message')?.textContent ?? '');
+    if (/^Regenerate failed/.test(regenMsg)) continue;
+    if (!regenMsg.includes('Regenerated')) throw new Error(`H: regenerate did not run: "${regenMsg}"`);
+    hRan += 1;
+    if (!/^No change/.test(regenMsg)) hMoved.push(`${label}=${value}`);
+}
+if (hRan === 0) throw new Error(`H: no rung of the ladder even RAN the generator — "${regenMsg}"`);
+/**
+ * ⛔ **THE PIN.** Every rung that ran reported a no-op, and that is the claim.
+ * The day one of them moves the level this row REDS — and it should: the
+ * contract will have stopped pinning the region, which is exactly when "the
+ * oracle survived the regenerate" starts meaning something and this row wants
+ * re-measuring with the rung that moved it.
+ */
+if (hMoved.length) {
+    throw new Error(`H: the contract no longer PINS this region — [${hMoved.join(', ')}] moved `
+        + 'the level, where B-b measured all 8 rungs as no-ops. Re-measure this row: use the '
+        + 'rung that moved it and assert the counts readout changes, the way '
+        + "verify-region-step-editing's Phase F does.");
+}
+const hCountsAfter = await breCounts();
+if (hCountsAfter !== hCountsBefore) {
+    throw new Error(`H: the session reported ${hRan} no-ops but the level READ differently — `
+        + `"${hCountsBefore}" → "${hCountsAfter}"`);
+}
+console.log(`PHASE H: the keep-mode contract PINS this region — ${hRan}/${LADDER.length} `
+    + `settings rungs all no-ops ("${hCountsAfter}")`);
 await page.evaluate(() => {
     [...document.querySelectorAll('.bounce-region-editor-panel .bre-btn')]
         .find((e) => e.textContent.trim() === 'Save')?.click();
@@ -471,7 +732,8 @@ const hMsg = await message();
 if (!hMsg.includes('Sphere plan realised')) {
     throw new Error(`H: oracle failed after regenerate + save + 4: ${hMsg}`);
 }
-console.log('PHASE H OK: editor Regenerate (keep) → save → 4 kept the oracle');
+console.log('PHASE H OK: editor Regenerate (keep) → save → 4 kept the oracle '
+    + '(the VARYING regenerate is verify-region-step-editing Phase F)');
 
 // ── Phase I: composite-map mode radio renders + switches without error ──
 // (The two-click canvas gestures can't be driven headless — the GL panel
@@ -528,6 +790,67 @@ if (!jMsg.includes('Sphere plan realised')) {
     throw new Error(`J: oracle failed after substrate override + re-run: ${jMsg}`);
 }
 console.log('PHASE J OK: per-region substrate override (bounce→maze) re-realised + kept the oracle');
+
+// ── Phase K: the recorded edit history + Undo (editor-integration B-d) ──────
+// Every gesture above is now an OP on the envelope, not a mutate-and-forget.
+// The panel renders the list with a count and an Undo, and undoing everything
+// must return the world the seed produces — determinism is the guarantee.
+// ⚠ Phase J ends on "Run all (finish)", after which the panel's buttons stay
+// disabled while the run drains. Wait for Reset to come back rather than
+// assuming a fixed sleep is enough.
+for (let i = 0; i < 40; i += 1) {
+    // eslint-disable-next-line no-await-in-loop
+    const ready = await page.evaluate(() => [...document.querySelectorAll('.procgen-pipeline-panel button')]
+        .some((el) => el.textContent.trim() === 'Reset' && !el.disabled));
+    if (ready) break;
+    // eslint-disable-next-line no-await-in-loop
+    await page.waitForTimeout(500);
+}
+await stepToCompiled();
+
+const history = () => page.evaluate(() => ({
+    count: Number((document.querySelector('.procgen-pipeline-edit-count')?.textContent ?? '')
+        .replace(/\D+/g, '') || 0),
+    rows: [...document.querySelectorAll('.procgen-pipeline-edit-row')].map((r) => r.textContent),
+    hasUndo: !!document.querySelector('.procgen-pipeline-edit-undo'),
+}));
+const k0 = await history();
+if (k0.count !== 0) throw new Error(`K: expected an empty history, got ${k0.count}`);
+const sigClean = await mapSig();
+
+// One re-roll, through the panel's own button.
+await page.evaluate(() => {
+    const b = [...document.querySelectorAll('button')].find((x) => x.textContent.includes('Re-roll'));
+    b?.click();
+});
+await page.waitForTimeout(500);
+const k1 = await history();
+if (k1.count !== 1) throw new Error(`K: history did not record the re-roll (count ${k1.count})`);
+if (!k1.hasUndo) throw new Error('K: no Undo control after the first edit');
+if (!/Re-rolled/.test(k1.rows[0] ?? '')) throw new Error(`K: history row reads "${k1.rows[0]}"`);
+console.log(`PHASE K: the re-roll RECORDED — "${k1.rows[0]}"`);
+
+// Undo it and re-run: the map must come back to what the seed produces.
+await page.evaluate(() => {
+    document.querySelector('.procgen-pipeline-edit-undo')?.click();
+});
+await page.waitForTimeout(400);
+const kUndoMsg = await message();
+if (!kUndoMsg.startsWith('Undid:')) throw new Error(`K: undo message reads "${kUndoMsg}"`);
+const k2 = await history();
+if (k2.count !== 0) throw new Error(`K: history did not shrink on undo (count ${k2.count})`);
+await clickBtn('Run all (finish)');
+await page.waitForTimeout(2500);
+const kMsg = await message();
+if (!kMsg.includes('Sphere plan realised')) {
+    throw new Error(`K: oracle failed after undo + re-run: ${kMsg}`);
+}
+const sigBack = await mapSig();
+if (sigClean && sigBack && sigClean !== sigBack) {
+    throw new Error('K: undo did not return the never-edited map');
+}
+console.log('PHASE K OK: record → undo → re-run returns the never-edited world, oracle clean');
+
 
 const errors = logs.filter((l) => l.startsWith('[pageerror]'));
 if (errors.length > 0) {

@@ -100,27 +100,65 @@ Playthrough:
   Ruins Key
 }
 1: {
+  B.Scotch Pie Given: Instant Noodles
+  Candy 1: Spider Cider
+  Candy 2: Old Tutu
+  Candy 3: temy armor
   Candy 4: Snowdin Key
   Cider Sale: Punch Card
+  Donut Sale: Stained Apron
+  Ribbon Cracks: Torn Notebook
+  Toy Knife Edge: Burnt Pan
 }
 2: {
+  Bunny 1: Cloudy Glasses
   Bunny 2: Waterfall Key
+  Bunny 3: Toy Knife
   Bunny 4: Punch Card
+  Nicecream Snowdin: Legendary Hero
   Papyrus Date: Papyrus Date
+  Snowman: Nice Cream
 }
 3: {
+  Astro 1: Spider Donut
   Astro 2: Mettaton Plush
+  Card Reward: Heart Locket
+  Gerson 1: Butterscotch Pie
+  Gerson 2: Crab Apple
+  Gerson 3: Empty Gun
+  Gerson 4: Ballet Shoes
+  Grass Shoes: Starfait
+  Nicecream Waterfall: Snowman Piece
+  Quiche Bench: Tough Glove
+  TemmieShop 1: Astronaut Food
+  TemmieShop 2: 500G
+  TemmieShop 3: Astronaut Food
   Tutu Hidden: Hotland Key
   Undyne Date: Undyne Date
 }
 4: {
   Alphys Date: Alphys Date
+  Apron Hidden: Cinnamon Bun
+  Bratty Catty 1: Abandoned Quiche
   Bratty Catty 2: Core Key
+  Bratty Catty 3: Sea Tea
+  Bratty Catty 4: Bisicle
+  Burgerpants 1: Worn Dagger
+  Burgerpants 2: Spider Donut
   Burgerpants 3: Punch Card
   Burgerpants 4: Right Home Key
+  Noodles Fridge: 500G
+  Pan Hidden: Faded Ribbon
 }
 5: {
+  Left New Home Key: Face Steak
   Mettaton Plot: 1000G
+  Nicecream Punch Card: Starfait
+  Present Knife: Cowboy Hat
   Present Locket: Left Home Key
+  Right New Home Key: Manly Bandanna
   Trash Burger: 1000G
+}
+6: {
+  TemmieShop 4: Glamburger
 }

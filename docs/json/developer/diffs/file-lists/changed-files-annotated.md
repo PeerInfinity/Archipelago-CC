@@ -2,7 +2,7 @@
 
 Files modified from their upstream versions (commit `e6e0bc30`).
 
-## Root Directory (6 files)
+## Root Directory (7 files)
 
 - `.gitattributes`
 
@@ -30,19 +30,27 @@ Files modified from their upstream versions (commit `e6e0bc30`).
 
   Added `test_json` to pytest test discovery paths for fork-specific test modules.
 
+- `requirements.txt`
+
+  Relaxed the typing_extensions pin from `==4.15.0` to `>=4.15.0,<5`. CI's ModuleUpdate --force pip-installs every world's requirements file with --upgrade; zillion's `typing-extensions>=4.7,<5` upgraded past the exact core pin when 4.16.0 released, killing every unittests matrix job at setup.
+
 - `settings.py`
 
   Added `skip_required_files` global, `Group.__getattribute__` bypass for missing ROM paths, and early extraction from host.yaml `json_tools` section.
 
   [Diff](../diff-files/core-files.diff) | [Skip Required Files Proposal](../../proposals/skip-required-files-proposal.md)
 
-## `.github/workflows/` (2 files)
+## `.github/workflows/` (3 files)
 
 - `.github/workflows/codeql-analysis.yml`
 
   Added explicit `security-events`, `actions`, and `contents` permissions for safer fork operation.
 
   [Diff](../diff-files/config-files.diff)
+
+- `.github/workflows/scan-build.yml`
+
+  Added a `workflow_dispatch` trigger so the native-code static analysis can be run manually.
 
 - `.github/workflows/unittests.yml`
 
@@ -62,11 +70,7 @@ Files modified from their upstream versions (commit `e6e0bc30`).
 
   [Rule Builder Modifications](../rule-builder/rule-builder-modifications.md) | [Fork vs Upstream Comparison](../rule-builder/fork-vs-upstream-rule-builder.md)
 
-## `test/general/` (4 files)
-
-- `test/general/test_implemented.py`
-
-  Added 'The Messenger' and 'Overcooked! 2' to excluded_games in test_slot_data to prevent flaky fill failures caused by upstream worlds with tight access rules at certain random seeds.
+## `test/general/` (3 files)
 
 - `test/general/test_items.py`
 
@@ -190,4 +194,4 @@ Files modified from their upstream versions (commit `e6e0bc30`).
 
 ---
 
-**Total:** 28 changed files
+**Total:** 29 changed files

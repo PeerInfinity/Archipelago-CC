@@ -140,37 +140,63 @@ Playthrough:
 
 }
 1: {
+  Puzzle Hint Found: Brown Symbol: Sand Always Available in Ocean
   Puzzle Hint Found: Green Symbol: Key for Office
+  Puzzle Hint Found: Mailbox: Easier Lyre
   Puzzle Hint Found: Orange Symbol: Key for Underground Lake
   Puzzle Hint Found: Silver Symbol: Key for Shaman Room
   Puzzle Hint Found: Tan Symbol: Cloth Pot Bottom
+  Puzzle Hint Found: White Symbol: Crystal Always Available in Ocean
   Puzzle Solved Combination Lock: Key for Office Elevator
+  Puzzle Solved Gears: Wood Always Available in Pegasus Room
   Puzzle Solved Stone Henge: Key for Bedroom
 }
 2: {
+  Flashback Memory Obtained Egyptian Hieroglyphics Explained: Cloth Always Available in Egypt
+  Flashback Memory Obtained Museum Brochure: Easier Lyre
+  Flashback Memory Obtained Scrapbook: Heal
+  Flashback Memory Obtained Windlenot's Ghost: Heal
   Puzzle Hint Found: Atlantis Map: Crawling
   Puzzle Hint Found: Tape Recorder Heard: Key for Janitor Closet
+  Puzzle Solved Office Elevator: Cloth Always Available in Burial Room
   Storage: Desk Drawer: Crystal Pot Bottom DUPE
   Storage: Transforming Mask: Water Pot Top DUPE
   Windlenot's Body: Viewed Egyptian Hieroglyphics Explained
 }
 3: {
+  Flashback Memory Obtained Beth's Address Book: Easier Lyre
   Flashback Memory Obtained Black Book: Key for Ocean Room
   Flashback Memory Obtained In Search of the Unexplained: Key for Egypt Room
+  Flashback Memory Obtained Mythology of the Stars: Heal
+  Flashback Memory Obtained South American Pictographs: Wax Always Available in Anansi Room
+  Puzzle Hint Found: Beth's Note: Easier Lyre
   Puzzle Solved Library Statue: Key for Three Floor Elevator
   Puzzle Solved Theater Door: Key for Torture Room
   Storage: Library Cabinet: Oil Pot Top DUPE
   Storage: Library Statue: Sand Pot Bottom DUPE
 }
 4: {
+  Final Riddle: Fortune Teller: Heal
+  Flashback Memory Obtained Ancient Astrology: Wood Always Available in Blue Maze
   Flashback Memory Obtained Beth's Ghost: Ash Pot Bottom
   Flashback Memory Obtained Merrick's Ghost: Sand Pot Top
+  Flashback Memory Obtained Merrick's Notebook: Ash Always Available in Burial Room
   Jukebox: Set Song
+  Puzzle Hint Found: Egyptian Sphinx Heard: Heal
   Puzzle Hint Found: Elevator Writing: Key for UFO Room
+  Puzzle Hint Found: Gallows Information Plaque: Oil Always Available in Prehistoric Room
+  Puzzle Hint Found: Shaman Security Camera: Crystal Always Available in Lobby
   Puzzle Solved Alchemy: Key for Prehistoric Room
   Puzzle Solved Burial Door: Metal Pot Bottom
+  Puzzle Solved Chinese Solitaire: Easier Lyre
+  Puzzle Solved Clock Tower Door: Ash Always Available in Office
   Puzzle Solved Columns of RA: Key for Workshop
+  Puzzle Solved Fortune Teller Door: Wood Always Available in Workshop
+  Puzzle Solved Gallows: Easier Lyre
   Puzzle Solved Lyre: Key for Bedroom Elevator
+  Puzzle Solved Red Door: Easier Lyre
+  Puzzle Solved Shaman Drums: Metal Always Available in Prehistoric
+  Puzzle Solved Three Floor Elevator: Sand Always Available in Greenhouse
   Puzzle Solved UFO Symbols: Sand Pot Bottom
   Set Skull Dial: Burial: Set Skull Dial: Burial
   Set Skull Dial: Egypt: Set Skull Dial: Egypt
@@ -181,6 +207,7 @@ Playthrough:
   Storage: Egypt: Cloth Pot Bottom DUPE
   Storage: Gallows: Crystal Pot Top DUPE
   Storage: Lyre: Metal Pot Top DUPE
+  Storage: Shaman Hut: Empty
   Storage: Skeleton: Wood Pot Top DUPE
   Storage: UFO: Wood Pot Bottom DUPE
   Viewed Fortune: Viewed Fortune
@@ -188,19 +215,26 @@ Playthrough:
 5: {
   Clock Chains: Set Time
   Final Riddle: Planets Aligned: Ash Pot Top
+  Flashback Memory Obtained Museum Blueprints: Wood Always Available in Gods Room
+  Flashback Memory Obtained Professor Windlenot's Diary: Easier Lyre
   Ixupi Captured Sand: Oil Pot Bottom
   Orrery: Aligned Planets
   Puzzle Hint Found: Basilisk Bone Fragments: Cloth Pot Top
+  Puzzle Hint Found: Sirens Song Heard: Water Always Available in Lobby
   Puzzle Solved Anansi Music Box: Wax Pot Top
   Puzzle Solved Atlantis: Key for Generator Room
   Puzzle Solved Bedroom Elevator: Water Pot Bottom
+  Puzzle Solved Clock Chains: Easier Lyre
   Puzzle Solved Organ: Oil Pot Top
+  Puzzle Solved Workshop Drawers: Metal Always Available in Bedroom
   Set Skull Dial: Prehistoric: Set Skull Dial: Prehistoric
+  Storage: Anansi Music Box: Empty
   Storage: Eagles Nest: Wax Pot Top DUPE
   Storage: Ocean: Lightning Pot Top DUPE
   Storage: Workshop Drawers: Metal Pot Bottom DUPE
 }
 6: {
+  Final Riddle: Norse God Stone Message: Metal Always Available in Projector Room
   Ixupi Captured Oil: Lightning Pot Top
   Norse Stone: Viewed Norse Stone
   Storage: Clock Tower: Water Pot Bottom DUPE
@@ -210,6 +244,8 @@ Playthrough:
   Final Riddle: Beth's Body Page 17: Key for Projector Room
 }
 8: {
+  Final Riddle: Guillotine Dropped: Wax Always Available in Shaman Room
+  Flashback Memory Obtained Theater Movie: Wax Always Available in Library
   Guillotine: Lost Your Head
   Set Skull Dial: Tar River: Set Skull Dial: Tar River
   Storage: Tar River: Wax Pot Bottom DUPE
@@ -217,9 +253,11 @@ Playthrough:
 }
 9: {
   Puzzle Solved Maze Door: Key for Puzzle Room
+  Storage: Theater: Empty
 }
 10: {
   Puzzle Hint Found: Mastermind Information Plaque: Crystal Pot Top
+  Puzzle Solved Marble Flipper: Heal
   Puzzle Solved Mastermind: Wood Pot Top
   Puzzle Solved Skull Dial Door: Wax Pot Bottom
   Storage: Skull Bridge: Ash Pot Top DUPE

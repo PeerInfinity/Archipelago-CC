@@ -194,18 +194,24 @@ Playthrough:
   Progressive Sword
 }
 1: {
+  Cliff Plateau Isles - Cave: Piece of Heart
   Dragon Roost Cavern - First Room: DRC Small Key
   Northern Fairy Island - Great Fairy: Triforce Shard 5
   Pawprint Isle - Chuchu Cave - Chest: Grappling Hook
+  The Great Sea - Salvage Corp Gift: Silver Rupee
   Windfall Island - Jail - Tingle - First Gift: Wind Waker
+  Windfall Island - Jail - Tingle - Second Gift: Piece of Heart
   Windfall Island - Maggie - Free Item: Triforce Shard 8
 }
 2: {
   Dragon Roost Cavern - Alcove With Water Jugs: DRC Small Key
   Dragon Roost Cavern - Boarded Up Chest: Wind's Requiem
+  Pawprint Isle - Chuchu Cave - Scale the Wall: Piece of Heart
   Windfall Island - Tott - Teach Rhythm: Magic Armor
 }
 3: {
+  Dragon Roost Cavern - Chest Across Lava Pit: Orange Rupee
+  Dragon Roost Cavern - Rat Room: Silver Rupee
   Dragon Roost Cavern - Rat Room Boarded Up Chest: DRC Small Key
 }
 4: {
@@ -213,29 +219,45 @@ Playthrough:
 }
 5: {
   Dragon Roost Cavern - Big Key Chest: Nayru's Pearl
+  Dragon Roost Cavern - Boss Stairs Left Chest: DRC Dungeon Map
   Dragon Roost Cavern - Boss Stairs Right Chest: Deku Leaf
+  Dragon Roost Cavern - Dark Room: DRC Compass
   Dragon Roost Cavern - Miniboss: Progressive Magic Meter
   Dragon Roost Cavern - Pot Room Chest: DRC Big Key
+  Dragon Roost Cavern - Under Rope Bridge: Piece of Heart
 }
 6: {
   Cliff Plateau Isles - Highest Isle: Progressive Bow
+  Dragon Roost Cavern - Gohma Heart Container: Piece of Heart
   Forbidden Woods - Double Mothula Room: Progressive Sword
   Forbidden Woods - First Room: Skull Hammer
   Forbidden Woods - Hole in Tree: FW Small Key
   Forbidden Woods - Inside Hollow Tree's Mouth: Progressive Sword
   Forbidden Woods - Morth Pit: FW Big Key
+  Forbidden Woods - Vine Maze Left Chest: Silver Rupee
   Forbidden Woods - Vine Maze Right Chest: Progressive Shield
 }
 7: {
   Forbidden Woods - Climb to Top Using Boko Baba Bulbs: Progressive Sword
+  Forbidden Woods - Mothula Miniboss Room: FW Compass
+  Forbidden Woods - Past Seeds Hanging by Vines: Piece of Heart
   Forbidden Woods - Tall Room Before Miniboss: Triforce Shard 3
   Thorned Fairy Island - Great Fairy: Bombs
+  Western Fairy Island - Great Fairy: Silver Rupee
 }
 8: {
   Bomb Island - Cave: Progressive Bow
   Eastern Fairy Island - Great Fairy: Bait Bag
+  Forsaken Fortress - Chest Guarded By Bokoblin: FF Dungeon Map
   Forsaken Fortress - Chest Inside Lower Jail Cell: Triforce Shard 2
+  Forsaken Fortress - Chest Outside Upper Jail Cell: FF Compass
+  Forsaken Fortress - Chest on Bed: Orange Rupee
   Forsaken Fortress - Helmaroc King Heart Container: Triforce Shard 6
+  Forsaken Fortress - Phantom Ganon: Orange Rupee
+  Outset Island - Great Fairy: Hero's Charm
+  Pawprint Isle - Chuchu Cave - Behind Left Boulder: Silver Rupee
+  Pawprint Isle - Chuchu Cave - Behind Right Boulder: Silver Rupee
+  Southern Fairy Island - Great Fairy: Hurricane Spin
 }
 9: {
   Bird's Peak Rock - Cave: Power Bracelets
@@ -243,6 +265,8 @@ Playthrough:
   Needle Rock Isle - Cave: Boomerang
 }
 10: {
+  Forbidden Woods - Big Key Chest: FW Dungeon Map
+  Forbidden Woods - Chest Across Red Hanging Flower: Piece of Heart
   Forbidden Woods - Chest in Locked Tree Trunk: Command Melody
   Forbidden Woods - Kalle Demos Heart Container: Iron Boots
 }
@@ -252,29 +276,38 @@ Playthrough:
   Wind Temple - Chest Behind Seven Armos: WT Big Key
   Wind Temple - Chest Between Two Dirt Patches: Delivery Bag
   Wind Temple - Chest In Many Cyclones Room: WT Small Key
+  Wind Temple - Chest In Middle Of Hub Room: Piece of Heart
   Wind Temple - Chest at Top of Hub Room: WT Small Key
   Wind Temple - Chest in Left Alcove: Triforce Shard 4
   Wind Temple - Spike Wall Room - Destroy All Cracked Floors: Wallet Capacity Upgrade
+  Wind Temple - Spike Wall Room - First Chest: WT Compass
 }
 12: {
+  Diamond Steppe Island - Warp Maze Cave - First Chest: Silver Rupee
   Diamond Steppe Island - Warp Maze Cave - Second Chest: Din's Pearl
+  Rock Spire Isle - Beedle's Special Shop Ship - 500 Rupee Item: Bomb Bag Capacity Upgrade
   Rock Spire Isle - Beedle's Special Shop Ship - 900 Rupee Item: Progressive Shield
+  Rock Spire Isle - Beedle's Special Shop Ship - 950 Rupee Item: Orange Rupee
   Wind Temple - Chest Behind Stone Head: Triforce Shard 7
   Wind Temple - Kill All Enemies in Tall Basement Room: Wind God's Aria
+  Wind Temple - Wizzrobe Miniboss Room: WT Dungeon Map
 }
 13: {
+  Angular Isles - Cave: Orange Rupee
   Earth Temple - Chest Behind Destructible Walls: Note to Mom
   Wind Temple - Big Key Chest: Triforce Shard 1
   Wind Temple - Molgera Heart Container: Progressive Magic Meter
 }
 14: {
   Ganon's Tower - Maze Chest: Earth God's Lyric
+  Hyrule - Master Sword Chamber: Piece of Heart
 }
 15: {
   Earth Temple - End of Foggy Room With Floormasters: ET Big Key
   Earth Temple - Kill All Floormasters in Foggy Room: ET Small Key
 }
 16: {
+  Earth Temple - Casket in Second Crypt: ET Dungeon Map
   Earth Temple - Chest Behind Statues: Farore's Pearl
   Earth Temple - Chest In Three Blocks Room: ET Small Key
 }
@@ -282,18 +315,28 @@ Playthrough:
   Earth Temple - Big Key Chest: Progressive Bow
   Earth Temple - Chest in Third Crypt: Wallet Capacity Upgrade
   Earth Temple - Jalhalla Heart Container: Ghost Ship Chart
+  Earth Temple - Many Mirrors Room Left Chest: Silver Rupee
+  Earth Temple - Many Mirrors Room Right Chest: ET Compass
   Earth Temple - Stalfos Crypt Room: Empty Bottle
   Earth Temple - Stalfos Miniboss Room: Cabana Deed
+  Tower of the Gods - Chest Behind Bombable Walls: Heart Container
+  Tower of the Gods - Hop Across Floating Boxes: Orange Rupee
+  Tower of the Gods - Light Two Torches: TotG Dungeon Map
+  Tower of the Gods - Shoot Eye Above Skulls Room Chest: Tingle Tuner
   Tower of the Gods - Skulls Room Chest: TotG Small Key
 }
 18: {
   Defeat Ganondorf: Victory
+  Private Oasis - Cabana Labyrinth - Lower Floor Chest: Orange Rupee
   Private Oasis - Cabana Labyrinth - Upper Floor Chest: Empty Bottle
+  Tower of the Gods - Darknut Miniboss Room: Telescope
   Tower of the Gods - First Chest Guarded by Armos Knights: TotG Big Key
   Tower of the Gods - Floating Platforms Room: Song of Passing
   Tower of the Gods - Second Chest Guarded by Armos Knights: TotG Small Key
   Tower of the Gods - Stone Tablet: Empty Bottle
+  Tower of the Gods - Top of Floating Platforms Room: Piece of Heart
 }
 19: {
   Tower of the Gods - Big Key Chest: Empty Bottle
+  Tower of the Gods - Gohdan Heart Container: TotG Compass
 }

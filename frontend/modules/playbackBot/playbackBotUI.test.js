@@ -1068,3 +1068,143 @@ describe('PlaybackBotUI — substrate-switch stops the previous controller', () 
         expect(textController.calls.filter((c) => c.method === 'stop')).toHaveLength(0);
     });
 });
+
+describe('PlaybackBotUI — X1 maze collect policy', () => {
+    function makeCollectController(tiles) {
+        const c = makeFakeController();
+        c.listUncollectedConsumables = () => tiles;
+        return c;
+    }
+
+    function makeBot(controller) {
+        const bot = new PlaybackBotUI({
+            getSphereData: () => SAMPLE_SPHERE_DATA,
+            getStaticData: () => ({ regions: { R: { locations: [{ name: 'Free Loc' }] } } }),
+            getActiveController: () => controller,
+        });
+        bot._currentRegion = 'R';
+        return bot;
+    }
+
+    it('defaults to never — no detour, playback unchanged (X1-R3)', () => {
+        const controller = makeCollectController([{ x: 2, y: 2 }]);
+        const bot = makeBot(controller);
+        expect(bot.getMazeCollectPolicy()).toBe('never');
+        expect(bot._nextCollectDetour()).toBe(null);
+    });
+
+    it('never even asks the controller under the default policy', () => {
+        // The default must be a true no-op, not "ask then ignore" —
+        // otherwise a substrate could observe the bot probing it.
+        let asked = 0;
+        const controller = makeFakeController();
+        controller.listUncollectedConsumables = () => { asked++; return [{ x: 1, y: 1 }]; };
+        const bot = makeBot(controller);
+        bot._nextCollectDetour();
+        expect(asked).toBe(0);
+    });
+
+    it('returns the first uncollected tile under always', () => {
+        const controller = makeCollectController([{ x: 2, y: 2 }, { x: 3, y: 1 }]);
+        const bot = makeBot(controller);
+        bot.setMazeCollectPolicy('always');
+        expect(bot._nextCollectDetour()).toEqual({ x: 2, y: 2 });
+    });
+
+    it('returns null under always when nothing is left to collect', () => {
+        const bot = makeBot(makeCollectController([]));
+        bot.setMazeCollectPolicy('always');
+        expect(bot._nextCollectDetour()).toBe(null);
+    });
+
+    it('degrades to a no-op for substrates without the optional slot', () => {
+        const bot = makeBot(makeFakeController());
+        bot.setMazeCollectPolicy('always');
+        expect(bot._nextCollectDetour()).toBe(null);
+    });
+
+    it('survives a controller that throws', () => {
+        const controller = makeFakeController();
+        controller.listUncollectedConsumables = () => { throw new Error('boom'); };
+        const bot = makeBot(controller);
+        bot.setMazeCollectPolicy('always');
+        expect(bot._nextCollectDetour()).toBe(null);
+    });
+
+    it('normalises any unrecognised policy value to never', () => {
+        const bot = makeBot(makeCollectController([{ x: 1, y: 1 }]));
+        expect(bot.setMazeCollectPolicy('sometimes')).toBe('never');
+        expect(bot.setMazeCollectPolicy('ALWAYS')).toBe('never');
+        expect(bot.setMazeCollectPolicy('always')).toBe('always');
+    });
+
+    it('onConsumableCollected is inert when idle or when detours are off', () => {
+        const controller = makeCollectController([{ x: 2, y: 2 }]);
+        const bot = makeBot(controller);
+        bot._isActive = false;
+        bot.onConsumableCollected();
+        expect(controller.calls.filter((c) => c.method === 'walkTo')).toHaveLength(0);
+
+        bot._isActive = true; // active, but policy still 'never'
+        bot.onConsumableCollected();
+        expect(controller.calls.filter((c) => c.method === 'walkTo')).toHaveLength(0);
+    });
+});
+
+describe('PlaybackBotUI — an unresolvable walkTo is a NAMED failure, not a stall', () => {
+    // The router routes over the AP region graph; the substrate walks tiles.
+    // Those two can disagree: the region-atlas maze projection deliberately
+    // WALLS some crossings the AP compiler still emits, so the router can pick
+    // an exit the maze world has no tile for. The controller answers `false`;
+    // before this the panel logged to the console and returned, and the bot
+    // sat waiting for a region transition that could never arrive — a silent
+    // stall that reads exactly like slow progress in a timed test.
+    function makeRefusingController() {
+        const calls = [];
+        const record = (method) => (...args) => { calls.push({ method, args }); };
+        return {
+            calls,
+            play: record('play'),
+            stop: record('stop'),
+            step: record('step'),
+            instant: record('instant'),
+            reset: record('reset'),
+            setRate: record('setRate'),
+            walkTo: (...args) => { calls.push({ method: 'walkTo', args }); return false; },
+        };
+    }
+
+    const sphereData = [{ sphereIndex: 0, fractionalIndex: 1, locations: ['Loc A'] }];
+    const staticData = {
+        regions: new Map([['region_a', { locations: [{ name: 'Loc A', id: 1 }] }]]),
+    };
+
+    it('reports an error status naming the target the substrate cannot reach', () => {
+        const controller = makeRefusingController();
+        const bot = new PlaybackBotUI({
+            getSphereData: () => sphereData,
+            getStaticData: () => staticData,
+            getActiveController: () => controller,
+        });
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        bot.play();
+        expect(controller.calls.some((c) => c.method === 'walkTo')).toBe(true);
+        expect(bot.getStatus()).toContain('error:');
+        expect(bot.getStatus()).toContain('Loc A');
+        // And it did NOT go on to kick the clock as if the target had landed.
+        expect(controller.calls.filter((c) => c.method === 'play')).toHaveLength(0);
+    });
+
+    it('a controller that accepts the target is unaffected', () => {
+        const controller = makeFakeController();
+        const bot = new PlaybackBotUI({
+            getSphereData: () => sphereData,
+            getStaticData: () => staticData,
+            getActiveController: () => controller,
+        });
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        bot.play();
+        expect(bot.getStatus()).not.toContain('error:');
+        expect(controller.calls.some((c) => c.method === 'play')).toBe(true);
+    });
+});

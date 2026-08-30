@@ -36,14 +36,17 @@ import { fileURLToPath } from 'node:url';
 
 // Substrate libraries register on import.
 import '../../frontend/modules/mazeRoom/mazeRoomLibrary.js';
-import '../../frontend/modules/textAdventureSubstrate/textAdventureSubstrateLibrary.js';
+import '../../frontend/modules/textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js';
 import '../../frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js';
 import '../../frontend/modules/bounceDemo/bounceDemoLibrary.js';
+import '../../frontend/modules/runnerDemo/runnerDemoLibrary.js';
 
 import { arrangeShuffledSpiral, buildRulesJson, getRegionExits } from
     '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
 import { substrateRegistry } from
     '../../frontend/modules/shared/procgen/substrateRegistry.js';
+import { setJtaEmitZoneLocations } from
+    '../../frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js';
 
 function parseArgs(argv) {
     const out = {
@@ -54,6 +57,7 @@ function parseArgs(argv) {
         bidirectional: true,
         items: {},
         obstacles: {},
+        jtaLocations: false,
         out: './shuffled-spiral-dump.json',
     };
     const parseWxH = (s) => {
@@ -81,6 +85,7 @@ function parseArgs(argv) {
             }
             case '--start': out.start = next(); break;
             case '--no-bidirectional': out.bidirectional = false; break;
+            case '--jta-locations': out.jtaLocations = true; break;
             case '--items': {
                 const [id, n] = parseKv(next());
                 out.items[id] = n;
@@ -117,6 +122,7 @@ function extractHelpText() {
         '  --quota id=N               required; repeat per substrate',
         '  --start id                 substrate id or "auto" (default auto)',
         '  --no-bidirectional',
+        '  --jta-locations            emit jta zone tasks as AP locations',
         '  --items id=N',
         '  --obstacles id=N',
         '  -o, --out PATH             (default ./shuffled-spiral-dump.json)',
@@ -157,6 +163,9 @@ function shapeRegions(grid) {
 
 async function main() {
     const config = parseArgs(process.argv.slice(2));
+    // Opt-in jta zone-locations channel (Phase 1 skeleton). Off by
+    // default so jta dumps stay byte-identical to prior runs.
+    setJtaEmitZoneLocations(config.jtaLocations);
     const { grid, stats, startCell } = arrangeShuffledSpiral({
         regionSize: config.region,
         itemPool: { ...config.items },

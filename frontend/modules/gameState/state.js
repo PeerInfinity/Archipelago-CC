@@ -76,8 +76,7 @@ export class GameState {
         // savedQueueStore in loops/savedQueueStore.js. Saved queues
         // are now keyed by (rules-hash, region, substrate), capped
         // per region, and persist on every region exit (not just on
-        // "better than the previous best"). See
-        // NewDocs/plans/procedural-generation/loops-queue-and-manual-mode.md.
+        // "better than the previous best").
     }
 
     // -------------------- Mana API --------------------
@@ -148,6 +147,23 @@ export class GameState {
     }
 
     /**
+     * Gain mana. Counterpart of deductMana for substrates that mirror
+     * in-game resource GAINS into the shared pool (e.g. JtA energy
+     * items). NOT clamped: `maxMana` is the loop's STARTING mana (the
+     * value a loop reset refills to), not a ceiling — current mana may
+     * exceed it (user ruling 2026-07-05). Emits `gameState:manaChanged`.
+     * @param {number} amount - Amount of mana to gain (may be fractional)
+     * @returns {number} new currentMana value
+     */
+    gainMana(amount) {
+        const gain = Number(amount) || 0;
+        if (gain <= 0) return this.currentMana;
+        this.currentMana += gain;
+        this.emitManaChanged();
+        return this.currentMana;
+    }
+
+    /**
      * Refill mana to max. Used by loop reset.
      */
     refillMana() {
@@ -183,8 +199,11 @@ export class GameState {
 
     /**
      * Recompute maxMana from defaultMaxMana + Σ(substrate bonuses) +
-     * (optional) item contribution. Caps currentMana. Internal — called
-     * by setters / recalculateMaxMana when any input changes.
+     * (optional) item contribution. `maxMana` is the loop's STARTING
+     * mana (what a loop reset refills to), not a ceiling, so current
+     * mana is NOT capped here (user ruling 2026-07-05 — a rename to
+     * "startingMana" is tracked in the cleanup backlog). Internal —
+     * called by setters / recalculateMaxMana when any input changes.
      */
     _recomputeMaxMana() {
         let bonusSum = 0;
@@ -195,9 +214,6 @@ export class GameState {
             ? this._itemCount * this.manaPerItem
             : 0;
         this.maxMana = this.defaultMaxMana + bonusSum + itemContribution;
-        if (this.currentMana > this.maxMana) {
-            this.currentMana = this.maxMana;
-        }
         this.emitManaChanged();
     }
 

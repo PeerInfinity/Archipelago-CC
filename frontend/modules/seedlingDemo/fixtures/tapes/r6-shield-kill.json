@@ -1,0 +1,87 @@
+{
+  "tape_version": 6,
+  "game": "seedling",
+  "name": "r6-shield-kill",
+  "description": "R6 slice 5: THE SHIELDSPIRE. Boots into L19 under `shieldboss@80,32` and holds `up` for the whole tape — which walks into `hitPlayer()`'s own 48x16 band, pins the player at y 90.05 against the 48x48 solid, holds `direction = 1` so every latched `slashDirection` is UP, and keeps the 120-update stand-under counter running. Four `primary` presses: one ARMING press (the first `hit()` of every room entry is swallowed — `activated` is an instance field re-armed by every `new Game`) and three landings, each at `movedShield + 7`, the only animation `super.hit` is reachable through. Each landed hit calls `sit()` and ABORTS the stab before its damaging frames, so the fight is fought at zero damage. The third hit writes `{19,0}` from `startDeath`; `destroy` lands 23 graphic updates later and `FP.world.remove` 11 after that — and only the removal takes the wall away, because \"ShieldBoss\" is in `Mobile.solids`. Then the same held key walks north through the vacated cell into `bosskey@96,64`, the keyType-0 key that was INSIDE the body, and pays its two-page ceremony.",
+  "boot": {
+    "level": 19,
+    "x": 96,
+    "y": 112
+  },
+  "noclip": false,
+  "noDamage": false,
+  "noHazards": [
+    "water",
+    "lava",
+    "ice",
+    "waterfall"
+  ],
+  "grants": [
+    {
+      "level": 19,
+      "items": [
+        "sword"
+      ]
+    }
+  ],
+  "persistence": [],
+  "equips": [],
+  "pins": [
+    "sound",
+    "dead_frames"
+  ],
+  "save": {
+    "totem_parts": [],
+    "keys": [],
+    "seal_parts": []
+  },
+  "tick_count": 653,
+  "inputs": [
+    {
+      "key": "up",
+      "from": 0,
+      "to": 653
+    },
+    {
+      "key": "primary",
+      "from": 143,
+      "to": 144
+    },
+    {
+      "key": "primary",
+      "from": 276,
+      "to": 277
+    },
+    {
+      "key": "primary",
+      "from": 408,
+      "to": 409
+    },
+    {
+      "key": "primary",
+      "from": 458,
+      "to": 459
+    },
+    {
+      "key": "primary",
+      "from": 489,
+      "to": 490
+    },
+    {
+      "key": "primary",
+      "from": 520,
+      "to": 521
+    },
+    {
+      "key": "primary",
+      "from": 551,
+      "to": 552
+    },
+    {
+      "key": "primary",
+      "from": 582,
+      "to": 583
+    }
+  ]
+}
+

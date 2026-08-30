@@ -1,5 +1,6 @@
 import { getModuleEventBus, registerPanelInstance, unregisterPanelInstance, getPendingOverlayProvider, getNodeLabelProvider, getKeyForwarder } from './index.js';
 import { NodeOverlayManager } from './nodeOverlayManager.js';
+import { regionsOf } from '../procgenCore/rulesGraph.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { stateManagerProxySingleton as stateManager, getLastRawJsonData } from '../stateManager/index.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
@@ -961,17 +962,14 @@ export class RegionGraphUI {
     // buildProcgenGridLayout and overlap the top-left procgen region.
     // Place it half a cell northwest of its first connected procgen
     // region so the spatial relationship is visually clear.
-    const playerRegions = rules?.regions?.[playerId];
-    if (playerRegions && typeof playerRegions === 'object') {
-      for (const [regionName, regionData] of Object.entries(playerRegions)) {
-        if (layout.has(regionName)) continue;
-        const exits = regionData?.exits;
-        if (!Array.isArray(exits) || exits.length === 0) continue;
-        const firstConnected = exits.find(e => layout.has(e?.connected_region));
-        if (!firstConnected) continue;
-        const target = layout.get(firstConnected.connected_region);
-        layout.set(regionName, { gx: target.gx - 0.5, gy: target.gy - 0.5 });
-      }
+    for (const [regionName, regionData] of Object.entries(regionsOf(rules, playerId))) {
+      if (layout.has(regionName)) continue;
+      const exits = regionData?.exits;
+      if (!Array.isArray(exits) || exits.length === 0) continue;
+      const firstConnected = exits.find(e => layout.has(e?.connected_region));
+      if (!firstConnected) continue;
+      const target = layout.get(firstConnected.connected_region);
+      layout.set(regionName, { gx: target.gx - 0.5, gy: target.gy - 0.5 });
     }
     this.gridLayout = layout.size > 0 ? layout : null;
     if (this.gridLayout) {

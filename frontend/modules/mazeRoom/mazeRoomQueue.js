@@ -1,9 +1,7 @@
 /**
  * Maze room action queue. Tile-level action queue for the maze
- * substrate panel (Cavernous-2-style icon-row UI).
- *
- * Plan: NewDocs/plans/procedural-generation/maze-content-modules.md
- * (Phase 1).
+ * substrate panel (Cavernous-2-style icon-row UI). See
+ * docs/json/developer/procgen/maze.md ("The action queue").
  *
  * Verbs:
  *   - move (N/E/S/W) — also covers block pushes (side effect via a

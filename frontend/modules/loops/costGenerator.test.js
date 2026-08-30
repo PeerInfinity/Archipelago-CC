@@ -10,7 +10,12 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { CostGenerator } from './costGenerator.js';
 
+// The generator resolves its player from sphereState, falling back to
+// staticData.playerId — and refuses to extract anything when neither answers
+// (it used to silently plan player 1). centralRegistry has no sphereState in a
+// unit test, so the stub static data carries the id.
 function makeStubDeps({ staticData = {}, manaState = {} } = {}) {
+  if (staticData) staticData = { playerId: '1', ...staticData };
   const events = [];
   // Mana/XP/manaDebt/noManaDepletionReset live on the GameState
   // instance (production reads them via gameStateAPI.getState()).
@@ -176,6 +181,20 @@ describe('CostGenerator — _extractLocationEntries', () => {
       { type: 'state_update', sphere_index: 0, player_data: { 99: { sphere_locations: ['X'] } } },
     ];
     expect(gen._extractLocationEntries(log)).toEqual([]);
+  });
+
+  it('refuses to extract at all when no player id can be resolved', () => {
+    // No sphereState in the registry AND no playerId in the static data: the
+    // old code fell back to player 1 and generated a plausible cost set for
+    // whatever slice happened to be keyed '1'.
+    const { deps } = makeStubDeps({ staticData: {} });
+    deps.stateManager.getStaticData = () => ({});
+    const gen2 = new CostGenerator(deps);
+    expect(gen2._getCurrentPlayerId()).toBeNull();
+    const log = [
+      { type: 'state_update', sphere_index: 0, player_data: { 1: { sphere_locations: ['X'] } } },
+    ];
+    expect(gen2._extractLocationEntries(log)).toEqual([]);
   });
 
   it('passes through new_accessible_regions per entry', () => {
@@ -380,5 +399,64 @@ describe('CostGenerator — generate() concurrency guard', () => {
     const gen = new CostGenerator(deps);
     gen.isGenerating = true;
     await expect(gen.generate([])).rejects.toThrow('Generation already in progress');
+  });
+});
+
+describe('CostGenerator — SUMMARY regions are time-priced, not per-action (M5)', () => {
+  // A generated sidecar must not double-charge a summary substrate's visit:
+  // the time drain is its economy, so per-action costs would be charged on
+  // top of it. Region → shape resolution goes through loopState's single
+  // resolver, so the generator can never disagree with the runtime.
+  function makeSummaryAwareGen({ summaryRegions = ['B'] } = {}) {
+    const deps = makeStubDeps({
+      staticData: {
+        regions: new Map([
+          ['A', { exits: [{ connected_region: 'B' }] }],
+          ['B', { exits: [{ connected_region: 'A' }] }],
+        ]),
+        locations: new Map([
+          ['Loc1', { parent_region: 'A' }],
+          ['LocInB', { parent_region: 'B' }],
+        ]),
+      },
+    });
+    deps.deps.loopState.getRegionCaptureShape =
+      (r) => (summaryRegions.includes(r) ? 'summary' : 'coarse');
+    return new CostGenerator(deps.deps);
+  }
+
+  it('emits a drain rate and NO moveCost for a summary region', () => {
+    const gen = makeSummaryAwareGen();
+    const costs = { regions: {}, locations: {}, defaultRegionCost: 50, defaultLocationCost: 10 };
+    gen._assignDefaultCosts(costs);
+
+    expect(costs.regions.B).toEqual({ timeDrainPerSecond: 1 });
+    expect(costs.regions.B.moveCost).toBeUndefined();
+    // Non-summary regions are untouched by this rule.
+    expect(costs.regions.A.moveCost).toBe(50);
+  });
+
+  it('leaves locations inside a summary region uncosted', () => {
+    const gen = makeSummaryAwareGen();
+    const costs = { regions: {}, locations: {}, defaultRegionCost: 50, defaultLocationCost: 10 };
+    gen._assignDefaultCosts(costs);
+
+    expect(costs.locations.LocInB).toBeUndefined();
+    expect(costs.locations.Loc1).toBe(10);
+  });
+
+  it('falls back to today\'s behavior when the shape is unknown', () => {
+    const deps = makeStubDeps({
+      staticData: {
+        regions: new Map([['A', { exits: [] }]]),
+        locations: new Map([['Loc1', {}]]),
+      },
+    });
+    // No getRegionCaptureShape on the stub loopState at all.
+    const gen = new CostGenerator(deps.deps);
+    const costs = { regions: {}, locations: {}, defaultRegionCost: 50, defaultLocationCost: 10 };
+    gen._assignDefaultCosts(costs);
+    expect(costs.regions.A.moveCost).toBe(50);
+    expect(costs.locations.Loc1).toBe(10);
   });
 });

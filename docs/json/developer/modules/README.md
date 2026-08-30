@@ -47,6 +47,7 @@ These modules each correspond to a UI panel that the user can interact with in t
 -   **[JSON](./json.md):** Handles saving and loading of the application's entire configuration state (modes).
 -   **[Locations](./locations.md):** Displays all game locations and their real-time accessibility status.
 -   **[Loops](./loops.md):** The main UI panel for the Archipelago Loops incremental game mode.
+-   **[Loops Cost Debugger](./loopsCostDebugger.md):** Step-through planner/verifier for loop-mode mana costs, and the headless path that stamps generated costs into the live store.
 -   **[Modules](./modules.md):** A panel for viewing and managing the loaded frontend modules.
 -   **[Path Analyzer Panel](./pathAnalyzerPanel.md):** A dedicated panel for running the path analysis tool.
 -   **[Game State Panel](./gameStatePanel.md):** A simple panel for displaying the player's current state (e.g., current region).
@@ -57,7 +58,7 @@ These modules each correspond to a UI panel that the user can interact with in t
 -   **[Spoiler Checklist](./spoilerChecklist.md):** Interactive checklist for tracking sphere log progression with multiworld support.
 -   **[Spoiler Test](./spoilerTest.md):** The primary tool for validating game logic by replaying a game's progression against its spoiler log.
 -   **[Tests](./tests.md):** A developer panel that provides an in-app framework for running automated feature tests and integrates with Playwright for end-to-end validation.
--   **[Text Adventure](./textAdventure.md):** Provides a text-based interface for interacting with the game world.
+-   **[Text Adventure](../procgen/text-adventure.md):** Provides a text-based interface for interacting with the game world. Implemented by the `textAdventureSubstrateWrapper` module over the `textAdventureEngine` submodule; documented with the other substrates.
 -   **[Timer Panel](./timerPanel.md):** A dedicated panel that can host the Timer UI component.
 -   **[Proof Queue](./proofQueue.md):** Arrange MetaMath proof steps in dependency order with difficulty-based hypothesis assignment.
 -   **[Proof Graph](./proofGraph.md):** Reconstruct proof dependency edges in an interactive Cytoscape.js graph.

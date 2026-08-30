@@ -1,9 +1,17 @@
 import { FlashPanelUI } from './flashPanelUI.js';
 import eventBus from '../../app/core/eventBus.js';
+import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+// Import side effect registers `flash_seedling` (region-atlas Phase 4).
+import {
+  substrateRegistryEntry as flashSeedlingEntry,
+  FLASH_SEEDLING_LOAD_REGION_EVENT,
+} from './flashSeedlingLibrary.js';
+import { AP_ITEM_FOUND_EVENT, SeedlingRegionGlue } from './seedlingRegionGlue.js';
 
 let moduleDispatcher = null;
 let _moduleEventBus = null;
 let activePanelInstance = null;
+let seedlingRegionGlue = null;
 
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
@@ -31,6 +39,16 @@ export function register(registrationApi) {
 
   registrationApi.registerDispatcherSender('user:locationCheck', 'bottom', 'first');
 
+  // Region-atlas play-time binding: the glue publishes a boundary crossing as
+  // user:regionMove, the same dialect the substrate bridges use.
+  registrationApi.registerDispatcherSender('user:regionMove', 'bottom', 'first');
+
+  // The registry is also populated by flashSeedlingLibrary's import side
+  // effect; repeating it here is the standing convention (idempotent, guarded).
+  if (!substrateRegistry.has(flashSeedlingEntry.id)) {
+    substrateRegistry.register(flashSeedlingEntry);
+  }
+
   // Observe user:locationCheck as it flows through the dispatcher
   // chain, so the panel's "TP on UI click" feature can react to
   // clicks in the Regions/Locations/etc. panels without gating on
@@ -46,11 +64,58 @@ export function register(registrationApi) {
     );
   }
 
+  // Transport selection (read by FlashPanelUI at panel init; changing
+  // it takes effect the next time a flash panel initializes). Mirrors
+  // the moduleSettings.bounceDemo.renderer pattern.
+  registrationApi.registerSettingsSchema({
+    type: 'object',
+    properties: {
+      runtime: {
+        type: 'string',
+        default: 'auto',
+        enum: ['auto', 'flash', 'wasm'],
+        label: 'Runtime',
+        description: "'auto' uses the SWFRecomp wasm page when the game's "
+          + "flash_panel wiring provides one (runs in any browser), real "
+          + "Flash otherwise | 'flash' forces the real-Flash <object> embed "
+          + "(needs NPAPI Flash or Ruffle) | 'wasm' forces the wasm iframe.",
+      },
+    },
+  });
+
   registrationApi.registerEventBusSubscriberIntent('stateManager:rulesLoaded');
   registrationApi.registerEventBusSubscriberIntent('stateManager:inventoryChanged');
   registrationApi.registerEventBusSubscriberIntent('stateManager:ready');
   registrationApi.registerEventBusSubscriberIntent('stateManager:snapshotUpdated');
   registrationApi.registerEventBusSubscriberIntent('regionGraph:nodeSelected');
+  registrationApi.registerEventBusSubscriberIntent(FLASH_SEEDLING_LOAD_REGION_EVENT);
+
+  /**
+   * ⛔⛔ **THE READOUT EVENT NEEDS A REGISTERED PUBLISHER, AND WITHOUT ONE THE
+   * PUBLISH IS SKIPPED WITH A `warn` AND NOTHING ELSE.** `eventBus.publish`
+   * (`app/core/eventBus.js:126-129`) checks the publisher registry and
+   * `return`s — it does not throw — so `seedlingRegionGlue._itemFound`'s own
+   * `try/catch` (written for *"a bus that refuses an unknown event"*) never
+   * fires, its `stats.itemsFound` still counts the find, and the panel's
+   * subscriber is simply never called.
+   *
+   * ⛓ MEASURED ON THE REAL PAGE (P1-e run 4, `panel-check`): the glue reported
+   * `locationChecks: 1, itemsFound: 1`, the panel log carried
+   * *"found Light for you at \"Level 030 - Torchpickup\""* — written by the
+   * glue's own `_log`, not by the subscriber — and the readout element was
+   * still `{display:"none", headline:"", rows:""}`. The console said exactly
+   * why:
+   *
+   *     [WARN] [eventBus] Publisher flashPanel not registered for event
+   *     flashSeedling:apItemFound. Call registerEventBusPublisher first.
+   *
+   * ⚠ This is an M1 defect, latent since the event was introduced: nothing in
+   * production wired the check binding until P1, so nothing ever published it.
+   * `flashPanelUI.test`-less code plus a counter incremented BEFORE the publish
+   * is what let a producer's view and a consumer's view disagree in silence.
+   */
+  registrationApi.registerEventBusPublisher(AP_ITEM_FOUND_EVENT);
+  registrationApi.registerEventBusSubscriberIntent(AP_ITEM_FOUND_EVENT);
 
   log('info', '[FlashPanel Module] Registration complete.');
 }
@@ -83,11 +148,43 @@ export function setActivePanelInstance(instance) {
   activePanelInstance = instance;
 }
 
+/**
+ * The region-atlas glue, or null when the module hasn't initialized. The panel
+ * hands it every adapter it builds (see FlashPanelUI), and the verify script
+ * reads its stats.
+ */
+export function getSeedlingRegionGlue() {
+  return seedlingRegionGlue;
+}
+
+// Test/diagnostic handle (used by scripts/procgen/verify-seedling-wasm-
+// bridge.mjs to reach the live adapter).
+export function getActivePanelInstance() {
+  return activePanelInstance;
+}
+
 export function initialize(moduleId, priorityIndex, initializationApi) {
   log('info', `[FlashPanel Module] Initializing with priority ${priorityIndex}...`);
   moduleDispatcher = initializationApi.getDispatcher();
   _moduleEventBus = initializationApi.getEventBus();
+
+  // Region-atlas play-time binding. Started unconditionally: it is inert until
+  // a preset whose sidecars name the flash_seedling substrate is loaded, and
+  // subscribing here (rather than when a flash region first appears) is what
+  // keeps it ahead of procgenPlayer's start-region publish.
+  seedlingRegionGlue = new SeedlingRegionGlue({
+    eventBus: getModuleEventBus(),
+    getDispatcher: () => moduleDispatcher,
+    loadRegionEvent: FLASH_SEEDLING_LOAD_REGION_EVENT,
+    getPanel: () => activePanelInstance,
+  });
+  seedlingRegionGlue.start();
+
   log('info', '[FlashPanel Module] Initialization complete.');
+
+  return () => {
+    if (seedlingRegionGlue) { seedlingRegionGlue.stop(); seedlingRegionGlue = null; }
+  };
 }
 
 export function getDispatcher() {

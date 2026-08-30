@@ -1,0 +1,792 @@
+#!/usr/bin/env node
+/**
+ * check-seedling-editor-phases — **THE GENERATION LADDER, THE OVERLAYS AND THE
+ * SELECTABLE INTERMEDIATE RESULTS, IN A BROWSER** (PROCGEN ELEMENTS arc 3,
+ * slice 5a — D3, D4, D4' and D5).
+ *
+ * ⚖ The user's own requirement on the 2026-08-17 generation review (§4 item 6):
+ * *"a step-through of the WHOLE generation — a button per step and a report at
+ * each"*, and the 2026-08-18 ruling that the PICTURE follows the TEXT
+ * selection.
+ *
+ * ── ⛔ WHAT MAKES THESE CLAIMS **VALUES** AND NOT ECHOES ───────────────
+ *
+ * The anchor is NODE's own `generateStep` for the same URL, imported into this
+ * process. Every row below compares the browser's ledger, its folded terrain
+ * and its overlay data against that — so a page that published a readout it did
+ * not draw from, or drew a phase other than the one it names, dies here.
+ *
+ * ⛓ AND THE READOUT **IS** THE PICTURE'S ARGUMENT: `window.__editorGenerate
+ * .overlays` and `.phase.selected` are the very objects `drawGenOverlay` and
+ * `drawPaintables` consumed (`watchViewer.afterDrawGen` calls both with them),
+ * which is arc-2 §11.2's law one substrate over — two functions would let the
+ * picture be wrong while the readout stayed right.
+ *
+ * ── ⛔ IT BRINGS ITS OWN SERVER, SO IT CANNOT SKIP (trap 176) ──────────
+ *
+ * Run: node scripts/procgen/check-seedling-editor-phases.mjs
+ *      node scripts/procgen/check-seedling-editor-phases.mjs --host=http://localhost:8000
+ */
+
+import { chromium } from '@playwright/test';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import { closeServer, serveRepoRoot } from './serveRepoRoot.js';
+import { takeBoxLockOrExit } from './boxLock.js';
+
+/**
+ * ⛓ R9 P3b, ⚖ 54 (7) — **THE BOX LOCK.** This gate drives the machine (browser),
+ * so it takes the box before it starts and refuses BY NAME if another
+ * instrument holds it — replacing a hand-relayed "BOX BUSY". A gate run
+ * UNDER `gates.mjs` recognises the holder's token and passes through.
+ * `--wait-for-box=<sec>` queues instead of refusing.
+ */
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
+takeBoxLockOrExit({ name: 'check-seedling-editor-phases.mjs', kind: 'browser' });
+
+const HERE = dirname(fileURLToPath(import.meta.url));
+const REPO = join(HERE, '..', '..');
+const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
+    ?? `--${name}=${fallback}`).slice(`--${name}=`.length);
+
+const M = (p) => import(join(REPO, 'frontend/modules/seedlingDemo', p));
+const { generateStep } = await M('watchGenerate.js');
+const { foldLedger } = await M('procgenLedger.js');
+const { genOverlaysFor } = await M('watchGenOverlay.js');
+const { terrainAt } = await M('procgenLevel.js');
+const { seedlingSkeletonSpec } = await M('procgenSeedling.js');
+
+const PAGE_PATH = '/frontend/modules/seedlingDemo/watch.html';
+
+let failed = 0;
+const check = (ok, what, detail) => {
+    console.log(`${ok ? 'PASS' : 'FAIL'}: ${what}${detail ? ` — ${detail}` : ''}`);
+    if (!ok) failed++;
+};
+const json = (v) => JSON.stringify(v);
+
+/**
+ * ⚠ THE SUBJECTS ARE MEASURED, NOT PICKED.
+ *
+ * `SUBJECT` is **post-sword seed 2 with `?elements=killgate`** — the one cell
+ * in seeds 1..5 whose kill gate is PLACED rather than dropped by its
+ * certification (the other four report
+ * `the-skeleton-does-not-solve-with-the-element`), which is what gives the
+ * `on-connector` phase a door cell, a grown wall and a DEMAND region to show.
+ *
+ * `AREAS` is **`?skeleton=rooms&areas=1` at seed 2** — SCANNED for a graph that
+ * ACCEPTS, and the scan had to be RE-RUN through the page's own entry point.
+ *
+ * ⛔⛔ **A SUBJECT FOUND WITH A DIFFERENT INSTRUMENT IS A DIFFERENT SUBJECT.**
+ * The first scan called `seedlingModel` directly — a BARE room — and found
+ * `rooms` seeds 3 and 10. The page calls `generateStep`, which goes through the
+ * SEAM and therefore carries 4c's BIOME DEFAULT ELEMENT, and an element changes
+ * the room the partition is taken over. Re-scanned through `generateStep` (2
+ * biomes × 7 kinds × seeds 1..12): the accepting cells are **`rooms` seed 2 (7
+ * locks, 1 flag) and `rooms` seed 12 (9 locks, 1 flag)**, in BOTH biomes, and 2
+ * is the smaller. Seed 3 accepts only without an element, which is why this row
+ * reddened before the re-scan rather than after.
+ *
+ * ⛓⛓⛓ **RE-SCANNED AGAIN AT ARC 5 SLICE 6a** (trap 285), by the SAME rule
+ * through the SAME entry point, because the biome default changed shape again
+ * (the guard member draws its `len`, and a `chamber` joined the `+` list). The
+ * scan is unchanged — 2 biomes × 7 kinds × seeds 1..12 through `generateStep`
+ * — and its answer moved wholesale:
+ *
+ *     before   `rooms` seed 2 (7 locks, 1 flag) · `rooms` seed 12 (9, 1)
+ *     after    `loopy` seed 2 (5 locks, 1 flag) · `bushy` seed 7 (7, 1)
+ *
+ * ⛔ `rooms` ACCEPTS NOWHERE in the grid any more, so this is a kind change and
+ * not only a seed change. `loopy` seed 2 is taken on the rule that always
+ * applied — the smaller seed, and here also the smaller lock count.
+ *
+ * ⛓ 4b §14.3 published the ceiling this is measured against (acceptance 0–4 of
+ * 12 per kind, cause = the AREA COUNT on a 10x10 room).
+ *
+ * `DROPPED` is a level whose element the certification REFUSED, which is what
+ * the *"a dropped element draws NOTHING"* claim needs a live subject for.
+ *
+ * ⛔⛔⛔ **AND `DROPPED` IS SEARCHED FOR, NOT TYPED — R9 SLICE 13.**
+ *
+ * It used to read `{ seed: 1, biome: 'post-sword', elements: 'killgate' }`, and
+ * at `5c916efc0` that level is no longer dropped: `generateStep` answers
+ * `ran true, certified true, refused null`. CLAIM 5's first row failed, its
+ * second failed because the element now legitimately draws its groups, and its
+ * third dereferenced `refused.reason` on `null` — so the gate **threw** and
+ * never reached CLAIM 6 or printed a total.
+ *
+ * ⛓ THE CAUSE IS ON THE RECORD: R9 slice 11's `facingToward` repair
+ * (`64875843c`) flipped `post-sword` seeds 1 and 9 from REFUSED to CERTIFIED
+ * (kickoff §21.4 / §22.2 — killgate certification over seeds 1..20 goes 2 → 4).
+ * Slice 12's W0b re-picked the DEMOS catalogue's `dropped-element` row from
+ * seed 1 to seed 3 for exactly this reason; nobody ran this gate.
+ *
+ * ⇒ **THE SUBJECT IS A LIVE SEARCH RESULT AND MUST NOT BE FROZEN AS A
+ * LITERAL.** This is trap 572's family one level up: there, a pinned
+ * CARDINALITY over a set that grows by design; here, a pinned SUBJECT over a
+ * property that a solver change can revoke. The same docblock above records
+ * `AREAS` being re-scanned BY HAND twice for the identical reason. A hand
+ * re-pick buys one slice; a search buys every slice.
+ *
+ * The rule is the one this file has always applied and states above — **the
+ * smaller seed** — over the range §21.4 published, and a grid with NO dropped
+ * cell REFUSES BY NAME rather than handing CLAIM 5 a subject it cannot use.
+ */
+const SUBJECT = { seed: 2, biome: 'post-sword', elements: 'killgate' };
+const AREAS = { seed: 2, biome: 'pre-sword', skeleton: 'loopy', areas: 1 };
+
+/** The seed range §21.4 measured killgate certification over. */
+const DROPPED_SEEDS = 20;
+/** The grid `DROPPED` is taken from — the family SUBJECT is taken from too. */
+const DROPPED_GRID = { biome: 'post-sword', elements: 'killgate' };
+
+/**
+ * ⛓ THE FIRST DROPPED CELL, BY THE SMALLER-SEED RULE.
+ *
+ * ⛔ It returns the REPORT beside the subject, so the row that announces the
+ * search asserts on the very object CLAIM 5 goes on to read — a search whose
+ * answer were re-derived at the use site could disagree with its own
+ * announcement.
+ */
+function findDroppedSubject() {
+    for (let seed = 1; seed <= DROPPED_SEEDS; seed += 1) {
+        const step = generateStep({ seed, biome: DROPPED_GRID.biome, step: 0,
+            elements: { name: DROPPED_GRID.elements } });
+        const e = step.elements;
+        if (e?.ran === false && e?.certified === false && e?.refused) {
+            return { subject: { seed, ...DROPPED_GRID }, step };
+        }
+    }
+    return { subject: null, step: null };
+}
+const dropped = findDroppedSubject();
+const DROPPED = dropped.subject;
+
+const nodeSubject = generateStep({ seed: SUBJECT.seed, biome: SUBJECT.biome, step: 0,
+    elements: { name: SUBJECT.elements } });
+const nodeAreas = generateStep({ seed: AREAS.seed, biome: AREAS.biome, step: 0,
+    skeleton: seedlingSkeletonSpec(AREAS.skeleton), areas: { keys: AREAS.areas } });
+const nodeDropped = dropped.step;
+
+console.log(`node: subject ledger [${nodeSubject.ledger.map((r) => r.phase).join(', ')}]; `
+    + `areas ran ${nodeAreas.areas.ran} with ${nodeAreas.areas.locks?.length ?? 0} lock(s); `
+    + `dropped element ${DROPPED
+        ? `= seed ${DROPPED.seed} (${nodeDropped.elements.refused.reason})`
+        : 'NOT FOUND'}`);
+
+// ── the browser ───────────────────────────────────────────────────────
+
+let server = null;
+const host = arg('host', '');
+if (!host) server = await serveRepoRoot({});
+const origin = host || `http://127.0.0.1:${server.address().port}`;
+
+const browser = await chromium.launch();
+const page = await browser.newPage();
+const errors = [];
+page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
+page.on('pageerror', (e) => errors.push(`pageerror: ${e.message}`));
+
+const finish = async (code) => {
+    await browser.close().catch(() => {});
+    await closeServer(server);
+    process.exit(code);
+};
+
+/** ⛔ WAIT FOR THE ARM'S OWN READOUT, never for the element to exist (trap 246). */
+async function load(query) {
+    errors.length = 0;
+    const url = `${origin}${PAGE_PATH}?${query}`;
+    console.log(`page: ${url}`);
+    await page.goto(url, { waitUntil: 'domcontentloaded' });
+    await page.waitForFunction(() => window.__editorGenerate?.phase, null, { timeout: 300000 });
+    return page.evaluate(() => window.__editorGenerate);
+}
+
+/** ⛓ The phase readout, AFTER the control has settled on the index it asked
+ *  for — the CLAIM's own field, never a sleep. */
+const atPhase = async (index) => {
+    await page.waitForFunction((i) => window.__editorGenerate?.phase?.index === i,
+        index, { timeout: 60000 });
+    return page.evaluate(() => ({
+        gen: window.__editorGenerate,
+        note: document.getElementById('genPhaseNote').textContent,
+        label: document.getElementById('genPhaseLabel').textContent,
+        facts: [...document.querySelectorAll('#genPhaseFacts input[data-fact]')]
+            .map((b) => b.dataset.fact),
+        legend: [...document.querySelectorAll('#genLegend .tr')].map((e) => e.textContent),
+        status: document.getElementById('status').textContent,
+    }));
+};
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ CLAIM 1 — THE LEDGER REACHES THE PAGE, ROW FOR ROW
+ * ══════════════════════════════════════════════════════════════════════ */
+{
+    const web = await load(`source=generate&seed=${SUBJECT.seed}&biome=${SUBJECT.biome}`
+        + `&count=0&elements=${SUBJECT.elements}`);
+    check(web.phase.count === nodeSubject.ledger.length,
+        '⛓ the page holds the SAME NUMBER of pass-1 phases node recorded',
+        `${web.phase.count} vs ${nodeSubject.ledger.length}`);
+    check(json(web.phase.phases) === json(nodeSubject.ledger.map((r) => r.phase)),
+        '⛓⛓ …in the SAME ORDER, phase for phase', json(web.phase.phases));
+    check(web.phase.index === null,
+        '⛔ …and the page opens on the FINISHED level, not on a phase');
+    check(/the FINISHED level/.test(await page.evaluate(
+        () => document.getElementById('genPhaseLabel').textContent)),
+    '…and says so where a reader is looking');
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ CLAIM 2 — PHASE k SHOWS PHASE k's ROOM, AND NOTHING IS RE-RUN
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⛔ THE ANCHOR IS NODE's OWN FOLD of the SAME ledger, and the comparison is
+ * per CELL. A page that showed phase k+1's terrain for k — or that rebuilt the
+ * model instead of folding — dies here and in the ledger unit row, and nowhere
+ * else.
+ */
+{
+    const rows = nodeSubject.ledger;
+    await page.click('#genPhaseNext');
+    for (let k = 0; k < rows.length; k += 1) {
+        if (k > 0) await page.click('#genPhaseNext');
+        // eslint-disable-next-line no-await-in-loop
+        const at = await atPhase(k);
+        const shown = at.gen.phase.level;
+        // eslint-disable-next-line no-await-in-loop
+        const folded = foldLedger(rows, k,
+            { width: nodeSubject.record.width, height: nodeSubject.record.height });
+        const wrong = folded.terrain.filter((c) => terrainAt(shown, c.tx, c.ty) !== c.terrain);
+        check(wrong.length === 0,
+            `⛓⛓ phase ${k + 1}/${rows.length} (${rows[k].phase}) draws node's FOLD of the `
+            + 'ledger, cell for cell',
+            wrong.length ? `${wrong.length} cell(s) differ, first ${json(wrong[0])}` : '');
+        check(at.gen.phase.row.sentence === rows[k].sentence,
+            `…and the readout carries the PHASE's OWN sentence for ${rows[k].phase}`,
+            at.gen.phase.row.sentence.slice(0, 60));
+        check(at.note.includes(`${rows[k].tiles.changed.length} tile(s) changed`),
+            '…with the row\'s OWN tiles DELTA beside it, not a recount of the picture',
+            at.note.slice(0, 90));
+        check(json(at.facts.filter((f) => f !== '__all'))
+            === json(rows[k].data.facts.map((f) => f.id)),
+        '…and one SELECTABLE line per intermediate result the phase recorded',
+        json(at.facts));
+    }
+    /** ⛔ AND THE STATUS SAYS NOTHING WAS RE-RUN — the whole point of a ledger. */
+    const last = await atPhase(rows.length - 1);
+    check(/nothing was re-run/.test(last.status),
+        '⛔ the page says a phase is a VIEW — nothing was re-run', last.status);
+    check(/pass 2 — use STEP/.test(last.label),
+        '⛓⛓ …and the LAST pass-1 row hands over to the existing STEP', last.label);
+    /** ⛓ AND THE DELTAS SUM: the last phase folds to the level the page shows. */
+    await page.click('#genPhaseEnd');
+    const back = await atPhase(null);
+    check(back.gen.phase.index === null && back.gen.status === 'ok',
+        '⛓ `the FINISHED level` returns through the page\'s ONE display path');
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ CLAIM 3 — ⚖ THE 2026-08-18 RULING: THE PICTURE FOLLOWS THE TEXT
+ * ══════════════════════════════════════════════════════════════════════ */
+{
+    const rows = nodeSubject.ledger;
+    const k = rows.findIndex((r) => r.phase === 'on-connector');
+    await page.evaluate((i) => {
+        const el = document.getElementById('genPhase');
+        el.value = String(i);
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+    }, k);
+    let at = await atPhase(k);
+    check(at.gen.phase.selected.length === 0,
+        '⛔ NOTHING is painted until a line is SELECTED — the ruling\'s own shape');
+    const tick = async (id) => {
+        await page.evaluate((f) => {
+            const b = [...document.querySelectorAll('#genPhaseFacts input[data-fact]')]
+                .find((x) => x.dataset.fact === f);
+            b.checked = !b.checked;
+            b.dispatchEvent(new Event('change', { bubbles: true }));
+        }, id);
+        return atPhase(k);
+    };
+    at = await tick('demand-region');
+    const nodeDemand = rows[k].data.facts.find((f) => f.id === 'demand-region');
+    check(json(at.gen.phase.selected.map((f) => f.id)) === json(['demand-region']),
+        '⛓ selecting a LINE selects exactly its paintable');
+    check(json(at.gen.phase.selected[0].cells) === json(nodeDemand.cells),
+        '⛓⛓⛓ …and the CELLS the painter consumed are node\'s ledger\'s, cell for cell — the '
+        + 'readout IS the picture\'s argument', `${at.gen.phase.selected[0].cells.length} cell(s)`);
+    check(at.gen.phase.selected[0].kind === 'flood'
+        && at.gen.phase.selected[0].count === nodeDemand.count,
+    '…kind and count included', `${at.gen.phase.selected[0].kind}/${at.gen.phase.selected[0].count}`);
+    at = await tick('main-path');
+    check(at.gen.phase.selected.length === 2,
+        '⛓ MULTI-SELECT — two lines, two paintables', json(at.gen.phase.selected.map((f) => f.id)));
+    at = await tick('__all');
+    check(at.gen.phase.selected.length === rows[k].data.facts.length,
+        '⛓ the "ALL of this phase\'s facts" toggle selects every one',
+        `${at.gen.phase.selected.length} of ${rows[k].data.facts.length}`);
+    /** ⛔ AND THE SELECTION IS SCOPED TO ITS ROW — a fact id is unique within a
+     *  phase and not across them, so carrying ticks forward would paint a cell
+     *  list from a phase the reader is no longer looking at. */
+    await page.click('#genPhasePrev');
+    const prev = await atPhase(k - 1);
+    check(prev.gen.phase.selected.length === 0,
+        '⛔ …and moving to another phase CLEARS the selection — a fact id is a row\'s, '
+        + 'not the ledger\'s', json(prev.gen.phase.selected.map((f) => f.id)));
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ CLAIM 4 — THE THREE OVERLAYS AND THE LEGEND
+ * ══════════════════════════════════════════════════════════════════════ */
+{
+    const web = await load(`source=generate&seed=${AREAS.seed}&biome=${AREAS.biome}`
+        + `&count=0&skeleton=${AREAS.skeleton}&areas=${AREAS.areas}`);
+    check(web.layer === 'off' && web.overlays.groups.length === 0,
+        '⛔ the overlay opens OFF and draws nothing');
+    const setLayer = async (layer) => {
+        await page.selectOption('#genLayer', layer);
+        await page.waitForFunction((l) => window.__editorGenerate?.layer === l, layer,
+            { timeout: 60000 });
+        return page.evaluate(() => ({
+            gen: window.__editorGenerate,
+            legend: [...document.querySelectorAll('#genLegend .tr')].map((e) => e.textContent),
+        }));
+    };
+    for (const layer of ['sites', 'elements', 'areas', 'all']) {
+        // eslint-disable-next-line no-await-in-loop
+        const shown = await setLayer(layer);
+        const node = genOverlaysFor(nodeAreas.model, { layer, phase: null });
+        check(json(shown.gen.overlays.groups.map((g) => [g.id, g.count, g.style]))
+            === json(node.groups.map((g) => [g.id, g.count, g.style])),
+        `⛓⛓ the \`${layer}\` overlay's GROUPS are node's — id, cell count and style`,
+        json(shown.gen.overlays.groups.map((g) => g.id)));
+        check(json(shown.gen.overlays.groups.flatMap((g) => g.cells))
+            === json(node.groups.flatMap((g) => g.cells)),
+        `⛓⛓⛓ …and every CELL the painter was handed at \`${layer}\` is node's`,
+        `${shown.gen.overlays.groups.reduce((n, g) => n + g.count, 0)} cell(s)`);
+        /** ⛔ THE LEGEND NAMES EVERY DRAWN GROUP EXACTLY ONCE. */
+        check(shown.legend.length === node.legend.length,
+            `⛓ …and the LEGEND has one row per group plus one per note at \`${layer}\``,
+            `${shown.legend.length} rows`);
+    }
+    /** ⛓ THE LOCKS AND THE FLAG OF AN ACCEPTED GRAPH ARE DRAWN — the subject
+     *  this row was scanned for. */
+    const all = await setLayer('all');
+    const locks = all.gen.overlays.groups.find((g) => g.id === 'area:locks');
+    check(nodeAreas.areas.ran === true,
+        '⛓ the subject really is an ACCEPTED area graph (node says so)',
+        `${nodeAreas.areas.lockCount} lock(s), ${nodeAreas.areas.flags.length} flag(s)`);
+    check(locks && locks.count === nodeAreas.areas.locks.length,
+        '⛓⛓ an ACCEPTED area graph draws its boundary LOCKS',
+        `${locks?.count} vs ${nodeAreas.areas.locks.length}`);
+    check(all.gen.overlays.groups.some((g) => g.id === 'area:flags'),
+        '…and its FLAG(s)');
+    /** ⛔ NO TEXT ON THE CANVAS — the symbols are named ONCE each in the legend. */
+    check(all.legend.length > 0 && all.legend.every((t) => t.trim().length > 0),
+        '⛓ every legend row carries a label', `${all.legend.length} rows`);
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛔⛔ CLAIM 5 — A DROPPED ELEMENT DRAWS **NOTHING**
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * The geometry a refused certification measured survives on
+ * `certification.geometry` so the CENSUS numbers do (arc-3 §10.8) — but the
+ * level that SHIPPED does not contain it. A picture that read that field would
+ * draw a gadget nobody can walk into, and this is the row that says it does not.
+ */
+{
+    /**
+     * ⛔ THE SEARCH IS A CLAIM, NOT A PRELUDE. A grid with no dropped cell is a
+     * real state of the generator, and it must be REFUSED BY NAME here rather
+     * than surfacing three lines down as a `null` dereference — which is
+     * exactly how this row failed at `5c916efc0`.
+     */
+    check(DROPPED !== null,
+        `⛓⛓⛓ a DROPPED element SUBJECT still exists to check — searched, not typed `
+        + `(${DROPPED_GRID.biome}/${DROPPED_GRID.elements}, seeds 1..${DROPPED_SEEDS}, `
+        + 'smaller seed wins)',
+        DROPPED ? `seed ${DROPPED.seed} — ${nodeDropped.elements.refused.reason}`
+            : `NO seed in 1..${DROPPED_SEEDS} drops its element; this claim has no subject`);
+    /**
+     * ⛓ AND THE SIBLING SUBJECT IS ASSERTED FOR THE PROPERTY IT WAS CHOSEN FOR.
+     * `SUBJECT` is frozen on purpose — re-picking it by the same ascending rule
+     * would now select seed 1, a DIFFERENT level, and churn every CLAIM-1 cell
+     * count for no gain — but a frozen subject that quietly lost its property
+     * would leave the ledger rows asserting about a room nobody chose. This is
+     * the row that says it did not.
+     */
+    check(nodeSubject.elements?.ran === true && nodeSubject.elements?.certified === true,
+        `⛓ …and \`SUBJECT\` (seed ${SUBJECT.seed}) is still a PLACED killgate — the property `
+        + 'it was chosen for',
+        `ran ${nodeSubject.elements?.ran}, certified ${nodeSubject.elements?.certified}`);
+    if (DROPPED) {
+        // eslint-disable-next-line no-await-in-loop
+        await load(`source=generate&seed=${DROPPED.seed}&biome=${DROPPED.biome}`
+            + `&count=0&elements=${DROPPED.elements}`);
+        await page.selectOption('#genLayer', 'all');
+        await page.waitForFunction(() => window.__editorGenerate?.layer === 'all',
+            null, { timeout: 60000 });
+        const shown = await page.evaluate(() => ({
+            gen: window.__editorGenerate,
+            legend: [...document.querySelectorAll('#genLegend .tr')].map((e) => e.textContent),
+        }));
+        const reason = nodeDropped.elements.refused.reason;
+        check(shown.gen.overlays.groups.filter((g) => g.id.startsWith('element:')).length === 0,
+            '⛔⛔ …and the overlay draws NO element group at all',
+            json(shown.gen.overlays.groups.map((g) => g.id)));
+        check(shown.gen.overlays.notes.join(' ').includes(reason),
+            '⛓⛓ …and the REASON is a LEGEND row instead — by name',
+            shown.gen.overlays.notes.join(' ').slice(0, 100));
+        check(shown.legend.some((t) => t.includes(reason)),
+            '…and it is on the page where a reader is looking');
+    }
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ CLAIM 6 — THE FOUR INTERMEDIATE RESULTS SLICE 5a PRICED AND DID NOT
+ *               CARRY (arc 3, slice 5b — D1, D2, D3, D4)
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⛔ EVERY ONE OF THESE IS A **VALUE** CLAIM AND NOT AN ECHO: the anchor is
+ * node's own ledger for the same URL, and the comparison is CELL FOR CELL
+ * against the very object `drawPaintables` consumed. A page that listed the
+ * line and painted something else dies here.
+ *
+ * ⛓ AND NO PAINTER CODE WAS ADDED FOR ANY OF THEM. `drawPaintables` already
+ * switches on `cells|outline|path|flood` and the readout's lines are already
+ * the control, so a phase that learns a new fact reaches the screen with no
+ * page change at all — which is what ⚖ the 2026-08-18 ruling bought.
+ */
+{
+    const rows = nodeSubject.ledger;
+    await load(`source=generate&seed=${SUBJECT.seed}&biome=${SUBJECT.biome}`
+        + `&count=0&elements=${SUBJECT.elements}`);
+    const goTo = async (name) => {
+        const k = rows.findIndex((r) => r.phase === name);
+        await page.evaluate((i) => {
+            const el = document.getElementById('genPhase');
+            el.value = String(i);
+            el.dispatchEvent(new Event('input', { bubbles: true }));
+        }, k);
+        return { k, at: await atPhase(k) };
+    };
+    const tickAll = async (k) => {
+        await page.evaluate(() => {
+            const b = [...document.querySelectorAll('#genPhaseFacts input[data-fact]')]
+                .find((x) => x.dataset.fact === '__all');
+            if (!b.checked) b.click();
+        });
+        return atPhase(k);
+    };
+    const sel = (at, id) => at.gen.phase.selected.find((f) => f.id === id) ?? null;
+    const nodeFact = (name, id) => rows.find((r) => r.phase === name)
+        .data.facts.find((f) => f.id === id) ?? null;
+
+    /* ── D3: the ON-CONNECTOR candidate funnel ───────────────────────── */
+    {
+        const { k, at } = await goTo('on-connector');
+        const ids = at.facts.filter((f) => f !== '__all');
+        for (const id of ['door-candidates-offered', 'door-candidates-tried',
+            'door-candidates-legal']) {
+            check(ids.includes(id), `⛓ the on-connector row LISTS \`${id}\` as a selectable line`,
+                json(ids));
+        }
+        const after = await tickAll(k);
+        const legal = sel(after, 'door-candidates-legal');
+        const tried = sel(after, 'door-candidates-tried');
+        const offered = sel(after, 'door-candidates-offered');
+        check(json(legal?.cells) === json(nodeFact('on-connector', 'door-candidates-legal').cells),
+            '⛓⛓⛓ …and the LEGAL set the painter consumed is node\'s, cell for cell',
+            `${legal?.cells.length} cell(s)`);
+        check(legal?.cells.length === rows.find((r) => r.phase === 'on-connector')
+            .data.candidates,
+        '⛓⛓⛓ …and it is EXACTLY the set the element\'s ONE draw picked from '
+            + '(`cost.candidates`) — the equality that says it was CARRIED',
+        `${legal?.cells.length} vs ${rows.find((r) => r.phase === 'on-connector').data.candidates}`);
+        const key = (c) => `${c.x},${c.y}`;
+        const off = new Set(offered.cells.map(key));
+        const tri = new Set(tried.cells.map(key));
+        check(tried.cells.every((c) => off.has(key(c)))
+            && legal.cells.every((c) => tri.has(key(c))),
+        '⛓⛓ …and the funnel NARROWS on the page: offered ⊇ tried ⊇ legal',
+        `${off.size} ⊇ ${tri.size} ⊇ ${legal.cells.length}`);
+        check(legal.pick && tri.has(key(legal.pick)),
+            '⛔ …with the PICK outlined, and it is one of the legal cells', json(legal.pick));
+    }
+
+    /* ── D1: the door law's two floods, on the COMPOSITE row ─────────── */
+    {
+        const k = rows.map((r) => r.phase).lastIndexOf('composite');
+        await page.evaluate((i) => {
+            const el = document.getElementById('genPhase');
+            el.value = String(i);
+            el.dispatchEvent(new Event('input', { bubbles: true }));
+        }, k);
+        await atPhase(k);
+        const at = await tickAll(k);
+        const s = sel(at, 'door-flood-start');
+        const g = sel(at, 'door-flood-goal');
+        check(s && g, '⛓ the composite row carries BOTH sides of the door law\'s cut',
+            json(at.gen.phase.selected.map((f) => f.id)));
+        check(s.kind === 'flood' && g.kind === 'flood',
+            '…as `flood` paintables, which the existing painter already draws');
+        const key = (c) => `${c.x},${c.y}`;
+        const sk = new Set(s.cells.map(key));
+        check(g.cells.every((c) => !sk.has(key(c))),
+            '⛓⛓⛓ …and the two are DISJOINT on the page\'s own data — which IS clause 1',
+            `${s.cells.length} + ${g.cells.length}`);
+        const door = rows.find((r) => r.phase === 'on-connector').data.doorCell;
+        check(!sk.has(key(door)) && !g.cells.some((c) => key(c) === key(door)),
+            '⛔ …and the DOOR cell is in neither — it is the thing that was walled',
+            json(door));
+    }
+
+    /* ── D4: the certification's ROUTE ───────────────────────────────── */
+    {
+        const k = rows.findIndex((r) => r.phase === 'certification');
+        await page.evaluate((i) => {
+            const el = document.getElementById('genPhase');
+            el.value = String(i);
+            el.dispatchEvent(new Event('input', { bubbles: true }));
+        }, k);
+        await atPhase(k);
+        const at = await tickAll(k);
+        const route = sel(at, 'certification-route');
+        check(route !== null, '⛓ the CERTIFICATION row carries the solve\'s own ROUTE',
+            json(at.facts));
+        check(route.kind === 'path' && route.cells.length > 1,
+            '…as a `path`, which is the one thing a cell SET cannot say',
+            `${route.cells.length} cell(s)`);
+        check(json(route.cells) === json(nodeFact('certification', 'certification-route').cells),
+            '⛓⛓⛓ …and it is node\'s route, waypoint for waypoint');
+        check(route.note === null || /GAP/.test(route.note),
+            '⛔ …and a discontinuity is NAMED in the note rather than bridged',
+            (route.note ?? '(none)').slice(0, 60));
+        const lines = rows.find((r) => r.phase === 'certification').data.recordLines;
+        check(Array.isArray(lines) && lines.length > 0,
+            '⛓ …with the solve\'s RECORDS as reader\'s lines beside it', json(lines));
+    }
+
+    /* ── D2: the level-n floods and the VESTIBULE, on the AREAS subject ─ */
+    {
+        await load(`source=generate&seed=${AREAS.seed}&biome=${AREAS.biome}`
+            + `&count=0&skeleton=${AREAS.skeleton}&areas=${AREAS.areas}`);
+        const arows = nodeAreas.ledger;
+        const k = arows.findIndex((r) => r.phase === 'realisation');
+        check(k >= 0, '⛓ the AREAS subject reached REALISATION',
+            json(arows.map((r) => r.phase)));
+        await page.evaluate((i) => {
+            const el = document.getElementById('genPhase');
+            el.value = String(i);
+            el.dispatchEvent(new Event('input', { bubbles: true }));
+        }, k);
+        await atPhase(k);
+        const at = await tickAll(k);
+        const ves = at.gen.phase.selected.find((f) => f.id === 'goal-vestibule') ?? null;
+        const levels = at.gen.phase.selected.filter((f) => /^level-\d+-reach$/.test(f.id));
+        check(ves !== null, '⛓⛓ …and its REALISATION row carries the goal\'s VESTIBULE',
+            json(at.facts));
+        check(levels.length > 0, '⛓⛓ …and one LEVEL-n flood per key level asked',
+            json(levels.map((f) => `${f.id}:${f.count}`)));
+        /**
+         * ⛓⛓⛓ THE CLAIM THE FLOOD EXISTS FOR: level 0 is what the entrance
+         * reaches with every level->=1 lock walled, so it must be SMALLER than
+         * the next level up. A picture that painted the same set twice would
+         * pass a "the line is there" row and fail this one.
+         */
+        if (levels.length > 1) {
+            check(levels[0].count < levels[1].count,
+                '⛓⛓⛓ …and level 0 reaches STRICTLY FEWER cells than level 1 — the locks cut',
+                `${levels[0].count} < ${levels[1].count}`);
+        }
+        const nodeVes = arows[k].data.facts.find((f) => f.id === 'goal-vestibule');
+        check(json(ves.cells) === json(nodeVes.cells),
+            '⛓⛓ …cell for cell against node\'s own ledger');
+    }
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ ⚖ WATCH-PAGE ITEM (iii) — `?phase=` IS A DEEP LINK
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⚖ The user, 2026-08-22: *"a URL parameter for the PHASE so demo links
+ * deep-link to a phase"*. CLAIM 1 already asserts the page OPENS on the
+ * FINISHED level and that row is UNCHANGED — absence still means FINISHED, and
+ * this parameter did not move the default. These rows are what it added.
+ *
+ * ⛔ FOUR PROPERTIES, AND THEY FAIL INDEPENDENTLY: it LANDS, the readout AGREES
+ * with the canvas about which row that is, the link is a FIXED POINT with the
+ * new key in it, and a name this ladder does not have is REFUSED BY NAME
+ * instead of clamped.
+ */
+{
+    const NAME = nodeSubject.ledger[2].phase;
+    const BASE = `source=generate&seed=${SUBJECT.seed}&biome=${SUBJECT.biome}`
+        + `&count=0&elements=${SUBJECT.elements}`;
+    const bar = () => page.evaluate(() => window.location.search);
+    /**
+     * ⛔ THE DEEP LINK LANDS — and the row asserts the NAME, not only the
+     * index. An index claim would pass on a page that had landed on the right
+     * NUMBER of a different ladder, which is exactly the confusion the
+     * name-not-index decision was taken to avoid.
+     */
+    const deep = await load(`${BASE}&phase=${NAME}`);
+    check(deep.phase.index !== null && deep.phase.phases[deep.phase.index] === NAME,
+        `⛓⛓⛓ ⚖ ITEM (iii): \`?phase=${NAME}\` OPENS ON THAT ROW — from the URL alone, `
+        + 'with no press',
+        `index ${deep.phase.index} of ${deep.phase.count} = `
+        + `${json(deep.phase.phases[deep.phase.index])}`);
+    /**
+     * ⛔ AND THE PAGE AGREES WITH ITSELF. The readout says one thing; the LABEL
+     * is what the reader sees. A deep link that moved the readout and left the
+     * label on `the FINISHED level` would pass the row above.
+     */
+    const shownLabel = await page.evaluate(
+        () => document.getElementById('genPhaseLabel').textContent);
+    check(shownLabel.includes(NAME) && !shownLabel.includes('FINISHED'),
+        '…and the LABEL on the page says so too — the readout and the picture agree',
+        json(shownLabel));
+    /**
+     * ⛔ THE FIXED POINT, WITH THE NEW KEY IN IT. `?phase=` is DELETED by the
+     * first `show()` and re-SET by `goToPhase`, and a `delete` followed by a
+     * `set` APPENDS — so the key lands at the END of the bar, and a reload has
+     * to produce the SAME string rather than shuffling it again. That is the
+     * exact drift `writeRosterParam`'s docblock records having broken once.
+     */
+    const first = await bar();
+    check(first.includes(`phase=${NAME}`),
+        '⛓⛓ …and the bar CARRIES the phase — a link copied from here names it', first);
+    await load(first.replace(/^\?/, ''));
+    const second = await bar();
+    check(second === first,
+        '⛓⛓⛓ …and RELOADING that link rewrites it to ITSELF — a fixed point WITH the new '
+        + 'key, not a parameter that migrates down the bar on every copy',
+        `${first}\n        → ${second}`);
+    /**
+     * ⛔ THE ABSENCE ROW (trap 478's family). Pressing `the FINISHED level`
+     * must take the key OUT, not set it to some spelling of "none": the
+     * default has to leave the bar byte-identical to every link ever copied
+     * off this page, and a round trip cannot see a writer that kept it.
+     */
+    await page.click('#genPhaseEnd');
+    await page.waitForFunction(() => window.__editorGenerate?.phase?.index === null,
+        null, { timeout: 60000 });
+    const ended = await bar();
+    check(!ended.includes('phase='),
+        '⛔ …and pressing `the FINISHED level` DELETES the key — the default leaves the bar '
+        + 'clean, it is not spelled',
+        ended);
+    /**
+     * ⛔⛔ A NAME THIS LADDER DOES NOT HAVE IS REFUSED **BY NAME** — spoken in
+     * the status line AND on the readout, and NOT clamped. A clamp would make
+     * a link naming a phase that does not exist look exactly like one naming a
+     * phase that does, and the reader would study the wrong picture.
+     */
+    const BAD = 'nosuchphase';
+    const refused = await load(`${BASE}&phase=${BAD}`);
+    const status = await page.evaluate(
+        () => document.getElementById('status').textContent);
+    check(refused.phase.index === null,
+        `⛔⛔ …and \`?phase=${BAD}\` is NOT CLAMPED — the page stays on the FINISHED level`,
+        `index ${json(refused.phase.index)}`);
+    check(typeof refused.phase.why === 'string' && refused.phase.why.includes(BAD)
+        && nodeSubject.ledger.every((r) => refused.phase.why.includes(r.phase)),
+    '⛔⛔ …it is REFUSED BY NAME on the readout, and the refusal LISTS the phases this run '
+        + 'really recorded',
+    json(refused.phase.why));
+    check(status.includes(BAD),
+        '…and the reader is told where they are looking — the status line carries it',
+        json(status.slice(0, 120)));
+    /**
+     * ⛔ AND A REFUSED PHASE LEAVES NO LIE IN THE BAR. The page did not go
+     * there, so the link must not claim it did.
+     */
+    check(!(await bar()).includes('phase='),
+        '…and the REFUSED name is not written back to the bar — the link cannot claim a '
+        + 'phase the page is not showing',
+        await bar());
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ ⚖ WATCH-PAGE ITEM (ii) — THE THREE PHASE BUTTONS DO NOT DRIFT
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⚖ The user, 2026-08-22: *"the three phase buttons move to the LEFT so a
+ * changing text width changes only the slider's width"*. `#genPhaseLabel`
+ * swings from `no generation yet` to ~60 characters as the ladder is walked,
+ * and in the old order (prev · SLIDER · next · END · label) that swing pushed
+ * `PHASE ▶` and `the FINISHED level` sideways on every press.
+ *
+ * ⛔ MEASURED, NOT EYEBALLED — `getBoundingClientRect().x`, over a FULL ladder
+ * walk driven by the button the reader actually presses.
+ *
+ * ⛔ AND THE TWO HALVES ARE TWO ROWS, because they fail independently. The
+ * ORDER alone already holds the buttons' x — nothing that changes width is
+ * left of them — so a row asserting only x-constancy passes on a build whose
+ * slider is still the rigid `width:14em` and whose label therefore wraps
+ * instead of the slider shrinking. The row that gates the FLEX is the one
+ * below it: the slider's OWN width must CHANGE across the walk, because
+ * absorbing the label's swing is the whole of what the flex does.
+ */
+{
+    await load('source=generate&seed=2&biome=post-sword&count=0&elements=killgate');
+    /** The geometry of the row, as the browser lays it out right now. */
+    const metrics = () => page.evaluate(() => {
+        const x = (id) => document.getElementById(id).getBoundingClientRect().x;
+        return {
+            prev: x('genPhasePrev'),
+            next: x('genPhaseNext'),
+            end: x('genPhaseEnd'),
+            slider: document.getElementById('genPhase').getBoundingClientRect().width,
+            label: document.getElementById('genPhaseLabel').textContent,
+        };
+    });
+    const rows = nodeSubject.ledger.length;
+    /**
+     * ⛔ THE WALK IS THE READER'S OWN: `PHASE ▶`, pressed from the FINISHED
+     * level through every pass-1 row. Setting the slider's value directly
+     * would skip the state the label is longest in and would not be the
+     * gesture the user complained about.
+     */
+    const seen = [await metrics()];
+    for (let k = 0; k < rows; k += 1) {
+        // eslint-disable-next-line no-await-in-loop
+        await page.click('#genPhaseNext');
+        // eslint-disable-next-line no-await-in-loop
+        await atPhase(k);
+        // eslint-disable-next-line no-await-in-loop
+        seen.push(await metrics());
+    }
+    const constant = (key) => seen.every((m) => m[key] === seen[0][key]);
+    check(constant('prev') && constant('next') && constant('end'),
+        `⛓⛓⛓ ⚖ ITEM (ii): across a FULL ladder walk (${rows} press(es) of \`PHASE ▶\`) the `
+        + 'three buttons\' x is CONSTANT — the label\'s width no longer moves them',
+        `prev ${json([...new Set(seen.map((m) => m.prev))])} · `
+        + `next ${json([...new Set(seen.map((m) => m.next))])} · `
+        + `END ${json([...new Set(seen.map((m) => m.end))])}`);
+    /**
+     * ⛔ AND THE LABEL REALLY DID SWING. A walk whose label never changed width
+     * would make the row above vacuously true — trap 566's shape — so the
+     * subject is asserted before the property.
+     */
+    check(new Set(seen.map((m) => m.label)).size > 1,
+        '…on a walk whose LABEL really did change — the row is not vacuous',
+        `${new Set(seen.map((m) => m.label)).size} distinct label(s), `
+        + `widths ${Math.min(...seen.map((m) => m.label.length))}..`
+        + `${Math.max(...seen.map((m) => m.label.length))} chars`);
+    check(new Set(seen.map((m) => m.slider)).size > 1,
+        '⛓⛓ …and it is the SLIDER that absorbed the swing — its own width CHANGES across '
+        + 'the walk (this is the row that gates the flex, not the reorder)',
+        json([...new Set(seen.map((m) => Math.round(m.slider)))]));
+}
+
+check(errors.length === 0, 'no page errors across the whole row', errors.slice(0, 3).join(' | '));
+
+console.log(failed ? `\n${failed} FAILURE(S)` : '\nALL CHECKS PASSED');
+await finish(failed ? 1 : 0);

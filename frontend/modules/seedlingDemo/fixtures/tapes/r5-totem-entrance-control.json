@@ -1,0 +1,219 @@
+{
+  "tape_version": 3,
+  "game": "seedling",
+  "name": "r5-totem-entrance-control",
+  "description": "⛓ THE CONTROL, and the field is a BUTTON rather than a flag. Byte-identical to `r5-totem-entrance` except for one target: it opens the same chest, walks through the same join and takes the same door, and it does NOT stand on `buttonroom@32,48`. So L39 is built WITH `wandlock@144,592` and the same 400 ticks of UP end PINNED one tile short of it. ⚠ Its ledger is NOT empty — the arrival button writes {37,4}+{38,5} and the chest clears {38,1} in both arms, which is exactly why an exact-set assertion has to name them.",
+  "boot": {
+    "level": 38,
+    "x": 144,
+    "y": 288
+  },
+  "noclip": false,
+  "noDamage": true,
+  "noHazards": [],
+  "grants": [
+    {
+      "level": 38,
+      "items": [
+        "conch",
+        "feather",
+        "fire",
+        "sword"
+      ]
+    }
+  ],
+  "persistence": [],
+  "tick_count": 1048,
+  "inputs": [
+    {
+      "key": "up",
+      "from": 0,
+      "to": 136
+    },
+    {
+      "key": "down",
+      "from": 138,
+      "to": 140
+    },
+    {
+      "key": "right",
+      "from": 148,
+      "to": 150
+    },
+    {
+      "key": "down",
+      "from": 148,
+      "to": 225
+    },
+    {
+      "key": "left",
+      "from": 150,
+      "to": 151
+    },
+    {
+      "key": "right",
+      "from": 151,
+      "to": 152
+    },
+    {
+      "key": "left",
+      "from": 154,
+      "to": 156
+    },
+    {
+      "key": "right",
+      "from": 159,
+      "to": 160
+    },
+    {
+      "key": "up",
+      "from": 227,
+      "to": 230
+    },
+    {
+      "key": "down",
+      "from": 231,
+      "to": 233
+    },
+    {
+      "key": "down",
+      "from": 237,
+      "to": 239
+    },
+    {
+      "key": "right",
+      "from": 237,
+      "to": 284
+    },
+    {
+      "key": "up",
+      "from": 239,
+      "to": 240
+    },
+    {
+      "key": "left",
+      "from": 284,
+      "to": 285
+    },
+    {
+      "key": "right",
+      "from": 285,
+      "to": 286
+    },
+    {
+      "key": "left",
+      "from": 286,
+      "to": 287
+    },
+    {
+      "key": "right",
+      "from": 287,
+      "to": 288
+    },
+    {
+      "key": "up",
+      "from": 296,
+      "to": 298
+    },
+    {
+      "key": "left",
+      "from": 296,
+      "to": 344
+    },
+    {
+      "key": "down",
+      "from": 298,
+      "to": 299
+    },
+    {
+      "key": "up",
+      "from": 299,
+      "to": 300
+    },
+    {
+      "key": "down",
+      "from": 303,
+      "to": 305
+    },
+    {
+      "key": "up",
+      "from": 307,
+      "to": 308
+    },
+    {
+      "key": "right",
+      "from": 344,
+      "to": 345
+    },
+    {
+      "key": "left",
+      "from": 345,
+      "to": 346
+    },
+    {
+      "key": "left",
+      "from": 351,
+      "to": 353
+    },
+    {
+      "key": "up",
+      "from": 351,
+      "to": 432
+    },
+    {
+      "key": "right",
+      "from": 355,
+      "to": 357
+    },
+    {
+      "key": "left",
+      "from": 361,
+      "to": 362
+    },
+    {
+      "key": "right",
+      "from": 369,
+      "to": 370
+    },
+    {
+      "key": "left",
+      "from": 373,
+      "to": 374
+    },
+    {
+      "key": "right",
+      "from": 383,
+      "to": 384
+    },
+    {
+      "key": "left",
+      "from": 387,
+      "to": 388
+    },
+    {
+      "key": "down",
+      "from": 432,
+      "to": 433
+    },
+    {
+      "key": "up",
+      "from": 433,
+      "to": 434
+    },
+    {
+      "key": "down",
+      "from": 436,
+      "to": 437
+    },
+    {
+      "key": "up",
+      "from": 504,
+      "to": 600
+    },
+    {
+      "key": "up",
+      "from": 600,
+      "to": 1000
+    }
+  ]
+}

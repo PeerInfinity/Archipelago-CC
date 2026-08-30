@@ -1,0 +1,36 @@
+{
+  "tape_version": 3,
+  "game": "seedling",
+  "boot": {
+    "level": 8,
+    "x": 32,
+    "y": 128
+  },
+  "noclip": false,
+  "noHazards": [
+    "water",
+    "lava",
+    "ice",
+    "waterfall"
+  ],
+  "persistence": [],
+  "tick_count": 130,
+  "inputs": [
+    {
+      "key": "right",
+      "from": 1,
+      "to": 130
+    }
+  ],
+  "name": "r6-contact-pair-heart",
+  "noDamage": false,
+  "grants": [
+    {
+      "level": 8,
+      "items": [
+        "health"
+      ]
+    }
+  ],
+  "description": "THE CONTACT PAIR v2, arm 3 of 3 \u2014 `noDamage: FALSE` and ONE GRANT, which is the field that moves. `health` is not a flag: `Bot.applyGrant` does `Player.hitsMax = Player.hitsMax + 1` over `hitsMaxDef` 3, so this arm walks into the same trap with FOUR hearts and the same three hits at 48 / 72 / 100 leave it standing where the live arm died. The death that does come is a FOURTH hit at 123, and the arm is the direct witness that `hits >= hitsMax` reads a run value rather than a constant \u2014 R4's 'the one claim on the ladder whose truth value FLIPS', driven. It is also the only arm that witnesses the i-frame SUPPRESSION from the enemy's side: one tick of overlap inside an open window, paying nothing."
+}

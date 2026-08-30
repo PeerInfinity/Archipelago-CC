@@ -1,0 +1,30 @@
+{
+  "tape_version": 5,
+  "game": "seedling",
+  "name": "r5-l38-fade-boot",
+  "description": "⛓ THE FADE PROBE, HALF ONE — forty ticks of nothing at L38's L37 arrival. It exists to DECOMPOSE `r5-totem-entrance`'s 370 dead frames, and it found that the boot fade is NOT the 21 `r5-feather` measured: this level boots in TWENTY. A `blackCover` countdown and the frame `Bot.update` samples it on are two clocks, so the cost of a load is 19, 20 or 21 depending on their phase — which is why the ceremony's share had to be measured by subtraction rather than assumed from another tape's constants.",
+  "boot": {
+    "level": 38,
+    "x": 144,
+    "y": 288
+  },
+  "noclip": false,
+  "noDamage": true,
+  "noHazards": [],
+  "grants": [
+    {
+      "level": 38,
+      "items": [
+        "conch",
+        "feather",
+        "fire",
+        "sword"
+      ]
+    }
+  ],
+  "persistence": [],
+  "equips": [],
+  "pins": [],
+  "tick_count": 40,
+  "inputs": []
+}

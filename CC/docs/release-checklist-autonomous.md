@@ -828,11 +828,18 @@ for g in metamath depgraph jta bakingadventure codingadventure; do
 done
 ```
 
-The pack scripts produce **deterministic** zips, so only APWorlds whose *source*
-changed since the last pack show up in `git status` — the rest repack
-byte-identical. Commit only the changed `apworlds/*.apworld` (they're tracked
-release artifacts). (2026-06-27: `json_tools_installer`, `depgraph`, `metamath`
-changed; `jta`/`bakingadventure`/`codingadventure` byte-identical.)
+The pack scripts are **content-deterministic but not byte-deterministic**:
+zip entries embed filesystem mtimes, so a repack of unchanged sources can
+still show as modified in `git status` (2026-07-07 finding — the earlier
+"byte-identical" claim here was wrong). Don't use `git status` churn to decide
+what changed; the unit test
+`worlds/json_tools_installer/test/test_packed_apworld_freshness.py` compares
+tracked apworlds against fresh packs **by content** and fails on real
+staleness — run it (or the whole installer suite) and commit every
+`apworlds/*.apworld` it flags. Note the tracked artifacts are what the
+download links and the `--dev` installer serve: **an unrepacked apworld ships
+stale code even when the repo source is current** (this bit twice in 2026-07;
+the freshness test now guards it).
 
 ### 7.2 Dev installer test
 
@@ -894,12 +901,67 @@ Final result (run with `--upstream-fixes`): **all four variants exit 0, spoiler
 PASS, and UT-fuzz 10/10 success / 0 failures** (both Adventure and ALttP). See
 memory `project_romless_installer_alttp`.
 
-### 7.3 Manual GUI installer test (human-run, not autonomous)
+Two further opt-in variants exist since 2026-07-07 (not part of the standard
+four-variant loop; run them when the release touched dependency handling or the
+uninstall path):
+
+```bash
+python scripts/install_json_tools.py --dev --fresh --skip-setup --skip-tests \
+    --test-apworld-deps --test-uninstall --target-dir /tmp/jt-test
+```
+
+`--test-apworld-deps` seeds the clone with `metamath.apworld` before installing
+and asserts the installer auto-installed its requirements (metamathpy imports,
+MetaMath generates). `--test-uninstall` snapshots the clone pre-install and
+asserts the uninstall path restores it exactly (this is the check that caught
+uninstall deleting vanilla world files via `upstream_fixes` presence-detection).
+
+### 7.2b Frozen (compiled) install test
+
+The frozen counterpart of 7.2: verifies the installer works inside a compiled
+Windows Archipelago install (frozen_dest/`lib\` routing, apworld packing,
+in-process pip, world_source, export into the output zip). Same push-first
+caveat as 7.2: `--source dev` downloads from `main`, so push the release
+content first (or use `--source repo` to test the local HEAD offline).
+
+**Local bench** (WSL, against a compiled AP install — the location is input,
+never assumed):
+
+```bash
+python scripts/test/test-frozen-install.py \
+    --install-dir /mnt/c/ProgramData/Archipelago \
+    --scenario baseline pip-guard reinstall uninstall worldgen export-parity
+```
+
+Scenarios always reset the install first and reset again on success; failures
+leave it dirty for inspection (`--keep-state` to skip the success-reset). If
+WSL interop is broken after a WSL restart, the harness detects it and prints
+the re-registration command. 2026-07-07: all six scenarios green on the
+0.6.7 bench (87 checks).
+
+**CI variant** (windows-latest, ~30-45 min, ~250 MB of downloads):
+
+```bash
+gh workflow run test-frozen-install.yml --repo PeerInfinity/Archipelago-CC
+gh run watch --repo PeerInfinity/Archipelago-CC <run-id>
+```
+
+Installs the latest released AP Setup exe silently (runners execute elevated —
+locally this same install is the one manual UAC-consent step of bench setup)
+and runs the full scenario set. Inputs: `ap_version` (default = latest
+ArchipelagoMW release), `scenarios`, `source` (dev/stable/repo).
+
+### 7.3 Manual GUI installer test (human-run, visual checks only)
 
 `release-checklist.md` §7.3 — download `json_tools_installer.apworld` from `main`
 into a fresh vanilla Archipelago, run `Launcher.py`, and click through the JSON
-Tools Installer GUI. This is **interactive (a GUI)** and cannot be driven
-headlessly — flag it for the human to run; it isn't part of the autonomous flow.
+Tools Installer GUI. **The functional substance of this test is now covered
+autonomously**: the unit suite guards the GUI checkbox/property invariant, and
+7.2b's baseline scenario drives the same install flow (same functions, same
+component selection, single pip run, export config) inside the real frozen exe.
+The human click-through remains for **visual/interaction checks only** (layout,
+popups readable and not auto-dismissed, progress feedback) — flag it for the
+human, but it no longer gates functional correctness.
 
 ---
 

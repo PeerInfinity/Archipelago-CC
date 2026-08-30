@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import CollectionState
 
-from rule_builder import True_, False_, And, Has, HasAll, True_
+from ._ext import True_, False_, And, Has, HasAll, True_
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState

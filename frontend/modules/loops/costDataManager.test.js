@@ -375,3 +375,58 @@ describe('CostDataManager — clear / exportToJSON', () => {
     expect(JSON.parse(out.content)).toMatchObject({ regions: { Forest: { moveCost: 30 } } });
   });
 });
+
+describe('CostDataManager — explicit-only costs and the time drain (M5)', () => {
+  // Summary substrates (runner, bounce) are priced by TIME. Their per-action
+  // costs apply only where the sidecar names one EXPLICITLY — a sidecar-level
+  // default exists precisely for regions the data did not mention, which is
+  // the case that must read as free.
+  function loaded(data) {
+    const m = new CostDataManager();
+    m.setCostData(data, 'test');
+    return m;
+  }
+
+  const SIDECAR = {
+    regions: {
+      Costed: { moveCost: 30 },
+      Timed: { timeDrainPerSecond: 4 },
+      Bare: {},
+    },
+    locations: { CostedLoc: 70 },
+    defaultRegionCost: 50,
+    defaultLocationCost: 100,
+  };
+
+  it('explicit lookups answer null where the sidecar states nothing', () => {
+    const m = loaded(SIDECAR);
+    expect(m.getExplicitRegionCost('Costed')).toBe(30);
+    expect(m.getExplicitRegionCost('Bare')).toBeNull();
+    expect(m.getExplicitRegionCost('Unmentioned')).toBeNull();
+    expect(m.getExplicitLocationCost('CostedLoc')).toBe(70);
+    expect(m.getExplicitLocationCost('Unmentioned')).toBeNull();
+
+    // ...while the ordinary lookups still answer with the fallbacks. The
+    // whole point of the split: the summary economy must not see these.
+    expect(m.getRegionCost('Unmentioned')).toBe(50);
+    expect(m.getLocationCost('Unmentioned')).toBe(100);
+  });
+
+  it('the drain rate falls back per-region → sidecar → 1/s', () => {
+    const m = loaded(SIDECAR);
+    expect(m.getTimeDrainPerSecond('Timed')).toBe(4);
+    expect(m.getTimeDrainPerSecond('Costed')).toBe(1);
+
+    const withDefault = loaded({ ...SIDECAR, defaultTimeDrainPerSecond: 7 });
+    expect(withDefault.getTimeDrainPerSecond('Timed')).toBe(4);
+    expect(withDefault.getTimeDrainPerSecond('Costed')).toBe(7);
+
+    // Nothing loaded at all → the 1/s default, not a crash.
+    expect(new CostDataManager().getTimeDrainPerSecond('Anything')).toBe(1);
+  });
+
+  it('a negative rate is clamped to zero (a drain never refunds mana)', () => {
+    const m = loaded({ ...SIDECAR, regions: { ...SIDECAR.regions, Timed: { timeDrainPerSecond: -5 } } });
+    expect(m.getTimeDrainPerSecond('Timed')).toBe(0);
+  });
+});

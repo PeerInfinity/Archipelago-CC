@@ -1,0 +1,16 @@
+{
+  "name": "spark-off-z15-savings",
+  "options": {
+    "modOverrides": {
+      "auto_buy_budget_enabled": true
+    },
+    "zoneLimit": 15,
+    "maxRuns": 500,
+    "excludeTaskIds": [
+      17,
+      28,
+      88,
+      158
+    ]
+  }
+}

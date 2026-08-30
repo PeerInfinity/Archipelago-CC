@@ -7,7 +7,7 @@
  */
 
 import { createRng } from '../shared/rng.js';
-import { makeHasRule, makeAndRule, makeOrRule } from '../shared/rulesJsonBuilder.js';
+import { makeHasRule, makeAndRule, makeOrRule, makeExit, makeTrueRule } from '../shared/rulesJsonBuilder.js';
 
 const OPERATIONS = ['+', '-', '*', '/'];
 const OPERATION_ORDER = ['+', '-', '*', '/'];
@@ -862,7 +862,7 @@ function pathCostToRule(pathCost) {
 }
 
 function pathCostsToRule(pathCosts) {
-    if (!pathCosts.length) return { rule: 'True_' };
+    if (!pathCosts.length) return makeTrueRule();
     if (pathCosts.length === 1) return pathCostToRule(pathCosts[0]);
 
     const seen = new Set();
@@ -910,11 +910,8 @@ export function exportRulesJson(gameData) {
     const menuExits = [];
     for (const edge of (edgesBySource['null'] || [])) {
         const target = nodes[edge.targetIndex];
-        menuExits.push({
-            name: `C to ${target.regionName}`,
-            connected_region: target.regionName,
-            access_rule: pathCostsToRule(edge.pathCosts),
-        });
+        menuExits.push(makeExit(`C to ${target.regionName}`, target.regionName,
+            pathCostsToRule(edge.pathCosts)));
     }
     regions['C'] = { name: 'C', exits: menuExits, locations: [] };
 
@@ -932,11 +929,8 @@ export function exportRulesJson(gameData) {
             const target = nodes[targetIdx];
             const allCosts = [];
             for (const te of tedges) allCosts.push(...te.pathCosts);
-            exits.push({
-                name: `${node.regionName} to ${target.regionName}`,
-                connected_region: target.regionName,
-                access_rule: pathCostsToRule(allCosts),
-            });
+            exits.push(makeExit(`${node.regionName} to ${target.regionName}`,
+                target.regionName, pathCostsToRule(allCosts)));
         }
 
         const isTrash = node.item === TRASH_ITEM;

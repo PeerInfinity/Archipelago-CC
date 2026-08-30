@@ -1,0 +1,8 @@
+{
+  "name": "thresholds-off",
+  "options": {
+    "modOverrides": {
+      "threshold_master": false
+    }
+  }
+}
