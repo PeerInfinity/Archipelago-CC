@@ -167,7 +167,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { argvHelp, helpText } from './argvHelp.js';
+import { argvHelp, helpText, isEntryPoint } from './argvHelp.js';
 
 argvHelp(import.meta.url);
 
@@ -178,7 +178,20 @@ const arg = (name, fallback) => (argv.find((a) => a.startsWith(`--${name}=`))
     ?? `--${name}=${fallback}`).slice(name.length + 3);
 const JSON_OUT = argv.includes('--json');
 const WRITE_BASELINE = argv.includes('--write-baseline');
-/** ⛓ ⚖ 71 (b)'s escape hatch — drive THIS tree, the pre-SG1 behaviour exactly. */
+/**
+ * ⛓ ⚖ 71 (b)'s escape hatch — drive THIS tree, the pre-SG1 behaviour exactly.
+ *
+ * ⛔⛔ AND ONE MORE REASON THE WORKTREE IS THE DEFAULT, stated here because
+ * this is the flag people reach for precisely WHEN THEIR TREE IS DIRTY:
+ * `repairPorcelain` calls `git checkout -- <path>` on paths it believes its own
+ * children moved, which is trap 893 wearing an instrument. It is bounded — a
+ * path already dirty BEFORE the batch is in `wasPaths` and is left alone, and
+ * an untracked creation is never deleted — so an edit that pre-dates the run is
+ * safe. What is NOT safe is an edit made DURING a batch to a path a child also
+ * touched: that path is not in `wasPaths`, the mtime sweep names it, and it is
+ * restored to HEAD. Under the default that acts on a throwaway tree and is
+ * harmless; under `--in-place` it acts on yours.
+ */
 const IN_PLACE = argv.includes('--in-place');
 const ONLY = arg('only', '');
 
@@ -299,8 +312,21 @@ let treeRemoved = false;
 function removeWorktree() {
     if (!WORKTREE || treeRemoved) return;
     treeRemoved = true;
-    try { git(REPO, ['worktree', 'remove', '--force', WORKTREE]); } catch {
+    /**
+     * ⛔⛔ **`-f -f`, AND THE SINGLE `--force` WAS MEASURED FAILING.** A
+     * worktree whose `add` was interrupted stays LOCKED with the reason
+     * `initializing`, and git refuses `remove --force` on a locked tree —
+     * *"cannot remove a locked working tree … use 'remove -f -f' to override
+     * or unlock first"*. `worktree prune` does not rescue it either: prune
+     * deliberately skips LOCKED registrations. So the one case a cleanup path
+     * exists for — a setup that died halfway — was the one case it could not
+     * clean, and the registration outlived every attempt. Found by hand on
+     * three real orphans; both forces are load-bearing.
+     */
+    try { git(REPO, ['worktree', 'remove', '-f', '-f', WORKTREE]); } catch {
         try { rmSync(WORKTREE, { recursive: true, force: true }); } catch { /* gone */ }
+        /* ⛓ a lock left behind would make `prune` skip the registration too. */
+        try { git(REPO, ['worktree', 'unlock', WORKTREE]); } catch { /* not locked */ }
     }
     try { git(REPO, ['worktree', 'prune']); } catch { /* nothing to prune */ }
 }
@@ -309,7 +335,83 @@ for (const sig of ['SIGINT', 'SIGTERM', 'SIGHUP']) {
     process.on(sig, () => { removeWorktree(); process.exit(130); });
 }
 
-if (!IN_PLACE) {
+/**
+ * ⛓ WAS THIS FILE LAUNCHED, OR MERELY IMPORTED? ⛔ DECLARED HERE, ABOVE BOTH
+ * ITS USES — a `const` read above its declaration is a TDZ throw at module
+ * scope, which for this gate means every child's IMPORT door dying on a
+ * ReferenceError. Measured, on the first run after the guard went in.
+ */
+const IS_ENTRY_POINT = isEntryPoint(import.meta.url);
+
+/**
+ * ⛓⛓⛓ **AN ORPHANED WORKTREE FROM AN EARLIER RUN IS REPORTED, NEVER DELETED**
+ * — and this row exists because one appeared. During SG1's own matrix a
+ * `procgen-help-tree-*` turned up in `/tmp` that no run of mine had left: a
+ * half-created tree whose registration held a `locked` file reading
+ * **`initializing`** and an `index.lock` with no `index` — the signature of a
+ * `git worktree add` SIGKILLed mid-checkout. The exit and signal handlers
+ * cannot cover that case: SIGKILL runs nothing.
+ *
+ * ⛔ REPORT, NEVER AUTO-DELETE. It is the same law `repairPorcelain` states
+ * fifty lines down — restoring a tracked path is recoverable, deleting
+ * somebody's directory is not — and an orphan here may be ANOTHER SESSION'S
+ * run in flight, whose tree looks exactly like a dead one from outside.
+ * `worktree prune` first, because that only drops registrations whose
+ * directory is already gone; whatever survives it is a real directory and gets
+ * NAMED, with its lock reason, so it stops accumulating silently.
+ */
+if (!JSON_OUT && IS_ENTRY_POINT) {
+    try { git(REPO, ['worktree', 'prune']); } catch { /* nothing to prune */ }
+    try {
+        const orphans = git(REPO, ['worktree', 'list', '--porcelain']).split('\n\n')
+            .map((b) => b.split('\n'))
+            .filter((ls) => (ls[0] ?? '').startsWith('worktree ')
+                && ls[0].includes('/procgen-help-tree-'))
+            .map((ls) => ({
+                path: ls[0].slice('worktree '.length),
+                locked: ls.find((l) => l.startsWith('locked')) ?? null,
+            }));
+        for (const o of orphans) {
+            /* ⛓ STABLE PREFIX — this line is the only standing detector for
+             *  the class, so a future check can grep `## ⚠ ORPHAN WORKTREE`. */
+            console.log(`## ⚠ ORPHAN WORKTREE — ${o.path}${o.locked ? ` (${o.locked})` : ''}: a `
+                + 'previous `procgen-help-tree-*` is still registered. Either a run in flight in '
+                + 'another session, or one SIGKILLed mid-setup. ⛔ NOT removed by this run; '
+                + '`git worktree remove --force <path> && git worktree prune` clears a dead one.');
+        }
+    } catch { /* a repo that cannot list worktrees is not this gate's finding */ }
+}
+
+/**
+ * ⛓⛓⛓ **AND THE WORKTREE IS BUILT ONLY WHEN THIS FILE WAS LAUNCHED, NEVER
+ * WHEN IT WAS MERELY IMPORTED** — the entry-point guard, and W2 SHIPPED
+ * WITHOUT IT AND MEASURED THE COST.
+ *
+ * ⛔⛔ THE DEFECT, AND IT IS THE GATE BITING ITSELF. This file is one of the
+ * 265 instruments, so every `--doors=all` run opens its IMPORT door: `node -e
+ * "await import(<this file>)"`. Without this guard that child ran the module
+ * scope above, which now starts a 30-second `git worktree add` — and the child
+ * is KILLED at its 5 s baselined ceiling, mid-checkout. Each run therefore
+ * left a half-created tree in `/tmp` and a `locked initializing` registration
+ * in the COMMON gitdir (a linked worktree registers in the primary repo's
+ * `.git/worktrees/`, which is why they accumulated THERE), and **neither is
+ * visible to this gate's own observers**: the porcelain and the mtime sweep
+ * watch the working tree, not `.git`. Three of them had piled up before the
+ * matrix noticed. ⛓ It cannot be seen as a NEW finding either — this file is
+ * already on the import-door baseline, so its row is KNOWN and green whatever
+ * its module scope does. A gate that cannot observe its own new side effect is
+ * exactly what its own docblock is about.
+ *
+ * ⛓ WHAT THE GUARD PRESERVES, and why it is the honest fix rather than a
+ * suppression: an IMPORTED run now behaves exactly as it did before SG1 — the
+ * whole gate, in whatever tree it was imported from — which is precisely the
+ * behaviour the baseline entry for this file records. The measured question is
+ * unchanged and no baseline re-derivation is owed.
+ *
+ * ⛓ The HELP door never reached here: `argvHelp` prints and exits far above.
+ */
+
+if (!IN_PLACE && IS_ENTRY_POINT) {
     /* ⛓ `mkdtemp` reserves the NAME; `git worktree add` wants the path absent. */
     WORKTREE = mkdtempSync(join(tmpdir(), 'procgen-help-tree-'));
     rmSync(WORKTREE, { recursive: true, force: true });
@@ -419,9 +521,42 @@ if (ONLY && !instruments.length) {
  * and says what it could not do.
  */
 const PORCELAIN_TRIES = 3;
-/** ⛓ One reader, two subjects: the batch observers ask about TREE, the header
- *  asks about the PRIMARY tree (what a worktree run cannot see). */
-const porcelainOf = (cwd) => execFileSync('git', ['status', '--porcelain'],
+/**
+ * ⛓ One reader, two subjects: the batch observers ask about TREE, the header
+ * asks about the PRIMARY tree (what a worktree run cannot see).
+ *
+ * ⛔⛔ `--no-optional-locks` IS LOAD-BEARING, AND IT IS THE OBSERVER'S ALONE.
+ * `git status` takes `index.lock` OPPORTUNISTICALLY, only to refresh the
+ * index — it does not need it to answer. Another session measured what that
+ * costs: a SIGKILLed child's git op left the lock behind, every subsequent
+ * status died with *"Another git process seems to be running"*, and the gate
+ * produced nine minutes of one repeated fatal and NO VERDICT. A read that
+ * cannot be blocked cannot be the thing that dies.
+ *
+ * ⛔⛔ AND IT IS DELIBERATELY NOT PUT IN THE CHILDREN'S ENVIRONMENT
+ * (`GIT_OPTIONAL_LOCKS=0`), which would suppress their lock-taking too —
+ * **TRAP 789: the instrument SUPPRESSED the effect it measures, and the null
+ * read as inertness.** This gate's subject is what an import DOES, and taking
+ * a git lock is one of the things it can do — the same class as taking the box
+ * lock, which this gate already reports by name (that is what
+ * `verify-seedling-ap-placement.mjs` is on the baseline for). Making the
+ * children stop doing the observable thing would suppress the evidence along
+ * with the collision. A child that genuinely collides is a finding about THAT
+ * INSTRUMENT; the bounded retry below is what keeps the run alive to report it.
+ *
+ * ⛓ Independently disqualifying: without the index refresh a stat-dirty file
+ * reads as MODIFIED, so a child that only touched an mtime would be reported
+ * as having moved the porcelain — a manufactured finding in a gate whose whole
+ * output is findings.
+ *
+ * ⛓⛓ THE RULE THAT FALLS OUT, and it is a rule and not a coincidence: this
+ * gate injects exactly two variables into a child, and each one either
+ * ISOLATES it (`XDG_CACHE_HOME`) or NORMALISES its output (`NO_COLOR`).
+ * Nothing it injects changes what the child is ABLE to do. A third variable
+ * has to pass that test.
+ */
+const porcelainOf = (cwd) => execFileSync('git',
+    ['--no-optional-locks', 'status', '--porcelain'],
     { cwd, encoding: 'utf8', maxBuffer: 1 << 26 });
 function porcelain() {
     let last = null;
@@ -713,9 +848,10 @@ const treeLine = WORKTREE
       + `there, both disk observers are scoped to it, ${SUBMODULES} submodule(s) initialised, `
       + 'and it is removed on exit and on signal (a killed child\'s git locks live under its '
       + 'own private gitdir and die with it).'
-    : `## tree: IN PLACE (--in-place) ${REPO} at HEAD ${HEAD.slice(0, 9)} — ⚠ the children `
-      + 'REALLY WRITE here; at the measured heads that is two tracked files dirtied and five '
-      + 'untracked droppings, all declared in the baseline\'s `wrote:` lists.';
+    : `## tree: IN PLACE (${IS_ENTRY_POINT ? '--in-place' : 'IMPORTED, not launched'}) `
+      + `${REPO} at HEAD ${HEAD.slice(0, 9)} — ⚠ the children REALLY WRITE here; at the `
+      + 'measured heads that is two tracked files dirtied and five untracked droppings, all '
+      + 'declared in the baseline\'s `wrote:` lists.';
 if (!JSON_OUT) {
     console.log(treeLine);
     if (WORKTREE) {
@@ -753,8 +889,19 @@ for (const kind of ['import', 'help']) {
         importErr: kind === 'help' ? (byDoor.get(`import:${file}`)?.stderr ?? null) : null,
         importOut: kind === 'help' ? (byDoor.get(`import:${file}`)?.stdout ?? null) : null,
     }));
+    /**
+     * ⛓⛓ **ONE LINE PER BATCH, ON STDERR** — because until this slice an
+     * in-flight run and a STALLED one looked identical from outside: nothing is
+     * printed until both door passes are complete, and the incident that
+     * motivated ⚖ 71 (b) was nine minutes of exactly that silence. ⛔ stderr,
+     * not stdout: `--json`'s stdout is a document a consumer parses.
+     */
+    const batches = Math.ceil(doors.length / JOBS);
     for (let i = 0; i < doors.length; i += JOBS) {
         const batch = doors.slice(i, i + JOBS);
+        console.error(`## ${kind} batch ${i / JOBS + 1}/${batches} — `
+            + `${i}/${doors.length} door(s) done, ${((Date.now() - t0) / 1000).toFixed(0)} s: `
+            + `${batch.map((t) => t.file).join(', ')}`);
         /* eslint-disable-next-line no-await-in-loop */
         const out = await runBatch(batch);
         batch.forEach((t, k) => byDoor.set(`${t.kind}:${t.file}`, out[k]));

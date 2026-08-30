@@ -8,12 +8,12 @@
  * used is the one whose two predecessors broke 33 files and 2.
  */
 import { readFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
-import { HELP_FLAG, helpText, wantsHelp } from './argvHelp.js';
+import { HELP_FLAG, helpText, isEntryPoint, wantsHelp } from './argvHelp.js';
 import { bodyStartLine, flagsIn, inheritedFlagsIn } from './argvScan.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -86,5 +86,46 @@ describe('⛔⛔ where a file\'s body begins (trap 906, and the two anchors befo
 
     it('⛓ after a shebang and a header docblock', () => {
         expect(at(['#!/usr/bin/env node', '/** doc */', 'const x = 1;'])).toBe(2);
+    });
+});
+
+/**
+ * ⛓⛓⛓ **`isEntryPoint` DIRECTLY** — it had only INDIRECT coverage (through
+ * `argvHelp`) until R9 slice SG1 gave it a second job, and the second job is
+ * the one with a measured incident behind it.
+ */
+describe('isEntryPoint — only the file that was RUN answers', () => {
+    const ME = fileURLToPath(import.meta.url);
+
+    /**
+     * ⛓⛓ THE ROW THE SECOND JOB EARNED. SG1 W2 gave `check-procgen-help.mjs` a
+     * module scope that builds a git worktree — and that file is one of its own
+     * 265 instruments, so its IMPORT door (`node -e "await import(…)"`, which
+     * has NO `argv[1]`) started a ~30 s `git worktree add` and was SIGKILLed at
+     * its 5 s baselined ceiling, leaving a `locked initializing` registration
+     * and a half-created tree PER RUN. Three had accumulated
+     * (`procgen-help-tree-cvZlXG` at `7f21fb4a5`, `-E9Z2Sw` and `-dLa04B` at
+     * `15e70e7bb`) before anyone noticed, and the gate could not see one of
+     * them: its observers watch the WORKING TREE, while the litter lands in
+     * `.git/worktrees/` and `/tmp`, and its own row is baselined so it cannot
+     * red. Measured after the guard: one import-door opening, ONE orphan
+     * before, ZERO after, with the row's verdict unmoved.
+     */
+    it('is FALSE when there is no argv[1] at all — the bare-import launch', () => {
+        expect(isEntryPoint(import.meta.url, ['node'])).toBe(false);
+    });
+
+    it('is TRUE for the file that was launched, absolute or relative', () => {
+        expect(isEntryPoint(import.meta.url, ['node', ME])).toBe(true);
+        expect(isEntryPoint(import.meta.url, ['node', relative(process.cwd(), ME)])).toBe(true);
+    });
+
+    /** ⛔ the hoisted-dependency case its own docblock was written for. */
+    it('is FALSE for a DIFFERENT file', () => {
+        expect(isEntryPoint(import.meta.url, ['node', join(HERE, 'argvHelp.js')])).toBe(false);
+    });
+
+    it('⛔ does not crash on an argv[1] that does not exist', () => {
+        expect(isEntryPoint(import.meta.url, ['node', '/no/such/instrument.mjs'])).toBe(false);
     });
 });
