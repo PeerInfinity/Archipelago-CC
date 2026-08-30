@@ -1661,12 +1661,26 @@ if (PANEL_ARMS_ENABLED) {
             const bootPlayer = beganStep?.detail?.world?.player ?? null;
             const args = beganStep?.detail?.args ?? {};
             const half = beganStep?.detail?.halfTile ?? 0;
+            const bp = beganStep?.detail?.bootPosition ?? null;
             check(`${tag}: the reset was sent the GAME'S OWN boot position, not zeros`,
                 Number.isFinite(args.x) && Number.isFinite(args.y)
+                    && bp && args.x === bp.x && args.y === bp.y
+                    // whichever source answered, it must agree with the roster
                     && bootPlayer && args.x === bootPlayer.x - half
                     && args.y === bootPlayer.y - half,
-                `args ${JSON.stringify(args)} vs boot roster ${JSON.stringify(bootPlayer)} `
-                + `- half ${half}`);
+                `args ${JSON.stringify(args)} from ${JSON.stringify(bp?.source)} vs boot roster `
+                + `${JSON.stringify(bootPlayer)} - half ${half}`);
+            /**
+             * ⛓ THE GUARD'S ARMING, MEASURED. `lastLevel` is what makes the
+             * wrong-room refusal real rather than documented; if the binding
+             * has not seen a `level` report this is null and the row says so
+             * instead of quietly passing.
+             */
+            check(`${tag}: the boot position came from the BINDING'S declared report, and `
+                + 'carries the level that ARMS the wrong-room guard',
+            bp?.source?.includes('declared') === true
+                && bp?.level === (REWRITTEN_SET.start?.level ?? 0),
+            JSON.stringify(bp));
             check(`${tag}: and the player ENDED where the game had booted them`,
                 bootPlayer && resetStep?.detail?.player?.x === bootPlayer.x
                     && resetStep?.detail?.player?.y === bootPlayer.y,

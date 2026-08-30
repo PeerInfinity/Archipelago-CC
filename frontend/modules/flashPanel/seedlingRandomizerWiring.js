@@ -473,17 +473,44 @@ export async function runSeedlingRandomizerLoad({
      */
     const tileSize = Number(loaded.tileSize);
     const halfTile = Number.isFinite(tileSize) ? Math.floor(tileSize / 2) : 0;
-    const bootPosition = before.player
+    /**
+     * ⛓⛓ **TWO SOURCES FOR THE BOOT POSITION, AND THE FIRST NEEDS NO
+     * ARITHMETIC.** `SeedlingRegionBinding` already consumes every declared
+     * report the game makes: `playerPositionX/Y` into `lastSpawn` and `level`
+     * into `lastLevel` (`seedlingRegionBinding.js:333-334, :345`). Those are
+     * `Main.playerPositionX/Y` — **the constructor's OWN arguments**, not an
+     * entity position — so preferring them removes the half-tile correction
+     * from the happy path entirely, and `lastLevel` is what ARMS the wrong-room
+     * guard below. ⛔ Read, never written: this module does not touch the
+     * binding's state.
+     *
+     * The roster derivation stays as the fallback for the case the binding has
+     * seen nothing (it drops every report while parked, and a preset with no
+     * sidecars may never have made it active), and both readings are reported
+     * so a row can say WHICH one answered.
+     */
+    const declaredSpawn = glue?.binding?.lastSpawn ?? null;
+    const declaredLevel = glue?.binding?.lastLevel ?? null;
+    const fromDeclared = Number.isFinite(declaredSpawn?.x) && Number.isFinite(declaredSpawn?.y);
+    const bootPosition = fromDeclared
         ? {
-            x: before.player.x - halfTile,
-            y: before.player.y - halfTile,
-            // ⛓ The level the position BELONGS to, when the game reports one.
-            // `botStatus.level` is −1 before a bot run, and a negative level is
-            // the game's own "no game" sentinel, so it is carried as null
-            // rather than compared as a room number.
-            level: Number.isInteger(before.level) && before.level >= 0 ? before.level : null,
+            x: declaredSpawn.x,
+            y: declaredSpawn.y,
+            level: Number.isInteger(declaredLevel) && declaredLevel >= 0 ? declaredLevel : null,
+            source: 'the binding\'s last declared playerPosition',
         }
-        : null;
+        : (before.player
+            ? {
+                x: before.player.x - halfTile,
+                y: before.player.y - halfTile,
+                // ⛓ `botStatus.level` is −1 before a bot run — its fields are
+                // the bot's, unset until `botStart` — and a negative level is
+                // the game's own "no game" sentinel, so it is carried as null
+                // rather than compared as a room number.
+                level: Number.isInteger(before.level) && before.level >= 0 ? before.level : null,
+                source: `the roster, less the map's half-tile (${halfTile})`,
+            }
+            : null);
 
     const target = resetTargetFor(loaded.set, bootPosition);
     if (!target) {
@@ -499,6 +526,7 @@ export async function runSeedlingRandomizerLoad({
     overlay.setText(`starting the randomized game (${target.mode})…`);
     step('reset-begin', { mode: target.mode, level: target.level,
         expectLevel: target.expectLevel, args: { x: target.x, y: target.y }, halfTile,
+        bootPosition,
         world: { level: before.level, rosterSize: before.rosterSize, time: before.time,
             player: before.player ? { x: before.player.x, y: before.player.y } : null } });
     await waitFrame();

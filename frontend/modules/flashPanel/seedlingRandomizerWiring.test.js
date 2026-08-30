@@ -525,8 +525,8 @@ describe('the load sequence — overlay on, deliver, reset, overlay off', () => 
      * has to appear in the same sequence. Measured: the repaired row reds
      * under that mutant and the original did not.
      */
-    const fakeGlue = (order) => {
-        const g = { order, delivery: null, checkBinding: null };
+    const fakeGlue = (order, binding = null) => {
+        const g = { order, delivery: null, checkBinding: null, binding };
         g.setDelivery = (d) => { g.delivery = d; order.push('setDelivery'); return g; };
         g.setCheckBinding = (b) => { g.checkBinding = b; order.push('setCheckBinding'); return g; };
         return g;
@@ -548,7 +548,7 @@ describe('the load sequence — overlay on, deliver, reset, overlay off', () => 
     const run = (over = {}) => {
         const order = over.order ?? [];
         const overlay = over.overlay ?? fakeOverlay();
-        const glue = over.glue ?? fakeGlue(order);
+        const glue = over.glue ?? fakeGlue(order, over.binding ?? null);
         const teleports = [];
         let polls = 0;
         return runSeedlingRandomizerLoad({
@@ -651,6 +651,42 @@ describe('the load sequence — overlay on, deliver, reset, overlay off', () => 
      * `tree@0,0`. The reset is REFUSED, the rooms stay mounted, and nothing is
      * bound — because the world is not where the set says it should be.
      */
+    /**
+     * ⛔⛔ **THE DECLARED SPAWN WINS, AND IT NEEDS NO HALF-TILE.**
+     * `SeedlingRegionBinding.lastSpawn` is `Main.playerPositionX/Y` — the
+     * CONSTRUCTOR's own arguments — so when the binding has seen them the
+     * reset sends them verbatim, and `lastLevel` ARMS the wrong-room guard
+     * that is otherwise inert (`botStatus.level` is −1 before a bot run).
+     */
+    it('prefers the BINDING\'s declared spawn over the roster, with no half-tile', async () => {
+        const { teleports, r } = await run({
+            binding: { lastSpawn: { x: 64, y: 96 }, lastLevel: 0 },
+        });
+        expect(teleports).toEqual([{ level: -1, x: 64, y: 96 }]);
+        const began = r.steps.find((s) => s.name === 'reset-begin');
+        expect(began.detail.bootPosition).toMatchObject({ x: 64, y: 96, level: 0 });
+        expect(began.detail.bootPosition.source).toMatch(/declared playerPosition/);
+    });
+
+    it('…and with the binding ARMED, a start in another room is REFUSED', async () => {
+        const order = [];
+        const { r, teleports, glue } = await run({
+            order,
+            binding: { lastSpawn: { x: 64, y: 96 }, lastLevel: 0 },
+            loaded: loadedFor({ ok: true, chunks: 1, why: null }, { level: 47 }, order),
+        });
+        expect(teleports).toEqual([]);
+        expect(r.why).toBe('no position to reset to');
+        expect(glue.checkBinding).toBeNull();
+    });
+
+    it('falls back to the roster when the binding has seen nothing', async () => {
+        const { teleports, r } = await run({ binding: { lastSpawn: { x: null, y: null } } });
+        expect(teleports).toEqual([{ level: -1, x: 80, y: 128 }]);
+        expect(r.steps.find((s) => s.name === 'reset-begin').detail.bootPosition.source)
+            .toMatch(/half-tile/);
+    });
+
     it('a game that reports NO player refuses the reset rather than sending zeros', async () => {
         const { r, teleports, glue, overlay } = await run({
             bot: (n) => (n === 'botStatus' ? '{"level":0}' : '{"mobiles":[]}'),
