@@ -305,13 +305,23 @@ describe('who takes the box', () => {
          * moment a guard grew a brace block — a detector that reads a
          * REFORMATTING as a defect. What makes a take unguarded is that it is a
          * TOP-LEVEL statement, and that is what column zero means here.
+         *
+         * ⛓⛓ R9 SLICE SG1 — **AND A TOP-LEVEL TAKE MAY BIND ITS RETURN VALUE.**
+         * `takeBoxLockOrExit` returns `{ passthrough }`, which is how a gate
+         * learns it is running UNDER a battery (⚖ 71 (a)); the first gate to
+         * read it wrote `const BOX = takeBoxLockOrExit(…)` and this row filed
+         * it as a CONDITIONAL taker — the same reformatting-as-a-defect failure
+         * one paragraph up, arriving from the other side. `const <name> =` is
+         * still column zero and still unconditional; a `let`, an `if`, or any
+         * indentation is not.
          */
         const guarded = ['derive-seedling-tick0.mjs', 'plan-seedling-r7-ends-meet.mjs',
             'solve-seedling-r8-d2-chain.mjs', 'solve-seedling-r8-tail.mjs',
             'solve-seedling-r9-campaign.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
-            return text.includes('takeBoxLockOrExit(') && !/^takeBoxLockOrExit\(/m.test(text);
+            return text.includes('takeBoxLockOrExit(')
+                && !/^(?:const [A-Za-z_$][\w$]* = )?takeBoxLockOrExit\(/m.test(text);
         };
         expect(guarded.filter((f) => !isGuarded(f))).toEqual([]);
         /* ⛔ …and nobody ELSE guards one, which is the second direction. */

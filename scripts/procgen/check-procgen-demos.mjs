@@ -100,6 +100,8 @@ import {
 import { AREAS, TERMS, termById } from '../../frontend/modules/procgenDocs/glossary.js';
 import { closeServer, serveRepoRoot } from './serveRepoRoot.js';
 import { takeBoxLockOrExit } from './boxLock.js';
+import { gateRoster } from './gateRoster.js';
+import { siblingGatesIn } from './gateDedup.js';
 
 /**
  * ⛓ R9 P3b, ⚖ 54 (7) — **THE BOX LOCK.** This gate drives the machine (browser),
@@ -112,7 +114,57 @@ import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp } from './argvHelp.js';
 
 argvHelp(import.meta.url);
-takeBoxLockOrExit({ name: 'check-procgen-demos.mjs', kind: 'browser' });
+/** ⛓ …and the return value is READ, not discarded — see `UNDER_A_BATTERY`. */
+const BOX = takeBoxLockOrExit({ name: 'check-procgen-demos.mjs', kind: 'browser' });
+
+/**
+ * ⛓⛓⛓ **UNDER A BATTERY, A `cli` ROW THAT IS A SIBLING GATE IS NOT RE-DRIVEN**
+ * (⚖ ruling 71 (a), slice SG1; census in memory `note_slow_procgen_gates`).
+ *
+ * ⛔⛔ THE COST, MEASURED. Three of this catalogue's `cli` fields name a
+ * gate that `gates.mjs` ALREADY RUNS AS ITS OWN ROW:
+ * `check-seedling-editor-generate.mjs` (129–146 s) once and
+ * `check-seedling-editor-sequence.mjs` (~31 s) TWICE — about two thirds of this
+ * row's measured 310 s. A full `standing-values --write` therefore paid
+ * `editor-generate` about THREE times (the battery runs both of its arms) and
+ * `editor-sequence` three times, to re-learn the same verdict.
+ *
+ * ⛓ HOW THE GATE KNOWS. `takeBoxLockOrExit` already answers it: rule 3 of the
+ * box lock returns `passthrough: true` when the token in the environment is the
+ * live holder's — i.e. when this process is a CHILD of `gates.mjs`,
+ * `standing-values.mjs` or `record-standing-value.mjs`. That is exactly "a
+ * battery is running me", and it needed no new flag, no environment variable of
+ * our own and nothing for a caller to remember to pass.
+ *
+ * ⛔ STANDALONE IS UNCHANGED, AND THAT IS THE POINT. Trap 476 — *a catalogue
+ * field nothing EXECUTES is prose* — is what put these commands on the clock in
+ * the first place. A bare `node scripts/procgen/check-procgen-demos.mjs` still
+ * runs every one of them, so the field is still executed by the run a reader
+ * makes; what is dropped is only the SECOND execution inside a run that is
+ * already paying for the first.
+ *
+ * ⛔⛔ AND WHAT IS DEDUPED IS THE GATE, NOT THE COMMAND LINE. The battery runs
+ * a roster gate under the roster's OWN argv — `argvFor` gives
+ * `check-seedling-editor-sequence.mjs` a `--host=`, where the catalogue spells
+ * it bare (its own-server arm). The two are the same gate answering the same
+ * claims against two servers, and the dedup says so BY NAME in the line it
+ * prints rather than pretending the command lines matched. ⛓ The narrower
+ * rule — dedup only on argv equality with a battery ARM — was considered and
+ * would have licensed n21 alone (its bare spelling IS `own server`'s declared
+ * arm) and left n22/n23, the rows the census actually named, running.
+ */
+const UNDER_A_BATTERY = BOX?.passthrough === true;
+
+/**
+ * ⛓ `gates.mjs`'s ROSTER, derived from the same module `gates.mjs` derives it
+ * from (⚖ 17: read out of the instruments, never a typed list) — and the
+ * LICENCE rule itself lives in `gateDedup.js`, where a unit test can reach it
+ * without taking the box. Built on FIRST USE: a `--pages=` run, and a
+ * catalogue with no `cli` fields, never pay the readdir.
+ */
+let ROSTER_FILES = null;
+const dedupedSiblingIn = (command) => siblingGatesIn(
+    command, (ROSTER_FILES ??= new Set(gateRoster().map((g) => g.file))));
 
 /** ⛓ The catalogue PAGE — the module's other reader, gated below. */
 const DEMOS_PAGE = '/frontend/modules/procgenDocs/demos.html';
@@ -185,6 +237,17 @@ const chosen = only
 console.log(`catalogue: ${DEMOS.length} entr(ies) in procgenDocs/demos.js `
     + `(${DEMOS.filter((e) => e.prose).length} prose)`
     + (only ? ` — --only=${only} selects ${chosen.length}` : ''));
+/**
+ * ⛓⛓ **THE RUN SAYS WHICH BUILD IT IS** (trap 820: a guard cannot see which
+ * build it drives — make the artifact announce it). Two runs of this gate at one
+ * head can legitimately spend 310 s and 100 s, and the only difference is
+ * whether a battery held the box; a log that did not say so would be a timing
+ * mystery.
+ */
+console.log(`cli mode: ${UNDER_A_BATTERY
+    ? 'UNDER A BATTERY (box token inherited) — a `cli` row whose targets are ALL '
+      + '`gates.mjs` roster gates is NOT re-driven; every other row runs'
+    : 'STANDALONE (this process took the box) — every `cli` row RUNS'}`);
 if (only && chosen.length === 0) {
     console.log(`\n--only=${only} matched NO entry; ids: [${DEMOS.map((e) => e.id).join(', ')}]`);
     process.exit(1);
@@ -241,8 +304,19 @@ try {
          * failing is the more useful first answer.
          */
         if (entry.cli && !pages) {
-            if (entry.cli.skip) {
-                check(true, `⛓ "${name}" — its CLI is NOT RUN, by name`, entry.cli.skip);
+            /**
+             * ⛓ Order matters and it is the DECLARATION that wins: n14's
+             * `skip` is a refusal the catalogue makes with its own reason, and
+             * its target (`check-seedling-wasm-ship.mjs`) is a roster gate too
+             * — read the other way round, a battery run would rewrite a
+             * "needs a real GPU" skip as a dedup and lose the sentence.
+             */
+            const sibling = UNDER_A_BATTERY && !entry.cli.skip
+                ? dedupedSiblingIn(entry.cli.command) : null;
+            if (entry.cli.skip || sibling) {
+                check(true, `⛓ "${name}" — its CLI is NOT RUN, by name`,
+                    entry.cli.skip
+                    ?? `deduped — the battery runs ${sibling} as its own row`);
             } else {
                 const t0 = Date.now();
                 const r = spawnSync('bash', ['-c', entry.cli.command], {
