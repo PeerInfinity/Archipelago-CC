@@ -272,7 +272,7 @@ export const RESET_MODES = Object.freeze({
     NEW_GAME_ARM: 'new-game-arm',
 });
 
-export function resetTargetFor(set) {
+export function resetTargetFor(set, bootPosition = null) {
     const start = set?.start ?? null;
     if (!start || !Number.isInteger(start.level)) return null;
     if (Number.isInteger(start.x) && Number.isInteger(start.y)) {
@@ -285,15 +285,36 @@ export function resetTargetFor(set) {
             why: `the set names its own start — level ${start.level} at (${start.x}, ${start.y})`,
         };
     }
+    /**
+     * ⛔⛔ **`applyStart` DOES NOT SUPPLY A POSITION THE SET DOES NOT CARRY, SO
+     * THE CONSTRUCTOR'S ARGS STAND — AND ZEROS PARK THE PLAYER IN A SOLID.**
+     * MEASURED, P1-e run 4: this returned `{level:-1, x:0, y:0}` on the
+     * assumption that the game's new-game arm would place the player itself.
+     * It does not. The player landed at pixel (0, 0) — reported as `(8, 8)`
+     * in the roster, which is the entity centring — and **level 0 has
+     * `tree@0,0`**, so the ruled *"reset to the start"* put them inside a tree
+     * in the top-left corner. The reset rows all passed, because they assert
+     * that a reset was ISSUED and OBSERVED, not that the destination is
+     * somewhere a person can stand.
+     *
+     * ⇒ the fallback position is the GAME'S OWN, read live: the world as it
+     * stood at bridge-ready, before anything was delivered. `Main.as:51` boots
+     * `new Game(0, 80, 128)` and the roster then reports the player at
+     * (88, 136) — the constructor's args plus half a tile — so the args are
+     * recovered with the map document's OWN `tile_size`, never a typed 8.
+     * ⛓ `level` stays −1: the new-game arm still runs (and `applyStart` still
+     * wins whenever a set DOES carry a start), it simply is not asked to
+     * invent a coordinate it does not have.
+     */
     return {
         mode: RESET_MODES.NEW_GAME_ARM,
         level: -1,
-        x: 0,
-        y: 0,
+        x: bootPosition?.x ?? null,
+        y: bootPosition?.y ?? null,
         expectLevel: start.level,
         why: `the set's start names level ${start.level} and NO position, so the game's own `
-            + 'new-game arm (level < 0 -> LevelSet.applyStart) is the only thing that knows '
-            + 'the spawn',
+            + 'new-game arm (level < 0) runs, with the constructor args taken from the '
+            + 'position the GAME itself booted at',
     };
 }
 
@@ -396,7 +417,36 @@ export async function runSeedlingRandomizerLoad({
         return { ok: false, why: result.why, reset: null, steps, delivered: result };
     }
 
-    const target = resetTargetFor(loaded.set);
+    /**
+     * ⛔⛔ **THE WORLD IS READ BEFORE THE RESET, AND IT DOES TWO JOBS.**
+     *
+     * (1) It is the only thing that makes the reset OBSERVABLE for this set:
+     * the confirmation below waits for `level === expectLevel`, and for every
+     * set this slice delivers `expectLevel` is **0, the level the game already
+     * booted into** — true on its first iteration whether or not the reset
+     * landed, vacuous in exactly the way the ordering fixture was (trap 981)
+     * and the M1 door row was (trap 985). What CAN move is the world itself,
+     * so the BEFORE/AFTER pair is recorded and REPORTED rather than reduced to
+     * a boolean here; the gate owns the comparison.
+     *
+     * (2) It supplies the position the constructor is given when the SET does
+     * not carry one — see `resetTargetFor`. This read must therefore happen
+     * BEFORE the target is chosen, and before anything moves the player.
+     */
+    const before = readWorld(bot);
+    /**
+     * ⛓ THE HALF-TILE IS THE MAP DOCUMENT'S, NOT AN 8. `Entity` centres on its
+     * cell, so a roster position is the constructor's argument plus
+     * `tile_size / 2`; taking the divisor from the document the rooms came
+     * from means a set on a different grid is followed rather than mis-placed.
+     */
+    const tileSize = Number(loaded.tileSize);
+    const halfTile = Number.isFinite(tileSize) ? Math.floor(tileSize / 2) : 0;
+    const bootPosition = before.player
+        ? { x: before.player.x - halfTile, y: before.player.y - halfTile }
+        : null;
+
+    const target = resetTargetFor(loaded.set, bootPosition);
     if (!target) {
         // ⛓ REFUSED RATHER THAN GUESSED. A set with no `start.level` has no
         // start to reset to, and picking level 0 would invent one.
@@ -407,29 +457,25 @@ export async function runSeedlingRandomizerLoad({
         return { ok: true, why: null, reset: null, steps, delivered: result };
     }
 
-    /**
-     * ⛔⛔ **THE WORLD IS READ BEFORE THE RESET, AND THAT IS THE ONLY THING
-     * THAT MAKES THE RESET OBSERVABLE AT ALL FOR THIS SET.** The confirmation
-     * below waits for `level === expectLevel` — and for every set this slice
-     * delivers `expectLevel` is **0, the level the game already booted into**.
-     * So the wait is TRUE ON ITS FIRST ITERATION whether or not the reset
-     * landed: as a witness it is vacuous, in exactly the way this slice's
-     * ordering fixture was (trap 981) and the M1 door row was (trap 985).
-     *
-     * ⛓ What CAN move is the world itself. `new Game(-1,…)` is the game's own
-     * new-game arm and rebuilds the room, so the BEFORE/AFTER pair — roster
-     * size, the player's position, the whole `botStatus` block — is recorded
-     * and reported rather than reduced to a boolean here. The host cannot
-     * honestly assert *"the swap landed"* from a level number; it CAN hand the
-     * gate two readings and let a row compare them.
-     */
-    const before = readWorld(bot);
     overlay.setText(`starting the randomized game (${target.mode})…`);
     step('reset-begin', { mode: target.mode, level: target.level,
-        expectLevel: target.expectLevel,
+        expectLevel: target.expectLevel, args: { x: target.x, y: target.y }, halfTile,
         world: { level: before.level, rosterSize: before.rosterSize, time: before.time,
             player: before.player ? { x: before.player.x, y: before.player.y } : null } });
     await waitFrame();
+    if (!Number.isFinite(target.x) || !Number.isFinite(target.y)) {
+        // ⛔ REFUSED RATHER THAN SENT AS ZEROS. Zeros are what put the player
+        // inside `tree@0,0` in run 4; a reset with no position to send is a
+        // reset that should not be made.
+        overlay.setText('the randomized rooms are loaded, but the game did not report a '
+            + 'position to start from — the player was NOT moved.', 'error');
+        log('[ap placement] no boot position to reset to; the rooms are mounted and the '
+            + 'player was left where they were', 'error');
+        step('reset-end', { landed: false, why: 'no position' });
+        overlay.hide();
+        return { ok: true, why: 'no position to reset to', reset: { ...target, landed: false },
+            steps, delivered: result };
+    }
     teleport({ level: target.level, x: target.x, y: target.y });
 
     // ⛔ POLLED, NEVER SLEPT (trap 972 / trap 970: a wall-clock settle in a
@@ -645,6 +691,9 @@ export async function loadSeedlingRandomizer({
         census,
         assets,
         selfPlayer,
+        /** ⛓ The map document's OWN grid, carried so the reset can recover a
+         *  constructor argument from a roster position without typing an 8. */
+        tileSize: mapDoc.tile_size,
         capability: AP_ITEM_CAPABILITY,
     };
 }

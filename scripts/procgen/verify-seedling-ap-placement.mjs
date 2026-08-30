@@ -1643,6 +1643,34 @@ if (PANEL_ARMS_ENABLED) {
                             + `${M1_SUBJECT.entity.y + TILE_HALF}`)),
                     JSON.stringify((obs.roster ?? []).slice(0, 10)));
             }
+            /**
+             * ⛔⛔ **THE ROW RUN 4 DID NOT HAVE, AND THE DEFECT IT WOULD HAVE
+             * CAUGHT.** Every reset row passed in run 4 while the player was
+             * parked at pixel (0, 0) — *inside* `tree@0,0`, level 0's
+             * top-left solid — because the rows asserted that a reset was
+             * ISSUED and OBSERVED and never that the destination was somewhere
+             * a person can stand. The host sent `Game(-1, 0, 0)`; `applyStart`
+             * supplies no position when the set carries none, so the zeros
+             * stood.
+             *
+             * ⇒ the claim is now about the ARGS, and it is checked against the
+             * game's own boot: the player must end where the GAME started
+             * them, which is the only position the host can justify for a set
+             * whose `start` names only a level.
+             */
+            const bootPlayer = beganStep?.detail?.world?.player ?? null;
+            const args = beganStep?.detail?.args ?? {};
+            const half = beganStep?.detail?.halfTile ?? 0;
+            check(`${tag}: the reset was sent the GAME'S OWN boot position, not zeros`,
+                Number.isFinite(args.x) && Number.isFinite(args.y)
+                    && bootPlayer && args.x === bootPlayer.x - half
+                    && args.y === bootPlayer.y - half,
+                `args ${JSON.stringify(args)} vs boot roster ${JSON.stringify(bootPlayer)} `
+                + `- half ${half}`);
+            check(`${tag}: and the player ENDED where the game had booted them`,
+                bootPlayer && resetStep?.detail?.player?.x === bootPlayer.x
+                    && resetStep?.detail?.player?.y === bootPlayer.y,
+                `${JSON.stringify(resetStep?.detail?.player)} vs ${JSON.stringify(bootPlayer)}`);
             check(`${tag}: the step log is the ruled sequence, in order`,
                 JSON.stringify((obs.load?.steps ?? []).map((s) => s.name))
                     === JSON.stringify(['overlay-on', 'deliver-begin', 'deliver-end',

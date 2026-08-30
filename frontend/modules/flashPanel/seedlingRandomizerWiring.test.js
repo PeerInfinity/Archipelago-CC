@@ -436,10 +436,25 @@ describe('the reset target is chosen by the SET, not by preference', () => {
      * constant that belongs to `Main.as`, not to the host, and `region_coords`
      * has no level-0 row to derive it from. So the game's own arm answers.
      */
-    it('a start with only a LEVEL takes the game\'s new-game arm, and keeps the level', () => {
-        const t = resetTargetFor({ start: { level: 0 } });
-        expect(t).toMatchObject({ mode: RESET_MODES.NEW_GAME_ARM, level: -1, expectLevel: 0 });
-        expect(t.why).toMatch(/applyStart/);
+    /**
+     * ⛔⛔ AND THE CONSTRUCTOR ARGS COME FROM THE GAME, NOT FROM ZERO. Run 4
+     * sent `Game(-1, 0, 0)` on the assumption that the new-game arm would
+     * place the player; it does not when the set carries no position, so the
+     * player landed at pixel (0, 0) — and **level 0 has `tree@0,0`**. The
+     * fallback is the position the GAME booted at, read live.
+     */
+    it('a start with only a LEVEL takes the new-game arm with the GAME\'s own position', () => {
+        const t = resetTargetFor({ start: { level: 0 } }, { x: 80, y: 128 });
+        expect(t).toMatchObject({ mode: RESET_MODES.NEW_GAME_ARM, level: -1, expectLevel: 0,
+            x: 80, y: 128 });
+        expect(t.why).toMatch(/the position the GAME itself booted at/);
+    });
+
+    it('…and with NO boot position it carries null rather than zero', () => {
+        const t = resetTargetFor({ start: { level: 0 } }, null);
+        expect(t).toMatchObject({ mode: RESET_MODES.NEW_GAME_ARM, level: -1 });
+        expect(t.x).toBeNull();
+        expect(t.y).toBeNull();
     });
 
     it('no start at all is REFUSED rather than guessed as level 0', () => {
@@ -495,6 +510,7 @@ describe('the load sequence — overlay on, deliver, reset, overlay off', () => 
         return d;
     };
     const loadedFor = (result, start = { level: 0 }, order = []) => ({
+        tileSize: 16,
         set: { rooms: new Array(116), start },
         delivery: fakeDelivery(result, order),
         checkBinding: { id: 'the-binding' },
@@ -530,7 +546,9 @@ describe('the load sequence — overlay on, deliver, reset, overlay off', () => 
             ['overlay-on', 'deliver-begin', 'deliver-end', 'reset-begin', 'reset-end',
                 'bind', 'overlay-off']);
         expect(glue.order).toEqual(['setDelivery', 'deliver', 'setCheckBinding']);
-        expect(teleports).toEqual([{ level: -1, x: 0, y: 0 }]);
+        // ⛓ the args are the GAME's boot position recovered from the roster
+        // (88,136) minus the map's own half-tile (16/2) — never zeros.
+        expect(teleports).toEqual([{ level: -1, x: 80, y: 128 }]);
         expect(overlay.shown).toBe(false);
         expect(overlay.calls[0]).toBe('show');
         expect(overlay.calls.at(-1)).toBe('hide');
@@ -582,12 +600,32 @@ describe('the load sequence — overlay on, deliver, reset, overlay off', () => 
      * because they are.
      */
     it('a reset that is never observed times out, says so, and does NOT bind', async () => {
+        // ⛓ A roster WITH a player (so a boot position exists and the reset is
+        // actually issued) but a level that never becomes the expected one.
         const { r, glue, overlay } = await run({
-            bot: (n) => (n === 'botStatus' ? '{"level":99}' : '{"mobiles":[]}'),
+            bot: (n) => (n === 'botStatus' ? '{"level":99}'
+                : '{"mobiles":[{"cls":"Player","x":88,"y":136}]}'),
         });
         expect(r.ok).toBe(true);
         expect(r.why).toBe('reset not observed');
         expect(glue.order).toEqual(['setDelivery', 'deliver']);
+        expect(overlay.cls).toBe('error');
+    });
+
+    /**
+     * ⛔⛔ THE ROW RUN 4 OWED. A game that reports no player gives the host no
+     * position to send, and sending zeros is what parked the player inside
+     * `tree@0,0`. The reset is REFUSED, the rooms stay mounted, and nothing is
+     * bound — because the world is not where the set says it should be.
+     */
+    it('a game that reports NO player refuses the reset rather than sending zeros', async () => {
+        const { r, teleports, glue, overlay } = await run({
+            bot: (n) => (n === 'botStatus' ? '{"level":0}' : '{"mobiles":[]}'),
+        });
+        expect(teleports).toEqual([]);
+        expect(r.why).toBe('no position to reset to');
+        expect(glue.order).toEqual(['setDelivery', 'deliver']);
+        expect(glue.checkBinding).toBeNull();
         expect(overlay.cls).toBe('error');
     });
 
